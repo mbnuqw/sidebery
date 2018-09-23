@@ -1,0 +1,356 @@
+{
+  "ExtName": {
+    "message": "Sidebery"
+  },
+
+  "ExtDesc": {
+    "message": "Управление табами и закладками в боковой панели."
+  },
+
+  "ActionTitle": {
+    "message": "Открыть Sidebery"
+  },
+
+  "bookmarks_menu.title": {
+    "message": "Закладки"
+  },
+  "bookmarks_menu.reload_bookmarks_tree": {
+    "message": "Перезагрузить закладки"
+  },
+  "bookmarks_menu.collapse_all_folders": {
+    "message": "Свернуть все папки"
+  },
+
+  "bookmarks_editor.create": {
+    "message": "Создать"
+  },
+  "bookmarks_editor.save": {
+    "message": "Сохранить"
+  },
+  "bookmarks_editor.cancel": {
+    "message": "Отмена"
+  },
+  "bookmarks_editor.name_bookmark_placeholder": {
+    "message": "Название закладки..."
+  },
+  "bookmarks_editor.name_folder_placeholder": {
+    "message": "Название папки..."
+  },
+  "bookmarks_editor.url_placeholder": {
+    "message": "Ссылка..."
+  },
+
+  "sidebar.nav_add_ctx_title": {
+    "message": "Создать контейнер"
+  },
+  "sidebar.nav_settings_title": {
+    "message": "Открыть настройки"
+  },
+
+  "pinned_tabs_menu.title": {
+    "message": "Закрепленные табы"
+  },
+
+  "private_tabs_menu.title": {
+    "message": "Приватные табы"
+  },
+
+  "default_tabs_menu.title": {
+    "message": "Табы"
+  },
+  "default_tabs_menu.close_all_tabs": {
+    "message": "Закрыть все табы"
+  },
+
+  "tabs_menu.name_placeholder": {
+    "message": "Название контейнера..."
+  },
+  "tabs_menu.icon_label": {
+    "message": "Иконка"
+  },
+  "tabs_menu.color_label": {
+    "message": "Цвет"
+  },
+  "tabs_menu.close_all_tabs": {
+    "message": "Закрыть все табы"
+  },
+  "tabs_menu.delete_container": {
+    "message": "Удалить контейнер"
+  },
+  "tabs_menu.sync_label": {
+    "message": "Синхронизация"
+  },
+
+  "ctx_menu.open_in_new_window": {
+    "message": "Открыть в новом окне"
+  },
+  "ctx_menu.open_in_new_priv_window": {
+    "message": "Открыть в приватном окне"
+  },
+  "ctx_menu.open_in_default_panel": {
+    "message": "Открыть"
+  },
+  "ctx_menu.open_in_": {
+    "message": "Открыть в "
+  },
+  "ctx_menu._panel": {
+    "message": ""
+  },
+  "ctx_menu.create_bookmark": {
+    "message": "Создать закладку"
+  },
+  "ctx_menu.create_folder": {
+    "message": "Создать папку"
+  },
+  "ctx_menu.create_separator": {
+    "message": "Создать разделитель"
+  },
+  "ctx_menu.edit_bookmark": {
+    "message": "Редактировать"
+  },
+  "ctx_menu.delete_bookmark": {
+    "message": "Удалить"
+  },
+
+  "ctx_menu.move_to_new_window": {
+    "message": "Переместить в новое окно"
+  },
+  "ctx_menu.move_to_another_window": {
+    "message": "Переместить в другое окно"
+  },
+  "ctx_menu.move_to_window_": {
+    "message": "Переместить в окно..."
+  },
+  "ctx_menu.reopen_in_priv_window": {
+    "message": "Открыть в приватном окне"
+  },
+  "ctx_menu.reopen_in_default_panel": {
+    "message": "Открыть в стандартном контейнере"
+  },
+  "ctx_menu.re_open_in_": {
+    "message": "Открыть в "
+  },
+  "ctx_menu.reopen_in_another_window": {
+    "message": "Открыть в другом окне"
+  },
+  "ctx_menu.reopen_in_window_": {
+    "message": "Открыть в окне..."
+  },
+  "ctx_menu.pin": {
+    "message": "Закрепить"
+  },
+  "ctx_menu.unpin": {
+    "message": "Открепить"
+  },
+  "ctx_menu.mute": {
+    "message": "Выключить звук"
+  },
+  "ctx_menu.unmute": {
+    "message": "Включить звук"
+  },
+  "ctx_menu.clear_cookies": {
+    "message": "Удалить куки"
+  },
+  "ctx_menu.tab_close_down": {
+    "message": "Закрыть нижележащие табы"
+  },
+  "ctx_menu.tab_reload": {
+    "message": "Перезагрузить"
+  },
+  "ctx_menu.tab_duplicate": {
+    "message": "Дублировать"
+  },
+
+  "window_input.cancel": {
+    "message": "Отмена"
+  },
+
+  "settings.general_title": {
+    "message": "Основные"
+  },
+  "settings.tabs_title": {
+    "message": "Табы"
+  },
+  "settings.opt_true": {
+    "message": "вкл"
+  },
+  "settings.opt_false": {
+    "message": "выкл"
+  },
+  "settings.activate_last_tab_on_panel_switching": {
+    "message": "Активировать последний активный таб при переключении панелей"
+  },
+  "settings.create_new_tab_on_empty_panel": {
+    "message": "Создавать новый таб при переходе к пустому контейнеру"
+  },
+  "settings.skip_empty_panels": {
+    "message": "Пропускать пустые контейнеры при переключении"
+  },
+  "settings.show_tab_rm_btn": {
+    "message": "Показывать кнопку закрытия таба при наведении курсора"
+  },
+  "settings.h_scroll_through_panels": {
+    "message": "Переключать панели с помощью горизонтальной прокрутки"
+  },
+  "settings.scroll_through_tabs": {
+    "message": "Переключать табы с помощью колеса прокрутки"
+  },
+  "settings.scroll_tabs_panel": {
+    "message": "на панели"
+  },
+  "settings.scroll_tabs_global": {
+    "message": "глобально"
+  },
+  "settings.scroll_tabs_none": {
+    "message": "выкл"
+  },
+  "settings.tab_long_left_click": {
+    "message": "Длительное нажатие левой кнопки мыши по табу"
+  },
+  "settings.tab_long_left_click_close_down": {
+    "message": "закрыть нижележащие"
+  },
+  "settings.tab_long_left_click_reload": {
+    "message": "перезагрузить"
+  },
+  "settings.tab_long_left_click_duplicate": {
+    "message": "дублировать"
+  },
+  "settings.tab_long_left_click_pin": {
+    "message": "закрепить"
+  },
+  "settings.tab_long_left_click_mute": {
+    "message": "выключить звук"
+  },
+  "settings.tab_long_left_click_clear_cookies": {
+    "message": "удалить куки"
+  },
+  "settings.tab_long_left_click_none": {
+    "message": "выкл"
+  },
+  "settings.tab_long_right_click": {
+    "message": "Длительное нажатие правой кнопки мыши по табу"
+  },
+  "settings.tab_long_right_click_close_down": {
+    "message": "закрыть нижележащие"
+  },
+  "settings.tab_long_right_click_reload": {
+    "message": "перезагрузить"
+  },
+  "settings.tab_long_right_click_duplicate": {
+    "message": "дублировать"
+  },
+  "settings.tab_long_right_click_pin": {
+    "message": "закрепить"
+  },
+  "settings.tab_long_right_click_mute": {
+    "message": "выключить звук"
+  },
+  "settings.tab_long_right_click_clear_cookies": {
+    "message": "удалить куки"
+  },
+  "settings.tab_long_right_click_none": {
+    "message": "выкл"
+  },
+
+  "settings.appearance_title": {
+    "message": "Вид"
+  },
+  "settings.font_size": {
+    "message": "Размер шрифта"
+  },
+  "settings.font_size_xs": {
+    "message": "XS"
+  },
+  "settings.font_size_s": {
+    "message": "S"
+  },
+  "settings.font_size_m": {
+    "message": "M"
+  },
+  "settings.font_size_l": {
+    "message": "L"
+  },
+  "settings.font_size_xl": {
+    "message": "XL"
+  },
+  "settings.font_size_xxl": {
+    "message": "XXL"
+  },
+  "settings.switch_theme": {
+    "message": "Тема"
+  },
+  "settings.theme_dark": {
+    "message": "темная"
+  },
+  "settings.theme_light": {
+    "message": "светлая"
+  },
+  "settings.bg_noise": {
+    "message": "Матовый задный фон"
+  },
+  "settings.animations": {
+    "message": "Анимации"
+  },
+
+  "settings.kb_title": {
+    "message": "Клавиши"
+  },
+  "settings.open_sidebar_panel": {
+    "message": "Открыть панель"
+  },
+  "settings.next_panel": {
+    "message": "Следующая панель"
+  },
+  "settings.prev_panel": {
+    "message": "Предыдущая панель"
+  },
+  "settings.open_new_tab_in_curr_panel": {
+    "message": "Открыть новый таб в текущем контейнере"
+  },
+  "settings.close_tab": {
+    "message": "Закрыть таб"
+  },
+  "settings.reset_kb": {
+    "message": "Сбросить клав. настройки"
+  },
+
+  "settings.experements_title": {
+    "message": "Эксперименты"
+  },
+  "settings.drag_tab_between_panels": {
+    "message": "Перетаскавать таб между панелями"
+  },
+
+  "settings.help_title": {
+    "message": "Помошь"
+  },
+  "settings.cp_debug_info": {
+    "message": "Копировать отладочную инф."
+  },
+  "settings.cp_logs": {
+    "message": "Копировать логи"
+  },
+  "settings.cached_favics": {
+    "message": "Размер кэшированных иконок"
+  },
+  "settings.cached_favics_unknown": {
+    "message": "не определено - кликни для обновления"
+  },
+  "settings.sync_data_size": {
+    "message": "Размер данных для синхронизации"
+  },
+  "settings.sync_data_size_unknown": {
+    "message": "не определено - кликни для обновления"
+  },
+  "settings.version": {
+    "message": "версия: "
+  },
+  "settings.found_bug_label": {
+    "message": "Баг или фича?"
+  },
+  "settings.repo_issue": {
+    "message": "Open issue"
+  }
+}
+

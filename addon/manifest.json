@@ -1,0 +1,104 @@
+{
+  "manifest_version": 2,
+  "applications": {
+    "gecko": {
+      "id": "{3c078156-979c-498b-8990-85f7987dd929}",
+      "strict_min_version": "60.0"
+    }
+  },
+  "author": "mbnuqw",
+  "name": "__MSG_ExtName__",
+  "version": "1.0.0",
+  "default_locale": "en",
+  "description": "__MSG_ExtDesc__",
+  "homepage_url": "https://github.com/mbnuqw/sidebery",
+  "icons": {
+    "48": "./assets/logo-ce32-48.png",
+    "96": "./assets/logo-ce32-96.png"
+  },
+
+  "permissions": [
+    "tabs",
+    "bookmarks",
+    "clipboardWrite",
+    "cookies",
+    "contextualIdentities",
+    "storage",
+    "unlimitedStorage",
+    "<all_urls>"
+  ],
+
+  "sidebar_action": {
+    "default_icon": {
+      "16": "./assets/logo-ce32-16.png",
+      "32": "./assets/logo-ce32-32.png"
+    },
+    "default_title": "Nav Center",
+    "default_panel": "./sidebar/sidebar.html"
+  },
+
+  "commands": {
+    "_execute_sidebar_action": {
+      "suggested_key": {
+        "default": "Ctrl+E",
+        "mac": "MacCtrl+E",
+        "windows": "F1"
+      },
+      "description": "open_sidebar_panel"
+    },
+    "next_panel": {
+      "suggested_key": {
+        "default": "Ctrl+Period",
+        "mac": "MacCtrl+Period"
+      },
+      "description": "next_panel"
+    },
+    "prev_panel": {
+      "suggested_key": {
+        "default": "Ctrl+Comma",
+        "mac": "MacCtrl+Comma"
+      },
+      "description": "prev_panel"
+    },
+    "new_tab_on_panel": {
+      "suggested_key": {
+        "default": "Ctrl+Space",
+        "mac": "MacCtrl+Space"
+      },
+      "description": "open_new_tab_in_curr_panel"
+    },
+    "rm_tab_on_panel": {
+      "suggested_key": {
+        "default": "Ctrl+Delete",
+        "mac": "MacCtrl+W"
+      },
+      "description": "close_tab"
+    }
+  },
+
+  "browser_action": {
+    "default_icon": {
+      "16": "./assets/logo-ce32-16.png",
+      "32": "./assets/logo-ce32-32.png"
+    },
+    "default_title": "__MSG_ActionTitle__",
+    "theme_icons": [
+      {
+        "light": "./assets/logo-ce-16.png",
+        "dark": "./assets/logo-32-16.png",
+        "size": 16
+      },
+      {
+        "light": "./assets/logo-ince-32.png",
+        "dark": "./assets/logo-in32-32.png",
+        "size": 32
+      }
+    ]
+  },
+
+  "background": {
+    "scripts": ["background.js"]
+  },
+
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self';"
+}

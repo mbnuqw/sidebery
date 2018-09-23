@@ -1,0 +1,309 @@
+@import './mixins'
+
+html
+  box(relative)
+  size(h: 100%)
+  // font-size: var(--g-font-size)
+
+body
+  box(relative)
+  size(100%, 100%)
+  text(smooth: on)
+
+  a
+    text-decoration: none
+
+#root.-xs
+  --g-font-size: 13px
+#root.-s
+  --g-font-size: 14px
+#root.-m
+  --g-font-size: 14.5px
+#root.-l
+  --g-font-size: 15px
+#root.-xl
+  --g-font-size: 16px
+
+.root
+  box(relative)
+  size(100%, 100%)
+  background-color: var(--bg)
+
+// --- Hidden elements ---
+.hidden
+.hidden-assets
+  box(absolute)
+  pos(0, 0)
+  size(0, 0)
+  overflow: hidden
+  opacity: 0
+
+// --- Button common styles ---
+.btn
+  box(relative)
+  text(s: rem(13))
+  padding: 2px 6px
+  margin: 0 8px 8px 0
+  white-space: nowrap
+  text-overflow: ellipsis
+  overflow: hidden
+  cursor: pointer
+
+  transition: background-color var(--d-fast), color var(--d-fast), box-shadow var(--d-fast)
+  color: var(--btn-fg)
+  background-color: var(--btn-bg)
+  border-radius: var(--btn-roundness)
+  box-shadow: var(--btn-shadow)
+  &:hover
+    background-color: var(--btn-bg-hover)
+    color: var(--btn-fg-hover)
+    box-shadow: var(--btn-shadow-hover)
+  &:active
+    transition: none
+    background-color: var(--btn-bg-active)
+    color: var(--btn-fg-active)
+    box-shadow: var(--btn-shadow-active)
+  &:last-of-type
+    margin: 0 auto 8px 0
+
+// --- Panel Menu common styles ---
+.Menu > h2
+  box(relative)
+  text(s: rem(18), w: 400)
+  color: var(--c-title-fg)
+  margin: 16px 12px 12px
+  padding: 0
+
+.Menu .field
+  box(relative)
+  margin: 0 16px 8px
+  cursor: pointer
+  &[opt-true]
+    .input > .opt
+      color: var(--settings-opt-active-fg)
+    .input > .opt.-true
+      color: var(--settings-opt-true-fg)
+    .input > .opt.-false
+      color: var(--settings-opt-inactive-fg)
+
+.Menu .input > .opt
+  box(relative)
+  text(s: rem(14))
+  margin: 0 7px 0 0
+  color: var(--settings-opt-inactive-fg)
+  transition: color var(--d-fast)
+  &.-false
+    color: var(--settings-opt-false-fg)
+  &[opt-true]
+    color: var(--settings-opt-active-fg)
+    &[opt-none]
+      color: var(--settings-opt-false-fg)
+
+.Menu .options
+  box(relative, flex)
+  flex-wrap: wrap
+  flex-direction: column
+  justify-content: flex-start
+  margin: 4px 0 0
+
+.Menu .options > .opt
+  box(relative)
+  text(s: rem(15))
+  color: var(--ctx-menu-fg)
+  padding: 4px 8px 4px 12px
+  cursor: pointer
+  transition: color var(--d-fast), background-color var(--d-fast)
+  &:hover
+    background-color: var(--ctx-menu-bg-hover)
+  &:active
+    transition: none
+  &.-warn
+    color: #ff613d
+    &:hover
+      background-color: #ff613d
+      color: #ffffff
+
+// --- Themes ---
+#root.-dark
+  --c-bg: #323232
+  --c-act-fg: #fff
+  --c-title-fg: #cecece
+  --c-label-fg: #cecece
+  --c-label-fg-hover: #fefefe
+  --c-label-fg-active: #aaa
+  --c-label-fg-inactive: #969696
+  --c-pale-fg: #646464
+  --gr-bg-fade: linear-gradient(90deg, #ffffff00, #323232)
+
+  --bg: #323232
+  --fg: #cecece
+
+  --btn-bg: #245484
+  --btn-bg-hover: #295b8f
+  --btn-bg-active: #205386
+  --btn-fg: #fafafa
+  --btn-fg-hover: #ffffff
+  --btn-fg-active: #f2f2f2
+  --btn-shadow: 0 1px 2px 0 #00000024, 0 0 0 1px #00000012
+  --btn-shadow-hover: 0 1px 2px 0 #00000032, 0 0 0 1px #00000024
+  --btn-shadow-active: 0 1px 2px 0 #00000000, 0 0 0 1px #00000012
+  --btn-roundness: 3px
+
+  --scroll-progress-h: 1px
+  --scroll-progress-bg: #37adef
+
+  --ctx-menu-bg: #242424
+  --ctx-menu-bg-hover: #484848
+  --ctx-menu-fg: #ffffff
+  --ctx-menu-shadow: 0 1px 16px 0 #00000032
+
+  --nav-btn-fg: #fff
+  --nav-btn-bg-focus: #484848
+  --nav-btn-opacity: .4
+  --nav-btn-opacity-hover: .7
+  --nav-btn-opacity-active: .4
+  --nav-btn-activated-opacity: 1
+  --nav-btn-activated-filter: drop-shadow(0 0 1px #00000056)
+
+  --fav-in: #12121224
+  --fav-out: #ffffff24
+
+  --tabs-fg: #aaa
+  --tabs-fg-hover: #cecece
+  --tabs-fg-active: #aaa
+  --tabs-actibated-bg: #242424af
+  --tabs-actibated-overflow-gradient: linear-gradient(90deg, #ffffff00, #242424)
+  --tabs-actibated-fg: #ffffff
+  --tabs-selected-bg: #245484
+  // --tabs-selected-bg: #37adef56
+  --tabs-selected-fg: #ffffff
+  --tabs-loading-fg: #47cfff
+
+  --bookmarks-folder-closed-fg: #cecece
+  --bookmarks-folder-closed-fg-hover: #afafaf
+  --bookmarks-folder-closed-fg-active: #787878
+  --bookmarks-folder-open-fg: #fefefe
+  --bookmarks-folder-open-hover-fg: #dadada
+  --bookmarks-folder-open-active-fg: #898989
+  --bookmarks-folder-empty-fg: #646464
+  --bookmarks-drag-gradient: linear-gradient(90deg, #242424, #32323200)
+
+  --bookmarks-editor-bg: #323232
+  --bookmarks-editor-name-fg: #fafafa
+  --bookmarks-editor-url-fg: #cecece
+
+  --settings-title-fg: #cecece
+  --settings-label-fg: #cecece
+  --settings-label-fg-hover: #ffffff
+  --settings-opt-inactive-fg: #565656
+  --settings-opt-active-fg: #64aaff
+  --settings-opt-false-fg: #df6464
+  --settings-opt-true-fg: #64df64
+  --settings-shortcut-fg: #cecece
+  --settings-shortcut-fg-focus: #37adff
+  --settings-shortcut-bg: #484848
+  --settings-shortcut-shadow: 0 0 0 1.2px #565656
+  --settings-shortcut-shadow-focus: 0 0 0 1.2px #37adff
+
+  --window-input-title-bg: #484848
+  --window-input-title-fg: #ffffff
+  --window-input-border: #121212
+
+#root.-light
+  --c-bg: #fafafa
+  --c-act-fg: #000
+  --c-title-fg: #242424
+  --c-label-fg: #424242
+  --c-label-fg-hover: #000000
+  --c-label-fg-active: #565656
+  --c-label-fg-inactive: #969696
+  --c-pale-fg: #969696
+  --gr-bg-fade: linear-gradient(90deg, #ffffff00, #fafafa)
+
+  --bg: #fafafa
+  --fg: #242424
+
+  // --btn-bg: #178dff
+  --btn-bg: #328def
+  // --btn-bg: #44a4f4
+  --btn-bg-hover: #3995ea
+  --btn-bg-active: #268aef
+  --btn-fg: #fafafa
+  --btn-fg-hover: #ffffff
+  --btn-fg-active: #f2f2f2
+  --btn-shadow: 0 1px 2px 0 #00000024, 0 0 0 1px #00000000
+  --btn-shadow-hover: 0 1px 2px 0 #00000032, 0 0 0 1px #00000000
+  --btn-shadow-active: 0 1px 2px 0 #00000000, 0 0 0 1px #00000012
+  --btn-roundness: 3px
+
+  --scroll-progress-h: 2px
+  --scroll-progress-bg: #178dff
+
+  --ctx-menu-bg: #ffffff
+  --ctx-menu-bg-hover: #cacaca
+  --ctx-menu-fg: #000000
+  --ctx-menu-shadow: 0 0 0 1px #00000016, 0 1px 16px 0 #00000032
+
+  --nav-btn-fg: #323232
+  --nav-btn-bg-focus: #ffffff
+  --nav-btn-opacity: .5
+  --nav-btn-opacity-hover: .8
+  --nav-btn-opacity-active: .6
+  --nav-btn-activated-opacity: 1
+  --nav-btn-activated-filter: none
+
+  --fav-in: #48484832
+  --fav-out: #00000048
+
+  --tabs-fg: #323232
+  --tabs-fg-hover: #565656
+  --tabs-fg-active: #565656
+  --tabs-actibated-bg: #cacacaaf
+  --tabs-actibated-overflow-gradient: linear-gradient(90deg, #ffffff00, #cecece)
+  --tabs-actibated-fg: #000000
+  --tabs-loading-fg: #177dff
+  --tabs-selected-bg: #44a4f4
+  --tabs-selected-fg: #ffffff
+
+  --bookmarks-folder-closed-fg: #646464
+  --bookmarks-folder-closed-fg-hover: #323232
+  --bookmarks-folder-closed-fg-active: #787878
+  --bookmarks-folder-open-fg: #121212
+  --bookmarks-folder-open-hover-fg: #242424
+  --bookmarks-folder-open-active-fg: #898989
+  --bookmarks-folder-empty-fg: #969696
+  --bookmarks-drag-gradient: linear-gradient(90deg, #cacaca, #fafafa00)
+
+  --bookmarks-editor-bg: #fafafa
+  --bookmarks-editor-name-fg: #121212
+  --bookmarks-editor-url-fg: #242424
+
+  --settings-title-fg: #242424
+  --settings-label-fg: #323232
+  --settings-label-fg-hover: #000000
+  --settings-opt-inactive-fg: #afafaf
+  --settings-opt-active-fg: #278dff
+  --settings-opt-false-fg: #ef5444
+  --settings-opt-true-fg: #14cf24
+  --settings-shortcut-fg: #484848
+  --settings-shortcut-fg-focus: #278dff
+  --settings-shortcut-bg: #ffffff
+  --settings-shortcut-shadow: 0 0 0 1.2px #aaaaaa
+  --settings-shortcut-shadow-focus: 0 0 0 1.2px #37adff
+
+  --window-input-title-bg: #ffffff
+  --window-input-title-fg: #000000
+  --window-input-border: #afafaf
+
+// --- Animation ---
+#root.-no-animate
+  --d-tick: 0s
+  --d-fast: 0s
+  --d-norm: 0s
+  --d-slow: 0s
+
+#root.-animate
+  --d-tick: .05s
+  --d-fast: .12s
+  --d-norm: .2s
+  --d-slow: .3s

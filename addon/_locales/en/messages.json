@@ -1,0 +1,355 @@
+{
+  "ExtName": {
+    "message": "Sidebery"
+  },
+
+  "ExtDesc": {
+    "message": "Manage your tabs and bookmarks in sidebar."
+  },
+
+  "ActionTitle": {
+    "message": "Open Sidebery"
+  },
+
+  "bookmarks_menu.title": {
+    "message": "Bookmarks"
+  },
+  "bookmarks_menu.reload_bookmarks_tree": {
+    "message": "Reload bookmarks tree"
+  },
+  "bookmarks_menu.collapse_all_folders": {
+    "message": "Collapse all folders"
+  },
+
+  "bookmarks_editor.create": {
+    "message": "Create"
+  },
+  "bookmarks_editor.save": {
+    "message": "Save"
+  },
+  "bookmarks_editor.cancel": {
+    "message": "Cancel"
+  },
+  "bookmarks_editor.name_bookmark_placeholder": {
+    "message": "Bookmark name..."
+  },
+  "bookmarks_editor.name_folder_placeholder": {
+    "message": "Folder name..."
+  },
+  "bookmarks_editor.url_placeholder": {
+    "message": "Url..."
+  },
+
+  "sidebar.nav_add_ctx_title": {
+    "message": "Create container"
+  },
+  "sidebar.nav_settings_title": {
+    "message": "Open settings"
+  },
+
+  "pinned_tabs_menu.title": {
+    "message": "Pinned"
+  },
+
+  "private_tabs_menu.title": {
+    "message": "Private"
+  },
+
+  "default_tabs_menu.title": {
+    "message": "Tabs"
+  },
+  "default_tabs_menu.close_all_tabs": {
+    "message": "Close all tabs"
+  },
+
+  "tabs_menu.name_placeholder": {
+    "message": "Container name..."
+  },
+  "tabs_menu.icon_label": {
+    "message": "Icon"
+  },
+  "tabs_menu.color_label": {
+    "message": "Color"
+  },
+  "tabs_menu.close_all_tabs": {
+    "message": "Close all tabs"
+  },
+  "tabs_menu.delete_container": {
+    "message": "Delete container"
+  },
+  "tabs_menu.sync_label": {
+    "message": "Sync"
+  },
+
+  "ctx_menu.open_in_new_window": {
+    "message": "Open in new window"
+  },
+  "ctx_menu.open_in_new_priv_window": {
+    "message": "Open in new private window"
+  },
+  "ctx_menu.open_in_default_panel": {
+    "message": "Open"
+  },
+  "ctx_menu.open_in_": {
+    "message": "Open in "
+  },
+  "ctx_menu._panel": {
+    "message": ""
+  },
+  "ctx_menu.create_bookmark": {
+    "message": "Create bookmark"
+  },
+  "ctx_menu.create_folder": {
+    "message": "Create folder"
+  },
+  "ctx_menu.create_separator": {
+    "message": "Create separator"
+  },
+  "ctx_menu.edit_bookmark": {
+    "message": "Edit"
+  },
+  "ctx_menu.delete_bookmark": {
+    "message": "Delete"
+  },
+
+  "ctx_menu.move_to_new_window": {
+    "message": "Move to New window"
+  },
+  "ctx_menu.move_to_another_window": {
+    "message": "Move to another window"
+  },
+  "ctx_menu.move_to_window_": {
+    "message": "Move to window..."
+  },
+  "ctx_menu.reopen_in_priv_window": {
+    "message": "Reopen in Private window"
+  },
+  "ctx_menu.reopen_in_default_panel": {
+    "message": "Reopen in Default container"
+  },
+  "ctx_menu.re_open_in_": {
+    "message": "Reopen in "
+  },
+  "ctx_menu.reopen_in_another_window": {
+    "message": "Reopen in another window"
+  },
+  "ctx_menu.reopen_in_window_": {
+    "message": "Reopen in window..."
+  },
+  "ctx_menu.pin": {
+    "message": "Pin"
+  },
+  "ctx_menu.unpin": {
+    "message": "Unpin"
+  },
+  "ctx_menu.mute": {
+    "message": "Mute"
+  },
+  "ctx_menu.unmute": {
+    "message": "Unmute"
+  },
+  "ctx_menu.clear_cookies": {
+    "message": "Clear cookies"
+  },
+  "ctx_menu.tab_close_down": {
+    "message": "Close all tabs underneath"
+  },
+  "ctx_menu.tab_reload": {
+    "message": "Reload"
+  },
+  "ctx_menu.tab_duplicate": {
+    "message": "Duplicate"
+  },
+
+  "window_input.cancel": {
+    "message": "Cancel"
+  },
+
+  "settings.general_title": {
+    "message": "General"
+  },
+  "settings.tabs_title": {
+    "message": "Tabs"
+  },
+  "settings.opt_true": {
+    "message": "on"
+  },
+  "settings.opt_false": {
+    "message": "off"
+  },
+  "settings.activate_last_tab_on_panel_switching": {
+    "message": "Activate last active tab on panels switching"
+  },
+  "settings.create_new_tab_on_empty_panel": {
+    "message": "Create new tab on switching to empty container"
+  },
+  "settings.skip_empty_panels": {
+    "message": "Skip empty panels on switching"
+  },
+  "settings.show_tab_rm_btn": {
+    "message": "Show close button on tab hover"
+  },
+  "settings.h_scroll_through_panels": {
+    "message": "Use horizontal scroll to switch panels"
+  },
+  "settings.scroll_through_tabs": {
+    "message": "Switch tabs with scroll wheel"
+  },
+  "settings.scroll_tabs_panel": {
+    "message": "container"
+  },
+  "settings.scroll_tabs_global": {
+    "message": "global"
+  },
+  "settings.scroll_tabs_none": {
+    "message": "none"
+  },
+  "settings.tab_long_left_click": {
+    "message": "Long left click on tab"
+  },
+  "settings.tab_long_left_click_close_down": {
+    "message": "close all underneath"
+  },
+  "settings.tab_long_left_click_reload": {
+    "message": "reload"
+  },
+  "settings.tab_long_left_click_duplicate": {
+    "message": "duplicate"
+  },
+  "settings.tab_long_left_click_pin": {
+    "message": "pin"
+  },
+  "settings.tab_long_left_click_mute": {
+    "message": "mute"
+  },
+  "settings.tab_long_left_click_clear_cookies": {
+    "message": "clear cookies"
+  },
+  "settings.tab_long_left_click_none": {
+    "message": "none"
+  },
+  "settings.tab_long_right_click": {
+    "message": "Long right click on tab"
+  },
+  "settings.tab_long_right_click_close_down": {
+    "message": "close all underneath"
+  },
+  "settings.tab_long_right_click_reload": {
+    "message": "reload"
+  },
+  "settings.tab_long_right_click_duplicate": {
+    "message": "duplicate"
+  },
+  "settings.tab_long_right_click_pin": {
+    "message": "pin"
+  },
+  "settings.tab_long_right_click_mute": {
+    "message": "mute"
+  },
+  "settings.tab_long_right_click_clear_cookies": {
+    "message": "clear cookies"
+  },
+  "settings.tab_long_right_click_none": {
+    "message": "none"
+  },
+
+  "settings.appearance_title": {
+    "message": "Appearance"
+  },
+  "settings.font_size": {
+    "message": "Font size"
+  },
+  "settings.font_size_xs": {
+    "message": "XS"
+  },
+  "settings.font_size_s": {
+    "message": "S"
+  },
+  "settings.font_size_m": {
+    "message": "M"
+  },
+  "settings.font_size_l": {
+    "message": "L"
+  },
+  "settings.font_size_xl": {
+    "message": "XL"
+  },
+  "settings.font_size_xxl": {
+    "message": "XXL"
+  },
+  "settings.switch_theme": {
+    "message": "Theme"
+  },
+  "settings.theme_dark": {
+    "message": "dark"
+  },
+  "settings.theme_light": {
+    "message": "light"
+  },
+  "settings.bg_noise": {
+    "message": "Frosted background"
+  },
+  "settings.animations": {
+    "message": "Animations"
+  },
+
+  "settings.kb_title": {
+    "message": "Keybindings"
+  },
+  "settings.open_sidebar_panel": {
+    "message": "Open sidebar panel"
+  },
+  "settings.next_panel": {
+    "message": "Next panel"
+  },
+  "settings.prev_panel": {
+    "message": "Previous panel"
+  },
+  "settings.open_new_tab_in_curr_panel": {
+    "message": "Open new tab in current container"
+  },
+  "settings.close_tab": {
+    "message": "Close tab and stay on current container"
+  },
+  "settings.reset_kb": {
+    "message": "Reset Keybindings"
+  },
+
+  "settings.experements_title": {
+    "message": "Experiments"
+  },
+  "settings.drag_tab_between_panels": {
+    "message": "Drag tab between panels"
+  },
+
+  "settings.help_title": {
+    "message": "Help"
+  },
+  "settings.cp_debug_info": {
+    "message": "Copy Debug Info"
+  },
+  "settings.cp_logs": {
+    "message": "Copy Logs"
+  },
+  "settings.cached_favics": {
+    "message": "Cached favicons size"
+  },
+  "settings.cached_favics_unknown": {
+    "message": "unknown - click to recalc"
+  },
+  "settings.sync_data_size": {
+    "message": "Sync data size"
+  },
+  "settings.sync_data_size_unknown": {
+    "message": "unknown - click to recalc"
+  },
+  "settings.version": {
+    "message": "version: "
+  },
+  "settings.found_bug_label": {
+    "message": "Found bug or want new feature?"
+  },
+  "settings.repo_issue": {
+    "message": "Open issue"
+  }
+}

@@ -1,0 +1,163 @@
+// --- func
+//  Returns calc() css function with 
+// summ of provided args
+// > a: arg #1
+// > b: arg #2
+// < "calc(p (+|-) a)"
+// ------------------------------------
+rel(a, b)
+  if b > 0
+    return "calc(%s + %s)" % (a abs(b))
+  return "calc(%s - %s)" % (a abs(b))
+
+
+// --- func
+//  Convert passed value to rem.
+// > px: length in px
+// > base: 1rem length in px (default
+//         font size)
+// < rem value
+// ------------------------------------
+rem(px, base = 16)
+  return (1 / base * px)rem
+
+
+// --- func
+//  Returns attribute selector for 
+// namespace.
+// > ns: namespace name
+// > scope: scope name
+// < attribute selector
+// ------------------------------------
+ns(ns, scope = null)
+  if scope
+    return '[%s="%s"]' % (ns scope)
+  else
+    return '[%s]' % ns
+
+
+// --- mixin
+//  Media query block with namespace.
+// > w: threshold width
+// > ns: namespace name
+// > scope: scope name
+// ------------------------------------
+w(w, ns = null, scope = null)
+  op = w < 0 ? max-width : min-width
+  
+  if ns
+    @media screen and ({op}: abs(w))
+      {ns(ns, scope)}
+        {block}
+  else
+    @media screen and ({op}: abs(w))
+      {block}
+
+
+// --- mixin
+//  Element's positional styles.
+// > a: position|display|box-sizing
+// > b: display|box-sizing
+// > c: box-sizing
+// ------------------------------------
+box(a = null, b = null, c = null)
+  $position-options = absolute, relative, static, fixed, sticky, inherit
+  $box-sizing-options = content-box, border-box
+  
+  if a in $position-options
+    position: a
+  else if a in $box-sizing-options
+    box-sizing: a
+  else if a != null
+    display: a
+
+  if b in $box-sizing-options
+    box-sizing: b
+  else if b != null
+    display: b
+  
+  if c in $box-sizing-options
+    box-sizing: c
+
+
+// --- mixin
+//  Element position
+// > t: top
+// > l: left
+// > r: right
+// > b: bottom
+// ------------------------------------
+pos(t = null, l = null, r = null, b = null)
+  top: t if t != null
+  left: l if l != null and l != same
+  left: t if l == same
+  right: r if r != null
+  bottom: b if b != null
+
+
+// --- mixin
+//  Element's size styles.
+// > w: width
+// > h: height
+// > min-w: min-width
+// > min-h: min-height
+// > max-w: max-width
+// > max-h: max-height
+// ------------------------------------
+size(w = null, h = null, min-w = null, min-h = null, max-w = null, max-h = null)
+  width: w if w != null
+  height: h if h != null and h != same
+  height: w if h == same
+  min-width: min-w if min-w != null
+  min-height: min-h if min-h != null
+  max-width: max-w if max-w != null
+  max-height: max-h if max-h != null
+
+
+// --- mixin
+//  Element's text and font styles.
+// > f: font-family
+// > s: font-size
+// > w: font-weight
+// > c: color
+// > h: line-height
+// > d: text-decoration
+// > ...: self-explanatory
+// ------------------------------------
+text(f = null, s = null, w = null, c = null, h = null, d = null,
+    style = null, spacing = null, smooth = null, transform = null, stretch = null)
+  font-family: f if f != null
+  font-size: s if s != null
+  font-weight: w if w != null
+  color: c if c != null
+  line-height: h if h != null
+  text-decoration: d if d != null
+  font-style: style if style != null
+  letter-spacing: spacing if spacing != null
+  text-transform: transform if transform != null
+  font-stretch: stretch if (stretch != null)
+
+  if smooth == on
+    -webkit-font-smoothing: antialiased
+    -moz-osx-font-smoothing: grayscale
+  else if smooth == off
+    -webkit-font-smoothing: subpixel-antialiased
+    -moz-osx-font-smoothing: auto
+
+
+// --- mixin
+//  Underline with gaps.
+// > color: underline's color
+// > bg: background color
+// > thickness: underline's thickness
+// > gap: gap between text and 
+//        underline
+// > pos: underline's offset from the 
+//        bottom
+// ------------------------------------
+underline(color, bg, pos = 0, thickness = 1px, gap = thickness)
+  background-image: linear-gradient(0deg, color, color)
+  background-position: 0 "calc(100% - %s)" % pos
+  background-repeat: repeat-x
+  background-size: 1px thickness
+  text-shadow: gap 0 0 bg, "-%s" % gap 0 0 bg, 0 "-%s" % gap 0 bg

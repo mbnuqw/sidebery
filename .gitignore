@@ -1,0 +1,10 @@
+.cache
+.vscode
+dist
+node_modules
+addon/sidebar
+addon/settings
+build/profile-ru/*
+!build/profile-ru/__preserve-dir
+build/profile-en/*
+!build/profile-en/__preserve-dir

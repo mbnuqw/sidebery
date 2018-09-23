@@ -1,0 +1,38 @@
+{
+  "env": {
+    "browser": true,
+    "es6": true
+  },
+  "extends": ["eslint:recommended", "plugin:vue/recommended"],
+  "parserOptions": {
+    "ecmaVersion": 2017,
+    "sourceType": "module"
+  },
+  "rules": {
+    "indent": ["error", 2],
+    "linebreak-style": ["error", "unix"],
+    "quotes": ["error", "single"],
+    "semi": ["error", "never"],
+    "vue/html-self-closing": "off",
+    "vue/require-default-prop": "off"
+  },
+  "globals": {
+    "process": true,
+    "browser": true,
+    "jest": true,
+    "expect": true,
+    "mockFn": true,
+    "config": true,
+    "afterEach": true,
+    "beforeEach": true,
+    "describe": true,
+    "it": true,
+    "test": true,
+    "runs": true,
+    "waitsFor": true,
+    "pit": true,
+    "require": true,
+    "xdescribe": true,
+    "xit": true
+  }
+}

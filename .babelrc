@@ -1,0 +1,14 @@
+{
+  "presets": [
+    [
+      "env",
+      {
+        "targets": {
+          "browsers": ["Firefox > 60"]
+        },
+        "useBuiltIns": true
+      }
+    ]
+  ],
+  "plugins": ["transform-object-rest-spread"]
+}
