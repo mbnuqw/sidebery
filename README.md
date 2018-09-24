@@ -69,13 +69,10 @@ create folder `chrome` with file `userChrome.css`:
 > Framework: Vue  
 > Bundler: Parcel  
 > Tests: Jest  
-> Locales: en, ru  
 
 Install dependencies: `npm install`  
-Start dev (locale en): `npm run dev`  
-Start dev (locale xx): `npm run dev.xx`  
+Start dev: `npm run dev`  
 Build to ./dist: `npm run build`  
-Bump version: `npm run up` (or `up.min` / `up.maj` for minor / major)  
 
 
 ## Licence
