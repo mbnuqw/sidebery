@@ -9,6 +9,7 @@
       .opt.-false {{t('settings.opt_false')}}
 
   .options
+    .opt(v-if="haveTabs", @click="dedupTabs") {{t('tabs_menu.dedup_tabs')}}
     .opt(v-if="haveTabs", @click="reloadAllTabs") {{t('tabs_menu.reload_all_tabs')}}
     .opt(v-if="haveTabs", @click="closeAllTabs") {{t('default_tabs_menu.close_all_tabs')}}
 </template>
@@ -44,6 +45,18 @@ export default {
       else this.$root.syncPanels.push(id)
       this.$root.resyncPanels()
       this.$root.saveState()
+    },
+
+    dedupTabs() {
+      if (!this.conf.tabs || this.conf.tabs.length === 0) return
+      const toClose = []
+      this.conf.tabs.map((t, i) => {
+        for (let j = i + 1; j < this.conf.tabs.length; j++) {
+          if (this.conf.tabs[j].url === t.url) toClose.push(this.conf.tabs[j].id)
+        }
+      })
+      browser.tabs.remove(toClose)
+      this.$emit('close')
     },
 
     reloadAllTabs() {

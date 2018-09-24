@@ -71,6 +71,9 @@
   "tabs_menu.color_label": {
     "message": "Color"
   },
+  "tabs_menu.dedup_tabs": {
+    "message": "Close tabs duplicates"
+  },
   "tabs_menu.close_all_tabs": {
     "message": "Close all tabs"
   },

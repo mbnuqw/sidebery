@@ -71,6 +71,9 @@
   "tabs_menu.color_label": {
     "message": "Цвет"
   },
+  "tabs_menu.dedup_tabs": {
+    "message": "Закрыть дубликаты вкладок"
+  },
   "tabs_menu.close_all_tabs": {
     "message": "Закрыть все табы"
   },
