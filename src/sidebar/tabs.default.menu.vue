@@ -9,7 +9,8 @@
       .opt.-false {{t('settings.opt_false')}}
 
   .options
-    .opt(v-if="conf.tabs.length > 0", @click="closeAllTabs") {{t('default_tabs_menu.close_all_tabs')}}
+    .opt(v-if="haveTabs", @click="reloadAllTabs") {{t('tabs_menu.reload_all_tabs')}}
+    .opt(v-if="haveTabs", @click="closeAllTabs") {{t('default_tabs_menu.close_all_tabs')}}
 </template>
 
 
@@ -28,6 +29,11 @@ export default {
       if (this.conf.pinned) return !!this.$root.syncPanels.find(p => p === 'pinned')
       else return !!this.$root.syncPanels.find(p => p === this.$root.defaultCtx)
     },
+
+    haveTabs() {
+      if (!this.conf.tabs) return false
+      return this.conf.tabs.length > 0
+    },
   },
 
   methods: {
@@ -38,6 +44,12 @@ export default {
       else this.$root.syncPanels.push(id)
       this.$root.resyncPanels()
       this.$root.saveState()
+    },
+
+    reloadAllTabs() {
+      if (!this.conf.tabs || this.conf.tabs.length === 0) return
+      this.conf.tabs.map(t => browser.tabs.reload(t.id))
+      this.$emit('close')
     },
 
     closeAllTabs() {

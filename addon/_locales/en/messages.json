@@ -74,6 +74,9 @@
   "tabs_menu.close_all_tabs": {
     "message": "Close all tabs"
   },
+  "tabs_menu.reload_all_tabs": {
+    "message": "Reload all tabs"
+  },
   "tabs_menu.delete_container": {
     "message": "Delete container"
   },

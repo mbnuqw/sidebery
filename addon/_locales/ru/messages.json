@@ -74,6 +74,9 @@
   "tabs_menu.close_all_tabs": {
     "message": "Закрыть все табы"
   },
+  "tabs_menu.reload_all_tabs": {
+    "message": "Перезагрузить все табы"
+  },
   "tabs_menu.delete_container": {
     "message": "Удалить контейнер"
   },
