@@ -24,27 +24,27 @@
   "author": "mbnuqw",
   "license": "MIT",
   "devDependencies": {
-    "@vue/component-compiler-utils": "2.1.0",
+    "@vue/component-compiler-utils": "2.2.0",
     "babel-core": "6.26.3",
-    "babel-jest": "^23.6.0",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-jest": "23.6.0",
+    "babel-plugin-transform-object-rest-spread": "6.26.0",
     "babel-polyfill": "6.26.0",
     "babel-preset-env": "1.7.0",
-    "eslint": "^5.5.0",
-    "eslint-plugin-vue": "^4.7.1",
-    "jest": "^23.6.0",
-    "jest-vue-preprocessor": "^1.4.0",
+    "eslint": "5.6.0",
+    "eslint-plugin-vue": "4.7.1",
+    "jest": "23.6.0",
+    "jest-vue-preprocessor": "1.4.0",
     "parcel-bundler": "1.9.7",
     "pug": "2.0.3",
-    "regenerator-runtime": "0.12.0",
+    "regenerator-runtime": "0.12.1",
     "stylus": "0.54.5",
+    "vue-hot-reload-api": "2.3.1",
     "vue-server-renderer": "2.5.17",
-    "vue-template-compiler": "^2.5.17",
-    "web-ext": "2.7.0"
+    "vue-template-compiler": "2.5.17",
+    "web-ext": "2.9.1"
   },
   "dependencies": {
-    "vue": "2.5.17",
-    "vue-hot-reload-api": "2.3.0"
+    "vue": "2.5.17"
   },
   "prettier": {
     "semi": false,
@@ -57,7 +57,9 @@
   "alias": {
     "vue": "./node_modules/vue/dist/vue.esm.js"
   },
-  "browserslist": ["Firefox > 60"],
+  "browserslist": [
+    "Firefox > 60"
+  ],
   "jest": {
     "testMatch": [
       "**/src/libs/*.test.js",
