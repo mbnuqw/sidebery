@@ -357,5 +357,14 @@
   },
   "settings.repo_issue": {
     "message": "Open issue"
+  },
+  "settings.reset_settings": {
+    "message": "Reset settings to defaults"
+  },
+  "settings.rm_favi_cache": {
+    "message": "Remove cached favicons"
+  },
+  "settings.rm_sync_data": {
+    "message": "Remove sync data"
   }
 }

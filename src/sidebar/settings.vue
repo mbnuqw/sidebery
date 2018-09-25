@@ -122,6 +122,11 @@
         .label {{t('settings.sync_data_size')}}
         .info {{syncDataSize}}
 
+      .box
+        .btn.-warn(@click="$root.resetSettings") {{t('settings.reset_settings')}}
+        .btn.-warn(@click="$root.clearFaviCache") {{t('settings.rm_favi_cache')}}
+        .btn.-warn(@click="$root.clearSyncData") {{t('settings.rm_sync_data')}}
+
       a.github(tabindex="-1", href="https://github.com/mbnuqw/sidebery")
         svg: use(xlink:href="#icon_github")
 </template>

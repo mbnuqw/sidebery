@@ -5,8 +5,22 @@ import Utils from '../libs/utils'
 import Logs from '../libs/logs'
 import Dict from '../mixins/dict'
 
-let DEFAULT_CTX = 'firefox-default'
-let PRIVATE_CTX = 'firefox-private'
+const DEFAULT_CTX = 'firefox-default'
+const PRIVATE_CTX = 'firefox-private'
+const DEFAULT_SETTINGS = {
+  activateLastTabOnPanelSwitching: true,
+  createNewTabOnEmptyPanel: false,
+  skipEmptyPanels: false,
+  showTabRmBtn: true,
+  hScrollThroughPanels: false,
+  scrollThroughTabs: 'none',
+  tabLongLeftClick: 'none',
+  tabLongRightClick: 'none',
+  fontSize: 'm',
+  theme: 'dark',
+  bgNoise: true,
+  animations: true,
+}
 
 Vue.mixin(Dict)
 
@@ -45,18 +59,18 @@ new Vue({
 
       // --- Settings
       settingsLoaded: false,
-      activateLastTabOnPanelSwitching: true,
-      createNewTabOnEmptyPanel: false,
-      skipEmptyPanels: false,
-      showTabRmBtn: true,
-      hScrollThroughPanels: false,
-      scrollThroughTabs: 'none',
-      tabLongLeftClick: 'none',
-      tabLongRightClick: 'none',
-      fontSize: 'm',
-      theme: 'dark',
-      bgNoise: true,
-      animations: true,
+      activateLastTabOnPanelSwitching: DEFAULT_SETTINGS.activateLastTabOnPanelSwitching,
+      createNewTabOnEmptyPanel: DEFAULT_SETTINGS.createNewTabOnEmptyPanel,
+      skipEmptyPanels: DEFAULT_SETTINGS.skipEmptyPanels,
+      showTabRmBtn: DEFAULT_SETTINGS.showTabRmBtn,
+      hScrollThroughPanels: DEFAULT_SETTINGS.hScrollThroughPanels,
+      scrollThroughTabs: DEFAULT_SETTINGS.scrollThroughTabs,
+      tabLongLeftClick: DEFAULT_SETTINGS.tabLongLeftClick,
+      tabLongRightClick: DEFAULT_SETTINGS.tabLongRightClick,
+      fontSize: DEFAULT_SETTINGS.fontSize,
+      theme: DEFAULT_SETTINGS.theme,
+      bgNoise: DEFAULT_SETTINGS.bgNoise,
+      animations: DEFAULT_SETTINGS.animations,
       keybindings: [],
       dragTabToPanels: false,
 
@@ -593,6 +607,46 @@ new Vue({
           })
         })
       })
+    },
+
+    /**
+     * Reset settings to defaults
+     * and store them to local storage
+     */
+    resetSettings() {
+      this.activateLastTabOnPanelSwitching = DEFAULT_SETTINGS.activateLastTabOnPanelSwitching
+      this.createNewTabOnEmptyPanel = DEFAULT_SETTINGS.createNewTabOnEmptyPanel
+      this.skipEmptyPanels = DEFAULT_SETTINGS.skipEmptyPanels
+      this.showTabRmBtn = DEFAULT_SETTINGS.showTabRmBtn
+      this.hScrollThroughPanels = DEFAULT_SETTINGS.hScrollThroughPanels
+      this.scrollThroughTabs = DEFAULT_SETTINGS.scrollThroughTabs
+      this.tabLongLeftClick = DEFAULT_SETTINGS.tabLongLeftClick
+      this.tabLongRightClick = DEFAULT_SETTINGS.tabLongRightClick
+      this.fontSize = DEFAULT_SETTINGS.fontSize
+      this.theme = DEFAULT_SETTINGS.theme
+      this.bgNoise = DEFAULT_SETTINGS.bgNoise
+      this.animations = DEFAULT_SETTINGS.animations
+
+      this.saveSettings()
+    },
+
+    /**
+     * Remove all saved favicons
+     */
+    clearFaviCache() {
+      this.favicons = {}
+      browser.storage.local.set({ favicons: '{}' })
+    },
+
+    /**
+     * Clear sync data
+     */
+    clearSyncData() {
+      const syncPanelsData = {
+        time: ~~(Date.now() / 1000),
+        panels: [],
+      }
+      browser.storage.sync.set({ [this.localID]: JSON.stringify(syncPanelsData) })
     },
   },
 })
