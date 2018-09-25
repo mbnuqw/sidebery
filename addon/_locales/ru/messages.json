@@ -71,8 +71,14 @@
   "tabs_menu.color_label": {
     "message": "Цвет"
   },
+  "tabs_menu.dedup_tabs": {
+    "message": "Закрыть дубликаты вкладок"
+  },
   "tabs_menu.close_all_tabs": {
     "message": "Закрыть все табы"
+  },
+  "tabs_menu.reload_all_tabs": {
+    "message": "Перезагрузить все табы"
   },
   "tabs_menu.delete_container": {
     "message": "Удалить контейнер"
@@ -351,6 +357,15 @@
   },
   "settings.repo_issue": {
     "message": "Open issue"
+  },
+  "settings.reset_settings": {
+    "message": "Сбросить настройки"
+  },
+  "settings.rm_favi_cache": {
+    "message": "Удалить кэш иконок"
+  },
+  "settings.rm_sync_data": {
+    "message": "Удалить данные синхронизации"
   }
 }
 

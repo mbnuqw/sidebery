@@ -71,8 +71,14 @@
   "tabs_menu.color_label": {
     "message": "Color"
   },
+  "tabs_menu.dedup_tabs": {
+    "message": "Close tabs duplicates"
+  },
   "tabs_menu.close_all_tabs": {
     "message": "Close all tabs"
+  },
+  "tabs_menu.reload_all_tabs": {
+    "message": "Reload all tabs"
   },
   "tabs_menu.delete_container": {
     "message": "Delete container"
@@ -351,5 +357,14 @@
   },
   "settings.repo_issue": {
     "message": "Open issue"
+  },
+  "settings.reset_settings": {
+    "message": "Reset settings to defaults"
+  },
+  "settings.rm_favi_cache": {
+    "message": "Remove cached favicons"
+  },
+  "settings.rm_sync_data": {
+    "message": "Remove sync data"
   }
 }

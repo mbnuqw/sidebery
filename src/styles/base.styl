@@ -54,6 +54,12 @@ body
   background-color: var(--btn-bg)
   border-radius: var(--btn-roundness)
   box-shadow: var(--btn-shadow)
+  &.-warn
+    background-color: var(--btn-warn-bg)
+    &:hover
+      background-color: var(--btn-warn-bg-hover)
+    &:active
+      background-color: var(--btn-warn-bg-active)
   &:hover
     background-color: var(--btn-bg-hover)
     color: var(--btn-fg-hover)
@@ -141,6 +147,9 @@ body
   --btn-bg: #245484
   --btn-bg-hover: #295b8f
   --btn-bg-active: #205386
+  --btn-warn-bg: #a5361a
+  --btn-warn-bg-hover: #b23c1e
+  --btn-warn-bg-active: #a5361a
   --btn-fg: #fafafa
   --btn-fg-hover: #ffffff
   --btn-fg-active: #f2f2f2
@@ -228,6 +237,9 @@ body
   // --btn-bg: #44a4f4
   --btn-bg-hover: #3995ea
   --btn-bg-active: #268aef
+  --btn-warn-bg: #ff5538
+  --btn-warn-bg-hover: #ff613d
+  --btn-warn-bg-active: #ff5538
   --btn-fg: #fafafa
   --btn-fg-hover: #ffffff
   --btn-fg-active: #f2f2f2

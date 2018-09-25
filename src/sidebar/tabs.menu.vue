@@ -29,6 +29,8 @@
       .opt.-false {{t('settings.opt_false')}}
 
   .options
+    .opt(v-if="haveTabs", @click="dedupTabs") {{t('tabs_menu.dedup_tabs')}}
+    .opt(v-if="haveTabs", @click="reloadAllTabs") {{t('tabs_menu.reload_all_tabs')}}
     .opt(v-if="haveTabs", @click="closeAllTabs") {{t('tabs_menu.close_all_tabs')}}
     .opt.-warn(v-if="id", @click="remove") {{t('tabs_menu.delete_container')}}
 </template>
@@ -161,6 +163,24 @@ export default {
         icon: this.iconOpts[this.icon],
       }
       return await browser.contextualIdentities.create(details)
+    },
+
+    dedupTabs() {
+      if (!this.conf.tabs || this.conf.tabs.length === 0) return
+      const toClose = []
+      this.conf.tabs.map((t, i) => {
+        for (let j = i + 1; j < this.conf.tabs.length; j++) {
+          if (this.conf.tabs[j].url === t.url) toClose.push(this.conf.tabs[j].id)
+        }
+      })
+      browser.tabs.remove(toClose)
+      this.$emit('close')
+    },
+
+    reloadAllTabs() {
+      if (!this.conf.tabs || this.conf.tabs.length === 0) return
+      this.conf.tabs.map(t => browser.tabs.reload(t.id))
+      this.$emit('close')
     },
 
     closeAllTabs() {
