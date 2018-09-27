@@ -263,7 +263,9 @@ export default {
     },
 
     calcFaviCache() {
-      this.faviCache = Utils.StrSize(JSON.stringify(this.$root.favicons))
+      const size = Utils.StrSize(JSON.stringify(this.$root.favicons))
+      const count = Object.keys(this.$root.favicons).length
+      this.faviCache = count + ': ' + size
     },
 
     async calcSyncDataSize() {

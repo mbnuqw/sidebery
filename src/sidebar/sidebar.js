@@ -275,7 +275,7 @@ new Vue({
       let ans = await browser.storage.local.get('favicons')
       if (!ans.favicons) return
       try {
-        this.favicons = JSON.parse(ans['favicons']) || {}
+        this.favicons = JSON.parse(ans.favicons) || {}
       } catch (err) {
         this.favicons = {}
       }
