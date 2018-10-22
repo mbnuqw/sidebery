@@ -14,6 +14,7 @@ const DEFAULT_SETTINGS = {
   showTabRmBtn: true,
   hScrollThroughPanels: false,
   scrollThroughTabs: 'none',
+  tabDoubleClick: 'none',
   tabLongLeftClick: 'none',
   tabLongRightClick: 'none',
   fontSize: 'm',
@@ -52,6 +53,7 @@ new Vue({
 
       // --- Settings options
       scrollThroughTabsOpts: ['panel', 'global', 'none'],
+      tabDoubleClickOpts: ['reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'none'],
       tabLongLeftClickOpts: ['close_down', 'reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'none'],
       tabLongRightClickOpts: ['close_down', 'reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'none'],
       fontSizeOpts: ['xs', 's', 'm', 'l', 'xl', 'xxl'],
@@ -65,6 +67,7 @@ new Vue({
       showTabRmBtn: DEFAULT_SETTINGS.showTabRmBtn,
       hScrollThroughPanels: DEFAULT_SETTINGS.hScrollThroughPanels,
       scrollThroughTabs: DEFAULT_SETTINGS.scrollThroughTabs,
+      tabDoubleClick: DEFAULT_SETTINGS.tabDoubleClick,
       tabLongLeftClick: DEFAULT_SETTINGS.tabLongLeftClick,
       tabLongRightClick: DEFAULT_SETTINGS.tabLongRightClick,
       fontSize: DEFAULT_SETTINGS.fontSize,
@@ -224,6 +227,7 @@ new Vue({
           showTabRmBtn: this.showTabRmBtn,
           hScrollThroughPanels: this.hScrollThroughPanels,
           scrollThroughTabs: this.scrollThroughTabs,
+          tabDoubleClick: this.tabDoubleClick,
           tabLongLeftClick: this.tabLongLeftClick,
           tabLongRightClick: this.tabLongRightClick,
           fontSize: this.fontSize,
@@ -345,6 +349,7 @@ new Vue({
         showTabRmBtn: this.showTabRmBtn,
         hScrollThroughPanels: this.hScrollThroughPanels,
         scrollThroughTabs: this.scrollThroughTabs,
+        tabDoubleClick: this.tabDoubleClick,
         tabLongLeftClick: this.tabLongLeftClick,
         tabLongRightClick: this.tabLongRightClick,
         fontSize: this.fontSize,
@@ -623,6 +628,7 @@ new Vue({
       this.showTabRmBtn = DEFAULT_SETTINGS.showTabRmBtn
       this.hScrollThroughPanels = DEFAULT_SETTINGS.hScrollThroughPanels
       this.scrollThroughTabs = DEFAULT_SETTINGS.scrollThroughTabs
+      this.tabDoubleClick = DEFAULT_SETTINGS.tabDoubleClick
       this.tabLongLeftClick = DEFAULT_SETTINGS.tabLongLeftClick
       this.tabLongRightClick = DEFAULT_SETTINGS.tabLongRightClick
       this.fontSize = DEFAULT_SETTINGS.fontSize

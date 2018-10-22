@@ -11,7 +11,8 @@
     @contextmenu.prevent.stop=""
     @mousedown="onMD"
     @mouseup.prevent="onMU"
-    @mouseleave="onML")
+    @mouseleave="onML"
+    @dblclick="onDBL")
   .audio(@click="mute")
     svg.-loud: use(xlink:href="#icon_loud")
     svg.-mute: use(xlink:href="#icon_mute")
@@ -69,6 +70,21 @@ export default {
   },
 
   methods: {
+    /**
+     * Double click handler
+     */
+    onDBL() {
+      if (this.$root.tabDoubleClick === 'close_down') this.closeDown()
+      if (this.$root.tabDoubleClick === 'reload') this.reload()
+      if (this.$root.tabDoubleClick === 'duplicate') this.duplicate()
+      if (this.$root.tabDoubleClick === 'pin') this.pin()
+      if (this.$root.tabDoubleClick === 'mute') this.mute()
+      if (this.$root.tabDoubleClick === 'clear_cookies') this.clearCookies()
+    },
+
+    /**
+     * Mousedown handler
+     */
     onMD(e) {
       if (e.button === 1) {
         e.stopPropagation()
