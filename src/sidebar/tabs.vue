@@ -353,6 +353,7 @@ export default {
 .TabsPanel .container
   box(relative)
   size(100%, same)
+  padding: 0 0 64px
   transition: transform var(--d-fast), opacity var(--d-fast)
   &[ctx-menu] .tab:not([data-menu])
     opacity: .4
