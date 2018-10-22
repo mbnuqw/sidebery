@@ -37,20 +37,27 @@
             v-for="o in $root.scrollThroughTabsOpts"
             :opt-none="o === 'none'"
             :opt-true="o === $root.scrollThroughTabs") {{t('settings.scroll_tabs_' + o)}}
+      .field(@mousedown="switchOpt($event, 'tabDoubleClick')")
+        .label {{t('settings.tab_double_click')}}
+        .input
+          .opt(
+            v-for="o in $root.tabDoubleClickOpts"
+            :opt-none="o === 'none'"
+            :opt-true="o === $root.tabDoubleClick") {{t('settings.tab_action_' + o)}}
       .field(@mousedown="switchOpt($event, 'tabLongLeftClick')")
         .label {{t('settings.tab_long_left_click')}}
         .input
           .opt(
             v-for="o in $root.tabLongLeftClickOpts"
             :opt-none="o === 'none'"
-            :opt-true="o === $root.tabLongLeftClick") {{t('settings.tab_long_left_click_' + o)}}
+            :opt-true="o === $root.tabLongLeftClick") {{t('settings.tab_action_' + o)}}
       .field(@mousedown="switchOpt($event, 'tabLongRightClick')")
         .label {{t('settings.tab_long_right_click')}}
         .input
           .opt(
             v-for="o in $root.tabLongRightClickOpts"
             :opt-none="o === 'none'"
-            :opt-true="o === $root.tabLongRightClick") {{t('settings.tab_long_right_click_' + o)}}
+            :opt-true="o === $root.tabLongRightClick") {{t('settings.tab_action_' + o)}}
 
     section
       h2 {{t('settings.appearance_title')}}
@@ -263,7 +270,9 @@ export default {
     },
 
     calcFaviCache() {
-      this.faviCache = Utils.StrSize(JSON.stringify(this.$root.favicons))
+      const size = Utils.StrSize(JSON.stringify(this.$root.favicons))
+      const count = Object.keys(this.$root.favicons).length
+      this.faviCache = count + ': ' + size
     },
 
     async calcSyncDataSize() {

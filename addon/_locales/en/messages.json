@@ -210,52 +210,35 @@
   "settings.scroll_tabs_none": {
     "message": "none"
   },
+  "settings.tab_double_click": {
+    "message": "Double click on tab"
+  },
   "settings.tab_long_left_click": {
     "message": "Long left click on tab"
-  },
-  "settings.tab_long_left_click_close_down": {
-    "message": "close all underneath"
-  },
-  "settings.tab_long_left_click_reload": {
-    "message": "reload"
-  },
-  "settings.tab_long_left_click_duplicate": {
-    "message": "duplicate"
-  },
-  "settings.tab_long_left_click_pin": {
-    "message": "pin"
-  },
-  "settings.tab_long_left_click_mute": {
-    "message": "mute"
-  },
-  "settings.tab_long_left_click_clear_cookies": {
-    "message": "clear cookies"
-  },
-  "settings.tab_long_left_click_none": {
-    "message": "none"
   },
   "settings.tab_long_right_click": {
     "message": "Long right click on tab"
   },
-  "settings.tab_long_right_click_close_down": {
+
+  "settings.tab_action_close_down": {
     "message": "close all underneath"
   },
-  "settings.tab_long_right_click_reload": {
+  "settings.tab_action_reload": {
     "message": "reload"
   },
-  "settings.tab_long_right_click_duplicate": {
+  "settings.tab_action_duplicate": {
     "message": "duplicate"
   },
-  "settings.tab_long_right_click_pin": {
+  "settings.tab_action_pin": {
     "message": "pin"
   },
-  "settings.tab_long_right_click_mute": {
+  "settings.tab_action_mute": {
     "message": "mute"
   },
-  "settings.tab_long_right_click_clear_cookies": {
+  "settings.tab_action_clear_cookies": {
     "message": "clear cookies"
   },
-  "settings.tab_long_right_click_none": {
+  "settings.tab_action_none": {
     "message": "none"
   },
 

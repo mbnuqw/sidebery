@@ -376,15 +376,19 @@ export default {
 
       for (let item of e.dataTransfer.items) {
         if (item.kind !== 'string') return
-
+        
         if (item.type === 'text/uri-list') {
           item.getAsString(s => {
             if (s.indexOf('http') === -1) return
             const panel = this.panels[this.panel]
             if (panel && panel.cookieStoreId) {
-              browser.tabs.create({ url: s , cookieStoreId: panel.cookieStoreId})
+              browser.tabs.create({
+                url: s,
+                cookieStoreId: panel.cookieStoreId,
+                windowId: this.$root.windowId,
+              })
             } else {
-              browser.tabs.create({ url: s })
+              browser.tabs.create({ url: s, windowId: this.$root.windowId })
             }
           })
         }
@@ -392,8 +396,12 @@ export default {
         if (item.type === 'text/x-moz-text-internal') {
           item.getAsString(async s => {
             if (e.dataTransfer.dropEffect === 'move') {
-              const tabs = await browser.tabs.query({ url: s, currentWindow: false, lastFocusedWindow: true })
-              if (tabs.length !== 1) return
+              const tabs = await browser.tabs.query({
+                url: s,
+                currentWindow: false,
+                lastFocusedWindow: true,
+              })
+              if (tabs.length === 0) return
               if (tabs[0].url.indexOf('http') === -1) return
               browser.tabs.move(tabs[0].id, { windowId: this.$root.windowId, index: -1 })
             }
@@ -402,6 +410,7 @@ export default {
               browser.tabs.create({ windowId: this.$root.windowId, url: s })
             }
           })
+          break
         }
       }
     },
