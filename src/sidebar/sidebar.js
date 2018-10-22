@@ -289,6 +289,9 @@ new Vue({
       Logs.D(`Set favicon for '${hostname}'`)
       Vue.set(this.favicons, hostname, icon)
 
+      // Do not cache favicon if it too big
+      if (icon.length > 100000) return
+
       // Do not cache favicon in private mode
       if (this.private) return
 
