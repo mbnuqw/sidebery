@@ -9,7 +9,7 @@
     :close-btn="$root.showTabRmBtn"
     :title="tooltip"
     @contextmenu.prevent.stop=""
-    @mousedown.prevent="onMD"
+    @mousedown="onMD"
     @mouseup.prevent="onMU"
     @mouseleave="onML")
   .audio(@click="mute")
@@ -21,7 +21,7 @@
   .ctx(v-if="tab.ctxIcon", :style="{background: tab.ctxColor}")
   .close(v-if="$root.showTabRmBtn", @mousedown.stop="close", @mouseup.stop="")
     svg: use(xlink:href="#icon_remove")
-  .t-box
+  .t-box(draggable="true", v-on:dragstart="onDragStart")
     .title {{tab.title}}
     .loading
       svg.-a: use(xlink:href="#icon_load")
@@ -72,10 +72,15 @@ export default {
     onMD(e) {
       if (e.button === 1) {
         e.stopPropagation()
+        e.preventDefault()
         this.close()
       }
 
       if (e.button === 0) {
+        // Double-click-drag
+        if (this.mclickTimeout) return
+
+        e.preventDefault()
         this.$emit('md', e, this)
         this.hodorL = setTimeout(() => {
           if (this.$root.tabLongLeftClick === 'close_down') this.closeDown()
@@ -89,6 +94,7 @@ export default {
       }
 
       if (e.button === 2) {
+        e.preventDefault()
         this.$emit('mdr', e, this)
         this.hodorR = setTimeout(() => {
           if (this.$root.tabLongRightClick === 'close_down') this.closeDown()
@@ -112,11 +118,26 @@ export default {
           this.hodorR = clearTimeout(this.hodorR)
         }
       }
+
+      // Set timeout for double-click-drag event
+      this.mclickTimeout = setTimeout(() => {
+        this.mclickTimeout = null
+      }, 200)
     },
 
     onML() {
       if (this.hodorL) this.hodorL = clearTimeout(this.hodorL)
       if (this.hodorR) this.hodorR = clearTimeout(this.hodorR)
+    },
+
+    /**
+     * Handle dragstart event.
+     */
+    onDragStart(e) {
+      e.dataTransfer.setData('text/x-moz-text-internal', this.tab.url)
+      e.dataTransfer.setData('text/uri-list', this.tab.url)
+      e.dataTransfer.setData('text/plain', this.tab.url)
+      e.dataTransfer.effectAllowed = 'move'
     },
 
     /**
