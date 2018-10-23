@@ -95,7 +95,9 @@ export default {
         this.$emit('expand', this.node)
         setTimeout(() => this.recalcScroll(), 120)
       }
-      if (this.node.type === 'bookmark') this.openUrl(false, true)
+      if (this.node.type === 'bookmark') {
+        this.openUrl(this.$root.openBookmarkNewTab, true)
+      }
     },
 
     onFolderExpand(node) {

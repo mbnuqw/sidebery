@@ -17,6 +17,7 @@ const DEFAULT_SETTINGS = {
   tabDoubleClick: 'none',
   tabLongLeftClick: 'none',
   tabLongRightClick: 'none',
+  openBookmarkNewTab: false,
   fontSize: 'm',
   theme: 'dark',
   bgNoise: true,
@@ -70,6 +71,7 @@ new Vue({
       tabDoubleClick: DEFAULT_SETTINGS.tabDoubleClick,
       tabLongLeftClick: DEFAULT_SETTINGS.tabLongLeftClick,
       tabLongRightClick: DEFAULT_SETTINGS.tabLongRightClick,
+      openBookmarkNewTab: DEFAULT_SETTINGS.openBookmarkNewTab,
       fontSize: DEFAULT_SETTINGS.fontSize,
       theme: DEFAULT_SETTINGS.theme,
       bgNoise: DEFAULT_SETTINGS.bgNoise,
@@ -230,6 +232,7 @@ new Vue({
           tabDoubleClick: this.tabDoubleClick,
           tabLongLeftClick: this.tabLongLeftClick,
           tabLongRightClick: this.tabLongRightClick,
+          openBookmarkNewTab: this.openBookmarkNewTab,
           fontSize: this.fontSize,
           theme: this.theme,
           bgNoise: this.bgNoise,
@@ -352,6 +355,7 @@ new Vue({
         tabDoubleClick: this.tabDoubleClick,
         tabLongLeftClick: this.tabLongLeftClick,
         tabLongRightClick: this.tabLongRightClick,
+        openBookmarkNewTab: this.openBookmarkNewTab,
         fontSize: this.fontSize,
         theme: this.theme,
         bgNoise: this.bgNoise,
@@ -631,6 +635,7 @@ new Vue({
       this.tabDoubleClick = DEFAULT_SETTINGS.tabDoubleClick
       this.tabLongLeftClick = DEFAULT_SETTINGS.tabLongLeftClick
       this.tabLongRightClick = DEFAULT_SETTINGS.tabLongRightClick
+      this.openBookmarkNewTab = DEFAULT_SETTINGS.openBookmarkNewTab,
       this.fontSize = DEFAULT_SETTINGS.fontSize
       this.theme = DEFAULT_SETTINGS.theme
       this.bgNoise = DEFAULT_SETTINGS.bgNoise

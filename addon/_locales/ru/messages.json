@@ -242,6 +242,10 @@
     "message": "выкл"
   },
 
+  "settings.open_bookmark_new_tab": {
+    "message": "Открывать закладку в новом табе"
+  },
+
   "settings.appearance_title": {
     "message": "Вид"
   },

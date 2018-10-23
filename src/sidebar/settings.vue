@@ -58,6 +58,11 @@
             v-for="o in $root.tabLongRightClickOpts"
             :opt-none="o === 'none'"
             :opt-true="o === $root.tabLongRightClick") {{t('settings.tab_action_' + o)}}
+      .field(:opt-true="$root.openBookmarkNewTab", @click="toggleOpt('openBookmarkNewTab')")
+        .label {{t('settings.open_bookmark_new_tab')}}
+        .input
+          .opt.-true {{t('settings.opt_true')}}
+          .opt.-false {{t('settings.opt_false')}}
 
     section
       h2 {{t('settings.appearance_title')}}
