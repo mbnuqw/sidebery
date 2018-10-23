@@ -242,6 +242,10 @@
     "message": "none"
   },
 
+  "settings.open_bookmark_new_tab": {
+    "message": "Open bookmark in new tab"
+  },
+
   "settings.appearance_title": {
     "message": "Appearance"
   },

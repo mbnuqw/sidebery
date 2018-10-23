@@ -13,6 +13,10 @@
     @mouseup.prevent="onMU"
     @mouseleave="onML"
     @dblclick="onDBL")
+  .drag-layer(draggable="true"
+    @dragstart="onDragStart"
+    @dragenter="onDragEnter"
+    @dragleave="onDragLeave")
   .audio(@click="mute")
     svg.-loud: use(xlink:href="#icon_loud")
     svg.-mute: use(xlink:href="#icon_mute")
@@ -22,7 +26,7 @@
   .ctx(v-if="tab.ctxIcon", :style="{background: tab.ctxColor}")
   .close(v-if="$root.showTabRmBtn", @mousedown.stop="close", @mouseup.stop="")
     svg: use(xlink:href="#icon_remove")
-  .t-box(draggable="true", v-on:dragstart="onDragStart")
+  .t-box
     .title {{tab.title}}
     .loading
       svg.-a: use(xlink:href="#icon_load")
@@ -154,6 +158,27 @@ export default {
       e.dataTransfer.setData('text/uri-list', this.tab.url)
       e.dataTransfer.setData('text/plain', this.tab.url)
       e.dataTransfer.effectAllowed = 'move'
+    },
+
+    /**
+     * Handle dragenter event
+     */
+    onDragEnter() {
+      if (this.dragEnterTimeout) clearTimeout(this.dragEnterTimeout)
+      this.dragEnterTimeout = setTimeout(() => {
+        browser.tabs.update(this.tab.id, { active: true })
+        this.dragEnterTimeout = null
+      }, 200)
+    },
+
+    /**
+     * Handle dragleave event
+     */
+    onDragLeave() {
+      if (this.dragEnterTimeout) {
+        clearTimeout(this.dragEnterTimeout)
+        this.dragEnterTimeout = null
+      }
     },
 
     /**
@@ -453,6 +478,13 @@ export default {
     background-color: var(--tabs-selected-bg)
     .title
       color: var(--tabs-selected-fg)
+
+// --- Drag layer ---
+.Tab .drag-layer
+  box(absolute)
+  size(100%, same)
+  pos(0, 0)
+  z-index: 15
 
 // --- Audio ---
 .Tab .audio

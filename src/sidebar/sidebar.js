@@ -17,6 +17,7 @@ const DEFAULT_SETTINGS = {
   tabDoubleClick: 'none',
   tabLongLeftClick: 'none',
   tabLongRightClick: 'none',
+  openBookmarkNewTab: false,
   fontSize: 'm',
   theme: 'dark',
   bgNoise: true,
@@ -70,6 +71,7 @@ new Vue({
       tabDoubleClick: DEFAULT_SETTINGS.tabDoubleClick,
       tabLongLeftClick: DEFAULT_SETTINGS.tabLongLeftClick,
       tabLongRightClick: DEFAULT_SETTINGS.tabLongRightClick,
+      openBookmarkNewTab: DEFAULT_SETTINGS.openBookmarkNewTab,
       fontSize: DEFAULT_SETTINGS.fontSize,
       theme: DEFAULT_SETTINGS.theme,
       bgNoise: DEFAULT_SETTINGS.bgNoise,
@@ -219,23 +221,13 @@ new Vue({
      */
     async saveSettings() {
       if (!this.settingsLoaded) return
-      await browser.storage.local.set({
-        settings: {
-          activateLastTabOnPanelSwitching: this.activateLastTabOnPanelSwitching,
-          createNewTabOnEmptyPanel: this.createNewTabOnEmptyPanel,
-          skipEmptyPanels: this.skipEmptyPanels,
-          showTabRmBtn: this.showTabRmBtn,
-          hScrollThroughPanels: this.hScrollThroughPanels,
-          scrollThroughTabs: this.scrollThroughTabs,
-          tabDoubleClick: this.tabDoubleClick,
-          tabLongLeftClick: this.tabLongLeftClick,
-          tabLongRightClick: this.tabLongRightClick,
-          fontSize: this.fontSize,
-          theme: this.theme,
-          bgNoise: this.bgNoise,
-          animations: this.animations,
-        },
-      })
+      let settings = {}
+      for (const key in DEFAULT_SETTINGS) {
+        if (!DEFAULT_SETTINGS.hasOwnProperty(key)) continue
+        if (this[key] == null || this[key] == undefined) continue
+        settings[key] = this[key]
+      }
+      await browser.storage.local.set({ settings })
     },
     // ---
 
@@ -341,21 +333,11 @@ new Vue({
         pInfo.endIndex = p.endIndex
         return pInfo
       })
-      let Settings = {
-        settingsLoaded: this.settingsLoaded,
-        activateLastTabOnPanelSwitching: this.activateLastTabOnPanelSwitching,
-        createNewTabOnEmptyPanel: this.createNewTabOnEmptyPanel,
-        skipEmptyPanels: this.skipEmptyPanels,
-        showTabRmBtn: this.showTabRmBtn,
-        hScrollThroughPanels: this.hScrollThroughPanels,
-        scrollThroughTabs: this.scrollThroughTabs,
-        tabDoubleClick: this.tabDoubleClick,
-        tabLongLeftClick: this.tabLongLeftClick,
-        tabLongRightClick: this.tabLongRightClick,
-        fontSize: this.fontSize,
-        theme: this.theme,
-        bgNoise: this.bgNoise,
-        animations: this.animations,
+      let Settings = {}
+      for (const key in DEFAULT_SETTINGS) {
+        if (!DEFAULT_SETTINGS.hasOwnProperty(key)) continue
+        if (this[key] == null || this[key] == undefined) continue
+        Settings[key] = this[key]
       }
       return JSON.stringify({ AllTabs, Panels, Settings }, null, 2)
     },
@@ -622,19 +604,11 @@ new Vue({
      * and store them to local storage
      */
     resetSettings() {
-      this.activateLastTabOnPanelSwitching = DEFAULT_SETTINGS.activateLastTabOnPanelSwitching
-      this.createNewTabOnEmptyPanel = DEFAULT_SETTINGS.createNewTabOnEmptyPanel
-      this.skipEmptyPanels = DEFAULT_SETTINGS.skipEmptyPanels
-      this.showTabRmBtn = DEFAULT_SETTINGS.showTabRmBtn
-      this.hScrollThroughPanels = DEFAULT_SETTINGS.hScrollThroughPanels
-      this.scrollThroughTabs = DEFAULT_SETTINGS.scrollThroughTabs
-      this.tabDoubleClick = DEFAULT_SETTINGS.tabDoubleClick
-      this.tabLongLeftClick = DEFAULT_SETTINGS.tabLongLeftClick
-      this.tabLongRightClick = DEFAULT_SETTINGS.tabLongRightClick
-      this.fontSize = DEFAULT_SETTINGS.fontSize
-      this.theme = DEFAULT_SETTINGS.theme
-      this.bgNoise = DEFAULT_SETTINGS.bgNoise
-      this.animations = DEFAULT_SETTINGS.animations
+      for (const key in DEFAULT_SETTINGS) {
+        if (!DEFAULT_SETTINGS.hasOwnProperty(key)) continue
+        if (this[key] == null || this[key] == undefined) continue
+        Vue.set(this, key, DEFAULT_SETTINGS[key])
+      }
 
       this.saveSettings()
     },
