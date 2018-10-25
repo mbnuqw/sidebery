@@ -5,7 +5,7 @@
   :is-parent="!!isParent"
   :to-front="toFront || editorSelect"
   :menu="menu")
-  .body(:title="node.url", @click="onClick", @mousedown="onMD")
+  .body(:title="tooltip", @click="onClick", @mousedown="onMD")
     .fav(v-if="isBookmark", :no-fav="!favicon")
       .placeholder
       img(:src="favicon")
@@ -71,6 +71,10 @@ export default {
     favicon() {
       if (!this.hostname) return
       return this.$root.favicons[this.hostname]
+    },
+
+    tooltip() {
+      return `${this.node.title}\n${this.node.url}`
     },
   },
 
