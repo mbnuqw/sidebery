@@ -322,14 +322,20 @@ export default {
      */
     onWH(e) {
       if (this.$root.scrollThroughTabs !== 'none' && this.panel > 0) {
-        if (e.deltaY > 0) this.activateNextTab({
-          globaly: this.$root.scrollThroughTabs === 'global',
-          cycle: false,
-        })
-        if (e.deltaY < 0) this.activatePrevTab({
-          globaly: this.$root.scrollThroughTabs === 'global',
-          cycle: false,
-        })
+        if (e.deltaY > 0) {
+          if (this.wheelBlockTimeout) return
+          this.activateNextTab({
+            globaly: this.$root.scrollThroughTabs === 'global',
+            cycle: false,
+          })
+        }
+        if (e.deltaY < 0) {
+          if (this.wheelBlockTimeout) return
+          this.activatePrevTab({
+            globaly: this.$root.scrollThroughTabs === 'global',
+            cycle: false,
+          })
+        }
       }
 
       if (this.$root.hScrollThroughPanels) {
@@ -360,6 +366,15 @@ export default {
     },
 
     onMD(e) {
+      if (e.button === 1) {
+        if (this.wheelBlockTimeout) {
+          clearTimeout(this.wheelBlockTimeout)
+          this.wheelBlockTimeout = null
+        }
+        this.wheelBlockTimeout = setTimeout(() => {
+          this.wheelBlockTimeout = null
+        }, 250)
+      }
       if (e.button < 2) this.$root.closeCtxMenu()
     },
 
