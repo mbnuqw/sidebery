@@ -427,7 +427,11 @@ export default {
           if (!n.children) return n
           let b = n.children.find(b => b.id === id)
           if (b) {
-            n.children.splice(b.index, 1, { ...b, title: info.title, url: info.url })
+            n.children.splice(b.index, 1, {
+              ...b,
+              title: info.title || b.title,
+              url: info.url || b.url,
+            })
             updated = true
           } else if (!updated) n.children = updateWalk(n.children)
           return n
