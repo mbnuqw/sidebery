@@ -452,6 +452,7 @@ export default {
   &[data-audible]
     .audio
       opacity: 1
+      z-index: 20
       transform: translateX(0)
     .fav
     .t-box
@@ -462,6 +463,7 @@ export default {
   &[data-muted]
     .audio
       opacity: .8
+      z-index: 20
       transform: translateX(0)
       > svg.-loud
         opacity: 0
