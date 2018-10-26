@@ -25,6 +25,8 @@
 <script>
 import TextInput from './input.text'
 
+const URL_RE = /^(http:\/\/|https:\/\/)[a-z0-9]+([-.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/
+
 export default {
   components: {
     TextInput,
@@ -68,10 +70,7 @@ export default {
       if (e.key === 'Enter') {
         e.preventDefault()
         if ((this.isBookmark, this.$refs.url)) this.$refs.url.focus()
-        else {
-          if (this.action === 'create') this.createNode()
-          if (this.action === 'edit') this.updateNode()
-        }
+        else this.onOk()
       }
     },
 
@@ -81,8 +80,8 @@ export default {
     onUrlKD(e) {
       if (e.key === 'Escape') this.$emit('cancel')
       if (e.key === 'Enter') {
-        if (this.action === 'create') this.createNode()
-        if (this.action === 'edit') this.updateNode()
+        e.preventDefault()
+        this.onOk()
       }
     },
 
@@ -136,9 +135,14 @@ export default {
      * Ok button (create/save) click handler
      */
     onOk() {
-      if (!this.name) return
-      if (this.isBookmark && !this.url) return
-
+      if (!this.name) {
+        if (this.$refs.name) this.$refs.name.error()
+        return
+      }
+      if (this.isBookmark && !(this.url && URL_RE.test(this.url))) {
+        if (this.$refs.url) this.$refs.url.error()
+        return
+      }
       if (this.action === 'create') this.createNode()
       if (this.action === 'edit') this.updateNode()
     },
@@ -216,10 +220,14 @@ export default {
   text(s: rem(15))
   margin: 2px 0 0
   color: var(--bookmarks-editor-url-fg)
+  transition: color 1s
   > input
   > textarea
   > .placeholder
     padding: 2px 0
+  &.err
+    transition: none
+    color: var(--bookmarks-editor-error-fg)
 
 .BEditor .ctrls
   box(relative, flex)

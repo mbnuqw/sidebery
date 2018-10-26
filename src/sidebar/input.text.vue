@@ -101,6 +101,14 @@ export default {
     focus() {
       if (this.$refs.text) this.$refs.text.focus()
     },
+
+    error() {
+      this.$el.classList.add('err')
+      this.$el.classList.remove('err-animation')
+      this.$el.offsetHeight
+      this.$el.classList.add('err-animation')
+      this.$el.classList.remove('err')
+    }
   },
 }
 </script>
@@ -121,6 +129,12 @@ export default {
 
 .TextInput
   box(relative)
+  &.err-animation
+    animation: shake-it .3s
+    // > input
+    // > textarea
+    // > .placeholder
+    //   animation: red-shift 3s
 
 .TextInput[is-empty]
   > .placeholder
@@ -154,4 +168,31 @@ export default {
   opacity: 0
   transform: translateX(16px)
   transition: opacity var(--d-fast), transform var(--d-fast)
+
+
+@keyframes red-shift
+  0%
+    // filter: deop-shadow()
+    opacity: 1
+  100%
+    // filter: brightness(0)
+    opacity: .5
+
+@keyframes shake-it
+  0%
+    transform: translateX(0)
+  20%
+    transform: translateX(-12px)
+  40%
+    transform: translateX(12px)
+  55%
+    transform: translateX(-8px)
+  70%
+    transform: translateX(6px)
+  80%
+    transform: translateX(-4px)
+  90%
+    transform: translateX(2px)
+  100%
+    transform: translateX(0)
 </style>
