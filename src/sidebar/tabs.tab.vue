@@ -4,7 +4,7 @@
     :data-no-fav="!favicon || faviErr"
     :data-audible="tab.audible"
     :data-muted="tab.mutedInfo.muted"
-    :data-menu="menu"
+    :data-menu="menu || selected"
     :data-pinned="tab.pinned"
     :close-btn="$root.showTabRmBtn"
     :title="tooltip"
@@ -44,6 +44,7 @@ export default {
       type: Object,
       default: () => ({}),
     },
+    selected: Boolean,
   },
 
   data() {
@@ -101,7 +102,7 @@ export default {
         if (this.mclickTimeout) return
 
         e.preventDefault()
-        this.$emit('md', e, this)
+        this.$emit('mdl', e, this)
         this.hodorL = setTimeout(() => {
           if (this.$root.tabLongLeftClick === 'close_down') this.closeDown()
           if (this.$root.tabLongLeftClick === 'reload') this.reload()

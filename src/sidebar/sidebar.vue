@@ -210,7 +210,7 @@ export default {
     },
 
     /**
-     * Get list of tabs panels
+     * Get list of panels
      */
     panels() {
       const panels = DEFAULT_PANELS.concat(this.contexts)

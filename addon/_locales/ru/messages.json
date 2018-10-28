@@ -166,6 +166,12 @@
   "ctx_menu.tab_duplicate": {
     "message": "Дублировать"
   },
+  "ctx_menu.tabs_close": {
+    "message": "Закрыть"
+  },
+  "ctx_menu.tabs_reload": {
+    "message": "Перезагрузить"
+  },
 
   "window_input.cancel": {
     "message": "Отмена"

@@ -412,7 +412,7 @@ new Vue({
     closeCtxMenu() {
       if (this.ctxMenu) {
         Logs.D('Close context menu')
-        this.ctxMenu.off()
+        if (this.ctxMenu.off) this.ctxMenu.off()
         this.ctxMenu = null
       }
     },

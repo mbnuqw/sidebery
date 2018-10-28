@@ -27,8 +27,9 @@
         :key="t.id"
         :tab="t"
         :panel-index="i"
-        :dragged="isDragged(t.id)"
-        @md="onTabMD(i, ...arguments)"
+        :selected="isSelected(t.id)"
+        @mdl="onTabMDL(i, ...arguments)"
+        @mdr="onTabMDR(i, ...arguments)"
         @closedown="$emit('closedown', i)")
 </template>
 
@@ -36,6 +37,7 @@
 <script>
 import Tab from './tabs.tab'
 import ScrollBox from './scroll-box'
+import Utils from '../libs/utils'
 
 export default {
   components: {
@@ -56,6 +58,9 @@ export default {
     return {
       mpb: [],
       topOffset: 0,
+      selection: null,
+      selectionMenuEl: null,
+      selectedTabs: [],
       drag: null,
       dragTabs: [],
       dragEls: [],
@@ -72,64 +77,137 @@ export default {
       this.mpb[e.button] = true
     },
 
-    onMU(e) {
-      this.mpb[e.button] = false
+    onMU() {
+      if (this.drag) this.onTabMoveEnd()
+      if (this.selection) this.onTabsSelectionEnd()
+    },
 
-      if (this.drag) {
-        if (!this.drag.dragged) {
-          this.drag = null
-          return
-        }
+    onMM(e) {
+      if (this.drag) this.onTabMove(e)
+      if (this.selection) this.onTabsSelection(e)
+    },
 
-        // Set final position for dragged node
-        let draggedEl = this.$refs.dragTabs[this.drag.i]
-        let targetTab = this.dragTabs[this.drag.target]
-        if (!draggedEl || !targetTab) {
-          this.drag = null
-          return
-        }
-        this.dragEnd = true
-        this.$nextTick(() => {
-          draggedEl.style.transform = `translate(0px, ${targetTab.top}px)`
-        })
+    onTabMDL(i, e, vm) {
+      // Activate tab
+      browser.tabs.update(vm.tab.id, { active: true })
 
-        // Update actual nodes order
-        let newGlobalIndex = this.drag.globalIndex + this.drag.target - this.drag.i
-        if (!this.drag.panel || this.drag.panel === this.drag.origPanel) {
-          browser.tabs.move(this.drag.id, { index: newGlobalIndex })
-        } else if (this.$parent.panels[this.drag.panel]) {
-          let panel = this.$parent.panels[this.drag.panel]
-          let tab = this.$parent.allTabs.find(t => t.id === this.drag.id)
-          if (!panel.cookieStoreId) {
-            this.drag = null
-            return
+      if (!vm.tab.pinned) {
+        let id = vm.tab.id
+        let title = vm.tab.title
+        let globalIndex = vm.tab.index
+        let h = vm.height()
+        let tabY = h >> 1
+        let y = e.clientY
+        let x = e.clientX
+        this.drag = { id, title, globalIndex, i, h, tabY, y, x, top: 0, dragged: false }
+      }
+    },
+
+    onTabMDR(i, e, vm) {
+      if (vm.tab.pinned) return
+
+      let id = vm.tab.id
+      let h = vm.height()
+      let y = e.clientY
+      this.selection = { id, i, h, y }
+    },
+
+    onTabsSelection(e) {
+      if (!this.selection.active && Math.abs(e.clientY - this.selection.y) > 10) {
+        this.selection.active = true
+        this.$root.closeCtxMenu()
+        this.selectedTabs.push(this.selection.id)
+        this.recalcDragTabs()
+      }
+
+      if (this.selection.active) {
+        let moveY = e.clientY - this.topOffset + this.$refs.scrollBox.scrollY
+        for (let i = 0; i < this.dragTabs.length; i++) {
+          let tab = this.dragTabs[i]
+
+          // Up
+          if (this.selection.i > tab.index && moveY < tab.top + tab.h) {
+            if (!this.selectedTabs.includes(tab.id)) {
+              this.selectedTabs.push(tab.id)
+              this.selectionMenuEl = tab.el
+            }
           }
-          browser.tabs.create({
-            active: true,
-            cookieStoreId: panel.cookieStoreId,
-            index: newGlobalIndex,
-            url: tab.url,
-          })
-          browser.tabs.remove(this.drag.id)
-        }
 
-        // If tab position is not changed (and move event will
-        // not trigger) - just reset drag state.
-        if (newGlobalIndex === this.drag.globalIndex) {
-          setTimeout(() => {
-            this.drag = null
-          }, 8)
-          setTimeout(() => {
-            this.dragTabs = null
-            this.dragEnd = false
-          }, 128)
+          // Down
+          if (this.selection.i < tab.index && moveY > tab.top) {
+            if (!this.selectedTabs.includes(tab.id)) {
+              this.selectedTabs.push(tab.id)
+              this.selectionMenuEl = tab.el
+            }
+          }
         }
       }
     },
 
-    onMM(e) {
-      if (!this.drag) return
+    async onTabsSelectionEnd() {
+      if (this.selection && !this.selection.active) {
+        this.selection = null
+        return
+      }
+      if (this.selection && this.selectedTabs.length < 2) {
+        this.selection = null
+        this.selectedTabs = []
+        return
+      }
+      this.selection = null
+      if (!this.selectionMenuEl) return this.closeSelectionMenu()
 
+      let windows = await Utils.GetAllWindows()
+      let otherWindows = []
+      let otherDefaultWindows = []
+      let privateWindow
+      windows.map(w => {
+        if (!privateWindow && w.incognito) privateWindow = w
+        if (!w.current) otherWindows.push(w)
+        if (!w.current && !w.incognito) otherDefaultWindows.push(w)
+        return !w.current && !w.incognito
+      })
+
+      let opts = []
+      if (!this.$root.private) {
+        opts.push([this.t('ctx_menu.move_to_new_window'), this.moveSelectedTabsToNewWin])
+        if (otherDefaultWindows.length === 1) {
+          opts.push([this.t('ctx_menu.move_to_another_window'), () => this.moveToWin(otherDefaultWindows[0])])
+        }
+        if (otherDefaultWindows.length > 1) opts.push([this.t('ctx_menu.move_to_window_'), this.moveToWin])
+        if (this.storeId !== 'firefox-default') {
+          opts.push([this.t('ctx_menu.reopen_in_default_panel'), this.openInPanel, 'firefox-default'])
+        }
+        this.$root.$refs.sidebar.contexts.map(c => {
+          if (this.storeId === c.cookieStoreId) return
+          opts.push([
+            this.t('ctx_menu.re_open_in_') + `||${c.colorCode}>>${c.name}`,
+            this.openInPanel,
+            c.cookieStoreId,
+          ])
+        })
+      } else {
+        if (otherWindows.length === 1) {
+          opts.push([this.t('ctx_menu.reopen_in_another_window'), () => this.reopenInWin(otherWindows[0])])
+        }
+        if (otherWindows.length > 1) opts.push([this.t('ctx_menu.reopen_in_window_'), this.reopenInWin])
+      }
+      opts.push([this.t('ctx_menu.tabs_reload'), this.reloadSelectedTabs])
+      opts.push([this.t('ctx_menu.tabs_close'), this.closeSelectedTabs])
+
+      this.$root.closeCtxMenu()
+      this.$root.ctxMenu = {
+        el: this.selectionMenuEl,
+        off: this.closeSelectionMenu,
+        opts,
+      }
+    },
+
+    closeSelectionMenu() {
+      this.selectedTabs = []
+    },
+
+    onTabMove(e) {
       if (
         (!this.drag.dragged && Math.abs(e.clientY - this.drag.y) > 5) ||
         (!this.drag.dragged && Math.abs(e.clientX - this.drag.x) > 5)
@@ -211,24 +289,54 @@ export default {
       }
     },
 
-    onTabMD(i, e, vm) {
-      // Activate tab
-      browser.tabs.update(vm.tab.id, { active: true })
+    onTabMoveEnd() {
+      if (!this.drag.dragged) {
+        this.drag = null
+        return
+      }
 
-      if (!vm.tab.pinned) {
-        let h = vm.height()
-        this.drag = {
-          id: vm.tab.id,
-          title: vm.tab.title,
-          globalIndex: vm.tab.index,
-          i,
-          h,
-          tabY: h >> 1,
-          y: e.clientY,
-          x: e.clientX,
-          top: 0,
-          dragged: false,
+      // Set final position for dragged node
+      let draggedEl = this.$refs.dragTabs[this.drag.i]
+      let targetTab = this.dragTabs[this.drag.target]
+      if (!draggedEl || !targetTab) {
+        this.drag = null
+        return
+      }
+      this.dragEnd = true
+      this.$nextTick(() => {
+        draggedEl.style.transform = `translate(0px, ${targetTab.top}px)`
+      })
+
+      // Update actual nodes order
+      let newGlobalIndex = this.drag.globalIndex + this.drag.target - this.drag.i
+      if (!this.drag.panel || this.drag.panel === this.drag.origPanel) {
+        browser.tabs.move(this.drag.id, { index: newGlobalIndex })
+      } else if (this.$parent.panels[this.drag.panel]) {
+        let panel = this.$parent.panels[this.drag.panel]
+        let tab = this.$parent.allTabs.find(t => t.id === this.drag.id)
+        if (!panel.cookieStoreId) {
+          this.drag = null
+          return
         }
+        browser.tabs.create({
+          active: true,
+          cookieStoreId: panel.cookieStoreId,
+          index: newGlobalIndex,
+          url: tab.url,
+        })
+        browser.tabs.remove(this.drag.id)
+      }
+
+      // If tab position is not changed (and move event will
+      // not trigger) - just reset drag state.
+      if (newGlobalIndex === this.drag.globalIndex) {
+        setTimeout(() => {
+          this.drag = null
+        }, 8)
+        setTimeout(() => {
+          this.dragTabs = null
+          this.dragEnd = false
+        }, 128)
       }
     },
 
@@ -239,6 +347,7 @@ export default {
 
         t.fav = vm.faviErr ? null : vm.favicon
         t.h = vm.height()
+        t.el = vm.$el
         t.top = top
 
         top += t.h
@@ -260,6 +369,11 @@ export default {
       return this.drag.id === id && this.drag.dragged
     },
 
+    isSelected(id) {
+      if (!this.selectedTabs) return false
+      return this.selectedTabs.includes(id)
+    },
+
     /**
      * Return styles for fake drag tabs
      */
@@ -275,6 +389,65 @@ export default {
      */
     createTab() {
       this.$emit('create-tab', this.storeId)
+    },
+
+    async moveSelectedTabsToNewWin() {
+      if (!this.selectedTabs) return
+      const first = this.selectedTabs.shift()
+      const rest = [...this.selectedTabs]
+      const win = await browser.windows.create({ tabId: first })
+      browser.tabs.move(rest, {windowId: win.id, index: -1})
+    },
+
+    /**
+     *  Move selected tabs to window if provided,
+     * otherwise show window-choosing menu
+     */
+    async moveToWin(window) {
+      if (!this.selectedTabs) return
+      const windowId = window ? window.id : await this.$root.chooseWin()
+      const tabsId = [...this.selectedTabs]
+      browser.tabs.move(tabsId, { windowId, index: -1 })
+    },
+
+    /**
+     * Open selected tabs urls in
+     * another window.
+     */
+    async reopenInWin(window) {
+      if (!this.selectedTabs) return
+      const windowId = window ? window.id : await this.$root.chooseWin()
+      const tabsId = [...this.selectedTabs]
+      tabsId.map(id => {
+        let tab = this.tabs.find(t => t.id === id)
+        if (!tab) return
+        browser.tabs.create({ windowId, url: tab.url })
+      })
+    },
+
+    /**
+     * Open url in panel by cookieStoreId
+     */
+    openInPanel(id) {
+      if (!this.selectedTabs) return
+      const tabsId = [...this.selectedTabs]
+      tabsId.map(tabId => {
+        let tab = this.tabs.find(t => t.id === tabId)
+        if (!tab) return
+
+        browser.tabs.create({ cookieStoreId: id, url: tab.url })
+        browser.tabs.remove(tab.id)
+      })
+    },
+
+    reloadSelectedTabs() {
+      if (!this.selectedTabs) return
+      this.selectedTabs.map(id => browser.tabs.reload(id))
+    },
+
+    closeSelectedTabs() {
+      if (!this.selectedTabs) return
+      browser.tabs.remove(this.selectedTabs)
     },
   },
 }
