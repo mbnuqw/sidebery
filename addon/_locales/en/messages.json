@@ -166,6 +166,9 @@
   "ctx_menu.tab_duplicate": {
     "message": "Duplicate"
   },
+  "ctx_menu.tabs_reopen_in_new_priv_window": {
+    "message": "Reopen in new Private window"
+  },
   "ctx_menu.tabs_bookmark": {
     "message": "Create bookmarks"
   },

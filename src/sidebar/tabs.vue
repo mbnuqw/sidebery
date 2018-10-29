@@ -170,13 +170,36 @@ export default {
 
       let opts = []
       if (!this.$root.private) {
-        opts.push([this.t('ctx_menu.move_to_new_window'), this.moveSelectedTabsToNewWin])
+        // Move to new window
+        opts.push([
+          this.t('ctx_menu.move_to_new_window'),
+          this.moveSelectedTabsToNewWin
+        ])
+
+        // Move to windows
         if (otherDefaultWindows.length === 1) {
-          opts.push([this.t('ctx_menu.move_to_another_window'), () => this.moveToWin(otherDefaultWindows[0])])
+          opts.push([
+            this.t('ctx_menu.move_to_another_window'),
+            () => this.moveToWin(otherDefaultWindows[0])
+          ])
         }
-        if (otherDefaultWindows.length > 1) opts.push([this.t('ctx_menu.move_to_window_'), this.moveToWin])
+        if (otherDefaultWindows.length > 1) {
+          opts.push([this.t('ctx_menu.move_to_window_'), this.moveToWin])
+        }
+
+        // Reopen in new private window
+        opts.push([
+          this.t('ctx_menu.tabs_reopen_in_new_priv_window'),
+          () => this.reopenInNewPrivWin()
+        ])
+
+        // Reopen in containers
         if (this.storeId !== 'firefox-default') {
-          opts.push([this.t('ctx_menu.reopen_in_default_panel'), this.openInPanel, 'firefox-default'])
+          opts.push([
+            this.t('ctx_menu.reopen_in_default_panel'),
+            this.openInPanel,
+            'firefox-default',
+          ])
         }
         this.$root.$refs.sidebar.contexts.map(c => {
           if (this.storeId === c.cookieStoreId) return
@@ -407,8 +430,8 @@ export default {
      */
     async moveToWin(window) {
       if (!this.selectedTabs) return
-      const windowId = window ? window.id : await this.$root.chooseWin()
       const tabsId = [...this.selectedTabs]
+      const windowId = window ? window.id : await this.$root.chooseWin()
       browser.tabs.move(tabsId, { windowId, index: -1 })
     },
 
@@ -418,12 +441,28 @@ export default {
      */
     async reopenInWin(window) {
       if (!this.selectedTabs) return
-      const windowId = window ? window.id : await this.$root.chooseWin()
       const tabsId = [...this.selectedTabs]
+      const windowId = window ? window.id : await this.$root.chooseWin()
       tabsId.map(id => {
         let tab = this.tabs.find(t => t.id === id)
         if (!tab) return
         browser.tabs.create({ windowId, url: tab.url })
+      })
+    },
+
+    async reopenInNewPrivWin() {
+      if (!this.selectedTabs) return
+      const first = this.selectedTabs.shift()
+      const firstTab = this.tabs.find(t => t.id === first)
+      if (!firstTab) return
+      const rest = [...this.selectedTabs]
+      const win = await browser.windows.create({ url: firstTab.url, incognito: true })
+      browser.tabs.remove(first)
+      rest.map(tabId => {
+        let tab = this.tabs.find(t => t.id === first)
+        if (!tab) return
+        browser.tabs.create({windowId: win.id, url: tab.url})
+        browser.tabs.remove(tabId)
       })
     },
 
