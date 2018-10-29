@@ -166,6 +166,9 @@
   "ctx_menu.tab_duplicate": {
     "message": "Дублировать"
   },
+  "ctx_menu.tabs_bookmark": {
+    "message": "Создать закладки"
+  },
   "ctx_menu.tabs_close": {
     "message": "Закрыть"
   },

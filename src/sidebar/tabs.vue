@@ -192,6 +192,8 @@ export default {
         }
         if (otherWindows.length > 1) opts.push([this.t('ctx_menu.reopen_in_window_'), this.reopenInWin])
       }
+      opts.push([this.t('ctx_menu.pin'), this.pinSelectedTabs])
+      opts.push([this.t('ctx_menu.tabs_bookmark'), this.bookmarkSelectedTabs])
       opts.push([this.t('ctx_menu.tabs_reload'), this.reloadSelectedTabs])
       opts.push([this.t('ctx_menu.tabs_close'), this.closeSelectedTabs])
 
@@ -437,6 +439,22 @@ export default {
 
         browser.tabs.create({ cookieStoreId: id, url: tab.url })
         browser.tabs.remove(tab.id)
+      })
+    },
+
+    pinSelectedTabs() {
+      if (!this.selectedTabs) return
+      this.selectedTabs.map(tabId => {
+        browser.tabs.update(tabId, { pinned: true })
+      })
+    },
+
+    bookmarkSelectedTabs() {
+      if (!this.selectedTabs) return
+      this.selectedTabs.map(tabId => {
+        let tab = this.tabs.find(t => t.id === tabId)
+        if (!tab) return
+        browser.bookmarks.create({ title: tab.title, url: tab.url })
       })
     },
 
