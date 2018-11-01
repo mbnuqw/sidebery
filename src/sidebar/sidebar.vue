@@ -373,7 +373,7 @@ export default {
         }
         this.wheelBlockTimeout = setTimeout(() => {
           this.wheelBlockTimeout = null
-        }, 250)
+        }, 500)
       }
       if (e.button < 2) this.$root.closeCtxMenu()
     },
@@ -489,7 +489,6 @@ export default {
       let i = this.contexts.findIndex(c => c.cookieStoreId === id)
       if (i === -1) return
       this.contexts.splice(i, 1, contextualIdentity)
-      // this.$root.resyncPanels()
       this.$root.savePanels()
     },
     // ---

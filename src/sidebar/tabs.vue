@@ -160,7 +160,6 @@ export default {
         if (!privateWindow && w.incognito) privateWindow = w
         if (!w.current) otherWindows.push(w)
         if (!w.current && !w.incognito) otherDefWindows.push(w)
-        return !w.current && !w.incognito
       })
 
       const menu = new CtxMenu(this.selectionMenuEl, this.closeSelectionMenu)
@@ -344,6 +343,9 @@ export default {
       }
     },
 
+    /**
+     * Update fake drag tabs.
+     */
     recalcDragTabs() {
       let top = 0
       this.dragTabs = this.tabs.map(t => {
@@ -359,6 +361,9 @@ export default {
       })
     },
 
+    /**
+     * Recalc scroll wrapper.
+     */
     recalcScroll() {
       if (this.$refs.scrollBox) {
         this.$refs.scrollBox.recalcScroll()
@@ -366,13 +371,16 @@ export default {
     },
 
     /**
-     * Dragged state of tab
+     * Is tab dragged?
      */
     isDragged(id) {
       if (!this.drag) return false
       return this.drag.id === id && this.drag.dragged
     },
 
+    /**
+     * Is tab selected?
+     */
     isSelected(id) {
       if (!this.selectedTabs) return false
       return this.selectedTabs.includes(id)
@@ -395,6 +403,10 @@ export default {
       this.$emit('create-tab', this.storeId)
     },
 
+    /**
+     * Create new window with first selected
+     * tab and then move other selected tabs.
+     */
     async moveSelectedTabsToNewWin() {
       if (!this.selectedTabs) return
       const first = this.selectedTabs.shift()
@@ -464,27 +476,41 @@ export default {
       }
     },
 
+    /**
+     * Pin selected tabs
+     */
     pinSelectedTabs() {
       if (!this.selectedTabs) return
-      this.selectedTabs.map(tabId => {
+      for (let tabId of this.selectedTabs) {
         browser.tabs.update(tabId, { pinned: true })
-      })
+      }
     },
 
+    /**
+     * Create bookmarks from selected tabs
+     */
     bookmarkSelectedTabs() {
       if (!this.selectedTabs) return
-      this.selectedTabs.map(tabId => {
+      for (let tabId of this.selectedTabs) {
         let tab = this.tabs.find(t => t.id === tabId)
-        if (!tab) return
+        if (!tab) continue
         browser.bookmarks.create({ title: tab.title, url: tab.url })
-      })
+      }
     },
 
+    /**
+     * Reload selected tabs
+     */
     reloadSelectedTabs() {
       if (!this.selectedTabs) return
-      this.selectedTabs.map(id => browser.tabs.reload(id))
+      for (let tabId of this.selectedTabs) {
+        browser.tabs.reload(tabId)
+      }
     },
 
+    /**
+     * Close selected tabs
+     */
     closeSelectedTabs() {
       if (!this.selectedTabs) return
       browser.tabs.remove(this.selectedTabs)
