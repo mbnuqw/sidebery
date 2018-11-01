@@ -37,6 +37,7 @@
 
 <script>
 import Utils from '../libs/utils'
+import CtxMenu from './context-menu.js'
 
 export default {
   props: {
@@ -218,54 +219,54 @@ export default {
       if (this.menu) return
       let windows = await Utils.GetAllWindows()
       let otherWindows = []
-      let otherDefaultWindows = []
+      let otherDefWindows = []
       let privateWindow
       windows.map(w => {
         if (!privateWindow && w.incognito) privateWindow = w
         if (!w.current) otherWindows.push(w)
-        if (!w.current && !w.incognito) otherDefaultWindows.push(w)
+        if (!w.current && !w.incognito) otherDefWindows.push(w)
         return !w.current && !w.incognito
       })
       this.menu = true
 
-      let opts = []
+      const menu = new CtxMenu(this.$el, this.closeMenu)
+
       if (!this.$root.private) {
-        opts.push([this.t('ctx_menu.move_to_new_window'), this.moveToNewWin])
-        if (otherDefaultWindows.length === 1) {
-          opts.push([this.t('ctx_menu.move_to_another_window'), () => this.moveToWin(otherDefaultWindows[0])])
+        menu.add('move_to_new_window', this.moveToNewWin)
+
+        if (otherDefWindows.length === 1) {
+          menu.add('move_to_another_window', () => this.moveToWin(otherDefWindows[0]))
         }
-        if (otherDefaultWindows.length > 1) opts.push([this.t('ctx_menu.move_to_window_'), this.moveToWin])
-        opts.push([this.t('ctx_menu.reopen_in_priv_window'), () => this.reopenInPrivWin(privateWindow)])
+
+        if (otherDefWindows.length > 1) menu.add('move_to_window_', this.moveToWin)
+
+        menu.add('reopen_in_priv_window', () => this.reopenInPrivWin(privateWindow))
+
+        // Reopen in containers
         if (this.tab.cookieStoreId !== 'firefox-default') {
-          opts.push([this.t('ctx_menu.reopen_in_default_panel'), this.openInPanel, 'firefox-default'])
+          menu.add('reopen_in_default_panel', this.openInPanel, 'firefox-default')
         }
         this.$root.$refs.sidebar.contexts.map(c => {
           if (this.tab.cookieStoreId === c.cookieStoreId) return
-          opts.push([
-            this.t('ctx_menu.re_open_in_') + `||${c.colorCode}>>${c.name}`,
-            this.openInPanel,
-            c.cookieStoreId,
-          ])
+          const label = this.t('ctx_menu.re_open_in_') + `||${c.colorCode}>>${c.name}`
+          menu.addTranslated(label, this.openInPanel, c.cookieStoreId)
         })
       } else {
         if (otherWindows.length === 1) {
-          opts.push([this.t('ctx_menu.reopen_in_another_window'), () => this.reopenInWin(otherWindows[0])])
+          menu.add('reopen_in_another_window', () => this.reopenInWin(otherWindows[0]))
         }
-        if (otherWindows.length > 1) opts.push([this.t('ctx_menu.reopen_in_window_'), this.reopenInWin])
+
+        if (otherWindows.length > 1) menu.add('reopen_in_window_', this.reopenInWin)
       }
-      opts.push([this.tab.pinned ? this.t('ctx_menu.unpin') : this.t('ctx_menu.pin'), this.pin])
-      opts.push([this.tab.mutedInfo.muted ? this.t('ctx_menu.unmute') : this.t('ctx_menu.mute'), this.mute])
-      opts.push([this.t('ctx_menu.tab_reload'), this.reload])
-      opts.push([this.t('ctx_menu.tab_duplicate'), this.duplicate])
-      opts.push([this.t('ctx_menu.clear_cookies'), this.clearCookies])
-      opts.push([this.t('ctx_menu.tab_close_down'), this.closeDown])
+      menu.add(this.tab.pinned ? 'unpin' : 'pin', this.pin)
+      menu.add(this.tab.mutedInfo.muted ? 'unmute' : 'mute', this.mute)
+      menu.add('tab_reload', this.reload)
+      menu.add('tab_duplicate', this.duplicate)
+      menu.add('clear_cookies', this.clearCookies)
+      menu.add('tab_close_down', this.closeDown)
 
       this.$root.closeCtxMenu()
-      this.$root.ctxMenu = {
-        el: this.$el,
-        off: this.closeMenu,
-        opts,
-      }
+      this.$root.ctxMenu = menu
     },
 
     closeMenu() {

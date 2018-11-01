@@ -3,7 +3,6 @@
   :drag-active="drag && drag.dragged"
   :drag-end="dragEnd"
   @contextmenu.prevent.stop=""
-  @mousedown="onMD"
   @mousedown.middle="createTab"
   @mousemove="onMM"
   @mouseup="onMU"
@@ -38,6 +37,7 @@
 import Tab from './tabs.tab'
 import ScrollBox from './scroll-box'
 import Utils from '../libs/utils'
+import CtxMenu from './context-menu.js'
 
 export default {
   components: {
@@ -56,7 +56,6 @@ export default {
 
   data() {
     return {
-      mpb: [],
       topOffset: 0,
       selection: null,
       selectionMenuEl: null,
@@ -73,10 +72,6 @@ export default {
   },
 
   methods: {
-    onMD(e) {
-      this.mpb[e.button] = true
-    },
-
     onMU() {
       if (this.drag) this.onTabMoveEnd()
       if (this.selection) this.onTabsSelectionEnd()
@@ -109,7 +104,7 @@ export default {
       let id = vm.tab.id
       let h = vm.height()
       let y = e.clientY
-      this.selection = { id, i, h, y }
+      this.selection = { id, i: vm.tab.index, h, y }
     },
 
     onTabsSelection(e) {
@@ -159,73 +154,57 @@ export default {
 
       let windows = await Utils.GetAllWindows()
       let otherWindows = []
-      let otherDefaultWindows = []
+      let otherDefWindows = []
       let privateWindow
       windows.map(w => {
         if (!privateWindow && w.incognito) privateWindow = w
         if (!w.current) otherWindows.push(w)
-        if (!w.current && !w.incognito) otherDefaultWindows.push(w)
+        if (!w.current && !w.incognito) otherDefWindows.push(w)
         return !w.current && !w.incognito
       })
 
-      let opts = []
+      const menu = new CtxMenu(this.selectionMenuEl, this.closeSelectionMenu)
+
+      // Default window
       if (!this.$root.private) {
         // Move to new window
-        opts.push([
-          this.t('ctx_menu.move_to_new_window'),
-          this.moveSelectedTabsToNewWin
-        ])
+        menu.add('move_to_new_window', this.moveSelectedTabsToNewWin)
 
         // Move to windows
-        if (otherDefaultWindows.length === 1) {
-          opts.push([
-            this.t('ctx_menu.move_to_another_window'),
-            () => this.moveToWin(otherDefaultWindows[0])
-          ])
+        if (otherDefWindows.length === 1) {
+          menu.add('move_to_another_window', () => this.moveToWin(otherDefWindows[0]))
         }
-        if (otherDefaultWindows.length > 1) {
-          opts.push([this.t('ctx_menu.move_to_window_'), this.moveToWin])
-        }
+        if (otherDefWindows.length > 1) menu.add('move_to_window_', this.moveToWin)
 
         // Reopen in new private window
-        opts.push([
-          this.t('ctx_menu.tabs_reopen_in_new_priv_window'),
-          () => this.reopenInNewPrivWin()
-        ])
+        menu.add('tabs_reopen_in_new_priv_window', () => this.reopenInNewPrivWin())
 
         // Reopen in containers
         if (this.storeId !== 'firefox-default') {
-          opts.push([
-            this.t('ctx_menu.reopen_in_default_panel'),
-            this.openInPanel,
-            'firefox-default',
-          ])
+          menu.add('reopen_in_default_panel', this.openInPanel, 'firefox-default')
         }
         this.$root.$refs.sidebar.contexts.map(c => {
           if (this.storeId === c.cookieStoreId) return
-          opts.push([
-            this.t('ctx_menu.re_open_in_') + `||${c.colorCode}>>${c.name}`,
-            this.openInPanel,
-            c.cookieStoreId,
-          ])
+          const label = this.t('ctx_menu.re_open_in_') + `||${c.colorCode}>>${c.name}`
+          menu.addTranslated(label, this.openInPanel, c.cookieStoreId)
         })
-      } else {
-        if (otherWindows.length === 1) {
-          opts.push([this.t('ctx_menu.reopen_in_another_window'), () => this.reopenInWin(otherWindows[0])])
-        }
-        if (otherWindows.length > 1) opts.push([this.t('ctx_menu.reopen_in_window_'), this.reopenInWin])
       }
-      opts.push([this.t('ctx_menu.pin'), this.pinSelectedTabs])
-      opts.push([this.t('ctx_menu.tabs_bookmark'), this.bookmarkSelectedTabs])
-      opts.push([this.t('ctx_menu.tabs_reload'), this.reloadSelectedTabs])
-      opts.push([this.t('ctx_menu.tabs_close'), this.closeSelectedTabs])
+
+      // Private window
+      if (this.$root.private) {
+        if (otherWindows.length === 1) {
+          menu.add('reopen_in_another_window', () => this.reopenInWin(otherWindows[0]))
+        }
+        if (otherWindows.length > 1) menu.add('reopen_in_window_', this.reopenInWin)
+      }
+
+      menu.add('pin', this.pinSelectedTabs)
+      menu.add('tabs_bookmark', this.bookmarkSelectedTabs)
+      menu.add('tabs_reload', this.reloadSelectedTabs)
+      menu.add('tabs_close', this.closeSelectedTabs)
 
       this.$root.closeCtxMenu()
-      this.$root.ctxMenu = {
-        el: this.selectionMenuEl,
-        off: this.closeSelectionMenu,
-        opts,
-      }
+      this.$root.ctxMenu = menu
     },
 
     closeSelectionMenu() {
@@ -450,6 +429,10 @@ export default {
       })
     },
 
+    /**
+     * Open selected tabs urls in new
+     * private window and close them in current window
+     */
     async reopenInNewPrivWin() {
       if (!this.selectedTabs) return
       const first = this.selectedTabs.shift()
@@ -458,27 +441,27 @@ export default {
       const rest = [...this.selectedTabs]
       const win = await browser.windows.create({ url: firstTab.url, incognito: true })
       browser.tabs.remove(first)
-      rest.map(tabId => {
+      for (let tabId of rest) {
         let tab = this.tabs.find(t => t.id === first)
-        if (!tab) return
+        if (!tab) continue
         browser.tabs.create({windowId: win.id, url: tab.url})
         browser.tabs.remove(tabId)
-      })
+      }
     },
 
     /**
      * Open url in panel by cookieStoreId
      */
-    openInPanel(id) {
+    async openInPanel(id) {
       if (!this.selectedTabs) return
       const tabsId = [...this.selectedTabs]
-      tabsId.map(tabId => {
+      for (let tabId of tabsId) {
         let tab = this.tabs.find(t => t.id === tabId)
         if (!tab) return
 
-        browser.tabs.create({ cookieStoreId: id, url: tab.url })
-        browser.tabs.remove(tab.id)
-      })
+        await browser.tabs.create({ cookieStoreId: id, url: tab.url })
+        await browser.tabs.remove(tab.id)
+      }
     },
 
     pinSelectedTabs() {
