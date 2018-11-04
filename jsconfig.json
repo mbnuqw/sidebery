@@ -1,4 +1,7 @@
 {
-  "baseUrl": ".",
-  "include": ["./src/**/*"]
+  "include": [
+    "./addon/**/*",
+    "./src/**/*.vue",
+    "./src/**/*.js"
+  ]
 }

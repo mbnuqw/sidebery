@@ -30,12 +30,20 @@
         v-for="(btn, i) in nav"
         :key="btn.cookieStoreId || btn.name"
         :title="btn.name"
+        :loading="btn.loading"
         :data-active="panel === i"
         :data-hidden="btn.hidden"
         @click="onNavClick(i)"
         @mousedown.right="openMenu(i)")
         svg(:style="{fill: btn.colorCode}")
           use(:xlink:href="'#' + btn.icon")
+        .ok-badge
+          svg: use(xlink:href="#icon_ok")
+        .err-badge
+          svg: use(xlink:href="#icon_err")
+        .loading-spinner
+          each n in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+            .spinner-stick(class='spinner-stick-' + n)
 
     //- Add new container
     .add-btn(v-if="!$root.private", :title="t('sidebar.nav_add_ctx_title')", @click="openMenu(-1)")
@@ -57,6 +65,11 @@
       :pos="getPanelPos(i)"
       :active="i === panel"
       @create-tab="createTab"
+      @ready="onPanelReady(i)"
+      @panel-loading-start="onPanelLoadingStart(i)"
+      @panel-loading-end="onPanelLoadingEnd(i)"
+      @panel-loading-ok="onPanelLoadingOk(i)"
+      @panel-loading-err="onPanelLoadingErr(i)"
       @closedown="closeTabsDown(i, $event)")
     settings-panel.panel(:pos="settingsPanelPos")
 </template>
@@ -129,6 +142,8 @@ export default {
       contexts: [],
       allTabs: [],
       activeTabs: [],
+      loading: [true],
+      loadingTimers: [],
       drag: null,
     }
   },
@@ -171,6 +186,7 @@ export default {
       let hideOffset = 0
       for (i = 0; i < DEFAULT_PANELS.length; i++, k++) {
         const btn = DEFAULT_PANELS[i]
+        btn.loading = this.loading[i]
         btn.hidden = false
         if (noPinned && btn.pinned) {
           btn.hidden = true
@@ -188,6 +204,7 @@ export default {
       }
       for (i = 0; i < this.contexts.length; i++, k++) {
         const btn = this.contexts[i]
+        btn.loading = this.loading[k]
         if (this.$root.private) {
           btn.hidden = true
           continue
@@ -669,6 +686,42 @@ export default {
         this.panel = panelIndex
         this.$root.activePanel = this.panel
       }
+    },
+
+    onPanelReady(i) {
+      this.onPanelLoadingEnd(i)
+    },
+
+    onPanelLoadingStart(i) {
+      this.loading[i] = true
+      this.loading = [...this.loading]
+      if (this.loadingTimers[i]) {
+        clearTimeout(this.loadingTimers[i])
+        this.loadingTimers[i] = null
+      }
+    },
+
+    onPanelLoadingEnd(i) {
+      this.loading[i] = false
+      this.loading = [...this.loading]
+    },
+
+    onPanelLoadingOk(i) {
+      this.loading[i] = 'ok'
+      this.loading = [...this.loading]
+      this.loadingTimers[i] = setTimeout(() => {
+        this.onPanelLoadingEnd(i)
+        this.loadingTimers[i] = null
+      }, 2000)
+    },
+
+    onPanelLoadingErr(i) {
+      this.loading[i] = 'err'
+      this.loading = [...this.loading]
+      this.loadingTimers[i] = setTimeout(() => {
+        this.onPanelLoadingEnd(i)
+        this.loadingTimers[i] = null
+      }, 2000)
     },
     // ---
 
@@ -1263,13 +1316,79 @@ NAV_CONF_HEIGHT = auto
     size(0)
     opacity: 0
     z-index: -1
+  &[loading="true"]
+    cursor: progress
+    > .loading-spinner
+      opacity: 1
+  &[loading="ok"]
+    > .ok-badge
+      opacity: 1
+      transform: scale(1, 1)
+  &[loading="err"]
+    > .err-badge
+      opacity: 1
+      transform: scale(1, 1)
+  &[loading]
+    > svg
+      mask: radial-gradient(
+        circle at calc(100% - 2px) calc(100% - 2px),
+        #00000032,
+        #00000032 7px,
+        #000000 8px,
+        #000000
+      )
 
 .Sidebar .panel-btn > svg
   box(absolute)
   size(16px, same)
   fill: var(--nav-btn-fg)
-  tranform: translateZ(0)
+  transform: translateZ(0)
   transition: opacity var(--d-fast)
+
+.Sidebar .panel-btn > .loading-spinner
+  box(absolute)
+  size(11px, same)
+  pos(b: 5px, r: 6px)
+  border-radius: 50%
+  opacity: 0
+  transition: opacity var(--d-norm)
+
+  > .spinner-stick
+    box(absolute)
+    size(1px, 3px)
+    pos(calc(50% - 1px), calc(50% - 1px))
+    transform-origin: 50% 0%
+    opacity: 0
+
+    &:before
+      box(absolute)
+      pos(2.5px, 0)
+      size(100%, same)
+      background-color: #278dff
+      content: ''
+  for i in 0..12
+    > .spinner-stick-{i}
+      transform: rotateZ((i * 30)deg)
+      animation: loading-spin .6s (i*50)ms infinite
+
+.Sidebar .panel-btn > .ok-badge
+.Sidebar .panel-btn > .err-badge
+  box(absolute)
+  size(9px, same)
+  pos(b: 6px, r: 7px)
+  border-radius: 50%
+  opacity: 0
+  transform: scale(0.7, 0.7)
+  transition: opacity var(--d-norm), transform var(--d-norm)
+  > svg
+    box(absolute)
+    size(100%, same)
+
+.Sidebar .panel-btn > .ok-badge > svg
+  fill: #43D043
+
+.Sidebar .panel-btn > .err-badge > svg
+  fill: #DB2216
 
 .Sidebar .add-btn
 .Sidebar .settings-btn
@@ -1318,4 +1437,10 @@ NAV_CONF_HEIGHT = auto
     transform: translateX(-100%)
   &[pos="right"]
     transform: translateX(100%)
+
+@keyframes loading-spin
+  0%
+    opacity: 1
+  100%
+    opacity: 0
 </style>

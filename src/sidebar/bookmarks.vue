@@ -141,6 +141,10 @@ export default {
 
     this.tree = bookmarks[0].children
 
+    setTimeout(() => {
+      this.$emit('ready')
+    }, 120)
+
     if (this.active) {
       // 
       this.$nextTick(() => {
@@ -641,12 +645,15 @@ export default {
      * prev state.
      */
     async reloadBookmarks() {
+      this.$emit('panel-loading-start')
       try {
         let tree = await browser.bookmarks.getTree()
         this.tree = tree[0].children
+        this.$emit('panel-loading-ok')
       } catch (err) {
         Logs.E('Cannot reload bookmarks', err)
         this.tree = []
+        this.$emit('panel-loading-err')
       }
     },
   },

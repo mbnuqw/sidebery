@@ -27,6 +27,10 @@
         :tab="t"
         :panel-index="i"
         :selected="isSelected(t.id)"
+        @panel-loading-start="onPanelLoadingStart"
+        @panel-loading-end="onPanelLoadingEnd"
+        @panel-loading-ok="onPanelLoadingOk"
+        @panel-loading-err="onPanelLoadingErr"
         @mdl="onTabMDL(i, ...arguments)"
         @mdr="onTabMDR(i, ...arguments)"
         @closedown="$emit('closedown', i)")
@@ -341,6 +345,22 @@ export default {
           this.dragEnd = false
         }, 128)
       }
+    },
+
+    onPanelLoadingStart() {
+      this.$emit('panel-loading-start')
+    },
+
+    onPanelLoadingEnd() {
+      this.$emit('panel-loading-end')
+    },
+
+    onPanelLoadingOk() {
+      this.$emit('panel-loading-ok')
+    },
+
+    onPanelLoadingErr() {
+      this.$emit('panel-loading-err')
     },
 
     /**

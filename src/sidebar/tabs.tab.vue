@@ -20,9 +20,16 @@
   .audio(@click="mute")
     svg.-loud: use(xlink:href="#icon_loud")
     svg.-mute: use(xlink:href="#icon_mute")
-  .fav
+  .fav(:loading="loading")
     .placeholder
     img(:src="favicon", @load.passive="onFaviconLoad", @error="onFaviconErr")
+    .ok-badge
+      svg: use(xlink:href="#icon_ok")
+    .err-badge
+      svg: use(xlink:href="#icon_err")
+    .loading-spinner
+      each n in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+        .spinner-stick(class='spinner-stick-' + n)
   .ctx(v-if="tab.ctxIcon", :style="{background: tab.ctxColor}")
   .close(v-if="$root.showTabRmBtn", @mousedown.stop="close", @mouseup.stop="")
     svg: use(xlink:href="#icon_remove")
@@ -52,6 +59,7 @@ export default {
     return {
       menu: false,
       faviErr: false,
+      loading: false,
     }
   },
 
@@ -327,16 +335,51 @@ export default {
       browser.tabs.remove(this.tab.id)
     },
 
+    loadingStart() {
+      this.loading = true
+      if (this.loadingTimer) {
+        clearTimeout(this.loadingTimer)
+        this.loadingTimer = null
+      }
+    },
+
+    loadingEnd() {
+      this.loading = false
+    },
+
+    loadingOk() {
+      this.loading = 'ok'
+      this.loadingTimer = setTimeout(() => {
+        this.loadingEnd()
+        this.loadingTimer = null
+      }, 2000)
+    },
+
+    loadingErr() {
+      this.loading = 'err'
+      this.loadingTimer = setTimeout(() => {
+        this.loadingEnd()
+        this.loadingTimer = null
+      }, 2000)
+    },
+
     /**
      * Clear all cookies of this url
      */
     async clearCookies() {
-      this.$root.closeCtxMenu()
+      this.loadingStart()
+
       let url = new URL(this.tab.url)
       let domain = url.hostname
         .split('.')
         .slice(-2)
         .join('.')
+
+      if (!domain) {
+        this.loadingErr()
+        return
+      }
+
       let cookies = await browser.cookies.getAll({
         domain: domain,
         storeId: this.tab.cookieStoreId,
@@ -346,13 +389,17 @@ export default {
         storeId: this.tab.cookieStoreId,
       })
 
-      cookies.concat(fpcookies).map(c => {
-        browser.cookies.remove({
+      const clearing = cookies.concat(fpcookies).map(c => {
+        return browser.cookies.remove({
           storeId: this.tab.cookieStoreId,
           url: this.tab.url,
           name: c.name,
         })
       })
+
+      Promise.all(clearing)
+        .then(() => setTimeout(() => this.loadingOk(), 250))
+        .catch(() => setTimeout(() => this.loadingErr(), 250))
     },
 
     height() {
@@ -519,6 +566,27 @@ export default {
   opacity: 1
   z-index: 20
   transition: opacity var(--d-fast), transform var(--d-fast)
+  &[loading="true"]
+    cursor: progress
+    > .loading-spinner
+      opacity: 1
+  &[loading="ok"]
+    > .ok-badge
+      opacity: 1
+      transform: scale(1, 1)
+  &[loading="err"]
+    > .err-badge
+      opacity: 1
+      transform: scale(1, 1)
+  &[loading]
+    > img
+      mask: radial-gradient(
+        circle at calc(100% - 2px) calc(100% - 2px),
+        #00000032,
+        #00000032 7px,
+        #000000 8px,
+        #000000
+      )
 
 .Tab .fav > .placeholder
   box(absolute)
@@ -545,6 +613,52 @@ export default {
   box(absolute)
   size(100%, same)
   transition: opacity var(--d-fast), transform var(--d-fast)
+
+.Tab .fav > .loading-spinner
+  box(absolute)
+  size(11px, same)
+  pos(b: -3px, r: -3px)
+  border-radius: 50%
+  opacity: 0
+  transition: opacity var(--d-norm)
+
+  > .spinner-stick
+    box(absolute)
+    size(1px, 3px)
+    pos(calc(50% - 1px), calc(50% - 1px))
+    transform-origin: 50% 0%
+    opacity: 0
+
+    &:before
+      box(absolute)
+      pos(2.5px, 0)
+      size(100%, same)
+      background-color: #278dff
+      content: ''
+  for i in 0..12
+    > .spinner-stick-{i}
+      transform: rotateZ((i * 30)deg)
+      animation: loading-spin .6s (i*50)ms infinite
+
+.Tab .fav > .ok-badge
+.Tab .fav > .err-badge
+  box(absolute)
+  size(9px, same)
+  pos(b: -2px, r: -3px)
+  border-radius: 50%
+  opacity: 0
+  transform: scale(0.7, 0.7)
+  transition: opacity var(--d-norm), transform var(--d-norm)
+  > svg
+    box(absolute)
+    size(100%, same)
+
+.Tab .fav > .ok-badge > svg
+  fill: #43D043
+
+.Tab .fav > .err-badge > svg
+  fill: #DB2216
+
 
 // --- Context hightligh
 .Tab .ctx
