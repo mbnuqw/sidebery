@@ -256,9 +256,15 @@ export default {
         }
 
         if (p.cookieStoreId) {
-          p.tabs = this.allTabs.filter(t => {
-            return t.cookieStoreId === p.cookieStoreId && !t.pinned
-          })
+          p.tabs = []
+          for (let t of this.allTabs) {
+            if (t.cookieStoreId === p.cookieStoreId && !t.pinned) {
+              p.tabs.push(t)
+            }
+            if (p.tabs.length && t.cookieStoreId !== p.cookieStoreId) {
+              break
+            }
+          }
           this.updateActiveTab(i, p.tabs)
           if (p.tabs.length) {
             lastIndex = p.tabs[p.tabs.length - 1].index
@@ -518,9 +524,9 @@ export default {
       // this panel
       let panel = this.panels.find(p => p.cookieStoreId === tab.cookieStoreId)
       if (panel && panel.tabs) {
-        let targetIndex = panel.tabs.length ? panel.endIndex + 1 : panel.endIndex
-        if (tab.index > targetIndex || tab.index < panel.startIndex) {
-          browser.tabs.move(tab.id, { index: targetIndex })
+        let endIndex = panel.tabs.length ? panel.endIndex + 1 : panel.endIndex
+        if (tab.index > endIndex || tab.index < panel.startIndex) {
+          browser.tabs.move(tab.id, { index: endIndex })
         }
       }
 
@@ -672,12 +678,13 @@ export default {
 
       // Switch to tab's panel
       let tab = this.allTabs.find(t => t.id === info.tabId)
-      let panelIndex = 1
-      if (!tab.pinned) {
+      let panelIndex = -1
+      if (tab && !tab.pinned) {
         panelIndex = this.panels.findIndex(p => p.cookieStoreId === tab.cookieStoreId)
         if (panelIndex === -1) return
       }
-      if (this.panel !== panelIndex) {
+      if (tab && tab.pinned) panelIndex = 1
+      if (panelIndex > 0 && this.panel !== panelIndex) {
         this.panel = panelIndex
         this.$root.activePanel = this.panel
       }
