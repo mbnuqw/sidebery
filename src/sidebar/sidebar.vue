@@ -339,19 +339,14 @@ export default {
      */
     onWH(e) {
       if (this.$root.scrollThroughTabs !== 'none' && this.panel > 0) {
+        const globaly = this.$root.scrollThroughTabs === 'global'
         if (e.deltaY > 0) {
           if (this.wheelBlockTimeout) return
-          this.activateNextTab({
-            globaly: this.$root.scrollThroughTabs === 'global',
-            cycle: false,
-          })
+          this.activateNextTab({ globaly, cycle: false })
         }
         if (e.deltaY < 0) {
           if (this.wheelBlockTimeout) return
-          this.activatePrevTab({
-            globaly: this.$root.scrollThroughTabs === 'global',
-            cycle: false,
-          })
+          this.activatePrevTab({ globaly, cycle: false })
         }
       }
 
@@ -1181,7 +1176,6 @@ export default {
       if (!tabs || !tabs.length) return
 
       let current = tabs.findIndex(t => t.active)
-      if (current < 0) return
 
       let next = current + 1
       if (next >= tabs.length) {
@@ -1203,7 +1197,7 @@ export default {
       if (!tabs || !tabs.length) return
 
       let current = tabs.findIndex(t => t.active)
-      if (current < 0) return
+      if (current < 0) current = tabs.length
 
       let prev = current - 1
       if (prev < 0) {
