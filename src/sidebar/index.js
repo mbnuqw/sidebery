@@ -1,33 +1,23 @@
 import Vue from 'vue'
+import { mapGetters } from 'vuex'
 import Manifest from '../../addon/manifest.json'
 import Sidebar from './sidebar.vue'
 import Utils from '../libs/utils'
 import Logs from '../libs/logs'
 import Dict from '../mixins/dict'
+import Store from './store'
+import State from './store.state'
+import Getters from './store.getters'
+import DEFAULT_SETTINGS from './settings'
 
 const DEFAULT_CTX = 'firefox-default'
 const PRIVATE_CTX = 'firefox-private'
-const DEFAULT_SETTINGS = {
-  activateLastTabOnPanelSwitching: true,
-  createNewTabOnEmptyPanel: false,
-  skipEmptyPanels: false,
-  showTabRmBtn: true,
-  hScrollThroughPanels: false,
-  scrollThroughTabs: 'none',
-  tabDoubleClick: 'none',
-  tabLongLeftClick: 'none',
-  tabLongRightClick: 'none',
-  openBookmarkNewTab: false,
-  fontSize: 'm',
-  theme: 'dark',
-  bgNoise: true,
-  animations: true,
-}
 
 Vue.mixin(Dict)
 
-new Vue({
+export default new Vue({
   el: '#root',
+  store: Store,
 
   components: {
     Sidebar,
@@ -52,50 +42,25 @@ new Vue({
       syncPanels: [],
       lastSyncPanels: null,
 
-      // --- Settings options
-      scrollThroughTabsOpts: ['panel', 'global', 'none'],
-      tabDoubleClickOpts: ['reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'none'],
-      tabLongLeftClickOpts: ['close_down', 'reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'none'],
-      tabLongRightClickOpts: ['close_down', 'reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'none'],
-      fontSizeOpts: ['xs', 's', 'm', 'l', 'xl', 'xxl'],
-      themeOpts: ['dark', 'light'],
-
-      // --- Settings
-      settingsLoaded: false,
-      activateLastTabOnPanelSwitching: DEFAULT_SETTINGS.activateLastTabOnPanelSwitching,
-      createNewTabOnEmptyPanel: DEFAULT_SETTINGS.createNewTabOnEmptyPanel,
-      skipEmptyPanels: DEFAULT_SETTINGS.skipEmptyPanels,
-      showTabRmBtn: DEFAULT_SETTINGS.showTabRmBtn,
-      hScrollThroughPanels: DEFAULT_SETTINGS.hScrollThroughPanels,
-      scrollThroughTabs: DEFAULT_SETTINGS.scrollThroughTabs,
-      tabDoubleClick: DEFAULT_SETTINGS.tabDoubleClick,
-      tabLongLeftClick: DEFAULT_SETTINGS.tabLongLeftClick,
-      tabLongRightClick: DEFAULT_SETTINGS.tabLongRightClick,
-      openBookmarkNewTab: DEFAULT_SETTINGS.openBookmarkNewTab,
-      fontSize: DEFAULT_SETTINGS.fontSize,
-      theme: DEFAULT_SETTINGS.theme,
-      bgNoise: DEFAULT_SETTINGS.bgNoise,
-      animations: DEFAULT_SETTINGS.animations,
-      keybindings: [],
-      dragTabToPanels: false,
-
       // --- Cached
       favicons: {},
     }
   },
 
   computed: {
+    ...mapGetters(['fontSize']),
+
     themeClass() {
-      return '-' + this.theme
+      return '-' + State.theme
     },
 
     animateClass() {
-      if (this.animations) return '-animate'
+      if (State.animations) return '-animate'
       else return '-no-animate'
     },
 
     defaultCtx() {
-      return this.private ? PRIVATE_CTX : DEFAULT_CTX
+      return State.private ? PRIVATE_CTX : DEFAULT_CTX
     },
   },
 
@@ -108,21 +73,21 @@ new Vue({
   beforeCreate() {
     browser.windows.getCurrent()
       .then(win => {
-        this.private = win.incognito
-        this.windowId = win.id
+        State.private = win.incognito
+        State.windowId = win.id
       })
 
     browser.runtime.getPlatformInfo()
       .then(osInfo => {
-        this.osInfo = osInfo
-        this.os = osInfo.os
+        State.osInfo = osInfo
+        State.os = osInfo.os
       })
 
     browser.runtime.getBrowserInfo()
       .then(ffInfo => {
-        this.ffInfo = ffInfo
-        this.ffVer = parseInt(ffInfo.version.slice(0, 2))
-        if (isNaN(this.ffVer)) this.ffVer = 0
+        State.ffInfo = ffInfo
+        State.ffVer = parseInt(ffInfo.version.slice(0, 2))
+        if (isNaN(State.ffVer)) State.ffVer = 0
       })
   },
 
@@ -131,13 +96,14 @@ new Vue({
     browser.storage.onChanged.addListener(this.onChangeStorage)
     browser.commands.onCommand.addListener(this.onCmd)
 
-    let debounced = Utils.Debounce(() => this.saveState(), 567)
-    this.$watch('activePanel', debounced.func)
+    let debounced = Utils.Debounce(() => Store.dispatch('saveState'), 567)
+    Store.watch(Getters.activePanel, debounced.func)
+    // this.$watch('activePanel', debounced.func)
 
-    await this.loadSettings()
-    await this.loadState()
-    await this.loadKebindings()
-    await this.loadFavicons()
+    await Store.dispatch('loadSettings')
+    await Store.dispatch('loadState')
+    await Store.dispatch('loadKebindings')
+    await Store.dispatch('loadFavicons')
     await this.loadLocalID()
     await this.loadPanels()
   },
@@ -164,7 +130,7 @@ new Vue({
      * Handle changes of all storages (update current state)
      */
     onChangeStorage(changes, type) {
-      if (changes.settings) this.loadSettings()
+      if (changes.settings) Store.dispatch('loadSettings')
       if (type === 'sync') {
         let ids = Object.keys(changes).filter(id => id !== this.localID)
         if (!ids.length) return
@@ -186,96 +152,25 @@ new Vue({
 
     updateFontSize() {
       const htmlEl = document.documentElement
-      if (this.fontSize === 'xs') htmlEl.style.fontSize = '13.5px'
-      else if (this.fontSize === 's') htmlEl.style.fontSize = '14px'
-      else if (this.fontSize === 'm') htmlEl.style.fontSize = '14.5px'
-      else if (this.fontSize === 'l') htmlEl.style.fontSize = '15px'
-      else if (this.fontSize === 'xl') htmlEl.style.fontSize = '15.5px'
-      else if (this.fontSize === 'xxl') htmlEl.style.fontSize = '16px'
+      if (State.fontSize === 'xs') htmlEl.style.fontSize = '13.5px'
+      else if (State.fontSize === 's') htmlEl.style.fontSize = '14px'
+      else if (State.fontSize === 'm') htmlEl.style.fontSize = '14.5px'
+      else if (State.fontSize === 'l') htmlEl.style.fontSize = '15px'
+      else if (State.fontSize === 'xl') htmlEl.style.fontSize = '15.5px'
+      else if (State.fontSize === 'xxl') htmlEl.style.fontSize = '16px'
       else htmlEl.style.fontSize = '14.5px'
     },
 
-    // --- Settings ---
-    /**
-     * Try to load settings from local storage.
-     */
-    async loadSettings() {
-      let ans = await browser.storage.local.get('settings')
-      let settings = ans.settings
-      if (!settings) {
-        this.settingsLoaded = true
-        return
-      }
-
-      for (const key in settings) {
-        if (!settings.hasOwnProperty(key)) continue
-        if (settings[key] === undefined) continue
-        Vue.set(this, key, settings[key])
-      }
-
-      this.settingsLoaded = true
-    },
-
-    /**
-     * Save settings to local storage
-     */
-    async saveSettings() {
-      if (!this.settingsLoaded) return
-      let settings = {}
-      for (const key in DEFAULT_SETTINGS) {
-        if (!DEFAULT_SETTINGS.hasOwnProperty(key)) continue
-        if (this[key] == null || this[key] == undefined) continue
-        settings[key] = this[key]
-      }
-      await browser.storage.local.set({ settings })
-    },
-    // ---
-
-    // --- State ---
-    async loadState() {
-      let ans = await browser.storage.local.get('state')
-      let state = ans.state
-      if (!state) {
-        this.stateLoaded = true
-        return
-      }
-
-      if (!this.private && state.activePanel !== 2) {
-        this.activePanel = state.activePanel
-        this.$refs.sidebar.panel = this.activePanel
-      }
-      if (this.private) {
-        this.activePanel = 2
-        this.$refs.sidebar.panel = 2
-      }
-      if (state.syncPanels) {
-        this.syncPanels = state.syncPanels
-      }
-
-      this.stateLoaded = true
-    },
-
-    async saveState() {
-      if (!this.stateLoaded) return
-      await browser.storage.local.set({
-        state: {
-          activePanel: this.activePanel,
-          syncPanels: this.syncPanels,
-        },
-      })
-    },
-    // ---
-
     // --- Favicons cache ---
-    async loadFavicons() {
-      let ans = await browser.storage.local.get('favicons')
-      if (!ans.favicons) return
-      try {
-        this.favicons = JSON.parse(ans.favicons) || {}
-      } catch (err) {
-        this.favicons = {}
-      }
-    },
+    // async loadFavicons() {
+    //   let ans = await browser.storage.local.get('favicons')
+    //   if (!ans.favicons) return
+    //   try {
+    //     this.favicons = JSON.parse(ans.favicons) || {}
+    //   } catch (err) {
+    //     this.favicons = {}
+    //   }
+    // },
 
     /**
      * Store favicon to global state and
@@ -343,26 +238,6 @@ new Vue({
     },
 
     // --- Keybindings ---
-    /**
-     * Load keybindings
-     */
-    async loadKebindings() {
-      let commands = await browser.commands.getAll()
-      this.keybindings = commands
-    },
-
-    /**
-     * Update keybindings
-     */
-    async updateKeybinding(name, shortcut) {
-      Logs.D(`Update keybinding: '${name}' to '${shortcut}'`)
-      try {
-        await browser.commands.update({ name, shortcut })
-      } catch (err) {
-        Logs.E(`Cannot find command '${name}'`, err)
-      }
-    },
-
     // Commands listeners
     onCmd(name) {
       if (!this.windowFocused) return
@@ -389,20 +264,6 @@ new Vue({
       if (!this.$refs.sidebar) return
       let activeTab = this.$refs.sidebar.allTabs.find(t => t.active)
       this.$refs.sidebar.removeTab(activeTab)
-    },
-
-    /**
-     * Reset addon's keybindings
-     */
-    async resetKeybindings() {
-      Logs.D('Reset keybindings')
-      this.keybindings.map(async k => {
-        await browser.commands.reset(k.name)
-      })
-
-      setTimeout(() => {
-        this.loadKebindings()
-      }, 120)
     },
     // ---
 

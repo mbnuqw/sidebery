@@ -4,28 +4,28 @@
     section
       h2 {{t('settings.general_title')}}
       .field(
-        :opt-true="$root.activateLastTabOnPanelSwitching"
+        :opt-true="$store.state.activateLastTabOnPanelSwitching"
         @click="toggleOpt('activateLastTabOnPanelSwitching')")
         .label {{t('settings.activate_last_tab_on_panel_switching')}}
         .input
           .opt.-true {{t('settings.opt_true')}}
           .opt.-false {{t('settings.opt_false')}}
-      .field(:opt-true="$root.createNewTabOnEmptyPanel", @click="toggleOpt('createNewTabOnEmptyPanel')")
+      .field(:opt-true="$store.state.createNewTabOnEmptyPanel", @click="toggleOpt('createNewTabOnEmptyPanel')")
         .label {{t('settings.create_new_tab_on_empty_panel')}}
         .input
           .opt.-true {{t('settings.opt_true')}}
           .opt.-false {{t('settings.opt_false')}}
-      .field(:opt-true="$root.skipEmptyPanels", @click="toggleOpt('skipEmptyPanels')")
+      .field(:opt-true="$store.state.skipEmptyPanels", @click="toggleOpt('skipEmptyPanels')")
         .label {{t('settings.skip_empty_panels')}}
         .input
           .opt.-true {{t('settings.opt_true')}}
           .opt.-false {{t('settings.opt_false')}}
-      .field(:opt-true="$root.showTabRmBtn", @click="toggleOpt('showTabRmBtn')")
+      .field(:opt-true="$store.state.showTabRmBtn", @click="toggleOpt('showTabRmBtn')")
         .label {{t('settings.show_tab_rm_btn')}}
         .input
           .opt.-true {{t('settings.opt_true')}}
           .opt.-false {{t('settings.opt_false')}}
-      .field(:opt-true="$root.hScrollThroughPanels", @click="toggleOpt('hScrollThroughPanels')")
+      .field(:opt-true="$store.state.hScrollThroughPanels", @click="toggleOpt('hScrollThroughPanels')")
         .label {{t('settings.h_scroll_through_panels')}}
         .input
           .opt.-true {{t('settings.opt_true')}}
@@ -34,31 +34,31 @@
         .label {{t('settings.scroll_through_tabs')}}
         .input
           .opt(
-            v-for="o in $root.scrollThroughTabsOpts"
+            v-for="o in $store.state.scrollThroughTabsOpts"
             :opt-none="o === 'none'"
-            :opt-true="o === $root.scrollThroughTabs") {{t('settings.scroll_tabs_' + o)}}
+            :opt-true="o === $store.state.scrollThroughTabs") {{t('settings.scroll_tabs_' + o)}}
       .field(@mousedown="switchOpt($event, 'tabDoubleClick')")
         .label {{t('settings.tab_double_click')}}
         .input
           .opt(
-            v-for="o in $root.tabDoubleClickOpts"
+            v-for="o in $store.state.tabDoubleClickOpts"
             :opt-none="o === 'none'"
-            :opt-true="o === $root.tabDoubleClick") {{t('settings.tab_action_' + o)}}
+            :opt-true="o === $store.state.tabDoubleClick") {{t('settings.tab_action_' + o)}}
       .field(@mousedown="switchOpt($event, 'tabLongLeftClick')")
         .label {{t('settings.tab_long_left_click')}}
         .input
           .opt(
-            v-for="o in $root.tabLongLeftClickOpts"
+            v-for="o in $store.state.tabLongLeftClickOpts"
             :opt-none="o === 'none'"
-            :opt-true="o === $root.tabLongLeftClick") {{t('settings.tab_action_' + o)}}
+            :opt-true="o === $store.state.tabLongLeftClick") {{t('settings.tab_action_' + o)}}
       .field(@mousedown="switchOpt($event, 'tabLongRightClick')")
         .label {{t('settings.tab_long_right_click')}}
         .input
           .opt(
-            v-for="o in $root.tabLongRightClickOpts"
+            v-for="o in $store.state.tabLongRightClickOpts"
             :opt-none="o === 'none'"
-            :opt-true="o === $root.tabLongRightClick") {{t('settings.tab_action_' + o)}}
-      .field(:opt-true="$root.openBookmarkNewTab", @click="toggleOpt('openBookmarkNewTab')")
+            :opt-true="o === $store.state.tabLongRightClick") {{t('settings.tab_action_' + o)}}
+      .field(:opt-true="$store.state.openBookmarkNewTab", @click="toggleOpt('openBookmarkNewTab')")
         .label {{t('settings.open_bookmark_new_tab')}}
         .input
           .opt.-true {{t('settings.opt_true')}}
@@ -69,17 +69,17 @@
       .field(@mousedown="switchOpt($event, 'fontSize')")
         .label {{t('settings.font_size')}}
         .input
-          .opt(v-for="o in $root.fontSizeOpts", :opt-true="o === $root.fontSize") {{t('settings.font_size_' + o)}}
+          .opt(v-for="o in $store.state.fontSizeOpts", :opt-true="o === $store.state.fontSize") {{t('settings.font_size_' + o)}}
       .field(@mousedown="switchOpt($event, 'theme')")
         .label {{t('settings.switch_theme')}}
         .input
-          .opt(v-for="o in $root.themeOpts", :opt-true="o === $root.theme") {{t('settings.theme_' + o)}}
-      .field(:opt-true="$root.bgNoise", @click="toggleOpt('bgNoise')")
+          .opt(v-for="o in $store.state.themeOpts", :opt-true="o === $store.state.theme") {{t('settings.theme_' + o)}}
+      .field(:opt-true="$store.state.bgNoise", @click="toggleOpt('bgNoise')")
         .label {{t('settings.bg_noise')}}
         .input
           .opt.-true {{t('settings.opt_true')}}
           .opt.-false {{t('settings.opt_false')}}
-      .field(:opt-true="$root.animations", @click="toggleOpt('animations')")
+      .field(:opt-true="$store.state.animations", @click="toggleOpt('animations')")
         .label {{t('settings.animations')}}
         .input
           .opt.-true {{t('settings.opt_true')}}
@@ -88,7 +88,7 @@
     section
       h2 {{t('settings.kb_title')}}
       .keybinding(
-        v-for="(k, i) in $root.keybindings"
+        v-for="(k, i) in $store.state.keybindings"
         :key="k.name"
         :is-focused="k.focus"
         @click="changeKeybinding(k, i)")
@@ -148,6 +148,8 @@
 import ScrollBox from './scroll-box'
 import Utils from '../libs/utils'
 import Logs from '../libs/logs'
+import Store from './store'
+import State from './store.state'
 
 const VALID_SHORTCUT_62 = /^((Ctrl|Alt|Command|MacCtrl)\+)(Shift\+)?([A-Z0-9]|Comma|Period|Home|End|PageUp|PageDown|Space|Insert|Delete|Up|Down|Left|Right|F\d\d?)$|^((Ctrl|Alt|Command|MacCtrl)\+)?(Shift\+)?(F\d\d?)$/
 const VALID_SHORTCUT = /^((Ctrl|Alt|Command|MacCtrl)\+)((Shift|Alt)\+)?([A-Z0-9]|Comma|Period|Home|End|PageUp|PageDown|Space|Insert|Delete|Up|Down|Left|Right|F\d\d?)$|^((Ctrl|Alt|Command|MacCtrl)\+)?((Shift|Alt)\+)?(F\d\d?)$/
@@ -168,19 +170,19 @@ export default {
 
   computed: {
     issueLink() {
-      if (!this.$root.osInfo || !this.$root.ffInfo) return ISSUE_URL
+      if (!State.osInfo || !State.ffInfo) return ISSUE_URL
 
-      let body = `\n\n\n> OS: ${this.$root.osInfo.os} ${this.$root.osInfo.arch}  \n`
-      body += `> Firefox: ${this.$root.ffInfo.version}  \n`
-      body += `> Extension: ${this.$root.version}  \n`
+      let body = `\n\n\n> OS: ${State.osInfo.os} ${State.osInfo.arch}  \n`
+      body += `> Firefox: ${State.ffInfo.version}  \n`
+      body += `> Extension: ${State.version}  \n`
       return ISSUE_URL + '?body=' + encodeURIComponent(body)
     },
   },
 
   methods: {
     switchOpt(e, optName) {
-      const opt = this.$root[optName]
-      const opts = this.$root[optName + 'Opts']
+      const opt = State[optName]
+      const opts = State[optName + 'Opts']
       if (opt === undefined || opts === undefined) return
 
       let i = opts.indexOf(opt)
@@ -188,26 +190,28 @@ export default {
       if (e.button === 2) i--
       if (i >= opts.length) i = 0
       if (i < 0) i = opts.length - 1
-      this.$set(this.$root, optName, opts[i])
-      this.$root.saveSettings()
+      Store.commit('setSetting', { key: optName, val: opts[i] })
+      Store.dispatch('saveSettings')
     },
 
     toggleOpt(optName) {
-      const opt = this.$root[optName]
+      const opt = State[optName]
       if (opt === undefined) return
-      this.$set(this.$root, optName, !opt)
-      this.$root.saveSettings()
+      // this.$set(this.$root, optName, !opt)
+      // this.$root.saveSettings()
+      Store.commit('setSetting', { key: optName, val: !opt })
+      Store.dispatch('saveSettings')
     },
 
     // --- Keybinding ---
     changeKeybinding(k, i) {
       this.$refs.keybindingInputs[i].focus()
-      this.lastShortcut = this.$root.keybindings[i]
-      this.$root.keybindings.splice(i, 1, {...k, shortcut: 'Press new shortcut', focus: true})
+      this.lastShortcut = State.keybindings[i]
+      State.keybindings.splice(i, 1, {...k, shortcut: 'Press new shortcut', focus: true})
     },
     onKBBlur(k, i) {
       if (this.lastShortcut) {
-        this.$root.keybindings.splice(i, 1, this.lastShortcut)
+        State.keybindings.splice(i, 1, this.lastShortcut)
         this.lastShortcut = null
         return
       }
@@ -217,7 +221,7 @@ export default {
 
       let shortcut = []
       if (e.ctrlKey) {
-        if (this.$root.os === 'mac') shortcut.push('MacCtrl')
+        if (State.os === 'mac') shortcut.push('MacCtrl')
         else shortcut.push('Ctrl')
       }
       if (e.altKey) shortcut.push('Alt')
@@ -232,8 +236,9 @@ export default {
 
       if (this.checkShortcut(shortcut)) {
         this.lastShortcut = null
-        this.$root.keybindings.splice(i, 1, {...k, shortcut, focus: false})
-        this.$root.updateKeybinding(k.name, shortcut)
+        State.keybindings.splice(i, 1, {...k, shortcut, focus: false})
+        // this.$root.updateKeybinding(k.name, shortcut)
+        Store.dispatch('updateKeybinding', { name: k.name, shortcut })
         this.$refs.keybindingInputs[i].blur()
       }
     },
@@ -241,19 +246,20 @@ export default {
       this.$refs.keybindingInputs[i].blur()
     },
     checkShortcut(shortcut) {
-      let exists = this.$root.keybindings.find(k => k.shortcut === shortcut)
-      if (this.$root.ffVer > 62) return VALID_SHORTCUT.test(shortcut) && !exists
+      let exists = State.keybindings.find(k => k.shortcut === shortcut)
+      if (State.ffVer > 62) return VALID_SHORTCUT.test(shortcut) && !exists
       else return VALID_SHORTCUT_62.test(shortcut) && !exists
     },
     resetKeybindings() {
-      this.$root.resetKeybindings()
+      // this.$root.resetKeybindings()
+      Store.dispatch('resetKeybindings')
     },
     normalizeShortcut(s) {
-      if (this.$root.os === 'mac') {
+      if (State.os === 'mac') {
         return s.replace('Command', '⌘').replace('MacCtrl', 'Ctrl')
       }
-      if (this.$root.os === 'win') return s.replace('Command', 'Win')
-      if (this.$root.os === 'linux') return s.replace('Command', 'Super')
+      if (State.os === 'win') return s.replace('Command', 'Win')
+      if (State.os === 'linux') return s.replace('Command', 'Super')
       return s
     },
 

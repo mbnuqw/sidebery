@@ -41,7 +41,8 @@
     "web-ext": "2.9.1"
   },
   "dependencies": {
-    "vue": "2.5.17"
+    "vue": "2.5.17",
+    "vuex": "3.0.1"
   },
   "prettier": {
     "semi": false,

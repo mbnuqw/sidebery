@@ -77,18 +77,21 @@
 
 <script>
 import Vue from 'vue'
-import NoiseBg from '../directives/noise-bg'
-import Utils from '../libs/utils'
-import Logs from '../libs/logs'
-import { Translate } from '../mixins/dict'
-import CtxMenu from './context-menu'
-import BookmarksPanel from './bookmarks'
-import BookmarksMenu from './bookmarks.menu'
-import TabsPanel from './tabs'
-import TabsDefaultMenu from './tabs.default.menu'
-import TabsMenu from './tabs.menu'
-import SettingsPanel from './settings'
-import WindowInput from './input.window'
+import NoiseBg from '../directives/noise-bg.js'
+import Utils from '../libs/utils.js'
+import Logs from '../libs/logs.js'
+import { Translate } from '../mixins/dict.js'
+import CtxMenu from './context-menu.vue'
+import BookmarksPanel from './bookmarks.vue'
+import BookmarksMenu from './bookmarks.menu.vue'
+import TabsPanel from './tabs.vue'
+import TabsDefaultMenu from './tabs.default.menu.vue'
+import TabsMenu from './tabs.menu.vue'
+import SettingsPanel from './settings.vue'
+import WindowInput from './input.window.vue'
+
+import Root from './index.js'
+console.log('[DEBUG] Trying to impot root from sidebar.vue');
 
 Vue.directive('noise', NoiseBg)
 
@@ -318,6 +321,9 @@ export default {
   // --- Mounted Hook ---
   mounted() {
     this.updateNavSize()
+
+    console.log('[DEBUG] >', this.$root);
+    console.log('[DEBUG] >', Root);
   },
 
   beforeDestroy() {
@@ -370,6 +376,9 @@ export default {
       if (e.deltaY < 0) return this.switchToPrevPanel()
     },
 
+    /**
+     * Mouse enter event handler
+     */
     onME() {
       if (this.leaveTimeout) {
         clearTimeout(this.leaveTimeout)
@@ -377,12 +386,18 @@ export default {
       }
     },
 
+    /**
+     * Mouse leave event handler
+     */
     onML() {
       this.leaveTimeout = setTimeout(() => {
         this.$root.closeCtxMenu()
       }, 500)
     },
 
+    /**
+     * Mouse down event handler
+     */
     onMD(e) {
       if (e.button === 1) {
         if (this.wheelBlockTimeout) {
@@ -396,14 +411,23 @@ export default {
       if (e.button < 2) this.$root.closeCtxMenu()
     },
 
+    /**
+     * Drag enter event handler
+     */
     onDragEnter() {
       // console.log('[DEBUG] DRAG ENTER', e.dataTransfer);
     },
 
+    /**
+     * Drag leave event handler
+     */
     onDragLeave() {
       // console.log('[DEBUG] DRAG LEAVE', e.dataTransfer);
     },
 
+    /**
+     * Drop event handler
+     */
     onDrop(e) {
       if (!e.dataTransfer) return
 
@@ -448,6 +472,9 @@ export default {
       }
     },
 
+    /**
+     * Navigation button click hadler
+     */
     onNavClick(i) {
       if (this.panel !== i) {
         this.switchToPanel(i)
