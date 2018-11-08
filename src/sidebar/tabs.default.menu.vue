@@ -2,7 +2,7 @@
 .Menu(v-noise:300.g:12:af.a:0:42.s:0:9="")
   h2 {{conf.name}}
 
-  .field(v-if="!$root.private", :opt-true="syncON", @click="toggleSync")
+  .field(v-if="!isPrivate", :opt-true="syncON", @click="toggleSync")
     .label {{t('tabs_menu.sync_label')}}
     .input
       .opt.-true {{t('settings.opt_true')}}
@@ -16,6 +16,9 @@
 
 
 <script>
+import {mapGetters} from 'vuex'
+import State from './store.state'
+
 export default {
   props: {
     conf: Object,
@@ -26,9 +29,11 @@ export default {
   },
 
   computed: {
+    ...mapGetters(['isPrivate']),
+
     syncON() {
-      if (this.conf.pinned) return !!this.$root.syncPanels.find(p => p === 'pinned')
-      else return !!this.$root.syncPanels.find(p => p === this.$root.defaultCtx)
+      if (this.conf.pinned) return !!State.syncPanels.find(p => p === 'pinned')
+      else return !!State.syncPanels.find(p => p === State.defaultCtx)
     },
 
     haveTabs() {
@@ -39,12 +44,12 @@ export default {
 
   methods: {
     toggleSync() {
-      let id = this.conf.pinned ? 'pinned' : this.$root.defaultCtx
-      let pi = this.$root.syncPanels.findIndex(p => p === id)
-      if (pi !== -1) this.$root.syncPanels.splice(pi, 1)
-      else this.$root.syncPanels.push(id)
-      this.$root.resyncPanels()
-      this.$root.saveState()
+      let id = this.conf.pinned ? 'pinned' : State.defaultCtx
+      let pi = State.syncPanels.findIndex(p => p === id)
+      if (pi !== -1) State.syncPanels.splice(pi, 1)
+      else State.syncPanels.push(id)
+      State.resyncPanels()
+      State.saveState()
     },
 
     dedupTabs() {

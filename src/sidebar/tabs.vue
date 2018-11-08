@@ -38,6 +38,8 @@
 
 
 <script>
+import Store from './store'
+import State from './store.state'
 import Tab from './tabs.tab'
 import ScrollBox from './scroll-box'
 import Utils from '../libs/utils'
@@ -114,7 +116,7 @@ export default {
     onTabsSelection(e) {
       if (!this.selection.active && Math.abs(e.clientY - this.selection.y) > 10) {
         this.selection.active = true
-        this.$root.closeCtxMenu()
+        Store.commit('closeCtxMenu')
         this.selectedTabs.push(this.selection.id)
         this.recalcDragTabs()
       }
@@ -169,7 +171,7 @@ export default {
       const menu = new CtxMenu(this.selectionMenuEl, this.closeSelectionMenu)
 
       // Default window
-      if (!this.$root.private) {
+      if (!State.private) {
         // Move to new window
         menu.add('move_to_new_window', this.moveSelectedTabsToNewWin)
 
@@ -194,7 +196,7 @@ export default {
       }
 
       // Private window
-      if (this.$root.private) {
+      if (State.private) {
         if (otherWindows.length === 1) {
           menu.add('reopen_in_another_window', () => this.reopenInWin(otherWindows[0]))
         }
@@ -206,8 +208,8 @@ export default {
       menu.add('tabs_reload', this.reloadSelectedTabs)
       menu.add('tabs_close', this.closeSelectedTabs)
 
-      this.$root.closeCtxMenu()
-      this.$root.ctxMenu = menu
+      Store.commit('closeCtxMenu')
+      State.ctxMenu = menu
     },
 
     closeSelectionMenu() {
@@ -283,13 +285,13 @@ export default {
         this.$refs.dragTabs[this.drag.i].style.transform = `translate(0px, ${dragY}px)`
 
         if (dragX > 30) {
-          if (!this.$root.dragTabToPanels) return
+          if (!State.dragTabToPanels) return
           this.$parent.dragToNextPanel(this.drag)
           this.drag = null
         }
 
         if (dragX < -30) {
-          if (!this.$root.dragTabToPanels) return
+          if (!State.dragTabToPanels) return
           this.$parent.dragToPrevPanel(this.drag)
           this.drag = null
         }

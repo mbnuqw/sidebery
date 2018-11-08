@@ -29,6 +29,9 @@
 
 
 <script>
+import Store from './store'
+import State from './store.state'
+
 export default {
   name: 'BNode',
   props: {
@@ -70,7 +73,7 @@ export default {
 
     favicon() {
       if (!this.hostname) return
-      return this.$root.favicons[this.hostname]
+      return State.favicons[this.hostname]
     },
 
     tooltip() {
@@ -100,7 +103,7 @@ export default {
         setTimeout(() => this.recalcScroll(), 120)
       }
       if (this.node.type === 'bookmark') {
-        this.openUrl(this.$root.openBookmarkNewTab, true)
+        this.openUrl(State.openBookmarkNewTab, true)
       }
     },
 
@@ -125,7 +128,7 @@ export default {
 
     openMenu(isTarget) {
       if (isTarget) {
-        this.$root.closeCtxMenu()
+        Store.commit('closeCtxMenu')
 
         const openNewWinLabel = this.t('ctx_menu.open_in_new_window')
         const openPrivWinLabel = this.t('ctx_menu.open_in_new_priv_window')
@@ -152,7 +155,7 @@ export default {
         if (this.editable && !isSep) opts.push([this.t('ctx_menu.edit_bookmark'), this.edit])
         if (this.editable) opts.push([this.t('ctx_menu.delete_bookmark'), this.remove])
 
-        this.$root.ctxMenu = {
+        State.ctxMenu = {
           el: this.$el.childNodes[0],
           off: this.closeMenu,
           opts,

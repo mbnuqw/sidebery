@@ -197,8 +197,6 @@ export default {
     toggleOpt(optName) {
       const opt = State[optName]
       if (opt === undefined) return
-      // this.$set(this.$root, optName, !opt)
-      // this.$root.saveSettings()
       Store.commit('setSetting', { key: optName, val: !opt })
       Store.dispatch('saveSettings')
     },
@@ -237,7 +235,6 @@ export default {
       if (this.checkShortcut(shortcut)) {
         this.lastShortcut = null
         State.keybindings.splice(i, 1, {...k, shortcut, focus: false})
-        // this.$root.updateKeybinding(k.name, shortcut)
         Store.dispatch('updateKeybinding', { name: k.name, shortcut })
         this.$refs.keybindingInputs[i].blur()
       }
@@ -251,7 +248,6 @@ export default {
       else return VALID_SHORTCUT_62.test(shortcut) && !exists
     },
     resetKeybindings() {
-      // this.$root.resetKeybindings()
       Store.dispatch('resetKeybindings')
     },
     normalizeShortcut(s) {
@@ -281,8 +277,8 @@ export default {
     },
 
     calcFaviCache() {
-      const size = Utils.StrSize(JSON.stringify(this.$root.favicons))
-      const count = Object.keys(this.$root.favicons).length
+      const size = Utils.StrSize(JSON.stringify(State.favicons))
+      const count = Object.keys(State.favicons).length
       this.faviCache = count + ': ' + size
     },
 

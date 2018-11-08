@@ -1,4 +1,4 @@
-import DEFAULT_SETTINGS from './settings.js'
+import Logs from '../libs/logs'
 
 export default {
   /**
@@ -8,14 +8,14 @@ export default {
     state[keyVal.key] = keyVal.val
   },
 
-  // saveSettings(state) {
-  //   if (!state.settingsLoaded) return
-  //   let settings = {}
-  //   for (const key in DEFAULT_SETTINGS) {
-  //     if (!DEFAULT_SETTINGS.hasOwnProperty(key)) continue
-  //     if (state[key] == null || state[key] == undefined) continue
-  //     settings[key] = state[key]
-  //   }
-  //   browser.storage.local.set({ settings })
-  // },
+  /**
+   * Close context menu
+   */
+  closeCtxMenu(state) {
+    if (state.ctxMenu) {
+      Logs.D('Close context menu')
+      if (state.ctxMenu.off) state.ctxMenu.off()
+      state.ctxMenu = null
+    }
+  },
 }

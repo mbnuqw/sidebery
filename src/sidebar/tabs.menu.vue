@@ -37,6 +37,7 @@
 
 
 <script>
+import State from './store.state'
 import TextInput from './input.text'
 
 export default {
@@ -97,7 +98,7 @@ export default {
     },
 
     syncON() {
-      return !!this.$root.syncPanels.find(p => p === this.id)
+      return !!State.syncPanels.find(p => p === this.id)
     },
   },
 
@@ -216,9 +217,9 @@ export default {
     },
 
     toggleSync() {
-      let pi = this.$root.syncPanels.findIndex(p => p === this.id)
-      if (pi !== -1) this.$root.syncPanels.splice(pi, 1)
-      else this.$root.syncPanels.push(this.id)
+      let pi = State.syncPanels.findIndex(p => p === this.id)
+      if (pi !== -1) State.syncPanels.splice(pi, 1)
+      else State.syncPanels.push(this.id)
       this.$root.resyncPanels()
       this.$root.saveState()
     },

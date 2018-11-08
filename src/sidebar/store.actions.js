@@ -1,5 +1,5 @@
 import Logs from '../libs/logs'
-import DEFAULT_SETTINGS from './settings.js'
+import { DEFAULT_SETTINGS } from './settings.js'
 
 export default {
   // -----------------------------------
@@ -30,7 +30,6 @@ export default {
 
     state.stateLoaded = true
   },
-
 
   /**
    * Try to save some state values
@@ -63,7 +62,6 @@ export default {
       if (!settings.hasOwnProperty(key)) continue
       if (settings[key] === undefined) continue
       state[key] = settings[key]
-      // Vue.set(state, key, settings[key])
     }
 
     state.settingsLoaded = true
@@ -133,6 +131,28 @@ export default {
       state.favicons = JSON.parse(ans.favicons) || {}
     } catch (err) {
       state.favicons = {}
+    }
+  },
+
+  /**
+   * Store favicon to global state and
+   * save to localstorage
+   */
+  async setFavicon({ state }, { hostname, icon }) {
+    Logs.D(`Set favicon for '${hostname}'`)
+    state.favicons[hostname] = icon
+
+    // Do not cache favicon if it too big
+    if (icon.length > 100000) return
+
+    // Do not cache favicon in private mode
+    if (this.private) return
+
+    let faviStr = JSON.stringify(this.favicons)
+    try {
+      await browser.storage.local.set({ favicons: faviStr })
+    } catch (err) {
+      Logs.D(`Cannot cache favicon for '${hostname}'`, err)
     }
   },
 

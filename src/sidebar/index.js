@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import { mapGetters } from 'vuex'
-import Manifest from '../../addon/manifest.json'
 import Sidebar from './sidebar.vue'
 import Utils from '../libs/utils'
 import Logs from '../libs/logs'
@@ -24,27 +23,7 @@ export default new Vue({
   },
 
   data() {
-    return {
-      localID: '',
-      version: Manifest.version,
-      osInfo: null,
-      os: null,
-      ffInfo: null,
-      ffVer: null,
-      private: browser.extension.inIncognitoContext,
-      windowId: 0,
-      windowFocused: true,
-
-      // --- Global State
-      ctxMenu: null,
-      winChoosing: false,
-      activePanel: 3,
-      syncPanels: [],
-      lastSyncPanels: null,
-
-      // --- Cached
-      favicons: {},
-    }
+    return {}
   },
 
   computed: {
@@ -161,40 +140,6 @@ export default new Vue({
       else htmlEl.style.fontSize = '14.5px'
     },
 
-    // --- Favicons cache ---
-    // async loadFavicons() {
-    //   let ans = await browser.storage.local.get('favicons')
-    //   if (!ans.favicons) return
-    //   try {
-    //     this.favicons = JSON.parse(ans.favicons) || {}
-    //   } catch (err) {
-    //     this.favicons = {}
-    //   }
-    // },
-
-    /**
-     * Store favicon to global state and
-     * save to localstorage
-     */
-    async setFavicon(hostname, icon) {
-      Logs.D(`Set favicon for '${hostname}'`)
-      Vue.set(this.favicons, hostname, icon)
-
-      // Do not cache favicon if it too big
-      if (icon.length > 100000) return
-
-      // Do not cache favicon in private mode
-      if (this.private) return
-
-      let faviStr = JSON.stringify(this.favicons)
-      try {
-        await browser.storage.local.set({ favicons: faviStr })
-      } catch (err) {
-        Logs.D(`Cannot cache favicon for '${hostname}'`, err)
-      }
-    },
-    // ---
-
     /**
      * Find active tab panel and switch to it.
      */
@@ -266,17 +211,6 @@ export default new Vue({
       this.$refs.sidebar.removeTab(activeTab)
     },
     // ---
-
-    /**
-     * Close context menu
-     */
-    closeCtxMenu() {
-      if (this.ctxMenu) {
-        Logs.D('Close context menu')
-        if (this.ctxMenu.off) this.ctxMenu.off()
-        this.ctxMenu = null
-      }
-    },
 
     /**
      * Get default panel
@@ -478,7 +412,8 @@ export default new Vue({
      * Remove all saved favicons
      */
     clearFaviCache() {
-      this.favicons = {}
+      // todo: action
+      State.favicons = {}
       browser.storage.local.set({ favicons: '{}' })
     },
 

@@ -2,7 +2,7 @@
 .Bookmarks(
   :drag-active="drag && drag.dragged"
   :drag-end="dragEnd"
-  :ctx-menu="!!$root.ctxMenu"
+  :ctx-menu="!!ctxMenuOpened"
   :editing="editor"
   :not-renderable="!renderable"
   :invisible="!visible"
@@ -46,8 +46,10 @@
 
 
 <script>
+import { mapGetters } from 'vuex'
 import Utils from '../libs/utils'
 import Logs from '../libs/logs'
+import State from './store.state'
 import ScrollBox from './scroll-box'
 import BNode from './bookmarks.node'
 import BookmarksEditor from './bookmarks.editor'
@@ -75,6 +77,10 @@ export default {
       visible: false,
       lastScrollY: 0,
     }
+  },
+
+  computed: {
+    ...mapGetters(['ctxMenuOpened']),
   },
 
   watch: {
@@ -122,7 +128,7 @@ export default {
     const bookmarks = await browser.bookmarks.getTree()
 
     // If not private, restore bookmarks tree
-    if (!this.$root.private) {
+    if (!State.private) {
       let ans = await browser.storage.local.get('expandedBookmarks')
       let expandedBookmarks = ans.expandedBookmarks
       if (expandedBookmarks) {
@@ -573,7 +579,7 @@ export default {
           n.lvl = lvl
           if (n.url) {
             let hostname = n.url.split('/')[2]
-            if (hostname) n.fav = this.$root.favicons[hostname]
+            if (hostname) n.fav = State.favicons[hostname]
           }
           if (n.type === 'bookmark') n.h = 24
           if (n.type === 'folder') n.h = 28
