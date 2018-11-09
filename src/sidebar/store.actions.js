@@ -1,4 +1,5 @@
 import Logs from '../libs/logs'
+import Utils from '../libs/utils'
 import { DEFAULT_SETTINGS } from './settings.js'
 
 export default {
@@ -139,6 +140,7 @@ export default {
    * save to localstorage
    */
   async setFavicon({ state }, { hostname, icon }) {
+    if (!hostname) return
     Logs.D(`Set favicon for '${hostname}'`)
     state.favicons[hostname] = icon
 
@@ -146,9 +148,9 @@ export default {
     if (icon.length > 100000) return
 
     // Do not cache favicon in private mode
-    if (this.private) return
+    if (state.private) return
 
-    let faviStr = JSON.stringify(this.favicons)
+    let faviStr = JSON.stringify(state.favicons)
     try {
       await browser.storage.local.set({ favicons: faviStr })
     } catch (err) {
@@ -156,7 +158,72 @@ export default {
     }
   },
 
+  /**
+   * Remove all saved favicons
+   */
+  async clearFaviCache({ state }) {
+    state.favicons = {}
+    await browser.storage.local.set({ favicons: '{}' })
+  },
+
+  // ----------------------------
+  // --- --- --- Sync --- --- ---
+  // ----------------------------
+  /**
+   * Load local id or create new
+   */
+  async loadLocalID({ state }) {
+    let ans = await browser.storage.local.get('id')
+    if (ans.id) {
+      state.localID = ans.id
+    } else {
+      state.localID = Utils.Uid()
+      browser.storage.local.set({ id: state.localID })
+    }
+  },
+
+  /**
+   * Clear sync data.
+   */
+  async clearSyncData({ state }) {
+    const syncPanelsData = {
+      time: ~~(Date.now() / 1000),
+      panels: [],
+    }
+    await browser.storage.sync.set({ [state.localID]: JSON.stringify(syncPanelsData) })
+  },
+
   // ----------------------------
   // --- --- --- Misc --- --- ---
   // ----------------------------
+  /**
+   * Show windows choosing panel
+   */
+  async chooseWin({ state }) {
+    state.winChoosing = []
+    let wins = await browser.windows.getAll({ populate: true })
+    wins = wins.filter(w => !w.focused && !w.incognito)
+
+    return new Promise(res => {
+      wins = wins.map(async w => {
+        let tab = w.tabs.find(t => t.active)
+        if (!tab) return
+        if (w.focused) return
+        let screen = await browser.tabs.captureTab(tab.id)
+        return {
+          id: w.id,
+          title: w.title,
+          screen,
+          choose: () => {
+            state.winChoosing = null
+            res(w.id)
+          },
+        }
+      })
+
+      Promise.all(wins).then(wins => {
+        state.winChoosing = wins
+      })
+    })
+  },
 }

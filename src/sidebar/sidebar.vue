@@ -1,6 +1,6 @@
 <template lang="pug">
 .Sidebar(
-  :data-menu="menuOpened"
+  :data-menu="navMenuOpened"
   @wheel="onWH"
   @contextmenu.prevent.stop=""
   @dragover.prevent=""
@@ -17,10 +17,10 @@
   .nav(ref="nav")
     keep-alive
       component.panel-menu(
-        v-if="menu" 
+        v-if="navMenu" 
         ref="menu"
-        :is="menu.menu" 
-        :conf="menu"
+        :is="navMenu.menu" 
+        :conf="navMenu"
         @close="closeMenu"
         @height="recalcMenuHeight"
         @panel-cmd="panelCmd")
@@ -31,7 +31,7 @@
         :key="btn.cookieStoreId || btn.name"
         :title="btn.name"
         :loading="btn.loading"
-        :data-active="panel === i"
+        :data-active="panelIs(i)"
         :data-hidden="btn.hidden"
         @click="onNavClick(i)"
         @mousedown.right="openMenu(i)")
@@ -63,7 +63,7 @@
       :tabs="c.tabs"
       :store-id="c.cookieStoreId"
       :pos="getPanelPos(i)"
-      :active="i === panel"
+      :active="panelIs(i)"
       @create-tab="createTab"
       @ready="onPanelReady(i)"
       @panel-loading-start="onPanelLoadingStart(i)"
@@ -83,10 +83,9 @@ import Utils from '../libs/utils.js'
 import Logs from '../libs/logs.js'
 import Store from './store'
 import State from './store.state.js'
-import { Translate } from '../mixins/dict.js'
+import { DEFAULT_PANELS } from './store.state'
 import CtxMenu from './context-menu.vue'
 import BookmarksPanel from './bookmarks.vue'
-import BookmarksMenu from './bookmarks.menu.vue'
 import TabsPanel from './tabs.vue'
 import TabsDefaultMenu from './tabs.default.menu.vue'
 import TabsMenu from './tabs.menu.vue'
@@ -94,34 +93,6 @@ import SettingsPanel from './settings.vue'
 import WindowInput from './input.window.vue'
 
 Vue.directive('noise', NoiseBg)
-
-const DEFAULT_PANELS = [
-  {
-    name: Translate('bookmarks_menu.title'),
-    icon: 'icon_bookmarks',
-    menu: BookmarksMenu,
-    panel: BookmarksPanel,
-  },
-  {
-    name: Translate('pinned_tabs_menu.title'),
-    icon: 'icon_pin',
-    menu: TabsDefaultMenu,
-    pinned: true,
-  },
-  {
-    name: Translate('private_tabs_menu.title'),
-    icon: 'icon_tabs',
-    cookieStoreId: 'firefox-private',
-    menu: TabsDefaultMenu,
-    private: true,
-  },
-  {
-    name: Translate('default_tabs_menu.title'),
-    icon: 'icon_tabs',
-    cookieStoreId: 'firefox-default',
-    menu: TabsDefaultMenu,
-  },
-]
 
 // --- Vue Component ---
 export default {
@@ -136,18 +107,12 @@ export default {
 
   data() {
     return {
-      winId: null,
       width: 250,
-      menuOpened: false,
-      menu: null,
-      panel: State.activePanel,
+      navMenuOpened: false,
+      navMenu: null,
       settingsOpened: false,
-      contexts: [],
-      allTabs: [],
-      activeTabs: [],
       loading: [true],
       loadingTimers: [],
-      drag: null,
     }
   },
 
@@ -155,13 +120,13 @@ export default {
    * --- Computed ---
    */
   computed: {
-    ...mapGetters(['winChoosing', 'isPrivate']),
+    ...mapGetters(['winChoosing', 'isPrivate', 'defaultCtxId', 'panels']),
 
     /**
      * Background tranform style for parallax fx
      */
     bgPosStyle() {
-      return { transform: `translateX(-${this.panel * 5}%)` }
+      return { transform: `translateX(-${State.panelIndex * 5}%)` }
     },
 
     /**
@@ -173,11 +138,6 @@ export default {
 
     /**
      * Get list of navigational buttons
-     * {
-     *   ...ContextualIdentity,
-     *   comp: VueComponent - Menu panel
-     *   hidden: boolean
-     * }
      */
     nav() {
       let noPinned = !this.pinnedTabs.length
@@ -195,20 +155,20 @@ export default {
         btn.hidden = false
         if (noPinned && btn.pinned) {
           btn.hidden = true
-          if (this.panel > k) hideOffset++
+          if (State.panelIndex > k) hideOffset++
         }
         if (!State.private && btn.private) {
           btn.hidden = true
-          if (this.panel > k) hideOffset++
+          if (State.panelIndex > k) hideOffset++
         }
         if (State.private && btn.cookieStoreId === 'firefox-default') {
           btn.hidden = true
-          if (this.panel > k) hideOffset++
+          if (State.panelIndex > k) hideOffset++
         }
         out.push(btn)
       }
-      for (i = 0; i < this.contexts.length; i++, k++) {
-        const btn = this.contexts[i]
+      for (i = 0; i < State.ctxs.length; i++, k++) {
+        const btn = State.ctxs[i]
         btn.loading = this.loading[k]
         if (State.private) {
           btn.hidden = true
@@ -219,7 +179,7 @@ export default {
         out.push(btn)
       }
 
-      let p = this.panel - hideOffset
+      let p = State.panelIndex - hideOffset
       let vis = out.length - hideOffset
       for (i = 0, k = 0; i < out.length; i++) {
         if (out[i].hidden) continue
@@ -232,66 +192,18 @@ export default {
     },
 
     /**
-     * Get list of panels
-     */
-    panels() {
-      const panels = DEFAULT_PANELS.concat(this.contexts)
-      let lastIndex = 0
-      return panels.map((p, i) => {
-        if (!p.panel) p.panel = TabsPanel
-
-        if (p.pinned) {
-          p.tabs = this.allTabs.filter(t => t.pinned).map(t => {
-            let ctx = this.contexts.find(c => c.cookieStoreId === t.cookieStoreId)
-            if (!ctx) return t
-            t.ctxIcon = ctx.icon
-            t.ctxColor = ctx.colorCode
-            return t
-          })
-          this.updateActiveTab(i, p.tabs)
-          if (p.tabs.length) {
-            lastIndex = p.tabs[p.tabs.length - 1].index
-            p.startIndex = p.tabs[0].index
-            p.endIndex = lastIndex++
-          } else {
-            p.startIndex = lastIndex
-            p.endIndex = p.startIndex
-          }
-          return p
-        }
-
-        if (p.cookieStoreId) {
-          p.tabs = []
-          for (let t of this.allTabs) {
-            if (t.cookieStoreId === p.cookieStoreId && !t.pinned) {
-              p.tabs.push(t)
-            }
-            if (p.tabs.length && t.cookieStoreId !== p.cookieStoreId) {
-              break
-            }
-          }
-          this.updateActiveTab(i, p.tabs)
-          if (p.tabs.length) {
-            lastIndex = p.tabs[p.tabs.length - 1].index
-            p.startIndex = p.tabs[0].index
-            p.endIndex = lastIndex++
-          } else {
-            p.startIndex = lastIndex
-            p.endIndex = p.startIndex
-          }
-        }
-
-        return p
-      })
-    },
-
-    /**
      * Pinned tabs
      */
     pinnedTabs() {
-      return this.allTabs.filter(t => t.pinned)
+      return State.tabs.filter(t => t.pinned)
     },
   },
+
+  // watch: {
+  //   panels(p) {
+  //     console.log('[DEBUG] getter panels', p);
+  //   }
+  // },
 
   // --- Created Hook ---
   async created() {
@@ -311,7 +223,6 @@ export default {
     browser.tabs.onActivated.addListener(this.onActivatedTab)
 
     // --- Retrieve initial state
-    this.loadWindowId()
     await this.loadContexts()
     await this.loadTabs()
 
@@ -349,7 +260,7 @@ export default {
      * Sidebar wheel event handler
      */
     onWH(e) {
-      if (State.scrollThroughTabs !== 'none' && this.panel > 0) {
+      if (State.scrollThroughTabs !== 'none' && State.panelIndex > 0) {
         const globaly = State.scrollThroughTabs === 'global'
         if (e.deltaY > 0) {
           if (this.wheelBlockTimeout) return
@@ -436,7 +347,7 @@ export default {
         if (item.type === 'text/uri-list') {
           item.getAsString(s => {
             if (s.indexOf('http') === -1) return
-            const panel = this.panels[this.panel]
+            const panel = this.panels[State.panelIndex]
             if (panel && panel.cookieStoreId) {
               browser.tabs.create({
                 url: s,
@@ -475,7 +386,7 @@ export default {
      * Navigation button click hadler
      */
     onNavClick(i) {
-      if (this.panel !== i) {
+      if (State.panelIndex !== i) {
         this.switchToPanel(i)
       } else if (this.panels[i].cookieStoreId) {
         browser.tabs.create({ cookieStoreId: this.panels[i].cookieStoreId })
@@ -488,9 +399,9 @@ export default {
      */
     onCreatedContainer({ contextualIdentity }) {
       Logs.D(`New container created '${contextualIdentity.cookieStoreId}'`)
-      let i = this.contexts.push(contextualIdentity)
-      this.panel = i + 3
-      State.activePanel = this.panel
+      let i = State.ctxs.push(contextualIdentity)
+      State.panelIndex = i + 3
+      State.lastPanelIndex = State.panelIndex
 
       // Check if we have some updates
       // for container with this name
@@ -503,9 +414,9 @@ export default {
     async onRemovedContainer({ contextualIdentity }) {
       Logs.D(`Container removed '${contextualIdentity.cookieStoreId}'`)
       let id = contextualIdentity.cookieStoreId
-      let i = this.contexts.findIndex(c => c.cookieStoreId === id)
+      let i = State.ctxs.findIndex(c => c.cookieStoreId === id)
       if (i === -1) return
-      this.contexts.splice(i, 1)
+      State.ctxs.splice(i, 1)
 
       // Turn off sync
       let pi = State.syncPanels.findIndex(p => p === id)
@@ -519,8 +430,7 @@ export default {
       if (orphanTabs.length > 0) {
         await browser.tabs.remove(orphanTabs.map(t => t.id))
       } else {
-        this.panel = i + 3
-        State.activePanel = this.panel
+        Store.commit('setPanel', i + 3)
       }
     },
 
@@ -530,9 +440,9 @@ export default {
     onUpdatedContainer({ contextualIdentity }) {
       Logs.D(`Container updated '${contextualIdentity.cookieStoreId}'`)
       let id = contextualIdentity.cookieStoreId
-      let i = this.contexts.findIndex(c => c.cookieStoreId === id)
+      let i = State.ctxs.findIndex(c => c.cookieStoreId === id)
       if (i === -1) return
-      this.contexts.splice(i, 1, contextualIdentity)
+      State.ctxs.splice(i, 1, contextualIdentity)
       this.$root.savePanels()
     },
     // ---
@@ -542,7 +452,7 @@ export default {
      * tabs.onCreated
      */
     onCreatedTab(tab) {
-      if (tab.windowId !== this.winId) return
+      if (tab.windowId !== State.windowId) return
       Logs.D(`Tab created, id: '${tab.id}', index: '${tab.index}', ctx: '${tab.cookieStoreId}'`)
       Store.commit('closeCtxMenu')
 
@@ -557,10 +467,10 @@ export default {
       }
 
       // Shift tabs after inserted one. (NOT detected by vue)
-      for (let i = tab.index; i < this.allTabs.length; i++) {
-        this.allTabs[i].index++
+      for (let i = tab.index; i < State.tabs.length; i++) {
+        State.tabs[i].index++
       }
-      this.allTabs.splice(tab.index, 0, tab)
+      State.tabs.splice(tab.index, 0, tab)
       this.recalcPanelScroll()
       this.$root.savePanels()
     },
@@ -569,8 +479,8 @@ export default {
      * tabs.onUpdated
      */
     onUpdatedTab(tabId, change, tab) {
-      if (tab.windowId !== this.winId) return
-      let upIndex = this.allTabs.findIndex(t => t.id === tabId)
+      if (tab.windowId !== State.windowId) return
+      let upIndex = State.tabs.findIndex(t => t.id === tabId)
       if (upIndex === -1) return
 
       // Handle favicon change
@@ -586,19 +496,13 @@ export default {
         if (pi === -1) return
         let p = this.panels[pi]
         if (p && p.tabs) browser.tabs.move(tabId, { index: p.endIndex })
-        if (tab.active) {
-          this.panel = pi
-          State.activePanel = this.panel
-        }
+        if (tab.active) Store.commit('setPanel', pi)
       }
 
-      this.allTabs.splice(upIndex, 1, tab)
+      State.tabs.splice(upIndex, 1, tab)
 
       if (change.hasOwnProperty('pinned') && change.pinned) {
-        if (tab.active) {
-          this.panel = 1
-          State.activePanel = this.panel
-        }
+        if (tab.active) Store.commit('setPanel', 1)
       }
 
       if (change.hasOwnProperty('url') || change.hasOwnProperty('pinned')) {
@@ -610,17 +514,21 @@ export default {
      * tabs.onRemoved
      */
     onRemovedTab(tabId, info) {
-      if (info.windowId !== this.winId) return
+      if (info.windowId !== State.windowId) return
       Logs.D(`Tab removed, id: '${tabId}'`)
       Store.commit('closeCtxMenu')
-      let rmIndex = this.allTabs.findIndex(t => t.id === tabId)
+      let rmIndex = State.tabs.findIndex(t => t.id === tabId)
       if (rmIndex === -1) return
 
       // Shift tabs after removed one. (NOT detected by vue)
-      for (let i = rmIndex + 1; i < this.allTabs.length; i++) {
-        this.allTabs[i].index--
+      for (let i = rmIndex + 1; i < State.tabs.length; i++) {
+        State.tabs[i].index--
       }
-      this.allTabs.splice(rmIndex, 1)
+      State.tabs.splice(rmIndex, 1)
+      // ......
+      const panelIndex = State.activeTabs.findIndex(id => id === tabId)
+      if (panelIndex >= 0) State.activeTabs[panelIndex] = null
+      // ........
       this.recalcPanelScroll()
       this.$root.savePanels()
     },
@@ -629,16 +537,16 @@ export default {
      * tabs.onMoved
      */
     onMovedTab(id, info) {
-      if (info.windowId !== this.winId) return
+      if (info.windowId !== State.windowId) return
       Logs.D(`Tab moved, id: '${id}', from: '${info.fromIndex}', to: '${info.toIndex}'`)
       Store.commit('closeCtxMenu')
 
       // If moved tab active, cut it out
       let pIndex = this.getPanelIndex(id)
-      let isActive = this.activeTabs[pIndex] === id
+      let isActive = State.activeTabs[pIndex] === id
 
       // Reset drag status
-      let panelVM = this.$refs.panels[this.panel]
+      let panelVM = this.$refs.panels[State.panelIndex]
       if (panelVM && panelVM.drag) {
         panelVM.drag = null
         setTimeout(() => {
@@ -648,22 +556,19 @@ export default {
       }
 
       // Move tab in tabs array
-      let movedTab = this.allTabs.splice(info.fromIndex, 1)[0]
+      let movedTab = State.tabs.splice(info.fromIndex, 1)[0]
       if (!movedTab) return
       movedTab.index = info.toIndex
       // Shift tabs after moved one. (NOT detected by vue)
-      for (let i = 0; i < this.allTabs.length; i++) {
-        if (i < info.toIndex) this.allTabs[i].index = i
-        else this.allTabs[i].index = i + 1
+      for (let i = 0; i < State.tabs.length; i++) {
+        if (i < info.toIndex) State.tabs[i].index = i
+        else State.tabs[i].index = i + 1
       }
-      this.allTabs.splice(info.toIndex, 0, movedTab)
+      State.tabs.splice(info.toIndex, 0, movedTab)
 
       // Update active tab position
       pIndex = this.getPanelIndex(id)
-      if (isActive) {
-        this.panel = pIndex
-        State.activePanel = this.panel
-      }
+      if (isActive) Store.commit('setPanel', pIndex)
       this.recalcPanelScroll()
     },
 
@@ -671,12 +576,12 @@ export default {
      * tabs.onDetached
      */
     onDetachedTab(id, info) {
-      if (info.oldWindowId !== this.winId) return
+      if (info.oldWindowId !== State.windowId) return
       Logs.D(`Tab detached, id: '${id}'`)
       Store.commit('closeCtxMenu')
-      let i = this.allTabs.findIndex(t => t.id === id)
+      let i = State.tabs.findIndex(t => t.id === id)
       if (i === -1) return
-      this.allTabs.splice(i, 1)
+      State.tabs.splice(i, 1)
       this.recalcPanelScroll()
       this.$root.savePanels()
     },
@@ -685,7 +590,7 @@ export default {
      * tabs.onAttached
      */
     onAttachedTab(id, info) {
-      if (info.newWindowId !== this.winId) return
+      if (info.newWindowId !== State.windowId) return
       Logs.D(`Tab attached, id: '${id}'`)
       Store.commit('closeCtxMenu')
       this.loadTabs()
@@ -696,15 +601,18 @@ export default {
      * tabs.onActivated
      */
     onActivatedTab(info) {
-      if (info.windowId !== this.winId) return
+      if (info.windowId !== State.windowId) return
       Logs.D(`Tab activated, id: '${info.tabId}'`)
-      this.allTabs = this.allTabs.map(t => {
-        t.active = info.tabId === t.id
-        return t
-      })
+      for (let i = 0; i < State.tabs.length; i++) {
+        State.tabs[i].active = info.tabId === State.tabs[i].id
+      }
+      // State.tabs = State.tabs.map(t => {
+      //   t.active = info.tabId === t.id
+      //   return t
+      // })
 
       // Switch to tab's panel
-      let tab = this.allTabs.find(t => t.id === info.tabId)
+      let tab = State.tabs.find(t => t.id === info.tabId)
       let panelIndex = -1
       if (tab && !tab.pinned) {
         panelIndex = this.panels.findIndex(p => p.cookieStoreId === tab.cookieStoreId)
@@ -712,9 +620,10 @@ export default {
       }
       if (tab && tab.pinned) panelIndex = 1
       if (panelIndex > 0 && this.panel !== panelIndex) {
-        this.panel = panelIndex
-        State.activePanel = this.panel
+        Store.commit('setPanel', panelIndex)
       }
+
+      State.activeTabs[panelIndex] = info.tabId
     },
 
     onPanelReady(i) {
@@ -755,6 +664,13 @@ export default {
     // ---
 
     /**
+     * Check current panel's index
+     */
+    panelIs(index) {
+      return State.panelIndex === index
+    },
+
+    /**
      * Try to recalc panel's scroll
      */
     async recalcPanelScroll() {
@@ -772,13 +688,13 @@ export default {
       let active = tabs.find(t => t.active)
       if (active) {
         // Update active tab
-        this.activeTabs[i] = active.id
+        State.activeTabs[i] = active.id
       } else {
         // Remove tab from list of active tabs
         // if it no longer exists
-        let lastActive = this.activeTabs[i]
+        let lastActive = State.activeTabs[i]
         if (lastActive && !tabs.find(t => t.id === lastActive)) {
-          this.activeTabs[i] = null
+          State.activeTabs[i] = null
         }
       }
     },
@@ -788,7 +704,7 @@ export default {
      */
     getPanelIndex(tabId) {
       if (tabId === null) {
-        let t = this.allTabs.find(t => t.active)
+        let t = State.tabs.find(t => t.active)
         if (!t) return
         tabId = t.id
       }
@@ -825,7 +741,7 @@ export default {
       let p = this.panels.find(p => p.cookieStoreId === tab.cookieStoreId)
       if (!p || !p.tabs) return
       if (tab.index === p.endIndex && p.tabs.length > 1) {
-        let prevTab = this.allTabs[p.endIndex - 1]
+        let prevTab = State.tabs[p.endIndex - 1]
         browser.tabs.update(prevTab.id, { active: true })
         this.$nextTick(() => {
           browser.tabs.remove(tab.id)
@@ -841,16 +757,15 @@ export default {
     switchToPanel(index) {
       if (this.settingsOpened) this.closeSettings()
       Store.commit('closeCtxMenu')
-      this.panel = index
-      State.activePanel = this.panel
-      if (this.menuOpened) this.openMenu(this.panel)
+      Store.commit('setPanel', index)
+      if (this.navMenuOpened) this.openMenu(State.panelIndex)
       if (State.createNewTabOnEmptyPanel) {
-        let panel = this.panels[this.panel]
+        let panel = this.panels[State.panelIndex]
         if (panel.tabs && panel.tabs.length === 0) this.createTab(panel.cookieStoreId)
       }
 
       if (State.activateLastTabOnPanelSwitching) {
-        this.activateLastActiveTabOf(this.panel)
+        this.activateLastActiveTabOf(State.panelIndex)
       }
 
       this.recalcPanelScroll()
@@ -867,42 +782,42 @@ export default {
         this.switchPanelPause = null
       }, 128)
 
-      Logs.D(`Switch to next panel, current: ${this.panel}`)
+      Logs.D(`Switch to next panel, current: ${State.panelIndex}`)
 
       Store.commit('closeCtxMenu')
       if (this.settingsOpened) {
         this.closeSettings()
-        this.panel = State.activePanel
+        State.panelIndex = State.lastPanelIndex
         return
       }
 
-      if (this.panel < this.panels.length - 1) this.panel++
-      let i = this.panel
+      if (State.panelIndex < this.panels.length - 1) State.panelIndex++
+      let i = State.panelIndex
       while (this.panels[i].hidden) {
         if (i >= this.panels.length - 1) {
-          i = this.panel - 1
+          i = State.panelIndex - 1
           break
         }
         i++
       }
-      this.panel = i
+      State.panelIndex = i
       if (State.skipEmptyPanels) {
-        for (let i = this.panel; i < this.panels.length; i++) {
+        for (let i = State.panelIndex; i < this.panels.length; i++) {
           if (this.panels[i].tabs && this.panels[i].tabs.length) {
-            this.panel = i
+            State.panelIndex = i
             break
           }
         }
       }
-      State.activePanel = this.panel
+      State.lastPanelIndex = State.panelIndex
 
       if (State.activateLastTabOnPanelSwitching) {
-        this.activateLastActiveTabOf(this.panel)
+        this.activateLastActiveTabOf(State.panelIndex)
       }
 
-      if (this.menuOpened) this.openMenu(this.panel)
+      if (this.navMenuOpened) this.openMenu(State.panelIndex)
       if (State.createNewTabOnEmptyPanel) {
-        let panel = this.panels[this.panel]
+        let panel = this.panels[State.panelIndex]
         if (panel.tabs && panel.tabs.length === 0) this.createTab(panel.cookieStoreId)
       }
 
@@ -920,128 +835,58 @@ export default {
         this.switchPanelPause = null
       }, 128)
 
-      Logs.D(`Switch to prev panel, current: ${this.panel}`)
+      Logs.D(`Switch to prev panel, current: ${State.panelIndex}`)
 
       Store.commit('closeCtxMenu')
       if (this.settingsOpened) {
         this.closeSettings()
-        this.panel = State.activePanel
+        State.panelIndex = State.lastPanelIndex
         return
       }
 
-      if (this.panel < 0) this.panel = 0
-      if (this.panel > 0) this.panel--
-      while (this.panels[this.panel].hidden) {
-        this.panel--
+      if (State.panelIndex < 0) State.panelIndex = 0
+      if (State.panelIndex > 0) State.panelIndex--
+      while (this.panels[State.panelIndex].hidden) {
+        State.panelIndex--
       }
       if (State.skipEmptyPanels) {
-        for (let i = this.panel; i--; ) {
+        for (let i = State.panelIndex; i--; ) {
           if (this.panels[i].tabs && this.panels[i].tabs.length) {
-            this.panel = i
+            State.panelIndex = i
             break
           }
         }
       }
-      State.activePanel = this.panel
+      State.lastPanelIndex = State.panelIndex
 
       if (State.activateLastTabOnPanelSwitching) {
-        this.activateLastActiveTabOf(this.panel)
+        this.activateLastActiveTabOf(State.panelIndex)
       }
 
-      if (this.menuOpened) this.openMenu(this.panel)
+      if (this.navMenuOpened) this.openMenu(State.panelIndex)
       if (State.createNewTabOnEmptyPanel) {
-        let panel = this.panels[this.panel]
+        let panel = this.panels[State.panelIndex]
         if (panel.tabs && panel.tabs.length === 0) this.createTab(panel.cookieStoreId)
       }
 
       this.recalcPanelScroll()
     },
 
-    async dragToNextPanel(drag) {
-      if (this.panel >= this.panels.length - 1) return
-      let panel = this.panels[this.panel + 1]
-      let origPanel = this.panel + 1 === drag.origPanel
-
-      if (origPanel) {
-        this.drag = {
-          ...drag,
-          panel: this.panel + 1,
-          x: drag.x + 30,
-          i: drag.origIndex,
-        }
-      } else {
-        let index = panel.endIndex + 1
-        this.drag = {
-          ...drag,
-          panel: this.panel + 1,
-          globalIndex: index,
-          i: panel.tabs.length,
-          x: drag.x + 30,
-        }
-      }
-
-      if (!drag.origPanel) this.drag.origPanel = this.panel
-      if (!drag.origIndex) this.drag.origIndex = drag.i
-
-      this.$refs.panels[this.panel + 1].recalcDragTabs()
-      if (this.drag.panel !== this.drag.origPanel) {
-        this.$refs.panels[this.panel + 1].dragTabs.push(this.drag)
-      }
-      this.$refs.panels[this.panel + 1].drag = this.drag
-
-      await this.$nextTick()
-      this.switchToNextPanel()
-    },
-
-    async dragToPrevPanel(drag) {
-      if (this.panel <= 2) return
-      let panel = this.panels[this.panel - 1]
-      let origPanel = this.panel - 1 === drag.origPanel
-
-      if (origPanel) {
-        this.drag = {
-          ...drag,
-          panel: this.panel - 1,
-          x: drag.x - 30,
-          i: drag.origIndex,
-        }
-      } else {
-        let index = panel.endIndex + 1
-        this.drag = {
-          ...drag,
-          panel: this.panel - 1,
-          globalIndex: index,
-          i: panel.tabs.length,
-          x: drag.x - 30,
-        }
-      }
-
-      if (!drag.origPanel) this.drag.origPanel = this.panel
-      if (!drag.origIndex) this.drag.origIndex = drag.i
-
-      this.$refs.panels[this.panel - 1].recalcDragTabs()
-      if (this.drag.panel !== this.drag.origPanel) {
-        this.$refs.panels[this.panel - 1].dragTabs.push(this.drag)
-      }
-      this.$refs.panels[this.panel - 1].drag = this.drag
-
-      await this.$nextTick()
-      this.switchToPrevPanel()
-    },
-
     /**
-     * Activate last active tab on panel
+     * Activate last active tab on the panel
      */
     activateLastActiveTabOf(panelIndex) {
+      const tabId = State.activeTabs[panelIndex]
+      const p = this.panels[panelIndex]
+      if (!p || !p.tabs) return
+
       // Last active tab
-      if (typeof this.activeTabs[panelIndex] === 'number') {
-        browser.tabs.update(this.activeTabs[panelIndex], { active: true })
+      if (typeof tabId === 'number' && p.tabs.find(t => t.id === tabId)) {
+        browser.tabs.update(tabId, { active: true })
         return
       }
 
-      // Or last
-      const p = this.panels[panelIndex]
-      if (!p || !p.tabs) return
+      // Or just last
       const lastTab = p.tabs[p.tabs.length - 1]
       if (lastTab) browser.tabs.update(lastTab.id, { active: true })
     },
@@ -1051,9 +896,9 @@ export default {
      */
     getPanelPos(i) {
       if (this.settingsOpened) return 'left'
-      if (this.panel < i) return 'right'
-      if (this.panel === i) return 'center'
-      if (this.panel > i) return 'left'
+      if (State.panelIndex < i) return 'right'
+      if (State.panelIndex === i) return 'center'
+      if (State.panelIndex > i) return 'left'
     },
 
     // --- Menu ---
@@ -1063,11 +908,11 @@ export default {
     async openMenu(i) {
       if (this.settingsOpened) this.closeSettings()
       Store.commit('closeCtxMenu')
-      this.menuOpened = true
-      this.panel = i
-      if (i >= 0) State.activePanel = this.panel
-      if (i === -1) this.menu = { menu: TabsMenu, new: true }
-      else if (i >= 0) this.menu = { ...this.nav[i] }
+      this.navMenuOpened = true
+      State.panelIndex = i
+      if (i >= 0) State.activePanel = State.panelIndex
+      if (i === -1) this.navMenu = { menu: TabsMenu, new: true }
+      else if (i >= 0) this.navMenu = { ...this.nav[i] }
 
       await this.$nextTick()
       if (this.$refs.menu && this.$refs.menu.open) this.$refs.menu.open()
@@ -1077,7 +922,7 @@ export default {
 
     async recalcMenuHeight() {
       await this.$nextTick()
-      if (!this.menuOpened) return
+      if (!this.navMenuOpened) return
       let h = this.$refs.menu ? this.$refs.menu.$el.offsetHeight : 336
       this.$refs.nav.style.transform = `translateY(${h - 336}px)`
     },
@@ -1086,12 +931,12 @@ export default {
      * Close panel menu.
      */
     closeMenu() {
-      this.menuOpened = false
-      if (this.panel < 0 && State.activePanel >= 0) {
-        this.panel = State.activePanel
+      this.navMenuOpened = false
+      if (State.panelIndex < 0 && State.lastPanelIndex >= 0) {
+        State.panelIndex = State.lastPanelIndex
       }
       this.$refs.nav.style.transform = 'translateY(0px)'
-      setTimeout(() => (this.menu = null), 120)
+      setTimeout(() => (this.navMenu = null), 120)
     },
     // ---
 
@@ -1100,10 +945,10 @@ export default {
      * Open settings panel.
      */
     openSettings() {
-      if (this.menuOpened) this.closeMenu()
+      if (this.navMenuOpened) this.closeMenu()
       Store.commit('closeCtxMenu')
-      State.activePanel = this.panel
-      this.panel = -2
+      State.lastPanelIndex = State.panelIndex
+      State.panelIndex = -2
       this.settingsOpened = true
     },
 
@@ -1120,7 +965,7 @@ export default {
      */
     closeSettings() {
       this.settingsOpened = false
-      this.panel = State.activePanel
+      State.panelIndex = State.lastPanelIndex
     },
     // ---
 
@@ -1144,21 +989,19 @@ export default {
      * Load Contextual Identities
      */
     async loadContexts() {
-      this.contexts = await browser.contextualIdentities.query({})
+      State.ctxs = await browser.contextualIdentities.query({})
     },
 
     /**
      * Load all tabs for current window
      */
     async loadTabs() {
-      let tabs = await browser.tabs.query({
-        windowId: browser.windows.WINDOW_ID_CURRENT,
-        cookieStoreId: this.storeId,
-      })
+      const windowId = browser.windows.WINDOW_ID_CURRENT
+      const tabs = await browser.tabs.query({ windowId })
 
       // Check order of tabs and get moves for normalizing
-      let ctxs = [State.defaultCtx].concat(this.contexts.map(ctx => ctx.cookieStoreId))
-      let moves = []
+      const ctxs = [this.defaultCtxId].concat(State.ctxs.map(ctx => ctx.cookieStoreId))
+      const moves = []
       let index = 0
       let offset = 0
       for (let i = 0; i < ctxs.length; i++) {
@@ -1183,20 +1026,12 @@ export default {
       // Ask user for normalizing
       // ...
 
-      this.allTabs = tabs
+      State.tabs = tabs
 
       // Normalize order
       moves.map(async move => {
         await browser.tabs.move(move[0], { index: move[1] })
       })
-    },
-
-    /**
-     * Get current window id.
-     */
-    async loadWindowId() {
-      const win = await browser.windows.getCurrent()
-      this.winId = win.id
     },
 
     activateNextTab({ globaly, cycle }) {
@@ -1206,7 +1041,7 @@ export default {
         this.switchTabPause = null
       }, 50)
 
-      let tabs = globaly ? this.allTabs : this.panels[this.panel].tabs
+      let tabs = globaly ? State.tabs : this.panels[State.panelIndex].tabs
       if (!tabs || !tabs.length) return
 
       let current = tabs.findIndex(t => t.active)
@@ -1227,7 +1062,7 @@ export default {
         this.switchTabPause = null
       }, 50)
 
-      let tabs = globaly ? this.allTabs : this.panels[this.panel].tabs
+      let tabs = globaly ? State.tabs : this.panels[State.panelIndex].tabs
       if (!tabs || !tabs.length) return
 
       let current = tabs.findIndex(t => t.active)
@@ -1397,7 +1232,7 @@ NAV_CONF_HEIGHT = auto
   for i in 0..12
     > .spinner-stick-{i}
       transform: rotateZ((i * 30)deg)
-      animation: loading-spin .6s (i*50)ms infinite
+      // animation: loading-spin .6s (i*50)ms infinite
 
 .Sidebar .panel-btn > .ok-badge
 .Sidebar .panel-btn > .err-badge

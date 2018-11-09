@@ -59,6 +59,7 @@
     "Firefox > 60"
   ],
   "jest": {
+    "setupFiles": ["./test/web-ext-setup.js"],
     "testMatch": [
       "**/src/libs/*.test.js",
       "**/src/sidebar/*.test.js"

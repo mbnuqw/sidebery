@@ -259,7 +259,7 @@ export default {
         if (this.tab.cookieStoreId !== 'firefox-default') {
           menu.add('reopen_in_default_panel', this.openInPanel, 'firefox-default')
         }
-        this.$root.$refs.sidebar.contexts.map(c => {
+        State.ctxs.map(c => {
           if (this.tab.cookieStoreId === c.cookieStoreId) return
           const label = this.t('ctx_menu.re_open_in_') + `||${c.colorCode}>>${c.name}`
           menu.addTranslated(label, this.openInPanel, c.cookieStoreId)
@@ -300,7 +300,7 @@ export default {
      */
     async moveToWin(window) {
       Store.commit('closeCtxMenu')
-      let id = window ? window.id : await this.$root.chooseWin()
+      let id = window ? window.id : await Store.dispatch('chooseWin')
       browser.tabs.move(this.tab.id, { windowId: id, index: -1 })
     },
 
@@ -322,7 +322,7 @@ export default {
      */
     async reopenInWin(window) {
       Store.commit('closeCtxMenu')
-      let id = window ? window.id : await this.$root.chooseWin()
+      let id = window ? window.id : await Store.dispatch('chooseWin')
       let url = this.tab.url.indexOf('http') ? null : this.tab.url
       browser.tabs.create({ windowId: id, url })
     },
@@ -575,6 +575,10 @@ export default {
     cursor: progress
     > .loading-spinner
       opacity: 1
+      // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>TEST IT <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+      for i in 0..12
+        > .spinner-stick-{i}
+          animation: loading-spin .6s (i*50)ms infinite
   &[loading="ok"]
     > .ok-badge
       opacity: 1
@@ -643,7 +647,8 @@ export default {
   for i in 0..12
     > .spinner-stick-{i}
       transform: rotateZ((i * 30)deg)
-      animation: loading-spin .6s (i*50)ms infinite
+      animation: none
+      // animation: loading-spin .6s (i*50)ms infinite
 
 .Tab .fav > .ok-badge
 .Tab .fav > .err-badge

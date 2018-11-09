@@ -135,9 +135,9 @@
         .info {{syncDataSize}}
 
       .box
-        .btn.-warn(@click="$root.resetSettings") {{t('settings.reset_settings')}}
-        .btn.-warn(@click="$root.clearFaviCache") {{t('settings.rm_favi_cache')}}
-        .btn.-warn(@click="$root.clearSyncData") {{t('settings.rm_sync_data')}}
+        .btn.-warn(@click="resetSettings") {{t('settings.reset_settings')}}
+        .btn.-warn(@click="clearFaviCache") {{t('settings.rm_favi_cache')}}
+        .btn.-warn(@click="clearSyncData") {{t('settings.rm_sync_data')}}
 
       a.github(tabindex="-1", href="https://github.com/mbnuqw/sidebery")
         svg: use(xlink:href="#icon_github")
@@ -285,6 +285,28 @@ export default {
     async calcSyncDataSize() {
       const ans = await browser.storage.sync.get()
       this.syncDataSize = Utils.StrSize(JSON.stringify(ans))
+    },
+
+    /**
+     * Set default values for settings and save.
+     */
+    resetSettings() {
+      Store.commit('resetSettings')
+      Store.dispatch('saveSettings')
+    },
+
+    /**
+     * Remove all cached favicons.
+     */
+    clearFaviCache() {
+      Store.dispatch('clearFaviCache')
+    },
+
+    /**
+     * Clear all data for syncing
+     */
+    clearSyncData() {
+      Store.dispatch('clearSyncData')
     },
   },
 }

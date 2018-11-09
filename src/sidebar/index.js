@@ -9,9 +9,6 @@ import State from './store.state'
 import Getters from './store.getters'
 import DEFAULT_SETTINGS from './settings'
 
-const DEFAULT_CTX = 'firefox-default'
-const PRIVATE_CTX = 'firefox-private'
-
 Vue.mixin(Dict)
 
 export default new Vue({
@@ -27,7 +24,7 @@ export default new Vue({
   },
 
   computed: {
-    ...mapGetters(['fontSize']),
+    ...mapGetters(['fontSize', 'defaultCtxId']),
 
     themeClass() {
       return '-' + State.theme
@@ -36,10 +33,6 @@ export default new Vue({
     animateClass() {
       if (State.animations) return '-animate'
       else return '-no-animate'
-    },
-
-    defaultCtx() {
-      return State.private ? PRIVATE_CTX : DEFAULT_CTX
     },
   },
 
@@ -77,13 +70,12 @@ export default new Vue({
 
     let debounced = Utils.Debounce(() => Store.dispatch('saveState'), 567)
     Store.watch(Getters.activePanel, debounced.func)
-    // this.$watch('activePanel', debounced.func)
 
     await Store.dispatch('loadSettings')
     await Store.dispatch('loadState')
     await Store.dispatch('loadKebindings')
     await Store.dispatch('loadFavicons')
-    await this.loadLocalID()
+    await Store.dispatch('loadLocalID')
     await this.loadPanels()
   },
 
@@ -145,7 +137,7 @@ export default new Vue({
      */
     goToActiveTabPanel() {
       if (!this.$refs.sidebar) return
-      let t = this.$refs.sidebar.allTabs.find(t => t.active)
+      let t = State.tabs.find(t => t.active)
       if (!t) return
       let i = this.$refs.sidebar.getPanelIndex(t.id)
       this.$refs.sidebar.switchToPanel(i)
@@ -156,7 +148,7 @@ export default new Vue({
      */
     copyDebugInfo() {
       if (!this.$refs.sidebar) return
-      let AllTabs = this.$refs.sidebar.allTabs.map(t => {
+      let AllTabs = State.tabs.map(t => {
         const dbgInfo = { ...t }
         dbgInfo.favIconUrl = t.favIconUrl ? t.favIconUrl.slice(0, 4) : false
         delete dbgInfo.url
@@ -216,7 +208,7 @@ export default new Vue({
      * Get default panel
      */
     getDefaultPanel() {
-      return this.$refs.sidebar.panels.find(p => p.cookieStoreId === this.defaultCtx)
+      return this.$refs.sidebar.panels.find(p => p.cookieStoreId === this.defaultCtxId)
     },
 
     /**
@@ -227,57 +219,13 @@ export default new Vue({
     },
 
     /**
-     * Show windows choosing panel
-     */
-    async chooseWin() {
-      this.winChoosing = []
-      let wins = await browser.windows.getAll({ populate: true })
-      wins = wins.filter(w => !w.focused && !w.incognito)
-
-      return new Promise(res => {
-        wins = wins.map(async w => {
-          let tab = w.tabs.find(t => t.active)
-          if (!tab) return
-          if (w.focused) return
-          let screen = await browser.tabs.captureTab(tab.id)
-          return {
-            id: w.id,
-            title: w.title,
-            screen,
-            choose: () => {
-              this.winChoosing = null
-              res(w.id)
-            },
-          }
-        })
-
-        Promise.all(wins).then(wins => {
-          this.winChoosing = wins
-        })
-      })
-    },
-
-    /**
-     * Load local id or create new
-     */
-    async loadLocalID() {
-      let ans = await browser.storage.local.get('id')
-      if (ans.id) {
-        this.localID = ans.id
-      } else {
-        this.localID = Utils.Uid()
-        browser.storage.local.set({ id: this.localID })
-      }
-    },
-
-    /**
      * Load sync panels state
      */
     async loadPanels() {
       let ans = await browser.storage.sync.get()
-      Object.keys(ans).filter(id => id !== this.local)
+      Object.keys(ans).filter(id => id !== State.localID)
 
-      let ids = Object.keys(ans).filter(id => id !== this.localID)
+      let ids = Object.keys(ans).filter(id => id !== State.localID)
       if (!ids.length) return
       let syncData
       ids.map(id => {
@@ -291,7 +239,7 @@ export default new Vue({
         }
       })
       if (!syncData) return
-      this.lastSyncPanels = syncData
+      State.lastSyncPanels = syncData
       this.updatePanels(syncData)
     },
 
@@ -299,7 +247,7 @@ export default new Vue({
      * ReSync panels from last loaded state
      */
     async resyncPanels() {
-      if (this.lastSyncPanels) this.updatePanels(this.lastSyncPanels)
+      if (State.lastSyncPanels) this.updatePanels(State.lastSyncPanels)
     },
 
     /**
@@ -307,13 +255,13 @@ export default new Vue({
      */
     async savePanels() {
       if (!this.$refs.sidebar) return
-      if (this.private) return
+      if (State.private) return
 
       if (this.savePanelsTimeout) clearTimeout(this.savePanelsTimeout)
       this.savePanelsTimeout = setTimeout(() => {
 
         const syncPanels = []
-        this.syncPanels.map(pid => {
+        State.syncPanels.map(pid => {
           let panel
           if (pid === 'pinned') panel = this.$refs.sidebar.panels.find(p => p.pinned)
           else panel = this.$refs.sidebar.panels.find(p => p.cookieStoreId === pid)
@@ -331,7 +279,7 @@ export default new Vue({
           time: ~~(Date.now() / 1000),
           panels: syncPanels,
         }
-        browser.storage.sync.set({ [this.localID]: JSON.stringify(syncPanelsData) })
+        browser.storage.sync.set({ [State.localID]: JSON.stringify(syncPanelsData) })
       }, 500)
     },
 
@@ -347,13 +295,13 @@ export default new Vue({
         if (!locPanel) return
 
         // Handle pinned tabs
-        if (locPanel.pinned && this.syncPanels.indexOf('pinned') !== -1) {
+        if (locPanel.pinned && State.syncPanels.indexOf('pinned') !== -1) {
           if (!syncPanel.urls) return
           syncPanel.urls.map(syncUrl => {
             if (locPanel.tabs.find(t => t.url === syncUrl)) return
 
             browser.tabs.create({
-              windowId: this.windowId,
+              windowId: State.windowId,
               pinned: true,
               url: syncUrl,
               active: false,
@@ -361,15 +309,15 @@ export default new Vue({
           })
 
           // Reset last sync panel data
-          this.lastSyncPanels.panels[i] = null
+          State.lastSyncPanels.panels[i] = null
           return
         }
 
         // If sync is off
-        if (!this.syncPanels.find(pid => pid === locPanel.cookieStoreId)) return
+        if (!State.syncPanels.find(pid => pid === locPanel.cookieStoreId)) return
 
         // Reset last sync panel data
-        this.lastSyncPanels.panels[i] = null
+        State.lastSyncPanels.panels[i] = null
 
         // Update container
         if (locPanel.color !== syncPanel.color || locPanel.icon !== syncPanel.icon) {
@@ -392,40 +340,6 @@ export default new Vue({
           })
         })
       })
-    },
-
-    /**
-     * Reset settings to defaults
-     * and store them to local storage
-     */
-    resetSettings() {
-      for (const key in DEFAULT_SETTINGS) {
-        if (!DEFAULT_SETTINGS.hasOwnProperty(key)) continue
-        if (this[key] == null || this[key] == undefined) continue
-        Vue.set(this, key, DEFAULT_SETTINGS[key])
-      }
-
-      this.saveSettings()
-    },
-
-    /**
-     * Remove all saved favicons
-     */
-    clearFaviCache() {
-      // todo: action
-      State.favicons = {}
-      browser.storage.local.set({ favicons: '{}' })
-    },
-
-    /**
-     * Clear sync data
-     */
-    clearSyncData() {
-      const syncPanelsData = {
-        time: ~~(Date.now() / 1000),
-        panels: [],
-      }
-      browser.storage.sync.set({ [this.localID]: JSON.stringify(syncPanelsData) })
     },
   },
 })
