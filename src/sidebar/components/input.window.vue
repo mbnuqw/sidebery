@@ -12,7 +12,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import State from './store.state'
+import State from '../store.state'
 import ScrollBox from './scroll-box'
 
 export default {
@@ -53,7 +53,7 @@ export default {
 
 
 <style lang="stylus">
-@import '../styles/mixins'
+@import '../../styles/mixins'
 
 .WinInput
   box(absolute, flex)

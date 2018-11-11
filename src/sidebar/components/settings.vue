@@ -145,11 +145,11 @@
 
 
 <script>
+import Utils from '../../libs/utils'
+import Logs from '../../libs/logs'
+import Store from '../store'
+import State from '../store.state'
 import ScrollBox from './scroll-box'
-import Utils from '../libs/utils'
-import Logs from '../libs/logs'
-import Store from './store'
-import State from './store.state'
 
 const VALID_SHORTCUT_62 = /^((Ctrl|Alt|Command|MacCtrl)\+)(Shift\+)?([A-Z0-9]|Comma|Period|Home|End|PageUp|PageDown|Space|Insert|Delete|Up|Down|Left|Right|F\d\d?)$|^((Ctrl|Alt|Command|MacCtrl)\+)?(Shift\+)?(F\d\d?)$/
 const VALID_SHORTCUT = /^((Ctrl|Alt|Command|MacCtrl)\+)((Shift|Alt)\+)?([A-Z0-9]|Comma|Period|Home|End|PageUp|PageDown|Space|Insert|Delete|Up|Down|Left|Right|F\d\d?)$|^((Ctrl|Alt|Command|MacCtrl)\+)?((Shift|Alt)\+)?(F\d\d?)$/
@@ -314,7 +314,7 @@ export default {
 
 
 <style lang="stylus">
-@import '../styles/mixins'
+@import '../../styles/mixins'
 
 .Settings section
   box(relative)

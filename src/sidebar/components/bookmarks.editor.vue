@@ -189,7 +189,7 @@ export default {
 
 
 <style lang="stylus">
-@import '../styles/mixins'
+@import '../../styles/mixins'
 
 .BEditor
   box(absolute)

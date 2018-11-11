@@ -1,6 +1,6 @@
 <template lang="pug">
 .Sidebar(
-  :data-menu="navMenuOpened"
+  :menu-opened="isPanelMenuOpened"
   @wheel="onWH"
   @contextmenu.prevent.stop=""
   @dragover.prevent=""
@@ -13,16 +13,16 @@
   ctx-menu
   window-input(:is-active="!!winChoosing")
   .bg(v-noise:300.g:12:af.a:0:42.s:0:9="", :style="bgPosStyle")
-  .dimmer(@mousedown="closeMenu")
+  .dimmer(@mousedown="closePanelMenu")
   .nav(ref="nav")
     keep-alive
       component.panel-menu(
-        v-if="navMenu" 
+        v-if="panelMenu" 
         ref="menu"
-        :is="navMenu.menu" 
-        :conf="navMenu"
-        @close="closeMenu"
-        @height="recalcMenuHeight"
+        :is="panelMenu.menu" 
+        :conf="panelMenu"
+        @close="closePanelMenu"
+        @height="recalcPanelMenuHeight"
         @panel-cmd="panelCmd")
 
     .nav-strip(@wheel="onNavWheel")
@@ -34,7 +34,7 @@
         :data-active="panelIs(i)"
         :data-hidden="btn.hidden"
         @click="onNavClick(i)"
-        @mousedown.right="openMenu(i)")
+        @mousedown.right="openPanelMenu(i)")
         svg(:style="{fill: btn.colorCode}")
           use(:xlink:href="'#' + btn.icon")
         .ok-badge
@@ -46,11 +46,17 @@
             .spinner-stick(class='spinner-stick-' + n)
 
     //- Add new container
-    .add-btn(v-if="!isPrivate", :title="t('sidebar.nav_add_ctx_title')", @click="openMenu(-1)")
+    .add-btn(
+      v-if="!isPrivate"
+      :title="t('sidebar.nav_add_ctx_title')"
+      @click="openPanelMenu(-1)")
       svg: use(xlink:href="#icon_plus_v2")
 
     //- Settings
-    .settings-btn(:data-active="settingsOpened", :title="t('sidebar.nav_settings_title')", @click="toggleSettings")
+    .settings-btn(
+      :data-active="$store.state.settingsOpened"
+      :title="t('sidebar.nav_settings_title')"
+      @click="toggleSettings")
       svg: use(xlink:href="#icon_settings")
 
   //- Panels
@@ -61,6 +67,7 @@
       :key="c.cookieStoreId || c.name"
       :is="c.panel"
       :tabs="c.tabs"
+      :index="i"
       :store-id="c.cookieStoreId"
       :pos="getPanelPos(i)"
       :active="panelIs(i)"
@@ -69,28 +76,27 @@
       @panel-loading-start="onPanelLoadingStart(i)"
       @panel-loading-end="onPanelLoadingEnd(i)"
       @panel-loading-ok="onPanelLoadingOk(i)"
-      @panel-loading-err="onPanelLoadingErr(i)"
-      @closedown="closeTabsDown(i, $event)")
+      @panel-loading-err="onPanelLoadingErr(i)")
     settings-panel.panel(:pos="settingsPanelPos")
 </template>
 
 
 <script>
 import Vue from 'vue'
-import { mapGetters } from 'vuex'
-import NoiseBg from '../directives/noise-bg.js'
-import Utils from '../libs/utils.js'
-import Logs from '../libs/logs.js'
-import Store from './store'
-import State from './store.state.js'
-import { DEFAULT_PANELS } from './store.state'
-import CtxMenu from './context-menu.vue'
-import BookmarksPanel from './bookmarks.vue'
-import TabsPanel from './tabs.vue'
-import TabsDefaultMenu from './tabs.default.menu.vue'
-import TabsMenu from './tabs.menu.vue'
-import SettingsPanel from './settings.vue'
-import WindowInput from './input.window.vue'
+import { mapGetters, mapActions } from 'vuex'
+import NoiseBg from '../../directives/noise-bg.js'
+import Utils from '../../libs/utils.js'
+import Logs from '../../libs/logs.js'
+import EventBus from '../event-bus'
+import Store from '../store'
+import State, { DEFAULT_PANELS } from '../store.state.js'
+import CtxMenu from './context-menu'
+import BookmarksPanel from './bookmarks'
+import TabsPanel from './tabs'
+import TabsDefaultMenu from './tabs.default.menu'
+import TabsMenu from './tabs.menu'
+import SettingsPanel from './settings'
+import WindowInput from './input.window'
 
 Vue.directive('noise', NoiseBg)
 
@@ -108,9 +114,7 @@ export default {
   data() {
     return {
       width: 250,
-      navMenuOpened: false,
-      navMenu: null,
-      settingsOpened: false,
+      panelMenu: null,
       loading: [true],
       loadingTimers: [],
     }
@@ -120,7 +124,11 @@ export default {
    * --- Computed ---
    */
   computed: {
-    ...mapGetters(['winChoosing', 'isPrivate', 'defaultCtxId', 'panels']),
+    ...mapGetters(['winChoosing', 'isPrivate', 'defaultCtxId', 'panels', 'activePanel']),
+
+    isPanelMenuOpened() {
+      return !!State.panelMenuOpened
+    },
 
     /**
      * Background tranform style for parallax fx
@@ -133,7 +141,7 @@ export default {
      * Get settings-panel position
      */
     settingsPanelPos() {
-      return this.settingsOpened ? 'center' : 'right'
+      return State.settingsOpened ? 'center' : 'right'
     },
 
     /**
@@ -199,12 +207,6 @@ export default {
     },
   },
 
-  // watch: {
-  //   panels(p) {
-  //     console.log('[DEBUG] getter panels', p);
-  //   }
-  // },
-
   // --- Created Hook ---
   async created() {
     // --- Setup Hooks
@@ -223,12 +225,15 @@ export default {
     browser.tabs.onActivated.addListener(this.onActivatedTab)
 
     // --- Retrieve initial state
-    await this.loadContexts()
-    await this.loadTabs()
+    await Store.dispatch('loadContexts')
+    await Store.dispatch('loadTabs')
 
     // --- Handle resizing of sidebar
     const onresize = Utils.Asap(() => this.updateNavSize(), 120)
     window.addEventListener('resize', onresize.func)
+
+    // --- Handle global events
+    EventBus.$on('openPanelMenu', panelIndex => this.openPanelMenu(panelIndex))
   },
 
   // --- Mounted Hook ---
@@ -256,6 +261,8 @@ export default {
    * --- Methods ---
    */
   methods: {
+    ...mapActions(['createTab']),
+
     /**
      * Sidebar wheel event handler
      */
@@ -264,17 +271,17 @@ export default {
         const globaly = State.scrollThroughTabs === 'global'
         if (e.deltaY > 0) {
           if (this.wheelBlockTimeout) return
-          this.activateNextTab({ globaly, cycle: false })
+          Store.dispatch('switchTab', { globaly, cycle: false, step: 1 })
         }
         if (e.deltaY < 0) {
           if (this.wheelBlockTimeout) return
-          this.activatePrevTab({ globaly, cycle: false })
+          Store.dispatch('switchTab', { globaly, cycle: false, step: -1 })
         }
       }
 
       if (State.hScrollThroughPanels) {
-        if (e.deltaX > 0) return this.switchToNextPanel()
-        if (e.deltaX < 0) return this.switchToPrevPanel()
+        if (e.deltaX > 0) return Store.dispatch('switchPanel', 1)
+        if (e.deltaX < 0) return Store.dispatch('switchPanel', -1)
       }
     },
 
@@ -282,8 +289,8 @@ export default {
      * Navigation wheel event handler
      */
     onNavWheel(e) {
-      if (e.deltaY > 0) return this.switchToNextPanel()
-      if (e.deltaY < 0) return this.switchToPrevPanel()
+      if (e.deltaY > 0) return Store.dispatch('switchPanel', 1)
+      if (e.deltaY < 0) return Store.dispatch('switchPanel', -1)
     },
 
     /**
@@ -387,7 +394,7 @@ export default {
      */
     onNavClick(i) {
       if (State.panelIndex !== i) {
-        this.switchToPanel(i)
+        Store.dispatch('switchToPanel', i)
       } else if (this.panels[i].cookieStoreId) {
         browser.tabs.create({ cookieStoreId: this.panels[i].cookieStoreId })
       }
@@ -405,7 +412,7 @@ export default {
 
       // Check if we have some updates
       // for container with this name
-      this.$root.resyncPanels()
+      Store.dispatch('resyncPanels')
     },
 
     /**
@@ -443,7 +450,7 @@ export default {
       let i = State.ctxs.findIndex(c => c.cookieStoreId === id)
       if (i === -1) return
       State.ctxs.splice(i, 1, contextualIdentity)
-      this.$root.savePanels()
+      Store.dispatch('saveSyncPanels')
     },
     // ---
 
@@ -471,8 +478,8 @@ export default {
         State.tabs[i].index++
       }
       State.tabs.splice(tab.index, 0, tab)
-      this.recalcPanelScroll()
-      this.$root.savePanels()
+      Store.dispatch('recalcPanelScroll')
+      Store.dispatch('saveSyncPanels')
     },
 
     /**
@@ -506,7 +513,7 @@ export default {
       }
 
       if (change.hasOwnProperty('url') || change.hasOwnProperty('pinned')) {
-        this.$root.savePanels()
+        Store.dispatch('saveSyncPanels')
       }
     },
 
@@ -529,8 +536,8 @@ export default {
       const panelIndex = State.activeTabs.findIndex(id => id === tabId)
       if (panelIndex >= 0) State.activeTabs[panelIndex] = null
       // ........
-      this.recalcPanelScroll()
-      this.$root.savePanels()
+      Store.dispatch('recalcPanelScroll')
+      Store.dispatch('saveSyncPanels')
     },
 
     /**
@@ -569,7 +576,7 @@ export default {
       // Update active tab position
       pIndex = this.getPanelIndex(id)
       if (isActive) Store.commit('setPanel', pIndex)
-      this.recalcPanelScroll()
+      Store.dispatch('recalcPanelScroll')
     },
 
     /**
@@ -582,8 +589,8 @@ export default {
       let i = State.tabs.findIndex(t => t.id === id)
       if (i === -1) return
       State.tabs.splice(i, 1)
-      this.recalcPanelScroll()
-      this.$root.savePanels()
+      Store.dispatch('recalcPanelScroll')
+      Store.dispatch('saveSyncPanels')
     },
 
     /**
@@ -594,7 +601,7 @@ export default {
       Logs.D(`Tab attached, id: '${id}'`)
       Store.commit('closeCtxMenu')
       this.loadTabs()
-      this.$root.savePanels()
+      Store.dispatch('saveSyncPanels')
     },
 
     /**
@@ -671,33 +678,22 @@ export default {
     },
 
     /**
-     * Try to recalc panel's scroll
-     */
-    async recalcPanelScroll() {
-      const panelVM = this.$refs.panels[this.panel]
-      if (panelVM && panelVM.recalcScroll) {
-        await this.$nextTick()
-        panelVM.recalcScroll()
-      }
-    },
-
-    /**
      * Update active tab for panel
      */
-    updateActiveTab(i, tabs) {
-      let active = tabs.find(t => t.active)
-      if (active) {
-        // Update active tab
-        State.activeTabs[i] = active.id
-      } else {
-        // Remove tab from list of active tabs
-        // if it no longer exists
-        let lastActive = State.activeTabs[i]
-        if (lastActive && !tabs.find(t => t.id === lastActive)) {
-          State.activeTabs[i] = null
-        }
-      }
-    },
+    // updateActiveTab(i, tabs) {
+    //   let active = tabs.find(t => t.active)
+    //   if (active) {
+    //     // Update active tab
+    //     State.activeTabs[i] = active.id
+    //   } else {
+    //     // Remove tab from list of active tabs
+    //     // if it no longer exists
+    //     let lastActive = State.activeTabs[i]
+    //     if (lastActive && !tabs.find(t => t.id === lastActive)) {
+    //       State.activeTabs[i] = null
+    //     }
+    //   }
+    // },
 
     /**
      * Get panel index of tab
@@ -720,176 +716,11 @@ export default {
      * Get range info of panel by cookieStoreId
      * returns: [tab-length, start, end] or null
      */
-    getPanelRangeInfo(ctxId) {
-      let panel = this.panels.find(p => p.cookieStoreId === ctxId)
-      if (!panel) return null
-      return [panel.tabs.length, panel.startIndex, panel.endIndex]
-    },
-
-    /**
-     * Create new tab
-     */
-    createTab(ctxId) {
-      if (!ctxId) return
-      let p = this.panels.find(p => p.cookieStoreId === ctxId)
-      if (!p || !p.tabs) return
-      let index = p.tabs.length ? p.endIndex + 1 : p.startIndex
-      browser.tabs.create({ index, cookieStoreId: ctxId })
-    },
-
-    removeTab(tab) {
-      let p = this.panels.find(p => p.cookieStoreId === tab.cookieStoreId)
-      if (!p || !p.tabs) return
-      if (tab.index === p.endIndex && p.tabs.length > 1) {
-        let prevTab = State.tabs[p.endIndex - 1]
-        browser.tabs.update(prevTab.id, { active: true })
-        this.$nextTick(() => {
-          browser.tabs.remove(tab.id)
-        })
-      } else {
-        browser.tabs.remove(tab.id)
-      }
-    },
-
-    /**
-     * Switch current active panel by index
-     */
-    switchToPanel(index) {
-      if (this.settingsOpened) this.closeSettings()
-      Store.commit('closeCtxMenu')
-      Store.commit('setPanel', index)
-      if (this.navMenuOpened) this.openMenu(State.panelIndex)
-      if (State.createNewTabOnEmptyPanel) {
-        let panel = this.panels[State.panelIndex]
-        if (panel.tabs && panel.tabs.length === 0) this.createTab(panel.cookieStoreId)
-      }
-
-      if (State.activateLastTabOnPanelSwitching) {
-        this.activateLastActiveTabOf(State.panelIndex)
-      }
-
-      this.recalcPanelScroll()
-    },
-
-    /**
-     * Switch to next panel
-     */
-    async switchToNextPanel() {
-      // Debounce switching
-      if (this.switchPanelPause) return
-      this.switchPanelPause = setTimeout(() => {
-        clearTimeout(this.switchPanelPause)
-        this.switchPanelPause = null
-      }, 128)
-
-      Logs.D(`Switch to next panel, current: ${State.panelIndex}`)
-
-      Store.commit('closeCtxMenu')
-      if (this.settingsOpened) {
-        this.closeSettings()
-        State.panelIndex = State.lastPanelIndex
-        return
-      }
-
-      if (State.panelIndex < this.panels.length - 1) State.panelIndex++
-      let i = State.panelIndex
-      while (this.panels[i].hidden) {
-        if (i >= this.panels.length - 1) {
-          i = State.panelIndex - 1
-          break
-        }
-        i++
-      }
-      State.panelIndex = i
-      if (State.skipEmptyPanels) {
-        for (let i = State.panelIndex; i < this.panels.length; i++) {
-          if (this.panels[i].tabs && this.panels[i].tabs.length) {
-            State.panelIndex = i
-            break
-          }
-        }
-      }
-      State.lastPanelIndex = State.panelIndex
-
-      if (State.activateLastTabOnPanelSwitching) {
-        this.activateLastActiveTabOf(State.panelIndex)
-      }
-
-      if (this.navMenuOpened) this.openMenu(State.panelIndex)
-      if (State.createNewTabOnEmptyPanel) {
-        let panel = this.panels[State.panelIndex]
-        if (panel.tabs && panel.tabs.length === 0) this.createTab(panel.cookieStoreId)
-      }
-
-      this.recalcPanelScroll()
-    },
-
-    /**
-     * Switch to previous panel
-     */
-    async switchToPrevPanel() {
-      // Debounce switching
-      if (this.switchPanelPause) return
-      this.switchPanelPause = setTimeout(() => {
-        clearTimeout(this.switchPanelPause)
-        this.switchPanelPause = null
-      }, 128)
-
-      Logs.D(`Switch to prev panel, current: ${State.panelIndex}`)
-
-      Store.commit('closeCtxMenu')
-      if (this.settingsOpened) {
-        this.closeSettings()
-        State.panelIndex = State.lastPanelIndex
-        return
-      }
-
-      if (State.panelIndex < 0) State.panelIndex = 0
-      if (State.panelIndex > 0) State.panelIndex--
-      while (this.panels[State.panelIndex].hidden) {
-        State.panelIndex--
-      }
-      if (State.skipEmptyPanels) {
-        for (let i = State.panelIndex; i--; ) {
-          if (this.panels[i].tabs && this.panels[i].tabs.length) {
-            State.panelIndex = i
-            break
-          }
-        }
-      }
-      State.lastPanelIndex = State.panelIndex
-
-      if (State.activateLastTabOnPanelSwitching) {
-        this.activateLastActiveTabOf(State.panelIndex)
-      }
-
-      if (this.navMenuOpened) this.openMenu(State.panelIndex)
-      if (State.createNewTabOnEmptyPanel) {
-        let panel = this.panels[State.panelIndex]
-        if (panel.tabs && panel.tabs.length === 0) this.createTab(panel.cookieStoreId)
-      }
-
-      this.recalcPanelScroll()
-    },
-
-    /**
-     * Activate last active tab on the panel
-     */
-    activateLastActiveTabOf(panelIndex) {
-      const tabId = State.activeTabs[panelIndex]
-      const p = this.panels[panelIndex]
-      if (!p || !p.tabs) return
-
-      // Last active tab
-      if (typeof tabId === 'number' && p.tabs.find(t => t.id === tabId)) {
-        browser.tabs.update(tabId, { active: true })
-        return
-      }
-
-      // Or just last
-      const lastTab = p.tabs[p.tabs.length - 1]
-      if (lastTab) browser.tabs.update(lastTab.id, { active: true })
-    },
+    // getPanelRangeInfo(ctxId) {
+    //   let panel = this.panels.find(p => p.cookieStoreId === ctxId)
+    //   if (!panel) return null
+    //   return [panel.tabs.length, panel.startIndex, panel.endIndex]
+    // },
 
     /**
      * Get position class for panel by index.
@@ -901,18 +732,18 @@ export default {
       if (State.panelIndex > i) return 'left'
     },
 
-    // --- Menu ---
+    // --- Panel Menu ---
     /**
      * Open panel menu by nav index.
      */
-    async openMenu(i) {
-      if (this.settingsOpened) this.closeSettings()
+    async openPanelMenu(i) {
+      Store.commit('closeSettings')
       Store.commit('closeCtxMenu')
-      this.navMenuOpened = true
+      State.panelMenuOpened = true
       State.panelIndex = i
       if (i >= 0) State.activePanel = State.panelIndex
-      if (i === -1) this.navMenu = { menu: TabsMenu, new: true }
-      else if (i >= 0) this.navMenu = { ...this.nav[i] }
+      if (i === -1) this.panelMenu = { menu: TabsMenu, new: true }
+      else if (i >= 0) this.panelMenu = { ...this.nav[i] }
 
       await this.$nextTick()
       if (this.$refs.menu && this.$refs.menu.open) this.$refs.menu.open()
@@ -920,54 +751,37 @@ export default {
       this.$refs.nav.style.transform = `translateY(${h - 336}px)`
     },
 
-    async recalcMenuHeight() {
+    /**
+     * Wait for rerendering and calc panels menu height.
+     */
+    async recalcPanelMenuHeight() {
       await this.$nextTick()
-      if (!this.navMenuOpened) return
+      if (!State.panelMenuOpened) return
       let h = this.$refs.menu ? this.$refs.menu.$el.offsetHeight : 336
       this.$refs.nav.style.transform = `translateY(${h - 336}px)`
     },
 
     /**
-     * Close panel menu.
+     * Close nav menu.
      */
-    closeMenu() {
-      this.navMenuOpened = false
+    closePanelMenu() {
+      State.panelMenuOpened = false
       if (State.panelIndex < 0 && State.lastPanelIndex >= 0) {
         State.panelIndex = State.lastPanelIndex
       }
       this.$refs.nav.style.transform = 'translateY(0px)'
-      setTimeout(() => (this.navMenu = null), 120)
+      setTimeout(() => (this.panelMenu = null), 120)
     },
     // ---
-
-    // --- Settings ---
-    /**
-     * Open settings panel.
-     */
-    openSettings() {
-      if (this.navMenuOpened) this.closeMenu()
-      Store.commit('closeCtxMenu')
-      State.lastPanelIndex = State.panelIndex
-      State.panelIndex = -2
-      this.settingsOpened = true
-    },
 
     /**
      * Toggle settings
      */
     toggleSettings() {
-      if (this.settingsOpened) this.closeSettings()
-      else this.openSettings()
+      if (State.panelMenuOpened) this.closePanelMenu()
+      if (State.settingsOpened) Store.commit('closeSettings')
+      else Store.commit('openSettings')
     },
-
-    /**
-     * Close settings panel and return to last one.
-     */
-    closeSettings() {
-      this.settingsOpened = false
-      State.panelIndex = State.lastPanelIndex
-    },
-    // ---
 
     /**
      * Run command in panel
@@ -984,118 +798,13 @@ export default {
     updateNavSize() {
       if (this.width !== window.innerWidth) this.width = window.innerWidth
     },
-
-    /**
-     * Load Contextual Identities
-     */
-    async loadContexts() {
-      State.ctxs = await browser.contextualIdentities.query({})
-    },
-
-    /**
-     * Load all tabs for current window
-     */
-    async loadTabs() {
-      const windowId = browser.windows.WINDOW_ID_CURRENT
-      const tabs = await browser.tabs.query({ windowId })
-
-      // Check order of tabs and get moves for normalizing
-      const ctxs = [this.defaultCtxId].concat(State.ctxs.map(ctx => ctx.cookieStoreId))
-      const moves = []
-      let index = 0
-      let offset = 0
-      for (let i = 0; i < ctxs.length; i++) {
-        const ctx = ctxs[i]
-        for (let j = 0; j < tabs.length; j++) {
-          const tab = tabs[j]
-          if (tab.cookieStoreId !== ctx) continue
-
-          if (tab.pinned) {
-            index++
-            continue
-          }
-
-          if (index !== tab.index + offset) {
-            moves.push([tab.id, index])
-            offset++
-          }
-          index++
-        }
-      }
-
-      // Ask user for normalizing
-      // ...
-
-      State.tabs = tabs
-
-      // Normalize order
-      moves.map(async move => {
-        await browser.tabs.move(move[0], { index: move[1] })
-      })
-    },
-
-    activateNextTab({ globaly, cycle }) {
-      if (this.switchTabPause) return
-      this.switchTabPause = setTimeout(() => {
-        clearTimeout(this.switchTabPause)
-        this.switchTabPause = null
-      }, 50)
-
-      let tabs = globaly ? State.tabs : this.panels[State.panelIndex].tabs
-      if (!tabs || !tabs.length) return
-
-      let current = tabs.findIndex(t => t.active)
-
-      let next = current + 1
-      if (next >= tabs.length) {
-        if (cycle) next = 0
-        else return
-      }
-
-      browser.tabs.update(tabs[next].id, { active: true })
-    },
-
-    activatePrevTab({ globaly, cycle }) {
-      if (this.switchTabPause) return
-      this.switchTabPause = setTimeout(() => {
-        clearTimeout(this.switchTabPause)
-        this.switchTabPause = null
-      }, 50)
-
-      let tabs = globaly ? State.tabs : this.panels[State.panelIndex].tabs
-      if (!tabs || !tabs.length) return
-
-      let current = tabs.findIndex(t => t.active)
-      if (current < 0) current = tabs.length
-
-      let prev = current - 1
-      if (prev < 0) {
-        if (cycle) prev = tabs.length - 1
-        else return
-      }
-
-      browser.tabs.update(tabs[prev].id, { active: true })
-    },
-
-    closeTabsDown(panelIndex, tabIndex) {
-      const panel = this.panels[panelIndex]
-      if (!panel) return
-
-      if (!panel.tabs || !panel.tabs[tabIndex]) return
-      const tabs = panel.tabs.slice(tabIndex)
-      if (panel.tabs[tabIndex - 1] && tabs.find(t => t.active)) {
-        browser.tabs.update(panel.tabs[tabIndex - 1].id, { active: true })
-      }
-
-      browser.tabs.remove(tabs.map(t => t.id))
-    },
   },
 }
 </script>
 
 
 <style lang="stylus">
-@import '../styles/mixins'
+@import '../../styles/mixins'
 
 NAV_HEIGHT = 32px
 NAV_BTN_WIDTH = 34px
@@ -1108,7 +817,7 @@ NAV_CONF_HEIGHT = auto
   flex-direction: column
   overflow: hidden
 
-  &[data-menu]
+  &[menu-opened]
     > .dimmer
       z-index: 999
       opacity: 1

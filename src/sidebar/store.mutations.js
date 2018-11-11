@@ -1,5 +1,5 @@
 import Logs from '../libs/logs'
-import { DEFAULT_SETTINGS } from './settings.js'
+import { DEFAULT_SETTINGS } from './settings'
 
 export default {
   // --------------------------------
@@ -24,13 +24,32 @@ export default {
     }
   },
 
+  /**
+   * Open settings panel.
+   */
+  openSettings(state) {
+    if (state.settingsOpened) return
+    state.lastPanelIndex = state.panelIndex
+    state.panelIndex = -2
+    state.settingsOpened = true
+  },
+
+  /**
+   * Close settings panel and return to last one.
+   */
+  closeSettings(state) {
+    if (!state.settingsOpened) return
+    state.settingsOpened = false
+    state.panelIndex = state.lastPanelIndex
+  },
+
   //
   /**
    * Set panel index
    */
   setPanel(state, newIndex) {
     state.panelIndex = newIndex
-    if (newIndex >= 0) state.activePanel = newIndex
+    if (newIndex >= 0) state.lastPanelIndex = newIndex
   },
 
   // ------------------------------------

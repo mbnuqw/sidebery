@@ -47,9 +47,9 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import Utils from '../libs/utils'
-import Logs from '../libs/logs'
-import State from './store.state'
+import Utils from '../../libs/utils'
+import Logs from '../../libs/logs'
+import State from '../store.state'
 import ScrollBox from './scroll-box'
 import BNode from './bookmarks.node'
 import BookmarksEditor from './bookmarks.editor'
@@ -668,7 +668,7 @@ export default {
 
 
 <style lang="stylus">
-@import '../styles/mixins'
+@import '../../styles/mixins'
 
 .Bookmarks
   overflow: hidden

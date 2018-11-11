@@ -17,7 +17,7 @@
 
 <script>
 import {mapGetters} from 'vuex'
-import State from './store.state'
+import State from '../store.state'
 
 export default {
   props: {

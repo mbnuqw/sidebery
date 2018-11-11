@@ -15,9 +15,9 @@
 
 <script>
 import Vue from 'vue'
-import Utils from '../libs/utils'
-import Debounce from '../directives/debounce'
-import Store from './store'
+import Utils from '../../libs/utils'
+import Debounce from '../../directives/debounce'
+import Store from '../store'
 
 Vue.directive('debounce', Debounce)
 
@@ -157,7 +157,7 @@ export default {
 
 
 <style lang="stylus">
-@import '../styles/mixins'
+@import '../../styles/mixins'
 
 .ScrollBox
   box(relative)

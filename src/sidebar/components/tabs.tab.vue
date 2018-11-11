@@ -44,10 +44,10 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import Utils from '../libs/utils'
-import Store from './store'
-import State from './store.state'
-import CtxMenu from './context-menu.js'
+import Utils from '../../libs/utils'
+import Store from '../store'
+import State from '../store.state'
+import CtxMenu from '../context-menu'
 
 export default {
   props: {
@@ -225,7 +225,7 @@ export default {
     },
 
     close() {
-      this.$root.$refs.sidebar.removeTab(this.tab)
+      Store.dispatch('removeTab', this.tab)
     },
 
     async openMenu() {
@@ -423,7 +423,7 @@ export default {
      * Close all tabs underneath
      */
     closeDown() {
-      this.$emit('closedown')
+      Store.dispatch('closeTabsDown', this.tab.id)
     },
 
     /**
@@ -445,7 +445,7 @@ export default {
 
 
 <style lang="stylus">
-@import '../styles/mixins'
+@import '../../styles/mixins'
 
 .Tab
   box(relative, flex)

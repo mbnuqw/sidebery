@@ -12,8 +12,8 @@
 
 
 <script>
-import Store from './store'
-import Getters from './store.getters'
+import Store from '../store'
+import Getters from '../store.getters'
 
 export default {
   data() {
@@ -136,7 +136,7 @@ export default {
 
 
 <style lang="stylus">
-@import '../styles/mixins'
+@import '../../styles/mixins'
 
 .CtxMenu
   box(absolute)

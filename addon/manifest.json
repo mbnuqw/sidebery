@@ -34,7 +34,7 @@
       "32": "./assets/logo-ce32-32.png"
     },
     "default_title": "Nav Center",
-    "default_panel": "./sidebar/sidebar.html"
+    "default_panel": "./sidebar/index.html"
   },
 
   "commands": {

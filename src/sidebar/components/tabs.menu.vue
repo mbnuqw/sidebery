@@ -37,7 +37,8 @@
 
 
 <script>
-import State from './store.state'
+import Store from '../store'
+import State from '../store.state'
 import TextInput from './input.text'
 
 export default {
@@ -144,7 +145,7 @@ export default {
 
       // Check if we have some updates
       // for container with this name
-      this.$root.resyncPanels()
+      Store.dispatch('resyncPanels')
     },
 
     async updateIcon(i) {
@@ -220,7 +221,7 @@ export default {
       let pi = State.syncPanels.findIndex(p => p === this.id)
       if (pi !== -1) State.syncPanels.splice(pi, 1)
       else State.syncPanels.push(this.id)
-      this.$root.resyncPanels()
+      Store.dispatch('resyncPanels')
       this.$root.saveState()
     },
   },
@@ -229,7 +230,7 @@ export default {
 
 
 <style lang="stylus">
-@import '../styles/mixins'
+@import '../../styles/mixins'
 
 .Menu > .title
   text(s: rem(18))

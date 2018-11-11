@@ -25,7 +25,6 @@
         ref="tabs"
         :key="t.id"
         :tab="t"
-        :panel-index="i"
         :selected="isSelected(t.id)"
         @panel-loading-start="onPanelLoadingStart"
         @panel-loading-end="onPanelLoadingEnd"
@@ -38,12 +37,13 @@
 
 
 <script>
-import Store from './store'
-import State from './store.state'
+import Utils from '../../libs/utils'
+import Store from '../store'
+import State from '../store.state'
+import EventBus from '../event-bus'
+import CtxMenu from '../context-menu'
 import Tab from './tabs.tab'
 import ScrollBox from './scroll-box'
-import Utils from '../libs/utils'
-import CtxMenu from './context-menu.js'
 
 export default {
   components: {
@@ -56,7 +56,8 @@ export default {
       type: Array,
       default: () => [],
     },
-    activeTab: Number,
+    id: String,
+    index: Number,
     storeId: String,
   },
 
@@ -75,6 +76,10 @@ export default {
 
   mounted() {
     this.topOffset = this.$el.getBoundingClientRect().top
+    EventBus.$on('recalcPanelScroll', () => {
+      if (this.index !== State.panelIndex) return
+      this.recalcScroll()
+    })
   },
 
   methods: {
@@ -188,7 +193,7 @@ export default {
         if (this.storeId !== 'firefox-default') {
           menu.add('reopen_in_default_panel', this.openInPanel, 'firefox-default')
         }
-        this.$root.$refs.sidebar.contexts.map(c => {
+        State.ctxs.map(c => {
           if (this.storeId === c.cookieStoreId) return
           const label = this.t('ctx_menu.re_open_in_') + `||${c.colorCode}>>${c.name}`
           menu.addTranslated(label, this.openInPanel, c.cookieStoreId)
@@ -543,7 +548,7 @@ export default {
 
 
 <style lang="stylus" scoped>
-@import '../styles/mixins'
+@import '../../styles/mixins'
 
 .TabsPanel
   &[drag-active] .container

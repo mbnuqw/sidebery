@@ -1,10 +1,9 @@
 import { DEFAULT_CTX, PRIVATE_CTX, DEFAULT_PANELS } from './store.state'
-import TabsPanel from './tabs.vue'
+import TabsPanel from './components/tabs.vue'
 
 export default {
   bgNoise: s => s.bgNoise,
   fontSize: s => s.fontSize,
-  activePanel: s => s.activePanel,
   isPrivate: s => s.private,
   ctxMenu: s => s.ctxMenu,
   ctxMenuOpened: s => !!s.ctxMenu,
@@ -66,4 +65,6 @@ export default {
     })
     return out
   },
+  activePanel: (s, g) => g.panels[s.panelIndex],
+  defaultPanel: (_, g) => g.panels.find(p => p.cookieStoreId === g.defaultCtxId)
 }

@@ -29,8 +29,8 @@
 
 
 <script>
-import Store from './store'
-import State from './store.state'
+import Store from '../store'
+import State from '../store.state'
 
 export default {
   name: 'BNode',
@@ -271,7 +271,7 @@ export default {
 
 
 <style lang="stylus">
-@import '../styles/mixins'
+@import '../../styles/mixins'
 
 .Node
   box(relative)
