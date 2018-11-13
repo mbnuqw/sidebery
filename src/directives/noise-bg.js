@@ -17,6 +17,9 @@
 // import { Store } from 'gui/store'
 // import { Getters } from 'gui/store.getters'
 import { NoiseBg } from '../libs/noise-bg'
+import Store from '../sidebar/store'
+import State from '../sidebar/store.state'
+import Getters from '../sidebar/store.getters'
 
 const DefaultWidth = 300
 const DefaultHeight = 300
@@ -33,7 +36,7 @@ const DefaultHeight = 300
 // }
 
 export default {
-  bind(el, binding, vnode) {
+  bind(el, binding) {
     let conf = {}
     if (binding.value) {
       conf = binding.value
@@ -74,12 +77,11 @@ export default {
       })
     }
 
-    const root = vnode.context.$root
-    if (root.bgNoise) drawNoise()
-    if (root.$watch) {
-      root.$watch('bgNoise', function(n, p) {
-        if (n && !p) drawNoise()
-        if (!n && p) el.style.backgroundImage = ''
+    if (State.bgNoise) drawNoise()
+    if (Store.watch) {
+      Store.watch(Getters.bgNoise, function(curr, prev) {
+        if (curr && !prev) drawNoise()
+        if (!curr && prev) el.style.backgroundImage = ''
       })
     }
   },

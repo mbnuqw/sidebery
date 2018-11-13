@@ -26,15 +26,15 @@ const EXEC_CONFIG = { env: process.env, stdio: 'inherit' }
 
 let out = spawnSync(TESTS_CMD, TESTS_OPT, EXEC_CONFIG)
 if (out.status) process.exit(out.status)
-console.log('\n');
+console.log('\n')
 out = spawnSync(CLEAR_CACHE_CMD, CLEAR_CACHE_OPT, EXEC_CONFIG)
 if (out.status) process.exit(out.status)
-console.log('\n');
+console.log('\n')
 out = spawnSync(CLEAR_SIDEBAR_CMD, CLEAR_SIDEBAR_OPT, EXEC_CONFIG)
 if (out.status) process.exit(out.status)
-console.log('\n');
+console.log('\n')
 out = spawnSync(SIDEBAR_CMD, SIDEBAR_OPT, EXEC_CONFIG)
 if (out.status) process.exit(out.status)
-console.log('\n');
+console.log('\n')
 out = spawnSync(EXT_CMD, EXT_OPT, EXEC_CONFIG)
 if (out.status) process.exit(out.status)

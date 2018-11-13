@@ -115,7 +115,7 @@ export default {
 
 
 <style lang="stylus">
-@import '../styles/mixins'
+@import '../../styles/mixins'
 
 .inherit-text-styles
   font-family: inherit

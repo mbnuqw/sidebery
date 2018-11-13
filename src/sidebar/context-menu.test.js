@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import jsdom from 'jsdom'
-import ContextMenu from './context-menu.vue'
+import ContextMenu from './components/context-menu.vue'
 
 const renderer = require('vue-server-renderer').createRenderer()
 

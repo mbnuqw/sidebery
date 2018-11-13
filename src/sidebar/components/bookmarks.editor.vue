@@ -23,7 +23,7 @@
 
 
 <script>
-import TextInput from './input.text'
+import TextInput from './input.text.vue'
 
 const URL_RE = /^(http:\/\/|https:\/\/)[a-z0-9]+([-.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/
 
@@ -189,7 +189,7 @@ export default {
 
 
 <style lang="stylus">
-@import '../styles/mixins'
+@import '../../styles/mixins'
 
 .BEditor
   box(absolute)

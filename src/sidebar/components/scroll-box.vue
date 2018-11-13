@@ -15,8 +15,9 @@
 
 <script>
 import Vue from 'vue'
-import Utils from '../libs/utils'
-import Debounce from '../directives/debounce'
+import Utils from '../../libs/utils'
+import Debounce from '../../directives/debounce'
+import Store from '../store'
 
 Vue.directive('debounce', Debounce)
 
@@ -84,7 +85,7 @@ export default {
 
     onWH(e) {
       if (this.$refs.scrollContent.offsetHeight >= this.$refs.scrollBox.offsetHeight) {
-        this.$root.closeCtxMenu()
+        Store.commit('closeCtxMenu')
         if (e.deltaY) e.stopPropagation()
       }
     },
@@ -156,7 +157,7 @@ export default {
 
 
 <style lang="stylus">
-@import '../styles/mixins'
+@import '../../styles/mixins'
 
 .ScrollBox
   box(relative)

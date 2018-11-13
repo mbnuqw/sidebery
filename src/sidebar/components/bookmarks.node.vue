@@ -29,6 +29,10 @@
 
 
 <script>
+import { mapGetters } from 'vuex'
+import Store from '../store'
+import State from '../store.state'
+
 export default {
   name: 'BNode',
   props: {
@@ -47,6 +51,8 @@ export default {
   },
 
   computed: {
+    ...mapGetters(['defaultPanel', 'panels']),
+
     editable() {
       return this.node.parentId !== 'root________'
     },
@@ -70,7 +76,7 @@ export default {
 
     favicon() {
       if (!this.hostname) return
-      return this.$root.favicons[this.hostname]
+      return State.favicons[this.hostname]
     },
 
     tooltip() {
@@ -100,7 +106,7 @@ export default {
         setTimeout(() => this.recalcScroll(), 120)
       }
       if (this.node.type === 'bookmark') {
-        this.openUrl(this.$root.openBookmarkNewTab, true)
+        this.openUrl(State.openBookmarkNewTab, true)
       }
     },
 
@@ -125,7 +131,7 @@ export default {
 
     openMenu(isTarget) {
       if (isTarget) {
-        this.$root.closeCtxMenu()
+        Store.commit('closeCtxMenu')
 
         const openNewWinLabel = this.t('ctx_menu.open_in_new_window')
         const openPrivWinLabel = this.t('ctx_menu.open_in_new_priv_window')
@@ -136,9 +142,9 @@ export default {
         let opts = []
         if (!isSep) {
           opts.push([openNewWinLabel, this.openInNewWin])
-          opts.push([openPrivWinLabel, this.openInNewWin, { priv: true }])
+          opts.push([openPrivWinLabel, this.openInNewWin, { incognito: true }])
           if (this.isParent) opts.push([openDefLabel, this.openInPanel, 'firefox-default'])
-          this.$root.$refs.sidebar.contexts.map(c => {
+          State.ctxs.map(c => {
             opts.push([
               openPanLabel + `||${c.colorCode}>>${c.name}`, this.openInPanel, c.cookieStoreId
             ])
@@ -152,7 +158,7 @@ export default {
         if (this.editable && !isSep) opts.push([this.t('ctx_menu.edit_bookmark'), this.edit])
         if (this.editable) opts.push([this.t('ctx_menu.delete_bookmark'), this.remove])
 
-        this.$root.ctxMenu = {
+        State.ctxMenu = {
           el: this.$el.childNodes[0],
           off: this.closeMenu,
           opts,
@@ -172,8 +178,7 @@ export default {
     openUrl(inNewTab, withFocus) {
       if (!this.node.url) return
       if (inNewTab) {
-        let p = this.$root.getDefaultPanel()
-        let index = p.endIndex + 1
+        let index = this.defaultPanel.endIndex + 1
         browser.tabs.create({
           index,
           url: this.node.url,
@@ -181,12 +186,14 @@ export default {
         })
       } else {
         browser.tabs.update({ url: this.node.url })
-        if (withFocus) this.$root.goToActiveTabPanel()
+        if (withFocus) Store.dispatch('goToActiveTabPanel')
       }
     },
 
     openInPanel(panelId) {
-      let p = this.$root.getPanel(panelId)
+      const p = this.panels.find(p => p.cookieStoreId === panelId)
+      if (!p) return
+
       let index = p.endIndex + 1
 
       if (this.isBookmark) {
@@ -216,9 +223,9 @@ export default {
       }
     },
 
-    openInNewWin({ priv }) {
+    openInNewWin({ incognito } = {}) {
       if (this.isBookmark) {
-        return browser.windows.create({ url: this.node.url, incognito: priv })
+        return browser.windows.create({ url: this.node.url, incognito })
       }
 
       if (this.isParent) {
@@ -229,7 +236,7 @@ export default {
             if (n.type === 'folder') walker(n.children)
           })
         walker(this.node.children)
-        return browser.windows.create({ url: urls, incognito: priv })
+        return browser.windows.create({ url: urls, incognito })
       }
     },
 
@@ -268,7 +275,7 @@ export default {
 
 
 <style lang="stylus">
-@import '../styles/mixins'
+@import '../../styles/mixins'
 
 .Node
   box(relative)
