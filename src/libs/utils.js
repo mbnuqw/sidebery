@@ -123,6 +123,19 @@ async function GetAllWindows() {
     })
 }
 
+/**
+ * Get panel index of tab
+ */
+function GetPanelIndex(panels, tabId) {
+  let panelIndex = panels.findIndex(p => {
+    if (p.tabs && p.tabs.length) {
+      if (tabId === undefined) return !!p.tabs.find(t => t.active)
+      return !!p.tabs.find(t => t.id === tabId)
+    }
+  })
+  return panelIndex
+}
+
 export default {
   Uid,
   Asap,
@@ -131,4 +144,5 @@ export default {
   StrSize,
   BytesToStr,
   GetAllWindows,
+  GetPanelIndex,
 }

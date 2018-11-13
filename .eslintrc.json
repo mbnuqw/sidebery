@@ -19,6 +19,7 @@
   "globals": {
     "process": true,
     "browser": true,
+    "global": true,
     "jest": true,
     "expect": true,
     "mockFn": true,

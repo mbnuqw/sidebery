@@ -1,7 +1,7 @@
 <template lang="pug">
 .WinInput(v-noise:300.g:12:af.a:0:42.s:0:9="", :ready="isReady", @click="cancel")
   scroll-box(ref="scrollBox")
-    .box(v-for="(w, i) in $root.winChoosing", :key="w.id")
+    .box(v-for="(w, i) in winChoosing", :key="w.id")
       .win(@click.stop="w.choose")
         .title {{w.title}}
         img(:src="w.screen", @load="onScreenLoad(i)")
@@ -11,6 +11,8 @@
 
 
 <script>
+import { mapGetters } from 'vuex'
+import State from '../store.state'
 import ScrollBox from './scroll-box'
 
 export default {
@@ -23,24 +25,26 @@ export default {
   },
 
   computed: {
+    ...mapGetters(['winChoosing']),
+
     isReady() {
-      if (!this.$root.winChoosing || !this.$root.winChoosing.length) return false
-      return this.$root.winChoosing.reduce((o, w) => o && w.loaded, true)
+      if (!State.winChoosing || !State.winChoosing.length) return false
+      return State.winChoosing.reduce((o, w) => o && w.loaded, true)
     },
   },
 
   methods: {
     onScreenLoad(index) {
-      let win = this.$root.winChoosing[index]
-      this.$root.winChoosing.splice(index, 1, { ...win, loaded: true })
+      let win = State.winChoosing[index]
+      State.winChoosing.splice(index, 1, { ...win, loaded: true })
     },
 
     cancel() {
-      this.$root.winChoosing = this.$root.winChoosing.map(w => {
+      State.winChoosing = State.winChoosing.map(w => {
         return { ...w, loaded: false }
       })
       setTimeout(() => {
-        this.$root.winChoosing = null
+        State.winChoosing = null
       }, 120)
     },
   },
@@ -49,7 +53,7 @@ export default {
 
 
 <style lang="stylus">
-@import '../styles/mixins'
+@import '../../styles/mixins'
 
 .WinInput
   box(absolute, flex)

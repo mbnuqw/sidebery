@@ -6,7 +6,7 @@
     :data-muted="tab.mutedInfo.muted"
     :data-menu="menu || selected"
     :data-pinned="tab.pinned"
-    :close-btn="$root.showTabRmBtn"
+    :close-btn="showTabRmBtn"
     :title="tooltip"
     @contextmenu.prevent.stop=""
     @mousedown="onMD"
@@ -31,7 +31,7 @@
       each n in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
         .spinner-stick(class='spinner-stick-' + n)
   .ctx(v-if="tab.ctxIcon", :style="{background: tab.ctxColor}")
-  .close(v-if="$root.showTabRmBtn", @mousedown.stop="close", @mouseup.stop="")
+  .close(v-if="showTabRmBtn", @mousedown.stop="close", @mouseup.stop="")
     svg: use(xlink:href="#icon_remove")
   .t-box
     .title {{tab.title}}
@@ -43,8 +43,11 @@
 
 
 <script>
-import Utils from '../libs/utils'
-import CtxMenu from './context-menu.js'
+import { mapGetters } from 'vuex'
+import Utils from '../../libs/utils'
+import Store from '../store'
+import State from '../store.state'
+import CtxMenu from '../context-menu'
 
 export default {
   props: {
@@ -64,12 +67,14 @@ export default {
   },
 
   computed: {
+    ...mapGetters(['showTabRmBtn']),
+
     favicon() {
       if (this.tab.favIconUrl) return this.tab.favIconUrl
       else if (this.tab.url) {
         let hn = this.tab.url.split('/')[2]
         if (!hn) return
-        return this.$root.favicons[hn]
+        return State.favicons[hn]
       }
     },
 
@@ -88,12 +93,12 @@ export default {
      * Double click handler
      */
     onDBL() {
-      if (this.$root.tabDoubleClick === 'close_down') this.closeDown()
-      if (this.$root.tabDoubleClick === 'reload') this.reload()
-      if (this.$root.tabDoubleClick === 'duplicate') this.duplicate()
-      if (this.$root.tabDoubleClick === 'pin') this.pin()
-      if (this.$root.tabDoubleClick === 'mute') this.mute()
-      if (this.$root.tabDoubleClick === 'clear_cookies') this.clearCookies()
+      if (State.tabDoubleClick === 'close_down') this.closeDown()
+      if (State.tabDoubleClick === 'reload') this.reload()
+      if (State.tabDoubleClick === 'duplicate') this.duplicate()
+      if (State.tabDoubleClick === 'pin') this.pin()
+      if (State.tabDoubleClick === 'mute') this.mute()
+      if (State.tabDoubleClick === 'clear_cookies') this.clearCookies()
     },
 
     /**
@@ -113,12 +118,12 @@ export default {
         e.preventDefault()
         this.$emit('mdl', e, this)
         this.hodorL = setTimeout(() => {
-          if (this.$root.tabLongLeftClick === 'close_down') this.closeDown()
-          if (this.$root.tabLongLeftClick === 'reload') this.reload()
-          if (this.$root.tabLongLeftClick === 'duplicate') this.duplicate()
-          if (this.$root.tabLongLeftClick === 'pin') this.pin()
-          if (this.$root.tabLongLeftClick === 'mute') this.mute()
-          if (this.$root.tabLongLeftClick === 'clear_cookies') this.clearCookies()
+          if (State.tabLongLeftClick === 'close_down') this.closeDown()
+          if (State.tabLongLeftClick === 'reload') this.reload()
+          if (State.tabLongLeftClick === 'duplicate') this.duplicate()
+          if (State.tabLongLeftClick === 'pin') this.pin()
+          if (State.tabLongLeftClick === 'mute') this.mute()
+          if (State.tabLongLeftClick === 'clear_cookies') this.clearCookies()
           this.hodorL = null
         }, 250)
       }
@@ -127,12 +132,12 @@ export default {
         e.preventDefault()
         this.$emit('mdr', e, this)
         this.hodorR = setTimeout(() => {
-          if (this.$root.tabLongRightClick === 'close_down') this.closeDown()
-          if (this.$root.tabLongRightClick === 'reload') this.reload()
-          if (this.$root.tabLongRightClick === 'duplicate') this.duplicate()
-          if (this.$root.tabLongRightClick === 'pin') this.pin()
-          if (this.$root.tabLongRightClick === 'mute') this.mute()
-          if (this.$root.tabLongRightClick === 'clear_cookies') this.clearCookies()
+          if (State.tabLongRightClick === 'close_down') this.closeDown()
+          if (State.tabLongRightClick === 'reload') this.reload()
+          if (State.tabLongRightClick === 'duplicate') this.duplicate()
+          if (State.tabLongRightClick === 'pin') this.pin()
+          if (State.tabLongRightClick === 'mute') this.mute()
+          if (State.tabLongRightClick === 'clear_cookies') this.clearCookies()
           this.hodorR = null
         }, 250)
       }
@@ -197,6 +202,7 @@ export default {
      * store result to cache.
      */
     onFaviconLoad(e) {
+      if (!this.favicon) return
       if (this.favicon.indexOf('http') === 0) {
         let canvas = document.createElement('canvas')
         let ctx = canvas.getContext('2d')
@@ -207,7 +213,7 @@ export default {
         let base64 = canvas.toDataURL('image/png')
         let hn = this.tab.url.split('/')[2]
         if (!hn) return
-        this.$root.setFavicon(hn, base64)
+        Store.dispatch('setFavicon', { hostname: hn, icon: base64 })
       }
     },
 
@@ -220,7 +226,7 @@ export default {
     },
 
     close() {
-      this.$root.$refs.sidebar.removeTab(this.tab)
+      Store.dispatch('removeTab', this.tab)
     },
 
     async openMenu() {
@@ -239,7 +245,7 @@ export default {
 
       const menu = new CtxMenu(this.$el, this.closeMenu)
 
-      if (!this.$root.private) {
+      if (!State.private) {
         menu.add('move_to_new_window', this.moveToNewWin)
 
         if (otherDefWindows.length === 1) {
@@ -254,7 +260,7 @@ export default {
         if (this.tab.cookieStoreId !== 'firefox-default') {
           menu.add('reopen_in_default_panel', this.openInPanel, 'firefox-default')
         }
-        this.$root.$refs.sidebar.contexts.map(c => {
+        State.ctxs.map(c => {
           if (this.tab.cookieStoreId === c.cookieStoreId) return
           const label = this.t('ctx_menu.re_open_in_') + `||${c.colorCode}>>${c.name}`
           menu.addTranslated(label, this.openInPanel, c.cookieStoreId)
@@ -273,8 +279,8 @@ export default {
       menu.add('clear_cookies', this.clearCookies)
       menu.add('tab_close_down', this.closeDown)
 
-      this.$root.closeCtxMenu()
-      this.$root.ctxMenu = menu
+      Store.commit('closeCtxMenu')
+      State.ctxMenu = menu
     },
 
     closeMenu() {
@@ -285,7 +291,7 @@ export default {
      * Create new window with this tab
      */
     moveToNewWin() {
-      this.$root.closeCtxMenu()
+      Store.commit('closeCtxMenu')
       browser.windows.create({ tabId: this.tab.id })
     },
 
@@ -294,8 +300,8 @@ export default {
      * otherwise show window-choosing menu
      */
     async moveToWin(window) {
-      this.$root.closeCtxMenu()
-      let id = window ? window.id : await this.$root.chooseWin()
+      Store.commit('closeCtxMenu')
+      let id = window ? window.id : await Store.dispatch('chooseWin')
       browser.tabs.move(this.tab.id, { windowId: id, index: -1 })
     },
 
@@ -305,7 +311,7 @@ export default {
      * close current tab.
      */
     reopenInPrivWin(window) {
-      this.$root.closeCtxMenu()
+      Store.commit('closeCtxMenu')
       let url = this.tab.url.indexOf('http') ? null : this.tab.url
       if (!window) browser.windows.create({ incognito: true, url })
       else browser.tabs.create({ windowId: window.id, url })
@@ -316,8 +322,8 @@ export default {
      * another window.
      */
     async reopenInWin(window) {
-      this.$root.closeCtxMenu()
-      let id = window ? window.id : await this.$root.chooseWin()
+      Store.commit('closeCtxMenu')
+      let id = window ? window.id : await Store.dispatch('chooseWin')
       let url = this.tab.url.indexOf('http') ? null : this.tab.url
       browser.tabs.create({ windowId: id, url })
     },
@@ -326,7 +332,7 @@ export default {
      * Open url in panel by cookieStoreId
      */
     openInPanel(id) {
-      this.$root.closeCtxMenu()
+      Store.commit('closeCtxMenu')
       browser.tabs.create({
         active: true,
         cookieStoreId: id,
@@ -410,7 +416,7 @@ export default {
      * Pin tab
      */
     async pin() {
-      this.$root.closeCtxMenu()
+      Store.commit('closeCtxMenu')
       await browser.tabs.update(this.tab.id, { pinned: !this.tab.pinned })
     },
 
@@ -418,7 +424,7 @@ export default {
      * Close all tabs underneath
      */
     closeDown() {
-      this.$emit('closedown')
+      Store.dispatch('closeTabsDown', this.tab.id)
     },
 
     /**
@@ -440,7 +446,7 @@ export default {
 
 
 <style lang="stylus">
-@import '../styles/mixins'
+@import '../../styles/mixins'
 
 .Tab
   box(relative, flex)
@@ -570,6 +576,9 @@ export default {
     cursor: progress
     > .loading-spinner
       opacity: 1
+      for i in 0..12
+        > .spinner-stick-{i}
+          animation: loading-spin .6s (i*50)ms infinite
   &[loading="ok"]
     > .ok-badge
       opacity: 1
@@ -583,8 +592,8 @@ export default {
       mask: radial-gradient(
         circle at calc(100% - 2px) calc(100% - 2px),
         #00000032,
-        #00000032 7px,
-        #000000 8px,
+        #00000032 6.5px,
+        #000000 7.5px,
         #000000
       )
 
@@ -616,8 +625,8 @@ export default {
 
 .Tab .fav > .loading-spinner
   box(absolute)
-  size(11px, same)
-  pos(b: -3px, r: -3px)
+  size(10px, same)
+  pos(b: -4px, r: -3px)
   border-radius: 50%
   opacity: 0
   transition: opacity var(--d-norm)
@@ -638,13 +647,13 @@ export default {
   for i in 0..12
     > .spinner-stick-{i}
       transform: rotateZ((i * 30)deg)
-      animation: loading-spin .6s (i*50)ms infinite
+      animation: none
 
 .Tab .fav > .ok-badge
 .Tab .fav > .err-badge
   box(absolute)
-  size(9px, same)
-  pos(b: -2px, r: -3px)
+  size(10px, same)
+  pos(b: -3px, r: -3px)
   border-radius: 50%
   opacity: 0
   transform: scale(0.7, 0.7)

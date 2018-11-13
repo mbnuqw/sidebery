@@ -12,6 +12,9 @@
 
 
 <script>
+import Store from '../store'
+import Getters from '../store.getters'
+
 export default {
   data() {
     return {
@@ -40,7 +43,7 @@ export default {
   },
 
   created() {
-    this.$root.$watch('ctxMenu', (c, p) => {
+    Store.watch(Getters.ctxMenu, (c, p) => {
       if (this.leaveT) clearTimeout(this.leaveT)
 
       let h = this.$root.$el.offsetHeight
@@ -98,7 +101,7 @@ export default {
     },
     onML() {
       this.leaveT = setTimeout(() => {
-        this.$root.closeCtxMenu()
+        Store.commit('closeCtxMenu')
       }, 500)
     },
 
@@ -107,7 +110,7 @@ export default {
       if (!func) return
       let args = opt.slice(2)
       func(...args)
-      this.$root.closeCtxMenu()
+      Store.commit('closeCtxMenu')
     },
 
     parseLabel(input) {
@@ -133,7 +136,7 @@ export default {
 
 
 <style lang="stylus">
-@import '../styles/mixins'
+@import '../../styles/mixins'
 
 .CtxMenu
   box(absolute)

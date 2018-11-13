@@ -2,7 +2,7 @@
 .Bookmarks(
   :drag-active="drag && drag.dragged"
   :drag-end="dragEnd"
-  :ctx-menu="!!$root.ctxMenu"
+  :ctx-menu="!!ctxMenuOpened"
   :editing="editor"
   :not-renderable="!renderable"
   :invisible="!visible"
@@ -12,12 +12,12 @@
   scroll-box(ref="scrollBox", @auto-scroll="onMM")
     .drag-box
       .drag-node(
-        v-for="n in flat",
-        ref="flat",
-        :key="n.id",
-        :style="flatNodeStyle(n)",
-        :dragged="drag && drag.node.id === n.id && drag.dragged",
-        :n-type="n.type",
+        v-for="n in flat"
+        ref="flat"
+        :key="n.id"
+        :style="flatNodeStyle(n)"
+        :dragged="drag && drag.node.id === n.id && drag.dragged"
+        :n-type="n.type"
         :exp="n.expanded && n.children.length > 0")
         .exp(v-if="n.expanded && n.children.length")
           svg: use(xlink:href="#icon_expand")
@@ -26,10 +26,10 @@
           img(v-else, :src="n.fav")
         .title {{n.title}}
     b-node.node(
-      v-for="n in tree", 
+      v-for="n in $store.state.bookmarks"
       ref="nodes"
-      :key="n.id", 
-      :node="n", 
+      :key="n.id"
+      :node="n"
       :recalc-scroll="recalcScroll"
       @md="onNodeMD"
       @expand="onFolderExpand"
@@ -46,11 +46,15 @@
 
 
 <script>
-import Utils from '../libs/utils'
-import Logs from '../libs/logs'
-import ScrollBox from './scroll-box'
-import BNode from './bookmarks.node'
-import BookmarksEditor from './bookmarks.editor'
+import { mapGetters } from 'vuex'
+import Utils from '../../libs/utils'
+import Logs from '../../libs/logs'
+import Store from '../store'
+import State from '../store.state'
+import EventBus from '../event-bus'
+import ScrollBox from './scroll-box.vue'
+import BNode from './bookmarks.node.vue'
+import BookmarksEditor from './bookmarks.editor.vue'
 
 export default {
   components: {
@@ -65,7 +69,6 @@ export default {
 
   data() {
     return {
-      tree: [],
       topOffset: 0,
       drag: null,
       flat: [],
@@ -77,11 +80,15 @@ export default {
     }
   },
 
+  computed: {
+    ...mapGetters(['ctxMenuOpened']),
+  },
+
   watch: {
     // If bookmarks too many, do not render
     // them when panel is inactive
     active(c, p) {
-      if (!this.tree.length) return
+      if (!State.bookmarks.length) return
       const scrollBox = this.$refs.scrollBox
       if (!scrollBox) return
 
@@ -119,34 +126,15 @@ export default {
     browser.bookmarks.onMoved.addListener(this.onMoved)
     browser.bookmarks.onRemoved.addListener(this.onRemoved)
 
-    const bookmarks = await browser.bookmarks.getTree()
-
-    // If not private, restore bookmarks tree
-    if (!this.$root.private) {
-      let ans = await browser.storage.local.get('expandedBookmarks')
-      let expandedBookmarks = ans.expandedBookmarks
-      if (expandedBookmarks) {
-        expandedBookmarks.map(path => {
-          let node = bookmarks[0]
-          for (let i = 0; i < path.length; i++) {
-            let id = path[i]
-            let target = node.children.find(n => n.id === id)
-            if (!target || !target.children) break
-            target.expanded = true
-            node = target
-          }
-        })
-      }
+    this.$emit('panel-loading-start')
+    try {
+      await Store.dispatch('loadBookmarks')
+      this.$emit('panel-loading-ok')
+    } catch (err) {
+      this.$emit('panel-loading-err')
     }
 
-    this.tree = bookmarks[0].children
-
-    setTimeout(() => {
-      this.$emit('ready')
-    }, 120)
-
     if (this.active) {
-      // 
       this.$nextTick(() => {
         this.renderable = true
         setTimeout(() => {
@@ -154,6 +142,10 @@ export default {
         }, 16)
       })
     }
+
+    // Setup global events listeners
+    EventBus.$on('bookmarks.collapseAll', this.collapseAll)
+    EventBus.$on('bookmarks.reloadBookmarks', this.reloadBookmarks)
   },
 
   mounted() {
@@ -172,7 +164,7 @@ export default {
 
   methods: {
     onClick() {
-      this.$root.closeCtxMenu()
+      Store.commit('closeCtxMenu')
     },
 
     onMM(e) {
@@ -420,11 +412,10 @@ export default {
         })
       }
 
-      this.tree = putWalk(this.tree)
+      State.bookmarks = putWalk(State.bookmarks)
     },
 
     onChanged(id, info) {
-      // console.log('[DEBUG] BOOKMARK CHANGED', id, info);
       let updated = false
       const updateWalk = nodes => {
         return nodes.map(n => {
@@ -442,11 +433,10 @@ export default {
         })
       }
 
-      this.tree = updateWalk(this.tree)
+      State.bookmarks = updateWalk(State.bookmarks)
     },
 
     onMoved(id, info) {
-      // console.log('[DEBUG] BOOKMARK MOVED', id, info);
       if (this.drag) {
         this.drag = null
         setTimeout(() => {
@@ -485,12 +475,11 @@ export default {
         })
       }
 
-      this.tree = putWalk(rmWalk(this.tree))
+      State.bookmarks = putWalk(rmWalk(State.bookmarks))
       this.saveTreeState()
     },
 
     onRemoved(id, info) {
-      // console.log('[DEBUG] BOOKMARK REMOVED', id, info);
       let removed = false
       const rmWalk = nodes => {
         return nodes.map(n => {
@@ -505,7 +494,7 @@ export default {
         })
       }
 
-      this.tree = rmWalk(this.tree)
+      State.bookmarks = rmWalk(State.bookmarks)
     },
 
     onNodeMD(e, nodes) {
@@ -573,7 +562,7 @@ export default {
           n.lvl = lvl
           if (n.url) {
             let hostname = n.url.split('/')[2]
-            if (hostname) n.fav = this.$root.favicons[hostname]
+            if (hostname) n.fav = State.favicons[hostname]
           }
           if (n.type === 'bookmark') n.h = 24
           if (n.type === 'folder') n.h = 28
@@ -593,7 +582,7 @@ export default {
           }
         }
       }
-      walker(this.tree)
+      walker(State.bookmarks)
       this.flat = flatTree
     },
 
@@ -634,7 +623,7 @@ export default {
         }
       }
 
-      walker(this.tree)
+      walker(State.bookmarks)
       await browser.storage.local.set({
         expandedBookmarks,
       })
@@ -648,11 +637,11 @@ export default {
       this.$emit('panel-loading-start')
       try {
         let tree = await browser.bookmarks.getTree()
-        this.tree = tree[0].children
+        State.bookmarks = tree[0].children
         this.$emit('panel-loading-ok')
       } catch (err) {
         Logs.E('Cannot reload bookmarks', err)
-        this.tree = []
+        State.bookmarks = []
         this.$emit('panel-loading-err')
       }
     },
@@ -662,7 +651,7 @@ export default {
 
 
 <style lang="stylus">
-@import '../styles/mixins'
+@import '../../styles/mixins'
 
 .Bookmarks
   overflow: hidden
