@@ -8,6 +8,8 @@
 
 
 <script>
+import EventBus from '../event-bus'
+
 export default {
   props: {
     conf: Object,
@@ -19,12 +21,12 @@ export default {
 
   methods: {
     collapseAll() {
-      this.$emit('panel-cmd', this.conf.name, 'collapseAll')
+      EventBus.$emit('bookmarks.collapseAll')
       this.$emit('close')
     },
 
     reloadBookmarks() {
-      this.$emit('panel-cmd', this.conf.name, 'reloadBookmarks')
+      EventBus.$emit('bookmarks.reloadBookmarks')
       this.$emit('close')
     },
   },

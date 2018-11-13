@@ -169,6 +169,9 @@
   "ctx_menu.tabs_reopen_in_new_priv_window": {
     "message": "Открыть в новом приватном окне"
   },
+  "ctx_menu.tabs_reopen_in_new_window": {
+    "message": "Открыть в новом окне"
+  },
   "ctx_menu.tabs_bookmark": {
     "message": "Создать закладки"
   },

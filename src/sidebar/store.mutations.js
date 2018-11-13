@@ -6,9 +6,10 @@ export default {
   // --- --- --- Settings --- --- ---
   // --------------------------------
   /**
-   * Save settings to local storage
+   * Set setting value
    */
   setSetting(state, keyVal) {
+    if (!DEFAULT_SETTINGS.hasOwnProperty(keyVal.key)) return
     state[keyVal.key] = keyVal.val
   },
 

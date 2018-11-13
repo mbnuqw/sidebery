@@ -94,7 +94,7 @@ export default new Vue({
      * Set currently focused window
      */
     onFocusWindow(id) {
-      this.windowFocused = id === this.windowId
+      this.windowFocused = id === State.windowId
     },
 
     /**
@@ -133,17 +133,6 @@ export default new Vue({
     },
 
     /**
-     * Find active tab panel and switch to it.
-     */
-    goToActiveTabPanel() {
-      if (!this.$refs.sidebar) return
-      let t = State.tabs.find(t => t.active)
-      if (!t) return
-      let i = this.$refs.sidebar.getPanelIndex(t.id)
-      this.$refs.sidebar.switchToPanel(i)
-    },
-
-    /**
      * Copy to clipboard current state
      */
     copyDebugInfo() {
@@ -177,18 +166,16 @@ export default new Vue({
     // --- Keybindings ---
     // Commands listeners
     onCmd(name) {
-      if (!this.windowFocused) return
+      if (!State.windowFocused) return
       Logs.D(`Run command: ${name}`)
       let funcName = 'cmd_' + name
       if (this[funcName]) this[funcName]()
     },
     cmd_next_panel() {
-      if (!this.$refs.sidebar) return
-      this.$refs.sidebar.switchToNextPanel()
+      Store.dispatch('switchPanel', 1)
     },
     cmd_prev_panel() {
-      if (!this.$refs.sidebar) return
-      this.$refs.sidebar.switchToPrevPanel()
+      Store.dispatch('switchPanel', -1)
     },
     cmd_new_tab_on_panel() {
       let panel = this.panels[State.lastPanelIndex]

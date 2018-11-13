@@ -1,5 +1,6 @@
 import Logs from '../../libs/logs'
 import EventBus from '../event-bus'
+import Utils from '../../libs/utils'
 
 export default {
   /**
@@ -100,5 +101,14 @@ export default {
     }
 
     dispatch('recalcPanelScroll')
+  },
+
+  /**
+   * Find active tab panel and switch to it.
+   */
+  goToActiveTabPanel({ getters, dispatch }) {
+    let i = Utils.getPanelIndex(getters.panels)
+    if (i === -1) return
+    dispatch('switchToPanel', i)
   },
 }

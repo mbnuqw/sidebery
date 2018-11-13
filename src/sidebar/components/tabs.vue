@@ -42,8 +42,8 @@ import Store from '../store'
 import State from '../store.state'
 import EventBus from '../event-bus'
 import CtxMenu from '../context-menu'
-import Tab from './tabs.tab'
-import ScrollBox from './scroll-box'
+import Tab from './tabs.tab.vue'
+import ScrollBox from './scroll-box.vue'
 
 export default {
   components: {
@@ -132,18 +132,38 @@ export default {
           let tab = this.dragTabs[i]
 
           // Up
-          if (this.selection.i > tab.index && moveY < tab.top + tab.h) {
-            if (!this.selectedTabs.includes(tab.id)) {
-              this.selectedTabs.push(tab.id)
-              this.selectionMenuEl = tab.el
+          if (this.selection.i > tab.index) {
+            if (moveY < tab.top + tab.h) {
+              // Select
+              if (!this.selectedTabs.includes(tab.id)) {
+                this.selectedTabs.push(tab.id)
+                this.selectionMenuEl = tab.el
+              }
+            } else {
+              // Deselect
+              let index = this.selectedTabs.findIndex(id => id === tab.id)
+              if (index >= 0) {
+                this.selectedTabs.splice(index, 1)
+                this.selectionMenuEl = this.dragTabs[i + 1].el
+              }
             }
           }
 
           // Down
-          if (this.selection.i < tab.index && moveY > tab.top) {
-            if (!this.selectedTabs.includes(tab.id)) {
-              this.selectedTabs.push(tab.id)
-              this.selectionMenuEl = tab.el
+          if (this.selection.i < tab.index) {
+            if (moveY > tab.top) {
+              // Select
+              if (!this.selectedTabs.includes(tab.id)) {
+                this.selectedTabs.push(tab.id)
+                this.selectionMenuEl = tab.el
+              }
+            } else {
+              // Deselect
+              let index = this.selectedTabs.findIndex(id => id === tab.id)
+              if (index >= 0) {
+                this.selectedTabs.splice(index, 1)
+                this.selectionMenuEl = this.dragTabs[i - 1].el
+              }
             }
           }
         }
@@ -187,7 +207,7 @@ export default {
         if (otherDefWindows.length > 1) menu.add('move_to_window_', this.moveToWin)
 
         // Reopen in new private window
-        menu.add('tabs_reopen_in_new_priv_window', () => this.reopenInNewPrivWin())
+        menu.add('tabs_reopen_in_new_priv_window', () => this.reopenInNewWin({ incognito: true }))
 
         // Reopen in containers
         if (this.storeId !== 'firefox-default') {
@@ -202,6 +222,7 @@ export default {
 
       // Private window
       if (State.private) {
+        menu.add('tabs_reopen_in_new_window', () => this.reopenInNewWin())
         if (otherWindows.length === 1) {
           menu.add('reopen_in_another_window', () => this.reopenInWin(otherWindows[0]))
         }
@@ -449,7 +470,7 @@ export default {
     async moveToWin(window) {
       if (!this.selectedTabs) return
       const tabsId = [...this.selectedTabs]
-      const windowId = window ? window.id : await this.$root.chooseWin()
+      const windowId = window ? window.id : await Store.dispatch('chooseWin')
       browser.tabs.move(tabsId, { windowId, index: -1 })
     },
 
@@ -460,7 +481,7 @@ export default {
     async reopenInWin(window) {
       if (!this.selectedTabs) return
       const tabsId = [...this.selectedTabs]
-      const windowId = window ? window.id : await this.$root.chooseWin()
+      const windowId = window ? window.id : await Store.dispatch('chooseWin')
       tabsId.map(id => {
         let tab = this.tabs.find(t => t.id === id)
         if (!tab) return
@@ -470,18 +491,18 @@ export default {
 
     /**
      * Open selected tabs urls in new
-     * private window and close them in current window
+     * window and close them in current window.
      */
-    async reopenInNewPrivWin() {
+    async reopenInNewWin({ incognito } = {}) {
       if (!this.selectedTabs) return
       const first = this.selectedTabs.shift()
       const firstTab = this.tabs.find(t => t.id === first)
       if (!firstTab) return
       const rest = [...this.selectedTabs]
-      const win = await browser.windows.create({ url: firstTab.url, incognito: true })
+      const win = await browser.windows.create({ url: firstTab.url, incognito })
       browser.tabs.remove(first)
       for (let tabId of rest) {
-        let tab = this.tabs.find(t => t.id === first)
+        let tab = this.tabs.find(t => t.id === tabId)
         if (!tab) continue
         browser.tabs.create({windowId: win.id, url: tab.url})
         browser.tabs.remove(tabId)
@@ -538,9 +559,26 @@ export default {
     /**
      * Close selected tabs
      */
-    closeSelectedTabs() {
+    async closeSelectedTabs() {
       if (!this.selectedTabs) return
-      browser.tabs.remove(this.selectedTabs)
+      const selectedTabIds = [...this.selectedTabs]
+      const selectedTabs = this.selectedTabs.map(id => {
+        return State.tabs.find(t => t.id === id)
+      })
+
+      // Try activate prev tab
+      const activeTab = selectedTabs.find(t => t.active)
+      if (activeTab) {
+        const firstTab = selectedTabs.reduce((acc, t) => {
+          return acc.index <= t.index ? acc : t
+        })
+        const prevTab = State.tabs.find(t => t.index === firstTab.index - 1)
+        if (prevTab && prevTab.cookieStoreId === firstTab.cookieStoreId) {
+          await browser.tabs.update(prevTab.id, { active: true })
+        }
+      }
+
+      browser.tabs.remove(selectedTabIds)
     },
   },
 }

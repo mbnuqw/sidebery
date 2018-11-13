@@ -62,6 +62,8 @@ export default {
   activeTabs: [], // last active tab's id per panel
   ctxs: [], // all contextual identities
 
+  bookmarks: [],
+
   // --- Settings
   ...SETTINGS_OPTIONS,
   ...DEFAULT_SETTINGS,

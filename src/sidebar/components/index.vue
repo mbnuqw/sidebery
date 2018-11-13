@@ -4,8 +4,6 @@
   @wheel="onWH"
   @contextmenu.prevent.stop=""
   @dragover.prevent=""
-  @dragenter="onDragEnter"
-  @dragleave="onDragLeave"
   @drop="onDrop"
   @mouseenter="onME"
   @mouseleave="onML"
@@ -22,8 +20,7 @@
         :is="panelMenu.menu" 
         :conf="panelMenu"
         @close="closePanelMenu"
-        @height="recalcPanelMenuHeight"
-        @panel-cmd="panelCmd")
+        @height="recalcPanelMenuHeight")
 
     .nav-strip(@wheel="onNavWheel")
       .panel-btn(
@@ -72,7 +69,6 @@
       :pos="getPanelPos(i)"
       :active="panelIs(i)"
       @create-tab="createTab"
-      @ready="onPanelReady(i)"
       @panel-loading-start="onPanelLoadingStart(i)"
       @panel-loading-end="onPanelLoadingEnd(i)"
       @panel-loading-ok="onPanelLoadingOk(i)"
@@ -115,7 +111,7 @@ export default {
     return {
       width: 250,
       panelMenu: null,
-      loading: [true],
+      loading: [],
       loadingTimers: [],
     }
   },
@@ -234,6 +230,10 @@ export default {
 
     // --- Handle global events
     EventBus.$on('openPanelMenu', panelIndex => this.openPanelMenu(panelIndex))
+    EventBus.$on('panelLoadingStart', panelIndex => this.onPanelLoadingStart(panelIndex))
+    EventBus.$on('panelLoadingEnd', panelIndex => this.onPanelLoadingEnd(panelIndex))
+    EventBus.$on('panelLoadingOk', panelIndex => this.onPanelLoadingOk(panelIndex))
+    EventBus.$on('panelLoadingErr', panelIndex => this.onPanelLoadingErr(panelIndex))
   },
 
   // --- Mounted Hook ---
@@ -532,10 +532,10 @@ export default {
         State.tabs[i].index--
       }
       State.tabs.splice(rmIndex, 1)
-      // ......
+
       const panelIndex = State.activeTabs.findIndex(id => id === tabId)
       if (panelIndex >= 0) State.activeTabs[panelIndex] = null
-      // ........
+
       Store.dispatch('recalcPanelScroll')
       Store.dispatch('saveSyncPanels')
     },
@@ -549,7 +549,7 @@ export default {
       Store.commit('closeCtxMenu')
 
       // If moved tab active, cut it out
-      let pIndex = this.getPanelIndex(id)
+      let pIndex = Utils.GetPanelIndex(this.panels, id)
       let isActive = State.activeTabs[pIndex] === id
 
       // Reset drag status
@@ -566,6 +566,7 @@ export default {
       let movedTab = State.tabs.splice(info.fromIndex, 1)[0]
       if (!movedTab) return
       movedTab.index = info.toIndex
+
       // Shift tabs after moved one. (NOT detected by vue)
       for (let i = 0; i < State.tabs.length; i++) {
         if (i < info.toIndex) State.tabs[i].index = i
@@ -574,7 +575,7 @@ export default {
       State.tabs.splice(info.toIndex, 0, movedTab)
 
       // Update active tab position
-      pIndex = this.getPanelIndex(id)
+      pIndex = Utils.GetPanelIndex(this.panels, id)
       if (isActive) Store.commit('setPanel', pIndex)
       Store.dispatch('recalcPanelScroll')
     },
@@ -600,7 +601,7 @@ export default {
       if (info.newWindowId !== State.windowId) return
       Logs.D(`Tab attached, id: '${id}'`)
       Store.commit('closeCtxMenu')
-      this.loadTabs()
+      Store.dispatch('loadTabs')
       Store.dispatch('saveSyncPanels')
     },
 
@@ -613,10 +614,6 @@ export default {
       for (let i = 0; i < State.tabs.length; i++) {
         State.tabs[i].active = info.tabId === State.tabs[i].id
       }
-      // State.tabs = State.tabs.map(t => {
-      //   t.active = info.tabId === t.id
-      //   return t
-      // })
 
       // Switch to tab's panel
       let tab = State.tabs.find(t => t.id === info.tabId)
@@ -631,10 +628,6 @@ export default {
       }
 
       State.activeTabs[panelIndex] = info.tabId
-    },
-
-    onPanelReady(i) {
-      this.onPanelLoadingEnd(i)
     },
 
     onPanelLoadingStart(i) {
@@ -676,51 +669,6 @@ export default {
     panelIs(index) {
       return State.panelIndex === index
     },
-
-    /**
-     * Update active tab for panel
-     */
-    // updateActiveTab(i, tabs) {
-    //   let active = tabs.find(t => t.active)
-    //   if (active) {
-    //     // Update active tab
-    //     State.activeTabs[i] = active.id
-    //   } else {
-    //     // Remove tab from list of active tabs
-    //     // if it no longer exists
-    //     let lastActive = State.activeTabs[i]
-    //     if (lastActive && !tabs.find(t => t.id === lastActive)) {
-    //       State.activeTabs[i] = null
-    //     }
-    //   }
-    // },
-
-    /**
-     * Get panel index of tab
-     */
-    getPanelIndex(tabId) {
-      if (tabId === null) {
-        let t = State.tabs.find(t => t.active)
-        if (!t) return
-        tabId = t.id
-      }
-      let panelIndex = this.panels.findIndex(p => {
-        if (p.tabs && p.tabs.length) {
-          return !!p.tabs.find(t => t.id === tabId)
-        }
-      })
-      return panelIndex
-    },
-
-    /**
-     * Get range info of panel by cookieStoreId
-     * returns: [tab-length, start, end] or null
-     */
-    // getPanelRangeInfo(ctxId) {
-    //   let panel = this.panels.find(p => p.cookieStoreId === ctxId)
-    //   if (!panel) return null
-    //   return [panel.tabs.length, panel.startIndex, panel.endIndex]
-    // },
 
     /**
      * Get position class for panel by index.
@@ -781,15 +729,6 @@ export default {
       if (State.panelMenuOpened) this.closePanelMenu()
       if (State.settingsOpened) Store.commit('closeSettings')
       else Store.commit('openSettings')
-    },
-
-    /**
-     * Run command in panel
-     */
-    panelCmd(name, func, ...args) {
-      let i = this.panels.findIndex(p => p.name === name)
-      if (i === -1) return
-      if (this.$refs.panels[i][func]) this.$refs.panels[i][func](...args)
     },
 
     /**
@@ -892,6 +831,9 @@ NAV_CONF_HEIGHT = auto
     cursor: progress
     > .loading-spinner
       opacity: 1
+      for i in 0..12
+        > .spinner-stick-{i}
+          animation: loading-spin .6s (i*50)ms infinite
   &[loading="ok"]
     > .ok-badge
       opacity: 1
@@ -905,8 +847,8 @@ NAV_CONF_HEIGHT = auto
       mask: radial-gradient(
         circle at calc(100% - 2px) calc(100% - 2px),
         #00000032,
-        #00000032 7px,
-        #000000 8px,
+        #00000032 6.5px,
+        #000000 7.5px,
         #000000
       )
 
@@ -920,7 +862,7 @@ NAV_CONF_HEIGHT = auto
 .Sidebar .panel-btn > .loading-spinner
   box(absolute)
   size(11px, same)
-  pos(b: 5px, r: 6px)
+  pos(b: 4px, r: 6px)
   border-radius: 50%
   opacity: 0
   transition: opacity var(--d-norm)
@@ -941,13 +883,13 @@ NAV_CONF_HEIGHT = auto
   for i in 0..12
     > .spinner-stick-{i}
       transform: rotateZ((i * 30)deg)
-      // animation: loading-spin .6s (i*50)ms infinite
+      animation: none
 
 .Sidebar .panel-btn > .ok-badge
 .Sidebar .panel-btn > .err-badge
   box(absolute)
-  size(9px, same)
-  pos(b: 6px, r: 7px)
+  size(10px, same)
+  pos(b: 5px, r: 6px)
   border-radius: 50%
   opacity: 0
   transform: scale(0.7, 0.7)

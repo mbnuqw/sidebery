@@ -29,6 +29,7 @@
 
 
 <script>
+import { mapGetters } from 'vuex'
 import Store from '../store'
 import State from '../store.state'
 
@@ -50,6 +51,8 @@ export default {
   },
 
   computed: {
+    ...mapGetters(['defaultPanel', 'panels']),
+
     editable() {
       return this.node.parentId !== 'root________'
     },
@@ -139,9 +142,9 @@ export default {
         let opts = []
         if (!isSep) {
           opts.push([openNewWinLabel, this.openInNewWin])
-          opts.push([openPrivWinLabel, this.openInNewWin, { priv: true }])
+          opts.push([openPrivWinLabel, this.openInNewWin, { incognito: true }])
           if (this.isParent) opts.push([openDefLabel, this.openInPanel, 'firefox-default'])
-          this.$root.$refs.sidebar.contexts.map(c => {
+          State.ctxs.map(c => {
             opts.push([
               openPanLabel + `||${c.colorCode}>>${c.name}`, this.openInPanel, c.cookieStoreId
             ])
@@ -175,8 +178,7 @@ export default {
     openUrl(inNewTab, withFocus) {
       if (!this.node.url) return
       if (inNewTab) {
-        let p = this.$root.getDefaultPanel()
-        let index = p.endIndex + 1
+        let index = this.defaultPanel.endIndex + 1
         browser.tabs.create({
           index,
           url: this.node.url,
@@ -184,12 +186,14 @@ export default {
         })
       } else {
         browser.tabs.update({ url: this.node.url })
-        if (withFocus) this.$root.goToActiveTabPanel()
+        if (withFocus) Store.dispatch('goToActiveTabPanel')
       }
     },
 
     openInPanel(panelId) {
-      let p = this.$root.getPanel(panelId)
+      const p = this.panels.find(p => p.cookieStoreId === panelId)
+      if (!p) return
+
       let index = p.endIndex + 1
 
       if (this.isBookmark) {
@@ -219,9 +223,9 @@ export default {
       }
     },
 
-    openInNewWin({ priv }) {
+    openInNewWin({ incognito } = {}) {
       if (this.isBookmark) {
-        return browser.windows.create({ url: this.node.url, incognito: priv })
+        return browser.windows.create({ url: this.node.url, incognito })
       }
 
       if (this.isParent) {
@@ -232,7 +236,7 @@ export default {
             if (n.type === 'folder') walker(n.children)
           })
         walker(this.node.children)
-        return browser.windows.create({ url: urls, incognito: priv })
+        return browser.windows.create({ url: urls, incognito })
       }
     },
 

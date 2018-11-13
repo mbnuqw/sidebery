@@ -202,6 +202,7 @@ export default {
      * store result to cache.
      */
     onFaviconLoad(e) {
+      if (!this.favicon) return
       if (this.favicon.indexOf('http') === 0) {
         let canvas = document.createElement('canvas')
         let ctx = canvas.getContext('2d')
@@ -575,7 +576,6 @@ export default {
     cursor: progress
     > .loading-spinner
       opacity: 1
-      // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>TEST IT <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
       for i in 0..12
         > .spinner-stick-{i}
           animation: loading-spin .6s (i*50)ms infinite
@@ -592,8 +592,8 @@ export default {
       mask: radial-gradient(
         circle at calc(100% - 2px) calc(100% - 2px),
         #00000032,
-        #00000032 7px,
-        #000000 8px,
+        #00000032 6.5px,
+        #000000 7.5px,
         #000000
       )
 
@@ -625,8 +625,8 @@ export default {
 
 .Tab .fav > .loading-spinner
   box(absolute)
-  size(11px, same)
-  pos(b: -3px, r: -3px)
+  size(10px, same)
+  pos(b: -4px, r: -3px)
   border-radius: 50%
   opacity: 0
   transition: opacity var(--d-norm)
@@ -648,13 +648,12 @@ export default {
     > .spinner-stick-{i}
       transform: rotateZ((i * 30)deg)
       animation: none
-      // animation: loading-spin .6s (i*50)ms infinite
 
 .Tab .fav > .ok-badge
 .Tab .fav > .err-badge
   box(absolute)
-  size(9px, same)
-  pos(b: -2px, r: -3px)
+  size(10px, same)
+  pos(b: -3px, r: -3px)
   border-radius: 50%
   opacity: 0
   transform: scale(0.7, 0.7)

@@ -6,6 +6,7 @@ import FaviconsActions from './actions/favicons'
 import SyncActions from './actions/sync'
 import PanelsActions from './actions/panels'
 import TabsActions from './actions/tabs'
+import Bookmarks from './actions/bookmarks'
 
 export default {
   ...SavedStateActions,
@@ -15,6 +16,7 @@ export default {
   ...SyncActions,
   ...PanelsActions,
   ...TabsActions,
+  ...Bookmarks,
 
   // --- --- --- Misc --- --- ---
 

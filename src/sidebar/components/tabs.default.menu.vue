@@ -17,6 +17,7 @@
 
 <script>
 import {mapGetters} from 'vuex'
+import Store from '../store'
 import State from '../store.state'
 
 export default {
@@ -48,7 +49,7 @@ export default {
       let pi = State.syncPanels.findIndex(p => p === id)
       if (pi !== -1) State.syncPanels.splice(pi, 1)
       else State.syncPanels.push(id)
-      State.resyncPanels()
+      Store.dispatch('resyncPanels')
       State.saveState()
     },
 
