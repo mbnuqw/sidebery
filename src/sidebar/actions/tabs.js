@@ -1,3 +1,5 @@
+import Utils from '../../libs/utils'
+
 export default {
   /**
    * Load all tabs for current window
@@ -58,6 +60,15 @@ export default {
   async removeTab({ state, getters }, tab) {
     let p = getters.panels.find(p => p.cookieStoreId === tab.cookieStoreId)
     if (!p || !p.tabs) return
+
+    if (state.noEmptyDefault && tab.cookieStoreId === getters.defaultCtxId) {
+      const panelIndex = Utils.GetPanelIndex(getters.panels, tab.id)
+      const panelTabs = getters.panels[panelIndex].tabs
+      if (panelTabs && panelTabs.length === 1) {
+        await browser.tabs.create({ active: true })
+      }
+    }
+
     if (tab.index === p.endIndex && p.tabs.length > 1) {
       let prevTab = state.tabs[p.endIndex - 1]
       await browser.tabs.update(prevTab.id, { active: true })

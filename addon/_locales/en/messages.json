@@ -257,6 +257,10 @@
     "message": "none"
   },
 
+  "settings.no_empty_default": {
+    "message": "Create new tab when emptying default panel"
+  },
+
   "settings.open_bookmark_new_tab": {
     "message": "Open bookmark in new tab"
   },

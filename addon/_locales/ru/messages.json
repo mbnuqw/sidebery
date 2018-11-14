@@ -257,6 +257,10 @@
     "message": "выкл"
   },
 
+  "settings.no_empty_default": {
+    "message": "Создавать новую вкладку при опустошении стандартной панели"
+  },
+
   "settings.open_bookmark_new_tab": {
     "message": "Открывать закладку в новом табе"
   },

@@ -8,6 +8,7 @@ export const SETTINGS_OPTIONS = {
 }
 
 export const DEFAULT_SETTINGS = {
+  // Global
   activateLastTabOnPanelSwitching: true,
   createNewTabOnEmptyPanel: false,
   skipEmptyPanels: false,
@@ -18,6 +19,9 @@ export const DEFAULT_SETTINGS = {
   tabLongLeftClick: 'none',
   tabLongRightClick: 'none',
   openBookmarkNewTab: false,
+  noEmptyDefault: false,
+
+  // Appearance
   fontSize: 'm',
   theme: 'dark',
   bgNoise: true,

@@ -58,6 +58,11 @@
             v-for="o in $store.state.tabLongRightClickOpts"
             :opt-none="o === 'none'"
             :opt-true="o === $store.state.tabLongRightClick") {{t('settings.tab_action_' + o)}}
+      .field(:opt-true="$store.state.noEmptyDefault", @click="toggleOpt('noEmptyDefault')")
+        .label {{t('settings.no_empty_default')}}
+        .input
+          .opt.-true {{t('settings.opt_true')}}
+          .opt.-false {{t('settings.opt_false')}}
       .field(:opt-true="$store.state.openBookmarkNewTab", @click="toggleOpt('openBookmarkNewTab')")
         .label {{t('settings.open_bookmark_new_tab')}}
         .input

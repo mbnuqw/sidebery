@@ -527,14 +527,23 @@ export default {
       let rmIndex = State.tabs.findIndex(t => t.id === tabId)
       if (rmIndex === -1) return
 
+      const panelIndex = Utils.GetPanelIndex(this.panels, tabId)
+      const cookieStoreId = State.tabs[rmIndex].cookieStoreId
+
+      if (State.noEmptyDefault && cookieStoreId === this.defaultCtxId) {
+        const panelTabs = this.panels[panelIndex].tabs
+        if (panelTabs && panelTabs.length === 1) {
+          browser.tabs.create({})
+        }
+      }
+
       // Shift tabs after removed one. (NOT detected by vue)
       for (let i = rmIndex + 1; i < State.tabs.length; i++) {
         State.tabs[i].index--
       }
       State.tabs.splice(rmIndex, 1)
 
-      const panelIndex = State.activeTabs.findIndex(id => id === tabId)
-      if (panelIndex >= 0) State.activeTabs[panelIndex] = null
+      if (State.activeTabs[panelIndex] !== null) State.activeTabs[panelIndex] = null
 
       Store.dispatch('recalcPanelScroll')
       Store.dispatch('saveSyncPanels')
