@@ -632,7 +632,9 @@ export default {
         if (panelIndex === -1) return
       }
       if (tab && tab.pinned) panelIndex = 1
-      if (panelIndex > 0 && this.panel !== panelIndex) {
+      if (panelIndex > 0 && State.panelIndex !== panelIndex) {
+        // Close settings and switch panel
+        if (State.settingsOpened) State.settingsOpened = false
         Store.commit('setPanel', panelIndex)
       }
 
