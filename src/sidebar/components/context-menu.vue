@@ -107,9 +107,13 @@ export default {
 
     onClick(opt) {
       let func = opt[1]
-      if (!func) return
       let args = opt.slice(2)
-      func(...args)
+      if (typeof func === 'string') {
+        Store.dispatch(func, args[0])
+      }
+      if (typeof func === 'function') {
+        func(...args)
+      }
       Store.commit('closeCtxMenu')
     },
 

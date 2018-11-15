@@ -119,7 +119,10 @@
   },
 
   "ctx_menu.move_to_new_window": {
-    "message": "Move to New window"
+    "message": "Move to new window"
+  },
+  "ctx_menu.move_to_new_priv_window": {
+    "message": "Move to new private window"
   },
   "ctx_menu.move_to_another_window": {
     "message": "Move to another window"

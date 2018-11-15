@@ -17,7 +17,7 @@
     @dragstart="onDragStart"
     @dragenter="onDragEnter"
     @dragleave="onDragLeave")
-  .audio(@click="mute")
+  .audio(@click="$store.dispatch('remuteTabs', [tab.id])")
     svg.-loud: use(xlink:href="#icon_loud")
     svg.-mute: use(xlink:href="#icon_mute")
   .fav(:loading="loading")
@@ -47,6 +47,7 @@ import { mapGetters } from 'vuex'
 import Utils from '../../libs/utils'
 import Store from '../store'
 import State from '../store.state'
+import EventBus from '../event-bus'
 import CtxMenu from '../context-menu'
 
 export default {
@@ -88,17 +89,33 @@ export default {
     },
   },
 
+  created() {
+    EventBus.$on('tabLoadingStart', id => {
+      if (id === this.tab.id) this.loadingStart()
+    })
+    EventBus.$on('tabLoadingEnd', id => {
+      if (id === this.tab.id) this.loadingEnd()
+    })
+    EventBus.$on('tabLoadingOk', id => {
+      if (id === this.tab.id) this.loadingOk()
+    })
+    EventBus.$on('tabLoadingErr', id => {
+      if (id === this.tab.id) this.loadingErr()
+    })
+  },
+
   methods: {
     /**
      * Double click handler
      */
     onDBL() {
-      if (State.tabDoubleClick === 'close_down') this.closeDown()
-      if (State.tabDoubleClick === 'reload') this.reload()
-      if (State.tabDoubleClick === 'duplicate') this.duplicate()
-      if (State.tabDoubleClick === 'pin') this.pin()
-      if (State.tabDoubleClick === 'mute') this.mute()
-      if (State.tabDoubleClick === 'clear_cookies') this.clearCookies()
+      let dc = State.tabDoubleClick
+      if (dc === 'close_down') Store.dispatch('closeTabsDown', [this.tab.id])
+      if (dc === 'reload') Store.dispatch('reloadTabs', [this.tab.id])
+      if (dc === 'duplicate') Store.dispatch('duplicateTabs', [this.tab.id])
+      if (dc === 'pin') Store.dispatch('repinTabs', [this.tab.id])
+      if (dc === 'mute') Store.dispatch('remuteTabs', [this.tab.id])
+      if (dc === 'clear_cookies') Store.dispatch('closeTabsDown', [this.tab.id])
     },
 
     /**
@@ -118,12 +135,13 @@ export default {
         e.preventDefault()
         this.$emit('mdl', e, this)
         this.hodorL = setTimeout(() => {
-          if (State.tabLongLeftClick === 'close_down') this.closeDown()
-          if (State.tabLongLeftClick === 'reload') this.reload()
-          if (State.tabLongLeftClick === 'duplicate') this.duplicate()
-          if (State.tabLongLeftClick === 'pin') this.pin()
-          if (State.tabLongLeftClick === 'mute') this.mute()
-          if (State.tabLongLeftClick === 'clear_cookies') this.clearCookies()
+          let llc = State.tabLongLeftClick
+          if (llc === 'close_down') Store.dispatch('closeTabsDown', [this.tab.id])
+          if (llc === 'reload') Store.dispatch('reloadTabs', [this.tab.id])
+          if (llc === 'duplicate') Store.dispatch('duplicateTabs', [this.tab.id])
+          if (llc === 'pin') Store.dispatch('repinTabs', [this.tab.id])
+          if (llc === 'mute') Store.dispatch('remuteTabs', [this.tab.id])
+          if (llc === 'clear_cookies') Store.dispatch('closeTabsDown', [this.tab.id])
           this.hodorL = null
         }, 250)
       }
@@ -132,12 +150,13 @@ export default {
         e.preventDefault()
         this.$emit('mdr', e, this)
         this.hodorR = setTimeout(() => {
-          if (State.tabLongRightClick === 'close_down') this.closeDown()
-          if (State.tabLongRightClick === 'reload') this.reload()
-          if (State.tabLongRightClick === 'duplicate') this.duplicate()
-          if (State.tabLongRightClick === 'pin') this.pin()
-          if (State.tabLongRightClick === 'mute') this.mute()
-          if (State.tabLongRightClick === 'clear_cookies') this.clearCookies()
+          let lrc = State.tabLongRightClick
+          if (lrc === 'close_down') Store.dispatch('closeTabsDown', [this.tab.id])
+          if (lrc === 'reload') Store.dispatch('reloadTabs', [this.tab.id])
+          if (lrc === 'duplicate') Store.dispatch('duplicateTabs', [this.tab.id])
+          if (lrc === 'pin') Store.dispatch('repinTabs', [this.tab.id])
+          if (lrc === 'mute') Store.dispatch('remuteTabs', [this.tab.id])
+          if (lrc === 'clear_cookies') Store.dispatch('closeTabsDown', [this.tab.id])
           this.hodorR = null
         }, 250)
       }
@@ -221,63 +240,59 @@ export default {
       this.faviErr = true
     },
 
-    mute() {
-      browser.tabs.update(this.tab.id, { muted: !this.tab.mutedInfo.muted })
-    },
-
     close() {
       Store.dispatch('removeTab', this.tab)
     },
 
     async openMenu() {
       if (this.menu) return
-      let windows = await Utils.GetAllWindows()
-      let otherWindows = []
-      let otherDefWindows = []
-      let privateWindow
-      windows.map(w => {
-        if (!privateWindow && w.incognito) privateWindow = w
-        if (!w.current) otherWindows.push(w)
-        if (!w.current && !w.incognito) otherDefWindows.push(w)
-        return !w.current && !w.incognito
-      })
       this.menu = true
 
+      const otherWindows = (await Utils.GetAllWindows()).filter(w => !w.current)
       const menu = new CtxMenu(this.$el, this.closeMenu)
 
+      // Move to new window
+      let args = { tabIds: [this.tab.id] }
+      menu.add('move_to_new_window', 'moveTabsToNewWin', args)
+
+      // Move to new private window
+      args = { tabIds: [this.tab.id], incognito: true }
+      menu.add('move_to_new_priv_window', 'moveTabsToNewWin', args)
+
+      // Move to another window
+      if (otherWindows.length === 1) {
+        const args = { tabIds: [this.tab.id], window: otherWindows[0] }
+        menu.add('move_to_another_window', 'moveTabsToWin', args)
+      }
+
+      // Move to window...
+      if (otherWindows.length > 1) {
+        menu.add('move_to_window_', 'moveTabsToWin', { tabIds: [this.tab.id] })
+      }
+
+      // Default window
       if (!State.private) {
-        menu.add('move_to_new_window', this.moveToNewWin)
-
-        if (otherDefWindows.length === 1) {
-          menu.add('move_to_another_window', () => this.moveToWin(otherDefWindows[0]))
-        }
-
-        if (otherDefWindows.length > 1) menu.add('move_to_window_', this.moveToWin)
-
-        menu.add('reopen_in_priv_window', () => this.reopenInPrivWin(privateWindow))
-
         // Reopen in containers
         if (this.tab.cookieStoreId !== 'firefox-default') {
-          menu.add('reopen_in_default_panel', this.openInPanel, 'firefox-default')
+          const args = { tabIds: [this.tab.id], ctxId: 'firefox-default'}
+          menu.add('reopen_in_default_panel', 'moveTabsToCtx', args)
         }
         State.ctxs.map(c => {
           if (this.tab.cookieStoreId === c.cookieStoreId) return
+          const args = { tabIds: [this.tab.id], ctxId: c.cookieStoreId}
           const label = this.t('ctx_menu.re_open_in_') + `||${c.colorCode}>>${c.name}`
-          menu.addTranslated(label, this.openInPanel, c.cookieStoreId)
+          menu.addTranslated(label, 'moveTabsToCtx', args)
         })
-      } else {
-        if (otherWindows.length === 1) {
-          menu.add('reopen_in_another_window', () => this.reopenInWin(otherWindows[0]))
-        }
-
-        if (otherWindows.length > 1) menu.add('reopen_in_window_', this.reopenInWin)
       }
-      menu.add(this.tab.pinned ? 'unpin' : 'pin', this.pin)
-      menu.add(this.tab.mutedInfo.muted ? 'unmute' : 'mute', this.mute)
-      menu.add('tab_reload', this.reload)
-      menu.add('tab_duplicate', this.duplicate)
-      menu.add('clear_cookies', this.clearCookies)
-      menu.add('tab_close_down', this.closeDown)
+
+      if (!this.tab.pinned) menu.add('pin', 'pinTabs', [this.tab.id])
+      else menu.add('unpin', 'unpinTabs', [this.tab.id])
+      if (!this.tab.mutedInfo.muted) menu.add('mute', 'muteTabs', [this.tab.id])
+      else menu.add('unmute', 'unmute', [this.tab.id])
+      menu.add('tab_reload', 'reloadTabs', [this.tab.id])
+      menu.add('tab_duplicate', 'duplicateTabs', [this.tab.id])
+      menu.add('clear_cookies', 'clearTabsCookies', [this.tab.id])
+      menu.add('tab_close_down', 'closeTabsDown', this.tab.id)
 
       Store.commit('closeCtxMenu')
       State.ctxMenu = menu
@@ -285,60 +300,6 @@ export default {
 
     closeMenu() {
       this.menu = false
-    },
-
-    /**
-     * Create new window with this tab
-     */
-    moveToNewWin() {
-      Store.commit('closeCtxMenu')
-      browser.windows.create({ tabId: this.tab.id })
-    },
-
-    /**
-     *  Move tab to window if provided,
-     * otherwise show window-choosing menu
-     */
-    async moveToWin(window) {
-      Store.commit('closeCtxMenu')
-      let id = window ? window.id : await Store.dispatch('chooseWin')
-      browser.tabs.move(this.tab.id, { windowId: id, index: -1 })
-    },
-
-    /**
-     * Create new private window,
-     * open there tab with current url and
-     * close current tab.
-     */
-    reopenInPrivWin(window) {
-      Store.commit('closeCtxMenu')
-      let url = this.tab.url.indexOf('http') ? null : this.tab.url
-      if (!window) browser.windows.create({ incognito: true, url })
-      else browser.tabs.create({ windowId: window.id, url })
-    },
-
-    /**
-     * Open new tab with current url in
-     * another window.
-     */
-    async reopenInWin(window) {
-      Store.commit('closeCtxMenu')
-      let id = window ? window.id : await Store.dispatch('chooseWin')
-      let url = this.tab.url.indexOf('http') ? null : this.tab.url
-      browser.tabs.create({ windowId: id, url })
-    },
-
-    /**
-     * Open url in panel by cookieStoreId
-     */
-    openInPanel(id) {
-      Store.commit('closeCtxMenu')
-      browser.tabs.create({
-        active: true,
-        cookieStoreId: id,
-        url: this.tab.url.indexOf('http') ? null : this.tab.url,
-      })
-      browser.tabs.remove(this.tab.id)
     },
 
     loadingStart() {
@@ -369,76 +330,8 @@ export default {
       }, 2000)
     },
 
-    /**
-     * Clear all cookies of this url
-     */
-    async clearCookies() {
-      this.loadingStart()
-
-      let url = new URL(this.tab.url)
-      let domain = url.hostname
-        .split('.')
-        .slice(-2)
-        .join('.')
-
-      if (!domain) {
-        this.loadingErr()
-        return
-      }
-
-      let cookies = await browser.cookies.getAll({
-        domain: domain,
-        storeId: this.tab.cookieStoreId,
-      })
-      let fpcookies = await browser.cookies.getAll({
-        firstPartyDomain: domain,
-        storeId: this.tab.cookieStoreId,
-      })
-
-      const clearing = cookies.concat(fpcookies).map(c => {
-        return browser.cookies.remove({
-          storeId: this.tab.cookieStoreId,
-          url: this.tab.url,
-          name: c.name,
-        })
-      })
-
-      Promise.all(clearing)
-        .then(() => setTimeout(() => this.loadingOk(), 250))
-        .catch(() => setTimeout(() => this.loadingErr(), 250))
-    },
-
     height() {
       return this.$el.offsetHeight
-    },
-
-    /**
-     * Pin tab
-     */
-    async pin() {
-      Store.commit('closeCtxMenu')
-      await browser.tabs.update(this.tab.id, { pinned: !this.tab.pinned })
-    },
-
-    /**
-     * Close all tabs underneath
-     */
-    closeDown() {
-      Store.dispatch('closeTabsDown', this.tab.id)
-    },
-
-    /**
-     * Reload tab
-     */
-    reload(bypassCache) {
-      browser.tabs.reload(this.tab.id, { bypassCache })
-    },
-
-    /**
-     * Duplicate tab
-     */
-    duplicate() {
-      browser.tabs.duplicate(this.tab.id)
     },
   },
 }

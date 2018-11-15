@@ -121,6 +121,9 @@
   "ctx_menu.move_to_new_window": {
     "message": "Переместить в новое окно"
   },
+  "ctx_menu.move_to_new_priv_window": {
+    "message": "Переместить в новое приватное окно"
+  },
   "ctx_menu.move_to_another_window": {
     "message": "Переместить в другое окно"
   },

@@ -26,7 +26,7 @@ export default {
   async chooseWin({ state }) {
     state.winChoosing = []
     let wins = await browser.windows.getAll({ populate: true })
-    wins = wins.filter(w => !w.focused && !w.incognito)
+    wins = wins.filter(w => !w.focused)
 
     return new Promise(res => {
       wins = wins.map(async w => {
