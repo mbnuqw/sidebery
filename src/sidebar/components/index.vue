@@ -234,6 +234,7 @@ export default {
     EventBus.$on('panelLoadingEnd', panelIndex => this.onPanelLoadingEnd(panelIndex))
     EventBus.$on('panelLoadingOk', panelIndex => this.onPanelLoadingOk(panelIndex))
     EventBus.$on('panelLoadingErr', panelIndex => this.onPanelLoadingErr(panelIndex))
+    EventBus.$on('dragTabStart', tabInfo => this.outerDraggedTab = tabInfo)
   },
 
   // --- Mounted Hook ---
@@ -370,14 +371,21 @@ export default {
         if (item.type === 'text/x-moz-text-internal') {
           item.getAsString(async s => {
             if (e.dataTransfer.dropEffect === 'move') {
-              const tabs = await browser.tabs.query({
-                url: s,
-                currentWindow: false,
-                lastFocusedWindow: true,
-              })
-              if (tabs.length === 0) return
-              if (tabs[0].url.indexOf('http') === -1) return
-              browser.tabs.move(tabs[0].id, { windowId: State.windowId, index: -1 })
+              const tab = this.outerDraggedTab
+
+              if (!tab || tab.url !== s) {
+                if (s.indexOf('http') === -1) return
+                browser.tabs.create({ url: s, windowId: State.windowId })
+                return
+              }
+
+              if (tab.incognito === State.private) {
+                browser.tabs.move(tab.tabId, { windowId: State.windowId, index: -1 })
+              } else {
+                if (s.indexOf('http') === -1) return
+                browser.tabs.create({ url: s, windowId: State.windowId })
+                browser.tabs.remove(tab.tabId)
+              }
             }
             if (e.dataTransfer.dropEffect === 'copy') {
               if (s.indexOf('http') === -1) return

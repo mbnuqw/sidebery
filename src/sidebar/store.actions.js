@@ -57,4 +57,11 @@ export default {
   async recalcPanelScroll() {
     setTimeout(() => EventBus.$emit('recalcPanelScroll'), 33)
   },
+
+  /**
+   * Broadcast message to other parts of extension.
+   */
+  async broadcast(_, msg = {}) {
+    return await browser.runtime.sendMessage(msg)
+  },
 }

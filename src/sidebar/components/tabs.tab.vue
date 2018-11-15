@@ -192,6 +192,15 @@ export default {
       e.dataTransfer.setData('text/uri-list', this.tab.url)
       e.dataTransfer.setData('text/plain', this.tab.url)
       e.dataTransfer.effectAllowed = 'move'
+      Store.dispatch('broadcast', {
+        name: 'dragTabStart',
+        arg: {
+          tabId: this.tab.id,
+          incognito: State.private,
+          windowId: State.windowId,
+          url: this.tab.url,
+        },
+      })
     },
 
     /**
