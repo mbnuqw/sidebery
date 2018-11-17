@@ -308,6 +308,13 @@
     "message": "Animations"
   },
 
+  "settings.make_snapshot": {
+    "message": "Make snapshot"
+  },
+  "settings.rm_all_snapshots": {
+    "message": "Remove all snapshots"
+  },
+
   "settings.kb_title": {
     "message": "Keybindings"
   },

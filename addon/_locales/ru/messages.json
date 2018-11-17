@@ -308,6 +308,13 @@
     "message": "Анимации"
   },
 
+  "settings.make_snapshot": {
+    "message": "Создать снепшот"
+  },
+  "settings.rm_all_snapshots": {
+    "message": "Удалить все снепшоты"
+  },
+
   "settings.kb_title": {
     "message": "Клавиши"
   },

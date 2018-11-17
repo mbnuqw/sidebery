@@ -69,8 +69,11 @@ export default new Vue({
     browser.storage.onChanged.addListener(this.onChangeStorage)
     browser.commands.onCommand.addListener(this.onCmd)
 
-    let debounced = Utils.Debounce(() => Store.dispatch('saveState'), 567)
-    Store.watch(Getters.activePanel, debounced.func)
+    const dSavingState = Utils.Debounce(() => Store.dispatch('saveState'), 567)
+    Store.watch(Getters.activePanel, dSavingState.func)
+
+    const dMakingSnapshot = Utils.Debounce(() => Store.dispatch('makeSnapshot'), 5000)
+    Store.watch(Getters.tabs, dMakingSnapshot.func)
 
     await Store.dispatch('loadSettings')
     await Store.dispatch('loadState')
@@ -78,6 +81,7 @@ export default new Vue({
     await Store.dispatch('loadFavicons')
     await Store.dispatch('loadLocalID')
     await Store.dispatch('loadSyncPanels')
+    await Store.dispatch('loadSnapshots')
   },
 
   mounted() {

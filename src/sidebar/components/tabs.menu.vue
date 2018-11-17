@@ -164,7 +164,7 @@ export default {
         color: this.colorOpts[this.color].color,
         icon: this.iconOpts[this.icon],
       }
-      return await browser.contextualIdentities.create(details)
+      return await Store.dispatch('createContext', details)
     },
 
     dedupTabs() {

@@ -91,6 +91,17 @@
           .opt.-false {{t('settings.opt_false')}}
 
     section
+      h2 Snapshots
+      .box
+        .snapshot(v-for="(s, i) in snapshots", @click="applySnapshot(i)")
+          .time {{utime(s.time)}}
+          .tabs {{tabsCount(null, s.tabs)}}
+          .tabs(v-for="c in s.ctxs", :style="{color: c.colorCode}") {{tabsCount(c, s.tabs)}}
+      .box
+        .btn(@click="makeSnapshot") {{t('settings.make_snapshot')}}
+        .btn.-warn(@click="removeAllSnapshots") {{t('settings.rm_all_snapshots')}}
+
+    section
       h2 {{t('settings.kb_title')}}
       .keybinding(
         v-for="(k, i) in $store.state.keybindings"
@@ -108,14 +119,6 @@
           @keyup.prevent.stop="onKBKeyUp($event, k, i)")
       .box
         .btn(@click="resetKeybindings") {{t('settings.reset_kb')}}
-
-    //- section
-    //-   h2 {{t('settings.experements_title')}}
-    //-   .field(:opt-true="$root.dragTabToPanels", @click="toggleOpt('dragTabToPanels')")
-    //-     .label {{t('settings.drag_tab_between_panels')}}
-    //-     .input
-    //-       .opt.-true {{t('settings.opt_true')}}
-    //-       .opt.-false {{t('settings.opt_false')}}
 
     section
       h2 {{t('settings.help_title')}}
@@ -150,6 +153,7 @@
 
 
 <script>
+import { mapGetters } from 'vuex'
 import Utils from '../../libs/utils'
 import Logs from '../../libs/logs'
 import Store from '../store'
@@ -174,6 +178,8 @@ export default {
   },
 
   computed: {
+    ...mapGetters(['defaultCtxId']),
+
     issueLink() {
       if (!State.osInfo || !State.ffInfo) return ISSUE_URL
 
@@ -181,6 +187,10 @@ export default {
       body += `> Firefox: ${State.ffInfo.version}  \n`
       body += `> Extension: ${State.version}  \n`
       return ISSUE_URL + '?body=' + encodeURIComponent(body)
+    },
+
+    snapshots() {
+      return State.snapshots
     },
   },
 
@@ -262,6 +272,42 @@ export default {
       if (State.os === 'win') return s.replace('Command', 'Win')
       if (State.os === 'linux') return s.replace('Command', 'Super')
       return s
+    },
+
+    utime(sec) {
+      if (!sec) return null
+      const dt = new Date(sec * 1000)
+      let dtsec = dt.getSeconds()
+      if (dtsec < 10) dtsec = '0' + dtsec
+      let dtmin = dt.getMinutes()
+      if (dtmin < 10) dtmin = '0' + dtmin
+      let dthr = dt.getHours()
+      if (dthr < 10) dthr = '0' + dthr
+      let dtday = dt.getDate()
+      if (dtday < 10) dtday = '0' + dtday
+      let dtmth = dt.getMonth() + 1
+      if (dtmth < 10) dtmth = '0' + dtmth
+      const date = `${dtmth}.${dtday}`
+      const time = `${dthr}:${dtmin}:${dtsec}`
+      return `${date} - ${time}`
+    },
+
+    // --- Snapshot ---
+    tabsCount(ctx, tabs) {
+      if (!ctx) return tabs.filter(t => t.cookieStoreId === this.defaultCtxId).length
+      return tabs.filter(t => t.cookieStoreId === ctx.cookieStoreId).length
+    },
+
+    applySnapshot(index) {
+      Store.dispatch('applySnapshot', index)
+    },
+
+    makeSnapshot() {
+      Store.dispatch('makeSnapshot')
+    },
+
+    removeAllSnapshots() {
+      Store.dispatch('removeAllSnapshot')
     },
 
     // --- Help ---
@@ -393,6 +439,39 @@ export default {
   text(s: rem(14))
   color: var(--settings-label-fg)
   margin: 0 0 5px
+
+// --- Snapshots ---
+.Settings .snapshot
+  box(relative, flex)
+  text(s: rem(13))
+  size(100%)
+  color: var(--settings-label-fg)
+  margin: 0 0 3px
+  cursor: pointer
+  transition: opacity var(--d-fast)
+  &:nth-child(1)
+    opacity: .8
+  &:nth-child(2)
+    opacity: .7
+  &:nth-child(3)
+    opacity: .6
+  &:nth-child(4)
+    opacity: .5
+  &:nth-child(5)
+    opacity: .4
+  &:hover
+    opacity: 1
+  &:active
+    opacity: .7
+
+  .time
+    margin-right: auto
+    white-space: nowrap
+
+  .tabs
+    size(min-w: 12px)
+    text-align: right
+    margin: 0 0 0 5px
 
 // --- Keybindings ---
 .Settings .keybinding

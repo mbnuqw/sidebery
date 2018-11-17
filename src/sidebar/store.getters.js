@@ -8,6 +8,7 @@ export default {
   ctxMenu: s => s.ctxMenu,
   ctxMenuOpened: s => !!s.ctxMenu,
   winChoosing: s => s.winChoosing,
+  tabs: s => s.tabs,
 
   showTabRmBtn: s => s.showTabRmBtn,
 

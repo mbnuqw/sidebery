@@ -11,6 +11,14 @@ export default {
   },
 
   /**
+   * Create new conte...
+   */
+  async createContext(_, { name, color, icon }) {
+    const details = { name, color, icon }
+    return await browser.contextualIdentities.create(details)
+  },
+
+  /**
    * Switch current active panel by index
    */
   switchToPanel({ state, getters, commit, dispatch }, index) {

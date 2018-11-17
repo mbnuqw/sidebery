@@ -345,4 +345,104 @@ export default {
       await browser.tabs.remove(tab.id)
     }
   },
+
+  /**
+   * Make snapshot
+   */
+  makeSnapshot({ state, dispatch }) {
+    // Create snapshot
+    const time = ~~(Date.now() / 1000)
+    const tabs = state.tabs.map(t => {
+      return {
+        title: t.title,
+        url: t.url,
+        active: t.active,
+        pinned: t.pinned,
+        cookieStoreId: t.cookieStoreId,
+      }
+    })
+    const ctxs = state.ctxs.map(c => {
+      return {
+        cookieStoreId: c.cookieStoreId,
+        name: c.name,
+        icon: c.icon,
+        color: c.color,
+        colorCode: c.colorCode,
+      }
+    })
+    const snapshot = { tabs, ctxs, time }
+
+    // Push to store
+    if (state.snapshots.length < 5) {
+      state.snapshots.unshift(snapshot)
+      return dispatch('saveSnapshots')
+    }
+    
+    // Shift snapshotes
+    if (state.snapshots[3].time - state.snapshots[4].time > 604800) {
+      state.snapshots[4] = state.snapshots[3]
+    }
+    if (state.snapshots[2].time - state.snapshots[3].time > 86400) {
+      state.snapshots[3] = state.snapshots[2]
+    }
+    if (state.snapshots[1].time - state.snapshots[2].time > 3600) {
+      state.snapshots[2] = state.snapshots[1]
+    }
+    if (state.snapshots[0].time - state.snapshots[1].time > 60) {
+      state.snapshots[1] = state.snapshots[0]
+    }
+    state.snapshots[0] = snapshot
+    state.snapshots = [...state.snapshots]
+
+    dispatch('saveSnapshots')
+  },
+
+  /**
+   * Restore contexs and tabs from snapshot
+   */
+  applySnapshot({ state, dispatch }, index) {
+    const snapshot = state.snapshots[index]
+    if (!snapshot) return
+
+    // Restore contexts
+    snapshot.ctxs.map(c => {
+      const lctx = state.ctxs.find(lc => lc.cookieStoreId === c.cookieStoreId)
+      if (lctx) return
+      dispatch('createContext', { name: c.name, color: c.color, icon: c.icon })
+    })
+
+    // Restore tabs
+    snapshot.tabs.map(t => {
+      const ltab = state.ctxs.find(lt => lt.id === t.id && lt.url === t.url)
+      if (ltab) return
+      browser.tabs.create({
+        url: t.url,
+        active: t.active,
+        pinned: t.pinned,
+        cookieStoreId: t.cookieStoreId,
+      })
+    })
+    dispatch('loadTabs')
+  },
+
+  removeAllSnapshot({ state, dispatch }) {
+    state.snapshots = []
+    dispatch('saveSnapshots')
+  },
+
+  /**
+   * Save snapshots
+   */
+  async saveSnapshots({ state }) {
+    const snapshots = JSON.parse(JSON.stringify(state.snapshots))
+    await browser.storage.local.set({ snapshots, })
+  },
+
+  /**
+   * Load snapshots
+   */
+  async loadSnapshots({ state }) {
+    let ans = await browser.storage.local.get('snapshots')
+    state.snapshots = ans.snapshots || []
+  },
 }

@@ -55,6 +55,7 @@ export default {
   panelMenuOpened: false,
   recalcScrollNeeded: false,
   selectedTabs: [],
+  snapshots: [],
 
   lastPanelIndex: browser.extension.inIncognitoContext ? 2 : 3,
   panelIndex: browser.extension.inIncognitoContext ? 2 : 3,
