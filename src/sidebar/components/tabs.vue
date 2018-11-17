@@ -79,6 +79,26 @@ export default {
       if (this.index !== State.panelIndex) return
       this.recalcScroll()
     })
+
+    // Handle key navigation
+    EventBus.$on('keyActivate', () => {
+      if (State.panelIndex === this.index) this.onKeyActivate()
+    })
+    EventBus.$on('keyUp', () => {
+      if (State.panelIndex === this.index) this.onKeySelect(-1)
+    })
+    EventBus.$on('keyDown', () => {
+      if (State.panelIndex === this.index) this.onKeySelect(1)
+    })
+    EventBus.$on('keyUpShift', () => {
+      if (State.panelIndex === this.index) this.onKeySelectChange(-1)
+    })
+    EventBus.$on('keyDownShift', () => {
+      if (State.panelIndex === this.index) this.onKeySelectChange(1)
+    })
+    EventBus.$on('selectAll', () => {
+      if (State.panelIndex === this.index) State.selectedTabs = this.tabs.map(t => t.id)
+    })
   },
 
   methods: {
@@ -382,6 +402,57 @@ export default {
 
     onPanelLoadingErr() {
       this.$emit('panel-loading-err')
+    },
+
+    onKeySelect(dir) {
+      if (this.tabs.length === 0) return
+
+      if (State.selectedTabs.length === 0) {
+        let activeTab = this.tabs.find(t => t.active)
+        if (activeTab) {
+          State.selectedTabs.push(activeTab.id)
+        } else if (dir < 0) {
+          State.selectedTabs.push(this.tabs[this.tabs.length - 1].id)
+        } else if (dir > 0) {
+          State.selectedTabs.push(this.tabs[0].id)
+        }
+        return
+      }
+
+      const selId = State.selectedTabs[0]
+      let index = this.tabs.findIndex(t => t.id === selId) + dir
+      if (index < 0) index = 0
+      if (index >= this.tabs.length) index = this.tabs.length - 1
+      State.selectedTabs = [this.tabs[index].id]
+    },
+
+    onKeySelectChange(dir) {
+      if (State.selectedTabs.length === 0) return
+
+      if (State.selectedTabs.length === 1) {
+        const selId = State.selectedTabs[0]
+        let index = this.tabs.findIndex(t => t.id === selId)
+        this.selStartIndex = index
+        this.selEndIndex = index + dir
+      } else {
+        this.selEndIndex = this.selEndIndex + dir
+      }
+      if (this.selEndIndex < 0) this.selEndIndex = 0
+      if (this.selEndIndex >= this.tabs.length) this.selEndIndex = this.tabs.length - 1
+
+      let minIndex = Math.min(this.selStartIndex, this.selEndIndex)
+      let maxIndex = Math.max(this.selStartIndex, this.selEndIndex)
+      State.selectedTabs = []
+      for (let i = minIndex; i <= maxIndex; i++) {
+        State.selectedTabs.push(this.tabs[i].id)
+      }
+    },
+
+    onKeyActivate() {
+      if (this.tabs.length === 0) return
+      if (State.selectedTabs.length === 0) return
+      browser.tabs.update(State.selectedTabs[0], { active: true })
+      State.selectedTabs = []
     },
 
     /**

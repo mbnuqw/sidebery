@@ -16,6 +16,7 @@ export default {
   switchToPanel({ state, getters, commit, dispatch }, index) {
     commit('closeSettings')
     commit('closeCtxMenu')
+    commit('resetSelection')
     commit('setPanel', index)
     if (state.panelMenuOpened) EventBus.$emit('openPanelMenu', state.panelIndex)
     if (state.createNewTabOnEmptyPanel) {
@@ -46,6 +47,7 @@ export default {
     Logs.D(`Try to switch panel from: ${state.panelIndex} to: ${state.panelIndex + dir}`)
 
     commit('closeCtxMenu')
+    commit('resetSelection')
     if (state.settingsOpened) return commit('closeSettings')
 
     // Next

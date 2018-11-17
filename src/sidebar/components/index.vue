@@ -327,6 +327,7 @@ export default {
         }, 500)
       }
       if (e.button < 2) Store.commit('closeCtxMenu')
+      Store.commit('resetSelection')
     },
 
     /**
@@ -470,6 +471,7 @@ export default {
       if (tab.windowId !== State.windowId) return
       Logs.D(`Tab created, id: '${tab.id}', index: '${tab.index}', ctx: '${tab.cookieStoreId}'`)
       Store.commit('closeCtxMenu')
+      Store.commit('resetSelection')
 
       // If new tab is out of panel, move it to the end of
       // this panel
@@ -532,6 +534,7 @@ export default {
       if (info.windowId !== State.windowId) return
       Logs.D(`Tab removed, id: '${tabId}'`)
       Store.commit('closeCtxMenu')
+      Store.commit('resetSelection')
       let rmIndex = State.tabs.findIndex(t => t.id === tabId)
       if (rmIndex === -1) return
 
@@ -564,6 +567,7 @@ export default {
       if (info.windowId !== State.windowId) return
       Logs.D(`Tab moved, id: '${id}', from: '${info.fromIndex}', to: '${info.toIndex}'`)
       Store.commit('closeCtxMenu')
+      Store.commit('resetSelection')
 
       // If moved tab active, cut it out
       let pIndex = Utils.GetPanelIndex(this.panels, id)
@@ -604,6 +608,7 @@ export default {
       if (info.oldWindowId !== State.windowId) return
       Logs.D(`Tab detached, id: '${id}'`)
       Store.commit('closeCtxMenu')
+      Store.commit('resetSelection')
       let i = State.tabs.findIndex(t => t.id === id)
       if (i === -1) return
       State.tabs.splice(i, 1)
@@ -618,6 +623,7 @@ export default {
       if (info.newWindowId !== State.windowId) return
       Logs.D(`Tab attached, id: '${id}'`)
       Store.commit('closeCtxMenu')
+      Store.commit('resetSelection')
       Store.dispatch('loadTabs')
       Store.dispatch('saveSyncPanels')
     },
@@ -628,6 +634,7 @@ export default {
     onActivatedTab(info) {
       if (info.windowId !== State.windowId) return
       Logs.D(`Tab activated, id: '${info.tabId}'`)
+      Store.commit('resetSelection')
       for (let i = 0; i < State.tabs.length; i++) {
         State.tabs[i].active = info.tabId === State.tabs[i].id
       }
@@ -706,6 +713,7 @@ export default {
     async openPanelMenu(i) {
       Store.commit('closeSettings')
       Store.commit('closeCtxMenu')
+      Store.commit('resetSelection')
       State.panelMenuOpened = true
       State.panelIndex = i
       if (i >= 0) State.activePanel = State.panelIndex
@@ -748,6 +756,7 @@ export default {
       if (State.panelMenuOpened) this.closePanelMenu()
       if (State.settingsOpened) Store.commit('closeSettings')
       else Store.commit('openSettings')
+      Store.commit('resetSelection')
     },
 
     /**

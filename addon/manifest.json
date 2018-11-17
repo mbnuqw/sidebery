@@ -48,15 +48,13 @@
     },
     "next_panel": {
       "suggested_key": {
-        "default": "Ctrl+Period",
-        "mac": "MacCtrl+Period"
+        "default": "Alt+Right"
       },
       "description": "next_panel"
     },
     "prev_panel": {
       "suggested_key": {
-        "default": "Ctrl+Comma",
-        "mac": "MacCtrl+Comma"
+        "default": "Alt+Left"
       },
       "description": "prev_panel"
     },
@@ -73,6 +71,48 @@
         "mac": "MacCtrl+W"
       },
       "description": "close_tab"
+    },
+    "select_all": {
+      "suggested_key": {
+        "default": "Ctrl+Alt+A"
+      },
+      "description": "select_all"
+    },
+    "up": {
+      "suggested_key": {
+        "default": "Alt+Up"
+      },
+      "description": "up"
+    },
+    "down": {
+      "suggested_key": {
+        "default": "Alt+Down"
+      },
+      "description": "down"
+    },
+    "up_shift": {
+      "suggested_key": {
+        "default": "Alt+Shift+Up"
+      },
+      "description": "up"
+    },
+    "down_shift": {
+      "suggested_key": {
+        "default": "Alt+Shift+Down"
+      },
+      "description": "down"
+    },
+    "activate": {
+      "suggested_key": {
+        "default": "Alt+Space"
+      },
+      "description": "activate"
+    },
+    "reset_selection": {
+      "suggested_key": {
+        "default": "Alt+R"
+      },
+      "description": "reset_selection"
     }
   },
 

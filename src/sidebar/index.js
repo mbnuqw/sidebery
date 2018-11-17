@@ -7,6 +7,7 @@ import Dict from '../mixins/dict'
 import Store from './store'
 import State from './store.state'
 import Getters from './store.getters'
+import EventBus from './event-bus'
 import DEFAULT_SETTINGS from './settings'
 
 Vue.mixin(Dict)
@@ -184,8 +185,33 @@ export default new Vue({
       }
     },
     cmd_rm_tab_on_panel() {
-      let activeTab = State.tabs.find(t => t.active)
-      Store.dispatch('removeTab', activeTab)
+      if (State.selectedTabs.length > 0) {
+        Store.dispatch('closeTabs', State.selectedTabs)
+      } else {
+        let activeTab = State.tabs.find(t => t && t.active)
+        Store.dispatch('closeTabs', [activeTab.id])
+      }
+    },
+    cmd_activate() {
+      EventBus.$emit('keyActivate')
+    },
+    cmd_reset_selection() {
+      Store.commit('resetSelection')
+    },
+    cmd_select_all() {
+      EventBus.$emit('selectAll')
+    },
+    cmd_up() {
+      EventBus.$emit('keyUp')
+    },
+    cmd_down() {
+      EventBus.$emit('keyDown')
+    },
+    cmd_up_shift() {
+      EventBus.$emit('keyUpShift')
+    },
+    cmd_down_shift() {
+      EventBus.$emit('keyDownShift')
     },
     // ---
   },
