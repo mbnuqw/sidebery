@@ -7,7 +7,6 @@ import Dict from '../mixins/dict'
 import Store from './store'
 import State from './store.state'
 import Getters from './store.getters'
-import EventBus from './event-bus'
 import DEFAULT_SETTINGS from './settings'
 
 Vue.mixin(Dict)
@@ -126,6 +125,19 @@ export default new Vue({
       }
     },
 
+    /**
+     * Keybindings handler
+     */
+    onCmd(name) {
+      if (!State.windowFocused) return
+      Logs.D(`Run command: ${name}`)
+      let cmdName = 'kb_' + name
+      Store.dispatch(cmdName)
+    },
+
+    /**
+     * Update font size for 'html' tag.
+     */
     updateFontSize() {
       const htmlEl = document.documentElement
       if (State.fontSize === 'xs') htmlEl.style.fontSize = '13.5px'
@@ -167,56 +179,5 @@ export default new Vue({
       }
       return JSON.stringify({ AllTabs, Panels, Settings }, null, 2)
     },
-
-    // --- Keybindings ---
-    // Commands listeners
-    onCmd(name) {
-      if (!State.windowFocused) return
-      Logs.D(`Run command: ${name}`)
-      let funcName = 'cmd_' + name
-      if (this[funcName]) this[funcName]()
-    },
-    cmd_next_panel() {
-      Store.dispatch('switchPanel', 1)
-    },
-    cmd_prev_panel() {
-      Store.dispatch('switchPanel', -1)
-    },
-    cmd_new_tab_on_panel() {
-      let panel = this.panels[State.lastPanelIndex]
-      if (panel.cookieStoreId) {
-        Store.dispatch('createTab', panel.cookieStoreId)
-      }
-    },
-    cmd_rm_tab_on_panel() {
-      if (State.selectedTabs.length > 0) {
-        Store.dispatch('closeTabs', State.selectedTabs)
-      } else {
-        let activeTab = State.tabs.find(t => t && t.active)
-        Store.dispatch('closeTabs', [activeTab.id])
-      }
-    },
-    cmd_activate() {
-      EventBus.$emit('keyActivate')
-    },
-    cmd_reset_selection() {
-      Store.commit('resetSelection')
-    },
-    cmd_select_all() {
-      EventBus.$emit('selectAll')
-    },
-    cmd_up() {
-      EventBus.$emit('keyUp')
-    },
-    cmd_down() {
-      EventBus.$emit('keyDown')
-    },
-    cmd_up_shift() {
-      EventBus.$emit('keyUpShift')
-    },
-    cmd_down_shift() {
-      EventBus.$emit('keyDownShift')
-    },
-    // ---
   },
 })
