@@ -28,12 +28,14 @@
         :key="btn.cookieStoreId || btn.name"
         :title="btn.name"
         :loading="btn.loading"
+        :updated="btn.updated"
         :data-active="panelIs(i)"
         :data-hidden="btn.hidden"
         @click="onNavClick(i)"
         @mousedown.right="openPanelMenu(i)")
         svg(:style="{fill: btn.colorCode}")
           use(:xlink:href="'#' + btn.icon")
+        .update-badge
         .ok-badge
           svg: use(xlink:href="#icon_ok")
         .err-badge
@@ -85,7 +87,7 @@ import Utils from '../../libs/utils.js'
 import Logs from '../../libs/logs.js'
 import EventBus from '../event-bus'
 import Store from '../store'
-import State, { DEFAULT_PANELS } from '../store.state.js'
+import State, { DEFAULT_PANELS, DEFAULT_CTX } from '../store.state.js'
 import CtxMenu from './context-menu'
 import BookmarksPanel from './bookmarks'
 import TabsPanel from './tabs'
@@ -165,10 +167,13 @@ export default {
           btn.hidden = true
           if (State.panelIndex > k) hideOffset++
         }
-        if (State.private && btn.cookieStoreId === 'firefox-default') {
+        if (State.private && btn.cookieStoreId === DEFAULT_CTX) {
           btn.hidden = true
           if (State.panelIndex > k) hideOffset++
         }
+        btn.updated = !!State.updatedTabs.find(t => {
+          return t.panelIndex === k && k !== State.panelIndex && t.state > 1
+        })
         out.push(btn)
       }
       for (i = 0; i < State.ctxs.length; i++, k++) {
@@ -180,6 +185,9 @@ export default {
         }
         if (!btn.menu) btn.menu = TabsMenu
         btn.hidden = false
+        btn.updated = !!State.updatedTabs.find(t => {
+          return t.panelIndex === k && k !== State.panelIndex && t.state > 1
+        })
         out.push(btn)
       }
 
@@ -516,6 +524,29 @@ export default {
         if (tab.active) Store.commit('setPanel', pi)
       }
 
+      // Handler title change
+      if (change.hasOwnProperty('url')) {
+        const state = State.tabs[upIndex].url === change.url ? 1 : 0
+        const i = State.updatedTabs.findIndex(t => t.id === tab.id)
+        const info = State.updatedTabs[i]
+        if (info) {
+          info.state = state
+          State.updatedTabs.splice(i, 1, info)
+        } else {
+          State.updatedTabs.push({ id: tab.id, state })
+        }
+      }
+      if (change.hasOwnProperty('title') && !tab.active) {
+        const i = State.updatedTabs.findIndex(t => t.id === tab.id)
+        if (i >= 0) {
+          const info = State.updatedTabs[i]
+          const panelIndex = Utils.GetPanelIndex(this.panels, tab.id)
+          info.panelIndex = panelIndex
+          info.state++
+          State.updatedTabs.splice(i, 1, info)
+        }
+      }
+
       State.tabs.splice(upIndex, 1, tab)
 
       if (change.hasOwnProperty('pinned') && change.pinned) {
@@ -555,6 +586,10 @@ export default {
       State.tabs.splice(rmIndex, 1)
 
       if (State.activeTabs[panelIndex] !== null) State.activeTabs[panelIndex] = null
+
+      // Remove updated flag
+      const upTabIndex = State.updatedTabs.findIndex(t => t.id === tabId)
+      if (upTabIndex !== -1) State.updatedTabs.splice(upTabIndex, 1)
 
       Store.dispatch('recalcPanelScroll')
       Store.dispatch('saveSyncPanels')
@@ -612,6 +647,11 @@ export default {
       let i = State.tabs.findIndex(t => t.id === id)
       if (i === -1) return
       State.tabs.splice(i, 1)
+
+      // Remove updated flag
+      const upTabIndex = State.updatedTabs.findIndex(t => t.id === id)
+      if (upTabIndex !== -1) State.updatedTabs.splice(upTabIndex, 1)
+
       Store.dispatch('recalcPanelScroll')
       Store.dispatch('saveSyncPanels')
     },
@@ -652,6 +692,10 @@ export default {
         if (State.settingsOpened) State.settingsOpened = false
         Store.commit('setPanel', panelIndex)
       }
+
+      // Remove updated flag
+      const upTabIndex = State.updatedTabs.findIndex(t => t.id === info.tabId)
+      if (upTabIndex !== -1) State.updatedTabs.splice(upTabIndex, 1)
 
       State.activeTabs[panelIndex] = info.tabId
     },
@@ -855,6 +899,10 @@ NAV_CONF_HEIGHT = auto
     size(0)
     opacity: 0
     z-index: -1
+  &[updated]
+    > .update-badge
+      opacity: 1
+      transform: scale(1, 1)
   &[loading="true"]
     cursor: progress
     > .loading-spinner
@@ -871,6 +919,7 @@ NAV_CONF_HEIGHT = auto
       opacity: 1
       transform: scale(1, 1)
   &[loading]
+  &[updated]
     > svg
       mask: radial-gradient(
         circle at calc(100% - 2px) calc(100% - 2px),
@@ -912,6 +961,16 @@ NAV_CONF_HEIGHT = auto
     > .spinner-stick-{i}
       transform: rotateZ((i * 30)deg)
       animation: none
+
+.Sidebar .panel-btn > .update-badge
+  box(absolute)
+  size(10px, same)
+  pos(b: 5px, r: 6px)
+  border-radius: 50%
+  background-color: var(--nav-btn-update-badge-bg)
+  opacity: 0
+  transform: scale(0.7, 0.7)
+  transition: opacity var(--d-norm), transform var(--d-norm)
 
 .Sidebar .panel-btn > .ok-badge
 .Sidebar .panel-btn > .err-badge

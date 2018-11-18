@@ -7,7 +7,7 @@
     :data-menu="menu || selected"
     :data-pinned="tab.pinned"
     :discarded="tab.discarded"
-    :attention="tab.attention"
+    :updated="updated"
     :close-btn="showTabRmBtn"
     :title="tooltip"
     @contextmenu.prevent.stop=""
@@ -25,6 +25,7 @@
   .fav(:loading="loading")
     .placeholder
     img(:src="favicon", @load.passive="onFaviconLoad", @error="onFaviconErr")
+    .update-badge
     .ok-badge
       svg: use(xlink:href="#icon_ok")
     .err-badge
@@ -71,6 +72,12 @@ export default {
 
   computed: {
     ...mapGetters(['showTabRmBtn']),
+
+    updated() {
+      const info = State.updatedTabs.find(t => t.id === this.tab.id)
+      if (info && info.state > 1) return true
+      return false
+    },
 
     favicon() {
       if (this.tab.favIconUrl) return this.tab.favIconUrl
@@ -444,6 +451,19 @@ export default {
   &[discarded]
     opacity: .5
 
+  &[updated] .fav
+    > img
+      mask: radial-gradient(
+        circle at calc(100% - 2px) calc(100% - 2px),
+        #00000032,
+        #00000032 6.5px,
+        #000000 7.5px,
+        #000000
+      )
+    > .update-badge
+      opacity: 1
+      transform: scale(1, 1)
+
 // --- Drag layer ---
 .Tab .drag-layer
   box(absolute)
@@ -556,6 +576,16 @@ export default {
     > .spinner-stick-{i}
       transform: rotateZ((i * 30)deg)
       animation: none
+
+.Tab .fav > .update-badge
+  box(absolute)
+  size(10px, same)
+  pos(b: -3px, r: -3px)
+  border-radius: 50%
+  background-color: var(--tabs-update-badge-bg)
+  opacity: 0
+  transform: scale(0.7, 0.7)
+  transition: opacity var(--d-norm), transform var(--d-norm)
 
 .Tab .fav > .ok-badge
 .Tab .fav > .err-badge

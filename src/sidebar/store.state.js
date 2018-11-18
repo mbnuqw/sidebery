@@ -23,14 +23,14 @@ export const DEFAULT_PANELS = [
   {
     name: Translate('private_tabs_menu.title'),
     icon: 'icon_tabs',
-    cookieStoreId: 'firefox-private',
+    cookieStoreId: PRIVATE_CTX,
     menu: TabsDefaultMenu,
     private: true,
   },
   {
     name: Translate('default_tabs_menu.title'),
     icon: 'icon_tabs',
-    cookieStoreId: 'firefox-default',
+    cookieStoreId: DEFAULT_CTX,
     menu: TabsDefaultMenu,
   },
 ]
@@ -55,11 +55,12 @@ export default {
   panelMenuOpened: false,
   recalcScrollNeeded: false,
   selectedTabs: [],
+  updatedTabs: [],
   snapshots: [],
 
   lastPanelIndex: browser.extension.inIncognitoContext ? 2 : 3,
   panelIndex: browser.extension.inIncognitoContext ? 2 : 3,
-  
+
   tabs: [], // all tabs
   activeTabs: [], // last active tab's id per panel
   ctxs: [], // all contextual identities
