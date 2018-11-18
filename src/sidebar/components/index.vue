@@ -430,6 +430,7 @@ export default {
       // Check if we have some updates
       // for container with this name
       Store.dispatch('resyncPanels')
+      Store.dispatch('checkContextBindings', contextualIdentity.cookieStoreId)
     },
 
     /**
@@ -468,6 +469,7 @@ export default {
       if (i === -1) return
       State.ctxs.splice(i, 1, contextualIdentity)
       Store.dispatch('saveSyncPanels')
+      Store.dispatch('checkContextBindings', id)
     },
     // ---
 

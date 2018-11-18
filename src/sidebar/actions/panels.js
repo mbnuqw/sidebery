@@ -18,6 +18,35 @@ export default {
     return await browser.contextualIdentities.create(details)
   },
 
+  async checkContextBindings({ state }, ctxId) {
+    const ctx = state.ctxs.find(c => c.cookieStoreId === ctxId)
+    if (!ctx) return
+
+    const binding = ctx.name.split('@')[1]
+    if (!binding) return
+
+    let urls
+    const findWalk = nodes => {
+      return nodes.map(n => {
+        if (!n.children) return
+        if (n.children && n.title === binding) {
+          urls = n.children.map(ch => ch.url)
+        } else if (n.children && !urls) {
+          findWalk(n.children)
+        }
+        return n
+      })
+    }
+    findWalk(state.bookmarks)
+
+    if (!urls) return
+    for (let url of urls) {
+      if (!ctx.tabs) continue
+      if (ctx.tabs.find(t => t.url === url)) continue
+      browser.tabs.create({ url: url, cookieStoreId: ctxId })
+    }
+  },
+
   /**
    * Switch current active panel by index
    */
@@ -110,6 +139,7 @@ export default {
       }
     }
 
+    dispatch('checkContextBindings', getters.panels[state.panelIndex].cookieStoreId)
     dispatch('recalcPanelScroll')
   },
 
