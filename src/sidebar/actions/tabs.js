@@ -167,6 +167,13 @@ export default {
   },
 
   /**
+   * Discard tabs
+   */
+  discardTabs(_, tabIds = []) {
+    browser.tabs.discard(tabIds)
+  },
+
+  /**
    * Activate last active tab on the panel
    */
   activateLastActiveTabOf({ state, getters }, panelIndex) {

@@ -243,6 +243,7 @@ export default {
       }
 
       menu.add('pin', 'pinTabs', State.selectedTabs)
+      menu.add('tabs_discard', 'discardTabs', State.selectedTabs)
       menu.add('tabs_bookmark', 'bookmarkTabs', State.selectedTabs)
       menu.add('tabs_reload', 'reloadTabs', State.selectedTabs)
       menu.add('tabs_close', 'closeTabs', State.selectedTabs)

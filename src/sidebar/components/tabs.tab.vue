@@ -6,6 +6,8 @@
     :data-muted="tab.mutedInfo.muted"
     :data-menu="menu || selected"
     :data-pinned="tab.pinned"
+    :discarded="tab.discarded"
+    :attention="tab.attention"
     :close-btn="showTabRmBtn"
     :title="tooltip"
     @contextmenu.prevent.stop=""
@@ -298,6 +300,7 @@ export default {
       else menu.add('unpin', 'unpinTabs', [this.tab.id])
       if (!this.tab.mutedInfo.muted) menu.add('mute', 'muteTabs', [this.tab.id])
       else menu.add('unmute', 'unmute', [this.tab.id])
+      menu.add('tab_discard', 'discardTabs', [this.tab.id])
       menu.add('tab_reload', 'reloadTabs', [this.tab.id])
       menu.add('tab_duplicate', 'duplicateTabs', [this.tab.id])
       menu.add('clear_cookies', 'clearTabsCookies', [this.tab.id])
@@ -437,6 +440,9 @@ export default {
     background-color: var(--tabs-selected-bg)
     .title
       color: var(--tabs-selected-fg)
+  
+  &[discarded]
+    opacity: .5
 
 // --- Drag layer ---
 .Tab .drag-layer

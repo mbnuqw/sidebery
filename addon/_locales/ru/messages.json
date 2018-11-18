@@ -160,6 +160,9 @@
   "ctx_menu.clear_cookies": {
     "message": "Удалить куки"
   },
+  "ctx_menu.tab_discard": {
+    "message": "Выгрузить"
+  },
   "ctx_menu.tab_close_down": {
     "message": "Закрыть нижележащие табы"
   },
@@ -169,11 +172,15 @@
   "ctx_menu.tab_duplicate": {
     "message": "Дублировать"
   },
+
   "ctx_menu.tabs_reopen_in_new_priv_window": {
     "message": "Открыть в новом приватном окне"
   },
   "ctx_menu.tabs_reopen_in_new_window": {
     "message": "Открыть в новом окне"
+  },
+  "ctx_menu.tabs_discard": {
+    "message": "Выгрузить"
   },
   "ctx_menu.tabs_bookmark": {
     "message": "Создать закладки"

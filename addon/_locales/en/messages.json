@@ -160,6 +160,9 @@
   "ctx_menu.clear_cookies": {
     "message": "Clear cookies"
   },
+  "ctx_menu.tab_discard": {
+    "message": "Discard"
+  },
   "ctx_menu.tab_close_down": {
     "message": "Close all tabs underneath"
   },
@@ -169,11 +172,15 @@
   "ctx_menu.tab_duplicate": {
     "message": "Duplicate"
   },
+
   "ctx_menu.tabs_reopen_in_new_priv_window": {
     "message": "Reopen in new Private window"
   },
   "ctx_menu.tabs_reopen_in_new_window": {
     "message": "Reopen in new window"
+  },
+  "ctx_menu.tabs_discard": {
+    "message": "Discard"
   },
   "ctx_menu.tabs_bookmark": {
     "message": "Create bookmarks"
