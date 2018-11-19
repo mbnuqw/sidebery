@@ -526,7 +526,7 @@ export default {
         if (tab.active) Store.commit('setPanel', pi)
       }
 
-      // Handler title change
+      // Handle url change
       if (change.hasOwnProperty('url')) {
         const state = State.tabs[upIndex].url === change.url ? 1 : 0
         const i = State.updatedTabs.findIndex(t => t.id === tab.id)
@@ -538,6 +538,8 @@ export default {
           State.updatedTabs.push({ id: tab.id, state })
         }
       }
+
+      // Handle title change
       if (change.hasOwnProperty('title') && !tab.active) {
         const i = State.updatedTabs.findIndex(t => t.id === tab.id)
         if (i >= 0) {
@@ -572,9 +574,15 @@ export default {
       if (rmIndex === -1) return
 
       const panelIndex = Utils.GetPanelIndex(this.panels, tabId)
-      const cookieStoreId = State.tabs[rmIndex].cookieStoreId
+      const tab = State.tabs[rmIndex]
+      if (State.lockedPanels.includes(tab.cookieStoreId) && tab.url.indexOf('about')) {
+        browser.tabs.create({
+          url: tab.url,
+          cookieStoreId: tab.cookieStoreId,
+        })
+      }
 
-      if (State.noEmptyDefault && cookieStoreId === this.defaultCtxId) {
+      if (State.noEmptyDefault && tab.cookieStoreId === this.defaultCtxId) {
         const panelTabs = this.panels[panelIndex].tabs
         if (panelTabs && panelTabs.length === 1) {
           browser.tabs.create({})

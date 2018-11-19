@@ -61,6 +61,9 @@ export default {
   async removeTab({ state, getters }, tab) {
     let p = getters.panels.find(p => p.cookieStoreId === tab.cookieStoreId)
     if (!p || !p.tabs) return
+    if (state.lockedPanels.includes(tab.cookieStoreId) && tab.url.indexOf('about')) {
+      return
+    }
 
     if (state.noEmptyDefault && tab.cookieStoreId === getters.defaultCtxId) {
       const panelIndex = Utils.GetPanelIndex(getters.panels, tab.id)
@@ -83,10 +86,15 @@ export default {
    * Close tabs
    */
   async closeTabs({ state }, tabIds) {
-    const tabIdsCloned = [...tabIds]
-    const tabs = tabIds.map(id => {
-      return state.tabs.find(t => t.id === id)
-    })
+    const tabs = []
+    const toRemove = []
+    for (let id of tabIds) {
+      const tab = state.tabs.find(t => t.id === id)
+      if (!tab) continue
+      if (state.lockedPanels.includes(tab.cookieStoreId) && tab.url.indexOf('about')) continue
+      tabs.push(tab)
+      toRemove.push(tab.id)
+    }
 
     // Try activate prev tab
     const activeTab = tabs.find(t => t.active)
@@ -100,13 +108,13 @@ export default {
       }
     }
 
-    browser.tabs.remove(tabIdsCloned)
+    browser.tabs.remove(toRemove)
   },
 
   /**
-   * Remove all tabs underneath.
+   * Remove all tabs underneath. TODO: replace with closeTabs()
    */
-  closeTabsDown({ getters }, tabId) {
+  closeTabsDown({ state, getters }, tabId) {
     let tabIndex
     const panel = getters.panels.find(p => {
       if (!p.tabs) return false
@@ -114,6 +122,7 @@ export default {
       if (tabIndex !== -1) return true
     })
     if (!panel) return
+    if (state.lockedPanels.includes(panel.cookieStoreId)) return
 
     if (!panel.tabs || !panel.tabs[tabIndex]) return
     const tabs = panel.tabs.slice(tabIndex)
@@ -229,8 +238,11 @@ export default {
   /**
    * Duplicate tabs
    */
-  duplicateTabs(_, tabIds) {
+  duplicateTabs({ state }, tabIds) {
     for (let tabId of tabIds) {
+      let tab = state.tabs.find(t => t.id === tabId)
+      if (!tab) continue
+      if (state.lockedPanels.includes(tab.cookieStoreId)) continue
       browser.tabs.duplicate(tabId)
     }
   },

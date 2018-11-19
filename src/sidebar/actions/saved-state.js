@@ -18,6 +18,9 @@ export default {
     if (loadedState.syncPanels) {
       state.syncPanels = loadedState.syncPanels
     }
+    if (loadedState.lockedPanels) {
+      state.lockedPanels = loadedState.lockedPanels
+    }
 
     state.stateLoaded = true
   },
@@ -31,6 +34,7 @@ export default {
       state: {
         panelIndex: state.panelIndex,
         syncPanels: state.syncPanels,
+        lockedPanels: state.lockedPanels,
       },
     })
   },

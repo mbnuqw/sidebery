@@ -50,6 +50,7 @@ export default {
   ctxMenu: null,
   winChoosing: false,
   syncPanels: [],
+  lockedPanels: [],
   lastSyncPanels: null,
   settingsOpened: false,
   panelMenuOpened: false,

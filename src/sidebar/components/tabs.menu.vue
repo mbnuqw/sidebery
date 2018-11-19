@@ -28,6 +28,12 @@
       .opt.-true {{t('settings.opt_true')}}
       .opt.-false {{t('settings.opt_false')}}
 
+  .field(v-if="id", :opt-true="locked", @click="toggleLock")
+    .label Lock
+    .input
+      .opt.-true {{t('settings.opt_true')}}
+      .opt.-false {{t('settings.opt_false')}}
+
   .options
     .opt(v-if="haveTabs", @click="dedupTabs") {{t('tabs_menu.dedup_tabs')}}
     .opt(v-if="haveTabs", @click="reloadAllTabs") {{t('tabs_menu.reload_all_tabs')}}
@@ -100,6 +106,10 @@ export default {
 
     syncON() {
       return !!State.syncPanels.find(p => p === this.id)
+    },
+
+    locked() {
+      return !!State.lockedPanels.find(p => p === this.id)
     },
   },
 
@@ -222,7 +232,14 @@ export default {
       if (pi !== -1) State.syncPanels.splice(pi, 1)
       else State.syncPanels.push(this.id)
       Store.dispatch('resyncPanels')
-      this.$root.saveState()
+      Store.dispatch('saveState')
+    },
+
+    toggleLock() {
+      let pi = State.lockedPanels.findIndex(p => p === this.id)
+      if (pi !== -1) State.lockedPanels.splice(pi, 1)
+      else State.lockedPanels.push(this.id)
+      Store.dispatch('saveState')
     },
   },
 }
