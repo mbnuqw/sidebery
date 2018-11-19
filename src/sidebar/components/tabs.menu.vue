@@ -34,6 +34,49 @@
       .opt.-true {{t('settings.opt_true')}}
       .opt.-false {{t('settings.opt_false')}}
 
+  .field(v-if="id", @mousedown="switchProxy($event)")
+    .label Proxy
+    .input
+      .opt(
+        v-for="o in proxyOpts"
+        :opt-none="o === 'direct'"
+        :opt-true="o === proxied") {{t('tabs_menu.proxy_' + o)}}
+
+  .box
+    .field(v-if="id && proxied !== 'direct'")
+      text-input.text(
+        or="host"
+        :value="proxyHost"
+        :valid="proxyHostValid"
+        @input="onProxyHostInput")
+
+    .field(v-if="id && proxied !== 'direct'")
+      text-input.text(
+        or="port"
+        :value="proxyPort"
+        :valid="proxyPortValid"
+        @input="onProxyPortInput")
+
+    .field(v-if="id && proxied !== 'direct'")
+      text-input.text(
+        :value="proxyUsername"
+        or="username"
+        valid="fine"
+        @input="onProxyUsernameInput")
+
+    .field(v-if="id && proxied !== 'direct'")
+      text-input.text(
+        :value="proxyPassword"
+        or="password"
+        valid="fine"
+        @input="onProxyPasswordInput")
+
+    .field(v-if="id && isSomeSocks", :opt-true="proxyDNS", @click="toggleProxyDns")
+      .label proxy DNS
+      .input
+        .opt.-true {{t('settings.opt_true')}}
+        .opt.-false {{t('settings.opt_false')}}
+
   .options
     .opt(v-if="haveTabs", @click="dedupTabs") {{t('tabs_menu.dedup_tabs')}}
     .opt(v-if="haveTabs", @click="reloadAllTabs") {{t('tabs_menu.reload_all_tabs')}}
@@ -43,9 +86,13 @@
 
 
 <script>
+import { mapGetters } from 'vuex'
 import Store from '../store'
 import State from '../store.state'
 import TextInput from './input.text'
+
+const PROXY_HOST_RE = /\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/
+const PROXY_PORT_RE = /\d{2,5}/
 
 export default {
   name: 'TabsMenu',
@@ -91,10 +138,19 @@ export default {
         { color: 'purple', colorCode: '#af51f5' },
       ],
       color: 0,
+      proxyOpts: [
+        'http',
+        'https',
+        'socks4',
+        'socks',
+        'direct',
+      ],
     }
   },
 
   computed: {
+    ...mapGetters(['panels']),
+
     colorCode() {
       return this.colorOpts[this.color].colorCode
     },
@@ -110,6 +166,59 @@ export default {
 
     locked() {
       return !!State.lockedPanels.find(p => p === this.id)
+    },
+
+    proxied() {
+      const p = State.proxiedPanels.find(p => p.id === this.id)
+      if (p) return p.type
+      else return 'direct'
+    },
+
+    isSomeSocks() {
+      return this.proxied === 'socks' || this.proxied === 'socks4'
+    },
+
+    proxyHost() {
+      if (!this.id) return ''
+      const proxy = State.proxiedPanels.find(p => p.id === this.id)
+      if (!proxy || !proxy.host) return ''
+      return proxy.host
+    },
+
+    proxyPort() {
+      if (!this.id) return ''
+      const proxy = State.proxiedPanels.find(p => p.id === this.id)
+      if (!proxy || !proxy.port) return ''
+      return proxy.port
+    },
+
+    proxyHostValid() {
+      return PROXY_HOST_RE.test(this.proxyHost)
+    },
+
+    proxyPortValid() {
+      return PROXY_PORT_RE.test(this.proxyPort)
+    },
+
+    proxyUsername() {
+      if (!this.id) return ''
+      const proxy = State.proxiedPanels.find(p => p.id === this.id)
+      if (!proxy) return ''
+      return proxy.username
+    },
+
+    proxyPassword() {
+      if (!this.id) return ''
+      const proxy = State.proxiedPanels.find(p => p.id === this.id)
+      if (!proxy) return ''
+      return proxy.password
+    },
+
+    proxyDNS() {
+      if (!this.id) return false
+      const proxy = State.proxiedPanels.find(p => p.id === this.id)
+      if (!proxy) return false
+      return proxy.proxyDNS
     },
   },
 
@@ -241,6 +350,98 @@ export default {
       else State.lockedPanels.push(this.id)
       Store.dispatch('saveState')
     },
+
+    switchProxy(e) {
+      let i = this.proxyOpts.indexOf(this.proxied)
+      if (e.button === 0) i++
+      if (e.button === 2) i--
+      if (i >= this.proxyOpts.length) i = 0
+      if (i < 0) i = this.proxyOpts.length - 1
+
+      const panel = this.panels.find(p => p.cookieStoreId === this.id)
+      if (!panel || !panel.tabs) return
+
+      const proxySettings = {
+        id: this.id,
+        tabs: panel.tabs.map(t => t.id),
+        type: this.proxyOpts[i],
+        host: '',
+        port: '',
+        username: '',
+        password: '',
+        proxyDNS: false,
+        failoverTimeout: this.failoverTimeout,
+      }
+
+      let pi = State.proxiedPanels.findIndex(p => p.id === this.id)
+      if (pi !== -1) {
+        if (this.proxyOpts[i] === 'direct') State.proxiedPanels.splice(pi, 1)
+        else State.proxiedPanels.splice(pi, 1, proxySettings)
+      } else {
+        if (this.proxyOpts[i] !== 'direct') State.proxiedPanels.push(proxySettings)
+      }
+
+      Store.dispatch('saveState')
+      Store.dispatch('updateProxiedTabs')
+      this.$emit('height')
+    },
+
+    onProxyHostInput(value) {
+      if (!this.id) return
+      const pi = State.proxiedPanels.findIndex(p => p.id === this.id)
+      const proxy = { ...State.proxiedPanels[pi] }
+      if (pi === -1) return
+      proxy.host = value
+      State.proxiedPanels.splice(pi, 1, proxy)
+      if (!this.proxyHostValid) return
+      Store.dispatch('saveState')
+      Store.dispatch('updateProxiedTabs')
+    },
+
+    onProxyPortInput(value) {
+      if (!this.id) return
+      const pi = State.proxiedPanels.findIndex(p => p.id === this.id)
+      const proxy = { ...State.proxiedPanels[pi] }
+      if (pi === -1) return
+      proxy.port = value
+      State.proxiedPanels.splice(pi, 1, proxy)
+      if (!this.proxyPortValid) return
+      Store.dispatch('saveState')
+      Store.dispatch('updateProxiedTabs')
+    },
+
+    onProxyUsernameInput(value) {
+      if (!this.id) return
+      const pi = State.proxiedPanels.findIndex(p => p.id === this.id)
+      const proxy = { ...State.proxiedPanels[pi] }
+      if (pi === -1) return
+      proxy.username = value
+      State.proxiedPanels.splice(pi, 1, proxy)
+      Store.dispatch('saveState')
+      Store.dispatch('updateProxiedTabs')
+    },
+
+    onProxyPasswordInput(value) {
+      if (!this.id) return
+      const pi = State.proxiedPanels.findIndex(p => p.id === this.id)
+      const proxy = { ...State.proxiedPanels[pi] }
+      if (pi === -1) return
+      proxy.password = value
+      State.proxiedPanels.splice(pi, 1, proxy)
+      Store.dispatch('saveState')
+      Store.dispatch('updateProxiedTabs')
+    },
+
+    toggleProxyDns() {
+      if (!this.id) return
+      const pi = State.proxiedPanels.findIndex(p => p.id === this.id)
+      const proxy = { ...State.proxiedPanels[pi] }
+      proxy.proxyDNS = !proxy.proxyDNS
+      if (pi === -1) return
+      State.proxiedPanels.splice(pi, 1, proxy)
+      Store.dispatch('saveState')
+      Store.dispatch('updateProxiedTabs')
+    },
   },
 }
 </script>
@@ -253,6 +454,10 @@ export default {
   text(s: rem(18))
   color: var(--c-title-fg)
   margin: 16px 12px 12px
+
+.Menu .box
+  box(relative)
+  padding: 0 0 0 8px
 
 .Menu .field
   box(relative)
@@ -269,6 +474,7 @@ export default {
 .Menu .field > .label
   box(relative)
   text(s: rem(14))
+  margin: 0 auto 0 0
   color: var(--c-label-fg)
   transition: color var(--d-fast)
 
@@ -310,4 +516,25 @@ export default {
     size(16px, same)
     fill: var(--c-act-fg)
     transition: opacity var(--d-fast)
+
+.Menu .field > .text
+  text(s: rem(14))
+  margin: 2px 0 0
+  transition: color 1s
+  > input
+  > textarea
+    padding: 0 0 2px
+    color: var(--settings-opt-false-fg)
+  &[valid] > input
+  &[valid] > textarea
+    color: var(--settings-opt-true-fg)
+  &[valid="fine"] > input
+  &[valid="fine"] > textarea
+    color: var(--settings-opt-active-fg)
+  > .placeholder
+    padding: 0 0 2px
+    color: var(--c-label-fg)
+  // &.err
+  //   transition: none
+  //   color: var(--bookmarks-editor-error-fg)
 </style>

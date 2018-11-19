@@ -19,6 +19,7 @@
 
   "permissions": [
     "tabs",
+    "proxy",
     "bookmarks",
     "clipboardWrite",
     "cookies",

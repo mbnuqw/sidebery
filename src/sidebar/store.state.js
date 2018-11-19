@@ -51,6 +51,7 @@ export default {
   winChoosing: false,
   syncPanels: [],
   lockedPanels: [],
+  proxiedPanels: [],
   lastSyncPanels: null,
   settingsOpened: false,
   panelMenuOpened: false,

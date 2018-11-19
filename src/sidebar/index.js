@@ -76,6 +76,7 @@ export default new Vue({
 
     await Store.dispatch('loadSettings')
     await Store.dispatch('loadState')
+    Store.dispatch('updateProxiedTabs')
     await Store.dispatch('loadKebindings')
     await Store.dispatch('loadFavicons')
     await Store.dispatch('loadLocalID')

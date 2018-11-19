@@ -86,6 +86,21 @@
   "tabs_menu.sync_label": {
     "message": "Синхронизация"
   },
+  "tabs_menu.proxy_http": {
+    "message": "http"
+  },
+  "tabs_menu.proxy_https": {
+    "message": "tls"
+  },
+  "tabs_menu.proxy_socks4": {
+    "message": "socks4"
+  },
+  "tabs_menu.proxy_socks": {
+    "message": "socks5"
+  },
+  "tabs_menu.proxy_direct": {
+    "message": "none"
+  },
 
   "ctx_menu.open_in_new_window": {
     "message": "Открыть в новом окне"

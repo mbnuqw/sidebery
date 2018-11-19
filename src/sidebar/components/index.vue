@@ -500,6 +500,9 @@ export default {
       State.tabs.splice(tab.index, 0, tab)
       Store.dispatch('recalcPanelScroll')
       Store.dispatch('saveSyncPanels')
+      if (State.proxiedPanels.includes(tab.cookieStoreId)) {
+        Store.dispatch('setupTabProxy', tab.id)
+      }
     },
 
     /**

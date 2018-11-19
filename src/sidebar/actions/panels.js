@@ -1,6 +1,7 @@
 import Logs from '../../libs/logs'
 import EventBus from '../event-bus'
 import Utils from '../../libs/utils'
+import ReqHandler from '../proxy'
 
 export default {
   /**
@@ -150,5 +151,43 @@ export default {
     let i = Utils.getPanelIndex(getters.panels)
     if (i === -1) return
     dispatch('switchToPanel', i)
+  },
+
+  /**
+   * Update proxied tabs.
+   * 
+   * I should call this action after proxy settings
+   * change and after creating new tag for 
+   * proxied panel.
+   * 
+   * In case I activate proxy settings
+   * I should get all current tabs ids
+   * and put them in proxy request filter.
+   * Than just create listener.
+   * 
+   * If there is some new tab appeared
+   * I'll just create new req listener with
+   * only one tabId.
+   * 
+   * If got proxy settings turned off
+   * I'll remove all listeners.
+   * 
+   * And I should make this action idempotent.
+   */
+  updateProxiedTabs({ state, dispatch }) {
+    if (state.proxiedPanels.length) dispatch('turnOnProxy')
+    else dispatch('turnOffProxy')
+  },
+
+  turnOnProxy() {
+    if (!browser.proxy.onRequest.hasListener(ReqHandler)) {
+      browser.proxy.onRequest.addListener(ReqHandler, { urls: ['<all_urls>'] })
+    }
+  },
+
+  turnOffProxy() {
+    if (browser.proxy.onRequest.hasListener(ReqHandler)) {
+      browser.proxy.onRequest.removeListener(ReqHandler)
+    }
   },
 }
