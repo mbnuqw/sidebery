@@ -821,6 +821,7 @@ export default {
      */
     updateNavSize() {
       if (this.width !== window.innerWidth) this.width = window.innerWidth
+      this.recalcPanelMenuHeight()
     },
   },
 }
@@ -879,8 +880,8 @@ NAV_CONF_HEIGHT = auto
 .Sidebar .panel-menu
   box(absolute)
   pos(b: 0, l: 0)
-  size(100%, NAV_CONF_HEIGHT)
-  padding: 300px 0 36px
+  size(100%, NAV_CONF_HEIGHT, max-h: calc(100vh + 200px))
+  padding: 300px 0 32px
   background-color: var(--c-bg)
   box-shadow: 0 1px 12px 0 #00000056, 0 1px 0 0 #00000012
   opacity: 0

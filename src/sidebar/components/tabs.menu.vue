@@ -8,80 +8,81 @@
     @input="onInput"
     @keydown.enter.prevent="onEnter")
 
-  .field
-    .label {{t('tabs_menu.icon_label')}}
-    .input
-      .icon(v-for="(o, i) in iconOpts", :data-on="i === icon", @click="updateIcon(i)")
-        svg(:style="{fill: colorCode}")
-          use(:xlink:href="'#' + o")
+  scroll-box.scroll-box(ref="scrollBox")
+    .field
+      .label {{t('tabs_menu.icon_label')}}
+      .input
+        .icon(v-for="(o, i) in iconOpts", :data-on="i === icon", @click="updateIcon(i)")
+          svg(:style="{fill: colorCode}")
+            use(:xlink:href="'#' + o")
 
-  .field
-    .label {{t('tabs_menu.color_label')}}
-    .input
-      .icon(v-for="(o, i) in colorOpts", :data-on="i === color", @click="updateColor(i)")
-        svg(:style="{fill: o.colorCode}")
-          use(xlink:href="#circle")
+    .field
+      .label {{t('tabs_menu.color_label')}}
+      .input
+        .icon(v-for="(o, i) in colorOpts", :data-on="i === color", @click="updateColor(i)")
+          svg(:style="{fill: o.colorCode}")
+            use(xlink:href="#circle")
 
-  .field(v-if="id", :opt-true="syncON", @click="toggleSync")
-    .label {{t('tabs_menu.sync_label')}}
-    .input
-      .opt.-true {{t('settings.opt_true')}}
-      .opt.-false {{t('settings.opt_false')}}
-
-  .field(v-if="id", :opt-true="locked", @click="toggleLock")
-    .label Lock
-    .input
-      .opt.-true {{t('settings.opt_true')}}
-      .opt.-false {{t('settings.opt_false')}}
-
-  .field(v-if="id", @mousedown="switchProxy($event)")
-    .label Proxy
-    .input
-      .opt(
-        v-for="o in proxyOpts"
-        :opt-none="o === 'direct'"
-        :opt-true="o === proxied") {{t('tabs_menu.proxy_' + o)}}
-
-  .box
-    .field(v-if="id && proxied !== 'direct'")
-      text-input.text(
-        or="host"
-        :value="proxyHost"
-        :valid="proxyHostValid"
-        @input="onProxyHostInput")
-
-    .field(v-if="id && proxied !== 'direct'")
-      text-input.text(
-        or="port"
-        :value="proxyPort"
-        :valid="proxyPortValid"
-        @input="onProxyPortInput")
-
-    .field(v-if="id && proxied !== 'direct'")
-      text-input.text(
-        :value="proxyUsername"
-        or="username"
-        valid="fine"
-        @input="onProxyUsernameInput")
-
-    .field(v-if="id && proxied !== 'direct'")
-      text-input.text(
-        :value="proxyPassword"
-        or="password"
-        valid="fine"
-        @input="onProxyPasswordInput")
-
-    .field(v-if="id && isSomeSocks", :opt-true="proxyDNS", @click="toggleProxyDns")
-      .label proxy DNS
+    .field(v-if="id", :opt-true="syncON", @click="toggleSync")
+      .label {{t('tabs_menu.sync_label')}}
       .input
         .opt.-true {{t('settings.opt_true')}}
         .opt.-false {{t('settings.opt_false')}}
 
-  .options
-    .opt(v-if="haveTabs", @click="dedupTabs") {{t('tabs_menu.dedup_tabs')}}
-    .opt(v-if="haveTabs", @click="reloadAllTabs") {{t('tabs_menu.reload_all_tabs')}}
-    .opt(v-if="haveTabs", @click="closeAllTabs") {{t('tabs_menu.close_all_tabs')}}
-    .opt.-warn(v-if="id", @click="remove") {{t('tabs_menu.delete_container')}}
+    .field(v-if="id", :opt-true="locked", @click="toggleLock")
+      .label Lock
+      .input
+        .opt.-true {{t('settings.opt_true')}}
+        .opt.-false {{t('settings.opt_false')}}
+
+    .field(v-if="id", @mousedown="switchProxy($event)")
+      .label Proxy
+      .input
+        .opt(
+          v-for="o in proxyOpts"
+          :opt-none="o === 'direct'"
+          :opt-true="o === proxied") {{t('tabs_menu.proxy_' + o)}}
+
+    .box
+      .field(v-if="id && proxied !== 'direct'")
+        text-input.text(
+          or="host"
+          :value="proxyHost"
+          :valid="proxyHostValid"
+          @input="onProxyHostInput")
+
+      .field(v-if="id && proxied !== 'direct'")
+        text-input.text(
+          or="port"
+          :value="proxyPort"
+          :valid="proxyPortValid"
+          @input="onProxyPortInput")
+
+      .field(v-if="id && proxied !== 'direct'")
+        text-input.text(
+          :value="proxyUsername"
+          or="username"
+          valid="fine"
+          @input="onProxyUsernameInput")
+
+      .field(v-if="id && proxied !== 'direct'")
+        text-input.text(
+          :value="proxyPassword"
+          or="password"
+          valid="fine"
+          @input="onProxyPasswordInput")
+
+      .field(v-if="id && isSomeSocks", :opt-true="proxyDNS", @click="toggleProxyDns")
+        .label proxy DNS
+        .input
+          .opt.-true {{t('settings.opt_true')}}
+          .opt.-false {{t('settings.opt_false')}}
+
+    .options
+      .opt(v-if="haveTabs", @click="dedupTabs") {{t('tabs_menu.dedup_tabs')}}
+      .opt(v-if="haveTabs", @click="reloadAllTabs") {{t('tabs_menu.reload_all_tabs')}}
+      .opt(v-if="haveTabs", @click="closeAllTabs") {{t('tabs_menu.close_all_tabs')}}
+      .opt.-warn(v-if="id", @click="remove") {{t('tabs_menu.delete_container')}}
 </template>
 
 
@@ -90,6 +91,7 @@ import { mapGetters } from 'vuex'
 import Store from '../store'
 import State from '../store.state'
 import TextInput from './input.text'
+import ScrollBox from './scroll-box'
 
 const PROXY_HOST_RE = /\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/
 const PROXY_PORT_RE = /\d{2,5}/
@@ -99,6 +101,7 @@ export default {
 
   components: {
     TextInput,
+    ScrollBox,
   },
 
   props: {
@@ -235,7 +238,7 @@ export default {
       this.$emit('height')
     },
 
-    open() {
+    async open() {
       this.init()
       this.$emit('height')
       if (this.$refs.name) this.$refs.name.focus()
@@ -316,14 +319,13 @@ export default {
       this.$emit('close')
     },
 
-    init() {
+    async init() {
       // Edit existing tabs container
       if (this.conf.cookieStoreId) {
         this.id = this.conf.cookieStoreId
         this.name = this.conf.name
         this.color = this.colorOpts.findIndex(c => c.color === this.conf.color)
         this.icon = this.iconOpts.indexOf(this.conf.icon)
-        return
       }
 
       // Create new tabs container
@@ -332,8 +334,10 @@ export default {
         this.name = ''
         this.icon = 0
         this.color = 0
-        return
       }
+
+      await this.$nextTick()
+      if (this.$refs.scrollBox) this.$refs.scrollBox.recalcScroll()
     },
 
     toggleSync() {
@@ -450,6 +454,10 @@ export default {
 <style lang="stylus">
 @import '../../styles/mixins'
 
+.Menu
+  box(flex)
+  flex-direction: column
+
 .Menu > .title
   text(s: rem(18))
   color: var(--c-title-fg)
@@ -458,6 +466,11 @@ export default {
 .Menu .box
   box(relative)
   padding: 0 0 0 8px
+
+.Menu .scroll-box
+  size(max-h: calc(100vh - 200px))
+  flex-grow: 1
+  flex-shrink: 1
 
 .Menu .field
   box(relative)
