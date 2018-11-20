@@ -30,13 +30,13 @@
         .opt.-false {{t('settings.opt_false')}}
 
     .field(v-if="id", :opt-true="locked", @click="toggleLock")
-      .label Lock
+      .label {{t('tabs_menu.lock_label')}}
       .input
         .opt.-true {{t('settings.opt_true')}}
         .opt.-false {{t('settings.opt_false')}}
 
     .field(v-if="id", @mousedown="switchProxy($event)")
-      .label Proxy
+      .label {{t('tabs_menu.proxy_label')}}
       .input
         .opt(
           v-for="o in proxyOpts"
@@ -46,34 +46,47 @@
     .box
       .field(v-if="id && proxied !== 'direct'")
         text-input.text(
-          or="host"
+          ref="proxyHost"
+          :or="t('tabs_menu.proxy_host_placeholder')"
+          :line="true"
           :value="proxyHost"
           :valid="proxyHostValid"
-          @input="onProxyHostInput")
+          @input="onProxyHostInput"
+          @keydown="onFieldKeydown($event, 'proxyPort', 'name')")
 
       .field(v-if="id && proxied !== 'direct'")
         text-input.text(
-          or="port"
+          ref="proxyPort"
+          :or="t('tabs_menu.proxy_port_placeholder')"
+          :line="true"
           :value="proxyPort"
           :valid="proxyPortValid"
-          @input="onProxyPortInput")
+          @input="onProxyPortInput"
+          @keydown="onFieldKeydown($event, 'proxyUsername', 'proxyHost')")
 
-      .field(v-if="id && proxied !== 'direct'")
+      .field(v-if="id && proxied === 'socks'")
         text-input.text(
+          ref="proxyUsername"
+          valid="fine"
+          :or="t('tabs_menu.proxy_username_placeholder')"
+          :line="true"
           :value="proxyUsername"
-          or="username"
-          valid="fine"
-          @input="onProxyUsernameInput")
+          @input="onProxyUsernameInput"
+          @keydown="onFieldKeydown($event, 'proxyPassword', 'proxyPort')")
 
-      .field(v-if="id && proxied !== 'direct'")
+      .field(v-if="id && proxied === 'socks'")
         text-input.text(
-          :value="proxyPassword"
-          or="password"
+          ref="proxyPassword"
           valid="fine"
-          @input="onProxyPasswordInput")
+          :or="t('tabs_menu.proxy_password_placeholder')"
+          :line="true"
+          :value="proxyPassword"
+          :password="true"
+          @input="onProxyPasswordInput"
+          @keydown="onFieldKeydown($event, null, 'proxyUsername')")
 
       .field(v-if="id && isSomeSocks", :opt-true="proxyDNS", @click="toggleProxyDns")
-        .label proxy DNS
+        .label {{t('tabs_menu.proxy_dns_label')}}
         .input
           .opt.-true {{t('settings.opt_true')}}
           .opt.-false {{t('settings.opt_false')}}
@@ -93,8 +106,8 @@ import State from '../store.state'
 import TextInput from './input.text'
 import ScrollBox from './scroll-box'
 
-const PROXY_HOST_RE = /\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/
-const PROXY_PORT_RE = /\d{2,5}/
+const PROXY_HOST_RE = /^.{3,65536}$/
+const PROXY_PORT_RE = /^\d{2,5}$/
 
 export default {
   name: 'TabsMenu',
@@ -141,13 +154,7 @@ export default {
         { color: 'purple', colorCode: '#af51f5' },
       ],
       color: 0,
-      proxyOpts: [
-        'http',
-        'https',
-        'socks4',
-        'socks',
-        'direct',
-      ],
+      proxyOpts: ['http', 'https', 'socks4', 'socks', 'direct'],
     }
   },
 
@@ -369,12 +376,11 @@ export default {
         id: this.id,
         tabs: panel.tabs.map(t => t.id),
         type: this.proxyOpts[i],
-        host: '',
-        port: '',
-        username: '',
-        password: '',
-        proxyDNS: false,
-        failoverTimeout: this.failoverTimeout,
+        host: this.proxyHost,
+        port: this.proxyPort,
+        username: this.proxyUsername,
+        password: this.proxyPassword,
+        proxyDNS: this.proxyDNS,
       }
 
       let pi = State.proxiedPanels.findIndex(p => p.id === this.id)
@@ -445,6 +451,17 @@ export default {
       State.proxiedPanels.splice(pi, 1, proxy)
       Store.dispatch('saveState')
       Store.dispatch('updateProxiedTabs')
+    },
+
+    onFieldKeydown(e, nextFieldName, prevFieldName) {
+      if (e.code === 'Enter' || e.code === 'Tab') {
+        if (e.shiftKey) {
+          if (this.$refs[prevFieldName]) this.$refs[prevFieldName].focus()
+        } else {
+          if (this.$refs[nextFieldName]) this.$refs[nextFieldName].focus()
+        }
+        e.preventDefault()
+      }
     },
   },
 }
@@ -547,7 +564,4 @@ export default {
   > .placeholder
     padding: 0 0 2px
     color: var(--c-label-fg)
-  // &.err
-  //   transition: none
-  //   color: var(--bookmarks-editor-error-fg)
 </style>

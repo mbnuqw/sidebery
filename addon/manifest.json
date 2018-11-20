@@ -95,13 +95,13 @@
       "suggested_key": {
         "default": "Alt+Shift+Up"
       },
-      "description": "up"
+      "description": "up_shit"
     },
     "down_shift": {
       "suggested_key": {
         "default": "Alt+Shift+Down"
       },
-      "description": "down"
+      "description": "down_shift"
     },
     "activate": {
       "suggested_key": {

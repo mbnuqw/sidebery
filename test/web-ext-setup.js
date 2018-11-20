@@ -1,3 +1,5 @@
+const MsgHandlers = []
+
 const browser = {
   extension: {
     inIncognitoContext: false,
@@ -5,9 +7,19 @@ const browser = {
   i18n: {
     getUILanguage: () => 'en',
   },
+  runtime: {
+    sendMessage: (msg) => {
+      MsgHandlers.map(h => h(msg))
+    },
+    onMessage: {
+      addListener: handler => {
+        MsgHandlers.push(handler)
+      },
+    },
+  },
   windows: {
     getCurrent() {
-      return new Promise((res, rej) => {
+      return new Promise(res => {
         res({
           id: 123,
         })
@@ -15,7 +27,7 @@ const browser = {
     },
 
     getAll() {
-      return new Promise((res, rej) => {
+      return new Promise(res => {
         res([
           {
             id: 123,

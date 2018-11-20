@@ -1,88 +1,23 @@
-import Vue from 'vue'
-import jsdom from 'jsdom'
-import ContextMenu from './components/context-menu.vue'
+import CtxMenu from './context-menu'
 
-const renderer = require('vue-server-renderer').createRenderer()
+describe('ContextMenu helper', () => {
+  test('create new context menu', () => {
+    const el = 'element'
+    const offHandler = 'offHandler'
+    const ctxMenu = new CtxMenu(el, offHandler)
 
-describe('Context menu component', () => {
-  test('Rendering', () => {
-    const ClonedComponent = Vue.extend(ContextMenu)
-    const NewComponent = new ClonedComponent({
-      data() {
-        return {
-          aOpts: [['Option 1', () => {}], ['Option 2', () => {}]],
-        }
-      },
-    }).$mount()
+    expect(ctxMenu).toEqual(expect.objectContaining({
+      el: expect.stringMatching('element'),
+      off: expect.stringMatching('offHandler'),
+      opts: expect.any(Array)
+    }))
 
-    renderer.renderToString(NewComponent, (err, str) => {
-      const dom = new jsdom.JSDOM(str)
-      const optEls = dom.window.document.querySelectorAll('.CtxMenu > .container > .box > .opt')
-      expect(optEls['0'].textContent).toEqual('Option 1')
-      expect(optEls['1'].textContent).toEqual('Option 2')
-    })
-  })
-
-  describe('Computed values', () => {
-    test('posStyle (a/b)', () => {
-      const ClonedComponent = Vue.extend(ContextMenu)
-      const NewComponent = new ClonedComponent({
-        data() {
-          return {
-            bPos: 1000,
-          }
-        }
-      }).$mount()
-      expect(NewComponent.aPosStyle).toEqual(
-        expect.objectContaining({
-          transform: 'translateY(0px)'
-        })
-      )
-      expect(NewComponent.bPosStyle).toEqual(
-        expect.objectContaining({
-          transform: 'translateY(1000px)'
-        })
-      )
-    })
-  })
-
-  describe('parseLabel()', () => {
-    it('leaves simple labels untouched', () => {
-      const ClonedComponent = Vue.extend(ContextMenu)
-      const NewComponent = new ClonedComponent().$mount()
-
-      const parsedLabel = NewComponent.parseLabel('some label')
-      expect(parsedLabel).toHaveLength(1)
-      expect(parsedLabel[0].label).toEqual('some label')
-      expect(parsedLabel[0].color).toEqual('')
-      expect(parsedLabel[0].w).toEqual('')
-    })
-
-    it('parses labels with colorized parts', () => {
-      const ClonedComponent = Vue.extend(ContextMenu)
-      const NewComponent = new ClonedComponent().$mount()
-
-      const parsedLabel = NewComponent.parseLabel('Label with ||#1155aa>>blue|| part')
-      expect(parsedLabel).toHaveLength(3)
-      expect(parsedLabel).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({
-            label: 'Label with ',
-            color: '',
-            w: '',
-          }),
-          expect.objectContaining({
-            label: 'blue',
-            color: '#1155aa',
-            w: '600',
-          }),
-          expect.objectContaining({
-            label: ' part',
-            color: '',
-            w: '',
-          }),
-        ])
-      )
-    })
+    ctxMenu.add('label', 'arg1', 'arg2')
+    ctxMenu.addTranslated('Label', 'arg1')
+    expect(ctxMenu.opts).toHaveLength(2)
+    expect(ctxMenu.opts[0]).toHaveLength(3)
+    expect(ctxMenu.opts[0][0]).toBe('ctx_menu.label')
+    expect(ctxMenu.opts[1]).toHaveLength(2)
+    expect(ctxMenu.opts[1][0]).toBe('Label')
   })
 })

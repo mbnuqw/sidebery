@@ -86,6 +86,27 @@
   "tabs_menu.sync_label": {
     "message": "Синхронизация"
   },
+  "tabs_menu.lock_label": {
+    "message": "Заблокировать"
+  },
+  "tabs_menu.proxy_label": {
+    "message": "Прокси"
+  },
+  "tabs_menu.proxy_host_placeholder": {
+    "message": "Хост"
+  },
+  "tabs_menu.proxy_port_placeholder": {
+    "message": "Порт"
+  },
+  "tabs_menu.proxy_username_placeholder": {
+    "message": "Пользователь"
+  },
+  "tabs_menu.proxy_password_placeholder": {
+    "message": "Пароль"
+  },
+  "tabs_menu.proxy_dns_label": {
+    "message": "проксировать DNS"
+  },
   "tabs_menu.proxy_http": {
     "message": "http"
   },
@@ -354,6 +375,27 @@
   },
   "settings.close_tab": {
     "message": "Закрыть таб"
+  },
+  "settings.select_all": {
+    "message": "Выделить все"
+  },
+  "settings.up": {
+    "message": "Вверх"
+  },
+  "settings.down": {
+    "message": "Вниз"
+  },
+  "settings.up_shit": {
+    "message": "Вверх с выделением"
+  },
+  "settings.down_shift": {
+    "message": "Вниз с выделением"
+  },
+  "settings.activate": {
+    "message": "Активировать выделенное"
+  },
+  "settings.reset_selection": {
+    "message": "Сбросить выделенние"
   },
   "settings.reset_kb": {
     "message": "Сбросить клав. настройки"

@@ -86,6 +86,27 @@
   "tabs_menu.sync_label": {
     "message": "Sync"
   },
+  "tabs_menu.lock_label": {
+    "message": "Lock"
+  },
+  "tabs_menu.proxy_label": {
+    "message": "Proxy"
+  },
+  "tabs_menu.proxy_host_placeholder": {
+    "message": "host"
+  },
+  "tabs_menu.proxy_port_placeholder": {
+    "message": "port"
+  },
+  "tabs_menu.proxy_username_placeholder": {
+    "message": "username"
+  },
+  "tabs_menu.proxy_password_placeholder": {
+    "message": "password"
+  },
+  "tabs_menu.proxy_dns_label": {
+    "message": "proxy DNS"
+  },
   "tabs_menu.proxy_http": {
     "message": "http"
   },
@@ -354,6 +375,27 @@
   },
   "settings.close_tab": {
     "message": "Close tab and stay on current container"
+  },
+  "settings.select_all": {
+    "message": "Select all"
+  },
+  "settings.up": {
+    "message": "Up"
+  },
+  "settings.down": {
+    "message": "Down"
+  },
+  "settings.up_shit": {
+    "message": "Select up"
+  },
+  "settings.down_shift": {
+    "message": "Select down"
+  },
+  "settings.activate": {
+    "message": "Activate selection"
+  },
+  "settings.reset_selection": {
+    "message": "Reset selection"
   },
   "settings.reset_kb": {
     "message": "Reset Keybindings"
