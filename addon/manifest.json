@@ -75,7 +75,7 @@
     },
     "select_all": {
       "suggested_key": {
-        "default": "Ctrl+Alt+A"
+        "default": "Alt+G"
       },
       "description": "select_all"
     },
