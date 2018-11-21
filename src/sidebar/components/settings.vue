@@ -92,11 +92,39 @@
 
     section
       h2 Snapshots
+      div
+        .field.inline(:opt-true="snapshotPinned", @click="toggleSnapshotPinned")
+          .label Pinned
+          .input
+            .opt.-true {{t('settings.opt_true')}}
+            .opt.-false {{t('settings.opt_false')}}
+        .field.inline(:opt-true="snapshotDefault", @click="toggleSnapshotDefault")
+          .label Default
+          .input
+            .opt.-true {{t('settings.opt_true')}}
+            .opt.-false {{t('settings.opt_false')}}
+        .field.inline(
+          v-for="(c, i) in snapshotContiners"
+          :opt-true="c.active"
+          @click="toggleSnapshotContainer(i, c.id)")
+          .label(:style="{ color: c.color }") {{c.name}}
+          .input
+            .opt.-true {{t('settings.opt_true')}}
+            .opt.-false {{t('settings.opt_false')}}
+
+      .field(v-if="snapshotsIsON", @mousedown="switchOpt($event, 'snapshotsLimit')")
+        .label {{t('settings.snapshots_limit_label')}}
+        .input
+          .opt(
+            v-for="o in $store.state.snapshotsLimitOpts"
+            :opt-true="o === $store.state.snapshotsLimit") {{t('settings.snapshot_limit_' + o)}}
       .box
         .snapshot(v-for="(s, i) in snapshots", @click="applySnapshot(i)")
           .time {{utime(s.time)}}
+          .tabs.pinned {{tabsCount('pinned', s.tabs)}}
           .tabs {{tabsCount(null, s.tabs)}}
           .tabs(v-for="c in s.ctxs", :style="{color: c.colorCode}") {{tabsCount(c, s.tabs)}}
+        .label-btn(@click="viewAllSnapshots") view all
       .box
         .btn(@click="makeSnapshot") {{t('settings.make_snapshot')}}
         .btn.-warn(@click="removeAllSnapshots") {{t('settings.rm_all_snapshots')}}
@@ -156,6 +184,7 @@
 import { mapGetters } from 'vuex'
 import Utils from '../../libs/utils'
 import Logs from '../../libs/logs'
+import EventBus from '../event-bus'
 import Store from '../store'
 import State from '../store.state'
 import ScrollBox from './scroll-box'
@@ -191,6 +220,29 @@ export default {
 
     snapshots() {
       return State.snapshots
+    },
+
+    snapshotsIsON() {
+      return State.snapshotsTargets.reduce((a, s) => a || s, false)
+    },
+
+    snapshotPinned() {
+      return !!State.snapshotsTargets[0]
+    },
+
+    snapshotDefault() {
+      return !!State.snapshotsTargets[1]
+    },
+
+    snapshotContiners() {
+      return State.ctxs.map((c, i) => {
+        return {
+          id: c.cookieStoreId,
+          name: c.name,
+          color: c.colorCode,
+          active: !!State.snapshotsTargets[i + 2]
+        }
+      })
     },
   },
 
@@ -293,8 +345,33 @@ export default {
     },
 
     // --- Snapshot ---
+    toggleSnapshotPinned() {
+      State.snapshotsTargets[0] = !State.snapshotsTargets[0]
+      State.snapshotsTargets = [...State.snapshotsTargets]
+      Store.dispatch('saveSettings')
+    },
+    toggleSnapshotDefault() {
+      State.snapshotsTargets[1] = !State.snapshotsTargets[1]
+      State.snapshotsTargets = [...State.snapshotsTargets]
+      Store.dispatch('saveSettings')
+    },
+    toggleSnapshotContainer(i, name) {
+      if (State.snapshotsTargets[i + 2]) State.snapshotsTargets[i + 2] = false
+      else State.snapshotsTargets[i + 2] = name
+      State.snapshotsTargets = [...State.snapshotsTargets]
+      Store.dispatch('saveSettings')
+    },
+
+    viewAllSnapshots() {
+      EventBus.$emit('toggle-snapshots-list')
+    },
+
     tabsCount(ctx, tabs) {
-      if (!ctx) return tabs.filter(t => t.cookieStoreId === this.defaultCtxId).length
+      if (ctx === 'pinned') return tabs.filter(t => t.pinned).length
+      if (!ctx) return tabs.filter(t => {
+        return t.cookieStoreId === this.defaultCtxId
+          && !t.pinned
+      }).length
       return tabs.filter(t => t.cookieStoreId === ctx.cookieStoreId).length
     },
 
@@ -403,6 +480,14 @@ export default {
   color: var(--settings-label-fg)
   transition: color var(--d-fast)
 
+.Settings .field.inline
+  box(flex)
+  margin: 0 12px 2px 16px
+  justify-content: space-between
+  align-items: center
+  &:last-of-type
+    margin: 0 12px 12px 16px
+
 .Settings .field > .input
   box(relative, flex)
   flex-wrap: wrap
@@ -472,6 +557,23 @@ export default {
     size(min-w: 12px)
     text-align: right
     margin: 0 0 0 5px
+    &.pinned
+      color: var(--settings-snapshot-counter-pinned-fg)
+
+.Settings .label-btn
+  box(relative)
+  text(s: rem(14))
+  size(100%)
+  margin: 2px 0
+  text-align: center
+  color: var(--settings-label-btn-fg)
+  cursor: pointer
+  transition: opacity var(--d-fast)
+  &:hover
+    color: var(--settings-label-btn-fg-hover)
+  &:active
+    transition: none
+    color: var(--settings-label-btn-fg-active)
 
 // --- Keybindings ---
 .Settings .keybinding

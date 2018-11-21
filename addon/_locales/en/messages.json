@@ -351,6 +351,18 @@
     "message": "Animations"
   },
 
+  "settings.snapshots_limit_label": {
+    "message": "Keep for"
+  },
+  "settings.snapshot_limit_1d": {
+    "message": "1 day"
+  },
+  "settings.snapshot_limit_1w": {
+    "message": "1 week"
+  },
+  "settings.snapshot_limit_1m": {
+    "message": "1 month"
+  },
   "settings.make_snapshot": {
     "message": "Make snapshot"
   },
@@ -399,13 +411,6 @@
   },
   "settings.reset_kb": {
     "message": "Reset Keybindings"
-  },
-
-  "settings.experements_title": {
-    "message": "Experiments"
-  },
-  "settings.drag_tab_between_panels": {
-    "message": "Drag tab between panels"
   },
 
   "settings.help_title": {

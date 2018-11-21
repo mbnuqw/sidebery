@@ -10,6 +10,7 @@
   @mousedown="onMD")
   ctx-menu
   window-input(:is-active="!!winChoosing")
+  snapshots-list
   .bg(v-noise:300.g:12:af.a:0:42.s:0:9="", :style="bgPosStyle")
   .dimmer(@mousedown="closePanelMenu")
   .nav(ref="nav")
@@ -95,6 +96,7 @@ import TabsDefaultMenu from './tabs.default.menu'
 import TabsMenu from './tabs.menu'
 import SettingsPanel from './settings'
 import WindowInput from './input.window'
+import SnapshotsList from './snapshots-list'
 
 Vue.directive('noise', NoiseBg)
 
@@ -107,6 +109,7 @@ export default {
     TabsPanel,
     SettingsPanel,
     WindowInput,
+    SnapshotsList,
   },
 
   data() {

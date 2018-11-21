@@ -5,6 +5,7 @@ export const SETTINGS_OPTIONS = {
   tabLongRightClickOpts: ['close_down', 'reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'none'],
   fontSizeOpts: ['xs', 's', 'm', 'l', 'xl', 'xxl'],
   themeOpts: ['dark', 'light'],
+  snapshotsLimitOpts: ['1d', '1w', '1m']
 }
 
 export const DEFAULT_SETTINGS = {
@@ -20,10 +21,14 @@ export const DEFAULT_SETTINGS = {
   tabLongRightClick: 'none',
   openBookmarkNewTab: false,
   noEmptyDefault: false,
-
+  
   // Appearance
   fontSize: 'm',
   theme: 'dark',
   bgNoise: true,
   animations: true,
+
+  // Snapshots
+  snapshotsTargets: [true],
+  snapshotsLimit: '1w',
 }

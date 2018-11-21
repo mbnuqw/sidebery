@@ -71,7 +71,7 @@ export default new Vue({
     const dSavingState = Utils.Debounce(() => Store.dispatch('saveState'), 567)
     Store.watch(Getters.activePanel, dSavingState.func)
 
-    const dMakingSnapshot = Utils.Debounce(() => Store.dispatch('makeSnapshot'), 5000)
+    const dMakingSnapshot = Utils.Debounce(() => Store.dispatch('makeSnapshot'), 1000)
     Store.watch(Getters.tabs, dMakingSnapshot.func)
 
     await Store.dispatch('loadSettings')

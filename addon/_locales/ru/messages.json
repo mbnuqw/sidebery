@@ -351,6 +351,18 @@
     "message": "Анимации"
   },
 
+  "settings.snapshots_limit_label": {
+    "message": "Хранить"
+  },
+  "settings.snapshot_limit_1d": {
+    "message": "Сутки"
+  },
+  "settings.snapshot_limit_1w": {
+    "message": "Неделю"
+  },
+  "settings.snapshot_limit_1m": {
+    "message": "Месяц"
+  },
   "settings.make_snapshot": {
     "message": "Создать снепшот"
   },
@@ -399,13 +411,6 @@
   },
   "settings.reset_kb": {
     "message": "Сбросить клав. настройки"
-  },
-
-  "settings.experements_title": {
-    "message": "Эксперименты"
-  },
-  "settings.drag_tab_between_panels": {
-    "message": "Перетаскавать таб между панелями"
   },
 
   "settings.help_title": {

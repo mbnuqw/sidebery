@@ -7,6 +7,7 @@ import SyncActions from './actions/sync'
 import PanelsActions from './actions/panels'
 import TabsActions from './actions/tabs'
 import Bookmarks from './actions/bookmarks'
+import Snapshots from './actions/snapshots'
 
 export default {
   ...SavedStateActions,
@@ -17,6 +18,7 @@ export default {
   ...PanelsActions,
   ...TabsActions,
   ...Bookmarks,
+  ...Snapshots,
 
   // --- --- --- Misc --- --- ---
 
