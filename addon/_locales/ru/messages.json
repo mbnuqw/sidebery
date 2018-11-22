@@ -354,6 +354,15 @@
   "settings.snapshots_limit_label": {
     "message": "Хранить"
   },
+  "settings.snapshots_pinned_label": {
+    "message": "Закрепленные"
+  },
+  "settings.snapshots_default_label": {
+    "message": "Стандартные"
+  },
+  "settings.snapshots_view_all_label": {
+    "message": "просмотреть все"
+  },
   "settings.snapshot_limit_1d": {
     "message": "Сутки"
   },
@@ -451,6 +460,16 @@
   },
   "settings.rm_sync_data": {
     "message": "Удалить данные синхронизации"
+  },
+
+  "snapshots.snapshots_time_label": {
+    "message": "Время"
+  },
+  "snapshots.snapshots_tabs_label": {
+    "message": "Табы"
+  },
+  "snapshots.snapshots_close_label": {
+    "message": "Закрыть"
   }
 }
 

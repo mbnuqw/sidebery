@@ -1,11 +1,14 @@
 <template lang="pug">
 .SnapshotsList(v-noise:300.g:12:af.a:0:42.s:0:9="", :is-active="active" @click="cancel")
   .header
-    .datetime Date
-    .tabs Tabs
+    .datetime {{t('snapshots.snapshots_time_label')}}
+    .tabs {{t('snapshots.snapshots_tabs_label')}}
   scroll-box(ref="scrollBox")
     .box
-      .snapshot(v-for="s in snapshots", :title="firstFiveUrls(s.tabs)")
+      .snapshot(
+        v-for="s in snapshots"
+        :title="firstFiveUrls(s.tabs)"
+        @click="applySnapshot(s)")
         .datetime
           .date {{udate(s.time)}}
           .time {{utime(s.time)}}
@@ -14,7 +17,7 @@
         .tabs(v-for="c in s.ctxs", :style="{color: c.colorCode}") {{tabsCount(c, s.tabs)}}
     
   .ctrls
-    .btn Close
+    .btn {{t('snapshots.snapshots_close_label')}}
 </template>
 
 
@@ -38,7 +41,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['winChoosing']),
+    ...mapGetters(['winChoosing', 'defaultCtxId']),
   },
 
   created() {
@@ -81,6 +84,9 @@ export default {
       this.close()
     },
 
+    /**
+     * Get string containing urls of tabs.
+     */
     firstFiveUrls(tabs) {
       if (!tabs) return ''
       let out = tabs.length > 7 ? tabs.slice(0, 7) : tabs
@@ -92,27 +98,8 @@ export default {
       return outStr
     },
 
-    udate(sec) {
-      if (!sec) return null
-      const dt = new Date(sec * 1000)
-      let dtday = dt.getDate()
-      if (dtday < 10) dtday = '0' + dtday
-      let dtmth = dt.getMonth() + 1
-      if (dtmth < 10) dtmth = '0' + dtmth
-      return `${dt.getFullYear()}.${dtmth}.${dtday}`
-    },
-
-    utime(sec) {
-      if (!sec) return null
-      const dt = new Date(sec * 1000)
-      let dtsec = dt.getSeconds()
-      if (dtsec < 10) dtsec = '0' + dtsec
-      let dtmin = dt.getMinutes()
-      if (dtmin < 10) dtmin = '0' + dtmin
-      let dthr = dt.getHours()
-      if (dthr < 10) dthr = '0' + dthr
-      return `${dthr}:${dtmin}:${dtsec}`
-    },
+    udate: Utils.UDate,
+    utime: Utils.UTime,
 
     /**
      * Get tabs count for provided container
@@ -124,6 +111,13 @@ export default {
           && !t.pinned
       }).length
       return tabs.filter(t => t.cookieStoreId === ctx.cookieStoreId).length
+    },
+
+    /**
+     * Apply snapshot
+     */
+    applySnapshot(snapshot) {
+      Store.dispatch('applySnapshot', snapshot)
     },
   },
 }
@@ -148,12 +142,15 @@ export default {
 
 .SnapshotsList .header
   box(relative, flex)
-  text(s: rem(16))
+  text(s: rem(18))
   justify-content: space-between
   align-items: center
   color: var(--settings-label-fg)
-  padding: 6px 8px
+  padding: 8px 12px
 
+.SnapshotsList .box
+  box(relative)
+  padding: 0 0 1px
 
 .SnapshotsList .snapshot
   box(relative, flex)
@@ -161,7 +158,7 @@ export default {
   size(100%)
   color: var(--settings-label-fg)
   margin: 0 0 3px
-  padding: 3px 8px
+  padding: 3px 12px
   cursor: pointer
   opacity: .8
   transition: opacity var(--d-fast)

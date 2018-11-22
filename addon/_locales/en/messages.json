@@ -354,6 +354,15 @@
   "settings.snapshots_limit_label": {
     "message": "Keep for"
   },
+  "settings.snapshots_pinned_label": {
+    "message": "Pinned"
+  },
+  "settings.snapshots_default_label": {
+    "message": "Default"
+  },
+  "settings.snapshots_view_all_label": {
+    "message": "view all"
+  },
   "settings.snapshot_limit_1d": {
     "message": "1 day"
   },
@@ -451,5 +460,15 @@
   },
   "settings.rm_sync_data": {
     "message": "Remove sync data"
+  },
+
+  "snapshots.snapshots_time_label": {
+    "message": "Time"
+  },
+  "snapshots.snapshots_tabs_label": {
+    "message": "Tabs"
+  },
+  "snapshots.snapshots_close_label": {
+    "message": "Close"
   }
 }

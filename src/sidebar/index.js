@@ -68,12 +68,6 @@ export default new Vue({
     browser.storage.onChanged.addListener(this.onChangeStorage)
     browser.commands.onCommand.addListener(this.onCmd)
 
-    const dSavingState = Utils.Debounce(() => Store.dispatch('saveState'), 567)
-    Store.watch(Getters.activePanel, dSavingState.func)
-
-    const dMakingSnapshot = Utils.Debounce(() => Store.dispatch('makeSnapshot'), 1000)
-    Store.watch(Getters.tabs, dMakingSnapshot.func)
-
     await Store.dispatch('loadSettings')
     await Store.dispatch('loadState')
     Store.dispatch('updateProxiedTabs')
@@ -82,6 +76,12 @@ export default new Vue({
     await Store.dispatch('loadLocalID')
     await Store.dispatch('loadSyncPanels')
     await Store.dispatch('loadSnapshots')
+
+    const dSavingState = Utils.Debounce(() => Store.dispatch('saveState'), 567)
+    Store.watch(Getters.activePanel, dSavingState.func)
+
+    const dMakingSnapshot = Utils.Debounce(() => Store.dispatch('makeSnapshot'), 10000)
+    Store.watch(Getters.tabs, dMakingSnapshot.func)
   },
 
   mounted() {

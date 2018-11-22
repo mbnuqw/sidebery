@@ -94,12 +94,12 @@
       h2 Snapshots
       div
         .field.inline(:opt-true="snapshotPinned", @click="toggleSnapshotPinned")
-          .label Pinned
+          .label {{t('settings.snapshots_pinned_label')}}
           .input
             .opt.-true {{t('settings.opt_true')}}
             .opt.-false {{t('settings.opt_false')}}
         .field.inline(:opt-true="snapshotDefault", @click="toggleSnapshotDefault")
-          .label Default
+          .label {{t('settings.snapshots_default_label')}}
           .input
             .opt.-true {{t('settings.opt_true')}}
             .opt.-false {{t('settings.opt_false')}}
@@ -119,12 +119,17 @@
             v-for="o in $store.state.snapshotsLimitOpts"
             :opt-true="o === $store.state.snapshotsLimit") {{t('settings.snapshot_limit_' + o)}}
       .box
-        .snapshot(v-for="(s, i) in snapshots", @click="applySnapshot(i)")
+        .snapshot(
+          v-for="(s, i) in snapshots"
+          :title="firstFiveUrls(s.tabs)"
+          @click="applySnapshot(s)")
           .time {{utime(s.time)}}
           .tabs.pinned {{tabsCount('pinned', s.tabs)}}
           .tabs {{tabsCount(null, s.tabs)}}
           .tabs(v-for="c in s.ctxs", :style="{color: c.colorCode}") {{tabsCount(c, s.tabs)}}
-        .label-btn(@click="viewAllSnapshots") view all
+        .label-btn(
+          v-if="snapshots.length"
+          @click="viewAllSnapshots") {{t('settings.snapshots_view_all_label')}}
       .box
         .btn(@click="makeSnapshot") {{t('settings.make_snapshot')}}
         .btn.-warn(@click="removeAllSnapshots") {{t('settings.rm_all_snapshots')}}
@@ -326,23 +331,7 @@ export default {
       return s
     },
 
-    utime(sec) {
-      if (!sec) return null
-      const dt = new Date(sec * 1000)
-      let dtsec = dt.getSeconds()
-      if (dtsec < 10) dtsec = '0' + dtsec
-      let dtmin = dt.getMinutes()
-      if (dtmin < 10) dtmin = '0' + dtmin
-      let dthr = dt.getHours()
-      if (dthr < 10) dthr = '0' + dthr
-      let dtday = dt.getDate()
-      if (dtday < 10) dtday = '0' + dtday
-      let dtmth = dt.getMonth() + 1
-      if (dtmth < 10) dtmth = '0' + dtmth
-      const date = `${dtmth}.${dtday}`
-      const time = `${dthr}:${dtmin}:${dtsec}`
-      return `${date} - ${time}`
-    },
+    utime: Utils.UTime,
 
     // --- Snapshot ---
     toggleSnapshotPinned() {
@@ -375,8 +364,25 @@ export default {
       return tabs.filter(t => t.cookieStoreId === ctx.cookieStoreId).length
     },
 
-    applySnapshot(index) {
-      Store.dispatch('applySnapshot', index)
+    /**
+     * Get string containing urls of tabs.
+     */
+    firstFiveUrls(tabs) {
+      if (!tabs) return ''
+      let out = tabs.length > 7 ? tabs.slice(0, 7) : tabs
+      let outStr = out.map(t => {
+        if (t.url.length <= 36) return t.url
+        else return t.url.slice(0, 36) + '...'
+      }).join('\n')
+      if (tabs.length > 7) outStr += '\n...'
+      return outStr
+    },
+
+    /**
+     * Apply snapshot
+     */
+    applySnapshot(snapshot) {
+      Store.dispatch('applySnapshot', snapshot)
     },
 
     makeSnapshot() {
@@ -487,6 +493,12 @@ export default {
   align-items: center
   &:last-of-type
     margin: 0 12px 12px 16px
+  >.input
+    flex-shrink: 0
+  >.label
+    margin-right: 12px
+    overflow: hidden
+    text-overflow: ellipsis
 
 .Settings .field > .input
   box(relative, flex)
@@ -564,7 +576,7 @@ export default {
   box(relative)
   text(s: rem(14))
   size(100%)
-  margin: 2px 0
+  margin: 2px 0 8px
   text-align: center
   color: var(--settings-label-btn-fg)
   cursor: pointer

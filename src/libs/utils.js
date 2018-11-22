@@ -136,6 +136,34 @@ function GetPanelIndex(panels, tabId) {
   return panelIndex
 }
 
+/**
+ * Get date string from unix seconds
+ */
+function UDate(sec) {
+  if (!sec) return null
+  const dt = new Date(sec * 1000)
+  let dtday = dt.getDate()
+  if (dtday < 10) dtday = '0' + dtday
+  let dtmth = dt.getMonth() + 1
+  if (dtmth < 10) dtmth = '0' + dtmth
+  return `${dt.getFullYear()}.${dtmth}.${dtday}`
+}
+
+/**
+ * Get time string from unix seconds
+ */
+function UTime(sec) {
+  if (!sec) return null
+  const dt = new Date(sec * 1000)
+  let dtsec = dt.getSeconds()
+  if (dtsec < 10) dtsec = '0' + dtsec
+  let dtmin = dt.getMinutes()
+  if (dtmin < 10) dtmin = '0' + dtmin
+  let dthr = dt.getHours()
+  if (dthr < 10) dthr = '0' + dthr
+  return `${dthr}:${dtmin}:${dtsec}`
+}
+
 export default {
   Uid,
   Asap,
@@ -145,4 +173,6 @@ export default {
   BytesToStr,
   GetAllWindows,
   GetPanelIndex,
+  UDate,
+  UTime,
 }

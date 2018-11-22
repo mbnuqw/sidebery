@@ -40,7 +40,8 @@ export default {
         colorCode: c.colorCode,
       })
     }
-    if (tabs.length === 0 && ctxs.length === 0) return
+    console.log('[DEBUG] length of tabs', tabs.length);
+    if (tabs.length === 0) return
     const snapshot = { tabs, ctxs, time }
 
     // Check if there are changes from last five snapshots
@@ -63,7 +64,18 @@ export default {
       state.snapshots = state.snapshots.slice(0, 5)
     }
 
+    // Get all snapshots and remove all beyond limit
     const snapshots = await dispatch('loadAllSnapshots')
+    let limit = 0
+    if (state.snapshotsLimit === '1d') limit = 86400
+    if (state.snapshotsLimit === '1w') limit = 604800
+    if (state.snapshotsLimit === '1m') limit = 18144000
+
+    let i = 0
+    for (; i < snapshots.length; i++) {
+      if (time - limit < snapshots[i].time) break
+    }
+    snapshots.splice(0, i)
     snapshots.push(JSON.parse(JSON.stringify(state.snapshots[0])))
     await browser.storage.local.set({ snapshots })
   },
@@ -71,28 +83,32 @@ export default {
   /**
    * Restore contexs and tabs from snapshot
    */
-  applySnapshot({ state, dispatch }, index) {
-    const snapshot = state.snapshots[index]
+  async applySnapshot({ state, dispatch }, snapshot) {
     if (!snapshot) return
 
     // Restore contexts
-    snapshot.ctxs.map(c => {
+    const ctxIdMap = {}
+    for (let c of snapshot.ctxs) {
       const lctx = state.ctxs.find(lc => lc.cookieStoreId === c.cookieStoreId)
-      if (lctx) return
-      dispatch('createContext', { name: c.name, color: c.color, icon: c.icon })
-    })
+      if (lctx) continue
+      let nc = await dispatch('createContext', { name: c.name, color: c.color, icon: c.icon })
+      ctxIdMap[c.cookieStoreId] = nc.cookieStoreId
+    }
 
     // Restore tabs
-    snapshot.tabs.map(t => {
-      const ltab = state.ctxs.find(lt => lt.id === t.id && lt.url === t.url)
-      if (ltab) return
-      browser.tabs.create({
-        url: t.url,
-        active: t.active,
-        pinned: t.pinned,
-        cookieStoreId: t.cookieStoreId,
+    for (let t of snapshot.tabs) {
+      const ltab = state.tabs.find(lt => {
+        return lt.id === t.id
+          && lt.url === t.url
+          && lt.cookieStoreId === t.cookieStoreId
       })
-    })
+      if (ltab) continue
+      await browser.tabs.create({
+        url: t.url,
+        pinned: t.pinned,
+        cookieStoreId: ctxIdMap[t.cookieStoreId] || t.cookieStoreId,
+      })
+    }
     dispatch('loadTabs')
   },
 
