@@ -304,7 +304,7 @@
   },
 
   "settings.no_empty_default": {
-    "message": "Create new tab when emptying default panel"
+    "message": "Create new tab on emptying default panel"
   },
 
   "settings.open_bookmark_new_tab": {
@@ -344,6 +344,12 @@
   "settings.theme_light": {
     "message": "light"
   },
+  "settings.theme_custom": {
+    "message": "custom"
+  },
+  "settings.appearance_bg_color_label": {
+    "message": "Background color"
+  },
   "settings.bg_noise": {
     "message": "Frosted background"
   },
@@ -351,6 +357,9 @@
     "message": "Animations"
   },
 
+  "settings.snapshots_title": {
+    "message": "Снепшоты"
+  },
   "settings.snapshots_limit_label": {
     "message": "Keep for"
   },
@@ -455,8 +464,11 @@
   "settings.reset_settings": {
     "message": "Reset settings to defaults"
   },
+  "settings.rm_unused_favi_cache": {
+    "message": "Remove unused favicons"
+  },
   "settings.rm_favi_cache": {
-    "message": "Remove cached favicons"
+    "message": "Remove all favicons"
   },
   "settings.rm_sync_data": {
     "message": "Remove sync data"

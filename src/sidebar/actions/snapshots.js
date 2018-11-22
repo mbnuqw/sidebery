@@ -40,7 +40,6 @@ export default {
         colorCode: c.colorCode,
       })
     }
-    console.log('[DEBUG] length of tabs', tabs.length);
     if (tabs.length === 0) return
     const snapshot = { tabs, ctxs, time }
 

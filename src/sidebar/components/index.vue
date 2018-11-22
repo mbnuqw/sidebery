@@ -534,26 +534,35 @@ export default {
 
       // Handle url change
       if (change.hasOwnProperty('url')) {
-        const state = State.tabs[upIndex].url === change.url ? 1 : 0
         const i = State.updatedTabs.findIndex(t => t.id === tab.id)
         const info = State.updatedTabs[i]
         if (info) {
-          info.state = state
+          info.state = 0
           State.updatedTabs.splice(i, 1, info)
         } else {
-          State.updatedTabs.push({ id: tab.id, state })
+          State.updatedTabs.push({ id: tab.id, state: 0 })
         }
       }
 
       // Handle title change
       if (change.hasOwnProperty('title') && !tab.active) {
-        const i = State.updatedTabs.findIndex(t => t.id === tab.id)
-        if (i >= 0) {
-          const info = State.updatedTabs[i]
-          const panelIndex = Utils.GetPanelIndex(this.panels, tab.id)
-          info.panelIndex = panelIndex
-          info.state++
-          State.updatedTabs.splice(i, 1, info)
+        // If prev url start with 'http'
+        const prevTabState = State.tabs[upIndex]
+        if (!prevTabState.url.indexOf('http')) {
+          // And if prev title not just url
+          // which is default title value
+          const hn = prevTabState.url.split('/')[2]
+          const shn = hn.indexOf('www.') ? hn : hn.slice(4)
+          if (prevTabState.title.indexOf(shn)) {
+            const i = State.updatedTabs.findIndex(t => t.id === tab.id)
+            if (i >= 0) {
+              const info = State.updatedTabs[i]
+              const panelIndex = Utils.GetPanelIndex(this.panels, tab.id)
+              info.panelIndex = panelIndex
+              info.state++
+              State.updatedTabs.splice(i, 1, info)
+            }
+          }
         }
       }
 

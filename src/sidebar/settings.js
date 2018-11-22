@@ -1,8 +1,8 @@
 export const SETTINGS_OPTIONS = {
   scrollThroughTabsOpts: ['panel', 'global', 'none'],
   tabDoubleClickOpts: ['reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'none'],
-  tabLongLeftClickOpts: ['close_down', 'reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'none'],
-  tabLongRightClickOpts: ['close_down', 'reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'none'],
+  tabLongLeftClickOpts: ['reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'none'],
+  tabLongRightClickOpts: ['reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'none'],
   fontSizeOpts: ['xs', 's', 'm', 'l', 'xl', 'xxl'],
   themeOpts: ['dark', 'light'],
   snapshotsLimitOpts: ['1d', '1w', '1m']

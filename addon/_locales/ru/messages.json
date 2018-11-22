@@ -120,7 +120,7 @@
     "message": "socks5"
   },
   "tabs_menu.proxy_direct": {
-    "message": "none"
+    "message": "выкл"
   },
 
   "ctx_menu.open_in_new_window": {
@@ -344,6 +344,12 @@
   "settings.theme_light": {
     "message": "светлая"
   },
+  "settings.theme_custom": {
+    "message": "настроить..."
+  },
+  "settings.appearance_bg_color_label": {
+    "message": "Цвет фона"
+  },
   "settings.bg_noise": {
     "message": "Матовый задный фон"
   },
@@ -351,6 +357,9 @@
     "message": "Анимации"
   },
 
+  "settings.snapshots_title": {
+    "message": "Снепшоты"
+  },
   "settings.snapshots_limit_label": {
     "message": "Хранить"
   },
@@ -454,6 +463,9 @@
   },
   "settings.reset_settings": {
     "message": "Сбросить настройки"
+  },
+  "settings.rm_unused_favi_cache": {
+    "message": "Удалить неиспользуемые иконки"
   },
   "settings.rm_favi_cache": {
     "message": "Удалить кэш иконок"

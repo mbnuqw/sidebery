@@ -74,11 +74,15 @@
       .field(@mousedown="switchOpt($event, 'fontSize')")
         .label {{t('settings.font_size')}}
         .input
-          .opt(v-for="o in $store.state.fontSizeOpts", :opt-true="o === $store.state.fontSize") {{t('settings.font_size_' + o)}}
+          .opt(
+            v-for="o in $store.state.fontSizeOpts"
+            :opt-true="o === $store.state.fontSize") {{t('settings.font_size_' + o)}}
       .field(@mousedown="switchOpt($event, 'theme')")
         .label {{t('settings.switch_theme')}}
         .input
-          .opt(v-for="o in $store.state.themeOpts", :opt-true="o === $store.state.theme") {{t('settings.theme_' + o)}}
+          .opt(
+            v-for="o in $store.state.themeOpts"
+            :opt-true="o === $store.state.theme") {{t('settings.theme_' + o)}}
       .field(:opt-true="$store.state.bgNoise", @click="toggleOpt('bgNoise')")
         .label {{t('settings.bg_noise')}}
         .input
@@ -91,7 +95,7 @@
           .opt.-false {{t('settings.opt_false')}}
 
     section
-      h2 Snapshots
+      h2 {{t('settings.snapshots_title')}}
       div
         .field.inline(:opt-true="snapshotPinned", @click="toggleSnapshotPinned")
           .label {{t('settings.snapshots_pinned_label')}}
@@ -177,7 +181,8 @@
 
       .box
         .btn.-warn(@click="resetSettings") {{t('settings.reset_settings')}}
-        .btn.-warn(@click="clearFaviCache") {{t('settings.rm_favi_cache')}}
+        .btn.-warn(@click="clearFaviCache(false)") {{t('settings.rm_unused_favi_cache')}}
+        .btn.-warn(@click="clearFaviCache(true)") {{t('settings.rm_favi_cache')}}
         .btn.-warn(@click="clearSyncData") {{t('settings.rm_sync_data')}}
 
       a.github(tabindex="-1", href="https://github.com/mbnuqw/sidebery")
@@ -193,6 +198,7 @@ import EventBus from '../event-bus'
 import Store from '../store'
 import State from '../store.state'
 import ScrollBox from './scroll-box'
+import TextInput from './input.text'
 
 const VALID_SHORTCUT_62 = /^((Ctrl|Alt|Command|MacCtrl)\+)(Shift\+)?([A-Z0-9]|Comma|Period|Home|End|PageUp|PageDown|Space|Insert|Delete|Up|Down|Left|Right|F\d\d?)$|^((Ctrl|Alt|Command|MacCtrl)\+)?(Shift\+)?(F\d\d?)$/
 const VALID_SHORTCUT = /^((Ctrl|Alt|Command|MacCtrl)\+)((Shift|Alt)\+)?([A-Z0-9]|Comma|Period|Home|End|PageUp|PageDown|Space|Insert|Delete|Up|Down|Left|Right|F\d\d?)$|^((Ctrl|Alt|Command|MacCtrl)\+)?((Shift|Alt)\+)?(F\d\d?)$/
@@ -202,6 +208,7 @@ const ISSUE_URL = 'https://github.com/mbnuqw/sidebery/issues/new'
 export default {
   components: {
     ScrollBox,
+    TextInput,
   },
 
   data() {
@@ -430,10 +437,10 @@ export default {
     },
 
     /**
-     * Remove all cached favicons.
+     * Clear cached favicons.
      */
-    clearFaviCache() {
-      Store.dispatch('clearFaviCache')
+    clearFaviCache(all) {
+      Store.dispatch('clearFaviCache', { all })
     },
 
     /**
@@ -632,18 +639,10 @@ export default {
   opacity: 0
   z-index: -1
 
-.Settings .version
-  box(relative)
-  text(s: rem(14))
-  text-align: center
-  margin: 8px 16px
-  color: var(--settings-label-fg)
-  opacity: .6
-
 .Settings .github
   box(relative, block)
-  size(21px, same)
-  margin: 12px 16px 8px
+  size(23px, same)
+  margin: 18px auto 16px
   padding: 0
   opacity: .5
   &:hover
@@ -653,5 +652,5 @@ export default {
   > svg
     box(absolute)
     size(100%, same)
-    fill: var(--settings-label-fg)
+    fill: #646464
 </style>

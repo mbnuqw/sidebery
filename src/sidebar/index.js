@@ -38,7 +38,7 @@ export default new Vue({
 
   watch: {
     fontSize() {
-      this.updateFontSize()
+      Store.dispatch('updateFontSize')
     },
   },
 
@@ -72,10 +72,10 @@ export default new Vue({
     await Store.dispatch('loadState')
     Store.dispatch('updateProxiedTabs')
     await Store.dispatch('loadKebindings')
-    await Store.dispatch('loadFavicons')
     await Store.dispatch('loadLocalID')
     await Store.dispatch('loadSyncPanels')
     await Store.dispatch('loadSnapshots')
+    await Store.dispatch('loadFavicons')
 
     const dSavingState = Utils.Debounce(() => Store.dispatch('saveState'), 567)
     Store.watch(Getters.activePanel, dSavingState.func)
@@ -85,7 +85,7 @@ export default new Vue({
   },
 
   mounted() {
-    this.updateFontSize()
+    Store.dispatch('updateFontSize')
   },
 
   beforeDestroy() {
@@ -134,20 +134,6 @@ export default new Vue({
       Logs.D(`Run command: ${name}`)
       let cmdName = 'kb_' + name
       Store.dispatch(cmdName)
-    },
-
-    /**
-     * Update font size for 'html' tag.
-     */
-    updateFontSize() {
-      const htmlEl = document.documentElement
-      if (State.fontSize === 'xs') htmlEl.style.fontSize = '13.5px'
-      else if (State.fontSize === 's') htmlEl.style.fontSize = '14px'
-      else if (State.fontSize === 'm') htmlEl.style.fontSize = '14.5px'
-      else if (State.fontSize === 'l') htmlEl.style.fontSize = '15px'
-      else if (State.fontSize === 'xl') htmlEl.style.fontSize = '15.5px'
-      else if (State.fontSize === 'xxl') htmlEl.style.fontSize = '16px'
-      else htmlEl.style.fontSize = '14.5px'
     },
 
     /**

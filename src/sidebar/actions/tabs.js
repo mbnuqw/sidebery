@@ -73,13 +73,11 @@ export default {
       }
     }
 
-    if (tab.index === p.endIndex && p.tabs.length > 1) {
+    if (tab.index === p.endIndex && p.tabs.length > 1 && tab.active) {
       let prevTab = state.tabs[p.endIndex - 1]
       await browser.tabs.update(prevTab.id, { active: true })
-      browser.tabs.remove(tab.id)
-    } else {
-      browser.tabs.remove(tab.id)
     }
+    browser.tabs.remove(tab.id)
   },
 
   /**
