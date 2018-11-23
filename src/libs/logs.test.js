@@ -1,23 +1,29 @@
 import Logs from './logs'
 
 describe('Logs', () => {
-  test('Debug and Error messages', () => {
-    Logs.D('one', 'two')
-    Logs.E('some error', new Error('errr'))
+  test('Debug and Error messages in dev', () => {
+    process.env.NODE_ENV = 'development'
+    global.console = {
+      log: jest.fn(),
+      error: jest.fn(),
+    }
 
-    const jsonStr = Logs.GetJSON()
-    const logs = JSON.parse(jsonStr)
-    expect(logs).toHaveLength(2)
-    expect(logs).toEqual(expect.arrayContaining([
-      expect.objectContaining({
-        msg: expect.arrayContaining(['one', 'two']),
-        t: expect.any(Number),
-      }),
-      expect.objectContaining({
-        err: expect.stringMatching('Error: errr'),
-        msg: expect.stringMatching('some error'),
-        t: expect.any(Number),
-      })
-    ]))
+    Logs.D('logs')
+    Logs.E('error', new Error('badabum'))
+    expect(global.console.log).toBeCalled()
+    expect(global.console.error).toBeCalled()
+  })
+
+  test('Debug and Error messages in prod', () => {
+    process.env.NODE_ENV = 'production'
+    global.console = {
+      log: jest.fn(),
+      error: jest.fn(),
+    }
+
+    Logs.D('logs')
+    Logs.E('error', new Error('badabum'))
+    expect(global.console.log).not.toBeCalled()
+    expect(global.console.error).not.toBeCalled()
   })
 })

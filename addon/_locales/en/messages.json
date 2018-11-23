@@ -358,7 +358,7 @@
   },
 
   "settings.snapshots_title": {
-    "message": "Снепшоты"
+    "message": "Snapshots"
   },
   "settings.snapshots_limit_label": {
     "message": "Keep for"
