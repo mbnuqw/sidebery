@@ -86,6 +86,42 @@
   "tabs_menu.sync_label": {
     "message": "Sync"
   },
+  "tabs_menu.lock_label": {
+    "message": "Lock"
+  },
+  "tabs_menu.proxy_label": {
+    "message": "Proxy"
+  },
+  "tabs_menu.proxy_host_placeholder": {
+    "message": "host"
+  },
+  "tabs_menu.proxy_port_placeholder": {
+    "message": "port"
+  },
+  "tabs_menu.proxy_username_placeholder": {
+    "message": "username"
+  },
+  "tabs_menu.proxy_password_placeholder": {
+    "message": "password"
+  },
+  "tabs_menu.proxy_dns_label": {
+    "message": "proxy DNS"
+  },
+  "tabs_menu.proxy_http": {
+    "message": "http"
+  },
+  "tabs_menu.proxy_https": {
+    "message": "tls"
+  },
+  "tabs_menu.proxy_socks4": {
+    "message": "socks4"
+  },
+  "tabs_menu.proxy_socks": {
+    "message": "socks5"
+  },
+  "tabs_menu.proxy_direct": {
+    "message": "none"
+  },
 
   "ctx_menu.open_in_new_window": {
     "message": "Open in new window"
@@ -119,7 +155,10 @@
   },
 
   "ctx_menu.move_to_new_window": {
-    "message": "Move to New window"
+    "message": "Move to new window"
+  },
+  "ctx_menu.move_to_new_priv_window": {
+    "message": "Move to new private window"
   },
   "ctx_menu.move_to_another_window": {
     "message": "Move to another window"
@@ -157,6 +196,9 @@
   "ctx_menu.clear_cookies": {
     "message": "Clear cookies"
   },
+  "ctx_menu.tab_discard": {
+    "message": "Discard"
+  },
   "ctx_menu.tab_close_down": {
     "message": "Close all tabs underneath"
   },
@@ -166,11 +208,15 @@
   "ctx_menu.tab_duplicate": {
     "message": "Duplicate"
   },
+
   "ctx_menu.tabs_reopen_in_new_priv_window": {
     "message": "Reopen in new Private window"
   },
   "ctx_menu.tabs_reopen_in_new_window": {
     "message": "Reopen in new window"
+  },
+  "ctx_menu.tabs_discard": {
+    "message": "Discard"
   },
   "ctx_menu.tabs_bookmark": {
     "message": "Create bookmarks"
@@ -257,6 +303,10 @@
     "message": "none"
   },
 
+  "settings.no_empty_default": {
+    "message": "Create new tab on emptying default panel"
+  },
+
   "settings.open_bookmark_new_tab": {
     "message": "Open bookmark in new tab"
   },
@@ -294,11 +344,48 @@
   "settings.theme_light": {
     "message": "light"
   },
+  "settings.theme_custom": {
+    "message": "custom"
+  },
+  "settings.appearance_bg_color_label": {
+    "message": "Background color"
+  },
   "settings.bg_noise": {
     "message": "Frosted background"
   },
   "settings.animations": {
     "message": "Animations"
+  },
+
+  "settings.snapshots_title": {
+    "message": "Снепшоты"
+  },
+  "settings.snapshots_limit_label": {
+    "message": "Keep for"
+  },
+  "settings.snapshots_pinned_label": {
+    "message": "Pinned"
+  },
+  "settings.snapshots_default_label": {
+    "message": "Default"
+  },
+  "settings.snapshots_view_all_label": {
+    "message": "view all"
+  },
+  "settings.snapshot_limit_1d": {
+    "message": "1 day"
+  },
+  "settings.snapshot_limit_1w": {
+    "message": "1 week"
+  },
+  "settings.snapshot_limit_1m": {
+    "message": "1 month"
+  },
+  "settings.make_snapshot": {
+    "message": "Make snapshot"
+  },
+  "settings.rm_all_snapshots": {
+    "message": "Remove all snapshots"
   },
 
   "settings.kb_title": {
@@ -319,15 +406,29 @@
   "settings.close_tab": {
     "message": "Close tab and stay on current container"
   },
+  "settings.select_all": {
+    "message": "Select all"
+  },
+  "settings.up": {
+    "message": "Up"
+  },
+  "settings.down": {
+    "message": "Down"
+  },
+  "settings.up_shit": {
+    "message": "Select up"
+  },
+  "settings.down_shift": {
+    "message": "Select down"
+  },
+  "settings.activate": {
+    "message": "Activate selection"
+  },
+  "settings.reset_selection": {
+    "message": "Reset selection"
+  },
   "settings.reset_kb": {
     "message": "Reset Keybindings"
-  },
-
-  "settings.experements_title": {
-    "message": "Experiments"
-  },
-  "settings.drag_tab_between_panels": {
-    "message": "Drag tab between panels"
   },
 
   "settings.help_title": {
@@ -363,10 +464,23 @@
   "settings.reset_settings": {
     "message": "Reset settings to defaults"
   },
+  "settings.rm_unused_favi_cache": {
+    "message": "Remove unused favicons"
+  },
   "settings.rm_favi_cache": {
-    "message": "Remove cached favicons"
+    "message": "Remove all favicons"
   },
   "settings.rm_sync_data": {
     "message": "Remove sync data"
+  },
+
+  "snapshots.snapshots_time_label": {
+    "message": "Time"
+  },
+  "snapshots.snapshots_tabs_label": {
+    "message": "Tabs"
+  },
+  "snapshots.snapshots_close_label": {
+    "message": "Close"
   }
 }

@@ -1,3 +1,6 @@
+import Utils from '../../libs/utils'
+import EventBus from '../event-bus'
+
 export default {
   /**
    * Load all tabs for current window
@@ -58,19 +61,58 @@ export default {
   async removeTab({ state, getters }, tab) {
     let p = getters.panels.find(p => p.cookieStoreId === tab.cookieStoreId)
     if (!p || !p.tabs) return
-    if (tab.index === p.endIndex && p.tabs.length > 1) {
+    if (state.lockedPanels.includes(tab.cookieStoreId) && tab.url.indexOf('about')) {
+      return
+    }
+
+    if (state.noEmptyDefault && tab.cookieStoreId === getters.defaultCtxId) {
+      const panelIndex = Utils.GetPanelIndex(getters.panels, tab.id)
+      const panelTabs = getters.panels[panelIndex].tabs
+      if (panelTabs && panelTabs.length === 1) {
+        await browser.tabs.create({ active: true })
+      }
+    }
+
+    if (tab.index === p.endIndex && p.tabs.length > 1 && tab.active) {
       let prevTab = state.tabs[p.endIndex - 1]
       await browser.tabs.update(prevTab.id, { active: true })
-      browser.tabs.remove(tab.id)
-    } else {
-      browser.tabs.remove(tab.id)
     }
+    browser.tabs.remove(tab.id)
   },
 
   /**
-   * Remove all tabs underneath.
+   * Close tabs
    */
-  closeTabsDown({ getters }, tabId) {
+  async closeTabs({ state }, tabIds) {
+    const tabs = []
+    const toRemove = []
+    for (let id of tabIds) {
+      const tab = state.tabs.find(t => t.id === id)
+      if (!tab) continue
+      if (state.lockedPanels.includes(tab.cookieStoreId) && tab.url.indexOf('about')) continue
+      tabs.push(tab)
+      toRemove.push(tab.id)
+    }
+
+    // Try activate prev tab
+    const activeTab = tabs.find(t => t.active)
+    if (activeTab) {
+      const firstTab = tabs.reduce((acc, t) => {
+        return acc.index <= t.index ? acc : t
+      })
+      const prevTab = state.tabs.find(t => t.index === firstTab.index - 1)
+      if (prevTab && prevTab.cookieStoreId === firstTab.cookieStoreId) {
+        await browser.tabs.update(prevTab.id, { active: true })
+      }
+    }
+
+    browser.tabs.remove(toRemove)
+  },
+
+  /**
+   * Remove all tabs underneath. TODO: replace with closeTabs()
+   */
+  closeTabsDown({ state, getters }, tabId) {
     let tabIndex
     const panel = getters.panels.find(p => {
       if (!p.tabs) return false
@@ -78,6 +120,7 @@ export default {
       if (tabIndex !== -1) return true
     })
     if (!panel) return
+    if (state.lockedPanels.includes(panel.cookieStoreId)) return
 
     if (!panel.tabs || !panel.tabs[tabIndex]) return
     const tabs = panel.tabs.slice(tabIndex)
@@ -122,6 +165,22 @@ export default {
   },
 
   /**
+   * Reload tabs
+   */
+  reloadTabs(_, tabIds = []) {
+    for (let tabId of tabIds) {
+      browser.tabs.reload(tabId)
+    }
+  },
+
+  /**
+   * Discard tabs
+   */
+  discardTabs(_, tabIds = []) {
+    browser.tabs.discard(tabIds)
+  },
+
+  /**
    * Activate last active tab on the panel
    */
   activateLastActiveTabOf({ state, getters }, panelIndex) {
@@ -138,5 +197,169 @@ export default {
     // Or just last
     const lastTab = p.tabs[p.tabs.length - 1]
     if (lastTab) browser.tabs.update(lastTab.id, { active: true })
+  },
+
+  /**
+   * (un)Pin tabs
+   */
+  pinTabs(_, tabIds) {
+    for (let tabId of tabIds) browser.tabs.update(tabId, { pinned: true })
+  },
+  unpinTabs(_, tabIds) {
+    for (let tabId of tabIds) browser.tabs.update(tabId, { pinned: false })
+  },
+  repinTabs({ state }, tabIds) {
+    for (let tabId of tabIds) {
+      let tab = state.tabs.find(t => t.id === tabId)
+      if (!tab) continue
+      browser.tabs.update(tabId, { pinned: !tab.pinned })
+    }
+  },
+
+  /**
+   * (un)Mute tabs
+   */
+  muteTabs(_, tabIds) {
+    for (let tabId of tabIds) browser.tabs.update(tabId, { muted: true })
+  },
+  unmuteTabs(_, tabIds) {
+    for (let tabId of tabIds) browser.tabs.update(tabId, { muted: false })
+  },
+  remuteTabs({ state }, tabIds) {
+    for (let tabId of tabIds) {
+      let tab = state.tabs.find(t => t.id === tabId)
+      if (!tab) continue
+      browser.tabs.update(tabId, { muted: !tab.mutedInfo.muted })
+    }
+  },
+
+  /**
+   * Duplicate tabs
+   */
+  duplicateTabs({ state }, tabIds) {
+    for (let tabId of tabIds) {
+      let tab = state.tabs.find(t => t.id === tabId)
+      if (!tab) continue
+      if (state.lockedPanels.includes(tab.cookieStoreId)) continue
+      browser.tabs.duplicate(tabId)
+    }
+  },
+
+  /**
+   * Create bookmarks from tabs
+   */
+  bookmarkTabs({ state }, tabIds) {
+    for (let tabId of tabIds) {
+      let tab = state.tabs.find(t => t.id === tabId)
+      if (!tab) continue
+      browser.bookmarks.create({ title: tab.title, url: tab.url })
+    }
+  },
+
+  /**
+   * Clear all cookies of tab urls
+   */
+  async clearTabsCookies({ state }, tabIds) {
+    for (let tabId of tabIds) {
+      let tab = state.tabs.find(t => t.id === tabId)
+      if (!tab) continue
+
+      EventBus.$emit('tabLoadingStart', tab.id)
+
+      let url = new URL(tab.url)
+      let domain = url.hostname
+        .split('.')
+        .slice(-2)
+        .join('.')
+
+      if (!domain) {
+        EventBus.$emit('tabLoadingErr', tab.id)
+        break
+      }
+
+      let cookies = await browser.cookies.getAll({
+        domain: domain,
+        storeId: tab.cookieStoreId,
+      })
+      let fpcookies = await browser.cookies.getAll({
+        firstPartyDomain: domain,
+        storeId: tab.cookieStoreId,
+      })
+
+      const clearing = cookies.concat(fpcookies).map(c => {
+        return browser.cookies.remove({
+          storeId: tab.cookieStoreId,
+          url: tab.url,
+          name: c.name,
+        })
+      })
+
+      Promise.all(clearing)
+        .then(() => setTimeout(() => EventBus.$emit('tabLoadingOk', tab.id), 250))
+        .catch(() => setTimeout(() => EventBus.$emit('tabLoadingErr', tab.id), 250))
+    }
+  },
+
+  /**
+   * Create new window with first tab
+   * and then move other tabs.
+   */
+  async moveTabsToNewWin({ state }, { tabIds, incognito }) {
+    const first = tabIds.shift()
+    const firstTab = state.tabs.find(t => t.id === first)
+    if (!firstTab) return
+    const rest = [...tabIds]
+
+    if (state.private === incognito) {
+      const win = await browser.windows.create({ tabId: first, incognito })
+      browser.tabs.move(rest, { windowId: win.id, index: -1 })
+    } else {
+      const win = await browser.windows.create({ url: firstTab.url, incognito })
+      browser.tabs.remove(first)
+      for (let tabId of rest) {
+        let tab = state.tabs.find(t => t.id === tabId)
+        if (!tab) continue
+        browser.tabs.create({ windowId: win.id, url: tab.url })
+        browser.tabs.remove(tabId)
+      }
+    }
+  },
+
+  /**
+   *  Move tabs to window if provided,
+   * otherwise show window-choosing menu.
+   */
+  async moveTabsToWin({ state, dispatch }, { tabIds, window }) {
+    const ids = [...tabIds]
+    const windowId = window ? window.id : await dispatch('chooseWin')
+    const win = (await Utils.GetAllWindows()).find(w => w.id === windowId)
+
+    if (state.private === win.incognito) {
+      browser.tabs.move(ids, { windowId, index: -1 })
+    } else {
+      for (let id of ids) {
+        let tab = state.tabs.find(t => t.id === id)
+        if (!tab) continue
+        browser.tabs.create({ url: tab.url, windowId })
+        browser.tabs.remove(id)
+      }
+    }
+  },
+
+  /**
+   * Move tabs (reopen url) in provided context.
+   */
+  async moveTabsToCtx({ state }, { tabIds, ctxId }) {
+    const ids = [...tabIds]
+    for (let tabId of ids) {
+      let tab = state.tabs.find(t => t.id === tabId)
+      if (!tab) return
+
+      await browser.tabs.create({
+        cookieStoreId: ctxId,
+        url: tab.url.indexOf('http') ? null : tab.url
+      })
+      await browser.tabs.remove(tab.id)
+    }
   },
 }

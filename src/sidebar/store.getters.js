@@ -8,9 +8,7 @@ export default {
   ctxMenu: s => s.ctxMenu,
   ctxMenuOpened: s => !!s.ctxMenu,
   winChoosing: s => s.winChoosing,
-
-  showTabRmBtn: s => s.showTabRmBtn,
-
+  tabs: s => s.tabs,
   defaultCtxId: s => (s.private ? PRIVATE_CTX : DEFAULT_CTX),
 
   /**

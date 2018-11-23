@@ -1,6 +1,7 @@
 import Logs from '../../libs/logs'
 import EventBus from '../event-bus'
 import Utils from '../../libs/utils'
+import ReqHandler from '../proxy'
 
 export default {
   /**
@@ -11,11 +12,49 @@ export default {
   },
 
   /**
+   * Create new conte...
+   */
+  async createContext(_, { name, color, icon }) {
+    const details = { name, color, icon }
+    return await browser.contextualIdentities.create(details)
+  },
+
+  async checkContextBindings({ state }, ctxId) {
+    const ctx = state.ctxs.find(c => c.cookieStoreId === ctxId)
+    if (!ctx) return
+
+    const binding = ctx.name.split('@')[1]
+    if (!binding) return
+
+    let urls
+    const findWalk = nodes => {
+      return nodes.map(n => {
+        if (!n.children) return
+        if (n.children && n.title === binding) {
+          urls = n.children.map(ch => ch.url)
+        } else if (n.children && !urls) {
+          findWalk(n.children)
+        }
+        return n
+      })
+    }
+    findWalk(state.bookmarks)
+
+    if (!urls) return
+    for (let url of urls) {
+      if (!ctx.tabs) continue
+      if (ctx.tabs.find(t => t.url === url)) continue
+      browser.tabs.create({ url: url, cookieStoreId: ctxId })
+    }
+  },
+
+  /**
    * Switch current active panel by index
    */
   switchToPanel({ state, getters, commit, dispatch }, index) {
     commit('closeSettings')
     commit('closeCtxMenu')
+    commit('resetSelection')
     commit('setPanel', index)
     if (state.panelMenuOpened) EventBus.$emit('openPanelMenu', state.panelIndex)
     if (state.createNewTabOnEmptyPanel) {
@@ -46,6 +85,7 @@ export default {
     Logs.D(`Try to switch panel from: ${state.panelIndex} to: ${state.panelIndex + dir}`)
 
     commit('closeCtxMenu')
+    commit('resetSelection')
     if (state.settingsOpened) return commit('closeSettings')
 
     // Next
@@ -100,6 +140,7 @@ export default {
       }
     }
 
+    dispatch('checkContextBindings', getters.panels[state.panelIndex].cookieStoreId)
     dispatch('recalcPanelScroll')
   },
 
@@ -110,5 +151,43 @@ export default {
     let i = Utils.getPanelIndex(getters.panels)
     if (i === -1) return
     dispatch('switchToPanel', i)
+  },
+
+  /**
+   * Update proxied tabs.
+   * 
+   * I should call this action after proxy settings
+   * change and after creating new tag for 
+   * proxied panel.
+   * 
+   * In case I activate proxy settings
+   * I should get all current tabs ids
+   * and put them in proxy request filter.
+   * Than just create listener.
+   * 
+   * If there is some new tab appeared
+   * I'll just create new req listener with
+   * only one tabId.
+   * 
+   * If got proxy settings turned off
+   * I'll remove all listeners.
+   * 
+   * And I should make this action idempotent.
+   */
+  updateProxiedTabs({ state, dispatch }) {
+    if (state.proxiedPanels.length) dispatch('turnOnProxy')
+    else dispatch('turnOffProxy')
+  },
+
+  turnOnProxy() {
+    if (!browser.proxy.onRequest.hasListener(ReqHandler)) {
+      browser.proxy.onRequest.addListener(ReqHandler, { urls: ['<all_urls>'] })
+    }
+  },
+
+  turnOffProxy() {
+    if (browser.proxy.onRequest.hasListener(ReqHandler)) {
+      browser.proxy.onRequest.removeListener(ReqHandler)
+    }
   },
 }

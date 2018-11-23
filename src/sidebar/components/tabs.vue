@@ -66,7 +66,6 @@ export default {
       topOffset: 0,
       selection: null,
       selectionMenuEl: null,
-      selectedTabs: [],
       drag: null,
       dragTabs: [],
       dragEls: [],
@@ -79,6 +78,26 @@ export default {
     EventBus.$on('recalcPanelScroll', () => {
       if (this.index !== State.panelIndex) return
       this.recalcScroll()
+    })
+
+    // Handle key navigation
+    EventBus.$on('keyActivate', () => {
+      if (State.panelIndex === this.index) this.onKeyActivate()
+    })
+    EventBus.$on('keyUp', () => {
+      if (State.panelIndex === this.index) this.onKeySelect(-1)
+    })
+    EventBus.$on('keyDown', () => {
+      if (State.panelIndex === this.index) this.onKeySelect(1)
+    })
+    EventBus.$on('keyUpShift', () => {
+      if (State.panelIndex === this.index) this.onKeySelectChange(-1)
+    })
+    EventBus.$on('keyDownShift', () => {
+      if (State.panelIndex === this.index) this.onKeySelectChange(1)
+    })
+    EventBus.$on('selectAll', () => {
+      if (State.panelIndex === this.index) State.selectedTabs = this.tabs.map(t => t.id)
     })
   },
 
@@ -122,7 +141,7 @@ export default {
       if (!this.selection.active && Math.abs(e.clientY - this.selection.y) > 10) {
         this.selection.active = true
         Store.commit('closeCtxMenu')
-        this.selectedTabs.push(this.selection.id)
+        State.selectedTabs.push(this.selection.id)
         this.recalcDragTabs()
       }
 
@@ -135,15 +154,15 @@ export default {
           if (this.selection.i > tab.index) {
             if (moveY < tab.top + tab.h) {
               // Select
-              if (!this.selectedTabs.includes(tab.id)) {
-                this.selectedTabs.push(tab.id)
+              if (!State.selectedTabs.includes(tab.id)) {
+                State.selectedTabs.push(tab.id)
                 this.selectionMenuEl = tab.el
               }
             } else {
               // Deselect
-              let index = this.selectedTabs.findIndex(id => id === tab.id)
+              let index = State.selectedTabs.findIndex(id => id === tab.id)
               if (index >= 0) {
-                this.selectedTabs.splice(index, 1)
+                State.selectedTabs.splice(index, 1)
                 this.selectionMenuEl = this.dragTabs[i + 1].el
               }
             }
@@ -153,15 +172,15 @@ export default {
           if (this.selection.i < tab.index) {
             if (moveY > tab.top) {
               // Select
-              if (!this.selectedTabs.includes(tab.id)) {
-                this.selectedTabs.push(tab.id)
+              if (!State.selectedTabs.includes(tab.id)) {
+                State.selectedTabs.push(tab.id)
                 this.selectionMenuEl = tab.el
               }
             } else {
               // Deselect
-              let index = this.selectedTabs.findIndex(id => id === tab.id)
+              let index = State.selectedTabs.findIndex(id => id === tab.id)
               if (index >= 0) {
-                this.selectedTabs.splice(index, 1)
+                State.selectedTabs.splice(index, 1)
                 this.selectionMenuEl = this.dragTabs[i - 1].el
               }
             }
@@ -170,76 +189,71 @@ export default {
       }
     },
 
+    /**
+     * Open context menu
+     */
     async onTabsSelectionEnd() {
       if (this.selection && !this.selection.active) {
         this.selection = null
         return
       }
-      if (this.selection && this.selectedTabs.length < 2) {
+      if (this.selection && State.selectedTabs.length < 2) {
         this.selection = null
-        this.selectedTabs = []
+        State.selectedTabs = []
         return
       }
       this.selection = null
       if (!this.selectionMenuEl) return this.closeSelectionMenu()
 
-      let windows = await Utils.GetAllWindows()
-      let otherWindows = []
-      let otherDefWindows = []
-      let privateWindow
-      windows.map(w => {
-        if (!privateWindow && w.incognito) privateWindow = w
-        if (!w.current) otherWindows.push(w)
-        if (!w.current && !w.incognito) otherDefWindows.push(w)
-      })
-
+      const otherWindows = (await Utils.GetAllWindows()).filter(w => !w.current)
       const menu = new CtxMenu(this.selectionMenuEl, this.closeSelectionMenu)
+
+      // Move to new window
+      let args = { tabIds: State.selectedTabs }
+      menu.add('move_to_new_window', 'moveTabsToNewWin', args)
+
+      // Move to new private window
+      args = { tabIds: State.selectedTabs, incognito: true }
+      menu.add('move_to_new_priv_window', 'moveTabsToNewWin', args)
+
+      // Move to another window
+      if (otherWindows.length === 1) {
+        const args = { tabIds: State.selectedTabs, window: otherWindows[0] }
+        menu.add('move_to_another_window', 'moveTabsToWin', args)
+      }
+
+      // Move to window...
+      if (otherWindows.length > 1) {
+        menu.add('move_to_window_', 'moveTabsToWin', { tabIds: State.selectedTabs })
+      }
 
       // Default window
       if (!State.private) {
-        // Move to new window
-        menu.add('move_to_new_window', this.moveSelectedTabsToNewWin)
-
-        // Move to windows
-        if (otherDefWindows.length === 1) {
-          menu.add('move_to_another_window', () => this.moveToWin(otherDefWindows[0]))
-        }
-        if (otherDefWindows.length > 1) menu.add('move_to_window_', this.moveToWin)
-
-        // Reopen in new private window
-        menu.add('tabs_reopen_in_new_priv_window', () => this.reopenInNewWin({ incognito: true }))
-
         // Reopen in containers
         if (this.storeId !== 'firefox-default') {
-          menu.add('reopen_in_default_panel', this.openInPanel, 'firefox-default')
+          const args = { tabIds: State.selectedTabs, ctxId: 'firefox-default'}
+          menu.add('reopen_in_default_panel', 'moveTabsToCtx', args)
         }
         State.ctxs.map(c => {
           if (this.storeId === c.cookieStoreId) return
+          const args = { tabIds: State.selectedTabs, ctxId: c.cookieStoreId}
           const label = this.t('ctx_menu.re_open_in_') + `||${c.colorCode}>>${c.name}`
-          menu.addTranslated(label, this.openInPanel, c.cookieStoreId)
+          menu.addTranslated(label, 'moveTabsToCtx', args)
         })
       }
 
-      // Private window
-      if (State.private) {
-        menu.add('tabs_reopen_in_new_window', () => this.reopenInNewWin())
-        if (otherWindows.length === 1) {
-          menu.add('reopen_in_another_window', () => this.reopenInWin(otherWindows[0]))
-        }
-        if (otherWindows.length > 1) menu.add('reopen_in_window_', this.reopenInWin)
-      }
-
-      menu.add('pin', this.pinSelectedTabs)
-      menu.add('tabs_bookmark', this.bookmarkSelectedTabs)
-      menu.add('tabs_reload', this.reloadSelectedTabs)
-      menu.add('tabs_close', this.closeSelectedTabs)
+      menu.add('pin', 'pinTabs', State.selectedTabs)
+      menu.add('tabs_discard', 'discardTabs', State.selectedTabs)
+      menu.add('tabs_bookmark', 'bookmarkTabs', State.selectedTabs)
+      menu.add('tabs_reload', 'reloadTabs', State.selectedTabs)
+      menu.add('tabs_close', 'closeTabs', State.selectedTabs)
 
       Store.commit('closeCtxMenu')
       State.ctxMenu = menu
     },
 
     closeSelectionMenu() {
-      this.selectedTabs = []
+      State.selectedTabs = []
     },
 
     onTabMove(e) {
@@ -391,6 +405,57 @@ export default {
       this.$emit('panel-loading-err')
     },
 
+    onKeySelect(dir) {
+      if (this.tabs.length === 0) return
+
+      if (State.selectedTabs.length === 0) {
+        let activeTab = this.tabs.find(t => t.active)
+        if (activeTab) {
+          State.selectedTabs.push(activeTab.id)
+        } else if (dir < 0) {
+          State.selectedTabs.push(this.tabs[this.tabs.length - 1].id)
+        } else if (dir > 0) {
+          State.selectedTabs.push(this.tabs[0].id)
+        }
+        return
+      }
+
+      const selId = State.selectedTabs[0]
+      let index = this.tabs.findIndex(t => t.id === selId) + dir
+      if (index < 0) index = 0
+      if (index >= this.tabs.length) index = this.tabs.length - 1
+      State.selectedTabs = [this.tabs[index].id]
+    },
+
+    onKeySelectChange(dir) {
+      if (State.selectedTabs.length === 0) return
+
+      if (State.selectedTabs.length === 1) {
+        const selId = State.selectedTabs[0]
+        let index = this.tabs.findIndex(t => t.id === selId)
+        this.selStartIndex = index
+        this.selEndIndex = index + dir
+      } else {
+        this.selEndIndex = this.selEndIndex + dir
+      }
+      if (this.selEndIndex < 0) this.selEndIndex = 0
+      if (this.selEndIndex >= this.tabs.length) this.selEndIndex = this.tabs.length - 1
+
+      let minIndex = Math.min(this.selStartIndex, this.selEndIndex)
+      let maxIndex = Math.max(this.selStartIndex, this.selEndIndex)
+      State.selectedTabs = []
+      for (let i = minIndex; i <= maxIndex; i++) {
+        State.selectedTabs.push(this.tabs[i].id)
+      }
+    },
+
+    onKeyActivate() {
+      if (this.tabs.length === 0) return
+      if (State.selectedTabs.length === 0) return
+      browser.tabs.update(State.selectedTabs[0], { active: true })
+      State.selectedTabs = []
+    },
+
     /**
      * Update fake drag tabs.
      */
@@ -430,8 +495,8 @@ export default {
      * Is tab selected?
      */
     isSelected(id) {
-      if (!this.selectedTabs) return false
-      return this.selectedTabs.includes(id)
+      if (!State.selectedTabs) return false
+      return State.selectedTabs.includes(id)
     },
 
     /**
@@ -449,136 +514,6 @@ export default {
      */
     createTab() {
       this.$emit('create-tab', this.storeId)
-    },
-
-    /**
-     * Create new window with first selected
-     * tab and then move other selected tabs.
-     */
-    async moveSelectedTabsToNewWin() {
-      if (!this.selectedTabs) return
-      const first = this.selectedTabs.shift()
-      const rest = [...this.selectedTabs]
-      const win = await browser.windows.create({ tabId: first })
-      browser.tabs.move(rest, {windowId: win.id, index: -1})
-    },
-
-    /**
-     *  Move selected tabs to window if provided,
-     * otherwise show window-choosing menu
-     */
-    async moveToWin(window) {
-      if (!this.selectedTabs) return
-      const tabsId = [...this.selectedTabs]
-      const windowId = window ? window.id : await Store.dispatch('chooseWin')
-      browser.tabs.move(tabsId, { windowId, index: -1 })
-    },
-
-    /**
-     * Open selected tabs urls in
-     * another window.
-     */
-    async reopenInWin(window) {
-      if (!this.selectedTabs) return
-      const tabsId = [...this.selectedTabs]
-      const windowId = window ? window.id : await Store.dispatch('chooseWin')
-      tabsId.map(id => {
-        let tab = this.tabs.find(t => t.id === id)
-        if (!tab) return
-        browser.tabs.create({ windowId, url: tab.url })
-      })
-    },
-
-    /**
-     * Open selected tabs urls in new
-     * window and close them in current window.
-     */
-    async reopenInNewWin({ incognito } = {}) {
-      if (!this.selectedTabs) return
-      const first = this.selectedTabs.shift()
-      const firstTab = this.tabs.find(t => t.id === first)
-      if (!firstTab) return
-      const rest = [...this.selectedTabs]
-      const win = await browser.windows.create({ url: firstTab.url, incognito })
-      browser.tabs.remove(first)
-      for (let tabId of rest) {
-        let tab = this.tabs.find(t => t.id === tabId)
-        if (!tab) continue
-        browser.tabs.create({windowId: win.id, url: tab.url})
-        browser.tabs.remove(tabId)
-      }
-    },
-
-    /**
-     * Open url in panel by cookieStoreId
-     */
-    async openInPanel(id) {
-      if (!this.selectedTabs) return
-      const tabsId = [...this.selectedTabs]
-      for (let tabId of tabsId) {
-        let tab = this.tabs.find(t => t.id === tabId)
-        if (!tab) return
-
-        await browser.tabs.create({ cookieStoreId: id, url: tab.url })
-        await browser.tabs.remove(tab.id)
-      }
-    },
-
-    /**
-     * Pin selected tabs
-     */
-    pinSelectedTabs() {
-      if (!this.selectedTabs) return
-      for (let tabId of this.selectedTabs) {
-        browser.tabs.update(tabId, { pinned: true })
-      }
-    },
-
-    /**
-     * Create bookmarks from selected tabs
-     */
-    bookmarkSelectedTabs() {
-      if (!this.selectedTabs) return
-      for (let tabId of this.selectedTabs) {
-        let tab = this.tabs.find(t => t.id === tabId)
-        if (!tab) continue
-        browser.bookmarks.create({ title: tab.title, url: tab.url })
-      }
-    },
-
-    /**
-     * Reload selected tabs
-     */
-    reloadSelectedTabs() {
-      if (!this.selectedTabs) return
-      for (let tabId of this.selectedTabs) {
-        browser.tabs.reload(tabId)
-      }
-    },
-
-    /**
-     * Close selected tabs
-     */
-    async closeSelectedTabs() {
-      if (!this.selectedTabs) return
-      const selectedTabIds = [...this.selectedTabs]
-      const selectedTabs = this.selectedTabs.map(id => {
-        return State.tabs.find(t => t.id === id)
-      })
-
-      // Try activate prev tab
-      const activeTab = selectedTabs.find(t => t.active)
-      if (activeTab) {
-        const firstTab = selectedTabs.reduce((acc, t) => {
-          return acc.index <= t.index ? acc : t
-        })
-        const prevTab = State.tabs.find(t => t.index === firstTab.index - 1)
-        if (prevTab && prevTab.cookieStoreId === firstTab.cookieStoreId) {
-          await browser.tabs.update(prevTab.id, { active: true })
-        }
-      }
-
-      browser.tabs.remove(selectedTabIds)
     },
   },
 }

@@ -1,13 +1,15 @@
 export const SETTINGS_OPTIONS = {
   scrollThroughTabsOpts: ['panel', 'global', 'none'],
   tabDoubleClickOpts: ['reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'none'],
-  tabLongLeftClickOpts: ['close_down', 'reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'none'],
-  tabLongRightClickOpts: ['close_down', 'reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'none'],
+  tabLongLeftClickOpts: ['reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'none'],
+  tabLongRightClickOpts: ['reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'none'],
   fontSizeOpts: ['xs', 's', 'm', 'l', 'xl', 'xxl'],
   themeOpts: ['dark', 'light'],
+  snapshotsLimitOpts: ['1d', '1w', '1m']
 }
 
 export const DEFAULT_SETTINGS = {
+  // Global
   activateLastTabOnPanelSwitching: true,
   createNewTabOnEmptyPanel: false,
   skipEmptyPanels: false,
@@ -18,8 +20,15 @@ export const DEFAULT_SETTINGS = {
   tabLongLeftClick: 'none',
   tabLongRightClick: 'none',
   openBookmarkNewTab: false,
+  noEmptyDefault: false,
+  
+  // Appearance
   fontSize: 'm',
   theme: 'dark',
   bgNoise: true,
   animations: true,
+
+  // Snapshots
+  snapshotsTargets: [true],
+  snapshotsLimit: '1w',
 }

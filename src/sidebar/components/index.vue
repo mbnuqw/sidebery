@@ -10,6 +10,7 @@
   @mousedown="onMD")
   ctx-menu
   window-input(:is-active="!!winChoosing")
+  snapshots-list
   .bg(v-noise:300.g:12:af.a:0:42.s:0:9="", :style="bgPosStyle")
   .dimmer(@mousedown="closePanelMenu")
   .nav(ref="nav")
@@ -28,12 +29,14 @@
         :key="btn.cookieStoreId || btn.name"
         :title="btn.name"
         :loading="btn.loading"
+        :updated="btn.updated"
         :data-active="panelIs(i)"
         :data-hidden="btn.hidden"
         @click="onNavClick(i)"
         @mousedown.right="openPanelMenu(i)")
         svg(:style="{fill: btn.colorCode}")
           use(:xlink:href="'#' + btn.icon")
+        .update-badge
         .ok-badge
           svg: use(xlink:href="#icon_ok")
         .err-badge
@@ -85,7 +88,7 @@ import Utils from '../../libs/utils.js'
 import Logs from '../../libs/logs.js'
 import EventBus from '../event-bus'
 import Store from '../store'
-import State, { DEFAULT_PANELS } from '../store.state.js'
+import State, { DEFAULT_PANELS, DEFAULT_CTX } from '../store.state.js'
 import CtxMenu from './context-menu'
 import BookmarksPanel from './bookmarks'
 import TabsPanel from './tabs'
@@ -93,6 +96,7 @@ import TabsDefaultMenu from './tabs.default.menu'
 import TabsMenu from './tabs.menu'
 import SettingsPanel from './settings'
 import WindowInput from './input.window'
+import SnapshotsList from './snapshots-list'
 
 Vue.directive('noise', NoiseBg)
 
@@ -105,6 +109,7 @@ export default {
     TabsPanel,
     SettingsPanel,
     WindowInput,
+    SnapshotsList,
   },
 
   data() {
@@ -165,10 +170,13 @@ export default {
           btn.hidden = true
           if (State.panelIndex > k) hideOffset++
         }
-        if (State.private && btn.cookieStoreId === 'firefox-default') {
+        if (State.private && btn.cookieStoreId === DEFAULT_CTX) {
           btn.hidden = true
           if (State.panelIndex > k) hideOffset++
         }
+        btn.updated = !!State.updatedTabs.find(t => {
+          return t.panelIndex === k && k !== State.panelIndex && t.state > 1
+        })
         out.push(btn)
       }
       for (i = 0; i < State.ctxs.length; i++, k++) {
@@ -180,6 +188,9 @@ export default {
         }
         if (!btn.menu) btn.menu = TabsMenu
         btn.hidden = false
+        btn.updated = !!State.updatedTabs.find(t => {
+          return t.panelIndex === k && k !== State.panelIndex && t.state > 1
+        })
         out.push(btn)
       }
 
@@ -234,6 +245,7 @@ export default {
     EventBus.$on('panelLoadingEnd', panelIndex => this.onPanelLoadingEnd(panelIndex))
     EventBus.$on('panelLoadingOk', panelIndex => this.onPanelLoadingOk(panelIndex))
     EventBus.$on('panelLoadingErr', panelIndex => this.onPanelLoadingErr(panelIndex))
+    EventBus.$on('dragTabStart', tabInfo => this.outerDraggedTab = tabInfo)
   },
 
   // --- Mounted Hook ---
@@ -326,6 +338,7 @@ export default {
         }, 500)
       }
       if (e.button < 2) Store.commit('closeCtxMenu')
+      Store.commit('resetSelection')
     },
 
     /**
@@ -370,14 +383,21 @@ export default {
         if (item.type === 'text/x-moz-text-internal') {
           item.getAsString(async s => {
             if (e.dataTransfer.dropEffect === 'move') {
-              const tabs = await browser.tabs.query({
-                url: s,
-                currentWindow: false,
-                lastFocusedWindow: true,
-              })
-              if (tabs.length === 0) return
-              if (tabs[0].url.indexOf('http') === -1) return
-              browser.tabs.move(tabs[0].id, { windowId: State.windowId, index: -1 })
+              const tab = this.outerDraggedTab
+
+              if (!tab || tab.url !== s) {
+                if (s.indexOf('http') === -1) return
+                browser.tabs.create({ url: s, windowId: State.windowId })
+                return
+              }
+
+              if (tab.incognito === State.private) {
+                browser.tabs.move(tab.tabId, { windowId: State.windowId, index: -1 })
+              } else {
+                if (s.indexOf('http') === -1) return
+                browser.tabs.create({ url: s, windowId: State.windowId })
+                browser.tabs.remove(tab.tabId)
+              }
             }
             if (e.dataTransfer.dropEffect === 'copy') {
               if (s.indexOf('http') === -1) return
@@ -413,6 +433,7 @@ export default {
       // Check if we have some updates
       // for container with this name
       Store.dispatch('resyncPanels')
+      Store.dispatch('checkContextBindings', contextualIdentity.cookieStoreId)
     },
 
     /**
@@ -451,6 +472,7 @@ export default {
       if (i === -1) return
       State.ctxs.splice(i, 1, contextualIdentity)
       Store.dispatch('saveSyncPanels')
+      Store.dispatch('checkContextBindings', id)
     },
     // ---
 
@@ -462,6 +484,7 @@ export default {
       if (tab.windowId !== State.windowId) return
       Logs.D(`Tab created, id: '${tab.id}', index: '${tab.index}', ctx: '${tab.cookieStoreId}'`)
       Store.commit('closeCtxMenu')
+      Store.commit('resetSelection')
 
       // If new tab is out of panel, move it to the end of
       // this panel
@@ -480,6 +503,9 @@ export default {
       State.tabs.splice(tab.index, 0, tab)
       Store.dispatch('recalcPanelScroll')
       Store.dispatch('saveSyncPanels')
+      if (State.proxiedPanels.includes(tab.cookieStoreId)) {
+        Store.dispatch('setupTabProxy', tab.id)
+      }
     },
 
     /**
@@ -506,6 +532,40 @@ export default {
         if (tab.active) Store.commit('setPanel', pi)
       }
 
+      // Handle url change
+      if (change.hasOwnProperty('url')) {
+        const i = State.updatedTabs.findIndex(t => t.id === tab.id)
+        const info = State.updatedTabs[i]
+        if (info) {
+          info.state = 0
+          State.updatedTabs.splice(i, 1, info)
+        } else {
+          State.updatedTabs.push({ id: tab.id, state: 0 })
+        }
+      }
+
+      // Handle title change
+      if (change.hasOwnProperty('title') && !tab.active) {
+        // If prev url start with 'http'
+        const prevTabState = State.tabs[upIndex]
+        if (!prevTabState.url.indexOf('http')) {
+          // And if prev title not just url
+          // which is default title value
+          const hn = prevTabState.url.split('/')[2]
+          const shn = hn.indexOf('www.') ? hn : hn.slice(4)
+          if (prevTabState.title.indexOf(shn)) {
+            const i = State.updatedTabs.findIndex(t => t.id === tab.id)
+            if (i >= 0) {
+              const info = State.updatedTabs[i]
+              const panelIndex = Utils.GetPanelIndex(this.panels, tab.id)
+              info.panelIndex = panelIndex
+              info.state++
+              State.updatedTabs.splice(i, 1, info)
+            }
+          }
+        }
+      }
+
       State.tabs.splice(upIndex, 1, tab)
 
       if (change.hasOwnProperty('pinned') && change.pinned) {
@@ -524,8 +584,25 @@ export default {
       if (info.windowId !== State.windowId) return
       Logs.D(`Tab removed, id: '${tabId}'`)
       Store.commit('closeCtxMenu')
+      Store.commit('resetSelection')
       let rmIndex = State.tabs.findIndex(t => t.id === tabId)
       if (rmIndex === -1) return
+
+      const panelIndex = Utils.GetPanelIndex(this.panels, tabId)
+      const tab = State.tabs[rmIndex]
+      if (State.lockedPanels.includes(tab.cookieStoreId) && tab.url.indexOf('about')) {
+        browser.tabs.create({
+          url: tab.url,
+          cookieStoreId: tab.cookieStoreId,
+        })
+      }
+
+      if (State.noEmptyDefault && tab.cookieStoreId === this.defaultCtxId) {
+        const panelTabs = this.panels[panelIndex].tabs
+        if (panelTabs && panelTabs.length === 1) {
+          browser.tabs.create({})
+        }
+      }
 
       // Shift tabs after removed one. (NOT detected by vue)
       for (let i = rmIndex + 1; i < State.tabs.length; i++) {
@@ -533,8 +610,11 @@ export default {
       }
       State.tabs.splice(rmIndex, 1)
 
-      const panelIndex = State.activeTabs.findIndex(id => id === tabId)
-      if (panelIndex >= 0) State.activeTabs[panelIndex] = null
+      if (State.activeTabs[panelIndex] !== null) State.activeTabs[panelIndex] = null
+
+      // Remove updated flag
+      const upTabIndex = State.updatedTabs.findIndex(t => t.id === tabId)
+      if (upTabIndex !== -1) State.updatedTabs.splice(upTabIndex, 1)
 
       Store.dispatch('recalcPanelScroll')
       Store.dispatch('saveSyncPanels')
@@ -547,6 +627,7 @@ export default {
       if (info.windowId !== State.windowId) return
       Logs.D(`Tab moved, id: '${id}', from: '${info.fromIndex}', to: '${info.toIndex}'`)
       Store.commit('closeCtxMenu')
+      Store.commit('resetSelection')
 
       // If moved tab active, cut it out
       let pIndex = Utils.GetPanelIndex(this.panels, id)
@@ -587,9 +668,15 @@ export default {
       if (info.oldWindowId !== State.windowId) return
       Logs.D(`Tab detached, id: '${id}'`)
       Store.commit('closeCtxMenu')
+      Store.commit('resetSelection')
       let i = State.tabs.findIndex(t => t.id === id)
       if (i === -1) return
       State.tabs.splice(i, 1)
+
+      // Remove updated flag
+      const upTabIndex = State.updatedTabs.findIndex(t => t.id === id)
+      if (upTabIndex !== -1) State.updatedTabs.splice(upTabIndex, 1)
+
       Store.dispatch('recalcPanelScroll')
       Store.dispatch('saveSyncPanels')
     },
@@ -601,6 +688,7 @@ export default {
       if (info.newWindowId !== State.windowId) return
       Logs.D(`Tab attached, id: '${id}'`)
       Store.commit('closeCtxMenu')
+      Store.commit('resetSelection')
       Store.dispatch('loadTabs')
       Store.dispatch('saveSyncPanels')
     },
@@ -611,6 +699,7 @@ export default {
     onActivatedTab(info) {
       if (info.windowId !== State.windowId) return
       Logs.D(`Tab activated, id: '${info.tabId}'`)
+      Store.commit('resetSelection')
       for (let i = 0; i < State.tabs.length; i++) {
         State.tabs[i].active = info.tabId === State.tabs[i].id
       }
@@ -623,9 +712,15 @@ export default {
         if (panelIndex === -1) return
       }
       if (tab && tab.pinned) panelIndex = 1
-      if (panelIndex > 0 && this.panel !== panelIndex) {
+      if (panelIndex > 0 && State.panelIndex !== panelIndex) {
+        // Close settings and switch panel
+        if (State.settingsOpened) State.settingsOpened = false
         Store.commit('setPanel', panelIndex)
       }
+
+      // Remove updated flag
+      const upTabIndex = State.updatedTabs.findIndex(t => t.id === info.tabId)
+      if (upTabIndex !== -1) State.updatedTabs.splice(upTabIndex, 1)
 
       State.activeTabs[panelIndex] = info.tabId
     },
@@ -687,6 +782,7 @@ export default {
     async openPanelMenu(i) {
       Store.commit('closeSettings')
       Store.commit('closeCtxMenu')
+      Store.commit('resetSelection')
       State.panelMenuOpened = true
       State.panelIndex = i
       if (i >= 0) State.activePanel = State.panelIndex
@@ -729,6 +825,7 @@ export default {
       if (State.panelMenuOpened) this.closePanelMenu()
       if (State.settingsOpened) Store.commit('closeSettings')
       else Store.commit('openSettings')
+      Store.commit('resetSelection')
     },
 
     /**
@@ -736,6 +833,7 @@ export default {
      */
     updateNavSize() {
       if (this.width !== window.innerWidth) this.width = window.innerWidth
+      this.recalcPanelMenuHeight()
     },
   },
 }
@@ -794,8 +892,8 @@ NAV_CONF_HEIGHT = auto
 .Sidebar .panel-menu
   box(absolute)
   pos(b: 0, l: 0)
-  size(100%, NAV_CONF_HEIGHT)
-  padding: 300px 0 36px
+  size(100%, NAV_CONF_HEIGHT, max-h: calc(100vh + 200px))
+  padding: 300px 0 32px
   background-color: var(--c-bg)
   box-shadow: 0 1px 12px 0 #00000056, 0 1px 0 0 #00000012
   opacity: 0
@@ -827,6 +925,10 @@ NAV_CONF_HEIGHT = auto
     size(0)
     opacity: 0
     z-index: -1
+  &[updated]
+    > .update-badge
+      opacity: 1
+      transform: scale(1, 1)
   &[loading="true"]
     cursor: progress
     > .loading-spinner
@@ -843,6 +945,7 @@ NAV_CONF_HEIGHT = auto
       opacity: 1
       transform: scale(1, 1)
   &[loading]
+  &[updated]
     > svg
       mask: radial-gradient(
         circle at calc(100% - 2px) calc(100% - 2px),
@@ -884,6 +987,16 @@ NAV_CONF_HEIGHT = auto
     > .spinner-stick-{i}
       transform: rotateZ((i * 30)deg)
       animation: none
+
+.Sidebar .panel-btn > .update-badge
+  box(absolute)
+  size(10px, same)
+  pos(b: 5px, r: 6px)
+  border-radius: 50%
+  background-color: var(--nav-btn-update-badge-bg)
+  opacity: 0
+  transform: scale(0.7, 0.7)
+  transition: opacity var(--d-norm), transform var(--d-norm)
 
 .Sidebar .panel-btn > .ok-badge
 .Sidebar .panel-btn > .err-badge

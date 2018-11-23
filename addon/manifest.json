@@ -8,7 +8,7 @@
   },
   "author": "mbnuqw",
   "name": "__MSG_ExtName__",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "default_locale": "en",
   "description": "__MSG_ExtDesc__",
   "homepage_url": "https://github.com/mbnuqw/sidebery",
@@ -19,6 +19,7 @@
 
   "permissions": [
     "tabs",
+    "proxy",
     "bookmarks",
     "clipboardWrite",
     "cookies",
@@ -48,15 +49,13 @@
     },
     "next_panel": {
       "suggested_key": {
-        "default": "Ctrl+Period",
-        "mac": "MacCtrl+Period"
+        "default": "Alt+Right"
       },
       "description": "next_panel"
     },
     "prev_panel": {
       "suggested_key": {
-        "default": "Ctrl+Comma",
-        "mac": "MacCtrl+Comma"
+        "default": "Alt+Left"
       },
       "description": "prev_panel"
     },
@@ -73,6 +72,48 @@
         "mac": "MacCtrl+W"
       },
       "description": "close_tab"
+    },
+    "select_all": {
+      "suggested_key": {
+        "default": "Alt+G"
+      },
+      "description": "select_all"
+    },
+    "up": {
+      "suggested_key": {
+        "default": "Alt+Up"
+      },
+      "description": "up"
+    },
+    "down": {
+      "suggested_key": {
+        "default": "Alt+Down"
+      },
+      "description": "down"
+    },
+    "up_shift": {
+      "suggested_key": {
+        "default": "Alt+Shift+Up"
+      },
+      "description": "up_shit"
+    },
+    "down_shift": {
+      "suggested_key": {
+        "default": "Alt+Shift+Down"
+      },
+      "description": "down_shift"
+    },
+    "activate": {
+      "suggested_key": {
+        "default": "Alt+Space"
+      },
+      "description": "activate"
+    },
+    "reset_selection": {
+      "suggested_key": {
+        "default": "Alt+R"
+      },
+      "description": "reset_selection"
     }
   },
 

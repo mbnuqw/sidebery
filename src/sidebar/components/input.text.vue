@@ -3,11 +3,11 @@
   input(
     v-if="line"
     ref="text"
-    type="text"
     autocomplete="off"
     autocorrect="off"
     autocapitalize="off"
     spellcheck="false"
+    :type="password ? 'password' : 'text'"
     :tabindex="tabindex"
     :value="value"
     @input="onInput"
@@ -48,6 +48,7 @@ export default {
       type: String,
       default: () => '-1'
     },
+    password: Boolean,
   },
 
   data() {

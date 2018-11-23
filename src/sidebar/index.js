@@ -38,7 +38,7 @@ export default new Vue({
 
   watch: {
     fontSize() {
-      this.updateFontSize()
+      Store.dispatch('updateFontSize')
     },
   },
 
@@ -68,19 +68,24 @@ export default new Vue({
     browser.storage.onChanged.addListener(this.onChangeStorage)
     browser.commands.onCommand.addListener(this.onCmd)
 
-    let debounced = Utils.Debounce(() => Store.dispatch('saveState'), 567)
-    Store.watch(Getters.activePanel, debounced.func)
-
     await Store.dispatch('loadSettings')
     await Store.dispatch('loadState')
+    Store.dispatch('updateProxiedTabs')
     await Store.dispatch('loadKebindings')
-    await Store.dispatch('loadFavicons')
     await Store.dispatch('loadLocalID')
     await Store.dispatch('loadSyncPanels')
+    await Store.dispatch('loadSnapshots')
+    await Store.dispatch('loadFavicons')
+
+    const dSavingState = Utils.Debounce(() => Store.dispatch('saveState'), 567)
+    Store.watch(Getters.activePanel, dSavingState.func)
+
+    const dMakingSnapshot = Utils.Debounce(() => Store.dispatch('makeSnapshot'), 10000)
+    Store.watch(Getters.tabs, dMakingSnapshot.func)
   },
 
   mounted() {
-    this.updateFontSize()
+    Store.dispatch('updateFontSize')
   },
 
   beforeDestroy() {
@@ -121,15 +126,14 @@ export default new Vue({
       }
     },
 
-    updateFontSize() {
-      const htmlEl = document.documentElement
-      if (State.fontSize === 'xs') htmlEl.style.fontSize = '13.5px'
-      else if (State.fontSize === 's') htmlEl.style.fontSize = '14px'
-      else if (State.fontSize === 'm') htmlEl.style.fontSize = '14.5px'
-      else if (State.fontSize === 'l') htmlEl.style.fontSize = '15px'
-      else if (State.fontSize === 'xl') htmlEl.style.fontSize = '15.5px'
-      else if (State.fontSize === 'xxl') htmlEl.style.fontSize = '16px'
-      else htmlEl.style.fontSize = '14.5px'
+    /**
+     * Keybindings handler
+     */
+    onCmd(name) {
+      if (!State.windowFocused) return
+      Logs.D(`Run command: ${name}`)
+      let cmdName = 'kb_' + name
+      Store.dispatch(cmdName)
     },
 
     /**
@@ -162,31 +166,5 @@ export default new Vue({
       }
       return JSON.stringify({ AllTabs, Panels, Settings }, null, 2)
     },
-
-    // --- Keybindings ---
-    // Commands listeners
-    onCmd(name) {
-      if (!State.windowFocused) return
-      Logs.D(`Run command: ${name}`)
-      let funcName = 'cmd_' + name
-      if (this[funcName]) this[funcName]()
-    },
-    cmd_next_panel() {
-      Store.dispatch('switchPanel', 1)
-    },
-    cmd_prev_panel() {
-      Store.dispatch('switchPanel', -1)
-    },
-    cmd_new_tab_on_panel() {
-      let panel = this.panels[State.lastPanelIndex]
-      if (panel.cookieStoreId) {
-        Store.dispatch('createTab', panel.cookieStoreId)
-      }
-    },
-    cmd_rm_tab_on_panel() {
-      let activeTab = State.tabs.find(t => t.active)
-      Store.dispatch('removeTab', activeTab)
-    },
-    // ---
   },
 })

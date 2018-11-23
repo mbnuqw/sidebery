@@ -86,6 +86,42 @@
   "tabs_menu.sync_label": {
     "message": "Синхронизация"
   },
+  "tabs_menu.lock_label": {
+    "message": "Заблокировать"
+  },
+  "tabs_menu.proxy_label": {
+    "message": "Прокси"
+  },
+  "tabs_menu.proxy_host_placeholder": {
+    "message": "Хост"
+  },
+  "tabs_menu.proxy_port_placeholder": {
+    "message": "Порт"
+  },
+  "tabs_menu.proxy_username_placeholder": {
+    "message": "Пользователь"
+  },
+  "tabs_menu.proxy_password_placeholder": {
+    "message": "Пароль"
+  },
+  "tabs_menu.proxy_dns_label": {
+    "message": "проксировать DNS"
+  },
+  "tabs_menu.proxy_http": {
+    "message": "http"
+  },
+  "tabs_menu.proxy_https": {
+    "message": "tls"
+  },
+  "tabs_menu.proxy_socks4": {
+    "message": "socks4"
+  },
+  "tabs_menu.proxy_socks": {
+    "message": "socks5"
+  },
+  "tabs_menu.proxy_direct": {
+    "message": "выкл"
+  },
 
   "ctx_menu.open_in_new_window": {
     "message": "Открыть в новом окне"
@@ -120,6 +156,9 @@
 
   "ctx_menu.move_to_new_window": {
     "message": "Переместить в новое окно"
+  },
+  "ctx_menu.move_to_new_priv_window": {
+    "message": "Переместить в новое приватное окно"
   },
   "ctx_menu.move_to_another_window": {
     "message": "Переместить в другое окно"
@@ -157,6 +196,9 @@
   "ctx_menu.clear_cookies": {
     "message": "Удалить куки"
   },
+  "ctx_menu.tab_discard": {
+    "message": "Выгрузить"
+  },
   "ctx_menu.tab_close_down": {
     "message": "Закрыть нижележащие табы"
   },
@@ -166,11 +208,15 @@
   "ctx_menu.tab_duplicate": {
     "message": "Дублировать"
   },
+
   "ctx_menu.tabs_reopen_in_new_priv_window": {
     "message": "Открыть в новом приватном окне"
   },
   "ctx_menu.tabs_reopen_in_new_window": {
     "message": "Открыть в новом окне"
+  },
+  "ctx_menu.tabs_discard": {
+    "message": "Выгрузить"
   },
   "ctx_menu.tabs_bookmark": {
     "message": "Создать закладки"
@@ -257,6 +303,10 @@
     "message": "выкл"
   },
 
+  "settings.no_empty_default": {
+    "message": "Создавать новую вкладку при опустошении стандартной панели"
+  },
+
   "settings.open_bookmark_new_tab": {
     "message": "Открывать закладку в новом табе"
   },
@@ -294,11 +344,48 @@
   "settings.theme_light": {
     "message": "светлая"
   },
+  "settings.theme_custom": {
+    "message": "настроить..."
+  },
+  "settings.appearance_bg_color_label": {
+    "message": "Цвет фона"
+  },
   "settings.bg_noise": {
     "message": "Матовый задный фон"
   },
   "settings.animations": {
     "message": "Анимации"
+  },
+
+  "settings.snapshots_title": {
+    "message": "Снепшоты"
+  },
+  "settings.snapshots_limit_label": {
+    "message": "Хранить"
+  },
+  "settings.snapshots_pinned_label": {
+    "message": "Закрепленные"
+  },
+  "settings.snapshots_default_label": {
+    "message": "Стандартные"
+  },
+  "settings.snapshots_view_all_label": {
+    "message": "просмотреть все"
+  },
+  "settings.snapshot_limit_1d": {
+    "message": "Сутки"
+  },
+  "settings.snapshot_limit_1w": {
+    "message": "Неделю"
+  },
+  "settings.snapshot_limit_1m": {
+    "message": "Месяц"
+  },
+  "settings.make_snapshot": {
+    "message": "Создать снепшот"
+  },
+  "settings.rm_all_snapshots": {
+    "message": "Удалить все снепшоты"
   },
 
   "settings.kb_title": {
@@ -319,15 +406,29 @@
   "settings.close_tab": {
     "message": "Закрыть таб"
   },
+  "settings.select_all": {
+    "message": "Выделить все"
+  },
+  "settings.up": {
+    "message": "Вверх"
+  },
+  "settings.down": {
+    "message": "Вниз"
+  },
+  "settings.up_shit": {
+    "message": "Вверх с выделением"
+  },
+  "settings.down_shift": {
+    "message": "Вниз с выделением"
+  },
+  "settings.activate": {
+    "message": "Активировать выделенное"
+  },
+  "settings.reset_selection": {
+    "message": "Сбросить выделенние"
+  },
   "settings.reset_kb": {
     "message": "Сбросить клав. настройки"
-  },
-
-  "settings.experements_title": {
-    "message": "Эксперименты"
-  },
-  "settings.drag_tab_between_panels": {
-    "message": "Перетаскавать таб между панелями"
   },
 
   "settings.help_title": {
@@ -363,11 +464,24 @@
   "settings.reset_settings": {
     "message": "Сбросить настройки"
   },
+  "settings.rm_unused_favi_cache": {
+    "message": "Удалить неиспользуемые иконки"
+  },
   "settings.rm_favi_cache": {
     "message": "Удалить кэш иконок"
   },
   "settings.rm_sync_data": {
     "message": "Удалить данные синхронизации"
+  },
+
+  "snapshots.snapshots_time_label": {
+    "message": "Время"
+  },
+  "snapshots.snapshots_tabs_label": {
+    "message": "Табы"
+  },
+  "snapshots.snapshots_close_label": {
+    "message": "Закрыть"
   }
 }
 

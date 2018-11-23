@@ -7,7 +7,7 @@ const LOGS_CAPACITY = 256
 
 function D(...args) {
   let now = Date.now()
-  if (Logs.length > LOGS_CAPACITY) Logs.unshift(0, 16)
+  if (Logs.length > LOGS_CAPACITY) Logs.splice(0, 16)
   Logs.push({ msg: args, t: now - ts })
   ts = now
   if (process.env.NODE_ENV === 'development') console.log('[DEBUG]', ...args)
@@ -15,7 +15,7 @@ function D(...args) {
 
 function E(msg, err) {
   let now = Date.now()
-  if (Logs.length > 150) Logs.unshift(0, 15)
+  if (Logs.length > LOGS_CAPACITY) Logs.splice(0, 16)
   Logs.push({ err: err.toString(), msg, t: now - ts })
   ts = now
   if (process.env.NODE_ENV === 'development') console.error(`[ERROR] ${msg}`, err)

@@ -7,6 +7,7 @@ import SyncActions from './actions/sync'
 import PanelsActions from './actions/panels'
 import TabsActions from './actions/tabs'
 import Bookmarks from './actions/bookmarks'
+import Snapshots from './actions/snapshots'
 
 export default {
   ...SavedStateActions,
@@ -17,6 +18,7 @@ export default {
   ...PanelsActions,
   ...TabsActions,
   ...Bookmarks,
+  ...Snapshots,
 
   // --- --- --- Misc --- --- ---
 
@@ -26,7 +28,7 @@ export default {
   async chooseWin({ state }) {
     state.winChoosing = []
     let wins = await browser.windows.getAll({ populate: true })
-    wins = wins.filter(w => !w.focused && !w.incognito)
+    wins = wins.filter(w => !w.focused)
 
     return new Promise(res => {
       wins = wins.map(async w => {
@@ -54,7 +56,14 @@ export default {
   /**
    * Breadcast recalc panel's scroll event.
    */
-  async recalcPanelScroll() {
+  recalcPanelScroll() {
     setTimeout(() => EventBus.$emit('recalcPanelScroll'), 33)
+  },
+
+  /**
+   * Broadcast message to other parts of extension.
+   */
+  async broadcast(_, msg = {}) {
+    return await browser.runtime.sendMessage(msg)
   },
 }

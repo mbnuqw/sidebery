@@ -44,13 +44,25 @@ export default {
     state.panelIndex = state.lastPanelIndex
   },
 
-  //
+  // ------------------------------
+  // --- --- --- Panels --- --- ---
+  // ------------------------------
   /**
    * Set panel index
    */
   setPanel(state, newIndex) {
     state.panelIndex = newIndex
     if (newIndex >= 0) state.lastPanelIndex = newIndex
+  },
+
+  // ----------------------------
+  // --- --- --- Tabs --- --- ---
+  // ----------------------------
+  /**
+   * Reset selection.
+   */
+  resetSelection(state) {
+    if (state.selectedTabs.length > 0) state.selectedTabs = []
   },
 
   // ------------------------------------

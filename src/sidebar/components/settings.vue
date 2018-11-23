@@ -58,6 +58,11 @@
             v-for="o in $store.state.tabLongRightClickOpts"
             :opt-none="o === 'none'"
             :opt-true="o === $store.state.tabLongRightClick") {{t('settings.tab_action_' + o)}}
+      .field(:opt-true="$store.state.noEmptyDefault", @click="toggleOpt('noEmptyDefault')")
+        .label {{t('settings.no_empty_default')}}
+        .input
+          .opt.-true {{t('settings.opt_true')}}
+          .opt.-false {{t('settings.opt_false')}}
       .field(:opt-true="$store.state.openBookmarkNewTab", @click="toggleOpt('openBookmarkNewTab')")
         .label {{t('settings.open_bookmark_new_tab')}}
         .input
@@ -69,11 +74,15 @@
       .field(@mousedown="switchOpt($event, 'fontSize')")
         .label {{t('settings.font_size')}}
         .input
-          .opt(v-for="o in $store.state.fontSizeOpts", :opt-true="o === $store.state.fontSize") {{t('settings.font_size_' + o)}}
+          .opt(
+            v-for="o in $store.state.fontSizeOpts"
+            :opt-true="o === $store.state.fontSize") {{t('settings.font_size_' + o)}}
       .field(@mousedown="switchOpt($event, 'theme')")
         .label {{t('settings.switch_theme')}}
         .input
-          .opt(v-for="o in $store.state.themeOpts", :opt-true="o === $store.state.theme") {{t('settings.theme_' + o)}}
+          .opt(
+            v-for="o in $store.state.themeOpts"
+            :opt-true="o === $store.state.theme") {{t('settings.theme_' + o)}}
       .field(:opt-true="$store.state.bgNoise", @click="toggleOpt('bgNoise')")
         .label {{t('settings.bg_noise')}}
         .input
@@ -84,6 +93,50 @@
         .input
           .opt.-true {{t('settings.opt_true')}}
           .opt.-false {{t('settings.opt_false')}}
+
+    section
+      h2 {{t('settings.snapshots_title')}}
+      div
+        .field.inline(:opt-true="snapshotPinned", @click="toggleSnapshotPinned")
+          .label {{t('settings.snapshots_pinned_label')}}
+          .input
+            .opt.-true {{t('settings.opt_true')}}
+            .opt.-false {{t('settings.opt_false')}}
+        .field.inline(:opt-true="snapshotDefault", @click="toggleSnapshotDefault")
+          .label {{t('settings.snapshots_default_label')}}
+          .input
+            .opt.-true {{t('settings.opt_true')}}
+            .opt.-false {{t('settings.opt_false')}}
+        .field.inline(
+          v-for="(c, i) in snapshotContiners"
+          :opt-true="c.active"
+          @click="toggleSnapshotContainer(i, c.id)")
+          .label(:style="{ color: c.color }") {{c.name}}
+          .input
+            .opt.-true {{t('settings.opt_true')}}
+            .opt.-false {{t('settings.opt_false')}}
+
+      .field(v-if="snapshotsIsON", @mousedown="switchOpt($event, 'snapshotsLimit')")
+        .label {{t('settings.snapshots_limit_label')}}
+        .input
+          .opt(
+            v-for="o in $store.state.snapshotsLimitOpts"
+            :opt-true="o === $store.state.snapshotsLimit") {{t('settings.snapshot_limit_' + o)}}
+      .box
+        .snapshot(
+          v-for="(s, i) in snapshots"
+          :title="firstFiveUrls(s.tabs)"
+          @click="applySnapshot(s)")
+          .time {{utime(s.time)}}
+          .tabs.pinned {{tabsCount('pinned', s.tabs)}}
+          .tabs {{tabsCount(null, s.tabs)}}
+          .tabs(v-for="c in s.ctxs", :style="{color: c.colorCode}") {{tabsCount(c, s.tabs)}}
+        .label-btn(
+          v-if="snapshots.length"
+          @click="viewAllSnapshots") {{t('settings.snapshots_view_all_label')}}
+      .box
+        .btn(@click="makeSnapshot") {{t('settings.make_snapshot')}}
+        .btn.-warn(@click="removeAllSnapshots") {{t('settings.rm_all_snapshots')}}
 
     section
       h2 {{t('settings.kb_title')}}
@@ -103,14 +156,6 @@
           @keyup.prevent.stop="onKBKeyUp($event, k, i)")
       .box
         .btn(@click="resetKeybindings") {{t('settings.reset_kb')}}
-
-    //- section
-    //-   h2 {{t('settings.experements_title')}}
-    //-   .field(:opt-true="$root.dragTabToPanels", @click="toggleOpt('dragTabToPanels')")
-    //-     .label {{t('settings.drag_tab_between_panels')}}
-    //-     .input
-    //-       .opt.-true {{t('settings.opt_true')}}
-    //-       .opt.-false {{t('settings.opt_false')}}
 
     section
       h2 {{t('settings.help_title')}}
@@ -136,7 +181,8 @@
 
       .box
         .btn.-warn(@click="resetSettings") {{t('settings.reset_settings')}}
-        .btn.-warn(@click="clearFaviCache") {{t('settings.rm_favi_cache')}}
+        .btn.-warn(@click="clearFaviCache(false)") {{t('settings.rm_unused_favi_cache')}}
+        .btn.-warn(@click="clearFaviCache(true)") {{t('settings.rm_favi_cache')}}
         .btn.-warn(@click="clearSyncData") {{t('settings.rm_sync_data')}}
 
       a.github(tabindex="-1", href="https://github.com/mbnuqw/sidebery")
@@ -145,11 +191,14 @@
 
 
 <script>
+import { mapGetters } from 'vuex'
 import Utils from '../../libs/utils'
 import Logs from '../../libs/logs'
+import EventBus from '../event-bus'
 import Store from '../store'
 import State from '../store.state'
 import ScrollBox from './scroll-box'
+import TextInput from './input.text'
 
 const VALID_SHORTCUT_62 = /^((Ctrl|Alt|Command|MacCtrl)\+)(Shift\+)?([A-Z0-9]|Comma|Period|Home|End|PageUp|PageDown|Space|Insert|Delete|Up|Down|Left|Right|F\d\d?)$|^((Ctrl|Alt|Command|MacCtrl)\+)?(Shift\+)?(F\d\d?)$/
 const VALID_SHORTCUT = /^((Ctrl|Alt|Command|MacCtrl)\+)((Shift|Alt)\+)?([A-Z0-9]|Comma|Period|Home|End|PageUp|PageDown|Space|Insert|Delete|Up|Down|Left|Right|F\d\d?)$|^((Ctrl|Alt|Command|MacCtrl)\+)?((Shift|Alt)\+)?(F\d\d?)$/
@@ -159,6 +208,7 @@ const ISSUE_URL = 'https://github.com/mbnuqw/sidebery/issues/new'
 export default {
   components: {
     ScrollBox,
+    TextInput,
   },
 
   data() {
@@ -169,6 +219,8 @@ export default {
   },
 
   computed: {
+    ...mapGetters(['defaultCtxId']),
+
     issueLink() {
       if (!State.osInfo || !State.ffInfo) return ISSUE_URL
 
@@ -176,6 +228,33 @@ export default {
       body += `> Firefox: ${State.ffInfo.version}  \n`
       body += `> Extension: ${State.version}  \n`
       return ISSUE_URL + '?body=' + encodeURIComponent(body)
+    },
+
+    snapshots() {
+      return State.snapshots
+    },
+
+    snapshotsIsON() {
+      return State.snapshotsTargets.reduce((a, s) => a || s, false)
+    },
+
+    snapshotPinned() {
+      return !!State.snapshotsTargets[0]
+    },
+
+    snapshotDefault() {
+      return !!State.snapshotsTargets[1]
+    },
+
+    snapshotContiners() {
+      return State.ctxs.map((c, i) => {
+        return {
+          id: c.cookieStoreId,
+          name: c.name,
+          color: c.colorCode,
+          active: !!State.snapshotsTargets[i + 2]
+        }
+      })
     },
   },
 
@@ -259,6 +338,68 @@ export default {
       return s
     },
 
+    utime: Utils.UTime,
+
+    // --- Snapshot ---
+    toggleSnapshotPinned() {
+      State.snapshotsTargets[0] = !State.snapshotsTargets[0]
+      State.snapshotsTargets = [...State.snapshotsTargets]
+      Store.dispatch('saveSettings')
+    },
+    toggleSnapshotDefault() {
+      State.snapshotsTargets[1] = !State.snapshotsTargets[1]
+      State.snapshotsTargets = [...State.snapshotsTargets]
+      Store.dispatch('saveSettings')
+    },
+    toggleSnapshotContainer(i, name) {
+      if (State.snapshotsTargets[i + 2]) State.snapshotsTargets[i + 2] = false
+      else State.snapshotsTargets[i + 2] = name
+      State.snapshotsTargets = [...State.snapshotsTargets]
+      Store.dispatch('saveSettings')
+    },
+
+    viewAllSnapshots() {
+      EventBus.$emit('toggle-snapshots-list')
+    },
+
+    tabsCount(ctx, tabs) {
+      if (ctx === 'pinned') return tabs.filter(t => t.pinned).length
+      if (!ctx) return tabs.filter(t => {
+        return t.cookieStoreId === this.defaultCtxId
+          && !t.pinned
+      }).length
+      return tabs.filter(t => t.cookieStoreId === ctx.cookieStoreId).length
+    },
+
+    /**
+     * Get string containing urls of tabs.
+     */
+    firstFiveUrls(tabs) {
+      if (!tabs) return ''
+      let out = tabs.length > 7 ? tabs.slice(0, 7) : tabs
+      let outStr = out.map(t => {
+        if (t.url.length <= 36) return t.url
+        else return t.url.slice(0, 36) + '...'
+      }).join('\n')
+      if (tabs.length > 7) outStr += '\n...'
+      return outStr
+    },
+
+    /**
+     * Apply snapshot
+     */
+    applySnapshot(snapshot) {
+      Store.dispatch('applySnapshot', snapshot)
+    },
+
+    makeSnapshot() {
+      Store.dispatch('makeSnapshot')
+    },
+
+    removeAllSnapshots() {
+      Store.dispatch('removeAllSnapshot')
+    },
+
     // --- Help ---
     copyDebugInfo() {
       if (!this.$refs.debugInfo) return
@@ -296,10 +437,10 @@ export default {
     },
 
     /**
-     * Remove all cached favicons.
+     * Clear cached favicons.
      */
-    clearFaviCache() {
-      Store.dispatch('clearFaviCache')
+    clearFaviCache(all) {
+      Store.dispatch('clearFaviCache', { all })
     },
 
     /**
@@ -352,6 +493,20 @@ export default {
   color: var(--settings-label-fg)
   transition: color var(--d-fast)
 
+.Settings .field.inline
+  box(flex)
+  margin: 0 12px 2px 16px
+  justify-content: space-between
+  align-items: center
+  &:last-of-type
+    margin: 0 12px 12px 16px
+  >.input
+    flex-shrink: 0
+  >.label
+    margin-right: 12px
+    overflow: hidden
+    text-overflow: ellipsis
+
 .Settings .field > .input
   box(relative, flex)
   flex-wrap: wrap
@@ -388,6 +543,56 @@ export default {
   text(s: rem(14))
   color: var(--settings-label-fg)
   margin: 0 0 5px
+
+// --- Snapshots ---
+.Settings .snapshot
+  box(relative, flex)
+  text(s: rem(13))
+  size(100%)
+  color: var(--settings-label-fg)
+  margin: 0 0 3px
+  cursor: pointer
+  transition: opacity var(--d-fast)
+  &:nth-child(1)
+    opacity: .8
+  &:nth-child(2)
+    opacity: .7
+  &:nth-child(3)
+    opacity: .6
+  &:nth-child(4)
+    opacity: .5
+  &:nth-child(5)
+    opacity: .4
+  &:hover
+    opacity: 1
+  &:active
+    opacity: .7
+
+  .time
+    margin-right: auto
+    white-space: nowrap
+
+  .tabs
+    size(min-w: 12px)
+    text-align: right
+    margin: 0 0 0 5px
+    &.pinned
+      color: var(--settings-snapshot-counter-pinned-fg)
+
+.Settings .label-btn
+  box(relative)
+  text(s: rem(14))
+  size(100%)
+  margin: 2px 0 8px
+  text-align: center
+  color: var(--settings-label-btn-fg)
+  cursor: pointer
+  transition: opacity var(--d-fast)
+  &:hover
+    color: var(--settings-label-btn-fg-hover)
+  &:active
+    transition: none
+    color: var(--settings-label-btn-fg-active)
 
 // --- Keybindings ---
 .Settings .keybinding
@@ -434,18 +639,10 @@ export default {
   opacity: 0
   z-index: -1
 
-.Settings .version
-  box(relative)
-  text(s: rem(14))
-  text-align: center
-  margin: 8px 16px
-  color: var(--settings-label-fg)
-  opacity: .6
-
 .Settings .github
   box(relative, block)
-  size(21px, same)
-  margin: 12px 16px 8px
+  size(23px, same)
+  margin: 18px auto 16px
   padding: 0
   opacity: .5
   &:hover
@@ -455,5 +652,5 @@ export default {
   > svg
     box(absolute)
     size(100%, same)
-    fill: var(--settings-label-fg)
+    fill: #646464
 </style>

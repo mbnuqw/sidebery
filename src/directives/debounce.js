@@ -40,12 +40,18 @@ export default {
       }, delay)
     }
 
-    el.addEventListener(binding.eventName, binding.handler)
-    // vnode.componentInstance.$on(binding.eventName, binding.handler)
+    if (vnode.componentInstance) {
+      vnode.componentInstance.$on(binding.eventName, binding.handler)
+    } else {
+      el.addEventListener(binding.eventName, binding.handler)
+    }
   },
 
   unbind(el, binding, vnode) {
-    el.addEventListener(binding.eventName, binding.handler)
-    // vnode.componentInstance.$off(binding.eventName, binding.handler)
+    if (vnode.componentInstance) {
+      vnode.componentInstance.$off(binding.eventName, binding.handler)
+    } else {
+      el.removeEventListener(binding.eventName, binding.handler)
+    }
   },
 }
