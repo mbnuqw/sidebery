@@ -19,7 +19,7 @@
     @dragstart="onDragStart"
     @dragenter="onDragEnter"
     @dragleave="onDragLeave")
-  .audio(@click="$store.dispatch('remuteTabs', [tab.id])")
+  .audio(@mousedown.stop="", @click="$store.dispatch('remuteTabs', [tab.id])")
     svg.-loud: use(xlink:href="#icon_loud")
     svg.-mute: use(xlink:href="#icon_mute")
   .fav(:loading="loading")
