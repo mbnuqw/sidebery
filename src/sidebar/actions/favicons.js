@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import Logs from '../../libs/logs'
 
 export default {
@@ -17,7 +18,7 @@ export default {
   async setFavicon({ state }, { hostname, icon }) {
     if (!hostname) return
     Logs.D(`Set favicon for '${hostname}'`)
-    state.favicons[hostname] = icon
+    Vue.set(state.favicons, hostname, icon)
 
     // Do not cache favicon if it too big
     if (icon.length > 100000) return
@@ -47,10 +48,11 @@ export default {
     // Remove all favs
     if (all) {
       state.favicons = {}
-      await browser.storage.local.set({ favicons: '{}' })
+      await browser.storage.local.set({ favicons: {} })
       return
     }
 
+    // Remove only unused
     const hWalk = nodes => {
       for (let n of nodes) {
         if (n.url) {
