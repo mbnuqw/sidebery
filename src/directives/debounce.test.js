@@ -23,7 +23,7 @@ describe('Debounce vue directive', () => {
       }
       const binding = {
         arg: 'scroll',
-        modifiers: { 25: true, instant: true },
+        modifiers: { 20: true, instant: true },
         value: () => counter++,
       }
       const vnode = {}

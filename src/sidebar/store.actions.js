@@ -56,7 +56,7 @@ export default {
   /**
    * Breadcast recalc panel's scroll event.
    */
-  async recalcPanelScroll() {
+  recalcPanelScroll() {
     setTimeout(() => EventBus.$emit('recalcPanelScroll'), 33)
   },
 

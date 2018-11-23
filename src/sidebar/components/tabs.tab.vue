@@ -8,7 +8,7 @@
     :data-pinned="tab.pinned"
     :discarded="tab.discarded"
     :updated="updated"
-    :close-btn="showTabRmBtn"
+    :close-btn="$store.state.showTabRmBtn"
     :title="tooltip"
     @contextmenu.prevent.stop=""
     @mousedown="onMD"
@@ -34,7 +34,7 @@
       each n in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
         .spinner-stick(class='spinner-stick-' + n)
   .ctx(v-if="tab.ctxIcon", :style="{background: tab.ctxColor}")
-  .close(v-if="showTabRmBtn", @mousedown.stop="close", @mouseup.stop="")
+  .close(v-if="$store.state.showTabRmBtn", @mousedown.stop="close", @mouseup.stop="")
     svg: use(xlink:href="#icon_remove")
   .t-box
     .title {{tab.title}}
