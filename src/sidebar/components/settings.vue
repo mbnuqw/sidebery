@@ -167,9 +167,7 @@
       .box
         .label Debug
         .btn(@click="copyDebugInfo") {{t('settings.cp_debug_info')}}
-        .btn(@click="copyLogs") {{t('settings.cp_logs')}}
         textarea.hidden(ref="debugInfo", tabindex="-1")
-        textarea.hidden(ref="logs", tabindex="-1")
 
       .field(@click="calcFaviCache")
         .label {{t('settings.cached_favics')}}
@@ -193,7 +191,6 @@
 <script>
 import { mapGetters } from 'vuex'
 import Utils from '../../libs/utils'
-import Logs from '../../libs/logs'
 import EventBus from '../event-bus'
 import Store from '../store'
 import State from '../store.state'
@@ -407,14 +404,6 @@ export default {
       this.$refs.debugInfo.select()
       document.execCommand('copy')
       this.$refs.debugInfo.value = ''
-    },
-
-    copyLogs() {
-      if (!this.$refs.logs) return
-      this.$refs.logs.value = Logs.GetJSON()
-      this.$refs.logs.select()
-      document.execCommand('copy')
-      this.$refs.logs.value = ''
     },
 
     calcFaviCache() {
