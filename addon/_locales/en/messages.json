@@ -244,6 +244,9 @@
   "settings.opt_false": {
     "message": "off"
   },
+  "settings.native_scrollbars": {
+    "message": "Use native scroll-bars"
+  },
   "settings.activate_last_tab_on_panel_switching": {
     "message": "Activate last active tab on panels switching"
   },

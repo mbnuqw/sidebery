@@ -204,4 +204,15 @@ export default {
 .ScrollBox > .scroll-container > .scrollable
   box(relative)
   size(100vw)
+
+// --- Native scroll bars ---
+#root.-native-scroll
+  .ScrollBox > .scroll-container
+    size(100%)
+
+  .ScrollBox > .progress
+    box(none)
+
+  .ScrollBox > .scroll-container > .scrollable
+    size(100%)
 </style>

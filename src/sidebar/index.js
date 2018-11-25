@@ -26,6 +26,10 @@ export default new Vue({
   computed: {
     ...mapGetters(['fontSize', 'defaultCtxId', 'panels']),
 
+    nativeScrollbarsClass() {
+      return State.nativeScrollbars ? '-native-scroll' : '-custom-scroll'
+    },
+
     themeClass() {
       return '-' + State.theme
     },

@@ -244,6 +244,9 @@
   "settings.opt_false": {
     "message": "выкл"
   },
+  "settings.native_scrollbars": {
+    "message": "Использовать системные скроллбары"
+  },
   "settings.activate_last_tab_on_panel_switching": {
     "message": "Активировать последний активный таб при переключении панелей"
   },
