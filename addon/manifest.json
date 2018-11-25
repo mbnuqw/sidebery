@@ -49,13 +49,13 @@
     },
     "next_panel": {
       "suggested_key": {
-        "default": "Alt+Right"
+        "default": "Alt+Period"
       },
       "description": "next_panel"
     },
     "prev_panel": {
       "suggested_key": {
-        "default": "Alt+Left"
+        "default": "Alt+Comma"
       },
       "description": "prev_panel"
     },
