@@ -4,6 +4,13 @@
     section
       h2 {{t('settings.general_title')}}
       .field(
+        :opt-true="$store.state.nativeScrollbars"
+        @click="toggleOpt('nativeScrollbars')")
+        .label {{t('settings.native_scrollbars')}}
+        .input
+          .opt.-true {{t('settings.opt_true')}}
+          .opt.-false {{t('settings.opt_false')}}
+      .field(
         :opt-true="$store.state.activateLastTabOnPanelSwitching"
         @click="toggleOpt('activateLastTabOnPanelSwitching')")
         .label {{t('settings.activate_last_tab_on_panel_switching')}}

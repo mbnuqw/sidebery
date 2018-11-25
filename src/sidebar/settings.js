@@ -10,6 +10,7 @@ export const SETTINGS_OPTIONS = {
 
 export const DEFAULT_SETTINGS = {
   // Global
+  nativeScrollbars: false,
   activateLastTabOnPanelSwitching: true,
   createNewTabOnEmptyPanel: false,
   skipEmptyPanels: false,

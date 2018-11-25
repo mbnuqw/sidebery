@@ -8,7 +8,7 @@
   },
   "author": "mbnuqw",
   "name": "__MSG_ExtName__",
-  "version": "1.5.1",
+  "version": "1.6.0",
   "default_locale": "en",
   "description": "__MSG_ExtDesc__",
   "homepage_url": "https://github.com/mbnuqw/sidebery",
@@ -49,13 +49,13 @@
     },
     "next_panel": {
       "suggested_key": {
-        "default": "Alt+Right"
+        "default": "Alt+Period"
       },
       "description": "next_panel"
     },
     "prev_panel": {
       "suggested_key": {
-        "default": "Alt+Left"
+        "default": "Alt+Comma"
       },
       "description": "prev_panel"
     },
