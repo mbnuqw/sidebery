@@ -71,11 +71,7 @@
       :store-id="c.cookieStoreId"
       :pos="getPanelPos(i)"
       :active="panelIs(i)"
-      @create-tab="createTab"
-      @panel-loading-start="onPanelLoadingStart(i)"
-      @panel-loading-end="onPanelLoadingEnd(i)"
-      @panel-loading-ok="onPanelLoadingOk(i)"
-      @panel-loading-err="onPanelLoadingErr(i)")
+      @create-tab="createTab")
     settings-panel.panel(:pos="settingsPanelPos")
 </template>
 

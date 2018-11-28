@@ -1,9 +1,17 @@
+import EventBus from '../event-bus'
+
 export default {
   /**
    * Load bookmarks and restore tree state
    */
   async loadBookmarks({ state }) {
-    const bookmarks = await browser.bookmarks.getTree()
+    EventBus.$emit('panelLoadingStart', 0)
+    let bookmarks = []
+    try {
+      bookmarks = await browser.bookmarks.getTree()
+    } catch (err) {
+      EventBus.$emit('panelLoadingErr', 0)
+    }
 
     // If not private, restore bookmarks tree
     if (!state.private) {
@@ -24,5 +32,7 @@ export default {
     }
 
     state.bookmarks = bookmarks[0].children
+    EventBus.$emit('panelLoadingOk', 0)
+    EventBus.$emit('bookmarks.render')
   },
 }
