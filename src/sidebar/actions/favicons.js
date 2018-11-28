@@ -75,4 +75,22 @@ export default {
     await browser.storage.local.set({ favicons: favs })
     state.favicons = favs
   },
+
+  /**
+   * Try to remove unused favicons.
+   */
+  async tryClearFaviCache({ dispatch }, time) {
+    const now = ~~(Date.now() / 1000)
+
+    let ans = await browser.storage.local.get('favAutoCleanTime')
+    if (!ans.favAutoCleanTime) {
+      await browser.storage.local.set({ favAutoCleanTime: now })
+      return
+    }
+
+    if (ans.favAutoCleanTime < now - time) {
+      await dispatch('clearFaviCache')
+      await browser.storage.local.set({ favAutoCleanTime: now })
+    }
+  },
 }

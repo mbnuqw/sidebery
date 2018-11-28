@@ -86,6 +86,9 @@ export default new Vue({
 
     const dMakingSnapshot = Utils.Debounce(() => Store.dispatch('makeSnapshot'), 10000)
     Store.watch(Getters.tabs, dMakingSnapshot.func)
+
+    // Try to clear unneeded favicons
+    Store.dispatch('tryClearFaviCache', 86400)
   },
 
   mounted() {
