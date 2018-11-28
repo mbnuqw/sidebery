@@ -590,10 +590,6 @@ export default {
     transition: none
     color: var(--settings-label-btn-fg-active)
 
-// --- Btn ---
-.Settings .btn
-  text(s: rem(14))
-
 // --- Keybindings ---
 .Settings .keybinding
   box(relative, flex)
