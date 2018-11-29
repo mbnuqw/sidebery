@@ -1,3 +1,5 @@
+import { Translate, PlurTrans } from '../mixins/dict'
+
 /*global browser:true*/
 // prettier-ignore
 const Alph = [
@@ -164,6 +166,31 @@ function UTime(sec) {
   return `${dthr}:${dtmin}:${dtsec}`
 }
 
+/**
+ * Get elapsed time string from unix seconds
+ */
+function UElapsed(sec = 0) {
+  const now = ~~(Date.now() / 1000)
+  let elapsed = now - sec
+  if (elapsed < 60) return Translate('elapsed.now')
+  elapsed = ~~(elapsed / 60)
+  // Less then an hour
+  if (elapsed < 60) return `${elapsed} ${Translate('elapsed.min')}`
+  elapsed = ~~(elapsed / 60)
+  // Less then a day
+  if (elapsed < 24) return `${elapsed} ${Translate('elapsed.hr')}`
+  elapsed = ~~(elapsed / 24)
+  // Less then a week
+  if (elapsed < 7) return `${elapsed} ${PlurTrans('elapsed.day')}`
+  let weeks = ~~(elapsed / 7)
+  // Less then a longest month
+  if (elapsed < 31) return `${weeks} ${PlurTrans('elapsed.week')}`
+  elapsed = ~~(elapsed / 30.44)
+  // Less then a year
+  if (elapsed < 12) return `${elapsed} ${PlurTrans('elapsed.month')}`
+  return `${~~(elapsed / 12)} ${PlurTrans('elapsed.year')}`
+}
+
 export default {
   Uid,
   Asap,
@@ -175,4 +202,5 @@ export default {
   GetPanelIndex,
   UDate,
   UTime,
+  UElapsed,
 }

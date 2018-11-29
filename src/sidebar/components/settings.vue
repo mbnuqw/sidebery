@@ -134,7 +134,7 @@
           v-for="(s, i) in snapshots"
           :title="firstFiveUrls(s.tabs)"
           @click="applySnapshot(s)")
-          .time {{utime(s.time)}}
+          .time {{uelapsed(s.time)}}
           .tabs.pinned {{tabsCount('pinned', s.tabs)}}
           .tabs {{tabsCount(null, s.tabs)}}
           .tabs(v-for="c in s.ctxs", :style="{color: c.colorCode}") {{tabsCount(c, s.tabs)}}
@@ -343,6 +343,7 @@ export default {
     },
 
     utime: Utils.UTime,
+    uelapsed: Utils.UElapsed,
 
     // --- Snapshot ---
     toggleSnapshotPinned() {

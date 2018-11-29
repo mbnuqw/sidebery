@@ -485,5 +485,31 @@
   },
   "snapshots.snapshots_close_label": {
     "message": "Close"
+  },
+
+  "elapsed.now": {
+    "message": "just now"
+  },
+  "elapsed.min": {
+    "message": "min ago"
+  },
+  "elapsed.hr": {
+    "message": "hr ago"
+  },
+  "elapsed.day": {
+    "message": "day ago|days ago",
+    "description": "1|"
+  },
+  "elapsed.week": {
+    "message": "week ago|weeks ago",
+    "description": "1|"
+  },
+  "elapsed.month": {
+    "message": "month ago|months ago",
+    "description": "1|"
+  },
+  "elapsed.year": {
+    "message": "year ago|years ago",
+    "description": "1|"
   }
 }

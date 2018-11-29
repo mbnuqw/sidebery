@@ -62,6 +62,7 @@
     "setupFiles": ["./test/web-ext-setup.js", "./test/env-setup.js"],
     "testMatch": [
       "**/src/directives/*.test.js",
+      "**/src/mixins/*.test.js",
       "**/src/libs/*.test.js",
       "**/src/sidebar/*.test.js",
       "**/src/sidebar/components/*.test.js"
