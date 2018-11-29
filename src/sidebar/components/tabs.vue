@@ -112,21 +112,18 @@ export default {
       // Activate tab
       browser.tabs.update(vm.tab.id, { active: true })
 
-      if (!vm.tab.pinned) {
-        let id = vm.tab.id
-        let title = vm.tab.title
-        let globalIndex = vm.tab.index
-        let h = vm.height()
-        let tabY = h >> 1
-        let y = e.clientY
-        let x = e.clientX
-        this.drag = { id, title, globalIndex, i, h, tabY, y, x, top: 0, dragged: false }
-      }
+      // Start dragging
+      let id = vm.tab.id
+      let title = vm.tab.title
+      let globalIndex = vm.tab.index
+      let h = vm.height()
+      let tabY = h >> 1
+      let y = e.clientY
+      let x = e.clientX
+      this.drag = { id, title, globalIndex, i, h, tabY, y, x, top: 0, dragged: false }
     },
 
     onTabMDR(i, e, vm) {
-      if (vm.tab.pinned) return
-
       let id = vm.tab.id
       let h = vm.height()
       let y = e.clientY
@@ -238,7 +235,11 @@ export default {
         })
       }
 
-      menu.add('pin', 'pinTabs', State.selectedTabs)
+      if (State.panelIndex === 1) {
+        menu.add('unpin', 'unpinTabs', State.selectedTabs)
+      } else {
+        menu.add('pin', 'pinTabs', State.selectedTabs)
+      }
       menu.add('tabs_discard', 'discardTabs', State.selectedTabs)
       menu.add('tabs_bookmark', 'bookmarkTabs', State.selectedTabs)
       menu.add('tabs_reload', 'reloadTabs', State.selectedTabs)

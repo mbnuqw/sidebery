@@ -1,7 +1,5 @@
 import { Locales, Translate, PlurTrans } from './dict'
 
-// jest.mock('../../addon/_locales/ru/messages.json')
-
 describe('Dict', () => {
   test('Tranlation', () => {
     Locales['en']['a'] = {
