@@ -1,6 +1,6 @@
 {
   "name": "nav-center",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "Navigation ext",
   "main": "index.js",
   "scripts": {
@@ -62,6 +62,7 @@
     "setupFiles": ["./test/web-ext-setup.js", "./test/env-setup.js"],
     "testMatch": [
       "**/src/directives/*.test.js",
+      "**/src/mixins/*.test.js",
       "**/src/libs/*.test.js",
       "**/src/sidebar/*.test.js",
       "**/src/sidebar/components/*.test.js"

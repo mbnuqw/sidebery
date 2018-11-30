@@ -134,7 +134,7 @@
           v-for="(s, i) in snapshots"
           :title="firstFiveUrls(s.tabs)"
           @click="applySnapshot(s)")
-          .time {{utime(s.time)}}
+          .time {{uelapsed(s.time)}}
           .tabs.pinned {{tabsCount('pinned', s.tabs)}}
           .tabs {{tabsCount(null, s.tabs)}}
           .tabs(v-for="c in s.ctxs", :style="{color: c.colorCode}") {{tabsCount(c, s.tabs)}}
@@ -185,8 +185,8 @@
         .info {{syncDataSize}}
 
       .box
+        .btn(@click="clearFaviCache(false)") {{t('settings.rm_unused_favi_cache')}}
         .btn.-warn(@click="resetSettings") {{t('settings.reset_settings')}}
-        .btn.-warn(@click="clearFaviCache(false)") {{t('settings.rm_unused_favi_cache')}}
         .btn.-warn(@click="clearFaviCache(true)") {{t('settings.rm_favi_cache')}}
         .btn.-warn(@click="clearSyncData") {{t('settings.rm_sync_data')}}
 
@@ -343,6 +343,7 @@ export default {
     },
 
     utime: Utils.UTime,
+    uelapsed: Utils.UElapsed,
 
     // --- Snapshot ---
     toggleSnapshotPinned() {
@@ -600,11 +601,10 @@ export default {
   &:hover
     > .label
       color: var(--settings-label-fg-hover)
-  &[is-focused] 
+  &[is-focused]
     > .value
       color: var(--settings-shortcut-fg-focus)
       box-shadow: var(--settings-shortcut-shadow-focus)
-  &[is-focused] 
     > .label
       color: var(--settings-label-fg-hover)
   + .box

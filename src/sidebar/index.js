@@ -75,17 +75,22 @@ export default new Vue({
     await Store.dispatch('loadSettings')
     await Store.dispatch('loadState')
     Store.dispatch('updateProxiedTabs')
-    await Store.dispatch('loadKebindings')
+    if (State.panelIndex === 0) Store.dispatch('loadBookmarks')
+    Store.dispatch('loadKebindings')
     await Store.dispatch('loadLocalID')
-    await Store.dispatch('loadSyncPanels')
-    await Store.dispatch('loadSnapshots')
-    await Store.dispatch('loadFavicons')
+    Store.dispatch('loadSyncPanels')
+    Store.dispatch('loadSnapshots')
+    Store.dispatch('loadFavicons')
+    if (State.panelIndex !== 0) Store.dispatch('loadBookmarks')
 
     const dSavingState = Utils.Debounce(() => Store.dispatch('saveState'), 567)
     Store.watch(Getters.activePanel, dSavingState.func)
 
     const dMakingSnapshot = Utils.Debounce(() => Store.dispatch('makeSnapshot'), 10000)
     Store.watch(Getters.tabs, dMakingSnapshot.func)
+
+    // Try to clear unneeded favicons
+    Store.dispatch('tryClearFaviCache', 86400)
   },
 
   mounted() {

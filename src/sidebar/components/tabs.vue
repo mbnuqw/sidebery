@@ -26,10 +26,6 @@
         :key="t.id"
         :tab="t"
         :selected="isSelected(t.id)"
-        @panel-loading-start="onPanelLoadingStart"
-        @panel-loading-end="onPanelLoadingEnd"
-        @panel-loading-ok="onPanelLoadingOk"
-        @panel-loading-err="onPanelLoadingErr"
         @mdl="onTabMDL(i, ...arguments)"
         @mdr="onTabMDR(i, ...arguments)"
         @closedown="$emit('closedown', i)")
@@ -116,21 +112,18 @@ export default {
       // Activate tab
       browser.tabs.update(vm.tab.id, { active: true })
 
-      if (!vm.tab.pinned) {
-        let id = vm.tab.id
-        let title = vm.tab.title
-        let globalIndex = vm.tab.index
-        let h = vm.height()
-        let tabY = h >> 1
-        let y = e.clientY
-        let x = e.clientX
-        this.drag = { id, title, globalIndex, i, h, tabY, y, x, top: 0, dragged: false }
-      }
+      // Start dragging
+      let id = vm.tab.id
+      let title = vm.tab.title
+      let globalIndex = vm.tab.index
+      let h = vm.height()
+      let tabY = h >> 1
+      let y = e.clientY
+      let x = e.clientX
+      this.drag = { id, title, globalIndex, i, h, tabY, y, x, top: 0, dragged: false }
     },
 
     onTabMDR(i, e, vm) {
-      if (vm.tab.pinned) return
-
       let id = vm.tab.id
       let h = vm.height()
       let y = e.clientY
@@ -242,7 +235,11 @@ export default {
         })
       }
 
-      menu.add('pin', 'pinTabs', State.selectedTabs)
+      if (State.panelIndex === 1) {
+        menu.add('unpin', 'unpinTabs', State.selectedTabs)
+      } else {
+        menu.add('pin', 'pinTabs', State.selectedTabs)
+      }
       menu.add('tabs_discard', 'discardTabs', State.selectedTabs)
       menu.add('tabs_bookmark', 'bookmarkTabs', State.selectedTabs)
       menu.add('tabs_reload', 'reloadTabs', State.selectedTabs)
@@ -387,22 +384,6 @@ export default {
           this.dragEnd = false
         }, 128)
       }
-    },
-
-    onPanelLoadingStart() {
-      this.$emit('panel-loading-start')
-    },
-
-    onPanelLoadingEnd() {
-      this.$emit('panel-loading-end')
-    },
-
-    onPanelLoadingOk() {
-      this.$emit('panel-loading-ok')
-    },
-
-    onPanelLoadingErr() {
-      this.$emit('panel-loading-err')
     },
 
     onKeySelect(dir) {

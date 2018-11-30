@@ -88,7 +88,6 @@ export default {
     // If bookmarks too many, do not render
     // them when panel is inactive
     active(c, p) {
-      if (!State.bookmarks.length) return
       const scrollBox = this.$refs.scrollBox
       if (!scrollBox) return
 
@@ -126,26 +125,19 @@ export default {
     browser.bookmarks.onMoved.addListener(this.onMoved)
     browser.bookmarks.onRemoved.addListener(this.onRemoved)
 
-    this.$emit('panel-loading-start')
-    try {
-      await Store.dispatch('loadBookmarks')
-      this.$emit('panel-loading-ok')
-    } catch (err) {
-      this.$emit('panel-loading-err')
-    }
-
-    if (this.active) {
-      this.$nextTick(() => {
-        this.renderable = true
-        setTimeout(() => {
-          this.visible = true
-        }, 16)
-      })
-    }
-
     // Setup global events listeners
     EventBus.$on('bookmarks.collapseAll', this.collapseAll)
     EventBus.$on('bookmarks.reloadBookmarks', this.reloadBookmarks)
+    EventBus.$on('bookmarks.render', () => {
+      if (this.active) {
+        this.$nextTick(() => {
+          this.renderable = true
+          setTimeout(() => {
+            this.visible = true
+          }, 16)
+        })
+      }
+    })
   },
 
   mounted() {
@@ -634,15 +626,15 @@ export default {
      * prev state.
      */
     async reloadBookmarks() {
-      this.$emit('panel-loading-start')
+      EventBus.$emit('panelLoadingStart', 0)
       try {
         let tree = await browser.bookmarks.getTree()
         State.bookmarks = tree[0].children
-        this.$emit('panel-loading-ok')
+        EventBus.$emit('panelLoadingOk', 0)
       } catch (err) {
         Logs.E('Cannot reload bookmarks', err)
         State.bookmarks = []
-        this.$emit('panel-loading-err')
+        EventBus.$emit('panelLoadingErr', 0)
       }
     },
   },

@@ -5,22 +5,28 @@ Manage your tabs and bookmarks in sidebar.
 
 ## Features
 
-- Vertical tabs
+- Vertical layout
 - Bookmarks operations
 - Contextual Identities management
-- Synchronizing tabs per containers
+- Synchronizing containers
+- Different proxy settings for each containers
+- Creating tabs snapshots for easy recovering
 - Light and dark themes
 - Configurable navigation
+- Multiple tabs selection with right mouse button
 
 
 ## Usage
 
-- Open: `Ctrl+E` (windows: `F1`)
-- Switch to next panel: `Ctrl+Period`
-- Switch to previous panel: `Ctrl+Comma`
-- Create new tab in current panel: `Ctrl+Space` or middle click on panel
-- Remove tab: `Ctrl+Delete` (macos: `Ctrl+W`)
-- ... and all default firefox keybindings
+- Open - `Ctrl+E` (windows: `F1`) or click on extension button
+- Switch to next panel - `Alt+Period` or scroll to right (if configured)
+- Switch to previous panel - `Alt+Comma` or scroll to left (if configured)
+- Create new tab in current panel - `Ctrl+Space` or middle click on panel
+- Remove tab - `Ctrl+Delete` (macos: `Ctrl+W`)
+- Select tabs and open context menu - push right mouse button and move cursor
+- Select all - `Alt+G`
+- Select next/prev element - `Alt+Down/Up`
+- Open panel menu - right click on panel icon
 
 
 ## Hide/customize native panels
