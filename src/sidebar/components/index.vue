@@ -593,7 +593,11 @@ export default {
         })
       }
 
-      if (State.noEmptyDefault && tab.cookieStoreId === this.defaultCtxId) {
+      if (
+        State.noEmptyDefault
+        && !tab.pinned
+        && tab.cookieStoreId === this.defaultCtxId
+      ) {
         const panelTabs = this.panels[panelIndex].tabs
         if (panelTabs && panelTabs.length === 1) {
           browser.tabs.create({})
