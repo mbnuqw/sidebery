@@ -59,13 +59,17 @@ export default {
    * Remove tab.
    */
   async removeTab({ state, getters }, tab) {
-    let p = getters.panels.find(p => p.cookieStoreId === tab.cookieStoreId)
+    let p = Utils.GetPanelOf(getters.panels, tab)
     if (!p || !p.tabs) return
     if (state.lockedPanels.includes(tab.cookieStoreId) && tab.url.indexOf('about')) {
       return
     }
 
-    if (state.noEmptyDefault && tab.cookieStoreId === getters.defaultCtxId) {
+    if (
+      state.noEmptyDefault
+      && !tab.pinned
+      && tab.cookieStoreId === getters.defaultCtxId
+    ) {
       const panelIndex = Utils.GetPanelIndex(getters.panels, tab.id)
       const panelTabs = getters.panels[panelIndex].tabs
       if (panelTabs && panelTabs.length === 1) {

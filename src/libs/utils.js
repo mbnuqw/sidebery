@@ -139,6 +139,17 @@ function GetPanelIndex(panels, tabId) {
 }
 
 /**
+ * Get panel by tab obj.
+ */
+function GetPanelOf(panels, tab) {
+  if (tab.pinned) return panels[1]
+  for (let i = 2; i < panels.length; i++) {
+    if (panels[i].cookieStoreId === tab.cookieStoreId) return panels[i]
+  }
+  return null
+}
+
+/**
  * Get date string from unix seconds
  */
 function UDate(sec) {
@@ -200,6 +211,7 @@ export default {
   BytesToStr,
   GetAllWindows,
   GetPanelIndex,
+  GetPanelOf,
   UDate,
   UTime,
   UElapsed,
