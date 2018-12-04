@@ -438,6 +438,7 @@ export default {
      */
     clearFaviCache(all) {
       Store.dispatch('clearFaviCache', { all })
+      if (!all) this.calcFaviCache()
     },
 
     /**
