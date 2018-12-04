@@ -145,34 +145,27 @@ export default {
      * Get list of navigational buttons
      */
     nav() {
-      let noPinned = !this.pinnedTabs.length
       let cap = ~~((this.width - 56) / 34)
       let halfCap = cap >> 1
       let invModCap = (cap % halfCap) ^ 1
 
-      let i
-      let k = 0
+      let i, k
       let out = []
       let hideOffset = 0
-      for (i = 0; i < DEFAULT_PANELS.length; i++, k++) {
+      for (i = 0, k = 0; i < DEFAULT_PANELS.length; i++, k++) {
         const btn = DEFAULT_PANELS[i]
         btn.loading = this.loading[i]
         btn.hidden = false
-        if (noPinned && btn.pinned) {
+        if (
+          !this.anyPinnedTabs && btn.pinned
+          || !State.private && btn.private
+          || State.private && btn.cookieStoreId === DEFAULT_CTX
+        ) {
           btn.hidden = true
           if (State.panelIndex > k) hideOffset++
         }
-        if (!State.private && btn.private) {
-          btn.hidden = true
-          if (State.panelIndex > k) hideOffset++
-        }
-        if (State.private && btn.cookieStoreId === DEFAULT_CTX) {
-          btn.hidden = true
-          if (State.panelIndex > k) hideOffset++
-        }
-        btn.updated = !!State.updatedTabs.find(t => {
-          return t.panelIndex === k && k !== State.panelIndex && t.state > 1
-        })
+        btn.updated = this.updatedPanels.includes(btn.cookieStoreId)
+        if (k === State.panelIndex) btn.updated = false
         out.push(btn)
       }
       for (i = 0; i < State.ctxs.length; i++, k++) {
@@ -180,13 +173,12 @@ export default {
         btn.loading = this.loading[k]
         if (State.private) {
           btn.hidden = true
-          continue
+          break
         }
         if (!btn.menu) btn.menu = TabsMenu
         btn.hidden = false
-        btn.updated = !!State.updatedTabs.find(t => {
-          return t.panelIndex === k && k !== State.panelIndex && t.state > 1
-        })
+        btn.updated = this.updatedPanels.includes(btn.cookieStoreId)
+        if (k === State.panelIndex) btn.updated = false
         out.push(btn)
       }
 
@@ -203,10 +195,18 @@ export default {
     },
 
     /**
-     * Pinned tabs
+     * Have any pinned tabs
      */
-    pinnedTabs() {
-      return State.tabs.filter(t => t.pinned)
+    anyPinnedTabs() {
+      if (!State.tabs[0]) return false
+      return !!State.tabs[0].pinned
+    },
+
+    /**
+     * List of updated panels
+     */
+    updatedPanels() {
+      return Object.values(State.updatedTabs)
     },
   },
 
@@ -242,6 +242,9 @@ export default {
     EventBus.$on('panelLoadingOk', panelIndex => this.onPanelLoadingOk(panelIndex))
     EventBus.$on('panelLoadingErr', panelIndex => this.onPanelLoadingErr(panelIndex))
     EventBus.$on('dragTabStart', tabInfo => this.outerDraggedTab = tabInfo)
+
+    // --- Non-watched vars
+    this.updatedTabs = {}
   },
 
   // --- Mounted Hook ---
@@ -530,14 +533,7 @@ export default {
 
       // Handle url change
       if (change.hasOwnProperty('url')) {
-        const i = State.updatedTabs.findIndex(t => t.id === tab.id)
-        const info = State.updatedTabs[i]
-        if (info) {
-          info.state = 0
-          State.updatedTabs.splice(i, 1, info)
-        } else {
-          State.updatedTabs.push({ id: tab.id, state: 0 })
-        }
+        this.updatedTabs[tab.id] = 1
       }
 
       // Handle title change
@@ -550,13 +546,11 @@ export default {
           const hn = prevTabState.url.split('/')[2]
           const shn = hn.indexOf('www.') ? hn : hn.slice(4)
           if (prevTabState.title.indexOf(shn)) {
-            const i = State.updatedTabs.findIndex(t => t.id === tab.id)
-            if (i >= 0) {
-              const info = State.updatedTabs[i]
-              const panelIndex = Utils.GetPanelIndex(this.panels, tab.id)
-              info.panelIndex = panelIndex
-              info.state++
-              State.updatedTabs.splice(i, 1, info)
+            if (this.updatedTabs[tab.id]) {
+              this.updatedTabs[tab.id]++
+              if (this.updatedTabs[tab.id] > 2) {
+                this.$set(State.updatedTabs, tab.id, tab.cookieStoreId)
+              }
             }
           }
         }
@@ -613,8 +607,8 @@ export default {
       if (State.activeTabs[panelIndex] !== null) State.activeTabs[panelIndex] = null
 
       // Remove updated flag
-      const upTabIndex = State.updatedTabs.findIndex(t => t.id === tabId)
-      if (upTabIndex !== -1) State.updatedTabs.splice(upTabIndex, 1)
+      this.$delete(State.updatedTabs, tabId)
+      this.updatedTabs[tabId] = 0
 
       Store.dispatch('recalcPanelScroll')
       Store.dispatch('saveSyncPanels')
@@ -674,8 +668,8 @@ export default {
       State.tabs.splice(i, 1)
 
       // Remove updated flag
-      const upTabIndex = State.updatedTabs.findIndex(t => t.id === id)
-      if (upTabIndex !== -1) State.updatedTabs.splice(upTabIndex, 1)
+      this.$delete(State.updatedTabs, id)
+      this.updatedTabs[id] = 0
 
       Store.dispatch('recalcPanelScroll')
       Store.dispatch('saveSyncPanels')
@@ -719,8 +713,8 @@ export default {
       }
 
       // Remove updated flag
-      const upTabIndex = State.updatedTabs.findIndex(t => t.id === info.tabId)
-      if (upTabIndex !== -1) State.updatedTabs.splice(upTabIndex, 1)
+      this.$delete(State.updatedTabs, info.tabId)
+      this.updatedTabs[info.tabId] = 0
 
       State.activeTabs[panelIndex] = info.tabId
     },

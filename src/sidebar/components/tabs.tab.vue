@@ -74,9 +74,7 @@ export default {
     ...mapGetters(['showTabRmBtn']),
 
     updated() {
-      const info = State.updatedTabs.find(t => t.id === this.tab.id)
-      if (info && info.state > 1) return true
-      return false
+      return !!State.updatedTabs[this.tab.id]
     },
 
     favicon() {
