@@ -409,7 +409,10 @@ export default {
     },
 
     onKeySelectChange(dir) {
-      if (State.selectedTabs.length === 0) return
+      if (State.selectedTabs.length === 0) {
+        this.onKeySelect(dir)
+        return
+      }
 
       if (State.selectedTabs.length === 1) {
         const selId = State.selectedTabs[0]
