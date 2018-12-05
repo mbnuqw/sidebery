@@ -27,6 +27,7 @@ export function PlurTrans(id, val) {
   if (!id) return ''
   if (!Locales[LANG][id] || Locales[LANG][id].message === undefined) return id
   const forms = Locales[LANG][id].message.split('|')
+  if (forms.length === 1) return Locales[LANG][id].message
   const ranges = Locales[LANG][id].description.split('|')
     .map(range => {
       if (!range) return null
