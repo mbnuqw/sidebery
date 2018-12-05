@@ -180,8 +180,8 @@ function UTime(sec) {
 /**
  * Get elapsed time string from unix seconds
  */
-function UElapsed(sec = 0) {
-  const now = ~~(Date.now() / 1000)
+function UElapsed(sec = 0, nowSec = 0) {
+  const now = nowSec || ~~(Date.now() / 1000)
   let elapsed = now - sec
   if (elapsed < 60) return Translate('elapsed.now')
   elapsed = ~~(elapsed / 60)
