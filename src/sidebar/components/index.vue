@@ -27,7 +27,7 @@
       .panel-btn(
         v-for="(btn, i) in nav"
         :key="btn.cookieStoreId || btn.name"
-        :title="btn.name"
+        :title="getTooltip(i)"
         :loading="btn.loading"
         :updated="btn.updated"
         :data-active="panelIs(i)"
@@ -832,6 +832,14 @@ export default {
     updateNavSize() {
       if (this.width !== window.innerWidth) this.width = window.innerWidth
       this.recalcPanelMenuHeight()
+    },
+
+    /**
+     * Get tooltip for button
+     */
+    getTooltip(i) {
+      if (!this.panels[i].tabs) return this.nav[i].name
+      return `${this.nav[i].name}: ${this.panels[i].tabs.length}`
     },
   },
 }
