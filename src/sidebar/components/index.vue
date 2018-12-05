@@ -639,6 +639,10 @@ export default {
 
       // Move tab in tabs array
       let movedTab = State.tabs.splice(info.fromIndex, 1)[0]
+      if (!movedTab) {
+        const i = State.tabs.findIndex(t => t.id === id)
+        movedTab = State.tabs.splice(i, 1)[0]
+      }
       if (!movedTab) return
       movedTab.index = info.toIndex
 
