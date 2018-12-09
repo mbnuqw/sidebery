@@ -171,11 +171,6 @@
         .label {{t('settings.found_bug_label')}}
         a.btn(tabindex="-1", :href="issueLink") {{t('settings.repo_issue')}}
 
-      .box
-        .label Debug
-        .btn(@click="copyDebugInfo") {{t('settings.cp_debug_info')}}
-        textarea.hidden(ref="debugInfo", tabindex="-1")
-
       .field(@click="calcFaviCache")
         .label {{t('settings.cached_favics')}}
         .info {{faviCache}}
@@ -256,7 +251,7 @@ export default {
           id: c.cookieStoreId,
           name: c.name,
           color: c.colorCode,
-          active: !!State.snapshotsTargets[i + 2]
+          active: !!State.snapshotsTargets[i + 2],
         }
       })
     },
@@ -288,7 +283,7 @@ export default {
     changeKeybinding(k, i) {
       this.$refs.keybindingInputs[i].focus()
       this.lastShortcut = State.keybindings[i]
-      State.keybindings.splice(i, 1, {...k, shortcut: 'Press new shortcut', focus: true})
+      State.keybindings.splice(i, 1, { ...k, shortcut: 'Press new shortcut', focus: true })
     },
     onKBBlur(k, i) {
       if (this.lastShortcut) {
@@ -317,7 +312,7 @@ export default {
 
       if (this.checkShortcut(shortcut)) {
         this.lastShortcut = null
-        State.keybindings.splice(i, 1, {...k, shortcut, focus: false})
+        State.keybindings.splice(i, 1, { ...k, shortcut, focus: false })
         Store.dispatch('updateKeybinding', { name: k.name, shortcut })
         this.$refs.keybindingInputs[i].blur()
       }
@@ -369,10 +364,11 @@ export default {
 
     tabsCount(ctx, tabs) {
       if (ctx === 'pinned') return tabs.filter(t => t.pinned).length
-      if (!ctx) return tabs.filter(t => {
-        return t.cookieStoreId === this.defaultCtxId
-          && !t.pinned
-      }).length
+      if (!ctx) {
+        return tabs.filter(t => {
+          return t.cookieStoreId === this.defaultCtxId && !t.pinned
+        }).length
+      }
       return tabs.filter(t => t.cookieStoreId === ctx.cookieStoreId).length
     },
 
@@ -382,10 +378,12 @@ export default {
     firstFiveUrls(tabs) {
       if (!tabs) return ''
       let out = tabs.length > 7 ? tabs.slice(0, 7) : tabs
-      let outStr = out.map(t => {
-        if (t.url.length <= 36) return t.url
-        else return t.url.slice(0, 36) + '...'
-      }).join('\n')
+      let outStr = out
+        .map(t => {
+          if (t.url.length <= 36) return t.url
+          else return t.url.slice(0, 36) + '...'
+        })
+        .join('\n')
       if (tabs.length > 7) outStr += '\n...'
       return outStr
     },
@@ -406,14 +404,6 @@ export default {
     },
 
     // --- Help ---
-    copyDebugInfo() {
-      if (!this.$refs.debugInfo) return
-      this.$refs.debugInfo.value = this.$root.copyDebugInfo()
-      this.$refs.debugInfo.select()
-      document.execCommand('copy')
-      this.$refs.debugInfo.value = ''
-    },
-
     calcFaviCache() {
       const size = Utils.StrSize(JSON.stringify(State.favicons))
       const count = Object.keys(State.favicons).length
