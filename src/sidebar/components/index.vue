@@ -30,12 +30,15 @@
         :title="getTooltip(i)"
         :loading="btn.loading"
         :updated="btn.updated"
+        :proxified="btn.proxified"
         :data-active="panelIs(i)"
         :data-hidden="btn.hidden"
         @click="onNavClick(i)"
         @mousedown.right="openPanelMenu(i)")
         svg(:style="{fill: btn.colorCode}")
           use(:xlink:href="'#' + btn.icon")
+        .proxy-badge
+          svg: use(xlink:href="#icon_proxy")
         .update-badge
         .ok-badge
           svg: use(xlink:href="#icon_ok")
@@ -170,6 +173,9 @@ export default {
       }
       for (i = 0; i < State.ctxs.length; i++, k++) {
         const btn = State.ctxs[i]
+        btn.proxified = !!State.proxiedPanels.find(p => {
+          return p.id === btn.cookieStoreId && !!p.host && !!p.port
+        })
         btn.loading = this.loading[k]
         if (State.private) {
           btn.hidden = true
@@ -931,6 +937,10 @@ NAV_CONF_HEIGHT = auto
     size(0)
     opacity: 0
     z-index: -1
+  &[proxified]
+    > .proxy-badge
+      opacity: 1
+      transform: scale(1, 1)
   &[updated]
     > .update-badge
       opacity: 1
@@ -950,6 +960,7 @@ NAV_CONF_HEIGHT = auto
     > .err-badge
       opacity: 1
       transform: scale(1, 1)
+  &[proxified]
   &[loading]
   &[updated]
     > svg
@@ -1003,6 +1014,18 @@ NAV_CONF_HEIGHT = auto
   opacity: 0
   transform: scale(0.7, 0.7)
   transition: opacity var(--d-norm), transform var(--d-norm)
+
+.Sidebar .panel-btn > .proxy-badge
+  box(absolute)
+  size(9px, same)
+  pos(b: 6px, r: 7px)
+  fill: var(--nav-btn-fg)
+  opacity: 0
+  transform: scale(0.7, 0.7)
+  transition: opacity var(--d-norm), transform var(--d-norm)
+  > svg
+    box(absolute)
+    size(100%, same)
 
 .Sidebar .panel-btn > .ok-badge
 .Sidebar .panel-btn > .err-badge
