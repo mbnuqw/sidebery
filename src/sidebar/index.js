@@ -7,7 +7,6 @@ import Dict from '../mixins/dict'
 import Store from './store'
 import State from './store.state'
 import Getters from './store.getters'
-import DEFAULT_SETTINGS from './settings'
 
 Vue.mixin(Dict)
 
@@ -80,6 +79,7 @@ export default new Vue({
     Store.dispatch('loadSyncPanels')
     Store.dispatch('loadSnapshots')
     Store.dispatch('loadFavicons')
+    Store.dispatch('loadPermissions')
     await Store.dispatch('loadBookmarks')
 
     const dSavingState = Utils.Debounce(() => Store.dispatch('saveState'), 567)
@@ -142,37 +142,6 @@ export default new Vue({
       Logs.D(`Run command: ${name}`)
       let cmdName = 'kb_' + name
       Store.dispatch(cmdName)
-    },
-
-    /**
-     * Copy to clipboard current state
-     */
-    copyDebugInfo() {
-      if (!this.$refs.sidebar) return
-      let AllTabs = State.tabs.map(t => {
-        const dbgInfo = { ...t }
-        dbgInfo.favIconUrl = t.favIconUrl ? t.favIconUrl.slice(0, 4) : false
-        delete dbgInfo.url
-        delete dbgInfo.title
-        return dbgInfo
-      })
-      let Panels = this.panels.map(p => {
-        let pInfo = { id: p.cookieStoreId }
-        if (p.tabs) {
-          pInfo.tabs = p.tabs.map(t => `id: ${t.id}, index: ${t.index}`)
-          pInfo.tabsCount = p.tabs.length
-        }
-        pInfo.startIndex = p.startIndex
-        pInfo.endIndex = p.endIndex
-        return pInfo
-      })
-      let Settings = {}
-      for (const key in DEFAULT_SETTINGS) {
-        if (!DEFAULT_SETTINGS.hasOwnProperty(key)) continue
-        if (this[key] == null || this[key] == undefined) continue
-        Settings[key] = this[key]
-      }
-      return JSON.stringify({ AllTabs, Panels, Settings }, null, 2)
     },
   },
 })

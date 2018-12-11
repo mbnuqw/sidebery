@@ -66,4 +66,12 @@ export default {
   async broadcast(_, msg = {}) {
     return await browser.runtime.sendMessage(msg)
   },
+
+  /**
+   * Retrieve current permissions
+   */
+  async loadPermissions({ state }) {
+    const permsObj = await browser.permissions.getAll()
+    state.permissions = [...permsObj.permissions, ...permsObj.origins]
+  },
 }

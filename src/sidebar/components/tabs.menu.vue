@@ -362,7 +362,20 @@ export default {
       Store.dispatch('saveState')
     },
 
-    switchProxy(e) {
+    async switchProxy(e) {
+      // Check permissions
+      try {
+        const permitted = await browser.permissions.contains({ origins: ['<all_urls>'] })
+        if (!permitted) {
+          browser.tabs.create({
+            url: browser.runtime.getURL('permissions/all-urls.html'),
+          })
+          return
+        }
+      } catch (err) {
+        return
+      }
+
       let i = this.proxyOpts.indexOf(this.proxied)
       if (e.button === 0) i++
       if (e.button === 2) i--

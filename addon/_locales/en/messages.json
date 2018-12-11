@@ -434,6 +434,16 @@
     "message": "Reset Keybindings"
   },
 
+  "settings.permissions_title": {
+    "message": "Permissions"
+  },
+  "settings.all_urls_label": {
+    "message": "Websites data:"
+  },
+  "settings.all_urls_info": {
+    "message": "Required for:\n- Cleaning cookies\n- Proxy"
+  },
+
   "settings.help_title": {
     "message": "Help"
   },
@@ -511,5 +521,21 @@
   "elapsed.year": {
     "message": "year ago|years ago",
     "description": "1|"
+  },
+
+  "permissions.all_urls.title": {
+    "message": "Permissions"
+  },
+  "permissions.all_urls.logo": {
+    "message": "Sidebery"
+  },
+  "permissions.all_urls.msg": {
+    "message": "Invoked action require some additional permissions:"
+  },
+  "permissions.all_urls.btn": {
+    "message": "Request 'Websites data' permission"
+  },
+  "permissions.all_urls.note": {
+    "message": "This can be undone in sidebery settings section 'permissions'."
   }
 }

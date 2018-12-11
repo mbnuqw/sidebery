@@ -264,6 +264,17 @@ export default {
    * Clear all cookies of tab urls
    */
   async clearTabsCookies({ state }, tabIds) {
+    try {
+      const permitted = await browser.permissions.contains({ origins: ['<all_urls>'] })
+      if (!permitted) {
+        const url = browser.runtime.getURL('permissions/all-urls.html')
+        browser.tabs.create({ url })
+        return
+      }
+    } catch (err) {
+      return
+    }
+
     for (let tabId of tabIds) {
       let tab = state.tabs.find(t => t.id === tabId)
       if (!tab) continue

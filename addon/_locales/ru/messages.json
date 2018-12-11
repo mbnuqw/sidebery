@@ -434,6 +434,16 @@
     "message": "Сбросить клав. настройки"
   },
 
+  "settings.permissions_title": {
+    "message": "Разрешения"
+  },
+  "settings.all_urls_label": {
+    "message": "Данные веб-сайтов:"
+  },
+  "settings.all_urls_info": {
+    "message": "Необходимо для:\n- Удаления куков\n- Прокси"
+  },
+
   "settings.help_title": {
     "message": "Помошь"
   },
@@ -511,6 +521,22 @@
   "elapsed.year": {
     "message": "год назад|года назад|лет назад",
     "description": "1,21|2,3,4,22,23,24|"
+  },
+
+  "permissions.all_urls.title": {
+    "message": "Разрешения"
+  },
+  "permissions.all_urls.logo": {
+    "message": "Sidebery"
+  },
+  "permissions.all_urls.msg": {
+    "message": "Вызванное действие требует дополнительных разрешений:"
+  },
+  "permissions.all_urls.btn": {
+    "message": "Запросить разрешение 'Данные веб-сайтов'"
+  },
+  "permissions.all_urls.note": {
+    "message": "Это разрешение можно отозвать в настройках, секции 'Разрешения'."
   }
 }
 

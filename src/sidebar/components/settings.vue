@@ -165,16 +165,23 @@
         .btn(@click="resetKeybindings") {{t('settings.reset_kb')}}
 
     section
+      h2 {{t('settings.permissions_title')}}
+
+      div
+        .field.inline(:opt-true="permAllUrls", @click="togglePermAllUrls")
+          .label {{t('settings.all_urls_label')}}
+          .input
+            .opt.-true {{t('settings.opt_true')}}
+            .opt.-false {{t('settings.opt_false')}}
+        .box
+          .info {{t('settings.all_urls_info')}}
+
+    section
       h2 {{t('settings.help_title')}}
 
       .box
         .label {{t('settings.found_bug_label')}}
         a.btn(tabindex="-1", :href="issueLink") {{t('settings.repo_issue')}}
-
-      .box
-        .label Debug
-        .btn(@click="copyDebugInfo") {{t('settings.cp_debug_info')}}
-        textarea.hidden(ref="debugInfo", tabindex="-1")
 
       .field(@click="calcFaviCache")
         .label {{t('settings.cached_favics')}}
@@ -219,6 +226,7 @@ export default {
     return {
       faviCache: this.t('settings.cached_favics_unknown'),
       syncDataSize: this.t('settings.sync_data_size_unknown'),
+      permAllUrls: false,
     }
   },
 
@@ -256,10 +264,15 @@ export default {
           id: c.cookieStoreId,
           name: c.name,
           color: c.colorCode,
-          active: !!State.snapshotsTargets[i + 2]
+          active: !!State.snapshotsTargets[i + 2],
         }
       })
     },
+  },
+
+  async mounted() {
+    // Get permissions state
+    this.permAllUrls = await browser.permissions.contains({ origins: ['<all_urls>'] })
   },
 
   methods: {
@@ -288,7 +301,7 @@ export default {
     changeKeybinding(k, i) {
       this.$refs.keybindingInputs[i].focus()
       this.lastShortcut = State.keybindings[i]
-      State.keybindings.splice(i, 1, {...k, shortcut: 'Press new shortcut', focus: true})
+      State.keybindings.splice(i, 1, { ...k, shortcut: 'Press new shortcut', focus: true })
     },
     onKBBlur(k, i) {
       if (this.lastShortcut) {
@@ -317,7 +330,7 @@ export default {
 
       if (this.checkShortcut(shortcut)) {
         this.lastShortcut = null
-        State.keybindings.splice(i, 1, {...k, shortcut, focus: false})
+        State.keybindings.splice(i, 1, { ...k, shortcut, focus: false })
         Store.dispatch('updateKeybinding', { name: k.name, shortcut })
         this.$refs.keybindingInputs[i].blur()
       }
@@ -369,10 +382,11 @@ export default {
 
     tabsCount(ctx, tabs) {
       if (ctx === 'pinned') return tabs.filter(t => t.pinned).length
-      if (!ctx) return tabs.filter(t => {
-        return t.cookieStoreId === this.defaultCtxId
-          && !t.pinned
-      }).length
+      if (!ctx) {
+        return tabs.filter(t => {
+          return t.cookieStoreId === this.defaultCtxId && !t.pinned
+        }).length
+      }
       return tabs.filter(t => t.cookieStoreId === ctx.cookieStoreId).length
     },
 
@@ -382,10 +396,12 @@ export default {
     firstFiveUrls(tabs) {
       if (!tabs) return ''
       let out = tabs.length > 7 ? tabs.slice(0, 7) : tabs
-      let outStr = out.map(t => {
-        if (t.url.length <= 36) return t.url
-        else return t.url.slice(0, 36) + '...'
-      }).join('\n')
+      let outStr = out
+        .map(t => {
+          if (t.url.length <= 36) return t.url
+          else return t.url.slice(0, 36) + '...'
+        })
+        .join('\n')
       if (tabs.length > 7) outStr += '\n...'
       return outStr
     },
@@ -405,15 +421,22 @@ export default {
       Store.dispatch('removeAllSnapshot')
     },
 
-    // --- Help ---
-    copyDebugInfo() {
-      if (!this.$refs.debugInfo) return
-      this.$refs.debugInfo.value = this.$root.copyDebugInfo()
-      this.$refs.debugInfo.select()
-      document.execCommand('copy')
-      this.$refs.debugInfo.value = ''
+    // --- Permissions ---
+    async togglePermAllUrls() {
+      this.permAllUrls = await browser.permissions.contains({ origins: ['<all_urls>'] })
+
+      if (this.permAllUrls) {
+        await browser.permissions.remove({ origins: ['<all_urls>'] })
+        State.proxiedPanels = []
+        this.permAllUrls = await browser.permissions.contains({ origins: ['<all_urls>'] })
+      } else {
+        browser.tabs.create({
+          url: browser.runtime.getURL('permissions/all-urls.html'),
+        })
+      }
     },
 
+    // --- Help ---
     calcFaviCache() {
       const size = Utils.StrSize(JSON.stringify(State.favicons))
       const count = Object.keys(State.favicons).length
@@ -541,6 +564,14 @@ export default {
   text(s: rem(14))
   color: var(--settings-label-fg)
   margin: 0 0 5px
+
+.Settings .box > .info
+  box(relative)
+  text(s: rem(13)) 
+  size(max-w: 100%)
+  padding: 0 0 0 8px
+  white-space: pre
+  color: var(--settings-info-fg)
 
 // --- Snapshots ---
 .Settings .snapshot

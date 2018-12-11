@@ -8,7 +8,7 @@
   },
   "author": "mbnuqw",
   "name": "__MSG_ExtName__",
-  "version": "1.6.3",
+  "version": "1.7.0",
   "default_locale": "en",
   "description": "__MSG_ExtDesc__",
   "homepage_url": "https://github.com/mbnuqw/sidebery",
@@ -19,13 +19,14 @@
 
   "permissions": [
     "tabs",
-    "proxy",
-    "bookmarks",
-    "clipboardWrite",
-    "cookies",
     "contextualIdentities",
+    "cookies",
     "storage",
-    "unlimitedStorage",
+    "proxy",
+    "bookmarks"
+  ],
+  
+  "optional_permissions": [
     "<all_urls>"
   ],
 
