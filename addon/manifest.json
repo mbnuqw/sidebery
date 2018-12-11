@@ -19,12 +19,14 @@
 
   "permissions": [
     "tabs",
-    "proxy",
-    "bookmarks",
-    "cookies",
     "contextualIdentities",
+    "cookies",
     "storage",
-    "unlimitedStorage",
+    "proxy",
+    "bookmarks"
+  ],
+  
+  "optional_permissions": [
     "<all_urls>"
   ],
 

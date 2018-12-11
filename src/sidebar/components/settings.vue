@@ -165,6 +165,18 @@
         .btn(@click="resetKeybindings") {{t('settings.reset_kb')}}
 
     section
+      h2 {{t('settings.permissions_title')}}
+
+      div
+        .field.inline(:opt-true="permAllUrls", @click="togglePermAllUrls")
+          .label {{t('settings.all_urls_label')}}
+          .input
+            .opt.-true {{t('settings.opt_true')}}
+            .opt.-false {{t('settings.opt_false')}}
+        .box
+          .info {{t('settings.all_urls_info')}}
+
+    section
       h2 {{t('settings.help_title')}}
 
       .box
@@ -214,6 +226,7 @@ export default {
     return {
       faviCache: this.t('settings.cached_favics_unknown'),
       syncDataSize: this.t('settings.sync_data_size_unknown'),
+      permAllUrls: false,
     }
   },
 
@@ -255,6 +268,11 @@ export default {
         }
       })
     },
+  },
+
+  async mounted() {
+    // Get permissions state
+    this.permAllUrls = await browser.permissions.contains({ origins: ['<all_urls>'] })
   },
 
   methods: {
@@ -403,6 +421,21 @@ export default {
       Store.dispatch('removeAllSnapshot')
     },
 
+    // --- Permissions ---
+    async togglePermAllUrls() {
+      this.permAllUrls = await browser.permissions.contains({ origins: ['<all_urls>'] })
+
+      if (this.permAllUrls) {
+        await browser.permissions.remove({ origins: ['<all_urls>'] })
+        State.proxiedPanels = []
+        this.permAllUrls = await browser.permissions.contains({ origins: ['<all_urls>'] })
+      } else {
+        browser.tabs.create({
+          url: browser.runtime.getURL('permissions/all-urls.html'),
+        })
+      }
+    },
+
     // --- Help ---
     calcFaviCache() {
       const size = Utils.StrSize(JSON.stringify(State.favicons))
@@ -531,6 +564,14 @@ export default {
   text(s: rem(14))
   color: var(--settings-label-fg)
   margin: 0 0 5px
+
+.Settings .box > .info
+  box(relative)
+  text(s: rem(13)) 
+  size(max-w: 100%)
+  padding: 0 0 0 8px
+  white-space: pre
+  color: var(--settings-info-fg)
 
 // --- Snapshots ---
 .Settings .snapshot

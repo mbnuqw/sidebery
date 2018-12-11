@@ -45,6 +45,7 @@ export default {
   private: browser.extension.inIncognitoContext,
   windowId: 0,
   windowFocused: true,
+  permissions: [],
 
   // --- Global State
   ctxMenu: null,
