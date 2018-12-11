@@ -27,21 +27,21 @@
     "babel-plugin-transform-object-rest-spread": "6.26.0",
     "babel-polyfill": "6.26.0",
     "babel-preset-env": "1.7.0",
-    "eslint": "5.8.0",
-    "eslint-plugin-vue": "4.7.1",
+    "eslint": "5.10.0",
+    "eslint-plugin-vue": "5.0.0",
     "jest": "23.6.0",
     "jest-vue-preprocessor": "1.4.0",
     "parcel-bundler": "1.10.3",
     "pug": "2.0.3",
-    "regenerator-runtime": "0.12.1",
+    "regenerator-runtime": "0.13.1",
     "stylus": "0.54.5",
     "vue-hot-reload-api": "2.3.1",
-    "vue-server-renderer": "2.5.17",
-    "vue-template-compiler": "2.5.17",
-    "web-ext": "2.9.1"
+    "vue-server-renderer": "2.5.20",
+    "vue-template-compiler": "2.5.20",
+    "web-ext": "2.9.2"
   },
   "dependencies": {
-    "vue": "2.5.17",
+    "vue": "2.5.20",
     "vuex": "3.0.1"
   },
   "prettier": {
@@ -59,7 +59,10 @@
     "Firefox > 60"
   ],
   "jest": {
-    "setupFiles": ["./test/web-ext-setup.js", "./test/env-setup.js"],
+    "setupFiles": [
+      "./test/web-ext-setup.js",
+      "./test/env-setup.js"
+    ],
     "testMatch": [
       "**/src/directives/*.test.js",
       "**/src/mixins/*.test.js",
