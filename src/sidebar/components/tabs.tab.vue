@@ -84,6 +84,7 @@ export default {
         if (!hn) return
         return State.favicons[hn]
       }
+      return undefined
     },
 
     offsetStyle() {
@@ -374,31 +375,25 @@ export default {
       z-index: 20
 
   &[data-active]
-    background-color: var(--tabs-actibated-bg)
+    background-color: var(--tabs-activated-bg)
     .fav
       opacity: 1
     .title
-      color: var(--tabs-actibated-fg)
+      color: var(--tabs-activated-fg)
     .grad
-      background-image: var(--tabs-actibated-overflow-gradient)
+      background-image: var(--tabs-activated-overflow-gradient)
 
   &[close-btn]:hover
-    &[data-audible] .title
-    &[data-muted] .title
+    &[data-audible] .t-box
+    &[data-muted] .t-box
       mask: linear-gradient(-90deg, transparent, transparent 42px, #000000 64px, #000000)
-    &[data-status="loading"] .title
-      mask: linear-gradient(-90deg, transparent, transparent 32px, #000000 54px, #000000)
-    &[data-status="loading"]&[data-audible] .title
-    &[data-status="loading"]&[data-muted] .title
-      mask: linear-gradient(-90deg, transparent, transparent 52px, #000000 72px, #000000)
-    .title
+    .t-box
       mask: linear-gradient(-90deg, transparent, transparent 24px, #000000 48px, #000000)
   
   &[data-status="loading"]
     cursor: progress
     .title
       transform: translateX(9px)
-      mask: linear-gradient(-90deg, transparent, transparent 9px, #000000 22px, #000000)
     .loading > svg.-a
       animation: tab-loading .8s infinite
     .loading > svg.-b
@@ -422,7 +417,7 @@ export default {
     .fav
     .t-box
       transform: translateX(16px)
-    .title
+    .t-box
       mask: linear-gradient(-90deg, transparent, transparent 16px, #000000 28px, #000000)
 
   &[data-muted]
@@ -437,7 +432,7 @@ export default {
     .fav
     .t-box
       transform: translateX(16px)
-    .title
+    .t-box
       mask: linear-gradient(-90deg, transparent, transparent 16px, #000000 28px, #000000)
 
   &[data-menu]
@@ -605,7 +600,7 @@ export default {
   fill: #DB2216
 
 
-// --- Context hightligh
+// --- Context highlight
 .Tab .ctx
   box(absolute)
   pos(b: 11px, l: 0px)
@@ -619,6 +614,7 @@ export default {
   size(100%)
   transition: opacity var(--d-fast), transform var(--d-fast)
   overflow: hidden
+  mask: linear-gradient(-90deg, transparent, #000000 12px, #000000)
 
 // Title
 .Tab .title
@@ -630,7 +626,6 @@ export default {
   white-space: nowrap
   overflow: hidden
   transition: transform var(--d-fast), color var(--d-fast), mask var(--d-fast)
-  mask: linear-gradient(-90deg, transparent, #000000 12px, #000000)
 
 // Loading
 .Tab .loading
