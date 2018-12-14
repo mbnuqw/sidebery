@@ -375,13 +375,13 @@ export default {
       z-index: 20
 
   &[data-active]
-    background-color: var(--tabs-actibated-bg)
+    background-color: var(--tabs-activated-bg)
     .fav
       opacity: 1
     .title
-      color: var(--tabs-actibated-fg)
+      color: var(--tabs-activated-fg)
     .grad
-      background-image: var(--tabs-actibated-overflow-gradient)
+      background-image: var(--tabs-activated-overflow-gradient)
 
   &[close-btn]:hover
     &[data-audible] .t-box

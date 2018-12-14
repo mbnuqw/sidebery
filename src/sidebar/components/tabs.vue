@@ -535,7 +535,7 @@ export default {
   &[dragged]
     transition: none
     z-index: 50
-    background-color: var(--tabs-actibated-bg)
+    background-color: var(--tabs-activated-bg)
 
 .TabsPanel .drag-fav
   box(relative)
