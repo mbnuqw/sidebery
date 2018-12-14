@@ -8,22 +8,22 @@ describe('Debounce vue directive', () => {
         addEventListener: async function(eventName, handler) {
           expect(eventName).toBe(binding.arg)
           handler()
-          await new Promise(res => setTimeout(res, 10))
+          await new Promise(res => setTimeout(res, 20))
           handler()
-          await new Promise(res => setTimeout(res, 10))
+          await new Promise(res => setTimeout(res, 20))
           handler()
-          await new Promise(res => setTimeout(res, 10))
+          await new Promise(res => setTimeout(res, 20))
           handler()
         },
         removeEventListener: function(eventName, handler) {
           expect(eventName).toBe(binding.arg)
           expect(handler).toBe(binding.handler)
-          counter++
+          counter = 0
         },
       }
       const binding = {
         arg: 'scroll',
-        modifiers: { 20: true, instant: true },
+        modifiers: { 50: true, instant: true },
         value: () => counter++,
       }
       const vnode = {}
@@ -34,12 +34,12 @@ describe('Debounce vue directive', () => {
       expect(counter).toBe(1)
 
       // Final result
-      await new Promise(res => setTimeout(res, 100))
+      await new Promise(res => setTimeout(res, 200))
       expect(counter).toBe(2)
 
       // Unbind
       Debounce.unbind(el, binding, vnode)
-      expect(counter).toBe(3)
+      expect(counter).toBe(0)
     })
 
     test('debouncing vnode event w/o instant flag', async () => {
@@ -50,7 +50,7 @@ describe('Debounce vue directive', () => {
       }
       const binding = {
         arg: 'scroll',
-        modifiers: { 25: true },
+        modifiers: { 50: true },
         value: () => counter++,
       }
       const vnode = {
@@ -58,17 +58,17 @@ describe('Debounce vue directive', () => {
           $on: async function(eventName, handler) {
             expect(eventName).toBe(binding.arg)
             handler()
-            await new Promise(res => setTimeout(res, 10))
+            await new Promise(res => setTimeout(res, 20))
             handler()
-            await new Promise(res => setTimeout(res, 10))
+            await new Promise(res => setTimeout(res, 20))
             handler()
-            await new Promise(res => setTimeout(res, 10))
+            await new Promise(res => setTimeout(res, 20))
             handler()
           },
           $off: function(eventName, handler) {
             expect(eventName).toBe(binding.arg)
             expect(handler).toBe(binding.handler)
-            counter++
+            counter = 0
           },
         }
       }
@@ -79,12 +79,12 @@ describe('Debounce vue directive', () => {
       expect(counter).toBe(0)
 
       // Final result
-      await new Promise(res => setTimeout(res, 100))
+      await new Promise(res => setTimeout(res, 200))
       expect(counter).toBe(1)
 
       // Unbind
       Debounce.unbind(el, binding, vnode)
-      expect(counter).toBe(2)
+      expect(counter).toBe(0)
     })
   })
 })
