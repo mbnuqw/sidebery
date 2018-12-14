@@ -939,7 +939,7 @@ NAV_CONF_HEIGHT = auto
     z-index: -1
   &[proxified]
     > .proxy-badge
-      opacity: 1
+      opacity: .64
       transform: scale(1, 1)
   &[updated]
     > .update-badge
