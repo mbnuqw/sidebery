@@ -75,7 +75,8 @@
       :pos="getPanelPos(i)"
       :active="panelIs(i)"
       @create-tab="createTab")
-    settings-panel.panel(:pos="settingsPanelPos")
+    transition(name="settings")
+      settings-panel(v-if="$store.state.settingsOpened", :pos="settingsPanelPos")
 </template>
 
 
@@ -131,7 +132,7 @@ export default {
     },
 
     /**
-     * Background tranform style for parallax fx
+     * Background transform style for parallax fx
      */
     bgPosStyle() {
       return { transform: `translateX(-${State.panelIndex * 5}%)` }
@@ -1093,6 +1094,28 @@ NAV_CONF_HEIGHT = auto
     transform: translateX(-100%)
   &[pos="right"]
     transform: translateX(100%)
+
+// --- Settings Transitions ---
+.Sidebar
+  .settings-enter-active
+  .settings-leave-active
+    transition: opacity var(--d-fast), z-index var(--d-fast), transform var(--d-fast)
+  .settings-enter
+    transform: translateX(100%)
+    opacity: 0
+    z-index: 0
+  .settings-enter-to
+    transform: translateX(0)
+    opacity: 1
+    z-index: 10
+  .settings-leave
+    transform: translateX(0)
+    opacity: 1
+    z-index: 10
+  .settings-leave-to
+    transform: translateX(100%)
+    opacity: 0
+    z-index: 0
 
 @keyframes loading-spin
   0%
