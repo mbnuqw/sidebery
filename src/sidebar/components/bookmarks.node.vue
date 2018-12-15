@@ -13,7 +13,7 @@
       svg: use(xlink:href="#icon_expand")
     .title(v-if="node.title") {{node.title}}
   transition(name="expand")
-    .children(v-if="isParent" v-show="expanded")
+    .children(v-if="isParent" v-show="expanded" :title="node.title")
       b-node.child(
         v-for="(n, i) in node.children"
         ref="children"
@@ -80,6 +80,7 @@ export default {
     },
 
     tooltip() {
+      if (!this.node.url) return `${this.node.title}`
       return `${this.node.title}\n${this.node.url}`
     },
   },
@@ -362,7 +363,7 @@ export default {
   box(relative, flex)
   align-items: center
   cursor: pointer
-  transform: tranlateZ(0)
+  transform: translateZ(0)
   transition: opacity var(--d-fast)
   &:hover > .title
     color: var(--c-label-fg-hover)
@@ -424,7 +425,18 @@ export default {
 // Node's children box
 .Node .children
   box(relative)
-  transform: tranlateZ(0)
+  // Check that shit
+  transform: translateZ(0)
+  &:before
+    content: ''
+    box(absolute)
+    size(1px, calc(100% - 11px))
+    pos(0, 1px)
+    background-color: #72727264
+    opacity: .5
+    transition: opacity var(--d-slow)
+  &:hover:before
+    opacity: 1
 
 // Expanded state icon
 .Node .exp
