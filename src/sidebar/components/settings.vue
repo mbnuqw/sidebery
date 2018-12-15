@@ -115,7 +115,7 @@
             .opt.-true {{t('settings.opt_true')}}
             .opt.-false {{t('settings.opt_false')}}
         .field.inline(
-          v-for="(c, i) in snapshotContiners"
+          v-for="(c, i) in snapshotContainers"
           :opt-true="c.active"
           @click="toggleSnapshotContainer(i, c.id)")
           .label(:style="{ color: c.color }") {{c.name}}
@@ -258,7 +258,7 @@ export default {
       return !!State.snapshotsTargets[1]
     },
 
-    snapshotContiners() {
+    snapshotContainers() {
       return State.ctxs.map((c, i) => {
         return {
           id: c.cookieStoreId,
@@ -477,6 +477,11 @@ export default {
 
 <style lang="stylus">
 @import '../../styles/mixins'
+
+.Settings
+  box(absolute)
+  pos(0, 0)
+  size(100%, same)
 
 .Settings section
   box(relative)

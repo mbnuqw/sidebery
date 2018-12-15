@@ -425,7 +425,6 @@ export default {
 // Node's children box
 .Node .children
   box(relative)
-  // Check that shit
   transform: translateZ(0)
   &:before
     content: ''
