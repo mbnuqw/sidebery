@@ -75,6 +75,11 @@
         .input
           .opt.-true {{t('settings.opt_true')}}
           .opt.-false {{t('settings.opt_false')}}
+      .field(:opt-true="$store.state.hideInact", @click="toggleHideInact")
+        .label {{t('settings.hide_inactive_panel_tabs')}}
+        .input
+          .opt.-true {{t('settings.opt_true')}}
+          .opt.-false {{t('settings.opt_false')}}
 
     section
       h2 {{t('settings.appearance_title')}}
@@ -168,13 +173,21 @@
       h2 {{t('settings.permissions_title')}}
 
       div
-        .field.inline(:opt-true="permAllUrls", @click="togglePermAllUrls")
+        .field.inline(:opt-true="$store.state.permAllUrls", @click="togglePermAllUrls")
           .label {{t('settings.all_urls_label')}}
           .input
             .opt.-true {{t('settings.opt_true')}}
             .opt.-false {{t('settings.opt_false')}}
         .box
           .info {{t('settings.all_urls_info')}}
+      div
+        .field.inline(:opt-true="$store.state.permTabHide", @click="togglePermTabHide")
+          .label {{t('settings.tab_hide_label')}}
+          .input
+            .opt.-true {{t('settings.opt_true')}}
+            .opt.-false {{t('settings.opt_false')}}
+        .box
+          .info {{t('settings.tab_hide_info')}}
 
     section
       h2 {{t('settings.help_title')}}
@@ -226,7 +239,6 @@ export default {
     return {
       faviCache: this.t('settings.cached_favics_unknown'),
       syncDataSize: this.t('settings.sync_data_size_unknown'),
-      permAllUrls: false,
     }
   },
 
@@ -272,7 +284,9 @@ export default {
 
   async mounted() {
     // Get permissions state
-    this.permAllUrls = await browser.permissions.contains({ origins: ['<all_urls>'] })
+    State.permAllUrls = await browser.permissions.contains({ origins: ['<all_urls>'] })
+    State.permTabHide = await browser.permissions.contains({ permissions: ['tabHide'] })
+    if (State.hideInact) Store.dispatch('hideInactPanelsTabs')
   },
 
   methods: {
@@ -295,6 +309,23 @@ export default {
       if (opt === undefined) return
       Store.commit('setSetting', { key: optName, val: !opt })
       Store.dispatch('saveSettings')
+    },
+
+    async toggleHideInact() {
+      State.permTabHide = await browser.permissions.contains({ permissions: ['tabHide'] })
+      if (State.hideInact) {
+        this.toggleOpt('hideInact')
+        Store.dispatch('showAllTabs')
+      } else {
+        if (State.permTabHide) {
+          this.toggleOpt('hideInact')
+          Store.dispatch('hideInactPanelsTabs')
+        } else {
+          browser.tabs.create({
+            url: browser.runtime.getURL('permissions/tab-hide.html'),
+          })
+        }
+      }
     },
 
     // --- Keybinding ---
@@ -423,17 +454,34 @@ export default {
 
     // --- Permissions ---
     async togglePermAllUrls() {
-      this.permAllUrls = await browser.permissions.contains({ origins: ['<all_urls>'] })
+      State.permAllUrls = await browser.permissions.contains({ origins: ['<all_urls>'] })
 
-      if (this.permAllUrls) {
+      if (State.permAllUrls) {
         await browser.permissions.remove({ origins: ['<all_urls>'] })
         State.proxiedPanels = []
-        this.permAllUrls = await browser.permissions.contains({ origins: ['<all_urls>'] })
+        State.permAllUrls = await browser.permissions.contains({ origins: ['<all_urls>'] })
       } else {
         browser.tabs.create({
           url: browser.runtime.getURL('permissions/all-urls.html'),
         })
       }
+      Store.dispatch('saveSettings')
+    },
+
+    async togglePermTabHide() {
+      State.permTabHide = await browser.permissions.contains({ permissions: ['tabHide'] })
+
+      if (State.permTabHide) {
+        await browser.permissions.remove({ permissions: ['tabHide'] })
+        await Store.dispatch('showAllTabs')
+        State.hideInact = false
+        State.permTabHide = await browser.permissions.contains({ permissions: ['tabHide'] })
+      } else {
+        browser.tabs.create({
+          url: browser.runtime.getURL('permissions/tab-hide.html'),
+        })
+      }
+      Store.dispatch('saveSettings')
     },
 
     // --- Help ---

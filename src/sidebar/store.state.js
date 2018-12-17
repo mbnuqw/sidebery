@@ -60,6 +60,8 @@ export default {
   selectedTabs: [],
   updatedTabs: {},
   snapshots: [],
+  permAllUrls: false,
+  permTabHide: false,
 
   lastPanelIndex: browser.extension.inIncognitoContext ? 2 : 3,
   panelIndex: browser.extension.inIncognitoContext ? 2 : 3,

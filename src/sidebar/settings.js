@@ -22,6 +22,7 @@ export const DEFAULT_SETTINGS = {
   tabLongRightClick: 'none',
   openBookmarkNewTab: false,
   noEmptyDefault: false,
+  hideInact: false,
   
   // Appearance
   fontSize: 'm',

@@ -305,9 +305,11 @@
   "settings.tab_action_none": {
     "message": "none"
   },
-
   "settings.no_empty_default": {
     "message": "Create new tab on emptying default panel"
+  },
+  "settings.hide_inactive_panel_tabs": {
+    "message": "Hide inactive panels tabs"
   },
 
   "settings.open_bookmark_new_tab": {
@@ -443,6 +445,12 @@
   "settings.all_urls_info": {
     "message": "Required for:\n- Cleaning cookies\n- Proxy"
   },
+  "settings.tab_hide_label": {
+    "message": "Hiding tabs:"
+  },
+  "settings.tab_hide_info": {
+    "message": "Required for:\n- Hiding inactive panels tabs"
+  },
 
   "settings.help_title": {
     "message": "Help"
@@ -534,6 +542,9 @@
   },
   "permissions.all_urls.btn": {
     "message": "Request 'Websites data' permission"
+  },
+  "permissions.tabHide.btn": {
+    "message": "Request 'Hiding tabs' permission"
   },
   "permissions.all_urls.note": {
     "message": "This can be undone in sidebery settings section 'permissions'."

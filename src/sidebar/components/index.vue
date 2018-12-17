@@ -307,6 +307,8 @@ export default {
      * Navigation wheel event handler
      */
     onNavWheel(e) {
+      e.stopPropagation()
+      e.preventDefault()
       if (e.deltaY > 0) return Store.dispatch('switchPanel', 1)
       if (e.deltaY < 0) return Store.dispatch('switchPanel', -1)
     },
@@ -728,6 +730,8 @@ export default {
       this.updatedTabs[info.tabId] = 0
 
       State.activeTabs[panelIndex] = info.tabId
+
+      if (State.hideInact) Store.dispatch('hideInactPanelsTabs')
     },
 
     onPanelLoadingStart(i) {

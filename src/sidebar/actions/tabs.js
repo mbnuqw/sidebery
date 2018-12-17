@@ -377,4 +377,29 @@ export default {
       await browser.tabs.remove(tab.id)
     }
   },
+
+  /**
+   * Show all tabs
+   */
+  async showAllTabs({ state }) {
+    return browser.tabs.show(state.tabs.map(t => t.id))
+  },
+
+  /**
+   * (re)Hide inactive panels tabs
+   */
+  async hideInactPanelsTabs({ state, getters }) {
+    const actPI = state.panelIndex < 0 ? state.lastPanelIndex : state.panelIndex
+    const actP = getters.panels[actPI]
+    if (!actP || !actP.tabs || actP.pinned) return
+    const toShow = actP.tabs.map(t => t.id)
+    const toHide = getters.panels.reduce((acc, p, i) => {
+      if (!p.tabs || p.tabs.length === 0) return acc
+      if (i !== actPI) return acc.concat(p.tabs.map(t => t.id))
+      return acc
+    }, [])
+
+    browser.tabs.show(toShow)
+    browser.tabs.hide(toHide)
+  },
 }

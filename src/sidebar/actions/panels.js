@@ -69,6 +69,8 @@ export default {
     }
 
     dispatch('recalcPanelScroll')
+
+    if (state.hideInact) dispatch('hideInactPanelsTabs')
   },
 
   /**
@@ -142,6 +144,8 @@ export default {
 
     dispatch('checkContextBindings', getters.panels[state.panelIndex].cookieStoreId)
     dispatch('recalcPanelScroll')
+
+    if (state.hideInact) dispatch('hideInactPanelsTabs')
   },
 
   /**

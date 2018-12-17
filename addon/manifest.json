@@ -27,7 +27,8 @@
   ],
   
   "optional_permissions": [
-    "<all_urls>"
+    "<all_urls>",
+    "tabHide"
   ],
 
   "sidebar_action": {

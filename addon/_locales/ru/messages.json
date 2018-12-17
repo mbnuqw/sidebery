@@ -305,9 +305,11 @@
   "settings.tab_action_none": {
     "message": "выкл"
   },
-
   "settings.no_empty_default": {
     "message": "Создавать новую вкладку при опустошении стандартной панели"
+  },
+  "settings.hide_inactive_panel_tabs": {
+    "message": "Скрывать табы неактивных панелей"
   },
 
   "settings.open_bookmark_new_tab": {
@@ -443,6 +445,12 @@
   "settings.all_urls_info": {
     "message": "Необходимо для:\n- Удаления куков\n- Прокси"
   },
+  "settings.tab_hide_label": {
+    "message": "Скрытие табов:"
+  },
+  "settings.tab_hide_info": {
+    "message": "Необходимо для:\n- Скрывания табов неактивных панелей"
+  },
 
   "settings.help_title": {
     "message": "Помошь"
@@ -534,6 +542,9 @@
   },
   "permissions.all_urls.btn": {
     "message": "Запросить разрешение 'Данные веб-сайтов'"
+  },
+  "permissions.tabHide.btn": {
+    "message": "Запросить разрешение 'Скрытие табов'"
   },
   "permissions.all_urls.note": {
     "message": "Это разрешение можно отозвать в настройках, секции 'Разрешения'."
