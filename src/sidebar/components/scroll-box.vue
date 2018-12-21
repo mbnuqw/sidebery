@@ -1,5 +1,10 @@
 <template lang="pug">
-.ScrollBox(@mousedown="onMD", @mousemove="onMM", @mouseup="onMU", @mouseleave="onMU", @wheel="onWH")
+.ScrollBox(
+  @mousedown="onMD"
+  @mousemove="onMM"
+  @mouseup="onMU"
+  @mouseleave="onMU"
+  @wheel="onWheel")
   .progress(ref="scroll", :data-scrolling="scrolling")
   .top-shadow(:data-show="topOverflow")
   .bottom-shadow(:data-show="bottomOverflow")
@@ -17,13 +22,16 @@
 import Vue from 'vue'
 import Utils from '../../libs/utils'
 import Debounce from '../../directives/debounce'
-import Store from '../store'
 
 Vue.directive('debounce', Debounce)
 
 const DRAG_SCROLL_AREA = 38
 
 export default {
+  props: {
+    lock: Boolean,
+  },
+
   data() {
     return {
       topOverflow: false,
@@ -83,11 +91,8 @@ export default {
       this.autoScroll()
     },
 
-    onWH(e) {
-      if (this.$refs.scrollContent.offsetHeight >= this.$refs.scrollBox.offsetHeight) {
-        Store.commit('closeCtxMenu')
-        if (e.deltaY) e.stopPropagation()
-      }
+    onWheel(e) {
+      if (this.lock) e.preventDefault()
     },
 
     autoScroll(y, e) {
