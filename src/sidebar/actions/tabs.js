@@ -171,8 +171,11 @@ export default {
   /**
    * Reload tabs
    */
-  reloadTabs(_, tabIds = []) {
+  reloadTabs({ state }, tabIds = []) {
     for (let tabId of tabIds) {
+      const tab = state.tabs.find(t => t.id === tabId)
+      if (!tab) continue
+      if (tab.url === 'about:blank' && tab.status === 'loading') continue
       browser.tabs.reload(tabId)
     }
   },
