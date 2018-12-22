@@ -143,28 +143,6 @@ export default {
   },
 
   /**
-   * Remove all tabs underneath. TODO: replace with closeTabs()
-   */
-  closeTabsDown({ state, getters }, tabId) {
-    let tabIndex
-    const panel = getters.panels.find(p => {
-      if (!p.tabs) return false
-      tabIndex = p.tabs.findIndex(t => t.id === tabId)
-      if (tabIndex !== -1) return true
-    })
-    if (!panel) return
-    if (state.lockedPanels.includes(panel.cookieStoreId)) return
-
-    if (!panel.tabs || !panel.tabs[tabIndex]) return
-    const tabs = panel.tabs.slice(tabIndex)
-    if (panel.tabs[tabIndex - 1] && tabs.find(t => t.active)) {
-      browser.tabs.update(panel.tabs[tabIndex - 1].id, { active: true })
-    }
-
-    browser.tabs.remove(tabs.map(t => t.id))
-  },
-
-  /**
    * Activate tab relatively current active tab.
    */
   switchTab({ state, getters }, { globaly, cycle, step }) {
