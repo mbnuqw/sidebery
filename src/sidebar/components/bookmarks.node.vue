@@ -13,7 +13,7 @@
       svg: use(xlink:href="#icon_expand")
     .title(v-if="node.title") {{node.title}}
   transition(name="expand")
-    .children(v-if="isParent" v-show="expanded" :title="node.title")
+    .children(v-if="isParent", v-show="expanded", :title="node.title")
       b-node.child(
         v-for="(n, i) in node.children"
         ref="children"
@@ -113,6 +113,17 @@ export default {
 
     onFolderExpand(node) {
       this.$emit('expand', node)
+      if (State.autoCloseBookmarks && node.parentId === this.node.id && node.expanded) {
+        for (let child of this.node.children) {
+          if (child.id !== node.id
+          && child.type === 'folder'
+          && child.expanded) {
+            const vm = this.$refs.children.find(c => c.node.id === child.id)
+            if (!vm) continue
+            vm.collapse()
+          }
+        }
+      }
     },
 
     onChildMD(e, nodes) {

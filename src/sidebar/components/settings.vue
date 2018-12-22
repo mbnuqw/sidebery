@@ -75,6 +75,13 @@
         .input
           .opt.-true {{t('settings.opt_true')}}
           .opt.-false {{t('settings.opt_false')}}
+      .field(
+        :opt-true="$store.state.autoCloseBookmarks"
+        @click="toggleOpt('autoCloseBookmarks')")
+        .label {{t('settings.auto_close_bookmarks')}}
+        .input
+          .opt.-true {{t('settings.opt_true')}}
+          .opt.-false {{t('settings.opt_false')}}
       .field(:opt-true="$store.state.hideInact", @click="toggleHideInact")
         .label {{t('settings.hide_inactive_panel_tabs')}}
         .input

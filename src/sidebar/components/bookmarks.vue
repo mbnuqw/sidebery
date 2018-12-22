@@ -500,8 +500,19 @@ export default {
       }
     },
 
-    onFolderExpand() {
+    onFolderExpand(node) {
       this.saveTreeState()
+      if (State.autoCloseBookmarks && node.parentId === 'root________' && node.expanded) {
+        for (let child of State.bookmarks) {
+          if (child.id !== node.id
+          && child.type === 'folder'
+          && child.expanded) {
+            const vm = this.$refs.nodes.find(c => c.node.id === child.id)
+            if (!vm) continue
+            vm.collapse()
+          }
+        }
+      }
     },
 
     onCreate(type, path, onEndHandlers) {

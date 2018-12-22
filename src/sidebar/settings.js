@@ -21,6 +21,7 @@ export const DEFAULT_SETTINGS = {
   tabLongLeftClick: 'none',
   tabLongRightClick: 'none',
   openBookmarkNewTab: false,
+  autoCloseBookmarks: false,
   noEmptyDefault: false,
   hideInact: false,
   
