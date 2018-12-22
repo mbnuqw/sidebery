@@ -444,6 +444,8 @@ export default {
       if (index < 0) index = 0
       if (index >= this.tabs.length) index = this.tabs.length - 1
       State.selectedTabs = [this.tabs[index].id]
+
+      this.scrollToSelectedTab()
     },
 
     onKeySelectChange(dir) {
@@ -468,6 +470,23 @@ export default {
       State.selectedTabs = []
       for (let i = minIndex; i <= maxIndex; i++) {
         State.selectedTabs.push(this.tabs[i].id)
+      }
+
+      this.scrollToSelectedTab()
+    },
+
+    scrollToSelectedTab() {
+      const tabId = State.selectedTabs[0]
+      if (tabId === undefined) return
+      const tabVm = this.$refs.tabs.find(t => t.tab.id === tabId)
+      if (!tabVm) return
+      const activeTabAbsTop = tabVm.$el.offsetTop
+      const activeTabAbsBottom = tabVm.$el.offsetTop + tabVm.$el.offsetHeight
+
+      if (activeTabAbsTop < this.$refs.scrollBox.scrollY + 64) {
+        this.$refs.scrollBox.setScrollY(activeTabAbsTop - 64)
+      } else if (activeTabAbsBottom > this.$refs.scrollBox.scrollY + this.$el.offsetHeight - 64) {
+        this.$refs.scrollBox.setScrollY(activeTabAbsBottom - this.$el.offsetHeight + 64)
       }
     },
 

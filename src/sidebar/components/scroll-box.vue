@@ -1,9 +1,9 @@
 <template lang="pug">
 .ScrollBox(
-  @mousedown="onMD"
-  @mousemove="onMM"
-  @mouseup="onMU"
-  @mouseleave="onMU"
+  @mousedown="onMouseDown"
+  @mousemove="onMouseMove"
+  @mouseup="onMouseUp"
+  @mouseleave="onMouseUp"
   @wheel="onWheel")
   .progress(ref="scroll", :data-scrolling="scrolling")
   .top-shadow(:data-show="topOverflow")
@@ -59,17 +59,17 @@ export default {
   },
 
   methods: {
-    onMD(e) {
+    onMouseDown(e) {
       this.mpb[e.button] = true
     },
 
-    onMU(e) {
+    onMouseUp(e) {
       this.mpb[e.button] = false
       this.autoScroll()
     },
 
-    onMM(e) {
-      if (!this.mpb[0]) return
+    onMouseMove(e) {
+      if (!this.mpb[0] && !this.mpb[2]) return
       let boxHeight = this.$refs.scrollBox.offsetHeight
       let contentHeight = this.$refs.scrollContent.offsetHeight
       if (contentHeight <= boxHeight) return
