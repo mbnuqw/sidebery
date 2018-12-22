@@ -140,11 +140,14 @@
           :title="firstFiveUrls(s.tabs)"
           @click="applySnapshot(s)")
           .time {{uelapsed(s.time)}}
-          .tabs.pinned {{tabsCount('pinned', s.tabs)}}
-          .tabs {{tabsCount(null, s.tabs)}}
-          .tabs(v-for="c in s.ctxs", :style="{color: c.colorCode}") {{tabsCount(c, s.tabs)}}
+          .tabs.pinned(v-if="tabsCount('pinned', s.tabs)") {{tabsCount('pinned', s.tabs)}}
+          .tabs(v-if="tabsCount(null, s.tabs)") {{tabsCount(null, s.tabs)}}
+          .tabs(
+            v-for="c in s.ctxs"
+            v-if="tabsCount(c, s.tabs)"
+            :style="{color: c.colorCode}") {{tabsCount(c, s.tabs)}}
         .label-btn(
-          v-if="snapshots.length"
+          v-if="snapshots.length >= 5"
           @click="viewAllSnapshots") {{t('settings.snapshots_view_all_label')}}
       .box
         .btn(@click="makeSnapshot") {{t('settings.make_snapshot')}}
@@ -418,7 +421,7 @@ export default {
           return t.cookieStoreId === this.defaultCtxId && !t.pinned
         }).length
       }
-      return tabs.filter(t => t.cookieStoreId === ctx.cookieStoreId).length
+      return tabs.filter(t => t.cookieStoreId === ctx.cookieStoreId && !t.pinned).length
     },
 
     /**

@@ -1,5 +1,9 @@
 <template lang="pug">
 .SnapshotsList(v-noise:300.g:12:af.a:0:42.s:0:9="", :is-active="active" @click="cancel")
+  .title
+    .text {{t('settings.snapshots_title')}}
+    .close-btn
+      svg: use(xlink:href="#icon_remove")
   .header
     .datetime {{t('snapshots.snapshots_time_label')}}
     .tabs {{t('snapshots.snapshots_tabs_label')}}
@@ -9,15 +13,16 @@
         v-for="s in snapshots"
         :title="firstFiveUrls(s.tabs)"
         @click="applySnapshot(s)")
-        .datetime
-          .date {{udate(s.time)}}
-          .time {{utime(s.time)}}
-        .tabs.pinned {{tabsCount('pinned', s.tabs)}}
-        .tabs {{tabsCount(null, s.tabs)}}
-        .tabs(v-for="c in s.ctxs", :style="{color: c.colorCode}") {{tabsCount(c, s.tabs)}}
+        .datetime {{uelapsed(s.time)}}
+        .tabs.pinned(v-if="tabsCount('pinned', s.tabs)") {{tabsCount('pinned', s.tabs)}}
+        .tabs(v-if="tabsCount(null, s.tabs)") {{tabsCount(null, s.tabs)}}
+        .tabs(
+          v-for="c in s.ctxs"
+          v-if="tabsCount(c, s.tabs)"
+          :style="{color: c.colorCode}") {{tabsCount(c, s.tabs)}}
     
-  .ctrls
-    .btn {{t('snapshots.snapshots_close_label')}}
+  //- .ctrls
+  //-   .btn {{t('snapshots.snapshots_close_label')}}
 </template>
 
 
@@ -90,27 +95,30 @@ export default {
     firstFiveUrls(tabs) {
       if (!tabs) return ''
       let out = tabs.length > 7 ? tabs.slice(0, 7) : tabs
-      let outStr = out.map(t => {
-        if (t.url.length <= 36) return t.url
-        else return t.url.slice(0, 36) + '...'
-      }).join('\n')
+      let outStr = out
+        .map(t => {
+          if (t.url.length <= 36) return t.url
+          else return t.url.slice(0, 36) + '...'
+        })
+        .join('\n')
       if (tabs.length > 7) outStr += '\n...'
       return outStr
     },
 
     udate: Utils.UDate,
     utime: Utils.UTime,
+    uelapsed: Utils.UElapsed,
 
     /**
      * Get tabs count for provided container
      */
     tabsCount(ctx, tabs) {
       if (ctx === 'pinned') return tabs.filter(t => t.pinned).length
-      if (!ctx) return tabs.filter(t => {
-        return t.cookieStoreId === this.defaultCtxId
-          && !t.pinned
-      }).length
-      return tabs.filter(t => t.cookieStoreId === ctx.cookieStoreId).length
+      if (!ctx)
+        return tabs.filter(t => {
+          return t.cookieStoreId === this.defaultCtxId && !t.pinned
+        }).length
+      return tabs.filter(t => t.cookieStoreId === ctx.cookieStoreId && !t.pinned).length
     },
 
     /**
@@ -139,6 +147,32 @@ export default {
 .SnapshotsList[is-active]
   opacity: 1
   z-index: 1500
+
+.SnapshotsList .title
+  box(relative, flex)
+  justify-content: space-between
+  align-items: center
+  padding: 8px 8px 8px 12px
+  > .text
+    box(relative)
+    text(s: rem(24))
+    color: var(--settings-title-fg)
+  > .close-btn
+    box(relative)
+    size(27px, same)
+    cursor: pointer
+    &:hover > svg
+      fill: #ea4335
+    &:active > svg
+      transition: none
+      fill: #a63626
+    > svg
+      box(absolute)
+      pos(5px, same)
+      size(17px, same)
+      fill: #a63626
+      transition: fill var(--d-fast)
+
 
 .SnapshotsList .header
   box(relative, flex)
