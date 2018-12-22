@@ -12,18 +12,14 @@ export default {
     // Check order of tabs and get moves for normalizing
     const ctxs = [getters.defaultCtxId].concat(state.ctxs.map(ctx => ctx.cookieStoreId))
     const moves = []
-    let index = 0
+    let index = tabs.filter(t => t.pinned).length
     let offset = 0
     for (let i = 0; i < ctxs.length; i++) {
       const ctx = ctxs[i]
       for (let j = 0; j < tabs.length; j++) {
         const tab = tabs[j]
+        if (tab.pinned) continue
         if (tab.cookieStoreId !== ctx) continue
-
-        if (tab.pinned) {
-          index++
-          continue
-        }
 
         if (index !== tab.index + offset) {
           moves.push([tab.id, index])
@@ -32,9 +28,6 @@ export default {
         index++
       }
     }
-
-    // Ask user for normalizing
-    // ...
 
     state.tabs = tabs
 
