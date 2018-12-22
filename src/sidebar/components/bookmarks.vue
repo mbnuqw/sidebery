@@ -113,7 +113,9 @@ export default {
         setTimeout(() => {
           this.lastScrollY = this.$refs.scrollBox.scrollY
           this.renderable = false
-          setTimeout(() => {this.visible = false}, 16)
+          setTimeout(() => {
+            this.visible = false
+          }, 16)
         }, 128)
       }
     },
@@ -504,9 +506,7 @@ export default {
       this.saveTreeState()
       if (State.autoCloseBookmarks && node.parentId === 'root________' && node.expanded) {
         for (let child of State.bookmarks) {
-          if (child.id !== node.id
-          && child.type === 'folder'
-          && child.expanded) {
+          if (child.id !== node.id && child.type === 'folder') {
             const vm = this.$refs.nodes.find(c => c.node.id === child.id)
             if (!vm) continue
             vm.collapse()

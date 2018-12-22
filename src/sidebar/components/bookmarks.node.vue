@@ -115,9 +115,7 @@ export default {
       this.$emit('expand', node)
       if (State.autoCloseBookmarks && node.parentId === this.node.id && node.expanded) {
         for (let child of this.node.children) {
-          if (child.id !== node.id
-          && child.type === 'folder'
-          && child.expanded) {
+          if (child.id !== node.id && child.type === 'folder') {
             const vm = this.$refs.children.find(c => c.node.id === child.id)
             if (!vm) continue
             vm.collapse()
@@ -158,7 +156,9 @@ export default {
           if (this.isParent) opts.push([openDefLabel, this.openInPanel, 'firefox-default'])
           State.ctxs.map(c => {
             opts.push([
-              openPanLabel + `||${c.colorCode}>>${c.name}`, this.openInPanel, c.cookieStoreId
+              openPanLabel + `||${c.colorCode}>>${c.name}`,
+              this.openInPanel,
+              c.cookieStoreId,
             ])
           })
         }
