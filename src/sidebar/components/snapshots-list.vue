@@ -20,9 +20,6 @@
           v-for="c in s.ctxs"
           v-if="tabsCount(c, s.tabs)"
           :style="{color: c.colorCode}") {{tabsCount(c, s.tabs)}}
-    
-  //- .ctrls
-  //-   .btn {{t('snapshots.snapshots_close_label')}}
 </template>
 
 
