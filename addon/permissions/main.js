@@ -6,7 +6,10 @@ void (async function() {
   const msgEl = document.getElementById('msg')
   if (msgEl) msgEl.innerText = browser.i18n.getMessage('permissions.all_urls.msg')
   const btnEl = document.getElementById('req_btn')
-  if (btnEl) btnEl.innerText = browser.i18n.getMessage('permissions.all_urls.btn')
+  if (btnEl) {
+    const permName = btnEl.getAttribute('data-perm')
+    btnEl.innerText = browser.i18n.getMessage(`permissions.${permName}.btn`)
+  }
   const noteEl = document.getElementById('note')
   if (noteEl) noteEl.innerText = browser.i18n.getMessage('permissions.all_urls.note')
 })()
@@ -16,14 +19,12 @@ void (async function() {
   const reqBtnEl = document.getElementById('req_btn')
   if (!reqBtnEl) return
 
-  // Get origins (currently only <all_urls>)
-  const origins = []
-  if (reqBtnEl.getAttribute('data-orig')) origins.push('<all_urls>')
-
   // Get permissions
+  const origins = []
   const permissions = []
   let perm = reqBtnEl.getAttribute('data-perm')
-  if (perm) permissions.push(perm)
+  if (perm === 'all_urls') origins.push('<all_urls>')
+  else if (perm) permissions.push(perm)
 
   reqBtnEl.addEventListener('click', () => {
     browser.permissions.request({ origins, permissions }).then(() => {

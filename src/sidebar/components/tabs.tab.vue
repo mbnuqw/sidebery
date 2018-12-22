@@ -118,12 +118,11 @@ export default {
      */
     onDBL() {
       let dc = State.tabDoubleClick
-      if (dc === 'close_down') Store.dispatch('closeTabsDown', [this.tab.id])
       if (dc === 'reload') Store.dispatch('reloadTabs', [this.tab.id])
       if (dc === 'duplicate') Store.dispatch('duplicateTabs', [this.tab.id])
       if (dc === 'pin') Store.dispatch('repinTabs', [this.tab.id])
       if (dc === 'mute') Store.dispatch('remuteTabs', [this.tab.id])
-      if (dc === 'clear_cookies') Store.dispatch('closeTabsDown', [this.tab.id])
+      if (dc === 'clear_cookies') Store.dispatch('clearTabsCookies', [this.tab.id])
     },
 
     /**
@@ -144,12 +143,11 @@ export default {
         this.$emit('mdl', e, this)
         this.hodorL = setTimeout(() => {
           let llc = State.tabLongLeftClick
-          if (llc === 'close_down') Store.dispatch('closeTabsDown', [this.tab.id])
           if (llc === 'reload') Store.dispatch('reloadTabs', [this.tab.id])
           if (llc === 'duplicate') Store.dispatch('duplicateTabs', [this.tab.id])
           if (llc === 'pin') Store.dispatch('repinTabs', [this.tab.id])
           if (llc === 'mute') Store.dispatch('remuteTabs', [this.tab.id])
-          if (llc === 'clear_cookies') Store.dispatch('closeTabsDown', [this.tab.id])
+          if (llc === 'clear_cookies') Store.dispatch('clearTabsCookies', [this.tab.id])
           this.hodorL = null
         }, 250)
       }
@@ -159,12 +157,11 @@ export default {
         this.$emit('mdr', e, this)
         this.hodorR = setTimeout(() => {
           let lrc = State.tabLongRightClick
-          if (lrc === 'close_down') Store.dispatch('closeTabsDown', [this.tab.id])
           if (lrc === 'reload') Store.dispatch('reloadTabs', [this.tab.id])
           if (lrc === 'duplicate') Store.dispatch('duplicateTabs', [this.tab.id])
           if (lrc === 'pin') Store.dispatch('repinTabs', [this.tab.id])
           if (lrc === 'mute') Store.dispatch('remuteTabs', [this.tab.id])
-          if (lrc === 'clear_cookies') Store.dispatch('closeTabsDown', [this.tab.id])
+          if (lrc === 'clear_cookies') Store.dispatch('clearTabsCookies', [this.tab.id])
           this.hodorR = null
         }, 250)
       }
@@ -310,7 +307,6 @@ export default {
       menu.add('tab_reload', 'reloadTabs', [this.tab.id])
       menu.add('tab_duplicate', 'duplicateTabs', [this.tab.id])
       menu.add('clear_cookies', 'clearTabsCookies', [this.tab.id])
-      menu.add('tab_close_down', 'closeTabsDown', this.tab.id)
 
       Store.commit('closeCtxMenu')
       State.ctxMenu = menu

@@ -13,7 +13,7 @@
       svg: use(xlink:href="#icon_expand")
     .title(v-if="node.title") {{node.title}}
   transition(name="expand")
-    .children(v-if="isParent" v-show="expanded" :title="node.title")
+    .children(v-if="isParent", v-show="expanded", :title="node.title")
       b-node.child(
         v-for="(n, i) in node.children"
         ref="children"
@@ -80,8 +80,9 @@ export default {
     },
 
     tooltip() {
-      if (!this.node.url) return `${this.node.title}`
-      return `${this.node.title}\n${this.node.url}`
+      if (this.node.type === 'folder') return `${this.node.title}: ${this.node.children.length}`
+      if (this.node.type === 'bookmark') return `${this.node.title}\n${this.node.url}`
+      return ''
     },
   },
 
@@ -113,6 +114,15 @@ export default {
 
     onFolderExpand(node) {
       this.$emit('expand', node)
+      if (State.autoCloseBookmarks && node.parentId === this.node.id && node.expanded) {
+        for (let child of this.node.children) {
+          if (child.id !== node.id && child.type === 'folder') {
+            const vm = this.$refs.children.find(c => c.node.id === child.id)
+            if (!vm) continue
+            vm.collapse()
+          }
+        }
+      }
     },
 
     onChildMD(e, nodes) {
@@ -147,7 +157,9 @@ export default {
           if (this.isParent) opts.push([openDefLabel, this.openInPanel, 'firefox-default'])
           State.ctxs.map(c => {
             opts.push([
-              openPanLabel + `||${c.colorCode}>>${c.name}`, this.openInPanel, c.cookieStoreId
+              openPanLabel + `||${c.colorCode}>>${c.name}`,
+              this.openInPanel,
+              c.cookieStoreId,
             ])
           })
         }
@@ -419,7 +431,7 @@ export default {
   color: var(--c-label-fg)
   white-space: nowrap
   overflow: hidden
-  transition: transform var(--d-fast)
+  transition: transform var(--d-fast), color var(--d-fast)
   mask: linear-gradient(-90deg, transparent, #000000 12px, #000000)
 
 // Node's children box

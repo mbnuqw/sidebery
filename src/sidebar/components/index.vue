@@ -285,18 +285,6 @@ export default {
      * Sidebar wheel event handler
      */
     onWH(e) {
-      if (State.scrollThroughTabs !== 'none' && State.panelIndex > 0) {
-        const globaly = State.scrollThroughTabs === 'global'
-        if (e.deltaY > 0) {
-          if (this.wheelBlockTimeout) return
-          Store.dispatch('switchTab', { globaly, cycle: false, step: 1 })
-        }
-        if (e.deltaY < 0) {
-          if (this.wheelBlockTimeout) return
-          Store.dispatch('switchTab', { globaly, cycle: false, step: -1 })
-        }
-      }
-
       if (State.hScrollThroughPanels) {
         if (e.deltaX > 0) return Store.dispatch('switchPanel', 1)
         if (e.deltaX < 0) return Store.dispatch('switchPanel', -1)
@@ -307,6 +295,8 @@ export default {
      * Navigation wheel event handler
      */
     onNavWheel(e) {
+      e.stopPropagation()
+      e.preventDefault()
       if (e.deltaY > 0) return Store.dispatch('switchPanel', 1)
       if (e.deltaY < 0) return Store.dispatch('switchPanel', -1)
     },
@@ -335,12 +325,12 @@ export default {
      */
     onMD(e) {
       if (e.button === 1) {
-        if (this.wheelBlockTimeout) {
-          clearTimeout(this.wheelBlockTimeout)
-          this.wheelBlockTimeout = null
+        if (State.wheelBlockTimeout) {
+          clearTimeout(State.wheelBlockTimeout)
+          State.wheelBlockTimeout = null
         }
-        this.wheelBlockTimeout = setTimeout(() => {
-          this.wheelBlockTimeout = null
+        State.wheelBlockTimeout = setTimeout(() => {
+          State.wheelBlockTimeout = null
         }, 500)
       }
       if (e.button < 2) Store.commit('closeCtxMenu')
@@ -722,12 +712,15 @@ export default {
         if (State.settingsOpened) State.settingsOpened = false
         Store.commit('setPanel', panelIndex)
       }
+      EventBus.$emit('scrollToActiveTab', panelIndex, info.tabId)
 
       // Remove updated flag
       this.$delete(State.updatedTabs, info.tabId)
       this.updatedTabs[info.tabId] = 0
 
       State.activeTabs[panelIndex] = info.tabId
+
+      if (State.hideInact) Store.dispatch('hideInactPanelsTabs')
     },
 
     onPanelLoadingStart(i) {

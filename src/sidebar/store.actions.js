@@ -70,8 +70,13 @@ export default {
   /**
    * Retrieve current permissions
    */
-  async loadPermissions({ state }) {
+  async loadPermissions({ state, dispatch }) {
     const permsObj = await browser.permissions.getAll()
     state.permissions = [...permsObj.permissions, ...permsObj.origins]
+
+    // Get optianal permissions state
+    state.permAllUrls = await browser.permissions.contains({ origins: ['<all_urls>'] })
+    state.permTabHide = await browser.permissions.contains({ permissions: ['tabHide'] })
+    if (state.hideInact) dispatch('hideInactPanelsTabs')
   },
 }
