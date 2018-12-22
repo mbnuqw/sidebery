@@ -281,7 +281,7 @@ export default {
       menu.add('tabs_discard', 'discardTabs', State.selectedTabs)
       menu.add('tabs_bookmark', 'bookmarkTabs', State.selectedTabs)
       menu.add('tabs_reload', 'reloadTabs', State.selectedTabs)
-      menu.add('tabs_close', 'closeTabs', State.selectedTabs)
+      menu.add('tabs_close', 'removeTabs', State.selectedTabs)
 
       Store.commit('closeCtxMenu')
       State.ctxMenu = menu
