@@ -307,7 +307,6 @@ export default {
       menu.add('tab_reload', 'reloadTabs', [this.tab.id])
       menu.add('tab_duplicate', 'duplicateTabs', [this.tab.id])
       menu.add('clear_cookies', 'clearTabsCookies', [this.tab.id])
-      menu.add('tab_close_down', 'closeTabsDown', this.tab.id)
 
       Store.commit('closeCtxMenu')
       State.ctxMenu = menu
