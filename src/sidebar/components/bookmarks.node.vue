@@ -80,8 +80,9 @@ export default {
     },
 
     tooltip() {
-      if (!this.node.url) return `${this.node.title}`
-      return `${this.node.title}\n${this.node.url}`
+      if (this.node.type === 'folder') return `${this.node.title}: ${this.node.children.length}`
+      if (this.node.type === 'bookmark') return `${this.node.title}\n${this.node.url}`
+      return ''
     },
   },
 
@@ -430,7 +431,7 @@ export default {
   color: var(--c-label-fg)
   white-space: nowrap
   overflow: hidden
-  transition: transform var(--d-fast)
+  transition: transform var(--d-fast), color var(--d-fast)
   mask: linear-gradient(-90deg, transparent, #000000 12px, #000000)
 
 // Node's children box
