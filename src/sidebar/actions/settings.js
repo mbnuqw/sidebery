@@ -30,7 +30,8 @@ export default {
     for (const key in DEFAULT_SETTINGS) {
       if (!DEFAULT_SETTINGS.hasOwnProperty(key)) continue
       if (state[key] == null || state[key] == undefined) continue
-      settings[key] = state[key]
+      if (state[key] instanceof Object) settings[key] = JSON.parse(JSON.stringify(state[key]))
+      else settings[key] = state[key]
     }
     await browser.storage.local.set({ settings })
   },

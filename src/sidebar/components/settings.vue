@@ -116,20 +116,20 @@
     section
       h2 {{t('settings.snapshots_title')}}
       div
-        .field.inline(:opt-true="snapshotPinned", @click="toggleSnapshotPinned")
+        .field.inline(:opt-true="snapshotPinned", @click="toggleSnapshots('pinned')")
           .label {{t('settings.snapshots_pinned_label')}}
           .input
             .opt.-true {{t('settings.opt_true')}}
             .opt.-false {{t('settings.opt_false')}}
-        .field.inline(:opt-true="snapshotDefault", @click="toggleSnapshotDefault")
+        .field.inline(:opt-true="snapshotDefault", @click="toggleSnapshots('default')")
           .label {{t('settings.snapshots_default_label')}}
           .input
             .opt.-true {{t('settings.opt_true')}}
             .opt.-false {{t('settings.opt_false')}}
         .field.inline(
-          v-for="(c, i) in snapshotContainers"
+          v-for="c in snapshotContainers"
           :opt-true="c.active"
-          @click="toggleSnapshotContainer(i, c.id)")
+          @click="toggleSnapshots(c.id)")
           .label(:style="{ color: c.color }") {{c.name}}
           .input
             .opt.-true {{t('settings.opt_true')}}
@@ -144,7 +144,7 @@
       .box
         .snapshot(
           v-for="(s, i) in snapshots"
-          :title="firstFiveUrls(s.tabs)"
+          :title="firstUrls(s.tabs)"
           @click="applySnapshot(s)")
           .time {{uelapsed(s.time)}}
           .tabs.pinned(v-if="tabsCount('pinned', s.tabs)") {{tabsCount('pinned', s.tabs)}}
@@ -269,24 +269,25 @@ export default {
     },
 
     snapshotsIsON() {
-      return State.snapshotsTargets.reduce((a, s) => a || s, false)
+      return Object.values(State.snapshotsTargets)
+        .reduce((a, s) => a || s, false)
     },
 
     snapshotPinned() {
-      return !!State.snapshotsTargets[0]
+      return State.snapshotsTargets.pinned
     },
 
     snapshotDefault() {
-      return !!State.snapshotsTargets[1]
+      return State.snapshotsTargets.default
     },
 
     snapshotContainers() {
-      return State.ctxs.map((c, i) => {
+      return State.ctxs.map(c => {
         return {
           id: c.cookieStoreId,
           name: c.name,
           color: c.colorCode,
-          active: !!State.snapshotsTargets[i + 2],
+          active: !!State.snapshotsTargets[c.cookieStoreId],
         }
       })
     },
@@ -400,20 +401,9 @@ export default {
     uelapsed: Utils.UElapsed,
 
     // --- Snapshot ---
-    toggleSnapshotPinned() {
-      State.snapshotsTargets[0] = !State.snapshotsTargets[0]
-      State.snapshotsTargets = [...State.snapshotsTargets]
-      Store.dispatch('saveSettings')
-    },
-    toggleSnapshotDefault() {
-      State.snapshotsTargets[1] = !State.snapshotsTargets[1]
-      State.snapshotsTargets = [...State.snapshotsTargets]
-      Store.dispatch('saveSettings')
-    },
-    toggleSnapshotContainer(i, name) {
-      if (State.snapshotsTargets[i + 2]) State.snapshotsTargets[i + 2] = false
-      else State.snapshotsTargets[i + 2] = name
-      State.snapshotsTargets = [...State.snapshotsTargets]
+    toggleSnapshots(name) {
+      const v = !State.snapshotsTargets[name]
+      State.snapshotsTargets = { ...State.snapshotsTargets, [name]: v }
       Store.dispatch('saveSettings')
     },
 
@@ -434,13 +424,13 @@ export default {
     /**
      * Get string containing urls of tabs.
      */
-    firstFiveUrls(tabs) {
+    firstUrls(tabs) {
       if (!tabs) return ''
       let out = tabs.length > 7 ? tabs.slice(0, 7) : tabs
       let outStr = out
         .map(t => {
-          if (t.url.length <= 36) return t.url
-          else return t.url.slice(0, 36) + '...'
+          if (t.url.length <= 64) return t.url
+          else return t.url.slice(0, 64) + '...'
         })
         .join('\n')
       if (tabs.length > 7) outStr += '\n...'

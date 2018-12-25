@@ -32,6 +32,6 @@ export const DEFAULT_SETTINGS = {
   animations: true,
 
   // Snapshots
-  snapshotsTargets: [true],
+  snapshotsTargets: { 'pinned': true },
   snapshotsLimit: '1w',
 }
