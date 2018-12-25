@@ -9,6 +9,7 @@
 
 <script>
 import EventBus from '../event-bus'
+import Store from '../store'
 
 export default {
   props: {
@@ -26,7 +27,7 @@ export default {
     },
 
     reloadBookmarks() {
-      EventBus.$emit('bookmarks.reloadBookmarks')
+      Store.dispatch('reloadBookmarks')
       this.$emit('close')
     },
   },
