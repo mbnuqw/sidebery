@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import Logs from '../../libs/logs'
 
 export default {
   /**
@@ -17,7 +16,6 @@ export default {
    */
   async setFavicon({ state }, { hostname, icon }) {
     if (!hostname) return
-    Logs.D(`Set favicon for '${hostname}'`)
     Vue.set(state.favicons, hostname, icon)
 
     // Do not cache favicon if it too big
@@ -30,7 +28,7 @@ export default {
     try {
       await browser.storage.local.set({ favicons: favs })
     } catch (err) {
-      Logs.D(`Cannot cache favicon for '${hostname}'`, err)
+      // ...
     }
   },
 

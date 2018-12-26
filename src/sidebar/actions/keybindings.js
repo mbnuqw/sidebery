@@ -1,4 +1,3 @@
-import Logs from '../../libs/logs'
 import EventBus from '../event-bus'
 
 export default {
@@ -14,11 +13,10 @@ export default {
    * Update keybindings
    */
   async updateKeybinding(_, { name, shortcut }) {
-    Logs.D(`Update keybinding: '${name}' to '${shortcut}'`)
     try {
       await browser.commands.update({ name, shortcut })
     } catch (err) {
-      Logs.E(`Cannot find command '${name}'`, err)
+      // ...
     }
   },
 
@@ -26,7 +24,6 @@ export default {
    * Reset addon's keybindings
    */
   async resetKeybindings({ state, dispatch }) {
-    Logs.D('Reset keybindings')
     state.keybindings.map(async k => {
       await browser.commands.reset(k.name)
     })

@@ -48,7 +48,6 @@
 <script>
 import { mapGetters } from 'vuex'
 import Utils from '../../libs/utils'
-import Logs from '../../libs/logs'
 import Store from '../store'
 import State from '../store.state'
 import EventBus from '../event-bus'
@@ -398,7 +397,6 @@ export default {
      * Handle creating bookmark
      */
     onCreated(id, bookmark) {
-      Logs.D(`Bookmark created, id: ${id}, type: ${bookmark.type}`)
       let added = false
       if (bookmark.type === 'folder' && !bookmark.children) bookmark.children = []
       const putWalk = nodes => {

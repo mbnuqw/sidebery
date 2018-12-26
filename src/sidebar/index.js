@@ -2,7 +2,6 @@ import Vue from 'vue'
 import { mapGetters } from 'vuex'
 import Sidebar from './components/index.vue'
 import Utils from '../libs/utils'
-import Logs from '../libs/logs'
 import Dict from '../mixins/dict'
 import Store from './store'
 import State from './store.state'
@@ -139,7 +138,6 @@ export default new Vue({
      */
     onCmd(name) {
       if (!State.windowFocused) return
-      Logs.D(`Run command: ${name}`)
       let cmdName = 'kb_' + name
       Store.dispatch(cmdName)
     },

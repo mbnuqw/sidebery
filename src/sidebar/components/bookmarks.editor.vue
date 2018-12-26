@@ -48,12 +48,12 @@ export default {
   computed: {
     namePlaceholder() {
       if (this.type === 'bookmark') return 'bookmarks_editor.name_bookmark_placeholder'
-      if (this.type === 'folder') return 'bookmarks_editor.name_folder_placeholder'
+      else return 'bookmarks_editor.name_folder_placeholder'
     },
 
     okBtnLabel() {
       if (this.action === 'create') return 'bookmarks_editor.create'
-      if (this.action === 'edit') return 'bookmarks_editor.save'
+      else return 'bookmarks_editor.save'
     },
 
     isBookmark() {

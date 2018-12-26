@@ -1,4 +1,3 @@
-import Logs from '../libs/logs'
 import { DEFAULT_SETTINGS } from './settings'
 
 export default {
@@ -73,7 +72,6 @@ export default {
    */
   closeCtxMenu(state) {
     if (state.ctxMenu) {
-      Logs.D('Close context menu')
       if (state.ctxMenu.off) state.ctxMenu.off()
       state.ctxMenu = null
     }
