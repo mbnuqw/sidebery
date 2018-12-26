@@ -34,10 +34,9 @@ export default {
     if (state.savePanelsTimeout) clearTimeout(state.savePanelsTimeout)
     state.savePanelsTimeout = setTimeout(() => {
       const syncPanels = []
-      state.syncPanels.map(pid => {
-        let panel
-        if (pid === 'pinned') panel = getters.panels.find(p => p.pinned)
-        else panel = getters.panels.find(p => p.cookieStoreId === pid)
+      state.syncedPanels.map((sync, index) => {
+        if (!sync) return
+        let panel = getters.panels[index]
         if (!panel) return
 
         syncPanels.push({
@@ -91,53 +90,40 @@ export default {
   /**
    * Update current panels state.
    */
-  updateSyncPanels({ state }, synced) {
+  updateSyncPanels({ state, getters }, synced) {
     synced.panels.map((syncPanel, i) => {
       if (!syncPanel) return
-      const locPanel = this.panels.find(p => p.name === syncPanel.name)
-      if (!locPanel) return
 
-      // Handle pinned tabs
-      if (locPanel.pinned && state.syncPanels.indexOf('pinned') !== -1) {
-        if (!syncPanel.urls) return
-        syncPanel.urls.map(syncUrl => {
-          if (locPanel.tabs.find(t => t.url === syncUrl)) return
-
-          browser.tabs.create({
-            windowId: state.windowId,
-            pinned: true,
-            url: syncUrl,
-            active: false,
-          })
-        })
-
-        // Reset last sync panel data
-        state.lastSyncPanels.panels[i] = null
-        return
-      }
-
-      // If sync is off
-      if (!state.syncPanels.find(pid => pid === locPanel.cookieStoreId)) return
+      // Check if there is such panel and everything ok
+      const locPanelIndex = getters.panels.findIndex(p => p.name === syncPanel.name)
+      const locPanel = getters.panels[locPanelIndex]
+      if (locPanelIndex === -1) return
+      if (!state.syncedPanels[locPanelIndex]) return
+      if (!syncPanel.urls || !locPanel.tabs) return
 
       // Reset last sync panel data
-      state.lastSyncPanels.panels[i] = null
-
-      // Update container
-      if (locPanel.color !== syncPanel.color || locPanel.icon !== syncPanel.icon) {
-        browser.contextualIdentities.update(locPanel.cookieStoreId, {
-          color: syncPanel.color,
-          icon: syncPanel.icon,
-        })
+      if (state.lastSyncPanels) {
+        state.lastSyncPanels.panels[i] = null
       }
 
-      // Update tabs
-      if (!syncPanel.urls || !locPanel.tabs) return
+      // Update container
+      if (!locPanel.pinned) {
+        if (locPanel.color !== syncPanel.color || locPanel.icon !== syncPanel.icon) {
+          browser.contextualIdentities.update(locPanel.cookieStoreId, {
+            color: syncPanel.color,
+            icon: syncPanel.icon,
+          })
+        }
+      }
+
+      // Create missing tabs
       syncPanel.urls.map(syncUrl => {
         if (locPanel.tabs.find(t => t.url === syncUrl)) return
 
         browser.tabs.create({
           windowId: state.windowId,
-          cookieStoreId: locPanel.cookieStoreId,
+          cookieStoreId: locPanel.cookieStoreId || getters.defaultCtxId,
+          pinned: locPanel.pinned,
           url: syncUrl,
           active: false,
         })

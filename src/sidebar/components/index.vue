@@ -20,6 +20,7 @@
         ref="menu"
         :is="panelMenu.menu" 
         :conf="panelMenu"
+        :index="$store.state.panelIndex"
         @close="closePanelMenu"
         @height="recalcPanelMenuHeight")
 
@@ -439,9 +440,9 @@ export default {
       if (i === -1) return
       State.ctxs.splice(i, 1)
 
-      // Turn off sync
-      let pi = State.syncPanels.findIndex(p => p === id)
-      if (pi !== -1) State.syncPanels.splice(pi, 1)
+      // Turn off sync and unlock
+      this.$set(State.syncedPanels, this.index, false)
+      this.$set(State.lockedPanels, this.index, false)
 
       // Close tabs
       let orphanTabs = await browser.tabs.query({
@@ -571,7 +572,7 @@ export default {
 
       const panelIndex = Utils.GetPanelIndex(this.panels, tabId)
       const tab = State.tabs[rmIndex]
-      if (State.lockedPanels.includes(tab.cookieStoreId) && tab.url.indexOf('about')) {
+      if (State.lockedTabs[panelIndex] && tab.url.indexOf('about')) {
         browser.tabs.create({
           url: tab.url,
           cookieStoreId: tab.cookieStoreId,
@@ -684,25 +685,35 @@ export default {
      */
     onActivatedTab(info) {
       if (info.windowId !== State.windowId) return
-      Store.commit('resetSelection')
-      for (let i = 0; i < State.tabs.length; i++) {
-        State.tabs[i].active = info.tabId === State.tabs[i].id
-      }
 
-      // Switch to tab's panel
-      let tab = State.tabs.find(t => t.id === info.tabId)
-      let panelIndex = -1
-      if (tab && !tab.pinned) {
-        panelIndex = this.panels.findIndex(p => p.cookieStoreId === tab.cookieStoreId)
-        if (panelIndex === -1) return
+      // Reset selectin and close settings
+      Store.commit('resetSelection')
+      if (State.settingsOpened) State.settingsOpened = false
+
+      // Update tabs and find activated one
+      let tab, isActivated
+      for (let i = State.tabs.length; i--;) {
+        isActivated = info.tabId === State.tabs[i].id
+        State.tabs[i].active = isActivated
+        if (isActivated) tab = State.tabs[i]
       }
-      if (tab && tab.pinned) panelIndex = 1
-      if (panelIndex > 0 && State.panelIndex !== panelIndex) {
-        // Close settings and switch panel
-        if (State.settingsOpened) State.settingsOpened = false
+      if (!tab) return
+
+      // Find panel of activated tab
+      let panelIndex = this.panels.findIndex(p => {
+        return tab.pinned ? p.pinned : p.cookieStoreId === tab.cookieStoreId
+      })
+      if (panelIndex === -1) return
+
+      // Switch to activated tab's panel
+      if (!State.lockedPanels[State.panelIndex]) {
         Store.commit('setPanel', panelIndex)
       }
       EventBus.$emit('scrollToActiveTab', panelIndex, info.tabId)
+
+      if (State.panelMenuOpened) {
+        this.openPanelMenu(panelIndex)
+      }
 
       // Remove updated flag
       this.$delete(State.updatedTabs, info.tabId)

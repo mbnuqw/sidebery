@@ -50,7 +50,8 @@ export default {
   // --- Global State
   ctxMenu: null,
   winChoosing: false,
-  syncPanels: [],
+  syncedPanels: [],
+  lockedTabs: [],
   lockedPanels: [],
   proxiedPanels: [],
   lastSyncPanels: null,

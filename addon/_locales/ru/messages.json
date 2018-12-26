@@ -86,8 +86,11 @@
   "tabs_menu.sync_label": {
     "message": "Синхронизация"
   },
+  "tabs_menu.lock_panel_label": {
+    "message": "Заблокировать панель"
+  },
   "tabs_menu.lock_label": {
-    "message": "Заблокировать"
+    "message": "Заблокировать табы"
   },
   "tabs_menu.proxy_label": {
     "message": "Прокси"

@@ -2,6 +2,15 @@
 .Menu(v-noise:300.g:12:af.a:0:42.s:0:9="")
   h2 {{conf.name}}
 
+  .field(
+    :opt-true="lockedPanel"
+    :title="t('tabs_menu.lock_panel_tooltip')"
+    @click="togglePanelLock")
+    .label {{t('tabs_menu.lock_panel_label')}}
+    .input
+      .opt.-true {{t('settings.opt_true')}}
+      .opt.-false {{t('settings.opt_false')}}
+
   .field(v-if="!isPrivate", :opt-true="syncON", @click="toggleSync")
     .label {{t('tabs_menu.sync_label')}}
     .input
@@ -23,6 +32,7 @@ import State from '../store.state'
 export default {
   props: {
     conf: Object,
+    index: Number,
   },
 
   data() {
@@ -32,9 +42,12 @@ export default {
   computed: {
     ...mapGetters(['isPrivate']),
 
+    lockedPanel() {
+      return State.lockedPanels[this.index]
+    },
+
     syncON() {
-      if (this.conf.pinned) return !!State.syncPanels.find(p => p === 'pinned')
-      else return !!State.syncPanels.find(p => p === State.defaultCtx)
+      return State.syncedPanels[this.index]
     },
 
     haveTabs() {
@@ -44,13 +57,19 @@ export default {
   },
 
   methods: {
+    togglePanelLock() {
+      this.$set(State.lockedPanels, this.index, !State.lockedPanels[this.index])
+      Store.dispatch('saveState')
+    },
+
     toggleSync() {
-      let id = this.conf.pinned ? 'pinned' : State.defaultCtx
-      let pi = State.syncPanels.findIndex(p => p === id)
-      if (pi !== -1) State.syncPanels.splice(pi, 1)
-      else State.syncPanels.push(id)
+      this.$set(State.syncedPanels, this.index, !State.syncedPanels[this.index])
+      // let id = this.conf.pinned ? 'pinned' : State.defaultCtx
+      // let pi = State.syncPanels.findIndex(p => p === id)
+      // if (pi !== -1) State.syncPanels.splice(pi, 1)
+      // else State.syncPanels.push(id)
       Store.dispatch('resyncPanels')
-      State.saveState()
+      Store.dispatch('saveState')
     },
 
     dedupTabs() {

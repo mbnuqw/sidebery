@@ -50,6 +50,7 @@ export default {
    * Set panel index
    */
   setPanel(state, newIndex) {
+    if (state.panelIndex === newIndex) return
     state.panelIndex = newIndex
     if (newIndex >= 0) state.lastPanelIndex = newIndex
   },
