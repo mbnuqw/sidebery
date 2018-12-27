@@ -110,6 +110,7 @@ export default {
    * Update current panels state.
    */
   updateSyncPanels({ state, getters }, synced) {
+    if (!synced) return
     if (synced.id === state.localID) return
 
     // Check if this data already used
