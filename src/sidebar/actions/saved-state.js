@@ -18,6 +18,9 @@ export default {
     if (loadedState.syncedPanels) {
       state.syncedPanels = loadedState.syncedPanels
     }
+    if (loadedState.synced) {
+      state.synced = loadedState.synced
+    }
     if (loadedState.lockedPanels) {
       state.lockedPanels = loadedState.lockedPanels
     }
@@ -40,6 +43,7 @@ export default {
       state: {
         panelIndex: state.panelIndex,
         syncedPanels: state.syncedPanels,
+        synced: JSON.parse(JSON.stringify(state.synced)),
         lockedPanels: state.lockedPanels,
         lockedTabs: state.lockedTabs,
         proxiedPanels: JSON.parse(JSON.stringify(state.proxiedPanels)),

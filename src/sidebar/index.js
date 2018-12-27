@@ -116,19 +116,23 @@ export default new Vue({
       if (changes.settings) Store.dispatch('loadSettings')
       if (type === 'sync') {
         let ids = Object.keys(changes).filter(id => id !== this.localID)
-        if (!ids.length) return
+
         let syncData
         ids.map(id => {
           if (!changes[id] || !changes[id].newValue) return
+          let data
+
           try {
-            let a = JSON.parse(changes[id].newValue)
-            if (syncData && syncData.time > a.time) return
-            else syncData = a
+            data = JSON.parse(changes[id].newValue)
           } catch (err) {
-            // pass
+            return
           }
+
+          if (syncData && syncData.time > data.time) return
+          else syncData = data
         })
         this.lastSyncPanels = syncData
+
         Store.dispatch('updateSyncPanels', syncData)
       }
     },

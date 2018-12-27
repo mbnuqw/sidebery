@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import Utils from '../../libs/utils'
 
 export default {
@@ -41,6 +42,8 @@ export default {
 
         syncPanels.push({
           cookieStoreId: panel.cookieStoreId,
+          pinned: panel.pinned,
+          default: panel.cookieStoreId === getters.defaultCtxId,
           name: panel.name,
           icon: panel.icon,
           color: panel.color,
@@ -48,10 +51,16 @@ export default {
         })
       })
       const syncPanelsData = {
+        id: state.localID,
         time: ~~(Date.now() / 1000),
         panels: syncPanels,
       }
-      browser.storage.sync.set({ [state.localID]: JSON.stringify(syncPanelsData) })
+
+      if (syncPanels.length > 0) {
+        browser.storage.sync.set({ [state.localID]: JSON.stringify(syncPanelsData) })
+      } else {
+        browser.storage.sync.remove(state.localID)
+      }
     }, 500)
   },
 
@@ -63,20 +72,30 @@ export default {
     Object.keys(ans).filter(id => id !== state.localID)
 
     let ids = Object.keys(ans).filter(id => id !== state.localID)
-    if (!ids.length) return
-    let syncData
-    ids.map(id => {
-      if (!ans[id] || !ans[id].newValue) return
+    const syncData = ids.reduce((syncData, id) => {
+      if (!ans[id]) return syncData
+
+      let data
       try {
-        let a = JSON.parse(ans[id].newValue)
-        if (syncData && syncData.time > a.time) return
-        else syncData = a
+        data = JSON.parse(ans[id])
       } catch (err) {
-        // it's ok
+        // ERROR
+        return syncData
       }
-    })
+
+      // Mark to remove empty sync data
+      if (!data.panels) return syncData
+      if (data.panels.length === 0) return syncData
+
+      if (syncData && syncData.time > data.time) return syncData
+      else syncData = data
+
+      return syncData
+    }, null)
+
     if (!syncData) return
     state.lastSyncPanels = syncData
+    dispatch('saveState')
     dispatch('updateSyncPanels', syncData)
   },
 
@@ -91,11 +110,25 @@ export default {
    * Update current panels state.
    */
   updateSyncPanels({ state, getters }, synced) {
+    if (synced.id === state.localID) return
+
+    // Check if this data already used
+    if (state.synced[synced.id] && state.synced[synced.id] >= synced.time) return
+    else Vue.set(state.synced, synced.id, synced.time)
+
     synced.panels.map((syncPanel, i) => {
       if (!syncPanel) return
 
       // Check if there is such panel and everything ok
-      const locPanelIndex = getters.panels.findIndex(p => p.name === syncPanel.name)
+      const locPanelIndex = getters.panels.findIndex(p => {
+        if (syncPanel.pinned) {
+          return p.pinned
+        } else if (syncPanel.default) {
+          return p.cookieStoreId === getters.defaultCtxId
+        } else {
+          return p.name === syncPanel.name
+        }
+      })
       const locPanel = getters.panels[locPanelIndex]
       if (locPanelIndex === -1) return
       if (!state.syncedPanels[locPanelIndex]) return
