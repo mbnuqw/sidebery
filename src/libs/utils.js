@@ -192,14 +192,16 @@ function UElapsed(sec = 0, nowSec = 0) {
   if (elapsed < 24) return `${elapsed} ${Translate('elapsed.hr')}`
   elapsed = ~~(elapsed / 24)
   // Less then a week
-  if (elapsed < 7) return `${elapsed} ${PlurTrans('elapsed.day')}`
+  if (elapsed < 7) return `${elapsed} ${PlurTrans('elapsed.day', elapsed)}`
   let weeks = ~~(elapsed / 7)
   // Less then a longest month
-  if (elapsed < 31) return `${weeks} ${PlurTrans('elapsed.week')}`
+  if (elapsed < 31) return `${weeks} ${PlurTrans('elapsed.week', weeks)}`
   elapsed = ~~(elapsed / 30.44)
   // Less then a year
-  if (elapsed < 12) return `${elapsed} ${PlurTrans('elapsed.month')}`
-  return `${~~(elapsed / 12)} ${PlurTrans('elapsed.year')}`
+  if (elapsed < 12) return `${elapsed} ${PlurTrans('elapsed.month', elapsed)}`
+  // Years
+  elapsed = ~~(elapsed / 12)
+  return `${elapsed} ${PlurTrans('elapsed.year', elapsed)}`
 }
 
 export default {

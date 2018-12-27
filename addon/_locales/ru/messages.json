@@ -529,8 +529,8 @@
     "description": "1|"
   },
   "elapsed.month": {
-    "message": "месяц назад|месяцa назад",
-    "description": "1|"
+    "message": "месяц назад|месяцa назад|месяцев назад",
+    "description": "1|2,3,4|"
   },
   "elapsed.year": {
     "message": "год назад|года назад|лет назад",
