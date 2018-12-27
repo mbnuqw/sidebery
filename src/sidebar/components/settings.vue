@@ -154,7 +154,7 @@
             v-if="tabsCount(c, s.tabs)"
             :style="{color: c.colorCode}") {{tabsCount(c, s.tabs)}}
         .label-btn(
-          v-if="snapshots.length >= 5"
+          v-if="snapshots.length >= 1"
           @click="viewAllSnapshots") {{t('settings.snapshots_view_all_label')}}
       .box
         .btn(@click="makeSnapshot") {{t('settings.make_snapshot')}}
