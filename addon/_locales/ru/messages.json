@@ -86,8 +86,14 @@
   "tabs_menu.sync_label": {
     "message": "Синхронизация"
   },
+  "tabs_menu.lock_panel_tooltip": {
+    "message": "Запретить автоматическое переключение с этой панели"
+  },
   "tabs_menu.lock_panel_label": {
     "message": "Заблокировать панель"
+  },
+  "tabs_menu.lock_tooltip": {
+    "message": "Запретить закрытие вкладок на этой панели"
   },
   "tabs_menu.lock_label": {
     "message": "Заблокировать табы"
