@@ -7,9 +7,9 @@
   :not-renderable="!renderable"
   :invisible="!visible"
   @click="onClick"
-  @mouseup="onMU"
-  @mouseleave="onMU")
-  scroll-box(ref="scrollBox", @auto-scroll="onMM")
+  @mouseup="onMouseUp"
+  @mouseleave="onMouseUp")
+  scroll-box(ref="scrollBox", @auto-scroll="onMouseMove")
     .drag-box
       .drag-node(
         v-for="n in flat"
@@ -31,7 +31,7 @@
       :key="n.id"
       :node="n"
       :recalc-scroll="recalcScroll"
-      @md="onNodeMD"
+      @md="onNodeMouseDown"
       @expand="onFolderExpand"
       @create="onCreate"
       @edit="onEdit")
@@ -48,7 +48,6 @@
 <script>
 import { mapGetters } from 'vuex'
 import Utils from '../../libs/utils'
-import Logs from '../../libs/logs'
 import Store from '../store'
 import State from '../store.state'
 import EventBus from '../event-bus'
@@ -129,7 +128,6 @@ export default {
 
     // Setup global events listeners
     EventBus.$on('bookmarks.collapseAll', this.collapseAll)
-    EventBus.$on('bookmarks.reloadBookmarks', this.reloadBookmarks)
     EventBus.$on('bookmarks.render', () => {
       if (this.active) {
         this.$nextTick(() => {
@@ -145,7 +143,7 @@ export default {
   mounted() {
     this.topOffset = this.$el.getBoundingClientRect().top
 
-    const onmove = Utils.Asap(this.onMM)
+    const onmove = Utils.Asap(this.onMouseMove)
     this.$el.addEventListener('mousemove', onmove.func)
   },
 
@@ -161,7 +159,11 @@ export default {
       Store.commit('closeCtxMenu')
     },
 
-    onMM(e) {
+    /**
+     * Handle mousemove event
+     * ps. yes, it's big
+     */
+    onMouseMove(e) {
       if (!this.drag) return
       if (this.drag.lvl === 0) return
 
@@ -329,7 +331,10 @@ export default {
       }
     },
 
-    onMU() {
+    /**
+     * Handle mouseup event on the panel
+     */
+    onMouseUp() {
       if (this.drag) {
         if (!this.drag.dragged) {
           this.drag = null
@@ -388,8 +393,10 @@ export default {
       }
     },
 
+    /**
+     * Handle creating bookmark
+     */
     onCreated(id, bookmark) {
-      Logs.D(`Bookmark created, id: ${id}, type: ${bookmark.type}`)
       let added = false
       if (bookmark.type === 'folder' && !bookmark.children) bookmark.children = []
       const putWalk = nodes => {
@@ -409,6 +416,9 @@ export default {
       State.bookmarks = putWalk(State.bookmarks)
     },
 
+    /**
+     * Handle bookmark change
+     */
     onChanged(id, info) {
       let updated = false
       const updateWalk = nodes => {
@@ -430,7 +440,11 @@ export default {
       State.bookmarks = updateWalk(State.bookmarks)
     },
 
+    /**
+     * Handle moving bookmark
+     */
     onMoved(id, info) {
+      // Quit from dragging mode
       if (this.drag) {
         this.drag = null
         setTimeout(() => {
@@ -438,6 +452,7 @@ export default {
           this.dragEnd = false
         }, 128)
       }
+
       let node
       let removed = false
       const rmWalk = nodes => {
@@ -470,9 +485,12 @@ export default {
       }
 
       State.bookmarks = putWalk(rmWalk(State.bookmarks))
-      this.saveTreeState()
+      Store.dispatch('saveTreeState')
     },
 
+    /**
+     * Handle removing bookmark node
+     */
     onRemoved(id, info) {
       let removed = false
       const rmWalk = nodes => {
@@ -491,7 +509,10 @@ export default {
       State.bookmarks = rmWalk(State.bookmarks)
     },
 
-    onNodeMD(e, nodes) {
+    /**
+     * Handle mouse down on bookmark node
+     */
+    onNodeMouseDown(e, nodes) {
       this.drag = {
         node: nodes[0],
         lvl: nodes.length - 1,
@@ -502,8 +523,13 @@ export default {
       }
     },
 
+    /**
+     * Handle folder expand
+     */
     onFolderExpand(node) {
-      this.saveTreeState()
+      Store.dispatch('saveTreeState')
+
+      // Auto-close sibling dir
       if (State.autoCloseBookmarks && node.parentId === 'root________' && node.expanded) {
         for (let child of State.bookmarks) {
           if (child.id !== node.id && child.type === 'folder') {
@@ -515,6 +541,9 @@ export default {
       }
     },
 
+    /**
+     * Handle creating new bookmark
+     */
     onCreate(type, path, onEndHandlers) {
       if (type === 'separator') {
         browser.bookmarks.create({
@@ -531,6 +560,9 @@ export default {
       this.editEndHandlers = onEndHandlers
     },
 
+    /**
+     * Handle edit event of nodes tree
+     */
     onEdit(node, path, onEndHandlers) {
       if (!this.$refs.editor) return
       this.$refs.editor.edit(node, path)
@@ -538,6 +570,9 @@ export default {
       this.editEndHandlers = onEndHandlers
     },
 
+    /**
+     * Handle cancel changes in editor
+     */
     onEditorCancel() {
       this.editor = false
       while (this.editEndHandlers && this.editEndHandlers[0]) {
@@ -545,6 +580,9 @@ export default {
       }
     },
 
+    /**
+     * Handle saving changes in editor
+     */
     onEditorOk() {
       this.editor = false
       while (this.editEndHandlers && this.editEndHandlers[0]) {
@@ -552,6 +590,10 @@ export default {
       }
     },
 
+    /**
+     * Recalculate possitions and sizes for flat
+     * nodes
+     */
     updateFlatLayout() {
       let flatTree = []
       let index = -1
@@ -589,6 +631,9 @@ export default {
       this.flat = flatTree
     },
 
+    /**
+     * Return styles object for flat node
+     */
     flatNodeStyle(flatNode) {
       return {
         transform: `translate(${12 * flatNode.lvl}px, ${flatNode.top}px)`,
@@ -596,6 +641,9 @@ export default {
       }
     },
 
+    /**
+     * Recalculate scroll possition
+     */
     recalcScroll() {
       if (!this.active) return
       if (this.$refs.scrollBox) {
@@ -603,50 +651,15 @@ export default {
       }
     },
 
+    /**
+     * Collapse all bookmarks folders
+     */
     collapseAll() {
       if (!this.$refs.nodes) return
       this.$refs.nodes.map(vm => {
         vm.collapse(true)
       })
-      this.saveTreeState()
-    },
-
-    async saveTreeState() {
-      let expandedBookmarks = []
-      let path = []
-      const walker = nodes => {
-        for (let i = 0; i < nodes.length; i++) {
-          const n = nodes[i]
-          if (n.children && n.expanded) {
-            path.push(n.id)
-            expandedBookmarks.push([...path])
-            walker(n.children)
-            path.pop()
-          }
-        }
-      }
-
-      walker(State.bookmarks)
-      await browser.storage.local.set({
-        expandedBookmarks,
-      })
-    },
-
-    /**
-     * Reload bookmarks without restoring
-     * prev state.
-     */
-    async reloadBookmarks() {
-      EventBus.$emit('panelLoadingStart', 0)
-      try {
-        let tree = await browser.bookmarks.getTree()
-        State.bookmarks = tree[0].children
-        EventBus.$emit('panelLoadingOk', 0)
-      } catch (err) {
-        Logs.E('Cannot reload bookmarks', err)
-        State.bookmarks = []
-        EventBus.$emit('panelLoadingErr', 0)
-      }
+      Store.dispatch('saveTreeState')
     },
   },
 }

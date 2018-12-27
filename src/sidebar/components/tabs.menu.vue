@@ -29,7 +29,21 @@
         .opt.-true {{t('settings.opt_true')}}
         .opt.-false {{t('settings.opt_false')}}
 
-    .field(v-if="id", :opt-true="locked", @click="toggleLock")
+    .field(
+      v-if="id"
+      :opt-true="lockedPanel"
+      :title="t('tabs_menu.lock_panel_tooltip')"
+      @click="togglePanelLock")
+      .label {{t('tabs_menu.lock_panel_label')}}
+      .input
+        .opt.-true {{t('settings.opt_true')}}
+        .opt.-false {{t('settings.opt_false')}}
+
+    .field(
+      v-if="id"
+      :opt-true="lockedTabs"
+      :title="t('tabs_menu.lock_tooltip')"
+      @click="toggleTabsLock")
       .label {{t('tabs_menu.lock_label')}}
       .input
         .opt.-true {{t('settings.opt_true')}}
@@ -122,6 +136,7 @@ export default {
       type: Object,
       default: () => ({}),
     },
+    index: Number,
   },
 
   data() {
@@ -171,11 +186,15 @@ export default {
     },
 
     syncON() {
-      return !!State.syncPanels.find(p => p === this.id)
+      return State.syncedPanels[this.index]
     },
 
-    locked() {
-      return !!State.lockedPanels.find(p => p === this.id)
+    lockedPanel() {
+      return State.lockedPanels[this.index]
+    },
+
+    lockedTabs() {
+      return State.lockedTabs[this.index]
     },
 
     proxied() {
@@ -348,17 +367,21 @@ export default {
     },
 
     toggleSync() {
-      let pi = State.syncPanels.findIndex(p => p === this.id)
-      if (pi !== -1) State.syncPanels.splice(pi, 1)
-      else State.syncPanels.push(this.id)
+      this.$set(State.syncedPanels, this.index, !State.syncedPanels[this.index])
+      // let pi = State.syncPanels.findIndex(p => p === this.id)
+      // if (pi !== -1) State.syncPanels.splice(pi, 1)
+      // else State.syncPanels.push(this.id)
       Store.dispatch('resyncPanels')
       Store.dispatch('saveState')
     },
 
-    toggleLock() {
-      let pi = State.lockedPanels.findIndex(p => p === this.id)
-      if (pi !== -1) State.lockedPanels.splice(pi, 1)
-      else State.lockedPanels.push(this.id)
+    togglePanelLock() {
+      this.$set(State.lockedPanels, this.index, !State.lockedPanels[this.index])
+      Store.dispatch('saveState')
+    },
+
+    toggleTabsLock() {
+      this.$set(State.lockedTabs, this.index, !State.lockedTabs[this.index])
       Store.dispatch('saveState')
     },
 

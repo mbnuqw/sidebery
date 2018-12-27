@@ -1,4 +1,3 @@
-import Logs from '../libs/logs'
 import { DEFAULT_SETTINGS } from './settings'
 
 export default {
@@ -51,6 +50,7 @@ export default {
    * Set panel index
    */
   setPanel(state, newIndex) {
+    if (state.panelIndex === newIndex) return
     state.panelIndex = newIndex
     if (newIndex >= 0) state.lastPanelIndex = newIndex
   },
@@ -73,7 +73,6 @@ export default {
    */
   closeCtxMenu(state) {
     if (state.ctxMenu) {
-      Logs.D('Close context menu')
       if (state.ctxMenu.off) state.ctxMenu.off()
       state.ctxMenu = null
     }

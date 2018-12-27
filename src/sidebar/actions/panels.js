@@ -1,4 +1,3 @@
-import Logs from '../../libs/logs'
 import EventBus from '../event-bus'
 import Utils from '../../libs/utils'
 import ReqHandler from '../proxy'
@@ -83,8 +82,6 @@ export default {
       clearTimeout(state.switchPanelPause)
       state.switchPanelPause = null
     }, 128)
-
-    Logs.D(`Try to switch panel from: ${state.panelIndex} to: ${state.panelIndex + dir}`)
 
     commit('closeCtxMenu')
     commit('resetSelection')

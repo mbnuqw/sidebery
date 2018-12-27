@@ -1,3 +1,5 @@
+import { DEFAULT_CTX } from '../store.state'
+
 export default {
   /**
    * Make snapshot
@@ -8,51 +10,53 @@ export default {
     // Gather tabs and containers
     const tabs = []
     const ctxs = []
-    for (let t of state.tabs) {
-      const p = state.snapshotsTargets[0] !== t.pinned
-      const d = state.snapshotsTargets[1] !== (t.cookieStoreId === getters.defaultCtxId)
-      const c = !state.snapshotsTargets.includes(t.cookieStoreId)
-      if (p && d && c) continue
-      if (!t.url.indexOf('about')) continue
-      if (tabs.find(pt => {
-        return pt.url === t.url
-          && pt.cookieStoreId === t.cookieStoreId
-          && pt.pinned === t.pinned
-      })) {
-        continue
+    getters.panels.map(p => {
+      // Filter empty, non-tabs and turned-off panels
+      if (!p.tabs || !p.tabs.length) return
+      if (p.pinned === true && !state.snapshotsTargets.pinned) return
+      if (p.cookieStoreId === DEFAULT_CTX) {
+        if (!state.snapshotsTargets.default) return
+      } else {
+        if (p.cookieStoreId && !state.snapshotsTargets[p.cookieStoreId]) return
       }
 
-      tabs.push({
-        title: t.title,
-        url: t.url,
-        pinned: t.pinned,
-        cookieStoreId: t.cookieStoreId,
+      p.tabs.map(t => {
+        if (!t.url.indexOf('about')) return
+        tabs.push({
+          title: t.title,
+          url: t.url,
+          pinned: t.pinned,
+          cookieStoreId: t.cookieStoreId,
+        })
       })
-    }
-    for (let c of state.ctxs) {
-      if (!state.snapshotsTargets.includes(c.cookieStoreId)) continue
 
-      ctxs.push({
-        cookieStoreId: c.cookieStoreId,
-        name: c.name,
-        icon: c.icon,
-        color: c.color,
-        colorCode: c.colorCode,
-      })
-    }
+      // Gather context panels
+      if (state.snapshotsTargets[p.cookieStoreId]) {
+        ctxs.push({
+          cookieStoreId: p.cookieStoreId,
+          name: p.name,
+          icon: p.icon,
+          color: p.color,
+          colorCode: p.colorCode,
+        })
+      }
+    })
+
     if (tabs.length === 0) return
     const snapshot = { tabs, ctxs, time }
 
     // Check if there are changes from last five snapshots
     for (let s of state.snapshots) {
-      let same = snapshot.tabs.length === s.tabs.length
+      let same = true
       for (let t of snapshot.tabs) {
+        same =
+          same &&
+          !!s.tabs.find(pt => {
+            return (
+              pt.url === t.url && pt.cookieStoreId === t.cookieStoreId && pt.pinned === t.pinned
+            )
+          })
         if (!same) break
-        same = same && !!s.tabs.find(pt => {
-          return pt.url === t.url
-            && pt.cookieStoreId === t.cookieStoreId
-            && pt.pinned === t.pinned
-        })
       }
       if (same) return
     }
@@ -97,9 +101,7 @@ export default {
     // Restore tabs
     for (let t of snapshot.tabs) {
       const ltab = state.tabs.find(lt => {
-        return lt.id === t.id
-          && lt.url === t.url
-          && lt.cookieStoreId === t.cookieStoreId
+        return lt.pinned === t.pinned && lt.url === t.url && lt.cookieStoreId === t.cookieStoreId
       })
       if (ltab) continue
       await browser.tabs.create({

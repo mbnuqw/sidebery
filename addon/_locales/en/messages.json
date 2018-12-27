@@ -86,8 +86,17 @@
   "tabs_menu.sync_label": {
     "message": "Sync"
   },
+  "tabs_menu.lock_panel_tooltip": {
+    "message": "Prevent auto-switching from this panel"
+  },
+  "tabs_menu.lock_panel_label": {
+    "message": "Lock panel"
+  },
+  "tabs_menu.lock_tooltip": {
+    "message": "Prevent closing tabs on this panel"
+  },
   "tabs_menu.lock_label": {
-    "message": "Lock"
+    "message": "Lock tabs"
   },
   "tabs_menu.proxy_label": {
     "message": "Proxy"

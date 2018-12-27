@@ -15,11 +15,17 @@ export default {
         state.panelIndex = loadedState.panelIndex
       }
     }
-    if (loadedState.syncPanels) {
-      state.syncPanels = loadedState.syncPanels
+    if (loadedState.syncedPanels) {
+      state.syncedPanels = loadedState.syncedPanels
+    }
+    if (loadedState.synced) {
+      state.synced = loadedState.synced
     }
     if (loadedState.lockedPanels) {
       state.lockedPanels = loadedState.lockedPanels
+    }
+    if (loadedState.lockedTabs) {
+      state.lockedTabs = loadedState.lockedTabs
     }
     if (loadedState.proxiedPanels) {
       state.proxiedPanels = loadedState.proxiedPanels
@@ -36,8 +42,10 @@ export default {
     await browser.storage.local.set({
       state: {
         panelIndex: state.panelIndex,
-        syncPanels: state.syncPanels,
+        syncedPanels: state.syncedPanels,
+        synced: JSON.parse(JSON.stringify(state.synced)),
         lockedPanels: state.lockedPanels,
+        lockedTabs: state.lockedTabs,
         proxiedPanels: JSON.parse(JSON.stringify(state.proxiedPanels)),
       },
     })

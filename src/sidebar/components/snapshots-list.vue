@@ -4,22 +4,27 @@
     .text {{t('settings.snapshots_title')}}
     .close-btn
       svg: use(xlink:href="#icon_remove")
-  .header
-    .datetime {{t('snapshots.snapshots_time_label')}}
-    .tabs {{t('snapshots.snapshots_tabs_label')}}
   scroll-box(ref="scrollBox")
     .box
       .snapshot(
         v-for="s in snapshots"
-        :title="firstFiveUrls(s.tabs)"
         @click="applySnapshot(s)")
         .datetime {{uelapsed(s.time)}}
-        .tabs.pinned(v-if="tabsCount('pinned', s.tabs)") {{tabsCount('pinned', s.tabs)}}
-        .tabs(v-if="tabsCount(null, s.tabs)") {{tabsCount(null, s.tabs)}}
-        .tabs(
+        .panel-info(v-if="s.tabs.find(t => t.pinned)")
+          .url.pinned(
+            v-for="t in s.tabs.filter(t => t.pinned)"
+            :title="t.url") - {{t.title}}
+        .panel-info(v-if="s.tabs.find(t => !t.pinned && t.cookieStoreId === defaultCtxId)")
+          .url(
+            v-for="t in s.tabs.filter(t => !t.pinned && t.cookieStoreId === defaultCtxId)"
+            :title="t.url") - {{t.title}}
+        .panel-info(
           v-for="c in s.ctxs"
-          v-if="tabsCount(c, s.tabs)"
-          :style="{color: c.colorCode}") {{tabsCount(c, s.tabs)}}
+          v-if="s.tabs.find(t => !t.pinned && t.cookieStoreId === c.cookieStoreId)")
+          .url(
+            v-for="t in s.tabs.filter(t => !t.pinned && t.cookieStoreId === c.cookieStoreId)"
+            :style="{color: c.colorCode}"
+            :title="t.url") - {{t.title}}
 </template>
 
 
@@ -86,37 +91,9 @@ export default {
       this.close()
     },
 
-    /**
-     * Get string containing urls of tabs.
-     */
-    firstFiveUrls(tabs) {
-      if (!tabs) return ''
-      let out = tabs.length > 7 ? tabs.slice(0, 7) : tabs
-      let outStr = out
-        .map(t => {
-          if (t.url.length <= 36) return t.url
-          else return t.url.slice(0, 36) + '...'
-        })
-        .join('\n')
-      if (tabs.length > 7) outStr += '\n...'
-      return outStr
-    },
-
     udate: Utils.UDate,
     utime: Utils.UTime,
     uelapsed: Utils.UElapsed,
-
-    /**
-     * Get tabs count for provided container
-     */
-    tabsCount(ctx, tabs) {
-      if (ctx === 'pinned') return tabs.filter(t => t.pinned).length
-      if (!ctx)
-        return tabs.filter(t => {
-          return t.cookieStoreId === this.defaultCtxId && !t.pinned
-        }).length
-      return tabs.filter(t => t.cookieStoreId === ctx.cookieStoreId && !t.pinned).length
-    },
 
     /**
      * Apply snapshot
@@ -187,8 +164,9 @@ export default {
   box(relative, flex)
   text(s: rem(13))
   size(100%)
+  flex-direction: column
   color: var(--settings-label-fg)
-  margin: 0 0 3px
+  margin: 0 0 8px
   padding: 3px 12px
   cursor: pointer
   opacity: .8
@@ -200,21 +178,19 @@ export default {
 
   .datetime
     box(relative)
+    text(s: rem(14))
     margin-right: auto
 
-  .date
+  .panel-info
     box(relative)
-    white-space: nowrap
+    margin-top: 6px
 
-  .time
+  .url
     box(relative)
+    overflow: hidden
+    text-overflow: ellipsis
     white-space: nowrap
-    opacity: .7
-
-  .tabs
-    size(min-w: 12px)
-    text-align: right
-    margin: 0 0 0 5px
+    padding: 0 0 0 8px
     &.pinned
       color: var(--settings-snapshot-counter-pinned-fg)
 

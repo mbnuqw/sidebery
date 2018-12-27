@@ -1,13 +1,13 @@
 <template lang="pug">
 .Sidebar(
   :menu-opened="isPanelMenuOpened"
-  @wheel="onWH"
+  @wheel="onWheel"
   @contextmenu.prevent.stop=""
   @dragover.prevent=""
   @drop="onDrop"
-  @mouseenter="onME"
-  @mouseleave="onML"
-  @mousedown="onMD")
+  @mouseenter="onMouseEnter"
+  @mouseleave="onMouseLeave"
+  @mousedown="onMouseDown")
   ctx-menu
   window-input(:is-active="!!winChoosing")
   snapshots-list
@@ -20,6 +20,7 @@
         ref="menu"
         :is="panelMenu.menu" 
         :conf="panelMenu"
+        :index="$store.state.panelIndex"
         @close="closePanelMenu"
         @height="recalcPanelMenuHeight")
 
@@ -85,7 +86,6 @@ import Vue from 'vue'
 import { mapGetters, mapActions } from 'vuex'
 import NoiseBg from '../../directives/noise-bg.js'
 import Utils from '../../libs/utils.js'
-import Logs from '../../libs/logs.js'
 import EventBus from '../event-bus'
 import Store from '../store'
 import State, { DEFAULT_PANELS, DEFAULT_CTX } from '../store.state.js'
@@ -284,7 +284,7 @@ export default {
     /**
      * Sidebar wheel event handler
      */
-    onWH(e) {
+    onWheel(e) {
       if (State.hScrollThroughPanels) {
         if (e.deltaX > 0) return Store.dispatch('switchPanel', 1)
         if (e.deltaX < 0) return Store.dispatch('switchPanel', -1)
@@ -304,7 +304,7 @@ export default {
     /**
      * Mouse enter event handler
      */
-    onME() {
+    onMouseEnter() {
       if (this.leaveTimeout) {
         clearTimeout(this.leaveTimeout)
         this.leaveTimeout = null
@@ -314,7 +314,7 @@ export default {
     /**
      * Mouse leave event handler
      */
-    onML() {
+    onMouseLeave() {
       this.leaveTimeout = setTimeout(() => {
         Store.commit('closeCtxMenu')
       }, 500)
@@ -323,7 +323,7 @@ export default {
     /**
      * Mouse down event handler
      */
-    onMD(e) {
+    onMouseDown(e) {
       if (e.button === 1) {
         if (State.wheelBlockTimeout) {
           clearTimeout(State.wheelBlockTimeout)
@@ -421,7 +421,6 @@ export default {
      * contextualIdentities.onCreated
      */
     onCreatedContainer({ contextualIdentity }) {
-      Logs.D(`New container created '${contextualIdentity.cookieStoreId}'`)
       let i = State.ctxs.push(contextualIdentity)
       State.panelIndex = i + 3
       State.lastPanelIndex = State.panelIndex
@@ -436,15 +435,14 @@ export default {
      * contextualIdentities.onRemoved
      */
     async onRemovedContainer({ contextualIdentity }) {
-      Logs.D(`Container removed '${contextualIdentity.cookieStoreId}'`)
       let id = contextualIdentity.cookieStoreId
       let i = State.ctxs.findIndex(c => c.cookieStoreId === id)
       if (i === -1) return
       State.ctxs.splice(i, 1)
 
-      // Turn off sync
-      let pi = State.syncPanels.findIndex(p => p === id)
-      if (pi !== -1) State.syncPanels.splice(pi, 1)
+      // Turn off sync and unlock
+      this.$set(State.syncedPanels, this.index, false)
+      this.$set(State.lockedPanels, this.index, false)
 
       // Close tabs
       let orphanTabs = await browser.tabs.query({
@@ -462,7 +460,6 @@ export default {
      * contextualIdentities.onUpdated
      */
     onUpdatedContainer({ contextualIdentity }) {
-      Logs.D(`Container updated '${contextualIdentity.cookieStoreId}'`)
       let id = contextualIdentity.cookieStoreId
       let i = State.ctxs.findIndex(c => c.cookieStoreId === id)
       if (i === -1) return
@@ -478,7 +475,6 @@ export default {
      */
     onCreatedTab(tab) {
       if (tab.windowId !== State.windowId) return
-      Logs.D(`Tab created, id: '${tab.id}', index: '${tab.index}', ctx: '${tab.cookieStoreId}'`)
       Store.commit('closeCtxMenu')
       Store.commit('resetSelection')
 
@@ -569,7 +565,6 @@ export default {
      */
     onRemovedTab(tabId, info) {
       if (info.windowId !== State.windowId) return
-      Logs.D(`Tab removed, id: '${tabId}'`)
       Store.commit('closeCtxMenu')
       Store.commit('resetSelection')
       let rmIndex = State.tabs.findIndex(t => t.id === tabId)
@@ -577,7 +572,7 @@ export default {
 
       const panelIndex = Utils.GetPanelIndex(this.panels, tabId)
       const tab = State.tabs[rmIndex]
-      if (State.lockedPanels.includes(tab.cookieStoreId) && tab.url.indexOf('about')) {
+      if (State.lockedTabs[panelIndex] && tab.url.indexOf('about')) {
         browser.tabs.create({
           url: tab.url,
           cookieStoreId: tab.cookieStoreId,
@@ -616,7 +611,6 @@ export default {
      */
     onMovedTab(id, info) {
       if (info.windowId !== State.windowId) return
-      Logs.D(`Tab moved, id: '${id}', from: '${info.fromIndex}', to: '${info.toIndex}'`)
       Store.commit('closeCtxMenu')
       Store.commit('resetSelection')
 
@@ -661,7 +655,6 @@ export default {
      */
     onDetachedTab(id, info) {
       if (info.oldWindowId !== State.windowId) return
-      Logs.D(`Tab detached, id: '${id}'`)
       Store.commit('closeCtxMenu')
       Store.commit('resetSelection')
       let i = State.tabs.findIndex(t => t.id === id)
@@ -681,7 +674,6 @@ export default {
      */
     onAttachedTab(id, info) {
       if (info.newWindowId !== State.windowId) return
-      Logs.D(`Tab attached, id: '${id}'`)
       Store.commit('closeCtxMenu')
       Store.commit('resetSelection')
       Store.dispatch('loadTabs')
@@ -693,26 +685,35 @@ export default {
      */
     onActivatedTab(info) {
       if (info.windowId !== State.windowId) return
-      Logs.D(`Tab activated, id: '${info.tabId}'`)
-      Store.commit('resetSelection')
-      for (let i = 0; i < State.tabs.length; i++) {
-        State.tabs[i].active = info.tabId === State.tabs[i].id
-      }
 
-      // Switch to tab's panel
-      let tab = State.tabs.find(t => t.id === info.tabId)
-      let panelIndex = -1
-      if (tab && !tab.pinned) {
-        panelIndex = this.panels.findIndex(p => p.cookieStoreId === tab.cookieStoreId)
-        if (panelIndex === -1) return
+      // Reset selectin and close settings
+      Store.commit('resetSelection')
+      if (State.settingsOpened) State.settingsOpened = false
+
+      // Update tabs and find activated one
+      let tab, isActivated
+      for (let i = State.tabs.length; i--;) {
+        isActivated = info.tabId === State.tabs[i].id
+        State.tabs[i].active = isActivated
+        if (isActivated) tab = State.tabs[i]
       }
-      if (tab && tab.pinned) panelIndex = 1
-      if (panelIndex > 0 && State.panelIndex !== panelIndex) {
-        // Close settings and switch panel
-        if (State.settingsOpened) State.settingsOpened = false
+      if (!tab) return
+
+      // Find panel of activated tab
+      let panelIndex = this.panels.findIndex(p => {
+        return tab.pinned ? p.pinned : p.cookieStoreId === tab.cookieStoreId
+      })
+      if (panelIndex === -1) return
+
+      // Switch to activated tab's panel
+      if (!State.lockedPanels[State.panelIndex]) {
         Store.commit('setPanel', panelIndex)
       }
       EventBus.$emit('scrollToActiveTab', panelIndex, info.tabId)
+
+      if (State.panelMenuOpened) {
+        this.openPanelMenu(panelIndex)
+      }
 
       // Remove updated flag
       this.$delete(State.updatedTabs, info.tabId)

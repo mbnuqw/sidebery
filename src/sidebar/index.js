@@ -2,7 +2,6 @@ import Vue from 'vue'
 import { mapGetters } from 'vuex'
 import Sidebar from './components/index.vue'
 import Utils from '../libs/utils'
-import Logs from '../libs/logs'
 import Dict from '../mixins/dict'
 import Store from './store'
 import State from './store.state'
@@ -117,19 +116,23 @@ export default new Vue({
       if (changes.settings) Store.dispatch('loadSettings')
       if (type === 'sync') {
         let ids = Object.keys(changes).filter(id => id !== this.localID)
-        if (!ids.length) return
+
         let syncData
         ids.map(id => {
           if (!changes[id] || !changes[id].newValue) return
+          let data
+
           try {
-            let a = JSON.parse(changes[id].newValue)
-            if (syncData && syncData.time > a.time) return
-            else syncData = a
+            data = JSON.parse(changes[id].newValue)
           } catch (err) {
-            // pass
+            return
           }
+
+          if (syncData && syncData.time > data.time) return
+          else syncData = data
         })
         this.lastSyncPanels = syncData
+
         Store.dispatch('updateSyncPanels', syncData)
       }
     },
@@ -139,7 +142,6 @@ export default new Vue({
      */
     onCmd(name) {
       if (!State.windowFocused) return
-      Logs.D(`Run command: ${name}`)
       let cmdName = 'kb_' + name
       Store.dispatch(cmdName)
     },

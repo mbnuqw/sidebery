@@ -54,7 +54,7 @@ export default {
   async removeTab({ state, getters }, tab) {
     let p = Utils.GetPanelOf(getters.panels, tab)
     if (!p || !p.tabs) return
-    if (state.lockedPanels.includes(tab.cookieStoreId) && tab.url.indexOf('about')) {
+    if (state.lockedTabs[state.panelIndex] && tab.url.indexOf('about')) {
       return
     }
 
@@ -90,7 +90,7 @@ export default {
     for (let id of tabIds) {
       const tab = state.tabs.find(t => t.id === id)
       if (!tab) continue
-      if (state.lockedPanels.includes(tab.cookieStoreId) && tab.url.indexOf('about')) continue
+      if (state.lockedTabs[state.panelIndex] && tab.url.indexOf('about')) continue
       if (panelId === undefined) panelId = tab.cookieStoreId
       if (panelId && panelId !== tab.cookieStoreId) panelId = null
       if (firstIndex === undefined) firstIndex = tab.index
