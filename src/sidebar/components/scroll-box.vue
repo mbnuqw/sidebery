@@ -123,6 +123,7 @@ export default {
     },
 
     recalcScroll() {
+      if (!this.$refs.scrollBox) return
       let boxHeight = this.$refs.scrollBox.offsetHeight
       let contentHeight = this.$refs.scrollContent.offsetHeight
       this.boxHeight = boxHeight
