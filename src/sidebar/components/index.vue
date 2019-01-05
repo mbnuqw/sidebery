@@ -32,8 +32,9 @@
         :loading="btn.loading"
         :updated="btn.updated"
         :proxified="btn.proxified"
-        :data-active="panelIs(i)"
-        :data-hidden="btn.hidden"
+        :is-active="panelIs(i)"
+        :is-hidden="btn.hidden"
+        :class="'rel-' + btn.relIndex"
         @click="onNavClick(i)"
         @mousedown.right="openPanelMenu(i)")
         svg(:style="{fill: btn.colorCode}")
@@ -191,10 +192,12 @@ export default {
 
       let p = State.panelIndex - hideOffset
       let vis = out.length - hideOffset
+      let r = 0
       for (i = 0, k = 0; i < out.length; i++) {
         if (out[i].hidden) continue
         if (p - k > halfCap && vis - k > cap) out[i].hidden = true
         if (p - k < invModCap - halfCap && k > cap - 1) out[i].hidden = true
+        if (!out[i].hidden) out[i].relIndex = r++
         k++
       }
 
@@ -868,7 +871,7 @@ NAV_CONF_HEIGHT = auto
     .panel-menu
       opacity: 1
       transition: opacity var(--d-fast), z-index var(--d-fast)
-    .panel-btn[data-active="true"]
+    .panel-btn[is-active="true"]
       flex-grow: 10
       transition: flex var(--d-fast)
 
@@ -913,25 +916,25 @@ NAV_CONF_HEIGHT = auto
   overflow: hidden
 
 .Sidebar .panel-btn
-  box(relative, flex)
+  box(absolute, flex)
   size(NAV_BTN_WIDTH, NAV_HEIGHT, max-w: 34px)
   justify-content: center
   align-items: center
   flex-shrink: 0
   opacity: var(--nav-btn-opacity)
   z-index: 10
-  transition: opacity var(--d-fast), width var(--d-fast), z-index var(--d-fast)
-  &[data-active="true"]
+  transition: opacity var(--d-fast), transform var(--d-fast), z-index var(--d-fast)
+  &[is-active="true"]
     opacity: var(--nav-btn-activated-opacity)
   &:hover
     opacity: var(--nav-btn-opacity-hover)
   &:active
     opacity: var(--nav-btn-opacity-active)
     transition: none
-  &[data-hidden="true"]
-    size(0)
+  &[is-hidden="true"]
     opacity: 0
     z-index: -1
+    transform: scale(0, 0)
   &[proxified]
     > .proxy-badge
       opacity: .64
@@ -966,6 +969,10 @@ NAV_CONF_HEIGHT = auto
         #000000 7.5px,
         #000000
       )
+
+  for i in 0..16
+    &.rel-{i}
+      transform: translateX(NAV_BTN_WIDTH * i)
 
 .Sidebar .panel-btn > svg
   box(absolute)
