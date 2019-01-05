@@ -68,6 +68,7 @@
       "**/src/mixins/*.test.js",
       "**/src/libs/*.test.js",
       "**/src/sidebar/*.test.js",
+      "**/src/sidebar/actions/*.test.js",
       "**/src/sidebar/components/*.test.js"
     ],
     "transform": {

@@ -1,6 +1,7 @@
 const MsgHandlers = []
 
 const browser = {
+  bookmarks: {},
   extension: {
     inIncognitoContext: false,
   },
@@ -16,6 +17,9 @@ const browser = {
         MsgHandlers.push(handler)
       },
     },
+  },
+  storage: {
+    local: {},
   },
   tabs: {
     captureTab: () => 'tab image'
