@@ -32,8 +32,9 @@
         :loading="btn.loading"
         :updated="btn.updated"
         :proxified="btn.proxified"
-        :data-active="panelIs(i)"
-        :data-hidden="btn.hidden"
+        :is-active="panelIs(i)"
+        :is-hidden="btn.hidden"
+        :class="'rel-' + btn.relIndex"
         @click="onNavClick(i)"
         @mousedown.right="openPanelMenu(i)")
         svg(:style="{fill: btn.colorCode}")
@@ -168,7 +169,7 @@ export default {
           btn.hidden = true
           if (State.panelIndex > k) hideOffset++
         }
-        btn.updated = this.updatedPanels.includes(btn.cookieStoreId)
+        btn.updated = this.updatedPanels.includes(k)
         if (k === State.panelIndex) btn.updated = false
         out.push(btn)
       }
@@ -184,17 +185,19 @@ export default {
         }
         if (!btn.menu) btn.menu = TabsMenu
         btn.hidden = false
-        btn.updated = this.updatedPanels.includes(btn.cookieStoreId)
+        btn.updated = this.updatedPanels.includes(k)
         if (k === State.panelIndex) btn.updated = false
         out.push(btn)
       }
 
       let p = State.panelIndex - hideOffset
       let vis = out.length - hideOffset
+      let r = 0
       for (i = 0, k = 0; i < out.length; i++) {
         if (out[i].hidden) continue
         if (p - k > halfCap && vis - k > cap) out[i].hidden = true
         if (p - k < invModCap - halfCap && k > cap - 1) out[i].hidden = true
+        if (!out[i].hidden) out[i].relIndex = r++
         k++
       }
 
@@ -249,9 +252,6 @@ export default {
     EventBus.$on('panelLoadingOk', panelIndex => this.onPanelLoadingOk(panelIndex))
     EventBus.$on('panelLoadingErr', panelIndex => this.onPanelLoadingErr(panelIndex))
     EventBus.$on('dragTabStart', tabInfo => this.outerDraggedTab = tabInfo)
-
-    // --- Non-watched vars
-    this.updatedTabs = {}
   },
 
   // --- Mounted Hook ---
@@ -362,7 +362,7 @@ export default {
         
         if (item.type === 'text/uri-list') {
           item.getAsString(s => {
-            if (s.indexOf('http') === -1) return
+            if (!s.startsWith('http')) return
             const panel = this.panels[State.panelIndex]
             if (panel && panel.cookieStoreId) {
               browser.tabs.create({
@@ -382,7 +382,7 @@ export default {
               const tab = this.outerDraggedTab
 
               if (!tab || tab.url !== s) {
-                if (s.indexOf('http') === -1) return
+                if (!s.startsWith('http')) return
                 browser.tabs.create({ url: s, windowId: State.windowId })
                 return
               }
@@ -390,13 +390,13 @@ export default {
               if (tab.incognito === State.private) {
                 browser.tabs.move(tab.tabId, { windowId: State.windowId, index: -1 })
               } else {
-                if (s.indexOf('http') === -1) return
+                if (!s.startsWith('http')) return
                 browser.tabs.create({ url: s, windowId: State.windowId })
                 browser.tabs.remove(tab.tabId)
               }
             }
             if (e.dataTransfer.dropEffect === 'copy') {
-              if (s.indexOf('http') === -1) return
+              if (!s.startsWith('http')) return
               browser.tabs.create({ windowId: State.windowId, url: s })
             }
           })
@@ -510,7 +510,7 @@ export default {
 
       // Handle favicon change
       // If favicon is not external link - store it in cache
-      if (change.favIconUrl && change.favIconUrl.indexOf('http') !== 0) {
+      if (change.favIconUrl && !change.favIconUrl.startsWith('http')) {
         const hostname = tab.url.split('/')[2]
         Store.dispatch('setFavicon', { hostname, icon: change.favIconUrl })
       }
@@ -524,27 +524,20 @@ export default {
         if (tab.active) Store.commit('setPanel', pi)
       }
 
-      // Handle url change
-      if (change.hasOwnProperty('url')) {
-        this.updatedTabs[tab.id] = 1
-      }
-
       // Handle title change
       if (change.hasOwnProperty('title') && !tab.active) {
         // If prev url start with 'http'
         const prevTabState = State.tabs[upIndex]
-        if (!prevTabState.url.indexOf('http')) {
-          // And if prev title not just url
-          // which is default title value
-          const hn = prevTabState.url.split('/')[2]
-          const shn = hn.indexOf('www.') ? hn : hn.slice(4)
-          if (prevTabState.title.indexOf(shn)) {
-            if (this.updatedTabs[tab.id]) {
-              this.updatedTabs[tab.id]++
-              if (this.updatedTabs[tab.id] > 2) {
-                this.$set(State.updatedTabs, tab.id, tab.cookieStoreId)
-              }
-            }
+        if (
+          prevTabState.url.startsWith('http') &&
+          prevTabState.url.indexOf(prevTabState.title) < 0 &&
+          prevTabState.url === tab.url
+        ) {
+          if (tab.pinned) {
+            this.$set(State.updatedTabs, tab.id, 1)
+          } else {
+            let pi = this.panels.findIndex(p => p.cookieStoreId === tab.cookieStoreId)
+            this.$set(State.updatedTabs, tab.id, pi)
           }
         }
       }
@@ -572,7 +565,7 @@ export default {
 
       const panelIndex = Utils.GetPanelIndex(this.panels, tabId)
       const tab = State.tabs[rmIndex]
-      if (State.lockedTabs[panelIndex] && tab.url.indexOf('about')) {
+      if (State.lockedTabs[panelIndex] && !tab.url.startsWith('about')) {
         browser.tabs.create({
           url: tab.url,
           cookieStoreId: tab.cookieStoreId,
@@ -600,7 +593,6 @@ export default {
 
       // Remove updated flag
       this.$delete(State.updatedTabs, tabId)
-      this.updatedTabs[tabId] = 0
 
       Store.dispatch('recalcPanelScroll')
       Store.dispatch('saveSyncPanels')
@@ -663,7 +655,6 @@ export default {
 
       // Remove updated flag
       this.$delete(State.updatedTabs, id)
-      this.updatedTabs[id] = 0
 
       Store.dispatch('recalcPanelScroll')
       Store.dispatch('saveSyncPanels')
@@ -717,7 +708,6 @@ export default {
 
       // Remove updated flag
       this.$delete(State.updatedTabs, info.tabId)
-      this.updatedTabs[info.tabId] = 0
 
       State.activeTabs[panelIndex] = info.tabId
 
@@ -868,7 +858,7 @@ NAV_CONF_HEIGHT = auto
     .panel-menu
       opacity: 1
       transition: opacity var(--d-fast), z-index var(--d-fast)
-    .panel-btn[data-active="true"]
+    .panel-btn[is-active="true"]
       flex-grow: 10
       transition: flex var(--d-fast)
 
@@ -913,32 +903,35 @@ NAV_CONF_HEIGHT = auto
   overflow: hidden
 
 .Sidebar .panel-btn
-  box(relative, flex)
+  box(absolute, flex)
   size(NAV_BTN_WIDTH, NAV_HEIGHT, max-w: 34px)
   justify-content: center
   align-items: center
   flex-shrink: 0
   opacity: var(--nav-btn-opacity)
   z-index: 10
-  transition: opacity var(--d-fast), width var(--d-fast), z-index var(--d-fast)
-  &[data-active="true"]
+  transition: opacity var(--d-fast), transform var(--d-fast), z-index var(--d-fast)
+  &[is-active="true"]
     opacity: var(--nav-btn-activated-opacity)
   &:hover
     opacity: var(--nav-btn-opacity-hover)
   &:active
     opacity: var(--nav-btn-opacity-active)
     transition: none
-  &[data-hidden="true"]
-    size(0)
+  &[is-hidden="true"]
     opacity: 0
     z-index: -1
-  &[proxified]
-    > .proxy-badge
-      opacity: .64
-      transform: scale(1, 1)
+    transform: scale(0, 0)
   &[updated]
     > .update-badge
       opacity: 1
+      transform: scale(1, 1)
+  &[proxified]
+    > .update-badge
+      opacity: 0
+      transform: scale(0.7, 0.7)
+    > .proxy-badge
+      opacity: .64
       transform: scale(1, 1)
   &[loading="true"]
     cursor: progress
@@ -955,9 +948,17 @@ NAV_CONF_HEIGHT = auto
     > .err-badge
       opacity: 1
       transform: scale(1, 1)
+  &[updated]
+    > svg
+      mask: radial-gradient(
+        circle at calc(100% - 2px) calc(100% - 2px),
+        #00000032,
+        #00000032 4.5px,
+        #000000 5.5px,
+        #000000
+      )
   &[proxified]
   &[loading]
-  &[updated]
     > svg
       mask: radial-gradient(
         circle at calc(100% - 2px) calc(100% - 2px),
@@ -966,6 +967,11 @@ NAV_CONF_HEIGHT = auto
         #000000 7.5px,
         #000000
       )
+
+  // Button x possition
+  for i in 0..16
+    &.rel-{i}
+      transform: translateX(NAV_BTN_WIDTH * i)
 
 .Sidebar .panel-btn > svg
   box(absolute)
@@ -1002,8 +1008,8 @@ NAV_CONF_HEIGHT = auto
 
 .Sidebar .panel-btn > .update-badge
   box(absolute)
-  size(10px, same)
-  pos(b: 5px, r: 6px)
+  size(6px, same)
+  pos(b: 7px, r: 8px)
   border-radius: 50%
   background-color: var(--nav-btn-update-badge-bg)
   opacity: 0

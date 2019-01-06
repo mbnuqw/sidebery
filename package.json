@@ -1,6 +1,6 @@
 {
   "name": "nav-center",
-  "version": "1.8.1",
+  "version": "1.8.2",
   "description": "Navigation ext",
   "main": "index.js",
   "scripts": {
@@ -68,6 +68,7 @@
       "**/src/mixins/*.test.js",
       "**/src/libs/*.test.js",
       "**/src/sidebar/*.test.js",
+      "**/src/sidebar/actions/*.test.js",
       "**/src/sidebar/components/*.test.js"
     ],
     "transform": {
