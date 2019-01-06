@@ -11,10 +11,10 @@
     :close-btn="$store.state.showTabRmBtn"
     :title="tooltip"
     @contextmenu.prevent.stop=""
-    @mousedown="onMD"
-    @mouseup.prevent="onMU"
-    @mouseleave="onML"
-    @dblclick="onDBL")
+    @mousedown="onMouseDown"
+    @mouseup.prevent="onMouseUp"
+    @mouseleave="onMouseLeave"
+    @dblclick="onDoubleClick")
   .drag-layer(draggable="true"
     @dragstart="onDragStart"
     @dragenter="onDragEnter"
@@ -116,7 +116,7 @@ export default {
     /**
      * Double click handler
      */
-    onDBL() {
+    onDoubleClick() {
       let dc = State.tabDoubleClick
       if (dc === 'reload') Store.dispatch('reloadTabs', [this.tab.id])
       if (dc === 'duplicate') Store.dispatch('duplicateTabs', [this.tab.id])
@@ -128,7 +128,7 @@ export default {
     /**
      * Mousedown handler
      */
-    onMD(e) {
+    onMouseDown(e) {
       if (e.button === 1) {
         e.stopPropagation()
         e.preventDefault()
@@ -167,7 +167,7 @@ export default {
       }
     },
 
-    onMU(e) {
+    onMouseUp(e) {
       if (e.button === 0) {
         if (this.hodorL) this.hodorL = clearTimeout(this.hodorL)
       }
@@ -184,7 +184,7 @@ export default {
       }, 200)
     },
 
-    onML() {
+    onMouseLeave() {
       if (this.hodorL) this.hodorL = clearTimeout(this.hodorL)
       if (this.hodorR) this.hodorR = clearTimeout(this.hodorR)
     },
@@ -445,8 +445,8 @@ export default {
       mask: radial-gradient(
         circle at calc(100% - 2px) calc(100% - 2px),
         #00000032,
-        #00000032 6.5px,
-        #000000 7.5px,
+        #00000032 4.5px,
+        #000000 5.5px,
         #000000
       )
     > .update-badge
@@ -568,8 +568,8 @@ export default {
 
 .Tab .fav > .update-badge
   box(absolute)
-  size(10px, same)
-  pos(b: -3px, r: -3px)
+  size(6px, same)
+  pos(b: -1px, r: -1px)
   border-radius: 50%
   background-color: var(--tabs-update-badge-bg)
   opacity: 0

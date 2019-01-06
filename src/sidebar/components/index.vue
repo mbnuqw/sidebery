@@ -169,7 +169,7 @@ export default {
           btn.hidden = true
           if (State.panelIndex > k) hideOffset++
         }
-        btn.updated = this.updatedPanels.includes(btn.cookieStoreId)
+        btn.updated = this.updatedPanels.includes(k)
         if (k === State.panelIndex) btn.updated = false
         out.push(btn)
       }
@@ -185,7 +185,7 @@ export default {
         }
         if (!btn.menu) btn.menu = TabsMenu
         btn.hidden = false
-        btn.updated = this.updatedPanels.includes(btn.cookieStoreId)
+        btn.updated = this.updatedPanels.includes(k)
         if (k === State.panelIndex) btn.updated = false
         out.push(btn)
       }
@@ -252,9 +252,6 @@ export default {
     EventBus.$on('panelLoadingOk', panelIndex => this.onPanelLoadingOk(panelIndex))
     EventBus.$on('panelLoadingErr', panelIndex => this.onPanelLoadingErr(panelIndex))
     EventBus.$on('dragTabStart', tabInfo => this.outerDraggedTab = tabInfo)
-
-    // --- Non-watched vars
-    this.updatedTabs = {}
   },
 
   // --- Mounted Hook ---
@@ -527,27 +524,20 @@ export default {
         if (tab.active) Store.commit('setPanel', pi)
       }
 
-      // Handle url change
-      if (change.hasOwnProperty('url')) {
-        this.updatedTabs[tab.id] = 1
-      }
-
       // Handle title change
       if (change.hasOwnProperty('title') && !tab.active) {
         // If prev url start with 'http'
         const prevTabState = State.tabs[upIndex]
-        if (!prevTabState.url.indexOf('http')) {
-          // And if prev title not just url
-          // which is default title value
-          const hn = prevTabState.url.split('/')[2]
-          const shn = hn.indexOf('www.') ? hn : hn.slice(4)
-          if (prevTabState.title.indexOf(shn)) {
-            if (this.updatedTabs[tab.id]) {
-              this.updatedTabs[tab.id]++
-              if (this.updatedTabs[tab.id] > 2) {
-                this.$set(State.updatedTabs, tab.id, tab.cookieStoreId)
-              }
-            }
+        if (
+          prevTabState.url.startsWith('http') &&
+          prevTabState.url.indexOf(prevTabState.title) < 0 &&
+          prevTabState.url === tab.url
+        ) {
+          if (tab.pinned) {
+            this.$set(State.updatedTabs, tab.id, 1)
+          } else {
+            let pi = this.panels.findIndex(p => p.cookieStoreId === tab.cookieStoreId)
+            this.$set(State.updatedTabs, tab.id, pi)
           }
         }
       }
@@ -603,7 +593,6 @@ export default {
 
       // Remove updated flag
       this.$delete(State.updatedTabs, tabId)
-      this.updatedTabs[tabId] = 0
 
       Store.dispatch('recalcPanelScroll')
       Store.dispatch('saveSyncPanels')
@@ -666,7 +655,6 @@ export default {
 
       // Remove updated flag
       this.$delete(State.updatedTabs, id)
-      this.updatedTabs[id] = 0
 
       Store.dispatch('recalcPanelScroll')
       Store.dispatch('saveSyncPanels')
@@ -720,7 +708,6 @@ export default {
 
       // Remove updated flag
       this.$delete(State.updatedTabs, info.tabId)
-      this.updatedTabs[info.tabId] = 0
 
       State.activeTabs[panelIndex] = info.tabId
 
@@ -935,13 +922,16 @@ NAV_CONF_HEIGHT = auto
     opacity: 0
     z-index: -1
     transform: scale(0, 0)
-  &[proxified]
-    > .proxy-badge
-      opacity: .64
-      transform: scale(1, 1)
   &[updated]
     > .update-badge
       opacity: 1
+      transform: scale(1, 1)
+  &[proxified]
+    > .update-badge
+      opacity: 0
+      transform: scale(0.7, 0.7)
+    > .proxy-badge
+      opacity: .64
       transform: scale(1, 1)
   &[loading="true"]
     cursor: progress
@@ -958,9 +948,17 @@ NAV_CONF_HEIGHT = auto
     > .err-badge
       opacity: 1
       transform: scale(1, 1)
+  &[updated]
+    > svg
+      mask: radial-gradient(
+        circle at calc(100% - 2px) calc(100% - 2px),
+        #00000032,
+        #00000032 4.5px,
+        #000000 5.5px,
+        #000000
+      )
   &[proxified]
   &[loading]
-  &[updated]
     > svg
       mask: radial-gradient(
         circle at calc(100% - 2px) calc(100% - 2px),
@@ -970,6 +968,7 @@ NAV_CONF_HEIGHT = auto
         #000000
       )
 
+  // Button x possition
   for i in 0..16
     &.rel-{i}
       transform: translateX(NAV_BTN_WIDTH * i)
@@ -1009,8 +1008,8 @@ NAV_CONF_HEIGHT = auto
 
 .Sidebar .panel-btn > .update-badge
   box(absolute)
-  size(10px, same)
-  pos(b: 5px, r: 6px)
+  size(6px, same)
+  pos(b: 7px, r: 8px)
   border-radius: 50%
   background-color: var(--nav-btn-update-badge-bg)
   opacity: 0
