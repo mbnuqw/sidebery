@@ -236,7 +236,7 @@ export default {
      */
     onFaviconLoad(e) {
       if (!this.favicon) return
-      if (this.favicon.indexOf('http') === 0) {
+      if (this.favicon.startsWith('http')) {
         let canvas = document.createElement('canvas')
         let ctx = canvas.getContext('2d')
         canvas.width = e.target.naturalWidth

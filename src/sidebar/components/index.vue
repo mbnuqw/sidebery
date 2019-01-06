@@ -362,7 +362,7 @@ export default {
         
         if (item.type === 'text/uri-list') {
           item.getAsString(s => {
-            if (s.indexOf('http') === -1) return
+            if (!s.startsWith('http')) return
             const panel = this.panels[State.panelIndex]
             if (panel && panel.cookieStoreId) {
               browser.tabs.create({
@@ -382,7 +382,7 @@ export default {
               const tab = this.outerDraggedTab
 
               if (!tab || tab.url !== s) {
-                if (s.indexOf('http') === -1) return
+                if (!s.startsWith('http')) return
                 browser.tabs.create({ url: s, windowId: State.windowId })
                 return
               }
@@ -390,13 +390,13 @@ export default {
               if (tab.incognito === State.private) {
                 browser.tabs.move(tab.tabId, { windowId: State.windowId, index: -1 })
               } else {
-                if (s.indexOf('http') === -1) return
+                if (!s.startsWith('http')) return
                 browser.tabs.create({ url: s, windowId: State.windowId })
                 browser.tabs.remove(tab.tabId)
               }
             }
             if (e.dataTransfer.dropEffect === 'copy') {
-              if (s.indexOf('http') === -1) return
+              if (!s.startsWith('http')) return
               browser.tabs.create({ windowId: State.windowId, url: s })
             }
           })
@@ -510,7 +510,7 @@ export default {
 
       // Handle favicon change
       // If favicon is not external link - store it in cache
-      if (change.favIconUrl && change.favIconUrl.indexOf('http') !== 0) {
+      if (change.favIconUrl && !change.favIconUrl.startsWith('http')) {
         const hostname = tab.url.split('/')[2]
         Store.dispatch('setFavicon', { hostname, icon: change.favIconUrl })
       }
@@ -565,7 +565,7 @@ export default {
 
       const panelIndex = Utils.GetPanelIndex(this.panels, tabId)
       const tab = State.tabs[rmIndex]
-      if (State.lockedTabs[panelIndex] && tab.url.indexOf('about')) {
+      if (State.lockedTabs[panelIndex] && !tab.url.startsWith('about')) {
         browser.tabs.create({
           url: tab.url,
           cookieStoreId: tab.cookieStoreId,
