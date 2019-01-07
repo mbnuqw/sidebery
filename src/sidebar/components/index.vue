@@ -101,6 +101,8 @@ import SnapshotsList from './snapshots-list'
 
 Vue.directive('noise', NoiseBg)
 
+const URL_HOST_PATH_RE = /^([a-z0-9-]{1,63}\.)+\w+(:\d+)?\/[A-Za-z0-9-._~:/?#[\]%@!$&'()*+,;=]*$/
+
 // --- Vue Component ---
 export default {
   components: {
@@ -526,18 +528,18 @@ export default {
 
       // Handle title change
       if (change.hasOwnProperty('title') && !tab.active) {
-        // If prev url start with 'http'
+        // If prev url starts with 'http' and current url same as prev
         const prevTabState = State.tabs[upIndex]
-        if (
-          prevTabState.url.startsWith('http') &&
-          prevTabState.url.indexOf(prevTabState.title) < 0 &&
-          prevTabState.url === tab.url
-        ) {
-          if (tab.pinned) {
-            this.$set(State.updatedTabs, tab.id, 1)
-          } else {
-            let pi = this.panels.findIndex(p => p.cookieStoreId === tab.cookieStoreId)
-            this.$set(State.updatedTabs, tab.id, pi)
+        if (prevTabState.url.startsWith('http') && prevTabState.url === tab.url) {
+          // and if title doesn't looks like url
+          if (!URL_HOST_PATH_RE.test(prevTabState.title)) {
+            // Mark tab as updated
+            if (tab.pinned) {
+              this.$set(State.updatedTabs, tab.id, 1)
+            } else {
+              let pi = this.panels.findIndex(p => p.cookieStoreId === tab.cookieStoreId)
+              this.$set(State.updatedTabs, tab.id, pi)
+            }
           }
         }
       }
