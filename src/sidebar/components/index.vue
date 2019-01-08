@@ -532,7 +532,10 @@ export default {
         const prevTabState = State.tabs[upIndex]
         if (prevTabState.url.startsWith('http') && prevTabState.url === tab.url) {
           // and if title doesn't looks like url
-          if (!URL_HOST_PATH_RE.test(prevTabState.title)) {
+          if (
+            !URL_HOST_PATH_RE.test(prevTabState.title) &&
+            !URL_HOST_PATH_RE.test(tab.title)
+          ) {
             // Mark tab as updated
             if (tab.pinned) {
               this.$set(State.updatedTabs, tab.id, 1)
