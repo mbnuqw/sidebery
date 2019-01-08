@@ -511,8 +511,8 @@ export default {
       if (upIndex === -1) return
 
       // Handle favicon change
-      // If favicon is not external link - store it in cache
-      if (change.favIconUrl && !change.favIconUrl.startsWith('http')) {
+      // If favicon is base64 string - store it in cache
+      if (change.favIconUrl && change.favIconUrl.startsWith('data:')) {
         const hostname = tab.url.split('/')[2]
         Store.dispatch('setFavicon', { hostname, icon: change.favIconUrl })
       }
