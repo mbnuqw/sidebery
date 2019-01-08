@@ -461,7 +461,7 @@
     "message": "Hiding tabs:"
   },
   "settings.tab_hide_info": {
-    "message": "Required for:\n- Hiding inactive panels tabs"
+    "message": "Required for:\n- Hiding tabs on inactive panels"
   },
 
   "settings.help_title": {
