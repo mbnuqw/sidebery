@@ -493,7 +493,7 @@ export default {
 
     async calcSyncDataSize() {
       const ans = await browser.storage.sync.get()
-      this.syncDataSize = Utils.StrSize(JSON.stringify(ans))
+      this.syncDataSize = Utils.StrSize(ans[State.localID] || '')
     },
 
     /**
@@ -515,8 +515,9 @@ export default {
     /**
      * Clear all data for syncing
      */
-    clearSyncData() {
-      Store.dispatch('clearSyncData')
+    async clearSyncData() {
+      await Store.dispatch('clearSyncData')
+      this.calcSyncDataSize()
     },
   },
 }

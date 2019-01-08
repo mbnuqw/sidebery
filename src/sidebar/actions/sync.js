@@ -20,6 +20,7 @@ export default {
    */
   async clearSyncData({ state }) {
     const syncPanelsData = {
+      id: state.localID,
       time: ~~(Date.now() / 1000),
       panels: [],
     }
