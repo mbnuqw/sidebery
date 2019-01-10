@@ -112,6 +112,8 @@
         .input
           .opt.-true {{t('settings.opt_true')}}
           .opt.-false {{t('settings.opt_false')}}
+      .box
+        .btn(@click="openThemeEditor") {{t('settings.edit_theme')}}
 
     section
       h2 {{t('settings.snapshots_title')}}
@@ -337,6 +339,10 @@ export default {
           })
         }
       }
+    },
+
+    openThemeEditor() {
+      EventBus.$emit('open-theme-editor')
     },
 
     // --- Keybinding ---

@@ -8,6 +8,7 @@ import PanelsActions from './actions/panels'
 import TabsActions from './actions/tabs'
 import Bookmarks from './actions/bookmarks'
 import Snapshots from './actions/snapshots'
+import Styles from './actions/styles'
 
 export default {
   ...SavedStateActions,
@@ -19,6 +20,7 @@ export default {
   ...TabsActions,
   ...Bookmarks,
   ...Snapshots,
+  ...Styles,
 
   // --- --- --- Misc --- --- ---
 

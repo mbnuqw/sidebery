@@ -373,6 +373,9 @@
   "settings.animations": {
     "message": "Animations"
   },
+  "settings.edit_theme": {
+    "message": "Edit theme"
+  },
 
   "settings.snapshots_title": {
     "message": "Snapshots"

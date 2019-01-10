@@ -2,7 +2,7 @@ export default {
   /**
    * Try to load saved sidebar state
    */
-  async loadState({ state }) {
+  async loadState({ state, dispatch }) {
     let ans = await browser.storage.local.get('state')
     let loadedState = ans.state
     if (!loadedState) {
@@ -30,12 +30,18 @@ export default {
     if (loadedState.proxiedPanels) {
       state.proxiedPanels = loadedState.proxiedPanels
     }
+    if (loadedState.customTheme) {
+      state.customTheme = loadedState.customTheme
+      dispatch('updateStyles')
+    }
 
     state.stateLoaded = true
   },
 
   /**
-   * Try to save some state values
+   * Try to save some state values.
+   * ps. use JSON.parse(JSON.str...()) to remove vue
+   * getters/setters and other hidden stuff
    */
   async saveState({ state }) {
     if (!state.stateLoaded) return
@@ -47,6 +53,7 @@ export default {
         lockedPanels: state.lockedPanels,
         lockedTabs: state.lockedTabs,
         proxiedPanels: JSON.parse(JSON.stringify(state.proxiedPanels)),
+        customTheme: JSON.parse(JSON.stringify(state.customTheme)),
       },
     })
   },

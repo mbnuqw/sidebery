@@ -65,6 +65,7 @@ export default {
   permAllUrls: false,
   permTabHide: false,
   wheelBlockTimeout: null,
+  customTheme: {},
 
   lastPanelIndex: browser.extension.inIncognitoContext ? 2 : 3,
   panelIndex: browser.extension.inIncognitoContext ? 2 : 3,
