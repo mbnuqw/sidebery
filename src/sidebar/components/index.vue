@@ -899,7 +899,7 @@ NAV_CONF_HEIGHT = auto
   pos(b: 0, l: 0)
   size(100%, NAV_CONF_HEIGHT, max-h: calc(100vh + 200px))
   padding: 300px 0 32px
-  background-color: var(--c-bg)
+  background-color: var(--bg)
   box-shadow: 0 1px 12px 0 #00000056, 0 1px 0 0 #00000012
   opacity: 0
   z-index: 0
@@ -1070,7 +1070,7 @@ NAV_CONF_HEIGHT = auto
   > svg
     box(absolute)
     size(16px, same)
-    fill: var(--c-act-fg)
+    fill: var(--nav-btn-fg)
     opacity: .4
     transition: opacity var(--d-fast)
 

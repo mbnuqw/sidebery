@@ -519,7 +519,7 @@ export default {
   size(3px, same)
   pos(7px, 6px)
   border-radius: 50%
-  background-color: var(--fav-out)
+  background-color: var(--favicons-placehoder-bg)
   opacity: 0
   transform: translateY(4px)
   transition: opacity var(--d-fast), transform var(--d-fast)
@@ -529,7 +529,7 @@ export default {
     box(absolute)
     size(3px, same)
     border-radius: 6px
-    background-color: var(--fav-out)
+    background-color: var(--favicons-placehoder-bg)
   &:before
     pos(0, -5px)
   &:after
@@ -599,10 +599,10 @@ export default {
 // --- Context highlight
 .Tab .ctx
   box(absolute)
-  pos(b: 11px, l: 0px)
-  size(2px, 8px)
+  pos(b: 10px, l: 0px)
+  size(2px, 10px)
   z-index: 2000
-  box-shadow: 0 0 2px 0 var(--c-bg)
+  box-shadow: 0 0 2px 0 #00000024
 
 // --- Title box ---
 .Tab .t-box

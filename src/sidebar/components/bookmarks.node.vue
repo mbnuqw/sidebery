@@ -302,6 +302,12 @@ export default {
     size(h: 24px)
     > .title
       text(s: rem(14), w: 400)
+      color: var(--bookmarks-node-title-fg)
+    &:hover > .title
+      color: var(--bookmarks-node-title-fg-hover)
+    &:active > .title
+      transition: none
+      color: var(--bookmarks-node-title-fg-active)
 
 .Node[n-type="folder"]
   &:not([is-parent]) // Empty folder
@@ -371,17 +377,12 @@ export default {
       background-image: linear-gradient(90deg, transparent, var(--tabs-selected-fg), var(--tabs-selected-fg), var(--tabs-selected-fg))
 
 // Body of node
-.Node .body
+.Node > .body
   box(relative, flex)
   align-items: center
   cursor: pointer
   transform: translateZ(0)
   transition: opacity var(--d-fast)
-  &:hover > .title
-    color: var(--c-label-fg-hover)
-  &:active > .title
-    transition: none
-    color: var(--c-label-fg-active)
 
 // Favicon
 .Node .fav
@@ -403,7 +404,7 @@ export default {
   size(3px, same)
   pos(7px, 6px)
   border-radius: 50%
-  background-color: var(--fav-out)
+  background-color: var(--favicons-placehoder-bg)
   opacity: 0
   transform: translateY(4px)
   transition: opacity var(--d-fast), transform var(--d-fast)
@@ -413,7 +414,7 @@ export default {
     box(absolute)
     size(3px, same)
     border-radius: 6px
-    background-color: var(--fav-out)
+    background-color: var(--favicons-placehoder-bg)
   &:before
     pos(0, -5px)
   &:after
@@ -428,7 +429,6 @@ export default {
 .Node .title
   box(relative)
   size(100%)
-  color: var(--c-label-fg)
   white-space: nowrap
   overflow: hidden
   transition: transform var(--d-fast), color var(--d-fast)

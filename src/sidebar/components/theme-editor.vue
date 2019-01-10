@@ -110,10 +110,10 @@ export default {
   size(100%, same)
   flex-direction: column
   background-color: var(--bg)
-  // z-index: -1
-  // opacity: 0
-  opacity: 1
-  z-index: 1500
+  z-index: -1
+  opacity: 0
+  // opacity: 1
+  // z-index: 1500
   transition: opacity var(--d-fast), z-index var(--d-fast)
 .ThemeEditor[is-active]
   opacity: 1

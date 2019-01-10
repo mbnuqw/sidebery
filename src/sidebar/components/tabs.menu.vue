@@ -513,7 +513,7 @@ export default {
 
 .Menu > .title
   text(s: rem(18))
-  color: var(--c-title-fg)
+  color: var(--panel-menu-title-fg)
   margin: 16px 12px 12px
 
 .Menu .box
@@ -529,6 +529,13 @@ export default {
   box(relative)
   margin: 0 16px 8px
   cursor: pointer
+  &:hover
+    > .label
+      color: var(--panel-menu-label-fg-hover)
+  &:active
+    > .label
+      transition: none
+      color: var(--panel-menu-label-fg-active)
   &[opt-true]
     .opt
       color: var(--settings-opt-active-fg)
@@ -541,7 +548,7 @@ export default {
   box(relative)
   text(s: rem(14))
   margin: 0 auto 0 0
-  color: var(--c-label-fg)
+  color: var(--panel-menu-label-fg)
   transition: color var(--d-fast)
 
 .Menu .field > .input
@@ -580,7 +587,6 @@ export default {
   > svg
     box(absolute)
     size(16px, same)
-    fill: var(--c-act-fg)
     transition: opacity var(--d-fast)
 
 .Menu .field > .text
@@ -599,5 +605,5 @@ export default {
     color: var(--settings-opt-active-fg)
   > .placeholder
     padding: 0 0 2px
-    color: var(--c-label-fg)
+    color: var(--panel-menu-label-fg)
 </style>

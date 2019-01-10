@@ -545,7 +545,7 @@ export default {
 .Settings section > h2
   box(relative)
   text(s: rem(24), w: 400)
-  color: var(--c-title-fg)
+  color: var(--settings-title-fg)
   padding: 8px 12px 10px
   margin: 0
 
@@ -559,7 +559,7 @@ export default {
   &:active
     > .label
       transition: none
-      color: var(--c-label-fg-active)
+      color: var(--settings-label-fg-active)
   &[opt-true]
     .opt
       color: var(--settings-opt-active-fg)

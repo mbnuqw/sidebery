@@ -708,7 +708,6 @@ export default {
   pos(0, 0)
   size(100%)
   align-items: center
-  color: var(--c-label-fg)
   white-space: nowrap
   transition: transform var(--d-fast), opacity var(--d-fast)
   border-top-left-radius: 3px
@@ -718,7 +717,7 @@ export default {
   &[n-type="bookmark"]
     text(s: rem(14))
     padding-left: 12px
-    color: var(--c-label-fg)
+    color: var(--bookmarks-node-title-fg)
 
   &[n-type="folder"]
     text(s: rem(16))
@@ -773,14 +772,14 @@ export default {
   size(3px, same)
   pos(7px, 6px)
   border-radius: 50%
-  background-color: var(--fav-out)
+  background-color: var(--favicons-placehoder-bg)
   &:before
   &:after
     content: ''
     box(absolute)
     size(3px, same)
     border-radius: 6px
-    background-color: var(--fav-out)
+    background-color: var(--favicons-placehoder-bg)
   &:before
     pos(0, -5px)
   &:after
@@ -794,14 +793,6 @@ export default {
 .Bookmarks .drag-node > .title
   box(relative)
   transition: transform var(--d-fast)
-
-// --- Overflow gradient ---
-.Bookmarks .fade
-  box(absolute)
-  pos(0, r: 0)
-  size(8px, 100%)
-  z-index: 1000
-  background-image: var(--gr-bg-fade)
 
 // --- Root nodes ---
 .Bookmarks .node

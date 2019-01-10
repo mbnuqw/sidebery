@@ -607,7 +607,7 @@ export default {
     size(3px, same)
     pos(7px, 6px)
     border-radius: 50%
-    background-color: var(--fav-out)
+    background-color: var(--favicons-placehoder-bg)
     transition: opacity var(--d-fast), transform var(--d-fast)
     &:before
     &:after
@@ -615,7 +615,7 @@ export default {
       box(absolute)
       size(3px, same)
       border-radius: 6px
-      background-color: var(--fav-out)
+      background-color: var(--favicons-placehoder-bg)
     &:before
       pos(0, -5px)
     &:after

@@ -76,7 +76,7 @@ body
 .Menu > h2
   box(relative)
   text(s: rem(18), w: 400)
-  color: var(--c-title-fg)
+  color: var(--panel-menu-title-fg)
   margin: 16px 12px 12px
   padding: 0
 
@@ -130,197 +130,208 @@ body
       color: #ffffff
 
 // --- Themes ---
-#root.-dark
-  --c-bg: #323232
-  --c-act-fg: #fff
-  --c-title-fg: #cecece
-  --c-label-fg: #cecece
-  --c-label-fg-hover: #fefefe
-  --c-label-fg-active: #aaa
-  --c-label-fg-inactive: #969696
-  --c-pale-fg: #646464
-  --gr-bg-fade: linear-gradient(90deg, #ffffff00, #323232)
+#root
+  // Common
+  &.-dark
+    --bg: #323232
+    --favicons-placehoder-bg: #ffffff24
+  &.-light
+    --bg: #fafafa
+    --favicons-placehoder-bg: #00000048
 
-  --bg: #323232
-  --fg: #cecece
+  // Button
+  &.-dark
+    --btn-bg: #245484
+    --btn-bg-hover: #295b8f
+    --btn-bg-active: #205386
+    --btn-warn-bg: #b93527
+    --btn-warn-bg-hover: #c93627
+    --btn-warn-bg-active: #b93224
+    --btn-fg: #fafafa
+    --btn-fg-hover: #ffffff
+    --btn-fg-active: #f2f2f2
+    --btn-shadow: 0 1px 2px 0 #00000024, 0 0 0 1px #00000012
+    --btn-shadow-hover: 0 1px 2px 0 #00000032, 0 0 0 1px #00000024
+    --btn-shadow-active: 0 1px 2px 0 #00000000, 0 0 0 1px #00000012
+    --btn-roundness: 3px
+  &.-light
+    --btn-bg: #328def
+    --btn-bg-hover: #3995ea
+    --btn-bg-active: #268aef
+    --btn-warn-bg: #ff5538
+    --btn-warn-bg-hover: #ff613d
+    --btn-warn-bg-active: #ff5538
+    --btn-fg: #fafafa
+    --btn-fg-hover: #ffffff
+    --btn-fg-active: #f2f2f2
+    --btn-shadow: 0 1px 2px 0 #00000024, 0 0 0 1px #00000000
+    --btn-shadow-hover: 0 1px 2px 0 #00000032, 0 0 0 1px #00000000
+    --btn-shadow-active: 0 1px 2px 0 #00000000, 0 0 0 1px #00000012
+    --btn-roundness: 3px
 
-  --btn-bg: #245484
-  --btn-bg-hover: #295b8f
-  --btn-bg-active: #205386
-  --btn-warn-bg: #b93527
-  --btn-warn-bg-hover: #c93627
-  --btn-warn-bg-active: #b93224
-  --btn-fg: #fafafa
-  --btn-fg-hover: #ffffff
-  --btn-fg-active: #f2f2f2
-  --btn-shadow: 0 1px 2px 0 #00000024, 0 0 0 1px #00000012
-  --btn-shadow-hover: 0 1px 2px 0 #00000032, 0 0 0 1px #00000024
-  --btn-shadow-active: 0 1px 2px 0 #00000000, 0 0 0 1px #00000012
-  --btn-roundness: 3px
+  // Scroll Box
+  &.-dark
+    --scroll-progress-h: 1px
+    --scroll-progress-bg: #37adef
+  &.-light
+    --scroll-progress-h: 2px
+    --scroll-progress-bg: #178dff
 
-  --scroll-progress-h: 1px
-  --scroll-progress-bg: #37adef
+  // Context Menu
+  &.-dark
+    --ctx-menu-bg: #242424
+    --ctx-menu-bg-hover: #484848
+    --ctx-menu-fg: #ffffff
+    --ctx-menu-shadow: 0 1px 16px 0 #00000032
+  &.-light
+    --ctx-menu-bg: #ffffff
+    --ctx-menu-bg-hover: #cacaca
+    --ctx-menu-fg: #000000
+    --ctx-menu-shadow: 0 0 0 1px #00000016, 0 1px 16px 0 #00000032
 
-  --ctx-menu-bg: #242424
-  --ctx-menu-bg-hover: #484848
-  --ctx-menu-fg: #ffffff
-  --ctx-menu-shadow: 0 1px 16px 0 #00000032
+  // Nav Strip
+  &.-dark
+    --nav-btn-fg: #fff
+    --nav-btn-bg-focus: #484848
+    --nav-btn-opacity: .4
+    --nav-btn-opacity-hover: .7
+    --nav-btn-opacity-active: .4
+    --nav-btn-activated-opacity: 1
+    --nav-btn-activated-filter: drop-shadow(0 0 1px #00000056)
+    --nav-btn-update-badge-bg: #00e9fb
+  &.-light
+    --nav-btn-fg: #323232
+    --nav-btn-bg-focus: #ffffff
+    --nav-btn-opacity: .5
+    --nav-btn-opacity-hover: .8
+    --nav-btn-opacity-active: .6
+    --nav-btn-activated-opacity: 1
+    --nav-btn-activated-filter: none
+    --nav-btn-update-badge-bg: #01acda
 
-  --nav-btn-fg: #fff
-  --nav-btn-bg-focus: #484848
-  --nav-btn-opacity: .4
-  --nav-btn-opacity-hover: .7
-  --nav-btn-opacity-active: .4
-  --nav-btn-activated-opacity: 1
-  --nav-btn-activated-filter: drop-shadow(0 0 1px #00000056)
-  --nav-btn-update-badge-bg: #00e9fb
+  // Panel Menu
+  &.-dark
+    --panel-menu-title-fg: #cecece
+    --panel-menu-label-fg: #cecece
+    --panel-menu-label-fg-hover: #ffffff
+    --panel-menu-label-fg-active: #aaaaaa
+  &.-light
+    --panel-menu-title-fg: #242424
+    --panel-menu-label-fg: #323232
+    --panel-menu-label-fg-hover: #000000
+    --panel-menu-label-fg-active: #565656
 
-  --fav-in: #12121224
-  --fav-out: #ffffff24
+  // Tabs
+  &.-dark
+    --tabs-fg: #aaa
+    --tabs-fg-hover: #cecece
+    --tabs-fg-active: #aaa
+    --tabs-activated-bg: #242424af
+    --tabs-activated-overflow-gradient: linear-gradient(90deg, #ffffff00, #242424)
+    --tabs-activated-fg: #ffffff
+    --tabs-selected-bg: #245484
+    --tabs-selected-fg: #ffffff
+    --tabs-loading-fg: #47cfff
+    --tabs-update-badge-bg: #00e9fb
+  &.-light
+    --tabs-fg: #323232
+    --tabs-fg-hover: #565656
+    --tabs-fg-active: #565656
+    --tabs-activated-bg: #cacacaaf
+    --tabs-activated-overflow-gradient: linear-gradient(90deg, #ffffff00, #cecece)
+    --tabs-activated-fg: #000000
+    --tabs-loading-fg: #177dff
+    --tabs-selected-bg: #44a4f4
+    --tabs-selected-fg: #ffffff
+    --tabs-update-badge-bg: #01acda
 
-  --tabs-fg: #aaa
-  --tabs-fg-hover: #cecece
-  --tabs-fg-active: #aaa
-  --tabs-activated-bg: #242424af
-  --tabs-activated-overflow-gradient: linear-gradient(90deg, #ffffff00, #242424)
-  --tabs-activated-fg: #ffffff
-  --tabs-selected-bg: #245484
-  --tabs-selected-fg: #ffffff
-  --tabs-loading-fg: #47cfff
-  --tabs-update-badge-bg: #00e9fb
+  // Bookmarks
+  &.-dark
+    --bookmarks-node-title-fg: #cecece
+    --bookmarks-node-title-fg-hover: #fefefe
+    --bookmarks-node-title-fg-active: #aaaaaa
+    --bookmarks-folder-closed-fg: #cecece
+    --bookmarks-folder-closed-fg-hover: #ffffff
+    --bookmarks-folder-closed-fg-active: #787878
+    --bookmarks-folder-open-fg: #fefefe
+    --bookmarks-folder-open-hover-fg: #dadada
+    --bookmarks-folder-open-active-fg: #898989
+    --bookmarks-folder-empty-fg: #646464
+    --bookmarks-drag-gradient: linear-gradient(90deg, #242424, #32323200)
+  &.-light
+    --bookmarks-node-title-fg: #242424
+    --bookmarks-node-title-fg-hover: #000000
+    --bookmarks-node-title-fg-active: #565656
+    --bookmarks-folder-closed-fg: #646464
+    --bookmarks-folder-closed-fg-hover: #323232
+    --bookmarks-folder-closed-fg-active: #787878
+    --bookmarks-folder-open-fg: #121212
+    --bookmarks-folder-open-hover-fg: #242424
+    --bookmarks-folder-open-active-fg: #898989
+    --bookmarks-folder-empty-fg: #969696
+    --bookmarks-drag-gradient: linear-gradient(90deg, #cacaca, #fafafa00)
 
-  --bookmarks-folder-closed-fg: #cecece
-  --bookmarks-folder-closed-fg-hover: #ffffff
-  --bookmarks-folder-closed-fg-active: #787878
-  --bookmarks-folder-open-fg: #fefefe
-  --bookmarks-folder-open-hover-fg: #dadada
-  --bookmarks-folder-open-active-fg: #898989
-  --bookmarks-folder-empty-fg: #646464
-  --bookmarks-drag-gradient: linear-gradient(90deg, #242424, #32323200)
+  // Bookmarks Editor
+  &.-dark
+    --bookmarks-editor-bg: #323232
+    --bookmarks-editor-name-fg: #fafafa
+    --bookmarks-editor-url-fg: #cecece
+    --bookmarks-editor-error-fg: #ef5444
+  &.-light
+    --bookmarks-editor-bg: #fafafa
+    --bookmarks-editor-name-fg: #121212
+    --bookmarks-editor-url-fg: #242424
+    --bookmarks-editor-error-fg: #ff5538
 
-  --bookmarks-editor-bg: #323232
-  --bookmarks-editor-name-fg: #fafafa
-  --bookmarks-editor-url-fg: #cecece
-  --bookmarks-editor-error-fg: #ef5444
+  // Settings
+  &.-dark
+    --settings-title-fg: #cecece
+    --settings-label-fg: #cecece
+    --settings-label-fg-hover: #ffffff
+    --settings-label-fg-active: #aaaaaa
+    --settings-info-fg: #898989
+    --settings-opt-inactive-fg: #565656
+    --settings-opt-active-fg: #64aaff
+    --settings-opt-false-fg: #df6464
+    --settings-opt-true-fg: #64df64
+    --settings-snapshot-counter-pinned-fg: #686868
+    --settings-shortcut-fg: #cecece
+    --settings-shortcut-fg-focus: #37adff
+    --settings-shortcut-bg: #484848
+    --settings-shortcut-shadow: 0 0 0 1.2px #565656
+    --settings-shortcut-shadow-focus: 0 0 0 1.2px #37adff
+    --settings-label-btn-fg: #cecece
+    --settings-label-btn-fg-hover: #ffffff
+    --settings-label-btn-fg-active: #afafaf
+  &.-light
+    --settings-title-fg: #242424
+    --settings-label-fg: #323232
+    --settings-label-fg-hover: #000000
+    --settings-label-fg-active: #565656
+    --settings-info-fg: #727272
+    --settings-opt-inactive-fg: #afafaf
+    --settings-opt-active-fg: #278dff
+    --settings-opt-false-fg: #ef5444
+    --settings-opt-true-fg: #14cf24
+    --settings-snapshot-counter-pinned-fg: #565656
+    --settings-shortcut-fg: #484848
+    --settings-shortcut-fg-focus: #278dff
+    --settings-shortcut-bg: #ffffff
+    --settings-shortcut-shadow: 0 0 0 1.2px #aaaaaa
+    --settings-shortcut-shadow-focus: 0 0 0 1.2px #37adff
+    --settings-label-btn-fg: #323232
+    --settings-label-btn-fg-hover: #000000
+    --settings-label-btn-fg-active: #242424
 
-  --settings-title-fg: #cecece
-  --settings-label-fg: #cecece
-  --settings-label-fg-hover: #ffffff
-  --settings-info-fg: #898989
-  --settings-opt-inactive-fg: #565656
-  --settings-opt-active-fg: #64aaff
-  --settings-opt-false-fg: #df6464
-  --settings-opt-true-fg: #64df64
-  --settings-snapshot-counter-pinned-fg: #686868
-  --settings-shortcut-fg: #cecece
-  --settings-shortcut-fg-focus: #37adff
-  --settings-shortcut-bg: #484848
-  --settings-shortcut-shadow: 0 0 0 1.2px #565656
-  --settings-shortcut-shadow-focus: 0 0 0 1.2px #37adff
-  --settings-label-btn-fg: #cecece
-  --settings-label-btn-fg-hover: #ffffff
-  --settings-label-btn-fg-active: #afafaf
-
-  --window-input-title-bg: #484848
-  --window-input-title-fg: #ffffff
-  --window-input-border: #121212
-
-#root.-light
-  --c-bg: #fafafa
-  --c-act-fg: #000
-  --c-title-fg: #242424
-  --c-label-fg: #424242
-  --c-label-fg-hover: #000000
-  --c-label-fg-active: #565656
-  --c-label-fg-inactive: #969696
-  --c-pale-fg: #969696
-  --gr-bg-fade: linear-gradient(90deg, #ffffff00, #fafafa)
-
-  --bg: #fafafa
-  --fg: #242424
-
-  // --btn-bg: #178dff
-  --btn-bg: #328def
-  // --btn-bg: #44a4f4
-  --btn-bg-hover: #3995ea
-  --btn-bg-active: #268aef
-  --btn-warn-bg: #ff5538
-  --btn-warn-bg-hover: #ff613d
-  --btn-warn-bg-active: #ff5538
-  --btn-fg: #fafafa
-  --btn-fg-hover: #ffffff
-  --btn-fg-active: #f2f2f2
-  --btn-shadow: 0 1px 2px 0 #00000024, 0 0 0 1px #00000000
-  --btn-shadow-hover: 0 1px 2px 0 #00000032, 0 0 0 1px #00000000
-  --btn-shadow-active: 0 1px 2px 0 #00000000, 0 0 0 1px #00000012
-  --btn-roundness: 3px
-
-  --scroll-progress-h: 2px
-  --scroll-progress-bg: #178dff
-
-  --ctx-menu-bg: #ffffff
-  --ctx-menu-bg-hover: #cacaca
-  --ctx-menu-fg: #000000
-  --ctx-menu-shadow: 0 0 0 1px #00000016, 0 1px 16px 0 #00000032
-
-  --nav-btn-fg: #323232
-  --nav-btn-bg-focus: #ffffff
-  --nav-btn-opacity: .5
-  --nav-btn-opacity-hover: .8
-  --nav-btn-opacity-active: .6
-  --nav-btn-activated-opacity: 1
-  --nav-btn-activated-filter: none
-  --nav-btn-update-badge-bg: #01acda
-
-  --fav-in: #48484832
-  --fav-out: #00000048
-
-  --tabs-fg: #323232
-  --tabs-fg-hover: #565656
-  --tabs-fg-active: #565656
-  --tabs-activated-bg: #cacacaaf
-  --tabs-activated-overflow-gradient: linear-gradient(90deg, #ffffff00, #cecece)
-  --tabs-activated-fg: #000000
-  --tabs-loading-fg: #177dff
-  --tabs-selected-bg: #44a4f4
-  --tabs-selected-fg: #ffffff
-  --tabs-update-badge-bg: #01acda
-
-  --bookmarks-folder-closed-fg: #646464
-  --bookmarks-folder-closed-fg-hover: #323232
-  --bookmarks-folder-closed-fg-active: #787878
-  --bookmarks-folder-open-fg: #121212
-  --bookmarks-folder-open-hover-fg: #242424
-  --bookmarks-folder-open-active-fg: #898989
-  --bookmarks-folder-empty-fg: #969696
-  --bookmarks-drag-gradient: linear-gradient(90deg, #cacaca, #fafafa00)
-
-  --bookmarks-editor-bg: #fafafa
-  --bookmarks-editor-name-fg: #121212
-  --bookmarks-editor-url-fg: #242424
-  --bookmarks-editor-error-fg: #ff5538
-
-  --settings-title-fg: #242424
-  --settings-label-fg: #323232
-  --settings-label-fg-hover: #000000
-  --settings-info-fg: #727272
-  --settings-opt-inactive-fg: #afafaf
-  --settings-opt-active-fg: #278dff
-  --settings-opt-false-fg: #ef5444
-  --settings-opt-true-fg: #14cf24
-  --settings-snapshot-counter-pinned-fg: #565656
-  --settings-shortcut-fg: #484848
-  --settings-shortcut-fg-focus: #278dff
-  --settings-shortcut-bg: #ffffff
-  --settings-shortcut-shadow: 0 0 0 1.2px #aaaaaa
-  --settings-shortcut-shadow-focus: 0 0 0 1.2px #37adff
-  --settings-label-btn-fg: #323232
-  --settings-label-btn-fg-hover: #000000
-  --settings-label-btn-fg-active: #242424
-
-  --window-input-title-bg: #ffffff
-  --window-input-title-fg: #000000
-  --window-input-border: #afafaf
+  // Window Input
+  &.-dark
+    --window-input-title-bg: #484848
+    --window-input-title-fg: #ffffff
+    --window-input-border: #121212
+  &.-light
+    --window-input-title-bg: #ffffff
+    --window-input-title-fg: #000000
+    --window-input-border: #afafaf
 
 // --- Animation ---
 #root.-no-animate
