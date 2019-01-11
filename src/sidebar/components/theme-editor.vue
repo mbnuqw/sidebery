@@ -1,18 +1,33 @@
 <template lang="pug">
-.ThemeEditor(v-noise:300.g:12:af.a:0:42.s:0:9="", :is-active="active", @click="cancel")
-  .title Edit theme
+.ThemeEditor(v-noise:300.g:12:af.a:0:42.s:0:9="", :is-active="active")
+  .title(@click="close") Edit theme
   scroll-box(ref="scrollBox")
     .box
       section.section
-        .title Colors
+        .title Common
         .field
           .label Background
-          .input(:opt-true="!!$store.state.customTheme.bg", @click="toggleStyle('bg')")
-            .opt.-true {{t('settings.opt_true')}}
-            .opt.-false {{t('settings.opt_false')}}
-          color-input.input(
-            v-model="bg"
-            v-debounce:input.128="() => updateStyle('bg')")
+          .input-group
+            color-input.color-input(
+              v-model="bg"
+              v-debounce:input.128="() => updateStyle('bg')")
+            .input(
+              :opt-true="!!$store.state.customTheme.bg"
+              @click="toggleStyle('bg')")
+              .opt.-true {{t('settings.opt_true')}}
+              .opt.-false {{t('settings.opt_false')}}
+
+        .field
+          .label Favicons placeholder color
+          .input-group
+            color-input.color-input(
+              v-model="favicons_placehoder_bg"
+              v-debounce:input.128="() => updateStyle('favicons_placehoder_bg')")
+            .input(
+              :opt-true="!!$store.state.customTheme.favicons_placehoder_bg"
+              @click="toggleStyle('favicons_placehoder_bg')")
+              .opt.-true {{t('settings.opt_true')}}
+              .opt.-false {{t('settings.opt_false')}}
 </template>
 
 
@@ -22,6 +37,8 @@ import Store from '../store'
 import State from '../store.state'
 import ScrollBox from './scroll-box'
 import ColorInput from './input.color'
+
+const UNDERSCORE_RE = /_/g
 
 export default {
   components: {
@@ -33,7 +50,8 @@ export default {
     return {
       active: false,
 
-      bg: '#00000000'
+      bg: '#000000ff',
+      favicons_placehoder_bg: '#000000ff',
     }
   },
 
@@ -46,6 +64,9 @@ export default {
     const compStyle = getComputedStyle(this.$el)
 
     this.bg = loadedTheme.bg || compStyle.getPropertyValue('--bg').trim()
+    this.favicons_placehoder_bg =
+      loadedTheme.favicons_placehoder_bg ||
+      compStyle.getPropertyValue('--favicons-placehoder-bg').trim()
   },
 
   methods: {
@@ -79,7 +100,7 @@ export default {
       let current = State.customTheme[key]
       if (current) {
         this.$set(State.customTheme, key, null)
-        this.$root.$el.style.removeProperty('--' + key.replace('_', '-'))
+        this.$root.$el.style.removeProperty('--' + key.replace(UNDERSCORE_RE, '-'))
         Store.dispatch('saveState')
       } else {
         State.customTheme[key] = true
@@ -92,7 +113,7 @@ export default {
      */
     updateStyle(key) {
       if (!State.customTheme[key]) return
-      this.$root.$el.style.setProperty('--' + key.replace('_', '-'), this[key])
+      this.$root.$el.style.setProperty('--' + key.replace(UNDERSCORE_RE, '-'), this[key])
       this.$set(State.customTheme, key, this[key])
       Store.dispatch('saveState')
     },
@@ -121,7 +142,7 @@ export default {
 
 .ThemeEditor > .title
   box(relative)
-  text(c: #ccc, s: rem(21))
+  text(c: #ccc, s: rem(24))
   text-align: center
   padding: 12px 16px
 
@@ -134,7 +155,7 @@ export default {
 
 .ThemeEditor .section > .title
   box(relative)
-  text(c: #ccc, s: rem(18))
+  text(c: #ccc, s: rem(21))
   padding: 2px 16px
 
 .ThemeEditor .section > .field
@@ -142,17 +163,22 @@ export default {
   padding: 8px 16px
   > .label
     box(relative)
-    text(c: #ccc, s: rem(16))
-  > .input
+    text(c: #afafaf, s: rem(15))
+  > .input-group
+    box(relative, flex)
+    align-items: center
+    margin: 8px 0 0
+  .color-input
     box(relative)
     size(100%)
-    text(c: #ccc, s: rem(15))
-    margin: 8px 0 0
+    text(c: #afafaf, s: rem(15))
+    margin: 0 16px 0 0
 
-.ThemeEditor .field > .input
+.ThemeEditor .field .input
   box(relative, flex)
   flex-wrap: wrap
   cursor: pointer
+  flex-shrink: 0
 
   &[opt-true]
     .opt

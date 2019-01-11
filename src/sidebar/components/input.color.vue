@@ -18,20 +18,6 @@
     spellcheck="false"
     :value="textValue"
     @input="onTextInput")
-  input.opaque(
-    size=""
-    min="0"
-    max="100"
-    step="any"
-    type="number"
-    tabindex="-1"
-    autocomplete="off"
-    autocorrect="off"
-    autocapitalize="off"
-    spellcheck="false"
-    :value="opaque"
-    @input="onOpaqueInput")
-  div %
 </template>
 
 
@@ -53,6 +39,7 @@ export default {
   data() {
     return {
       isActive: false,
+      opaq: 'ff',
     }
   },
 
@@ -70,27 +57,13 @@ export default {
     textValue() {
       if (!this.value) return '000000'
       if (this.value[0] !== '#') return '000000'
-      return this.value.slice(1, 7)
-    },
-
-    opaque() {
-      if (!this.value) return 100
-      if (this.value[0] !== '#') return 100
-      if (this.value.length < 9) return 100
-
-      const hex = this.value.slice(7, 9)
-      const val = parseInt(hex, 16)
-      if (isNaN(val)) return 100
-      else return Math.trunc(val / 255 * 100)
-    },
-
-    hexOpaq() {
-      let hex = Math.trunc((this.opaque / 100) * 255).toString(16)
-      return hex.length == 1 ? '0' + hex : hex
+      return this.value.slice(1, 9)
     },
 
     colorOpacity() {
-      return this.opaque / 100
+      const num = parseInt(this.opaq, 16)
+      if (isNaN(num)) return 1
+      return num / 255
     },
   },
 
@@ -98,21 +71,19 @@ export default {
     onColorInput(e) {
       let len = e.target.value.length
       if (len < 7) e.target.value += '0'.repeat(6 - len)
-      this.$emit('input', e.target.value + this.hexOpaq)
+      this.$emit('input', e.target.value + this.opaq)
     },
 
     onTextInput(e) {
       let len = e.target.value.length
-      if (len > 6) e.target.value = e.target.value.slice(0, 6)
+      if (len > 8) e.target.value = e.target.value.slice(0, 8)
       if (len === 6) {
-        this.$emit('input', '#' + e.target.value + this.hexOpaq)
+        this.$emit('input', '#' + e.target.value)
       }
-    },
-
-    onOpaqueInput(e) {
-      let hex = Math.trunc((e.target.value / 100) * 255).toString(16)
-      hex = hex.length == 1 ? '0' + hex : hex
-      this.$emit('input', this.colorValue + hex)
+      if (len === 8) {
+        this.opaq = e.target.value.slice(-2)
+        this.$emit('input', '#' + e.target.value)
+      }
     },
   },
 }
@@ -154,7 +125,6 @@ export default {
     cursor: pointer
 
 .ColorInput > .text
-.ColorInput > .opaque
   box(relative)
   size(1px)
   -webkit-appearance: none
@@ -164,11 +134,5 @@ export default {
   padding: 0
   background-color: transparent
   z-index: 1
-  flex-grow: 1
-
-.ColorInput > .opaque
-  text-align: right
-  -moz-appearance: textfield
-  // just trust me
-  text-align-last: right
+  flex-grow: 2
 </style>
