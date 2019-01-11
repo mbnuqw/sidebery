@@ -11,11 +11,7 @@
             color-input.color-input(
               v-model="bg"
               v-debounce:input.128="() => updateStyle('bg')")
-            .input(
-              :opt-true="!!$store.state.customTheme.bg"
-              @click="toggleStyle('bg')")
-              .opt.-true {{t('settings.opt_true')}}
-              .opt.-false {{t('settings.opt_false')}}
+            toggle-input.toggle(:value="isStyleOn('bg')", @input="toggleStyle('bg')")
 
         .field
           .label Favicons placeholder color
@@ -23,11 +19,10 @@
             color-input.color-input(
               v-model="favicons_placehoder_bg"
               v-debounce:input.128="() => updateStyle('favicons_placehoder_bg')")
-            .input(
-              :opt-true="!!$store.state.customTheme.favicons_placehoder_bg"
-              @click="toggleStyle('favicons_placehoder_bg')")
-              .opt.-true {{t('settings.opt_true')}}
-              .opt.-false {{t('settings.opt_false')}}
+            toggle-input.toggle(
+              :value="isStyleOn('favicons_placehoder_bg')"
+              @input="toggleStyle('favicons_placehoder_bg')")
+
 </template>
 
 
@@ -37,6 +32,7 @@ import Store from '../store'
 import State from '../store.state'
 import ScrollBox from './scroll-box'
 import ColorInput from './input.color'
+import ToggleInput from './input.toggle'
 
 const UNDERSCORE_RE = /_/g
 
@@ -44,6 +40,7 @@ export default {
   components: {
     ScrollBox,
     ColorInput,
+    ToggleInput,
   },
 
   data() {
@@ -91,6 +88,13 @@ export default {
      */
     cancel() {
       this.close()
+    },
+
+    /**
+     * Get current state of theme parameter
+     */
+    isStyleOn(key) {
+      return !!this.$store.state.customTheme[key]
     },
 
     /**
@@ -174,30 +178,6 @@ export default {
     text(c: #afafaf, s: rem(15))
     margin: 0 16px 0 0
 
-.ThemeEditor .field .input
-  box(relative, flex)
-  flex-wrap: wrap
-  cursor: pointer
+.ThemeEditor .toggle
   flex-shrink: 0
-
-  &[opt-true]
-    .opt
-      color: var(--settings-opt-active-fg)
-    .opt.-true
-      color: var(--settings-opt-true-fg)
-    .opt.-false
-      color: var(--settings-opt-inactive-fg)
-
-.ThemeEditor .opt
-  box(relative)
-  text(s: rem(14))
-  margin: 0 7px 0 0
-  color: var(--settings-opt-inactive-fg)
-  transition: color var(--d-fast)
-  &.-false
-    color: var(--settings-opt-false-fg)
-  &[opt-true]
-    color: var(--settings-opt-active-fg)
-    &[opt-none]
-      color: var(--settings-opt-false-fg)
 </style>

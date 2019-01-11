@@ -3,146 +3,135 @@
   scroll-box(ref="scrollBox")
     section
       h2 {{t('settings.general_title')}}
-      .field(
-        :opt-true="$store.state.nativeScrollbars"
-        @click="toggleOpt('nativeScrollbars')")
-        .label {{t('settings.native_scrollbars')}}
-        .input
-          .opt.-true {{t('settings.opt_true')}}
-          .opt.-false {{t('settings.opt_false')}}
-      .field(
-        :opt-true="$store.state.activateLastTabOnPanelSwitching"
-        @click="toggleOpt('activateLastTabOnPanelSwitching')")
-        .label {{t('settings.activate_last_tab_on_panel_switching')}}
-        .input
-          .opt.-true {{t('settings.opt_true')}}
-          .opt.-false {{t('settings.opt_false')}}
-      .field(:opt-true="$store.state.createNewTabOnEmptyPanel", @click="toggleOpt('createNewTabOnEmptyPanel')")
-        .label {{t('settings.create_new_tab_on_empty_panel')}}
-        .input
-          .opt.-true {{t('settings.opt_true')}}
-          .opt.-false {{t('settings.opt_false')}}
-      .field(:opt-true="$store.state.skipEmptyPanels", @click="toggleOpt('skipEmptyPanels')")
-        .label {{t('settings.skip_empty_panels')}}
-        .input
-          .opt.-true {{t('settings.opt_true')}}
-          .opt.-false {{t('settings.opt_false')}}
-      .field(:opt-true="$store.state.showTabRmBtn", @click="toggleOpt('showTabRmBtn')")
-        .label {{t('settings.show_tab_rm_btn')}}
-        .input
-          .opt.-true {{t('settings.opt_true')}}
-          .opt.-false {{t('settings.opt_false')}}
-      .field(:opt-true="$store.state.hScrollThroughPanels", @click="toggleOpt('hScrollThroughPanels')")
-        .label {{t('settings.h_scroll_through_panels')}}
-        .input
-          .opt.-true {{t('settings.opt_true')}}
-          .opt.-false {{t('settings.opt_false')}}
-      .field(@mousedown="switchOpt($event, 'scrollThroughTabs')")
-        .label {{t('settings.scroll_through_tabs')}}
-        .input
-          .opt(
-            v-for="o in $store.state.scrollThroughTabsOpts"
-            :opt-none="o === 'none'"
-            :opt-true="o === $store.state.scrollThroughTabs") {{t('settings.scroll_tabs_' + o)}}
-      .field(@mousedown="switchOpt($event, 'tabDoubleClick')")
-        .label {{t('settings.tab_double_click')}}
-        .input
-          .opt(
-            v-for="o in $store.state.tabDoubleClickOpts"
-            :opt-none="o === 'none'"
-            :opt-true="o === $store.state.tabDoubleClick") {{t('settings.tab_action_' + o)}}
-      .field(@mousedown="switchOpt($event, 'tabLongLeftClick')")
-        .label {{t('settings.tab_long_left_click')}}
-        .input
-          .opt(
-            v-for="o in $store.state.tabLongLeftClickOpts"
-            :opt-none="o === 'none'"
-            :opt-true="o === $store.state.tabLongLeftClick") {{t('settings.tab_action_' + o)}}
-      .field(@mousedown="switchOpt($event, 'tabLongRightClick')")
-        .label {{t('settings.tab_long_right_click')}}
-        .input
-          .opt(
-            v-for="o in $store.state.tabLongRightClickOpts"
-            :opt-none="o === 'none'"
-            :opt-true="o === $store.state.tabLongRightClick") {{t('settings.tab_action_' + o)}}
-      .field(:opt-true="$store.state.noEmptyDefault", @click="toggleOpt('noEmptyDefault')")
-        .label {{t('settings.no_empty_default')}}
-        .input
-          .opt.-true {{t('settings.opt_true')}}
-          .opt.-false {{t('settings.opt_false')}}
-      .field(:opt-true="$store.state.openBookmarkNewTab", @click="toggleOpt('openBookmarkNewTab')")
-        .label {{t('settings.open_bookmark_new_tab')}}
-        .input
-          .opt.-true {{t('settings.opt_true')}}
-          .opt.-false {{t('settings.opt_false')}}
-      .field(
-        :opt-true="$store.state.autoCloseBookmarks"
-        @click="toggleOpt('autoCloseBookmarks')")
-        .label {{t('settings.auto_close_bookmarks')}}
-        .input
-          .opt.-true {{t('settings.opt_true')}}
-          .opt.-false {{t('settings.opt_false')}}
-      .field(:opt-true="$store.state.hideInact", @click="toggleHideInact")
-        .label {{t('settings.hide_inactive_panel_tabs')}}
-        .input
-          .opt.-true {{t('settings.opt_true')}}
-          .opt.-false {{t('settings.opt_false')}}
+
+      toggle-field(
+        label="settings.native_scrollbars"
+        :value="$store.state.nativeScrollbars"
+        @input="setOpt('nativeScrollbars', $event)")
+
+      toggle-field(
+        label="settings.activate_last_tab_on_panel_switching"
+        :value="$store.state.activateLastTabOnPanelSwitching"
+        @input="setOpt('activateLastTabOnPanelSwitching', $event)")
+
+      toggle-field(
+        label="settings.create_new_tab_on_empty_panel"
+        :value="$store.state.createNewTabOnEmptyPanel"
+        @input="setOpt('createNewTabOnEmptyPanel', $event)")
+
+      toggle-field(
+        label="settings.skip_empty_panels"
+        :value="$store.state.skipEmptyPanels"
+        @input="setOpt('skipEmptyPanels', $event)")
+
+      toggle-field(
+        label="settings.show_tab_rm_btn"
+        :value="$store.state.showTabRmBtn"
+        @input="setOpt('showTabRmBtn', $event)")
+
+      toggle-field(
+        label="settings.h_scroll_through_panels"
+        :value="$store.state.hScrollThroughPanels"
+        @input="setOpt('hScrollThroughPanels', $event)")
+
+      select-field(
+        label="settings.scroll_through_tabs"
+        optLabel="settings.scroll_tabs_"
+        :value="$store.state.scrollThroughTabs"
+        :opts="$store.state.scrollThroughTabsOpts"
+        @input="setOpt('scrollThroughTabs', $event)")
+
+      select-field(
+        label="settings.tab_double_click"
+        optLabel="settings.tab_action_"
+        :value="$store.state.tabDoubleClick"
+        :opts="$store.state.tabDoubleClickOpts"
+        @input="setOpt('tabDoubleClick', $event)")
+
+      select-field(
+        label="settings.tab_long_left_click"
+        optLabel="settings.tab_action_"
+        :value="$store.state.tabLongLeftClick"
+        :opts="$store.state.tabLongLeftClickOpts"
+        @input="setOpt('tabLongLeftClick', $event)")
+
+      select-field(
+        label="settings.tab_long_right_click"
+        optLabel="settings.tab_action_"
+        :value="$store.state.tabLongRightClick"
+        :opts="$store.state.tabLongRightClickOpts"
+        @input="setOpt('tabLongRightClick', $event)")
+      
+      toggle-field(
+        label="settings.no_empty_default"
+        :value="$store.state.noEmptyDefault"
+        @input="setOpt('noEmptyDefault', $event)")
+
+      toggle-field(
+        label="settings.open_bookmark_new_tab"
+        :value="$store.state.openBookmarkNewTab"
+        @input="setOpt('openBookmarkNewTab', $event)")
+
+      toggle-field(
+        label="settings.auto_close_bookmarks"
+        :value="$store.state.autoCloseBookmarks"
+        @input="setOpt('autoCloseBookmarks', $event)")
+
+      toggle-field(
+        label="settings.hide_inactive_panel_tabs"
+        :value="$store.state.hideInact"
+        @input="setOpt('hideInact', $event)")
 
     section
       h2 {{t('settings.appearance_title')}}
-      .field(@mousedown="switchOpt($event, 'fontSize')")
-        .label {{t('settings.font_size')}}
-        .input
-          .opt(
-            v-for="o in $store.state.fontSizeOpts"
-            :opt-true="o === $store.state.fontSize") {{t('settings.font_size_' + o)}}
-      .field(@mousedown="switchOpt($event, 'theme')")
-        .label {{t('settings.switch_theme')}}
-        .input
-          .opt(
-            v-for="o in $store.state.themeOpts"
-            :opt-true="o === $store.state.theme") {{t('settings.theme_' + o)}}
-      .field(:opt-true="$store.state.bgNoise", @click="toggleOpt('bgNoise')")
-        .label {{t('settings.bg_noise')}}
-        .input
-          .opt.-true {{t('settings.opt_true')}}
-          .opt.-false {{t('settings.opt_false')}}
-      .field(:opt-true="$store.state.animations", @click="toggleOpt('animations')")
-        .label {{t('settings.animations')}}
-        .input
-          .opt.-true {{t('settings.opt_true')}}
-          .opt.-false {{t('settings.opt_false')}}
-      .box
-        .btn(@click="openThemeEditor") {{t('settings.edit_theme')}}
+      select-field(
+        label="settings.font_size"
+        optLabel="settings.font_size_"
+        :value="$store.state.fontSize"
+        :opts="$store.state.fontSizeOpts"
+        @input="setOpt('fontSize', $event)")
+
+      select-field(
+        label="settings.switch_theme"
+        optLabel="settings.theme_"
+        :value="$store.state.theme"
+        :opts="$store.state.themeOpts"
+        @input="setOpt('theme', $event)")
+
+      toggle-field(
+        label="settings.bg_noise"
+        :value="$store.state.bgNoise"
+        @input="setOpt('bgNoise', $event)")
+
+      toggle-field(
+        label="settings.animations"
+        :value="$store.state.animations"
+        @input="setOpt('animations', $event)")
+
+      .box: .btn(@click="openThemeEditor") {{t('settings.edit_theme')}}
 
     section
       h2 {{t('settings.snapshots_title')}}
       div
         .field.inline(:opt-true="snapshotPinned", @click="toggleSnapshots('pinned')")
           .label {{t('settings.snapshots_pinned_label')}}
-          .input
-            .opt.-true {{t('settings.opt_true')}}
-            .opt.-false {{t('settings.opt_false')}}
+          toggle-input(:value="snapshotPinned")
         .field.inline(:opt-true="snapshotDefault", @click="toggleSnapshots('default')")
           .label {{t('settings.snapshots_default_label')}}
-          .input
-            .opt.-true {{t('settings.opt_true')}}
-            .opt.-false {{t('settings.opt_false')}}
+          toggle-input(:value="snapshotDefault")
         .field.inline(
           v-for="c in snapshotContainers"
           :opt-true="c.active"
           @click="toggleSnapshots(c.id)")
           .label(:style="{ color: c.color }") {{c.name}}
-          .input
-            .opt.-true {{t('settings.opt_true')}}
-            .opt.-false {{t('settings.opt_false')}}
+          toggle-input(:value="c.active")
 
       .field(v-if="snapshotsIsON", @mousedown="switchOpt($event, 'snapshotsLimit')")
         .label {{t('settings.snapshots_limit_label')}}
-        .input
-          .opt(
-            v-for="o in $store.state.snapshotsLimitOpts"
-            :opt-true="o === $store.state.snapshotsLimit") {{t('settings.snapshot_limit_' + o)}}
+        select-input(
+          label="settings.snapshot_limit_"
+          :value="$store.state.snapshotsLimit"
+          :opts="$store.state.snapshotsLimitOpts")
       .box
         .snapshot(
           v-for="(s, i) in snapshots"
@@ -187,19 +176,14 @@
       div
         .field.inline(:opt-true="$store.state.permAllUrls", @click="togglePermAllUrls")
           .label {{t('settings.all_urls_label')}}
-          .input
-            .opt.-true {{t('settings.opt_true')}}
-            .opt.-false {{t('settings.opt_false')}}
-        .box
-          .info {{t('settings.all_urls_info')}}
+          toggle-input(:value="$store.state.permAllUrls")
+        .box: .info {{t('settings.all_urls_info')}}
+
       div
         .field.inline(:opt-true="$store.state.permTabHide", @click="togglePermTabHide")
           .label {{t('settings.tab_hide_label')}}
-          .input
-            .opt.-true {{t('settings.opt_true')}}
-            .opt.-false {{t('settings.opt_false')}}
-        .box
-          .info {{t('settings.tab_hide_info')}}
+          toggle-input(:value="$store.state.permTabHide")
+        .box: .info {{t('settings.tab_hide_info')}}
 
     section
       h2 {{t('settings.help_title')}}
@@ -236,6 +220,12 @@ import State from '../store.state'
 import ScrollBox from './scroll-box'
 import TextInput from './input.text'
 
+import ToggleInput from './input.toggle'
+import SelectInput from './input.select'
+
+import ToggleField from './field.toggle'
+import SelectField from './field.select'
+
 const VALID_SHORTCUT_62 = /^((Ctrl|Alt|Command|MacCtrl)\+)(Shift\+)?([A-Z0-9]|Comma|Period|Home|End|PageUp|PageDown|Space|Insert|Delete|Up|Down|Left|Right|F\d\d?)$|^((Ctrl|Alt|Command|MacCtrl)\+)?(Shift\+)?(F\d\d?)$/
 const VALID_SHORTCUT = /^((Ctrl|Alt|Command|MacCtrl)\+)((Shift|Alt)\+)?([A-Z0-9]|Comma|Period|Home|End|PageUp|PageDown|Space|Insert|Delete|Up|Down|Left|Right|F\d\d?)$|^((Ctrl|Alt|Command|MacCtrl)\+)?((Shift|Alt)\+)?(F\d\d?)$/
 const SPEC_KEYS = /^(Comma|Period|Home|End|PageUp|PageDown|Space|Insert|Delete|F\d\d?)$/
@@ -245,6 +235,12 @@ export default {
   components: {
     ScrollBox,
     TextInput,
+
+    ToggleInput,
+    SelectInput,
+
+    ToggleField,
+    SelectField,
   },
 
   data() {
@@ -314,6 +310,11 @@ export default {
       if (i >= opts.length) i = 0
       if (i < 0) i = opts.length - 1
       Store.commit('setSetting', { key: optName, val: opts[i] })
+      Store.dispatch('saveSettings')
+    },
+
+    setOpt(key, val) {
+      Store.commit('setSetting', { key, val })
       Store.dispatch('saveSettings')
     },
 
@@ -549,31 +550,6 @@ export default {
   padding: 8px 12px 10px
   margin: 0
 
-.Settings .field
-  box(relative)
-  margin: 0 12px 12px 16px
-  cursor: pointer
-  &:hover
-    > .label
-      color: var(--settings-label-fg-hover)
-  &:active
-    > .label
-      transition: none
-      color: var(--settings-label-fg-active)
-  &[opt-true]
-    .opt
-      color: var(--settings-opt-active-fg)
-    .opt.-true
-      color: var(--settings-opt-true-fg)
-    .opt.-false
-      color: var(--settings-opt-inactive-fg)
-
-.Settings .field > .label
-  box(relative)
-  text(s: rem(14))
-  color: var(--settings-label-fg)
-  transition: color var(--d-fast)
-
 .Settings .field.inline
   box(flex)
   margin: 0 12px 2px 16px
@@ -596,19 +572,6 @@ export default {
   box(relative)
   text(s: rem(14))
   color: var(--settings-opt-active-fg)
-
-.Settings .opt
-  box(relative)
-  text(s: rem(14))
-  margin: 0 7px 0 0
-  color: var(--settings-opt-inactive-fg)
-  transition: color var(--d-fast)
-  &.-false
-    color: var(--settings-opt-false-fg)
-  &[opt-true]
-    color: var(--settings-opt-active-fg)
-    &[opt-none]
-      color: var(--settings-opt-false-fg)
 
 // --- Container ---
 .Settings .box
