@@ -59,6 +59,11 @@
     "Firefox > 60"
   ],
   "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "vue"
+    ],
     "setupFiles": [
       "./test/web-ext-setup.js",
       "./test/env-setup.js"
