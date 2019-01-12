@@ -2,20 +2,19 @@
 .Menu(v-noise:300.g:12:af.a:0:42.s:0:9="")
   h2 {{conf.name}}
 
-  .field(
-    :opt-true="lockedPanel"
+  toggle-field(
+    label="tabs_menu.lock_panel_label"
     :title="t('tabs_menu.lock_panel_tooltip')"
-    @click="togglePanelLock")
-    .label {{t('tabs_menu.lock_panel_label')}}
-    .input
-      .opt.-true {{t('settings.opt_true')}}
-      .opt.-false {{t('settings.opt_false')}}
+    :value="lockedPanel"
+    :inline="true"
+    @input="togglePanelLock")
 
-  .field(v-if="!isPrivate", :opt-true="syncON", @click="toggleSync")
-    .label {{t('tabs_menu.sync_label')}}
-    .input
-      .opt.-true {{t('settings.opt_true')}}
-      .opt.-false {{t('settings.opt_false')}}
+  toggle-field(
+    v-if="!isPrivate"
+    label="tabs_menu.sync_label"
+    :value="syncON"
+    :inline="true"
+    @input="toggleSync")
 
   .options
     .opt(v-if="haveTabs", @click="dedupTabs") {{t('tabs_menu.dedup_tabs')}}
@@ -28,8 +27,13 @@
 import {mapGetters} from 'vuex'
 import Store from '../store'
 import State from '../store.state'
+import ToggleField from './field.toggle'
 
 export default {
+  components: {
+    ToggleField,
+  },
+
   props: {
     conf: Object,
     index: Number,

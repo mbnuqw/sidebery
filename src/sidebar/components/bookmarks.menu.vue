@@ -2,14 +2,12 @@
 .Menu(v-noise:300.g:12:af.a:0:42.s:0:9="")
   h2 {{t('bookmarks_menu.title')}}
 
-  .field(
-    :opt-true="lockedPanel"
+  toggle-field(
+    label="tabs_menu.lock_panel_label"
     :title="t('tabs_menu.lock_panel_tooltip')"
-    @click="togglePanelLock")
-    .label {{t('tabs_menu.lock_panel_label')}}
-    .input
-      .opt.-true {{t('settings.opt_true')}}
-      .opt.-false {{t('settings.opt_false')}}
+    :value="lockedPanel"
+    :inline="true"
+    @input="togglePanelLock")
 
   .options
     .opt(@click="reloadBookmarks") {{t('bookmarks_menu.reload_bookmarks_tree')}}
@@ -21,8 +19,13 @@
 import EventBus from '../event-bus'
 import Store from '../store'
 import State from '../store.state'
+import ToggleField from './field.toggle'
 
 export default {
+  components: {
+    ToggleField,
+  },
+
   props: {
     conf: Object,
     index: Number,

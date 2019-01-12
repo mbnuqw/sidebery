@@ -1,6 +1,6 @@
 <template lang="pug">
 .SelectInput(@mousedown="select")
-  .opt(v-for="o in opts", :opt-none="o === 'none'", :opt-true="o === value") {{t(label + o)}}
+  .opt(v-for="o in opts", :opt-none="o === noneOpt", :opt-true="o === value") {{t(label + o)}}
 </template>
 
 
@@ -10,6 +10,10 @@ export default {
     value: String,
     opts:  Array,
     label: String,
+    noneOpt: {
+      type: String,
+      default: () => 'none'
+    },
   },
 
   data() {

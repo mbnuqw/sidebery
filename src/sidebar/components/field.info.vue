@@ -1,7 +1,7 @@
 <template lang="pug">
-.ToggleField(:class="{ inline }", @click="toggle")
-  .label(:style="{ color }") {{t(label)}}
-  toggle-input.input(:value="value")
+.InfoField(@click="onClick")
+  .label {{t(label)}}
+  .info {{value}}
 </template>
 
 
@@ -14,11 +14,8 @@ export default {
   },
 
   props: {
-    value: Boolean,
+    value: String,
     label: String,
-    field: Boolean,
-    inline: Boolean,
-    color: String,
   },
 
   data() {
@@ -26,8 +23,8 @@ export default {
   },
 
   methods: {
-    toggle() {
-      this.$emit('input', !this.value)
+    onClick(e) {
+      this.$emit('click', e)
     },
   },
 }
@@ -37,7 +34,7 @@ export default {
 <style lang="stylus">
 @import '../../styles/mixins'
 
-.ToggleField
+.InfoField
   box(relative)
   padding: 2px 0
   margin: 8px 12px 8px 16px
@@ -52,23 +49,14 @@ export default {
   &.-no-top-margin
     margin-top: 0
 
-.ToggleField > .label
+.InfoField > .label
   box(relative)
   text(s: rem(14))
   color: var(--settings-label-fg)
   transition: color var(--d-fast)
 
-.ToggleField.inline
-  box(flex)
-  margin: 0 12px 0 16px
-  justify-content: space-between
-  align-items: center
-  // &:last-of-type
-  //   margin: 0 12px 12px 16px
-  >.input
-    flex-shrink: 0
-  >.label
-    margin-right: 12px
-    overflow: hidden
-    text-overflow: ellipsis
+.InfoField > .info
+  box(relative)
+  text(s: rem(14))
+  color: var(--settings-opt-active-fg)
 </style>

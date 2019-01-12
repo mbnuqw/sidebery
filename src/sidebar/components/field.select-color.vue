@@ -1,28 +1,27 @@
 <template lang="pug">
-.SelectField(@mousedown="select")
+.SelectColorField
   .label {{t(label)}}
-  select-input(
-    :label="optLabel"
+  select-color-input(
     :value="value"
     :opts="opts"
-    :noneOpt="noneOpt")
+    :fill="optFill"
+    @input="select")
 </template>
 
 
 <script>
-import SelectInput from './input.select'
+import SelectColorInput from './input.select-color'
 
 export default {
   components: {
-    SelectInput
+    SelectColorInput,
   },
 
   props: {
     value: String,
     label: String,
-    optLabel: String,
+    optFill: String,
     opts: Array,
-    noneOpt: String,
   },
 
   data() {
@@ -30,13 +29,8 @@ export default {
   },
 
   methods: {
-    select(e) {
-      let i = this.opts.indexOf(this.value)
-      if (e.button === 0) i++
-      if (e.button === 2) i--
-      if (i >= this.opts.length) i = 0
-      if (i < 0) i = this.opts.length - 1
-      this.$emit('input', this.opts[i])
+    select(option) {
+      this.$emit('input', option)
     },
   },
 }
@@ -46,7 +40,7 @@ export default {
 <style lang="stylus">
 @import '../../styles/mixins'
 
-.SelectField
+.SelectColorField
   box(relative)
   padding: 2px 0
   margin: 8px 12px 8px 16px
@@ -54,14 +48,10 @@ export default {
   &:hover
     > .label
       color: var(--settings-label-fg-hover)
-  &:active
-    > .label
-      transition: none
-      color: var(--settings-label-fg-active)
   &.-no-top-margin
     margin-top: 0
 
-.SelectField > .label
+.SelectColorField > .label
   box(relative)
   text(s: rem(14))
   color: var(--settings-label-fg)

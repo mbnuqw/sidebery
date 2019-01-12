@@ -8,54 +8,51 @@
     @input="onInput"
     @keydown.enter.prevent="onEnter")
 
-  scroll-box.scroll-box(ref="scrollBox")
-    .field
-      .label {{t('tabs_menu.icon_label')}}
-      .input
-        .icon(v-for="(o, i) in iconOpts", :data-on="i === icon", @click="updateIcon(i)")
-          svg(:style="{fill: colorCode}")
-            use(:xlink:href="'#' + o")
+  scroll-box.scroll-box(ref="scrollBox"): .scoll-wrapper
+    icon-select-field.-no-top-margin(
+      label="tabs_menu.icon_label"
+      :value="icon"
+      :opts="iconOpts"
+      :optFill="colorCode"
+      @input="updateIcon")
 
-    .field
-      .label {{t('tabs_menu.color_label')}}
-      .input
-        .icon(v-for="(o, i) in colorOpts", :data-on="i === color", @click="updateColor(i)")
-          svg(:style="{fill: o.colorCode}")
-            use(xlink:href="#circle")
+    color-select-field(
+      label="tabs_menu.color_label"
+      :value="color"
+      :opts="colorOpts"
+      @input="updateColor")
 
-    .field(v-if="id", :opt-true="syncON", @click="toggleSync")
-      .label {{t('tabs_menu.sync_label')}}
-      .input
-        .opt.-true {{t('settings.opt_true')}}
-        .opt.-false {{t('settings.opt_false')}}
-
-    .field(
+    toggle-field(
       v-if="id"
-      :opt-true="lockedPanel"
+      label="tabs_menu.sync_label"
+      :value="syncON"
+      :inline="true"
+      @input="toggleSync")
+
+    toggle-field(
+      v-if="id"
+      label="tabs_menu.lock_panel_label"
       :title="t('tabs_menu.lock_panel_tooltip')"
-      @click="togglePanelLock")
-      .label {{t('tabs_menu.lock_panel_label')}}
-      .input
-        .opt.-true {{t('settings.opt_true')}}
-        .opt.-false {{t('settings.opt_false')}}
+      :value="lockedPanel"
+      :inline="true"
+      @input="togglePanelLock")
 
-    .field(
+    toggle-field(
       v-if="id"
-      :opt-true="lockedTabs"
+      label="tabs_menu.lock_label"
       :title="t('tabs_menu.lock_tooltip')"
-      @click="toggleTabsLock")
-      .label {{t('tabs_menu.lock_label')}}
-      .input
-        .opt.-true {{t('settings.opt_true')}}
-        .opt.-false {{t('settings.opt_false')}}
+      :value="lockedTabs"
+      :inline="true"
+      @input="toggleTabsLock")
 
-    .field(v-if="id", @mousedown="switchProxy($event)")
-      .label {{t('tabs_menu.proxy_label')}}
-      .input
-        .opt(
-          v-for="o in proxyOpts"
-          :opt-none="o === 'direct'"
-          :opt-true="o === proxied") {{t('tabs_menu.proxy_' + o)}}
+    select-field(
+      v-if="id"
+      label="tabs_menu.proxy_label"
+      optLabel="tabs_menu.proxy_"
+      noneOpt="direct"
+      :value="proxied"
+      :opts="proxyOpts"
+      @input="switchProxy")
 
     .box
       .field(v-if="id && proxied !== 'direct'")
@@ -99,11 +96,12 @@
           @input="onProxyPasswordInput"
           @keydown="onFieldKeydown($event, null, 'proxyUsername')")
 
-      .field(v-if="id && isSomeSocks", :opt-true="proxyDNS", @click="toggleProxyDns")
-        .label {{t('tabs_menu.proxy_dns_label')}}
-        .input
-          .opt.-true {{t('settings.opt_true')}}
-          .opt.-false {{t('settings.opt_false')}}
+      toggle-field(
+        v-if="id && isSomeSocks"
+        label="tabs_menu.proxy_dns_label"
+        :value="proxyDNS"
+        :inline="true"
+        @input="toggleProxyDns")
 
     .options
       .opt(v-if="haveTabs", @click="dedupTabs") {{t('tabs_menu.dedup_tabs')}}
@@ -119,6 +117,10 @@ import Store from '../store'
 import State from '../store.state'
 import TextInput from './input.text'
 import ScrollBox from './scroll-box'
+import ToggleField from './field.toggle'
+import SelectField from './field.select'
+import IconSelectField from './field.select-icon'
+import ColorSelectField from './field.select-color'
 
 const PROXY_HOST_RE = /^.{3,65536}$/
 const PROXY_PORT_RE = /^\d{2,5}$/
@@ -129,6 +131,10 @@ export default {
   components: {
     TextInput,
     ScrollBox,
+    ToggleField,
+    SelectField,
+    IconSelectField,
+    ColorSelectField,
   },
 
   props: {
@@ -157,7 +163,7 @@ export default {
         'tree',
         'chill',
       ],
-      icon: 0,
+      icon: 'fingerprint',
       colorOpts: [
         { color: 'blue', colorCode: '#37adff' },
         { color: 'turquoise', colorCode: '#00c79a' },
@@ -168,7 +174,7 @@ export default {
         { color: 'pink', colorCode: '#ff4bda' },
         { color: 'purple', colorCode: '#af51f5' },
       ],
-      color: 0,
+      color: 'blue',
       proxyOpts: ['http', 'https', 'socks4', 'socks', 'direct'],
     }
   },
@@ -177,7 +183,9 @@ export default {
     ...mapGetters(['panels']),
 
     colorCode() {
-      return this.colorOpts[this.color].colorCode
+      const colorOption = this.colorOpts.find(c => c.color === this.color)
+      if (colorOption) return colorOption.colorCode
+      else return this.colorOpts[0].colorCode
     },
 
     haveTabs() {
@@ -274,8 +282,8 @@ export default {
       if (!this.name || !this.id) return
       await browser.contextualIdentities.update(this.id, {
         name: this.name,
-        icon: this.iconOpts[this.icon],
-        color: this.colorOpts[this.color].color,
+        icon: this.icon,
+        color: this.color,
       })
     },
 
@@ -296,21 +304,21 @@ export default {
       Store.dispatch('resyncPanels')
     },
 
-    async updateIcon(i) {
-      this.icon = i
+    async updateIcon(icon) {
+      this.icon = icon
       this.update()
     },
 
-    async updateColor(i) {
-      this.color = i
+    async updateColor(color) {
+      this.color = color
       this.update()
     },
 
     async createNew() {
       const details = {
         name: this.name,
-        color: this.colorOpts[this.color].color,
-        icon: this.iconOpts[this.icon],
+        color: this.color,
+        icon: this.icon,
       }
       return await Store.dispatch('createContext', details)
     },
@@ -350,16 +358,16 @@ export default {
       if (this.conf.cookieStoreId) {
         this.id = this.conf.cookieStoreId
         this.name = this.conf.name
-        this.color = this.colorOpts.findIndex(c => c.color === this.conf.color)
-        this.icon = this.iconOpts.indexOf(this.conf.icon)
+        this.color = this.conf.color
+        this.icon = this.conf.icon
       }
 
       // Create new tabs container
       if (!this.conf.cookieStoreId && this.conf.new) {
         this.id = ''
         this.name = ''
-        this.icon = 0
-        this.color = 0
+        this.icon = 'fingerprint'
+        this.color = 'blue'
       }
 
       await this.$nextTick()
@@ -368,9 +376,6 @@ export default {
 
     toggleSync() {
       this.$set(State.syncedPanels, this.index, !State.syncedPanels[this.index])
-      // let pi = State.syncPanels.findIndex(p => p === this.id)
-      // if (pi !== -1) State.syncPanels.splice(pi, 1)
-      // else State.syncPanels.push(this.id)
       Store.dispatch('resyncPanels')
       Store.dispatch('saveState')
     },
@@ -385,7 +390,7 @@ export default {
       Store.dispatch('saveState')
     },
 
-    async switchProxy(e) {
+    async switchProxy(type) {
       // Check permissions
       try {
         const permitted = await browser.permissions.contains({ origins: ['<all_urls>'] })
@@ -399,19 +404,13 @@ export default {
         return
       }
 
-      let i = this.proxyOpts.indexOf(this.proxied)
-      if (e.button === 0) i++
-      if (e.button === 2) i--
-      if (i >= this.proxyOpts.length) i = 0
-      if (i < 0) i = this.proxyOpts.length - 1
-
       const panel = this.panels.find(p => p.cookieStoreId === this.id)
       if (!panel || !panel.tabs) return
 
       const proxySettings = {
         id: this.id,
         tabs: panel.tabs.map(t => t.id),
-        type: this.proxyOpts[i],
+        type,
         host: this.proxyHost,
         port: this.proxyPort,
         username: this.proxyUsername,
@@ -421,10 +420,10 @@ export default {
 
       let pi = State.proxiedPanels.findIndex(p => p.id === this.id)
       if (pi !== -1) {
-        if (this.proxyOpts[i] === 'direct') State.proxiedPanels.splice(pi, 1)
+        if (type === 'direct') State.proxiedPanels.splice(pi, 1)
         else State.proxiedPanels.splice(pi, 1, proxySettings)
       } else {
-        if (this.proxyOpts[i] !== 'direct') State.proxiedPanels.push(proxySettings)
+        if (type !== 'direct') State.proxiedPanels.push(proxySettings)
       }
 
       Store.dispatch('saveState')
@@ -516,6 +515,10 @@ export default {
   color: var(--panel-menu-title-fg)
   margin: 16px 12px 12px
 
+.Menu .scoll-wrapper
+  box(relative)
+  padding: 1px 0 0
+
 .Menu .box
   box(relative)
   padding: 0 0 0 8px
@@ -525,56 +528,17 @@ export default {
   flex-grow: 1
   flex-shrink: 1
 
-.Menu .field
-  box(relative)
-  margin: 0 16px 8px
-  cursor: pointer
-  &:hover
-    > .label
-      color: var(--panel-menu-label-fg-hover)
-  &:active
-    > .label
-      transition: none
-      color: var(--panel-menu-label-fg-active)
-  &[opt-true]
-    .opt
-      color: var(--settings-opt-active-fg)
-    .opt.-true
-      color: var(--settings-opt-true-fg)
-    .opt.-false
-      color: var(--settings-opt-inactive-fg)
-
-.Menu .field > .label
-  box(relative)
-  text(s: rem(14))
-  margin: 0 auto 0 0
-  color: var(--panel-menu-label-fg)
-  transition: color var(--d-fast)
-
 .Menu .field > .input
   box(relative, flex)
   flex-wrap: wrap
 
-.Menu .opt
-  box(relative)
-  text(s: rem(14))
-  margin: 0
-  color: var(--settings-opt-inactive-fg)
-  transition: color var(--d-fast)
-  &.-false
-    color: var(--settings-opt-false-fg)
-  &[opt-true]
-    color: var(--settings-opt-active-fg)
-    &[opt-none]
-      color: var(--settings-opt-false-fg)
-
 // Option icon
 .Menu .input > .icon
   box(relative, flex)
-  size(28px, same)
+  size(26px, same)
   justify-content: center
   align-items: center
-  margin: 0 2px 0
+  margin: 0
   opacity: .5
   border-radius: 3px
   filter: grayscale(0.5)

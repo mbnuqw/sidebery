@@ -84,6 +84,7 @@
 
     section
       h2 {{t('settings.appearance_title')}}
+
       select-field(
         label="settings.font_size"
         optLabel="settings.font_size_"
@@ -113,25 +114,31 @@
     section
       h2 {{t('settings.snapshots_title')}}
       div
-        .field.inline(:opt-true="snapshotPinned", @click="toggleSnapshots('pinned')")
-          .label {{t('settings.snapshots_pinned_label')}}
-          toggle-input(:value="snapshotPinned")
-        .field.inline(:opt-true="snapshotDefault", @click="toggleSnapshots('default')")
-          .label {{t('settings.snapshots_default_label')}}
-          toggle-input(:value="snapshotDefault")
-        .field.inline(
+        toggle-field(
+          label="settings.snapshots_pinned_label"
+          :inline="true"
+          :value="snapshotPinned"
+          @input="toggleSnapshots('pinned')")
+        toggle-field(
+          label="settings.snapshots_default_label"
+          :inline="true"
+          :value="snapshotDefault"
+          @input="toggleSnapshots('default')")
+        toggle-field(
           v-for="c in snapshotContainers"
-          :opt-true="c.active"
-          @click="toggleSnapshots(c.id)")
-          .label(:style="{ color: c.color }") {{c.name}}
-          toggle-input(:value="c.active")
+          :label="c.name"
+          :color="c.color"
+          :inline="true"
+          :value="c.active"
+          @input="toggleSnapshots(c.id)")
 
-      .field(v-if="snapshotsIsON", @mousedown="switchOpt($event, 'snapshotsLimit')")
-        .label {{t('settings.snapshots_limit_label')}}
-        select-input(
-          label="settings.snapshot_limit_"
-          :value="$store.state.snapshotsLimit"
-          :opts="$store.state.snapshotsLimitOpts")
+      select-field(
+        v-if="snapshotsIsON"
+        label="settings.snapshots_limit_label"
+        optLabel="settings.snapshot_limit_"
+        :value="$store.state.snapshotsLimit"
+        :opts="$store.state.snapshotsLimitOpts"
+        @input="setOpt('snapshotsLimit', $event)")
       .box
         .snapshot(
           v-for="(s, i) in snapshots"
@@ -174,15 +181,19 @@
       h2 {{t('settings.permissions_title')}}
 
       div
-        .field.inline(:opt-true="$store.state.permAllUrls", @click="togglePermAllUrls")
-          .label {{t('settings.all_urls_label')}}
-          toggle-input(:value="$store.state.permAllUrls")
+        toggle-field(
+          label="settings.all_urls_label"
+          :inline="true"
+          :value="$store.state.permAllUrls"
+          @input="togglePermAllUrls")
         .box: .info {{t('settings.all_urls_info')}}
 
       div
-        .field.inline(:opt-true="$store.state.permTabHide", @click="togglePermTabHide")
-          .label {{t('settings.tab_hide_label')}}
-          toggle-input(:value="$store.state.permTabHide")
+        toggle-field(
+          label="settings.tab_hide_label"
+          :inline="true"
+          :value="$store.state.permTabHide"
+          @input="togglePermTabHide")
         .box: .info {{t('settings.tab_hide_info')}}
 
     section
@@ -192,13 +203,15 @@
         .label {{t('settings.found_bug_label')}}
         a.btn(tabindex="-1", :href="issueLink") {{t('settings.repo_issue')}}
 
-      .field(@click="calcFaviCache")
-        .label {{t('settings.cached_favics')}}
-        .info {{faviCache}}
+      info-field(
+        label="settings.cached_favics"
+        :value="faviCache"
+        @click="calcFaviCache")
 
-      .field(@click="calcSyncDataSize")
-        .label {{t('settings.sync_data_size')}}
-        .info {{syncDataSize}}
+      info-field(
+        label="settings.sync_data_size"
+        :value="syncDataSize"
+        @click="calcSyncDataSize")
 
       .box
         .btn(@click="clearFaviCache(false)") {{t('settings.rm_unused_favi_cache')}}
@@ -218,13 +231,10 @@ import EventBus from '../event-bus'
 import Store from '../store'
 import State from '../store.state'
 import ScrollBox from './scroll-box'
-import TextInput from './input.text'
-
-import ToggleInput from './input.toggle'
-import SelectInput from './input.select'
 
 import ToggleField from './field.toggle'
 import SelectField from './field.select'
+import InfoField from './field.info'
 
 const VALID_SHORTCUT_62 = /^((Ctrl|Alt|Command|MacCtrl)\+)(Shift\+)?([A-Z0-9]|Comma|Period|Home|End|PageUp|PageDown|Space|Insert|Delete|Up|Down|Left|Right|F\d\d?)$|^((Ctrl|Alt|Command|MacCtrl)\+)?(Shift\+)?(F\d\d?)$/
 const VALID_SHORTCUT = /^((Ctrl|Alt|Command|MacCtrl)\+)((Shift|Alt)\+)?([A-Z0-9]|Comma|Period|Home|End|PageUp|PageDown|Space|Insert|Delete|Up|Down|Left|Right|F\d\d?)$|^((Ctrl|Alt|Command|MacCtrl)\+)?((Shift|Alt)\+)?(F\d\d?)$/
@@ -234,13 +244,9 @@ const ISSUE_URL = 'https://github.com/mbnuqw/sidebery/issues/new'
 export default {
   components: {
     ScrollBox,
-    TextInput,
-
-    ToggleInput,
-    SelectInput,
-
     ToggleField,
     SelectField,
+    InfoField,
   },
 
   data() {
@@ -547,31 +553,8 @@ export default {
   box(relative)
   text(s: rem(24), w: 400)
   color: var(--settings-title-fg)
-  padding: 8px 12px 10px
+  padding: 8px 12px 8px
   margin: 0
-
-.Settings .field.inline
-  box(flex)
-  margin: 0 12px 2px 16px
-  justify-content: space-between
-  align-items: center
-  &:last-of-type
-    margin: 0 12px 12px 16px
-  >.input
-    flex-shrink: 0
-  >.label
-    margin-right: 12px
-    overflow: hidden
-    text-overflow: ellipsis
-
-.Settings .field > .input
-  box(relative, flex)
-  flex-wrap: wrap
-
-.Settings .field > .info
-  box(relative)
-  text(s: rem(14))
-  color: var(--settings-opt-active-fg)
 
 // --- Container ---
 .Settings .box
