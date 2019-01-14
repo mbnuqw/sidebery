@@ -24,6 +24,8 @@
 <script>
 import TextInput from './input.text'
 
+const RGBA_RE = /^rgba\((\d+),\s?(\d+),\s?(\d+),\s?(.+)\)$/
+
 export default {
   components: {
     TextInput,
@@ -50,12 +52,27 @@ export default {
 
     colorValue() {
       if (!this.value) return '#000000'
+      if (this.value.startsWith('rgba')) {
+        let [, r, g, b] = RGBA_RE.exec(this.value)
+        r = parseInt(r).toString(16)
+        g = parseInt(g).toString(16)
+        b = parseInt(b).toString(16)
+        return '#' + r + g + b
+      }
       if (this.value[0] !== '#') return '#000000'
       return this.value.slice(0, 7)
     },
 
     textValue() {
       if (!this.value) return '000000'
+      if (this.value.startsWith('rgba')) {
+        let [, r, g, b, a] = RGBA_RE.exec(this.value)
+        r = parseInt(r).toString(16)
+        g = parseInt(g).toString(16)
+        b = parseInt(b).toString(16)
+        a = Math.trunc(parseFloat(a) * 255).toString(16)
+        return r + g + b + a
+      }
       if (this.value[0] !== '#') return '000000'
       return this.value.slice(1, 9)
     },

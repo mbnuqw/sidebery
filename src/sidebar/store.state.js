@@ -65,7 +65,17 @@ export default {
   permAllUrls: false,
   permTabHide: false,
   wheelBlockTimeout: null,
-  customTheme: {},
+  customStyles: {
+    bg: null,
+    favicons_placehoder_bg: null,
+
+    btn_bg: null,
+    btn_bg_hover: null,
+    btn_bg_active: null,
+    btn_fg: null,
+    btn_fg_hover: null,
+    btn_fg_active: null,
+  },
 
   lastPanelIndex: browser.extension.inIncognitoContext ? 2 : 3,
   panelIndex: browser.extension.inIncognitoContext ? 2 : 3,

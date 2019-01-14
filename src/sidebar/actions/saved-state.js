@@ -2,7 +2,7 @@ export default {
   /**
    * Try to load saved sidebar state
    */
-  async loadState({ state, dispatch }) {
+  async loadState({ state }) {
     let ans = await browser.storage.local.get('state')
     let loadedState = ans.state
     if (!loadedState) {
@@ -30,10 +30,6 @@ export default {
     if (loadedState.proxiedPanels) {
       state.proxiedPanels = loadedState.proxiedPanels
     }
-    if (loadedState.customTheme) {
-      state.customTheme = loadedState.customTheme
-      dispatch('updateStyles')
-    }
 
     state.stateLoaded = true
   },
@@ -53,7 +49,6 @@ export default {
         lockedPanels: state.lockedPanels,
         lockedTabs: state.lockedTabs,
         proxiedPanels: JSON.parse(JSON.stringify(state.proxiedPanels)),
-        customTheme: JSON.parse(JSON.stringify(state.customTheme)),
       },
     })
   },

@@ -72,6 +72,7 @@ export default new Vue({
 
     await Store.dispatch('loadSettings')
     await Store.dispatch('loadState')
+    Store.dispatch('loadStyles')
     Store.dispatch('updateProxiedTabs')
     Store.dispatch('loadKebindings')
     await Store.dispatch('loadLocalID')
@@ -114,6 +115,7 @@ export default new Vue({
      */
     onChangeStorage(changes, type) {
       if (changes.settings) Store.dispatch('loadSettings')
+      if (changes.styles) Store.dispatch('applyStyles', changes.styles.newValue)
       if (type === 'sync') {
         let ids = Object.keys(changes).filter(id => id !== this.localID)
 
