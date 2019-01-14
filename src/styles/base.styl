@@ -1,4 +1,6 @@
 @import './mixins'
+@import './btn'
+@import './panel-menu'
 
 html
   box(relative)
@@ -8,20 +10,8 @@ body
   box(relative)
   size(100%, 100%)
   text(smooth: on)
-
   a
     text-decoration: none
-
-#root.-xs
-  --g-font-size: 13px
-#root.-s
-  --g-font-size: 14px
-#root.-m
-  --g-font-size: 14.5px
-#root.-l
-  --g-font-size: 15px
-#root.-xl
-  --g-font-size: 16px
 
 .root
   box(relative)
@@ -36,98 +26,6 @@ body
   size(0, 0)
   overflow: hidden
   opacity: 0
-
-// --- Button common styles ---
-.btn
-  box(relative)
-  size(max-w: 100%)
-  text(s: rem(13))
-  padding: 2px 6px
-  margin: 0 8px 8px 0
-  white-space: nowrap
-  text-overflow: ellipsis
-  overflow: hidden
-  cursor: pointer
-
-  transition: background-color var(--d-fast), color var(--d-fast), box-shadow var(--d-fast)
-  color: var(--btn-fg)
-  background-color: var(--btn-bg)
-  border-radius: var(--btn-roundness)
-  box-shadow: var(--btn-shadow)
-  &.-warn
-    background-color: var(--btn-warn-bg)
-    &:hover
-      background-color: var(--btn-warn-bg-hover)
-    &:active
-      background-color: var(--btn-warn-bg-active)
-  &:hover
-    background-color: var(--btn-bg-hover)
-    color: var(--btn-fg-hover)
-    box-shadow: var(--btn-shadow-hover)
-  &:active
-    transition: none
-    background-color: var(--btn-bg-active)
-    color: var(--btn-fg-active)
-    box-shadow: var(--btn-shadow-active)
-  &:last-of-type
-    margin: 0 auto 8px 0
-
-// --- Panel Menu common styles ---
-.Menu > h2
-  box(relative)
-  text(s: rem(18), w: 400)
-  color: var(--panel-menu-title-fg)
-  margin: 16px 12px 12px
-  padding: 0
-
-.Menu .field
-  box(relative)
-  margin: 0 16px 8px
-  cursor: pointer
-  &[opt-true]
-    .input > .opt
-      color: var(--settings-opt-active-fg)
-    .input > .opt.-true
-      color: var(--settings-opt-true-fg)
-    .input > .opt.-false
-      color: var(--settings-opt-inactive-fg)
-
-.Menu .input > .opt
-  box(relative)
-  text(s: rem(14))
-  margin: 0 7px 0 0
-  color: var(--settings-opt-inactive-fg)
-  transition: color var(--d-fast)
-  &.-false
-    color: var(--settings-opt-false-fg)
-  &[opt-true]
-    color: var(--settings-opt-active-fg)
-    &[opt-none]
-      color: var(--settings-opt-false-fg)
-
-.Menu .options
-  box(relative, flex)
-  flex-wrap: wrap
-  flex-direction: column
-  justify-content: flex-start
-  margin: 8px 0 0
-
-.Menu .options > .opt
-  box(relative)
-  text(s: rem(15))
-  color: var(--ctx-menu-fg)
-  padding: 4px 8px 4px 12px
-  cursor: pointer
-  transition: color var(--d-fast), background-color var(--d-fast)
-  &:hover
-    background-color: var(--ctx-menu-bg-hover)
-  &:active
-    transition: none
-  &.-warn
-    color: #ff613d
-    &:hover
-      background-color: #ff613d
-      color: #ffffff
 
 // --- Themes ---
 #root
@@ -247,26 +145,26 @@ body
 
   // Bookmarks
   &.-dark
-    --bookmarks-node-title-fg: #cecece
-    --bookmarks-node-title-fg-hover: #fefefe
+    --bookmarks-node-title-fg: #cacaca
+    --bookmarks-node-title-fg-hover: #ffffff
     --bookmarks-node-title-fg-active: #aaaaaa
-    --bookmarks-folder-closed-fg: #cecece
+    --bookmarks-folder-closed-fg: #cacaca
     --bookmarks-folder-closed-fg-hover: #ffffff
     --bookmarks-folder-closed-fg-active: #787878
-    --bookmarks-folder-open-fg: #fefefe
+    --bookmarks-folder-open-fg: #ffffff
     --bookmarks-folder-open-hover-fg: #dadada
     --bookmarks-folder-open-active-fg: #898989
     --bookmarks-folder-empty-fg: #646464
     --bookmarks-drag-gradient: linear-gradient(90deg, #242424, #32323200)
   &.-light
-    --bookmarks-node-title-fg: #242424
+    --bookmarks-node-title-fg: #363636
     --bookmarks-node-title-fg-hover: #000000
     --bookmarks-node-title-fg-active: #565656
     --bookmarks-folder-closed-fg: #646464
     --bookmarks-folder-closed-fg-hover: #323232
     --bookmarks-folder-closed-fg-active: #787878
-    --bookmarks-folder-open-fg: #121212
-    --bookmarks-folder-open-hover-fg: #242424
+    --bookmarks-folder-open-fg: #000000
+    --bookmarks-folder-open-hover-fg: #323232
     --bookmarks-folder-open-active-fg: #898989
     --bookmarks-folder-empty-fg: #969696
     --bookmarks-drag-gradient: linear-gradient(90deg, #cacaca, #fafafa00)
@@ -345,3 +243,15 @@ body
   --d-fast: .12s
   --d-norm: .2s
   --d-slow: .3s
+
+// --- Font sizes ---
+#root.-xs
+  --g-font-size: 13px
+#root.-s
+  --g-font-size: 14px
+#root.-m
+  --g-font-size: 14.5px
+#root.-l
+  --g-font-size: 15px
+#root.-xl
+  --g-font-size: 16px

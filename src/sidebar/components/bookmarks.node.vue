@@ -321,6 +321,7 @@ export default {
     &:hover > .title
       color: var(--bookmarks-folder-closed-fg-hover)
     &:active > .title
+      transition: none
       color: var(--bookmarks-folder-closed-fg-active)
     > .title
       text(s: rem(16), w: 400)
