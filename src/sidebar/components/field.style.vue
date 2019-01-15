@@ -1,27 +1,30 @@
 <template lang="pug">
-.ColorField
+.StyleField
   .label {{t(label)}}
-  .input-group
-    color-input.color-input(
-      v-debounce:input.128="debouncedInput"
+  .input-group(:is-activated="isActive")
+    text-input.text-input(
       :value="value"
-      @input="onInput")
+      :line="true"
+      :or="or"
+      @input="onInput"
+      @change="onChange")
     toggle-input.toggle(:value="isActive", @input="toggle")
 </template>
 
 
 <script>
 import ToggleInput from './input.toggle'
-import ColorInput from './input.color'
+import TextInput from './input.text'
 
 export default {
   components: {
     ToggleInput,
-    ColorInput,
+    TextInput,
   },
 
   props: {
     value: String,
+    or: String,
     label: String,
     optFill: String,
     opts: Array,
@@ -42,7 +45,7 @@ export default {
       this.$emit('input', val)
     },
 
-    debouncedInput() {
+    onChange() {
       this.$emit('change', this.value)
     },
 
@@ -57,7 +60,7 @@ export default {
 <style lang="stylus">
 @import '../../styles/mixins'
 
-.ColorField
+.StyleField
   box(relative)
   padding: 2px 0
   margin: 8px 12px 8px 16px
@@ -67,23 +70,27 @@ export default {
   &.-no-top-margin
     margin-top: 0
 
-.ColorField > .label
+.StyleField > .label
   box(relative)
   text(s: rem(15))
   color: var(--settings-label-fg)
   transition: color var(--d-fast)
 
-.ColorField > .input-group
+.StyleField > .input-group
   box(relative, flex)
   align-items: center
-  margin: 8px 0 0
+  margin: 6px 0 0
 
-  > .color-input
+  > .text-input
     box(relative)
     size(100%)
     text(c: #afafaf, s: rem(15))
     margin: 0 16px 0 0
+    transform: opacity var(--d-fast)
 
   > .toggle
     flex-shrink: 0
+  
+  &:not([is-activated]) > .color-input
+    opacity: .5
 </style>

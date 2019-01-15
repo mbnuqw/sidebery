@@ -75,6 +75,34 @@ export default {
     btn_fg: null,
     btn_fg_hover: null,
     btn_fg_active: null,
+
+    scroll_progress_h: null,
+    scroll_progress_bg: null,
+
+    ctx_menu_bg: null,
+    ctx_menu_bg_hover: null,
+    ctx_menu_fg: null,
+
+    nav_btn_fg: null,
+
+    tabs_fg: null,
+    tabs_fg_hover: null,
+    tabs_fg_active: null,
+    tabs_activated_bg: null,
+    tabs_activated_fg: null,
+    tabs_selected_bg: null,
+    tabs_selected_fg: null,
+
+    bookmarks_node_title_fg: null,
+    bookmarks_node_title_fg_hover: null,
+    bookmarks_node_title_fg_active: null,
+    bookmarks_folder_closed_fg: null,
+    bookmarks_folder_closed_fg_hover: null,
+    bookmarks_folder_closed_fg_active: null,
+    bookmarks_folder_open_fg: null,
+    bookmarks_folder_open_fg_hover: null,
+    bookmarks_folder_open_fg_active: null,
+    bookmarks_folder_empty_fg: null,
   },
 
   lastPanelIndex: browser.extension.inIncognitoContext ? 2 : 3,

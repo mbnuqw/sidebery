@@ -5,12 +5,12 @@
     .box
       section.section
         .title Common
-        color-field(
-          label="Background"
+        color-style-field(
+          label="Background color"
           v-model="$store.state.customStyles.bg"
           @change="updateStyle('bg')"
           @toggle="toggleStyle('bg')")
-        color-field(
+        color-style-field(
           label="Favicons placeholder color"
           v-model="$store.state.customStyles.favicons_placehoder_bg"
           @change="updateStyle('favicons_placehoder_bg')"
@@ -18,54 +18,168 @@
 
       section.section
         .title Button
-        color-field(
-          label="Button background"
+        color-style-field(
+          label="Background color"
           v-model="$store.state.customStyles.btn_bg"
           @change="updateStyle('btn_bg')"
           @toggle="toggleStyle('btn_bg')")
-        color-field(
-          label="Button hover background"
+        color-style-field(
+          label="Hover background color"
           v-model="$store.state.customStyles.btn_bg_hover"
           @change="updateStyle('btn_bg_hover')"
           @toggle="toggleStyle('btn_bg_hover')")
-        color-field(
-          label="Button active background"
+        color-style-field(
+          label="Active background color"
           v-model="$store.state.customStyles.btn_bg_active"
           @change="updateStyle('btn_bg_active')"
           @toggle="toggleStyle('btn_bg_active')")
-        color-field(
-          label="Button foreground"
+        color-style-field(
+          label="Foreground color"
           v-model="$store.state.customStyles.btn_fg"
           @change="updateStyle('btn_fg')"
           @toggle="toggleStyle('btn_fg')")
-        color-field(
-          label="Button hover foreground"
+        color-style-field(
+          label="Hover foreground color"
           v-model="$store.state.customStyles.btn_fg_hover"
           @change="updateStyle('btn_fg_hover')"
           @toggle="toggleStyle('btn_fg_hover')")
-        color-field(
-          label="Button active foreground"
+        color-style-field(
+          label="Active foreground color"
           v-model="$store.state.customStyles.btn_fg_active"
           @change="updateStyle('btn_fg_active')"
           @toggle="toggleStyle('btn_fg_active')")
       
       section.section
         .title Scroll Box
-      
+        style-field(
+          label="Progress height"
+          v-model="$store.state.customStyles.scroll_progress_h"
+          or="..."
+          @change="updateStyle('scroll_progress_h')"
+          @toggle="toggleStyle('scroll_progress_h')")
+        color-style-field(
+          label="Progress color"
+          v-model="$store.state.customStyles.scroll_progress_bg"
+          @change="updateStyle('scroll_progress_bg')"
+          @toggle="toggleStyle('scroll_progress_bg')")
+
       section.section
         .title Context Menu
+        color-style-field(
+          label="Background color"
+          v-model="$store.state.customStyles.ctx_menu_bg"
+          @change="updateStyle('ctx_menu_bg')"
+          @toggle="toggleStyle('ctx_menu_bg')")
+        color-style-field(
+          label="Option's foreground color"
+          v-model="$store.state.customStyles.ctx_menu_fg"
+          @change="updateStyle('ctx_menu_fg')"
+          @toggle="toggleStyle('ctx_menu_fg')")
+        color-style-field(
+          label="Option's background color on hover"
+          v-model="$store.state.customStyles.ctx_menu_bg_hover"
+          @change="updateStyle('ctx_menu_bg_hover')"
+          @toggle="toggleStyle('ctx_menu_bg_hover')")
       
       section.section
         .title Navigation Strip
-      
-      section.section
-        .title Panel Menu
+        color-style-field(
+          label="Foreground color"
+          v-model="$store.state.customStyles.nav_btn_fg"
+          @change="updateStyle('nav_btn_fg')"
+          @toggle="toggleStyle('nav_btn_fg')")
       
       section.section
         .title Tabs
+        color-style-field(
+          label="Foreground color"
+          v-model="$store.state.customStyles.tabs_fg"
+          @change="updateStyle('tabs_fg')"
+          @toggle="toggleStyle('tabs_fg')")
+        color-style-field(
+          label="Foreground color on hover"
+          v-model="$store.state.customStyles.tabs_fg_hover"
+          @change="updateStyle('tabs_fg_hover')"
+          @toggle="toggleStyle('tabs_fg_hover')")
+        color-style-field(
+          label="Foreground color on active"
+          v-model="$store.state.customStyles.tabs_fg_active"
+          @change="updateStyle('tabs_fg_active')"
+          @toggle="toggleStyle('tabs_fg_active')")
+        color-style-field(
+          label="Active tab background color"
+          v-model="$store.state.customStyles.tabs_activated_bg"
+          @change="updateStyle('tabs_activated_bg')"
+          @toggle="toggleStyle('tabs_activated_bg')")
+        color-style-field(
+          label="Active tab foreground color"
+          v-model="$store.state.customStyles.tabs_activated_fg"
+          @change="updateStyle('tabs_activated_fg')"
+          @toggle="toggleStyle('tabs_activated_fg')")
+        color-style-field(
+          label="Selected tab background color"
+          v-model="$store.state.customStyles.tabs_selected_bg"
+          @change="updateStyle('tabs_selected_bg')"
+          @toggle="toggleStyle('tabs_selected_bg')")
+        color-style-field(
+          label="Selected tab foreground color"
+          v-model="$store.state.customStyles.tabs_selected_fg"
+          @change="updateStyle('tabs_selected_fg')"
+          @toggle="toggleStyle('tabs_selected_fg')")
       
       section.section
         .title Bookmarks
+        color-style-field(
+          label="Bookmark color"
+          v-model="$store.state.customStyles.bookmarks_node_title_fg"
+          @change="updateStyle('bookmarks_node_title_fg')"
+          @toggle="toggleStyle('bookmarks_node_title_fg')")
+        color-style-field(
+          label="Bookmark color on hover"
+          v-model="$store.state.customStyles.bookmarks_node_title_fg_hover"
+          @change="updateStyle('bookmarks_node_title_fg_hover')"
+          @toggle="toggleStyle('bookmarks_node_title_fg_hover')")
+        color-style-field(
+          label="Bookmark color on active"
+          v-model="$store.state.customStyles.bookmarks_node_title_fg_active"
+          @change="updateStyle('bookmarks_node_title_fg_active')"
+          @toggle="toggleStyle('bookmarks_node_title_fg_active')")
+        color-style-field(
+          label="Closed folder color"
+          v-model="$store.state.customStyles.bookmarks_folder_closed_fg"
+          @change="updateStyle('bookmarks_folder_closed_fg')"
+          @toggle="toggleStyle('bookmarks_folder_closed_fg')")
+        color-style-field(
+          label="Closed folder color on hover"
+          v-model="$store.state.customStyles.bookmarks_folder_closed_fg_hover"
+          @change="updateStyle('bookmarks_folder_closed_fg_hover')"
+          @toggle="toggleStyle('bookmarks_folder_closed_fg_hover')")
+        color-style-field(
+          label="Closed folder color on active"
+          v-model="$store.state.customStyles.bookmarks_folder_closed_fg_active"
+          @change="updateStyle('bookmarks_folder_closed_fg_active')"
+          @toggle="toggleStyle('bookmarks_folder_closed_fg_active')")
+        color-style-field(
+          label="Opened folder color"
+          v-model="$store.state.customStyles.bookmarks_folder_open_fg"
+          @change="updateStyle('bookmarks_folder_open_fg')"
+          @toggle="toggleStyle('bookmarks_folder_open_fg')")
+        color-style-field(
+          label="Opened folder color on hover"
+          v-model="$store.state.customStyles.bookmarks_folder_open_fg_hover"
+          @change="updateStyle('bookmarks_folder_open_fg_hover')"
+          @toggle="toggleStyle('bookmarks_folder_open_fg_hover')")
+        color-style-field(
+          label="Opened folder color on active"
+          v-model="$store.state.customStyles.bookmarks_folder_open_fg_active"
+          @change="updateStyle('bookmarks_folder_open_fg_active')"
+          @toggle="toggleStyle('bookmarks_folder_open_fg_active')")
+        color-style-field(
+          label="Empty folder color"
+          v-model="$store.state.customStyles.bookmarks_folder_empty_fg"
+          @change="updateStyle('bookmarks_folder_empty_fg')"
+          @toggle="toggleStyle('bookmarks_folder_empty_fg')")
+
 </template>
 
 
@@ -75,12 +189,14 @@ import Utils from '../../libs/utils'
 import Store from '../store'
 import State from '../store.state'
 import ScrollBox from './scroll-box'
-import ColorField from './field.color'
+import StyleField from './field.style'
+import ColorStyleField from './field.style-color'
 
 export default {
   components: {
     ScrollBox,
-    ColorField,
+    ColorStyleField,
+    StyleField,
   },
 
   data() {
@@ -163,6 +279,8 @@ export default {
   background-color: var(--bg)
   z-index: -1
   opacity: 0
+  // z-index: 1500
+  // opacity: 1
   transition: opacity var(--d-fast), z-index var(--d-fast)
 .StylesEditor[is-active]
   opacity: 1
@@ -174,13 +292,13 @@ export default {
   text-align: center
   padding: 12px 16px
 
-.StylesEditor > .box
+.StylesEditor .box
   box(relative)
-  padding: 0 0 16px
+  padding: 0 0 8px
 
 .StylesEditor .section
   box(relative)
-  margin: 24px 0 0
+  margin: 28px 0 0
   &:first-of-type
     margin: 0
 

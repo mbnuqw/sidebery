@@ -376,8 +376,6 @@ export default {
       opacity: 1
     .title
       color: var(--tabs-activated-fg)
-    .grad
-      background-image: var(--tabs-activated-overflow-gradient)
 
   &[close-btn]:hover
     &[data-audible] .t-box
