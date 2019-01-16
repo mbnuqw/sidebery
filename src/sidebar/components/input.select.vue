@@ -43,16 +43,16 @@ export default {
   cursor: pointer
   &[opt-true]
     .opt
-      color: var(--settings-opt-active-fg)
+      color: var(--active-fg)
 
 .SelectInput > .opt
   box(relative)
   text(s: rem(14))
   margin: 0 7px 0 0
-  color: var(--settings-opt-inactive-fg)
+  color: var(--inactive-fg)
   transition: color var(--d-fast)
   &[opt-true]
-    color: var(--settings-opt-active-fg)
+    color: var(--active-fg)
     &[opt-none]
-      color: var(--settings-opt-false-fg)
+      color: var(--false-fg)
 </style>

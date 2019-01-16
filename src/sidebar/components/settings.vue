@@ -132,29 +132,30 @@
           :value="c.active"
           @input="toggleSnapshots(c.id)")
 
-      select-field(
-        v-if="snapshotsIsON"
-        label="settings.snapshots_limit_label"
-        optLabel="settings.snapshot_limit_"
-        :value="$store.state.snapshotsLimit"
-        :opts="$store.state.snapshotsLimitOpts"
-        @input="setOpt('snapshotsLimit', $event)")
+      //- select-field(
+      //-   v-if="snapshotsIsON"
+      //-   label="settings.snapshots_limit_label"
+      //-   optLabel="settings.snapshot_limit_"
+      //-   :value="$store.state.snapshotsLimit"
+      //-   :opts="$store.state.snapshotsLimitOpts"
+      //-   @input="setOpt('snapshotsLimit', $event)")
+      //- .box
+        //- .snapshot(
+        //-   v-for="(s, i) in snapshots"
+        //-   :title="firstUrls(s.tabs)"
+        //-   @click="applySnapshot(s)")
+        //-   .time {{uelapsed(s.time)}}
+        //-   .tabs.pinned(v-if="tabsCount('pinned', s.tabs)") {{tabsCount('pinned', s.tabs)}}
+        //-   .tabs(v-if="tabsCount(null, s.tabs)") {{tabsCount(null, s.tabs)}}
+        //-   .tabs(
+        //-     v-for="c in s.ctxs"
+        //-     v-if="tabsCount(c, s.tabs)"
+        //-     :style="{color: c.colorCode}") {{tabsCount(c, s.tabs)}}
+        //- .label-btn(
+        //-   v-if="snapshots.length >= 1"
+        //-   @click="viewAllSnapshots") {{t('settings.snapshots_view_all_label')}}
       .box
-        .snapshot(
-          v-for="(s, i) in snapshots"
-          :title="firstUrls(s.tabs)"
-          @click="applySnapshot(s)")
-          .time {{uelapsed(s.time)}}
-          .tabs.pinned(v-if="tabsCount('pinned', s.tabs)") {{tabsCount('pinned', s.tabs)}}
-          .tabs(v-if="tabsCount(null, s.tabs)") {{tabsCount(null, s.tabs)}}
-          .tabs(
-            v-for="c in s.ctxs"
-            v-if="tabsCount(c, s.tabs)"
-            :style="{color: c.colorCode}") {{tabsCount(c, s.tabs)}}
-        .label-btn(
-          v-if="snapshots.length >= 1"
-          @click="viewAllSnapshots") {{t('settings.snapshots_view_all_label')}}
-      .box
+        .btn(@click="viewAllSnapshots") {{t('settings.snapshots_view_all_label')}}
         .btn(@click="makeSnapshot") {{t('settings.make_snapshot')}}
         .btn.-warn(@click="removeAllSnapshots") {{t('settings.rm_all_snapshots')}}
 
@@ -552,7 +553,7 @@ export default {
 .Settings section > h2
   box(relative)
   text(s: rem(24), w: 400)
-  color: var(--settings-title-fg)
+  color: var(--title-fg)
   padding: 8px 12px 8px
   margin: 0
 
@@ -568,7 +569,7 @@ export default {
 .Settings .box > .label
   box(relative)
   text(s: rem(14))
-  color: var(--settings-label-fg)
+  color: var(--label-fg)
   margin: 0 0 5px
 
 .Settings .box > .info
@@ -577,14 +578,14 @@ export default {
   size(max-w: 100%)
   padding: 0 0 0 8px
   white-space: pre
-  color: var(--settings-info-fg)
+  color: var(--info-fg)
 
 // --- Snapshots ---
 .Settings .snapshot
   box(relative, flex)
   text(s: rem(13))
   size(100%)
-  color: var(--settings-label-fg)
+  color: var(--label-fg)
   margin: 0 0 3px
   cursor: pointer
   transition: opacity var(--d-fast)
@@ -614,20 +615,20 @@ export default {
     &.pinned
       color: var(--settings-snapshot-counter-pinned-fg)
 
-.Settings .label-btn
-  box(relative)
-  text(s: rem(14))
-  size(100%)
-  margin: 2px 0 8px
-  text-align: center
-  color: var(--settings-label-btn-fg)
-  cursor: pointer
-  transition: opacity var(--d-fast)
-  &:hover
-    color: var(--settings-label-btn-fg-hover)
-  &:active
-    transition: none
-    color: var(--settings-label-btn-fg-active)
+// .Settings .label-btn
+//   box(relative)
+//   text(s: rem(14))
+//   size(100%)
+//   margin: 2px 0 8px
+//   text-align: center
+//   color: var(--settings-label-btn-fg)
+//   cursor: pointer
+//   transition: opacity var(--d-fast)
+//   &:hover
+//     color: var(--settings-label-btn-fg-hover)
+//   &:active
+//     transition: none
+//     color: var(--settings-label-btn-fg-active)
 
 // --- Keybindings ---
 .Settings .keybinding
@@ -638,20 +639,20 @@ export default {
   cursor: pointer
   &:hover
     > .label
-      color: var(--settings-label-fg-hover)
+      color: var(--label-fg-hover)
   &[is-focused]
     > .value
       color: var(--settings-shortcut-fg-focus)
       box-shadow: var(--settings-shortcut-shadow-focus)
     > .label
-      color: var(--settings-label-fg-hover)
+      color: var(--label-fg-hover)
   + .box
     padding-top: 8px
 
 .Settings .keybinding > .label
   box(relative)
   text(s: rem(14))
-  color: var(--settings-label-fg)
+  color: var(--label-fg)
   margin: 0 6px 5px 0
   transition: color var(--d-fast)
 

@@ -11,6 +11,56 @@
           @change="updateStyle('bg')"
           @toggle="toggleStyle('bg')")
         color-style-field(
+          label="Title color"
+          v-model="$store.state.customStyles.title_fg"
+          @change="updateStyle('title_fg')"
+          @toggle="toggleStyle('title_fg')")
+        color-style-field(
+          label="Sub-title color"
+          v-model="$store.state.customStyles.sub_title_fg"
+          @change="updateStyle('sub_title_fg')"
+          @toggle="toggleStyle('sub_title_fg')")
+        color-style-field(
+          label="Label color"
+          v-model="$store.state.customStyles.label_fg"
+          @change="updateStyle('label_fg')"
+          @toggle="toggleStyle('label_fg')")
+        color-style-field(
+          label="Label color on hover"
+          v-model="$store.state.customStyles.label_fg_hover"
+          @change="updateStyle('label_fg_hover')"
+          @toggle="toggleStyle('label_fg_hover')")
+        color-style-field(
+          label="Label color on active"
+          v-model="$store.state.customStyles.label_fg_active"
+          @change="updateStyle('label_fg_active')"
+          @toggle="toggleStyle('label_fg_active')")
+        color-style-field(
+          label="Info color"
+          v-model="$store.state.customStyles.info_fg"
+          @change="updateStyle('info_fg')"
+          @toggle="toggleStyle('info_fg')")
+        color-style-field(
+          label="Color of positive option"
+          v-model="$store.state.customStyles.true_fg"
+          @change="updateStyle('true_fg')"
+          @toggle="toggleStyle('true_fg')")
+        color-style-field(
+          label="Color of negative option"
+          v-model="$store.state.customStyles.false_fg"
+          @change="updateStyle('false_fg')"
+          @toggle="toggleStyle('false_fg')")
+        color-style-field(
+          label="Color of active option"
+          v-model="$store.state.customStyles.active_fg"
+          @change="updateStyle('active_fg')"
+          @toggle="toggleStyle('active_fg')")
+        color-style-field(
+          label="Color of inactive option"
+          v-model="$store.state.customStyles.inactive_fg"
+          @change="updateStyle('inactive_fg')"
+          @toggle="toggleStyle('inactive_fg')")
+        color-style-field(
           label="Favicons placeholder color"
           v-model="$store.state.customStyles.favicons_placehoder_bg"
           @change="updateStyle('favicons_placehoder_bg')"
@@ -48,7 +98,7 @@
           v-model="$store.state.customStyles.btn_fg_active"
           @change="updateStyle('btn_fg_active')"
           @toggle="toggleStyle('btn_fg_active')")
-      
+
       section.section
         .title Scroll Box
         style-field(
@@ -288,7 +338,8 @@ export default {
 
 .StylesEditor > .title
   box(relative)
-  text(c: #ccc, s: rem(24))
+  text(s: rem(24))
+  color: var(--title-fg)
   text-align: center
   padding: 12px 16px
 
@@ -304,6 +355,7 @@ export default {
 
 .StylesEditor .section > .title
   box(relative)
-  text(c: #ccc, s: rem(21))
+  text(s: rem(21))
+  color: var(--sub-title-fg)
   padding: 2px 16px
 </style>

@@ -32,9 +32,29 @@ body
   // Common
   &.-dark
     --bg: #323232
+    --title-fg: #ffffff
+    --sub-title-fg: #ffffff
+    --label-fg: #cecece
+    --label-fg-hover: #ffffff
+    --label-fg-active: #aaaaaa
+    --info-fg: #898989
+    --true-fg: #64df64
+    --false-fg: #df6464
+    --active-fg: #64aaff
+    --inactive-fg: #565656
     --favicons-placehoder-bg: #ffffff24
   &.-light
     --bg: #fafafa
+    --title-fg: #000000
+    --sub-title-fg: #ffffff
+    --label-fg: #323232
+    --label-fg-hover: #000000
+    --label-fg-active: #565656
+    --info-fg: #898989
+    --true-fg: #64df64
+    --false-fg: #df6464
+    --active-fg: #64aaff
+    --inactive-fg: #afafaf
     --favicons-placehoder-bg: #00000048
 
   // Button
@@ -79,12 +99,16 @@ body
   &.-dark
     --ctx-menu-bg: #242424
     --ctx-menu-bg-hover: #484848
+    --ctx-menu-warn-bg-hover: #ff613d
     --ctx-menu-fg: #ffffff
+    --ctx-menu-warn-fg: #ff613d
     --ctx-menu-shadow: 0 1px 16px 0 #00000032
   &.-light
     --ctx-menu-bg: #ffffff
     --ctx-menu-bg-hover: #cacaca
+    --ctx-menu-warn-bg-hover: #ff613d
     --ctx-menu-fg: #000000
+    --ctx-menu-warn-fg: #ff613d
     --ctx-menu-shadow: 0 0 0 1px #00000016, 0 1px 16px 0 #00000032
 
   // Nav Strip
@@ -106,18 +130,6 @@ body
     --nav-btn-activated-opacity: 1
     --nav-btn-activated-filter: none
     --nav-btn-update-badge-bg: #01acda
-
-  // Panel Menu
-  &.-dark
-    --panel-menu-title-fg: #cecece
-    --panel-menu-label-fg: #cecece
-    --panel-menu-label-fg-hover: #ffffff
-    --panel-menu-label-fg-active: #aaaaaa
-  &.-light
-    --panel-menu-title-fg: #242424
-    --panel-menu-label-fg: #323232
-    --panel-menu-label-fg-hover: #000000
-    --panel-menu-label-fg-active: #565656
 
   // Tabs
   &.-dark
@@ -167,67 +179,21 @@ body
     --bookmarks-folder-empty-fg: #969696
     --bookmarks-drag-gradient: linear-gradient(90deg, #cacaca, #fafafa00)
 
-  // Bookmarks Editor
-  &.-dark
-    --bookmarks-editor-bg: #323232
-    --bookmarks-editor-name-fg: #fafafa
-    --bookmarks-editor-url-fg: #cecece
-    --bookmarks-editor-error-fg: #ef5444
-  &.-light
-    --bookmarks-editor-bg: #fafafa
-    --bookmarks-editor-name-fg: #121212
-    --bookmarks-editor-url-fg: #242424
-    --bookmarks-editor-error-fg: #ff5538
-
   // Settings
   &.-dark
-    --settings-title-fg: #cecece
-    --settings-label-fg: #cecece
-    --settings-label-fg-hover: #ffffff
-    --settings-label-fg-active: #aaaaaa
-    --settings-info-fg: #898989
-    --settings-opt-inactive-fg: #565656
-    --settings-opt-active-fg: #64aaff
-    --settings-opt-false-fg: #df6464
-    --settings-opt-true-fg: #64df64
     --settings-snapshot-counter-pinned-fg: #686868
     --settings-shortcut-fg: #cecece
     --settings-shortcut-fg-focus: #37adff
     --settings-shortcut-bg: #484848
     --settings-shortcut-shadow: 0 0 0 1.2px #565656
     --settings-shortcut-shadow-focus: 0 0 0 1.2px #37adff
-    --settings-label-btn-fg: #cecece
-    --settings-label-btn-fg-hover: #ffffff
-    --settings-label-btn-fg-active: #afafaf
   &.-light
-    --settings-title-fg: #242424
-    --settings-label-fg: #323232
-    --settings-label-fg-hover: #000000
-    --settings-label-fg-active: #565656
-    --settings-info-fg: #727272
-    --settings-opt-inactive-fg: #afafaf
-    --settings-opt-active-fg: #278dff
-    --settings-opt-false-fg: #ef5444
-    --settings-opt-true-fg: #14cf24
     --settings-snapshot-counter-pinned-fg: #565656
     --settings-shortcut-fg: #484848
     --settings-shortcut-fg-focus: #278dff
     --settings-shortcut-bg: #ffffff
     --settings-shortcut-shadow: 0 0 0 1.2px #aaaaaa
     --settings-shortcut-shadow-focus: 0 0 0 1.2px #37adff
-    --settings-label-btn-fg: #323232
-    --settings-label-btn-fg-hover: #000000
-    --settings-label-btn-fg-active: #242424
-
-  // Window Input
-  &.-dark
-    --window-input-title-bg: #484848
-    --window-input-title-fg: #ffffff
-    --window-input-border: #121212
-  &.-light
-    --window-input-title-bg: #ffffff
-    --window-input-title-fg: #000000
-    --window-input-border: #afafaf
 
 // --- Animation ---
 #root.-no-animate

@@ -3,7 +3,7 @@
 .Menu > h2
   box(relative)
   text(s: rem(18), w: 400)
-  color: var(--panel-menu-title-fg)
+  color: var(--title-fg)
   margin: 16px 12px 12px
   padding: 0
 
@@ -13,24 +13,24 @@
   cursor: pointer
   &[opt-true]
     .input > .opt
-      color: var(--settings-opt-active-fg)
+      color: var(--active-fg)
     .input > .opt.-true
-      color: var(--settings-opt-true-fg)
+      color: var(--true-fg)
     .input > .opt.-false
-      color: var(--settings-opt-inactive-fg)
+      color: var(--inactive-fg)
 
 .Menu .input > .opt
   box(relative)
   text(s: rem(14))
   margin: 0 7px 0 0
-  color: var(--settings-opt-inactive-fg)
+  color: var(--inactive-fg)
   transition: color var(--d-fast)
   &.-false
-    color: var(--settings-opt-false-fg)
+    color: var(--false-fg)
   &[opt-true]
-    color: var(--settings-opt-active-fg)
+    color: var(--active-fg)
     &[opt-none]
-      color: var(--settings-opt-false-fg)
+      color: var(--false-fg)
 
 .Menu .options
   box(relative, flex)
@@ -51,7 +51,7 @@
   &:active
     transition: none
   &.-warn
-    color: #ff613d
+    color: var(--ctx-menu-warn-fg)
     &:hover
-      background-color: #ff613d
-      color: #ffffff
+      background-color: var(--ctx-menu-warn-bg-hover)
+      color: var(--ctx-menu-fg)

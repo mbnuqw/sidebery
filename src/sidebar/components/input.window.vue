@@ -95,7 +95,7 @@ export default {
   size(100%, max-h: 240px)
   border-radius: 3px
   overflow: hidden
-  box-shadow: 0 0 0 1px var(--window-input-border), 0 2px 12px 0 #12121228
+  box-shadow: 0 0 0 1px #00000024, 0 2px 12px 0 #12121228
   cursor: pointer
   opacity: .8
   transition: opacity var(--d-fast)
@@ -108,14 +108,14 @@ export default {
 .WinInput .win > .title
   box(relative)
   text(s: rem(14))
-  color: var(--window-input-title-fg)
+  color: var(--title-fg)
   padding: 2px 8px
   margin: 0 0 1px
   white-space: nowrap
   overflow: hidden
   text-overflow: ellipsis
-  background-color: var(--window-input-title-bg)
-  box-shadow: 0 1px 0 0 var(--window-input-border)
+  background-color: var(--bg)
+  box-shadow: 0 1px 0 0 #00000024
 
 .WinInput .win > img
   box(relative, block)

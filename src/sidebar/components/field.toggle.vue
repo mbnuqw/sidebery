@@ -44,18 +44,18 @@ export default {
   cursor: pointer
   &:hover
     > .label
-      color: var(--settings-label-fg-hover)
+      color: var(--label-fg-hover)
   &:active
     > .label
       transition: none
-      color: var(--settings-label-fg-active)
+      color: var(--label-fg-active)
   &.-no-top-margin
     margin-top: 0
 
 .ToggleField > .label
   box(relative)
   text(s: rem(14))
-  color: var(--settings-label-fg)
+  color: var(--label-fg)
   transition: color var(--d-fast)
 
 .ToggleField.inline
@@ -63,8 +63,6 @@ export default {
   margin: 0 12px 0 16px
   justify-content: space-between
   align-items: center
-  // &:last-of-type
-  //   margin: 0 12px 12px 16px
   >.input
     flex-shrink: 0
   >.label

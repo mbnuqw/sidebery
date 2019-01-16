@@ -130,7 +130,7 @@ export default {
   > .text
     box(relative)
     text(s: rem(24))
-    color: var(--settings-title-fg)
+    color: var(--title-fg)
   > .close-btn
     box(relative)
     size(27px, same)
@@ -153,7 +153,7 @@ export default {
   text(s: rem(18))
   justify-content: space-between
   align-items: center
-  color: var(--settings-label-fg)
+  color: var(--sub-title-fg)
   padding: 8px 12px
 
 .SnapshotsList .box
@@ -165,7 +165,7 @@ export default {
   text(s: rem(13))
   size(100%)
   flex-direction: column
-  color: var(--settings-label-fg)
+  color: var(--label-fg)
   margin: 0 0 8px
   padding: 3px 12px
   cursor: pointer

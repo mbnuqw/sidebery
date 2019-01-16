@@ -33,16 +33,16 @@ export default {
   cursor: pointer
   &[opt-true]
     .opt.-true
-      color: var(--settings-opt-true-fg)
+      color: var(--true-fg)
     .opt.-false
-      color: var(--settings-opt-inactive-fg)
+      color: var(--inactive-fg)
   
 .ToggleInput > .opt
   box(relative)
   text(s: rem(14))
   margin: 0 7px 0 0
-  color: var(--settings-opt-inactive-fg)
+  color: var(--inactive-fg)
   transition: color var(--d-fast)
   &.-false
-    color: var(--settings-opt-false-fg)
+    color: var(--false-fg)
 </style>

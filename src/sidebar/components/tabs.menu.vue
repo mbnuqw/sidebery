@@ -512,7 +512,7 @@ export default {
 
 .Menu > .title
   text(s: rem(18))
-  color: var(--panel-menu-title-fg)
+  color: var(--title-fg)
   margin: 16px 12px 12px
 
 .Menu .scoll-wrapper
@@ -560,14 +560,14 @@ export default {
   > input
   > textarea
     padding: 0 0 2px
-    color: var(--settings-opt-false-fg)
+    color: var(--false-fg)
   &[valid] > input
   &[valid] > textarea
-    color: var(--settings-opt-true-fg)
+    color: var(--true-fg)
   &[valid="fine"] > input
   &[valid="fine"] > textarea
-    color: var(--settings-opt-active-fg)
+    color: var(--active-fg)
   > .placeholder
     padding: 0 0 2px
-    color: var(--panel-menu-label-fg)
+    color: var(--label-fg)
 </style>

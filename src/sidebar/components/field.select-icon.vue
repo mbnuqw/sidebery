@@ -47,13 +47,13 @@ export default {
   cursor: pointer
   &:hover
     > .label
-      color: var(--settings-label-fg-hover)
+      color: var(--label-fg-hover)
   &.-no-top-margin
     margin-top: 0
 
 .SelectIconField > .label
   box(relative)
   text(s: rem(14))
-  color: var(--settings-label-fg)
+  color: var(--label-fg)
   transition: color var(--d-fast)
 </style>

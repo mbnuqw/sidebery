@@ -196,7 +196,7 @@ export default {
   size(100%)
   pos(b: 0, l: 0)
   padding: 0 0 16px
-  background-color: var(--bookmarks-editor-bg)
+  background-color: var(--bg)
   z-index: 100
   box-shadow: 0 -1px 12px 0 #00000056, 0 -1px 0 0 #00000012
   opacity: 0
@@ -214,12 +214,12 @@ export default {
   &.-name
     > .input
       text(s: rem(18))
-      color: var(--bookmarks-editor-name-fg)
+      color: var(--title-fg)
 
 .BEditor .field > .input
   text(s: rem(15))
   margin: 2px 0 0
-  color: var(--bookmarks-editor-url-fg)
+  color: var(--sub-title-fg)
   transition: color 1s
   > input
   > textarea
@@ -227,7 +227,7 @@ export default {
     padding: 2px 0
   &.err
     transition: none
-    color: var(--bookmarks-editor-error-fg)
+    color: var(--false-fg)
 
 .BEditor .ctrls
   box(relative, flex)

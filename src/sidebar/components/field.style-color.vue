@@ -63,14 +63,14 @@ export default {
   margin: 8px 12px 8px 16px
   &:hover
     > .label
-      color: var(--settings-label-fg-hover)
+      color: var(--label-fg-hover)
   &.-no-top-margin
     margin-top: 0
 
 .ColorField > .label
   box(relative)
   text(s: rem(15))
-  color: var(--settings-label-fg)
+  color: var(--label-fg)
   transition: color var(--d-fast)
 
 .ColorField > .input-group

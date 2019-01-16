@@ -67,6 +67,16 @@ export default {
   wheelBlockTimeout: null,
   customStyles: {
     bg: null,
+    title_fg: null,
+    sub_title_fg: null,
+    label_fg: null,
+    label_fg_hover: null,
+    label_fg_active: null,
+    info_fg: null,
+    true_fg: null,
+    false_fg: null,
+    active_fg: null,
+    inactive_fg: null,
     favicons_placehoder_bg: null,
 
     btn_bg: null,

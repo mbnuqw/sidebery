@@ -117,7 +117,7 @@ export default {
 
 .ColorInput > .color-wrapper
   box(relative)
-  size(18px, 18px)
+  size(16px, same)
   flex-shrink: 0
   border-radius: 50%
   overflow: hidden
