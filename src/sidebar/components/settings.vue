@@ -3,84 +3,76 @@
   scroll-box(ref="scrollBox")
     section
       h2 {{t('settings.general_title')}}
-
       toggle-field(
         label="settings.native_scrollbars"
         :value="$store.state.nativeScrollbars"
         @input="setOpt('nativeScrollbars', $event)")
-
-      toggle-field(
-        label="settings.activate_last_tab_on_panel_switching"
-        :value="$store.state.activateLastTabOnPanelSwitching"
-        @input="setOpt('activateLastTabOnPanelSwitching', $event)")
-
-      toggle-field(
-        label="settings.create_new_tab_on_empty_panel"
-        :value="$store.state.createNewTabOnEmptyPanel"
-        @input="setOpt('createNewTabOnEmptyPanel', $event)")
-
-      toggle-field(
-        label="settings.skip_empty_panels"
-        :value="$store.state.skipEmptyPanels"
-        @input="setOpt('skipEmptyPanels', $event)")
-
-      toggle-field(
-        label="settings.show_tab_rm_btn"
-        :value="$store.state.showTabRmBtn"
-        @input="setOpt('showTabRmBtn', $event)")
-
       toggle-field(
         label="settings.h_scroll_through_panels"
         :value="$store.state.hScrollThroughPanels"
         @input="setOpt('hScrollThroughPanels', $event)")
 
+    section
+      h2 {{t('Tabs')}}
+      toggle-field(
+        label="settings.activate_last_tab_on_panel_switching"
+        :value="$store.state.activateLastTabOnPanelSwitching"
+        @input="setOpt('activateLastTabOnPanelSwitching', $event)")
+      toggle-field(
+        label="settings.create_new_tab_on_empty_panel"
+        :value="$store.state.createNewTabOnEmptyPanel"
+        @input="setOpt('createNewTabOnEmptyPanel', $event)")
+      toggle-field(
+        label="settings.skip_empty_panels"
+        :value="$store.state.skipEmptyPanels"
+        @input="setOpt('skipEmptyPanels', $event)")
+      toggle-field(
+        label="settings.show_tab_rm_btn"
+        :value="$store.state.showTabRmBtn"
+        @input="setOpt('showTabRmBtn', $event)")
       select-field(
         label="settings.scroll_through_tabs"
         optLabel="settings.scroll_tabs_"
         :value="$store.state.scrollThroughTabs"
         :opts="$store.state.scrollThroughTabsOpts"
         @input="setOpt('scrollThroughTabs', $event)")
-
       select-field(
         label="settings.tab_double_click"
         optLabel="settings.tab_action_"
         :value="$store.state.tabDoubleClick"
         :opts="$store.state.tabDoubleClickOpts"
         @input="setOpt('tabDoubleClick', $event)")
-
       select-field(
         label="settings.tab_long_left_click"
         optLabel="settings.tab_action_"
         :value="$store.state.tabLongLeftClick"
         :opts="$store.state.tabLongLeftClickOpts"
         @input="setOpt('tabLongLeftClick', $event)")
-
       select-field(
         label="settings.tab_long_right_click"
         optLabel="settings.tab_action_"
         :value="$store.state.tabLongRightClick"
         :opts="$store.state.tabLongRightClickOpts"
         @input="setOpt('tabLongRightClick', $event)")
-      
       toggle-field(
         label="settings.no_empty_default"
         :value="$store.state.noEmptyDefault"
         @input="setOpt('noEmptyDefault', $event)")
-
-      toggle-field(
-        label="settings.open_bookmark_new_tab"
-        :value="$store.state.openBookmarkNewTab"
-        @input="setOpt('openBookmarkNewTab', $event)")
-
-      toggle-field(
-        label="settings.auto_close_bookmarks"
-        :value="$store.state.autoCloseBookmarks"
-        @input="setOpt('autoCloseBookmarks', $event)")
-
       toggle-field(
         label="settings.hide_inactive_panel_tabs"
         :value="$store.state.hideInact"
         @input="setOpt('hideInact', $event)")
+
+    section
+      h2 {{t('Bookmarks')}}
+      toggle-field(
+        label="settings.open_bookmark_new_tab"
+        :value="$store.state.openBookmarkNewTab"
+        @input="setOpt('openBookmarkNewTab', $event)")
+      toggle-field(
+        label="settings.auto_close_bookmarks"
+        :value="$store.state.autoCloseBookmarks"
+        @input="setOpt('autoCloseBookmarks', $event)")
 
     section
       h2 {{t('settings.appearance_title')}}
@@ -91,19 +83,16 @@
         :value="$store.state.fontSize"
         :opts="$store.state.fontSizeOpts"
         @input="setOpt('fontSize', $event)")
-
       select-field(
         label="settings.switch_theme"
         optLabel="settings.theme_"
         :value="$store.state.theme"
         :opts="$store.state.themeOpts"
         @input="setOpt('theme', $event)")
-
       toggle-field(
         label="settings.bg_noise"
         :value="$store.state.bgNoise"
         @input="setOpt('bgNoise', $event)")
-
       toggle-field(
         label="settings.animations"
         :value="$store.state.animations"
@@ -132,28 +121,6 @@
           :value="c.active"
           @input="toggleSnapshots(c.id)")
 
-      //- select-field(
-      //-   v-if="snapshotsIsON"
-      //-   label="settings.snapshots_limit_label"
-      //-   optLabel="settings.snapshot_limit_"
-      //-   :value="$store.state.snapshotsLimit"
-      //-   :opts="$store.state.snapshotsLimitOpts"
-      //-   @input="setOpt('snapshotsLimit', $event)")
-      //- .box
-        //- .snapshot(
-        //-   v-for="(s, i) in snapshots"
-        //-   :title="firstUrls(s.tabs)"
-        //-   @click="applySnapshot(s)")
-        //-   .time {{uelapsed(s.time)}}
-        //-   .tabs.pinned(v-if="tabsCount('pinned', s.tabs)") {{tabsCount('pinned', s.tabs)}}
-        //-   .tabs(v-if="tabsCount(null, s.tabs)") {{tabsCount(null, s.tabs)}}
-        //-   .tabs(
-        //-     v-for="c in s.ctxs"
-        //-     v-if="tabsCount(c, s.tabs)"
-        //-     :style="{color: c.colorCode}") {{tabsCount(c, s.tabs)}}
-        //- .label-btn(
-        //-   v-if="snapshots.length >= 1"
-        //-   @click="viewAllSnapshots") {{t('settings.snapshots_view_all_label')}}
       .buttons
         .btn(@click="viewAllSnapshots") {{t('View snapshots')}}
         .btn(@click="makeSnapshot") {{t('settings.make_snapshot')}}
@@ -583,12 +550,11 @@ export default {
 .Settings .inline-fields
   box(relative, grid)
   grid-gap: 3px 0
-  // margin-bottom: 3px
 
 .Settings .buttons
   box(relative, grid)
   grid-gap: 7px 0
-  margin: 4px 12px 0 16px
+  margin: 4px 16px 0 16px
 
 // --- Snapshots ---
 .Settings .snapshot
@@ -642,8 +608,6 @@ export default {
       box-shadow: var(--settings-shortcut-shadow-focus)
     > .label
       color: var(--label-fg-hover)
-  // + .box
-  //   padding-top: 8px
 
 .Settings .keybinding > .label
   box(relative)
