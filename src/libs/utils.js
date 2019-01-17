@@ -45,7 +45,7 @@ export function Uid() {
  */
 function Asap(cb, delay) {
   const ctx = { busy: false }
-  ctx.func = (a) => {
+  ctx.func = a => {
     if (ctx.busy) return
     ctx.busy = true
 
@@ -109,7 +109,7 @@ function BytesToStr(bytes) {
  * Get byte len of string
  */
 function StrSize(str) {
-  const bytes = encodeURI(str).split(/%..|./).length - 1
+  const bytes = new Blob([str]).size
   return BytesToStr(bytes)
 }
 
@@ -117,13 +117,14 @@ function StrSize(str) {
  * Get all windows and check which current
  */
 async function GetAllWindows() {
-  return Promise.all([browser.windows.getCurrent(), browser.windows.getAll()])
-    .then(([current, all]) => {
+  return Promise.all([browser.windows.getCurrent(), browser.windows.getAll()]).then(
+    ([current, all]) => {
       return all.map(w => {
         if (w.id === current.id) w.current = true
         return w
       })
-    })
+    }
+  )
 }
 
 /**
