@@ -109,11 +109,11 @@
         :value="$store.state.animations"
         @input="setOpt('animations', $event)")
 
-      .box: .btn(@click="openThemeEditor") {{t('settings.edit_theme')}}
+      .buttons: .btn(@click="openThemeEditor") {{t('settings.edit_theme')}}
 
     section
       h2 {{t('settings.snapshots_title')}}
-      div
+      .inline-fields
         toggle-field(
           label="settings.snapshots_pinned_label"
           :inline="true"
@@ -154,8 +154,8 @@
         //- .label-btn(
         //-   v-if="snapshots.length >= 1"
         //-   @click="viewAllSnapshots") {{t('settings.snapshots_view_all_label')}}
-      .box
-        .btn(@click="viewAllSnapshots") {{t('settings.snapshots_view_all_label')}}
+      .buttons
+        .btn(@click="viewAllSnapshots") {{t('View snapshots')}}
         .btn(@click="makeSnapshot") {{t('settings.make_snapshot')}}
         .btn.-warn(@click="removeAllSnapshots") {{t('settings.rm_all_snapshots')}}
 
@@ -175,7 +175,7 @@
           @blur="onKBBlur(k, i)"
           @keydown.prevent.stop="onKBKey($event, k, i)"
           @keyup.prevent.stop="onKBKeyUp($event, k, i)")
-      .box
+      .buttons
         .btn(@click="resetKeybindings") {{t('settings.reset_kb')}}
 
     section
@@ -195,30 +195,33 @@
           :inline="true"
           :value="$store.state.permTabHide"
           @input="togglePermTabHide")
-        .box: .info {{t('settings.tab_hide_info')}}
+        .box: .info {{t('settings.tab_hide_info')}} whats inside huh
 
     section
-      h2 {{t('settings.help_title')}}
-
-      .box
-        .label {{t('settings.found_bug_label')}}
-        a.btn(tabindex="-1", :href="issueLink") {{t('settings.repo_issue')}}
-
+      h2 {{t('Favicons')}}
       info-field(
         label="settings.cached_favics"
         :value="faviCache"
         @click="calcFaviCache")
+      .buttons
+        .btn(@click="clearFaviCache(false)") {{t('settings.rm_unused_favi_cache')}}
+        .btn.-warn(@click="clearFaviCache(true)") {{t('settings.rm_favi_cache')}}
 
+    section
+      h2 {{t('Sync')}}
       info-field(
         label="settings.sync_data_size"
         :value="syncDataSize"
         @click="calcSyncDataSize")
-
-      .box
-        .btn(@click="clearFaviCache(false)") {{t('settings.rm_unused_favi_cache')}}
-        .btn.-warn(@click="resetSettings") {{t('settings.reset_settings')}}
-        .btn.-warn(@click="clearFaviCache(true)") {{t('settings.rm_favi_cache')}}
+      .buttons
         .btn.-warn(@click="clearSyncData") {{t('settings.rm_sync_data')}}
+
+    section
+      h2 {{t('settings.help_title')}}
+
+      .buttons
+        a.btn(tabindex="-1", :href="issueLink") {{t('settings.repo_issue')}}
+        .btn.-warn(@click="resetSettings") {{t('settings.reset_settings')}}
 
       a.github(tabindex="-1", href="https://github.com/mbnuqw/sidebery")
         svg: use(xlink:href="#icon_github")
@@ -228,7 +231,6 @@
 <script>
 import { mapGetters } from 'vuex'
 import Utils from '../../libs/utils'
-import EventBus from '../event-bus'
 import Store from '../store'
 import State from '../store.state'
 import ScrollBox from './scroll-box'
@@ -350,7 +352,7 @@ export default {
     },
 
     openThemeEditor() {
-      EventBus.$emit('open-theme-editor')
+      Store.commit('openStylesEditor')
     },
 
     // --- Keybinding ---
@@ -422,7 +424,7 @@ export default {
     },
 
     viewAllSnapshots() {
-      EventBus.$emit('toggle-snapshots-list')
+      Store.dispatch('openSnapshotsViewer')
     },
 
     tabsCount(ctx, tabs) {
@@ -547,38 +549,46 @@ export default {
   size(100%, same)
 
 .Settings section
-  box(relative)
-  padding: 2px 0 8px
+  box(relative, grid)
+  padding: 2px 0 24px
+  grid-gap: 8px 0
 
 .Settings section > h2
   box(relative)
   text(s: rem(24), w: 400)
   color: var(--title-fg)
-  padding: 8px 12px 8px
-  margin: 0
+  padding: 0 12px
+  margin: 8px 0 2px
 
 // --- Container ---
 .Settings .box
-  box(relative, flex)
-  flex-direction: column
-  flex-wrap: wrap
-  justify-content: flex-start
-  align-items: flex-start
-  margin: 0 16px 5px
+  box(relative, grid)
+  grid-gap: 8px 0
+  margin: 0 12px 0 16px
 
 .Settings .box > .label
   box(relative)
   text(s: rem(14))
   color: var(--label-fg)
-  margin: 0 0 5px
+  margin: 0
 
 .Settings .box > .info
   box(relative)
   text(s: rem(13)) 
   size(max-w: 100%)
   padding: 0 0 0 8px
-  white-space: pre
+  white-space: pre-wrap
   color: var(--info-fg)
+
+.Settings .inline-fields
+  box(relative, grid)
+  grid-gap: 3px 0
+  // margin-bottom: 3px
+
+.Settings .buttons
+  box(relative, grid)
+  grid-gap: 7px 0
+  margin: 4px 12px 0 16px
 
 // --- Snapshots ---
 .Settings .snapshot
@@ -615,27 +625,13 @@ export default {
     &.pinned
       color: var(--settings-snapshot-counter-pinned-fg)
 
-// .Settings .label-btn
-//   box(relative)
-//   text(s: rem(14))
-//   size(100%)
-//   margin: 2px 0 8px
-//   text-align: center
-//   color: var(--settings-label-btn-fg)
-//   cursor: pointer
-//   transition: opacity var(--d-fast)
-//   &:hover
-//     color: var(--settings-label-btn-fg-hover)
-//   &:active
-//     transition: none
-//     color: var(--settings-label-btn-fg-active)
-
 // --- Keybindings ---
 .Settings .keybinding
   box(relative, flex)
   flex-direction: column
   align-items: flex-start
-  margin: 0 8px 12px 16px
+  padding: 2px 0
+  margin: 0 8px 0 16px
   cursor: pointer
   &:hover
     > .label
@@ -646,8 +642,8 @@ export default {
       box-shadow: var(--settings-shortcut-shadow-focus)
     > .label
       color: var(--label-fg-hover)
-  + .box
-    padding-top: 8px
+  // + .box
+  //   padding-top: 8px
 
 .Settings .keybinding > .label
   box(relative)
@@ -677,7 +673,7 @@ export default {
 .Settings .github
   box(relative, block)
   size(23px, same)
-  margin: 18px auto 16px
+  margin: 24px auto 8px
   padding: 0
   opacity: .5
   &:hover

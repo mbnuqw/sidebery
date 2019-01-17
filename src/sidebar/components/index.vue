@@ -10,8 +10,6 @@
   @mousedown="onMouseDown")
   ctx-menu
   window-input(:is-active="!!winChoosing")
-  snapshots-list
-  styles-editor
   .bg(v-noise:300.g:12:af.a:0:42.s:0:9="", :style="bgPosStyle")
   .dimmer(@mousedown="closePanelMenu")
   .nav(ref="nav")
@@ -60,7 +58,7 @@
 
     //- Settings
     .settings-btn(
-      :data-active="$store.state.settingsOpened"
+      :data-active="$store.state.panelIndex === -2"
       :title="t('sidebar.nav_settings_title')"
       @click="toggleSettings")
       svg: use(xlink:href="#icon_settings")
@@ -79,7 +77,9 @@
       :active="panelIs(i)"
       @create-tab="createTab")
     transition(name="settings")
-      settings-panel(v-if="$store.state.settingsOpened", :pos="settingsPanelPos")
+      settings-panel(v-if="$store.state.panelIndex === -2", :pos="settingsPanelPos")
+      styles-editor(v-if="$store.state.panelIndex === -3", :pos="stylesEditorPanelPos")
+      snapshots-list(v-if="$store.state.panelIndex === -4", :pos="snapshotsPanelPos")
 </template>
 
 
@@ -148,7 +148,21 @@ export default {
      * Get settings-panel position
      */
     settingsPanelPos() {
-      return State.settingsOpened ? 'center' : 'right'
+      return State.panelIndex === -2 ? 'center' : 'right'
+    },
+
+    /**
+     * Get styles-editor-panel position
+     */
+    stylesEditorPanelPos() {
+      return State.panelIndex === -3 ? 'center' : 'right'
+    },
+
+    /**
+     * Get styles-editor-panel position
+     */
+    snapshotsPanelPos() {
+      return State.panelIndex === -4 ? 'center' : 'right'
     },
 
     /**
@@ -687,7 +701,6 @@ export default {
 
       // Reset selectin and close settings
       Store.commit('resetSelection')
-      if (State.settingsOpened) State.settingsOpened = false
 
       // Update tabs and find activated one
       let tab, isActivated
@@ -766,7 +779,7 @@ export default {
      * Get position class for panel by index.
      */
     getPanelPos(i) {
-      if (this.settingsOpened) return 'left'
+      if (State.panelIndex < 0) return 'left'
       if (State.panelIndex < i) return 'right'
       if (State.panelIndex === i) return 'center'
       if (State.panelIndex > i) return 'left'
@@ -820,7 +833,7 @@ export default {
      */
     toggleSettings() {
       if (State.panelMenuOpened) this.closePanelMenu()
-      if (State.settingsOpened) Store.commit('closeSettings')
+      if (State.panelIndex === -2) Store.commit('closeSettings')
       else Store.commit('openSettings')
       Store.commit('resetSelection')
     },

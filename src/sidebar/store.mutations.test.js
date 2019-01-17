@@ -37,13 +37,11 @@ describe('Vuex store mutations', () => {
     const state = {
       lastPanelIndex: 3,
       panelIndex: 2,
-      settingsOpened: false,
     }
     Mutations.openSettings(state)
     expect(state).toEqual(expect.objectContaining({
       lastPanelIndex: 2,
       panelIndex: -2,
-      settingsOpened: true,
     }))
   })
 
@@ -52,13 +50,11 @@ describe('Vuex store mutations', () => {
     const state = {
       lastPanelIndex: 2,
       panelIndex: -2,
-      settingsOpened: true,
     }
     Mutations.closeSettings(state)
     expect(state).toEqual(expect.objectContaining({
       lastPanelIndex: 2,
       panelIndex: 2,
-      settingsOpened: false,
     }))
   })
 

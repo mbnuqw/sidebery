@@ -85,7 +85,12 @@ export default {
 
     commit('closeCtxMenu')
     commit('resetSelection')
-    if (state.settingsOpened) return commit('closeSettings')
+
+    // Restore prev front panel
+    if (state.panelIndex < 0) {
+      if (state.lastPanelIndex < 0) state.panelIndex = 0
+      else state.panelIndex = state.lastPanelIndex
+    }
 
     // Next
     if (dir > 0) {

@@ -1,13 +1,9 @@
 <template lang="pug">
-.SnapshotsList(v-noise:300.g:12:af.a:0:42.s:0:9="", :is-active="active" @click="cancel")
-  .title
-    .text {{t('settings.snapshots_title')}}
-    .close-btn
-      svg: use(xlink:href="#icon_remove")
+.SnapshotsList
   scroll-box(ref="scrollBox")
     .box
       .snapshot(
-        v-for="s in snapshots"
+        v-for="s in $store.state.snapshots"
         @click="applySnapshot(s)")
         .datetime {{uelapsed(s.time)}}
         .panel-info(v-if="s.tabs.find(t => t.pinned)")
@@ -31,7 +27,6 @@
 <script>
 import { mapGetters } from 'vuex'
 import Utils from '../../libs/utils'
-import EventBus from '../event-bus'
 import Store from '../store'
 import ScrollBox from './scroll-box'
 
@@ -51,8 +46,8 @@ export default {
     ...mapGetters(['winChoosing', 'defaultCtxId']),
   },
 
-  created() {
-    EventBus.$on('toggle-snapshots-list', () => this.toggle())
+  beforeDestroy() {
+    Store.dispatch('unloadSnapshots')
   },
 
   methods: {
@@ -84,13 +79,6 @@ export default {
       this.snapshots = []
     },
 
-    /**
-     * Close this panel
-     */
-    cancel() {
-      this.close()
-    },
-
     udate: Utils.UDate,
     utime: Utils.UTime,
     uelapsed: Utils.UElapsed,
@@ -114,47 +102,6 @@ export default {
   pos(0, 0)
   size(100%, same)
   flex-direction: column
-  z-index: -1
-  background-color: var(--bg)
-  opacity: 0
-  transition: opacity var(--d-fast), z-index var(--d-fast)
-.SnapshotsList[is-active]
-  opacity: 1
-  z-index: 1500
-
-.SnapshotsList .title
-  box(relative, flex)
-  justify-content: space-between
-  align-items: center
-  padding: 8px 8px 8px 12px
-  > .text
-    box(relative)
-    text(s: rem(24))
-    color: var(--title-fg)
-  > .close-btn
-    box(relative)
-    size(27px, same)
-    cursor: pointer
-    &:hover > svg
-      fill: #ea4335
-    &:active > svg
-      transition: none
-      fill: #a63626
-    > svg
-      box(absolute)
-      pos(5px, same)
-      size(17px, same)
-      fill: #a63626
-      transition: fill var(--d-fast)
-
-
-.SnapshotsList .header
-  box(relative, flex)
-  text(s: rem(18))
-  justify-content: space-between
-  align-items: center
-  color: var(--sub-title-fg)
-  padding: 8px 12px
 
 .SnapshotsList .box
   box(relative)

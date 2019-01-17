@@ -1,6 +1,5 @@
 <template lang="pug">
-.StylesEditor(v-noise:300.g:12:af.a:0:42.s:0:9="", :is-active="active")
-  .title(@click="close") Edit styles
+.StylesEditor
   scroll-box(ref="scrollBox")
     .box
       section.section
@@ -229,7 +228,6 @@
           v-model="$store.state.customStyles.bookmarks_folder_empty_fg"
           @change="updateStyle('bookmarks_folder_empty_fg')"
           @toggle="toggleStyle('bookmarks_folder_empty_fg')")
-
 </template>
 
 
@@ -260,29 +258,6 @@ export default {
   },
 
   methods: {
-    /**
-     * Open this panel
-     */
-    async open() {
-      this.active = true
-      await this.$nextTick()
-      if (this.$refs.scrollBox) this.$refs.scrollBox.recalcScroll()
-    },
-
-    /**
-     * Close this panel
-     */
-    close() {
-      this.active = false
-    },
-
-    /**
-     * Close this panel
-     */
-    cancel() {
-      this.close()
-    },
-
     /**
      * Get current state of theme parameter
      */
@@ -326,36 +301,25 @@ export default {
   pos(0, 0)
   size(100%, same)
   flex-direction: column
-  background-color: var(--bg)
-  z-index: -1
-  opacity: 0
-  // z-index: 1500
-  // opacity: 1
-  transition: opacity var(--d-fast), z-index var(--d-fast)
-.StylesEditor[is-active]
-  opacity: 1
-  z-index: 1500
 
 .StylesEditor > .title
   box(relative)
   text(s: rem(24))
   color: var(--title-fg)
-  text-align: center
   padding: 12px 16px
 
 .StylesEditor .box
-  box(relative)
-  padding: 0 0 8px
+  box(relative, grid)
+  grid-gap: 32px 0
+  padding: 8px 0 16px
 
 .StylesEditor .section
-  box(relative)
-  margin: 28px 0 0
-  &:first-of-type
-    margin: 0
+  box(relative, grid)
+  grid-gap: 12px 0
 
 .StylesEditor .section > .title
   box(relative)
-  text(s: rem(21))
+  text(s: rem(24))
   color: var(--sub-title-fg)
   padding: 2px 16px
 </style>

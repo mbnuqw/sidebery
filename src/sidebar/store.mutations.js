@@ -28,18 +28,30 @@ export default {
    * Open settings panel.
    */
   openSettings(state) {
-    if (state.settingsOpened) return
-    state.lastPanelIndex = state.panelIndex
+    if (state.panelIndex === -2) return
+    if (state.panelIndex >= 0) state.lastPanelIndex = state.panelIndex
     state.panelIndex = -2
-    state.settingsOpened = true
   },
 
   /**
    * Close settings panel and return to last one.
    */
   closeSettings(state) {
-    if (!state.settingsOpened) return
-    state.settingsOpened = false
+    if (state.panelIndex !== -2) return
+    if (state.lastPanelIndex >= 0) state.panelIndex = state.lastPanelIndex
+    else state.panelIndex = 0
+  },
+
+  // -------------------------------------
+  // --- --- --- Styles Editor --- --- ---
+  // -------------------------------------
+  openStylesEditor(state) {
+    if (state.panelIndex >= 0) state.lastPanelIndex = state.panelIndex
+    state.panelIndex = -3
+  },
+
+  closeStylesEditor(state) {
+    state.lastPanelIndex = state.panelIndex
     state.panelIndex = state.lastPanelIndex
   },
 
