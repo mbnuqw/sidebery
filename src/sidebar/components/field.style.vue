@@ -63,7 +63,7 @@ export default {
 .StyleField
   box(relative)
   padding: 2px 0
-  margin: 8px 12px 8px 16px
+  margin: 0 12px 0 16px
   &:hover
     > .label
       color: var(--label-fg-hover)

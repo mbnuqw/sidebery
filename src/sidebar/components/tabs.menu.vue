@@ -1,5 +1,5 @@
 <template lang="pug">
-.Menu(v-noise:300.g:12:af.a:0:42.s:0:9="")
+.ContainerMenu(v-noise:300.g:12:af.a:0:42.s:0:9="")
   text-input.title(
     ref="name"
     v-debounce.250="updateName"
@@ -274,8 +274,9 @@ export default {
 
     async open() {
       this.init()
-      this.$emit('height')
+      if (this.$refs.name) this.$refs.name.recalcTextHeight()
       if (this.$refs.name) this.$refs.name.focus()
+      this.$emit('height')
     },
 
     async update() {
@@ -506,34 +507,39 @@ export default {
 <style lang="stylus">
 @import '../../styles/mixins'
 
-.Menu
+.ContainerMenu
   box(flex)
   flex-direction: column
 
-.Menu > .title
-  text(s: rem(18))
+.ContainerMenu > .title
+  text(s: rem(24), w: 400)
   color: var(--title-fg)
   margin: 16px 12px 12px
 
-.Menu .scoll-wrapper
-  box(relative)
+.ContainerMenu .scoll-wrapper
+  box(relative, grid)
+  grid-gap: 3px 0
   padding: 1px 0 0
 
-.Menu .box
+.ContainerMenu .box
   box(relative)
   padding: 0 0 0 8px
 
-.Menu .scroll-box
+.ContainerMenu .scroll-box
   size(max-h: calc(100vh - 200px))
   flex-grow: 1
   flex-shrink: 1
 
-.Menu .field > .input
+.ContainerMenu .field
+  box(relative)
+  margin: 0 16px
+
+.ContainerMenu .field > .input
   box(relative, flex)
   flex-wrap: wrap
 
 // Option icon
-.Menu .input > .icon
+.ContainerMenu .input > .icon
   box(relative, flex)
   size(26px, same)
   justify-content: center
@@ -553,7 +559,7 @@ export default {
     size(16px, same)
     transition: opacity var(--d-fast)
 
-.Menu .field > .text
+.ContainerMenu .field > .text
   text(s: rem(14))
   margin: 2px 0 0
   transition: color 1s

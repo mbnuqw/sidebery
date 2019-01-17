@@ -40,7 +40,7 @@ export default {
 .ToggleField
   box(relative)
   padding: 2px 0
-  margin: 8px 12px 8px 16px
+  margin: 0 12px 0 16px
   cursor: pointer
   &:hover
     > .label
@@ -69,4 +69,6 @@ export default {
     margin-right: 12px
     overflow: hidden
     text-overflow: ellipsis
+  // +[class$="Field"]
+  //   margin-top: 3px
 </style>

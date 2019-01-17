@@ -37,7 +37,7 @@ export default {
 .InfoField
   box(relative)
   padding: 2px 0
-  margin: 8px 12px 8px 16px
+  margin: 0 12px 0 16px
   cursor: pointer
   &:hover
     > .label
