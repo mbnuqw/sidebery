@@ -1,9 +1,10 @@
 <template lang="pug">
-.SelectField(@mousedown="select")
+.SelectField(:is-inactive="inactive", @mousedown="select")
   .label {{t(label)}}
   select-input(
     :label="optLabel"
     :value="value"
+    :inactive="inactive"
     :opts="opts"
     :noneOpt="noneOpt")
 </template>
@@ -20,6 +21,7 @@ export default {
   props: {
     value: String,
     label: String,
+    inactive: Boolean,
     optLabel: String,
     opts: Array,
     noneOpt: String,
@@ -31,6 +33,7 @@ export default {
 
   methods: {
     select(e) {
+      if (this.inactive) return
       let i = this.opts.indexOf(this.value)
       if (e.button === 0) i++
       if (e.button === 2) i--
@@ -58,6 +61,9 @@ export default {
     > .label
       transition: none
       color: var(--label-fg-active)
+  &[is-inactive]
+    opacity: .2
+    cursor: default
   &.-no-top-margin
     margin-top: 0
 

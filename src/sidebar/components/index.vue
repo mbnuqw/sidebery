@@ -49,14 +49,6 @@
           each n in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
             .spinner-stick(class='spinner-stick-' + n)
 
-      //- Add new container
-      //- .panel-btn(
-      //-   v-if="!isPrivate"
-      //-   :title="t('sidebar.nav_add_ctx_title')"
-      //-   :class="'rel-' + countOfVisibleBtns"
-      //-   @click="openPanelMenu(-1)")
-      //-   svg: use(xlink:href="#icon_plus_v2")
-
     //- Settings
     .settings-btn(
       :data-active="$store.state.panelIndex === -2"

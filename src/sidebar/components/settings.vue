@@ -62,6 +62,25 @@
         label="settings.hide_inactive_panel_tabs"
         :value="$store.state.hideInact"
         @input="setOpt('hideInact', $event)")
+      select-field(
+        label="settings.label.tabs_panel_left_click_action"
+        optLabel="settings.label.tabs_panel_left_click_action_"
+        :value="$store.state.tabsPanelLeftClickAction"
+        :opts="$store.state.tabsPanelLeftClickActionOpts"
+        @input="setOpt('tabsPanelLeftClickAction', $event)")
+      select-field(
+        label="settings.label.tabs_panel_double_click_action"
+        optLabel="settings.label.tabs_panel_double_click_action_"
+        :inactive="$store.state.tabsPanelLeftClickAction !== 'none'"
+        :value="$store.state.tabsPanelDoubleClickAction"
+        :opts="$store.state.tabsPanelDoubleClickActionOpts"
+        @input="setOpt('tabsPanelDoubleClickAction', $event)")
+      select-field(
+        label="settings.label.tabs_panel_right_click_action"
+        optLabel="settings.label.tabs_panel_right_click_action_"
+        :value="$store.state.tabsPanelRightClickAction"
+        :opts="$store.state.tabsPanelRightClickActionOpts"
+        @input="setOpt('tabsPanelRightClickAction', $event)")
 
     section
       h2 {{t('Bookmarks')}}

@@ -129,9 +129,10 @@ export default {
      * Mousedown handler
      */
     onMouseDown(e) {
+      e.stopPropagation()
+      e.preventDefault()
+
       if (e.button === 1) {
-        e.stopPropagation()
-        e.preventDefault()
         this.close()
       }
 
@@ -150,6 +151,9 @@ export default {
           if (llc === 'clear_cookies') Store.dispatch('clearTabsCookies', [this.tab.id])
           this.hodorL = null
         }, 250)
+
+        Store.commit('closeCtxMenu')
+        Store.commit('resetSelection')
       }
 
       if (e.button === 2) {
@@ -164,6 +168,8 @@ export default {
           if (lrc === 'clear_cookies') Store.dispatch('clearTabsCookies', [this.tab.id])
           this.hodorR = null
         }, 250)
+
+        Store.commit('resetSelection')
       }
     },
 

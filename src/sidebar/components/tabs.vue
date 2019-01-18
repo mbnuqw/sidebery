@@ -4,7 +4,8 @@
   :drag-end="dragEnd"
   @contextmenu.prevent.stop=""
   @wheel="onWheel"
-  @mousedown.middle="createTab"
+  @mousedown="onMouseDown"
+  @dblclick="onDoubleClick"
   @mousemove="onMouseMove"
   @mouseup="onMouseUp"
   @mouseleave="onMouseUp")
@@ -118,6 +119,29 @@ export default {
   },
 
   methods: {
+    onMouseDown(e) {
+      if (e.button === 0) {
+        const la = State.tabsPanelLeftClickAction
+        if (la === 'prev') return Store.dispatch('switchPanel', -1)
+      }
+
+      if (e.button === 1) {
+        this.createTab()
+      }
+
+      if (e.button === 2) {
+        const ra = State.tabsPanelRightClickAction
+        if (ra === 'next') return Store.dispatch('switchPanel', 1)
+        if (ra === 'menu') return EventBus.$emit('openPanelMenu', State.panelIndex)
+      }
+    },
+
+    onDoubleClick() {
+      if (State.tabsPanelLeftClickAction !== 'none') return
+      const da = State.tabsPanelDoubleClickAction
+      if (da === 'tab') return this.createTab()
+    },
+
     onMouseUp() {
       if (this.drag) this.onTabMoveEnd()
       if (this.selection) this.onTabsSelectionEnd()

@@ -320,6 +320,36 @@
   "settings.hide_inactive_panel_tabs": {
     "message": "Hide inactive panels tabs"
   },
+  "settings.label.tabs_panel_left_click_action": {
+    "message": "Left click on tabs panel"
+  },
+  "settings.label.tabs_panel_left_click_action_prev": {
+    "message": "previous panel"
+  },
+  "settings.label.tabs_panel_left_click_action_none": {
+    "message": "none"
+  },
+  "settings.label.tabs_panel_double_click_action": {
+    "message": "Double click on tabs panel"
+  },
+  "settings.label.tabs_panel_double_click_action_tab": {
+    "message": "create tab"
+  },
+  "settings.label.tabs_panel_double_click_action_none": {
+    "message": "none"
+  },
+  "settings.label.tabs_panel_right_click_action": {
+    "message": "Right click on tabs panel"
+  },
+  "settings.label.tabs_panel_right_click_action_next": {
+    "message": "next panel"
+  },
+  "settings.label.tabs_panel_right_click_action_menu": {
+    "message": "panel menu"
+  },
+  "settings.label.tabs_panel_right_click_action_none": {
+    "message": "none"
+  },
 
   "settings.open_bookmark_new_tab": {
     "message": "Open bookmark in new tab"

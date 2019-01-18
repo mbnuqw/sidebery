@@ -320,6 +320,36 @@
   "settings.hide_inactive_panel_tabs": {
     "message": "Скрывать табы неактивных панелей"
   },
+  "settings.label.tabs_panel_left_click_action": {
+    "message": "Левый клик по панели с табами"
+  },
+  "settings.label.tabs_panel_left_click_action_prev": {
+    "message": "пред. панель"
+  },
+  "settings.label.tabs_panel_left_click_action_none": {
+    "message": "выкл"
+  },
+  "settings.label.tabs_panel_double_click_action": {
+    "message": "Двойной клик по панели с табами"
+  },
+  "settings.label.tabs_panel_double_click_action_tab": {
+    "message": "создать таб"
+  },
+  "settings.label.tabs_panel_double_click_action_none": {
+    "message": "выкл"
+  },
+  "settings.label.tabs_panel_right_click_action": {
+    "message": "Правый клик по панели с табами"
+  },
+  "settings.label.tabs_panel_right_click_action_next": {
+    "message": "след. панель"
+  },
+  "settings.label.tabs_panel_right_click_action_menu": {
+    "message": "меню панели"
+  },
+  "settings.label.tabs_panel_right_click_action_none": {
+    "message": "выкл"
+  },
 
   "settings.open_bookmark_new_tab": {
     "message": "Открывать закладку в новом табе"
