@@ -49,12 +49,13 @@
           each n in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
             .spinner-stick(class='spinner-stick-' + n)
 
-    //- Add new container
-    .add-btn(
-      v-if="!isPrivate"
-      :title="t('sidebar.nav_add_ctx_title')"
-      @click="openPanelMenu(-1)")
-      svg: use(xlink:href="#icon_plus_v2")
+      //- Add new container
+      //- .panel-btn(
+      //-   v-if="!isPrivate"
+      //-   :title="t('sidebar.nav_add_ctx_title')"
+      //-   :class="'rel-' + countOfVisibleBtns"
+      //-   @click="openPanelMenu(-1)")
+      //-   svg: use(xlink:href="#icon_plus_v2")
 
     //- Settings
     .settings-btn(
@@ -104,6 +105,7 @@ import StylesEditor from './styles-editor'
 Vue.directive('noise', NoiseBg)
 
 const URL_HOST_PATH_RE = /^([a-z0-9-]{1,63}\.)+\w+(:\d+)?\/[A-Za-z0-9-._~:/?#[\]%@!$&'()*+,;=]*$/
+const ADD_CTX_BTN = { icon: 'icon_plus_v2', hidden: false }
 
 // --- Vue Component ---
 export default {
@@ -166,10 +168,17 @@ export default {
     },
 
     /**
+     * Count of visible nav buttons
+     */
+    countOfVisibleBtns() {
+      return this.nav.filter(b => !b.hidden).length
+    },
+
+    /**
      * Get list of navigational buttons
      */
     nav() {
-      let cap = ~~((this.width - 56) / 34)
+      let cap = ~~((this.width - 32) / 34)
       let halfCap = cap >> 1
       let invModCap = (cap % halfCap) ^ 1
 
@@ -208,6 +217,9 @@ export default {
         if (k === State.panelIndex) btn.updated = false
         out.push(btn)
       }
+
+      ADD_CTX_BTN.hidden = false
+      out.push(ADD_CTX_BTN)
 
       let p = State.panelIndex - hideOffset
       let vis = out.length - hideOffset
@@ -428,6 +440,7 @@ export default {
      * Navigation button click hadler
      */
     onNavClick(i) {
+      if (i === this.panels.length) return this.openPanelMenu(-1)
       if (State.panelIndex !== i) {
         Store.dispatch('switchToPanel', i)
       } else if (this.panels[i].cookieStoreId) {
@@ -790,6 +803,7 @@ export default {
      * Open panel menu by nav index.
      */
     async openPanelMenu(i) {
+      if (i === this.panels.length) i = -1
       Store.commit('closeSettings')
       Store.commit('closeCtxMenu')
       Store.commit('resetSelection')
@@ -850,6 +864,7 @@ export default {
      * Get tooltip for button
      */
     getTooltip(i) {
+      if (i === this.panels.length) return this.t('sidebar.nav_add_ctx_title')
       if (!this.panels[i].tabs) return this.nav[i].name
       return `${this.nav[i].name}: ${this.panels[i].tabs.length}`
     },
