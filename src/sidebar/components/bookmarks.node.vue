@@ -5,7 +5,7 @@
   :is-parent="!!isParent"
   :to-front="toFront || editorSelect"
   :menu="menu")
-  .body(:title="tooltip", @click="onClick", @mousedown="onMD")
+  .body(:title="tooltip", @click="onClick", @mousedown="onMouseDown")
     .fav(v-if="isBookmark", :no-fav="!favicon")
       .placeholder
       img(:src="favicon")
@@ -91,9 +91,12 @@ export default {
   },
 
   methods: {
-    onMD(e) {
+    onMouseDown(e) {
       if (e.button === 0) this.$emit('md', e, [this.node])
-      if (e.button === 1) this.openUrl(true, false)
+      if (e.button === 1) {
+        e.preventDefault()
+        this.openUrl(true, false)
+      }
       if (e.button === 2) {
         e.stopPropagation()
         this.openMenu(true)
