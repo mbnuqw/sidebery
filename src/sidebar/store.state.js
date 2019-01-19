@@ -115,8 +115,7 @@ export default {
   },
 
   lastPanelIndex: browser.extension.inIncognitoContext ? 2 : 3,
-  // panelIndex: browser.extension.inIncognitoContext ? 2 : 3,
-  panelIndex: -3,
+  panelIndex: browser.extension.inIncognitoContext ? 2 : 3,
 
   tabs: [], // all tabs
   activeTabs: [], // last active tab's id per panel

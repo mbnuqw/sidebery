@@ -307,6 +307,7 @@ export default {
       text(s: rem(14), w: 400)
       color: var(--bookmarks-node-title-fg)
     &:hover > .title
+      transition: transform var(--d-fast)
       color: var(--bookmarks-node-title-fg-hover)
     &:active > .title
       transition: none
@@ -322,6 +323,7 @@ export default {
   > .body
     size(h: 28px)
     &:hover > .title
+      transition: transform var(--d-fast)
       color: var(--bookmarks-folder-closed-fg-hover)
     &:active > .title
       transition: none

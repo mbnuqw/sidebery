@@ -726,10 +726,6 @@ export default {
       }
       EventBus.$emit('scrollToActiveTab', panelIndex, info.tabId)
 
-      if (State.panelMenuOpened) {
-        this.openPanelMenu(panelIndex)
-      }
-
       // Remove updated flag
       this.$delete(State.updatedTabs, info.tabId)
 

@@ -594,10 +594,10 @@ export default {
     size(100%, same)
 
 .Tab .fav > .ok-badge > svg
-  fill: #43D043
+  fill: var(--true-fg)
 
 .Tab .fav > .err-badge > svg
-  fill: #DB2216
+  fill: var(--false-fg)
 
 
 // --- Context highlight

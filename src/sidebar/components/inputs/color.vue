@@ -144,6 +144,7 @@ export default {
 .ColorInput > .text
   box(relative)
   size(1px)
+  color: var(--label-fg)
   -webkit-appearance: none
   border: none
   outline: none

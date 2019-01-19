@@ -274,7 +274,6 @@ export default {
 
     async open() {
       this.init()
-      if (this.$refs.name) this.$refs.name.recalcTextHeight()
       if (this.$refs.name) this.$refs.name.focus()
       this.$emit('height')
     },
@@ -372,6 +371,7 @@ export default {
       }
 
       await this.$nextTick()
+      if (this.$refs.name) this.$refs.name.recalcTextHeight()
       if (this.$refs.scrollBox) this.$refs.scrollBox.recalcScroll()
     },
 
