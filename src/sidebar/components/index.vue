@@ -204,8 +204,10 @@ export default {
         out.push(btn)
       }
 
-      ADD_CTX_BTN.hidden = false
-      out.push(ADD_CTX_BTN)
+      if (!State.private) {
+        ADD_CTX_BTN.hidden = false
+        out.push(ADD_CTX_BTN)
+      }
 
       let p = State.panelIndex - hideOffset
       let vis = out.length - hideOffset
