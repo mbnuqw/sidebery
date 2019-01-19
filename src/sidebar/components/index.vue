@@ -1,6 +1,6 @@
 <template lang="pug">
 .Sidebar(
-  :menu-opened="isPanelMenuOpened"
+  :dashboard-opened="$store.state.dashboardOpened"
   @wheel="onWheel"
   @contextmenu.prevent.stop=""
   @dragover.prevent=""
@@ -11,17 +11,17 @@
   ctx-menu
   window-input(:is-active="!!winChoosing")
   .bg(v-noise:300.g:12:af.a:0:42.s:0:9="", :style="bgPosStyle")
-  .dimmer(@mousedown="closePanelMenu")
+  .dimmer(@mousedown="closeDashboard")
   .nav(ref="nav")
     keep-alive
       component.panel-menu(
-        v-if="panelMenu" 
+        v-if="dashboard"
         ref="menu"
-        :is="panelMenu.component" 
-        :conf="panelMenu"
+        :is="dashboard.component" 
+        :conf="dashboard"
         :index="$store.state.panelIndex"
-        @close="closePanelMenu"
-        @height="recalcPanelMenuHeight")
+        @close="closeDashboard"
+        @height="recalcDashboardHeight")
 
     .nav-strip(@wheel="onNavWheel")
       .panel-btn(
@@ -35,7 +35,7 @@
         :is-hidden="btn.hidden"
         :class="'rel-' + btn.relIndex"
         @click="onNavClick(i)"
-        @mousedown.right="openPanelMenu(i)")
+        @mousedown.right="openDashboard(i)")
         svg(:style="{fill: btn.colorCode}")
           use(:xlink:href="'#' + btn.icon")
         .proxy-badge
@@ -113,7 +113,7 @@ export default {
   data() {
     return {
       width: 250,
-      panelMenu: null,
+      dashboard: null,
       loading: [],
       loadingTimers: [],
     }
@@ -124,10 +124,6 @@ export default {
    */
   computed: {
     ...mapGetters(['winChoosing', 'isPrivate', 'defaultCtxId', 'panels', 'activePanel']),
-
-    isPanelMenuOpened() {
-      return !!State.panelMenuOpened
-    },
 
     /**
      * Background transform style for parallax fx
@@ -267,7 +263,7 @@ export default {
     window.addEventListener('resize', onresize.func)
 
     // --- Handle global events
-    EventBus.$on('openPanelMenu', panelIndex => this.openPanelMenu(panelIndex))
+    EventBus.$on('openDashboard', panelIndex => this.openDashboard(panelIndex))
     EventBus.$on('panelLoadingStart', panelIndex => this.onPanelLoadingStart(panelIndex))
     EventBus.$on('panelLoadingEnd', panelIndex => this.onPanelLoadingEnd(panelIndex))
     EventBus.$on('panelLoadingOk', panelIndex => this.onPanelLoadingOk(panelIndex))
@@ -430,7 +426,7 @@ export default {
      * Navigation button click hadler
      */
     onNavClick(i) {
-      if (i === this.panels.length) return this.openPanelMenu(-1)
+      if (i === this.panels.length) return this.openDashboard(-1)
       if (State.panelIndex !== i) {
         Store.dispatch('switchToPanel', i)
       } else if (this.panels[i].cookieStoreId) {
@@ -788,16 +784,16 @@ export default {
     /**
      * Open panel menu by nav index.
      */
-    async openPanelMenu(i) {
+    async openDashboard(i) {
       if (i === this.panels.length) i = -1
       Store.commit('closeSettings')
       Store.commit('closeCtxMenu')
       Store.commit('resetSelection')
-      State.panelMenuOpened = true
+      State.dashboardOpened = true
       State.panelIndex = i
       if (i >= 0) State.activePanel = State.panelIndex
-      if (i === -1) this.panelMenu = { component: TabsDashboard, new: true }
-      else if (i >= 0) this.panelMenu = { ...this.nav[i] }
+      if (i === -1) this.dashboard = { component: TabsDashboard, new: true }
+      else if (i >= 0) this.dashboard = { ...this.nav[i] }
 
       await this.$nextTick()
       if (this.$refs.menu && this.$refs.menu.open) this.$refs.menu.open()
@@ -808,9 +804,9 @@ export default {
     /**
      * Wait for rerendering and calc panels menu height.
      */
-    async recalcPanelMenuHeight() {
+    async recalcDashboardHeight() {
       await this.$nextTick()
-      if (!State.panelMenuOpened) return
+      if (!State.dashboardOpened) return
       let h = this.$refs.menu ? this.$refs.menu.$el.offsetHeight : 336
       this.$refs.nav.style.transform = `translateY(${h - 336}px)`
     },
@@ -818,13 +814,13 @@ export default {
     /**
      * Close nav menu.
      */
-    closePanelMenu() {
-      State.panelMenuOpened = false
+    closeDashboard() {
+      State.dashboardOpened = false
       if (State.panelIndex < 0 && State.lastPanelIndex >= 0) {
         State.panelIndex = State.lastPanelIndex
       }
       this.$refs.nav.style.transform = 'translateY(0px)'
-      setTimeout(() => (this.panelMenu = null), 120)
+      setTimeout(() => (this.dashboard = null), 120)
     },
     // ---
 
@@ -832,7 +828,7 @@ export default {
      * Toggle settings
      */
     toggleSettings() {
-      if (State.panelMenuOpened) this.closePanelMenu()
+      if (State.dashboardOpened) this.closeDashboard()
       if (State.panelIndex === -2) Store.commit('closeSettings')
       else Store.commit('openSettings')
       Store.commit('resetSelection')
@@ -843,7 +839,7 @@ export default {
      */
     updateNavSize() {
       if (this.width !== window.innerWidth) this.width = window.innerWidth
-      this.recalcPanelMenuHeight()
+      this.recalcDashboardHeight()
     },
 
     /**
@@ -873,7 +869,7 @@ NAV_CONF_HEIGHT = auto
   flex-direction: column
   overflow: hidden
 
-  &[menu-opened]
+  &[dashboard-opened]
     > .dimmer
       z-index: 999
       opacity: 1

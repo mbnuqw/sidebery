@@ -14,7 +14,7 @@
     @mousedown="onMouseDown"
     @mouseup.prevent="onMouseUp"
     @mouseleave="onMouseLeave"
-    @dblclick="onDoubleClick")
+    @dblclick.stop="onDoubleClick")
   .drag-layer(draggable="true"
     @dragstart="onDragStart"
     @dragenter="onDragEnter"

@@ -55,7 +55,7 @@ export default {
     commit('closeCtxMenu')
     commit('resetSelection')
     commit('setPanel', index)
-    if (state.panelMenuOpened) EventBus.$emit('openPanelMenu', state.panelIndex)
+    if (state.dashboardOpened) EventBus.$emit('openDashboard', state.panelIndex)
     if (state.createNewTabOnEmptyPanel) {
       let panel = getters.panels[state.panelIndex]
       if (panel.tabs && panel.tabs.length === 0) {
@@ -136,7 +136,7 @@ export default {
       dispatch('activateLastActiveTabOf', state.panelIndex)
     }
 
-    if (state.panelMenuOpened) EventBus.$emit('openPanelMenu', state.panelIndex)
+    if (state.dashboardOpened) EventBus.$emit('openDashboard', state.panelIndex)
     if (state.createNewTabOnEmptyPanel) {
       let panel = getters.panels[state.panelIndex]
       if (panel.tabs && panel.tabs.length === 0) {

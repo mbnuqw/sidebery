@@ -56,7 +56,7 @@ export default {
   lockedTabs: [],
   lockedPanels: [],
   proxiedPanels: [],
-  panelMenuOpened: false,
+  dashboardOpened: false,
   recalcScrollNeeded: false,
   selectedTabs: [],
   updatedTabs: {},
