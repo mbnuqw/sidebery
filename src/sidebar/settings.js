@@ -8,7 +8,6 @@ export const SETTINGS_OPTIONS = {
   tabsPanelRightClickActionOpts: ['next', 'dash', 'none'],
   fontSizeOpts: ['xs', 's', 'm', 'l', 'xl', 'xxl'],
   themeOpts: ['dark', 'light'],
-  snapshotsLimitOpts: ['1d', '1w', '1m']
 }
 
 export const DEFAULT_SETTINGS = {
@@ -43,5 +42,4 @@ export const DEFAULT_SETTINGS = {
 
   // Snapshots
   snapshotsTargets: { 'pinned': true },
-  snapshotsLimit: '1w',
 }
