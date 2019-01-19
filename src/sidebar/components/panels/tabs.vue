@@ -132,7 +132,7 @@ export default {
       if (e.button === 2) {
         const ra = State.tabsPanelRightClickAction
         if (ra === 'next') return Store.dispatch('switchPanel', 1)
-        if (ra === 'menu') return EventBus.$emit('openDashboard', State.panelIndex)
+        if (ra === 'dash') return EventBus.$emit('openDashboard', State.panelIndex)
       }
     },
 
