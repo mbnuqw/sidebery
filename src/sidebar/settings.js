@@ -5,7 +5,7 @@ export const SETTINGS_OPTIONS = {
   tabLongRightClickOpts: ['reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'none'],
   tabsPanelLeftClickActionOpts: ['prev', 'none'],
   tabsPanelDoubleClickActionOpts: ['tab', 'none'],
-  tabsPanelRightClickActionOpts: ['next', 'menu', 'none'],
+  tabsPanelRightClickActionOpts: ['next', 'dash', 'none'],
   fontSizeOpts: ['xs', 's', 'm', 'l', 'xl', 'xxl'],
   themeOpts: ['dark', 'light'],
   snapshotsLimitOpts: ['1d', '1w', '1m']

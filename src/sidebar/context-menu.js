@@ -8,7 +8,7 @@ export default class CtxMenu {
   }
 
   add(label, ...args) {
-    this.opts.push([Translate(`ctx_menu.${label}`), ...args])
+    this.opts.push([Translate(`menu.${label}`), ...args])
   }
 
   addTranslated(label, ...args) {

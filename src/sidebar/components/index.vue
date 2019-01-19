@@ -17,7 +17,7 @@
       component.panel-menu(
         v-if="panelMenu" 
         ref="menu"
-        :is="panelMenu.menu" 
+        :is="panelMenu.component" 
         :conf="panelMenu"
         :index="$store.state.panelIndex"
         @close="closePanelMenu"
@@ -52,7 +52,7 @@
     //- Settings
     .settings-btn(
       :data-active="$store.state.panelIndex === -2"
-      :title="t('sidebar.nav_settings_title')"
+      :title="t('nav.settings_tooltip')"
       @click="toggleSettings")
       svg: use(xlink:href="#icon_settings")
 
@@ -71,8 +71,8 @@
       @create-tab="createTab")
     transition(name="settings")
       settings-panel(v-if="$store.state.panelIndex === -2", :pos="settingsPanelPos")
-      styles-editor(v-if="$store.state.panelIndex === -3", :pos="stylesEditorPanelPos")
-      snapshots-list(v-if="$store.state.panelIndex === -4", :pos="snapshotsPanelPos")
+      styles-panel(v-if="$store.state.panelIndex === -3", :pos="stylesPanelPos")
+      snapshots-panel(v-if="$store.state.panelIndex === -4", :pos="snapshotsPanelPos")
 </template>
 
 
@@ -85,14 +85,13 @@ import EventBus from '../event-bus'
 import Store from '../store'
 import State, { DEFAULT_PANELS, DEFAULT_CTX } from '../store.state.js'
 import CtxMenu from './context-menu'
-import BookmarksPanel from './bookmarks'
-import TabsPanel from './tabs'
-import TabsDefaultMenu from './tabs.default.menu'
-import TabsMenu from './tabs.menu'
-import SettingsPanel from './settings'
-import WindowInput from './input.window'
-import SnapshotsList from './snapshots-list'
-import StylesEditor from './styles-editor'
+import WindowInput from './inputs/window'
+import TabsDashboard from './dashboards/containered-tabs'
+import BookmarksPanel from './panels/bookmarks'
+import TabsPanel from './panels/tabs'
+import SettingsPanel from './panels/settings'
+import SnapshotsPanel from './panels/snapshots'
+import StylesPanel from './panels/styles'
 
 Vue.directive('noise', NoiseBg)
 
@@ -104,12 +103,11 @@ export default {
   components: {
     CtxMenu,
     BookmarksPanel,
-    TabsDefaultMenu,
     TabsPanel,
     SettingsPanel,
     WindowInput,
-    SnapshotsList,
-    StylesEditor,
+    SnapshotsPanel,
+    StylesPanel,
   },
 
   data() {
@@ -148,7 +146,7 @@ export default {
     /**
      * Get styles-editor-panel position
      */
-    stylesEditorPanelPos() {
+    stylesPanelPos() {
       return State.panelIndex === -3 ? 'center' : 'right'
     },
 
@@ -203,7 +201,7 @@ export default {
           btn.hidden = true
           break
         }
-        if (!btn.menu) btn.menu = TabsMenu
+        if (!btn.component) btn.component = TabsDashboard
         btn.hidden = false
         btn.updated = this.updatedPanels.includes(k)
         if (k === State.panelIndex) btn.updated = false
@@ -802,7 +800,7 @@ export default {
       State.panelMenuOpened = true
       State.panelIndex = i
       if (i >= 0) State.activePanel = State.panelIndex
-      if (i === -1) this.panelMenu = { menu: TabsMenu, new: true }
+      if (i === -1) this.panelMenu = { component: TabsDashboard, new: true }
       else if (i >= 0) this.panelMenu = { ...this.nav[i] }
 
       await this.$nextTick()
@@ -856,7 +854,7 @@ export default {
      * Get tooltip for button
      */
     getTooltip(i) {
-      if (i === this.panels.length) return this.t('sidebar.nav_add_ctx_title')
+      if (i === this.panels.length) return this.t('nav.add_ctx_tooltip')
       if (!this.panels[i].tabs) return this.nav[i].name
       return `${this.nav[i].name}: ${this.panels[i].tabs.length}`
     },
