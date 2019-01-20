@@ -85,6 +85,7 @@ export default {
     })
     EventBus.$on('scrollToActiveTab', (panelIndex, tabId) => {
       if (panelIndex !== this.index) return
+      if (!this.$refs.tabs) return
       const tabVm = this.$refs.tabs.find(t => t.tab.id === tabId)
       if (!tabVm) return
       const activeTabAbsTop = tabVm.$el.offsetTop

@@ -33,7 +33,7 @@
       toggle-field(
         label="settings.hide_inactive_panel_tabs"
         :value="$store.state.hideInact"
-        @input="setOpt('hideInact', $event)")
+        @input="toggleHideInact")
 
     section
       h2 {{t('settings.bookmarks_title')}}
@@ -181,7 +181,7 @@
           :inline="true"
           :value="$store.state.permTabHide"
           @input="togglePermTabHide")
-        .box: .info {{t('settings.tab_hide_info')}} whats inside huh
+        .box: .info {{t('settings.tab_hide_info')}}
 
     section
       h2 {{t('settings.favi_title')}}
@@ -322,18 +322,17 @@ export default {
     async toggleHideInact() {
       State.permTabHide = await browser.permissions.contains({ permissions: ['tabHide'] })
       if (State.hideInact) {
-        this.toggleOpt('hideInact')
         Store.dispatch('showAllTabs')
       } else {
-        if (State.permTabHide) {
-          this.toggleOpt('hideInact')
-          Store.dispatch('hideInactPanelsTabs')
-        } else {
-          browser.tabs.create({
-            url: browser.runtime.getURL('permissions/tab-hide.html'),
-          })
+        if (!State.permTabHide) {
+          const url = browser.runtime.getURL('permissions/tab-hide.html')
+          browser.tabs.create({ url })
+          return
         }
+        Store.dispatch('hideInactPanelsTabs')
       }
+
+      this.toggleOpt('hideInact')
     },
 
     openStylesEditor() {
@@ -473,10 +472,10 @@ export default {
       State.permTabHide = await browser.permissions.contains({ permissions: ['tabHide'] })
 
       if (State.permTabHide) {
-        await browser.permissions.remove({ permissions: ['tabHide'] })
         await Store.dispatch('showAllTabs')
+        await browser.permissions.remove({ permissions: ['tabHide'] })
         State.hideInact = false
-        State.permTabHide = await browser.permissions.contains({ permissions: ['tabHide'] })
+        State.permTabHide = false
       } else {
         browser.tabs.create({
           url: browser.runtime.getURL('permissions/tab-hide.html'),

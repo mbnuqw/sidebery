@@ -724,6 +724,13 @@ export default {
       }
       EventBus.$emit('scrollToActiveTab', panelIndex, info.tabId)
 
+      // Reopen dashboard
+      if (State.dashboardOpened) {
+        if (this.dashboard.cookieStoreId !== this.nav[State.panelIndex].cookieStoreId) {
+          this.openDashboard(State.panelIndex)
+        }
+      }
+
       // Remove updated flag
       this.$delete(State.updatedTabs, info.tabId)
 
