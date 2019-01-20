@@ -1,6 +1,6 @@
 <template lang="pug">
 .Sidebar(
-  :menu-opened="isPanelMenuOpened"
+  :dashboard-opened="$store.state.dashboardOpened"
   @wheel="onWheel"
   @contextmenu.prevent.stop=""
   @dragover.prevent=""
@@ -10,19 +10,18 @@
   @mousedown="onMouseDown")
   ctx-menu
   window-input(:is-active="!!winChoosing")
-  snapshots-list
   .bg(v-noise:300.g:12:af.a:0:42.s:0:9="", :style="bgPosStyle")
-  .dimmer(@mousedown="closePanelMenu")
+  .dimmer(@mousedown="closeDashboard")
   .nav(ref="nav")
     keep-alive
       component.panel-menu(
-        v-if="panelMenu" 
+        v-if="dashboard"
         ref="menu"
-        :is="panelMenu.menu" 
-        :conf="panelMenu"
+        :is="dashboard.component" 
+        :conf="dashboard"
         :index="$store.state.panelIndex"
-        @close="closePanelMenu"
-        @height="recalcPanelMenuHeight")
+        @close="closeDashboard"
+        @height="recalcDashboardHeight")
 
     .nav-strip(@wheel="onNavWheel")
       .panel-btn(
@@ -36,7 +35,7 @@
         :is-hidden="btn.hidden"
         :class="'rel-' + btn.relIndex"
         @click="onNavClick(i)"
-        @mousedown.right="openPanelMenu(i)")
+        @mousedown.right="openDashboard(i)")
         svg(:style="{fill: btn.colorCode}")
           use(:xlink:href="'#' + btn.icon")
         .proxy-badge
@@ -50,17 +49,10 @@
           each n in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
             .spinner-stick(class='spinner-stick-' + n)
 
-    //- Add new container
-    .add-btn(
-      v-if="!isPrivate"
-      :title="t('sidebar.nav_add_ctx_title')"
-      @click="openPanelMenu(-1)")
-      svg: use(xlink:href="#icon_plus_v2")
-
     //- Settings
     .settings-btn(
-      :data-active="$store.state.settingsOpened"
-      :title="t('sidebar.nav_settings_title')"
+      :data-active="$store.state.panelIndex === -2"
+      :title="t('nav.settings_tooltip')"
       @click="toggleSettings")
       svg: use(xlink:href="#icon_settings")
 
@@ -78,7 +70,9 @@
       :active="panelIs(i)"
       @create-tab="createTab")
     transition(name="settings")
-      settings-panel(v-if="$store.state.settingsOpened", :pos="settingsPanelPos")
+      settings-panel(v-if="$store.state.panelIndex === -2", :pos="settingsPanelPos")
+      styles-panel(v-if="$store.state.panelIndex === -3", :pos="stylesPanelPos")
+      snapshots-panel(v-if="$store.state.panelIndex === -4", :pos="snapshotsPanelPos")
 </template>
 
 
@@ -91,34 +85,35 @@ import EventBus from '../event-bus'
 import Store from '../store'
 import State, { DEFAULT_PANELS, DEFAULT_CTX } from '../store.state.js'
 import CtxMenu from './context-menu'
-import BookmarksPanel from './bookmarks'
-import TabsPanel from './tabs'
-import TabsDefaultMenu from './tabs.default.menu'
-import TabsMenu from './tabs.menu'
-import SettingsPanel from './settings'
-import WindowInput from './input.window'
-import SnapshotsList from './snapshots-list'
+import WindowInput from './inputs/window'
+import TabsDashboard from './dashboards/containered-tabs'
+import BookmarksPanel from './panels/bookmarks'
+import TabsPanel from './panels/tabs'
+import SettingsPanel from './panels/settings'
+import SnapshotsPanel from './panels/snapshots'
+import StylesPanel from './panels/styles'
 
 Vue.directive('noise', NoiseBg)
 
 const URL_HOST_PATH_RE = /^([a-z0-9-]{1,63}\.)+\w+(:\d+)?\/[A-Za-z0-9-._~:/?#[\]%@!$&'()*+,;=]*$/
+const ADD_CTX_BTN = { icon: 'icon_plus_v2', hidden: false }
 
 // --- Vue Component ---
 export default {
   components: {
     CtxMenu,
     BookmarksPanel,
-    TabsDefaultMenu,
     TabsPanel,
     SettingsPanel,
     WindowInput,
-    SnapshotsList,
+    SnapshotsPanel,
+    StylesPanel,
   },
 
   data() {
     return {
       width: 250,
-      panelMenu: null,
+      dashboard: null,
       loading: [],
       loadingTimers: [],
     }
@@ -129,10 +124,6 @@ export default {
    */
   computed: {
     ...mapGetters(['winChoosing', 'isPrivate', 'defaultCtxId', 'panels', 'activePanel']),
-
-    isPanelMenuOpened() {
-      return !!State.panelMenuOpened
-    },
 
     /**
      * Background transform style for parallax fx
@@ -145,14 +136,35 @@ export default {
      * Get settings-panel position
      */
     settingsPanelPos() {
-      return State.settingsOpened ? 'center' : 'right'
+      return State.panelIndex === -2 ? 'center' : 'right'
+    },
+
+    /**
+     * Get styles-editor-panel position
+     */
+    stylesPanelPos() {
+      return State.panelIndex === -3 ? 'center' : 'right'
+    },
+
+    /**
+     * Get styles-editor-panel position
+     */
+    snapshotsPanelPos() {
+      return State.panelIndex === -4 ? 'center' : 'right'
+    },
+
+    /**
+     * Count of visible nav buttons
+     */
+    countOfVisibleBtns() {
+      return this.nav.filter(b => !b.hidden).length
     },
 
     /**
      * Get list of navigational buttons
      */
     nav() {
-      let cap = ~~((this.width - 56) / 34)
+      let cap = ~~((this.width - 32) / 34)
       let halfCap = cap >> 1
       let invModCap = (cap % halfCap) ^ 1
 
@@ -185,11 +197,16 @@ export default {
           btn.hidden = true
           break
         }
-        if (!btn.menu) btn.menu = TabsMenu
+        if (!btn.component) btn.component = TabsDashboard
         btn.hidden = false
         btn.updated = this.updatedPanels.includes(k)
         if (k === State.panelIndex) btn.updated = false
         out.push(btn)
+      }
+
+      if (!State.private) {
+        ADD_CTX_BTN.hidden = false
+        out.push(ADD_CTX_BTN)
       }
 
       let p = State.panelIndex - hideOffset
@@ -248,7 +265,7 @@ export default {
     window.addEventListener('resize', onresize.func)
 
     // --- Handle global events
-    EventBus.$on('openPanelMenu', panelIndex => this.openPanelMenu(panelIndex))
+    EventBus.$on('openDashboard', panelIndex => this.openDashboard(panelIndex))
     EventBus.$on('panelLoadingStart', panelIndex => this.onPanelLoadingStart(panelIndex))
     EventBus.$on('panelLoadingEnd', panelIndex => this.onPanelLoadingEnd(panelIndex))
     EventBus.$on('panelLoadingOk', panelIndex => this.onPanelLoadingOk(panelIndex))
@@ -411,6 +428,7 @@ export default {
      * Navigation button click hadler
      */
     onNavClick(i) {
+      if (i === this.panels.length) return this.openDashboard(-1)
       if (State.panelIndex !== i) {
         Store.dispatch('switchToPanel', i)
       } else if (this.panels[i].cookieStoreId) {
@@ -684,7 +702,6 @@ export default {
 
       // Reset selectin and close settings
       Store.commit('resetSelection')
-      if (State.settingsOpened) State.settingsOpened = false
 
       // Update tabs and find activated one
       let tab, isActivated
@@ -707,8 +724,11 @@ export default {
       }
       EventBus.$emit('scrollToActiveTab', panelIndex, info.tabId)
 
-      if (State.panelMenuOpened) {
-        this.openPanelMenu(panelIndex)
+      // Reopen dashboard
+      if (State.dashboardOpened) {
+        if (this.dashboard.cookieStoreId !== this.nav[State.panelIndex].cookieStoreId) {
+          this.openDashboard(State.panelIndex)
+        }
       }
 
       // Remove updated flag
@@ -763,7 +783,7 @@ export default {
      * Get position class for panel by index.
      */
     getPanelPos(i) {
-      if (this.settingsOpened) return 'left'
+      if (State.panelIndex < 0) return 'left'
       if (State.panelIndex < i) return 'right'
       if (State.panelIndex === i) return 'center'
       if (State.panelIndex > i) return 'left'
@@ -773,15 +793,16 @@ export default {
     /**
      * Open panel menu by nav index.
      */
-    async openPanelMenu(i) {
+    async openDashboard(i) {
+      if (i === this.panels.length) i = -1
       Store.commit('closeSettings')
       Store.commit('closeCtxMenu')
       Store.commit('resetSelection')
-      State.panelMenuOpened = true
+      State.dashboardOpened = true
       State.panelIndex = i
       if (i >= 0) State.activePanel = State.panelIndex
-      if (i === -1) this.panelMenu = { menu: TabsMenu, new: true }
-      else if (i >= 0) this.panelMenu = { ...this.nav[i] }
+      if (i === -1) this.dashboard = { component: TabsDashboard, new: true }
+      else if (i >= 0) this.dashboard = { ...this.nav[i] }
 
       await this.$nextTick()
       if (this.$refs.menu && this.$refs.menu.open) this.$refs.menu.open()
@@ -792,9 +813,9 @@ export default {
     /**
      * Wait for rerendering and calc panels menu height.
      */
-    async recalcPanelMenuHeight() {
+    async recalcDashboardHeight() {
       await this.$nextTick()
-      if (!State.panelMenuOpened) return
+      if (!State.dashboardOpened) return
       let h = this.$refs.menu ? this.$refs.menu.$el.offsetHeight : 336
       this.$refs.nav.style.transform = `translateY(${h - 336}px)`
     },
@@ -802,13 +823,13 @@ export default {
     /**
      * Close nav menu.
      */
-    closePanelMenu() {
-      State.panelMenuOpened = false
+    closeDashboard() {
+      State.dashboardOpened = false
       if (State.panelIndex < 0 && State.lastPanelIndex >= 0) {
         State.panelIndex = State.lastPanelIndex
       }
       this.$refs.nav.style.transform = 'translateY(0px)'
-      setTimeout(() => (this.panelMenu = null), 120)
+      setTimeout(() => (this.dashboard = null), 120)
     },
     // ---
 
@@ -816,8 +837,8 @@ export default {
      * Toggle settings
      */
     toggleSettings() {
-      if (State.panelMenuOpened) this.closePanelMenu()
-      if (State.settingsOpened) Store.commit('closeSettings')
+      if (State.dashboardOpened) this.closeDashboard()
+      if (State.panelIndex === -2) Store.commit('closeSettings')
       else Store.commit('openSettings')
       Store.commit('resetSelection')
     },
@@ -827,13 +848,14 @@ export default {
      */
     updateNavSize() {
       if (this.width !== window.innerWidth) this.width = window.innerWidth
-      this.recalcPanelMenuHeight()
+      this.recalcDashboardHeight()
     },
 
     /**
      * Get tooltip for button
      */
     getTooltip(i) {
+      if (i === this.panels.length) return this.t('nav.add_ctx_tooltip')
       if (!this.panels[i].tabs) return this.nav[i].name
       return `${this.nav[i].name}: ${this.panels[i].tabs.length}`
     },
@@ -856,7 +878,7 @@ NAV_CONF_HEIGHT = auto
   flex-direction: column
   overflow: hidden
 
-  &[menu-opened]
+  &[dashboard-opened]
     > .dimmer
       z-index: 999
       opacity: 1
@@ -896,7 +918,7 @@ NAV_CONF_HEIGHT = auto
   pos(b: 0, l: 0)
   size(100%, NAV_CONF_HEIGHT, max-h: calc(100vh + 200px))
   padding: 300px 0 32px
-  background-color: var(--c-bg)
+  background-color: var(--bg)
   box-shadow: 0 1px 12px 0 #00000056, 0 1px 0 0 #00000012
   opacity: 0
   z-index: 0
@@ -1067,7 +1089,7 @@ NAV_CONF_HEIGHT = auto
   > svg
     box(absolute)
     size(16px, same)
-    fill: var(--c-act-fg)
+    fill: var(--nav-btn-fg)
     opacity: .4
     transition: opacity var(--d-fast)
 

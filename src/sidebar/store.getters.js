@@ -1,5 +1,5 @@
 import { DEFAULT_CTX, PRIVATE_CTX, DEFAULT_PANELS } from './store.state'
-import TabsPanel from './components/tabs.vue'
+import TabsPanel from './components/panels/tabs.vue'
 
 export default {
   bgNoise: s => s.bgNoise,

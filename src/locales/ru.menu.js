@@ -1,0 +1,33 @@
+export default {
+  // --- Bookmark
+  'menu.bookmark.open_in_new_window': { message: 'Открыть в новом окне' },
+  'menu.bookmark.open_in_new_priv_window': { message: 'Открыть в новом приватном окне' },
+  'menu.bookmark.open_in_default_panel': { message: 'Открыть' },
+  'menu.bookmark.open_in_': { message: 'Открыть в ' },
+  'menu.bookmark.create_bookmark': { message: 'Создать закладку' },
+  'menu.bookmark.create_folder': { message: 'Создать папку' },
+  'menu.bookmark.create_separator': { message: 'Создать разделитель' },
+  'menu.bookmark.edit_bookmark': { message: 'Редактировать' },
+  'menu.bookmark.delete_bookmark': { message: 'Удалить' },
+
+  // --- Tab
+  'menu.tab.move_to_new_window': { message: 'Переместить в новое окно' },
+  'menu.tab.move_to_new_priv_window': { message: 'Переместить в новое приватное окно' },
+  'menu.tab.move_to_another_window': { message: 'Переместить в другое окно' },
+  'menu.tab.move_to_window_': { message: 'Переместить в окно...' },
+  'menu.tab.reopen_in_priv_window': { message: 'Открыть в приватном окне' },
+  'menu.tab.reopen_in_default_panel': { message: 'Открыть в стандартном контейнере' },
+  'menu.tab.reopen_in_': { message: 'Открыть в ' },
+  'menu.tab.reopen_in_another_window': { message: 'Открыть в другом окне' },
+  'menu.tab.reopen_in_window_': { message: 'Открыть в окне...' },
+  'menu.tab.pin': { message: 'Закрепить' },
+  'menu.tab.unpin': { message: 'Открепить' },
+  'menu.tab.mute': { message: 'Выключить звук' },
+  'menu.tab.unmute': { message: 'Включить звук' },
+  'menu.tab.clear_cookies': { message: 'Удалить куки' },
+  'menu.tab.discard': { message: 'Выгрузить' },
+  'menu.tab.bookmarks': { message: 'Создать закладки' },
+  'menu.tab.reload': { message: 'Перезагрузить' },
+  'menu.tab.duplicate': { message: 'Дублировать' },
+  'menu.tab.close': { message: 'Закрыть' },
+}

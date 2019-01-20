@@ -1,6 +1,6 @@
 {
   "name": "nav-center",
-  "version": "1.8.4",
+  "version": "1.9.0",
   "description": "Navigation ext",
   "main": "index.js",
   "scripts": {
@@ -9,7 +9,7 @@
     "dev.ext.ru": "web-ext run --source-dir ./addon -f firefox --keep-profile-changes --firefox-profile ./build/profile-ru",
     "dev": "node ./build/debug.js en",
     "dev.ru": "node ./build/debug.js ru",
-    "build.sidebar": "parcel build ./src/sidebar/index.html -d ./addon/sidebar/ --public-url ./ --no-autoinstall",
+    "build.sidebar": "parcel build ./src/sidebar/index.html -d ./addon/sidebar/ --public-url ./ --no-autoinstall --no-source-maps",
     "build.ext": "web-ext build --source-dir ./addon -a dist/ -i *.lock ./package.json",
     "build": "node ./build/release.js",
     "lint": "web-ext lint -s ./addon",
@@ -59,6 +59,11 @@
     "Firefox > 60"
   ],
   "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "vue"
+    ],
     "setupFiles": [
       "./test/web-ext-setup.js",
       "./test/env-setup.js"

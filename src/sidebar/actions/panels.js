@@ -55,7 +55,7 @@ export default {
     commit('closeCtxMenu')
     commit('resetSelection')
     commit('setPanel', index)
-    if (state.panelMenuOpened) EventBus.$emit('openPanelMenu', state.panelIndex)
+    if (state.dashboardOpened) EventBus.$emit('openDashboard', state.panelIndex)
     if (state.createNewTabOnEmptyPanel) {
       let panel = getters.panels[state.panelIndex]
       if (panel.tabs && panel.tabs.length === 0) {
@@ -85,7 +85,12 @@ export default {
 
     commit('closeCtxMenu')
     commit('resetSelection')
-    if (state.settingsOpened) return commit('closeSettings')
+
+    // Restore prev front panel
+    if (state.panelIndex < 0) {
+      if (state.lastPanelIndex < 0) state.panelIndex = 0
+      else state.panelIndex = state.lastPanelIndex
+    }
 
     // Next
     if (dir > 0) {
@@ -131,7 +136,7 @@ export default {
       dispatch('activateLastActiveTabOf', state.panelIndex)
     }
 
-    if (state.panelMenuOpened) EventBus.$emit('openPanelMenu', state.panelIndex)
+    if (state.dashboardOpened) EventBus.$emit('openDashboard', state.panelIndex)
     if (state.createNewTabOnEmptyPanel) {
       let panel = getters.panels[state.panelIndex]
       if (panel.tabs && panel.tabs.length === 0) {

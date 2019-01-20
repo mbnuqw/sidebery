@@ -9,6 +9,7 @@ const Alph = [
   'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
   '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '_',
 ]
+const UNDERSCORE_RE = /_/g
 
 /**
  *  Generate base64-like uid
@@ -44,7 +45,7 @@ export function Uid() {
  */
 function Asap(cb, delay) {
   const ctx = { busy: false }
-  ctx.func = (a) => {
+  ctx.func = a => {
     if (ctx.busy) return
     ctx.busy = true
 
@@ -108,7 +109,7 @@ function BytesToStr(bytes) {
  * Get byte len of string
  */
 function StrSize(str) {
-  const bytes = encodeURI(str).split(/%..|./).length - 1
+  const bytes = new Blob([str]).size
   return BytesToStr(bytes)
 }
 
@@ -116,13 +117,14 @@ function StrSize(str) {
  * Get all windows and check which current
  */
 async function GetAllWindows() {
-  return Promise.all([browser.windows.getCurrent(), browser.windows.getAll()])
-    .then(([current, all]) => {
+  return Promise.all([browser.windows.getCurrent(), browser.windows.getAll()]).then(
+    ([current, all]) => {
       return all.map(w => {
         if (w.id === current.id) w.current = true
         return w
       })
-    })
+    }
+  )
 }
 
 /**
@@ -204,6 +206,13 @@ function UElapsed(sec = 0, nowSec = 0) {
   return `${elapsed} ${PlurTrans('elapsed.year', elapsed)}`
 }
 
+/**
+ * Convert key to css variable --kebab-case
+ */
+function CSSVar(key) {
+  return '--' + key.replace(UNDERSCORE_RE, '-')
+}
+
 export default {
   Uid,
   Asap,
@@ -217,4 +226,5 @@ export default {
   UDate,
   UTime,
   UElapsed,
+  CSSVar,
 }

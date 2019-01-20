@@ -1,0 +1,33 @@
+export default {
+  // --- Bookmark
+  'menu.bookmark.open_in_new_window': { message: 'Open in new window' },
+  'menu.bookmark.open_in_new_priv_window': { message: 'Open in new private window' },
+  'menu.bookmark.open_in_default_panel': { message: 'Open' },
+  'menu.bookmark.open_in_': { message: 'Open in ' },
+  'menu.bookmark.create_bookmark': { message: 'Create bookmark' },
+  'menu.bookmark.create_folder': { message: 'Create folder' },
+  'menu.bookmark.create_separator': { message: 'Create separator' },
+  'menu.bookmark.edit_bookmark': { message: 'Edit' },
+  'menu.bookmark.delete_bookmark': { message: 'Delete' },
+
+  // --- Tab
+  'menu.tab.move_to_new_window': { message: 'Move to new window' },
+  'menu.tab.move_to_new_priv_window': { message: 'Move to new private window' },
+  'menu.tab.move_to_another_window': { message: 'Move to another window' },
+  'menu.tab.move_to_window_': { message: 'Move to window...' },
+  'menu.tab.reopen_in_priv_window': { message: 'Reopen in private window' },
+  'menu.tab.reopen_in_default_panel': { message: 'Reopen in default container' },
+  'menu.tab.reopen_in_': { message: 'Reopen in ' },
+  'menu.tab.reopen_in_another_window': { message: 'Reopen in another window' },
+  'menu.tab.reopen_in_window_': { message: 'Reopen in window...' },
+  'menu.tab.pin': { message: 'Pin' },
+  'menu.tab.unpin': { message: 'Unpin' },
+  'menu.tab.mute': { message: 'Mute' },
+  'menu.tab.unmute': { message: 'Unmute' },
+  'menu.tab.clear_cookies': { message: 'Clear cookies' },
+  'menu.tab.discard': { message: 'Discard' },
+  'menu.tab.bookmarks': { message: 'Create bookmarks' },
+  'menu.tab.reload': { message: 'Reload' },
+  'menu.tab.duplicate': { message: 'Duplicate' },
+  'menu.tab.close': { message: 'Close' },
+}

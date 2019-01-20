@@ -42,11 +42,13 @@ export default {
       }
     })
 
+    // If all ok, create snapshot and load
     if (tabs.length === 0) return
     const snapshot = { tabs, ctxs, time }
+    state.snapshots = await dispatch('loadSnapshots')
 
     // Check if there are changes from last five snapshots
-    for (let s of state.snapshots) {
+    for (let s of state.snapshots.slice(0, 5)) {
       let same = true
       for (let t of snapshot.tabs) {
         same =
@@ -61,26 +63,19 @@ export default {
       if (same) return
     }
 
-    // Put to store
+    // Put new one to store
     state.snapshots.unshift(snapshot)
-    if (state.snapshots.length > 5) {
-      state.snapshots = state.snapshots.slice(0, 5)
+
+    // Remove last snapshots if there are too many of them
+    const size = new Blob([JSON.stringify(state.snapshots)]).size
+    if (size > 655360) {
+      state.snapshots.splice(-5, 5)
     }
 
-    // Get all snapshots and remove all beyond limit
-    const snapshots = await dispatch('loadAllSnapshots')
-    let limit = 0
-    if (state.snapshotsLimit === '1d') limit = 86400
-    if (state.snapshotsLimit === '1w') limit = 604800
-    if (state.snapshotsLimit === '1m') limit = 18144000
-
-    let i = 0
-    for (; i < snapshots.length; i++) {
-      if (time - limit < snapshots[i].time) break
-    }
-    snapshots.splice(0, i)
-    snapshots.push(JSON.parse(JSON.stringify(state.snapshots[0])))
+    // Store snapshots and unload from mem
+    const snapshots = JSON.parse(JSON.stringify(state.snapshots)).reverse()
     await browser.storage.local.set({ snapshots })
+    dispatch('unloadSnapshots')
   },
 
   /**
@@ -124,17 +119,33 @@ export default {
   /**
    * Load snapshots.
    */
-  async loadSnapshots({ state }) {
+  async loadSnapshots() {
     const ans = await browser.storage.local.get('snapshots')
-    if (!ans.snapshots) return []
-    state.snapshots = ans.snapshots.slice(-5).reverse()
+    return ans.snapshots.reverse() || []
   },
 
   /**
-   * Load all snapshots.
+   * Unload snapshots.
    */
-  async loadAllSnapshots() {
-    const ans = await browser.storage.local.get('snapshots')
-    return ans.snapshots || []
+  unloadSnapshots({ state }) {
+    state.snapshots = []
+  },
+
+  /**
+   * Open snapshots viewer
+   */
+  async openSnapshotsViewer({ state, dispatch }) {
+    state.snapshots = await dispatch('loadSnapshots')
+    // state.snapshots.reverse()
+    if (state.panelIndex >= 0) state.lastPanelIndex = state.panelIndex
+    state.panelIndex = -4
+  },
+
+  /**
+   * Close snapshots viewer
+   */
+  async closeSnapshotsViewer({ state }) {
+    state.lastPanelIndex = state.panelIndex
+    state.panelIndex = state.lastPanelIndex
   },
 }

@@ -35,7 +35,9 @@ export default {
   },
 
   /**
-   * Try to save some state values
+   * Try to save some state values.
+   * ps. use JSON.parse(JSON.str...()) to remove vue
+   * getters/setters and other hidden stuff
    */
   async saveState({ state }) {
     if (!state.stateLoaded) return
