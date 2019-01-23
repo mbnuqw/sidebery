@@ -14,7 +14,7 @@
     @mousedown="onMouseDown"
     @mouseup.prevent="onMouseUp"
     @mouseleave="onMouseLeave"
-    @dblclick.stop="onDoubleClick")
+    @dblclick.prevent.stop="onDoubleClick")
   .drag-layer(draggable="true"
     @dragstart="onDragStart"
     @dragenter="onDragEnter"
@@ -129,11 +129,10 @@ export default {
      * Mousedown handler
      */
     onMouseDown(e) {
-      e.stopPropagation()
-      e.preventDefault()
-
       if (e.button === 1) {
         this.close()
+        e.preventDefault()
+        e.stopPropagation()
       }
 
       if (e.button === 0) {
@@ -141,6 +140,7 @@ export default {
         if (this.mclickTimeout) return
 
         e.preventDefault()
+        e.stopPropagation()
         this.$emit('mdl', e, this)
         this.hodorL = setTimeout(() => {
           let llc = State.tabLongLeftClick
@@ -158,6 +158,7 @@ export default {
 
       if (e.button === 2) {
         e.preventDefault()
+        e.stopPropagation()
         this.$emit('mdr', e, this)
         this.hodorR = setTimeout(() => {
           let lrc = State.tabLongRightClick

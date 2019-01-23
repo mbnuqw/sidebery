@@ -29,8 +29,7 @@
         :tab="t"
         :selected="isSelected(t.id)"
         @mdl="onTabMouseDownLeft(i, ...arguments)"
-        @mdr="onTabMouseDownRight(i, ...arguments)"
-        @closedown="$emit('closedown', i)")
+        @mdr="onTabMouseDownRight(i, ...arguments)")
 </template>
 
 

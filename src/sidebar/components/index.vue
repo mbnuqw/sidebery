@@ -357,20 +357,6 @@ export default {
     },
 
     /**
-     * Drag enter event handler
-     */
-    onDragEnter() {
-      // console.log('[DEBUG] DRAG ENTER', e.dataTransfer);
-    },
-
-    /**
-     * Drag leave event handler
-     */
-    onDragLeave() {
-      // console.log('[DEBUG] DRAG LEAVE', e.dataTransfer);
-    },
-
-    /**
      * Drop event handler
      */
     onDrop(e) {
