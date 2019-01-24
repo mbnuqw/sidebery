@@ -311,6 +311,8 @@ export default {
      * Sidebar wheel event handler
      */
     onWheel(e) {
+      if (State.ctxMenu) Store.commit('closeCtxMenu')
+
       if (State.hScrollThroughPanels) {
         if (e.deltaX > 0) return Store.dispatch('switchPanel', 1)
         if (e.deltaX < 0) return Store.dispatch('switchPanel', -1)
