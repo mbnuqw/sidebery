@@ -17,9 +17,6 @@ describe('Vuex getters', () => {
   test('ctxMenuOpened', () => {
     expect(Getters.ctxMenuOpened({ ctxMenu: {} })).toBe(true)
   })
-  test('winChoosing', () => {
-    expect(Getters.winChoosing({ winChoosing: [] })).toEqual(expect.arrayContaining([]))
-  })
   test('tabs', () => {
     expect(Getters.tabs({ tabs: [1, 2, 3] })).toEqual(expect.arrayContaining([1, 2, 3]))
   })

@@ -38,14 +38,14 @@ export default {
   },
 
   /**
-   * Create new tab
+   * Create new tab in current window
    */
-  createTab({ getters }, ctxId) {
+  createTab({ state, getters }, ctxId) {
     if (!ctxId) return
     let p = getters.panels.find(p => p.cookieStoreId === ctxId)
     if (!p || !p.tabs) return
     let index = p.tabs.length ? p.endIndex + 1 : p.startIndex
-    browser.tabs.create({ index, cookieStoreId: ctxId })
+    browser.tabs.create({ index, cookieStoreId: ctxId, windowId: state.windowId })
   },
 
   /**

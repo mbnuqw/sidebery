@@ -1,7 +1,7 @@
 {
   "name": "nav-center",
-  "version": "1.9.0",
-  "description": "Navigation ext",
+  "version": "1.9.1",
+  "description": "Manage your tabs and bookmarks in sidebar",
   "main": "index.js",
   "scripts": {
     "dev.sidebar": "parcel watch ./src/sidebar/index.html -d ./addon/sidebar/ --public-url ./ --no-autoinstall",

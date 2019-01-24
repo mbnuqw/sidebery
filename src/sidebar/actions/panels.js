@@ -18,6 +18,9 @@ export default {
     return await browser.contextualIdentities.create(details)
   },
 
+  /**
+   * Check context binding to bookmarks dir
+   */
   async checkContextBindings({ state }, ctxId) {
     const ctx = state.ctxs.find(c => c.cookieStoreId === ctxId)
     if (!ctx) return
@@ -154,7 +157,7 @@ export default {
    * Find active tab panel and switch to it.
    */
   goToActiveTabPanel({ getters, dispatch }) {
-    let i = Utils.getPanelIndex(getters.panels)
+    let i = Utils.GetPanelIndex(getters.panels)
     if (i === -1) return
     dispatch('switchToPanel', i)
   },
@@ -167,12 +170,18 @@ export default {
     else dispatch('turnOffProxy')
   },
 
+  /**
+   * Turn on proxy
+   */
   turnOnProxy() {
     if (!browser.proxy.onRequest.hasListener(ReqHandler)) {
       browser.proxy.onRequest.addListener(ReqHandler, { urls: ['<all_urls>'] })
     }
   },
 
+  /**
+   * Turn off proxy
+   */
   turnOffProxy() {
     if (browser.proxy.onRequest.hasListener(ReqHandler)) {
       browser.proxy.onRequest.removeListener(ReqHandler)

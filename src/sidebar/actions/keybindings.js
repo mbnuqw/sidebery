@@ -4,7 +4,7 @@ export default {
   /**
    * Load keybindings
    */
-  async loadKebindings({ state }) {
+  async loadKeybindings({ state }) {
     let commands = await browser.commands.getAll()
     state.keybindings = commands
   },
@@ -29,7 +29,7 @@ export default {
     })
 
     setTimeout(() => {
-      dispatch('loadKebindings')
+      dispatch('loadKeybindings')
     }, 120)
   },
 

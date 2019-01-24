@@ -29,6 +29,7 @@ export default {
    */
   async chooseWin({ state }) {
     state.winChoosing = []
+    state.panelIndex = -5
     let wins = await browser.windows.getAll({ populate: true })
     wins = wins.filter(w => !w.focused)
 
@@ -44,6 +45,7 @@ export default {
           screen,
           choose: () => {
             state.winChoosing = null
+            state.panelIndex = state.lastPanelIndex
             res(w.id)
           },
         }

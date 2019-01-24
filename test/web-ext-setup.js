@@ -2,11 +2,19 @@ const MsgHandlers = []
 
 const browser = {
   bookmarks: {},
+  commands: {
+    cmds: [],
+    getAll: () => Promise.resolve(browser.commands.cmds),
+  },
+  contextualIdentities: {},
   extension: {
     inIncognitoContext: false,
   },
   i18n: {
     getUILanguage: () => 'en',
+  },
+  proxy: {
+    onRequest: {},
   },
   runtime: {
     sendMessage: msg => {

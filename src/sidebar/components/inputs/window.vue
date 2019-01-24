@@ -1,17 +1,14 @@
 <template lang="pug">
-.WinInput(v-noise:300.g:12:af.a:0:42.s:0:9="", :ready="isReady", @click="cancel")
+.WinInput(:ready="isReady", @click="cancel")
   scroll-box(ref="scrollBox")
-    .box(v-for="(w, i) in winChoosing", :key="w.id")
+    .box(v-for="(w, i) in $store.state.winChoosing", :key="w.id")
       .win(@click.stop="w.choose")
         .title {{w.title}}
         img(:src="w.screen", @load="onScreenLoad(i)")
-  .ctrls
-    .btn {{t('btn.cancel')}}
 </template>
 
 
 <script>
-import { mapGetters } from 'vuex'
 import State from '../../store.state'
 import ScrollBox from '../scroll-box'
 
@@ -25,8 +22,6 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['winChoosing']),
-
     isReady() {
       if (!State.winChoosing || !State.winChoosing.length) return false
       return State.winChoosing.reduce((o, w) => o && w.loaded, true)
@@ -45,6 +40,7 @@ export default {
       })
       setTimeout(() => {
         State.winChoosing = null
+        State.panelIndex = State.lastPanelIndex
       }, 120)
     },
   },
@@ -60,15 +56,8 @@ export default {
   pos(0, 0)
   size(100%, same)
   flex-direction: column
-  z-index: -1
-  background-color: var(--bg)
-  opacity: 0
-  transition: opacity var(--d-fast), z-index var(--d-fast)
-.WinInput[is-active]
-  opacity: 1
-  z-index: 1500
-  
-.WinInput[is-active][ready]
+
+.WinInput[ready]
   .box
     opacity: 1
     transform: translateY(0)
