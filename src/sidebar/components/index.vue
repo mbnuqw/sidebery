@@ -9,7 +9,6 @@
   @mouseleave="onMouseLeave"
   @mousedown="onMouseDown")
   ctx-menu
-  window-input(:is-active="!!winChoosing")
   .bg(v-noise:300.g:12:af.a:0:42.s:0:9="", :style="bgPosStyle")
   .dimmer(@mousedown="closeDashboard")
   .nav(ref="nav")
@@ -73,6 +72,7 @@
       settings-panel(v-if="$store.state.panelIndex === -2", :pos="settingsPanelPos")
       styles-panel(v-if="$store.state.panelIndex === -3", :pos="stylesPanelPos")
       snapshots-panel(v-if="$store.state.panelIndex === -4", :pos="snapshotsPanelPos")
+      window-input(v-if="$store.state.panelIndex === -5", :pos="windowInputPos")
 </template>
 
 
@@ -123,7 +123,7 @@ export default {
    * --- Computed ---
    */
   computed: {
-    ...mapGetters(['winChoosing', 'isPrivate', 'defaultCtxId', 'panels', 'activePanel']),
+    ...mapGetters(['isPrivate', 'defaultCtxId', 'panels', 'activePanel']),
 
     /**
      * Background transform style for parallax fx
@@ -151,6 +151,13 @@ export default {
      */
     snapshotsPanelPos() {
       return State.panelIndex === -4 ? 'center' : 'right'
+    },
+
+    /**
+     * Get window-input-panel position
+     */
+    windowInputPos() {
+      return State.panelIndex === -5 ? 'center' : 'right'
     },
 
     /**

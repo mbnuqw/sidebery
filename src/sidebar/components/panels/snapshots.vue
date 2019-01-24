@@ -43,7 +43,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['winChoosing', 'defaultCtxId']),
+    ...mapGetters(['defaultCtxId']),
   },
 
   beforeDestroy() {
