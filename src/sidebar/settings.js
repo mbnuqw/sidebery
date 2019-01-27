@@ -29,6 +29,7 @@ export const DEFAULT_SETTINGS = {
   tabsPanelLeftClickAction: 'none',
   tabsPanelDoubleClickAction: 'tab',
   tabsPanelRightClickAction: 'none',
+  tabsTree: false,
   
   // Bookmarks
   openBookmarkNewTab: false,

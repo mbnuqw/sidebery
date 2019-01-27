@@ -18,6 +18,7 @@ export default {
   'settings.show_tab_rm_btn': { message: 'Показывать кнопку закрытия таба при наведении курсора' },
   'settings.no_empty_default': { message: 'Создавать новую вкладку при опустошении стандартной панели' },
   'settings.hide_inactive_panel_tabs': { message: 'Скрывать табы неактивных панелей' },
+  'settings.tabs_tree_layout': { message: 'Древовидное отображение табов' },
 
   // --- Bookmarks
   'settings.bookmarks_title': { message: 'Закладки' },

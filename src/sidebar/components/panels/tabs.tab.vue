@@ -8,6 +8,7 @@
     :data-pinned="tab.pinned"
     :discarded="tab.discarded"
     :updated="updated"
+    :lvl="tab.lvl"
     :close-btn="$store.state.showTabRmBtn"
     :title="tooltip"
     @contextmenu.prevent.stop=""
@@ -94,6 +95,15 @@ export default {
 
     tooltip() {
       return `${this.tab.title}\n${this.tab.url}`
+    },
+
+    lvl() {
+      if (this.tab.openerTabId === undefined) return 0
+      if (this.tab.openerTabId === null) return 0
+      for (let i = this.tab.index + 1; i--;) {
+        if (this.tab.openerTabId === State.tabs[i].id) return 1
+      }
+      return 0
     },
   },
 
@@ -376,6 +386,17 @@ export default {
     .close
       opacity: 1
       z-index: 20
+
+  &[lvl="1"]
+    padding-left: 15px
+  &[lvl="2"]
+    padding-left: 30px
+  &[lvl="3"]
+    padding-left: 45px
+  &[lvl="4"]
+    padding-left: 60px
+  &[lvl="5"]
+    padding-left: 75px
 
   &[data-active]
     background-color: var(--tabs-activated-bg)

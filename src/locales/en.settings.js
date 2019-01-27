@@ -18,6 +18,7 @@ export default {
   'settings.show_tab_rm_btn': { message: 'Show close button on tab hover' },
   'settings.no_empty_default': { message: 'Create new tab on emptying default panel' },
   'settings.hide_inactive_panel_tabs': { message: 'Hide tabs of inactive panels' },
+  'settings.tabs_tree_layout': { message: 'Tabs tree structure' },
 
   // --- Bookmarks
   'settings.bookmarks_title': { message: 'Bookmarks' },

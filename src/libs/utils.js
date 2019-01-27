@@ -213,6 +213,33 @@ function CSSVar(key) {
   return '--' + key.replace(UNDERSCORE_RE, '-')
 }
 
+/**
+ * Calculate tree levels of tabs
+ */
+function CalcTabsTreeLevels(tabs) {
+  let lvl = 0
+  let parents = []
+  for (let t of tabs) {
+    // zero-lvl
+    if (t.openerTabId === undefined) {
+      lvl = 0
+      parents = []
+    }
+    // have parent
+    if (t.openerTabId !== undefined) {
+      // in / out
+      if (!parents.includes(t.openerTabId)) {
+        parents[lvl] = t.openerTabId
+        lvl++
+      } else if (lvl !== parents.length - 1) {
+        lvl = parents.indexOf(t.openerTabId) + 1
+      }
+    }
+    t.lvl = lvl
+  }
+  return tabs
+}
+
 export default {
   Uid,
   Asap,
@@ -227,4 +254,5 @@ export default {
   UTime,
   UElapsed,
   CSSVar,
+  CalcTabsTreeLevels,
 }

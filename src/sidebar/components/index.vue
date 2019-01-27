@@ -507,6 +507,19 @@ export default {
       for (let i = tab.index; i < State.tabs.length; i++) {
         State.tabs[i].index++
       }
+
+      // Update tree
+      if (State.tabsTree && tab.openerTabId !== undefined) {
+        for (let i = tab.index; i--; ) {
+          if (tab.openerTabId === State.tabs[i].id) {
+            if (State.tabs[i].lvl) tab.lvl = State.tabs[i].lvl + 1
+            else tab.lvl = 1
+            break
+          }
+        }
+      }
+
+      // Put new tab in tabs list
       State.tabs.splice(tab.index, 0, tab)
       Store.dispatch('recalcPanelScroll')
       Store.dispatch('saveSyncPanels')
@@ -522,6 +535,9 @@ export default {
       if (tab.windowId !== State.windowId) return
       let upIndex = State.tabs.findIndex(t => t.id === tabId)
       if (upIndex === -1) return
+
+      // Preserve tree level
+      tab.lvl = State.tabs[upIndex].lvl
 
       // Handle favicon change
       // If favicon is base64 string - store it in cache

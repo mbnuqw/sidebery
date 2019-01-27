@@ -35,6 +35,9 @@ export default {
     moves.map(async move => {
       await browser.tabs.move(move[0], { index: move[1] })
     })
+
+    // Calc tree levels
+    if (state.tabsTree) Utils.CalcTabsTreeLevels(state.tabs)
   },
 
   /**

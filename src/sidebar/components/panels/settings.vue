@@ -34,6 +34,10 @@
         label="settings.hide_inactive_panel_tabs"
         :value="$store.state.hideInact"
         @input="toggleHideInact")
+      toggle-field(
+        label="settings.tabs_tree_layout"
+        :value="$store.state.tabsTree"
+        @input="toggleTabsTree")
 
     section
       h2 {{t('settings.bookmarks_title')}}
@@ -333,6 +337,18 @@ export default {
       }
 
       this.toggleOpt('hideInact')
+    },
+
+    toggleTabsTree() {
+      if (State.tabsTree) {
+        State.tabs = State.tabs.map(t => {
+          t.lvl = 0
+          return t
+        })
+      } else {
+        State.tabs = Utils.CalcTabsTreeLevels(State.tabs)
+      }
+      this.toggleOpt('tabsTree')
     },
 
     openStylesEditor() {
