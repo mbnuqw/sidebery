@@ -1,21 +1,23 @@
 <template lang="pug">
 .Tab(:data-active="tab.active"
-    :data-status="tab.status"
-    :data-no-fav="!favicon || faviErr"
-    :data-audible="tab.audible"
-    :data-muted="tab.mutedInfo.muted"
-    :data-menu="menu || selected"
-    :data-pinned="tab.pinned"
-    :discarded="tab.discarded"
-    :updated="updated"
-    :lvl="tab.lvl"
-    :close-btn="$store.state.showTabRmBtn"
-    :title="tooltip"
-    @contextmenu.prevent.stop=""
-    @mousedown="onMouseDown"
-    @mouseup.prevent="onMouseUp"
-    @mouseleave="onMouseLeave"
-    @dblclick.prevent.stop="onDoubleClick")
+  :data-status="tab.status"
+  :data-no-fav="!favicon || faviErr"
+  :data-audible="tab.audible"
+  :data-muted="tab.mutedInfo.muted"
+  :data-menu="menu || selected"
+  :data-pinned="tab.pinned"
+  :discarded="tab.discarded"
+  :updated="updated"
+  :parent="tab.parent"
+  :folded="tab.folded"
+  :lvl="tab.lvl"
+  :close-btn="$store.state.showTabRmBtn"
+  :title="tooltip"
+  @contextmenu.prevent.stop=""
+  @mousedown="onMouseDown"
+  @mouseup.prevent="onMouseUp"
+  @mouseleave="onMouseLeave"
+  @dblclick.prevent.stop="onDoubleClick")
   .drag-layer(draggable="true"
     @dragstart="onDragStart"
     @dragenter="onDragEnter"
@@ -26,6 +28,7 @@
   .fav(:loading="loading")
     .placeholder
     img(:src="favicon", @load.passive="onFaviconLoad", @error="onFaviconErr")
+    .exp(@mousedown.stop="onExp"): svg: use(xlink:href="#icon_expand")
     .update-badge
     .ok-badge
       svg: use(xlink:href="#icon_ok")
@@ -95,15 +98,6 @@ export default {
 
     tooltip() {
       return `${this.tab.title}\n${this.tab.url}`
-    },
-
-    lvl() {
-      if (this.tab.openerTabId === undefined) return 0
-      if (this.tab.openerTabId === null) return 0
-      for (let i = this.tab.index + 1; i--;) {
-        if (this.tab.openerTabId === State.tabs[i].id) return 1
-      }
-      return 0
     },
   },
 
@@ -271,6 +265,10 @@ export default {
       this.faviErr = true
     },
 
+    onExp() {
+      Store.dispatch('toggleBranch', this.tab.id)
+    },
+
     close() {
       Store.dispatch('removeTab', this.tab)
     },
@@ -372,7 +370,10 @@ export default {
 <style lang="stylus">
 @import '../../../styles/mixins'
 
+
 .Tab
+  --tabs-indent: 10px
+
   box(relative, flex)
   size(h: 30px)
   align-items: center
@@ -388,15 +389,32 @@ export default {
       z-index: 20
 
   &[lvl="1"]
-    padding-left: 15px
+    margin-left: var(--tabs-indent)
   &[lvl="2"]
-    padding-left: 30px
+    margin-left: calc(var(--tabs-indent) * 2)
   &[lvl="3"]
-    padding-left: 45px
+    margin-left: calc(var(--tabs-indent) * 3)
   &[lvl="4"]
-    padding-left: 60px
+    margin-left: calc(var(--tabs-indent) * 4)
   &[lvl="5"]
-    padding-left: 75px
+    margin-left: calc(var(--tabs-indent) * 5)
+
+  &[parent] .fav:hover
+    > .placeholder
+    > img
+      opacity: .2
+    > .exp
+      z-index: 1
+      opacity: 1
+
+  &[folded]
+    .fav > .placeholder
+    .fav > img
+      opacity: .2
+    .fav > .exp
+      z-index: 1
+      opacity: 1
+      transform: rotateZ(-90deg)
 
   &[data-active]
     background-color: var(--tabs-activated-bg)
@@ -436,7 +454,7 @@ export default {
       opacity: 1
       z-index: 20
       transform: translateX(0)
-    .fav
+    // .fav
     .t-box
       transform: translateX(16px)
     .t-box
@@ -451,7 +469,7 @@ export default {
         opacity: 0
       > svg.-mute
         opacity: 1
-    .fav
+    // .fav
     .t-box
       transform: translateX(16px)
     .t-box
@@ -489,7 +507,7 @@ export default {
 // --- Audio ---
 .Tab .audio
   box(absolute)
-  pos(0, 0)
+  pos(0, 24px)
   size(16px, 100%)
   z-index: 1
   opacity: 0
@@ -565,6 +583,19 @@ export default {
   box(absolute)
   size(100%, same)
   transition: opacity var(--d-fast), transform var(--d-fast)
+
+.Tab .fav > .exp
+  box(absolute)
+  size(100%, same)
+  opacity: 0
+  z-index: 0
+  cursor: pointer
+  transition: opacity var(--d-fast), transform var(--d-fast)
+  > svg
+    box(absolute)
+    pos(1px, same)
+    size(14px, same)
+    fill: var(--bookmarks-folder-open-fg)
 
 .Tab .fav > .loading-spinner
   box(absolute)

@@ -37,7 +37,7 @@ export default {
     })
 
     // Calc tree levels
-    if (state.tabsTree) Utils.CalcTabsTreeLevels(state.tabs)
+    if (state.tabsTree) state.tabs = Utils.CalcTabsTreeLevels(state.tabs)
   },
 
   /**
@@ -153,7 +153,8 @@ export default {
 
     let index = tabs.findIndex(t => t.active)
     if (step > 0) {
-      index = index + step
+      index += step
+      while (tabs[index] && tabs[index].hidden) index += step
       if (index >= tabs.length) {
         if (cycle) index = 0
         else return
@@ -161,7 +162,8 @@ export default {
     }
     if (step < 0) {
       if (index < 0) index = tabs.length
-      index = index + step
+      index += step
+      while (tabs[index] && tabs[index].hidden) index += step
       if (index < 0) {
         if (cycle) index = tabs.length - 1
         else return
@@ -409,5 +411,49 @@ export default {
 
     if (toShow.length) browser.tabs.show(toShow)
     if (toHide.length) browser.tabs.hide(toHide)
+  },
+
+  /**
+   * Hide children of tab
+   */
+  async foldTabsBranch({ state }, tabId) {
+    const toHide = []
+    for (let t of state.tabs) {
+      if (t.id === tabId) t.folded = true
+      if (t.openerTabId === tabId || toHide.includes(t.openerTabId)) {
+        if (t.active) await browser.tabs.update(tabId, { active: true })
+        if (!t.hidden) toHide.push(t.id)
+      }
+    }
+
+    if (toHide.length) browser.tabs.hide(toHide)
+  },
+
+  /**
+   * Show children of tab
+   */
+  async expTabsBranch({ state }, tabId) {
+    const toShow = []
+    const preserve = []
+    for (let t of state.tabs) {
+      if (t.id === tabId) t.folded = false
+      if (t.id !== tabId && t.folded) preserve.push(t.id)
+      if (t.openerTabId === tabId || toShow.includes(t.openerTabId)) {
+        if (t.hidden && t.openerTabId === tabId) toShow.push(t.id)
+        if (!preserve.includes(t.openerTabId)) toShow.push(t.id)
+      }
+    }
+
+    if (toShow.length) browser.tabs.show(toShow)
+  },
+
+  /**
+   * Toggle tabs branch visability (fold/expand)
+   */
+  async toggleBranch({ state, dispatch }, tabId) {
+    const rootTab = state.tabs.find(t => t.id === tabId)
+    if (!rootTab) return
+    if (rootTab.folded) dispatch('expTabsBranch', tabId)
+    else dispatch('foldTabsBranch', tabId)
   },
 }

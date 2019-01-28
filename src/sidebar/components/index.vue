@@ -263,10 +263,6 @@ export default {
     browser.tabs.onAttached.addListener(this.onAttachedTab)
     browser.tabs.onActivated.addListener(this.onActivatedTab)
 
-    // --- Retrieve initial state
-    await Store.dispatch('loadContexts')
-    await Store.dispatch('loadTabs')
-
     // --- Handle resizing of sidebar
     const onresize = Utils.Asap(() => this.updateNavSize(), 120)
     window.addEventListener('resize', onresize.func)
@@ -514,6 +510,8 @@ export default {
           if (tab.openerTabId === State.tabs[i].id) {
             if (State.tabs[i].lvl) tab.lvl = State.tabs[i].lvl + 1
             else tab.lvl = 1
+            State.tabs[i].parent = true
+            State.tabs[i].folded = false
             break
           }
         }
@@ -536,8 +534,10 @@ export default {
       let upIndex = State.tabs.findIndex(t => t.id === tabId)
       if (upIndex === -1) return
 
-      // Preserve tree level
+      // Preserve tree levels and parent flags
       tab.lvl = State.tabs[upIndex].lvl
+      tab.parent = State.tabs[upIndex].parent
+      tab.folded = State.tabs[upIndex].folded
 
       // Handle favicon change
       // If favicon is base64 string - store it in cache

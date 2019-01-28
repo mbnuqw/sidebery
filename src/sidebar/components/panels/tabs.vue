@@ -24,6 +24,7 @@
     .container(:ctx-menu="!!$root.ctxMenu")
       tab.tab(
         v-for="(t, i) in tabs"
+        v-if="!t.hidden"
         ref="tabs"
         :key="t.id"
         :tab="t"

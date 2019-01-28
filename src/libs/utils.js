@@ -219,7 +219,9 @@ function CSSVar(key) {
 function CalcTabsTreeLevels(tabs) {
   let lvl = 0
   let parents = []
-  for (let t of tabs) {
+  // for (let t of tabs) {
+  for (let i = 0; i < tabs.length; i++) {
+    let t = tabs[i]
     // zero-lvl
     if (t.openerTabId === undefined) {
       lvl = 0
@@ -229,6 +231,8 @@ function CalcTabsTreeLevels(tabs) {
     if (t.openerTabId !== undefined) {
       // in / out
       if (!parents.includes(t.openerTabId)) {
+        tabs[i - 1].parent = true
+        tabs[i - 1].folded = t.hidden
         parents[lvl] = t.openerTabId
         lvl++
       } else if (lvl !== parents.length - 1) {
