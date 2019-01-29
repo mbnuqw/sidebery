@@ -135,11 +135,11 @@ describe('Panels actions', () => {
       expect(state.panelIndex).toBe(1)
     })
 
-    test('to next, skipping hidden panel', async () => {
+    test('to next, skipping inactive panel', async () => {
       const commit = jest.fn()
       const dispatch = jest.fn()
       const state = { panelIndex: 0 }
-      const getters = { panels: [{}, { hidden: true }, {}, {}] }
+      const getters = { panels: [{}, { inactive: true }, {}, {}] }
       await PanelsActions.switchPanel({ state, getters, commit, dispatch }, 1)
       expect(state.panelIndex).toBe(2)
     })
@@ -173,11 +173,11 @@ describe('Panels actions', () => {
       expect(state.panelIndex).toBe(0)
     })
 
-    test('to prev, skipping hidden panel', async () => {
+    test('to prev, skipping inactive panel', async () => {
       const commit = jest.fn()
       const dispatch = jest.fn()
       const state = { panelIndex: 2 }
-      const getters = { panels: [{}, { hidden: true }, {}, {}] }
+      const getters = { panels: [{}, { inactive: true }, {}, {}] }
       await PanelsActions.switchPanel({ state, getters, commit, dispatch }, -1)
       expect(state.panelIndex).toBe(0)
     })
