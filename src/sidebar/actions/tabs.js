@@ -29,6 +29,12 @@ export default {
       }
     }
 
+    // Set tabs initial props and update state
+    tabs.forEach(t => {
+      t.parent = false
+      t.folded = false
+      t.lvl = 0
+    })
     state.tabs = tabs
 
     // Normalize order
