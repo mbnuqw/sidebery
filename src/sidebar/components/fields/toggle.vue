@@ -1,5 +1,5 @@
 <template lang="pug">
-.ToggleField(:class="{ inline }", @click="toggle")
+.ToggleField(:class="{ inline, inactive }", @click="toggle")
   .label(:style="{ color }") {{t(label)}}
   toggle-input.input(:value="value")
 </template>
@@ -16,6 +16,7 @@ export default {
   props: {
     value: Boolean,
     label: String,
+    inactive: Boolean,
     field: Boolean,
     inline: Boolean,
     color: String,
@@ -27,6 +28,7 @@ export default {
 
   methods: {
     toggle() {
+      if (this.inactive) return
       this.$emit('input', !this.value)
     },
   },
@@ -49,6 +51,9 @@ export default {
     > .label
       transition: none
       color: var(--label-fg-active)
+  &.inactive
+    opacity: .2
+    cursor: default
   &.-no-top-margin
     margin-top: 0
 

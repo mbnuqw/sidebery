@@ -32,6 +32,7 @@ export const DEFAULT_SETTINGS = {
   tabsTree: false,
   
   // Bookmarks
+  bookmarksPanel: true,
   openBookmarkNewTab: false,
   autoCloseBookmarks: false,
 

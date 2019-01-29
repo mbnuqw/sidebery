@@ -95,44 +95,14 @@ export default {
       else state.panelIndex = state.lastPanelIndex
     }
 
-    // Next
-    if (dir > 0) {
-      if (state.panelIndex < getters.panels.length - 1) state.panelIndex++
-      let i = state.panelIndex
-      while (getters.panels[i].hidden) {
-        if (i >= getters.panels.length - 1) {
-          i = state.panelIndex - 1
-          break
-        }
-        i++
-      }
-      state.panelIndex = i
-      if (state.skipEmptyPanels) {
-        for (let i = state.panelIndex; i < getters.panels.length; i++) {
-          if (getters.panels[i].tabs && getters.panels[i].tabs.length) {
-            state.panelIndex = i
-            break
-          }
-        }
-      }
+    // Update panel index
+    let i = state.panelIndex + dir
+    for (;getters.panels[i]; i += dir) {
+      const p = getters.panels[i]
+      if (state.skipEmptyPanels && p.tabs && !p.tabs.length) continue
+      if (!p.inactive) break
     }
-
-    // Prev
-    if (dir < 0) {
-      if (state.panelIndex < 0) state.panelIndex = 0
-      if (state.panelIndex > 0) state.panelIndex--
-      while (getters.panels[state.panelIndex].hidden) {
-        state.panelIndex--
-      }
-      if (state.skipEmptyPanels) {
-        for (let i = state.panelIndex; i--; ) {
-          if (getters.panels[i].tabs && getters.panels[i].tabs.length) {
-            state.panelIndex = i
-            break
-          }
-        }
-      }
-    }
+    if (getters.panels[i]) state.panelIndex = i
     state.lastPanelIndex = state.panelIndex
 
     if (state.activateLastTabOnPanelSwitching) {

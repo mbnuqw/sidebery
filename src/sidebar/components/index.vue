@@ -59,6 +59,7 @@
   .panel-box
     component.panel(
       v-for="(c, i) in panels"
+      v-if="panelVisible(i)"
       ref="panels"
       :key="c.cookieStoreId || c.name"
       :is="c.panel"
@@ -182,14 +183,17 @@ export default {
         const btn = DEFAULT_PANELS[i]
         btn.loading = this.loading[i]
         btn.hidden = false
+        btn.inactive = false
         if (
           !this.anyPinnedTabs && btn.pinned
           || !State.private && btn.private
           || State.private && btn.cookieStoreId === DEFAULT_CTX
         ) {
           btn.hidden = true
+          btn.inactive = true
           if (State.panelIndex > k) hideOffset++
         }
+        if (i === 0 && !State.bookmarksPanel) btn.hidden = btn.inactive = true
         btn.updated = this.updatedPanels.includes(k)
         if (k === State.panelIndex) btn.updated = false
         out.push(btn)
@@ -202,10 +206,12 @@ export default {
         btn.loading = this.loading[k]
         if (State.private) {
           btn.hidden = true
+          btn.inactive = true
           break
         }
         if (!btn.component) btn.component = TabsDashboard
         btn.hidden = false
+        btn.inactive = false
         btn.updated = this.updatedPanels.includes(k)
         if (k === State.panelIndex) btn.updated = false
         out.push(btn)
@@ -788,6 +794,14 @@ export default {
      */
     panelIs(index) {
       return State.panelIndex === index
+    },
+
+    /**
+     * Check if panel should be rendered
+     */
+    panelVisible(index) {
+      if (index === 0) return State.bookmarksPanel
+      return true
     },
 
     /**

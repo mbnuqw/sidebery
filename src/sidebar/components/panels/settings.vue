@@ -42,11 +42,17 @@
     section
       h2 {{t('settings.bookmarks_title')}}
       toggle-field(
+        label="settings.bookmarks_panel"
+        :value="$store.state.bookmarksPanel"
+        @input="toggleBookmarksPanel")
+      toggle-field(
         label="settings.open_bookmark_new_tab"
+        :inactive="!$store.state.bookmarksPanel"
         :value="$store.state.openBookmarkNewTab"
         @input="setOpt('openBookmarkNewTab', $event)")
       toggle-field(
         label="settings.auto_close_bookmarks"
+        :inactive="!$store.state.bookmarksPanel"
         :value="$store.state.autoCloseBookmarks"
         @input="setOpt('autoCloseBookmarks', $event)")
 
@@ -323,6 +329,7 @@ export default {
       Store.dispatch('saveSettings')
     },
 
+    // --- Tabs ---
     async toggleHideInact() {
       State.permTabHide = await browser.permissions.contains({ permissions: ['tabHide'] })
       if (State.hideInact) {
@@ -351,6 +358,14 @@ export default {
       this.toggleOpt('tabsTree')
     },
 
+    // --- Bookmarks ---
+    toggleBookmarksPanel() {
+      if (State.bookmarksPanel) State.bookmarks = []
+      else Store.dispatch('loadBookmarks')
+      this.toggleOpt('bookmarksPanel')
+    },
+
+    // --- Appearance ---
     openStylesEditor() {
       Store.commit('openStylesEditor')
     },

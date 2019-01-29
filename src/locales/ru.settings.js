@@ -22,6 +22,7 @@ export default {
 
   // --- Bookmarks
   'settings.bookmarks_title': { message: 'Закладки' },
+  'settings.bookmarks_panel': { message: 'Панель заладок' },
   'settings.open_bookmark_new_tab': { message: 'Открывать закладку в новом табе' },
   'settings.auto_close_bookmarks': { message: 'Автоматически закрывать папки' },
 

@@ -4,7 +4,6 @@
   select-input(
     :label="optLabel"
     :value="value"
-    :inactive="inactive"
     :opts="opts"
     :noneOpt="noneOpt")
 </template>

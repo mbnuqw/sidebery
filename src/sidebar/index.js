@@ -82,7 +82,7 @@ export default new Vue({
     Store.dispatch('loadSnapshots')
     Store.dispatch('loadFavicons')
     Store.dispatch('loadPermissions')
-    await Store.dispatch('loadBookmarks')
+    if (State.bookmarksPanel) await Store.dispatch('loadBookmarks')
 
     const dSavingState = Utils.Debounce(() => Store.dispatch('saveState'), 567)
     Store.watch(Getters.activePanel, dSavingState.func)

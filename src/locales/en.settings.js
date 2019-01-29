@@ -22,6 +22,7 @@ export default {
 
   // --- Bookmarks
   'settings.bookmarks_title': { message: 'Bookmarks' },
+  'settings.bookmarks_panel': { message: 'Bookmarks panel' },
   'settings.open_bookmark_new_tab': { message: 'Open bookmark in new tab' },
   'settings.auto_close_bookmarks': { message: 'Auto-close folders' },
 
