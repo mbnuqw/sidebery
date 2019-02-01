@@ -1,16 +1,21 @@
 <template lang="pug">
 .Sidebar(
   :dashboard-opened="$store.state.dashboardOpened"
+  :drag-mode="dragMode"
+  :pointer-mode="pointerMode"
   @wheel="onWheel"
   @contextmenu.prevent.stop=""
-  @dragover.prevent=""
-  @drop="onDrop"
+  @dragover.prevent="onDragMove"
+  @dragenter="onDragEnter"
+  @dragleave="onDragLeave"
+  @drop.stop.prevent="onDrop"
   @mouseenter="onMouseEnter"
   @mouseleave="onMouseLeave"
   @mousedown="onMouseDown")
   ctx-menu
   .bg(v-noise:300.g:12:af.a:0:42.s:0:9="", :style="bgPosStyle")
   .dimmer(@mousedown="closeDashboard")
+  .pointer(ref="pointer"): .arrow
   .nav(ref="nav")
     keep-alive
       component.panel-menu(
@@ -34,6 +39,8 @@
         :is-hidden="btn.hidden"
         :class="'rel-' + btn.relIndex"
         @click="onNavClick(i)"
+        @dragenter="onNavDragEnter(i)"
+        @dragleave="onNavDragLeave(i)"
         @mousedown.right="openDashboard(i)")
         svg(:style="{fill: btn.colorCode}")
           use(:xlink:href="'#' + btn.icon")
@@ -114,6 +121,8 @@ export default {
   data() {
     return {
       width: 250,
+      dragMode: false,
+      pointerMode: 'between',
       dashboard: null,
       loading: [],
       loadingTimers: [],
@@ -174,7 +183,7 @@ export default {
     nav() {
       let cap = ~~((this.width - 32) / 34)
       let halfCap = cap >> 1
-      let invModCap = (cap % halfCap) ^ 1
+      let invModCap = cap % halfCap ^ 1
 
       let i, k
       let out = []
@@ -185,9 +194,9 @@ export default {
         btn.hidden = false
         btn.inactive = false
         if (
-          !this.anyPinnedTabs && btn.pinned
-          || !State.private && btn.private
-          || State.private && btn.cookieStoreId === DEFAULT_CTX
+          (!this.anyPinnedTabs && btn.pinned) ||
+          (!State.private && btn.private) ||
+          (State.private && btn.cookieStoreId === DEFAULT_CTX)
         ) {
           btn.hidden = true
           btn.inactive = true
@@ -279,7 +288,9 @@ export default {
     EventBus.$on('panelLoadingEnd', panelIndex => this.onPanelLoadingEnd(panelIndex))
     EventBus.$on('panelLoadingOk', panelIndex => this.onPanelLoadingOk(panelIndex))
     EventBus.$on('panelLoadingErr', panelIndex => this.onPanelLoadingErr(panelIndex))
-    EventBus.$on('dragTabStart', tabInfo => this.outerDraggedTab = tabInfo)
+    EventBus.$on('dragStart', info => (this.dragInfo = info))
+    EventBus.$on('outerDragStart', info => (this.outerDragInfo = info))
+    EventBus.$on('panelSwitched', () => setTimeout(() => this.recalcPanelBounds(), 256))
   },
 
   // --- Mounted Hook ---
@@ -332,6 +343,56 @@ export default {
     },
 
     /**
+     * Drag move handler
+     */
+    onDragMove(e) {
+      if (!this.dragMode) return
+      if (!this.$refs.pointer) return
+
+      let scroll = this.panelScrollEl ? this.panelScrollEl.scrollTop : 0
+      let y = e.clientY - this.panelTopOffset + scroll
+
+      // The end
+      if (y > this.dropSlots[this.dropSlots.length - 1].b) {
+        const s = this.dropSlots[this.dropSlots.length - 1]
+        const pos = s.e - 12 + this.panelTopOffset - scroll
+        this.$refs.pointer.style.transform = `translateY(${pos}px)`
+        this.pointerMode = 'between'
+        this.dropParent = s.parent
+        this.dropIndex = s.index
+        return
+      }
+
+      for (let i = 0; i < this.dropSlots.length; i++) {
+        const s = this.dropSlots[i]
+        if (y > s.e || y < s.s) continue
+        if (y < s.t) {
+          const pos = s.s - 12 + this.panelTopOffset - scroll
+          this.$refs.pointer.style.transform = `translateY(${pos}px)`
+          this.pointerMode = 'between'
+          this.dropParent = s.parent
+          this.dropIndex = s.index - 1
+          break
+        }
+
+        if (s.in) {
+          if (y < s.b) {
+            const pos = s.c - 12 + this.panelTopOffset - scroll
+            this.$refs.pointer.style.transform = `translateY(${pos}px)`
+            this.pointerMode = 'in'
+            this.dropParent = s.id
+            this.dropIndex = s.index
+            if (s.folded && e.clientX < 32) {
+              s.folded = false
+              this.expandDropTarget()
+            }
+            break
+          }
+        }
+      }
+    },
+
+    /**
      * Mouse enter event handler
      */
     onMouseEnter() {
@@ -368,57 +429,114 @@ export default {
     },
 
     /**
+     * Drag enter event handler
+     */
+    onDragEnter(e) {
+      if (e && e.relatedTarget) return
+
+      // Get drop slots
+      if (!this.$refs.panels || !this.$refs.panels[State.panelIndex]) return
+      const panelVN = this.$refs.panels[State.panelIndex]
+      this.dropSlots = panelVN.getItemsBounds()
+      if (!this.dropSlots) return
+
+      // Get start coorinate of drop slots
+      this.panelTopOffset = panelVN.getTopOffset()
+
+      // Get scroll element
+      this.panelScrollEl = panelVN.getScrollEl()
+
+      // Turn on drag mode
+      this.dragMode = true
+    },
+
+    onDragLeave(e) {
+      if (e && e.relatedTarget) return
+      this.resetDrag()
+    },
+
+    /**
      * Drop event handler
+     * 
+     *                   Tab     OuterTab  Bookmark  OuterBookmark  Native
+     * ToSamePanel       id      -         id        -              -
+     * ToSamePanel+CTRL  url     -         url       -              -
+     * 
+     * ToTabsPanel       both    url       url       url            url
+     * ToTabsPanel+CTRL  url     url       url       url            url
+     * ToBookmarksPanel  url     url       -         -              url
      */
     onDrop(e) {
-      if (!e.dataTransfer) return
+      // if (!this.dropIndex && !this.dropIn) return
+      const draggedNodes = this.dragInfo || this.outerDragInfo
 
-      for (let item of e.dataTransfer.items) {
-        if (item.kind !== 'string') return
-        
-        if (item.type === 'text/uri-list') {
-          item.getAsString(s => {
-            if (!s.startsWith('http')) return
-            const panel = this.panels[State.panelIndex]
-            if (panel && panel.cookieStoreId) {
-              browser.tabs.create({
-                url: s,
-                cookieStoreId: panel.cookieStoreId,
-                windowId: State.windowId,
-              })
-            } else {
-              browser.tabs.create({ url: s, windowId: State.windowId })
-            }
-          })
-        }
-
-        if (item.type === 'text/x-moz-text-internal') {
-          item.getAsString(async s => {
-            if (e.dataTransfer.dropEffect === 'move') {
-              const tab = this.outerDraggedTab
-
-              if (!tab || tab.url !== s) {
-                if (!s.startsWith('http')) return
-                browser.tabs.create({ url: s, windowId: State.windowId })
-                return
-              }
-
-              if (tab.incognito === State.private) {
-                browser.tabs.move(tab.tabId, { windowId: State.windowId, index: -1 })
-              } else {
-                if (!s.startsWith('http')) return
-                browser.tabs.create({ url: s, windowId: State.windowId })
-                browser.tabs.remove(tab.tabId)
-              }
-            }
-            if (e.dataTransfer.dropEffect === 'copy') {
-              if (!s.startsWith('http')) return
-              browser.tabs.create({ windowId: State.windowId, url: s })
-            }
-          })
-          break
-        }
+      if (this.panels[State.panelIndex].tabs) {
+        Store.dispatch('dropToTabs', {
+          event: e,
+          dropIndex: this.dropIndex,
+          dropParent: this.dropParent,
+          nodes: draggedNodes,
+        })
       }
+      if (this.panels[State.panelIndex].bookmarks) {
+        Store.dispatch('dropToBookmarks', {
+          event: e,
+          dropIndex: this.dropIndex,
+          dropParent: this.dropParent,
+          nodes: draggedNodes,
+        })
+      }
+
+      this.resetDrag()
+
+      // if (!e.dataTransfer) return
+
+      // for (let item of e.dataTransfer.items) {
+      //   if (item.kind !== 'string') return
+
+      //   if (item.type === 'text/uri-list') {
+      //     item.getAsString(s => {
+      //       if (!s.startsWith('http')) return
+      //       const panel = this.panels[State.panelIndex]
+      //       if (panel && panel.cookieStoreId) {
+      //         browser.tabs.create({
+      //           url: s,
+      //           cookieStoreId: panel.cookieStoreId,
+      //           windowId: State.windowId,
+      //         })
+      //       } else {
+      //         browser.tabs.create({ url: s, windowId: State.windowId })
+      //       }
+      //     })
+      //   }
+
+      //   if (item.type === 'text/x-moz-text-internal') {
+      //     item.getAsString(async s => {
+      //       if (e.dataTransfer.dropEffect === 'move') {
+      //         const tab = this.outerDragInfo
+
+      //         if (!tab || tab.url !== s) {
+      //           if (!s.startsWith('http')) return
+      //           browser.tabs.create({ url: s, windowId: State.windowId })
+      //           return
+      //         }
+
+      //         if (tab.incognito === State.private) {
+      //           browser.tabs.move(tab.tabId, { windowId: State.windowId, index: -1 })
+      //         } else {
+      //           if (!s.startsWith('http')) return
+      //           browser.tabs.create({ url: s, windowId: State.windowId })
+      //           browser.tabs.remove(tab.tabId)
+      //         }
+      //       }
+      //       if (e.dataTransfer.dropEffect === 'copy') {
+      //         if (!s.startsWith('http')) return
+      //         browser.tabs.create({ windowId: State.windowId, url: s })
+      //       }
+      //     })
+      //     break
+      //   }
+      // }
     },
 
     /**
@@ -430,6 +548,26 @@ export default {
         Store.dispatch('switchToPanel', i)
       } else if (this.panels[i].cookieStoreId) {
         browser.tabs.create({ cookieStoreId: this.panels[i].cookieStoreId })
+      }
+    },
+
+    /**
+     * Navigation button dragenter handler
+     */
+    onNavDragEnter(i) {
+      this.navDragEnterIndex = i
+      if (this.navDragEnterTimeout) clearTimeout(this.navDragEnterTimeout)
+      this.navDragEnterTimeout = setTimeout(() => {
+        Store.dispatch('switchToPanel', i)
+      }, 200)
+    },
+
+    /**
+     * Navigation button dragleave handler
+     */
+    onNavDragLeave(i) {
+      if (this.navDragEnterTimeout && this.navDragEnterIndex === i) {
+        clearTimeout(this.navDragEnterTimeout)
       }
     },
 
@@ -511,16 +649,19 @@ export default {
       }
 
       // Update tree
+      tab.parentId = -1
       if (State.tabsTree && tab.openerTabId !== undefined) {
+        tab.parentId = tab.openerTabId
         for (let i = tab.index; i--; ) {
-          if (tab.openerTabId === State.tabs[i].id) {
+          if (tab.parentId === State.tabs[i].id) {
             if (State.tabs[i].lvl) tab.lvl = State.tabs[i].lvl + 1
             else tab.lvl = 1
-            State.tabs[i].parent = true
+            State.tabs[i].isParent = true
             State.tabs[i].folded = false
             break
           }
         }
+        Store.dispatch('saveTabsTree')
       }
 
       // Put new tab in tabs list
@@ -542,7 +683,8 @@ export default {
 
       // Preserve tree levels and parent flags
       tab.lvl = State.tabs[upIndex].lvl
-      tab.parent = State.tabs[upIndex].parent
+      tab.parentId = State.tabs[upIndex].parentId
+      tab.isParent = State.tabs[upIndex].isParent
       tab.folded = State.tabs[upIndex].folded
 
       // Handle favicon change
@@ -567,10 +709,7 @@ export default {
         const prevTabState = State.tabs[upIndex]
         if (prevTabState.url.startsWith('http') && prevTabState.url === tab.url) {
           // and if title doesn't looks like url
-          if (
-            !URL_HOST_PATH_RE.test(prevTabState.title) &&
-            !URL_HOST_PATH_RE.test(tab.title)
-          ) {
+          if (!URL_HOST_PATH_RE.test(prevTabState.title) && !URL_HOST_PATH_RE.test(tab.title)) {
             // Mark tab as updated
             if (tab.pinned) {
               this.$set(State.updatedTabs, tab.id, 1)
@@ -612,11 +751,7 @@ export default {
         })
       }
 
-      if (
-        State.noEmptyDefault
-        && !tab.pinned
-        && tab.cookieStoreId === this.defaultCtxId
-      ) {
+      if (State.noEmptyDefault && !tab.pinned && tab.cookieStoreId === this.defaultCtxId) {
         const panelTabs = this.panels[panelIndex].tabs
         if (panelTabs && panelTabs.length === 1) {
           browser.tabs.create({})
@@ -646,19 +781,8 @@ export default {
       Store.commit('closeCtxMenu')
       Store.commit('resetSelection')
 
-      // If moved tab active, cut it out
       let pIndex = Utils.GetPanelIndex(this.panels, id)
       let isActive = State.activeTabs[pIndex] === id
-
-      // Reset drag status
-      let panelVM = this.$refs.panels[State.panelIndex]
-      if (panelVM && panelVM.drag) {
-        panelVM.drag = null
-        setTimeout(() => {
-          panelVM.dragTabs = null
-          panelVM.dragEnd = false
-        }, 128)
-      }
 
       // Move tab in tabs array
       let movedTab = State.tabs.splice(info.fromIndex, 1)[0]
@@ -680,6 +804,12 @@ export default {
       pIndex = Utils.GetPanelIndex(this.panels, id)
       if (isActive) Store.commit('setPanel', pIndex)
       Store.dispatch('recalcPanelScroll')
+
+      // Calc tree levels
+      if (State.tabsTree) {
+        State.tabs = Utils.CalcTabsTreeLevels(State.tabs)
+        Store.dispatch('saveTabsTree')
+      }
     },
 
     /**
@@ -722,7 +852,7 @@ export default {
 
       // Update tabs and find activated one
       let tab, isActivated
-      for (let i = State.tabs.length; i--;) {
+      for (let i = State.tabs.length; i--; ) {
         isActivated = info.tabId === State.tabs[i].id
         State.tabs[i].active = isActivated
         if (isActivated) tab = State.tabs[i]
@@ -812,6 +942,52 @@ export default {
       if (State.panelIndex < i) return 'right'
       if (State.panelIndex === i) return 'center'
       if (State.panelIndex > i) return 'left'
+    },
+
+    /**
+     * Recalc panel bounds
+     */
+    recalcPanelBounds() {
+      if (!this.dragMode) return
+
+      // Get drop slots
+      if (!this.$refs.panels || !this.$refs.panels[State.panelIndex]) return
+      const panelVN = this.$refs.panels[State.panelIndex]
+      this.dropSlots = panelVN.getItemsBounds()
+
+      // Get start coorinate of drop slots
+      this.panelTopOffset = panelVN.getTopOffset()
+
+      // Get scroll element
+      this.panelScrollEl = panelVN.getScrollEl()
+    },
+
+    /**
+     * Expand drop target
+     */
+    expandDropTarget() {
+      if (this.pointerMode !== 'in') return
+      if (this.pointerEnterTimeout) return
+
+      if (typeof this.dropParent === 'number') Store.dispatch('expTabsBranch', this.dropParent)
+      if (typeof this.dropParent === 'string') Store.dispatch('expandBookmark', this.dropParent)
+      setTimeout(() => this.recalcPanelBounds(), 128)
+      this.pointerEnterTimeout = setTimeout(() => {
+        this.pointerEnterTimeout = null
+      }, 500)
+    },
+
+    /**
+     * Reset drag-and-drop values
+     */
+    resetDrag() {
+      this.dragInfo = null
+      this.outerDragInfo = null
+      this.dragMode = false
+      this.dropIndex = null
+      this.dropParent = null
+      this.panelScrollEl = null
+      EventBus.$emit('dragEnd')
     },
 
     // --- Panel Menu ---
@@ -963,6 +1139,13 @@ NAV_CONF_HEIGHT = auto
   opacity: var(--nav-btn-opacity)
   z-index: 10
   transition: opacity var(--d-fast), transform var(--d-fast), z-index var(--d-fast)
+  // for dragenter
+  &:before
+    content: ''
+    box(absolute)
+    size(100%, same)
+    pos(0, 0)
+    z-index: 1
   &[is-active="true"]
     opacity: var(--nav-btn-activated-opacity)
   &:hover
@@ -1125,6 +1308,46 @@ NAV_CONF_HEIGHT = auto
   &[data-active="true"]
     > svg
       opacity: 1
+
+// --- Move pointer ---
+.Sidebar > .pointer
+  box(absolute)
+  size(32px, 24px)
+  pos(0, 0)
+  z-index: -1
+  opacity: 0
+  transition: z-index var(--d-fast), opacity var(--d-fast), transform var(--d-fast)
+  .arrow
+    box(absolute)
+    size(100%, same)
+    pos(0, 0)
+    transform: translateX(0)
+    transition: transform var(--d-fast)
+    &:before
+      content: ''
+      box(absolute)
+      size(16px, 16px)
+      pos(4px, -11px)
+      transform: rotateZ(45deg)
+      box-shadow: inset 0 0 0 2px var(--nav-btn-update-badge-bg)
+      transition: background-color var(--d-fast)
+  &:after
+    content: ''
+    box(absolute)
+    size(100vw, 2px)
+    pos(11px, 6px)
+    background-color: var(--nav-btn-update-badge-bg)
+    opacity: 0
+    transition: opacity var(--d-fast), transform var(--d-fast)
+.Sidebar[drag-mode] > .pointer
+  opacity: 1
+  z-index: 100
+.Sidebar[pointer-mode="between"] > .pointer:after
+  opacity: 1
+.Sidebar[pointer-mode="in"] > .pointer .arrow:before
+  background-color: var(--nav-btn-update-badge-bg)
+.Sidebar[pointer-mode="in"] > .pointer:after
+  opacity: 0
 
 // --- Panel ---
 .Sidebar > .panel-box

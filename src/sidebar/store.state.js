@@ -13,6 +13,7 @@ export const DEFAULT_PANELS = [
     icon: 'icon_bookmarks',
     component: BookmarksDashboard,
     panel: BookmarksPanel,
+    bookmarks: true,
   },
   {
     name: Translate('pinned_dashboard.title'),

@@ -1,11 +1,13 @@
 <template lang="pug">
 .Node(
   :n-type="node.type"
-  :is-expanded="expanded"
+  :is-expanded="node.expanded"
   :is-parent="!!isParent"
   :to-front="toFront || editorSelect"
+  :dragged="dragged"
   :menu="menu")
   .body(:title="tooltip", @click="onClick", @mousedown="onMouseDown")
+    .drag-layer(draggable="true", @dragstart="onDragStart")
     .fav(v-if="isBookmark", :no-fav="!favicon")
       .placeholder
       img(:src="favicon")
@@ -13,7 +15,7 @@
       svg: use(xlink:href="#icon_expand")
     .title(v-if="node.title") {{node.title}}
   transition(name="expand")
-    .children(v-if="isParent", v-show="expanded", :title="node.title")
+    .children(v-if="isParent", v-show="node.expanded", :title="node.title")
       b-node.child(
         v-for="(n, i) in node.children"
         ref="children"
@@ -22,7 +24,6 @@
         :recalc-scroll="recalcScroll"
         :edit-node="editNode"
         @md="onChildMD"
-        @expand="onFolderExpand"
         @create="onCreate"
         @edit="onEdit")
 </template>
@@ -32,6 +33,7 @@
 import { mapGetters } from 'vuex'
 import Store from '../../store'
 import State from '../../store.state'
+import EventBus from '../../event-bus'
 
 export default {
   name: 'BNode',
@@ -43,10 +45,10 @@ export default {
 
   data() {
     return {
-      expanded: false,
       menu: false,
       toFront: false,
       editorSelect: false,
+      dragged: false,
     }
   },
 
@@ -87,7 +89,7 @@ export default {
   },
 
   created() {
-    this.expanded = !!this.node.expanded
+    EventBus.$on('dragEnd', () => {this.dragged = false})
   },
 
   methods: {
@@ -105,9 +107,8 @@ export default {
 
     onClick() {
       if (this.node.type === 'folder') {
-        this.expanded = !this.expanded
-        this.node.expanded = this.expanded
-        this.$emit('expand', this.node)
+        if (!this.node.expanded) Store.dispatch('expandBookmark', this.node.id)
+        else Store.dispatch('foldBookmark', this.node.id)
         setTimeout(() => this.recalcScroll(), 120)
       }
       if (this.node.type === 'bookmark') {
@@ -115,17 +116,30 @@ export default {
       }
     },
 
-    onFolderExpand(node) {
-      this.$emit('expand', node)
-      if (State.autoCloseBookmarks && node.parentId === this.node.id && node.expanded) {
-        for (let child of this.node.children) {
-          if (child.id !== node.id && child.type === 'folder') {
-            const vm = this.$refs.children.find(c => c.node.id === child.id)
-            if (!vm) continue
-            vm.collapse()
-          }
-        }
-      }
+    /**
+     * Handle dragstart event.
+     */
+    onDragStart(e) {
+      e.dataTransfer.setData('text/x-moz-text-internal', this.node.url)
+      e.dataTransfer.setData('text/uri-list', this.node.url)
+      e.dataTransfer.setData('text/plain', this.node.url)
+      e.dataTransfer.effectAllowed = 'move'
+      const info = [{
+        type: 'bookmark',
+        id: this.node.id,
+        index: this.node.index,
+        parent: this.node.parentId,
+        incognito: State.private,
+        windowId: State.windowId,
+        url: this.node.url,
+        title: this.node.title,
+      }]
+      EventBus.$emit('dragStart', info)
+      Store.dispatch('broadcast', {
+        name: 'outerDragStart',
+        arg: info,
+      })
+      this.dragged = true
     },
 
     onChildMD(e, nodes) {
@@ -134,8 +148,7 @@ export default {
     },
 
     collapse(deep = false) {
-      this.expanded = false
-      this.node.expanded = this.expanded
+      this.node.expanded = false
 
       if (deep) {
         if (!this.$refs.children) return
@@ -300,9 +313,12 @@ export default {
   border-top-left-radius: 3px
   border-bottom-left-radius: 3px
 
+.Node[dragged]
+  opacity: .32 !important
+
 .Node[n-type="bookmark"]
   > .body
-    size(h: 24px)
+    height: var(--bookmarks-bookmark-height)
     > .title
       text(s: rem(14), w: 400)
       color: var(--bookmarks-node-title-fg)
@@ -321,7 +337,7 @@ export default {
       > .title
         color: var(--bookmarks-folder-empty-fg)
   > .body
-    size(h: 28px)
+    height: var(--bookmarks-folder-height)
     &:hover > .title
       transition: transform var(--d-fast)
       color: var(--bookmarks-folder-closed-fg-hover)
@@ -334,7 +350,7 @@ export default {
 
 .Node[n-type="separator"]
   > .body
-    size(h: 17px)
+    height: var(--bookmarks-separator-height)
     &:before
       content: ''
       box(absolute)
@@ -389,6 +405,12 @@ export default {
   cursor: pointer
   transform: translateZ(0)
   transition: opacity var(--d-fast)
+
+.Node .drag-layer
+  box(absolute)
+  size(100%, same)
+  pos(0, 0)
+  z-index: 15
 
 // Favicon
 .Node .fav

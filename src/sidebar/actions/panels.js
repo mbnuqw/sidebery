@@ -71,8 +71,8 @@ export default {
     }
 
     dispatch('recalcPanelScroll')
-
     if (state.hideInact) dispatch('hideInactPanelsTabs')
+    EventBus.$emit('panelSwitched')
   },
 
   /**
@@ -119,8 +119,8 @@ export default {
 
     dispatch('checkContextBindings', getters.panels[state.panelIndex].cookieStoreId)
     dispatch('recalcPanelScroll')
-
     if (state.hideInact) dispatch('hideInactPanelsTabs')
+    EventBus.$emit('panelSwitched')
   },
 
   /**

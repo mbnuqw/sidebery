@@ -10,6 +10,7 @@ const Alph = [
   '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '_',
 ]
 const UNDERSCORE_RE = /_/g
+const CSS_NUM_RE = /([\d.]+)(\w*)/
 
 /**
  *  Generate base64-like uid
@@ -219,29 +220,43 @@ function CSSVar(key) {
 function CalcTabsTreeLevels(tabs) {
   let lvl = 0
   let parents = []
-  // for (let t of tabs) {
   for (let i = 0; i < tabs.length; i++) {
     let t = tabs[i]
     // zero-lvl
-    if (t.openerTabId === undefined) {
+    if (t.parentId < 0) {
       lvl = 0
       parents = []
     }
     // have parent
-    if (t.openerTabId !== undefined) {
+    if (t.parentId >= 0) {
       // in / out
-      if (!parents.includes(t.openerTabId)) {
-        tabs[i - 1].parent = true
+      if (!parents.includes(t.parentId)) {
+        tabs[i - 1].isParent = true
         tabs[i - 1].folded = t.hidden
-        parents[lvl] = t.openerTabId
+        parents[lvl] = t.parentId
         lvl++
       } else if (lvl !== parents.length - 1) {
-        lvl = parents.indexOf(t.openerTabId) + 1
+        lvl = parents.indexOf(t.parentId) + 1
       }
     }
     t.lvl = lvl
   }
   return tabs
+}
+
+/**
+ * Parse numerical css value
+ */
+function ParseCSSNum(cssValue, or = 0) {
+  let [, num, unit] = CSS_NUM_RE.exec(cssValue.trim())
+  if (num.includes('.')) {
+    if (num[0] === '.') num = '0' + num
+    num = parseFloat(num)
+  } else {
+    num = parseInt(num)
+  }
+  if (isNaN(num)) num = or
+  return [num, unit]
 }
 
 export default {
@@ -259,4 +274,5 @@ export default {
   UElapsed,
   CSSVar,
   CalcTabsTreeLevels,
+  ParseCSSNum,
 }

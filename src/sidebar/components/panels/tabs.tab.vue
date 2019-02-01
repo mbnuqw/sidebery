@@ -8,9 +8,10 @@
   :data-pinned="tab.pinned"
   :discarded="tab.discarded"
   :updated="updated"
-  :parent="tab.parent"
+  :is-parent="tab.isParent"
   :folded="tab.folded"
   :lvl="tab.lvl"
+  :dragged="dragged"
   :close-btn="$store.state.showTabRmBtn"
   :title="tooltip"
   @contextmenu.prevent.stop=""
@@ -71,6 +72,7 @@ export default {
       menu: false,
       faviErr: false,
       loading: false,
+      dragged: false,
     }
   },
 
@@ -114,6 +116,7 @@ export default {
     EventBus.$on('tabLoadingErr', id => {
       if (id === this.tab.id) this.loadingErr()
     })
+    EventBus.$on('dragEnd', () => {this.dragged = false})
   },
 
   methods: {
@@ -140,11 +143,6 @@ export default {
       }
 
       if (e.button === 0) {
-        // Double-click-drag
-        if (this.mclickTimeout) return
-
-        e.preventDefault()
-        e.stopPropagation()
         this.$emit('mdl', e, this)
         this.hodorL = setTimeout(() => {
           let llc = State.tabLongLeftClick
@@ -188,11 +186,6 @@ export default {
           this.hodorR = clearTimeout(this.hodorR)
         }
       }
-
-      // Set timeout for double-click-drag event
-      this.mclickTimeout = setTimeout(() => {
-        this.mclickTimeout = null
-      }, 200)
     },
 
     onMouseLeave() {
@@ -208,15 +201,23 @@ export default {
       e.dataTransfer.setData('text/uri-list', this.tab.url)
       e.dataTransfer.setData('text/plain', this.tab.url)
       e.dataTransfer.effectAllowed = 'move'
+      const info = [{
+        type: 'tab',
+        id: this.tab.id,
+        index: this.tab.index,
+        ctx: this.tab.cookieStoreId,
+        incognito: State.private,
+        windowId: State.windowId,
+        panel: State.panelIndex,
+        url: this.tab.url,
+        title: this.tab.title,
+      }]
+      EventBus.$emit('dragStart', info)
       Store.dispatch('broadcast', {
-        name: 'dragTabStart',
-        arg: {
-          tabId: this.tab.id,
-          incognito: State.private,
-          windowId: State.windowId,
-          url: this.tab.url,
-        },
+        name: 'outerDragStart',
+        arg: info,
       })
+      this.dragged = true
     },
 
     /**
@@ -372,10 +373,8 @@ export default {
 
 
 .Tab
-  --tabs-indent: 10px
-
   box(relative, flex)
-  size(h: 30px)
+  height: var(--tabs-height)
   align-items: center
   transform: translateZ(0)
   transition: opacity var(--d-fast), transform .12s, z-index 0s .2s, background-color var(--d-fast)
@@ -399,7 +398,10 @@ export default {
   &[lvl="5"]
     margin-left: calc(var(--tabs-indent) * 5)
 
-  &[parent] .fav:hover
+  &[dragged]
+    opacity: .32
+
+  &[is-parent] .fav:hover
     > .placeholder
     > img
       opacity: .2
@@ -588,7 +590,7 @@ export default {
   box(absolute)
   size(100%, same)
   opacity: 0
-  z-index: 0
+  z-index: -1
   cursor: pointer
   transition: opacity var(--d-fast), transform var(--d-fast)
   > svg

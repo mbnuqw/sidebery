@@ -68,7 +68,7 @@ export default {
    * Broadcast message to other parts of extension.
    */
   async broadcast(_, msg = {}) {
-    return await browser.runtime.sendMessage(msg)
+    browser.runtime.sendMessage(msg)
   },
 
   /**

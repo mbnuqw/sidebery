@@ -1,6 +1,8 @@
 import Utils from '../../libs/utils'
 import EventBus from '../event-bus'
 
+let TabsTreeSaveTimeout
+
 export default {
   /**
    * Load all tabs for current window
@@ -31,8 +33,9 @@ export default {
 
     // Set tabs initial props and update state
     tabs.forEach(t => {
-      t.parent = false
+      t.isParent = false
       t.folded = false
+      t.parentId = -1
       t.lvl = 0
     })
     state.tabs = tabs
@@ -43,7 +46,43 @@ export default {
     })
 
     // Calc tree levels
-    if (state.tabsTree) state.tabs = Utils.CalcTabsTreeLevels(state.tabs)
+    if (state.tabsTree) {
+      let ans = await browser.storage.local.get('tabsTree')
+      let tabsTree = ans.tabsTree || []
+      for (let tr of tabsTree) {
+        const parentTab = state.tabs[tr[0]]
+        const parentLvl = tr[1]
+        const parentFolded = tr[2]
+        const childTab = state.tabs[tr[3]]
+        if (!parentTab || !childTab) continue
+        parentTab.isParent = true
+        parentTab.lvl = parentLvl
+        parentTab.folded = parentFolded
+        childTab.parentId = parentTab.id
+        childTab.lvl = parentLvl + 1
+      }
+      /* eslint-disable-next-line */
+      state.tabsTree = state.tabsTree
+    }
+  },
+
+  /**
+   * Save tabs tree relations [parentIndex, parentLvl, parentFolded, childIndex]
+   */
+  saveTabsTree({ state }) {
+    if (TabsTreeSaveTimeout) clearTimeout(TabsTreeSaveTimeout)
+    TabsTreeSaveTimeout = setTimeout(async () => {
+      const tabsTree = []
+      for (let t of state.tabs) {
+        if (t.parentId >= 0) {
+          const parentTab = state.tabs.find(p => p.id === t.parentId)
+          if (!parentTab) continue
+          tabsTree.push([parentTab.index, parentTab.lvl, parentTab.folded, t.index])
+        }
+      }
+      await browser.storage.local.set({ tabsTree })
+      TabsTreeSaveTimeout = null
+    }, 1500)
   },
 
   /**
@@ -67,11 +106,7 @@ export default {
       return
     }
 
-    if (
-      state.noEmptyDefault
-      && !tab.pinned
-      && tab.cookieStoreId === getters.defaultCtxId
-    ) {
+    if (state.noEmptyDefault && !tab.pinned && tab.cookieStoreId === getters.defaultCtxId) {
       const panelIndex = Utils.GetPanelIndex(getters.panels, tab.id)
       const panelTabs = getters.panels[panelIndex].tabs
       if (panelTabs && panelTabs.length === 1) {
@@ -120,10 +155,10 @@ export default {
     // If there are not tabs on this panel
     // create new one (if that option accepted)
     if (
-      panel
-      && toRemove.length === panel.tabs.length
-      && panelId === getters.defaultCtxId
-      && state.noEmptyDefault
+      panel &&
+      toRemove.length === panel.tabs.length &&
+      panelId === getters.defaultCtxId &&
+      state.noEmptyDefault
     ) {
       await browser.tabs.create({ active: true })
     }
@@ -386,7 +421,7 @@ export default {
 
       await browser.tabs.create({
         cookieStoreId: ctxId,
-        url: tab.url.indexOf('http') ? null : tab.url
+        url: tab.url.indexOf('http') ? null : tab.url,
       })
       await browser.tabs.remove(tab.id)
     }
@@ -422,35 +457,37 @@ export default {
   /**
    * Hide children of tab
    */
-  async foldTabsBranch({ state }, tabId) {
+  async foldTabsBranch({ state, dispatch }, tabId) {
     const toHide = []
     for (let t of state.tabs) {
       if (t.id === tabId) t.folded = true
-      if (t.openerTabId === tabId || toHide.includes(t.openerTabId)) {
+      if (t.parentId === tabId || toHide.includes(t.parentId)) {
         if (t.active) await browser.tabs.update(tabId, { active: true })
         if (!t.hidden) toHide.push(t.id)
       }
     }
 
     if (toHide.length) browser.tabs.hide(toHide)
+    dispatch('saveTabsTree')
   },
 
   /**
    * Show children of tab
    */
-  async expTabsBranch({ state }, tabId) {
+  async expTabsBranch({ state, dispatch }, tabId) {
     const toShow = []
     const preserve = []
     for (let t of state.tabs) {
       if (t.id === tabId) t.folded = false
       if (t.id !== tabId && t.folded) preserve.push(t.id)
-      if (t.openerTabId === tabId || toShow.includes(t.openerTabId)) {
-        if (t.hidden && t.openerTabId === tabId) toShow.push(t.id)
-        if (!preserve.includes(t.openerTabId)) toShow.push(t.id)
+      if (t.parentId === tabId || toShow.includes(t.parentId)) {
+        if (t.hidden && t.parentId === tabId) toShow.push(t.id)
+        if (!preserve.includes(t.parentId)) toShow.push(t.id)
       }
     }
 
     if (toShow.length) browser.tabs.show(toShow)
+    dispatch('saveTabsTree')
   },
 
   /**
@@ -461,5 +498,59 @@ export default {
     if (!rootTab) return
     if (rootTab.folded) dispatch('expTabsBranch', tabId)
     else dispatch('foldTabsBranch', tabId)
+  },
+
+  /**
+   * Drop to tabs panel
+   */
+  async dropToTabs({ state, getters, dispatch }, { event, dropIndex, dropParent, nodes } = {}) {
+    const destCtx = getters.panels[state.panelIndex].cookieStoreId
+
+    // Tabs or Bookmarks
+    if (nodes && nodes.length) {
+      const samePanel = nodes[0].panel === state.panelIndex
+
+      if (nodes[0].type === 'tab' && samePanel && !event.ctrlKey) {
+        // Move
+        if (nodes[0].index === dropIndex) return
+
+        dropIndex = nodes[0].index > dropIndex ? dropIndex + 1 : dropIndex
+        browser.tabs.move(nodes.map(t => t.id), {
+          windowId: state.windowId,
+          index: dropIndex,
+        })
+        browser.tabs.update(nodes[0].id, { active: true })
+
+        // Update tabs tree
+        if (state.tabsTree) {
+          for (let node of nodes) {
+            const tab = state.tabs.find(t => t.id === node.id)
+            if (tab) tab.parentId = dropParent >= 0 ? dropParent : -1
+          }
+          if (dropIndex === nodes[0].index) {
+            state.tabs = Utils.CalcTabsTreeLevels(state.tabs)
+          }
+        }
+      } else {
+        // Create new tabs
+        for (let i = 0; i < nodes.length; i++) {
+          const node = nodes[i]
+          await browser.tabs.create({
+            active: true,
+            cookieStoreId: destCtx,
+            index: dropIndex + 1,
+            url: node.url,
+            windowId: state.windowId,
+          })
+        }
+      }
+    }
+
+    // Native event
+    if (nodes === null) {
+      if (!event.dataTransfer) return
+    }
+
+    dispatch('saveTabsTree')
   },
 }

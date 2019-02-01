@@ -157,6 +157,10 @@ export default {
       this.$refs.scrollBox.scrollTop = y
       this.recalcScroll()
     },
+
+    getScrollBox() {
+      return this.$refs.scrollBox
+    },
   },
 }
 </script>
