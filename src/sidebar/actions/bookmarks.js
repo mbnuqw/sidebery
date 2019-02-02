@@ -81,6 +81,16 @@ export default {
     EventBus.$emit('panelLoadingStart', 0)
     try {
       let tree = await browser.bookmarks.getTree()
+
+      // Normalize objects before vue
+      const walker = nodes => {
+        for (let n of nodes) {
+          if (n.type === 'folder') n.expanded = false
+          if (n.children) walker(n.children)
+        }
+      }
+      walker(tree[0].children)
+
       state.bookmarks = tree[0].children
       EventBus.$emit('panelLoadingOk', 0)
     } catch (err) {
