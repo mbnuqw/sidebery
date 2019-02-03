@@ -398,63 +398,6 @@ export default {
   &[drag-end] .drag-tab[dragged]
     transition: transform var(--d-fast)
 
-.TabsPanel .drag-box
-  box(absolute)
-  size(100%, same)
-  pos(0, 0)
-  opacity: 0
-  z-index: -1
-  transition: opacity var(--d-fast), z-index var(--d-fast)
-
-.TabsPanel .drag-tab
-  box(absolute, flex)
-  pos(0, 0)
-  size(100%)
-  align-items: center
-  background-color: #24242400
-  white-space: nowrap
-  transition: transform var(--d-fast), background-color var(--d-fast)
-  &[dragged]
-    transition: none
-    z-index: 50
-    background-color: var(--tabs-activated-bg)
-
-.TabsPanel .drag-fav
-  box(relative)
-  size(16px, same)
-  flex-shrink: 0
-  margin: 0 6px 0 7px
-  > img
-    box(absolute)
-    size(100%, same)
-  > .placeholder
-    box(absolute)
-    size(3px, same)
-    pos(7px, 6px)
-    border-radius: 50%
-    background-color: var(--favicons-placehoder-bg)
-    transition: opacity var(--d-fast), transform var(--d-fast)
-    &:before
-    &:after
-      content: ''
-      box(absolute)
-      size(3px, same)
-      border-radius: 6px
-      background-color: var(--favicons-placehoder-bg)
-    &:before
-      pos(0, -5px)
-    &:after
-      pos(0, 5px)
-
-.TabsPanel .drag-title
-  box(relative)
-  text(s: rem(16), h: 28px)
-  flex-grow: 1
-  color: var(--tabs-fg)
-  padding: 0 1px
-  overflow: hidden
-  mask: linear-gradient(-90deg, transparent, #000000 12px, #000000)
-
 .TabsPanel .container
   box(relative)
   size(100%, same)

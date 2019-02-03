@@ -122,7 +122,7 @@ export default {
     return {
       width: 250,
       dragMode: false,
-      pointerMode: 'between',
+      pointerMode: 'none',
       dashboard: null,
       loading: [],
       loadingTimers: [],
@@ -359,8 +359,10 @@ export default {
         if (this.pointerPos !== this.panelTopOffset - scroll - 12) {
           this.pointerPos = this.panelTopOffset - scroll - 12
           this.$refs.pointer.style.transform = `translateY(${this.pointerPos}px)`
+          this.pointerMode = 'between'
           this.dropParent = -1
           this.dropIndex = 0 // Find start index of panel
+          console.log(`[DEBUG] EMPTY index: ${this.dropIndex}, parent: ${this.dropParent}`);
         }
         return
       }
@@ -373,7 +375,9 @@ export default {
           this.$refs.pointer.style.transform = `translateY(${this.pointerPos}px)`
           this.pointerMode = 'between'
           this.dropParent = slot.parent
-          this.dropIndex = slot.index + 1
+          if (slot.folded) this.dropIndex = -1
+          else this.dropIndex = slot.index + 1
+          console.log(`[DEBUG] END index: ${this.dropIndex}, parent: ${this.dropParent}`);
         }
         return
       }
@@ -389,10 +393,11 @@ export default {
             this.pointerPos = slot.start - 12 + this.panelTopOffset - scroll
             this.$refs.pointer.style.transform = `translateY(${this.pointerPos}px)`
             this.pointerMode = 'between'
-
+  
             if (!prevSlot) {
               this.dropParent = -1
               this.dropIndex = slot.index
+              console.log(`[DEBUG] BETWEEN START index: ${this.dropIndex}, parent: ${this.dropParent}`);
               break
             }
 
@@ -400,11 +405,16 @@ export default {
               // First child
               this.dropParent = slot.parent
               this.dropIndex = slot.index
+            } else if (prevSlot.folded) {
+              // After folded group
+              this.dropParent = prevSlot.parent
+              this.dropIndex = slot.index
             } else {
-              // Second - Last
+              // Second-Last in group
               this.dropParent = prevSlot.parent
               this.dropIndex = prevSlot.index + 1
             }
+            console.log(`[DEBUG] BETWEEN index: ${this.dropIndex}, parent: ${this.dropParent}`);
           }
           break
         }
@@ -413,15 +423,27 @@ export default {
           if (this.pointerPos !== slot.center - 12 + this.panelTopOffset - scroll) {
             this.pointerPos = slot.center - 12 + this.panelTopOffset - scroll
             this.$refs.pointer.style.transform = `translateY(${this.pointerPos}px)`
-            this.pointerMode = 'in'
+            this.pointerMode = slot.folded ? 'inside-fold' : 'inside-exp'
             this.dropParent = slot.id
             if (slot.type === 'tab') this.dropIndex = slot.index + 1
             else this.dropIndex = 0
           }
-          if (slot.folded && e.clientX < 32) {
+          if (!this.pointerExpLock && slot.folded && e.clientX < 36) {
             slot.folded = false
+            this.pointerExpLock = true
             this.expandDropTarget()
+            this.pointerMode = 'inside-exp'
           }
+          if (this.pointerExpLock && e.clientX > 36) {
+            this.pointerExpLock = false
+          }
+          if (!this.pointerExpLock && !slot.folded && e.clientX < 36) {
+            slot.folded = true
+            this.pointerExpLock = true
+            this.foldDropTarget()
+            this.pointerMode = 'inside-fold'
+          }
+          console.log(`[DEBUG] INSIDE index: ${this.dropIndex}, parent: ${this.dropParent}`);
           break
         }
       }
@@ -517,7 +539,7 @@ export default {
       if (this.panels[State.panelIndex].bookmarks) {
         Store.dispatch('dropToBookmarks', {
           event: e,
-          dropIndex: this.pointerMode === 'in' ? 0 : this.dropIndex,
+          dropIndex: this.pointerMode.startsWith('inside') ? 0 : this.dropIndex,
           dropParent: this.dropParent,
           nodes: this.dragNodes,
         })
@@ -542,6 +564,8 @@ export default {
      * Navigation button dragenter handler
      */
     onNavDragEnter(i) {
+      // Skip last button (AddNewContianer)
+      if (i === this.nav.length - 1) return
       this.navDragEnterIndex = i
       if (this.navDragEnterTimeout) clearTimeout(this.navDragEnterTimeout)
       this.navDragEnterTimeout = setTimeout(() => {
@@ -758,6 +782,12 @@ export default {
 
       Store.dispatch('recalcPanelScroll')
       Store.dispatch('saveSyncPanels')
+
+      // Calc tree levels
+      if (State.tabsTree) {
+        State.tabs = Utils.CalcTabsTreeLevels(State.tabs)
+        Store.dispatch('saveTabsTree')
+      }
     },
 
     /**
@@ -954,11 +984,35 @@ export default {
      * Expand drop target
      */
     expandDropTarget() {
-      if (this.pointerMode !== 'in') return
+      if (!this.pointerMode.startsWith('inside')) return
       if (this.pointerEnterTimeout) return
 
       if (typeof this.dropParent === 'number') Store.dispatch('expTabsBranch', this.dropParent)
       if (typeof this.dropParent === 'string') Store.dispatch('expandBookmark', this.dropParent)
+
+      // Start expand animation
+      if (this.$refs.pointer) {
+        this.$refs.pointer.classList.remove('-expanding')
+        this.$refs.pointer.offsetHeight
+        this.$refs.pointer.classList.add('-expanding')
+      }
+
+      setTimeout(() => this.recalcPanelBounds(), 128)
+      this.pointerEnterTimeout = setTimeout(() => {
+        this.pointerEnterTimeout = null
+      }, 500)
+    },
+
+    /**
+     * Fold drop target
+     */
+    foldDropTarget() {
+      if (!this.pointerMode.startsWith('inside')) return
+      if (this.pointerEnterTimeout) return
+
+      if (typeof this.dropParent === 'number') Store.dispatch('foldTabsBranch', this.dropParent)
+      if (typeof this.dropParent === 'string') Store.dispatch('foldBookmark', this.dropParent)
+
       setTimeout(() => this.recalcPanelBounds(), 128)
       this.pointerEnterTimeout = setTimeout(() => {
         this.pointerEnterTimeout = null
@@ -974,6 +1028,7 @@ export default {
       this.dropIndex = null
       this.dropParent = null
       this.pointerPos = null
+      this.pointerMode = 'none'
       this.panelScrollEl = null
       EventBus.$emit('dragEnd')
     },
@@ -1309,8 +1364,8 @@ NAV_CONF_HEIGHT = auto
     box(absolute)
     size(100%, same)
     pos(0, 0)
-    transform: translateX(0)
-    transition: transform var(--d-fast)
+    opacity: 1
+    transition: opacity var(--d-fast)
     &:before
       content: ''
       box(absolute)
@@ -1319,6 +1374,14 @@ NAV_CONF_HEIGHT = auto
       transform: rotateZ(45deg)
       box-shadow: inset 0 0 0 2px var(--nav-btn-update-badge-bg)
       transition: background-color var(--d-fast)
+    &:after
+      content: ''
+      box(absolute)
+      size(16px, 16px)
+      pos(4px, -11px)
+      opacity: 0
+      transform: rotateZ(45deg)
+      box-shadow: inset -1px 1px 0 0 var(--nav-btn-update-badge-bg)
   &:after
     content: ''
     box(absolute)
@@ -1326,16 +1389,22 @@ NAV_CONF_HEIGHT = auto
     pos(11px, 6px)
     background-color: var(--nav-btn-update-badge-bg)
     opacity: 0
-    transition: opacity var(--d-fast), transform var(--d-fast)
+    transition: opacity var(--d-fast)
 .Sidebar[drag-mode] > .pointer
   opacity: 1
   z-index: 100
+.Sidebar[pointer-mode="none"] > .pointer .arrow
+  opacity: 0
 .Sidebar[pointer-mode="between"] > .pointer:after
   opacity: 1
-.Sidebar[pointer-mode="in"] > .pointer .arrow:before
+.Sidebar[pointer-mode="inside-fold"] > .pointer .arrow:before
   background-color: var(--nav-btn-update-badge-bg)
-.Sidebar[pointer-mode="in"] > .pointer:after
+.Sidebar[pointer-mode^="inside"] > .pointer:after
   opacity: 0
+.Sidebar > .pointer.-expanding .arrow
+  animation: pointer-expand-arrow .3s
+.Sidebar > .pointer.-expanding .arrow:after
+  animation: pointer-expand-pulse .5s
 
 // --- Panel ---
 .Sidebar > .panel-box
@@ -1385,4 +1454,18 @@ NAV_CONF_HEIGHT = auto
     opacity: 1
   100%
     opacity: 0
+
+@keyframes pointer-expand-arrow
+  0%
+    opacity: 0
+  100%
+    opacity: 1
+
+@keyframes pointer-expand-pulse
+  0%
+    opacity: 1
+    transform: rotateZ(45deg) scale(1, 1)
+  100%
+    opacity: 0
+    transform: rotateZ(45deg) scale(2, 2)
 </style>

@@ -42,7 +42,7 @@
   .close(v-if="$store.state.showTabRmBtn", @mousedown.stop="close", @mouseup.stop="")
     svg: use(xlink:href="#icon_remove")
   .t-box
-    .title {{tab.title}}
+    .title {{tab.id}} - [{{tab.index}}] - {{tab.title}}
     .loading
       svg.-a: use(xlink:href="#icon_load")
       svg.-b: use(xlink:href="#icon_load")
@@ -398,9 +398,6 @@ export default {
   &[lvl="5"]
     padding-left: calc(var(--tabs-indent) * 5)
 
-  &[dragged]
-    opacity: .32
-
   &[is-parent] .fav:hover
     > .placeholder
     > img
@@ -424,6 +421,12 @@ export default {
       opacity: 1
     .title
       color: var(--tabs-activated-fg)
+
+  &[dragged]
+    z-index: 10
+    background-color: var(--tabs-selected-bg)
+    .title
+      color: var(--tabs-selected-fg)
 
   &[close-btn]:hover
     &[data-audible] .t-box
