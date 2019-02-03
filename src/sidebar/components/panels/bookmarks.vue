@@ -45,6 +45,7 @@ export default {
 
   props: {
     active: Boolean,
+    index: Number,
   },
 
   data() {

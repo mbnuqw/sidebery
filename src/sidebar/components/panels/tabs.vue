@@ -42,7 +42,6 @@ export default {
       type: Array,
       default: () => [],
     },
-    id: String,
     index: Number,
     storeId: String,
   },

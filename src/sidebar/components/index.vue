@@ -470,8 +470,9 @@ export default {
       if (e && e.relatedTarget) return
 
       // Get drop slots
-      if (!this.$refs.panels || !this.$refs.panels[State.panelIndex]) return
-      const panelVN = this.$refs.panels[State.panelIndex]
+      if (!this.$refs.panels) return
+      const panelVN = this.$refs.panels.find(p => p.index === State.panelIndex)
+      if (!panelVN) return
       this.dropSlots = panelVN.getItemsBounds()
       if (!this.dropSlots) return
 
@@ -502,6 +503,9 @@ export default {
      * ToBookmarksPanel  url     url       -         -              url
      */
     onDrop(e) {
+      if (this.dropParent === undefined) this.dropParent = -1
+      if (this.dropParent === null) this.dropParent = -1
+
       if (this.panels[State.panelIndex].tabs) {
         Store.dispatch('dropToTabs', {
           event: e,
@@ -934,8 +938,9 @@ export default {
       if (!this.dragMode) return
 
       // Get drop slots
-      if (!this.$refs.panels || !this.$refs.panels[State.panelIndex]) return
-      const panelVN = this.$refs.panels[State.panelIndex]
+      if (!this.$refs.panels) return
+      const panelVN = this.$refs.panels.find(p => p.index === State.panelIndex)
+      if (!panelVN) return
       this.dropSlots = panelVN.getItemsBounds()
 
       // Get start coorinate of drop slots

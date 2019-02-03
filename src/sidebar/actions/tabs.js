@@ -545,10 +545,14 @@ export default {
             active: !(parent && parent.folded),
             cookieStoreId: destCtx,
             index: dropIndex,
-            openerTabId: dropParent,
+            openerTabId: dropParent < 0 ? undefined : dropParent,
             url: node.url,
             windowId: state.windowId,
           })
+          // Remove source tab
+          if (nodes[0].type === 'tab' && !event.ctrlKey) {
+            await browser.tabs.remove(node.id)
+          }
         }
       }
     }
