@@ -235,16 +235,16 @@ function CalcTabsTreeLevels(tabs) {
     if (t.parentId >= 0) {
       // in / out
       if (!parents.includes(t.parentId)) {
-        tabs[i - 1].isParent = true
-        tabs[i - 1].folded = t.hidden
+        lastParent = tabs[i - 1]
+        lastParent.isParent = true
+        lastParent.folded = lastParent.folded || !!t.hidden
         parents[lvl] = t.parentId
         relations[i - 1] = [t.id]
-        lastParent = i - 1
         lvl++
       } else if (lvl !== parents.length - 1) {
         lvl = parents.indexOf(t.parentId) + 1
       } else {
-        relations[lastParent].push(t.id)
+        relations[lastParent.index].push(t.id)
       }
     }
     t.lvl = lvl

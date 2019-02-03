@@ -505,6 +505,7 @@ export default {
    */
   async dropToTabs({ state, getters, dispatch }, { event, dropIndex, dropParent, nodes } = {}) {
     const destCtx = getters.panels[state.panelIndex].cookieStoreId
+    const parent = state.tabs.find(t => t.id === dropParent)
 
     // Tabs or Bookmarks
     if (nodes && nodes.length) {
@@ -518,7 +519,12 @@ export default {
             windowId: state.windowId,
             index: dropIndex,
           })
-          browser.tabs.update(nodes[0].id, { active: true })
+          // Hide tabs for folded branch or activate first node for expanded
+          if (parent && parent.folded) {
+            browser.tabs.hide(nodes.map(t => t.id))
+          } else {
+            browser.tabs.update(nodes[0].id, { active: true })
+          }
         }
 
         // Update tabs tree
@@ -536,7 +542,7 @@ export default {
         for (let i = 0; i < nodes.length; i++) {
           const node = nodes[i]
           await browser.tabs.create({
-            active: true,
+            active: !(parent && parent.folded),
             cookieStoreId: destCtx,
             index: dropIndex,
             openerTabId: dropParent,

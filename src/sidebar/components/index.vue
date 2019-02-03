@@ -640,7 +640,7 @@ export default {
             if (State.tabs[i].lvl) tab.lvl = State.tabs[i].lvl + 1
             else tab.lvl = 1
             State.tabs[i].isParent = true
-            State.tabs[i].folded = false
+            if (State.tabs[i].folded) browser.tabs.hide(tab.id)
             break
           }
         }
@@ -968,6 +968,7 @@ export default {
       this.dragMode = false
       this.dropIndex = null
       this.dropParent = null
+      this.pointerPos = null
       this.panelScrollEl = null
       EventBus.$emit('dragEnd')
     },
