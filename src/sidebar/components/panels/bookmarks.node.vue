@@ -13,6 +13,7 @@
       img(:src="favicon")
     .exp(v-if="isParent")
       svg: use(xlink:href="#icon_expand")
+    //- .title(v-if="node.title") {{node.index}} : {{node.parentId}}/{{node.id}} - {{node.title}}
     .title(v-if="node.title") {{node.title}}
   transition(name="expand")
     .children(v-if="isParent", v-show="node.expanded", :title="node.title")
@@ -125,7 +126,7 @@ export default {
       e.dataTransfer.setData('text/plain', this.node.url)
       e.dataTransfer.effectAllowed = 'move'
       const info = [{
-        type: 'bookmark',
+        type: this.node.type,
         id: this.node.id,
         index: this.node.index,
         parent: this.node.parentId,

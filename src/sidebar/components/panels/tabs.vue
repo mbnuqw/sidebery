@@ -297,8 +297,8 @@ export default {
       const thRaw = compStyle.getPropertyValue('--tabs-height')
       const th = Utils.ParseCSSNum(thRaw.trim())[0]
       if (th === 0) return []
-      const c = th >> 1
-      const e = c >> 1
+      const half = th >> 1
+      const e = half >> 1
 
       let overallHeight = 0
       const bounds = []
@@ -312,11 +312,11 @@ export default {
           in: true,
           folded: t.folded,
           parent: t.parentId,
-          s: overallHeight,
-          t: overallHeight + e,
-          c: overallHeight + c,
-          b: overallHeight + c + e,
-          e: overallHeight + th,
+          start: overallHeight,
+          top: overallHeight + e,
+          center: overallHeight + half,
+          bottom: overallHeight + half + e,
+          end: overallHeight + th,
         })
 
         overallHeight += th

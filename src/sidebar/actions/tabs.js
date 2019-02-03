@@ -45,25 +45,25 @@ export default {
       await browser.tabs.move(move[0], { index: move[1] })
     })
 
-    // Calc tree levels
-    if (state.tabsTree) {
-      let ans = await browser.storage.local.get('tabsTree')
-      let tabsTree = ans.tabsTree || []
-      for (let tr of tabsTree) {
-        const parentTab = state.tabs[tr[0]]
-        const parentLvl = tr[1]
-        const parentFolded = tr[2]
-        const childTab = state.tabs[tr[3]]
-        if (!parentTab || !childTab) continue
-        parentTab.isParent = true
-        parentTab.lvl = parentLvl
-        parentTab.folded = parentFolded
-        childTab.parentId = parentTab.id
-        childTab.lvl = parentLvl + 1
-      }
-      /* eslint-disable-next-line */
-      state.tabsTree = state.tabsTree
-    }
+    // // Calc tree levels
+    // if (state.tabsTree) {
+    //   let ans = await browser.storage.local.get('tabsTree')
+    //   let tabsTree = ans.tabsTree || []
+    //   for (let tr of tabsTree) {
+    //     const parentTab = state.tabs[tr[0]]
+    //     const parentLvl = tr[1]
+    //     const parentFolded = tr[2]
+    //     const childTab = state.tabs[tr[3]]
+    //     if (!parentTab || !childTab) continue
+    //     parentTab.isParent = true
+    //     parentTab.lvl = parentLvl
+    //     parentTab.folded = parentFolded
+    //     childTab.parentId = parentTab.id
+    //     childTab.lvl = parentLvl + 1
+    //   }
+    //   /* eslint-disable-next-line */
+    //   state.tabsTree = state.tabsTree
+    // }
   },
 
   /**
@@ -512,14 +512,14 @@ export default {
 
       if (nodes[0].type === 'tab' && samePanel && !event.ctrlKey) {
         // Move
-        if (nodes[0].index === dropIndex) return
-
-        dropIndex = nodes[0].index > dropIndex ? dropIndex + 1 : dropIndex
-        browser.tabs.move(nodes.map(t => t.id), {
-          windowId: state.windowId,
-          index: dropIndex,
-        })
-        browser.tabs.update(nodes[0].id, { active: true })
+        if (nodes[0].index !== dropIndex) {
+          dropIndex = nodes[0].index > dropIndex ? dropIndex : dropIndex - 1
+          browser.tabs.move(nodes.map(t => t.id), {
+            windowId: state.windowId,
+            index: dropIndex,
+          })
+          browser.tabs.update(nodes[0].id, { active: true })
+        }
 
         // Update tabs tree
         if (state.tabsTree) {
@@ -538,7 +538,8 @@ export default {
           await browser.tabs.create({
             active: true,
             cookieStoreId: destCtx,
-            index: dropIndex + 1,
+            index: dropIndex,
+            openerTabId: dropParent,
             url: node.url,
             windowId: state.windowId,
           })
@@ -547,8 +548,26 @@ export default {
     }
 
     // Native event
-    if (nodes === null) {
+    if (!nodes) {
       if (!event.dataTransfer) return
+      for (let item of event.dataTransfer.items) {
+        if (item.kind !== 'string') return
+
+        if (item.type === 'text/uri-list') {
+          item.getAsString(s => {
+            if (!s.startsWith('http')) return
+            if (destCtx) {
+              browser.tabs.create({
+                url: s,
+                cookieStoreId: destCtx,
+                windowId: state.windowId,
+              })
+            } else {
+              browser.tabs.create({ url: s, windowId: state.windowId })
+            }
+          })
+        }
+      }
     }
 
     dispatch('saveTabsTree')

@@ -288,8 +288,8 @@ export default {
     EventBus.$on('panelLoadingEnd', panelIndex => this.onPanelLoadingEnd(panelIndex))
     EventBus.$on('panelLoadingOk', panelIndex => this.onPanelLoadingOk(panelIndex))
     EventBus.$on('panelLoadingErr', panelIndex => this.onPanelLoadingErr(panelIndex))
-    EventBus.$on('dragStart', info => (this.dragInfo = info))
-    EventBus.$on('outerDragStart', info => (this.outerDragInfo = info))
+    EventBus.$on('dragStart', info => (this.dragNodes = info))
+    EventBus.$on('outerDragStart', info => (this.dragNodes = info))
     EventBus.$on('panelSwitched', () => setTimeout(() => this.recalcPanelBounds(), 256))
   },
 
@@ -349,45 +349,80 @@ export default {
       if (!this.dragMode) return
       if (!this.$refs.pointer) return
 
+      let dragNode = this.dragNodes ? this.dragNodes[0] : null
+      let dragNodeId = dragNode ? dragNode.id : null
       let scroll = this.panelScrollEl ? this.panelScrollEl.scrollTop : 0
       let y = e.clientY - this.panelTopOffset + scroll
 
-      // The end
-      if (y > this.dropSlots[this.dropSlots.length - 1].b) {
-        const s = this.dropSlots[this.dropSlots.length - 1]
-        const pos = s.e - 12 + this.panelTopOffset - scroll
-        this.$refs.pointer.style.transform = `translateY(${pos}px)`
-        this.pointerMode = 'between'
-        this.dropParent = s.parent
-        this.dropIndex = s.index
+      // Empty
+      if (this.dropSlots.length === 0) {
+        if (this.pointerPos !== this.panelTopOffset - scroll - 12) {
+          this.pointerPos = this.panelTopOffset - scroll - 12
+          this.$refs.pointer.style.transform = `translateY(${this.pointerPos}px)`
+          this.dropParent = -1
+          this.dropIndex = 0 // Find start index of panel
+        }
+        return
+      }
+
+      // End
+      if (y > this.dropSlots[this.dropSlots.length - 1].bottom) {
+        const slot = this.dropSlots[this.dropSlots.length - 1]
+        if (this.pointerPos !== slot.end - 12 + this.panelTopOffset - scroll) {
+          this.pointerPos = slot.end - 12 + this.panelTopOffset - scroll
+          this.$refs.pointer.style.transform = `translateY(${this.pointerPos}px)`
+          this.pointerMode = 'between'
+          this.dropParent = slot.parent
+          this.dropIndex = slot.index + 1
+        }
         return
       }
 
       for (let i = 0; i < this.dropSlots.length; i++) {
-        const s = this.dropSlots[i]
-        if (y > s.e || y < s.s) continue
-        if (y < s.t) {
-          const pos = s.s - 12 + this.panelTopOffset - scroll
-          this.$refs.pointer.style.transform = `translateY(${pos}px)`
-          this.pointerMode = 'between'
-          this.dropParent = s.parent
-          this.dropIndex = s.index - 1
+        const slot = this.dropSlots[i]
+        // Skip
+        if (y > slot.end || y < slot.start || slot.id === dragNodeId) continue
+        // Between
+        if (slot.in ? y < slot.top : y < slot.center) {
+          const prevSlot = this.dropSlots[i - 1]
+          if (this.pointerPos !== slot.start - 12 + this.panelTopOffset - scroll) {
+            this.pointerPos = slot.start - 12 + this.panelTopOffset - scroll
+            this.$refs.pointer.style.transform = `translateY(${this.pointerPos}px)`
+            this.pointerMode = 'between'
+
+            if (!prevSlot) {
+              this.dropParent = -1
+              this.dropIndex = slot.index
+              break
+            }
+
+            if (prevSlot.id === slot.parent) {
+              // First child
+              this.dropParent = slot.parent
+              this.dropIndex = slot.index
+            } else {
+              // Second - Last
+              this.dropParent = prevSlot.parent
+              this.dropIndex = prevSlot.index + 1
+            }
+          }
           break
         }
-
-        if (s.in) {
-          if (y < s.b) {
-            const pos = s.c - 12 + this.panelTopOffset - scroll
-            this.$refs.pointer.style.transform = `translateY(${pos}px)`
+        // Inside
+        if (slot.in && y < slot.bottom) {
+          if (this.pointerPos !== slot.center - 12 + this.panelTopOffset - scroll) {
+            this.pointerPos = slot.center - 12 + this.panelTopOffset - scroll
+            this.$refs.pointer.style.transform = `translateY(${this.pointerPos}px)`
             this.pointerMode = 'in'
-            this.dropParent = s.id
-            this.dropIndex = s.index
-            if (s.folded && e.clientX < 32) {
-              s.folded = false
-              this.expandDropTarget()
-            }
-            break
+            this.dropParent = slot.id
+            if (slot.type === 'tab') this.dropIndex = slot.index + 1
+            else this.dropIndex = 0
           }
+          if (slot.folded && e.clientX < 32) {
+            slot.folded = false
+            this.expandDropTarget()
+          }
+          break
         }
       }
     },
@@ -467,76 +502,24 @@ export default {
      * ToBookmarksPanel  url     url       -         -              url
      */
     onDrop(e) {
-      // if (!this.dropIndex && !this.dropIn) return
-      const draggedNodes = this.dragInfo || this.outerDragInfo
-
       if (this.panels[State.panelIndex].tabs) {
         Store.dispatch('dropToTabs', {
           event: e,
           dropIndex: this.dropIndex,
           dropParent: this.dropParent,
-          nodes: draggedNodes,
+          nodes: this.dragNodes,
         })
       }
       if (this.panels[State.panelIndex].bookmarks) {
         Store.dispatch('dropToBookmarks', {
           event: e,
-          dropIndex: this.dropIndex,
+          dropIndex: this.pointerMode === 'in' ? 0 : this.dropIndex,
           dropParent: this.dropParent,
-          nodes: draggedNodes,
+          nodes: this.dragNodes,
         })
       }
 
       this.resetDrag()
-
-      // if (!e.dataTransfer) return
-
-      // for (let item of e.dataTransfer.items) {
-      //   if (item.kind !== 'string') return
-
-      //   if (item.type === 'text/uri-list') {
-      //     item.getAsString(s => {
-      //       if (!s.startsWith('http')) return
-      //       const panel = this.panels[State.panelIndex]
-      //       if (panel && panel.cookieStoreId) {
-      //         browser.tabs.create({
-      //           url: s,
-      //           cookieStoreId: panel.cookieStoreId,
-      //           windowId: State.windowId,
-      //         })
-      //       } else {
-      //         browser.tabs.create({ url: s, windowId: State.windowId })
-      //       }
-      //     })
-      //   }
-
-      //   if (item.type === 'text/x-moz-text-internal') {
-      //     item.getAsString(async s => {
-      //       if (e.dataTransfer.dropEffect === 'move') {
-      //         const tab = this.outerDragInfo
-
-      //         if (!tab || tab.url !== s) {
-      //           if (!s.startsWith('http')) return
-      //           browser.tabs.create({ url: s, windowId: State.windowId })
-      //           return
-      //         }
-
-      //         if (tab.incognito === State.private) {
-      //           browser.tabs.move(tab.tabId, { windowId: State.windowId, index: -1 })
-      //         } else {
-      //           if (!s.startsWith('http')) return
-      //           browser.tabs.create({ url: s, windowId: State.windowId })
-      //           browser.tabs.remove(tab.tabId)
-      //         }
-      //       }
-      //       if (e.dataTransfer.dropEffect === 'copy') {
-      //         if (!s.startsWith('http')) return
-      //         browser.tabs.create({ windowId: State.windowId, url: s })
-      //       }
-      //     })
-      //     break
-      //   }
-      // }
     },
 
     /**
@@ -981,8 +964,7 @@ export default {
      * Reset drag-and-drop values
      */
     resetDrag() {
-      this.dragInfo = null
-      this.outerDragInfo = null
+      this.dragNodes = null
       this.dragMode = false
       this.dropIndex = null
       this.dropParent = null

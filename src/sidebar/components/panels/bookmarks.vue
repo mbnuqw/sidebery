@@ -14,8 +14,6 @@
       :key="n.id"
       :node="n"
       :recalc-scroll="recalcScroll"
-      @md="onNodeMouseDown"
-      @expand="onFolderExpand"
       @create="onCreate"
       @edit="onEdit")
 
@@ -190,15 +188,6 @@ export default {
      * Handle moving bookmark
      */
     onMoved(id, info) {
-      // Quit from dragging mode
-      if (this.drag) {
-        this.drag = null
-        setTimeout(() => {
-          this.flat = null
-          this.dragEnd = false
-        }, 128)
-      }
-
       let node
       let removed = false
       const rmWalk = nodes => {
@@ -206,6 +195,7 @@ export default {
           if (n.id === info.oldParentId) {
             node = n.children.splice(info.oldIndex, 1)[0]
             node.index = info.index
+            node.parentId = info.parentId
             for (let i = info.oldIndex; i < n.children.length; i++) {
               n.children[i].index--
             }
@@ -256,38 +246,6 @@ export default {
     },
 
     /**
-     * Handle mouse down on bookmark node
-     */
-    onNodeMouseDown(e, nodes) {
-      this.drag = {
-        node: nodes[0],
-        lvl: nodes.length - 1,
-        x: e.clientX,
-        y: e.clientY,
-        dragged: false,
-        path: [],
-      }
-    },
-
-    /**
-     * Handle folder expand
-     */
-    onFolderExpand(node) {
-      Store.dispatch('saveTreeState')
-
-      // Auto-close sibling dir
-      if (State.autoCloseBookmarks && node.parentId === 'root________' && node.expanded) {
-        for (let child of State.bookmarks) {
-          if (child.id !== node.id && child.type === 'folder') {
-            const vm = this.$refs.nodes.find(c => c.node.id === child.id)
-            if (!vm) continue
-            vm.collapse()
-          }
-        }
-      }
-    },
-
-    /**
      * Handle creating new bookmark
      */
     onCreate(type, path, onEndHandlers) {
@@ -334,47 +292,6 @@ export default {
       while (this.editEndHandlers && this.editEndHandlers[0]) {
         this.editEndHandlers.pop()()
       }
-    },
-
-    /**
-     * Recalculate possitions and sizes for flat
-     * nodes
-     */
-    updateFlatLayout() {
-      let flatTree = []
-      let index = -1
-      let lvl = 0
-      let top = 0
-      const walker = nodes => {
-        for (let i = 0; i < nodes.length; i++) {
-          const n = nodes[i]
-          index++
-          n.top = top
-          n.lvl = lvl
-          if (n.url) {
-            let hostname = n.url.split('/')[2]
-            if (hostname) n.fav = State.favicons[hostname]
-          }
-          if (n.type === 'bookmark') n.h = 24
-          if (n.type === 'folder') n.h = 28
-          if (n.type === 'separator') n.h = 17
-          top += n.h
-          if (n.id === this.drag.node.id) {
-            this.drag.i = index
-            this.drag.h = n.h
-            this.drag.y = n.h >> 1
-            this.drag.top = n.top
-          }
-          flatTree.push(n)
-          if (n.children && n.expanded && n.id !== this.drag.node.id) {
-            lvl++
-            walker(n.children)
-            lvl--
-          }
-        }
-      }
-      walker(State.bookmarks)
-      this.flat = flatTree
     },
 
     /**
@@ -428,11 +345,11 @@ export default {
             in: n.type === 'folder',
             folded: !n.expanded,
             parent: n.parentId,
-            s: overallHeight,
-            t: overallHeight + e,
-            c: overallHeight + c,
-            b: overallHeight + c + e,
-            e: overallHeight + h,
+            start: overallHeight,
+            top: overallHeight + e,
+            center: overallHeight + c,
+            bottom: overallHeight + c + e,
+            end: overallHeight + h,
           })
 
           overallHeight += h

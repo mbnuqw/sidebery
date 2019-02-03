@@ -220,6 +220,8 @@ function CSSVar(key) {
 function CalcTabsTreeLevels(tabs) {
   let lvl = 0
   let parents = []
+  let relations = {}
+  let lastParent
   for (let i = 0; i < tabs.length; i++) {
     let t = tabs[i]
     // zero-lvl
@@ -227,6 +229,8 @@ function CalcTabsTreeLevels(tabs) {
       lvl = 0
       parents = []
     }
+    // is parent
+    if (t.isParent && !relations[i]) relations[i] = []
     // have parent
     if (t.parentId >= 0) {
       // in / out
@@ -234,13 +238,26 @@ function CalcTabsTreeLevels(tabs) {
         tabs[i - 1].isParent = true
         tabs[i - 1].folded = t.hidden
         parents[lvl] = t.parentId
+        relations[i - 1] = [t.id]
+        lastParent = i - 1
         lvl++
       } else if (lvl !== parents.length - 1) {
         lvl = parents.indexOf(t.parentId) + 1
+      } else {
+        relations[lastParent].push(t.id)
       }
     }
     t.lvl = lvl
   }
+
+  for (let parentIndex in relations) {
+    if (!relations.hasOwnProperty(parentIndex)) continue
+    if (!relations[parentIndex].length) {
+      tabs[parentIndex].isParent = false
+      tabs[parentIndex].folded = false
+    }
+  }
+
   return tabs
 }
 

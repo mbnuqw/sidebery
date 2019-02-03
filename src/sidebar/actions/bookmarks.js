@@ -107,7 +107,7 @@ export default {
     const expandPath = []
     const walker = nodes => {
       if (state.autoCloseBookmarks && nodes.find(c => c.id === nodeId)) {
-        nodes.map(c => c.expanded = false)
+        nodes.map(c => (c.expanded = false))
       }
       for (let i = 0; i < nodes.length; i++) {
         if (nodes[i].type !== 'folder') continue
@@ -164,12 +164,14 @@ export default {
   async dropToBookmarks(_, { event, dropIndex, dropParent, nodes } = {}) {
     // Tabs or Bookmarks
     if (nodes && nodes.length) {
-      if (nodes[0].type === 'bookmark' && !event.ctrlKey) {
-        if (nodes[0].index === dropIndex) return
+      const nodeType = nodes[0].type
+      const isBookmarkNode =
+        nodeType === 'bookmark' || nodeType === 'folder' || nodeType === 'separator'
+
+      if (isBookmarkNode && !event.ctrlKey) {
         if (nodes[0].parent === dropParent) {
-          dropIndex = nodes[0].index > dropIndex ? dropIndex + 1 : dropIndex
-        } else {
-          dropIndex++
+          if (nodes[0].index === dropIndex) return
+          dropIndex = nodes[0].index > dropIndex ? dropIndex : dropIndex - 1
         }
         for (let b of nodes) {
           await browser.bookmarks.move(b.id, { parentId: dropParent, index: dropIndex })
@@ -180,15 +182,44 @@ export default {
             url: n.url,
             title: n.title,
             index: dropIndex,
-            parent: dropParent,
+            parentId: dropParent,
           })
         }
       }
     }
 
     // Native
-    if (nodes === null) {
+    if (!nodes) {
       if (!event.dataTransfer) return
+
+      let url, title
+      for (let item of event.dataTransfer.items) {
+        if (item.kind !== 'string') return
+
+        if (item.type === 'text/x-moz-url-desc') item.getAsString(s => {
+          title = s
+          if (url) {
+            browser.bookmarks.create({
+              url: url,
+              title: title,
+              index: dropIndex,
+              parentId: dropParent,
+            })
+          }
+        })
+
+        if (item.type === 'text/uri-list') item.getAsString(s => {
+          url = s
+          if (title) {
+            browser.bookmarks.create({
+              url: url,
+              title: title,
+              index: dropIndex,
+              parentId: dropParent,
+            })
+          }
+        })
+      }
     }
   },
 }
