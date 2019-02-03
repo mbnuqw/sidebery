@@ -116,7 +116,11 @@ export default {
 
     if (tab.index === p.endIndex && p.tabs.length > 1 && tab.active) {
       let prevTab = state.tabs[p.endIndex - 1]
-      await browser.tabs.update(prevTab.id, { active: true })
+      if (prevTab.hidden && prevTab.parentId >= 0) {
+        await browser.tabs.update(prevTab.parentId, { active: true })
+      } else {
+        await browser.tabs.update(prevTab.id, { active: true })
+      }
     }
     browser.tabs.remove(tab.id)
   },
@@ -234,21 +238,25 @@ export default {
   },
 
   /**
-   * Activate last active tab on the panel
+   * Try to activate last active tab on the panel
    */
   activateLastActiveTabOf({ state, getters }, panelIndex) {
     const tabId = state.activeTabs[panelIndex]
     const p = getters.panels[panelIndex]
-    if (!p || !p.tabs) return
+    if (!p || !p.tabs || !p.tabs.length) return
 
     // Last active tab
-    if (typeof tabId === 'number' && p.tabs.find(t => t.id === tabId)) {
+    const lastActiveTab = p.tabs.find(t => t.id === tabId)
+    if (typeof tabId === 'number' && lastActiveTab && !lastActiveTab.hidden) {
       browser.tabs.update(tabId, { active: true })
       return
     }
 
-    // Or just last
-    const lastTab = p.tabs[p.tabs.length - 1]
+    // Or just last non-hidden
+    let lastTab = p.tabs[p.tabs.length - 1]
+    for (let i = p.tabs.length; i-- && lastTab.hidden; ) {
+      lastTab = p.tabs[i]
+    }
     if (lastTab) browser.tabs.update(lastTab.id, { active: true })
   },
 
