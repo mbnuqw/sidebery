@@ -18,7 +18,7 @@
   @mousedown="onMouseDown"
   @mouseup.prevent="onMouseUp"
   @mouseleave="onMouseLeave"
-  @dblclick.prevent.stop="onDoubleClick")
+  @dblclick.prevent.stop="onDoubleClick"): .lvl-wrapper
   .drag-layer(draggable="true"
     @dragstart="onDragStart"
     @dragenter="onDragEnter"
@@ -42,7 +42,7 @@
   .close(v-if="$store.state.showTabRmBtn", @mousedown.stop="close", @mouseup.stop="")
     svg: use(xlink:href="#icon_remove")
   .t-box
-    .title {{tab.id}} {{tab.title}}
+    .title {{tab.title}}
     .loading
       svg.-a: use(xlink:href="#icon_load")
       svg.-b: use(xlink:href="#icon_load")
@@ -388,15 +388,15 @@ export default {
       z-index: 20
 
   &[lvl="1"]
-    margin-left: var(--tabs-indent)
+    padding-left: var(--tabs-indent)
   &[lvl="2"]
-    margin-left: calc(var(--tabs-indent) * 2)
+    padding-left: calc(var(--tabs-indent) * 2)
   &[lvl="3"]
-    margin-left: calc(var(--tabs-indent) * 3)
+    padding-left: calc(var(--tabs-indent) * 3)
   &[lvl="4"]
-    margin-left: calc(var(--tabs-indent) * 4)
+    padding-left: calc(var(--tabs-indent) * 4)
   &[lvl="5"]
-    margin-left: calc(var(--tabs-indent) * 5)
+    padding-left: calc(var(--tabs-indent) * 5)
 
   &[dragged]
     opacity: .32
@@ -498,6 +498,12 @@ export default {
     > .update-badge
       opacity: 1
       transform: scale(1, 1)
+
+// --- Level Wrapper
+.Tab .lvl-wrapper
+  box(relative, flex)
+  size(100%, same)
+  align-items: center
 
 // --- Drag layer ---
 .Tab .drag-layer
