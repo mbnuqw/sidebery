@@ -11,7 +11,9 @@
   @drop.stop.prevent="onDrop"
   @mouseenter="onMouseEnter"
   @mouseleave="onMouseLeave"
-  @mousedown="onMouseDown")
+  @mousedown="onMouseDown"
+  @mouseup="onMouseUp"
+  @mousemove.passive="onMouseMove")
   ctx-menu
   .bg(v-noise:300.g:12:af.a:0:42.s:0:9="", :style="bgPosStyle")
   .dimmer(@mousedown="closeDashboard")
@@ -75,7 +77,9 @@
       :store-id="c.cookieStoreId"
       :pos="getPanelPos(i)"
       :active="panelIs(i)"
-      @create-tab="createTab")
+      @create-tab="createTab"
+      @start-selection="startSelection"
+      @stop-selection="stopSelection")
     transition(name="settings")
       settings-panel(v-if="$store.state.panelIndex === -2", :pos="settingsPanelPos")
       styles-panel(v-if="$store.state.panelIndex === -3", :pos="stylesPanelPos")
@@ -196,13 +200,13 @@ export default {
         if (
           (!this.anyPinnedTabs && btn.pinned) ||
           (!State.private && btn.private) ||
-          (State.private && btn.cookieStoreId === DEFAULT_CTX)
+          (State.private && btn.cookieStoreId === DEFAULT_CTX) ||
+          (i === 0 && !State.bookmarksPanel)
         ) {
           btn.hidden = true
           btn.inactive = true
           if (State.panelIndex > k) hideOffset++
         }
-        if (i === 0 && !State.bookmarksPanel) btn.hidden = btn.inactive = true
         btn.updated = this.updatedPanels.includes(k)
         if (k === State.panelIndex) btn.updated = false
         out.push(btn)
@@ -343,6 +347,83 @@ export default {
     },
 
     /**
+     * MouseMove event handler
+     */
+    onMouseMove(e) {
+      if (!this.selectionStart) return
+
+      if (this.selectionStart && !this.selection && Math.abs(e.clientY - this.selectY) > 5) {
+        this.selection = true
+        State.selected.push(this.selectionStart.id) // ..if group, add children too
+
+        let eventName
+        if (this.selectionStart.type === 'tab') eventName = 'selectTab'
+        if (this.selectionStart.type === 'bookmark') eventName = 'selectBookmark'
+        EventBus.$emit(eventName, this.selectionStart.id)
+
+        this.recalcPanelBounds()
+        const scroll = this.panelScrollEl ? this.panelScrollEl.scrollTop : 0
+        const startY = this.selectionStart.clientY - this.panelTopOffset + scroll
+        const firstItem = this.itemSlots.find(s => s.start <= startY && s.end >= startY)
+        if (firstItem) {
+          this.selectionStart.clientY = firstItem.center + this.panelTopOffset - scroll
+        }
+        return
+      }
+
+      if (this.selection) {
+        const scroll = this.panelScrollEl ? this.panelScrollEl.scrollTop : 0
+        const startY = this.selectionStart.clientY - this.panelTopOffset + scroll
+        const y = e.clientY - this.panelTopOffset + scroll
+        const topY = Math.min(startY, y)
+        const bottomY = Math.max(startY, y)
+
+        const slotUnderCursor = this.itemSlots.find(s => s.start <= y && s.end >= y)
+        if (slotUnderCursor) {
+          if (slotUnderCursor.id === this.slotUnderCursor) return
+          this.slotUnderCursor = slotUnderCursor.id
+        } else {
+          this.slotUnderCursor = undefined
+        }
+
+        for (let slot of this.itemSlots) {
+          // Inside
+          if (slot.end >= topY && slot.start + 1 <= bottomY) {
+            if (!State.selected.includes(slot.id)) {
+              State.selected.push(slot.id)
+              if (slot.type === 'tab') EventBus.$emit('selectTab', slot.id)
+              if (slot.type === 'bookmark') EventBus.$emit('selectBookmark', slot.id)
+            }
+          } else {
+          // Outside
+            if (State.selected.includes(slot.id)) {
+              State.selected.splice(State.selected.indexOf(slot.id), 1)
+              if (slot.type === 'tab') EventBus.$emit('deselectTab', slot.id)
+              if (slot.type === 'bookmark') EventBus.$emit('deselectBookmark', slot.id)
+            }
+          }
+        }
+      }
+    },
+
+    /**
+     * Start selection
+     */
+    startSelection(info) {
+      this.selectionStart = info
+      this.selectY = info.clientY
+    },
+
+    /**
+     * Stop selection
+     */
+    stopSelection() {
+      this.selectionStart = null
+      this.selection = false
+      this.selectY = 0
+    },
+
+    /**
      * Drag move handler
      */
     onDragMove(e) {
@@ -355,21 +436,20 @@ export default {
       let y = e.clientY - this.panelTopOffset + scroll
 
       // Empty
-      if (this.dropSlots.length === 0) {
+      if (this.itemSlots.length === 0) {
         if (this.pointerPos !== this.panelTopOffset - scroll - 12) {
           this.pointerPos = this.panelTopOffset - scroll - 12
           this.$refs.pointer.style.transform = `translateY(${this.pointerPos}px)`
           this.pointerMode = 'between'
           this.dropParent = -1
-          this.dropIndex = 0 // Find start index of panel
-          console.log(`[DEBUG] EMPTY index: ${this.dropIndex}, parent: ${this.dropParent}`);
+          this.dropIndex = this.panels[State.panelIndex].startIndex
         }
         return
       }
 
       // End
-      if (y > this.dropSlots[this.dropSlots.length - 1].bottom) {
-        const slot = this.dropSlots[this.dropSlots.length - 1]
+      if (y > this.itemSlots[this.itemSlots.length - 1].bottom) {
+        const slot = this.itemSlots[this.itemSlots.length - 1]
         if (this.pointerPos !== slot.end - 12 + this.panelTopOffset - scroll) {
           this.pointerPos = slot.end - 12 + this.panelTopOffset - scroll
           this.$refs.pointer.style.transform = `translateY(${this.pointerPos}px)`
@@ -377,27 +457,26 @@ export default {
           this.dropParent = slot.parent
           if (slot.folded) this.dropIndex = -1
           else this.dropIndex = slot.index + 1
-          console.log(`[DEBUG] END index: ${this.dropIndex}, parent: ${this.dropParent}`);
         }
         return
       }
 
-      for (let i = 0; i < this.dropSlots.length; i++) {
-        const slot = this.dropSlots[i]
+      for (let i = 0; i < this.itemSlots.length; i++) {
+        const slot = this.itemSlots[i]
         // Skip
         if (y > slot.end || y < slot.start || slot.id === dragNodeId) continue
         // Between
         if (slot.in ? y < slot.top : y < slot.center) {
-          const prevSlot = this.dropSlots[i - 1]
+          const prevSlot = this.itemSlots[i - 1]
           if (this.pointerPos !== slot.start - 12 + this.panelTopOffset - scroll) {
             this.pointerPos = slot.start - 12 + this.panelTopOffset - scroll
             this.$refs.pointer.style.transform = `translateY(${this.pointerPos}px)`
             this.pointerMode = 'between'
+            let dragNodeIsTab = dragNode ? dragNode.type === 'tab' : false
   
             if (!prevSlot) {
               this.dropParent = -1
               this.dropIndex = slot.index
-              console.log(`[DEBUG] BETWEEN START index: ${this.dropIndex}, parent: ${this.dropParent}`);
               break
             }
 
@@ -405,7 +484,7 @@ export default {
               // First child
               this.dropParent = slot.parent
               this.dropIndex = slot.index
-            } else if (prevSlot.folded) {
+            } else if (dragNodeIsTab && prevSlot.folded) {
               // After folded group
               this.dropParent = prevSlot.parent
               this.dropIndex = slot.index
@@ -414,7 +493,6 @@ export default {
               this.dropParent = prevSlot.parent
               this.dropIndex = prevSlot.index + 1
             }
-            console.log(`[DEBUG] BETWEEN index: ${this.dropIndex}, parent: ${this.dropParent}`);
           }
           break
         }
@@ -443,7 +521,6 @@ export default {
             this.foldDropTarget()
             this.pointerMode = 'inside-fold'
           }
-          console.log(`[DEBUG] INSIDE index: ${this.dropIndex}, parent: ${this.dropParent}`);
           break
         }
       }
@@ -481,8 +558,23 @@ export default {
           State.wheelBlockTimeout = null
         }, 500)
       }
-      if (e.button < 2) Store.commit('closeCtxMenu')
-      Store.commit('resetSelection')
+      if (e.button < 2) {
+        if (this.selectionStart) this.stopSelection()
+        Store.commit('closeCtxMenu')
+      }
+
+      // !!NOTE!!
+      // This should be done at click (mouseup)
+      // Store.commit('resetSelection')
+    },
+
+    /**
+     * Mouse up event handler
+     */
+    onMouseUp(e) {
+      if (e.button === 2) {
+        if (this.selectionStart) this.stopSelection()
+      }
     },
 
     /**
@@ -495,8 +587,8 @@ export default {
       if (!this.$refs.panels) return
       const panelVN = this.$refs.panels.find(p => p.index === State.panelIndex)
       if (!panelVN) return
-      this.dropSlots = panelVN.getItemsBounds()
-      if (!this.dropSlots) return
+      this.itemSlots = panelVN.getItemsBounds()
+      if (!this.itemSlots) return
 
       // Get start coorinate of drop slots
       this.panelTopOffset = panelVN.getTopOffset()
@@ -965,13 +1057,11 @@ export default {
      * Recalc panel bounds
      */
     recalcPanelBounds() {
-      if (!this.dragMode) return
-
       // Get drop slots
       if (!this.$refs.panels) return
       const panelVN = this.$refs.panels.find(p => p.index === State.panelIndex)
       if (!panelVN) return
-      this.dropSlots = panelVN.getItemsBounds()
+      this.itemSlots = panelVN.getItemsBounds()
 
       // Get start coorinate of drop slots
       this.panelTopOffset = panelVN.getTopOffset()

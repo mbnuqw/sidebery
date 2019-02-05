@@ -5,11 +5,8 @@
   @contextmenu.prevent.stop=""
   @wheel="onWheel"
   @mousedown="onMouseDown"
-  @dblclick="onDoubleClick"
-  @mousemove="onMouseMove"
-  @mouseup="onMouseUp"
-  @mouseleave="onMouseUp")
-  scroll-box(ref="scrollBox", :lock="scrollLock", @auto-scroll="onMouseMove")
+  @dblclick="onDoubleClick")
+  scroll-box(ref="scrollBox", :lock="scrollLock")
     .container(:ctx-menu="!!$root.ctxMenu")
       tab.tab(
         v-for="(t, i) in tabs"
@@ -17,9 +14,8 @@
         ref="tabs"
         :key="t.id"
         :tab="t"
-        :selected="isSelected(t.id)"
-        @mdl="onTabMouseDownLeft(i, ...arguments)"
-        @mdr="onTabMouseDownRight(i, ...arguments)")
+        @start-selection="$emit('start-selection', $event)"
+        @stop-selection="$emit('stop-selection')")
 </template>
 
 
@@ -102,7 +98,7 @@ export default {
       if (State.panelIndex === this.index) this.onKeySelectChange(1)
     })
     EventBus.$on('selectAll', () => {
-      if (State.panelIndex === this.index) State.selectedTabs = this.tabs.map(t => t.id)
+      if (State.panelIndex === this.index) State.selected = this.tabs.map(t => t.id)
     })
   },
 
@@ -130,16 +126,6 @@ export default {
       if (da === 'tab') return this.createTab()
     },
 
-    onMouseUp() {
-      if (this.drag) this.onTabMoveEnd()
-      if (this.selection) this.onTabsSelectionEnd()
-    },
-
-    onMouseMove(e) {
-      if (this.drag) this.onTabMove(e)
-      if (this.selection) this.onTabsSelection(e)
-    },
-
     onWheel(e) {
       if (State.scrollThroughTabs !== 'none') {
         const globaly = State.scrollThroughTabs === 'global'
@@ -156,75 +142,40 @@ export default {
     },
 
     /**
-     * Mouse Down on tab
+     * ...
      */
-    onTabMouseDownLeft(i, e, vm) {
-      // Activate tab
-      browser.tabs.update(vm.tab.id, { active: true })
-
-      // Start dragging
-      // ...
-    },
-
-    onTabMouseDownRight() {
-      // ...args: i, e, vm
-    },
-
-    onTabsSelection() {
-      // ...
-    },
-
-    /**
-     * Open context menu
-     */
-    async onTabsSelectionEnd() {
-      // ...
-    },
-
-    closeSelectionMenu() {
-      State.selectedTabs = []
-    },
-
-    onTabMove() {
-      // ...
-    },
-
-    onTabMoveEnd() {
-      // ...
-    },
-
     onKeySelect(dir) {
       if (this.tabs.length === 0) return
 
-      if (State.selectedTabs.length === 0) {
+      if (State.selected.length === 0) {
         let activeTab = this.tabs.find(t => t.active)
         if (activeTab) {
-          State.selectedTabs.push(activeTab.id)
+          State.selected.push(activeTab.id)
         } else if (dir < 0) {
-          State.selectedTabs.push(this.tabs[this.tabs.length - 1].id)
+          State.selected.push(this.tabs[this.tabs.length - 1].id)
         } else if (dir > 0) {
-          State.selectedTabs.push(this.tabs[0].id)
+          State.selected.push(this.tabs[0].id)
         }
         return
       }
 
-      const selId = State.selectedTabs[0]
+      const selId = State.selected[0]
       let index = this.tabs.findIndex(t => t.id === selId) + dir
       if (index < 0) index = 0
       if (index >= this.tabs.length) index = this.tabs.length - 1
-      State.selectedTabs = [this.tabs[index].id]
+      State.selected = [this.tabs[index].id]
 
       this.scrollToSelectedTab()
     },
 
     onKeySelectChange(dir) {
-      if (State.selectedTabs.length === 0) {
+      if (State.selected.length === 0) {
         this.onKeySelect(dir)
         return
       }
 
-      if (State.selectedTabs.length === 1) {
-        const selId = State.selectedTabs[0]
+      if (State.selected.length === 1) {
+        const selId = State.selected[0]
         let index = this.tabs.findIndex(t => t.id === selId)
         this.selStartIndex = index
         this.selEndIndex = index + dir
@@ -236,16 +187,16 @@ export default {
 
       let minIndex = Math.min(this.selStartIndex, this.selEndIndex)
       let maxIndex = Math.max(this.selStartIndex, this.selEndIndex)
-      State.selectedTabs = []
+      State.selected = []
       for (let i = minIndex; i <= maxIndex; i++) {
-        State.selectedTabs.push(this.tabs[i].id)
+        State.selected.push(this.tabs[i].id)
       }
 
       this.scrollToSelectedTab()
     },
 
     scrollToSelectedTab() {
-      const tabId = State.selectedTabs[0]
+      const tabId = State.selected[0]
       if (tabId === undefined) return
       const tabVm = this.$refs.tabs.find(t => t.tab.id === tabId)
       if (!tabVm) return
@@ -261,27 +212,27 @@ export default {
 
     onKeyActivate() {
       if (this.tabs.length === 0) return
-      if (State.selectedTabs.length === 0) return
-      browser.tabs.update(State.selectedTabs[0], { active: true })
-      State.selectedTabs = []
+      if (State.selected.length === 0) return
+      browser.tabs.update(State.selected[0], { active: true })
+      State.selected = []
     },
 
     /**
      * Update fake drag tabs.
      */
     recalcDragTabs() {
-      let top = 0
-      this.dragTabs = this.tabs.map(t => {
-        const vm = this.$refs.tabs.find(tvm => tvm.tab.id === t.id)
+      // let top = 0
+      // this.dragTabs = this.tabs.map(t => {
+      //   const vm = this.$refs.tabs.find(tvm => tvm.tab.id === t.id)
 
-        t.fav = vm.faviErr ? null : vm.favicon
-        t.h = vm.height()
-        t.el = vm.$el
-        t.top = top
+      //   t.fav = vm.faviErr ? null : vm.favicon
+      //   t.h = vm.height()
+      //   t.el = vm.$el
+      //   t.top = top
 
-        top += t.h
-        return t
-      })
+      //   top += t.h
+      //   return t
+      // })
     },
 
     /**
@@ -355,14 +306,6 @@ export default {
     isDragged(id) {
       if (!this.drag) return false
       return this.drag.id === id && this.drag.dragged
-    },
-
-    /**
-     * Is tab selected?
-     */
-    isSelected(id) {
-      if (!State.selectedTabs) return false
-      return State.selectedTabs.includes(id)
     },
 
     /**

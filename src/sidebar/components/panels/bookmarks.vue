@@ -15,7 +15,8 @@
       :node="n"
       :recalc-scroll="recalcScroll"
       @create="onCreate"
-      @edit="onEdit")
+      @edit="onEdit"
+      @start-selection="onStartSelection")
 
   bookmarks-editor.editor(
     ref="editor"
@@ -136,6 +137,10 @@ export default {
   methods: {
     onClick() {
       Store.commit('closeCtxMenu')
+    },
+
+    onStartSelection(event) {
+      this.$emit('start-selection', event)
     },
 
     /**

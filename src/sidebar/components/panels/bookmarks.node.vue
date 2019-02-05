@@ -5,7 +5,7 @@
   :is-parent="!!isParent"
   :to-front="toFront || editorSelect"
   :dragged="dragged"
-  :menu="menu")
+  :is-selected="selected")
   .body(:title="tooltip", @click="onClick", @mousedown="onMouseDown")
     .drag-layer(draggable="true", @dragstart="onDragStart")
     .fav(v-if="isBookmark", :no-fav="!favicon")
@@ -13,7 +13,6 @@
       img(:src="favicon")
     .exp(v-if="isParent")
       svg: use(xlink:href="#icon_expand")
-    //- .title(v-if="node.title") {{node.index}} : {{node.parentId}}/{{node.id}} - {{node.title}}
     .title(v-if="node.title") {{node.title}}
   transition(name="expand")
     .children(v-if="isParent", v-show="node.expanded", :title="node.title")
@@ -24,9 +23,9 @@
         :node="n"
         :recalc-scroll="recalcScroll"
         :edit-node="editNode"
-        @md="onChildMD"
         @create="onCreate"
-        @edit="onEdit")
+        @edit="onEdit"
+        @start-selection="onChildStartSelection")
 </template>
 
 
@@ -50,6 +49,7 @@ export default {
       toFront: false,
       editorSelect: false,
       dragged: false,
+      selected: false,
     }
   },
 
@@ -90,31 +90,73 @@ export default {
   },
 
   created() {
-    EventBus.$on('dragEnd', () => {this.dragged = false})
+    EventBus.$on('dragEnd', this.onDragEnd)
+    EventBus.$on('selectBookmark', this.onBookmarkSelection)
+    EventBus.$on('deselectBookmark', this.onBookmarkDeselection)
+  },
+
+  beforeDestroy() {
+    EventBus.$off('dragEnd', this.onDragEnd)
+    EventBus.$off('selectBookmark', this.onBookmarkSelection)
+    EventBus.$off('deselectBookmark', this.onBookmarkDeselection)
   },
 
   methods: {
+    /**
+     * Handle mouse down event.
+     */
     onMouseDown(e) {
-      if (e.button === 0) this.$emit('md', e, [this.node])
       if (e.button === 1) {
         e.preventDefault()
-        this.openUrl(true, false)
+        if (State.selected.length) EventBus.$emit('deselectBookmark')
+        else this.openUrl(true, false)
       }
       if (e.button === 2) {
         e.stopPropagation()
-        this.openMenu(true)
+        this.$emit('start-selection', {
+          type: 'bookmark',
+          clientY: e.clientY,
+          ctrlKey: e.ctrlKey,
+          id: this.node.id,
+        }, [this.node])
       }
     },
 
+    /**
+     * Handle click event. 
+     */
     onClick() {
+      if (State.selected.length) {
+        State.selected = []
+        EventBus.$emit('deselectBookmark')
+        return
+      }
       if (this.node.type === 'folder') {
         if (!this.node.expanded) Store.dispatch('expandBookmark', this.node.id)
         else Store.dispatch('foldBookmark', this.node.id)
+
+        // !!!!! Make recalculation in bookmakrs component !!!!!
+        // remove recalcScroll function prop
         setTimeout(() => this.recalcScroll(), 120)
       }
       if (this.node.type === 'bookmark') {
         this.openUrl(State.openBookmarkNewTab, true)
       }
+    },
+
+    /**
+     * Handle bookmark selection
+     */
+    onBookmarkSelection(id) {
+      if (this.node.id === id) this.selected = true
+    },
+
+    /**
+     * Handle bookmark deselection
+     */
+    onBookmarkDeselection(id) {
+      if (!id) this.selected = false
+      if (id && this.node.id === id) this.selected = false
     },
 
     /**
@@ -143,11 +185,24 @@ export default {
       this.dragged = true
     },
 
-    onChildMD(e, nodes) {
-      nodes.push(this.node)
-      this.$emit('md', e, nodes)
+    /**
+     * Handle drag end event
+     */
+    onDragEnd() {
+      this.dragged = false
     },
 
+    /**
+     * Handle mouse event from child node
+     */
+    onChildStartSelection(event, nodes) {
+      nodes.push(this.node)
+      this.$emit('start-selection', event, nodes)
+    },
+
+    /**
+     * Collapse this node
+     */
     collapse(deep = false) {
       this.node.expanded = false
 
@@ -157,6 +212,9 @@ export default {
       }
     },
 
+    /**
+     * Open context menu for this node
+     */
     openMenu(isTarget) {
       if (isTarget) {
         Store.commit('closeCtxMenu')
@@ -199,6 +257,9 @@ export default {
       if (this.$parent.openMenu) this.$parent.openMenu()
     },
 
+    /**
+     * Close context menu
+     */
     closeMenu() {
       this.menu = false
       this.toFront = false
@@ -381,10 +442,10 @@ export default {
   > .body > .exp > svg
     transform: rotateZ(0deg)
 
-// > Opened Menu
-.Node[menu="true"][n-type="bookmark"]
-.Node[menu="true"][n-type="folder"]
-.Node[menu="true"][n-type="separator"]
+// > Selected
+.Node[is-selected="true"][n-type="bookmark"]
+.Node[is-selected="true"][n-type="folder"]
+.Node[is-selected="true"][n-type="separator"]
   z-index: 30
   background-color: var(--tabs-selected-bg)
   > .body
@@ -394,7 +455,7 @@ export default {
     > .title
       color: var(--tabs-selected-fg)
 
-.Node[menu="true"][n-type="separator"]
+.Node[is-selected="true"][n-type="separator"]
   > .body
     &:before
       background-image: linear-gradient(90deg, transparent, var(--tabs-selected-fg), var(--tabs-selected-fg), var(--tabs-selected-fg))

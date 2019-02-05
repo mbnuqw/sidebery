@@ -1,3 +1,4 @@
+import EventBus from './event-bus'
 import { DEFAULT_SETTINGS } from './settings'
 
 export default {
@@ -74,7 +75,12 @@ export default {
    * Reset selection.
    */
   resetSelection(state) {
-    if (state.selectedTabs.length > 0) state.selectedTabs = []
+    // console.log('[DEBUG] resetSelection');
+    if (state.selected.length > 0) {
+      state.selected = []
+      EventBus.$emit('deselectTab')
+      EventBus.$emit('deselectBookmark')
+    }
   },
 
   // ------------------------------------

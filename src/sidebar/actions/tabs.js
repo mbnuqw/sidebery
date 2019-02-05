@@ -514,7 +514,7 @@ export default {
   async dropToTabs({ state, getters, dispatch }, { event, dropIndex, dropParent, nodes } = {}) {
     const destCtx = getters.panels[state.panelIndex].cookieStoreId
     const parent = state.tabs.find(t => t.id === dropParent)
-    if (dropIndex === -1) dropIndex = getters.panels[state.panelIndex].tabs.length
+    if (dropIndex === -1) dropIndex = getters.panels[state.panelIndex].endIndex
 
     // Tabs or Bookmarks
     if (nodes && nodes.length) {
@@ -524,19 +524,17 @@ export default {
         // Move
         if (nodes[0].index !== dropIndex) {
           dropIndex = nodes[0].index > dropIndex ? dropIndex : dropIndex - 1
-          console.log('[DEBUG] move index:', dropIndex);
-          // HERE!!!
-          // I need to set dropIndex to the last hidden tab
           browser.tabs.move(nodes.map(t => t.id), {
             windowId: state.windowId,
             index: dropIndex,
           })
-          // Hide tabs for folded branch or activate first node for expanded
-          if (parent && parent.folded) {
-            browser.tabs.hide(nodes.map(t => t.id))
-          } else {
-            browser.tabs.update(nodes[0].id, { active: true })
-          }
+        }
+
+        // Hide tabs for folded branch or activate first node for expanded
+        if (parent && parent.folded) {
+          browser.tabs.hide(nodes.map(t => t.id))
+        } else {
+          browser.tabs.update(nodes[0].id, { active: true })
         }
 
         // Update tabs tree

@@ -59,7 +59,7 @@ export default {
   proxiedPanels: [],
   dashboardOpened: false,
   recalcScrollNeeded: false,
-  selectedTabs: [],
+  selected: [],
   updatedTabs: {},
   snapshots: [],
   permAllUrls: false,

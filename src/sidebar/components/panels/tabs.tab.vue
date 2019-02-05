@@ -4,8 +4,8 @@
   :data-no-fav="!favicon || faviErr"
   :data-audible="tab.audible"
   :data-muted="tab.mutedInfo.muted"
-  :data-menu="menu || selected"
   :data-pinned="tab.pinned"
+  :is-selected="selected"
   :discarded="tab.discarded"
   :updated="updated"
   :is-parent="tab.isParent"
@@ -16,7 +16,7 @@
   :title="tooltip"
   @contextmenu.prevent.stop=""
   @mousedown="onMouseDown"
-  @mouseup.prevent="onMouseUp"
+  @mouseup="onMouseUp"
   @mouseleave="onMouseLeave"
   @dblclick.prevent.stop="onDoubleClick"): .lvl-wrapper
   .drag-layer(draggable="true"
@@ -64,7 +64,6 @@ export default {
       type: Object,
       default: () => ({}),
     },
-    selected: Boolean,
   },
 
   data() {
@@ -73,6 +72,7 @@ export default {
       faviErr: false,
       loading: false,
       dragged: false,
+      selected: false,
     }
   },
 
@@ -117,6 +117,13 @@ export default {
       if (id === this.tab.id) this.loadingErr()
     })
     EventBus.$on('dragEnd', () => {this.dragged = false})
+    EventBus.$on('selectTab', this.onTabSelection)
+    EventBus.$on('deselectTab', this.onTabDeselection)
+  },
+
+  beforeDestroy() {
+    EventBus.$off('selectTab', this.onTabSelection)
+    EventBus.$off('deselectTab', this.onTabDeselection)
   },
 
   methods: {
@@ -143,7 +150,10 @@ export default {
       }
 
       if (e.button === 0) {
-        this.$emit('mdl', e, this)
+        // Activate tab
+        browser.tabs.update(this.tab.id, { active: true })
+
+        // Long-click action
         this.hodorL = setTimeout(() => {
           let llc = State.tabLongLeftClick
           if (llc === 'reload') Store.dispatch('reloadTabs', [this.tab.id])
@@ -161,8 +171,15 @@ export default {
       if (e.button === 2) {
         e.preventDefault()
         e.stopPropagation()
-        this.$emit('mdr', e, this)
+        this.$emit('start-selection', {
+          type: 'tab',
+          clientY: e.clientY,
+          ctrlKey: e.ctrlKey,
+          id: this.tab.id,
+        })
+        // Long-click action
         this.hodorR = setTimeout(() => {
+          this.$emit('stop-selection')
           let lrc = State.tabLongRightClick
           if (lrc === 'reload') Store.dispatch('reloadTabs', [this.tab.id])
           if (lrc === 'duplicate') Store.dispatch('duplicateTabs', [this.tab.id])
@@ -171,23 +188,38 @@ export default {
           if (lrc === 'clear_cookies') Store.dispatch('clearTabsCookies', [this.tab.id])
           this.hodorR = null
         }, 250)
-
-        Store.commit('resetSelection')
       }
     },
 
+    /**
+     * Handle mouseup event
+     */
     onMouseUp(e) {
-      if (e.button === 0) {
-        if (this.hodorL) this.hodorL = clearTimeout(this.hodorL)
+      if (e.button === 0 && this.hodorL) {
+        this.hodorL = clearTimeout(this.hodorL)
       }
-      if (e.button === 2) {
-        if (this.hodorR) {
-          this.openMenu()
-          this.hodorR = clearTimeout(this.hodorR)
-        }
+      if (e.button === 2 && this.hodorR) {
+        this.hodorR = clearTimeout(this.hodorR)
+
+        console.log('[DEBUG] Open context menu, select tab');
+        State.selected = [this.tab.id]
+        this.selected = true
+        // ...and open context menu
       }
     },
 
+    onTabSelection(id) {
+      this.hodorR = clearTimeout(this.hodorR)
+      if (this.tab.id === id) this.selected = true
+    },
+    onTabDeselection(id) {
+      if (!id) this.selected = false
+      if (id && this.tab.id === id) this.selected = false
+    },
+
+    /**
+     * Handle mouseleave event
+     */
     onMouseLeave() {
       if (this.hodorL) this.hodorL = clearTimeout(this.hodorL)
       if (this.hodorR) this.hodorR = clearTimeout(this.hodorR)
@@ -276,6 +308,7 @@ export default {
 
     async openMenu() {
       if (this.menu) return
+      State.selected.push(this.tab.id)
       this.menu = true
 
       const otherWindows = (await Utils.GetAllWindows()).filter(w => !w.current)
@@ -330,6 +363,7 @@ export default {
 
     closeMenu() {
       this.menu = false
+      State.selected.splice(State.selected.indexOf(this.tab.id), 1)
     },
 
     loadingStart() {
@@ -406,7 +440,7 @@ export default {
       z-index: 1
       opacity: 1
 
-  &[folded]
+  &[is-parent][folded]
     .fav > .placeholder
     .fav > img
       opacity: .2
@@ -480,7 +514,7 @@ export default {
     .t-box
       mask: linear-gradient(-90deg, transparent, transparent 16px, #000000 28px, #000000)
 
-  &[data-menu]
+  &[is-selected]
     z-index: 10
     background-color: var(--tabs-selected-bg)
     .title

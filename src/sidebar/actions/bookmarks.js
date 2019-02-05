@@ -162,6 +162,7 @@ export default {
    * Drop to bookmarks panel
    */
   async dropToBookmarks(_, { event, dropIndex, dropParent, nodes } = {}) {
+    console.log('[DEBUG] dropToBookmarks', dropIndex, dropParent);
     // Tabs or Bookmarks
     if (nodes && nodes.length) {
       const nodeType = nodes[0].type

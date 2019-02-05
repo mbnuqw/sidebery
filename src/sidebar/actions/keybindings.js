@@ -47,8 +47,8 @@ export default {
     }
   },
   kb_rm_tab_on_panel({ state, dispatch }) {
-    if (state.selectedTabs.length > 0) {
-      dispatch('removeTabs', state.selectedTabs)
+    if (state.selected.length > 0) {
+      dispatch('removeTabs', state.selected)
     } else {
       let activeTab = state.tabs.find(t => t && t.active)
       dispatch('removeTabs', [activeTab.id])

@@ -54,14 +54,14 @@ describe('Keybindings actions', () => {
   describe('kb_rm_tab_on_panel', () => {
     test('remove active tab', async () => {
       const dispatch = jest.fn()
-      const state = { selectedTabs: [], tabs: [{ active: true, id: 123 }] }
+      const state = { selected: [], tabs: [{ active: true, id: 123 }] }
       await KBActions.kb_rm_tab_on_panel({ state, dispatch })
       expect(dispatch).toHaveBeenCalledWith('removeTabs', [123])
     })
 
     test('remove selected tabs', async () => {
       const dispatch = jest.fn()
-      const state = { selectedTabs: [2, 5, 16] }
+      const state = { selected: [2, 5, 16] }
       await KBActions.kb_rm_tab_on_panel({ state, dispatch })
       expect(dispatch).toHaveBeenCalledWith('removeTabs', [2, 5, 16])
     })
