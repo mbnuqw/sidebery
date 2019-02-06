@@ -201,9 +201,21 @@ export default {
         this.hodorR = clearTimeout(this.hodorR)
 
         // Select this tab
-        Store.commit('closeCtxMenu')
-        State.selected = [this.tab.id]
-        this.selected = true
+        if (this.tab.isParent && this.tab.folded) {
+        // Select whole branch if tab is folded
+          const toSelect = [this.tab.id]
+          for (let tab of State.tabs) {
+            if (toSelect.includes(tab.parentId)) toSelect.push(tab.id)
+          }
+          toSelect.map(id => EventBus.$emit('selectTab', id))
+          State.selected = [...toSelect]
+          Store.dispatch('openCtxMenu', { el: this.$el, node: this.tab })
+        } else {
+        // Select only current tab 
+          Store.commit('closeCtxMenu')
+          State.selected = [this.tab.id]
+          this.selected = true
+        }
       }
     },
 
@@ -314,8 +326,23 @@ export default {
       this.faviErr = true
     },
 
-    onExp() {
-      Store.dispatch('toggleBranch', this.tab.id)
+    /**
+     * Handle mousedown event on expand button
+     */
+    onExp(e) {
+      // Fold/Expand branch
+      if (e.button === 0) Store.dispatch('toggleBranch', this.tab.id)
+
+      // Select whole branch and show menu
+      if (e.button === 2) {
+        const toSelect = [this.tab.id]
+        for (let tab of State.tabs) {
+          if (toSelect.includes(tab.parentId)) toSelect.push(tab.id)
+        }
+        toSelect.map(id => EventBus.$emit('selectTab', id))
+        State.selected = [...toSelect]
+        Store.dispatch('openCtxMenu', { el: this.$el, node: this.tab })
+      }
     },
 
     close() {
