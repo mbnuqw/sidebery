@@ -353,6 +353,7 @@ export default {
       if (!this.selectionStart) return
 
       if (this.selectionStart && !this.selection && Math.abs(e.clientY - this.selectY) > 5) {
+        Store.commit('closeCtxMenu')
         this.selection = true
         State.selected.push(this.selectionStart.id) // ..if group, add children too
 
@@ -410,6 +411,7 @@ export default {
      * Start selection
      */
     startSelection(info) {
+      console.log('[DEBUG]   startSelection');
       this.selectionStart = info
       this.selectY = info.clientY
     },
@@ -421,6 +423,12 @@ export default {
       this.selectionStart = null
       this.selection = false
       this.selectY = 0
+
+      if (State.selected.length) {
+        const target = State.selected[State.selected.length - 1]
+        if (typeof target === 'number') EventBus.$emit('openTabMenu', target)
+        if (typeof target === 'string') EventBus.$emit('openBookmarkMenu', target)
+      }
     },
 
     /**
@@ -549,6 +557,7 @@ export default {
      * Mouse down event handler
      */
     onMouseDown(e) {
+      console.log('[DEBUG] INDEX mousedown');
       if (e.button === 1) {
         if (State.wheelBlockTimeout) {
           clearTimeout(State.wheelBlockTimeout)
@@ -558,14 +567,13 @@ export default {
           State.wheelBlockTimeout = null
         }, 500)
       }
+
       if (e.button < 2) {
         if (this.selectionStart) this.stopSelection()
-        Store.commit('closeCtxMenu')
       }
 
-      // !!NOTE!!
-      // This should be done at click (mouseup)
-      // Store.commit('resetSelection')
+      Store.commit('closeCtxMenu')
+      Store.commit('resetSelection')
     },
 
     /**
@@ -573,6 +581,7 @@ export default {
      */
     onMouseUp(e) {
       if (e.button === 2) {
+        console.log('[DEBUG] INDEX mouseup, stopSelection()');
         if (this.selectionStart) this.stopSelection()
       }
     },

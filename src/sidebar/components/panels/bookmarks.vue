@@ -14,16 +14,8 @@
       :key="n.id"
       :node="n"
       :recalc-scroll="recalcScroll"
-      @create="onCreate"
-      @edit="onEdit"
       @start-selection="onStartSelection")
-
-  bookmarks-editor.editor(
-    ref="editor"
-    :is-active="editor"
-    @cancel="onEditorCancel"
-    @create="onEditorOk"
-    @change="onEditorOk")
+  bookmarks-editor.editor(v-if="$store.state.bookmarkEditor")
 </template>
 
 
@@ -149,6 +141,7 @@ export default {
     onCreated(id, bookmark) {
       let added = false
       if (bookmark.type === 'folder' && !bookmark.children) bookmark.children = []
+      if (bookmark.type === 'folder') bookmark.expanded = false
       const putWalk = nodes => {
         return nodes.map(n => {
           if (n.id === bookmark.parentId) {
@@ -249,55 +242,6 @@ export default {
       }
 
       State.bookmarks = rmWalk(State.bookmarks)
-    },
-
-    /**
-     * Handle creating new bookmark
-     */
-    onCreate(type, path, onEndHandlers) {
-      if (type === 'separator') {
-        browser.bookmarks.create({
-          parentId: path[0].id,
-          type: 'separator',
-          index: 0,
-        })
-        return
-      }
-
-      if (!this.$refs.editor) return
-      this.$refs.editor.create(type, path)
-      this.editor = true
-      this.editEndHandlers = onEndHandlers
-    },
-
-    /**
-     * Handle edit event of nodes tree
-     */
-    onEdit(node, path, onEndHandlers) {
-      if (!this.$refs.editor) return
-      this.$refs.editor.edit(node, path)
-      this.editor = true
-      this.editEndHandlers = onEndHandlers
-    },
-
-    /**
-     * Handle cancel changes in editor
-     */
-    onEditorCancel() {
-      this.editor = false
-      while (this.editEndHandlers && this.editEndHandlers[0]) {
-        this.editEndHandlers.pop()()
-      }
-    },
-
-    /**
-     * Handle saving changes in editor
-     */
-    onEditorOk() {
-      this.editor = false
-      while (this.editEndHandlers && this.editEndHandlers[0]) {
-        this.editEndHandlers.pop()()
-      }
     },
 
     /**
@@ -417,127 +361,27 @@ export default {
 .Bookmarks
   overflow: hidden
 
-.Bookmarks[drag-active="true"] .drag-box
-  opacity: 1
-  z-index: 10
+// .Bookmarks[drag-active="true"] .drag-box
+//   opacity: 1
+//   z-index: 10
 
-.Bookmarks[drag-active="true"] .node
-  opacity: 0
+// .Bookmarks[drag-active="true"] .node
+//   opacity: 0
 
-.Bookmarks[drag-end="true"] .drag-node[dragged]
-  transition: transform var(--d-fast)
+// .Bookmarks[drag-end="true"] .drag-node[dragged]
+//   transition: transform var(--d-fast)
 
-.Bookmarks[ctx-menu] .Node:not([to-front="true"]) > .body
-  opacity: .4
+// .Bookmarks[ctx-menu] .Node:not([to-front="true"]) > .body
+//   opacity: .4
 
-.Bookmarks[editing] .Node:not([to-front]) > .body
-  opacity: .4
+// .Bookmarks[editing] .Node:not([to-front]) > .body
+//   opacity: .4
 
 .Bookmarks[not-renderable] .node
   box(none)
 
 .Bookmarks[invisible] .node
   opacity: 0
-
-// --- Draggable nodes ---
-.Bookmarks .drag-box
-  box(absolute)
-  pos(0, 0)
-  size(100%, same)
-  opacity: 0
-  z-index: -1
-  transition: opacity var(--d-fast), z-index var(--d-fast)
-
-.Bookmarks .drag-node
-  box(absolute, flex)
-  pos(0, 0)
-  size(100%)
-  align-items: center
-  white-space: nowrap
-  transition: transform var(--d-fast), opacity var(--d-fast)
-  border-top-left-radius: 3px
-  border-bottom-left-radius: 3px
-  opacity: .4
-
-  &[n-type="bookmark"]
-    text(s: rem(14))
-    padding-left: 12px
-    color: var(--bookmarks-node-title-fg)
-
-  &[n-type="folder"]
-    text(s: rem(16))
-    padding-left: 12px
-    color: var(--bookmarks-folder-closed-fg)
-
-  &[n-type="separator"]
-    size(h: 17px)
-    &:before
-      content: ''
-      box(absolute)
-      pos(8px, l: 16px)
-      size(calc(100% - 16px), 1px)
-      border-radius: 2px
-      background-image: linear-gradient(90deg, transparent, #545454, #545454, #545454)
-
-  &[dragged]
-    transition: none
-    z-index: 50
-    opacity: 1
-    background-image: var(--bookmarks-drag-gradient)
-
-  &[exp] > .title
-    transform: translateX(12px)
-
-  &[drag-parent="true"]
-    opacity: 1
-
-.Bookmarks .drag-node > .exp
-  box(absolute)
-  size(15px, same)
-  flex-shrink: 0
-  transform: translateX(-6px)
-  transition: transform var(--d-fast), opacity var(--d-fast)
-
-.Bookmarks .drag-node > .exp > svg
-  box(absolute)
-  pos(0, 0)
-  size(100%, same)
-  fill: var(--bookmarks-folder-open-fg)
-  transform: rotateZ(0deg)
-  transition: transform var(--d-fast)
-
-.Bookmarks .drag-node > .fav
-  box(relative)
-  size(16px, same)
-  flex-shrink: 0
-  margin: 0 8px 0 0
-
-.Bookmarks .drag-node > .fav > .placeholder
-  box(absolute)
-  size(3px, same)
-  pos(7px, 6px)
-  border-radius: 50%
-  background-color: var(--favicons-placehoder-bg)
-  &:before
-  &:after
-    content: ''
-    box(absolute)
-    size(3px, same)
-    border-radius: 6px
-    background-color: var(--favicons-placehoder-bg)
-  &:before
-    pos(0, -5px)
-  &:after
-    pos(0, 5px)
-
-.Bookmarks .drag-node > .fav > img
-  box(absolute)
-  pos(0, 0)
-  size(100%, same)
-
-.Bookmarks .drag-node > .title
-  box(relative)
-  transition: transform var(--d-fast)
 
 // --- Root nodes ---
 .Bookmarks .node

@@ -223,4 +223,89 @@ export default {
       }
     }
   },
+
+  /**
+   * Open bookmarks in new window
+   */
+  openBookmarksInNewWin({ state }, { ids, incognito }) {
+    const urls = []
+    const walker = (nodes, ids) => {
+      nodes.map(n => {
+        if (
+          n.type === 'bookmark' &&
+          !n.url.indexOf('http') &&
+          ids.includes(n.id)
+        ) urls.push(n.url)
+        if (n.type === 'folder') walker(n.children, ids)
+      })
+    }
+    walker(state.bookmarks, ids)
+
+    return browser.windows.create({ url: urls, incognito })
+  },
+
+  /**
+   * Open bookmarks
+   */
+  openBookmarksInPanel({ state, getters }, { ids, panelId }) {
+    const p = getters.panels.find(p => p.cookieStoreId === panelId)
+    if (!p) return
+
+    let index = p.endIndex + 1
+
+    const urls = []
+    const walker = nodes => {
+      nodes.map(n => {
+        if (
+          n.type === 'bookmark' &&
+          !n.url.indexOf('http') &&
+          ids.includes(n.id)
+        ) urls.push(n.url)
+        if (n.type === 'folder') walker(n.children)
+      })
+    }
+    walker(state.bookmarks)
+
+    urls.map(url => {
+      browser.tabs.create({
+        index: index++,
+        url: url,
+        cookieStoreId: panelId,
+      })
+    })
+  },
+
+  /**
+   * Start bookmark creation
+   */
+  startBookmarkCreation({ state }, { type, target }) {
+    let parentId
+    if (target.type === 'bookmark') parentId = target.parentId
+    if (target.type === 'folder') parentId = target.id
+
+    if (type === 'separator') {
+      browser.bookmarks.create({ parentId, type: 'separator', index: 0 })
+      return
+    }
+
+    state.bookmarkEditorTarget = { type, parentId }
+    state.bookmarkEditor = true
+  },
+
+  /**
+   * Start bookmark editing
+   */
+  startBookmarkEditing({ state }, node) {
+    state.bookmarkEditorTarget = node
+    state.bookmarkEditor = true
+  },
+
+  /**
+   * Remove bookmarks
+   */
+  async removeBookmarks(_, ids) {
+    for (let id of ids) {
+      await browser.bookmarks.removeTree(id)
+    }
+  },
 }

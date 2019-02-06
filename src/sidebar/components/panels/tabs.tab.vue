@@ -52,11 +52,9 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import Utils from '../../../libs/utils'
 import Store from '../../store'
 import State from '../../store.state'
 import EventBus from '../../event-bus'
-import CtxMenu from '../../context-menu'
 
 export default {
   props: {
@@ -119,11 +117,13 @@ export default {
     EventBus.$on('dragEnd', () => {this.dragged = false})
     EventBus.$on('selectTab', this.onTabSelection)
     EventBus.$on('deselectTab', this.onTabDeselection)
+    EventBus.$on('openTabMenu', this.onTabMenu)
   },
 
   beforeDestroy() {
     EventBus.$off('selectTab', this.onTabSelection)
     EventBus.$off('deselectTab', this.onTabDeselection)
+    EventBus.$off('openTabMenu', this.onTabMenu)
   },
 
   methods: {
@@ -143,6 +143,8 @@ export default {
      * Mousedown handler
      */
     onMouseDown(e) {
+      // Store.commit('closeCtxMenu')
+
       if (e.button === 1) {
         this.close()
         e.preventDefault()
@@ -163,9 +165,6 @@ export default {
           if (llc === 'clear_cookies') Store.dispatch('clearTabsCookies', [this.tab.id])
           this.hodorL = null
         }, 250)
-
-        Store.commit('closeCtxMenu')
-        Store.commit('resetSelection')
       }
 
       if (e.button === 2) {
@@ -201,20 +200,37 @@ export default {
       if (e.button === 2 && this.hodorR) {
         this.hodorR = clearTimeout(this.hodorR)
 
-        console.log('[DEBUG] Open context menu, select tab');
+        // Select this tab
+        Store.commit('closeCtxMenu')
         State.selected = [this.tab.id]
         this.selected = true
-        // ...and open context menu
       }
     },
 
+    /**
+     * Handle tab-selection event
+     */
     onTabSelection(id) {
-      this.hodorR = clearTimeout(this.hodorR)
-      if (this.tab.id === id) this.selected = true
+      if (this.tab.id === id) {
+        this.selected = true
+        this.hodorR = clearTimeout(this.hodorR)
+      }
     },
+  
+    /**
+     * Handle tab-deselection event
+     */
     onTabDeselection(id) {
       if (!id) this.selected = false
       if (id && this.tab.id === id) this.selected = false
+    },
+
+    /**
+     * Open tab[s] menu
+     */
+    onTabMenu(id) {
+      if (id !== this.tab.id) return
+      Store.dispatch('openCtxMenu', { el: this.$el, node: this.tab })
     },
 
     /**
@@ -306,66 +322,6 @@ export default {
       Store.dispatch('removeTab', this.tab)
     },
 
-    async openMenu() {
-      if (this.menu) return
-      State.selected.push(this.tab.id)
-      this.menu = true
-
-      const otherWindows = (await Utils.GetAllWindows()).filter(w => !w.current)
-      const menu = new CtxMenu(this.$el, this.closeMenu)
-
-      // Move to new window
-      let args = { tabIds: [this.tab.id] }
-      menu.add('tab.move_to_new_window', 'moveTabsToNewWin', args)
-
-      // Move to new private window
-      args = { tabIds: [this.tab.id], incognito: true }
-      menu.add('tab.move_to_new_priv_window', 'moveTabsToNewWin', args)
-
-      // Move to another window
-      if (otherWindows.length === 1) {
-        const args = { tabIds: [this.tab.id], window: otherWindows[0] }
-        menu.add('tab.move_to_another_window', 'moveTabsToWin', args)
-      }
-
-      // Move to window...
-      if (otherWindows.length > 1) {
-        menu.add('tab.move_to_window_', 'moveTabsToWin', { tabIds: [this.tab.id] })
-      }
-
-      // Default window
-      if (!State.private) {
-        // Reopen in containers
-        if (this.tab.cookieStoreId !== 'firefox-default') {
-          const args = { tabIds: [this.tab.id], ctxId: 'firefox-default'}
-          menu.add('tab.reopen_in_default_panel', 'moveTabsToCtx', args)
-        }
-        State.ctxs.map(c => {
-          if (this.tab.cookieStoreId === c.cookieStoreId) return
-          const args = { tabIds: [this.tab.id], ctxId: c.cookieStoreId}
-          const label = this.t('menu.tab.reopen_in_') + `||${c.colorCode}>>${c.name}`
-          menu.addTranslated(label, 'moveTabsToCtx', args)
-        })
-      }
-
-      if (!this.tab.pinned) menu.add('tab.pin', 'pinTabs', [this.tab.id])
-      else menu.add('tab.unpin', 'unpinTabs', [this.tab.id])
-      if (!this.tab.mutedInfo.muted) menu.add('tab.mute', 'muteTabs', [this.tab.id])
-      else menu.add('tab.unmute', 'unmute', [this.tab.id])
-      menu.add('tab.discard', 'discardTabs', [this.tab.id])
-      menu.add('tab.reload', 'reloadTabs', [this.tab.id])
-      menu.add('tab.duplicate', 'duplicateTabs', [this.tab.id])
-      menu.add('tab.clear_cookies', 'clearTabsCookies', [this.tab.id])
-
-      Store.commit('closeCtxMenu')
-      State.ctxMenu = menu
-    },
-
-    closeMenu() {
-      this.menu = false
-      State.selected.splice(State.selected.indexOf(this.tab.id), 1)
-    },
-
     loadingStart() {
       this.loading = true
       if (this.loadingTimer) {
@@ -394,6 +350,7 @@ export default {
       }, 2000)
     },
 
+    // ??? remove
     height() {
       return this.$el.offsetHeight
     },

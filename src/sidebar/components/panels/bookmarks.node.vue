@@ -6,7 +6,7 @@
   :to-front="toFront || editorSelect"
   :dragged="dragged"
   :is-selected="selected")
-  .body(:title="tooltip", @click="onClick", @mousedown="onMouseDown")
+  .body(:title="tooltip", @click="onClick", @mousedown="onMouseDown", @mouseup="onMouseUp")
     .drag-layer(draggable="true", @dragstart="onDragStart")
     .fav(v-if="isBookmark", :no-fav="!favicon")
       .placeholder
@@ -23,8 +23,6 @@
         :node="n"
         :recalc-scroll="recalcScroll"
         :edit-node="editNode"
-        @create="onCreate"
-        @edit="onEdit"
         @start-selection="onChildStartSelection")
 </template>
 
@@ -93,12 +91,14 @@ export default {
     EventBus.$on('dragEnd', this.onDragEnd)
     EventBus.$on('selectBookmark', this.onBookmarkSelection)
     EventBus.$on('deselectBookmark', this.onBookmarkDeselection)
+    EventBus.$on('openBookmarkMenu', this.onBookmarkMenu)
   },
 
   beforeDestroy() {
     EventBus.$off('dragEnd', this.onDragEnd)
     EventBus.$off('selectBookmark', this.onBookmarkSelection)
     EventBus.$off('deselectBookmark', this.onBookmarkDeselection)
+    EventBus.$off('openBookmarkMenu', this.onBookmarkMenu)
   },
 
   methods: {
@@ -119,6 +119,20 @@ export default {
           ctrlKey: e.ctrlKey,
           id: this.node.id,
         }, [this.node])
+      }
+    },
+
+    /**
+     * Handle mouseup event
+     */
+    onMouseUp(e) {
+      if (e.button === 2) {
+        Store.commit('closeCtxMenu')
+        // Select this bookmark
+        if (!State.selected.length) {
+          State.selected = [this.node.id]
+          this.selected = true
+        }
       }
     },
 
@@ -157,6 +171,14 @@ export default {
     onBookmarkDeselection(id) {
       if (!id) this.selected = false
       if (id && this.node.id === id) this.selected = false
+    },
+
+    /**
+     * Open bookmark menu
+     */
+    onBookmarkMenu(id) {
+      if (id !== this.node.id) return
+      Store.dispatch('openCtxMenu', { el: this.$el.childNodes[0], node: this.node })
     },
 
     /**
@@ -212,60 +234,6 @@ export default {
       }
     },
 
-    /**
-     * Open context menu for this node
-     */
-    openMenu(isTarget) {
-      if (isTarget) {
-        Store.commit('closeCtxMenu')
-
-        const openNewWinLabel = this.t('menu.bookmark.open_in_new_window')
-        const openPrivWinLabel = this.t('menu.bookmark.open_in_new_priv_window')
-        const openDefLabel = this.t('menu.bookmark.open_in_default_panel')
-        const openPanLabel = this.t('menu.bookmark.open_in_')
-
-        let isSep = this.node.type === 'separator'
-        let opts = []
-        if (!isSep) {
-          opts.push([openNewWinLabel, this.openInNewWin])
-          opts.push([openPrivWinLabel, this.openInNewWin, { incognito: true }])
-          if (this.isParent) opts.push([openDefLabel, this.openInPanel, 'firefox-default'])
-          State.ctxs.map(c => {
-            opts.push([
-              openPanLabel + `||${c.colorCode}>>${c.name}`,
-              this.openInPanel,
-              c.cookieStoreId,
-            ])
-          })
-        }
-        if (this.isFolder) {
-          opts.push([this.t('menu.bookmark.create_bookmark'), this.create, 'bookmark'])
-          opts.push([this.t('menu.bookmark.create_folder'), this.create, 'folder'])
-          opts.push([this.t('menu.bookmark.create_separator'), this.create, 'separator'])
-        }
-        if (this.editable && !isSep) opts.push([this.t('menu.bookmark.edit_bookmark'), this.edit])
-        if (this.editable) opts.push([this.t('menu.bookmark.delete_bookmark'), this.remove])
-
-        State.ctxMenu = {
-          el: this.$el.childNodes[0],
-          off: this.closeMenu,
-          opts,
-        }
-        this.menu = true
-      }
-      this.toFront = true
-      if (this.$parent.openMenu) this.$parent.openMenu()
-    },
-
-    /**
-     * Close context menu
-     */
-    closeMenu() {
-      this.menu = false
-      this.toFront = false
-      if (this.$parent.closeMenu) this.$parent.closeMenu()
-    },
-
     openUrl(inNewTab, withFocus) {
       if (!this.node.url) return
       if (inNewTab) {
@@ -281,84 +249,9 @@ export default {
       }
     },
 
-    openInPanel(panelId) {
-      const p = this.panels.find(p => p.cookieStoreId === panelId)
-      if (!p) return
-
-      let index = p.endIndex + 1
-
-      if (this.isBookmark) {
-        browser.tabs.create({
-          index: index,
-          url: this.node.url,
-          cookieStoreId: panelId,
-        })
-      }
-
-      if (this.isParent) {
-        const urls = []
-        const walker = list =>
-          list.map(n => {
-            if (n.type === 'bookmark' && !n.url.indexOf('http')) urls.push(n.url)
-            if (n.type === 'folder') walker(n.children)
-          })
-        walker(this.node.children)
-
-        urls.map(url => {
-          browser.tabs.create({
-            index: index++,
-            url: url,
-            cookieStoreId: panelId,
-          })
-        })
-      }
-    },
-
-    openInNewWin({ incognito } = {}) {
-      if (this.isBookmark) {
-        return browser.windows.create({ url: this.node.url, incognito })
-      }
-
-      if (this.isParent) {
-        const urls = []
-        const walker = list =>
-          list.map(n => {
-            if (n.type === 'bookmark' && !n.url.indexOf('http')) urls.push(n.url)
-            if (n.type === 'folder') walker(n.children)
-          })
-        walker(this.node.children)
-        return browser.windows.create({ url: urls, incognito })
-      }
-    },
-
     remove() {
       if (!this.isParent) browser.bookmarks.remove(this.node.id)
       else browser.bookmarks.removeTree(this.node.id)
-    },
-
-    create(type) {
-      if (this.isFolder) this.$emit('create', type, [this.node], [this.onEditEnd])
-      else this.$emit('create', type, [])
-      this.editorSelect = true
-    },
-    onCreate(type, path, onEndHandlers) {
-      path.push(this.node)
-      onEndHandlers.push(this.onEditEnd)
-      this.$emit('create', type, path, onEndHandlers)
-      this.editorSelect = true
-    },
-
-    edit() {
-      this.editorSelect = true
-      if (this.isFolder) this.$emit('edit', this.node, [this.node], [this.onEditEnd])
-      else this.$emit('edit', this.node, [], [this.onEditEnd])
-    },
-    onEdit(node, path, onEndHandlers) {
-      path.push(this.node)
-      this.$emit('edit', node, path, onEndHandlers)
-    },
-    onEditEnd() {
-      this.editorSelect = false
     },
   },
 }
@@ -374,6 +267,18 @@ export default {
   margin: 0
   border-top-left-radius: 3px
   border-bottom-left-radius: 3px
+  &:before
+    content: ''
+    box(absolute)
+    pos(0, r: 0)
+    size(100vw, 100%)
+    background-color: var(--tabs-selected-bg)
+    z-index: -1
+    opacity: 0
+    transform: scale(0, 0)
+    transition: opacity var(--d-fast),
+                z-index var(--d-fast),
+                transform 0s var(--d-fast)
 
 .Node[dragged]
   opacity: .32 !important
@@ -443,22 +348,38 @@ export default {
     transform: rotateZ(0deg)
 
 // > Selected
-.Node[is-selected="true"][n-type="bookmark"]
-.Node[is-selected="true"][n-type="folder"]
-.Node[is-selected="true"][n-type="separator"]
-  z-index: 30
-  background-color: var(--tabs-selected-bg)
-  > .body
-  > .body:hover
-  > .body:active
-    z-index: 100
-    > .title
-      color: var(--tabs-selected-fg)
+// .Node[is-selected="true"][n-type="bookmark"]
+// .Node[is-selected="true"][n-type="folder"]
+// .Node[is-selected="true"][n-type="separator"]
+//   z-index: 30
+//   background-color: var(--tabs-selected-bg)
+//   > .body
+//   > .body:hover
+//   > .body:active
+//     z-index: 100
+//     > .title
+//       color: var(--tabs-selected-fg)
 
-.Node[is-selected="true"][n-type="separator"]
-  > .body
-    &:before
-      background-image: linear-gradient(90deg, transparent, var(--tabs-selected-fg), var(--tabs-selected-fg), var(--tabs-selected-fg))
+// .Node[is-selected="true"][n-type="separator"]
+//   > .body
+//     &:before
+      // background-image: linear-gradient(90deg, transparent, var(--tabs-selected-fg), var(--tabs-selected-fg), var(--tabs-selected-fg))
+
+.Node[is-selected="true"]
+  &:before
+    opacity: 1
+    z-index: 0
+    transform: scale(1, 1)
+    transition: opacity var(--d-fast),
+                z-index var(--d-fast),
+                transform 0s 0s
+    // content: ''
+    // box(absolute)
+    // pos(0, r: 0)
+    // size(100vw, 100%)
+    // background-color: var(--tabs-selected-bg)
+  .body .title
+    color: var(--tabs-selected-fg)
 
 // Body of node
 .Node > .body

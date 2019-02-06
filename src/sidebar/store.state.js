@@ -123,6 +123,8 @@ export default {
   ctxs: [], // all contextual identities
 
   bookmarks: [],
+  bookmarkEditor: false,
+  bookmarkEditorTarget: null,
 
   // --- Settings
   ...SETTINGS_OPTIONS,

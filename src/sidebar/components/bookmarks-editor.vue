@@ -1,12 +1,12 @@
 <template lang="pug">
 .BEditor(v-noise:300.g:12:af.a:0:42.s:0:9="")
-  .field.-name
+  .field.-title
     text-input.input(
-      ref="name"
-      v-model="name"
-      :or="t(namePlaceholder)"
+      ref="title"
+      v-model="title"
+      :or="t(titlePlaceholder)"
       :tabindex="tabindex"
-      @keydown="onNameKD")
+      @keydown="onTitleKD")
   .field.-url(v-if="isBookmark")
     text-input.input(
       ref="url"
@@ -23,6 +23,7 @@
 
 
 <script>
+import State from '../store.state'
 import TextInput from './inputs/text.vue'
 
 const URL_RE = /^(http:\/\/|https:\/\/)[a-z0-9]+([-.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/
@@ -38,7 +39,7 @@ export default {
       action: 'create',
       type: 'bookmark',
       id: '',
-      name: '',
+      title: '',
       url: '',
       tags: '', // https://bugzilla.mozilla.org/show_bug.cgi?id=1225916
       path: [],
@@ -46,7 +47,7 @@ export default {
   },
 
   computed: {
-    namePlaceholder() {
+    titlePlaceholder() {
       if (this.type === 'bookmark') return 'bookmarks_editor.name_bookmark_placeholder'
       else return 'bookmarks_editor.name_folder_placeholder'
     },
@@ -61,12 +62,36 @@ export default {
     },
   },
 
+  created() {
+    if (!State.bookmarkEditorTarget) return
+
+    let done = false
+    const path = []
+    const walker = nodes => {
+      for (let n of nodes) {
+        if (done) break
+        if (n.type !== 'folder') continue
+        path.push(n)
+        if (n.id === State.bookmarkEditorTarget.parentId) {
+          done = true
+          break
+        }
+        walker(n.children)
+        if (!done) path.pop()
+      }
+    }
+    walker(State.bookmarks)
+
+    if (State.bookmarkEditorTarget.title) this.edit(State.bookmarkEditorTarget, path)
+    else this.create(State.bookmarkEditorTarget.type, path)
+  },
+
   methods: {
     /**
      * KeyDown handler for name input
      */
-    onNameKD(e) {
-      if (e.key === 'Escape') this.$emit('cancel')
+    onTitleKD(e) {
+      if (e.key === 'Escape') this.onCancel()
       if (e.key === 'Enter') {
         e.preventDefault()
         if ((this.isBookmark, this.$refs.url)) this.$refs.url.focus()
@@ -78,7 +103,7 @@ export default {
      * KeyDown handler for url input
      */
     onUrlKD(e) {
-      if (e.key === 'Escape') this.$emit('cancel')
+      if (e.key === 'Escape') this.onCancel()
       if (e.key === 'Enter') {
         e.preventDefault()
         this.onOk()
@@ -92,19 +117,19 @@ export default {
       this.action = 'create'
       this.type = type
       this.id = ''
-      this.name = ''
+      this.title = ''
       this.url = ''
       this.tags = ''
-      this.path = path.reverse()
+      this.path = path
       this.tabindex = '0'
 
       this.$nextTick(() => {
-        if (this.$refs.name) this.$refs.name.recalcTextHeight()
+        if (this.$refs.title) this.$refs.title.recalcTextHeight()
         if (this.$refs.url) this.$refs.url.recalcTextHeight()
       })
 
       setTimeout(() => {
-        if (this.$refs.name) this.$refs.name.focus()
+        if (this.$refs.title) this.$refs.title.focus()
       }, 256)
     },
 
@@ -115,19 +140,19 @@ export default {
       this.action = 'edit'
       this.id = node.id
       this.type = node.type
-      this.name = node.title
+      this.title = node.title
       this.url = node.url
-      this.path = path.reverse()
+      this.path = path
       this.tags = ''
       this.tabindex = '0'
 
       this.$nextTick(() => {
-        if (this.$refs.name) this.$refs.name.recalcTextHeight()
+        if (this.$refs.title) this.$refs.title.recalcTextHeight()
         if (this.$refs.url) this.$refs.url.recalcTextHeight()
       })
 
       setTimeout(() => {
-        if (this.$refs.name) this.$refs.name.focus()
+        if (this.$refs.title) this.$refs.title.focus()
       }, 256)
     },
 
@@ -135,8 +160,8 @@ export default {
      * Ok button (create/save) click handler
      */
     onOk() {
-      if (!this.name) {
-        if (this.$refs.name) this.$refs.name.error()
+      if (!this.title) {
+        if (this.$refs.title) this.$refs.title.error()
         return
       }
       if (this.isBookmark && !(this.url && URL_RE.test(this.url))) {
@@ -152,7 +177,8 @@ export default {
      */
     onCancel() {
       this.tabindex = '-1'
-      this.$emit('cancel')
+      State.bookmarkEditor = false
+      State.bookmarkEditorTarget = null
     },
 
     /**
@@ -161,14 +187,15 @@ export default {
     createNode() {
       browser.bookmarks.create({
         parentId: this.path[this.path.length - 1].id,
-        title: this.name,
+        title: this.title,
         type: this.type,
         url: this.url,
         index: 0,
       })
 
       this.tabindex = '-1'
-      this.$emit('create')
+      State.bookmarkEditor = false
+      State.bookmarkEditorTarget = null
     },
 
     /**
@@ -176,12 +203,13 @@ export default {
      */
     updateNode() {
       browser.bookmarks.update(this.id, {
-        title: this.name,
+        title: this.title,
         url: this.url,
       })
 
       this.tabindex = '-1'
-      this.$emit('change')
+      State.bookmarkEditor = false
+      State.bookmarkEditorTarget = null
     },
   },
 }
@@ -199,19 +227,11 @@ export default {
   background-color: var(--bg)
   z-index: 100
   box-shadow: 0 -1px 12px 0 #00000056, 0 -1px 0 0 #00000012
-  opacity: 0
-  z-index: -1
-  transform: translateY(100%)
-  transition: opacity var(--d-fast), transform var(--d-fast), z-index var(--d-fast)
-  &[is-active]
-    opacity: 1
-    z-index: 1000
-    transform: translateY(0)
 
 .BEditor .field
   box(relative)
   margin: 12px 16px 0
-  &.-name
+  &.-title
     > .input
       text(s: rem(18))
       color: var(--title-fg)

@@ -218,24 +218,6 @@ export default {
     },
 
     /**
-     * Update fake drag tabs.
-     */
-    recalcDragTabs() {
-      // let top = 0
-      // this.dragTabs = this.tabs.map(t => {
-      //   const vm = this.$refs.tabs.find(tvm => tvm.tab.id === t.id)
-
-      //   t.fav = vm.faviErr ? null : vm.favicon
-      //   t.h = vm.height()
-      //   t.el = vm.$el
-      //   t.top = top
-
-      //   top += t.h
-      //   return t
-      // })
-    },
-
-    /**
      * Calculate tabs bounds
      */
     getItemsBounds() {

@@ -18,6 +18,8 @@ import Getters from '../store.getters'
 export default {
   data() {
     return {
+
+
       aIsActive: false,
       aOpts: [],
       aPos: 0,
@@ -47,17 +49,8 @@ export default {
       if (this.leaveT) clearTimeout(this.leaveT)
 
       let h = this.$root.$el.offsetHeight
-      if (c && !p) {
-        let rect = c.el.getBoundingClientRect()
-        this.aOpts = c.opts
-        this.aIsActive = true
-        this.$nextTick(() => {
-          this.aDown = this.$refs.aBox.offsetHeight + rect.bottom < h
-          this.aPos = this.aDown ? rect.bottom : rect.top
-        })
-      }
 
-      if (c && p) {
+      if (c) {
         let rect = c.el.getBoundingClientRect()
         if (this.aOpts.length) {
           this.bOpts = c.opts
@@ -87,10 +80,6 @@ export default {
       if (!c && p) {
         this.aIsActive = false
         this.bIsActive = false
-        setTimeout(() => {
-          this.aOpts = []
-          this.bOpts = []
-        }, 128)
       }
     })
   },
@@ -169,7 +158,7 @@ export default {
 .CtxMenu .box
   box(absolute)
   pos(r: 0)
-  size(max-w: calc(100% - 12px))
+  size(max-w: calc(100% - 28px))
   z-index: 30
   padding: 0 0 0 0
   margin: 0
