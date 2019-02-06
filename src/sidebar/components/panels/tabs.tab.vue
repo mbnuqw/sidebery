@@ -345,8 +345,24 @@ export default {
       }
     },
 
-    close() {
-      Store.dispatch('removeTab', this.tab)
+    /**
+     * Close tab[s]
+     */
+    close(e) {
+      // Remove only this tab on left tab
+      if (e.button === 0) {
+        Store.dispatch('removeTab', this.tab)
+      }
+
+      // Remove whole tabs branch
+      if (e.button === 2) {
+        const toRemove = [this.tab.id]
+        for (let tab of State.tabs) {
+          if (toRemove.includes(tab.parentId)) toRemove.push(tab.id)
+        }
+        if (toRemove.length === 1) Store.dispatch('removeTab', this.tab)
+        else if (toRemove.length > 1) Store.dispatch('removeTabs', toRemove)
+      }
     },
 
     loadingStart() {

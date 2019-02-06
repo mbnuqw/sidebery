@@ -411,7 +411,6 @@ export default {
      * Start selection
      */
     startSelection(info) {
-      console.log('[DEBUG]   startSelection');
       this.selectionStart = info
       this.selectY = info.clientY
     },
@@ -557,7 +556,6 @@ export default {
      * Mouse down event handler
      */
     onMouseDown(e) {
-      console.log('[DEBUG] INDEX mousedown');
       if (e.button === 1) {
         if (State.wheelBlockTimeout) {
           clearTimeout(State.wheelBlockTimeout)
@@ -581,7 +579,6 @@ export default {
      */
     onMouseUp(e) {
       if (e.button === 2) {
-        console.log('[DEBUG] INDEX mouseup, stopSelection()');
         if (this.selectionStart) this.stopSelection()
       }
     },
