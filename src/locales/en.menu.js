@@ -20,6 +20,7 @@ export default {
   'menu.tab.reopen_in_': { message: 'Reopen in ' },
   'menu.tab.reopen_in_another_window': { message: 'Reopen in another window' },
   'menu.tab.reopen_in_window_': { message: 'Reopen in window...' },
+  'menu.tab.flatten': { message: 'Flatten' },
   'menu.tab.pin': { message: 'Pin' },
   'menu.tab.unpin': { message: 'Unpin' },
   'menu.tab.mute': { message: 'Mute' },

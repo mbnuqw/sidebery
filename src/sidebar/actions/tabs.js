@@ -595,4 +595,30 @@ export default {
 
     dispatch('saveTabsTree')
   },
+
+  /**
+   * Flatten tabs tree
+   */
+  flattenTabs({ state }, tabIds) {
+    // Gather children
+    let minLvlTab = { lvl: 999 }
+    const toFlat = [...tabIds]
+    const ttf = tabIds.map(id => state.tabs.find(t => t.id === id))
+    for (let tab of state.tabs) {
+      if (toFlat.includes(tab.id) && tab.lvl < minLvlTab.lvl) minLvlTab = tab
+      if (toFlat.includes(tab.parentId)) {
+        toFlat.push(tab.id)
+        ttf.push(tab)
+        if (tab.lvl < minLvlTab.lvl) minLvlTab = tab
+      }
+    }
+
+    if (!minLvlTab.parentId) return
+    for (let tab of ttf) {
+      tab.lvl = minLvlTab.lvl
+      tab.parentId = minLvlTab.parentId
+    }
+
+    state.tabs = Utils.CalcTabsTreeLevels(state.tabs)
+  },
 }
