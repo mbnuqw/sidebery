@@ -1,7 +1,5 @@
 <template lang="pug">
 .TabsPanel(
-  :drag-active="drag && drag.dragged"
-  :drag-end="dragEnd"
   @contextmenu.prevent.stop=""
   @wheel="onWheel"
   @mousedown="onMouseDown"
@@ -50,7 +48,6 @@ export default {
       drag: null,
       dragTabs: [],
       dragEls: [],
-      dragEnd: false,
     }
   },
 
@@ -313,15 +310,6 @@ export default {
 
 <style lang="stylus" scoped>
 @import '../../../styles/mixins'
-
-.TabsPanel
-  &[drag-active] .container
-    opacity: 0
-  &[drag-active] .drag-box
-    opacity: 1
-    z-index: 10
-  &[drag-end] .drag-tab[dragged]
-    transition: transform var(--d-fast)
 
 .TabsPanel .container
   box(relative)

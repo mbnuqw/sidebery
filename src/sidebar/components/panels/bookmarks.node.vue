@@ -4,7 +4,6 @@
   :is-expanded="node.expanded"
   :is-parent="!!isParent"
   :to-front="toFront || editorSelect"
-  :dragged="dragged"
   :is-selected="selected")
   .body(:title="tooltip", @click="onClick", @mousedown="onMouseDown", @mouseup="onMouseUp")
     .drag-layer(draggable="true", @dragstart="onDragStart")
@@ -46,7 +45,6 @@ export default {
       menu: false,
       toFront: false,
       editorSelect: false,
-      dragged: false,
       selected: false,
     }
   },
@@ -88,14 +86,12 @@ export default {
   },
 
   created() {
-    EventBus.$on('dragEnd', this.onDragEnd)
     EventBus.$on('selectBookmark', this.onBookmarkSelection)
     EventBus.$on('deselectBookmark', this.onBookmarkDeselection)
     EventBus.$on('openBookmarkMenu', this.onBookmarkMenu)
   },
 
   beforeDestroy() {
-    EventBus.$off('dragEnd', this.onDragEnd)
     EventBus.$off('selectBookmark', this.onBookmarkSelection)
     EventBus.$off('deselectBookmark', this.onBookmarkDeselection)
     EventBus.$off('openBookmarkMenu', this.onBookmarkMenu)
@@ -204,14 +200,6 @@ export default {
         name: 'outerDragStart',
         arg: info,
       })
-      this.dragged = true
-    },
-
-    /**
-     * Handle drag end event
-     */
-    onDragEnd() {
-      this.dragged = false
     },
 
     /**
@@ -279,9 +267,6 @@ export default {
     transition: opacity var(--d-fast),
                 z-index var(--d-fast),
                 transform 0s var(--d-fast)
-
-.Node[dragged]
-  opacity: .32 !important
 
 .Node[n-type="bookmark"]
   > .body

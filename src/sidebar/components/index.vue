@@ -604,6 +604,14 @@ export default {
 
       // Turn on drag mode
       this.dragMode = true
+      
+      // Select dragged nodes
+      if (this.dragNodes) {
+        for (let n of this.dragNodes) {
+          if (n.type === 'tab') EventBus.$emit('selectTab', n.id)
+          else EventBus.$emit('selectBookmark', n.id)
+        }
+      }
     },
 
     onDragLeave(e) {
@@ -643,6 +651,10 @@ export default {
         })
       }
 
+      if (this.dragNodes) {
+        if (this.dragNodes[0].type === 'tab') EventBus.$emit('deselectTab')
+        else EventBus.$emit('deselectBookmark')
+      }
       this.resetDrag()
     },
 
@@ -1126,7 +1138,6 @@ export default {
       this.pointerPos = null
       this.pointerMode = 'none'
       this.panelScrollEl = null
-      EventBus.$emit('dragEnd')
     },
 
     // --- Panel Menu ---

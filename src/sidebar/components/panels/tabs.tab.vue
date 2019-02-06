@@ -11,7 +11,6 @@
   :is-parent="tab.isParent"
   :folded="tab.folded"
   :lvl="tab.lvl"
-  :dragged="dragged"
   :close-btn="$store.state.showTabRmBtn"
   :title="tooltip"
   @contextmenu.prevent.stop=""
@@ -39,7 +38,7 @@
       each n in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
         .spinner-stick(class='spinner-stick-' + n)
   .ctx(v-if="tab.ctxIcon", :style="{background: tab.ctxColor}")
-  .close(v-if="$store.state.showTabRmBtn", @mousedown.stop="close", @mouseup.stop="")
+  .close(v-if="$store.state.showTabRmBtn", @mousedown.stop="onCloseClick", @mouseup.stop="")
     svg: use(xlink:href="#icon_remove")
   .t-box
     .title {{tab.id}} - [{{tab.index}}] - {{tab.title}}
@@ -69,7 +68,6 @@ export default {
       menu: false,
       faviErr: false,
       loading: false,
-      dragged: false,
       selected: false,
     }
   },
@@ -114,7 +112,6 @@ export default {
     EventBus.$on('tabLoadingErr', id => {
       if (id === this.tab.id) this.loadingErr()
     })
-    EventBus.$on('dragEnd', () => {this.dragged = false})
     EventBus.$on('selectTab', this.onTabSelection)
     EventBus.$on('deselectTab', this.onTabDeselection)
     EventBus.$on('openTabMenu', this.onTabMenu)
@@ -143,8 +140,6 @@ export default {
      * Mousedown handler
      */
     onMouseDown(e) {
-      // Store.commit('closeCtxMenu')
-
       if (e.button === 1) {
         this.close()
         e.preventDefault()
@@ -277,7 +272,6 @@ export default {
         name: 'outerDragStart',
         arg: info,
       })
-      this.dragged = true
     },
 
     /**
@@ -346,23 +340,30 @@ export default {
     },
 
     /**
-     * Close tab[s]
+     * Handle click on close btn
      */
-    close(e) {
-      // Remove only this tab on left tab
-      if (e.button === 0) {
-        Store.dispatch('removeTab', this.tab)
-      }
+    onCloseClick(e) {
+      if (e.button === 0) this.close()
+      if (e.button === 2) this.closeTree()
+    },
 
-      // Remove whole tabs branch
-      if (e.button === 2) {
-        const toRemove = [this.tab.id]
-        for (let tab of State.tabs) {
-          if (toRemove.includes(tab.parentId)) toRemove.push(tab.id)
-        }
-        if (toRemove.length === 1) Store.dispatch('removeTab', this.tab)
-        else if (toRemove.length > 1) Store.dispatch('removeTabs', toRemove)
+    /**
+     * Close tab
+     */
+    close() {
+      Store.dispatch('removeTab', this.tab)
+    },
+
+    /**
+     * Close tabs tree
+     */
+    closeTree() {
+      const toRemove = [this.tab.id]
+      for (let tab of State.tabs) {
+        if (toRemove.includes(tab.parentId)) toRemove.push(tab.id)
       }
+      if (toRemove.length === 1) Store.dispatch('removeTab', this.tab)
+      else if (toRemove.length > 1) Store.dispatch('removeTabs', toRemove)
     },
 
     loadingStart() {
@@ -455,12 +456,6 @@ export default {
       opacity: 1
     .title
       color: var(--tabs-activated-fg)
-
-  &[dragged]
-    z-index: 10
-    background-color: var(--tabs-selected-bg)
-    .title
-      color: var(--tabs-selected-fg)
 
   &[close-btn]:hover
     &[data-audible] .t-box

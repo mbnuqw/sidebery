@@ -1,7 +1,6 @@
 <template lang="pug">
 .Bookmarks(
   :drag-active="drag && drag.dragged"
-  :drag-end="dragEnd"
   :ctx-menu="!!ctxMenuOpened"
   :editing="editor"
   :not-renderable="!renderable"
@@ -46,7 +45,6 @@ export default {
       topOffset: 0,
       drag: null,
       flat: [],
-      dragEnd: false,
       editor: false,
       renderable: false,
       visible: false,
