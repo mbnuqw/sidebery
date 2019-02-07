@@ -558,20 +558,32 @@ export default {
         }
       } else {
         // Create new tabs
+        const oldNewMap = []
         for (let i = 0; i < nodes.length; i++) {
           const node = nodes[i]
-          await browser.tabs.create({
+          if (node.type === 'separator') continue
+          const info = await browser.tabs.create({
             active: !(parent && parent.folded),
             cookieStoreId: destCtx,
-            index: dropIndex,
+            index: dropIndex + i,
             openerTabId: dropParent < 0 ? undefined : dropParent,
-            url: node.url,
+            url: node.url || browser.runtime.getURL('group/group.html'),
             windowId: state.windowId,
           })
-          // Remove source tab
+          oldNewMap[node.id] = info.id
+          // Restore parentId
+          if (nodes.length > 1 && nodes[0].id === nodes[1].parentId) {
+            const tab = state.tabs.find(t => t.id === info.id)
+            if (tab && oldNewMap[node.parentId]) tab.parentId = oldNewMap[node.parentId]
+          }
+          // Remove source tab (and update tabs tree)
           if (nodes[0].type === 'tab' && !event.ctrlKey) {
             await browser.tabs.remove(node.id)
           }
+        }
+        // Update tabs tree if there are no tabs was deleted
+        if (nodes[0].type !== 'tab' || event.ctrlKey) {
+          state.tabs = Utils.CalcTabsTreeLevels(state.tabs)
         }
       }
     }

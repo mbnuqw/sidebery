@@ -181,24 +181,41 @@ export default {
      * Handle dragstart event.
      */
     onDragStart(e) {
+      // Check what to drag
+      const toDrag = [this.node.id]
+      const nodesToDrag = [this.node]
+      const walker = nodes => {
+        for (let node of nodes) {
+          if (toDrag.includes(node.parentId)) {
+            toDrag.push(node.id)
+            nodesToDrag.push(node)
+          }
+          if (node.type === 'folder') walker(node.children)
+        }
+      }
+      walker(State.bookmarks)
+
+      // Set drag info
       e.dataTransfer.setData('text/x-moz-text-internal', this.node.url)
       e.dataTransfer.setData('text/uri-list', this.node.url)
       e.dataTransfer.setData('text/plain', this.node.url)
       e.dataTransfer.effectAllowed = 'move'
-      const info = [{
-        type: this.node.type,
-        id: this.node.id,
-        index: this.node.index,
-        parent: this.node.parentId,
-        incognito: State.private,
-        windowId: State.windowId,
-        url: this.node.url,
-        title: this.node.title,
-      }]
-      EventBus.$emit('dragStart', info)
+      const dragData = nodesToDrag.map(n => {
+        return {
+          type: n.type,
+          id: n.id,
+          parentId: n.parentId,
+          index: n.index,
+          incognito: State.private,
+          windowId: State.windowId,
+          url: n.url,
+          title: n.title,
+        }
+      })
+      EventBus.$emit('dragStart', dragData)
       Store.dispatch('broadcast', {
         name: 'outerDragStart',
-        arg: info,
+        arg: dragData,
       })
     },
 

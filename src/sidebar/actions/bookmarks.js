@@ -170,7 +170,7 @@ export default {
         nodeType === 'bookmark' || nodeType === 'folder' || nodeType === 'separator'
 
       if (isBookmarkNode && !event.ctrlKey) {
-        if (nodes[0].parent === dropParent) {
+        if (nodes[0].parentId === dropParent) {
           if (nodes[0].index === dropIndex) return
           dropIndex = nodes[0].index > dropIndex ? dropIndex : dropIndex - 1
         }
