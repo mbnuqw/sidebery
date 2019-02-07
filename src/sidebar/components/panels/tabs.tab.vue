@@ -141,7 +141,8 @@ export default {
      */
     onMouseDown(e) {
       if (e.button === 1) {
-        this.close()
+        if (this.tab.folded) this.closeTree()
+        else this.close()
         e.preventDefault()
         e.stopPropagation()
       }

@@ -607,6 +607,8 @@ export default {
 
   /**
    * Flatten tabs tree
+   * 
+   * TODO: to mutations
    */
   flattenTabs({ state }, tabIds) {
     // Gather children

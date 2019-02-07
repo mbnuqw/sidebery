@@ -863,6 +863,7 @@ export default {
       let rmIndex = State.tabs.findIndex(t => t.id === tabId)
       if (rmIndex === -1) return
 
+      // Locked tabs
       const panelIndex = Utils.GetPanelIndex(this.panels, tabId)
       const tab = State.tabs[rmIndex]
       if (State.lockedTabs[panelIndex] && !tab.url.startsWith('about')) {
@@ -872,10 +873,18 @@ export default {
         })
       }
 
+      // No-empty
       if (State.noEmptyDefault && !tab.pinned && tab.cookieStoreId === this.defaultCtxId) {
         const panelTabs = this.panels[panelIndex].tabs
         if (panelTabs && panelTabs.length === 1) {
           browser.tabs.create({})
+        }
+      }
+
+      // Down level of children
+      if (State.tabsTree && tab.isParent) {
+        for (let t of State.tabs) {
+          if (t.parentId === tab.id) t.parentId = tab.parentId
         }
       }
 
