@@ -162,12 +162,27 @@ export default {
    * Drop to bookmarks panel
    */
   async dropToBookmarks(_, { event, dropIndex, dropParent, nodes } = {}) {
-    console.log('[DEBUG] dropToBookmarks', dropIndex, dropParent);
     // Tabs or Bookmarks
     if (nodes && nodes.length) {
       const nodeType = nodes[0].type
       const isBookmarkNode =
         nodeType === 'bookmark' || nodeType === 'folder' || nodeType === 'separator'
+
+      // Filter nested bookmarks
+      if (isBookmarkNode) {
+        let p
+        const toDrop = []
+        for (let n of nodes) {
+          if (!p && n.type !== 'folder') toDrop.push(n)
+          if (!p && n.type === 'folder') {
+            toDrop.push(n)
+            p = n.parentId
+            continue
+          }
+          if (p && p === n.parentId) toDrop.push(n)
+        }
+        nodes = toDrop
+      }
 
       if (isBookmarkNode && !event.ctrlKey) {
         if (nodes[0].parentId === dropParent) {

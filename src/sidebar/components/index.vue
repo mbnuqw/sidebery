@@ -127,6 +127,7 @@ export default {
       width: 250,
       dragMode: false,
       pointerMode: 'none',
+      pointerInactive: false,
       dashboard: null,
       loading: [],
       loadingTimers: [],
@@ -438,7 +439,6 @@ export default {
       if (!this.$refs.pointer) return
 
       let dragNode = this.dragNodes ? this.dragNodes[0] : null
-      let dragNodeId = dragNode ? dragNode.id : null
       let scroll = this.panelScrollEl ? this.panelScrollEl.scrollTop : 0
       let y = e.clientY - this.panelTopOffset + scroll
 
@@ -471,7 +471,7 @@ export default {
       for (let i = 0; i < this.itemSlots.length; i++) {
         const slot = this.itemSlots[i]
         // Skip
-        if (y > slot.end || y < slot.start || slot.id === dragNodeId) continue
+        if (y > slot.end || y < slot.start) continue
         // Between
         if (slot.in ? y < slot.top : y < slot.center) {
           const prevSlot = this.itemSlots[i - 1]

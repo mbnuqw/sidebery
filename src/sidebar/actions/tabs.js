@@ -520,6 +520,15 @@ export default {
     if (nodes && nodes.length) {
       const samePanel = nodes[0].panel === state.panelIndex
 
+      // Reset drop to same place
+      if (nodes[0].type === 'tab' && samePanel) {
+        let k = nodes[0].index >= dropIndex ? dropIndex : dropIndex - 1
+        for (let n of nodes) {
+          if (k === n.index && dropParent !== n.id) continue
+          if (k === n.index || dropParent === n.id) return
+        }
+      }
+
       if (nodes[0].type === 'tab' && samePanel && !event.ctrlKey) {
         // Move
         if (nodes[0].index !== dropIndex) {
