@@ -18,8 +18,6 @@ import Getters from '../store.getters'
 export default {
   data() {
     return {
-
-
       aIsActive: false,
       aOpts: [],
       aPos: 0,

@@ -41,7 +41,7 @@
   .close(v-if="$store.state.showTabRmBtn", @mousedown.stop="onCloseClick", @mouseup.stop="")
     svg: use(xlink:href="#icon_remove")
   .t-box
-    .title {{tab.id}} - [{{tab.index}}] - {{tab.title}}
+    .title {{tab.parentId}}/{{tab.id}} - isParent: {{tab.isParent}} - {{tab.title}}
     .loading
       svg.-a: use(xlink:href="#icon_load")
       svg.-b: use(xlink:href="#icon_load")
@@ -252,25 +252,39 @@ export default {
      * Handle dragstart event.
      */
     onDragStart(e) {
+      // Check what to drag
+      const toDrag = [this.tab.id]
+      const tabsToDrag = [this.tab]
+      for (let tab of State.tabs) {
+        if (toDrag.includes(tab.parentId)) {
+          toDrag.push(tab.id)
+          tabsToDrag.push(tab)
+        }
+      }
+
+      // Set drag info
       e.dataTransfer.setData('text/x-moz-text-internal', this.tab.url)
       e.dataTransfer.setData('text/uri-list', this.tab.url)
       e.dataTransfer.setData('text/plain', this.tab.url)
       e.dataTransfer.effectAllowed = 'move'
-      const info = [{
-        type: 'tab',
-        id: this.tab.id,
-        index: this.tab.index,
-        ctx: this.tab.cookieStoreId,
-        incognito: State.private,
-        windowId: State.windowId,
-        panel: State.panelIndex,
-        url: this.tab.url,
-        title: this.tab.title,
-      }]
-      EventBus.$emit('dragStart', info)
+      const dragData = tabsToDrag.map(t => {
+        return {
+          type: 'tab',
+          id: t.id,
+          parentId: t.parentId,
+          index: t.index,
+          ctx: t.cookieStoreId,
+          incognito: State.private,
+          windowId: State.windowId,
+          panel: State.panelIndex,
+          url: t.url,
+          title: t.title,
+        }
+      })
+      EventBus.$emit('dragStart', dragData)
       Store.dispatch('broadcast', {
         name: 'outerDragStart',
-        arg: info,
+        arg: dragData,
       })
     },
 

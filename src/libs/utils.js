@@ -219,43 +219,53 @@ function CSSVar(key) {
  */
 function CalcTabsTreeLevels(tabs) {
   let lvl = 0
-  let parents = []
-  let relations = {}
-  let lastParent
+  let parents = {}
+  let path = []
   for (let i = 0; i < tabs.length; i++) {
+    let pt = tabs[i - 1]
     let t = tabs[i]
-    // zero-lvl
+
+    // Normalize parents props
+    t.isParent = !!t.isParent
+    t.folded = !!t.folded
+
+    // Tabs without parents
     if (t.parentId < 0) {
       lvl = 0
-      parents = []
+      path = []
     }
-    // is parent
-    if (t.isParent && !relations[i]) relations[i] = []
-    // have parent
+
+    // With parent
     if (t.parentId >= 0) {
-      // in / out
-      if (!parents.includes(t.parentId)) {
-        lastParent = tabs[i - 1]
-        lastParent.isParent = true
-        lastParent.folded = lastParent.folded || !!t.hidden
-        parents[lvl] = t.parentId
-        relations[i - 1] = [t.id]
+      // Set parent id
+      parents[t.parentId] = true
+
+      // First child
+      // tab
+      //   tab <
+      if (pt && pt.id === t.parentId) {
+        path[lvl] = t.parentId
+        pt.isParent = true
+        pt.folded = pt.folded || !!t.hidden
         lvl++
-      } else if (lvl !== parents.length - 1) {
-        lvl = parents.indexOf(t.parentId) + 1
-      } else {
-        relations[lastParent.index].push(t.id)
+      }
+
+      // After the last child
+      //   tab
+      // tab <
+      if (pt && pt.id !== t.parentId && pt.parentId !== t.parentId) {
+        lvl = path.indexOf(t.parentId) + 1
       }
     }
+
+    // Set tab lvl
     t.lvl = lvl
   }
 
-  for (let parentIndex in relations) {
-    if (!relations.hasOwnProperty(parentIndex)) continue
-    if (!relations[parentIndex].length) {
-      tabs[parentIndex].isParent = false
-      tabs[parentIndex].folded = false
-    }
+  // Reset parents without children
+  for (let t of tabs) {
+    t.isParent = !!parents[t.id]
+    if (!t.isParent) t.folded = false
   }
 
   return tabs

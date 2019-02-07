@@ -539,10 +539,19 @@ export default {
 
         // Update tabs tree
         if (state.tabsTree) {
-          for (let node of nodes) {
-            const tab = state.tabs.find(t => t.id === node.id)
+          if (nodes.length > 1 && nodes[0].id === nodes[1].parentId) {
+          // If dragNodes is sub-tree, preserve struct
+            const tab = state.tabs.find(t => t.id === nodes[0].id)
             if (tab) tab.parentId = dropParent >= 0 ? dropParent : -1
+          } else {
+          // Or just flatten all nodes
+            for (let node of nodes) {
+              const tab = state.tabs.find(t => t.id === node.id)
+              if (tab) tab.parentId = dropParent >= 0 ? dropParent : -1
+            }
           }
+
+          // If there are no moving, just update tabs tree
           if (dropIndex === nodes[0].index) {
             state.tabs = Utils.CalcTabsTreeLevels(state.tabs)
           }

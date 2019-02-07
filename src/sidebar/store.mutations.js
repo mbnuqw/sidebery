@@ -75,7 +75,7 @@ export default {
    * Reset selection.
    */
   resetSelection(state) {
-    console.log('[DEBUG] resetSelection');
+    // console.log('[DEBUG] resetSelection');
     if (state.selected.length > 0) {
       state.selected = []
       EventBus.$emit('deselectTab')
@@ -90,7 +90,7 @@ export default {
    * Close context menu
    */
   closeCtxMenu(state) {
-    console.log('[DEBUG] closeCtxMenu');
+    // console.log('[DEBUG] closeCtxMenu');
     if (state.ctxMenu) {
       if (state.ctxMenu.off) state.ctxMenu.off()
       state.ctxMenu = null
