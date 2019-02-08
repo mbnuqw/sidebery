@@ -45,25 +45,25 @@ export default {
       await browser.tabs.move(move[0], { index: move[1] })
     })
 
-    // // Calc tree levels
-    // if (state.tabsTree) {
-    //   let ans = await browser.storage.local.get('tabsTree')
-    //   let tabsTree = ans.tabsTree || []
-    //   for (let tr of tabsTree) {
-    //     const parentTab = state.tabs[tr[0]]
-    //     const parentLvl = tr[1]
-    //     const parentFolded = tr[2]
-    //     const childTab = state.tabs[tr[3]]
-    //     if (!parentTab || !childTab) continue
-    //     parentTab.isParent = true
-    //     parentTab.lvl = parentLvl
-    //     parentTab.folded = parentFolded
-    //     childTab.parentId = parentTab.id
-    //     childTab.lvl = parentLvl + 1
-    //   }
-    //   /* eslint-disable-next-line */
-    //   state.tabsTree = state.tabsTree
-    // }
+    // Calc tree levels
+    if (state.tabsTree) {
+      let ans = await browser.storage.local.get('tabsTree')
+      let tabsTree = ans.tabsTree || []
+      for (let tr of tabsTree) {
+        const parentTab = state.tabs[tr[0]]
+        const parentLvl = tr[1]
+        const parentFolded = tr[2]
+        const childTab = state.tabs[tr[3]]
+        if (!parentTab || !childTab) continue
+        parentTab.isParent = true
+        parentTab.lvl = parentLvl
+        parentTab.folded = parentFolded
+        childTab.parentId = parentTab.id
+        childTab.lvl = parentLvl + 1
+      }
+      /* eslint-disable-next-line */
+      state.tabsTree = state.tabsTree
+    }
   },
 
   /**
