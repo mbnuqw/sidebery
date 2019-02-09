@@ -18,6 +18,12 @@ export default {
   'settings.show_tab_rm_btn': { message: 'Show close button on tab hover' },
   'settings.no_empty_default': { message: 'Create new tab on emptying default panel' },
   'settings.hide_inactive_panel_tabs': { message: 'Hide tabs of inactive panels' },
+  'settings.pinned_tabs_position': { message: 'Pinned tabs position' },
+  'settings.pinned_tabs_position_top': { message: 'top' },
+  'settings.pinned_tabs_position_left': { message: 'left' },
+  'settings.pinned_tabs_position_right': { message: 'right' },
+  'settings.pinned_tabs_position_bottom': { message: 'bottom' },
+  'settings.pinned_tabs_position_panel': { message: 'panel' },
   'settings.tabs_tree_layout': { message: 'Tabs tree structure' },
 
   // --- Bookmarks

@@ -136,7 +136,7 @@ export default {
       if (!node.pinned) menu.add('tab.pin', 'pinTabs', [node.id])
       else menu.add('tab.unpin', 'unpinTabs', [node.id])
       if (!node.mutedInfo.muted) menu.add('tab.mute', 'muteTabs', [node.id])
-      else menu.add('tab.unmute', 'unmute', [node.id])
+      else menu.add('tab.unmute', 'unmuteTabs', [node.id])
       menu.add('tab.discard', 'discardTabs', [node.id])
       menu.add('tab.reload', 'reloadTabs', [node.id])
       menu.add('tab.duplicate', 'duplicateTabs', [node.id])

@@ -6,6 +6,7 @@ export const SETTINGS_OPTIONS = {
   tabsPanelLeftClickActionOpts: ['prev', 'none'],
   tabsPanelDoubleClickActionOpts: ['tab', 'none'],
   tabsPanelRightClickActionOpts: ['next', 'dash', 'none'],
+  pinnedTabsPositionOpts: ['panel', 'top', 'left', 'right'],
   fontSizeOpts: ['xs', 's', 'm', 'l', 'xl', 'xxl'],
   themeOpts: ['dark', 'light'],
 }
@@ -29,6 +30,7 @@ export const DEFAULT_SETTINGS = {
   tabsPanelLeftClickAction: 'none',
   tabsPanelDoubleClickAction: 'tab',
   tabsPanelRightClickAction: 'none',
+  pinnedTabsPosition: 'panel',
   tabsTree: false,
   
   // Bookmarks

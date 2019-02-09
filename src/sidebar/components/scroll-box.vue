@@ -210,10 +210,19 @@ export default {
   transition: opacity .3s
   &[data-scrolling]
     opacity: 1
+#root.-pinned-tabs-left
+#root.-pinned-tabs-right
+  .ScrollBox > .progress
+    width: calc(100vw - 33px)
+    left: calc(-100vw + 33px)
 
 .ScrollBox > .scroll-container > .scrollable
   box(relative)
   size(100vw)
+#root.-pinned-tabs-left
+#root.-pinned-tabs-right
+  .ScrollBox > .scroll-container > .scrollable
+    width: calc(100vw - 33px)
 
 // --- Native scroll bars ---
 #root.-native-scroll

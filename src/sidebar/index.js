@@ -22,7 +22,7 @@ export default new Vue({
   },
 
   computed: {
-    ...mapGetters(['fontSize', 'defaultCtxId', 'panels']),
+    ...mapGetters(['fontSize', 'defaultCtxId', 'panels', 'pinnedTabs']),
 
     nativeScrollbarsClass() {
       return State.nativeScrollbars ? '-native-scroll' : '-custom-scroll'
@@ -35,6 +35,11 @@ export default new Vue({
     animateClass() {
       if (State.animations) return '-animate'
       else return '-no-animate'
+    },
+
+    pinnedPosClass() {
+      if (!this.pinnedTabs.length) return '-no-pinned-tabs'
+      return '-pinned-tabs-' + State.pinnedTabsPosition
     },
   },
 

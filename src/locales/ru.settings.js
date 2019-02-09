@@ -18,6 +18,12 @@ export default {
   'settings.show_tab_rm_btn': { message: 'Показывать кнопку закрытия таба при наведении курсора' },
   'settings.no_empty_default': { message: 'Создавать новую вкладку при опустошении стандартной панели' },
   'settings.hide_inactive_panel_tabs': { message: 'Скрывать табы неактивных панелей' },
+  'settings.pinned_tabs_position': { message: 'Расположение закрепленных табов' },
+  'settings.pinned_tabs_position_top': { message: 'вверху' },
+  'settings.pinned_tabs_position_left': { message: 'слева' },
+  'settings.pinned_tabs_position_right': { message: 'справа' },
+  'settings.pinned_tabs_position_bottom': { message: 'внизу' },
+  'settings.pinned_tabs_position_panel': { message: 'панель' },
   'settings.tabs_tree_layout': { message: 'Древовидное отображение табов' },
 
   // --- Bookmarks

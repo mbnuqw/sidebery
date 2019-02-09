@@ -4,6 +4,10 @@
   @wheel="onWheel"
   @mousedown="onMouseDown"
   @dblclick="onDoubleClick")
+  pinned-dock(v-if="$store.state.pinnedTabsPosition === 'panel'"
+    :ctx="storeId"
+    @start-selection="$emit('start-selection', $event)"
+    @stop-selection="$emit('stop-selection')")
   scroll-box(ref="scrollBox", :lock="scrollLock")
     .container(:ctx-menu="!!$root.ctxMenu")
       tab.tab(
@@ -24,9 +28,11 @@ import Utils from '../../../libs/utils'
 import EventBus from '../../event-bus'
 import Tab from './tabs.tab.vue'
 import ScrollBox from '../scroll-box.vue'
+import PinnedDock from './pinned-dock'
 
 export default {
   components: {
+    PinnedDock,
     ScrollBox,
     Tab,
   },
@@ -266,7 +272,8 @@ export default {
      * Return top offset of panel
      */
     getTopOffset() {
-      const b = this.$el.getBoundingClientRect()
+      const scollEl = this.$refs.scrollBox.getScrollBox()
+      const b = scollEl.getBoundingClientRect()
       return b.top
     },
 

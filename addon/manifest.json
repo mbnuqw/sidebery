@@ -36,7 +36,7 @@
       "16": "./assets/logo-ce32-16.png",
       "32": "./assets/logo-ce32-32.png"
     },
-    "default_title": "Nav Center",
+    "default_title": "Sidebery",
     "default_panel": "./sidebar/index.html"
   },
 

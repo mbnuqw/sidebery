@@ -138,7 +138,7 @@ export default {
   transition: opacity var(--d-fast), z-index var(--d-fast)
   &[is-active]
     opacity: 1
-    z-index: 2000
+    z-index: 5000
 
 .CtxMenu .container
   box(absolute)

@@ -34,6 +34,13 @@
         label="settings.hide_inactive_panel_tabs"
         :value="$store.state.hideInact"
         @input="toggleHideInact")
+      select-field(
+        label="settings.pinned_tabs_position"
+        optLabel="settings.pinned_tabs_position_"
+        :value="$store.state.pinnedTabsPosition"
+        :opts="$store.state.pinnedTabsPositionOpts"
+        @input="setOpt('pinnedTabsPosition', $event)")
+
       toggle-field(
         label="settings.tabs_tree_layout"
         :value="$store.state.tabsTree"

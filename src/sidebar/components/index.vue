@@ -15,76 +15,85 @@
   @mouseup="onMouseUp"
   @mousemove.passive="onMouseMove")
   ctx-menu
-  .bg(v-noise:300.g:12:af.a:0:42.s:0:9="", :style="bgPosStyle")
-  .dimmer(@mousedown="closeDashboard")
-  .pointer(ref="pointer"): .arrow
-  .nav(ref="nav")
-    keep-alive
-      component.panel-menu(
-        v-if="dashboard"
-        ref="menu"
-        :is="dashboard.component" 
-        :conf="dashboard"
-        :index="$store.state.panelIndex"
-        @close="closeDashboard"
-        @height="recalcDashboardHeight")
 
-    .nav-strip(@wheel="onNavWheel")
-      .panel-btn(
-        v-for="(btn, i) in nav"
-        :key="btn.cookieStoreId || btn.name"
-        :title="getTooltip(i)"
-        :loading="btn.loading"
-        :updated="btn.updated"
-        :proxified="btn.proxified"
-        :is-active="panelIs(i)"
-        :is-hidden="btn.hidden"
-        :class="'rel-' + btn.relIndex"
-        @click="onNavClick(i)"
-        @dragenter="onNavDragEnter(i)"
-        @dragleave="onNavDragLeave(i)"
-        @mousedown.right="openDashboard(i)")
-        svg(:style="{fill: btn.colorCode}")
-          use(:xlink:href="'#' + btn.icon")
-        .proxy-badge
-          svg: use(xlink:href="#icon_proxy")
-        .update-badge
-        .ok-badge
-          svg: use(xlink:href="#icon_ok")
-        .err-badge
-          svg: use(xlink:href="#icon_err")
-        .loading-spinner
-          each n in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-            .spinner-stick(class='spinner-stick-' + n)
+  //- Pinned tabs dock
+  pinned-dock(v-if="$store.state.pinnedTabsPosition !== 'panel'"
+    @start-selection="startSelection"
+    @stop-selection="stopSelection")
 
-    //- Settings
-    .settings-btn(
-      :data-active="$store.state.panelIndex === -2"
-      :title="t('nav.settings_tooltip')"
-      @click="toggleSettings")
-      svg: use(xlink:href="#icon_settings")
+  .box
+    .bg(v-noise:300.g:12:af.a:0:42.s:0:9="", :style="bgPosStyle")
+    .dimmer(@mousedown="closeDashboard")
+    .pointer(ref="pointer"): .arrow
 
-  //- Panels
-  .panel-box
-    component.panel(
-      v-for="(c, i) in panels"
-      v-if="panelVisible(i)"
-      ref="panels"
-      :key="c.cookieStoreId || c.name"
-      :is="c.panel"
-      :tabs="c.tabs"
-      :index="i"
-      :store-id="c.cookieStoreId"
-      :pos="getPanelPos(i)"
-      :active="panelIs(i)"
-      @create-tab="createTab"
-      @start-selection="startSelection"
-      @stop-selection="stopSelection")
-    transition(name="settings")
-      settings-panel(v-if="$store.state.panelIndex === -2", :pos="settingsPanelPos")
-      styles-panel(v-if="$store.state.panelIndex === -3", :pos="stylesPanelPos")
-      snapshots-panel(v-if="$store.state.panelIndex === -4", :pos="snapshotsPanelPos")
-      window-input(v-if="$store.state.panelIndex === -5", :pos="windowInputPos")
+    //- Navigation
+    .nav(ref="nav")
+      keep-alive
+        component.panel-menu(
+          v-if="dashboard"
+          ref="menu"
+          :is="dashboard.component" 
+          :conf="dashboard"
+          :index="$store.state.panelIndex"
+          @close="closeDashboard"
+          @height="recalcDashboardHeight")
+
+      .nav-strip(@wheel="onNavWheel")
+        .panel-btn(
+          v-for="(btn, i) in nav"
+          :key="btn.cookieStoreId || btn.name"
+          :title="getTooltip(i)"
+          :loading="btn.loading"
+          :updated="btn.updated"
+          :proxified="btn.proxified"
+          :is-active="panelIs(i)"
+          :is-hidden="btn.hidden"
+          :class="'rel-' + btn.relIndex"
+          @click="onNavClick(i)"
+          @dragenter="onNavDragEnter(i)"
+          @dragleave="onNavDragLeave(i)"
+          @mousedown.right="openDashboard(i)")
+          svg(:style="{fill: btn.colorCode}")
+            use(:xlink:href="'#' + btn.icon")
+          .proxy-badge
+            svg: use(xlink:href="#icon_proxy")
+          .update-badge
+          .ok-badge
+            svg: use(xlink:href="#icon_ok")
+          .err-badge
+            svg: use(xlink:href="#icon_err")
+          .loading-spinner
+            each n in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+              .spinner-stick(class='spinner-stick-' + n)
+
+      //- Settings
+      .settings-btn(
+        :data-active="$store.state.panelIndex === -2"
+        :title="t('nav.settings_tooltip')"
+        @click="toggleSettings")
+        svg: use(xlink:href="#icon_settings")
+
+    //- Panels
+    .panel-box
+      component.panel(
+        v-for="(c, i) in panels"
+        v-if="panelVisible(i)"
+        ref="panels"
+        :key="c.cookieStoreId || c.name"
+        :is="c.panel"
+        :tabs="c.tabs"
+        :index="i"
+        :store-id="c.cookieStoreId"
+        :pos="getPanelPos(i)"
+        :active="panelIs(i)"
+        @create-tab="createTab"
+        @start-selection="startSelection"
+        @stop-selection="stopSelection")
+      transition(name="settings")
+        settings-panel(v-if="$store.state.panelIndex === -2", :pos="settingsPanelPos")
+        styles-panel(v-if="$store.state.panelIndex === -3", :pos="stylesPanelPos")
+        snapshots-panel(v-if="$store.state.panelIndex === -4", :pos="snapshotsPanelPos")
+        window-input(v-if="$store.state.panelIndex === -5", :pos="windowInputPos")
 </template>
 
 
@@ -104,6 +113,7 @@ import TabsPanel from './panels/tabs'
 import SettingsPanel from './panels/settings'
 import SnapshotsPanel from './panels/snapshots'
 import StylesPanel from './panels/styles'
+import PinnedDock from './panels/pinned-dock'
 
 Vue.directive('noise', NoiseBg)
 
@@ -120,6 +130,7 @@ export default {
     WindowInput,
     SnapshotsPanel,
     StylesPanel,
+    PinnedDock,
   },
 
   data() {
@@ -1207,7 +1218,8 @@ export default {
      * Update sidebar width value.
      */
     updateNavSize() {
-      if (this.width !== window.innerWidth) this.width = window.innerWidth
+      // if (this.width !== this.$el.offsetWidth) this.width = this.$el.offsetWidth
+      if (this.width !== this.$refs.nav.offsetWidth) this.width = this.$refs.nav.offsetWidth
       this.recalcDashboardHeight()
     },
 
@@ -1239,7 +1251,7 @@ NAV_CONF_HEIGHT = auto
   overflow: hidden
 
   &[dashboard-opened]
-    > .dimmer
+    .dimmer
       z-index: 999
       opacity: 1
     .panel-menu
@@ -1249,14 +1261,28 @@ NAV_CONF_HEIGHT = auto
       flex-grow: 10
       transition: flex var(--d-fast)
 
+#root.-pinned-tabs-top > .Sidebar
+  flex-direction: column
+#root.-pinned-tabs-left > .Sidebar
+  flex-direction: row
+#root.-pinned-tabs-bottom > .Sidebar
+  flex-direction: column-reverse
+#root.-pinned-tabs-right > .Sidebar
+  flex-direction: row-reverse
+
+.Sidebar > .box
+  box(relative, flex)
+  size(100%, same)
+  flex-direction: column
+
 // --- Parallaxed background ---
-.Sidebar > .bg
+.Sidebar > .box > .bg
   box(absolute)
   size(200%, 100%)
   transition: transform var(--d-fast)
 
 // --- Dimmer layer ---
-.Sidebar > .dimmer
+.Sidebar .dimmer
   box(absolute)
   pos(0, 0)
   size(100%, same)
@@ -1266,7 +1292,7 @@ NAV_CONF_HEIGHT = auto
   transition: z-index var(--d-fast), opacity var(--d-fast)
 
 // --- Nav panel ---
-.Sidebar > .nav
+.Sidebar .nav
   box(relative, flex)
   size(100%, NAV_HEIGHT)
   z-index: 1000
@@ -1469,7 +1495,7 @@ NAV_CONF_HEIGHT = auto
       opacity: 1
 
 // --- Move pointer ---
-.Sidebar > .pointer
+.Sidebar .pointer
   box(absolute)
   size(32px, 24px)
   pos(0, 0)
@@ -1506,24 +1532,23 @@ NAV_CONF_HEIGHT = auto
     background-color: var(--nav-btn-update-badge-bg)
     opacity: 0
     transition: opacity var(--d-fast)
-.Sidebar[drag-mode] > .pointer
+.Sidebar[drag-mode] .pointer
   opacity: 1
   z-index: 100
-.Sidebar[pointer-mode="none"] > .pointer .arrow
+.Sidebar[pointer-mode="none"] .pointer .arrow
   opacity: 0
-.Sidebar[pointer-mode="between"] > .pointer:after
-  opacity: 1
-.Sidebar[pointer-mode="inside-fold"] > .pointer .arrow:before
+.Sidebar[pointer-mode="between"] .pointer:after  opacity: 1
+.Sidebar[pointer-mode="inside-fold"] .pointer .arrow:before
   background-color: var(--nav-btn-update-badge-bg)
-.Sidebar[pointer-mode^="inside"] > .pointer:after
+.Sidebar[pointer-mode^="inside"] .pointer:after
   opacity: 0
-.Sidebar > .pointer.-expanding .arrow
+.Sidebar .pointer.-expanding .arrow
   animation: pointer-expand-arrow .3s
-.Sidebar > .pointer.-expanding .arrow:after
+.Sidebar .pointer.-expanding .arrow:after
   animation: pointer-expand-pulse .5s
 
 // --- Panel ---
-.Sidebar > .panel-box
+.Sidebar .panel-box
   box(relative)
   flex-grow: 2
 

@@ -15,12 +15,12 @@ export const DEFAULT_PANELS = [
     panel: BookmarksPanel,
     bookmarks: true,
   },
-  {
-    name: Translate('pinned_dashboard.title'),
-    icon: 'icon_pin',
-    component: DefaultTabsDashboard,
-    pinned: true,
-  },
+  // {
+  //   name: Translate('pinned_dashboard.title'),
+  //   icon: 'icon_pin',
+  //   component: DefaultTabsDashboard,
+  //   pinned: true,
+  // },
   {
     name: Translate('private_dashboard.title'),
     icon: 'icon_tabs',
