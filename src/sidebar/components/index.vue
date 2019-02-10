@@ -311,9 +311,7 @@ export default {
 
   // --- Mounted Hook ---
   mounted() {
-    setTimeout(() => {
-      this.updateNavSize()
-    }, 256)
+    setTimeout(() => this.updateNavSize(), 256)
   },
 
   beforeDestroy() {
@@ -1047,9 +1045,8 @@ export default {
       this.$delete(State.updatedTabs, info.tabId)
 
       // Find panel of activated tab
-      let panelIndex = this.panels.findIndex(p => {
-        return tab.pinned ? p.pinned : p.cookieStoreId === tab.cookieStoreId
-      })
+      if (tab.pinned && State.pinnedTabsPosition !== 'panel') return
+      let panelIndex = this.panels.findIndex(p => p.cookieStoreId === tab.cookieStoreId)
       if (panelIndex === -1) return
 
       // Switch to activated tab's panel
