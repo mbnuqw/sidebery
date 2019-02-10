@@ -20,7 +20,7 @@
     @dragleave.stop="onDragLeave"
     @drop="onDragLeave")
   .fav
-    .placeholder
+    .placeholder: svg: use(xlink:href="#icon_ff")
     img(:src="favicon", @load.passive="onFaviconLoad", @error="onFaviconErr")
     .update-badge
     .ok-badge
@@ -531,24 +531,16 @@ export default {
 // --- Placeholer
 .PinnedTab .fav > .placeholder
   box(absolute)
-  size(3px, same)
-  pos(7px, 6px)
-  border-radius: 50%
-  background-color: var(--favicons-placehoder-bg)
+  size(16px, same)
+  pos(0, 0)
   opacity: 0
   transform: translateY(4px)
   transition: opacity var(--d-fast), transform var(--d-fast)
-  &:before
-  &:after
-    content: ''
+  > svg
     box(absolute)
-    size(3px, same)
-    border-radius: 6px
-    background-color: var(--favicons-placehoder-bg)
-  &:before
-    pos(0, -5px)
-  &:after
-    pos(0, 5px)
+    size(100%, same)
+    pos(0, 0)
+    fill: var(--favicons-placehoder-bg)
 
 // --- Favicon image
 .PinnedTab .fav > img

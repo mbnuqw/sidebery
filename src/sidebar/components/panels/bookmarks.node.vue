@@ -8,7 +8,7 @@
   .body(:title="tooltip", @click="onClick", @mousedown="onMouseDown", @mouseup="onMouseUp")
     .drag-layer(draggable="true", @dragstart="onDragStart")
     .fav(v-if="isBookmark", :no-fav="!favicon")
-      .placeholder
+      .placeholder: svg: use(xlink:href="#icon_ff")
       img(:src="favicon")
     .exp(v-if="isParent")
       svg: use(xlink:href="#icon_expand")
@@ -414,24 +414,17 @@ export default {
       transform: translateY(-4px)
 .Node .fav > .placeholder
   box(absolute)
-  size(3px, same)
-  pos(7px, 6px)
-  border-radius: 50%
-  background-color: var(--favicons-placehoder-bg)
+  size(16px, same)
+  pos(0, 0)
   opacity: 0
   transform: translateY(4px)
   transition: opacity var(--d-fast), transform var(--d-fast)
-  &:before
-  &:after
-    content: ''
+  > svg
     box(absolute)
-    size(3px, same)
-    border-radius: 6px
-    background-color: var(--favicons-placehoder-bg)
-  &:before
-    pos(0, -5px)
-  &:after
-    pos(0, 5px)
+    size(100%, same)
+    pos(0, 0)
+    fill: var(--favicons-placehoder-bg)
+
 .Node .fav > img
   box(absolute)
   pos(0, 0)

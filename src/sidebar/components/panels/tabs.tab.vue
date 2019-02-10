@@ -26,7 +26,7 @@
     svg.-loud: use(xlink:href="#icon_loud")
     svg.-mute: use(xlink:href="#icon_mute")
   .fav(:loading="loading")
-    .placeholder
+    .placeholder: svg: use(xlink:href="#icon_ff")
     img(:src="favicon", @load.passive="onFaviconLoad", @error="onFaviconErr")
     .exp(@mousedown.stop="onExp"): svg: use(xlink:href="#icon_expand")
     .update-badge
@@ -449,21 +449,31 @@ export default {
     padding-left: calc(var(--tabs-indent) * 5)
 
   &[is-parent] .fav:hover
-    > .placeholder
-    > img
-      opacity: .2
     > .exp
       z-index: 1
       opacity: 1
 
-  &[is-parent][folded]
-    .fav > .placeholder
-    .fav > img
+  &[is-parent][data-no-fav] .fav:hover
+    > .placeholder
+      opacity: .5
+
+  &[is-parent]:not([data-no-fav]) .fav:hover
+    > img
       opacity: .2
+
+  &[is-parent][folded]
     .fav > .exp
       z-index: 1
       opacity: 1
       transform: rotateZ(-90deg)
+
+  &[is-parent][folded][data-no-fav]
+    .fav > .placeholder
+      opacity: .5
+
+  &[is-parent][folded]:not([data-no-fav])
+    .fav > img
+      opacity: .2
 
   &[data-active]
     background-color: var(--tabs-activated-bg)
@@ -615,24 +625,16 @@ export default {
 
 .Tab .fav > .placeholder
   box(absolute)
-  size(3px, same)
-  pos(7px, 6px)
-  border-radius: 50%
-  background-color: var(--favicons-placehoder-bg)
+  size(16px, same)
+  pos(0, 0)
   opacity: 0
   transform: translateY(4px)
   transition: opacity var(--d-fast), transform var(--d-fast)
-  &:before
-  &:after
-    content: ''
+  > svg
     box(absolute)
-    size(3px, same)
-    border-radius: 6px
-    background-color: var(--favicons-placehoder-bg)
-  &:before
-    pos(0, -5px)
-  &:after
-    pos(0, 5px)
+    size(100%, same)
+    pos(0, 0)
+    fill: var(--favicons-placehoder-bg)
 
 .Tab .fav > img
   box(absolute)
