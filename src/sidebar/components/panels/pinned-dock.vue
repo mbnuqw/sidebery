@@ -1,6 +1,7 @@
 <template lang="pug">
 .PinnedDock(v-noise:300.g:12:af.a:0:42.s:0:9=""
   :drag-pointed="dragPointed"
+  @wheel="onWheel"
   @drop.stop.prevent="onDrop"
   @dragenter="onDragEnter"
   @dragleave="onDragLeave")
@@ -44,6 +45,21 @@ export default {
   },
 
   methods: {
+    onWheel(e) {
+      if (State.pinnedTabsPosition !== 'panel' && State.scrollThroughTabs !== 'none') {
+        const globaly = State.scrollThroughTabs === 'global' || e.shiftKey
+
+        if (e.deltaY > 0) {
+          if (State.wheelBlockTimeout) return
+          this.$store.dispatch('switchTab', { globaly, cycle: e.ctrlKey, step: 1, pinned: true })
+        }
+        if (e.deltaY < 0) {
+          if (State.wheelBlockTimeout) return
+          this.$store.dispatch('switchTab', { globaly, cycle: e.ctrlKey, step: -1, pinned: true })
+        }
+      }
+    },
+
     onDragEnter() {
       this.dragPointed = true
     },

@@ -186,7 +186,7 @@ export default {
   /**
    * Activate tab relatively current active tab.
    */
-  switchTab({ state, getters }, { globaly, cycle, step }) {
+  switchTab({ state, getters }, { globaly, cycle, step, pinned }) {
     if (state.switchTabPause) return
     state.switchTabPause = setTimeout(() => {
       clearTimeout(state.switchTabPause)
@@ -208,7 +208,8 @@ export default {
         tabs = state.tabs.filter(t => t.cookieStoreId === p.cookieStoreId)
       }
     } else {
-      tabs = globaly ? state.tabs : getters.panels[state.panelIndex].tabs
+      if (pinned) tabs = getters.pinnedTabs
+      else tabs = globaly ? state.tabs : getters.panels[state.panelIndex].tabs
     }
     if (!tabs || !tabs.length) return
 
