@@ -16,6 +16,7 @@
 
 <script>
 import State from '../../store.state'
+import EventBus from '../../event-bus'
 import PinnedTab from './pinned-tab'
 
 export default {
@@ -68,6 +69,11 @@ export default {
         nodes: State.dragNodes,
         pin: true,
       })
+
+      if (State.dragNodes) {
+        if (State.dragNodes[0].type === 'tab') EventBus.$emit('deselectTab')
+        else EventBus.$emit('deselectBookmark')
+      }
 
       this.pointedTabIndex = -1
       this.dragPointed = false
