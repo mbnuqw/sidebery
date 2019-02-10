@@ -15,12 +15,6 @@ export const DEFAULT_PANELS = [
     panel: BookmarksPanel,
     bookmarks: true,
   },
-  // {
-  //   name: Translate('pinned_dashboard.title'),
-  //   icon: 'icon_pin',
-  //   component: DefaultTabsDashboard,
-  //   pinned: true,
-  // },
   {
     name: Translate('private_dashboard.title'),
     icon: 'icon_tabs',
@@ -115,8 +109,8 @@ export default {
     bookmarks_folder_empty_fg: null,
   },
 
-  lastPanelIndex: browser.extension.inIncognitoContext ? 2 : 3,
-  panelIndex: browser.extension.inIncognitoContext ? 2 : 3,
+  lastPanelIndex: browser.extension.inIncognitoContext ? 1 : 2,
+  panelIndex: browser.extension.inIncognitoContext ? 1 : 2,
 
   tabs: [], // all tabs
   activeTabs: [], // last active tab's id per panel

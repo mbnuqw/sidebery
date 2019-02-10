@@ -511,7 +511,7 @@ export default {
   /**
    * Drop to tabs panel
    */
-  async dropToTabs({ state, getters, dispatch }, { event, dropIndex, dropParent, nodes } = {}) {
+  async dropToTabs({ state, getters, dispatch }, { event, dropIndex, dropParent, nodes, pin } = {}) {
     const destCtx = getters.panels[state.panelIndex].cookieStoreId
     const parent = state.tabs.find(t => t.id === dropParent)
     if (dropIndex === -1) dropIndex = getters.panels[state.panelIndex].endIndex
@@ -530,6 +530,18 @@ export default {
       }
 
       if (nodes[0].type === 'tab' && samePanel && !event.ctrlKey) {
+        // Pin/Unpin tab
+        if (!pin && nodes[0].pinned) {
+          for (let n of nodes) {
+            await browser.tabs.update(n.id, { pinned: false })
+          }
+        }
+        if (pin && !nodes[0].pinned) {
+          for (let n of nodes) {
+            await browser.tabs.update(n.id, { pinned: true })
+          }
+        }
+
         // Move
         if (nodes[0].index !== dropIndex) {
           dropIndex = nodes[0].index > dropIndex ? dropIndex : dropIndex - 1
@@ -578,10 +590,11 @@ export default {
             openerTabId: dropParent < 0 ? undefined : dropParent,
             url: node.url || browser.runtime.getURL('group/group.html'),
             windowId: state.windowId,
+            pinned: pin,
           })
           oldNewMap[node.id] = info.id
           // Restore parentId
-          if (nodes.length > 1 && nodes[0].id === nodes[1].parentId) {
+          if (nodes.length > 1 && nodes[0].id === nodes[1].parentId && !pin) {
             const tab = state.tabs.find(t => t.id === info.id)
             if (tab && oldNewMap[node.parentId]) tab.parentId = oldNewMap[node.parentId]
           }

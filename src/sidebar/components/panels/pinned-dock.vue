@@ -1,14 +1,21 @@
 <template lang="pug">
-.PinnedDock(v-noise:300.g:12:af.a:0:42.s:0:9="")
+.PinnedDock(v-noise:300.g:12:af.a:0:42.s:0:9=""
+  :drag-pointed="dragPointed"
+  @drop.stop.prevent="onDrop"
+  @dragenter="onDragEnter"
+  @dragleave="onDragLeave")
   pinned-tab(v-for="t in pinnedTabs"
     :tab="t"
     :ctx="!ctx"
     @start-selection="$emit('start-selection', $event)"
-    @stop-selection="$emit('stop-selection')")
+    @stop-selection="$emit('stop-selection')"
+    @dragenter="onTabPointed")
+  .to-the-end(v-if="pinnedTabs.length")
 </template>
 
 
 <script>
+import State from '../../store.state'
 import PinnedTab from './pinned-tab'
 
 export default {
@@ -21,7 +28,10 @@ export default {
   },
 
   data() {
-    return {}
+    return {
+      dragPointed: false,
+      pointedTabIndex: -1,
+    }
   },
 
   computed: {
@@ -29,6 +39,38 @@ export default {
       const pinned = this.$store.getters.pinnedTabs
       if (this.ctx) return pinned.filter(t => t.cookieStoreId === this.ctx)
       else return pinned
+    },
+  },
+
+  methods: {
+    onDragEnter() {
+      this.dragPointed = true
+    },
+
+    onTabPointed(index) {
+      this.pointedTabIndex = index
+    },
+
+    onDragLeave() {
+      this.dragPointed = false
+    },
+
+    onDrop(e) {
+      // Get drop index
+      let dropIndex = 0
+      if (this.dragPointed === true) dropIndex = this.pinnedTabs[this.pinnedTabs.length - 1].index + 1
+      else if (this.pointedTabIndex > -1) dropIndex = this.pointedTabIndex
+
+      this.$store.dispatch('dropToTabs', {
+        event: e,
+        dropIndex: dropIndex,
+        dropParent: -1,
+        nodes: State.dragNodes,
+        pin: true,
+      })
+
+      this.pointedTabIndex = -1
+      this.dragPointed = false
     },
   },
 }
@@ -82,4 +124,30 @@ export default {
   flex-direction: row
   box-shadow: inset 0 -1px 0 0 #00000024,
               inset 0 0 8px 0 #00000032
+
+// The last drop position
+.PinnedDock .to-the-end
+  box(relative)
+  opacity: 0
+  transition: opacity var(--d-fast)
+  &:before
+    content: ''
+    box(absolute)
+    pos(0, 0)
+    background-color: var(--tabs-update-badge-bg)
+
+#root.-pinned-tabs-panel .PinnedDock .to-the-end
+#root.-pinned-tabs-top .PinnedDock .to-the-end
+  size(0, 32px)
+  &:before
+    size(1px, 32px)
+
+#root.-pinned-tabs-left .PinnedDock .to-the-end
+#root.-pinned-tabs-right .PinnedDock .to-the-end
+  size(32px, 0)
+  &:before
+    size(32px, 1px)
+
+.PinnedDock[drag-pointed] .to-the-end
+  opacity: 1
 </style>

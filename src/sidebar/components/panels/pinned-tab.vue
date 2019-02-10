@@ -7,6 +7,7 @@
   :discarded="tab.discarded"
   :updated="updated"
   :loading="loading || tab.status === 'loading'"
+  :drop-slot="dropSlot"
   :title="tooltip"
   @contextmenu.prevent.stop=""
   @mousedown="onMouseDown"
@@ -15,8 +16,9 @@
   @dblclick.prevent.stop="onDoubleClick")
   .drag-layer(draggable="true"
     @dragstart="onDragStart"
-    @dragenter="onDragEnter"
-    @dragleave="onDragLeave")
+    @dragenter.stop="onDragEnter"
+    @dragleave.stop="onDragLeave"
+    @drop="onDragLeave")
   .fav
     .placeholder
     img(:src="favicon", @load.passive="onFaviconLoad", @error="onFaviconErr")
@@ -56,6 +58,7 @@ export default {
       faviErr: false,
       loading: false,
       selected: false,
+      dropSlot: false,
     }
   },
 
@@ -250,6 +253,7 @@ export default {
           id: t.id,
           parentId: t.parentId,
           index: t.index,
+          pinned: true,
           ctx: t.cookieStoreId,
           incognito: State.private,
           windowId: State.windowId,
@@ -269,6 +273,9 @@ export default {
      * Handle dragenter event
      */
     onDragEnter() {
+      this.$emit('dragenter', this.tab.index)
+      this.dropSlot = true
+
       if (this.dragEnterTimeout) clearTimeout(this.dragEnterTimeout)
       this.dragEnterTimeout = setTimeout(() => {
         browser.tabs.update(this.tab.id, { active: true })
@@ -280,6 +287,8 @@ export default {
      * Handle dragleave event
      */
     onDragLeave() {
+      this.dropSlot = false
+
       if (this.dragEnterTimeout) {
         clearTimeout(this.dragEnterTimeout)
         this.dragEnterTimeout = null
@@ -415,6 +424,14 @@ export default {
       opacity: 1
       z-index: 20
 
+  &:before
+    content: ''
+    box(absolute)
+    size(100%, same)
+    pos(1px, 1px)
+    opacity: 0
+    transition: opacity var(--d-fast)
+
   &[data-active]
     background-color: var(--tabs-activated-bg)
     .fav
@@ -459,6 +476,16 @@ export default {
       opacity: 1
       transform: scale(1, 1)
 
+#root.-pinned-tabs-panel
+#root.-pinned-tabs-top
+  .PinnedTab:before
+    box-shadow: -1px 0 0 0 var(--tabs-update-badge-bg)
+
+#root.-pinned-tabs-left
+#root.-pinned-tabs-right
+  .PinnedTab:before
+    box-shadow: 0 -1px 0 0 var(--tabs-update-badge-bg)
+
 // --- Level Wrapper
 .PinnedTab .lvl-wrapper
   box(relative, flex)
@@ -470,7 +497,7 @@ export default {
   box(absolute)
   size(100%, same)
   pos(0, 0)
-  z-index: 15
+  z-index: 25
 
 // --- Audio ---
 .PinnedTab .audio
@@ -657,4 +684,9 @@ export default {
   border-radius: 50%
   z-index: 2000
   box-shadow: inset 0 0 1px 0 var(--title-fg)
+
+// --- Drop slot
+.PinnedTab[drop-slot]
+  &:before
+    opacity: 1
 </style>

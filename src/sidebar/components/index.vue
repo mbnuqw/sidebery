@@ -304,8 +304,8 @@ export default {
     EventBus.$on('panelLoadingEnd', panelIndex => this.onPanelLoadingEnd(panelIndex))
     EventBus.$on('panelLoadingOk', panelIndex => this.onPanelLoadingOk(panelIndex))
     EventBus.$on('panelLoadingErr', panelIndex => this.onPanelLoadingErr(panelIndex))
-    EventBus.$on('dragStart', info => (this.dragNodes = info))
-    EventBus.$on('outerDragStart', info => (this.dragNodes = info))
+    EventBus.$on('dragStart', info => (State.dragNodes = info))
+    EventBus.$on('outerDragStart', info => (State.dragNodes = info))
     EventBus.$on('panelSwitched', () => setTimeout(() => this.recalcPanelBounds(), 256))
   },
 
@@ -449,9 +449,14 @@ export default {
       if (!this.dragMode) return
       if (!this.$refs.pointer) return
 
-      let dragNode = this.dragNodes ? this.dragNodes[0] : null
+      let dragNode = State.dragNodes ? State.dragNodes[0] : null
       let scroll = this.panelScrollEl ? this.panelScrollEl.scrollTop : 0
       let y = e.clientY - this.panelTopOffset + scroll
+      
+      if (this.pointerMode !== 'none' && y < 0) {
+        this.pointerPos--
+        this.pointerMode = 'none'
+      }
 
       // Empty
       if (this.itemSlots.length === 0) {
@@ -617,8 +622,8 @@ export default {
       this.dragMode = true
       
       // Select dragged nodes
-      if (this.dragNodes) {
-        for (let n of this.dragNodes) {
+      if (State.dragNodes) {
+        for (let n of State.dragNodes) {
           if (n.type === 'tab') EventBus.$emit('selectTab', n.id)
           else EventBus.$emit('selectBookmark', n.id)
         }
@@ -650,7 +655,7 @@ export default {
           event: e,
           dropIndex: this.dropIndex,
           dropParent: this.dropParent,
-          nodes: this.dragNodes,
+          nodes: State.dragNodes,
         })
       }
       if (this.panels[State.panelIndex].bookmarks) {
@@ -658,12 +663,12 @@ export default {
           event: e,
           dropIndex: this.pointerMode.startsWith('inside') ? 0 : this.dropIndex,
           dropParent: this.dropParent,
-          nodes: this.dragNodes,
+          nodes: State.dragNodes,
         })
       }
 
-      if (this.dragNodes) {
-        if (this.dragNodes[0].type === 'tab') EventBus.$emit('deselectTab')
+      if (State.dragNodes) {
+        if (State.dragNodes[0].type === 'tab') EventBus.$emit('deselectTab')
         else EventBus.$emit('deselectBookmark')
       }
       this.resetDrag()
@@ -854,10 +859,6 @@ export default {
       }
 
       State.tabs.splice(upIndex, 1, tab)
-
-      if (change.hasOwnProperty('pinned') && change.pinned) {
-        if (tab.active) Store.commit('setPanel', 1)
-      }
 
       if (change.hasOwnProperty('url') || change.hasOwnProperty('pinned')) {
         Store.dispatch('saveSyncPanels')
@@ -1151,7 +1152,7 @@ export default {
      * Reset drag-and-drop values
      */
     resetDrag() {
-      this.dragNodes = null
+      State.dragNodes = null
       this.dragMode = false
       this.dropIndex = null
       this.dropParent = null
