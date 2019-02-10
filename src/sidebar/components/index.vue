@@ -884,8 +884,8 @@ export default {
           // and if title doesn't looks like url
           if (!URL_HOST_PATH_RE.test(prevTabState.title) && !URL_HOST_PATH_RE.test(tab.title)) {
             // Mark tab as updated
-            if (tab.pinned) {
-              this.$set(State.updatedTabs, tab.id, 1)
+            if (tab.pinned && State.pinnedTabsPosition !== 'panel') {
+              this.$set(State.updatedTabs, tab.id, -1)
             } else {
               let pi = this.panels.findIndex(p => p.cookieStoreId === tab.cookieStoreId)
               this.$set(State.updatedTabs, tab.id, pi)
@@ -1043,6 +1043,9 @@ export default {
       }
       if (!tab) return
 
+      // Remove updated flag
+      this.$delete(State.updatedTabs, info.tabId)
+
       // Find panel of activated tab
       let panelIndex = this.panels.findIndex(p => {
         return tab.pinned ? p.pinned : p.cookieStoreId === tab.cookieStoreId
@@ -1061,9 +1064,6 @@ export default {
           this.openDashboard(State.panelIndex)
         }
       }
-
-      // Remove updated flag
-      this.$delete(State.updatedTabs, info.tabId)
 
       State.activeTabs[panelIndex] = info.tabId
 
