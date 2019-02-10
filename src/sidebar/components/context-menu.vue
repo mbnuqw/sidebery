@@ -21,22 +21,24 @@ export default {
       aIsActive: false,
       aOpts: [],
       aPos: 0,
+      aX: 0,
       aDown: true,
       bIsActive: false,
       bOpts: [],
       bPos: 0,
+      bX: 0,
       bDown: true,
     }
   },
 
   computed: {
     aPosStyle() {
-      let style = { transform: `translateY(${this.aPos}px)` }
+      let style = { transform: `translateY(${this.aPos}px) translateX(${this.aX}px)` }
       if (!this.aDown) style.bottom = '0px'
       return style
     },
     bPosStyle() {
-      let style = { transform: `translateY(${this.bPos}px)` }
+      let style = { transform: `translateY(${this.bPos}px) translateX(${this.bX}px)` }
       if (!this.bDown) style.bottom = '0px'
       return style
     },
@@ -57,10 +59,13 @@ export default {
           this.$nextTick(() => {
             this.bDown = this.$refs.bBox.offsetHeight + rect.bottom < h
             this.bPos = this.bDown ? rect.bottom : rect.top
+            const fullWidth = this.$el.offsetWidth
+            const menuWidth = this.$refs.bBox.offsetWidth
+            if (rect.right < fullWidth - menuWidth) this.bX = rect.right
+            else if (rect.left > menuWidth) this.bX = rect.left - menuWidth
+            else this.bX = this.$el.offsetWidth - menuWidth
           })
-          setTimeout(() => {
-            this.aOpts = []
-          }, 128)
+          setTimeout(() => (this.aOpts = []), 128)
         } else {
           this.aOpts = c.opts
           this.aIsActive = true
@@ -68,10 +73,13 @@ export default {
           this.$nextTick(() => {
             this.aDown = this.$refs.aBox.offsetHeight + rect.bottom < h
             this.aPos = this.aDown ? rect.bottom : rect.top
+            const fullWidth = this.$el.offsetWidth
+            const menuWidth = this.$refs.aBox.offsetWidth
+            if (rect.right < fullWidth - menuWidth) this.aX = rect.right
+            else if (rect.left > menuWidth) this.aX = rect.left - menuWidth
+            else this.aX = this.$el.offsetWidth - menuWidth
           })
-          setTimeout(() => {
-            this.bOpts = []
-          }, 128)
+          setTimeout(() => (this.bOpts = []), 128)
         }
       }
 
@@ -116,11 +124,14 @@ export default {
     },
 
     getTitle(input) {
-      return input.split('||').map(part => {
-        let parsed = part.split('>>')
-        return parsed[parsed.length - 1]
-      }).join('')
-    }
+      return input
+        .split('||')
+        .map(part => {
+          let parsed = part.split('>>')
+          return parsed[parsed.length - 1]
+        })
+        .join('')
+    },
   },
 }
 </script>
@@ -155,14 +166,15 @@ export default {
 
 .CtxMenu .box
   box(absolute)
-  pos(r: 0)
+  // pos(r: 0)
   size(max-w: calc(100% - 28px))
   z-index: 30
   padding: 0 0 0 0
   margin: 0
   overflow: hidden
-  border-top-left-radius: 3px
-  border-bottom-left-radius: 3px
+  border-radius: 3px
+  // border-top-left-radius: 3px
+  // border-bottom-left-radius: 3px
   background-color: var(--ctx-menu-bg)
   box-shadow: var(--ctx-menu-shadow)
 
