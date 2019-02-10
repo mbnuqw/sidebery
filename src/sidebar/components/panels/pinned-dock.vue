@@ -10,7 +10,7 @@
     @start-selection="$emit('start-selection', $event)"
     @stop-selection="$emit('stop-selection')"
     @dragenter="onTabPointed")
-  .to-the-end(v-if="pinnedTabs.length")
+  .to-the-end(v-if="pinnedTabs.length", @dragleave.stop="", @dragenter.stop="")
 </template>
 
 

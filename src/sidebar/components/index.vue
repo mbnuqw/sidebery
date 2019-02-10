@@ -15,16 +15,16 @@
   @mouseup="onMouseUp"
   @mousemove.passive="onMouseMove")
   ctx-menu
+  .pointer(ref="pointer"): .arrow
 
   //- Pinned tabs dock
   pinned-dock(v-if="$store.state.pinnedTabsPosition !== 'panel'"
     @start-selection="startSelection"
     @stop-selection="stopSelection")
 
-  .box
+  .box(ref="box")
     .bg(v-noise:300.g:12:af.a:0:42.s:0:9="", :style="bgPosStyle")
     .dimmer(@mousedown="closeDashboard")
-    .pointer(ref="pointer"): .arrow
 
     //- Navigation
     .nav(ref="nav")
@@ -311,7 +311,9 @@ export default {
 
   // --- Mounted Hook ---
   mounted() {
-    this.updateNavSize()
+    setTimeout(() => {
+      this.updateNavSize()
+    }, 256)
   },
 
   beforeDestroy() {
@@ -452,16 +454,41 @@ export default {
       let dragNode = State.dragNodes ? State.dragNodes[0] : null
       let scroll = this.panelScrollEl ? this.panelScrollEl.scrollTop : 0
       let y = e.clientY - this.panelTopOffset + scroll
+      let x = e.clientX - this.panelLeftOffset
       
-      if (this.pointerMode !== 'none' && y < 0) {
-        this.pointerPos--
+      // Hide pointer if cursor out of drop area
+      if (!this.pointerYLock && y < 0) {
         this.pointerMode = 'none'
+        this.pointerYLock = true
+        return
       }
+      if (this.pointerYLock && this.pointerMode === 'none' && y > 0) {
+        this.pointerYLock = false
+        if (!this.pointerXLock) {
+          this.pointerPos--
+          this.pointerMode = 'between'
+        }
+      }
+      if (!this.pointerXLock && (x < 0 || e.clientX > this.width)) {
+        this.pointerMode = 'none'
+        this.pointerXLock = true
+        return
+      }
+      if (this.pointerXLock && this.pointerMode === 'none' && (x > 0 && e.clientX < this.width)) {
+        this.pointerXLock = false
+        if (!this.pointerYLock) {
+          this.pointerPos--
+          this.pointerMode = 'between'
+        }
+      }
+
+      if (this.pointerXLock || this.pointerYLock) return
 
       // Empty
       if (this.itemSlots.length === 0) {
-        if (this.pointerPos !== this.panelTopOffset - scroll - 12) {
-          this.pointerPos = this.panelTopOffset - scroll - 12
+        const pos = this.panelTopOffset - scroll - 12
+        if (!this.pointerXLock && !this.pointerYLock && this.pointerPos !== pos) {
+          this.pointerPos = pos
           this.$refs.pointer.style.transform = `translateY(${this.pointerPos}px)`
           this.pointerMode = 'between'
           this.dropParent = -1
@@ -473,8 +500,9 @@ export default {
       // End
       if (y > this.itemSlots[this.itemSlots.length - 1].bottom) {
         const slot = this.itemSlots[this.itemSlots.length - 1]
-        if (this.pointerPos !== slot.end - 12 + this.panelTopOffset - scroll) {
-          this.pointerPos = slot.end - 12 + this.panelTopOffset - scroll
+        const pos = slot.end - 12 + this.panelTopOffset - scroll
+        if (!this.pointerXLock && !this.pointerYLock && this.pointerPos !== pos) {
+          this.pointerPos = pos
           this.$refs.pointer.style.transform = `translateY(${this.pointerPos}px)`
           this.pointerMode = 'between'
           this.dropParent = slot.parent
@@ -491,8 +519,9 @@ export default {
         // Between
         if (slot.in ? y < slot.top : y < slot.center) {
           const prevSlot = this.itemSlots[i - 1]
-          if (this.pointerPos !== slot.start - 12 + this.panelTopOffset - scroll) {
-            this.pointerPos = slot.start - 12 + this.panelTopOffset - scroll
+          const pos = slot.start - 12 + this.panelTopOffset - scroll
+          if (!this.pointerXLock && !this.pointerYLock && this.pointerPos !== pos) {
+            this.pointerPos = pos
             this.$refs.pointer.style.transform = `translateY(${this.pointerPos}px)`
             this.pointerMode = 'between'
             let dragNodeIsTab = dragNode ? dragNode.type === 'tab' : false
@@ -521,24 +550,25 @@ export default {
         }
         // Inside
         if (slot.in && y < slot.bottom) {
-          if (this.pointerPos !== slot.center - 12 + this.panelTopOffset - scroll) {
-            this.pointerPos = slot.center - 12 + this.panelTopOffset - scroll
+          const pos = slot.center - 12 + this.panelTopOffset - scroll
+          if (!this.pointerXLock && !this.pointerYLock && this.pointerPos !== pos) {
+            this.pointerPos = pos
             this.$refs.pointer.style.transform = `translateY(${this.pointerPos}px)`
             this.pointerMode = slot.folded ? 'inside-fold' : 'inside-exp'
             this.dropParent = slot.id
             if (slot.type === 'tab') this.dropIndex = slot.index + 1
             else this.dropIndex = 0
           }
-          if (!this.pointerExpLock && slot.folded && e.clientX < 36) {
+          if (!this.pointerExpLock && slot.folded && x < 36) {
             slot.folded = false
             this.pointerExpLock = true
             this.expandDropTarget()
             this.pointerMode = 'inside-exp'
           }
-          if (this.pointerExpLock && e.clientX > 36) {
+          if (this.pointerExpLock && x > 36) {
             this.pointerExpLock = false
           }
-          if (!this.pointerExpLock && !slot.folded && e.clientX < 36) {
+          if (!this.pointerExpLock && !slot.folded && x < 36) {
             slot.folded = true
             this.pointerExpLock = true
             this.foldDropTarget()
@@ -614,6 +644,7 @@ export default {
 
       // Get start coorinate of drop slots
       this.panelTopOffset = panelVN.getTopOffset()
+      this.panelLeftOffset = this.$refs.box.offsetLeft
 
       // Get scroll element
       this.panelScrollEl = panelVN.getScrollEl()
@@ -1219,7 +1250,6 @@ export default {
      * Update sidebar width value.
      */
     updateNavSize() {
-      // if (this.width !== this.$el.offsetWidth) this.width = this.$el.offsetWidth
       if (this.width !== this.$refs.nav.offsetWidth) this.width = this.$refs.nav.offsetWidth
       this.recalcDashboardHeight()
     },
@@ -1538,7 +1568,8 @@ NAV_CONF_HEIGHT = auto
   z-index: 100
 .Sidebar[pointer-mode="none"] .pointer .arrow
   opacity: 0
-.Sidebar[pointer-mode="between"] .pointer:after  opacity: 1
+.Sidebar[pointer-mode="between"] .pointer:after
+  opacity: 1
 .Sidebar[pointer-mode="inside-fold"] .pointer .arrow:before
   background-color: var(--nav-btn-update-badge-bg)
 .Sidebar[pointer-mode^="inside"] .pointer:after
@@ -1547,6 +1578,9 @@ NAV_CONF_HEIGHT = auto
   animation: pointer-expand-arrow .3s
 .Sidebar .pointer.-expanding .arrow:after
   animation: pointer-expand-pulse .5s
+
+#root.-pinned-tabs-left .Sidebar .pointer
+  pos(l: 33px)
 
 // --- Panel ---
 .Sidebar .panel-box
