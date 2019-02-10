@@ -663,6 +663,10 @@ export default {
 
     onDragLeave(e) {
       if (e && e.relatedTarget) return
+      for (let n of State.dragNodes) {
+        if (n.type === 'tab') EventBus.$emit('deselectTab', n.id)
+        else EventBus.$emit('deselectBookmark', n.id)
+      }
       this.resetDrag()
     },
 
@@ -703,6 +707,7 @@ export default {
         else EventBus.$emit('deselectBookmark')
       }
       this.resetDrag()
+      State.dragNodes = null
     },
 
     /**
@@ -1183,7 +1188,6 @@ export default {
      * Reset drag-and-drop values
      */
     resetDrag() {
-      State.dragNodes = null
       this.dragMode = false
       this.dropIndex = null
       this.dropParent = null
