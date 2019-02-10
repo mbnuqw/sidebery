@@ -131,15 +131,15 @@ export default {
 
     onWheel(e) {
       if (State.scrollThroughTabs !== 'none') {
-        const globaly = State.scrollThroughTabs === 'global'
+        const globaly = State.scrollThroughTabs === 'global' || e.shiftKey
 
         if (e.deltaY > 0) {
           if (State.wheelBlockTimeout) return
-          Store.dispatch('switchTab', { globaly, cycle: false, step: 1 })
+          Store.dispatch('switchTab', { globaly, cycle: e.ctrlKey, step: 1 })
         }
         if (e.deltaY < 0) {
           if (State.wheelBlockTimeout) return
-          Store.dispatch('switchTab', { globaly, cycle: false, step: -1 })
+          Store.dispatch('switchTab', { globaly, cycle: e.ctrlKey, step: -1 })
         }
       }
     },

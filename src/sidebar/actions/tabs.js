@@ -193,7 +193,23 @@ export default {
       state.switchTabPause = null
     }, 50)
 
-    let tabs = globaly ? state.tabs : getters.panels[state.panelIndex].tabs
+    let tabs
+    if (state.pinnedTabsPosition === 'panel') {
+      tabs = []
+      if (globaly) {
+        for (let p of getters.panels) {
+          if (!p.cookieStoreId) continue
+          for (let t of state.tabs) {
+            if (t.cookieStoreId === p.cookieStoreId) tabs.push(t)
+          }
+        }
+      } else {
+        const p = getters.panels[state.panelIndex]
+        tabs = state.tabs.filter(t => t.cookieStoreId === p.cookieStoreId)
+      }
+    } else {
+      tabs = globaly ? state.tabs : getters.panels[state.panelIndex].tabs
+    }
     if (!tabs || !tabs.length) return
 
     let index = tabs.findIndex(t => t.active)
