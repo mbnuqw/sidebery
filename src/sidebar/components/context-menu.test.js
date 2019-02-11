@@ -35,12 +35,12 @@ describe('Context menu component', () => {
       }).$mount()
       expect(NewComponent.aPosStyle).toEqual(
         expect.objectContaining({
-          transform: 'translateY(0px)'
+          transform: 'translateY(0px) translateX(0px)'
         })
       )
       expect(NewComponent.bPosStyle).toEqual(
         expect.objectContaining({
-          transform: 'translateY(1000px)'
+          transform: 'translateY(1000px) translateX(0px)'
         })
       )
     })

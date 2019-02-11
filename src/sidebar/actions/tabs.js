@@ -47,22 +47,16 @@ export default {
 
     // Calc tree levels
     if (state.tabsTree) {
-      let ans = await browser.storage.local.get('tabsTree')
-      let tabsTree = ans.tabsTree || []
-      for (let tr of tabsTree) {
-        const parentTab = state.tabs[tr[0]]
-        const parentLvl = tr[1]
-        const parentFolded = tr[2]
-        const childTab = state.tabs[tr[3]]
-        if (!parentTab || !childTab) continue
-        parentTab.isParent = true
-        parentTab.lvl = parentLvl
-        parentTab.folded = parentFolded
-        childTab.parentId = parentTab.id
-        childTab.lvl = parentLvl + 1
+      for (let t of state.tabs) {
+        if (t.openerTabId !== undefined) {
+          const parentTab = state.tabs.find(pt => pt.id === t.openerTabId)
+          if (!parentTab) continue
+          if (!parentTab.isParent) parentTab.isParent = true
+          parentTab.folded = t.hidden
+          t.parentId = t.openerTabId
+        }
       }
-      /* eslint-disable-next-line */
-      state.tabsTree = state.tabsTree
+      state.tabsTree = Utils.CalcTabsTreeLevels(state.tabs)
     }
   },
 
@@ -72,17 +66,13 @@ export default {
   saveTabsTree({ state }) {
     if (TabsTreeSaveTimeout) clearTimeout(TabsTreeSaveTimeout)
     TabsTreeSaveTimeout = setTimeout(async () => {
-      const tabsTree = []
       for (let t of state.tabs) {
-        if (t.parentId >= 0) {
-          const parentTab = state.tabs.find(p => p.id === t.parentId)
-          if (!parentTab) continue
-          tabsTree.push([parentTab.index, parentTab.lvl, parentTab.folded, t.index])
+        if (t.parentId > -1 && t.parentId !== t.openerTabId) {
+          browser.tabs.update(t.id, { openerTabId: t.parentId })
         }
       }
-      await browser.storage.local.set({ tabsTree })
       TabsTreeSaveTimeout = null
-    }, 1500)
+    }, 1000)
   },
 
   /**
@@ -528,7 +518,10 @@ export default {
   /**
    * Drop to tabs panel
    */
-  async dropToTabs({ state, getters, dispatch }, { event, dropIndex, dropParent, nodes, pin } = {}) {
+  async dropToTabs(
+    { state, getters, dispatch },
+    { event, dropIndex, dropParent, nodes, pin } = {}
+  ) {
     const destCtx = getters.panels[state.panelIndex].cookieStoreId
     const parent = state.tabs.find(t => t.id === dropParent)
     if (dropIndex === -1) dropIndex = getters.panels[state.panelIndex].endIndex
@@ -578,11 +571,11 @@ export default {
         // Update tabs tree
         if (state.tabsTree) {
           if (nodes.length > 1 && nodes[0].id === nodes[1].parentId) {
-          // If dragNodes is sub-tree, preserve struct
+            // If dragNodes is sub-tree, preserve struct
             const tab = state.tabs.find(t => t.id === nodes[0].id)
             if (tab) tab.parentId = dropParent >= 0 ? dropParent : -1
           } else {
-          // Or just flatten all nodes
+            // Or just flatten all nodes
             for (let node of nodes) {
               const tab = state.tabs.find(t => t.id === node.id)
               if (tab) tab.parentId = dropParent >= 0 ? dropParent : -1
@@ -658,7 +651,7 @@ export default {
 
   /**
    * Flatten tabs tree
-   * 
+   *
    * TODO: to mutations
    */
   flattenTabs({ state }, tabIds) {
