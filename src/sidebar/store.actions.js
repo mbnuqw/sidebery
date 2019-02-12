@@ -179,6 +179,7 @@ export default {
         })
       }
 
+      menu.add('tab.group', 'groupTabs', state.selected)
       menu.add('tab.flatten', 'flattenTabs', state.selected)
 
       if (state.panelIndex === 1) {

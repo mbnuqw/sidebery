@@ -286,6 +286,37 @@ function ParseCSSNum(cssValue, or = 0) {
   return [num, unit]
 }
 
+/**
+ * Find common substring
+ */
+function CommonSubStr(strings) {
+  if (!strings || !strings.length) return ''
+  if (strings.length === 1) return strings[0]
+  const first = strings[0]
+  const others = strings.slice(1)
+  let start = 0
+  let end = 1
+  let out = ''
+  let common = ''
+
+  while (end <= first.length) {
+    common = first.slice(start, end)
+
+    const isCommon = others.every(s => {
+      return s.toLowerCase().includes(common.toLowerCase())
+    })
+
+    if (isCommon) {
+      if (common.length > out.length) out = common
+      end++
+    } else {
+      end = ++start + 1
+    }
+  }
+
+  return out
+}
+
 export default {
   Uid,
   Asap,
@@ -302,4 +333,5 @@ export default {
   CSSVar,
   CalcTabsTreeLevels,
   ParseCSSNum,
+  CommonSubStr,
 }

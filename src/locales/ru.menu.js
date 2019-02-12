@@ -20,6 +20,7 @@ export default {
   'menu.tab.reopen_in_': { message: 'Открыть в ' },
   'menu.tab.reopen_in_another_window': { message: 'Открыть в другом окне' },
   'menu.tab.reopen_in_window_': { message: 'Открыть в окне...' },
+  'menu.tab.group': { message: 'Сгруппировать' },
   'menu.tab.flatten': { message: 'Сбросить вложенность' },
   'menu.tab.pin': { message: 'Закрепить' },
   'menu.tab.unpin': { message: 'Открепить' },

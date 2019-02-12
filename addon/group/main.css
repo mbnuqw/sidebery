@@ -9,10 +9,9 @@ body {
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  height: 100%;
   margin: 0;
+  padding: 0 8px;
   -moz-osx-font-smoothing: grayscale;
   background-color: #242424;
   color: #ffffff;
@@ -20,9 +19,20 @@ body {
   font-size: 1.2rem;
 }
 
-h2 {
+body h2 {
   max-width: 450px;
   text-align: center;
+}
+
+body input {
+  -webkit-appearance: none;
+  border: none;
+  outline: none;
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+  resize: none;
+  z-index: 1;
 }
 
 .logo {
@@ -33,4 +43,95 @@ h2 {
   font-weight: 700;
   color: #363636;
   cursor: default;
+}
+
+.title {
+  display: block;
+  width: 100%;
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-align: center;
+  color: #cecece;
+  margin: 80px 0 50px;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  margin: 0;
+  max-width: 960px;
+  min-height: 128px;
+  padding: 0 0 32px;
+}
+
+.tab-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: calc(33.3% - 16px);
+  height: 240px;
+  padding: 8px;
+}
+
+.tab {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 6px;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 0 0 1px #00000024,
+              0 2px 5px 0 #00000032;
+}
+.tab:before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(180deg, #00000016, #000000af, #000000df);
+  transition: opacity .2s;
+  z-index: 1;
+}
+.tab:hover:before {
+  opacity: 0.92;
+}
+.tab:active {
+  opacity: 0.9;
+}
+
+.tab .bg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  border-radius: 6.5px;
+  z-index: 0;
+}
+
+.tab h3 {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  margin: 0 16px 12px;
+  max-height: 72px;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 24px;
+  overflow: hidden;
+  mask: linear-gradient(180deg, #000000, #000000 42px, #00000036);
+  z-index: 2;
+}
+
+@media screen and (max-width: 720px) {
+  .tab-wrapper {
+    width: calc(50% - 16px);
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .tab-wrapper {
+    width: calc(100% - 16px);
+  }
 }

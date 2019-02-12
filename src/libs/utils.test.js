@@ -340,4 +340,25 @@ describe('Global utilities', () => {
       ])
     })
   })
+
+  // CommonSubStr
+  describe('CommonSubStr()', () => {
+    test('Find common part of strings', () => {
+      const strings = ['Just some stringA', 'another StriNg', '__STRING__']
+      const common = Utils.CommonSubStr(strings)
+      expect(common).toBe('string')
+
+      const a = ['Just some string', 'another StriNg', 'STRING__']
+      const commona = Utils.CommonSubStr(a)
+      expect(commona).toBe('string')
+
+      const noStrings = []
+      const common1 = Utils.CommonSubStr(noStrings)
+      expect(common1).toBe('')
+
+      const one = ['just one']
+      const common2 = Utils.CommonSubStr(one)
+      expect(common2).toBe('just one')
+    })
+  })
 })

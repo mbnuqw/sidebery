@@ -598,7 +598,7 @@ export default {
             cookieStoreId: destCtx,
             index: dropIndex + i,
             openerTabId: dropParent < 0 ? undefined : dropParent,
-            url: node.url || browser.runtime.getURL('group/group.html'),
+            url: node.url || browser.runtime.getURL('group/group.html') + `#${encodeURI(node.title)}`,
             windowId: state.windowId,
             pinned: pin,
           })
@@ -675,5 +675,87 @@ export default {
     }
 
     state.tabs = Utils.CalcTabsTreeLevels(state.tabs)
+  },
+
+  /**
+   * Group tabs
+   */
+  async groupTabs({ state }, tabIds) {
+    // Get tabs
+    const tabs = []
+    for (let t of state.tabs) {
+      if (tabIds.includes(t.id) && t.url.indexOf('about:')) tabs.push(t)
+      if (tabs.length === tabIds) break
+    }
+
+    if (!tabs.length) return
+
+    // Find title for group tab
+    const titles = tabs.map(t => t.title)
+    let commonPart = Utils.CommonSubStr(titles)
+    let isOk = commonPart[0] === commonPart[0].toUpperCase()
+    let groupTitle = commonPart
+      .replace(/^(\s|\.|_|-|—|\/|=|;|:)+/, ' ')
+      .replace(/(\s|\.|_|-|—|\/|=|;|:)+$/, ' ')
+      .trim()
+
+    if (!isOk || groupTitle.length < 4) {
+      const hosts = tabs.map(t => t.url.split('/')[2])
+      groupTitle = Utils.CommonSubStr(hosts)
+      if (groupTitle.startsWith('.')) groupTitle = groupTitle.slice(1)
+      groupTitle = groupTitle.replace(/^www\./, '')
+    }
+
+    if (!isOk || groupTitle.length < 4) {
+      groupTitle = 'Group ' + tabs[0].index
+    }
+
+    // Find index and create group tab
+    const groupTab = await browser.tabs.create({
+      active: !(parent && parent.folded),
+      cookieStoreId: tabs[0].cookieStoreId,
+      index: tabs[0].index,
+      openerTabId: tabs[0].parentId < 0 ? undefined : tabs[0].parentId,
+      url: browser.runtime.getURL('group/group.html') + `#${encodeURI(groupTitle)}`,
+      windowId: state.windowId,
+    })
+
+    // Update parent of selected tabs
+    tabs.forEach(t => t.parentId = groupTab.id)
+    state.tabs = Utils.CalcTabsTreeLevels(state.tabs)
+  },
+
+  /**
+   * Get grouped tabs (for group page)
+   */
+  async getGroupInfo({ state }, groupTitle) {
+    await Utils.Sleep(128)
+
+    const groupTab = state.tabs.find(t => t.title === groupTitle)
+    if (!groupTab) return {}
+
+    const out = {
+      id: groupTab.id,
+      tabs: [],
+    }
+
+    const parents = [groupTab.id]
+    for (let t of state.tabs) {
+      if (parents.includes(t.parentId)) {
+        if (t.isParent) parents.push(t.id)
+        const screen = await browser.tabs.captureTab(
+          t.id,
+          { format: 'jpeg', quality: 98 },
+        )
+        out.tabs.push({
+          id: t.id,
+          title: t.title,
+          url: t.url,
+          screen,
+        })
+      }
+    }
+
+    return out
   },
 }
