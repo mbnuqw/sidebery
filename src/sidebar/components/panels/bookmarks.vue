@@ -14,7 +14,8 @@
       :node="n"
       :recalc-scroll="recalcScroll"
       @start-selection="onStartSelection")
-  bookmarks-editor.editor(v-if="$store.state.bookmarkEditor")
+  transition(name="editor")
+    bookmarks-editor.editor(v-if="$store.state.bookmarkEditor")
 </template>
 
 
@@ -359,22 +360,6 @@ export default {
 .Bookmarks
   overflow: hidden
 
-// .Bookmarks[drag-active="true"] .drag-box
-//   opacity: 1
-//   z-index: 10
-
-// .Bookmarks[drag-active="true"] .node
-//   opacity: 0
-
-// .Bookmarks[drag-end="true"] .drag-node[dragged]
-//   transition: transform var(--d-fast)
-
-// .Bookmarks[ctx-menu] .Node:not([to-front="true"]) > .body
-//   opacity: .4
-
-// .Bookmarks[editing] .Node:not([to-front]) > .body
-//   opacity: .4
-
 .Bookmarks[not-renderable] .node
   box(none)
 
@@ -386,4 +371,26 @@ export default {
   box(relative)
   opacity: 1
   transition: opacity var(--d-fast)
+
+// --- Editor Transitions ---
+.Bookmarks
+  .editor-enter-active
+  .editor-leave-active
+    transition: opacity var(--d-fast), z-index var(--d-fast), transform var(--d-fast)
+  .editor-enter
+    transform: translateY(100%)
+    opacity: 0
+    z-index: 0
+  .editor-enter-to
+    transform: translateY(0)
+    opacity: 1
+    z-index: 10
+  .editor-leave
+    transform: translateY(0)
+    opacity: 1
+    z-index: 10
+  .editor-leave-to
+    transform: translateY(100%)
+    opacity: 0
+    z-index: 0
 </style>
