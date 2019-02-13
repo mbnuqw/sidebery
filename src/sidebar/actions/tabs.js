@@ -47,17 +47,17 @@ export default {
 
     // Restore tree levels
     if (state.tabsTree) {
-      const ans = await browser.storage.local.get('tabsTree')
-      if (ans.tabsTree) {
+      const ans = await browser.storage.local.get('tabsTreeState')
+      if (ans.tabsTreeState) {
         const parents = []
-        for (let t of ans.tabsTree) {
+        for (let t of ans.tabsTreeState) {
           const tab = state.tabs[t.index]
 
           // Check if this is actual target tab
           if (!tab) break
           if (tab.url !== t.url) break
           if (tab.cookieStoreId !== t.ctx) break
-         
+
           tab.isParent = t.isParent
           if (t.isParent) parents[t.id] = tab
           if (t.parentId > -1) {
@@ -78,10 +78,10 @@ export default {
   saveTabsTree({ state }, delay = 1000) {
     if (TabsTreeSaveTimeout) clearTimeout(TabsTreeSaveTimeout)
     TabsTreeSaveTimeout = setTimeout(async () => {
-      const tabsTree = []
+      const tabsTreeState = []
       for (let t of state.tabs) {
         if (t.isParent || t.parentId > -1) {
-          tabsTree.push({
+          tabsTreeState.push({
             id: t.id,
             index: t.index,
             url: t.url,
@@ -91,7 +91,7 @@ export default {
           })
         }
       }
-      await browser.storage.local.set({ tabsTree })
+      await browser.storage.local.set({ tabsTreeState })
       TabsTreeSaveTimeout = null
     }, delay)
   },
@@ -614,12 +614,13 @@ export default {
         for (let i = 0; i < nodes.length; i++) {
           const node = nodes[i]
           if (node.type === 'separator') continue
+          const groupPageUrl = browser.runtime.getURL('group/group.html')
           const info = await browser.tabs.create({
             active: !(parent && parent.folded),
             cookieStoreId: destCtx,
             index: dropIndex + i,
             openerTabId: dropParent < 0 ? undefined : dropParent,
-            url: node.url || browser.runtime.getURL('group/group.html') + `#${encodeURI(node.title)}`,
+            url: node.url ? node.url : groupPageUrl + `#${encodeURI(node.title)}`,
             windowId: state.windowId,
             pinned: pin,
           })
@@ -751,7 +752,7 @@ export default {
     })
 
     // Update parent of selected tabs
-    tabs.forEach(t => t.parentId = groupTab.id)
+    tabs.forEach(t => (t.parentId = groupTab.id))
     state.tabs = Utils.CalcTabsTreeLevels(state.tabs)
     dispatch('saveTabsTree', 250)
   },
@@ -776,10 +777,7 @@ export default {
         if (t.isParent) parents.push(t.id)
         let screen
         if (!t.discarded) {
-          screen = await browser.tabs.captureTab(
-            t.id,
-            { format: 'jpeg', quality: 98 },
-          )
+          screen = await browser.tabs.captureTab(t.id, { format: 'jpeg', quality: 90 })
         }
         out.tabs.push({
           id: t.id,
