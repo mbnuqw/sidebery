@@ -236,6 +236,9 @@ function CalcTabsTreeLevels(tabs, maxLvl = 'none') {
       path = []
     }
 
+    // Reset circular reference
+    if (t.parentId === t.id) t.parentId = lvl ? path[lvl - 1] : -1
+
     // With parent
     if (t.parentId >= 0) {
       // Set parent id

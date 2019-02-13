@@ -682,10 +682,13 @@ export default {
     const toFlat = [...tabIds]
     const ttf = tabIds.map(id => state.tabs.find(t => t.id === id))
     for (let tab of state.tabs) {
+      if (tab.hidden) continue
       if (toFlat.includes(tab.id) && tab.lvl < minLvlTab.lvl) minLvlTab = tab
       if (toFlat.includes(tab.parentId)) {
-        toFlat.push(tab.id)
-        ttf.push(tab)
+        if (!toFlat.includes(tab.id)) {
+          toFlat.push(tab.id)
+          ttf.push(tab)
+        }
         if (tab.lvl < minLvlTab.lvl) minLvlTab = tab
       }
     }
