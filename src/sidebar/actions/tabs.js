@@ -545,7 +545,7 @@ export default {
   ) {
     const destCtx = getters.panels[state.panelIndex].cookieStoreId
     const parent = state.tabs.find(t => t.id === dropParent)
-    if (dropIndex === -1) dropIndex = getters.panels[state.panelIndex].endIndex
+    if (dropIndex === -1) dropIndex = getters.panels[state.panelIndex].endIndex + 1
 
     // Tabs or Bookmarks
     if (nodes && nodes.length) {
