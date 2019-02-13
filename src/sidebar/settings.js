@@ -7,6 +7,7 @@ export const SETTINGS_OPTIONS = {
   tabsPanelDoubleClickActionOpts: ['tab', 'none'],
   tabsPanelRightClickActionOpts: ['next', 'dash', 'none'],
   pinnedTabsPositionOpts: ['panel', 'top', 'left', 'right'],
+  tabsTreeLimitOpts: [1, 2, 3, 4, 5, 'none'],
   fontSizeOpts: ['xs', 's', 'm', 'l', 'xl', 'xxl'],
   themeOpts: ['dark', 'light'],
 }
@@ -33,6 +34,7 @@ export const DEFAULT_SETTINGS = {
   pinnedTabsPosition: 'panel',
   tabsTree: false,
   groupOnOpen: true,
+  tabsTreeLimit: 'none',
   
   // Bookmarks
   bookmarksPanel: true,

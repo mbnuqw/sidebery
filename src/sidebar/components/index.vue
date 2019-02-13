@@ -822,9 +822,12 @@ export default {
       // Update tree
       tab.parentId = -1
       if (State.tabsTree && tab.openerTabId !== undefined) {
-        let nextTab = State.tabs[tab.index]
-        if (State.groupOnOpen || nextTab.parentId === tab.openerTabId) {
-          // Create sub-tree
+        let parent = panel.tabs.find(t => t.id === tab.openerTabId)
+        if (!parent) parent = { lvl: 0 }
+        let lvlOk = !parent.lvl || parent.lvl < State.tabsTreeLimit
+
+        if ((State.groupOnOpen || parent.isParent) && lvlOk) {
+          // Child
           tab.parentId = tab.openerTabId
           for (let i = tab.index; i--; ) {
             if (tab.parentId !== State.tabs[i].id) continue
@@ -835,6 +838,7 @@ export default {
             break
           }
         } else {
+          // Sibling
           for (let i = tab.index; i--; ) {
             if (tab.openerTabId === State.tabs[i].id) {
               tab.parentId = State.tabs[i].parentId
@@ -1002,7 +1006,7 @@ export default {
 
       // Calc tree levels
       if (State.tabsTree) {
-        State.tabs = Utils.CalcTabsTreeLevels(State.tabs)
+        State.tabs = Utils.CalcTabsTreeLevels(State.tabs, State.tabsTreeLimit)
         Store.dispatch('saveTabsTree')
       }
     },

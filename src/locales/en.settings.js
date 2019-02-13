@@ -26,6 +26,13 @@ export default {
   'settings.pinned_tabs_position_panel': { message: 'panel' },
   'settings.tabs_tree_layout': { message: 'Tabs tree structure' },
   'settings.group_on_open_layout': { message: 'Create sub-tree on opening link in new tab' },
+  'settings.tabs_tree_limit': { message: 'Tabs tree max level' },
+  'settings.tabs_tree_limit_1': { message: '1' },
+  'settings.tabs_tree_limit_2': { message: '2' },
+  'settings.tabs_tree_limit_3': { message: '3' },
+  'settings.tabs_tree_limit_4': { message: '4' },
+  'settings.tabs_tree_limit_5': { message: '5' },
+  'settings.tabs_tree_limit_none': { message: 'none' },
 
   // --- Bookmarks
   'settings.bookmarks_title': { message: 'Bookmarks' },

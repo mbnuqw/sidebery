@@ -47,9 +47,16 @@
         @input="toggleTabsTree")
       toggle-field(
         label="settings.group_on_open_layout"
-        :value="$store.state.groupOnOpen"
         :inactive="!$store.state.tabsTree"
+        :value="$store.state.groupOnOpen"
         @input="setOpt('groupOnOpen', $event)")
+      select-field(
+        label="settings.tabs_tree_limit"
+        optLabel="settings.tabs_tree_limit_"
+        :inactive="!$store.state.tabsTree"
+        :value="$store.state.tabsTreeLimit"
+        :opts="$store.state.tabsTreeLimitOpts"
+        @input="setOpt('tabsTreeLimit', $event)")
 
     section
       h2 {{t('settings.bookmarks_title')}}

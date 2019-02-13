@@ -605,7 +605,7 @@ export default {
 
           // If there are no moving, just update tabs tree
           if (dropIndex === nodes[0].index) {
-            state.tabs = Utils.CalcTabsTreeLevels(state.tabs)
+            state.tabs = Utils.CalcTabsTreeLevels(state.tabs, state.tabsTreeLimit)
           }
         }
       } else {
@@ -720,6 +720,7 @@ export default {
     }
 
     if (!tabs.length) return
+    if (tabs[0].lvl >= state.tabsTreeLimit) return
 
     // Find title for group tab
     const titles = tabs.map(t => t.title)

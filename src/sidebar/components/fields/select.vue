@@ -18,7 +18,7 @@ export default {
   },
 
   props: {
-    value: String,
+    value: [String, Number],
     label: String,
     inactive: Boolean,
     optLabel: String,

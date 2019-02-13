@@ -217,7 +217,8 @@ function CSSVar(key) {
 /**
  * Calculate tree levels of tabs
  */
-function CalcTabsTreeLevels(tabs) {
+function CalcTabsTreeLevels(tabs, maxLvl = 'none') {
+  if (maxLvl === 'none') maxLvl = 999
   let lvl = 0
   let parents = {}
   let path = []
@@ -256,6 +257,14 @@ function CalcTabsTreeLevels(tabs) {
       if (pt && pt.id !== t.parentId && pt.parentId !== t.parentId) {
         lvl = path.indexOf(t.parentId) + 1
       }
+    }
+
+    if (lvl > maxLvl) {
+      if (t.parentId >= 0) {
+        parents[t.parentId] = false
+        t.parentId = path[maxLvl - 1]
+      }
+      lvl = maxLvl
     }
 
     // Set tab lvl

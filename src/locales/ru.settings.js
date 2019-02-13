@@ -26,6 +26,13 @@ export default {
   'settings.pinned_tabs_position_panel': { message: 'панель' },
   'settings.tabs_tree_layout': { message: 'Древовидное отображение табов' },
   'settings.group_on_open_layout': { message: 'Создать поддерево при открытии ссылки в новом табе' },
+  'settings.tabs_tree_limit': { message: 'Максимальный уровень вложенности табов' },
+  'settings.tabs_tree_limit_1': { message: '1' },
+  'settings.tabs_tree_limit_2': { message: '2' },
+  'settings.tabs_tree_limit_3': { message: '3' },
+  'settings.tabs_tree_limit_4': { message: '4' },
+  'settings.tabs_tree_limit_5': { message: '5' },
+  'settings.tabs_tree_limit_none': { message: 'выкл' },
 
   // --- Bookmarks
   'settings.bookmarks_title': { message: 'Закладки' },
