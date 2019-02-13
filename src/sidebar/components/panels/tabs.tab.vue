@@ -344,6 +344,7 @@ export default {
 
       // Select whole branch and show menu
       if (e.button === 2) {
+        Store.commit('resetSelection')
         const toSelect = [this.tab.id]
         for (let tab of State.tabs) {
           if (toSelect.includes(tab.parentId)) toSelect.push(tab.id)
