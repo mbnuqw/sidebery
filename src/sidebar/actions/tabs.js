@@ -54,6 +54,7 @@ export default {
           const tab = state.tabs[t.index]
 
           // Check if this is actual target tab
+          if (!tab) break
           if (tab.url !== t.url) break
           if (tab.cookieStoreId !== t.ctx) break
          
