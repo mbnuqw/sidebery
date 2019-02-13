@@ -703,6 +703,14 @@ export default {
    * Group tabs
    */
   async groupTabs({ state, dispatch }, tabIds) {
+    // Check permissions
+    const permitted = await browser.permissions.contains({ origins: ['<all_urls>'] })
+    if (!permitted) {
+      const url = browser.runtime.getURL('permissions/all-urls.html')
+      browser.tabs.create({ url })
+      return
+    }
+
     // Get tabs
     const tabs = []
     for (let t of state.tabs) {
@@ -766,10 +774,13 @@ export default {
     for (let t of state.tabs) {
       if (parents.includes(t.parentId)) {
         if (t.isParent) parents.push(t.id)
-        const screen = await browser.tabs.captureTab(
-          t.id,
-          { format: 'jpeg', quality: 98 },
-        )
+        let screen
+        if (!t.discarded) {
+          screen = await browser.tabs.captureTab(
+            t.id,
+            { format: 'jpeg', quality: 98 },
+          )
+        }
         out.tabs.push({
           id: t.id,
           title: t.title,

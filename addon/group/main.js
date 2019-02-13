@@ -46,17 +46,24 @@ function createTabEl(info) {
   const tabEl = document.createElement('div')
   tabEl.classList.add('tab')
 
-  const bgEl = document.createElement('div')
-  bgEl.classList.add('bg')
   if (info.screen) {
-    bgEl.style.backgroundImage = `url(${info.screen})`
+    const bgEl = document.createElement('div')
+    bgEl.classList.add('bg')
+    if (info.screen) {
+      bgEl.style.backgroundImage = `url(${info.screen})`
+    }
+    tabEl.appendChild(bgEl)
   }
 
   const titleEl = document.createElement('h3')
   titleEl.innerText = info.title
-
-  tabEl.appendChild(bgEl)
   tabEl.appendChild(titleEl)
+
+  const urlEl = document.createElement('p')
+  urlEl.classList.add('url')
+  urlEl.innerText = info.url
+  tabEl.appendChild(urlEl)
+
   el.appendChild(tabEl)
   return el
 }

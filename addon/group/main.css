@@ -77,6 +77,10 @@ body input {
 
 .tab {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
   width: 100%;
   height: 100%;
   border-radius: 6px;
@@ -90,7 +94,7 @@ body input {
   position: absolute;
   width: 100%;
   height: 100%;
-  background-image: linear-gradient(180deg, #00000016, #000000af, #000000df);
+  background-image: linear-gradient(180deg, #00000064, #000000df);
   transition: opacity .2s;
   z-index: 1;
 }
@@ -111,7 +115,7 @@ body input {
 }
 
 .tab h3 {
-  position: absolute;
+  position: relative;
   left: 0;
   bottom: 0;
   margin: 0 16px 12px;
@@ -120,7 +124,19 @@ body input {
   font-weight: 400;
   line-height: 24px;
   overflow: hidden;
-  mask: linear-gradient(180deg, #000000, #000000 42px, #00000036);
+  color: #fafafa;
+  z-index: 2;
+}
+
+.tab .url {
+  position: relative;
+  left: 0;
+  bottom: 0;
+  margin: 0 16px 12px;
+  font-size: 15px;
+  font-weight: 400;
+  overflow: hidden;
+  color: #acacac;
   z-index: 2;
 }
 
