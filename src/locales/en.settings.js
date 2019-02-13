@@ -25,6 +25,7 @@ export default {
   'settings.pinned_tabs_position_bottom': { message: 'bottom' },
   'settings.pinned_tabs_position_panel': { message: 'panel' },
   'settings.tabs_tree_layout': { message: 'Tabs tree structure' },
+  'settings.group_on_open_layout': { message: 'Create sub-tree on opening link in new tab' },
 
   // --- Bookmarks
   'settings.bookmarks_title': { message: 'Bookmarks' },

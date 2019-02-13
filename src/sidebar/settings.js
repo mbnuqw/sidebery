@@ -32,6 +32,7 @@ export const DEFAULT_SETTINGS = {
   tabsPanelRightClickAction: 'none',
   pinnedTabsPosition: 'panel',
   tabsTree: false,
+  groupOnOpen: true,
   
   // Bookmarks
   bookmarksPanel: true,

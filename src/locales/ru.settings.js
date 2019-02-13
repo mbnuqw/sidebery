@@ -25,6 +25,7 @@ export default {
   'settings.pinned_tabs_position_bottom': { message: 'внизу' },
   'settings.pinned_tabs_position_panel': { message: 'панель' },
   'settings.tabs_tree_layout': { message: 'Древовидное отображение табов' },
+  'settings.group_on_open_layout': { message: 'Создать поддерево при открытии ссылки в новом табе' },
 
   // --- Bookmarks
   'settings.bookmarks_title': { message: 'Закладки' },

@@ -822,26 +822,39 @@ export default {
       // Update tree
       tab.parentId = -1
       if (State.tabsTree && tab.openerTabId !== undefined) {
-        tab.parentId = tab.openerTabId
-        for (let i = tab.index; i--; ) {
-          if (tab.parentId === State.tabs[i].id) {
+        let nextTab = State.tabs[tab.index]
+        if (State.groupOnOpen || nextTab.parentId === tab.openerTabId) {
+          // Create sub-tree
+          tab.parentId = tab.openerTabId
+          for (let i = tab.index; i--; ) {
+            if (tab.parentId !== State.tabs[i].id) continue
             if (State.tabs[i].lvl) tab.lvl = State.tabs[i].lvl + 1
             else tab.lvl = 1
             State.tabs[i].isParent = true
             if (State.tabs[i].folded) browser.tabs.hide(tab.id)
             break
           }
+        } else {
+          for (let i = tab.index; i--; ) {
+            if (tab.openerTabId === State.tabs[i].id) {
+              tab.parentId = State.tabs[i].parentId
+              tab.lvl = State.tabs[i].lvl
+              break
+            }
+          }
         }
-        Store.dispatch('saveTabsTree')
       }
 
       // Put new tab in tabs list
       State.tabs.splice(tab.index, 0, tab)
+
+      // Update state
       Store.dispatch('recalcPanelScroll')
       Store.dispatch('saveSyncPanels')
       if (State.proxiedPanels.includes(tab.cookieStoreId)) {
         Store.dispatch('setupTabProxy', tab.id)
       }
+      if (State.tabsTree) Store.dispatch('saveTabsTree', 500)
     },
 
     /**

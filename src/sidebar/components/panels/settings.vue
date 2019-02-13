@@ -45,6 +45,11 @@
         label="settings.tabs_tree_layout"
         :value="$store.state.tabsTree"
         @input="toggleTabsTree")
+      toggle-field(
+        label="settings.group_on_open_layout"
+        :value="$store.state.groupOnOpen"
+        :inactive="!$store.state.tabsTree"
+        @input="setOpt('groupOnOpen', $event)")
 
     section
       h2 {{t('settings.bookmarks_title')}}

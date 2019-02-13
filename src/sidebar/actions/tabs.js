@@ -68,7 +68,7 @@ export default {
         }
       }
 
-      state.tabsTree = Utils.CalcTabsTreeLevels(state.tabs)
+      state.tabs = Utils.CalcTabsTreeLevels(state.tabs)
     }
   },
 
