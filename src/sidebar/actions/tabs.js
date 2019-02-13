@@ -45,34 +45,54 @@ export default {
       await browser.tabs.move(move[0], { index: move[1] })
     })
 
-    // Calc tree levels
+    // Restore tree levels
     if (state.tabsTree) {
-      for (let t of state.tabs) {
-        if (t.openerTabId !== undefined) {
-          const parentTab = state.tabs.find(pt => pt.id === t.openerTabId)
-          if (!parentTab) continue
-          if (!parentTab.isParent) parentTab.isParent = true
-          parentTab.folded = t.hidden
-          t.parentId = t.openerTabId
+      const ans = await browser.storage.local.get('tabsTree')
+      if (ans.tabsTree) {
+        const parents = []
+        for (let t of ans.tabsTree) {
+          const tab = state.tabs[t.index]
+
+          // Check if this is actual target tab
+          if (tab.url !== t.url) break
+          if (tab.cookieStoreId !== t.ctx) break
+         
+          tab.isParent = t.isParent
+          if (t.isParent) parents[t.id] = tab
+          if (t.parentId > -1) {
+            const parentTab = parents[t.parentId]
+            if (parentTab.folded !== tab.hidden) parentTab.folded = tab.hidden
+            tab.parentId = parentTab.id
+          }
         }
       }
+
       state.tabsTree = Utils.CalcTabsTreeLevels(state.tabs)
     }
   },
 
   /**
-   * Save tabs tree relations [parentIndex, parentLvl, parentFolded, childIndex]
+   * Save tabs tree
    */
-  saveTabsTree({ state }) {
+  saveTabsTree({ state }, delay = 1000) {
     if (TabsTreeSaveTimeout) clearTimeout(TabsTreeSaveTimeout)
     TabsTreeSaveTimeout = setTimeout(async () => {
+      const tabsTree = []
       for (let t of state.tabs) {
-        if (t.parentId > -1 && t.parentId !== t.openerTabId) {
-          browser.tabs.update(t.id, { openerTabId: t.parentId })
+        if (t.isParent || t.parentId > -1) {
+          tabsTree.push({
+            id: t.id,
+            index: t.index,
+            url: t.url,
+            ctx: t.cookieStoreId,
+            isParent: t.isParent,
+            parentId: t.parentId,
+          })
         }
       }
+      await browser.storage.local.set({ tabsTree })
       TabsTreeSaveTimeout = null
-    }, 1000)
+    }, delay)
   },
 
   /**
@@ -654,7 +674,7 @@ export default {
    *
    * TODO: to mutations
    */
-  flattenTabs({ state }, tabIds) {
+  flattenTabs({ state, dispatch }, tabIds) {
     // Gather children
     let minLvlTab = { lvl: 999 }
     const toFlat = [...tabIds]
@@ -675,12 +695,13 @@ export default {
     }
 
     state.tabs = Utils.CalcTabsTreeLevels(state.tabs)
+    dispatch('saveTabsTree', 250)
   },
 
   /**
    * Group tabs
    */
-  async groupTabs({ state }, tabIds) {
+  async groupTabs({ state, dispatch }, tabIds) {
     // Get tabs
     const tabs = []
     for (let t of state.tabs) {
@@ -723,6 +744,7 @@ export default {
     // Update parent of selected tabs
     tabs.forEach(t => t.parentId = groupTab.id)
     state.tabs = Utils.CalcTabsTreeLevels(state.tabs)
+    dispatch('saveTabsTree', 250)
   },
 
   /**
