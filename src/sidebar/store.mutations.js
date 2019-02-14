@@ -18,11 +18,19 @@ export default {
    * and store them to local storage
    */
   resetSettings(state) {
+    // Reset settings
     for (const key in DEFAULT_SETTINGS) {
       if (!DEFAULT_SETTINGS.hasOwnProperty(key)) continue
       if (state[key] == null || state[key] == undefined) continue
       state[key] = DEFAULT_SETTINGS[key]
     }
+
+    // Reset saved state
+    state.syncedPanels = []
+    state.synced = {}
+    state.lockedPanels = []
+    state.lockedTabs = []
+    state.proxiedPanels = []
   },
 
   /**
