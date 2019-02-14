@@ -852,6 +852,12 @@ export default {
       // Put new tab in tabs list
       State.tabs.splice(tab.index, 0, tab)
 
+      // Set tab's successor
+      if (State.ffVer >= 65) {
+        const prevTab = State.tabs[tab.index - 1]
+        if (prevTab) browser.tabs.update(tab.id, { successorTabId: prevTab.id })
+      }
+
       // Update state
       Store.dispatch('recalcPanelScroll')
       Store.dispatch('saveSyncPanels')
