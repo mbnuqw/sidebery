@@ -42,7 +42,8 @@
   .close(v-if="$store.state.showTabRmBtn", @mousedown.stop="onCloseClick", @mouseup.stop="")
     svg: use(xlink:href="#icon_remove")
   .t-box
-    .title {{tab.title}}
+    //- .title {{tab.title}}
+    .title {{tab.index}} - id: {{tab.id}} - {{tab.title}}
     .loading
       svg.-a: use(xlink:href="#icon_load")
       svg.-b: use(xlink:href="#icon_load")

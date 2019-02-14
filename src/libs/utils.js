@@ -250,7 +250,7 @@ function CalcTabsTreeLevels(tabs, maxLvl = 'none') {
       if (pt && pt.id === t.parentId) {
         path[lvl] = t.parentId
         pt.isParent = true
-        pt.folded = pt.folded || !!t.hidden
+        pt.folded = pt.folded || !!t.invisible
         lvl++
       }
 

@@ -563,6 +563,7 @@ export default {
     { state, getters, dispatch },
     { event, dropIndex, dropParent, nodes, pin } = {}
   ) {
+    // console.log('[DEBUG] TABS ACTION dropToTabs', dropIndex, dropParent);
     const destCtx = getters.panels[state.panelIndex].cookieStoreId
     const parent = state.tabs.find(t => t.id === dropParent)
     if (dropIndex === -1) dropIndex = getters.panels[state.panelIndex].endIndex + 1
@@ -589,6 +590,15 @@ export default {
         }
         if (pin && !nodes[0].pinned) {
           for (let n of nodes) {
+            const tab = state.tabs.find(t => t.id === n.id)
+            // Skip group tab
+            if (tab && tab.url.startsWith('moz-extension')) continue
+            // Flatten
+            if (tab) {
+              tab.lvl = 0
+              tab.parentId = -1
+            }
+            // Pin tab
             await browser.tabs.update(n.id, { pinned: true })
           }
         }
@@ -604,8 +614,16 @@ export default {
 
         // Hide tabs for folded branch or activate first node for expanded
         if (parent && parent.folded) {
+          nodes.forEach(n => {
+            const tab = state.tabs.find(t => t.id === n.id)
+            if (tab) tab.invisible = true
+          })
           browser.tabs.hide(nodes.map(t => t.id))
         } else {
+          nodes.forEach(n => {
+            const tab = state.tabs.find(t => t.id === n.id)
+            if (tab) tab.invisible = false
+          })
           browser.tabs.update(nodes[0].id, { active: true })
         }
 
