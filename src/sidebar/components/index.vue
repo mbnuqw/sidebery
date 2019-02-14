@@ -866,6 +866,7 @@ export default {
      */
     onUpdatedTab(tabId, change, tab) {
       if (tab.windowId !== State.windowId) return
+      // console.log('[DEBUG] INDEX onUpdatedTab');
       let upIndex = State.tabs.findIndex(t => t.id === tabId)
       if (upIndex === -1) return
 
@@ -874,6 +875,7 @@ export default {
       tab.parentId = State.tabs[upIndex].parentId
       tab.isParent = State.tabs[upIndex].isParent
       tab.folded = State.tabs[upIndex].folded
+      tab.invisible = State.tabs[upIndex].invisible
 
       // Handle favicon change
       // If favicon is base64 string - store it in cache
@@ -1045,6 +1047,7 @@ export default {
      */
     onActivatedTab(info) {
       if (info.windowId !== State.windowId) return
+      // console.log('[DEBUG] INDEX onActivatedTab');
 
       // Reset selectin and close settings
       Store.commit('resetSelection')
@@ -1081,7 +1084,7 @@ export default {
 
       State.activeTabs[panelIndex] = info.tabId
 
-      if (State.hideInact) Store.dispatch('hideInactPanelsTabs')
+      // if (State.hideInact) Store.dispatch('hideInactPanelsTabs')
     },
 
     onPanelLoadingStart(i) {

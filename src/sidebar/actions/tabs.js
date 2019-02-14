@@ -36,6 +36,7 @@ export default {
       t.isParent = false
       t.folded = false
       t.parentId = -1
+      t.invisible = false
       t.lvl = 0
     })
     state.tabs = tabs
@@ -62,7 +63,7 @@ export default {
           if (t.isParent) parents[t.id] = tab
           if (t.parentId > -1) {
             const parentTab = parents[t.parentId]
-            if (parentTab.folded !== tab.hidden) parentTab.folded = tab.hidden
+            if (parentTab.folded !== tab.invisible) parentTab.folded = tab.invisible
             tab.parentId = parentTab.id
           }
         }
@@ -129,7 +130,7 @@ export default {
 
     if (tab.index === p.endIndex && p.tabs.length > 1 && tab.active) {
       let prevTab = state.tabs[p.endIndex - 1]
-      if (prevTab.hidden && prevTab.parentId >= 0) {
+      if (prevTab.invisible && prevTab.parentId >= 0) {
         await browser.tabs.update(prevTab.parentId, { active: true })
       } else {
         await browser.tabs.update(prevTab.id, { active: true })
@@ -230,7 +231,7 @@ export default {
     let index = tabs.findIndex(t => t.active)
     if (step > 0) {
       index += step
-      while (tabs[index] && tabs[index].hidden) index += step
+      while (tabs[index] && tabs[index].invisible) index += step
       if (index >= tabs.length) {
         if (cycle) index = 0
         else return
@@ -239,7 +240,7 @@ export default {
     if (step < 0) {
       if (index < 0) index = tabs.length
       index += step
-      while (tabs[index] && tabs[index].hidden) index += step
+      while (tabs[index] && tabs[index].invisible) index += step
       if (index < 0) {
         if (cycle) index = tabs.length - 1
         else return
@@ -278,14 +279,14 @@ export default {
 
     // Last active tab
     const lastActiveTab = p.tabs.find(t => t.id === tabId)
-    if (typeof tabId === 'number' && lastActiveTab && !lastActiveTab.hidden) {
+    if (typeof tabId === 'number' && lastActiveTab && !lastActiveTab.invisible) {
       browser.tabs.update(tabId, { active: true })
       return
     }
 
     // Or just last non-hidden
     let lastTab = p.tabs[p.tabs.length - 1]
-    for (let i = p.tabs.length; i-- && lastTab.hidden; ) {
+    for (let i = p.tabs.length; i-- && lastTab.invisible; ) {
       lastTab = p.tabs[i]
     }
     if (lastTab) browser.tabs.update(lastTab.id, { active: true })
@@ -479,14 +480,15 @@ export default {
    * (re)Hide inactive panels tabs
    */
   async hideInactPanelsTabs({ state, getters }) {
+    // console.log('[DEBUG] TABS ACTION hideInactPanelsTabs');
     const actPI = state.panelIndex < 0 ? state.lastPanelIndex : state.panelIndex
     const actP = getters.panels[actPI]
     if (!actP || !actP.tabs || actP.pinned) return
-    const toShow = actP.tabs.filter(t => t.hidden).map(t => t.id)
+    const toShow = actP.tabs.filter(t => t.hidden && !t.invisible).map(t => t.id)
     const toHide = getters.panels.reduce((acc, p, i) => {
       if (!p.tabs || p.tabs.length === 0) return acc
       if (i === actPI) return acc
-      return acc.concat(p.tabs.filter(t => !t.hidden).map(t => t.id))
+      return acc.concat(p.tabs.filter(t => !t.hidden && !t.invisible).map(t => t.id))
     }, [])
 
     if (toShow.length) browser.tabs.show(toShow)
@@ -497,14 +499,20 @@ export default {
    * Hide children of tab
    */
   async foldTabsBranch({ state, dispatch }, tabId) {
+    // console.log('[DEBUG] TABS ACTION foldTabsBranch');
     const toHide = []
     for (let t of state.tabs) {
       if (t.id === tabId) t.folded = true
       if (t.parentId === tabId || toHide.includes(t.parentId)) {
         if (t.active) await browser.tabs.update(tabId, { active: true })
-        if (!t.hidden) toHide.push(t.id)
+        if (!t.invisible) {
+          toHide.push(t.id)
+          t.invisible = true
+        }
       }
     }
+
+    await Utils.Sleep(120)
 
     if (toHide.length) browser.tabs.hide(toHide)
     dispatch('saveTabsTree')
@@ -514,16 +522,25 @@ export default {
    * Show children of tab
    */
   async expTabsBranch({ state, dispatch }, tabId) {
+    // console.log('[DEBUG] TABS ACTION expTabsBranch');
     const toShow = []
     const preserve = []
     for (let t of state.tabs) {
       if (t.id === tabId) t.folded = false
       if (t.id !== tabId && t.folded) preserve.push(t.id)
       if (t.parentId === tabId || toShow.includes(t.parentId)) {
-        if (t.hidden && t.parentId === tabId) toShow.push(t.id)
-        if (!preserve.includes(t.parentId)) toShow.push(t.id)
+        if (t.invisible && t.parentId === tabId) {
+          toShow.push(t.id)
+          t.invisible = false
+        }
+        if (!preserve.includes(t.parentId)) {
+          toShow.push(t.id)
+          t.invisible = false
+        }
       }
     }
+
+    await Utils.Sleep(120)
 
     if (toShow.length) browser.tabs.show(toShow)
     dispatch('saveTabsTree')

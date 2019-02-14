@@ -12,7 +12,6 @@
     .container(:ctx-menu="!!$root.ctxMenu")
       tab.tab(
         v-for="(t, i) in tabs"
-        v-if="!t.hidden"
         ref="tabs"
         :key="t.id"
         :tab="t"
@@ -238,7 +237,7 @@ export default {
       let overallHeight = 0
       const bounds = []
       for (let t of this.tabs) {
-        if (t.hidden) continue
+        if (t.invisible) continue
 
         bounds.push({
           type: 'tab',

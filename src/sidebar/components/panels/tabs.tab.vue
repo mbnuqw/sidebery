@@ -10,6 +10,7 @@
   :updated="updated"
   :is-parent="tab.isParent"
   :folded="tab.folded"
+  :invisible="tab.invisible"
   :lvl="tab.lvl"
   :close-btn="$store.state.showTabRmBtn"
   :title="tooltip"
@@ -556,6 +557,10 @@ export default {
     > .update-badge
       opacity: 1
       transform: scale(1, 1)
+
+  &[invisible]
+    box(none)
+    z-index: -1
 
 // --- Level Wrapper
 .Tab .lvl-wrapper
