@@ -250,7 +250,7 @@ export default {
         })
       } else {
         browser.tabs.update({ url: this.node.url })
-        if (withFocus && !State.lockedPanels[0]) Store.dispatch('goToActiveTabPanel')
+        if (withFocus && !this.panels[0].lockedPanel) Store.dispatch('goToActiveTabPanel')
       }
     },
 

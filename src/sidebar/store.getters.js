@@ -1,5 +1,4 @@
-import { DEFAULT_CTX, PRIVATE_CTX, DEFAULT_PANELS } from './store.state'
-import TabsPanel from './components/panels/tabs.vue'
+import { DEFAULT_CTX, PRIVATE_CTX } from './store.state'
 
 export default {
   bgNoise: s => s.bgNoise,
@@ -7,7 +6,7 @@ export default {
   isPrivate: s => s.private,
   ctxMenu: s => s.ctxMenu,
   ctxMenuOpened: s => !!s.ctxMenu,
-  tabs: s => s.tabs,
+  // tabs: s => s.tabs, // ??? remove ???
   pinnedTabs: s => s.tabs.filter(t => t.pinned),
   defaultCtxId: s => (s.private ? PRIVATE_CTX : DEFAULT_CTX),
 
@@ -15,35 +14,30 @@ export default {
    * Get list of panels
    */
   panels(state, getters) {
-    const panels = DEFAULT_PANELS.concat(state.ctxs)
     let lastIndex = getters.pinnedTabs.length
-    const out = panels.map(p => {
-      if (!p.panel) p.panel = TabsPanel
+    for (let c of state.containers) {
+      if (c.panel !== 'TabsPanel') continue
 
-      if (p.cookieStoreId) {
-        p.tabs = []
-        for (let t of state.tabs) {
-          if (t.cookieStoreId === p.cookieStoreId && !t.pinned) {
-            p.tabs.push(t)
-          }
-          if (p.tabs.length && t.cookieStoreId !== p.cookieStoreId) {
-            break
-          }
+      c.tabs = []
+      for (let t of state.tabs) {
+        if (t.cookieStoreId === c.cookieStoreId && !t.pinned) {
+          c.tabs.push(t)
         }
-        if (p.tabs.length) {
-          lastIndex = p.tabs[p.tabs.length - 1].index
-          p.startIndex = p.tabs[0].index
-          p.endIndex = lastIndex++
-        } else {
-          p.startIndex = lastIndex
-          p.endIndex = p.startIndex
+        if (c.tabs.length && t.cookieStoreId !== c.cookieStoreId) {
+          break
         }
       }
+      if (c.tabs.length) {
+        lastIndex = c.tabs[c.tabs.length - 1].index
+        c.startIndex = c.tabs[0].index
+        c.endIndex = lastIndex++
+      } else {
+        c.startIndex = lastIndex
+        c.endIndex = c.startIndex
+      }
+    }
 
-      return p
-    })
-
-    return out
+    return state.containers
   },
   activePanel: (s, g) => g.panels[s.panelIndex],
   defaultPanel: (_, g) => g.panels.find(p => p.cookieStoreId === g.defaultCtxId),

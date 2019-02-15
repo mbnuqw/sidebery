@@ -126,7 +126,7 @@ const PROXY_HOST_RE = /^.{3,65536}$/
 const PROXY_PORT_RE = /^\d{2,5}$/
 
 export default {
-  name: 'TabsMenu',
+  name: 'ContainerDashboard',
 
   components: {
     TextInput,
@@ -180,7 +180,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['panels']),
+    ...mapGetters(['panelsMap']),
 
     colorCode() {
       const colorOption = this.colorOpts.find(c => c.color === this.color)
@@ -194,21 +194,20 @@ export default {
     },
 
     syncON() {
-      return State.syncedPanels[this.index]
+      return this.conf.sync
     },
 
     lockedPanel() {
-      return State.lockedPanels[this.index]
+      return this.conf.lockedPanel
     },
 
     lockedTabs() {
-      return State.lockedTabs[this.index]
+      return this.conf.lockedTabs
     },
 
     proxied() {
-      const p = State.proxiedPanels.find(p => p.id === this.id)
-      if (p) return p.type
-      else return 'direct'
+      if (!this.conf.proxy) return 'direct'
+      return this.conf.proxy.type
     },
 
     isSomeSocks() {
@@ -216,17 +215,13 @@ export default {
     },
 
     proxyHost() {
-      if (!this.id) return ''
-      const proxy = State.proxiedPanels.find(p => p.id === this.id)
-      if (!proxy || !proxy.host) return ''
-      return proxy.host
+      if (!this.id || !this.conf.proxy) return ''
+      return this.conf.proxy.host
     },
 
     proxyPort() {
-      if (!this.id) return ''
-      const proxy = State.proxiedPanels.find(p => p.id === this.id)
-      if (!proxy || !proxy.port) return ''
-      return proxy.port
+      if (!this.id || !this.conf.proxy) return ''
+      return this.conf.proxy.port
     },
 
     proxyHostValid() {
@@ -238,24 +233,18 @@ export default {
     },
 
     proxyUsername() {
-      if (!this.id) return ''
-      const proxy = State.proxiedPanels.find(p => p.id === this.id)
-      if (!proxy) return ''
-      return proxy.username
+      if (!this.id || !this.conf.proxy) return ''
+      return this.conf.proxy.username
     },
 
     proxyPassword() {
-      if (!this.id) return ''
-      const proxy = State.proxiedPanels.find(p => p.id === this.id)
-      if (!proxy) return ''
-      return proxy.password
+      if (!this.id || !this.conf.proxy) return ''
+      return this.conf.proxy.password
     },
 
     proxyDNS() {
-      if (!this.id) return false
-      const proxy = State.proxiedPanels.find(p => p.id === this.id)
-      if (!proxy) return false
-      return proxy.proxyDNS
+      if (!this.id || !this.conf.proxy) return false
+      return this.conf.proxy.proxyDNS
     },
   },
 
@@ -376,19 +365,19 @@ export default {
     },
 
     toggleSync() {
-      this.$set(State.syncedPanels, this.index, !State.syncedPanels[this.index])
+      this.conf.sync = !this.conf.sync
       Store.dispatch('resyncPanels')
-      Store.dispatch('saveState')
+      Store.dispatch('saveContainers')
     },
 
     togglePanelLock() {
-      this.$set(State.lockedPanels, this.index, !State.lockedPanels[this.index])
-      Store.dispatch('saveState')
+      this.conf.lockedPanel = !this.conf.lockedPanel
+      Store.dispatch('saveContainers')
     },
 
     toggleTabsLock() {
-      this.$set(State.lockedTabs, this.index, !State.lockedTabs[this.index])
-      Store.dispatch('saveState')
+      this.conf.lockedTabs = !this.conf.lockedTabs
+      Store.dispatch('saveContainers')
     },
 
     async switchProxy(type) {
@@ -402,15 +391,14 @@ export default {
           return
         }
       } catch (err) {
+        console.log('[DEBUG] ???');
         return
       }
 
-      const panel = this.panels.find(p => p.cookieStoreId === this.id)
+      const panel = this.panelsMap[this.id]
       if (!panel || !panel.tabs) return
 
       const proxySettings = {
-        id: this.id,
-        tabs: panel.tabs.map(t => t.id),
         type,
         host: this.proxyHost,
         port: this.proxyPort,
@@ -419,73 +407,60 @@ export default {
         proxyDNS: this.proxyDNS,
       }
 
-      let pi = State.proxiedPanels.findIndex(p => p.id === this.id)
-      if (pi !== -1) {
-        if (type === 'direct') State.proxiedPanels.splice(pi, 1)
-        else State.proxiedPanels.splice(pi, 1, proxySettings)
+      if (type === 'direct') {
+        State.proxies[this.id] = undefined
+        this.conf.proxy = null
       } else {
-        if (type !== 'direct') State.proxiedPanels.push(proxySettings)
+        State.proxies[this.id] = { ...proxySettings }
+        this.conf.proxy = proxySettings
       }
 
-      Store.dispatch('saveState')
+      Store.dispatch('saveContainers')
       Store.dispatch('updateProxiedTabs')
       this.$emit('height')
     },
 
     onProxyHostInput(value) {
-      if (!this.id) return
-      const pi = State.proxiedPanels.findIndex(p => p.id === this.id)
-      const proxy = { ...State.proxiedPanels[pi] }
-      if (pi === -1) return
-      proxy.host = value
-      State.proxiedPanels.splice(pi, 1, proxy)
+      if (!this.id || !this.conf.proxy) return
+      this.conf.proxy.host = value
+      if (State.proxies[this.id]) State.proxies[this.id].host = value
       if (!this.proxyHostValid) return
-      Store.dispatch('saveState')
+      Store.dispatch('saveContainers')
       Store.dispatch('updateProxiedTabs')
     },
 
     onProxyPortInput(value) {
-      if (!this.id) return
-      const pi = State.proxiedPanels.findIndex(p => p.id === this.id)
-      const proxy = { ...State.proxiedPanels[pi] }
-      if (pi === -1) return
-      proxy.port = value
-      State.proxiedPanels.splice(pi, 1, proxy)
+      if (!this.id || !this.conf.proxy) return
+      this.conf.proxy.port = value
+      if (State.proxies[this.id]) State.proxies[this.id].port = value
       if (!this.proxyPortValid) return
-      Store.dispatch('saveState')
+      Store.dispatch('saveContainers')
       Store.dispatch('updateProxiedTabs')
     },
 
     onProxyUsernameInput(value) {
-      if (!this.id) return
-      const pi = State.proxiedPanels.findIndex(p => p.id === this.id)
-      const proxy = { ...State.proxiedPanels[pi] }
-      if (pi === -1) return
-      proxy.username = value
-      State.proxiedPanels.splice(pi, 1, proxy)
-      Store.dispatch('saveState')
+      if (!this.id || !this.conf.proxy) return
+      this.conf.proxy.username = value
+      if (State.proxies[this.id]) State.proxies[this.id].username = value
+      Store.dispatch('saveContainers')
       Store.dispatch('updateProxiedTabs')
     },
 
     onProxyPasswordInput(value) {
-      if (!this.id) return
-      const pi = State.proxiedPanels.findIndex(p => p.id === this.id)
-      const proxy = { ...State.proxiedPanels[pi] }
-      if (pi === -1) return
-      proxy.password = value
-      State.proxiedPanels.splice(pi, 1, proxy)
-      Store.dispatch('saveState')
+      if (!this.id || !this.conf.proxy) return
+      this.conf.proxy.password = value
+      if (State.proxies[this.id]) State.proxies[this.id].password = value
+      Store.dispatch('saveContainers')
       Store.dispatch('updateProxiedTabs')
     },
 
     toggleProxyDns() {
-      if (!this.id) return
-      const pi = State.proxiedPanels.findIndex(p => p.id === this.id)
-      const proxy = { ...State.proxiedPanels[pi] }
-      proxy.proxyDNS = !proxy.proxyDNS
-      if (pi === -1) return
-      State.proxiedPanels.splice(pi, 1, proxy)
-      Store.dispatch('saveState')
+      if (!this.id || !this.conf.proxy) return
+      this.conf.proxy.proxyDNS = !this.conf.proxy.proxyDNS
+      if (State.proxies[this.id]) {
+        State.proxies[this.id].proxyDNS = !State.proxies[this.id].proxyDNS
+      }
+      Store.dispatch('saveContainers')
       Store.dispatch('updateProxiedTabs')
     },
 

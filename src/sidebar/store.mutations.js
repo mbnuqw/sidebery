@@ -26,11 +26,7 @@ export default {
     }
 
     // Reset saved state
-    state.syncedPanels = []
     state.synced = {}
-    state.lockedPanels = []
-    state.lockedTabs = []
-    state.proxiedPanels = []
   },
 
   /**

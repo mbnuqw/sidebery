@@ -26,7 +26,6 @@
 <script>
 import {mapGetters} from 'vuex'
 import Store from '../../store'
-import State from '../../store.state'
 import ToggleField from '../fields/toggle'
 
 export default {
@@ -47,11 +46,11 @@ export default {
     ...mapGetters(['isPrivate']),
 
     lockedPanel() {
-      return State.lockedPanels[this.index]
+      return this.conf.lockedPanel
     },
 
     syncON() {
-      return State.syncedPanels[this.index]
+      return this.conf.sync
     },
 
     haveTabs() {
@@ -62,16 +61,12 @@ export default {
 
   methods: {
     togglePanelLock() {
-      this.$set(State.lockedPanels, this.index, !State.lockedPanels[this.index])
-      Store.dispatch('saveState')
+      this.conf.lockedPanel = !this.conf.lockedPanel
+      Store.dispatch('saveContainers')
     },
 
     toggleSync() {
-      this.$set(State.syncedPanels, this.index, !State.syncedPanels[this.index])
-      // let id = this.conf.pinned ? 'pinned' : State.defaultCtx
-      // let pi = State.syncPanels.findIndex(p => p === id)
-      // if (pi !== -1) State.syncPanels.splice(pi, 1)
-      // else State.syncPanels.push(id)
+      this.conf.sync = !this.conf.sync
       Store.dispatch('resyncPanels')
       Store.dispatch('saveState')
     },

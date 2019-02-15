@@ -36,21 +36,19 @@ export default {
     if (state.savePanelsTimeout) clearTimeout(state.savePanelsTimeout)
     state.savePanelsTimeout = setTimeout(() => {
       const syncPanels = []
-      state.syncedPanels.map((sync, index) => {
-        if (!sync) return
-        let panel = getters.panels[index]
-        if (!panel) return
-
+      for (let c of state.containers) {
+        if (!c.sync) continue
         syncPanels.push({
-          cookieStoreId: panel.cookieStoreId,
-          pinned: panel.pinned,
-          default: panel.cookieStoreId === getters.defaultCtxId,
-          name: panel.name,
-          icon: panel.icon,
-          color: panel.color,
-          urls: panel.tabs.map(t => t.url),
+          cookieStoreId: c.cookieStoreId,
+          pinned: c.pinned,
+          default: c.cookieStoreId === getters.defaultCtxId,
+          name: c.name,
+          icon: c.icon,
+          color: c.color,
+          urls: c.tabs.map(t => t.url),
         })
-      })
+      }
+
       const syncPanelsData = {
         id: state.localID,
         time: ~~(Date.now() / 1000),
@@ -133,7 +131,7 @@ export default {
       })
       const locPanel = getters.panels[locPanelIndex]
       if (locPanelIndex === -1) return
-      if (!state.syncedPanels[locPanelIndex]) return
+      if (!getters.panels[locPanelIndex].sync) return
       if (!syncPanel.urls || !locPanel.tabs) return
 
       // Reset last sync panel data

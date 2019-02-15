@@ -18,7 +18,6 @@
 <script>
 import EventBus from '../../event-bus'
 import Store from '../../store'
-import State from '../../store.state'
 import ToggleField from '../fields/toggle'
 
 export default {
@@ -37,14 +36,14 @@ export default {
 
   computed: {
     lockedPanel() {
-      return State.lockedPanels[this.index]
+      return this.conf.lockedPanel
     },
   },
 
   methods: {
     togglePanelLock() {
-      this.$set(State.lockedPanels, this.index, !State.lockedPanels[this.index])
-      Store.dispatch('saveState')
+      this.conf.lockedPanel = !this.conf.lockedPanel
+      Store.dispatch('saveContainers')
     },
 
     collapseAll() {

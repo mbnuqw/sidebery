@@ -12,7 +12,8 @@ export default {
     const tabs = await browser.tabs.query({ windowId })
 
     // Check order of tabs and get moves for normalizing
-    const ctxs = [getters.defaultCtxId].concat(state.ctxs.map(ctx => ctx.cookieStoreId))
+    const ctxs = [getters.defaultCtxId]
+      .concat(state.containers.filter(c => c.type === 'ctx').map(c => c.cookieStoreId))
     const moves = []
     let index = tabs.filter(t => t.pinned).length
     let offset = 0
@@ -114,7 +115,7 @@ export default {
   async removeTab({ state, getters, dispatch }, tab) {
     let p = Utils.GetPanelOf(getters.panels, tab)
     if (!p || !p.tabs) return
-    if (state.lockedTabs[state.panelIndex] && tab.url.indexOf('about')) {
+    if (p.lockedTabs && tab.url.indexOf('about')) {
       return
     }
 
@@ -152,8 +153,9 @@ export default {
     for (let id of tabIds) {
       const tab = state.tabs.find(t => t.id === id)
       if (!tab) continue
+      const panel = getters.panels.find(p => p.id === tab.cookieStoreId)
       if (tab.folded) dispatch('expTabsBranch', id)
-      if (state.lockedTabs[state.panelIndex] && tab.url.indexOf('about')) continue
+      if (panel.lockedTabs && tab.url.indexOf('about')) continue
       if (panelId === undefined) panelId = tab.cookieStoreId
       if (panelId && panelId !== tab.cookieStoreId) panelId = null
       if (firstIndex === undefined) firstIndex = tab.index
@@ -171,7 +173,7 @@ export default {
       panel = getters.panels.find(p => p.cookieStoreId === panelId)
     }
 
-    // If there are not tabs on this panel
+    // If there are no tabs on this panel
     // create new one (if that option accepted)
     if (
       panel &&
@@ -272,24 +274,19 @@ export default {
   /**
    * Try to activate last active tab on the panel
    */
-  activateLastActiveTabOf({ state, getters }, panelIndex) {
-    const tabId = state.activeTabs[panelIndex]
+  activateLastActiveTabOf({ getters }, panelIndex) {
     const p = getters.panels[panelIndex]
     if (!p || !p.tabs || !p.tabs.length) return
-
-    // Last active tab
-    const lastActiveTab = p.tabs.find(t => t.id === tabId)
-    if (typeof tabId === 'number' && lastActiveTab && !lastActiveTab.invisible) {
-      browser.tabs.update(tabId, { active: true })
-      return
+    const tab = p.tabs.find(t => t.id === p.lastActiveTab)
+    if (tab && !tab.invisible) {
+      browser.tabs.update(tab.id, { active: true })
+    } else {
+      let lastTab = p.tabs[p.tabs.length - 1]
+      for (let i = p.tabs.length; i-- && lastTab.invisible; ) {
+        lastTab = p.tabs[i]
+      }
+      if (lastTab) browser.tabs.update(lastTab.id, { active: true })
     }
-
-    // Or just last non-hidden
-    let lastTab = p.tabs[p.tabs.length - 1]
-    for (let i = p.tabs.length; i-- && lastTab.invisible; ) {
-      lastTab = p.tabs[i]
-    }
-    if (lastTab) browser.tabs.update(lastTab.id, { active: true })
   },
 
   /**
@@ -333,7 +330,7 @@ export default {
     for (let tabId of tabIds) {
       let tab = state.tabs.find(t => t.id === tabId)
       if (!tab) continue
-      if (state.lockedPanels.includes(tab.cookieStoreId)) continue
+      // if (state.lockedPanels.includes(tab.cookieStoreId)) continue
       browser.tabs.duplicate(tabId)
     }
   },
