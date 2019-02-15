@@ -10,6 +10,7 @@
 
   scroll-box.scroll-box(ref="scrollBox"): .scoll-wrapper
     icon-select-field.-no-top-margin(
+      v-if="id"
       label="container_dashboard.icon_label"
       :value="icon"
       :opts="iconOpts"
@@ -17,6 +18,7 @@
       @input="updateIcon")
 
     color-select-field(
+      v-if="id"
       label="container_dashboard.color_label"
       :value="color"
       :opts="colorOpts"
@@ -180,7 +182,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['panelsMap']),
+    ...mapGetters(['panels']),
 
     colorCode() {
       const colorOption = this.colorOpts.find(c => c.color === this.color)
@@ -381,21 +383,20 @@ export default {
     },
 
     async switchProxy(type) {
+      // console.log('[DEBUG] CONTAINER DASHBOARD switchProxy');
       // Check permissions
-      try {
+      if (type !== 'direct') {
         const permitted = await browser.permissions.contains({ origins: ['<all_urls>'] })
         if (!permitted) {
+          this.switchProxy('direct')
           browser.tabs.create({
             url: browser.runtime.getURL('permissions/all-urls.html'),
           })
           return
         }
-      } catch (err) {
-        console.log('[DEBUG] ???');
-        return
       }
 
-      const panel = this.panelsMap[this.id]
+      const panel = this.panels.find(p => p.id === this.id)
       if (!panel || !panel.tabs) return
 
       const proxySettings = {

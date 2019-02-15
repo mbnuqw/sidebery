@@ -154,7 +154,7 @@ export default {
    * --- Computed ---
    */
   computed: {
-    ...mapGetters(['isPrivate', 'defaultCtxId', 'panels', 'panelsMap', 'activePanel']),
+    ...mapGetters(['isPrivate', 'defaultCtxId', 'panels', 'activePanel']),
 
     /**
      * Background transform style for parallax fx
@@ -202,6 +202,7 @@ export default {
      * Get list of navigational buttons
      */
     nav() {
+      // console.log('[DEBUG] INDEX COMPUTED nav');
       let cap = ~~((this.width - 32) / 34)
       let halfCap = cap >> 1
       let invModCap = cap % halfCap ^ 1
@@ -277,7 +278,18 @@ export default {
 
     // Tabs
     browser.tabs.onCreated.addListener(this.onCreatedTab)
-    browser.tabs.onUpdated.addListener(this.onUpdatedTab)
+    browser.tabs.onUpdated.addListener(this.onUpdatedTab, {
+      properties: [
+        'audible',
+        'discarded',
+        'favIconUrl',
+        'hidden',
+        'mutedInfo',
+        'pinned',
+        'status',
+        'title',
+      ],
+    })
     browser.tabs.onRemoved.addListener(this.onRemovedTab)
     browser.tabs.onMoved.addListener(this.onMovedTab)
     browser.tabs.onDetached.addListener(this.onDetachedTab)
@@ -737,6 +749,7 @@ export default {
      * contextualIdentities.onCreated
      */
     onCreatedContainer({ contextualIdentity }) {
+      // console.log('[DEBUG] INDEX onCreatedContainer');
       State.ctxs.push(contextualIdentity)
       State.containers.push({
         ...contextualIdentity,
@@ -746,36 +759,45 @@ export default {
         panel: 'TabsPanel',
         lockedTabs: false,
         lockedPanel: false,
-        proxyConfig: null,
+        proxy: null,
         sync: false,
+        lastActiveTab: -1,
       })
       State.panelIndex = this.panels.length - 1
       State.lastPanelIndex = State.panelIndex
 
+      this.openDashboard(State.panelIndex)
+
       // Check if we have some updates
       // for container with this name
       Store.dispatch('resyncPanels')
+      Store.dispatch('saveContainers')
     },
 
     /**
      * contextualIdentities.onRemoved
      */
     async onRemovedContainer({ contextualIdentity }) {
+      // console.log('[DEBUG] INDEX onRemovedContainer');
       let id = contextualIdentity.cookieStoreId
-      let i = State.ctxs.findIndex(c => c.cookieStoreId === id)
-      if (i === -1) return
-      State.ctxs.splice(i, 1)
 
       // Close tabs
-      let orphanTabs = await browser.tabs.query({
-        windowId: browser.windows.WINDOW_ID_CURRENT,
-        cookieStoreId: id,
-      })
-      if (orphanTabs.length > 0) {
-        await browser.tabs.remove(orphanTabs.map(t => t.id))
-      } else {
-        Store.commit('setPanel', i + 3)
-      }
+      const orphanTabs = State.tabs.filter(t => t.cookieStoreId === id)
+      await browser.tabs.remove(orphanTabs.map(t => t.id))
+
+      // Remove container
+      let ctxIndex = State.ctxs.findIndex(c => c.cookieStoreId === id)
+      let ctrIndex = State.containers.findIndex(c => c.id === id)
+      if (ctxIndex === -1 || ctrIndex === -1) return
+      State.ctxs.splice(ctxIndex, 1)
+      State.containers.splice(ctrIndex, 1)
+      if (State.proxies[id]) delete State.proxies[id]
+
+      // Switch to prev panel
+      State.panelIndex = this.panels.length - 1
+      State.lastPanelIndex = State.panelIndex
+
+      Store.dispatch('saveContainers')
     },
 
     /**
@@ -790,6 +812,7 @@ export default {
       State.ctxs.splice(ctxIndex, 1, contextualIdentity)
       State.containers.splice(ctrIndex, 1, { ...State.containers[ctrIndex], ...contextualIdentity })
       Store.dispatch('saveSyncPanels')
+      Store.dispatch('saveContainers')
     },
     // ---
 
@@ -799,6 +822,7 @@ export default {
      */
     onCreatedTab(tab) {
       if (tab.windowId !== State.windowId) return
+      // console.log('[DEBUG] INDEX onCreatedTab');
       Store.commit('closeCtxMenu')
       Store.commit('resetSelection')
 
@@ -1051,7 +1075,7 @@ export default {
       if (info.windowId !== State.windowId) return
       // console.log('[DEBUG] INDEX onActivatedTab');
 
-      // Reset selectin and close settings
+      // Reset selection and close dashboard
       Store.commit('resetSelection')
 
       // Update tabs and find activated one

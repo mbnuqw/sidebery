@@ -508,7 +508,10 @@ export default {
 
       if (State.permAllUrls) {
         await browser.permissions.remove({ origins: ['<all_urls>'] })
-        State.proxiedPanels = []
+        State.proxiedPanels = {}
+        State.containers.map(c => {
+          if (c.proxy) c.proxy = null
+        })
         State.permAllUrls = await browser.permissions.contains({ origins: ['<all_urls>'] })
       } else {
         browser.tabs.create({

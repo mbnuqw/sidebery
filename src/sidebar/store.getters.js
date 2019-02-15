@@ -6,7 +6,6 @@ export default {
   isPrivate: s => s.private,
   ctxMenu: s => s.ctxMenu,
   ctxMenuOpened: s => !!s.ctxMenu,
-  // tabs: s => s.tabs, // ??? remove ???
   pinnedTabs: s => s.tabs.filter(t => t.pinned),
   defaultCtxId: s => (s.private ? PRIVATE_CTX : DEFAULT_CTX),
 
@@ -14,18 +13,15 @@ export default {
    * Get list of panels
    */
   panels(state, getters) {
+    // console.log('[DEBUG] GETTER panels');
     let lastIndex = getters.pinnedTabs.length
     for (let c of state.containers) {
       if (c.panel !== 'TabsPanel') continue
 
       c.tabs = []
       for (let t of state.tabs) {
-        if (t.cookieStoreId === c.cookieStoreId && !t.pinned) {
-          c.tabs.push(t)
-        }
-        if (c.tabs.length && t.cookieStoreId !== c.cookieStoreId) {
-          break
-        }
+        if (t.pinned) continue
+        if (t.cookieStoreId === c.cookieStoreId) c.tabs.push(t)
       }
       if (c.tabs.length) {
         lastIndex = c.tabs[c.tabs.length - 1].index
