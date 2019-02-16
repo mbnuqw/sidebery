@@ -102,6 +102,7 @@ export default {
   'settings.up_shift': { message: 'Select up' },
   'settings.down_shift': { message: 'Select down' },
   'settings.activate': { message: 'Activate selection' },
+  'settings.menu': { message: 'Open menu' },
   'settings.reset_selection': { message: 'Reset selection' },
   'settings.reset_kb': { message: 'Reset Keybindings' },
 

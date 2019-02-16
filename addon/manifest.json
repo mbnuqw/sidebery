@@ -111,6 +111,12 @@
       },
       "description": "activate"
     },
+    "menu": {
+      "suggested_key": {
+        "default": "Alt+M"
+      },
+      "description": "menu"
+    },
     "reset_selection": {
       "suggested_key": {
         "default": "Alt+R"

@@ -65,6 +65,7 @@ export default {
   kb_reset_selection({ commit }) {
     // console.log('[DEBUG] KEYBINDING kb_reset_selection');
     commit('resetSelection')
+    commit('closeCtxMenu')
   },
   kb_select_all() {
     // console.log('[DEBUG] KEYBINDING kb_select_all');
@@ -85,5 +86,9 @@ export default {
   kb_down_shift() {
     // console.log('[DEBUG] KEYBINDING kb_down_shift');
     EventBus.$emit('keyDownShift')
+  },
+  kb_menu() {
+    // console.log('[DEBUG] KEYBINDING kb_menu');
+    EventBus.$emit('keyMenu')
   },
 }

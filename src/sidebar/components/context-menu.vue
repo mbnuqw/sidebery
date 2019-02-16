@@ -2,18 +2,31 @@
 .CtxMenu(:is-active="aIsActive || bIsActive", @mouseenter="onME", @mouseleave="onML")
   .container(:is-active="aIsActive")
     .box(ref="aBox", :style="aPosStyle")
-      .opt(v-for="(opt, i) in aOpts", :key="opt[0]", :title="getTitle(opt[0])", @click="onClick(opt)", @mousedown.stop="")
-        span(v-for="out in parseLabel(opt[0])", :style="{color: out.color, fontWeight: out.w}") {{out.label}}
+      .opt(v-for="(opt, i) in aOpts"
+        :key="opt[0]"
+        :title="getTitle(opt[0])"
+        :is-selected="isSelected(i)"
+        @click="onClick(opt)"
+        @mousedown.stop="")
+        span(v-for="out in parseLabel(opt[0])"
+          :style="{color: out.color, fontWeight: out.w}") {{out.label}}
   .container(:is-active="bIsActive")
     .box(ref="bBox", :style="bPosStyle")
-      .opt(v-for="(opt, i) in bOpts", :key="opt[0]", :title="getTitle(opt[0])", @click="onClick(opt)", @mousedown.stop="")
-        span(v-for="out in parseLabel(opt[0])", :style="{color: out.color, fontWeight: out.w}") {{out.label}}
+      .opt(v-for="(opt, i) in bOpts"
+        :key="opt[0]"
+        :title="getTitle(opt[0])"
+        :is-selected="isSelected(i)"
+        @click="onClick(opt)"
+        @mousedown.stop="")
+        span(v-for="out in parseLabel(opt[0])"
+          :style="{color: out.color, fontWeight: out.w}") {{out.label}}
 </template>
 
 
 <script>
 import Store from '../store'
 import Getters from '../store.getters'
+import EventBus from '../event-bus'
 
 export default {
   data() {
@@ -28,6 +41,7 @@ export default {
       bPos: 0,
       bX: 0,
       bDown: true,
+      selected: -1,
     }
   },
 
@@ -45,13 +59,19 @@ export default {
   },
 
   created() {
+    EventBus.$on('selectOption', this.onSelectOption)
+    EventBus.$on('activateOption', this.onActivateOption)
+
     Store.watch(Getters.ctxMenu, (c, p) => {
       if (this.leaveT) clearTimeout(this.leaveT)
+      this.selected = -1
 
       let h = this.$root.$el.offsetHeight
 
       if (c) {
-        let rect = c.el.getBoundingClientRect()
+        let rect
+        if (c.el.start && c.el.end) rect = { top: c.el.start, bottom: c.el.end, left: 120, right: 120 }
+        else  rect = c.el.getBoundingClientRect()
         if (this.aOpts.length) {
           this.bOpts = c.opts
           this.bIsActive = true
@@ -112,6 +132,34 @@ export default {
       Store.commit('closeCtxMenu')
     },
 
+    onSelectOption(dir) {
+      if (!dir) return
+
+      const opts = this.aIsActive ? this.aOpts : this.bOpts
+
+      if (this.selected < 0) {
+        if (dir > 0) this.selected = 0
+        else this.selected = opts.length - 1
+        return
+      }
+
+      if (this.selected >= 0) {
+        this.selected += dir
+        if (this.selected < 0) this.selected = 0
+        if (this.selected >= opts.length) this.selected = opts.length - 1
+      }
+    },
+
+    onActivateOption() {
+      if (this.selected < 0) return
+      const opts = this.aIsActive ? this.aOpts : this.bOpts
+      this.onClick(opts[this.selected])
+    },
+
+    isSelected(index) {
+      return this.selected === index
+    },
+
     parseLabel(input) {
       return input.split('||').map(part => {
         let parsed = part.split('>>')
@@ -166,15 +214,12 @@ export default {
 
 .CtxMenu .box
   box(absolute)
-  // pos(r: 0)
   size(max-w: calc(100% - 28px))
   z-index: 30
   padding: 0 0 0 0
   margin: 0
   overflow: hidden
   border-radius: 3px
-  // border-top-left-radius: 3px
-  // border-bottom-left-radius: 3px
   background-color: var(--ctx-menu-bg)
   box-shadow: var(--ctx-menu-shadow)
 
@@ -202,5 +247,6 @@ export default {
   &:last-of-type
     padding-bottom: 4px
   &:hover:before
+  &[is-selected]
     background-color: var(--ctx-menu-bg-hover)
 </style>

@@ -102,6 +102,7 @@ export default {
   'settings.up_shift': { message: 'Вверх с выделением' },
   'settings.down_shift': { message: 'Вниз с выделением' },
   'settings.activate': { message: 'Активировать выделенное' },
+  'settings.menu': { message: 'Открыть меню' },
   'settings.reset_selection': { message: 'Сбросить выделенние' },
   'settings.reset_kb': { message: 'Сбросить клав. настройки' },
 

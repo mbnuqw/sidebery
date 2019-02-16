@@ -316,6 +316,7 @@ export default {
     EventBus.$on('keyDown', () => this.onKeySelect(1))
     EventBus.$on('keyUpShift', () => this.onKeySelectExpand(-1))
     EventBus.$on('keyDownShift', () => this.onKeySelectExpand(1))
+    EventBus.$on('keyMenu', () => this.onKeyMenu())
     EventBus.$on('selectAll', () => this.onKeySelectAll())
   },
 
@@ -1155,6 +1156,11 @@ export default {
      * Handle shortcut 'activate'
      */
     onKeyActivate() {
+      if (State.ctxMenu) {
+        EventBus.$emit('activateOption')
+        return
+      }
+
       this.recalcPanelBounds()
       if (!this.itemSlots || !this.itemSlots.length) return
       if (!State.selected || !State.selected.length) return
@@ -1204,6 +1210,12 @@ export default {
      */
     onKeySelect(dir) {
       if (!dir) return
+
+      if (State.ctxMenu) {
+        EventBus.$emit('selectOption', dir)
+        return
+      }
+
       this.recalcPanelBounds()
       if (!this.itemSlots || !this.itemSlots.length) return
 
@@ -1347,6 +1359,39 @@ export default {
         EventBus.$emit(selectEvent, s.id)
         State.selected.push(s.id)
       }
+    },
+
+    /**
+     * Open context menu
+     */
+    onKeyMenu() {
+      this.recalcPanelBounds()
+      if (!this.itemSlots || !this.itemSlots.length) return
+      if (!State.selected || !State.selected.length) return
+
+      // Tabs or Bookmarks?
+      const type = typeof State.selected[0] === 'number' ? 'tab' : 'bookmark'
+      const targetId = State.selected[0]
+      const targetSlot = this.itemSlots.find(s => s.id === targetId)
+      let target
+      if (type === 'tab') target = State.tabs.find(t => t.id === targetId)
+      if (type === 'bookmark') {
+        let n
+        const findWalk = nodes => {
+          if (target) return
+          for (n of nodes) {
+            if (n.id === targetId) return target = n
+            if (n.children) findWalk(n.children)
+          }
+        }
+        findWalk(State.bookmarks)
+      }
+
+      if (!target) return
+      const offset = this.panelTopOffset - this.panelScrollEl.scrollTop
+      const start = targetSlot.start + offset
+      const end = targetSlot.end + offset
+      Store.dispatch('openCtxMenu', { el: { start, end }, node: target })
     },
     // ---
 
