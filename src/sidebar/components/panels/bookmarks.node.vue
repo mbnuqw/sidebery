@@ -289,7 +289,7 @@ export default {
   > .body
     height: var(--bookmarks-bookmark-height)
     > .title
-      text(s: rem(14), w: 400)
+      font: var(--bookmarks-bookmark-font)
       color: var(--bookmarks-node-title-fg)
     &:hover > .title
       transition: transform var(--d-fast)
@@ -314,7 +314,7 @@ export default {
       transition: none
       color: var(--bookmarks-folder-closed-fg-active)
     > .title
-      text(s: rem(16), w: 400)
+      font: var(--bookmarks-folder-font)
       color: var(--bookmarks-folder-closed-fg)
 
 .Node[n-type="separator"]

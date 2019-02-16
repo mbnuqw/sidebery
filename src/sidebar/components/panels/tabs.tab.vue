@@ -424,7 +424,6 @@ export default {
 <style lang="stylus">
 @import '../../../styles/mixins'
 
-
 .Tab
   box(relative, flex)
   height: var(--tabs-height)
@@ -736,7 +735,8 @@ export default {
 // Title
 .Tab .title
   box(relative)
-  text(s: rem(16), h: 28px)
+  // text(s: rem(16))
+  font: var(--tabs-font)
   color: var(--tabs-fg)
   padding: 0 1px
   transition: color .2s

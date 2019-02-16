@@ -70,6 +70,8 @@ export const CUSTOM_STYLES = {
 
   nav_btn_fg: null,
 
+  tabs_height: null,
+  tabs_indent: null,
   tabs_fg: null,
   tabs_fg_hover: null,
   tabs_fg_active: null,
@@ -78,6 +80,11 @@ export const CUSTOM_STYLES = {
   tabs_selected_bg: null,
   tabs_selected_fg: null,
 
+  bookmarks_bookmark_height: null,
+  bookmarks_folder_height: null,
+  bookmarks_separator_height: null,
+  bookmarks_bookmark_font: null,
+  bookmarks_folder_font: null,
   bookmarks_node_title_fg: null,
   bookmarks_node_title_fg_hover: null,
   bookmarks_node_title_fg_active: null,
