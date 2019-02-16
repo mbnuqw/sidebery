@@ -40,7 +40,7 @@ export const DEFAULT_PANELS = [
     lastActiveTab: -1,
   },
 ]
-const CUSTOM_STYLES = {
+export const CUSTOM_STYLES = {
   bg: null,
   title_fg: null,
   sub_title_fg: null,

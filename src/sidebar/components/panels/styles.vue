@@ -228,6 +228,8 @@
           v-model="$store.state.customStyles.bookmarks_folder_empty_fg"
           @change="updateStyle('bookmarks_folder_empty_fg')"
           @toggle="toggleStyle('bookmarks_folder_empty_fg')")
+
+      .btn(@click="resetStyles") {{t('styles.reset_styles')}}
 </template>
 
 
@@ -239,6 +241,7 @@ import State from '../../store.state'
 import ScrollBox from '../scroll-box'
 import StyleField from '../fields/style'
 import ColorStyleField from '../fields/style-color'
+import { CUSTOM_STYLES } from '../../store.state'
 
 export default {
   components: {
@@ -288,6 +291,17 @@ export default {
       Store.dispatch('setStyle', { key, val: State.customStyles[key] })
       Store.dispatch('saveStyles')
     },
+
+    /**
+     * Reset custom styles
+     */
+    resetStyles() {
+      this.$store.state.customStyles = CUSTOM_STYLES
+      for (let key of Object.keys(CUSTOM_STYLES)) {
+        Store.dispatch('removeStyle', key)
+      }
+      Store.dispatch('saveStyles')
+    },
   },
 }
 </script>
@@ -322,4 +336,9 @@ export default {
   text(s: rem(24))
   color: var(--sub-title-fg)
   padding: 2px 16px
+
+.StylesEditor .btn
+  size(80%)
+  margin-left: auto
+  margin-right: auto
 </style>

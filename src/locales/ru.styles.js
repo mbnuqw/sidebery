@@ -60,4 +60,6 @@ export default {
   'styles.bookmarks_opened_dir_fg_color_hover': { message: 'Цвет отрытой папки при наведении курсора' },
   'styles.bookmarks_opened_dir_fg_color_active': { message: 'Цвет отрытой папки при клике' },
   'styles.bookmarks_empty_dir_fg_color': { message: 'Цвет пустой папки' },
+
+  'styles.reset_styles': { message: 'Сбросить' },
 }
