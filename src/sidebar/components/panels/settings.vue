@@ -235,7 +235,8 @@
       h2 {{t('settings.help_title')}}
 
       .buttons
-        a.btn(tabindex="-1", :href="issueLink") {{t('settings.repo_issue')}}
+        a.btn(tabindex="-1", :href="issueLink") {{t('settings.repo_bug')}}
+        a.btn(tabindex="-1", :href="featureReqLink") {{t('settings.repo_req')}}
         .btn.-warn(@click="resetSettings") {{t('settings.reset_settings')}}
 
       a.github(tabindex="-1", href="https://github.com/mbnuqw/sidebery")
@@ -283,6 +284,10 @@ export default {
       body += `> Firefox: ${State.ffInfo.version}  \n`
       body += `> Extension: ${State.version}  \n`
       return ISSUE_URL + '?body=' + encodeURIComponent(body)
+    },
+
+    featureReqLink() {
+      return ISSUE_URL
     },
 
     snapshots() {

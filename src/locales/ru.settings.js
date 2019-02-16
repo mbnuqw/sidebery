@@ -129,5 +129,7 @@ export default {
   // --- Help
   'settings.help_title': { message: 'Помошь' },
   'settings.repo_issue': { message: 'Создать github issue' },
+  'settings.repo_bug': { message: 'Report bug' },
+  'settings.repo_req': { message: 'Feature request' },
   'settings.reset_settings': { message: 'Сбросить настройки' },
 }

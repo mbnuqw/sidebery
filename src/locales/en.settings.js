@@ -129,5 +129,7 @@ export default {
   // --- Help
   'settings.help_title': { message: 'Help' },
   'settings.repo_issue': { message: 'Open issue' },
+  'settings.repo_bug': { message: 'Report bug' },
+  'settings.repo_req': { message: 'Feature request' },
   'settings.reset_settings': { message: 'Reset settings to defaults' },
 }
