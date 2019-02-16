@@ -336,9 +336,9 @@ export default {
 .Node[is-expanded][is-parent]
   > .body
     &:hover > .title
-      color: var(--bookmarks-folder-open-hover-fg)
+      color: var(--bookmarks-folder-open-fg-hover)
     &:active > .title
-      color: var(--bookmarks-folder-open-active-fg)
+      color: var(--bookmarks-folder-open-fg-active)
     > .title
       color: var(--bookmarks-folder-open-fg)
       mask: linear-gradient(-90deg, transparent 12px, #000000 24px, #000000)
