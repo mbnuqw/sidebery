@@ -9,7 +9,7 @@ export default {
    * and merge them
    */
   async loadContainers({ state }) {
-    console.log('[DEBUG] PANELS ACION loadContainers');
+    // console.log('[DEBUG] PANELS ACION loadContainers');
     // Get contextual identities
     const ctxs = await browser.contextualIdentities.query({})
 
@@ -68,7 +68,7 @@ export default {
    * Save containers
    */
   async saveContainers({ state }) {
-    console.log('[DEBUG] PANELS ACION saveContainers');
+    // console.log('[DEBUG] PANELS ACION saveContainers');
     const cleaned = JSON.parse(JSON.stringify(state.containers))
     await browser.storage.local.set({ containers: cleaned })
   },

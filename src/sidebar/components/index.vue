@@ -154,7 +154,7 @@ export default {
    * --- Computed ---
    */
   computed: {
-    ...mapGetters(['isPrivate', 'defaultCtxId', 'panels', 'activePanel']),
+    ...mapGetters(['isPrivate', 'defaultCtxId', 'defaultPanel', 'panels', 'activePanel']),
 
     /**
      * Background transform style for parallax fx
@@ -309,6 +309,14 @@ export default {
     EventBus.$on('dragStart', info => (State.dragNodes = info))
     EventBus.$on('outerDragStart', info => (State.dragNodes = info))
     EventBus.$on('panelSwitched', () => setTimeout(() => this.recalcPanelBounds(), 256))
+
+    // Handle key navigation
+    EventBus.$on('keyActivate', () => this.onKeyActivate())
+    EventBus.$on('keyUp', () => this.onKeySelect(-1))
+    EventBus.$on('keyDown', () => this.onKeySelect(1))
+    EventBus.$on('keyUpShift', () => this.onKeySelectExpand(-1))
+    EventBus.$on('keyDownShift', () => this.onKeySelectExpand(1))
+    EventBus.$on('selectAll', () => this.onKeySelectAll())
   },
 
   // --- Mounted Hook ---
@@ -1141,6 +1149,204 @@ export default {
         this.onPanelLoadingEnd(i)
         this.loadingTimers[i] = null
       }, 2000)
+    },
+
+    /**
+     * Handle shortcut 'activate'
+     */
+    onKeyActivate() {
+      this.recalcPanelBounds()
+      if (!this.itemSlots || !this.itemSlots.length) return
+      if (!State.selected || !State.selected.length) return
+
+      // Tabs or Bookmarks?
+      const type = this.itemSlots[0].type
+      const targetId = State.selected[0]
+      if (type === 'tab') {
+        browser.tabs.update(targetId, { active: true })
+      }
+      if (type === 'bookmark') {
+        let target, n
+        const findWalk = nodes => {
+          if (target) return
+          for (n of nodes) {
+            if (n.id === targetId) return target = n
+            if (n.children) findWalk(n.children)
+          }
+        }
+        findWalk(State.bookmarks)
+
+        if (!target) return
+        if (target.type === 'folder') {
+          if (target.expanded) Store.dispatch('foldBookmark', target.id)
+          else Store.dispatch('expandBookmark', target.id)
+        }
+        if (target.type === 'bookmark') {
+          if (State.openBookmarkNewTab) {
+            let index = this.defaultPanel.endIndex + 1
+            browser.tabs.create({
+              index,
+              url: target.url,
+              active: true,
+            })
+          } else {
+            browser.tabs.update({ url: target.url })
+            if (State.openBookmarkNewTab && !this.panels[0].lockedPanel) {
+              Store.dispatch('goToActiveTabPanel')
+            }
+          }
+        }
+      }
+    },
+
+    /**
+     * Change selection
+     */
+    onKeySelect(dir) {
+      if (!dir) return
+      this.recalcPanelBounds()
+      if (!this.itemSlots || !this.itemSlots.length) return
+
+      // Tabs or Bookmarks?
+      const type = this.itemSlots[0].type
+      const selectEvent = type === 'tab' ? 'selectTab' : 'selectBookmark'
+      const deselectEvent = type === 'tab' ? 'deselectTab' : 'deselectBookmark'
+      let target = null
+
+      // Change current selection
+      if (State.selected.length) {
+        const selId = State.selected[0]
+        const selIndex = this.itemSlots.findIndex(s => s.id === selId)
+        target = this.itemSlots[selIndex + dir]
+        if (target) {
+          Store.commit('resetSelection')
+          EventBus.$emit(deselectEvent, selId)
+          EventBus.$emit(selectEvent, target.id)
+          State.selected = [target.id]
+        }
+      }
+
+      // No selected items -> select first/last
+      if (!State.selected.length) {
+        const panel = this.panels[State.panelIndex]
+        let activeTab, activeSlot
+        if (panel && panel.tabs) activeTab = panel.tabs.find(t => t.active)
+        if (activeTab) activeSlot = this.itemSlots.find(s => s.id === activeTab.id)
+        // From start / end
+        if (dir > 0) {
+          target = activeSlot ? activeSlot : this.itemSlots[0]
+          EventBus.$emit(selectEvent, target.id)
+          State.selected.push(target.id)
+        } else {
+          target = activeSlot ? activeSlot : this.itemSlots[this.itemSlots.length - 1]
+          EventBus.$emit(selectEvent, target.id)
+          State.selected.push(target.id)
+        }
+      }
+
+      // Update scroll position
+      if (target) {
+        const h = this.panelScrollEl.offsetHeight
+        const s = this.panelScrollEl.scrollTop
+        if (target.start < s + 64) {
+          this.panelScrollEl.scrollTop = target.start - 64
+        }
+        if (target.end > h + s - 64) {
+          this.panelScrollEl.scrollTop = target.end - h + 64
+        }
+      }
+    },
+
+    /**
+     * Expand selection to provided direction
+     */
+    onKeySelectExpand(dir) {
+      if (!dir) return
+      this.recalcPanelBounds()
+      if (!this.itemSlots || !this.itemSlots.length) return
+
+      // Tabs or Bookmarks?
+      const type = this.itemSlots[0].type
+      const selectEvent = type === 'tab' ? 'selectTab' : 'selectBookmark'
+      const deselectEvent = type === 'tab' ? 'deselectTab' : 'deselectBookmark'
+      let target
+
+      // No selected items -> select first/last
+      if (!State.selected.length) {
+        // From start / end
+        if (dir > 0) {
+          target = this.itemSlots[0]
+          EventBus.$emit(selectEvent, target.id)
+          State.selected.push(target.id)
+        } else {
+          target = this.itemSlots[this.itemSlots.length - 1]
+          EventBus.$emit(selectEvent, target.id)
+          State.selected.push(target.id)
+        }
+      }
+
+      // Change current selection
+      if (State.selected.length) {
+        if (State.selected.length === 1) {
+          const selId = State.selected[0]
+          let index = this.itemSlots.findIndex(t => t.id === selId)
+          this.selStartIndex = index
+          this.selEndIndex = index + dir
+        } else {
+          this.selEndIndex = this.selEndIndex + dir
+        }
+        if (this.selEndIndex < 0) this.selEndIndex = 0
+        if (this.selEndIndex >= this.itemSlots.length) this.selEndIndex = this.itemSlots.length - 1
+
+        let minIndex = Math.min(this.selStartIndex, this.selEndIndex)
+        let maxIndex = Math.max(this.selStartIndex, this.selEndIndex)
+
+        const toSelect = []
+        const all = []
+        for (let i = minIndex; i <= maxIndex; i++) {
+          const id = this.itemSlots[i].id
+          if (!State.selected.includes(id)) {
+            toSelect.push(id)
+            target = this.itemSlots[i]
+          }
+          all.push(id)
+        }
+        const toDeselect = State.selected.filter(id => !all.includes(id))
+
+        State.selected = all
+        toDeselect.forEach(id => EventBus.$emit(deselectEvent, id))
+        toSelect.forEach(id => EventBus.$emit(selectEvent, id))
+      }
+
+      // Update scroll position
+      if (target) {
+        const h = this.panelScrollEl.offsetHeight
+        const s = this.panelScrollEl.scrollTop
+        if (target.start < s + 64) {
+          this.panelScrollEl.scrollTop = target.start - 64
+        }
+        if (target.end > h + s - 64) {
+          this.panelScrollEl.scrollTop = target.end - h + 64
+        }
+      }
+    },
+
+    /**
+     * Select all items on current panel
+     */
+    onKeySelectAll() {
+      this.recalcPanelBounds()
+      if (!this.itemSlots || !this.itemSlots.length) return
+
+      // Tabs or Bookmarks?
+      const type = this.itemSlots[0].type
+      const selectEvent = type === 'tab' ? 'selectTab' : 'selectBookmark'
+
+      Store.commit('resetSelection')
+      for (let s of this.itemSlots) {
+        EventBus.$emit(selectEvent, s.id)
+        State.selected.push(s.id)
+      }
     },
     // ---
 

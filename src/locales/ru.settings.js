@@ -99,7 +99,7 @@ export default {
   'settings.select_all': { message: 'Выделить все' },
   'settings.up': { message: 'Вверх' },
   'settings.down': { message: 'Вниз' },
-  'settings.up_shit': { message: 'Вверх с выделением' },
+  'settings.up_shift': { message: 'Вверх с выделением' },
   'settings.down_shift': { message: 'Вниз с выделением' },
   'settings.activate': { message: 'Активировать выделенное' },
   'settings.reset_selection': { message: 'Сбросить выделенние' },

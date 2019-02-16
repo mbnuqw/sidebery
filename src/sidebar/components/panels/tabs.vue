@@ -82,26 +82,6 @@ export default {
         this.$refs.scrollBox.setScrollY(activeTabAbsBottom - this.$el.offsetHeight + 64)
       }
     })
-
-    // Handle key navigation
-    EventBus.$on('keyActivate', () => {
-      if (State.panelIndex === this.index) this.onKeyActivate()
-    })
-    EventBus.$on('keyUp', () => {
-      if (State.panelIndex === this.index) this.onKeySelect(-1)
-    })
-    EventBus.$on('keyDown', () => {
-      if (State.panelIndex === this.index) this.onKeySelect(1)
-    })
-    EventBus.$on('keyUpShift', () => {
-      if (State.panelIndex === this.index) this.onKeySelectChange(-1)
-    })
-    EventBus.$on('keyDownShift', () => {
-      if (State.panelIndex === this.index) this.onKeySelectChange(1)
-    })
-    EventBus.$on('selectAll', () => {
-      if (State.panelIndex === this.index) State.selected = this.tabs.map(t => t.id)
-    })
   },
 
   methods: {
@@ -140,75 +120,6 @@ export default {
           if (State.wheelBlockTimeout) return
           Store.dispatch('switchTab', { globaly, cycle: e.ctrlKey, step: -1 })
         }
-      }
-    },
-
-    /**
-     * ...
-     */
-    onKeySelect(dir) {
-      if (this.tabs.length === 0) return
-
-      if (State.selected.length === 0) {
-        let activeTab = this.tabs.find(t => t.active)
-        if (activeTab) {
-          State.selected.push(activeTab.id)
-        } else if (dir < 0) {
-          State.selected.push(this.tabs[this.tabs.length - 1].id)
-        } else if (dir > 0) {
-          State.selected.push(this.tabs[0].id)
-        }
-        return
-      }
-
-      const selId = State.selected[0]
-      let index = this.tabs.findIndex(t => t.id === selId) + dir
-      if (index < 0) index = 0
-      if (index >= this.tabs.length) index = this.tabs.length - 1
-      State.selected = [this.tabs[index].id]
-
-      this.scrollToSelectedTab()
-    },
-
-    onKeySelectChange(dir) {
-      if (State.selected.length === 0) {
-        this.onKeySelect(dir)
-        return
-      }
-
-      if (State.selected.length === 1) {
-        const selId = State.selected[0]
-        let index = this.tabs.findIndex(t => t.id === selId)
-        this.selStartIndex = index
-        this.selEndIndex = index + dir
-      } else {
-        this.selEndIndex = this.selEndIndex + dir
-      }
-      if (this.selEndIndex < 0) this.selEndIndex = 0
-      if (this.selEndIndex >= this.tabs.length) this.selEndIndex = this.tabs.length - 1
-
-      let minIndex = Math.min(this.selStartIndex, this.selEndIndex)
-      let maxIndex = Math.max(this.selStartIndex, this.selEndIndex)
-      State.selected = []
-      for (let i = minIndex; i <= maxIndex; i++) {
-        State.selected.push(this.tabs[i].id)
-      }
-
-      this.scrollToSelectedTab()
-    },
-
-    scrollToSelectedTab() {
-      const tabId = State.selected[0]
-      if (tabId === undefined) return
-      const tabVm = this.$refs.tabs.find(t => t.tab.id === tabId)
-      if (!tabVm) return
-      const activeTabAbsTop = tabVm.$el.offsetTop
-      const activeTabAbsBottom = tabVm.$el.offsetTop + tabVm.$el.offsetHeight
-
-      if (activeTabAbsTop < this.$refs.scrollBox.scrollY + 64) {
-        this.$refs.scrollBox.setScrollY(activeTabAbsTop - 64)
-      } else if (activeTabAbsBottom > this.$refs.scrollBox.scrollY + this.$el.offsetHeight - 64) {
-        this.$refs.scrollBox.setScrollY(activeTabAbsBottom - this.$el.offsetHeight + 64)
       }
     },
 

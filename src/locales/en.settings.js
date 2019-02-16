@@ -99,7 +99,7 @@ export default {
   'settings.select_all': { message: 'Select all' },
   'settings.up': { message: 'Up' },
   'settings.down': { message: 'Down' },
-  'settings.up_shit': { message: 'Select up' },
+  'settings.up_shift': { message: 'Select up' },
   'settings.down_shift': { message: 'Select down' },
   'settings.activate': { message: 'Activate selection' },
   'settings.reset_selection': { message: 'Reset selection' },

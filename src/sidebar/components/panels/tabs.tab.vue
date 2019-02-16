@@ -42,8 +42,8 @@
   .close(v-if="$store.state.showTabRmBtn", @mousedown.stop="onCloseClick", @mouseup.stop="")
     svg: use(xlink:href="#icon_remove")
   .t-box
-    //- .title {{tab.title}}
-    .title {{tab.index}} - id: {{tab.id}} - {{tab.title}}
+    .title {{tab.title}}
+    //- .title {{tab.index}} - id: {{tab.id}} - {{tab.title}}
     .loading
       svg.-a: use(xlink:href="#icon_load")
       svg.-b: use(xlink:href="#icon_load")
@@ -102,24 +102,20 @@ export default {
   },
 
   created() {
-    EventBus.$on('tabLoadingStart', id => {
-      if (id === this.tab.id) this.loadingStart()
-    })
-    EventBus.$on('tabLoadingEnd', id => {
-      if (id === this.tab.id) this.loadingEnd()
-    })
-    EventBus.$on('tabLoadingOk', id => {
-      if (id === this.tab.id) this.loadingOk()
-    })
-    EventBus.$on('tabLoadingErr', id => {
-      if (id === this.tab.id) this.loadingErr()
-    })
+    EventBus.$on('tabLoadingStart', this.loadingStart)
+    EventBus.$on('tabLoadingEnd', this.loadingEnd)
+    EventBus.$on('tabLoadingOk', this.loadingOk)
+    EventBus.$on('tabLoadingErr', this.loadingErr)
     EventBus.$on('selectTab', this.onTabSelection)
     EventBus.$on('deselectTab', this.onTabDeselection)
     EventBus.$on('openTabMenu', this.onTabMenu)
   },
 
   beforeDestroy() {
+    EventBus.$off('tabLoadingStart', this.loadingStart)
+    EventBus.$off('tabLoadingEnd', this.loadingEnd)
+    EventBus.$off('tabLoadingOk', this.loadingOk)
+    EventBus.$off('tabLoadingErr', this.loadingErr)
     EventBus.$off('selectTab', this.onTabSelection)
     EventBus.$off('deselectTab', this.onTabDeselection)
     EventBus.$off('openTabMenu', this.onTabMenu)
@@ -384,7 +380,8 @@ export default {
       else if (toRemove.length > 1) Store.dispatch('removeTabs', toRemove)
     },
 
-    loadingStart() {
+    loadingStart(id) {
+      if (id !== this.tab.id) return
       this.loading = true
       if (this.loadingTimer) {
         clearTimeout(this.loadingTimer)
@@ -392,11 +389,13 @@ export default {
       }
     },
 
-    loadingEnd() {
+    loadingEnd(id) {
+      if (id !== this.tab.id) return
       this.loading = false
     },
 
-    loadingOk() {
+    loadingOk(id) {
+      if (id !== this.tab.id) return
       this.loading = 'ok'
       this.loadingTimer = setTimeout(() => {
         this.loadingEnd()
@@ -404,7 +403,8 @@ export default {
       }, 2000)
     },
 
-    loadingErr() {
+    loadingErr(id) {
+      if (id !== this.tab.id) return
       this.loading = 'err'
       this.loadingTimer = setTimeout(() => {
         this.loadingEnd()
