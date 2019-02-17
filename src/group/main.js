@@ -1,4 +1,11 @@
 void (async function() {
+  // Load settings and set theme
+  let ans = await browser.storage.local.get('settings')
+  let settings = ans.settings
+  let theme = settings ? settings.theme : 'dark'
+  const rootEl = document.getElementById('root')
+  rootEl.classList.add('-' + theme)
+
   // Set title of group page
   const title = decodeURI(window.location.hash.slice(1))
   const titleEl = document.getElementById('title')
@@ -55,14 +62,18 @@ function createTabEl(info) {
     tabEl.appendChild(bgEl)
   }
 
+  const infoEl = document.createElement('div')
+  infoEl.classList.add('info')
+  tabEl.appendChild(infoEl)
+
   const titleEl = document.createElement('h3')
   titleEl.innerText = info.title
-  tabEl.appendChild(titleEl)
+  infoEl.appendChild(titleEl)
 
   const urlEl = document.createElement('p')
   urlEl.classList.add('url')
   urlEl.innerText = info.url
-  tabEl.appendChild(urlEl)
+  infoEl.appendChild(urlEl)
 
   el.appendChild(tabEl)
   return el

@@ -1,0 +1,216 @@
+@import './mixins'
+
+// --- Themes ---
+#root
+  // Common
+  &.-dark
+    --bg: #323232
+    --title-fg: #ffffff
+    --sub-title-fg: #ffffff
+    --label-fg: #cecece
+    --label-fg-hover: #ffffff
+    --label-fg-active: #aaaaaa
+    --info-fg: #898989
+    --true-fg: #64df64
+    --false-fg: #df6464
+    --active-fg: #64aaff
+    --inactive-fg: #595959
+    --favicons-placehoder-bg: #ffffff24
+  &.-light
+    --bg: #fafafa
+    --title-fg: #000000
+    --sub-title-fg: #242424
+    --label-fg: #323232
+    --label-fg-hover: #000000
+    --label-fg-active: #565656
+    --info-fg: #727272
+    --true-fg: #15d53c
+    --false-fg: #d72f2f
+    --active-fg: #146fd9
+    --inactive-fg: #a6a6a6
+    --favicons-placehoder-bg: #00000048
+
+  // Button
+  &.-dark
+    --btn-bg: #245484
+    --btn-bg-hover: #295b8f
+    --btn-bg-active: #205386
+    --btn-warn-bg: #b93527
+    --btn-warn-bg-hover: #c93627
+    --btn-warn-bg-active: #b93224
+    --btn-fg: #fafafa
+    --btn-fg-hover: #ffffff
+    --btn-fg-active: #f2f2f2
+    --btn-shadow: 0 1px 2px 0 #00000024, 0 0 0 1px #00000012
+    --btn-shadow-hover: 0 1px 2px 0 #00000032, 0 0 0 1px #00000024
+    --btn-shadow-active: 0 1px 2px 0 #00000000, 0 0 0 1px #00000012
+    --btn-roundness: 3px
+  &.-light
+    --btn-bg: #328def
+    --btn-bg-hover: #3995ea
+    --btn-bg-active: #268aef
+    --btn-warn-bg: #ff5538
+    --btn-warn-bg-hover: #ff613d
+    --btn-warn-bg-active: #ff5538
+    --btn-fg: #fafafa
+    --btn-fg-hover: #ffffff
+    --btn-fg-active: #f2f2f2
+    --btn-shadow: 0 1px 2px 0 #00000024, 0 0 0 1px #00000000
+    --btn-shadow-hover: 0 1px 2px 0 #00000032, 0 0 0 1px #00000000
+    --btn-shadow-active: 0 1px 2px 0 #00000000, 0 0 0 1px #00000012
+    --btn-roundness: 3px
+
+  // Scroll Box
+  &.-dark
+    --scroll-progress-h: 1px
+    --scroll-progress-bg: #37adef
+  &.-light
+    --scroll-progress-h: 2px
+    --scroll-progress-bg: #178dff
+
+  // Context Menu
+  &.-dark
+    --ctx-menu-bg: #242424
+    --ctx-menu-bg-hover: #484848
+    --ctx-menu-warn-bg-hover: #ff613d
+    --ctx-menu-fg: #ffffff
+    --ctx-menu-warn-fg: #ff613d
+    --ctx-menu-shadow: 0 1px 16px 0 #00000032
+  &.-light
+    --ctx-menu-bg: #ffffff
+    --ctx-menu-bg-hover: #cacaca
+    --ctx-menu-warn-bg-hover: #ff613d
+    --ctx-menu-fg: #000000
+    --ctx-menu-warn-fg: #ff613d
+    --ctx-menu-shadow: 0 0 0 1px #00000016, 0 1px 16px 0 #00000032
+
+  // Nav Strip
+  &.-dark
+    --nav-btn-fg: #ffffff
+    --nav-btn-bg-focus: #484848
+    --nav-btn-opacity: .4
+    --nav-btn-opacity-hover: .7
+    --nav-btn-opacity-active: .4
+    --nav-btn-activated-opacity: 1
+    --nav-btn-activated-filter: drop-shadow(0 0 1px #00000056)
+    --nav-btn-update-badge-bg: #00e9fb
+  &.-light
+    --nav-btn-fg: #323232
+    --nav-btn-bg-focus: #ffffff
+    --nav-btn-opacity: .5
+    --nav-btn-opacity-hover: .8
+    --nav-btn-opacity-active: .6
+    --nav-btn-activated-opacity: 1
+    --nav-btn-activated-filter: none
+    --nav-btn-update-badge-bg: #01acda
+
+  // Tabs
+  &.-dark
+    --tabs-fg: #aaa
+    --tabs-fg-hover: #cecece
+    --tabs-fg-active: #aaa
+    --tabs-activated-bg: #242424af
+    --tabs-activated-fg: #ffffff
+    --tabs-selected-bg: #245484
+    --tabs-selected-fg: #ffffff
+    --tabs-loading-fg: #47cfff
+    --tabs-update-badge-bg: #00e9fb
+  &.-light
+    --tabs-fg: #323232
+    --tabs-fg-hover: #565656
+    --tabs-fg-active: #565656
+    --tabs-activated-bg: #cacacaaf
+    --tabs-activated-fg: #000000
+    --tabs-loading-fg: #146fd9
+    --tabs-selected-bg: #44a4f4
+    --tabs-selected-fg: #ffffff
+    --tabs-update-badge-bg: #01acda
+
+  // Bookmarks
+  &.-dark
+    --bookmarks-node-title-fg: #bebebe
+    --bookmarks-node-title-fg-hover: #ffffff
+    --bookmarks-node-title-fg-active: #aaaaaa
+    --bookmarks-folder-closed-fg: #bebebe
+    --bookmarks-folder-closed-fg-hover: #ffffff
+    --bookmarks-folder-closed-fg-active: #787878
+    --bookmarks-folder-open-fg: #ffffff
+    --bookmarks-folder-open-fg-hover: #dadada
+    --bookmarks-folder-open-fg-active: #898989
+    --bookmarks-folder-empty-fg: #646464
+    --bookmarks-drag-gradient: linear-gradient(90deg, #242424, #32323200)
+  &.-light
+    --bookmarks-node-title-fg: #3a3a3a
+    --bookmarks-node-title-fg-hover: #000000
+    --bookmarks-node-title-fg-active: #565656
+    --bookmarks-folder-closed-fg: #646464
+    --bookmarks-folder-closed-fg-hover: #323232
+    --bookmarks-folder-closed-fg-active: #787878
+    --bookmarks-folder-open-fg: #000000
+    --bookmarks-folder-open-fg-hover: #323232
+    --bookmarks-folder-open-fg-active: #898989
+    --bookmarks-folder-empty-fg: #969696
+    --bookmarks-drag-gradient: linear-gradient(90deg, #cacaca, #fafafa00)
+
+  // Settings
+  &.-dark
+    --settings-snapshot-counter-pinned-fg: #686868
+    --settings-shortcut-fg: #cecece
+    --settings-shortcut-fg-focus: #37adff
+    --settings-shortcut-bg: #484848
+    --settings-shortcut-shadow: 0 0 0 1.2px #565656
+    --settings-shortcut-shadow-focus: 0 0 0 1.2px #37adff
+  &.-light
+    --settings-snapshot-counter-pinned-fg: #565656
+    --settings-shortcut-fg: #484848
+    --settings-shortcut-fg-focus: #278dff
+    --settings-shortcut-bg: #ffffff
+    --settings-shortcut-shadow: 0 0 0 1.2px #aaaaaa
+    --settings-shortcut-shadow-focus: 0 0 0 1.2px #37adff
+
+
+// --- Sizes ---
+// Tabs
+#root
+  --tabs-height: 30px
+  --tabs-indent: 10px
+
+// Bookmarks
+#root
+  --bookmarks-bookmark-height: 24px
+  --bookmarks-folder-height: 28px
+  --bookmarks-separator-height: 17px
+
+// --- Animation ---
+#root.-no-animate
+  --d-tick: 0s
+  --d-fast: 0s
+  --d-norm: 0s
+  --d-slow: 0s
+
+#root.-animate
+  --d-tick: .05s
+  --d-fast: .12s
+  --d-norm: .2s
+  --d-slow: .3s
+
+// --- Font sizes ---
+#root.-xs
+  --g-font-size: 13px
+#root.-s
+  --g-font-size: 14px
+#root.-m
+  --g-font-size: 14.5px
+#root.-l
+  --g-font-size: 15px
+#root.-xl
+  --g-font-size: 16px
+
+// Tabs
+#root
+  --tabs-font: rem(16) sans-serif
+
+// Bookmarks
+#root
+  --bookmarks-bookmark-font: rem(14) sans-serif
+  --bookmarks-folder-font: rem(16) sans-serif

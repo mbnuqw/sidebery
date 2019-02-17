@@ -1,0 +1,124 @@
+@import '../styles/mixins'
+@import '../styles/vars'
+
+html
+  box(relative)
+  size(h: 100%)
+
+body
+  box(relative, flex)
+  size(rel(100%, -16px), min-h: 100%)
+  text(sans-serif, smooth: on)
+  margin: 0
+  flex-direction: column
+  align-items: center
+  padding: 0 8px
+  background-color: var(--bg)
+
+body h2
+  max-width: 450px
+  text-align: center
+
+body input
+  -webkit-appearance: none
+  border: none
+  outline: none
+  margin: 0
+  padding: 0
+  background-color: transparent
+  resize: none
+  z-index: 1
+
+.logo
+  box(relative)
+  text(s: 1.5rem, w: 700)
+  margin: 50px auto
+  color: var(--inactive-fg)
+  cursor: default
+  opacity: .24
+
+.title
+  box(relative, block)
+  size(100%)
+  text(s: 2.5rem, w: 700)
+  text-align: center
+  color: var(--label-fg)
+  margin: 50px 0 50px
+
+.tabs
+  box(flex)
+  size(100%, max-w: 960px, min-h: 128px)
+  flex-wrap: wrap
+  margin: 0 0 auto
+
+.tab-wrapper
+  box(relative, flex)
+  size(rel(33.3%, -16px), 240px)
+  justify-content: center
+  align-items: center
+  padding: 8px
+
+.tab
+  box(relative, flex)
+  size(100%, same)
+  flex-direction: column
+  align-items: flex-start
+  justify-content: flex-end
+  border-radius: 6px
+  overflow: hidden
+  cursor: pointer
+  transition: box-shadow var(--d-norm)
+  box-shadow: 0 0 0 1px #00000024,
+              0 2px 5px 0 #00000032
+  &:hover
+    box-shadow: 0 0 0 1px #00000032,
+              0 2px 5px 0 #00000046
+  &:active
+    opacity: .8
+
+  .bg
+    box(absolute)
+    size(100%, same)
+    background-size: cover
+    border-radius: 6.5px
+    z-index: 0
+
+  .info
+    box(relative)
+    pos(l: 0, b: 0)
+    size(100%)
+    z-index: 2
+    padding: 8px 0 0
+    background-color: var(--bg)
+    opacity: .92
+    transition: opacity var(--d-norm)
+    box-shadow: 0 -1px 0 0 #00000024,
+                0 0 16px 0 #00000046
+  &:hover .info
+    opacity: 1
+
+  h3
+    box(relative)
+    size(h: 48px)
+    text(s: 18px, w: 400, h: 24px)
+    margin: 0 16px 8px
+    overflow: hidden
+    color: var(--title-fg)
+
+  .url
+    box(relative)
+    size(max-w: rel(100%, -32px))
+    text(s: 15px, w: 400)
+    margin: 0 16px 12px
+    overflow: hidden
+    color: var(--info-fg)
+    white-space: nowrap
+    text-overflow: ellipsis
+
+@media screen and (max-width: 720px)
+  .tab-wrapper
+    size(rel(50%, -16px))
+
+@media screen and (max-width: 450px)
+  .tab-wrapper
+    size(rel(100%, -16px))

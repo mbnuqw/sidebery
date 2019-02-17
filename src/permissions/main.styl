@@ -1,3 +1,5 @@
+@import '../styles/vars'
+
 html {
   position: relative;
   height: 100%;
@@ -14,8 +16,8 @@ body {
   height: 100%;
   margin: 0;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #242424;
-  color: #ffffff;
+  background-color: var(--bg)
+  color: var(--title-fg);
   font-family: sans-serif;
   font-size: 1.2rem;
 }
@@ -26,13 +28,14 @@ h2 {
 }
 
 .logo {
-  position: absolute;
-  top: 24px;
-  left: 32px;
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #363636;
-  cursor: default;
+  position: absolute
+  top: 24px
+  left: 32px
+  font-size: 1.5rem
+  font-weight: 700
+  color: var(--inactive-fg)
+  cursor: default
+  opacity: .24
 }
 
 .form {
