@@ -5,6 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev.sidebar": "parcel watch ./src/sidebar/index.html -d ./addon/sidebar/ --public-url ./ --no-autoinstall",
+    "dev.group": "parcel watch ./src/group/group.html -d ./addon/group/ --public-url ./ --no-autoinstall",
+    "dev.perm.url": "parcel watch ./src/permissions/all-urls.html -d ./addon/permissions/ --public-url ./ --no-autoinstall",
+    "dev.perm.hide": "parcel watch ./src/permissions/tab-hide.html -d ./addon/permissions/ --public-url ./ --no-autoinstall",
     "dev.ext.en": "web-ext run --source-dir ./addon -f firefox-nightly --keep-profile-changes --firefox-profile ./build/profile-en",
     "dev.ext.ru": "web-ext run --source-dir ./addon -f firefox --keep-profile-changes --firefox-profile ./build/profile-ru",
     "dev": "node ./build/debug.js en",
@@ -15,6 +18,8 @@
     "lint": "web-ext lint -s ./addon",
     "clear.cache": "rm -rf .cache",
     "clear.sidebar": "rm -rf addon/sidebar",
+    "clear.group": "rm -rf addon/group",
+    "clear.permissions": "rm -rf addon/permissions",
     "clear.full": "rm -rf node_modules package-lock.json",
     "test": "./node_modules/.bin/jest"
   },

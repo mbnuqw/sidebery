@@ -132,11 +132,14 @@ body input {
   position: relative;
   left: 0;
   bottom: 0;
+  max-width: calc(100% - 32px);
   margin: 0 16px 12px;
   font-size: 15px;
   font-weight: 400;
   overflow: hidden;
   color: #acacac;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   z-index: 2;
 }
 
