@@ -32,6 +32,7 @@ export default {
           lockedPanel: false,
           proxy: null,
           sync: false,
+          noEmpty: false,
           lastActiveTab: -1,
         })
       } else {
@@ -40,6 +41,12 @@ export default {
         ctr.icon = ctx.icon
         ctr.iconUrl = ctx.iconUrl
         ctr.name = ctx.name
+        if (ctr.lockedTabs === undefined) ctr.lockedTabs = false
+        if (ctr.lockedPanel === undefined) ctr.lockedPanel = false
+        if (ctr.proxy === undefined) ctr.proxy = null
+        if (ctr.sync === undefined) ctr.sync = false
+        if (ctr.noEmpty === undefined) ctr.noEmpty = false
+        if (ctr.lastActiveTab === undefined) ctr.lastActiveTab = -1
       }
     }
 

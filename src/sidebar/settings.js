@@ -26,7 +26,7 @@ export const DEFAULT_SETTINGS = {
   tabDoubleClick: 'none',
   tabLongLeftClick: 'none',
   tabLongRightClick: 'none',
-  noEmptyDefault: false,
+
   hideInact: false,
   tabsPanelLeftClickAction: 'none',
   tabsPanelDoubleClickAction: 'tab',

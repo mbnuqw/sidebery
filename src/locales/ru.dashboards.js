@@ -5,6 +5,8 @@ export default {
   'dashboard.lock_panel_tooltip': { message: 'Запретить автоматическое переключение с этой панели' },
   'dashboard.lock_tabs_label': { message: 'Заблокировать табы' },
   'dashboard.lock_tabs_tooltip': { message: 'Запретить закрытие вкладок на этой панели' },
+  'dashboard.no_empty_label': { message: 'No empty' },
+  'dashboard.no_empty_tooltip': { message: 'Создавать новый таб при закрытии последнего' },
 
   // --- Bookmarks
   'bookmarks_dashboard.title': { message: 'Закладки' },

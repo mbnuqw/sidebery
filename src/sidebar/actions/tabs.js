@@ -113,6 +113,7 @@ export default {
    * Remove tab.
    */
   async removeTab({ state, getters, dispatch }, tab) {
+    // console.log('[DEBUG] TABS ACTION removeTab');
     let p = Utils.GetPanelOf(getters.panels, tab)
     if (!p || !p.tabs) return
     if (p.lockedTabs && tab.url.indexOf('about')) {
@@ -121,11 +122,11 @@ export default {
 
     if (tab.folded) dispatch('expTabsBranch', tab.id)
 
-    if (state.noEmptyDefault && !tab.pinned && tab.cookieStoreId === getters.defaultCtxId) {
+    if (p && p.noEmpty) {
       const panelIndex = Utils.GetPanelIndex(getters.panels, tab.id)
       const panelTabs = getters.panels[panelIndex].tabs
       if (panelTabs && panelTabs.length === 1) {
-        await browser.tabs.create({ active: true })
+        await browser.tabs.create({ cookieStoreId: p.id })
       }
     }
 
@@ -144,6 +145,7 @@ export default {
    * Remove tabs
    */
   async removeTabs({ state, getters, dispatch }, tabIds) {
+    // console.log('[DEBUG] TABS ACTION removeTabs');
     const tabs = []
     const toRemove = []
     let panelId = undefined
@@ -154,6 +156,10 @@ export default {
       const tab = state.tabs.find(t => t.id === id)
       if (!tab) continue
       const panel = getters.panels.find(p => p.id === tab.cookieStoreId)
+      if (!panel) {
+        toRemove.push(tab.id)
+        continue
+      }
       if (tab.folded) dispatch('expTabsBranch', id)
       if (panel.lockedTabs && tab.url.indexOf('about')) continue
       if (panelId === undefined) panelId = tab.cookieStoreId
@@ -178,8 +184,7 @@ export default {
     if (
       panel &&
       toRemove.length === panel.tabs.length &&
-      panelId === getters.defaultCtxId &&
-      state.noEmptyDefault
+      panel.noEmpty
     ) {
       await browser.tabs.create({ active: true })
     }

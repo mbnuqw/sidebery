@@ -5,16 +5,23 @@
   toggle-field(
     v-if="!isPrivate"
     label="dashboard.sync_label"
-    :value="syncON"
+    :value="conf.syncON"
     :inline="true"
     @input="toggleSync")
 
   toggle-field(
     label="dashboard.lock_panel_label"
     :title="t('dashboard.lock_panel_tooltip')"
-    :value="lockedPanel"
+    :value="conf.lockedPanel"
     :inline="true"
     @input="togglePanelLock")
+
+  toggle-field(
+    label="dashboard.no_empty_label"
+    :title="t('dashboard.no_empty_tooltip')"
+    :value="conf.noEmpty"
+    :inline="true"
+    @input="togglePanelNoEmpty")
 
   .options
     .opt(v-if="haveTabs", @click="dedupTabs") {{t('tabs_dashboard.dedup_tabs')}}
@@ -45,14 +52,6 @@ export default {
   computed: {
     ...mapGetters(['isPrivate']),
 
-    lockedPanel() {
-      return this.conf.lockedPanel
-    },
-
-    syncON() {
-      return this.conf.sync
-    },
-
     haveTabs() {
       if (!this.conf.tabs) return false
       return this.conf.tabs.length > 0
@@ -68,7 +67,12 @@ export default {
     toggleSync() {
       this.conf.sync = !this.conf.sync
       Store.dispatch('resyncPanels')
-      Store.dispatch('saveState')
+      Store.dispatch('saveContainers')
+    },
+
+    togglePanelNoEmpty() {
+      this.conf.noEmpty = !this.conf.noEmpty
+      Store.dispatch('saveContainers')
     },
 
     dedupTabs() {

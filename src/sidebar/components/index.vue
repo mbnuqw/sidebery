@@ -770,6 +770,7 @@ export default {
         lockedPanel: false,
         proxy: null,
         sync: false,
+        noEmpty: false,
         lastActiveTab: -1,
       })
       State.panelIndex = this.panels.length - 1
@@ -966,7 +967,7 @@ export default {
       const panelIndex = Utils.GetPanelIndex(this.panels, tabId)
       const panel = this.panels[panelIndex]
       const tab = State.tabs[rmIndex]
-      if (panel.lockedTabs && !tab.url.startsWith('about')) {
+      if (panel && panel.lockedTabs && !tab.url.startsWith('about')) {
         browser.tabs.create({
           url: tab.url,
           cookieStoreId: tab.cookieStoreId,
@@ -974,10 +975,10 @@ export default {
       }
 
       // No-empty
-      if (State.noEmptyDefault && !tab.pinned && tab.cookieStoreId === this.defaultCtxId) {
+      if (panel && panel.noEmpty) {
         const panelTabs = panel.tabs
         if (panelTabs && panelTabs.length === 1) {
-          browser.tabs.create({})
+          browser.tabs.create({ cookieStoreId: panel.id })
         }
       }
 
@@ -994,7 +995,7 @@ export default {
       }
       State.tabs.splice(rmIndex, 1)
 
-      if (panel.lastActiveTab >= 0) panel.lastActiveTab = -1
+      if (panel && panel.lastActiveTab >= 0) panel.lastActiveTab = -1
 
       // Remove updated flag
       this.$delete(State.updatedTabs, tabId)

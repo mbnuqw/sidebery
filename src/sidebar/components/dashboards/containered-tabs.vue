@@ -27,7 +27,7 @@
     toggle-field(
       v-if="id"
       label="dashboard.sync_label"
-      :value="syncON"
+      :value="conf.sync"
       :inline="true"
       @input="toggleSync")
 
@@ -35,7 +35,7 @@
       v-if="id"
       label="dashboard.lock_panel_label"
       :title="t('dashboard.lock_panel_tooltip')"
-      :value="lockedPanel"
+      :value="conf.lockedPanel"
       :inline="true"
       @input="togglePanelLock")
 
@@ -43,9 +43,16 @@
       v-if="id"
       label="dashboard.lock_tabs_label"
       :title="t('dashboard.lock_tabs_tooltip')"
-      :value="lockedTabs"
+      :value="conf.lockedTabs"
       :inline="true"
       @input="toggleTabsLock")
+
+    toggle-field(
+      label="dashboard.no_empty_label"
+      :title="t('dashboard.no_empty_tooltip')"
+      :value="conf.noEmpty"
+      :inline="true"
+      @input="togglePanelNoEmpty")
 
     select-field(
       v-if="id"
@@ -193,18 +200,6 @@ export default {
     haveTabs() {
       if (!this.conf.tabs || !this.id) return false
       return this.conf.tabs.length > 0
-    },
-
-    syncON() {
-      return this.conf.sync
-    },
-
-    lockedPanel() {
-      return this.conf.lockedPanel
-    },
-
-    lockedTabs() {
-      return this.conf.lockedTabs
     },
 
     proxied() {
@@ -379,6 +374,11 @@ export default {
 
     toggleTabsLock() {
       this.conf.lockedTabs = !this.conf.lockedTabs
+      Store.dispatch('saveContainers')
+    },
+
+    togglePanelNoEmpty() {
+      this.conf.noEmpty = !this.conf.noEmpty
       Store.dispatch('saveContainers')
     },
 

@@ -27,10 +27,6 @@
         :value="$store.state.showTabRmBtn"
         @input="setOpt('showTabRmBtn', $event)")
       toggle-field(
-        label="settings.no_empty_default"
-        :value="$store.state.noEmptyDefault"
-        @input="setOpt('noEmptyDefault', $event)")
-      toggle-field(
         label="settings.hide_inactive_panel_tabs"
         :value="$store.state.hideInact"
         @input="toggleHideInact")
