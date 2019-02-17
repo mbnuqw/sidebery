@@ -929,7 +929,8 @@ export default {
       }
 
       // Handle title change
-      if (change.hasOwnProperty('title') && !tab.active && tab.status === 'complete') {
+      let inact = Date.now() - tab.lastAccessed
+      if (change.hasOwnProperty('title') && !tab.active && inact > 5000) {
         // If prev url starts with 'http' and current url same as prev
         const prevTabState = State.tabs[upIndex]
         if (prevTabState.url.startsWith('http') && prevTabState.url === tab.url) {
