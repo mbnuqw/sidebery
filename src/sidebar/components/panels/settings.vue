@@ -27,6 +27,7 @@
         :value="$store.state.showTabRmBtn"
         @input="setOpt('showTabRmBtn', $event)")
       toggle-field(
+        v-if="$store.state.ffVer >= 61"
         label="settings.hide_inactive_panel_tabs"
         :value="$store.state.hideInact"
         @input="toggleHideInact")

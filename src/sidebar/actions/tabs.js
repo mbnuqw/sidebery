@@ -516,7 +516,7 @@ export default {
 
     await Utils.Sleep(120)
 
-    if (toHide.length) browser.tabs.hide(toHide)
+    if (toHide.length && state.ffVer >= 61) browser.tabs.hide(toHide)
     dispatch('saveTabsTree')
   },
 
@@ -544,7 +544,7 @@ export default {
 
     await Utils.Sleep(120)
 
-    if (toShow.length) browser.tabs.show(toShow)
+    if (toShow.length && state.ffVer >= 61) browser.tabs.show(toShow)
     dispatch('saveTabsTree')
   },
 
