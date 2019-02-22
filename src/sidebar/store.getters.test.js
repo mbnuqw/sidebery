@@ -17,9 +17,6 @@ describe('Vuex getters', () => {
   test('ctxMenuOpened', () => {
     expect(Getters.ctxMenuOpened({ ctxMenu: {} })).toBe(true)
   })
-  test('tabs', () => {
-    expect(Getters.tabs({ tabs: [1, 2, 3] })).toEqual(expect.arrayContaining([1, 2, 3]))
-  })
   test('defaultCtxId', () => {
     expect(Getters.defaultCtxId({ private: true })).toBe(PRIVATE_CTX)
     expect(Getters.defaultCtxId({ private: false })).toBe(DEFAULT_CTX)
@@ -27,8 +24,9 @@ describe('Vuex getters', () => {
 
   test('panels', () => {
     const state = {
-      ctxs: [
-        { cookieStoreId: 'a', icon: 'a-icon', colorCode: 'a-color' }
+      containers: [
+        ...DEFAULT_PANELS,
+        { panel: 'TabsPanel', cookieStoreId: 'a', icon: 'a-icon', colorCode: 'a-color' },
       ],
       tabs: [
         { id: 11, pinned: true, cookieStoreId: DEFAULT_CTX },
@@ -64,8 +62,9 @@ describe('Vuex getters', () => {
   test('activePanel', () => {
     const state = {
       panelIndex: 2,
-      ctxs: [
-        { cookieStoreId: 'a', icon: 'a-icon', colorCode: 'a-color' }
+      containers: [
+        ...DEFAULT_PANELS,
+        { panel: 'TabsPanel', cookieStoreId: 'a', icon: 'a-icon', colorCode: 'a-color' },
       ],
       tabs: [
         { id: 11, pinned: true, cookieStoreId: DEFAULT_CTX },
@@ -86,8 +85,9 @@ describe('Vuex getters', () => {
   test('defaultPanel', () => {
     const state = {
       panelIndex: 0,
-      ctxs: [
-        { cookieStoreId: 'a', icon: 'a-icon', colorCode: 'a-color' }
+      containers: [
+        ...DEFAULT_PANELS,
+        { panel: 'TabsPanel', cookieStoreId: 'a', icon: 'a-icon', colorCode: 'a-color' },
       ],
       tabs: [
         { id: 11, pinned: true, cookieStoreId: DEFAULT_CTX },
