@@ -1019,9 +1019,6 @@ export default {
       Store.commit('closeCtxMenu')
       Store.commit('resetSelection')
 
-      let pIndex = Utils.GetPanelIndex(this.panels, id)
-      let isActive = this.panels[pIndex].lastActiveTab === id
-
       // Move tab in tabs array
       let movedTab = State.tabs.splice(info.fromIndex, 1)[0]
       if (!movedTab) {
@@ -1037,10 +1034,6 @@ export default {
         else State.tabs[i].index = i + 1
       }
       State.tabs.splice(info.toIndex, 0, movedTab)
-
-      // Update active tab position
-      pIndex = Utils.GetPanelIndex(this.panels, id)
-      if (isActive) Store.commit('setPanel', pIndex)
       Store.dispatch('recalcPanelScroll')
 
       // Calc tree levels

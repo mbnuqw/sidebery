@@ -24,6 +24,7 @@ export default {
   'settings.pinned_tabs_position_right': { message: 'right' },
   'settings.pinned_tabs_position_bottom': { message: 'bottom' },
   'settings.pinned_tabs_position_panel': { message: 'panel' },
+  'settings.pinned_tabs_sync': { message: 'Sync pinned tabs' },
   'settings.tabs_tree_layout': { message: 'Tabs tree structure' },
   'settings.group_on_open_layout': { message: 'Create sub-tree on opening link in new tab' },
   'settings.tabs_tree_limit': { message: 'Tabs tree max level' },

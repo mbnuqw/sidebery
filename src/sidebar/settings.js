@@ -32,6 +32,7 @@ export const DEFAULT_SETTINGS = {
   tabsPanelDoubleClickAction: 'tab',
   tabsPanelRightClickAction: 'none',
   pinnedTabsPosition: 'panel',
+  pinnedTabsSync: false,
   tabsTree: false,
   groupOnOpen: true,
   tabsTreeLimit: 'none',

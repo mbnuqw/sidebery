@@ -37,6 +37,10 @@
         :value="$store.state.pinnedTabsPosition"
         :opts="$store.state.pinnedTabsPositionOpts"
         @input="setOpt('pinnedTabsPosition', $event)")
+      toggle-field(
+        label="settings.pinned_tabs_sync"
+        :value="$store.state.pinnedTabsSync"
+        @input="togglePinnedTabsSync")
 
       toggle-field(
         label="settings.tabs_tree_layout"
@@ -377,6 +381,11 @@ export default {
         State.tabs = Utils.CalcTabsTreeLevels(State.tabs)
       }
       this.toggleOpt('tabsTree')
+    },
+
+    togglePinnedTabsSync() {
+      this.toggleOpt('pinnedTabsSync')
+      Store.dispatch('resyncPanels')
     },
 
     // --- Bookmarks ---

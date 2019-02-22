@@ -5,7 +5,7 @@
   toggle-field(
     v-if="!isPrivate"
     label="dashboard.sync_label"
-    :value="conf.syncON"
+    :value="conf.sync"
     :inline="true"
     @input="toggleSync")
 
@@ -65,6 +65,7 @@ export default {
     },
 
     toggleSync() {
+      // console.log('[DEBUG] DEFAULT TABS DASH toggleSync');
       this.conf.sync = !this.conf.sync
       Store.dispatch('resyncPanels')
       Store.dispatch('saveContainers')
