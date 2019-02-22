@@ -251,11 +251,20 @@ export default {
      * Handle dragstart event.
      */
     onDragStart(e) {
+      // Hide context menu (if any)
+      if (State.ctxMenu) State.ctxMenu = null
+
       // Check what to drag
       const toDrag = [this.tab.id]
-      const tabsToDrag = [this.tab]
+      const tabsToDrag = []
+      if (!State.selected.length) tabsToDrag.push(this.tab)
       for (let tab of State.tabs) {
         if (toDrag.includes(tab.parentId)) {
+          toDrag.push(tab.id)
+          tabsToDrag.push(tab)
+          continue
+        }
+        if (State.selected.includes(tab.id)) {
           toDrag.push(tab.id)
           tabsToDrag.push(tab)
         }
@@ -735,7 +744,6 @@ export default {
 // Title
 .Tab .title
   box(relative)
-  // text(s: rem(16))
   font: var(--tabs-font)
   color: var(--tabs-fg)
   padding: 0 1px

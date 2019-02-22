@@ -625,14 +625,21 @@ export default {
         if (this.selectionStart) this.stopSelection()
       }
 
-      Store.commit('closeCtxMenu')
-      Store.commit('resetSelection')
+      if (e.button > 0) {
+        Store.commit('closeCtxMenu')
+        Store.commit('resetSelection')
+      }
     },
 
     /**
      * Mouse up event handler
      */
     onMouseUp(e) {
+      if (e.button === 0) {
+        Store.commit('closeCtxMenu')
+        Store.commit('resetSelection')
+      }
+
       if (e.button === 2) {
         if (this.selectionStart) this.stopSelection()
       }
@@ -1079,7 +1086,7 @@ export default {
       if (info.windowId !== State.windowId) return
       // console.log('[DEBUG] INDEX onActivatedTab');
 
-      // Reset selection and close dashboard
+      // Reset selection
       Store.commit('resetSelection')
 
       // Update tabs and find activated one

@@ -181,12 +181,20 @@ export default {
      * Handle dragstart event.
      */
     onDragStart(e) {
+      // Hide context menu (if any)
+      if (State.ctxMenu) State.ctxMenu = null
+
       // Check what to drag
       const toDrag = [this.node.id]
-      const nodesToDrag = [this.node]
+      const nodesToDrag = []
+      if (!State.selected.length) nodesToDrag.push(this.node)
       const walker = nodes => {
         for (let node of nodes) {
           if (toDrag.includes(node.parentId)) {
+            toDrag.push(node.id)
+            nodesToDrag.push(node)
+          }
+          if (State.selected.includes(node.id)) {
             toDrag.push(node.id)
             nodesToDrag.push(node)
           }
