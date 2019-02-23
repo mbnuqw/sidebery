@@ -146,8 +146,10 @@ export default {
       }
 
       if (e.button === 0) {
-        // Activate tab
-        browser.tabs.update(this.tab.id, { active: true })
+        // Activate tab (if nothing selected)
+        if (!State.selected.length) {
+          browser.tabs.update(this.tab.id, { active: true })
+        }
 
         // Long-click action
         this.hodorL = setTimeout(() => {
@@ -269,6 +271,9 @@ export default {
           tabsToDrag.push(tab)
         }
       }
+
+      // Clear selected elements
+      State.selected = []
 
       // Set drag info
       e.dataTransfer.setData('text/x-moz-text-internal', this.tab.url)
