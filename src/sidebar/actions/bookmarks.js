@@ -104,10 +104,14 @@ export default {
    */
   expandBookmark({ state }, nodeId) {
     let done = false
+    let isEmpty = false
     const expandPath = []
+    const toFold = []
     const walker = nodes => {
       if (state.autoCloseBookmarks && nodes.find(c => c.id === nodeId)) {
-        nodes.map(c => (c.expanded = false))
+        for (let n of nodes) {
+          if (n.expanded) toFold.push(n)
+        }
       }
       for (let i = 0; i < nodes.length; i++) {
         if (nodes[i].type !== 'folder') continue
@@ -116,6 +120,7 @@ export default {
         if (!done && n.children) {
           expandPath.push(i)
           if (n.id === nodeId) {
+            isEmpty = !n.children.length
             done = true
             return
           }
@@ -130,6 +135,12 @@ export default {
     for (let i of expandPath) {
       parent = parent.children[i]
       parent.expanded = true
+    }
+
+    if (state.autoCloseBookmarks && !isEmpty) {
+      for (let n of toFold) {
+        n.expanded = false
+      }
     }
 
     /* eslint-disable-next-line */
