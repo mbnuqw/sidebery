@@ -407,7 +407,7 @@ export default {
       if (id !== this.tab.id) return
       this.loading = 'ok'
       this.loadingTimer = setTimeout(() => {
-        this.loadingEnd()
+        this.loadingEnd(id)
         this.loadingTimer = null
       }, 2000)
     },
@@ -416,7 +416,7 @@ export default {
       if (id !== this.tab.id) return
       this.loading = 'err'
       this.loadingTimer = setTimeout(() => {
-        this.loadingEnd()
+        this.loadingEnd(id)
         this.loadingTimer = null
       }, 2000)
     },
