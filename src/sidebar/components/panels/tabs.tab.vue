@@ -773,7 +773,7 @@ export default {
 // --- CLose button ---
 .Tab .close
   box(absolute)
-  pos(4px, r: 4px)
+  pos(calc(50% - 11px), r: 4px)
   size(23px, same)
   cursor: pointer
   z-index: -1
