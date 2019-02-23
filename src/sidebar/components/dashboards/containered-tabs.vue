@@ -48,6 +48,7 @@
       @input="toggleTabsLock")
 
     toggle-field(
+      v-if="id"
       label="dashboard.no_empty_label"
       :title="t('dashboard.no_empty_tooltip')"
       :value="conf.noEmpty"
