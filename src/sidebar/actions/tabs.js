@@ -620,10 +620,12 @@ export default {
             const tab = state.tabs.find(t => t.id === n.id)
             if (tab) tab.invisible = true
           })
-          browser.tabs.hide(nodes.map(t => t.id))
+          browser.tabs.hide(nodes.map(t => t.id)) //       ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
         } else {
-          const tab = state.tabs.find(t => t.id === nodes[0].id)
-          if (tab) tab.invisible = false
+          nodes.forEach(n => {
+            const tab = state.tabs.find(t => t.id === n.id)
+            if (tab) tab.invisible = false
+          })
           browser.tabs.update(nodes[0].id, { active: true })
         }
 
