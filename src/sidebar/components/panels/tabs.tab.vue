@@ -468,6 +468,7 @@ export default {
     > .exp
       z-index: 1
       opacity: 1
+      transform: scale(1, 1)
 
   &[is-parent][data-no-fav] .fav:hover
     > .placeholder
@@ -481,7 +482,7 @@ export default {
     .fav > .exp
       z-index: 1
       opacity: 1
-      transform: rotateZ(-90deg)
+      transform: scale(1, 1) rotateZ(-90deg)
 
   &[is-parent][folded][data-no-fav]
     .fav > .placeholder
@@ -668,6 +669,7 @@ export default {
   opacity: 0
   z-index: -1
   cursor: pointer
+  transform: scale(0.5, 0.5)
   transition: opacity var(--d-fast), transform var(--d-fast)
   > svg
     box(absolute)

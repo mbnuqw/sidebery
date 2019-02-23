@@ -558,7 +558,7 @@ export default {
           break
         }
         // Inside
-        if (slot.in && y < slot.bottom) {
+        if (slot.in && y < slot.bottom && State.tabsTree) {
           const pos = slot.center - 12 + this.panelTopOffset - scroll
           if (!this.pointerXLock && !this.pointerYLock && this.pointerPos !== pos) {
             this.pointerPos = pos

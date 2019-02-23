@@ -374,6 +374,10 @@ export default {
     toggleTabsTree() {
       if (State.tabsTree) {
         State.tabs = State.tabs.map(t => {
+          t.isParent = false
+          t.folded = false
+          t.invisible = false
+          t.parentId = -1
           t.lvl = 0
           return t
         })

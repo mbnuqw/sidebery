@@ -654,6 +654,7 @@ export default {
         for (let i = 0; i < nodes.length; i++) {
           const node = nodes[i]
           if (node.type === 'separator') continue
+          if (!state.tabsTree && node.type !== 'bookmark') continue
           const groupPageUrl = browser.runtime.getURL('group/group.html')
           const info = await browser.tabs.create({
             active: !(parent && parent.folded),
@@ -666,7 +667,7 @@ export default {
           })
           oldNewMap[node.id] = info.id
           // Restore parentId
-          if (nodes.length > 1 && nodes[0].id === nodes[1].parentId && !pin) {
+          if (state.tabsTree && nodes.length > 1 && nodes[0].id === nodes[1].parentId && !pin) {
             const tab = state.tabs.find(t => t.id === info.id)
             if (tab && oldNewMap[node.parentId]) tab.parentId = oldNewMap[node.parentId]
           }
