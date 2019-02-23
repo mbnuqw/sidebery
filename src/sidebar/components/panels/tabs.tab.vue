@@ -658,14 +658,15 @@ export default {
 
 .Tab .fav > .exp
   box(absolute)
-  size(100%, same)
+  size(calc(100% + 8px), same)
+  pos(-4px, -4px)
   opacity: 0
   z-index: -1
   cursor: pointer
   transition: opacity var(--d-fast), transform var(--d-fast)
   > svg
     box(absolute)
-    pos(1px, same)
+    pos(5px, same)
     size(14px, same)
     fill: var(--bookmarks-folder-open-fg)
 
@@ -772,8 +773,9 @@ export default {
 // --- CLose button ---
 .Tab .close
   box(absolute)
-  pos(calc(50% - 11px), r: 4px)
-  size(23px, same)
+  pos(0, r: 0)
+  size(31px)
+  height: var(--tabs-height)
   cursor: pointer
   z-index: -1
   opacity: 0
@@ -784,7 +786,7 @@ export default {
     fill: #fa5335
   > svg
     box(absolute)
-    pos(3px, same)
+    pos(calc(50% - 8px), same)
     size(17px, same)
     fill: #a63626
     transition: fill var(--d-fast)
