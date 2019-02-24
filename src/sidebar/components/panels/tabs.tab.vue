@@ -13,6 +13,7 @@
   :invisible="tab.invisible"
   :lvl="tab.lvl"
   :close-btn="$store.state.showTabRmBtn"
+  :style="{ transform: yPosition }"
   :title="tooltip"
   @contextmenu.prevent.stop=""
   @mousedown="onMouseDown"
@@ -59,6 +60,7 @@ import EventBus from '../../event-bus'
 
 export default {
   props: {
+    index: Number,
     tab: {
       type: Object,
       default: () => ({}),
@@ -79,6 +81,10 @@ export default {
 
     updated() {
       return !!State.updatedTabs[this.tab.id]
+    },
+
+    yPosition() {
+      return `translateY(${this.index * 30}px)`
     },
 
     favicon() {
@@ -450,7 +456,10 @@ export default {
 @import '../../../styles/mixins'
 
 .Tab
-  box(relative, flex)
+  box(absolute, flex)
+  width: 100%
+
+  // box(relative, flex)
   height: var(--tabs-height)
   align-items: center
   transform: translateZ(0)
@@ -595,7 +604,7 @@ export default {
       transform: scale(1, 1)
 
   &[invisible]
-    box(none)
+    opacity: 0
     z-index: -1
 
 // --- Level Wrapper
@@ -603,6 +612,7 @@ export default {
   box(relative, flex)
   size(100%, same)
   align-items: center
+  transition: opacity var(--d-fast), transform var(--d-fast)
 
 // --- Drag layer ---
 .Tab .drag-layer

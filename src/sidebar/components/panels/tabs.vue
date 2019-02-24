@@ -10,13 +10,15 @@
     @stop-selection="$emit('stop-selection')")
   scroll-box(ref="scrollBox", :lock="scrollLock")
     .container(:ctx-menu="!!$root.ctxMenu")
-      tab.tab(
-        v-for="(t, i) in tabs"
-        ref="tabs"
-        :key="t.id"
-        :tab="t"
-        @start-selection="$emit('start-selection', $event)"
-        @stop-selection="$emit('stop-selection')")
+      transition-group(name="tab")
+        tab.tab(
+          v-for="(t, i) in tabs"
+          ref="tabs"
+          :key="t.id"
+          :index="getTabYPosition(i)"
+          :tab="t"
+          @start-selection="$emit('start-selection', $event)"
+          @stop-selection="$emit('stop-selection')")
 </template>
 
 
@@ -130,6 +132,14 @@ export default {
       State.selected = []
     },
 
+    getTabYPosition(i) {
+      let out = i
+      while (i--) {
+        if (this.tabs[i].invisible) out--
+      }
+      return out
+    },
+
     /**
      * Calculate tabs bounds
      */
@@ -225,7 +235,7 @@ export default {
 </script>
 
 
-<style lang="stylus" scoped>
+<style lang="stylus">
 @import '../../../styles/mixins'
 
 .TabsPanel .container
@@ -235,4 +245,17 @@ export default {
   transition: transform var(--d-fast), opacity var(--d-fast)
   &[ctx-menu] .tab:not([data-menu])
     opacity: .4
+
+  .tab-enter .lvl-wrapper
+    transform: translateX(8px)
+    opacity: 0
+  .tab-enter-to .lvl-wrapper
+    transform: translateX(0)
+    opacity: 1
+  .tab-leave .lvl-wrapper
+    transform: translateX(0)
+    opacity: 1
+  .tab-leave-to .lvl-wrapper
+    transform: translateX(8px)
+    opacity: 0
 </style>
