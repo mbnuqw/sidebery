@@ -61,10 +61,13 @@ export default {
           if (tab.cookieStoreId !== t.ctx) break
 
           tab.isParent = t.isParent
+          tab.folded = t.folded
           if (t.isParent) parents[t.id] = tab
           if (t.parentId > -1) {
             const parentTab = parents[t.parentId]
-            if (parentTab.folded !== tab.invisible) parentTab.folded = tab.invisible
+            if (parentTab.folded) {
+              tab.invisible = true
+            } else tab.invisible = false
             tab.parentId = parentTab.id
           }
         }
@@ -89,6 +92,7 @@ export default {
             url: t.url,
             ctx: t.cookieStoreId,
             isParent: t.isParent,
+            folded: t.folded,
             parentId: t.parentId,
           })
         }
