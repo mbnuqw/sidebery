@@ -5,7 +5,7 @@
   :data-muted="tab.mutedInfo.muted"
   :is-selected="selected"
   :discarded="tab.discarded"
-  :updated="true"
+  :updated="updated"
   :loading="loading || tab.status === 'loading'"
   :drop-slot="dropSlot"
   :title="tooltip"
