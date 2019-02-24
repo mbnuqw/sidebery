@@ -846,11 +846,9 @@ export default {
       // If new tab is out of panel, move it to the end of
       // this panel
       let panel = this.panels.find(p => p.cookieStoreId === tab.cookieStoreId)
-      if (panel && panel.tabs) {
-        let endIndex = panel.tabs.length ? panel.endIndex + 1 : panel.endIndex
-        if (tab.index > endIndex || tab.index < panel.startIndex) {
-          browser.tabs.move(tab.id, { index: endIndex })
-        }
+      let endIndex = panel.tabs.length ? panel.endIndex + 1 : panel.endIndex
+      if (tab.index > endIndex || tab.index < panel.startIndex) {
+        browser.tabs.move(tab.id, { index: endIndex })
       }
 
       // Shift tabs after inserted one. (NOT detected by vue)
@@ -888,14 +886,15 @@ export default {
         }
       }
 
+      // Set last tab successor
+      if (State.ffVer >= 65 && tab.index > panel.endIndex && panel.tabs.length) {
+        const prevTab = panel.tabs[panel.tabs.length - 1]
+        browser.tabs.update(prevTab.id, { successorTabId: -1 })
+        browser.tabs.update(tab.id, { successorTabId: prevTab.id })
+      }
+
       // Put new tab in tabs list
       State.tabs.splice(tab.index, 0, tab)
-
-      // Set tab's successor
-      if (State.ffVer >= 65) {
-        const prevTab = State.tabs[tab.index - 1]
-        if (prevTab) browser.tabs.update(tab.id, { successorTabId: prevTab.id })
-      }
 
       // Update state
       Store.dispatch('recalcPanelScroll')
@@ -997,6 +996,22 @@ export default {
         }
       }
 
+      // Update last tab successor
+      if (State.ffVer >= 65 && panel.tabs.length > 2) {
+        // Removing the last tab
+        if (tab.index === panel.endIndex) {
+          const prevTab = panel.tabs[panel.tabs.length - 2]
+          const prePrevTab = panel.tabs[panel.tabs.length - 3]
+          browser.tabs.update(prevTab.id, { successorTabId: prePrevTab.id })
+        }
+        // Removing successor of last tab
+        if (tab.index === panel.endIndex - 1) {
+          const lastTab = panel.tabs[panel.tabs.length - 1]
+          const prevTab = panel.tabs[panel.tabs.length - 3]
+          browser.tabs.update(lastTab.id, { successorTabId: prevTab.id })
+        }
+      }
+
       // Shift tabs after removed one. (NOT detected by vue)
       for (let i = rmIndex + 1; i < State.tabs.length; i++) {
         State.tabs[i].index--
@@ -1025,6 +1040,28 @@ export default {
       if (info.windowId !== State.windowId) return
       Store.commit('closeCtxMenu')
       Store.commit('resetSelection')
+
+      // Update last tab successor
+      const panelIndex = Utils.GetPanelIndex(this.panels, id)
+      const panel = this.panels[panelIndex]
+      if (State.ffVer >= 65 && panel.tabs.length > 1) {
+        // Move last tab - reset successor
+        if (info.fromIndex === panel.endIndex) {
+          const lastTab = State.tabs[info.fromIndex]
+          const prevTab = State.tabs[info.fromIndex - 1]
+          const prePrevTab = info.toIndex === info.fromIndex - 1 ?
+            lastTab : State.tabs[info.fromIndex - 2]
+          browser.tabs.update(lastTab.id, { successorTabId: -1 })
+          browser.tabs.update(prevTab.id, { successorTabId: prePrevTab.id })
+        }
+        // Move tab to end - set successor for it
+        if (info.toIndex === panel.endIndex) {
+          const lastTab = panel.tabs[panel.tabs.length - 1]
+          const movedTab = State.tabs[info.fromIndex]
+          browser.tabs.update(lastTab.id, { successorTabId: -1 })
+          browser.tabs.update(movedTab.id, { successorTabId: lastTab.id })
+        }
+      }
 
       // Move tab in tabs array
       let movedTab = State.tabs.splice(info.fromIndex, 1)[0]
