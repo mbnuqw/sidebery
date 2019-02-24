@@ -16,7 +16,7 @@ export const DEFAULT_SETTINGS = {
   // Global
   nativeScrollbars: false,
   hScrollThroughPanels: false,
-  
+
   // Tabs
   activateLastTabOnPanelSwitching: true,
   createNewTabOnEmptyPanel: false,
@@ -36,7 +36,8 @@ export const DEFAULT_SETTINGS = {
   tabsTree: false,
   groupOnOpen: true,
   tabsTreeLimit: 'none',
-  
+  hideFoldedTabs: false,
+
   // Bookmarks
   bookmarksPanel: true,
   openBookmarkNewTab: false,
@@ -49,5 +50,5 @@ export const DEFAULT_SETTINGS = {
   animations: true,
 
   // Snapshots
-  snapshotsTargets: { 'pinned': true },
+  snapshotsTargets: { pinned: true },
 }

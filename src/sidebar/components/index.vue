@@ -858,6 +858,7 @@ export default {
 
       // Update tree
       tab.parentId = -1
+      tab.invisible = false
       if (State.tabsTree && tab.openerTabId !== undefined) {
         let parent = panel.tabs.find(t => t.id === tab.openerTabId)
         if (!parent) parent = { lvl: 0 }
@@ -871,7 +872,10 @@ export default {
             if (State.tabs[i].lvl) tab.lvl = State.tabs[i].lvl + 1
             else tab.lvl = 1
             State.tabs[i].isParent = true
-            if (State.tabs[i].folded) browser.tabs.hide(tab.id)
+            if (State.tabs[i].folded) {
+              tab.invisible = true
+              if (State.hideFoldedTabs) browser.tabs.hide(tab.id)
+            }
             break
           }
         } else {

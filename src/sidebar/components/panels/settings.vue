@@ -58,6 +58,12 @@
         :value="$store.state.tabsTreeLimit"
         :opts="$store.state.tabsTreeLimitOpts"
         @input="setOpt('tabsTreeLimit', $event)")
+      toggle-field(
+        v-if="$store.state.ffVer >= 61"
+        label="settings.hide_folded_tabs"
+        :inactive="!$store.state.tabsTree"
+        :value="$store.state.hideFoldedTabs"
+        @input="toggleHideFoldedTabs")
 
     section
       h2 {{t('settings.bookmarks_title')}}
@@ -387,6 +393,23 @@ export default {
       this.toggleOpt('tabsTree')
     },
 
+    async toggleHideFoldedTabs() {
+      State.permTabHide = await browser.permissions.contains({ permissions: ['tabHide'] })
+      if (State.hideFoldedTabs) {
+        const toShow = State.tabs.filter(t => t.invisible).map(t => t.id)
+        browser.tabs.show(toShow)
+      } else {
+        if (!State.permTabHide) {
+          const url = browser.runtime.getURL('permissions/tab-hide.html')
+          browser.tabs.create({ url })
+          return
+        }
+        const toHide = State.tabs.filter(t => t.invisible).map(t => t.id)
+        browser.tabs.hide(toHide)
+      }
+      this.toggleOpt('hideFoldedTabs')
+    },
+
     togglePinnedTabsSync() {
       this.toggleOpt('pinnedTabsSync')
       Store.dispatch('resyncPanels')
@@ -543,6 +566,7 @@ export default {
         await Store.dispatch('showAllTabs')
         await browser.permissions.remove({ permissions: ['tabHide'] })
         State.hideInact = false
+        if (State.hideFoldedTabs) this.toggleHideFoldedTabs()
         State.permTabHide = false
       } else {
         browser.tabs.create({

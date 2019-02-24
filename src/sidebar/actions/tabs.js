@@ -516,7 +516,9 @@ export default {
 
     await Utils.Sleep(120)
 
-    if (toHide.length && state.ffVer >= 61) browser.tabs.hide(toHide)
+    if (state.hideFoldedTabs && toHide.length && state.ffVer >= 61) {
+      browser.tabs.hide(toHide)
+    }
     dispatch('saveTabsTree')
   },
 
@@ -544,7 +546,9 @@ export default {
 
     await Utils.Sleep(120)
 
-    if (toShow.length && state.ffVer >= 61) browser.tabs.show(toShow)
+    if (state.hideFoldedTabs && toShow.length && state.ffVer >= 61) {
+      browser.tabs.show(toShow)
+    }
     dispatch('saveTabsTree')
   },
 
@@ -620,7 +624,7 @@ export default {
             const tab = state.tabs.find(t => t.id === n.id)
             if (tab) tab.invisible = true
           })
-          browser.tabs.hide(nodes.map(t => t.id)) //       ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+          if (state.hideFoldedTabs) browser.tabs.hide(nodes.map(t => t.id))
         } else {
           nodes.forEach(n => {
             const tab = state.tabs.find(t => t.id === n.id)
