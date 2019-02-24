@@ -922,6 +922,11 @@ export default {
       tab.folded = State.tabs[upIndex].folded
       tab.invisible = State.tabs[upIndex].invisible
 
+      // Loaded
+      if (change.hasOwnProperty('status') && change.status === 'complete') {
+        EventBus.$emit('tabLoaded', tab.id)
+      }
+
       // Handle favicon change
       // If favicon is base64 string - store it in cache
       if (change.favIconUrl && change.favIconUrl.startsWith('data:')) {
@@ -1741,20 +1746,20 @@ NAV_CONF_HEIGHT = auto
   &[updated]
     > svg
       mask: radial-gradient(
-        circle at calc(100% - 2px) calc(100% - 2px),
+        circle at calc(100% - 1.5px) calc(100% - 1.5px),
         #00000032,
-        #00000032 4.5px,
-        #000000 5.5px,
+        #00000032 5px,
+        #000000 6px,
         #000000
       )
   &[proxified]
   &[loading]
     > svg
       mask: radial-gradient(
-        circle at calc(100% - 2px) calc(100% - 2px),
+        circle at calc(100% - 1px) calc(100% - 1px),
         #00000032,
-        #00000032 6.5px,
-        #000000 7.5px,
+        #00000032 7px,
+        #000000 8px,
         #000000
       )
 
@@ -1780,16 +1785,15 @@ NAV_CONF_HEIGHT = auto
 
   > .spinner-stick
     box(absolute)
-    size(1px, 3px)
-    pos(calc(50% - 1px), calc(50% - 1px))
-    transform-origin: 50% 0%
+    size(1px, 4px)
+    pos(calc(50% - 2px), calc(50% - 1px))
     opacity: 0
 
     &:before
       box(absolute)
-      pos(2.5px, 0)
+      pos(4px, 0)
       size(100%, same)
-      background-color: #278dff
+      background-color: var(--tabs-loading-fg)
       content: ''
   for i in 0..12
     > .spinner-stick-{i}

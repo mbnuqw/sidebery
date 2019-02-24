@@ -19,6 +19,7 @@
   @mouseup="onMouseUp"
   @mouseleave="onMouseLeave"
   @dblclick.prevent.stop="onDoubleClick"): .lvl-wrapper
+  .loaded-fx
   .drag-layer(draggable="true"
     @dragstart="onDragStart"
     @dragenter="onDragEnter"
@@ -38,7 +39,6 @@
     .loading-spinner
       each n in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
         .spinner-stick(class='spinner-stick-' + n)
-  .ctx(v-if="tab.ctxIcon", :style="{background: tab.ctxColor}")
   .close(v-if="$store.state.showTabRmBtn", @mousedown.stop="onCloseClick", @mouseup.stop="")
     svg: use(xlink:href="#icon_remove")
   .t-box
@@ -106,6 +106,7 @@ export default {
     EventBus.$on('tabLoadingEnd', this.loadingEnd)
     EventBus.$on('tabLoadingOk', this.loadingOk)
     EventBus.$on('tabLoadingErr', this.loadingErr)
+    EventBus.$on('tabLoaded', this.onLoaded)
     EventBus.$on('selectTab', this.onTabSelection)
     EventBus.$on('deselectTab', this.onTabDeselection)
     EventBus.$on('openTabMenu', this.onTabMenu)
@@ -116,6 +117,7 @@ export default {
     EventBus.$off('tabLoadingEnd', this.loadingEnd)
     EventBus.$off('tabLoadingOk', this.loadingOk)
     EventBus.$off('tabLoadingErr', this.loadingErr)
+    EventBus.$off('tabLoaded', this.onLoaded)
     EventBus.$off('selectTab', this.onTabSelection)
     EventBus.$off('deselectTab', this.onTabDeselection)
     EventBus.$off('openTabMenu', this.onTabMenu)
@@ -375,6 +377,15 @@ export default {
       if (e.button === 2) this.closeTree()
     },
 
+    onLoaded(id) {
+      if (id !== this.tab.id) return
+      if (this.tab.status !== 'loading') return
+      this.$el.classList.remove('-loaded')
+      this.$el.offsetHeight
+      this.$el.classList.add('-loaded')
+      setTimeout(() => {this.$el.classList.remove('-loaded')}, 500)
+    },
+
     /**
      * Close tab
      */
@@ -463,6 +474,16 @@ export default {
     padding-left: calc(var(--tabs-indent) * 4)
   &[lvl="5"]
     padding-left: calc(var(--tabs-indent) * 5)
+  &[lvl="6"]
+    padding-left: calc(var(--tabs-indent) * 6)
+  &[lvl="7"]
+    padding-left: calc(var(--tabs-indent) * 7)
+  &[lvl="8"]
+    padding-left: calc(var(--tabs-indent) * 8)
+  &[lvl="9"]
+    padding-left: calc(var(--tabs-indent) * 9)
+  &[lvl="10"]
+    padding-left: calc(var(--tabs-indent) * 10)
 
   &[is-parent] .fav:hover
     > .exp
@@ -509,7 +530,7 @@ export default {
   &[data-status="loading"]
     cursor: progress
     .title
-      transform: translateX(9px)
+      transform: translateX(11px)
     .loading > svg.-a
       animation: tab-loading .8s infinite
     .loading > svg.-b
@@ -565,8 +586,8 @@ export default {
       mask: radial-gradient(
         circle at calc(100% - 2px) calc(100% - 2px),
         #00000032,
-        #00000032 4.5px,
-        #000000 5.5px,
+        #00000032 4px,
+        #000000 5px,
         #000000
       )
     > .update-badge
@@ -639,8 +660,8 @@ export default {
       mask: radial-gradient(
         circle at calc(100% - 2px) calc(100% - 2px),
         #00000032,
-        #00000032 6.5px,
-        #000000 7.5px,
+        #00000032 6px,
+        #000000 7px,
         #000000
       )
 
@@ -680,23 +701,22 @@ export default {
 .Tab .fav > .loading-spinner
   box(absolute)
   size(10px, same)
-  pos(b: -4px, r: -3px)
+  pos(b: -4px, r: -4px)
   border-radius: 50%
   opacity: 0
   transition: opacity var(--d-norm)
 
   > .spinner-stick
     box(absolute)
-    size(1px, 3px)
-    pos(calc(50% - 1px), calc(50% - 1px))
-    transform-origin: 50% 0%
+    size(1px, 4px)
+    pos(calc(50% - 2px), calc(50% - 1px))
     opacity: 0
 
     &:before
       box(absolute)
-      pos(2.5px, 0)
+      pos(4px, 0)
       size(100%, same)
-      background-color: #278dff
+      background-color: var(--tabs-loading-fg)
       content: ''
   for i in 0..12
     > .spinner-stick-{i}
@@ -741,6 +761,16 @@ export default {
   z-index: 2000
   box-shadow: 0 0 2px 0 #00000024
 
+.Tab .loaded-fx
+  box(absolute)
+  size(100%, same)
+  pos(0, 0)
+  background-image: linear-gradient(90deg, #00000000, var(--tabs-loading-fg))
+  opacity: 0
+  transform: translateX(-100%)
+.Tab.-loaded .loaded-fx
+  animation: tab-loaded .3s
+
 // --- Title box ---
 .Tab .t-box
   box(relative)
@@ -764,18 +794,18 @@ export default {
 .Tab .loading
   box(absolute)
   pos(calc(50% - 8px), 0)
-  size(5px, 16px)
+  size(7px, 16px)
   transition: transform var(--d-fast)
   > svg
     box(absolute)
-    pos(3px)
-    size(5px, 3px)
+    pos(2px, 0)
+    size(7px, 4px)
     fill: var(--tabs-loading-fg)
     opacity: 0
   > svg.-b
-    pos(7px)
+    pos(6px)
   > svg.-c
-    pos(11px)
+    pos(10px)
 
 // --- CLose button ---
 .Tab .close
@@ -804,4 +834,12 @@ export default {
     opacity: 1
   100%
     opacity: 0
+
+@keyframes tab-loaded
+  0%
+    opacity: .8
+    transform: translateX(-100%)
+  100%
+    opacity: 0
+    transform: translateX(0)
 </style>
