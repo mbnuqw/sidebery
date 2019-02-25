@@ -533,8 +533,10 @@ export default {
     // console.log('[DEBUG] TABS ACTION expTabsBranch');
     const toShow = []
     const preserve = []
+    const tab = state.tabs.find(t => t.id === tabId)
+    if (!tab) return
     for (let t of state.tabs) {
-      if (state.autoFoldTabs && t.id !== tabId && t.isParent && !t.folded) {
+      if (state.autoFoldTabs && t.id !== tabId && t.isParent && !t.folded && tab.lvl === t.lvl) {
         dispatch('foldTabsBranch', t.id)
       }
       if (t.id === tabId) t.folded = false

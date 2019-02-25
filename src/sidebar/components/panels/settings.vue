@@ -69,6 +69,11 @@
         :inactive="!$store.state.tabsTree"
         :value="$store.state.autoFoldTabs"
         @input="setOpt('autoFoldTabs', $event)")
+      toggle-field(
+        label="settings.auto_exp_tabs"
+        :inactive="!$store.state.tabsTree"
+        :value="$store.state.autoExpandTabs"
+        @input="setOpt('autoExpandTabs', $event)")
 
     section
       h2 {{t('settings.bookmarks_title')}}

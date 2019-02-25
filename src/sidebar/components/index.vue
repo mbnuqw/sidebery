@@ -1167,6 +1167,11 @@ export default {
         }
       }
 
+      // Auto expand tabs group
+      if (State.autoExpandTabs && tab.isParent && tab.folded) {
+        Store.dispatch('expTabsBranch', tab.id)
+      }
+
       this.panels[State.panelIndex].lastActiveTab = info.tabId
     },
 

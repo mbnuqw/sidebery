@@ -38,6 +38,7 @@ export const DEFAULT_SETTINGS = {
   tabsTreeLimit: 'none',
   hideFoldedTabs: false,
   autoFoldTabs: false,
+  autoExpandTabs: false,
 
   // Bookmarks
   bookmarksPanel: true,

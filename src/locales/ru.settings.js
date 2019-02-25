@@ -36,6 +36,7 @@ export default {
   'settings.tabs_tree_limit_none': { message: 'выкл' },
   'settings.hide_folded_tabs': { message: 'Скрывать свернутые табы' },
   'settings.auto_fold_tabs': { message: 'Автоматически сворачивать табы' },
+  'settings.auto_exp_tabs': { message: 'Автоматически разворачивать табы' },
 
   // --- Bookmarks
   'settings.bookmarks_title': { message: 'Закладки' },
