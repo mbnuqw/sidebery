@@ -783,8 +783,8 @@ export default {
     let commonPart = Utils.CommonSubStr(titles)
     let isOk = commonPart[0] === commonPart[0].toUpperCase()
     let groupTitle = commonPart
-      .replace(/^(\s|\.|_|-|—|\/|=|;|:)+/, ' ')
-      .replace(/(\s|\.|_|-|—|\/|=|;|:)+$/, ' ')
+      .replace(/^(\s|\.|_|-|—|–|\/|=|;|:)+/g, ' ')
+      .replace(/(\s|\.|_|-|—|–|\/|=|;|:)+$/g, ' ')
       .trim()
 
     if (!isOk || groupTitle.length < 4) {
@@ -818,9 +818,10 @@ export default {
    * Get grouped tabs (for group page)
    */
   async getGroupInfo({ state }, groupTitle) {
+    // console.log('[DEBUG] TABS ACTION getGroupInfo', groupTitle);
     await Utils.Sleep(128)
 
-    const groupTab = state.tabs.find(t => t.title === groupTitle)
+    const groupTab = state.tabs.find(t => t.title === groupTitle && t.url.startsWith('moz'))
     if (!groupTab) return {}
 
     const out = {
