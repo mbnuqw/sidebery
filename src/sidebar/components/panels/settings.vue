@@ -64,6 +64,11 @@
         :inactive="!$store.state.tabsTree"
         :value="$store.state.hideFoldedTabs"
         @input="toggleHideFoldedTabs")
+      toggle-field(
+        label="settings.auto_fold_tabs"
+        :inactive="!$store.state.tabsTree"
+        :value="$store.state.autoFoldTabs"
+        @input="setOpt('autoFoldTabs', $event)")
 
     section
       h2 {{t('settings.bookmarks_title')}}

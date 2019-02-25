@@ -35,6 +35,7 @@ export default {
   'settings.tabs_tree_limit_5': { message: '5' },
   'settings.tabs_tree_limit_none': { message: 'none' },
   'settings.hide_folded_tabs': { message: 'Hide folded tabs' },
+  'settings.auto_fold_tabs': { message: 'Auto fold tabs' },
 
   // --- Bookmarks
   'settings.bookmarks_title': { message: 'Bookmarks' },

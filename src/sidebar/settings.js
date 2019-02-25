@@ -37,6 +37,7 @@ export const DEFAULT_SETTINGS = {
   groupOnOpen: true,
   tabsTreeLimit: 'none',
   hideFoldedTabs: false,
+  autoFoldTabs: false,
 
   // Bookmarks
   bookmarksPanel: true,

@@ -534,6 +534,9 @@ export default {
     const toShow = []
     const preserve = []
     for (let t of state.tabs) {
+      if (state.autoFoldTabs && t.id !== tabId && t.isParent && !t.folded) {
+        dispatch('foldTabsBranch', t.id)
+      }
       if (t.id === tabId) t.folded = false
       if (t.id !== tabId && t.folded) preserve.push(t.id)
       if (t.parentId === tabId || toShow.includes(t.parentId)) {

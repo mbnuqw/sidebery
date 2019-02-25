@@ -35,6 +35,7 @@ export default {
   'settings.tabs_tree_limit_5': { message: '5' },
   'settings.tabs_tree_limit_none': { message: 'выкл' },
   'settings.hide_folded_tabs': { message: 'Скрывать свернутые табы' },
+  'settings.auto_fold_tabs': { message: 'Автоматически сворачивать табы' },
 
   // --- Bookmarks
   'settings.bookmarks_title': { message: 'Закладки' },
