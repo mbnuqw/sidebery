@@ -10,16 +10,14 @@
     @stop-selection="$emit('stop-selection')")
   scroll-box(ref="scrollBox", :lock="scrollLock")
     .container(:ctx-menu="!!$root.ctxMenu", :style="{ height: scrollHeight }")
-      transition-group(name="tab")
-        .just-another-wrapper(
-          v-for="(t, i) in tabs"
-          :key="t.id")
-          tab.tab(
-            ref="tabs"
-            :position="getTabYPosition(i)"
-            :tab="t"
-            @start-selection="$emit('start-selection', $event)"
-            @stop-selection="$emit('stop-selection')")
+      tab.tab(
+        v-for="(t, i) in tabs"
+        ref="tabs"
+        :key="t.id"
+        :position="getTabYPosition(i)"
+        :tab="t"
+        @start-selection="$emit('start-selection', $event)"
+        @stop-selection="$emit('stop-selection')")
 </template>
 
 
@@ -257,16 +255,21 @@ export default {
   &[ctx-menu] .tab:not([data-menu])
     opacity: .4
 
-  .tab-enter .lvl-wrapper
-    transform: translateX(8px)
-    opacity: 0
-  .tab-enter-to .lvl-wrapper
-    transform: translateX(0)
-    opacity: 1
-  .tab-leave .lvl-wrapper
-    transform: translateX(0)
-    opacity: 1
-  .tab-leave-to .lvl-wrapper
-    transform: translateX(8px)
-    opacity: 0
+  // .tab-wrapper
+  //   box(absolute)
+  //   size(100%)
+  //   pos(0, 0)
+
+  // .tab-enter .lvl-wrapper
+  //   // transform: translateX(12px)
+  //   opacity: 0
+  // .tab-enter-to .lvl-wrapper
+  //   // transform: translateX(0)
+  //   opacity: 1
+  // .tab-leave .lvl-wrapper
+  //   // transform: translateX(0)
+  //   opacity: 1
+  // .tab-leave-to .lvl-wrapper
+  //   // transform: translateX(12px)
+  //   opacity: 0
 </style>
