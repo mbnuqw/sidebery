@@ -14,9 +14,29 @@ const CLEAR_SIDEBAR = scripts['clear.sidebar'].split(' ')
 const CLEAR_SIDEBAR_CMD = CLEAR_SIDEBAR[0]
 const CLEAR_SIDEBAR_OPT = CLEAR_SIDEBAR.slice(1)
 
+const CLEAR_GROUP = scripts['clear.group'].split(' ')
+const CLEAR_GROUP_CMD = CLEAR_GROUP[0]
+const CLEAR_GROUP_OPT = CLEAR_GROUP.slice(1)
+
+const CLEAR_PERM = scripts['clear.permissions'].split(' ')
+const CLEAR_PERM_CMD = CLEAR_PERM[0]
+const CLEAR_PERM_OPT = CLEAR_PERM.slice(1)
+
 const SIDEBAR = scripts['build.sidebar'].split(' ')
 const SIDEBAR_CMD = SIDEBAR[0]
 const SIDEBAR_OPT = SIDEBAR.slice(1)
+
+const GROUP = scripts['build.group'].split(' ')
+const GROUP_CMD = GROUP[0]
+const GROUP_OPT = GROUP.slice(1)
+
+const PERM_URL = scripts['build.perm.url'].split(' ')
+const PERM_URL_CMD = PERM_URL[0]
+const PERM_URL_OPT = PERM_URL.slice(1)
+
+const PERM_HIDE = scripts['build.perm.hide'].split(' ')
+const PERM_HIDE_CMD = PERM_HIDE[0]
+const PERM_HIDE_OPT = PERM_HIDE.slice(1)
 
 const EXT = scripts['build.ext'].split(' ')
 const EXT_CMD = EXT[0]
@@ -31,7 +51,17 @@ out = spawnSync(CLEAR_CACHE_CMD, CLEAR_CACHE_OPT, EXEC_CONFIG)
 if (out.status) process.exit(out.status)
 out = spawnSync(CLEAR_SIDEBAR_CMD, CLEAR_SIDEBAR_OPT, EXEC_CONFIG)
 if (out.status) process.exit(out.status)
+out = spawnSync(CLEAR_GROUP_CMD, CLEAR_GROUP_OPT, EXEC_CONFIG)
+if (out.status) process.exit(out.status)
+out = spawnSync(CLEAR_PERM_CMD, CLEAR_PERM_OPT, EXEC_CONFIG)
+if (out.status) process.exit(out.status)
 out = spawnSync(SIDEBAR_CMD, SIDEBAR_OPT, EXEC_CONFIG)
+if (out.status) process.exit(out.status)
+out = spawnSync(GROUP_CMD, GROUP_OPT, EXEC_CONFIG)
+if (out.status) process.exit(out.status)
+out = spawnSync(PERM_URL_CMD, PERM_URL_OPT, EXEC_CONFIG)
+if (out.status) process.exit(out.status)
+out = spawnSync(PERM_HIDE_CMD, PERM_HIDE_OPT, EXEC_CONFIG)
 if (out.status) process.exit(out.status)
 out = spawnSync(EXT_CMD, EXT_OPT, EXEC_CONFIG)
 if (out.status) process.exit(out.status)
