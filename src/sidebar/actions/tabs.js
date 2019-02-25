@@ -65,7 +65,7 @@ export default {
           if (t.isParent) parents[t.id] = tab
           if (t.parentId > -1) {
             const parentTab = parents[t.parentId]
-            if (parentTab.folded) {
+            if (parentTab.folded || parentTab.invisible) {
               tab.invisible = true
             } else tab.invisible = false
             tab.parentId = parentTab.id
@@ -242,7 +242,6 @@ export default {
     let index = tabs.findIndex(t => t.active)
     if (step > 0) {
       index += step
-      while (tabs[index] && tabs[index].invisible) index += step
       if (index >= tabs.length) {
         if (cycle) index = 0
         else return
@@ -251,7 +250,6 @@ export default {
     if (step < 0) {
       if (index < 0) index = tabs.length
       index += step
-      while (tabs[index] && tabs[index].invisible) index += step
       if (index < 0) {
         if (cycle) index = tabs.length - 1
         else return
@@ -535,6 +533,7 @@ export default {
     const preserve = []
     const tab = state.tabs.find(t => t.id === tabId)
     if (!tab) return
+    if (tab.invisible) dispatch('expTabsBranch', tab.parentId)
     for (let t of state.tabs) {
       if (state.autoFoldTabs && t.id !== tabId && t.isParent && !t.folded && tab.lvl === t.lvl) {
         dispatch('foldTabsBranch', t.id)

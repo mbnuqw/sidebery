@@ -1171,6 +1171,9 @@ export default {
       if (State.autoExpandTabs && tab.isParent && tab.folded) {
         Store.dispatch('expTabsBranch', tab.id)
       }
+      if (tab.invisible) {
+        Store.dispatch('expTabsBranch', tab.parentId)
+      }
 
       this.panels[State.panelIndex].lastActiveTab = info.tabId
     },
