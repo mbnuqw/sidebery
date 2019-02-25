@@ -357,24 +357,6 @@ export default {
   > .body > .exp > svg
     transform: rotateZ(0deg)
 
-// > Selected
-// .Node[is-selected="true"][n-type="bookmark"]
-// .Node[is-selected="true"][n-type="folder"]
-// .Node[is-selected="true"][n-type="separator"]
-//   z-index: 30
-//   background-color: var(--tabs-selected-bg)
-//   > .body
-//   > .body:hover
-//   > .body:active
-//     z-index: 100
-//     > .title
-//       color: var(--tabs-selected-fg)
-
-// .Node[is-selected="true"][n-type="separator"]
-//   > .body
-//     &:before
-      // background-image: linear-gradient(90deg, transparent, var(--tabs-selected-fg), var(--tabs-selected-fg), var(--tabs-selected-fg))
-
 .Node[is-selected="true"]
   &:before
     opacity: 1
@@ -383,11 +365,6 @@ export default {
     transition: opacity var(--d-fast),
                 z-index var(--d-fast),
                 transform 0s 0s
-    // content: ''
-    // box(absolute)
-    // pos(0, r: 0)
-    // size(100vw, 100%)
-    // background-color: var(--tabs-selected-bg)
   .body .title
     color: var(--tabs-selected-fg)
 

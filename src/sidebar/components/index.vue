@@ -1055,7 +1055,7 @@ export default {
       // Update last tab successor
       const panelIndex = Utils.GetPanelIndex(this.panels, id)
       const panel = this.panels[panelIndex]
-      if (State.ffVer >= 65 && panel.tabs.length > 1) {
+      if (panel && State.ffVer >= 65 && panel.tabs.length > 1) {
         // Move last tab - reset successor
         if (info.fromIndex === panel.endIndex) {
           const lastTab = State.tabs[info.fromIndex]

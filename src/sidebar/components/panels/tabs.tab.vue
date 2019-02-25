@@ -44,7 +44,6 @@
     svg: use(xlink:href="#icon_remove")
   .t-box
     .title {{tab.title}}
-    //- .title {{tab.position}} - id: {{tab.id}} - {{tab.title}}
     .loading
       svg.-a: use(xlink:href="#icon_load")
       svg.-b: use(xlink:href="#icon_load")
@@ -629,7 +628,7 @@ export default {
 
   > svg
     box(absolute)
-    pos(9px, 6px)
+    pos(calc(50% - 5px), 6px)
     size(11px, same)
     fill: var(--tabs-fg)
     transition: opacity var(--d-fast)
