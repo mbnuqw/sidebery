@@ -381,11 +381,10 @@ export default {
 
     onLoaded(id) {
       if (id !== this.tab.id) return
-      if (this.tab.status !== 'loading') return
       this.$el.classList.remove('-loaded')
       this.$el.offsetHeight
       this.$el.classList.add('-loaded')
-      setTimeout(() => {this.$el.classList.remove('-loaded')}, 500)
+      setTimeout(() => {this.$el.classList.remove('-loaded')}, 250)
     },
 
     /**

@@ -924,8 +924,12 @@ export default {
       tab.invisible = State.tabs[upIndex].invisible
 
       // Loaded
-      if (change.hasOwnProperty('status') && change.status === 'complete') {
-        EventBus.$emit('tabLoaded', tab.id)
+      if (change.hasOwnProperty('status')) {
+        const newStatus = change.status
+        const prevStatus = State.tabs[upIndex].status
+        if (newStatus === 'complete' && prevStatus === 'loading') {
+          EventBus.$emit('tabLoaded', tab.id)
+        }
       }
 
       // Handle favicon change
