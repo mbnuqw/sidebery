@@ -1,6 +1,6 @@
 export const SETTINGS_OPTIONS = {
   scrollThroughTabsOpts: ['panel', 'global', 'none'],
-  tabDoubleClickOpts: ['reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'none'],
+  tabDoubleClickOpts: ['reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'exp', 'none'],
   tabLongLeftClickOpts: ['reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'none'],
   tabLongRightClickOpts: ['reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'none'],
   tabsPanelLeftClickActionOpts: ['prev', 'none'],

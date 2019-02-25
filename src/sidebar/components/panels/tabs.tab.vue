@@ -135,6 +135,7 @@ export default {
       if (dc === 'pin') Store.dispatch('repinTabs', [this.tab.id])
       if (dc === 'mute') Store.dispatch('remuteTabs', [this.tab.id])
       if (dc === 'clear_cookies') Store.dispatch('clearTabsCookies', [this.tab.id])
+      if (dc === 'exp' && this.tab.isParent) Store.dispatch('toggleBranch', this.tab.id)
     },
 
     /**

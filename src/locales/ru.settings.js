@@ -83,6 +83,7 @@ export default {
   'settings.tab_action_pin': { message: 'закрепить' },
   'settings.tab_action_mute': { message: 'выключить звук' },
   'settings.tab_action_clear_cookies': { message: 'удалить куки' },
+  'settings.tab_action_exp': { message: 'развернуть' },
   'settings.tab_action_none': { message: 'выкл' },
   'settings.tabs_panel_left_click_action': { message: 'Левый клик по панели с табами' },
   'settings.tabs_panel_double_click_action': { message: 'Двойной клик по панели с табами' },
