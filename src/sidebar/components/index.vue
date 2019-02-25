@@ -306,6 +306,7 @@ export default {
     EventBus.$on('panelLoadingEnd', panelIndex => this.onPanelLoadingEnd(panelIndex))
     EventBus.$on('panelLoadingOk', panelIndex => this.onPanelLoadingOk(panelIndex))
     EventBus.$on('panelLoadingErr', panelIndex => this.onPanelLoadingErr(panelIndex))
+    EventBus.$on('dynVarChange', this.recalcDynVars)
     EventBus.$on('dragStart', info => (State.dragNodes = info))
     EventBus.$on('outerDragStart', info => (State.dragNodes = info))
     EventBus.$on('panelSwitched', () => setTimeout(() => this.recalcPanelBounds(), 256))
@@ -1047,6 +1048,7 @@ export default {
      */
     onMovedTab(id, info) {
       if (info.windowId !== State.windowId) return
+      // console.log('[DEBUG] INDEX onMovedTab');
       Store.commit('closeCtxMenu')
       Store.commit('resetSelection')
 
@@ -1466,6 +1468,12 @@ export default {
       if (State.panelIndex < i) return 'right'
       if (State.panelIndex === i) return 'center'
       if (State.panelIndex > i) return 'left'
+    },
+
+    recalcDynVars() {
+      const compStyle = getComputedStyle(this.$el)
+      const thRaw = compStyle.getPropertyValue('--tabs-height')
+      State.tabHeight = Utils.ParseCSSNum(thRaw.trim())[0]
     },
 
     /**

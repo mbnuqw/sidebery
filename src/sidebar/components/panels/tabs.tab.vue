@@ -13,7 +13,7 @@
   :invisible="tab.invisible"
   :lvl="tab.lvl"
   :close-btn="$store.state.showTabRmBtn"
-  :style="{ transform: yPosition }"
+  :style="{ transform: 'translateY(' + position + 'px)' }"
   :title="tooltip"
   @contextmenu.prevent.stop=""
   @mousedown="onMouseDown"
@@ -44,7 +44,7 @@
     svg: use(xlink:href="#icon_remove")
   .t-box
     .title {{tab.title}}
-    //- .title {{tab.index}} - id: {{tab.id}} - {{tab.title}}
+    //- .title {{tab.position}} - id: {{tab.id}} - {{tab.title}}
     .loading
       svg.-a: use(xlink:href="#icon_load")
       svg.-b: use(xlink:href="#icon_load")
@@ -60,7 +60,7 @@ import EventBus from '../../event-bus'
 
 export default {
   props: {
-    index: Number,
+    position: Number,
     tab: {
       type: Object,
       default: () => ({}),
@@ -81,10 +81,6 @@ export default {
 
     updated() {
       return !!State.updatedTabs[this.tab.id]
-    },
-
-    yPosition() {
-      return `translateY(${this.index * 30}px)`
     },
 
     favicon() {
@@ -463,7 +459,7 @@ export default {
   height: var(--tabs-height)
   align-items: center
   transform: translateZ(0)
-  transition: opacity var(--d-fast), transform .12s, z-index 0s .2s, background-color var(--d-fast)
+  transition: opacity var(--d-fast), transform var(--d-fast), z-index 0s .2s
   &:hover
     .fav
       opacity: 1

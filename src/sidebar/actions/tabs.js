@@ -630,10 +630,8 @@ export default {
           })
           if (state.hideFoldedTabs) browser.tabs.hide(nodes.map(t => t.id))
         } else {
-          nodes.forEach(n => {
-            const tab = state.tabs.find(t => t.id === n.id)
-            if (tab) tab.invisible = false
-          })
+          const tab = state.tabs.find(t => t.id === nodes[0].id)
+          if (tab) tab.invisible = false
           browser.tabs.update(nodes[0].id, { active: true })
         }
 

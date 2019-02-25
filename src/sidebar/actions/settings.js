@@ -25,6 +25,7 @@ export default {
    * Save settings to local storage
    */
   async saveSettings({ state }) {
+    // console.log('[DEBUG] SETTINGS ACTION saveSettings');
     if (!state.settingsLoaded) return
     let settings = {}
     for (const key in DEFAULT_SETTINGS) {

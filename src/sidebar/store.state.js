@@ -107,6 +107,7 @@ export default {
   private: browser.extension.inIncognitoContext,
   windowId: 0,
   windowFocused: true,
+  tabHeight: 30,
 
   // --- Global State
   ctxMenu: null,

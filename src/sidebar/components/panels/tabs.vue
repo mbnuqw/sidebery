@@ -9,16 +9,17 @@
     @start-selection="$emit('start-selection', $event)"
     @stop-selection="$emit('stop-selection')")
   scroll-box(ref="scrollBox", :lock="scrollLock")
-    .container(:ctx-menu="!!$root.ctxMenu")
+    .container(:ctx-menu="!!$root.ctxMenu", :style="{ height: scrollHeight }")
       transition-group(name="tab")
-        tab.tab(
+        .just-another-wrapper(
           v-for="(t, i) in tabs"
-          ref="tabs"
-          :key="t.id"
-          :index="getTabYPosition(i)"
-          :tab="t"
-          @start-selection="$emit('start-selection', $event)"
-          @stop-selection="$emit('stop-selection')")
+          :key="t.id")
+          tab.tab(
+            ref="tabs"
+            :position="getTabYPosition(i)"
+            :tab="t"
+            @start-selection="$emit('start-selection', $event)"
+            @stop-selection="$emit('stop-selection')")
 </template>
 
 
@@ -62,6 +63,14 @@ export default {
     scrollLock() {
       return State.scrollThroughTabs !== 'none'
     },
+
+    scrollHeight() {
+      let h = 64
+      for (let t of this.tabs) {
+        if (!t.invisible) h += State.tabHeight
+      }
+      return `${h}px`
+    },
   },
 
   mounted() {
@@ -72,16 +81,18 @@ export default {
     })
     EventBus.$on('scrollToActiveTab', (panelIndex, tabId) => {
       if (panelIndex !== this.index) return
-      if (!this.$refs.tabs) return
-      const tabVm = this.$refs.tabs.find(t => t.tab.id === tabId)
-      if (!tabVm) return
-      const activeTabAbsTop = tabVm.$el.offsetTop
-      const activeTabAbsBottom = tabVm.$el.offsetTop + tabVm.$el.offsetHeight
-
-      if (activeTabAbsTop < this.$refs.scrollBox.scrollY + 64) {
-        this.$refs.scrollBox.setScrollY(activeTabAbsTop - 64)
-      } else if (activeTabAbsBottom > this.$refs.scrollBox.scrollY + this.$el.offsetHeight - 64) {
-        this.$refs.scrollBox.setScrollY(activeTabAbsBottom - this.$el.offsetHeight + 64)
+      const sb = this.$refs.scrollBox.getScrollBox()
+      const sh = this.$el.offsetHeight
+      let h = 0
+      for (let t of this.tabs) {
+        h += State.tabHeight
+        if (t.id === tabId) break
+      }
+      if (h - State.tabHeight < sb.scrollTop + 64) {
+        sb.scrollTop = h - State.tabHeight - 64
+      }
+      if (h + 64 > sh + sb.scrollTop) {
+        sb.scrollTop = h - sh + 64
       }
     })
   },
@@ -137,7 +148,7 @@ export default {
       while (i--) {
         if (this.tabs[i].invisible) out--
       }
-      return out
+      return out * State.tabHeight
     },
 
     /**
