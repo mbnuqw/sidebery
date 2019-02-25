@@ -84,7 +84,8 @@ export default {
   > .text-input
     box(relative)
     size(100%)
-    text(c: #afafaf, s: rem(15))
+    text(s: rem(15))
+    color: var(--label-fg)
     margin: 0 16px 0 0
     transform: opacity var(--d-fast)
 
