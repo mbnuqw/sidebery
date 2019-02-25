@@ -858,6 +858,8 @@ export default {
       }
 
       // Update tree
+      tab.isParent = false
+      tab.folded = false
       tab.parentId = -1
       tab.invisible = false
       if (State.tabsTree && tab.openerTabId !== undefined) {
