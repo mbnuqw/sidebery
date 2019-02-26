@@ -982,8 +982,12 @@ export default {
      */
     onRemovedTab(tabId, info) {
       if (info.windowId !== State.windowId) return
-      Store.commit('closeCtxMenu')
-      Store.commit('resetSelection')
+      // console.log('[DEBUG] INDEX onRemovedTab');
+      State.removingTabs.splice(State.removingTabs.indexOf(tabId), 1)
+      if (!State.removingTabs.length) {
+        Store.commit('closeCtxMenu')
+        Store.commit('resetSelection')
+      }
       let rmIndex = State.tabs.findIndex(t => t.id === tabId)
       if (rmIndex === -1) return
 
@@ -1014,7 +1018,7 @@ export default {
       }
 
       // Update last tab successor
-      if (State.ffVer >= 65 && panel.tabs.length > 2) {
+      if (State.ffVer >= 65 && panel.tabs.length > 2 && !State.removingTabs.length) {
         // Removing the last tab
         if (tab.index === panel.endIndex) {
           const prevTab = panel.tabs[panel.tabs.length - 2]
@@ -1040,11 +1044,13 @@ export default {
       // Remove updated flag
       this.$delete(State.updatedTabs, tabId)
 
-      Store.dispatch('recalcPanelScroll')
-      Store.dispatch('saveSyncPanels')
+      if (!State.removingTabs.length) {
+        Store.dispatch('recalcPanelScroll')
+        Store.dispatch('saveSyncPanels')
+      }
 
       // Calc tree levels
-      if (State.tabsTree) {
+      if (State.tabsTree && !State.removingTabs.length) {
         State.tabs = Utils.CalcTabsTreeLevels(State.tabs)
         Store.dispatch('saveTabsTree')
       }

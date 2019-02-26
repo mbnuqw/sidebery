@@ -150,6 +150,7 @@ export default {
    */
   async removeTabs({ state, getters, dispatch }, tabIds) {
     // console.log('[DEBUG] TABS ACTION removeTabs');
+    state.removingTabs = [...tabIds]
     const tabs = []
     const toRemove = []
     let panelId = undefined
