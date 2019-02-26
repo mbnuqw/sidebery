@@ -643,15 +643,32 @@ export default {
 
         // Update tabs tree
         if (state.tabsTree) {
-          if (nodes.length > 1 && nodes[0].id === nodes[1].parentId) {
-            // If dragNodes is sub-tree, preserve struct
-            const tab = state.tabs.find(t => t.id === nodes[0].id)
-            if (tab) tab.parentId = dropParent >= 0 ? dropParent : -1
-          } else {
-            // Or just flatten all nodes
-            for (let node of nodes) {
-              const tab = state.tabs.find(t => t.id === node.id)
-              if (tab) tab.parentId = dropParent >= 0 ? dropParent : -1
+          // Get parent tab parameters
+          let parentId = parent ? parent.id : -1
+          let parentLvl = parent ? parent.lvl : 0
+          if (parentLvl === state.tabsTreeLimit) parentId = parent.parentId
+
+          // Set first tab parentId
+          const firstTab = state.tabs.find(t => t.id === nodes[0].id)
+          firstTab.parentId = parentId
+
+          // Get level offset for gragged branch
+          let lvl = firstTab.lvl
+
+          for (let i = 1; i < nodes.length; i++) {
+            const prevTab = state.tabs.find(t => t.id === nodes[i - 1].id)
+            const tab = state.tabs.find(t => t.id === nodes[i].id)
+            if (!tab) continue
+
+            // Above the limit
+            if (parentLvl + tab.lvl - lvl >= state.tabsTreeLimit) {
+              tab.parentId = prevTab.parentId
+              continue
+            }
+
+            // Flat nodes below first node's level
+            if (nodes[i].lvl <= lvl) {
+              tab.parentId = parentId
             }
           }
 

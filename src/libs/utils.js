@@ -263,14 +263,6 @@ function CalcTabsTreeLevels(tabs, maxLvl = 'none') {
       }
     }
 
-    if (lvl > maxLvl) {
-      if (t.parentId >= 0) {
-        parents[t.parentId] = false
-        t.parentId = path[maxLvl - 1]
-      }
-      lvl = maxLvl
-    }
-
     // Set tab lvl
     t.lvl = lvl
   }

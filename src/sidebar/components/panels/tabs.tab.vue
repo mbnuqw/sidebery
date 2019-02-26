@@ -43,7 +43,7 @@
   .close(v-if="$store.state.showTabRmBtn", @mousedown.stop="onCloseClick", @mouseup.stop="")
     svg: use(xlink:href="#icon_remove")
   .t-box
-    .title {{tab.title}}
+    .title {{tab.id}} - {{tab.title}}
     .loading
       svg.-a: use(xlink:href="#icon_load")
       svg.-b: use(xlink:href="#icon_load")
@@ -289,6 +289,7 @@ export default {
           type: 'tab',
           id: t.id,
           parentId: t.parentId,
+          lvl: t.lvl,
           index: t.index,
           ctx: t.cookieStoreId,
           incognito: State.private,

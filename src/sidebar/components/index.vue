@@ -861,6 +861,7 @@ export default {
       tab.isParent = false
       tab.folded = false
       tab.parentId = -1
+      tab.lvl = 0
       tab.invisible = false
       if (State.tabsTree && tab.openerTabId !== undefined) {
         let parent = panel.tabs.find(t => t.id === tab.openerTabId)
