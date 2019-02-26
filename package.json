@@ -82,7 +82,11 @@
       "**/src/libs/*.test.js",
       "**/src/sidebar/*.test.js",
       "**/src/sidebar/actions/*.test.js",
-      "**/src/sidebar/components/*.test.js"
+      "**/src/sidebar/components/*.test.js",
+      "**/src/sidebar/components/dashboards/*.test.js",
+      "**/src/sidebar/components/fields/*.test.js",
+      "**/src/sidebar/components/inputs/*.test.js",
+      "**/src/sidebar/components/panels/*.test.js"
     ],
     "transform": {
       "^.+\\.js$": "<rootDir>/node_modules/babel-jest",

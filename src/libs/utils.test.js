@@ -86,21 +86,6 @@ describe('Global utilities', () => {
     })
   })
 
-  // GetAllWindows
-  describe('GetAllWindows()', () => {
-    test('gets all windows and check which current', async () => {
-      const windows = await Utils.GetAllWindows()
-      expect(windows).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({
-            id: 123,
-            current: true,
-          })
-        ])
-      )
-    })
-  })
-
   // GetPanelIndex
   describe('GetPanelIndex()', () => {
     test('Get panel index by tab id', async () => {

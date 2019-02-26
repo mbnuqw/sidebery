@@ -441,7 +441,7 @@ export default {
   async moveTabsToWin({ state, dispatch }, { tabIds, window }) {
     const ids = [...tabIds]
     const windowId = window ? window.id : await dispatch('chooseWin')
-    const win = (await Utils.GetAllWindows()).find(w => w.id === windowId)
+    const win = (await dispatch('getAllWindows')).find(w => w.id === windowId)
 
     if (state.private === win.incognito) {
       browser.tabs.move(ids, { windowId, index: -1 })

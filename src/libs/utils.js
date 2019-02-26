@@ -115,20 +115,6 @@ function StrSize(str) {
 }
 
 /**
- * Get all windows and check which current
- */
-async function GetAllWindows() {
-  return Promise.all([browser.windows.getCurrent(), browser.windows.getAll()]).then(
-    ([current, all]) => {
-      return all.map(w => {
-        if (w.id === current.id) w.current = true
-        return w
-      })
-    }
-  )
-}
-
-/**
  * Get panel index of tab
  */
 function GetPanelIndex(panels, tabId) {
@@ -329,7 +315,6 @@ export default {
   Sleep,
   StrSize,
   BytesToStr,
-  GetAllWindows,
   GetPanelIndex,
   GetPanelOf,
   UDate,

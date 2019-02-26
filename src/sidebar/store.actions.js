@@ -1,6 +1,5 @@
 import EventBus from './event-bus'
 import CtxMenu from './context-menu'
-import Utils from '../libs/utils'
 import { Translate } from  '../mixins/dict'
 import SavedStateActions from './actions/saved-state'
 import SettingsActions from './actions/settings'
@@ -87,14 +86,29 @@ export default {
     if (state.hideInact) dispatch('hideInactPanelsTabs')
   },
 
+
+  /**
+   * Get all windows and check which current
+   */
+  async getAllWindows() {
+    return Promise.all([browser.windows.getCurrent(), browser.windows.getAll()]).then(
+      ([current, all]) => {
+        return all.map(w => {
+          if (w.id === current.id) w.current = true
+          return w
+        })
+      }
+    )
+  },
+
   /**
    * Open context menu
    */
-  async openCtxMenu({ state, commit, getters }, { el, node } = {}) {
+  async openCtxMenu({ state, commit, getters, dispatch }, { el, node } = {}) {
     let nodesLen = state.selected.length
     let nodeType = typeof node.id === 'number' ? 'tab' : 'bookmark'
     const menu = new CtxMenu(el, () => commit('resetSelection'))
-    const otherWindows = (await Utils.GetAllWindows()).filter(w => !w.current)
+    const otherWindows = (await dispatch('getAllWindows')).filter(w => !w.current)
 
     // --- Tab
     // ------

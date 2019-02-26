@@ -1,5 +1,19 @@
 const MsgHandlers = []
 
+// const browser = {
+//   bookmarks: {},
+//   commands: {},
+//   contextualIdentities: {},
+//   extension: {},
+//   i18n: {},
+//   proxy: {},
+//   permissions: {},
+//   runtime: {},
+//   storage: {},
+//   tabs: {},
+//   windows: {},
+// }
+
 const browser = {
   bookmarks: {},
   commands: {
@@ -16,15 +30,10 @@ const browser = {
   proxy: {
     onRequest: {},
   },
+  permissions: {},
   runtime: {
-    sendMessage: msg => {
-      MsgHandlers.map(h => h(msg))
-    },
-    onMessage: {
-      addListener: handler => {
-        MsgHandlers.push(handler)
-      },
-    },
+    sendMessage: msg => MsgHandlers.map(h => h(msg)),
+    onMessage: { addListener: handler => MsgHandlers.push(handler) },
   },
   storage: {
     local: {
@@ -35,42 +44,12 @@ const browser = {
       },
       get: key => Promise.resolve({ [key]: browser.storage.local.data[key] }),
     },
+    sync: {},
   },
   tabs: {
     captureTab: () => 'tab image',
   },
-  windows: {
-    getCurrent() {
-      return new Promise(res => {
-        res({
-          id: 123,
-        })
-      })
-    },
-
-    getAll({ populate } = {}) {
-      return new Promise(res => {
-        res([
-          {
-            id: 123,
-            title: 'one',
-            tabs: populate ? [{ id: 11, active: true }, { id: 12 }] : undefined,
-          },
-          {
-            id: 1,
-            title: 'two',
-            focused: true,
-            tabs: populate ? [{ id: 21, active: true }] : undefined,
-          },
-          {
-            id: 2,
-            title: 'three',
-            tabs: populate ? [{ id: 31, active: true }] : undefined,
-          },
-        ])
-      })
-    },
-  },
+  windows: {},
 }
 
 global.browser = browser
