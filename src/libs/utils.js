@@ -132,7 +132,7 @@ function GetPanelIndex(panels, tabId) {
  */
 function GetPanelOf(panels, tab) {
   if (tab.pinned) return panels[1]
-  for (let i = 2; i < panels.length; i++) {
+  for (let i = 1; i < panels.length; i++) {
     if (panels[i].cookieStoreId === tab.cookieStoreId) return panels[i]
   }
   return null

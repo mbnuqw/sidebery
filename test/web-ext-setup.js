@@ -20,6 +20,7 @@ const browser = {
     cmds: [],
     getAll: () => Promise.resolve(browser.commands.cmds),
   },
+  cookies: {},
   contextualIdentities: {},
   extension: {
     inIncognitoContext: false,

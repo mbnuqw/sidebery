@@ -126,10 +126,8 @@ export default {
 
     if (tab.folded) dispatch('expTabsBranch', tab.id)
 
-    if (p && p.noEmpty) {
-      const panelIndex = Utils.GetPanelIndex(getters.panels, tab.id)
-      const panelTabs = getters.panels[panelIndex].tabs
-      if (panelTabs && panelTabs.length === 1) {
+    if (p.noEmpty) {
+      if (p.tabs && p.tabs.length === 1) {
         await browser.tabs.create({ cookieStoreId: p.id })
       }
     }
@@ -267,7 +265,7 @@ export default {
     for (let tabId of tabIds) {
       const tab = state.tabs.find(t => t.id === tabId)
       if (!tab) continue
-      if (tab.url === 'about:blank' && tab.status === 'loading') continue
+      if (tab.url === 'about:blank' && tab.status === 'loading') continue // hm...wut?
       browser.tabs.reload(tabId)
     }
   },
@@ -338,7 +336,6 @@ export default {
     for (let tabId of tabIds) {
       let tab = state.tabs.find(t => t.id === tabId)
       if (!tab) continue
-      // if (state.lockedPanels.includes(tab.cookieStoreId)) continue
       browser.tabs.duplicate(tabId)
     }
   },
@@ -544,11 +541,7 @@ export default {
       if (t.id === tabId) t.folded = false
       if (t.id !== tabId && t.folded) preserve.push(t.id)
       if (t.parentId === tabId || toShow.includes(t.parentId)) {
-        if (t.invisible && t.parentId === tabId) {
-          toShow.push(t.id)
-          t.invisible = false
-        }
-        if (!preserve.includes(t.parentId)) {
+        if ((t.invisible && t.parentId === tabId) && !preserve.includes(t.parentId)) {
           toShow.push(t.id)
           t.invisible = false
         }
