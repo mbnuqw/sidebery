@@ -684,6 +684,8 @@ export default {
           const node = nodes[i]
           if (node.type === 'separator') continue
           if (!state.tabsTree && node.type !== 'bookmark') continue
+          if (state.tabsTreeLimit > 0 && node.type !== 'bookmark') continue
+
           const groupPageUrl = browser.runtime.getURL('group/group.html')
           const info = await browser.tabs.create({
             active: !(parent && parent.folded),
@@ -695,16 +697,19 @@ export default {
             pinned: pin,
           })
           oldNewMap[node.id] = info.id
+
           // Restore parentId
           if (state.tabsTree && nodes.length > 1 && nodes[0].id === nodes[1].parentId && !pin) {
             const tab = state.tabs.find(t => t.id === info.id)
             if (tab && oldNewMap[node.parentId]) tab.parentId = oldNewMap[node.parentId]
           }
+
           // Remove source tab (and update tabs tree)
           if (nodes[0].type === 'tab' && !event.ctrlKey) {
             await browser.tabs.remove(node.id)
           }
         }
+
         // Update tabs tree if there are no tabs was deleted
         if (nodes[0].type !== 'tab' || event.ctrlKey) {
           state.tabs = Utils.CalcTabsTreeLevels(state.tabs)
