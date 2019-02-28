@@ -412,9 +412,11 @@ export default {
       if (type === 'direct') {
         State.proxies[this.id] = undefined
         this.conf.proxy = null
+        this.conf.proxified = false
       } else {
         State.proxies[this.id] = { ...proxySettings }
         this.conf.proxy = proxySettings
+        this.conf.proxified = this.proxyHostValid && this.proxyPortValid
       }
 
       Store.dispatch('saveContainers')
@@ -425,6 +427,7 @@ export default {
     onProxyHostInput(value) {
       if (!this.id || !this.conf.proxy) return
       this.conf.proxy.host = value
+      this.conf.proxified = this.proxyHostValid && this.proxyPortValid
       if (State.proxies[this.id]) State.proxies[this.id].host = value
       if (!this.proxyHostValid) return
       Store.dispatch('saveContainers')
@@ -434,6 +437,7 @@ export default {
     onProxyPortInput(value) {
       if (!this.id || !this.conf.proxy) return
       this.conf.proxy.port = value
+      this.conf.proxified = this.proxyHostValid && this.proxyPortValid
       if (State.proxies[this.id]) State.proxies[this.id].port = value
       if (!this.proxyPortValid) return
       Store.dispatch('saveContainers')

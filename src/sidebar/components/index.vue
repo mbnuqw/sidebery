@@ -777,6 +777,7 @@ export default {
         lockedTabs: false,
         lockedPanel: false,
         proxy: null,
+        proxified: false,
         sync: false,
         noEmpty: false,
         lastActiveTab: -1,

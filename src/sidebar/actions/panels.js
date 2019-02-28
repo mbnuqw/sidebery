@@ -31,6 +31,7 @@ export default {
           lockedTabs: false,
           lockedPanel: false,
           proxy: null,
+          proxified: false,
           sync: false,
           noEmpty: false,
           lastActiveTab: -1,
@@ -44,6 +45,7 @@ export default {
         if (ctr.lockedTabs === undefined) ctr.lockedTabs = false
         if (ctr.lockedPanel === undefined) ctr.lockedPanel = false
         if (ctr.proxy === undefined) ctr.proxy = null
+        if (ctr.proxified === undefined) ctr.proxified = false
         if (ctr.sync === undefined) ctr.sync = false
         if (ctr.noEmpty === undefined) ctr.noEmpty = false
         if (ctr.lastActiveTab === undefined) ctr.lastActiveTab = -1
