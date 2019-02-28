@@ -1,5 +1,5 @@
 <template lang="pug">
-.PinnedTab(:data-active="tab.active"
+.PinnedTab(:is-active="tab.active"
   :data-no-fav="!favicon || faviErr"
   :data-audible="tab.audible"
   :data-muted="tab.mutedInfo.muted"
@@ -35,6 +35,7 @@
       svg.-loud: use(xlink:href="#icon_loud")
       svg.-mute: use(xlink:href="#icon_mute")
   .ctx(v-if="ctx && ctxColor", :style="{background: ctxColor}")
+  .title(v-if="withTitle") {{tab.title}}
 </template>
 
 
@@ -88,6 +89,10 @@ export default {
 
     tooltip() {
       return `${this.tab.title}\n${this.tab.url}`
+    },
+
+    withTitle() {
+      return State.pinnedTabsPosition === 'panel' && State.pinnedTabsList
     },
   },
 
@@ -420,21 +425,27 @@ export default {
 
 
 .PinnedTab
+  --pinned-tab-size: 32px
+
   box(relative, flex)
   size(32px, same)
+  width: var(--pinned-tab-size)
   overflow: hidden
   justify-content: center
   align-items: center
   transform: translateZ(0)
   transition: opacity var(--d-fast), transform .12s, z-index 0s .2s, background-color var(--d-fast)
   &:hover
+  &[is-active]:hover
     .fav
-      opacity: 1
+      opacity: .7
     .title
       color: var(--tabs-fg-hover)
-    .close
-      opacity: 1
-      z-index: 20
+  &:active
+  &[is-active]:active
+    .fav
+      transition: none
+      opacity: .5
 
   &:before
     content: ''
@@ -444,7 +455,7 @@ export default {
     opacity: 0
     transition: opacity var(--d-fast)
 
-  &[data-active]
+  &[is-active]
     background-color: var(--tabs-activated-bg)
     .fav
       opacity: 1
@@ -487,6 +498,15 @@ export default {
     > .update-badge
       opacity: 1
       transform: scale(1, 1)
+
+#root.-pinned-tabs-panel.-pinned-tabs-list
+  .PinnedTab
+    size(100%)
+    justify-content: flex-start
+    height: var(--tabs-height)
+    padding-left: 1px
+  .PinnedTab:before
+    box-shadow: 0 -1px 0 0 var(--tabs-update-badge-bg)
 
 #root.-pinned-tabs-panel
 #root.-pinned-tabs-top
@@ -535,6 +555,7 @@ export default {
 .PinnedTab .fav
   box(relative)
   size(16px, same)
+  margin: 0 6px
   flex-shrink: 0
   opacity: 1
   z-index: 20
@@ -703,4 +724,17 @@ export default {
 .PinnedTab[drop-slot]
   &:before
     opacity: 1
+
+// --- Title
+.PinnedTab .title
+  box(relative)
+  flex-grow: 1
+  font: var(--tabs-font)
+  color: var(--tabs-fg)
+  padding: 0 1px
+  transition: color .2s
+  white-space: nowrap
+  overflow: hidden
+  transition: transform var(--d-fast), color var(--d-fast), mask var(--d-fast)
+  mask: linear-gradient(-90deg, transparent, #000000 12px, #000000)
 </style>

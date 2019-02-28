@@ -25,6 +25,7 @@ export default {
   'settings.pinned_tabs_position_bottom': { message: 'внизу' },
   'settings.pinned_tabs_position_panel': { message: 'панель' },
   'settings.pinned_tabs_sync': { message: 'Синхронизировать закрепленные вкладки' },
+  'settings.pinned_tabs_list': { message: 'Показывать заголовки закрепленных табов' },
   'settings.tabs_tree_layout': { message: 'Древовидное отображение табов' },
   'settings.group_on_open_layout': { message: 'Создать поддерево при открытии ссылки в новом табе' },
   'settings.tabs_tree_limit': { message: 'Максимальный уровень вложенности табов' },

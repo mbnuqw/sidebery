@@ -41,6 +41,11 @@ export default new Vue({
       if (!this.pinnedTabs.length) return '-no-pinned-tabs'
       return '-pinned-tabs-' + State.pinnedTabsPosition
     },
+
+    pinnedViewClass() {
+      if (State.pinnedTabsList) return '-pinned-tabs-list'
+      else return '-pinned-tabs-grid'
+    },
   },
 
   watch: {

@@ -33,6 +33,7 @@ export const DEFAULT_SETTINGS = {
   tabsPanelRightClickAction: 'none',
   pinnedTabsPosition: 'panel',
   pinnedTabsSync: false,
+  pinnedTabsList: false,
   tabsTree: false,
   groupOnOpen: true,
   tabsTreeLimit: 'none',

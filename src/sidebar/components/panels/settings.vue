@@ -38,6 +38,11 @@
         :opts="$store.state.pinnedTabsPositionOpts"
         @input="setOpt('pinnedTabsPosition', $event)")
       toggle-field(
+        v-if="$store.state.pinnedTabsPosition === 'panel'"
+        label="settings.pinned_tabs_list"
+        :value="$store.state.pinnedTabsList"
+        @input="setOpt('pinnedTabsList', $event)")
+      toggle-field(
         label="settings.pinned_tabs_sync"
         :value="$store.state.pinnedTabsSync"
         @input="togglePinnedTabsSync")

@@ -1,5 +1,5 @@
 <template lang="pug">
-.Tab(:data-active="tab.active"
+.Tab(:is-active="tab.active"
   :data-status="tab.status"
   :data-no-fav="!favicon || faviErr"
   :data-audible="tab.audible"
@@ -43,7 +43,7 @@
   .close(v-if="$store.state.showTabRmBtn", @mousedown.stop="onCloseClick", @mouseup.stop="")
     svg: use(xlink:href="#icon_remove")
   .t-box
-    .title {{tab.index}} - {{tab.id}} - {{tab.title}}
+    .title {{tab.title}}
     .loading
       svg.-a: use(xlink:href="#icon_load")
       svg.-b: use(xlink:href="#icon_load")
@@ -454,20 +454,24 @@ export default {
 .Tab
   box(absolute, flex)
   width: 100%
-
-  // box(relative, flex)
   height: var(--tabs-height)
   align-items: center
   transform: translateZ(0)
   transition: opacity var(--d-fast), transform var(--d-fast), z-index 0s .2s
   &:hover
+  &[is-active]:hover
     .fav
-      opacity: 1
+      opacity: .7
     .title
       color: var(--tabs-fg-hover)
     .close
       opacity: 1
       z-index: 20
+  &:active
+  &[is-active]:active
+    .fav
+      transition: none
+      opacity: .5
 
   &[lvl="1"]
     padding-left: var(--tabs-indent)
@@ -518,7 +522,7 @@ export default {
     .fav > img
       opacity: .2
 
-  &[data-active]
+  &[is-active]
     background-color: var(--tabs-activated-bg)
     .fav
       opacity: 1

@@ -262,7 +262,8 @@ export default {
     for (let tabId of tabIds) {
       const tab = state.tabs.find(t => t.id === tabId)
       if (!tab) continue
-      if (tab.url === 'about:blank' && tab.status === 'loading') continue // hm...wut?
+      // if tab loading and haven't yet url
+      if (tab.url === 'about:blank' && tab.status === 'loading') continue
       browser.tabs.reload(tabId)
     }
   },
@@ -278,6 +279,7 @@ export default {
    * Try to activate last active tab on the panel
    */
   activateLastActiveTabOf({ getters }, panelIndex) {
+    // console.log('[DEBUG] TABS ACION activateLastActiveTabOf');
     const p = getters.panels[panelIndex]
     if (!p || !p.tabs || !p.tabs.length) return
     const tab = p.tabs.find(t => t.id === p.lastActiveTab)
