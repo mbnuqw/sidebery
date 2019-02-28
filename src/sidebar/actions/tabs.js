@@ -12,8 +12,9 @@ export default {
     const tabs = await browser.tabs.query({ windowId })
 
     // Check order of tabs and get moves for normalizing
-    const ctxs = [getters.defaultCtxId]
-      .concat(state.containers.filter(c => c.type === 'ctx').map(c => c.cookieStoreId))
+    const ctxs = [getters.defaultCtxId].concat(
+      state.containers.filter(c => c.type === 'ctx').map(c => c.cookieStoreId)
+    )
     const moves = []
     let index = tabs.filter(t => t.pinned).length
     let offset = 0
@@ -184,11 +185,7 @@ export default {
 
     // If there are no tabs on this panel
     // create new one (if that option accepted)
-    if (
-      panel &&
-      toRemove.length === panel.tabs.length &&
-      panel.noEmpty
-    ) {
+    if (panel && toRemove.length === panel.tabs.length && panel.noEmpty) {
       await browser.tabs.create({ active: true })
     }
 
@@ -541,7 +538,7 @@ export default {
       if (t.id === tabId) t.folded = false
       if (t.id !== tabId && t.folded) preserve.push(t.id)
       if (t.parentId === tabId || toShow.includes(t.parentId)) {
-        if ((t.invisible && t.parentId === tabId) && !preserve.includes(t.parentId)) {
+        if (t.invisible && (t.parentId === tabId || !preserve.includes(t.parentId))) {
           toShow.push(t.id)
           t.invisible = false
         }
@@ -576,63 +573,54 @@ export default {
     // console.log('[DEBUG] TABS ACTION dropToTabs', dropIndex, dropParent);
     const destCtx = getters.panels[state.panelIndex].cookieStoreId
     const parent = state.tabs.find(t => t.id === dropParent)
+    const toHide = []
+    const toShow = []
     if (dropIndex === -1) dropIndex = getters.panels[state.panelIndex].endIndex + 1
 
     // Tabs or Bookmarks
     if (nodes && nodes.length) {
       const samePanel = nodes[0].panel === state.panelIndex
 
-      // Reset drop to same place
-      if (nodes[0].type === 'tab' && samePanel) {
-        let k = nodes[0].index >= dropIndex ? dropIndex : dropIndex - 1
-        for (let n of nodes) {
-          if (k === n.index && dropParent !== n.id) continue
-          if (k === n.index || dropParent === n.id) return
-        }
-      }
+      // Normalize dropIndex for tabs droped to the same panel
+      // If dropIndex is greater that first tab index - decrease it by 1
+      if (samePanel) dropIndex = dropIndex <= nodes[0].index ? dropIndex : dropIndex - 1
 
+      // Move tabs
       if (nodes[0].type === 'tab' && samePanel && !event.ctrlKey) {
-        // Pin/Unpin tab
-        if (!pin && nodes[0].pinned) {
-          for (let n of nodes) {
-            await browser.tabs.update(n.id, { pinned: false })
+        // Reset drop to same place
+        if (nodes[0].index === dropIndex && dropParent === nodes[0].parentId) return
+
+        // Get dragged tabs
+        const tabs = []
+        for (let n of nodes) {
+          let tab = state.tabs.find(t => t.id === n.id)
+          if (!tab) return
+          tabs.push(tab)
+        }
+
+        // Unpin tab
+        if (!pin && tabs[0].pinned) {
+          for (let t of tabs) {
+            await browser.tabs.update(t.id, { pinned: false })
           }
         }
-        if (pin && !nodes[0].pinned) {
-          for (let n of nodes) {
-            const tab = state.tabs.find(t => t.id === n.id)
+
+        // Pin tab
+        if (pin && !tabs[0].pinned) {
+          for (let t of tabs) {
             // Skip group tab
-            if (tab && tab.url.startsWith('moz-extension')) continue
+            if (t.url.startsWith('moz-extension')) continue
             // Flatten
-            if (tab) {
-              tab.lvl = 0
-              tab.parentId = -1
-            }
+            t.lvl = 0
+            t.parentId = -1
             // Pin tab
-            await browser.tabs.update(n.id, { pinned: true })
+            await browser.tabs.update(t.id, { pinned: true })
           }
         }
 
         // Move
-        if (nodes[0].index !== dropIndex) {
-          dropIndex = nodes[0].index > dropIndex ? dropIndex : dropIndex - 1
-          browser.tabs.move(nodes.map(t => t.id), {
-            windowId: state.windowId,
-            index: dropIndex,
-          })
-        }
-
-        // Hide tabs for folded branch or activate first node for expanded
-        if (parent && parent.folded) {
-          nodes.forEach(n => {
-            const tab = state.tabs.find(t => t.id === n.id)
-            if (tab) tab.invisible = true
-          })
-          if (state.hideFoldedTabs) browser.tabs.hide(nodes.map(t => t.id))
-        } else {
-          const tab = state.tabs.find(t => t.id === nodes[0].id)
-          if (tab) tab.invisible = false
-          browser.tabs.update(nodes[0].id, { active: true })
+        if (tabs[0].index !== dropIndex) {
+          browser.tabs.move(tabs.map(t => t.id), { windowId: state.windowId, index: dropIndex })
         }
 
         // Update tabs tree
@@ -642,35 +630,51 @@ export default {
           let parentLvl = parent ? parent.lvl : 0
           if (parentLvl === state.tabsTreeLimit) parentId = parent.parentId
 
-          // Set first tab parentId
-          const firstTab = state.tabs.find(t => t.id === nodes[0].id)
-          firstTab.parentId = parentId
+          // Set first tab parentId and other parameters
+          tabs[0].parentId = parentId
+          if (parent && parent.folded) tabs[0].invisible = true
+          else tabs[0].invisible = false
 
           // Get level offset for gragged branch
-          let lvl = firstTab.lvl
+          let lvlOffset = tabs[0].lvl
 
-          for (let i = 1; i < nodes.length; i++) {
-            const prevTab = state.tabs.find(t => t.id === nodes[i - 1].id)
-            const tab = state.tabs.find(t => t.id === nodes[i].id)
-            if (!tab) continue
+          for (let i = 1; i < tabs.length; i++) {
+            const prevTab = tabs[i - 1]
+            const tab = tabs[i]
 
             // Above the limit
-            if (parentLvl + tab.lvl - lvl >= state.tabsTreeLimit) {
+            if (parentLvl + tab.lvl - lvlOffset >= state.tabsTreeLimit) {
               tab.parentId = prevTab.parentId
               continue
             }
 
             // Flat nodes below first node's level
-            if (nodes[i].lvl <= lvl) {
+            if (tabs[i].lvl <= lvlOffset) {
               tab.parentId = parentId
+            }
+
+            // Update invisibility of tabs
+            if (parent && parent.folded) {
+              tab.invisible = true
+              if (state.hideFoldedTabs && !tab.hidden) toHide.push(tab.id)
+            } else if (tab.parentId === parentId) {
+              tab.invisible = false
+              if (state.hideFoldedTabs && tab.hidden) toShow.push(tab.id)
             }
           }
 
           // If there are no moving, just update tabs tree
-          if (dropIndex === nodes[0].index) {
+          if (dropIndex === tabs[0].index) {
             state.tabs = Utils.CalcTabsTreeLevels(state.tabs, state.tabsTreeLimit)
           }
         }
+
+        // If first tab is not invisible, activate it
+        if (!tabs[0].invisible) browser.tabs.update(tabs[0].id, { active: true })
+
+        // Hide/Show tabs
+        if (toHide.length) browser.tabs.hide(toHide)
+        if (toShow.length) browser.tabs.show(toShow)
       } else {
         // Create new tabs
         const oldNewMap = []

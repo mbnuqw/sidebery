@@ -983,6 +983,7 @@ export default {
     onRemovedTab(tabId, info) {
       if (info.windowId !== State.windowId) return
       // console.log('[DEBUG] INDEX onRemovedTab');
+      if (!State.removingTabs) State.removingTabs = []
       State.removingTabs.splice(State.removingTabs.indexOf(tabId), 1)
       if (!State.removingTabs.length) {
         Store.commit('closeCtxMenu')
