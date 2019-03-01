@@ -581,15 +581,14 @@ export default {
 
     // Tabs or Bookmarks
     if (nodes && nodes.length) {
-      // const samePanel = nodes[0].panel === state.panelIndex
       const samePanel = nodes[0].ctx === getters.panels[state.panelIndex].id
-
-      // Normalize dropIndex for tabs droped to the same panel
-      // If dropIndex is greater that first tab index - decrease it by 1
-      if (samePanel) dropIndex = dropIndex <= nodes[0].index ? dropIndex : dropIndex - 1
 
       // Move tabs
       if (nodes[0].type === 'tab' && samePanel && !event.ctrlKey) {
+        // Normalize dropIndex for tabs droped to the same panel
+        // If dropIndex is greater that first tab index - decrease it by 1
+        if (samePanel) dropIndex = dropIndex <= nodes[0].index ? dropIndex : dropIndex - 1
+
         // Get dragged tabs
         const tabs = []
         for (let n of nodes) {
@@ -717,27 +716,17 @@ export default {
 
     // Native event
     if (!nodes) {
-      if (!event.dataTransfer) return
-      for (let item of event.dataTransfer.items) {
-        if (item.kind !== 'string') return
+      const url = await Utils.GetUrlFromDragEvent(event)
 
-        if (item.type === 'text/uri-list') {
-          item.getAsString(s => {
-            if (!s.startsWith('http')) return
-            if (destCtx) {
-              browser.tabs.create({
-                active: false,
-                url: s,
-                index: dropIndex,
-                openerTabId: dropParent < 0 ? undefined : dropParent,
-                cookieStoreId: destCtx,
-                windowId: state.windowId,
-              })
-            } else {
-              browser.tabs.create({ url: s, windowId: state.windowId })
-            }
-          })
-        }
+      if (url && destCtx) {
+        browser.tabs.create({
+          active: true,
+          url,
+          index: dropIndex,
+          openerTabId: dropParent < 0 ? undefined : dropParent,
+          cookieStoreId: destCtx,
+          windowId: state.windowId,
+        })
       }
     }
 

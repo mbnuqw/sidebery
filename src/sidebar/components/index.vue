@@ -884,6 +884,16 @@ export default {
             }
             break
           }
+
+          // Auto fold sibling sub-trees
+          if (State.autoFoldTabs) {
+            for (let t of State.tabs) {
+              if (t.isParent && !t.folded && t.lvl === parent.lvl && t.id !== tab.openerTabId) {
+                Store.dispatch('foldTabsBranch', t.id)
+              }
+            }
+          }
+
         } else {
           // Sibling
           for (let i = tab.index; i--; ) {

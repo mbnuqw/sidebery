@@ -11,6 +11,7 @@ const Alph = [
 ]
 const UNDERSCORE_RE = /_/g
 const CSS_NUM_RE = /([\d.]+)(\w*)/
+const URL_RE =  /^(https?:\/\/)/
 
 /**
  *  Generate base64-like uid
@@ -308,6 +309,23 @@ function CommonSubStr(strings) {
   return out
 }
 
+/**
+ * Try to find url in dragged items and return first valid
+ */
+async function GetUrlFromDragEvent(event) {
+  return new Promise(res => {
+    if (!event.dataTransfer) return res()
+
+    for (let item of event.dataTransfer.items) {
+      if (item.kind !== 'string') continue
+
+      item.getAsString(s => {
+        if (URL_RE.test(s)) res(s)
+      })
+    }
+  })
+}
+
 export default {
   Uid,
   Asap,
@@ -324,4 +342,5 @@ export default {
   CalcTabsTreeLevels,
   ParseCSSNum,
   CommonSubStr,
+  GetUrlFromDragEvent,
 }
