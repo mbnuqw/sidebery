@@ -560,7 +560,6 @@ export default {
       opacity: 1
       z-index: 20
       transform: translateX(0)
-    // .fav
     .t-box
       transform: translateX(16px)
     .t-box
@@ -575,13 +574,13 @@ export default {
         opacity: 0
       > svg.-mute
         opacity: 1
-    // .fav
     .t-box
       transform: translateX(16px)
     .t-box
       mask: linear-gradient(-90deg, transparent, transparent 16px, #000000 28px, #000000)
 
   &[is-selected]
+  &[is-selected]:hover
     z-index: 10
     background-color: var(--tabs-selected-bg)
     .title
