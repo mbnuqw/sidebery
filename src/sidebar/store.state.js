@@ -37,6 +37,7 @@ export const DEFAULT_PANELS = [
     lockedPanel: false,
     proxyConfig: null,
     sync: false,
+    noEmpty: false,
     lastActiveTab: -1,
   },
 ]
