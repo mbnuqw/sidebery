@@ -60,16 +60,18 @@ export default {
       }
     },
 
-    onDragEnter() {
-      this.dragPointed = true
+    onDragEnter(e) {
+      // console.log('[DEBUG] PinnedDock onDragEnter');
+      if (e.srcElement === this.$el) this.dragPointed = true
     },
 
     onTabPointed(index) {
       this.pointedTabIndex = index
     },
 
-    onDragLeave() {
-      this.dragPointed = false
+    onDragLeave(e) {
+      // console.log('[DEBUG] PinnedDock onDragLeave');
+      if (e.srcElement === this.$el) this.dragPointed = false
     },
 
     onDrop(e) {

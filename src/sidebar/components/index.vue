@@ -651,6 +651,7 @@ export default {
      */
     onDragEnter(e) {
       if (e && e.relatedTarget) return
+      // console.log('[DEBUG] INDEX onDragEnter');
 
       // Get drop slots
       if (!this.$refs.panels) return

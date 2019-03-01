@@ -1102,6 +1102,7 @@ describe('dropToTabs', () => {
       panels: [
         {},
         {
+          id: 'container-A',
           cookieStoreId: 'container-A',
           endIndex: 3,
         },
@@ -1131,10 +1132,10 @@ describe('dropToTabs', () => {
     const args = { event, dropIndex: 2, dropParent: -1, nodes, pin: false }
 
     await TabsActions.dropToTabs(ctx, args)
-    expect(browser.tabs.update).not.toBeCalled()
+    expect(browser.tabs.update).toBeCalledWith(3, { active: true })
     expect(browser.tabs.move).not.toBeCalled()
     expect(browser.tabs.hide).not.toBeCalled()
-    expect(dispatch).not.toBeCalled()
+    expect(dispatch).toBeCalledWith('saveTabsTree')
   })
 
   test('drop tabs from the same panel to the same place (with shift)', async () => {
@@ -1148,6 +1149,7 @@ describe('dropToTabs', () => {
       panels: [
         {},
         {
+          id: 'container-A',
           cookieStoreId: 'container-A',
           endIndex: 3,
         },
@@ -1177,10 +1179,10 @@ describe('dropToTabs', () => {
     const args = { event, dropIndex: 3, dropParent: -1, nodes, pin: false }
 
     await TabsActions.dropToTabs(ctx, args)
-    expect(browser.tabs.update).not.toBeCalled()
+    expect(browser.tabs.update).toBeCalledWith(3, { active: true })
     expect(browser.tabs.move).not.toBeCalled()
     expect(browser.tabs.hide).not.toBeCalled()
-    expect(dispatch).not.toBeCalled()
+    expect(dispatch).toBeCalledWith('saveTabsTree')
   })
 
   test('drop to the end of panel if dropIndex is not defined', async () => {
@@ -1194,6 +1196,7 @@ describe('dropToTabs', () => {
       panels: [
         {},
         {
+          id: 'container-A',
           cookieStoreId: 'container-A',
           endIndex: 2,
         },
@@ -1240,6 +1243,7 @@ describe('dropToTabs', () => {
       panels: [
         {},
         {
+          id: 'container-A',
           cookieStoreId: 'container-A',
           endIndex: 2,
         },
@@ -1303,6 +1307,7 @@ describe('dropToTabs', () => {
       panels: [
         {},
         {
+          id: 'container-A',
           cookieStoreId: 'container-A',
           endIndex: 2,
         },
@@ -1373,6 +1378,7 @@ describe('dropToTabs', () => {
       panels: [
         {},
         {
+          id: 'container-A',
           cookieStoreId: 'container-A',
           endIndex: 2,
         },
@@ -1425,6 +1431,7 @@ describe('dropToTabs', () => {
       panels: [
         {},
         {
+          id: 'container-A',
           cookieStoreId: 'container-A',
           endIndex: 2,
         },
@@ -1491,6 +1498,7 @@ describe('dropToTabs', () => {
       panels: [
         {},
         {
+          id: 'container-A',
           cookieStoreId: 'container-A',
           endIndex: 2,
         },
@@ -1503,7 +1511,7 @@ describe('dropToTabs', () => {
     const ctx = { state, getters, dispatch }
     const event = { ctrlKey: false }
     const nodes = [
-      { type: 'tab', id: 4, panel: 1, index: 3, parentId: 1 },
+      { type: 'tab', id: 4, panel: 1, index: 3, parentId: 1, ctx: 'container-A' },
       { type: 'tab', id: 5 },
       { type: 'tab', id: 6 },
       { type: 'tab', id: 7 },
@@ -1551,6 +1559,7 @@ describe('dropToTabs', () => {
       panels: [
         {},
         {
+          id: 'container-A',
           cookieStoreId: 'container-A',
           endIndex: 2,
         },
@@ -1563,7 +1572,7 @@ describe('dropToTabs', () => {
     const ctx = { state, getters, dispatch }
     const event = { ctrlKey: false }
     const nodes = [
-      { type: 'tab', id: 4, panel: 1, index: 3, parentId: 1 },
+      { type: 'tab', id: 4, panel: 1, index: 3, parentId: 1, ctx: 'container-A' },
       { type: 'tab', id: 5 },
       { type: 'tab', id: 6 },
       { type: 'tab', id: 7 },
@@ -1611,6 +1620,7 @@ describe('dropToTabs', () => {
       panels: [
         {},
         {
+          id: 'container-A',
           cookieStoreId: 'container-A',
           endIndex: 2,
         },
@@ -1623,7 +1633,7 @@ describe('dropToTabs', () => {
     const ctx = { state, getters, dispatch }
     const event = { ctrlKey: false }
     const nodes = [
-      { type: 'tab', id: 4, panel: 1, index: 3, parentId: 1 },
+      { type: 'tab', id: 4, panel: 1, index: 3, parentId: 1, ctx: 'container-A' },
       { type: 'tab', id: 5 },
       { type: 'tab', id: 6 },
       { type: 'tab', id: 7 },

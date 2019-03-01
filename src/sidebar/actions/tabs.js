@@ -572,7 +572,7 @@ export default {
     { state, getters, dispatch },
     { event, dropIndex, dropParent, nodes, pin } = {}
   ) {
-    // console.log('[DEBUG] TABS ACTION dropToTabs', dropIndex, dropParent);
+    // console.log('[DEBUG] TABS ACTION dropToTabs', dropIndex, dropParent, pin);
     const destCtx = getters.panels[state.panelIndex].cookieStoreId
     const parent = state.tabs.find(t => t.id === dropParent)
     const toHide = []
@@ -581,7 +581,8 @@ export default {
 
     // Tabs or Bookmarks
     if (nodes && nodes.length) {
-      const samePanel = nodes[0].panel === state.panelIndex
+      // const samePanel = nodes[0].panel === state.panelIndex
+      const samePanel = nodes[0].ctx === getters.panels[state.panelIndex].id
 
       // Normalize dropIndex for tabs droped to the same panel
       // If dropIndex is greater that first tab index - decrease it by 1
@@ -589,9 +590,6 @@ export default {
 
       // Move tabs
       if (nodes[0].type === 'tab' && samePanel && !event.ctrlKey) {
-        // Reset drop to same place
-        if (nodes[0].index === dropIndex && dropParent === nodes[0].parentId) return
-
         // Get dragged tabs
         const tabs = []
         for (let n of nodes) {
@@ -620,8 +618,8 @@ export default {
           }
         }
 
-        // Move
-        if (tabs[0].index !== dropIndex) {
+        // Move if target index is different or pinned state changed
+        if (tabs[0].index !== dropIndex || !!pin !== !!tabs[0].pinned) {
           browser.tabs.move(tabs.map(t => t.id), { windowId: state.windowId, index: dropIndex })
         }
 

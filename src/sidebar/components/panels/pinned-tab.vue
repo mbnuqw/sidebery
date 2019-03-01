@@ -17,8 +17,8 @@
   .loaded-fx
   .drag-layer(draggable="true"
     @dragstart="onDragStart"
-    @dragenter.stop="onDragEnter"
-    @dragleave.stop="onDragLeave"
+    @dragenter="onDragEnter"
+    @dragleave="onDragLeave"
     @drop="onDragLeave")
   .fav
     .placeholder: svg: use(xlink:href="#icon_ff")
@@ -236,6 +236,7 @@ export default {
      * Handle dragstart event.
      */
     onDragStart(e) {
+      // console.log('[DEBUG] PinnedTab onDragStart');
       // Check what to drag
       const toDrag = [this.tab.id]
       const tabsToDrag = [this.tab]
@@ -258,6 +259,7 @@ export default {
           parentId: t.parentId,
           index: t.index,
           pinned: true,
+          lvl: 0,
           ctx: t.cookieStoreId,
           incognito: State.private,
           windowId: State.windowId,
