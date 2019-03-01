@@ -6,7 +6,7 @@
   :not-renderable="!renderable"
   :invisible="!visible"
   @click="onClick")
-  scroll-box(ref="scrollBox")
+  scroll-box(ref="scrollBox"): .bookmarks-wrapper
     b-node.node(
       v-for="n in $store.state.bookmarks"
       ref="nodes"
@@ -359,6 +359,10 @@ export default {
 
 .Bookmarks
   overflow: hidden
+
+.Bookmarks .bookmarks-wrapper
+  box(relative)
+  padding-bottom: 64px
 
 .Bookmarks[not-renderable] .node
   box(none)

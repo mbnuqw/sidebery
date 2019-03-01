@@ -357,7 +357,9 @@ export default {
   > .body > .exp > svg
     transform: rotateZ(0deg)
 
-.Node[is-selected="true"]
+.Node[n-type="bookmark"][is-selected="true"]
+.Node[n-type="folder"][is-selected="true"]
+.Node[n-type="separator"][is-selected="true"]
   &:before
     opacity: 1
     z-index: 0
@@ -365,7 +367,8 @@ export default {
     transition: opacity var(--d-fast),
                 z-index var(--d-fast),
                 transform 0s 0s
-  .body .title
+  > .body > .title
+  > .body:hover > .title
     color: var(--tabs-selected-fg)
 
 // Body of node
