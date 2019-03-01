@@ -144,7 +144,8 @@ export default {
   size(100%, auto)
   flex-wrap: wrap
   flex-direction: row
-  box-shadow: inset 0 -1px 0 0 #00000024,
+  box-shadow: inset 0 1px 0 0 #00000024,
+              inset 0 -1px 0 0 #00000024,
               inset 0 0 8px 0 #00000032
 
 // The last drop position
@@ -157,6 +158,10 @@ export default {
     box(absolute)
     pos(0, 0)
     background-color: var(--tabs-update-badge-bg)
+
+#root.-pinned-tabs-panel.-pinned-tabs-list
+  .PinnedDock .to-the-end
+    box(none)
 
 #root.-pinned-tabs-panel .PinnedDock .to-the-end
 #root.-pinned-tabs-top .PinnedDock .to-the-end
