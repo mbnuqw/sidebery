@@ -25,6 +25,19 @@ export default {
       state[key] = DEFAULT_SETTINGS[key]
     }
 
+    // Reset dashboard settings
+    for (let c of state.containers) {
+      if (c.panel === 'TabsPanel') {
+        c.lockedTabs = false
+        c.lockedPanel = false
+        c.proxy = null
+        c.proxified = false
+        c.sync = false
+        c.noEmpty = false
+        c.lastActiveTab = -1
+      }
+    }
+
     // Reset saved state
     state.synced = {}
   },
