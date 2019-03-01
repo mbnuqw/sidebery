@@ -22,7 +22,9 @@ describe('Vuex store mutations', () => {
 
   // openSettings
   test('resetSettings', () => {
-    const state = {}
+    const state = {
+      containers: []
+    }
     Mutations.setSetting(state, { key: 'theme', val: 'blue' })
     Mutations.resetSettings(state)
     expect(state).toEqual(
