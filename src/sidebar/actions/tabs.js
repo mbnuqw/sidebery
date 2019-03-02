@@ -58,7 +58,7 @@ export default {
 
           // Check if this is actual target tab
           if (!tab) break
-          if (tab.url !== t.url) break
+          if (tab.url !== t.url && tab.status === 'complete') break
           if (tab.cookieStoreId !== t.ctx) break
 
           tab.isParent = t.isParent
