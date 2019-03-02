@@ -10,6 +10,8 @@ const Alph = [
   '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '_',
 ]
 const UNDERSCORE_RE = /_/g
+const CSS_NUM_RE = /([\d.]+)(\w*)/
+const URL_RE =  /^(https?:\/\/)/
 
 /**
  *  Generate base64-like uid
@@ -114,20 +116,6 @@ function StrSize(str) {
 }
 
 /**
- * Get all windows and check which current
- */
-async function GetAllWindows() {
-  return Promise.all([browser.windows.getCurrent(), browser.windows.getAll()]).then(
-    ([current, all]) => {
-      return all.map(w => {
-        if (w.id === current.id) w.current = true
-        return w
-      })
-    }
-  )
-}
-
-/**
  * Get panel index of tab
  */
 function GetPanelIndex(panels, tabId) {
@@ -145,7 +133,7 @@ function GetPanelIndex(panels, tabId) {
  */
 function GetPanelOf(panels, tab) {
   if (tab.pinned) return panels[1]
-  for (let i = 2; i < panels.length; i++) {
+  for (let i = 1; i < panels.length; i++) {
     if (panels[i].cookieStoreId === tab.cookieStoreId) return panels[i]
   }
   return null
@@ -213,6 +201,131 @@ function CSSVar(key) {
   return '--' + key.replace(UNDERSCORE_RE, '-')
 }
 
+/**
+ * Calculate tree levels of tabs
+ */
+function CalcTabsTreeLevels(tabs, maxLvl = 'none') {
+  // console.log('[DEBUG] UTILS CalcTabsTreeLevels');
+  if (maxLvl === 'none') maxLvl = 999
+  let lvl = 0
+  let parents = {}
+  let path = []
+  for (let i = 0; i < tabs.length; i++) {
+    let pt = tabs[i - 1]
+    let t = tabs[i]
+
+    // Normalize parents props
+    t.isParent = !!t.isParent
+    t.folded = !!t.folded
+
+    // Tabs without parents
+    if (t.parentId < 0) {
+      lvl = 0
+      path = []
+    }
+
+    // Reset circular reference
+    if (t.parentId === t.id) t.parentId = lvl ? path[lvl - 1] : -1
+
+    // With parent
+    if (t.parentId >= 0) {
+      // Set parent id
+      parents[t.parentId] = true
+
+      // First child
+      // tab
+      //   tab <
+      if (pt && pt.id === t.parentId) {
+        path[lvl] = t.parentId
+        pt.isParent = true
+        pt.folded = pt.folded || !!t.invisible
+        lvl++
+      }
+
+      // After the last child
+      //   tab
+      // tab <
+      if (pt && pt.id !== t.parentId && pt.parentId !== t.parentId) {
+        lvl = path.indexOf(t.parentId) + 1
+      }
+    }
+
+    // Set tab lvl
+    t.lvl = lvl
+  }
+
+  // Reset parents without children
+  for (let t of tabs) {
+    t.isParent = !!parents[t.id]
+    if (!t.isParent) t.folded = false
+  }
+
+  return tabs
+}
+
+/**
+ * Parse numerical css value
+ */
+function ParseCSSNum(cssValue, or = 0) {
+  let [, num, unit] = CSS_NUM_RE.exec(cssValue.trim())
+  if (num.includes('.')) {
+    if (num[0] === '.') num = '0' + num
+    num = parseFloat(num)
+  } else {
+    num = parseInt(num)
+  }
+  if (isNaN(num)) num = or
+  return [num, unit]
+}
+
+/**
+ * Find common substring
+ */
+function CommonSubStr(strings) {
+  if (!strings || !strings.length) return ''
+  if (strings.length === 1) return strings[0]
+  const first = strings[0]
+  const others = strings.slice(1)
+  let start = 0
+  let end = 1
+  let out = ''
+  let common = ''
+
+  while (end <= first.length) {
+    common = first.slice(start, end)
+
+    const isCommon = others.every(s => {
+      return s.toLowerCase().includes(common.toLowerCase())
+    })
+
+    if (isCommon) {
+      if (common.length > out.length) out = common
+      end++
+    } else {
+      end = ++start + 1
+    }
+  }
+
+  return out
+}
+
+/**
+ * Try to find url in dragged items and return first valid
+ */
+async function GetUrlFromDragEvent(event) {
+  return new Promise(res => {
+    if (!event.dataTransfer) return res()
+
+    for (let item of event.dataTransfer.items) {
+      if (item.kind !== 'string') continue
+
+      item.getAsString(s => {
+        if (URL_RE.test(s)) res(s)
+      })
+    }
+  })
+}
+
 export default {
   Uid,
   Asap,
@@ -220,11 +333,14 @@ export default {
   Sleep,
   StrSize,
   BytesToStr,
-  GetAllWindows,
   GetPanelIndex,
   GetPanelOf,
   UDate,
   UTime,
   UElapsed,
   CSSVar,
+  CalcTabsTreeLevels,
+  ParseCSSNum,
+  CommonSubStr,
+  GetUrlFromDragEvent,
 }

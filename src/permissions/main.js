@@ -1,3 +1,11 @@
+// Load settings and set theme
+void(async function() {
+  let ans = await browser.storage.local.get('settings')
+  let settings = ans.settings
+  let theme = settings ? settings.theme : 'dark'
+  document.body.classList.add('-' + theme)
+})()
+
 // Translation
 void (async function() {
   document.title = browser.i18n.getMessage('permissions.all_urls.title')

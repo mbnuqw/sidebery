@@ -40,6 +40,9 @@ export default {
 
   // --- Tabs
   'styles.tabs_title': { message: 'Tabs' },
+  'styles.tabs_height': { message: 'Tabs height' },
+  'styles.tabs_indent': { message: 'Tabs indent' },
+  'styles.tabs_font': { message: 'Tabs font' },
   'styles.tabs_fg_color': { message: 'Foreground color' },
   'styles.tabs_fg_color_hover': { message: 'Foreground color on hover' },
   'styles.tabs_fg_color_active': { message: 'Foreground color on active' },
@@ -50,6 +53,11 @@ export default {
 
   // --- Bookmarks
   'styles.bookmarks_title': { message: 'Bookmarks' },
+  'styles.bookmarks_bookmark_height': { message: 'Bookmark height' },
+  'styles.bookmarks_folder_height': { message: 'Folder height' },
+  'styles.bookmarks_separator_height': { message: 'Separator height' },
+  'styles.bookmarks_bookmark_font': { message: 'Bookmark font' },
+  'styles.bookmarks_folder_font': { message: 'Folder font' },
   'styles.bookmarks_fg_color': { message: 'Bookmark color' },
   'styles.bookmarks_fg_color_hover': { message: 'Bookmark color on hover' },
   'styles.bookmarks_fg_color_active': { message: 'Bookmark color on active' },
@@ -60,4 +68,6 @@ export default {
   'styles.bookmarks_opened_dir_fg_color_hover': { message: 'Opened folder color on hover' },
   'styles.bookmarks_opened_dir_fg_color_active': { message: 'Opened folder color on active' },
   'styles.bookmarks_empty_dir_fg_color': { message: 'Empty folder color' },
+
+  'styles.reset_styles': { message: 'Reset' },
 }

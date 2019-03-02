@@ -40,6 +40,9 @@ export default {
 
   // --- Tabs
   'styles.tabs_title': { message: 'Табы' },
+  'styles.tabs_height': { message: 'Высота таба' },
+  'styles.tabs_indent': { message: 'Отступ таба' },
+  'styles.tabs_font': { message: 'Шрифт таба' },
   'styles.tabs_fg_color': { message: 'Цвет надписей' },
   'styles.tabs_fg_color_hover': { message: 'Цвет надписей при наведении курсора' },
   'styles.tabs_fg_color_active': { message: 'Цвет надписей при клике' },
@@ -50,6 +53,11 @@ export default {
 
   // --- Bookmarks
   'styles.bookmarks_title': { message: 'Закладки' },
+  'styles.bookmarks_bookmark_height': { message: 'Высота закладки' },
+  'styles.bookmarks_folder_height': { message: 'Высота папки' },
+  'styles.bookmarks_separator_height': { message: 'Высота разделителя' },
+  'styles.bookmarks_bookmark_font': { message: 'Шрифт закладки' },
+  'styles.bookmarks_folder_font': { message: 'Шрифт папки' },
   'styles.bookmarks_fg_color': { message: 'Цвет надписей' },
   'styles.bookmarks_fg_color_hover': { message: 'Цвет надписей при наведении курсора' },
   'styles.bookmarks_fg_color_active': { message: 'Цвет надписей при клике' },
@@ -60,4 +68,6 @@ export default {
   'styles.bookmarks_opened_dir_fg_color_hover': { message: 'Цвет отрытой папки при наведении курсора' },
   'styles.bookmarks_opened_dir_fg_color_active': { message: 'Цвет отрытой папки при клике' },
   'styles.bookmarks_empty_dir_fg_color': { message: 'Цвет пустой папки' },
+
+  'styles.reset_styles': { message: 'Сбросить' },
 }

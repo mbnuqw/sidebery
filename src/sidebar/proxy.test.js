@@ -15,12 +15,9 @@ describe('Request handler for proxy', () => {
         cookieStoreId: 'pumpurum',
       }
     ]
-    State.proxiedPanels = [
-      {
-        id: 'olala',
-        proxy: 'settings',
-      },
-    ]
+    State.proxies = {
+      olala: 'proxy-settings',
+    }
 
     let proxy = ProxyReqHandler({ tabId: -1 })
     expect(proxy).toBeUndefined()
@@ -32,9 +29,6 @@ describe('Request handler for proxy', () => {
     expect(proxy).toBeUndefined()
 
     proxy = ProxyReqHandler({ tabId: 12 })
-    expect(proxy).toEqual(expect.objectContaining({
-      id: expect.stringMatching('olala'),
-      proxy: expect.stringMatching('settings'),
-    }))
+    expect(proxy).toBe('proxy-settings')
   })
 })

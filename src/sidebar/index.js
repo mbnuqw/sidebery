@@ -22,7 +22,7 @@ export default new Vue({
   },
 
   computed: {
-    ...mapGetters(['fontSize', 'defaultCtxId', 'panels']),
+    ...mapGetters(['fontSize', 'defaultCtxId', 'panels', 'pinnedTabs']),
 
     nativeScrollbarsClass() {
       return State.nativeScrollbars ? '-native-scroll' : '-custom-scroll'
@@ -35,6 +35,16 @@ export default new Vue({
     animateClass() {
       if (State.animations) return '-animate'
       else return '-no-animate'
+    },
+
+    pinnedPosClass() {
+      if (!this.pinnedTabs.length) return '-no-pinned-tabs'
+      return '-pinned-tabs-' + State.pinnedTabsPosition
+    },
+
+    pinnedViewClass() {
+      if (State.pinnedTabsList) return '-pinned-tabs-list'
+      else return '-pinned-tabs-grid'
     },
   },
 
@@ -67,11 +77,14 @@ export default new Vue({
 
   async created() {
     browser.windows.onFocusChanged.addListener(this.onFocusWindow)
+    browser.windows.onRemoved.addListener(this.onRemovedWindow)
     browser.storage.onChanged.addListener(this.onChangeStorage)
     browser.commands.onCommand.addListener(this.onCmd)
 
     await Store.dispatch('loadSettings')
     await Store.dispatch('loadState')
+    await Store.dispatch('loadContainers')
+    await Store.dispatch('loadTabs')
     Store.dispatch('loadStyles')
     Store.dispatch('updateProxiedTabs')
     Store.dispatch('loadKeybindings')
@@ -80,13 +93,13 @@ export default new Vue({
     Store.dispatch('loadSnapshots')
     Store.dispatch('loadFavicons')
     Store.dispatch('loadPermissions')
-    await Store.dispatch('loadBookmarks')
+    if (State.bookmarksPanel) await Store.dispatch('loadBookmarks')
 
     const dSavingState = Utils.Debounce(() => Store.dispatch('saveState'), 567)
     Store.watch(Getters.activePanel, dSavingState.func)
 
-    const dMakingSnapshot = Utils.Debounce(() => Store.dispatch('makeSnapshot'), 10000)
-    Store.watch(Getters.tabs, dMakingSnapshot.func)
+    // const dMakingSnapshot = Utils.Debounce(() => Store.dispatch('makeSnapshot'), 10000)
+    // Store.watch(Getters.tabs, dMakingSnapshot.func)
 
     // Try to clear unneeded favicons
     Store.dispatch('tryClearFaviCache', 86400)
@@ -108,6 +121,15 @@ export default new Vue({
      */
     onFocusWindow(id) {
       this.windowFocused = id === State.windowId
+    },
+
+    /**
+     * Handle window removing
+     */
+    onRemovedWindow(windowId) {
+      if (State.windowId !== windowId) {
+        Store.dispatch('saveTabsTree', 0)
+      }
     },
 
     /**

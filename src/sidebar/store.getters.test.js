@@ -17,9 +17,6 @@ describe('Vuex getters', () => {
   test('ctxMenuOpened', () => {
     expect(Getters.ctxMenuOpened({ ctxMenu: {} })).toBe(true)
   })
-  test('tabs', () => {
-    expect(Getters.tabs({ tabs: [1, 2, 3] })).toEqual(expect.arrayContaining([1, 2, 3]))
-  })
   test('defaultCtxId', () => {
     expect(Getters.defaultCtxId({ private: true })).toBe(PRIVATE_CTX)
     expect(Getters.defaultCtxId({ private: false })).toBe(DEFAULT_CTX)
@@ -27,8 +24,9 @@ describe('Vuex getters', () => {
 
   test('panels', () => {
     const state = {
-      ctxs: [
-        { cookieStoreId: 'a', icon: 'a-icon', colorCode: 'a-color' }
+      containers: [
+        ...DEFAULT_PANELS,
+        { panel: 'TabsPanel', cookieStoreId: 'a', icon: 'a-icon', colorCode: 'a-color' },
       ],
       tabs: [
         { id: 11, pinned: true, cookieStoreId: DEFAULT_CTX },
@@ -36,37 +34,37 @@ describe('Vuex getters', () => {
         { id: 31, pinned: false, cookieStoreId: 'a' },
       ],
     }
+    const getters = {
+      pinnedTabs: [{ id: 11, pinned: true, cookieStoreId: DEFAULT_CTX }]
+    }
 
-    const panels = Getters.panels(state)
+    const panels = Getters.panels(state, getters)
 
-    expect(panels).toHaveLength(5)
+    expect(panels).toHaveLength(4)
     // Bookmarks
     expect(panels[0].icon).toBe(DEFAULT_PANELS[0].icon)
     expect(panels[0].name).toBe(DEFAULT_PANELS[0].name)
-    // Pinned
+    // Private
+    expect(panels[1].cookieStoreId).toBe(PRIVATE_CTX)
     expect(panels[1].icon).toBe(DEFAULT_PANELS[1].icon)
     expect(panels[1].name).toBe(DEFAULT_PANELS[1].name)
-    expect(panels[1].tabs).toHaveLength(1)
-    // Private
-    expect(panels[2].cookieStoreId).toBe(PRIVATE_CTX)
+    // Default
+    expect(panels[2].cookieStoreId).toBe(DEFAULT_CTX)
     expect(panels[2].icon).toBe(DEFAULT_PANELS[2].icon)
     expect(panels[2].name).toBe(DEFAULT_PANELS[2].name)
-    // Default
-    expect(panels[3].cookieStoreId).toBe(DEFAULT_CTX)
-    expect(panels[3].icon).toBe(DEFAULT_PANELS[3].icon)
-    expect(panels[3].name).toBe(DEFAULT_PANELS[3].name)
-    expect(panels[3].tabs).toHaveLength(1)
+    expect(panels[2].tabs).toHaveLength(1)
     // Context - 'a'
-    expect(panels[4].cookieStoreId).toBe('a')
-    expect(panels[4].icon).toBe('a-icon')
-    expect(panels[4].tabs).toHaveLength(1)
+    expect(panels[3].cookieStoreId).toBe('a')
+    expect(panels[3].icon).toBe('a-icon')
+    expect(panels[3].tabs).toHaveLength(1)
   })
 
   test('activePanel', () => {
     const state = {
-      panelIndex: 3,
-      ctxs: [
-        { cookieStoreId: 'a', icon: 'a-icon', colorCode: 'a-color' }
+      panelIndex: 2,
+      containers: [
+        ...DEFAULT_PANELS,
+        { panel: 'TabsPanel', cookieStoreId: 'a', icon: 'a-icon', colorCode: 'a-color' },
       ],
       tabs: [
         { id: 11, pinned: true, cookieStoreId: DEFAULT_CTX },
@@ -74,8 +72,11 @@ describe('Vuex getters', () => {
         { id: 31, pinned: false, cookieStoreId: 'a' },
       ],
     }
+    const getters = {
+      pinnedTabs: [{ id: 11, pinned: true, cookieStoreId: DEFAULT_CTX }]
+    }
 
-    const panels = Getters.panels(state)
+    const panels = Getters.panels(state, getters)
     const activePanel = Getters.activePanel(state, { panels })
 
     expect(activePanel.cookieStoreId).toBe(DEFAULT_CTX)
@@ -84,8 +85,9 @@ describe('Vuex getters', () => {
   test('defaultPanel', () => {
     const state = {
       panelIndex: 0,
-      ctxs: [
-        { cookieStoreId: 'a', icon: 'a-icon', colorCode: 'a-color' }
+      containers: [
+        ...DEFAULT_PANELS,
+        { panel: 'TabsPanel', cookieStoreId: 'a', icon: 'a-icon', colorCode: 'a-color' },
       ],
       tabs: [
         { id: 11, pinned: true, cookieStoreId: DEFAULT_CTX },
@@ -93,8 +95,11 @@ describe('Vuex getters', () => {
         { id: 31, pinned: false, cookieStoreId: 'a' },
       ],
     }
+    const getters = {
+      pinnedTabs: [{ id: 11, pinned: true, cookieStoreId: DEFAULT_CTX }]
+    }
 
-    const panels = Getters.panels(state)
+    const panels = Getters.panels(state, getters)
     const defaultCtxId = Getters.defaultCtxId({ private: true })
     const defaultPanel = Getters.defaultPanel(state, { panels, defaultCtxId })
 

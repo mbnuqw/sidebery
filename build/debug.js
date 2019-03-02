@@ -24,6 +24,18 @@ const SIDEBAR = scripts['dev.sidebar'].split(' ')
 const SIDEBAR_CMD = SIDEBAR[0]
 const SIDEBAR_OPT = SIDEBAR.slice(1)
 
+const GROUP = scripts['dev.group'].split(' ')
+const GROUP_CMD = GROUP[0]
+const GROUP_OPT = GROUP.slice(1)
+
+const PERM_URL = scripts['dev.perm.url'].split(' ')
+const PERM_URL_CMD = PERM_URL[0]
+const PERM_URL_OPT = PERM_URL.slice(1)
+
+const PERM_HIDE = scripts['dev.perm.hide'].split(' ')
+const PERM_HIDE_CMD = PERM_HIDE[0]
+const PERM_HIDE_OPT = PERM_HIDE.slice(1)
+
 const EXT = scripts['dev.ext.' + LANG].split(' ')
 const EXT_CMD = EXT[0]
 const EXT_OPT = EXT.slice(1)
@@ -33,10 +45,19 @@ const EXEC_CONFIG = { env: process.env }
 let out = spawnSync(CLEAR_SIDEBAR_CMD, CLEAR_SIDEBAR_OPT, EXEC_CONFIG)
 if (out.status) process.exit(out.status)
 const Sidebar = spawn(SIDEBAR_CMD, SIDEBAR_OPT, EXEC_CONFIG)
+const Group = spawn(GROUP_CMD, GROUP_OPT, EXEC_CONFIG)
+const PermUrl = spawn(PERM_URL_CMD, PERM_URL_OPT, EXEC_CONFIG)
+const PermHide = spawn(PERM_HIDE_CMD, PERM_HIDE_OPT, EXEC_CONFIG)
 const Ext = spawn(EXT_CMD, EXT_OPT, EXEC_CONFIG)
 
 Sidebar.stdout.on('data', data => logOut('[Sidebar] ', data))
 Sidebar.stderr.on('data', data => errOut('[Sidebar ERROR] ', data))
+Group.stdout.on('data', data => logOut('[Group] ', data))
+Group.stderr.on('data', data => errOut('[Group ERROR] ', data))
+PermUrl.stdout.on('data', data => logOut('[PermUrl] ', data))
+PermUrl.stderr.on('data', data => errOut('[PermUrl ERROR] ', data))
+PermHide.stdout.on('data', data => logOut('[PermHide] ', data))
+PermHide.stderr.on('data', data => errOut('[PermHide ERROR] ', data))
 Ext.stdout.on('data', data => logOut('[Ext]     ', data))
 
 function logOut(prefix, data) {

@@ -5,16 +5,23 @@
   toggle-field(
     v-if="!isPrivate"
     label="dashboard.sync_label"
-    :value="syncON"
+    :value="conf.sync"
     :inline="true"
     @input="toggleSync")
 
   toggle-field(
     label="dashboard.lock_panel_label"
     :title="t('dashboard.lock_panel_tooltip')"
-    :value="lockedPanel"
+    :value="conf.lockedPanel"
     :inline="true"
     @input="togglePanelLock")
+
+  toggle-field(
+    label="dashboard.no_empty_label"
+    :title="t('dashboard.no_empty_tooltip')"
+    :value="conf.noEmpty"
+    :inline="true"
+    @input="togglePanelNoEmpty")
 
   .options
     .opt(v-if="haveTabs", @click="dedupTabs") {{t('tabs_dashboard.dedup_tabs')}}
@@ -26,7 +33,6 @@
 <script>
 import {mapGetters} from 'vuex'
 import Store from '../../store'
-import State from '../../store.state'
 import ToggleField from '../fields/toggle'
 
 export default {
@@ -46,14 +52,6 @@ export default {
   computed: {
     ...mapGetters(['isPrivate']),
 
-    lockedPanel() {
-      return State.lockedPanels[this.index]
-    },
-
-    syncON() {
-      return State.syncedPanels[this.index]
-    },
-
     haveTabs() {
       if (!this.conf.tabs) return false
       return this.conf.tabs.length > 0
@@ -62,18 +60,20 @@ export default {
 
   methods: {
     togglePanelLock() {
-      this.$set(State.lockedPanels, this.index, !State.lockedPanels[this.index])
-      Store.dispatch('saveState')
+      this.conf.lockedPanel = !this.conf.lockedPanel
+      Store.dispatch('saveContainers')
     },
 
     toggleSync() {
-      this.$set(State.syncedPanels, this.index, !State.syncedPanels[this.index])
-      // let id = this.conf.pinned ? 'pinned' : State.defaultCtx
-      // let pi = State.syncPanels.findIndex(p => p === id)
-      // if (pi !== -1) State.syncPanels.splice(pi, 1)
-      // else State.syncPanels.push(id)
+      // console.log('[DEBUG] DEFAULT TABS DASH toggleSync');
+      this.conf.sync = !this.conf.sync
       Store.dispatch('resyncPanels')
-      Store.dispatch('saveState')
+      Store.dispatch('saveContainers')
+    },
+
+    togglePanelNoEmpty() {
+      this.conf.noEmpty = !this.conf.noEmpty
+      Store.dispatch('saveContainers')
     },
 
     dedupTabs() {

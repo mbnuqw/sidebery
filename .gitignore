@@ -4,6 +4,8 @@ dist
 node_modules
 addon/sidebar
 addon/settings
+addon/group
+addon/permissions
 build/profile-ru/*
 !build/profile-ru/__preserve-dir
 build/profile-en/*

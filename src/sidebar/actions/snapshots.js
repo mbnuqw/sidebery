@@ -121,6 +121,7 @@ export default {
    */
   async loadSnapshots() {
     const ans = await browser.storage.local.get('snapshots')
+    if (!ans.snapshots) return []
     return ans.snapshots.reverse() || []
   },
 
@@ -136,7 +137,6 @@ export default {
    */
   async openSnapshotsViewer({ state, dispatch }) {
     state.snapshots = await dispatch('loadSnapshots')
-    // state.snapshots.reverse()
     if (state.panelIndex >= 0) state.lastPanelIndex = state.panelIndex
     state.panelIndex = -4
   },

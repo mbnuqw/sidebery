@@ -5,6 +5,8 @@ export default {
   'dashboard.lock_panel_tooltip': { message: 'Prevent auto-switching from this panel' },
   'dashboard.lock_tabs_label': { message: 'Lock tabs' },
   'dashboard.lock_tabs_tooltip': { message: 'Prevent closing tabs on this panel' },
+  'dashboard.no_empty_label': { message: 'No empty' },
+  'dashboard.no_empty_tooltip': { message: 'Create new tab on closing the last one' },
 
   // --- Bookmarks
   'bookmarks_dashboard.title': { message: 'Bookmarks' },

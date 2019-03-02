@@ -132,10 +132,6 @@ export default {
   box(relative)
   &.err-animation
     animation: shake-it .3s
-    // > input
-    // > textarea
-    // > .placeholder
-    //   animation: red-shift 3s
 
 .TextInput[is-empty]
   > .placeholder
@@ -173,10 +169,8 @@ export default {
 
 @keyframes red-shift
   0%
-    // filter: deop-shadow()
     opacity: 1
   100%
-    // filter: brightness(0)
     opacity: .5
 
 @keyframes shake-it

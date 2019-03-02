@@ -86,21 +86,6 @@ describe('Global utilities', () => {
     })
   })
 
-  // GetAllWindows
-  describe('GetAllWindows()', () => {
-    test('gets all windows and check which current', async () => {
-      const windows = await Utils.GetAllWindows()
-      expect(windows).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({
-            id: 123,
-            current: true,
-          })
-        ])
-      )
-    })
-  })
-
   // GetPanelIndex
   describe('GetPanelIndex()', () => {
     test('Get panel index by tab id', async () => {
@@ -174,6 +159,191 @@ describe('Global utilities', () => {
       expect(Utils.UElapsed(10, 320000)).toBe('3 d')
       expect(Utils.UElapsed(10, 2000000)).toBe('3 e')
       expect(Utils.UElapsed(10, 36000000)).toBe('1 y')
+    })
+  })
+
+  // CalcTabsTreeLevels
+  describe('CalcTabsTreeLevels()', () => {
+    test('Move group of tabs', () => {
+    //     >    I     >      II     >     III    >     IV
+    // |tab 0       |tab 0       |tab 0       |tab 0       |tab 0       
+    // |tab 1      -|TAB 5       |tab 5       |tab 5       |tab 5       
+    // |  tab 2    ^|tab 1      >|  TAB 6     |  tab 6     |  tab 6     
+    // |  tab 3    ^|  tab 2    ^|tab 1      >|    TAB 7   |    tab 7   
+    // |    tab 4  ^|  tab 3    ^|  tab 2    ^|tab 1      >|  TAB 8     
+    // |tab 5      ^|    tab 4  ^|  tab 3    ^|  tab 2    ^|tab 1       
+    // |  tab 6    <|tab 6      ^|    tab 4  ^|  tab 3    ^|  tab 2     
+    // |    tab 7  <|  tab 7    <|tab 7      ^|    tab 4  ^|  tab 3     
+    // |  tab 8    <|tab 8       |tab 8       |tab 8      ^|    tab 4   
+    // |tab 9       |tab 9       |tab 9       |tab 9       |tab 9       
+      const tabs = [
+        { id: 0, index: 0, parentId: -1 },
+        { id: 1, index: 1, parentId: -1 },
+        { id: 2, index: 2, parentId: 1 },
+        { id: 3, index: 3, parentId: 1 },
+        { id: 4, index: 4, parentId: 3 },
+        { id: 5, index: 5, parentId: -1 },
+        { id: 6, index: 6, parentId: 5 },
+        { id: 7, index: 7, parentId: 6 },
+        { id: 8, index: 8, parentId: 5 },
+        { id: 9, index: 9, parentId: -1 },
+      ]
+
+      Utils.CalcTabsTreeLevels(tabs)
+
+      expect(tabs).toEqual([
+        { id: 0, index: 0, isParent: false, lvl: 0, parentId: -1, folded: false },
+        { id: 1, index: 1, isParent: true,  lvl: 0, parentId: -1, folded: false },
+        { id: 2, index: 2, isParent: false, lvl: 1, parentId: 1, folded: false },
+        { id: 3, index: 3, isParent: true,  lvl: 1, parentId: 1, folded: false },
+        { id: 4, index: 4, isParent: false, lvl: 2, parentId: 3, folded: false },
+        { id: 5, index: 5, isParent: true, lvl: 0, parentId: -1, folded: false },
+        { id: 6, index: 6, isParent: true, lvl: 1, parentId: 5, folded: false },
+        { id: 7, index: 7, isParent: false, lvl: 2, parentId: 6, folded: false },
+        { id: 8, index: 8, isParent: false, lvl: 1, parentId: 5, folded: false },
+        { id: 9, index: 9, isParent: false, lvl: 0, parentId: -1, folded: false },
+      ])
+
+      // ---
+
+      const tabs1 = [
+        { id: 0, index: 0, parentId: -1 },
+        { id: 5, index: 1, parentId: -1 },
+        { id: 1, index: 2, parentId: -1 },
+        { id: 2, index: 3, parentId: 1 },
+        { id: 3, index: 4, parentId: 1 },
+        { id: 4, index: 5, parentId: 3 },
+        { id: 6, index: 6, parentId: 5 },
+        { id: 7, index: 7, parentId: 6 },
+        { id: 8, index: 8, parentId: 5 },
+        { id: 9, index: 9, parentId: -1 },
+      ]
+
+      Utils.CalcTabsTreeLevels(tabs1)
+
+      expect(tabs1).toEqual([
+        { id: 0, index: 0, isParent: false, lvl: 0, parentId: -1, folded: false },
+        { id: 5, index: 1, isParent: true, lvl: 0, parentId: -1, folded: false },
+        { id: 1, index: 2, isParent: true,  lvl: 0, parentId: -1, folded: false },
+        { id: 2, index: 3, isParent: false, lvl: 1, parentId: 1, folded: false },
+        { id: 3, index: 4, isParent: true,  lvl: 1, parentId: 1, folded: false },
+        { id: 4, index: 5, isParent: false, lvl: 2, parentId: 3, folded: false },
+        { id: 6, index: 6, isParent: true, lvl: 0, parentId: 5, folded: false },
+        { id: 7, index: 7, isParent: false, lvl: 1, parentId: 6, folded: false },
+        { id: 8, index: 8, isParent: false, lvl: 0, parentId: 5, folded: false },
+        { id: 9, index: 9, isParent: false, lvl: 0, parentId: -1, folded: false },
+      ])
+
+      // ---
+
+      const tabs2 = [
+        { id: 0, index: 0, parentId: -1 },
+        { id: 5, index: 1, parentId: -1 },
+        { id: 6, index: 2, parentId: 5 },
+        { id: 1, index: 3, parentId: -1 },
+        { id: 2, index: 4, parentId: 1 },
+        { id: 3, index: 5, parentId: 1 },
+        { id: 4, index: 6, parentId: 3 },
+        { id: 7, index: 7, parentId: 6 },
+        { id: 8, index: 8, parentId: 5 },
+        { id: 9, index: 9, parentId: -1 },
+      ]
+
+      Utils.CalcTabsTreeLevels(tabs2)
+
+      expect(tabs2).toEqual([
+        { id: 0, index: 0, isParent: false, lvl: 0, parentId: -1, folded: false },
+        { id: 5, index: 1, isParent: true, lvl: 0, parentId: -1, folded: false },
+        { id: 6, index: 2, isParent: true, lvl: 1, parentId: 5, folded: false },
+        { id: 1, index: 3, isParent: true,  lvl: 0, parentId: -1, folded: false },
+        { id: 2, index: 4, isParent: false, lvl: 1, parentId: 1, folded: false },
+        { id: 3, index: 5, isParent: true,  lvl: 1, parentId: 1, folded: false },
+        { id: 4, index: 6, isParent: false, lvl: 2, parentId: 3, folded: false },
+        { id: 7, index: 7, isParent: false, lvl: 0, parentId: 6, folded: false },
+        { id: 8, index: 8, isParent: false, lvl: 0, parentId: 5, folded: false },
+        { id: 9, index: 9, isParent: false, lvl: 0, parentId: -1, folded: false },
+      ])
+
+      // ---
+
+      const tabs3 = [
+        { id: 0, index: 0, parentId: -1 },
+        { id: 5, index: 1, parentId: -1 },
+        { id: 6, index: 2, parentId: 5 },
+        { id: 7, index: 3, parentId: 6 },
+        { id: 1, index: 4, parentId: -1 },
+        { id: 2, index: 5, parentId: 1 },
+        { id: 3, index: 6, parentId: 1 },
+        { id: 4, index: 7, parentId: 3 },
+        { id: 8, index: 8, parentId: 5 },
+        { id: 9, index: 9, parentId: -1 },
+      ]
+
+      Utils.CalcTabsTreeLevels(tabs3)
+
+      expect(tabs3).toEqual([
+        { id: 0, index: 0, isParent: false, lvl: 0, parentId: -1, folded: false },
+        { id: 5, index: 1, isParent: true, lvl: 0, parentId: -1, folded: false },
+        { id: 6, index: 2, isParent: true, lvl: 1, parentId: 5, folded: false },
+        { id: 7, index: 3, isParent: false, lvl: 2, parentId: 6, folded: false },
+        { id: 1, index: 4, isParent: true,  lvl: 0, parentId: -1, folded: false },
+        { id: 2, index: 5, isParent: false, lvl: 1, parentId: 1, folded: false },
+        { id: 3, index: 6, isParent: true,  lvl: 1, parentId: 1, folded: false },
+        { id: 4, index: 7, isParent: false, lvl: 2, parentId: 3, folded: false },
+        { id: 8, index: 8, isParent: false, lvl: 0, parentId: 5, folded: false },
+        { id: 9, index: 9, isParent: false, lvl: 0, parentId: -1, folded: false },
+      ])
+
+      // ---
+
+      const tabs4 = [
+        { id: 0, index: 0, parentId: -1 },
+        { id: 5, index: 1, parentId: -1 },
+        { id: 6, index: 2, parentId: 5 },
+        { id: 7, index: 3, parentId: 6 },
+        { id: 8, index: 4, parentId: 5 },
+        { id: 1, index: 5, parentId: -1 },
+        { id: 2, index: 6, parentId: 1 },
+        { id: 3, index: 7, parentId: 1 },
+        { id: 4, index: 8, parentId: 3 },
+        { id: 9, index: 9, parentId: -1 },
+      ]
+
+      Utils.CalcTabsTreeLevels(tabs4)
+
+      expect(tabs4).toEqual([
+        { id: 0, index: 0, isParent: false, lvl: 0, parentId: -1, folded: false },
+        { id: 5, index: 1, isParent: true, lvl: 0, parentId: -1, folded: false },
+        { id: 6, index: 2, isParent: true, lvl: 1, parentId: 5, folded: false },
+        { id: 7, index: 3, isParent: false, lvl: 2, parentId: 6, folded: false },
+        { id: 8, index: 4, isParent: false, lvl: 1, parentId: 5, folded: false },
+        { id: 1, index: 5, isParent: true,  lvl: 0, parentId: -1, folded: false },
+        { id: 2, index: 6, isParent: false, lvl: 1, parentId: 1, folded: false },
+        { id: 3, index: 7, isParent: true,  lvl: 1, parentId: 1, folded: false },
+        { id: 4, index: 8, isParent: false, lvl: 2, parentId: 3, folded: false },
+        { id: 9, index: 9, isParent: false, lvl: 0, parentId: -1, folded: false },
+      ])
+    })
+  })
+
+  // CommonSubStr
+  describe('CommonSubStr()', () => {
+    test('Find common part of strings', () => {
+      const strings = ['Just some stringA', 'another StriNg', '__STRING__']
+      const common = Utils.CommonSubStr(strings)
+      expect(common).toBe('string')
+
+      const a = ['Just some string', 'another StriNg', 'STRING__']
+      const commona = Utils.CommonSubStr(a)
+      expect(commona).toBe('string')
+
+      const noStrings = []
+      const common1 = Utils.CommonSubStr(noStrings)
+      expect(common1).toBe('')
+
+      const one = ['just one']
+      const common2 = Utils.CommonSubStr(one)
+      expect(common2).toBe('just one')
     })
   })
 })

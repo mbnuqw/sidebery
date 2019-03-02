@@ -8,7 +8,7 @@
   },
   "author": "mbnuqw",
   "name": "__MSG_ExtName__",
-  "version": "1.9.2",
+  "version": "2.0.0",
   "default_locale": "en",
   "description": "__MSG_ExtDesc__",
   "homepage_url": "https://github.com/mbnuqw/sidebery",
@@ -36,7 +36,7 @@
       "16": "./assets/logo-ce32-16.png",
       "32": "./assets/logo-ce32-32.png"
     },
-    "default_title": "Nav Center",
+    "default_title": "Sidebery",
     "default_panel": "./sidebar/index.html"
   },
 
@@ -97,7 +97,7 @@
       "suggested_key": {
         "default": "Alt+Shift+Up"
       },
-      "description": "up_shit"
+      "description": "up_shift"
     },
     "down_shift": {
       "suggested_key": {
@@ -110,6 +110,12 @@
         "default": "Alt+Space"
       },
       "description": "activate"
+    },
+    "menu": {
+      "suggested_key": {
+        "default": "Alt+M"
+      },
+      "description": "menu"
     },
     "reset_selection": {
       "suggested_key": {

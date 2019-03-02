@@ -22,7 +22,9 @@ describe('Vuex store mutations', () => {
 
   // openSettings
   test('resetSettings', () => {
-    const state = {}
+    const state = {
+      containers: []
+    }
     Mutations.setSetting(state, { key: 'theme', val: 'blue' })
     Mutations.resetSettings(state)
     expect(state).toEqual(
@@ -74,10 +76,10 @@ describe('Vuex store mutations', () => {
   // resetSelection
   test('resetSelection', () => {
     const state = {
-      selectedTabs: [1, 2, 3],
+      selected: [1, 2, 3],
     }
     Mutations.resetSelection(state)
-    expect(state.selectedTabs.length).toBe(0)
+    expect(state.selected.length).toBe(0)
   })
 
   // closeCtxMenu

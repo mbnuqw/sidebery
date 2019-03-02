@@ -1,47 +1,21 @@
 <template lang="pug">
 .Bookmarks(
   :drag-active="drag && drag.dragged"
-  :drag-end="dragEnd"
   :ctx-menu="!!ctxMenuOpened"
   :editing="editor"
   :not-renderable="!renderable"
   :invisible="!visible"
-  @click="onClick"
-  @mouseup="onMouseUp"
-  @mouseleave="onMouseUp")
-  scroll-box(ref="scrollBox", @auto-scroll="onMouseMove")
-    .drag-box
-      .drag-node(
-        v-for="n in flat"
-        ref="flat"
-        :key="n.id"
-        :style="flatNodeStyle(n)"
-        :dragged="drag && drag.node.id === n.id && drag.dragged"
-        :n-type="n.type"
-        :exp="n.expanded && n.children.length > 0")
-        .exp(v-if="n.expanded && n.children.length")
-          svg: use(xlink:href="#icon_expand")
-        .fav(v-if="n.type === 'bookmark'")
-          .placeholder(v-if="!n.fav")
-          img(v-else, :src="n.fav")
-        .title {{n.title}}
+  @click="onClick")
+  scroll-box(ref="scrollBox"): .bookmarks-wrapper
     b-node.node(
       v-for="n in $store.state.bookmarks"
       ref="nodes"
       :key="n.id"
       :node="n"
       :recalc-scroll="recalcScroll"
-      @md="onNodeMouseDown"
-      @expand="onFolderExpand"
-      @create="onCreate"
-      @edit="onEdit")
-
-  bookmarks-editor.editor(
-    ref="editor"
-    :is-active="editor"
-    @cancel="onEditorCancel"
-    @create="onEditorOk"
-    @change="onEditorOk")
+      @start-selection="onStartSelection")
+  transition(name="editor")
+    bookmarks-editor.editor(v-if="$store.state.bookmarkEditor")
 </template>
 
 
@@ -64,6 +38,7 @@ export default {
 
   props: {
     active: Boolean,
+    index: Number,
   },
 
   data() {
@@ -71,7 +46,6 @@ export default {
       topOffset: 0,
       drag: null,
       flat: [],
-      dragEnd: false,
       editor: false,
       renderable: false,
       visible: false,
@@ -142,9 +116,6 @@ export default {
 
   mounted() {
     this.topOffset = this.$el.getBoundingClientRect().top
-
-    const onmove = Utils.Asap(this.onMouseMove)
-    this.$el.addEventListener('mousemove', onmove.func)
   },
 
   beforeDestroy() {
@@ -159,238 +130,8 @@ export default {
       Store.commit('closeCtxMenu')
     },
 
-    /**
-     * Handle mousemove event
-     * ps. yes, it's big
-     */
-    onMouseMove(e) {
-      if (!this.drag) return
-      if (this.drag.lvl === 0) return
-
-      if (
-        (!this.drag.dragged && Math.abs(e.clientY - this.drag.y) > 5) ||
-        (!this.drag.dragged && Math.abs(e.clientX - this.drag.x) > 5)
-      ) {
-        this.drag.dragged = true
-        this.updateFlatLayout()
-      }
-
-      if (this.drag.dragged) {
-        if (!this.$refs.flat || !this.$refs.flat[this.drag.i]) return
-        let moveY = e.clientY - this.topOffset + this.$refs.scrollBox.scrollY
-        let y
-        let x
-
-        for (let i = 0; i < this.flat.length; i++) {
-          let node = this.flat[i]
-
-          // Dragged node - just skip
-          if (i === this.drag.i) continue
-
-          // Nodes BEFORE dragged
-          if (i < this.drag.i) {
-            if (node.top > moveY - node.h) {
-              // - [Dragged Node] UP
-              // ...
-              // -> You here
-              // - OLD PLACE
-              y = node.top + this.drag.h
-            } else {
-              // ...
-              // -> You here
-              // - [Dragged Node] UP
-              // - OLD PLACE
-              this.drag.target = i + 1
-              y = node.top
-            }
-            x = 12 * node.lvl
-          }
-
-          // Nodes AFTER dragged
-          if (i > this.drag.i) {
-            if (node.top > moveY) {
-              // - OLD PLACE
-              // - [Dragged Node] DOWN
-              // -> You here
-              // ...
-              y = node.top
-            } else {
-              // - OLD PLACE
-              // ...
-              // -> You here
-              // - [Dragged Node] DOWN
-              this.drag.target = i
-              y = node.top - this.drag.h
-            }
-            x = 12 * node.lvl
-          }
-
-          if (y !== this.$refs.flat[i].lastY || x !== this.$refs.flat[i].lastX) {
-            this.$refs.flat[i].style.transform = `translate(${x}px, ${y}px)`
-            this.$refs.flat[i].lastY = y
-            this.$refs.flat[i].lastX = x
-          }
-        }
-
-        let prev
-        let next
-
-        if (this.drag.target < this.drag.i) {
-          // UP
-          prev = this.flat[this.drag.target - 1]
-          next = this.flat[this.drag.target]
-        }
-        if (this.drag.target === this.drag.i) {
-          prev = this.flat[this.drag.target - 1]
-          next = this.flat[this.drag.target + 1]
-        }
-        if (this.drag.target > this.drag.i) {
-          prev = this.flat[this.drag.target]
-          next = this.flat[this.drag.target + 1]
-          // DOWN
-        }
-        let prevFolder = prev && prev.type === 'folder'
-
-        // Between...
-        if (prev && next) {
-          if (prevFolder) {
-            if (prev.lvl < next.lvl) {
-              //   > folder
-              //     * dragged
-              //     - whatever
-              this.drag.lvl = next.lvl
-            } else {
-              //   < folder
-              //   *-* dragged
-              //   - whatever
-              this.drag.lvl = this.drag.x > e.clientX ? prev.lvl : prev.lvl + 1
-            }
-          } else {
-            if (prev.lvl > next.lvl) {
-              //    - not folder
-              //  *-* dragged
-              //  - whatever
-              this.drag.lvl = this.drag.x > e.clientX ? prev.lvl - 1 : prev.lvl
-            } else {
-              //  - node
-              //  * dragged
-              //  - whatever
-              this.drag.lvl = prev.lvl
-            }
-          }
-        }
-
-        // Last
-        if (prev && !next) {
-          this.drag.lvl = 1
-        }
-
-        // Non-zero
-        if (this.drag.lvl === 0) {
-          this.drag.lvl = 1
-        }
-
-        // Reset highlight of old folders
-        if (this.drag.path[this.drag.lvl] !== undefined) {
-          let index = this.drag.path.pop()
-          if (this.$refs.flat[index]) {
-            this.$refs.flat[index].setAttribute('drag-parent', false)
-          }
-        }
-
-        // Set highlight for folder in current path
-        let j = this.drag.target
-        if (this.drag.i < this.drag.target) j++
-        let l = this.drag.lvl
-        while (j--) {
-          // Only folders
-          if (this.flat[j].type !== 'folder') continue
-          // Only parents
-          if (this.flat[j].lvl < l) {
-            // Only new values
-            if (this.drag.path[this.flat[j].lvl] !== j) {
-              let old = this.drag.path[this.flat[j].lvl]
-              if (this.$refs.flat[old]) {
-                this.$refs.flat[old].setAttribute('drag-parent', false)
-              }
-              this.$refs.flat[j].setAttribute('drag-parent', true)
-              this.drag.path[this.flat[j].lvl] = j
-            }
-            // Go to lower lvl
-            l--
-          }
-
-          // Ok, root
-          if (this.flat[j].lvl === 0) break
-        }
-
-        let dragX = 12 * this.drag.lvl
-        let dragY = moveY - this.drag.y
-        if (dragY < 0) dragY = 0
-        this.$refs.flat[this.drag.i].style.transform = `translate(${dragX}px, ${dragY}px)`
-      }
-    },
-
-    /**
-     * Handle mouseup event on the panel
-     */
-    onMouseUp() {
-      if (this.drag) {
-        if (!this.drag.dragged) {
-          this.drag = null
-          return
-        }
-
-        // Copy drag values
-        let id = this.drag.node.id
-        let lvl = this.drag.lvl
-        // let flatIndex = this.drag.i
-        let targetIndex = this.drag.target
-
-        // Get target index and parantId
-        let index = 0
-        let parentId
-        if (targetIndex > this.drag.i) targetIndex++
-        for (let i = targetIndex; i--; ) {
-          if (this.flat[i].id === id) continue
-          if (this.flat[i].lvl > lvl) continue
-          if (this.flat[i].lvl === lvl) index++
-          if (this.flat[i].lvl < lvl) {
-            parentId = this.flat[i].id
-            break
-          }
-        }
-        if (!parentId) {
-          this.drag = null
-          setTimeout(() => {
-            this.flat = null
-          }, 128)
-          return
-        }
-
-        // Update actual nodes order
-        browser.bookmarks.move(id, { parentId, index })
-
-        // Set final position for dragged node
-        let draggedEl = this.$refs.flat[this.drag.i]
-        let targetNode = this.flat[this.drag.target]
-        this.dragEnd = true
-        this.$nextTick(() => {
-          draggedEl.style.transform = `translate(${12 * lvl}px, ${targetNode.top}px)`
-        })
-
-        // If node position is not changed (and move event will
-        // not trigger) - just reset drag state.
-        if (index === this.drag.node.index) {
-          setTimeout(() => {
-            this.drag = null
-          }, 128)
-          setTimeout(() => {
-            this.flat = null
-            this.dragEnd = false
-          }, 256)
-        }
-      }
+    onStartSelection(event) {
+      this.$emit('start-selection', event)
     },
 
     /**
@@ -399,6 +140,7 @@ export default {
     onCreated(id, bookmark) {
       let added = false
       if (bookmark.type === 'folder' && !bookmark.children) bookmark.children = []
+      if (bookmark.type === 'folder') bookmark.expanded = false
       const putWalk = nodes => {
         return nodes.map(n => {
           if (n.id === bookmark.parentId) {
@@ -444,15 +186,6 @@ export default {
      * Handle moving bookmark
      */
     onMoved(id, info) {
-      // Quit from dragging mode
-      if (this.drag) {
-        this.drag = null
-        setTimeout(() => {
-          this.flat = null
-          this.dragEnd = false
-        }, 128)
-      }
-
       let node
       let removed = false
       const rmWalk = nodes => {
@@ -460,6 +193,7 @@ export default {
           if (n.id === info.oldParentId) {
             node = n.children.splice(info.oldIndex, 1)[0]
             node.index = info.index
+            node.parentId = info.parentId
             for (let i = info.oldIndex; i < n.children.length; i++) {
               n.children[i].index--
             }
@@ -510,135 +244,89 @@ export default {
     },
 
     /**
-     * Handle mouse down on bookmark node
+     * Calculate bookmarks bounds
      */
-    onNodeMouseDown(e, nodes) {
-      this.drag = {
-        node: nodes[0],
-        lvl: nodes.length - 1,
-        x: e.clientX,
-        y: e.clientY,
-        dragged: false,
-        path: [],
-      }
-    },
+    getItemsBounds() {
+      // probe bookmarks height
+      const compStyle = getComputedStyle(this.$el)
+      const fhRaw = compStyle.getPropertyValue('--bookmarks-folder-height')
+      const fh = Utils.ParseCSSNum(fhRaw.trim())[0]
+      const fc = fh >> 1
+      const fe = fc >> 1
+    
+      const bhRaw = compStyle.getPropertyValue('--bookmarks-bookmark-height')
+      const bh = Utils.ParseCSSNum(bhRaw.trim())[0]
+      const bc = bh >> 1
+      const be = bc >> 1
 
-    /**
-     * Handle folder expand
-     */
-    onFolderExpand(node) {
-      Store.dispatch('saveTreeState')
+      const shRaw = compStyle.getPropertyValue('--bookmarks-separator-height')
+      const sh = Utils.ParseCSSNum(shRaw.trim())[0]
+      const sc = sh >> 1
+      const se = sc >> 1
 
-      // Auto-close sibling dir
-      if (State.autoCloseBookmarks && node.parentId === 'root________' && node.expanded) {
-        for (let child of State.bookmarks) {
-          if (child.id !== node.id && child.type === 'folder') {
-            const vm = this.$refs.nodes.find(c => c.node.id === child.id)
-            if (!vm) continue
-            vm.collapse()
-          }
-        }
-      }
-    },
-
-    /**
-     * Handle creating new bookmark
-     */
-    onCreate(type, path, onEndHandlers) {
-      if (type === 'separator') {
-        browser.bookmarks.create({
-          parentId: path[0].id,
-          type: 'separator',
-          index: 0,
-        })
-        return
-      }
-
-      if (!this.$refs.editor) return
-      this.$refs.editor.create(type, path)
-      this.editor = true
-      this.editEndHandlers = onEndHandlers
-    },
-
-    /**
-     * Handle edit event of nodes tree
-     */
-    onEdit(node, path, onEndHandlers) {
-      if (!this.$refs.editor) return
-      this.$refs.editor.edit(node, path)
-      this.editor = true
-      this.editEndHandlers = onEndHandlers
-    },
-
-    /**
-     * Handle cancel changes in editor
-     */
-    onEditorCancel() {
-      this.editor = false
-      while (this.editEndHandlers && this.editEndHandlers[0]) {
-        this.editEndHandlers.pop()()
-      }
-    },
-
-    /**
-     * Handle saving changes in editor
-     */
-    onEditorOk() {
-      this.editor = false
-      while (this.editEndHandlers && this.editEndHandlers[0]) {
-        this.editEndHandlers.pop()()
-      }
-    },
-
-    /**
-     * Recalculate possitions and sizes for flat
-     * nodes
-     */
-    updateFlatLayout() {
-      let flatTree = []
-      let index = -1
-      let lvl = 0
-      let top = 0
+      let overallHeight = 0
+      let h, c, e
+      const bounds = []
       const walker = nodes => {
         for (let i = 0; i < nodes.length; i++) {
           const n = nodes[i]
-          index++
-          n.top = top
-          n.lvl = lvl
-          if (n.url) {
-            let hostname = n.url.split('/')[2]
-            if (hostname) n.fav = State.favicons[hostname]
+
+          if (n.type === 'folder') {
+            h = fh
+            c = fc
+            e = fe
           }
-          if (n.type === 'bookmark') n.h = 24
-          if (n.type === 'folder') n.h = 28
-          if (n.type === 'separator') n.h = 17
-          top += n.h
-          if (n.id === this.drag.node.id) {
-            this.drag.i = index
-            this.drag.h = n.h
-            this.drag.y = n.h >> 1
-            this.drag.top = n.top
+          if (n.type === 'bookmark') {
+            h = bh
+            c = bc
+            e = be
           }
-          flatTree.push(n)
-          if (n.children && n.expanded && n.id !== this.drag.node.id) {
-            lvl++
+          if (n.type === 'separator') {
+            h = sh
+            c = sc
+            e = se
+          }
+
+          bounds.push({
+            type: 'bookmark',
+            id: n.id,
+            index: n.index,
+            in: n.type === 'folder',
+            folded: !n.expanded,
+            parent: n.parentId,
+            start: overallHeight,
+            top: overallHeight + e,
+            center: overallHeight + c,
+            bottom: overallHeight + c + e,
+            end: overallHeight + h,
+          })
+
+          overallHeight += h
+
+          if (n.children && n.expanded) {
             walker(n.children)
-            lvl--
           }
         }
       }
       walker(State.bookmarks)
-      this.flat = flatTree
+
+      return bounds
     },
 
     /**
-     * Return styles object for flat node
+     * Return scroll-box element
      */
-    flatNodeStyle(flatNode) {
-      return {
-        transform: `translate(${12 * flatNode.lvl}px, ${flatNode.top}px)`,
-        height: flatNode.h + 'px',
-      }
+    getScrollEl() {
+      if (!this.$refs.scrollBox) return
+      else return this.$refs.scrollBox.getScrollBox()
+    },
+
+    /**
+     * Return top offset of panel
+     */
+    getTopOffset() {
+      const b = this.$el.getBoundingClientRect()
+      return b.top
     },
 
     /**
@@ -672,21 +360,9 @@ export default {
 .Bookmarks
   overflow: hidden
 
-.Bookmarks[drag-active="true"] .drag-box
-  opacity: 1
-  z-index: 10
-
-.Bookmarks[drag-active="true"] .node
-  opacity: 0
-
-.Bookmarks[drag-end="true"] .drag-node[dragged]
-  transition: transform var(--d-fast)
-
-.Bookmarks[ctx-menu] .Node:not([to-front="true"]) > .body
-  opacity: .4
-
-.Bookmarks[editing] .Node:not([to-front]) > .body
-  opacity: .4
+.Bookmarks .bookmarks-wrapper
+  box(relative)
+  padding-bottom: 64px
 
 .Bookmarks[not-renderable] .node
   box(none)
@@ -694,109 +370,31 @@ export default {
 .Bookmarks[invisible] .node
   opacity: 0
 
-// --- Draggable nodes ---
-.Bookmarks .drag-box
-  box(absolute)
-  pos(0, 0)
-  size(100%, same)
-  opacity: 0
-  z-index: -1
-  transition: opacity var(--d-fast), z-index var(--d-fast)
-
-.Bookmarks .drag-node
-  box(absolute, flex)
-  pos(0, 0)
-  size(100%)
-  align-items: center
-  white-space: nowrap
-  transition: transform var(--d-fast), opacity var(--d-fast)
-  border-top-left-radius: 3px
-  border-bottom-left-radius: 3px
-  opacity: .4
-
-  &[n-type="bookmark"]
-    text(s: rem(14))
-    padding-left: 12px
-    color: var(--bookmarks-node-title-fg)
-
-  &[n-type="folder"]
-    text(s: rem(16))
-    padding-left: 12px
-    color: var(--bookmarks-folder-closed-fg)
-
-  &[n-type="separator"]
-    size(h: 17px)
-    &:before
-      content: ''
-      box(absolute)
-      pos(8px, l: 16px)
-      size(calc(100% - 16px), 1px)
-      border-radius: 2px
-      background-image: linear-gradient(90deg, transparent, #545454, #545454, #545454)
-
-  &[dragged]
-    transition: none
-    z-index: 50
-    opacity: 1
-    background-image: var(--bookmarks-drag-gradient)
-
-  &[exp] > .title
-    transform: translateX(12px)
-
-  &[drag-parent="true"]
-    opacity: 1
-
-.Bookmarks .drag-node > .exp
-  box(absolute)
-  size(15px, same)
-  flex-shrink: 0
-  transform: translateX(-6px)
-  transition: transform var(--d-fast), opacity var(--d-fast)
-
-.Bookmarks .drag-node > .exp > svg
-  box(absolute)
-  pos(0, 0)
-  size(100%, same)
-  fill: var(--bookmarks-folder-open-fg)
-  transform: rotateZ(0deg)
-  transition: transform var(--d-fast)
-
-.Bookmarks .drag-node > .fav
-  box(relative)
-  size(16px, same)
-  flex-shrink: 0
-  margin: 0 8px 0 0
-
-.Bookmarks .drag-node > .fav > .placeholder
-  box(absolute)
-  size(3px, same)
-  pos(7px, 6px)
-  border-radius: 50%
-  background-color: var(--favicons-placehoder-bg)
-  &:before
-  &:after
-    content: ''
-    box(absolute)
-    size(3px, same)
-    border-radius: 6px
-    background-color: var(--favicons-placehoder-bg)
-  &:before
-    pos(0, -5px)
-  &:after
-    pos(0, 5px)
-
-.Bookmarks .drag-node > .fav > img
-  box(absolute)
-  pos(0, 0)
-  size(100%, same)
-
-.Bookmarks .drag-node > .title
-  box(relative)
-  transition: transform var(--d-fast)
-
 // --- Root nodes ---
 .Bookmarks .node
   box(relative)
   opacity: 1
   transition: opacity var(--d-fast)
+
+// --- Editor Transitions ---
+.Bookmarks
+  .editor-enter-active
+  .editor-leave-active
+    transition: opacity var(--d-fast), z-index var(--d-fast), transform var(--d-fast)
+  .editor-enter
+    transform: translateY(100%)
+    opacity: 0
+    z-index: 0
+  .editor-enter-to
+    transform: translateY(0)
+    opacity: 1
+    z-index: 10
+  .editor-leave
+    transform: translateY(0)
+    opacity: 1
+    z-index: 10
+  .editor-leave-to
+    transform: translateY(100%)
+    opacity: 0
+    z-index: 0
 </style>

@@ -5,15 +5,6 @@ import EventBus from '../event-bus'
 import PanelsActions from './panels'
 
 describe('Panels actions', () => {
-  test('loadContexts', async () => {
-    browser.contextualIdentities.query = jest.fn(() => [1, 2])
-    const state = { ctxs: [] }
-    await PanelsActions.loadContexts({ state })
-    expect(browser.contextualIdentities.query).toHaveBeenCalled()
-    expect(state.ctxs[0]).toBe(1)
-    expect(state.ctxs[1]).toBe(2)
-  })
-
   test('createContext', async () => {
     browser.contextualIdentities.create = jest.fn()
     await PanelsActions.createContext({}, { name: 'a', color: 'b', icon: 'c' })
@@ -21,50 +12,6 @@ describe('Panels actions', () => {
       name: 'a',
       color: 'b',
       icon: 'c',
-    })
-  })
-
-  describe('checkContextBindings', () => {
-    test('without any contexts', async () => {
-      browser.tabs.create = jest.fn()
-      const state = { ctxs: [] }
-      await PanelsActions.checkContextBindings({ state }, 'x')
-      expect(browser.tabs.create).not.toHaveBeenCalled()
-    })
-
-    test('without @rule in name', async () => {
-      browser.tabs.create = jest.fn()
-      const state = { ctxs: [{ cookieStoreId: 'x', name: 'just' }] }
-      await PanelsActions.checkContextBindings({ state }, 'x')
-      expect(browser.tabs.create).not.toHaveBeenCalled()
-    })
-
-    test('without bookmarks dir', async () => {
-      browser.tabs.create = jest.fn()
-      const state = {
-        ctxs: [{ cookieStoreId: 'x', name: 'a@some' }],
-        bookmarks: [{ title: 'n' }],
-      }
-      await PanelsActions.checkContextBindings({ state }, 'x')
-      expect(browser.tabs.create).not.toHaveBeenCalled()
-    })
-
-    test('open urls of matched bookmarks dir', async () => {
-      browser.tabs.create = jest.fn()
-      const state = {
-        ctxs: [{ cookieStoreId: 'x', name: 'a@some', tabs: [{ url: 'a' }] }],
-        bookmarks: [
-          {
-            title: 'some',
-            children: [{ url: 'a' }, { url: 'b' }],
-          },
-        ],
-      }
-      await PanelsActions.checkContextBindings({ state }, 'x')
-      expect(browser.tabs.create).toHaveBeenCalledWith({
-        cookieStoreId: 'x',
-        url: 'b',
-      })
     })
   })
 
@@ -135,11 +82,11 @@ describe('Panels actions', () => {
       expect(state.panelIndex).toBe(1)
     })
 
-    test('to next, skipping hidden panel', async () => {
+    test('to next, skipping inactive panel', async () => {
       const commit = jest.fn()
       const dispatch = jest.fn()
       const state = { panelIndex: 0 }
-      const getters = { panels: [{}, { hidden: true }, {}, {}] }
+      const getters = { panels: [{}, { inactive: true }, {}, {}] }
       await PanelsActions.switchPanel({ state, getters, commit, dispatch }, 1)
       expect(state.panelIndex).toBe(2)
     })
@@ -173,11 +120,11 @@ describe('Panels actions', () => {
       expect(state.panelIndex).toBe(0)
     })
 
-    test('to prev, skipping hidden panel', async () => {
+    test('to prev, skipping inactive panel', async () => {
       const commit = jest.fn()
       const dispatch = jest.fn()
       const state = { panelIndex: 2 }
-      const getters = { panels: [{}, { hidden: true }, {}, {}] }
+      const getters = { panels: [{}, { inactive: true }, {}, {}] }
       await PanelsActions.switchPanel({ state, getters, commit, dispatch }, -1)
       expect(state.panelIndex).toBe(0)
     })
@@ -213,14 +160,14 @@ describe('Panels actions', () => {
   describe('updateProxiedTabs', () => {
     test('Turn off proxy if there are no proxied panels', () => {
       const dispatch = jest.fn()
-      const state = { proxiedPanels: [] }
+      const state = { containers: [{ proxy: false }] }
       PanelsActions.updateProxiedTabs({ state, dispatch })
       expect(dispatch).toHaveBeenCalledWith('turnOffProxy')
     })
 
     test('Turn on proxy if there are some proxied panels', () => {
       const dispatch = jest.fn()
-      const state = { proxiedPanels: [ 1 ] }
+      const state = { containers: [{ proxy: true }] }
       PanelsActions.updateProxiedTabs({ state, dispatch })
       expect(dispatch).toHaveBeenCalledWith('turnOnProxy')
     })

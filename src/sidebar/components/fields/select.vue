@@ -4,7 +4,6 @@
   select-input(
     :label="optLabel"
     :value="value"
-    :inactive="inactive"
     :opts="opts"
     :noneOpt="noneOpt")
 </template>
@@ -19,7 +18,7 @@ export default {
   },
 
   props: {
-    value: String,
+    value: [String, Number],
     label: String,
     inactive: Boolean,
     optLabel: String,

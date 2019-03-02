@@ -1,3 +1,4 @@
+import EventBus from './event-bus'
 import { DEFAULT_SETTINGS } from './settings'
 
 export default {
@@ -17,11 +18,28 @@ export default {
    * and store them to local storage
    */
   resetSettings(state) {
+    // Reset settings
     for (const key in DEFAULT_SETTINGS) {
       if (!DEFAULT_SETTINGS.hasOwnProperty(key)) continue
       if (state[key] == null || state[key] == undefined) continue
       state[key] = DEFAULT_SETTINGS[key]
     }
+
+    // Reset dashboard settings
+    for (let c of state.containers) {
+      if (c.panel === 'TabsPanel') {
+        c.lockedTabs = false
+        c.lockedPanel = false
+        c.proxy = null
+        c.proxified = false
+        c.sync = false
+        c.noEmpty = false
+        c.lastActiveTab = -1
+      }
+    }
+
+    // Reset saved state
+    state.synced = {}
   },
 
   /**
@@ -74,7 +92,12 @@ export default {
    * Reset selection.
    */
   resetSelection(state) {
-    if (state.selectedTabs.length > 0) state.selectedTabs = []
+    if (state.selected.length > 0) {
+      // console.log('[DEBUG] MUT resetSelection');
+      state.selected = []
+      EventBus.$emit('deselectTab')
+      EventBus.$emit('deselectBookmark')
+    }
   },
 
   // ------------------------------------
@@ -84,6 +107,7 @@ export default {
    * Close context menu
    */
   closeCtxMenu(state) {
+    // console.log('[DEBUG] MUT closeCtxMenu');
     if (state.ctxMenu) {
       if (state.ctxMenu.off) state.ctxMenu.off()
       state.ctxMenu = null

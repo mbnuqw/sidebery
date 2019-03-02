@@ -2,18 +2,31 @@
 .CtxMenu(:is-active="aIsActive || bIsActive", @mouseenter="onME", @mouseleave="onML")
   .container(:is-active="aIsActive")
     .box(ref="aBox", :style="aPosStyle")
-      .opt(v-for="(opt, i) in aOpts", :key="opt[0]", :title="getTitle(opt[0])", @click="onClick(opt)", @mousedown.stop="")
-        span(v-for="out in parseLabel(opt[0])", :style="{color: out.color, fontWeight: out.w}") {{out.label}}
+      .opt(v-for="(opt, i) in aOpts"
+        :key="opt[0]"
+        :title="getTitle(opt[0])"
+        :is-selected="isSelected(i)"
+        @click="onClick(opt)"
+        @mousedown.stop="")
+        span(v-for="out in parseLabel(opt[0])"
+          :style="{color: out.color, fontWeight: out.w}") {{out.label}}
   .container(:is-active="bIsActive")
     .box(ref="bBox", :style="bPosStyle")
-      .opt(v-for="(opt, i) in bOpts", :key="opt[0]", :title="getTitle(opt[0])", @click="onClick(opt)", @mousedown.stop="")
-        span(v-for="out in parseLabel(opt[0])", :style="{color: out.color, fontWeight: out.w}") {{out.label}}
+      .opt(v-for="(opt, i) in bOpts"
+        :key="opt[0]"
+        :title="getTitle(opt[0])"
+        :is-selected="isSelected(i)"
+        @click="onClick(opt)"
+        @mousedown.stop="")
+        span(v-for="out in parseLabel(opt[0])"
+          :style="{color: out.color, fontWeight: out.w}") {{out.label}}
 </template>
 
 
 <script>
 import Store from '../store'
 import Getters from '../store.getters'
+import EventBus from '../event-bus'
 
 export default {
   data() {
@@ -21,44 +34,44 @@ export default {
       aIsActive: false,
       aOpts: [],
       aPos: 0,
+      aX: 0,
       aDown: true,
       bIsActive: false,
       bOpts: [],
       bPos: 0,
+      bX: 0,
       bDown: true,
+      selected: -1,
     }
   },
 
   computed: {
     aPosStyle() {
-      let style = { transform: `translateY(${this.aPos}px)` }
+      let style = { transform: `translateY(${this.aPos}px) translateX(${this.aX}px)` }
       if (!this.aDown) style.bottom = '0px'
       return style
     },
     bPosStyle() {
-      let style = { transform: `translateY(${this.bPos}px)` }
+      let style = { transform: `translateY(${this.bPos}px) translateX(${this.bX}px)` }
       if (!this.bDown) style.bottom = '0px'
       return style
     },
   },
 
   created() {
+    EventBus.$on('selectOption', this.onSelectOption)
+    EventBus.$on('activateOption', this.onActivateOption)
+
     Store.watch(Getters.ctxMenu, (c, p) => {
       if (this.leaveT) clearTimeout(this.leaveT)
+      this.selected = -1
 
       let h = this.$root.$el.offsetHeight
-      if (c && !p) {
-        let rect = c.el.getBoundingClientRect()
-        this.aOpts = c.opts
-        this.aIsActive = true
-        this.$nextTick(() => {
-          this.aDown = this.$refs.aBox.offsetHeight + rect.bottom < h
-          this.aPos = this.aDown ? rect.bottom : rect.top
-        })
-      }
 
-      if (c && p) {
-        let rect = c.el.getBoundingClientRect()
+      if (c) {
+        let rect
+        if (c.el.start && c.el.end) rect = { top: c.el.start, bottom: c.el.end, left: 120, right: 120 }
+        else  rect = c.el.getBoundingClientRect()
         if (this.aOpts.length) {
           this.bOpts = c.opts
           this.bIsActive = true
@@ -66,10 +79,13 @@ export default {
           this.$nextTick(() => {
             this.bDown = this.$refs.bBox.offsetHeight + rect.bottom < h
             this.bPos = this.bDown ? rect.bottom : rect.top
+            const fullWidth = this.$el.offsetWidth
+            const menuWidth = this.$refs.bBox.offsetWidth
+            if (rect.right < fullWidth - menuWidth) this.bX = rect.right
+            else if (rect.left > menuWidth) this.bX = rect.left - menuWidth
+            else this.bX = this.$el.offsetWidth - menuWidth
           })
-          setTimeout(() => {
-            this.aOpts = []
-          }, 128)
+          setTimeout(() => (this.aOpts = []), 128)
         } else {
           this.aOpts = c.opts
           this.aIsActive = true
@@ -77,20 +93,19 @@ export default {
           this.$nextTick(() => {
             this.aDown = this.$refs.aBox.offsetHeight + rect.bottom < h
             this.aPos = this.aDown ? rect.bottom : rect.top
+            const fullWidth = this.$el.offsetWidth
+            const menuWidth = this.$refs.aBox.offsetWidth
+            if (rect.right < fullWidth - menuWidth) this.aX = rect.right
+            else if (rect.left > menuWidth) this.aX = rect.left - menuWidth
+            else this.aX = this.$el.offsetWidth - menuWidth
           })
-          setTimeout(() => {
-            this.bOpts = []
-          }, 128)
+          setTimeout(() => (this.bOpts = []), 128)
         }
       }
 
       if (!c && p) {
         this.aIsActive = false
         this.bIsActive = false
-        setTimeout(() => {
-          this.aOpts = []
-          this.bOpts = []
-        }, 128)
       }
     })
   },
@@ -117,6 +132,34 @@ export default {
       Store.commit('closeCtxMenu')
     },
 
+    onSelectOption(dir) {
+      if (!dir) return
+
+      const opts = this.aIsActive ? this.aOpts : this.bOpts
+
+      if (this.selected < 0) {
+        if (dir > 0) this.selected = 0
+        else this.selected = opts.length - 1
+        return
+      }
+
+      if (this.selected >= 0) {
+        this.selected += dir
+        if (this.selected < 0) this.selected = 0
+        if (this.selected >= opts.length) this.selected = opts.length - 1
+      }
+    },
+
+    onActivateOption() {
+      if (this.selected < 0) return
+      const opts = this.aIsActive ? this.aOpts : this.bOpts
+      this.onClick(opts[this.selected])
+    },
+
+    isSelected(index) {
+      return this.selected === index
+    },
+
     parseLabel(input) {
       return input.split('||').map(part => {
         let parsed = part.split('>>')
@@ -129,11 +172,14 @@ export default {
     },
 
     getTitle(input) {
-      return input.split('||').map(part => {
-        let parsed = part.split('>>')
-        return parsed[parsed.length - 1]
-      }).join('')
-    }
+      return input
+        .split('||')
+        .map(part => {
+          let parsed = part.split('>>')
+          return parsed[parsed.length - 1]
+        })
+        .join('')
+    },
   },
 }
 </script>
@@ -151,7 +197,7 @@ export default {
   transition: opacity var(--d-fast), z-index var(--d-fast)
   &[is-active]
     opacity: 1
-    z-index: 2000
+    z-index: 5000
 
 .CtxMenu .container
   box(absolute)
@@ -168,14 +214,12 @@ export default {
 
 .CtxMenu .box
   box(absolute)
-  pos(r: 0)
-  size(max-w: calc(100% - 12px))
+  size(max-w: calc(100% - 28px))
   z-index: 30
   padding: 0 0 0 0
   margin: 0
   overflow: hidden
-  border-top-left-radius: 3px
-  border-bottom-left-radius: 3px
+  border-radius: 3px
   background-color: var(--ctx-menu-bg)
   box-shadow: var(--ctx-menu-shadow)
 
@@ -203,5 +247,6 @@ export default {
   &:last-of-type
     padding-bottom: 4px
   &:hover:before
+  &[is-selected]
     background-color: var(--ctx-menu-bg-hover)
 </style>

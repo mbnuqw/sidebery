@@ -1,19 +1,20 @@
 <template lang="pug">
 .Node(
   :n-type="node.type"
-  :is-expanded="expanded"
+  :is-expanded="node.expanded"
   :is-parent="!!isParent"
   :to-front="toFront || editorSelect"
-  :menu="menu")
-  .body(:title="tooltip", @click="onClick", @mousedown="onMouseDown")
+  :is-selected="selected")
+  .body(:title="tooltip", @click="onClick", @mousedown="onMouseDown", @mouseup="onMouseUp")
+    .drag-layer(draggable="true", @dragstart="onDragStart")
     .fav(v-if="isBookmark", :no-fav="!favicon")
-      .placeholder
+      .placeholder: svg: use(xlink:href="#icon_ff")
       img(:src="favicon")
     .exp(v-if="isParent")
       svg: use(xlink:href="#icon_expand")
     .title(v-if="node.title") {{node.title}}
   transition(name="expand")
-    .children(v-if="isParent", v-show="expanded", :title="node.title")
+    .children(v-if="isParent", v-show="node.expanded", :title="node.title")
       b-node.child(
         v-for="(n, i) in node.children"
         ref="children"
@@ -21,10 +22,7 @@
         :node="n"
         :recalc-scroll="recalcScroll"
         :edit-node="editNode"
-        @md="onChildMD"
-        @expand="onFolderExpand"
-        @create="onCreate"
-        @edit="onEdit")
+        @start-selection="onChildStartSelection")
 </template>
 
 
@@ -32,6 +30,7 @@
 import { mapGetters } from 'vuex'
 import Store from '../../store'
 import State from '../../store.state'
+import EventBus from '../../event-bus'
 
 export default {
   name: 'BNode',
@@ -43,10 +42,10 @@ export default {
 
   data() {
     return {
-      expanded: false,
       menu: false,
       toFront: false,
       editorSelect: false,
+      selected: false,
     }
   },
 
@@ -87,27 +86,67 @@ export default {
   },
 
   created() {
-    this.expanded = !!this.node.expanded
+    EventBus.$on('selectBookmark', this.onBookmarkSelection)
+    EventBus.$on('deselectBookmark', this.onBookmarkDeselection)
+    EventBus.$on('openBookmarkMenu', this.onBookmarkMenu)
+  },
+
+  beforeDestroy() {
+    EventBus.$off('selectBookmark', this.onBookmarkSelection)
+    EventBus.$off('deselectBookmark', this.onBookmarkDeselection)
+    EventBus.$off('openBookmarkMenu', this.onBookmarkMenu)
   },
 
   methods: {
+    /**
+     * Handle mouse down event.
+     */
     onMouseDown(e) {
-      if (e.button === 0) this.$emit('md', e, [this.node])
       if (e.button === 1) {
         e.preventDefault()
-        this.openUrl(true, false)
+        if (State.selected.length) EventBus.$emit('deselectBookmark')
+        else this.openUrl(true, false)
       }
       if (e.button === 2) {
         e.stopPropagation()
-        this.openMenu(true)
+        this.$emit('start-selection', {
+          type: 'bookmark',
+          clientY: e.clientY,
+          ctrlKey: e.ctrlKey,
+          id: this.node.id,
+        }, [this.node])
       }
     },
 
+    /**
+     * Handle mouseup event
+     */
+    onMouseUp(e) {
+      if (e.button === 2) {
+        Store.commit('closeCtxMenu')
+        // Select this bookmark
+        if (!State.selected.length) {
+          State.selected = [this.node.id]
+          this.selected = true
+        }
+      }
+    },
+
+    /**
+     * Handle click event. 
+     */
     onClick() {
+      if (State.selected.length) {
+        State.selected = []
+        EventBus.$emit('deselectBookmark')
+        return
+      }
       if (this.node.type === 'folder') {
-        this.expanded = !this.expanded
-        this.node.expanded = this.expanded
-        this.$emit('expand', this.node)
+        if (!this.node.expanded) Store.dispatch('expandBookmark', this.node.id)
+        else Store.dispatch('foldBookmark', this.node.id)
+
+        // !!!!! Make recalculation in bookmakrs component !!!!!
+        // remove recalcScroll function prop
         setTimeout(() => this.recalcScroll(), 120)
       }
       if (this.node.type === 'bookmark') {
@@ -115,80 +154,97 @@ export default {
       }
     },
 
-    onFolderExpand(node) {
-      this.$emit('expand', node)
-      if (State.autoCloseBookmarks && node.parentId === this.node.id && node.expanded) {
-        for (let child of this.node.children) {
-          if (child.id !== node.id && child.type === 'folder') {
-            const vm = this.$refs.children.find(c => c.node.id === child.id)
-            if (!vm) continue
-            vm.collapse()
+    /**
+     * Handle bookmark selection
+     */
+    onBookmarkSelection(id) {
+      if (this.node.id === id) this.selected = true
+    },
+
+    /**
+     * Handle bookmark deselection
+     */
+    onBookmarkDeselection(id) {
+      if (!id) this.selected = false
+      if (id && this.node.id === id) this.selected = false
+    },
+
+    /**
+     * Open bookmark menu
+     */
+    onBookmarkMenu(id) {
+      if (id !== this.node.id) return
+      Store.dispatch('openCtxMenu', { el: this.$el.childNodes[0], node: this.node })
+    },
+
+    /**
+     * Handle dragstart event.
+     */
+    onDragStart(e) {
+      // Hide context menu (if any)
+      if (State.ctxMenu) State.ctxMenu = null
+
+      // Check what to drag
+      const toDrag = [this.node.id]
+      const nodesToDrag = []
+      if (!State.selected.length) nodesToDrag.push(this.node)
+      const walker = nodes => {
+        for (let node of nodes) {
+          if (toDrag.includes(node.parentId)) {
+            toDrag.push(node.id)
+            nodesToDrag.push(node)
           }
+          if (State.selected.includes(node.id)) {
+            toDrag.push(node.id)
+            nodesToDrag.push(node)
+          }
+          if (node.type === 'folder') walker(node.children)
         }
       }
+      walker(State.bookmarks)
+
+      // Set drag info
+      e.dataTransfer.setData('text/x-moz-text-internal', this.node.url)
+      e.dataTransfer.setData('text/uri-list', this.node.url)
+      e.dataTransfer.setData('text/plain', this.node.url)
+      e.dataTransfer.effectAllowed = 'move'
+      const dragData = nodesToDrag.map(n => {
+        return {
+          type: n.type,
+          id: n.id,
+          parentId: n.parentId,
+          index: n.index,
+          incognito: State.private,
+          windowId: State.windowId,
+          url: n.url,
+          title: n.title,
+        }
+      })
+      EventBus.$emit('dragStart', dragData)
+      Store.dispatch('broadcast', {
+        name: 'outerDragStart',
+        arg: dragData,
+      })
     },
 
-    onChildMD(e, nodes) {
+    /**
+     * Handle mouse event from child node
+     */
+    onChildStartSelection(event, nodes) {
       nodes.push(this.node)
-      this.$emit('md', e, nodes)
+      this.$emit('start-selection', event, nodes)
     },
 
+    /**
+     * Collapse this node
+     */
     collapse(deep = false) {
-      this.expanded = false
-      this.node.expanded = this.expanded
+      this.node.expanded = false
 
       if (deep) {
         if (!this.$refs.children) return
         this.$refs.children.map(n => n.collapse(true))
       }
-    },
-
-    openMenu(isTarget) {
-      if (isTarget) {
-        Store.commit('closeCtxMenu')
-
-        const openNewWinLabel = this.t('menu.bookmark.open_in_new_window')
-        const openPrivWinLabel = this.t('menu.bookmark.open_in_new_priv_window')
-        const openDefLabel = this.t('menu.bookmark.open_in_default_panel')
-        const openPanLabel = this.t('menu.bookmark.open_in_')
-
-        let isSep = this.node.type === 'separator'
-        let opts = []
-        if (!isSep) {
-          opts.push([openNewWinLabel, this.openInNewWin])
-          opts.push([openPrivWinLabel, this.openInNewWin, { incognito: true }])
-          if (this.isParent) opts.push([openDefLabel, this.openInPanel, 'firefox-default'])
-          State.ctxs.map(c => {
-            opts.push([
-              openPanLabel + `||${c.colorCode}>>${c.name}`,
-              this.openInPanel,
-              c.cookieStoreId,
-            ])
-          })
-        }
-        if (this.isFolder) {
-          opts.push([this.t('menu.bookmark.create_bookmark'), this.create, 'bookmark'])
-          opts.push([this.t('menu.bookmark.create_folder'), this.create, 'folder'])
-          opts.push([this.t('menu.bookmark.create_separator'), this.create, 'separator'])
-        }
-        if (this.editable && !isSep) opts.push([this.t('menu.bookmark.edit_bookmark'), this.edit])
-        if (this.editable) opts.push([this.t('menu.bookmark.delete_bookmark'), this.remove])
-
-        State.ctxMenu = {
-          el: this.$el.childNodes[0],
-          off: this.closeMenu,
-          opts,
-        }
-        this.menu = true
-      }
-      this.toFront = true
-      if (this.$parent.openMenu) this.$parent.openMenu()
-    },
-
-    closeMenu() {
-      this.menu = false
-      this.toFront = false
-      if (this.$parent.closeMenu) this.$parent.closeMenu()
     },
 
     openUrl(inNewTab, withFocus) {
@@ -202,88 +258,13 @@ export default {
         })
       } else {
         browser.tabs.update({ url: this.node.url })
-        if (withFocus && !State.lockedPanels[0]) Store.dispatch('goToActiveTabPanel')
-      }
-    },
-
-    openInPanel(panelId) {
-      const p = this.panels.find(p => p.cookieStoreId === panelId)
-      if (!p) return
-
-      let index = p.endIndex + 1
-
-      if (this.isBookmark) {
-        browser.tabs.create({
-          index: index,
-          url: this.node.url,
-          cookieStoreId: panelId,
-        })
-      }
-
-      if (this.isParent) {
-        const urls = []
-        const walker = list =>
-          list.map(n => {
-            if (n.type === 'bookmark' && !n.url.indexOf('http')) urls.push(n.url)
-            if (n.type === 'folder') walker(n.children)
-          })
-        walker(this.node.children)
-
-        urls.map(url => {
-          browser.tabs.create({
-            index: index++,
-            url: url,
-            cookieStoreId: panelId,
-          })
-        })
-      }
-    },
-
-    openInNewWin({ incognito } = {}) {
-      if (this.isBookmark) {
-        return browser.windows.create({ url: this.node.url, incognito })
-      }
-
-      if (this.isParent) {
-        const urls = []
-        const walker = list =>
-          list.map(n => {
-            if (n.type === 'bookmark' && !n.url.indexOf('http')) urls.push(n.url)
-            if (n.type === 'folder') walker(n.children)
-          })
-        walker(this.node.children)
-        return browser.windows.create({ url: urls, incognito })
+        if (withFocus && !this.panels[0].lockedPanel) Store.dispatch('goToActiveTabPanel')
       }
     },
 
     remove() {
       if (!this.isParent) browser.bookmarks.remove(this.node.id)
       else browser.bookmarks.removeTree(this.node.id)
-    },
-
-    create(type) {
-      if (this.isFolder) this.$emit('create', type, [this.node], [this.onEditEnd])
-      else this.$emit('create', type, [])
-      this.editorSelect = true
-    },
-    onCreate(type, path, onEndHandlers) {
-      path.push(this.node)
-      onEndHandlers.push(this.onEditEnd)
-      this.$emit('create', type, path, onEndHandlers)
-      this.editorSelect = true
-    },
-
-    edit() {
-      this.editorSelect = true
-      if (this.isFolder) this.$emit('edit', this.node, [this.node], [this.onEditEnd])
-      else this.$emit('edit', this.node, [], [this.onEditEnd])
-    },
-    onEdit(node, path, onEndHandlers) {
-      path.push(this.node)
-      this.$emit('edit', node, path, onEndHandlers)
-    },
-    onEditEnd() {
-      this.editorSelect = false
     },
   },
 }
@@ -299,12 +280,24 @@ export default {
   margin: 0
   border-top-left-radius: 3px
   border-bottom-left-radius: 3px
+  &:before
+    content: ''
+    box(absolute)
+    pos(0, r: 0)
+    size(100vw, 100%)
+    background-color: var(--tabs-selected-bg)
+    z-index: -1
+    opacity: 0
+    transform: scale(0, 0)
+    transition: opacity var(--d-fast),
+                z-index var(--d-fast),
+                transform 0s var(--d-fast)
 
 .Node[n-type="bookmark"]
   > .body
-    size(h: 24px)
+    height: var(--bookmarks-bookmark-height)
     > .title
-      text(s: rem(14), w: 400)
+      font: var(--bookmarks-bookmark-font)
       color: var(--bookmarks-node-title-fg)
     &:hover > .title
       transition: transform var(--d-fast)
@@ -321,7 +314,7 @@ export default {
       > .title
         color: var(--bookmarks-folder-empty-fg)
   > .body
-    size(h: 28px)
+    height: var(--bookmarks-folder-height)
     &:hover > .title
       transition: transform var(--d-fast)
       color: var(--bookmarks-folder-closed-fg-hover)
@@ -329,12 +322,12 @@ export default {
       transition: none
       color: var(--bookmarks-folder-closed-fg-active)
     > .title
-      text(s: rem(16), w: 400)
+      font: var(--bookmarks-folder-font)
       color: var(--bookmarks-folder-closed-fg)
 
 .Node[n-type="separator"]
   > .body
-    size(h: 17px)
+    height: var(--bookmarks-separator-height)
     &:before
       content: ''
       box(absolute)
@@ -351,9 +344,9 @@ export default {
 .Node[is-expanded][is-parent]
   > .body
     &:hover > .title
-      color: var(--bookmarks-folder-open-hover-fg)
+      color: var(--bookmarks-folder-open-fg-hover)
     &:active > .title
-      color: var(--bookmarks-folder-open-active-fg)
+      color: var(--bookmarks-folder-open-fg-active)
     > .title
       color: var(--bookmarks-folder-open-fg)
       mask: linear-gradient(-90deg, transparent 12px, #000000 24px, #000000)
@@ -364,23 +357,19 @@ export default {
   > .body > .exp > svg
     transform: rotateZ(0deg)
 
-// > Opened Menu
-.Node[menu="true"][n-type="bookmark"]
-.Node[menu="true"][n-type="folder"]
-.Node[menu="true"][n-type="separator"]
-  z-index: 30
-  background-color: var(--tabs-selected-bg)
-  > .body
-  > .body:hover
-  > .body:active
-    z-index: 100
-    > .title
-      color: var(--tabs-selected-fg)
-
-.Node[menu="true"][n-type="separator"]
-  > .body
-    &:before
-      background-image: linear-gradient(90deg, transparent, var(--tabs-selected-fg), var(--tabs-selected-fg), var(--tabs-selected-fg))
+.Node[n-type="bookmark"][is-selected="true"]
+.Node[n-type="folder"][is-selected="true"]
+.Node[n-type="separator"][is-selected="true"]
+  &:before
+    opacity: 1
+    z-index: 0
+    transform: scale(1, 1)
+    transition: opacity var(--d-fast),
+                z-index var(--d-fast),
+                transform 0s 0s
+  > .body > .title
+  > .body:hover > .title
+    color: var(--tabs-selected-fg)
 
 // Body of node
 .Node > .body
@@ -389,6 +378,12 @@ export default {
   cursor: pointer
   transform: translateZ(0)
   transition: opacity var(--d-fast)
+
+.Node .drag-layer
+  box(absolute)
+  size(100%, same)
+  pos(0, 0)
+  z-index: 15
 
 // Favicon
 .Node .fav
@@ -407,24 +402,17 @@ export default {
       transform: translateY(-4px)
 .Node .fav > .placeholder
   box(absolute)
-  size(3px, same)
-  pos(7px, 6px)
-  border-radius: 50%
-  background-color: var(--favicons-placehoder-bg)
+  size(16px, same)
+  pos(0, 0)
   opacity: 0
   transform: translateY(4px)
   transition: opacity var(--d-fast), transform var(--d-fast)
-  &:before
-  &:after
-    content: ''
+  > svg
     box(absolute)
-    size(3px, same)
-    border-radius: 6px
-    background-color: var(--favicons-placehoder-bg)
-  &:before
-    pos(0, -5px)
-  &:after
-    pos(0, 5px)
+    size(100%, same)
+    pos(0, 0)
+    fill: var(--favicons-placehoder-bg)
+
 .Node .fav > img
   box(absolute)
   pos(0, 0)

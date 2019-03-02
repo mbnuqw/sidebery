@@ -1,32 +1,23 @@
 # Sidebery
 
-Manage your tabs and bookmarks in sidebar.
+[![https://addons.mozilla.org/en-US/firefox/addon/sidebery/](https://addons.cdn.mozilla.net/static/img/addons-buttons/AMO-button_2.png)](https://addons.mozilla.org/en-US/firefox/addon/sidebery/)
+
+Firefox addon for managing tabs, containers (contextual identities) and bookmarks in sidebar. Supports both flat and tree tabs layout, drag-and-drop actions, different proxy settings for each container, synchronization and much more.
 
 
 ## Features
 
-- Vertical layout
+- Vertical tabs layout (flat and tree)
 - Bookmarks operations
+- Drag-and-drop
 - Contextual Identities management
 - Synchronizing containers
 - Different proxy settings for each containers
 - Creating tabs snapshots for easy recovering
 - Light and dark themes
-- Configurable navigation
-- Multiple tabs selection with right mouse button
-
-
-## Usage
-
-- Open - `Ctrl+E` (windows: `F1`) or click on extension button
-- Switch to next panel - `Alt+Period` or scroll to right (if configured)
-- Switch to previous panel - `Alt+Comma` or scroll to left (if configured)
-- Create new tab in current panel - `Ctrl+Space` or middle click on panel
-- Remove tab - `Ctrl+Delete` (macos: `Ctrl+W`)
-- Select tabs and open context menu - push right mouse button and move cursor
-- Select all - `Alt+G`
-- Select next/prev element - `Alt+Down/Up`
-- Open panel menu - right click on panel icon
+- Customizable styles
+- Configurable navigation with mouse and keyboard
+- Multiple tabs/bookmarks selection with right mouse button
 
 
 ## Hide/customize native panels

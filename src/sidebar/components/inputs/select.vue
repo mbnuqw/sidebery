@@ -7,7 +7,7 @@
 <script>
 export default {
   props: {
-    value: String,
+    value: [String, Number],
     opts:  Array,
     label: String,
     noneOpt: {

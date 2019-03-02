@@ -103,7 +103,7 @@
         style-field(
           label="styles.scroll_progress_height"
           v-model="$store.state.customStyles.scroll_progress_h"
-          or="..."
+          or="---"
           @change="updateStyle('scroll_progress_h')"
           @toggle="toggleStyle('scroll_progress_h')")
         color-style-field(
@@ -137,9 +137,27 @@
           v-model="$store.state.customStyles.nav_btn_fg"
           @change="updateStyle('nav_btn_fg')"
           @toggle="toggleStyle('nav_btn_fg')")
-      
+
       section.section
         .title {{t('styles.tabs_title')}}
+        style-field(
+          label="styles.tabs_height"
+          v-model="$store.state.customStyles.tabs_height"
+          or="---"
+          @change="updateStyle('tabs_height')"
+          @toggle="toggleStyle('tabs_height')")
+        style-field(
+          label="styles.tabs_indent"
+          v-model="$store.state.customStyles.tabs_indent"
+          or="---"
+          @change="updateStyle('tabs_indent')"
+          @toggle="toggleStyle('tabs_indent')")
+        style-field(
+          label="styles.tabs_font"
+          v-model="$store.state.customStyles.tabs_font"
+          or="---"
+          @change="updateStyle('tabs_font')"
+          @toggle="toggleStyle('tabs_font')")
         color-style-field(
           label="styles.tabs_fg_color"
           v-model="$store.state.customStyles.tabs_fg"
@@ -175,9 +193,39 @@
           v-model="$store.state.customStyles.tabs_selected_fg"
           @change="updateStyle('tabs_selected_fg')"
           @toggle="toggleStyle('tabs_selected_fg')")
-      
+
       section.section
         .title {{t('styles.bookmarks_title')}}
+        style-field(
+          label="styles.bookmarks_bookmark_height"
+          v-model="$store.state.customStyles.bookmarks_bookmark_height"
+          or="---"
+          @change="updateStyle('bookmarks_bookmark_height')"
+          @toggle="toggleStyle('bookmarks_bookmark_height')")
+        style-field(
+          label="styles.bookmarks_folder_height"
+          v-model="$store.state.customStyles.bookmarks_folder_height"
+          or="---"
+          @change="updateStyle('bookmarks_folder_height')"
+          @toggle="toggleStyle('bookmarks_folder_height')")
+        style-field(
+          label="styles.bookmarks_separator_height"
+          v-model="$store.state.customStyles.bookmarks_separator_height"
+          or="---"
+          @change="updateStyle('bookmarks_separator_height')"
+          @toggle="toggleStyle('bookmarks_separator_height')")
+        style-field(
+          label="styles.bookmarks_bookmark_font"
+          v-model="$store.state.customStyles.bookmarks_bookmark_font"
+          or="---"
+          @change="updateStyle('bookmarks_bookmark_font')"
+          @toggle="toggleStyle('bookmarks_bookmark_font')")
+        style-field(
+          label="styles.bookmarks_folder_font"
+          v-model="$store.state.customStyles.bookmarks_folder_font"
+          or="---"
+          @change="updateStyle('bookmarks_folder_font')"
+          @toggle="toggleStyle('bookmarks_folder_font')")
         color-style-field(
           label="styles.bookmarks_fg_color"
           v-model="$store.state.customStyles.bookmarks_node_title_fg"
@@ -228,6 +276,8 @@
           v-model="$store.state.customStyles.bookmarks_folder_empty_fg"
           @change="updateStyle('bookmarks_folder_empty_fg')"
           @toggle="toggleStyle('bookmarks_folder_empty_fg')")
+
+      .btn(@click="resetStyles") {{t('styles.reset_styles')}}
 </template>
 
 
@@ -239,6 +289,7 @@ import State from '../../store.state'
 import ScrollBox from '../scroll-box'
 import StyleField from '../fields/style'
 import ColorStyleField from '../fields/style-color'
+import { CUSTOM_STYLES } from '../../store.state'
 
 export default {
   components: {
@@ -288,6 +339,17 @@ export default {
       Store.dispatch('setStyle', { key, val: State.customStyles[key] })
       Store.dispatch('saveStyles')
     },
+
+    /**
+     * Reset custom styles
+     */
+    resetStyles() {
+      this.$store.state.customStyles = CUSTOM_STYLES
+      for (let key of Object.keys(CUSTOM_STYLES)) {
+        Store.dispatch('removeStyle', key)
+      }
+      Store.dispatch('saveStyles')
+    },
   },
 }
 </script>
@@ -322,4 +384,9 @@ export default {
   text(s: rem(24))
   color: var(--sub-title-fg)
   padding: 2px 16px
+
+.StylesEditor .btn
+  size(80%)
+  margin-left: auto
+  margin-right: auto
 </style>

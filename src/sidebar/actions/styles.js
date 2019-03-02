@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Utils from '../../libs/utils'
+import EventBus from '../event-bus'
 
 export default {
   /**
@@ -20,6 +21,8 @@ export default {
     }
 
     state.customStyles = loadedStyles
+
+    setTimeout(() => EventBus.$emit('dynVarChange'), 256)
   },
 
   /**
@@ -45,6 +48,8 @@ export default {
         rootEl.style.removeProperty(Utils.CSSVar(key))
       }
     }
+
+    setTimeout(() => EventBus.$emit('dynVarChange'), 256)
   },
 
   /**

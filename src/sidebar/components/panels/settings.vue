@@ -27,22 +27,73 @@
         :value="$store.state.showTabRmBtn"
         @input="setOpt('showTabRmBtn', $event)")
       toggle-field(
-        label="settings.no_empty_default"
-        :value="$store.state.noEmptyDefault"
-        @input="setOpt('noEmptyDefault', $event)")
-      toggle-field(
+        v-if="$store.state.ffVer >= 61"
         label="settings.hide_inactive_panel_tabs"
         :value="$store.state.hideInact"
         @input="toggleHideInact")
+      select-field(
+        label="settings.pinned_tabs_position"
+        optLabel="settings.pinned_tabs_position_"
+        :value="$store.state.pinnedTabsPosition"
+        :opts="$store.state.pinnedTabsPositionOpts"
+        @input="setOpt('pinnedTabsPosition', $event)")
+      toggle-field(
+        label="settings.pinned_tabs_list"
+        :inactive="$store.state.pinnedTabsPosition !== 'panel'"
+        :value="$store.state.pinnedTabsList"
+        @input="setOpt('pinnedTabsList', $event)")
+      toggle-field(
+        label="settings.pinned_tabs_sync"
+        :value="$store.state.pinnedTabsSync"
+        @input="togglePinnedTabsSync")
+
+      toggle-field(
+        label="settings.tabs_tree_layout"
+        :value="$store.state.tabsTree"
+        @input="toggleTabsTree")
+      toggle-field(
+        label="settings.group_on_open_layout"
+        :inactive="!$store.state.tabsTree"
+        :value="$store.state.groupOnOpen"
+        @input="setOpt('groupOnOpen', $event)")
+      select-field(
+        label="settings.tabs_tree_limit"
+        optLabel="settings.tabs_tree_limit_"
+        :inactive="!$store.state.tabsTree"
+        :value="$store.state.tabsTreeLimit"
+        :opts="$store.state.tabsTreeLimitOpts"
+        @input="setOpt('tabsTreeLimit', $event)")
+      toggle-field(
+        v-if="$store.state.ffVer >= 61"
+        label="settings.hide_folded_tabs"
+        :inactive="!$store.state.tabsTree"
+        :value="$store.state.hideFoldedTabs"
+        @input="toggleHideFoldedTabs")
+      toggle-field(
+        label="settings.auto_fold_tabs"
+        :inactive="!$store.state.tabsTree"
+        :value="$store.state.autoFoldTabs"
+        @input="setOpt('autoFoldTabs', $event)")
+      toggle-field(
+        label="settings.auto_exp_tabs"
+        :inactive="!$store.state.tabsTree"
+        :value="$store.state.autoExpandTabs"
+        @input="setOpt('autoExpandTabs', $event)")
 
     section
       h2 {{t('settings.bookmarks_title')}}
       toggle-field(
+        label="settings.bookmarks_panel"
+        :value="$store.state.bookmarksPanel"
+        @input="toggleBookmarksPanel")
+      toggle-field(
         label="settings.open_bookmark_new_tab"
+        :inactive="!$store.state.bookmarksPanel"
         :value="$store.state.openBookmarkNewTab"
         @input="setOpt('openBookmarkNewTab', $event)")
       toggle-field(
         label="settings.auto_close_bookmarks"
+        :inactive="!$store.state.bookmarksPanel"
         :value="$store.state.autoCloseBookmarks"
         @input="setOpt('autoCloseBookmarks', $event)")
 
@@ -206,7 +257,8 @@
       h2 {{t('settings.help_title')}}
 
       .buttons
-        a.btn(tabindex="-1", :href="issueLink") {{t('settings.repo_issue')}}
+        a.btn(tabindex="-1", :href="issueLink") {{t('settings.repo_bug')}}
+        a.btn(tabindex="-1", :href="featureReqLink") {{t('settings.repo_req')}}
         .btn.-warn(@click="resetSettings") {{t('settings.reset_settings')}}
 
       a.github(tabindex="-1", href="https://github.com/mbnuqw/sidebery")
@@ -254,6 +306,10 @@ export default {
       body += `> Firefox: ${State.ffInfo.version}  \n`
       body += `> Extension: ${State.version}  \n`
       return ISSUE_URL + '?body=' + encodeURIComponent(body)
+    },
+
+    featureReqLink() {
+      return ISSUE_URL
     },
 
     snapshots() {
@@ -319,6 +375,7 @@ export default {
       Store.dispatch('saveSettings')
     },
 
+    // --- Tabs ---
     async toggleHideInact() {
       State.permTabHide = await browser.permissions.contains({ permissions: ['tabHide'] })
       if (State.hideInact) {
@@ -335,6 +392,52 @@ export default {
       this.toggleOpt('hideInact')
     },
 
+    toggleTabsTree() {
+      if (State.tabsTree) {
+        State.tabs = State.tabs.map(t => {
+          t.isParent = false
+          t.folded = false
+          t.invisible = false
+          t.parentId = -1
+          t.lvl = 0
+          return t
+        })
+      } else {
+        State.tabs = Utils.CalcTabsTreeLevels(State.tabs)
+      }
+      this.toggleOpt('tabsTree')
+    },
+
+    async toggleHideFoldedTabs() {
+      State.permTabHide = await browser.permissions.contains({ permissions: ['tabHide'] })
+      if (State.hideFoldedTabs) {
+        const toShow = State.tabs.filter(t => t.invisible).map(t => t.id)
+        browser.tabs.show(toShow)
+      } else {
+        if (!State.permTabHide) {
+          const url = browser.runtime.getURL('permissions/tab-hide.html')
+          browser.tabs.create({ url })
+          return
+        }
+        const toHide = State.tabs.filter(t => t.invisible).map(t => t.id)
+        browser.tabs.hide(toHide)
+      }
+      this.toggleOpt('hideFoldedTabs')
+    },
+
+    togglePinnedTabsSync() {
+      this.toggleOpt('pinnedTabsSync')
+      Store.dispatch('resyncPanels')
+    },
+
+    // --- Bookmarks ---
+    toggleBookmarksPanel() {
+      if (State.bookmarksPanel) State.bookmarks = []
+      else Store.dispatch('loadBookmarks')
+      this.toggleOpt('bookmarksPanel')
+    },
+
+    // --- Appearance ---
     openStylesEditor() {
       Store.commit('openStylesEditor')
     },
@@ -458,7 +561,10 @@ export default {
 
       if (State.permAllUrls) {
         await browser.permissions.remove({ origins: ['<all_urls>'] })
-        State.proxiedPanels = []
+        State.proxiedPanels = {}
+        State.containers.map(c => {
+          if (c.proxy) c.proxy = null
+        })
         State.permAllUrls = await browser.permissions.contains({ origins: ['<all_urls>'] })
       } else {
         browser.tabs.create({
@@ -475,6 +581,7 @@ export default {
         await Store.dispatch('showAllTabs')
         await browser.permissions.remove({ permissions: ['tabHide'] })
         State.hideInact = false
+        if (State.hideFoldedTabs) this.toggleHideFoldedTabs()
         State.permTabHide = false
       } else {
         browser.tabs.create({
@@ -502,6 +609,8 @@ export default {
     resetSettings() {
       Store.commit('resetSettings')
       Store.dispatch('saveSettings')
+      Store.dispatch('saveContainers')
+      Store.dispatch('saveState')
     },
 
     /**
