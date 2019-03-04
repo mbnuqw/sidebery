@@ -311,6 +311,7 @@ export default {
      * Handle dragenter event
      */
     onDragEnter() {
+      if (this.tab.invisible) return
       if (this.dragEnterTimeout) clearTimeout(this.dragEnterTimeout)
       this.dragEnterTimeout = setTimeout(() => {
         browser.tabs.update(this.tab.id, { active: true })
@@ -457,6 +458,7 @@ export default {
   width: 100%
   height: var(--tabs-height)
   align-items: center
+  z-index: 10
   transform: translateZ(0)
   transition: opacity var(--d-fast), transform var(--d-fast), z-index 0s .2s
   &:hover

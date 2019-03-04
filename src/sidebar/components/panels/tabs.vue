@@ -254,22 +254,4 @@ export default {
   transition: transform var(--d-fast), opacity var(--d-fast)
   &[ctx-menu] .tab:not([data-menu])
     opacity: .4
-
-  // .tab-wrapper
-  //   box(absolute)
-  //   size(100%)
-  //   pos(0, 0)
-
-  // .tab-enter .lvl-wrapper
-  //   // transform: translateX(12px)
-  //   opacity: 0
-  // .tab-enter-to .lvl-wrapper
-  //   // transform: translateX(0)
-  //   opacity: 1
-  // .tab-leave .lvl-wrapper
-  //   // transform: translateX(0)
-  //   opacity: 1
-  // .tab-leave-to .lvl-wrapper
-  //   // transform: translateX(12px)
-  //   opacity: 0
 </style>
