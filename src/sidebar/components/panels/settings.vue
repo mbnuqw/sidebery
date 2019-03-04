@@ -31,6 +31,9 @@
         label="settings.hide_inactive_panel_tabs"
         :value="$store.state.hideInact"
         @input="toggleHideInact")
+
+    section
+      h2 {{t('settings.pinned_tabs_title')}}
       select-field(
         label="settings.pinned_tabs_position"
         optLabel="settings.pinned_tabs_position_"
@@ -47,6 +50,8 @@
         :value="$store.state.pinnedTabsSync"
         @input="togglePinnedTabsSync")
 
+    section
+      h2 {{t('settings.pinned_tabs_tree')}}
       toggle-field(
         label="settings.tabs_tree_layout"
         :value="$store.state.tabsTree"

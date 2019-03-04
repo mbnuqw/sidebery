@@ -18,6 +18,9 @@ export default {
   'settings.show_tab_rm_btn': { message: 'Показывать кнопку закрытия таба при наведении курсора' },
   'settings.no_empty_default': { message: 'Создавать новую вкладку при опустошении стандартной панели' },
   'settings.hide_inactive_panel_tabs': { message: 'Скрывать табы неактивных панелей' },
+
+  // --- Pinned tabs
+  'settings.pinned_tabs_title': { message: 'Закрепленные табы' },
   'settings.pinned_tabs_position': { message: 'Расположение закрепленных табов' },
   'settings.pinned_tabs_position_top': { message: 'вверху' },
   'settings.pinned_tabs_position_left': { message: 'слева' },
@@ -26,6 +29,9 @@ export default {
   'settings.pinned_tabs_position_panel': { message: 'панель' },
   'settings.pinned_tabs_sync': { message: 'Синхронизировать закрепленные вкладки' },
   'settings.pinned_tabs_list': { message: 'Показывать заголовки закрепленных табов' },
+
+  // --- Tabs tree
+  'settings.pinned_tabs_tree': { message: 'Древовидное отображение табов' },
   'settings.tabs_tree_layout': { message: 'Древовидное отображение табов' },
   'settings.group_on_open_layout': { message: 'Создать поддерево при открытии ссылки в новом табе' },
   'settings.tabs_tree_limit': { message: 'Максимальный уровень вложенности табов' },

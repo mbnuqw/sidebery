@@ -18,6 +18,9 @@ export default {
   'settings.show_tab_rm_btn': { message: 'Show close button on tab hover' },
   'settings.no_empty_default': { message: 'Create new tab on emptying default panel' },
   'settings.hide_inactive_panel_tabs': { message: 'Hide tabs of inactive panels' },
+
+  // --- Pinned tabs
+  'settings.pinned_tabs_title': { message: 'Pinned tabs' },
   'settings.pinned_tabs_position': { message: 'Pinned tabs position' },
   'settings.pinned_tabs_position_top': { message: 'top' },
   'settings.pinned_tabs_position_left': { message: 'left' },
@@ -26,6 +29,9 @@ export default {
   'settings.pinned_tabs_position_panel': { message: 'panel' },
   'settings.pinned_tabs_sync': { message: 'Sync pinned tabs' },
   'settings.pinned_tabs_list': { message: 'Show titles of pinned tabs' },
+
+  // --- Tabs tree
+  'settings.pinned_tabs_tree': { message: 'Tabs tree' },
   'settings.tabs_tree_layout': { message: 'Tabs tree structure' },
   'settings.group_on_open_layout': { message: 'Create sub-tree on opening link in new tab' },
   'settings.tabs_tree_limit': { message: 'Tabs tree max level' },
