@@ -94,12 +94,10 @@ export default new Vue({
     Store.dispatch('loadFavicons')
     Store.dispatch('loadPermissions')
     if (State.bookmarksPanel) await Store.dispatch('loadBookmarks')
+    Store.dispatch('updateTabsSuccessors')
 
     const dSavingState = Utils.Debounce(() => Store.dispatch('saveState'), 567)
     Store.watch(Getters.activePanel, dSavingState.func)
-
-    // const dMakingSnapshot = Utils.Debounce(() => Store.dispatch('makeSnapshot'), 10000)
-    // Store.watch(Getters.tabs, dMakingSnapshot.func)
 
     // Try to clear unneeded favicons
     Store.dispatch('tryClearFaviCache', 86400)
