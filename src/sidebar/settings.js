@@ -15,31 +15,27 @@ export const SETTINGS_OPTIONS = {
 export const DEFAULT_SETTINGS = {
   // Global
   nativeScrollbars: false,
-  hScrollThroughPanels: false,
 
   // Tabs
   activateLastTabOnPanelSwitching: true,
   createNewTabOnEmptyPanel: false,
   skipEmptyPanels: false,
   showTabRmBtn: true,
-  scrollThroughTabs: 'none',
-  tabDoubleClick: 'none',
-  tabLongLeftClick: 'none',
-  tabLongRightClick: 'none',
-
   hideInact: false,
-  tabsPanelLeftClickAction: 'none',
-  tabsPanelDoubleClickAction: 'tab',
-  tabsPanelRightClickAction: 'none',
+
+  // Pinned tabs
   pinnedTabsPosition: 'panel',
   pinnedTabsSync: false,
   pinnedTabsList: false,
+
+  // Tabs tree
   tabsTree: false,
   groupOnOpen: true,
   tabsTreeLimit: 'none',
   hideFoldedTabs: false,
   autoFoldTabs: false,
   autoExpandTabs: false,
+  rmFoldedTabs: false,
 
   // Bookmarks
   bookmarksPanel: true,
@@ -54,4 +50,14 @@ export const DEFAULT_SETTINGS = {
 
   // Snapshots
   snapshotsTargets: { pinned: true },
+
+  // Mouse
+  hScrollThroughPanels: false,
+  scrollThroughTabs: 'none',
+  tabDoubleClick: 'none',
+  tabLongLeftClick: 'none',
+  tabLongRightClick: 'none',
+  tabsPanelLeftClickAction: 'none',
+  tabsPanelDoubleClickAction: 'tab',
+  tabsPanelRightClickAction: 'none',
 }

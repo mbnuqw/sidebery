@@ -44,6 +44,7 @@ export default {
   'settings.hide_folded_tabs': { message: 'Скрывать свернутые табы' },
   'settings.auto_fold_tabs': { message: 'Автоматически сворачивать табы' },
   'settings.auto_exp_tabs': { message: 'Автоматически разворачивать табы' },
+  'settings.rm_folded_tabs': { message: 'Закрывать свернутые табы вместе с родительским' },
 
   // --- Bookmarks
   'settings.bookmarks_title': { message: 'Закладки' },

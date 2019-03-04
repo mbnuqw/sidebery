@@ -125,7 +125,7 @@ export default {
       return
     }
 
-    if (tab.folded) dispatch('expTabsBranch', tab.id)
+    if (!state.rmFoldedTabs && tab.folded) dispatch('expTabsBranch', tab.id)
 
     if (p.noEmpty) {
       if (p.tabs && p.tabs.length === 1) {
@@ -164,7 +164,7 @@ export default {
         toRemove.push(tab.id)
         continue
       }
-      if (tab.folded) dispatch('expTabsBranch', id)
+      if (!state.rmFoldedTabs && tab.folded) dispatch('expTabsBranch', id)
       if (panel.lockedTabs && tab.url.indexOf('about')) continue
       if (panelId === undefined) panelId = tab.cookieStoreId
       if (panelId && panelId !== tab.cookieStoreId) panelId = null

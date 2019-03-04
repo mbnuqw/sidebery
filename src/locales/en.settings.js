@@ -44,6 +44,7 @@ export default {
   'settings.hide_folded_tabs': { message: 'Hide folded tabs' },
   'settings.auto_fold_tabs': { message: 'Auto fold tabs' },
   'settings.auto_exp_tabs': { message: 'Auto expand tabs' },
+  'settings.rm_folded_tabs': { message: 'Close folded tabs with parent' },
 
   // --- Bookmarks
   'settings.bookmarks_title': { message: 'Bookmarks' },
