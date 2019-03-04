@@ -202,6 +202,7 @@ export default {
         // Select this tab
         if (this.tab.isParent && this.tab.folded) {
         // Select whole branch if tab is folded
+          Store.commit('resetSelection')
           const toSelect = [this.tab.id]
           for (let tab of State.tabs) {
             if (toSelect.includes(tab.parentId)) toSelect.push(tab.id)
@@ -241,6 +242,7 @@ export default {
      */
     onTabMenu(id) {
       if (id !== this.tab.id) return
+      if (this.tab.invisible) return
       Store.dispatch('openCtxMenu', { el: this.$el, node: this.tab })
     },
 
