@@ -636,6 +636,7 @@ export default {
      * Mouse up event handler
      */
     onMouseUp(e) {
+      // console.log('[DEBUG] INDEX onMouseUp');
       if (e.button === 0) {
         Store.commit('closeCtxMenu')
         Store.commit('resetSelection')
@@ -1013,6 +1014,16 @@ export default {
           url: tab.url,
           cookieStoreId: tab.cookieStoreId,
         })
+      }
+
+      // Remove folded children
+      if (State.tabsTree && State.rmFoldedTabs && tab.folded) {
+        const toRemove = []
+        for (let t of State.tabs) {
+          if (toRemove.includes(t.parentId)) toRemove.push(t.id)
+          if (t.parentId === tab.id) toRemove.push(t.id)
+        }
+        Store.dispatch('removeTabs', toRemove)
       }
 
       // No-empty

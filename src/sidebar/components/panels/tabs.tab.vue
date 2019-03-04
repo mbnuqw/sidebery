@@ -143,8 +143,7 @@ export default {
      */
     onMouseDown(e) {
       if (e.button === 1) {
-        if (this.tab.folded) this.closeTree()
-        else this.close()
+        this.close()
         e.preventDefault()
         e.stopPropagation()
       }
@@ -203,6 +202,7 @@ export default {
         // Select this tab
         if (this.tab.isParent && this.tab.folded) {
         // Select whole branch if tab is folded
+          Store.commit('resetSelection')
           const toSelect = [this.tab.id]
           for (let tab of State.tabs) {
             if (toSelect.includes(tab.parentId)) toSelect.push(tab.id)
@@ -242,6 +242,7 @@ export default {
      */
     onTabMenu(id) {
       if (id !== this.tab.id) return
+      if (this.tab.invisible) return
       Store.dispatch('openCtxMenu', { el: this.$el, node: this.tab })
     },
 
@@ -310,6 +311,7 @@ export default {
      * Handle dragenter event
      */
     onDragEnter() {
+      if (this.tab.invisible) return
       if (this.dragEnterTimeout) clearTimeout(this.dragEnterTimeout)
       this.dragEnterTimeout = setTimeout(() => {
         browser.tabs.update(this.tab.id, { active: true })
@@ -456,6 +458,7 @@ export default {
   width: 100%
   height: var(--tabs-height)
   align-items: center
+  z-index: 10
   transform: translateZ(0)
   transition: opacity var(--d-fast), transform var(--d-fast), z-index 0s .2s
   &:hover

@@ -105,6 +105,7 @@ export default {
    * Open context menu
    */
   async openCtxMenu({ state, commit, getters, dispatch }, { el, node } = {}) {
+    // console.log('[DEBUG] ACTION openCtxMenu');
     let nodesLen = state.selected.length
     let nodeType = typeof node.id === 'number' ? 'tab' : 'bookmark'
     const menu = new CtxMenu(el, () => commit('resetSelection'))

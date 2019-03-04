@@ -104,6 +104,20 @@ export default {
   },
 
   /**
+   * Update tabs successorTabId
+   */
+  updateTabsSuccessors({ getters }) {
+    for (let panel of getters.panels) {
+      if (!panel.tabs || panel.tabs.length < 2) continue
+      const penultTab = panel.tabs[panel.tabs.length - 2]
+      const lastTab = panel.tabs[panel.tabs.length - 1]
+      if (lastTab.successorTabId !== penultTab.id) {
+        browser.tabs.update(lastTab.id, { successorTabId: penultTab.id })
+      }
+    }
+  },
+
+  /**
    * Create new tab in current window
    */
   createTab({ state, getters }, ctxId) {
@@ -125,7 +139,7 @@ export default {
       return
     }
 
-    if (tab.folded) dispatch('expTabsBranch', tab.id)
+    if (!state.rmFoldedTabs && tab.folded) dispatch('expTabsBranch', tab.id)
 
     if (p.noEmpty) {
       if (p.tabs && p.tabs.length === 1) {
@@ -164,7 +178,7 @@ export default {
         toRemove.push(tab.id)
         continue
       }
-      if (tab.folded) dispatch('expTabsBranch', id)
+      if (!state.rmFoldedTabs && tab.folded) dispatch('expTabsBranch', id)
       if (panel.lockedTabs && tab.url.indexOf('about')) continue
       if (panelId === undefined) panelId = tab.cookieStoreId
       if (panelId && panelId !== tab.cookieStoreId) panelId = null
@@ -759,6 +773,7 @@ export default {
     for (let tab of ttf) {
       tab.lvl = minLvlTab.lvl
       tab.parentId = minLvlTab.parentId
+      tab.invisible = false
     }
 
     state.tabs = Utils.CalcTabsTreeLevels(state.tabs)
