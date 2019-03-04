@@ -759,6 +759,7 @@ export default {
     for (let tab of ttf) {
       tab.lvl = minLvlTab.lvl
       tab.parentId = minLvlTab.parentId
+      tab.invisible = false
     }
 
     state.tabs = Utils.CalcTabsTreeLevels(state.tabs)
