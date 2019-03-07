@@ -843,7 +843,7 @@ export default {
      */
     onCreatedTab(tab) {
       if (tab.windowId !== State.windowId) return
-      // console.log('[DEBUG] INDEX onCreatedTab');
+      // console.log('[DEBUG] INDEX onCreatedTab', tab.title);
       Store.commit('closeCtxMenu')
       Store.commit('resetSelection')
 
@@ -860,48 +860,79 @@ export default {
         State.tabs[i].index++
       }
 
-      // Update tree
+      // --- Update tree
+      // Set default tree props (for reactivity)
       tab.isParent = false
       tab.folded = false
       tab.parentId = -1
       tab.lvl = 0
       tab.invisible = false
-      if (State.tabsTree && tab.openerTabId !== undefined) {
-        let parent = panel.tabs.find(t => t.id === tab.openerTabId)
-        if (!parent) parent = { lvl: 0 }
-        let lvlOk = !parent.lvl || !(parent.lvl >= State.tabsTreeLimit)
-
-        if ((State.groupOnOpen || parent.isParent) && lvlOk) {
-          // Child
-          tab.parentId = tab.openerTabId
-          for (let i = tab.index; i--; ) {
-            if (tab.parentId !== State.tabs[i].id) continue
-            if (State.tabs[i].lvl) tab.lvl = State.tabs[i].lvl + 1
-            else tab.lvl = 1
-            State.tabs[i].isParent = true
-            if (State.tabs[i].folded) {
-              tab.invisible = true
-              if (State.hideFoldedTabs) browser.tabs.hide(tab.id)
-            }
-            break
-          }
-
-          // Auto fold sibling sub-trees
-          if (State.autoFoldTabs) {
-            for (let t of State.tabs) {
-              if (t.isParent && !t.folded && t.lvl === parent.lvl && t.id !== tab.openerTabId) {
-                Store.dispatch('foldTabsBranch', t.id)
+      if (State.tabsTree) {
+        // Check if this tab is reopened
+        if (State.removedTabs && State.removedTabs.length > 0 && !tab.openerTabId) {
+          let lastRmTab = State.removedTabs[State.removedTabs.length - 1]
+          if (lastRmTab.title === tab.title) {
+            // Check if parent still exists
+            let parent
+            for (let i = tab.index; i--; ) {
+              if (State.tabs[i].id === lastRmTab.parentId) {
+                parent = State.tabs[i]
+                break
               }
             }
-          }
+            if (parent) {
+              tab.parentId = parent.id
+              tab.invisible = parent.folded
+              if (tab.invisible && State.hideFoldedTabs) browser.tabs.hide(tab.id)
+              if (State.tabsTreeLimit > 0 && parent.lvl >= State.tabsTreeLimit) {
+                tab.lvl = parent.lvl
+              } else {
+                tab.lvl = parent.lvl + 1
+              }
+            }
 
-        } else {
-          // Sibling
-          for (let i = tab.index; i--; ) {
-            if (tab.openerTabId === State.tabs[i].id) {
-              tab.parentId = State.tabs[i].parentId
-              tab.lvl = State.tabs[i].lvl
+            State.removedTabs.pop()
+          }
+        }
+
+        // Child tab
+        if (tab.openerTabId !== undefined) {
+          let parent = panel.tabs.find(t => t.id === tab.openerTabId)
+          if (!parent) parent = { lvl: 0 }
+          let lvlOk = !parent.lvl || !(parent.lvl >= State.tabsTreeLimit)
+
+          if ((State.groupOnOpen || parent.isParent) && lvlOk) {
+            // Child
+            tab.parentId = tab.openerTabId
+            for (let i = tab.index; i--; ) {
+              if (tab.parentId !== State.tabs[i].id) continue
+              if (State.tabs[i].lvl) tab.lvl = State.tabs[i].lvl + 1
+              else tab.lvl = 1
+              State.tabs[i].isParent = true
+              if (State.tabs[i].folded) {
+                tab.invisible = true
+                if (State.hideFoldedTabs) browser.tabs.hide(tab.id)
+              }
               break
+            }
+
+            // Auto fold sibling sub-trees
+            if (State.autoFoldTabs) {
+              for (let t of State.tabs) {
+                if (t.isParent && !t.folded && t.lvl === parent.lvl && t.id !== tab.openerTabId) {
+                  Store.dispatch('foldTabsBranch', t.id)
+                }
+              }
+            }
+
+          } else {
+            // Sibling
+            for (let i = tab.index; i--; ) {
+              if (tab.openerTabId === State.tabs[i].id) {
+                tab.parentId = State.tabs[i].parentId
+                tab.lvl = State.tabs[i].lvl
+                break
+              }
             }
           }
         }
@@ -1014,6 +1045,18 @@ export default {
           url: tab.url,
           cookieStoreId: tab.cookieStoreId,
         })
+      }
+
+      // Temporary store child tab info (for tree recovering)
+      if (State.tabsTree && tab.parentId >= 0 && !tab.url.startsWith('about:')) {
+        if (!State.removedTabs) State.removedTabs = []
+        if (State.removedTabs.length > 123) State.removedTabs.splice(50, 50)
+        if (tab.parentId >= 0) {
+          State.removedTabs.push({
+            title: tab.title,
+            parentId: tab.parentId,
+          })
+        }
       }
 
       // Remove folded children
