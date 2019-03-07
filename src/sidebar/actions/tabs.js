@@ -66,10 +66,12 @@ export default {
           if (t.isParent) parents[t.id] = tab
           if (t.parentId > -1) {
             const parentTab = parents[t.parentId]
-            if (parentTab.folded || parentTab.invisible) {
-              tab.invisible = true
-            } else tab.invisible = false
-            tab.parentId = parentTab.id
+            if (parentTab) {
+              if (parentTab.folded || parentTab.invisible) {
+                tab.invisible = true
+              } else tab.invisible = false
+              tab.parentId = parentTab.id
+            }
           }
         }
       }
