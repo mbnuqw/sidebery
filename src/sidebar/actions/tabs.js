@@ -680,7 +680,7 @@ export default {
         for (let i = 0; i < nodes.length; i++) {
           const node = nodes[i]
           if (node.type === 'separator') continue
-          if (!state.tabsTree && node.type !== 'bookmark') continue
+          if (!state.tabsTree && node.type === 'folder') continue
           if (state.tabsTreeLimit > 0 && node.type === 'folder') continue
 
           const groupPageUrl = browser.runtime.getURL('group/group.html')
