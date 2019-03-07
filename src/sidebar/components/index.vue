@@ -843,7 +843,7 @@ export default {
      */
     onCreatedTab(tab) {
       if (tab.windowId !== State.windowId) return
-      // console.log('[DEBUG] INDEX onCreatedTab');
+      // console.log('[DEBUG] INDEX onCreatedTab', tab.title);
       Store.commit('closeCtxMenu')
       Store.commit('resetSelection')
 
@@ -860,58 +860,87 @@ export default {
         State.tabs[i].index++
       }
 
-      // Update tree
+      // --- Update tree
+      // Set default tree props (for reactivity)
       tab.isParent = false
       tab.folded = false
       tab.parentId = -1
       tab.lvl = 0
       tab.invisible = false
-      if (State.tabsTree && tab.openerTabId !== undefined) {
-        let parent = panel.tabs.find(t => t.id === tab.openerTabId)
-        if (!parent) parent = { lvl: 0 }
-        let lvlOk = !parent.lvl || !(parent.lvl >= State.tabsTreeLimit)
-
-        if ((State.groupOnOpen || parent.isParent) && lvlOk) {
-          // Child
-          tab.parentId = tab.openerTabId
-          for (let i = tab.index; i--; ) {
-            if (tab.parentId !== State.tabs[i].id) continue
-            if (State.tabs[i].lvl) tab.lvl = State.tabs[i].lvl + 1
-            else tab.lvl = 1
-            State.tabs[i].isParent = true
-            if (State.tabs[i].folded) {
-              tab.invisible = true
-              if (State.hideFoldedTabs) browser.tabs.hide(tab.id)
-            }
-            break
-          }
-
-          // Auto fold sibling sub-trees
-          if (State.autoFoldTabs) {
-            for (let t of State.tabs) {
-              if (t.isParent && !t.folded && t.lvl === parent.lvl && t.id !== tab.openerTabId) {
-                Store.dispatch('foldTabsBranch', t.id)
+      if (State.tabsTree) {
+        // Check if this tab is reopened
+        if (State.removedTabs && State.removedTabs.length > 0 && !tab.openerTabId) {
+          let lastRmTab = State.removedTabs[State.removedTabs.length - 1]
+          if (lastRmTab.title === tab.title) {
+            // Check if parent still exists
+            let parent
+            for (let i = tab.index; i--; ) {
+              if (State.tabs[i].id === lastRmTab.parentId) {
+                parent = State.tabs[i]
+                break
               }
             }
-          }
+            if (parent) {
+              tab.parentId = parent.id
+              tab.invisible = parent.folded
+              if (tab.invisible && State.hideFoldedTabs) browser.tabs.hide(tab.id)
+              if (State.tabsTreeLimit > 0 && parent.lvl >= State.tabsTreeLimit) {
+                tab.lvl = parent.lvl
+              } else {
+                tab.lvl = parent.lvl + 1
+              }
+            }
 
-        } else {
-          // Sibling
-          for (let i = tab.index; i--; ) {
-            if (tab.openerTabId === State.tabs[i].id) {
-              tab.parentId = State.tabs[i].parentId
-              tab.lvl = State.tabs[i].lvl
+            State.removedTabs.pop()
+          }
+        }
+
+        // Child tab
+        if (tab.openerTabId !== undefined) {
+          let parent = panel.tabs.find(t => t.id === tab.openerTabId)
+          if (!parent) parent = { lvl: 0 }
+          let lvlOk = !parent.lvl || !(parent.lvl >= State.tabsTreeLimit)
+
+          if ((State.groupOnOpen || parent.isParent) && lvlOk) {
+            // Child
+            tab.parentId = tab.openerTabId
+            for (let i = tab.index; i--; ) {
+              if (tab.parentId !== State.tabs[i].id) continue
+              if (State.tabs[i].lvl) tab.lvl = State.tabs[i].lvl + 1
+              else tab.lvl = 1
+              State.tabs[i].isParent = true
+              if (State.tabs[i].folded) {
+                tab.invisible = true
+                if (State.hideFoldedTabs) browser.tabs.hide(tab.id)
+              }
               break
+            }
+
+            // Auto fold sibling sub-trees
+            if (State.autoFoldTabs) {
+              for (let t of State.tabs) {
+                if (t.isParent && !t.folded && t.lvl === parent.lvl && t.id !== tab.openerTabId) {
+                  Store.dispatch('foldTabsBranch', t.id)
+                }
+              }
+            }
+
+          } else {
+            // Sibling
+            for (let i = tab.index; i--; ) {
+              if (tab.openerTabId === State.tabs[i].id) {
+                tab.parentId = State.tabs[i].parentId
+                tab.lvl = State.tabs[i].lvl
+                break
+              }
             }
           }
         }
       }
 
       // Set last tab successor
-      if (State.ffVer >= 65 && tab.index > panel.endIndex && panel.tabs.length) {
-        const prevTab = panel.tabs[panel.tabs.length - 1]
-        browser.tabs.update(prevTab.id, { successorTabId: -1 })
-        browser.tabs.update(tab.id, { successorTabId: prevTab.id })
+      if (panel.tabs.length >= 1 && tab.index >= panel.endIndex) {
+        Store.dispatch('updateTabsSuccessorsDebounced', { timeout: 200 })
       }
 
       // Put new tab in tabs list
@@ -1016,6 +1045,18 @@ export default {
         })
       }
 
+      // Temporary store child tab info (for tree recovering)
+      if (State.tabsTree && tab.parentId >= 0 && !tab.url.startsWith('about:')) {
+        if (!State.removedTabs) State.removedTabs = []
+        if (State.removedTabs.length > 123) State.removedTabs.splice(50, 50)
+        if (tab.parentId >= 0) {
+          State.removedTabs.push({
+            title: tab.title,
+            parentId: tab.parentId,
+          })
+        }
+      }
+
       // Remove folded children
       if (State.tabsTree && State.rmFoldedTabs && tab.folded) {
         const toRemove = []
@@ -1034,10 +1075,13 @@ export default {
         }
       }
 
-      // Down level of children
+      // Down level of children and make them visible
       if (State.tabsTree && tab.isParent) {
         for (let t of State.tabs) {
-          if (t.parentId === tab.id) t.parentId = tab.parentId
+          if (t.parentId === tab.id) {
+            t.parentId = tab.parentId
+            t.invisible = false
+          }
         }
       }
 
@@ -1047,12 +1091,14 @@ export default {
         if (tab.index === panel.endIndex) {
           const prevTab = panel.tabs[panel.tabs.length - 2]
           const prePrevTab = panel.tabs[panel.tabs.length - 3]
+          prevTab.successorTabId = prePrevTab.id
           browser.tabs.update(prevTab.id, { successorTabId: prePrevTab.id })
         }
         // Removing successor of last tab
         if (tab.index === panel.endIndex - 1) {
           const lastTab = panel.tabs[panel.tabs.length - 1]
           const prevTab = panel.tabs[panel.tabs.length - 3]
+          lastTab.successorTabId = prevTab.id
           browser.tabs.update(lastTab.id, { successorTabId: prevTab.id })
         }
       }
@@ -1085,31 +1131,9 @@ export default {
      */
     onMovedTab(id, info) {
       if (info.windowId !== State.windowId) return
-      // console.log('[DEBUG] INDEX onMovedTab');
+      // console.log('[DEBUG] INDEX onMovedTab', id);
       Store.commit('closeCtxMenu')
       Store.commit('resetSelection')
-
-      // Update last tab successor
-      const panelIndex = Utils.GetPanelIndex(this.panels, id)
-      const panel = this.panels[panelIndex]
-      if (panel && State.ffVer >= 65 && panel.tabs.length > 1) {
-        // Move last tab - reset successor
-        if (info.fromIndex === panel.endIndex) {
-          const lastTab = State.tabs[info.fromIndex]
-          const prevTab = State.tabs[info.fromIndex - 1]
-          const prePrevTab = info.toIndex === info.fromIndex - 1 ?
-            lastTab : State.tabs[info.fromIndex - 2]
-          browser.tabs.update(lastTab.id, { successorTabId: -1 })
-          browser.tabs.update(prevTab.id, { successorTabId: prePrevTab.id })
-        }
-        // Move tab to end - set successor for it
-        if (info.toIndex === panel.endIndex) {
-          const lastTab = panel.tabs[panel.tabs.length - 1]
-          const movedTab = State.tabs[info.fromIndex]
-          browser.tabs.update(lastTab.id, { successorTabId: -1 })
-          browser.tabs.update(movedTab.id, { successorTabId: lastTab.id })
-        }
-      }
 
       // Move tab in tabs array
       let movedTab = State.tabs.splice(info.fromIndex, 1)[0]
@@ -1127,6 +1151,9 @@ export default {
       }
       State.tabs.splice(info.toIndex, 0, movedTab)
       Store.dispatch('recalcPanelScroll')
+
+      // Update last tab successor
+      Store.dispatch('updateTabsSuccessorsDebounced', { timeout: 200 })
 
       // Calc tree levels
       if (State.tabsTree) {

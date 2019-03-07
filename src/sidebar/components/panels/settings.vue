@@ -67,7 +67,7 @@
         :inactive="!$store.state.tabsTree"
         :value="$store.state.tabsTreeLimit"
         :opts="$store.state.tabsTreeLimitOpts"
-        @input="setOpt('tabsTreeLimit', $event)")
+        @input="toggleTabsTreeLimit")
       toggle-field(
         v-if="$store.state.ffVer >= 61"
         label="settings.hide_folded_tabs"
@@ -416,6 +416,21 @@ export default {
         State.tabs = Utils.CalcTabsTreeLevels(State.tabs)
       }
       this.toggleOpt('tabsTree')
+    },
+
+    toggleTabsTreeLimit(e) {
+      this.setOpt('tabsTreeLimit', e)
+
+      // Update tree
+      if (State.tabsTreeLimit > 0) {
+        const path = []
+        for (let tab of State.tabs) {
+          if (tab.isParent) path[tab.lvl] = tab.id
+          if (tab.lvl > State.tabsTreeLimit) tab.parentId = path[State.tabsTreeLimit - 1]
+        }
+      }
+      State.tabs = Utils.CalcTabsTreeLevels(State.tabs)
+      Store.dispatch('saveTabsTree')
     },
 
     async toggleHideFoldedTabs() {

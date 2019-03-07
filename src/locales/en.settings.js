@@ -124,7 +124,7 @@ export default {
   'settings.all_urls_label': { message: 'Websites data:' },
   'settings.all_urls_info': { message: 'Required for:\n- Cleaning cookies\n- Proxy' },
   'settings.tab_hide_label': { message: 'Hiding tabs:' },
-  'settings.tab_hide_info': { message: 'Required for:\n- Hiding tabs on inactive panels' },
+  'settings.tab_hide_info': { message: 'Required for:\n- Hiding tabs on inactive panels\n- Hiding folded tabs' },
 
   // --- Favicons
   'settings.favi_title': { message: 'Favicons' },
