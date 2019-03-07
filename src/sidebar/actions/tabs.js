@@ -625,7 +625,7 @@ export default {
         if (state.tabsTree) {
           // Get parent tab parameters
           let parentId = parent ? parent.id : -1
-          let parentLvl = parent ? parent.lvl : 0
+          let parentLvl = parent ? parent.lvl : -1
           if (parentLvl === state.tabsTreeLimit) parentId = parent.parentId
 
           // Set first tab parentId and other parameters
@@ -676,29 +676,25 @@ export default {
       } else {
         // Create new tabs
         const oldNewMap = []
+        let opener = dropParent < 0 ? undefined : dropParent
         for (let i = 0; i < nodes.length; i++) {
           const node = nodes[i]
           if (node.type === 'separator') continue
           if (!state.tabsTree && node.type !== 'bookmark') continue
-          if (state.tabsTreeLimit > 0 && node.type !== 'bookmark') continue
+          if (state.tabsTreeLimit > 0 && node.type === 'folder') continue
 
           const groupPageUrl = browser.runtime.getURL('group/group.html')
+          if (oldNewMap[node.parentId] >= 0) opener = oldNewMap[node.parentId]
           const info = await browser.tabs.create({
             active: !(parent && parent.folded),
             cookieStoreId: destCtx,
             index: dropIndex + i,
-            openerTabId: dropParent < 0 ? undefined : dropParent,
+            openerTabId: opener,
             url: node.url ? node.url : groupPageUrl + `#${encodeURI(node.title)}`,
             windowId: state.windowId,
             pinned: pin,
           })
           oldNewMap[node.id] = info.id
-
-          // Restore parentId
-          if (state.tabsTree && nodes.length > 1 && nodes[0].id === nodes[1].parentId && !pin) {
-            const tab = state.tabs.find(t => t.id === info.id)
-            if (tab && oldNewMap[node.parentId]) tab.parentId = oldNewMap[node.parentId]
-          }
         }
 
         // Remove source tabs
@@ -710,7 +706,7 @@ export default {
 
         // Update tabs tree if there are no tabs was deleted
         if (nodes[0].type !== 'tab' || event.ctrlKey) {
-          state.tabs = Utils.CalcTabsTreeLevels(state.tabs)
+          state.tabs = Utils.CalcTabsTreeLevels(state.tabs, state.tabsTreeLimit)
         }
       }
     }
