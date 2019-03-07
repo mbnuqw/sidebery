@@ -124,7 +124,7 @@ export default {
   'settings.all_urls_label': { message: 'Данные веб-сайтов:' },
   'settings.all_urls_info': { message: 'Необходимо для:\n- Удаления куков\n- Прокси' },
   'settings.tab_hide_label': { message: 'Скрытие табов:' },
-  'settings.tab_hide_info': { message: 'Необходимо для:\n- Скрывания табов неактивных панелей' },
+  'settings.tab_hide_info': { message: 'Необходимо для:\n- Скрывания табов неактивных панелей\n- Скрывания свернутых табов' },
 
   // --- Favicons
   'settings.favi_title': { message: 'Иконки сайтов' },
