@@ -339,13 +339,12 @@ describe('removeTab', () => {
         },
       ],
     }
-    const dispatch = jest.fn()
     browser.tabs.remove = jest.fn()
     browser.tabs.create = jest.fn()
     browser.tabs.update = jest.fn()
 
     await TabsActions.removeTab(
-      { state, getters, dispatch },
+      { state, getters },
       {
         id: 1,
         cookieStoreId: 'a',
@@ -354,8 +353,6 @@ describe('removeTab', () => {
         folded: true,
       }
     )
-    // Expand folded
-    expect(dispatch).toBeCalledWith('expTabsBranch', 1)
     // Create new tab if remove the last one in noEmpty panel
     expect(browser.tabs.create).toBeCalledWith({ cookieStoreId: 'a' })
     // No activation
@@ -384,12 +381,11 @@ describe('removeTabs', () => {
     const getters = {
       panels: [],
     }
-    const dispatch = jest.fn()
     browser.tabs.remove = jest.fn()
     browser.tabs.create = jest.fn()
     browser.tabs.update = jest.fn()
 
-    await TabsActions.removeTabs({ state, getters, dispatch }, [1, 2])
+    await TabsActions.removeTabs({ state, getters }, [1, 2])
     expect(browser.tabs.remove).toBeCalledWith([1, 2])
   })
 
@@ -419,14 +415,12 @@ describe('removeTabs', () => {
         },
       ],
     }
-    const dispatch = jest.fn()
     browser.tabs.remove = jest.fn()
     browser.tabs.create = jest.fn()
     browser.tabs.update = jest.fn()
 
-    await TabsActions.removeTabs({ state, getters, dispatch }, [1, 2])
+    await TabsActions.removeTabs({ state, getters }, [1, 2])
     expect(browser.tabs.remove).toBeCalledWith([1, 2])
-    expect(dispatch).toBeCalledWith('expTabsBranch', 1)
     expect(browser.tabs.create).toBeCalledWith({ active: true })
     expect(browser.tabs.update).not.toBeCalled()
   })
@@ -457,14 +451,12 @@ describe('removeTabs', () => {
         },
       ],
     }
-    const dispatch = jest.fn()
     browser.tabs.remove = jest.fn()
     browser.tabs.create = jest.fn()
     browser.tabs.update = jest.fn()
 
-    await TabsActions.removeTabs({ state, getters, dispatch }, [1, 2])
+    await TabsActions.removeTabs({ state, getters }, [1, 2])
     expect(browser.tabs.remove).toBeCalledWith([])
-    expect(dispatch).toBeCalledWith('expTabsBranch', 1)
   })
 })
 

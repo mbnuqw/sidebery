@@ -1026,7 +1026,7 @@ export default {
      */
     onRemovedTab(tabId, info) {
       if (info.windowId !== State.windowId) return
-      // console.log('[DEBUG] INDEX onRemovedTab');
+      console.log('[DEBUG] INDEX onRemovedTab');
       if (!State.removingTabs) State.removingTabs = []
       State.removingTabs.splice(State.removingTabs.indexOf(tabId), 1)
       if (!State.removingTabs.length) {
@@ -1077,10 +1077,13 @@ export default {
         }
       }
 
-      // Down level of children
+      // Down level of children and make them visible
       if (State.tabsTree && tab.isParent) {
         for (let t of State.tabs) {
-          if (t.parentId === tab.id) t.parentId = tab.parentId
+          if (t.parentId === tab.id) {
+            t.parentId = tab.parentId
+            t.invisible = false
+          }
         }
       }
 

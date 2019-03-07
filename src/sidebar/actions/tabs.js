@@ -133,15 +133,13 @@ export default {
   /**
    * Remove tab.
    */
-  async removeTab({ state, getters, dispatch }, tab) {
+  async removeTab({ state, getters }, tab) {
     // console.log('[DEBUG] TABS ACTION removeTab');
     let p = Utils.GetPanelOf(getters.panels, tab)
     if (!p || !p.tabs) return
     if (p.lockedTabs && tab.url.indexOf('about')) {
       return
     }
-
-    if (!state.rmFoldedTabs && tab.folded) dispatch('expTabsBranch', tab.id)
 
     if (p.noEmpty) {
       if (p.tabs && p.tabs.length === 1) {
@@ -163,7 +161,7 @@ export default {
   /**
    * Remove tabs
    */
-  async removeTabs({ state, getters, dispatch }, tabIds) {
+  async removeTabs({ state, getters }, tabIds) {
     // console.log('[DEBUG] TABS ACTION removeTabs');
     state.removingTabs = [...tabIds]
     const tabs = []
@@ -180,7 +178,6 @@ export default {
         toRemove.push(tab.id)
         continue
       }
-      if (!state.rmFoldedTabs && tab.folded) dispatch('expTabsBranch', id)
       if (panel.lockedTabs && tab.url.indexOf('about')) continue
       if (panelId === undefined) panelId = tab.cookieStoreId
       if (panelId && panelId !== tab.cookieStoreId) panelId = null
