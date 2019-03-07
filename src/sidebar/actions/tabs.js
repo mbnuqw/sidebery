@@ -1,7 +1,7 @@
 import Utils from '../../libs/utils'
 import EventBus from '../event-bus'
 
-let TabsTreeSaveTimeout
+let TabsTreeSaveTimeout, UpdateTabsSuccessorsTimeout
 
 export default {
   /**
@@ -103,20 +103,6 @@ export default {
       await browser.storage.local.set({ tabsTreeState })
       TabsTreeSaveTimeout = null
     }, delay)
-  },
-
-  /**
-   * Update tabs successorTabId
-   */
-  updateTabsSuccessors({ getters }) {
-    for (let panel of getters.panels) {
-      if (!panel.tabs || panel.tabs.length < 2) continue
-      const penultTab = panel.tabs[panel.tabs.length - 2]
-      const lastTab = panel.tabs[panel.tabs.length - 1]
-      if (lastTab.successorTabId !== penultTab.id) {
-        browser.tabs.update(lastTab.id, { successorTabId: penultTab.id })
-      }
-    }
   },
 
   /**
@@ -713,11 +699,13 @@ export default {
             const tab = state.tabs.find(t => t.id === info.id)
             if (tab && oldNewMap[node.parentId]) tab.parentId = oldNewMap[node.parentId]
           }
+        }
 
-          // Remove source tab (and update tabs tree)
-          if (nodes[0].type === 'tab' && !event.ctrlKey) {
-            await browser.tabs.remove(node.id)
-          }
+        // Remove source tabs
+        if (nodes[0].type === 'tab' && !event.ctrlKey) {
+          const toRemove = nodes.map(n => n.id)
+          state.removingTabs = [...toRemove]
+          await browser.tabs.remove(toRemove)
         }
 
         // Update tabs tree if there are no tabs was deleted
@@ -870,5 +858,47 @@ export default {
     }
 
     return out
+  },
+
+  /**
+   * Update successorTabId of tabs
+   */
+  updateTabsSuccessors({ state, getters }) {
+    if (state.ffVer < 65) return
+    // console.log('[DEBUG] TABS ACTION updateTabsSuccessors');
+    const toReset = []
+    for (let panel of getters.panels) {
+      // No tabs
+      if (!panel.tabs || panel.tabs.length === 0) continue
+
+      // Panel have 1 tab
+      if (panel.tabs.length === 1) {
+        panel.tabs[0].successorTabId = -1
+        if (panel.tabs[0].successorTabId >= 0) toReset.push(panel.tabs[0].id)
+        continue
+      }
+
+      // Check tabs above the last one
+      for (let i = panel.tabs.length - 1; i--;) {
+        panel.tabs[i].successorTabId = -1
+        if (panel.tabs[i].successorTabId >= 0) toReset.push(panel.tabs[i].id)
+      }
+
+      // Update successor of last tab
+      const penultTab = panel.tabs[panel.tabs.length - 2]
+      const lastTab = panel.tabs[panel.tabs.length - 1]
+      if (lastTab.successorTabId !== penultTab.id) {
+        lastTab.successorTabId = penultTab.id
+        browser.tabs.update(lastTab.id, { successorTabId: penultTab.id })
+      }
+    }
+
+    for (let id of toReset) {
+      browser.tabs.update(id, { successorTabId: -1 })
+    }
+  },
+  updateTabsSuccessorsDebounced({ dispatch }, { timeout } = {}) {
+    if (UpdateTabsSuccessorsTimeout) clearTimeout(UpdateTabsSuccessorsTimeout)
+    UpdateTabsSuccessorsTimeout = setTimeout(() => dispatch('updateTabsSuccessors'), timeout)
   },
 }

@@ -939,10 +939,8 @@ export default {
       }
 
       // Set last tab successor
-      if (State.ffVer >= 65 && tab.index > panel.endIndex && panel.tabs.length) {
-        const prevTab = panel.tabs[panel.tabs.length - 1]
-        browser.tabs.update(prevTab.id, { successorTabId: -1 })
-        browser.tabs.update(tab.id, { successorTabId: prevTab.id })
+      if (panel.tabs.length >= 1 && tab.index >= panel.endIndex) {
+        Store.dispatch('updateTabsSuccessorsDebounced', { timeout: 200 })
       }
 
       // Put new tab in tabs list
@@ -1093,12 +1091,14 @@ export default {
         if (tab.index === panel.endIndex) {
           const prevTab = panel.tabs[panel.tabs.length - 2]
           const prePrevTab = panel.tabs[panel.tabs.length - 3]
+          prevTab.successorTabId = prePrevTab.id
           browser.tabs.update(prevTab.id, { successorTabId: prePrevTab.id })
         }
         // Removing successor of last tab
         if (tab.index === panel.endIndex - 1) {
           const lastTab = panel.tabs[panel.tabs.length - 1]
           const prevTab = panel.tabs[panel.tabs.length - 3]
+          lastTab.successorTabId = prevTab.id
           browser.tabs.update(lastTab.id, { successorTabId: prevTab.id })
         }
       }
@@ -1131,31 +1131,9 @@ export default {
      */
     onMovedTab(id, info) {
       if (info.windowId !== State.windowId) return
-      // console.log('[DEBUG] INDEX onMovedTab');
+      // console.log('[DEBUG] INDEX onMovedTab', id);
       Store.commit('closeCtxMenu')
       Store.commit('resetSelection')
-
-      // Update last tab successor
-      const panelIndex = Utils.GetPanelIndex(this.panels, id)
-      const panel = this.panels[panelIndex]
-      if (panel && State.ffVer >= 65 && panel.tabs.length > 1) {
-        // Move last tab - reset successor
-        if (info.fromIndex === panel.endIndex) {
-          const lastTab = State.tabs[info.fromIndex]
-          const prevTab = State.tabs[info.fromIndex - 1]
-          const prePrevTab = info.toIndex === info.fromIndex - 1 ?
-            lastTab : State.tabs[info.fromIndex - 2]
-          browser.tabs.update(lastTab.id, { successorTabId: -1 })
-          browser.tabs.update(prevTab.id, { successorTabId: prePrevTab.id })
-        }
-        // Move tab to end - set successor for it
-        if (info.toIndex === panel.endIndex) {
-          const lastTab = panel.tabs[panel.tabs.length - 1]
-          const movedTab = State.tabs[info.fromIndex]
-          browser.tabs.update(lastTab.id, { successorTabId: -1 })
-          browser.tabs.update(movedTab.id, { successorTabId: lastTab.id })
-        }
-      }
 
       // Move tab in tabs array
       let movedTab = State.tabs.splice(info.fromIndex, 1)[0]
@@ -1173,6 +1151,9 @@ export default {
       }
       State.tabs.splice(info.toIndex, 0, movedTab)
       Store.dispatch('recalcPanelScroll')
+
+      // Update last tab successor
+      Store.dispatch('updateTabsSuccessorsDebounced', { timeout: 200 })
 
       // Calc tree levels
       if (State.tabsTree) {
