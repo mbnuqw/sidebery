@@ -869,15 +869,19 @@ export default {
 
       // Panel have 1 tab
       if (panel.tabs.length === 1) {
-        panel.tabs[0].successorTabId = -1
-        if (panel.tabs[0].successorTabId >= 0) toReset.push(panel.tabs[0].id)
+        if (panel.tabs[0].successorTabId >= 0) {
+          panel.tabs[0].successorTabId = -1
+          toReset.push(panel.tabs[0].id)
+        }
         continue
       }
 
       // Check tabs above the last one
       for (let i = panel.tabs.length - 1; i--;) {
-        panel.tabs[i].successorTabId = -1
-        if (panel.tabs[i].successorTabId >= 0) toReset.push(panel.tabs[i].id)
+        if (panel.tabs[i].successorTabId >= 0) {
+          panel.tabs[i].successorTabId = -1
+          toReset.push(panel.tabs[i].id)
+        }
       }
 
       // Update successor of last tab
