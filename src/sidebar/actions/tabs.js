@@ -643,12 +643,16 @@ export default {
             // Above the limit
             if (parentLvl + tab.lvl - lvlOffset >= state.tabsTreeLimit) {
               tab.parentId = prevTab.parentId
+              tab.invisible = false
+              tab.folded = false
               continue
             }
 
             // Flat nodes below first node's level
             if (tabs[i].lvl <= lvlOffset) {
               tab.parentId = parentId
+              tab.invisible = false
+              tab.folded = false
             }
 
             // Update invisibility of tabs
