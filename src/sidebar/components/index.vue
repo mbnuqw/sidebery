@@ -143,7 +143,6 @@ export default {
       width: 250,
       dragMode: false,
       pointerMode: 'none',
-      pointerInactive: false,
       dashboard: null,
       loading: [],
       loadingTimers: [],
@@ -691,14 +690,6 @@ export default {
 
     /**
      * Drop event handler
-     * 
-     *                   Tab     OuterTab  Bookmark  OuterBookmark  Native
-     * ToSamePanel       id      -         id        -              -
-     * ToSamePanel+CTRL  url     -         url       -              -
-     * 
-     * ToTabsPanel       both    url       url       url            url
-     * ToTabsPanel+CTRL  url     url       url       url            url
-     * ToBookmarksPanel  url     url       -         -              url
      */
     onDrop(e) {
       if (this.dropParent === undefined) this.dropParent = -1
