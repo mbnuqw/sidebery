@@ -643,12 +643,16 @@ export default {
             // Above the limit
             if (parentLvl + tab.lvl - lvlOffset >= state.tabsTreeLimit) {
               tab.parentId = prevTab.parentId
+              tab.invisible = false
+              tab.folded = false
               continue
             }
 
             // Flat nodes below first node's level
             if (tabs[i].lvl <= lvlOffset) {
               tab.parentId = parentId
+              tab.invisible = false
+              tab.folded = false
             }
 
             // Update invisibility of tabs
@@ -663,7 +667,7 @@ export default {
 
           // If there are no moving, just update tabs tree
           if (dropIndex === tabs[0].index) {
-            state.tabs = Utils.CalcTabsTreeLevels(state.tabs, state.tabsTreeLimit)
+            state.tabs = Utils.CalcTabsTreeLevels(state.tabs)
           }
         }
 
@@ -706,7 +710,7 @@ export default {
 
         // Update tabs tree if there are no tabs was deleted
         if (nodes[0].type !== 'tab' || event.ctrlKey) {
-          state.tabs = Utils.CalcTabsTreeLevels(state.tabs, state.tabsTreeLimit)
+          state.tabs = Utils.CalcTabsTreeLevels(state.tabs)
         }
       }
     }
@@ -778,8 +782,12 @@ export default {
     // Get tabs
     const tabs = []
     for (let t of state.tabs) {
-      if (tabIds.includes(t.id) && t.url.indexOf('about:')) tabs.push(t)
-      if (tabs.length === tabIds) break
+      if (t.url.startsWith('about:')) continue
+      if (tabIds.includes(t.id)) tabs.push(t)
+      else if (tabIds.includes(t.parentId)) {
+        tabIds.push(t.id)
+        tabs.push(t)
+      }
     }
 
     if (!tabs.length) return
@@ -788,7 +796,7 @@ export default {
     // Find title for group tab
     const titles = tabs.map(t => t.title)
     let commonPart = Utils.CommonSubStr(titles)
-    let isOk = commonPart[0] === commonPart[0].toUpperCase()
+    let isOk = commonPart ? commonPart[0] === commonPart[0].toUpperCase() : false
     let groupTitle = commonPart
       .replace(/^(\s|\.|_|-|—|–|\/|=|;|:)+/g, ' ')
       .replace(/(\s|\.|_|-|—|–|\/|=|;|:)+$/g, ' ')
@@ -802,7 +810,7 @@ export default {
     }
 
     if (!isOk || groupTitle.length < 4) {
-      groupTitle = 'Group ' + tabs[0].index
+      groupTitle = tabs[0].title
     }
 
     // Find index and create group tab
@@ -816,7 +824,25 @@ export default {
     })
 
     // Update parent of selected tabs
-    tabs.forEach(t => (t.parentId = groupTab.id))
+    tabs[0].parentId = groupTab.id
+    if (tabs[0].lvl + 1 === state.tabsTreeLimit) tabs[0].folded = false
+    for (let i = 1; i < tabs.length; i++) {
+      let prev = tabs[i - 1]
+      let tab = tabs[i]
+
+      if (state.tabsTreeLimit > 0 && tab.lvl + 1 > state.tabsTreeLimit) {
+        tab.parentId = prev.parentId
+        tab.folded = false
+        tab.invisible = false
+        continue
+      }
+
+      if (tab.lvl <= tabs[0].lvl) {
+        tab.parentId = groupTab.id
+        tab.folded = false
+        tab.invisible = false
+      }
+    }
     state.tabs = Utils.CalcTabsTreeLevels(state.tabs)
     dispatch('saveTabsTree', 250)
   },

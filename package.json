@@ -1,6 +1,6 @@
 {
   "name": "nav-center",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "Manage your tabs and bookmarks in sidebar",
   "main": "index.js",
   "scripts": {

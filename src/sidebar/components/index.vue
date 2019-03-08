@@ -143,7 +143,6 @@ export default {
       width: 250,
       dragMode: false,
       pointerMode: 'none',
-      pointerInactive: false,
       dashboard: null,
       loading: [],
       loadingTimers: [],
@@ -691,14 +690,6 @@ export default {
 
     /**
      * Drop event handler
-     * 
-     *                   Tab     OuterTab  Bookmark  OuterBookmark  Native
-     * ToSamePanel       id      -         id        -              -
-     * ToSamePanel+CTRL  url     -         url       -              -
-     * 
-     * ToTabsPanel       both    url       url       url            url
-     * ToTabsPanel+CTRL  url     url       url       url            url
-     * ToBookmarksPanel  url     url       -         -              url
      */
     onDrop(e) {
       if (this.dropParent === undefined) this.dropParent = -1
@@ -899,9 +890,10 @@ export default {
         if (tab.openerTabId !== undefined) {
           let parent = panel.tabs.find(t => t.id === tab.openerTabId)
           if (!parent) parent = { lvl: 0 }
+          let parentOk = parent.cookieStoreId === tab.cookieStoreId
           let lvlOk = !parent.lvl || !(parent.lvl >= State.tabsTreeLimit)
 
-          if ((State.groupOnOpen || parent.isParent) && lvlOk) {
+          if ((State.groupOnOpen || parent.isParent) && lvlOk && parentOk) {
             // Child
             tab.parentId = tab.openerTabId
             for (let i = tab.index; i--; ) {
@@ -1157,7 +1149,7 @@ export default {
 
       // Calc tree levels
       if (State.tabsTree) {
-        State.tabs = Utils.CalcTabsTreeLevels(State.tabs, State.tabsTreeLimit)
+        State.tabs = Utils.CalcTabsTreeLevels(State.tabs)
         Store.dispatch('saveTabsTree')
       }
     },

@@ -810,14 +810,14 @@ export default {
   transition: transform var(--d-fast)
   > svg
     box(absolute)
-    pos(2px, 0)
+    pos(3px, 0)
     size(7px, 4px)
     fill: var(--tabs-loading-fg)
     opacity: 0
   > svg.-b
-    pos(6px)
+    pos(7px)
   > svg.-c
-    pos(10px)
+    pos(11px)
 
 // --- CLose button ---
 .Tab .close
