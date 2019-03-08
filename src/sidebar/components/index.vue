@@ -1158,7 +1158,7 @@ export default {
 
       // Calc tree levels
       if (State.tabsTree) {
-        State.tabs = Utils.CalcTabsTreeLevels(State.tabs, State.tabsTreeLimit)
+        State.tabs = Utils.CalcTabsTreeLevels(State.tabs)
         Store.dispatch('saveTabsTree')
       }
     },
