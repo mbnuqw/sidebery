@@ -899,9 +899,10 @@ export default {
         if (tab.openerTabId !== undefined) {
           let parent = panel.tabs.find(t => t.id === tab.openerTabId)
           if (!parent) parent = { lvl: 0 }
+          let parentOk = parent.cookieStoreId === tab.cookieStoreId
           let lvlOk = !parent.lvl || !(parent.lvl >= State.tabsTreeLimit)
 
-          if ((State.groupOnOpen || parent.isParent) && lvlOk) {
+          if ((State.groupOnOpen || parent.isParent) && lvlOk && parentOk) {
             // Child
             tab.parentId = tab.openerTabId
             for (let i = tab.index; i--; ) {
