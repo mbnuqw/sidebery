@@ -1283,6 +1283,9 @@ export default {
       const type = this.itemSlots[0].type
       const targetId = State.selected[0]
       if (type === 'tab') {
+        const tab = State.tabs.find(t => t.id === targetId)
+        if (!tab) return
+        if (tab.active) Store.commit('resetSelection')
         browser.tabs.update(targetId, { active: true })
       }
       if (type === 'bookmark') {
