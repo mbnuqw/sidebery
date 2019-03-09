@@ -29,7 +29,7 @@
     svg.-loud: use(xlink:href="#icon_loud")
     svg.-mute: use(xlink:href="#icon_mute")
   .fav(:loading="loading")
-    .placeholder: svg: use(xlink:href="#icon_ff")
+    .placeholder: svg: use(:xlink:href="fav_placeholder")
     img(:src="favicon", @load.passive="onFaviconLoad", @error="onFaviconErr")
     .exp(@mousedown.stop="onExp"): svg: use(xlink:href="#icon_expand")
     .update-badge
@@ -56,6 +56,11 @@ import { mapGetters } from 'vuex'
 import Store from '../../store'
 import State from '../../store.state'
 import EventBus from '../../event-bus'
+
+const PNG_RE = /(\.png)([?#].*)?$/i
+const JPG_RE = /(\.jpe?g)([?#].*)?$/i
+const PDF_RE = /(\.pdf)([?#].*)?$/i
+const GROUP_RE = /\/group\/group\.html/
 
 export default {
   props: {
@@ -99,6 +104,17 @@ export default {
 
     tooltip() {
       return `${this.tab.title}\n${this.tab.url}`
+    },
+
+    fav_placeholder() {
+      if (this.tab.url.startsWith('moz-extension:') && GROUP_RE.test(this.tab.url)) {
+        return '#icon_group'
+      }
+      if (PNG_RE.test(this.tab.url)) return '#icon_png'
+      if (JPG_RE.test(this.tab.url)) return '#icon_jpg'
+      if (PDF_RE.test(this.tab.url)) return '#icon_pdf'
+      if (this.tab.url.startsWith('file:')) return '#icon_local_file'
+      return '#icon_ff'
     },
   },
 
