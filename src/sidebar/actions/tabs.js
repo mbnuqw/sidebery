@@ -282,7 +282,7 @@ export default {
     const p = getters.panels[panelIndex]
     if (!p || !p.tabs || !p.tabs.length) return
     const tab = p.tabs.find(t => t.id === p.lastActiveTab)
-    if (tab && !tab.invisible) {
+    if (tab) {
       browser.tabs.update(tab.id, { active: true })
     } else {
       let lastTab = p.tabs[p.tabs.length - 1]
