@@ -590,7 +590,7 @@ describe('activateLastActiveTabOf', () => {
     browser.tabs.update = jest.fn()
 
     await TabsActions.activateLastActiveTabOf({ getters }, 0)
-    expect(browser.tabs.update).toBeCalledWith(1, { active: true })
+    expect(browser.tabs.update).toBeCalledWith(2, { active: true })
   })
 })
 
