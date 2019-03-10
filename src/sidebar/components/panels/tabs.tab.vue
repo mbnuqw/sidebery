@@ -478,6 +478,8 @@ export default {
   transform: translateZ(0)
   transition: opacity var(--d-fast), transform var(--d-fast), z-index 0s .2s
   &:hover
+    background-color: var(--tabs-bg-hover)
+  &:hover
   &[is-active]:hover
     .fav
       opacity: .7
@@ -488,6 +490,7 @@ export default {
       z-index: 20
   &:active
   &[is-active]:active
+    background-color: var(--tabs-bg-active)
     .fav
       transition: none
       opacity: .5

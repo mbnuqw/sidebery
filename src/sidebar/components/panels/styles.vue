@@ -180,6 +180,16 @@
           @change="updateStyle('tabs_fg_active')"
           @toggle="toggleStyle('tabs_fg_active')")
         color-style-field(
+          label="styles.tabs_bg_color_hover"
+          v-model="$store.state.customStyles.tabs_bg_hover"
+          @change="updateStyle('tabs_bg_hover')"
+          @toggle="toggleStyle('tabs_bg_hover')")
+        color-style-field(
+          label="styles.tabs_bg_color_active"
+          v-model="$store.state.customStyles.tabs_bg_active"
+          @change="updateStyle('tabs_bg_active')"
+          @toggle="toggleStyle('tabs_bg_active')")
+        color-style-field(
           label="styles.tabs_active_bg_color"
           v-model="$store.state.customStyles.tabs_activated_bg"
           @change="updateStyle('tabs_activated_bg')"
@@ -247,6 +257,16 @@
           v-model="$store.state.customStyles.bookmarks_node_title_fg_active"
           @change="updateStyle('bookmarks_node_title_fg_active')"
           @toggle="toggleStyle('bookmarks_node_title_fg_active')")
+        color-style-field(
+          label="styles.bookmarks_bg_color_hover"
+          v-model="$store.state.customStyles.bookmarks_node_bg_hover"
+          @change="updateStyle('bookmarks_node_bg_hover')"
+          @toggle="toggleStyle('bookmarks_node_bg_hover')")
+        color-style-field(
+          label="styles.bookmarks_bg_color_active"
+          v-model="$store.state.customStyles.bookmarks_node_bg_active"
+          @change="updateStyle('bookmarks_node_bg_active')"
+          @toggle="toggleStyle('bookmarks_node_bg_active')")
         color-style-field(
           label="styles.bookmarks_closed_dir_fg_color"
           v-model="$store.state.customStyles.bookmarks_folder_closed_fg"
