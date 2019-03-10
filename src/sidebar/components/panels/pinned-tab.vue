@@ -448,7 +448,9 @@ export default {
   justify-content: center
   align-items: center
   transform: translateZ(0)
-  transition: opacity var(--d-fast), transform .12s, z-index 0s .2s, background-color var(--d-fast)
+  transition: opacity var(--d-fast), transform .12s, z-index 0s .2s
+  &:hover
+    background-color: var(--tabs-bg-hover)
   &:hover
   &[is-active]:hover
     .fav
@@ -457,6 +459,7 @@ export default {
       color: var(--tabs-fg-hover)
   &:active
   &[is-active]:active
+    background-color: var(--tabs-bg-active)
     .fav
       transition: none
       opacity: .5
