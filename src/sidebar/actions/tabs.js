@@ -584,9 +584,15 @@ export default {
 
       // Move tabs
       if (nodes[0].type === 'tab' && samePanel && !event.ctrlKey) {
+        // Check if tabs was dropped to same place
+        const inside = dropIndex > nodes[0].index && dropIndex <= nodes[nodes.length - 1].index
+        const inFirst = nodes[0].id === dropParent
+        const inLast = nodes[nodes.length - 1].id === dropParent
+        if (inside || inFirst || inLast) return
+
         // Normalize dropIndex for tabs droped to the same panel
         // If dropIndex is greater that first tab index - decrease it by 1
-        if (samePanel) dropIndex = dropIndex <= nodes[0].index ? dropIndex : dropIndex - 1
+        dropIndex = dropIndex <= nodes[0].index ? dropIndex : dropIndex - 1
 
         // Get dragged tabs
         const tabs = []
@@ -617,7 +623,8 @@ export default {
         }
 
         // Move if target index is different or pinned state changed
-        if (tabs[0].index !== dropIndex || !!pin !== !!tabs[0].pinned) {
+        const moveIndexOk = tabs[0].index !== dropIndex && tabs[tabs.length - 1].index !== dropIndex
+        if (moveIndexOk || !!pin !== !!tabs[0].pinned) {
           browser.tabs.move(tabs.map(t => t.id), { windowId: state.windowId, index: dropIndex })
         }
 
@@ -666,7 +673,7 @@ export default {
           }
 
           // If there are no moving, just update tabs tree
-          if (dropIndex === tabs[0].index) {
+          if (!moveIndexOk) {
             state.tabs = Utils.CalcTabsTreeLevels(state.tabs)
           }
         }
