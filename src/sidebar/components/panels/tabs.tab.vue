@@ -334,7 +334,7 @@ export default {
       this.dragEnterTimeout = setTimeout(() => {
         browser.tabs.update(this.tab.id, { active: true })
         this.dragEnterTimeout = null
-      }, 200)
+      }, 500)
     },
 
     /**
@@ -605,6 +605,7 @@ export default {
 
   &[is-selected]
   &[is-selected]:hover
+  &[is-selected]:active
     z-index: 10
     background-color: var(--tabs-selected-bg)
     .title
