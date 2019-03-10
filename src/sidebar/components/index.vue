@@ -1224,7 +1224,7 @@ export default {
       }
 
       // Auto expand tabs group
-      if (State.autoExpandTabs && tab.isParent && tab.folded) {
+      if (State.autoExpandTabs && tab.isParent && tab.folded && !this.dragMode) {
         Store.dispatch('expTabsBranch', tab.id)
       }
       if (tab.invisible) {
