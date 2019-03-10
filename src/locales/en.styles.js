@@ -30,6 +30,7 @@ export default {
 
   // --- Context Menu
   'styles.menu_title': { message: 'Context Menu' },
+  'styles.menu_font': { message: 'Font' },
   'styles.menu_bg_color': { message: 'Background color' },
   'styles.menu_opt_fg_color': { message: 'Option\'s foreground color' },
   'styles.menu_opt_fg_color_hover': { message: 'Option\'s background color on hover' },

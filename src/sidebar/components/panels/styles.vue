@@ -114,6 +114,12 @@
 
       section.section
         .title {{t('styles.menu_title')}}
+        style-field(
+          label="styles.menu_font"
+          v-model="$store.state.customStyles.ctx_menu_font"
+          or="---"
+          @change="updateStyle('ctx_menu_font')"
+          @toggle="toggleStyle('ctx_menu_font')")
         color-style-field(
           label="styles.menu_bg_color"
           v-model="$store.state.customStyles.ctx_menu_bg"

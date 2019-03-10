@@ -225,7 +225,8 @@ export default {
 
 .CtxMenu .opt
   box(relative, flex)
-  text(s: rem(14))
+  // text(s: rem(14))
+  font: var(--ctx-menu-font)
   align-items: center
   justify-content: flex-start
   padding: 2px 0 2px 8px

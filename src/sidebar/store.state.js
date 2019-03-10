@@ -65,6 +65,7 @@ export const CUSTOM_STYLES = {
   scroll_progress_h: null,
   scroll_progress_bg: null,
 
+  ctx_menu_font: null,
   ctx_menu_bg: null,
   ctx_menu_bg_hover: null,
   ctx_menu_fg: null,

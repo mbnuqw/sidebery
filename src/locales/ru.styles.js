@@ -30,6 +30,7 @@ export default {
 
   // --- Context Menu
   'styles.menu_title': { message: 'Контекстное меню' },
+  'styles.menu_font': { message: 'Шрифт' },
   'styles.menu_bg_color': { message: 'Цвет фона' },
   'styles.menu_opt_fg_color': { message: 'Цвет надписей' },
   'styles.menu_opt_fg_color_hover': { message: 'Цвет фона опции при наведении курсора' },
