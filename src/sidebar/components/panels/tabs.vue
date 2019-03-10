@@ -15,6 +15,7 @@
         ref="tabs"
         :key="t.id"
         :position="getTabYPosition(i)"
+        :child-count="getChildrenCount(i)"
         :tab="t"
         @start-selection="$emit('start-selection', $event)"
         @stop-selection="$emit('stop-selection')")
@@ -147,6 +148,17 @@ export default {
         if (this.tabs[i].invisible) out--
       }
       return out * State.tabHeight
+    },
+
+    getChildrenCount(i) {
+      if (!State.tabsChildCount) return 0
+      if (!this.tabs[i].isParent) return 0
+      let count = 0
+      for (let c = i + 1; c < this.tabs.length; c++) {
+        if (this.tabs[c].lvl <= this.tabs[i].lvl) break
+        count++
+      }
+      return count
     },
 
     /**

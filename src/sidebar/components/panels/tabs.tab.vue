@@ -40,6 +40,7 @@
     .loading-spinner
       each n in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
         .spinner-stick(class='spinner-stick-' + n)
+    .child-count(v-if="childCount && tab.folded") {{childCount}}
   .close(v-if="$store.state.showTabRmBtn", @mousedown.stop="onCloseClick", @mouseup.stop="")
     svg: use(xlink:href="#icon_remove")
   .t-box
@@ -65,6 +66,7 @@ const GROUP_RE = /\/group\/group\.html/
 export default {
   props: {
     position: Number,
+    childCount: Number,
     tab: {
       type: Object,
       default: () => ({}),
@@ -783,6 +785,13 @@ export default {
 .Tab .fav > .err-badge > svg
   fill: var(--false-fg)
 
+.Tab .fav > .child-count
+  box(absolute)
+  size(8px)
+  pos(b: -5px, r: -3px)
+  font: var(--tabs-count-font)
+  text-align: center
+  color: var(--tabs-fg)
 
 // --- Context highlight
 .Tab .ctx

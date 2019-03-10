@@ -45,6 +45,7 @@ export default {
   'settings.auto_fold_tabs': { message: 'Автоматически сворачивать табы' },
   'settings.auto_exp_tabs': { message: 'Автоматически разворачивать табы' },
   'settings.rm_folded_tabs': { message: 'Закрывать свернутые табы вместе с родительским' },
+  'settings.tabs_child_count': { message: 'Показывать количество потомков' },
 
   // --- Bookmarks
   'settings.bookmarks_title': { message: 'Закладки' },

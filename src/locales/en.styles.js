@@ -44,6 +44,7 @@ export default {
   'styles.tabs_height': { message: 'Tabs height' },
   'styles.tabs_indent': { message: 'Tabs indent' },
   'styles.tabs_font': { message: 'Tabs font' },
+  'styles.tabs_count_font': { message: 'Count of descendants font' },
   'styles.tabs_fg_color': { message: 'Foreground color' },
   'styles.tabs_fg_color_hover': { message: 'Foreground color on hover' },
   'styles.tabs_fg_color_active': { message: 'Foreground color on active' },

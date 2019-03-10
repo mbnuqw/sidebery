@@ -164,6 +164,12 @@
           or="---"
           @change="updateStyle('tabs_font')"
           @toggle="toggleStyle('tabs_font')")
+        style-field(
+          label="styles.tabs_count_font"
+          v-model="$store.state.customStyles.tabs_count_font"
+          or="---"
+          @change="updateStyle('tabs_count_font')"
+          @toggle="toggleStyle('tabs_count_font')")
         color-style-field(
           label="styles.tabs_fg_color"
           v-model="$store.state.customStyles.tabs_fg"

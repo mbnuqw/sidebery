@@ -74,6 +74,8 @@ export const CUSTOM_STYLES = {
 
   tabs_height: null,
   tabs_indent: null,
+  tabs_font: null,
+  tabs_count_font: null,
   tabs_fg: null,
   tabs_fg_hover: null,
   tabs_fg_active: null,

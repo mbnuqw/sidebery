@@ -44,6 +44,7 @@ export default {
   'styles.tabs_height': { message: 'Высота таба' },
   'styles.tabs_indent': { message: 'Отступ таба' },
   'styles.tabs_font': { message: 'Шрифт таба' },
+  'styles.tabs_count_font': { message: 'Шрифт кол-ва потомков' },
   'styles.tabs_fg_color': { message: 'Цвет надписей' },
   'styles.tabs_fg_color_hover': { message: 'Цвет надписей при наведении курсора' },
   'styles.tabs_fg_color_active': { message: 'Цвет надписей при клике' },

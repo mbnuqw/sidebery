@@ -89,6 +89,11 @@
         :inactive="!$store.state.tabsTree"
         :value="$store.state.rmFoldedTabs"
         @input="setOpt('rmFoldedTabs', $event)")
+      toggle-field(
+        label="settings.tabs_child_count"
+        :inactive="!$store.state.tabsTree"
+        :value="$store.state.tabsChildCount"
+        @input="setOpt('tabsChildCount', $event)")
 
     section
       h2 {{t('settings.bookmarks_title')}}

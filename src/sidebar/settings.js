@@ -36,6 +36,7 @@ export const DEFAULT_SETTINGS = {
   autoFoldTabs: false,
   autoExpandTabs: false,
   rmFoldedTabs: false,
+  tabsChildCount: true,
 
   // Bookmarks
   bookmarksPanel: true,
