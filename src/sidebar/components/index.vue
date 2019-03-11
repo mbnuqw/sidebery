@@ -985,6 +985,14 @@ export default {
         if (tab.active) Store.commit('setPanel', pi)
       }
 
+      // Handle pinned tab
+      if (change.hasOwnProperty('pinned') && change.pinned) {
+        let panel = this.panels.find(p => p.cookieStoreId === tab.cookieStoreId)
+        if (panel.noEmpty && panel.tabs.length === 1) {
+          browser.tabs.create({ cookieStoreId: panel.cookieStoreId })
+        }
+      }
+
       // Handle title change
       let inact = Date.now() - tab.lastAccessed
       if (change.hasOwnProperty('title') && !tab.active && inact > 5000) {
