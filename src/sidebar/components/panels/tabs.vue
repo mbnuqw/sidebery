@@ -174,7 +174,7 @@ export default {
       const th = Utils.ParseCSSNum(thRaw.trim())[0]
       if (th === 0) return []
       const half = th >> 1
-      const e = half >> 1
+      const e = (half >> 1) + 2
 
       let overallHeight = 0
       const bounds = []
