@@ -652,7 +652,8 @@ export default {
             // Above the limit
             if (parentLvl + tab.lvl - lvlOffset >= state.tabsTreeLimit) {
               tab.parentId = prevTab.parentId
-              tab.invisible = false
+              if (parent && parent.folded) tab.invisible = true
+              else tab.invisible = false
               tab.folded = false
               continue
             }
