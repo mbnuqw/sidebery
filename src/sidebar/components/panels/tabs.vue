@@ -15,6 +15,7 @@
         ref="tabs"
         :key="t.id"
         :position="getTabYPosition(i)"
+        :child-count="getChildrenCount(i)"
         :tab="t"
         @start-selection="$emit('start-selection', $event)"
         @stop-selection="$emit('stop-selection')")
@@ -149,6 +150,17 @@ export default {
       return out * State.tabHeight
     },
 
+    getChildrenCount(i) {
+      if (!State.tabsChildCount) return 0
+      if (!this.tabs[i].isParent) return 0
+      let count = 0
+      for (let c = i + 1; c < this.tabs.length; c++) {
+        if (this.tabs[c].lvl <= this.tabs[i].lvl) break
+        count++
+      }
+      return count
+    },
+
     /**
      * Calculate tabs bounds
      */
@@ -162,7 +174,7 @@ export default {
       const th = Utils.ParseCSSNum(thRaw.trim())[0]
       if (th === 0) return []
       const half = th >> 1
-      const e = half >> 1
+      const e = (half >> 1) + 2
 
       let overallHeight = 0
       const bounds = []

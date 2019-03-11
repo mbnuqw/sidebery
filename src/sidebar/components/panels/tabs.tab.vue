@@ -29,7 +29,7 @@
     svg.-loud: use(xlink:href="#icon_loud")
     svg.-mute: use(xlink:href="#icon_mute")
   .fav(:loading="loading")
-    .placeholder: svg: use(xlink:href="#icon_ff")
+    .placeholder: svg: use(:xlink:href="favPlaceholder")
     img(:src="favicon", @load.passive="onFaviconLoad", @error="onFaviconErr")
     .exp(@mousedown.stop="onExp"): svg: use(xlink:href="#icon_expand")
     .update-badge
@@ -40,6 +40,7 @@
     .loading-spinner
       each n in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
         .spinner-stick(class='spinner-stick-' + n)
+    .child-count(v-if="childCount && tab.folded") {{childCount}}
   .close(v-if="$store.state.showTabRmBtn", @mousedown.stop="onCloseClick", @mouseup.stop="")
     svg: use(xlink:href="#icon_remove")
   .t-box
@@ -57,9 +58,15 @@ import Store from '../../store'
 import State from '../../store.state'
 import EventBus from '../../event-bus'
 
+const PNG_RE = /(\.png)([?#].*)?$/i
+const JPG_RE = /(\.jpe?g)([?#].*)?$/i
+const PDF_RE = /(\.pdf)([?#].*)?$/i
+const GROUP_RE = /\/group\/group\.html/
+
 export default {
   props: {
     position: Number,
+    childCount: Number,
     tab: {
       type: Object,
       default: () => ({}),
@@ -99,6 +106,17 @@ export default {
 
     tooltip() {
       return `${this.tab.title}\n${this.tab.url}`
+    },
+
+    favPlaceholder() {
+      if (this.tab.url.startsWith('moz-extension:') && GROUP_RE.test(this.tab.url)) {
+        return '#icon_group'
+      }
+      if (PNG_RE.test(this.tab.url)) return '#icon_png'
+      if (JPG_RE.test(this.tab.url)) return '#icon_jpg'
+      if (PDF_RE.test(this.tab.url)) return '#icon_pdf'
+      if (this.tab.url.startsWith('file:')) return '#icon_local_file'
+      return '#icon_ff'
     },
   },
 
@@ -316,7 +334,7 @@ export default {
       this.dragEnterTimeout = setTimeout(() => {
         browser.tabs.update(this.tab.id, { active: true })
         this.dragEnterTimeout = null
-      }, 200)
+      }, 500)
     },
 
     /**
@@ -462,6 +480,8 @@ export default {
   transform: translateZ(0)
   transition: opacity var(--d-fast), transform var(--d-fast), z-index 0s .2s
   &:hover
+    background-color: var(--tabs-bg-hover)
+  &:hover
   &[is-active]:hover
     .fav
       opacity: .7
@@ -472,6 +492,7 @@ export default {
       z-index: 20
   &:active
   &[is-active]:active
+    background-color: var(--tabs-bg-active)
     .fav
       transition: none
       opacity: .5
@@ -584,6 +605,7 @@ export default {
 
   &[is-selected]
   &[is-selected]:hover
+  &[is-selected]:active
     z-index: 10
     background-color: var(--tabs-selected-bg)
     .title
@@ -764,6 +786,13 @@ export default {
 .Tab .fav > .err-badge > svg
   fill: var(--false-fg)
 
+.Tab .fav > .child-count
+  box(absolute)
+  size(8px)
+  pos(b: -5px, r: -3px)
+  font: var(--tabs-count-font)
+  text-align: center
+  color: var(--tabs-fg)
 
 // --- Context highlight
 .Tab .ctx

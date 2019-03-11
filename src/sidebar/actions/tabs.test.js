@@ -590,7 +590,7 @@ describe('activateLastActiveTabOf', () => {
     browser.tabs.update = jest.fn()
 
     await TabsActions.activateLastActiveTabOf({ getters }, 0)
-    expect(browser.tabs.update).toBeCalledWith(1, { active: true })
+    expect(browser.tabs.update).toBeCalledWith(2, { active: true })
   })
 })
 
@@ -911,28 +911,6 @@ describe('foldTabsBranch', () => {
     await TabsActions.foldTabsBranch({ state, dispatch }, 1)
     await new Promise(r => setTimeout(r, 500))
     expect(browser.tabs.update).toBeCalledWith(1, { active: true })
-    expect(browser.tabs.hide).not.toBeCalled()
-    expect(state.tabs[0].folded).toBe(true)
-    expect(state.tabs[1].invisible).toBe(true)
-    expect(dispatch).toBeCalledWith('saveTabsTree')
-  })
-
-  test('fold tabs branch with auto expanding', async () => {
-    const state = {
-      hideFoldedTabs: false,
-      autoExpandTabs: true,
-      tabs: [
-        { id: 1, isParent: true, folded: false },
-        { id: 2, parentId: 1, invisible: false, active: true },
-      ],
-    }
-    const dispatch = jest.fn()
-    browser.tabs.update = jest.fn()
-    browser.tabs.hide = jest.fn()
-
-    await TabsActions.foldTabsBranch({ state, dispatch }, 1)
-    await new Promise(r => setTimeout(r, 500))
-    expect(browser.tabs.update).not.toBeCalled()
     expect(browser.tabs.hide).not.toBeCalled()
     expect(state.tabs[0].folded).toBe(true)
     expect(state.tabs[1].invisible).toBe(true)

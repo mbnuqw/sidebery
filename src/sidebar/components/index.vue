@@ -985,6 +985,14 @@ export default {
         if (tab.active) Store.commit('setPanel', pi)
       }
 
+      // Handle pinned tab
+      if (change.hasOwnProperty('pinned') && change.pinned) {
+        let panel = this.panels.find(p => p.cookieStoreId === tab.cookieStoreId)
+        if (panel.noEmpty && panel.tabs.length === 1) {
+          browser.tabs.create({ cookieStoreId: panel.cookieStoreId })
+        }
+      }
+
       // Handle title change
       let inact = Date.now() - tab.lastAccessed
       if (change.hasOwnProperty('title') && !tab.active && inact > 5000) {
@@ -1224,8 +1232,16 @@ export default {
       }
 
       // Auto expand tabs group
-      if (State.autoExpandTabs && tab.isParent && tab.folded) {
-        Store.dispatch('expTabsBranch', tab.id)
+      if (State.autoExpandTabs && tab.isParent && tab.folded && !this.dragMode) {
+        let prevActiveChild
+        for (let i = tab.index + 1; i < State.tabs.length; i++) {
+          if (State.tabs[i].lvl <= tab.lvl) break
+          if (State.tabs[i].id === info.previousTabId) {
+            prevActiveChild = true
+            break
+          }
+        }
+        if (!prevActiveChild) Store.dispatch('expTabsBranch', tab.id)
       }
       if (tab.invisible) {
         Store.dispatch('expTabsBranch', tab.parentId)
@@ -1283,6 +1299,9 @@ export default {
       const type = this.itemSlots[0].type
       const targetId = State.selected[0]
       if (type === 'tab') {
+        const tab = State.tabs.find(t => t.id === targetId)
+        if (!tab) return
+        if (tab.active) Store.commit('resetSelection')
         browser.tabs.update(targetId, { active: true })
       }
       if (type === 'bookmark') {

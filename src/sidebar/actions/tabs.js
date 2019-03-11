@@ -282,7 +282,7 @@ export default {
     const p = getters.panels[panelIndex]
     if (!p || !p.tabs || !p.tabs.length) return
     const tab = p.tabs.find(t => t.id === p.lastActiveTab)
-    if (tab && !tab.invisible) {
+    if (tab) {
       browser.tabs.update(tab.id, { active: true })
     } else {
       let lastTab = p.tabs[p.tabs.length - 1]
@@ -504,7 +504,7 @@ export default {
     for (let t of state.tabs) {
       if (t.id === tabId) t.folded = true
       if (t.parentId === tabId || toHide.includes(t.parentId)) {
-        if (t.active && !state.autoExpandTabs) {
+        if (t.active) {
           await browser.tabs.update(tabId, { active: true })
         }
         if (!t.invisible) {
@@ -572,21 +572,29 @@ export default {
     { event, dropIndex, dropParent, nodes, pin } = {}
   ) {
     // console.log('[DEBUG] TABS ACTION dropToTabs', dropIndex, dropParent, pin);
-    const destCtx = getters.panels[state.panelIndex].cookieStoreId
+    const currentPanel = getters.panels[state.panelIndex]
+    const destCtx = currentPanel.cookieStoreId
     const parent = state.tabs.find(t => t.id === dropParent)
     const toHide = []
     const toShow = []
-    if (dropIndex === -1) dropIndex = getters.panels[state.panelIndex].endIndex + 1
+    if (dropIndex === -1) dropIndex = currentPanel.endIndex + 1
 
     // Tabs or Bookmarks
     if (nodes && nodes.length) {
-      const samePanel = nodes[0].ctx === getters.panels[state.panelIndex].id
+      let samePanel = nodes[0].ctx === currentPanel.id
+      if (pin && currentPanel.panel !== 'TabsPanel') samePanel = true
 
       // Move tabs
       if (nodes[0].type === 'tab' && samePanel && !event.ctrlKey) {
+        // Check if tabs was dropped to same place
+        const inside = dropIndex > nodes[0].index && dropIndex <= nodes[nodes.length - 1].index
+        const inFirst = nodes[0].id === dropParent
+        const inLast = nodes[nodes.length - 1].id === dropParent
+        if (inside || inFirst || inLast) return
+
         // Normalize dropIndex for tabs droped to the same panel
         // If dropIndex is greater that first tab index - decrease it by 1
-        if (samePanel) dropIndex = dropIndex <= nodes[0].index ? dropIndex : dropIndex - 1
+        dropIndex = dropIndex <= nodes[0].index ? dropIndex : dropIndex - 1
 
         // Get dragged tabs
         const tabs = []
@@ -617,7 +625,8 @@ export default {
         }
 
         // Move if target index is different or pinned state changed
-        if (tabs[0].index !== dropIndex || !!pin !== !!tabs[0].pinned) {
+        const moveIndexOk = tabs[0].index !== dropIndex && tabs[tabs.length - 1].index !== dropIndex
+        if (moveIndexOk || !!pin !== !!tabs[0].pinned) {
           browser.tabs.move(tabs.map(t => t.id), { windowId: state.windowId, index: dropIndex })
         }
 
@@ -643,7 +652,8 @@ export default {
             // Above the limit
             if (parentLvl + tab.lvl - lvlOffset >= state.tabsTreeLimit) {
               tab.parentId = prevTab.parentId
-              tab.invisible = false
+              if (parent && parent.folded) tab.invisible = true
+              else tab.invisible = false
               tab.folded = false
               continue
             }
@@ -666,7 +676,7 @@ export default {
           }
 
           // If there are no moving, just update tabs tree
-          if (dropIndex === tabs[0].index) {
+          if (!moveIndexOk) {
             state.tabs = Utils.CalcTabsTreeLevels(state.tabs)
           }
         }
@@ -782,7 +792,6 @@ export default {
     // Get tabs
     const tabs = []
     for (let t of state.tabs) {
-      if (t.url.startsWith('about:')) continue
       if (tabIds.includes(t.id)) tabs.push(t)
       else if (tabIds.includes(t.parentId)) {
         tabIds.push(t.id)
@@ -798,12 +807,14 @@ export default {
     let commonPart = Utils.CommonSubStr(titles)
     let isOk = commonPart ? commonPart[0] === commonPart[0].toUpperCase() : false
     let groupTitle = commonPart
-      .replace(/^(\s|\.|_|-|—|–|\/|=|;|:)+/g, ' ')
-      .replace(/(\s|\.|_|-|—|–|\/|=|;|:)+$/g, ' ')
+      .replace(/^(\s|\.|_|-|—|–|\(|\)|\/|=|;|:)+/g, ' ')
+      .replace(/(\s|\.|_|-|—|–|\(|\)|\/|=|;|:)+$/g, ' ')
       .trim()
 
     if (!isOk || groupTitle.length < 4) {
-      const hosts = tabs.map(t => t.url.split('/')[2])
+      const hosts = tabs
+        .filter(t => !t.url.startsWith('about:'))
+        .map(t => t.url.split('/')[2])
       groupTitle = Utils.CommonSubStr(hosts)
       if (groupTitle.startsWith('.')) groupTitle = groupTitle.slice(1)
       groupTitle = groupTitle.replace(/^www\./, '')

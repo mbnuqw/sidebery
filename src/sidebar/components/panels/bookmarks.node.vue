@@ -328,7 +328,7 @@ export default {
 .Node[n-type="separator"]
   > .body
     height: var(--bookmarks-separator-height)
-    &:before
+    &:after
       content: ''
       box(absolute)
       pos(8px, l: 16px)
@@ -378,6 +378,16 @@ export default {
   cursor: pointer
   transform: translateZ(0)
   transition: opacity var(--d-fast)
+  &:before
+    content: ''
+    box(absolute)
+    pos(0, r: 0)
+    size(100vw, 100%)
+
+.Node:not([is-selected]) > .body:hover:before
+    background-color: var(--bookmarks-node-bg-hover)
+.Node:not([is-selected]) > .body:active:before
+    background-color: var(--bookmarks-node-bg-active)
 
 .Node .drag-layer
   box(absolute)

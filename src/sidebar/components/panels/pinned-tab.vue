@@ -21,7 +21,7 @@
     @dragleave="onDragLeave"
     @drop="onDragLeave")
   .fav
-    .placeholder: svg: use(xlink:href="#icon_ff")
+    .placeholder: svg: use(:xlink:href="favPlaceholder")
     img(:src="favicon", @load.passive="onFaviconLoad", @error="onFaviconErr")
     .update-badge
     .ok-badge
@@ -44,6 +44,10 @@ import { mapGetters } from 'vuex'
 import Store from '../../store'
 import State from '../../store.state'
 import EventBus from '../../event-bus'
+
+const PNG_RE = /(\.png)([?#].*)?$/i
+const JPG_RE = /(\.jpe?g)([?#].*)?$/i
+const PDF_RE = /(\.pdf)([?#].*)?$/i
 
 export default {
   props: {
@@ -93,6 +97,14 @@ export default {
 
     withTitle() {
       return State.pinnedTabsPosition === 'panel' && State.pinnedTabsList
+    },
+
+    favPlaceholder() {
+      if (PNG_RE.test(this.tab.url)) return '#icon_png'
+      if (JPG_RE.test(this.tab.url)) return '#icon_jpg'
+      if (PDF_RE.test(this.tab.url)) return '#icon_pdf'
+      if (this.tab.url.startsWith('file:')) return '#icon_local_file'
+      return '#icon_ff'
     },
   },
 
@@ -436,7 +448,9 @@ export default {
   justify-content: center
   align-items: center
   transform: translateZ(0)
-  transition: opacity var(--d-fast), transform .12s, z-index 0s .2s, background-color var(--d-fast)
+  transition: opacity var(--d-fast), transform .12s, z-index 0s .2s
+  &:hover
+    background-color: var(--tabs-bg-hover)
   &:hover
   &[is-active]:hover
     .fav
@@ -445,6 +459,7 @@ export default {
       color: var(--tabs-fg-hover)
   &:active
   &[is-active]:active
+    background-color: var(--tabs-bg-active)
     .fav
       transition: none
       opacity: .5
@@ -480,6 +495,7 @@ export default {
       transform: translateY(-4px)
 
   &[is-selected]
+  &[is-selected]:active
     z-index: 10
     background-color: var(--tabs-selected-bg)
     .title
