@@ -807,8 +807,8 @@ export default {
     let commonPart = Utils.CommonSubStr(titles)
     let isOk = commonPart ? commonPart[0] === commonPart[0].toUpperCase() : false
     let groupTitle = commonPart
-      .replace(/^(\s|\.|_|-|—|–|\/|=|;|:)+/g, ' ')
-      .replace(/(\s|\.|_|-|—|–|\/|=|;|:)+$/g, ' ')
+      .replace(/^(\s|\.|_|-|—|–|\(|\)|\/|=|;|:)+/g, ' ')
+      .replace(/(\s|\.|_|-|—|–|\(|\)|\/|=|;|:)+$/g, ' ')
       .trim()
 
     if (!isOk || groupTitle.length < 4) {
