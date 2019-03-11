@@ -789,7 +789,6 @@ export default {
     // Get tabs
     const tabs = []
     for (let t of state.tabs) {
-      if (t.url.startsWith('about:')) continue
       if (tabIds.includes(t.id)) tabs.push(t)
       else if (tabIds.includes(t.parentId)) {
         tabIds.push(t.id)
@@ -810,7 +809,9 @@ export default {
       .trim()
 
     if (!isOk || groupTitle.length < 4) {
-      const hosts = tabs.map(t => t.url.split('/')[2])
+      const hosts = tabs
+        .filter(t => !t.url.startsWith('about:'))
+        .map(t => t.url.split('/')[2])
       groupTitle = Utils.CommonSubStr(hosts)
       if (groupTitle.startsWith('.')) groupTitle = groupTitle.slice(1)
       groupTitle = groupTitle.replace(/^www\./, '')
