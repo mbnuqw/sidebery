@@ -29,7 +29,7 @@
     svg.-loud: use(xlink:href="#icon_loud")
     svg.-mute: use(xlink:href="#icon_mute")
   .fav(:loading="loading")
-    .placeholder: svg: use(:xlink:href="fav_placeholder")
+    .placeholder: svg: use(:xlink:href="favPlaceholder")
     img(:src="favicon", @load.passive="onFaviconLoad", @error="onFaviconErr")
     .exp(@mousedown.stop="onExp"): svg: use(xlink:href="#icon_expand")
     .update-badge
@@ -108,7 +108,7 @@ export default {
       return `${this.tab.title}\n${this.tab.url}`
     },
 
-    fav_placeholder() {
+    favPlaceholder() {
       if (this.tab.url.startsWith('moz-extension:') && GROUP_RE.test(this.tab.url)) {
         return '#icon_group'
       }

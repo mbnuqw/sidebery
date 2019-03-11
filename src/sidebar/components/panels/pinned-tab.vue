@@ -21,7 +21,7 @@
     @dragleave="onDragLeave"
     @drop="onDragLeave")
   .fav
-    .placeholder: svg: use(:xlink:href="fav_placeholder")
+    .placeholder: svg: use(:xlink:href="favPlaceholder")
     img(:src="favicon", @load.passive="onFaviconLoad", @error="onFaviconErr")
     .update-badge
     .ok-badge
@@ -99,7 +99,7 @@ export default {
       return State.pinnedTabsPosition === 'panel' && State.pinnedTabsList
     },
 
-    fav_placeholder() {
+    favPlaceholder() {
       if (PNG_RE.test(this.tab.url)) return '#icon_png'
       if (JPG_RE.test(this.tab.url)) return '#icon_jpg'
       if (PDF_RE.test(this.tab.url)) return '#icon_pdf'
@@ -495,6 +495,7 @@ export default {
       transform: translateY(-4px)
 
   &[is-selected]
+  &[is-selected]:active
     z-index: 10
     background-color: var(--tabs-selected-bg)
     .title

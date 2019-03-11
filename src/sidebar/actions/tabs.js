@@ -572,15 +572,17 @@ export default {
     { event, dropIndex, dropParent, nodes, pin } = {}
   ) {
     // console.log('[DEBUG] TABS ACTION dropToTabs', dropIndex, dropParent, pin);
-    const destCtx = getters.panels[state.panelIndex].cookieStoreId
+    const currentPanel = getters.panels[state.panelIndex]
+    const destCtx = currentPanel.cookieStoreId
     const parent = state.tabs.find(t => t.id === dropParent)
     const toHide = []
     const toShow = []
-    if (dropIndex === -1) dropIndex = getters.panels[state.panelIndex].endIndex + 1
+    if (dropIndex === -1) dropIndex = currentPanel.endIndex + 1
 
     // Tabs or Bookmarks
     if (nodes && nodes.length) {
-      const samePanel = nodes[0].ctx === getters.panels[state.panelIndex].id
+      let samePanel = nodes[0].ctx === currentPanel.id
+      if (pin && currentPanel.panel !== 'TabsPanel') samePanel = true
 
       // Move tabs
       if (nodes[0].type === 'tab' && samePanel && !event.ctrlKey) {
