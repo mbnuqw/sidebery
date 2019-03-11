@@ -1233,7 +1233,15 @@ export default {
 
       // Auto expand tabs group
       if (State.autoExpandTabs && tab.isParent && tab.folded && !this.dragMode) {
-        Store.dispatch('expTabsBranch', tab.id)
+        let prevActiveChild
+        for (let i = tab.index + 1; i < State.tabs.length; i++) {
+          if (State.tabs[i].lvl <= tab.lvl) break
+          if (State.tabs[i].id === info.previousTabId) {
+            prevActiveChild = true
+            break
+          }
+        }
+        if (!prevActiveChild) Store.dispatch('expTabsBranch', tab.id)
       }
       if (tab.invisible) {
         Store.dispatch('expTabsBranch', tab.parentId)

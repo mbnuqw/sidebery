@@ -504,7 +504,7 @@ export default {
     for (let t of state.tabs) {
       if (t.id === tabId) t.folded = true
       if (t.parentId === tabId || toHide.includes(t.parentId)) {
-        if (t.active && !state.autoExpandTabs) {
+        if (t.active) {
           await browser.tabs.update(tabId, { active: true })
         }
         if (!t.invisible) {
