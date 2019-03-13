@@ -95,7 +95,7 @@
           @input="onProxyUsernameInput"
           @keydown="onFieldKeydown($event, 'proxyPassword', 'proxyPort')")
 
-      .field(v-if="id && proxied === 'socks'")
+      .field(v-if="id && proxied === 'socks' && proxyUsername")
         text-input.text(
           ref="proxyPassword"
           valid="fine"
