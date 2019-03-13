@@ -105,7 +105,7 @@ export default {
     },
 
     tooltip() {
-      return `${this.tab.title}\n${this.tab.url}`
+      return `${this.tab.title}\n${decodeURI(this.tab.url)}`
     },
 
     favPlaceholder() {
