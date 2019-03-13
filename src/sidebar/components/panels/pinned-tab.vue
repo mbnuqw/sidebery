@@ -173,12 +173,6 @@ export default {
       if (e.button === 2) {
         e.preventDefault()
         e.stopPropagation()
-        this.$emit('start-selection', {
-          type: 'tab',
-          clientY: e.clientY,
-          ctrlKey: e.ctrlKey,
-          id: this.tab.id,
-        })
         // Long-click action
         this.hodorR = setTimeout(() => {
           this.$emit('stop-selection')
@@ -207,6 +201,7 @@ export default {
         Store.commit('closeCtxMenu')
         State.selected = [this.tab.id]
         this.selected = true
+        this.$emit('stop-selection')
       }
     },
 

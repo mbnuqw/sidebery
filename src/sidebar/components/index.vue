@@ -386,6 +386,16 @@ export default {
         EventBus.$emit(eventName, this.selectionStart.id)
 
         this.recalcPanelBounds()
+
+        // // Do not handle mouse move event out of panel
+        // console.log('[DEBUG] hm', e.clientX, this.panelLeftOffset);
+        // if (e.clientX < this.panelLeftOffset) {
+        //   this.selectionStart = false
+        //   this.selection = false
+        //   Store.commit('resetSelection')
+        //   return
+        // }
+
         const scroll = this.panelScrollEl ? this.panelScrollEl.scrollTop : 0
         const startY = this.selectionStart.clientY - this.panelTopOffset + scroll
         const firstItem = this.itemSlots.find(s => s.start <= startY && s.end >= startY)

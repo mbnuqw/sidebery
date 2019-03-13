@@ -8,7 +8,6 @@
   pinned-tab(v-for="t in pinnedTabs"
     :tab="t"
     :ctx="!ctx"
-    @start-selection="$emit('start-selection', $event)"
     @stop-selection="$emit('stop-selection')"
     @dragenter="onTabPointed")
   .to-the-end(v-if="pinnedTabs.length", @dragleave.stop="", @dragenter.stop="")
