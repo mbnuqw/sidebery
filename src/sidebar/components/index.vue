@@ -1224,7 +1224,7 @@ export default {
       this.$delete(State.updatedTabs, info.tabId)
 
       // Find panel of activated tab
-      if (tab.pinned && State.pinnedTabsPosition !== 'panel') return
+      if (tab.pinned) return
       let panelIndex = this.panels.findIndex(p => p.cookieStoreId === tab.cookieStoreId)
       if (panelIndex === -1) return
 
@@ -1232,7 +1232,6 @@ export default {
       if (!this.panels[State.panelIndex].lockedPanel) {
         Store.commit('setPanel', panelIndex)
       }
-      EventBus.$emit('scrollToActiveTab', panelIndex, info.tabId)
 
       // Reopen dashboard
       if (State.dashboardOpened) {
@@ -1258,6 +1257,7 @@ export default {
       }
 
       this.panels[State.panelIndex].lastActiveTab = info.tabId
+      EventBus.$emit('scrollToActiveTab', panelIndex, info.tabId)
     },
 
     onPanelLoadingStart(i) {
@@ -2032,9 +2032,10 @@ NAV_CONF_HEIGHT = auto
   flex-grow: 2
 
 .Sidebar .panel
-  box(absolute)
+  box(absolute, flex)
   pos(0, 0)
   size(100%, same)
+  flex-direction: column
   transition: transform var(--d-fast), opacity var(--d-fast), z-index var(--d-fast)
   opacity: 0
   z-index: 0
