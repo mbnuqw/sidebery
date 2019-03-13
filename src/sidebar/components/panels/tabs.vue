@@ -31,6 +31,8 @@ import Tab from './tabs.tab.vue'
 import ScrollBox from '../scroll-box.vue'
 import PinnedDock from './pinned-dock'
 
+const PRE_SCROLL = 64
+
 export default {
   components: {
     PinnedDock,
@@ -64,7 +66,7 @@ export default {
     },
 
     scrollHeight() {
-      let h = 64
+      let h = PRE_SCROLL
       for (let t of this.tabs) {
         if (!t.invisible) h += State.tabHeight
       }
@@ -74,24 +76,27 @@ export default {
 
   mounted() {
     this.topOffset = this.$el.getBoundingClientRect().top
+    this.scrollBoxEl = this.$refs.scrollBox.getScrollBox()
+
     EventBus.$on('recalcPanelScroll', () => {
       if (this.index !== State.panelIndex) return
       this.recalcScroll()
     })
+
     EventBus.$on('scrollToActiveTab', (panelIndex, tabId) => {
       if (panelIndex !== this.index) return
-      const sb = this.$refs.scrollBox.getScrollBox()
-      const sh = this.$el.offsetHeight
+      if (!this.scrollBoxEl) return
+      const sh = this.scrollBoxEl.offsetHeight
       let h = 0
       for (let t of this.tabs) {
-        h += State.tabHeight
+        if (!t.invisible) h += State.tabHeight
         if (t.id === tabId) break
       }
-      if (h - State.tabHeight < sb.scrollTop + 64) {
-        sb.scrollTop = h - State.tabHeight - 64
+      if (h - State.tabHeight < this.scrollBoxEl.scrollTop + PRE_SCROLL) {
+        this.scrollBoxEl.scrollTop = h - State.tabHeight - PRE_SCROLL
       }
-      if (h + 64 > sh + sb.scrollTop) {
-        sb.scrollTop = h - sh + 64
+      if (h + PRE_SCROLL > sh + this.scrollBoxEl.scrollTop) {
+        this.scrollBoxEl.scrollTop = h - sh + PRE_SCROLL
       }
     })
   },
@@ -104,6 +109,7 @@ export default {
       }
 
       if (e.button === 1) {
+        e.preventDefault()
         this.createTab()
       }
 

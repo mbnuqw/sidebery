@@ -137,31 +137,6 @@
       .buttons: .btn(@click="openStylesEditor") {{t('settings.edit_styles')}}
 
     section
-      h2 {{t('settings.snapshots_title')}}
-      .inline-fields
-        toggle-field(
-          label="settings.snapshots_pinned_label"
-          :inline="true"
-          :value="snapshotPinned"
-          @input="toggleSnapshots('pinned')")
-        toggle-field(
-          label="settings.snapshots_default_label"
-          :inline="true"
-          :value="snapshotDefault"
-          @input="toggleSnapshots('default')")
-        toggle-field(
-          v-for="c in snapshotContainers"
-          :label="c.name"
-          :color="c.color"
-          :inline="true"
-          :value="c.active"
-          @input="toggleSnapshots(c.id)")
-      .buttons
-        .btn(@click="viewAllSnapshots") {{t('settings.snapshots_view_label')}}
-        .btn(@click="makeSnapshot") {{t('settings.make_snapshot')}}
-        .btn.-warn(@click="removeAllSnapshots") {{t('settings.rm_all_snapshots')}}
-
-    section
       h2 {{t('settings.mouse_title')}}
       toggle-field(
         label="settings.h_scroll_through_panels"
@@ -248,6 +223,31 @@
           :value="$store.state.permTabHide"
           @input="togglePermTabHide")
         .box: .info {{t('settings.tab_hide_info')}}
+
+    section
+      h2 {{t('settings.snapshots_title')}}
+      .inline-fields
+        toggle-field(
+          label="settings.snapshots_pinned_label"
+          :inline="true"
+          :value="snapshotPinned"
+          @input="toggleSnapshots('pinned')")
+        toggle-field(
+          label="settings.snapshots_default_label"
+          :inline="true"
+          :value="snapshotDefault"
+          @input="toggleSnapshots('default')")
+        toggle-field(
+          v-for="c in snapshotContainers"
+          :label="c.name"
+          :color="c.color"
+          :inline="true"
+          :value="c.active"
+          @input="toggleSnapshots(c.id)")
+      .buttons
+        .btn(@click="viewAllSnapshots") {{t('settings.snapshots_view_label')}}
+        .btn(@click="makeSnapshot") {{t('settings.make_snapshot')}}
+        .btn.-warn(@click="removeAllSnapshots") {{t('settings.rm_all_snapshots')}}
 
     section
       h2 {{t('settings.favi_title')}}

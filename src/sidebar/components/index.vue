@@ -386,6 +386,16 @@ export default {
         EventBus.$emit(eventName, this.selectionStart.id)
 
         this.recalcPanelBounds()
+
+        // // Do not handle mouse move event out of panel
+        // console.log('[DEBUG] hm', e.clientX, this.panelLeftOffset);
+        // if (e.clientX < this.panelLeftOffset) {
+        //   this.selectionStart = false
+        //   this.selection = false
+        //   Store.commit('resetSelection')
+        //   return
+        // }
+
         const scroll = this.panelScrollEl ? this.panelScrollEl.scrollTop : 0
         const startY = this.selectionStart.clientY - this.panelTopOffset + scroll
         const firstItem = this.itemSlots.find(s => s.start <= startY && s.end >= startY)
@@ -1060,11 +1070,12 @@ export default {
       // Remove folded children
       if (State.tabsTree && State.rmFoldedTabs && tab.folded) {
         const toRemove = []
-        for (let t of State.tabs) {
-          if (toRemove.includes(t.parentId)) toRemove.push(t.id)
-          if (t.parentId === tab.id) toRemove.push(t.id)
+        for (let i = tab.index + 1; i < State.tabs.length; i++) {
+          const t = State.tabs[i]
+          if (t.lvl <= tab.lvl) break
+          if (!State.removingTabs.includes(t.id)) toRemove.push(t.id)
         }
-        Store.dispatch('removeTabs', toRemove)
+        if (toRemove.length) Store.dispatch('removeTabs', toRemove)
       }
 
       // No-empty
@@ -1080,7 +1091,7 @@ export default {
         for (let t of State.tabs) {
           if (t.parentId === tab.id) {
             t.parentId = tab.parentId
-            t.invisible = false
+            if (!State.removingTabs.includes(t.id)) t.invisible = false
           }
         }
       }
@@ -1214,7 +1225,7 @@ export default {
       this.$delete(State.updatedTabs, info.tabId)
 
       // Find panel of activated tab
-      if (tab.pinned && State.pinnedTabsPosition !== 'panel') return
+      if (tab.pinned) return
       let panelIndex = this.panels.findIndex(p => p.cookieStoreId === tab.cookieStoreId)
       if (panelIndex === -1) return
 
@@ -1222,7 +1233,6 @@ export default {
       if (!this.panels[State.panelIndex].lockedPanel) {
         Store.commit('setPanel', panelIndex)
       }
-      EventBus.$emit('scrollToActiveTab', panelIndex, info.tabId)
 
       // Reopen dashboard
       if (State.dashboardOpened) {
@@ -1248,6 +1258,7 @@ export default {
       }
 
       this.panels[State.panelIndex].lastActiveTab = info.tabId
+      EventBus.$emit('scrollToActiveTab', panelIndex, info.tabId)
     },
 
     onPanelLoadingStart(i) {
@@ -2022,9 +2033,10 @@ NAV_CONF_HEIGHT = auto
   flex-grow: 2
 
 .Sidebar .panel
-  box(absolute)
+  box(absolute, flex)
   pos(0, 0)
   size(100%, same)
+  flex-direction: column
   transition: transform var(--d-fast), opacity var(--d-fast), z-index var(--d-fast)
   opacity: 0
   z-index: 0

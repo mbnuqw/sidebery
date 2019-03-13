@@ -149,7 +149,11 @@ export default {
    */
   async removeTabs({ state, getters }, tabIds) {
     // console.log('[DEBUG] TABS ACTION removeTabs');
-    state.removingTabs = [...tabIds]
+    if (state.removingTabs && state.removingTabs.length) {
+      state.removingTabs = [...state.removingTabs, ...tabIds]
+    } else {
+      state.removingTabs = [...tabIds]
+    }
     const tabs = []
     const toRemove = []
     let panelId = undefined
@@ -162,6 +166,7 @@ export default {
       const panel = getters.panels.find(p => p.id === tab.cookieStoreId)
       if (!panel) {
         toRemove.push(tab.id)
+        tab.invisible = true
         continue
       }
       if (panel.lockedTabs && tab.url.indexOf('about')) continue
@@ -173,6 +178,7 @@ export default {
       else if (lastIndex < tab.index) lastIndex = tab.index
       tabs.push(tab)
       toRemove.push(tab.id)
+      tab.invisible = true
     }
 
     // Check if all tabs from the same panel
