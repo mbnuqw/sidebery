@@ -1070,11 +1070,12 @@ export default {
       // Remove folded children
       if (State.tabsTree && State.rmFoldedTabs && tab.folded) {
         const toRemove = []
-        for (let t of State.tabs) {
-          if (toRemove.includes(t.parentId)) toRemove.push(t.id)
-          if (t.parentId === tab.id) toRemove.push(t.id)
+        for (let i = tab.index + 1; i < State.tabs.length; i++) {
+          const t = State.tabs[i]
+          if (t.lvl <= tab.lvl) break
+          if (!State.removingTabs.includes(t.id)) toRemove.push(t.id)
         }
-        Store.dispatch('removeTabs', toRemove)
+        if (toRemove.length) Store.dispatch('removeTabs', toRemove)
       }
 
       // No-empty
@@ -1090,7 +1091,7 @@ export default {
         for (let t of State.tabs) {
           if (t.parentId === tab.id) {
             t.parentId = tab.parentId
-            t.invisible = false
+            if (!State.removingTabs.includes(t.id)) t.invisible = false
           }
         }
       }
