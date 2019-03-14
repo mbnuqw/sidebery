@@ -3,6 +3,8 @@ import Utils from '../../libs/utils'
 import ReqHandler from '../proxy'
 import { DEFAULT_PANELS } from '../store.state'
 
+let recalcPanelScrollTimeout
+
 export default {
   /**
    * Load Contextual Identities and containers
@@ -88,6 +90,16 @@ export default {
   async createContext(_, { name, color, icon }) {
     const details = { name, color, icon }
     return await browser.contextualIdentities.create(details)
+  },
+
+  /**
+   * Breadcast recalc panel's scroll event.
+   */
+  recalcPanelScroll() {
+    if (recalcPanelScrollTimeout) clearTimeout(recalcPanelScrollTimeout)
+    recalcPanelScrollTimeout = setTimeout(() => {
+      EventBus.$emit('recalcPanelScroll')
+    }, 200)
   },
 
   /**

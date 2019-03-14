@@ -1,4 +1,3 @@
-import EventBus from './event-bus'
 import CtxMenu from './context-menu'
 import { Translate } from  '../mixins/dict'
 import SavedStateActions from './actions/saved-state'
@@ -57,13 +56,6 @@ export default {
         state.winChoosing = wins
       })
     })
-  },
-
-  /**
-   * Breadcast recalc panel's scroll event.
-   */
-  recalcPanelScroll() {
-    setTimeout(() => EventBus.$emit('recalcPanelScroll'), 33)
   },
 
   /**
