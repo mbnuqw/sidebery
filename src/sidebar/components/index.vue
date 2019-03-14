@@ -946,6 +946,7 @@ export default {
       }
 
       // Put new tab in tabs list
+      State.tabsMap[tab.id] = tab
       State.tabs.splice(tab.index, 0, tab)
 
       // Update state
@@ -959,22 +960,13 @@ export default {
      */
     onUpdatedTab(tabId, change, tab) {
       if (tab.windowId !== State.windowId) return
-      // console.log('[DEBUG] INDEX onUpdatedTab');
-      let upIndex = State.tabs.findIndex(t => t.id === tabId)
-      if (upIndex === -1) return
-
-      // Preserve tree levels and parent flags
-      tab.lvl = State.tabs[upIndex].lvl
-      tab.parentId = State.tabs[upIndex].parentId
-      tab.isParent = State.tabs[upIndex].isParent
-      tab.folded = State.tabs[upIndex].folded
-      tab.invisible = State.tabs[upIndex].invisible
+      if (!State.tabs[tab.index]) return
+      if (State.tabs[tab.index].id !== tabId) return
+      const localTab = State.tabs[tab.index]
 
       // Loaded
       if (change.hasOwnProperty('status')) {
-        const newStatus = change.status
-        const prevStatus = State.tabs[upIndex].status
-        if (newStatus === 'complete' && prevStatus === 'loading') {
+        if (change.status === 'complete' && localTab.status === 'loading') {
           EventBus.$emit('tabLoaded', tab.id)
         }
       }
@@ -1007,10 +999,9 @@ export default {
       let inact = Date.now() - tab.lastAccessed
       if (change.hasOwnProperty('title') && !tab.active && inact > 5000) {
         // If prev url starts with 'http' and current url same as prev
-        const prevTabState = State.tabs[upIndex]
-        if (prevTabState.url.startsWith('http') && prevTabState.url === tab.url) {
+        if (localTab.url.startsWith('http') && localTab.url === tab.url) {
           // and if title doesn't looks like url
-          if (!URL_HOST_PATH_RE.test(prevTabState.title) && !URL_HOST_PATH_RE.test(tab.title)) {
+          if (!URL_HOST_PATH_RE.test(localTab.title) && !URL_HOST_PATH_RE.test(tab.title)) {
             // Mark tab as updated
             if (tab.pinned && State.pinnedTabsPosition !== 'panel') {
               this.$set(State.updatedTabs, tab.id, -1)
@@ -1022,7 +1013,7 @@ export default {
         }
       }
 
-      State.tabs.splice(upIndex, 1, tab)
+      Object.assign(localTab, change)
 
       if (change.hasOwnProperty('url') || change.hasOwnProperty('pinned')) {
         Store.dispatch('saveSyncPanels')
@@ -1034,25 +1025,23 @@ export default {
      */
     onRemovedTab(tabId, info) {
       if (info.windowId !== State.windowId) return
-      // console.log('[DEBUG] INDEX onRemovedTab');
+
       if (!State.removingTabs) State.removingTabs = []
-      State.removingTabs.splice(State.removingTabs.indexOf(tabId), 1)
+      else State.removingTabs.splice(State.removingTabs.indexOf(tabId), 1)
+
       if (!State.removingTabs.length) {
         Store.commit('closeCtxMenu')
         Store.commit('resetSelection')
       }
-      let rmIndex = State.tabs.findIndex(t => t.id === tabId)
-      if (rmIndex === -1) return
 
-      // Locked tabs
-      const panelIndex = Utils.GetPanelIndex(this.panels, tabId)
-      const panel = this.panels[panelIndex]
-      const tab = State.tabs[rmIndex]
-      if (panel && panel.lockedTabs && !tab.url.startsWith('about')) {
-        browser.tabs.create({
-          url: tab.url,
-          cookieStoreId: tab.cookieStoreId,
-        })
+      // Try to get removed tab and his panel
+      if (!State.tabsMap[tabId]) return
+      const tab = State.tabsMap[tabId]
+      const panel = Utils.GetPanelOf(this.panels, tab)
+
+      // Recreate locked tab
+      if (panel && panel.lockedTabs && tab.url.startsWith('http')) {
+        browser.tabs.create({ url: tab.url, cookieStoreId: tab.cookieStoreId })
       }
 
       // Temporary store child tab info (for tree recovering)
@@ -1060,39 +1049,34 @@ export default {
         if (!State.removedTabs) State.removedTabs = []
         if (State.removedTabs.length > 123) State.removedTabs.splice(50, 50)
         if (tab.parentId >= 0) {
-          State.removedTabs.push({
-            title: tab.title,
-            parentId: tab.parentId,
-          })
+          State.removedTabs.push({ title: tab.title, parentId: tab.parentId })
         }
-      }
-
-      // Remove folded children
-      if (State.tabsTree && State.rmFoldedTabs && tab.folded) {
-        const toRemove = []
-        for (let i = tab.index + 1; i < State.tabs.length; i++) {
-          const t = State.tabs[i]
-          if (t.lvl <= tab.lvl) break
-          if (!State.removingTabs.includes(t.id)) toRemove.push(t.id)
-        }
-        if (toRemove.length) Store.dispatch('removeTabs', toRemove)
       }
 
       // No-empty
       if (panel && panel.noEmpty) {
-        const panelTabs = panel.tabs
-        if (panelTabs && panelTabs.length === 1) {
+        if (panel.tabs && panel.tabs.length === 1) {
           browser.tabs.create({ cookieStoreId: panel.id })
         }
       }
 
-      // Down level of children and make them visible
+      // Handle child tabs
       if (State.tabsTree && tab.isParent) {
-        for (let t of State.tabs) {
-          if (t.parentId === tab.id) {
-            t.parentId = tab.parentId
-            if (!State.removingTabs.includes(t.id)) t.invisible = false
+        const toRemove = []
+        for (let i = tab.index + 1; i < State.tabs.length; i++) {
+          const t = State.tabs[i]
+          if (t.lvl <= tab.lvl) break
+
+          // Remove folded tabs
+          if (tab.folded && State.rmFoldedTabs) {
+            if (!State.removingTabs.includes(t.id)) toRemove.push(t.id)
           }
+
+          // Down level
+          if (t.parentId === tab.id) t.parentId = tab.parentId
+
+          // Show invisible children
+          if (!State.removingTabs.includes(t.id)) t.invisible = false
         }
       }
 
@@ -1115,10 +1099,11 @@ export default {
       }
 
       // Shift tabs after removed one. (NOT detected by vue)
-      for (let i = rmIndex + 1; i < State.tabs.length; i++) {
+      for (let i = tab.index + 1; i < State.tabs.length; i++) {
         State.tabs[i].index--
       }
-      State.tabs.splice(rmIndex, 1)
+      State.tabsMap[tabId] = undefined
+      State.tabs.splice(tab.index, 1)
 
       if (panel && panel.lastActiveTab >= 0) panel.lastActiveTab = -1
 
@@ -1180,8 +1165,11 @@ export default {
       if (info.oldWindowId !== State.windowId) return
       Store.commit('closeCtxMenu')
       Store.commit('resetSelection')
-      let i = State.tabs.findIndex(t => t.id === id)
-      if (i === -1) return
+
+      if (!State.tabsMap[id]) return
+      let i = State.tabsMap[id].index
+
+      State.tabsMap[id] = undefined
       State.tabs.splice(i, 1)
 
       // Remove updated flag
