@@ -767,15 +767,6 @@ export default {
 
         this.recalcPanelBounds()
 
-        // // Do not handle mouse move event out of panel
-        // console.log('[DEBUG] hm', e.clientX, this.panelLeftOffset);
-        // if (e.clientX < this.panelLeftOffset) {
-        //   this.selectionStart = false
-        //   this.selection = false
-        //   Store.commit('resetSelection')
-        //   return
-        // }
-
         const scroll = this.panelScrollEl ? this.panelScrollEl.scrollTop : 0
         const startY = this.selectionStart.clientY - this.panelTopOffset + scroll
         const firstItem = this.itemSlots.find(s => s.start <= startY && s.end >= startY)
@@ -1149,7 +1140,6 @@ export default {
      * contextualIdentities.onCreated
      */
     onCreatedContainer({ contextualIdentity }) {
-      // console.log('[DEBUG] INDEX onCreatedContainer');
       State.ctxs.push(contextualIdentity)
       State.containers.push({
         ...contextualIdentity,
@@ -1185,7 +1175,8 @@ export default {
 
       // Close tabs
       const orphanTabs = State.tabs.filter(t => t.cookieStoreId === id)
-      await browser.tabs.remove(orphanTabs.map(t => t.id))
+      State.removingTabs = orphanTabs.map(t => t.id)
+      await browser.tabs.remove([...State.removingTabs])
 
       // Remove container
       let ctxIndex = State.ctxs.findIndex(c => c.cookieStoreId === id)
@@ -1206,13 +1197,14 @@ export default {
      * contextualIdentities.onUpdated
      */
     onUpdatedContainer({ contextualIdentity }) {
-      // console.log('[DEBUG] INDEX onUpdatedContainer');
       let id = contextualIdentity.cookieStoreId
       let ctxIndex = State.ctxs.findIndex(c => c.cookieStoreId === id)
       let ctrIndex = State.containers.findIndex(c => c.cookieStoreId === id)
       if (ctxIndex === -1 || ctrIndex === -1) return
+
       State.ctxs.splice(ctxIndex, 1, contextualIdentity)
       State.containers.splice(ctrIndex, 1, { ...State.containers[ctrIndex], ...contextualIdentity })
+
       Store.dispatch('saveSyncPanels')
       Store.dispatch('saveContainers')
     },
@@ -1224,7 +1216,7 @@ export default {
      */
     onCreatedTab(tab) {
       if (tab.windowId !== State.windowId) return
-      // console.log('[DEBUG] INDEX onCreatedTab', tab.title);
+
       Store.commit('closeCtxMenu')
       Store.commit('resetSelection')
 
@@ -1575,7 +1567,6 @@ export default {
      */
     onActivatedTab(info) {
       if (info.windowId !== State.windowId) return
-      // console.log('[DEBUG] INDEX onActivatedTab');
 
       // Reset selection
       Store.commit('resetSelection')
