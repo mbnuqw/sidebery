@@ -34,12 +34,14 @@ export default {
     }
 
     // Set tabs initial props and update state
+    state.tabsMap = []
     tabs.forEach(t => {
       t.isParent = false
       t.folded = false
       t.parentId = -1
       t.invisible = false
       t.lvl = 0
+      state.tabsMap[t.id] = t
     })
     state.tabs = tabs
 
