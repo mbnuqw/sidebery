@@ -53,7 +53,6 @@
 
 
 <script>
-import { mapGetters } from 'vuex'
 import Store from '../../store'
 import State from '../../store.state'
 import EventBus from '../../event-bus'
@@ -83,8 +82,6 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['showTabRmBtn']),
-
     updated() {
       return !!State.updatedTabs[this.tab.id]
     },
@@ -174,6 +171,7 @@ export default {
 
         // Long-click action
         this.hodorL = setTimeout(() => {
+          if (State.dragNodes) return
           let llc = State.tabLongLeftClick
           if (llc === 'reload') Store.dispatch('reloadTabs', [this.tab.id])
           if (llc === 'duplicate') Store.dispatch('duplicateTabs', [this.tab.id])
@@ -276,6 +274,8 @@ export default {
      * Handle dragstart event.
      */
     onDragStart(e) {
+      if (!this.hodorL) return
+
       // Hide context menu (if any)
       if (State.ctxMenu) State.ctxMenu = null
 
