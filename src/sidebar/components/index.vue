@@ -533,7 +533,7 @@ export default {
    * --- Computed ---
    */
   computed: {
-    ...mapGetters(['isPrivate', 'defaultCtxId', 'defaultPanel', 'panels', 'activePanel']),
+    ...mapGetters(['defaultCtxId', 'defaultPanel', 'panels', 'activePanel']),
 
     /**
      * Background transform style for parallax fx
@@ -568,13 +568,6 @@ export default {
      */
     windowInputPos() {
       return State.panelIndex === -5 ? 'center' : 'right'
-    },
-
-    /**
-     * Count of visible nav buttons
-     */
-    countOfVisibleBtns() {
-      return this.nav.filter(b => !b.hidden).length
     },
 
     /**
@@ -629,14 +622,6 @@ export default {
       }
 
       return out
-    },
-
-    /**
-     * Have any pinned tabs
-     */
-    anyPinnedTabs() {
-      if (!State.tabs[0]) return false
-      return !!State.tabs[0].pinned
     },
 
     /**
