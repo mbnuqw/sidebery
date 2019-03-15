@@ -199,8 +199,10 @@ export default {
       const activeTab = tabs.find(t => t.active)
 
       if (activeTab && activeTab.cookieStoreId === panel.cookieStoreId) {
-        let toActivate = panel.tabs.find(t => t.index === firstIndex - 1)
-        if (!toActivate) toActivate = panel.tabs.find(t => t.index === lastIndex + 1)
+        let toActivate = state.tabs[firstIndex - 1]
+        if (toActivate.cookieStoreId !== panel.cookieStoreId) {
+          toActivate = state.tabs[lastIndex + 1]
+        }
         if (toActivate) await browser.tabs.update(toActivate.id, { active: true })
       }
     }
@@ -707,7 +709,8 @@ export default {
         // Move if target index is different or pinned state changed
         const moveIndexOk = tabs[0].index !== dropIndex && tabs[tabs.length - 1].index !== dropIndex
         if (moveIndexOk || !!pin !== !!tabs[0].pinned) {
-          browser.tabs.move(tabs.map(t => t.id), { windowId: state.windowId, index: dropIndex })
+          state.movingTabs = tabs.map(t => t.id)
+          browser.tabs.move([...state.movingTabs], { windowId: state.windowId, index: dropIndex })
         }
 
         // Update tabs tree

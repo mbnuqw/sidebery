@@ -1420,8 +1420,14 @@ export default {
      */
     onMovedTab(id, info) {
       if (info.windowId !== State.windowId) return
-      Store.commit('closeCtxMenu')
-      Store.commit('resetSelection')
+
+      if (!State.movingTabs) State.movingTabs = []
+      else State.movingTabs.splice(State.movingTabs.indexOf(id), 1)
+
+      if (!State.movingTabs.length) {
+        Store.commit('closeCtxMenu')
+        Store.commit('resetSelection')
+      }
 
       // Move tab in tabs array
       let movedTab = State.tabs.splice(info.fromIndex, 1)[0]
@@ -1430,21 +1436,22 @@ export default {
         movedTab = State.tabs.splice(i, 1)[0]
       }
       if (!movedTab) return
-      movedTab.index = info.toIndex
 
-      // Shift tabs after moved one. (NOT detected by vue)
-      for (let i = 0; i < State.tabs.length; i++) {
-        if (i < info.toIndex) State.tabs[i].index = i
-        else State.tabs[i].index = i + 1
-      }
       State.tabs.splice(info.toIndex, 0, movedTab)
       Store.dispatch('recalcPanelScroll')
+
+      // Update tabs indexes.
+      const minIndex = Math.min(info.fromIndex, info.toIndex)
+      const maxIndex = Math.max(info.fromIndex, info.toIndex)
+      for (let i = minIndex; i <= maxIndex; i++) {
+        State.tabs[i].index = i
+      }
 
       // Update last tab successor
       Store.dispatch('updateTabsSuccessorsDebounced', { timeout: 200 })
 
       // Calc tree levels
-      if (State.tabsTree) {
+      if (State.tabsTree && !State.movingTabs.length) {
         State.tabs = Utils.CalcTabsTreeLevels(State.tabs)
         Store.dispatch('saveTabsTree')
       }
