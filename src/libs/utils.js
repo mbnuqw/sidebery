@@ -325,6 +325,22 @@ async function GetUrlFromDragEvent(event) {
   })
 }
 
+/**
+ * Find bookmark
+ */
+function FindBookmark(bookmarks, id) {
+  let target, n
+  const findWalk = nodes => {
+    for (n of nodes) {
+      if (n.id === id) return target = n
+      if (n.children) findWalk(n.children)
+      if (target) return
+    }
+  }
+  findWalk(bookmarks)
+  return target
+}
+
 export default {
   Uid,
   Asap,
@@ -342,4 +358,5 @@ export default {
   ParseCSSNum,
   CommonSubStr,
   GetUrlFromDragEvent,
+  FindBookmark,
 }

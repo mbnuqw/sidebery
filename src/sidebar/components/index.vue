@@ -38,7 +38,7 @@
           @close="closeDashboard"
           @height="recalcDashboardHeight")
 
-      .nav-strip(@wheel="onNavWheel")
+      .nav-strip(@wheel.stop.prevent="onNavWheel")
         .panel-btn(
           v-for="(btn, i) in nav"
           :key="btn.cookieStoreId || btn.name"
@@ -728,8 +728,6 @@ export default {
      * Navigation wheel event handler
      */
     onNavWheel(e) {
-      e.stopPropagation()
-      e.preventDefault()
       if (e.deltaY > 0) return Store.dispatch('switchPanel', 1)
       if (e.deltaY < 0) return Store.dispatch('switchPanel', -1)
     },
@@ -1001,7 +999,6 @@ export default {
      * Mouse up event handler
      */
     onMouseUp(e) {
-      // console.log('[DEBUG] INDEX onMouseUp');
       if (e.button === 0) {
         Store.commit('closeCtxMenu')
         Store.commit('resetSelection')
@@ -1017,7 +1014,6 @@ export default {
      */
     onDragEnter(e) {
       if (e && e.relatedTarget) return
-      // console.log('[DEBUG] INDEX onDragEnter');
 
       // Get drop slots
       if (!this.$refs.panels) return
@@ -1045,6 +1041,9 @@ export default {
       }
     },
 
+    /**
+     * Drag leave event handler
+     */
     onDragLeave(e) {
       if (e && e.relatedTarget) return
       for (let n of State.dragNodes) {
@@ -1108,7 +1107,7 @@ export default {
       if (this.navDragEnterTimeout) clearTimeout(this.navDragEnterTimeout)
       this.navDragEnterTimeout = setTimeout(() => {
         Store.dispatch('switchToPanel', i)
-      }, 200)
+      }, 250)
     },
 
     /**
@@ -1155,7 +1154,6 @@ export default {
      * contextualIdentities.onRemoved
      */
     async onRemovedContainer({ contextualIdentity }) {
-      // console.log('[DEBUG] INDEX onRemovedContainer');
       let id = contextualIdentity.cookieStoreId
 
       // Close tabs
@@ -1205,8 +1203,7 @@ export default {
       Store.commit('closeCtxMenu')
       Store.commit('resetSelection')
 
-      // If new tab is out of panel, move it to the end of
-      // this panel
+      // If new tab is out of panel, move it to the end of this panel
       let panel = this.panels.find(p => p.cookieStoreId === tab.cookieStoreId)
       let endIndex = panel.tabs.length ? panel.endIndex + 1 : panel.endIndex
       if (tab.index > endIndex || tab.index < panel.startIndex) {
@@ -1218,83 +1215,27 @@ export default {
         State.tabs[i].index++
       }
 
-      // --- Update tree
-      // Set default tree props (for reactivity)
+      // Set default custom props (for reactivity)
       tab.isParent = false
       tab.folded = false
       tab.parentId = -1
       tab.lvl = 0
       tab.invisible = false
+
+      // Put new tab in tabs list
+      State.tabsMap[tab.id] = tab
+      State.tabs.splice(tab.index, 0, tab)
+
+      // Update tree
       if (State.tabsTree) {
-        // Check if this tab is reopened
-        if (State.removedTabs && State.removedTabs.length > 0 && !tab.openerTabId) {
-          let lastRmTab = State.removedTabs[State.removedTabs.length - 1]
-          if (lastRmTab.title === tab.title) {
-            // Check if parent still exists
-            let parent
-            for (let i = tab.index; i--; ) {
-              if (State.tabs[i].id === lastRmTab.parentId) {
-                parent = State.tabs[i]
-                break
-              }
-            }
-            if (parent) {
-              tab.parentId = parent.id
-              tab.invisible = parent.folded
-              if (tab.invisible && State.hideFoldedTabs) browser.tabs.hide(tab.id)
-              if (State.tabsTreeLimit > 0 && parent.lvl >= State.tabsTreeLimit) {
-                tab.lvl = parent.lvl
-              } else {
-                tab.lvl = parent.lvl + 1
-              }
-            }
-
-            State.removedTabs.pop()
-          }
+        if (tab.openerTabId === undefined) {
+          // Try to restore ?reopened tab
+          Store.dispatch('restoreReopenedTreeTab', tab.id)
+        } else {
+          Store.dispatch('newTreeTab', tab.id)
         }
 
-        // Child tab
-        if (tab.openerTabId !== undefined) {
-          let parent = panel.tabs.find(t => t.id === tab.openerTabId)
-          if (!parent) parent = { lvl: 0 }
-          let parentOk = parent.cookieStoreId === tab.cookieStoreId
-          let lvlOk = !parent.lvl || !(parent.lvl >= State.tabsTreeLimit)
-
-          if ((State.groupOnOpen || parent.isParent) && lvlOk && parentOk) {
-            // Child
-            tab.parentId = tab.openerTabId
-            for (let i = tab.index; i--; ) {
-              if (tab.parentId !== State.tabs[i].id) continue
-              if (State.tabs[i].lvl) tab.lvl = State.tabs[i].lvl + 1
-              else tab.lvl = 1
-              State.tabs[i].isParent = true
-              if (State.tabs[i].folded) {
-                tab.invisible = true
-                if (State.hideFoldedTabs) browser.tabs.hide(tab.id)
-              }
-              break
-            }
-
-            // Auto fold sibling sub-trees
-            if (State.autoFoldTabs) {
-              for (let t of State.tabs) {
-                if (t.isParent && !t.folded && t.lvl === parent.lvl && t.id !== tab.openerTabId) {
-                  Store.dispatch('foldTabsBranch', t.id)
-                }
-              }
-            }
-
-          } else {
-            // Sibling
-            for (let i = tab.index; i--; ) {
-              if (tab.openerTabId === State.tabs[i].id) {
-                tab.parentId = State.tabs[i].parentId
-                tab.lvl = State.tabs[i].lvl
-                break
-              }
-            }
-          }
-        }
+        Store.dispatch('saveTabsTree', 500)
       }
 
       // Set last tab successor
@@ -1302,14 +1243,8 @@ export default {
         Store.dispatch('updateTabsSuccessorsDebounced', { timeout: 200 })
       }
 
-      // Put new tab in tabs list
-      State.tabsMap[tab.id] = tab
-      State.tabs.splice(tab.index, 0, tab)
-
-      // Update state
       Store.dispatch('recalcPanelScroll')
       Store.dispatch('saveSyncPanels')
-      if (State.tabsTree) Store.dispatch('saveTabsTree', 500)
     },
 
     /**
@@ -1370,6 +1305,7 @@ export default {
         }
       }
 
+      // Update tab object
       Object.assign(localTab, change)
 
       if (change.hasOwnProperty('url') || change.hasOwnProperty('pinned')) {
@@ -1484,7 +1420,6 @@ export default {
      */
     onMovedTab(id, info) {
       if (info.windowId !== State.windowId) return
-      // console.log('[DEBUG] INDEX onMovedTab', id);
       Store.commit('closeCtxMenu')
       Store.commit('resetSelection')
 
@@ -1605,6 +1540,9 @@ export default {
       EventBus.$emit('scrollToActiveTab', panelIndex, info.tabId)
     },
 
+    /**
+     * Start panel loading
+     */
     onPanelLoadingStart(i) {
       this.loading[i] = true
       this.loading = [...this.loading]
@@ -1614,11 +1552,17 @@ export default {
       }
     },
 
+    /**
+     * Stop panel loading
+     */
     onPanelLoadingEnd(i) {
       this.loading[i] = false
       this.loading = [...this.loading]
     },
 
+    /**
+     * Set panel state to 'ok' for 2s
+     */
     onPanelLoadingOk(i) {
       this.loading[i] = 'ok'
       this.loading = [...this.loading]
@@ -1628,6 +1572,9 @@ export default {
       }, 2000)
     },
 
+    /**
+     * Set panel state to 'err' or 2s
+     */
     onPanelLoadingErr(i) {
       this.loading[i] = 'err'
       this.loading = [...this.loading]
@@ -1653,36 +1600,27 @@ export default {
       // Tabs or Bookmarks?
       const type = this.itemSlots[0].type
       const targetId = State.selected[0]
+
       if (type === 'tab') {
-        const tab = State.tabs.find(t => t.id === targetId)
+        const tab = State.tabsMap[targetId]
         if (!tab) return
         if (tab.active) Store.commit('resetSelection')
         browser.tabs.update(targetId, { active: true })
       }
-      if (type === 'bookmark') {
-        let target, n
-        const findWalk = nodes => {
-          if (target) return
-          for (n of nodes) {
-            if (n.id === targetId) return target = n
-            if (n.children) findWalk(n.children)
-          }
-        }
-        findWalk(State.bookmarks)
 
+      if (type === 'bookmark') {
+        const target = Utils.FindBookmark(State.bookmarks, targetId)
         if (!target) return
+
         if (target.type === 'folder') {
           if (target.expanded) Store.dispatch('foldBookmark', target.id)
           else Store.dispatch('expandBookmark', target.id)
         }
+
         if (target.type === 'bookmark') {
           if (State.openBookmarkNewTab) {
             let index = this.defaultPanel.endIndex + 1
-            browser.tabs.create({
-              index,
-              url: target.url,
-              active: true,
-            })
+            browser.tabs.create({ index, url: target.url, active: true })
           } else {
             browser.tabs.update({ url: target.url })
             if (State.openBookmarkNewTab && !this.panels[0].lockedPanel) {
@@ -1862,18 +1800,8 @@ export default {
       const targetId = State.selected[0]
       const targetSlot = this.itemSlots.find(s => s.id === targetId)
       let target
-      if (type === 'tab') target = State.tabs.find(t => t.id === targetId)
-      if (type === 'bookmark') {
-        let n
-        const findWalk = nodes => {
-          if (target) return
-          for (n of nodes) {
-            if (n.id === targetId) return target = n
-            if (n.children) findWalk(n.children)
-          }
-        }
-        findWalk(State.bookmarks)
-      }
+      if (type === 'tab') target = State.tabsMap[targetId]
+      if (type === 'bookmark') target = Utils.FindBookmark(State.bookmarks, targetId)
 
       if (!target) return
       const offset = this.panelTopOffset - this.panelScrollEl.scrollTop
@@ -1908,6 +1836,9 @@ export default {
       if (State.panelIndex > i) return 'left'
     },
 
+    /**
+     * Recalc css vars
+     */
     recalcDynVars() {
       const compStyle = getComputedStyle(this.$el)
       const thRaw = compStyle.getPropertyValue('--tabs-height')
@@ -1982,7 +1913,7 @@ export default {
       this.panelScrollEl = null
     },
 
-    // --- Panel Menu ---
+    // --- Dashboard ---
     /**
      * Open panel menu by nav index.
      */
