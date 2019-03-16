@@ -563,6 +563,8 @@ export default {
     cursor: progress
     .title
       transform: translateX(11px)
+    .loading
+      opacity: 1
     .loading > svg.-a
       animation: tab-loading .8s infinite
     .loading > svg.-b
@@ -835,7 +837,8 @@ export default {
   box(absolute)
   pos(calc(50% - 8px), 0)
   size(7px, 16px)
-  transition: transform var(--d-fast)
+  opacity: 0
+  transition: transform var(--d-fast), opacity var(--d-fast)
   > svg
     box(absolute)
     pos(3px, 0)
