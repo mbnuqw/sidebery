@@ -410,11 +410,16 @@ export default {
   /**
    * Duplicate tabs
    */
-  duplicateTabs({ state }, tabIds) {
+  async duplicateTabs({ state }, tabIds) {
     for (let tabId of tabIds) {
       let tab = state.tabsMap[tabId]
       if (!tab) continue
-      browser.tabs.duplicate(tabId)
+      await browser.tabs.create({
+        index: tab.index + 1,
+        cookieStoreId: tab.cookieStoreId,
+        url: tab.url,
+        openerTabId: tabId
+      })
     }
   },
 
