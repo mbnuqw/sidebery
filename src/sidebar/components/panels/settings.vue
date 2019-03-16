@@ -7,6 +7,12 @@
         label="settings.native_scrollbars"
         :value="$store.state.nativeScrollbars"
         @input="setOpt('nativeScrollbars', $event)")
+      select-field(
+        label="settings.autoHide_ctx_menu"
+        optLabel="settings.autoHide_ctx_menu_"
+        :value="$store.state.autoHideCtxMenu"
+        :opts="$store.state.autoHideCtxMenuOpts"
+        @input="setOpt('autoHideCtxMenu', $event)")
 
     section
       h2 {{t('settings.tabs_title')}}

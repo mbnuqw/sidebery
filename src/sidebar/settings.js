@@ -1,4 +1,5 @@
 export const SETTINGS_OPTIONS = {
+  autoHideCtxMenuOpts: [500, 1000, 'none'],
   scrollThroughTabsOpts: ['panel', 'global', 'none'],
   tabDoubleClickOpts: ['reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'exp', 'none'],
   tabLongLeftClickOpts: ['reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'none'],
@@ -15,6 +16,7 @@ export const SETTINGS_OPTIONS = {
 export const DEFAULT_SETTINGS = {
   // Global
   nativeScrollbars: false,
+  autoHideCtxMenu: 500,
 
   // Tabs
   activateLastTabOnPanelSwitching: true,

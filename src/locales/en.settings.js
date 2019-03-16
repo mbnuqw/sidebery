@@ -5,6 +5,10 @@ export default {
   // --- General
   'settings.general_title': { message: 'General' },
   'settings.native_scrollbars': { message: 'Use native scroll-bars' },
+  'settings.autoHide_ctx_menu': { message: 'Auto hide context menu after' },
+  'settings.autoHide_ctx_menu_500': { message: '0.5s' },
+  'settings.autoHide_ctx_menu_1000': { message: '1s' },
+  'settings.autoHide_ctx_menu_none': { message: 'none' },
 
   // --- Tabs
   'settings.tabs_title': { message: 'Tabs' },
