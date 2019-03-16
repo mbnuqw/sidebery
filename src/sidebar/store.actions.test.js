@@ -66,7 +66,7 @@ describe('Common actions', () => {
       EventBus.$on('recalcPanelScroll', () => counter++)
       Actions.recalcPanelScroll()
       await new Promise(res => setTimeout(res, 40))
-      expect(counter).toBe(1)
+      expect(counter).toBe(0)
     })
   })
 

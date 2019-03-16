@@ -15,6 +15,9 @@ describe('Request handler for proxy', () => {
         cookieStoreId: 'pumpurum',
       }
     ]
+    State.tabsMap = []
+    State.tabsMap[12] = State.tabs[0]
+    State.tabsMap[100] = State.tabs[1]
     State.proxies = {
       olala: 'proxy-settings',
     }
