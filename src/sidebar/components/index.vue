@@ -1511,7 +1511,7 @@ export default {
       this.$delete(State.updatedTabs, info.tabId)
 
       // Find panel of activated tab
-      if (tab.pinned) return
+      if (tab.pinned && State.pinnedTabsPosition !== 'panel') return
       let panelIndex = this.panels.findIndex(p => p.cookieStoreId === tab.cookieStoreId)
       if (panelIndex === -1) return
 
