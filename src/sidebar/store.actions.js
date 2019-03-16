@@ -140,6 +140,10 @@ export default {
         })
       }
 
+      if (state.tabsTree) {
+        menu.add('tab.group', 'groupTabs', state.selected)
+      }
+
       if (!node.pinned) menu.add('tab.pin', 'pinTabs', [node.id])
       else menu.add('tab.unpin', 'unpinTabs', [node.id])
       if (!node.mutedInfo.muted) menu.add('tab.mute', 'muteTabs', [node.id])
