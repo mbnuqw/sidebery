@@ -362,8 +362,17 @@ export default {
   /**
    * (un)Pin tabs
    */
-  pinTabs(_, tabIds) {
-    for (let tabId of tabIds) browser.tabs.update(tabId, { pinned: true })
+  pinTabs({ state }, tabIds) {
+    for (let tabId of tabIds) {
+      let tab = state.tabsMap[tabId]
+      if (!tab) continue
+      for (let i = tab.index + 1; i < state.tabs.length; i++) {
+        const child = state.tabs[i]
+        if (child.lvl <= tab.lvl) break
+        if (child.parentId === tab.id) child.parentId = tab.parentId
+      }
+      browser.tabs.update(tabId, { pinned: true })
+    }
   },
   unpinTabs(_, tabIds) {
     for (let tabId of tabIds) browser.tabs.update(tabId, { pinned: false })
@@ -372,6 +381,11 @@ export default {
     for (let tabId of tabIds) {
       let tab = state.tabsMap[tabId]
       if (!tab) continue
+      for (let i = tab.index + 1; i < state.tabs.length; i++) {
+        const child = state.tabs[i]
+        if (child.lvl <= tab.lvl) break
+        if (child.parentId === tab.id) child.parentId = tab.parentId
+      }
       browser.tabs.update(tabId, { pinned: !tab.pinned })
     }
   },
@@ -662,15 +676,18 @@ export default {
           tabs.push(tab)
         }
 
+        let pinTab = pin && !tabs[0].pinned
+        let unpinTab = !pin && tabs[0].pinned
+
         // Unpin tab
-        if (!pin && tabs[0].pinned) {
+        if (unpinTab) {
           for (let t of tabs) {
             await browser.tabs.update(t.id, { pinned: false })
           }
         }
 
         // Pin tab
-        if (pin && !tabs[0].pinned) {
+        if (pinTab) {
           for (let t of tabs) {
             // Skip group tab
             if (t.url.startsWith('moz-extension')) continue
@@ -684,7 +701,7 @@ export default {
 
         // Move if target index is different or pinned state changed
         const moveIndexOk = tabs[0].index !== dropIndex && tabs[tabs.length - 1].index !== dropIndex
-        if (moveIndexOk || !!pin !== !!tabs[0].pinned) {
+        if (moveIndexOk || pinTab || unpinTab) {
           state.movingTabs = tabs.map(t => t.id)
           browser.tabs.move([...state.movingTabs], { windowId: state.windowId, index: dropIndex })
         }
