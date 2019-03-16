@@ -302,10 +302,10 @@ export default {
 
     let parent = state.tabsMap[tab.openerTabId]
     if (!parent) parent = { lvl: 0 }
-    let parentOk = parent.cookieStoreId === tab.cookieStoreId
+    if (parent.cookieStoreId !== tab.cookieStoreId) return
     let lvlOk = !parent.lvl || !(parent.lvl >= state.tabsTreeLimit)
 
-    if ((state.groupOnOpen || parent.isParent) && lvlOk && parentOk) {
+    if ((state.groupOnOpen || parent.isParent) && lvlOk) {
       // Child
       tab.parentId = tab.openerTabId
       for (let i = tab.index; i--; ) {
