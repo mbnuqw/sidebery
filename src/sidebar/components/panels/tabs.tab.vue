@@ -412,7 +412,7 @@ export default {
      * Close tab
      */
     close() {
-      Store.dispatch('removeTab', this.tab)
+      Store.dispatch('removeTabs', [this.tab.id])
     },
 
     /**
@@ -423,8 +423,7 @@ export default {
       for (let tab of State.tabs) {
         if (toRemove.includes(tab.parentId)) toRemove.push(tab.id)
       }
-      if (toRemove.length === 1) Store.dispatch('removeTab', this.tab)
-      else if (toRemove.length > 1) Store.dispatch('removeTabs', toRemove)
+      Store.dispatch('removeTabs', toRemove)
     },
 
     loadingStart(id) {
