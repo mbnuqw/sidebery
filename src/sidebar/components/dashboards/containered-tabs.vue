@@ -384,7 +384,6 @@ export default {
     },
 
     async switchProxy(type) {
-      // console.log('[DEBUG] CONTAINER DASHBOARD switchProxy');
       // Check permissions
       if (type !== 'direct') {
         const permitted = await browser.permissions.contains({ origins: ['<all_urls>'] })
@@ -450,6 +449,7 @@ export default {
       if (State.proxies[this.id]) State.proxies[this.id].username = value
       Store.dispatch('saveContainers')
       Store.dispatch('updateProxiedTabs')
+      this.$emit('height')
     },
 
     onProxyPasswordInput(value) {
