@@ -1611,7 +1611,10 @@ export default {
       if (type === 'tab') {
         const tab = State.tabsMap[targetId]
         if (!tab) return
-        if (tab.active) Store.commit('resetSelection')
+        if (tab.active) {
+          Store.commit('resetSelection')
+          if (tab.isParent) Store.dispatch('toggleBranch', tab.id)
+        }
         browser.tabs.update(targetId, { active: true })
       }
 
