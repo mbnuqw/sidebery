@@ -968,7 +968,7 @@ export default {
     onMouseLeave() {
       this.leaveTimeout = setTimeout(() => {
         Store.commit('closeCtxMenu')
-      }, 500)
+      }, 250)
     },
 
     /**
