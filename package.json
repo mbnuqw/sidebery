@@ -29,28 +29,28 @@
   "author": "mbnuqw",
   "license": "MIT",
   "devDependencies": {
-    "@vue/component-compiler-utils": "2.3.1",
+    "@vue/component-compiler-utils": "2.6.0",
     "babel-core": "6.26.3",
-    "babel-jest": "23.6.0",
+    "babel-jest": "24.5.0",
     "babel-plugin-transform-object-rest-spread": "6.26.0",
     "babel-polyfill": "6.26.0",
     "babel-preset-env": "1.7.0",
-    "eslint": "5.10.0",
-    "eslint-plugin-vue": "5.0.0",
-    "jest": "23.6.0",
+    "eslint": "5.15.2",
+    "eslint-plugin-vue": "5.2.2",
+    "jest": "24.5.0",
     "jest-vue-preprocessor": "1.4.0",
-    "parcel-bundler": "1.11.0",
+    "parcel-bundler": "1.12.2",
     "pug": "2.0.3",
     "regenerator-runtime": "0.13.1",
     "stylus": "0.54.5",
-    "vue-hot-reload-api": "2.3.1",
-    "vue-server-renderer": "2.5.21",
-    "vue-template-compiler": "2.5.21",
-    "web-ext": "2.9.3"
+    "vue-hot-reload-api": "2.3.3",
+    "vue-server-renderer": "2.6.9",
+    "vue-template-compiler": "2.6.9",
+    "web-ext": "3.0.0"
   },
   "dependencies": {
-    "vue": "2.5.21",
-    "vuex": "3.0.1"
+    "vue": "2.6.9",
+    "vuex": "3.1.0"
   },
   "prettier": {
     "semi": false,
