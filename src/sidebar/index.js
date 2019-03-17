@@ -86,7 +86,6 @@ export default new Vue({
     await Store.dispatch('loadContainers')
     await Store.dispatch('loadTabs')
     Store.dispatch('loadStyles')
-    Store.dispatch('updateProxiedTabs')
     Store.dispatch('loadKeybindings')
     await Store.dispatch('loadLocalID')
     Store.dispatch('loadSyncPanels')

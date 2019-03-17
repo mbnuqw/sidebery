@@ -599,7 +599,10 @@ export default {
         await browser.permissions.remove({ origins: ['<all_urls>'] })
         State.proxiedPanels = {}
         State.containers.map(c => {
-          if (c.proxy) c.proxy = null
+          if (c.proxified) c.proxified = false
+          if (c.proxy) c.proxy.type = 'direct'
+          if (c.includeHostsActive) c.includeHostsActive = false
+          if (c.excludeHostsActive) c.excludeHostsActive = false
         })
         State.permAllUrls = await browser.permissions.contains({ origins: ['<all_urls>'] })
       } else {
@@ -607,6 +610,7 @@ export default {
           url: browser.runtime.getURL('permissions/all-urls.html'),
         })
       }
+      Store.dispatch('saveContainers')
       Store.dispatch('saveSettings')
     },
 

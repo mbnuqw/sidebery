@@ -44,4 +44,8 @@ export default {
   'container_dashboard.proxy_socks4': { message: 'socks4' },
   'container_dashboard.proxy_socks': { message: 'socks5' },
   'container_dashboard.proxy_direct': { message: 'none' },
+  'container_dashboard.rules_include': { message: 'Include hosts' },
+  'container_dashboard.rules_include_tip': { message: 'Automaticaly reopen tabs opened in another container in this container' },
+  'container_dashboard.rules_exclude': { message: 'Exclude hosts' },
+  'container_dashboard.rules_exclude_tip': { message: 'Automaticaly reopen tabs opened in this container in default container' },
 }

@@ -1137,6 +1137,10 @@ export default {
         proxified: false,
         sync: false,
         noEmpty: false,
+        includeHostsActive: false,
+        includeHosts: '',
+        excludeHostsActive: false,
+        excludeHosts: '',
         lastActiveTab: -1,
       })
       State.panelIndex = this.panels.length - 1

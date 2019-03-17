@@ -3,15 +3,14 @@ import Utils from '../../libs/utils'
 import ReqHandler from '../proxy'
 import { DEFAULT_PANELS } from '../store.state'
 
-let recalcPanelScrollTimeout
+let recalcPanelScrollTimeout, updateReqHandlerTimeout
 
 export default {
   /**
    * Load Contextual Identities and containers
    * and merge them
    */
-  async loadContainers({ state }) {
-    // console.log('[DEBUG] PANELS ACION loadContainers');
+  async loadContainers({ state, dispatch }) {
     // Get contextual identities
     const ctxs = await browser.contextualIdentities.query({})
 
@@ -36,6 +35,10 @@ export default {
           proxified: false,
           sync: false,
           noEmpty: false,
+          includeHostsActive: false,
+          includeHosts: '',
+          excludeHostsActive: false,
+          excludeHosts: '',
           lastActiveTab: -1,
         })
       } else {
@@ -50,6 +53,10 @@ export default {
         if (ctr.proxified === undefined) ctr.proxified = false
         if (ctr.sync === undefined) ctr.sync = false
         if (ctr.noEmpty === undefined) ctr.noEmpty = false
+        if (ctr.includeHostsActive === undefined) ctr.includeHostsActive = false
+        if (ctr.includeHosts === undefined) ctr.includeHosts = ''
+        if (ctr.excludeHostsActive === undefined) ctr.excludeHostsActive = false
+        if (ctr.excludeHosts === undefined) ctr.excludeHosts = ''
         if (ctr.lastActiveTab === undefined) ctr.lastActiveTab = -1
       }
     }
@@ -64,22 +71,18 @@ export default {
       const rIndex = containers.findIndex(c => c.id === id)
       if (rIndex !== -1) containers.splice(rIndex, 1)
     }
-
-    // Set proxy configs
-    state.proxies = {}
-    for (let ctr of containers) {
-      if (ctr.proxy) state.proxies[ctr.id] = { ...ctr.proxy }
-    }
     
     state.ctxs = ctxs
     state.containers = containers
+
+    // Set requests handler (if needed)
+    dispatch('updateReqHandler')
   },
 
   /**
    * Save containers
    */
   async saveContainers({ state }) {
-    // console.log('[DEBUG] PANELS ACION saveContainers');
     const cleaned = JSON.parse(JSON.stringify(state.containers))
     await browser.storage.local.set({ containers: cleaned })
   },
@@ -99,6 +102,7 @@ export default {
     if (recalcPanelScrollTimeout) clearTimeout(recalcPanelScrollTimeout)
     recalcPanelScrollTimeout = setTimeout(() => {
       EventBus.$emit('recalcPanelScroll')
+      recalcPanelScrollTimeout = null
     }, 200)
   },
 
@@ -184,27 +188,80 @@ export default {
   },
 
   /**
-   * Update proxied tabs.
+   * Update request handler
    */
-  updateProxiedTabs({ state, dispatch }) {
-    if (state.containers.find(c => !!c.proxy)) dispatch('turnOnProxy')
-    else dispatch('turnOffProxy')
+  async updateReqHandler({ state, dispatch }) {
+    state.proxies = {}
+    state.includeHostsRules = []
+    state.excludeHostsRules = {}
+
+    for (let ctr of state.containers) {
+      // Proxy
+      if (ctr.proxified && ctr.proxy) state.proxies[ctr.id] = { ...ctr.proxy }
+
+      // Include rules
+      if (ctr.includeHostsActive) {
+        for (let rawRule of ctr.includeHosts.split('\n')) {
+          let rule = rawRule.trim()
+          if (!rule) continue
+
+          if (rule[0] === '/' && rule[rule.length - 1] === '/') {
+            rule = new RegExp(rule.slice(1, rule.length - 1))
+          }
+
+          state.includeHostsRules.push({ ctx: ctr.id, host: rule })
+        }
+      }
+
+      // Exclude rules
+      if (ctr.excludeHostsActive) {
+        state.excludeHostsRules[ctr.id] = ctr.excludeHosts
+          .split('\n')
+          .map(r => {
+            let rule = r.trim()
+
+            if (rule[0] === '/' && rule[rule.length - 1] === '/') {
+              rule = new RegExp(rule.slice(1, rule.length - 1))
+            }
+
+            return rule
+          })
+          .filter(r => r)
+      }
+    }
+
+    // Turn on request handler
+    const incRulesOk = state.includeHostsRules.length > 0
+    const excRulesOk = Object.keys(state.excludeHostsRules).length > 0
+    const proxyOk = Object.keys(state.proxies).length > 0
+    if (incRulesOk || excRulesOk || proxyOk) dispatch('turnOnReqHandler')
+    else dispatch('turnOffReqHandler')
   },
 
   /**
-   * Turn on proxy
+   * Update request handler debounced
    */
-  turnOnProxy() {
-    // console.log('[DEBUG] PANELS ACION turnOnProxy');
+  updateReqHandlerDebounced({ dispatch }) {
+    if (updateReqHandlerTimeout) clearTimeout(updateReqHandlerTimeout)
+    updateReqHandlerTimeout = setTimeout(() => {
+      dispatch('updateReqHandler')
+      updateReqHandlerTimeout = null
+    }, 500)
+  },
+
+  /**
+   * Set request handler
+   */
+  turnOnReqHandler() {
     if (!browser.proxy.onRequest.hasListener(ReqHandler)) {
       browser.proxy.onRequest.addListener(ReqHandler, { urls: ['<all_urls>'] })
     }
   },
 
   /**
-   * Turn off proxy
+   * Unset request handler
    */
-  turnOffProxy() {
+  turnOffReqHandler() {
     if (browser.proxy.onRequest.hasListener(ReqHandler)) {
       browser.proxy.onRequest.removeListener(ReqHandler)
     }

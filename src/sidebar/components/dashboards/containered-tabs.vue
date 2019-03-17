@@ -55,6 +55,38 @@
       :inline="true"
       @input="togglePanelNoEmpty")
 
+    toggle-field(
+      v-if="id"
+      label="container_dashboard.rules_include"
+      :value="conf.includeHostsActive"
+      :inline="true"
+      @input="toggleIncludeHosts")
+    .box(v-if="id && conf.includeHostsActive")
+      .field
+        text-input.text(
+          ref="includeHostsInput"
+          or="---"
+          :value="conf.includeHosts"
+          :valid="includeHostsValid"
+          @input="onIncludeHostsInput"
+          @change="onIncludeHostsChange")
+
+    toggle-field(
+      v-if="id"
+      label="container_dashboard.rules_exclude"
+      :value="conf.excludeHostsActive"
+      :inline="true"
+      @input="toggleExcludeHosts")
+    .box(v-if="id && conf.excludeHostsActive")
+      .field
+        text-input.text(
+          ref="excludeHostsInput"
+          or="---"
+          :value="conf.excludeHosts"
+          :valid="excludeHostsValid"
+          @input="onExcludeHostsInput"
+          @change="onExcludeHostsChange")
+
     select-field(
       v-if="id"
       label="container_dashboard.proxy_label"
@@ -124,7 +156,6 @@
 <script>
 import { mapGetters } from 'vuex'
 import Store from '../../store'
-import State from '../../store.state'
 import TextInput from '../inputs/text'
 import ScrollBox from '../scroll-box'
 import ToggleField from '../fields/toggle'
@@ -132,6 +163,7 @@ import SelectField from '../fields/select'
 import IconSelectField from '../fields/select-icon'
 import ColorSelectField from '../fields/select-color'
 
+const HOSTS_RULE_RE = /^.+$/m
 const PROXY_HOST_RE = /^.{3,65536}$/
 const PROXY_PORT_RE = /^\d{2,5}$/
 
@@ -210,6 +242,14 @@ export default {
 
     isSomeSocks() {
       return this.proxied === 'socks' || this.proxied === 'socks4'
+    },
+
+    includeHostsValid() {
+      return HOSTS_RULE_RE.test(this.conf.includeHosts)
+    },
+
+    excludeHostsValid() {
+      return HOSTS_RULE_RE.test(this.conf.excludeHosts)
     },
 
     proxyHost() {
@@ -383,6 +423,62 @@ export default {
       Store.dispatch('saveContainers')
     },
 
+    async toggleIncludeHosts() {
+      if (!this.conf.includeHostsActive) {
+        const permitted = await browser.permissions.contains({ origins: ['<all_urls>'] })
+        if (!permitted) {
+          const permUrl = browser.runtime.getURL('permissions/all-urls.html')
+          this.switchProxy('direct')
+          browser.tabs.create({ url: permUrl })
+          return
+        }
+      }
+
+      this.conf.includeHostsActive = !this.conf.includeHostsActive
+      Store.dispatch('saveContainers')
+      Store.dispatch('updateReqHandler')
+      await this.$nextTick()
+      this.$emit('height')
+      if (this.$refs.includeHostsInput) this.$refs.includeHostsInput.focus()
+    },
+
+    onIncludeHostsInput(value) {
+      this.conf.includeHosts = value
+      Store.dispatch('updateReqHandlerDebounced')
+    },
+
+    onIncludeHostsChange() {
+      Store.dispatch('saveContainers')
+    },
+
+    async toggleExcludeHosts() {
+      if (!this.conf.excludeHostsActive) {
+        const permitted = await browser.permissions.contains({ origins: ['<all_urls>'] })
+        if (!permitted) {
+          const permUrl = browser.runtime.getURL('permissions/all-urls.html')
+          this.switchProxy('direct')
+          browser.tabs.create({ url: permUrl })
+          return
+        }
+      }
+
+      this.conf.excludeHostsActive = !this.conf.excludeHostsActive
+      Store.dispatch('saveContainers')
+      Store.dispatch('updateReqHandler')
+      await this.$nextTick()
+      this.$emit('height')
+      if (this.$refs.excludeHostsInput) this.$refs.excludeHostsInput.focus()
+    },
+
+    onExcludeHostsInput(value) {
+      this.conf.excludeHosts = value
+      Store.dispatch('updateReqHandlerDebounced')
+    },
+
+    onExcludeHostsChange() {
+      Store.dispatch('saveContainers')
+    },
+
     async switchProxy(type) {
       // Check permissions
       if (type !== 'direct') {
@@ -399,7 +495,7 @@ export default {
       const panel = this.panels.find(p => p.id === this.id)
       if (!panel || !panel.tabs) return
 
-      const proxySettings = {
+      this.conf.proxy = {
         type,
         host: this.proxyHost,
         port: this.proxyPort,
@@ -408,18 +504,11 @@ export default {
         proxyDNS: this.proxyDNS,
       }
 
-      if (type === 'direct') {
-        State.proxies[this.id] = undefined
-        this.conf.proxy = null
-        this.conf.proxified = false
-      } else {
-        State.proxies[this.id] = { ...proxySettings }
-        this.conf.proxy = proxySettings
-        this.conf.proxified = this.proxyHostValid && this.proxyPortValid
-      }
+      if (type === 'direct') this.conf.proxified = false
+      else this.conf.proxified = this.proxyHostValid && this.proxyPortValid
 
       Store.dispatch('saveContainers')
-      Store.dispatch('updateProxiedTabs')
+      Store.dispatch('updateReqHandler')
       this.$emit('height')
     },
 
@@ -427,47 +516,45 @@ export default {
       if (!this.id || !this.conf.proxy) return
       this.conf.proxy.host = value
       this.conf.proxified = this.proxyHostValid && this.proxyPortValid
-      if (State.proxies[this.id]) State.proxies[this.id].host = value
       if (!this.proxyHostValid) return
+
       Store.dispatch('saveContainers')
-      Store.dispatch('updateProxiedTabs')
+      Store.dispatch('updateReqHandlerDebounced')
     },
 
     onProxyPortInput(value) {
       if (!this.id || !this.conf.proxy) return
       this.conf.proxy.port = value
       this.conf.proxified = this.proxyHostValid && this.proxyPortValid
-      if (State.proxies[this.id]) State.proxies[this.id].port = value
       if (!this.proxyPortValid) return
+
       Store.dispatch('saveContainers')
-      Store.dispatch('updateProxiedTabs')
+      Store.dispatch('updateReqHandlerDebounced')
     },
 
     onProxyUsernameInput(value) {
       if (!this.id || !this.conf.proxy) return
       this.conf.proxy.username = value
-      if (State.proxies[this.id]) State.proxies[this.id].username = value
+
       Store.dispatch('saveContainers')
-      Store.dispatch('updateProxiedTabs')
+      Store.dispatch('updateReqHandlerDebounced')
       this.$emit('height')
     },
 
     onProxyPasswordInput(value) {
       if (!this.id || !this.conf.proxy) return
       this.conf.proxy.password = value
-      if (State.proxies[this.id]) State.proxies[this.id].password = value
+
       Store.dispatch('saveContainers')
-      Store.dispatch('updateProxiedTabs')
+      Store.dispatch('updateReqHandlerDebounced')
     },
 
     toggleProxyDns() {
       if (!this.id || !this.conf.proxy) return
       this.conf.proxy.proxyDNS = !this.conf.proxy.proxyDNS
-      if (State.proxies[this.id]) {
-        State.proxies[this.id].proxyDNS = !State.proxies[this.id].proxyDNS
-      }
+
       Store.dispatch('saveContainers')
-      Store.dispatch('updateProxiedTabs')
+      Store.dispatch('updateReqHandler')
     },
 
     onFieldKeydown(e, nextFieldName, prevFieldName) {
