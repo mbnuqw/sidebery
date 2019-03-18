@@ -3,6 +3,8 @@ import EventBus from '../event-bus'
 
 let TabsTreeSaveTimeout, UpdateTabsSuccessorsTimeout
 
+const GROUP_URL = 'moz-extension://eec1cad1-d067-40d5-a88f-9b1d9c7172d9/group/group.html'
+
 export default {
   /**
    * Load all tabs for current window
@@ -55,25 +57,44 @@ export default {
       const ans = await browser.storage.local.get('tabsTreeState')
       if (ans.tabsTreeState) {
         const parents = []
+        let offset = 0
         for (let t of ans.tabsTreeState) {
-          const tab = state.tabs[t.index]
+          let tab = state.tabs[t.index - offset]
+          if (!tab) break
+
+          // Removed group
+          if (t.url !== tab.url && t.url.startsWith(GROUP_URL)) {
+            const parent = parents[t.parentId]
+            const rTab = await browser.tabs.create({
+              windowId: state.windowId,
+              index: t.index,
+              url: t.url,
+              cookieStoreId: t.ctx,
+              active: false,
+            })
+
+            tab = state.tabsMap[rTab.id]
+            tab.isParent = t.isParent
+            tab.folded = t.folded
+            if (t.isParent) parents[t.id] = tab
+            if (parent) {
+              tab.invisible = parent.folded || parent.invisible
+              tab.parentId = parent.id
+            }
+            continue
+          }
 
           // Check if this is actual target tab
-          if (!tab) break
           if (tab.url !== t.url && tab.status === 'complete') break
           if (tab.cookieStoreId !== t.ctx) break
 
           tab.isParent = t.isParent
           tab.folded = t.folded
           if (t.isParent) parents[t.id] = tab
-          if (t.parentId > -1) {
+          if (parents[t.parentId]) {
             const parentTab = parents[t.parentId]
-            if (parentTab) {
-              if (parentTab.folded || parentTab.invisible) {
-                tab.invisible = true
-              } else tab.invisible = false
-              tab.parentId = parentTab.id
-            }
+            tab.invisible = parentTab.folded || parentTab.invisible
+            tab.parentId = parentTab.id
           }
         }
       }
