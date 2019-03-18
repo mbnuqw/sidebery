@@ -52,17 +52,18 @@ void (async function() {
 function createTabEl(info) {
   const el = document.createElement('div')
   el.classList.add('tab-wrapper')
+  el.title = info.url
 
-  const tabEl = document.createElement('div')
-  tabEl.classList.add('tab')
+  info.tabEl = document.createElement('div')
+  info.tabEl.classList.add('tab')
 
   info.bgEl = document.createElement('div')
   info.bgEl.classList.add('bg')
-  tabEl.appendChild(info.bgEl)
+  info.tabEl.appendChild(info.bgEl)
 
   const infoEl = document.createElement('div')
   infoEl.classList.add('info')
-  tabEl.appendChild(infoEl)
+  info.tabEl.appendChild(infoEl)
 
   const titleEl = document.createElement('h3')
   titleEl.innerText = info.title
@@ -73,7 +74,7 @@ function createTabEl(info) {
   urlEl.innerText = info.url
   infoEl.appendChild(urlEl)
 
-  el.appendChild(tabEl)
+  el.appendChild(info.tabEl)
   return el
 }
 
@@ -82,7 +83,13 @@ function createTabEl(info) {
  */
 function loadScreens(tabs) {
   for (let tab of tabs) {
-    if (tab.discarded) continue
+    if (tab.discarded) {
+      tab.tabEl.classList.add('-discarded')
+      tab.bgEl.style.backgroundImage = `url(${tab.favIconUrl})`
+      tab.bgEl.style.backgroundPosition = 'center'
+      tab.bgEl.style.filter = 'blur(32px)'
+      continue
+    }
 
     // Set loading start
     browser.tabs.captureTab(tab.id, { format: 'jpeg', quality: 90 })
