@@ -6,13 +6,29 @@ void (async function() {
   const rootEl = document.getElementById('root')
   rootEl.classList.add('-' + theme)
 
-  // Load current window
-  let win = await browser.windows.getCurrent()
-
-  // Set title of group page
+  // Load current window and get url-hash
+  const win = await browser.windows.getCurrent()
   const hash = decodeURI(window.location.hash.slice(1))
-  const titleEl = document.getElementById('title')
 
+  // Init page
+  let lastState
+  lastState = await init(win.id, hash, lastState)
+
+  // Set listener for reinit request
+  browser.runtime.onMessage.addListener(async msg => {
+    if (msg.windowId !== undefined && msg.windowId !== win.id) return
+    if (msg.name === 'reinit_group' && decodeURI(msg.arg) === hash) {
+      lastState = await init(win.id, hash, lastState)
+    }
+  })
+})()
+
+/**
+ * Init group page
+ */
+async function init(windowId, hash, lastState) {
+  // Set title of group page
+  const titleEl = document.getElementById('title')
   const hashData = hash.split(':id:')
   const title = hashData[0]
   const groupId = hashData[1]
@@ -29,13 +45,26 @@ void (async function() {
   // Get list of tabs
   const groupInfo = await browser.runtime.sendMessage({
     action: 'getGroupInfo',
-    windowId: win.id,
+    windowId,
     arg: hash,
   })
+
+  // Check for changes
+  const checkSum = groupInfo.tabs.map(t => {
+    return [ t.title, t.url, t.discarded ]
+  })
+  const checkSumStr = JSON.stringify(checkSum)
+  if (lastState === checkSumStr) return checkSumStr
 
   // Render tabs
   if (groupInfo && groupInfo.tabs) {
     const tabsBoxEl = document.getElementById('tabs')
+
+    // Cleanup
+    while (tabsBoxEl.lastChild) {
+      tabsBoxEl.removeChild(tabsBoxEl.lastChild)
+    }
+
     for (let info of groupInfo.tabs) {
       info.el = createTabEl(info)
       tabsBoxEl.appendChild(info.el)
@@ -53,7 +82,9 @@ void (async function() {
 
   // Load screens
   loadScreens(groupInfo.tabs)
-})()
+
+  return checkSumStr
+}
 
 /**
  * Create tab element
