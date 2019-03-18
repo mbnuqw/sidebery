@@ -28,11 +28,11 @@ void (async function() {
   if (groupInfo && groupInfo.tabs) {
     const tabsBoxEl = document.getElementById('tabs')
     for (let info of groupInfo.tabs) {
-      const tabEl = createTabEl(info)
-      tabsBoxEl.appendChild(tabEl)
+      info.el = createTabEl(info)
+      tabsBoxEl.appendChild(info.el)
 
       // Set click listeners
-      tabEl.addEventListener('click', async () => {
+      info.el.addEventListener('click', async () => {
         await browser.runtime.sendMessage({
           action: 'expTabsBranch',
           arg: groupInfo.id,
@@ -41,6 +41,9 @@ void (async function() {
       })
     }
   }
+
+  // Load screens
+  loadScreens(groupInfo.tabs)
 })()
 
 /**
@@ -53,14 +56,9 @@ function createTabEl(info) {
   const tabEl = document.createElement('div')
   tabEl.classList.add('tab')
 
-  if (info.screen) {
-    const bgEl = document.createElement('div')
-    bgEl.classList.add('bg')
-    if (info.screen) {
-      bgEl.style.backgroundImage = `url(${info.screen})`
-    }
-    tabEl.appendChild(bgEl)
-  }
+  info.bgEl = document.createElement('div')
+  info.bgEl.classList.add('bg')
+  tabEl.appendChild(info.bgEl)
 
   const infoEl = document.createElement('div')
   infoEl.classList.add('info')
@@ -77,4 +75,19 @@ function createTabEl(info) {
 
   el.appendChild(tabEl)
   return el
+}
+
+/**
+ * Load screenshots
+ */
+function loadScreens(tabs) {
+  for (let tab of tabs) {
+    if (tab.discarded) continue
+
+    // Set loading start
+    browser.tabs.captureTab(tab.id, { format: 'jpeg', quality: 90 })
+      .then(screen => {
+        tab.bgEl.style.backgroundImage = `url(${screen})`
+      })
+  }
 }

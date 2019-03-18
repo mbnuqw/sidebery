@@ -943,7 +943,6 @@ export default {
    * Get grouped tabs (for group page)
    */
   async getGroupInfo({ state }, groupTitle) {
-    // console.log('[DEBUG] TABS ACTION getGroupInfo', groupTitle);
     await Utils.Sleep(128)
 
     const groupTab = state.tabs.find(t => t.title === groupTitle && t.url.startsWith('moz'))
@@ -954,21 +953,16 @@ export default {
       tabs: [],
     }
 
-    const parents = [groupTab.id]
-    for (let t of state.tabs) {
-      if (parents.includes(t.parentId)) {
-        if (t.isParent) parents.push(t.id)
-        let screen
-        if (!t.discarded) {
-          screen = await browser.tabs.captureTab(t.id, { format: 'jpeg', quality: 90 })
-        }
-        out.tabs.push({
-          id: t.id,
-          title: t.title,
-          url: t.url,
-          screen,
-        })
-      }
+    for (let i = groupTab.index + 1; i < state.tabs.length; i++) {
+      const tab = state.tabs[i]
+      if (tab.lvl <= groupTab.lvl) break
+      out.tabs.push({
+        id: tab.id,
+        title: tab.title,
+        url: tab.url,
+        discarded: tab.discarded,
+        favIconUrl: tab.favIconUrl,
+      })
     }
 
     return out
@@ -979,7 +973,6 @@ export default {
    */
   updateTabsSuccessors({ state, getters }) {
     if (state.ffVer < 65) return
-    // console.log('[DEBUG] TABS ACTION updateTabsSuccessors');
     const toReset = []
     for (let panel of getters.panels) {
       // No tabs
