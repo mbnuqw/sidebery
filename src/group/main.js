@@ -6,22 +6,31 @@ void (async function() {
   const rootEl = document.getElementById('root')
   rootEl.classList.add('-' + theme)
 
+  // Load current window
+  let win = await browser.windows.getCurrent()
+
   // Set title of group page
-  const title = decodeURI(window.location.hash.slice(1))
+  const hash = decodeURI(window.location.hash.slice(1))
   const titleEl = document.getElementById('title')
+
+  const hashData = hash.split(':id:')
+  const title = hashData[0]
+  const groupId = hashData[1]
   titleEl.value = title
   document.title = title
 
   // Listen chagnes of title
   titleEl.addEventListener('input', e => {
-    document.title = e.target.value
-    window.location.hash = '#' + encodeURI(e.target.value)
+    const normTitle = e.target.value.trim()
+    document.title = normTitle
+    window.location.hash = `#${encodeURI(normTitle)}:id:${groupId}`
   })
 
   // Get list of tabs
   const groupInfo = await browser.runtime.sendMessage({
     action: 'getGroupInfo',
-    arg: title,
+    windowId: win.id,
+    arg: hash,
   })
 
   // Render tabs

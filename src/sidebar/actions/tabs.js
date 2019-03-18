@@ -905,13 +905,16 @@ export default {
       groupTitle = tabs[0].title
     }
 
+    // Create hash id
+    const hashId = `${groupTitle}:id:${Utils.Uid()}`
+
     // Find index and create group tab
     const groupTab = await browser.tabs.create({
       active: !(parent && parent.folded),
       cookieStoreId: tabs[0].cookieStoreId,
       index: tabs[0].index,
       openerTabId: tabs[0].parentId < 0 ? undefined : tabs[0].parentId,
-      url: browser.runtime.getURL('group/group.html') + `#${encodeURI(groupTitle)}`,
+      url: browser.runtime.getURL('group/group.html') + `#${encodeURI(hashId)}`,
       windowId: state.windowId,
     })
 
@@ -942,10 +945,16 @@ export default {
   /**
    * Get grouped tabs (for group page)
    */
-  async getGroupInfo({ state }, groupTitle) {
+  async getGroupInfo({ state }, groupId) {
     await Utils.Sleep(128)
 
-    const groupTab = state.tabs.find(t => t.title === groupTitle && t.url.startsWith('moz'))
+    const idData = groupId.split(':id:')
+    const title = idData[0]
+    const id = idData[1]
+    const groupTab = state.tabs.find(t => {
+      if (id) return t.url.endsWith(id)
+      else return t.title === title && t.url.startsWith('moz')
+    })
     if (!groupTab) return {}
 
     const out = {
