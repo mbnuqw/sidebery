@@ -151,6 +151,7 @@ export default {
       if (dc === 'mute') Store.dispatch('remuteTabs', [this.tab.id])
       if (dc === 'clear_cookies') Store.dispatch('clearTabsCookies', [this.tab.id])
       if (dc === 'exp' && this.tab.isParent) Store.dispatch('toggleBranch', this.tab.id)
+      if (dc === 'new_after') Store.dispatch('createTabAfter', this.tab.id)
     },
 
     /**
@@ -178,6 +179,7 @@ export default {
           if (llc === 'pin') Store.dispatch('repinTabs', [this.tab.id])
           if (llc === 'mute') Store.dispatch('remuteTabs', [this.tab.id])
           if (llc === 'clear_cookies') Store.dispatch('clearTabsCookies', [this.tab.id])
+          if (llc === 'new_after') Store.dispatch('createTabAfter', this.tab.id)
           this.hodorL = null
         }, 250)
       }
@@ -200,6 +202,7 @@ export default {
           if (lrc === 'pin') Store.dispatch('repinTabs', [this.tab.id])
           if (lrc === 'mute') Store.dispatch('remuteTabs', [this.tab.id])
           if (lrc === 'clear_cookies') Store.dispatch('clearTabsCookies', [this.tab.id])
+          if (lrc === 'new_after') Store.dispatch('createTabAfter', this.tab.id)
           this.hodorR = null
         }, 250)
       }

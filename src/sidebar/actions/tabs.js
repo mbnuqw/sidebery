@@ -1042,4 +1042,33 @@ export default {
     if (UpdateTabsSuccessorsTimeout) clearTimeout(UpdateTabsSuccessorsTimeout)
     UpdateTabsSuccessorsTimeout = setTimeout(() => dispatch('updateTabsSuccessors'), timeout)
   },
+
+  /**
+   * Create tab after another tab
+   */
+  createTabAfter({ state }, tabId) {
+    // Get target tab
+    const targetTab = state.tabsMap[tabId]
+    if (!targetTab) return
+
+    // Get index and parentId for new tab
+    let parentId
+    let index = targetTab.index + 1
+    if (targetTab.isParent && !targetTab.folded) {
+      parentId = targetTab.id
+    } else {
+      parentId = targetTab.parentId
+      while (state.tabs[index] && state.tabs[index].lvl > targetTab.lvl) {
+        index++
+      }
+    }
+    if (parentId < 0) parentId = undefined
+
+    browser.tabs.create({
+      index,
+      cookieStoreId: targetTab.cookieStoreId,
+      windowId: state.windowId,
+      openerTabId: parentId,
+    })
+  },
 }
