@@ -27,6 +27,8 @@ export default {
           url: t.url,
           pinned: t.pinned,
           cookieStoreId: t.cookieStoreId,
+          parentId: t.parentId,
+          lvl: t.lvl,
         })
       })
 

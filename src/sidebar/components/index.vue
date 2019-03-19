@@ -1500,6 +1500,8 @@ export default {
     onActivatedTab(info) {
       if (info.windowId !== State.windowId) return
 
+      const currentPanel = this.panels[State.panelIndex]
+
       // Reset selection
       Store.commit('resetSelection')
 
@@ -1521,7 +1523,7 @@ export default {
       if (panelIndex === -1) return
 
       // Switch to activated tab's panel
-      if (!this.panels[State.panelIndex].lockedPanel) {
+      if (!currentPanel || !currentPanel.lockedPanel) {
         Store.commit('setPanel', panelIndex)
       }
 
@@ -1548,7 +1550,7 @@ export default {
         Store.dispatch('expTabsBranch', tab.parentId)
       }
 
-      this.panels[State.panelIndex].lastActiveTab = info.tabId
+      if (currentPanel) currentPanel.lastActiveTab = info.tabId
       EventBus.$emit('scrollToActiveTab', panelIndex, info.tabId)
 
       // If activated tab is group - reinit it
