@@ -156,36 +156,4 @@ describe('Panels actions', () => {
     await PanelsActions.goToActiveTabPanel({ getters, dispatch })
     expect(dispatch).toHaveBeenCalledWith('switchToPanel', 1)
   })
-
-  describe('updateProxiedTabs', () => {
-    test('Turn off proxy if there are no proxied panels', () => {
-      const dispatch = jest.fn()
-      const state = { containers: [{ proxy: false }] }
-      PanelsActions.updateProxiedTabs({ state, dispatch })
-      expect(dispatch).toHaveBeenCalledWith('turnOffProxy')
-    })
-
-    test('Turn on proxy if there are some proxied panels', () => {
-      const dispatch = jest.fn()
-      const state = { containers: [{ proxy: true }] }
-      PanelsActions.updateProxiedTabs({ state, dispatch })
-      expect(dispatch).toHaveBeenCalledWith('turnOnProxy')
-    })
-  })
-
-  test('turnOnProxy', () => {
-    browser.proxy.onRequest.hasListener = jest.fn(() => false)
-    browser.proxy.onRequest.addListener = jest.fn()
-    PanelsActions.turnOnProxy()
-    expect(browser.proxy.onRequest.hasListener).toHaveBeenCalled()
-    expect(browser.proxy.onRequest.addListener).toHaveBeenCalled()
-  })
-
-  test('turnOffProxy', () => {
-    browser.proxy.onRequest.hasListener = jest.fn(() => true)
-    browser.proxy.onRequest.removeListener = jest.fn()
-    PanelsActions.turnOffProxy()
-    expect(browser.proxy.onRequest.hasListener).toHaveBeenCalled()
-    expect(browser.proxy.onRequest.removeListener).toHaveBeenCalled()
-  })
 })

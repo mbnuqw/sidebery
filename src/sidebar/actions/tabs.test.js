@@ -515,10 +515,14 @@ describe('activateLastActiveTabOf', () => {
 
 describe('pinTabs', () => {
   test('pin tabs', async () => {
+    const state = {
+      tabs: [{ id: 1, pinned: false }, { id: 2, pinned: true }],
+    }
+    state.tabsMap = [ undefined, ...state.tabs ]
     browser.tabs.update = jest.fn()
-    await TabsActions.pinTabs({}, [1, 2, 3])
-    expect(browser.tabs.update).toBeCalledTimes(3)
-    expect(browser.tabs.update).toHaveBeenLastCalledWith(3, { pinned: true })
+    await TabsActions.pinTabs({ state }, [1, 2, 3])
+    expect(browser.tabs.update).toBeCalledTimes(2)
+    expect(browser.tabs.update).toHaveBeenLastCalledWith(2, { pinned: true })
   })
 
   test('unpin tabs', async () => {
@@ -574,11 +578,11 @@ describe('duplicateTabs', () => {
     const state = {
       tabs: [{ id: 1 }, { id: 2 }, { id: 3 }],
     }
+    browser.tabs.create = jest.fn()
     state.tabsMap = [ undefined, ...state.tabs ]
     browser.tabs.duplicate = jest.fn()
     await TabsActions.duplicateTabs({ state }, [2, 3, 4])
-    expect(browser.tabs.duplicate).toBeCalledTimes(2)
-    expect(browser.tabs.duplicate).toHaveBeenLastCalledWith(3)
+    expect(browser.tabs.create).toBeCalledTimes(2)
   })
 })
 
