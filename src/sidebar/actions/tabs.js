@@ -236,6 +236,7 @@ export default {
       else tabs = globaly ? state.tabs : panel.tabs
     }
     if (!tabs || !tabs.length) return
+    if (state.scrollThroughVisibleTabs) tabs = tabs.filter(t => !t.invisible)
 
     let index = tabs.findIndex(t => t.active)
     if (step > 0) {

@@ -88,6 +88,7 @@ export default {
   'settings.scroll_through_tabs_panel': { message: 'container' },
   'settings.scroll_through_tabs_global': { message: 'global' },
   'settings.scroll_through_tabs_none': { message: 'none' },
+  'settings.scroll_through_visible_tabs': { message: 'Visible only' },
   'settings.tab_double_click': { message: 'Double click on tab' },
   'settings.tab_long_left_click': { message: 'Long left click on tab' },
   'settings.tab_long_right_click': { message: 'Long right click on tab' },

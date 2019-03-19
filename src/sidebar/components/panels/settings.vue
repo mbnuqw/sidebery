@@ -154,6 +154,11 @@
         :value="$store.state.scrollThroughTabs"
         :opts="$store.state.scrollThroughTabsOpts"
         @input="setOpt('scrollThroughTabs', $event)")
+      .box(v-if="$store.state.tabsTree && $store.state.scrollThroughTabs !== 'none'")
+        toggle-field(
+          label="settings.scroll_through_visible_tabs"
+          :value="$store.state.scrollThroughVisibleTabs"
+          @input="setOpt('scrollThroughVisibleTabs', $event)")
       select-field(
         label="settings.tab_double_click"
         optLabel="settings.tab_action_"

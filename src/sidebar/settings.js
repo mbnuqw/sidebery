@@ -57,6 +57,7 @@ export const DEFAULT_SETTINGS = {
   // Mouse
   hScrollThroughPanels: false,
   scrollThroughTabs: 'none',
+  scrollThroughVisibleTabs: false,
   tabDoubleClick: 'none',
   tabLongLeftClick: 'none',
   tabLongRightClick: 'none',
