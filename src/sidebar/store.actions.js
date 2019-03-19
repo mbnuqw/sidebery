@@ -192,7 +192,12 @@ export default {
 
       if (state.tabsTree) {
         menu.add('tab.group', 'groupTabs', state.selected)
-        menu.add('tab.flatten', 'flattenTabs', state.selected)
+        const sameLvl = state.selected.every((id, i) => {
+          const tab = state.tabsMap[id]
+          const next = state.tabsMap[state.selected[i + 1]]
+          return !next || tab.lvl === next.lvl
+        })
+        if (!sameLvl) menu.add('tab.flatten', 'flattenTabs', state.selected)
       }
 
       if (state.panelIndex === 1) {
