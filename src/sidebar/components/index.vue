@@ -1616,12 +1616,24 @@ export default {
       }
 
       this.recalcPanelBounds()
+      // Get type
       if (!this.itemSlots || !this.itemSlots.length) return
-      if (!State.selected || !State.selected.length) return
-
-      // Tabs or Bookmarks?
       const type = this.itemSlots[0].type
-      const targetId = State.selected[0]
+
+      // Get target
+      let targetId
+      if (!State.selected || !State.selected.length) {
+        if (type !== 'tab') return
+
+        const activePanel = this.panels[State.panelIndex]
+        if (!activePanel || !activePanel.tabs) return
+        const activeTab = activePanel.tabs.find(t => t.active)
+        if (!activeTab) return
+
+        targetId = activeTab.id
+      } else {
+        targetId = State.selected[0]
+      }
 
       if (type === 'tab') {
         const tab = State.tabsMap[targetId]

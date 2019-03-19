@@ -113,6 +113,7 @@ export default {
   'settings.next_panel': { message: 'Следующая панель' },
   'settings.prev_panel': { message: 'Предыдущая панель' },
   'settings.open_new_tab_in_curr_panel': { message: 'Открыть новый таб в текущем контейнере' },
+  'settings.open_new_tab_after': { message: 'Открыть новый таб после текущего' },
   'settings.close_tab': { message: 'Закрыть таб' },
   'settings.select_all': { message: 'Выделить все' },
   'settings.up': { message: 'Вверх' },

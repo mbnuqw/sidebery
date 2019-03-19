@@ -68,6 +68,13 @@
       },
       "description": "open_new_tab_in_curr_panel"
     },
+    "new_tab_in_group": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+Space",
+        "mac": "MacCtrl+Shift+Space"
+      },
+      "description": "open_new_tab_after"
+    },
     "rm_tab_on_panel": {
       "suggested_key": {
         "default": "Ctrl+Delete",
