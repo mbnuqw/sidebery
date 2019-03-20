@@ -1047,9 +1047,11 @@ export default {
      */
     onDragLeave(e) {
       if (e && e.relatedTarget) return
-      for (let n of State.dragNodes) {
-        if (n.type === 'tab') EventBus.$emit('deselectTab', n.id)
-        else EventBus.$emit('deselectBookmark', n.id)
+      if (State.dragNodes) {
+        for (let n of State.dragNodes) {
+          if (n.type === 'tab') EventBus.$emit('deselectTab', n.id)
+          else EventBus.$emit('deselectBookmark', n.id)
+        }
       }
       this.resetDrag()
     },
@@ -1108,7 +1110,7 @@ export default {
       if (this.navDragEnterTimeout) clearTimeout(this.navDragEnterTimeout)
       this.navDragEnterTimeout = setTimeout(() => {
         Store.dispatch('switchToPanel', i)
-      }, 250)
+      }, 300)
     },
 
     /**
