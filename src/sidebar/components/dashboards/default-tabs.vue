@@ -81,7 +81,6 @@ export default {
             cookieStoreId: panel.cookieStoreId,
             active: true,
           })
-          this.$emit('height')
         }
       }
       Store.dispatch('saveContainers')

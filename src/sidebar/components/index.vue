@@ -1248,6 +1248,11 @@ export default {
         Store.dispatch('updateTabsSuccessorsDebounced', { timeout: 200 })
       }
 
+      // Update dashboard height (if it opened)
+      if (State.dashboardOpened && !panel.tabs.length) {
+        this.recalcDashboardHeight()
+      }
+
       Store.dispatch('recalcPanelScroll')
       Store.dispatch('saveSyncPanels')
     },
