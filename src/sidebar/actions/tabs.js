@@ -330,6 +330,7 @@ export default {
 
     let parent = state.tabsMap[tab.openerTabId]
     if (!parent) parent = { lvl: 0 }
+    if (parent.pinned) return
     if (parent.cookieStoreId !== tab.cookieStoreId) return
     let lvlOk = !parent.lvl || !(parent.lvl >= state.tabsTreeLimit)
 
