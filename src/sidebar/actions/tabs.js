@@ -58,12 +58,21 @@ export default {
       if (ans.tabsTreeState) {
         const parents = []
         let offset = 0
-        for (let t of ans.tabsTreeState) {
+        for (let i = 0; i < ans.tabsTreeState.length; i++) {
+          // Saved nodes
+          const t = ans.tabsTreeState[i]
+          const nextT = ans.tabsTreeState[i + 1]
+
+          // Current tab
           let tab = state.tabs[t.index - offset]
           if (!tab) break
 
+          const sameUrl = t.url === tab.url
+          const isGroup = t.url.startsWith(GROUP_URL)
+          const nextUrlOk = nextT ? nextT.url === tab.url : true
+
           // Removed group
-          if (t.url !== tab.url && t.url.startsWith(GROUP_URL)) {
+          if (!sameUrl && isGroup && nextUrlOk) {
             const parent = parents[t.parentId]
             const rTab = await browser.tabs.create({
               windowId: state.windowId,
@@ -85,7 +94,7 @@ export default {
           }
 
           // Check if this is actual target tab
-          if (tab.url !== t.url && tab.status === 'complete') break
+          if (!sameUrl && tab.status === 'complete') break
           if (tab.cookieStoreId !== t.ctx) break
 
           tab.isParent = t.isParent
