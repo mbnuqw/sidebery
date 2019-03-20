@@ -1096,7 +1096,11 @@ export default {
       if (State.panelIndex !== i) {
         Store.dispatch('switchToPanel', i)
       } else if (this.panels[i].cookieStoreId) {
-        browser.tabs.create({ cookieStoreId: this.panels[i].cookieStoreId })
+        if (State.dashboardOpened) {
+          this.closeDashboard()
+        } else {
+          browser.tabs.create({ cookieStoreId: this.panels[i].cookieStoreId })
+        }
       }
     },
 
