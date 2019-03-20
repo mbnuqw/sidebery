@@ -15,9 +15,6 @@ export default {
   'settings.activate_last_tab_on_panel_switching': {
     message: 'Activate last active tab on panels switching',
   },
-  'settings.create_new_tab_on_empty_panel': {
-    message: 'Create new tab on switching to empty container',
-  },
   'settings.skip_empty_panels': { message: 'Skip empty panels on switching' },
   'settings.show_tab_rm_btn': { message: 'Show close button on tab hover' },
   'settings.no_empty_default': { message: 'Create new tab on emptying default panel' },

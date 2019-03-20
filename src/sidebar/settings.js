@@ -20,7 +20,6 @@ export const DEFAULT_SETTINGS = {
 
   // Tabs
   activateLastTabOnPanelSwitching: true,
-  createNewTabOnEmptyPanel: false,
   skipEmptyPanels: false,
   showTabRmBtn: true,
   hideInact: false,

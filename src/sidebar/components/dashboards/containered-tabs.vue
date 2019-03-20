@@ -418,8 +418,19 @@ export default {
       Store.dispatch('saveContainers')
     },
 
-    togglePanelNoEmpty() {
+    async togglePanelNoEmpty() {
       this.conf.noEmpty = !this.conf.noEmpty
+      if (this.conf.noEmpty) {
+        const panel = Store.getters.panels.find(p => p.cookieStoreId === this.id)
+        if (panel && panel.tabs && !panel.tabs.length) {
+          await browser.tabs.create({
+            index: panel.startIndex,
+            cookieStoreId: panel.cookieStoreId,
+            active: true,
+          })
+          this.$emit('height')
+        }
+      }
       Store.dispatch('saveContainers')
     },
 

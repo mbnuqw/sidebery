@@ -21,10 +21,6 @@
         :value="$store.state.activateLastTabOnPanelSwitching"
         @input="setOpt('activateLastTabOnPanelSwitching', $event)")
       toggle-field(
-        label="settings.create_new_tab_on_empty_panel"
-        :value="$store.state.createNewTabOnEmptyPanel"
-        @input="setOpt('createNewTabOnEmptyPanel', $event)")
-      toggle-field(
         label="settings.skip_empty_panels"
         :value="$store.state.skipEmptyPanels"
         @input="setOpt('skipEmptyPanels', $event)")

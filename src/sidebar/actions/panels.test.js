@@ -40,17 +40,6 @@ describe('Panels actions', () => {
       expect(EventBus.$emit).toHaveBeenCalledWith('openDashboard', 123)
     })
 
-    test('with createNewTabOnEmptyPanel setting', async () => {
-      const commit = jest.fn()
-      const dispatch = jest.fn()
-      const state = { createNewTabOnEmptyPanel: true, panelIndex: 1 }
-      const getters = {
-        panels: [{}, { cookieStoreId: 'a', tabs: [] }],
-      }
-      await PanelsActions.switchToPanel({ state, getters, commit, dispatch }, 1)
-      expect(dispatch).toHaveBeenCalledWith('createTab', 'a')
-    })
-
     test('with activateLastTabOnPanelSwitching setting', async () => {
       const commit = jest.fn()
       const dispatch = jest.fn()

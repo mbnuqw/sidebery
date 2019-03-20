@@ -15,9 +15,6 @@ export default {
   'settings.activate_last_tab_on_panel_switching': {
     message: 'Активировать последний активный таб при переключении панелей',
   },
-  'settings.create_new_tab_on_empty_panel': {
-    message: 'Создавать новый таб при переходе к пустому контейнеру',
-  },
   'settings.skip_empty_panels': { message: 'Пропускать пустые контейнеры при переключении' },
   'settings.show_tab_rm_btn': { message: 'Показывать кнопку закрытия таба при наведении курсора' },
   'settings.no_empty_default': { message: 'Создавать новую вкладку при опустошении стандартной панели' },
