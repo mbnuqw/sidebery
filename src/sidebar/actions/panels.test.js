@@ -1,7 +1,6 @@
 jest.mock('../event-bus', () => {
   return { $emit: jest.fn() }
 })
-import EventBus from '../event-bus'
 import PanelsActions from './panels'
 
 describe('Panels actions', () => {
@@ -12,50 +11,6 @@ describe('Panels actions', () => {
       name: 'a',
       color: 'b',
       icon: 'c',
-    })
-  })
-
-  describe('switchToPanel', () => {
-    test('without any special settings', async () => {
-      const commit = jest.fn()
-      const dispatch = jest.fn()
-      const state = {}
-      const getters = {}
-      await PanelsActions.switchToPanel({ state, getters, commit, dispatch }, 2)
-      expect(commit).toHaveBeenCalledTimes(4)
-      expect(commit).toHaveBeenCalledWith('closeSettings')
-      expect(commit).toHaveBeenCalledWith('closeCtxMenu')
-      expect(commit).toHaveBeenCalledWith('resetSelection')
-      expect(commit).toHaveBeenCalledWith('setPanel', 2)
-      expect(dispatch).toHaveBeenCalledTimes(1)
-      expect(dispatch).toHaveBeenCalledWith('recalcPanelScroll')
-    })
-
-    test('with opened dashboard', async () => {
-      const commit = jest.fn()
-      const dispatch = jest.fn()
-      const state = { dashboardOpened: true, panelIndex: 123 }
-      const getters = {}
-      await PanelsActions.switchToPanel({ state, getters, commit, dispatch }, 2)
-      expect(EventBus.$emit).toHaveBeenCalledWith('openDashboard', 123)
-    })
-
-    test('with activateLastTabOnPanelSwitching setting', async () => {
-      const commit = jest.fn()
-      const dispatch = jest.fn()
-      const state = { activateLastTabOnPanelSwitching: true, panelIndex: 123 }
-      const getters = {}
-      await PanelsActions.switchToPanel({ state, getters, commit, dispatch }, 123)
-      expect(dispatch).toHaveBeenCalledWith('activateLastActiveTabOf', 123)
-    })
-
-    test('with hideInact setting', async () => {
-      const commit = jest.fn()
-      const dispatch = jest.fn()
-      const state = { hideInact: true, panelIndex: 12 }
-      const getters = {}
-      await PanelsActions.switchToPanel({ state, getters, commit, dispatch }, 123)
-      expect(dispatch).toHaveBeenCalledWith('hideInactPanelsTabs')
     })
   })
 

@@ -275,33 +275,6 @@ describe('createTab', () => {
 })
 
 describe('removeTabs', () => {
-  test('remove tabs (without panel)', async () => {
-    const state = {
-      tabs: [
-        {
-          id: 1,
-          cookieStoreId: 'a',
-          url: 'abc',
-        },
-        {
-          id: 2,
-          cookieStoreId: 'a',
-          url: '456',
-        },
-      ],
-    }
-    state.tabsMap = [ undefined, ...state.tabs ]
-    const getters = {
-      panels: [],
-    }
-    browser.tabs.remove = jest.fn()
-    browser.tabs.create = jest.fn()
-    browser.tabs.update = jest.fn()
-
-    await TabsActions.removeTabs({ state, getters }, [1, 2])
-    expect(browser.tabs.remove).toBeCalledWith([1, 2])
-  })
-
   test('remove tabs', async () => {
     const state = {
       tabs: [
