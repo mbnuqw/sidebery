@@ -1519,7 +1519,8 @@ export default {
 
       // Find panel of activated tab
       if (tab.pinned && State.pinnedTabsPosition !== 'panel') return
-      let panelIndex = this.panels.findIndex(p => p.cookieStoreId === tab.cookieStoreId)
+      const panelIndex = this.panels.findIndex(p => p.cookieStoreId === tab.cookieStoreId)
+      const tabPanel = this.panels[panelIndex]
       if (panelIndex === -1) return
 
       // Switch to activated tab's panel
@@ -1550,7 +1551,7 @@ export default {
         Store.dispatch('expTabsBranch', tab.parentId)
       }
 
-      if (currentPanel) currentPanel.lastActiveTab = info.tabId
+      tabPanel.lastActiveTab = info.tabId
       EventBus.$emit('scrollToActiveTab', panelIndex, info.tabId)
 
       // If activated tab is group - reinit it
