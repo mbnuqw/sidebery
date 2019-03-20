@@ -352,7 +352,9 @@ export default {
       // Auto fold sibling sub-trees
       if (state.autoFoldTabs) {
         for (let t of state.tabs) {
-          if (t.isParent && !t.folded && t.lvl === parent.lvl && t.id !== tab.openerTabId) {
+          const sameLvl = t.lvl === parent.lvl
+          const notParent = t.id !== tab.openerTabId
+          if (t.isParent && !t.folded && sameLvl && notParent && !tab.invisible) {
             dispatch('foldTabsBranch', t.id)
           }
         }
