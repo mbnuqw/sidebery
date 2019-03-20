@@ -1354,7 +1354,11 @@ export default {
       // No-empty
       if (panel && panel.noEmpty) {
         if (panel.tabs && panel.tabs.length === 1) {
-          browser.tabs.create({ cookieStoreId: panel.id })
+          browser.tabs.create({
+            index: panel.startIndex,
+            cookieStoreId: panel.id,
+            active: true,
+          })
         }
       }
 

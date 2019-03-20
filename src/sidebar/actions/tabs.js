@@ -191,7 +191,11 @@ export default {
     // If there are no tabs on this panel
     // create new one (if that option accepted)
     if (tabs.length === panel.tabs.length && panel.noEmpty) {
-      await browser.tabs.create({ cookieStoreId: ctxId, active: true })
+      await browser.tabs.create({
+        index: panel.startIndex,
+        cookieStoreId: ctxId,
+        active: true,
+      })
     }
 
     // Try to activate prev or next tab on this panel
