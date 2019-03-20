@@ -345,7 +345,7 @@ export default {
      * Close tab
      */
     close() {
-      Store.dispatch('removeTabs', [this.tab.id])
+      this.$emit('remove', this.tab)
     },
 
     loadingStart(id) {

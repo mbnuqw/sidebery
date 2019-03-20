@@ -159,7 +159,7 @@ export default {
     }
     const tabs = []
     const toRemove = []
-    let panel, firstIndex, lastIndex, isPinned
+    let panel, firstIndex, lastIndex
 
     // Find tabs to remove
     for (let id of tabIds) {
@@ -174,9 +174,6 @@ export default {
       }
 
       if (p.lockedTabs && tab.url.indexOf('about')) continue
-
-      if (tab.pinned && isPinned !== null) isPinned = true
-      else isPinned = null
 
       if (panel && panel !== p) panel = null
       else if (panel !== p) panel = p
@@ -194,20 +191,20 @@ export default {
 
     // If there are no tabs on this panel
     // create new one (if that option accepted)
-    if (panel && !isPinned && toRemove.length === panel.tabs.length && panel.noEmpty) {
+    if (panel && toRemove.length === panel.tabs.length && panel.noEmpty) {
       await browser.tabs.create({ cookieStoreId: panel.cookieStoreId, active: true })
     }
 
     // Try to activate prev or next tab on this panel
     // if there are some other tabs and if
     // all removed tabs from the same panel
-    if (panel && !isPinned && toRemove.length < panel.tabs.length) {
+    if (panel && toRemove.length < panel.tabs.length) {
       const activeTab = tabs.find(t => t.active)
 
       if (activeTab && activeTab.cookieStoreId === panel.cookieStoreId) {
-        let toActivate = state.tabs[firstIndex - 1]
+        let toActivate = state.tabs[firstIndex + 1]
         if (!toActivate || toActivate.cookieStoreId !== panel.cookieStoreId) {
-          toActivate = state.tabs[lastIndex + 1]
+          toActivate = state.tabs[lastIndex - 1]
         }
         if (toActivate) await browser.tabs.update(toActivate.id, { active: true })
       }
