@@ -1376,6 +1376,9 @@ export default {
           // Show invisible children
           if (!State.removingTabs.includes(t.id)) t.invisible = false
         }
+
+        // Remove child tabs
+        if (State.rmFoldedTabs && toRemove.length) Store.dispatch('removeTabs', toRemove)
       }
 
       // Update last tab successor

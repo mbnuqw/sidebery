@@ -152,61 +152,61 @@ export default {
    * Remove tabs
    */
   async removeTabs({ state, getters }, tabIds) {
-    if (state.removingTabs && state.removingTabs.length) {
-      state.removingTabs = [...state.removingTabs, ...tabIds]
-    } else {
-      state.removingTabs = [...tabIds]
-    }
-    const tabs = []
-    const toRemove = []
-    let panel, firstIndex, lastIndex
+    let tabs = tabIds.map(id => state.tabsMap[id])
+    const ctxId = tabs[0].cookieStoreId
+    const panel = getters.panels.find(p => p.cookieStoreId === ctxId)
+    if (!panel) return
 
-    // Find tabs to remove
-    for (let id of tabIds) {
-      const tab = state.tabsMap[id]
-      if (!tab) continue
-
-      const p = getters.panels.find(p => p.cookieStoreId === tab.cookieStoreId)
-      if (!p) {
-        toRemove.push(tab.id)
-        tab.invisible = true
-        continue
-      }
-
-      if (p.lockedTabs && tab.url.indexOf('about')) continue
-
-      if (panel && panel !== p) panel = null
-      else if (panel !== p) panel = p
-
-      if (firstIndex === undefined) firstIndex = tab.index
-      else if (firstIndex > tab.index) firstIndex = tab.index
-
-      if (lastIndex === undefined) lastIndex = tab.index
-      else if (lastIndex < tab.index) lastIndex = tab.index
-
-      tabs.push(tab)
-      toRemove.push(tab.id)
+    tabs = tabs.filter(tab => {
+      if (!tab) return false
+      if (tab.cookieStoreId !== ctxId) return false
+      if (panel.lockedTabs && !tab.url.startsWith('about')) return false
       tab.invisible = true
+      return true
+    })
+
+    // Remove folded tabs
+    if (state.rmFoldedTabs) {
+      for (let tab of tabs) {
+        if (tab.isParent && tab.folded) {
+          for (let i = tab.index + 1; i < state.tabs.length; i++) {
+            if (state.tabs[i].lvl <= tab.lvl) break
+            tabs.push(state.tabs[i])
+          }
+        }
+      }
+    }
+
+    // Sort by index
+    tabs = tabs.sort((a, b) => a.index - b.index)
+
+    // Set tabs to be removed
+    const toRemove = tabs.map(t => t.id)
+    if (state.removingTabs && state.removingTabs.length) {
+      state.removingTabs = [...state.removingTabs, ...toRemove]
+    } else {
+      state.removingTabs = [...toRemove]
     }
 
     // If there are no tabs on this panel
     // create new one (if that option accepted)
-    if (panel && toRemove.length === panel.tabs.length && panel.noEmpty) {
-      await browser.tabs.create({ cookieStoreId: panel.cookieStoreId, active: true })
+    if (tabs.length === panel.tabs.length && panel.noEmpty) {
+      await browser.tabs.create({ cookieStoreId: ctxId, active: true })
     }
 
     // Try to activate prev or next tab on this panel
-    // if there are some other tabs and if
-    // all removed tabs from the same panel
-    if (panel && toRemove.length < panel.tabs.length) {
+    if (tabs.length < panel.tabs.length) {
       const activeTab = tabs.find(t => t.active)
 
       if (activeTab && activeTab.cookieStoreId === panel.cookieStoreId) {
-        let toActivate = state.tabs[firstIndex + 1]
-        if (!toActivate || toActivate.cookieStoreId !== panel.cookieStoreId) {
-          toActivate = state.tabs[lastIndex - 1]
-        }
-        if (toActivate) await browser.tabs.update(toActivate.id, { active: true })
+        const prevIndex = tabs[0].index - 1
+        const nextIndex = tabs[tabs.length - 1].index + 1
+
+        let target
+        if (nextIndex <= panel.endIndex) target = state.tabs[nextIndex]
+        else if (prevIndex >= panel.startIndex) target = state.tabs[prevIndex]
+
+        if (target) await browser.tabs.update(target.id, { active: true })
       }
     }
 
