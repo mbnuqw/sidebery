@@ -1288,7 +1288,10 @@ export default {
       if (change.hasOwnProperty('pinned') && change.pinned) {
         let panel = this.panels.find(p => p.cookieStoreId === tab.cookieStoreId)
         if (panel.noEmpty && panel.tabs.length === 1) {
-          browser.tabs.create({ cookieStoreId: panel.cookieStoreId })
+          browser.tabs.create({
+            index: panel.startIndex,
+            cookieStoreId: panel.cookieStoreId,
+          })
         }
       }
 
@@ -1334,12 +1337,19 @@ export default {
 
       // Try to get removed tab and his panel
       if (!State.tabsMap[tabId]) return
+      let creatingNewTab
       const tab = State.tabsMap[tabId]
       const panel = Utils.GetPanelOf(this.panels, tab)
 
       // Recreate locked tab
       if (panel && panel.lockedTabs && tab.url.startsWith('http')) {
-        browser.tabs.create({ url: tab.url, cookieStoreId: tab.cookieStoreId })
+        browser.tabs.create({
+          index: tab.index,
+          url: tab.url,
+          openerTabId: tab.parentId > -1 ? tab.parentId : undefined,
+          cookieStoreId: tab.cookieStoreId,
+        })
+        creatingNewTab = true
       }
 
       // Temporary store child tab info (for tree recovering)
@@ -1352,8 +1362,8 @@ export default {
       }
 
       // No-empty
-      if (panel && panel.noEmpty) {
-        if (panel.tabs && panel.tabs.length === 1) {
+      if (panel && panel.noEmpty && panel.tabs && panel.tabs.length === 1) {
+        if (!creatingNewTab) {
           browser.tabs.create({
             index: panel.startIndex,
             cookieStoreId: panel.id,
