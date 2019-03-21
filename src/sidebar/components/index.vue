@@ -1484,7 +1484,7 @@ export default {
       const minIndex = Math.min(info.fromIndex, info.toIndex)
       const maxIndex = Math.max(info.fromIndex, info.toIndex)
       for (let i = minIndex; i <= maxIndex; i++) {
-        State.tabs[i].index = i
+        if (State.tabs[i]) State.tabs[i].index = i
       }
 
       // Update last tab successor
