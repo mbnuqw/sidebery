@@ -117,7 +117,7 @@ export default new Vue({
      * Set currently focused window
      */
     onFocusWindow(id) {
-      this.windowFocused = id === State.windowId
+      State.windowFocused = id === State.windowId
     },
 
     /**
