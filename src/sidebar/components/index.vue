@@ -1999,7 +1999,6 @@ export default {
       Store.commit('resetSelection')
       State.dashboardOpened = true
       State.panelIndex = i
-      if (i >= 0) State.activePanel = State.panelIndex
       if (i === -1) this.dashboard = { dashboard: 'TabsDashboard', new: true }
       else if (i >= 0) this.dashboard = this.nav[i]
 

@@ -23,6 +23,8 @@
     :inline="true"
     @input="togglePanelNoEmpty")
 
+  .delimiter
+
   .options
     .opt(v-if="haveTabs", @click="dedupTabs") {{t('tabs_dashboard.dedup_tabs')}}
     .opt(v-if="haveTabs", @click="reloadAllTabs") {{t('tabs_dashboard.reload_all_tabs')}}

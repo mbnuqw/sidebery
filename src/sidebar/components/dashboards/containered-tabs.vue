@@ -96,8 +96,8 @@
       :opts="proxyOpts"
       @input="switchProxy")
 
-    .box
-      .field(v-if="id && proxied !== 'direct'")
+    .box(v-if="id && proxied !== 'direct'")
+      .field
         text-input.text(
           ref="proxyHost"
           :or="t('container_dashboard.proxy_host_placeholder')"
@@ -107,7 +107,7 @@
           @input="onProxyHostInput"
           @keydown="onFieldKeydown($event, 'proxyPort', 'name')")
 
-      .field(v-if="id && proxied !== 'direct'")
+      .field
         text-input.text(
           ref="proxyPort"
           :or="t('container_dashboard.proxy_port_placeholder')"
@@ -117,7 +117,7 @@
           @input="onProxyPortInput"
           @keydown="onFieldKeydown($event, 'proxyUsername', 'proxyHost')")
 
-      .field(v-if="id && proxied === 'socks'")
+      .field(v-if="proxied === 'socks'")
         text-input.text(
           ref="proxyUsername"
           valid="fine"
@@ -127,7 +127,7 @@
           @input="onProxyUsernameInput"
           @keydown="onFieldKeydown($event, 'proxyPassword', 'proxyPort')")
 
-      .field(v-if="id && proxied === 'socks' && proxyUsername")
+      .field(v-if="proxied === 'socks' && proxyUsername")
         text-input.text(
           ref="proxyPassword"
           valid="fine"
@@ -145,11 +145,13 @@
         :inline="true"
         @input="toggleProxyDns")
 
-    .options
-      .opt(v-if="haveTabs", @click="dedupTabs") {{t('tabs_dashboard.dedup_tabs')}}
-      .opt(v-if="haveTabs", @click="reloadAllTabs") {{t('tabs_dashboard.reload_all_tabs')}}
-      .opt(v-if="haveTabs", @click="closeAllTabs") {{t('tabs_dashboard.close_all_tabs')}}
-      .opt.-warn(v-if="id", @click="remove") {{t('tabs_dashboard.delete_container')}}
+  .delimiter(v-if="id")
+
+  .options
+    .opt(v-if="tabsCount", @click="dedupTabs") {{t('tabs_dashboard.dedup_tabs')}}
+    .opt(v-if="tabsCount", @click="reloadAllTabs") {{t('tabs_dashboard.reload_all_tabs')}}
+    .opt(v-if="tabsCount", @click="closeAllTabs") {{t('tabs_dashboard.close_all_tabs')}}
+    .opt.-warn(v-if="id", @click="remove") {{t('tabs_dashboard.delete_container')}}
 </template>
 
 
@@ -230,9 +232,10 @@ export default {
       else return this.colorOpts[0].colorCode
     },
 
-    haveTabs() {
-      if (!this.conf.tabs || !this.id) return false
-      return this.conf.tabs.length > 0
+    tabsCount() {
+      if (!this.id) return 0
+      if (!this.panels[this.index] || !this.panels[this.index].tabs) return 0
+      return this.panels[this.index].tabs.length
     },
 
     proxied() {
@@ -450,6 +453,7 @@ export default {
       Store.dispatch('updateReqHandler')
       await this.$nextTick()
       this.$emit('height')
+      if (this.$refs.scrollBox) this.$refs.scrollBox.recalcScroll()
       if (this.$refs.includeHostsInput) this.$refs.includeHostsInput.focus()
     },
 
@@ -479,6 +483,7 @@ export default {
       Store.dispatch('updateReqHandler')
       await this.$nextTick()
       this.$emit('height')
+      if (this.$refs.scrollBox) this.$refs.scrollBox.recalcScroll()
       if (this.$refs.excludeHostsInput) this.$refs.excludeHostsInput.focus()
     },
 
@@ -522,7 +527,10 @@ export default {
 
       Store.dispatch('saveContainers')
       Store.dispatch('updateReqHandler')
+
+      await this.$nextTick()
       this.$emit('height')
+      if (this.$refs.scrollBox) this.$refs.scrollBox.recalcScroll()
     },
 
     onProxyHostInput(value) {
