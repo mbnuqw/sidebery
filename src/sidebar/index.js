@@ -133,6 +133,8 @@ export default new Vue({
      * Handle changes of all storages (update current state)
      */
     onChangeStorage(changes, type) {
+      if (type === 'local' && State.windowFocused) return
+
       if (changes.settings) Store.dispatch('loadSettings')
       if (changes.styles) Store.dispatch('applyStyles', changes.styles.newValue)
       if (type === 'sync') {

@@ -35,7 +35,6 @@ export default {
 
     if (state.savePanelsTimeout) clearTimeout(state.savePanelsTimeout)
     state.savePanelsTimeout = setTimeout(() => {
-      // console.log('[DEBUG] SYNC ACTION saveSyncPanels');
       const syncPanels = []
       let syncPinnedTabs = []
       if (state.pinnedTabsSync) {
@@ -76,7 +75,6 @@ export default {
    * Load sync panels state.
    */
   async loadSyncPanels({ state, dispatch }) {
-    // console.log('[DEBUG] SYNC ACTION loadSyncPanels');
     let ans = await browser.storage.sync.get()
     Object.keys(ans).filter(id => id !== state.localID)
 

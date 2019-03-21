@@ -83,6 +83,7 @@ export default {
    * Save containers
    */
   async saveContainers({ state }) {
+    if (!state.windowFocused) return
     const cleaned = JSON.parse(JSON.stringify(state.containers))
     await browser.storage.local.set({ containers: cleaned })
   },

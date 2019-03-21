@@ -1131,6 +1131,8 @@ export default {
      * contextualIdentities.onCreated
      */
     onCreatedContainer({ contextualIdentity }) {
+      if (!State.windowFocused) return
+
       State.ctxs.push(contextualIdentity)
       State.containers.push({
         ...contextualIdentity,
@@ -1165,6 +1167,8 @@ export default {
      * contextualIdentities.onRemoved
      */
     async onRemovedContainer({ contextualIdentity }) {
+      if (!State.windowFocused) return
+
       let id = contextualIdentity.cookieStoreId
 
       // Find container
@@ -1194,6 +1198,8 @@ export default {
      * contextualIdentities.onUpdated
      */
     onUpdatedContainer({ contextualIdentity }) {
+      if (!State.windowFocused) return
+
       let id = contextualIdentity.cookieStoreId
       let ctxIndex = State.ctxs.findIndex(c => c.cookieStoreId === id)
       let ctrIndex = State.containers.findIndex(c => c.cookieStoreId === id)
