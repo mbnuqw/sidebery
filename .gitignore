@@ -10,3 +10,5 @@ build/profile-ru/*
 !build/profile-ru/__preserve-dir
 build/profile-en/*
 !build/profile-en/__preserve-dir
+build/profile-beta/*
+!build/profile-beta/__preserve-dir
