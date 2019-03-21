@@ -438,6 +438,7 @@ export default {
         const permitted = await browser.permissions.contains({ origins: ['<all_urls>'] })
         if (!permitted) {
           const permUrl = browser.runtime.getURL('permissions/all-urls.html')
+          this.$emit('close')
           this.switchProxy('direct')
           browser.tabs.create({ url: permUrl })
           return
@@ -466,6 +467,7 @@ export default {
         const permitted = await browser.permissions.contains({ origins: ['<all_urls>'] })
         if (!permitted) {
           const permUrl = browser.runtime.getURL('permissions/all-urls.html')
+          this.$emit('close')
           this.switchProxy('direct')
           browser.tabs.create({ url: permUrl })
           return
@@ -494,6 +496,7 @@ export default {
       if (type !== 'direct') {
         const permitted = await browser.permissions.contains({ origins: ['<all_urls>'] })
         if (!permitted) {
+          this.$emit('close')
           this.switchProxy('direct')
           browser.tabs.create({
             url: browser.runtime.getURL('permissions/all-urls.html'),

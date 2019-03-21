@@ -1200,7 +1200,11 @@ export default {
       if (ctxIndex === -1 || ctrIndex === -1) return
 
       State.ctxs.splice(ctxIndex, 1, contextualIdentity)
-      State.containers.splice(ctrIndex, 1, { ...State.containers[ctrIndex], ...contextualIdentity })
+      State.containers[ctrIndex].color = contextualIdentity.color
+      State.containers[ctrIndex].colorCode = contextualIdentity.colorCode
+      State.containers[ctrIndex].icon = contextualIdentity.icon
+      State.containers[ctrIndex].iconUrl = contextualIdentity.iconUrl
+      State.containers[ctrIndex].name = contextualIdentity.name
 
       Store.dispatch('saveSyncPanels')
       Store.dispatch('saveContainers')
