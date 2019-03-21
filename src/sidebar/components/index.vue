@@ -1167,23 +1167,26 @@ export default {
     async onRemovedContainer({ contextualIdentity }) {
       let id = contextualIdentity.cookieStoreId
 
+      // Find container
+      let ctxIndex = State.ctxs.findIndex(c => c.cookieStoreId === id)
+      let ctrIndex = State.containers.findIndex(c => c.cookieStoreId === id)
+      if (ctxIndex === -1 || ctrIndex === -1) return
+      State.containers[ctrIndex].noEmpty = false
+
       // Close tabs
       const orphanTabs = State.tabs.filter(t => t.cookieStoreId === id)
       State.removingTabs = orphanTabs.map(t => t.id)
       await browser.tabs.remove([...State.removingTabs])
 
       // Remove container
-      let ctxIndex = State.ctxs.findIndex(c => c.cookieStoreId === id)
-      let ctrIndex = State.containers.findIndex(c => c.id === id)
-      if (ctxIndex === -1 || ctrIndex === -1) return
       State.ctxs.splice(ctxIndex, 1)
       State.containers.splice(ctrIndex, 1)
-      if (State.proxies[id]) delete State.proxies[id]
 
       // Switch to prev panel
       State.panelIndex = this.panels.length - 1
       State.lastPanelIndex = State.panelIndex
 
+      Store.dispatch('updateReqHandler')
       Store.dispatch('saveContainers')
     },
 
