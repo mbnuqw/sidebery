@@ -75,7 +75,6 @@ export default new Vue({
 
   async created() {
     browser.windows.onFocusChanged.addListener(this.onFocusWindow)
-    browser.windows.onRemoved.addListener(this.onRemovedWindow)
     browser.storage.onChanged.addListener(this.onChangeStorage)
     browser.commands.onCommand.addListener(this.onCmd)
 
@@ -113,14 +112,9 @@ export default new Vue({
      */
     onFocusWindow(id) {
       State.windowFocused = id === State.windowId
-    },
-
-    /**
-     * Handle window removing
-     */
-    onRemovedWindow(windowId) {
-      if (State.windowId !== windowId) {
-        Store.dispatch('saveTabsTree', 0)
+      if (State.windowFocused) {
+        if (State.tabsTree) Store.dispatch('saveTabsTree', 0)
+        Store.dispatch('savePanelIndex')
       }
     },
 
