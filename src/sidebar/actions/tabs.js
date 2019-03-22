@@ -117,7 +117,7 @@ export default {
    */
   saveTabsTree({ state }, delay = 1000) {
     if (TabsTreeSaveTimeout) clearTimeout(TabsTreeSaveTimeout)
-    TabsTreeSaveTimeout = setTimeout(async () => {
+    TabsTreeSaveTimeout = setTimeout(() => {
       const tabsTreeState = []
       for (let t of state.tabs) {
         if (t.isParent || t.parentId > -1) {
@@ -132,7 +132,7 @@ export default {
           })
         }
       }
-      await browser.storage.local.set({ tabsTreeState })
+      browser.storage.local.set({ tabsTreeState })
       TabsTreeSaveTimeout = null
     }, delay)
   },
