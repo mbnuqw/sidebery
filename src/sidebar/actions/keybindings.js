@@ -13,11 +13,7 @@ export default {
    * Update keybindings
    */
   async updateKeybinding(_, { name, shortcut }) {
-    try {
-      await browser.commands.update({ name, shortcut })
-    } catch (err) {
-      // ...
-    }
+    await browser.commands.update({ name, shortcut })
   },
 
   /**

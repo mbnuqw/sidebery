@@ -86,7 +86,6 @@ export default {
       try {
         data = JSON.parse(ans[id])
       } catch (err) {
-        // ERROR
         return syncData
       }
 
