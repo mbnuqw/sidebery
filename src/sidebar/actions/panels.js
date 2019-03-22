@@ -221,7 +221,10 @@ export default {
       if (state.skipEmptyPanels && p.tabs && !p.tabs.length) continue
       if (!p.inactive) break
     }
-    if (getters.panels[i]) state.panelIndex = i
+    if (getters.panels[i]) {
+      state.panelIndex = i
+      dispatch('savePanelIndex')
+    }
     state.lastPanelIndex = state.panelIndex
 
     if (state.activateLastTabOnPanelSwitching) {
@@ -237,7 +240,6 @@ export default {
     dispatch('recalcPanelScroll')
     if (state.hideInact) dispatch('hideInactPanelsTabs')
     EventBus.$emit('panelSwitched')
-    dispatch('savePanelIndex')
   },
 
   /**
