@@ -103,8 +103,8 @@ export default {
 
     if (!syncData) return
     state.lastSyncPanels = syncData
-    dispatch('saveState')
     dispatch('updateSyncPanels', syncData)
+    dispatch('saveSynced')
   },
 
   /**

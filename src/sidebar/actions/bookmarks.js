@@ -49,7 +49,9 @@ export default {
   /**
    * Save tree state
    */
-  async saveTreeState({ state }) {
+  async saveBookmarksTree({ state }) {
+    if (!state.windowFocused) return
+
     let expandedBookmarks = []
     let path = []
     const walker = nodes => {
@@ -68,9 +70,7 @@ export default {
     await utils.Sleep(128)
 
     walker(state.bookmarks)
-    await browser.storage.local.set({
-      expandedBookmarks,
-    })
+    await browser.storage.local.set({ expandedBookmarks })
   },
 
   /**
@@ -102,7 +102,7 @@ export default {
   /**
    * Expand bookmark folder
    */
-  expandBookmark({ state }, nodeId) {
+  expandBookmark({ state, dispatch }, nodeId) {
     let done = false
     let isEmpty = false
     const expandPath = []
@@ -145,12 +145,13 @@ export default {
 
     /* eslint-disable-next-line */
     state.bookmarks = state.bookmarks
+    dispatch('saveBookmarksTree')
   },
 
   /**
    * Fold bookmark folder
    */
-  foldBookmark({ state }, nodeId) {
+  foldBookmark({ state, dispatch }, nodeId) {
     let done = false
     const walker = nodes => {
       for (let n of nodes) {
@@ -167,6 +168,7 @@ export default {
 
     /* eslint-disable-next-line */
     state.bookmarks = state.bookmarks
+    dispatch('saveBookmarksTree')
   },
 
   /**

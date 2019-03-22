@@ -36,7 +36,7 @@ describe('Bookmarks actions', () => {
   })
 
   /**
-   * saveTreeState
+   * saveBookmarksTree
    */
   test('Saving bookmarks tree state', async () => {
     // Prepare env
@@ -50,7 +50,7 @@ describe('Bookmarks actions', () => {
     }
 
     // Checks
-    await BookmarksActions.saveTreeState({ state })
+    await BookmarksActions.saveBookmarksTree({ state })
     expect(expandedBookmarks.length).toBe(0)
   })
 

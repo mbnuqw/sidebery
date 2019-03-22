@@ -651,7 +651,6 @@ export default {
       Store.commit('resetSettings')
       Store.dispatch('saveSettings')
       Store.dispatch('saveContainers')
-      Store.dispatch('saveState')
     },
 
     /**

@@ -537,27 +537,25 @@ export default {
       if (!this.id || !this.conf.proxy) return
       this.conf.proxy.host = value
       this.conf.proxified = this.proxyHostValid && this.proxyPortValid
-      if (!this.proxyHostValid) return
 
-      Store.dispatch('saveContainers')
-      Store.dispatch('updateReqHandlerDebounced')
+      Store.dispatch('saveContainersDebounced')
+      if (this.proxyHostValid) Store.dispatch('updateReqHandlerDebounced')
     },
 
     onProxyPortInput(value) {
       if (!this.id || !this.conf.proxy) return
       this.conf.proxy.port = value
       this.conf.proxified = this.proxyHostValid && this.proxyPortValid
-      if (!this.proxyPortValid) return
 
-      Store.dispatch('saveContainers')
-      Store.dispatch('updateReqHandlerDebounced')
+      Store.dispatch('saveContainersDebounced')
+      if (this.proxyPortValid) Store.dispatch('updateReqHandlerDebounced')
     },
 
     onProxyUsernameInput(value) {
       if (!this.id || !this.conf.proxy) return
       this.conf.proxy.username = value
 
-      Store.dispatch('saveContainers')
+      Store.dispatch('saveContainersDebounced')
       Store.dispatch('updateReqHandlerDebounced')
       this.$emit('height')
     },
@@ -566,7 +564,7 @@ export default {
       if (!this.id || !this.conf.proxy) return
       this.conf.proxy.password = value
 
-      Store.dispatch('saveContainers')
+      Store.dispatch('saveContainersDebounced')
       Store.dispatch('updateReqHandlerDebounced')
     },
 

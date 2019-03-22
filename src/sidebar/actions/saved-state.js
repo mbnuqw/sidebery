@@ -3,37 +3,33 @@ export default {
    * Try to load saved sidebar state
    */
   async loadState({ state }) {
-    let ans = await browser.storage.local.get('state')
-    let loadedState = ans.state
-    if (!loadedState) {
-      state.stateLoaded = true
-      return
-    }
+    let ans = await browser.storage.local.get(['panelIndex', 'synced'])
+    if (!ans) return
 
-    if (!state.private && loadedState.panelIndex !== 1) {
-      if (loadedState.panelIndex >= 0) {
-        state.panelIndex = loadedState.panelIndex
+    if (!state.private && ans.panelIndex !== 1) {
+      if (ans.panelIndex >= 0) {
+        state.panelIndex = ans.panelIndex
       }
     }
-    if (loadedState.synced) {
-      state.synced = loadedState.synced
-    }
 
-    state.stateLoaded = true
+    if (ans.synced) {
+      state.synced = ans.synced
+    }
   },
 
   /**
-   * Try to save some state values.
-   * ps. use JSON.parse(JSON.str...()) to remove vue
-   * getters/setters and other hidden stuff
+   * Save panel index
    */
-  async saveState({ state }) {
-    if (!state.stateLoaded) return
-    await browser.storage.local.set({
-      state: {
-        panelIndex: state.panelIndex,
-        synced: JSON.parse(JSON.stringify(state.synced)),
-      },
-    })
+  savePanelIndex({ state }) {
+    if (!state.windowFocused || state.private) return
+    browser.storage.local.set({ panelIndex: state.panelIndex })
+  },
+
+  /**
+   * Save synced data
+   */
+  saveSynced({ state }) {
+    if (!state.windowFocused) return
+    browser.storage.local.set({ synced: JSON.parse(JSON.stringify(state.synced)) })
   },
 }

@@ -3,7 +3,7 @@ import Utils from '../../libs/utils'
 import ReqHandler from '../proxy'
 import { DEFAULT_PANELS } from '../store.state'
 
-let recalcPanelScrollTimeout, updateReqHandlerTimeout
+let recalcPanelScrollTimeout, updateReqHandlerTimeout, saveContainersTimeout
 
 export default {
   /**
@@ -71,7 +71,7 @@ export default {
       const rIndex = containers.findIndex(c => c.id === id)
       if (rIndex !== -1) containers.splice(rIndex, 1)
     }
-    
+
     state.ctxs = ctxs
     state.containers = containers
 
@@ -80,12 +80,75 @@ export default {
   },
 
   /**
+   * Update containers data
+   */
+  async updateContainers({ state }, containers) {
+    if (!containers) return
+
+    for (let localCtr of state.containers) {
+      const newCtr = containers.find(nc => nc.id === localCtr.id)
+      if (!newCtr) continue
+
+      localCtr.colorCode = newCtr.colorCode
+      localCtr.color = newCtr.color
+      localCtr.icon = newCtr.icon
+      localCtr.iconUrl = newCtr.iconUrl
+      localCtr.name = newCtr.name
+
+      localCtr.lockedTabs = newCtr.lockedTabs
+      localCtr.lockedPanel = newCtr.lockedPanel
+      localCtr.proxy = newCtr.proxy
+      localCtr.proxified = newCtr.proxified
+      localCtr.sync = newCtr.sync
+      localCtr.noEmpty = newCtr.noEmpty
+      localCtr.includeHostsActive = newCtr.includeHostsActive
+      localCtr.includeHosts = newCtr.includeHosts
+      localCtr.excludeHostsActive = newCtr.excludeHostsActive
+      localCtr.excludeHosts = newCtr.excludeHosts
+      localCtr.lastActiveTab = newCtr.lastActiveTab
+    }
+  },
+
+  /**
    * Save containers
    */
   async saveContainers({ state }) {
     if (!state.windowFocused) return
-    const cleaned = JSON.parse(JSON.stringify(state.containers))
+    const output = []
+    for (let ctr of state.containers) {
+      output.push({
+        cookieStoreId: ctr.cookieStoreId,
+        colorCode: ctr.colorCode,
+        color: ctr.color,
+        icon: ctr.icon,
+        iconUrl: ctr.iconUrl,
+        name: ctr.name,
+
+        type: ctr.type,
+        id: ctr.id,
+        dashboard: ctr.dashboard,
+        panel: ctr.panel,
+        lockedTabs: ctr.lockedTabs,
+        lockedPanel: ctr.lockedPanel,
+        proxy: ctr.proxy,
+        proxified: ctr.proxified,
+        sync: ctr.sync,
+        noEmpty: ctr.noEmpty,
+        includeHostsActive: ctr.includeHostsActive,
+        includeHosts: ctr.includeHosts,
+        excludeHostsActive: ctr.excludeHostsActive,
+        excludeHosts: ctr.excludeHosts,
+        lastActiveTab: ctr.lastActiveTab,
+        private: ctr.private,
+        bookmarks: ctr.bookmarks,
+      })
+    }
+    const cleaned = JSON.parse(JSON.stringify(output))
     await browser.storage.local.set({ containers: cleaned })
+  },
+  saveContainersDebounced({ dispatch }) {
+    if (saveContainersTimeout) clearTimeout(saveContainersTimeout)
+    saveContainersTimeout = setTimeout(() => dispatch('saveContainers'), 500)
   },
 
   /**
@@ -128,6 +191,7 @@ export default {
     dispatch('recalcPanelScroll')
     if (state.hideInact) dispatch('hideInactPanelsTabs')
     EventBus.$emit('panelSwitched')
+    dispatch('savePanelIndex')
   },
 
   /**
@@ -173,6 +237,7 @@ export default {
     dispatch('recalcPanelScroll')
     if (state.hideInact) dispatch('hideInactPanelsTabs')
     EventBus.$emit('panelSwitched')
+    dispatch('savePanelIndex')
   },
 
   /**

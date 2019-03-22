@@ -219,7 +219,7 @@ export default {
       }
 
       State.bookmarks = putWalk(rmWalk(State.bookmarks))
-      Store.dispatch('saveTreeState')
+      Store.dispatch('saveBookmarksTree')
     },
 
     /**
@@ -347,7 +347,7 @@ export default {
       this.$refs.nodes.map(vm => {
         vm.collapse(true)
       })
-      Store.dispatch('saveTreeState')
+      Store.dispatch('saveBookmarksTree')
     },
   },
 }

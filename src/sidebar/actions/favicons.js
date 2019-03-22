@@ -1,5 +1,7 @@
 import Vue from 'vue'
 
+let saveFaviconsTimeout
+
 export default {
   /**
    * Load cached favicons
@@ -14,7 +16,7 @@ export default {
    * Store favicon to global state and
    * save to localstorage
    */
-  async setFavicon({ state }, { hostname, icon }) {
+  setFavicon({ state, dispatch }, { hostname, icon }) {
     if (!hostname) return
     Vue.set(state.favicons, hostname, icon)
 
@@ -24,12 +26,17 @@ export default {
     // Do not cache favicon in private mode
     if (state.private) return
 
-    let favs = {...state.favicons}
-    try {
-      await browser.storage.local.set({ favicons: favs })
-    } catch (err) {
-      // ...
-    }
+    dispatch('saveFaviconsDebounced')
+  },
+
+  /**
+   * Save favicons to store
+   */
+  async saveFaviconsDebounced({ state }) {
+    if (saveFaviconsTimeout) clearTimeout(saveFaviconsTimeout)
+    saveFaviconsTimeout = setTimeout(() => {
+      browser.storage.local.set({ favicons: {...state.favicons} })
+    }, 500)
   },
 
   /**
@@ -77,7 +84,8 @@ export default {
   /**
    * Try to remove unused favicons.
    */
-  async tryClearFaviCache({ dispatch }, time) {
+  async tryClearFaviCache({ state, dispatch }, time) {
+    if (!state.windowFocused) return
     const now = ~~(Date.now() / 1000)
 
     let ans = await browser.storage.local.get('favAutoCleanTime')

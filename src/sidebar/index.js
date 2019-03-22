@@ -1,11 +1,9 @@
 import Vue from 'vue'
 import { mapGetters } from 'vuex'
 import Sidebar from './components/index.vue'
-import Utils from '../libs/utils'
 import Dict from '../mixins/dict'
 import Store from './store'
 import State from './store.state'
-import Getters from './store.getters'
 
 Vue.mixin(Dict)
 
@@ -95,9 +93,6 @@ export default new Vue({
     if (State.bookmarksPanel) await Store.dispatch('loadBookmarks')
     Store.dispatch('updateTabsSuccessors')
 
-    const dSavingState = Utils.Debounce(() => Store.dispatch('saveState'), 567)
-    Store.watch(Getters.activePanel, dSavingState.func)
-
     // Try to clear unneeded favicons
     Store.dispatch('tryClearFaviCache', 86400)
   },
@@ -135,8 +130,14 @@ export default new Vue({
     onChangeStorage(changes, type) {
       if (type === 'local' && State.windowFocused) return
 
-      if (changes.settings) Store.dispatch('loadSettings')
+      if (changes.settings) {
+        Store.dispatch('updateSettings', changes.settings.newValue)
+      }
       if (changes.styles) Store.dispatch('applyStyles', changes.styles.newValue)
+      if (changes.containers) {
+        Store.dispatch('updateContainers', changes.containers.newValue)
+      }
+
       if (type === 'sync') {
         let ids = Object.keys(changes).filter(id => id !== this.localID)
 
