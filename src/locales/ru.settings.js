@@ -6,6 +6,7 @@ export default {
   'settings.general_title': { message: 'Основные' },
   'settings.native_scrollbars': { message: 'Использовать системные скроллбары' },
   'settings.autoHide_ctx_menu': { message: 'Скрывать контекстное меню' },
+  'settings.autoHide_ctx_menu_250': { message: '0.25 сек.' },
   'settings.autoHide_ctx_menu_500': { message: '0.5 сек.' },
   'settings.autoHide_ctx_menu_1000': { message: '1 сек.' },
   'settings.autoHide_ctx_menu_none': { message: 'никогда' },

@@ -1,5 +1,5 @@
 export const SETTINGS_OPTIONS = {
-  autoHideCtxMenuOpts: [500, 1000, 'none'],
+  autoHideCtxMenuOpts: [250, 500, 1000, 'none'],
   scrollThroughTabsOpts: ['panel', 'global', 'none'],
   tabDoubleClickOpts: ['reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'exp', 'new_after', 'none'],
   tabLongLeftClickOpts: ['reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'new_after', 'none'],
