@@ -89,27 +89,40 @@ export default {
   /**
    * Restore contexs and tabs from snapshot
    */
-  async applySnapshot({ getters }, snapshot) {
+  async applySnapshot({ state, commit, getters }, snapshot) {
     if (!snapshot) return
 
     // Restore tabs
     const tabsMap = {}
     for (let tab of snapshot.tabs) {
-      const panel = getters.panels.find(p => p.cookieStoreId === tab.cookieStoreId)
+      let panelIndex = getters.panels.findIndex(p => p.cookieStoreId === tab.cookieStoreId)
+      let panel = getters.panels[panelIndex]
+      if (!panel) {
+        panel = getters.defaultPanel
+        panelIndex = state.private ? 1 : 2
+      }
 
+      // Get group url
       if (tab.url.startsWith('moz') && tab.url.includes('/group.html')) {
         const idIndex = tab.url.indexOf('/group.html') + 12
         const groupId = tab.url.slice(idIndex)
         tab.url = browser.runtime.getURL('group/group.html') + `#${groupId}`
       }
 
+      // Create tabs
       const createdTab = await browser.tabs.create({
         url: tab.url,
         pinned: tab.pinned,
-        cookieStoreId: panel ? tab.cookieStoreId : getters.defaultCtxId,
+        cookieStoreId: panel.cookieStoreId,
         openerTabId: tabsMap[tab.parentId],
+        active: false,
       })
       if (tab.id !== undefined) tabsMap[tab.id] = createdTab.id
+
+      // Switch to panel
+      if (!tab.pinned && panelIndex !== state.panelIndex) {
+        commit('setPanel', panelIndex)
+      }
     }
   },
 
