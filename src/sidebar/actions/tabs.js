@@ -3,8 +3,6 @@ import EventBus from '../event-bus'
 
 let TabsTreeSaveTimeout, UpdateTabsSuccessorsTimeout
 
-const GROUP_URL = 'moz-extension://eec1cad1-d067-40d5-a88f-9b1d9c7172d9/group/group.html'
-
 export default {
   /**
    * Load all tabs for current window
@@ -68,16 +66,18 @@ export default {
           if (!tab) break
 
           const sameUrl = t.url === tab.url
-          const isGroup = t.url.startsWith(GROUP_URL)
+          const isGroup = t.url.startsWith('moz') && t.url.includes('/group/group.html')
           const nextUrlOk = nextT ? nextT.url === tab.url : true
 
           // Removed group
           if (!sameUrl && isGroup && nextUrlOk) {
+            const idIndex = t.url.indexOf('/group/group.html') + 18
+            const groupId = t.url.slice(idIndex)
             const parent = parents[t.parentId]
             const rTab = await browser.tabs.create({
               windowId: state.windowId,
               index: t.index,
-              url: t.url,
+              url: browser.runtime.getURL('group/group.html') + `#${groupId}`,
               cookieStoreId: t.ctx,
               active: false,
             })

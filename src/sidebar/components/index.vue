@@ -499,7 +499,6 @@ import PinnedDock from './panels/pinned-dock'
 
 Vue.directive('noise', NoiseBg)
 
-const GROUP_URL = 'moz-extension://eec1cad1-d067-40d5-a88f-9b1d9c7172d9/group/group.html'
 const URL_HOST_PATH_RE = /^([a-z0-9-]{1,63}\.)+\w+(:\d+)?\/[A-Za-z0-9-._~:/?#[\]%@!$&'()*+,;=]*$/
 const ADD_CTX_BTN = { icon: 'icon_plus_v2', hidden: false }
 
@@ -1596,8 +1595,9 @@ export default {
       EventBus.$emit('scrollToActiveTab', panelIndex, info.tabId)
 
       // If activated tab is group - reinit it
-      if (tab.url.startsWith(GROUP_URL)) {
-        const groupId = tab.url.slice(GROUP_URL.length + 1)
+      if (tab.url.startsWith('moz') && tab.url.includes('/group/group.html')) {
+        const idIndex = tab.url.indexOf('/group/group.html') + 18
+        const groupId = tab.url.slice(idIndex)
         browser.runtime.sendMessage({
           name: 'reinit_group',
           windowId: State.windowId,

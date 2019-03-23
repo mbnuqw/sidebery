@@ -15,10 +15,10 @@ void (async function() {
   lastState = await init(win.id, hash, lastState)
 
   // Set listener for reinit request
-  browser.runtime.onMessage.addListener(async msg => {
+  browser.runtime.onMessage.addListener(msg => {
     if (msg.windowId !== undefined && msg.windowId !== win.id) return
     if (msg.name === 'reinit_group' && decodeURI(msg.arg) === hash) {
-      lastState = await init(win.id, hash, lastState)
+      init(win.id, hash, lastState).then(state => lastState = state)
     }
   })
 })()
@@ -48,6 +48,7 @@ async function init(windowId, hash, lastState) {
     windowId,
     arg: hash,
   })
+  if (!groupInfo || !groupInfo.tabs) return lastState
 
   // Check for changes
   const checkSum = groupInfo.tabs.map(t => {
