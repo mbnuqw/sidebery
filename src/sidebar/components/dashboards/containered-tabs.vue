@@ -66,10 +66,10 @@
         text-input.text(
           ref="includeHostsInput"
           or="---"
+          v-debounce:input.500="onIncludeHostsChange"
           :value="conf.includeHosts"
           :valid="includeHostsValid"
-          @input="onIncludeHostsInput"
-          @change="onIncludeHostsChange")
+          @input="onIncludeHostsInput")
 
     toggle-field(
       v-if="id"
@@ -82,10 +82,10 @@
         text-input.text(
           ref="excludeHostsInput"
           or="---"
+          v-debounce:input.500="onExcludeHostsChange"
           :value="conf.excludeHosts"
           :valid="excludeHostsValid"
-          @input="onExcludeHostsInput"
-          @change="onExcludeHostsChange")
+          @input="onExcludeHostsInput")
 
     select-field(
       v-if="id"
@@ -306,6 +306,12 @@ export default {
       this.init()
       if (this.$refs.name) this.$refs.name.focus()
       this.$emit('height')
+      if (this.$refs.includeHostsInput) {
+        this.$refs.includeHostsInput.recalcTextHeight()
+      }
+      if (this.$refs.excludeHostsInput) {
+        this.$refs.excludeHostsInput.recalcTextHeight()
+      }
     },
 
     async update() {
