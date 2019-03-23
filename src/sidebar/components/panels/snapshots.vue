@@ -3,7 +3,7 @@
   scroll-box(ref="scrollBox")
     .box
       .snapshot(
-        v-for="s in $store.state.snapshots")
+        v-for="(s, i) in $store.state.snapshots")
         .datetime {{uelapsed(s.time)}}
         .panel-info(v-if="s.tabs.find(t => t.pinned)")
           .url.pinned(
@@ -25,6 +25,9 @@
             :title="t.url"
             :tree-lvl="t.lvl"
             @mousedown.prevent.stop="openTab($event, t)") {{t.title}}
+        .ctrls
+          .btn(@click="applySnapshot(s)") {{t('settings.apply_snapshot')}}
+          .btn.-warn(@click="removeSnapshot(i)") {{t('settings.rm_snapshot')}}
 </template>
 
 
@@ -93,6 +96,13 @@ export default {
      */
     applySnapshot(snapshot) {
       Store.dispatch('applySnapshot', snapshot)
+    },
+
+    /**
+     * Remove snapshot
+     */
+    removeSnapshot(index) {
+      Store.dispatch('removeSnapshot', index)
     },
 
     /**
@@ -189,12 +199,23 @@ export default {
 
 .SnapshotsList .ctrls
   box(relative, flex)
-  size(100%, 48px)
-  justify-content: center
+  justify-content: flex-end
   align-items: center
+  grid-gap: 0px 8px
+  padding: 8px 0
 
 .SnapshotsList .ctrls > .btn
-  text(s: rem(14))
-  padding: 3px 10px
-  margin: 0 8px
+  background-color: #00000000
+  box-shadow: none
+  color: var(--true-fg)
+  opacity: .8
+  transition: opacity var(--d-fast)
+  &.-warn
+    color: var(--false-fg)
+  &:hover
+    opacity: 1
+  &:active
+    transition: none
+    opacity: .7
+  
 </style>

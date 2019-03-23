@@ -77,6 +77,8 @@ export default {
   'settings.snapshots_view_label': { message: 'View snapshots' },
   'settings.make_snapshot': { message: 'Make snapshot' },
   'settings.rm_all_snapshots': { message: 'Remove all snapshots' },
+  'settings.apply_snapshot': { message: 'apply' },
+  'settings.rm_snapshot': { message: 'remove' },
 
   // --- Mouse
   'settings.mouse_title': { message: 'Mouse' },

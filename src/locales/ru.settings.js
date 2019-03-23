@@ -77,6 +77,8 @@ export default {
   'settings.snapshots_view_label': { message: 'Просмотреть снепшоты' },
   'settings.make_snapshot': { message: 'Создать снепшот' },
   'settings.rm_all_snapshots': { message: 'Удалить все снепшоты' },
+  'settings.apply_snapshot': { message: 'применить' },
+  'settings.rm_snapshot': { message: 'удалить' },
 
   // --- Mouse
   'settings.mouse_title': { message: 'Мышь' },
