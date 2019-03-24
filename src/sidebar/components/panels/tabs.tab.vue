@@ -31,7 +31,7 @@
   .fav(:loading="loading")
     .placeholder: svg: use(:xlink:href="favPlaceholder")
     img(:src="favicon", @load.passive="onFaviconLoad", @error="onFaviconErr")
-    .exp(@mousedown.stop="onExp"): svg: use(xlink:href="#icon_expand")
+    .exp(@dblclick.prevent.stop="", @mousedown.stop="onExp"): svg: use(xlink:href="#icon_expand")
     .update-badge
     .ok-badge
       svg: use(xlink:href="#icon_ok")
