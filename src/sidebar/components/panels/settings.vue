@@ -96,6 +96,11 @@
         :inactive="!$store.state.tabsTree"
         :value="$store.state.tabsChildCount"
         @input="setOpt('tabsChildCount', $event)")
+      toggle-field(
+        label="settings.tabs_lvl_dots"
+        :inactive="!$store.state.tabsTree"
+        :value="$store.state.tabsLvlDots"
+        @input="setOpt('tabsLvlDots', $event)")
 
     section
       h2 {{t('settings.bookmarks_title')}}

@@ -48,6 +48,7 @@ export default {
   'settings.auto_exp_tabs': { message: 'Auto expand tabs' },
   'settings.rm_folded_tabs': { message: 'Close folded tabs with parent' },
   'settings.tabs_child_count': { message: 'Show count of descendants' },
+  'settings.tabs_lvl_dots': { message: 'Show marks of tabs levels' },
 
   // --- Bookmarks
   'settings.bookmarks_title': { message: 'Bookmarks' },

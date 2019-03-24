@@ -501,24 +501,89 @@ export default {
 
   &[lvl="1"]
     padding-left: var(--tabs-indent)
+    > .lvl-wrapper:before
+      box-shadow: calc(var(--tabs-indent) / -2) 0 0 0 var(--inactive-fg)
   &[lvl="2"]
     padding-left: calc(var(--tabs-indent) * 2)
+    > .lvl-wrapper:before
+      box-shadow: calc(var(--tabs-indent) / -2) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -1.5) 0 0 0 var(--inactive-fg)
   &[lvl="3"]
     padding-left: calc(var(--tabs-indent) * 3)
+    > .lvl-wrapper:before
+      box-shadow: calc(var(--tabs-indent) / -2) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -1.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -2.5) 0 0 0 var(--inactive-fg)
   &[lvl="4"]
     padding-left: calc(var(--tabs-indent) * 4)
+    > .lvl-wrapper:before
+      box-shadow: calc(var(--tabs-indent) / -2) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -1.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -2.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -3.5) 0 0 0 var(--inactive-fg)
   &[lvl="5"]
     padding-left: calc(var(--tabs-indent) * 5)
+    > .lvl-wrapper:before
+      box-shadow: calc(var(--tabs-indent) / -2) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -1.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -2.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -3.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -4.5) 0 0 0 var(--inactive-fg)
   &[lvl="6"]
     padding-left: calc(var(--tabs-indent) * 6)
+    > .lvl-wrapper:before
+      box-shadow: calc(var(--tabs-indent) / -2) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -1.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -2.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -3.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -4.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -5.5) 0 0 0 var(--inactive-fg)
   &[lvl="7"]
     padding-left: calc(var(--tabs-indent) * 7)
+    > .lvl-wrapper:before
+      box-shadow: calc(var(--tabs-indent) / -2) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -1.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -2.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -3.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -4.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -5.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -6.5) 0 0 0 var(--inactive-fg)
   &[lvl="8"]
     padding-left: calc(var(--tabs-indent) * 8)
+    > .lvl-wrapper:before
+      box-shadow: calc(var(--tabs-indent) / -2) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -1.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -2.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -3.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -4.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -5.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -6.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -7.5) 0 0 0 var(--inactive-fg)
   &[lvl="9"]
     padding-left: calc(var(--tabs-indent) * 9)
+    > .lvl-wrapper:before
+      box-shadow: calc(var(--tabs-indent) / -2) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -1.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -2.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -3.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -4.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -5.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -6.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -7.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -8.5) 0 0 0 var(--inactive-fg)
   &[lvl="10"]
     padding-left: calc(var(--tabs-indent) * 10)
+    > .lvl-wrapper:before
+      box-shadow: calc(var(--tabs-indent) / -2) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -1.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -2.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -3.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -4.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -5.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -6.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -7.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -8.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -9.5) 0 0 0 var(--inactive-fg)
 
   &[is-parent] .fav:hover
     > .exp
@@ -641,6 +706,15 @@ export default {
   size(100%, same)
   align-items: center
   transition: opacity var(--d-fast), transform var(--d-fast)
+  &:before
+    content: ''
+    box(absolute, none)
+    size(3px, 3px)
+    pos(calc(50% - 1px), 2px)
+    border-radius: 50%
+    opacity: .8
+#root.-tabs-lvl-marks .Tab .lvl-wrapper:before
+  box(block)
 
 // --- Drag layer ---
 .Tab .drag-layer

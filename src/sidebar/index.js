@@ -44,6 +44,11 @@ export default new Vue({
       if (State.pinnedTabsList) return '-pinned-tabs-list'
       else return '-pinned-tabs-grid'
     },
+
+    tabsLvlMarksClass() {
+      if (State.tabsLvlDots) return '-tabs-lvl-marks'
+      else return ''
+    },
   },
 
   watch: {
