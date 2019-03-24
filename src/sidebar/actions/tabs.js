@@ -59,38 +59,46 @@ export default {
         for (let i = 0; i < ans.tabsTreeState.length; i++) {
           // Saved nodes
           const t = ans.tabsTreeState[i]
-          const nextT = ans.tabsTreeState[i + 1]
 
           // Current tab
           let tab = state.tabs[t.index - offset]
           if (!tab) break
 
           const sameUrl = t.url === tab.url
-          const isGroup = t.url.startsWith('moz') && t.url.includes('/group/group.html')
-          const nextUrlOk = nextT ? nextT.url === tab.url : true
+          const isGroup = Utils.IsGroupUrl(t.url)
+          if (isGroup) {
+            let nextUrlOk = true
 
-          // Removed group
-          if (!sameUrl && isGroup && nextUrlOk) {
-            const idIndex = t.url.indexOf('/group/group.html') + 18
-            const groupId = t.url.slice(idIndex)
-            const parent = parents[t.parentId]
-            const rTab = await browser.tabs.create({
-              windowId: state.windowId,
-              index: t.index,
-              url: browser.runtime.getURL('group/group.html') + `#${groupId}`,
-              cookieStoreId: t.ctx,
-              active: false,
-            })
-
-            tab = state.tabsMap[rTab.id]
-            tab.isParent = t.isParent
-            tab.folded = t.folded
-            if (t.isParent) parents[t.id] = tab
-            if (parent) {
-              tab.invisible = parent.folded || parent.invisible
-              tab.parentId = parent.id
+            // Check if next non-group tab is ok
+            for (let j = i + 1; j < ans.tabsTreeState.length; j++) {
+              const nextTab = ans.tabsTreeState[j]
+              if (!nextTab) break
+              nextUrlOk = nextTab.url === tab.url
+              if (!Utils.IsGroupUrl(nextTab.url)) break
             }
-            continue
+
+            // Removed group
+            if (!sameUrl && nextUrlOk) {
+              const groupId = Utils.GetGroupId(t.url)
+              const parent = parents[t.parentId]
+              const rTab = await browser.tabs.create({
+                windowId: state.windowId,
+                index: t.index,
+                url: browser.runtime.getURL('group/group.html') + `#${groupId}`,
+                cookieStoreId: t.ctx,
+                active: false,
+              })
+
+              tab = state.tabsMap[rTab.id]
+              tab.isParent = t.isParent
+              tab.folded = t.folded
+              if (t.isParent) parents[t.id] = tab
+              if (parent) {
+                tab.invisible = parent.folded || parent.invisible
+                tab.parentId = parent.id
+              }
+              continue
+            }
           }
 
           // Check if this is actual target tab

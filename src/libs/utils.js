@@ -339,6 +339,21 @@ function FindBookmark(bookmarks, id) {
   return target
 }
 
+/**
+ * Check if string is group url
+ */
+function IsGroupUrl(url) {
+  return url.startsWith('moz') && url.includes('/group.html')
+}
+
+/**
+ * Get group id
+ */
+function GetGroupId(url) {
+  const idIndex = url.indexOf('/group.html') + 12
+  return url.slice(idIndex)
+}
+
 export default {
   Uid,
   Asap,
@@ -357,4 +372,6 @@ export default {
   CommonSubStr,
   GetUrlFromDragEvent,
   FindBookmark,
+  IsGroupUrl,
+  GetGroupId,
 }
