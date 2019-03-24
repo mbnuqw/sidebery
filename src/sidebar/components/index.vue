@@ -1250,10 +1250,14 @@ export default {
       State.tabs.splice(tab.index, 0, tab)
 
       // Update tree
-      if (State.tabsTree) {
+      if (State.tabsTree && !tab.pinned) {
         if (tab.openerTabId === undefined) {
-          // Try to restore ?reopened tab
-          Store.dispatch('restoreReopenedTreeTab', tab.id)
+          // Set tab tree level
+          const nextTab = State.tabs[tab.index + 1]
+          if (nextTab && tab.cookieStoreId === nextTab.cookieStoreId) {
+            tab.parentId = nextTab.parentId
+            tab.lvl = nextTab.lvl
+          }
         } else {
           Store.dispatch('newTreeTab', tab.id)
         }
