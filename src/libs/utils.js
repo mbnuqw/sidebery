@@ -10,7 +10,7 @@ const Alph = [
 ]
 const UNDERSCORE_RE = /_/g
 const CSS_NUM_RE = /([\d.]+)(\w*)/
-const URL_RE =  /^(https?:\/\/)/
+const URL_RE = /^(https?:\/\/)/
 
 /**
  *  Generate base64-like uid
@@ -315,9 +315,16 @@ async function GetUrlFromDragEvent(event) {
 
     for (let item of event.dataTransfer.items) {
       if (item.kind !== 'string') continue
+      const typeOk =
+        item.type === 'text/x-moz-url-data' ||
+        item.type === 'text/uri-list' ||
+        item.type === 'text/x-moz-text-internal'
+
+      if (!typeOk) continue
 
       item.getAsString(s => {
         if (URL_RE.test(s)) res(s)
+        else res()
       })
     }
   })
