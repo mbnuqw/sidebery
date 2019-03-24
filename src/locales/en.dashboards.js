@@ -1,12 +1,13 @@
 export default {
   // --- General
   'dashboard.sync_label': { message: 'Sync' },
+  'dashboard.sync_tooltip': { message: 'Auto-open synchronized tabs on this panel (using Firefox sync)' },
   'dashboard.lock_panel_label': { message: 'Lock panel' },
   'dashboard.lock_panel_tooltip': { message: 'Prevent auto-switching from this panel' },
   'dashboard.lock_tabs_label': { message: 'Lock tabs' },
   'dashboard.lock_tabs_tooltip': { message: 'Prevent closing tabs on this panel' },
   'dashboard.no_empty_label': { message: 'No empty' },
-  'dashboard.no_empty_tooltip': { message: 'Create new tab on closing the last one' },
+  'dashboard.no_empty_tooltip': { message: 'Prevent emptying of this panel' },
 
   // --- Bookmarks
   'bookmarks_dashboard.title': { message: 'Bookmarks' },
@@ -44,8 +45,8 @@ export default {
   'container_dashboard.proxy_socks4': { message: 'socks4' },
   'container_dashboard.proxy_socks': { message: 'socks5' },
   'container_dashboard.proxy_direct': { message: 'none' },
-  'container_dashboard.rules_include': { message: 'Include hosts' },
-  'container_dashboard.rules_include_tip': { message: 'Automaticaly reopen tabs opened in another container in this container' },
-  'container_dashboard.rules_exclude': { message: 'Exclude hosts' },
-  'container_dashboard.rules_exclude_tip': { message: 'Automaticaly reopen tabs opened in this container in default container' },
+  'container_dashboard.rules_include': { message: 'Include urls' },
+  'container_dashboard.rules_include_tooltip': { message: 'Reopen tabs with matched urls in this panel.\nNewline separated list of "substrings" or "/regex/":\n    example.com\n    /^(some)?regex$/\n    ...' },
+  'container_dashboard.rules_exclude': { message: 'Exclude urls' },
+  'container_dashboard.rules_exclude_tooltip': { message: 'Reopen tabs with matched url in default panel.\nNewline separated list of "substrings" or "/regex/":\n    example.com\n    /^(some)?regex$/\n    ...' },
 }

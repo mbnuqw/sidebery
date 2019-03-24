@@ -27,6 +27,7 @@
     toggle-field(
       v-if="id"
       label="dashboard.sync_label"
+      :title="t('dashboard.sync_tooltip')"
       :value="conf.sync"
       :inline="true"
       @input="toggleSync")
@@ -58,6 +59,7 @@
     toggle-field(
       v-if="id"
       label="container_dashboard.rules_include"
+      :title="t('container_dashboard.rules_include_tooltip')"
       :value="conf.includeHostsActive"
       :inline="true"
       @input="toggleIncludeHosts")
@@ -74,6 +76,7 @@
     toggle-field(
       v-if="id"
       label="container_dashboard.rules_exclude"
+      :title="t('container_dashboard.rules_exclude_tooltip')"
       :value="conf.excludeHostsActive"
       :inline="true"
       @input="toggleExcludeHosts")
