@@ -1591,9 +1591,8 @@ export default {
       EventBus.$emit('scrollToActiveTab', panelIndex, info.tabId)
 
       // If activated tab is group - reinit it
-      if (tab.url.startsWith('moz') && tab.url.includes('/group/group.html')) {
-        const idIndex = tab.url.indexOf('/group/group.html') + 18
-        const groupId = tab.url.slice(idIndex)
+      if (Utils.IsGroupUrl(tab.url)) {
+        const groupId = Utils.GetGroupId(tab.url)
         browser.runtime.sendMessage({
           name: 'reinit_group',
           windowId: State.windowId,

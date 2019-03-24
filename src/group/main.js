@@ -17,6 +17,8 @@ void (async function() {
   // Set listener for reinit request
   browser.runtime.onMessage.addListener(msg => {
     if (msg.windowId !== undefined && msg.windowId !== win.id) return
+
+    const hash = decodeURI(window.location.hash.slice(1))
     if (msg.name === 'reinit_group' && decodeURI(msg.arg) === hash) {
       init(win.id, hash, lastState).then(state => lastState = state)
     }
