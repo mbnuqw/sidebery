@@ -276,32 +276,45 @@ export default {
   /**
    * Open bookmarks
    */
-  openBookmarksInPanel({ state, getters }, { ids, panelId }) {
-    const p = getters.panels.find(p => p.cookieStoreId === panelId)
+  async openBookmarksInPanel({ state, commit, getters }, { ids, panelId }) {
+    const pi = getters.panels.findIndex(p => p.cookieStoreId === panelId)
+    const p = getters.panels[pi]
     if (!p) return
 
     let index = p.endIndex + 1
 
-    const urls = []
+    const toOpen = []
     const walker = nodes => {
-      nodes.map(n => {
-        if (
-          n.type === 'bookmark' &&
-          !n.url.indexOf('http') &&
-          ids.includes(n.id)
-        ) urls.push(n.url)
-        if (n.type === 'folder') walker(n.children)
-      })
+      for (let node of nodes) {
+        if (node.type === 'separator') continue
+
+        const isIt = ids.includes(node.id)
+        const isChild = ids.includes(node.parentId)
+
+        if (isIt || isChild) toOpen.push(node)
+        if (isChild && node.type === 'folder') ids.push(node.id)
+
+        if (node.children) walker(node.children)
+      }
     }
     walker(state.bookmarks)
 
-    urls.map(url => {
-      browser.tabs.create({
+    commit('setPanel', pi)
+
+    const idMap = []
+    const groupPageUrl = browser.runtime.getURL('group/group.html')
+    for (let node of toOpen) {
+      const isDir = node.type === 'folder'
+      if (isDir && !state.tabsTree) continue
+      const createdTab = await browser.tabs.create({
         index: index++,
-        url: url,
+        url: node.url ? node.url : groupPageUrl + `#${encodeURI(node.title)}`,
         cookieStoreId: panelId,
+        active: false,
+        openerTabId: idMap[node.parentId],
       })
-    })
+      if (isDir) idMap[node.id] = createdTab.id
+    }
   },
 
   /**
