@@ -823,6 +823,7 @@ export default {
     onDragMove(e) {
       if (!this.dragMode) return
       if (!this.$refs.pointer) return
+      if (!this.itemSlots) return
 
       let dragNode = State.dragNodes ? State.dragNodes[0] : null
       let scroll = this.panelScrollEl ? this.panelScrollEl.scrollTop : 0

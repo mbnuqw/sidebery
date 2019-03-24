@@ -164,7 +164,7 @@ export default {
      * Calculate tabs bounds
      */
     getItemsBounds() {
-      if (!this.$refs.tabs) return null
+      if (!this.$refs.tabs) return []
       if (!this.$refs.tabs.length) return []
 
       // probe tabs heights
