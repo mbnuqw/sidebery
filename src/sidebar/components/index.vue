@@ -1379,15 +1379,6 @@ export default {
         creatingNewTab = true
       }
 
-      // Temporary store child tab info (for tree recovering)
-      if (State.tabsTree && tab.parentId >= 0 && !tab.url.startsWith('about:')) {
-        if (!State.removedTabs) State.removedTabs = []
-        if (State.removedTabs.length > 123) State.removedTabs.splice(50, 50)
-        if (tab.parentId >= 0) {
-          State.removedTabs.push({ title: tab.title, parentId: tab.parentId })
-        }
-      }
-
       // No-empty
       if (panel && panel.noEmpty && panel.tabs && panel.tabs.length === 1) {
         if (!creatingNewTab) {

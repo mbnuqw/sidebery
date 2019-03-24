@@ -297,39 +297,6 @@ export default {
   },
 
   /**
-   * Restore reopened tab's tree props
-   */
-  restoreReopenedTreeTab({ state }, tabId) {
-    if (!state.removedTabs) return
-    const tab = state.tabsMap[tabId]
-    const lastRmTab = state.removedTabs[state.removedTabs.length - 1]
-    if (!tab) return
-    if (!lastRmTab) return
-    if (lastRmTab.title !== tab.title) return
-
-    // Check if parent still exists
-    let parent
-    for (let i = tab.index; i--; ) {
-      if (state.tabs[i].id === lastRmTab.parentId) {
-        parent = state.tabs[i]
-        break
-      }
-    }
-    if (parent) {
-      tab.parentId = parent.id
-      tab.invisible = parent.folded
-      if (tab.invisible && state.hideFoldedTabs) browser.tabs.hide(tab.id)
-      if (state.tabsTreeLimit > 0 && parent.lvl >= state.tabsTreeLimit) {
-        tab.lvl = parent.lvl
-      } else {
-        tab.lvl = parent.lvl + 1
-      }
-    }
-
-    state.removedTabs.pop()
-  },
-
-  /**
    * Set related with tabs tree values
    * for new child tab.
    */
