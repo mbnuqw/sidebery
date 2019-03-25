@@ -1588,7 +1588,7 @@ export default {
       }
 
       tabPanel.lastActiveTab = info.tabId
-      EventBus.$emit('scrollToActiveTab', panelIndex, info.tabId)
+      if (!tab.pinned) EventBus.$emit('scrollToActiveTab', panelIndex, info.tabId)
 
       // If activated tab is group - reinit it
       if (Utils.IsGroupUrl(tab.url)) {
