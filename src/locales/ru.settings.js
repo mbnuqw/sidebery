@@ -5,14 +5,16 @@ export default {
   // --- General
   'settings.general_title': { message: 'Основные' },
   'settings.native_scrollbars': { message: 'Использовать системные скроллбары' },
+  'settings.autoHide_ctx_menu': { message: 'Скрывать контекстное меню' },
+  'settings.autoHide_ctx_menu_250': { message: '0.25 сек.' },
+  'settings.autoHide_ctx_menu_500': { message: '0.5 сек.' },
+  'settings.autoHide_ctx_menu_1000': { message: '1 сек.' },
+  'settings.autoHide_ctx_menu_none': { message: 'никогда' },
 
   // --- Tabs
   'settings.tabs_title': { message: 'Табы' },
   'settings.activate_last_tab_on_panel_switching': {
     message: 'Активировать последний активный таб при переключении панелей',
-  },
-  'settings.create_new_tab_on_empty_panel': {
-    message: 'Создавать новый таб при переходе к пустому контейнеру',
   },
   'settings.skip_empty_panels': { message: 'Пропускать пустые контейнеры при переключении' },
   'settings.show_tab_rm_btn': { message: 'Показывать кнопку закрытия таба при наведении курсора' },
@@ -46,6 +48,7 @@ export default {
   'settings.auto_exp_tabs': { message: 'Автоматически разворачивать табы' },
   'settings.rm_folded_tabs': { message: 'Закрывать свернутые табы вместе с родительским' },
   'settings.tabs_child_count': { message: 'Показывать количество потомков' },
+  'settings.tabs_lvl_dots': { message: 'Показывать отметки уровней табов' },
 
   // --- Bookmarks
   'settings.bookmarks_title': { message: 'Закладки' },
@@ -76,6 +79,8 @@ export default {
   'settings.snapshots_view_label': { message: 'Просмотреть снепшоты' },
   'settings.make_snapshot': { message: 'Создать снепшот' },
   'settings.rm_all_snapshots': { message: 'Удалить все снепшоты' },
+  'settings.apply_snapshot': { message: 'применить' },
+  'settings.rm_snapshot': { message: 'удалить' },
 
   // --- Mouse
   'settings.mouse_title': { message: 'Мышь' },
@@ -84,6 +89,7 @@ export default {
   'settings.scroll_through_tabs_panel': { message: 'на панели' },
   'settings.scroll_through_tabs_global': { message: 'глобально' },
   'settings.scroll_through_tabs_none': { message: 'выкл' },
+  'settings.scroll_through_visible_tabs': { message: 'Только видимые' },
   'settings.tab_double_click': { message: 'Двойной клик по табу' },
   'settings.tab_long_left_click': { message: 'Длительное нажатие левой кнопки мыши по табу' },
   'settings.tab_long_right_click': { message: 'Длительное нажатие правой кнопки мыши по табу' },
@@ -93,6 +99,7 @@ export default {
   'settings.tab_action_mute': { message: 'выключить звук' },
   'settings.tab_action_clear_cookies': { message: 'удалить куки' },
   'settings.tab_action_exp': { message: 'развернуть' },
+  'settings.tab_action_new_after': { message: 'новый таб' },
   'settings.tab_action_none': { message: 'выкл' },
   'settings.tabs_panel_left_click_action': { message: 'Левый клик по панели с табами' },
   'settings.tabs_panel_double_click_action': { message: 'Двойной клик по панели с табами' },
@@ -109,6 +116,7 @@ export default {
   'settings.next_panel': { message: 'Следующая панель' },
   'settings.prev_panel': { message: 'Предыдущая панель' },
   'settings.open_new_tab_in_curr_panel': { message: 'Открыть новый таб в текущем контейнере' },
+  'settings.open_new_tab_after': { message: 'Открыть новый таб после текущего' },
   'settings.close_tab': { message: 'Закрыть таб' },
   'settings.select_all': { message: 'Выделить все' },
   'settings.up': { message: 'Вверх' },

@@ -1,6 +1,6 @@
 {
-  "name": "nav-center",
-  "version": "2.1.1",
+  "name": "sidebery",
+  "version": "2.2.0",
   "description": "Manage your tabs and bookmarks in sidebar",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "dev.group": "parcel watch ./src/group/group.html -d ./addon/group/ --public-url ./ --no-autoinstall",
     "dev.perm.url": "parcel watch ./src/permissions/all-urls.html -d ./addon/permissions/ --public-url ./ --no-autoinstall",
     "dev.perm.hide": "parcel watch ./src/permissions/tab-hide.html -d ./addon/permissions/ --public-url ./ --no-autoinstall",
-    "dev.ext.en": "web-ext run --source-dir ./addon -f firefox-nightly --keep-profile-changes --firefox-profile ./build/profile-en",
+    "dev.ext.en": "web-ext run --source-dir ./addon -f firefox-beta --keep-profile-changes --firefox-profile ./build/profile-beta",
     "dev.ext.ru": "web-ext run --source-dir ./addon -f firefox --keep-profile-changes --firefox-profile ./build/profile-ru",
     "dev": "node ./build/debug.js en",
     "dev.ru": "node ./build/debug.js ru",
@@ -29,28 +29,28 @@
   "author": "mbnuqw",
   "license": "MIT",
   "devDependencies": {
-    "@vue/component-compiler-utils": "2.3.1",
+    "@vue/component-compiler-utils": "2.6.0",
     "babel-core": "6.26.3",
-    "babel-jest": "23.6.0",
+    "babel-jest": "24.5.0",
     "babel-plugin-transform-object-rest-spread": "6.26.0",
     "babel-polyfill": "6.26.0",
     "babel-preset-env": "1.7.0",
-    "eslint": "5.10.0",
-    "eslint-plugin-vue": "5.0.0",
-    "jest": "23.6.0",
-    "jest-vue-preprocessor": "1.4.0",
-    "parcel-bundler": "1.11.0",
+    "eslint": "5.15.3",
+    "eslint-plugin-vue": "5.2.2",
+    "jest": "24.5.0",
+    "parcel-bundler": "1.12.3",
     "pug": "2.0.3",
-    "regenerator-runtime": "0.13.1",
+    "regenerator-runtime": "0.13.2",
     "stylus": "0.54.5",
-    "vue-hot-reload-api": "2.3.1",
-    "vue-server-renderer": "2.5.21",
-    "vue-template-compiler": "2.5.21",
-    "web-ext": "2.9.3"
+    "vue-hot-reload-api": "2.3.3",
+    "vue-server-renderer": "2.6.10",
+    "vue-template-compiler": "2.6.10",
+    "vue-template-es2015-compiler": "1.9.1",
+    "web-ext": "3.0.0"
   },
   "dependencies": {
-    "vue": "2.5.21",
-    "vuex": "3.0.1"
+    "vue": "2.6.10",
+    "vuex": "3.1.0"
   },
   "prettier": {
     "semi": false,
@@ -69,8 +69,7 @@
   "jest": {
     "moduleFileExtensions": [
       "js",
-      "json",
-      "vue"
+      "json"
     ],
     "setupFiles": [
       "./test/web-ext-setup.js",
@@ -81,16 +80,10 @@
       "**/src/mixins/*.test.js",
       "**/src/libs/*.test.js",
       "**/src/sidebar/*.test.js",
-      "**/src/sidebar/actions/*.test.js",
-      "**/src/sidebar/components/*.test.js",
-      "**/src/sidebar/components/dashboards/*.test.js",
-      "**/src/sidebar/components/fields/*.test.js",
-      "**/src/sidebar/components/inputs/*.test.js",
-      "**/src/sidebar/components/panels/*.test.js"
+      "**/src/sidebar/actions/*.test.js"
     ],
     "transform": {
-      "^.+\\.js$": "<rootDir>/node_modules/babel-jest",
-      ".*\\.(vue)$": "<rootDir>/node_modules/jest-vue-preprocessor"
+      "^.+\\.js$": "<rootDir>/node_modules/babel-jest"
     }
   }
 }

@@ -15,7 +15,9 @@ beforeEach(() => {
 
 describe('makeSnapshot', () => {
   test('make empty snapshot', async () => {
-    const state = {}
+    const state = {
+      snapshotsTargets: {},
+    }
     const getters = {
       panels: [
         { tabs: [] }

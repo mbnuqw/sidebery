@@ -7,6 +7,12 @@
         label="settings.native_scrollbars"
         :value="$store.state.nativeScrollbars"
         @input="setOpt('nativeScrollbars', $event)")
+      select-field(
+        label="settings.autoHide_ctx_menu"
+        optLabel="settings.autoHide_ctx_menu_"
+        :value="$store.state.autoHideCtxMenu"
+        :opts="$store.state.autoHideCtxMenuOpts"
+        @input="setOpt('autoHideCtxMenu', $event)")
 
     section
       h2 {{t('settings.tabs_title')}}
@@ -14,10 +20,6 @@
         label="settings.activate_last_tab_on_panel_switching"
         :value="$store.state.activateLastTabOnPanelSwitching"
         @input="setOpt('activateLastTabOnPanelSwitching', $event)")
-      toggle-field(
-        label="settings.create_new_tab_on_empty_panel"
-        :value="$store.state.createNewTabOnEmptyPanel"
-        @input="setOpt('createNewTabOnEmptyPanel', $event)")
       toggle-field(
         label="settings.skip_empty_panels"
         :value="$store.state.skipEmptyPanels"
@@ -94,6 +96,11 @@
         :inactive="!$store.state.tabsTree"
         :value="$store.state.tabsChildCount"
         @input="setOpt('tabsChildCount', $event)")
+      toggle-field(
+        label="settings.tabs_lvl_dots"
+        :inactive="!$store.state.tabsTree"
+        :value="$store.state.tabsLvlDots"
+        @input="setOpt('tabsLvlDots', $event)")
 
     section
       h2 {{t('settings.bookmarks_title')}}
@@ -148,6 +155,11 @@
         :value="$store.state.scrollThroughTabs"
         :opts="$store.state.scrollThroughTabsOpts"
         @input="setOpt('scrollThroughTabs', $event)")
+      .box(v-if="$store.state.tabsTree && $store.state.scrollThroughTabs !== 'none'")
+        toggle-field(
+          label="settings.scroll_through_visible_tabs"
+          :value="$store.state.scrollThroughVisibleTabs"
+          @input="setOpt('scrollThroughVisibleTabs', $event)")
       select-field(
         label="settings.tab_double_click"
         optLabel="settings.tab_action_"
@@ -593,7 +605,10 @@ export default {
         await browser.permissions.remove({ origins: ['<all_urls>'] })
         State.proxiedPanels = {}
         State.containers.map(c => {
-          if (c.proxy) c.proxy = null
+          if (c.proxified) c.proxified = false
+          if (c.proxy) c.proxy.type = 'direct'
+          if (c.includeHostsActive) c.includeHostsActive = false
+          if (c.excludeHostsActive) c.excludeHostsActive = false
         })
         State.permAllUrls = await browser.permissions.contains({ origins: ['<all_urls>'] })
       } else {
@@ -601,6 +616,7 @@ export default {
           url: browser.runtime.getURL('permissions/all-urls.html'),
         })
       }
+      Store.dispatch('saveContainers')
       Store.dispatch('saveSettings')
     },
 
@@ -640,7 +656,6 @@ export default {
       Store.commit('resetSettings')
       Store.dispatch('saveSettings')
       Store.dispatch('saveContainers')
-      Store.dispatch('saveState')
     },
 
     /**

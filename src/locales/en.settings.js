@@ -5,14 +5,16 @@ export default {
   // --- General
   'settings.general_title': { message: 'General' },
   'settings.native_scrollbars': { message: 'Use native scroll-bars' },
+  'settings.autoHide_ctx_menu': { message: 'Auto hide context menu after' },
+  'settings.autoHide_ctx_menu_250': { message: '0.25s' },
+  'settings.autoHide_ctx_menu_500': { message: '0.5s' },
+  'settings.autoHide_ctx_menu_1000': { message: '1s' },
+  'settings.autoHide_ctx_menu_none': { message: 'none' },
 
   // --- Tabs
   'settings.tabs_title': { message: 'Tabs' },
   'settings.activate_last_tab_on_panel_switching': {
     message: 'Activate last active tab on panels switching',
-  },
-  'settings.create_new_tab_on_empty_panel': {
-    message: 'Create new tab on switching to empty container',
   },
   'settings.skip_empty_panels': { message: 'Skip empty panels on switching' },
   'settings.show_tab_rm_btn': { message: 'Show close button on tab hover' },
@@ -46,6 +48,7 @@ export default {
   'settings.auto_exp_tabs': { message: 'Auto expand tabs' },
   'settings.rm_folded_tabs': { message: 'Close folded tabs with parent' },
   'settings.tabs_child_count': { message: 'Show count of descendants' },
+  'settings.tabs_lvl_dots': { message: 'Show marks of tabs levels' },
 
   // --- Bookmarks
   'settings.bookmarks_title': { message: 'Bookmarks' },
@@ -76,6 +79,8 @@ export default {
   'settings.snapshots_view_label': { message: 'View snapshots' },
   'settings.make_snapshot': { message: 'Make snapshot' },
   'settings.rm_all_snapshots': { message: 'Remove all snapshots' },
+  'settings.apply_snapshot': { message: 'apply' },
+  'settings.rm_snapshot': { message: 'remove' },
 
   // --- Mouse
   'settings.mouse_title': { message: 'Mouse' },
@@ -84,6 +89,7 @@ export default {
   'settings.scroll_through_tabs_panel': { message: 'container' },
   'settings.scroll_through_tabs_global': { message: 'global' },
   'settings.scroll_through_tabs_none': { message: 'none' },
+  'settings.scroll_through_visible_tabs': { message: 'Visible only' },
   'settings.tab_double_click': { message: 'Double click on tab' },
   'settings.tab_long_left_click': { message: 'Long left click on tab' },
   'settings.tab_long_right_click': { message: 'Long right click on tab' },
@@ -93,6 +99,7 @@ export default {
   'settings.tab_action_mute': { message: 'mute' },
   'settings.tab_action_clear_cookies': { message: 'clear cookies' },
   'settings.tab_action_exp': { message: 'expand' },
+  'settings.tab_action_new_after': { message: 'new tab' },
   'settings.tab_action_none': { message: 'none' },
   'settings.tabs_panel_left_click_action': { message: 'Left click on tabs panel' },
   'settings.tabs_panel_double_click_action': { message: 'Double click on tabs panel' },
@@ -109,6 +116,7 @@ export default {
   'settings.next_panel': { message: 'Next panel' },
   'settings.prev_panel': { message: 'Previous panel' },
   'settings.open_new_tab_in_curr_panel': { message: 'Open new tab in current container' },
+  'settings.open_new_tab_after': { message: 'Open new tab after current one' },
   'settings.close_tab': { message: 'Close tab and stay on current container' },
   'settings.select_all': { message: 'Select all' },
   'settings.up': { message: 'Up' },

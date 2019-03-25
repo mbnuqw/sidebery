@@ -31,7 +31,7 @@
   .fav(:loading="loading")
     .placeholder: svg: use(:xlink:href="favPlaceholder")
     img(:src="favicon", @load.passive="onFaviconLoad", @error="onFaviconErr")
-    .exp(@mousedown.stop="onExp"): svg: use(xlink:href="#icon_expand")
+    .exp(@dblclick.prevent.stop="", @mousedown.stop="onExp"): svg: use(xlink:href="#icon_expand")
     .update-badge
     .ok-badge
       svg: use(xlink:href="#icon_ok")
@@ -53,7 +53,6 @@
 
 
 <script>
-import { mapGetters } from 'vuex'
 import Store from '../../store'
 import State from '../../store.state'
 import EventBus from '../../event-bus'
@@ -83,8 +82,6 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['showTabRmBtn']),
-
     updated() {
       return !!State.updatedTabs[this.tab.id]
     },
@@ -154,6 +151,7 @@ export default {
       if (dc === 'mute') Store.dispatch('remuteTabs', [this.tab.id])
       if (dc === 'clear_cookies') Store.dispatch('clearTabsCookies', [this.tab.id])
       if (dc === 'exp' && this.tab.isParent) Store.dispatch('toggleBranch', this.tab.id)
+      if (dc === 'new_after') Store.dispatch('createTabAfter', this.tab.id)
     },
 
     /**
@@ -174,12 +172,14 @@ export default {
 
         // Long-click action
         this.hodorL = setTimeout(() => {
+          if (State.dragNodes) return
           let llc = State.tabLongLeftClick
           if (llc === 'reload') Store.dispatch('reloadTabs', [this.tab.id])
           if (llc === 'duplicate') Store.dispatch('duplicateTabs', [this.tab.id])
           if (llc === 'pin') Store.dispatch('repinTabs', [this.tab.id])
           if (llc === 'mute') Store.dispatch('remuteTabs', [this.tab.id])
           if (llc === 'clear_cookies') Store.dispatch('clearTabsCookies', [this.tab.id])
+          if (llc === 'new_after') Store.dispatch('createTabAfter', this.tab.id)
           this.hodorL = null
         }, 250)
       }
@@ -202,6 +202,7 @@ export default {
           if (lrc === 'pin') Store.dispatch('repinTabs', [this.tab.id])
           if (lrc === 'mute') Store.dispatch('remuteTabs', [this.tab.id])
           if (lrc === 'clear_cookies') Store.dispatch('clearTabsCookies', [this.tab.id])
+          if (lrc === 'new_after') Store.dispatch('createTabAfter', this.tab.id)
           this.hodorR = null
         }, 250)
       }
@@ -276,6 +277,8 @@ export default {
      * Handle dragstart event.
      */
     onDragStart(e) {
+      if (!this.hodorL) return
+
       // Hide context menu (if any)
       if (State.ctxMenu) State.ctxMenu = null
 
@@ -412,7 +415,7 @@ export default {
      * Close tab
      */
     close() {
-      Store.dispatch('removeTab', this.tab)
+      Store.dispatch('removeTabs', [this.tab.id])
     },
 
     /**
@@ -423,8 +426,7 @@ export default {
       for (let tab of State.tabs) {
         if (toRemove.includes(tab.parentId)) toRemove.push(tab.id)
       }
-      if (toRemove.length === 1) Store.dispatch('removeTab', this.tab)
-      else if (toRemove.length > 1) Store.dispatch('removeTabs', toRemove)
+      Store.dispatch('removeTabs', toRemove)
     },
 
     loadingStart(id) {
@@ -499,24 +501,89 @@ export default {
 
   &[lvl="1"]
     padding-left: var(--tabs-indent)
+    > .lvl-wrapper:before
+      box-shadow: calc(var(--tabs-indent) / -2) 0 0 0 var(--inactive-fg)
   &[lvl="2"]
     padding-left: calc(var(--tabs-indent) * 2)
+    > .lvl-wrapper:before
+      box-shadow: calc(var(--tabs-indent) / -2) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -1.5) 0 0 0 var(--inactive-fg)
   &[lvl="3"]
     padding-left: calc(var(--tabs-indent) * 3)
+    > .lvl-wrapper:before
+      box-shadow: calc(var(--tabs-indent) / -2) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -1.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -2.5) 0 0 0 var(--inactive-fg)
   &[lvl="4"]
     padding-left: calc(var(--tabs-indent) * 4)
+    > .lvl-wrapper:before
+      box-shadow: calc(var(--tabs-indent) / -2) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -1.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -2.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -3.5) 0 0 0 var(--inactive-fg)
   &[lvl="5"]
     padding-left: calc(var(--tabs-indent) * 5)
+    > .lvl-wrapper:before
+      box-shadow: calc(var(--tabs-indent) / -2) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -1.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -2.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -3.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -4.5) 0 0 0 var(--inactive-fg)
   &[lvl="6"]
     padding-left: calc(var(--tabs-indent) * 6)
+    > .lvl-wrapper:before
+      box-shadow: calc(var(--tabs-indent) / -2) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -1.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -2.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -3.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -4.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -5.5) 0 0 0 var(--inactive-fg)
   &[lvl="7"]
     padding-left: calc(var(--tabs-indent) * 7)
+    > .lvl-wrapper:before
+      box-shadow: calc(var(--tabs-indent) / -2) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -1.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -2.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -3.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -4.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -5.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -6.5) 0 0 0 var(--inactive-fg)
   &[lvl="8"]
     padding-left: calc(var(--tabs-indent) * 8)
+    > .lvl-wrapper:before
+      box-shadow: calc(var(--tabs-indent) / -2) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -1.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -2.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -3.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -4.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -5.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -6.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -7.5) 0 0 0 var(--inactive-fg)
   &[lvl="9"]
     padding-left: calc(var(--tabs-indent) * 9)
+    > .lvl-wrapper:before
+      box-shadow: calc(var(--tabs-indent) / -2) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -1.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -2.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -3.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -4.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -5.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -6.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -7.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -8.5) 0 0 0 var(--inactive-fg)
   &[lvl="10"]
     padding-left: calc(var(--tabs-indent) * 10)
+    > .lvl-wrapper:before
+      box-shadow: calc(var(--tabs-indent) / -2) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -1.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -2.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -3.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -4.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -5.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -6.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -7.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -8.5) 0 0 0 var(--inactive-fg),
+                  calc(var(--tabs-indent) * -9.5) 0 0 0 var(--inactive-fg)
 
   &[is-parent] .fav:hover
     > .exp
@@ -564,6 +631,8 @@ export default {
     cursor: progress
     .title
       transform: translateX(11px)
+    .loading
+      opacity: 1
     .loading > svg.-a
       animation: tab-loading .8s infinite
     .loading > svg.-b
@@ -637,6 +706,15 @@ export default {
   size(100%, same)
   align-items: center
   transition: opacity var(--d-fast), transform var(--d-fast)
+  &:before
+    content: ''
+    box(absolute, none)
+    size(3px, 3px)
+    pos(calc(50% - 1px), 2px)
+    border-radius: 50%
+    opacity: .8
+#root.-tabs-lvl-marks .Tab .lvl-wrapper:before
+  box(block)
 
 // --- Drag layer ---
 .Tab .drag-layer
@@ -836,7 +914,8 @@ export default {
   box(absolute)
   pos(calc(50% - 8px), 0)
   size(7px, 16px)
-  transition: transform var(--d-fast)
+  opacity: 0
+  transition: transform var(--d-fast), opacity var(--d-fast)
   > svg
     box(absolute)
     pos(3px, 0)

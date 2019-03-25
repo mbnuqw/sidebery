@@ -10,37 +10,54 @@ export default {
     // Gather tabs and containers
     const tabs = []
     const ctxs = []
-    getters.panels.map(p => {
+    // Pinned tabs
+    if (state.snapshotsTargets.pinned) {
+      for (let tab of getters.pinnedTabs) {
+        if (tab.url.startsWith('about')) continue
+        tabs.push({
+          id: tab.id,
+          title: tab.title,
+          url: tab.url,
+          pinned: tab.pinned,
+          cookieStoreId: tab.cookieStoreId,
+        })
+      }
+    }
+
+    // Tabs on panels
+    for (let panel of getters.panels) {
       // Filter empty, non-tabs and turned-off panels
-      if (!p.tabs || !p.tabs.length) return
-      if (p.pinned === true && !state.snapshotsTargets.pinned) return
-      if (p.cookieStoreId === DEFAULT_CTX) {
-        if (!state.snapshotsTargets.default) return
+      if (!panel.tabs || !panel.tabs.length) continue
+      if (panel.cookieStoreId === DEFAULT_CTX) {
+        if (!state.snapshotsTargets.default) continue
       } else {
-        if (p.cookieStoreId && !state.snapshotsTargets[p.cookieStoreId]) return
+        if (panel.cookieStoreId && !state.snapshotsTargets[panel.cookieStoreId]) continue
       }
 
-      p.tabs.map(t => {
-        if (!t.url.indexOf('about')) return
+      for (let tab of panel.tabs) {
+        if (tab.url.startsWith('about')) continue
         tabs.push({
-          title: t.title,
-          url: t.url,
-          pinned: t.pinned,
-          cookieStoreId: t.cookieStoreId,
+          id: tab.id,
+          title: tab.title,
+          url: tab.url,
+          pinned: tab.pinned,
+          cookieStoreId: tab.cookieStoreId,
+          parentId: tab.parentId,
+          lvl: tab.lvl,
         })
-      })
+      }
 
       // Gather context panels
-      if (state.snapshotsTargets[p.cookieStoreId]) {
+      if (state.snapshotsTargets[panel.cookieStoreId]) {
         ctxs.push({
-          cookieStoreId: p.cookieStoreId,
-          name: p.name,
-          icon: p.icon,
-          color: p.color,
-          colorCode: p.colorCode,
+          cookieStoreId: panel.cookieStoreId,
+          name: panel.name,
+          icon: panel.icon,
+          color: panel.color,
+          colorCode: panel.colorCode,
         })
       }
-    })
+    }
 
     // If all ok, create snapshot and load
     if (tabs.length === 0) return
@@ -48,20 +65,11 @@ export default {
     state.snapshots = await dispatch('loadSnapshots')
 
     // Check if there are changes from last five snapshots
-    for (let s of state.snapshots.slice(0, 5)) {
-      let same = true
-      for (let t of snapshot.tabs) {
-        same =
-          same &&
-          !!s.tabs.find(pt => {
-            return (
-              pt.url === t.url && pt.cookieStoreId === t.cookieStoreId && pt.pinned === t.pinned
-            )
-          })
-        if (!same) break
-      }
-      if (same) return
-    }
+    const shape = JSON.stringify({ tabs: snapshot.tabs, ctxs: snapshot.ctxs })
+    const existed = state.snapshots
+      .slice(0, 5)
+      .some(s => JSON.stringify({ tabs: s.tabs, ctxs: s.ctxs }) === shape)
+    if (existed) return
 
     // Put new one to store
     state.snapshots.unshift(snapshot)
@@ -81,31 +89,57 @@ export default {
   /**
    * Restore contexs and tabs from snapshot
    */
-  async applySnapshot({ state, dispatch }, snapshot) {
+  async applySnapshot({ state, commit, getters }, snapshot) {
     if (!snapshot) return
 
-    // Restore contexts
-    const ctxIdMap = {}
-    for (let c of snapshot.ctxs) {
-      const lctx = state.ctxs.find(lc => lc.cookieStoreId === c.cookieStoreId)
-      if (lctx) continue
-      let nc = await dispatch('createContext', { name: c.name, color: c.color, icon: c.icon })
-      ctxIdMap[c.cookieStoreId] = nc.cookieStoreId
+    // Restore tabs
+    const tabsMap = {}
+    for (let tab of snapshot.tabs) {
+      let panelIndex = getters.panels.findIndex(p => p.cookieStoreId === tab.cookieStoreId)
+      let panel = getters.panels[panelIndex]
+      if (!panel) {
+        panel = getters.defaultPanel
+        panelIndex = state.private ? 1 : 2
+      }
+
+      // Get group url
+      if (tab.url.startsWith('moz') && tab.url.includes('/group.html')) {
+        const idIndex = tab.url.indexOf('/group.html') + 12
+        const groupId = tab.url.slice(idIndex)
+        tab.url = browser.runtime.getURL('group/group.html') + `#${groupId}`
+      }
+
+      // Create tabs
+      const createdTab = await browser.tabs.create({
+        url: tab.url,
+        pinned: tab.pinned,
+        cookieStoreId: panel.cookieStoreId,
+        openerTabId: tabsMap[tab.parentId],
+        active: false,
+      })
+      if (tab.id !== undefined) tabsMap[tab.id] = createdTab.id
+
+      // Switch to panel
+      if (!tab.pinned && panelIndex !== state.panelIndex) {
+        commit('setPanel', panelIndex)
+      }
+    }
+  },
+
+  /**
+   * Remove snapshot
+   */
+  async removeSnapshot({ state }, index) {
+    if (index < 0) return
+
+    // Remove
+    if (state.snapshots[index]) {
+      state.snapshots.splice(index, 1)
     }
 
-    // Restore tabs
-    for (let t of snapshot.tabs) {
-      const ltab = state.tabs.find(lt => {
-        return lt.pinned === t.pinned && lt.url === t.url && lt.cookieStoreId === t.cookieStoreId
-      })
-      if (ltab) continue
-      await browser.tabs.create({
-        url: t.url,
-        pinned: t.pinned,
-        cookieStoreId: ctxIdMap[t.cookieStoreId] || t.cookieStoreId,
-      })
-    }
-    dispatch('loadTabs')
+    // Store snapshots
+    const snapshots = JSON.parse(JSON.stringify(state.snapshots)).reverse()
+    await browser.storage.local.set({ snapshots })
   },
 
   /**

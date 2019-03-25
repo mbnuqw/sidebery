@@ -25,6 +25,7 @@
 
 <script>
 import Store from '../store'
+import State from '../store.state'
 import Getters from '../store.getters'
 import EventBus from '../event-bus'
 
@@ -115,9 +116,10 @@ export default {
       if (this.leaveT) clearTimeout(this.leaveT)
     },
     onML() {
+      if (State.autoHideCtxMenu === 'none') return
       this.leaveT = setTimeout(() => {
         Store.commit('closeCtxMenu')
-      }, 500)
+      }, State.autoHideCtxMenu)
     },
 
     onClick(opt) {

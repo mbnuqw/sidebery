@@ -121,7 +121,7 @@ describe('Global utilities', () => {
       const tab1 = { cookieStoreId: 'b', pinned: true }
       const tab2 = { cookieStoreId: 'a', pinned: false }
 
-      expect(Utils.GetPanelOf(panels, tab1).pinned).toBe(true)
+      expect(Utils.GetPanelOf(panels, tab1)).toBe(null)
       expect(Utils.GetPanelOf(panels, tab2).cookieStoreId).toBe('a')
     })
   })

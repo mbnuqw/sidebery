@@ -1,4 +1,3 @@
-import EventBus from './event-bus'
 import CtxMenu from './context-menu'
 import { Translate } from  '../mixins/dict'
 import SavedStateActions from './actions/saved-state'
@@ -57,13 +56,6 @@ export default {
         state.winChoosing = wins
       })
     })
-  },
-
-  /**
-   * Breadcast recalc panel's scroll event.
-   */
-  recalcPanelScroll() {
-    setTimeout(() => EventBus.$emit('recalcPanelScroll'), 33)
   },
 
   /**
@@ -148,6 +140,10 @@ export default {
         })
       }
 
+      if (state.tabsTree) {
+        menu.add('tab.group', 'groupTabs', state.selected)
+      }
+
       if (!node.pinned) menu.add('tab.pin', 'pinTabs', [node.id])
       else menu.add('tab.unpin', 'unpinTabs', [node.id])
       if (!node.mutedInfo.muted) menu.add('tab.mute', 'muteTabs', [node.id])
@@ -196,7 +192,12 @@ export default {
 
       if (state.tabsTree) {
         menu.add('tab.group', 'groupTabs', state.selected)
-        menu.add('tab.flatten', 'flattenTabs', state.selected)
+        const sameLvl = state.selected.every((id, i) => {
+          const tab = state.tabsMap[id]
+          const next = state.tabsMap[state.selected[i + 1]]
+          return !next || tab.lvl === next.lvl
+        })
+        if (!sameLvl) menu.add('tab.flatten', 'flattenTabs', state.selected)
       }
 
       if (state.panelIndex === 1) {

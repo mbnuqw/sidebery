@@ -9,6 +9,8 @@
     :inline="true"
     @input="togglePanelLock")
 
+  .delimiter
+
   .options
     .opt(@click="reloadBookmarks") {{t('bookmarks_dashboard.reload_bookmarks_tree')}}
     .opt(@click="collapseAll") {{t('bookmarks_dashboard.collapse_all_folders')}}

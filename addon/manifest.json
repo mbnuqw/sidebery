@@ -8,7 +8,7 @@
   },
   "author": "mbnuqw",
   "name": "__MSG_ExtName__",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "default_locale": "en",
   "description": "__MSG_ExtDesc__",
   "homepage_url": "https://github.com/mbnuqw/sidebery",
@@ -67,6 +67,13 @@
         "mac": "MacCtrl+Space"
       },
       "description": "open_new_tab_in_curr_panel"
+    },
+    "new_tab_in_group": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+Space",
+        "mac": "MacCtrl+Shift+Space"
+      },
+      "description": "open_new_tab_after"
     },
     "rm_tab_on_panel": {
       "suggested_key": {

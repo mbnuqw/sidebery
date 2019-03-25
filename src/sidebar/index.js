@@ -1,11 +1,9 @@
 import Vue from 'vue'
 import { mapGetters } from 'vuex'
 import Sidebar from './components/index.vue'
-import Utils from '../libs/utils'
 import Dict from '../mixins/dict'
 import Store from './store'
 import State from './store.state'
-import Getters from './store.getters'
 
 Vue.mixin(Dict)
 
@@ -46,6 +44,11 @@ export default new Vue({
       if (State.pinnedTabsList) return '-pinned-tabs-list'
       else return '-pinned-tabs-grid'
     },
+
+    tabsLvlMarksClass() {
+      if (State.tabsLvlDots) return '-tabs-lvl-marks'
+      else return ''
+    },
   },
 
   watch: {
@@ -77,7 +80,6 @@ export default new Vue({
 
   async created() {
     browser.windows.onFocusChanged.addListener(this.onFocusWindow)
-    browser.windows.onRemoved.addListener(this.onRemovedWindow)
     browser.storage.onChanged.addListener(this.onChangeStorage)
     browser.commands.onCommand.addListener(this.onCmd)
 
@@ -86,7 +88,6 @@ export default new Vue({
     await Store.dispatch('loadContainers')
     await Store.dispatch('loadTabs')
     Store.dispatch('loadStyles')
-    Store.dispatch('updateProxiedTabs')
     Store.dispatch('loadKeybindings')
     await Store.dispatch('loadLocalID')
     Store.dispatch('loadSyncPanels')
@@ -95,9 +96,6 @@ export default new Vue({
     Store.dispatch('loadPermissions')
     if (State.bookmarksPanel) await Store.dispatch('loadBookmarks')
     Store.dispatch('updateTabsSuccessors')
-
-    const dSavingState = Utils.Debounce(() => Store.dispatch('saveState'), 567)
-    Store.watch(Getters.activePanel, dSavingState.func)
 
     // Try to clear unneeded favicons
     Store.dispatch('tryClearFaviCache', 86400)
@@ -118,15 +116,10 @@ export default new Vue({
      * Set currently focused window
      */
     onFocusWindow(id) {
-      this.windowFocused = id === State.windowId
-    },
-
-    /**
-     * Handle window removing
-     */
-    onRemovedWindow(windowId) {
-      if (State.windowId !== windowId) {
-        Store.dispatch('saveTabsTree', 0)
+      State.windowFocused = id === State.windowId
+      if (State.windowFocused) {
+        if (State.tabsTree) Store.dispatch('saveTabsTree', 0)
+        Store.dispatch('savePanelIndex')
       }
     },
 
@@ -134,8 +127,16 @@ export default new Vue({
      * Handle changes of all storages (update current state)
      */
     onChangeStorage(changes, type) {
-      if (changes.settings) Store.dispatch('loadSettings')
+      if (type === 'local' && State.windowFocused) return
+
+      if (changes.settings) {
+        Store.dispatch('updateSettings', changes.settings.newValue)
+      }
       if (changes.styles) Store.dispatch('applyStyles', changes.styles.newValue)
+      if (changes.containers) {
+        Store.dispatch('updateContainers', changes.containers.newValue)
+      }
+
       if (type === 'sync') {
         let ids = Object.keys(changes).filter(id => id !== this.localID)
 

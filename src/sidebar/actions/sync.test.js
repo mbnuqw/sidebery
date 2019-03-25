@@ -196,8 +196,8 @@ describe('loadSyncPanels', () => {
 
     await SyncActions.loadSyncPanels({ state, dispatch })
     expect(state.lastSyncPanels).toEqual(data456)
-    expect(dispatch).toBeCalledWith('saveState')
     expect(dispatch).toBeCalledWith('updateSyncPanels', data456)
+    expect(dispatch).toBeCalledWith('saveSynced')
   })
 })
 

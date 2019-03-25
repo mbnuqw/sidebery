@@ -11,37 +11,18 @@
   margin: 16px 12px 12px
   padding: 0
 
-// .Menu .field
-//   box(relative)
-//   margin: 0 16px
-//   cursor: pointer
-//   &[opt-true]
-//     .input > .opt
-//       color: var(--active-fg)
-//     .input > .opt.-true
-//       color: var(--true-fg)
-//     .input > .opt.-false
-//       color: var(--inactive-fg)
-
-// .Menu .input > .opt
-//   box(relative)
-//   text(s: rem(14))
-//   margin: 0 7px 0 0
-//   color: var(--inactive-fg)
-//   transition: color var(--d-fast)
-//   &.-false
-//     color: var(--false-fg)
-//   &[opt-true]
-//     color: var(--active-fg)
-//     &[opt-none]
-//       color: var(--false-fg)
+.delimiter
+  box(relative)
+  size(128px, 1px)
+  margin: 8px auto
+  opacity: .5
+  background-image: linear-gradient(90deg, #00000000, var(--inactive-fg), var(--inactive-fg), #00000000)
 
 .options
   box(relative, flex)
   flex-wrap: wrap
   flex-direction: column
   justify-content: flex-start
-  margin: 8px 0 0
 
 .options > .opt
   box(relative)

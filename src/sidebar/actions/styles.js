@@ -38,6 +38,8 @@ export default {
    * Apply provided styles
    */
   applyStyles({ state }, styles) {
+    if (!styles) return
+
     const rootEl = document.getElementById('root')
     for (let key in state.customStyles) {
       if (!state.customStyles.hasOwnProperty(key)) continue

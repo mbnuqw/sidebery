@@ -148,8 +148,7 @@ export default {
      */
     onMouseDown(e) {
       if (e.button === 1) {
-        if (this.tab.folded) this.closeTree()
-        else this.close()
+        this.close()
         e.preventDefault()
         e.stopPropagation()
       }
@@ -333,33 +332,6 @@ export default {
       this.faviErr = true
     },
 
-    /**
-     * Handle mousedown event on expand button
-     */
-    onExp(e) {
-      // Fold/Expand branch
-      if (e.button === 0) Store.dispatch('toggleBranch', this.tab.id)
-
-      // Select whole branch and show menu
-      if (e.button === 2) {
-        const toSelect = [this.tab.id]
-        for (let tab of State.tabs) {
-          if (toSelect.includes(tab.parentId)) toSelect.push(tab.id)
-        }
-        toSelect.map(id => EventBus.$emit('selectTab', id))
-        State.selected = [...toSelect]
-        Store.dispatch('openCtxMenu', { el: this.$el, node: this.tab })
-      }
-    },
-
-    /**
-     * Handle click on close btn
-     */
-    onCloseClick(e) {
-      if (e.button === 0) this.close()
-      if (e.button === 2) this.closeTree()
-    },
-
     onLoaded(id) {
       if (id !== this.tab.id) return
       if (this.tab.status !== 'loading') return
@@ -373,19 +345,7 @@ export default {
      * Close tab
      */
     close() {
-      Store.dispatch('removeTab', this.tab)
-    },
-
-    /**
-     * Close tabs tree
-     */
-    closeTree() {
-      const toRemove = [this.tab.id]
-      for (let tab of State.tabs) {
-        if (toRemove.includes(tab.parentId)) toRemove.push(tab.id)
-      }
-      if (toRemove.length === 1) Store.dispatch('removeTab', this.tab)
-      else if (toRemove.length > 1) Store.dispatch('removeTabs', toRemove)
+      this.$emit('remove', this.tab)
     },
 
     loadingStart(id) {

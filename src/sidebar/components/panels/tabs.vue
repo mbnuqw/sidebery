@@ -141,13 +141,6 @@ export default {
       }
     },
 
-    onKeyActivate() {
-      if (this.tabs.length === 0) return
-      if (State.selected.length === 0) return
-      browser.tabs.update(State.selected[0], { active: true })
-      State.selected = []
-    },
-
     getTabYPosition(i) {
       let out = i
       while (i--) {
@@ -171,7 +164,7 @@ export default {
      * Calculate tabs bounds
      */
     getItemsBounds() {
-      if (!this.$refs.tabs) return null
+      if (!this.$refs.tabs) return []
       if (!this.$refs.tabs.length) return []
 
       // probe tabs heights

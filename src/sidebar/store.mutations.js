@@ -93,7 +93,6 @@ export default {
    */
   resetSelection(state) {
     if (state.selected.length > 0) {
-      // console.log('[DEBUG] MUT resetSelection');
       state.selected = []
       EventBus.$emit('deselectTab')
       EventBus.$emit('deselectBookmark')
@@ -107,7 +106,6 @@ export default {
    * Close context menu
    */
   closeCtxMenu(state) {
-    // console.log('[DEBUG] MUT closeCtxMenu');
     if (state.ctxMenu) {
       if (state.ctxMenu.off) state.ctxMenu.off()
       state.ctxMenu = null

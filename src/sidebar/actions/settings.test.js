@@ -58,7 +58,7 @@ describe('saveSettings', () => {
   })
 
   test('save empty settings', async () => {
-    const state = { settingsLoaded: true }
+    const state = { settingsLoaded: true, windowFocused: true }
     browser.storage.local.set = jest.fn()
 
     await SettingsActions.saveSettings({ state })
@@ -68,6 +68,7 @@ describe('saveSettings', () => {
   test('save settings', async () => {
     const state = {
       settingsLoaded: true,
+      windowFocused: true,
       nativeScrollbars: true,
     }
     browser.storage.local.set = jest.fn()
@@ -80,9 +81,10 @@ describe('saveSettings', () => {
     })
   })
 
-  test('save nomalized settings', async () => {
+  test('save normalized settings', async () => {
     const state = {
       settingsLoaded: true,
+      windowFocused: true,
       snapshotsTargets: { just: () => {} },
     }
     browser.storage.local.set = jest.fn()

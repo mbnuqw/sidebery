@@ -25,8 +25,7 @@ export default {
    * Save settings to local storage
    */
   async saveSettings({ state }) {
-    // console.log('[DEBUG] SETTINGS ACTION saveSettings');
-    if (!state.settingsLoaded) return
+    if (!state.settingsLoaded || !state.windowFocused) return
     let settings = {}
     for (const key in DEFAULT_SETTINGS) {
       if (!DEFAULT_SETTINGS.hasOwnProperty(key)) continue
@@ -35,6 +34,18 @@ export default {
       else settings[key] = state[key]
     }
     await browser.storage.local.set({ settings })
+  },
+
+  /**
+   * Update settings
+   */
+  updateSettings({ state }, settings) {
+    if (!settings) return
+
+    for (let k in settings) {
+      if (!settings.hasOwnProperty(k)) continue
+      if (settings[k] !== undefined) state[k] = settings[k]
+    }
   },
 
   /**

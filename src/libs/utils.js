@@ -1,6 +1,5 @@
 import { Translate, PlurTrans } from '../mixins/dict'
 
-/*global browser:true*/
 // prettier-ignore
 const Alph = [
   'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
@@ -11,7 +10,7 @@ const Alph = [
 ]
 const UNDERSCORE_RE = /_/g
 const CSS_NUM_RE = /([\d.]+)(\w*)/
-const URL_RE =  /^(https?:\/\/)/
+const URL_RE = /^(https?:\/\/)/
 
 /**
  *  Generate base64-like uid
@@ -132,7 +131,7 @@ function GetPanelIndex(panels, tabId) {
  * Get panel by tab obj.
  */
 function GetPanelOf(panels, tab) {
-  if (tab.pinned) return panels[1]
+  if (tab.pinned) return null
   for (let i = 1; i < panels.length; i++) {
     if (panels[i].cookieStoreId === tab.cookieStoreId) return panels[i]
   }
@@ -205,7 +204,6 @@ function CSSVar(key) {
  * Calculate tree levels of tabs
  */
 function CalcTabsTreeLevels(tabs) {
-  // console.log('[DEBUG] UTILS CalcTabsTreeLevels');
   let lvl = 0
   let parents = {}
   let path = []
@@ -317,12 +315,50 @@ async function GetUrlFromDragEvent(event) {
 
     for (let item of event.dataTransfer.items) {
       if (item.kind !== 'string') continue
+      const typeOk =
+        item.type === 'text/x-moz-url-data' ||
+        item.type === 'text/uri-list' ||
+        item.type === 'text/x-moz-text-internal'
+
+      if (!typeOk) continue
 
       item.getAsString(s => {
         if (URL_RE.test(s)) res(s)
+        else res()
       })
     }
   })
+}
+
+/**
+ * Find bookmark
+ */
+function FindBookmark(bookmarks, id) {
+  let target, n
+  const findWalk = nodes => {
+    for (n of nodes) {
+      if (n.id === id) return target = n
+      if (n.children) findWalk(n.children)
+      if (target) return
+    }
+  }
+  findWalk(bookmarks)
+  return target
+}
+
+/**
+ * Check if string is group url
+ */
+function IsGroupUrl(url) {
+  return url.startsWith('moz') && url.includes('/group.html')
+}
+
+/**
+ * Get group id
+ */
+function GetGroupId(url) {
+  const idIndex = url.indexOf('/group.html') + 12
+  return url.slice(idIndex)
 }
 
 export default {
@@ -342,4 +378,7 @@ export default {
   ParseCSSNum,
   CommonSubStr,
   GetUrlFromDragEvent,
+  FindBookmark,
+  IsGroupUrl,
+  GetGroupId,
 }

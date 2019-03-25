@@ -6,33 +6,74 @@ void (async function() {
   const rootEl = document.getElementById('root')
   rootEl.classList.add('-' + theme)
 
+  // Load current window and get url-hash
+  const win = await browser.windows.getCurrent()
+  const hash = decodeURI(window.location.hash.slice(1))
+
+  // Init page
+  let lastState
+  lastState = await init(win.id, hash, lastState)
+
+  // Set listener for reinit request
+  browser.runtime.onMessage.addListener(msg => {
+    if (msg.windowId !== undefined && msg.windowId !== win.id) return
+
+    const hash = decodeURI(window.location.hash.slice(1))
+    if (msg.name === 'reinit_group' && decodeURI(msg.arg) === hash) {
+      init(win.id, hash, lastState).then(state => lastState = state)
+    }
+  })
+})()
+
+/**
+ * Init group page
+ */
+async function init(windowId, hash, lastState) {
   // Set title of group page
-  const title = decodeURI(window.location.hash.slice(1))
   const titleEl = document.getElementById('title')
+  const hashData = hash.split(':id:')
+  const title = hashData[0]
+  const groupId = hashData[1]
   titleEl.value = title
   document.title = title
 
   // Listen chagnes of title
   titleEl.addEventListener('input', e => {
-    document.title = e.target.value
-    window.location.hash = '#' + encodeURI(e.target.value)
+    const normTitle = e.target.value.trim()
+    document.title = normTitle
+    window.location.hash = `#${encodeURI(normTitle)}:id:${groupId}`
   })
 
   // Get list of tabs
   const groupInfo = await browser.runtime.sendMessage({
     action: 'getGroupInfo',
-    arg: title,
+    windowId,
+    arg: hash,
   })
+  if (!groupInfo || !groupInfo.tabs) return lastState
+
+  // Check for changes
+  const checkSum = groupInfo.tabs.map(t => {
+    return [ t.title, t.url, t.discarded ]
+  })
+  const checkSumStr = JSON.stringify(checkSum)
+  if (lastState === checkSumStr) return checkSumStr
 
   // Render tabs
   if (groupInfo && groupInfo.tabs) {
     const tabsBoxEl = document.getElementById('tabs')
+
+    // Cleanup
+    while (tabsBoxEl.lastChild) {
+      tabsBoxEl.removeChild(tabsBoxEl.lastChild)
+    }
+
     for (let info of groupInfo.tabs) {
-      const tabEl = createTabEl(info)
-      tabsBoxEl.appendChild(tabEl)
+      info.el = createTabEl(info)
+      tabsBoxEl.appendChild(info.el)
 
       // Set click listeners
-      tabEl.addEventListener('click', async () => {
+      info.el.addEventListener('click', async () => {
         await browser.runtime.sendMessage({
           action: 'expTabsBranch',
           arg: groupInfo.id,
@@ -41,7 +82,12 @@ void (async function() {
       })
     }
   }
-})()
+
+  // Load screens
+  loadScreens(groupInfo.tabs)
+
+  return checkSumStr
+}
 
 /**
  * Create tab element
@@ -49,22 +95,18 @@ void (async function() {
 function createTabEl(info) {
   const el = document.createElement('div')
   el.classList.add('tab-wrapper')
+  el.title = info.url
 
-  const tabEl = document.createElement('div')
-  tabEl.classList.add('tab')
+  info.tabEl = document.createElement('div')
+  info.tabEl.classList.add('tab')
 
-  if (info.screen) {
-    const bgEl = document.createElement('div')
-    bgEl.classList.add('bg')
-    if (info.screen) {
-      bgEl.style.backgroundImage = `url(${info.screen})`
-    }
-    tabEl.appendChild(bgEl)
-  }
+  info.bgEl = document.createElement('div')
+  info.bgEl.classList.add('bg')
+  info.tabEl.appendChild(info.bgEl)
 
   const infoEl = document.createElement('div')
   infoEl.classList.add('info')
-  tabEl.appendChild(infoEl)
+  info.tabEl.appendChild(infoEl)
 
   const titleEl = document.createElement('h3')
   titleEl.innerText = info.title
@@ -75,6 +117,27 @@ function createTabEl(info) {
   urlEl.innerText = info.url
   infoEl.appendChild(urlEl)
 
-  el.appendChild(tabEl)
+  el.appendChild(info.tabEl)
   return el
+}
+
+/**
+ * Load screenshots
+ */
+function loadScreens(tabs) {
+  for (let tab of tabs) {
+    if (tab.discarded) {
+      tab.tabEl.classList.add('-discarded')
+      tab.bgEl.style.backgroundImage = `url(${tab.favIconUrl})`
+      tab.bgEl.style.backgroundPosition = 'center'
+      tab.bgEl.style.filter = 'blur(32px)'
+      continue
+    }
+
+    // Set loading start
+    browser.tabs.captureTab(tab.id, { format: 'jpeg', quality: 90 })
+      .then(screen => {
+        tab.bgEl.style.backgroundImage = `url(${screen})`
+      })
+  }
 }

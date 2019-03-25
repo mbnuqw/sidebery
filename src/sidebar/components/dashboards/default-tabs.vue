@@ -23,6 +23,8 @@
     :inline="true"
     @input="togglePanelNoEmpty")
 
+  .delimiter
+
   .options
     .opt(v-if="haveTabs", @click="dedupTabs") {{t('tabs_dashboard.dedup_tabs')}}
     .opt(v-if="haveTabs", @click="reloadAllTabs") {{t('tabs_dashboard.reload_all_tabs')}}
@@ -65,14 +67,24 @@ export default {
     },
 
     toggleSync() {
-      // console.log('[DEBUG] DEFAULT TABS DASH toggleSync');
       this.conf.sync = !this.conf.sync
       Store.dispatch('resyncPanels')
       Store.dispatch('saveContainers')
     },
 
-    togglePanelNoEmpty() {
+    async togglePanelNoEmpty() {
       this.conf.noEmpty = !this.conf.noEmpty
+      if (this.conf.noEmpty) {
+        const defaultId = Store.getters.defaultCtxId
+        const panel = Store.getters.panels.find(p => p.cookieStoreId === defaultId)
+        if (panel && panel.tabs && !panel.tabs.length) {
+          await browser.tabs.create({
+            index: panel.startIndex,
+            cookieStoreId: panel.cookieStoreId,
+            active: true,
+          })
+        }
+      }
       Store.dispatch('saveContainers')
     },
 

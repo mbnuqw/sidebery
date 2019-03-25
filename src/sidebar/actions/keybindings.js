@@ -13,11 +13,7 @@ export default {
    * Update keybindings
    */
   async updateKeybinding(_, { name, shortcut }) {
-    try {
-      await browser.commands.update({ name, shortcut })
-    } catch (err) {
-      // ...
-    }
+    await browser.commands.update({ name, shortcut })
   },
 
   /**
@@ -35,22 +31,54 @@ export default {
 
   // --- Commands ---
   kb_next_panel({ dispatch }) {
-    // console.log('[DEBUG] KEYBINDING kb_next_panel');
     dispatch('switchPanel', 1)
   },
   kb_prev_panel({ dispatch }) {
-    // console.log('[DEBUG] KEYBINDING kb_prev_panel');
     dispatch('switchPanel', -1)
   },
   kb_new_tab_on_panel({ state, dispatch, getters }) {
-    // console.log('[DEBUG] KEYBINDING kb_new_tab_on_panel');
     let panel = getters.panels[state.lastPanelIndex]
     if (panel.cookieStoreId) {
       dispatch('createTab', panel.cookieStoreId)
     }
   },
+  kb_new_tab_in_group({ state, getters }) {
+    const panel = getters.panels[state.panelIndex]
+    if (!panel || !panel.tabs) return
+
+    // Find active/selected tab
+    let activeTab
+    if (state.selected.length > 0) {
+      activeTab = state.tabsMap[state.selected[state.selected.length - 1]]
+    } else {
+      activeTab = panel.tabs.find(t => t.active)
+    }
+
+    // Get index and parentId for new tab
+    let index, parentId
+    if (!activeTab) {
+      index = panel.tabs.length ? panel.endIndex + 1 : panel.startIndex
+    } else {
+      index = activeTab.index + 1
+      if (activeTab.isParent && !activeTab.folded) {
+        parentId = activeTab.id
+      } else {
+        parentId = activeTab.parentId
+        while (state.tabs[index] && state.tabs[index].lvl > activeTab.lvl) {
+          index++
+        }
+      }
+      if (parentId < 0) parentId = undefined
+    }
+
+    browser.tabs.create({
+      index,
+      cookieStoreId: panel.cookieStoreId,
+      windowId: state.windowId,
+      openerTabId: parentId,
+    })
+  },
   kb_rm_tab_on_panel({ state, dispatch }) {
-    // console.log('[DEBUG] KEYBINDING kb_rm_tab_on_panel');
     if (state.selected.length > 0) {
       dispatch('removeTabs', state.selected)
     } else {
@@ -59,36 +87,28 @@ export default {
     }
   },
   kb_activate() {
-    // console.log('[DEBUG] KEYBINDING kb_activate');
     EventBus.$emit('keyActivate')
   },
   kb_reset_selection({ commit }) {
-    // console.log('[DEBUG] KEYBINDING kb_reset_selection');
     commit('resetSelection')
     commit('closeCtxMenu')
   },
   kb_select_all() {
-    // console.log('[DEBUG] KEYBINDING kb_select_all');
     EventBus.$emit('selectAll')
   },
   kb_up() {
-    // console.log('[DEBUG] KEYBINDING kb_up');
     EventBus.$emit('keyUp')
   },
   kb_down() {
-    // console.log('[DEBUG] KEYBINDING kb_down');
     EventBus.$emit('keyDown')
   },
   kb_up_shift() {
-    // console.log('[DEBUG] KEYBINDING kb_up_shift');
     EventBus.$emit('keyUpShift')
   },
   kb_down_shift() {
-    // console.log('[DEBUG] KEYBINDING kb_down_shift');
     EventBus.$emit('keyDownShift')
   },
   kb_menu() {
-    // console.log('[DEBUG] KEYBINDING kb_menu');
     EventBus.$emit('keyMenu')
   },
 }

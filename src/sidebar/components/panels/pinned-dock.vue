@@ -5,9 +5,10 @@
   @drop.stop.prevent="onDrop"
   @dragenter="onDragEnter"
   @dragleave="onDragLeave")
-  pinned-tab(v-for="t in pinnedTabs"
+  pinned-tab(v-for="(t, i) in pinnedTabs"
     :tab="t"
     :ctx="!ctx"
+    @remove="removeTab(i, $event)"
     @stop-selection="$emit('stop-selection')"
     @dragenter="onTabPointed")
   .to-the-end(v-if="pinnedTabs.length", @dragleave.stop="", @dragenter.stop="")
@@ -15,6 +16,7 @@
 
 
 <script>
+import Store from '../../store'
 import State from '../../store.state'
 import EventBus from '../../event-bus'
 import PinnedTab from './pinned-tab'
@@ -94,6 +96,22 @@ export default {
 
       this.pointedTabIndex = -1
       this.dragPointed = false
+    },
+
+    async removeTab(index, tab) {
+      // Activate another pinned tab or first tab of panel
+      if (tab.active) {
+        let toActivate = this.pinnedTabs[index + 1] || this.pinnedTabs[index - 1]
+        if (!toActivate) {
+          let panel = Store.getters.panels[State.panelIndex]
+          if (!panel || !panel.tabs) panel = Store.getters.panels[State.lastPanelIndex]
+          if (panel && panel.tabs) toActivate = panel.tabs[0]
+        }
+
+        if (toActivate) await browser.tabs.update(toActivate.id, { active: true })
+      }
+
+      browser.tabs.remove(tab.id)
     },
   },
 }

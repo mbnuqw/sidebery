@@ -65,6 +65,7 @@ body input
   align-items: flex-start
   justify-content: flex-end
   border-radius: 6px
+  background-color: #78787824
   overflow: hidden
   cursor: pointer
   transition: box-shadow var(--d-norm)
@@ -80,6 +81,7 @@ body input
     box(absolute)
     size(100%, same)
     background-size: cover
+    background-repeat: no-repeat
     border-radius: 6.5px
     z-index: 0
 
@@ -104,6 +106,7 @@ body input
     margin: 0 16px 8px
     overflow: hidden
     color: var(--title-fg)
+    text-shadow: 0 1px 8px #00000024
 
   .url
     box(relative)
@@ -114,6 +117,7 @@ body input
     color: var(--info-fg)
     white-space: nowrap
     text-overflow: ellipsis
+    text-shadow: 0 1px 8px #00000024
 
 @media screen and (max-width: 720px)
   .tab-wrapper
