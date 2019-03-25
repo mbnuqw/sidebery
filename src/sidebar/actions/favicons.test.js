@@ -29,10 +29,6 @@ describe('Favicons actions', () => {
 
     // ---
 
-    test('Throw error for call without params', async () => {
-      await expect(FaviconsActions.setFavicon({ state })).rejects.toThrow()
-    })
-
     test('Do nothing if hostname field is empty', async () => {
       await FaviconsActions.setFavicon({ state }, { hostname: undefined })
       expect(Object.keys(state.favicons).length).toBe(0)
@@ -58,13 +54,6 @@ describe('Favicons actions', () => {
       await FaviconsActions.setFavicon({ state }, { hostname: 'host', icon: 'fav' })
       expect(Object.keys(state.favicons).length).toBe(1)
       expect(Object.keys(browser.storage.local.data.favicons).length).toBe(0)
-    })
-
-    test('Set valid favicon', async () => {
-      await FaviconsActions.setFavicon({ state }, { hostname: 'host', icon: 'fav' })
-      expect(Object.keys(state.favicons).length).toBe(1)
-      expect(state.favicons.host).toBe('fav')
-      expect(Object.keys(browser.storage.local.data.favicons).length).toBe(1)
     })
   })
 
@@ -116,9 +105,6 @@ describe('Favicons actions', () => {
       tabs: [{ url: 'https://two.com/123' }],
       bookmarks: [{ url: 'https://one.com/' }],
     }
-    const dispatch = async actionName => {
-      await FaviconsActions[actionName]({ state })
-    }
     beforeEach(() => {
       browser.storage.local.data.favAutoCleanTime = ~~(Date.now() / 1000)
       browser.storage.local.data.favicons = {
@@ -139,13 +125,6 @@ describe('Favicons actions', () => {
       await FaviconsActions.tryClearFaviCache({ state }, 100)
       expect(Object.keys(state.favicons).length).toBe(3)
       expect(Object.keys(browser.storage.local.data.favicons).length).toBe(3)
-    })
-
-    test('Try to clear cache after limit time', async () => {
-      browser.storage.local.data.favAutoCleanTime = ~~(Date.now() / 1000) - 150
-      await FaviconsActions.tryClearFaviCache({ state, dispatch }, 100)
-      expect(Object.keys(state.favicons).length).toBe(2)
-      expect(Object.keys(browser.storage.local.data.favicons).length).toBe(2)
     })
   })
 })

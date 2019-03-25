@@ -36,25 +36,6 @@ describe('Bookmarks actions', () => {
   })
 
   /**
-   * saveBookmarksTree
-   */
-  test('Saving bookmarks tree state', async () => {
-    // Prepare env
-    let expandedBookmarks
-    browser.storage.local.set = kv => {
-      expandedBookmarks = kv.expandedBookmarks
-      return Promise.resolve(null)
-    }
-    const state = {
-      bookmarks: [],
-    }
-
-    // Checks
-    await BookmarksActions.saveBookmarksTree({ state })
-    expect(expandedBookmarks.length).toBe(0)
-  })
-
-  /**
    * reloadBookmarks
    */
   test('Bookmarks reloading', async () => {
