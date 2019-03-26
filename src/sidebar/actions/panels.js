@@ -273,7 +273,7 @@ export default {
             rule = new RegExp(rule.slice(1, rule.length - 1))
           }
 
-          state.includeHostsRules.push({ ctx: ctr.id, host: rule })
+          state.includeHostsRules.push({ ctx: ctr.id, value: rule })
         }
       }
 

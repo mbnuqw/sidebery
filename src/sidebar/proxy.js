@@ -1,6 +1,7 @@
 import State from './store.state'
 
 export default function reqHandler(info) {
+  if (!State.tabsMap) return
   let tab = State.tabsMap[info.tabId]
   if (!tab) return
 
@@ -9,8 +10,8 @@ export default function reqHandler(info) {
     // Inlude rules
     for (let rule of State.includeHostsRules) {
       let ok
-      if ((typeof rule.host)[0] === 's') ok = info.url.indexOf(rule.host) !== -1
-      else ok = rule.host.test(info.url)
+      if ((typeof rule.value)[0] === 's') ok = info.url.indexOf(rule.value) !== -1
+      else ok = rule.value.test(info.url)
 
       if (ok && tab.cookieStoreId !== rule.ctx) {
         browser.tabs.create({
