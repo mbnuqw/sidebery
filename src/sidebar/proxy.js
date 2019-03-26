@@ -18,6 +18,7 @@ export default function reqHandler(info) {
           url: info.url,
           cookieStoreId: rule.ctx,
           active: tab.active,
+          pinned: tab.pinned,
         })
         browser.tabs.remove(tab.id)
         return
@@ -36,6 +37,7 @@ export default function reqHandler(info) {
             windowId: State.windowId,
             url: info.url,
             active: tab.active,
+            pinned: tab.pinned,
           })
           browser.tabs.remove(tab.id)
           return
