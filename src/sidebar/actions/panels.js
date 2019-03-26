@@ -316,7 +316,8 @@ export default {
   /**
    * Set request handler
    */
-  turnOnReqHandler() {
+  turnOnReqHandler({ state }) {
+    if (state.private) return
     if (!browser.proxy.onRequest.hasListener(ReqHandler)) {
       browser.proxy.onRequest.addListener(ReqHandler, { urls: ['<all_urls>'] })
     }
@@ -325,7 +326,8 @@ export default {
   /**
    * Unset request handler
    */
-  turnOffReqHandler() {
+  turnOffReqHandler({ state }) {
+    if (state.private) return
     if (browser.proxy.onRequest.hasListener(ReqHandler)) {
       browser.proxy.onRequest.removeListener(ReqHandler)
     }
