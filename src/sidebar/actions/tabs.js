@@ -800,6 +800,9 @@ export default {
             pinned: pin,
           })
           oldNewMap[node.id] = info.id
+          if (state.tabsMap[info.id] && opener) {
+            state.tabsMap[info.id].parentId = opener
+          }
         }
 
         // Remove source tabs
