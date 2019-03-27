@@ -140,7 +140,7 @@ export default {
         })
       }
 
-      if (state.tabsTree) {
+      if (state.tabsTree && !node.pinned) {
         menu.add('tab.group', 'groupTabs', state.selected)
       }
 
