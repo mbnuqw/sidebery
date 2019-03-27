@@ -491,7 +491,6 @@ export default {
       color: var(--tabs-fg-hover)
     .close
       opacity: 1
-      z-index: 20
   &:active
   &[is-active]:active
     background-color: var(--tabs-bg-active)
@@ -879,7 +878,7 @@ export default {
   size(31px)
   height: var(--tabs-height)
   cursor: pointer
-  z-index: -1
+  z-index: 20
   opacity: 0
   &:hover > svg
     fill: #ea4335
