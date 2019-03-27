@@ -146,6 +146,19 @@ export default {
   },
 
   /**
+   * Scroll to active tab
+   */
+  scrollToActiveTab({ state, getters }) {
+    const activePanel = getters.panels[state.panelIndex]
+    if (activePanel && activePanel.tabs) {
+      const activeTab = activePanel.tabs.find(t => t.active)
+      if (activeTab) {
+        EventBus.$emit('scrollToActiveTab', state.panelIndex, activeTab.id)
+      }
+    }
+  },
+
+  /**
    * Create new tab in current window
    */
   createTab({ state, getters }, ctxId) {

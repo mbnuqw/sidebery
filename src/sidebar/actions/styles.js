@@ -21,8 +21,7 @@ export default {
     }
 
     state.customStyles = loadedStyles
-
-    setTimeout(() => EventBus.$emit('dynVarChange'), 256)
+    EventBus.$emit('dynVarChange')
   },
 
   /**
