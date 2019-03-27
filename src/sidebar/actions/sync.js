@@ -119,7 +119,6 @@ export default {
   updateSyncPanels({ state, getters }, synced) {
     if (!synced) return
     if (synced.id === state.localID) return
-    // console.log('[DEBUG] SYNC ACTION updateSyncPanels');
 
     // Check if this data already used
     if (state.synced[synced.id] && state.synced[synced.id] >= synced.time) return
