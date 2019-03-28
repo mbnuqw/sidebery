@@ -368,13 +368,6 @@ export default {
     },
   },
 
-  async mounted() {
-    // Get permissions state
-    State.permAllUrls = await browser.permissions.contains({ origins: ['<all_urls>'] })
-    State.permTabHide = await browser.permissions.contains({ permissions: ['tabHide'] })
-    if (State.hideInact) Store.dispatch('hideInactPanelsTabs')
-  },
-
   methods: {
     switchOpt(e, optName) {
       const opt = State[optName]
@@ -403,8 +396,7 @@ export default {
     },
 
     // --- Tabs ---
-    async toggleHideInact() {
-      State.permTabHide = await browser.permissions.contains({ permissions: ['tabHide'] })
+    toggleHideInact() {
       if (State.hideInact) {
         Store.dispatch('showAllTabs')
       } else {
@@ -450,8 +442,7 @@ export default {
       Store.dispatch('saveTabsTree')
     },
 
-    async toggleHideFoldedTabs() {
-      State.permTabHide = await browser.permissions.contains({ permissions: ['tabHide'] })
+    toggleHideFoldedTabs() {
       if (State.hideFoldedTabs) {
         const toShow = State.tabs.filter(t => t.invisible).map(t => t.id)
         browser.tabs.show(toShow)
@@ -599,8 +590,6 @@ export default {
 
     // --- Permissions ---
     async togglePermAllUrls() {
-      State.permAllUrls = await browser.permissions.contains({ origins: ['<all_urls>'] })
-
       if (State.permAllUrls) {
         await browser.permissions.remove({ origins: ['<all_urls>'] })
         State.proxiedPanels = {}
@@ -610,7 +599,7 @@ export default {
           if (c.includeHostsActive) c.includeHostsActive = false
           if (c.excludeHostsActive) c.excludeHostsActive = false
         })
-        State.permAllUrls = await browser.permissions.contains({ origins: ['<all_urls>'] })
+        State.permAllUrls = false
       } else {
         browser.tabs.create({
           url: browser.runtime.getURL('permissions/all-urls.html'),
@@ -621,8 +610,6 @@ export default {
     },
 
     async togglePermTabHide() {
-      State.permTabHide = await browser.permissions.contains({ permissions: ['tabHide'] })
-
       if (State.permTabHide) {
         await Store.dispatch('showAllTabs')
         await browser.permissions.remove({ permissions: ['tabHide'] })

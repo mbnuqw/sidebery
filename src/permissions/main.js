@@ -1,5 +1,5 @@
 // Load settings and set theme
-void(async function() {
+void (async function() {
   let ans = await browser.storage.local.get('settings')
   let settings = ans.settings
   let theme = settings ? settings.theme : 'dark'
@@ -36,7 +36,8 @@ void (async function() {
 
   reqBtnEl.addEventListener('click', () => {
     browser.permissions.request({ origins, permissions }).then(() => {
-      browser.runtime.reload()
+      browser.runtime.sendMessage({ action: 'reloadOptPermissions' })
+      browser.tabs.getCurrent().then(tab => browser.tabs.remove([tab.id]))
     })
   })
 })()

@@ -133,6 +133,7 @@ export default new Vue({
 
       if (changes.settings) {
         Store.dispatch('updateSettings', changes.settings.newValue)
+        Store.dispatch('reloadOptPermissions')
       }
       if (changes.styles) Store.dispatch('applyStyles', changes.styles.newValue)
       if (changes.containers) {

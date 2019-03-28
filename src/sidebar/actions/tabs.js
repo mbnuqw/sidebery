@@ -463,14 +463,9 @@ export default {
    * Clear all cookies of tab urls
    */
   async clearTabsCookies({ state }, tabIds) {
-    try {
-      const permitted = await browser.permissions.contains({ origins: ['<all_urls>'] })
-      if (!permitted) {
-        const url = browser.runtime.getURL('permissions/all-urls.html')
-        browser.tabs.create({ url })
-        return
-      }
-    } catch (err) {
+    if (!state.permAllUrls) {
+      const url = browser.runtime.getURL('permissions/all-urls.html')
+      browser.tabs.create({ url })
       return
     }
 
@@ -891,8 +886,7 @@ export default {
    */
   async groupTabs({ state, dispatch }, tabIds) {
     // Check permissions
-    const permitted = await browser.permissions.contains({ origins: ['<all_urls>'] })
-    if (!permitted) {
+    if (!state.permAllUrls) {
       const url = browser.runtime.getURL('permissions/all-urls.html')
       browser.tabs.create({ url })
       return
