@@ -108,6 +108,9 @@ export default {
       if (JPG_RE.test(this.tab.url)) return '#icon_jpg'
       if (PDF_RE.test(this.tab.url)) return '#icon_pdf'
       if (this.tab.url.startsWith('file:')) return '#icon_local_file'
+      if (this.tab.url.startsWith('about:preferences')) return '#icon_pref'
+      if (this.tab.url.startsWith('about:addons')) return '#icon_addons'
+      if (this.tab.url.startsWith('about:performance')) return '#icon_perf'
       return '#icon_ff'
     },
   },
