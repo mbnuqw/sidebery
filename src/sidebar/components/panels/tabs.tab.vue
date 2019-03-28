@@ -30,7 +30,7 @@
     svg.-mute: use(xlink:href="#icon_mute")
   .fav(:loading="loading")
     .placeholder: svg: use(:xlink:href="favPlaceholder")
-    img(:src="favicon", @load.passive="onFaviconLoad", @error="onFaviconErr")
+    img(:src="favicon", @load.passive="onFaviconLoad")
     .exp(@dblclick.prevent.stop="", @mousedown.stop="onExp"): svg: use(xlink:href="#icon_expand")
     .update-badge
     .ok-badge
@@ -75,7 +75,6 @@ export default {
   data() {
     return {
       menu: false,
-      faviErr: false,
       loading: false,
       selected: false,
     }
@@ -89,11 +88,6 @@ export default {
     favicon() {
       if (this.tab.status === 'loading') return State.favicons[this.tab.host]
       else return State.favicons[this.tab.host] || this.tab.favIconUrl
-    },
-
-    offsetStyle() {
-      if (!this.offsetY) return {}
-      return { transform: `translateY(${this.offsetY}px)` }
     },
 
     tooltip() {
@@ -367,10 +361,6 @@ export default {
         if (!hn) return
         Store.dispatch('setFavicon', { hostname: hn, icon: base64 })
       }
-    },
-
-    onFaviconErr() {
-      this.faviErr = true
     },
 
     /**
