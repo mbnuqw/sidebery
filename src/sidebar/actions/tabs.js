@@ -41,7 +41,9 @@ export default {
       t.parentId = -1
       t.invisible = false
       t.lvl = 0
+      t.host = t.url.split('/')[2] || ''
       state.tabsMap[t.id] = t
+      if (!t.favIconUrl || t.favIconUrl.startsWith('chrome:')) t.favIconUrl = ''
     })
     state.tabs = tabs
 

@@ -1245,6 +1245,9 @@ export default {
       tab.parentId = -1
       tab.lvl = 0
       tab.invisible = false
+      tab.favIconUrl = ''
+      tab.host = ''
+      if (tab.url) tab.host = tab.url.split('/')[2] || ''
 
       // Put new tab in tabs list
       State.tabsMap[tab.id] = tab
@@ -1285,9 +1288,17 @@ export default {
      */
     onUpdatedTab(tabId, change, tab) {
       if (tab.windowId !== State.windowId) return
-      if (!State.tabs[tab.index]) return
-      if (State.tabs[tab.index].id !== tabId) return
-      const localTab = State.tabs[tab.index]
+
+      const localTab = State.tabsMap[tabId]
+      if (!localTab) return
+
+      // Url
+      if (change.hasOwnProperty('url')) {
+        if (change.url !== localTab.url) {
+          localTab.host = change.url.split('/')[2] || ''
+          if (change.url.startsWith('about:')) localTab.favIconUrl = ''
+        }
+      }
 
       // Loaded
       if (change.hasOwnProperty('status')) {
@@ -1298,9 +1309,13 @@ export default {
 
       // Handle favicon change
       // If favicon is base64 string - store it in cache
-      if (change.favIconUrl && change.favIconUrl.startsWith('data:')) {
-        const hostname = tab.url.split('/')[2]
-        Store.dispatch('setFavicon', { hostname, icon: change.favIconUrl })
+      if (change.favIconUrl) {
+        if (change.favIconUrl.startsWith('data:')) {
+          const hostname = tab.url.split('/')[2]
+          Store.dispatch('setFavicon', { hostname, icon: change.favIconUrl })
+        } else if (change.favIconUrl.startsWith('chrome:')) {
+          change.favIconUrl = ''
+        }
       }
 
       // Handle unpinned tab

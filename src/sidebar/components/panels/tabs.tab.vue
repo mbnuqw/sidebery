@@ -1,7 +1,7 @@
 <template lang="pug">
 .Tab(:is-active="tab.active"
   :data-status="tab.status"
-  :data-no-fav="!favicon || faviErr"
+  :data-no-fav="!favicon"
   :data-audible="tab.audible"
   :data-muted="tab.mutedInfo.muted"
   :data-pinned="tab.pinned"
@@ -87,13 +87,8 @@ export default {
     },
 
     favicon() {
-      if (this.tab.favIconUrl) return this.tab.favIconUrl
-      else if (this.tab.url) {
-        let hn = this.tab.url.split('/')[2]
-        if (!hn) return
-        return State.favicons[hn]
-      }
-      return undefined
+      if (this.tab.status === 'loading') return State.favicons[this.tab.host]
+      else return State.favicons[this.tab.host] || this.tab.favIconUrl
     },
 
     offsetStyle() {
@@ -581,6 +576,7 @@ export default {
     .fav > img
       opacity: 0
       transform: translateY(-4px)
+      transition: none
 
   &[data-audible]
     .audio
