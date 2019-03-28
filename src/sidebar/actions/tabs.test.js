@@ -575,6 +575,7 @@ describe('bookmarkTabs', () => {
 describe('clearTabsCookies', () => {
   test('clear cookies', async () => {
     const state = {
+      permAllUrls: true,
       tabs: [
         { id: 1 },
         { id: 2, title: 'a', url: 'http://some.com' },

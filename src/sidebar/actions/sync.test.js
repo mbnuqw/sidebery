@@ -204,7 +204,8 @@ describe('loadSyncPanels', () => {
 describe('resyncPanels', () => {
   test('resync panels', async () => {
     const state = {
-      lastSyncPanels: '123456789'
+      windowFocused: true,
+      lastSyncPanels: '123456789',
     }
     const dispatch = jest.fn()
 
