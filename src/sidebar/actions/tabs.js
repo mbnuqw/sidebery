@@ -60,14 +60,14 @@ export default {
         let offset = 0
         for (let i = 0; i < ans.tabsTreeState.length; i++) {
           // Saved nodes
-          const t = ans.tabsTreeState[i]
+          const savedTab = ans.tabsTreeState[i]
 
           // Current tab
-          let tab = state.tabs[t.index - offset]
+          let tab = state.tabs[savedTab.index - offset]
           if (!tab) break
 
-          const sameUrl = t.url === tab.url
-          const isGroup = Utils.IsGroupUrl(t.url)
+          const sameUrl = savedTab.url === tab.url
+          const isGroup = Utils.IsGroupUrl(savedTab.url)
           if (isGroup) {
             let nextUrlOk = true
 
@@ -81,20 +81,20 @@ export default {
 
             // Removed group
             if (!sameUrl && nextUrlOk) {
-              const groupId = Utils.GetGroupId(t.url)
-              const parent = parents[t.parentId]
+              const groupId = Utils.GetGroupId(savedTab.url)
+              const parent = parents[savedTab.parentId]
               const rTab = await browser.tabs.create({
                 windowId: state.windowId,
-                index: t.index,
+                index: savedTab.index,
                 url: browser.runtime.getURL('group/group.html') + `#${groupId}`,
-                cookieStoreId: t.ctx,
+                cookieStoreId: savedTab.ctx,
                 active: false,
               })
 
               tab = state.tabsMap[rTab.id]
-              tab.isParent = t.isParent
-              tab.folded = t.folded
-              if (t.isParent) parents[t.id] = tab
+              tab.isParent = savedTab.isParent
+              tab.folded = savedTab.folded
+              if (savedTab.isParent) parents[savedTab.id] = tab
               if (parent) {
                 tab.invisible = parent.folded || parent.invisible
                 tab.parentId = parent.id
@@ -105,13 +105,13 @@ export default {
 
           // Check if this is actual target tab
           if (!sameUrl && tab.status === 'complete') break
-          if (tab.cookieStoreId !== t.ctx) break
+          if (tab.cookieStoreId !== savedTab.ctx) break
 
-          tab.isParent = t.isParent
-          tab.folded = t.folded
-          if (t.isParent) parents[t.id] = tab
-          if (parents[t.parentId]) {
-            const parentTab = parents[t.parentId]
+          tab.isParent = savedTab.isParent
+          tab.folded = savedTab.folded
+          if (savedTab.isParent) parents[savedTab.id] = tab
+          if (parents[savedTab.parentId]) {
+            const parentTab = parents[savedTab.parentId]
             tab.invisible = parentTab.folded || parentTab.invisible
             tab.parentId = parentTab.id
           }
