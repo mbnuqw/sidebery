@@ -82,18 +82,12 @@ export default {
   /**
    * Update containers data
    */
-  async updateContainers({ state }, containers) {
+  async updateContainers({ state, dispatch }, containers) {
     if (!containers) return
 
     for (let localCtr of state.containers) {
       const newCtr = containers.find(nc => nc.id === localCtr.id)
       if (!newCtr) continue
-
-      localCtr.colorCode = newCtr.colorCode
-      localCtr.color = newCtr.color
-      localCtr.icon = newCtr.icon
-      localCtr.iconUrl = newCtr.iconUrl
-      localCtr.name = newCtr.name
 
       localCtr.lockedTabs = newCtr.lockedTabs
       localCtr.lockedPanel = newCtr.lockedPanel
@@ -107,6 +101,8 @@ export default {
       localCtr.excludeHosts = newCtr.excludeHosts
       localCtr.lastActiveTab = newCtr.lastActiveTab
     }
+
+    dispatch('updateReqHandlerDebounced')
   },
 
   /**

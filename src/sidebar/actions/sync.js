@@ -110,6 +110,7 @@ export default {
    * ReSync panels from last loaded state.
    */
   resyncPanels({ state, dispatch }) {
+    if (!state.windowFocused) return
     if (state.lastSyncPanels) dispatch('updateSyncPanels', state.lastSyncPanels)
   },
 

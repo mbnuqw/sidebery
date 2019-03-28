@@ -1131,8 +1131,6 @@ export default {
      * contextualIdentities.onCreated
      */
     onCreatedContainer({ contextualIdentity }) {
-      if (!State.windowFocused) return
-
       State.ctxs.push(contextualIdentity)
       State.containers.push({
         ...contextualIdentity,
@@ -1152,23 +1150,24 @@ export default {
         excludeHosts: '',
         lastActiveTab: -1,
       })
-      State.panelIndex = this.panels.length - 1
-      State.lastPanelIndex = State.panelIndex
-
-      this.openDashboard(State.panelIndex)
 
       // Check if we have some updates
       // for container with this name
-      Store.dispatch('resyncPanels')
-      Store.dispatch('saveContainers')
+      if (State.windowFocused) {
+        State.panelIndex = this.panels.length - 1
+        State.lastPanelIndex = State.panelIndex
+
+        this.openDashboard(State.panelIndex)
+
+        Store.dispatch('resyncPanels')
+        Store.dispatch('saveContainers')
+      }
     },
 
     /**
      * contextualIdentities.onRemoved
      */
     async onRemovedContainer({ contextualIdentity }) {
-      if (!State.windowFocused) return
-
       let id = contextualIdentity.cookieStoreId
 
       // Find container
@@ -1187,19 +1186,21 @@ export default {
       State.containers.splice(ctrIndex, 1)
 
       // Switch to prev panel
-      State.panelIndex = this.panels.length - 1
-      State.lastPanelIndex = State.panelIndex
+      if (State.panelIndex >= this.panels.length) {
+        State.panelIndex = this.panels.length - 1
+        State.lastPanelIndex = State.panelIndex
+      }
 
-      Store.dispatch('updateReqHandler')
-      Store.dispatch('saveContainers')
+      if (State.windowFocused) {
+        Store.dispatch('updateReqHandler')
+        Store.dispatch('saveContainers')
+      }
     },
 
     /**
      * contextualIdentities.onUpdated
      */
     onUpdatedContainer({ contextualIdentity }) {
-      if (!State.windowFocused) return
-
       let id = contextualIdentity.cookieStoreId
       let ctxIndex = State.ctxs.findIndex(c => c.cookieStoreId === id)
       let ctrIndex = State.containers.findIndex(c => c.cookieStoreId === id)
@@ -1212,8 +1213,10 @@ export default {
       State.containers[ctrIndex].iconUrl = contextualIdentity.iconUrl
       State.containers[ctrIndex].name = contextualIdentity.name
 
-      Store.dispatch('saveSyncPanels')
-      Store.dispatch('saveContainers')
+      if (State.windowFocused) {
+        Store.dispatch('saveSyncPanels')
+        Store.dispatch('saveContainers')
+      }
     },
     // ---
 
