@@ -5,6 +5,7 @@ import Dict from '../mixins/dict'
 import Store from './store'
 import State from './store.state'
 
+if (!State.tabsMap) State.tabsMap = []
 Vue.mixin(Dict)
 
 export default new Vue({
