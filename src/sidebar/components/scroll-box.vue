@@ -1,10 +1,5 @@
 <template lang="pug">
-.ScrollBox(
-  @mousedown="onMouseDown"
-  @mousemove="onMouseMove"
-  @mouseup="onMouseUp"
-  @mouseleave="onMouseUp"
-  @wheel="onWheel")
+.ScrollBox(@wheel="onWheel")
   .progress(ref="scroll", :data-scrolling="scrolling")
   .top-shadow(:data-show="topOverflow")
   .bottom-shadow(:data-show="bottomOverflow")
@@ -25,8 +20,6 @@ import Debounce from '../../directives/debounce'
 
 Vue.directive('debounce', Debounce)
 
-const DRAG_SCROLL_AREA = 38
-
 export default {
   props: {
     lock: Boolean,
@@ -37,17 +30,11 @@ export default {
       topOverflow: false,
       bottomOverflow: false,
       scrollGripY: 0,
-      scrollGripHeight: 0,
       scrolling: false,
       scrollY: 0,
       boxHeight: 0,
       contentHeight: 0,
     }
-  },
-
-  created() {
-    this.mpb = []
-    this.autoScrollRatio = 1
   },
 
   mounted() {
@@ -59,67 +46,8 @@ export default {
   },
 
   methods: {
-    onMouseDown(e) {
-      this.mpb[e.button] = true
-    },
-
-    onMouseUp(e) {
-      this.mpb[e.button] = false
-      this.autoScroll()
-    },
-
-    onMouseMove(e) {
-      if (!this.mpb[0] && !this.mpb[2]) return
-      let boxHeight = this.$refs.scrollBox.offsetHeight
-      let contentHeight = this.$refs.scrollContent.offsetHeight
-      if (contentHeight <= boxHeight) return
-
-      if (e.clientY - this.topOffset < DRAG_SCROLL_AREA) {
-        this.autoScrollRatio = (e.clientY - this.topOffset - DRAG_SCROLL_AREA) >> 2
-        this.autoScrollRatio = Math.abs(this.autoScrollRatio)
-        this.autoScroll(-1, e)
-        return
-      }
-
-      if (boxHeight - e.clientY + this.topOffset < DRAG_SCROLL_AREA) {
-        this.autoScrollRatio = (boxHeight - e.clientY + this.topOffset - DRAG_SCROLL_AREA) >> 2
-        this.autoScrollRatio = Math.abs(this.autoScrollRatio)
-        this.autoScroll(1, e)
-        return
-      }
-
-      this.autoScroll()
-    },
-
     onWheel(e) {
       if (this.lock) e.preventDefault()
-    },
-
-    autoScroll(y, e) {
-      if (y && !this.autoScrolling) {
-        this.autoScrolling = true
-        this.autoScrollLoop(y, e)
-      }
-
-      if (!y) {
-        if (this.autoScrolling) this.autoScrolling = false
-      }
-    },
-
-    autoScrollLoop(y, e) {
-      if (!this.autoScrolling) return
-      let contentY = this.$refs.scrollBox.scrollTop
-      let boxHeight = this.$refs.scrollBox.offsetHeight
-      let contentHeight = this.$refs.scrollContent.offsetHeight
-      if (y < 0 && contentY > 0) {
-        this.$refs.scrollBox.scrollTop = contentY - 1 * this.autoScrollRatio
-        this.$emit('auto-scroll', e)
-      }
-      if (y > 0 && contentY + boxHeight < contentHeight) {
-        this.$refs.scrollBox.scrollTop = contentY + 1 * this.autoScrollRatio
-        this.$emit('auto-scroll', e)
-      }
-      window.requestAnimationFrame(() => this.autoScrollLoop(y, e))
     },
 
     recalcScroll() {

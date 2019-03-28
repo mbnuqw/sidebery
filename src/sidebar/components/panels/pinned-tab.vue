@@ -31,9 +31,9 @@
     .loading-spinner
       each n in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
         .spinner-stick(class='spinner-stick-' + n)
-    .audio-badge(@mousedown.stop="", @click="$store.dispatch('remuteTabs', [tab.id])")
-      svg.-loud: use(xlink:href="#icon_loud")
-      svg.-mute: use(xlink:href="#icon_mute")
+  .audio-badge(@mousedown.stop="", @click="$store.dispatch('remuteTabs', [tab.id])")
+    svg.-loud: use(xlink:href="#icon_loud")
+    svg.-mute: use(xlink:href="#icon_mute")
   .ctx(v-if="ctx && ctxColor", :style="{background: ctxColor}")
   .title(v-if="withTitle") {{tab.title}}
 </template>
@@ -480,6 +480,8 @@ export default {
     padding-left: 1px
   .PinnedTab:before
     box-shadow: 0 -1px 0 0 var(--tabs-update-badge-bg)
+  .PinnedTab .audio-badge
+    pos(l: 16px)
 
 #root.-pinned-tabs-panel
 #root.-pinned-tabs-top
@@ -634,10 +636,10 @@ export default {
   fill: var(--false-fg)
 
 // --- Audio badge
-.PinnedTab .fav > .audio-badge
+.PinnedTab .audio-badge
   box(absolute)
   size(10px, same)
-  pos(b: -3px, r: -3px)
+  pos(calc(50% + 1px), 17px)
   border-radius: 50%
   opacity: 0
   z-index: -1
@@ -660,17 +662,17 @@ export default {
       #000000 7.5px,
       #000000
     )
-  .fav > .audio-badge
-    z-index: 2
+  .audio-badge
+    z-index: 200
     opacity: 1
     transform: scale(1, 1)
 
 .PinnedTab[data-audible]
-  .fav > .audio-badge > svg.-loud
+  .audio-badge > svg.-loud
     opacity: 1
 
 .PinnedTab[data-muted]
-  .fav > .audio-badge > svg.-mute
+  .audio-badge > svg.-mute
     opacity: 1
 
 // --- Loaded fx

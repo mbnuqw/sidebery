@@ -2,7 +2,7 @@
 /*eslint no-console: off*/
 const { spawn, spawnSync } = require('child_process')
 const { scripts } = require('../package.json')
-const LANG = process.argv[process.argv.length - 1]
+const VER = process.argv[process.argv.length - 1]
 
 const colors = {
   reset: '\x1b[0m',
@@ -36,7 +36,7 @@ const PERM_HIDE = scripts['dev.perm.hide'].split(' ')
 const PERM_HIDE_CMD = PERM_HIDE[0]
 const PERM_HIDE_OPT = PERM_HIDE.slice(1)
 
-const EXT = scripts['dev.ext.' + LANG].split(' ')
+const EXT = scripts['dev.ext.' + VER].split(' ')
 const EXT_CMD = EXT[0]
 const EXT_OPT = EXT.slice(1)
 

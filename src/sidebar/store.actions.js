@@ -78,6 +78,14 @@ export default {
     if (state.hideInact) dispatch('hideInactPanelsTabs')
   },
 
+  /**
+   * Reload optianal permissions
+   */
+  async reloadOptPermissions({ state, dispatch }) {
+    state.permAllUrls = await browser.permissions.contains({ origins: ['<all_urls>'] })
+    state.permTabHide = await browser.permissions.contains({ permissions: ['tabHide'] })
+    if (state.hideInact) dispatch('hideInactPanelsTabs')
+  },
 
   /**
    * Get all windows and check which current
@@ -140,7 +148,7 @@ export default {
         })
       }
 
-      if (state.tabsTree) {
+      if (state.tabsTree && !node.pinned) {
         menu.add('tab.group', 'groupTabs', state.selected)
       }
 

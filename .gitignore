@@ -12,3 +12,5 @@ build/profile-en/*
 !build/profile-en/__preserve-dir
 build/profile-beta/*
 !build/profile-beta/__preserve-dir
+build/profile-esr/*
+!build/profile-esr/__preserve-dir

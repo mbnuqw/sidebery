@@ -5,6 +5,7 @@ import Dict from '../mixins/dict'
 import Store from './store'
 import State from './store.state'
 
+if (!State.tabsMap) State.tabsMap = []
 Vue.mixin(Dict)
 
 export default new Vue({
@@ -87,9 +88,10 @@ export default new Vue({
     await Store.dispatch('loadState')
     await Store.dispatch('loadContainers')
     await Store.dispatch('loadTabs')
-    Store.dispatch('loadStyles')
-    Store.dispatch('loadKeybindings')
     await Store.dispatch('loadLocalID')
+    await Store.dispatch('loadStyles')
+    Store.dispatch('scrollToActiveTab')
+    Store.dispatch('loadKeybindings')
     Store.dispatch('loadSyncPanels')
     Store.dispatch('loadSnapshots')
     Store.dispatch('loadFavicons')
@@ -131,6 +133,7 @@ export default new Vue({
 
       if (changes.settings) {
         Store.dispatch('updateSettings', changes.settings.newValue)
+        Store.dispatch('reloadOptPermissions')
       }
       if (changes.styles) Store.dispatch('applyStyles', changes.styles.newValue)
       if (changes.containers) {

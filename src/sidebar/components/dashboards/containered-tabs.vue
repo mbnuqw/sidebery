@@ -161,6 +161,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import Store from '../../store'
+import State from '../../store.state'
 import TextInput from '../inputs/text'
 import ScrollBox from '../scroll-box'
 import ToggleField from '../fields/toggle'
@@ -447,8 +448,7 @@ export default {
 
     async toggleIncludeHosts() {
       if (!this.conf.includeHostsActive) {
-        const permitted = await browser.permissions.contains({ origins: ['<all_urls>'] })
-        if (!permitted) {
+        if (!State.permAllUrls) {
           const permUrl = browser.runtime.getURL('permissions/all-urls.html')
           this.$emit('close')
           this.switchProxy('direct')
@@ -477,8 +477,7 @@ export default {
 
     async toggleExcludeHosts() {
       if (!this.conf.excludeHostsActive) {
-        const permitted = await browser.permissions.contains({ origins: ['<all_urls>'] })
-        if (!permitted) {
+        if (!State.permAllUrls) {
           const permUrl = browser.runtime.getURL('permissions/all-urls.html')
           this.$emit('close')
           this.switchProxy('direct')
@@ -508,8 +507,7 @@ export default {
     async switchProxy(type) {
       // Check permissions
       if (type !== 'direct') {
-        const permitted = await browser.permissions.contains({ origins: ['<all_urls>'] })
-        if (!permitted) {
+        if (!State.permAllUrls) {
           this.$emit('close')
           this.switchProxy('direct')
           browser.tabs.create({

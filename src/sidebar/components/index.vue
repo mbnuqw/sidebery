@@ -1131,8 +1131,6 @@ export default {
      * contextualIdentities.onCreated
      */
     onCreatedContainer({ contextualIdentity }) {
-      if (!State.windowFocused) return
-
       State.ctxs.push(contextualIdentity)
       State.containers.push({
         ...contextualIdentity,
@@ -1152,23 +1150,24 @@ export default {
         excludeHosts: '',
         lastActiveTab: -1,
       })
-      State.panelIndex = this.panels.length - 1
-      State.lastPanelIndex = State.panelIndex
-
-      this.openDashboard(State.panelIndex)
 
       // Check if we have some updates
       // for container with this name
-      Store.dispatch('resyncPanels')
-      Store.dispatch('saveContainers')
+      if (State.windowFocused) {
+        State.panelIndex = this.panels.length - 1
+        State.lastPanelIndex = State.panelIndex
+
+        this.openDashboard(State.panelIndex)
+
+        Store.dispatch('resyncPanels')
+        Store.dispatch('saveContainers')
+      }
     },
 
     /**
      * contextualIdentities.onRemoved
      */
     async onRemovedContainer({ contextualIdentity }) {
-      if (!State.windowFocused) return
-
       let id = contextualIdentity.cookieStoreId
 
       // Find container
@@ -1187,19 +1186,21 @@ export default {
       State.containers.splice(ctrIndex, 1)
 
       // Switch to prev panel
-      State.panelIndex = this.panels.length - 1
-      State.lastPanelIndex = State.panelIndex
+      if (State.panelIndex >= this.panels.length) {
+        State.panelIndex = this.panels.length - 1
+        State.lastPanelIndex = State.panelIndex
+      }
 
-      Store.dispatch('updateReqHandler')
-      Store.dispatch('saveContainers')
+      if (State.windowFocused) {
+        Store.dispatch('updateReqHandler')
+        Store.dispatch('saveContainers')
+      }
     },
 
     /**
      * contextualIdentities.onUpdated
      */
     onUpdatedContainer({ contextualIdentity }) {
-      if (!State.windowFocused) return
-
       let id = contextualIdentity.cookieStoreId
       let ctxIndex = State.ctxs.findIndex(c => c.cookieStoreId === id)
       let ctrIndex = State.containers.findIndex(c => c.cookieStoreId === id)
@@ -1212,8 +1213,10 @@ export default {
       State.containers[ctrIndex].iconUrl = contextualIdentity.iconUrl
       State.containers[ctrIndex].name = contextualIdentity.name
 
-      Store.dispatch('saveSyncPanels')
-      Store.dispatch('saveContainers')
+      if (State.windowFocused) {
+        Store.dispatch('saveSyncPanels')
+        Store.dispatch('saveContainers')
+      }
     },
     // ---
 
@@ -1245,6 +1248,9 @@ export default {
       tab.parentId = -1
       tab.lvl = 0
       tab.invisible = false
+      tab.favIconUrl = ''
+      tab.host = ''
+      if (tab.url) tab.host = tab.url.split('/')[2] || ''
 
       // Put new tab in tabs list
       State.tabsMap[tab.id] = tab
@@ -1285,9 +1291,17 @@ export default {
      */
     onUpdatedTab(tabId, change, tab) {
       if (tab.windowId !== State.windowId) return
-      if (!State.tabs[tab.index]) return
-      if (State.tabs[tab.index].id !== tabId) return
-      const localTab = State.tabs[tab.index]
+
+      const localTab = State.tabsMap[tabId]
+      if (!localTab) return
+
+      // Url
+      if (change.hasOwnProperty('url')) {
+        if (change.url !== localTab.url) {
+          localTab.host = change.url.split('/')[2] || ''
+          if (change.url.startsWith('about:')) localTab.favIconUrl = ''
+        }
+      }
 
       // Loaded
       if (change.hasOwnProperty('status')) {
@@ -1298,9 +1312,13 @@ export default {
 
       // Handle favicon change
       // If favicon is base64 string - store it in cache
-      if (change.favIconUrl && change.favIconUrl.startsWith('data:')) {
-        const hostname = tab.url.split('/')[2]
-        Store.dispatch('setFavicon', { hostname, icon: change.favIconUrl })
+      if (change.favIconUrl) {
+        if (change.favIconUrl.startsWith('data:')) {
+          const hostname = tab.url.split('/')[2]
+          Store.dispatch('setFavicon', { hostname, icon: change.favIconUrl })
+        } else if (change.favIconUrl.startsWith('chrome:')) {
+          change.favIconUrl = ''
+        }
       }
 
       // Handle unpinned tab

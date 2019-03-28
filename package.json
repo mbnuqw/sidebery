@@ -1,6 +1,6 @@
 {
   "name": "sidebery",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "Manage your tabs and bookmarks in sidebar",
   "main": "index.js",
   "scripts": {
@@ -10,8 +10,10 @@
     "dev.perm.hide": "parcel watch ./src/permissions/tab-hide.html -d ./addon/permissions/ --public-url ./ --no-autoinstall",
     "dev.ext.en": "web-ext run --source-dir ./addon -f firefox-beta --keep-profile-changes --firefox-profile ./build/profile-beta",
     "dev.ext.ru": "web-ext run --source-dir ./addon -f firefox --keep-profile-changes --firefox-profile ./build/profile-ru",
+    "dev.ext.esr": "web-ext run --source-dir ./addon -f firefox-esr --keep-profile-changes --firefox-profile ./build/profile-esr",
     "dev": "node ./build/debug.js en",
     "dev.ru": "node ./build/debug.js ru",
+    "dev.esr": "node ./build/debug.js esr",
     "build.sidebar": "parcel build ./src/sidebar/index.html -d ./addon/sidebar/ --public-url ./ --no-autoinstall --no-source-maps",
     "build.group": "parcel build ./src/group/group.html -d ./addon/group/ --public-url ./ --no-autoinstall --no-source-maps",
     "build.perm.url": "parcel build ./src/permissions/all-urls.html -d ./addon/permissions/ --public-url ./ --no-autoinstall --no-source-maps",

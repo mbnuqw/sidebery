@@ -1,7 +1,7 @@
 <template lang="pug">
 .Tab(:is-active="tab.active"
   :data-status="tab.status"
-  :data-no-fav="!favicon || faviErr"
+  :data-no-fav="!favicon"
   :data-audible="tab.audible"
   :data-muted="tab.mutedInfo.muted"
   :data-pinned="tab.pinned"
@@ -30,7 +30,7 @@
     svg.-mute: use(xlink:href="#icon_mute")
   .fav(:loading="loading")
     .placeholder: svg: use(:xlink:href="favPlaceholder")
-    img(:src="favicon", @load.passive="onFaviconLoad", @error="onFaviconErr")
+    img(:src="favicon", @load.passive="onFaviconLoad")
     .exp(@dblclick.prevent.stop="", @mousedown.stop="onExp"): svg: use(xlink:href="#icon_expand")
     .update-badge
     .ok-badge
@@ -75,7 +75,6 @@ export default {
   data() {
     return {
       menu: false,
-      faviErr: false,
       loading: false,
       selected: false,
     }
@@ -87,18 +86,8 @@ export default {
     },
 
     favicon() {
-      if (this.tab.favIconUrl) return this.tab.favIconUrl
-      else if (this.tab.url) {
-        let hn = this.tab.url.split('/')[2]
-        if (!hn) return
-        return State.favicons[hn]
-      }
-      return undefined
-    },
-
-    offsetStyle() {
-      if (!this.offsetY) return {}
-      return { transform: `translateY(${this.offsetY}px)` }
+      if (this.tab.status === 'loading') return State.favicons[this.tab.host]
+      else return State.favicons[this.tab.host] || this.tab.favIconUrl
     },
 
     tooltip() {
@@ -113,6 +102,9 @@ export default {
       if (JPG_RE.test(this.tab.url)) return '#icon_jpg'
       if (PDF_RE.test(this.tab.url)) return '#icon_pdf'
       if (this.tab.url.startsWith('file:')) return '#icon_local_file'
+      if (this.tab.url.startsWith('about:preferences')) return '#icon_pref'
+      if (this.tab.url.startsWith('about:addons')) return '#icon_addons'
+      if (this.tab.url.startsWith('about:performance')) return '#icon_perf'
       return '#icon_ff'
     },
   },
@@ -371,10 +363,6 @@ export default {
       }
     },
 
-    onFaviconErr() {
-      this.faviErr = true
-    },
-
     /**
      * Handle mousedown event on expand button
      */
@@ -491,7 +479,6 @@ export default {
       color: var(--tabs-fg-hover)
     .close
       opacity: 1
-      z-index: 20
   &:active
   &[is-active]:active
     background-color: var(--tabs-bg-active)
@@ -501,89 +488,24 @@ export default {
 
   &[lvl="1"]
     padding-left: var(--tabs-indent)
-    > .lvl-wrapper:before
-      box-shadow: calc(var(--tabs-indent) / -2) 0 0 0 var(--inactive-fg)
   &[lvl="2"]
     padding-left: calc(var(--tabs-indent) * 2)
-    > .lvl-wrapper:before
-      box-shadow: calc(var(--tabs-indent) / -2) 0 0 0 var(--inactive-fg),
-                  calc(var(--tabs-indent) * -1.5) 0 0 0 var(--inactive-fg)
   &[lvl="3"]
     padding-left: calc(var(--tabs-indent) * 3)
-    > .lvl-wrapper:before
-      box-shadow: calc(var(--tabs-indent) / -2) 0 0 0 var(--inactive-fg),
-                  calc(var(--tabs-indent) * -1.5) 0 0 0 var(--inactive-fg),
-                  calc(var(--tabs-indent) * -2.5) 0 0 0 var(--inactive-fg)
   &[lvl="4"]
     padding-left: calc(var(--tabs-indent) * 4)
-    > .lvl-wrapper:before
-      box-shadow: calc(var(--tabs-indent) / -2) 0 0 0 var(--inactive-fg),
-                  calc(var(--tabs-indent) * -1.5) 0 0 0 var(--inactive-fg),
-                  calc(var(--tabs-indent) * -2.5) 0 0 0 var(--inactive-fg),
-                  calc(var(--tabs-indent) * -3.5) 0 0 0 var(--inactive-fg)
   &[lvl="5"]
     padding-left: calc(var(--tabs-indent) * 5)
-    > .lvl-wrapper:before
-      box-shadow: calc(var(--tabs-indent) / -2) 0 0 0 var(--inactive-fg),
-                  calc(var(--tabs-indent) * -1.5) 0 0 0 var(--inactive-fg),
-                  calc(var(--tabs-indent) * -2.5) 0 0 0 var(--inactive-fg),
-                  calc(var(--tabs-indent) * -3.5) 0 0 0 var(--inactive-fg),
-                  calc(var(--tabs-indent) * -4.5) 0 0 0 var(--inactive-fg)
   &[lvl="6"]
     padding-left: calc(var(--tabs-indent) * 6)
-    > .lvl-wrapper:before
-      box-shadow: calc(var(--tabs-indent) / -2) 0 0 0 var(--inactive-fg),
-                  calc(var(--tabs-indent) * -1.5) 0 0 0 var(--inactive-fg),
-                  calc(var(--tabs-indent) * -2.5) 0 0 0 var(--inactive-fg),
-                  calc(var(--tabs-indent) * -3.5) 0 0 0 var(--inactive-fg),
-                  calc(var(--tabs-indent) * -4.5) 0 0 0 var(--inactive-fg),
-                  calc(var(--tabs-indent) * -5.5) 0 0 0 var(--inactive-fg)
   &[lvl="7"]
     padding-left: calc(var(--tabs-indent) * 7)
-    > .lvl-wrapper:before
-      box-shadow: calc(var(--tabs-indent) / -2) 0 0 0 var(--inactive-fg),
-                  calc(var(--tabs-indent) * -1.5) 0 0 0 var(--inactive-fg),
-                  calc(var(--tabs-indent) * -2.5) 0 0 0 var(--inactive-fg),
-                  calc(var(--tabs-indent) * -3.5) 0 0 0 var(--inactive-fg),
-                  calc(var(--tabs-indent) * -4.5) 0 0 0 var(--inactive-fg),
-                  calc(var(--tabs-indent) * -5.5) 0 0 0 var(--inactive-fg),
-                  calc(var(--tabs-indent) * -6.5) 0 0 0 var(--inactive-fg)
   &[lvl="8"]
     padding-left: calc(var(--tabs-indent) * 8)
-    > .lvl-wrapper:before
-      box-shadow: calc(var(--tabs-indent) / -2) 0 0 0 var(--inactive-fg),
-                  calc(var(--tabs-indent) * -1.5) 0 0 0 var(--inactive-fg),
-                  calc(var(--tabs-indent) * -2.5) 0 0 0 var(--inactive-fg),
-                  calc(var(--tabs-indent) * -3.5) 0 0 0 var(--inactive-fg),
-                  calc(var(--tabs-indent) * -4.5) 0 0 0 var(--inactive-fg),
-                  calc(var(--tabs-indent) * -5.5) 0 0 0 var(--inactive-fg),
-                  calc(var(--tabs-indent) * -6.5) 0 0 0 var(--inactive-fg),
-                  calc(var(--tabs-indent) * -7.5) 0 0 0 var(--inactive-fg)
   &[lvl="9"]
     padding-left: calc(var(--tabs-indent) * 9)
-    > .lvl-wrapper:before
-      box-shadow: calc(var(--tabs-indent) / -2) 0 0 0 var(--inactive-fg),
-                  calc(var(--tabs-indent) * -1.5) 0 0 0 var(--inactive-fg),
-                  calc(var(--tabs-indent) * -2.5) 0 0 0 var(--inactive-fg),
-                  calc(var(--tabs-indent) * -3.5) 0 0 0 var(--inactive-fg),
-                  calc(var(--tabs-indent) * -4.5) 0 0 0 var(--inactive-fg),
-                  calc(var(--tabs-indent) * -5.5) 0 0 0 var(--inactive-fg),
-                  calc(var(--tabs-indent) * -6.5) 0 0 0 var(--inactive-fg),
-                  calc(var(--tabs-indent) * -7.5) 0 0 0 var(--inactive-fg),
-                  calc(var(--tabs-indent) * -8.5) 0 0 0 var(--inactive-fg)
   &[lvl="10"]
     padding-left: calc(var(--tabs-indent) * 10)
-    > .lvl-wrapper:before
-      box-shadow: calc(var(--tabs-indent) / -2) 0 0 0 var(--inactive-fg),
-                  calc(var(--tabs-indent) * -1.5) 0 0 0 var(--inactive-fg),
-                  calc(var(--tabs-indent) * -2.5) 0 0 0 var(--inactive-fg),
-                  calc(var(--tabs-indent) * -3.5) 0 0 0 var(--inactive-fg),
-                  calc(var(--tabs-indent) * -4.5) 0 0 0 var(--inactive-fg),
-                  calc(var(--tabs-indent) * -5.5) 0 0 0 var(--inactive-fg),
-                  calc(var(--tabs-indent) * -6.5) 0 0 0 var(--inactive-fg),
-                  calc(var(--tabs-indent) * -7.5) 0 0 0 var(--inactive-fg),
-                  calc(var(--tabs-indent) * -8.5) 0 0 0 var(--inactive-fg),
-                  calc(var(--tabs-indent) * -9.5) 0 0 0 var(--inactive-fg)
 
   &[is-parent] .fav:hover
     > .exp
@@ -647,6 +569,7 @@ export default {
     .fav > img
       opacity: 0
       transform: translateY(-4px)
+      transition: none
 
   &[data-audible]
     .audio
@@ -715,6 +638,16 @@ export default {
     opacity: .8
 #root.-tabs-lvl-marks .Tab .lvl-wrapper:before
   box(block)
+  box-shadow: calc(var(--tabs-indent) / -2) 0 0 0 var(--inactive-fg),
+              calc(var(--tabs-indent) * -1.5) 0 0 0 var(--inactive-fg),
+              calc(var(--tabs-indent) * -2.5) 0 0 0 var(--inactive-fg),
+              calc(var(--tabs-indent) * -3.5) 0 0 0 var(--inactive-fg),
+              calc(var(--tabs-indent) * -4.5) 0 0 0 var(--inactive-fg),
+              calc(var(--tabs-indent) * -5.5) 0 0 0 var(--inactive-fg),
+              calc(var(--tabs-indent) * -6.5) 0 0 0 var(--inactive-fg),
+              calc(var(--tabs-indent) * -7.5) 0 0 0 var(--inactive-fg),
+              calc(var(--tabs-indent) * -8.5) 0 0 0 var(--inactive-fg),
+              calc(var(--tabs-indent) * -9.5) 0 0 0 var(--inactive-fg)
 
 // --- Drag layer ---
 .Tab .drag-layer
@@ -934,7 +867,7 @@ export default {
   size(31px)
   height: var(--tabs-height)
   cursor: pointer
-  z-index: -1
+  z-index: 20
   opacity: 0
   &:hover > svg
     fill: #ea4335

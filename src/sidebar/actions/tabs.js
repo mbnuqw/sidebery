@@ -41,7 +41,9 @@ export default {
       t.parentId = -1
       t.invisible = false
       t.lvl = 0
+      t.host = t.url.split('/')[2] || ''
       state.tabsMap[t.id] = t
+      if (!t.favIconUrl || t.favIconUrl.startsWith('chrome:')) t.favIconUrl = ''
     })
     state.tabs = tabs
 
@@ -58,14 +60,14 @@ export default {
         let offset = 0
         for (let i = 0; i < ans.tabsTreeState.length; i++) {
           // Saved nodes
-          const t = ans.tabsTreeState[i]
+          const savedTab = ans.tabsTreeState[i]
 
           // Current tab
-          let tab = state.tabs[t.index - offset]
+          let tab = state.tabs[savedTab.index - offset]
           if (!tab) break
 
-          const sameUrl = t.url === tab.url
-          const isGroup = Utils.IsGroupUrl(t.url)
+          const sameUrl = savedTab.url === tab.url
+          const isGroup = Utils.IsGroupUrl(savedTab.url)
           if (isGroup) {
             let nextUrlOk = true
 
@@ -79,20 +81,20 @@ export default {
 
             // Removed group
             if (!sameUrl && nextUrlOk) {
-              const groupId = Utils.GetGroupId(t.url)
-              const parent = parents[t.parentId]
+              const groupId = Utils.GetGroupId(savedTab.url)
+              const parent = parents[savedTab.parentId]
               const rTab = await browser.tabs.create({
                 windowId: state.windowId,
-                index: t.index,
+                index: savedTab.index,
                 url: browser.runtime.getURL('group/group.html') + `#${groupId}`,
-                cookieStoreId: t.ctx,
+                cookieStoreId: savedTab.ctx,
                 active: false,
               })
 
               tab = state.tabsMap[rTab.id]
-              tab.isParent = t.isParent
-              tab.folded = t.folded
-              if (t.isParent) parents[t.id] = tab
+              tab.isParent = savedTab.isParent
+              tab.folded = savedTab.folded
+              if (savedTab.isParent) parents[savedTab.id] = tab
               if (parent) {
                 tab.invisible = parent.folded || parent.invisible
                 tab.parentId = parent.id
@@ -103,13 +105,13 @@ export default {
 
           // Check if this is actual target tab
           if (!sameUrl && tab.status === 'complete') break
-          if (tab.cookieStoreId !== t.ctx) break
+          if (tab.cookieStoreId !== savedTab.ctx) break
 
-          tab.isParent = t.isParent
-          tab.folded = t.folded
-          if (t.isParent) parents[t.id] = tab
-          if (parents[t.parentId]) {
-            const parentTab = parents[t.parentId]
+          tab.isParent = savedTab.isParent
+          tab.folded = savedTab.folded
+          if (savedTab.isParent) parents[savedTab.id] = tab
+          if (parents[savedTab.parentId]) {
+            const parentTab = parents[savedTab.parentId]
             tab.invisible = parentTab.folded || parentTab.invisible
             tab.parentId = parentTab.id
           }
@@ -143,6 +145,19 @@ export default {
       browser.storage.local.set({ tabsTreeState })
       TabsTreeSaveTimeout = null
     }, delay)
+  },
+
+  /**
+   * Scroll to active tab
+   */
+  scrollToActiveTab({ state, getters }) {
+    const activePanel = getters.panels[state.panelIndex]
+    if (activePanel && activePanel.tabs) {
+      const activeTab = activePanel.tabs.find(t => t.active)
+      if (activeTab) {
+        EventBus.$emit('scrollToActiveTab', state.panelIndex, activeTab.id)
+      }
+    }
   },
 
   /**
@@ -448,14 +463,9 @@ export default {
    * Clear all cookies of tab urls
    */
   async clearTabsCookies({ state }, tabIds) {
-    try {
-      const permitted = await browser.permissions.contains({ origins: ['<all_urls>'] })
-      if (!permitted) {
-        const url = browser.runtime.getURL('permissions/all-urls.html')
-        browser.tabs.create({ url })
-        return
-      }
-    } catch (err) {
+    if (!state.permAllUrls) {
+      const url = browser.runtime.getURL('permissions/all-urls.html')
+      browser.tabs.create({ url })
       return
     }
 
@@ -800,6 +810,9 @@ export default {
             pinned: pin,
           })
           oldNewMap[node.id] = info.id
+          if (state.tabsMap[info.id] && opener) {
+            state.tabsMap[info.id].parentId = opener
+          }
         }
 
         // Remove source tabs
@@ -873,8 +886,7 @@ export default {
    */
   async groupTabs({ state, dispatch }, tabIds) {
     // Check permissions
-    const permitted = await browser.permissions.contains({ origins: ['<all_urls>'] })
-    if (!permitted) {
+    if (!state.permAllUrls) {
       const url = browser.runtime.getURL('permissions/all-urls.html')
       browser.tabs.create({ url })
       return

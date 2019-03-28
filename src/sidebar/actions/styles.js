@@ -21,8 +21,7 @@ export default {
     }
 
     state.customStyles = loadedStyles
-
-    setTimeout(() => EventBus.$emit('dynVarChange'), 256)
+    EventBus.$emit('dynVarChange')
   },
 
   /**
@@ -61,6 +60,7 @@ export default {
     const rootEl = document.getElementById('root')
     Vue.set(state.customStyles, key, val)
     rootEl.style.setProperty(Utils.CSSVar(key), val)
+    setTimeout(() => EventBus.$emit('dynVarChange'), 256)
   },
 
   /**
@@ -70,5 +70,6 @@ export default {
     const rootEl = document.getElementById('root')
     Vue.set(state.customStyles, key, null)
     rootEl.style.removeProperty(Utils.CSSVar(key))
+    setTimeout(() => EventBus.$emit('dynVarChange'), 256)
   },
 }
