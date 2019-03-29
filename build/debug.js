@@ -36,6 +36,10 @@ const PERM_HIDE = scripts['dev.perm.hide'].split(' ')
 const PERM_HIDE_CMD = PERM_HIDE[0]
 const PERM_HIDE_OPT = PERM_HIDE.slice(1)
 
+const DBG_HIDE = scripts['dev.debug'].split(' ')
+const DBG_HIDE_CMD = DBG_HIDE[0]
+const DBG_HIDE_OPT = DBG_HIDE.slice(1)
+
 const EXT = scripts['dev.ext.' + VER].split(' ')
 const EXT_CMD = EXT[0]
 const EXT_OPT = EXT.slice(1)
@@ -48,6 +52,7 @@ const Sidebar = spawn(SIDEBAR_CMD, SIDEBAR_OPT, EXEC_CONFIG)
 const Group = spawn(GROUP_CMD, GROUP_OPT, EXEC_CONFIG)
 const PermUrl = spawn(PERM_URL_CMD, PERM_URL_OPT, EXEC_CONFIG)
 const PermHide = spawn(PERM_HIDE_CMD, PERM_HIDE_OPT, EXEC_CONFIG)
+const Debug = spawn(DBG_HIDE_CMD, DBG_HIDE_OPT, EXEC_CONFIG)
 const Ext = spawn(EXT_CMD, EXT_OPT, EXEC_CONFIG)
 
 Sidebar.stdout.on('data', data => logOut('[Sidebar] ', data))
@@ -58,6 +63,8 @@ PermUrl.stdout.on('data', data => logOut('[PermUrl] ', data))
 PermUrl.stderr.on('data', data => errOut('[PermUrl ERROR] ', data))
 PermHide.stdout.on('data', data => logOut('[PermHide] ', data))
 PermHide.stderr.on('data', data => errOut('[PermHide ERROR] ', data))
+Debug.stdout.on('data', data => logOut('[Debug] ', data))
+Debug.stderr.on('data', data => errOut('[Debug ERROR] ', data))
 Ext.stdout.on('data', data => logOut('[Ext]     ', data))
 
 function logOut(prefix, data) {

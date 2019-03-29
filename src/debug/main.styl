@@ -1,0 +1,55 @@
+@import '../styles/mixins'
+@import '../styles/vars'
+
+html
+  box(relative)
+  size(h: 100%)
+
+body
+  box(relative, flex)
+  size(rel(100%, -16px), min-h: 100%)
+  text(sans-serif, smooth: on)
+  margin: 0
+  flex-direction: column
+  align-items: center
+  padding: 0 8px
+  background-color: var(--bg)
+
+body h2
+  max-width: 450px
+  text-align: center
+
+body input
+  -webkit-appearance: none
+  border: none
+  outline: none
+  margin: 0
+  padding: 0
+  background-color: transparent
+  resize: none
+  z-index: 1
+
+.logo
+  box(relative)
+  text(s: 1.5rem, w: 700)
+  margin: 50px auto
+  color: var(--inactive-fg)
+  cursor: default
+  opacity: .24
+
+.title
+  box(relative, block)
+  size(100%)
+  text(monospace, s: 9px, w: 700)
+  text-align: center
+  color: var(--inactive-fg)
+  margin: 50px 0 50px
+  white-space: pre
+
+.data
+  box(relative)
+  size(max-w: 720px)
+  text(monospace, s: 10px)
+  color: var(--true-fg)
+  white-space: pre-wrap
+  cursor: pointer

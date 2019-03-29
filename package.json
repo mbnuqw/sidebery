@@ -8,6 +8,7 @@
     "dev.group": "parcel watch ./src/group/group.html -d ./addon/group/ --public-url ./ --no-autoinstall",
     "dev.perm.url": "parcel watch ./src/permissions/all-urls.html -d ./addon/permissions/ --public-url ./ --no-autoinstall",
     "dev.perm.hide": "parcel watch ./src/permissions/tab-hide.html -d ./addon/permissions/ --public-url ./ --no-autoinstall",
+    "dev.debug": "parcel watch ./src/debug/debug.html -d ./addon/debug/ --public-url ./ --no-autoinstall",
     "dev.ext.en": "web-ext run --source-dir ./addon -f firefox-beta --keep-profile-changes --firefox-profile ./build/profile-beta",
     "dev.ext.ru": "web-ext run --source-dir ./addon -f firefox --keep-profile-changes --firefox-profile ./build/profile-ru",
     "dev.ext.esr": "web-ext run --source-dir ./addon -f firefox-esr --keep-profile-changes --firefox-profile ./build/profile-esr",
@@ -18,6 +19,7 @@
     "build.group": "parcel build ./src/group/group.html -d ./addon/group/ --public-url ./ --no-autoinstall --no-source-maps",
     "build.perm.url": "parcel build ./src/permissions/all-urls.html -d ./addon/permissions/ --public-url ./ --no-autoinstall --no-source-maps",
     "build.perm.hide": "parcel build ./src/permissions/tab-hide.html -d ./addon/permissions/ --public-url ./ --no-autoinstall --no-source-maps",
+    "build.debug": "parcel build ./src/debug/debug.html -d ./addon/debug/ --public-url ./ --no-autoinstall --no-source-maps",
     "build.ext": "web-ext build --source-dir ./addon -a dist/ -i *.lock ./package.json",
     "build": "node ./build/release.js",
     "lint": "web-ext lint -s ./addon",
@@ -25,6 +27,7 @@
     "clear.sidebar": "rm -rf addon/sidebar",
     "clear.group": "rm -rf addon/group",
     "clear.permissions": "rm -rf addon/permissions",
+    "clear.debug": "rm -rf addon/debug",
     "clear.full": "rm -rf node_modules package-lock.json",
     "test": "./node_modules/.bin/jest"
   },

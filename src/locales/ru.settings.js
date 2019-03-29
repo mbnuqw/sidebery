@@ -150,6 +150,7 @@ export default {
 
   // --- Help
   'settings.help_title': { message: 'Помошь' },
+  'settings.debug_info': { message: 'Debug info' },
   'settings.repo_issue': { message: 'Создать github issue' },
   'settings.repo_bug': { message: 'Report bug' },
   'settings.repo_req': { message: 'Feature request' },

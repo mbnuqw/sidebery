@@ -284,6 +284,7 @@
       h2 {{t('settings.help_title')}}
 
       .buttons
+        .btn(@click="openDebugInfo") {{t('settings.debug_info')}}
         a.btn(tabindex="-1", :href="issueLink") {{t('settings.repo_bug')}}
         a.btn(tabindex="-1", :href="featureReqLink") {{t('settings.repo_req')}}
         .btn.-warn(@click="resetSettings") {{t('settings.reset_settings')}}
@@ -295,6 +296,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { DEFAULT_SETTINGS } from '../../settings'
 import Utils from '../../../libs/utils'
 import Store from '../../store'
 import State from '../../store.state'
@@ -659,6 +661,34 @@ export default {
     async clearSyncData() {
       await Store.dispatch('clearSyncData')
       this.calcSyncDataSize()
+    },
+
+    /**
+     * Open debug info page
+     */
+    openDebugInfo() {
+      const settings = {}
+      for (let sKey in DEFAULT_SETTINGS) {
+        if (!DEFAULT_SETTINGS.hasOwnProperty(sKey)) continue
+        settings[sKey] = State[sKey]
+      }
+
+      const panels = []
+      for (let panel of Store.getters.panels) {
+        // Get sanitized clone
+        const panelClone = JSON.parse(JSON.stringify(panel))
+        if (panelClone.tabs) panelClone.tabs = panelClone.tabs.length
+        delete panelClone.name
+        delete panelClone.includeHosts
+        delete panelClone.excludeHosts
+        delete panelClone.proxy
+        panels.push(panelClone)
+      }
+
+      const data = JSON.stringify({ settings, panels }, null, '  ')
+      let url = browser.runtime.getURL('debug/debug.html')
+      url += '?data=' + encodeURIComponent(data)
+      browser.tabs.create({ url })
     },
   },
 }
