@@ -598,12 +598,15 @@ export default {
     const actPI = state.panelIndex < 0 ? state.lastPanelIndex : state.panelIndex
     const actP = getters.panels[actPI]
     if (!actP || !actP.tabs || actP.pinned) return
-    const toShow = actP.tabs.filter(t => t.hidden && !t.invisible).map(t => t.id)
-    const toHide = getters.panels.reduce((acc, p, i) => {
-      if (!p.tabs || p.tabs.length === 0) return acc
-      if (i === actPI) return acc
-      return acc.concat(p.tabs.filter(t => !t.hidden && !t.invisible).map(t => t.id))
-    }, [])
+
+    const toShow = actP.tabs.filter(t => {
+      if (state.hideFoldedTabs) return t.hidden && !t.invisible
+      else return t.hidden
+    }).map(t => t.id)
+
+    const toHide = state.tabs.filter(t => {
+      return !t.hidden && !t.pinned && t.cookieStoreId !== actP.cookieStoreId
+    }).map(t => t.id)
 
     if (toShow.length) browser.tabs.show(toShow)
     if (toHide.length) browser.tabs.hide(toHide)
