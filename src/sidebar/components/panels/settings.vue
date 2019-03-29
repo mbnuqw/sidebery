@@ -295,6 +295,7 @@
 
 
 <script>
+import Vue from 'vue'
 import { mapGetters } from 'vuex'
 import { DEFAULT_SETTINGS } from '../../settings'
 import Utils from '../../../libs/utils'
@@ -368,6 +369,16 @@ export default {
         }
       })
     },
+  },
+
+  mounted() {
+    // Cleanup snapshots targets
+    for (let ctxId in State.snapshotsTargets) {
+      if (!State.snapshotsTargets.hasOwnProperty(ctxId)) continue
+      if (!State.ctxs.find(c => c.cookieStoreId === ctxId)) {
+        Vue.delete(State.snapshotsTargets, ctxId)
+      }
+    }
   },
 
   methods: {
