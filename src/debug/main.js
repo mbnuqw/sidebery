@@ -7,14 +7,36 @@ void (async function() {
   rootEl.classList.add('-' + theme)
 
   const url = new URL(window.location)
-  const data = url.searchParams.get('data')
-  const dataEl = document.getElementById('data')
-  dataEl.innerText = data
+  const settingsEl = document.getElementById('settings')
+  const settingsData = url.searchParams.get('settings')
+  settingsEl.innerText = settingsData
 
-  dataEl.addEventListener('click', () => {
+  const panelsEl = document.getElementById('panels')
+  const panelsData = url.searchParams.get('panels')
+  panelsEl.innerText = panelsData
+
+  const tabsEl = document.getElementById('tabs')
+  const tabsData = url.searchParams.get('tabs')
+  tabsEl.innerText = tabsData
+
+  settingsEl.addEventListener('click', () => {
     const selection = window.getSelection()
     const range = new window.Range()
-    range.selectNode(dataEl)
+    range.selectNode(settingsEl)
+    selection.addRange(range)
+  })
+
+  panelsEl.addEventListener('click', () => {
+    const selection = window.getSelection()
+    const range = new window.Range()
+    range.selectNode(panelsEl)
+    selection.addRange(range)
+  })
+
+  tabsEl.addEventListener('click', () => {
+    const selection = window.getSelection()
+    const range = new window.Range()
+    range.selectNode(tabsEl)
     selection.addRange(range)
   })
 })()

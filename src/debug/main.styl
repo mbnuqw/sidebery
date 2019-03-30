@@ -42,14 +42,28 @@ body input
   size(100%)
   text(monospace, s: 9px, w: 700)
   text-align: center
-  color: var(--inactive-fg)
+  color: var(--title-fg)
   margin: 50px 0 50px
   white-space: pre
 
 .data
-  box(relative)
-  size(max-w: 720px)
-  text(monospace, s: 10px)
-  color: var(--true-fg)
-  white-space: pre-wrap
-  cursor: pointer
+  box(relative, flex)
+  size(100%)
+  justify-content: space-around
+  section
+    box(relative)
+    size(100%, max-w: 640px)
+    h2
+      box(relative)
+      size(100%)
+      text(s: 1.5rem, w: 600)
+      color: var(--sub-title-fg)
+      text-align: center
+      padding: 8px 0
+    .data
+      box(relative)
+      size(100%)
+      text(monospace, s: 10px)
+      color: var(--true-fg)
+      white-space: pre-wrap
+      cursor: pointer

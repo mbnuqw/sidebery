@@ -688,17 +688,35 @@ export default {
       for (let panel of Store.getters.panels) {
         // Get sanitized clone
         const panelClone = JSON.parse(JSON.stringify(panel))
+
         if (panelClone.tabs) panelClone.tabs = panelClone.tabs.length
         delete panelClone.name
+        delete panelClone.iconUrl
         delete panelClone.includeHosts
         delete panelClone.excludeHosts
         delete panelClone.proxy
         panels.push(panelClone)
       }
 
-      const data = JSON.stringify({ settings, panels }, null, '  ')
+      const tabs = []
+      for (let tab of State.tabs) {
+        // Get sanitized clone
+        const tabClone = JSON.parse(JSON.stringify(tab))
+
+        delete tabClone.title
+        tabClone.url = tabClone.url.slice(0, 5) + '...'
+        tabClone.favIconUrl = tabClone.favIconUrl.slice(0, 5) + '...'
+        tabs.push(tabClone)
+      }
+
+      const settingsJSON = JSON.stringify(settings, null, '  ')
+      const panelsJSON = JSON.stringify(panels, null, '  ')
+      const tabsJSON = JSON.stringify(tabs, null, '  ')
+
       let url = browser.runtime.getURL('debug/debug.html')
-      url += '?data=' + encodeURIComponent(data)
+      url += '?settings=' + encodeURIComponent(settingsJSON)
+      url += '&panels=' + encodeURIComponent(panelsJSON)
+      url += '&tabs=' + encodeURIComponent(tabsJSON)
       browser.tabs.create({ url })
     },
   },
