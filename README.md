@@ -2,20 +2,19 @@
 
 [![https://addons.mozilla.org/en-US/firefox/addon/sidebery/](https://addons.cdn.mozilla.net/static/img/addons-buttons/AMO-button_2.png)](https://addons.mozilla.org/en-US/firefox/addon/sidebery/)
 
-Firefox addon for managing tabs, containers (contextual identities) and bookmarks in sidebar. Supports both flat and tree tabs layout, drag-and-drop actions, different proxy settings for each container, synchronization and much more.
-
+Firefox addon for managing tabs, containers (contextual identities) and bookmarks in sidebar. Supports both flat and tree tabs layouts, per-container include/exclude rules, proxy configs for each container and much more.
 
 ## Features
 
 - Vertical tabs layout (flat and tree)
 - Bookmarks operations
-- Drag-and-drop
 - Contextual Identities management
 - Proxy configs for each container
 - Include/Exclude rules for each container
 - Creating tabs snapshots for easy recovering
 - Light and dark themes
 - Customizable styles
+- Drag-and-drop
 - Configurable navigation with mouse and keyboard
 - Multiple tabs/bookmarks selection with right mouse button
 
