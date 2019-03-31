@@ -19,7 +19,7 @@
     "build.group": "parcel build ./src/group/group.html -d ./addon/group/ --public-url ./ --no-autoinstall --no-source-maps",
     "build.perm.url": "parcel build ./src/permissions/all-urls.html -d ./addon/permissions/ --public-url ./ --no-autoinstall --no-source-maps",
     "build.perm.hide": "parcel build ./src/permissions/tab-hide.html -d ./addon/permissions/ --public-url ./ --no-autoinstall --no-source-maps",
-    "build.debug": "parcel build ./src/debug/debug.html -d ./addon/debug/ --public-url ./ --no-autoinstall --no-source-maps",
+    "build.debug": "parcel build ./src/debug/debug.html -d ./addon/debug/ --public-url ./ --no-autoinstall --no-source-maps --no-minify",
     "build.ext": "web-ext build --source-dir ./addon -a dist/ -i *.lock ./package.json",
     "build": "node ./build/release.js",
     "lint": "web-ext lint -s ./addon",

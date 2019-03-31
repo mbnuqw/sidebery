@@ -22,6 +22,10 @@ const CLEAR_PERM = scripts['clear.permissions'].split(' ')
 const CLEAR_PERM_CMD = CLEAR_PERM[0]
 const CLEAR_PERM_OPT = CLEAR_PERM.slice(1)
 
+const CLEAR_DBG = scripts['clear.debug'].split(' ')
+const CLEAR_DBG_CMD = CLEAR_DBG[0]
+const CLEAR_DBG_OPT = CLEAR_DBG.slice(1)
+
 const SIDEBAR = scripts['build.sidebar'].split(' ')
 const SIDEBAR_CMD = SIDEBAR[0]
 const SIDEBAR_OPT = SIDEBAR.slice(1)
@@ -58,6 +62,8 @@ if (out.status) process.exit(out.status)
 out = spawnSync(CLEAR_GROUP_CMD, CLEAR_GROUP_OPT, EXEC_CONFIG)
 if (out.status) process.exit(out.status)
 out = spawnSync(CLEAR_PERM_CMD, CLEAR_PERM_OPT, EXEC_CONFIG)
+if (out.status) process.exit(out.status)
+out = spawnSync(CLEAR_DBG_CMD, CLEAR_DBG_OPT, EXEC_CONFIG)
 if (out.status) process.exit(out.status)
 out = spawnSync(SIDEBAR_CMD, SIDEBAR_OPT, EXEC_CONFIG)
 if (out.status) process.exit(out.status)
