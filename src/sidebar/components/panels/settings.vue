@@ -47,7 +47,7 @@
         :inactive="$store.state.pinnedTabsPosition !== 'panel'"
         :value="$store.state.pinnedTabsList"
         @input="setOpt('pinnedTabsList', $event)")
-      toggle-field(
+      toggle-field.-rm(
         label="settings.pinned_tabs_sync"
         :value="$store.state.pinnedTabsSync"
         @input="togglePinnedTabsSync")
@@ -118,6 +118,11 @@
         :inactive="!$store.state.bookmarksPanel"
         :value="$store.state.autoCloseBookmarks"
         @input="setOpt('autoCloseBookmarks', $event)")
+      toggle-field(
+        label="settings.auto_rm_other"
+        :inactive="!$store.state.bookmarksPanel"
+        :value="$store.state.autoRemoveOther"
+        @input="setOpt('autoRemoveOther', $event)")
 
     section
       h2 {{t('settings.appearance_title')}}
@@ -271,7 +276,7 @@
         .btn(@click="clearFaviCache(false)") {{t('settings.rm_unused_favi_cache')}}
         .btn.-warn(@click="clearFaviCache(true)") {{t('settings.rm_favi_cache')}}
 
-    section
+    section.-rm
       h2 {{t('settings.sync_title')}}
       info-field(
         label="settings.sync_data_size"
@@ -284,9 +289,14 @@
       h2 {{t('settings.help_title')}}
 
       .buttons
+        .btn(@click="openDebugInfo") {{t('settings.debug_info')}}
         a.btn(tabindex="-1", :href="issueLink") {{t('settings.repo_bug')}}
         a.btn(tabindex="-1", :href="featureReqLink") {{t('settings.repo_req')}}
         .btn.-warn(@click="resetSettings") {{t('settings.reset_settings')}}
+
+      .ref
+        .rm-example
+        .desc {{t('settings.ref_rm')}}
 
       a.github(tabindex="-1", href="https://github.com/mbnuqw/sidebery")
         svg: use(xlink:href="#icon_github")
@@ -294,7 +304,9 @@
 
 
 <script>
+import Vue from 'vue'
 import { mapGetters } from 'vuex'
+import { DEFAULT_SETTINGS } from '../../settings'
 import Utils from '../../../libs/utils'
 import Store from '../../store'
 import State from '../../store.state'
@@ -366,6 +378,16 @@ export default {
         }
       })
     },
+  },
+
+  mounted() {
+    // Cleanup snapshots targets
+    for (let ctxId in State.snapshotsTargets) {
+      if (!State.snapshotsTargets.hasOwnProperty(ctxId)) continue
+      if (!State.ctxs.find(c => c.cookieStoreId === ctxId)) {
+        Vue.delete(State.snapshotsTargets, ctxId)
+      }
+    }
   },
 
   methods: {
@@ -660,6 +682,54 @@ export default {
       await Store.dispatch('clearSyncData')
       this.calcSyncDataSize()
     },
+
+    /**
+     * Open debug info page
+     */
+    openDebugInfo() {
+      const settings = {}
+      for (let sKey in DEFAULT_SETTINGS) {
+        if (!DEFAULT_SETTINGS.hasOwnProperty(sKey)) continue
+        settings[sKey] = State[sKey]
+      }
+
+      const panels = []
+      for (let panel of Store.getters.panels) {
+        // Get sanitized clone
+        const panelClone = JSON.parse(JSON.stringify(panel))
+
+        if (panelClone.tabs) panelClone.tabs = panelClone.tabs.length
+        delete panelClone.name
+        delete panelClone.iconUrl
+        delete panelClone.includeHosts
+        delete panelClone.excludeHosts
+        delete panelClone.proxy
+        panels.push(panelClone)
+      }
+
+      const tabs = []
+      for (let tab of State.tabs) {
+        // Get sanitized clone
+        const tabClone = JSON.parse(JSON.stringify(tab))
+
+        delete tabClone.title
+        tabClone.url = tabClone.url.slice(0, 5) + '...'
+        if (tabClone.favIconUrl && tabClone.favIconUrl.length > 5) {
+          tabClone.favIconUrl = tabClone.favIconUrl.slice(0, 5) + '...'
+        }
+        tabs.push(tabClone)
+      }
+
+      const settingsJSON = JSON.stringify(settings, null, '  ')
+      const panelsJSON = JSON.stringify(panels, null, '  ')
+      const tabsJSON = JSON.stringify(tabs, null, '  ')
+
+      let url = browser.runtime.getURL('debug/debug.html')
+      url += '?settings=' + encodeURIComponent(settingsJSON)
+      url += '&panels=' + encodeURIComponent(panelsJSON)
+      url += '&tabs=' + encodeURIComponent(tabsJSON)
+      browser.tabs.create({ url })
+    },
   },
 }
 </script>
@@ -677,6 +747,10 @@ export default {
   box(relative, grid)
   padding: 2px 0 24px
   grid-gap: 8px 0
+  &.-rm
+    outline: 2px dashed #ff110032
+    outline-offset: -2px
+    background-color: #ff110016
 
 .Settings section > h2
   box(relative)
@@ -792,6 +866,33 @@ export default {
   opacity: 0
   z-index: -1
 
+.Settings .ref
+  box(relative, flex)
+  align-items: center
+  margin: 8px 8px 0 16px
+
+  .rm-example
+  .exp-example
+    box(relative)
+    size(24px, same)
+    flex-shrink: 0
+    margin: 0 8px 0 0
+  
+  .rm-example
+    outline: 2px dashed #ff110032
+    outline-offset: -2px
+    background-color: #ff110016
+  
+  .exp-example
+    outline: 2px dashed #78780036
+    outline-offset: -2px
+    background-color: #78780018
+
+  .desc
+    box(relative)
+    text(s: rem(13))
+    color: var(--info-fg)
+    
 .Settings .github
   box(relative, block)
   size(23px, same)

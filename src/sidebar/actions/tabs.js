@@ -10,6 +10,7 @@ export default {
   async loadTabs({ state, getters }) {
     const windowId = browser.windows.WINDOW_ID_CURRENT
     const tabs = await browser.tabs.query({ windowId })
+    const activePanel = getters.panels[state.panelIndex]
 
     // Check order of tabs and get moves for normalizing
     const ctxs = [getters.defaultCtxId].concat(
@@ -51,6 +52,15 @@ export default {
     moves.map(async move => {
       await browser.tabs.move(move[0], { index: move[1] })
     })
+
+    // Switch to panel with active tab
+    const activeTab = state.tabs.find(t => t.active)
+    const activePanelIsTabs = activePanel.panel === 'TabsPanel'
+    const activePanelIsOk = activeTab.cookieStoreId === activePanel.cookieStoreId
+    if (!activeTab.pinned && activePanelIsTabs && !activePanelIsOk) {
+      const index = getters.panels.findIndex(p => p.cookieStoreId === activeTab.cookieStoreId)
+      if (index !== -1) state.panelIndex = index
+    }
 
     // Restore tree levels
     if (state.tabsTree) {
@@ -373,7 +383,7 @@ export default {
     const p = getters.panels[panelIndex]
     if (!p || !p.tabs || !p.tabs.length) return
     const tab = state.tabsMap[p.lastActiveTab]
-    if (tab) {
+    if (tab && tab.cookieStoreId === p.cookieStoreId) {
       browser.tabs.update(tab.id, { active: true })
     } else {
       let lastTab = p.tabs[p.tabs.length - 1]
@@ -588,12 +598,15 @@ export default {
     const actPI = state.panelIndex < 0 ? state.lastPanelIndex : state.panelIndex
     const actP = getters.panels[actPI]
     if (!actP || !actP.tabs || actP.pinned) return
-    const toShow = actP.tabs.filter(t => t.hidden && !t.invisible).map(t => t.id)
-    const toHide = getters.panels.reduce((acc, p, i) => {
-      if (!p.tabs || p.tabs.length === 0) return acc
-      if (i === actPI) return acc
-      return acc.concat(p.tabs.filter(t => !t.hidden && !t.invisible).map(t => t.id))
-    }, [])
+
+    const toShow = actP.tabs.filter(t => {
+      if (state.hideFoldedTabs) return t.hidden && !t.invisible
+      else return t.hidden
+    }).map(t => t.id)
+
+    const toHide = state.tabs.filter(t => {
+      return !t.hidden && !t.pinned && t.cookieStoreId !== actP.cookieStoreId
+    }).map(t => t.id)
 
     if (toShow.length) browser.tabs.show(toShow)
     if (toHide.length) browser.tabs.hide(toHide)

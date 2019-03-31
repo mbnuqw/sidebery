@@ -56,6 +56,14 @@ export default {
     cursor: default
   &.-no-top-margin
     margin-top: 0
+  &.-rm:before
+    content: ''
+    box(absolute)
+    size(calc(100% + 6px), 100%)
+    pos(0, -6px)
+    outline: 2px dashed #ff110032
+    outline-offset: -2px
+    background-color: #ff110016
 
 .ToggleField > .label
   box(relative)

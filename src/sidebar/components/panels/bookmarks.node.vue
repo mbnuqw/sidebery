@@ -249,6 +249,7 @@ export default {
 
     openUrl(inNewTab, withFocus) {
       if (!this.node.url) return
+
       if (inNewTab) {
         let index = this.defaultPanel.endIndex + 1
         browser.tabs.create({
@@ -259,6 +260,10 @@ export default {
       } else {
         browser.tabs.update({ url: this.node.url })
         if (withFocus && !this.panels[0].lockedPanel) Store.dispatch('goToActiveTabPanel')
+      }
+
+      if (this.node.parentId === 'unfiled_____' && State.autoRemoveOther) {
+        this.remove()
       }
     },
 

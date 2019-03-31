@@ -55,6 +55,7 @@ export default {
   'settings.bookmarks_panel': { message: 'Bookmarks panel' },
   'settings.open_bookmark_new_tab': { message: 'Open bookmark in new tab' },
   'settings.auto_close_bookmarks': { message: 'Auto-close folders' },
+  'settings.auto_rm_other': { message: 'Delete opened bookmarks from "Other Bookmarks" folder' },
 
   // --- Appearance
   'settings.appearance_title': { message: 'Appearance' },
@@ -150,8 +151,10 @@ export default {
 
   // --- Help
   'settings.help_title': { message: 'Help' },
+  'settings.debug_info': { message: 'Debug info' },
   'settings.repo_issue': { message: 'Open issue' },
   'settings.repo_bug': { message: 'Report bug' },
   'settings.repo_req': { message: 'Feature request' },
   'settings.reset_settings': { message: 'Reset settings to defaults' },
+  'settings.ref_rm': { message: 'Will be removed, open issue if you need this feature.' },
 }

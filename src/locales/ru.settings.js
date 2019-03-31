@@ -55,6 +55,7 @@ export default {
   'settings.bookmarks_panel': { message: 'Панель заладок' },
   'settings.open_bookmark_new_tab': { message: 'Открывать закладку в новом табе' },
   'settings.auto_close_bookmarks': { message: 'Автоматически закрывать папки' },
+  'settings.auto_rm_other': { message: 'Удалять открытые закладки из папки "Другие закладки"' },
 
   // --- Appearance
   'settings.appearance_title': { message: 'Вид' },
@@ -150,8 +151,10 @@ export default {
 
   // --- Help
   'settings.help_title': { message: 'Помошь' },
+  'settings.debug_info': { message: 'Debug info' },
   'settings.repo_issue': { message: 'Создать github issue' },
   'settings.repo_bug': { message: 'Report bug' },
   'settings.repo_req': { message: 'Feature request' },
   'settings.reset_settings': { message: 'Сбросить настройки' },
+  'settings.ref_rm': { message: 'Will be removed, open issue if you need this feature.' },
 }

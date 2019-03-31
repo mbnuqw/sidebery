@@ -21,16 +21,18 @@ beforeEach(() => {
 describe('loadTabs', () => {
   test('initial tabs loading with normalization', async () => {
     const state = {
+      panelIndex: 0,
       containers: [],
       tabs: [],
     }
     const getters = {
       defaultCtxId: 'firefox-default',
+      panels: [{ panel: 'TabsPanel' }],
     }
     browser.windows.WINDOW_ID_CURRENT = 1
     browser.tabs.query = jest.fn(() => {
       return [
-        { id: 1, index: 0, cookieStoreId: 'firefox-default', pinned: true, url: 'aaa' },
+        { id: 1, index: 0, cookieStoreId: 'firefox-default', pinned: true, url: 'aaa', active: true },
         { id: 2, index: 1, cookieStoreId: 'firefox-default', pinned: false, url: 'bbb' },
       ]
     })
@@ -48,6 +50,7 @@ describe('loadTabs', () => {
 
   test('tabs loading with ordering correction', async () => {
     const state = {
+      panelIndex: 0,
       containers: [
         { type: 'ctx', cookieStoreId: 'container-A' },
         { type: 'ctx', cookieStoreId: 'container-B' },
@@ -56,11 +59,12 @@ describe('loadTabs', () => {
     }
     const getters = {
       defaultCtxId: 'firefox-default',
+      panels: [{ panel: 'TabsPanel' }],
     }
     browser.windows.WINDOW_ID_CURRENT = 1
     browser.tabs.query = jest.fn(() => {
       return [
-        { id: 1, index: 0, cookieStoreId: 'firefox-default', pinned: true, url: 'aaa' },
+        { id: 1, index: 0, cookieStoreId: 'firefox-default', pinned: true, url: 'aaa', active: true },
         { id: 2, index: 1, cookieStoreId: 'firefox-default', pinned: false, url: 'bbb' },
         { id: 3, index: 2, cookieStoreId: 'container-B', pinned: false, url: 'ccc' },
         { id: 4, index: 3, cookieStoreId: 'container-A', pinned: false, url: 'ddd' },
@@ -79,6 +83,7 @@ describe('loadTabs', () => {
   test('load tabs tree', async () => {
     const state = {
       tabsTree: true,
+      panelIndex: 0,
       containers: [
         { type: 'ctx', cookieStoreId: 'container-A' },
         { type: 'ctx', cookieStoreId: 'container-B' },
@@ -87,11 +92,17 @@ describe('loadTabs', () => {
     }
     const getters = {
       defaultCtxId: 'firefox-default',
+      panels: [
+        {
+          panel: 'TabsPanel',
+          tabs: [],
+        },
+      ],
     }
     browser.windows.WINDOW_ID_CURRENT = 1
     browser.tabs.query = jest.fn(() => {
       return [
-        { id: 1, index: 0, cookieStoreId: 'firefox-default', pinned: true, url: 'aaa' },
+        { id: 1, index: 0, cookieStoreId: 'firefox-default', pinned: true, url: 'aaa', active: true },
         { id: 2, index: 1, cookieStoreId: 'firefox-default', pinned: false, url: 'bbb' },
         { id: 5, index: 2, cookieStoreId: 'firefox-default', pinned: false, url: 'eee' },
         { id: 4, index: 3, cookieStoreId: 'container-A', pinned: false, url: 'ddd' },
@@ -776,15 +787,23 @@ describe('hideInactPanelsTabs', () => {
     const state = {
       panelIndex: -1,
       lastPanelIndex: 2,
+      tabs: [
+        { id: 1, cookieStoreId: 'a', hidden: true, invisible: false },
+        { id: 2, cookieStoreId: 'b', hidden: false, invisible: false },
+        { id: 3, cookieStoreId: 'b', hidden: true, invisible: true },
+        { id: 4, cookieStoreId: 'b', hidden: false, invisible: true },
+      ],
     }
     const getters = {
       panels: [
         {}, // bookmarks
         {}, // private
         {
+          cookieStoreId: 'a',
           tabs: [{ id: 1, hidden: true, invisible: false }],
         },
         {
+          cookieStoreId: 'b',
           tabs: [
             { id: 2, hidden: false, invisible: false },
             { id: 3, hidden: true, invisible: true },
@@ -798,7 +817,7 @@ describe('hideInactPanelsTabs', () => {
 
     await TabsActions.hideInactPanelsTabs({ state, getters })
     expect(browser.tabs.show).toBeCalledWith([1])
-    expect(browser.tabs.hide).toBeCalledWith([2])
+    expect(browser.tabs.hide).toBeCalledWith([2, 4])
   })
 })
 

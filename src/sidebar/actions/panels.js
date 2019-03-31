@@ -207,7 +207,7 @@ export default {
     // Restore prev front panel
     if (state.panelIndex < 0) {
       if (state.lastPanelIndex < 0) state.panelIndex = 0
-      else state.panelIndex = state.lastPanelIndex
+      else state.panelIndex = state.lastPanelIndex - dir
     }
 
     // Update panel index
