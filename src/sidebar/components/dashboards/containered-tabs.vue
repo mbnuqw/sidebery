@@ -24,7 +24,7 @@
       :opts="colorOpts"
       @input="updateColor")
 
-    toggle-field(
+    toggle-field.-rm(
       v-if="id"
       label="dashboard.sync_label"
       :title="t('dashboard.sync_tooltip')"

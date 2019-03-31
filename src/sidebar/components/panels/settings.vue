@@ -47,7 +47,7 @@
         :inactive="$store.state.pinnedTabsPosition !== 'panel'"
         :value="$store.state.pinnedTabsList"
         @input="setOpt('pinnedTabsList', $event)")
-      toggle-field(
+      toggle-field.-rm(
         label="settings.pinned_tabs_sync"
         :value="$store.state.pinnedTabsSync"
         @input="togglePinnedTabsSync")
@@ -271,7 +271,7 @@
         .btn(@click="clearFaviCache(false)") {{t('settings.rm_unused_favi_cache')}}
         .btn.-warn(@click="clearFaviCache(true)") {{t('settings.rm_favi_cache')}}
 
-    section
+    section.-rm
       h2 {{t('settings.sync_title')}}
       info-field(
         label="settings.sync_data_size"
@@ -288,6 +288,10 @@
         a.btn(tabindex="-1", :href="issueLink") {{t('settings.repo_bug')}}
         a.btn(tabindex="-1", :href="featureReqLink") {{t('settings.repo_req')}}
         .btn.-warn(@click="resetSettings") {{t('settings.reset_settings')}}
+
+      .ref
+        .rm-example
+        .desc {{t('settings.ref_rm')}}
 
       a.github(tabindex="-1", href="https://github.com/mbnuqw/sidebery")
         svg: use(xlink:href="#icon_github")
@@ -736,6 +740,10 @@ export default {
   box(relative, grid)
   padding: 2px 0 24px
   grid-gap: 8px 0
+  &.-rm
+    outline: 2px dashed #ff110032
+    outline-offset: -2px
+    background-color: #ff110016
 
 .Settings section > h2
   box(relative)
@@ -851,6 +859,33 @@ export default {
   opacity: 0
   z-index: -1
 
+.Settings .ref
+  box(relative, flex)
+  align-items: center
+  margin: 8px 8px 0 16px
+
+  .rm-example
+  .exp-example
+    box(relative)
+    size(24px, same)
+    flex-shrink: 0
+    margin: 0 8px 0 0
+  
+  .rm-example
+    outline: 2px dashed #ff110032
+    outline-offset: -2px
+    background-color: #ff110016
+  
+  .exp-example
+    outline: 2px dashed #78780036
+    outline-offset: -2px
+    background-color: #78780018
+
+  .desc
+    box(relative)
+    text(s: rem(13))
+    color: var(--info-fg)
+    
 .Settings .github
   box(relative, block)
   size(23px, same)

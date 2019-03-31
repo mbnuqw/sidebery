@@ -155,4 +155,5 @@ export default {
   'settings.repo_bug': { message: 'Report bug' },
   'settings.repo_req': { message: 'Feature request' },
   'settings.reset_settings': { message: 'Reset settings to defaults' },
+  'settings.ref_rm': { message: 'Will be removed, open issue if you need this feature.' },
 }
