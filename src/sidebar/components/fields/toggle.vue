@@ -60,7 +60,7 @@ export default {
     content: ''
     box(absolute)
     size(calc(100% + 6px), 100%)
-    pos(0, -3px)
+    pos(0, -6px)
     outline: 2px dashed #ff110032
     outline-offset: -2px
     background-color: #ff110016
