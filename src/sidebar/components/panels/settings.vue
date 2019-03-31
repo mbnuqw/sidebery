@@ -714,7 +714,9 @@ export default {
 
         delete tabClone.title
         tabClone.url = tabClone.url.slice(0, 5) + '...'
-        tabClone.favIconUrl = tabClone.favIconUrl.slice(0, 5) + '...'
+        if (tabClone.favIconUrl && tabClone.favIconUrl.length > 5) {
+          tabClone.favIconUrl = tabClone.favIconUrl.slice(0, 5) + '...'
+        }
         tabs.push(tabClone)
       }
 
