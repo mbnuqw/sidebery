@@ -55,6 +55,7 @@ export default {
   'settings.bookmarks_panel': { message: 'Панель заладок' },
   'settings.open_bookmark_new_tab': { message: 'Открывать закладку в новом табе' },
   'settings.auto_close_bookmarks': { message: 'Автоматически закрывать папки' },
+  'settings.auto_rm_other': { message: 'Удалять открытые закладки из папки "Другие закладки"' },
 
   // --- Appearance
   'settings.appearance_title': { message: 'Вид' },

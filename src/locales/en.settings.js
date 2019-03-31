@@ -55,6 +55,7 @@ export default {
   'settings.bookmarks_panel': { message: 'Bookmarks panel' },
   'settings.open_bookmark_new_tab': { message: 'Open bookmark in new tab' },
   'settings.auto_close_bookmarks': { message: 'Auto-close folders' },
+  'settings.auto_rm_other': { message: 'Delete opened bookmarks from "Other Bookmarks" folder' },
 
   // --- Appearance
   'settings.appearance_title': { message: 'Appearance' },

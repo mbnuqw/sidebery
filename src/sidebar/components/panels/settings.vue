@@ -118,6 +118,11 @@
         :inactive="!$store.state.bookmarksPanel"
         :value="$store.state.autoCloseBookmarks"
         @input="setOpt('autoCloseBookmarks', $event)")
+      toggle-field(
+        label="settings.auto_rm_other"
+        :inactive="!$store.state.bookmarksPanel"
+        :value="$store.state.autoRemoveOther"
+        @input="setOpt('autoRemoveOther', $event)")
 
     section
       h2 {{t('settings.appearance_title')}}

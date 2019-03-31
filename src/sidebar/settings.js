@@ -44,6 +44,7 @@ export const DEFAULT_SETTINGS = {
   bookmarksPanel: true,
   openBookmarkNewTab: false,
   autoCloseBookmarks: false,
+  autoRemoveOther: false,
 
   // Appearance
   fontSize: 'm',
