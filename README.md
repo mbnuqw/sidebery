@@ -11,8 +11,8 @@ Firefox addon for managing tabs, containers (contextual identities) and bookmark
 - Bookmarks operations
 - Drag-and-drop
 - Contextual Identities management
-- Synchronizing containers
-- Different proxy settings for each containers
+- Proxy configs for each container
+- Include/Exclude rules for each container
 - Creating tabs snapshots for easy recovering
 - Light and dark themes
 - Customizable styles
