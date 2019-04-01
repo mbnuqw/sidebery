@@ -1,8 +1,5 @@
 <template lang="pug">
 .Bookmarks(
-  :drag-active="drag && drag.dragged"
-  :ctx-menu="!!ctxMenuOpened"
-  :editing="editor"
   :not-renderable="!renderable"
   :invisible="!visible"
   @click="onClick")
@@ -20,7 +17,6 @@
 
 
 <script>
-import { mapGetters } from 'vuex'
 import Utils from '../../../libs/utils'
 import Store from '../../store'
 import State from '../../store.state'
@@ -43,18 +39,11 @@ export default {
 
   data() {
     return {
-      topOffset: 0,
-      drag: null,
-      flat: [],
       editor: false,
       renderable: false,
       visible: false,
       lastScrollY: 0,
     }
-  },
-
-  computed: {
-    ...mapGetters(['ctxMenuOpened']),
   },
 
   watch: {
@@ -112,10 +101,6 @@ export default {
         })
       }
     })
-  },
-
-  mounted() {
-    this.topOffset = this.$el.getBoundingClientRect().top
   },
 
   beforeDestroy() {
