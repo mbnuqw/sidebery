@@ -9,7 +9,6 @@
       ref="nodes"
       :key="n.id"
       :node="n"
-      :recalc-scroll="recalcScroll"
       @start-selection="onStartSelection")
   transition(name="editor")
     bookmarks-editor.editor(v-if="$store.state.bookmarkEditor")
@@ -100,6 +99,10 @@ export default {
           }, 16)
         })
       }
+    })
+    EventBus.$on('recalcPanelScroll', () => {
+      if (this.index !== State.panelIndex) return
+      this.recalcScroll()
     })
   },
 
@@ -318,7 +321,6 @@ export default {
      * Recalculate scroll possition
      */
     recalcScroll() {
-      if (!this.active) return
       if (this.$refs.scrollBox) {
         this.$refs.scrollBox.recalcScroll()
       }

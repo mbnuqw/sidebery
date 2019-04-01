@@ -145,6 +145,7 @@ export default {
 
     /* eslint-disable-next-line */
     state.bookmarks = state.bookmarks
+    dispatch('recalcPanelScroll')
     dispatch('saveBookmarksTree')
   },
 
@@ -168,6 +169,7 @@ export default {
 
     /* eslint-disable-next-line */
     state.bookmarks = state.bookmarks
+    dispatch('recalcPanelScroll')
     dispatch('saveBookmarksTree')
   },
 

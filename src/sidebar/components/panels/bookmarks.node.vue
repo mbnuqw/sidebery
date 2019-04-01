@@ -3,7 +3,6 @@
   :n-type="node.type"
   :is-expanded="node.expanded"
   :is-parent="!!isParent"
-  :to-front="toFront || editorSelect"
   :is-selected="selected")
   .body(:title="tooltip", @click="onClick", @mousedown="onMouseDown", @mouseup="onMouseUp")
     .drag-layer(draggable="true", @dragstart="onDragStart")
@@ -20,7 +19,6 @@
         ref="children"
         :key="n.id"
         :node="n"
-        :recalc-scroll="recalcScroll"
         :edit-node="editNode"
         @start-selection="onChildStartSelection")
 </template>
@@ -36,15 +34,11 @@ export default {
   name: 'BNode',
   props: {
     node: Object,
-    recalcScroll: Function,
     editNode: String,
   },
 
   data() {
     return {
-      menu: false,
-      toFront: false,
-      editorSelect: false,
       selected: false,
     }
   },
@@ -52,16 +46,8 @@ export default {
   computed: {
     ...mapGetters(['defaultPanel', 'panels']),
 
-    editable() {
-      return this.node.parentId !== 'root________'
-    },
-
     isParent() {
       return this.node.children && this.node.children.length
-    },
-
-    isFolder() {
-      return this.node.type === 'folder'
     },
 
     isBookmark() {
@@ -144,10 +130,6 @@ export default {
       if (this.node.type === 'folder') {
         if (!this.node.expanded) Store.dispatch('expandBookmark', this.node.id)
         else Store.dispatch('foldBookmark', this.node.id)
-
-        // !!!!! Make recalculation in bookmakrs component !!!!!
-        // remove recalcScroll function prop
-        setTimeout(() => this.recalcScroll(), 120)
       }
       if (this.node.type === 'bookmark') {
         this.openUrl(State.openBookmarkNewTab, true)
@@ -340,10 +322,6 @@ export default {
       size(calc(100% - 16px), 1px)
       border-radius: 2px
       background-image: linear-gradient(90deg, transparent, #545454, #545454, #545454)
-
-// > To Front
-.Node[to-front="true"]
-  z-index: 100
 
 // > Expanded
 .Node[is-expanded][is-parent]
