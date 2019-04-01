@@ -291,7 +291,6 @@
       .buttons
         .btn(@click="openDebugInfo") {{t('settings.debug_info')}}
         a.btn(tabindex="-1", :href="issueLink") {{t('settings.repo_bug')}}
-        a.btn(tabindex="-1", :href="featureReqLink") {{t('settings.repo_req')}}
         .btn.-warn(@click="resetSettings") {{t('settings.reset_settings')}}
 
       .ref
