@@ -6,18 +6,22 @@ void (async function() {
   const rootEl = document.getElementById('root')
   rootEl.classList.add('-' + theme)
 
-  const url = new URL(window.location)
+  // Wait for the info
+  const win = await browser.windows.getCurrent()
+  const info = await browser.runtime.sendMessage({
+    action: 'getDbgInfo',
+    windowId: win.id,
+  })
+
+  if (!info) return
+
   const settingsEl = document.getElementById('settings')
-  const settingsData = url.searchParams.get('settings')
-  settingsEl.innerText = settingsData
-
   const panelsEl = document.getElementById('panels')
-  const panelsData = url.searchParams.get('panels')
-  panelsEl.innerText = panelsData
-
   const tabsEl = document.getElementById('tabs')
-  const tabsData = url.searchParams.get('tabs')
-  tabsEl.innerText = tabsData
+
+  settingsEl.innerText = JSON.stringify(info.settings, null, '   ')
+  panelsEl.innerText = JSON.stringify(info.panels, null, '   ')
+  tabsEl.innerText = JSON.stringify(info.tabs, null, '   ')
 
   settingsEl.addEventListener('click', () => {
     const selection = window.getSelection()
