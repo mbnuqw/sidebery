@@ -87,6 +87,11 @@ export default new Vue({
     await Store.dispatch('loadSettings')
     await Store.dispatch('loadState')
     await Store.dispatch('loadContainers')
+
+    if (State.bookmarksPanel && State.panelIndex === 0) {
+      await Store.dispatch('loadBookmarks')
+    }
+
     await Store.dispatch('loadTabs')
     await Store.dispatch('loadLocalID')
     await Store.dispatch('loadStyles')
@@ -96,8 +101,8 @@ export default new Vue({
     Store.dispatch('loadSnapshots')
     Store.dispatch('loadFavicons')
     Store.dispatch('loadPermissions')
-    if (State.bookmarksPanel) await Store.dispatch('loadBookmarks')
     Store.dispatch('updateTabsSuccessors')
+
 
     // Try to clear unneeded favicons
     Store.dispatch('tryClearFaviCache', 86400)

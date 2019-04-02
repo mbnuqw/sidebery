@@ -18,7 +18,6 @@
 
 
 <script>
-import EventBus from '../../event-bus'
 import Store from '../../store'
 import ToggleField from '../fields/toggle'
 
@@ -49,7 +48,7 @@ export default {
     },
 
     collapseAll() {
-      EventBus.$emit('bookmarks.collapseAll')
+      Store.dispatch('collapseAllBookmarks')
       this.$emit('close')
     },
 

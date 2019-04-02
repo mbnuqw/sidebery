@@ -9,7 +9,6 @@
     .children(v-if="isParent", v-show="node.expanded", :title="node.title")
       component.child(
         v-for="(n, i) in node.children"
-        ref="children"
         :is="n.type"
         :key="n.id"
         :node="n"
@@ -201,18 +200,6 @@ export default {
     onChildStartSelection(event, nodes) {
       nodes.push(this.node)
       this.$emit('start-selection', event, nodes)
-    },
-
-    /**
-     * Collapse this node
-     */
-    collapse(deep = false) {
-      this.node.expanded = false
-
-      if (deep) {
-        if (!this.$refs.children) return
-        this.$refs.children.map(n => n.collapse(true))
-      }
     },
 
     remove() {

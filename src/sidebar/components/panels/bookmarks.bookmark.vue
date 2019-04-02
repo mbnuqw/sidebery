@@ -178,18 +178,6 @@ export default {
       })
     },
 
-    /**
-     * Collapse this node
-     */
-    collapse(deep = false) {
-      this.node.expanded = false
-
-      if (deep) {
-        if (!this.$refs.children) return
-        this.$refs.children.map(n => n.collapse(true))
-      }
-    },
-
     openUrl(inNewTab, withFocus) {
       if (!this.node.url) return
 

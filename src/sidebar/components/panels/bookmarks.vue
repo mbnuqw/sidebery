@@ -6,7 +6,6 @@
   scroll-box(ref="scrollBox"): .bookmarks-wrapper
     component.node(
       v-for="n in $store.state.bookmarks"
-      ref="nodes"
       :is="n.type"
       :key="n.id"
       :node="n"
@@ -53,19 +52,23 @@ export default {
   watch: {
     // If bookmarks too many, do not render
     // them when panel is inactive
-    active(c, p) {
+    async active(c, p) {
       const scrollBox = this.$refs.scrollBox
       if (!scrollBox) return
 
       // Activation
       if (c && !p) {
+        if (State.bookmarks.length === 0) {
+          await Store.dispatch('loadBookmarks')
+        }
+
         setTimeout(() => {
           this.renderable = true
           setTimeout(() => {
             if (!this.visible) scrollBox.setScrollY(this.lastScrollY)
             this.visible = true
           }, 16)
-        }, 128)
+        }, 16)
       }
 
       // Deactivation
@@ -82,7 +85,7 @@ export default {
           setTimeout(() => {
             this.visible = false
           }, 16)
-        }, 128)
+        }, 120)
       }
     },
   },
@@ -94,21 +97,18 @@ export default {
     browser.bookmarks.onRemoved.addListener(this.onRemoved)
 
     // Setup global events listeners
-    EventBus.$on('bookmarks.collapseAll', this.collapseAll)
-    EventBus.$on('bookmarks.render', () => {
-      if (this.active) {
-        this.$nextTick(() => {
-          this.renderable = true
-          setTimeout(() => {
-            this.visible = true
-          }, 16)
-        })
-      }
-    })
     EventBus.$on('recalcPanelScroll', () => {
       if (this.index !== State.panelIndex) return
       this.recalcScroll()
     })
+
+    // Render
+    if (State.panelIndex === 0) {
+      this.renderable = true
+      setTimeout(() => {
+        this.visible = true
+      }, 16)
+    }
   },
 
   beforeDestroy() {
@@ -334,17 +334,6 @@ export default {
         this.$refs.scrollBox.recalcScroll()
       }
     },
-
-    /**
-     * Collapse all bookmarks folders
-     */
-    collapseAll() {
-      if (!this.$refs.nodes) return
-      this.$refs.nodes.map(vm => {
-        vm.collapse(true)
-      })
-      Store.dispatch('saveBookmarksTree')
-    },
   },
 }
 </script>
@@ -359,6 +348,9 @@ export default {
 .Bookmarks .bookmarks-wrapper
   box(relative)
   padding-bottom: 64px
+
+.Bookmarks[not-renderable]
+  cursor: progress
 
 .Bookmarks[not-renderable] .node
   box(none)

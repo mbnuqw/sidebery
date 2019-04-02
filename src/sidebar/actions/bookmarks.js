@@ -17,9 +17,7 @@ export default {
     // Normalize objects before vue
     const walker = nodes => {
       for (let n of nodes) {
-        if (n.type === 'bookmark') {
-          n.host = n.url.split('/')[2]
-        }
+        if (n.type === 'bookmark') n.host = n.url.split('/')[2]
         if (n.type === 'folder') n.expanded = false
         if (n.children) walker(n.children)
       }
@@ -46,7 +44,6 @@ export default {
 
     state.bookmarks = bookmarks[0].children
     EventBus.$emit('panelLoadingOk', 0)
-    EventBus.$emit('bookmarks.render')
   },
 
   /**
@@ -88,6 +85,7 @@ export default {
       // Normalize objects before vue
       const walker = nodes => {
         for (let n of nodes) {
+          if (n.type === 'bookmark') n.host = n.url.split('/')[2]
           if (n.type === 'folder') n.expanded = false
           if (n.children) walker(n.children)
         }
@@ -354,5 +352,19 @@ export default {
     for (let id of ids) {
       await browser.bookmarks.removeTree(id)
     }
+  },
+
+  /**
+   * Collapse all bookmarks folders
+   */
+  collapseAllBookmarks({ state, dispatch }) {
+    const walker = nodes => {
+      for (let n of nodes) {
+        if (n.type === 'folder') n.expanded = false
+        if (n.children) walker(n.children)
+      }
+    }
+    walker(state.bookmarks)
+    dispatch('saveBookmarksTree')
   },
 }
