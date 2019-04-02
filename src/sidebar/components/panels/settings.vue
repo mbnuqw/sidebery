@@ -29,7 +29,6 @@
         :value="$store.state.showTabRmBtn"
         @input="setOpt('showTabRmBtn', $event)")
       toggle-field(
-        v-if="$store.state.ffVer >= 61"
         label="settings.hide_inactive_panel_tabs"
         :value="$store.state.hideInact"
         @input="toggleHideInact")
@@ -71,7 +70,6 @@
         :opts="$store.state.tabsTreeLimitOpts"
         @input="toggleTabsTreeLimit")
       toggle-field(
-        v-if="$store.state.ffVer >= 61"
         label="settings.hide_folded_tabs"
         :inactive="!$store.state.tabsTree"
         :value="$store.state.hideFoldedTabs"
@@ -313,7 +311,6 @@ import ToggleField from '../fields/toggle'
 import SelectField from '../fields/select'
 import InfoField from '../fields/info'
 
-const VALID_SHORTCUT_62 = /^((Ctrl|Alt|Command|MacCtrl)\+)(Shift\+)?([A-Z0-9]|Comma|Period|Home|End|PageUp|PageDown|Space|Insert|Delete|Up|Down|Left|Right|F\d\d?)$|^((Ctrl|Alt|Command|MacCtrl)\+)?(Shift\+)?(F\d\d?)$/
 const VALID_SHORTCUT = /^((Ctrl|Alt|Command|MacCtrl)\+)((Shift|Alt)\+)?([A-Z0-9]|Comma|Period|Home|End|PageUp|PageDown|Space|Insert|Delete|Up|Down|Left|Right|F\d\d?)$|^((Ctrl|Alt|Command|MacCtrl)\+)?((Shift|Alt)\+)?(F\d\d?)$/
 const SPEC_KEYS = /^(Comma|Period|Home|End|PageUp|PageDown|Space|Insert|Delete|F\d\d?)$/
 const ISSUE_URL = 'https://github.com/mbnuqw/sidebery/issues/new'
@@ -538,8 +535,7 @@ export default {
     },
     checkShortcut(shortcut) {
       let exists = State.keybindings.find(k => k.shortcut === shortcut)
-      if (State.ffVer > 62) return VALID_SHORTCUT.test(shortcut) && !exists
-      else return VALID_SHORTCUT_62.test(shortcut) && !exists
+      return VALID_SHORTCUT.test(shortcut) && !exists
     },
     resetKeybindings() {
       Store.dispatch('resetKeybindings')

@@ -1433,7 +1433,7 @@ export default {
       }
 
       // Update last tab successor
-      if (panel && State.ffVer >= 65 && panel.tabs.length > 2 && !State.removingTabs.length) {
+      if (panel && panel.tabs.length > 2 && !State.removingTabs.length) {
         // Removing the last tab
         if (tab.index === panel.endIndex) {
           const prevTab = panel.tabs[panel.tabs.length - 2]

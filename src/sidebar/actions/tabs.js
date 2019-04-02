@@ -630,7 +630,7 @@ export default {
       }
     }
 
-    if (state.hideFoldedTabs && toHide.length && state.ffVer >= 61) {
+    if (state.hideFoldedTabs && toHide.length) {
       browser.tabs.hide(toHide)
     }
     dispatch('saveTabsTree')
@@ -659,7 +659,7 @@ export default {
       }
     }
 
-    if (state.hideFoldedTabs && toShow.length && state.ffVer >= 61) {
+    if (state.hideFoldedTabs && toShow.length) {
       browser.tabs.show(toShow)
     }
     dispatch('saveTabsTree')
@@ -1015,8 +1015,7 @@ export default {
   /**
    * Update successorTabId of tabs
    */
-  updateTabsSuccessors({ state, getters }) {
-    if (state.ffVer < 65) return
+  updateTabsSuccessors({ getters }) {
     const toReset = []
     for (let panel of getters.panels) {
       // No tabs
