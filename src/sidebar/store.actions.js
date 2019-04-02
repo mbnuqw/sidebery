@@ -258,17 +258,26 @@ export default {
         }
 
         // Edit
-        menu.add('bookmark.edit_bookmark', 'startBookmarkEditing', node)
+        if (node.parentId !== 'root________') {
+          menu.add('bookmark.edit_bookmark', 'startBookmarkEditing', node)
+        }
       }
 
       // Delete
-      menu.add('bookmark.delete_bookmark', 'removeBookmarks', [node.id])
+      if (node.parentId !== 'root________') {
+        menu.add('bookmark.delete_bookmark', 'removeBookmarks', [node.id])
+      }
     }
 
     // --- Bookmarks
     // ------
     if (nodeType === 'bookmark' && nodesLen > 1) {
       const openPanLabel = Translate('menu.bookmark.open_in_')
+      const hasConst =
+        state.selected.includes('menu________') ||
+        state.selected.includes('toolbar_____') ||
+        state.selected.includes('unfiled_____') ||
+        state.selected.includes('mobile______')
 
       // Open in new window
       let args = { ids: state.selected }
@@ -287,7 +296,9 @@ export default {
       })
 
       // Delete
-      menu.add('bookmark.delete_bookmark', 'removeBookmarks', state.selected)
+      if (!hasConst) {
+        menu.add('bookmark.delete_bookmark', 'removeBookmarks', state.selected)
+      }
     }
 
     state.ctxMenu = menu
