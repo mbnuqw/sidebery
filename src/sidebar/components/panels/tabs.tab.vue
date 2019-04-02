@@ -400,7 +400,7 @@ export default {
       this.$el.classList.remove('-loaded')
       this.$el.offsetHeight
       this.$el.classList.add('-loaded')
-      setTimeout(() => {this.$el.classList.remove('-loaded')}, 250)
+      setTimeout(() => {this.$el.classList.remove('-loaded')}, 333)
     },
 
     /**
@@ -898,5 +898,5 @@ export default {
     transform: translateX(-100%)
   100%
     opacity: 0
-    transform: translateX(0)
+    transform: translateX(5px)
 </style>
