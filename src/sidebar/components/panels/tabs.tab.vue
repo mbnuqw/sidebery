@@ -91,7 +91,11 @@ export default {
     },
 
     tooltip() {
-      return `${this.tab.title}\n${decodeURI(this.tab.url)}`
+      try {
+        return `${this.tab.title}\n${decodeURI(this.tab.url)}`
+      } catch (err) {
+        return `${this.tab.title}\n${this.tab.url}`
+      }
     },
 
     favPlaceholder() {
