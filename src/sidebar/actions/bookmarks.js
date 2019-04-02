@@ -1,5 +1,5 @@
 import EventBus from '../event-bus'
-import utils from '../../libs/utils'
+import Utils from '../../libs/utils'
 
 export default {
   /**
@@ -67,7 +67,7 @@ export default {
     }
 
     // Wait a moment...
-    await utils.Sleep(128)
+    await Utils.Sleep(128)
 
     walker(state.bookmarks)
     await browser.storage.local.set({ expandedBookmarks })
@@ -305,13 +305,12 @@ export default {
     commit('setPanel', pi)
 
     const idMap = []
-    const groupPageUrl = browser.runtime.getURL('group/group.html')
     for (let node of toOpen) {
       const isDir = node.type === 'folder'
       if (isDir && !state.tabsTree) continue
       const createdTab = await browser.tabs.create({
         index: index++,
-        url: node.url ? node.url : groupPageUrl + `#${encodeURI(node.title)}`,
+        url: node.url ? node.url : Utils.GetGroupUrl(node.title),
         cookieStoreId: panelId,
         active: false,
         openerTabId: idMap[node.parentId],

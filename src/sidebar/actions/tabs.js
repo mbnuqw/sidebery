@@ -811,14 +811,13 @@ export default {
           if (!state.tabsTree && node.type === 'folder') continue
           if (state.tabsTreeLimit > 0 && node.type === 'folder') continue
 
-          const groupPageUrl = browser.runtime.getURL('group/group.html')
           if (oldNewMap[node.parentId] >= 0) opener = oldNewMap[node.parentId]
           const info = await browser.tabs.create({
             active: !(parent && parent.folded),
             cookieStoreId: destCtx,
             index: dropIndex + i,
             openerTabId: opener,
-            url: node.url ? node.url : groupPageUrl + `#${encodeURI(node.title)}`,
+            url: node.url ? node.url : Utils.GetGroupUrl(node.title),
             windowId: state.windowId,
             pinned: pin,
           })
@@ -940,16 +939,13 @@ export default {
       groupTitle = tabs[0].title
     }
 
-    // Create hash id
-    const hashId = `${groupTitle}:id:${Utils.Uid()}`
-
     // Find index and create group tab
     const groupTab = await browser.tabs.create({
       active: !(parent && parent.folded),
       cookieStoreId: tabs[0].cookieStoreId,
       index: tabs[0].index,
       openerTabId: tabs[0].parentId < 0 ? undefined : tabs[0].parentId,
-      url: browser.runtime.getURL('group/group.html') + `#${encodeURI(hashId)}`,
+      url: Utils.GetGroupUrl(groupTitle),
       windowId: state.windowId,
     })
 

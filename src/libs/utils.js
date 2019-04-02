@@ -361,6 +361,11 @@ function GetGroupId(url) {
   return url.slice(idIndex)
 }
 
+function GetGroupUrl(name) {
+  const urlBase = browser.runtime.getURL('group/group.html')
+  return urlBase + `#${encodeURI(name)}:id:${Uid()}`
+}
+
 export default {
   Uid,
   Asap,
@@ -381,4 +386,5 @@ export default {
   FindBookmark,
   IsGroupUrl,
   GetGroupId,
+  GetGroupUrl,
 }
