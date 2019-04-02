@@ -1,22 +1,16 @@
 <template lang="pug">
-.Node(
-  :n-type="node.type"
-  :is-expanded="node.expanded"
-  :is-parent="!!isParent"
-  :is-selected="selected")
+.Folder(:is-expanded="node.expanded", :is-parent="isParent", :is-selected="selected")
   .body(:title="tooltip", @click="onClick", @mousedown="onMouseDown", @mouseup="onMouseUp")
     .drag-layer(draggable="true", @dragstart="onDragStart")
-    .fav(v-if="isBookmark", :no-fav="!favicon")
-      .placeholder: svg: use(xlink:href="#icon_ff")
-      img(:src="favicon")
     .exp(v-if="isParent")
       svg: use(xlink:href="#icon_expand")
     .title(v-if="node.title") {{node.title}}
   transition(name="expand")
     .children(v-if="isParent", v-show="node.expanded", :title="node.title")
-      b-node.child(
+      component.child(
         v-for="(n, i) in node.children"
         ref="children"
+        :is="n.type"
         :key="n.id"
         :node="n"
         :edit-node="editNode"
@@ -29,9 +23,17 @@ import { mapGetters } from 'vuex'
 import Store from '../../store'
 import State from '../../store.state'
 import EventBus from '../../event-bus'
+import Bookmark from './bookmarks.bookmark'
+import Separator from './bookmarks.separator'
 
 export default {
-  name: 'BNode',
+  name: 'Folder',
+
+  components: {
+    Bookmark,
+    Separator,
+  },
+
   props: {
     node: Object,
     editNode: String,
@@ -47,27 +49,11 @@ export default {
     ...mapGetters(['defaultPanel', 'panels']),
 
     isParent() {
-      return this.node.children && this.node.children.length
-    },
-
-    isBookmark() {
-      return this.node.type === 'bookmark'
-    },
-
-    hostname() {
-      if (!this.node.url) return
-      return this.node.url.split('/')[2]
-    },
-
-    favicon() {
-      if (!this.hostname) return
-      return State.favicons[this.hostname]
+      return !!this.node.children && this.node.children.length > 0
     },
 
     tooltip() {
-      if (this.node.type === 'folder') return `${this.node.title}: ${this.node.children.length}`
-      if (this.node.type === 'bookmark') return `${this.node.title}\n${this.node.url}`
-      return ''
+      return `${this.node.title}: ${this.node.children.length}`
     },
   },
 
@@ -229,26 +215,6 @@ export default {
       }
     },
 
-    openUrl(inNewTab, withFocus) {
-      if (!this.node.url) return
-
-      if (inNewTab) {
-        let index = this.defaultPanel.endIndex + 1
-        browser.tabs.create({
-          index,
-          url: this.node.url,
-          active: withFocus,
-        })
-      } else {
-        browser.tabs.update({ url: this.node.url })
-        if (withFocus && !this.panels[0].lockedPanel) Store.dispatch('goToActiveTabPanel')
-      }
-
-      if (this.node.parentId === 'unfiled_____' && State.autoRemoveOther) {
-        this.remove()
-      }
-    },
-
     remove() {
       if (!this.isParent) browser.bookmarks.remove(this.node.id)
       else browser.bookmarks.removeTree(this.node.id)
@@ -261,7 +227,7 @@ export default {
 <style lang="stylus">
 @import '../../../styles/mixins'
 
-.Node
+.Folder
   box(relative)
   padding: 0 0 0 12px
   margin: 0
@@ -280,20 +246,6 @@ export default {
                 z-index var(--d-fast),
                 transform 0s var(--d-fast)
 
-.Node[n-type="bookmark"]
-  > .body
-    height: var(--bookmarks-bookmark-height)
-    > .title
-      font: var(--bookmarks-bookmark-font)
-      color: var(--bookmarks-node-title-fg)
-    &:hover > .title
-      transition: transform var(--d-fast)
-      color: var(--bookmarks-node-title-fg-hover)
-    &:active > .title
-      transition: none
-      color: var(--bookmarks-node-title-fg-active)
-
-.Node[n-type="folder"]
   &:not([is-parent]) // Empty folder
     > .body
     > .body:hover
@@ -312,19 +264,8 @@ export default {
       font: var(--bookmarks-folder-font)
       color: var(--bookmarks-folder-closed-fg)
 
-.Node[n-type="separator"]
-  > .body
-    height: var(--bookmarks-separator-height)
-    &:after
-      content: ''
-      box(absolute)
-      pos(8px, l: 16px)
-      size(calc(100% - 16px), 1px)
-      border-radius: 2px
-      background-image: linear-gradient(90deg, transparent, #545454, #545454, #545454)
-
 // > Expanded
-.Node[is-expanded][is-parent]
+.Folder[is-expanded][is-parent]
   > .body
     &:hover > .title
       color: var(--bookmarks-folder-open-fg-hover)
@@ -340,9 +281,7 @@ export default {
   > .body > .exp > svg
     transform: rotateZ(0deg)
 
-.Node[n-type="bookmark"][is-selected="true"]
-.Node[n-type="folder"][is-selected="true"]
-.Node[n-type="separator"][is-selected="true"]
+.Folder[is-selected="true"]
   &:before
     opacity: 1
     z-index: 0
@@ -355,7 +294,7 @@ export default {
     color: var(--tabs-selected-fg)
 
 // Body of node
-.Node > .body
+.Folder > .body
   box(relative, flex)
   align-items: center
   cursor: pointer
@@ -367,53 +306,19 @@ export default {
     pos(0, r: 0)
     size(100vw, 100%)
 
-.Node:not([is-selected]) > .body:hover:before
+.Folder:not([is-selected]) > .body:hover:before
     background-color: var(--bookmarks-node-bg-hover)
-.Node:not([is-selected]) > .body:active:before
+.Folder:not([is-selected]) > .body:active:before
     background-color: var(--bookmarks-node-bg-active)
 
-.Node .drag-layer
+.Folder .drag-layer
   box(absolute)
   size(100%, same)
   pos(0, 0)
   z-index: 15
 
-// Favicon
-.Node .fav
-  box(relative)
-  size(16px, same)
-  flex-shrink: 0
-  margin: 0 8px 0 0
-  z-index: 20
-  transition: opacity var(--d-fast), transform var(--d-fast)
-  &[no-fav]
-    > .placeholder
-      opacity: 1
-      transform: translateY(0)
-    > img
-      opacity: 0
-      transform: translateY(-4px)
-.Node .fav > .placeholder
-  box(absolute)
-  size(16px, same)
-  pos(0, 0)
-  opacity: 0
-  transform: translateY(4px)
-  transition: opacity var(--d-fast), transform var(--d-fast)
-  > svg
-    box(absolute)
-    size(100%, same)
-    pos(0, 0)
-    fill: var(--favicons-placehoder-bg)
-
-.Node .fav > img
-  box(absolute)
-  pos(0, 0)
-  size(100%, same)
-  transition: opacity var(--d-fast), transform var(--d-fast)
-
 // Title
-.Node .title
+.Folder .title
   box(relative)
   size(100%)
   white-space: nowrap
@@ -422,7 +327,7 @@ export default {
   mask: linear-gradient(-90deg, transparent, #000000 12px, #000000)
 
 // Node's children box
-.Node .children
+.Folder .children
   box(relative)
   transform: translateZ(0)
   &:before
@@ -437,7 +342,7 @@ export default {
     opacity: 1
 
 // Expanded state icon
-.Node .exp
+.Folder .exp
   box(absolute)
   size(15px, same)
   margin: 1px 2px 0 0
@@ -445,7 +350,7 @@ export default {
   transform: translateX(-14px)
   opacity: 0
   transition: transform var(--d-fast), opacity var(--d-fast)
-.Node .exp > svg
+.Folder .exp > svg
   box(absolute)
   pos(0, 0)
   size(100%, same)

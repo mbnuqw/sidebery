@@ -4,9 +4,10 @@
   :invisible="!visible"
   @click="onClick")
   scroll-box(ref="scrollBox"): .bookmarks-wrapper
-    b-node.node(
+    component.node(
       v-for="n in $store.state.bookmarks"
       ref="nodes"
+      :is="n.type"
       :key="n.id"
       :node="n"
       @start-selection="onStartSelection")
@@ -21,13 +22,17 @@ import Store from '../../store'
 import State from '../../store.state'
 import EventBus from '../../event-bus'
 import ScrollBox from '../scroll-box.vue'
-import BNode from './bookmarks.node.vue'
+import Bookmark from './bookmarks.bookmark.vue'
+import Folder from './bookmarks.folder.vue'
+import Separator from './bookmarks.separator.vue'
 import BookmarksEditor from '../bookmarks-editor.vue'
 
 export default {
   components: {
     ScrollBox,
-    BNode,
+    Bookmark,
+    Folder,
+    Separator,
     BookmarksEditor,
   },
 
