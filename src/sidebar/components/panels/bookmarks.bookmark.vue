@@ -30,14 +30,9 @@ export default {
   computed: {
     ...mapGetters(['defaultPanel', 'panels']),
 
-    hostname() {
-      if (!this.node.url) return
-      return this.node.url.split('/')[2]
-    },
-
     favicon() {
-      if (!this.hostname) return
-      return State.favicons[this.hostname]
+      if (!this.node.host) return
+      return State.favicons[this.node.host]
     },
 
     tooltip() {

@@ -17,6 +17,9 @@ export default {
     // Normalize objects before vue
     const walker = nodes => {
       for (let n of nodes) {
+        if (n.type === 'bookmark') {
+          n.host = n.url.split('/')[2]
+        }
         if (n.type === 'folder') n.expanded = false
         if (n.children) walker(n.children)
       }

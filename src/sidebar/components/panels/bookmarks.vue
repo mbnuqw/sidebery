@@ -132,6 +132,9 @@ export default {
      */
     onCreated(id, bookmark) {
       let added = false
+      if (bookmark.type === 'bookmark') {
+        bookmark.host = bookmark.url.split('/')[2]
+      }
       if (bookmark.type === 'folder' && !bookmark.children) bookmark.children = []
       if (bookmark.type === 'folder') bookmark.expanded = false
       const putWalk = nodes => {
@@ -165,6 +168,7 @@ export default {
               ...b,
               title: info.title || b.title,
               url: info.url || b.url,
+              host: info.url ? info.url.split('/')[2] : b.host,
             })
             updated = true
           } else if (!updated) n.children = updateWalk(n.children)
