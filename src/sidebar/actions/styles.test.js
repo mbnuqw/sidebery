@@ -26,7 +26,9 @@ describe('loadStyles', () => {
 
   test('load styles', async () => {
     const state = {
-      customStyles: {},
+      customStyles: {
+        bg: null,
+      },
     }
     browser.storage.local.get = jest.fn(() => {
       return { styles: { bg: '#123456' } }
