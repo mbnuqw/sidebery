@@ -1,5 +1,6 @@
 <template lang="pug">
 .PinnedDock(v-noise:300.g:12:af.a:0:42.s:0:9=""
+  :is-empty="pinnedTabs.length === 0"
   :drag-pointed="dragPointed"
   @wheel="onWheel"
   @drop.stop.prevent="onDrop"
@@ -131,13 +132,17 @@ export default {
     box(absolute)
     pos(0, 0)
     size(100%, same)
-    background-color: #00000008
+    background-color: var(--pinned-dock-overlay-bg)
+    box-shadow: var(--pinned-dock-overlay-shadow)
+  &[is-empty]
+    box(none)
 
 // Per-Panel
 #root.-pinned-tabs-panel .PinnedDock
   size(100%, auto)
   flex-wrap: wrap
   flex-direction: row
+  padding: 1px 0
   box-shadow: inset 0 1px 0 0 #00000024,
               inset 0 -1px 0 0 #00000024,
               inset 0 0 8px 0 #00000032
@@ -163,6 +168,7 @@ export default {
   size(100%, auto)
   flex-wrap: wrap
   flex-direction: row
+  padding: 1px 0
   box-shadow: inset 0 1px 0 0 #00000024,
               inset 0 -1px 0 0 #00000024,
               inset 0 0 8px 0 #00000032

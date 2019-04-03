@@ -39,6 +39,11 @@ export default {
   'styles.nav_title': { message: 'Navigation Strip' },
   'styles.nav_fg_color': { message: 'Foreground color' },
 
+  // --- Pinned dock
+  'styles.pinned_dock_title': { message: 'Pinned tabs dock' },
+  'styles.pinned_dock_overlay_bg': { message: 'Background overlay' },
+  'styles.pinned_dock_overlay_shadow': { message: 'Shadow overlay' },
+
   // --- Tabs
   'styles.tabs_title': { message: 'Tabs' },
   'styles.tabs_height': { message: 'Tabs height' },
@@ -54,6 +59,12 @@ export default {
   'styles.tabs_active_fg_color': { message: 'Active tab foreground color' },
   'styles.tabs_selected_bg_color': { message: 'Selected tab background color' },
   'styles.tabs_selected_fg_color': { message: 'Selected tab foreground color' },
+  'styles.tabs_border': { message: 'Border' },
+  'styles.tabs_activated_border': { message: 'Active tab border' },
+  'styles.tabs_selected_border': { message: 'Selected tab border' },
+  'styles.tabs_shadow': { message: 'Shadow' },
+  'styles.tabs_activated_shadow': { message: 'Active tab shadow' },
+  'styles.tabs_selected_shadow': { message: 'Selected tab shadow' },
 
   // --- Bookmarks
   'styles.bookmarks_title': { message: 'Bookmarks' },

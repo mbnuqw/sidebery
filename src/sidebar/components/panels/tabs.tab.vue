@@ -473,6 +473,8 @@ export default {
   z-index: 10
   transform: translateZ(0)
   transition: opacity var(--d-fast), transform var(--d-fast), z-index 0s .2s
+  border: var(--tabs-border)
+  box-shadow: var(--tabs-shadow)
   &:hover
     background-color: var(--tabs-bg-hover)
   &:hover
@@ -541,6 +543,8 @@ export default {
 
   &[is-active]
     background-color: var(--tabs-activated-bg)
+    border: var(--tabs-activated-border)
+    box-shadow: var(--tabs-activated-shadow)
     .fav
       opacity: 1
     .title
@@ -604,6 +608,8 @@ export default {
   &[is-selected]:active
     z-index: 10
     background-color: var(--tabs-selected-bg)
+    border: var(--tabs-selected-border)
+    box-shadow: var(--tabs-selected-shadow)
     .title
       color: var(--tabs-selected-fg)
   

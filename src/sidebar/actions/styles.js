@@ -15,12 +15,14 @@ export default {
     for (let key in state.customStyles) {
       if (!state.customStyles.hasOwnProperty(key)) continue
 
+      if (loadedStyles[key] !== undefined) {
+        state.customStyles[key] = loadedStyles[key]
+      }
       if (loadedStyles[key]) {
         rootEl.style.setProperty(Utils.CSSVar(key), loadedStyles[key])
       }
     }
 
-    state.customStyles = loadedStyles
     EventBus.$emit('dynVarChange')
   },
 

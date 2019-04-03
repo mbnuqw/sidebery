@@ -72,6 +72,9 @@ export const CUSTOM_STYLES = {
 
   nav_btn_fg: null,
 
+  pinned_dock_overlay_bg: null,
+  pinned_dock_overlay_shadow: null,
+
   tabs_height: null,
   tabs_indent: null,
   tabs_font: null,
@@ -85,6 +88,12 @@ export const CUSTOM_STYLES = {
   tabs_activated_fg: null,
   tabs_selected_bg: null,
   tabs_selected_fg: null,
+  tabs_border: null,
+  tabs_activated_border: null,
+  tabs_selected_border: null,
+  tabs_shadow: null,
+  tabs_activated_shadow: null,
+  tabs_selected_shadow: null,
 
   bookmarks_bookmark_height: null,
   bookmarks_folder_height: null,

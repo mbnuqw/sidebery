@@ -145,6 +145,21 @@
           @toggle="toggleStyle('nav_btn_fg')")
 
       section.section
+        .title {{t('styles.pinned_dock_title')}}
+        style-field(
+          label="styles.pinned_dock_overlay_bg"
+          v-model="$store.state.customStyles.pinned_dock_overlay_bg"
+          or="---"
+          @change="updateStyle('pinned_dock_overlay_bg')"
+          @toggle="toggleStyle('pinned_dock_overlay_bg')")
+        style-field(
+          label="styles.pinned_dock_overlay_shadow"
+          v-model="$store.state.customStyles.pinned_dock_overlay_shadow"
+          or="---"
+          @change="updateStyle('pinned_dock_overlay_shadow')"
+          @toggle="toggleStyle('pinned_dock_overlay_shadow')")
+
+      section.section
         .title {{t('styles.tabs_title')}}
         style-field(
           label="styles.tabs_height"
@@ -215,6 +230,42 @@
           v-model="$store.state.customStyles.tabs_selected_fg"
           @change="updateStyle('tabs_selected_fg')"
           @toggle="toggleStyle('tabs_selected_fg')")
+        style-field(
+          label="styles.tabs_border"
+          v-model="$store.state.customStyles.tabs_border"
+          or="---"
+          @change="updateStyle('tabs_border')"
+          @toggle="toggleStyle('tabs_border')")
+        style-field(
+          label="styles.tabs_activated_border"
+          v-model="$store.state.customStyles.tabs_activated_border"
+          or="---"
+          @change="updateStyle('tabs_activated_border')"
+          @toggle="toggleStyle('tabs_activated_border')")
+        style-field(
+          label="styles.tabs_selected_border"
+          v-model="$store.state.customStyles.tabs_selected_border"
+          or="---"
+          @change="updateStyle('tabs_selected_border')"
+          @toggle="toggleStyle('tabs_selected_border')")
+        style-field(
+          label="styles.tabs_shadow"
+          v-model="$store.state.customStyles.tabs_shadow"
+          or="---"
+          @change="updateStyle('tabs_shadow')"
+          @toggle="toggleStyle('tabs_shadow')")
+        style-field(
+          label="styles.tabs_activated_shadow"
+          v-model="$store.state.customStyles.tabs_activated_shadow"
+          or="---"
+          @change="updateStyle('tabs_activated_shadow')"
+          @toggle="toggleStyle('tabs_activated_shadow')")
+        style-field(
+          label="styles.tabs_selected_shadow"
+          v-model="$store.state.customStyles.tabs_selected_shadow"
+          or="---"
+          @change="updateStyle('tabs_selected_shadow')"
+          @toggle="toggleStyle('tabs_selected_shadow')")
 
       section.section
         .title {{t('styles.bookmarks_title')}}
