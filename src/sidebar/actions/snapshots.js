@@ -178,7 +178,7 @@ export default {
   /**
    * Close snapshots viewer
    */
-  async closeSnapshotsViewer({ state }) {
+  closeSnapshotsViewer({ state }) {
     state.lastPanelIndex = state.panelIndex
     state.panelIndex = state.lastPanelIndex
   },

@@ -14,9 +14,11 @@ export const SETTINGS_OPTIONS = {
 }
 
 export const DEFAULT_SETTINGS = {
-  // Global
+  // General
   nativeScrollbars: false,
   autoHideCtxMenu: 'none',
+  ctxMenuTopActions: false,
+  ctxMenuInlineCtr: false,
 
   // Tabs
   activateLastTabOnPanelSwitching: true,

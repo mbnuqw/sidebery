@@ -94,6 +94,7 @@
         styles-panel(v-if="$store.state.panelIndex === -3", :pos="stylesPanelPos")
         snapshots-panel(v-if="$store.state.panelIndex === -4", :pos="snapshotsPanelPos")
         window-input(v-if="$store.state.panelIndex === -5", :pos="windowInputPos")
+        context-menu-panel(v-if="$store.state.panelIndex === -6", :pos="ctxPanelPos")
 </template>
 
 
@@ -495,6 +496,7 @@ import TabsPanel from './panels/tabs'
 import SettingsPanel from './panels/settings'
 import SnapshotsPanel from './panels/snapshots'
 import StylesPanel from './panels/styles'
+import ContextMenuPanel from './panels/context-menu'
 import PinnedDock from './panels/pinned-dock'
 
 Vue.directive('noise', NoiseBg)
@@ -515,6 +517,7 @@ export default {
     WindowInput,
     SnapshotsPanel,
     StylesPanel,
+    ContextMenuPanel,
     PinnedDock,
   },
 
@@ -568,6 +571,13 @@ export default {
      */
     windowInputPos() {
       return State.panelIndex === -5 ? 'center' : 'right'
+    },
+
+    /**
+     * Get context menu panel position
+     */
+    ctxPanelPos() {
+      return State.panelIndex === -6 ? 'center' : 'right'
     },
 
     /**

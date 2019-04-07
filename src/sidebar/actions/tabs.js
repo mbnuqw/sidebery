@@ -461,12 +461,14 @@ export default {
   /**
    * Create bookmarks from tabs
    */
-  bookmarkTabs({ state }, tabIds) {
+  async bookmarkTabs({ state }, tabIds) {
+    EventBus.$emit('panelLoadingStart', 0)
     for (let tabId of tabIds) {
       let tab = state.tabsMap[tabId]
       if (!tab) continue
-      browser.bookmarks.create({ title: tab.title, url: tab.url })
+      await browser.bookmarks.create({ title: tab.title, url: tab.url })
     }
+    EventBus.$emit('panelLoadingOk', 0)
   },
 
   /**

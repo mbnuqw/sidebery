@@ -114,6 +114,33 @@ export const CUSTOM_STYLES = {
   bookmarks_folder_empty_fg: null,
 }
 
+export const DEFAULT_TABS_MENU = [
+  ['undo', 'mute', 'reload', 'bookmark'],
+  'moveToNewWin',
+  'moveToNewPrivWin',
+  'moveToAnotherWin',
+  'moveToWin',
+  'moveToCtr',
+  'pin',
+  'discard',
+  'group',
+  'flatten',
+  'clearCookies',
+  'close',
+]
+
+export const DEFAULT_BOOKMARKS_MENU = [
+  'undo',
+  'openInNewWin',
+  'openInNewPrivWin',
+  'openInCtr',
+  'createBookmark',
+  'createFolder',
+  'createSeparator',
+  'edit',
+  'delete',
+]
+
 export default {
   localID: '',
   version: Manifest.version,
@@ -125,6 +152,9 @@ export default {
   windowId: 0,
   windowFocused: true,
   tabHeight: 30,
+
+  tabsMenu: [],
+  bookmarksMenu: [],
 
   // --- Global State
   ctxMenu: null,

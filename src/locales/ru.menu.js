@@ -1,7 +1,10 @@
 export default {
+  'menu.undo': { message: 'Undo' },
+
   // --- Bookmark
   'menu.bookmark.open_in_new_window': { message: 'Открыть в новом окне' },
   'menu.bookmark.open_in_new_priv_window': { message: 'Открыть в новом приватном окне' },
+  'menu.bookmark.open_in_ctr_': { message: 'Открыть в контейнере...' },
   'menu.bookmark.open_in_default_panel': { message: 'Открыть' },
   'menu.bookmark.open_in_': { message: 'Открыть в ' },
   'menu.bookmark.create_bookmark': { message: 'Создать закладку' },
@@ -17,6 +20,7 @@ export default {
   'menu.tab.move_to_window_': { message: 'Переместить в окно...' },
   'menu.tab.reopen_in_priv_window': { message: 'Открыть в приватном окне' },
   'menu.tab.reopen_in_default_panel': { message: 'Открыть в стандартном контейнере' },
+  'menu.tab.reopen_in_ctr_': { message: 'Открыть в контейнере...' },
   'menu.tab.reopen_in_': { message: 'Открыть в ' },
   'menu.tab.reopen_in_another_window': { message: 'Открыть в другом окне' },
   'menu.tab.reopen_in_window_': { message: 'Открыть в окне...' },
@@ -28,8 +32,17 @@ export default {
   'menu.tab.unmute': { message: 'Включить звук' },
   'menu.tab.clear_cookies': { message: 'Удалить куки' },
   'menu.tab.discard': { message: 'Выгрузить' },
+  'menu.tab.bookmark': { message: 'Создать закладки' },
   'menu.tab.bookmarks': { message: 'Создать закладки' },
   'menu.tab.reload': { message: 'Перезагрузить' },
   'menu.tab.duplicate': { message: 'Дублировать' },
   'menu.tab.close': { message: 'Закрыть' },
+
+  // --- Editor
+  'menu.editor.reset': { message: 'Сброс' },
+  'menu.editor.tabs_title': { message: 'Табы' },
+  'menu.editor.bookmarks_title': { message: 'Закладки' },
+  'menu.editor.inline_group_title': { message: 'Решетка' },
+  'menu.editor.list_title': { message: 'Список' },
+  'menu.editor.disabled_title': { message: 'Отключено' },
 }

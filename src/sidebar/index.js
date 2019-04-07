@@ -93,6 +93,7 @@ export default new Vue({
     }
 
     await Store.dispatch('loadTabs')
+    await Store.dispatch('loadCtxMenu')
     await Store.dispatch('loadLocalID')
     await Store.dispatch('loadStyles')
     Store.dispatch('scrollToActiveTab')

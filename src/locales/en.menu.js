@@ -1,7 +1,10 @@
 export default {
+  'menu.undo': { message: 'Undo' },
+
   // --- Bookmark
   'menu.bookmark.open_in_new_window': { message: 'Open in new window' },
   'menu.bookmark.open_in_new_priv_window': { message: 'Open in new private window' },
+  'menu.bookmark.open_in_ctr_': { message: 'Open in container...' },
   'menu.bookmark.open_in_default_panel': { message: 'Open' },
   'menu.bookmark.open_in_': { message: 'Open in ' },
   'menu.bookmark.create_bookmark': { message: 'Create bookmark' },
@@ -17,6 +20,7 @@ export default {
   'menu.tab.move_to_window_': { message: 'Move to window...' },
   'menu.tab.reopen_in_priv_window': { message: 'Reopen in private window' },
   'menu.tab.reopen_in_default_panel': { message: 'Reopen in default container' },
+  'menu.tab.reopen_in_ctr_': { message: 'Reopen in container...' },
   'menu.tab.reopen_in_': { message: 'Reopen in ' },
   'menu.tab.reopen_in_another_window': { message: 'Reopen in another window' },
   'menu.tab.reopen_in_window_': { message: 'Reopen in window...' },
@@ -28,8 +32,17 @@ export default {
   'menu.tab.unmute': { message: 'Unmute' },
   'menu.tab.clear_cookies': { message: 'Clear cookies' },
   'menu.tab.discard': { message: 'Discard' },
+  'menu.tab.bookmark': { message: 'Bookmark' },
   'menu.tab.bookmarks': { message: 'Create bookmarks' },
   'menu.tab.reload': { message: 'Reload' },
   'menu.tab.duplicate': { message: 'Duplicate' },
   'menu.tab.close': { message: 'Close' },
+
+  // --- Editor
+  'menu.editor.reset': { message: 'Reset' },
+  'menu.editor.tabs_title': { message: 'Tabs' },
+  'menu.editor.bookmarks_title': { message: 'Bookmarks' },
+  'menu.editor.inline_group_title': { message: 'Inline group' },
+  'menu.editor.list_title': { message: 'List' },
+  'menu.editor.disabled_title': { message: 'Disabled' },
 }

@@ -5,11 +5,15 @@ export default {
   // --- General
   'settings.general_title': { message: 'Основные' },
   'settings.native_scrollbars': { message: 'Использовать системные скроллбары' },
+
+  // --- Context menu
+  'settings.ctx_menu_title': { message: 'Контекстное меню' },
   'settings.autoHide_ctx_menu': { message: 'Скрывать контекстное меню' },
   'settings.autoHide_ctx_menu_250': { message: '0.25 сек.' },
   'settings.autoHide_ctx_menu_500': { message: '0.5 сек.' },
   'settings.autoHide_ctx_menu_1000': { message: '1 сек.' },
   'settings.autoHide_ctx_menu_none': { message: 'никогда' },
+  'settings.ctx_menu_editor': { message: 'Редактировать меню' },
 
   // --- Tabs
   'settings.tabs_title': { message: 'Табы' },

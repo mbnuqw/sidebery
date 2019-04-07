@@ -2,23 +2,49 @@
 .CtxMenu(:is-active="aIsActive || bIsActive", @mouseenter="onME", @mouseleave="onML")
   .container(:is-active="aIsActive")
     .box(ref="aBox", :style="aPosStyle")
+      .inline-group(
+        v-for="iOpts in aInline"
+        v-if="iOpts.length"
+        @wheel.prevent.stop="")
+        .icon-opt(
+          v-for="(opt, i) in iOpts"
+          :btn-width="btnWidth(iOpts, i)"
+          :title="getTitle(opt.label)"
+          :is-selected="isSelected(opt)"
+          @click="onClick(opt)"
+          @mousedown.stop="")
+          svg(:style="{fill: opt.color}")
+            use(:xlink:href="'#' + opt.icon")
       .opt(v-for="(opt, i) in aOpts"
-        :key="opt[0]"
-        :title="getTitle(opt[0])"
-        :is-selected="isSelected(i)"
+        :key="opt.label"
+        :title="getTitle(opt.label)"
+        :is-selected="isSelected(opt)"
         @click="onClick(opt)"
         @mousedown.stop="")
-        span(v-for="out in parseLabel(opt[0])"
+        span(v-for="out in parseLabel(opt.label)"
           :style="{color: out.color, fontWeight: out.w}") {{out.label}}
   .container(:is-active="bIsActive")
     .box(ref="bBox", :style="bPosStyle")
+      .inline-group(
+        v-for="iOpts in bInline"
+        v-if="iOpts.length"
+        @wheel.prevent.stop="")
+        .icon-opt(
+          v-for="(opt, i) in iOpts"
+          :btn-width="btnWidth(iOpts, i)"
+          :title="getTitle(opt.label)"
+          :is-selected="isSelected(opt)"
+          @click="onClick(opt)"
+          @mousedown.stop="")
+          svg(:style="{fill: opt.color}")
+            use(:xlink:href="'#' + opt.icon")
       .opt(v-for="(opt, i) in bOpts"
-        :key="opt[0]"
-        :title="getTitle(opt[0])"
-        :is-selected="isSelected(i)"
+        :key="opt.label"
+        :title="getTitle(opt.label)"
+        :is-selected="isSelected(opt)"
         @click="onClick(opt)"
         @mousedown.stop="")
-        span(v-for="out in parseLabel(opt[0])"
+        span(v-for="out in parseLabel(opt.label)"
           :style="{color: out.color, fontWeight: out.w}") {{out.label}}
 </template>
 
@@ -34,11 +60,13 @@ export default {
     return {
       aIsActive: false,
       aOpts: [],
+      aInline: [],
       aPos: 0,
       aX: 0,
       aDown: true,
       bIsActive: false,
       bOpts: [],
+      bInline: [],
       bPos: 0,
       bX: 0,
       bDown: true,
@@ -52,10 +80,16 @@ export default {
       if (!this.aDown) style.bottom = '0px'
       return style
     },
+    aAll() {
+      return this.aInline.reduce((a, v) => a.concat(v), []).concat(this.aOpts)
+    },
     bPosStyle() {
       let style = { transform: `translateY(${this.bPos}px) translateX(${this.bX}px)` }
       if (!this.bDown) style.bottom = '0px'
       return style
+    },
+    bAll() {
+      return this.bInline.reduce((a, v) => a.concat(v), []).concat(this.bOpts)
     },
   },
 
@@ -72,9 +106,11 @@ export default {
       if (c) {
         let rect
         if (c.el.start && c.el.end) rect = { top: c.el.start, bottom: c.el.end, left: 120, right: 120 }
-        else  rect = c.el.getBoundingClientRect()
+        else rect = c.el.getBoundingClientRect()
+
         if (this.aOpts.length) {
           this.bOpts = c.opts
+          this.bInline = c.inline
           this.bIsActive = true
           this.aIsActive = false
           this.$nextTick(() => {
@@ -86,9 +122,13 @@ export default {
             else if (rect.left > menuWidth) this.bX = rect.left - menuWidth
             else this.bX = this.$el.offsetWidth - menuWidth
           })
-          setTimeout(() => (this.aOpts = []), 128)
+          setTimeout(() => {
+            this.aOpts = []
+            this.aInline = []
+          }, 128)
         } else {
           this.aOpts = c.opts
+          this.aInline = c.inline
           this.aIsActive = true
           this.bIsActive = false
           this.$nextTick(() => {
@@ -100,7 +140,10 @@ export default {
             else if (rect.left > menuWidth) this.aX = rect.left - menuWidth
             else this.aX = this.$el.offsetWidth - menuWidth
           })
-          setTimeout(() => (this.bOpts = []), 128)
+          setTimeout(() => {
+            this.bOpts = []
+            this.bInline = []
+          }, 128)
         }
       }
 
@@ -123,13 +166,11 @@ export default {
     },
 
     onClick(opt) {
-      let func = opt[1]
-      let args = opt.slice(2)
-      if (typeof func === 'string') {
-        Store.dispatch(func, args[0])
+      if (typeof opt.action === 'string') {
+        Store.dispatch(opt.action, opt.args)
       }
-      if (typeof func === 'function') {
-        func(...args)
+      if (typeof opt.action === 'function') {
+        opt.action(...opt.args)
       }
       Store.commit('closeCtxMenu')
     },
@@ -137,7 +178,7 @@ export default {
     onSelectOption(dir) {
       if (!dir) return
 
-      const opts = this.aIsActive ? this.aOpts : this.bOpts
+      const opts = this.aIsActive ? this.aAll : this.bAll
 
       if (this.selected < 0) {
         if (dir > 0) this.selected = 0
@@ -154,12 +195,21 @@ export default {
 
     onActivateOption() {
       if (this.selected < 0) return
-      const opts = this.aIsActive ? this.aOpts : this.bOpts
+      const opts = this.aIsActive ? this.aAll : this.bAll
       this.onClick(opts[this.selected])
     },
 
-    isSelected(index) {
-      return this.selected === index
+    btnWidth(opts, i) {
+      if (i < 5) return 0
+      const k = opts.length % 5
+      const p = opts.length - k
+      if (i < p) return 0
+      else return 5
+    },
+
+    isSelected(opt) {
+      const opts = this.aIsActive ? this.aAll : this.bAll
+      return opts[this.selected] === opt
     },
 
     parseLabel(input) {
@@ -216,7 +266,7 @@ export default {
 
 .CtxMenu .box
   box(absolute)
-  size(max-w: calc(100% - 28px))
+  size(max-w: calc(100% - 28px), min-w: 160px)
   z-index: 30
   padding: 0 0 0 0
   margin: 0
@@ -225,9 +275,38 @@ export default {
   background-color: var(--ctx-menu-bg)
   box-shadow: var(--ctx-menu-shadow)
 
+.CtxMenu .inline-group
+  box(relative, flex)
+  overflow: hidden
+  flex-wrap: wrap
+  &:not(:last-of-type)
+    padding: 0 0 1px
+    box-shadow: inset 0 -1px 0 0 #00000032
+
+.CtxMenu .icon-opt
+  box(relative)
+  size(auto, 30px, min-w: 30px)
+  flex-grow: 1
+  flex-shrink: 0
+  &[btn-width="5"]
+    size(20%)
+    flex-grow: 0
+  &:hover
+  &[is-selected]
+    background-color: var(--ctx-menu-bg-hover)
+    svg
+      opacity: 1
+  &:active
+    opacity: .7
+  svg
+    box(absolute)
+    size(16px, same)
+    pos(calc(50% - 8px), calc(50% - 8px))
+    opacity: .8
+    fill: var(--ctx-menu-fg)
+
 .CtxMenu .opt
   box(relative, flex)
-  // text(s: rem(14))
   font: var(--ctx-menu-font)
   align-items: center
   justify-content: flex-start
@@ -252,4 +331,6 @@ export default {
   &:hover:before
   &[is-selected]
     background-color: var(--ctx-menu-bg-hover)
+  &:active
+    opacity: .7
 </style>
