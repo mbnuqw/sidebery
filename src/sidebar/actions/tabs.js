@@ -204,6 +204,7 @@ export default {
         if (tab.isParent && tab.folded) {
           for (let i = tab.index + 1; i < state.tabs.length; i++) {
             if (state.tabs[i].lvl <= tab.lvl) break
+            
             tabs.push(state.tabs[i])
           }
         }

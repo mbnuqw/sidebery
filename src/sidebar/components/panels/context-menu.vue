@@ -64,7 +64,7 @@ import ScrollBox from '../scroll-box'
 import { DEFAULT_TABS_MENU, DEFAULT_BOOKMARKS_MENU } from '../../store.state'
 
 const TABS_MENU_OPTS = {
-  'undo': 'menu.undo',
+  'undoRmTab': 'menu.tab.undo',
   'pin': 'menu.tab.pin',
   'reload': 'menu.tab.reload',
   'bookmark': 'menu.tab.bookmark',
@@ -82,7 +82,6 @@ const TABS_MENU_OPTS = {
 }
 
 const BOOKMARKS_MENU_OPTS = {
-  'undo': 'menu.undo',
   'openInNewWin': 'menu.bookmark.open_in_new_window',
   'openInNewPrivWin': 'menu.bookmark.open_in_new_priv_window',
   'openInCtr': 'menu.bookmark.open_in_ctr_',

@@ -100,4 +100,15 @@ export default {
       }
     )
   },
+
+  /**
+   * Undo remove tab
+   */
+  async undoRmTab() {
+    let closed = await browser.sessions.getRecentlyClosed()
+    if (closed && closed.length) {
+      const tab = closed.find(c => c.tab)
+      if (tab) await browser.sessions.restore(tab.sessionId)
+    }
+  },
 }

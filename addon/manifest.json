@@ -23,7 +23,8 @@
     "cookies",
     "storage",
     "proxy",
-    "bookmarks"
+    "bookmarks",
+    "sessions"
   ],
   
   "optional_permissions": [

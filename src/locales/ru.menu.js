@@ -1,6 +1,4 @@
 export default {
-  'menu.undo': { message: 'Undo' },
-
   // --- Bookmark
   'menu.bookmark.open_in_new_window': { message: 'Открыть в новом окне' },
   'menu.bookmark.open_in_new_priv_window': { message: 'Открыть в новом приватном окне' },
@@ -14,6 +12,7 @@ export default {
   'menu.bookmark.delete_bookmark': { message: 'Удалить' },
 
   // --- Tab
+  'menu.tab.undo': { message: 'Восстановить удаленный таб' },
   'menu.tab.move_to_new_window': { message: 'Переместить в новое окно' },
   'menu.tab.move_to_new_priv_window': { message: 'Переместить в новое приватное окно' },
   'menu.tab.move_to_another_window': { message: 'Переместить в другое окно' },

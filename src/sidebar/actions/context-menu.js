@@ -6,7 +6,7 @@ const OPTIONS = {
   // ---
   // -- General
   // -
-  undo: () => ({ label: Translate('menu.undo'), icon: 'icon_undo', action: 'undo' }),
+  undoRmTab: () => ({ label: Translate('menu.tab.undo'), icon: 'icon_undo', action: 'undoRmTab' }),
 
   // ---
   // -- Tabs
@@ -257,7 +257,8 @@ export default {
     if (!ans || !ans.tabsMenu) state.tabsMenu = JSON.parse(JSON.stringify(DEFAULT_TABS_MENU))
     else state.tabsMenu = ans.tabsMenu
 
-    if (!ans || !ans.bookmarksMenu) state.bookmarksMenu = JSON.parse(JSON.stringify(DEFAULT_BOOKMARKS_MENU))
+    if (!ans || !ans.bookmarksMenu)
+      state.bookmarksMenu = JSON.parse(JSON.stringify(DEFAULT_BOOKMARKS_MENU))
     else state.bookmarksMenu = ans.bookmarksMenu
   },
 
@@ -267,7 +268,7 @@ export default {
   async saveCtxMenu({ state }) {
     browser.storage.local.set({
       tabsMenu: JSON.parse(JSON.stringify(state.tabsMenu)),
-      bookmarksMenu: JSON.parse(JSON.stringify(state.bookmarksMenu))
+      bookmarksMenu: JSON.parse(JSON.stringify(state.bookmarksMenu)),
     })
   },
 
@@ -293,7 +294,7 @@ export default {
   async openCtxMenu({ state, commit }, { el, node } = {}) {
     const nodeType = typeof node.id === 'number' ? 'tab' : 'bookmark'
     const options = nodeType === 'tab' ? state.tabsMenu : state.bookmarksMenu
-    
+
     state.otherWindows = (await browser.windows.getAll()).filter(w => w.id !== State.windowId)
 
     const inline = []

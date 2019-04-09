@@ -115,7 +115,7 @@ export const CUSTOM_STYLES = {
 }
 
 export const DEFAULT_TABS_MENU = [
-  ['undo', 'mute', 'reload', 'bookmark'],
+  ['undoRmTab', 'mute', 'reload', 'bookmark'],
   'moveToNewWin',
   'moveToNewPrivWin',
   'moveToAnotherWin',
@@ -130,7 +130,6 @@ export const DEFAULT_TABS_MENU = [
 ]
 
 export const DEFAULT_BOOKMARKS_MENU = [
-  'undo',
   'openInNewWin',
   'openInNewPrivWin',
   'openInCtr',
