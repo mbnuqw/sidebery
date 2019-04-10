@@ -444,7 +444,7 @@ export default {
           return t
         })
       } else {
-        State.tabs = Utils.CalcTabsTreeLevels(State.tabs)
+        Utils.UpdateTabsTree(State)
       }
       this.toggleOpt('tabsTree')
     },
@@ -457,10 +457,9 @@ export default {
         const path = []
         for (let tab of State.tabs) {
           if (tab.isParent) path[tab.lvl] = tab.id
-          if (tab.lvl > State.tabsTreeLimit) tab.parentId = path[State.tabsTreeLimit - 1]
         }
       }
-      State.tabs = Utils.CalcTabsTreeLevels(State.tabs)
+      Utils.UpdateTabsTree(State)
       Store.dispatch('saveTabsTree')
     },
 

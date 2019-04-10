@@ -201,63 +201,74 @@ function CSSVar(key) {
 }
 
 /**
- * Calculate tree levels of tabs
+ * Normalize tree levels
  */
-function CalcTabsTreeLevels(tabs) {
-  let lvl = 0
-  let parents = {}
-  let path = []
-  for (let i = 0; i < tabs.length; i++) {
-    let pt = tabs[i - 1]
-    let t = tabs[i]
+function UpdateTabsTree(state, startIndex = 0, endIndex = -1) {
+  if (!state.tabsTree) return
+  if (!state.tabs || !state.tabs.length) return
+  if (startIndex < 0) startIndex = 0
+  if (endIndex === -1) endIndex = state.tabs.length
+  const maxLvl = typeof state.tabsTreeLimit === 'number' ? state.tabsTreeLimit : 123
 
-    // Normalize parents props
-    t.isParent = !!t.isParent
-    t.folded = !!t.folded
-
-    // Tabs without parents
-    if (t.parentId < 0) {
-      lvl = 0
-      path = []
+  for (let i = startIndex; i < endIndex; i++) {
+    const t = state.tabs[i]
+    if (!t) return
+    if (t.pinned) {
+      t.parentId = -1
+      t.lvl = 0
+      t.invisible = false
+      t.isParent = false
+      t.folded = false
+      continue
     }
+    const pt = state.tabs[i - 1]
 
-    // Reset circular reference
-    if (t.parentId === t.id) t.parentId = lvl ? path[lvl - 1] : -1
+    let parent = state.tabsMap[t.parentId]
+    if (parent && (parent.pinned || parent.index >= t.index)) parent = undefined
 
-    // With parent
-    if (t.parentId >= 0) {
-      // Set parent id
-      parents[t.parentId] = true
-
-      // First child
-      // tab
-      //   tab <
-      if (pt && pt.id === t.parentId) {
-        path[lvl] = t.parentId
-        pt.isParent = true
-        pt.folded = pt.folded || !!t.invisible
-        lvl++
+    // Parent is defined
+    if (parent && !parent.pinned) {
+      if (parent.lvl === maxLvl) {
+        parent.isParent = false
+        parent.folded = false
+        t.parentId = parent.parentId
+        t.lvl = parent.lvl
+        t.invisible = parent.invisible
+      } else {
+        parent.isParent = true
+        t.lvl = parent.lvl + 1
+        t.invisible = parent.folded || parent.invisible
       }
 
-      // After the last child
-      //   tab
-      // tab <
-      if (pt && pt.id !== t.parentId && pt.parentId !== t.parentId) {
-        lvl = path.indexOf(t.parentId) + 1
+      // if prev tab is not parent and with smaller lvl
+      // go back and set lvl and parentId
+      if (pt && pt.id !== t.parentId && pt.lvl < t.lvl) {
+        for (let j = t.index; j--; ) {
+          if (state.tabs[j].id === parent.id) break
+          if (state.tabs[j].cookieStoreId !== t.cookieStoreId) break
+          if (parent.lvl === maxLvl) {
+            state.tabs[j].parentId = parent.parentId
+            state.tabs[j].isParent = false
+            state.tabs[j].folded = false
+          } else {
+            state.tabs[j].parentId = parent.id
+          }
+          state.tabs[j].lvl = t.lvl
+          state.tabs[j].invisible = t.invisible
+        }
       }
+    } else {
+      t.parentId = -1
+      t.lvl = 0
+      t.invisible = false
     }
 
-    // Set tab lvl
-    t.lvl = lvl
+    // Reset parent if next tab have same lvl and parentId
+    if (pt && pt.lvl >= t.lvl) {
+      pt.isParent = false
+      pt.folded = false
+    }
   }
-
-  // Reset parents without children
-  for (let t of tabs) {
-    t.isParent = !!parents[t.id]
-    if (!t.isParent) t.folded = false
-  }
-
-  return tabs
 }
 
 /**
@@ -379,7 +390,7 @@ export default {
   UTime,
   UElapsed,
   CSSVar,
-  CalcTabsTreeLevels,
+  UpdateTabsTree,
   ParseCSSNum,
   CommonSubStr,
   GetUrlFromDragEvent,

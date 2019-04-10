@@ -1276,7 +1276,9 @@ export default {
             tab.lvl = nextTab.lvl
           }
         } else {
-          Store.dispatch('newTreeTab', tab.id)
+          tab.parentId = tab.openerTabId
+          const start = panel.startIndex
+          Utils.UpdateTabsTree(State, start, tab.index + 1)
         }
 
         Store.dispatch('saveTabsTree', 500)
@@ -1372,6 +1374,10 @@ export default {
       // Update tab object
       Object.assign(localTab, change)
 
+      if (change.hasOwnProperty('pinned') && change.pinned) {
+        Utils.UpdateTabsTree(State)
+      }
+
       if (change.hasOwnProperty('url') || change.hasOwnProperty('pinned')) {
         Store.dispatch('saveSyncPanels')
       }
@@ -1433,9 +1439,6 @@ export default {
 
           // Down level
           if (t.parentId === tab.id) t.parentId = tab.parentId
-
-          // Show invisible children
-          if (!State.removingTabs.includes(t.id)) t.invisible = false
         }
 
         // Remove child tabs
@@ -1479,7 +1482,9 @@ export default {
 
       // Calc tree levels
       if (State.tabsTree && !State.removingTabs.length) {
-        State.tabs = Utils.CalcTabsTreeLevels(State.tabs)
+        const startIndex = panel ? panel.startIndex : 0
+        const endIndex = panel ? panel.endIndex + 1 : -1
+        Utils.UpdateTabsTree(State, startIndex, endIndex)
         Store.dispatch('saveTabsTree')
       }
     },
@@ -1521,7 +1526,11 @@ export default {
 
       // Calc tree levels
       if (State.tabsTree && !State.movingTabs.length) {
-        State.tabs = Utils.CalcTabsTreeLevels(State.tabs)
+        const panel = this.panels[State.panelIndex]
+        const panelOk = panel && panel.tabs
+        const startIndex = panelOk ? panel.startIndex : 0
+        const endIndex = panelOk ? panel.endIndex + 1 : -1
+        Utils.UpdateTabsTree(State, startIndex, endIndex)
         Store.dispatch('saveTabsTree')
       }
     },

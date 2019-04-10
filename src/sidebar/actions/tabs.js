@@ -105,10 +105,7 @@ export default {
               tab.isParent = savedTab.isParent
               tab.folded = savedTab.folded
               if (savedTab.isParent) parents[savedTab.id] = tab
-              if (parent) {
-                tab.invisible = parent.folded || parent.invisible
-                tab.parentId = parent.id
-              }
+              if (parent) tab.parentId = parent.id
               continue
             }
           }
@@ -121,14 +118,11 @@ export default {
           tab.folded = savedTab.folded
           if (savedTab.isParent) parents[savedTab.id] = tab
           if (parents[savedTab.parentId]) {
-            const parentTab = parents[savedTab.parentId]
-            tab.invisible = parentTab.folded || parentTab.invisible
-            tab.parentId = parentTab.id
+            tab.parentId = parents[savedTab.parentId].id
           }
         }
       }
-
-      state.tabs = Utils.CalcTabsTreeLevels(state.tabs)
+      Utils.UpdateTabsTree(state)
     }
   },
 
@@ -320,61 +314,6 @@ export default {
    */
   discardTabs(_, tabIds = []) {
     browser.tabs.discard(tabIds)
-  },
-
-  /**
-   * Set related with tabs tree values
-   * for new child tab.
-   */
-  newTreeTab({ state, getters, dispatch }, tabId ) {
-    const tab = state.tabsMap[tabId]
-    if (!tab) return
-
-    const panel = getters.panels.find(p => p.cookieStoreId === tab.cookieStoreId)
-    if (!panel) return
-
-    let parent = state.tabsMap[tab.openerTabId]
-    if (!parent) parent = { lvl: 0 }
-    if (parent.pinned) return
-    if (parent.cookieStoreId !== tab.cookieStoreId) return
-    let lvlOk = !parent.lvl || !(parent.lvl >= state.tabsTreeLimit)
-
-    if ((state.groupOnOpen || parent.isParent) && lvlOk) {
-      // Child
-      tab.parentId = tab.openerTabId
-      for (let i = tab.index; i--; ) {
-        if (tab.parentId !== state.tabs[i].id) continue
-        if (state.tabs[i].lvl) tab.lvl = state.tabs[i].lvl + 1
-        else tab.lvl = 1
-        state.tabs[i].isParent = true
-        if (state.tabs[i].folded) {
-          tab.invisible = true
-          if (state.hideFoldedTabs) browser.tabs.hide(tab.id)
-        }
-        break
-      }
-
-      // Auto fold sibling sub-trees
-      if (state.autoFoldTabs) {
-        for (let t of state.tabs) {
-          const sameLvl = t.lvl === parent.lvl
-          const notParent = t.id !== tab.openerTabId
-          if (t.isParent && !t.folded && sameLvl && notParent && !tab.invisible) {
-            dispatch('foldTabsBranch', t.id)
-          }
-        }
-      }
-
-    } else {
-      // Sibling
-      for (let i = tab.index; i--; ) {
-        if (tab.openerTabId === state.tabs[i].id) {
-          tab.parentId = state.tabs[i].parentId
-          tab.lvl = state.tabs[i].lvl
-          break
-        }
-      }
-    }
   },
 
   /**
@@ -751,50 +690,34 @@ export default {
         if (state.tabsTree) {
           // Get parent tab parameters
           let parentId = parent ? parent.id : -1
-          let parentLvl = parent ? parent.lvl : -1
-          if (parentLvl === state.tabsTreeLimit) parentId = parent.parentId
 
           // Set first tab parentId and other parameters
           tabs[0].parentId = parentId
-          if (parent && parent.folded) tabs[0].invisible = true
-          else tabs[0].invisible = false
 
           // Get level offset for gragged branch
           let lvlOffset = tabs[0].lvl
 
           for (let i = 1; i < tabs.length; i++) {
-            const prevTab = tabs[i - 1]
+            // const prevTab = tabs[i - 1]
             const tab = tabs[i]
-
-            // Above the limit
-            if (parentLvl + tab.lvl - lvlOffset >= state.tabsTreeLimit) {
-              tab.parentId = prevTab.parentId
-              if (parent && parent.folded) tab.invisible = true
-              else tab.invisible = false
-              tab.folded = false
-              continue
-            }
 
             // Flat nodes below first node's level
             if (tabs[i].lvl <= lvlOffset) {
               tab.parentId = parentId
-              tab.invisible = false
               tab.folded = false
             }
 
             // Update invisibility of tabs
             if (parent && parent.folded) {
-              tab.invisible = true
               if (state.hideFoldedTabs && !tab.hidden) toHide.push(tab.id)
             } else if (tab.parentId === parentId) {
-              tab.invisible = false
               if (state.hideFoldedTabs && tab.hidden) toShow.push(tab.id)
             }
           }
 
           // If there are no moving, just update tabs tree
           if (!moveIndexOk) {
-            state.tabs = Utils.CalcTabsTreeLevels(state.tabs)
+            Utils.UpdateTabsTree(state, currentPanel.startIndex, currentPanel.endIndex + 1)
           }
         }
 
@@ -839,7 +762,7 @@ export default {
 
         // Update tabs tree if there are no tabs was deleted
         if (nodes[0].type !== 'tab' || event.ctrlKey) {
-          state.tabs = Utils.CalcTabsTreeLevels(state.tabs)
+          Utils.UpdateTabsTree(state, dropIndex - 1, dropIndex + nodes.length)
         }
       }
     }
@@ -889,10 +812,9 @@ export default {
     for (let tab of ttf) {
       tab.lvl = minLvlTab.lvl
       tab.parentId = minLvlTab.parentId
-      tab.invisible = false
     }
 
-    state.tabs = Utils.CalcTabsTreeLevels(state.tabs)
+    Utils.UpdateTabsTree(state, ttf[0].index - 1, ttf[ttf.length - 1].index + 1)
     dispatch('saveTabsTree', 250)
   },
 
@@ -954,25 +876,15 @@ export default {
 
     // Update parent of selected tabs
     tabs[0].parentId = groupTab.id
-    if (tabs[0].lvl + 1 === state.tabsTreeLimit) tabs[0].folded = false
     for (let i = 1; i < tabs.length; i++) {
-      let prev = tabs[i - 1]
       let tab = tabs[i]
-
-      if (state.tabsTreeLimit > 0 && tab.lvl + 1 > state.tabsTreeLimit) {
-        tab.parentId = prev.parentId
-        tab.folded = false
-        tab.invisible = false
-        continue
-      }
 
       if (tab.lvl <= tabs[0].lvl) {
         tab.parentId = groupTab.id
         tab.folded = false
-        tab.invisible = false
       }
     }
-    state.tabs = Utils.CalcTabsTreeLevels(state.tabs)
+    Utils.UpdateTabsTree(state, tabs[0].index - 2, tabs[tabs.length - 1].index + 1)
     dispatch('saveTabsTree', 250)
   },
 
