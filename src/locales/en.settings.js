@@ -24,6 +24,11 @@ export default {
   'settings.show_tab_rm_btn': { message: 'Show close button on tab hover' },
   'settings.no_empty_default': { message: 'Create new tab on emptying default panel' },
   'settings.hide_inactive_panel_tabs': { message: 'Hide tabs of inactive panels' },
+  'settings.activate_after_closing': { message: 'After closing current tab activate' },
+  'settings.activate_after_closing_next': { message: 'next tab' },
+  'settings.activate_after_closing_prev': { message: 'previous tab' },
+  'settings.activate_after_closing_prev_act': { message: 'previously active tab' },
+  'settings.activate_after_closing_none': { message: 'none' },
 
   // --- Pinned tabs
   'settings.pinned_tabs_title': { message: 'Pinned tabs' },

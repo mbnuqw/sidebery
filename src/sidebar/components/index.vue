@@ -1284,11 +1284,6 @@ export default {
         Store.dispatch('saveTabsTree', 500)
       }
 
-      // Set last tab successor
-      if (panel.tabs.length >= 1 && tab.index >= panel.endIndex) {
-        Store.dispatch('updateTabsSuccessorsDebounced', { timeout: 200 })
-      }
-
       // Update dashboard height (if it opened)
       if (State.dashboardOpened && !panel.tabs.length) {
         this.recalcDashboardHeight()
@@ -1445,24 +1440,6 @@ export default {
         if (State.rmFoldedTabs && toRemove.length) Store.dispatch('removeTabs', toRemove)
       }
 
-      // Update last tab successor
-      if (panel && panel.tabs.length > 2 && !State.removingTabs.length) {
-        // Removing the last tab
-        if (tab.index === panel.endIndex) {
-          const prevTab = panel.tabs[panel.tabs.length - 2]
-          const prePrevTab = panel.tabs[panel.tabs.length - 3]
-          prevTab.successorTabId = prePrevTab.id
-          browser.tabs.update(prevTab.id, { successorTabId: prePrevTab.id })
-        }
-        // Removing successor of last tab
-        if (tab.index === panel.endIndex - 1) {
-          const lastTab = panel.tabs[panel.tabs.length - 1]
-          const prevTab = panel.tabs[panel.tabs.length - 3]
-          lastTab.successorTabId = prevTab.id
-          browser.tabs.update(lastTab.id, { successorTabId: prevTab.id })
-        }
-      }
-
       // Shift tabs after removed one. (NOT detected by vue)
       for (let i = tab.index + 1; i < State.tabs.length; i++) {
         State.tabs[i].index--
@@ -1521,9 +1498,6 @@ export default {
         if (State.tabs[i]) State.tabs[i].index = i
       }
 
-      // Update last tab successor
-      Store.dispatch('updateTabsSuccessorsDebounced', { timeout: 200 })
-
       // Calc tree levels
       if (State.tabsTree && !State.movingTabs.length) {
         const panel = this.panels[State.panelIndex]
@@ -1579,13 +1553,19 @@ export default {
       Store.commit('resetSelection')
 
       // Update tabs and find activated one
-      let tab, isActivated
-      for (let i = State.tabs.length; i--; ) {
-        isActivated = info.tabId === State.tabs[i].id
-        State.tabs[i].active = isActivated
-        if (isActivated) tab = State.tabs[i]
-      }
+      let tab = State.tabsMap[info.tabId]
       if (!tab) return
+      tab.active = true
+
+      // Update previous active tab and store his id
+      let prevActive = State.tabsMap[info.previousTabId]
+      if (prevActive) {
+        prevActive.active = false
+
+        if (!State.actTabs) State.actTabs = []
+        if (State.actTabs.length > 128) State.actTabs = State.actTabs.slice(32)
+        State.actTabs.push(prevActive.id)
+      }
 
       // Remove updated flag
       this.$delete(State.updatedTabs, info.tabId)
@@ -1635,6 +1615,12 @@ export default {
           windowId: State.windowId,
           arg: groupId,
         })
+      }
+
+      // Update successorTabId
+      if (State.activateAfterClosing !== 'none') {
+        const target = Utils.FindSuccessorTab(State, tab)
+        if (target) browser.tabs.moveInSuccession([tab.id], target.id)
       }
     },
 

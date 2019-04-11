@@ -377,6 +377,78 @@ function GetGroupUrl(name) {
   return urlBase + `#${encodeURI(name)}:id:${Uid()}`
 }
 
+/**
+ * Find successor tab
+ */
+function FindSuccessorTab(state, tab, exclude) {
+  let target
+
+  // Next tab
+  if (state.activateAfterClosing === 'next') {
+    for (let i = tab.index + 1, next; i < state.tabs.length; i++) {
+      next = state.tabs[i]
+      if (next.cookieStoreId !== tab.cookieStoreId || next.pinned !== tab.pinned) break
+      if (exclude && exclude.includes(next.id)) continue
+      if (next.lvl >= tab.lvl && next.cookieStoreId === tab.cookieStoreId) {
+        target = next
+        break
+      }
+    }
+
+    if (!target) {
+      for (let i = tab.index, prev; i--; ) {
+        prev = state.tabs[i]
+        if (prev.cookieStoreId !== tab.cookieStoreId || prev.pinned !== tab.pinned) break
+        if (exclude && exclude.includes(prev.id)) continue
+        if (prev.lvl <= tab.lvl && prev.cookieStoreId === tab.cookieStoreId) {
+          target = prev
+          break
+        }
+      }
+    }
+  }
+
+  // Previous tab
+  if (state.activateAfterClosing === 'prev') {
+    for (let i = tab.index, prev; i--; ) {
+      prev = state.tabs[i]
+      if (prev.cookieStoreId !== tab.cookieStoreId || prev.pinned !== tab.pinned) break
+      if (exclude && exclude.includes(prev.id)) continue
+      if (prev.lvl <= tab.lvl && prev.cookieStoreId === tab.cookieStoreId) {
+        target = prev
+        break
+      }
+    }
+
+    if (!target) {
+      for (let i = tab.index + 1, next; i < state.tabs.length; i++) {
+        next = state.tabs[i]
+        if (next.cookieStoreId !== tab.cookieStoreId || next.pinned !== tab.pinned) break
+        if (exclude && exclude.includes(next.id)) continue
+        if (next.lvl >= tab.lvl && next.cookieStoreId === tab.cookieStoreId) {
+          target = next
+          break
+        }
+      }
+    }
+  }
+
+  // Previously active tab
+  if (state.activateAfterClosing === 'prev_act') {
+    let targetId
+    for (let i = state.actTabs.length; i--;) {
+      targetId = state.actTabs[i]
+      if (exclude && exclude.includes(targetId)) continue
+      if (targetId !== tab.id && state.tabsMap[targetId]) {
+        target = state.tabsMap[targetId]
+        break
+      }
+    }
+  }
+
+  return target
+}
+
 export default {
   Uid,
   Asap,
@@ -398,4 +470,5 @@ export default {
   IsGroupUrl,
   GetGroupId,
   GetGroupUrl,
+  FindSuccessorTab,
 }

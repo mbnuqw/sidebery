@@ -37,6 +37,12 @@
         label="settings.hide_inactive_panel_tabs"
         :value="$store.state.hideInact"
         @input="toggleHideInact")
+      select-field(
+        label="settings.activate_after_closing"
+        optLabel="settings.activate_after_closing_"
+        :value="$store.state.activateAfterClosing"
+        :opts="$store.state.activateAfterClosingOpts"
+        @input="setOpt('activateAfterClosing', $event)")
 
     section
       h2 {{t('settings.pinned_tabs_title')}}

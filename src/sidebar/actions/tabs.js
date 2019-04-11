@@ -1,7 +1,7 @@
 import Utils from '../../libs/utils'
 import EventBus from '../event-bus'
 
-let TabsTreeSaveTimeout, UpdateTabsSuccessorsTimeout
+let TabsTreeSaveTimeout
 
 export default {
   /**
@@ -229,16 +229,9 @@ export default {
     // Try to activate prev or next tab on this panel
     if (tabs.length < panel.tabs.length) {
       const activeTab = tabs.find(t => t.active)
-
-      if (activeTab && activeTab.cookieStoreId === panel.cookieStoreId) {
-        const prevIndex = tabs[0].index - 1
-        const nextIndex = tabs[tabs.length - 1].index + 1
-
-        let target
-        if (nextIndex <= panel.endIndex) target = state.tabs[nextIndex]
-        else if (prevIndex >= panel.startIndex) target = state.tabs[prevIndex]
-
-        if (target) await browser.tabs.update(target.id, { active: true })
+      if (activeTab) {
+        const target = Utils.FindSuccessorTab(state, activeTab, tabs.map(t => t.id))
+        if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
       }
     }
 
@@ -921,50 +914,6 @@ export default {
     }
 
     return out
-  },
-
-  /**
-   * Update successorTabId of tabs
-   */
-  updateTabsSuccessors({ getters }) {
-    const toReset = []
-    for (let panel of getters.panels) {
-      // No tabs
-      if (!panel.tabs || panel.tabs.length === 0) continue
-
-      // Panel have 1 tab
-      if (panel.tabs.length === 1) {
-        if (panel.tabs[0].successorTabId >= 0) {
-          panel.tabs[0].successorTabId = -1
-          toReset.push(panel.tabs[0].id)
-        }
-        continue
-      }
-
-      // Check tabs above the last one
-      for (let i = panel.tabs.length - 1; i--;) {
-        if (panel.tabs[i].successorTabId >= 0) {
-          panel.tabs[i].successorTabId = -1
-          toReset.push(panel.tabs[i].id)
-        }
-      }
-
-      // Update successor of last tab
-      const penultTab = panel.tabs[panel.tabs.length - 2]
-      const lastTab = panel.tabs[panel.tabs.length - 1]
-      if (lastTab.successorTabId !== penultTab.id) {
-        lastTab.successorTabId = penultTab.id
-        browser.tabs.update(lastTab.id, { successorTabId: penultTab.id })
-      }
-    }
-
-    for (let id of toReset) {
-      browser.tabs.update(id, { successorTabId: -1 })
-    }
-  },
-  updateTabsSuccessorsDebounced({ dispatch }, { timeout } = {}) {
-    if (UpdateTabsSuccessorsTimeout) clearTimeout(UpdateTabsSuccessorsTimeout)
-    UpdateTabsSuccessorsTimeout = setTimeout(() => dispatch('updateTabsSuccessors'), timeout)
   },
 
   /**

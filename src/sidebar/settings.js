@@ -7,6 +7,7 @@ export const SETTINGS_OPTIONS = {
   tabsPanelLeftClickActionOpts: ['prev', 'none'],
   tabsPanelDoubleClickActionOpts: ['tab', 'none'],
   tabsPanelRightClickActionOpts: ['next', 'dash', 'none'],
+  activateAfterClosingOpts: ['prev_act', 'next', 'prev', 'none'],
   pinnedTabsPositionOpts: ['panel', 'top', 'left', 'right'],
   tabsTreeLimitOpts: [1, 2, 3, 4, 5, 'none'],
   fontSizeOpts: ['xs', 's', 'm', 'l', 'xl', 'xxl'],
@@ -25,6 +26,7 @@ export const DEFAULT_SETTINGS = {
   skipEmptyPanels: false,
   showTabRmBtn: true,
   hideInact: false,
+  activateAfterClosing: 'next',
 
   // Pinned tabs
   pinnedTabsPosition: 'panel',

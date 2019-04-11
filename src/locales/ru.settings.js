@@ -24,6 +24,11 @@ export default {
   'settings.show_tab_rm_btn': { message: 'Показывать кнопку закрытия таба при наведении курсора' },
   'settings.no_empty_default': { message: 'Создавать новую вкладку при опустошении стандартной панели' },
   'settings.hide_inactive_panel_tabs': { message: 'Скрывать табы неактивных панелей' },
+  'settings.activate_after_closing': { message: 'После закрытия текущей вкладки активировать' },
+  'settings.activate_after_closing_next': { message: 'следующую' },
+  'settings.activate_after_closing_prev': { message: 'предыдущую' },
+  'settings.activate_after_closing_prev_act': { message: 'последнюю активную' },
+  'settings.activate_after_closing_none': { message: 'выкл' },
 
   // --- Pinned tabs
   'settings.pinned_tabs_title': { message: 'Закрепленные табы' },

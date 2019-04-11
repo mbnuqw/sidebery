@@ -102,8 +102,6 @@ export default new Vue({
     Store.dispatch('loadSnapshots')
     Store.dispatch('loadFavicons')
     Store.dispatch('loadPermissions')
-    Store.dispatch('updateTabsSuccessors')
-
 
     // Try to clear unneeded favicons
     Store.dispatch('tryClearFaviCache', 86400)
