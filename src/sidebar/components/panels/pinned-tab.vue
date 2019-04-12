@@ -1,6 +1,6 @@
 <template lang="pug">
 .PinnedTab(:is-active="tab.active"
-  :data-no-fav="!favicon || faviErr"
+  :data-no-fav="!favicon"
   :data-audible="tab.audible"
   :data-muted="tab.mutedInfo.muted"
   :is-selected="selected"
@@ -22,7 +22,7 @@
     @drop="onDragLeave")
   .fav
     .placeholder: svg: use(:xlink:href="favPlaceholder")
-    img(:src="favicon", @load.passive="onFaviconLoad", @error="onFaviconErr")
+    img(:src="favicon", @load.passive="onFaviconLoad")
     .update-badge
     .ok-badge
       svg: use(xlink:href="#icon_ok")
@@ -78,13 +78,8 @@ export default {
     },
 
     favicon() {
-      if (this.tab.favIconUrl) return this.tab.favIconUrl
-      else if (this.tab.url) {
-        let hn = this.tab.url.split('/')[2]
-        if (!hn) return
-        return State.favicons[hn]
-      }
-      return undefined
+      if (this.tab.status === 'loading') return State.favicons[this.tab.host]
+      else return State.favicons[this.tab.host] || this.tab.favIconUrl
     },
 
     ctxColor() {
@@ -106,6 +101,9 @@ export default {
       if (JPG_RE.test(this.tab.url)) return '#icon_jpg'
       if (PDF_RE.test(this.tab.url)) return '#icon_pdf'
       if (this.tab.url.startsWith('file:')) return '#icon_local_file'
+      if (this.tab.url.startsWith('about:preferences')) return '#icon_pref'
+      if (this.tab.url.startsWith('about:addons')) return '#icon_addons'
+      if (this.tab.url.startsWith('about:performance')) return '#icon_perf'
       return '#icon_ff'
     },
   },
