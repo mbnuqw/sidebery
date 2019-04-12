@@ -1,10 +1,42 @@
+import { CUSTOM_STYLES } from '../sidebar/store.state'
+import { NoiseBg } from '../libs/noise-bg'
+import Utils from '../libs/utils'
+
 void (async function() {
   // Load settings and set theme
   let ans = await browser.storage.local.get('settings')
   let settings = ans.settings
   let theme = settings ? settings.theme : 'dark'
-  const rootEl = document.getElementById('root')
-  rootEl.classList.add('-' + theme)
+
+  // Set theme class
+  document.body.classList.add('-' + theme)
+
+  // Set background noise
+  if (settings.bgNoise) {
+    NoiseBg(document.body, {
+      width: 300,
+      height: 300,
+      gray: [12, 175],
+      alpha: [0, 66],
+      spread: [0, 9],
+    })
+    let scaleShift = ~~window.devicePixelRatio
+    let sW = 300 >> scaleShift
+    let sH = 300 >> scaleShift
+    document.body.style.backgroundSize = `${sW}px ${sH}px`
+  }
+
+  // Set user styles
+  ans = await browser.storage.local.get('styles')
+  let loadedStyles = ans.styles
+  if (loadedStyles) {
+    for (let key in CUSTOM_STYLES) {
+      if (!CUSTOM_STYLES.hasOwnProperty(key)) continue
+      if (loadedStyles[key]) {
+        document.body.style.setProperty(Utils.CSSVar(key), loadedStyles[key])
+      }
+    }
+  }
 
   // Load current window and get url-hash
   const win = await browser.windows.getCurrent()
@@ -20,7 +52,7 @@ void (async function() {
 
     const hash = decodeURI(window.location.hash.slice(1))
     if (msg.name === 'reinit_group' && decodeURI(msg.arg) === hash) {
-      init(win.id, hash, lastState).then(state => lastState = state)
+      init(win.id, hash, lastState).then(state => (lastState = state))
     }
   })
 })()
@@ -54,7 +86,7 @@ async function init(windowId, hash, lastState) {
 
   // Check for changes
   const checkSum = groupInfo.tabs.map(t => {
-    return [ t.title, t.url, t.discarded ]
+    return [t.title, t.url, t.discarded]
   })
   const checkSumStr = JSON.stringify(checkSum)
   if (lastState === checkSumStr) return checkSumStr
@@ -135,9 +167,8 @@ function loadScreens(tabs) {
     }
 
     // Set loading start
-    browser.tabs.captureTab(tab.id, { format: 'jpeg', quality: 90 })
-      .then(screen => {
-        tab.bgEl.style.backgroundImage = `url(${screen})`
-      })
+    browser.tabs.captureTab(tab.id, { format: 'jpeg', quality: 90 }).then(screen => {
+      tab.bgEl.style.backgroundImage = `url(${screen})`
+    })
   }
 }
