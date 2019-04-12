@@ -437,6 +437,7 @@ export default {
         const panel = Store.getters.panels.find(p => p.cookieStoreId === this.id)
         if (panel && panel.tabs && !panel.tabs.length) {
           await browser.tabs.create({
+            windowId: State.windowId,
             index: panel.startIndex,
             cookieStoreId: panel.cookieStoreId,
             active: true,
@@ -452,7 +453,7 @@ export default {
           const permUrl = browser.runtime.getURL('permissions/all-urls.html')
           this.$emit('close')
           this.switchProxy('direct')
-          browser.tabs.create({ url: permUrl })
+          browser.tabs.create({ url: permUrl, windowId: State.windowId })
           return
         }
       }
@@ -481,7 +482,7 @@ export default {
           const permUrl = browser.runtime.getURL('permissions/all-urls.html')
           this.$emit('close')
           this.switchProxy('direct')
-          browser.tabs.create({ url: permUrl })
+          browser.tabs.create({ url: permUrl, windowId: State.windowId })
           return
         }
       }
@@ -508,11 +509,10 @@ export default {
       // Check permissions
       if (type !== 'direct') {
         if (!State.permAllUrls) {
+          const url = browser.runtime.getURL('permissions/all-urls.html')
           this.$emit('close')
           this.switchProxy('direct')
-          browser.tabs.create({
-            url: browser.runtime.getURL('permissions/all-urls.html'),
-          })
+          browser.tabs.create({ url, windowId: State.windowId })
           return
         }
       }

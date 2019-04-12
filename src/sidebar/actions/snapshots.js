@@ -111,6 +111,7 @@ export default {
 
       // Create tabs
       const createdTab = await browser.tabs.create({
+        windowId: state.windowId,
         url: tab.url,
         pinned: tab.pinned,
         cookieStoreId: panel.cookieStoreId,

@@ -35,6 +35,7 @@
 <script>
 import {mapGetters} from 'vuex'
 import Store from '../../store'
+import State from '../../store.state'
 import ToggleField from '../fields/toggle'
 
 export default {
@@ -79,6 +80,7 @@ export default {
         const panel = Store.getters.panels.find(p => p.cookieStoreId === defaultId)
         if (panel && panel.tabs && !panel.tabs.length) {
           await browser.tabs.create({
+            windowId: State.windowId,
             index: panel.startIndex,
             cookieStoreId: panel.cookieStoreId,
             active: true,

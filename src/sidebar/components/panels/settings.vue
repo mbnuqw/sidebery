@@ -430,7 +430,7 @@ export default {
       } else {
         if (!State.permTabHide) {
           const url = browser.runtime.getURL('permissions/tab-hide.html')
-          browser.tabs.create({ url })
+          browser.tabs.create({ url, windowId: State.windowId })
           return
         }
         Store.dispatch('hideInactPanelsTabs')
@@ -476,7 +476,7 @@ export default {
       } else {
         if (!State.permTabHide) {
           const url = browser.runtime.getURL('permissions/tab-hide.html')
-          browser.tabs.create({ url })
+          browser.tabs.create({ url, windowId: State.windowId })
           return
         }
         const toHide = State.tabs.filter(t => t.invisible).map(t => t.id)
@@ -627,9 +627,8 @@ export default {
         })
         State.permAllUrls = false
       } else {
-        browser.tabs.create({
-          url: browser.runtime.getURL('permissions/all-urls.html'),
-        })
+        const url = browser.runtime.getURL('permissions/all-urls.html')
+        browser.tabs.create({ url, windowId: State.windowId })
       }
       Store.dispatch('saveContainers')
       Store.dispatch('saveSettings')
@@ -643,9 +642,8 @@ export default {
         if (State.hideFoldedTabs) this.toggleHideFoldedTabs()
         State.permTabHide = false
       } else {
-        browser.tabs.create({
-          url: browser.runtime.getURL('permissions/tab-hide.html'),
-        })
+        const url = browser.runtime.getURL('permissions/tab-hide.html')
+        browser.tabs.create({ url, windowId: State.windowId })
       }
       Store.dispatch('saveSettings')
     },
@@ -690,9 +688,9 @@ export default {
     /**
      * Open debug info page
      */
-    async openDebugInfo() {
+    openDebugInfo() {
       let url = browser.runtime.getURL('debug/debug.html')
-      await browser.tabs.create({ url })
+      browser.tabs.create({ url, windowId: State.windowId })
     },
 
     /**

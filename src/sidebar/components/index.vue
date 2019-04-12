@@ -1109,7 +1109,10 @@ export default {
         if (State.dashboardOpened) {
           this.closeDashboard()
         } else {
-          browser.tabs.create({ cookieStoreId: this.panels[i].cookieStoreId })
+          browser.tabs.create({
+            windowId: State.windowId,
+            cookieStoreId: this.panels[i].cookieStoreId,
+          })
         }
       }
     },
@@ -1342,6 +1345,7 @@ export default {
         let panel = this.panels.find(p => p.cookieStoreId === tab.cookieStoreId)
         if (panel.noEmpty && panel.tabs.length === 1) {
           browser.tabs.create({
+            windowId: State.windowId,
             index: panel.startIndex,
             cookieStoreId: panel.cookieStoreId,
           })
@@ -1401,6 +1405,7 @@ export default {
       // Recreate locked tab
       if (panel && panel.lockedTabs && tab.url.startsWith('http')) {
         browser.tabs.create({
+          windowId: State.windowId,
           index: tab.index,
           url: tab.url,
           openerTabId: tab.parentId > -1 ? tab.parentId : undefined,
@@ -1413,6 +1418,7 @@ export default {
       if (panel && panel.noEmpty && panel.tabs && panel.tabs.length === 1) {
         if (!creatingNewTab) {
           browser.tabs.create({
+            windowId: State.windowId,
             index: panel.startIndex,
             cookieStoreId: panel.id,
             active: true,

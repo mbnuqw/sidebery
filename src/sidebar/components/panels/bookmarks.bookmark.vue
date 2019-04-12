@@ -185,6 +185,7 @@ export default {
         let index = this.defaultPanel.endIndex + 1
         browser.tabs.create({
           index,
+          windowId: State.windowId,
           url: this.node.url,
           active: withFocus,
         })

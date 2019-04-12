@@ -214,7 +214,11 @@ export default {
 
     // No-empty panels
     if (tabs.length === panel.tabs.length && panel.noEmpty) {
-      await browser.tabs.create({ index: panel.startIndex, cookieStoreId: ctxId })
+      await browser.tabs.create({
+        windowId: state.windowId,
+        index: panel.startIndex,
+        cookieStoreId: ctxId
+      })
     }
 
     // Update successorTabId if there are active tab
@@ -374,6 +378,7 @@ export default {
       let tab = state.tabsMap[tabId]
       if (!tab) continue
       await browser.tabs.create({
+        windowId: state.windowId,
         index: tab.index + 1,
         cookieStoreId: tab.cookieStoreId,
         url: tab.url,
@@ -401,7 +406,7 @@ export default {
   async clearTabsCookies({ state }, tabIds) {
     if (!state.permAllUrls) {
       const url = browser.runtime.getURL('permissions/all-urls.html')
-      browser.tabs.create({ url })
+      browser.tabs.create({ url, windowId: state.windowId })
       return
     }
 
@@ -501,6 +506,7 @@ export default {
       if (!tab) return
 
       await browser.tabs.create({
+        windowId: state.windowId,
         cookieStoreId: ctxId,
         url: tab.url.indexOf('http') ? null : tab.url,
       })
@@ -809,7 +815,7 @@ export default {
     // Check permissions
     if (!state.permAllUrls) {
       const url = browser.runtime.getURL('permissions/all-urls.html')
-      browser.tabs.create({ url })
+      browser.tabs.create({ url, windowId: state.windowId })
       return
     }
 

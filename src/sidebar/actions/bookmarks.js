@@ -309,6 +309,7 @@ export default {
       const isDir = node.type === 'folder'
       if (isDir && !state.tabsTree) continue
       const createdTab = await browser.tabs.create({
+        windowId: state.windowId,
         index: index++,
         url: node.url ? node.url : Utils.GetGroupUrl(node.title),
         cookieStoreId: panelId,
