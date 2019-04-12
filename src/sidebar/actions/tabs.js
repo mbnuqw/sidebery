@@ -179,36 +179,32 @@ export default {
    * Remove tabs
    */
   async removeTabs({ state, getters }, tabIds) {
-    let tabs = tabIds.map(id => state.tabsMap[id])
-    const ctxId = tabs[0].cookieStoreId
+    if (!tabIds || !tabIds.length) return
+    if (!state.tabsMap[tabIds[0]]) return
+    const ctxId = state.tabsMap[tabIds[0]].cookieStoreId
     const panel = getters.panels.find(p => p.cookieStoreId === ctxId)
     if (!panel) return
 
-    tabs = tabs.filter(tab => {
-      if (!tab) return false
-      if (tab.cookieStoreId !== ctxId) return false
-      if (panel.lockedTabs && !tab.url.startsWith('about')) return false
-      tab.invisible = true
-      return true
-    })
+    let tabsMap = {}
+    for (let id of tabIds) {
+      let tab = state.tabsMap[id]
+      if (!tab) continue
+      if (tab.cookieStoreId !== ctxId) continue
+      if (panel.lockedTabs && !tab.url.startsWith('about')) continue
 
-    // Remove folded tabs
-    if (state.rmFoldedTabs) {
-      for (let tab of tabs) {
-        if (tab.isParent && tab.folded) {
-          for (let i = tab.index + 1; i < state.tabs.length; i++) {
-            if (state.tabs[i].lvl <= tab.lvl) break
-            
-            tabs.push(state.tabs[i])
-          }
+      tabsMap[id] = tab
+      tab.invisible = true
+
+      if (state.rmFoldedTabs && tab.folded) {
+        for (let i = tab.index + 1; i < state.tabs.length; i++) {
+          if (state.tabs[i].lvl <= tab.lvl) break
+          tabsMap[state.tabs[i].id] = state.tabs[i]
         }
       }
     }
 
-    // Sort by index
-    tabs = tabs.sort((a, b) => a.index - b.index)
-
     // Set tabs to be removed
+    const tabs = Object.values(tabsMap).sort((a, b) => a.index - b.index)
     const toRemove = tabs.map(t => t.id)
     if (state.removingTabs && state.removingTabs.length) {
       state.removingTabs = [...state.removingTabs, ...toRemove]
@@ -216,17 +212,12 @@ export default {
       state.removingTabs = [...toRemove]
     }
 
-    // If there are no tabs on this panel
-    // create new one (if that option accepted)
+    // No-empty panels
     if (tabs.length === panel.tabs.length && panel.noEmpty) {
-      await browser.tabs.create({
-        index: panel.startIndex,
-        cookieStoreId: ctxId,
-        active: true,
-      })
+      await browser.tabs.create({ index: panel.startIndex, cookieStoreId: ctxId })
     }
 
-    // Try to activate prev or next tab on this panel
+    // Update successorTabId if there are active tab
     if (tabs.length < panel.tabs.length) {
       const activeTab = tabs.find(t => t.active)
       if (activeTab) {
