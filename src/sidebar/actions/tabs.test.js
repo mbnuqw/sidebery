@@ -1428,7 +1428,7 @@ describe('dropToTabs', () => {
     const ctx = { state, getters, dispatch }
     const event = { ctrlKey: false }
     const nodes = [
-      { type: 'tab', id: 4, panel: 1, index: 3, parentId: 1, ctx: 'container-A' },
+      { type: 'tab', id: 4, panel: 1, index: 3, parentId: 1, ctx: 'container-A', windowId: 1 },
       { type: 'tab', id: 5 },
       { type: 'tab', id: 6 },
       { type: 'tab', id: 7 },
