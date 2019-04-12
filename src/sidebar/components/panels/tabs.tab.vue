@@ -304,17 +304,12 @@ export default {
       e.dataTransfer.effectAllowed = 'move'
       const dragData = tabsToDrag.map(t => {
         return {
+          ...JSON.parse(JSON.stringify(t)),
           type: 'tab',
-          id: t.id,
-          parentId: t.parentId,
-          lvl: t.lvl,
-          index: t.index,
           ctx: t.cookieStoreId,
-          incognito: State.private,
           windowId: State.windowId,
           panel: State.panelIndex,
-          url: t.url,
-          title: t.title,
+          incognito: State.private,
         }
       })
       EventBus.$emit('dragStart', dragData)

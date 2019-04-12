@@ -628,6 +628,16 @@ export default {
 
       // Move tabs
       if (nodes[0].type === 'tab' && samePanel && !event.ctrlKey) {
+        // Move to different window
+        if (nodes[0].windowId !== state.windowId) {
+          state.attachingTabs = [...nodes]
+          for (let i = 0; i < nodes.length; i++) {
+            const index = dropIndex + i
+            await browser.tabs.move(nodes[i].id, { windowId: state.windowId, index })
+          }
+          return
+        }
+
         // Check if tabs was dropped to same place
         const inside = dropIndex > nodes[0].index && dropIndex <= nodes[nodes.length - 1].index
         const inFirst = nodes[0].id === dropParent

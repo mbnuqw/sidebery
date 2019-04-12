@@ -1258,7 +1258,8 @@ export default {
       // Set default custom props (for reactivity)
       tab.isParent = false
       tab.folded = false
-      tab.parentId = -1
+      if (tab.parentId === undefined) tab.parentId = -1
+      else tab.openerTabId = tab.parentId
       tab.lvl = 0
       tab.invisible = false
       tab.favIconUrl = ''
@@ -1520,31 +1521,33 @@ export default {
      */
     onDetachedTab(id, info) {
       if (info.oldWindowId !== State.windowId) return
-      Store.commit('closeCtxMenu')
-      Store.commit('resetSelection')
-
-      if (!State.tabsMap[id]) return
-      let i = State.tabsMap[id].index
-
-      State.tabsMap[id] = undefined
-      State.tabs.splice(i, 1)
-
-      // Remove updated flag
-      this.$delete(State.updatedTabs, id)
-
-      Store.dispatch('recalcPanelScroll')
-      Store.dispatch('saveSyncPanels')
+      const tab = State.tabsMap[id]
+      if (tab) tab.folded = false
+      this.onRemovedTab(id, { windowId: State.windowId })
     },
 
     /**
      * tabs.onAttached
      */
-    onAttachedTab(id, info) {
+    async onAttachedTab(id, info) {
       if (info.newWindowId !== State.windowId) return
-      Store.commit('closeCtxMenu')
-      Store.commit('resetSelection')
-      Store.dispatch('loadTabs')
-      Store.dispatch('saveSyncPanels')
+
+      if (!State.attachingTabs) State.attachingTabs = []
+      const ai = State.attachingTabs.findIndex(t => t.id === id)
+
+      let tab
+      if (ai > -1) {
+        tab = State.attachingTabs.splice(ai, 1)[0]
+      } else {
+        tab = await browser.tabs.get(id)
+      }
+
+      tab.windowId = State.windowId
+      tab.index = info.newPosition
+
+      this.onCreatedTab(tab)
+
+      if (tab.active) browser.tabs.update(tab.id, { active: true })
     },
 
     /**
@@ -1558,11 +1561,6 @@ export default {
       // Reset selection
       Store.commit('resetSelection')
 
-      // Update tabs and find activated one
-      let tab = State.tabsMap[info.tabId]
-      if (!tab) return
-      tab.active = true
-
       // Update previous active tab and store his id
       let prevActive = State.tabsMap[info.previousTabId]
       if (prevActive) {
@@ -1572,6 +1570,11 @@ export default {
         if (State.actTabs.length > 128) State.actTabs = State.actTabs.slice(32)
         State.actTabs.push(prevActive.id)
       }
+
+      // Update tabs and find activated one
+      let tab = State.tabsMap[info.tabId]
+      if (!tab) return
+      tab.active = true
 
       // Remove updated flag
       this.$delete(State.updatedTabs, info.tabId)
