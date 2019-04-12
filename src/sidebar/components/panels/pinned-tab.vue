@@ -36,6 +36,8 @@
     svg.-mute: use(xlink:href="#icon_mute")
   .ctx(v-if="ctx && ctxColor", :style="{background: ctxColor}")
   .title(v-if="withTitle") {{tab.title}}
+  .close(v-if="$store.state.showTabRmBtn", @mousedown.stop="close", @mouseup.stop="")
+    svg: use(xlink:href="#icon_remove")
 </template>
 
 
@@ -718,4 +720,33 @@ export default {
   overflow: hidden
   transition: transform var(--d-fast), color var(--d-fast), mask var(--d-fast)
   mask: linear-gradient(-90deg, transparent, #000000 12px, #000000)
+
+// --- Close button
+.PinnedTab .close
+  box(absolute, none)
+  pos(0, r: 0)
+  size(31px)
+  height: var(--tabs-height)
+  cursor: pointer
+  z-index: 30
+  opacity: 0
+  &:hover > svg
+    fill: #ea4335
+  &:active > svg
+    transition: none
+    fill: #fa5335
+  > svg
+    box(absolute)
+    pos(calc(50% - 8px), same)
+    size(17px, same)
+    fill: #a63626
+    transition: fill var(--d-fast)
+#root.-pinned-tabs-panel.-pinned-tabs-list
+  .PinnedTab .close
+    box(block)
+  .PinnedTab:hover
+    .title
+      mask: linear-gradient(-90deg, transparent, transparent 25px, #000000 50px, #000000)
+    .close
+      opacity: 1
 </style>
