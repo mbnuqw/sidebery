@@ -288,6 +288,7 @@ describe('createTab', () => {
 describe('removeTabs', () => {
   test('remove tabs', async () => {
     const state = {
+      windowId: 1,
       tabs: [
         {
           id: 1,
@@ -310,6 +311,7 @@ describe('removeTabs', () => {
           cookieStoreId: 'a',
           noEmpty: true,
           tabs: state.tabs,
+          startIndex: 0,
         },
       ],
     }
@@ -319,7 +321,7 @@ describe('removeTabs', () => {
 
     await TabsActions.removeTabs({ state, getters }, [1, 2])
     expect(browser.tabs.remove).toBeCalledWith([1, 2])
-    expect(browser.tabs.create).toBeCalledWith({ cookieStoreId: 'a', active: true })
+    expect(browser.tabs.create).toBeCalledWith({ cookieStoreId: 'a', windowId: 1, index: 0 })
     expect(browser.tabs.update).not.toBeCalled()
   })
 
