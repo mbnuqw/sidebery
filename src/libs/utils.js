@@ -210,6 +210,10 @@ function UpdateTabsTree(state, startIndex = 0, endIndex = -1) {
   if (endIndex === -1) endIndex = state.tabs.length
   const maxLvl = typeof state.tabsTreeLimit === 'number' ? state.tabsTreeLimit : 123
 
+  // Reset parent-flags of the last tab
+  state.tabs[state.tabs.length - 1].isParent = false
+  state.tabs[state.tabs.length - 1].folded = false
+
   for (let i = startIndex; i < endIndex; i++) {
     const t = state.tabs[i]
     if (!t) return
@@ -263,7 +267,7 @@ function UpdateTabsTree(state, startIndex = 0, endIndex = -1) {
       t.invisible = false
     }
 
-    // Reset parent if next tab have same lvl and parentId
+    // Reset parent-flags of prev tab if current tab have same lvl
     if (pt && pt.lvl >= t.lvl) {
       pt.isParent = false
       pt.folded = false
