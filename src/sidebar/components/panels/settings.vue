@@ -57,10 +57,6 @@
         :inactive="$store.state.pinnedTabsPosition !== 'panel'"
         :value="$store.state.pinnedTabsList"
         @input="setOpt('pinnedTabsList', $event)")
-      toggle-field.-rm(
-        label="settings.pinned_tabs_sync"
-        :value="$store.state.pinnedTabsSync"
-        @input="togglePinnedTabsSync")
 
     section
       h2 {{t('settings.pinned_tabs_tree')}}
@@ -285,15 +281,6 @@
         .btn(@click="clearFaviCache(false)") {{t('settings.rm_unused_favi_cache')}}
         .btn.-warn(@click="clearFaviCache(true)") {{t('settings.rm_favi_cache')}}
 
-    section.-rm
-      h2 {{t('settings.sync_title')}}
-      info-field(
-        label="settings.sync_data_size"
-        :value="syncDataSize"
-        @click="calcSyncDataSize")
-      .buttons
-        .btn.-warn(@click="clearSyncData") {{t('settings.rm_sync_data')}}
-
     section
       h2 {{t('settings.help_title')}}
 
@@ -302,9 +289,9 @@
         a.btn(tabindex="-1", :href="issueLink") {{t('settings.repo_bug')}}
         .btn.-warn(@click="resetSettings") {{t('settings.reset_settings')}}
 
-      .ref
-        .rm-example
-        .desc {{t('settings.ref_rm')}}
+      //- .ref
+      //-   .rm-example
+      //-   .desc {{t('settings.ref_rm')}}
 
       a.github(tabindex="-1", href="https://github.com/mbnuqw/sidebery")
         svg: use(xlink:href="#icon_github")
@@ -485,11 +472,6 @@ export default {
       this.toggleOpt('hideFoldedTabs')
     },
 
-    togglePinnedTabsSync() {
-      this.toggleOpt('pinnedTabsSync')
-      Store.dispatch('resyncPanels')
-    },
-
     // --- Bookmarks ---
     toggleBookmarksPanel() {
       if (State.bookmarksPanel) State.bookmarks = []
@@ -655,11 +637,6 @@ export default {
       this.faviCache = count + ': ' + size
     },
 
-    async calcSyncDataSize() {
-      const ans = await browser.storage.sync.get()
-      this.syncDataSize = Utils.StrSize(ans[State.localID] || '')
-    },
-
     /**
      * Set default values for settings and save.
      */
@@ -675,14 +652,6 @@ export default {
     clearFaviCache(all) {
       Store.dispatch('clearFaviCache', { all })
       if (!all) this.calcFaviCache()
-    },
-
-    /**
-     * Clear all data for syncing
-     */
-    async clearSyncData() {
-      await Store.dispatch('clearSyncData')
-      this.calcSyncDataSize()
     },
 
     /**

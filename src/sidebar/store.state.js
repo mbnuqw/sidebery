@@ -36,7 +36,6 @@ export const DEFAULT_PANELS = [
     lockedTabs: false,
     lockedPanel: false,
     proxyConfig: null,
-    sync: false,
     noEmpty: false,
     lastActiveTab: -1,
   },
@@ -141,7 +140,6 @@ export const DEFAULT_BOOKMARKS_MENU = [
 ]
 
 export default {
-  localID: '',
   version: Manifest.version,
   osInfo: null,
   os: null,
@@ -158,9 +156,6 @@ export default {
   // --- Global State
   ctxMenu: null,
   winChoosing: false,
-
-  synced: {},
-  lastSyncPanels: null,
 
   dashboardOpened: false,
   recalcScrollNeeded: false,

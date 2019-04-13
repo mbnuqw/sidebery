@@ -33,7 +33,6 @@ export default {
           lockedPanel: false,
           proxy: null,
           proxified: false,
-          sync: false,
           noEmpty: false,
           includeHostsActive: false,
           includeHosts: '',
@@ -51,7 +50,6 @@ export default {
         if (ctr.lockedPanel === undefined) ctr.lockedPanel = false
         if (ctr.proxy === undefined) ctr.proxy = null
         if (ctr.proxified === undefined) ctr.proxified = false
-        if (ctr.sync === undefined) ctr.sync = false
         if (ctr.noEmpty === undefined) ctr.noEmpty = false
         if (ctr.includeHostsActive === undefined) ctr.includeHostsActive = false
         if (ctr.includeHosts === undefined) ctr.includeHosts = ''
@@ -93,7 +91,6 @@ export default {
       localCtr.lockedPanel = newCtr.lockedPanel
       localCtr.proxy = newCtr.proxy
       localCtr.proxified = newCtr.proxified
-      localCtr.sync = newCtr.sync
       localCtr.noEmpty = newCtr.noEmpty
       localCtr.includeHostsActive = newCtr.includeHostsActive
       localCtr.includeHosts = newCtr.includeHosts
@@ -128,7 +125,6 @@ export default {
         lockedPanel: ctr.lockedPanel,
         proxy: ctr.proxy,
         proxified: ctr.proxified,
-        sync: ctr.sync,
         noEmpty: ctr.noEmpty,
         includeHostsActive: ctr.includeHostsActive,
         includeHosts: ctr.includeHosts,

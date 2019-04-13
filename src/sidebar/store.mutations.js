@@ -37,9 +37,6 @@ export default {
         c.lastActiveTab = -1
       }
     }
-
-    // Reset saved state
-    state.synced = {}
   },
 
   /**

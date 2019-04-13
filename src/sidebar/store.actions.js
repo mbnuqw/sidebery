@@ -2,7 +2,6 @@ import SavedStateActions from './actions/saved-state'
 import SettingsActions from './actions/settings'
 import KeybindingsActions from './actions/keybindings'
 import FaviconsActions from './actions/favicons'
-import SyncActions from './actions/sync'
 import PanelsActions from './actions/panels'
 import TabsActions from './actions/tabs'
 import Bookmarks from './actions/bookmarks'
@@ -15,7 +14,6 @@ export default {
   ...SettingsActions,
   ...KeybindingsActions,
   ...FaviconsActions,
-  ...SyncActions,
   ...PanelsActions,
   ...TabsActions,
   ...Bookmarks,

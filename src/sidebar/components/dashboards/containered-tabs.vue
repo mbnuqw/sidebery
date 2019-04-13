@@ -24,14 +24,6 @@
       :opts="colorOpts"
       @input="updateColor")
 
-    toggle-field.-rm(
-      v-if="id"
-      label="dashboard.sync_label"
-      :title="t('dashboard.sync_tooltip')"
-      :value="conf.sync"
-      :inline="true"
-      @input="toggleSync")
-
     toggle-field(
       v-if="id"
       label="dashboard.lock_panel_label"
@@ -338,10 +330,6 @@ export default {
 
       // Or update
       await this.update()
-
-      // Check if we have some updates
-      // for container with this name
-      Store.dispatch('resyncPanels')
     },
 
     async updateIcon(icon) {
@@ -413,12 +401,6 @@ export default {
       await this.$nextTick()
       if (this.$refs.name) this.$refs.name.recalcTextHeight()
       if (this.$refs.scrollBox) this.$refs.scrollBox.recalcScroll()
-    },
-
-    toggleSync() {
-      this.conf.sync = !this.conf.sync
-      Store.dispatch('resyncPanels')
-      Store.dispatch('saveContainers')
     },
 
     togglePanelLock() {

@@ -1155,7 +1155,6 @@ export default {
         lockedPanel: false,
         proxy: null,
         proxified: false,
-        sync: false,
         noEmpty: false,
         includeHostsActive: false,
         includeHosts: '',
@@ -1172,7 +1171,6 @@ export default {
 
         this.openDashboard(State.panelIndex)
 
-        Store.dispatch('resyncPanels')
         Store.dispatch('saveContainers')
       }
     },
@@ -1226,10 +1224,7 @@ export default {
       State.containers[ctrIndex].iconUrl = contextualIdentity.iconUrl
       State.containers[ctrIndex].name = contextualIdentity.name
 
-      if (State.windowFocused) {
-        Store.dispatch('saveSyncPanels')
-        Store.dispatch('saveContainers')
-      }
+      if (State.windowFocused) Store.dispatch('saveContainers')
     },
     // ---
 
@@ -1294,7 +1289,6 @@ export default {
       }
 
       Store.dispatch('recalcPanelScroll')
-      Store.dispatch('saveSyncPanels')
     },
 
     /**
@@ -1378,10 +1372,6 @@ export default {
       if (change.hasOwnProperty('pinned') && change.pinned) {
         Utils.UpdateTabsTree(State)
       }
-
-      if (change.hasOwnProperty('url') || change.hasOwnProperty('pinned')) {
-        Store.dispatch('saveSyncPanels')
-      }
     },
 
     /**
@@ -1460,10 +1450,7 @@ export default {
       // Remove updated flag
       this.$delete(State.updatedTabs, tabId)
 
-      if (!State.removingTabs.length) {
-        Store.dispatch('recalcPanelScroll')
-        Store.dispatch('saveSyncPanels')
-      }
+      if (!State.removingTabs.length) Store.dispatch('recalcPanelScroll')
 
       // Calc tree levels
       if (State.tabsTree && !State.removingTabs.length) {

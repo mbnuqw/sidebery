@@ -2,13 +2,6 @@
 .Menu(v-noise:300.g:12:af.a:0:42.s:0:9="")
   h2 {{conf.name}}
 
-  toggle-field.-rm(
-    v-if="!isPrivate"
-    label="dashboard.sync_label"
-    :value="conf.sync"
-    :inline="true"
-    @input="toggleSync")
-
   toggle-field(
     label="dashboard.lock_panel_label"
     :title="t('dashboard.lock_panel_tooltip')"
@@ -64,12 +57,6 @@ export default {
   methods: {
     togglePanelLock() {
       this.conf.lockedPanel = !this.conf.lockedPanel
-      Store.dispatch('saveContainers')
-    },
-
-    toggleSync() {
-      this.conf.sync = !this.conf.sync
-      Store.dispatch('resyncPanels')
       Store.dispatch('saveContainers')
     },
 

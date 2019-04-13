@@ -1045,7 +1045,6 @@ describe('dropToTabs', () => {
     expect(browser.tabs.update).toBeCalledWith(3, { active: true })
     expect(browser.tabs.move).not.toBeCalled()
     expect(browser.tabs.hide).not.toBeCalled()
-    expect(dispatch).toBeCalledWith('saveTabsTree')
   })
 
   test('drop tabs from the same panel to the same place (with shift)', async () => {
@@ -1093,7 +1092,6 @@ describe('dropToTabs', () => {
     expect(browser.tabs.update).toBeCalledWith(3, { active: true })
     expect(browser.tabs.move).not.toBeCalled()
     expect(browser.tabs.hide).not.toBeCalled()
-    expect(dispatch).toBeCalledWith('saveTabsTree')
   })
 
   test('drop to the end of panel if dropIndex is not defined', async () => {
@@ -1141,7 +1139,6 @@ describe('dropToTabs', () => {
     expect(browser.tabs.move).toBeCalledWith([2], { windowId: 1, index: 2 })
     expect(browser.tabs.update).toBeCalledWith(2, { active: true })
     expect(browser.tabs.hide).not.toBeCalled()
-    expect(dispatch).toBeCalledWith('saveTabsTree')
   })
 
   test('move multiple tabs', async () => {
@@ -1202,7 +1199,6 @@ describe('dropToTabs', () => {
     expect(browser.tabs.move).toBeCalledWith([2, 3], { windowId: 1, index: 0 })
     expect(browser.tabs.update).toBeCalledWith(2, { active: true })
     expect(browser.tabs.hide).not.toBeCalled()
-    expect(dispatch).toBeCalledWith('saveTabsTree')
   })
 
   test('move multiple tabs to pinned dock', async () => {
@@ -1273,7 +1269,6 @@ describe('dropToTabs', () => {
     expect(browser.tabs.update.mock.calls[2][0]).toBe(2)
     expect(browser.tabs.update.mock.calls[2][1]).toEqual({ active: true })
     expect(browser.tabs.hide).not.toBeCalled()
-    expect(dispatch).toBeCalledWith('saveTabsTree')
   })
 
   test('drop tab to folded parent', async () => {
@@ -1327,7 +1322,6 @@ describe('dropToTabs', () => {
     expect(state.tabs[2].invisible).toBe(true)
     expect(browser.tabs.update).not.toBeCalled()
     expect(browser.tabs.hide).not.toBeCalled()
-    expect(dispatch).toBeCalledWith('saveTabsTree')
   })
 
   test('drop tab to expanded parent', async () => {
@@ -1381,7 +1375,6 @@ describe('dropToTabs', () => {
     expect(state.tabs[2].invisible).toBe(false)
     expect(browser.tabs.update).toBeCalledWith(3, { active: true })
     expect(browser.tabs.hide).not.toBeCalled()
-    expect(dispatch).toBeCalledWith('saveTabsTree')
   })
 
   // 0 1 2 3       0 1 2 3 4

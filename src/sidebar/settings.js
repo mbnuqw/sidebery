@@ -30,7 +30,6 @@ export const DEFAULT_SETTINGS = {
 
   // Pinned tabs
   pinnedTabsPosition: 'panel',
-  pinnedTabsSync: false,
   pinnedTabsList: false,
 
   // Tabs tree
