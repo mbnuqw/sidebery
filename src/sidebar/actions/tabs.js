@@ -534,16 +534,47 @@ export default {
     const ids = [...tabIds]
     const windowId = window ? window.id : await dispatch('chooseWin')
     const win = (await dispatch('getAllWindows')).find(w => w.id === windowId)
+    const tabs = ids.map(id => {
+      const tab = state.tabsMap[id]
+      return {
+        id: tab.id,
+        url: tab.url,
+        parentId: tab.parentId,
+        folded: tab.folded,
+      }
+    })
 
     if (state.private === win.incognito) {
-      browser.tabs.move(ids, { windowId, index: -1 })
-    } else {
-      for (let id of ids) {
-        let tab = state.tabsMap[id]
-        if (!tab) continue
-        browser.tabs.create({ url: tab.url, windowId })
-        browser.tabs.remove(id)
+      for (let tab of tabs) {
+        await browser.tabs.move(tab.id, { windowId, index: -1 })
       }
+    } else {
+      const oldNewMap = {}
+      for (let tab of tabs) {
+        // Create / remove
+        const newTab = await browser.tabs.create({ url: tab.url, windowId })
+        browser.tabs.remove(tab.id)
+
+        // Update values
+        oldNewMap[tab.id] = newTab.id
+        tab.id = oldNewMap[tab.id]
+        if (tab.parentId > -1) {
+          tab.parentId = oldNewMap[tab.parentId] || -1
+        }
+      }
+    }
+
+    if (state.tabsTree) {
+      // Ok, this is just tmp solution
+      // with timeout...
+      // ~~~~~~~ REWRITE THIS ~~~~~~~~
+      await Utils.Sleep(1000)
+      browser.runtime.sendMessage({
+        windowId: win.id,
+        action: 'restoreTabsTree',
+        arg: tabs,
+      })
+      // ~~~~~~~ REWRITE THIS ~~~~~~~~
     }
   },
 
