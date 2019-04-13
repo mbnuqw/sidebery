@@ -459,20 +459,71 @@ export default {
     const firstTab = state.tabsMap[first]
     if (!firstTab) return
     const rest = [...tabIds]
+    const restTabs = rest.map(id => {
+      const tab = state.tabsMap[id]
+      return {
+        id: tab.id,
+        url: tab.url,
+        parentId: tab.parentId,
+        folded: tab.folded,
+      }
+    })
 
-    if (state.private === incognito) {
-      const win = await browser.windows.create({ tabId: first, incognito })
-      browser.tabs.move(rest, { windowId: win.id, index: -1 })
+    let win
+
+    if (state.private === !!incognito) {
+      win = await browser.windows.create({ tabId: first, incognito })
+      for (let id of rest) {
+        await browser.tabs.move(id, { windowId: win.id, index: -1 })
+      }
     } else {
-      const win = await browser.windows.create({ url: firstTab.url, incognito })
+      win = await browser.windows.create({ url: firstTab.url, incognito })
+      const firstNewTab = win.tabs[0]
+      const oldNewMap = { [firstTab.id]: firstNewTab.id }
+
       browser.tabs.remove(first)
-      for (let tabId of rest) {
-        let tab = state.tabsMap[tabId]
-        if (!tab) continue
-        browser.tabs.create({ windowId: win.id, url: tab.url })
-        browser.tabs.remove(tabId)
+      for (let tab of restTabs) {
+        // Create / remove
+        const newTab = await browser.tabs.create({ windowId: win.id, url: tab.url })
+        browser.tabs.remove(tab.id)
+
+        // Update values
+        oldNewMap[tab.id] = newTab.id
+        tab.id = oldNewMap[tab.id]
+        if (tab.parentId > -1) {
+          tab.parentId = oldNewMap[tab.parentId] || -1
+        }
       }
     }
+
+    if (state.tabsTree) {
+      // Ok, this is just tmp solution
+      // with timeout...
+      // ~~~~~~~ REWRITE THIS ~~~~~~~~
+      await Utils.Sleep(1000)
+      browser.runtime.sendMessage({
+        windowId: win.id,
+        action: 'restoreTabsTree',
+        arg: restTabs,
+      })
+      // ~~~~~~~ REWRITE THIS ~~~~~~~~
+    }
+  },
+
+  /**
+   * Try to restore tree for listed tabs
+   */
+  restoreTabsTree({ state }, tabs) {
+    if (!state.tabsTree) return
+
+    for (let info of tabs) {
+      const tab = state.tabsMap[info.id]
+      if (!tab) return
+      tab.parentId = info.parentId
+      tab.folded = info.folded
+    }
+    
+    Utils.UpdateTabsTree(state)
   },
 
   /**
