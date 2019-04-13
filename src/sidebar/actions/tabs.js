@@ -611,7 +611,7 @@ export default {
    * Drop to tabs panel
    */
   async dropToTabs(
-    { state, getters, dispatch },
+    { state, getters },
     { event, dropIndex, dropParent, nodes, pin } = {}
   ) {
     const currentPanel = getters.panels[state.panelIndex]
@@ -782,8 +782,6 @@ export default {
         })
       }
     }
-
-    dispatch('saveTabsTree')
   },
 
   /**

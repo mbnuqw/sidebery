@@ -1285,7 +1285,7 @@ export default {
           Utils.UpdateTabsTree(State, start, tab.index + 1)
         }
 
-        Store.dispatch('saveTabsTree', 500)
+        Store.dispatch('saveTabsTree')
       }
 
       // Update dashboard height (if it opened)
@@ -1311,6 +1311,7 @@ export default {
         if (change.url !== localTab.url) {
           localTab.host = change.url.split('/')[2] || ''
           if (change.url.startsWith('about:')) localTab.favIconUrl = ''
+          else Store.dispatch('saveTabsTree')
         }
       }
 
