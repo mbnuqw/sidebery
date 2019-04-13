@@ -583,16 +583,35 @@ export default {
    */
   async moveTabsToCtx({ state }, { tabIds, ctxId }) {
     const ids = [...tabIds]
-    for (let tabId of ids) {
-      let tab = state.tabsMap[tabId]
-      if (!tab) return
+    const oldNewMap = {}
+    const tabs = ids.map(id => {
+      const tab = state.tabsMap[id]
+      return {
+        id: tab.id,
+        url: tab.url,
+        parentId: tab.parentId,
+        folded: tab.folded,
+      }
+    })
 
-      await browser.tabs.create({
+    for (let tab of tabs) {
+      // Create / remove
+      const newTab = await browser.tabs.create({
         windowId: state.windowId,
         cookieStoreId: ctxId,
         url: tab.url.indexOf('http') ? null : tab.url,
       })
       await browser.tabs.remove(tab.id)
+
+      // Update values
+      oldNewMap[tab.id] = newTab.id
+      if (tab.parentId > -1) {
+        state.tabsMap[newTab.id].parentId = oldNewMap[tab.parentId]
+      }
+    }
+
+    if (state.tabsTree) {
+      Utils.UpdateTabsTree(state)
     }
   },
 
