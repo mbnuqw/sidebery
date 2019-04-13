@@ -1,7 +1,7 @@
 {
   "ExtName": { "message": "Sidebery" },
   "ExtDesc": {
-    "message": "Addon for managing tabs, containers (contextual identities) and bookmarks in sidebar. Supports both flat and tree tabs layout, drag-and-drop actions, different proxy settings for each container, synchronization and much more."
+    "message": "Addon for managing tabs, containers (contextual identities) and bookmarks in sidebar. Supports both flat and tree tabs layouts, per-container include/exclude rules, proxy configs for each container and much more."
   },
   "ActionTitle": { "message": "Open Sidebery" },
 
