@@ -333,34 +333,36 @@ export default {
 .CtxMenuBuilder .group-title
   box(relative)
   text(s: rem(18))
-  color: var(--title-fg)
+  color: var(--sub-title-fg)
   padding: 3px 0
 
 .CtxMenuBuilder .opt
   box(relative, flex)
   align-items: center
-  padding: 2px 0
+  padding: 0 0 0 3px
   &:hover
+    .opt-title
+      opacity: 1
     .opt-btn
       opacity: .8
 
   .opt-title
     box(relative)
     text(s: rem(14))
-    color: var(--info-fg)
+    color: var(--label-fg)
     white-space: nowrap
     overflow: hidden
     text-overflow: ellipsis
-    padding: 0 8px 0 0
+    padding: 2px 5px 2px 0
     margin: 0 auto 0 0
+    opacity: .7
 
   .opt-btn
     box(relative)
-    size(16px, same)
+    size(22px, same)
     fill: var(--title-fg)
     flex-shrink: 0
     flex-grow: 0
-    margin: 0 3px
     cursor: pointer
     opacity: .2
     &.-up svg
