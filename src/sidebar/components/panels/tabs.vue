@@ -109,8 +109,8 @@ export default {
         if (la === 'expand') {
           if (!State.tabsTree) return
           const activeTab = State.tabs.find(t => t.active)
-          if (!activeTab || !activeTab.folded) return
-          return Store.dispatch('expTabsBranch', activeTab.id)
+          if (!activeTab || !activeTab.isParent) return
+          return Store.dispatch('toggleBranch', activeTab.id)
         }
       }
 
@@ -126,8 +126,8 @@ export default {
         if (ra === 'expand') {
           if (!State.tabsTree) return
           const activeTab = State.tabs.find(t => t.active)
-          if (!activeTab || !activeTab.folded) return
-          return Store.dispatch('expTabsBranch', activeTab.id)
+          if (!activeTab || !activeTab.isParent) return
+          return Store.dispatch('toggleBranch', activeTab.id)
         }
       }
     },

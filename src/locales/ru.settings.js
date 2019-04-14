@@ -123,7 +123,7 @@ export default {
   'settings.tabs_panel_action_prev': { message: 'пред. панель' },
   'settings.tabs_panel_action_next': { message: 'след. панель' },
   'settings.tabs_panel_action_dash': { message: 'меню панели' },
-  'settings.tabs_panel_action_expand': { message: 'развернуть таб' },
+  'settings.tabs_panel_action_expand': { message: 'развернуть/свернуть' },
   'settings.tabs_panel_action_none': { message: 'выкл' },
 
   // --- Keybindings
