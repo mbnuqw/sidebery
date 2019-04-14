@@ -377,6 +377,7 @@ export default {
     // Cleanup snapshots targets
     for (let ctxId in State.snapshotsTargets) {
       if (!State.snapshotsTargets.hasOwnProperty(ctxId)) continue
+      if (ctxId === 'default' || ctxId === 'pinned') continue
       if (!State.ctxs.find(c => c.cookieStoreId === ctxId)) {
         Vue.delete(State.snapshotsTargets, ctxId)
       }
