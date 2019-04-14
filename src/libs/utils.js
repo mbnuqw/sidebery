@@ -386,14 +386,26 @@ function GetGroupUrl(name) {
  */
 function FindSuccessorTab(state, tab, exclude) {
   let target
+  const isNextTree = state.activateAfterClosingNextRule === 'tree'
+  const isPrevTree = state.activateAfterClosingPrevRule === 'tree'
+  const isPrevVisible = state.activateAfterClosingPrevRule === 'visible'
 
   // Next tab
   if (state.activateAfterClosing === 'next') {
     for (let i = tab.index + 1, next; i < state.tabs.length; i++) {
       next = state.tabs[i]
+
+      // Next tab is the last of group and rule is TREE
+      if (isNextTree && next.lvl < tab.lvl) break
+
+      // Next tab is out of target panel
       if (next.cookieStoreId !== tab.cookieStoreId || next.pinned !== tab.pinned) break
+    
+      // Next tab excluded
       if (exclude && exclude.includes(next.id)) continue
-      if (next.lvl >= tab.lvl && next.cookieStoreId === tab.cookieStoreId) {
+
+      // OK: Next tab is in current panel
+      if (next.cookieStoreId === tab.cookieStoreId) {
         target = next
         break
       }
@@ -402,9 +414,21 @@ function FindSuccessorTab(state, tab, exclude) {
     if (!target) {
       for (let i = tab.index, prev; i--; ) {
         prev = state.tabs[i]
+
+        // Prev tab is out of target panel
         if (prev.cookieStoreId !== tab.cookieStoreId || prev.pinned !== tab.pinned) break
+
+        // Prev tab is excluded
         if (exclude && exclude.includes(prev.id)) continue
-        if (prev.lvl <= tab.lvl && prev.cookieStoreId === tab.cookieStoreId) {
+
+        // Prev tab is too far in tree structure
+        if (isPrevTree && prev.lvl > tab.lvl) continue
+
+        // Prev tab is invisible
+        if (isPrevVisible && prev.invisible) continue
+
+        // OK: Prev tab is in target panel
+        if (prev.cookieStoreId === tab.cookieStoreId) {
           target = prev
           break
         }
@@ -416,9 +440,21 @@ function FindSuccessorTab(state, tab, exclude) {
   if (state.activateAfterClosing === 'prev') {
     for (let i = tab.index, prev; i--; ) {
       prev = state.tabs[i]
+
+      // Prev tab is out of target panel
       if (prev.cookieStoreId !== tab.cookieStoreId || prev.pinned !== tab.pinned) break
+
+      // Prev tab is excluded
       if (exclude && exclude.includes(prev.id)) continue
-      if (prev.lvl <= tab.lvl && prev.cookieStoreId === tab.cookieStoreId) {
+
+      // Prev tab is too far in tree structure
+      if (isPrevTree && prev.lvl > tab.lvl) continue
+
+      // Prev tab is invisible
+      if (isPrevVisible && prev.invisible) continue
+
+      // OK: Prev tab is in target panel
+      if (prev.cookieStoreId === tab.cookieStoreId) {
         target = prev
         break
       }
@@ -427,9 +463,18 @@ function FindSuccessorTab(state, tab, exclude) {
     if (!target) {
       for (let i = tab.index + 1, next; i < state.tabs.length; i++) {
         next = state.tabs[i]
+
+        // Next tab is the last of group and rule is TREE
+        if (isNextTree && next.lvl < tab.lvl) break
+
+        // Next tab is out of target panel
         if (next.cookieStoreId !== tab.cookieStoreId || next.pinned !== tab.pinned) break
+      
+        // Next tab excluded
         if (exclude && exclude.includes(next.id)) continue
-        if (next.lvl >= tab.lvl && next.cookieStoreId === tab.cookieStoreId) {
+
+        // OK: Next tab is in current panel
+        if (next.cookieStoreId === tab.cookieStoreId) {
           target = next
           break
         }
@@ -442,7 +487,10 @@ function FindSuccessorTab(state, tab, exclude) {
     let targetId
     for (let i = state.actTabs.length; i--; ) {
       targetId = state.actTabs[i]
+
+      // Tab excluded
       if (exclude && exclude.includes(targetId)) continue
+
       if (targetId !== tab.id && state.tabsMap[targetId]) {
         target = state.tabsMap[targetId]
         break
@@ -450,6 +498,7 @@ function FindSuccessorTab(state, tab, exclude) {
     }
   }
 
+  // console.log('[DEBUG] FindSuccessorTab', target.id);
   return target
 }
 

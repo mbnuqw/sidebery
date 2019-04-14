@@ -8,6 +8,8 @@ export const SETTINGS_OPTIONS = {
   tabsPanelDoubleClickActionOpts: ['tab', 'none'],
   tabsPanelRightClickActionOpts: ['next', 'dash', 'expand', 'none'],
   activateAfterClosingOpts: ['prev_act', 'next', 'prev', 'none'],
+  activateAfterClosingPrevRuleOpts: ['tree', 'visible', 'any'],
+  activateAfterClosingNextRuleOpts: ['tree', 'any'],
   pinnedTabsPositionOpts: ['panel', 'top', 'left', 'right'],
   tabsTreeLimitOpts: [1, 2, 3, 4, 5, 'none'],
   fontSizeOpts: ['xs', 's', 'm', 'l', 'xl', 'xxl'],
@@ -27,6 +29,8 @@ export const DEFAULT_SETTINGS = {
   showTabRmBtn: true,
   hideInact: false,
   activateAfterClosing: 'next',
+  activateAfterClosingPrevRule: 'visible',
+  activateAfterClosingNextRule: 'tree',
 
   // Pinned tabs
   pinnedTabsPosition: 'panel',

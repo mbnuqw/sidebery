@@ -43,6 +43,20 @@
         :value="$store.state.activateAfterClosing"
         :opts="$store.state.activateAfterClosingOpts"
         @input="setOpt('activateAfterClosing', $event)")
+      .box(v-show="$store.state.activateAfterClosing === 'next' || $store.state.activateAfterClosing === 'prev'")
+        select-field(
+          label="settings.activate_after_closing_prev_rule"
+          optLabel="settings.activate_after_closing_rule_"
+          :value="$store.state.activateAfterClosingPrevRule"
+          :opts="$store.state.activateAfterClosingPrevRuleOpts"
+          @input="setOpt('activateAfterClosingPrevRule', $event)")
+        select-field(
+          label="settings.activate_after_closing_next_rule"
+          optLabel="settings.activate_after_closing_rule_"
+          :value="$store.state.activateAfterClosingNextRule"
+          :opts="$store.state.activateAfterClosingNextRuleOpts"
+          @input="setOpt('activateAfterClosingNextRule', $event)")
+
 
     section
       h2 {{t('settings.pinned_tabs_title')}}

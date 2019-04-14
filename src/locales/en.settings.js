@@ -29,6 +29,11 @@ export default {
   'settings.activate_after_closing_prev': { message: 'previous tab' },
   'settings.activate_after_closing_prev_act': { message: 'previously active tab' },
   'settings.activate_after_closing_none': { message: 'none' },
+  'settings.activate_after_closing_prev_rule': { message: 'Previous tab rule' },
+  'settings.activate_after_closing_next_rule': { message: 'Next tab rule' },
+  'settings.activate_after_closing_rule_tree': { message: 'tree' },
+  'settings.activate_after_closing_rule_visible': { message: 'visible' },
+  'settings.activate_after_closing_rule_any': { message: 'any' },
 
   // --- Pinned tabs
   'settings.pinned_tabs_title': { message: 'Pinned tabs' },

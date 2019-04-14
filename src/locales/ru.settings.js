@@ -29,6 +29,11 @@ export default {
   'settings.activate_after_closing_prev': { message: 'предыдущую' },
   'settings.activate_after_closing_prev_act': { message: 'последнюю активную' },
   'settings.activate_after_closing_none': { message: 'выкл' },
+  'settings.activate_after_closing_prev_rule': { message: 'Правило предыдущего таба' },
+  'settings.activate_after_closing_next_rule': { message: 'Правило следующего таба' },
+  'settings.activate_after_closing_rule_tree': { message: 'дерево' },
+  'settings.activate_after_closing_rule_visible': { message: 'видимый' },
+  'settings.activate_after_closing_rule_any': { message: 'любой' },
 
   // --- Pinned tabs
   'settings.pinned_tabs_title': { message: 'Закрепленные табы' },
