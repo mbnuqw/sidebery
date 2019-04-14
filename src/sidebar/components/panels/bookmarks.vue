@@ -1,18 +1,14 @@
 <template lang="pug">
 .Bookmarks(
-  :drag-active="drag && drag.dragged"
-  :ctx-menu="!!ctxMenuOpened"
-  :editing="editor"
   :not-renderable="!renderable"
   :invisible="!visible"
   @click="onClick")
   scroll-box(ref="scrollBox"): .bookmarks-wrapper
-    b-node.node(
+    component.node(
       v-for="n in $store.state.bookmarks"
-      ref="nodes"
+      :is="n.type"
       :key="n.id"
       :node="n"
-      :recalc-scroll="recalcScroll"
       @start-selection="onStartSelection")
   transition(name="editor")
     bookmarks-editor.editor(v-if="$store.state.bookmarkEditor")
@@ -20,19 +16,22 @@
 
 
 <script>
-import { mapGetters } from 'vuex'
 import Utils from '../../../libs/utils'
 import Store from '../../store'
 import State from '../../store.state'
 import EventBus from '../../event-bus'
 import ScrollBox from '../scroll-box.vue'
-import BNode from './bookmarks.node.vue'
+import Bookmark from './bookmarks.bookmark.vue'
+import Folder from './bookmarks.folder.vue'
+import Separator from './bookmarks.separator.vue'
 import BookmarksEditor from '../bookmarks-editor.vue'
 
 export default {
   components: {
     ScrollBox,
-    BNode,
+    Bookmark,
+    Folder,
+    Separator,
     BookmarksEditor,
   },
 
@@ -43,9 +42,6 @@ export default {
 
   data() {
     return {
-      topOffset: 0,
-      drag: null,
-      flat: [],
       editor: false,
       renderable: false,
       visible: false,
@@ -53,26 +49,26 @@ export default {
     }
   },
 
-  computed: {
-    ...mapGetters(['ctxMenuOpened']),
-  },
-
   watch: {
     // If bookmarks too many, do not render
     // them when panel is inactive
-    active(c, p) {
+    async active(c, p) {
       const scrollBox = this.$refs.scrollBox
       if (!scrollBox) return
 
       // Activation
       if (c && !p) {
+        if (State.bookmarks.length === 0) {
+          await Store.dispatch('loadBookmarks')
+        }
+
         setTimeout(() => {
           this.renderable = true
           setTimeout(() => {
             if (!this.visible) scrollBox.setScrollY(this.lastScrollY)
             this.visible = true
           }, 16)
-        }, 128)
+        }, 16)
       }
 
       // Deactivation
@@ -89,7 +85,7 @@ export default {
           setTimeout(() => {
             this.visible = false
           }, 16)
-        }, 128)
+        }, 120)
       }
     },
   },
@@ -101,21 +97,18 @@ export default {
     browser.bookmarks.onRemoved.addListener(this.onRemoved)
 
     // Setup global events listeners
-    EventBus.$on('bookmarks.collapseAll', this.collapseAll)
-    EventBus.$on('bookmarks.render', () => {
-      if (this.active) {
-        this.$nextTick(() => {
-          this.renderable = true
-          setTimeout(() => {
-            this.visible = true
-          }, 16)
-        })
-      }
+    EventBus.$on('recalcPanelScroll', () => {
+      if (this.index !== State.panelIndex) return
+      this.recalcScroll()
     })
-  },
 
-  mounted() {
-    this.topOffset = this.$el.getBoundingClientRect().top
+    // Render
+    if (State.panelIndex === 0) {
+      this.renderable = true
+      setTimeout(() => {
+        this.visible = true
+      }, 16)
+    }
   },
 
   beforeDestroy() {
@@ -139,6 +132,9 @@ export default {
      */
     onCreated(id, bookmark) {
       let added = false
+      if (bookmark.type === 'bookmark') {
+        bookmark.host = bookmark.url.split('/')[2]
+      }
       if (bookmark.type === 'folder' && !bookmark.children) bookmark.children = []
       if (bookmark.type === 'folder') bookmark.expanded = false
       const putWalk = nodes => {
@@ -172,6 +168,7 @@ export default {
               ...b,
               title: info.title || b.title,
               url: info.url || b.url,
+              host: info.url ? info.url.split('/')[2] : b.host,
             })
             updated = true
           } else if (!updated) n.children = updateWalk(n.children)
@@ -333,21 +330,9 @@ export default {
      * Recalculate scroll possition
      */
     recalcScroll() {
-      if (!this.active) return
       if (this.$refs.scrollBox) {
         this.$refs.scrollBox.recalcScroll()
       }
-    },
-
-    /**
-     * Collapse all bookmarks folders
-     */
-    collapseAll() {
-      if (!this.$refs.nodes) return
-      this.$refs.nodes.map(vm => {
-        vm.collapse(true)
-      })
-      Store.dispatch('saveBookmarksTree')
     },
   },
 }
@@ -363,6 +348,9 @@ export default {
 .Bookmarks .bookmarks-wrapper
   box(relative)
   padding-bottom: 64px
+
+.Bookmarks[not-renderable]
+  cursor: progress
 
 .Bookmarks[not-renderable] .node
   box(none)

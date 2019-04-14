@@ -3,12 +3,12 @@
   "applications": {
     "gecko": {
       "id": "{3c078156-979c-498b-8990-85f7987dd929}",
-      "strict_min_version": "60.0"
+      "strict_min_version": "65.0"
     }
   },
   "author": "mbnuqw",
   "name": "__MSG_ExtName__",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "default_locale": "en",
   "description": "__MSG_ExtDesc__",
   "homepage_url": "https://github.com/mbnuqw/sidebery",
@@ -23,7 +23,8 @@
     "cookies",
     "storage",
     "proxy",
-    "bookmarks"
+    "bookmarks",
+    "sessions"
   ],
   
   "optional_permissions": [

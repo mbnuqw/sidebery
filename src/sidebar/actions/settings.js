@@ -61,4 +61,50 @@ export default {
     else if (state.fontSize === 'xxl') htmlEl.style.fontSize = '16px'
     else htmlEl.style.fontSize = '14.5px'
   },
+
+  /**
+   * Provide debug data
+   */
+  getDbgInfo({ state, getters }) {
+    const settings = {}
+    for (let sKey in DEFAULT_SETTINGS) {
+      if (!DEFAULT_SETTINGS.hasOwnProperty(sKey)) continue
+      settings[sKey] = state[sKey]
+    }
+
+    const panels = []
+    for (let panel of getters.panels) {
+      // Get sanitized clone
+      const panelClone = JSON.parse(JSON.stringify(panel))
+
+      if (panelClone.tabs) panelClone.tabs = panelClone.tabs.length
+      delete panelClone.name
+      delete panelClone.iconUrl
+      delete panelClone.includeHosts
+      delete panelClone.excludeHosts
+      delete panelClone.proxy
+      panels.push(panelClone)
+    }
+
+    const tabs = []
+    for (let tab of state.tabs) {
+      // Get sanitized clone
+      const tabClone = JSON.parse(JSON.stringify(tab))
+
+      delete tabClone.title
+      delete tabClone.host
+      delete tabClone.width
+      delete tabClone.height
+      delete tabClone.lastAccessed
+      tabClone.muted = tabClone.mutedInfo.muted
+      delete tabClone.mutedInfo
+      tabClone.url = tabClone.url.slice(0, 5) + '...'
+      if (tabClone.favIconUrl && tabClone.favIconUrl.length > 5) {
+        tabClone.favIconUrl = tabClone.favIconUrl.slice(0, 5) + '...'
+      }
+      tabs.push(tabClone)
+    }
+
+    return { settings, panels, tabs }
+  },
 }

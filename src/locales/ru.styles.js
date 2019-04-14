@@ -39,6 +39,11 @@ export default {
   'styles.nav_title': { message: 'Полоса навигации' },
   'styles.nav_fg_color': { message: 'Основной цвет' },
 
+  // --- Pinned dock
+  'styles.pinned_dock_title': { message: 'Область закрепленных табов' },
+  'styles.pinned_dock_overlay_bg': { message: 'Оттенок фона' },
+  'styles.pinned_dock_overlay_shadow': { message: 'Дополнительная тень' },
+
   // --- Tabs
   'styles.tabs_title': { message: 'Табы' },
   'styles.tabs_height': { message: 'Высота таба' },
@@ -54,6 +59,12 @@ export default {
   'styles.tabs_active_fg_color': { message: 'Цвет надписей активного таба' },
   'styles.tabs_selected_bg_color': { message: 'Цвет фона выделенного таба' },
   'styles.tabs_selected_fg_color': { message: 'Цвет надписей выделенного таба' },
+  'styles.tabs_border': { message: 'Рамка' },
+  'styles.tabs_activated_border': { message: 'Рамка активного таба' },
+  'styles.tabs_selected_border': { message: 'Рамка выделенного таба' },
+  'styles.tabs_shadow': { message: 'Тень' },
+  'styles.tabs_activated_shadow': { message: 'Тень активного таба' },
+  'styles.tabs_selected_shadow': { message: 'Тень выделенного таба' },
 
   // --- Bookmarks
   'styles.bookmarks_title': { message: 'Закладки' },

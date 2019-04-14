@@ -4,9 +4,12 @@ export const SETTINGS_OPTIONS = {
   tabDoubleClickOpts: ['reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'exp', 'new_after', 'none'],
   tabLongLeftClickOpts: ['reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'new_after', 'none'],
   tabLongRightClickOpts: ['reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'new_after', 'none'],
-  tabsPanelLeftClickActionOpts: ['prev', 'none'],
+  tabsPanelLeftClickActionOpts: ['prev', 'expand', 'none'],
   tabsPanelDoubleClickActionOpts: ['tab', 'none'],
-  tabsPanelRightClickActionOpts: ['next', 'dash', 'none'],
+  tabsPanelRightClickActionOpts: ['next', 'dash', 'expand', 'none'],
+  activateAfterClosingOpts: ['prev_act', 'next', 'prev', 'none'],
+  activateAfterClosingPrevRuleOpts: ['tree', 'visible', 'any'],
+  activateAfterClosingNextRuleOpts: ['tree', 'any'],
   pinnedTabsPositionOpts: ['panel', 'top', 'left', 'right'],
   tabsTreeLimitOpts: [1, 2, 3, 4, 5, 'none'],
   fontSizeOpts: ['xs', 's', 'm', 'l', 'xl', 'xxl'],
@@ -14,19 +17,23 @@ export const SETTINGS_OPTIONS = {
 }
 
 export const DEFAULT_SETTINGS = {
-  // Global
+  // General
   nativeScrollbars: false,
   autoHideCtxMenu: 'none',
+  ctxMenuTopActions: false,
+  ctxMenuInlineCtr: false,
 
   // Tabs
   activateLastTabOnPanelSwitching: true,
   skipEmptyPanels: false,
   showTabRmBtn: true,
   hideInact: false,
+  activateAfterClosing: 'next',
+  activateAfterClosingPrevRule: 'visible',
+  activateAfterClosingNextRule: 'tree',
 
   // Pinned tabs
   pinnedTabsPosition: 'panel',
-  pinnedTabsSync: false,
   pinnedTabsList: false,
 
   // Tabs tree

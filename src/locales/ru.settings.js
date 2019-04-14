@@ -5,11 +5,15 @@ export default {
   // --- General
   'settings.general_title': { message: 'Основные' },
   'settings.native_scrollbars': { message: 'Использовать системные скроллбары' },
+
+  // --- Context menu
+  'settings.ctx_menu_title': { message: 'Контекстное меню' },
   'settings.autoHide_ctx_menu': { message: 'Скрывать контекстное меню' },
   'settings.autoHide_ctx_menu_250': { message: '0.25 сек.' },
   'settings.autoHide_ctx_menu_500': { message: '0.5 сек.' },
   'settings.autoHide_ctx_menu_1000': { message: '1 сек.' },
   'settings.autoHide_ctx_menu_none': { message: 'никогда' },
+  'settings.ctx_menu_editor': { message: 'Редактировать меню' },
 
   // --- Tabs
   'settings.tabs_title': { message: 'Табы' },
@@ -20,6 +24,16 @@ export default {
   'settings.show_tab_rm_btn': { message: 'Показывать кнопку закрытия таба при наведении курсора' },
   'settings.no_empty_default': { message: 'Создавать новую вкладку при опустошении стандартной панели' },
   'settings.hide_inactive_panel_tabs': { message: 'Скрывать табы неактивных панелей' },
+  'settings.activate_after_closing': { message: 'После закрытия текущей вкладки активировать' },
+  'settings.activate_after_closing_next': { message: 'следующую' },
+  'settings.activate_after_closing_prev': { message: 'предыдущую' },
+  'settings.activate_after_closing_prev_act': { message: 'последнюю активную' },
+  'settings.activate_after_closing_none': { message: 'выкл' },
+  'settings.activate_after_closing_prev_rule': { message: 'Правило предыдущего таба' },
+  'settings.activate_after_closing_next_rule': { message: 'Правило следующего таба' },
+  'settings.activate_after_closing_rule_tree': { message: 'дерево' },
+  'settings.activate_after_closing_rule_visible': { message: 'видимый' },
+  'settings.activate_after_closing_rule_any': { message: 'любой' },
 
   // --- Pinned tabs
   'settings.pinned_tabs_title': { message: 'Закрепленные табы' },
@@ -109,6 +123,7 @@ export default {
   'settings.tabs_panel_action_prev': { message: 'пред. панель' },
   'settings.tabs_panel_action_next': { message: 'след. панель' },
   'settings.tabs_panel_action_dash': { message: 'меню панели' },
+  'settings.tabs_panel_action_expand': { message: 'развернуть/свернуть' },
   'settings.tabs_panel_action_none': { message: 'выкл' },
 
   // --- Keybindings
@@ -153,7 +168,7 @@ export default {
   'settings.help_title': { message: 'Помошь' },
   'settings.debug_info': { message: 'Debug info' },
   'settings.repo_issue': { message: 'Создать github issue' },
-  'settings.repo_bug': { message: 'Report bug' },
+  'settings.repo_bug': { message: 'Report a bug' },
   'settings.repo_req': { message: 'Feature request' },
   'settings.reset_settings': { message: 'Сбросить настройки' },
   'settings.ref_rm': { message: 'Will be removed, open issue if you need this feature.' },

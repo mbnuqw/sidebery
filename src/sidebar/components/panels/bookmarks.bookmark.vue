@@ -1,28 +1,11 @@
 <template lang="pug">
-.Node(
-  :n-type="node.type"
-  :is-expanded="node.expanded"
-  :is-parent="!!isParent"
-  :to-front="toFront || editorSelect"
-  :is-selected="selected")
+.Bookmark(:is-selected="selected")
   .body(:title="tooltip", @click="onClick", @mousedown="onMouseDown", @mouseup="onMouseUp")
     .drag-layer(draggable="true", @dragstart="onDragStart")
-    .fav(v-if="isBookmark", :no-fav="!favicon")
+    .fav(:no-fav="!favicon")
       .placeholder: svg: use(xlink:href="#icon_ff")
       img(:src="favicon")
-    .exp(v-if="isParent")
-      svg: use(xlink:href="#icon_expand")
     .title(v-if="node.title") {{node.title}}
-  transition(name="expand")
-    .children(v-if="isParent", v-show="node.expanded", :title="node.title")
-      b-node.child(
-        v-for="(n, i) in node.children"
-        ref="children"
-        :key="n.id"
-        :node="n"
-        :recalc-scroll="recalcScroll"
-        :edit-node="editNode"
-        @start-selection="onChildStartSelection")
 </template>
 
 
@@ -33,18 +16,13 @@ import State from '../../store.state'
 import EventBus from '../../event-bus'
 
 export default {
-  name: 'BNode',
   props: {
     node: Object,
-    recalcScroll: Function,
     editNode: String,
   },
 
   data() {
     return {
-      menu: false,
-      toFront: false,
-      editorSelect: false,
       selected: false,
     }
   },
@@ -52,36 +30,13 @@ export default {
   computed: {
     ...mapGetters(['defaultPanel', 'panels']),
 
-    editable() {
-      return this.node.parentId !== 'root________'
-    },
-
-    isParent() {
-      return this.node.children && this.node.children.length
-    },
-
-    isFolder() {
-      return this.node.type === 'folder'
-    },
-
-    isBookmark() {
-      return this.node.type === 'bookmark'
-    },
-
-    hostname() {
-      if (!this.node.url) return
-      return this.node.url.split('/')[2]
-    },
-
     favicon() {
-      if (!this.hostname) return
-      return State.favicons[this.hostname]
+      if (!this.node.host) return
+      return State.favicons[this.node.host]
     },
 
     tooltip() {
-      if (this.node.type === 'folder') return `${this.node.title}: ${this.node.children.length}`
-      if (this.node.type === 'bookmark') return `${this.node.title}\n${this.node.url}`
-      return ''
+      return `${this.node.title}\n${this.node.url}`
     },
   },
 
@@ -144,10 +99,6 @@ export default {
       if (this.node.type === 'folder') {
         if (!this.node.expanded) Store.dispatch('expandBookmark', this.node.id)
         else Store.dispatch('foldBookmark', this.node.id)
-
-        // !!!!! Make recalculation in bookmakrs component !!!!!
-        // remove recalcScroll function prop
-        setTimeout(() => this.recalcScroll(), 120)
       }
       if (this.node.type === 'bookmark') {
         this.openUrl(State.openBookmarkNewTab, true)
@@ -227,26 +178,6 @@ export default {
       })
     },
 
-    /**
-     * Handle mouse event from child node
-     */
-    onChildStartSelection(event, nodes) {
-      nodes.push(this.node)
-      this.$emit('start-selection', event, nodes)
-    },
-
-    /**
-     * Collapse this node
-     */
-    collapse(deep = false) {
-      this.node.expanded = false
-
-      if (deep) {
-        if (!this.$refs.children) return
-        this.$refs.children.map(n => n.collapse(true))
-      }
-    },
-
     openUrl(inNewTab, withFocus) {
       if (!this.node.url) return
 
@@ -254,6 +185,7 @@ export default {
         let index = this.defaultPanel.endIndex + 1
         browser.tabs.create({
           index,
+          windowId: State.windowId,
           url: this.node.url,
           active: withFocus,
         })
@@ -279,7 +211,7 @@ export default {
 <style lang="stylus">
 @import '../../../styles/mixins'
 
-.Node
+.Bookmark
   box(relative)
   padding: 0 0 0 12px
   margin: 0
@@ -298,7 +230,6 @@ export default {
                 z-index var(--d-fast),
                 transform 0s var(--d-fast)
 
-.Node[n-type="bookmark"]
   > .body
     height: var(--bookmarks-bookmark-height)
     > .title
@@ -311,73 +242,20 @@ export default {
       transition: none
       color: var(--bookmarks-node-title-fg-active)
 
-.Node[n-type="folder"]
-  &:not([is-parent]) // Empty folder
-    > .body
-    > .body:hover
-    > .body:active
-      > .title
-        color: var(--bookmarks-folder-empty-fg)
-  > .body
-    height: var(--bookmarks-folder-height)
-    &:hover > .title
-      transition: transform var(--d-fast)
-      color: var(--bookmarks-folder-closed-fg-hover)
-    &:active > .title
-      transition: none
-      color: var(--bookmarks-folder-closed-fg-active)
-    > .title
-      font: var(--bookmarks-folder-font)
-      color: var(--bookmarks-folder-closed-fg)
-
-.Node[n-type="separator"]
-  > .body
-    height: var(--bookmarks-separator-height)
-    &:after
-      content: ''
-      box(absolute)
-      pos(8px, l: 16px)
-      size(calc(100% - 16px), 1px)
-      border-radius: 2px
-      background-image: linear-gradient(90deg, transparent, #545454, #545454, #545454)
-
-// > To Front
-.Node[to-front="true"]
-  z-index: 100
-
-// > Expanded
-.Node[is-expanded][is-parent]
-  > .body
-    &:hover > .title
-      color: var(--bookmarks-folder-open-fg-hover)
-    &:active > .title
-      color: var(--bookmarks-folder-open-fg-active)
-    > .title
-      color: var(--bookmarks-folder-open-fg)
-      mask: linear-gradient(-90deg, transparent 12px, #000000 24px, #000000)
-      transform: translateX(12px)
-  > .body > .exp
-    transform: translateX(-6px)
-    opacity: 1
-  > .body > .exp > svg
-    transform: rotateZ(0deg)
-
-.Node[n-type="bookmark"][is-selected="true"]
-.Node[n-type="folder"][is-selected="true"]
-.Node[n-type="separator"][is-selected="true"]
-  &:before
-    opacity: 1
-    z-index: 0
-    transform: scale(1, 1)
-    transition: opacity var(--d-fast),
-                z-index var(--d-fast),
-                transform 0s 0s
-  > .body > .title
-  > .body:hover > .title
-    color: var(--tabs-selected-fg)
+  &[is-selected="true"]
+    &:before
+      opacity: 1
+      z-index: 0
+      transform: scale(1, 1)
+      transition: opacity var(--d-fast),
+                  z-index var(--d-fast),
+                  transform 0s 0s
+    > .body > .title
+    > .body:hover > .title
+      color: var(--tabs-selected-fg)
 
 // Body of node
-.Node > .body
+.Bookmark > .body
   box(relative, flex)
   align-items: center
   cursor: pointer
@@ -389,19 +267,19 @@ export default {
     pos(0, r: 0)
     size(100vw, 100%)
 
-.Node:not([is-selected]) > .body:hover:before
+.Bookmark:not([is-selected]) > .body:hover:before
     background-color: var(--bookmarks-node-bg-hover)
-.Node:not([is-selected]) > .body:active:before
+.Bookmark:not([is-selected]) > .body:active:before
     background-color: var(--bookmarks-node-bg-active)
 
-.Node .drag-layer
+.Bookmark .drag-layer
   box(absolute)
   size(100%, same)
   pos(0, 0)
   z-index: 15
 
 // Favicon
-.Node .fav
+.Bookmark .fav
   box(relative)
   size(16px, same)
   flex-shrink: 0
@@ -415,7 +293,7 @@ export default {
     > img
       opacity: 0
       transform: translateY(-4px)
-.Node .fav > .placeholder
+.Bookmark .fav > .placeholder
   box(absolute)
   size(16px, same)
   pos(0, 0)
@@ -428,14 +306,14 @@ export default {
     pos(0, 0)
     fill: var(--favicons-placehoder-bg)
 
-.Node .fav > img
+.Bookmark .fav > img
   box(absolute)
   pos(0, 0)
   size(100%, same)
   transition: opacity var(--d-fast), transform var(--d-fast)
 
 // Title
-.Node .title
+.Bookmark .title
   box(relative)
   size(100%)
   white-space: nowrap
@@ -444,7 +322,7 @@ export default {
   mask: linear-gradient(-90deg, transparent, #000000 12px, #000000)
 
 // Node's children box
-.Node .children
+.Bookmark .children
   box(relative)
   transform: translateZ(0)
   &:before
@@ -457,32 +335,4 @@ export default {
     transition: opacity var(--d-slow)
   &:hover:before
     opacity: 1
-
-// Expanded state icon
-.Node .exp
-  box(absolute)
-  size(15px, same)
-  margin: 1px 2px 0 0
-  flex-shrink: 0
-  transform: translateX(-14px)
-  opacity: 0
-  transition: transform var(--d-fast), opacity var(--d-fast)
-.Node .exp > svg
-  box(absolute)
-  pos(0, 0)
-  size(100%, same)
-  fill: var(--bookmarks-folder-open-fg)
-  transform: rotateZ(-90deg)
-  transition: transform var(--d-fast)
-
-// --- Vue transitions ---
-.expand-enter-active
-  transition: opacity var(--d-norm), transform var(--d-fast)
-.expand-enter
-  opacity: 0
-  transform: translateX(-12px)
-.expand-enter-to
-.expand-leave
-  opacity: 1
-  transform: translateX(0)
 </style>

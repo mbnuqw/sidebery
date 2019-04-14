@@ -1,6 +1,6 @@
 {
   "name": "sidebery",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "Manage your tabs and bookmarks in sidebar",
   "main": "index.js",
   "scripts": {

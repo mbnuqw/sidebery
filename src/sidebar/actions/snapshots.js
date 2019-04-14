@@ -111,6 +111,7 @@ export default {
 
       // Create tabs
       const createdTab = await browser.tabs.create({
+        windowId: state.windowId,
         url: tab.url,
         pinned: tab.pinned,
         cookieStoreId: panel.cookieStoreId,
@@ -178,7 +179,7 @@ export default {
   /**
    * Close snapshots viewer
    */
-  async closeSnapshotsViewer({ state }) {
+  closeSnapshotsViewer({ state }) {
     state.lastPanelIndex = state.panelIndex
     state.panelIndex = state.lastPanelIndex
   },

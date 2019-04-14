@@ -23,19 +23,6 @@ describe('loadStyles', () => {
     await StylesActions.loadStyles({ state })
     expect(state.customStyles).toBeUndefined()
   })
-
-  test('load styles', async () => {
-    const state = {
-      customStyles: {},
-    }
-    browser.storage.local.get = jest.fn(() => {
-      return { styles: { bg: '#123456' } }
-    })
-    document.getElementById = jest.fn()
-
-    await StylesActions.loadStyles({ state })
-    expect(state.customStyles).toEqual({ bg: '#123456' })
-  })
 })
 
 describe('saveStyles', () => {

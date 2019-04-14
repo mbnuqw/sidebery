@@ -13,7 +13,6 @@ export default {
    * Get list of panels
    */
   panels(state, getters) {
-    // console.log('[DEBUG] GETTER panels');
     let lastIndex = getters.pinnedTabs.length
     for (let c of state.containers) {
       if (c.panel !== 'TabsPanel') continue

@@ -106,6 +106,12 @@ export default {
       if (e.button === 0) {
         const la = State.tabsPanelLeftClickAction
         if (la === 'prev') return Store.dispatch('switchPanel', -1)
+        if (la === 'expand') {
+          if (!State.tabsTree) return
+          const activeTab = State.tabs.find(t => t.active)
+          if (!activeTab || !activeTab.isParent) return
+          return Store.dispatch('toggleBranch', activeTab.id)
+        }
       }
 
       if (e.button === 1) {
@@ -117,6 +123,12 @@ export default {
         const ra = State.tabsPanelRightClickAction
         if (ra === 'next') return Store.dispatch('switchPanel', 1)
         if (ra === 'dash') return EventBus.$emit('openDashboard', State.panelIndex)
+        if (ra === 'expand') {
+          if (!State.tabsTree) return
+          const activeTab = State.tabs.find(t => t.active)
+          if (!activeTab || !activeTab.isParent) return
+          return Store.dispatch('toggleBranch', activeTab.id)
+        }
       }
     },
 

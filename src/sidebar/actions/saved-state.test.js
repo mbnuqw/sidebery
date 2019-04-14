@@ -21,7 +21,7 @@ describe('SavedState actions', () => {
     })
 
     await SavedStateActions.loadState({ state })
-    expect(browser.storage.local.get).toBeCalledWith(['panelIndex', 'synced'])
+    expect(browser.storage.local.get).toBeCalledWith('panelIndex')
     expect(state.panelIndex).toBeUndefined()
   })
 
@@ -34,29 +34,29 @@ describe('SavedState actions', () => {
     })
 
     await SavedStateActions.loadState({ state })
-    expect(browser.storage.local.get).toBeCalledWith(['panelIndex', 'synced'])
+    expect(browser.storage.local.get).toBeCalledWith('panelIndex')
     expect(state.panelIndex).toBeUndefined()
   })
 
   test('load state with negative panelIndex', async () => {
     const state = {}
     browser.storage.local.get = jest.fn(() => {
-      return {  panelIndex: -2 }
+      return { panelIndex: -2 }
     })
 
     await SavedStateActions.loadState({ state })
-    expect(browser.storage.local.get).toBeCalledWith(['panelIndex', 'synced'])
+    expect(browser.storage.local.get).toBeCalledWith('panelIndex')
     expect(state.panelIndex).toBeUndefined()
   })
 
   test('loadState', async () => {
     const state = {}
     browser.storage.local.get = jest.fn(() => {
-      return { panelIndex: 0, synced: {} }
+      return { panelIndex: 0 }
     })
 
     await SavedStateActions.loadState({ state })
-    expect(browser.storage.local.get).toBeCalledWith(['panelIndex', 'synced'])
+    expect(browser.storage.local.get).toBeCalledWith('panelIndex')
     expect(state.panelIndex).toBe(0)
   })
 })

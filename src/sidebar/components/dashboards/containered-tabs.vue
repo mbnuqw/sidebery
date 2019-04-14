@@ -24,14 +24,6 @@
       :opts="colorOpts"
       @input="updateColor")
 
-    toggle-field.-rm(
-      v-if="id"
-      label="dashboard.sync_label"
-      :title="t('dashboard.sync_tooltip')"
-      :value="conf.sync"
-      :inline="true"
-      @input="toggleSync")
-
     toggle-field(
       v-if="id"
       label="dashboard.lock_panel_label"
@@ -338,10 +330,6 @@ export default {
 
       // Or update
       await this.update()
-
-      // Check if we have some updates
-      // for container with this name
-      Store.dispatch('resyncPanels')
     },
 
     async updateIcon(icon) {
@@ -415,12 +403,6 @@ export default {
       if (this.$refs.scrollBox) this.$refs.scrollBox.recalcScroll()
     },
 
-    toggleSync() {
-      this.conf.sync = !this.conf.sync
-      Store.dispatch('resyncPanels')
-      Store.dispatch('saveContainers')
-    },
-
     togglePanelLock() {
       this.conf.lockedPanel = !this.conf.lockedPanel
       Store.dispatch('saveContainers')
@@ -437,6 +419,7 @@ export default {
         const panel = Store.getters.panels.find(p => p.cookieStoreId === this.id)
         if (panel && panel.tabs && !panel.tabs.length) {
           await browser.tabs.create({
+            windowId: State.windowId,
             index: panel.startIndex,
             cookieStoreId: panel.cookieStoreId,
             active: true,
@@ -452,7 +435,7 @@ export default {
           const permUrl = browser.runtime.getURL('permissions/all-urls.html')
           this.$emit('close')
           this.switchProxy('direct')
-          browser.tabs.create({ url: permUrl })
+          browser.tabs.create({ url: permUrl, windowId: State.windowId })
           return
         }
       }
@@ -481,7 +464,7 @@ export default {
           const permUrl = browser.runtime.getURL('permissions/all-urls.html')
           this.$emit('close')
           this.switchProxy('direct')
-          browser.tabs.create({ url: permUrl })
+          browser.tabs.create({ url: permUrl, windowId: State.windowId })
           return
         }
       }
@@ -508,11 +491,10 @@ export default {
       // Check permissions
       if (type !== 'direct') {
         if (!State.permAllUrls) {
+          const url = browser.runtime.getURL('permissions/all-urls.html')
           this.$emit('close')
           this.switchProxy('direct')
-          browser.tabs.create({
-            url: browser.runtime.getURL('permissions/all-urls.html'),
-          })
+          browser.tabs.create({ url, windowId: State.windowId })
           return
         }
       }

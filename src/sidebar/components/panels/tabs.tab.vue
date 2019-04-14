@@ -91,7 +91,11 @@ export default {
     },
 
     tooltip() {
-      return `${this.tab.title}\n${decodeURI(this.tab.url)}`
+      try {
+        return `${this.tab.title}\n${decodeURI(this.tab.url)}`
+      } catch (err) {
+        return `${this.tab.title}\n${this.tab.url}`
+      }
     },
 
     favPlaceholder() {
@@ -300,17 +304,12 @@ export default {
       e.dataTransfer.effectAllowed = 'move'
       const dragData = tabsToDrag.map(t => {
         return {
+          ...JSON.parse(JSON.stringify(t)),
           type: 'tab',
-          id: t.id,
-          parentId: t.parentId,
-          lvl: t.lvl,
-          index: t.index,
           ctx: t.cookieStoreId,
-          incognito: State.private,
           windowId: State.windowId,
           panel: State.panelIndex,
-          url: t.url,
-          title: t.title,
+          incognito: State.private,
         }
       })
       EventBus.$emit('dragStart', dragData)
@@ -388,6 +387,7 @@ export default {
      */
     onCloseClick(e) {
       if (e.button === 0) this.close()
+      if (e.button === 1) this.close()
       if (e.button === 2) this.closeTree()
     },
 
@@ -396,7 +396,7 @@ export default {
       this.$el.classList.remove('-loaded')
       this.$el.offsetHeight
       this.$el.classList.add('-loaded')
-      setTimeout(() => {this.$el.classList.remove('-loaded')}, 250)
+      setTimeout(() => {this.$el.classList.remove('-loaded')}, 333)
     },
 
     /**
@@ -469,6 +469,8 @@ export default {
   z-index: 10
   transform: translateZ(0)
   transition: opacity var(--d-fast), transform var(--d-fast), z-index 0s .2s
+  border: var(--tabs-border)
+  box-shadow: var(--tabs-shadow)
   &:hover
     background-color: var(--tabs-bg-hover)
   &:hover
@@ -537,6 +539,8 @@ export default {
 
   &[is-active]
     background-color: var(--tabs-activated-bg)
+    border: var(--tabs-activated-border)
+    box-shadow: var(--tabs-activated-shadow)
     .fav
       opacity: 1
     .title
@@ -600,6 +604,8 @@ export default {
   &[is-selected]:active
     z-index: 10
     background-color: var(--tabs-selected-bg)
+    border: var(--tabs-selected-border)
+    box-shadow: var(--tabs-selected-shadow)
     .title
       color: var(--tabs-selected-fg)
   
@@ -894,5 +900,5 @@ export default {
     transform: translateX(-100%)
   100%
     opacity: 0
-    transform: translateX(0)
+    transform: translateX(5px)
 </style>

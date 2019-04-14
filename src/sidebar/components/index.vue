@@ -94,6 +94,7 @@
         styles-panel(v-if="$store.state.panelIndex === -3", :pos="stylesPanelPos")
         snapshots-panel(v-if="$store.state.panelIndex === -4", :pos="snapshotsPanelPos")
         window-input(v-if="$store.state.panelIndex === -5", :pos="windowInputPos")
+        context-menu-panel(v-if="$store.state.panelIndex === -6", :pos="ctxPanelPos")
 </template>
 
 
@@ -495,6 +496,7 @@ import TabsPanel from './panels/tabs'
 import SettingsPanel from './panels/settings'
 import SnapshotsPanel from './panels/snapshots'
 import StylesPanel from './panels/styles'
+import ContextMenuPanel from './panels/context-menu'
 import PinnedDock from './panels/pinned-dock'
 
 Vue.directive('noise', NoiseBg)
@@ -515,6 +517,7 @@ export default {
     WindowInput,
     SnapshotsPanel,
     StylesPanel,
+    ContextMenuPanel,
     PinnedDock,
   },
 
@@ -568,6 +571,13 @@ export default {
      */
     windowInputPos() {
       return State.panelIndex === -5 ? 'center' : 'right'
+    },
+
+    /**
+     * Get context menu panel position
+     */
+    ctxPanelPos() {
+      return State.panelIndex === -6 ? 'center' : 'right'
     },
 
     /**
@@ -923,7 +933,7 @@ export default {
           break
         }
         // Inside
-        if (slot.in && y < slot.bottom && State.tabsTree) {
+        if (slot.in && y < slot.bottom && (State.tabsTree || !State.panelIndex)) {
           const pos = slot.center - 12 + this.panelTopOffset - scroll
           if (!this.pointerXLock && !this.pointerYLock && this.pointerPos !== pos) {
             this.pointerPos = pos
@@ -1099,7 +1109,10 @@ export default {
         if (State.dashboardOpened) {
           this.closeDashboard()
         } else {
-          browser.tabs.create({ cookieStoreId: this.panels[i].cookieStoreId })
+          browser.tabs.create({
+            windowId: State.windowId,
+            cookieStoreId: this.panels[i].cookieStoreId,
+          })
         }
       }
     },
@@ -1142,7 +1155,6 @@ export default {
         lockedPanel: false,
         proxy: null,
         proxified: false,
-        sync: false,
         noEmpty: false,
         includeHostsActive: false,
         includeHosts: '',
@@ -1159,7 +1171,6 @@ export default {
 
         this.openDashboard(State.panelIndex)
 
-        Store.dispatch('resyncPanels')
         Store.dispatch('saveContainers')
       }
     },
@@ -1213,10 +1224,7 @@ export default {
       State.containers[ctrIndex].iconUrl = contextualIdentity.iconUrl
       State.containers[ctrIndex].name = contextualIdentity.name
 
-      if (State.windowFocused) {
-        Store.dispatch('saveSyncPanels')
-        Store.dispatch('saveContainers')
-      }
+      if (State.windowFocused) Store.dispatch('saveContainers')
     },
     // ---
 
@@ -1245,7 +1253,8 @@ export default {
       // Set default custom props (for reactivity)
       tab.isParent = false
       tab.folded = false
-      tab.parentId = -1
+      if (tab.parentId === undefined) tab.parentId = -1
+      else tab.openerTabId = tab.parentId
       tab.lvl = 0
       tab.invisible = false
       tab.favIconUrl = ''
@@ -1266,15 +1275,15 @@ export default {
             tab.lvl = nextTab.lvl
           }
         } else {
-          Store.dispatch('newTreeTab', tab.id)
+          tab.parentId = tab.openerTabId
+          const start = panel.startIndex
+          Utils.UpdateTabsTree(State, start, tab.index + 1)
+          if (State.autoFoldTabs) {
+            Store.dispatch('expTabsBranch', tab.parentId)
+          }
         }
 
-        Store.dispatch('saveTabsTree', 500)
-      }
-
-      // Set last tab successor
-      if (panel.tabs.length >= 1 && tab.index >= panel.endIndex) {
-        Store.dispatch('updateTabsSuccessorsDebounced', { timeout: 200 })
+        Store.dispatch('saveTabsTree')
       }
 
       // Update dashboard height (if it opened)
@@ -1283,7 +1292,6 @@ export default {
       }
 
       Store.dispatch('recalcPanelScroll')
-      Store.dispatch('saveSyncPanels')
     },
 
     /**
@@ -1300,6 +1308,7 @@ export default {
         if (change.url !== localTab.url) {
           localTab.host = change.url.split('/')[2] || ''
           if (change.url.startsWith('about:')) localTab.favIconUrl = ''
+          else Store.dispatch('saveTabsTree')
         }
       }
 
@@ -1335,6 +1344,7 @@ export default {
         let panel = this.panels.find(p => p.cookieStoreId === tab.cookieStoreId)
         if (panel.noEmpty && panel.tabs.length === 1) {
           browser.tabs.create({
+            windowId: State.windowId,
             index: panel.startIndex,
             cookieStoreId: panel.cookieStoreId,
           })
@@ -1362,8 +1372,8 @@ export default {
       // Update tab object
       Object.assign(localTab, change)
 
-      if (change.hasOwnProperty('url') || change.hasOwnProperty('pinned')) {
-        Store.dispatch('saveSyncPanels')
+      if (change.hasOwnProperty('pinned') && change.pinned) {
+        Utils.UpdateTabsTree(State)
       }
     },
 
@@ -1390,6 +1400,7 @@ export default {
       // Recreate locked tab
       if (panel && panel.lockedTabs && tab.url.startsWith('http')) {
         browser.tabs.create({
+          windowId: State.windowId,
           index: tab.index,
           url: tab.url,
           openerTabId: tab.parentId > -1 ? tab.parentId : undefined,
@@ -1402,6 +1413,7 @@ export default {
       if (panel && panel.noEmpty && panel.tabs && panel.tabs.length === 1) {
         if (!creatingNewTab) {
           browser.tabs.create({
+            windowId: State.windowId,
             index: panel.startIndex,
             cookieStoreId: panel.id,
             active: true,
@@ -1423,31 +1435,10 @@ export default {
 
           // Down level
           if (t.parentId === tab.id) t.parentId = tab.parentId
-
-          // Show invisible children
-          if (!State.removingTabs.includes(t.id)) t.invisible = false
         }
 
         // Remove child tabs
         if (State.rmFoldedTabs && toRemove.length) Store.dispatch('removeTabs', toRemove)
-      }
-
-      // Update last tab successor
-      if (panel && State.ffVer >= 65 && panel.tabs.length > 2 && !State.removingTabs.length) {
-        // Removing the last tab
-        if (tab.index === panel.endIndex) {
-          const prevTab = panel.tabs[panel.tabs.length - 2]
-          const prePrevTab = panel.tabs[panel.tabs.length - 3]
-          prevTab.successorTabId = prePrevTab.id
-          browser.tabs.update(prevTab.id, { successorTabId: prePrevTab.id })
-        }
-        // Removing successor of last tab
-        if (tab.index === panel.endIndex - 1) {
-          const lastTab = panel.tabs[panel.tabs.length - 1]
-          const prevTab = panel.tabs[panel.tabs.length - 3]
-          lastTab.successorTabId = prevTab.id
-          browser.tabs.update(lastTab.id, { successorTabId: prevTab.id })
-        }
       }
 
       // Shift tabs after removed one. (NOT detected by vue)
@@ -1462,14 +1453,13 @@ export default {
       // Remove updated flag
       this.$delete(State.updatedTabs, tabId)
 
-      if (!State.removingTabs.length) {
-        Store.dispatch('recalcPanelScroll')
-        Store.dispatch('saveSyncPanels')
-      }
+      if (!State.removingTabs.length) Store.dispatch('recalcPanelScroll')
 
       // Calc tree levels
       if (State.tabsTree && !State.removingTabs.length) {
-        State.tabs = Utils.CalcTabsTreeLevels(State.tabs)
+        const startIndex = panel ? panel.startIndex : 0
+        const endIndex = panel ? panel.endIndex + 1 : -1
+        Utils.UpdateTabsTree(State, startIndex, endIndex)
         Store.dispatch('saveTabsTree')
       }
     },
@@ -1506,12 +1496,13 @@ export default {
         if (State.tabs[i]) State.tabs[i].index = i
       }
 
-      // Update last tab successor
-      Store.dispatch('updateTabsSuccessorsDebounced', { timeout: 200 })
-
       // Calc tree levels
       if (State.tabsTree && !State.movingTabs.length) {
-        State.tabs = Utils.CalcTabsTreeLevels(State.tabs)
+        const panel = this.panels[State.panelIndex]
+        const panelOk = panel && panel.tabs
+        const startIndex = panelOk ? panel.startIndex : 0
+        const endIndex = panelOk ? panel.endIndex + 1 : -1
+        Utils.UpdateTabsTree(State, startIndex, endIndex)
         Store.dispatch('saveTabsTree')
       }
     },
@@ -1521,31 +1512,33 @@ export default {
      */
     onDetachedTab(id, info) {
       if (info.oldWindowId !== State.windowId) return
-      Store.commit('closeCtxMenu')
-      Store.commit('resetSelection')
-
-      if (!State.tabsMap[id]) return
-      let i = State.tabsMap[id].index
-
-      State.tabsMap[id] = undefined
-      State.tabs.splice(i, 1)
-
-      // Remove updated flag
-      this.$delete(State.updatedTabs, id)
-
-      Store.dispatch('recalcPanelScroll')
-      Store.dispatch('saveSyncPanels')
+      const tab = State.tabsMap[id]
+      if (tab) tab.folded = false
+      this.onRemovedTab(id, { windowId: State.windowId })
     },
 
     /**
      * tabs.onAttached
      */
-    onAttachedTab(id, info) {
+    async onAttachedTab(id, info) {
       if (info.newWindowId !== State.windowId) return
-      Store.commit('closeCtxMenu')
-      Store.commit('resetSelection')
-      Store.dispatch('loadTabs')
-      Store.dispatch('saveSyncPanels')
+
+      if (!State.attachingTabs) State.attachingTabs = []
+      const ai = State.attachingTabs.findIndex(t => t.id === id)
+
+      let tab
+      if (ai > -1) {
+        tab = State.attachingTabs.splice(ai, 1)[0]
+      } else {
+        tab = await browser.tabs.get(id)
+      }
+
+      tab.windowId = State.windowId
+      tab.index = info.newPosition
+
+      this.onCreatedTab(tab)
+
+      if (tab.active) browser.tabs.update(tab.id, { active: true })
     },
 
     /**
@@ -1559,14 +1552,20 @@ export default {
       // Reset selection
       Store.commit('resetSelection')
 
-      // Update tabs and find activated one
-      let tab, isActivated
-      for (let i = State.tabs.length; i--; ) {
-        isActivated = info.tabId === State.tabs[i].id
-        State.tabs[i].active = isActivated
-        if (isActivated) tab = State.tabs[i]
+      // Update previous active tab and store his id
+      let prevActive = State.tabsMap[info.previousTabId]
+      if (prevActive) {
+        prevActive.active = false
+
+        if (!State.actTabs) State.actTabs = []
+        if (State.actTabs.length > 128) State.actTabs = State.actTabs.slice(32)
+        State.actTabs.push(prevActive.id)
       }
+
+      // Update tabs and find activated one
+      let tab = State.tabsMap[info.tabId]
       if (!tab) return
+      tab.active = true
 
       // Remove updated flag
       this.$delete(State.updatedTabs, info.tabId)
@@ -1616,6 +1615,12 @@ export default {
           windowId: State.windowId,
           arg: groupId,
         })
+      }
+
+      // Update successorTabId
+      if (State.activateAfterClosing !== 'none') {
+        const target = Utils.FindSuccessorTab(State, tab)
+        if (target) browser.tabs.moveInSuccession([tab.id], target.id)
       }
     },
 

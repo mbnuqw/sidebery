@@ -1,7 +1,7 @@
 import Utils from '../../libs/utils'
 import EventBus from '../event-bus'
 
-let TabsTreeSaveTimeout, UpdateTabsSuccessorsTimeout
+let TabsTreeSaveTimeout
 
 export default {
   /**
@@ -105,10 +105,7 @@ export default {
               tab.isParent = savedTab.isParent
               tab.folded = savedTab.folded
               if (savedTab.isParent) parents[savedTab.id] = tab
-              if (parent) {
-                tab.invisible = parent.folded || parent.invisible
-                tab.parentId = parent.id
-              }
+              if (parent) tab.parentId = parent.id
               continue
             }
           }
@@ -121,14 +118,11 @@ export default {
           tab.folded = savedTab.folded
           if (savedTab.isParent) parents[savedTab.id] = tab
           if (parents[savedTab.parentId]) {
-            const parentTab = parents[savedTab.parentId]
-            tab.invisible = parentTab.folded || parentTab.invisible
-            tab.parentId = parentTab.id
+            tab.parentId = parents[savedTab.parentId].id
           }
         }
       }
-
-      state.tabs = Utils.CalcTabsTreeLevels(state.tabs)
+      Utils.UpdateTabsTree(state)
     }
   },
 
@@ -185,35 +179,32 @@ export default {
    * Remove tabs
    */
   async removeTabs({ state, getters }, tabIds) {
-    let tabs = tabIds.map(id => state.tabsMap[id])
-    const ctxId = tabs[0].cookieStoreId
+    if (!tabIds || !tabIds.length) return
+    if (!state.tabsMap[tabIds[0]]) return
+    const ctxId = state.tabsMap[tabIds[0]].cookieStoreId
     const panel = getters.panels.find(p => p.cookieStoreId === ctxId)
     if (!panel) return
 
-    tabs = tabs.filter(tab => {
-      if (!tab) return false
-      if (tab.cookieStoreId !== ctxId) return false
-      if (panel.lockedTabs && !tab.url.startsWith('about')) return false
-      tab.invisible = true
-      return true
-    })
+    let tabsMap = {}
+    for (let id of tabIds) {
+      let tab = state.tabsMap[id]
+      if (!tab) continue
+      if (tab.cookieStoreId !== ctxId) continue
+      if (panel.lockedTabs && !tab.url.startsWith('about')) continue
 
-    // Remove folded tabs
-    if (state.rmFoldedTabs) {
-      for (let tab of tabs) {
-        if (tab.isParent && tab.folded) {
-          for (let i = tab.index + 1; i < state.tabs.length; i++) {
-            if (state.tabs[i].lvl <= tab.lvl) break
-            tabs.push(state.tabs[i])
-          }
+      tabsMap[id] = tab
+      tab.invisible = true
+
+      if (state.rmFoldedTabs && tab.folded) {
+        for (let i = tab.index + 1; i < state.tabs.length; i++) {
+          if (state.tabs[i].lvl <= tab.lvl) break
+          tabsMap[state.tabs[i].id] = state.tabs[i]
         }
       }
     }
 
-    // Sort by index
-    tabs = tabs.sort((a, b) => a.index - b.index)
-
     // Set tabs to be removed
+    const tabs = Object.values(tabsMap).sort((a, b) => a.index - b.index)
     const toRemove = tabs.map(t => t.id)
     if (state.removingTabs && state.removingTabs.length) {
       state.removingTabs = [...state.removingTabs, ...toRemove]
@@ -221,29 +212,21 @@ export default {
       state.removingTabs = [...toRemove]
     }
 
-    // If there are no tabs on this panel
-    // create new one (if that option accepted)
+    // No-empty panels
     if (tabs.length === panel.tabs.length && panel.noEmpty) {
       await browser.tabs.create({
+        windowId: state.windowId,
         index: panel.startIndex,
         cookieStoreId: ctxId,
-        active: true,
       })
     }
 
-    // Try to activate prev or next tab on this panel
+    // Update successorTabId if there are active tab
     if (tabs.length < panel.tabs.length) {
       const activeTab = tabs.find(t => t.active)
-
-      if (activeTab && activeTab.cookieStoreId === panel.cookieStoreId) {
-        const prevIndex = tabs[0].index - 1
-        const nextIndex = tabs[tabs.length - 1].index + 1
-
-        let target
-        if (nextIndex <= panel.endIndex) target = state.tabs[nextIndex]
-        else if (prevIndex >= panel.startIndex) target = state.tabs[prevIndex]
-
-        if (target) await browser.tabs.update(target.id, { active: true })
+      if (activeTab) {
+        const target = Utils.FindSuccessorTab(state, activeTab, tabs.map(t => t.id))
+        if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
       }
     }
 
@@ -322,61 +305,6 @@ export default {
   },
 
   /**
-   * Set related with tabs tree values
-   * for new child tab.
-   */
-  newTreeTab({ state, getters, dispatch }, tabId ) {
-    const tab = state.tabsMap[tabId]
-    if (!tab) return
-
-    const panel = getters.panels.find(p => p.cookieStoreId === tab.cookieStoreId)
-    if (!panel) return
-
-    let parent = state.tabsMap[tab.openerTabId]
-    if (!parent) parent = { lvl: 0 }
-    if (parent.pinned) return
-    if (parent.cookieStoreId !== tab.cookieStoreId) return
-    let lvlOk = !parent.lvl || !(parent.lvl >= state.tabsTreeLimit)
-
-    if ((state.groupOnOpen || parent.isParent) && lvlOk) {
-      // Child
-      tab.parentId = tab.openerTabId
-      for (let i = tab.index; i--; ) {
-        if (tab.parentId !== state.tabs[i].id) continue
-        if (state.tabs[i].lvl) tab.lvl = state.tabs[i].lvl + 1
-        else tab.lvl = 1
-        state.tabs[i].isParent = true
-        if (state.tabs[i].folded) {
-          tab.invisible = true
-          if (state.hideFoldedTabs) browser.tabs.hide(tab.id)
-        }
-        break
-      }
-
-      // Auto fold sibling sub-trees
-      if (state.autoFoldTabs) {
-        for (let t of state.tabs) {
-          const sameLvl = t.lvl === parent.lvl
-          const notParent = t.id !== tab.openerTabId
-          if (t.isParent && !t.folded && sameLvl && notParent && !tab.invisible) {
-            dispatch('foldTabsBranch', t.id)
-          }
-        }
-      }
-
-    } else {
-      // Sibling
-      for (let i = tab.index; i--; ) {
-        if (tab.openerTabId === state.tabs[i].id) {
-          tab.parentId = state.tabs[i].parentId
-          tab.lvl = state.tabs[i].lvl
-          break
-        }
-      }
-    }
-  },
-
-  /**
    * Try to activate last active tab on the panel
    */
   activateLastActiveTabOf({ state, getters }, panelIndex) {
@@ -450,10 +378,11 @@ export default {
       let tab = state.tabsMap[tabId]
       if (!tab) continue
       await browser.tabs.create({
+        windowId: state.windowId,
         index: tab.index + 1,
         cookieStoreId: tab.cookieStoreId,
         url: tab.url,
-        openerTabId: tabId
+        openerTabId: tabId,
       })
     }
   },
@@ -461,12 +390,14 @@ export default {
   /**
    * Create bookmarks from tabs
    */
-  bookmarkTabs({ state }, tabIds) {
+  async bookmarkTabs({ state }, tabIds) {
+    EventBus.$emit('panelLoadingStart', 0)
     for (let tabId of tabIds) {
       let tab = state.tabsMap[tabId]
       if (!tab) continue
-      browser.bookmarks.create({ title: tab.title, url: tab.url })
+      await browser.bookmarks.create({ title: tab.title, url: tab.url })
     }
+    EventBus.$emit('panelLoadingOk', 0)
   },
 
   /**
@@ -475,7 +406,7 @@ export default {
   async clearTabsCookies({ state }, tabIds) {
     if (!state.permAllUrls) {
       const url = browser.runtime.getURL('permissions/all-urls.html')
-      browser.tabs.create({ url })
+      browser.tabs.create({ url, windowId: state.windowId })
       return
     }
 
@@ -493,7 +424,7 @@ export default {
 
       if (!domain) {
         EventBus.$emit('tabLoadingErr', tab.id)
-        break
+        continue
       }
 
       let cookies = await browser.cookies.getAll({
@@ -528,20 +459,71 @@ export default {
     const firstTab = state.tabsMap[first]
     if (!firstTab) return
     const rest = [...tabIds]
+    const restTabs = rest.map(id => {
+      const tab = state.tabsMap[id]
+      return {
+        id: tab.id,
+        url: tab.url,
+        parentId: tab.parentId,
+        folded: tab.folded,
+      }
+    })
 
-    if (state.private === incognito) {
-      const win = await browser.windows.create({ tabId: first, incognito })
-      browser.tabs.move(rest, { windowId: win.id, index: -1 })
+    let win
+
+    if (state.private === !!incognito) {
+      win = await browser.windows.create({ tabId: first, incognito })
+      for (let id of rest) {
+        await browser.tabs.move(id, { windowId: win.id, index: -1 })
+      }
     } else {
-      const win = await browser.windows.create({ url: firstTab.url, incognito })
+      win = await browser.windows.create({ url: firstTab.url, incognito })
+      const firstNewTab = win.tabs[0]
+      const oldNewMap = { [firstTab.id]: firstNewTab.id }
+
       browser.tabs.remove(first)
-      for (let tabId of rest) {
-        let tab = state.tabsMap[tabId]
-        if (!tab) continue
-        browser.tabs.create({ windowId: win.id, url: tab.url })
-        browser.tabs.remove(tabId)
+      for (let tab of restTabs) {
+        // Create / remove
+        const newTab = await browser.tabs.create({ windowId: win.id, url: tab.url })
+        browser.tabs.remove(tab.id)
+
+        // Update values
+        oldNewMap[tab.id] = newTab.id
+        tab.id = oldNewMap[tab.id]
+        if (tab.parentId > -1) {
+          tab.parentId = oldNewMap[tab.parentId] || -1
+        }
       }
     }
+
+    if (state.tabsTree) {
+      // Ok, this is just tmp solution
+      // with timeout...
+      // ~~~~~~~ REWRITE THIS ~~~~~~~~
+      await Utils.Sleep(1000)
+      browser.runtime.sendMessage({
+        windowId: win.id,
+        action: 'restoreTabsTree',
+        arg: restTabs,
+      })
+      // ~~~~~~~ REWRITE THIS ~~~~~~~~
+    }
+  },
+
+  /**
+   * Try to restore tree for listed tabs
+   */
+  restoreTabsTree({ state }, tabs) {
+    if (!state.tabsTree) return
+
+    for (let info of tabs) {
+      const tab = state.tabsMap[info.id]
+      if (!tab) return
+      tab.parentId = info.parentId
+      tab.folded = info.folded
+    }
+
+    Utils.UpdateTabsTree(state)
   },
 
   /**
@@ -552,16 +534,49 @@ export default {
     const ids = [...tabIds]
     const windowId = window ? window.id : await dispatch('chooseWin')
     const win = (await dispatch('getAllWindows')).find(w => w.id === windowId)
+    const tabs = []
+    for (let id of ids) {
+      const tab = state.tabsMap[id]
+      if (!tab) continue
+      tabs.push({
+        id: tab.id,
+        url: tab.url,
+        parentId: tab.parentId,
+        folded: tab.folded,
+      })
+    }
 
     if (state.private === win.incognito) {
-      browser.tabs.move(ids, { windowId, index: -1 })
-    } else {
-      for (let id of ids) {
-        let tab = state.tabsMap[id]
-        if (!tab) continue
-        browser.tabs.create({ url: tab.url, windowId })
-        browser.tabs.remove(id)
+      for (let tab of tabs) {
+        await browser.tabs.move(tab.id, { windowId, index: -1 })
       }
+    } else {
+      const oldNewMap = {}
+      for (let tab of tabs) {
+        // Create / remove
+        const newTab = await browser.tabs.create({ url: tab.url, windowId })
+        browser.tabs.remove(tab.id)
+
+        // Update values
+        oldNewMap[tab.id] = newTab.id
+        tab.id = oldNewMap[tab.id]
+        if (tab.parentId > -1) {
+          tab.parentId = oldNewMap[tab.parentId] || -1
+        }
+      }
+    }
+
+    if (state.tabsTree) {
+      // Ok, this is just tmp solution
+      // with timeout...
+      // ~~~~~~~ REWRITE THIS ~~~~~~~~
+      await Utils.Sleep(1000)
+      browser.runtime.sendMessage({
+        windowId: win.id,
+        action: 'restoreTabsTree',
+        arg: tabs,
+      })
+      // ~~~~~~~ REWRITE THIS ~~~~~~~~
     }
   },
 
@@ -570,15 +585,37 @@ export default {
    */
   async moveTabsToCtx({ state }, { tabIds, ctxId }) {
     const ids = [...tabIds]
-    for (let tabId of ids) {
-      let tab = state.tabsMap[tabId]
-      if (!tab) return
+    const oldNewMap = {}
+    const tabs = []
+    for (let id of ids) {
+      const tab = state.tabsMap[id]
+      if (!tab) continue
+      tabs.push({
+        id: tab.id,
+        url: tab.url,
+        parentId: tab.parentId,
+        folded: tab.folded,
+      })
+    }
 
-      await browser.tabs.create({
+    for (let tab of tabs) {
+      // Create / remove
+      const newTab = await browser.tabs.create({
+        windowId: state.windowId,
         cookieStoreId: ctxId,
         url: tab.url.indexOf('http') ? null : tab.url,
       })
       await browser.tabs.remove(tab.id)
+
+      // Update values
+      oldNewMap[tab.id] = newTab.id
+      if (tab.parentId > -1) {
+        state.tabsMap[newTab.id].parentId = oldNewMap[tab.parentId]
+      }
+    }
+
+    if (state.tabsTree) {
+      Utils.UpdateTabsTree(state)
     }
   },
 
@@ -599,14 +636,18 @@ export default {
     const actP = getters.panels[actPI]
     if (!actP || !actP.tabs || actP.pinned) return
 
-    const toShow = actP.tabs.filter(t => {
-      if (state.hideFoldedTabs) return t.hidden && !t.invisible
-      else return t.hidden
-    }).map(t => t.id)
+    const toShow = actP.tabs
+      .filter(t => {
+        if (state.hideFoldedTabs) return t.hidden && !t.invisible
+        else return t.hidden
+      })
+      .map(t => t.id)
 
-    const toHide = state.tabs.filter(t => {
-      return !t.hidden && !t.pinned && t.cookieStoreId !== actP.cookieStoreId
-    }).map(t => t.id)
+    const toHide = state.tabs
+      .filter(t => {
+        return !t.hidden && !t.pinned && t.cookieStoreId !== actP.cookieStoreId
+      })
+      .map(t => t.id)
 
     if (toShow.length) browser.tabs.show(toShow)
     if (toHide.length) browser.tabs.hide(toHide)
@@ -630,7 +671,7 @@ export default {
       }
     }
 
-    if (state.hideFoldedTabs && toHide.length && state.ffVer >= 61) {
+    if (state.hideFoldedTabs && toHide.length) {
       browser.tabs.hide(toHide)
     }
     dispatch('saveTabsTree')
@@ -659,7 +700,7 @@ export default {
       }
     }
 
-    if (state.hideFoldedTabs && toShow.length && state.ffVer >= 61) {
+    if (state.hideFoldedTabs && toShow.length) {
       browser.tabs.show(toShow)
     }
     dispatch('saveTabsTree')
@@ -678,10 +719,7 @@ export default {
   /**
    * Drop to tabs panel
    */
-  async dropToTabs(
-    { state, getters, dispatch },
-    { event, dropIndex, dropParent, nodes, pin } = {}
-  ) {
+  async dropToTabs({ state, getters }, { event, dropIndex, dropParent, nodes, pin } = {}) {
     const currentPanel = getters.panels[state.panelIndex]
     const destCtx = currentPanel.cookieStoreId
     const parent = state.tabsMap[dropParent]
@@ -696,6 +734,16 @@ export default {
 
       // Move tabs
       if (nodes[0].type === 'tab' && samePanel && !event.ctrlKey) {
+        // Move to different window
+        if (nodes[0].windowId !== state.windowId) {
+          state.attachingTabs = [...nodes]
+          for (let i = 0; i < nodes.length; i++) {
+            const index = dropIndex + i
+            await browser.tabs.move(nodes[i].id, { windowId: state.windowId, index })
+          }
+          return
+        }
+
         // Check if tabs was dropped to same place
         const inside = dropIndex > nodes[0].index && dropIndex <= nodes[nodes.length - 1].index
         const inFirst = nodes[0].id === dropParent
@@ -748,50 +796,34 @@ export default {
         if (state.tabsTree) {
           // Get parent tab parameters
           let parentId = parent ? parent.id : -1
-          let parentLvl = parent ? parent.lvl : -1
-          if (parentLvl === state.tabsTreeLimit) parentId = parent.parentId
 
           // Set first tab parentId and other parameters
           tabs[0].parentId = parentId
-          if (parent && parent.folded) tabs[0].invisible = true
-          else tabs[0].invisible = false
 
           // Get level offset for gragged branch
           let lvlOffset = tabs[0].lvl
 
           for (let i = 1; i < tabs.length; i++) {
-            const prevTab = tabs[i - 1]
+            // const prevTab = tabs[i - 1]
             const tab = tabs[i]
-
-            // Above the limit
-            if (parentLvl + tab.lvl - lvlOffset >= state.tabsTreeLimit) {
-              tab.parentId = prevTab.parentId
-              if (parent && parent.folded) tab.invisible = true
-              else tab.invisible = false
-              tab.folded = false
-              continue
-            }
 
             // Flat nodes below first node's level
             if (tabs[i].lvl <= lvlOffset) {
               tab.parentId = parentId
-              tab.invisible = false
               tab.folded = false
             }
 
             // Update invisibility of tabs
             if (parent && parent.folded) {
-              tab.invisible = true
               if (state.hideFoldedTabs && !tab.hidden) toHide.push(tab.id)
             } else if (tab.parentId === parentId) {
-              tab.invisible = false
               if (state.hideFoldedTabs && tab.hidden) toShow.push(tab.id)
             }
           }
 
           // If there are no moving, just update tabs tree
           if (!moveIndexOk) {
-            state.tabs = Utils.CalcTabsTreeLevels(state.tabs)
+            Utils.UpdateTabsTree(state, currentPanel.startIndex, currentPanel.endIndex + 1)
           }
         }
 
@@ -811,14 +843,13 @@ export default {
           if (!state.tabsTree && node.type === 'folder') continue
           if (state.tabsTreeLimit > 0 && node.type === 'folder') continue
 
-          const groupPageUrl = browser.runtime.getURL('group/group.html')
           if (oldNewMap[node.parentId] >= 0) opener = oldNewMap[node.parentId]
           const info = await browser.tabs.create({
             active: !(parent && parent.folded),
             cookieStoreId: destCtx,
             index: dropIndex + i,
             openerTabId: opener,
-            url: node.url ? node.url : groupPageUrl + `#${encodeURI(node.title)}`,
+            url: node.url ? node.url : Utils.GetGroupUrl(node.title),
             windowId: state.windowId,
             pinned: pin,
           })
@@ -837,7 +868,7 @@ export default {
 
         // Update tabs tree if there are no tabs was deleted
         if (nodes[0].type !== 'tab' || event.ctrlKey) {
-          state.tabs = Utils.CalcTabsTreeLevels(state.tabs)
+          Utils.UpdateTabsTree(state, dropIndex - 1, dropIndex + nodes.length)
         }
       }
     }
@@ -857,8 +888,6 @@ export default {
         })
       }
     }
-
-    dispatch('saveTabsTree')
   },
 
   /**
@@ -887,10 +916,9 @@ export default {
     for (let tab of ttf) {
       tab.lvl = minLvlTab.lvl
       tab.parentId = minLvlTab.parentId
-      tab.invisible = false
     }
 
-    state.tabs = Utils.CalcTabsTreeLevels(state.tabs)
+    Utils.UpdateTabsTree(state, ttf[0].index - 1, ttf[ttf.length - 1].index + 1)
     dispatch('saveTabsTree', 250)
   },
 
@@ -901,7 +929,7 @@ export default {
     // Check permissions
     if (!state.permAllUrls) {
       const url = browser.runtime.getURL('permissions/all-urls.html')
-      browser.tabs.create({ url })
+      browser.tabs.create({ url, windowId: state.windowId })
       return
     }
 
@@ -928,9 +956,7 @@ export default {
       .trim()
 
     if (!isOk || groupTitle.length < 4) {
-      const hosts = tabs
-        .filter(t => !t.url.startsWith('about:'))
-        .map(t => t.url.split('/')[2])
+      const hosts = tabs.filter(t => !t.url.startsWith('about:')).map(t => t.url.split('/')[2])
       groupTitle = Utils.CommonSubStr(hosts)
       if (groupTitle.startsWith('.')) groupTitle = groupTitle.slice(1)
       groupTitle = groupTitle.replace(/^www\./, '')
@@ -940,40 +966,27 @@ export default {
       groupTitle = tabs[0].title
     }
 
-    // Create hash id
-    const hashId = `${groupTitle}:id:${Utils.Uid()}`
-
     // Find index and create group tab
     const groupTab = await browser.tabs.create({
       active: !(parent && parent.folded),
       cookieStoreId: tabs[0].cookieStoreId,
       index: tabs[0].index,
       openerTabId: tabs[0].parentId < 0 ? undefined : tabs[0].parentId,
-      url: browser.runtime.getURL('group/group.html') + `#${encodeURI(hashId)}`,
+      url: Utils.GetGroupUrl(groupTitle),
       windowId: state.windowId,
     })
 
     // Update parent of selected tabs
     tabs[0].parentId = groupTab.id
-    if (tabs[0].lvl + 1 === state.tabsTreeLimit) tabs[0].folded = false
     for (let i = 1; i < tabs.length; i++) {
-      let prev = tabs[i - 1]
       let tab = tabs[i]
-
-      if (state.tabsTreeLimit > 0 && tab.lvl + 1 > state.tabsTreeLimit) {
-        tab.parentId = prev.parentId
-        tab.folded = false
-        tab.invisible = false
-        continue
-      }
 
       if (tab.lvl <= tabs[0].lvl) {
         tab.parentId = groupTab.id
         tab.folded = false
-        tab.invisible = false
       }
     }
-    state.tabs = Utils.CalcTabsTreeLevels(state.tabs)
+    Utils.UpdateTabsTree(state, tabs[0].index - 2, tabs[tabs.length - 1].index + 1)
     dispatch('saveTabsTree', 250)
   },
 
@@ -1010,51 +1023,6 @@ export default {
     }
 
     return out
-  },
-
-  /**
-   * Update successorTabId of tabs
-   */
-  updateTabsSuccessors({ state, getters }) {
-    if (state.ffVer < 65) return
-    const toReset = []
-    for (let panel of getters.panels) {
-      // No tabs
-      if (!panel.tabs || panel.tabs.length === 0) continue
-
-      // Panel have 1 tab
-      if (panel.tabs.length === 1) {
-        if (panel.tabs[0].successorTabId >= 0) {
-          panel.tabs[0].successorTabId = -1
-          toReset.push(panel.tabs[0].id)
-        }
-        continue
-      }
-
-      // Check tabs above the last one
-      for (let i = panel.tabs.length - 1; i--;) {
-        if (panel.tabs[i].successorTabId >= 0) {
-          panel.tabs[i].successorTabId = -1
-          toReset.push(panel.tabs[i].id)
-        }
-      }
-
-      // Update successor of last tab
-      const penultTab = panel.tabs[panel.tabs.length - 2]
-      const lastTab = panel.tabs[panel.tabs.length - 1]
-      if (lastTab.successorTabId !== penultTab.id) {
-        lastTab.successorTabId = penultTab.id
-        browser.tabs.update(lastTab.id, { successorTabId: penultTab.id })
-      }
-    }
-
-    for (let id of toReset) {
-      browser.tabs.update(id, { successorTabId: -1 })
-    }
-  },
-  updateTabsSuccessorsDebounced({ dispatch }, { timeout } = {}) {
-    if (UpdateTabsSuccessorsTimeout) clearTimeout(UpdateTabsSuccessorsTimeout)
-    UpdateTabsSuccessorsTimeout = setTimeout(() => dispatch('updateTabsSuccessors'), timeout)
   },
 
   /**

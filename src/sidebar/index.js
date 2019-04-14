@@ -87,17 +87,19 @@ export default new Vue({
     await Store.dispatch('loadSettings')
     await Store.dispatch('loadState')
     await Store.dispatch('loadContainers')
+
+    if (State.bookmarksPanel && State.panelIndex === 0) {
+      await Store.dispatch('loadBookmarks')
+    }
+
     await Store.dispatch('loadTabs')
-    await Store.dispatch('loadLocalID')
+    await Store.dispatch('loadCtxMenu')
     await Store.dispatch('loadStyles')
     Store.dispatch('scrollToActiveTab')
     Store.dispatch('loadKeybindings')
-    Store.dispatch('loadSyncPanels')
     Store.dispatch('loadSnapshots')
     Store.dispatch('loadFavicons')
     Store.dispatch('loadPermissions')
-    if (State.bookmarksPanel) await Store.dispatch('loadBookmarks')
-    Store.dispatch('updateTabsSuccessors')
 
     // Try to clear unneeded favicons
     Store.dispatch('tryClearFaviCache', 86400)
@@ -138,28 +140,6 @@ export default new Vue({
       if (changes.styles) Store.dispatch('applyStyles', changes.styles.newValue)
       if (changes.containers) {
         Store.dispatch('updateContainers', changes.containers.newValue)
-      }
-
-      if (type === 'sync') {
-        let ids = Object.keys(changes).filter(id => id !== this.localID)
-
-        let syncData
-        ids.map(id => {
-          if (!changes[id] || !changes[id].newValue) return
-          let data
-
-          try {
-            data = JSON.parse(changes[id].newValue)
-          } catch (err) {
-            return
-          }
-
-          if (syncData && syncData.time > data.time) return
-          else syncData = data
-        })
-        this.lastSyncPanels = syncData
-
-        Store.dispatch('updateSyncPanels', syncData)
       }
     },
 

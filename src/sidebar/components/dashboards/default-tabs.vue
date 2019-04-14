@@ -2,13 +2,6 @@
 .Menu(v-noise:300.g:12:af.a:0:42.s:0:9="")
   h2 {{conf.name}}
 
-  toggle-field.-rm(
-    v-if="!isPrivate"
-    label="dashboard.sync_label"
-    :value="conf.sync"
-    :inline="true"
-    @input="toggleSync")
-
   toggle-field(
     label="dashboard.lock_panel_label"
     :title="t('dashboard.lock_panel_tooltip')"
@@ -35,6 +28,7 @@
 <script>
 import {mapGetters} from 'vuex'
 import Store from '../../store'
+import State from '../../store.state'
 import ToggleField from '../fields/toggle'
 
 export default {
@@ -66,12 +60,6 @@ export default {
       Store.dispatch('saveContainers')
     },
 
-    toggleSync() {
-      this.conf.sync = !this.conf.sync
-      Store.dispatch('resyncPanels')
-      Store.dispatch('saveContainers')
-    },
-
     async togglePanelNoEmpty() {
       this.conf.noEmpty = !this.conf.noEmpty
       if (this.conf.noEmpty) {
@@ -79,6 +67,7 @@ export default {
         const panel = Store.getters.panels.find(p => p.cookieStoreId === defaultId)
         if (panel && panel.tabs && !panel.tabs.length) {
           await browser.tabs.create({
+            windowId: State.windowId,
             index: panel.startIndex,
             cookieStoreId: panel.cookieStoreId,
             active: true,

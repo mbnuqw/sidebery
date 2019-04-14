@@ -7,12 +7,17 @@
         label="settings.native_scrollbars"
         :value="$store.state.nativeScrollbars"
         @input="setOpt('nativeScrollbars', $event)")
+
+    section
+      h2 {{t('settings.ctx_menu_title')}}
       select-field(
         label="settings.autoHide_ctx_menu"
         optLabel="settings.autoHide_ctx_menu_"
         :value="$store.state.autoHideCtxMenu"
         :opts="$store.state.autoHideCtxMenuOpts"
         @input="setOpt('autoHideCtxMenu', $event)")
+      .box
+        .btn(@click="openCtxMenuBuilder") {{t('settings.ctx_menu_editor')}}
 
     section
       h2 {{t('settings.tabs_title')}}
@@ -29,10 +34,29 @@
         :value="$store.state.showTabRmBtn"
         @input="setOpt('showTabRmBtn', $event)")
       toggle-field(
-        v-if="$store.state.ffVer >= 61"
         label="settings.hide_inactive_panel_tabs"
         :value="$store.state.hideInact"
         @input="toggleHideInact")
+      select-field(
+        label="settings.activate_after_closing"
+        optLabel="settings.activate_after_closing_"
+        :value="$store.state.activateAfterClosing"
+        :opts="$store.state.activateAfterClosingOpts"
+        @input="setOpt('activateAfterClosing', $event)")
+      .box(v-show="$store.state.activateAfterClosing === 'next' || $store.state.activateAfterClosing === 'prev'")
+        select-field(
+          label="settings.activate_after_closing_prev_rule"
+          optLabel="settings.activate_after_closing_rule_"
+          :value="$store.state.activateAfterClosingPrevRule"
+          :opts="$store.state.activateAfterClosingPrevRuleOpts"
+          @input="setOpt('activateAfterClosingPrevRule', $event)")
+        select-field(
+          label="settings.activate_after_closing_next_rule"
+          optLabel="settings.activate_after_closing_rule_"
+          :value="$store.state.activateAfterClosingNextRule"
+          :opts="$store.state.activateAfterClosingNextRuleOpts"
+          @input="setOpt('activateAfterClosingNextRule', $event)")
+
 
     section
       h2 {{t('settings.pinned_tabs_title')}}
@@ -47,10 +71,6 @@
         :inactive="$store.state.pinnedTabsPosition !== 'panel'"
         :value="$store.state.pinnedTabsList"
         @input="setOpt('pinnedTabsList', $event)")
-      toggle-field.-rm(
-        label="settings.pinned_tabs_sync"
-        :value="$store.state.pinnedTabsSync"
-        @input="togglePinnedTabsSync")
 
     section
       h2 {{t('settings.pinned_tabs_tree')}}
@@ -71,7 +91,6 @@
         :opts="$store.state.tabsTreeLimitOpts"
         @input="toggleTabsTreeLimit")
       toggle-field(
-        v-if="$store.state.ffVer >= 61"
         label="settings.hide_folded_tabs"
         :inactive="!$store.state.tabsTree"
         :value="$store.state.hideFoldedTabs"
@@ -276,27 +295,17 @@
         .btn(@click="clearFaviCache(false)") {{t('settings.rm_unused_favi_cache')}}
         .btn.-warn(@click="clearFaviCache(true)") {{t('settings.rm_favi_cache')}}
 
-    section.-rm
-      h2 {{t('settings.sync_title')}}
-      info-field(
-        label="settings.sync_data_size"
-        :value="syncDataSize"
-        @click="calcSyncDataSize")
-      .buttons
-        .btn.-warn(@click="clearSyncData") {{t('settings.rm_sync_data')}}
-
     section
       h2 {{t('settings.help_title')}}
 
       .buttons
         .btn(@click="openDebugInfo") {{t('settings.debug_info')}}
         a.btn(tabindex="-1", :href="issueLink") {{t('settings.repo_bug')}}
-        a.btn(tabindex="-1", :href="featureReqLink") {{t('settings.repo_req')}}
         .btn.-warn(@click="resetSettings") {{t('settings.reset_settings')}}
 
-      .ref
-        .rm-example
-        .desc {{t('settings.ref_rm')}}
+      //- .ref
+      //-   .rm-example
+      //-   .desc {{t('settings.ref_rm')}}
 
       a.github(tabindex="-1", href="https://github.com/mbnuqw/sidebery")
         svg: use(xlink:href="#icon_github")
@@ -306,7 +315,6 @@
 <script>
 import Vue from 'vue'
 import { mapGetters } from 'vuex'
-import { DEFAULT_SETTINGS } from '../../settings'
 import Utils from '../../../libs/utils'
 import Store from '../../store'
 import State from '../../store.state'
@@ -315,7 +323,6 @@ import ToggleField from '../fields/toggle'
 import SelectField from '../fields/select'
 import InfoField from '../fields/info'
 
-const VALID_SHORTCUT_62 = /^((Ctrl|Alt|Command|MacCtrl)\+)(Shift\+)?([A-Z0-9]|Comma|Period|Home|End|PageUp|PageDown|Space|Insert|Delete|Up|Down|Left|Right|F\d\d?)$|^((Ctrl|Alt|Command|MacCtrl)\+)?(Shift\+)?(F\d\d?)$/
 const VALID_SHORTCUT = /^((Ctrl|Alt|Command|MacCtrl)\+)((Shift|Alt)\+)?([A-Z0-9]|Comma|Period|Home|End|PageUp|PageDown|Space|Insert|Delete|Up|Down|Left|Right|F\d\d?)$|^((Ctrl|Alt|Command|MacCtrl)\+)?((Shift|Alt)\+)?(F\d\d?)$/
 const SPEC_KEYS = /^(Comma|Period|Home|End|PageUp|PageDown|Space|Insert|Delete|F\d\d?)$/
 const ISSUE_URL = 'https://github.com/mbnuqw/sidebery/issues/new'
@@ -384,6 +391,7 @@ export default {
     // Cleanup snapshots targets
     for (let ctxId in State.snapshotsTargets) {
       if (!State.snapshotsTargets.hasOwnProperty(ctxId)) continue
+      if (ctxId === 'default' || ctxId === 'pinned') continue
       if (!State.ctxs.find(c => c.cookieStoreId === ctxId)) {
         Vue.delete(State.snapshotsTargets, ctxId)
       }
@@ -424,7 +432,7 @@ export default {
       } else {
         if (!State.permTabHide) {
           const url = browser.runtime.getURL('permissions/tab-hide.html')
-          browser.tabs.create({ url })
+          browser.tabs.create({ url, windowId: State.windowId })
           return
         }
         Store.dispatch('hideInactPanelsTabs')
@@ -444,7 +452,7 @@ export default {
           return t
         })
       } else {
-        State.tabs = Utils.CalcTabsTreeLevels(State.tabs)
+        Utils.UpdateTabsTree(State)
       }
       this.toggleOpt('tabsTree')
     },
@@ -457,10 +465,9 @@ export default {
         const path = []
         for (let tab of State.tabs) {
           if (tab.isParent) path[tab.lvl] = tab.id
-          if (tab.lvl > State.tabsTreeLimit) tab.parentId = path[State.tabsTreeLimit - 1]
         }
       }
-      State.tabs = Utils.CalcTabsTreeLevels(State.tabs)
+      Utils.UpdateTabsTree(State)
       Store.dispatch('saveTabsTree')
     },
 
@@ -471,18 +478,13 @@ export default {
       } else {
         if (!State.permTabHide) {
           const url = browser.runtime.getURL('permissions/tab-hide.html')
-          browser.tabs.create({ url })
+          browser.tabs.create({ url, windowId: State.windowId })
           return
         }
         const toHide = State.tabs.filter(t => t.invisible).map(t => t.id)
         browser.tabs.hide(toHide)
       }
       this.toggleOpt('hideFoldedTabs')
-    },
-
-    togglePinnedTabsSync() {
-      this.toggleOpt('pinnedTabsSync')
-      Store.dispatch('resyncPanels')
     },
 
     // --- Bookmarks ---
@@ -540,8 +542,7 @@ export default {
     },
     checkShortcut(shortcut) {
       let exists = State.keybindings.find(k => k.shortcut === shortcut)
-      if (State.ffVer > 62) return VALID_SHORTCUT.test(shortcut) && !exists
-      else return VALID_SHORTCUT_62.test(shortcut) && !exists
+      return VALID_SHORTCUT.test(shortcut) && !exists
     },
     resetKeybindings() {
       Store.dispatch('resetKeybindings')
@@ -623,9 +624,8 @@ export default {
         })
         State.permAllUrls = false
       } else {
-        browser.tabs.create({
-          url: browser.runtime.getURL('permissions/all-urls.html'),
-        })
+        const url = browser.runtime.getURL('permissions/all-urls.html')
+        browser.tabs.create({ url, windowId: State.windowId })
       }
       Store.dispatch('saveContainers')
       Store.dispatch('saveSettings')
@@ -639,9 +639,8 @@ export default {
         if (State.hideFoldedTabs) this.toggleHideFoldedTabs()
         State.permTabHide = false
       } else {
-        browser.tabs.create({
-          url: browser.runtime.getURL('permissions/tab-hide.html'),
-        })
+        const url = browser.runtime.getURL('permissions/tab-hide.html')
+        browser.tabs.create({ url, windowId: State.windowId })
       }
       Store.dispatch('saveSettings')
     },
@@ -651,11 +650,6 @@ export default {
       const size = Utils.StrSize(JSON.stringify(State.favicons))
       const count = Object.keys(State.favicons).length
       this.faviCache = count + ': ' + size
-    },
-
-    async calcSyncDataSize() {
-      const ans = await browser.storage.sync.get()
-      this.syncDataSize = Utils.StrSize(ans[State.localID] || '')
     },
 
     /**
@@ -676,59 +670,18 @@ export default {
     },
 
     /**
-     * Clear all data for syncing
-     */
-    async clearSyncData() {
-      await Store.dispatch('clearSyncData')
-      this.calcSyncDataSize()
-    },
-
-    /**
      * Open debug info page
      */
     openDebugInfo() {
-      const settings = {}
-      for (let sKey in DEFAULT_SETTINGS) {
-        if (!DEFAULT_SETTINGS.hasOwnProperty(sKey)) continue
-        settings[sKey] = State[sKey]
-      }
-
-      const panels = []
-      for (let panel of Store.getters.panels) {
-        // Get sanitized clone
-        const panelClone = JSON.parse(JSON.stringify(panel))
-
-        if (panelClone.tabs) panelClone.tabs = panelClone.tabs.length
-        delete panelClone.name
-        delete panelClone.iconUrl
-        delete panelClone.includeHosts
-        delete panelClone.excludeHosts
-        delete panelClone.proxy
-        panels.push(panelClone)
-      }
-
-      const tabs = []
-      for (let tab of State.tabs) {
-        // Get sanitized clone
-        const tabClone = JSON.parse(JSON.stringify(tab))
-
-        delete tabClone.title
-        tabClone.url = tabClone.url.slice(0, 5) + '...'
-        if (tabClone.favIconUrl && tabClone.favIconUrl.length > 5) {
-          tabClone.favIconUrl = tabClone.favIconUrl.slice(0, 5) + '...'
-        }
-        tabs.push(tabClone)
-      }
-
-      const settingsJSON = JSON.stringify(settings, null, '  ')
-      const panelsJSON = JSON.stringify(panels, null, '  ')
-      const tabsJSON = JSON.stringify(tabs, null, '  ')
-
       let url = browser.runtime.getURL('debug/debug.html')
-      url += '?settings=' + encodeURIComponent(settingsJSON)
-      url += '&panels=' + encodeURIComponent(panelsJSON)
-      url += '&tabs=' + encodeURIComponent(tabsJSON)
-      browser.tabs.create({ url })
+      browser.tabs.create({ url, windowId: State.windowId })
+    },
+
+    /**
+     * Open context menu builder panel
+     */
+    openCtxMenuBuilder() {
+      Store.dispatch('openCtxMenuBuilder')
     },
   },
 }

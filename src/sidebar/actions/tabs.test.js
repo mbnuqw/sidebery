@@ -32,7 +32,14 @@ describe('loadTabs', () => {
     browser.windows.WINDOW_ID_CURRENT = 1
     browser.tabs.query = jest.fn(() => {
       return [
-        { id: 1, index: 0, cookieStoreId: 'firefox-default', pinned: true, url: 'aaa', active: true },
+        {
+          id: 1,
+          index: 0,
+          cookieStoreId: 'firefox-default',
+          pinned: true,
+          url: 'aaa',
+          active: true,
+        },
         { id: 2, index: 1, cookieStoreId: 'firefox-default', pinned: false, url: 'bbb' },
       ]
     })
@@ -64,7 +71,14 @@ describe('loadTabs', () => {
     browser.windows.WINDOW_ID_CURRENT = 1
     browser.tabs.query = jest.fn(() => {
       return [
-        { id: 1, index: 0, cookieStoreId: 'firefox-default', pinned: true, url: 'aaa', active: true },
+        {
+          id: 1,
+          index: 0,
+          cookieStoreId: 'firefox-default',
+          pinned: true,
+          url: 'aaa',
+          active: true,
+        },
         { id: 2, index: 1, cookieStoreId: 'firefox-default', pinned: false, url: 'bbb' },
         { id: 3, index: 2, cookieStoreId: 'container-B', pinned: false, url: 'ccc' },
         { id: 4, index: 3, cookieStoreId: 'container-A', pinned: false, url: 'ddd' },
@@ -102,7 +116,14 @@ describe('loadTabs', () => {
     browser.windows.WINDOW_ID_CURRENT = 1
     browser.tabs.query = jest.fn(() => {
       return [
-        { id: 1, index: 0, cookieStoreId: 'firefox-default', pinned: true, url: 'aaa', active: true },
+        {
+          id: 1,
+          index: 0,
+          cookieStoreId: 'firefox-default',
+          pinned: true,
+          url: 'aaa',
+          active: true,
+        },
         { id: 2, index: 1, cookieStoreId: 'firefox-default', pinned: false, url: 'bbb' },
         { id: 5, index: 2, cookieStoreId: 'firefox-default', pinned: false, url: 'eee' },
         { id: 4, index: 3, cookieStoreId: 'container-A', pinned: false, url: 'ddd' },
@@ -288,6 +309,7 @@ describe('createTab', () => {
 describe('removeTabs', () => {
   test('remove tabs', async () => {
     const state = {
+      windowId: 1,
       tabs: [
         {
           id: 1,
@@ -302,7 +324,7 @@ describe('removeTabs', () => {
         },
       ],
     }
-    state.tabsMap = [ undefined, ...state.tabs ]
+    state.tabsMap = [undefined, ...state.tabs]
     const getters = {
       panels: [
         {
@@ -310,6 +332,7 @@ describe('removeTabs', () => {
           cookieStoreId: 'a',
           noEmpty: true,
           tabs: state.tabs,
+          startIndex: 0,
         },
       ],
     }
@@ -319,7 +342,7 @@ describe('removeTabs', () => {
 
     await TabsActions.removeTabs({ state, getters }, [1, 2])
     expect(browser.tabs.remove).toBeCalledWith([1, 2])
-    expect(browser.tabs.create).toBeCalledWith({ cookieStoreId: 'a', active: true })
+    expect(browser.tabs.create).toBeCalledWith({ cookieStoreId: 'a', windowId: 1, index: 0 })
     expect(browser.tabs.update).not.toBeCalled()
   })
 
@@ -339,7 +362,7 @@ describe('removeTabs', () => {
         },
       ],
     }
-    state.tabsMap = [ undefined, ...state.tabs ]
+    state.tabsMap = [undefined, ...state.tabs]
     const getters = {
       panels: [
         {
@@ -450,7 +473,7 @@ describe('reloadTabs', () => {
     const state = {
       tabs: [{ id: 1 }, { id: 2 }, { id: 3 }],
     }
-    state.tabsMap = [ undefined, ...state.tabs ]
+    state.tabsMap = [undefined, ...state.tabs]
     browser.tabs.reload = jest.fn()
 
     await TabsActions.reloadTabs({ state }, [2, 3, 4])
@@ -480,7 +503,7 @@ describe('activateLastActiveTabOf', () => {
 
   test('activate invisible tab', async () => {
     const state = {
-      tabsMap: [undefined, { id: 1 }, { id: 2, invisible: true }]
+      tabsMap: [undefined, { id: 1 }, { id: 2, invisible: true }],
     }
     const getters = {
       panels: [
@@ -502,7 +525,7 @@ describe('pinTabs', () => {
     const state = {
       tabs: [{ id: 1, pinned: false }, { id: 2, pinned: true }],
     }
-    state.tabsMap = [ undefined, ...state.tabs ]
+    state.tabsMap = [undefined, ...state.tabs]
     browser.tabs.update = jest.fn()
     await TabsActions.pinTabs({ state }, [1, 2, 3])
     expect(browser.tabs.update).toBeCalledTimes(2)
@@ -520,7 +543,7 @@ describe('pinTabs', () => {
     const state = {
       tabs: [{ id: 1, pinned: false }, { id: 2, pinned: true }],
     }
-    state.tabsMap = [ undefined, ...state.tabs ]
+    state.tabsMap = [undefined, ...state.tabs]
     browser.tabs.update = jest.fn()
     await TabsActions.repinTabs({ state }, [1, 2, 3])
     expect(browser.tabs.update).toBeCalledTimes(2)
@@ -548,7 +571,7 @@ describe('muteTabs', () => {
     const state = {
       tabs: [{ id: 1, mutedInfo: { muted: false } }, { id: 2, mutedInfo: { muted: true } }],
     }
-    state.tabsMap = [ undefined, ...state.tabs ]
+    state.tabsMap = [undefined, ...state.tabs]
     browser.tabs.update = jest.fn()
     await TabsActions.remuteTabs({ state }, [1, 2, 3])
     expect(browser.tabs.update).toBeCalledTimes(2)
@@ -563,7 +586,7 @@ describe('duplicateTabs', () => {
       tabs: [{ id: 1 }, { id: 2 }, { id: 3 }],
     }
     browser.tabs.create = jest.fn()
-    state.tabsMap = [ undefined, ...state.tabs ]
+    state.tabsMap = [undefined, ...state.tabs]
     browser.tabs.duplicate = jest.fn()
     await TabsActions.duplicateTabs({ state }, [2, 3, 4])
     expect(browser.tabs.create).toBeCalledTimes(2)
@@ -575,7 +598,7 @@ describe('bookmarkTabs', () => {
     const state = {
       tabs: [{ id: 1 }, { id: 2, title: 'a', url: 'b' }, { id: 3, title: 'c', url: 'd' }],
     }
-    state.tabsMap = [ undefined, ...state.tabs ]
+    state.tabsMap = [undefined, ...state.tabs]
     browser.bookmarks.create = jest.fn()
     await TabsActions.bookmarkTabs({ state }, [2, 3, 4])
     expect(browser.bookmarks.create).toBeCalledTimes(2)
@@ -594,7 +617,7 @@ describe('clearTabsCookies', () => {
         { id: 4, title: 'd', url: 'about:newtab' },
       ],
     }
-    state.tabsMap = [ undefined, ...state.tabs ]
+    state.tabsMap = [undefined, ...state.tabs]
     EventBus.$emit = jest.fn()
     browser.permissions.contains = jest.fn(() => true)
     browser.cookies.getAll = jest.fn(() => [{ name: 'abc' }])
@@ -637,18 +660,18 @@ describe('moveTabsToNewWin', () => {
       private: false,
       tabs: [{ id: 1, url: 'asdf' }, { id: 2, url: 'asdf' }],
     }
-    state.tabsMap = [ undefined, ...state.tabs ]
+    state.tabsMap = [undefined, ...state.tabs]
     browser.windows.create = jest.fn(() => {
-      return { id: 123 }
+      return { id: 123, tabs: [{ id: 1 }] }
     })
     browser.tabs.move = jest.fn()
     browser.tabs.create = jest.fn()
     browser.tabs.remove = jest.fn()
 
-    await TabsActions.moveTabsToNewWin({ state }, { tabIds: [1, 2, 3], incognito: false })
+    await TabsActions.moveTabsToNewWin({ state }, { tabIds: [1, 2], incognito: false })
 
     expect(browser.windows.create).toBeCalledWith({ tabId: 1, incognito: false })
-    expect(browser.tabs.move).toBeCalledWith([2, 3], { windowId: 123, index: -1 })
+    expect(browser.tabs.move).toBeCalledWith(2, { windowId: 123, index: -1 })
   })
 
   test('move tabs to new window with different private status', async () => {
@@ -656,15 +679,17 @@ describe('moveTabsToNewWin', () => {
       private: false,
       tabs: [{ id: 1, url: 'asdf' }, { id: 2, url: 'qwer' }],
     }
-    state.tabsMap = [ undefined, ...state.tabs ]
+    state.tabsMap = [undefined, ...state.tabs]
     browser.windows.create = jest.fn(() => {
-      return { id: 123 }
+      return { id: 123, tabs: [{ id: 1 }] }
     })
     browser.tabs.move = jest.fn()
-    browser.tabs.create = jest.fn()
+    browser.tabs.create = jest.fn(() => {
+      return { id: 1 }
+    })
     browser.tabs.remove = jest.fn()
 
-    await TabsActions.moveTabsToNewWin({ state }, { tabIds: [1, 2, 3], incognito: true })
+    await TabsActions.moveTabsToNewWin({ state }, { tabIds: [1, 2], incognito: true })
 
     expect(browser.windows.create).toBeCalledWith({ url: 'asdf', incognito: true })
     expect(browser.tabs.create).toBeCalledWith({ windowId: 123, url: 'qwer' })
@@ -680,7 +705,7 @@ describe('moveTabsToWin', () => {
       private: false,
       tabs: [{ id: 1, url: 'asdf' }, { id: 2, url: 'qwer' }],
     }
-    state.tabsMap = [ undefined, ...state.tabs ]
+    state.tabsMap = [undefined, ...state.tabs]
     const dispatch = jest.fn(name => {
       if (name === 'chooseWin') return 123
       if (name === 'getAllWindows') return [{ id: 1 }, { id: 12 }, { id: 123, incognito: false }]
@@ -690,7 +715,7 @@ describe('moveTabsToWin', () => {
     browser.tabs.remove = jest.fn()
 
     await TabsActions.moveTabsToWin({ state, dispatch }, { tabIds: [1, 2, 3] })
-    expect(browser.tabs.move).toBeCalledWith([1, 2, 3], { windowId: 123, index: -1 })
+    expect(browser.tabs.move).toBeCalledWith(1, { windowId: 123, index: -1 })
     expect(browser.tabs.create).not.toBeCalled()
     expect(browser.tabs.remove).not.toBeCalled()
   })
@@ -700,13 +725,15 @@ describe('moveTabsToWin', () => {
       private: false,
       tabs: [{ id: 1, url: 'asdf' }, { id: 2, url: 'qwer' }],
     }
-    state.tabsMap = [ undefined, ...state.tabs ]
+    state.tabsMap = [undefined, ...state.tabs]
     const dispatch = jest.fn(name => {
       if (name === 'chooseWin') return 123
       if (name === 'getAllWindows') return [{ id: 1 }, { id: 12 }, { id: 123, incognito: true }]
     })
     browser.tabs.move = jest.fn()
-    browser.tabs.create = jest.fn()
+    browser.tabs.create = jest.fn(() => {
+      return { id: 1 }
+    })
     browser.tabs.remove = jest.fn()
 
     await TabsActions.moveTabsToWin({ state, dispatch }, { tabIds: [1, 2, 3] })
@@ -726,8 +753,10 @@ describe('moveTabsToCtx', () => {
       private: false,
       tabs: [{ id: 1, url: 'http://asdf.com' }, { id: 2, url: 'qwer' }],
     }
-    state.tabsMap = [ undefined, ...state.tabs ]
-    browser.tabs.create = jest.fn()
+    state.tabsMap = [undefined, ...state.tabs]
+    browser.tabs.create = jest.fn(() => {
+      return { id: 1 }
+    })
     browser.tabs.remove = jest.fn()
 
     await TabsActions.moveTabsToCtx({ state }, { tabIds: [1, 2, 3], ctxId: 'b' })
@@ -1043,7 +1072,6 @@ describe('dropToTabs', () => {
     expect(browser.tabs.update).toBeCalledWith(3, { active: true })
     expect(browser.tabs.move).not.toBeCalled()
     expect(browser.tabs.hide).not.toBeCalled()
-    expect(dispatch).toBeCalledWith('saveTabsTree')
   })
 
   test('drop tabs from the same panel to the same place (with shift)', async () => {
@@ -1091,7 +1119,6 @@ describe('dropToTabs', () => {
     expect(browser.tabs.update).toBeCalledWith(3, { active: true })
     expect(browser.tabs.move).not.toBeCalled()
     expect(browser.tabs.hide).not.toBeCalled()
-    expect(dispatch).toBeCalledWith('saveTabsTree')
   })
 
   test('drop to the end of panel if dropIndex is not defined', async () => {
@@ -1139,7 +1166,6 @@ describe('dropToTabs', () => {
     expect(browser.tabs.move).toBeCalledWith([2], { windowId: 1, index: 2 })
     expect(browser.tabs.update).toBeCalledWith(2, { active: true })
     expect(browser.tabs.hide).not.toBeCalled()
-    expect(dispatch).toBeCalledWith('saveTabsTree')
   })
 
   test('move multiple tabs', async () => {
@@ -1200,7 +1226,6 @@ describe('dropToTabs', () => {
     expect(browser.tabs.move).toBeCalledWith([2, 3], { windowId: 1, index: 0 })
     expect(browser.tabs.update).toBeCalledWith(2, { active: true })
     expect(browser.tabs.hide).not.toBeCalled()
-    expect(dispatch).toBeCalledWith('saveTabsTree')
   })
 
   test('move multiple tabs to pinned dock', async () => {
@@ -1271,7 +1296,6 @@ describe('dropToTabs', () => {
     expect(browser.tabs.update.mock.calls[2][0]).toBe(2)
     expect(browser.tabs.update.mock.calls[2][1]).toEqual({ active: true })
     expect(browser.tabs.hide).not.toBeCalled()
-    expect(dispatch).toBeCalledWith('saveTabsTree')
   })
 
   test('drop tab to folded parent', async () => {
@@ -1325,7 +1349,6 @@ describe('dropToTabs', () => {
     expect(state.tabs[2].invisible).toBe(true)
     expect(browser.tabs.update).not.toBeCalled()
     expect(browser.tabs.hide).not.toBeCalled()
-    expect(dispatch).toBeCalledWith('saveTabsTree')
   })
 
   test('drop tab to expanded parent', async () => {
@@ -1379,7 +1402,6 @@ describe('dropToTabs', () => {
     expect(state.tabs[2].invisible).toBe(false)
     expect(browser.tabs.update).toBeCalledWith(3, { active: true })
     expect(browser.tabs.hide).not.toBeCalled()
-    expect(dispatch).toBeCalledWith('saveTabsTree')
   })
 
   // 0 1 2 3       0 1 2 3 4
@@ -1426,7 +1448,7 @@ describe('dropToTabs', () => {
     const ctx = { state, getters, dispatch }
     const event = { ctrlKey: false }
     const nodes = [
-      { type: 'tab', id: 4, panel: 1, index: 3, parentId: 1, ctx: 'container-A' },
+      { type: 'tab', id: 4, panel: 1, index: 3, parentId: 1, ctx: 'container-A', windowId: 1 },
       { type: 'tab', id: 5 },
       { type: 'tab', id: 6 },
       { type: 'tab', id: 7 },
@@ -1440,130 +1462,6 @@ describe('dropToTabs', () => {
     expect(state.tabs[4].parentId).toBe(4)
     expect(state.tabs[5].parentId).toBe(5)
     expect(state.tabs[6].parentId).toBe(2)
-    expect(state.tabs[2].parentId).toBe(2)
-  })
-
-  // 0 1 2 3       0 1 2 3<
-  // tab           tab
-  //   tab           tab
-  //     ====          TAB
-  //     tab             TAB
-  //>  TAB               TAB
-  //>    TAB           TAB
-  //>      TAB         tab
-  //>TAB
-  // 0 1 2 3       0 1 2 3
-  test('drop tabs tree with limit 3', async () => {
-    const state = {
-      windowId: 1,
-      panelIndex: 1,
-      private: false,
-      tabsTree: true,
-      tabsTreeLimit: 3,
-      tabs: [
-        { id: 1, index: 0, url: 'a', lvl: 0, isParent: true, parentId: -1 },
-        { id: 2, index: 1, url: 'a', lvl: 1, isParetn: true, parentId: 1 },
-        { id: 3, index: 2, url: 'a', lvl: 2, isParent: false, parentId: 2 },
-        { id: 4, index: 3, url: 'a', lvl: 1, isParent: true, parentId: 1 },
-        { id: 5, index: 4, url: 'a', lvl: 2, isParent: true, parentId: 4 },
-        { id: 6, index: 5, url: 'a', lvl: 3, isParent: false, parentId: 5 },
-        { id: 7, index: 6, url: 'a', lvl: 0, isParent: false, parentId: -1 },
-      ],
-    }
-    state.tabsMap = [undefined, ...state.tabs]
-    const getters = {
-      panels: [
-        {},
-        {
-          id: 'container-A',
-          cookieStoreId: 'container-A',
-          endIndex: 2,
-        },
-      ],
-    }
-    const dispatch = jest.fn()
-    browser.tabs.update = jest.fn()
-    browser.tabs.move = jest.fn()
-    browser.tabs.hide = jest.fn()
-    const ctx = { state, getters, dispatch }
-    const event = { ctrlKey: false }
-    const nodes = [
-      { type: 'tab', id: 4, panel: 1, index: 3, parentId: 1, ctx: 'container-A' },
-      { type: 'tab', id: 5 },
-      { type: 'tab', id: 6 },
-      { type: 'tab', id: 7 },
-    ]
-    const args = { event, dropIndex: 2, dropParent: 2, nodes, pin: false }
-
-    await TabsActions.dropToTabs(ctx, args)
-    expect(browser.tabs.move).toBeCalledWith([4, 5, 6, 7], { windowId: 1, index: 2 })
-    expect(state.tabs[1].id).toBe(2)
-    expect(state.tabs[3].parentId).toBe(2)
-    expect(state.tabs[4].parentId).toBe(4)
-    expect(state.tabs[5].parentId).toBe(4)
-    expect(state.tabs[6].parentId).toBe(2)
-    expect(state.tabs[2].parentId).toBe(2)
-  })
-
-  // 0 1 2 3       0 1<
-  // tab           tab
-  //   tab           tab
-  //     ====        TAB
-  //     tab         TAB
-  //>  TAB           TAB
-  //>    TAB         TAB
-  //>      TAB       tab
-  //>TAB
-  // 0 1 2 3       0 1 2 3
-  test('drop tabs tree with limit 1', async () => {
-    const state = {
-      windowId: 1,
-      panelIndex: 1,
-      private: false,
-      tabsTree: true,
-      tabsTreeLimit: 1,
-      tabs: [
-        { id: 1, index: 0, url: 'a', lvl: 0, isParent: true, parentId: -1 },
-        { id: 2, index: 1, url: 'a', lvl: 1, isParetn: true, parentId: 1 },
-        { id: 3, index: 2, url: 'a', lvl: 2, isParent: false, parentId: 2 },
-        { id: 4, index: 3, url: 'a', lvl: 1, isParent: true, parentId: 1 },
-        { id: 5, index: 4, url: 'a', lvl: 2, isParent: true, parentId: 4 },
-        { id: 6, index: 5, url: 'a', lvl: 3, isParent: false, parentId: 5 },
-        { id: 7, index: 6, url: 'a', lvl: 0, isParent: false, parentId: -1 },
-      ],
-    }
-    state.tabsMap = [undefined, ...state.tabs]
-    const getters = {
-      panels: [
-        {},
-        {
-          id: 'container-A',
-          cookieStoreId: 'container-A',
-          endIndex: 2,
-        },
-      ],
-    }
-    const dispatch = jest.fn()
-    browser.tabs.update = jest.fn()
-    browser.tabs.move = jest.fn()
-    browser.tabs.hide = jest.fn()
-    const ctx = { state, getters, dispatch }
-    const event = { ctrlKey: false }
-    const nodes = [
-      { type: 'tab', id: 4, panel: 1, index: 3, parentId: 1, ctx: 'container-A' },
-      { type: 'tab', id: 5 },
-      { type: 'tab', id: 6 },
-      { type: 'tab', id: 7 },
-    ]
-    const args = { event, dropIndex: 2, dropParent: 2, nodes, pin: false }
-
-    await TabsActions.dropToTabs(ctx, args)
-    expect(browser.tabs.move).toBeCalledWith([4, 5, 6, 7], { windowId: 1, index: 2 })
-    expect(state.tabs[1].id).toBe(2)
-    expect(state.tabs[3].parentId).toBe(1)
-    expect(state.tabs[4].parentId).toBe(1)
-    expect(state.tabs[5].parentId).toBe(1)
-    expect(state.tabs[6].parentId).toBe(1)
     expect(state.tabs[2].parentId).toBe(2)
   })
 })

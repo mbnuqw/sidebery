@@ -5,11 +5,15 @@ export default {
   // --- General
   'settings.general_title': { message: 'General' },
   'settings.native_scrollbars': { message: 'Use native scroll-bars' },
+
+  // --- Context menu
+  'settings.ctx_menu_title': { message: 'Context menu' },
   'settings.autoHide_ctx_menu': { message: 'Auto hide context menu after' },
   'settings.autoHide_ctx_menu_250': { message: '0.25s' },
   'settings.autoHide_ctx_menu_500': { message: '0.5s' },
   'settings.autoHide_ctx_menu_1000': { message: '1s' },
   'settings.autoHide_ctx_menu_none': { message: 'none' },
+  'settings.ctx_menu_editor': { message: 'Edit menu' },
 
   // --- Tabs
   'settings.tabs_title': { message: 'Tabs' },
@@ -17,9 +21,19 @@ export default {
     message: 'Activate last active tab on panels switching',
   },
   'settings.skip_empty_panels': { message: 'Skip empty panels on switching' },
-  'settings.show_tab_rm_btn': { message: 'Show close button on tab hover' },
+  'settings.show_tab_rm_btn': { message: 'Show close button on mouse hover' },
   'settings.no_empty_default': { message: 'Create new tab on emptying default panel' },
   'settings.hide_inactive_panel_tabs': { message: 'Hide tabs of inactive panels' },
+  'settings.activate_after_closing': { message: 'After closing current tab activate' },
+  'settings.activate_after_closing_next': { message: 'next tab' },
+  'settings.activate_after_closing_prev': { message: 'previous tab' },
+  'settings.activate_after_closing_prev_act': { message: 'previously active tab' },
+  'settings.activate_after_closing_none': { message: 'none' },
+  'settings.activate_after_closing_prev_rule': { message: 'Previous tab rule' },
+  'settings.activate_after_closing_next_rule': { message: 'Next tab rule' },
+  'settings.activate_after_closing_rule_tree': { message: 'tree' },
+  'settings.activate_after_closing_rule_visible': { message: 'visible' },
+  'settings.activate_after_closing_rule_any': { message: 'any' },
 
   // --- Pinned tabs
   'settings.pinned_tabs_title': { message: 'Pinned tabs' },
@@ -36,7 +50,7 @@ export default {
   'settings.pinned_tabs_tree': { message: 'Tabs tree' },
   'settings.tabs_tree_layout': { message: 'Tabs tree structure' },
   'settings.group_on_open_layout': { message: 'Create sub-tree on opening link in new tab' },
-  'settings.tabs_tree_limit': { message: 'Tabs tree max level' },
+  'settings.tabs_tree_limit': { message: 'Tabs tree level limit' },
   'settings.tabs_tree_limit_1': { message: '1' },
   'settings.tabs_tree_limit_2': { message: '2' },
   'settings.tabs_tree_limit_3': { message: '3' },
@@ -45,8 +59,8 @@ export default {
   'settings.tabs_tree_limit_none': { message: 'none' },
   'settings.hide_folded_tabs': { message: 'Hide folded tabs' },
   'settings.auto_fold_tabs': { message: 'Auto fold tabs' },
-  'settings.auto_exp_tabs': { message: 'Auto expand tabs' },
-  'settings.rm_folded_tabs': { message: 'Close folded tabs with parent' },
+  'settings.auto_exp_tabs': { message: 'Auto expand tab on activation' },
+  'settings.rm_folded_tabs': { message: 'Auto close folded child tabs' },
   'settings.tabs_child_count': { message: 'Show count of descendants' },
   'settings.tabs_lvl_dots': { message: 'Show marks of tabs levels' },
 
@@ -87,7 +101,7 @@ export default {
   'settings.mouse_title': { message: 'Mouse' },
   'settings.h_scroll_through_panels': { message: 'Use horizontal scroll to switch panels' },
   'settings.scroll_through_tabs': { message: 'Switch tabs with scroll wheel' },
-  'settings.scroll_through_tabs_panel': { message: 'container' },
+  'settings.scroll_through_tabs_panel': { message: 'panel' },
   'settings.scroll_through_tabs_global': { message: 'global' },
   'settings.scroll_through_tabs_none': { message: 'none' },
   'settings.scroll_through_visible_tabs': { message: 'Visible only' },
@@ -109,6 +123,7 @@ export default {
   'settings.tabs_panel_action_prev': { message: 'previous panel' },
   'settings.tabs_panel_action_next': { message: 'next panel' },
   'settings.tabs_panel_action_dash': { message: 'open dashboard' },
+  'settings.tabs_panel_action_expand': { message: 'expand/fold' },
   'settings.tabs_panel_action_none': { message: 'none' },
 
   // --- Keybindings
@@ -153,8 +168,8 @@ export default {
   'settings.help_title': { message: 'Help' },
   'settings.debug_info': { message: 'Debug info' },
   'settings.repo_issue': { message: 'Open issue' },
-  'settings.repo_bug': { message: 'Report bug' },
+  'settings.repo_bug': { message: 'Report a bug' },
   'settings.repo_req': { message: 'Feature request' },
-  'settings.reset_settings': { message: 'Reset settings to defaults' },
+  'settings.reset_settings': { message: 'Reset settings' },
   'settings.ref_rm': { message: 'Will be removed, open issue if you need this feature.' },
 }

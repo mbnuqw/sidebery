@@ -70,12 +70,12 @@
 
   // Context Menu
   &.-dark
-    --ctx-menu-bg: #242424
+    --ctx-menu-bg: #2a2a2a
     --ctx-menu-bg-hover: #484848
     --ctx-menu-warn-bg-hover: #ff613d
     --ctx-menu-fg: #ffffff
     --ctx-menu-warn-fg: #ff613d
-    --ctx-menu-shadow: 0 1px 16px 0 #00000032
+    --ctx-menu-shadow: 0 0 0 1px #212121, 0 1px 16px 0 #00000048
   &.-light
     --ctx-menu-bg: #ffffff
     --ctx-menu-bg-hover: #cacaca
@@ -213,14 +213,28 @@
   --g-font-size: 15px
 #root.-xl
   --g-font-size: 16px
+
+// Pinned dock
+#root
+  --pinned-dock-overlay-bg: #00000008
+  --pinned-dock-overlay-shadow: none
+
 // Tabs
 #root
   --tabs-font: rem(16) sans-serif
   --tabs-count-font: rem(9) sans-serif
+  --tabs-border: none
+  --tabs-activated-border: none
+  --tabs-selected-border: none
+  --tabs-shadow: none
+  --tabs-activated-shadow: none
+  --tabs-selected-shadow: none
+
 // Bookmarks
 #root
   --bookmarks-bookmark-font: rem(14) sans-serif
   --bookmarks-folder-font: rem(16) sans-serif
+
 // ContextMenu
 #root
   --ctx-menu-font: rem(14) sans-serif

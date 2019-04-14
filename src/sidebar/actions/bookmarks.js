@@ -1,5 +1,5 @@
 import EventBus from '../event-bus'
-import utils from '../../libs/utils'
+import Utils from '../../libs/utils'
 
 export default {
   /**
@@ -17,6 +17,7 @@ export default {
     // Normalize objects before vue
     const walker = nodes => {
       for (let n of nodes) {
+        if (n.type === 'bookmark') n.host = n.url.split('/')[2]
         if (n.type === 'folder') n.expanded = false
         if (n.children) walker(n.children)
       }
@@ -43,7 +44,6 @@ export default {
 
     state.bookmarks = bookmarks[0].children
     EventBus.$emit('panelLoadingOk', 0)
-    EventBus.$emit('bookmarks.render')
   },
 
   /**
@@ -67,7 +67,7 @@ export default {
     }
 
     // Wait a moment...
-    await utils.Sleep(128)
+    await Utils.Sleep(128)
 
     walker(state.bookmarks)
     await browser.storage.local.set({ expandedBookmarks })
@@ -85,6 +85,7 @@ export default {
       // Normalize objects before vue
       const walker = nodes => {
         for (let n of nodes) {
+          if (n.type === 'bookmark') n.host = n.url.split('/')[2]
           if (n.type === 'folder') n.expanded = false
           if (n.children) walker(n.children)
         }
@@ -145,6 +146,7 @@ export default {
 
     /* eslint-disable-next-line */
     state.bookmarks = state.bookmarks
+    dispatch('recalcPanelScroll')
     dispatch('saveBookmarksTree')
   },
 
@@ -168,6 +170,7 @@ export default {
 
     /* eslint-disable-next-line */
     state.bookmarks = state.bookmarks
+    dispatch('recalcPanelScroll')
     dispatch('saveBookmarksTree')
   },
 
@@ -175,7 +178,6 @@ export default {
    * Drop to bookmarks panel
    */
   async dropToBookmarks(_, { event, dropIndex, dropParent, nodes } = {}) {
-    // console.log('[DEBUG] BOOKMARKS ACTION dropToBookmarks', dropIndex, dropParent);
     // Tabs or Bookmarks
     if (nodes && nodes.length) {
       const nodeType = nodes[0].type
@@ -226,29 +228,33 @@ export default {
       for (let item of event.dataTransfer.items) {
         if (item.kind !== 'string') return
 
-        if (item.type === 'text/x-moz-url-desc') item.getAsString(s => {
-          title = s
-          if (url) {
-            browser.bookmarks.create({
-              url: url,
-              title: title,
-              index: dropIndex,
-              parentId: dropParent,
-            })
-          }
-        })
+        if (item.type === 'text/x-moz-url-desc') {
+          item.getAsString(s => {
+            title = s
+            if (url) {
+              browser.bookmarks.create({
+                url: url,
+                title: title,
+                index: dropIndex,
+                parentId: dropParent,
+              })
+            }
+          })
+        }
 
-        if (item.type === 'text/uri-list') item.getAsString(s => {
-          url = s
-          if (title) {
-            browser.bookmarks.create({
-              url: url,
-              title: title,
-              index: dropIndex,
-              parentId: dropParent,
-            })
-          }
-        })
+        if (item.type === 'text/uri-list') {
+          item.getAsString(s => {
+            url = s
+            if (title) {
+              browser.bookmarks.create({
+                url: url,
+                title: title,
+                index: dropIndex,
+                parentId: dropParent,
+              })
+            }
+          })
+        }
       }
     }
   },
@@ -258,17 +264,17 @@ export default {
    */
   openBookmarksInNewWin({ state }, { ids, incognito }) {
     const urls = []
-    const walker = (nodes, ids) => {
-      nodes.map(n => {
-        if (
-          n.type === 'bookmark' &&
-          !n.url.indexOf('http') &&
-          ids.includes(n.id)
-        ) urls.push(n.url)
-        if (n.type === 'folder') walker(n.children, ids)
-      })
+    const walker = nodes => {
+      for (let node of nodes) {
+        if (ids.includes(node.parentId)) {
+          if (node.children) ids.push(node.id)
+          if (node.url) urls.push(node.url)
+        }
+        if (node.url && ids.includes(node.id)) urls.push(node.url)
+        if (node.children) walker(node.children)
+      }
     }
-    walker(state.bookmarks, ids)
+    walker(state.bookmarks)
 
     return browser.windows.create({ url: urls, incognito })
   },
@@ -302,13 +308,13 @@ export default {
     commit('setPanel', pi)
 
     const idMap = []
-    const groupPageUrl = browser.runtime.getURL('group/group.html')
     for (let node of toOpen) {
       const isDir = node.type === 'folder'
       if (isDir && !state.tabsTree) continue
       const createdTab = await browser.tabs.create({
+        windowId: state.windowId,
         index: index++,
-        url: node.url ? node.url : groupPageUrl + `#${encodeURI(node.title)}`,
+        url: node.url ? node.url : Utils.GetGroupUrl(node.title),
         cookieStoreId: panelId,
         active: false,
         openerTabId: idMap[node.parentId],
@@ -349,5 +355,19 @@ export default {
     for (let id of ids) {
       await browser.bookmarks.removeTree(id)
     }
+  },
+
+  /**
+   * Collapse all bookmarks folders
+   */
+  collapseAllBookmarks({ state, dispatch }) {
+    const walker = nodes => {
+      for (let n of nodes) {
+        if (n.type === 'folder') n.expanded = false
+        if (n.children) walker(n.children)
+      }
+    }
+    walker(state.bookmarks)
+    dispatch('saveBookmarksTree')
   },
 }

@@ -23,7 +23,7 @@ function getRandCh(range, isMonochrome) {
  * < Array|number
  **/
 function normalizeByteRange(range) {
-  if (typeof range === `number`) {
+  if (typeof range === 'number') {
     if (range < 0 || range > 255) range = 127
     return range
   } else if (Array.isArray(range) && range.length === 2) {
@@ -44,16 +44,16 @@ function normalizeByteRange(range) {
  **/
 function createCanvas(width, height) {
   // Canvas box
-  let canvasBoxEl = document.createElement(`div`)
-  canvasBoxEl.style.position = `absolute`
-  canvasBoxEl.style.overflow = `hidden`
-  canvasBoxEl.style.opacity = `0`
-  canvasBoxEl.style.width = `1px`
-  canvasBoxEl.style.height = `1px`
+  let canvasBoxEl = document.createElement('div')
+  canvasBoxEl.style.position = 'absolute'
+  canvasBoxEl.style.overflow = 'hidden'
+  canvasBoxEl.style.opacity = '0'
+  canvasBoxEl.style.width = '1px'
+  canvasBoxEl.style.height = '1px'
   document.body.appendChild(canvasBoxEl)
 
   // Canvas
-  let canvasEl = document.createElement(`canvas`)
+  let canvasEl = document.createElement('canvas')
   canvasEl.width = width
   canvasEl.height = height
   canvasBoxEl.appendChild(canvasEl)
@@ -71,11 +71,11 @@ function createCanvas(width, height) {
  * > a: Array|number - alpha range/value
  **/
 function generateNoise(imgData, r, g, b, a, s) {
-  let monoR = typeof r === `number`
-  let monoG = typeof g === `number`
-  let monoB = typeof b === `number`
-  let monoA = typeof a === `number`
-  let monoS = typeof s === `number`
+  let monoR = typeof r === 'number'
+  let monoG = typeof g === 'number'
+  let monoB = typeof b === 'number'
+  let monoA = typeof a === 'number'
+  let monoS = typeof s === 'number'
   let i = getRandCh(s, monoS) * 4
 
   if (r === g && r === b) {
