@@ -424,7 +424,7 @@ export default {
 
       if (!domain) {
         EventBus.$emit('tabLoadingErr', tab.id)
-        break
+        continue
       }
 
       let cookies = await browser.cookies.getAll({
