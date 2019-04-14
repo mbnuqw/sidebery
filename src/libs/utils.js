@@ -352,7 +352,7 @@ function FindBookmark(bookmarks, id) {
   let target, n
   const findWalk = nodes => {
     for (n of nodes) {
-      if (n.id === id) return target = n
+      if (n.id === id) return (target = n)
       if (n.children) findWalk(n.children)
       if (target) return
     }
@@ -440,7 +440,7 @@ function FindSuccessorTab(state, tab, exclude) {
   // Previously active tab
   if (state.activateAfterClosing === 'prev_act') {
     let targetId
-    for (let i = state.actTabs.length; i--;) {
+    for (let i = state.actTabs.length; i--; ) {
       targetId = state.actTabs[i]
       if (exclude && exclude.includes(targetId)) continue
       if (targetId !== tab.id && state.tabsMap[targetId]) {

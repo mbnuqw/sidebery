@@ -91,10 +91,10 @@ describe('Global utilities', () => {
     test('Get panel index by tab id', async () => {
       const panels = [
         {
-          tabs: [{ id: 1 }, { id: 12 }]
+          tabs: [{ id: 1 }, { id: 12 }],
         },
         {
-          tabs: [{ id: 8 }, { id: 2 }]
+          tabs: [{ id: 8 }, { id: 2 }],
         },
       ]
       expect(Utils.GetPanelIndex(panels, 1)).toBe(0)
@@ -109,14 +109,9 @@ describe('Global utilities', () => {
         {},
         {
           pinned: true,
-          tabs: [
-            { cookieStoreId: 'a', pinned: true },
-            { cookieStoreId: 'b', pinned: true }
-          ]
+          tabs: [{ cookieStoreId: 'a', pinned: true }, { cookieStoreId: 'b', pinned: true }],
         },
-        {          cookieStoreId: 'a',
-          tabs: [{ cookieStoreId: 'a' }, { cookieStoreId: 'a' }]
-        },
+        { cookieStoreId: 'a', tabs: [{ cookieStoreId: 'a' }, { cookieStoreId: 'a' }] },
       ]
       const tab1 = { cookieStoreId: 'b', pinned: true }
       const tab2 = { cookieStoreId: 'a', pinned: false }

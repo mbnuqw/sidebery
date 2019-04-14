@@ -217,7 +217,7 @@ export default {
       await browser.tabs.create({
         windowId: state.windowId,
         index: panel.startIndex,
-        cookieStoreId: ctxId
+        cookieStoreId: ctxId,
       })
     }
 
@@ -382,7 +382,7 @@ export default {
         index: tab.index + 1,
         cookieStoreId: tab.cookieStoreId,
         url: tab.url,
-        openerTabId: tabId
+        openerTabId: tabId,
       })
     }
   },
@@ -522,7 +522,7 @@ export default {
       tab.parentId = info.parentId
       tab.folded = info.folded
     }
-    
+
     Utils.UpdateTabsTree(state)
   },
 
@@ -534,15 +534,17 @@ export default {
     const ids = [...tabIds]
     const windowId = window ? window.id : await dispatch('chooseWin')
     const win = (await dispatch('getAllWindows')).find(w => w.id === windowId)
-    const tabs = ids.map(id => {
+    const tabs = []
+    for (let id of ids) {
       const tab = state.tabsMap[id]
-      return {
+      if (!tab) continue
+      tabs.push({
         id: tab.id,
         url: tab.url,
         parentId: tab.parentId,
         folded: tab.folded,
-      }
-    })
+      })
+    }
 
     if (state.private === win.incognito) {
       for (let tab of tabs) {
@@ -584,15 +586,17 @@ export default {
   async moveTabsToCtx({ state }, { tabIds, ctxId }) {
     const ids = [...tabIds]
     const oldNewMap = {}
-    const tabs = ids.map(id => {
+    const tabs = []
+    for (let id of ids) {
       const tab = state.tabsMap[id]
-      return {
+      if (!tab) continue
+      tabs.push({
         id: tab.id,
         url: tab.url,
         parentId: tab.parentId,
         folded: tab.folded,
-      }
-    })
+      })
+    }
 
     for (let tab of tabs) {
       // Create / remove
@@ -632,14 +636,18 @@ export default {
     const actP = getters.panels[actPI]
     if (!actP || !actP.tabs || actP.pinned) return
 
-    const toShow = actP.tabs.filter(t => {
-      if (state.hideFoldedTabs) return t.hidden && !t.invisible
-      else return t.hidden
-    }).map(t => t.id)
+    const toShow = actP.tabs
+      .filter(t => {
+        if (state.hideFoldedTabs) return t.hidden && !t.invisible
+        else return t.hidden
+      })
+      .map(t => t.id)
 
-    const toHide = state.tabs.filter(t => {
-      return !t.hidden && !t.pinned && t.cookieStoreId !== actP.cookieStoreId
-    }).map(t => t.id)
+    const toHide = state.tabs
+      .filter(t => {
+        return !t.hidden && !t.pinned && t.cookieStoreId !== actP.cookieStoreId
+      })
+      .map(t => t.id)
 
     if (toShow.length) browser.tabs.show(toShow)
     if (toHide.length) browser.tabs.hide(toHide)
@@ -711,10 +719,7 @@ export default {
   /**
    * Drop to tabs panel
    */
-  async dropToTabs(
-    { state, getters },
-    { event, dropIndex, dropParent, nodes, pin } = {}
-  ) {
+  async dropToTabs({ state, getters }, { event, dropIndex, dropParent, nodes, pin } = {}) {
     const currentPanel = getters.panels[state.panelIndex]
     const destCtx = currentPanel.cookieStoreId
     const parent = state.tabsMap[dropParent]
@@ -951,9 +956,7 @@ export default {
       .trim()
 
     if (!isOk || groupTitle.length < 4) {
-      const hosts = tabs
-        .filter(t => !t.url.startsWith('about:'))
-        .map(t => t.url.split('/')[2])
+      const hosts = tabs.filter(t => !t.url.startsWith('about:')).map(t => t.url.split('/')[2])
       groupTitle = Utils.CommonSubStr(hosts)
       if (groupTitle.startsWith('.')) groupTitle = groupTitle.slice(1)
       groupTitle = groupTitle.replace(/^www\./, '')

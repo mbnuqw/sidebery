@@ -228,29 +228,33 @@ export default {
       for (let item of event.dataTransfer.items) {
         if (item.kind !== 'string') return
 
-        if (item.type === 'text/x-moz-url-desc') item.getAsString(s => {
-          title = s
-          if (url) {
-            browser.bookmarks.create({
-              url: url,
-              title: title,
-              index: dropIndex,
-              parentId: dropParent,
-            })
-          }
-        })
+        if (item.type === 'text/x-moz-url-desc') {
+          item.getAsString(s => {
+            title = s
+            if (url) {
+              browser.bookmarks.create({
+                url: url,
+                title: title,
+                index: dropIndex,
+                parentId: dropParent,
+              })
+            }
+          })
+        }
 
-        if (item.type === 'text/uri-list') item.getAsString(s => {
-          url = s
-          if (title) {
-            browser.bookmarks.create({
-              url: url,
-              title: title,
-              index: dropIndex,
-              parentId: dropParent,
-            })
-          }
-        })
+        if (item.type === 'text/uri-list') {
+          item.getAsString(s => {
+            url = s
+            if (title) {
+              browser.bookmarks.create({
+                url: url,
+                title: title,
+                index: dropIndex,
+                parentId: dropParent,
+              })
+            }
+          })
+        }
       }
     }
   },

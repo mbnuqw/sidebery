@@ -32,7 +32,14 @@ describe('loadTabs', () => {
     browser.windows.WINDOW_ID_CURRENT = 1
     browser.tabs.query = jest.fn(() => {
       return [
-        { id: 1, index: 0, cookieStoreId: 'firefox-default', pinned: true, url: 'aaa', active: true },
+        {
+          id: 1,
+          index: 0,
+          cookieStoreId: 'firefox-default',
+          pinned: true,
+          url: 'aaa',
+          active: true,
+        },
         { id: 2, index: 1, cookieStoreId: 'firefox-default', pinned: false, url: 'bbb' },
       ]
     })
@@ -64,7 +71,14 @@ describe('loadTabs', () => {
     browser.windows.WINDOW_ID_CURRENT = 1
     browser.tabs.query = jest.fn(() => {
       return [
-        { id: 1, index: 0, cookieStoreId: 'firefox-default', pinned: true, url: 'aaa', active: true },
+        {
+          id: 1,
+          index: 0,
+          cookieStoreId: 'firefox-default',
+          pinned: true,
+          url: 'aaa',
+          active: true,
+        },
         { id: 2, index: 1, cookieStoreId: 'firefox-default', pinned: false, url: 'bbb' },
         { id: 3, index: 2, cookieStoreId: 'container-B', pinned: false, url: 'ccc' },
         { id: 4, index: 3, cookieStoreId: 'container-A', pinned: false, url: 'ddd' },
@@ -102,7 +116,14 @@ describe('loadTabs', () => {
     browser.windows.WINDOW_ID_CURRENT = 1
     browser.tabs.query = jest.fn(() => {
       return [
-        { id: 1, index: 0, cookieStoreId: 'firefox-default', pinned: true, url: 'aaa', active: true },
+        {
+          id: 1,
+          index: 0,
+          cookieStoreId: 'firefox-default',
+          pinned: true,
+          url: 'aaa',
+          active: true,
+        },
         { id: 2, index: 1, cookieStoreId: 'firefox-default', pinned: false, url: 'bbb' },
         { id: 5, index: 2, cookieStoreId: 'firefox-default', pinned: false, url: 'eee' },
         { id: 4, index: 3, cookieStoreId: 'container-A', pinned: false, url: 'ddd' },
@@ -303,7 +324,7 @@ describe('removeTabs', () => {
         },
       ],
     }
-    state.tabsMap = [ undefined, ...state.tabs ]
+    state.tabsMap = [undefined, ...state.tabs]
     const getters = {
       panels: [
         {
@@ -341,7 +362,7 @@ describe('removeTabs', () => {
         },
       ],
     }
-    state.tabsMap = [ undefined, ...state.tabs ]
+    state.tabsMap = [undefined, ...state.tabs]
     const getters = {
       panels: [
         {
@@ -452,7 +473,7 @@ describe('reloadTabs', () => {
     const state = {
       tabs: [{ id: 1 }, { id: 2 }, { id: 3 }],
     }
-    state.tabsMap = [ undefined, ...state.tabs ]
+    state.tabsMap = [undefined, ...state.tabs]
     browser.tabs.reload = jest.fn()
 
     await TabsActions.reloadTabs({ state }, [2, 3, 4])
@@ -482,7 +503,7 @@ describe('activateLastActiveTabOf', () => {
 
   test('activate invisible tab', async () => {
     const state = {
-      tabsMap: [undefined, { id: 1 }, { id: 2, invisible: true }]
+      tabsMap: [undefined, { id: 1 }, { id: 2, invisible: true }],
     }
     const getters = {
       panels: [
@@ -504,7 +525,7 @@ describe('pinTabs', () => {
     const state = {
       tabs: [{ id: 1, pinned: false }, { id: 2, pinned: true }],
     }
-    state.tabsMap = [ undefined, ...state.tabs ]
+    state.tabsMap = [undefined, ...state.tabs]
     browser.tabs.update = jest.fn()
     await TabsActions.pinTabs({ state }, [1, 2, 3])
     expect(browser.tabs.update).toBeCalledTimes(2)
@@ -522,7 +543,7 @@ describe('pinTabs', () => {
     const state = {
       tabs: [{ id: 1, pinned: false }, { id: 2, pinned: true }],
     }
-    state.tabsMap = [ undefined, ...state.tabs ]
+    state.tabsMap = [undefined, ...state.tabs]
     browser.tabs.update = jest.fn()
     await TabsActions.repinTabs({ state }, [1, 2, 3])
     expect(browser.tabs.update).toBeCalledTimes(2)
@@ -550,7 +571,7 @@ describe('muteTabs', () => {
     const state = {
       tabs: [{ id: 1, mutedInfo: { muted: false } }, { id: 2, mutedInfo: { muted: true } }],
     }
-    state.tabsMap = [ undefined, ...state.tabs ]
+    state.tabsMap = [undefined, ...state.tabs]
     browser.tabs.update = jest.fn()
     await TabsActions.remuteTabs({ state }, [1, 2, 3])
     expect(browser.tabs.update).toBeCalledTimes(2)
@@ -565,7 +586,7 @@ describe('duplicateTabs', () => {
       tabs: [{ id: 1 }, { id: 2 }, { id: 3 }],
     }
     browser.tabs.create = jest.fn()
-    state.tabsMap = [ undefined, ...state.tabs ]
+    state.tabsMap = [undefined, ...state.tabs]
     browser.tabs.duplicate = jest.fn()
     await TabsActions.duplicateTabs({ state }, [2, 3, 4])
     expect(browser.tabs.create).toBeCalledTimes(2)
@@ -577,7 +598,7 @@ describe('bookmarkTabs', () => {
     const state = {
       tabs: [{ id: 1 }, { id: 2, title: 'a', url: 'b' }, { id: 3, title: 'c', url: 'd' }],
     }
-    state.tabsMap = [ undefined, ...state.tabs ]
+    state.tabsMap = [undefined, ...state.tabs]
     browser.bookmarks.create = jest.fn()
     await TabsActions.bookmarkTabs({ state }, [2, 3, 4])
     expect(browser.bookmarks.create).toBeCalledTimes(2)
@@ -596,7 +617,7 @@ describe('clearTabsCookies', () => {
         { id: 4, title: 'd', url: 'about:newtab' },
       ],
     }
-    state.tabsMap = [ undefined, ...state.tabs ]
+    state.tabsMap = [undefined, ...state.tabs]
     EventBus.$emit = jest.fn()
     browser.permissions.contains = jest.fn(() => true)
     browser.cookies.getAll = jest.fn(() => [{ name: 'abc' }])
@@ -639,18 +660,18 @@ describe('moveTabsToNewWin', () => {
       private: false,
       tabs: [{ id: 1, url: 'asdf' }, { id: 2, url: 'asdf' }],
     }
-    state.tabsMap = [ undefined, ...state.tabs ]
+    state.tabsMap = [undefined, ...state.tabs]
     browser.windows.create = jest.fn(() => {
-      return { id: 123 }
+      return { id: 123, tabs: [{ id: 1 }] }
     })
     browser.tabs.move = jest.fn()
     browser.tabs.create = jest.fn()
     browser.tabs.remove = jest.fn()
 
-    await TabsActions.moveTabsToNewWin({ state }, { tabIds: [1, 2, 3], incognito: false })
+    await TabsActions.moveTabsToNewWin({ state }, { tabIds: [1, 2], incognito: false })
 
     expect(browser.windows.create).toBeCalledWith({ tabId: 1, incognito: false })
-    expect(browser.tabs.move).toBeCalledWith([2, 3], { windowId: 123, index: -1 })
+    expect(browser.tabs.move).toBeCalledWith(2, { windowId: 123, index: -1 })
   })
 
   test('move tabs to new window with different private status', async () => {
@@ -658,15 +679,17 @@ describe('moveTabsToNewWin', () => {
       private: false,
       tabs: [{ id: 1, url: 'asdf' }, { id: 2, url: 'qwer' }],
     }
-    state.tabsMap = [ undefined, ...state.tabs ]
+    state.tabsMap = [undefined, ...state.tabs]
     browser.windows.create = jest.fn(() => {
-      return { id: 123 }
+      return { id: 123, tabs: [{ id: 1 }] }
     })
     browser.tabs.move = jest.fn()
-    browser.tabs.create = jest.fn()
+    browser.tabs.create = jest.fn(() => {
+      return { id: 1 }
+    })
     browser.tabs.remove = jest.fn()
 
-    await TabsActions.moveTabsToNewWin({ state }, { tabIds: [1, 2, 3], incognito: true })
+    await TabsActions.moveTabsToNewWin({ state }, { tabIds: [1, 2], incognito: true })
 
     expect(browser.windows.create).toBeCalledWith({ url: 'asdf', incognito: true })
     expect(browser.tabs.create).toBeCalledWith({ windowId: 123, url: 'qwer' })
@@ -682,7 +705,7 @@ describe('moveTabsToWin', () => {
       private: false,
       tabs: [{ id: 1, url: 'asdf' }, { id: 2, url: 'qwer' }],
     }
-    state.tabsMap = [ undefined, ...state.tabs ]
+    state.tabsMap = [undefined, ...state.tabs]
     const dispatch = jest.fn(name => {
       if (name === 'chooseWin') return 123
       if (name === 'getAllWindows') return [{ id: 1 }, { id: 12 }, { id: 123, incognito: false }]
@@ -692,7 +715,7 @@ describe('moveTabsToWin', () => {
     browser.tabs.remove = jest.fn()
 
     await TabsActions.moveTabsToWin({ state, dispatch }, { tabIds: [1, 2, 3] })
-    expect(browser.tabs.move).toBeCalledWith([1, 2, 3], { windowId: 123, index: -1 })
+    expect(browser.tabs.move).toBeCalledWith(1, { windowId: 123, index: -1 })
     expect(browser.tabs.create).not.toBeCalled()
     expect(browser.tabs.remove).not.toBeCalled()
   })
@@ -702,13 +725,15 @@ describe('moveTabsToWin', () => {
       private: false,
       tabs: [{ id: 1, url: 'asdf' }, { id: 2, url: 'qwer' }],
     }
-    state.tabsMap = [ undefined, ...state.tabs ]
+    state.tabsMap = [undefined, ...state.tabs]
     const dispatch = jest.fn(name => {
       if (name === 'chooseWin') return 123
       if (name === 'getAllWindows') return [{ id: 1 }, { id: 12 }, { id: 123, incognito: true }]
     })
     browser.tabs.move = jest.fn()
-    browser.tabs.create = jest.fn()
+    browser.tabs.create = jest.fn(() => {
+      return { id: 1 }
+    })
     browser.tabs.remove = jest.fn()
 
     await TabsActions.moveTabsToWin({ state, dispatch }, { tabIds: [1, 2, 3] })
@@ -728,8 +753,10 @@ describe('moveTabsToCtx', () => {
       private: false,
       tabs: [{ id: 1, url: 'http://asdf.com' }, { id: 2, url: 'qwer' }],
     }
-    state.tabsMap = [ undefined, ...state.tabs ]
-    browser.tabs.create = jest.fn()
+    state.tabsMap = [undefined, ...state.tabs]
+    browser.tabs.create = jest.fn(() => {
+      return { id: 1 }
+    })
     browser.tabs.remove = jest.fn()
 
     await TabsActions.moveTabsToCtx({ state }, { tabIds: [1, 2, 3], ctxId: 'b' })

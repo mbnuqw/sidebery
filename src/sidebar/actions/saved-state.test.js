@@ -41,7 +41,7 @@ describe('SavedState actions', () => {
   test('load state with negative panelIndex', async () => {
     const state = {}
     browser.storage.local.get = jest.fn(() => {
-      return {  panelIndex: -2 }
+      return { panelIndex: -2 }
     })
 
     await SavedStateActions.loadState({ state })
@@ -52,7 +52,7 @@ describe('SavedState actions', () => {
   test('loadState', async () => {
     const state = {}
     browser.storage.local.get = jest.fn(() => {
-      return { panelIndex: 0}
+      return { panelIndex: 0 }
     })
 
     await SavedStateActions.loadState({ state })

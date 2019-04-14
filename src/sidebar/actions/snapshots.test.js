@@ -19,9 +19,7 @@ describe('makeSnapshot', () => {
       snapshotsTargets: {},
     }
     const getters = {
-      panels: [
-        { tabs: [] }
-      ]
+      panels: [{ tabs: [] }],
     }
     const dispatch = jest.fn(name => {
       if (name === 'loadSnapshots') return []

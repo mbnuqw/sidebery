@@ -208,7 +208,7 @@ export default {
 
     // Update panel index
     let i = state.panelIndex + dir
-    for (;getters.panels[i]; i += dir) {
+    for (; getters.panels[i]; i += dir) {
       const p = getters.panels[i]
       if (state.skipEmptyPanels && p.tabs && !p.tabs.length) continue
       if (!p.inactive) break

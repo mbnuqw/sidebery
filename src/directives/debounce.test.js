@@ -70,7 +70,7 @@ describe('Debounce vue directive', () => {
             expect(handler).toBe(binding.handler)
             counter = 0
           },
-        }
+        },
       }
 
       Debounce.bind(el, binding, vnode)

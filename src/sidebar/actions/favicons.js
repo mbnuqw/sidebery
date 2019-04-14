@@ -35,7 +35,7 @@ export default {
   async saveFaviconsDebounced({ state }) {
     if (saveFaviconsTimeout) clearTimeout(saveFaviconsTimeout)
     saveFaviconsTimeout = setTimeout(() => {
-      browser.storage.local.set({ favicons: {...state.favicons} })
+      browser.storage.local.set({ favicons: { ...state.favicons } })
     }, 500)
   },
 
@@ -76,7 +76,7 @@ export default {
       delete state.favicons[hn]
     }
 
-    let favs = {...state.favicons}
+    let favs = { ...state.favicons }
     await browser.storage.local.set({ favicons: favs })
     state.favicons = favs
   },
