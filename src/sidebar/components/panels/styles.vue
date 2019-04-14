@@ -455,12 +455,12 @@ export default {
 
 .StylesEditor .box
   box(relative, grid)
-  grid-gap: 32px 0
+  grid-gap: 50px 0
   padding: 8px 0 16px
 
 .StylesEditor .section
   box(relative, grid)
-  grid-gap: 12px 0
+  grid-gap: 20px 0
 
 .StylesEditor .section > .title
   box(relative)

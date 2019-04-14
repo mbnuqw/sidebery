@@ -162,7 +162,7 @@ export default {
   'settings.help_title': { message: 'Помошь' },
   'settings.debug_info': { message: 'Debug info' },
   'settings.repo_issue': { message: 'Создать github issue' },
-  'settings.repo_bug': { message: 'Report bug' },
+  'settings.repo_bug': { message: 'Report a bug' },
   'settings.repo_req': { message: 'Feature request' },
   'settings.reset_settings': { message: 'Сбросить настройки' },
   'settings.ref_rm': { message: 'Will be removed, open issue if you need this feature.' },
