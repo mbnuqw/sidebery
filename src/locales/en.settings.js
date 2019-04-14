@@ -118,6 +118,7 @@ export default {
   'settings.tabs_panel_action_prev': { message: 'previous panel' },
   'settings.tabs_panel_action_next': { message: 'next panel' },
   'settings.tabs_panel_action_dash': { message: 'open dashboard' },
+  'settings.tabs_panel_action_expand': { message: 'expand tab' },
   'settings.tabs_panel_action_none': { message: 'none' },
 
   // --- Keybindings
