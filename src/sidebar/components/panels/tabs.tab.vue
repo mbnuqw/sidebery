@@ -387,6 +387,7 @@ export default {
      */
     onCloseClick(e) {
       if (e.button === 0) this.close()
+      if (e.button === 1) this.close()
       if (e.button === 2) this.closeTree()
     },
 
