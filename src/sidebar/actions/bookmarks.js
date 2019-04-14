@@ -178,7 +178,6 @@ export default {
    * Drop to bookmarks panel
    */
   async dropToBookmarks(_, { event, dropIndex, dropParent, nodes } = {}) {
-    // console.log('[DEBUG] BOOKMARKS ACTION dropToBookmarks', dropIndex, dropParent);
     // Tabs or Bookmarks
     if (nodes && nodes.length) {
       const nodeType = nodes[0].type
@@ -261,17 +260,17 @@ export default {
    */
   openBookmarksInNewWin({ state }, { ids, incognito }) {
     const urls = []
-    const walker = (nodes, ids) => {
-      nodes.map(n => {
-        if (
-          n.type === 'bookmark' &&
-          !n.url.indexOf('http') &&
-          ids.includes(n.id)
-        ) urls.push(n.url)
-        if (n.type === 'folder') walker(n.children, ids)
-      })
+    const walker = nodes => {
+      for (let node of nodes) {
+        if (ids.includes(node.parentId)) {
+          if (node.children) ids.push(node.id)
+          if (node.url) urls.push(node.url)
+        }
+        if (node.url && ids.includes(node.id)) urls.push(node.url)
+        if (node.children) walker(node.children)
+      }
     }
-    walker(state.bookmarks, ids)
+    walker(state.bookmarks)
 
     return browser.windows.create({ url: urls, incognito })
   },
