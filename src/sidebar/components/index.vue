@@ -1278,6 +1278,9 @@ export default {
           tab.parentId = tab.openerTabId
           const start = panel.startIndex
           Utils.UpdateTabsTree(State, start, tab.index + 1)
+          if (State.autoFoldTabs) {
+            Store.dispatch('expTabsBranch', tab.parentId)
+          }
         }
 
         Store.dispatch('saveTabsTree')
