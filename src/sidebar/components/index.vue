@@ -1277,8 +1277,9 @@ export default {
         } else {
           tab.parentId = tab.openerTabId
           const start = panel.startIndex
+          const parent = State.tabsMap[tab.parentId]
           Utils.UpdateTabsTree(State, start, tab.index + 1)
-          if (State.autoFoldTabs) {
+          if (State.autoFoldTabs && parent && !parent.folded) {
             Store.dispatch('expTabsBranch', tab.parentId)
           }
         }
