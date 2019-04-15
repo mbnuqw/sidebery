@@ -42,20 +42,20 @@
         optLabel="settings.activate_after_closing_"
         :value="$store.state.activateAfterClosing"
         :opts="$store.state.activateAfterClosingOpts"
-        @input="setOpt('activateAfterClosing', $event)")
+        @input="setOpt('activateAfterClosing', $event), updateSuccession()")
       .box(v-show="$store.state.activateAfterClosing === 'next' || $store.state.activateAfterClosing === 'prev'")
         select-field(
           label="settings.activate_after_closing_prev_rule"
           optLabel="settings.activate_after_closing_rule_"
           :value="$store.state.activateAfterClosingPrevRule"
           :opts="$store.state.activateAfterClosingPrevRuleOpts"
-          @input="setOpt('activateAfterClosingPrevRule', $event)")
+          @input="setOpt('activateAfterClosingPrevRule', $event), updateSuccession()")
         select-field(
           label="settings.activate_after_closing_next_rule"
           optLabel="settings.activate_after_closing_rule_"
           :value="$store.state.activateAfterClosingNextRule"
           :opts="$store.state.activateAfterClosingNextRuleOpts"
-          @input="setOpt('activateAfterClosingNextRule', $event)")
+          @input="setOpt('activateAfterClosingNextRule', $event), updateSuccession()")
 
 
     section
@@ -469,6 +469,14 @@ export default {
       }
       Utils.UpdateTabsTree(State)
       Store.dispatch('saveTabsTree')
+    },
+
+    updateSuccession() {
+      const activeTab = State.tabs.find(t => t.active)
+      if (State.activateAfterClosing !== 'none' && activeTab) {
+        const target = Utils.FindSuccessorTab(State, activeTab)
+        if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
+      }
     },
 
     toggleHideFoldedTabs() {
