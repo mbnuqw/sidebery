@@ -11,6 +11,7 @@ export default {
     const windowId = browser.windows.WINDOW_ID_CURRENT
     const tabs = await browser.tabs.query({ windowId })
     const activePanel = getters.panels[state.panelIndex]
+    let activeTab
 
     // Check order of tabs and get moves for normalizing
     const ctxs = [getters.defaultCtxId].concat(
@@ -45,6 +46,7 @@ export default {
       t.host = t.url.split('/')[2] || ''
       state.tabsMap[t.id] = t
       if (!t.favIconUrl || t.favIconUrl.startsWith('chrome:')) t.favIconUrl = ''
+      if (t.active) activeTab = t
     })
     state.tabs = tabs
 
@@ -54,7 +56,6 @@ export default {
     })
 
     // Switch to panel with active tab
-    const activeTab = state.tabs.find(t => t.active)
     const activePanelIsTabs = activePanel.panel === 'TabsPanel'
     const activePanelIsOk = activeTab.cookieStoreId === activePanel.cookieStoreId
     if (!activeTab.pinned && activePanelIsTabs && !activePanelIsOk) {
@@ -123,6 +124,12 @@ export default {
         }
       }
       Utils.UpdateTabsTree(state)
+    }
+
+    // Update succession
+    if (state.activateAfterClosing !== 'none' && activeTab) {
+      const target = Utils.FindSuccessorTab(state, activeTab)
+      if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
     }
   },
 
