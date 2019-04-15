@@ -498,7 +498,6 @@ function FindSuccessorTab(state, tab, exclude) {
     }
   }
 
-  // console.log('[DEBUG] FindSuccessorTab', target.id);
   return target
 }
 

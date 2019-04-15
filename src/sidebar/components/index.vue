@@ -1291,6 +1291,15 @@ export default {
         this.recalcDashboardHeight()
       }
 
+      // Update succession
+      if (State.activateAfterClosing !== 'none') {
+        const activeTab = State.tabsMap[State.activeTabId]
+        if (activeTab && activeTab.active) {
+          const target = Utils.FindSuccessorTab(State, activeTab)
+          if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
+        }
+      }
+
       Store.dispatch('recalcPanelScroll')
     },
 
@@ -1441,6 +1450,11 @@ export default {
         if (State.rmFoldedTabs && toRemove.length) Store.dispatch('removeTabs', toRemove)
       }
 
+      // Update last active tab if needed
+      if (tab.active && panel && panel.lastActiveTab >= 0) {
+        panel.lastActiveTab = -1
+      }
+
       // Shift tabs after removed one. (NOT detected by vue)
       for (let i = tab.index + 1; i < State.tabs.length; i++) {
         State.tabs[i].index--
@@ -1448,19 +1462,26 @@ export default {
       State.tabsMap[tabId] = undefined
       State.tabs.splice(tab.index, 1)
 
-      if (panel && panel.lastActiveTab >= 0) panel.lastActiveTab = -1
-
       // Remove updated flag
       this.$delete(State.updatedTabs, tabId)
 
       if (!State.removingTabs.length) Store.dispatch('recalcPanelScroll')
 
-      // Calc tree levels
+      // Update tree
       if (State.tabsTree && !State.removingTabs.length) {
         const startIndex = panel ? panel.startIndex : 0
         const endIndex = panel ? panel.endIndex + 1 : -1
         Utils.UpdateTabsTree(State, startIndex, endIndex)
         Store.dispatch('saveTabsTree')
+      }
+
+      // Update succession
+      if (!State.removingTabs.length && State.activateAfterClosing !== 'none') {
+        const activeTab = State.tabsMap[State.activeTabId]
+        if (activeTab && activeTab.active) {
+          const target = Utils.FindSuccessorTab(State, activeTab)
+          if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
+        }
       }
     },
 
@@ -1504,6 +1525,15 @@ export default {
         const endIndex = panelOk ? panel.endIndex + 1 : -1
         Utils.UpdateTabsTree(State, startIndex, endIndex)
         Store.dispatch('saveTabsTree')
+      }
+
+      // Update succession
+      if (!State.movingTabs.length && State.activateAfterClosing !== 'none') {
+        const activeTab = State.tabsMap[State.activeTabId]
+        if (activeTab && activeTab.active) {
+          const target = Utils.FindSuccessorTab(State, activeTab)
+          if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
+        }
       }
     },
 
@@ -1566,6 +1596,7 @@ export default {
       let tab = State.tabsMap[info.tabId]
       if (!tab) return
       tab.active = true
+      State.activeTabId = info.tabId
 
       // Remove updated flag
       this.$delete(State.updatedTabs, info.tabId)
@@ -1617,7 +1648,7 @@ export default {
         })
       }
 
-      // Update successorTabId
+      // Update succession
       if (State.activateAfterClosing !== 'none') {
         const target = Utils.FindSuccessorTab(State, tab)
         if (target) browser.tabs.moveInSuccession([tab.id], target.id)
