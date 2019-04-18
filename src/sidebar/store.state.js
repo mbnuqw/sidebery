@@ -150,8 +150,8 @@ export default {
   windowFocused: true,
   tabHeight: 30,
 
-  tabsMenu: [],
-  bookmarksMenu: [],
+  tabsMenu: JSON.parse(JSON.stringify(DEFAULT_TABS_MENU)),
+  bookmarksMenu: JSON.parse(JSON.stringify(DEFAULT_BOOKMARKS_MENU)),
 
   // --- Global State
   ctxMenu: null,
