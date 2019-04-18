@@ -346,6 +346,29 @@ async function GetUrlFromDragEvent(event) {
 }
 
 /**
+ * Try to get desciption string from drag event
+ */
+async function GetDescFromDragEvent(event) {
+  return new Promise(res => {
+    if (!event.dataTransfer) return res()
+    let typeOk
+
+    for (let item of event.dataTransfer.items) {
+      if (item.kind !== 'string') continue
+      typeOk = item.type === 'text/x-moz-url-desc'
+
+      if (typeOk) {
+        item.getAsString(s => res(s))
+        break
+      }
+    }
+
+    if (typeOk) setTimeout(() => res(), 1000)
+    else res()
+  })
+}
+
+/**
  * Find bookmark
  */
 function FindBookmark(bookmarks, id) {
@@ -387,8 +410,11 @@ function GetGroupUrl(name) {
 function FindSuccessorTab(state, tab, exclude) {
   let target
   const isNextTree = state.activateAfterClosingNextRule === 'tree'
+  const isNextVisible = state.rmFoldedTabs
   const isPrevTree = state.activateAfterClosingPrevRule === 'tree'
   const isPrevVisible = state.activateAfterClosingPrevRule === 'visible'
+
+  if (state.removingTabs && !exclude) exclude = state.removingTabs
 
   // Next tab
   if (state.activateAfterClosing === 'next') {
@@ -403,6 +429,9 @@ function FindSuccessorTab(state, tab, exclude) {
     
       // Next tab excluded
       if (exclude && exclude.includes(next.id)) continue
+
+      // Next tab is invisible
+      if (isNextVisible && next.invisible) continue
 
       // OK: Next tab is in current panel
       if (next.cookieStoreId === tab.cookieStoreId) {
@@ -473,6 +502,9 @@ function FindSuccessorTab(state, tab, exclude) {
         // Next tab excluded
         if (exclude && exclude.includes(next.id)) continue
 
+        // Next tab is invisible
+        if (isNextVisible && next.invisible) continue
+
         // OK: Next tab is in current panel
         if (next.cookieStoreId === tab.cookieStoreId) {
           target = next
@@ -518,6 +550,7 @@ export default {
   ParseCSSNum,
   CommonSubStr,
   GetUrlFromDragEvent,
+  GetDescFromDragEvent,
   FindBookmark,
   IsGroupUrl,
   GetGroupId,

@@ -87,7 +87,7 @@ export default {
 
     favicon() {
       if (this.tab.status === 'loading') return State.favicons[this.tab.host]
-      else return State.favicons[this.tab.host] || this.tab.favIconUrl
+      else return this.tab.favIconUrl || State.favicons[this.tab.host]
     },
 
     tooltip() {
