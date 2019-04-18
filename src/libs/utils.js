@@ -410,6 +410,7 @@ function GetGroupUrl(name) {
 function FindSuccessorTab(state, tab, exclude) {
   let target
   const isNextTree = state.activateAfterClosingNextRule === 'tree'
+  const isNextVisible = state.rmFoldedTabs
   const isPrevTree = state.activateAfterClosingPrevRule === 'tree'
   const isPrevVisible = state.activateAfterClosingPrevRule === 'visible'
 
@@ -430,7 +431,7 @@ function FindSuccessorTab(state, tab, exclude) {
       if (exclude && exclude.includes(next.id)) continue
 
       // Next tab is invisible
-      if (next.invisible) continue
+      if (isNextVisible && next.invisible) continue
 
       // OK: Next tab is in current panel
       if (next.cookieStoreId === tab.cookieStoreId) {
@@ -502,7 +503,7 @@ function FindSuccessorTab(state, tab, exclude) {
         if (exclude && exclude.includes(next.id)) continue
 
         // Next tab is invisible
-        if (next.invisible) continue
+        if (isNextVisible && next.invisible) continue
 
         // OK: Next tab is in current panel
         if (next.cookieStoreId === tab.cookieStoreId) {
