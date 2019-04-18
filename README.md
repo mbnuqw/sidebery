@@ -122,15 +122,6 @@ Build to ./dist: `npm run build`
 
 ---
 
-## Donate
-
-If you like this project, you can support it with the following methods:
-
-<a title="Buy Me A Coffee" href="https://www.buymeacoffee.com/diQuHDMa6" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
-<a title="PayPal" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=G8VTVV2PPX2SL&source=url"><img src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" alt="PayPal"></a>
-
----
-
 ## Licence
 
 MIT
