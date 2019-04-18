@@ -346,6 +346,29 @@ async function GetUrlFromDragEvent(event) {
 }
 
 /**
+ * Try to get desciption string from drag event
+ */
+async function GetDescFromDragEvent(event) {
+  return new Promise(res => {
+    if (!event.dataTransfer) return res()
+    let typeOk
+
+    for (let item of event.dataTransfer.items) {
+      if (item.kind !== 'string') continue
+      typeOk = item.type === 'text/x-moz-url-desc'
+
+      if (typeOk) {
+        item.getAsString(s => res(s))
+        break
+      }
+    }
+
+    if (typeOk) setTimeout(() => res(), 1000)
+    else res()
+  })
+}
+
+/**
  * Find bookmark
  */
 function FindBookmark(bookmarks, id) {
@@ -518,6 +541,7 @@ export default {
   ParseCSSNum,
   CommonSubStr,
   GetUrlFromDragEvent,
+  GetDescFromDragEvent,
   FindBookmark,
   IsGroupUrl,
   GetGroupId,

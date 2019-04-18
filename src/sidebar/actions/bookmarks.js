@@ -177,7 +177,7 @@ export default {
   /**
    * Drop to bookmarks panel
    */
-  async dropToBookmarks(_, { event, dropIndex, dropParent, nodes } = {}) {
+  async dropToBookmarks({ state }, { event, dropIndex, dropParent, nodes } = {}) {
     // Tabs or Bookmarks
     if (nodes && nodes.length) {
       const nodeType = nodes[0].type
@@ -222,39 +222,23 @@ export default {
 
     // Native
     if (!nodes) {
-      if (!event.dataTransfer) return
+      let [url, title] = await Promise.all([
+        Utils.GetUrlFromDragEvent(event),
+        Utils.GetDescFromDragEvent(event),
+      ])
 
-      let url, title
-      for (let item of event.dataTransfer.items) {
-        if (item.kind !== 'string') return
-
-        if (item.type === 'text/x-moz-url-desc') {
-          item.getAsString(s => {
-            title = s
-            if (url) {
-              browser.bookmarks.create({
-                url: url,
-                title: title,
-                index: dropIndex,
-                parentId: dropParent,
-              })
-            }
-          })
+      if (url) {
+        if (!title || title === url) {
+          const tab = state.tabs.find(t => t.url === url)
+          if (tab) title = tab.title
         }
 
-        if (item.type === 'text/uri-list') {
-          item.getAsString(s => {
-            url = s
-            if (title) {
-              browser.bookmarks.create({
-                url: url,
-                title: title,
-                index: dropIndex,
-                parentId: dropParent,
-              })
-            }
-          })
-        }
+        browser.bookmarks.create({
+          url: url,
+          title: title || url,
+          index: dropIndex,
+          parentId: dropParent,
+        })
       }
     }
   },
