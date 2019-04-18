@@ -1169,7 +1169,7 @@ export default {
         State.panelIndex = this.panels.length - 1
         State.lastPanelIndex = State.panelIndex
 
-        this.openDashboard(State.panelIndex)
+        if (State.dashboardOpened) this.openDashboard(State.panelIndex)
 
         Store.dispatch('saveContainers')
       }
