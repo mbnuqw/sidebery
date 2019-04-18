@@ -413,6 +413,8 @@ function FindSuccessorTab(state, tab, exclude) {
   const isPrevTree = state.activateAfterClosingPrevRule === 'tree'
   const isPrevVisible = state.activateAfterClosingPrevRule === 'visible'
 
+  if (state.removingTabs && !exclude) exclude = state.removingTabs
+
   // Next tab
   if (state.activateAfterClosing === 'next') {
     for (let i = tab.index + 1, next; i < state.tabs.length; i++) {
@@ -426,6 +428,9 @@ function FindSuccessorTab(state, tab, exclude) {
     
       // Next tab excluded
       if (exclude && exclude.includes(next.id)) continue
+
+      // Next tab is invisible
+      if (next.invisible) continue
 
       // OK: Next tab is in current panel
       if (next.cookieStoreId === tab.cookieStoreId) {
@@ -495,6 +500,9 @@ function FindSuccessorTab(state, tab, exclude) {
       
         // Next tab excluded
         if (exclude && exclude.includes(next.id)) continue
+
+        // Next tab is invisible
+        if (next.invisible) continue
 
         // OK: Next tab is in current panel
         if (next.cookieStoreId === tab.cookieStoreId) {

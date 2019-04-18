@@ -678,6 +678,12 @@ export default {
       }
     }
 
+    // Update succession
+    if (tab.active) {
+      const target = Utils.FindSuccessorTab(state, tab)
+      if (target) browser.tabs.moveInSuccession([tab.id], target.id)
+    }
+
     if (state.hideFoldedTabs && toHide.length) {
       browser.tabs.hide(toHide)
     }
@@ -705,6 +711,12 @@ export default {
           t.invisible = false
         }
       }
+    }
+
+    // Update succession
+    if (tab.active) {
+      const target = Utils.FindSuccessorTab(state, tab)
+      if (target) browser.tabs.moveInSuccession([tab.id], target.id)
     }
 
     if (state.hideFoldedTabs && toShow.length) {
