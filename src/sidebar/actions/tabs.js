@@ -904,6 +904,7 @@ export default {
           openerTabId: dropParent < 0 ? undefined : dropParent,
           cookieStoreId: destCtx,
           windowId: state.windowId,
+          pinned: pin,
         })
       }
     }
