@@ -48,6 +48,8 @@ function createCanvas(width, height) {
   canvasBoxEl.style.position = 'absolute'
   canvasBoxEl.style.overflow = 'hidden'
   canvasBoxEl.style.opacity = '0'
+  canvasBoxEl.style.top = 0
+  canvasBoxEl.style.left = 0
   canvasBoxEl.style.width = '1px'
   canvasBoxEl.style.height = '1px'
   document.body.appendChild(canvasBoxEl)
