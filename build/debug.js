@@ -48,6 +48,10 @@ const MENU = scripts['dev.menu'].split(' ')
 const MENU_CMD = MENU[0]
 const MENU_OPT = MENU.slice(1)
 
+const STYLES = scripts['dev.styles'].split(' ')
+const STYLES_CMD = STYLES[0]
+const STYLES_OPT = STYLES.slice(1)
+
 const EXT = scripts['dev.ext.' + VER].split(' ')
 const EXT_CMD = EXT[0]
 const EXT_OPT = EXT.slice(1)
@@ -56,29 +60,41 @@ const EXEC_CONFIG = { env: process.env }
 
 let out = spawnSync(CLEAR_SIDEBAR_CMD, CLEAR_SIDEBAR_OPT, EXEC_CONFIG)
 if (out.status) process.exit(out.status)
-const Sidebar = spawn(SIDEBAR_CMD, SIDEBAR_OPT, EXEC_CONFIG)
-const Group = spawn(GROUP_CMD, GROUP_OPT, EXEC_CONFIG)
-const PermUrl = spawn(PERM_URL_CMD, PERM_URL_OPT, EXEC_CONFIG)
-const PermHide = spawn(PERM_HIDE_CMD, PERM_HIDE_OPT, EXEC_CONFIG)
-const Debug = spawn(DBG_CMD, DBG_OPT, EXEC_CONFIG)
-const Settings = spawn(SETTINGS_CMD, SETTINGS_OPT, EXEC_CONFIG)
-const Menu = spawn(MENU_CMD, MENU_OPT, EXEC_CONFIG)
-const Ext = spawn(EXT_CMD, EXT_OPT, EXEC_CONFIG)
 
+const Sidebar = spawn(SIDEBAR_CMD, SIDEBAR_OPT, EXEC_CONFIG)
 Sidebar.stdout.on('data', data => logOut('[Sidebar] ', data))
 Sidebar.stderr.on('data', data => errOut('[Sidebar ERROR] ', data))
+
+const Group = spawn(GROUP_CMD, GROUP_OPT, EXEC_CONFIG)
 Group.stdout.on('data', data => logOut('[Group] ', data))
 Group.stderr.on('data', data => errOut('[Group ERROR] ', data))
+
+const PermUrl = spawn(PERM_URL_CMD, PERM_URL_OPT, EXEC_CONFIG)
 PermUrl.stdout.on('data', data => logOut('[PermUrl] ', data))
 PermUrl.stderr.on('data', data => errOut('[PermUrl ERROR] ', data))
+
+const PermHide = spawn(PERM_HIDE_CMD, PERM_HIDE_OPT, EXEC_CONFIG)
 PermHide.stdout.on('data', data => logOut('[PermHide] ', data))
 PermHide.stderr.on('data', data => errOut('[PermHide ERROR] ', data))
+
+const Debug = spawn(DBG_CMD, DBG_OPT, EXEC_CONFIG)
 Debug.stdout.on('data', data => logOut('[Debug] ', data))
 Debug.stderr.on('data', data => errOut('[Debug ERROR] ', data))
+
+const Settings = spawn(SETTINGS_CMD, SETTINGS_OPT, EXEC_CONFIG)
 Settings.stdout.on('data', data => logOut('[Settings] ', data))
 Settings.stderr.on('data', data => errOut('[Settings ERROR] ', data))
+
+const Menu = spawn(MENU_CMD, MENU_OPT, EXEC_CONFIG)
 Menu.stdout.on('data', data => logOut('[Menu] ', data))
 Menu.stderr.on('data', data => errOut('[Menu ERROR] ', data))
+
+const Styles = spawn(STYLES_CMD, STYLES_OPT, EXEC_CONFIG)
+Styles.stdout.on('data', data => logOut('[Styles] ', data))
+Styles.stderr.on('data', data => errOut('[Styles ERROR] ', data))
+
+const Ext = spawn(EXT_CMD, EXT_OPT, EXEC_CONFIG)
+
 Ext.stdout.on('data', data => logOut('[Ext]     ', data))
 
 function logOut(prefix, data) {

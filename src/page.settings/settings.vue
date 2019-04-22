@@ -586,7 +586,7 @@ export default {
      * Open page of theme editor
      */
     openThemeEditor() {
-      const url = browser.runtime.getURL('theme-editor/theme-editor.html')
+      const url = browser.runtime.getURL('theme/theme.html')
       browser.tabs.create({ url, windowId: State.windowId })
     },
 
@@ -594,7 +594,7 @@ export default {
      * Open page of styles editor
      */
     openStylesEditor() {
-      const url = browser.runtime.getURL('styles-editor/styles-editor.html')
+      const url = browser.runtime.getURL('styles/styles.html')
       browser.tabs.create({ url, windowId: State.windowId })
     },
 

@@ -54,6 +54,10 @@ const MENU = scripts['build.menu'].split(' ')
 const MENU_CMD = MENU[0]
 const MENU_OPT = MENU.slice(1)
 
+const STYLES = scripts['build.styles'].split(' ')
+const STYLES_CMD = STYLES[0]
+const STYLES_OPT = STYLES.slice(1)
+
 const EXT = scripts['build.ext'].split(' ')
 const EXT_CMD = EXT[0]
 const EXT_OPT = EXT.slice(1)
@@ -86,6 +90,8 @@ if (out.status) process.exit(out.status)
 out = spawnSync(SETTINGS_CMD, SETTINGS_OPT, EXEC_CONFIG)
 if (out.status) process.exit(out.status)
 out = spawnSync(MENU_CMD, MENU_OPT, EXEC_CONFIG)
+if (out.status) process.exit(out.status)
+out = spawnSync(STYLES_CMD, STYLES_OPT, EXEC_CONFIG)
 if (out.status) process.exit(out.status)
 out = spawnSync(EXT_CMD, EXT_OPT, EXEC_CONFIG)
 if (out.status) process.exit(out.status)
