@@ -55,6 +55,7 @@ export default new Vue({
     await Store.dispatch('loadSettings')
     await Store.dispatch('loadState')
     await Store.dispatch('loadContainers')
+    Store.dispatch('loadStyles')
     Store.dispatch('loadKeybindings')
     Store.dispatch('loadSnapshots')
     Store.dispatch('loadPermissions')

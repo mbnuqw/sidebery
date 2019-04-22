@@ -59,7 +59,6 @@
 <script>
 import State from '../sidebar/store.state'
 import Store from '../sidebar/store'
-// import ScrollBox from '../scroll-box'
 import { DEFAULT_TABS_MENU, DEFAULT_BOOKMARKS_MENU } from '../sidebar/store.state'
 
 const TABS_MENU_OPTS = {
@@ -92,10 +91,6 @@ const BOOKMARKS_MENU_OPTS = {
 }
 
 export default {
-  components: {
-    // ScrollBox,
-  },
-
   data() {
     return {
       active: false,
@@ -386,7 +381,4 @@ export default {
 .CtxMenuBuilder .btn
   size(auto)
   padding: 5px 16px
-  // margin-top: 8px
-  // margin-left: auto
-  // margin-right: auto
 </style>

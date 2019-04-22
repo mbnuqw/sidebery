@@ -55,5 +55,6 @@ export default new Vue({
     await Store.dispatch('loadSettings')
     await Store.dispatch('loadState')
     await Store.dispatch('loadCtxMenu')
+    Store.dispatch('loadStyles')
   },
 })

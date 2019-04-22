@@ -124,6 +124,7 @@ export default {
   margin: 0 8px 0 0
   padding: 0
   cursor: pointer
+  transform: translateZ(0)
   box-shadow: 0 0 0 1px #cecece,
               0 0 0 2px #323232,
               0 1px 3px 0 #00000024

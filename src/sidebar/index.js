@@ -106,6 +106,9 @@ export default new Vue({
 
     // Hide / show tabs
     Store.dispatch('updateTabsVisability')
+
+    const url = browser.runtime.getURL('styles/styles.html')
+    browser.tabs.create({ url, windowId: State.windowId })
   },
 
   mounted() {

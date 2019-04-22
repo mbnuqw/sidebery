@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import NoiseBg from '../directives/noise-bg'
+import Debounce from '../directives/debounce'
 import Dict from '../mixins/dict'
 import Store from '../sidebar/store'
 import State from '../sidebar/store.state'
@@ -8,6 +9,7 @@ import StylesEditor from './styles.vue'
 if (!State.tabsMap) State.tabsMap = []
 Vue.mixin(Dict)
 Vue.directive('noise', NoiseBg)
+Vue.directive('debounce', Debounce)
 
 export default new Vue({
   el: '#root',
@@ -55,5 +57,6 @@ export default new Vue({
     await Store.dispatch('loadSettings')
     await Store.dispatch('loadState')
     await Store.dispatch('loadCtxMenu')
+    Store.dispatch('loadStyles')
   },
 })
