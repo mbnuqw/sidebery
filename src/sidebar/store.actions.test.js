@@ -85,20 +85,14 @@ describe('Common actions', () => {
         hideInact: true
       }
       const dispatch = jest.fn()
-      browser.permissions.getAll = () => {
-        return { permissions: ['perm'], origins: ['orig'] }
-      }
       browser.permissions.contains = wut => {
         if (wut.origins && wut.origins[0] === '<all_urls>') return true
         if (wut.permissions && wut.permissions[0] === 'tabHide') return true
       }
 
       await Actions.loadPermissions({ state, dispatch })
-      expect(state.permissions[0]).toBe('perm')
-      expect(state.permissions[1]).toBe('orig')
       expect(state.permAllUrls).toBe(true)
       expect(state.permTabHide).toBe(true)
-      expect(dispatch).toBeCalledWith('hideInactPanelsTabs')
     })
   })
 

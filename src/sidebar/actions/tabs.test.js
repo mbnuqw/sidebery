@@ -795,61 +795,6 @@ describe('showAllTabs', () => {
   })
 })
 
-describe('hideInactPanelsTabs', () => {
-  test('cannot find active panel', async () => {
-    const state = {
-      panelIndex: -1,
-      lastPanelIndex: 2,
-    }
-    const getters = {
-      panels: [],
-    }
-    browser.tabs.show = jest.fn()
-    browser.tabs.hide = jest.fn()
-
-    await TabsActions.hideInactPanelsTabs({ state, getters })
-    expect(browser.tabs.show).not.toBeCalled()
-    expect(browser.tabs.hide).not.toBeCalled()
-  })
-
-  test('hide some tabs', async () => {
-    const state = {
-      panelIndex: -1,
-      lastPanelIndex: 2,
-      tabs: [
-        { id: 1, cookieStoreId: 'a', hidden: true, invisible: false },
-        { id: 2, cookieStoreId: 'b', hidden: false, invisible: false },
-        { id: 3, cookieStoreId: 'b', hidden: true, invisible: true },
-        { id: 4, cookieStoreId: 'b', hidden: false, invisible: true },
-      ],
-    }
-    const getters = {
-      panels: [
-        {}, // bookmarks
-        {}, // private
-        {
-          cookieStoreId: 'a',
-          tabs: [{ id: 1, hidden: true, invisible: false }],
-        },
-        {
-          cookieStoreId: 'b',
-          tabs: [
-            { id: 2, hidden: false, invisible: false },
-            { id: 3, hidden: true, invisible: true },
-            { id: 4, hidden: false, invisible: true },
-          ],
-        },
-      ],
-    }
-    browser.tabs.show = jest.fn()
-    browser.tabs.hide = jest.fn()
-
-    await TabsActions.hideInactPanelsTabs({ state, getters })
-    expect(browser.tabs.show).toBeCalledWith([1])
-    expect(browser.tabs.hide).toBeCalledWith([2, 4])
-  })
-})
-
 describe('foldTabsBranch', () => {
   test('fold tabs branch', async () => {
     const state = {
