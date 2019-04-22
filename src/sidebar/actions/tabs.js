@@ -37,7 +37,7 @@ export default {
 
     // Set tabs initial props and update state
     state.tabsMap = []
-    tabs.forEach(t => {
+    for (let t of tabs) {
       t.isParent = false
       t.folded = false
       t.parentId = -1
@@ -47,13 +47,13 @@ export default {
       state.tabsMap[t.id] = t
       if (!t.favIconUrl || t.favIconUrl.startsWith('chrome:')) t.favIconUrl = ''
       if (t.active) activeTab = t
-    })
+    }
     state.tabs = tabs
 
     // Normalize order
-    moves.map(async move => {
+    for (let move of moves) {
       await browser.tabs.move(move[0], { index: move[1] })
-    })
+    }
 
     // Switch to panel with active tab
     const activePanelIsTabs = activePanel.panel === 'TabsPanel'

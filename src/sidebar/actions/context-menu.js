@@ -1,6 +1,5 @@
 import State from '../store.state'
 import { Translate } from '../../mixins/dict'
-import { DEFAULT_TABS_MENU, DEFAULT_BOOKMARKS_MENU } from '../store.state'
 
 const OPTIONS = {
   // ---
@@ -252,14 +251,10 @@ export default {
    * Load custom context menu
    */
   async loadCtxMenu({ state }) {
-    let ans = await browser.storage.local.get(['tabsMenu', 'bookmarksMenu'])
+    let ans = await browser.storage.local.get(['tabsMenu', 'bookmarksMenu']) || {}
 
-    if (!ans || !ans.tabsMenu) state.tabsMenu = JSON.parse(JSON.stringify(DEFAULT_TABS_MENU))
-    else state.tabsMenu = ans.tabsMenu
-
-    if (!ans || !ans.bookmarksMenu)
-      state.bookmarksMenu = JSON.parse(JSON.stringify(DEFAULT_BOOKMARKS_MENU))
-    else state.bookmarksMenu = ans.bookmarksMenu
+    if (ans.tabsMenu) state.tabsMenu = ans.tabsMenu
+    if (ans.bookmarksMenu) state.bookmarksMenu = ans.bookmarksMenu
   },
 
   /**

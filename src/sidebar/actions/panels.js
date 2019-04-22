@@ -13,11 +13,15 @@ export default {
   async loadContainers({ state, dispatch }) {
     // Get contextual identities
     const ctxs = await browser.contextualIdentities.query({})
+    if (!ctxs) {
+      state.containers = DEFAULT_PANELS
+      return
+    }
 
     // Get saved containers
     let ans = await browser.storage.local.get('containers')
-    let containers = ans.containers
-    if (!containers || !containers.length) containers = DEFAULT_PANELS
+    let containers = DEFAULT_PANELS
+    if (ans && ans.containers && ans.containers.length) containers = ans.containers
 
     // Merge saved containers and queried contextualIdentities
     for (let ctx of ctxs) {
