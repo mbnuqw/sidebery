@@ -17,6 +17,11 @@
     "96": "./assets/logo-ce32-96.png"
   },
 
+  "options_ui": {
+    "open_in_tab": true,
+    "page": "settings/settings.html"
+  },
+
   "permissions": [
     "tabs",
     "contextualIdentities",

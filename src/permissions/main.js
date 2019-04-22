@@ -69,7 +69,7 @@ void (async function() {
 
   reqBtnEl.addEventListener('click', () => {
     browser.permissions.request({ origins, permissions }).then(() => {
-      browser.runtime.sendMessage({ action: 'reloadOptPermissions' })
+      browser.runtime.sendMessage({ action: 'loadPermissions' })
       browser.tabs.getCurrent().then(tab => browser.tabs.remove([tab.id]))
     })
   })

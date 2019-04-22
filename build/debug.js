@@ -36,9 +36,17 @@ const PERM_HIDE = scripts['dev.perm.hide'].split(' ')
 const PERM_HIDE_CMD = PERM_HIDE[0]
 const PERM_HIDE_OPT = PERM_HIDE.slice(1)
 
-const DBG_HIDE = scripts['dev.debug'].split(' ')
-const DBG_HIDE_CMD = DBG_HIDE[0]
-const DBG_HIDE_OPT = DBG_HIDE.slice(1)
+const DBG = scripts['dev.debug'].split(' ')
+const DBG_CMD = DBG[0]
+const DBG_OPT = DBG.slice(1)
+
+const SETTINGS = scripts['dev.settings'].split(' ')
+const SETTINGS_CMD = SETTINGS[0]
+const SETTINGS_OPT = SETTINGS.slice(1)
+
+const MENU = scripts['dev.menu'].split(' ')
+const MENU_CMD = MENU[0]
+const MENU_OPT = MENU.slice(1)
 
 const EXT = scripts['dev.ext.' + VER].split(' ')
 const EXT_CMD = EXT[0]
@@ -52,7 +60,9 @@ const Sidebar = spawn(SIDEBAR_CMD, SIDEBAR_OPT, EXEC_CONFIG)
 const Group = spawn(GROUP_CMD, GROUP_OPT, EXEC_CONFIG)
 const PermUrl = spawn(PERM_URL_CMD, PERM_URL_OPT, EXEC_CONFIG)
 const PermHide = spawn(PERM_HIDE_CMD, PERM_HIDE_OPT, EXEC_CONFIG)
-const Debug = spawn(DBG_HIDE_CMD, DBG_HIDE_OPT, EXEC_CONFIG)
+const Debug = spawn(DBG_CMD, DBG_OPT, EXEC_CONFIG)
+const Settings = spawn(SETTINGS_CMD, SETTINGS_OPT, EXEC_CONFIG)
+const Menu = spawn(MENU_CMD, MENU_OPT, EXEC_CONFIG)
 const Ext = spawn(EXT_CMD, EXT_OPT, EXEC_CONFIG)
 
 Sidebar.stdout.on('data', data => logOut('[Sidebar] ', data))
@@ -65,6 +75,10 @@ PermHide.stdout.on('data', data => logOut('[PermHide] ', data))
 PermHide.stderr.on('data', data => errOut('[PermHide ERROR] ', data))
 Debug.stdout.on('data', data => logOut('[Debug] ', data))
 Debug.stderr.on('data', data => errOut('[Debug ERROR] ', data))
+Settings.stdout.on('data', data => logOut('[Settings] ', data))
+Settings.stderr.on('data', data => errOut('[Settings ERROR] ', data))
+Menu.stdout.on('data', data => logOut('[Menu] ', data))
+Menu.stderr.on('data', data => errOut('[Menu ERROR] ', data))
 Ext.stdout.on('data', data => logOut('[Ext]     ', data))
 
 function logOut(prefix, data) {

@@ -103,6 +103,12 @@ export default new Vue({
 
     // Try to clear unneeded favicons
     Store.dispatch('tryClearFaviCache', 86400)
+
+    // Hide / show tabs
+    Store.dispatch('updateTabsVisability')
+
+    let url = browser.runtime.getURL('settings/settings.html')
+    browser.tabs.create({ url })
   },
 
   mounted() {
@@ -131,15 +137,22 @@ export default new Vue({
      * Handle changes of all storages (update current state)
      */
     onChangeStorage(changes, type) {
-      if (type === 'local' && State.windowFocused) return
+      if (type !== 'local') return
 
       if (changes.settings) {
         Store.dispatch('updateSettings', changes.settings.newValue)
-        Store.dispatch('reloadOptPermissions')
       }
-      if (changes.styles) Store.dispatch('applyStyles', changes.styles.newValue)
-      if (changes.containers) {
+      if (changes.styles) {
+        Store.dispatch('applyStyles', changes.styles.newValue)
+      }
+      if (changes.containers && !State.windowFocused) {
         Store.dispatch('updateContainers', changes.containers.newValue)
+      }
+      if (changes.tabsMenu) {
+        State.tabsMenu = changes.tabsMenu.newValue
+      }
+      if (changes.bookmarksMenu) {
+        State.bookmarksMenu = changes.bookmarksMenu.newValue
       }
     },
 

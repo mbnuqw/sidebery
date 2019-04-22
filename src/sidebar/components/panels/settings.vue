@@ -73,7 +73,7 @@
         @input="setOpt('pinnedTabsList', $event)")
 
     section
-      h2 {{t('settings.pinned_tabs_tree')}}
+      h2 {{t('settings.tabs_tree')}}
       toggle-field(
         label="settings.tabs_tree_layout"
         :value="$store.state.tabsTree"
@@ -435,7 +435,8 @@ export default {
           browser.tabs.create({ url, windowId: State.windowId })
           return
         }
-        Store.dispatch('hideInactPanelsTabs')
+        Store.dispatch('updateTabsVisability')
+        // Store.dispatch('hideInactPanelsTabs')
       }
 
       this.toggleOpt('hideInact')

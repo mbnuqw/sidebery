@@ -1,4 +1,5 @@
 import { DEFAULT_SETTINGS } from '../settings'
+import Utils from '../../libs/utils'
 
 export default {
   /**
@@ -39,12 +40,55 @@ export default {
   /**
    * Update settings
    */
-  updateSettings({ state }, settings) {
+  updateSettings({ state, dispatch }, settings) {
     if (!settings) return
 
+    // Check what values was updated
+    const hideInactTabs = state.hideInact !== settings.hideInact
+    const updateSuccessions =
+      state.activateAfterClosing !== settings.activateAfterClosing ||
+      state.activateAfterClosingPrevRule !== settings.activateAfterClosingPrevRule ||
+      state.activateAfterClosingNextRule !== settings.activateAfterClosingNextRule
+    const resetTree = state.tabsTree !== settings.tabsTree && state.tabsTree
+    const updateTree = state.tabsTreeLimit !== settings.tabsTreeLimit
+    const updateInvisTabs =  state.hideFoldedTabs !== settings.hideFoldedTabs
+    const toggleBookmarks = state.bookmarksPanel !== settings.bookmarksPanel
+
+    // Update settings
     for (let k in settings) {
       if (!settings.hasOwnProperty(k)) continue
       if (settings[k] !== undefined) state[k] = settings[k]
+    }
+
+    if (updateSuccessions) {
+      const activeTab = state.tabs.find(t => t.active)
+      if (state.activateAfterClosing !== 'none' && activeTab) {
+        const target = Utils.FindSuccessorTab(state, activeTab)
+        if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
+      }
+    }
+
+    if (resetTree) {
+      for (let tab of state.tabs) {
+        tab.isParent = false
+        tab.folded = false
+        tab.invisible = false
+        tab.parentId = -1
+        tab.lvl = 0
+      }
+    }
+
+    if (updateTree) {
+      Utils.UpdateTabsTree(state)
+    }
+
+    if (hideInactTabs || updateInvisTabs) {
+      dispatch('updateTabsVisability')
+    }
+
+    if (toggleBookmarks) {
+      if (state.bookmarksPanel) dispatch('loadBookmarks')
+      else state.bookmarks = []
     }
   },
 

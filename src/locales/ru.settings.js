@@ -47,7 +47,7 @@ export default {
   'settings.pinned_tabs_list': { message: 'Показывать заголовки закрепленных табов' },
 
   // --- Tabs tree
-  'settings.pinned_tabs_tree': { message: 'Древовидное отображение табов' },
+  'settings.tabs_tree_title': { message: 'Древовидное отображение табов' },
   'settings.tabs_tree_layout': { message: 'Древовидное отображение табов' },
   'settings.group_on_open_layout': { message: 'Создать поддерево при открытии ссылки в новом табе' },
   'settings.tabs_tree_limit': { message: 'Максимальный уровень вложенности табов' },

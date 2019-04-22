@@ -67,22 +67,25 @@ export default {
    * Retrieve current permissions
    */
   async loadPermissions({ state, dispatch }) {
-    const permsObj = await browser.permissions.getAll()
-    state.permissions = [...permsObj.permissions, ...permsObj.origins]
-
-    // Get optianal permissions state
     state.permAllUrls = await browser.permissions.contains({ origins: ['<all_urls>'] })
     state.permTabHide = await browser.permissions.contains({ permissions: ['tabHide'] })
-    if (state.hideInact) dispatch('hideInactPanelsTabs')
-  },
 
-  /**
-   * Reload optianal permissions
-   */
-  async reloadOptPermissions({ state, dispatch }) {
-    state.permAllUrls = await browser.permissions.contains({ origins: ['<all_urls>'] })
-    state.permTabHide = await browser.permissions.contains({ permissions: ['tabHide'] })
-    if (state.hideInact) dispatch('hideInactPanelsTabs')
+    if (!state.permAllUrls) {
+      state.proxiedPanels = {}
+      state.containers.map(c => {
+        if (c.proxified) c.proxified = false
+        if (c.proxy) c.proxy.type = 'direct'
+        if (c.includeHostsActive) c.includeHostsActive = false
+        if (c.excludeHostsActive) c.excludeHostsActive = false
+      })
+      dispatch('saveContainers')
+    }
+
+    if (!state.permTabHide) {
+      state.hideInact = false
+      state.hideFoldedTabs = false
+      dispatch('saveSettings')
+    }
   },
 
   /**

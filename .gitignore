@@ -3,6 +3,7 @@
 dist
 node_modules
 addon/sidebar
+addon/menu
 addon/settings
 addon/group
 addon/permissions

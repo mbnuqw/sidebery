@@ -181,7 +181,7 @@ export default {
     }
 
     dispatch('recalcPanelScroll')
-    if (state.hideInact) dispatch('hideInactPanelsTabs')
+    dispatch('updateTabsVisability')
     EventBus.$emit('panelSwitched')
     dispatch('savePanelIndex')
   },
@@ -230,7 +230,7 @@ export default {
     }
 
     dispatch('recalcPanelScroll')
-    if (state.hideInact) dispatch('hideInactPanelsTabs')
+    dispatch('updateTabsVisability')
     EventBus.$emit('panelSwitched')
   },
 

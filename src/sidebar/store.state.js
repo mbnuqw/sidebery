@@ -180,7 +180,7 @@ export default {
   customStyles: CUSTOM_STYLES,
   snapshots: [],
   keybindings: [],
-  permissions: [],
+  // permissions: [],
   permAllUrls: false,
   permTabHide: false,
   settingsLoaded: false,

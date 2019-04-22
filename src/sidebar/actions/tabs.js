@@ -635,26 +635,59 @@ export default {
     return browser.tabs.show(tabsToShow)
   },
 
+  // /**
+  //  * (re)Hide inactive panels tabs
+  //  */
+  // async hideInactPanelsTabs({ state, getters }) {
+  //   const actPI = state.panelIndex < 0 ? state.lastPanelIndex : state.panelIndex
+  //   const actP = getters.panels[actPI]
+  //   if (!actP || !actP.tabs || actP.pinned) return
+
+  //   const toShow = actP.tabs
+  //     .filter(t => {
+  //       if (state.hideFoldedTabs) return t.hidden && !t.invisible
+  //       else return t.hidden
+  //     })
+  //     .map(t => t.id)
+
+  //   const toHide = state.tabs
+  //     .filter(t => {
+  //       return !t.hidden && !t.pinned && t.cookieStoreId !== actP.cookieStoreId
+  //     })
+  //     .map(t => t.id)
+
+  //   if (toShow.length) browser.tabs.show(toShow)
+  //   if (toHide.length) browser.tabs.hide(toHide)
+  // },
+
   /**
-   * (re)Hide inactive panels tabs
+   * Update tabs visability
    */
-  async hideInactPanelsTabs({ state, getters }) {
-    const actPI = state.panelIndex < 0 ? state.lastPanelIndex : state.panelIndex
-    const actP = getters.panels[actPI]
-    if (!actP || !actP.tabs || actP.pinned) return
+  updateTabsVisability({ state, getters }) {
+    const hideFolded = state.hideFoldedTabs
+    const hideInact = state.hideInact
+    const actPanelIndex = state.panelIndex < 0 ? state.lastPanelIndex : state.panelIndex
+    const actPanel = getters.panels[actPanelIndex]
+    if (!actPanel || !actPanel.tabs) return
+    const actCtx = actPanel.cookieStoreId
 
-    const toShow = actP.tabs
-      .filter(t => {
-        if (state.hideFoldedTabs) return t.hidden && !t.invisible
-        else return t.hidden
-      })
-      .map(t => t.id)
+    const toShow = []
+    const toHide = []
+    for (let tab of state.tabs) {
+      if (tab.pinned) continue
 
-    const toHide = state.tabs
-      .filter(t => {
-        return !t.hidden && !t.pinned && t.cookieStoreId !== actP.cookieStoreId
-      })
-      .map(t => t.id)
+      if (hideFolded && tab.invisible) {
+        if (!tab.hidden) toHide.push(tab.id)
+        continue
+      }
+
+      if (hideInact && tab.cookieStoreId !== actCtx) {
+        if (!tab.hidden) toHide.push(tab.id)
+        continue
+      }
+
+      if (tab.hidden) toShow.push(tab.id)
+    }
 
     if (toShow.length) browser.tabs.show(toShow)
     if (toHide.length) browser.tabs.hide(toHide)
@@ -1073,4 +1106,36 @@ export default {
       openerTabId: parentId,
     })
   },
+
+  /**
+   * Update succession of current tab
+   */
+  // updateSuccessionOfActiveTab({ state }) {
+  //   const activeTab = state.tabs.find(t => t.active)
+  //   if (state.activateAfterClosing !== 'none' && activeTab) {
+  //     const target = Utils.FindSuccessorTab(state, activeTab)
+  //     if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
+  //   }
+  // },
+
+  // /**
+  //  * Reset tabs tree
+  //  */
+  // resetTabsTree({ state }) {
+  //   for (let tab of state.tabs) {
+  //     tab.isParent = false
+  //     tab.folded = false
+  //     tab.invisible = false
+  //     tab.parentId = -1
+  //     tab.lvl = 0
+  //   }
+  // },
+
+  /**
+   * Update tabs tree
+   */
+  // updateTabsTree({ state }) {
+  //   console.log('[DEBUG] >>>', state.tabsTreeLimit);
+  //   Utils.UpdateTabsTree(state)
+  // },
 }

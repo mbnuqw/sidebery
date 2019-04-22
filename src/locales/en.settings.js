@@ -13,7 +13,7 @@ export default {
   'settings.autoHide_ctx_menu_500': { message: '0.5s' },
   'settings.autoHide_ctx_menu_1000': { message: '1s' },
   'settings.autoHide_ctx_menu_none': { message: 'none' },
-  'settings.ctx_menu_editor': { message: 'Edit menu' },
+  'settings.ctx_menu_editor': { message: 'Edit context menu' },
 
   // --- Tabs
   'settings.tabs_title': { message: 'Tabs' },
@@ -47,7 +47,7 @@ export default {
   'settings.pinned_tabs_list': { message: 'Show titles of pinned tabs' },
 
   // --- Tabs tree
-  'settings.pinned_tabs_tree': { message: 'Tabs tree' },
+  'settings.tabs_tree_title': { message: 'Tabs tree' },
   'settings.tabs_tree_layout': { message: 'Tabs tree structure' },
   'settings.group_on_open_layout': { message: 'Create sub-tree on opening link in new tab' },
   'settings.tabs_tree_limit': { message: 'Tabs tree level limit' },
@@ -92,7 +92,7 @@ export default {
   'settings.snapshots_pinned_label': { message: 'Pinned' },
   'settings.snapshots_default_label': { message: 'Default' },
   'settings.snapshots_view_label': { message: 'View snapshots' },
-  'settings.make_snapshot': { message: 'Make snapshot' },
+  'settings.make_snapshot': { message: 'Create snapshot' },
   'settings.rm_all_snapshots': { message: 'Remove all snapshots' },
   'settings.apply_snapshot': { message: 'apply' },
   'settings.rm_snapshot': { message: 'remove' },
