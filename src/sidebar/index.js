@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import { mapGetters } from 'vuex'
+import EventBus from './event-bus'
 import Sidebar from './components/index.vue'
 import Dict from '../mixins/dict'
 import Store from './store'
@@ -97,7 +98,6 @@ export default new Vue({
     await Store.dispatch('loadStyles')
     Store.dispatch('scrollToActiveTab')
     Store.dispatch('loadKeybindings')
-    Store.dispatch('loadSnapshots')
     Store.dispatch('loadFavicons')
     Store.dispatch('loadPermissions')
 
@@ -107,8 +107,7 @@ export default new Vue({
     // Hide / show tabs
     Store.dispatch('updateTabsVisability')
 
-    const url = browser.runtime.getURL('styles/styles.html')
-    browser.tabs.create({ url, windowId: State.windowId })
+    EventBus.$on('CreateSnapshot', () => Store.dispatch('makeSnapshot'))
   },
 
   mounted() {

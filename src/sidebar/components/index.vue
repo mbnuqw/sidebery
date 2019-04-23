@@ -70,7 +70,7 @@
       .settings-btn(
         :data-active="$store.state.panelIndex === -2"
         :title="t('nav.settings_tooltip')"
-        @click="toggleSettings")
+        @click="openSettings")
         svg: use(xlink:href="#icon_settings")
 
     //- Panels
@@ -90,11 +90,7 @@
         @start-selection="startSelection"
         @stop-selection="stopSelection")
       transition(name="settings")
-        settings-panel(v-if="$store.state.panelIndex === -2", :pos="settingsPanelPos")
-        styles-panel(v-if="$store.state.panelIndex === -3", :pos="stylesPanelPos")
-        snapshots-panel(v-if="$store.state.panelIndex === -4", :pos="snapshotsPanelPos")
         window-input(v-if="$store.state.panelIndex === -5", :pos="windowInputPos")
-        context-menu-panel(v-if="$store.state.panelIndex === -6", :pos="ctxPanelPos")
 </template>
 
 
@@ -546,38 +542,10 @@ export default {
     },
 
     /**
-     * Get settings-panel position
-     */
-    settingsPanelPos() {
-      return State.panelIndex === -2 ? 'center' : 'right'
-    },
-
-    /**
-     * Get styles-editor-panel position
-     */
-    stylesPanelPos() {
-      return State.panelIndex === -3 ? 'center' : 'right'
-    },
-
-    /**
-     * Get styles-editor-panel position
-     */
-    snapshotsPanelPos() {
-      return State.panelIndex === -4 ? 'center' : 'right'
-    },
-
-    /**
      * Get window-input-panel position
      */
     windowInputPos() {
       return State.panelIndex === -5 ? 'center' : 'right'
-    },
-
-    /**
-     * Get context menu panel position
-     */
-    ctxPanelPos() {
-      return State.panelIndex === -6 ? 'center' : 'right'
     },
 
     /**
@@ -2090,11 +2058,11 @@ export default {
     /**
      * Toggle settings
      */
-    toggleSettings() {
-      if (State.dashboardOpened) this.closeDashboard()
-      if (State.panelIndex === -2) Store.commit('closeSettings')
-      else Store.commit('openSettings')
-      Store.commit('resetSelection')
+    openSettings() {
+      const url = browser.runtime.getURL('settings/settings.html')
+      const existedTab = State.tabs.find(t => t.url === url)
+      if (existedTab) browser.tabs.update(existedTab.id, { active: true })
+      else browser.tabs.create({ url, windowId: State.windowId })
     },
 
     /**

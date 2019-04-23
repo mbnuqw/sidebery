@@ -16,7 +16,7 @@
       @input="setOpt('autoHideCtxMenu', $event)")
     .separator
     .ctrls
-      .btn(@click="openCtxMenuBuilder") {{t('settings.ctx_menu_editor')}}
+      .btn(@click="openPage('menu/menu')") {{t('settings.ctx_menu_editor')}}
 
   section
     h2 {{t('settings.tabs_title')}}
@@ -187,7 +187,7 @@
       :value="$store.state.bgNoise"
       @input="setOpt('bgNoise', $event)")
     .separator
-    .ctrls: .btn(@click="openStylesEditor") {{t('settings.edit_styles')}}
+    .ctrls: .btn(@click="openPage('styles/styles')") {{t('settings.edit_styles')}}
 
   section
     h2 {{t('settings.mouse_title')}}
@@ -549,6 +549,20 @@ export default {
     },
 
     /**
+     * Open page as a child
+     */
+    async openPage(name) {
+      let url = browser.runtime.getURL(name + '.html')
+      const tab = await browser.tabs.getCurrent()
+      const conf = { url, windowId: State.windowId }
+      if (tab) {
+        conf.openerTabId = tab.id
+        conf.index = tab.index + 1
+      }
+      browser.tabs.create(conf)
+    },
+
+    /**
      * Open page with context menu builder
      */
     openCtxMenuBuilder() {
@@ -722,23 +736,32 @@ export default {
     /**
      * Update snapshots viewer
      */
-    viewAllSnapshots() {
-      const url = browser.runtime.getURL('styles-editor/styles-editor.html')
-      browser.tabs.create({ url, windowId: State.windowId })
+    async viewAllSnapshots() {
+      let url = browser.runtime.getURL('snapshots/snapshots.html')
+      const tab = await browser.tabs.getCurrent()
+      const conf = { url, windowId: State.windowId }
+      if (tab) {
+        conf.openerTabId = tab.id
+        conf.index = tab.index + 1
+      }
+      browser.tabs.create(conf)
     },
 
     /**
      * Create snapshot
      */
     createSnapshot() {
-      browser.runtime.sendMessage({ action: 'makeSnapshot' })
+      browser.runtime.sendMessage({
+        name: 'CreateSnapshot',
+        windowId: State.windowId,
+      })
     },
 
     /**
      * Remove snapshot
      */
     removeAllSnapshots() {
-      browser.runtime.sendMessage({ action: 'removeAllSnapshot' })
+      browser.storage.local.set({ snapshots: [] })
     },
     
     /**

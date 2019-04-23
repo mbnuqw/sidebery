@@ -1,22 +1,20 @@
 import Vue from 'vue'
 import NoiseBg from '../directives/noise-bg'
-import Debounce from '../directives/debounce'
 import Dict from '../mixins/dict'
 import Store from '../sidebar/store'
 import State from '../sidebar/store.state'
-import StylesEditor from './styles.vue'
+import Snapshots from './snapshots.vue'
 
 if (!State.tabsMap) State.tabsMap = []
 Vue.mixin(Dict)
 Vue.directive('noise', NoiseBg)
-Vue.directive('debounce', Debounce)
 
 export default new Vue({
   el: '#root',
   store: Store,
 
   components: {
-    StylesEditor,
+    Snapshots,
   },
 
   data() {
@@ -36,28 +34,34 @@ export default new Vue({
 
   async created() {
     Store.dispatch('loadStyles')
+    browser.storage.onChanged.addListener(this.onChangeStorage)
 
     browser.windows.getCurrent()
       .then(win => {
         State.private = win.incognito
         State.windowId = win.id
       })
-    
-    browser.runtime.getPlatformInfo()
-      .then(osInfo => {
-        State.osInfo = osInfo
-        State.os = osInfo.os
-      })
-
-    browser.runtime.getBrowserInfo()
-      .then(ffInfo => {
-        State.ffInfo = ffInfo
-        State.ffVer = parseInt(ffInfo.version.slice(0, 2))
-        if (isNaN(State.ffVer)) State.ffVer = 0
-      })
 
     await Store.dispatch('loadSettings')
     await Store.dispatch('loadState')
-    await Store.dispatch('loadCtxMenu')
+    Store.dispatch('loadSnapshots')
+  },
+
+  beforeDestroy() {
+    browser.storage.onChanged.removeListener(this.onChangeStorage)
+  },
+
+  methods: {
+    /**
+     * Handle changes of all storages (update current state)
+     */
+    onChangeStorage(changes, type) {
+      if (type !== 'local') return
+
+      if (changes.snapshots) {
+        State.snapshots = changes.snapshots.newValue
+        State.snapshots.reverse()
+      }
+    },
   },
 })

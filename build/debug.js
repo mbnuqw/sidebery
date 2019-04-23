@@ -52,6 +52,10 @@ const STYLES = scripts['dev.styles'].split(' ')
 const STYLES_CMD = STYLES[0]
 const STYLES_OPT = STYLES.slice(1)
 
+const SNAPSHOTS = scripts['dev.snapshots'].split(' ')
+const SNAPSHOTS_CMD = SNAPSHOTS[0]
+const SNAPSHOTS_OPT = SNAPSHOTS.slice(1)
+
 const EXT = scripts['dev.ext.' + VER].split(' ')
 const EXT_CMD = EXT[0]
 const EXT_OPT = EXT.slice(1)
@@ -92,6 +96,10 @@ Menu.stderr.on('data', data => errOut('[Menu ERROR] ', data))
 const Styles = spawn(STYLES_CMD, STYLES_OPT, EXEC_CONFIG)
 Styles.stdout.on('data', data => logOut('[Styles] ', data))
 Styles.stderr.on('data', data => errOut('[Styles ERROR] ', data))
+
+const Snapshots = spawn(SNAPSHOTS_CMD, SNAPSHOTS_OPT, EXEC_CONFIG)
+Snapshots.stdout.on('data', data => logOut('[Snapshots] ', data))
+Snapshots.stderr.on('data', data => errOut('[Snapshots ERROR] ', data))
 
 const Ext = spawn(EXT_CMD, EXT_OPT, EXEC_CONFIG)
 

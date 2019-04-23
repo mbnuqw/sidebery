@@ -12,6 +12,7 @@
     "dev.settings": "parcel watch ./src/page.settings/settings.html -d ./addon/settings/ --public-url ./ --no-autoinstall",
     "dev.menu": "parcel watch ./src/page.menu/menu.html -d ./addon/menu/ --public-url ./ --no-autoinstall",
     "dev.styles": "parcel watch ./src/page.styles/styles.html -d ./addon/styles/ --public-url ./ --no-autoinstall",
+    "dev.snapshots": "parcel watch ./src/page.snapshots/snapshots.html -d ./addon/snapshots/ --public-url ./ --no-autoinstall",
     "dev.ext.en": "web-ext run --source-dir ./addon -f firefox-beta --keep-profile-changes --firefox-profile ./build/profile-beta",
     "dev.ext.ru": "web-ext run --source-dir ./addon -f firefox --keep-profile-changes --firefox-profile ./build/profile-ru",
     "dev.ext.esr": "web-ext run --source-dir ./addon -f firefox-esr --keep-profile-changes --firefox-profile ./build/profile-esr",
@@ -26,6 +27,7 @@
     "build.settings": "parcel build ./src/page.settings/settings.html -d ./addon/settings/ --public-url ./ --no-autoinstall --no-source-maps --no-minify",
     "build.menu": "parcel build ./src/page.menu/menu.html -d ./addon/menu/ --public-url ./ --no-autoinstall --no-source-maps --no-minify",
     "build.styles": "parcel build ./src/page.styles/styles.html -d ./addon/styles/ --public-url ./ --no-autoinstall --no-source-maps --no-minify",
+    "build.snapshots": "parcel build ./src/page.snapshots/snapshots.html -d ./addon/snapshots/ --public-url ./ --no-autoinstall --no-source-maps --no-minify",
     "build.ext": "web-ext build --source-dir ./addon -a dist/ -i *.lock ./package.json",
     "build": "node ./build/release.js",
     "lint": "web-ext lint -s ./addon",
@@ -37,6 +39,7 @@
     "clear.settings": "rm -rf addon/settings",
     "clear.menu": "rm -rf addon/menu",
     "clear.styles": "rm -rf addon/styles",
+    "clear.snapshots": "rm -rf addon/snapshots",
     "clear.full": "rm -rf node_modules package-lock.json",
     "test": "./node_modules/.bin/jest"
   },

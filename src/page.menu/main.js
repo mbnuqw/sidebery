@@ -33,6 +33,8 @@ export default new Vue({
   },
 
   async created() {
+    Store.dispatch('loadStyles')
+
     browser.windows.getCurrent()
       .then(win => {
         State.private = win.incognito
@@ -55,6 +57,5 @@ export default new Vue({
     await Store.dispatch('loadSettings')
     await Store.dispatch('loadState')
     await Store.dispatch('loadCtxMenu')
-    Store.dispatch('loadStyles')
   },
 })

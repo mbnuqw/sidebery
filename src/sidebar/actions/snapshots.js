@@ -4,7 +4,7 @@ export default {
   /**
    * Make snapshot
    */
-  async makeSnapshot({ state, dispatch, getters }) {
+  async makeSnapshot({ state, getters }) {
     const time = ~~(Date.now() / 1000)
 
     // Gather tabs and containers
@@ -62,28 +62,30 @@ export default {
     // If all ok, create snapshot and load
     if (tabs.length === 0) return
     const snapshot = { tabs, ctxs, time }
-    state.snapshots = await dispatch('loadSnapshots')
 
-    // Check if there are changes from last five snapshots
+    // Load snapshots
+    const ans = await browser.storage.local.get('snapshots') || {}
+    const snapshots = ans.snapshots || []
+    snapshots.reverse()
+
+    // Check if there are changes from last three snapshots
     const shape = JSON.stringify({ tabs: snapshot.tabs, ctxs: snapshot.ctxs })
-    const existed = state.snapshots
-      .slice(0, 5)
+    const existed = snapshots
+      .slice(-3)
       .some(s => JSON.stringify({ tabs: s.tabs, ctxs: s.ctxs }) === shape)
     if (existed) return
 
     // Put new one to store
-    state.snapshots.unshift(snapshot)
+    snapshots.push(snapshot)
 
     // Remove last snapshots if there are too many of them
-    const size = new Blob([JSON.stringify(state.snapshots)]).size
+    const size = new Blob([JSON.stringify(snapshots)]).size
     if (size > 655360) {
-      state.snapshots.splice(-5, 5)
+      snapshots.splice(-5, 5)
     }
 
     // Store snapshots and unload from mem
-    const snapshots = JSON.parse(JSON.stringify(state.snapshots)).reverse()
     await browser.storage.local.set({ snapshots })
-    dispatch('unloadSnapshots')
   },
 
   /**
@@ -128,59 +130,11 @@ export default {
   },
 
   /**
-   * Remove snapshot
-   */
-  async removeSnapshot({ state }, index) {
-    if (index < 0) return
-
-    // Remove
-    if (state.snapshots[index]) {
-      state.snapshots.splice(index, 1)
-    }
-
-    // Store snapshots
-    const snapshots = JSON.parse(JSON.stringify(state.snapshots)).reverse()
-    await browser.storage.local.set({ snapshots })
-  },
-
-  /**
-   * Remove all snapshots.
-   */
-  async removeAllSnapshot({ state }) {
-    state.snapshots = []
-    await browser.storage.local.set({ snapshots: [] })
-  },
-
-  /**
    * Load snapshots.
    */
-  async loadSnapshots() {
+  async loadSnapshots({ state }) {
     const ans = await browser.storage.local.get('snapshots')
-    if (!ans.snapshots) return []
-    return ans.snapshots.reverse() || []
-  },
-
-  /**
-   * Unload snapshots.
-   */
-  unloadSnapshots({ state }) {
-    state.snapshots = []
-  },
-
-  /**
-   * Open snapshots viewer
-   */
-  async openSnapshotsViewer({ state, dispatch }) {
-    state.snapshots = await dispatch('loadSnapshots')
-    if (state.panelIndex >= 0) state.lastPanelIndex = state.panelIndex
-    state.panelIndex = -4
-  },
-
-  /**
-   * Close snapshots viewer
-   */
-  closeSnapshotsViewer({ state }) {
-    state.lastPanelIndex = state.panelIndex
-    state.panelIndex = state.lastPanelIndex
+    if (ans && ans.snapshots) state.snapshots = ans.snapshots
+    state.snapshots.reverse()
   },
 }
