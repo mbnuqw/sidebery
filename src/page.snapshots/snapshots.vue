@@ -1,6 +1,7 @@
 <template lang="pug">
 .SnapshotsList
   h1 Snapshots
+  .placeholder(v-if="!$store.state.snapshots.length")
   .snapshot(v-for="(s, i) in $store.state.snapshots")
     .datetime {{uelapsed(s.time)}}
     .panel-info(v-if="s.tabs.find(t => t.pinned)")
@@ -177,6 +178,16 @@ export default {
     &[tree-lvl="10"]
       margin-left: 100px
 
+.SnapshotsList .placeholder
+  box(absolute)
+  size(5px, same)
+  pos(calc(50% + 50px), calc(50% - 2px))
+  background-color: var(--inactive-fg)
+  border-radius: 50%
+  transform: translateZ(0)
+  box-shadow: -9px 0 0 0 var(--inactive-fg),
+              9px 0 0 0 var(--inactive-fg)
+
 .SnapshotsList .ctrls
   box(relative, flex)
   justify-content: flex-end
@@ -197,5 +208,4 @@ export default {
   &:active
     transition: none
     opacity: .7
-  
 </style>

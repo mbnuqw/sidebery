@@ -550,7 +550,7 @@ export default {
   grid-gap: 8px 8px
   justify-content: center
   flex-wrap: wrap
-  margin: 5px 16px
+  margin: 5px 16px 24px
 
 .StylesEditor .btn
   size(auto)

@@ -280,7 +280,7 @@
         :inline="true"
         :value="$store.state.permAllUrls"
         @input="togglePermAllUrls")
-      .ctrls: .info {{t('settings.all_urls_info')}}
+      .box: .info {{t('settings.all_urls_info')}}
 
     .separator
 
@@ -290,7 +290,7 @@
         :inline="true"
         :value="$store.state.permTabHide"
         @input="togglePermTabHide")
-      .ctrls: .info {{t('settings.tab_hide_info')}}
+      .box: .info {{t('settings.tab_hide_info')}}
 
   section
     h2 {{t('settings.snapshots_title')}}
