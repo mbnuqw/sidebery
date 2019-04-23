@@ -35,10 +35,38 @@ body
   overflow: hidden
   opacity: 0
 
-.logo
-  box(relative)
-  text(s: 1.5rem, w: 700)
+footer
+  box(relative, flex)
   margin: 20px auto 50px
+  justify-content: center
+  align-items: center
   color: var(--inactive-fg)
-  cursor: default
-  opacity: .24
+
+  .github
+  .amo
+    box(relative)
+    size(24px, same)
+    opacity: .36
+    transition: opacity var(--d-fast)
+    &:hover
+      opacity: 1
+    &:active
+      opacity: .5
+  
+  .amo svg
+    pos(0, r: 0)
+    size(22px, same)
+    transform: rotateZ(-45deg)
+
+  svg
+    box(absolute)
+    size(100%, same)
+    fill: var(--inactive-fg)
+
+  .logo
+    box(relative)
+    text(s: 1.5rem, w: 700)
+    padding: 0 32px
+    color: var(--inactive-fg)
+    cursor: default
+    opacity: .36
