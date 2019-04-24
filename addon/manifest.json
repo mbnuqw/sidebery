@@ -13,8 +13,8 @@
   "description": "__MSG_ExtDesc__",
   "homepage_url": "https://github.com/mbnuqw/sidebery",
   "icons": {
-    "48": "./assets/logo-ce32-48.png",
-    "96": "./assets/logo-ce32-96.png"
+    "48": "./assets/logo-df-48.png",
+    "96": "./assets/logo-df-96.png"
   },
 
   "options_ui": {
@@ -39,8 +39,8 @@
 
   "sidebar_action": {
     "default_icon": {
-      "16": "./assets/logo-ce32-16.png",
-      "32": "./assets/logo-ce32-32.png"
+      "16": "./assets/logo-g-16.png",
+      "32": "./assets/logo-g-32.png"
     },
     "default_title": "Sidebery",
     "default_panel": "./sidebar/index.html"
@@ -140,19 +140,19 @@
 
   "browser_action": {
     "default_icon": {
-      "16": "./assets/logo-ce32-16.png",
-      "32": "./assets/logo-ce32-32.png"
+      "16": "./assets/logo-g-16.png",
+      "32": "./assets/logo-g-32.png"
     },
     "default_title": "__MSG_ActionTitle__",
     "theme_icons": [
       {
-        "light": "./assets/logo-ce-16.png",
-        "dark": "./assets/logo-32-16.png",
+        "light": "./assets/logo-gl-16.png",
+        "dark": "./assets/logo-gd-16.png",
         "size": 16
       },
       {
-        "light": "./assets/logo-ince-32.png",
-        "dark": "./assets/logo-in32-32.png",
+        "light": "./assets/logo-gl-32.png",
+        "dark": "./assets/logo-gd-32.png",
         "size": 32
       }
     ]
