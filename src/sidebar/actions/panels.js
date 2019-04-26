@@ -1,5 +1,6 @@
 import EventBus from '../event-bus'
 import Utils from '../../libs/utils'
+import Logs from '../../libs/logs'
 import ReqHandler from '../proxy'
 import { DEFAULT_PANELS } from '../store.state'
 
@@ -14,6 +15,7 @@ export default {
     // Get contextual identities
     const ctxs = await browser.contextualIdentities.query({})
     if (!ctxs) {
+      Logs.push('[WARN] Cannot load contextual identities')
       state.containers = DEFAULT_PANELS
       return
     }
@@ -21,6 +23,7 @@ export default {
     // Get saved containers
     let ans = await browser.storage.local.get('containers')
     let containers = DEFAULT_PANELS
+    if (!ans || !ans.containers) Logs.push('[WARN] Cannot load containers')
     if (ans && ans.containers && ans.containers.length) containers = ans.containers
 
     // Merge saved containers and queried contextualIdentities
@@ -79,6 +82,8 @@ export default {
 
     // Set requests handler (if needed)
     dispatch('updateReqHandler')
+
+    Logs.push('[INFO] Containers loaded')
   },
 
   /**

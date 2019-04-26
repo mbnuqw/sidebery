@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import Logs from '../../libs/logs'
 
 let saveFaviconsTimeout
 
@@ -8,8 +9,12 @@ export default {
    */
   async loadFavicons({ state }) {
     let ans = await browser.storage.local.get('favicons')
-    if (!ans.favicons) return
+    if (!ans.favicons) {
+      Logs.push('[WARN] Cannot load favicons')
+      return
+    }
     state.favicons = ans.favicons
+    Logs.push('[INFO] Favicons loaded')
   },
 
   /**
@@ -98,5 +103,7 @@ export default {
       await dispatch('clearFaviCache')
       await browser.storage.local.set({ favAutoCleanTime: now })
     }
+
+    Logs.push('[INFO] Favicons cleaned up')
   },
 }

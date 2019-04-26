@@ -15,10 +15,6 @@ body
   padding: 0 8px
   background-color: var(--bg)
 
-body h2
-  max-width: 450px
-  text-align: center
-
 body input
   -webkit-appearance: none
   border: none
@@ -29,32 +25,163 @@ body input
   resize: none
   z-index: 1
 
+.hidden
+.hidden-assets
+  box(absolute)
+  pos(0, 0)
+  size(0, 0)
+  overflow: hidden
+  opacity: 0
+
 .logo
   box(relative)
-  text(s: 1.5rem, w: 700)
+  size(36px, same)
+  padding: 0 36px
   margin: 50px auto
-  color: var(--inactive-fg)
-  cursor: default
+  fill: #646464
   opacity: .24
 
 .title
-  box(relative, block)
+  box(relative)
   size(100%)
-  text(monospace, s: 9px, w: 700)
+  text(s: 2.5rem, w: 700)
+  padding: 30px 0
+  color: var(--title-fg)
   text-align: center
-  color: var(--inactive-fg)
-  margin: 50px 0 50px
-  white-space: pre
-  cursor: default
-  opacity: .8
+
+h2
+  box(relative)
+  size(100%)
+  text(s: 2rem, w: 400)
+  color: var(--sub-title-fg)
+  text-align: center
+  padding: 15px 0
+
+.info
+  box(relative, flex)
+  size(100%, )
+  flex-wrap: wrap
+  justify-content: center
+  padding: 0 0 16px
+
+  section
+    box(relative, flex)
+    size(250px)
+    align-items: center
+    flex-direction: column
+    padding: 0 0 32px
+
+  .sub
+    box(relative)
+    size(100%, max-w: 200px)
+    padding: 0 8px
+
+    .label
+      text(s: rem(14))
+
+.separator
+  box(relative)
+  size(100%, 1px, max-w: 220px)
+  background-color: #00000032
+  box-shadow: 0 1px 0 0 #78787816
+  margin: 3px 0
+
+.field
+  box(relative, flex)
+  size(calc(100% - 16px), max-w: 200px)
+  justify-content: space-between
+  align-items: center
+  padding: 0 8px
+  
+  .label
+    box(relative)
+    text(s: rem(15))
+    flex-shrink: 1
+    overflow: hidden
+    text-overflow: ellipsis
+    color: var(--label-fg)
+  
+  .value
+    box(relative)
+    text(monospace, s: rem(11))
+    flex-shrink: 0
+    color: var(--info-fg)
+    &.-info
+      color: var(--active-fg)
+
+.windows
+  box(relative, flex)
+  size(100%)
+  flex-wrap: wrap
+  justify-content: center
+  padding: 0 0 16px
+
+  .window
+    box(relative, flex)
+    size(100%)
+    flex-wrap: wrap
+    justify-content: center
+    padding: 0 0 32px
+
+  .init
+    box(relative, flex)
+    size(250px)
+    justify-content: flex-start
+    flex-direction: column
+    padding: 0 0 32px
+  
+  .tabs
+    box(relative, flex)
+    size(320px)
+    align-items: center
+    flex-direction: column
+    padding: 0 0 32px
+  
+  .tab
+    box(relative, flex)
+    size(calc(100% - 16px), max-w: 300px)
+    align-items: center
+    justify-content: flex-start
+    padding: 0 8px
+  
+  .refs
+    box(relative)
+    text(monospace, s: rem(10))
+    flex-shrink: 1
+    overflow: hidden
+    text-overflow: ellipsis
+    color: var(--label-fg)
+    white-space: pre
+    margin: 0 16px 0 0
+
+  .flags
+  .lvl
+    box(relative)
+    text(monospace, s: rem(10))
+    flex-shrink: 0
+    white-space: pre
+    margin: 0 16px 0 0
+
+  .flags
+    box(flex)
+    justify-content: flex-start
+    align-items: center
+    color: var(--inactive-fg)
+    .-active
+      color: var(--active-fg)
+
+  .lvl
+    text(s: rem(9))
+    color: var(--info-fg)
 
 .data
   box(relative, flex)
   size(100%)
+  flex-wrap: wrap
   justify-content: space-around
   section
     box(relative)
-    size(100%, max-w: 640px)
+    size(100%, max-w: 720px)
     h2
       box(relative)
       size(100%)
@@ -62,10 +189,10 @@ body input
       color: var(--info-fg)
       text-align: center
       padding: 8px 0
-    .data
+    .json
       box(relative)
       size(100%)
       text(monospace, s: 10px)
       color: var(--true-fg)
-      white-space: pre-wrap
+      word-wrap: anywhere
       cursor: pointer

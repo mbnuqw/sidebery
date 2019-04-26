@@ -1,4 +1,5 @@
 import Utils from '../../libs/utils'
+import Logs from '../../libs/logs'
 import EventBus from '../event-bus'
 
 let TabsTreeSaveTimeout
@@ -54,6 +55,7 @@ export default {
     for (let move of moves) {
       await browser.tabs.move(move[0], { index: move[1] })
     }
+    if (moves.length) Logs.push('[INFO] Tabs order was normalized')
 
     // Switch to panel with active tab
     const activePanelIsTabs = activePanel.panel === 'TabsPanel'
@@ -124,6 +126,8 @@ export default {
         }
       }
       Utils.UpdateTabsTree(state)
+
+      Logs.push('[INFO] Tabs tree restored')
     }
 
     // Update succession
@@ -131,6 +135,8 @@ export default {
       const target = Utils.FindSuccessorTab(state, activeTab)
       if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
     }
+
+    Logs.push('[INFO] Tabs loaded')
   },
 
   /**

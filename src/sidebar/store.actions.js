@@ -1,3 +1,4 @@
+import Logs from '../libs/logs'
 import SavedStateActions from './actions/saved-state'
 import SettingsActions from './actions/settings'
 import KeybindingsActions from './actions/keybindings'
@@ -86,6 +87,8 @@ export default {
       state.hideFoldedTabs = false
       dispatch('saveSettings')
     }
+
+    Logs.push('[INFO] Permissions loaded')
   },
 
   /**

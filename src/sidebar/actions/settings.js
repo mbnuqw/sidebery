@@ -1,5 +1,6 @@
 import { DEFAULT_SETTINGS } from '../settings'
 import Utils from '../../libs/utils'
+import Logs from '../../libs/logs'
 
 export default {
   /**
@@ -7,12 +8,13 @@ export default {
    */
   async loadSettings({ state }) {
     let ans = await browser.storage.local.get('settings')
-    let settings = ans.settings
-    if (!settings) {
+    if (!ans || !ans.settings) {
+      Logs.push('[WARN] Cannot load settings')
       state.settingsLoaded = true
       return
     }
 
+    let settings = ans.settings
     for (const key in settings) {
       if (!settings.hasOwnProperty(key)) continue
       if (settings[key] === undefined) continue
@@ -20,6 +22,7 @@ export default {
     }
 
     state.settingsLoaded = true
+    Logs.push('[INFO] Settings loaded')
   },
 
   /**
@@ -51,7 +54,7 @@ export default {
       state.activateAfterClosingNextRule !== settings.activateAfterClosingNextRule
     const resetTree = state.tabsTree !== settings.tabsTree && state.tabsTree
     const updateTree = state.tabsTreeLimit !== settings.tabsTreeLimit
-    const updateInvisTabs =  state.hideFoldedTabs !== settings.hideFoldedTabs
+    const updateInvisTabs = state.hideFoldedTabs !== settings.hideFoldedTabs
     const toggleBookmarks = state.bookmarksPanel !== settings.bookmarksPanel
 
     // Update settings
@@ -107,30 +110,11 @@ export default {
   },
 
   /**
-   * Provide debug data
+   * Provide window-wise debug data
    */
-  getDbgInfo({ state, getters }) {
-    const settings = {}
-    for (let sKey in DEFAULT_SETTINGS) {
-      if (!DEFAULT_SETTINGS.hasOwnProperty(sKey)) continue
-      settings[sKey] = state[sKey]
-    }
-
-    const panels = []
-    for (let panel of getters.panels) {
-      // Get sanitized clone
-      const panelClone = JSON.parse(JSON.stringify(panel))
-
-      if (panelClone.tabs) panelClone.tabs = panelClone.tabs.length
-      delete panelClone.name
-      delete panelClone.iconUrl
-      delete panelClone.includeHosts
-      delete panelClone.excludeHosts
-      delete panelClone.proxy
-      panels.push(panelClone)
-    }
-
+  async getWindowDbgInfo({ state }) {
     const tabs = []
+
     for (let tab of state.tabs) {
       // Get sanitized clone
       const tabClone = JSON.parse(JSON.stringify(tab))
@@ -149,6 +133,75 @@ export default {
       tabs.push(tabClone)
     }
 
-    return { settings, panels, tabs }
+    return { logs: Logs, tabs }
+  },
+
+  /**
+   * Provide common debug data
+   */
+  async getCommonDbgInfo({ state, getters }) {
+    // Settings
+    const settings = {}
+    for (let sKey in DEFAULT_SETTINGS) {
+      if (!DEFAULT_SETTINGS.hasOwnProperty(sKey)) continue
+      settings[sKey] = state[sKey]
+    }
+
+    // Panels
+    const panels = []
+    for (let panel of getters.panels) {
+      // Get sanitized clone
+      const panelClone = JSON.parse(JSON.stringify(panel))
+
+      if (panelClone.tabs) panelClone.tabs = panelClone.tabs.length
+      delete panelClone.name
+      delete panelClone.iconUrl
+      delete panelClone.includeHosts
+      delete panelClone.excludeHosts
+      delete panelClone.proxy
+      panels.push(panelClone)
+    }
+
+    // Storage
+    const stored = await browser.storage.local.get()
+    const storage = {}
+    try {
+      storage.overal = Utils.StrSize(JSON.stringify(stored))
+      storage.favicons = Utils.StrSize(JSON.stringify(stored.favicons))
+      storage.faviconsCount = Object.keys(stored.favicons).length
+      storage.tabs = Utils.StrSize(JSON.stringify(stored.tabsTreeState))
+      storage.snapshots = Utils.StrSize(JSON.stringify(stored.snapshots))
+      storage.containers = Utils.StrSize(JSON.stringify(stored.containers))
+    } catch (err) {
+      // nothing to do...
+    }
+
+    // Bookmarks
+    let bookmarksCount = 0
+    let foldersCount = 0
+    let separatorsCount = 0
+    let lvl = 0, maxDepth = 0
+    const walker = nodes => {
+      if (lvl > maxDepth) maxDepth = lvl
+      for (let node of nodes) {
+        if (node.type === 'bookmark') bookmarksCount++
+        if (node.type === 'folder') foldersCount++
+        if (node.type === 'separator') separatorsCount++
+        if (node.children) {
+          lvl++
+          walker(node.children)
+          lvl--
+        }
+      }
+    }
+    walker(state.bookmarks)
+    const bookmarks = {
+      bookmarksCount,
+      foldersCount,
+      separatorsCount,
+      maxDepth,
+    }
+
+    return { settings, panels, storage, bookmarks }
   },
 }

@@ -1,3 +1,4 @@
+import Logs from '../../libs/logs'
 import State from '../store.state'
 import { Translate } from '../../mixins/dict'
 
@@ -253,8 +254,14 @@ export default {
   async loadCtxMenu({ state }) {
     let ans = await browser.storage.local.get(['tabsMenu', 'bookmarksMenu']) || {}
 
-    if (ans.tabsMenu) state.tabsMenu = ans.tabsMenu
-    if (ans.bookmarksMenu) state.bookmarksMenu = ans.bookmarksMenu
+    if (ans.tabsMenu) {
+      state.tabsMenu = ans.tabsMenu
+      Logs.push('[INFO] Tabs menu loaded')
+    }
+    if (ans.bookmarksMenu) {
+      state.bookmarksMenu = ans.bookmarksMenu
+      Logs.push('[INFO] Bookmarks menu loaded')
+    }
   },
 
   /**

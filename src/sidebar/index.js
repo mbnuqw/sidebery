@@ -85,6 +85,8 @@ export default new Vue({
     browser.storage.onChanged.addListener(this.onChangeStorage)
     browser.commands.onCommand.addListener(this.onCmd)
 
+    State.instanceType = 'sidebar'
+
     await Store.dispatch('loadSettings')
     await Store.dispatch('loadState')
     await Store.dispatch('loadContainers')

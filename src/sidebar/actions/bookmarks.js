@@ -1,5 +1,6 @@
 import EventBus from '../event-bus'
 import Utils from '../../libs/utils'
+import Logs from '../../libs/logs'
 
 export default {
   /**
@@ -7,10 +8,9 @@ export default {
    */
   async loadBookmarks({ state }) {
     EventBus.$emit('panelLoadingStart', 0)
-    let bookmarks = []
-    try {
-      bookmarks = await browser.bookmarks.getTree()
-    } catch (err) {
+    let bookmarks = await browser.bookmarks.getTree()
+    if (!bookmarks || !bookmarks.length) {
+      Logs.push('[ERROR] Cannot load bookmarks')
       EventBus.$emit('panelLoadingErr', 0)
     }
 
@@ -40,10 +40,13 @@ export default {
           }
         })
       }
+      Logs.push('[INFO] Bookmarks tree state restored')
     }
 
     state.bookmarks = bookmarks[0].children
     EventBus.$emit('panelLoadingOk', 0)
+
+    Logs.push('[INFO] Bookmarks loaded')
   },
 
   /**

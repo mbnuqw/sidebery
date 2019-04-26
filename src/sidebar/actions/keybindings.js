@@ -1,3 +1,4 @@
+import Logs from '../../libs/logs'
 import EventBus from '../event-bus'
 
 export default {
@@ -7,6 +8,7 @@ export default {
   async loadKeybindings({ state }) {
     let commands = await browser.commands.getAll()
     state.keybindings = commands
+    Logs.push('[INFO] Keybindings loaded')
   },
 
   /**

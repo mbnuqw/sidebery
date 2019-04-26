@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Utils from '../../libs/utils'
+import Logs from '../../libs/logs'
 import EventBus from '../event-bus'
 
 export default {
@@ -9,7 +10,10 @@ export default {
   async loadStyles({ state }) {
     let ans = await browser.storage.local.get('styles')
     let loadedStyles = ans.styles
-    if (!loadedStyles) return
+    if (!loadedStyles) {
+      Logs.push('[WARN] Cannot load styles')
+      return
+    }
 
     const rootEl = document.getElementById('root')
     for (let key in state.customStyles) {
@@ -24,6 +28,7 @@ export default {
     }
 
     EventBus.$emit('dynVarChange')
+    Logs.push('[INFO] Styles loaded')
   },
 
   /**

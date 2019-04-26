@@ -7,6 +7,7 @@ const eb = new Vue()
 browser.runtime.onMessage.addListener(msg => {
   if (!msg.name && !msg.action) return
   if (msg.windowId !== undefined && msg.windowId !== State.windowId) return
+  if (msg.instanceType !== undefined && msg.instanceType !== State.instanceType) return
 
   // Emit
   if (msg.name) eb.$emit(msg.name, msg.arg)
