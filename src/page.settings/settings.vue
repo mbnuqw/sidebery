@@ -187,7 +187,9 @@
       :value="$store.state.bgNoise"
       @input="setOpt('bgNoise', $event)")
     .separator
-    .ctrls: .btn(@click="openPage('styles/styles')") {{t('settings.edit_styles')}}
+    .ctrls
+      .btn(@click="openPage('styles/styles')") {{t('settings.edit_styles')}}
+      .btn(@click="openPage('theme/theme')") {{t('settings.edit_theme')}}
 
   section
     h2 {{t('settings.mouse_title')}}

@@ -13,7 +13,7 @@ export const SETTINGS_OPTIONS = {
   pinnedTabsPositionOpts: ['panel', 'top', 'left', 'right'],
   tabsTreeLimitOpts: [1, 2, 3, 4, 5, 'none'],
   fontSizeOpts: ['xs', 's', 'm', 'l', 'xl', 'xxl'],
-  themeOpts: ['dark', 'light'],
+  themeOpts: ['dark', 'light', 'custom'],
 }
 
 export const DEFAULT_SETTINGS = {

@@ -52,6 +52,10 @@ const STYLES = scripts['dev.styles'].split(' ')
 const STYLES_CMD = STYLES[0]
 const STYLES_OPT = STYLES.slice(1)
 
+const THEME = scripts['dev.theme'].split(' ')
+const THEME_CMD = THEME[0]
+const THEME_OPT = THEME.slice(1)
+
 const SNAPSHOTS = scripts['dev.snapshots'].split(' ')
 const SNAPSHOTS_CMD = SNAPSHOTS[0]
 const SNAPSHOTS_OPT = SNAPSHOTS.slice(1)
@@ -96,6 +100,10 @@ Menu.stderr.on('data', data => errOut('[Menu ERROR] ', data))
 const Styles = spawn(STYLES_CMD, STYLES_OPT, EXEC_CONFIG)
 Styles.stdout.on('data', data => logOut('[Styles] ', data))
 Styles.stderr.on('data', data => errOut('[Styles ERROR] ', data))
+
+const Theme = spawn(THEME_CMD, THEME_OPT, EXEC_CONFIG)
+Theme.stdout.on('data', data => logOut('[Theme] ', data))
+Theme.stderr.on('data', data => errOut('[Theme ERROR] ', data))
 
 const Snapshots = spawn(SNAPSHOTS_CMD, SNAPSHOTS_OPT, EXEC_CONFIG)
 Snapshots.stdout.on('data', data => logOut('[Snapshots] ', data))

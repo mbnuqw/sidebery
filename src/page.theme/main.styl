@@ -1,0 +1,153 @@
+@import '../styles/mixins'
+@import '../styles/vars'
+@import '../styles/btn'
+
+html
+  box(relative)
+  size(h: 100%)
+
+body
+  box(relative, flex)
+  size(100%, min-h: 100%, max-h: 100%)
+  text(sans-serif, smooth: on)
+  overflow: hidden
+  margin: 0
+  justify-content: flex-start
+  align-items: stretch
+  padding: 0
+  background-color: var(--bg)
+
+.hidden
+.hidden-assets
+  box(absolute)
+  pos(0, 0)
+  size(0, 0)
+  overflow: hidden
+  opacity: 0
+
+// --- Deshboard ---
+section.dashboard
+  box(relative, flex)
+  size(180px)
+  flex-shrink: 0
+  flex-direction: column
+  padding: 0 8px 8px
+  justify-content: center
+  -moz-user-select: none
+  background-color: #00000012
+  box-shadow: inset 0 0 0 1px #00000016,
+              inset 0 0 8px 0 #00000032
+
+  h1.title
+    box(relative)
+    size(100%)
+    text(s: rem(24px), w: 500)
+    padding: 24px 0
+    margin: 0
+    color: var(--title-fg)
+    text-align: center
+
+  .predefined
+    box(relative)
+    size(100%)
+    flex-grow: 1
+
+    .theme
+      box(relative)
+      text(s: rem(16px))
+      color: var(--info-fg)
+      padding: 3px 8px
+      cursor: pointer
+      opacity: .8
+      &:hover
+        opacity: 1
+      &:active
+        opacity: .7
+      &.-active
+        color: var(--active-fg)
+        opacity: 1
+
+  .btn
+    size(auto)
+    margin: 0 8px 8px
+
+  .logo
+    box(relative)
+    size(36px, same)
+    margin: 16px auto
+    fill: #646464
+    opacity: .24
+
+
+// --- Selectors ---
+section.selectors
+  box(relative, border-box)
+  size(75%, h: 100%, max-h: 100vh)
+  overflow-x: hidden
+  overflow-y: auto
+  padding: 16px 12px 16px 12px
+
+  .selector
+    box(relative)
+    text(monospace, s: rem(11))
+    padding: 2px 0
+    color: var(--label-fg)
+    cursor: pointer
+    &[is-component]
+      color: var(--active-fg)
+    &[lvl="0"]
+      padding-left: 0
+    &[lvl="1"]
+      padding-left: 10px
+    &[lvl="2"]
+      padding-left: 20px
+    &[lvl="3"]
+      padding-left: 30px
+    &[lvl="4"]
+      padding-left: 40px
+    &[lvl="5"]
+      padding-left: 50px
+    &[lvl="6"]
+      padding-left: 60px
+    &[lvl="7"]
+      padding-left: 70px
+    &[lvl="8"]
+      padding-left: 80px
+    &[lvl="9"]
+      padding-left: 90px
+    &[lvl="10"]
+      padding-left: 100px
+    &[lvl="11"]
+      padding-left: 110px
+    &[lvl="12"]
+      padding-left: 120px
+    &[lvl="13"]
+      padding-left: 130px
+    &[lvl="14"]
+      padding-left: 140px
+    &[lvl="15"]
+      padding-left: 150px
+    &[lvl="16"]
+      padding-left: 160px
+
+// --- CSS ---
+section.css
+  box(relative)
+  size(100%)
+  flex-grow: 2
+  background-color: #00000012
+  box-shadow: inset 0 0 0 1px #00000016,
+              inset 0 0 8px 0 #00000032
+
+  .editor
+    box(absolute, border-box)
+    size(100%, 100%)
+    text(monospace, s: rem(11))
+    color: var(--true-fg)
+    -webkit-appearance: none
+    border: none
+    outline: none
+    margin: 0
+    padding: 16px
+    background-color: transparent
+    resize: none

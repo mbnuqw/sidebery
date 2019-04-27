@@ -83,9 +83,11 @@ export default {
   'settings.switch_theme': { message: 'Theme' },
   'settings.theme_dark': { message: 'dark' },
   'settings.theme_light': { message: 'light' },
+  'settings.theme_custom': { message: 'custom' },
   'settings.bg_noise': { message: 'Frosted background' },
   'settings.animations': { message: 'Animations' },
   'settings.edit_styles': { message: 'Edit styles' },
+  'settings.edit_theme': { message: 'Edit theme' },
 
   // --- Snapshots
   'settings.snapshots_title': { message: 'Snapshots' },

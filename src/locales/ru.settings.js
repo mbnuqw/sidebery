@@ -83,9 +83,11 @@ export default {
   'settings.switch_theme': { message: 'Тема' },
   'settings.theme_dark': { message: 'темная' },
   'settings.theme_light': { message: 'светлая' },
+  'settings.theme_custom': { message: 'своя' },
   'settings.bg_noise': { message: 'Матовый задный фон' },
   'settings.animations': { message: 'Анимации' },
   'settings.edit_styles': { message: 'Редактировать стили' },
+  'settings.edit_theme': { message: 'Редактировать тему' },
 
   // --- Snapshots
   'settings.snapshots_title': { message: 'Снепшоты' },

@@ -26,6 +26,26 @@ const CLEAR_DBG = scripts['clear.debug'].split(' ')
 const CLEAR_DBG_CMD = CLEAR_DBG[0]
 const CLEAR_DBG_OPT = CLEAR_DBG.slice(1)
 
+const CLEAR_STYLES = scripts['clear.styles'].split(' ')
+const CLEAR_STYLES_CMD = CLEAR_STYLES[0]
+const CLEAR_STYLES_OPT = CLEAR_STYLES.slice(1)
+
+const CLEAR_THEME = scripts['clear.theme'].split(' ')
+const CLEAR_THEME_CMD = CLEAR_THEME[0]
+const CLEAR_THEME_OPT = CLEAR_THEME.slice(1)
+
+const CLEAR_SETTINGS = scripts['clear.settings'].split(' ')
+const CLEAR_SETTINGS_CMD = CLEAR_SETTINGS[0]
+const CLEAR_SETTINGS_OPT = CLEAR_SETTINGS.slice(1)
+
+const CLEAR_SNAPSHOTS = scripts['clear.snapshots'].split(' ')
+const CLEAR_SNAPSHOTS_CMD = CLEAR_SNAPSHOTS[0]
+const CLEAR_SNAPSHOTS_OPT = CLEAR_SNAPSHOTS.slice(1)
+
+const CLEAR_MENU = scripts['clear.menu'].split(' ')
+const CLEAR_MENU_CMD = CLEAR_MENU[0]
+const CLEAR_MENU_OPT = CLEAR_MENU.slice(1)
+
 const SIDEBAR = scripts['build.sidebar'].split(' ')
 const SIDEBAR_CMD = SIDEBAR[0]
 const SIDEBAR_OPT = SIDEBAR.slice(1)
@@ -58,6 +78,10 @@ const STYLES = scripts['build.styles'].split(' ')
 const STYLES_CMD = STYLES[0]
 const STYLES_OPT = STYLES.slice(1)
 
+const THEME = scripts['build.theme'].split(' ')
+const THEME_CMD = THEME[0]
+const THEME_OPT = THEME.slice(1)
+
 const SNAPSHOTS = scripts['build.snapshots'].split(' ')
 const SNAPSHOTS_CMD = SNAPSHOTS[0]
 const SNAPSHOTS_OPT = SNAPSHOTS.slice(1)
@@ -81,6 +105,17 @@ out = spawnSync(CLEAR_PERM_CMD, CLEAR_PERM_OPT, EXEC_CONFIG)
 if (out.status) process.exit(out.status)
 out = spawnSync(CLEAR_DBG_CMD, CLEAR_DBG_OPT, EXEC_CONFIG)
 if (out.status) process.exit(out.status)
+out = spawnSync(CLEAR_STYLES_CMD, CLEAR_STYLES_OPT, EXEC_CONFIG)
+if (out.status) process.exit(out.status)
+out = spawnSync(CLEAR_THEME_CMD, CLEAR_THEME_OPT, EXEC_CONFIG)
+if (out.status) process.exit(out.status)
+out = spawnSync(CLEAR_SETTINGS_CMD, CLEAR_SETTINGS_OPT, EXEC_CONFIG)
+if (out.status) process.exit(out.status)
+out = spawnSync(CLEAR_SNAPSHOTS_CMD, CLEAR_SNAPSHOTS_OPT, EXEC_CONFIG)
+if (out.status) process.exit(out.status)
+out = spawnSync(CLEAR_MENU_CMD, CLEAR_MENU_OPT, EXEC_CONFIG)
+if (out.status) process.exit(out.status)
+
 out = spawnSync(SIDEBAR_CMD, SIDEBAR_OPT, EXEC_CONFIG)
 if (out.status) process.exit(out.status)
 out = spawnSync(GROUP_CMD, GROUP_OPT, EXEC_CONFIG)
@@ -97,7 +132,10 @@ out = spawnSync(MENU_CMD, MENU_OPT, EXEC_CONFIG)
 if (out.status) process.exit(out.status)
 out = spawnSync(STYLES_CMD, STYLES_OPT, EXEC_CONFIG)
 if (out.status) process.exit(out.status)
+out = spawnSync(THEME_CMD, THEME_OPT, EXEC_CONFIG)
+if (out.status) process.exit(out.status)
 out = spawnSync(SNAPSHOTS_CMD, SNAPSHOTS_OPT, EXEC_CONFIG)
 if (out.status) process.exit(out.status)
+
 out = spawnSync(EXT_CMD, EXT_OPT, EXEC_CONFIG)
 if (out.status) process.exit(out.status)

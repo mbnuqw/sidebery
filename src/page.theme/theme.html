@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Settings / Theme</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" media="screen" href="./main.styl" />
+</head>
+<body id="root" class="root -animate">
+  <div class="hidden-assets">
+    <!-- Logo -->
+    <svg id="icon_sidebery" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M1 2a1 1 0 0 1 1-1h4.84a.5.5 0 0 1 .48.64l-.57 2a.5.5 0 0 1-.48.36H1.5a.5.5 0 0 1-.5-.5V2zM5.4 6a.5.5 0 0 1 .49.64l-.57 2a.5.5 0 0 1-.48.36H1.5a.5.5 0 0 1-.5-.5v-2c0-.28.22-.5.5-.5h3.9zM4.46 11.64a.5.5 0 0 0-.48-.64H1.5a.5.5 0 0 0-.5.5V14a1 1 0 0 0 1 1h1.12a.5.5 0 0 0 .48-.36l.86-3zM8.6 14.64l3.72-13a.5.5 0 0 0-.48-.64h-1.46a.5.5 0 0 0-.48.36l-3.72 13a.5.5 0 0 0 .48.64h1.46a.5.5 0 0 0 .48-.36zM15 14V4.57c0-.58-.82-.7-.98-.14l-2.84 9.93a.5.5 0 0 0 .48.64H14a1 1 0 0 0 1-1z"/></svg>
+  </div>
+
+  <section class="dashboard">
+    <h1 class="title">Theme</h1>
+    <div class="predefined">
+      <div class="theme -active">Base</div>
+      <div class="theme">Proton</div>
+      <div class="theme">Metal</div>
+    </div>
+    <div class="btn">Import</div>
+    <div class="btn">Export</div>
+    <!-- <svg class="logo"><use xlink:href="#icon_sidebery"></use></svg> -->
+  </section>
+
+  <section class="selectors" id="selectors">
+    <div class="selector" lvl="0">#root.root</div>
+    <div class="selector" lvl="1" is-component>.Sidebar</div>
+    <div class="selector" lvl="2" is-component>.CtxMenu</div>
+    <div class="selector" lvl="3">.container</div>
+    <div class="selector" lvl="4">.box</div>
+    <div class="selector" lvl="2">.pointer</div>
+    <div class="selector" lvl="3">.arrow</div>
+    <div class="selector" lvl="2" is-component>.PinnedDock</div>
+    <div class="selector" lvl="3" is-component>.PinnedTab</div>
+    <div class="selector" lvl="4">.loaded-fx</div>
+    <div class="selector" lvl="4">.drag-layer</div>
+    <div class="selector" lvl="4">.fav</div>
+    <div class="selector" lvl="5">.placeholder: svg</div>
+    <div class="selector" lvl="5">img</div>
+    <div class="selector" lvl="5">.update-badge</div>
+    <div class="selector" lvl="5">.ok-badge: svg</div>
+    <div class="selector" lvl="5">.err-badge: svg</div>
+    <div class="selector" lvl="5">.loading-spinner</div>
+    <div class="selector" lvl="6">.spinner-stick.spinner-stick-0 ... 11</div>
+    <div class="selector" lvl="5">.audio-badge</div>
+    <div class="selector" lvl="6">svg.-loud</div>
+    <div class="selector" lvl="6">svg.-mute</div>
+    <div class="selector" lvl="5">.close: svg</div>
+    <div class="selector" lvl="3">.to-the-end</div>
+    <div class="selector" lvl="2">.box</div>
+    <div class="selector" lvl="3">.bg</div>
+    <div class="selector" lvl="3">.dimmer</div>
+    <div class="selector" lvl="3">.nav</div>
+    <div class="selector" lvl="4">.nav-strip</div>
+    <div class="selector" lvl="5">.panel-btn.rel-0 ...</div>
+    <div class="selector" lvl="6">svg</div>
+    <div class="selector" lvl="6">.proxy-badge: svg</div>
+    <div class="selector" lvl="6">.update-badge</div>
+    <div class="selector" lvl="6">.ok-badge: svg</div>
+    <div class="selector" lvl="6">.err-badge: svg</div>
+    <div class="selector" lvl="6">.loading-spinner</div>
+    <div class="selector" lvl="7">.spinner-stick.spinner-stick-0 ... 11</div>
+    <div class="selector" lvl="4">.settings-btn</div>
+    <div class="selector" lvl="0">.</div>
+  </section>
+
+  <section class="css">
+    <textarea class="editor">/* --- CSS --- */</textarea>
+  </section>
+
+  <script src="./main.js"></script>
+</body>
+</html>

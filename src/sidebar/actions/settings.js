@@ -204,4 +204,43 @@ export default {
 
     return { settings, panels, storage, bookmarks }
   },
+
+  /**
+   * Get sidebar css selectors
+   */
+  getCssSelectors() {
+    const selectors = [
+      { id: 'root', lvl: 0, classList: ['root'] }
+    ]
+    const rootEl = document.getElementById('root')
+
+    let lvl = 1
+    const walker = nodes => {
+      for (let node of nodes) {
+        if (node.nodeType !== 1) continue
+        if (node.tagName === 'use') continue
+
+        const sel = {
+          id: node.id,
+          tag: node.tagName.toLowerCase(),
+          lvl,
+        }
+
+        if (typeof node.className === 'string') {
+          sel.classList = node.className.split(' ')
+        }
+
+        selectors.push(sel)
+
+        if (node.childNodes && node.childNodes.length) {
+          lvl++
+          walker(node.childNodes)
+          lvl--
+        }
+      }
+    }
+    walker(rootEl.childNodes)
+
+    return selectors
+  },
 }
