@@ -965,13 +965,6 @@ export default {
    * Group tabs
    */
   async groupTabs({ state, dispatch }, tabIds) {
-    // Check permissions
-    if (!state.permAllUrls) {
-      const url = browser.runtime.getURL('permissions/all-urls.html')
-      browser.tabs.create({ url, windowId: state.windowId })
-      return
-    }
-
     // Get tabs
     const tabs = []
     for (let t of state.tabs) {
