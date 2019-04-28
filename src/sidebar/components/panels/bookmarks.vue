@@ -132,11 +132,13 @@ export default {
      */
     onCreated(id, bookmark) {
       let added = false
-      if (bookmark.type === 'bookmark') {
-        bookmark.host = bookmark.url.split('/')[2]
-      }
+      if (bookmark.type === 'bookmark') bookmark.host = bookmark.url.split('/')[2]
       if (bookmark.type === 'folder' && !bookmark.children) bookmark.children = []
       if (bookmark.type === 'folder') bookmark.expanded = false
+      if (State.selOpenedBookmarks && bookmark.url) {
+        bookmark.opened = !!State.tabs.find(t => t.url === bookmark.url)
+      }
+
       const putWalk = nodes => {
         return nodes.map(n => {
           if (n.id === bookmark.parentId) {
@@ -151,6 +153,14 @@ export default {
         })
       }
 
+      State.bookmarksMap[id] = bookmark
+      if (bookmark.url) {
+        if (State.bookmarksUrlMap[bookmark.url]) {
+          State.bookmarksUrlMap[bookmark.url].push(bookmark)
+        } else {
+          State.bookmarksUrlMap[bookmark.url] = [bookmark]
+        }
+      }
       State.bookmarks = putWalk(State.bookmarks)
     },
 
@@ -158,18 +168,28 @@ export default {
      * Handle bookmark change
      */
     onChanged(id, info) {
+      const oldUrl = State.bookmarksMap[id].url
+      if (oldUrl !== info.url && State.bookmarksUrlMap[oldUrl]) {
+        const iob = State.bookmarksUrlMap[oldUrl].findIndex(b => b.id === id)
+        if (iob > -1) State.bookmarksUrlMap[oldUrl].splice(iob, 1)
+      }
+
       let updated = false
       const updateWalk = nodes => {
         return nodes.map(n => {
           if (!n.children) return n
           let b = n.children.find(b => b.id === id)
           if (b) {
-            n.children.splice(b.index, 1, {
-              ...b,
-              title: info.title || b.title,
-              url: info.url || b.url,
-              host: info.url ? info.url.split('/')[2] : b.host,
-            })
+            if (b.title !== info.title) b.title = info.title
+            if (b.url !== info.url) {
+              b.url = info.url
+              b.host = info.url.split('/')[2]
+              if (State.bookmarksUrlMap[info.url]) {
+                State.bookmarksUrlMap[info.url].push(b)
+              } else {
+                State.bookmarksUrlMap[info.url] = [b]
+              }
+            }
             updated = true
           } else if (!updated) n.children = updateWalk(n.children)
           return n
@@ -224,9 +244,11 @@ export default {
      */
     onRemoved(id, info) {
       let removed = false
+      let url
       const rmWalk = nodes => {
         return nodes.map(n => {
           if (n.id === info.parentId) {
+            url = n.children[info.index].url
             n.children.splice(info.index, 1)
             for (let i = info.index; i < n.children.length; i++) {
               n.children[i].index--
@@ -237,6 +259,11 @@ export default {
         })
       }
 
+      State.bookmarksMap[id] = undefined
+      if (url && State.bookmarksUrlMap[url]) {
+        const ib = State.bookmarksUrlMap[url].findIndex(b => b.id === id)
+        if (ib > -1) State.bookmarksUrlMap[url].splice(ib, 1)
+      }
       State.bookmarks = rmWalk(State.bookmarks)
     },
 

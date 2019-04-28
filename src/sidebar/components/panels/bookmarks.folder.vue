@@ -1,5 +1,9 @@
 <template lang="pug">
-.Folder(:is-expanded="node.expanded", :is-parent="isParent", :is-selected="selected")
+.Folder(
+  :is-expanded="node.expanded"
+  :is-parent="isParent"
+  :is-selected="selected"
+  :is-opened="opened")
   .body(:title="tooltip", @click="onClick", @mousedown="onMouseDown", @mouseup="onMouseUp")
     .drag-layer(draggable="true", @dragstart="onDragStart")
     .exp(v-if="isParent")
@@ -24,6 +28,9 @@ import State from '../../store.state'
 import EventBus from '../../event-bus'
 import Bookmark from './bookmarks.bookmark'
 import Separator from './bookmarks.separator'
+
+const istack = []
+const tstack = []
 
 export default {
   name: 'Folder',
@@ -53,6 +60,36 @@ export default {
 
     tooltip() {
       return `${this.node.title}: ${this.node.children.length}`
+    },
+
+    opened() {
+      if (!State.selOpenedBookmarks) return false
+      if (!this.node.children) return false
+      let i, n, target = this.node.children
+      for (i = 0; target && i < target.length; i++) {
+        n = target[i]
+        if (n.opened) {
+          istack.length = 0
+          tstack.length = 0
+          return true
+        }
+        if (n.children) {
+          if (i < target.length - 1) {
+            tstack.push(target)
+            istack.push(i)
+          }
+          target = n.children
+          i = -1
+          continue
+        }
+        if (i === target.length - 1) {
+          target = tstack.pop()
+          i = istack.pop()
+        }
+      }
+      istack.length = 0
+      tstack.length = 0
+      return false
     },
   },
 
@@ -293,10 +330,14 @@ export default {
     pos(0, r: 0)
     size(100vw, 100%)
 
+.Folder:not([is-selected])[is-opened] > .body > .title
+.Folder:not([is-selected])[is-opened] > .body:hover > .title
+  color: var(--active-fg)
+
 .Folder:not([is-selected]) > .body:hover:before
-    background-color: var(--bookmarks-node-bg-hover)
+  background-color: var(--bookmarks-node-bg-hover)
 .Folder:not([is-selected]) > .body:active:before
-    background-color: var(--bookmarks-node-bg-active)
+  background-color: var(--bookmarks-node-bg-active)
 
 .Folder .drag-layer
   box(absolute)

@@ -15,10 +15,28 @@ export default {
     }
 
     // Normalize objects before vue
+    state.bookmarksMap = {}
+    state.bookmarksUrlMap = {}
     const walker = nodes => {
       for (let n of nodes) {
-        if (n.type === 'bookmark') n.host = n.url.split('/')[2]
-        if (n.type === 'folder') n.expanded = false
+        state.bookmarksMap[n.id] = n
+        if (n.type === 'bookmark') {
+          n.host = n.url.split('/')[2]
+          if (state.selOpenedBookmarks) {
+            n.opened = !!state.tabs.find(t => t.url === n.url)
+          } else {
+            n.opened = false
+          }
+          if (state.bookmarksUrlMap[n.url]) {
+            state.bookmarksUrlMap[n.url].push(n)
+          } else {
+            state.bookmarksUrlMap[n.url] = [n]
+          }
+        }
+        if (n.type === 'folder') {
+          n.expanded = false
+          n.opened = false
+        }
         if (n.children) walker(n.children)
       }
     }

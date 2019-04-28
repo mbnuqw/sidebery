@@ -70,6 +70,8 @@ export default {
   'settings.open_bookmark_new_tab': { message: 'Открывать закладку в новом табе' },
   'settings.auto_close_bookmarks': { message: 'Автоматически закрывать папки' },
   'settings.auto_rm_other': { message: 'Удалять открытые закладки из папки "Другие закладки"' },
+  'settings.sel_opened_bookmarks': { message: 'Выделять открытые закладки' },
+  'settings.act_opened_tab': { message: 'Переходить на открытую вкладку вместо открытия новой' },
 
   // --- Appearance
   'settings.appearance_title': { message: 'Вид' },

@@ -160,6 +160,19 @@
       :inactive="!$store.state.bookmarksPanel"
       :value="$store.state.autoRemoveOther"
       @input="setOpt('autoRemoveOther', $event)")
+    .separator
+    toggle-field(
+      label="settings.sel_opened_bookmarks"
+      :inactive="!$store.state.bookmarksPanel"
+      :value="$store.state.selOpenedBookmarks"
+      @input="setOpt('selOpenedBookmarks', $event)")
+    .sub-fields
+      .separator
+      toggle-field(
+        label="settings.act_opened_tab"
+        :inactive="!$store.state.bookmarksPanel || !$store.state.selOpenedBookmarks"
+        :value="$store.state.actOpenedTab"
+        @input="setOpt('actOpenedTab', $event)")
 
   section
     h2 {{t('settings.appearance_title')}}

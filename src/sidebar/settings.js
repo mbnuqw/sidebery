@@ -13,7 +13,7 @@ export const SETTINGS_OPTIONS = {
   pinnedTabsPositionOpts: ['panel', 'top', 'left', 'right'],
   tabsTreeLimitOpts: [1, 2, 3, 4, 5, 'none'],
   fontSizeOpts: ['xs', 's', 'm', 'l', 'xl', 'xxl'],
-  themeOpts: ['dark', 'light', 'custom'],
+  themeOpts: ['dark', 'light'],
 }
 
 export const DEFAULT_SETTINGS = {
@@ -52,6 +52,8 @@ export const DEFAULT_SETTINGS = {
   openBookmarkNewTab: false,
   autoCloseBookmarks: false,
   autoRemoveOther: false,
+  selOpenedBookmarks: false,
+  actOpenedTab: false,
 
   // Appearance
   fontSize: 'm',

@@ -45,6 +45,11 @@ export default {
       t.invisible = false
       t.lvl = 0
       t.host = t.url.split('/')[2] || ''
+      if (state.selOpenedBookmarks && state.bookmarksUrlMap && state.bookmarksUrlMap[t.url]) {
+        for (let b of state.bookmarksUrlMap[t.url]) {
+          b.opened = true
+        }
+      }
       state.tabsMap[t.id] = t
       if (!t.favIconUrl || t.favIconUrl.startsWith('chrome:')) t.favIconUrl = ''
       if (t.active) activeTab = t

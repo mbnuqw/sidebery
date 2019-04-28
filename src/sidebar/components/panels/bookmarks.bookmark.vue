@@ -1,5 +1,5 @@
 <template lang="pug">
-.Bookmark(:is-selected="selected")
+.Bookmark(:is-selected="selected" :is-opened="node.opened")
   .body(:title="tooltip", @click="onClick", @mousedown="onMouseDown", @mouseup="onMouseUp")
     .drag-layer(draggable="true", @dragstart="onDragStart")
     .fav(:no-fav="!favicon")
@@ -101,6 +101,13 @@ export default {
         else Store.dispatch('foldBookmark', this.node.id)
       }
       if (this.node.type === 'bookmark') {
+        if (State.actOpenedTab && this.node.opened) {
+          const tab = State.tabs.find(t => t.url === this.node.url)
+          if (tab) {
+            browser.tabs.update(tab.id, { active: true })
+            return
+          }
+        }
         this.openUrl(State.openBookmarkNewTab, true)
       }
     },
@@ -229,6 +236,18 @@ export default {
     transition: opacity var(--d-fast),
                 z-index var(--d-fast),
                 transform 0s var(--d-fast)
+  &:after
+    content: ''
+    box(absolute)
+    pos(0, r: 0)
+    size(100vw, 100%)
+    background-color: var(--true-fg)
+    z-index: -1
+    opacity: 0
+    transform: scale(0, 0)
+    transition: opacity var(--d-fast),
+                z-index var(--d-fast),
+                transform 0s var(--d-fast)
 
   > .body
     height: var(--bookmarks-bookmark-height)
@@ -241,6 +260,10 @@ export default {
     &:active > .title
       transition: none
       color: var(--bookmarks-node-title-fg-active)
+  
+  &[is-opened="true"]
+    > .body > .title
+      color: var(--active-fg)
 
   &[is-selected="true"]
     &:before

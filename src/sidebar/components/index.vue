@@ -1203,6 +1203,12 @@ export default {
     onCreatedTab(tab) {
       if (tab.windowId !== State.windowId) return
 
+      if (State.selOpenedBookmarks && State.bookmarksUrlMap && State.bookmarksUrlMap[tab.url]) {
+        for (let b of State.bookmarksUrlMap[tab.url]) {
+          b.opened = true
+        }
+      }
+
       Store.commit('closeCtxMenu')
       Store.commit('resetSelection')
 
@@ -1284,6 +1290,18 @@ export default {
       // Url
       if (change.hasOwnProperty('url')) {
         if (change.url !== localTab.url) {
+          if (State.selOpenedBookmarks && State.bookmarksUrlMap) {
+            if (State.bookmarksUrlMap[localTab.url]) {
+              for (let b of State.bookmarksUrlMap[localTab.url]) {
+                b.opened = false
+              }
+            }
+            if (State.bookmarksUrlMap[change.url]) {
+              for (let b of State.bookmarksUrlMap[change.url]) {
+                b.opened = true
+              }
+            }
+          }
           localTab.host = change.url.split('/')[2] || ''
           if (change.url.startsWith('about:')) localTab.favIconUrl = ''
           else Store.dispatch('saveTabsTree')
@@ -1450,6 +1468,16 @@ export default {
         if (activeTab && activeTab.active) {
           const target = Utils.FindSuccessorTab(State, activeTab)
           if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
+        }
+      }
+
+      // Remove opened flag from bookmark
+      if (State.selOpenedBookmarks && State.bookmarksUrlMap && State.bookmarksUrlMap[tab.url]) {
+        for (let t of State.tabs) {
+          if (t.url === tab.url) return
+        }
+        for (let b of State.bookmarksUrlMap[tab.url]) {
+          b.opened = false
         }
       }
     },
