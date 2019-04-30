@@ -2,9 +2,11 @@
 .vscode
 dist
 node_modules
-addon/sidebar
+addon/sidebar/*
+!addon/sidebar/index.html
 addon/snapshots
 addon/theme
+addon/themes
 addon/styles
 addon/menu
 addon/settings

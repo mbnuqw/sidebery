@@ -14,6 +14,7 @@ export const SETTINGS_OPTIONS = {
   tabsTreeLimitOpts: [1, 2, 3, 4, 5, 'none'],
   fontSizeOpts: ['xs', 's', 'm', 'l', 'xl', 'xxl'],
   themeOpts: ['dark', 'light'],
+  lookOpts: ['default', 'aluminium', 'base'],
 }
 
 export const DEFAULT_SETTINGS = {
@@ -57,9 +58,10 @@ export const DEFAULT_SETTINGS = {
 
   // Appearance
   fontSize: 'm',
-  theme: 'dark',
   bgNoise: true,
   animations: true,
+  theme: 'dark',
+  look: 'default',
 
   // Snapshots
   snapshotsTargets: { pinned: true },

@@ -188,6 +188,18 @@
       :value="$store.state.animations"
       @input="setOpt('animations', $event)")
     .separator
+    toggle-field(
+      label="settings.bg_noise"
+      :value="$store.state.bgNoise"
+      @input="setOpt('bgNoise', $event)")
+    .separator
+    select-field(
+      label="settings.look"
+      optLabel="settings.look_"
+      :value="$store.state.look"
+      :opts="$store.state.lookOpts"
+      @input="setOpt('look', $event)")
+    .separator
     select-field(
       label="settings.switch_theme"
       optLabel="settings.theme_"
@@ -195,14 +207,9 @@
       :opts="$store.state.themeOpts"
       @input="setOpt('theme', $event)")
     .separator
-    toggle-field(
-      label="settings.bg_noise"
-      :value="$store.state.bgNoise"
-      @input="setOpt('bgNoise', $event)")
-    .separator
     .ctrls
-      .btn(@click="openPage('styles/styles')") {{t('settings.edit_styles')}}
       .btn(@click="openPage('theme/theme')") {{t('settings.edit_theme')}}
+      .btn(@click="openPage('styles/styles')") {{t('settings.edit_styles')}}
 
   section
     h2 {{t('settings.mouse_title')}}

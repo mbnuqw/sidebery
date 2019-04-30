@@ -43,35 +43,3 @@ export default {
   },
 }
 </script>
-
-
-<style lang="stylus">
-@import '../../../styles/mixins'
-
-.SelectField
-  box(relative)
-  padding: 2px 0
-  margin: 0 12px 0 16px
-  cursor: pointer
-  opacity: .8
-  &:hover
-    opacity: 1
-    // > .label
-    //   color: var(--label-fg-hover)
-  &:active
-    opacity: .7
-    // > .label
-    //   transition: none
-    //   color: var(--label-fg-active)
-  &[is-inactive]
-    opacity: .2
-    cursor: default
-  &.-no-top-margin
-    margin-top: 0
-
-.SelectField > .label
-  box(relative)
-  text(s: rem(14))
-  color: var(--label-fg)
-  transition: color var(--d-fast)
-</style>

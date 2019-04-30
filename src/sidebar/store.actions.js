@@ -8,6 +8,7 @@ import TabsActions from './actions/tabs'
 import Bookmarks from './actions/bookmarks'
 import Snapshots from './actions/snapshots'
 import Styles from './actions/styles'
+import Themes from './actions/themes'
 import CtxMenuActions from './actions/context-menu'
 
 export default {
@@ -20,6 +21,7 @@ export default {
   ...Bookmarks,
   ...Snapshots,
   ...Styles,
+  ...Themes,
   ...CtxMenuActions,
 
   // --- --- --- Misc --- --- ---

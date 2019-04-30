@@ -56,6 +56,7 @@ export default {
     const updateTree = state.tabsTreeLimit !== settings.tabsTreeLimit
     const updateInvisTabs = state.hideFoldedTabs !== settings.hideFoldedTabs
     const toggleBookmarks = state.bookmarksPanel !== settings.bookmarksPanel
+    const look = state.look !== settings.look
 
     // Update settings
     for (let k in settings) {
@@ -93,6 +94,26 @@ export default {
       if (state.bookmarksPanel) dispatch('loadBookmarks')
       else state.bookmarks = []
     }
+
+    if (look) {
+      dispatch('updateTheme')
+    }
+  },
+
+  /**
+   * Update theme
+   */
+  updateTheme({ state }) {
+    let themeLinkEl = document.getElementById('theme_link')
+    if (!themeLinkEl) {
+      themeLinkEl = document.createElement('link')
+      themeLinkEl.id = 'theme_link'
+      themeLinkEl.type = 'text/css'
+      themeLinkEl.rel = 'stylesheet'
+    }
+
+    themeLinkEl.href = `../themes/${state.look}.css`
+    document.head.appendChild(themeLinkEl)
   },
 
   /**

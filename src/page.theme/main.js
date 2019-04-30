@@ -51,6 +51,16 @@ void (async function() {
   // for (let sel of selectors) {
   //   appendSelector(boxEl, sel)
   // }
+
+  // Update theme
+  const textFieldEl = document.getElementById('editor')
+  textFieldEl.addEventListener('change', event => {
+    browser.runtime.sendMessage({
+      instanceType: 'sidebar',
+      action: 'applyThemeCSS',
+      arg: event.target.value,
+    })
+  })
 })()
 
 /**

@@ -1,5 +1,5 @@
 <template lang="pug">
-.SelectColorField
+.SelectOptField
   .label {{t(label)}}
   select-color-input(
     :value="value"
@@ -35,25 +35,3 @@ export default {
   },
 }
 </script>
-
-
-<style lang="stylus">
-@import '../../../styles/mixins'
-
-.SelectColorField
-  box(relative)
-  padding: 2px 0
-  margin: 0 12px 0 16px
-  cursor: pointer
-  &:hover
-    > .label
-      color: var(--label-fg-hover)
-  &.-no-top-margin
-    margin-top: 0
-
-.SelectColorField > .label
-  box(relative)
-  text(s: rem(14))
-  color: var(--label-fg)
-  transition: color var(--d-fast)
-</style>

@@ -88,6 +88,7 @@ export default new Vue({
     State.instanceType = 'sidebar'
 
     await Store.dispatch('loadSettings')
+    Store.dispatch('updateTheme')
     await Store.dispatch('loadState')
     await Store.dispatch('loadContainers')
 

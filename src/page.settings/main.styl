@@ -1,6 +1,10 @@
 @import '../styles/mixins'
-@import '../styles/vars'
-@import '../styles/btn'
+@import '../styles/themes/default/vars'
+@import '../styles/themes/default/btn'
+@import '../styles/themes/default/field.toggle'
+@import '../styles/themes/default/input.toggle'
+@import '../styles/themes/default/field.select'
+@import '../styles/themes/default/input.select'
 
 html
   box(relative)
@@ -18,8 +22,8 @@ body
     text-decoration: none
 
 .root
-  box(relative, flex)
-  size(rel(100%, -16px), min-h: 100%)
+  box(relative, flex, border-box)
+  size(100%)
   flex-direction: column
   align-items: center
   padding: 0 8px
