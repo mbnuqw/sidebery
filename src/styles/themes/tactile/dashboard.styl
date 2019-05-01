@@ -1,0 +1,42 @@
+@import '../../mixins'
+
+.Menu
+  box(relative, grid)
+  grid-gap: 3px 0
+
+.Menu > h2
+  box(relative)
+  text(s: rem(24), w: 400)
+  color: var(--title-fg)
+  margin: 16px 12px 12px
+  padding: 0
+
+.delimiter
+  box(relative)
+  size(128px, 1px)
+  margin: 8px auto
+  opacity: .5
+  background-image: linear-gradient(90deg, #00000000, var(--inactive-fg), var(--inactive-fg), #00000000)
+
+.options
+  box(relative, flex)
+  flex-wrap: wrap
+  flex-direction: column
+  justify-content: flex-start
+
+.options > .opt
+  box(relative)
+  text(s: rem(15))
+  color: var(--ctx-menu-fg)
+  padding: 4px 8px 4px 12px
+  cursor: pointer
+  transition: color var(--d-fast), background-color var(--d-fast)
+  &:hover
+    background-color: var(--ctx-menu-bg-hover)
+  &:active
+    transition: none
+  &.-warn
+    color: var(--ctx-menu-warn-fg)
+    &:hover
+      background-color: var(--ctx-menu-warn-bg-hover)
+      color: var(--ctx-menu-fg)

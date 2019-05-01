@@ -18,8 +18,8 @@
     "dev.ext.ru": "web-ext run --source-dir ./addon -f firefox --keep-profile-changes --firefox-profile ./build/profile-ru",
     "dev.ext.esr": "web-ext run --source-dir ./addon -f firefox-esr --keep-profile-changes --firefox-profile ./build/profile-esr",
     "dev.themes.default": "stylus ./src/styles/themes/default/index.styl -w --out ./addon/themes/default.css",
-    "dev.themes.aluminium": "stylus ./src/styles/themes/aluminium/index.styl -w --out ./addon/themes/aluminium.css",
-    "dev.themes.base": "stylus ./src/styles/themes/base/index.styl -w --out ./addon/themes/base.css",
+    "dev.themes.tactile": "stylus ./src/styles/themes/tactile/index.styl -w --out ./addon/themes/tactile.css",
+    "dev.themes.none": "stylus ./src/styles/themes/none/index.styl -w --out ./addon/themes/none.css",
 
     "build.sidebar": "parcel build ./src/sidebar/index.html -d ./addon/sidebar/ --public-url ./ --no-autoinstall --no-source-maps",
     "build.group": "parcel build ./src/page.group/group.html -d ./addon/group/ --public-url ./ --no-autoinstall --no-source-maps",

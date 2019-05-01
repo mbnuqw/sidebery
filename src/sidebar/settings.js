@@ -14,7 +14,7 @@ export const SETTINGS_OPTIONS = {
   tabsTreeLimitOpts: [1, 2, 3, 4, 5, 'none'],
   fontSizeOpts: ['xs', 's', 'm', 'l', 'xl', 'xxl'],
   themeOpts: ['dark', 'light'],
-  lookOpts: ['default', 'aluminium', 'base'],
+  lookOpts: ['default', 'tactile', 'none'],
 }
 
 export const DEFAULT_SETTINGS = {

@@ -279,7 +279,11 @@ function UpdateTabsTree(state, startIndex = 0, endIndex = -1) {
  * Parse numerical css value
  */
 function ParseCSSNum(cssValue, or = 0) {
-  let [, num, unit] = CSS_NUM_RE.exec(cssValue.trim())
+  const parseResult = CSS_NUM_RE.exec(cssValue.trim())
+  if (!parseResult) return [0, '']
+  let num = parseResult[1]
+  let unit = parseResult[2]
+
   if (num.includes('.')) {
     if (num[0] === '.') num = '0' + num
     num = parseFloat(num)
