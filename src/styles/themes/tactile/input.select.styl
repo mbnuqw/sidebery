@@ -2,19 +2,32 @@
 
 .SelectInput
   box(relative, flex)
+  grid-gap: 1px 1px
   flex-wrap: wrap
+  justify-content: stretch
+  align-items: stretch
   cursor: pointer
-  &[opt-true]
-    .opt
-      color: var(--active-fg)
+  margin-top: 5px
+  overflow: hidden
+  border-radius: 3px
+  box-shadow: 0 0 0 1px #00000032, 0 1px 3px 0 #00000032
 
 .SelectInput > .opt
   box(relative)
-  text(s: rem(14))
-  margin: 0 7px 0 0
+  text(s: rem(12))
+  flex-grow: 1
+  // margin: 0 1px 1px 0
+  padding: 1px 6px
   color: var(--inactive-fg)
   transition: color var(--d-fast)
+  text-transform: uppercase
+  background-color: #00000012
+  background-image: linear-gradient(0deg, #ffffff08, #00000012)
+  text-align: center
+  box-shadow: 0 0 0 1px #00000032
   &[opt-true]
     color: var(--active-fg)
+    background-image: linear-gradient(0deg, #00000012, #ffffff08)
+    box-shadow: 0 0 0 1px #00000032, 0 1px 3px 0 #00000032
     &[opt-none]
       color: var(--false-fg)

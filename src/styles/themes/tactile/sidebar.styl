@@ -71,12 +71,19 @@ NAV_CONF_HEIGHT = auto
   box(absolute)
   pos(b: 0, l: 0)
   size(100%, NAV_CONF_HEIGHT, max-h: calc(100vh + 200px))
-  padding: 300px 0 32px
-  background-color: var(--bg)
+  padding: 300px 0 36px
+  background-color: var(--dash-bg)
   box-shadow: 0 1px 12px 0 #00000056, 0 1px 0 0 #00000012
   opacity: 0
   z-index: 0
   transition: opacity var(--d-fast) .03s, z-index var(--d-fast)
+  &:before
+    content: ''
+    box(absolute)
+    pos(b: 0, l: 0)
+    size(100%, 32px)
+    background-image: linear-gradient(180deg, #00000000, #00000032)
+    box-shadow: inset 0 1px 0 0 #00000032
 
 .Sidebar .nav-strip
   box(relative, flex)

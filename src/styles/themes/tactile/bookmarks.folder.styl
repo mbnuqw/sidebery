@@ -47,7 +47,7 @@
     > .title
       color: var(--bookmarks-folder-open-fg)
       mask: linear-gradient(-90deg, transparent 12px, #000000 24px, #000000)
-      transform: translateX(12px)
+      // transform: translateX(12px)
   > .body > .exp
     transform: translateX(-6px)
     opacity: 1
@@ -71,6 +71,11 @@
   box(relative, flex)
   align-items: center
   cursor: pointer
+  border-top-left-radius: 3px
+  border-bottom-left-radius: 3px
+  box-shadow: inset 0 1px 0 0 #ffffff12,
+              inset 1px 0 0 0 #00000032,
+              inset 0 -1px 0 0 #00000032
   transform: translateZ(0)
   transition: opacity var(--d-fast)
   &:before
@@ -95,11 +100,12 @@
   z-index: 15
 
 // Title
-.Folder .title
+.Folder > .body .title
   box(relative)
   size(100%)
   white-space: nowrap
   overflow: hidden
+  transform: translateX(20px)
   transition: transform var(--d-fast), color var(--d-fast)
   mask: linear-gradient(-90deg, transparent, #000000 12px, #000000)
 
@@ -121,11 +127,12 @@
 // Expanded state icon
 .Folder .exp
   box(absolute)
+  pos(l: 2px)
   size(15px, same)
   margin: 1px 2px 0 0
   flex-shrink: 0
-  transform: translateX(-14px)
-  opacity: 0
+  // transform: translateX(-14px)
+  // opacity: 0
   transition: transform var(--d-fast), opacity var(--d-fast)
 .Folder .exp > svg
   box(absolute)

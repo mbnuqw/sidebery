@@ -4,17 +4,35 @@
   box(relative, flex)
   flex-wrap: wrap
   cursor: pointer
+  transform: translateZ(0)
   &[opt-true]
     .opt.-true
       color: var(--true-fg)
+      box-shadow: 0 0 0 1px #00000032, 0 1px 3px 0 #00000032
+      background-image: linear-gradient(0deg, #00000012, #ffffff08)
     .opt.-false
       color: var(--inactive-fg)
+      box-shadow: 0 0 0 1px #00000032
+      background-image: linear-gradient(0deg, #ffffff08, #00000012)
   
 .ToggleInput > .opt
   box(relative)
-  text(s: rem(14))
-  margin: 0 7px 0 0
+  text(s: rem(12))
+  margin: 0 1px 0 0
+  padding: 2px 5px
   color: var(--inactive-fg)
   transition: color var(--d-fast)
+  background-color: #00000012
+  box-shadow: 0 0 0 1px #00000032
+  background-image: linear-gradient(0deg, #ffffff08, #00000012)
+  text-transform: uppercase
+  &:first-of-type
+    border-top-left-radius: 3px
+    border-bottom-left-radius: 3px
+  &:last-of-type
+    border-top-right-radius: 3px
+    border-bottom-right-radius: 3px
   &.-false
     color: var(--false-fg)
+    box-shadow: 0 0 0 1px #00000032, 0 1px 3px 0 #00000032
+    background-image: linear-gradient(0deg, #00000012, #ffffff08)

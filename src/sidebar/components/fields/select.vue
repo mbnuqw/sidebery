@@ -1,5 +1,5 @@
 <template lang="pug">
-.SelectField(:is-inactive="inactive", @mousedown="select")
+.SelectField(:is-inline="inline", :is-inactive="inactive", @mousedown="select")
   .label {{t(label)}}
   select-input(
     :label="optLabel"
@@ -21,6 +21,7 @@ export default {
     value: [String, Number],
     label: String,
     inactive: Boolean,
+    inline: Boolean,
     optLabel: String,
     opts: Array,
     noneOpt: String,
