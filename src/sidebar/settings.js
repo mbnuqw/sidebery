@@ -62,6 +62,7 @@ export const DEFAULT_SETTINGS = {
   animations: true,
   theme: 'dark',
   look: 'default',
+  customTheme: false,
 
   // Snapshots
   snapshotsTargets: { pinned: true },

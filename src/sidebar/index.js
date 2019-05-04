@@ -89,6 +89,8 @@ export default new Vue({
 
     await Store.dispatch('loadSettings')
     Store.dispatch('updateTheme')
+    if (State.customTheme) Store.dispatch('loadCustomTheme')
+
     await Store.dispatch('loadState')
     await Store.dispatch('loadContainers')
 

@@ -231,21 +231,27 @@ export default {
    */
   getCssSelectors() {
     const selectors = [
-      { id: 'root', lvl: 0, classList: ['root'] }
+      { id: 'root', classList: ['root'], lvl: 0, children: [] }
     ]
     const rootEl = document.getElementById('root')
 
-    let lvl = 1
-    const walker = nodes => {
+    const walker = (nodes, selectors) => {
       for (let node of nodes) {
         if (node.nodeType !== 1) continue
         if (node.tagName === 'use') continue
 
-        const sel = {
-          id: node.id,
-          tag: node.tagName.toLowerCase(),
-          lvl,
+        const sel = { id: node.id, tag: node.tagName.toLowerCase() }
+
+        const attrs = []
+        for (let attr of node.attributes) {
+          if (attr.name === 'class') continue
+          if (attr.name === 'title') continue
+          if (attr.name === 'tabindex') continue
+
+          attrs.push([attr.name, attr.value])
         }
+
+        if (attrs.length) sel.attrs = attrs
 
         if (typeof node.className === 'string') {
           sel.classList = node.className.split(' ')
@@ -254,13 +260,12 @@ export default {
         selectors.push(sel)
 
         if (node.childNodes && node.childNodes.length) {
-          lvl++
-          walker(node.childNodes)
-          lvl--
+          sel.children = []
+          walker(node.childNodes, sel.children)
         }
       }
     }
-    walker(rootEl.childNodes)
+    walker(rootEl.childNodes, selectors[0].children)
 
     return selectors
   },
