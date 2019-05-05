@@ -8,9 +8,8 @@
     @input="onInput"
     @keydown.enter.prevent="onEnter")
 
-  scroll-box.scroll-box(ref="scrollBox"): .scoll-wrapper
+  scroll-box.scroll-box(v-if="id" ref="scrollBox"): .scoll-wrapper
     icon-select-field.-no-top-margin(
-      v-if="id"
       label="container_dashboard.icon_label"
       :value="icon"
       :opts="iconOpts"
@@ -18,14 +17,12 @@
       @input="updateIcon")
 
     color-select-field(
-      v-if="id"
       label="container_dashboard.color_label"
       :value="color"
       :opts="colorOpts"
       @input="updateColor")
 
     toggle-field(
-      v-if="id"
       label="dashboard.lock_panel_label"
       :title="t('dashboard.lock_panel_tooltip')"
       :value="conf.lockedPanel"
@@ -33,7 +30,6 @@
       @input="togglePanelLock")
 
     toggle-field(
-      v-if="id"
       label="dashboard.lock_tabs_label"
       :title="t('dashboard.lock_tabs_tooltip')"
       :value="conf.lockedTabs"
@@ -41,7 +37,6 @@
       @input="toggleTabsLock")
 
     toggle-field(
-      v-if="id"
       label="dashboard.no_empty_label"
       :title="t('dashboard.no_empty_tooltip')"
       :value="conf.noEmpty"
@@ -49,13 +44,12 @@
       @input="togglePanelNoEmpty")
 
     toggle-field(
-      v-if="id"
       label="container_dashboard.rules_include"
       :title="t('container_dashboard.rules_include_tooltip')"
       :value="conf.includeHostsActive"
       :inline="true"
       @input="toggleIncludeHosts")
-    .box(v-if="id && conf.includeHostsActive")
+    .box(v-if="conf.includeHostsActive")
       .field
         text-input.text(
           ref="includeHostsInput"
@@ -66,7 +60,6 @@
           @input="onIncludeHostsInput")
 
     toggle-field(
-      v-if="id"
       label="container_dashboard.rules_exclude"
       :title="t('container_dashboard.rules_exclude_tooltip')"
       :value="conf.excludeHostsActive"
@@ -83,7 +76,6 @@
           @input="onExcludeHostsInput")
 
     select-field(
-      v-if="id"
       label="container_dashboard.proxy_label"
       optLabel="container_dashboard.proxy_"
       noneOpt="direct"
@@ -91,7 +83,7 @@
       :opts="proxyOpts"
       @input="switchProxy")
 
-    .box(v-if="id && proxied !== 'direct'")
+    .box(v-if="proxied !== 'direct'")
       .field
         text-input.text(
           ref="proxyHost"
@@ -134,7 +126,7 @@
           @keydown="onFieldKeydown($event, null, 'proxyUsername')")
 
       toggle-field(
-        v-if="id && isSomeSocks"
+        v-if="isSomeSocks"
         label="container_dashboard.proxy_dns_label"
         :value="proxyDNS"
         :inline="true"

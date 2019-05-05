@@ -2,22 +2,10 @@
 
 .Bookmark
   box(relative)
-  padding: 0 0 0 12px
+  padding: 0
   margin: 0
   border-top-left-radius: 3px
   border-bottom-left-radius: 3px
-  &:before
-    content: ''
-    box(absolute)
-    pos(0, r: 0)
-    size(100vw, 100%)
-    background-color: var(--tabs-selected-bg)
-    z-index: -1
-    opacity: 0
-    transform: scale(0, 0)
-    transition: opacity var(--d-fast),
-                z-index var(--d-fast),
-                transform 0s var(--d-fast)
   &:after
     content: ''
     box(absolute)
@@ -48,13 +36,8 @@
       color: var(--active-fg)
 
   &[is-selected="true"]
-    &:before
+    > .body:before
       opacity: 1
-      z-index: 0
-      transform: scale(1, 1)
-      transition: opacity var(--d-fast),
-                  z-index var(--d-fast),
-                  transform 0s 0s
     > .body > .title
     > .body:hover > .title
       color: var(--tabs-selected-fg)
@@ -64,19 +47,27 @@
   box(relative, flex)
   align-items: center
   cursor: pointer
+  overflow: hidden
+  border-top-left-radius: 5px
+  border-bottom-left-radius: 5px
+  background-image: linear-gradient(#ffffff08, #00000016)
   box-shadow: inset 0 1px 0 0 #ffffff12,
+              inset 1px 0 0 0 #00000032,
+              0 -1px 0 0 #00000032,
               inset 0 -1px 0 0 #00000032
   transform: translateZ(0)
   transition: opacity var(--d-fast)
   &:before
     content: ''
     box(absolute)
-    pos(0, r: 0)
-    size(100vw, 100%)
+    size(100%, same)
+    pos(0, 0)
+    background-color: var(--tabs-selected-bg)
+    opacity: 0
 
-.Bookmark:not([is-selected]) > .body:hover:before
+.Bookmark:not([is-selected]) > .body:hover
     background-color: var(--bookmarks-node-bg-hover)
-.Bookmark:not([is-selected]) > .body:active:before
+.Bookmark:not([is-selected]) > .body:active
     background-color: var(--bookmarks-node-bg-active)
 
 .Bookmark .drag-layer
@@ -90,7 +81,7 @@
   box(relative)
   size(16px, same)
   flex-shrink: 0
-  margin: 0 8px 0 0
+  margin: 0 4px 0 5px
   z-index: 20
   transition: opacity var(--d-fast), transform var(--d-fast)
   &[no-fav]
@@ -127,18 +118,3 @@
   overflow: hidden
   transition: transform var(--d-fast), color var(--d-fast)
   mask: linear-gradient(-90deg, transparent, #000000 12px, #000000)
-
-// Node's children box
-.Bookmark .children
-  box(relative)
-  transform: translateZ(0)
-  &:before
-    content: ''
-    box(absolute)
-    size(1px, calc(100% - 11px))
-    pos(0, 1px)
-    background-color: #72727264
-    opacity: .5
-    transition: opacity var(--d-slow)
-  &:hover:before
-    opacity: 1

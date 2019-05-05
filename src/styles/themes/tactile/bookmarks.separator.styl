@@ -2,31 +2,14 @@
 
 .Separator
   box(relative)
-  padding: 0 0 0 12px
+  padding: 0
   margin: 0
   border-top-left-radius: 3px
   border-bottom-left-radius: 3px
-  &:before
-    content: ''
-    box(absolute)
-    pos(0, r: 0)
-    size(100vw, 100%)
-    background-color: var(--tabs-selected-bg)
-    z-index: -1
-    opacity: 0
-    transform: scale(0, 0)
-    transition: opacity var(--d-fast),
-                z-index var(--d-fast),
-                transform 0s var(--d-fast)
 
   &[is-selected="true"]
-    &:before
+    > .body:before
       opacity: 1
-      z-index: 0
-      transform: scale(1, 1)
-      transition: opacity var(--d-fast),
-                  z-index var(--d-fast),
-                  transform 0s 0s
     > .body > .title
     > .body:hover > .title
       color: var(--tabs-selected-fg)
@@ -36,24 +19,30 @@
     height: var(--bookmarks-separator-height)
     align-items: center
     cursor: pointer
+    overflow: hidden
     transform: translateZ(0)
     transition: opacity var(--d-fast)
+    border-top-left-radius: 5px
+    border-bottom-left-radius: 5px
     &:before
       content: ''
       box(absolute)
-      pos(0, r: 0)
-      size(100vw, 100%)
+      size(100%, same)
+      pos(0, 0)
+      background-color: var(--tabs-selected-bg)
+      opacity: 0
     &:after
       content: ''
       box(absolute)
       pos(8px, l: 16px)
-      size(calc(100% - 16px), 1px)
+      size(calc(100% - 32px), 1px)
       border-radius: 2px
-      background-image: linear-gradient(90deg, transparent, #545454, #545454, #545454)
+      background-color: #00000032
+      box-shadow: 0 1px 0 0 #ffffff08
 
-.Separator:not([is-selected]) > .body:hover:before
+.Separator:not([is-selected]) > .body:hover
     background-color: var(--bookmarks-node-bg-hover)
-.Separator:not([is-selected]) > .body:active:before
+.Separator:not([is-selected]) > .body:active
     background-color: var(--bookmarks-node-bg-active)
 
 .Separator .drag-layer

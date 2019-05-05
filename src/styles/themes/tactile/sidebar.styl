@@ -71,7 +71,7 @@ NAV_CONF_HEIGHT = auto
   box(absolute)
   pos(b: 0, l: 0)
   size(100%, NAV_CONF_HEIGHT, max-h: calc(100vh + 200px))
-  padding: 300px 0 36px
+  padding: 300px 0 32px
   background-color: var(--dash-bg)
   box-shadow: 0 1px 12px 0 #00000056, 0 1px 0 0 #00000012
   opacity: 0
@@ -175,12 +175,11 @@ NAV_CONF_HEIGHT = auto
   fill: var(--nav-btn-fg)
   transform: translateZ(0)
   transition: opacity var(--d-fast)
-  // filter: drop-shadow(1px 1px 0 #ffffff12)
   filter: drop-shadow(1px 1px 0 #ffffff12) saturate(120%) brightness(80%) contrast(120%)
 
 .Sidebar .panel-btn[is-active] > svg
   filter: saturate(100%) brightness(120%) contrast(100%)
-  fill: #ffffff
+  fill: var(--nav-btn-fg)
 
 .Sidebar .panel-btn > .loading-spinner
   box(absolute)
@@ -264,16 +263,13 @@ NAV_CONF_HEIGHT = auto
     box(absolute)
     size(16px, same)
     fill: var(--nav-btn-fg)
-    opacity: .4
+    opacity: .8
     transition: opacity var(--d-fast)
 
 .Sidebar .add-btn
   margin: 0 0 0 auto
 .Sidebar .settings-btn
   margin: 0 3px 0 0
-  &[data-active="true"]
-    > svg
-      opacity: 1
 
 // --- Move pointer ---
 .Sidebar .pointer
