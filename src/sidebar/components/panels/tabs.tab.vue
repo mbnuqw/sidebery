@@ -301,8 +301,12 @@ export default {
 
       // Set drag info
       e.dataTransfer.setData('text/x-moz-text-internal', this.tab.url)
+      e.dataTransfer.setData('text/x-moz-url', this.tab.url + '\n' + this.tab.title)
+      e.dataTransfer.setData('text/x-moz-url-data', this.tab.url)
+      e.dataTransfer.setData('text/x-moz-url-desc', this.tab.title)
       e.dataTransfer.setData('text/uri-list', this.tab.url)
       e.dataTransfer.setData('text/plain', this.tab.url)
+      e.dataTransfer.setData('text/html', `<a href="${this.tab.url}>${this.tab.title}</a>`)
       e.dataTransfer.effectAllowed = 'move'
       const dragData = tabsToDrag.map(t => {
         return {
