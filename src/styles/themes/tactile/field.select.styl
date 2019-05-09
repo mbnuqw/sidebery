@@ -10,10 +10,10 @@
     opacity: 1
   &:active
     opacity: .7
-  &[is-inactive]
+  &.-inactive
     opacity: .2
     cursor: default
-  &[is-inline]
+  &.-inline
     box(flex)
   &.-no-top-margin
     margin-top: 0
@@ -24,6 +24,6 @@
   color: var(--label-fg)
   transition: color var(--d-fast)
 
-.SelectField[is-inline] > .label
+.SelectField.-inline > .label
   flex-grow: 1
   margin: 0 auto 0 0

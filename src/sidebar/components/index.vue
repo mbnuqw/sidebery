@@ -1,8 +1,8 @@
 <template lang="pug">
 .Sidebar(
-  :dashboard-opened="$store.state.dashboardOpened"
-  :drag-mode="dragMode"
-  :pointer-mode="pointerMode"
+  :data-dashboard="$store.state.dashboardOpened"
+  :data-drag="dragMode"
+  :data-pointer="pointerMode"
   @wheel="onWheel"
   @contextmenu.prevent.stop=""
   @dragover.prevent="onDragMove"
@@ -18,7 +18,8 @@
   .pointer(ref="pointer"): .arrow
 
   //- Pinned tabs dock
-  pinned-dock(v-if="$store.state.pinnedTabsPosition !== 'panel'"
+  pinned-dock(
+    v-if="$store.state.pinnedTabsPosition !== 'panel'"
     @start-selection="startSelection"
     @stop-selection="stopSelection")
 
@@ -42,13 +43,13 @@
         .panel-btn(
           v-for="(btn, i) in nav"
           :key="btn.cookieStoreId || btn.name"
-          :title="getTooltip(i)"
-          :loading="btn.loading"
-          :updated="btn.updated"
-          :proxified="btn.proxified"
-          :is-active="panelIs(i)"
-          :is-hidden="btn.hidden"
+          :data-loading="btn.loading"
+          :data-updated="btn.updated"
+          :data-proxified="btn.proxified"
+          :data-active="panelIs(i)"
+          :data-hidden="btn.hidden"
           :class="'rel-' + btn.relIndex"
+          :title="getTooltip(i)"
           @click="onNavClick(i)"
           @dragenter="onNavDragEnter(i)"
           @dragleave="onNavDragLeave(i)"
@@ -81,16 +82,16 @@
         ref="panels"
         :key="c.cookieStoreId || c.name"
         :is="c.panel"
+        :data-pos="getPanelPos(i)"
         :tabs="c.tabs"
         :index="i"
         :store-id="c.cookieStoreId"
-        :pos="getPanelPos(i)"
         :active="panelIs(i)"
         @create-tab="createTab"
         @start-selection="startSelection"
         @stop-selection="stopSelection")
       transition(name="settings")
-        window-input(v-if="$store.state.panelIndex === -5", :pos="windowInputPos")
+        window-input(v-if="$store.state.panelIndex === -5", :data-pos="windowInputPos")
 </template>
 
 

@@ -1,12 +1,11 @@
 <template lang="pug">
-.Separator(:is-selected="selected")
-  .body(@click="onClick", @mousedown="onMouseDown", @mouseup="onMouseUp")
-    .drag-layer(draggable="true", @dragstart="onDragStart")
+.Separator(:class="classList")
+  .body(@click="onClick" @mousedown="onMouseDown" @mouseup="onMouseUp")
+    .drag-layer(draggable="true" @dragstart="onDragStart")
 </template>
 
 
 <script>
-import { mapGetters } from 'vuex'
 import Store from '../../store'
 import State from '../../store.state'
 import EventBus from '../../event-bus'
@@ -24,7 +23,11 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['defaultPanel', 'panels']),
+    classList() {
+      return {
+        '-selected': this.selected,
+      }
+    },
   },
 
   created() {

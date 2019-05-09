@@ -12,7 +12,7 @@
     size(100%, same)
     background-color: var(--pinned-dock-overlay-bg)
     box-shadow: var(--pinned-dock-overlay-shadow)
-  &[is-empty]
+  &.-empty
     box(none)
 
 // Per-Panel
@@ -78,5 +78,5 @@
   &:before
     size(32px, 1px)
 
-.PinnedDock[drag-pointed] .to-the-end
+.PinnedDock.-drag-pointed .to-the-end
   opacity: 1

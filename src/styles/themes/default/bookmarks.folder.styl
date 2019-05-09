@@ -19,7 +19,7 @@
                 z-index var(--d-fast),
                 transform 0s var(--d-fast)
 
-  &:not([is-parent]) // Empty folder
+  &:not(.-parent) // Empty folder
     > .body
     > .body:hover
     > .body:active
@@ -38,7 +38,7 @@
       color: var(--bookmarks-folder-closed-fg)
 
 // > Expanded
-.Folder[is-expanded][is-parent]
+.Folder.-expanded.-parent
   > .body
     &:hover > .title
       color: var(--bookmarks-folder-open-fg-hover)
@@ -54,7 +54,7 @@
   > .body > .exp > svg
     transform: rotateZ(0deg)
 
-.Folder[is-selected="true"]
+.Folder.-selected
   &:before
     opacity: 1
     z-index: 0
@@ -79,13 +79,13 @@
     pos(0, r: 0)
     size(100vw, 100%)
 
-.Folder:not([is-selected])[is-opened] > .body > .title
-.Folder:not([is-selected])[is-opened] > .body:hover > .title
+.Folder:not(.-selected).-opened > .body > .title
+.Folder:not(.-selected).-opened > .body:hover > .title
   color: var(--active-fg)
 
-.Folder:not([is-selected]) > .body:hover:before
+.Folder:not(.-selected) > .body:hover:before
   background-color: var(--bookmarks-node-bg-hover)
-.Folder:not([is-selected]) > .body:active:before
+.Folder:not(.-selected) > .body:active:before
   background-color: var(--bookmarks-node-bg-active)
 
 .Folder .drag-layer

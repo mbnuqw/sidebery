@@ -2,12 +2,12 @@
 
 .Separator
   box(relative)
-  padding: 0
+  padding: 0 0 0 2px
   margin: 0
   border-top-left-radius: 3px
   border-bottom-left-radius: 3px
 
-  &[is-selected="true"]
+  &.-selected
     > .body:before
       opacity: 1
     > .body > .title
@@ -40,9 +40,9 @@
       background-color: #00000032
       box-shadow: 0 1px 0 0 #ffffff08
 
-.Separator:not([is-selected]) > .body:hover
+.Separator:not(.-selected) > .body:hover
     background-color: var(--bookmarks-node-bg-hover)
-.Separator:not([is-selected]) > .body:active
+.Separator:not(.-selected) > .body:active
     background-color: var(--bookmarks-node-bg-active)
 
 .Separator .drag-layer

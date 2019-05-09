@@ -1,6 +1,8 @@
 <template lang="pug">
 .SelectInput(@mousedown="select")
-  .opt(v-for="o in opts", :opt-none="o === noneOpt", :opt-true="o === value") {{t(label + o)}}
+  .opt(
+    v-for="o in opts"
+    :class="{ '-none': o === noneOpt, '-true': o === value }") {{t(label + o)}}
 </template>
 
 

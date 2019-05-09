@@ -1,6 +1,6 @@
 <template lang="pug">
-.CtxMenu(:is-active="aIsActive || bIsActive", @mouseenter="onME", @mouseleave="onML")
-  .container(:is-active="aIsActive")
+.CtxMenu(:data-active="aIsActive || bIsActive", @mouseenter="onME", @mouseleave="onML")
+  .container(:data-active="aIsActive")
     .box(ref="aBox", :style="aPosStyle")
       .inline-group(
         v-for="iOpts in aInline"
@@ -8,22 +8,24 @@
         @wheel.prevent.stop="")
         .icon-opt(
           v-for="(opt, i) in iOpts"
-          :btn-width="btnWidth(iOpts, i)"
+          :data-width="btnWidth(iOpts, i)"
+          :data-selected="isSelected(opt)"
           :title="getTitle(opt.label)"
-          :is-selected="isSelected(opt)"
           @click="onClick(opt)"
           @mousedown.stop="")
           svg(:style="{fill: opt.color}")
             use(:xlink:href="'#' + opt.icon")
-      .opt(v-for="(opt, i) in aOpts"
+      .opt(
+        v-for="(opt, i) in aOpts"
         :key="opt.label"
+        :data-selected="isSelected(opt)"
         :title="getTitle(opt.label)"
-        :is-selected="isSelected(opt)"
         @click="onClick(opt)"
         @mousedown.stop="")
-        span(v-for="out in parseLabel(opt.label)"
+        span(
+          v-for="out in parseLabel(opt.label)"
           :style="{color: out.color, fontWeight: out.w}") {{out.label}}
-  .container(:is-active="bIsActive")
+  .container(:data-active="bIsActive")
     .box(ref="bBox", :style="bPosStyle")
       .inline-group(
         v-for="iOpts in bInline"
@@ -31,20 +33,22 @@
         @wheel.prevent.stop="")
         .icon-opt(
           v-for="(opt, i) in iOpts"
-          :btn-width="btnWidth(iOpts, i)"
+          :data-width="btnWidth(iOpts, i)"
+          :data-selected="isSelected(opt)"
           :title="getTitle(opt.label)"
-          :is-selected="isSelected(opt)"
           @click="onClick(opt)"
           @mousedown.stop="")
           svg(:style="{fill: opt.color}")
             use(:xlink:href="'#' + opt.icon")
-      .opt(v-for="(opt, i) in bOpts"
+      .opt(
+        v-for="(opt, i) in bOpts"
         :key="opt.label"
+        :data-selected="isSelected(opt)"
         :title="getTitle(opt.label)"
-        :is-selected="isSelected(opt)"
         @click="onClick(opt)"
         @mousedown.stop="")
-        span(v-for="out in parseLabel(opt.label)"
+        span(
+          v-for="out in parseLabel(opt.label)"
           :style="{color: out.color, fontWeight: out.w}") {{out.label}}
 </template>
 

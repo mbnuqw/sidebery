@@ -1,16 +1,12 @@
 <template lang="pug">
-.Folder(
-  :is-expanded="node.expanded"
-  :is-parent="isParent"
-  :is-selected="selected"
-  :is-opened="opened")
-  .body(:title="tooltip", @click="onClick", @mousedown="onMouseDown", @mouseup="onMouseUp")
-    .drag-layer(draggable="true", @dragstart="onDragStart")
+.Folder(:class="classList")
+  .body(:title="tooltip" @click="onClick" @mousedown="onMouseDown" @mouseup="onMouseUp")
+    .drag-layer(draggable="true" @dragstart="onDragStart")
     .exp(v-if="isParent")
       svg: use(xlink:href="#icon_expand")
     .title(v-if="node.title") {{node.title}}
   transition(name="expand")
-    .children(v-if="isParent", v-show="node.expanded", :title="node.title")
+    .children(v-if="isParent" v-show="node.expanded" :title="node.title")
       component.child(
         v-for="(n, i) in node.children"
         :is="n.type"
@@ -53,6 +49,15 @@ export default {
 
   computed: {
     ...mapGetters(['defaultPanel', 'panels']),
+
+    classList() {
+      return {
+        '-expanded': this.node.expanded,
+        '-parent': this.isParent,
+        '-selected': this.selected,
+        '-opened': this.opened,
+      }
+    },
 
     isParent() {
       return !!this.node.children && this.node.children.length > 0

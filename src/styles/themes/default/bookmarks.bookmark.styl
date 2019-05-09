@@ -43,11 +43,11 @@
       transition: none
       color: var(--bookmarks-node-title-fg-active)
   
-  &[is-opened="true"]
+  &.-opened
     > .body > .title
       color: var(--active-fg)
 
-  &[is-selected="true"]
+  &.-selected
     &:before
       opacity: 1
       z-index: 0
@@ -91,13 +91,13 @@
   margin: 0 8px 0 0
   z-index: 20
   transition: opacity var(--d-fast), transform var(--d-fast)
-  &[no-fav]
-    > .placeholder
-      opacity: 1
-      transform: translateY(0)
-    > img
-      opacity: 0
-      transform: translateY(-4px)
+.Bookmark.-favless .fav
+  > .placeholder
+    opacity: 1
+    transform: translateY(0)
+  > img
+    opacity: 0
+    transform: translateY(-4px)
 .Bookmark .fav > .placeholder
   box(absolute)
   size(16px, same)

@@ -1,12 +1,12 @@
 <template lang="pug">
 .ColorField
   .label {{t(label)}}
-  .input-group(:is-activated="isActive")
+  .input-group(:class="classList")
     color-input.color-input(
       v-debounce:input.128="debouncedInput"
       :value="value"
       @input="onInput")
-    toggle-input.toggle(:value="isActive", @input="toggle")
+    toggle-input.toggle(:value="!!value", @input="toggle")
 </template>
 
 
@@ -32,9 +32,11 @@ export default {
   },
 
   computed: {
-    isActive() {
-      return !!this.value
-    }
+    classList() {
+      return {
+        '-activated': !!this.value,
+      }
+    },
   },
 
   methods: {

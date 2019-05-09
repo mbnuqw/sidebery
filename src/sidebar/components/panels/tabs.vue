@@ -9,8 +9,8 @@
     @start-selection="$emit('start-selection', $event)"
     @stop-selection="$emit('stop-selection')")
   scroll-box(ref="scrollBox", :lock="scrollLock")
-    .container(:ctx-menu="!!$root.ctxMenu", :style="{ height: scrollHeight }")
-      tab.tab(
+    .container(:style="{ height: scrollHeight }")
+      tab(
         v-for="(t, i) in tabs"
         ref="tabs"
         :key="t.id"

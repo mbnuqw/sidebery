@@ -1,13 +1,17 @@
 <template lang="pug">
-.PinnedTab(:is-active="tab.active"
-  :data-no-fav="!favicon"
+.PinnedTab(
+  :data-active="tab.active"
+  :data-status="tab.status"
+  :data-progress="loading"
+  :data-selected="selected"
+  :data-favless="!favicon"
   :data-audible="tab.audible"
   :data-muted="tab.mutedInfo.muted"
-  :is-selected="selected"
-  :discarded="tab.discarded"
-  :updated="updated"
-  :loading="loading || tab.status === 'loading'"
-  :drop-slot="dropSlot"
+  :data-discarded="tab.discarded"
+  :data-updated="updated"
+  :data-drop-slot="dropSlot"
+  :data-close-btn="$store.state.showTabRmBtn"
+
   :title="tooltip"
   @contextmenu.prevent.stop=""
   @mousedown="onMouseDown"
@@ -242,7 +246,6 @@ export default {
      * Handle dragstart event.
      */
     onDragStart(e) {
-      // console.log('[DEBUG] PinnedTab onDragStart');
       // Check what to drag
       const toDrag = [this.tab.id]
       const tabsToDrag = [this.tab]

@@ -1,5 +1,5 @@
 <template lang="pug">
-.ToggleField(:class="{ inline, inactive }", @click="toggle")
+.ToggleField(:class="classList", @click="toggle")
   .label(:style="{ color }") {{t(label)}}
   toggle-input.input(:value="value")
 </template>
@@ -24,6 +24,15 @@ export default {
 
   data() {
     return {}
+  },
+
+  computed: {
+    classList() {
+      return {
+        '-inline': this.inline,
+        '-inactive': this.inactive,
+      }
+    },
   },
 
   methods: {

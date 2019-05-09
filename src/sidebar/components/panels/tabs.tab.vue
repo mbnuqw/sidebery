@@ -1,18 +1,20 @@
 <template lang="pug">
-.Tab(:is-active="tab.active"
+.Tab(
+  :data-active="tab.active"
   :data-status="tab.status"
-  :data-no-fav="!favicon"
+  :data-progress="loading"
+  :data-selected="selected"
+  :data-favless="!favicon"
   :data-audible="tab.audible"
   :data-muted="tab.mutedInfo.muted"
-  :data-pinned="tab.pinned"
-  :is-selected="selected"
-  :discarded="tab.discarded"
-  :updated="updated"
-  :is-parent="tab.isParent"
-  :folded="tab.folded"
-  :invisible="tab.invisible"
-  :lvl="tab.lvl"
-  :close-btn="$store.state.showTabRmBtn"
+  :data-discarded="tab.discarded"
+  :data-updated="updated"
+  :data-lvl="tab.lvl"
+  :data-parent="tab.isParent"
+  :data-folded="tab.folded"
+  :data-invisible="tab.invisible"
+  :data-close-btn="$store.state.showTabRmBtn"
+
   :style="{ transform: 'translateY(' + position + 'px)' }"
   :title="tooltip"
   @contextmenu.prevent.stop=""
@@ -21,14 +23,15 @@
   @mouseleave="onMouseLeave"
   @dblclick.prevent.stop="onDoubleClick"): .lvl-wrapper
   .loaded-fx
-  .drag-layer(draggable="true"
+  .drag-layer(
+    draggable="true"
     @dragstart="onDragStart"
     @dragenter="onDragEnter"
     @dragleave="onDragLeave")
   .audio(@mousedown.stop="", @click="$store.dispatch('remuteTabs', [tab.id])")
     svg.-loud: use(xlink:href="#icon_loud")
     svg.-mute: use(xlink:href="#icon_mute")
-  .fav(:loading="loading")
+  .fav
     .placeholder: svg: use(:xlink:href="favPlaceholder")
     img(:src="favicon", @load.passive="onFaviconLoad")
     .exp(@dblclick.prevent.stop="", @mousedown.stop="onExp"): svg: use(xlink:href="#icon_expand")
@@ -74,7 +77,6 @@ export default {
 
   data() {
     return {
-      menu: false,
       loading: false,
       selected: false,
     }

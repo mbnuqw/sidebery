@@ -4,9 +4,6 @@
   box(relative, flex)
   flex-wrap: wrap
   cursor: pointer
-  &[opt-true]
-    .opt
-      color: var(--active-fg)
 
 .SelectInput > .opt
   box(relative)
@@ -14,7 +11,7 @@
   margin: 0 7px 0 0
   color: var(--inactive-fg)
   transition: color var(--d-fast)
-  &[opt-true]
+  &.-true
     color: var(--active-fg)
-    &[opt-none]
+    &.-none
       color: var(--false-fg)

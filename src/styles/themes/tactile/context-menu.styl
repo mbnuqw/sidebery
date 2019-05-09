@@ -7,7 +7,7 @@
   z-index: -1
   opacity: 0
   transition: opacity var(--d-fast), z-index var(--d-fast)
-  &[is-active]
+  &[data-active]
     opacity: 1
     z-index: 5000
 
@@ -19,7 +19,7 @@
   opacity: 0
   transform: translateX(16px)
   transition: opacity var(--d-fast), z-index var(--d-fast), transform var(--d-fast)
-  &[is-active]
+  &[data-active]
     opacity: 1
     z-index: 100
     transform: translateX(0)
@@ -48,11 +48,11 @@
   size(auto, 30px, min-w: 30px)
   flex-grow: 1
   flex-shrink: 0
-  &[btn-width="5"]
+  &[data-width="5"]
     size(20%)
     flex-grow: 0
   &:hover
-  &[is-selected]
+  &[data-selected]
     background-color: var(--ctx-menu-bg-hover)
     svg
       opacity: 1
@@ -89,7 +89,7 @@
   &:last-of-type
     padding-bottom: 4px
   &:hover:before
-  &[is-selected]
+  &[data-selected]
     background-color: var(--ctx-menu-bg-hover)
   &:active
     opacity: .7

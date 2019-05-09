@@ -1,14 +1,14 @@
 <template lang="pug">
 .StyleField
   .label {{t(label)}}
-  .input-group(:is-activated="isActive")
+  .input-group(:class="classList")
     text-input.text-input(
       :value="value"
       :line="true"
       :or="or"
       @input="onInput"
       @change="onChange")
-    toggle-input.toggle(:value="isActive", @input="toggle")
+    toggle-input.toggle(:value="!!value", @input="toggle")
 </template>
 
 
@@ -35,8 +35,10 @@ export default {
   },
 
   computed: {
-    isActive() {
-      return !!this.value
+    classList() {
+      return {
+        '-activated': !!this.value,
+      }
     }
   },
 

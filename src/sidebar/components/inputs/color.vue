@@ -1,5 +1,5 @@
 <template lang="pug">
-.ColorInput(:is-active="isActive", :is-empty="isEmpty")
+.ColorInput
   .color-wrapper
     input.color(
       ref="hexRgb"
@@ -46,10 +46,6 @@ export default {
   },
 
   computed: {
-    isEmpty() {
-      return !this.value
-    },
-
     colorValue() {
       if (!this.value) return '#000000'
       if (this.value.startsWith('rgba')) {

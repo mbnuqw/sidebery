@@ -1,8 +1,5 @@
 <template lang="pug">
-.Bookmarks(
-  :not-renderable="!renderable"
-  :invisible="!visible"
-  @click="onClick")
+.Bookmarks(:class="classList" @click="onClick")
   scroll-box(ref="scrollBox"): .bookmarks-wrapper
     component.node(
       v-for="n in $store.state.bookmarks"
@@ -47,6 +44,15 @@ export default {
       visible: false,
       lastScrollY: 0,
     }
+  },
+
+  computed: {
+    classList() {
+      return {
+        '-not-renderable': !this.renderable,
+        '-invisible': !this.visible,
+      }
+    },
   },
 
   watch: {

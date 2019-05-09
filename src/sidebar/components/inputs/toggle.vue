@@ -1,5 +1,5 @@
 <template lang="pug">
-.ToggleInput(:opt-true="value", @click="toggle")
+.ToggleInput(:class="classList" @click="toggle")
   .opt.-true {{t('settings.opt_true')}}
   .opt.-false {{t('settings.opt_false')}}
 </template>
@@ -13,6 +13,14 @@ export default {
 
   data() {
     return {}
+  },
+
+  computed: {
+    classList() {
+      return {
+        '-on': this.value,
+      }
+    },
   },
 
   methods: {

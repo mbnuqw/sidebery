@@ -16,14 +16,14 @@ NAV_CONF_HEIGHT = auto
   flex-direction: column
   overflow: hidden
 
-  &[dashboard-opened]
+  &[data-dashboard]
     .dimmer
       z-index: 999
       opacity: 1
     .panel-menu
       opacity: 1
       transition: opacity var(--d-fast), z-index var(--d-fast)
-    .panel-btn[is-active="true"]
+    .panel-btn[data-active="true"]
       flex-grow: 10
       transition: flex var(--d-fast)
 
@@ -97,44 +97,44 @@ NAV_CONF_HEIGHT = auto
     size(100%, same)
     pos(0, 0)
     z-index: 1
-  &[is-active="true"]
+  &[data-active="true"]
     opacity: var(--nav-btn-activated-opacity)
   &:hover
     opacity: var(--nav-btn-opacity-hover)
   &:active
     opacity: var(--nav-btn-opacity-active)
     transition: none
-  &[is-hidden="true"]
+  &[data-hidden="true"]
     opacity: 0
     z-index: -1
     transform: scale(0, 0)
-  &[updated]
+  &[data-updated]
     > .update-badge
       opacity: 1
       transform: scale(1, 1)
-  &[proxified]
+  &[data-proxified]
     > .update-badge
       opacity: 0
       transform: scale(0.7, 0.7)
     > .proxy-badge
       opacity: .64
       transform: scale(1, 1)
-  &[loading="true"]
+  &[data-loading="true"]
     cursor: progress
     > .loading-spinner
       opacity: 1
       for i in 0..12
         > .spinner-stick-{i}
           animation: loading-spin .6s (i*50)ms infinite
-  &[loading="ok"]
+  &[data-loading="ok"]
     > .ok-badge
       opacity: 1
       transform: scale(1, 1)
-  &[loading="err"]
+  &[data-loading="err"]
     > .err-badge
       opacity: 1
       transform: scale(1, 1)
-  &[updated]
+  &[data-updated]
     > svg
       mask: radial-gradient(
         circle at calc(100% - 1.5px) calc(100% - 1.5px),
@@ -143,8 +143,8 @@ NAV_CONF_HEIGHT = auto
         #000000 6px,
         #000000
       )
-  &[proxified]
-  &[loading]
+  &[data-proxified]
+  &[data-loading]
     > svg
       mask: radial-gradient(
         circle at calc(100% - 1px) calc(100% - 1px),
@@ -297,16 +297,16 @@ NAV_CONF_HEIGHT = auto
     background-color: var(--nav-btn-update-badge-bg)
     opacity: 0
     transition: opacity var(--d-fast)
-.Sidebar[drag-mode] .pointer
+.Sidebar[data-drag] .pointer
   opacity: 1
   z-index: 100
-.Sidebar[pointer-mode="none"] .pointer .arrow
+.Sidebar[data-pointer="none"] .pointer .arrow
   opacity: 0
-.Sidebar[pointer-mode="between"] .pointer:after
+.Sidebar[data-pointer="between"] .pointer:after
   opacity: 1
-.Sidebar[pointer-mode="inside-fold"] .pointer .arrow:before
+.Sidebar[data-pointer="inside-fold"] .pointer .arrow:before
   background-color: var(--nav-btn-update-badge-bg)
-.Sidebar[pointer-mode^="inside"] .pointer:after
+.Sidebar[data-pointer^="inside"] .pointer:after
   opacity: 0
 .Sidebar .pointer.-expanding .arrow
   animation: pointer-expand-arrow .3s
@@ -329,13 +329,13 @@ NAV_CONF_HEIGHT = auto
   transition: transform var(--d-fast), opacity var(--d-fast), z-index var(--d-fast)
   opacity: 0
   z-index: 0
-  &[pos="center"]
+  &[data-pos="center"]
     z-index: 10
     opacity: 1
     transform: translateX(0)
-  &[pos="left"]
+  &[data-pos="left"]
     transform: translateX(-100%)
-  &[pos="right"]
+  &[data-pos="right"]
     transform: translateX(100%)
 
 // --- Settings Transitions ---

@@ -19,7 +19,7 @@
                 z-index var(--d-fast),
                 transform 0s var(--d-fast)
 
-  &[is-selected="true"]
+  &.-selected
     &:before
       opacity: 1
       z-index: 0
@@ -51,9 +51,9 @@
       border-radius: 2px
       background-image: linear-gradient(90deg, transparent, #545454, #545454, #545454)
 
-.Separator:not([is-selected]) > .body:hover:before
+.Separator:not(.-selected) > .body:hover:before
     background-color: var(--bookmarks-node-bg-hover)
-.Separator:not([is-selected]) > .body:active:before
+.Separator:not(.-selected) > .body:active:before
     background-color: var(--bookmarks-node-bg-active)
 
 .Separator .drag-layer

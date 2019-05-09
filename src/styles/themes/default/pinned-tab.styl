@@ -16,13 +16,13 @@
   &:hover
     background-color: var(--tabs-bg-hover)
   &:hover
-  &[is-active]:hover
+  &[data-active]:hover
     .fav
       opacity: .7
     .title
       color: var(--tabs-fg-hover)
   &:active
-  &[is-active]:active
+  &[data-active]:active
     background-color: var(--tabs-bg-active)
     .fav
       transition: none
@@ -36,7 +36,7 @@
     opacity: 0
     transition: opacity var(--d-fast)
 
-  &[is-active]
+  &[data-active]
     background-color: var(--tabs-activated-bg)
     border: var(--tabs-activated-border)
     box-shadow: var(--tabs-activated-shadow)
@@ -45,14 +45,7 @@
     .title
       color: var(--tabs-activated-fg)
 
-  &[close-btn]:hover
-    &[data-audible] .t-box
-    &[data-muted] .t-box
-      mask: linear-gradient(-90deg, transparent, transparent 42px, #000000 64px, #000000)
-    .t-box
-      mask: linear-gradient(-90deg, transparent, transparent 24px, #000000 48px, #000000)
-
-  &[data-no-fav]
+  &[data-favless]
     .fav > .placeholder
       opacity: 1
       transform: translateY(0)
@@ -60,8 +53,8 @@
       opacity: 0
       transform: translateY(-4px)
 
-  &[is-selected]
-  &[is-selected]:active
+  &[data-selected]
+  &[data-selected]:active
     z-index: 10
     background-color: var(--tabs-selected-bg)
     border: var(--tabs-selected-border)
@@ -69,10 +62,10 @@
     .title
       color: var(--tabs-selected-fg)
   
-  &[discarded]
+  &[data-discarded]
     opacity: .5
 
-  &[updated] .fav
+  &[data-updated] .fav
     > img
       mask: radial-gradient(
         circle at calc(100% - 2px) calc(100% - 2px),
@@ -195,20 +188,20 @@
       transform: rotateZ((i * 30)deg)
       animation: none
 
-.PinnedTab[loading="true"]:not([data-audible]):not([data-muted]) .fav
+.PinnedTab[data-status="loading"]:not([data-audible]):not([data-muted]) .fav
+.PinnedTab[data-progress="true"]:not([data-audible]):not([data-muted]) .fav
     cursor: progress
     > .loading-spinner
       opacity: 1
       for i in 0..12
         > .spinner-stick-{i}
           animation: loading-spin .6s (i*50)ms infinite
-.PinnedTab[loading="ok"] .fav > .ok-badge
+.PinnedTab[data-progress="ok"] .fav > .ok-badge
+.PinnedTab[data-progress="err"] .fav > .err-badge
   opacity: 1
   transform: scale(1, 1)
-.PinnedTab[loading="err"] .fav > .err-badge
-  opacity: 1
-  transform: scale(1, 1)
-.PinnedTab[loading] .fav > img
+.PinnedTab[data-status="loading"] .fav > img
+.PinnedTab[data-progress] .fav > img
   mask: radial-gradient(
     circle at calc(100% - 1px) calc(100% - 1px),
     #00000032,
@@ -309,7 +302,7 @@
   box-shadow: inset 0 0 1px 0 var(--title-fg)
 
 // --- Drop slot
-.PinnedTab[drop-slot]
+.PinnedTab[data-drop-slot]
   &:before
     opacity: 1
 
@@ -347,9 +340,9 @@
     fill: #a63626
     transition: fill var(--d-fast)
 #root.-pinned-tabs-panel.-pinned-tabs-list
-  .PinnedTab .close
+  .PinnedTab[data-close-btn] .close
     box(block)
-  .PinnedTab:hover
+  .PinnedTab[data-close-btn]:hover
     .title
       mask: linear-gradient(-90deg, transparent, transparent 25px, #000000 50px, #000000)
     .close
