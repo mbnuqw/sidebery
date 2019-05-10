@@ -1,7 +1,7 @@
 <template lang="pug">
 .StyleField
   .label {{t(label)}}
-  .input-group(:class="classList")
+  .input-group(:data-active="!!value")
     text-input.text-input(
       :value="value"
       :line="true"
@@ -32,14 +32,6 @@ export default {
 
   data() {
     return {}
-  },
-
-  computed: {
-    classList() {
-      return {
-        '-activated': !!this.value,
-      }
-    }
   },
 
   methods: {

@@ -1,5 +1,5 @@
 <template lang="pug">
-.SelectField(:class="classList" @mousedown="select")
+.SelectField(:data-inline="inline" :data-inactive="inactive" @mousedown="select")
   .label {{t(label)}}
   select-input(
     :label="optLabel"
@@ -29,15 +29,6 @@ export default {
 
   data() {
     return {}
-  },
-
-  computed: {
-    classList() {
-      return {
-        '-inline': this.inline,
-        '-inactive': this.inactive
-      }
-    }
   },
 
   methods: {

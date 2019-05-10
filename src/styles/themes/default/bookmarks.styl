@@ -7,13 +7,13 @@
   box(relative)
   padding-bottom: 64px
 
-.Bookmarks.-not-renderable
+.Bookmarks[data-unrenderable]
   cursor: progress
 
-.Bookmarks.-not-renderable .node
-  box(none)
+  .node
+    box(none)
 
-.Bookmarks.-invisible .node
+.Bookmarks[data-invisible] .node
   opacity: 0
 
 // --- Root nodes ---

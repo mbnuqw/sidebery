@@ -15,12 +15,12 @@
   &.err-animation
     animation: shake-it .3s
 
-.TextInput.-empty
+.TextInput[data-empty]
   > .placeholder
     opacity: .5
     transform: translateX(0)
 
-.TextInput.-active
+.TextInput[data-active]
   > .placeholder
     transform: translateX(3px)
 

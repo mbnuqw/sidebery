@@ -1,5 +1,5 @@
 <template lang="pug">
-.TextInput(:class="classList")
+.TextInput(:data-active="isActive" :data-empty="!value")
   input(
     v-if="line"
     ref="text"
@@ -56,15 +56,6 @@ export default {
       isActive: false,
       val: '',
     }
-  },
-
-  computed: {
-    classList() {
-      return {
-        '-active': this.isActive,
-        '-empty': !this.value,
-      }
-    },
   },
 
   mounted() {

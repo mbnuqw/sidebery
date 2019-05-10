@@ -1,5 +1,9 @@
 <template lang="pug">
-.Folder(:class="classList")
+.Folder(
+  :data-expanded="node.expanded"
+  :data-parent="isParent"
+  :data-selected="selected"
+  :data-opened="opened")
   .body(:title="tooltip" @click="onClick" @mousedown="onMouseDown" @mouseup="onMouseUp")
     .drag-layer(draggable="true" @dragstart="onDragStart")
     .exp(v-if="isParent")
@@ -18,7 +22,6 @@
 
 
 <script>
-import { mapGetters } from 'vuex'
 import Store from '../../store'
 import State from '../../store.state'
 import EventBus from '../../event-bus'
@@ -48,17 +51,6 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['defaultPanel', 'panels']),
-
-    classList() {
-      return {
-        '-expanded': this.node.expanded,
-        '-parent': this.isParent,
-        '-selected': this.selected,
-        '-opened': this.opened,
-      }
-    },
-
     isParent() {
       return !!this.node.children && this.node.children.length > 0
     },

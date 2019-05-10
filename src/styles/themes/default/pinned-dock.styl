@@ -12,11 +12,11 @@
     size(100%, same)
     background-color: var(--pinned-dock-overlay-bg)
     box-shadow: var(--pinned-dock-overlay-shadow)
-  &.-empty
+  &[data-empty]
     box(none)
 
 // Per-Panel
-#root.-pinned-tabs-panel .PinnedDock
+#root[data-pinned-tabs-position="panel"] .PinnedDock
   size(100%, auto)
   flex-wrap: wrap
   flex-direction: row
@@ -26,7 +26,7 @@
               inset 0 0 8px 0 #00000032
 
 // Left
-#root.-pinned-tabs-left .PinnedDock
+#root[data-pinned-tabs-position="left"] .PinnedDock
   size(auto, 100%)
   flex-direction: column
   padding: 0 1px 0 0
@@ -34,7 +34,7 @@
               inset 0 0 8px 0 #00000032
 
 // Right
-#root.-pinned-tabs-right .PinnedDock
+#root[data-pinned-tabs-position="right"] .PinnedDock
   size(auto, 100%)
   flex-direction: column
   padding: 0 0 0 1px
@@ -42,7 +42,7 @@
               inset 0 0 8px 0 #00000032
 
 // Top
-#root.-pinned-tabs-top .PinnedDock
+#root[data-pinned-tabs-position="top"] .PinnedDock
   size(100%, auto)
   flex-wrap: wrap
   flex-direction: row
@@ -62,21 +62,21 @@
     pos(0, 0)
     background-color: var(--tabs-update-badge-bg)
 
-#root.-pinned-tabs-panel.-pinned-tabs-list
+#root[data-pinned-tabs-position="panel"][data-pinned-tabs-list]
   .PinnedDock .to-the-end
     box(none)
 
-#root.-pinned-tabs-panel .PinnedDock .to-the-end
-#root.-pinned-tabs-top .PinnedDock .to-the-end
+#root[data-pinned-tabs-position="panel"] .PinnedDock .to-the-end
+#root[data-pinned-tabs-position="top"] .PinnedDock .to-the-end
   size(0, 32px)
   &:before
     size(1px, 32px)
 
-#root.-pinned-tabs-left .PinnedDock .to-the-end
-#root.-pinned-tabs-right .PinnedDock .to-the-end
+#root[data-pinned-tabs-position="left"] .PinnedDock .to-the-end
+#root[data-pinned-tabs-position="right"] .PinnedDock .to-the-end
   size(32px, 0)
   &:before
     size(32px, 1px)
 
-.PinnedDock.-drag-pointed .to-the-end
+.PinnedDock[data-drag-pointed] .to-the-end
   opacity: 1

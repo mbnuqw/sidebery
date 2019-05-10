@@ -1,6 +1,8 @@
 <template lang="pug">
-.PinnedDock(v-noise:300.g:12:af.a:0:42.s:0:9=""
-  :class="classList"
+.PinnedDock(
+  v-noise:300.g:12:af.a:0:42.s:0:9=""
+  :data-empty="pinnedTabs.length === 0"
+  :data-drag-pointed="dragPointed"
   @wheel="onWheel"
   @drop.stop.prevent="onDrop"
   @dragenter="onDragEnter"
@@ -38,13 +40,6 @@ export default {
   },
 
   computed: {
-    classList() {
-      return {
-        '-empty': this.pinnedTabs.length === 0,
-        '-drag-pointed': this.dragPointed,
-      }
-    },
-
     pinnedTabs() {
       const pinned = this.$store.getters.pinnedTabs
       if (this.ctx) return pinned.filter(t => t.cookieStoreId === this.ctx)

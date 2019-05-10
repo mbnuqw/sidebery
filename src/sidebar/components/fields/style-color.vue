@@ -1,7 +1,7 @@
 <template lang="pug">
 .ColorField
   .label {{t(label)}}
-  .input-group(:class="classList")
+  .input-group(:data-active="!!value")
     color-input.color-input(
       v-debounce:input.128="debouncedInput"
       :value="value"
@@ -29,14 +29,6 @@ export default {
 
   data() {
     return {}
-  },
-
-  computed: {
-    classList() {
-      return {
-        '-activated': !!this.value,
-      }
-    },
   },
 
   methods: {

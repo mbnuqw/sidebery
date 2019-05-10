@@ -27,13 +27,11 @@ NAV_CONF_HEIGHT = auto
       flex-grow: 10
       transition: flex var(--d-fast)
 
-#root.-pinned-tabs-top > .Sidebar
+#root[data-pinned-tabs-position="top"] > .Sidebar
   flex-direction: column
-#root.-pinned-tabs-left > .Sidebar
+#root[data-pinned-tabs-position="left"] > .Sidebar
   flex-direction: row
-#root.-pinned-tabs-bottom > .Sidebar
-  flex-direction: column-reverse
-#root.-pinned-tabs-right > .Sidebar
+#root[data-pinned-tabs-position="right"] > .Sidebar
   flex-direction: row-reverse
 
 .Sidebar > .box
@@ -313,7 +311,7 @@ NAV_CONF_HEIGHT = auto
 .Sidebar .pointer.-expanding .arrow:after
   animation: pointer-expand-pulse .5s
 
-#root.-pinned-tabs-left .Sidebar .pointer
+#root[data-pinned-tabs-position="left"] .Sidebar .pointer
   pos(l: 33px)
 
 // --- Panel ---

@@ -1,5 +1,8 @@
 <template lang="pug">
-.Bookmark(:class="classList")
+.Bookmark(
+  :data-selected="selected"
+  :data-opened="node.opened"
+  :data-favless="!favicon")
   .body(:title="tooltip", @click="onClick", @mousedown="onMouseDown", @mouseup="onMouseUp")
     .drag-layer(draggable="true", @dragstart="onDragStart")
     .fav
@@ -29,14 +32,6 @@ export default {
 
   computed: {
     ...mapGetters(['defaultPanel', 'panels']),
-
-    classList() {
-      return {
-        '-selected': this.selected,
-        '-opened': this.node.opened,
-        '-favless': !this.favicon,
-      }
-    },
 
     favicon() {
       if (!this.node.host) return

@@ -78,7 +78,7 @@
       opacity: 1
       transform: scale(1, 1)
 
-#root.-pinned-tabs-panel.-pinned-tabs-list
+#root[data-pinned-tabs-position="panel"][data-pinned-tabs-list]
   .PinnedTab
     size(100%)
     justify-content: flex-start
@@ -89,13 +89,13 @@
   .PinnedTab .audio-badge
     pos(l: 16px)
 
-#root.-pinned-tabs-panel
-#root.-pinned-tabs-top
+#root[data-pinned-tabs-position="panel"]
+#root[data-pinned-tabs-position="top"]
   .PinnedTab:before
     box-shadow: -1px 0 0 0 var(--tabs-update-badge-bg)
 
-#root.-pinned-tabs-left
-#root.-pinned-tabs-right
+#root[data-pinned-tabs-position="left"]
+#root[data-pinned-tabs-position="right"]
   .PinnedTab:before
     box-shadow: 0 -1px 0 0 var(--tabs-update-badge-bg)
 
@@ -339,7 +339,7 @@
     size(17px, same)
     fill: #a63626
     transition: fill var(--d-fast)
-#root.-pinned-tabs-panel.-pinned-tabs-list
+#root[data-pinned-tabs-position="panel"][data-pinned-tabs-list]
   .PinnedTab[data-close-btn] .close
     box(block)
   .PinnedTab[data-close-btn]:hover

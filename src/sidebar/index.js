@@ -24,32 +24,9 @@ export default new Vue({
   computed: {
     ...mapGetters(['fontSize', 'defaultCtxId', 'panels', 'pinnedTabs']),
 
-    nativeScrollbarsClass() {
-      return State.nativeScrollbars ? '-native-scroll' : '-custom-scroll'
-    },
-
-    themeClass() {
-      return '-' + State.theme
-    },
-
-    animateClass() {
-      if (State.animations) return '-animate'
-      else return '-no-animate'
-    },
-
-    pinnedPosClass() {
-      if (!this.pinnedTabs.length) return '-no-pinned-tabs'
-      return '-pinned-tabs-' + State.pinnedTabsPosition
-    },
-
-    pinnedViewClass() {
-      if (State.pinnedTabsList) return '-pinned-tabs-list'
-      else return '-pinned-tabs-grid'
-    },
-
-    tabsLvlMarksClass() {
-      if (State.tabsLvlDots) return '-tabs-lvl-marks'
-      else return ''
+    pinnedTabsPosition() {
+      if (!this.pinnedTabs.length) return 'none'
+      return State.pinnedTabsPosition
     },
   },
 

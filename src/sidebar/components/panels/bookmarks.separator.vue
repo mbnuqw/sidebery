@@ -1,5 +1,5 @@
 <template lang="pug">
-.Separator(:class="classList")
+.Separator(:data-selected="selected")
   .body(@click="onClick" @mousedown="onMouseDown" @mouseup="onMouseUp")
     .drag-layer(draggable="true" @dragstart="onDragStart")
 </template>
@@ -20,14 +20,6 @@ export default {
     return {
       selected: false,
     }
-  },
-
-  computed: {
-    classList() {
-      return {
-        '-selected': this.selected,
-      }
-    },
   },
 
   created() {

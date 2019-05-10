@@ -31,11 +31,11 @@
       transition: none
       color: var(--bookmarks-node-title-fg-active)
   
-  &.-opened
+  &[data-opened]
     > .body > .title
       color: var(--active-fg)
 
-  &.-selected
+  &[data-selected]
     > .body:before
       opacity: 1
     > .body > .title
@@ -65,9 +65,9 @@
     background-color: var(--tabs-selected-bg)
     opacity: 0
 
-.Bookmark:not(.-selected) > .body:hover
+.Bookmark:not([data-selected]) > .body:hover
     background-color: var(--bookmarks-node-bg-hover)
-.Bookmark:not(.-selected) > .body:active
+.Bookmark:not([data-selected]) > .body:active
     background-color: var(--bookmarks-node-bg-active)
 
 .Bookmark .drag-layer
@@ -84,7 +84,7 @@
   margin: 0 4px 0 5px
   z-index: 20
   transition: opacity var(--d-fast), transform var(--d-fast)
-.Bookmark.-favless .fav
+.Bookmark[data-favless] .fav
   > .placeholder
     opacity: 1
     transform: translateY(0)

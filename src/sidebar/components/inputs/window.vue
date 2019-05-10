@@ -1,5 +1,5 @@
 <template lang="pug">
-.WinInput(:class="classList" @click="cancel")
+.WinInput(:data-ready="isReady" @click="cancel")
   scroll-box(ref="scrollBox")
     .box(v-for="(w, i) in $store.state.winChoosing", :key="w.id")
       .win(@click.stop="w.choose")
@@ -22,12 +22,6 @@ export default {
   },
 
   computed: {
-    classList() {
-      return {
-        '-ready': this.isReady,
-      }
-    },
-
     isReady() {
       if (!State.winChoosing || !State.winChoosing.length) return false
       return State.winChoosing.reduce((o, w) => o && w.loaded, true)

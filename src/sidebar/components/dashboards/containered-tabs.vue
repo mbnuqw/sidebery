@@ -135,10 +135,10 @@
   .delimiter(v-if="id")
 
   .options
-    .opt(v-if="tabsCount", @click="dedupTabs") {{t('tabs_dashboard.dedup_tabs')}}
-    .opt(v-if="tabsCount", @click="reloadAllTabs") {{t('tabs_dashboard.reload_all_tabs')}}
-    .opt(v-if="tabsCount", @click="closeAllTabs") {{t('tabs_dashboard.close_all_tabs')}}
-    .opt.-warn(v-if="id", @click="remove") {{t('tabs_dashboard.delete_container')}}
+    .opt(v-if="tabsCount" @click="dedupTabs") {{t('tabs_dashboard.dedup_tabs')}}
+    .opt(v-if="tabsCount" @click="reloadAllTabs") {{t('tabs_dashboard.reload_all_tabs')}}
+    .opt(v-if="tabsCount" @click="closeAllTabs") {{t('tabs_dashboard.close_all_tabs')}}
+    .opt.-warn(v-if="id" @click="remove") {{t('tabs_dashboard.delete_container')}}
 </template>
 
 

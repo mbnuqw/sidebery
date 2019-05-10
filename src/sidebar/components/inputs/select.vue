@@ -2,7 +2,8 @@
 .SelectInput(@mousedown="select")
   .opt(
     v-for="o in opts"
-    :class="{ '-none': o === noneOpt, '-true': o === value }") {{t(label + o)}}
+    :data-none="o === noneOpt"
+    :data-active="o === value") {{t(label + o)}}
 </template>
 
 

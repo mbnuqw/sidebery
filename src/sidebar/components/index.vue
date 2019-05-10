@@ -24,7 +24,7 @@
     @stop-selection="stopSelection")
 
   .box(ref="box")
-    .bg(v-noise:300.g:12:af.a:0:42.s:0:9="", :style="bgPosStyle")
+    .bg(v-noise:300.g:12:af.a:0:42.s:0:9="" :style="bgPosStyle")
     .dimmer(@mousedown="closeDashboard")
 
     //- Navigation
@@ -91,7 +91,7 @@
         @start-selection="startSelection"
         @stop-selection="stopSelection")
       transition(name="settings")
-        window-input(v-if="$store.state.panelIndex === -5", :data-pos="windowInputPos")
+        window-input(v-if="$store.state.panelIndex === -5" :data-pos="windowInputPos")
 </template>
 
 
