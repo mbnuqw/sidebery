@@ -1,18 +1,23 @@
 @import '../../mixins'
 
 .PinnedTab
-  --pinned-tab-size: 32px
-
   box(relative, flex)
-  size(32px, same)
-  width: var(--pinned-tab-size)
+  size(30px, same)
   overflow: hidden
   justify-content: center
   align-items: center
   border: var(--tabs-border)
   box-shadow: var(--tabs-shadow)
   transform: translateZ(0)
+  margin: 1px
   transition: opacity var(--d-fast), transform .12s, z-index 0s .2s
+  background-image: linear-gradient(0deg, #00000016, #ffffff02)
+  border-radius: 2px
+  box-shadow: inset 0 1px 0 0 #ffffff12,
+              inset 1px 0 0 0 #00000032,
+              inset -1px 0 0 0 #00000032,
+              0 -1px 0 0 #00000032,
+              inset 0 -1px 0 0 #00000032
   &:hover
     background-color: var(--tabs-bg-hover)
   &:hover
@@ -37,9 +42,13 @@
     transition: opacity var(--d-fast)
 
   &[data-active]
-    background-color: var(--tabs-activated-bg)
+    // background-color: #00000024
     border: var(--tabs-activated-border)
-    box-shadow: var(--tabs-activated-shadow)
+    box-shadow: inset 1px 0 0 0 #00000032,
+                inset -1px 0 0 0 #00000032,
+                inset 0 1px 0 0 #00000012,
+                inset 0 -1px 0 0 #00000032
+    background-image: linear-gradient(180deg, #00000042, #00000012)
     .fav
       opacity: 1
     .title
@@ -82,8 +91,9 @@
   .PinnedTab
     size(100%)
     justify-content: flex-start
-    height: var(--tabs-height)
-    padding-left: 1px
+    // height: var(--tabs-height)
+    height: 30px
+    // padding-left: 1px
   .PinnedTab:before
     box-shadow: 0 -1px 0 0 var(--tabs-update-badge-bg)
   .PinnedTab .audio-badge

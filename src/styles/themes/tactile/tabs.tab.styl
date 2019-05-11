@@ -7,46 +7,73 @@
   align-items: center
   z-index: 10
   transform: translateZ(0)
-  transition: opacity var(--d-fast), transform var(--d-fast), z-index 0s .2s
+  transition: opacity var(--d-fast), transform var(--d-fast)
   border: var(--tabs-border)
-  box-shadow: inset 0 1px 0 0 #ffffff12,
-              inset 0 -1px 0 0 #00000032
+
   &:before
     content: ''
     box(absolute)
     size(100%, same)
     pos(0, 0)
     background-image: linear-gradient(0deg, #00000016, #ffffff02)
-  &:hover
+    border-top-left-radius: 2px
+    border-bottom-left-radius: 2px
+    box-shadow: inset 0 1px 0 0 #ffffff12,
+                inset 1px 0 0 0 #00000032,
+                0 -1px 0 0 #00000032,
+                inset 0 -1px 0 0 #00000032
+  &:hover:before
     background-color: var(--tabs-bg-hover)
+
   &:hover
   &[data-active]:hover
     .close
       opacity: 1
-  &:active
-  &[data-active]:active
+
+  &:active:before
+  &[data-active]:active:before
     background-color: #00000032
 
   &[data-lvl="1"]
     padding-left: var(--tabs-indent)
+    &:before
+      margin-left: var(--tabs-indent)
   &[data-lvl="2"]
     padding-left: calc(var(--tabs-indent) * 2)
+    &:before
+      margin-left: calc(var(--tabs-indent) * 2)
   &[data-lvl="3"]
     padding-left: calc(var(--tabs-indent) * 3)
+    &:before
+      margin-left: calc(var(--tabs-indent) * 3)
   &[data-lvl="4"]
     padding-left: calc(var(--tabs-indent) * 4)
+    &:before
+      margin-left: calc(var(--tabs-indent) * 4)
   &[data-lvl="5"]
     padding-left: calc(var(--tabs-indent) * 5)
+    &:before
+      margin-left: calc(var(--tabs-indent) * 5)
   &[data-lvl="6"]
     padding-left: calc(var(--tabs-indent) * 6)
+    &:before
+      margin-left: calc(var(--tabs-indent) * 6)
   &[data-lvl="7"]
     padding-left: calc(var(--tabs-indent) * 7)
+    &:before
+      margin-left: calc(var(--tabs-indent) * 7)
   &[data-lvl="8"]
     padding-left: calc(var(--tabs-indent) * 8)
+    &:before
+      margin-left: calc(var(--tabs-indent) * 8)
   &[data-lvl="9"]
     padding-left: calc(var(--tabs-indent) * 9)
+    &:before
+      margin-left: calc(var(--tabs-indent) * 9)
   &[data-lvl="10"]
     padding-left: calc(var(--tabs-indent) * 10)
+    &:before
+      margin-left: calc(var(--tabs-indent) * 10)
 
   &[data-parent] .fav:hover
     > .exp
@@ -77,12 +104,16 @@
       opacity: .2
 
   &[data-active]
-    background-color: #00000024
-    border: var(--tabs-activated-border)
-    box-shadow: inset 0 1px 0 0 #ffffff08,
-                inset 0 -1px 0 0 #00000036
+    z-index: 100
     &:before
-      background-image: linear-gradient(180deg, #00000012, #ffffff10)
+      // background-color: #00000024
+      border: var(--tabs-activated-border)
+      box-shadow: inset 0 1px 0 0 #ffffff12,
+                  inset 1px 0 0 0 #00000032,
+                  0 -1px 0 0 #00000032,
+                  inset 0 -1px 0 0 #00000032
+      background-image: linear-gradient(180deg, #00000042, #00000012)
+
     .fav
       opacity: 1
     .title
@@ -143,11 +174,8 @@
   &[data-selected]:hover
   &[data-selected]:active
     z-index: 10
-    background-color: var(--tabs-selected-bg)
-    border: var(--tabs-selected-border)
-    box-shadow: var(--tabs-selected-shadow)
     &:before
-      content: none
+      background-color: var(--tabs-selected-bg)
     .title
       color: var(--tabs-selected-fg)
   
@@ -181,7 +209,7 @@
     content: ''
     box(absolute, none)
     size(3px, 3px)
-    pos(calc(50% - 1px), 2px)
+    pos(calc(50% - 1px), -2px)
     border-radius: 50%
     opacity: .8
 #root[data-tabs-tree-lvl-marks] .Tab .lvl-wrapper:before
