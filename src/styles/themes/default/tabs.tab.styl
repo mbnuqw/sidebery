@@ -13,7 +13,7 @@
   &:hover
     background-color: var(--tabs-bg-hover)
   &:hover
-  &[is-active]:hover
+  &[data-active]:hover
     .fav
       opacity: .7
     .title
@@ -21,62 +21,62 @@
     .close
       opacity: 1
   &:active
-  &[is-active]:active
+  &[data-active]:active
     background-color: var(--tabs-bg-active)
     .fav
       transition: none
       opacity: .5
 
-  &[lvl="1"]
+  &[data-lvl="1"]
     padding-left: var(--tabs-indent)
-  &[lvl="2"]
+  &[data-lvl="2"]
     padding-left: calc(var(--tabs-indent) * 2)
-  &[lvl="3"]
+  &[data-lvl="3"]
     padding-left: calc(var(--tabs-indent) * 3)
-  &[lvl="4"]
+  &[data-lvl="4"]
     padding-left: calc(var(--tabs-indent) * 4)
-  &[lvl="5"]
+  &[data-lvl="5"]
     padding-left: calc(var(--tabs-indent) * 5)
-  &[lvl="6"]
+  &[data-lvl="6"]
     padding-left: calc(var(--tabs-indent) * 6)
-  &[lvl="7"]
+  &[data-lvl="7"]
     padding-left: calc(var(--tabs-indent) * 7)
-  &[lvl="8"]
+  &[data-lvl="8"]
     padding-left: calc(var(--tabs-indent) * 8)
-  &[lvl="9"]
+  &[data-lvl="9"]
     padding-left: calc(var(--tabs-indent) * 9)
-  &[lvl="10"]
+  &[data-lvl="10"]
     padding-left: calc(var(--tabs-indent) * 10)
 
-  &[is-parent] .fav:hover
+  &[data-parent] .fav:hover
     > .exp
       z-index: 1
       opacity: 1
       transform: scale(1, 1)
 
-  &[is-parent][data-no-fav] .fav:hover
+  &[data-parent][data-favless] .fav:hover
     > .placeholder
       opacity: .5
 
-  &[is-parent]:not([data-no-fav]) .fav:hover
+  &[data-parent]:not([data-favless]) .fav:hover
     > img
       opacity: .2
 
-  &[is-parent][folded]
+  &[data-parent][data-folded]
     .fav > .exp
       z-index: 1
       opacity: 1
       transform: scale(1, 1) rotateZ(-90deg)
 
-  &[is-parent][folded][data-no-fav]
+  &[data-parent][data-folded][data-favless]
     .fav > .placeholder
       opacity: .5
 
-  &[is-parent][folded]:not([data-no-fav])
+  &[data-parent][data-folded]:not([data-favless])
     .fav > img
       opacity: .2
 
-  &[is-active]
+  &[data-active]
     background-color: var(--tabs-activated-bg)
     border: var(--tabs-activated-border)
     box-shadow: var(--tabs-activated-shadow)
@@ -85,7 +85,7 @@
     .title
       color: var(--tabs-activated-fg)
 
-  &[close-btn]:hover
+  &[data-close-btn]:hover
     &[data-audible] .t-box
     &[data-muted] .t-box
       mask: linear-gradient(-90deg, transparent, transparent 42px, #000000 64px, #000000)
@@ -105,7 +105,7 @@
     .loading > svg.-c
       animation: tab-loading .8s .14s infinite
 
-  &[data-no-fav]
+  &[data-favless]
     .fav > .placeholder
       opacity: 1
       transform: translateY(0)
@@ -138,9 +138,9 @@
     .t-box
       mask: linear-gradient(-90deg, transparent, transparent 16px, #000000 28px, #000000)
 
-  &[is-selected]
-  &[is-selected]:hover
-  &[is-selected]:active
+  &[data-selected]
+  &[data-selected]:hover
+  &[data-selected]:active
     z-index: 10
     background-color: var(--tabs-selected-bg)
     border: var(--tabs-selected-border)
@@ -148,10 +148,10 @@
     .title
       color: var(--tabs-selected-fg)
   
-  &[discarded]
+  &[data-discarded]
     opacity: .5
 
-  &[updated] .fav
+  &[data-updated] .fav
     > img
       mask: radial-gradient(
         circle at calc(100% - 2px) calc(100% - 2px),
@@ -164,7 +164,7 @@
       opacity: 1
       transform: scale(1, 1)
 
-  &[invisible]
+  &[data-invisible]
     opacity: 0
     z-index: -1
 
@@ -230,22 +230,22 @@
   opacity: 1
   z-index: 20
   transition: opacity var(--d-fast), transform var(--d-fast)
-  &[loading="true"]
+  &[data-progress="true"]
     cursor: progress
     > .loading-spinner
       opacity: 1
       for i in 0..12
         > .spinner-stick-{i}
           animation: loading-spin .6s (i*50)ms infinite
-  &[loading="ok"]
+  &[data-progress="ok"]
     > .ok-badge
       opacity: 1
       transform: scale(1, 1)
-  &[loading="err"]
+  &[data-progress="err"]
     > .err-badge
       opacity: 1
       transform: scale(1, 1)
-  &[loading]
+  &[data-progress]
     > img
       mask: radial-gradient(
         circle at calc(100% - 2px) calc(100% - 2px),

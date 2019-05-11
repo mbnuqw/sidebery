@@ -3,7 +3,7 @@
 // --- Themes ---
 #root
   // Common
-  &.-dark
+  &[data-style="dark"]
     --bg: #323232
     --title-fg: #ffffff
     --sub-title-fg: #ffffff
@@ -16,7 +16,7 @@
     --active-fg: #64aaff
     --inactive-fg: #595959
     --favicons-placehoder-bg: #ffffff24
-  &.-light
+  &[data-style="light"]
     --bg: #fafafa
     --title-fg: #000000
     --sub-title-fg: #242424
@@ -31,7 +31,7 @@
     --favicons-placehoder-bg: #00000048
 
   // Button
-  &.-dark
+  &[data-style="dark"]
     --btn-bg: #245484
     --btn-bg-hover: #295b8f
     --btn-bg-active: #205386
@@ -45,7 +45,7 @@
     --btn-shadow-hover: 0 1px 2px 0 #00000032, 0 0 0 1px #00000024
     --btn-shadow-active: 0 1px 2px 0 #00000000, 0 0 0 1px #00000012
     --btn-roundness: 3px
-  &.-light
+  &[data-style="light"]
     --btn-bg: #328def
     --btn-bg-hover: #3995ea
     --btn-bg-active: #268aef
@@ -61,22 +61,22 @@
     --btn-roundness: 3px
 
   // Scroll Box
-  &.-dark
+  &[data-style="dark"]
     --scroll-progress-h: 1px
     --scroll-progress-bg: #37adef
-  &.-light
+  &[data-style="light"]
     --scroll-progress-h: 2px
     --scroll-progress-bg: #178dff
 
   // Context Menu
-  &.-dark
+  &[data-style="dark"]
     --ctx-menu-bg: #2a2a2a
     --ctx-menu-bg-hover: #484848
     --ctx-menu-warn-bg-hover: #ff613d
     --ctx-menu-fg: #ffffff
     --ctx-menu-warn-fg: #ff613d
     --ctx-menu-shadow: 0 0 0 1px #212121, 0 1px 16px 0 #00000048
-  &.-light
+  &[data-style="light"]
     --ctx-menu-bg: #ffffff
     --ctx-menu-bg-hover: #cacaca
     --ctx-menu-warn-bg-hover: #ff613d
@@ -85,7 +85,7 @@
     --ctx-menu-shadow: 0 0 0 1px #00000016, 0 1px 16px 0 #00000032
 
   // Nav Strip
-  &.-dark
+  &[data-style="dark"]
     --nav-btn-fg: #ffffff
     --nav-btn-bg-focus: #484848
     --nav-btn-opacity: .4
@@ -94,7 +94,7 @@
     --nav-btn-activated-opacity: 1
     --nav-btn-activated-filter: drop-shadow(0 0 1px #00000056)
     --nav-btn-update-badge-bg: #00e9fb
-  &.-light
+  &[data-style="light"]
     --nav-btn-fg: #323232
     --nav-btn-bg-focus: #ffffff
     --nav-btn-opacity: .5
@@ -105,7 +105,7 @@
     --nav-btn-update-badge-bg: #01acda
 
   // Tabs
-  &.-dark
+  &[data-style="dark"]
     --tabs-fg: #aaa
     --tabs-fg-hover: #cecece
     --tabs-fg-active: #aaa
@@ -117,7 +117,7 @@
     --tabs-selected-fg: #ffffff
     --tabs-loading-fg: #47cfff
     --tabs-update-badge-bg: #00e9fb
-  &.-light
+  &[data-style="light"]
     --tabs-fg: #323232
     --tabs-fg-hover: #000000
     --tabs-fg-active: #565656
@@ -131,7 +131,7 @@
     --tabs-update-badge-bg: #01acda
 
   // Bookmarks
-  &.-dark
+  &[data-style="dark"]
     --bookmarks-node-title-fg: #bebebe
     --bookmarks-node-title-fg-hover: #ffffff
     --bookmarks-node-title-fg-active: #aaaaaa
@@ -145,7 +145,7 @@
     --bookmarks-folder-open-fg-active: #898989
     --bookmarks-folder-empty-fg: #646464
     --bookmarks-drag-gradient: linear-gradient(90deg, #242424, #32323200)
-  &.-light
+  &[data-style="light"]
     --bookmarks-node-title-fg: #3a3a3a
     --bookmarks-node-title-fg-hover: #000000
     --bookmarks-node-title-fg-active: #565656
@@ -161,14 +161,14 @@
     --bookmarks-drag-gradient: linear-gradient(90deg, #cacaca, #fafafa00)
 
   // Settings
-  &.-dark
+  &[data-style="dark"]
     --settings-snapshot-counter-pinned-fg: #686868
     --settings-shortcut-fg: #cecece
     --settings-shortcut-fg-focus: #37adff
     --settings-shortcut-bg: #484848
     --settings-shortcut-shadow: 0 0 0 1.2px #565656
     --settings-shortcut-shadow-focus: 0 0 0 1.2px #37adff
-  &.-light
+  &[data-style="light"]
     --settings-snapshot-counter-pinned-fg: #565656
     --settings-shortcut-fg: #484848
     --settings-shortcut-fg-focus: #278dff
@@ -190,29 +190,17 @@
   --bookmarks-separator-height: 17px
 
 // --- Animation ---
-#root.-no-animate
+#root[data-animations="none"]
   --d-tick: 0s
   --d-fast: 0s
   --d-norm: 0s
   --d-slow: 0s
 
-#root.-animate
+#root[data-animations="fast"]
   --d-tick: .05s
   --d-fast: .12s
   --d-norm: .2s
   --d-slow: .3s
-
-// --- Font sizes ---
-#root.-xs
-  --g-font-size: 13px
-#root.-s
-  --g-font-size: 14px
-#root.-m
-  --g-font-size: 14.5px
-#root.-l
-  --g-font-size: 15px
-#root.-xl
-  --g-font-size: 16px
 
 // Pinned dock
 #root
