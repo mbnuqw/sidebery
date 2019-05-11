@@ -368,7 +368,7 @@
   background-image: linear-gradient(90deg, #00000000, var(--tabs-loading-fg))
   opacity: 0
   transform: translateX(-100%)
-.Tab.-loaded .loaded-fx
+.Tab[data-status="complete"] .loaded-fx
   animation: tab-loaded .3s
 
 // --- Title box ---

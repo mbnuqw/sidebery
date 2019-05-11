@@ -289,7 +289,7 @@
   background-image: linear-gradient(90deg, #00000000, var(--tabs-loading-fg))
   opacity: 0
   transform: translateX(-100%)
-.PinnedTab.-loaded .loaded-fx
+.PinnedTab[data-status="complete"] .loaded-fx
   animation: tab-loaded .2s
 
 // --- Context highlight

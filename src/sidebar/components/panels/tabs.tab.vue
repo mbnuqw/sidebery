@@ -120,7 +120,6 @@ export default {
     EventBus.$on('tabLoadingEnd', this.loadingEnd)
     EventBus.$on('tabLoadingOk', this.loadingOk)
     EventBus.$on('tabLoadingErr', this.loadingErr)
-    EventBus.$on('tabLoaded', this.onLoaded)
     EventBus.$on('selectTab', this.onTabSelection)
     EventBus.$on('deselectTab', this.onTabDeselection)
     EventBus.$on('openTabMenu', this.onTabMenu)
@@ -131,7 +130,6 @@ export default {
     EventBus.$off('tabLoadingEnd', this.loadingEnd)
     EventBus.$off('tabLoadingOk', this.loadingOk)
     EventBus.$off('tabLoadingErr', this.loadingErr)
-    EventBus.$off('tabLoaded', this.onLoaded)
     EventBus.$off('selectTab', this.onTabSelection)
     EventBus.$off('deselectTab', this.onTabDeselection)
     EventBus.$off('openTabMenu', this.onTabMenu)
@@ -396,14 +394,6 @@ export default {
       if (e.button === 0) this.close()
       if (e.button === 1) this.close()
       if (e.button === 2) this.closeTree()
-    },
-
-    onLoaded(id) {
-      if (id !== this.tab.id) return
-      this.$el.classList.remove('-loaded')
-      this.$el.offsetHeight
-      this.$el.classList.add('-loaded')
-      setTimeout(() => {this.$el.classList.remove('-loaded')}, 333)
     },
 
     /**

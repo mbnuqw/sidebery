@@ -922,11 +922,11 @@ export default {
       }
 
       // Loaded
-      if (change.hasOwnProperty('status')) {
-        if (change.status === 'complete' && localTab.status === 'loading') {
-          EventBus.$emit('tabLoaded', tab.id)
-        }
-      }
+      // if (change.hasOwnProperty('status')) {
+      //   if (change.status === 'complete' && localTab.status === 'loading') {
+      //     EventBus.$emit('tabLoaded', tab.id)
+      //   }
+      // }
 
       // Handle favicon change
       // If favicon is base64 string - store it in cache
