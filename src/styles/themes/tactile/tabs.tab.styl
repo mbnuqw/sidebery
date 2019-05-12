@@ -263,7 +263,7 @@
   transition: opacity var(--d-fast), transform var(--d-fast)
 .Tab[data-progress="true"] .fav
   cursor: progress
-  > .loading-spinner
+  > .progress-spinner
     opacity: 1
     for i in 0..12
       > .spinner-stick-{i}
@@ -319,7 +319,7 @@
     size(14px, same)
     fill: var(--bookmarks-folder-open-fg)
 
-.Tab .fav > .loading-spinner
+.Tab .fav > .progress-spinner
   box(absolute)
   size(10px, same)
   pos(b: -4px, r: -4px)
@@ -389,14 +389,14 @@
   z-index: 2000
   box-shadow: 0 0 2px 0 #00000024
 
-.Tab .loaded-fx
+.Tab .complete-fx
   box(absolute)
   size(100%, same)
   pos(0, 0)
   background-image: linear-gradient(90deg, #00000000, var(--tabs-loading-fg))
   opacity: 0
   transform: translateX(-100%)
-.Tab[data-status="complete"] .loaded-fx
+.Tab[data-status="complete"] .complete-fx
   animation: tab-loaded .3s
 
 // --- Title box ---

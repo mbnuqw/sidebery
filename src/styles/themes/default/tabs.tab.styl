@@ -10,22 +10,13 @@
   transition: opacity var(--d-fast), transform var(--d-fast), z-index 0s .2s
   border: var(--tabs-border)
   box-shadow: var(--tabs-shadow)
+
   &:hover
     background-color: var(--tabs-bg-hover)
-  &:hover
-  &[data-active]:hover
-    .fav
-      opacity: .7
-    .title
-      color: var(--tabs-fg-hover)
-    .close
-      opacity: 1
+
   &:active
   &[data-active]:active
     background-color: var(--tabs-bg-active)
-    .fav
-      transition: none
-      opacity: .5
 
   &[data-lvl="1"]
     padding-left: var(--tabs-indent)
@@ -48,95 +39,14 @@
   &[data-lvl="10"]
     padding-left: calc(var(--tabs-indent) * 10)
 
-  &[data-parent] .fav:hover
-    > .exp
-      z-index: 1
-      opacity: 1
-      transform: scale(1, 1)
-
-  &[data-parent][data-favless] .fav:hover
-    > .placeholder
-      opacity: .5
-
-  &[data-parent]:not([data-favless]) .fav:hover
-    > img
-      opacity: .2
-
-  &[data-parent][data-folded]
-    .fav > .exp
-      z-index: 1
-      opacity: 1
-      transform: scale(1, 1) rotateZ(-90deg)
-
-  &[data-parent][data-folded][data-favless]
-    .fav > .placeholder
-      opacity: .5
-
-  &[data-parent][data-folded]:not([data-favless])
-    .fav > img
-      opacity: .2
-
   &[data-active]
     background-color: var(--tabs-activated-bg)
     border: var(--tabs-activated-border)
     box-shadow: var(--tabs-activated-shadow)
-    .fav
-      opacity: 1
-    .title
-      color: var(--tabs-activated-fg)
-
-  &[data-close-btn]:hover
-    &[data-audible] .t-box
-    &[data-muted] .t-box
-      mask: linear-gradient(-90deg, transparent, transparent 42px, #000000 64px, #000000)
-    .t-box
-      mask: linear-gradient(-90deg, transparent, transparent 24px, #000000 48px, #000000)
   
   &[data-status="loading"]
+  &[data-progress="true"]
     cursor: progress
-    .title
-      transform: translateX(11px)
-    .loading
-      opacity: 1
-    .loading > svg.-a
-      animation: tab-loading .8s infinite
-    .loading > svg.-b
-      animation: tab-loading .8s .07s infinite
-    .loading > svg.-c
-      animation: tab-loading .8s .14s infinite
-
-  &[data-favless]
-    .fav > .placeholder
-      opacity: 1
-      transform: translateY(0)
-    .fav > img
-      opacity: 0
-      transform: translateY(-4px)
-      transition: none
-
-  &[data-audible]
-    .audio
-      opacity: 1
-      z-index: 20
-      transform: translateX(0)
-    .t-box
-      transform: translateX(16px)
-    .t-box
-      mask: linear-gradient(-90deg, transparent, transparent 16px, #000000 28px, #000000)
-
-  &[data-muted]
-    .audio
-      opacity: .8
-      z-index: 20
-      transform: translateX(0)
-      > svg.-loud
-        opacity: 0
-      > svg.-mute
-        opacity: 1
-    .t-box
-      transform: translateX(16px)
-    .t-box
-      mask: linear-gradient(-90deg, transparent, transparent 16px, #000000 28px, #000000)
 
   &[data-selected]
   &[data-selected]:hover
@@ -145,30 +55,17 @@
     background-color: var(--tabs-selected-bg)
     border: var(--tabs-selected-border)
     box-shadow: var(--tabs-selected-shadow)
-    .title
-      color: var(--tabs-selected-fg)
   
   &[data-discarded]
     opacity: .5
-
-  &[data-updated] .fav
-    > img
-      mask: radial-gradient(
-        circle at calc(100% - 2px) calc(100% - 2px),
-        #00000032,
-        #00000032 4px,
-        #000000 5px,
-        #000000
-      )
-    > .update-badge
-      opacity: 1
-      transform: scale(1, 1)
 
   &[data-invisible]
     opacity: 0
     z-index: -1
 
-// --- Level Wrapper
+// ---
+// -- Level Wrapper
+// -
 .Tab .lvl-wrapper
   box(relative, flex)
   size(100%, same)
@@ -181,6 +78,7 @@
     pos(calc(50% - 1px), 2px)
     border-radius: 50%
     opacity: .8
+
 #root[data-tabs-tree-lvl-marks] .Tab .lvl-wrapper:before
   box(block)
   box-shadow: calc(var(--tabs-indent) / -2) 0 0 0 var(--inactive-fg),
@@ -194,14 +92,18 @@
               calc(var(--tabs-indent) * -8.5) 0 0 0 var(--inactive-fg),
               calc(var(--tabs-indent) * -9.5) 0 0 0 var(--inactive-fg)
 
-// --- Drag layer ---
+// ---
+// -- Drag layer
+// -
 .Tab .drag-layer
   box(absolute)
   size(100%, same)
   pos(0, 0)
   z-index: 15
 
-// --- Audio ---
+// ---
+// -- Audio
+// -
 .Tab .audio
   box(absolute)
   pos(0, 24px)
@@ -210,18 +112,41 @@
   opacity: 0
   transform: translateX(-100%)
   transition: opacity var(--d-fast), transform var(--d-fast)
-
   > svg
     box(absolute)
     pos(calc(50% - 5px), 6px)
     size(11px, same)
     fill: var(--tabs-fg)
     transition: opacity var(--d-fast)
-
   > svg.-mute
     opacity: 0
 
-// --- Favicon ---
+.Tab[data-audible] .audio
+.Tab[data-muted] .audio
+  opacity: .8
+  z-index: 20
+  transform: translateX(0)
+  &:hover
+    opacity: 1
+  &:active
+    opacity: .5
+    transition: none
+
+.Tab[data-audible] .audio
+  > svg.-loud
+    opacity: 0
+  > svg.-mute
+    opacity: 1
+
+.Tab[data-muted] .audio
+  > svg.-loud
+    opacity: 0
+  > svg.-mute
+    opacity: 1
+
+// ---
+// -- Favicon
+// -
 .Tab .fav
   box(relative)
   size(16px, same)
@@ -230,32 +155,18 @@
   opacity: 1
   z-index: 20
   transition: opacity var(--d-fast), transform var(--d-fast)
-  &[data-progress="true"]
-    cursor: progress
-    > .loading-spinner
-      opacity: 1
-      for i in 0..12
-        > .spinner-stick-{i}
-          animation: loading-spin .6s (i*50)ms infinite
-  &[data-progress="ok"]
-    > .ok-badge
-      opacity: 1
-      transform: scale(1, 1)
-  &[data-progress="err"]
-    > .err-badge
-      opacity: 1
-      transform: scale(1, 1)
-  &[data-progress]
-    > img
-      mask: radial-gradient(
-        circle at calc(100% - 2px) calc(100% - 2px),
-        #00000032,
-        #00000032 6px,
-        #000000 7px,
-        #000000
-      )
 
-.Tab .fav > .placeholder
+.Tab:hover .fav
+  opacity: .7
+
+.Tab:active .fav
+  transition: none
+  opacity: .5
+
+// ---
+// -- Favicon placeholder
+// -
+.Tab .placeholder
   box(absolute)
   size(16px, same)
   pos(0, 0)
@@ -268,12 +179,55 @@
     pos(0, 0)
     fill: var(--favicons-placehoder-bg)
 
+.Tab[data-parent][data-favless] .fav:hover .placeholder
+.Tab[data-parent][data-folded][data-favless] .fav .placeholder
+  // Dim if combined with exp icon
+  opacity: .5
+
+.Tab[data-favless] .fav .placeholder
+  opacity: 1
+  transform: translateY(0)
+
+// ---
+// -- Favicon image
+// -
 .Tab .fav > img
   box(absolute)
   size(100%, same)
   transition: opacity var(--d-fast), transform var(--d-fast)
 
-.Tab .fav > .exp
+.Tab[data-parent]:not([data-favless]) .fav:hover > img
+.Tab[data-parent][data-folded]:not([data-favless]) .fav > img
+  // Dim if combined with exp icon
+  opacity: .2
+
+.Tab[data-progress] .fav > img
+    mask: radial-gradient(
+      circle at calc(100% - 2px) calc(100% - 2px),
+      #00000032,
+      #00000032 6px,
+      #000000 7px,
+      #000000
+    )
+
+.Tab[data-updated] .fav > img
+  mask: radial-gradient(
+    circle at calc(100% - 2px) calc(100% - 2px),
+    #00000032,
+    #00000032 4px,
+    #000000 5px,
+    #000000
+  )
+
+.Tab[data-favless] .fav > img
+  opacity: 0
+  transform: translateY(-4px)
+  transition: none
+
+// ---
+// -- Tabs group expand icon
+// -
+.Tab .exp
   box(absolute)
   size(calc(100% + 8px), same)
   pos(-4px, -4px)
@@ -288,32 +242,42 @@
     size(14px, same)
     fill: var(--bookmarks-folder-open-fg)
 
-.Tab .fav > .loading-spinner
-  box(absolute)
-  size(10px, same)
+.Tab[data-parent] .fav:hover .exp
+  z-index: 1
+  opacity: 1
+  transform: scale(1, 1)
+
+.Tab[data-parent][data-folded] .fav .exp
+  z-index: 1
+  opacity: 1
+  transform: scale(1, 1) rotateZ(-90deg)
+
+// ---
+// -- Progress spinner
+// -
+.Tab .progress-spinner
+  box(absolute, border-box)
+  size(11px, same)
   pos(b: -4px, r: -4px)
   border-radius: 50%
   opacity: 0
+  overflow: hidden
   transition: opacity var(--d-norm)
+  border-top: 2px solid var(--tabs-loading-fg)
+  border-left: 2px solid var(--inactive-fg)
+  border-right: 2px solid var(--inactive-fg)
+  border-bottom: 2px solid var(--inactive-fg)
 
-  > .spinner-stick
-    box(absolute)
-    size(1px, 4px)
-    pos(calc(50% - 2px), calc(50% - 1px))
-    opacity: 0
+.Tab[data-progress] .progress-spinner
+  animation: progress-animation .5s infinite linear
 
-    &:before
-      box(absolute)
-      pos(4px, 0)
-      size(100%, same)
-      background-color: var(--tabs-loading-fg)
-      content: ''
-  for i in 0..12
-    > .spinner-stick-{i}
-      transform: rotateZ((i * 30)deg)
-      animation: none
+.Tab[data-progress="true"] .progress-spinner
+  opacity: 1
 
-.Tab .fav > .update-badge
+// ---
+// -- Update / highlight badge
+// -
+.Tab .update-badge
   box(absolute)
   size(6px, same)
   pos(b: -1px, r: -1px)
@@ -323,8 +287,15 @@
   transform: scale(0.7, 0.7)
   transition: opacity var(--d-norm), transform var(--d-norm)
 
-.Tab .fav > .ok-badge
-.Tab .fav > .err-badge
+.Tab[data-updated] .update-badge
+  opacity: 1
+  transform: scale(1, 1)
+
+// ---
+// -- Ok / Err badges
+// -
+.Tab .ok-badge
+.Tab .err-badge
   box(absolute)
   size(10px, same)
   pos(b: -3px, r: -3px)
@@ -336,12 +307,23 @@
     box(absolute)
     size(100%, same)
 
-.Tab .fav > .ok-badge > svg
+.Tab[data-progress="ok"] .ok-badge
+  opacity: 1
+  transform: scale(1, 1)
+
+.Tab[data-progress="err"] .err-badge
+  opacity: 1
+  transform: scale(1, 1)
+
+.Tab .ok-badge > svg
   fill: var(--true-fg)
 
-.Tab .fav > .err-badge > svg
+.Tab .err-badge > svg
   fill: var(--false-fg)
 
+// ---
+// -- Count of descendants
+// -
 .Tab .fav > .child-count
   box(absolute)
   size(8px)
@@ -350,7 +332,9 @@
   text-align: center
   color: var(--tabs-fg)
 
-// --- Context highlight
+// ---
+// -- Context highlight
+// -
 .Tab .ctx
   box(absolute)
   pos(b: 10px, l: 0px)
@@ -358,17 +342,23 @@
   z-index: 2000
   box-shadow: 0 0 2px 0 #00000024
 
-.Tab .loaded-fx
+// ---
+// -- Complete animation
+// -
+.Tab .complete-fx
   box(absolute)
   size(100%, same)
   pos(0, 0)
   background-image: linear-gradient(90deg, #00000000, var(--tabs-loading-fg))
   opacity: 0
   transform: translateX(-100%)
-.Tab[data-status="complete"] .loaded-fx
-  animation: tab-loaded .3s
 
-// --- Title box ---
+.Tab[data-status="complete"] .complete-fx
+  animation: complete-animation .3s
+
+// ---
+// -- Title box
+// -
 .Tab .t-box
   box(relative)
   size(100%)
@@ -376,7 +366,21 @@
   overflow: hidden
   mask: linear-gradient(-90deg, transparent, #000000 12px, #000000)
 
-// Title
+.Tab[data-close-btn]:hover .t-box
+  mask: linear-gradient(-90deg, transparent, transparent 24px, #000000 48px, #000000)
+
+.Tab[data-close-btn][data-audible]:hover .t-box
+.Tab[data-close-btn][data-muted]:hover .t-box
+  mask: linear-gradient(-90deg, transparent, transparent 42px, #000000 64px, #000000)
+
+.Tab[data-audible] .t-box
+.Tab[data-muted] .t-box
+  transform: translateX(16px)
+  mask: linear-gradient(-90deg, transparent, transparent 16px, #000000 28px, #000000)
+
+// ---
+// -- Title
+// -
 .Tab .title
   box(relative)
   font: var(--tabs-font)
@@ -385,9 +389,23 @@
   transition: color .2s
   white-space: nowrap
   overflow: hidden
-  transition: transform var(--d-fast), color var(--d-fast), mask var(--d-fast)
+  transition: transform var(--d-fast), color var(--d-fast)
 
-// Loading
+.Tab[data-active] .title
+  color: var(--tabs-activated-fg)
+
+.Tab[data-selected] .title
+  color: var(--tabs-selected-fg)
+
+.Tab:hover .title
+  color: var(--tabs-fg-hover)
+
+.Tab[data-status="loading"] .title
+  transform: translateX(11px)
+
+// ---
+// -- Loading
+// -
 .Tab .loading
   box(absolute)
   pos(calc(50% - 8px), 0)
@@ -405,7 +423,18 @@
   > svg.-c
     pos(11px)
 
-// --- CLose button ---
+.Tab[data-status="loading"] .loading
+  opacity: 1
+  > svg.-a
+    animation: loading-animation .8s infinite
+  > svg.-b
+    animation: loading-animation .8s .07s infinite
+  > svg.-c
+    animation: loading-animation .8s .14s infinite
+
+// ---
+// -- Close button
+// -
 .Tab .close
   box(absolute)
   pos(0, r: 0)
@@ -426,17 +455,28 @@
     fill: #a63626
     transition: fill var(--d-fast)
 
-// --- Animations ---
-@keyframes tab-loading
+.Tab:hover .close
+  opacity: 1
+
+// ---
+// -- Animations
+// -
+@keyframes loading-animation
   0%
     opacity: 1
   100%
     opacity: 0
 
-@keyframes tab-loaded
+@keyframes complete-animation
   0%
     opacity: .8
     transform: translateX(-100%)
   100%
     opacity: 0
     transform: translateX(5px)
+
+@keyframes progress-animation
+  0%
+    transform: rotateZ(0deg)
+  100%
+    transform: rotateZ(360deg)

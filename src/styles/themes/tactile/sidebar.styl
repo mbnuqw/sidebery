@@ -129,7 +129,7 @@ NAV_CONF_HEIGHT = auto
       transform: scale(1, 1)
   &[data-loading="true"]
     cursor: progress
-    > .loading-spinner
+    > .progress-spinner
       opacity: 1
       for i in 0..12
         > .spinner-stick-{i}
@@ -179,7 +179,7 @@ NAV_CONF_HEIGHT = auto
   filter: saturate(100%) brightness(120%) contrast(100%)
   fill: var(--nav-btn-fg)
 
-.Sidebar .panel-btn > .loading-spinner
+.Sidebar .panel-btn > .progress-spinner
   box(absolute)
   size(11px, same)
   pos(b: 4px, r: 6px)

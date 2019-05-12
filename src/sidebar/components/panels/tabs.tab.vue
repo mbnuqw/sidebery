@@ -22,7 +22,7 @@
   @mouseup="onMouseUp"
   @mouseleave="onMouseLeave"
   @dblclick.prevent.stop="onDoubleClick"): .lvl-wrapper
-  .loaded-fx
+  .complete-fx
   .drag-layer(
     draggable="true"
     @dragstart="onDragStart"
@@ -40,9 +40,7 @@
       svg: use(xlink:href="#icon_ok")
     .err-badge
       svg: use(xlink:href="#icon_err")
-    .loading-spinner
-      each n in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-        .spinner-stick(class='spinner-stick-' + n)
+    .progress-spinner
     .child-count(v-if="childCount && tab.folded") {{childCount}}
   .close(v-if="$store.state.showTabRmBtn", @mousedown.stop="onCloseClick", @mouseup.stop="")
     svg: use(xlink:href="#icon_remove")
