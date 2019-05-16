@@ -14,8 +14,11 @@
   @mousedown="onMouseDown"
   @mouseup="onMouseUp"
   @mousemove.passive="onMouseMove")
+
   ctx-menu
-  .pointer(ref="pointer"): .arrow
+
+  .pointer(ref="pointer")
+    .arrow(:data-expanding="pointerExpanding" @animationend="onPointerExpanded")
 
   //- Pinned tabs dock
   pinned-dock(
@@ -30,7 +33,7 @@
     //- Navigation
     .nav(ref="nav")
       keep-alive
-        component.panel-menu(
+        component.dashboard(
           v-if="dashboard"
           ref="menu"
           :is="dashboard.dashboard" 
@@ -39,8 +42,8 @@
           @close="closeDashboard"
           @height="recalcDashboardHeight")
 
-      .nav-strip(@wheel.stop.prevent="onNavWheel")
-        .panel-btn(
+      .nav-bar(@wheel.stop.prevent="onNavWheel")
+        .nav-btn(
           v-for="(btn, i) in nav"
           :key="btn.cookieStoreId || btn.name"
           :data-loading="btn.loading"
@@ -48,7 +51,7 @@
           :data-proxified="btn.proxified"
           :data-active="panelIs(i)"
           :data-hidden="btn.hidden"
-          :class="'rel-' + btn.relIndex"
+          :data-index="btn.relIndex"
           :title="getTooltip(i)"
           @click="onNavClick(i)"
           @dragenter="onNavDragEnter(i)"
@@ -67,7 +70,6 @@
 
       //- Settings
       .settings-btn(
-        :data-active="$store.state.panelIndex === -2"
         :title="t('nav.settings_tooltip')"
         @click="openSettings")
         svg: use(xlink:href="#icon_settings")
@@ -88,7 +90,7 @@
         @create-tab="createTab"
         @start-selection="startSelection"
         @stop-selection="stopSelection")
-      transition(name="settings")
+      transition(name="panel")
         window-input(v-if="$store.state.panelIndex === -5" :data-pos="windowInputPos")
 </template>
 
@@ -133,6 +135,7 @@ export default {
       width: 250,
       dragMode: false,
       pointerMode: 'none',
+      pointerExpanding: false,
       dashboard: null,
       loading: [],
       loadingTimers: [],
@@ -1611,16 +1614,19 @@ export default {
       if (typeof this.dropParent === 'string') Store.dispatch('expandBookmark', this.dropParent)
 
       // Start expand animation
-      if (this.$refs.pointer) {
-        this.$refs.pointer.classList.remove('-expanding')
-        this.$refs.pointer.offsetHeight
-        this.$refs.pointer.classList.add('-expanding')
-      }
+      this.pointerExpanding = true
 
       setTimeout(() => this.recalcPanelBounds(), 128)
       this.pointerEnterTimeout = setTimeout(() => {
         this.pointerEnterTimeout = null
       }, 500)
+    },
+
+    /**
+     * Handle end of animation of poitner expanding
+     */
+    onPointerExpanded() {
+      this.pointerExpanding = false
     },
 
     /**

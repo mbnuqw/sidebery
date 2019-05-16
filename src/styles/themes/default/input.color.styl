@@ -5,7 +5,10 @@
   justify-content: space-between
   align-items: center
 
-.ColorInput > .color-wrapper
+// ---
+// -- Color input wrapper
+// -
+.ColorInput .color-wrapper
   box(relative)
   size(16px, same)
   flex-shrink: 0
@@ -19,20 +22,26 @@
               0 0 0 2px #323232,
               0 1px 3px 0 #00000024
 
-  > .color
-    box(relative)
-    size(calc(100% + 2px), same)
-    pos(-1px, -1px)
-    -webkit-appearance: none
-    border: none
-    outline: none
-    margin: 0
-    padding: 0
-    background-color: transparent
-    z-index: 0
-    cursor: pointer
+// ---
+// -- Color input
+// -
+.ColorInput .color
+  box(relative)
+  size(calc(100% + 2px), same)
+  pos(-1px, -1px)
+  -webkit-appearance: none
+  border: none
+  outline: none
+  margin: 0
+  padding: 0
+  background-color: transparent
+  z-index: 0
+  cursor: pointer
 
-.ColorInput > .text
+// ---
+// -- Color rgba value
+// -
+.ColorInput .text
   box(relative)
   size(1px)
   color: var(--label-fg)

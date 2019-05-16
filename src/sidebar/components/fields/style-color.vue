@@ -1,7 +1,7 @@
 <template lang="pug">
-.ColorField
+.ColorField(:data-active="!!value")
   .label {{t(label)}}
-  .input-group(:data-active="!!value")
+  .input-group
     color-input.color-input(
       v-debounce:input.128="debouncedInput"
       :value="value"

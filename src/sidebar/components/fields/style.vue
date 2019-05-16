@@ -1,7 +1,7 @@
 <template lang="pug">
-.StyleField
+.StyleField(:data-active="!!value")
   .label {{t(label)}}
-  .input-group(:data-active="!!value")
+  .input-group
     text-input.text-input(
       :value="value"
       :line="true"

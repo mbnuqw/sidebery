@@ -7,13 +7,15 @@
   @drop.stop.prevent="onDrop"
   @dragenter="onDragEnter"
   @dragleave="onDragLeave")
-  pinned-tab(v-for="(t, i) in pinnedTabs"
+  pinned-tab(
+    v-for="(t, i) in pinnedTabs"
+    :key="t.id"
     :tab="t"
     :ctx="!ctx"
     @remove="removeTab(i, $event)"
     @stop-selection="$emit('stop-selection')"
     @dragenter="onTabPointed")
-  .to-the-end(v-if="pinnedTabs.length", @dragleave.stop="", @dragenter.stop="")
+  .to-the-end(v-if="pinnedTabs.length" @dragleave.stop="" @dragenter.stop="")
 </template>
 
 
@@ -21,10 +23,12 @@
 import Store from '../../store'
 import State from '../../store.state'
 import EventBus from '../../event-bus'
+import Tab from './tabs.tab'
 import PinnedTab from './pinned-tab'
 
 export default {
   components: {
+    Tab,
     PinnedTab,
   },
 
@@ -64,7 +68,6 @@ export default {
     },
 
     onDragEnter(e) {
-      // console.log('[DEBUG] PinnedDock onDragEnter');
       if (e.srcElement === this.$el) this.dragPointed = true
     },
 
@@ -73,7 +76,6 @@ export default {
     },
 
     onDragLeave(e) {
-      // console.log('[DEBUG] PinnedDock onDragLeave');
       if (e.srcElement === this.$el) this.dragPointed = false
     },
 

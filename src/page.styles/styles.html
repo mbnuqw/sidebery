@@ -12,7 +12,13 @@
     <!-- Logo -->
     <svg id="icon_sidebery" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M1 2a1 1 0 0 1 1-1h4.84a.5.5 0 0 1 .48.64l-.57 2a.5.5 0 0 1-.48.36H1.5a.5.5 0 0 1-.5-.5V2zM5.4 6a.5.5 0 0 1 .49.64l-.57 2a.5.5 0 0 1-.48.36H1.5a.5.5 0 0 1-.5-.5v-2c0-.28.22-.5.5-.5h3.9zM4.46 11.64a.5.5 0 0 0-.48-.64H1.5a.5.5 0 0 0-.5.5V14a1 1 0 0 0 1 1h1.12a.5.5 0 0 0 .48-.36l.86-3zM8.6 14.64l3.72-13a.5.5 0 0 0-.48-.64h-1.46a.5.5 0 0 0-.48.36l-3.72 13a.5.5 0 0 0 .48.64h1.46a.5.5 0 0 0 .48-.36zM15 14V4.57c0-.58-.82-.7-.98-.14l-2.84 9.93a.5.5 0 0 0 .48.64H14a1 1 0 0 0 1-1z"/></svg>
   </div>
-  <div id="root" :class="['root', themeClass, animateClass]" v-noise:300.g:12:af.a:0:42.s:0:9="" @contextmenu.prevent.stop="">
+  <div
+    v-noise:300.g:12:af.a:0:42.s:0:9=""
+    id="root"
+    class="root"
+    :data-style="$store.state.theme"
+    :data-animations="$store.state.animations ? 'fast' : 'none'"
+    @contextmenu.prevent.stop="">
     <styles-editor></styles-editor>
     <svg class="logo"><use xlink:href="#icon_sidebery"></use></svg>
   </div>

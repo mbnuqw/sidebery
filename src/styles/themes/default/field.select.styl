@@ -6,17 +6,24 @@
   margin: 0 12px 0 16px
   cursor: pointer
   opacity: .8
+
   &:hover
     opacity: 1
+
   &:active
     opacity: .7
+
   &[data-inactive]
     opacity: .2
     cursor: default
+
   &.-no-top-margin
     margin-top: 0
 
-.SelectField > .label
+// ---
+// -- Label
+// -
+.SelectField .label
   box(relative)
   text(s: rem(14))
   color: var(--label-fg)

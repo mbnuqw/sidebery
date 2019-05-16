@@ -27,11 +27,11 @@
       transition: opacity var(--d-fast),
                   z-index var(--d-fast),
                   transform 0s 0s
-    > .body > .title
-    > .body:hover > .title
-      color: var(--tabs-selected-fg)
 
-  > .body
+// ---
+// -- Body
+// -
+.Separator .body
     box(relative, flex)
     height: var(--bookmarks-separator-height)
     align-items: center
@@ -51,11 +51,15 @@
       border-radius: 2px
       background-image: linear-gradient(90deg, transparent, #545454, #545454, #545454)
 
-.Separator:not([data-selected]) > .body:hover:before
-    background-color: var(--bookmarks-node-bg-hover)
-.Separator:not([data-selected]) > .body:active:before
-    background-color: var(--bookmarks-node-bg-active)
+.Separator:not([data-selected]) .body:hover:before
+  background-color: var(--bookmarks-node-bg-hover)
 
+.Separator:not([data-selected]) .body:active:before
+  background-color: var(--bookmarks-node-bg-active)
+
+// ---
+// -- Drag layer
+// -
 .Separator .drag-layer
   box(absolute)
   size(100%, same)

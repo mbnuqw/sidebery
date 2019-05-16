@@ -5,12 +5,21 @@
   size(100%, same)
   overflow: hidden
 
+// ---
+// -- Container of scrollable element
+// -
 .ScrollBox > .scroll-container
   box(relative)
   size(calc(100% + 32px), 100%)
   overflow-x: hidden
   overflow-y: auto
 
+#root[data-native-scrollbar] .ScrollBox > .scroll-container
+  size(100%)
+
+// ---
+// -- Scroll shadows
+// -
 .ScrollBox > .top-shadow
 .ScrollBox > .bottom-shadow
   box(absolute)
@@ -29,6 +38,9 @@
   pos(b: -12px, l: 0)
   box-shadow: 0 -1px 12px 0 #00000064, 0 -1px 0 0 #00000012
 
+// ---
+// -- Progress bar
+// -
 .ScrollBox > .progress
   box(absolute)
   pos(0, -100vw)
@@ -41,27 +53,29 @@
   transition: opacity .3s
   &[data-scrolling]
     opacity: 1
+
 #root[data-pinned-tabs-position="left"]
 #root[data-pinned-tabs-position="right"]
   .ScrollBox > .progress
     width: calc(100vw - 33px)
     left: calc(-100vw + 33px)
 
+#root[data-native-scrollbar]
+  .ScrollBox > .progress
+    box(none)
+
+// ---
+// -- Scrollable element
+// -
 .ScrollBox > .scroll-container > .scrollable
   box(relative)
   size(100vw)
+
 #root[data-pinned-tabs-position="left"]
 #root[data-pinned-tabs-position="right"]
   .ScrollBox > .scroll-container > .scrollable
     width: calc(100vw - 33px)
 
-// --- Native scroll bars ---
 #root[data-native-scrollbar]
-  .ScrollBox > .scroll-container
-    size(100%)
-
-  .ScrollBox > .progress
-    box(none)
-
   .ScrollBox > .scroll-container > .scrollable
     size(100%)

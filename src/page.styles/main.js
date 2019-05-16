@@ -23,17 +23,6 @@ export default new Vue({
     return {}
   },
 
-  computed: {
-    themeClass() {
-      return '-' + State.theme
-    },
-
-    animateClass() {
-      if (State.animations) return '-animate'
-      else return '-no-animate'
-    },
-  },
-
   async created() {
     Store.dispatch('loadStyles')
 

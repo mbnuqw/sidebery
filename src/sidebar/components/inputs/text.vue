@@ -1,5 +1,9 @@
 <template lang="pug">
-.TextInput(:data-active="isActive" :data-empty="!value")
+.TextInput(
+  :data-active="isActive"
+  :data-empty="!value"
+  :data-wrong="wrongValueAnimation"
+  @animationend="onAnimationEnd")
   input(
     v-if="line"
     ref="text"
@@ -54,6 +58,7 @@ export default {
   data() {
     return {
       isActive: false,
+      wrongValueAnimation: false,
       val: '',
     }
   },
@@ -98,12 +103,17 @@ export default {
     },
 
     error() {
-      this.$el.classList.add('err')
-      this.$el.classList.remove('err-animation')
-      this.$el.offsetHeight
-      this.$el.classList.add('err-animation')
-      this.$el.classList.remove('err')
-    }
+      this.wrongValueAnimation = true
+      // this.$el.classList.add('err')
+      // this.$el.classList.remove('err-animation')
+      // this.$el.offsetHeight
+      // this.$el.classList.add('err-animation')
+      // this.$el.classList.remove('err')
+    },
+
+    onAnimationEnd() {
+      this.wrongValueAnimation = false
+    },
   },
 }
 </script>

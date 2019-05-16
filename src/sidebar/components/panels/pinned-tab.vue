@@ -33,11 +33,9 @@
     .err-badge
       svg: use(xlink:href="#icon_err")
     .progress-spinner
-      each n in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-        .spinner-stick(class='spinner-stick-' + n)
-  .audio-badge(@mousedown.stop="", @click="$store.dispatch('remuteTabs', [tab.id])")
-    svg.-loud: use(xlink:href="#icon_loud")
-    svg.-mute: use(xlink:href="#icon_mute")
+    .audio-badge(@mousedown.stop="" @click="$store.dispatch('remuteTabs', [tab.id])")
+      svg.-loud: use(xlink:href="#icon_loud")
+      svg.-mute: use(xlink:href="#icon_mute")
   .ctx(v-if="ctx && ctxColor", :style="{background: ctxColor}")
   .title(v-if="withTitle") {{tab.title}}
   .close(v-if="$store.state.showTabRmBtn", @mousedown.stop="close", @mouseup.stop="")

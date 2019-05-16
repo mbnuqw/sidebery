@@ -10,19 +10,23 @@
 .Bookmarks[data-unrenderable]
   cursor: progress
 
-  .node
-    box(none)
-
-.Bookmarks[data-invisible] .node
-  opacity: 0
-
-// --- Root nodes ---
+// ---
+// -- Root nodes
+// -
 .Bookmarks .node
   box(relative)
   opacity: 1
   transition: opacity var(--d-fast)
 
-// --- Editor Transitions ---
+.Bookmarks[data-unrenderable] .node
+  box(none)
+
+.Bookmarks[data-invisible] .node
+  opacity: 0
+
+// ---
+// -- Editor Transitions
+// -
 .Bookmarks
   .editor-enter-active
   .editor-leave-active

@@ -4,13 +4,11 @@
   box(relative, flex)
   flex-wrap: wrap
   cursor: pointer
-  &[data-active]
-    .opt.-true
-      color: var(--true-fg)
-    .opt.-false
-      color: var(--inactive-fg)
 
-.ToggleInput > .opt
+// ---
+// -- Option
+// -
+.ToggleInput .opt
   box(relative)
   text(s: rem(14))
   margin: 0 7px 0 0
@@ -18,3 +16,9 @@
   transition: color var(--d-fast)
   &.-false
     color: var(--false-fg)
+
+.ToggleInput[data-active] .opt.-true
+  color: var(--true-fg)
+
+.ToggleInput[data-active] .opt.-false
+  color: var(--inactive-fg)

@@ -184,6 +184,24 @@
   // Dim if combined with exp icon
   opacity: .5
 
+.Tab[data-updated] .placeholder
+  mask: radial-gradient(
+    circle at calc(100% - 2px) calc(100% - 2px),
+    #00000024,
+    #00000024 4px,
+    #000000 5px,
+    #000000
+  )
+
+.Tab[data-progress] .placeholder
+    mask: radial-gradient(
+      circle at calc(100% - 2px) calc(100% - 2px),
+      #00000024,
+      #00000024 7px,
+      #000000 8px,
+      #000000
+    )
+
 .Tab[data-favless] .fav .placeholder
   opacity: 1
   transform: translateY(0)
@@ -201,23 +219,23 @@
   // Dim if combined with exp icon
   opacity: .2
 
-.Tab[data-progress] .fav > img
-    mask: radial-gradient(
-      circle at calc(100% - 2px) calc(100% - 2px),
-      #00000032,
-      #00000032 6px,
-      #000000 7px,
-      #000000
-    )
-
 .Tab[data-updated] .fav > img
   mask: radial-gradient(
     circle at calc(100% - 2px) calc(100% - 2px),
-    #00000032,
-    #00000032 4px,
+    #00000024,
+    #00000024 4px,
     #000000 5px,
     #000000
   )
+
+.Tab[data-progress] .fav > img
+    mask: radial-gradient(
+      circle at calc(100% - 2px) calc(100% - 2px),
+      #00000024,
+      #00000024 7px,
+      #000000 8px,
+      #000000
+    )
 
 .Tab[data-favless] .fav > img
   opacity: 0
@@ -257,7 +275,7 @@
 // -
 .Tab .progress-spinner
   box(absolute, border-box)
-  size(11px, same)
+  size(12px, same)
   pos(b: -4px, r: -4px)
   border-radius: 50%
   opacity: 0
@@ -287,7 +305,7 @@
   transform: scale(0.7, 0.7)
   transition: opacity var(--d-norm), transform var(--d-norm)
 
-.Tab[data-updated] .update-badge
+.Tab:not([data-progress])[data-updated] .update-badge
   opacity: 1
   transform: scale(1, 1)
 
@@ -297,8 +315,8 @@
 .Tab .ok-badge
 .Tab .err-badge
   box(absolute)
-  size(10px, same)
-  pos(b: -3px, r: -3px)
+  size(12px, same)
+  pos(b: -4px, r: -4px)
   border-radius: 50%
   opacity: 0
   transform: scale(0.7, 0.7)
@@ -308,9 +326,6 @@
     size(100%, same)
 
 .Tab[data-progress="ok"] .ok-badge
-  opacity: 1
-  transform: scale(1, 1)
-
 .Tab[data-progress="err"] .err-badge
   opacity: 1
   transform: scale(1, 1)
@@ -457,26 +472,3 @@
 
 .Tab:hover .close
   opacity: 1
-
-// ---
-// -- Animations
-// -
-@keyframes loading-animation
-  0%
-    opacity: 1
-  100%
-    opacity: 0
-
-@keyframes complete-animation
-  0%
-    opacity: .8
-    transform: translateX(-100%)
-  100%
-    opacity: 0
-    transform: translateX(5px)
-
-@keyframes progress-animation
-  0%
-    transform: rotateZ(0deg)
-  100%
-    transform: rotateZ(360deg)

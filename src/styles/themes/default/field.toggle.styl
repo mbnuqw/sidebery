@@ -10,11 +10,20 @@
     opacity: 1
   &:active
     opacity: .7
+
   &[data-inactive]
     opacity: .2
     cursor: default
+
+  &[data-inline]
+    box(flex)
+    margin: 0 12px 0 16px
+    justify-content: space-between
+    align-items: center
+
   &.-no-top-margin
     margin-top: 0
+
   &.-rm:before
     content: ''
     box(absolute)
@@ -24,20 +33,22 @@
     outline-offset: -2px
     background-color: #ff110016
 
-.ToggleField > .label
+// ---
+// -- Label
+// -
+.ToggleField .label
   box(relative)
   text(s: rem(14))
   color: var(--label-fg)
   transition: color var(--d-fast)
 
-.ToggleField[data-inline]
-  box(flex)
-  margin: 0 12px 0 16px
-  justify-content: space-between
-  align-items: center
-  >.input
-    flex-shrink: 0
-  >.label
-    margin-right: 12px
-    overflow: hidden
-    text-overflow: ellipsis
+.ToggleField[data-inline] .label
+  margin-right: 12px
+  overflow: hidden
+  text-overflow: ellipsis
+
+// ---
+// -- Input
+// -
+.ToggleField[data-inline] .input
+  flex-shrink: 0

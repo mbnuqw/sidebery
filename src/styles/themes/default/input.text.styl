@@ -12,20 +12,14 @@
 
 .TextInput
   box(relative)
-  &.err-animation
-    animation: shake-it .3s
+  &[data-wrong]
+    animation: shake-animation .3s, err-blink-animation .6s
 
-.TextInput[data-empty]
-  > .placeholder
-    opacity: .5
-    transform: translateX(0)
-
-.TextInput[data-active]
-  > .placeholder
-    transform: translateX(3px)
-
-.TextInput > input
-.TextInput > textarea
+// ---
+// -- Input
+// -
+.TextInput input
+.TextInput textarea
   @extend .inherit-text-styles
   box(relative, block)
   size(100%)
@@ -38,7 +32,10 @@
   resize: none
   z-index: 1
 
-.TextInput > .placeholder
+// ---
+// -- Placeholder
+// -
+.TextInput .placeholder
   @extend .inherit-text-styles
   box(absolute)
   pos(0, 0)
@@ -48,27 +45,9 @@
   transform: translateX(16px)
   transition: opacity var(--d-fast), transform var(--d-fast)
 
+.TextInput[data-empty] .placeholder
+  opacity: .5
+  transform: translateX(0)
 
-@keyframes red-shift
-  0%
-    opacity: 1
-  100%
-    opacity: .5
-
-@keyframes shake-it
-  0%
-    transform: translateX(0)
-  20%
-    transform: translateX(-12px)
-  40%
-    transform: translateX(12px)
-  55%
-    transform: translateX(-8px)
-  70%
-    transform: translateX(6px)
-  80%
-    transform: translateX(-4px)
-  90%
-    transform: translateX(2px)
-  100%
-    transform: translateX(0)
+.TextInput[data-active] .placeholder
+  transform: translateX(3px)

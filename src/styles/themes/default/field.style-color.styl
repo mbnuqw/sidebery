@@ -4,33 +4,46 @@
   box(relative)
   padding: 2px 0
   margin: 0 12px 0 16px
-  &:hover
-    > .label
-      color: var(--label-fg-hover)
+
   &.-no-top-margin
     margin-top: 0
 
-.ColorField > .label
+// ---
+// -- Label
+// -
+.ColorField .label
   box(relative)
   text(s: rem(15))
   color: var(--label-fg)
   transition: color var(--d-fast)
 
-.ColorField > .input-group
+.ColorField:hover  .label
+  color: var(--label-fg-hover)
+
+// ---
+// -- Container of inputs
+// -
+.ColorField .input-group
   box(relative, flex)
   align-items: center
   margin: 6px 0 0
 
-  > .color-input
-    box(relative)
-    size(100%)
-    text(s: rem(15))
-    color: var(--label-fg)
-    margin: 0 16px 0 0
-    transform: opacity var(--d-fast)
+// ---
+// -- Color input
+// -
+.ColorField .color-input
+  box(relative)
+  size(100%)
+  text(s: rem(15))
+  color: var(--label-fg)
+  margin: 0 16px 0 0
+  transform: opacity var(--d-fast)
 
-  > .toggle
-    flex-shrink: 0
+.ColorField:not([data-active]) .color-input
+  opacity: .5
 
-  &:not([data-active]) > .color-input
-    opacity: .5
+// ---
+// -- Toggle input
+// -
+.ColorField .toggle
+  flex-shrink: 0

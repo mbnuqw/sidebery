@@ -5,23 +5,30 @@
   padding: 2px 0
   margin: 0 12px 0 16px
   cursor: pointer
-  &:hover
-    > .label
-      color: var(--label-fg-hover)
-  &:active
-    > .label
-      transition: none
-      color: var(--label-fg-active)
+
   &.-no-top-margin
     margin-top: 0
 
-.InfoField > .label
+// ---
+// -- Label
+// -
+.InfoField .label
   box(relative)
   text(s: rem(14))
   color: var(--label-fg)
   transition: color var(--d-fast)
 
-.InfoField > .info
+.InfoField:hover .label
+  color: var(--label-fg-hover)
+
+.InfoField:active .label
+  transition: none
+  color: var(--label-fg-active)
+
+// ---
+// -- Info
+// -
+.InfoField .info
   box(relative)
   text(s: rem(14))
   color: var(--active-fg)
