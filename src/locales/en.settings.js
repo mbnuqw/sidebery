@@ -15,6 +15,12 @@ export default {
   'settings.autoHide_ctx_menu_none': { message: 'none' },
   'settings.ctx_menu_editor': { message: 'Edit context menu' },
 
+  // --- Context menu
+  'settings.nav_title': { message: 'Navigation bar' },
+  'settings.nav_bar_inline': { message: 'Show navigation bar in one line' },
+  'settings.hide_settings_btn': { message: 'Hide settings button' },
+  'settings.hide_add_btn': { message: 'Hide "New container" button' },
+
   // --- Tabs
   'settings.tabs_title': { message: 'Tabs' },
   'settings.activate_last_tab_on_panel_switching': {

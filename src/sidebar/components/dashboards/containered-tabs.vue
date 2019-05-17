@@ -3,9 +3,9 @@
   text-input.title(
     ref="name"
     v-debounce.250="updateName"
-    v-model="name"
+    :value="name"
     :or="t('container_dashboard.name_placeholder')"
-    @input="onInput"
+    @input="onNameInput"
     @keydown.enter.prevent="onEnter")
 
   scroll-box.scroll-box(v-if="id" ref="scrollBox"): .scoll-wrapper
@@ -179,8 +179,6 @@ export default {
 
   data() {
     return {
-      id: '',
-      name: '',
       iconOpts: [
         'fingerprint',
         'briefcase',
@@ -195,7 +193,6 @@ export default {
         'tree',
         'chill',
       ],
-      icon: 'fingerprint',
       colorOpts: [
         { color: 'blue', colorCode: '#37adff' },
         { color: 'turquoise', colorCode: '#00c79a' },
@@ -206,13 +203,28 @@ export default {
         { color: 'pink', colorCode: '#ff4bda' },
         { color: 'purple', colorCode: '#af51f5' },
       ],
-      color: 'blue',
       proxyOpts: ['http', 'https', 'socks4', 'socks', 'direct'],
     }
   },
 
   computed: {
     ...mapGetters(['panels']),
+
+    id() {
+      return this.conf.cookieStoreId || ''
+    },
+
+    name() {
+      return this.conf.name || ''
+    },
+
+    icon() {
+      return this.conf.icon || 'fingerprint'
+    },
+
+    color() {
+      return this.conf.color || 'blue'
+    },
 
     colorCode() {
       const colorOption = this.colorOpts.find(c => c.color === this.color)
@@ -277,8 +289,16 @@ export default {
     },
   },
 
-  created() {
+  watch: {
+    index(index) {
+      this.init()
+      if (index === -1) this.$refs.name.focus()
+    }
+  },
+
+  mounted() {
     this.init()
+    this.$refs.name.focus()
   },
 
   methods: {
@@ -286,14 +306,14 @@ export default {
       this.$emit('close')
     },
 
-    onInput() {
-      this.$emit('height')
+    onNameInput(value) {
+      this.conf.name = value
     },
 
-    async open() {
+    open() {
       this.init()
       if (this.$refs.name) this.$refs.name.focus()
-      this.$emit('height')
+      
       if (this.$refs.includeHostsInput) {
         this.$refs.includeHostsInput.recalcTextHeight()
       }
@@ -311,26 +331,19 @@ export default {
       })
     },
 
-    async updateName() {
-      // Create new container
-      if (this.name && !this.id) {
-        let ctx = await this.createNew()
-        this.id = ctx.cookieStoreId
-        this.$emit('height')
-        return
-      }
-
-      // Or update
-      await this.update()
+    updateName() {
+      // Create new container or update
+      if (this.name && !this.id) this.createNew()
+      else this.update()
     },
 
     async updateIcon(icon) {
-      this.icon = icon
+      this.conf.icon = icon
       this.update()
     },
 
     async updateColor(color) {
-      this.color = color
+      this.conf.color = color
       this.update()
     },
 
@@ -374,24 +387,14 @@ export default {
     },
 
     async init() {
-      // Edit existing tabs container
-      if (this.conf.cookieStoreId) {
-        this.id = this.conf.cookieStoreId
-        this.name = this.conf.name
-        this.color = this.conf.color
-        this.icon = this.conf.icon
-      }
-
-      // Create new tabs container
-      if (!this.conf.cookieStoreId && this.conf.new) {
-        this.id = ''
-        this.name = ''
-        this.icon = 'fingerprint'
-        this.color = 'blue'
-      }
-
       await this.$nextTick()
       if (this.$refs.name) this.$refs.name.recalcTextHeight()
+      if (this.$refs.includeHostsInput) {
+        this.$refs.includeHostsInput.recalcTextHeight()
+      }
+      if (this.$refs.excludeHostsInput) {
+        this.$refs.excludeHostsInput.recalcTextHeight()
+      }
       if (this.$refs.scrollBox) this.$refs.scrollBox.recalcScroll()
     },
 
@@ -436,7 +439,7 @@ export default {
       Store.dispatch('saveContainers')
       Store.dispatch('updateReqHandler')
       await this.$nextTick()
-      this.$emit('height')
+
       if (this.$refs.scrollBox) this.$refs.scrollBox.recalcScroll()
       if (this.$refs.includeHostsInput) this.$refs.includeHostsInput.focus()
     },
@@ -465,7 +468,7 @@ export default {
       Store.dispatch('saveContainers')
       Store.dispatch('updateReqHandler')
       await this.$nextTick()
-      this.$emit('height')
+      
       if (this.$refs.scrollBox) this.$refs.scrollBox.recalcScroll()
       if (this.$refs.excludeHostsInput) this.$refs.excludeHostsInput.focus()
     },
@@ -510,7 +513,7 @@ export default {
       Store.dispatch('updateReqHandler')
 
       await this.$nextTick()
-      this.$emit('height')
+      
       if (this.$refs.scrollBox) this.$refs.scrollBox.recalcScroll()
     },
 
@@ -538,7 +541,7 @@ export default {
 
       Store.dispatch('saveContainersDebounced')
       Store.dispatch('updateReqHandlerDebounced')
-      this.$emit('height')
+      
     },
 
     onProxyPasswordInput(value) {

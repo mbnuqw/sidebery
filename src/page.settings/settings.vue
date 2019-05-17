@@ -19,6 +19,23 @@
       .btn(@click="openPage('menu/menu')") {{t('settings.ctx_menu_editor')}}
 
   section
+    h2 {{t('settings.nav_title')}}
+    toggle-field(
+      label="settings.nav_bar_inline"
+      :value="$store.state.navBarInline"
+      @input="setOpt('navBarInline', $event)")
+    .separator
+    toggle-field(
+      label="settings.hide_settings_btn"
+      :value="$store.state.hideSettingsBtn"
+      @input="setOpt('hideSettingsBtn', $event)")
+    .separator
+    toggle-field(
+      label="settings.hide_add_btn"
+      :value="$store.state.hideAddBtn"
+      @input="setOpt('hideAddBtn', $event)")
+
+  section
     h2 {{t('settings.tabs_title')}}
     toggle-field(
       label="settings.activate_last_tab_on_panel_switching"

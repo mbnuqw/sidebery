@@ -24,6 +24,11 @@ export const DEFAULT_SETTINGS = {
   ctxMenuTopActions: false,
   ctxMenuInlineCtr: false,
 
+  // Nav bar
+  navBarInline: true,
+  hideSettingsBtn: false,
+  hideAddBtn: false,
+
   // Tabs
   activateLastTabOnPanelSwitching: true,
   skipEmptyPanels: false,

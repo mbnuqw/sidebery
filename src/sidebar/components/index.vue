@@ -1,8 +1,10 @@
 <template lang="pug">
 .Sidebar(
+  v-noise:300.g:12:af.a:0:42.s:0:9=""
   :data-dashboard="$store.state.dashboardOpened"
   :data-drag="dragMode"
   :data-pointer="pointerMode"
+  :data-nav-inline="$store.state.navBarInline"
   @wheel="onWheel"
   @contextmenu.prevent.stop=""
   @dragover.prevent="onDragMove"
@@ -27,21 +29,10 @@
     @stop-selection="stopSelection")
 
   .box(ref="box")
-    .bg(v-noise:300.g:12:af.a:0:42.s:0:9="" :style="bgPosStyle")
     .dimmer(@mousedown="closeDashboard")
 
     //- Navigation
-    .nav(ref="nav")
-      keep-alive
-        component.dashboard(
-          v-if="dashboard"
-          ref="menu"
-          :is="dashboard.dashboard" 
-          :conf="dashboard"
-          :index="$store.state.panelIndex"
-          @close="closeDashboard"
-          @height="recalcDashboardHeight")
-
+    .nav(v-noise:300.g:12:af.a:0:42.s:0:9="" ref="nav")
       .nav-bar(@wheel.stop.prevent="onNavWheel")
         .nav-btn(
           v-for="(btn, i) in nav"
@@ -70,6 +61,7 @@
 
       //- Settings
       .settings-btn(
+        v-if="!$store.state.hideSettingsBtn"
         :title="t('nav.settings_tooltip')"
         @click="openSettings")
         svg: use(xlink:href="#icon_settings")
@@ -92,6 +84,14 @@
         @stop-selection="stopSelection")
       transition(name="panel")
         window-input(v-if="$store.state.panelIndex === -5" :data-pos="windowInputPos")
+      transition(name="dashboard")
+        .dashboard-box(v-if="$store.state.dashboardOpened")
+          component.dashboard(
+            :data-pos="windowInputPos"
+            :is="dashboard.dashboard"
+            :conf="dashboard"
+            :index="$store.state.panelIndex"
+            @close="closeDashboard")
 </template>
 
 
@@ -149,13 +149,6 @@ export default {
     ...mapGetters(['defaultCtxId', 'defaultPanel', 'panels', 'activePanel']),
 
     /**
-     * Background transform style for parallax fx
-     */
-    bgPosStyle() {
-      return { transform: `translateX(-${State.panelIndex * 5}%)` }
-    },
-
-    /**
      * Get window-input-panel position
      */
     windowInputPos() {
@@ -166,8 +159,8 @@ export default {
      * Get list of navigational buttons
      */
     nav() {
-      // console.log('[DEBUG] INDEX COMPUTED nav');
-      let cap = ~~((this.width - 32) / 34)
+      let cap = ~~(this.width / 34)
+      if (!State.hideSettingsBtn) cap -= 1
       let halfCap = cap >> 1
       let invModCap = cap % halfCap ^ 1
 
@@ -198,10 +191,12 @@ export default {
         out.push(btn)
       }
 
-      if (!State.private) {
+      if (!State.private && !State.hideAddBtn) {
         ADD_CTX_BTN.hidden = false
         out.push(ADD_CTX_BTN)
       }
+
+      if (!State.navBarInline) return out
 
       let p = State.panelIndex - hideOffset
       let vis = out.length - hideOffset
@@ -1668,23 +1663,23 @@ export default {
       Store.commit('resetSelection')
       State.dashboardOpened = true
       State.panelIndex = i
-      if (i === -1) this.dashboard = { dashboard: 'TabsDashboard', new: true }
+      if (i === -1) this.dashboard = { dashboard: 'TabsDashboard', name: '', new: true }
       else if (i >= 0) this.dashboard = this.nav[i]
 
-      await this.$nextTick()
-      if (this.$refs.menu && this.$refs.menu.open) this.$refs.menu.open()
-      let h = this.$refs.menu.$el.offsetHeight
-      this.$refs.nav.style.transform = `translateY(${h - 336}px)`
+      // await this.$nextTick()
+      // if (this.$refs.menu && this.$refs.menu.open) this.$refs.menu.open()
+      // let h = this.$refs.menu.$el.offsetHeight
+      // this.$refs.nav.style.transform = `translateY(${h - 336}px)`
     },
 
     /**
      * Wait for rerendering and calc panels menu height.
      */
     async recalcDashboardHeight() {
-      await this.$nextTick()
-      if (!State.dashboardOpened) return
-      let h = this.$refs.menu ? this.$refs.menu.$el.offsetHeight : 336
-      this.$refs.nav.style.transform = `translateY(${h - 336}px)`
+      // await this.$nextTick()
+      // if (!State.dashboardOpened) return
+      // let h = this.$refs.menu ? this.$refs.menu.$el.offsetHeight : 336
+      // this.$refs.nav.style.transform = `translateY(${h - 336}px)`
     },
 
     /**
@@ -1692,11 +1687,12 @@ export default {
      */
     closeDashboard() {
       State.dashboardOpened = false
+      this.dashboard = null
       if (State.panelIndex < 0 && State.lastPanelIndex >= 0) {
         State.panelIndex = State.lastPanelIndex
       }
-      this.$refs.nav.style.transform = 'translateY(0px)'
-      setTimeout(() => (this.dashboard = null), 120)
+      // this.$refs.nav.style.transform = 'translateY(0px)'
+      // setTimeout(() => (this.dashboard = null), 120)
     },
     // ---
 

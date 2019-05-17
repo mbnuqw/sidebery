@@ -8,7 +8,7 @@
     tabindex="-1"
     v-debounce:scroll.instant.500="scrollingStartEnd"
     @scroll="recalcScroll")
-    .scrollable(ref="scrollContent")
+    .scrollable(v-noise:300.g:12:af.a:0:42.s:0:9="" ref="scrollContent")
       slot
 </template>
 

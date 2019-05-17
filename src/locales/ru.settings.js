@@ -15,6 +15,12 @@ export default {
   'settings.autoHide_ctx_menu_none': { message: 'никогда' },
   'settings.ctx_menu_editor': { message: 'Редактировать меню' },
 
+  // --- Context menu
+  'settings.nav_title': { message: 'Навигация' },
+  'settings.nav_bar_inline': { message: 'В одну строку' },
+  'settings.hide_settings_btn': { message: 'Скрывать кнопку "Настройки"' },
+  'settings.hide_add_btn': { message: 'Скрывать кнопку "Новый контейнер"' },
+
   // --- Tabs
   'settings.tabs_title': { message: 'Табы' },
   'settings.activate_last_tab_on_panel_switching': {

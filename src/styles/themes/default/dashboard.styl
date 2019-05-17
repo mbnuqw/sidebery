@@ -1,7 +1,8 @@
 @import '../../mixins'
 
 .Menu
-  box(relative, grid)
+  box(relative, flex)
+  flex-direction: column
   grid-gap: 3px 0
 
 .Menu > h2
@@ -14,6 +15,7 @@
 .delimiter
   box(relative)
   size(128px, 1px)
+  flex-shrink: 0
   margin: 8px auto
   opacity: .5
   background-image: linear-gradient(90deg, #00000000, var(--inactive-fg), var(--inactive-fg), #00000000)
@@ -23,6 +25,7 @@
   flex-wrap: wrap
   flex-direction: column
   justify-content: flex-start
+  padding: 0 0 8px
 
 .options > .opt
   box(relative)

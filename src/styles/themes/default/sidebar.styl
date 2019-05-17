@@ -29,6 +29,9 @@ NAV_CONF_HEIGHT = auto
 #root[data-pinned-tabs-position="right"] > .Sidebar
   flex-direction: row-reverse
 
+.Sidebar > .PinnedDock
+  z-index: 2001
+
 // ---
 // -- Main container
 // -
@@ -52,13 +55,13 @@ NAV_CONF_HEIGHT = auto
   box(absolute)
   pos(0, 0)
   size(100%, same)
-  background-color: #24242464
+  background-color: #00000032
   z-index: -1
   opacity: 0
   transition: z-index var(--d-fast), opacity var(--d-fast)
 
 .Sidebar[data-dashboard] .dimmer
-  z-index: 999
+  z-index: 500
   opacity: 1
 
 // ---
@@ -66,54 +69,58 @@ NAV_CONF_HEIGHT = auto
 // -
 .Sidebar .nav
   box(relative, flex)
-  size(100%, NAV_HEIGHT)
+  size(100%, min-h: NAV_HEIGHT)
+  z-index: 2000
+  background-color: var(--bg)
+  box-shadow: inset 0 -1px 0 0 #00000032, 0 0 12px 0 #00000000
+  translate: box-shadow var(--d-fast)
+
+.Sidebar[data-dashboard] .nav
+  box-shadow: inset 0 -1px 0 0 #00000032, 0 0 12px 0 #00000032
+
+// ---
+// -- Dashboard wrapper
+// -
+.Sidebar .dashboard-box
+  box(absolute, flex)
+  size(100%, max-h: calc(100% - 64px))
+  pos(0, 0)
+  flex-direction: column
   z-index: 1000
-  transform: translateY(0)
-  transition: transform var(--d-fast)
+  box-shadow: 0 1px 12px 0 #00000056, 0 0 0 1px #00000012
+  background-color: var(--bg)
 
 // ---
 // -- Dashboard
 // -
 .Sidebar .dashboard
-  box(absolute)
-  pos(b: 0, l: 0)
-  size(100%, NAV_CONF_HEIGHT, max-h: calc(100vh + 200px))
-  padding: 300px 0 32px
-  background-color: var(--bg)
-  box-shadow: 0 1px 12px 0 #00000056, 0 1px 0 0 #00000012
-  opacity: 0
-  z-index: 0
-  transition: opacity var(--d-fast) .03s, z-index var(--d-fast)
-
-.Sidebar[data-dashboard] .dashboard
-  opacity: 1
-  transition: opacity var(--d-fast), z-index var(--d-fast)
+  size(100%, same)
+  overflow: hidden
 
 // ---
 // -- Nav bar
 // -
 .Sidebar .nav-bar
   box(relative, flex)
+  flex-wrap: wrap
   flex-grow: 1
   overflow: hidden
+
+.Sidebar[data-nav-inline] .nav-bar
+  flex-wrap: nowrap
 
 // ---
 // -- Navigational button
 // -
 .Sidebar .nav-btn
-  box(absolute, flex)
-  size(NAV_BTN_WIDTH, NAV_HEIGHT, max-w: 34px)
+  box(relative, flex)
+  size(NAV_BTN_WIDTH, NAV_HEIGHT)
   justify-content: center
   align-items: center
   flex-shrink: 0
   opacity: var(--nav-btn-opacity)
   z-index: 10
   transition: opacity var(--d-fast), transform var(--d-fast), z-index var(--d-fast)
-
-  // Button x position
-  for i in 0..24
-    &[data-index=\"{i}\"]
-      transform: translateX(NAV_BTN_WIDTH * i)
 
   // for dragenter
   &:before
@@ -124,6 +131,7 @@ NAV_CONF_HEIGHT = auto
     z-index: 1
 
   &[data-active="true"]
+    background-color: #00000024
     opacity: var(--nav-btn-activated-opacity)
 
   &:hover
@@ -134,12 +142,24 @@ NAV_CONF_HEIGHT = auto
     transition: none
 
   &[data-hidden="true"]
+    box(none)
+
+  &[data-loading="true"]
+    cursor: progress
+
+.Sidebar[data-nav-inline] .nav-btn
+  box(absolute)
+
+  &[data-hidden="true"]
+    box(flex)
     opacity: 0
     z-index: -1
     transform: scale(0, 0)
 
-  &[data-loading="true"]
-    cursor: progress
+  // Button x position
+  for i in 0..24
+    &[data-index=\"{i}\"]
+      transform: translateX(NAV_BTN_WIDTH * i)
 
 // ---
 // -- Nav button icon
@@ -263,11 +283,10 @@ NAV_CONF_HEIGHT = auto
 // -
 .Sidebar .settings-btn
   box(relative, flex)
-  size(NAV_CTRL_WIDTH, NAV_HEIGHT)
+  size(NAV_BTN_WIDTH, NAV_HEIGHT)
   justify-content: center
   align-items: center
   flex-shrink: 0
-  margin: 0 3px 0 0
   &:hover > svg
     opacity: .7
   &:active > svg
@@ -383,10 +402,9 @@ NAV_CONF_HEIGHT = auto
 .Sidebar
   .panel-enter-active
   .panel-leave-active
-    transition: opacity var(--d-fast), z-index var(--d-fast), transform var(--d-fast)
+    transition: z-index var(--d-fast), transform var(--d-fast)
   .panel-enter
     transform: translateX(100%)
-    opacity: 0
     z-index: 0
   .panel-enter-to
     transform: translateX(0)
@@ -398,5 +416,22 @@ NAV_CONF_HEIGHT = auto
     z-index: 10
   .panel-leave-to
     transform: translateX(100%)
-    opacity: 0
+    z-index: 0
+
+  .dashboard-enter-active
+  .dashboard-leave-active
+    transition: z-index var(--d-fast), transform var(--d-fast)
+  .dashboard-enter
+    transform: translateY(-100%)
+    z-index: 0
+  .dashboard-enter-to
+    transform: translateY(0)
+    opacity: 1
+    z-index: 1000
+  .dashboard-leave
+    transform: translateY(0)
+    opacity: 1
+    z-index: 1000
+  .dashboard-leave-to
+    transform: translateY(-100%)
     z-index: 0

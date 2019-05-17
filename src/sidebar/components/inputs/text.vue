@@ -75,7 +75,7 @@ export default {
 
     onBlur() {
       this.isActive = false
-      this.$emit('blur', this.$refs.text.value)
+      if (this.$refs.text) this.$emit('blur', this.$refs.text.value)
     },
 
     onInput(e) {
@@ -85,7 +85,7 @@ export default {
     },
 
     onChange() {
-      this.$emit('change', this.$refs.text.value)
+      if (this.$refs.text) this.$emit('change', this.$refs.text.value)
     },
 
     onKD(e) {
