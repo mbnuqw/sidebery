@@ -413,6 +413,12 @@
       v-model="$store.state.customStyles.bookmarks_folder_empty_fg"
       @change="updateStyle('bookmarks_folder_empty_fg')"
       @toggle="toggleStyle('bookmarks_folder_empty_fg')")
+    .separator
+    color-style-field(
+      label="styles.bookmarks_opened_fg_color"
+      v-model="$store.state.customStyles.bookmarks_opened_fg"
+      @change="updateStyle('bookmarks_opened_fg')"
+      @toggle="toggleStyle('bookmarks_opened_fg')")
 
   .ctrls: .btn(@click="resetStyles") {{t('styles.reset_styles')}}
 </template>

@@ -44,10 +44,10 @@
     size(100vw, 100%)
 
 .Bookmark:not([is-selected]) > .body:hover:before
-    background-color: var(--bookmarks-node-bg-hover)
+  background-color: var(--bookmarks-node-bg-hover)
 
 .Bookmark:not([is-selected]) > .body:active:before
-    background-color: var(--bookmarks-node-bg-active)
+  background-color: var(--bookmarks-node-bg-active)
 
 // ---
 // -- Drag layer
@@ -124,7 +124,7 @@
   color: var(--bookmarks-node-title-fg-active)
 
 .Bookmark[data-opened] .title
-  color: var(--active-fg)
+  color: var(--bookmarks-opened-fg)
 
 .Bookmark[data-selected] .title
   color: var(--tabs-selected-fg)

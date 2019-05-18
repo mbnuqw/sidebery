@@ -85,6 +85,7 @@ export default {
   'styles.bookmarks_opened_dir_fg_color_hover': { message: 'Opened folder color on hover' },
   'styles.bookmarks_opened_dir_fg_color_active': { message: 'Opened folder color on click' },
   'styles.bookmarks_empty_dir_fg_color': { message: 'Empty folder color' },
+  'styles.bookmarks_opened_fg_color': { message: 'Opened bookmark color' },
 
   'styles.reset_styles': { message: 'Reset' },
 }

@@ -111,6 +111,7 @@ export const CUSTOM_STYLES = {
   bookmarks_folder_open_fg_hover: null,
   bookmarks_folder_open_fg_active: null,
   bookmarks_folder_empty_fg: null,
+  bookmarks_opened_fg: null,
 }
 
 export const DEFAULT_TABS_MENU = [
