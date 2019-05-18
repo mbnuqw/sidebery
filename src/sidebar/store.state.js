@@ -70,6 +70,8 @@ export const CUSTOM_STYLES = {
   ctx_menu_fg: null,
 
   nav_btn_fg: null,
+  nav_btn_width: null,
+  nav_btn_height: null,
 
   pinned_dock_overlay_bg: null,
   pinned_dock_overlay_shadow: null,

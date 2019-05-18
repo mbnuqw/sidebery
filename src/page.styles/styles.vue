@@ -162,6 +162,20 @@
       v-model="$store.state.customStyles.nav_btn_fg"
       @change="updateStyle('nav_btn_fg')"
       @toggle="toggleStyle('nav_btn_fg')")
+    .separator
+    style-field(
+      label="styles.nav_btn_width"
+      v-model="$store.state.customStyles.nav_btn_width"
+      or="---"
+      @change="updateStyle('nav_btn_width')"
+      @toggle="toggleStyle('nav_btn_width')")
+    .separator
+    style-field(
+      label="styles.nav_btn_height"
+      v-model="$store.state.customStyles.nav_btn_height"
+      or="---"
+      @change="updateStyle('nav_btn_height')"
+      @toggle="toggleStyle('nav_btn_height')")
 
   section
     h2 {{t('styles.pinned_dock_title')}}

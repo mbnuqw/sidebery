@@ -159,7 +159,7 @@ export default {
      * Get list of navigational buttons
      */
     nav() {
-      let cap = ~~(this.width / 34)
+      let cap = ~~(this.width / State.navBtnWidth)
       if (!State.hideSettingsBtn) cap -= 1
       let halfCap = cap >> 1
       let invModCap = cap % halfCap ^ 1
@@ -870,11 +870,6 @@ export default {
         Store.dispatch('saveTabsTree')
       }
 
-      // Update dashboard height (if it opened)
-      if (State.dashboardOpened && !panel.tabs.length) {
-        this.recalcDashboardHeight()
-      }
-
       // Update succession
       if (State.activateAfterClosing !== 'none') {
         const activeTab = State.tabsMap[State.activeTabId]
@@ -916,13 +911,6 @@ export default {
           else Store.dispatch('saveTabsTree')
         }
       }
-
-      // Loaded
-      // if (change.hasOwnProperty('status')) {
-      //   if (change.status === 'complete' && localTab.status === 'loading') {
-      //     EventBus.$emit('tabLoaded', tab.id)
-      //   }
-      // }
 
       // Handle favicon change
       // If favicon is base64 string - store it in cache
@@ -1578,7 +1566,9 @@ export default {
     recalcDynVars() {
       const compStyle = getComputedStyle(this.$el)
       const thRaw = compStyle.getPropertyValue('--tabs-height')
+      const nbwRaw = compStyle.getPropertyValue('--nav-btn-width')
       State.tabHeight = Utils.ParseCSSNum(thRaw.trim())[0]
+      State.navBtnWidth = Utils.ParseCSSNum(nbwRaw.trim())[0]
     },
 
     /**
@@ -1665,21 +1655,6 @@ export default {
       State.panelIndex = i
       if (i === -1) this.dashboard = { dashboard: 'TabsDashboard', name: '', new: true }
       else if (i >= 0) this.dashboard = this.nav[i]
-
-      // await this.$nextTick()
-      // if (this.$refs.menu && this.$refs.menu.open) this.$refs.menu.open()
-      // let h = this.$refs.menu.$el.offsetHeight
-      // this.$refs.nav.style.transform = `translateY(${h - 336}px)`
-    },
-
-    /**
-     * Wait for rerendering and calc panels menu height.
-     */
-    async recalcDashboardHeight() {
-      // await this.$nextTick()
-      // if (!State.dashboardOpened) return
-      // let h = this.$refs.menu ? this.$refs.menu.$el.offsetHeight : 336
-      // this.$refs.nav.style.transform = `translateY(${h - 336}px)`
     },
 
     /**
@@ -1691,8 +1666,6 @@ export default {
       if (State.panelIndex < 0 && State.lastPanelIndex >= 0) {
         State.panelIndex = State.lastPanelIndex
       }
-      // this.$refs.nav.style.transform = 'translateY(0px)'
-      // setTimeout(() => (this.dashboard = null), 120)
     },
     // ---
 
@@ -1711,7 +1684,6 @@ export default {
      */
     updateNavSize() {
       if (this.width !== this.$refs.nav.offsetWidth) this.width = this.$refs.nav.offsetWidth
-      this.recalcDashboardHeight()
     },
 
     /**

@@ -38,6 +38,8 @@ export default {
   // --- Navigation Strip
   'styles.nav_title': { message: 'Navigation Strip' },
   'styles.nav_fg_color': { message: 'Foreground color' },
+  'styles.nav_btn_width': { message: 'Button width' },
+  'styles.nav_btn_height': { message: 'Button height' },
 
   // --- Pinned dock
   'styles.pinned_dock_title': { message: 'Pinned tabs dock' },
