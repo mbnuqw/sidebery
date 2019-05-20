@@ -2,79 +2,60 @@
 
 .Bookmark
   box(relative)
-  padding: 0
   margin: 0
-  &:after
-    content: ''
-    box(absolute)
-    pos(0, r: 0)
-    size(100vw, 100%)
-    background-color: var(--true-fg)
-    z-index: -1
-    opacity: 0
-    transform: scale(0, 0)
-    transition: opacity var(--d-fast),
-                z-index var(--d-fast),
-                transform 0s var(--d-fast)
+  border-top-left-radius: 3px
+  border-bottom-left-radius: 3px
 
-  > .body
-    height: var(--bookmarks-bookmark-height)
-    > .title
-      font: var(--bookmarks-bookmark-font)
-      color: var(--bookmarks-node-title-fg)
-    &:hover > .title
-      transition: transform var(--d-fast)
-      color: var(--bookmarks-node-title-fg-hover)
-    &:active > .title
-      transition: none
-      color: var(--bookmarks-node-title-fg-active)
-  
-  &[data-opened]
-    > .body > .title
-      color: var(--active-fg)
-
-  &[data-selected]
-    > .body:before
-      opacity: 1
-    > .body > .title
-    > .body:hover > .title
-      color: var(--tabs-selected-fg)
-
-// Body of node
+// ---
+// -- Body
+// -
 .Bookmark > .body
   box(relative, flex)
+  height: var(--bookmarks-bookmark-height)
   align-items: center
   cursor: pointer
+  transform: translateZ(0)
+  transition: opacity var(--d-fast)
   overflow: hidden
   border-top-left-radius: 2px
   border-bottom-left-radius: 2px
-  background-image: linear-gradient(#ffffff08, #00000016)
+  background-color: #ffffff16
+  background-image: linear-gradient(0deg, #00000016, #00000000)
   box-shadow: inset 0 1px 0 0 #ffffff12,
-              inset 1px 0 0 0 #00000032,
-              0 -1px 0 0 #00000032,
-              inset 0 -1px 0 0 #00000032
-  transform: translateZ(0)
-  transition: opacity var(--d-fast)
-  &:before
-    content: ''
-    box(absolute)
-    size(100%, same)
-    pos(0, 0)
-    background-color: var(--tabs-selected-bg)
-    opacity: 0
+              inset 1px 0 0 0 var(--border-fg),
+              0 -1px 0 0 var(--border-fg),
+              inset 0 -1px 0 0 var(--border-fg),
+              0 1px 8px 0 #00000024
 
-.Bookmark:not([data-selected]) > .body:hover
-    background-color: var(--bookmarks-node-bg-hover)
-.Bookmark:not([data-selected]) > .body:active
-    background-color: var(--bookmarks-node-bg-active)
+.Bookmark > .body:hover
+  background-color: var(--bookmarks-node-bg-hover)
 
+.Bookmark[data-selected] > .body
+  background-color: var(--tabs-selected-bg)
+
+.Bookmark:not([is-selected]) > .body:active
+  background-color: var(--bookmarks-node-bg-active)
+
+.Bookmark[data-opened] > .body:before
+  content: ''
+  box(absolute)
+  size(4px, 4px)
+  pos(calc(50% - 2px), r: 4px)
+  border-radius: 50%
+  background-color: var(--bookmarks-opened-fg)
+
+// ---
+// -- Drag layer
+// -
 .Bookmark .drag-layer
   box(absolute)
   size(100%, same)
   pos(0, 0)
   z-index: 15
 
-// Favicon
+// ---
+// -- Favicon
+// -
 .Bookmark .fav
   box(relative)
   size(16px, same)
@@ -82,13 +63,10 @@
   margin: 0 4px 0 5px
   z-index: 20
   transition: opacity var(--d-fast), transform var(--d-fast)
-.Bookmark[data-favless] .fav
-  > .placeholder
-    opacity: 1
-    transform: translateY(0)
-  > img
-    opacity: 0
-    transform: translateY(-4px)
+
+// ---
+// -- Placeholder of favicon
+// -
 .Bookmark .fav > .placeholder
   box(absolute)
   size(16px, same)
@@ -96,23 +74,176 @@
   opacity: 0
   transform: translateY(4px)
   transition: opacity var(--d-fast), transform var(--d-fast)
+  filter: drop-shadow(1px 1px 0 #ffffff16)
   > svg
     box(absolute)
     size(100%, same)
     pos(0, 0)
     fill: var(--favicons-placehoder-bg)
 
+.Bookmark[data-favless] .fav .placeholder
+  opacity: 1
+  transform: translateY(0)
+
+// ---
+// -- Favicon's image
+// -
 .Bookmark .fav > img
   box(absolute)
   pos(0, 0)
   size(100%, same)
   transition: opacity var(--d-fast), transform var(--d-fast)
 
-// Title
+.Bookmark[data-favless] .fav > img
+  opacity: 0
+  transform: translateY(-4px)
+
+// ---
+// -- Title
+// -
 .Bookmark .title
   box(relative)
   size(100%)
+  font: var(--bookmarks-bookmark-font)
+  color: var(--bookmarks-node-title-fg)
+  text-shadow: 1px 1px 0 var(--text-edge-color)
   white-space: nowrap
   overflow: hidden
   transition: transform var(--d-fast), color var(--d-fast)
   mask: linear-gradient(-90deg, transparent, #000000 12px, #000000)
+
+.Bookmark:hover .title
+  transition: transform var(--d-fast)
+  color: var(--bookmarks-node-title-fg-hover)
+
+.Bookmark:active .title
+  transition: none
+  color: var(--bookmarks-node-title-fg-active)
+
+.Bookmark[data-opened] .title
+  mask: linear-gradient(-90deg, transparent 12px, #000000 24px, #000000)
+//   text-shadow: 1px 1px 0 #ffffff00
+//   color: var(--bookmarks-opened-fg)
+
+.Bookmark[data-selected] .title
+  color: var(--tabs-selected-fg)
+
+
+// @import '../../mixins'
+
+// .Bookmark
+//   box(relative)
+//   padding: 0
+//   margin: 0
+//   &:after
+//     content: ''
+//     box(absolute)
+//     pos(0, r: 0)
+//     size(100vw, 100%)
+//     background-color: var(--true-fg)
+//     z-index: -1
+//     opacity: 0
+//     transform: scale(0, 0)
+//     transition: opacity var(--d-fast),
+//                 z-index var(--d-fast),
+//                 transform 0s var(--d-fast)
+
+//   > .body
+//     height: var(--bookmarks-bookmark-height)
+//     > .title
+//       font: var(--bookmarks-bookmark-font)
+//       color: var(--bookmarks-node-title-fg)
+//     &:hover > .title
+//       transition: transform var(--d-fast)
+//       color: var(--bookmarks-node-title-fg-hover)
+//     &:active > .title
+//       transition: none
+//       color: var(--bookmarks-node-title-fg-active)
+  
+//   &[data-opened]
+//     > .body > .title
+//       color: var(--active-fg)
+
+//   &[data-selected]
+//     > .body:before
+//       opacity: 1
+//     > .body > .title
+//     > .body:hover > .title
+//       color: var(--tabs-selected-fg)
+
+// // Body of node
+// .Bookmark > .body
+//   box(relative, flex)
+//   align-items: center
+//   cursor: pointer
+//   overflow: hidden
+//   border-top-left-radius: 2px
+//   border-bottom-left-radius: 2px
+//   background-image: linear-gradient(#ffffff08, #00000016)
+//   box-shadow: inset 0 1px 0 0 #ffffff12,
+//               inset 1px 0 0 0 #00000032,
+//               0 -1px 0 0 #00000032,
+//               inset 0 -1px 0 0 #00000032
+//   transform: translateZ(0)
+//   transition: opacity var(--d-fast)
+//   &:before
+//     content: ''
+//     box(absolute)
+//     size(100%, same)
+//     pos(0, 0)
+//     background-color: var(--tabs-selected-bg)
+//     opacity: 0
+
+// .Bookmark:not([data-selected]) > .body:hover
+//     background-color: var(--bookmarks-node-bg-hover)
+// .Bookmark:not([data-selected]) > .body:active
+//     background-color: var(--bookmarks-node-bg-active)
+
+// .Bookmark .drag-layer
+//   box(absolute)
+//   size(100%, same)
+//   pos(0, 0)
+//   z-index: 15
+
+// // Favicon
+// .Bookmark .fav
+//   box(relative)
+//   size(16px, same)
+//   flex-shrink: 0
+//   margin: 0 4px 0 5px
+//   z-index: 20
+//   transition: opacity var(--d-fast), transform var(--d-fast)
+// .Bookmark[data-favless] .fav
+//   > .placeholder
+//     opacity: 1
+//     transform: translateY(0)
+//   > img
+//     opacity: 0
+//     transform: translateY(-4px)
+// .Bookmark .fav > .placeholder
+//   box(absolute)
+//   size(16px, same)
+//   pos(0, 0)
+//   opacity: 0
+//   transform: translateY(4px)
+//   transition: opacity var(--d-fast), transform var(--d-fast)
+//   > svg
+//     box(absolute)
+//     size(100%, same)
+//     pos(0, 0)
+//     fill: var(--favicons-placehoder-bg)
+
+// .Bookmark .fav > img
+//   box(absolute)
+//   pos(0, 0)
+//   size(100%, same)
+//   transition: opacity var(--d-fast), transform var(--d-fast)
+
+// // Title
+// .Bookmark .title
+//   box(relative)
+//   size(100%)
+//   white-space: nowrap
+//   overflow: hidden
+//   transition: transform var(--d-fast), color var(--d-fast)
+//   mask: linear-gradient(-90deg, transparent, #000000 12px, #000000)

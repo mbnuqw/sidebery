@@ -1,18 +1,9 @@
 @import '../../mixins'
 
-// --- Pinned tabs dock
 .PinnedDock
   box(relative, flex)
   z-index: 2000
   background-color: var(--bg)
-  padding: 2px 1px
-  &:before
-    content: ''
-    box(absolute)
-    pos(0, 0)
-    size(100%, same)
-    // background-color: var(--pinned-dock-overlay-bg)
-    box-shadow: var(--pinned-dock-overlay-shadow)
   &[data-empty]
     box(none)
 
@@ -21,16 +12,18 @@
   size(100%, auto)
   flex-wrap: wrap
   flex-direction: row
-  // padding: 1px 0
   box-shadow: inset 0 1px 0 0 #00000024,
               inset 0 -1px 0 0 #00000024,
               inset 0 0 8px 0 #00000032
+
+#root[data-pinned-tabs-position="panel"][data-pinned-tabs-list] .PinnedDock
+  padding: 0 0 7px
 
 // Left
 #root[data-pinned-tabs-position="left"] .PinnedDock
   size(auto, 100%)
   flex-direction: column
-  padding: 0 1px 0 0
+  padding: 1px 1px 0 0
   box-shadow: inset -1px 0 0 0 #00000024,
               inset 0 0 8px 0 #00000032
 
@@ -38,7 +31,7 @@
 #root[data-pinned-tabs-position="right"] .PinnedDock
   size(auto, 100%)
   flex-direction: column
-  padding: 0 0 0 1px
+  padding: 1px 0 0 1px
   box-shadow: inset 1px 0 0 0 #00000024,
               inset 0 0 8px 0 #00000032
 
@@ -47,12 +40,41 @@
   size(100%, auto)
   flex-wrap: wrap
   flex-direction: row
-  padding: 1px 0
+  padding: 0
   box-shadow: inset 0 1px 0 0 #00000024,
-              inset 0 -1px 0 0 #00000024,
               inset 0 0 8px 0 #00000032
 
-// The last drop position
+// ---
+// -- Background overlay
+// -
+.PinnedDock:before
+  content: ''
+  box(absolute)
+  pos(0, 0)
+  size(100%, same)
+  background-color: var(--pinned-dock-overlay-bg)
+  box-shadow: var(--pinned-dock-overlay-shadow)
+
+#root[data-pinned-tabs-position="panel"][data-pinned-tabs-list] .PinnedDock:before
+  box(none)
+
+// ---
+// -- Separator
+// -
+.PinnedDock:after
+  content: ''
+  box(absolute, none)
+  pos(b: 0px, l: 0)
+  size(100%, 10px)
+  background-color: #00000012
+  box-shadow: inset 0 -1px 0 0 #363636, inset 0 1px 0 0 #363636
+
+#root[data-pinned-tabs-position="panel"][data-pinned-tabs-list] .PinnedDock:after
+  box(block)
+
+// ---
+// -- The last drop position
+// -
 .PinnedDock .to-the-end
   box(relative)
   opacity: 0
@@ -63,30 +85,17 @@
     pos(0, 0)
     background-color: var(--tabs-update-badge-bg)
 
-#root[data-pinned-tabs-position="panel"][data-pinned-tabs-list]
-  .PinnedDock
-    padding-bottom: 9px
-  .PinnedDock:after
-    content: ''
-    box(absolute)
-    size(100%, 7px)
-    pos(b: 0, l: 0)
-    background-color: #00000012
-    box-shadow: inset 0 -1px 0 0 #00000032, inset 0 1px 0 0 #00000032
-  .PinnedDock .to-the-end
-    box(none)
-
 #root[data-pinned-tabs-position="panel"] .PinnedDock .to-the-end
 #root[data-pinned-tabs-position="top"] .PinnedDock .to-the-end
-  size(0, 30px)
+  size(0, 32px)
   &:before
-    size(1px, 30px)
+    size(1px, 32px)
 
 #root[data-pinned-tabs-position="left"] .PinnedDock .to-the-end
 #root[data-pinned-tabs-position="right"] .PinnedDock .to-the-end
-  size(30px, 0)
+  size(32px, 0)
   &:before
-    size(30px, 1px)
+    size(32px, 1px)
 
 .PinnedDock[data-drag-pointed] .to-the-end
   opacity: 1

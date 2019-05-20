@@ -43,13 +43,14 @@
           :data-active="panelIs(i)"
           :data-hidden="btn.hidden"
           :data-index="btn.relIndex"
+          :data-colorized="!!btn.colorCode"
+          :style="{'--ctx': btn.colorCode}"
           :title="getTooltip(i)"
           @click="onNavClick(i)"
           @dragenter="onNavDragEnter(i)"
           @dragleave="onNavDragLeave(i)"
           @mousedown.right="openDashboard(i)")
-          svg(:style="{fill: btn.colorCode}")
-            use(:xlink:href="'#' + btn.icon")
+          svg: use(:xlink:href="'#' + btn.icon")
           .proxy-badge
             svg: use(xlink:href="#icon_proxy")
           .update-badge
@@ -133,6 +134,7 @@ export default {
   data() {
     return {
       width: 250,
+      navBtnWidth: 34,
       dragMode: false,
       pointerMode: 'none',
       pointerExpanding: false,
@@ -159,7 +161,7 @@ export default {
      * Get list of navigational buttons
      */
     nav() {
-      let cap = ~~(this.width / State.navBtnWidth)
+      let cap = ~~(this.width / this.navBtnWidth)
       if (!State.hideSettingsBtn) cap -= 1
       let halfCap = cap >> 1
       let invModCap = cap % halfCap ^ 1
@@ -1568,7 +1570,7 @@ export default {
       const thRaw = compStyle.getPropertyValue('--tabs-height')
       const nbwRaw = compStyle.getPropertyValue('--nav-btn-width')
       State.tabHeight = Utils.ParseCSSNum(thRaw.trim())[0]
-      State.navBtnWidth = Utils.ParseCSSNum(nbwRaw.trim())[0]
+      this.navBtnWidth = Utils.ParseCSSNum(nbwRaw.trim())[0]
     },
 
     /**

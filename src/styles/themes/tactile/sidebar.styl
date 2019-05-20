@@ -1,31 +1,21 @@
 @import '../../mixins'
 
-NAV_HEIGHT = 32px
-NAV_BTN_WIDTH = 34px
-NAV_CTRL_WIDTH = 28px
-NAV_CONF_HEIGHT = auto
-
+// ---
+// -- Root vue element
+// -
 .root
   box(relative)
   size(100%, 100%)
   background-color: var(--bg)
 
+// ---
+// -- Sidebar root element
+// -
 .Sidebar
   box(relative, flex)
   size(100%, same)
   flex-direction: column
   overflow: hidden
-
-  &[data-dashboard]
-    .dimmer
-      z-index: 999
-      opacity: 1
-    .panel-menu
-      opacity: 1
-      transition: opacity var(--d-fast), z-index var(--d-fast)
-    .panel-btn[is-active="true"]
-      flex-grow: 10
-      transition: flex var(--d-fast)
 
 #root[data-pinned-tabs-position="top"] > .Sidebar
   flex-direction: column
@@ -34,68 +24,101 @@ NAV_CONF_HEIGHT = auto
 #root[data-pinned-tabs-position="right"] > .Sidebar
   flex-direction: row-reverse
 
+.Sidebar > .PinnedDock
+  z-index: 2001
+
+// ---
+// -- Main container
+// -
 .Sidebar > .box
   box(relative, flex)
   size(100%, same)
   flex-direction: column
 
-// --- Parallaxed background ---
-.Sidebar > .box > .bg
-  box(absolute)
-  size(200%, 100%)
-  transition: transform var(--d-fast)
-
-// --- Dimmer layer ---
+// ---
+// -- Dimmer layer
+// -
 .Sidebar .dimmer
   box(absolute)
   pos(0, 0)
   size(100%, same)
-  background-color: #24242464
+  background-color: #00000032
   z-index: -1
   opacity: 0
   transition: z-index var(--d-fast), opacity var(--d-fast)
 
-// --- Nav panel ---
+.Sidebar[data-dashboard] .dimmer
+  z-index: 500
+  opacity: 1
+
+// ---
+// -- Navigation
+// -
 .Sidebar .nav
   box(relative, flex)
-  size(100%, NAV_HEIGHT)
-  z-index: 1000
-  transform: translateY(0)
-  transition: transform var(--d-fast)
-  background-image: linear-gradient(180deg, #00000000, #00000032)
-  box-shadow: inset 0 -1px 0 0 #00000032, 0 -1px 0 0 #00000032
-
-.Sidebar .panel-menu
-  box(absolute)
-  pos(b: 0, l: 0)
-  size(100%, NAV_CONF_HEIGHT, max-h: calc(100vh + 200px))
-  padding: 300px 0 32px
-  background-color: var(--dash-bg)
-  box-shadow: 0 1px 12px 0 #00000056, 0 1px 0 0 #00000012
-  opacity: 0
-  z-index: 0
-  transition: opacity var(--d-fast) .03s, z-index var(--d-fast)
+  size(100%)
+  min-height: var(--nav-btn-height)
+  z-index: 2000
+  background-color: var(--bg)
+  box-shadow: inset 0 -1px 0 0 #00000032, inset 0 1px 0 0 #00000032, 0 0 12px 0 #00000000
+  translate: box-shadow var(--d-fast)
   &:before
     content: ''
     box(absolute)
-    pos(b: 0, l: 0)
-    size(100%, 32px)
+    pos(0, 0)
+    size(100%, same)
     background-image: linear-gradient(180deg, #00000000, #00000032)
-    box-shadow: inset 0 1px 0 0 #00000032
 
-.Sidebar .nav-strip
+.Sidebar[data-dashboard] .nav
+  box-shadow: inset 0 -1px 0 0 #00000032, inset 0 1px 0 0 #00000032, 0 0 12px 0 #00000032
+
+// ---
+// -- Dashboard wrapper
+// -
+.Sidebar .dashboard-box
+  box(absolute, flex)
+  size(100%, max-h: calc(100% - 64px))
+  pos(0, 0)
+  flex-direction: column
+  z-index: 1000
+  box-shadow: 0 1px 12px 0 #00000056, 0 0 0 1px var(--border-fg)
+  background-color: var(--bg)
+  // background-color: #787878
+
+// ---
+// -- Dashboard
+// -
+.Sidebar .dashboard
+  size(100%, same)
+  overflow: hidden
+
+// ---
+// -- Nav bar
+// -
+.Sidebar .nav-bar
   box(relative, flex)
+  flex-wrap: wrap
   flex-grow: 1
   overflow: hidden
 
-.Sidebar .panel-btn
-  box(absolute, flex)
-  size(NAV_BTN_WIDTH, NAV_HEIGHT, max-w: 34px)
+.Sidebar[data-nav-inline] .nav-bar
+  flex-wrap: nowrap
+
+// ---
+// -- Navigational button
+// -
+.Sidebar .nav-btn
+  box(relative, flex)
+  width: var(--nav-btn-width)
+  height: var(--nav-btn-height)
   justify-content: center
   align-items: center
   flex-shrink: 0
+  overflow: hidden
+  border-radius: 2px
   z-index: 10
   transition: opacity var(--d-fast), transform var(--d-fast), z-index var(--d-fast)
+
   // for dragenter
   &:before
     content: ''
@@ -103,121 +126,132 @@ NAV_CONF_HEIGHT = auto
     size(100%, same)
     pos(0, 0)
     z-index: 1
+
   &:hover
     background-color: #00000008
-    box-shadow: inset 0 0 0 1px #00000002, inset 0 0 8px 0 #00000012
-  &:active
-    background-color: #00000009
-    box-shadow: inset 0 0 0 1px #00000016, inset 0 0 8px 0 #00000018
-  &[data-active="true"]
+    box-shadow: inset 0 0 0 1px #00000024, inset 0 0 8px 0 #00000012
+
+  &[data-active]
     background-color: #00000016
-    box-shadow: inset 0 0 0 1px #00000012, inset 0 0 8px 0 #00000016
-  &[data-hidden="true"]
+    box-shadow: inset 0 0 0 1px var(--border-active-fg), inset 0 0 8px 0 #00000016
+
+  &:active
+    background-color: #00000024
+    box-shadow: inset 0 0 0 1px var(--border-active-fg), inset 0 0 8px 0 #00000018
+
+  &[data-hidden]
+    box(none)
+
+  &[data-loading]
+    cursor: progress
+
+#root[data-style="light"] .Sidebar .nav-btn[data-colorized]:after
+  content: ''
+  box(absolute)
+  size(7px, 7px)
+  pos(3px, 3px)
+  border-radius: 50%
+  background-color: var(--ctx)
+  box-shadow: 0 0 3px 0 #ffffff00
+  transition: opacity var(--d-fast), box-shadow var(--d-norm)
+  box-shadow: inset 0 0 1px 0 var(--title-fg)
+//   background-color: var(--ctx)
+  // > svg
+  //   fill: #ffffff !important
+
+.Sidebar[data-nav-inline] .nav-btn
+  box(absolute)
+
+  &[data-hidden]
+    box(flex)
     opacity: 0
     z-index: -1
     transform: scale(0, 0)
-  &[data-updated]
-    > .update-badge
-      opacity: 1
-      transform: scale(1, 1)
-  &[data-proxified]
-    > .update-badge
-      opacity: 0
-      transform: scale(0.7, 0.7)
-    > .proxy-badge
-      opacity: .64
-      transform: scale(1, 1)
-  &[data-loading="true"]
-    cursor: progress
-    > .progress-spinner
-      opacity: 1
-      for i in 0..12
-        > .spinner-stick-{i}
-          animation: loading-spin .6s (i*50)ms infinite
-  &[data-loading="ok"]
-    > .ok-badge
-      opacity: 1
-      transform: scale(1, 1)
-  &[data-loading="err"]
-    > .err-badge
-      opacity: 1
-      transform: scale(1, 1)
-  &[data-updated]
-    > svg
-      mask: radial-gradient(
-        circle at calc(100% - 1.5px) calc(100% - 1.5px),
-        #00000032,
-        #00000032 5px,
-        #000000 6px,
-        #000000
-      )
-  &[data-proxified]
-  &[data-loading]
-    > svg
-      mask: radial-gradient(
-        circle at calc(100% - 1px) calc(100% - 1px),
-        #00000032,
-        #00000032 7px,
-        #000000 8px,
-        #000000
-      )
 
-  // Button x possition
-  for i in 0..16
-    &.rel-{i}
-      transform: translateX(NAV_BTN_WIDTH * i)
+  // Button x position
+  for i in 0..24
+    &[data-index=\"{i}\"]
+      transform: "translateX(calc(var(--nav-btn-width) * %s))" % i
 
-.Sidebar .panel-btn > svg
+// ---
+// -- Nav button icon
+// -
+.Sidebar .nav-btn > svg
   box(absolute)
   size(16px, same)
-  fill: var(--nav-btn-fg)
+  fill: var(--ctx, var(--nav-btn-fg))
   transform: translateZ(0)
   transition: opacity var(--d-fast)
-  filter: drop-shadow(1px 1px 0 #ffffff12) saturate(120%) brightness(80%) contrast(120%)
 
-.Sidebar .panel-btn[data-active] > svg
-  filter: saturate(100%) brightness(120%) contrast(100%)
-  fill: var(--nav-btn-fg)
+#root[data-style="light"] .Sidebar .nav-btn > svg
+//   filter: drop-shadow(1px 1px 0 #ffffff08)
+  fill: var(--nav-btn-fg) !important
 
-.Sidebar .panel-btn > .progress-spinner
-  box(absolute)
-  size(11px, same)
-  pos(b: 4px, r: 6px)
+.Sidebar .nav-btn[data-updated][data-colorized] > svg
+  mask: radial-gradient(
+    circle at calc(100% - 2px) calc(100% - 2px),
+    #00000024,
+    #00000024 4px,
+    #000000 5px,
+    #000000
+  )
+
+.Sidebar .nav-btn[data-proxified] > svg
+.Sidebar .nav-btn[data-loading] > svg
+  mask: radial-gradient(
+    circle at calc(100% - 2px) calc(100% - 2px),
+    #00000024,
+    #00000024 7px,
+    #000000 8px,
+    #000000
+  )
+
+// ---
+// -- Progress spinner
+// -
+.Sidebar .nav-btn .progress-spinner
+  box(absolute, border-box)
+  size(12px, same)
+  pos(50%, 50%)
   border-radius: 50%
   opacity: 0
+  overflow: hidden
   transition: opacity var(--d-norm)
+  border-top: 2px solid var(--progress-fg)
+  border-left: 2px solid var(--progress-bg)
+  border-right: 2px solid var(--progress-bg)
+  border-bottom: 2px solid var(--progress-bg)
 
-  > .spinner-stick
-    box(absolute)
-    size(1px, 4px)
-    pos(calc(50% - 2px), calc(50% - 1px))
-    opacity: 0
+.Sidebar .nav-btn[data-loading] .progress-spinner
+  animation: progress-animation .5s infinite linear
 
-    &:before
-      box(absolute)
-      pos(4px, 0)
-      size(100%, same)
-      background-color: var(--tabs-loading-fg)
-      content: ''
-  for i in 0..12
-    > .spinner-stick-{i}
-      transform: rotateZ((i * 30)deg)
-      animation: none
+.Sidebar .nav-btn[data-loading="true"] .progress-spinner
+  opacity: 1
 
-.Sidebar .panel-btn > .update-badge
+// ---
+// -- Update / Highlight badge
+// -
+.Sidebar .nav-btn .update-badge
   box(absolute)
   size(6px, same)
-  pos(b: 7px, r: 8px)
+  pos(calc(50% + 3px), calc(50% + 3px))
   border-radius: 50%
   background-color: var(--nav-btn-update-badge-bg)
   opacity: 0
   transform: scale(0.7, 0.7)
   transition: opacity var(--d-norm), transform var(--d-norm)
 
-.Sidebar .panel-btn > .proxy-badge
+.Sidebar .nav-btn[data-updated]:not([data-proxified]) .update-badge
+  opacity: 1
+  transform: scale(1, 1)
+
+// ---
+// -- Proxy badge
+// -
+.Sidebar .nav-btn .proxy-badge
   box(absolute)
-  size(9px, same)
-  pos(b: 6px, r: 7px)
+  size(10px, same)
+  pos(calc(50% + 1px), calc(50% + 1px))
   fill: var(--nav-btn-fg)
   opacity: 0
   transform: scale(0.7, 0.7)
@@ -226,11 +260,18 @@ NAV_CONF_HEIGHT = auto
     box(absolute)
     size(100%, same)
 
-.Sidebar .panel-btn > .ok-badge
-.Sidebar .panel-btn > .err-badge
+.Sidebar .nav-btn[data-proxified] .proxy-badge
+  opacity: 1
+  transform: scale(1, 1)
+
+// ---
+// -- Ok / Err badge
+// -
+.Sidebar .nav-btn .ok-badge
+.Sidebar .nav-btn .err-badge
   box(absolute)
-  size(10px, same)
-  pos(b: 5px, r: 6px)
+  size(12px, same)
+  pos(50%, 50%)
   border-radius: 50%
   opacity: 0
   transform: scale(0.7, 0.7)
@@ -239,37 +280,48 @@ NAV_CONF_HEIGHT = auto
     box(absolute)
     size(100%, same)
 
-.Sidebar .panel-btn > .ok-badge > svg
-  fill: #43D043
+.Sidebar .nav-btn[data-loading="ok"] .ok-badge
+  opacity: 1
+  transform: scale(1, 1)
 
-.Sidebar .panel-btn > .err-badge > svg
-  fill: #DB2216
+.Sidebar .nav-btn[data-loading="err"] .err-badge
+  opacity: 1
+  transform: scale(1, 1)
 
-.Sidebar .add-btn
+.Sidebar .nav-btn .ok-badge > svg
+  fill: var(--true-fg)
+
+.Sidebar .nav-btn .err-badge > svg
+  fill: var(--false-fg)
+
+// ---
+// -- Settings button
+// -
 .Sidebar .settings-btn
   box(relative, flex)
-  size(NAV_CTRL_WIDTH, NAV_HEIGHT)
+  width: var(--nav-btn-width)
+  height: var(--nav-btn-height)
   justify-content: center
   align-items: center
+  border-radius: 2px
   flex-shrink: 0
-  &:hover > svg
-    opacity: .7
-  &:active > svg
-    transition: none
-    opacity: .4
   > svg
     box(absolute)
     size(16px, same)
     fill: var(--nav-btn-fg)
-    opacity: .8
     transition: opacity var(--d-fast)
 
-.Sidebar .add-btn
-  margin: 0 0 0 auto
-.Sidebar .settings-btn
-  margin: 0 3px 0 0
+  &:hover
+    background-color: #00000008
+    box-shadow: inset 0 0 0 1px #00000024, inset 0 0 8px 0 #00000012
 
-// --- Move pointer ---
+  &:active
+    background-color: #00000024
+    box-shadow: inset 0 0 0 1px #00000032, inset 0 0 8px 0 #00000018
+
+// ---
+// -- Move pointer
+// -
 .Sidebar .pointer
   box(absolute)
   size(32px, 24px)
@@ -277,28 +329,6 @@ NAV_CONF_HEIGHT = auto
   z-index: -1
   opacity: 0
   transition: z-index var(--d-fast), opacity var(--d-fast), transform var(--d-fast)
-  .arrow
-    box(absolute)
-    size(100%, same)
-    pos(0, 0)
-    opacity: 1
-    transition: opacity var(--d-fast)
-    &:before
-      content: ''
-      box(absolute)
-      size(16px, 16px)
-      pos(4px, -11px)
-      transform: rotateZ(45deg)
-      box-shadow: inset 0 0 0 2px var(--nav-btn-update-badge-bg)
-      transition: background-color var(--d-fast)
-    &:after
-      content: ''
-      box(absolute)
-      size(16px, 16px)
-      pos(4px, -11px)
-      opacity: 0
-      transform: rotateZ(45deg)
-      box-shadow: inset -1px 1px 0 0 var(--nav-btn-update-badge-bg)
   &:after
     content: ''
     box(absolute)
@@ -307,30 +337,68 @@ NAV_CONF_HEIGHT = auto
     background-color: var(--nav-btn-update-badge-bg)
     opacity: 0
     transition: opacity var(--d-fast)
+
 .Sidebar[data-drag] .pointer
   opacity: 1
   z-index: 100
-.Sidebar[data-pointer="none"] .pointer .arrow
-  opacity: 0
+
 .Sidebar[data-pointer="between"] .pointer:after
   opacity: 1
-.Sidebar[data-pointer="inside-fold"] .pointer .arrow:before
-  background-color: var(--nav-btn-update-badge-bg)
+
 .Sidebar[data-pointer^="inside"] .pointer:after
   opacity: 0
-.Sidebar .pointer.-expanding .arrow
-  animation: pointer-expand-arrow .3s
-.Sidebar .pointer.-expanding .arrow:after
-  animation: pointer-expand-pulse .5s
 
 #root[data-pinned-tabs-position="left"] .Sidebar .pointer
   pos(l: 33px)
 
-// --- Panel ---
+// ---
+// -- Arrow of drag pointer
+// -
+.Sidebar .arrow
+  box(absolute)
+  size(100%, same)
+  pos(0, 0)
+  opacity: 1
+  transition: opacity var(--d-fast)
+  &:before
+    content: ''
+    box(absolute)
+    size(16px, 16px)
+    pos(4px, -11px)
+    transform: rotateZ(45deg)
+    box-shadow: inset 0 0 0 2px var(--nav-btn-update-badge-bg)
+    transition: background-color var(--d-fast)
+  &:after
+    content: ''
+    box(absolute)
+    size(16px, 16px)
+    pos(4px, -11px)
+    opacity: 0
+    transform: rotateZ(45deg)
+    box-shadow: inset -1px 1px 0 0 var(--nav-btn-update-badge-bg)
+
+.Sidebar[data-pointer="none"] .arrow
+  opacity: 0
+
+.Sidebar[data-pointer="inside-fold"] .arrow:before
+  background-color: var(--nav-btn-update-badge-bg)
+
+.Sidebar .arrow[data-expanding]
+  animation: pointer-expand-arrow .3s
+
+.Sidebar .arrow[data-expanding]:after
+  animation: pointer-expand-pulse .5s
+
+// ---
+// -- Container of panels
+// -
 .Sidebar .panel-box
   box(relative)
   flex-grow: 2
 
+// ---
+// -- Panel
+// -
 .Sidebar .panel
   box(absolute, flex)
   pos(0, 0)
@@ -348,44 +416,42 @@ NAV_CONF_HEIGHT = auto
   &[data-pos="right"]
     transform: translateX(100%)
 
-// --- Settings Transitions ---
+// ---
+// -- Settings Transitions
+// -
 .Sidebar
-  .settings-enter-active
-  .settings-leave-active
-    transition: opacity var(--d-fast), z-index var(--d-fast), transform var(--d-fast)
-  .settings-enter
+  .panel-enter-active
+  .panel-leave-active
+    transition: z-index var(--d-fast), transform var(--d-fast)
+  .panel-enter
     transform: translateX(100%)
-    opacity: 0
     z-index: 0
-  .settings-enter-to
+  .panel-enter-to
     transform: translateX(0)
     opacity: 1
     z-index: 10
-  .settings-leave
+  .panel-leave
     transform: translateX(0)
     opacity: 1
     z-index: 10
-  .settings-leave-to
+  .panel-leave-to
     transform: translateX(100%)
-    opacity: 0
     z-index: 0
 
-@keyframes loading-spin
-  0%
+  .dashboard-enter-active
+  .dashboard-leave-active
+    transition: z-index var(--d-fast), transform var(--d-fast)
+  .dashboard-enter
+    transform: translateY(-100%)
+    z-index: 0
+  .dashboard-enter-to
+    transform: translateY(0)
     opacity: 1
-  100%
-    opacity: 0
-
-@keyframes pointer-expand-arrow
-  0%
-    opacity: 0
-  100%
+    z-index: 1000
+  .dashboard-leave
+    transform: translateY(0)
     opacity: 1
-
-@keyframes pointer-expand-pulse
-  0%
-    opacity: 1
-    transform: rotateZ(45deg) scale(1, 1)
-  100%
-    opacity: 0
-    transform: rotateZ(45deg) scale(2, 2)
+    z-index: 1000
+  .dashboard-leave-to
+    transform: translateY(-100%)
+    z-index: 0

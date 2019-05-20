@@ -7,7 +7,6 @@
   box(relative)
   padding: 2px 0
   margin: 0 12px 0 16px
-  cursor: pointer
   &:hover
     > .label
       opacity: 1
@@ -16,6 +15,7 @@
 
 .SelectOptField > .label
   box(relative)
-  text(s: rem(14))
+  text(s: rem(14), w: 700)
+  margin: 0 0 5px
   color: var(--label-fg)
-  opacity: .8
+  text-shadow: 1px 1px 0 var(--text-edge-color)

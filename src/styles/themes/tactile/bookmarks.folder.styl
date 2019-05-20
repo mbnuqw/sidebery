@@ -2,128 +2,137 @@
 
 .Folder
   box(relative)
-  padding: 0
   margin: 0
-  border-top-left-radius: 3px
-  border-bottom-left-radius: 3px
 
-  // > Empty
-.Folder:not([data-parent])
-  > .body
-  > .body:hover
-  > .body:active
-    > .title
-      color: var(--bookmarks-folder-empty-fg)
-
-// > Expanded
-.Folder[data-expanded][data-parent]
-  > .body
-    background-image: linear-gradient(#00000016, #ffffff08)
-    box-shadow: inset 0 0 12px 0 #00000032,
-                inset 1px 0 0 0 #00000032,
-                0 -1px 0 0 #00000032,
-                inset 0 -1px 0 0 #00000032
-    &:hover > .title
-      color: var(--bookmarks-folder-open-fg-hover)
-    &:active > .title
-      color: var(--bookmarks-folder-open-fg-active)
-    > .title
-      color: var(--bookmarks-folder-open-fg)
-      mask: linear-gradient(-90deg, transparent 12px, #000000 24px, #000000)
-  > .body > .exp
-    opacity: 1
-  > .body > .exp > svg
-    transform: rotateZ(0deg)
-
-.Folder[data-selected]
-  > .body:before
-    opacity: 1
-  > .body > .title
-  > .body:hover > .title
-    color: var(--tabs-selected-fg)
-
-// Body of node
+// ---
+// -- Body of node
+// -
 .Folder > .body
   box(relative, flex)
   height: var(--bookmarks-folder-height)
   align-items: center
   cursor: pointer
+  transform: translateZ(0)
+  transition: opacity var(--d-fast)
   overflow: hidden
   border-top-left-radius: 2px
   border-bottom-left-radius: 2px
-  background-image: linear-gradient(#ffffff08, #00000016)
+  background-color: #ffffff12
+  background-image: linear-gradient(0deg, #00000016, #00000000)
   box-shadow: inset 0 1px 0 0 #ffffff12,
-              inset 1px 0 0 0 #00000032,
-              0 -1px 0 0 #00000032,
-              inset 0 -1px 0 0 #00000032
-  transform: translateZ(0)
-  transition: opacity var(--d-fast)
-  &:before
-    content: ''
-    box(absolute)
-    size(100%, same)
-    pos(0, 0)
-    background-color: var(--tabs-selected-bg)
-    opacity: 0
-  > .title
-    font: var(--bookmarks-folder-font)
-    color: var(--bookmarks-folder-closed-fg)
-  &:hover > .title
-    transition: transform var(--d-fast)
-    color: var(--bookmarks-folder-closed-fg-hover)
-  &:active > .title
-    transition: none
-    color: var(--bookmarks-folder-closed-fg-active)
+              inset 1px 0 0 0 var(--border-fg),
+              0 -1px 0 0 var(--border-fg),
+              inset 0 -1px 0 0 var(--border-fg),
+              0 1px 8px 0 #00000024
 
-.Folder:not([data-selected])[data-opened] > .body > .title
-.Folder:not([data-selected])[data-opened] > .body:hover > .title
-  color: var(--active-fg)
+.Folder[data-expanded][data-parent] > .body
+  background-image: linear-gradient(180deg, #00000032, #00000000)
+  box-shadow: inset 1px 0 0 0 var(--border-active-fg),
+              0 -1px 0 0 var(--border-active-fg),
+              inset 0 -1px 0 0 var(--border-active-fg)
+
+.Folder[data-selected] > .body
+  background-color: var(--tabs-selected-bg)
 
 .Folder:not([data-selected]) > .body:hover
   background-color: var(--bookmarks-node-bg-hover)
+
 .Folder:not([data-selected]) > .body:active
   background-color: var(--bookmarks-node-bg-active)
 
+.Folder[data-opened] > .body:before
+  content: ''
+  box(absolute)
+  size(4px, 4px)
+  pos(calc(50% - 2px), r: 6px)
+  border-radius: 50%
+  background-color: var(--bookmarks-opened-fg)
+
+// ---
+// -- Drag layer
+// -
 .Folder .drag-layer
   box(absolute)
   size(100%, same)
   pos(0, 0)
   z-index: 15
 
-// Title
-.Folder > .body .title
+// ---
+// -- Title
+// -
+.Folder > .body > .title
   box(relative)
   size(100%)
+  margin: 0 0 0 20px
+  font: var(--bookmarks-folder-font)
+  color: var(--bookmarks-folder-closed-fg)
+  text-shadow: 1px 1px 0 var(--text-edge-color)
   white-space: nowrap
   overflow: hidden
-  transform: translateX(20px)
-  transition: transform var(--d-fast), color var(--d-fast)
   mask: linear-gradient(-90deg, transparent, #000000 12px, #000000)
 
-// Node's children box
+.Folder > .body:hover > .title
+  transition: transform var(--d-fast)
+  color: var(--bookmarks-folder-closed-fg-hover)
+
+.Folder > .body:active > .title
+  transition: none
+  color: var(--bookmarks-folder-closed-fg-active)
+
+.Folder[data-expanded][data-parent] > .body > .title
+  text-shadow: 1px 1px 0 #ffffff00
+  color: var(--bookmarks-folder-open-fg)
+.Folder[data-expanded][data-parent] > .body:hover > .title
+  color: var(--bookmarks-folder-open-fg-hover)
+.Folder[data-expanded][data-parent] > .body:active > .title
+  color: var(--bookmarks-folder-open-fg-active)
+
+// Empty folder
+.Folder:not([data-parent]) > .body > .title
+  color: var(--bookmarks-folder-empty-fg)
+
+.Folder[data-opened][data-parent] > .body > .title
+  mask: linear-gradient(-90deg, transparent 16px, #000000 28px, #000000)
+
+.Folder[data-selected] > .body > .title
+  color: var(--tabs-selected-fg)
+
+// ---
+// -- Children box
+// -
 .Folder .children
   box(relative)
   padding: 0 0 0 12px
   transform: translateZ(0)
 
-// Expanded state icon
+// ---
+// -- Expand icon
+// -
 .Folder .exp
   box(absolute)
-  pos(l: 3px)
   size(15px, same)
+  pos(l: 3px)
   margin: 1px 2px 0 0
   flex-shrink: 0
-  opacity: .2
+  filter: drop-shadow(0 1px 0 #ffffff16)
   transition: transform var(--d-fast), opacity var(--d-fast)
-.Folder .exp > svg
-  box(absolute)
-  pos(0, 0)
-  size(100%, same)
-  fill: var(--bookmarks-folder-open-fg)
-  transform: rotateZ(-90deg)
-  transition: transform var(--d-fast)
+  > svg
+    box(absolute)
+    pos(0, 0)
+    size(100%, same)
+    fill: var(--bookmarks-folder-closed-fg)
+    transform: rotateZ(-90deg)
+    transition: transform var(--d-fast), fill var(--d-fast)
 
-// --- Vue transitions ---
+.Folder[data-expanded][data-parent] > .body > .exp
+  opacity: 1
+  > svg
+    transform: rotateZ(0deg)
+    fill: var(--bookmarks-folder-open-fg)
+
+// ---
+// -- Vue transitions
+// -
 .expand-enter-active
   transition: opacity var(--d-norm), transform var(--d-fast)
 .expand-enter

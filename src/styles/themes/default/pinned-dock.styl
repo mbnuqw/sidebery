@@ -12,14 +12,13 @@
   size(100%, auto)
   flex-wrap: wrap
   flex-direction: row
-  padding: 1px 0
-  box-shadow: inset 0 1px 0 0 #00000024,
-              inset 0 -1px 0 0 #00000024,
+  padding: 0 0 1px
+  box-shadow: inset 0 -1px 0 0 #00000024,
               inset 0 0 8px 0 #00000032
 
 #root[data-pinned-tabs-position="panel"][data-pinned-tabs-list] .PinnedDock
-  padding: 0 0 13px
-  box-shadow: none
+  padding: 0 0 5px
+  box-shadow: inset 0 1px 0 0 #ffffff08
 
 // Left
 #root[data-pinned-tabs-position="left"] .PinnedDock
@@ -67,10 +66,12 @@
 .PinnedDock:after
   content: ''
   box(absolute, none)
-  pos(b: 7px, l: 0)
-  size(100%, 1px)
-  background-color: #00000032
-  box-shadow: 0 1px 0 0 #ffffff08
+  pos(b: 1px, l: 0)
+  size(100%, 5px)
+  background-color: #00000016
+  box-shadow: 0 1px 0 0 #00000032,
+              0 -1px 0 0 #00000032,
+              inset 0 1px 0 0 #ffffff08
 
 #root[data-pinned-tabs-position="panel"][data-pinned-tabs-list] .PinnedDock:after
   box(block)

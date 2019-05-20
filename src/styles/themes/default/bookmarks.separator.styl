@@ -32,24 +32,24 @@
 // -- Body
 // -
 .Separator .body
-    box(relative, flex)
-    height: var(--bookmarks-separator-height)
-    align-items: center
-    cursor: pointer
-    transform: translateZ(0)
-    transition: opacity var(--d-fast)
-    &:before
-      content: ''
-      box(absolute)
-      pos(0, r: 0)
-      size(100vw, 100%)
-    &:after
-      content: ''
-      box(absolute)
-      pos(8px, l: 16px)
-      size(calc(100% - 16px), 1px)
-      border-radius: 2px
-      background-image: linear-gradient(90deg, transparent, #545454, #545454, #545454)
+  box(relative, flex)
+  height: var(--bookmarks-separator-height)
+  align-items: center
+  cursor: pointer
+  transform: translateZ(0)
+  transition: opacity var(--d-fast)
+  &:before
+    content: ''
+    box(absolute)
+    pos(0, r: 0)
+    size(100vw, 100%)
+  &:after
+    content: ''
+    box(absolute)
+    pos(8px, l: 8px)
+    size(calc(100% - 16px), 1px)
+    background-color: #00000036
+    box-shadow: 0 1px 0 0 #ffffff08
 
 .Separator:not([data-selected]) .body:hover:before
   background-color: var(--bookmarks-node-bg-hover)

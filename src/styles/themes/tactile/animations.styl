@@ -1,0 +1,57 @@
+@keyframes loading-animation
+  0%
+    opacity: 1
+  100%
+    opacity: 0
+
+@keyframes complete-animation
+  0%
+    opacity: .8
+    transform: translateX(-100%)
+  100%
+    opacity: 0
+    transform: translateX(5px)
+
+@keyframes progress-animation
+  0%
+    transform: rotateZ(0deg)
+  100%
+    transform: rotateZ(360deg)
+
+@keyframes pointer-expand-arrow
+  0%
+    opacity: 0
+  100%
+    opacity: 1
+
+@keyframes pointer-expand-pulse
+  0%
+    opacity: 1
+    transform: rotateZ(45deg) scale(1, 1)
+  100%
+    opacity: 0
+    transform: rotateZ(45deg) scale(2, 2)
+
+@keyframes shake-animation
+  0%
+    transform: translateX(0)
+  20%
+    transform: translateX(-12px)
+  40%
+    transform: translateX(12px)
+  55%
+    transform: translateX(-8px)
+  70%
+    transform: translateX(6px)
+  80%
+    transform: translateX(-4px)
+  90%
+    transform: translateX(2px)
+  100%
+    transform: translateX(0)
+
+@keyframes err-blink-animation
+  0%
+    color: var(--false-fg)
+  100%
+    color: var(--label-fg)
