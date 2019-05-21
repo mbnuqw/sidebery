@@ -70,7 +70,6 @@
                   inset 1px 0 0 0 var(--border-active-fg),
                   0 -1px 0 0 var(--border-active-fg),
                   inset 0 -1px 0 0 var(--border-active-fg)
-      // background-image: linear-gradient(180deg, #00000032, #00000000)
       background-image: linear-gradient(180deg, #00000032, #00000000)
       background-color: var(--tabs-activated-bg)
     &:after
@@ -144,13 +143,14 @@
   size(16px, 100%)
   z-index: 1
   opacity: 0
+  filter: drop-shadow(1px 1px 0 var(--text-edge-color))
   transform: translateX(-100%)
   transition: opacity var(--d-fast), transform var(--d-fast)
   > svg
     box(absolute)
     pos(calc(50% - 6px), 5px)
     size(12px, same)
-    fill: var(--tabs-activated-fg)
+    fill: var(--badge-fg)
     transition: opacity var(--d-fast)
     opacity: 0
 
@@ -302,14 +302,13 @@
   pos(b: -4px, r: -4px)
   border-radius: 50%
   opacity: 0
-  overflow: hidden
   transition: opacity var(--d-norm)
   border-top: 2px solid var(--progress-fg)
-  border-left: 2px solid var(--inactive-bg)
-  border-right: 2px solid var(--inactive-bg)
-  border-bottom: 2px solid var(--inactive-bg)
+  border-left: 2px solid var(--progress-bg)
+  border-right: 2px solid var(--progress-bg)
+  border-bottom: 2px solid var(--progress-bg)
 
-.Tab[data-progress] .progress-spinner:before
+.Tab[data-progress] .progress-spinner
   animation: progress-animation .5s infinite linear
 
 .Tab[data-progress="true"] .progress-spinner

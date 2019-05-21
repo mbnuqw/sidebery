@@ -50,9 +50,7 @@
   &[data-selected]:active
     z-index: 10
     background-color: var(--tabs-selected-bg)
-    // border: var(--tabs-selected-border)
-    // box-shadow: var(--tabs-selected-shadow)
-  
+
   &[data-discarded]
     opacity: .5
   
@@ -117,6 +115,15 @@
 .PinnedTab[data-favless] .placeholder
   opacity: 1
   transform: translateY(0)
+
+.PinnedTab[data-updated] .placeholder
+  mask: radial-gradient(
+    circle at calc(100% - 2px) calc(100% - 2px),
+    #00000024,
+    #00000024 4px,
+    #000000 5px,
+    #000000
+  )
 
 .PinnedTab[data-status="loading"] .placeholder
 .PinnedTab[data-progress] .placeholder
@@ -214,7 +221,7 @@
   transform: scale(0.7, 0.7)
   transition: opacity var(--d-norm), transform var(--d-norm)
 
-.PinnedTab[data-updated] .update-badge
+.PinnedTab[data-updated]:not([data-status="loading"]):not([data-progress]):not([data-audible]):not([data-muted]) .update-badge
   opacity: 1
   transform: scale(1, 1)
 
@@ -255,11 +262,12 @@
   border-radius: 50%
   opacity: 0
   transform: scale(0.7, 0.7)
+  filter: drop-shadow(1px 1px 0 var(--text-edge-color))
   transition: opacity var(--d-norm), transform var(--d-norm), z-index var(--d-norm)
   > svg
     box(absolute)
     size(100%, same)
-    fill: var(--tabs-activated-fg)
+    fill: var(--badge-fg)
     opacity: 0
     transition: opacity var(--d-norm)
 

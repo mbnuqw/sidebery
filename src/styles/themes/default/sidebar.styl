@@ -157,7 +157,7 @@
 .Sidebar .nav-btn > svg
   box(absolute)
   size(16px, same)
-  fill: var(--nav-btn-fg)
+  fill: var(--ctx, var(--nav-btn-fg))
   transform: translateZ(0)
   transition: opacity var(--d-fast)
 
@@ -244,8 +244,8 @@
 .Sidebar .nav-btn .ok-badge
 .Sidebar .nav-btn .err-badge
   box(absolute)
-  size(10px, same)
-  pos(calc(50% + 1px), calc(50% + 1px))
+  size(12px, same)
+  pos(50%, 50%)
   border-radius: 50%
   opacity: 0
   transform: scale(0.7, 0.7)
@@ -255,9 +255,6 @@
     size(100%, same)
 
 .Sidebar .nav-btn[data-loading="ok"] .ok-badge
-  opacity: 1
-  transform: scale(1, 1)
-
 .Sidebar .nav-btn[data-loading="err"] .err-badge
   opacity: 1
   transform: scale(1, 1)

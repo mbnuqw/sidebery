@@ -24,9 +24,6 @@
 #root[data-pinned-tabs-position="right"] > .Sidebar
   flex-direction: row-reverse
 
-.Sidebar > .PinnedDock
-  z-index: 2001
-
 // ---
 // -- Main container
 // -
@@ -42,7 +39,7 @@
   box(absolute)
   pos(0, 0)
   size(100%, same)
-  background-color: #00000032
+  background-color: #00000064
   z-index: -1
   opacity: 0
   transition: z-index var(--d-fast), opacity var(--d-fast)
@@ -60,7 +57,7 @@
   min-height: var(--nav-btn-height)
   z-index: 2000
   background-color: var(--bg)
-  box-shadow: inset 0 -1px 0 0 #00000032, inset 0 1px 0 0 #00000032, 0 0 12px 0 #00000000
+  box-shadow: inset 0 -1px 0 0 var(--border-fg), inset 0 1px 0 0 var(--border-fg), 0 0 12px 0 #00000000
   translate: box-shadow var(--d-fast)
   &:before
     content: ''
@@ -70,7 +67,7 @@
     background-image: linear-gradient(180deg, #00000000, #00000032)
 
 .Sidebar[data-dashboard] .nav
-  box-shadow: inset 0 -1px 0 0 #00000032, inset 0 1px 0 0 #00000032, 0 0 12px 0 #00000032
+  box-shadow: inset 0 -1px 0 0 var(--border-fg), inset 0 1px 0 0 var(--border-fg), 0 0 12px 0 #00000032
 
 // ---
 // -- Dashboard wrapper
@@ -112,6 +109,7 @@
   width: var(--nav-btn-width)
   height: var(--nav-btn-height)
   justify-content: center
+  margin: 0 -1px -1px 0
   align-items: center
   flex-shrink: 0
   overflow: hidden
@@ -145,19 +143,6 @@
   &[data-loading]
     cursor: progress
 
-#root[data-style="light"] .Sidebar .nav-btn[data-colorized]:after
-  content: ''
-  box(absolute)
-  size(7px, 7px)
-  pos(3px, 3px)
-  border-radius: 50%
-  background-color: var(--ctx)
-  box-shadow: 0 0 3px 0 #ffffff00
-  transition: opacity var(--d-fast), box-shadow var(--d-norm)
-  box-shadow: inset 0 0 1px 0 var(--title-fg)
-//   background-color: var(--ctx)
-  // > svg
-  //   fill: #ffffff !important
 
 .Sidebar[data-nav-inline] .nav-btn
   box(absolute)
@@ -171,7 +156,7 @@
   // Button x position
   for i in 0..24
     &[data-index=\"{i}\"]
-      transform: "translateX(calc(var(--nav-btn-width) * %s))" % i
+      transform: "translateX(calc(var(--nav-btn-width) * %s - %spx))" % (i i)
 
 // ---
 // -- Nav button icon
@@ -183,11 +168,11 @@
   transform: translateZ(0)
   transition: opacity var(--d-fast)
 
-#root[data-style="light"] .Sidebar .nav-btn > svg
-//   filter: drop-shadow(1px 1px 0 #ffffff08)
+#root[data-style="light"] .Sidebar .nav-btn[data-colorized] > svg
   fill: var(--nav-btn-fg) !important
+  filter: drop-shadow(1px 0 0 var(--ctx)) drop-shadow(-1px 0 0 var(--ctx)) drop-shadow(0 -1px 0 var(--ctx)) drop-shadow(0 1px 0 var(--ctx))
 
-.Sidebar .nav-btn[data-updated][data-colorized] > svg
+.Sidebar .nav-btn[data-updated] > svg
   mask: radial-gradient(
     circle at calc(100% - 2px) calc(100% - 2px),
     #00000024,
@@ -281,9 +266,6 @@
     size(100%, same)
 
 .Sidebar .nav-btn[data-loading="ok"] .ok-badge
-  opacity: 1
-  transform: scale(1, 1)
-
 .Sidebar .nav-btn[data-loading="err"] .err-badge
   opacity: 1
   transform: scale(1, 1)

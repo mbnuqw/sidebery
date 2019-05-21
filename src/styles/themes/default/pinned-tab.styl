@@ -117,6 +117,15 @@
   opacity: 1
   transform: translateY(0)
 
+.PinnedTab[data-updated] .placeholder
+  mask: radial-gradient(
+    circle at calc(100% - 2px) calc(100% - 2px),
+    #00000024,
+    #00000024 4px,
+    #000000 5px,
+    #000000
+  )
+
 .PinnedTab[data-status="loading"] .placeholder
 .PinnedTab[data-progress] .placeholder
 .PinnedTab[data-audible] .placeholder
@@ -213,7 +222,7 @@
   transform: scale(0.7, 0.7)
   transition: opacity var(--d-norm), transform var(--d-norm)
 
-.PinnedTab[data-updated] .update-badge
+.PinnedTab[data-updated]:not([data-status="loading"]):not([data-progress]):not([data-audible]):not([data-muted]) .update-badge
   opacity: 1
   transform: scale(1, 1)
 
@@ -223,8 +232,8 @@
 .PinnedTab .ok-badge
 .PinnedTab .err-badge
   box(absolute)
-  size(10px, same)
-  pos(b: -4px, r: -4px)
+  size(12px, same)
+  pos(b: -5px, r: -5px)
   border-radius: 50%
   opacity: 0
   transform: scale(0.7, 0.7)
