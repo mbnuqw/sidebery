@@ -7,8 +7,6 @@
   justify-content: center
   align-items: center
   margin-right: -1px
-  border: var(--tabs-border)
-  box-shadow: var(--tabs-shadow)
   transform: translateZ(0)
   transition: opacity var(--d-fast), transform .12s
   background-color: #ffffff12
@@ -52,8 +50,8 @@
   &[data-selected]:active
     z-index: 10
     background-color: var(--tabs-selected-bg)
-    border: var(--tabs-selected-border)
-    box-shadow: var(--tabs-selected-shadow)
+    // border: var(--tabs-selected-border)
+    // box-shadow: var(--tabs-selected-shadow)
   
   &[data-discarded]
     opacity: .5
