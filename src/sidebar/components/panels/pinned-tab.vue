@@ -34,8 +34,8 @@
       svg: use(xlink:href="#icon_err")
     .progress-spinner
     .audio-badge(@mousedown.stop="" @click="$store.dispatch('remuteTabs', [tab.id])")
-      svg.-loud: use(xlink:href="#icon_loud")
-      svg.-mute: use(xlink:href="#icon_mute")
+      svg.-loud: use(xlink:href="#icon_loud_badge")
+      svg.-mute: use(xlink:href="#icon_mute_badge")
   .ctx(v-if="ctx && ctxColor", :style="{background: ctxColor}")
   .title(v-if="withTitle") {{tab.title}}
   .close(v-if="$store.state.showTabRmBtn", @mousedown.stop="close", @mouseup.stop="")

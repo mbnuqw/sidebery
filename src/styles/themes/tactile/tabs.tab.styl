@@ -149,11 +149,10 @@
   transition: opacity var(--d-fast), transform var(--d-fast)
   > svg
     box(absolute)
-    pos(calc(50% - 5px), 6px)
-    size(11px, same)
-    fill: var(--tabs-fg)
+    pos(calc(50% - 6px), 5px)
+    size(12px, same)
+    fill: var(--tabs-activated-fg)
     transition: opacity var(--d-fast)
-  > svg.-mute
     opacity: 0
 
 .Tab[data-audible] .audio
@@ -167,17 +166,9 @@
     opacity: .5
     transition: none
 
-.Tab[data-audible] .audio
-  > svg.-loud
-    opacity: 0
-  > svg.-mute
-    opacity: 1
-
-.Tab[data-muted] .audio
-  > svg.-loud
-    opacity: 0
-  > svg.-mute
-    opacity: 1
+.Tab[data-audible] svg.-loud
+.Tab[data-muted] svg.-mute
+  opacity: 1
 
 // ---
 // -- Favicon

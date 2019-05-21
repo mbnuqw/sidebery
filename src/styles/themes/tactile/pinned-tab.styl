@@ -252,8 +252,8 @@
 // -
 .PinnedTab .audio-badge
   box(absolute)
-  size(10px, same)
-  pos(b: -4px, r: -4px)
+  size(12px, same)
+  pos(b: -5px, r: -5px)
   border-radius: 50%
   opacity: 0
   transform: scale(0.7, 0.7)
@@ -261,19 +261,17 @@
   > svg
     box(absolute)
     size(100%, same)
-    fill: var(--tabs-fg)
+    fill: var(--tabs-activated-fg)
     opacity: 0
     transition: opacity var(--d-norm)
 
 .PinnedTab[data-audible] .audio-badge
 .PinnedTab[data-muted] .audio-badge
-  opacity: .8
+  opacity: 1
   transform: scale(1, 1)
 
-.PinnedTab[data-audible] .audio-badge > svg.-loud
-  opacity: 1
-
-.PinnedTab[data-muted] .audio-badge > svg.-mute
+.PinnedTab[data-audible] svg.-loud
+.PinnedTab[data-muted] svg.-mute
   opacity: 1
 
 .PinnedTab[data-progress] .audio-badge

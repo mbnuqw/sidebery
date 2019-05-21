@@ -96,7 +96,7 @@ const OPTIONS = {
     const wut = node.mutedInfo.muted ? 'unmute' : 'mute'
     return {
       label: Translate('menu.tab.' + wut),
-      icon: node.mutedInfo.muted ? 'icon_loud_16' : 'icon_mute_16',
+      icon: node.mutedInfo.muted ? 'icon_loud' : 'icon_mute',
       action: wut + 'Tabs',
       args: [...State.selected],
     }

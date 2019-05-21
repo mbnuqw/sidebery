@@ -29,8 +29,8 @@
     @dragenter="onDragEnter"
     @dragleave="onDragLeave")
   .audio(@mousedown.stop="", @click="$store.dispatch('remuteTabs', [tab.id])")
-    svg.-loud: use(xlink:href="#icon_loud")
-    svg.-mute: use(xlink:href="#icon_mute")
+    svg.-loud: use(xlink:href="#icon_loud_badge")
+    svg.-mute: use(xlink:href="#icon_mute_badge")
   .fav
     .placeholder: svg: use(:xlink:href="favPlaceholder")
     img(:src="favicon", @load.passive="onFaviconLoad")
