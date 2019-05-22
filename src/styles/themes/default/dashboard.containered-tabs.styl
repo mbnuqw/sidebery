@@ -7,12 +7,16 @@
 .ContainerMenu > .title
   text(s: rem(24), w: 400)
   color: var(--title-fg)
-  margin: 16px 12px 12px
+  margin: 12px 12px 12px
+
+.ContainerMenu .scroll-box
+  box-shadow: 0 -1px 0 0 var(--border-fg), 0 1px 0 0 var(--border-flare-fg)
 
 .ContainerMenu .scoll-wrapper
   box(relative, grid)
   grid-gap: 3px 0
-  padding: 1px 0 0
+  padding: 8px 0 12px
+  box-shadow: inset 0 1px 0 0 var(--border-flare-fg), inset 0 -1px 0 0 var(--border-fg)
 
 .ContainerMenu .box
   box(relative)

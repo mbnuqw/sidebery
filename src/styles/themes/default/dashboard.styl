@@ -9,11 +9,11 @@
   box(relative)
   text(s: rem(24), w: 400)
   color: var(--title-fg)
-  margin: 16px 12px 12px
+  margin: 12px 12px 12px
   padding: 0
 
 .delimiter
-  box(relative)
+  box(relative, none)
   size(128px, 1px)
   flex-shrink: 0
   margin: 8px auto
@@ -25,7 +25,11 @@
   flex-wrap: wrap
   flex-direction: column
   justify-content: flex-start
-  padding: 0 0 8px
+  padding: 8px 0 8px
+
+.Menu .options
+  margin: 8px 0 0
+  box-shadow: inset 0 1px 0 0 var(--border-flare-fg), 0 -1px 0 0 var(--border-fg)
 
 .options > .opt
   box(relative)
