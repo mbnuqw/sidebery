@@ -1,42 +1,42 @@
 @import '../../mixins'
 
-.ContainerMenu
+.ContainerDashboard
   box(flex)
   flex-direction: column
 
-.ContainerMenu > .title
+.ContainerDashboard > .title
   text(s: rem(24), w: 400)
   color: var(--title-fg)
   margin: 12px 12px 12px
 
-.ContainerMenu .scroll-box
+.ContainerDashboard .scroll-box
   box-shadow: 0 -1px 0 0 var(--border-fg), 0 1px 0 0 var(--border-flare-fg)
 
-.ContainerMenu .scoll-wrapper
+.ContainerDashboard .scoll-wrapper
   box(relative, grid)
   grid-gap: 3px 0
   padding: 8px 0 12px
   box-shadow: inset 0 1px 0 0 var(--border-flare-fg), inset 0 -1px 0 0 var(--border-fg)
 
-.ContainerMenu .box
+.ContainerDashboard .box
   box(relative)
   padding: 0 0 0 8px
 
-.ContainerMenu .scroll-box
+.ContainerDashboard .scroll-box
   size(max-h: calc(100vh - 200px))
   flex-grow: 1
   flex-shrink: 1
 
-.ContainerMenu .field
+.ContainerDashboard .field
   box(relative)
   margin: 0 16px
 
-.ContainerMenu .field > .input
+.ContainerDashboard .field > .input
   box(relative, flex)
   flex-wrap: wrap
 
 // Option icon
-.ContainerMenu .input > .icon
+.ContainerDashboard .input > .icon
   box(relative, flex)
   size(26px, same)
   justify-content: center
@@ -56,7 +56,7 @@
     size(16px, same)
     transition: opacity var(--d-fast)
 
-.ContainerMenu .field > .text
+.ContainerDashboard .field > .text
   text(s: rem(14))
   margin: 2px 0 0
   transition: color 1s

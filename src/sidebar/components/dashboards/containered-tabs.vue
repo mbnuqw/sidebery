@@ -1,5 +1,5 @@
 <template lang="pug">
-.ContainerMenu(v-noise:300.g:12:af.a:0:42.s:0:9="")
+.ContainerDashboard(v-noise:300.g:12:af.a:0:42.s:0:9="")
   text-input.title(
     ref="name"
     v-debounce.250="updateName"
