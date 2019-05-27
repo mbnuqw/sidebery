@@ -144,14 +144,15 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import TextInput from '../../../components/inputs/text'
+import ToggleField from '../../../components/fields/toggle'
+import SelectField from '../../../components/fields/select'
+import IconSelectField from '../../../components/fields/select-icon'
+import ColorSelectField from '../../../components/fields/select-color'
 import Store from '../../store'
-import State from '../../store.state'
-import TextInput from '../inputs/text'
+import State from '../../store/state'
+import Actions from '../../actions'
 import ScrollBox from '../scroll-box'
-import ToggleField from '../fields/toggle'
-import SelectField from '../fields/select'
-import IconSelectField from '../fields/select-icon'
-import ColorSelectField from '../fields/select-color'
 
 const HOSTS_RULE_RE = /^.+$/m
 const PROXY_HOST_RE = /^.{3,65536}$/
@@ -353,7 +354,7 @@ export default {
         color: this.color,
         icon: this.icon,
       }
-      return await Store.dispatch('createContext', details)
+      return await browser.contextualIdentities.create(details)
     },
 
     dedupTabs() {
@@ -400,12 +401,12 @@ export default {
 
     togglePanelLock() {
       this.conf.lockedPanel = !this.conf.lockedPanel
-      Store.dispatch('saveContainers')
+      Actions.saveContainers(State)
     },
 
     toggleTabsLock() {
       this.conf.lockedTabs = !this.conf.lockedTabs
-      Store.dispatch('saveContainers')
+      Actions.saveContainers(State)
     },
 
     async togglePanelNoEmpty() {
@@ -421,7 +422,7 @@ export default {
           })
         }
       }
-      Store.dispatch('saveContainers')
+      Actions.saveContainers(State)
     },
 
     async toggleIncludeHosts() {
@@ -436,8 +437,8 @@ export default {
       }
 
       this.conf.includeHostsActive = !this.conf.includeHostsActive
-      Store.dispatch('saveContainers')
-      Store.dispatch('updateReqHandler')
+      Actions.saveContainers(State)
+      Actions.updateReqHandler(State)
       await this.$nextTick()
 
       if (this.$refs.scrollBox) this.$refs.scrollBox.recalcScroll()
@@ -446,11 +447,11 @@ export default {
 
     onIncludeHostsInput(value) {
       this.conf.includeHosts = value
-      Store.dispatch('updateReqHandlerDebounced')
+      Actions.updateReqHandlerDebounced(State)
     },
 
     onIncludeHostsChange() {
-      Store.dispatch('saveContainers')
+      Actions.saveContainers(State)
     },
 
     async toggleExcludeHosts() {
@@ -465,8 +466,8 @@ export default {
       }
 
       this.conf.excludeHostsActive = !this.conf.excludeHostsActive
-      Store.dispatch('saveContainers')
-      Store.dispatch('updateReqHandler')
+      Actions.saveContainers(State)
+      Actions.updateReqHandler(State)
       await this.$nextTick()
       
       if (this.$refs.scrollBox) this.$refs.scrollBox.recalcScroll()
@@ -475,11 +476,11 @@ export default {
 
     onExcludeHostsInput(value) {
       this.conf.excludeHosts = value
-      Store.dispatch('updateReqHandlerDebounced')
+      Actions.updateReqHandlerDebounced(State)
     },
 
     onExcludeHostsChange() {
-      Store.dispatch('saveContainers')
+      Actions.saveContainers(State)
     },
 
     async switchProxy(type) {
@@ -509,8 +510,8 @@ export default {
       if (type === 'direct') this.conf.proxified = false
       else this.conf.proxified = this.proxyHostValid && this.proxyPortValid
 
-      Store.dispatch('saveContainers')
-      Store.dispatch('updateReqHandler')
+      Actions.saveContainers(State)
+      Actions.updateReqHandler(State)
 
       await this.$nextTick()
       
@@ -522,8 +523,8 @@ export default {
       this.conf.proxy.host = value
       this.conf.proxified = this.proxyHostValid && this.proxyPortValid
 
-      Store.dispatch('saveContainersDebounced')
-      if (this.proxyHostValid) Store.dispatch('updateReqHandlerDebounced')
+      Actions.saveContainersDebounced(State)
+      if (this.proxyHostValid) Actions.updateReqHandlerDebounced(State)
     },
 
     onProxyPortInput(value) {
@@ -531,16 +532,16 @@ export default {
       this.conf.proxy.port = value
       this.conf.proxified = this.proxyHostValid && this.proxyPortValid
 
-      Store.dispatch('saveContainersDebounced')
-      if (this.proxyPortValid) Store.dispatch('updateReqHandlerDebounced')
+      Actions.saveContainersDebounced(State)
+      if (this.proxyPortValid) Actions.updateReqHandlerDebounced(State)
     },
 
     onProxyUsernameInput(value) {
       if (!this.id || !this.conf.proxy) return
       this.conf.proxy.username = value
 
-      Store.dispatch('saveContainersDebounced')
-      Store.dispatch('updateReqHandlerDebounced')
+      Actions.saveContainersDebounced(State)
+      Actions.updateReqHandlerDebounced(State)
       
     },
 
@@ -548,16 +549,16 @@ export default {
       if (!this.id || !this.conf.proxy) return
       this.conf.proxy.password = value
 
-      Store.dispatch('saveContainersDebounced')
-      Store.dispatch('updateReqHandlerDebounced')
+      Actions.saveContainersDebounced(State)
+      Actions.updateReqHandlerDebounced(State)
     },
 
     toggleProxyDns() {
       if (!this.id || !this.conf.proxy) return
       this.conf.proxy.proxyDNS = !this.conf.proxy.proxyDNS
 
-      Store.dispatch('saveContainers')
-      Store.dispatch('updateReqHandler')
+      Actions.saveContainers(State)
+      Actions.updateReqHandler(State)
     },
 
     onFieldKeydown(e, nextFieldName, prevFieldName) {

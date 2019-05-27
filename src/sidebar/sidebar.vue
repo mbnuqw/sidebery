@@ -99,20 +99,22 @@
 <script>
 import Vue from 'vue'
 import { mapGetters, mapActions } from 'vuex'
-import NoiseBg from '../../directives/noise-bg.js'
-import Utils from '../../libs/utils.js'
+import InitNoiseBg from '../directives/noise-bg.js'
+import Utils from '../libs/utils.js'
 import EventBus from '../event-bus'
-import Store from '../store'
-import State from '../store.state.js'
-import CtxMenu from './context-menu'
-import WindowInput from './inputs/window'
-import BookmarksDashboard from './dashboards/bookmarks.vue'
-import DefaultTabsDashboard from './dashboards/default-tabs.vue'
-import TabsDashboard from './dashboards/containered-tabs'
-import BookmarksPanel from './panels/bookmarks'
-import TabsPanel from './panels/tabs'
-import PinnedDock from './panels/pinned-dock'
+import Store from './store'
+import State from './store/state.js'
+import Actions from './actions'
+import CtxMenu from './components/context-menu'
+import WindowInput from './components/inputs/window'
+import BookmarksDashboard from './components/dashboards/bookmarks.vue'
+import DefaultTabsDashboard from './components/dashboards/default-tabs.vue'
+import TabsDashboard from './components/dashboards/containered-tabs'
+import BookmarksPanel from './components/panels/bookmarks'
+import TabsPanel from './components/panels/tabs'
+import PinnedDock from './components/panels/pinned-dock'
 
+const NoiseBg = InitNoiseBg(State, Store)
 Vue.directive('noise', NoiseBg)
 
 const URL_HOST_PATH_RE = /^([a-z0-9-]{1,63}\.)+\w+(:\d+)?\/[A-Za-z0-9-._~:/?#[\]%@!$&'()*+,;=]*$/
@@ -305,11 +307,11 @@ export default {
      * Sidebar wheel event handler
      */
     onWheel(e) {
-      if (State.ctxMenu) Store.commit('closeCtxMenu')
+      if (State.ctxMenu) Actions.closeCtxMenu(State)
 
       if (State.hScrollThroughPanels) {
-        if (e.deltaX > 0) return Store.dispatch('switchPanel', 1)
-        if (e.deltaX < 0) return Store.dispatch('switchPanel', -1)
+        if (e.deltaX > 0) return Actions.switchPanel(State, Store.getters.panels, 1)
+        if (e.deltaX < 0) return Actions.switchPanel(State, Store.getters.panels, -1)
       }
     },
 
@@ -317,8 +319,8 @@ export default {
      * Navigation wheel event handler
      */
     onNavWheel(e) {
-      if (e.deltaY > 0) return Store.dispatch('switchPanel', 1)
-      if (e.deltaY < 0) return Store.dispatch('switchPanel', -1)
+      if (e.deltaY > 0) return Actions.switchPanel(State, Store.getters.panels, 1)
+      if (e.deltaY < 0) return Actions.switchPanel(State, Store.getters.panels, -1)
     },
 
     /**
@@ -328,7 +330,7 @@ export default {
       if (!this.selectionStart) return
 
       if (this.selectionStart && !this.selection && Math.abs(e.clientY - this.selectY) > 5) {
-        Store.commit('closeCtxMenu')
+        Actions.closeCtxMenu(State)
         this.selection = true
         State.selected.push(this.selectionStart.id) // ..if group, add children too
 
@@ -557,7 +559,7 @@ export default {
      */
     onMouseLeave() {
       this.leaveTimeout = setTimeout(() => {
-        Store.commit('closeCtxMenu')
+        Actions.closeCtxMenu(State)
       }, 250)
     },
 
@@ -580,8 +582,8 @@ export default {
       }
 
       if (e.button > 0) {
-        Store.commit('closeCtxMenu')
-        Store.commit('resetSelection')
+        Actions.closeCtxMenu(State)
+        Actions.resetSelection(State)
       }
     },
 
@@ -590,8 +592,8 @@ export default {
      */
     onMouseUp(e) {
       if (e.button === 0) {
-        Store.commit('closeCtxMenu')
-        Store.commit('resetSelection')
+        Actions.closeCtxMenu(State)
+        Actions.resetSelection(State)
       }
 
       if (e.button === 2) {
@@ -653,20 +655,11 @@ export default {
       if (this.dropParent === null) this.dropParent = -1
 
       if (this.panels[State.panelIndex].tabs) {
-        Store.dispatch('dropToTabs', {
-          event: e,
-          dropIndex: this.dropIndex,
-          dropParent: this.dropParent,
-          nodes: State.dragNodes,
-        })
+        Actions.dropToTabs(State, Store.getters.panels, e, this.dropIndex, this.dropParent, State.dragNodes)
       }
       if (this.panels[State.panelIndex].bookmarks) {
-        Store.dispatch('dropToBookmarks', {
-          event: e,
-          dropIndex: this.pointerMode.startsWith('inside') ? 0 : this.dropIndex,
-          dropParent: this.dropParent,
-          nodes: State.dragNodes,
-        })
+        if (this.pointerMode.startsWith('inside')) this.dropIndex = 0
+        Actions.dropToBookmarks(State, e, this.dropIndex, this.dropParent, State.dragNodes,)
       }
 
       if (State.dragNodes) {
@@ -683,7 +676,7 @@ export default {
     onNavClick(i) {
       if (i === this.panels.length) return this.openDashboard(-1)
       if (State.panelIndex !== i) {
-        Store.dispatch('switchToPanel', i)
+        Actions.switchToPanel(State, Store.getters.panels, i)
       } else if (this.panels[i].cookieStoreId) {
         if (State.dashboardOpened) {
           this.closeDashboard()
@@ -705,7 +698,7 @@ export default {
       this.navDragEnterIndex = i
       if (this.navDragEnterTimeout) clearTimeout(this.navDragEnterTimeout)
       this.navDragEnterTimeout = setTimeout(() => {
-        Store.dispatch('switchToPanel', i)
+        Actions.switchToPanel(State, Store.getters.panels, i)
       }, 300)
     },
 
@@ -750,7 +743,7 @@ export default {
 
         if (State.dashboardOpened) this.openDashboard(State.panelIndex)
 
-        Store.dispatch('saveContainers')
+        Actions.saveContainers(State)
       }
     },
 
@@ -782,8 +775,8 @@ export default {
       }
 
       if (State.windowFocused) {
-        Store.dispatch('updateReqHandler')
-        Store.dispatch('saveContainers')
+        Actions.updateReqHandler(State)
+        Actions.saveContainers(State)
       }
     },
 
@@ -803,7 +796,7 @@ export default {
       State.containers[ctrIndex].iconUrl = contextualIdentity.iconUrl
       State.containers[ctrIndex].name = contextualIdentity.name
 
-      if (State.windowFocused) Store.dispatch('saveContainers')
+      if (State.windowFocused) Actions.saveContainers(State)
     },
     // ---
 
@@ -820,8 +813,8 @@ export default {
         }
       }
 
-      Store.commit('closeCtxMenu')
-      Store.commit('resetSelection')
+      Actions.closeCtxMenu(State)
+      Actions.resetSelection(State)
 
       // If new tab is out of panel, move it to the end of this panel
       let panel = this.panels.find(p => p.cookieStoreId === tab.cookieStoreId)
@@ -865,11 +858,11 @@ export default {
           const parent = State.tabsMap[tab.parentId]
           Utils.UpdateTabsTree(State, start, tab.index + 1)
           if (State.autoFoldTabs && parent && !parent.folded) {
-            Store.dispatch('expTabsBranch', tab.parentId)
+            Actions.expTabsBranch(State, tab.parentId)
           }
         }
 
-        Store.dispatch('saveTabsTree')
+        Actions.saveTabsTree(State)
       }
 
       // Update succession
@@ -881,7 +874,7 @@ export default {
         }
       }
 
-      Store.dispatch('recalcPanelScroll')
+      Actions.recalcPanelScroll()
     },
 
     /**
@@ -910,7 +903,7 @@ export default {
           }
           localTab.host = change.url.split('/')[2] || ''
           if (change.url.startsWith('about:')) localTab.favIconUrl = ''
-          else Store.dispatch('saveTabsTree')
+          else Actions.saveTabsTree(State)
         }
       }
 
@@ -919,7 +912,7 @@ export default {
       if (change.favIconUrl) {
         if (change.favIconUrl.startsWith('data:')) {
           const hostname = tab.url.split('/')[2]
-          Store.dispatch('setFavicon', { hostname, icon: change.favIconUrl })
+          Actions.setFavicon(State, hostname, change.favIconUrl)
         } else if (change.favIconUrl.startsWith('chrome:')) {
           change.favIconUrl = ''
         }
@@ -931,7 +924,7 @@ export default {
         if (pi === -1) return
         let p = this.panels[pi]
         if (p && p.tabs) browser.tabs.move(tabId, { index: p.endIndex })
-        if (tab.active) Store.commit('setPanel', pi)
+        if (tab.active) Actions.setPanel(State, pi)
       }
 
       // Handle pinned tab
@@ -982,8 +975,8 @@ export default {
       else State.removingTabs.splice(State.removingTabs.indexOf(tabId), 1)
 
       if (!State.removingTabs.length) {
-        Store.commit('closeCtxMenu')
-        Store.commit('resetSelection')
+        Actions.closeCtxMenu(State)
+        Actions.resetSelection(State)
       }
 
       // Try to get removed tab and his panel
@@ -1033,7 +1026,7 @@ export default {
         }
 
         // Remove child tabs
-        if (State.rmFoldedTabs && toRemove.length) Store.dispatch('removeTabs', toRemove)
+        if (State.rmFoldedTabs && toRemove.length) Actions.removeTabs(State, Store.getters.panels, toRemove)
       }
 
       // Update last active tab if needed
@@ -1051,14 +1044,14 @@ export default {
       // Remove updated flag
       this.$delete(State.updatedTabs, tabId)
 
-      if (!State.removingTabs.length) Store.dispatch('recalcPanelScroll')
+      if (!State.removingTabs.length) Actions.recalcPanelScroll()
 
       // Update tree
       if (State.tabsTree && !State.removingTabs.length) {
         const startIndex = panel ? panel.startIndex : 0
         const endIndex = panel ? panel.endIndex + 1 : -1
         Utils.UpdateTabsTree(State, startIndex, endIndex)
-        Store.dispatch('saveTabsTree')
+        Actions.saveTabsTree(State)
       }
 
       // Update succession
@@ -1091,8 +1084,8 @@ export default {
       else State.movingTabs.splice(State.movingTabs.indexOf(id), 1)
 
       if (!State.movingTabs.length) {
-        Store.commit('closeCtxMenu')
-        Store.commit('resetSelection')
+        Actions.closeCtxMenu(State)
+        Actions.resetSelection(State)
       }
 
       // Move tab in tabs array
@@ -1104,7 +1097,7 @@ export default {
       if (!movedTab) return
 
       State.tabs.splice(info.toIndex, 0, movedTab)
-      Store.dispatch('recalcPanelScroll')
+      Actions.recalcPanelScroll()
 
       // Update tabs indexes.
       const minIndex = Math.min(info.fromIndex, info.toIndex)
@@ -1120,7 +1113,7 @@ export default {
         const startIndex = panelOk ? panel.startIndex : 0
         const endIndex = panelOk ? panel.endIndex + 1 : -1
         Utils.UpdateTabsTree(State, startIndex, endIndex)
-        Store.dispatch('saveTabsTree')
+        Actions.saveTabsTree(State)
       }
 
       // Update succession
@@ -1176,7 +1169,7 @@ export default {
       const currentPanel = this.panels[State.panelIndex]
 
       // Reset selection
-      Store.commit('resetSelection')
+      Actions.resetSelection(State)
 
       // Update previous active tab and store his id
       let prevActive = State.tabsMap[info.previousTabId]
@@ -1205,7 +1198,7 @@ export default {
 
       // Switch to activated tab's panel
       if (!currentPanel || !currentPanel.lockedPanel) {
-        Store.commit('setPanel', panelIndex)
+        Actions.setPanel(State, panelIndex)
       }
 
       // Reopen dashboard
@@ -1225,10 +1218,10 @@ export default {
             break
           }
         }
-        if (!prevActiveChild) Store.dispatch('expTabsBranch', tab.id)
+        if (!prevActiveChild) Actions.expTabsBranch(State, tab.id)
       }
       if (tab.invisible) {
-        Store.dispatch('expTabsBranch', tab.parentId)
+        Actions.expTabsBranch(State, tab.parentId)
       }
 
       tabPanel.lastActiveTab = info.tabId
@@ -1328,8 +1321,8 @@ export default {
         const tab = State.tabsMap[targetId]
         if (!tab) return
         if (tab.active) {
-          Store.commit('resetSelection')
-          if (tab.isParent) Store.dispatch('toggleBranch', tab.id)
+          Actions.resetSelection(State)
+          if (tab.isParent) Actions.toggleBranch(State, tab.id)
         }
         browser.tabs.update(targetId, { active: true })
       }
@@ -1339,8 +1332,8 @@ export default {
         if (!target) return
 
         if (target.type === 'folder') {
-          if (target.expanded) Store.dispatch('foldBookmark', target.id)
-          else Store.dispatch('expandBookmark', target.id)
+          if (target.expanded) Actions.foldBookmark(State, target.id)
+          else Actions.expandBookmark(State, target.id)
         }
 
         if (target.type === 'bookmark') {
@@ -1350,7 +1343,7 @@ export default {
           } else {
             browser.tabs.update({ url: target.url })
             if (State.openBookmarkNewTab && !this.panels[0].lockedPanel) {
-              Store.dispatch('goToActiveTabPanel')
+              Actions.goToActiveTabPanel(State, Store.getters.panels)
             }
           }
         }
@@ -1383,7 +1376,7 @@ export default {
         const selIndex = this.itemSlots.findIndex(s => s.id === selId)
         target = this.itemSlots[selIndex + dir]
         if (target) {
-          Store.commit('resetSelection')
+          Actions.resetSelection(State)
           EventBus.$emit(deselectEvent, selId)
           EventBus.$emit(selectEvent, target.id)
           State.selected = [target.id]
@@ -1506,7 +1499,7 @@ export default {
       const type = this.itemSlots[0].type
       const selectEvent = type === 'tab' ? 'selectTab' : 'selectBookmark'
 
-      Store.commit('resetSelection')
+      Actions.resetSelection(State)
       for (let s of this.itemSlots) {
         EventBus.$emit(selectEvent, s.id)
         State.selected.push(s.id)
@@ -1533,7 +1526,7 @@ export default {
       const offset = this.panelTopOffset - this.panelScrollEl.scrollTop
       const start = targetSlot.start + offset
       const end = targetSlot.end + offset
-      Store.dispatch('openCtxMenu', { el: { start, end }, node: target })
+      Actions.openCtxMenu(State, { start, end }, target)
     },
     // ---
 
@@ -1597,8 +1590,8 @@ export default {
       if (!this.pointerMode.startsWith('inside')) return
       if (this.pointerEnterTimeout) return
 
-      if (typeof this.dropParent === 'number') Store.dispatch('expTabsBranch', this.dropParent)
-      if (typeof this.dropParent === 'string') Store.dispatch('expandBookmark', this.dropParent)
+      if (typeof this.dropParent === 'number') Actions.expTabsBranch(State, this.dropParent)
+      if (typeof this.dropParent === 'string') Actions.expandBookmark(State, this.dropParent)
 
       // Start expand animation
       this.pointerExpanding = true
@@ -1623,8 +1616,8 @@ export default {
       if (!this.pointerMode.startsWith('inside')) return
       if (this.pointerEnterTimeout) return
 
-      if (typeof this.dropParent === 'number') Store.dispatch('foldTabsBranch', this.dropParent)
-      if (typeof this.dropParent === 'string') Store.dispatch('foldBookmark', this.dropParent)
+      if (typeof this.dropParent === 'number') Actions.foldTabsBranch(State, this.dropParent)
+      if (typeof this.dropParent === 'string') Actions.foldBookmark(State, this.dropParent)
 
       setTimeout(() => this.recalcPanelBounds(), 128)
       this.pointerEnterTimeout = setTimeout(() => {
@@ -1650,9 +1643,8 @@ export default {
      */
     async openDashboard(i) {
       if (i === this.panels.length) i = -1
-      Store.commit('closeSettings')
-      Store.commit('closeCtxMenu')
-      Store.commit('resetSelection')
+      Actions.closeCtxMenu(State)
+      Actions.resetSelection(State)
       State.dashboardOpened = true
       State.panelIndex = i
       if (i === -1) this.dashboard = { dashboard: 'TabsDashboard', name: '', new: true }

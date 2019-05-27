@@ -20,9 +20,10 @@
 
 
 <script>
+import EventBus from '../../../event-bus'
 import Store from '../../store'
-import State from '../../store.state'
-import EventBus from '../../event-bus'
+import State from '../../store/state'
+import Actions from '../../actions'
 import Tab from './tabs.tab'
 import PinnedTab from './pinned-tab'
 
@@ -58,15 +59,15 @@ export default {
 
         if (e.deltaY > 0) {
           if (State.wheelBlockTimeout) return
-          this.$store.dispatch('switchTab', { globaly, cycle: e.ctrlKey, step: 1, pinned: true })
+          Actions.switchTab(State, Store.getters.panels, Store.getters.pinnedTabs, globaly, e.ctrlKey, 1, true)
         }
         if (e.deltaY < 0) {
           if (State.wheelBlockTimeout) return
-          this.$store.dispatch('switchTab', { globaly, cycle: e.ctrlKey, step: -1, pinned: true })
+          Actions.switchTab(State, Store.getters.panels, Store.getters.pinnedTabs, globaly, e.ctrlKey, -1, true)
         }
       }
     },
-
+  
     onDragEnter(e) {
       if (e.srcElement === this.$el) this.dragPointed = true
     },
@@ -85,13 +86,7 @@ export default {
       if (this.dragPointed === true) dropIndex = this.pinnedTabs[this.pinnedTabs.length - 1].index + 1
       else if (this.pointedTabIndex > -1) dropIndex = this.pointedTabIndex
 
-      this.$store.dispatch('dropToTabs', {
-        event: e,
-        dropIndex: dropIndex,
-        dropParent: -1,
-        nodes: State.dragNodes,
-        pin: true,
-      })
+      Actions.dropToTabs(State, Store.getters.panels, e, dropIndex, -1, State.dragNodes, true)
 
       if (State.dragNodes) {
         if (State.dragNodes[0].type === 'tab') EventBus.$emit('deselectTab')

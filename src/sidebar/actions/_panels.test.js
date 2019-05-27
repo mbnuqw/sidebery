@@ -4,16 +4,6 @@ jest.mock('../event-bus', () => {
 import PanelsActions from './panels'
 
 describe('Panels actions', () => {
-  test('createContext', async () => {
-    browser.contextualIdentities.create = jest.fn()
-    await PanelsActions.createContext({}, { name: 'a', color: 'b', icon: 'c' })
-    expect(browser.contextualIdentities.create).toHaveBeenCalledWith({
-      name: 'a',
-      color: 'b',
-      icon: 'c',
-    })
-  })
-
   describe('switchPanel', () => {
     test('to next, without any special settings', async () => {
       const commit = jest.fn()

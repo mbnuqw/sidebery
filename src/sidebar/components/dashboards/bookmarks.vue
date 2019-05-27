@@ -18,8 +18,9 @@
 
 
 <script>
-import Store from '../../store'
-import ToggleField from '../fields/toggle'
+import ToggleField from '../../../components/fields/toggle'
+import State from '../../store/state'
+import Actions from '../../actions'
 
 export default {
   components: {
@@ -44,16 +45,16 @@ export default {
   methods: {
     togglePanelLock() {
       this.conf.lockedPanel = !this.conf.lockedPanel
-      Store.dispatch('saveContainers')
+      Actions.saveContainers(State)
     },
 
     collapseAll() {
-      Store.dispatch('collapseAllBookmarks')
+      Actions.collapseAllBookmarks(State)
       this.$emit('close')
     },
 
     reloadBookmarks() {
-      Store.dispatch('reloadBookmarks')
+      Actions.reloadBookmarks(State)
       this.$emit('close')
     },
   },

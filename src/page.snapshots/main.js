@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import NoiseBg from '../directives/noise-bg'
 import Dict from '../mixins/dict'
-import Store from '../sidebar/store'
-import State from '../sidebar/store.state'
+import Store from '../sidebar/store/store'
+import State from '../sidebar/store/state'
 import Snapshots from './snapshots.vue'
 
 if (!State.tabsMap) State.tabsMap = []

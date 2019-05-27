@@ -1,5 +1,3 @@
-import { DEFAULT_CTX, PRIVATE_CTX } from './store.state'
-
 export default {
   bgNoise: s => s.bgNoise,
   fontSize: s => s.fontSize,
@@ -7,7 +5,6 @@ export default {
   ctxMenu: s => s.ctxMenu,
   ctxMenuOpened: s => !!s.ctxMenu,
   pinnedTabs: s => s.tabs.filter(t => t.pinned),
-  defaultCtxId: s => (s.private ? PRIVATE_CTX : DEFAULT_CTX),
 
   /**
    * Get list of panels

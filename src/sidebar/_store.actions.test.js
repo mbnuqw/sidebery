@@ -1,4 +1,4 @@
-import Actions from './store.actions'
+import Actions from './actions'
 import EventBus from './event-bus'
 
 beforeEach(() => {
@@ -67,15 +67,6 @@ describe('Common actions', () => {
       Actions.recalcPanelScroll()
       await new Promise(res => setTimeout(res, 40))
       expect(counter).toBe(0)
-    })
-  })
-
-  describe('broadcast', () => {
-    test('just emit global message', async () => {
-      let ans = ''
-      EventBus.$on('some-msg', arg => ans = arg)
-      Actions.broadcast(null, { name: 'some-msg', arg: 'some-arg' })
-      expect(ans).toBe('some-arg')
     })
   })
 

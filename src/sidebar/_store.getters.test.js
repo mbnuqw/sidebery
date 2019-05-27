@@ -1,5 +1,5 @@
-import Getters from './store.getters'
-import { DEFAULT_CTX, PRIVATE_CTX, DEFAULT_PANELS } from './store.state'
+import Getters from './store/getters'
+import { DEFAULT_CTX, PRIVATE_CTX, DEFAULT_PANELS } from './store/state'
 
 describe('Vuex getters', () => {
   test('bgNoise', () => {

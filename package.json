@@ -4,7 +4,7 @@
   "description": "Manage your tabs and bookmarks in sidebar",
   "main": "index.js",
   "scripts": {
-    "dev.sidebar": "parcel watch ./src/sidebar/index.js -d ./addon/sidebar/ --public-url ./ --no-autoinstall",
+    "dev.sidebar": "parcel watch ./src/sidebar/sidebar.js -d ./addon/sidebar/ --public-url ./ --no-autoinstall",
     "dev.group": "parcel watch ./src/page.group/group.html -d ./addon/group/ --public-url ./ --no-autoinstall",
     "dev.perm.url": "parcel watch ./src/page.permissions/all-urls.html -d ./addon/permissions/ --public-url ./ --no-autoinstall",
     "dev.perm.hide": "parcel watch ./src/page.permissions/tab-hide.html -d ./addon/permissions/ --public-url ./ --no-autoinstall",

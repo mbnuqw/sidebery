@@ -1,4 +1,4 @@
-import { CUSTOM_STYLES } from '../sidebar/store.state'
+import { CUSTOM_STYLES } from '../sidebar/store/state'
 import { NoiseBg } from '../libs/noise-bg'
 import Utils from '../libs/utils'
 

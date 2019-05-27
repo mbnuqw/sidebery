@@ -54,10 +54,11 @@
 
 
 <script>
+import EventBus from '../../event-bus'
 import Store from '../store'
-import State from '../store.state'
-import Getters from '../store.getters'
-import EventBus from '../event-bus'
+import State from '../store/state'
+import Getters from '../store/getters'
+import Actions from '../actions'
 
 export default {
   data() {
@@ -165,18 +166,18 @@ export default {
     onML() {
       if (State.autoHideCtxMenu === 'none') return
       this.leaveT = setTimeout(() => {
-        Store.commit('closeCtxMenu')
+        Actions.closeCtxMenu(State)
       }, State.autoHideCtxMenu)
     },
 
     onClick(opt) {
       if (typeof opt.action === 'string') {
-        Store.dispatch(opt.action, opt.args)
+        Actions[opt.action](...opt.args)
       }
       if (typeof opt.action === 'function') {
         opt.action(...opt.args)
       }
-      Store.commit('closeCtxMenu')
+      Actions.closeCtxMenu(State)
     },
 
     onSelectOption(dir) {

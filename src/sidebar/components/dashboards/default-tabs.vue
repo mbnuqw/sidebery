@@ -27,9 +27,10 @@
 
 <script>
 import {mapGetters} from 'vuex'
+import ToggleField from '../../../components/fields/toggle'
 import Store from '../../store'
-import State from '../../store.state'
-import ToggleField from '../fields/toggle'
+import State from '../../store/state'
+import Actions from '../../actions'
 
 export default {
   components: {
@@ -57,7 +58,7 @@ export default {
   methods: {
     togglePanelLock() {
       this.conf.lockedPanel = !this.conf.lockedPanel
-      Store.dispatch('saveContainers')
+      Actions.saveContainers(State)
     },
 
     async togglePanelNoEmpty() {
@@ -74,7 +75,7 @@ export default {
           })
         }
       }
-      Store.dispatch('saveContainers')
+      Actions.saveContainers(State)
     },
 
     dedupTabs() {

@@ -1,4 +1,4 @@
-import State from './store.state'
+import State from './store/state'
 
 export default function reqHandler(info) {
   if (!State.tabsMap) return

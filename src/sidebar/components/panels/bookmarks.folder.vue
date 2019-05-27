@@ -22,11 +22,11 @@
 
 
 <script>
-import Store from '../../store'
-import State from '../../store.state'
-import EventBus from '../../event-bus'
+import EventBus from '../../../event-bus'
+import State from '../../store/state'
 import Bookmark from './bookmarks.bookmark'
 import Separator from './bookmarks.separator'
+import Actions from '../../actions'
 
 const istack = []
 const tstack = []
@@ -128,7 +128,7 @@ export default {
      */
     onMouseUp(e) {
       if (e.button === 2) {
-        Store.commit('closeCtxMenu')
+        Actions.closeCtxMenu(State)
         // Select this bookmark
         if (!State.selected.length) {
           State.selected = [this.node.id]
@@ -147,8 +147,8 @@ export default {
         return
       }
       if (this.node.type === 'folder') {
-        if (!this.node.expanded) Store.dispatch('expandBookmark', this.node.id)
-        else Store.dispatch('foldBookmark', this.node.id)
+        if (!this.node.expanded) Actions.expandBookmark(State, this.node.id)
+        else Actions.foldBookmark(State, this.node.id)
       }
       if (this.node.type === 'bookmark') {
         this.openUrl(State.openBookmarkNewTab, true)
@@ -175,7 +175,7 @@ export default {
      */
     onBookmarkMenu(id) {
       if (id !== this.node.id) return
-      Store.dispatch('openCtxMenu', { el: this.$el.childNodes[0], node: this.node })
+      Actions.openCtxMenu(State, this.$el.childNodes[0], this.node)
     },
 
     /**
@@ -222,7 +222,7 @@ export default {
         }
       })
       EventBus.$emit('dragStart', dragData)
-      Store.dispatch('broadcast', {
+      browser.runtime.sendMessage({
         name: 'outerDragStart',
         arg: dragData,
       })

@@ -1,10 +1,11 @@
 import Vue from 'vue'
 import { mapGetters } from 'vuex'
-import EventBus from './event-bus'
-import Sidebar from './components/index.vue'
+import EventBus from '../event-bus'
+import Sidebar from './sidebar.vue'
 import Dict from '../mixins/dict'
 import Store from './store'
-import State from './store.state'
+import State from './store/state'
+import Actions from './actions'
 
 if (!State.tabsMap) State.tabsMap = []
 Vue.mixin(Dict)
@@ -32,7 +33,7 @@ export default new Vue({
 
   watch: {
     fontSize() {
-      Store.dispatch('updateFontSize')
+      Actions.updateFontSize(State)
     },
   },
 
@@ -64,36 +65,36 @@ export default new Vue({
 
     State.instanceType = 'sidebar'
 
-    await Store.dispatch('loadSettings')
-    Store.dispatch('updateTheme')
-    if (State.customTheme) Store.dispatch('loadCustomTheme')
+    await Actions.loadSettings(State)
+    Actions.initTheme(State)
+    if (State.customTheme) Actions.loadCustomCSS(State)
 
-    await Store.dispatch('loadState')
-    await Store.dispatch('loadContainers')
+    await Actions.loadPanelIndex(State)
+    await Actions.loadContainers(State)
 
     if (State.bookmarksPanel && State.panelIndex === 0) {
-      await Store.dispatch('loadBookmarks')
+      await Actions.loadBookmarks(State)
     }
 
-    await Store.dispatch('loadTabs')
-    await Store.dispatch('loadCtxMenu')
-    await Store.dispatch('loadStyles')
-    Store.dispatch('scrollToActiveTab')
-    Store.dispatch('loadKeybindings')
-    Store.dispatch('loadFavicons')
-    Store.dispatch('loadPermissions')
+    await Actions.loadTabs(State, Store.getters.panels)
+    await Actions.loadCtxMenu(State)
+    await Actions.loadStyles()
+    Actions.scrollToActiveTab(State, Store.getters.panels)
+    Actions.loadKeybindings(State)
+    Actions.loadFavicons(State)
+    Actions.loadPermissions(State)
 
     // Try to clear unneeded favicons
-    Store.dispatch('tryClearFaviCache', 86400)
+    Actions.tryClearFaviCache(State, 86400)
 
     // Hide / show tabs
-    Store.dispatch('updateTabsVisability')
+    Actions.updateTabsVisability(State, Store.getters.panels)
 
-    EventBus.$on('CreateSnapshot', () => Store.dispatch('makeSnapshot'))
+    EventBus.$on('CreateSnapshot', () => Actions.makeSnapshot(State, Store.getters.panels, Store.getters.pinnedTabs))
   },
 
   mounted() {
-    Store.dispatch('updateFontSize')
+    Actions.updateFontSize(State)
   },
 
   beforeDestroy() {
@@ -109,8 +110,8 @@ export default new Vue({
     onFocusWindow(id) {
       State.windowFocused = id === State.windowId
       if (State.windowFocused) {
-        if (State.tabsTree) Store.dispatch('saveTabsTree', 0)
-        Store.dispatch('savePanelIndex')
+        if (State.tabsTree) Actions.saveTabsTree(State, 0)
+        Actions.savePanelIndex(State)
       }
     },
 
@@ -121,13 +122,13 @@ export default new Vue({
       if (type !== 'local') return
 
       if (changes.settings) {
-        Store.dispatch('updateSettings', changes.settings.newValue)
+        Actions.updateSettings(State, changes.settings.newValue)
       }
       if (changes.styles) {
-        Store.dispatch('applyStyles', changes.styles.newValue)
+        Actions.applyStyles(changes.styles.newValue)
       }
       if (changes.containers && !State.windowFocused) {
-        Store.dispatch('updateContainers', changes.containers.newValue)
+        Actions.updateContainers(State, changes.containers.newValue)
       }
       if (changes.tabsMenu) {
         State.tabsMenu = changes.tabsMenu.newValue
@@ -143,7 +144,7 @@ export default new Vue({
     onCmd(name) {
       if (!State.windowFocused) return
       let cmdName = 'kb_' + name
-      Store.dispatch(cmdName)
+      if (Actions[cmdName]) Actions[cmdName](State)
     },
   },
 })

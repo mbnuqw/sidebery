@@ -2,8 +2,8 @@ import Vue from 'vue'
 import NoiseBg from '../directives/noise-bg'
 import Debounce from '../directives/debounce'
 import Dict from '../mixins/dict'
-import Store from '../sidebar/store'
-import State from '../sidebar/store.state'
+import Store from '../sidebar/store/store'
+import State from '../sidebar/store/state'
 import StylesEditor from './styles.vue'
 
 if (!State.tabsMap) State.tabsMap = []

@@ -529,11 +529,12 @@
 
 
 <script>
-import Store from '../sidebar/store'
-import State from '../sidebar/store.state'
-import ToggleField from '../sidebar/components/fields/toggle'
-import SelectField from '../sidebar/components/fields/select'
-import InfoField from '../sidebar/components/fields/info'
+import Store from './store'
+import State from './state'
+import Actions from './actions'
+import ToggleField from '../components/fields/toggle'
+import SelectField from '../components/fields/select'
+import InfoField from '../components/fields/info'
 
 const VALID_SHORTCUT = /^((Ctrl|Alt|Command|MacCtrl)\+)((Shift|Alt)\+)?([A-Z0-9]|Comma|Period|Home|End|PageUp|PageDown|Space|Insert|Delete|Up|Down|Left|Right|F\d\d?)$|^((Ctrl|Alt|Command|MacCtrl)\+)?((Shift|Alt)\+)?(F\d\d?)$/
 const SPEC_KEYS = /^(Comma|Period|Home|End|PageUp|PageDown|Space|Insert|Delete|F\d\d?)$/
@@ -584,7 +585,7 @@ export default {
      */
     setOpt(key, val) {
       Store.commit('setSetting', { key, val })
-      Store.dispatch('saveSettings')
+      Actions.saveSettings(State)
     },
 
     /**
@@ -706,7 +707,7 @@ export default {
       if (this.checkShortcut(shortcut)) {
         this.lastShortcut = null
         State.keybindings.splice(i, 1, { ...k, shortcut, focus: false })
-        Store.dispatch('updateKeybinding', { name: k.name, shortcut })
+        Actions.updateKeybinding(k.name, shortcut)
         this.$refs.keybindingInputs[i].blur()
       }
     },
@@ -730,7 +731,7 @@ export default {
      * Reset all keybindings
      */
     resetKeybindings() {
-      Store.dispatch('resetKeybindings')
+      Actions.resetKeybindings(State)
     },
 
     /**
@@ -740,10 +741,13 @@ export default {
       if (State.permAllUrls) {
         await browser.permissions.remove({ origins: ['<all_urls>'] })
         browser.runtime.sendMessage({ action: 'loadPermissions' })
-        Store.dispatch('loadPermissions')
+        Actions.loadPermissions(State)
       } else {
-        const url = browser.runtime.getURL('permissions/all-urls.html')
-        browser.tabs.create({ url, windowId: State.windowId })
+        const request = { origins: ['<all_urls>'], permissions: [] }
+        browser.permissions.request(request).then(allowed => {
+          browser.runtime.sendMessage({ action: 'loadPermissions' })
+          State.permAllUrls = allowed
+        })
       }
     },
 
@@ -752,14 +756,16 @@ export default {
      */
     async togglePermTabHide() {
       if (State.permTabHide) {
-        await Store.dispatch('showAllTabs')
         await browser.runtime.sendMessage({ action: 'showAllTabs' })
         await browser.permissions.remove({ permissions: ['tabHide'] })
         browser.runtime.sendMessage({ action: 'loadPermissions' })
-        Store.dispatch('loadPermissions')
+        Actions.loadPermissions(State)
       } else {
-        const url = browser.runtime.getURL('permissions/tab-hide.html')
-        browser.tabs.create({ url, windowId: State.windowId })
+        const request = { origins: [], permissions: ['tabHide'] }
+        browser.permissions.request(request).then(allowed => {
+          browser.runtime.sendMessage({ action: 'loadPermissions' })
+          State.permTabHide = allowed
+        })
       }
     },
 
@@ -769,7 +775,7 @@ export default {
     toggleSnapshots(name) {
       const v = !State.snapshotsTargets[name]
       State.snapshotsTargets = { ...State.snapshotsTargets, [name]: v }
-      Store.dispatch('saveSettings')
+      Actions.saveSettings(State)
     },
 
     /**
@@ -821,9 +827,8 @@ export default {
      * Reset settings
      */
     resetSettings() {
-      Store.commit('resetSettings')
-      Store.dispatch('saveSettings')
-      Store.dispatch('saveContainers')
+      Actions.resetSettings(State)
+      Actions.saveSettings(State)
     },
   },
 }

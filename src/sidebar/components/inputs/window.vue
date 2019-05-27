@@ -9,7 +9,7 @@
 
 
 <script>
-import State from '../../store.state'
+import State from '../../store/state'
 import ScrollBox from '../scroll-box'
 
 export default {

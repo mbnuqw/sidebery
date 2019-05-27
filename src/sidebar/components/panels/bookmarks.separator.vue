@@ -6,9 +6,9 @@
 
 
 <script>
-import Store from '../../store'
-import State from '../../store.state'
-import EventBus from '../../event-bus'
+import EventBus from '../../../event-bus'
+import State from '../../store/state'
+import Actions from '../../actions'
 
 export default {
   name: 'BNode',
@@ -59,7 +59,7 @@ export default {
      */
     onMouseUp(e) {
       if (e.button === 2) {
-        Store.commit('closeCtxMenu')
+        Actions.closeCtxMenu(State)
         // Select this bookmark
         if (!State.selected.length) {
           State.selected = [this.node.id]
@@ -99,7 +99,7 @@ export default {
      */
     onBookmarkMenu(id) {
       if (id !== this.node.id) return
-      Store.dispatch('openCtxMenu', { el: this.$el.childNodes[0], node: this.node })
+      Actions.openCtxMenu(State, this.$el.childNodes[0], this.node)
     },
 
     /**
@@ -146,7 +146,7 @@ export default {
         }
       })
       EventBus.$emit('dragStart', dragData)
-      Store.dispatch('broadcast', {
+      browser.runtime.sendMessage({
         name: 'outerDragStart',
         arg: dragData,
       })

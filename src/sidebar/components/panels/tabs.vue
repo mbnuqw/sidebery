@@ -23,10 +23,11 @@
 
 
 <script>
-import Store from '../../store'
-import State from '../../store.state'
 import Utils from '../../../libs/utils'
-import EventBus from '../../event-bus'
+import EventBus from '../../../event-bus'
+import Store from '../../store'
+import State from '../../store/state'
+import Actions from '../../actions'
 import Tab from './tabs.tab.vue'
 import ScrollBox from '../scroll-box.vue'
 import PinnedDock from './pinned-dock'
@@ -105,12 +106,12 @@ export default {
     onMouseDown(e) {
       if (e.button === 0) {
         const la = State.tabsPanelLeftClickAction
-        if (la === 'prev') return Store.dispatch('switchPanel', -1)
+        if (la === 'prev') return Actions.switchPanel(State, Store.getters, -1)
         if (la === 'expand') {
           if (!State.tabsTree) return
           const activeTab = State.tabs.find(t => t.active)
           if (!activeTab || !activeTab.isParent) return
-          return Store.dispatch('toggleBranch', activeTab.id)
+          return Actions.toggleBranch(State, activeTab.id)
         }
       }
 
@@ -121,13 +122,13 @@ export default {
 
       if (e.button === 2) {
         const ra = State.tabsPanelRightClickAction
-        if (ra === 'next') return Store.dispatch('switchPanel', 1)
+        if (ra === 'next') return Actions.switchPanel(State, Store.getters.panels, 1)
         if (ra === 'dash') return EventBus.$emit('openDashboard', State.panelIndex)
         if (ra === 'expand') {
           if (!State.tabsTree) return
           const activeTab = State.tabs.find(t => t.active)
           if (!activeTab || !activeTab.isParent) return
-          return Store.dispatch('toggleBranch', activeTab.id)
+          return Actions.toggleBranch(State, activeTab.id)
         }
       }
     },
@@ -144,11 +145,11 @@ export default {
 
         if (e.deltaY > 0) {
           if (State.wheelBlockTimeout) return
-          Store.dispatch('switchTab', { globaly, cycle: e.ctrlKey, step: 1 })
+          Actions.switchTab(State, Store.getters.panels, Store.getters.pinnedTabs, globaly, e.ctrlKey, 1)
         }
         if (e.deltaY < 0) {
           if (State.wheelBlockTimeout) return
-          Store.dispatch('switchTab', { globaly, cycle: e.ctrlKey, step: -1 })
+          Actions.switchTab(State, Store.getters.panels, Store.getters.pinnedTabs, globaly, e.ctrlKey, -1)
         }
       }
     },

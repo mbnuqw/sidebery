@@ -14,9 +14,10 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import EventBus from '../../../event-bus'
 import Store from '../../store'
-import State from '../../store.state'
-import EventBus from '../../event-bus'
+import State from '../../store/state'
+import Actions from '../../actions'
 
 export default {
   props: {
@@ -81,7 +82,7 @@ export default {
      */
     onMouseUp(e) {
       if (e.button === 2) {
-        Store.commit('closeCtxMenu')
+        Actions.closeCtxMenu(State)
         // Select this bookmark
         if (!State.selected.length) {
           State.selected = [this.node.id]
@@ -99,20 +100,15 @@ export default {
         EventBus.$emit('deselectBookmark')
         return
       }
-      if (this.node.type === 'folder') {
-        if (!this.node.expanded) Store.dispatch('expandBookmark', this.node.id)
-        else Store.dispatch('foldBookmark', this.node.id)
-      }
-      if (this.node.type === 'bookmark') {
-        if (State.actOpenedTab && this.node.opened) {
-          const tab = State.tabs.find(t => t.url === this.node.url)
-          if (tab) {
-            browser.tabs.update(tab.id, { active: true })
-            return
-          }
+      
+      if (State.actOpenedTab && this.node.opened) {
+        const tab = State.tabs.find(t => t.url === this.node.url)
+        if (tab) {
+          browser.tabs.update(tab.id, { active: true })
+          return
         }
-        this.openUrl(State.openBookmarkNewTab, true)
       }
+      this.openUrl(State.openBookmarkNewTab, true)
     },
 
     /**
@@ -135,7 +131,7 @@ export default {
      */
     onBookmarkMenu(id) {
       if (id !== this.node.id) return
-      Store.dispatch('openCtxMenu', { el: this.$el.childNodes[0], node: this.node })
+      Actions.openCtxMenu(State, this.$el.childNodes[0], this.node)
     },
 
     /**
@@ -182,7 +178,7 @@ export default {
         }
       })
       EventBus.$emit('dragStart', dragData)
-      Store.dispatch('broadcast', {
+      browser.runtime.sendMessage({
         name: 'outerDragStart',
         arg: dragData,
       })
@@ -201,7 +197,7 @@ export default {
         })
       } else {
         browser.tabs.update({ url: this.node.url })
-        if (withFocus && !this.panels[0].lockedPanel) Store.dispatch('goToActiveTabPanel')
+        if (withFocus && !this.panels[0].lockedPanel) Actions.goToActiveTabPanel(State, Store.getters.panels)
       }
 
       if (this.node.parentId === 'unfiled_____' && State.autoRemoveOther) {

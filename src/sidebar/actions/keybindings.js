@@ -1,116 +1,116 @@
-import Logs from '../../libs/logs'
-import EventBus from '../event-bus'
+import EventBus from '../../event-bus'
+import CommonActions from '../../actions/keybindings'
+import Getters from '../store/getters'
+import Actions from '.'
+
+function kb_next_panel(state) {
+  Actions.switchPanel(state, 1)
+}
+
+function kb_prev_panel(state) {
+  Actions.switchPanel(state, -1)
+}
+
+function kb_new_tab_on_panel(state) {
+  let panel = Getters.panels[state.lastPanelIndex]
+  if (panel.cookieStoreId) {
+    Actions.createTab(panel.cookieStoreId)
+  }
+}
+
+function kb_new_tab_in_group(state) {
+  const panel = Getters.panels[state.panelIndex]
+  if (!panel || !panel.tabs) return
+
+  // Find active/selected tab
+  let activeTab
+  if (state.selected.length > 0) {
+    activeTab = state.tabsMap[state.selected[state.selected.length - 1]]
+  } else {
+    activeTab = panel.tabs.find(t => t.active)
+  }
+
+  // Get index and parentId for new tab
+  let index, parentId
+  if (!activeTab) {
+    index = panel.tabs.length ? panel.endIndex + 1 : panel.startIndex
+  } else {
+    index = activeTab.index + 1
+    if (activeTab.isParent && !activeTab.folded) {
+      parentId = activeTab.id
+    } else {
+      parentId = activeTab.parentId
+      while (state.tabs[index] && state.tabs[index].lvl > activeTab.lvl) {
+        index++
+      }
+    }
+    if (parentId < 0) parentId = undefined
+  }
+
+  browser.tabs.create({
+    index,
+    cookieStoreId: panel.cookieStoreId,
+    windowId: state.windowId,
+    openerTabId: parentId,
+  })
+}
+
+function kb_rm_tab_on_panel(state) {
+  if (state.selected.length > 0) {
+    Actions.removeTabs(state, state.selected)
+  } else {
+    let activeTab = state.tabs.find(t => t && t.active)
+    Actions.removeTabs(state, [activeTab.id])
+  }
+}
+
+function kb_activate() {
+  EventBus.$emit('keyActivate')
+}
+
+function kb_reset_selection(state) {
+  Actions.resetSelection(state)
+  Actions.closeCtxMenu(state)
+}
+
+function kb_select_all() {
+  EventBus.$emit('selectAll')
+}
+
+function kb_up() {
+  EventBus.$emit('keyUp')
+}
+
+function kb_down() {
+  EventBus.$emit('keyDown')
+}
+
+function kb_up_shift() {
+  EventBus.$emit('keyUpShift')
+}
+
+function kb_down_shift() {
+  EventBus.$emit('keyDownShift')
+}
+
+function kb_menu() {
+  EventBus.$emit('keyMenu')
+}
 
 export default {
-  /**
-   * Load keybindings
-   */
-  async loadKeybindings({ state }) {
-    let commands = await browser.commands.getAll()
-    state.keybindings = commands
-    Logs.push('[INFO] Keybindings loaded')
-  },
+  ...CommonActions,
 
-  /**
-   * Update keybindings
-   */
-  async updateKeybinding(_, { name, shortcut }) {
-    await browser.commands.update({ name, shortcut })
-  },
-
-  /**
-   * Reset addon's keybindings
-   */
-  async resetKeybindings({ state, dispatch }) {
-    state.keybindings.map(async k => {
-      await browser.commands.reset(k.name)
-    })
-
-    setTimeout(() => {
-      dispatch('loadKeybindings')
-    }, 120)
-  },
-
-  // --- Commands ---
-  kb_next_panel({ dispatch }) {
-    dispatch('switchPanel', 1)
-  },
-  kb_prev_panel({ dispatch }) {
-    dispatch('switchPanel', -1)
-  },
-  kb_new_tab_on_panel({ state, dispatch, getters }) {
-    let panel = getters.panels[state.lastPanelIndex]
-    if (panel.cookieStoreId) {
-      dispatch('createTab', panel.cookieStoreId)
-    }
-  },
-  kb_new_tab_in_group({ state, getters }) {
-    const panel = getters.panels[state.panelIndex]
-    if (!panel || !panel.tabs) return
-
-    // Find active/selected tab
-    let activeTab
-    if (state.selected.length > 0) {
-      activeTab = state.tabsMap[state.selected[state.selected.length - 1]]
-    } else {
-      activeTab = panel.tabs.find(t => t.active)
-    }
-
-    // Get index and parentId for new tab
-    let index, parentId
-    if (!activeTab) {
-      index = panel.tabs.length ? panel.endIndex + 1 : panel.startIndex
-    } else {
-      index = activeTab.index + 1
-      if (activeTab.isParent && !activeTab.folded) {
-        parentId = activeTab.id
-      } else {
-        parentId = activeTab.parentId
-        while (state.tabs[index] && state.tabs[index].lvl > activeTab.lvl) {
-          index++
-        }
-      }
-      if (parentId < 0) parentId = undefined
-    }
-
-    browser.tabs.create({
-      index,
-      cookieStoreId: panel.cookieStoreId,
-      windowId: state.windowId,
-      openerTabId: parentId,
-    })
-  },
-  kb_rm_tab_on_panel({ state, dispatch }) {
-    if (state.selected.length > 0) {
-      dispatch('removeTabs', state.selected)
-    } else {
-      let activeTab = state.tabs.find(t => t && t.active)
-      dispatch('removeTabs', [activeTab.id])
-    }
-  },
-  kb_activate() {
-    EventBus.$emit('keyActivate')
-  },
-  kb_reset_selection({ commit }) {
-    commit('resetSelection')
-    commit('closeCtxMenu')
-  },
-  kb_select_all() {
-    EventBus.$emit('selectAll')
-  },
-  kb_up() {
-    EventBus.$emit('keyUp')
-  },
-  kb_down() {
-    EventBus.$emit('keyDown')
-  },
-  kb_up_shift() {
-    EventBus.$emit('keyUpShift')
-  },
-  kb_down_shift() {
-    EventBus.$emit('keyDownShift')
-  },
-  kb_menu() {
-    EventBus.$emit('keyMenu')
-  },
+  kb_next_panel,
+  kb_prev_panel,
+  kb_new_tab_on_panel,
+  kb_new_tab_in_group,
+  kb_rm_tab_on_panel,
+  kb_activate,
+  kb_reset_selection,
+  kb_select_all,
+  kb_up,
+  kb_down,
+  kb_up_shift,
+  kb_down_shift,
+  kb_menu,
 }

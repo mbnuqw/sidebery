@@ -1,4 +1,4 @@
-import State from './store.state'
+import State from './store/state'
 import ProxyReqHandler from './proxy'
 
 jest.mock('./store.state')

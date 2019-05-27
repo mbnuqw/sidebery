@@ -33,7 +33,7 @@
     .err-badge
       svg: use(xlink:href="#icon_err")
     .progress-spinner
-    .audio-badge(@mousedown.stop="" @click="$store.dispatch('remuteTabs', [tab.id])")
+    .audio-badge
       svg.-loud: use(xlink:href="#icon_loud_badge")
       svg.-mute: use(xlink:href="#icon_mute_badge")
   .ctx(v-if="ctx && ctxColor", :style="{background: ctxColor}")
@@ -42,12 +42,11 @@
     svg: use(xlink:href="#icon_remove")
 </template>
 
-
 <script>
 import { mapGetters } from 'vuex'
-import Store from '../../store'
-import State from '../../store.state'
-import EventBus from '../../event-bus'
+import EventBus from '../../../event-bus'
+import State from '../../store/state'
+import Actions from '../../actions'
 
 const PNG_RE = /(\.png)([?#].*)?$/i
 const JPG_RE = /(\.jpe?g)([?#].*)?$/i
@@ -136,11 +135,11 @@ export default {
      */
     onDoubleClick() {
       let dc = State.tabDoubleClick
-      if (dc === 'reload') Store.dispatch('reloadTabs', [this.tab.id])
-      if (dc === 'duplicate') Store.dispatch('duplicateTabs', [this.tab.id])
-      if (dc === 'pin') Store.dispatch('repinTabs', [this.tab.id])
-      if (dc === 'mute') Store.dispatch('remuteTabs', [this.tab.id])
-      if (dc === 'clear_cookies') Store.dispatch('clearTabsCookies', [this.tab.id])
+      if (dc === 'reload') Actions.reloadTabs(State, [this.tab.id])
+      if (dc === 'duplicate') Actions.duplicateTabs(State, [this.tab.id])
+      if (dc === 'pin') Actions.repinTabs(State, [this.tab.id])
+      if (dc === 'mute') Actions.remuteTabs(State, [this.tab.id])
+      if (dc === 'clear_cookies') Actions.clearTabsCookies(State, [this.tab.id])
     },
 
     /**
@@ -160,11 +159,11 @@ export default {
         // Long-click action
         this.hodorL = setTimeout(() => {
           let llc = State.tabLongLeftClick
-          if (llc === 'reload') Store.dispatch('reloadTabs', [this.tab.id])
-          if (llc === 'duplicate') Store.dispatch('duplicateTabs', [this.tab.id])
-          if (llc === 'pin') Store.dispatch('repinTabs', [this.tab.id])
-          if (llc === 'mute') Store.dispatch('remuteTabs', [this.tab.id])
-          if (llc === 'clear_cookies') Store.dispatch('clearTabsCookies', [this.tab.id])
+          if (llc === 'reload') Actions.reloadTabs(State, [this.tab.id])
+          if (llc === 'duplicate') Actions.duplicateTabs(State, [this.tab.id])
+          if (llc === 'pin') Actions.repinTabs(State, [this.tab.id])
+          if (llc === 'mute') Actions.remuteTabs(State, [this.tab.id])
+          if (llc === 'clear_cookies') Actions.clearTabsCookies(State, [this.tab.id])
           this.hodorL = null
         }, 250)
       }
@@ -176,11 +175,11 @@ export default {
         this.hodorR = setTimeout(() => {
           this.$emit('stop-selection')
           let lrc = State.tabLongRightClick
-          if (lrc === 'reload') Store.dispatch('reloadTabs', [this.tab.id])
-          if (lrc === 'duplicate') Store.dispatch('duplicateTabs', [this.tab.id])
-          if (lrc === 'pin') Store.dispatch('repinTabs', [this.tab.id])
-          if (lrc === 'mute') Store.dispatch('remuteTabs', [this.tab.id])
-          if (lrc === 'clear_cookies') Store.dispatch('clearTabsCookies', [this.tab.id])
+          if (lrc === 'reload') Actions.reloadTabs(State, [this.tab.id])
+          if (lrc === 'duplicate') Actions.duplicateTabs(State, [this.tab.id])
+          if (lrc === 'pin') Actions.repinTabs(State, [this.tab.id])
+          if (lrc === 'mute') Actions.remuteTabs(State, [this.tab.id])
+          if (lrc === 'clear_cookies') Actions.clearTabsCookies(State, [this.tab.id])
           this.hodorR = null
         }, 250)
       }
@@ -197,7 +196,7 @@ export default {
         this.hodorR = clearTimeout(this.hodorR)
 
         // Select this tab
-        Store.commit('closeCtxMenu')
+        Actions.closeCtxMenu(State)
         State.selected = [this.tab.id]
         this.selected = true
         this.$emit('stop-selection')
@@ -227,7 +226,7 @@ export default {
      */
     onTabMenu(id) {
       if (id !== this.tab.id) return
-      Store.dispatch('openCtxMenu', { el: this.$el, node: this.tab })
+      Actions.openCtxMenu(State, this.$el, this.tab)
     },
 
     /**
@@ -274,7 +273,7 @@ export default {
         }
       })
       EventBus.$emit('dragStart', dragData)
-      Store.dispatch('broadcast', {
+      browser.runtime.sendMessage({
         name: 'outerDragStart',
         arg: dragData,
       })
@@ -323,7 +322,7 @@ export default {
         let base64 = canvas.toDataURL('image/png')
         let hn = this.tab.url.split('/')[2]
         if (!hn) return
-        Store.dispatch('setFavicon', { hostname: hn, icon: base64 })
+        Actions.setFavicon(State, hn, base64)
       }
     },
 

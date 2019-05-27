@@ -1,82 +1,55 @@
-import Vue from 'vue'
 import Utils from '../../libs/utils'
 import Logs from '../../libs/logs'
-import EventBus from '../event-bus'
+import EventBus from '../../event-bus'
+import CommonActions from '../../actions/styles'
+
+/**
+ * Load css vars and apply them
+ */
+async function loadStyles() {
+  let ans = await browser.storage.local.get('styles')
+  let loadedStyles = ans.styles
+  if (!loadedStyles) {
+    Logs.push('[WARN] Cannot load styles')
+    return
+  }
+
+  const rootEl = document.getElementById('root')
+  for (let key in loadedStyles) {
+    if (!loadedStyles.hasOwnProperty(key)) continue
+
+    if (loadedStyles[key]) {
+      rootEl.style.setProperty(Utils.CSSVar(key), loadedStyles[key])
+    }
+  }
+
+  EventBus.$emit('dynVarChange')
+  Logs.push('[INFO] Styles loaded')
+}
+
+/**
+ * Apply provided styles
+ */
+function applyStyles(styles) {
+  if (!styles) return
+
+  const rootEl = document.getElementById('root')
+  for (let key in styles) {
+    if (!styles.hasOwnProperty(key)) continue
+
+    if (styles[key]) {
+      rootEl.style.setProperty(Utils.CSSVar(key), styles[key])
+    } else {
+      rootEl.style.removeProperty(Utils.CSSVar(key))
+    }
+  }
+
+  setTimeout(() => EventBus.$emit('dynVarChange'), 256)
+}
 
 export default {
-  /**
-   * Load custom styles and apply them
-   */
-  async loadStyles({ state }) {
-    let ans = await browser.storage.local.get('styles')
-    let loadedStyles = ans.styles
-    if (!loadedStyles) {
-      Logs.push('[WARN] Cannot load styles')
-      return
-    }
+  ...CommonActions,
 
-    const rootEl = document.getElementById('root')
-    for (let key in state.customStyles) {
-      if (!state.customStyles.hasOwnProperty(key)) continue
-
-      if (loadedStyles[key] !== undefined) {
-        state.customStyles[key] = loadedStyles[key]
-      }
-      if (loadedStyles[key]) {
-        rootEl.style.setProperty(Utils.CSSVar(key), loadedStyles[key])
-      }
-    }
-
-    EventBus.$emit('dynVarChange')
-    Logs.push('[INFO] Styles loaded')
-  },
-
-  /**
-   * Save custom styles
-   */
-  async saveStyles({ state }) {
-    await browser.storage.local.set({
-      styles: JSON.parse(JSON.stringify(state.customStyles)),
-    })
-  },
-
-  /**
-   * Apply provided styles
-   */
-  applyStyles({ state }, styles) {
-    if (!styles) return
-
-    const rootEl = document.getElementById('root')
-    for (let key in state.customStyles) {
-      if (!state.customStyles.hasOwnProperty(key)) continue
-
-      if (styles[key]) {
-        rootEl.style.setProperty(Utils.CSSVar(key), styles[key])
-      } else {
-        rootEl.style.removeProperty(Utils.CSSVar(key))
-      }
-    }
-
-    setTimeout(() => EventBus.$emit('dynVarChange'), 256)
-  },
-
-  /**
-   * Set custom style
-   */
-  setStyle({ state }, { key, val }) {
-    const rootEl = document.getElementById('root')
-    Vue.set(state.customStyles, key, val)
-    rootEl.style.setProperty(Utils.CSSVar(key), val)
-    setTimeout(() => EventBus.$emit('dynVarChange'), 256)
-  },
-
-  /**
-   * Remove custom style
-   */
-  removeStyle({ state }, key) {
-    const rootEl = document.getElementById('root')
-    Vue.set(state.customStyles, key, null)
-    rootEl.style.removeProperty(Utils.CSSVar(key))
-    setTimeout(() => EventBus.$emit('dynVarChange'), 256)
-  },
+  loadStyles,
+  applyStyles,
 }

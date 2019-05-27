@@ -14,9 +14,9 @@
 
 <script>
 import Utils from '../../../libs/utils'
-import Store from '../../store'
-import State from '../../store.state'
-import EventBus from '../../event-bus'
+import EventBus from '../../../event-bus'
+import State from '../../store/state'
+import Actions from '../../actions'
 import ScrollBox from '../scroll-box.vue'
 import Bookmark from './bookmarks.bookmark.vue'
 import Folder from './bookmarks.folder.vue'
@@ -56,7 +56,7 @@ export default {
       // Activation
       if (c && !p) {
         if (State.bookmarks.length === 0) {
-          await Store.dispatch('loadBookmarks')
+          await Actions.loadBookmarks(State)
         }
 
         setTimeout(() => {
@@ -117,7 +117,7 @@ export default {
 
   methods: {
     onClick() {
-      Store.commit('closeCtxMenu')
+      Actions.closeCtxMenu(State)
     },
 
     onStartSelection(event) {
@@ -233,7 +233,7 @@ export default {
       }
 
       State.bookmarks = putWalk(rmWalk(State.bookmarks))
-      Store.dispatch('saveBookmarksTree')
+      Actions.saveBookmarksTree(State)
     },
 
     /**

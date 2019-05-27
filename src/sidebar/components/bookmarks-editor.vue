@@ -23,8 +23,8 @@
 
 
 <script>
-import State from '../store.state'
-import TextInput from './inputs/text.vue'
+import TextInput from '../../components/inputs/text.vue'
+import State from '../store/state'
 
 const URL_RE = /^(http:\/\/|https:\/\/)[a-z0-9]+([-.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/
 

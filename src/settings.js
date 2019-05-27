@@ -66,8 +66,8 @@ export const DEFAULT_SETTINGS = {
   bgNoise: true,
   animations: true,
   theme: 'dark',
-  look: 'default',
-  customTheme: false,
+  look: 'default', //.....? skin
+  customCSS: false,
 
   // Snapshots
   snapshotsTargets: { pinned: true },
