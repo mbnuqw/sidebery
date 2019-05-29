@@ -100,7 +100,7 @@ export default {
   lastPanelIndex: browser.extension.inIncognitoContext ? 1 : 2,
   panelIndex: browser.extension.inIncognitoContext ? 1 : 2,
 
-  ctxs: [],
+  containers: [],
   panels: [],
   tabs: [],
   updatedTabs: {},

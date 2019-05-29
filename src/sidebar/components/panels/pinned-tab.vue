@@ -84,7 +84,7 @@ export default {
     },
 
     ctxColor() {
-      const ctx = State.ctxs.find(c => c.cookieStoreId === this.tab.cookieStoreId)
+      const ctx = State.containers.find(c => c.cookieStoreId === this.tab.cookieStoreId)
       if (ctx && ctx.colorCode) return ctx.colorCode
       else return ''
     },

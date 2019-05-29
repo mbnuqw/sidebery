@@ -713,7 +713,7 @@ export default {
      * contextualIdentities.onCreated
      */
     onCreatedContainer({ contextualIdentity }) {
-      State.ctxs.push(contextualIdentity)
+      State.containers.push(contextualIdentity)
       State.panels.push({
         ...contextualIdentity,
         type: 'ctx',
@@ -751,7 +751,7 @@ export default {
       let id = contextualIdentity.cookieStoreId
 
       // Find container
-      let ctxIndex = State.ctxs.findIndex(c => c.cookieStoreId === id)
+      let ctxIndex = State.containers.findIndex(c => c.cookieStoreId === id)
       let ctrIndex = State.panels.findIndex(c => c.cookieStoreId === id)
       if (ctxIndex === -1 || ctrIndex === -1) return
       State.panels[ctrIndex].noEmpty = false
@@ -762,7 +762,7 @@ export default {
       await browser.tabs.remove([...State.removingTabs])
 
       // Remove container
-      State.ctxs.splice(ctxIndex, 1)
+      State.containers.splice(ctxIndex, 1)
       State.panels.splice(ctrIndex, 1)
 
       // Switch to prev panel
@@ -782,11 +782,11 @@ export default {
      */
     onUpdatedContainer({ contextualIdentity }) {
       let id = contextualIdentity.cookieStoreId
-      let ctxIndex = State.ctxs.findIndex(c => c.cookieStoreId === id)
+      let ctxIndex = State.containers.findIndex(c => c.cookieStoreId === id)
       let panelIndex = State.panels.findIndex(c => c.cookieStoreId === id)
       if (ctxIndex === -1 || panelIndex === -1) return
 
-      State.ctxs.splice(ctxIndex, 1, contextualIdentity)
+      State.containers.splice(ctxIndex, 1, contextualIdentity)
       State.panels[panelIndex].color = contextualIdentity.color
       State.panels[panelIndex].colorCode = contextualIdentity.colorCode
       State.panels[panelIndex].icon = contextualIdentity.icon

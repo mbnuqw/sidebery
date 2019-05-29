@@ -12,8 +12,8 @@ let recalcPanelScrollTimeout, updateReqHandlerTimeout, savePanelsTimeout
  */
 async function loadPanels(state) {
   // Get contextual identities
-  const ctxs = await browser.contextualIdentities.query({})
-  if (!ctxs) {
+  const containers = await browser.contextualIdentities.query({})
+  if (!containers) {
     Logs.push('[WARN] Cannot load contextual identities')
     state.panels = DEFAULT_PANELS
     return
@@ -41,7 +41,7 @@ async function loadPanels(state) {
   panels[2].endIndex = -1
 
   // Merge saved containers and queried contextualIdentities
-  for (let ctx of ctxs) {
+  for (let ctx of containers) {
     let panel = panels.find(p => p.cookieStoreId === ctx.cookieStoreId && p.type === 'ctx')
     if (!panel) {
       panels.push({
@@ -90,14 +90,14 @@ async function loadPanels(state) {
   const toRemove = []
   for (let ctr of panels) {
     if (ctr.type !== 'ctx') continue
-    if (!ctxs.find(c => c.cookieStoreId === ctr.id)) toRemove.push(ctr.id)
+    if (!containers.find(c => c.cookieStoreId === ctr.id)) toRemove.push(ctr.id)
   }
   for (let id of toRemove) {
     const rIndex = panels.findIndex(c => c.id === id)
     if (rIndex !== -1) panels.splice(rIndex, 1)
   }
 
-  state.ctxs = ctxs
+  state.containers = containers
   state.panels = panels
 
   // Set requests handler (if needed)

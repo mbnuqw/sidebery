@@ -51,7 +51,7 @@ export default {
       })
     }
 
-    for (let c of State.ctxs) {
+    for (let c of State.containers) {
       if (node.cookieStoreId === c.cookieStoreId) continue
       opts.push({
         label: Translate('menu.tab.reopen_in_') + `||${c.colorCode}>>${c.name}`,

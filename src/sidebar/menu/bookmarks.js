@@ -37,7 +37,7 @@ export default {
     }
 
     if (!State.private) {
-      for (let c of State.ctxs) {
+      for (let c of State.containers) {
         opts.push({
           label: Translate('menu.bookmark.open_in_') + `||${c.colorCode}>>${c.name}`,
           icon: c.icon,
