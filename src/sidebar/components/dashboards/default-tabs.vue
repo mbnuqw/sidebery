@@ -58,14 +58,14 @@ export default {
   methods: {
     togglePanelLock() {
       this.conf.lockedPanel = !this.conf.lockedPanel
-      Actions.saveContainers(State)
+      Actions.savePanels(State)
     },
 
     async togglePanelNoEmpty() {
       this.conf.noEmpty = !this.conf.noEmpty
       if (this.conf.noEmpty) {
         const defaultId = Store.getters.defaultCtxId
-        const panel = Store.getters.panels.find(p => p.cookieStoreId === defaultId)
+        const panel = State.panels.find(p => p.cookieStoreId === defaultId)
         if (panel && panel.tabs && !panel.tabs.length) {
           await browser.tabs.create({
             windowId: State.windowId,
@@ -75,7 +75,7 @@ export default {
           })
         }
       }
-      Actions.saveContainers(State)
+      Actions.savePanels(State)
     },
 
     dedupTabs() {

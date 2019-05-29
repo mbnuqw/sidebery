@@ -70,16 +70,16 @@ export default new Vue({
     if (State.customTheme) Actions.loadCustomCSS(State)
 
     await Actions.loadPanelIndex(State)
-    await Actions.loadContainers(State)
+    await Actions.loadPanels(State)
 
     if (State.bookmarksPanel && State.panelIndex === 0) {
       await Actions.loadBookmarks(State)
     }
 
-    await Actions.loadTabs(State, Store.getters.panels)
+    await Actions.loadTabs(State, Store.getters)
     await Actions.loadCtxMenu(State)
     await Actions.loadStyles()
-    Actions.scrollToActiveTab(State, Store.getters.panels)
+    Actions.scrollToActiveTab(State)
     Actions.loadKeybindings(State)
     Actions.loadFavicons(State)
     Actions.loadPermissions(State)
@@ -88,9 +88,9 @@ export default new Vue({
     Actions.tryClearFaviCache(State, 86400)
 
     // Hide / show tabs
-    Actions.updateTabsVisability(State, Store.getters.panels)
+    Actions.updateTabsVisability(State)
 
-    EventBus.$on('CreateSnapshot', () => Actions.makeSnapshot(State, Store.getters.panels, Store.getters.pinnedTabs))
+    EventBus.$on('CreateSnapshot', () => Actions.makeSnapshot(State, Store.getters.pinnedTabs))
   },
 
   mounted() {
@@ -127,8 +127,8 @@ export default new Vue({
       if (changes.styles) {
         Actions.applyStyles(changes.styles.newValue)
       }
-      if (changes.containers && !State.windowFocused) {
-        Actions.updateContainers(State, changes.containers.newValue)
+      if (changes.panels && !State.windowFocused) {
+        Actions.updatePanels(State, changes.panels.newValue)
       }
       if (changes.tabsMenu) {
         State.tabsMenu = changes.tabsMenu.newValue

@@ -287,9 +287,9 @@ function openBookmarksInNewWin(state, ids, incognito) {
 /**
  * Open bookmarks
  */
-async function openBookmarksInPanel(state, panels, ids, panelId) {
-  const pi = panels.findIndex(p => p.cookieStoreId === panelId)
-  const p = panels[pi]
+async function openBookmarksInPanel(state, ids, panelId) {
+  const pi = state.panels.findIndex(p => p.cookieStoreId === panelId)
+  const p = state.panels[pi]
   if (!p) return
 
   let index = p.endIndex + 1

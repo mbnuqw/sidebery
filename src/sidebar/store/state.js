@@ -24,6 +24,9 @@ export const DEFAULT_PANELS = [
     dashboard: 'DefaultTabsDashboard',
     panel: 'TabsPanel',
     private: true,
+    tabs: [],
+    startIndex: -1,
+    endIndex: -1,
   },
   {
     type: 'default',
@@ -38,6 +41,9 @@ export const DEFAULT_PANELS = [
     proxyConfig: null,
     noEmpty: false,
     lastActiveTab: -1,
+    tabs: [],
+    startIndex: -1,
+    endIndex: -1,
   },
 ]
 
@@ -95,7 +101,7 @@ export default {
   panelIndex: browser.extension.inIncognitoContext ? 1 : 2,
 
   ctxs: [],
-  containers: [],
+  panels: [],
   tabs: [],
   updatedTabs: {},
 

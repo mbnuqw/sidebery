@@ -59,11 +59,11 @@ export default {
 
         if (e.deltaY > 0) {
           if (State.wheelBlockTimeout) return
-          Actions.switchTab(State, Store.getters.panels, Store.getters.pinnedTabs, globaly, e.ctrlKey, 1, true)
+          Actions.switchTab(State, Store.getters, globaly, e.ctrlKey, 1, true)
         }
         if (e.deltaY < 0) {
           if (State.wheelBlockTimeout) return
-          Actions.switchTab(State, Store.getters.panels, Store.getters.pinnedTabs, globaly, e.ctrlKey, -1, true)
+          Actions.switchTab(State, Store.getters, globaly, e.ctrlKey, -1, true)
         }
       }
     },
@@ -86,7 +86,7 @@ export default {
       if (this.dragPointed === true) dropIndex = this.pinnedTabs[this.pinnedTabs.length - 1].index + 1
       else if (this.pointedTabIndex > -1) dropIndex = this.pointedTabIndex
 
-      Actions.dropToTabs(State, Store.getters.panels, e, dropIndex, -1, State.dragNodes, true)
+      Actions.dropToTabs(State, e, dropIndex, -1, State.dragNodes, true)
 
       if (State.dragNodes) {
         if (State.dragNodes[0].type === 'tab') EventBus.$emit('deselectTab')
@@ -102,8 +102,8 @@ export default {
       if (tab.active) {
         let toActivate = this.pinnedTabs[index + 1] || this.pinnedTabs[index - 1]
         if (!toActivate) {
-          let panel = Store.getters.panels[State.panelIndex]
-          if (!panel || !panel.tabs) panel = Store.getters.panels[State.lastPanelIndex]
+          let panel = State.panels[State.panelIndex]
+          if (!panel || !panel.tabs) panel = State.panels[State.lastPanelIndex]
           if (panel && panel.tabs) toActivate = panel.tabs[0]
         }
 

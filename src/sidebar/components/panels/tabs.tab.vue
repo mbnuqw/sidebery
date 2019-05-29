@@ -45,7 +45,7 @@
   .close(v-if="$store.state.showTabRmBtn", @mousedown.stop="onCloseClick", @mouseup.stop="")
     svg: use(xlink:href="#icon_remove")
   .t-box
-    .title {{tab.title}}
+    .title {{tab.index}}::{{tab.id}} {{tab.title}}
     .loading
       svg.-a: use(xlink:href="#icon_load")
       svg.-b: use(xlink:href="#icon_load")
@@ -55,7 +55,6 @@
 
 <script>
 import EventBus from '../../../event-bus'
-import Store from '../../store'
 import State from '../../store/state'
 import Actions from '../../actions'
 
@@ -406,7 +405,7 @@ export default {
      * Close tab
      */
     close() {
-      Actions.removeTabs(State, Store.getters.panels, [this.tab.id])
+      Actions.removeTabs(State, [this.tab.id])
     },
 
     /**
@@ -417,7 +416,7 @@ export default {
       for (let tab of State.tabs) {
         if (toRemove.includes(tab.parentId)) toRemove.push(tab.id)
       }
-      Actions.removeTabs(State, Store.getters.panels, toRemove)
+      Actions.removeTabs(State, toRemove)
     },
 
     loadingStart(id) {

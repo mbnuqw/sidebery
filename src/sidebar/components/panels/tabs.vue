@@ -19,6 +19,7 @@
         :tab="t"
         @start-selection="$emit('start-selection', $event)"
         @stop-selection="$emit('stop-selection')")
+  .dbg {{$store.state.panels[index].startIndex}} - {{$store.state.panels[index].endIndex}}
 </template>
 
 
@@ -84,7 +85,7 @@ export default {
       this.recalcScroll()
     })
 
-    EventBus.$on('scrollToActiveTab', (panelIndex, tabId) => {
+    EventBus.$on('scrollToTab', (panelIndex, tabId) => {
       if (panelIndex !== this.index) return
       if (!this.scrollBoxEl) return
       const sh = this.scrollBoxEl.offsetHeight
@@ -106,7 +107,7 @@ export default {
     onMouseDown(e) {
       if (e.button === 0) {
         const la = State.tabsPanelLeftClickAction
-        if (la === 'prev') return Actions.switchPanel(State, Store.getters, -1)
+        if (la === 'prev') return Actions.switchPanel(State, -1)
         if (la === 'expand') {
           if (!State.tabsTree) return
           const activeTab = State.tabs.find(t => t.active)
@@ -122,7 +123,7 @@ export default {
 
       if (e.button === 2) {
         const ra = State.tabsPanelRightClickAction
-        if (ra === 'next') return Actions.switchPanel(State, Store.getters.panels, 1)
+        if (ra === 'next') return Actions.switchPanel(State, 1)
         if (ra === 'dash') return EventBus.$emit('openDashboard', State.panelIndex)
         if (ra === 'expand') {
           if (!State.tabsTree) return
@@ -145,11 +146,11 @@ export default {
 
         if (e.deltaY > 0) {
           if (State.wheelBlockTimeout) return
-          Actions.switchTab(State, Store.getters.panels, Store.getters.pinnedTabs, globaly, e.ctrlKey, 1)
+          Actions.switchTab(State, Store.getters, globaly, e.ctrlKey, 1)
         }
         if (e.deltaY < 0) {
           if (State.wheelBlockTimeout) return
-          Actions.switchTab(State, Store.getters.panels, Store.getters.pinnedTabs, globaly, e.ctrlKey, -1)
+          Actions.switchTab(State, Store.getters, globaly, e.ctrlKey, -1)
         }
       }
     },
@@ -261,7 +262,7 @@ export default {
      * Create new tab
      */
     createTab() {
-      this.$emit('create-tab', this.storeId)
+      Actions.createTab(State, this.storeId)
     },
   },
 }

@@ -86,22 +86,6 @@ describe('Global utilities', () => {
     })
   })
 
-  // GetPanelIndex
-  describe('GetPanelIndex()', () => {
-    test('Get panel index by tab id', async () => {
-      const panels = [
-        {
-          tabs: [{ id: 1 }, { id: 12 }],
-        },
-        {
-          tabs: [{ id: 8 }, { id: 2 }],
-        },
-      ]
-      expect(Utils.GetPanelIndex(panels, 1)).toBe(0)
-      expect(Utils.GetPanelIndex(panels, 8)).toBe(1)
-    })
-  })
-
   // GetPanelOf
   describe('GetPanelOf()', () => {
     test('Get panel by tab', async () => {

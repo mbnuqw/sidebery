@@ -70,7 +70,7 @@
     //- Panels
     .panel-box
       component.panel(
-        v-for="(c, i) in panels"
+        v-for="(c, i) in $store.state.panels"
         v-if="panelVisible(i)"
         ref="panels"
         :key="c.cookieStoreId || c.name"
@@ -80,7 +80,6 @@
         :index="i"
         :store-id="c.cookieStoreId"
         :active="panelIs(i)"
-        @create-tab="createTab"
         @start-selection="startSelection"
         @stop-selection="stopSelection")
       transition(name="panel")
@@ -98,7 +97,7 @@
 
 <script>
 import Vue from 'vue'
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 import InitNoiseBg from '../directives/noise-bg.js'
 import Utils from '../libs/utils.js'
 import EventBus from '../event-bus'
@@ -150,7 +149,7 @@ export default {
    * --- Computed ---
    */
   computed: {
-    ...mapGetters(['defaultCtxId', 'defaultPanel', 'panels', 'activePanel']),
+    ...mapGetters(['defaultCtxId', 'defaultPanel', 'activePanel']),
 
     /**
      * Get window-input-panel position
@@ -172,8 +171,8 @@ export default {
       let out = []
       let hideOffset = 0
 
-      for (i = 0; i < State.containers.length; i++) {
-        const btn = State.containers[i]
+      for (i = 0; i < State.panels.length; i++) {
+        const btn = State.panels[i]
         btn.loading = this.loading[i]
         btn.hidden = false
         btn.inactive = false
@@ -301,8 +300,6 @@ export default {
    * --- Methods ---
    */
   methods: {
-    ...mapActions(['createTab']),
-
     /**
      * Sidebar wheel event handler
      */
@@ -310,8 +307,8 @@ export default {
       if (State.ctxMenu) Actions.closeCtxMenu(State)
 
       if (State.hScrollThroughPanels) {
-        if (e.deltaX > 0) return Actions.switchPanel(State, Store.getters.panels, 1)
-        if (e.deltaX < 0) return Actions.switchPanel(State, Store.getters.panels, -1)
+        if (e.deltaX > 0) return Actions.switchPanel(State, 1)
+        if (e.deltaX < 0) return Actions.switchPanel(State, -1)
       }
     },
 
@@ -319,8 +316,8 @@ export default {
      * Navigation wheel event handler
      */
     onNavWheel(e) {
-      if (e.deltaY > 0) return Actions.switchPanel(State, Store.getters.panels, 1)
-      if (e.deltaY < 0) return Actions.switchPanel(State, Store.getters.panels, -1)
+      if (e.deltaY > 0) return Actions.switchPanel(State, 1)
+      if (e.deltaY < 0) return Actions.switchPanel(State, -1)
     },
 
     /**
@@ -457,7 +454,7 @@ export default {
           this.$refs.pointer.style.transform = `translateY(${this.pointerPos}px)`
           this.pointerMode = 'between'
           this.dropParent = -1
-          this.dropIndex = this.panels[State.panelIndex].startIndex
+          this.dropIndex = State.panels[State.panelIndex].startIndex
         }
         return
       }
@@ -654,10 +651,10 @@ export default {
       if (this.dropParent === undefined) this.dropParent = -1
       if (this.dropParent === null) this.dropParent = -1
 
-      if (this.panels[State.panelIndex].tabs) {
-        Actions.dropToTabs(State, Store.getters.panels, e, this.dropIndex, this.dropParent, State.dragNodes)
+      if (State.panels[State.panelIndex].tabs) {
+        Actions.dropToTabs(State, e, this.dropIndex, this.dropParent, State.dragNodes)
       }
-      if (this.panels[State.panelIndex].bookmarks) {
+      if (State.panels[State.panelIndex].bookmarks) {
         if (this.pointerMode.startsWith('inside')) this.dropIndex = 0
         Actions.dropToBookmarks(State, e, this.dropIndex, this.dropParent, State.dragNodes,)
       }
@@ -674,16 +671,16 @@ export default {
      * Navigation button click hadler
      */
     onNavClick(i) {
-      if (i === this.panels.length) return this.openDashboard(-1)
+      if (i === State.panels.length) return this.openDashboard(-1)
       if (State.panelIndex !== i) {
-        Actions.switchToPanel(State, Store.getters.panels, i)
-      } else if (this.panels[i].cookieStoreId) {
+        Actions.switchToPanel(State, i)
+      } else if (State.panels[i].cookieStoreId) {
         if (State.dashboardOpened) {
           this.closeDashboard()
         } else {
           browser.tabs.create({
             windowId: State.windowId,
-            cookieStoreId: this.panels[i].cookieStoreId,
+            cookieStoreId: State.panels[i].cookieStoreId,
           })
         }
       }
@@ -698,7 +695,7 @@ export default {
       this.navDragEnterIndex = i
       if (this.navDragEnterTimeout) clearTimeout(this.navDragEnterTimeout)
       this.navDragEnterTimeout = setTimeout(() => {
-        Actions.switchToPanel(State, Store.getters.panels, i)
+        Actions.switchToPanel(State, i)
       }, 300)
     },
 
@@ -717,7 +714,7 @@ export default {
      */
     onCreatedContainer({ contextualIdentity }) {
       State.ctxs.push(contextualIdentity)
-      State.containers.push({
+      State.panels.push({
         ...contextualIdentity,
         type: 'ctx',
         id: contextualIdentity.cookieStoreId,
@@ -738,12 +735,12 @@ export default {
       // Check if we have some updates
       // for container with this name
       if (State.windowFocused) {
-        State.panelIndex = this.panels.length - 1
+        State.panelIndex = State.panels.length - 1
         State.lastPanelIndex = State.panelIndex
 
         if (State.dashboardOpened) this.openDashboard(State.panelIndex)
 
-        Actions.saveContainers(State)
+        Actions.savePanels(State)
       }
     },
 
@@ -755,9 +752,9 @@ export default {
 
       // Find container
       let ctxIndex = State.ctxs.findIndex(c => c.cookieStoreId === id)
-      let ctrIndex = State.containers.findIndex(c => c.cookieStoreId === id)
+      let ctrIndex = State.panels.findIndex(c => c.cookieStoreId === id)
       if (ctxIndex === -1 || ctrIndex === -1) return
-      State.containers[ctrIndex].noEmpty = false
+      State.panels[ctrIndex].noEmpty = false
 
       // Close tabs
       const orphanTabs = State.tabs.filter(t => t.cookieStoreId === id)
@@ -766,17 +763,17 @@ export default {
 
       // Remove container
       State.ctxs.splice(ctxIndex, 1)
-      State.containers.splice(ctrIndex, 1)
+      State.panels.splice(ctrIndex, 1)
 
       // Switch to prev panel
-      if (State.panelIndex >= this.panels.length) {
-        State.panelIndex = this.panels.length - 1
+      if (State.panelIndex >= State.panels.length) {
+        State.panelIndex = State.panels.length - 1
         State.lastPanelIndex = State.panelIndex
       }
 
       if (State.windowFocused) {
         Actions.updateReqHandler(State)
-        Actions.saveContainers(State)
+        Actions.savePanels(State)
       }
     },
 
@@ -786,17 +783,17 @@ export default {
     onUpdatedContainer({ contextualIdentity }) {
       let id = contextualIdentity.cookieStoreId
       let ctxIndex = State.ctxs.findIndex(c => c.cookieStoreId === id)
-      let ctrIndex = State.containers.findIndex(c => c.cookieStoreId === id)
-      if (ctxIndex === -1 || ctrIndex === -1) return
+      let panelIndex = State.panels.findIndex(c => c.cookieStoreId === id)
+      if (ctxIndex === -1 || panelIndex === -1) return
 
       State.ctxs.splice(ctxIndex, 1, contextualIdentity)
-      State.containers[ctrIndex].color = contextualIdentity.color
-      State.containers[ctrIndex].colorCode = contextualIdentity.colorCode
-      State.containers[ctrIndex].icon = contextualIdentity.icon
-      State.containers[ctrIndex].iconUrl = contextualIdentity.iconUrl
-      State.containers[ctrIndex].name = contextualIdentity.name
+      State.panels[panelIndex].color = contextualIdentity.color
+      State.panels[panelIndex].colorCode = contextualIdentity.colorCode
+      State.panels[panelIndex].icon = contextualIdentity.icon
+      State.panels[panelIndex].iconUrl = contextualIdentity.iconUrl
+      State.panels[panelIndex].name = contextualIdentity.name
 
-      if (State.windowFocused) Actions.saveContainers(State)
+      if (State.windowFocused) Actions.savePanels(State)
     },
     // ---
 
@@ -817,7 +814,7 @@ export default {
       Actions.resetSelection(State)
 
       // If new tab is out of panel, move it to the end of this panel
-      let panel = this.panels.find(p => p.cookieStoreId === tab.cookieStoreId)
+      let panel = State.panels.find(p => p.cookieStoreId === tab.cookieStoreId)
       let endIndex = panel.tabs.length ? panel.endIndex + 1 : panel.endIndex
       if (tab.index > endIndex || tab.index < panel.startIndex) {
         browser.tabs.move(tab.id, { index: endIndex })
@@ -842,6 +839,15 @@ export default {
       // Put new tab in tabs list
       State.tabsMap[tab.id] = tab
       State.tabs.splice(tab.index, 0, tab)
+
+      // Put new tab in panel
+      if (panel && panel.tabs) {
+        let targetIndex = tab.index - panel.startIndex
+        if (targetIndex <= panel.tabs.length) {
+          panel.tabs.splice(tab.index - panel.startIndex, 0, tab)
+          Utils.updatePanelsRanges(State, Store.getters)
+        }
+      }
 
       // Update tree
       if (State.tabsTree && !tab.pinned) {
@@ -920,16 +926,16 @@ export default {
 
       // Handle unpinned tab
       if (change.hasOwnProperty('pinned') && !change.pinned) {
-        let pi = this.panels.findIndex(p => p.cookieStoreId === tab.cookieStoreId)
+        let pi = State.panels.findIndex(p => p.cookieStoreId === tab.cookieStoreId)
         if (pi === -1) return
-        let p = this.panels[pi]
+        let p = State.panels[pi]
         if (p && p.tabs) browser.tabs.move(tabId, { index: p.endIndex })
         if (tab.active) Actions.setPanel(State, pi)
       }
 
       // Handle pinned tab
       if (change.hasOwnProperty('pinned') && change.pinned) {
-        let panel = this.panels.find(p => p.cookieStoreId === tab.cookieStoreId)
+        let panel = State.panels.find(p => p.cookieStoreId === tab.cookieStoreId)
         if (panel.noEmpty && panel.tabs.length === 1) {
           browser.tabs.create({
             windowId: State.windowId,
@@ -950,7 +956,7 @@ export default {
             if (tab.pinned && State.pinnedTabsPosition !== 'panel') {
               this.$set(State.updatedTabs, tab.id, -1)
             } else {
-              let pi = this.panels.findIndex(p => p.cookieStoreId === tab.cookieStoreId)
+              let pi = State.panels.findIndex(p => p.cookieStoreId === tab.cookieStoreId)
               this.$set(State.updatedTabs, tab.id, pi)
             }
           }
@@ -983,7 +989,7 @@ export default {
       if (!State.tabsMap[tabId]) return
       let creatingNewTab
       const tab = State.tabsMap[tabId]
-      const panel = Utils.GetPanelOf(this.panels, tab)
+      const panel = Utils.GetPanelOf(State.panels, tab)
 
       // Recreate locked tab
       if (panel && panel.lockedTabs && tab.url.startsWith('http')) {
@@ -1026,7 +1032,7 @@ export default {
         }
 
         // Remove child tabs
-        if (State.rmFoldedTabs && toRemove.length) Actions.removeTabs(State, Store.getters.panels, toRemove)
+        if (State.rmFoldedTabs && toRemove.length) Actions.removeTabs(State, toRemove)
       }
 
       // Update last active tab if needed
@@ -1040,6 +1046,12 @@ export default {
       }
       State.tabsMap[tabId] = undefined
       State.tabs.splice(tab.index, 1)
+
+      // Remove tab from panel
+      if (panel && panel.tabs) {
+        panel.tabs.splice(tab.index - panel.startIndex, 1)
+        Utils.updatePanelsRanges(State, Store.getters)
+      }
 
       // Remove updated flag
       this.$delete(State.updatedTabs, tabId)
@@ -1106,9 +1118,20 @@ export default {
         if (State.tabs[i]) State.tabs[i].index = i
       }
 
+      // Cut tab from panel
+      const panel = State.panels.find(p => p.cookieStoreId === movedTab.cookieStoreId)
+      if (panel && panel.tabs) {
+        let t = panel.tabs[info.fromIndex - panel.startIndex]
+        if (t && t.id === movedTab.id) {
+          panel.tabs.splice(info.fromIndex - panel.startIndex, 1)
+        }
+        panel.tabs.splice(info.toIndex - panel.startIndex, 0, movedTab)
+        Utils.updatePanelsRanges(State, Store.getters)
+      }
+
       // Calc tree levels
       if (State.tabsTree && !State.movingTabs.length) {
-        const panel = this.panels[State.panelIndex]
+        const panel = State.panels[State.panelIndex]
         const panelOk = panel && panel.tabs
         const startIndex = panelOk ? panel.startIndex : 0
         const endIndex = panelOk ? panel.endIndex + 1 : -1
@@ -1166,7 +1189,7 @@ export default {
     onActivatedTab(info) {
       if (info.windowId !== State.windowId) return
 
-      const currentPanel = this.panels[State.panelIndex]
+      const currentPanel = State.panels[State.panelIndex]
 
       // Reset selection
       Actions.resetSelection(State)
@@ -1192,8 +1215,8 @@ export default {
 
       // Find panel of activated tab
       if (tab.pinned && State.pinnedTabsPosition !== 'panel') return
-      const panelIndex = this.panels.findIndex(p => p.cookieStoreId === tab.cookieStoreId)
-      const tabPanel = this.panels[panelIndex]
+      const panelIndex = State.panels.findIndex(p => p.cookieStoreId === tab.cookieStoreId)
+      const tabPanel = State.panels[panelIndex]
       if (panelIndex === -1) return
 
       // Switch to activated tab's panel
@@ -1225,7 +1248,7 @@ export default {
       }
 
       tabPanel.lastActiveTab = info.tabId
-      if (!tab.pinned) EventBus.$emit('scrollToActiveTab', panelIndex, info.tabId)
+      if (!tab.pinned) EventBus.$emit('scrollToTab', panelIndex, info.tabId)
 
       // If activated tab is group - reinit it
       if (Utils.IsGroupUrl(tab.url)) {
@@ -1307,7 +1330,7 @@ export default {
       if (!State.selected || !State.selected.length) {
         if (type !== 'tab') return
 
-        const activePanel = this.panels[State.panelIndex]
+        const activePanel = State.panels[State.panelIndex]
         if (!activePanel || !activePanel.tabs) return
         const activeTab = activePanel.tabs.find(t => t.active)
         if (!activeTab) return
@@ -1342,8 +1365,8 @@ export default {
             browser.tabs.create({ index, url: target.url, active: true })
           } else {
             browser.tabs.update({ url: target.url })
-            if (State.openBookmarkNewTab && !this.panels[0].lockedPanel) {
-              Actions.goToActiveTabPanel(State, Store.getters.panels)
+            if (State.openBookmarkNewTab && !State.panels[0].lockedPanel) {
+              Actions.goToActiveTabPanel(State)
             }
           }
         }
@@ -1385,7 +1408,7 @@ export default {
 
       // No selected items -> select first/last
       if (!State.selected.length) {
-        const panel = this.panels[State.panelIndex]
+        const panel = State.panels[State.panelIndex]
         let activeTab, activeSlot
         if (panel && panel.tabs) activeTab = panel.tabs.find(t => t.active)
         if (activeTab) activeSlot = this.itemSlots.find(s => s.id === activeTab.id)
@@ -1642,7 +1665,7 @@ export default {
      * Open panel menu by nav index.
      */
     async openDashboard(i) {
-      if (i === this.panels.length) i = -1
+      if (i === State.panels.length) i = -1
       Actions.closeCtxMenu(State)
       Actions.resetSelection(State)
       State.dashboardOpened = true
@@ -1684,9 +1707,9 @@ export default {
      * Get tooltip for button
      */
     getTooltip(i) {
-      if (i === this.panels.length) return this.t('nav.add_ctx_tooltip')
-      if (!this.panels[i].tabs) return this.nav[i].name
-      return `${this.nav[i].name}: ${this.panels[i].tabs.length}`
+      if (i === State.panels.length) return this.t('nav.add_ctx_tooltip')
+      if (!State.panels[i].tabs) return this.nav[i].name
+      return `${this.nav[i].name}: ${State.panels[i].tabs.length}`
     },
   },
 }

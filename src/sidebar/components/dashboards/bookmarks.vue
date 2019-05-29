@@ -45,7 +45,7 @@ export default {
   methods: {
     togglePanelLock() {
       this.conf.lockedPanel = !this.conf.lockedPanel
-      Actions.saveContainers(State)
+      Actions.savePanels(State)
     },
 
     collapseAll() {

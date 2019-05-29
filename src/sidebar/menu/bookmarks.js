@@ -32,7 +32,7 @@ export default {
         label: Translate('menu.bookmark.open_in_default_panel'),
         icon: 'icon_tabs',
         action: 'openBookmarksInPanel',
-        args: { ids: [...State.selected] },
+        args: [ State, State.selected, State.defaultCtxId ],
       })
     }
 
@@ -43,7 +43,7 @@ export default {
           icon: c.icon,
           color: c.colorCode,
           action: 'openBookmarksInPanel',
-          args: { ids: [...State.selected], panelId: c.cookieStoreId },
+          args: [ State, State.selected, c.cookieStoreId ],
         })
       }
     }

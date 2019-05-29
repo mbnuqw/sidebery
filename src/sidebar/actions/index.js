@@ -52,13 +52,13 @@ async function loadPermissions(state) {
 
   if (!state.permAllUrls) {
     state.proxiedPanels = {}
-    state.containers.map(c => {
+    state.panels.map(c => {
       if (c.proxified) c.proxified = false
       if (c.proxy) c.proxy.type = 'direct'
       if (c.includeHostsActive) c.includeHostsActive = false
       if (c.excludeHostsActive) c.excludeHostsActive = false
     })
-    PanelsActions.saveContainers(state)
+    PanelsActions.savePanels(state)
   }
 
   if (!state.permTabHide) {

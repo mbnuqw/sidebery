@@ -115,19 +115,6 @@ function StrSize(str) {
 }
 
 /**
- * Get panel index of tab
- */
-function GetPanelIndex(panels, tabId) {
-  let panelIndex = panels.findIndex(p => {
-    if (p.tabs && p.tabs.length) {
-      if (tabId === undefined) return !!p.tabs.find(t => t.active)
-      return !!p.tabs.find(t => t.id === tabId)
-    }
-  })
-  return panelIndex
-}
-
-/**
  * Get panel by tab obj.
  */
 function GetPanelOf(panels, tab) {
@@ -271,6 +258,48 @@ function UpdateTabsTree(state, startIndex = 0, endIndex = -1) {
     if (pt && pt.lvl >= t.lvl) {
       pt.isParent = false
       pt.folded = false
+    }
+  }
+}
+
+/**
+ * Update tabs - panel relation with range indexes
+ */
+function updatePanelsTabs(state, getters) {
+  let lastIndex = getters.pinnedTabs.length
+  for (let panel of state.panels) {
+    if (panel.panel !== 'TabsPanel') continue
+
+    panel.tabs = []
+    for (let t of state.tabs) {
+      if (t.pinned) continue
+      if (t.cookieStoreId === panel.cookieStoreId) panel.tabs.push(t)
+    }
+    if (panel.tabs.length) {
+      lastIndex = panel.tabs[panel.tabs.length - 1].index
+      panel.startIndex = panel.tabs[0].index
+      panel.endIndex = lastIndex++
+    } else {
+      panel.startIndex = lastIndex
+      panel.endIndex = panel.startIndex
+    }
+  }
+}
+
+/**
+ * Update panels ranges
+ */
+function updatePanelsRanges(state, getters) {
+  let lastIndex = getters.pinnedTabs.length
+  for (let panel of state.panels) {
+    if (panel.panel !== 'TabsPanel') continue
+    if (panel.tabs.length) {
+      lastIndex = panel.tabs[panel.tabs.length - 1].index
+      panel.startIndex = panel.tabs[0].index
+      panel.endIndex = lastIndex++
+    } else {
+      panel.startIndex = lastIndex
+      panel.endIndex = panel.startIndex
     }
   }
 }
@@ -544,13 +573,14 @@ export default {
   Sleep,
   StrSize,
   BytesToStr,
-  GetPanelIndex,
   GetPanelOf,
   UDate,
   UTime,
   UElapsed,
   CSSVar,
   UpdateTabsTree,
+  updatePanelsTabs,
+  updatePanelsRanges,
   ParseCSSNum,
   CommonSubStr,
   GetUrlFromDragEvent,

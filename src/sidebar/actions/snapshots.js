@@ -4,7 +4,7 @@ import Actions from '.'
 /**
  * Make snapshot
  */
-async function makeSnapshot(state, panels, pinnedTabs) {
+async function makeSnapshot(state, pinnedTabs) {
   const time = ~~(Date.now() / 1000)
 
   // Gather tabs and containers
@@ -25,7 +25,7 @@ async function makeSnapshot(state, panels, pinnedTabs) {
   }
 
   // Tabs on panels
-  for (let panel of panels) {
+  for (let panel of state.panels) {
     // Filter empty, non-tabs and turned-off panels
     if (!panel.tabs || !panel.tabs.length) continue
     if (panel.cookieStoreId === DEFAULT_CTX) {
@@ -91,14 +91,14 @@ async function makeSnapshot(state, panels, pinnedTabs) {
 /**
  * Restore contexs and tabs from snapshot
  */
-async function applySnapshot(state, panels, defaultPanel, snapshot) {
+async function applySnapshot(state, defaultPanel, snapshot) {
   if (!snapshot) return
 
   // Restore tabs
   const tabsMap = {}
   for (let tab of snapshot.tabs) {
-    let panelIndex = panels.findIndex(p => p.cookieStoreId === tab.cookieStoreId)
-    let panel = panels[panelIndex]
+    let panelIndex = state.panels.findIndex(p => p.cookieStoreId === tab.cookieStoreId)
+    let panel = state.panels[panelIndex]
     if (!panel) {
       panel = defaultPanel
       panelIndex = state.private ? 1 : 2

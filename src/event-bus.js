@@ -15,7 +15,12 @@ export function InitMsgHandling(state, actions) {
     if (msg.name) eb.$emit(msg.name, msg.arg)
 
     // Run action
-    if (msg.action && actions[msg.action]) actions[msg.action](state, msg.arg)
+    if (msg.action && actions[msg.action]) {
+      let args = msg.args || []
+      if (msg.injectState) args.unshift(state)
+      if (msg.arg) args.push(msg.arg)
+      actions[msg.action](...args)
+    }
   })
 }
 

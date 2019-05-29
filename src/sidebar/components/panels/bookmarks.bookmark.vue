@@ -15,7 +15,6 @@
 <script>
 import { mapGetters } from 'vuex'
 import EventBus from '../../../event-bus'
-import Store from '../../store'
 import State from '../../store/state'
 import Actions from '../../actions'
 
@@ -197,7 +196,7 @@ export default {
         })
       } else {
         browser.tabs.update({ url: this.node.url })
-        if (withFocus && !this.panels[0].lockedPanel) Actions.goToActiveTabPanel(State, Store.getters.panels)
+        if (withFocus && !this.panels[0].lockedPanel) Actions.goToActiveTabPanel(State)
       }
 
       if (this.node.parentId === 'unfiled_____' && State.autoRemoveOther) {

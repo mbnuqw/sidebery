@@ -4,22 +4,6 @@ import CommonActions from '../../actions/settings'
 import Actions from './index'
 import { DEFAULT_SETTINGS } from '../../settings'
 
-// /**
-//  * Update theme
-//  */
-// function updateTheme(state) {
-//   let themeLinkEl = document.getElementById('theme_link')
-//   if (!themeLinkEl) {
-//     themeLinkEl = document.createElement('link')
-//     themeLinkEl.id = 'theme_link'
-//     themeLinkEl.type = 'text/css'
-//     themeLinkEl.rel = 'stylesheet'
-//   }
-
-//   themeLinkEl.href = `../themes/${state.look}.css`
-//   document.head.appendChild(themeLinkEl)
-// }
-
 /**
  * Update settings
  */
@@ -38,7 +22,7 @@ function updateSettings(state, settings) {
   const toggleBookmarks = state.bookmarksPanel !== settings.bookmarksPanel
   const look = state.look !== settings.look
 
-  // Update settings
+  // Update settings of this instance
   for (let k in settings) {
     if (!settings.hasOwnProperty(k)) continue
     if (settings[k] !== undefined) state[k] = settings[k]
@@ -76,7 +60,7 @@ function updateSettings(state, settings) {
   }
 
   if (look) {
-    Actions.updateTheme(state)
+    Actions.initTheme(state)
   }
 }
 
@@ -110,7 +94,7 @@ async function getWindowDbgInfo(state) {
 /**
  * Provide common debug data
  */
-async function getCommonDbgInfo(state, panels) {
+async function getCommonDbgInfo(state) {
   // Settings
   const settings = {}
   for (let sKey in DEFAULT_SETTINGS) {
@@ -120,7 +104,7 @@ async function getCommonDbgInfo(state, panels) {
 
   // Panels
   const panelsInfo = []
-  for (let panel of panels) {
+  for (let panel of state.panels) {
     // Get sanitized clone
     const panelClone = JSON.parse(JSON.stringify(panel))
 
@@ -142,7 +126,7 @@ async function getCommonDbgInfo(state, panels) {
     storage.faviconsCount = Object.keys(stored.favicons).length
     storage.tabs = Utils.StrSize(JSON.stringify(stored.tabsTreeState))
     storage.snapshots = Utils.StrSize(JSON.stringify(stored.snapshots))
-    storage.containers = Utils.StrSize(JSON.stringify(stored.containers))
+    storage.panels = Utils.StrSize(JSON.stringify(stored.panels))
   } catch (err) {
     // nothing to do...
   }

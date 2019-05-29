@@ -401,18 +401,18 @@ export default {
 
     togglePanelLock() {
       this.conf.lockedPanel = !this.conf.lockedPanel
-      Actions.saveContainers(State)
+      Actions.savePanels(State)
     },
 
     toggleTabsLock() {
       this.conf.lockedTabs = !this.conf.lockedTabs
-      Actions.saveContainers(State)
+      Actions.savePanels(State)
     },
 
     async togglePanelNoEmpty() {
       this.conf.noEmpty = !this.conf.noEmpty
       if (this.conf.noEmpty) {
-        const panel = Store.getters.panels.find(p => p.cookieStoreId === this.id)
+        const panel = State.panels.find(p => p.cookieStoreId === this.id)
         if (panel && panel.tabs && !panel.tabs.length) {
           await browser.tabs.create({
             windowId: State.windowId,
@@ -422,7 +422,7 @@ export default {
           })
         }
       }
-      Actions.saveContainers(State)
+      Actions.savePanels(State)
     },
 
     async toggleIncludeHosts() {
@@ -437,7 +437,7 @@ export default {
       }
 
       this.conf.includeHostsActive = !this.conf.includeHostsActive
-      Actions.saveContainers(State)
+      Actions.savePanels(State)
       Actions.updateReqHandler(State)
       await this.$nextTick()
 
@@ -451,7 +451,7 @@ export default {
     },
 
     onIncludeHostsChange() {
-      Actions.saveContainers(State)
+      Actions.savePanels(State)
     },
 
     async toggleExcludeHosts() {
@@ -466,7 +466,7 @@ export default {
       }
 
       this.conf.excludeHostsActive = !this.conf.excludeHostsActive
-      Actions.saveContainers(State)
+      Actions.savePanels(State)
       Actions.updateReqHandler(State)
       await this.$nextTick()
       
@@ -480,7 +480,7 @@ export default {
     },
 
     onExcludeHostsChange() {
-      Actions.saveContainers(State)
+      Actions.savePanels(State)
     },
 
     async switchProxy(type) {
@@ -510,7 +510,7 @@ export default {
       if (type === 'direct') this.conf.proxified = false
       else this.conf.proxified = this.proxyHostValid && this.proxyPortValid
 
-      Actions.saveContainers(State)
+      Actions.savePanels(State)
       Actions.updateReqHandler(State)
 
       await this.$nextTick()
@@ -523,7 +523,7 @@ export default {
       this.conf.proxy.host = value
       this.conf.proxified = this.proxyHostValid && this.proxyPortValid
 
-      Actions.saveContainersDebounced(State)
+      Actions.savePanelsDebounced(State)
       if (this.proxyHostValid) Actions.updateReqHandlerDebounced(State)
     },
 
@@ -532,7 +532,7 @@ export default {
       this.conf.proxy.port = value
       this.conf.proxified = this.proxyHostValid && this.proxyPortValid
 
-      Actions.saveContainersDebounced(State)
+      Actions.savePanelsDebounced(State)
       if (this.proxyPortValid) Actions.updateReqHandlerDebounced(State)
     },
 
@@ -540,7 +540,7 @@ export default {
       if (!this.id || !this.conf.proxy) return
       this.conf.proxy.username = value
 
-      Actions.saveContainersDebounced(State)
+      Actions.savePanelsDebounced(State)
       Actions.updateReqHandlerDebounced(State)
       
     },
@@ -549,7 +549,7 @@ export default {
       if (!this.id || !this.conf.proxy) return
       this.conf.proxy.password = value
 
-      Actions.saveContainersDebounced(State)
+      Actions.savePanelsDebounced(State)
       Actions.updateReqHandlerDebounced(State)
     },
 
@@ -557,7 +557,7 @@ export default {
       if (!this.id || !this.conf.proxy) return
       this.conf.proxy.proxyDNS = !this.conf.proxy.proxyDNS
 
-      Actions.saveContainers(State)
+      Actions.savePanels(State)
       Actions.updateReqHandler(State)
     },
 

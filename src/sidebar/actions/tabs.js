@@ -8,15 +8,15 @@ let TabsTreeSaveTimeout
 /**
  * Load all tabs for current window
  */
-async function loadTabs(state, panels) {
+async function loadTabs(state, getters) {
   const windowId = browser.windows.WINDOW_ID_CURRENT
   const tabs = await browser.tabs.query({ windowId })
-  const activePanel = panels[state.panelIndex]
+  const activePanel = state.panels[state.panelIndex]
   let activeTab
 
   // Check order of tabs and get moves for normalizing
   const ctxs = [state.defaultCtxId].concat(
-    state.containers.filter(c => c.type === 'ctx').map(c => c.cookieStoreId)
+    state.panels.filter(c => c.type === 'ctx').map(c => c.cookieStoreId)
   )
   const moves = []
   let index = tabs.filter(t => t.pinned).length
@@ -36,7 +36,7 @@ async function loadTabs(state, panels) {
     }
   }
 
-  // Set tabs initial props and update state
+  // Set tabs initial props and update stae
   state.tabsMap = []
   for (let t of tabs) {
     t.isParent = false
@@ -66,7 +66,7 @@ async function loadTabs(state, panels) {
   const activePanelIsTabs = activePanel.panel === 'TabsPanel'
   const activePanelIsOk = activeTab.cookieStoreId === activePanel.cookieStoreId
   if (!activeTab.pinned && activePanelIsTabs && !activePanelIsOk) {
-    const index = panels.findIndex(p => p.cookieStoreId === activeTab.cookieStoreId)
+    const index = state.panels.findIndex(p => p.cookieStoreId === activeTab.cookieStoreId)
     if (index !== -1) state.panelIndex = index
   }
 
@@ -141,6 +141,9 @@ async function loadTabs(state, panels) {
     if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
   }
 
+  // Update panels
+  Utils.updatePanelsTabs(state, getters)
+
   Logs.push('[INFO] Tabs loaded')
 }
 
@@ -172,12 +175,12 @@ function saveTabsTree(state, delay = 1000) {
 /**
  * Scroll to active tab
  */
-function scrollToActiveTab(state, panels) {
-  const activePanel = panels[state.panelIndex]
+function scrollToActiveTab(state) {
+  const activePanel = state.panels[state.panelIndex]
   if (activePanel && activePanel.tabs) {
     const activeTab = activePanel.tabs.find(t => t.active)
     if (activeTab) {
-      EventBus.$emit('scrollToActiveTab', state.panelIndex, activeTab.id)
+      EventBus.$emit('scrollToTab', state.panelIndex, activeTab.id)
     }
   }
 }
@@ -185,9 +188,9 @@ function scrollToActiveTab(state, panels) {
 /**
  * Create new tab in current window
  */
-function createTab(state, panels, ctxId) {
+function createTab(state, ctxId) {
   if (!ctxId) return
-  let p = panels.find(p => p.cookieStoreId === ctxId)
+  let p = state.panels.find(p => p.cookieStoreId === ctxId)
   if (!p || !p.tabs) return
   let index = p.tabs.length ? p.endIndex + 1 : p.startIndex
   browser.tabs.create({ index, cookieStoreId: ctxId, windowId: state.windowId })
@@ -196,11 +199,11 @@ function createTab(state, panels, ctxId) {
 /**
  * Remove tabs
  */
-async function removeTabs(state, panels, tabIds) {
+async function removeTabs(state, tabIds) {
   if (!tabIds || !tabIds.length) return
   if (!state.tabsMap[tabIds[0]]) return
   const ctxId = state.tabsMap[tabIds[0]].cookieStoreId
-  const panel = panels.find(p => p.cookieStoreId === ctxId)
+  const panel = state.panels.find(p => p.cookieStoreId === ctxId)
   if (!panel) return
 
   let tabsMap = {}
@@ -254,19 +257,19 @@ async function removeTabs(state, panels, tabIds) {
 /**
  * Activate tab relatively current active tab.
  */
-function switchTab(state, panels, pinnedTabs, globaly, cycle, step, pinned) {
+function switchTab(state, getters, globaly, cycle, step, pinned) {
   if (state.switchTabPause) return
   state.switchTabPause = setTimeout(() => {
     clearTimeout(state.switchTabPause)
     state.switchTabPause = null
   }, 50)
 
-  const panel = panels[state.panelIndex]
+  const panel = state.panels[state.panelIndex]
   let tabs
   if (state.pinnedTabsPosition === 'panel') {
     if (globaly) {
       tabs = []
-      for (let p of panels) {
+      for (let p of state.panels) {
         if (!p.cookieStoreId) continue
         for (let t of state.tabs) {
           if (t.cookieStoreId === p.cookieStoreId) tabs.push(t)
@@ -276,7 +279,7 @@ function switchTab(state, panels, pinnedTabs, globaly, cycle, step, pinned) {
       tabs = state.tabs.filter(t => t.cookieStoreId === panel.cookieStoreId)
     }
   } else {
-    if (pinned) tabs = pinnedTabs
+    if (pinned) tabs = getters.pinnedTabs
     else tabs = globaly ? state.tabs : panel.tabs
   }
   if (!tabs || !tabs.length) return
@@ -325,8 +328,8 @@ function discardTabs(tabIds = []) {
 /**
  * Try to activate last active tab on the panel
  */
-function activateLastActiveTabOf(state, panels, panelIndex) {
-  const p = panels[panelIndex]
+function activateLastActiveTabOf(state, panelIndex) {
+  const p = state.panels[panelIndex]
   if (!p || !p.tabs || !p.tabs.length) return
   const tab = state.tabsMap[p.lastActiveTab]
   if (tab && tab.cookieStoreId === p.cookieStoreId) {
@@ -649,11 +652,11 @@ async function showAllTabs(state) {
 /**
  * Update tabs visability
  */
-function updateTabsVisability(state, panels) {
+function updateTabsVisability(state) {
   const hideFolded = state.hideFoldedTabs
   const hideInact = state.hideInact
   const actPanelIndex = state.panelIndex < 0 ? state.lastPanelIndex : state.panelIndex
-  const actPanel = panels[actPanelIndex]
+  const actPanel = state.panels[actPanelIndex]
   if (!actPanel || !actPanel.tabs) return
   const actCtx = actPanel.cookieStoreId
 
@@ -741,7 +744,7 @@ function expTabsBranch(state, tabId) {
   if (state.hideFoldedTabs && toShow.length) {
     browser.tabs.show(toShow)
   }
-  saveTabsTree()
+  saveTabsTree(state)
 }
 
 /**
@@ -757,8 +760,8 @@ async function toggleBranch(state, tabId) {
 /**
  * Drop to tabs panel
  */
-async function dropToTabs(state, panels, event, dropIndex, dropParent, nodes, pin) {
-  const currentPanel = panels[state.panelIndex]
+async function dropToTabs(state, event, dropIndex, dropParent, nodes, pin) {
+  const currentPanel = state.panels[state.panelIndex]
   const destCtx = currentPanel.cookieStoreId
   const parent = state.tabsMap[dropParent]
   const toHide = []
@@ -963,7 +966,6 @@ function flattenTabs(state, tabIds) {
  * Group tabs
  */
 async function groupTabs(state, tabIds) {
-  console.log('[DEBUG] groupTabs', state);
   // Get tabs
   const tabs = []
   for (let t of state.tabs) {
