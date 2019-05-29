@@ -2,8 +2,8 @@
  *  Usage
  *
  * Register:
- *   import NoiseBg from './noise-bg.d'
- *   Vue.directive('noise', NoiseBg)
+ *   import noiseBg from './noise-bg.d'
+ *   Vue.directive('noise', noiseBg)
  *
  * Bind to element:
  *   <element v-noise:300x300.g:45:88></element>
@@ -14,7 +14,7 @@
  *   .a:0:5   - alpha (hex)
  *   .s:0:5   - spread (decimal)
  */
-import { NoiseBg } from '../libs/noise-bg'
+import { noiseBg } from '../libs/noise-bg'
 
 const DefaultWidth = 300
 const DefaultHeight = 300
@@ -30,7 +30,7 @@ const DefaultHeight = 300
 //   spread?: number | number[]
 // }
 
-export default function Init(state, store) {
+export default function initNoiseBgDirective(state, store) {
   return {
     bind(el, binding) {
       let conf = {}
@@ -64,7 +64,7 @@ export default function Init(state, store) {
         let sW = (conf.width || DefaultWidth) >> scaleShift
         let sH = (conf.height || DefaultHeight) >> scaleShift
         el.style.backgroundSize = `${sW}px ${sH}px`
-        NoiseBg(el, {
+        noiseBg(el, {
           width: conf.width || DefaultWidth,
           height: conf.height || DefaultHeight,
           gray: conf.gray || [0, 255],

@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import NoiseBg from '../directives/noise-bg'
+import noiseBg from '../directives/noise-bg'
 import Dict from '../mixins/dict'
 import Store from './store'
 import State from './store/state'
@@ -8,7 +8,7 @@ import Settings from './settings.vue'
 
 if (!State.tabsMap) State.tabsMap = []
 Vue.mixin(Dict)
-Vue.directive('noise', NoiseBg)
+Vue.directive('noise', noiseBg)
 
 export default new Vue({
   el: '#root',

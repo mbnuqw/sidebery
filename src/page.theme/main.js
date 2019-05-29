@@ -1,5 +1,5 @@
 import { CUSTOM_STYLES } from '../sidebar/store/state'
-import { NoiseBg } from '../libs/noise-bg'
+import { noiseBg } from '../libs/noise-bg'
 import Utils from '../libs/utils'
 
 let applyTimeout
@@ -26,7 +26,7 @@ void (async function() {
     for (let key in CUSTOM_STYLES) {
       if (!CUSTOM_STYLES.hasOwnProperty(key)) continue
       if (loadedStyles[key]) {
-        document.body.style.setProperty(Utils.CSSVar(key), loadedStyles[key])
+        document.body.style.setProperty(Utils.toCSSVarName(key), loadedStyles[key])
       }
     }
   }
@@ -188,7 +188,7 @@ function applyCSS(event) {
  * Generate noise
  */
 function generateNoise(el) {
-  NoiseBg(el, {
+  noiseBg(el, {
     width: 300,
     height: 300,
     gray: [12, 175],

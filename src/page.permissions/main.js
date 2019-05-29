@@ -1,5 +1,5 @@
 import { CUSTOM_STYLES } from '../sidebar/store/state'
-import { NoiseBg } from '../libs/noise-bg'
+import { noiseBg } from '../libs/noise-bg'
 import Utils from '../libs/utils'
 
 // Load settings and set theme
@@ -13,7 +13,7 @@ void (async function() {
 
   // Set background noise
   if (settings.bgNoise) {
-    NoiseBg(document.body, {
+    noiseBg(document.body, {
       width: 300,
       height: 300,
       gray: [12, 175],
@@ -33,7 +33,7 @@ void (async function() {
     for (let key in CUSTOM_STYLES) {
       if (!CUSTOM_STYLES.hasOwnProperty(key)) continue
       if (loadedStyles[key]) {
-        document.body.style.setProperty(Utils.CSSVar(key), loadedStyles[key])
+        document.body.style.setProperty(Utils.toCSSVarName(key), loadedStyles[key])
       }
     }
   }

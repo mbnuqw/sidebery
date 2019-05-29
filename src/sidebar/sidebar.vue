@@ -98,7 +98,7 @@
 <script>
 import Vue from 'vue'
 import { mapGetters } from 'vuex'
-import InitNoiseBg from '../directives/noise-bg.js'
+import initNoiseBgDirective from '../directives/noise-bg.js'
 import Utils from '../libs/utils.js'
 import EventBus from '../event-bus'
 import Store from './store'
@@ -113,8 +113,8 @@ import BookmarksPanel from './components/panels/bookmarks'
 import TabsPanel from './components/panels/tabs'
 import PinnedDock from './components/panels/pinned-dock'
 
-const NoiseBg = InitNoiseBg(State, Store)
-Vue.directive('noise', NoiseBg)
+const noiseBg = initNoiseBgDirective(State, Store)
+Vue.directive('noise', noiseBg)
 
 const URL_HOST_PATH_RE = /^([a-z0-9-]{1,63}\.)+\w+(:\d+)?\/[A-Za-z0-9-._~:/?#[\]%@!$&'()*+,;=]*$/
 const ADD_CTX_BTN = { icon: 'icon_plus_v2', hidden: false }
@@ -251,7 +251,7 @@ export default {
     browser.tabs.onActivated.addListener(this.onActivatedTab)
 
     // --- Handle resizing of sidebar
-    const onresize = Utils.Asap(() => this.updateNavSize(), 120)
+    const onresize = Utils.asap(() => this.updateNavSize(), 120)
     window.addEventListener('resize', onresize.func)
 
     // --- Handle global events
@@ -862,7 +862,7 @@ export default {
           tab.parentId = tab.openerTabId
           const start = panel.startIndex
           const parent = State.tabsMap[tab.parentId]
-          Utils.UpdateTabsTree(State, start, tab.index + 1)
+          Utils.updateTabsTree(State, start, tab.index + 1)
           if (State.autoFoldTabs && parent && !parent.folded) {
             Actions.expTabsBranch(State, tab.parentId)
           }
@@ -875,7 +875,7 @@ export default {
       if (State.activateAfterClosing !== 'none') {
         const activeTab = State.tabsMap[State.activeTabId]
         if (activeTab && activeTab.active) {
-          const target = Utils.FindSuccessorTab(State, activeTab)
+          const target = Utils.findSuccessorTab(State, activeTab)
           if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
         }
       }
@@ -967,7 +967,7 @@ export default {
       Object.assign(localTab, change)
 
       if (change.hasOwnProperty('pinned') && change.pinned) {
-        Utils.UpdateTabsTree(State)
+        Utils.updateTabsTree(State)
       }
     },
 
@@ -989,7 +989,7 @@ export default {
       if (!State.tabsMap[tabId]) return
       let creatingNewTab
       const tab = State.tabsMap[tabId]
-      const panel = Utils.GetPanelOf(State.panels, tab)
+      const panel = Utils.getPanelOf(State.panels, tab)
 
       // Recreate locked tab
       if (panel && panel.lockedTabs && tab.url.startsWith('http')) {
@@ -1062,7 +1062,7 @@ export default {
       if (State.tabsTree && !State.removingTabs.length) {
         const startIndex = panel ? panel.startIndex : 0
         const endIndex = panel ? panel.endIndex + 1 : -1
-        Utils.UpdateTabsTree(State, startIndex, endIndex)
+        Utils.updateTabsTree(State, startIndex, endIndex)
         Actions.saveTabsTree(State)
       }
 
@@ -1070,7 +1070,7 @@ export default {
       if (!State.removingTabs.length && State.activateAfterClosing !== 'none') {
         const activeTab = State.tabsMap[State.activeTabId]
         if (activeTab && activeTab.active) {
-          const target = Utils.FindSuccessorTab(State, activeTab)
+          const target = Utils.findSuccessorTab(State, activeTab)
           if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
         }
       }
@@ -1135,7 +1135,7 @@ export default {
         const panelOk = panel && panel.tabs
         const startIndex = panelOk ? panel.startIndex : 0
         const endIndex = panelOk ? panel.endIndex + 1 : -1
-        Utils.UpdateTabsTree(State, startIndex, endIndex)
+        Utils.updateTabsTree(State, startIndex, endIndex)
         Actions.saveTabsTree(State)
       }
 
@@ -1143,7 +1143,7 @@ export default {
       if (!State.movingTabs.length && State.activateAfterClosing !== 'none') {
         const activeTab = State.tabsMap[State.activeTabId]
         if (activeTab && activeTab.active) {
-          const target = Utils.FindSuccessorTab(State, activeTab)
+          const target = Utils.findSuccessorTab(State, activeTab)
           if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
         }
       }
@@ -1251,8 +1251,8 @@ export default {
       if (!tab.pinned) EventBus.$emit('scrollToTab', panelIndex, info.tabId)
 
       // If activated tab is group - reinit it
-      if (Utils.IsGroupUrl(tab.url)) {
-        const groupId = Utils.GetGroupId(tab.url)
+      if (Utils.isGroupUrl(tab.url)) {
+        const groupId = Utils.getGroupId(tab.url)
         browser.runtime.sendMessage({
           name: 'reinit_group',
           windowId: State.windowId,
@@ -1262,7 +1262,7 @@ export default {
 
       // Update succession
       if (State.activateAfterClosing !== 'none') {
-        const target = Utils.FindSuccessorTab(State, tab)
+        const target = Utils.findSuccessorTab(State, tab)
         if (target) browser.tabs.moveInSuccession([tab.id], target.id)
       }
     },
@@ -1351,7 +1351,7 @@ export default {
       }
 
       if (type === 'bookmark') {
-        const target = Utils.FindBookmark(State.bookmarks, targetId)
+        const target = Utils.findBookmark(State.bookmarks, targetId)
         if (!target) return
 
         if (target.type === 'folder') {
@@ -1543,7 +1543,7 @@ export default {
       const targetSlot = this.itemSlots.find(s => s.id === targetId)
       let target
       if (type === 'tab') target = State.tabsMap[targetId]
-      if (type === 'bookmark') target = Utils.FindBookmark(State.bookmarks, targetId)
+      if (type === 'bookmark') target = Utils.findBookmark(State.bookmarks, targetId)
 
       if (!target) return
       const offset = this.panelTopOffset - this.panelScrollEl.scrollTop
@@ -1585,8 +1585,8 @@ export default {
       const compStyle = getComputedStyle(this.$el)
       const thRaw = compStyle.getPropertyValue('--tabs-height')
       const nbwRaw = compStyle.getPropertyValue('--nav-btn-width')
-      State.tabHeight = Utils.ParseCSSNum(thRaw.trim())[0]
-      this.navBtnWidth = Utils.ParseCSSNum(nbwRaw.trim())[0]
+      State.tabHeight = Utils.parseCSSNum(thRaw.trim())[0]
+      this.navBtnWidth = Utils.parseCSSNum(nbwRaw.trim())[0]
     },
 
     /**

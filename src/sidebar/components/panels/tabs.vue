@@ -184,7 +184,7 @@ export default {
       // probe tabs heights
       const compStyle = getComputedStyle(this.$el)
       const thRaw = compStyle.getPropertyValue('--tabs-height')
-      const th = Utils.ParseCSSNum(thRaw.trim())[0]
+      const th = Utils.parseCSSNum(thRaw.trim())[0]
       if (th === 0) return []
       const half = th >> 1
       const e = (half >> 1) + 2

@@ -1,7 +1,7 @@
 import { Translate, PlurTrans } from '../mixins/dict'
 
 // prettier-ignore
-const Alph = [
+const ALPH = [
   'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
   'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
   'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
@@ -15,7 +15,7 @@ const URL_RE = /^(https?:\/\/)/
 /**
  *  Generate base64-like uid
  **/
-export function Uid() {
+export function uid() {
   // Get time and random parts
   let tp = Date.now()
   let rp1 = (Math.random() * 2147483648) | 0
@@ -24,17 +24,17 @@ export function Uid() {
 
   // Rand part
   for (let i = 0; i < 5; i++) {
-    chars.push(Alph[rp1 & 63])
+    chars.push(ALPH[rp1 & 63])
     rp1 = rp1 >> 6
   }
   for (let i = 5; i < 7; i++) {
-    chars.push(Alph[rp2 & 63])
+    chars.push(ALPH[rp2 & 63])
     rp2 = rp2 >> 6
   }
 
   // Time part
   for (let i = 7; i < 12; i++) {
-    chars.push(Alph[tp & 63])
+    chars.push(ALPH[tp & 63])
     tp = tp >> 6
   }
 
@@ -44,7 +44,7 @@ export function Uid() {
 /**
  * Run function ASAP
  */
-function Asap(cb, delay) {
+function asap(cb, delay) {
   const ctx = { busy: false }
   ctx.func = a => {
     if (ctx.busy) return
@@ -68,7 +68,7 @@ function Asap(cb, delay) {
 /**
  * Debounce function call
  */
-function Debounce(cb, delay, instant) {
+function debounce(cb, delay, instant) {
   const ctx = {}
   ctx.func = val => {
     if (ctx.busy) clearTimeout(ctx.busy)
@@ -87,7 +87,7 @@ function Debounce(cb, delay, instant) {
 /**
  * Sleep
  */
-async function Sleep(ms = 1000) {
+async function sleep(ms = 1000) {
   return new Promise(wakeup => {
     setTimeout(wakeup, ms)
   })
@@ -96,7 +96,7 @@ async function Sleep(ms = 1000) {
 /**
  * Bytes to readable string
  */
-function BytesToStr(bytes) {
+function bytesToStr(bytes) {
   if (bytes <= 1024) return bytes + ' b'
   let kb = Math.trunc(bytes / 102.4) / 10
   if (kb <= 1024) return kb + ' kb'
@@ -109,15 +109,15 @@ function BytesToStr(bytes) {
 /**
  * Get byte len of string
  */
-function StrSize(str) {
+function strSize(str) {
   const bytes = new Blob([str]).size
-  return BytesToStr(bytes)
+  return bytesToStr(bytes)
 }
 
 /**
  * Get panel by tab obj.
  */
-function GetPanelOf(panels, tab) {
+function getPanelOf(panels, tab) {
   if (tab.pinned) return null
   for (let i = 1; i < panels.length; i++) {
     if (panels[i].cookieStoreId === tab.cookieStoreId) return panels[i]
@@ -128,7 +128,7 @@ function GetPanelOf(panels, tab) {
 /**
  * Get date string from unix seconds
  */
-function UDate(sec) {
+function uDate(sec) {
   if (!sec) return null
   const dt = new Date(sec * 1000)
   let dtday = dt.getDate()
@@ -141,7 +141,7 @@ function UDate(sec) {
 /**
  * Get time string from unix seconds
  */
-function UTime(sec) {
+function uTime(sec) {
   if (!sec) return null
   const dt = new Date(sec * 1000)
   let dtsec = dt.getSeconds()
@@ -156,7 +156,7 @@ function UTime(sec) {
 /**
  * Get elapsed time string from unix seconds
  */
-function UElapsed(sec = 0, nowSec = 0) {
+function uElapsed(sec = 0, nowSec = 0) {
   const now = nowSec || ~~(Date.now() / 1000)
   let elapsed = now - sec
   if (elapsed < 60) return Translate('elapsed.now')
@@ -183,14 +183,14 @@ function UElapsed(sec = 0, nowSec = 0) {
 /**
  * Convert key to css variable --kebab-case
  */
-function CSSVar(key) {
+function toCSSVarName(key) {
   return '--' + key.replace(UNDERSCORE_RE, '-')
 }
 
 /**
  * Normalize tree levels
  */
-function UpdateTabsTree(state, startIndex = 0, endIndex = -1) {
+function updateTabsTree(state, startIndex = 0, endIndex = -1) {
   if (!state.tabsTree) return
   if (!state.tabs || !state.tabs.length) return
   if (startIndex < 0) startIndex = 0
@@ -307,7 +307,7 @@ function updatePanelsRanges(state, getters) {
 /**
  * Parse numerical css value
  */
-function ParseCSSNum(cssValue, or = 0) {
+function parseCSSNum(cssValue, or = 0) {
   const parseResult = CSS_NUM_RE.exec(cssValue.trim())
   if (!parseResult) return [0, '']
   let num = parseResult[1]
@@ -326,7 +326,7 @@ function ParseCSSNum(cssValue, or = 0) {
 /**
  * Find common substring
  */
-function CommonSubStr(strings) {
+function commonSubStr(strings) {
   if (!strings || !strings.length) return ''
   if (strings.length === 1) return strings[0]
   const first = strings[0]
@@ -357,7 +357,7 @@ function CommonSubStr(strings) {
 /**
  * Try to find url in dragged items and return first valid
  */
-async function GetUrlFromDragEvent(event) {
+async function getUrlFromDragEvent(event) {
   return new Promise(res => {
     if (!event.dataTransfer) return res()
 
@@ -381,7 +381,7 @@ async function GetUrlFromDragEvent(event) {
 /**
  * Try to get desciption string from drag event
  */
-async function GetDescFromDragEvent(event) {
+async function getDescFromDragEvent(event) {
   return new Promise(res => {
     if (!event.dataTransfer) return res()
     let typeOk
@@ -404,7 +404,7 @@ async function GetDescFromDragEvent(event) {
 /**
  * Find bookmark
  */
-function FindBookmark(bookmarks, id) {
+function findBookmark(bookmarks, id) {
   let target, n
   const findWalk = nodes => {
     for (n of nodes) {
@@ -420,27 +420,27 @@ function FindBookmark(bookmarks, id) {
 /**
  * Check if string is group url
  */
-function IsGroupUrl(url) {
+function isGroupUrl(url) {
   return url.startsWith('moz') && url.includes('/group.html')
 }
 
 /**
  * Get group id
  */
-function GetGroupId(url) {
+function getGroupId(url) {
   const idIndex = url.indexOf('/group.html') + 12
   return url.slice(idIndex)
 }
 
-function GetGroupUrl(name) {
+function getGroupUrl(name) {
   const urlBase = browser.runtime.getURL('group/group.html')
-  return urlBase + `#${encodeURI(name)}:id:${Uid()}`
+  return urlBase + `#${encodeURI(name)}:id:${uid()}`
 }
 
 /**
  * Find successor tab
  */
-function FindSuccessorTab(state, tab, exclude) {
+function findSuccessorTab(state, tab, exclude) {
   let target
   const isNextTree = state.activateAfterClosingNextRule === 'tree'
   const isNextVisible = state.rmFoldedTabs
@@ -567,27 +567,27 @@ function FindSuccessorTab(state, tab, exclude) {
 }
 
 export default {
-  Uid,
-  Asap,
-  Debounce,
-  Sleep,
-  StrSize,
-  BytesToStr,
-  GetPanelOf,
-  UDate,
-  UTime,
-  UElapsed,
-  CSSVar,
-  UpdateTabsTree,
+  uid,
+  asap,
+  debounce,
+  sleep,
+  strSize,
+  bytesToStr,
+  getPanelOf,
+  uDate,
+  uTime,
+  uElapsed,
+  toCSSVarName,
+  updateTabsTree,
   updatePanelsTabs,
   updatePanelsRanges,
-  ParseCSSNum,
-  CommonSubStr,
-  GetUrlFromDragEvent,
-  GetDescFromDragEvent,
-  FindBookmark,
-  IsGroupUrl,
-  GetGroupId,
-  GetGroupUrl,
-  FindSuccessorTab,
+  parseCSSNum,
+  commonSubStr,
+  getUrlFromDragEvent,
+  getDescFromDragEvent,
+  findBookmark,
+  isGroupUrl,
+  getGroupId,
+  getGroupUrl,
+  findSuccessorTab,
 }

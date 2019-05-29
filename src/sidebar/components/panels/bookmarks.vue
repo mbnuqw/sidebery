@@ -271,17 +271,17 @@ export default {
       // probe bookmarks height
       const compStyle = getComputedStyle(this.$el)
       const fhRaw = compStyle.getPropertyValue('--bookmarks-folder-height')
-      const fh = Utils.ParseCSSNum(fhRaw.trim())[0]
+      const fh = Utils.parseCSSNum(fhRaw.trim())[0]
       const fc = fh >> 1
       const fe = fc >> 1
     
       const bhRaw = compStyle.getPropertyValue('--bookmarks-bookmark-height')
-      const bh = Utils.ParseCSSNum(bhRaw.trim())[0]
+      const bh = Utils.parseCSSNum(bhRaw.trim())[0]
       const bc = bh >> 1
       const be = bc >> 1
 
       const shRaw = compStyle.getPropertyValue('--bookmarks-separator-height')
-      const sh = Utils.ParseCSSNum(shRaw.trim())[0]
+      const sh = Utils.parseCSSNum(shRaw.trim())[0]
       const sc = sh >> 1
       const se = sc >> 1
 

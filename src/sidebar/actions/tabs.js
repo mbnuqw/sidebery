@@ -85,7 +85,7 @@ async function loadTabs(state, getters) {
         if (!tab) break
 
         const sameUrl = savedTab.url === tab.url
-        const isGroup = Utils.IsGroupUrl(savedTab.url)
+        const isGroup = Utils.isGroupUrl(savedTab.url)
         if (isGroup) {
           let nextUrlOk = true
 
@@ -94,12 +94,12 @@ async function loadTabs(state, getters) {
             const nextTab = ans.tabsTreeState[j]
             if (!nextTab) break
             nextUrlOk = nextTab.url === tab.url
-            if (!Utils.IsGroupUrl(nextTab.url)) break
+            if (!Utils.isGroupUrl(nextTab.url)) break
           }
 
           // Removed group
           if (!sameUrl && nextUrlOk) {
-            const groupId = Utils.GetGroupId(savedTab.url)
+            const groupId = Utils.getGroupId(savedTab.url)
             const parent = parents[savedTab.parentId]
             const rTab = await browser.tabs.create({
               windowId: state.windowId,
@@ -130,14 +130,14 @@ async function loadTabs(state, getters) {
         }
       }
     }
-    Utils.UpdateTabsTree(state)
+    Utils.updateTabsTree(state)
 
     Logs.push('[INFO] Tabs tree restored')
   }
 
   // Update succession
   if (state.activateAfterClosing !== 'none' && activeTab) {
-    const target = Utils.FindSuccessorTab(state, activeTab)
+    const target = Utils.findSuccessorTab(state, activeTab)
     if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
   }
 
@@ -246,7 +246,7 @@ async function removeTabs(state, tabIds) {
   if (tabs.length < panel.tabs.length) {
     const activeTab = tabs.find(t => t.active)
     if (activeTab) {
-      const target = Utils.FindSuccessorTab(state, activeTab, tabs.map(t => t.id))
+      const target = Utils.findSuccessorTab(state, activeTab, tabs.map(t => t.id))
       if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
     }
   }
@@ -521,7 +521,7 @@ async function moveTabsToNewWin(state, tabIds, incognito) {
     // Ok, this is just tmp solution
     // with timeout...
     // ~~~~~~~ REWRITE THIS ~~~~~~~~
-    await Utils.Sleep(1000)
+    await Utils.sleep(1000)
     browser.runtime.sendMessage({
       windowId: win.id,
       action: 'restoreTabsTree',
@@ -544,7 +544,7 @@ function restoreTabsTree(state, tabs) {
     tab.folded = info.folded
   }
 
-  Utils.UpdateTabsTree(state)
+  Utils.updateTabsTree(state)
 }
 
 /**
@@ -591,7 +591,7 @@ async function moveTabsToWin(state, tabIds, window) {
     // Ok, this is just tmp solution
     // with timeout...
     // ~~~~~~~ REWRITE THIS ~~~~~~~~
-    await Utils.Sleep(1000)
+    await Utils.sleep(1000)
     browser.runtime.sendMessage({
       windowId: win.id,
       action: 'restoreTabsTree',
@@ -636,7 +636,7 @@ async function moveTabsToCtx(state, tabIds, ctxId) {
   }
 
   if (state.tabsTree) {
-    Utils.UpdateTabsTree(state)
+    Utils.updateTabsTree(state)
   }
 }
 
@@ -702,7 +702,7 @@ function foldTabsBranch(state, tabId) {
 
   // Update succession
   if (tab.active) {
-    const target = Utils.FindSuccessorTab(state, tab)
+    const target = Utils.findSuccessorTab(state, tab)
     if (target) browser.tabs.moveInSuccession([tab.id], target.id)
   }
 
@@ -737,7 +737,7 @@ function expTabsBranch(state, tabId) {
 
   // Update succession
   if (tab.active) {
-    const target = Utils.FindSuccessorTab(state, tab)
+    const target = Utils.findSuccessorTab(state, tab)
     if (target) browser.tabs.moveInSuccession([tab.id], target.id)
   }
 
@@ -864,7 +864,7 @@ async function dropToTabs(state, event, dropIndex, dropParent, nodes, pin) {
 
         // If there are no moving, just update tabs tree
         if (!moveIndexOk) {
-          Utils.UpdateTabsTree(state, currentPanel.startIndex, currentPanel.endIndex + 1)
+          Utils.updateTabsTree(state, currentPanel.startIndex, currentPanel.endIndex + 1)
         }
       }
 
@@ -890,7 +890,7 @@ async function dropToTabs(state, event, dropIndex, dropParent, nodes, pin) {
           cookieStoreId: destCtx,
           index: dropIndex + i,
           openerTabId: opener,
-          url: node.url ? node.url : Utils.GetGroupUrl(node.title),
+          url: node.url ? node.url : Utils.getGroupUrl(node.title),
           windowId: state.windowId,
           pinned: pin,
         })
@@ -909,14 +909,14 @@ async function dropToTabs(state, event, dropIndex, dropParent, nodes, pin) {
 
       // Update tabs tree if there are no tabs was deleted
       if (nodes[0].type !== 'tab' || event.ctrlKey) {
-        Utils.UpdateTabsTree(state, dropIndex - 1, dropIndex + nodes.length)
+        Utils.updateTabsTree(state, dropIndex - 1, dropIndex + nodes.length)
       }
     }
   }
 
   // Native event
   if (!nodes) {
-    const url = await Utils.GetUrlFromDragEvent(event)
+    const url = await Utils.getUrlFromDragEvent(event)
 
     if (url && destCtx) {
       browser.tabs.create({
@@ -958,7 +958,7 @@ function flattenTabs(state, tabIds) {
     tab.parentId = minLvlTab.parentId
   }
 
-  Utils.UpdateTabsTree(state, ttf[0].index - 1, ttf[ttf.length - 1].index + 1)
+  Utils.updateTabsTree(state, ttf[0].index - 1, ttf[ttf.length - 1].index + 1)
   saveTabsTree(state, 250)
 }
 
@@ -981,7 +981,7 @@ async function groupTabs(state, tabIds) {
 
   // Find title for group tab
   const titles = tabs.map(t => t.title)
-  let commonPart = Utils.CommonSubStr(titles)
+  let commonPart = Utils.commonSubStr(titles)
   let isOk = commonPart ? commonPart[0] === commonPart[0].toUpperCase() : false
   let groupTitle = commonPart
     .replace(/^(\s|\.|_|-|—|–|\(|\)|\/|=|;|:)+/g, ' ')
@@ -990,7 +990,7 @@ async function groupTabs(state, tabIds) {
 
   if (!isOk || groupTitle.length < 4) {
     const hosts = tabs.filter(t => !t.url.startsWith('about:')).map(t => t.url.split('/')[2])
-    groupTitle = Utils.CommonSubStr(hosts)
+    groupTitle = Utils.commonSubStr(hosts)
     if (groupTitle.startsWith('.')) groupTitle = groupTitle.slice(1)
     groupTitle = groupTitle.replace(/^www\./, '')
   }
@@ -1005,7 +1005,7 @@ async function groupTabs(state, tabIds) {
     cookieStoreId: tabs[0].cookieStoreId,
     index: tabs[0].index,
     openerTabId: tabs[0].parentId < 0 ? undefined : tabs[0].parentId,
-    url: Utils.GetGroupUrl(groupTitle),
+    url: Utils.getGroupUrl(groupTitle),
     windowId: state.windowId,
   })
 
@@ -1019,7 +1019,7 @@ async function groupTabs(state, tabIds) {
       tab.folded = false
     }
   }
-  Utils.UpdateTabsTree(state, tabs[0].index - 2, tabs[tabs.length - 1].index + 1)
+  Utils.updateTabsTree(state, tabs[0].index - 2, tabs[tabs.length - 1].index + 1)
   saveTabsTree(state, 250)
 }
 
@@ -1027,7 +1027,7 @@ async function groupTabs(state, tabIds) {
  * Get grouped tabs (for group page)
  */
 async function getGroupInfo(state, groupId) {
-  await Utils.Sleep(128)
+  await Utils.sleep(128)
 
   const idData = groupId.split(':id:')
   const title = idData[0]

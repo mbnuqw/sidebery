@@ -19,7 +19,7 @@ async function loadStyles() {
     if (!loadedStyles.hasOwnProperty(key)) continue
 
     if (loadedStyles[key]) {
-      rootEl.style.setProperty(Utils.CSSVar(key), loadedStyles[key])
+      rootEl.style.setProperty(Utils.toCSSVarName(key), loadedStyles[key])
     }
   }
 
@@ -38,9 +38,9 @@ function applyStyles(styles) {
     if (!styles.hasOwnProperty(key)) continue
 
     if (styles[key]) {
-      rootEl.style.setProperty(Utils.CSSVar(key), styles[key])
+      rootEl.style.setProperty(Utils.toCSSVarName(key), styles[key])
     } else {
-      rootEl.style.removeProperty(Utils.CSSVar(key))
+      rootEl.style.removeProperty(Utils.toCSSVarName(key))
     }
   }
 

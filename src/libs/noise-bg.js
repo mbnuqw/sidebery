@@ -114,7 +114,7 @@ function generateNoise(imgData, r, g, b, a, s) {
  *     [spread]: Array|number - distance between noise pixels in stroke
  *   }
  **/
-export function NoiseBg(target, conf = {}) {
+export function noiseBg(target, conf = {}) {
   // Check args
   if (!target) throw new Error(`Target is: ${target}`)
 

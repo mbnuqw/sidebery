@@ -31,7 +31,7 @@ function updateSettings(state, settings) {
   if (updateSuccessions) {
     const activeTab = state.tabs.find(t => t.active)
     if (state.activateAfterClosing !== 'none' && activeTab) {
-      const target = Utils.FindSuccessorTab(state, activeTab)
+      const target = Utils.findSuccessorTab(state, activeTab)
       if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
     }
   }
@@ -47,7 +47,7 @@ function updateSettings(state, settings) {
   }
 
   if (updateTree) {
-    Utils.UpdateTabsTree(state)
+    Utils.updateTabsTree(state)
   }
 
   if (hideInactTabs || updateInvisTabs) {
@@ -121,12 +121,12 @@ async function getCommonDbgInfo(state) {
   const stored = await browser.storage.local.get()
   const storage = {}
   try {
-    storage.overal = Utils.StrSize(JSON.stringify(stored))
-    storage.favicons = Utils.StrSize(JSON.stringify(stored.favicons))
+    storage.overal = Utils.strSize(JSON.stringify(stored))
+    storage.favicons = Utils.strSize(JSON.stringify(stored.favicons))
     storage.faviconsCount = Object.keys(stored.favicons).length
-    storage.tabs = Utils.StrSize(JSON.stringify(stored.tabsTreeState))
-    storage.snapshots = Utils.StrSize(JSON.stringify(stored.snapshots))
-    storage.panels = Utils.StrSize(JSON.stringify(stored.panels))
+    storage.tabs = Utils.strSize(JSON.stringify(stored.tabsTreeState))
+    storage.snapshots = Utils.strSize(JSON.stringify(stored.snapshots))
+    storage.panels = Utils.strSize(JSON.stringify(stored.panels))
   } catch (err) {
     // nothing to do...
   }

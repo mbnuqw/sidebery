@@ -49,9 +49,9 @@ export default {
   },
 
   methods: {
-    udate: Utils.UDate,
-    utime: Utils.UTime,
-    uelapsed: Utils.UElapsed,
+    udate: Utils.uDate,
+    utime: Utils.uTime,
+    uelapsed: Utils.uElapsed,
 
     /**
      * Apply snapshot

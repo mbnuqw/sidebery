@@ -46,7 +46,7 @@ async function loadStyles(state) {
       state.customStyles[key] = loadedStyles[key]
     }
     if (loadedStyles[key]) {
-      rootEl.style.setProperty(Utils.CSSVar(key), loadedStyles[key])
+      rootEl.style.setProperty(Utils.toCSSVarName(key), loadedStyles[key])
     }
   }
 
@@ -74,9 +74,9 @@ function applyStyles(state, styles) {
     if (!state.customStyles.hasOwnProperty(key)) continue
 
     if (styles[key]) {
-      rootEl.style.setProperty(Utils.CSSVar(key), styles[key])
+      rootEl.style.setProperty(Utils.toCSSVarName(key), styles[key])
     } else {
-      rootEl.style.removeProperty(Utils.CSSVar(key))
+      rootEl.style.removeProperty(Utils.toCSSVarName(key))
     }
   }
 
@@ -89,7 +89,7 @@ function applyStyles(state, styles) {
 function setStyle(state, key, val) {
   const rootEl = document.getElementById('root')
   Vue.set(state.customStyles, key, val)
-  rootEl.style.setProperty(Utils.CSSVar(key), val)
+  rootEl.style.setProperty(Utils.toCSSVarName(key), val)
   setTimeout(() => EventBus.$emit('dynVarChange'), 256)
 }
 
@@ -99,7 +99,7 @@ function setStyle(state, key, val) {
 function removeStyle(state, key) {
   const rootEl = document.getElementById('root')
   Vue.set(state.customStyles, key, null)
-  rootEl.style.removeProperty(Utils.CSSVar(key))
+  rootEl.style.removeProperty(Utils.toCSSVarName(key))
   setTimeout(() => EventBus.$emit('dynVarChange'), 256)
 }
 

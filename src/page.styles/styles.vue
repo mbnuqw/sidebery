@@ -480,7 +480,7 @@ export default {
         Store.dispatch('saveStyles')
       } else {
         const compStyle = getComputedStyle(this.$el)
-        const value = compStyle.getPropertyValue(Utils.CSSVar(key)).trim()
+        const value = compStyle.getPropertyValue(Utils.toCSSVarName(key)).trim()
         Store.dispatch('setStyle', { key, val: value })
         Store.dispatch('saveStyles')
       }

@@ -88,7 +88,7 @@ async function saveBookmarksTree(state) {
   }
 
   // Wait a moment...
-  await Utils.Sleep(128)
+  await Utils.sleep(128)
 
   walker(state.bookmarks)
   await browser.storage.local.set({ expandedBookmarks })
@@ -244,8 +244,8 @@ async function dropToBookmarks(state, event, dropIndex, dropParent, nodes) {
   // Native
   if (!nodes) {
     let [url, title] = await Promise.all([
-      Utils.GetUrlFromDragEvent(event),
-      Utils.GetDescFromDragEvent(event),
+      Utils.getUrlFromDragEvent(event),
+      Utils.getDescFromDragEvent(event),
     ])
 
     if (url) {
@@ -319,7 +319,7 @@ async function openBookmarksInPanel(state, ids, panelId) {
     const createdTab = await browser.tabs.create({
       windowId: state.windowId,
       index: index++,
-      url: node.url ? node.url : Utils.GetGroupUrl(node.title),
+      url: node.url ? node.url : Utils.getGroupUrl(node.title),
       cookieStoreId: panelId,
       active: false,
       openerTabId: idMap[node.parentId],
