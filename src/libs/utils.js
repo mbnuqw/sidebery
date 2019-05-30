@@ -1,4 +1,4 @@
-import { Translate, PlurTrans } from '../mixins/dict'
+import { translate, plurTrans } from '../mixins/dict'
 
 // prettier-ignore
 const ALPH = [
@@ -159,25 +159,25 @@ function uTime(sec) {
 function uElapsed(sec = 0, nowSec = 0) {
   const now = nowSec || ~~(Date.now() / 1000)
   let elapsed = now - sec
-  if (elapsed < 60) return Translate('elapsed.now')
+  if (elapsed < 60) return translate('elapsed.now')
   elapsed = ~~(elapsed / 60)
   // Less then an hour
-  if (elapsed < 60) return `${elapsed} ${Translate('elapsed.min')}`
+  if (elapsed < 60) return `${elapsed} ${translate('elapsed.min')}`
   elapsed = ~~(elapsed / 60)
   // Less then a day
-  if (elapsed < 24) return `${elapsed} ${Translate('elapsed.hr')}`
+  if (elapsed < 24) return `${elapsed} ${translate('elapsed.hr')}`
   elapsed = ~~(elapsed / 24)
   // Less then a week
-  if (elapsed < 7) return `${elapsed} ${PlurTrans('elapsed.day', elapsed)}`
+  if (elapsed < 7) return `${elapsed} ${plurTrans('elapsed.day', elapsed)}`
   let weeks = ~~(elapsed / 7)
   // Less then a longest month
-  if (elapsed < 31) return `${weeks} ${PlurTrans('elapsed.week', weeks)}`
+  if (elapsed < 31) return `${weeks} ${plurTrans('elapsed.week', weeks)}`
   elapsed = ~~(elapsed / 30.44)
   // Less then a year
-  if (elapsed < 12) return `${elapsed} ${PlurTrans('elapsed.month', elapsed)}`
+  if (elapsed < 12) return `${elapsed} ${plurTrans('elapsed.month', elapsed)}`
   // Years
   elapsed = ~~(elapsed / 12)
-  return `${elapsed} ${PlurTrans('elapsed.year', elapsed)}`
+  return `${elapsed} ${plurTrans('elapsed.year', elapsed)}`
 }
 
 /**

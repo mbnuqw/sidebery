@@ -1,4 +1,4 @@
-import { Locales, Translate, PlurTrans } from './dict'
+import { Locales, translate, plurTrans } from './dict'
 
 describe('Dict', () => {
   test('Tranlation', () => {
@@ -9,8 +9,8 @@ describe('Dict', () => {
       message: 'AB',
     }
 
-    expect(Translate('a')).toBe('A')
-    expect(Translate('b', 'a')).toBe('AB')
+    expect(translate('a')).toBe('A')
+    expect(translate('b', 'a')).toBe('AB')
   })
 
   test('Plural tranlation', () => {
@@ -19,16 +19,16 @@ describe('Dict', () => {
       description: '1,21,31|2,3,4,22,23,24|',
     }
 
-    expect(PlurTrans('elapsed.day', 1)).toBe('A')
-    expect(PlurTrans('elapsed.day', 21)).toBe('A')
-    expect(PlurTrans('elapsed.day', 31)).toBe('A')
-    expect(PlurTrans('elapsed.day', 2)).toBe('B')
-    expect(PlurTrans('elapsed.day', 3)).toBe('B')
-    expect(PlurTrans('elapsed.day', 4)).toBe('B')
-    expect(PlurTrans('elapsed.day', 22)).toBe('B')
-    expect(PlurTrans('elapsed.day', 5)).toBe('C')
-    expect(PlurTrans('elapsed.day', 6)).toBe('C')
-    expect(PlurTrans('elapsed.day', 11)).toBe('C')
-    expect(PlurTrans('elapsed.day', 56)).toBe('C')
+    expect(plurTrans('elapsed.day', 1)).toBe('A')
+    expect(plurTrans('elapsed.day', 21)).toBe('A')
+    expect(plurTrans('elapsed.day', 31)).toBe('A')
+    expect(plurTrans('elapsed.day', 2)).toBe('B')
+    expect(plurTrans('elapsed.day', 3)).toBe('B')
+    expect(plurTrans('elapsed.day', 4)).toBe('B')
+    expect(plurTrans('elapsed.day', 22)).toBe('B')
+    expect(plurTrans('elapsed.day', 5)).toBe('C')
+    expect(plurTrans('elapsed.day', 6)).toBe('C')
+    expect(plurTrans('elapsed.day', 11)).toBe('C')
+    expect(plurTrans('elapsed.day', 56)).toBe('C')
   })
 })

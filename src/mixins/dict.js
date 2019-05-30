@@ -45,7 +45,7 @@ if (!Locales[LANG]) LANG = 'en'
 /**
  *  Get dict value
  **/
-export function Translate(id, group) {
+export function translate(id, group) {
   if (!id) return ''
   if (group) id = `${group}.${id}`
   if (!Locales[LANG][id] || Locales[LANG][id].message === undefined) return id
@@ -55,7 +55,7 @@ export function Translate(id, group) {
 /**
  * Get right plural translation
  */
-export function PlurTrans(id, val) {
+export function plurTrans(id, val) {
   if (!id) return ''
   if (!Locales[LANG][id] || Locales[LANG][id].message === undefined) return id
   const forms = Locales[LANG][id].message.split('|')
@@ -77,7 +77,7 @@ export function PlurTrans(id, val) {
 
 export default {
   methods: {
-    t: Translate,
-    pt: PlurTrans,
+    t: translate,
+    pt: plurTrans,
   },
 }

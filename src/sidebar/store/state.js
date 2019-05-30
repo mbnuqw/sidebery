@@ -1,6 +1,6 @@
 import { DEFAULT_SETTINGS, SETTINGS_OPTIONS } from '../../settings.js'
 import Manifest from '../../../addon/manifest.json'
-import { Translate } from '../../mixins/dict'
+import { translate } from '../../mixins/dict'
 
 export const DEFAULT_CTX = 'firefox-default'
 export const PRIVATE_CTX = 'firefox-private'
@@ -8,7 +8,7 @@ export const DEFAULT_PANELS = [
   {
     type: 'bookmarks',
     id: 'bookmarks',
-    name: Translate('bookmarks_dashboard.title'),
+    name: translate('bookmarks_dashboard.title'),
     icon: 'icon_bookmarks',
     dashboard: 'BookmarksDashboard',
     panel: 'BookmarksPanel',
@@ -18,7 +18,7 @@ export const DEFAULT_PANELS = [
   {
     type: 'private',
     id: PRIVATE_CTX,
-    name: Translate('private_dashboard.title'),
+    name: translate('private_dashboard.title'),
     icon: 'icon_tabs',
     cookieStoreId: PRIVATE_CTX,
     dashboard: 'DefaultTabsDashboard',
@@ -31,7 +31,7 @@ export const DEFAULT_PANELS = [
   {
     type: 'default',
     id: DEFAULT_CTX,
-    name: Translate('default_dashboard.title'),
+    name: translate('default_dashboard.title'),
     icon: 'icon_tabs',
     cookieStoreId: DEFAULT_CTX,
     dashboard: 'DefaultTabsDashboard',
