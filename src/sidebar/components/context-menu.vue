@@ -57,7 +57,6 @@
 import EventBus from '../../event-bus'
 import Store from '../store'
 import State from '../store/state'
-import Getters from '../store/getters'
 import Actions from '../actions'
 
 export default {
@@ -102,7 +101,7 @@ export default {
     EventBus.$on('selectOption', this.onSelectOption)
     EventBus.$on('activateOption', this.onActivateOption)
 
-    Store.watch(Getters.ctxMenu, (c, p) => {
+    Store.watch(Object.getOwnPropertyDescriptor(State, 'ctxMenu').get, (c, p) => {
       if (this.leaveT) clearTimeout(this.leaveT)
       this.selected = -1
 

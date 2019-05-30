@@ -26,9 +26,7 @@
 
 
 <script>
-import {mapGetters} from 'vuex'
 import ToggleField from '../../../components/fields/toggle'
-import Store from '../../store'
 import State from '../../store/state'
 import Actions from '../../actions'
 
@@ -47,8 +45,6 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['isPrivate']),
-
     haveTabs() {
       if (!this.conf.tabs) return false
       return this.conf.tabs.length > 0
@@ -64,7 +60,7 @@ export default {
     async togglePanelNoEmpty() {
       this.conf.noEmpty = !this.conf.noEmpty
       if (this.conf.noEmpty) {
-        const defaultId = Store.getters.defaultCtxId
+        const defaultId = State.defaultCtxId
         const panel = State.panels.find(p => p.cookieStoreId === defaultId)
         if (panel && panel.tabs && !panel.tabs.length) {
           await browser.tabs.create({

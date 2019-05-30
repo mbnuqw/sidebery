@@ -91,7 +91,7 @@ async function makeSnapshot(state, pinnedTabs) {
 /**
  * Restore contexs and tabs from snapshot
  */
-async function applySnapshot(state, defaultPanel, snapshot) {
+async function applySnapshot(state, snapshot) {
   if (!snapshot) return
 
   // Restore tabs
@@ -100,7 +100,7 @@ async function applySnapshot(state, defaultPanel, snapshot) {
     let panelIndex = state.panels.findIndex(p => p.cookieStoreId === tab.cookieStoreId)
     let panel = state.panels[panelIndex]
     if (!panel) {
-      panel = defaultPanel
+      panel = state.defaultPanel
       panelIndex = state.private ? 1 : 2
     }
 

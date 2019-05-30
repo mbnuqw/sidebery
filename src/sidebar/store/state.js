@@ -81,6 +81,7 @@ export default {
   ffVer: null,
   private: browser.extension.inIncognitoContext,
   defaultCtxId: browser.extension.inIncognitoContext ? PRIVATE_CTX : DEFAULT_CTX,
+  defaultPanel: browser.extension.inIncognitoContext ? DEFAULT_PANELS[1] : DEFAULT_PANELS[2],
   windowId: 0,
   windowFocused: true,
   tabHeight: 30,

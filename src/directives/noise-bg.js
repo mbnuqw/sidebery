@@ -75,7 +75,7 @@ export default function initNoiseBgDirective(state, store) {
 
       if (state.bgNoise) drawNoise()
       if (store.watch) {
-        store.watch(Object.getOwnPropertyDescriptor(store.getters, 'bgNoise').get, function(curr, prev) {
+        store.watch(Object.getOwnPropertyDescriptor(state, 'bgNoise').get, function(curr, prev) {
           if (curr && !prev) drawNoise()
           if (!curr && prev) el.style.backgroundImage = ''
         })

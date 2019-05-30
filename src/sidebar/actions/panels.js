@@ -30,15 +30,17 @@ async function loadPanels(state) {
   // ---------------------------- UNTIL 3.1.0 --------------------------------
   let panels = DEFAULT_PANELS
   if (!ans || !ans.panels) Logs.push('[WARN] Cannot load panels')
-  if (ans && ans.panels && ans.panels.length) panels = ans.panels
+  // if (ans && ans.panels && ans.panels.length) panels = ans.panels
 
-  // hm...
-  panels[1].tabs = []
-  panels[1].startIndex = -1
-  panels[1].endIndex = -1
-  panels[2].tabs = []
-  panels[2].startIndex = -1
-  panels[2].endIndex = -1
+  // allright, this is tmp
+  if (ans && ans.panels && ans.panels.length) {
+    panels[0].lockedPanel = ans.panels[0].lockedPanel
+    // ---
+    panels[2].noEmpty = ans.panels[2].noEmpty
+    panels[2].lastActiveTab = ans.panels[2].lastActiveTab
+    panels[2].lockedPanel = ans.panels[2].lockedPanel
+    panels[2].lockedTabs = ans.panels[2].lockedTabs
+  }
 
   // Merge saved containers and queried contextualIdentities
   for (let ctx of containers) {

@@ -97,7 +97,6 @@
 
 <script>
 import Vue from 'vue'
-import { mapGetters } from 'vuex'
 import initNoiseBgDirective from '../directives/noise-bg.js'
 import Utils from '../libs/utils.js'
 import EventBus from '../event-bus'
@@ -149,8 +148,6 @@ export default {
    * --- Computed ---
    */
   computed: {
-    ...mapGetters(['defaultCtxId', 'defaultPanel', 'activePanel']),
-
     /**
      * Get window-input-panel position
      */
@@ -1361,7 +1358,7 @@ export default {
 
         if (target.type === 'bookmark') {
           if (State.openBookmarkNewTab) {
-            let index = this.defaultPanel.endIndex + 1
+            let index = State.defaultPanel.endIndex + 1
             browser.tabs.create({ index, url: target.url, active: true })
           } else {
             browser.tabs.update({ url: target.url })

@@ -23,17 +23,11 @@ export default new Vue({
   },
 
   computed: {
-    ...mapGetters(['fontSize', 'defaultCtxId', 'panels', 'pinnedTabs']),
+    ...mapGetters(['defaultCtxId', 'panels', 'pinnedTabs']),
 
     pinnedTabsPosition() {
       if (!this.pinnedTabs.length) return 'none'
       return State.pinnedTabsPosition
-    },
-  },
-
-  watch: {
-    fontSize() {
-      Actions.updateFontSize(State)
     },
   },
 
@@ -95,6 +89,9 @@ export default new Vue({
 
   mounted() {
     Actions.updateFontSize(State)
+    Store.watch(Object.getOwnPropertyDescriptor(State, 'fontSize').get, function() {
+      Actions.updateFontSize(State)
+    })
   },
 
   beforeDestroy() {

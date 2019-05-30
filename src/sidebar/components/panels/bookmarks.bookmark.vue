@@ -13,7 +13,6 @@
 
 
 <script>
-import { mapGetters } from 'vuex'
 import EventBus from '../../../event-bus'
 import State from '../../store/state'
 import Actions from '../../actions'
@@ -31,8 +30,6 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['defaultPanel', 'panels']),
-
     favicon() {
       if (!this.node.host) return
       return State.favicons[this.node.host]
@@ -187,7 +184,7 @@ export default {
       if (!this.node.url) return
 
       if (inNewTab) {
-        let index = this.defaultPanel.endIndex + 1
+        let index = State.defaultPanel.endIndex + 1
         browser.tabs.create({
           index,
           windowId: State.windowId,
