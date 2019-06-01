@@ -4,15 +4,15 @@ import Actions from '.'
 /**
  * Make snapshot
  */
-async function makeSnapshot(state, pinnedTabs) {
+async function makeSnapshot() {
   const time = ~~(Date.now() / 1000)
 
   // Gather tabs and containers
   const tabs = []
   const ctxs = []
   // Pinned tabs
-  if (state.snapshotsTargets.pinned) {
-    for (let tab of pinnedTabs) {
+  if (this.state.snapshotsTargets.pinned) {
+    for (let tab of this.getters.pinnedTabs) {
       if (tab.url.startsWith('about')) continue
       tabs.push({
         id: tab.id,
@@ -25,13 +25,13 @@ async function makeSnapshot(state, pinnedTabs) {
   }
 
   // Tabs on panels
-  for (let panel of state.panels) {
+  for (let panel of this.state.panels) {
     // Filter empty, non-tabs and turned-off panels
     if (!panel.tabs || !panel.tabs.length) continue
     if (panel.cookieStoreId === DEFAULT_CTX) {
-      if (!state.snapshotsTargets.default) continue
+      if (!this.state.snapshotsTargets.default) continue
     } else {
-      if (panel.cookieStoreId && !state.snapshotsTargets[panel.cookieStoreId]) continue
+      if (panel.cookieStoreId && !this.state.snapshotsTargets[panel.cookieStoreId]) continue
     }
 
     for (let tab of panel.tabs) {
@@ -48,7 +48,7 @@ async function makeSnapshot(state, pinnedTabs) {
     }
 
     // Gather context panels
-    if (state.snapshotsTargets[panel.cookieStoreId]) {
+    if (this.state.snapshotsTargets[panel.cookieStoreId]) {
       ctxs.push({
         cookieStoreId: panel.cookieStoreId,
         name: panel.name,
@@ -91,17 +91,17 @@ async function makeSnapshot(state, pinnedTabs) {
 /**
  * Restore contexs and tabs from snapshot
  */
-async function applySnapshot(state, snapshot) {
+async function applySnapshot(snapshot) {
   if (!snapshot) return
 
   // Restore tabs
   const tabsMap = {}
   for (let tab of snapshot.tabs) {
-    let panelIndex = state.panels.findIndex(p => p.cookieStoreId === tab.cookieStoreId)
-    let panel = state.panels[panelIndex]
+    let panelIndex = this.state.panels.findIndex(p => p.cookieStoreId === tab.cookieStoreId)
+    let panel = this.state.panels[panelIndex]
     if (!panel) {
-      panel = state.defaultPanel
-      panelIndex = state.private ? 1 : 2
+      panel = this.state.defaultPanel
+      panelIndex = this.state.private ? 1 : 2
     }
 
     // Get group url
@@ -113,7 +113,7 @@ async function applySnapshot(state, snapshot) {
 
     // Create tabs
     const createdTab = await browser.tabs.create({
-      windowId: state.windowId,
+      windowId: this.state.windowId,
       url: tab.url,
       pinned: tab.pinned,
       cookieStoreId: panel.cookieStoreId,
@@ -123,8 +123,8 @@ async function applySnapshot(state, snapshot) {
     if (tab.id !== undefined) tabsMap[tab.id] = createdTab.id
 
     // Switch to panel
-    if (!tab.pinned && panelIndex !== state.panelIndex) {
-      Actions.setPanel(state, panelIndex)
+    if (!tab.pinned && panelIndex !== this.state.panelIndex) {
+      Actions.setPanel(panelIndex)
     }
   }
 }
@@ -132,10 +132,10 @@ async function applySnapshot(state, snapshot) {
 /**
  * Load snapshots.
  */
-async function loadSnapshots(state) {
+async function loadSnapshots() {
   const ans = await browser.storage.local.get('snapshots')
-  if (ans && ans.snapshots) state.snapshots = ans.snapshots
-  state.snapshots.reverse()
+  if (ans && ans.snapshots) this.state.snapshots = ans.snapshots
+  this.state.snapshots.reverse()
 }
 
 export default {

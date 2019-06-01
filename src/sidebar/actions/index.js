@@ -1,7 +1,9 @@
 import Logs from '../../logs'
-import KeybindingsActions from '../../actions/keybindings'
 import EventBus from '../../event-bus'
+import Store from '../store'
+import State from '../store/state'
 import SettingsActions from './settings'
+import KeybindingsActions from './keybindings'
 import FaviconsActions from './favicons'
 import PanelsActions from './panels'
 import TabsActions from './tabs'
@@ -11,11 +13,11 @@ import StylesActions from './styles'
 import CtxMenuActions from './menu'
 
 /**
- * Show windows choosing panel
+ * Show window-select panel
  */
-async function chooseWin(state) {
-  state.winChoosing = []
-  state.panelIndex = -5
+async function chooseWin() {
+  this.state.winChoosing = []
+  this.state.panelIndex = -5
   let wins = await browser.windows.getAll({ populate: true })
   wins = wins.filter(w => !w.focused)
 
@@ -30,15 +32,15 @@ async function chooseWin(state) {
         title: w.title,
         screen,
         choose: () => {
-          state.winChoosing = null
-          state.panelIndex = state.lastPanelIndex
+          this.state.winChoosing = null
+          this.state.panelIndex = this.state.lastPanelIndex
           res(w.id)
         },
       }
     })
 
     Promise.all(wins).then(wins => {
-      state.winChoosing = wins
+      this.state.winChoosing = wins
     })
   })
 }
@@ -46,24 +48,24 @@ async function chooseWin(state) {
 /**
  * Retrieve current permissions
  */
-async function loadPermissions(state) {
-  state.permAllUrls = await browser.permissions.contains({ origins: ['<all_urls>'] })
-  state.permTabHide = await browser.permissions.contains({ permissions: ['tabHide'] })
+async function loadPermissions() {
+  this.state.permAllUrls = await browser.permissions.contains({ origins: ['<all_urls>'] })
+  this.state.permTabHide = await browser.permissions.contains({ permissions: ['tabHide'] })
 
-  if (!state.permAllUrls) {
-    state.proxiedPanels = {}
-    state.panels.map(c => {
+  if (!this.state.permAllUrls) {
+    this.state.proxiedPanels = {}
+    this.state.panels.map(c => {
       if (c.proxified) c.proxified = false
       if (c.proxy) c.proxy.type = 'direct'
       if (c.includeHostsActive) c.includeHostsActive = false
       if (c.excludeHostsActive) c.excludeHostsActive = false
     })
-    PanelsActions.savePanels(state)
+    Actions.savePanels()
   }
 
-  if (!state.permTabHide) {
-    state.hideInact = false
-    state.hideFoldedTabs = false
+  if (!this.state.permTabHide) {
+    this.state.hideInact = false
+    this.state.hideFoldedTabs = false
   }
 
   Logs.push('[INFO] Permissions loaded')
@@ -97,15 +99,15 @@ async function undoRmTab() {
 /**
  * Reset selection.
  */
-function resetSelection(state) {
-  if (state.selected.length > 0) {
-    state.selected = []
+function resetSelection() {
+  if (this.state.selected.length > 0) {
+    this.state.selected = []
     EventBus.$emit('deselectTab')
     EventBus.$emit('deselectBookmark')
   }
 }
 
-export default {
+const Actions = {
   ...SettingsActions,
   ...KeybindingsActions,
   ...FaviconsActions,
@@ -122,3 +124,12 @@ export default {
   undoRmTab,
   resetSelection,
 }
+
+// Inject vuex getters and state in actions
+for (let action in Actions) {
+  if (!Actions.hasOwnProperty(action)) continue
+
+  Actions[action] = Actions[action].bind({ getters: Store.getters, state: State })
+}
+
+export default Actions

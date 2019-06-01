@@ -117,7 +117,7 @@ export default {
 
   methods: {
     onClick() {
-      Actions.closeCtxMenu(State)
+      Actions.closeCtxMenu()
     },
 
     onStartSelection(event) {

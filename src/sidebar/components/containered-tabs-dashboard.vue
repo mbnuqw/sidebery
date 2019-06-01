@@ -400,12 +400,12 @@ export default {
 
     togglePanelLock() {
       this.conf.lockedPanel = !this.conf.lockedPanel
-      Actions.savePanels(State)
+      Actions.savePanels()
     },
 
     toggleTabsLock() {
       this.conf.lockedTabs = !this.conf.lockedTabs
-      Actions.savePanels(State)
+      Actions.savePanels()
     },
 
     async togglePanelNoEmpty() {
@@ -421,7 +421,7 @@ export default {
           })
         }
       }
-      Actions.savePanels(State)
+      Actions.savePanels()
     },
 
     async toggleIncludeHosts() {
@@ -436,8 +436,8 @@ export default {
       }
 
       this.conf.includeHostsActive = !this.conf.includeHostsActive
-      Actions.savePanels(State)
-      Actions.updateReqHandler(State)
+      Actions.savePanels()
+      Actions.updateReqHandler()
       await this.$nextTick()
 
       if (this.$refs.scrollBox) this.$refs.scrollBox.recalcScroll()
@@ -446,11 +446,11 @@ export default {
 
     onIncludeHostsInput(value) {
       this.conf.includeHosts = value
-      Actions.updateReqHandlerDebounced(State)
+      Actions.updateReqHandlerDebounced()
     },
 
     onIncludeHostsChange() {
-      Actions.savePanels(State)
+      Actions.savePanels()
     },
 
     async toggleExcludeHosts() {
@@ -465,8 +465,8 @@ export default {
       }
 
       this.conf.excludeHostsActive = !this.conf.excludeHostsActive
-      Actions.savePanels(State)
-      Actions.updateReqHandler(State)
+      Actions.savePanels()
+      Actions.updateReqHandler()
       await this.$nextTick()
       
       if (this.$refs.scrollBox) this.$refs.scrollBox.recalcScroll()
@@ -475,11 +475,11 @@ export default {
 
     onExcludeHostsInput(value) {
       this.conf.excludeHosts = value
-      Actions.updateReqHandlerDebounced(State)
+      Actions.updateReqHandlerDebounced()
     },
 
     onExcludeHostsChange() {
-      Actions.savePanels(State)
+      Actions.savePanels()
     },
 
     async switchProxy(type) {
@@ -509,8 +509,8 @@ export default {
       if (type === 'direct') this.conf.proxified = false
       else this.conf.proxified = this.proxyHostValid && this.proxyPortValid
 
-      Actions.savePanels(State)
-      Actions.updateReqHandler(State)
+      Actions.savePanels()
+      Actions.updateReqHandler()
 
       await this.$nextTick()
       
@@ -522,8 +522,8 @@ export default {
       this.conf.proxy.host = value
       this.conf.proxified = this.proxyHostValid && this.proxyPortValid
 
-      Actions.savePanelsDebounced(State)
-      if (this.proxyHostValid) Actions.updateReqHandlerDebounced(State)
+      Actions.savePanelsDebounced()
+      if (this.proxyHostValid) Actions.updateReqHandlerDebounced()
     },
 
     onProxyPortInput(value) {
@@ -531,16 +531,16 @@ export default {
       this.conf.proxy.port = value
       this.conf.proxified = this.proxyHostValid && this.proxyPortValid
 
-      Actions.savePanelsDebounced(State)
-      if (this.proxyPortValid) Actions.updateReqHandlerDebounced(State)
+      Actions.savePanelsDebounced()
+      if (this.proxyPortValid) Actions.updateReqHandlerDebounced()
     },
 
     onProxyUsernameInput(value) {
       if (!this.id || !this.conf.proxy) return
       this.conf.proxy.username = value
 
-      Actions.savePanelsDebounced(State)
-      Actions.updateReqHandlerDebounced(State)
+      Actions.savePanelsDebounced()
+      Actions.updateReqHandlerDebounced()
       
     },
 
@@ -548,16 +548,16 @@ export default {
       if (!this.id || !this.conf.proxy) return
       this.conf.proxy.password = value
 
-      Actions.savePanelsDebounced(State)
-      Actions.updateReqHandlerDebounced(State)
+      Actions.savePanelsDebounced()
+      Actions.updateReqHandlerDebounced()
     },
 
     toggleProxyDns() {
       if (!this.id || !this.conf.proxy) return
       this.conf.proxy.proxyDNS = !this.conf.proxy.proxyDNS
 
-      Actions.savePanels(State)
-      Actions.updateReqHandler(State)
+      Actions.savePanels()
+      Actions.updateReqHandler()
     },
 
     onFieldKeydown(e, nextFieldName, prevFieldName) {

@@ -19,7 +19,7 @@ export default {
       label: translate('menu.bookmark.open_in_new_window'),
       icon: 'icon_new_win',
       action: 'openBookmarksInNewWin',
-      args: { ids: [...State.selected] },
+      args: [State.selected],
     }
   },
 
@@ -29,7 +29,7 @@ export default {
       label: translate('menu.bookmark.open_in_new_priv_window'),
       icon: 'icon_private',
       action: 'openBookmarksInNewWin',
-      args: { ids: [...State.selected], incognito: true },
+      args: [State.selected, true],
     }
   },
 
@@ -42,7 +42,7 @@ export default {
         label: translate('menu.bookmark.open_in_default_panel'),
         icon: 'icon_tabs',
         action: 'openBookmarksInPanel',
-        args: [ State, State.selected, State.defaultCtxId ],
+        args: [ State.selected, State.defaultCtxId ],
       })
     }
 
@@ -53,7 +53,7 @@ export default {
           icon: c.icon,
           color: c.colorCode,
           action: 'openBookmarksInPanel',
-          args: [ State, State.selected, c.cookieStoreId ],
+          args: [ State.selected, c.cookieStoreId ],
         })
       }
     }
@@ -67,7 +67,7 @@ export default {
       label: translate('menu.bookmark.create_bookmark'),
       icon: 'icon_plus_b',
       action: 'startBookmarkCreation',
-      args: { type: 'bookmark', target: node },
+      args: ['bookmark', node],
     }
   },
 
@@ -77,7 +77,7 @@ export default {
       label: translate('menu.bookmark.create_folder'),
       icon: 'icon_plus_f',
       action: 'startBookmarkCreation',
-      args: { type: 'folder', target: node },
+      args: ['folder', node],
     }
   },
 
@@ -87,7 +87,7 @@ export default {
       label: translate('menu.bookmark.create_separator'),
       icon: 'icon_plus_s',
       action: 'startBookmarkCreation',
-      args: { type: 'separator', target: node },
+      args: ['separator', node],
     }
   },
 
@@ -99,7 +99,7 @@ export default {
       label: translate('menu.bookmark.edit_bookmark'),
       icon: 'icon_edit',
       action: 'startBookmarkEditing',
-      args: node,
+      args: [node],
     }
   },
 

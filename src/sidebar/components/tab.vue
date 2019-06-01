@@ -139,13 +139,13 @@ export default {
      */
     onDoubleClick() {
       let dc = State.tabDoubleClick
-      if (dc === 'reload') Actions.reloadTabs(State, [this.tab.id])
-      if (dc === 'duplicate') Actions.duplicateTabs(State, [this.tab.id])
-      if (dc === 'pin') Actions.repinTabs(State, [this.tab.id])
-      if (dc === 'mute') Actions.remuteTabs(State, [this.tab.id])
-      if (dc === 'clear_cookies') Actions.clearTabsCookies(State, [this.tab.id])
-      if (dc === 'exp' && this.tab.isParent) Actions.toggleBranch(State, this.tab.id)
-      if (dc === 'new_after') Actions.createTabAfter(State, this.tab.id)
+      if (dc === 'reload') Actions.reloadTabs([this.tab.id])
+      if (dc === 'duplicate') Actions.duplicateTabs([this.tab.id])
+      if (dc === 'pin') Actions.repinTabs([this.tab.id])
+      if (dc === 'mute') Actions.remuteTabs([this.tab.id])
+      if (dc === 'clear_cookies') Actions.clearTabsCookies([this.tab.id])
+      if (dc === 'exp' && this.tab.isParent) Actions.toggleBranch(this.tab.id)
+      if (dc === 'new_after') Actions.createTabAfter(this.tab.id)
     },
 
     /**
@@ -168,12 +168,12 @@ export default {
         this.hodorL = setTimeout(() => {
           if (State.dragNodes) return
           let llc = State.tabLongLeftClick
-          if (llc === 'reload') Actions.reloadTabs(State, [this.tab.id])
-          if (llc === 'duplicate') Actions.duplicateTabs(State, [this.tab.id])
-          if (llc === 'pin') Actions.repinTabs(State, [this.tab.id])
-          if (llc === 'mute') Actions.remuteTabs(State, [this.tab.id])
-          if (llc === 'clear_cookies') Actions.clearTabsCookies(State, [this.tab.id])
-          if (llc === 'new_after') Actions.createTabAfter(State, this.tab.id)
+          if (llc === 'reload') Actions.reloadTabs([this.tab.id])
+          if (llc === 'duplicate') Actions.duplicateTabs([this.tab.id])
+          if (llc === 'pin') Actions.repinTabs([this.tab.id])
+          if (llc === 'mute') Actions.remuteTabs([this.tab.id])
+          if (llc === 'clear_cookies') Actions.clearTabsCookies([this.tab.id])
+          if (llc === 'new_after') Actions.createTabAfter(this.tab.id)
           this.hodorL = null
         }, 250)
       }
@@ -191,12 +191,12 @@ export default {
         this.hodorR = setTimeout(() => {
           this.$emit('stop-selection')
           let lrc = State.tabLongRightClick
-          if (lrc === 'reload') Actions.reloadTabs(State,[this.tab.id])
-          if (lrc === 'duplicate') Actions.duplicateTabs(State,[this.tab.id])
-          if (lrc === 'pin') Actions.repinTabs(State,[this.tab.id])
-          if (lrc === 'mute') Actions.remuteTabs(State,[this.tab.id])
-          if (lrc === 'clear_cookies') Actions.clearTabsCookies(State,[this.tab.id])
-          if (lrc === 'new_after') Actions.createTabAfter(State,this.tab.id)
+          if (lrc === 'reload') Actions.reloadTabs([this.tab.id])
+          if (lrc === 'duplicate') Actions.duplicateTabs([this.tab.id])
+          if (lrc === 'pin') Actions.repinTabs([this.tab.id])
+          if (lrc === 'mute') Actions.remuteTabs([this.tab.id])
+          if (lrc === 'clear_cookies') Actions.clearTabsCookies([this.tab.id])
+          if (lrc === 'new_after') Actions.createTabAfter(this.tab.id)
           this.hodorR = null
         }, 250)
       }
@@ -215,17 +215,17 @@ export default {
         // Select this tab
         if (this.tab.isParent && this.tab.folded) {
         // Select whole branch if tab is folded
-          Actions.resetSelection(State)
+          Actions.resetSelection()
           const toSelect = [this.tab.id]
           for (let tab of State.tabs) {
             if (toSelect.includes(tab.parentId)) toSelect.push(tab.id)
           }
           toSelect.map(id => EventBus.$emit('selectTab', id))
           State.selected = [...toSelect]
-          Actions.openCtxMenu(State, this.$el, this.tab)
+          Actions.openCtxMenu(this.$el, this.tab)
         } else {
         // Select only current tab 
-          Actions.closeCtxMenu(State)
+          Actions.closeCtxMenu()
           State.selected = [this.tab.id]
           this.selected = true
         }
@@ -256,7 +256,7 @@ export default {
     onTabMenu(id) {
       if (id !== this.tab.id) return
       if (this.tab.invisible) return
-      Actions.openCtxMenu(State, this.$el, this.tab)
+      Actions.openCtxMenu(this.$el, this.tab)
     },
 
     /**
@@ -361,7 +361,7 @@ export default {
         let base64 = canvas.toDataURL('image/png')
         let hn = this.tab.url.split('/')[2]
         if (!hn) return
-        Actions.setFavicon(State, hn, base64)
+        Actions.setFavicon(hn, base64)
       }
     },
 
@@ -370,18 +370,18 @@ export default {
      */
     onExp(e) {
       // Fold/Expand branch
-      if (e.button === 0) Actions.toggleBranch(State, this.tab.id)
+      if (e.button === 0) Actions.toggleBranch(this.tab.id)
 
       // Select whole branch and show menu
       if (e.button === 2) {
-        Actions.resetSelection(State)
+        Actions.resetSelection()
         const toSelect = [this.tab.id]
         for (let tab of State.tabs) {
           if (toSelect.includes(tab.parentId)) toSelect.push(tab.id)
         }
         toSelect.map(id => EventBus.$emit('selectTab', id))
         State.selected = [...toSelect]
-        Actions.openCtxMenu(State, this.$el, this.tab)
+        Actions.openCtxMenu(this.$el, this.tab)
       }
     },
 
@@ -398,14 +398,14 @@ export default {
      * Handle click on audio button
      */
     onAudioClick() {
-      Actions.remuteTabs(State, [this.tab.id])
+      Actions.remuteTabs([this.tab.id])
     },
 
     /**
      * Close tab
      */
     close() {
-      Actions.removeTabs(State, [this.tab.id])
+      Actions.removeTabs([this.tab.id])
     },
 
     /**
@@ -416,7 +416,7 @@ export default {
       for (let tab of State.tabs) {
         if (toRemove.includes(tab.parentId)) toRemove.push(tab.id)
       }
-      Actions.removeTabs(State, toRemove)
+      Actions.removeTabs(toRemove)
     },
 
     loadingStart(id) {

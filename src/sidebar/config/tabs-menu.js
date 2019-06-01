@@ -23,14 +23,14 @@ export default {
     label: translate('menu.tab.move_to_new_window'),
     icon: 'icon_new_win',
     action: 'moveTabsToNewWin',
-    args: { tabIds: [...State.selected] },
+    args: [State.selected],
   }),
 
   moveToNewPrivWin: () => ({
     label: translate('menu.tab.move_to_new_priv_window'),
     icon: 'icon_private',
     action: 'moveTabsToNewWin',
-    args: { tabIds: [...State.selected], incognito: true },
+    args: [State.selected, true],
   }),
 
   moveToAnotherWin: () => {
@@ -39,7 +39,7 @@ export default {
       label: translate('menu.tab.move_to_another_window'),
       icon: 'icon_window',
       action: 'moveTabsToWin',
-      args: { tabIds: [...State.selected], window: State.otherWindows[0] },
+      args: [State.selected, State.otherWindows[0]],
     }
   },
 
@@ -49,7 +49,7 @@ export default {
       label: translate('menu.tab.move_to_window_'),
       icon: 'icon_windows',
       action: 'moveTabsToWin',
-      args: { tabIds: [...State.selected] },
+      args: [State.selected],
     }
   },
 
@@ -62,7 +62,7 @@ export default {
         label: translate('menu.tab.reopen_in_default_panel'),
         icon: 'icon_tabs',
         action: 'moveTabsToCtx',
-        args: { tabIds: [...State.selected], ctxId: 'firefox-default' },
+        args: [State.selected, 'firefox-default'],
       })
     }
 
@@ -73,7 +73,7 @@ export default {
         icon: c.icon,
         color: c.colorCode,
         action: 'moveTabsToCtx',
-        args: { tabIds: [...State.selected], ctxId: c.cookieStoreId },
+        args: [State.selected, c.cookieStoreId],
       })
     }
 
@@ -86,7 +86,7 @@ export default {
       label: translate('menu.tab.' + wut),
       icon: 'icon_pin',
       action: wut + 'Tabs',
-      args: [...State.selected],
+      args: [State.selected],
     }
   },
 
@@ -95,7 +95,7 @@ export default {
       label: translate('menu.tab.reload'),
       icon: 'icon_reload',
       action: 'reloadTabs',
-      args: [...State.selected],
+      args: [State.selected],
     }
   },
 
@@ -104,7 +104,7 @@ export default {
       label: translate('menu.tab.bookmark'),
       icon: 'icon_star',
       action: 'bookmarkTabs',
-      args: [...State.selected],
+      args: [State.selected],
     }
   },
 
@@ -114,7 +114,7 @@ export default {
       label: translate('menu.tab.' + wut),
       icon: node.mutedInfo.muted ? 'icon_loud' : 'icon_mute',
       action: wut + 'Tabs',
-      args: [...State.selected],
+      args: [State.selected],
     }
   },
 
@@ -126,7 +126,7 @@ export default {
       label: translate('menu.tab.discard'),
       icon: 'icon_discard',
       action: 'discardTabs',
-      args: [...State.selected],
+      args: [State.selected],
     }
   },
 
@@ -136,7 +136,7 @@ export default {
       label: translate('menu.tab.group'),
       icon: 'icon_group_tabs',
       action: 'groupTabs',
-      args: [State, State.selected],
+      args: [State.selected],
     }
   },
 
@@ -148,7 +148,7 @@ export default {
       label: translate('menu.tab.flatten'),
       icon: 'icon_flatten',
       action: 'flattenTabs',
-      args: [...State.selected],
+      args: [State.selected],
     }
   },
 
@@ -157,7 +157,7 @@ export default {
       label: translate('menu.tab.clear_cookies'),
       icon: 'icon_cookie',
       action: 'clearTabsCookies',
-      args: [...State.selected],
+      args: [State.selected],
     }
   },
 
@@ -167,7 +167,7 @@ export default {
       label: translate('menu.tab.close'),
       icon: 'icon_close',
       action: 'removeTabs',
-      args: [...State.selected],
+      args: [State.selected],
     }
   },
 }

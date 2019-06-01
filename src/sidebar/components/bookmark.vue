@@ -78,7 +78,7 @@ export default {
      */
     onMouseUp(e) {
       if (e.button === 2) {
-        Actions.closeCtxMenu(State)
+        Actions.closeCtxMenu()
         // Select this bookmark
         if (!State.selected.length) {
           State.selected = [this.node.id]
@@ -127,7 +127,7 @@ export default {
      */
     onBookmarkMenu(id) {
       if (id !== this.node.id) return
-      Actions.openCtxMenu(State, this.$el.childNodes[0], this.node)
+      Actions.openCtxMenu(this.$el.childNodes[0], this.node)
     },
 
     /**
@@ -193,7 +193,7 @@ export default {
         })
       } else {
         browser.tabs.update({ url: this.node.url })
-        if (withFocus && !this.panels[0].lockedPanel) Actions.goToActiveTabPanel(State)
+        if (withFocus && !this.panels[0].lockedPanel) Actions.goToActiveTabPanel()
       }
 
       if (this.node.parentId === 'unfiled_____' && State.autoRemoveOther) {

@@ -1,43 +1,43 @@
 import Utils from '../../utils'
 import Logs from '../../logs'
 import CommonActions from '../../actions/settings'
-import Actions from './index'
 import { DEFAULT_SETTINGS } from '../../settings'
+import Actions from '.'
 
 /**
  * Update settings
  */
-function updateSettings(state, settings) {
+function updateSettings(settings) {
   if (!settings) return
 
   // Check what values was updated
-  const hideInactTabs = state.hideInact !== settings.hideInact
+  const hideInactTabs = this.state.hideInact !== settings.hideInact
   const updateSuccessions =
-    state.activateAfterClosing !== settings.activateAfterClosing ||
-    state.activateAfterClosingPrevRule !== settings.activateAfterClosingPrevRule ||
-    state.activateAfterClosingNextRule !== settings.activateAfterClosingNextRule
-  const resetTree = state.tabsTree !== settings.tabsTree && state.tabsTree
-  const updateTree = state.tabsTreeLimit !== settings.tabsTreeLimit
-  const updateInvisTabs = state.hideFoldedTabs !== settings.hideFoldedTabs
-  const toggleBookmarks = state.bookmarksPanel !== settings.bookmarksPanel
-  const look = state.look !== settings.look
+    this.state.activateAfterClosing !== settings.activateAfterClosing ||
+    this.state.activateAfterClosingPrevRule !== settings.activateAfterClosingPrevRule ||
+    this.state.activateAfterClosingNextRule !== settings.activateAfterClosingNextRule
+  const resetTree = this.state.tabsTree !== settings.tabsTree && this.state.tabsTree
+  const updateTree = this.state.tabsTreeLimit !== settings.tabsTreeLimit
+  const updateInvisTabs = this.state.hideFoldedTabs !== settings.hideFoldedTabs
+  const toggleBookmarks = this.state.bookmarksPanel !== settings.bookmarksPanel
+  const look = this.state.look !== settings.look
 
   // Update settings of this instance
   for (let k in settings) {
     if (!settings.hasOwnProperty(k)) continue
-    if (settings[k] !== undefined) state[k] = settings[k]
+    if (settings[k] !== undefined) this.state[k] = settings[k]
   }
 
   if (updateSuccessions) {
-    const activeTab = state.tabs.find(t => t.active)
-    if (state.activateAfterClosing !== 'none' && activeTab) {
-      const target = Utils.findSuccessorTab(state, activeTab)
+    const activeTab = this.state.tabs.find(t => t.active)
+    if (this.state.activateAfterClosing !== 'none' && activeTab) {
+      const target = Utils.findSuccessorTab(this.state, activeTab)
       if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
     }
   }
 
   if (resetTree) {
-    for (let tab of state.tabs) {
+    for (let tab of this.state.tabs) {
       tab.isParent = false
       tab.folded = false
       tab.invisible = false
@@ -47,30 +47,30 @@ function updateSettings(state, settings) {
   }
 
   if (updateTree) {
-    Utils.updateTabsTree(state)
+    Actions.updateTabsTree()
   }
 
   if (hideInactTabs || updateInvisTabs) {
-    Actions.updateTabsVisability(state)
+    Actions.updateTabsVisability()
   }
 
   if (toggleBookmarks) {
-    if (state.bookmarksPanel) Actions.loadBookmarks(state)
-    else state.bookmarks = []
+    if (this.state.bookmarksPanel) Actions.loadBookmarks()
+    else this.state.bookmarks = []
   }
 
   if (look) {
-    Actions.initTheme(state)
+    Actions.initTheme()
   }
 }
 
 /**
  * Provide window-wise debug data
  */
-async function getWindowDbgInfo(state) {
+async function getWindowDbgInfo() {
   const tabs = []
 
-  for (let tab of state.tabs) {
+  for (let tab of this.state.tabs) {
     // Get sanitized clone
     const tabClone = JSON.parse(JSON.stringify(tab))
 
@@ -94,17 +94,17 @@ async function getWindowDbgInfo(state) {
 /**
  * Provide common debug data
  */
-async function getCommonDbgInfo(state) {
+async function getCommonDbgInfo() {
   // Settings
   const settings = {}
   for (let sKey in DEFAULT_SETTINGS) {
     if (!DEFAULT_SETTINGS.hasOwnProperty(sKey)) continue
-    settings[sKey] = state[sKey]
+    settings[sKey] = this.state[sKey]
   }
 
   // Panels
   const panelsInfo = []
-  for (let panel of state.panels) {
+  for (let panel of this.state.panels) {
     // Get sanitized clone
     const panelClone = JSON.parse(JSON.stringify(panel))
 
@@ -149,7 +149,7 @@ async function getCommonDbgInfo(state) {
       }
     }
   }
-  walker(state.bookmarks)
+  walker(this.state.bookmarks)
   const bookmarks = {
     bookmarksCount,
     foldersCount,

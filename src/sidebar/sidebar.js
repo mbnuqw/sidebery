@@ -59,38 +59,38 @@ export default new Vue({
 
     State.instanceType = 'sidebar'
 
-    await Actions.loadSettings(State)
-    Actions.initTheme(State)
-    if (State.customTheme) Actions.loadCustomCSS(State)
+    await Actions.loadSettings()
+    Actions.initTheme()
+    if (State.customTheme) Actions.loadCustomCSS()
 
-    await Actions.loadPanelIndex(State)
-    await Actions.loadPanels(State)
+    await Actions.loadPanelIndex()
+    await Actions.loadPanels()
 
     if (State.bookmarksPanel && State.panelIndex === 0) {
-      await Actions.loadBookmarks(State)
+      await Actions.loadBookmarks()
     }
 
-    await Actions.loadTabs(State, Store.getters)
-    await Actions.loadCtxMenu(State)
+    await Actions.loadTabs()
+    await Actions.loadCtxMenu()
     await Actions.loadStyles()
-    Actions.scrollToActiveTab(State)
-    Actions.loadKeybindings(State)
-    Actions.loadFavicons(State)
-    Actions.loadPermissions(State)
+    Actions.scrollToActiveTab()
+    Actions.loadKeybindings()
+    Actions.loadFavicons()
+    Actions.loadPermissions()
 
     // Try to clear unneeded favicons
-    Actions.tryClearFaviCache(State, 86400)
+    Actions.tryClearFaviCache(86400)
 
     // Hide / show tabs
-    Actions.updateTabsVisability(State)
+    Actions.updateTabsVisability()
 
-    EventBus.$on('CreateSnapshot', () => Actions.makeSnapshot(State, Store.getters.pinnedTabs))
+    EventBus.$on('CreateSnapshot', () => Actions.makeSnapshot())
   },
 
   mounted() {
-    Actions.updateFontSize(State)
+    Actions.updateFontSize()
     Store.watch(Object.getOwnPropertyDescriptor(State, 'fontSize').get, function() {
-      Actions.updateFontSize(State)
+      Actions.updateFontSize()
     })
   },
 
@@ -107,8 +107,8 @@ export default new Vue({
     onFocusWindow(id) {
       State.windowFocused = id === State.windowId
       if (State.windowFocused) {
-        if (State.tabsTree) Actions.saveTabsTree(State, 0)
-        Actions.savePanelIndex(State)
+        if (State.tabsTree) Actions.saveTabsTree(0)
+        Actions.savePanelIndex()
       }
     },
 
@@ -119,13 +119,13 @@ export default new Vue({
       if (type !== 'local') return
 
       if (changes.settings) {
-        Actions.updateSettings(State, changes.settings.newValue)
+        Actions.updateSettings(changes.settings.newValue)
       }
       if (changes.styles) {
         Actions.applyStyles(changes.styles.newValue)
       }
       if (changes.panels && !State.windowFocused) {
-        Actions.updatePanels(State, changes.panels.newValue)
+        Actions.updatePanels(changes.panels.newValue)
       }
       if (changes.tabsMenu) {
         State.tabsMenu = changes.tabsMenu.newValue
@@ -141,7 +141,7 @@ export default new Vue({
     onCmd(name) {
       if (!State.windowFocused) return
       let cmdName = 'kb_' + name
-      if (Actions[cmdName]) Actions[cmdName](State)
+      if (Actions[cmdName]) Actions[cmdName]()
     },
   },
 })

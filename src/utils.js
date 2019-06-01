@@ -188,123 +188,6 @@ function toCSSVarName(key) {
 }
 
 /**
- * Normalize tree levels
- */
-function updateTabsTree(state, startIndex = 0, endIndex = -1) {
-  if (!state.tabsTree) return
-  if (!state.tabs || !state.tabs.length) return
-  if (startIndex < 0) startIndex = 0
-  if (endIndex === -1) endIndex = state.tabs.length
-  const maxLvl = typeof state.tabsTreeLimit === 'number' ? state.tabsTreeLimit : 123
-
-  // Reset parent-flags of the last tab
-  state.tabs[state.tabs.length - 1].isParent = false
-  state.tabs[state.tabs.length - 1].folded = false
-
-  for (let i = startIndex; i < endIndex; i++) {
-    const t = state.tabs[i]
-    if (!t) return
-    if (t.pinned) {
-      t.parentId = -1
-      t.lvl = 0
-      t.invisible = false
-      t.isParent = false
-      t.folded = false
-      continue
-    }
-    const pt = state.tabs[i - 1]
-
-    let parent = state.tabsMap[t.parentId]
-    if (parent && (parent.pinned || parent.index >= t.index)) parent = undefined
-
-    // Parent is defined
-    if (parent && !parent.pinned) {
-      if (parent.lvl === maxLvl) {
-        parent.isParent = false
-        parent.folded = false
-        t.parentId = parent.parentId
-        t.lvl = parent.lvl
-        t.invisible = parent.invisible
-      } else {
-        parent.isParent = true
-        t.lvl = parent.lvl + 1
-        t.invisible = parent.folded || parent.invisible
-      }
-
-      // if prev tab is not parent and with smaller lvl
-      // go back and set lvl and parentId
-      if (pt && pt.id !== t.parentId && pt.lvl < t.lvl) {
-        for (let j = t.index; j--; ) {
-          if (state.tabs[j].id === parent.id) break
-          if (state.tabs[j].cookieStoreId !== t.cookieStoreId) break
-          if (parent.lvl === maxLvl) {
-            state.tabs[j].parentId = parent.parentId
-            state.tabs[j].isParent = false
-            state.tabs[j].folded = false
-          } else {
-            state.tabs[j].parentId = parent.id
-          }
-          state.tabs[j].lvl = t.lvl
-          state.tabs[j].invisible = t.invisible
-        }
-      }
-    } else {
-      t.parentId = -1
-      t.lvl = 0
-      t.invisible = false
-    }
-
-    // Reset parent-flags of prev tab if current tab have same lvl
-    if (pt && pt.lvl >= t.lvl) {
-      pt.isParent = false
-      pt.folded = false
-    }
-  }
-}
-
-/**
- * Update tabs - panel relation with range indexes
- */
-function updatePanelsTabs(state, getters) {
-  let lastIndex = getters.pinnedTabs.length
-  for (let panel of state.panels) {
-    if (panel.panel !== 'TabsPanel') continue
-
-    panel.tabs = []
-    for (let t of state.tabs) {
-      if (t.pinned) continue
-      if (t.cookieStoreId === panel.cookieStoreId) panel.tabs.push(t)
-    }
-    if (panel.tabs.length) {
-      lastIndex = panel.tabs[panel.tabs.length - 1].index
-      panel.startIndex = panel.tabs[0].index
-      panel.endIndex = lastIndex++
-    } else {
-      panel.startIndex = lastIndex
-      panel.endIndex = panel.startIndex
-    }
-  }
-}
-
-/**
- * Update panels ranges
- */
-function updatePanelsRanges(state, getters) {
-  let lastIndex = getters.pinnedTabs.length
-  for (let panel of state.panels) {
-    if (panel.panel !== 'TabsPanel') continue
-    if (panel.tabs.length) {
-      lastIndex = panel.tabs[panel.tabs.length - 1].index
-      panel.startIndex = panel.tabs[0].index
-      panel.endIndex = lastIndex++
-    } else {
-      panel.startIndex = lastIndex
-      panel.endIndex = panel.startIndex
-    }
-  }
-}
-
-/**
  * Parse numerical css value
  */
 function parseCSSNum(cssValue, or = 0) {
@@ -578,9 +461,6 @@ export default {
   uTime,
   uElapsed,
   toCSSVarName,
-  updateTabsTree,
-  updatePanelsTabs,
-  updatePanelsRanges,
   parseCSSNum,
   commonSubStr,
   getUrlFromDragEvent,

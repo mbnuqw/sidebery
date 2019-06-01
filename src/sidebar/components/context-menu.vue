@@ -165,7 +165,7 @@ export default {
     onML() {
       if (State.autoHideCtxMenu === 'none') return
       this.leaveT = setTimeout(() => {
-        Actions.closeCtxMenu(State)
+        Actions.closeCtxMenu()
       }, State.autoHideCtxMenu)
     },
 
@@ -176,7 +176,7 @@ export default {
       if (typeof opt.action === 'function') {
         opt.action(...opt.args)
       }
-      Actions.closeCtxMenu(State)
+      Actions.closeCtxMenu()
     },
 
     onSelectOption(dir) {

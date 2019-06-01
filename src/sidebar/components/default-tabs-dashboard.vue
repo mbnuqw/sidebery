@@ -54,7 +54,7 @@ export default {
   methods: {
     togglePanelLock() {
       this.conf.lockedPanel = !this.conf.lockedPanel
-      Actions.savePanels(State)
+      Actions.savePanels()
     },
 
     async togglePanelNoEmpty() {
@@ -71,7 +71,7 @@ export default {
           })
         }
       }
-      Actions.savePanels(State)
+      Actions.savePanels()
     },
 
     dedupTabs() {

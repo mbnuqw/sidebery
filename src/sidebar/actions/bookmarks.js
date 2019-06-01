@@ -6,7 +6,7 @@ import Actions from '.'
 /**
  * Load bookmarks and restore tree state
  */
-async function loadBookmarks(state) {
+async function loadBookmarks() {
   EventBus.$emit('panelLoadingStart', 0)
   let bookmarks = await browser.bookmarks.getTree()
   if (!bookmarks || !bookmarks.length) {
@@ -15,22 +15,22 @@ async function loadBookmarks(state) {
   }
 
   // Normalize objects before vue
-  state.bookmarksMap = {}
-  state.bookmarksUrlMap = {}
+  this.state.bookmarksMap = {}
+  this.state.bookmarksUrlMap = {}
   const walker = nodes => {
     for (let n of nodes) {
-      state.bookmarksMap[n.id] = n
+      this.state.bookmarksMap[n.id] = n
       if (n.type === 'bookmark') {
         n.host = n.url.split('/')[2]
-        if (state.selOpenedBookmarks) {
-          n.opened = !!state.tabs.find(t => t.url === n.url)
+        if (this.state.selOpenedBookmarks) {
+          n.opened = !!this.state.tabs.find(t => t.url === n.url)
         } else {
           n.opened = false
         }
-        if (state.bookmarksUrlMap[n.url]) {
-          state.bookmarksUrlMap[n.url].push(n)
+        if (this.state.bookmarksUrlMap[n.url]) {
+          this.state.bookmarksUrlMap[n.url].push(n)
         } else {
-          state.bookmarksUrlMap[n.url] = [n]
+          this.state.bookmarksUrlMap[n.url] = [n]
         }
       }
       if (n.type === 'folder') {
@@ -43,7 +43,7 @@ async function loadBookmarks(state) {
   walker(bookmarks[0].children)
 
   // If not private, restore bookmarks tree
-  if (!state.private) {
+  if (!this.state.private) {
     let ans = await browser.storage.local.get('expandedBookmarks')
     let expandedBookmarks = ans.expandedBookmarks
     if (expandedBookmarks) {
@@ -61,7 +61,7 @@ async function loadBookmarks(state) {
     Logs.push('[INFO] Bookmarks tree state restored')
   }
 
-  state.bookmarks = bookmarks[0].children
+  this.state.bookmarks = bookmarks[0].children
   EventBus.$emit('panelLoadingOk', 0)
 
   Logs.push('[INFO] Bookmarks loaded')
@@ -70,8 +70,8 @@ async function loadBookmarks(state) {
 /**
  * Save tree state
  */
-async function saveBookmarksTree(state) {
-  if (!state.windowFocused) return
+async function saveBookmarksTree() {
+  if (!this.state.windowFocused) return
 
   let expandedBookmarks = []
   let path = []
@@ -90,7 +90,7 @@ async function saveBookmarksTree(state) {
   // Wait a moment...
   await Utils.sleep(128)
 
-  walker(state.bookmarks)
+  walker(this.state.bookmarks)
   await browser.storage.local.set({ expandedBookmarks })
 }
 
@@ -98,7 +98,7 @@ async function saveBookmarksTree(state) {
  * Reload bookmarks without restoring
  * prev state.
  */
-async function reloadBookmarks(state) {
+async function reloadBookmarks() {
   EventBus.$emit('panelLoadingStart', 0)
   try {
     let tree = await browser.bookmarks.getTree()
@@ -113,10 +113,10 @@ async function reloadBookmarks(state) {
     }
     walker(tree[0].children)
 
-    state.bookmarks = tree[0].children
+    this.state.bookmarks = tree[0].children
     EventBus.$emit('panelLoadingOk', 0)
   } catch (err) {
-    state.bookmarks = []
+    this.state.bookmarks = []
     EventBus.$emit('panelLoadingErr', 0)
   }
 }
@@ -124,13 +124,13 @@ async function reloadBookmarks(state) {
 /**
  * Expand bookmark folder
  */
-function expandBookmark(state, nodeId) {
+function expandBookmark(nodeId) {
   let done = false
   let isEmpty = false
   const expandPath = []
   const toFold = []
   const walker = nodes => {
-    if (state.autoCloseBookmarks && nodes.find(c => c.id === nodeId)) {
+    if (this.state.autoCloseBookmarks && nodes.find(c => c.id === nodeId)) {
       for (let n of nodes) {
         if (n.expanded) toFold.push(n)
       }
@@ -151,30 +151,30 @@ function expandBookmark(state, nodeId) {
     }
     if (!done) expandPath.pop()
   }
-  walker(state.bookmarks)
+  walker(this.state.bookmarks)
 
-  let parent = { children: state.bookmarks }
+  let parent = { children: this.state.bookmarks }
   for (let i of expandPath) {
     parent = parent.children[i]
     parent.expanded = true
   }
 
-  if (state.autoCloseBookmarks && !isEmpty) {
+  if (this.state.autoCloseBookmarks && !isEmpty) {
     for (let n of toFold) {
       n.expanded = false
     }
   }
 
   /* eslint-disable-next-line */
-  state.bookmarks = state.bookmarks
-  Actions.recalcPanelScroll(state)
-  saveBookmarksTree(state)
+  this.state.bookmarks = this.state.bookmarks
+  Actions.recalcPanelScroll()
+  Actions.saveBookmarksTree()
 }
 
 /**
  * Fold bookmark folder
  */
-function foldBookmark(state, nodeId) {
+function foldBookmark(nodeId) {
   let done = false
   const walker = nodes => {
     for (let n of nodes) {
@@ -187,18 +187,18 @@ function foldBookmark(state, nodeId) {
       if (!done && n.children) walker(n.children)
     }
   }
-  walker(state.bookmarks)
+  walker(this.state.bookmarks)
 
   /* eslint-disable-next-line */
-  state.bookmarks = state.bookmarks
-  Actions.recalcPanelScroll(state)
-  saveBookmarksTree(state)
+  this.state.bookmarks = this.state.bookmarks
+  Actions.recalcPanelScroll()
+  Actions.saveBookmarksTree()
 }
 
 /**
  * Drop to bookmarks panel
  */
-async function dropToBookmarks(state, event, dropIndex, dropParent, nodes) {
+async function dropToBookmarks(event, dropIndex, dropParent, nodes) {
   // Tabs or Bookmarks
   if (nodes && nodes.length) {
     const nodeType = nodes[0].type
@@ -250,7 +250,7 @@ async function dropToBookmarks(state, event, dropIndex, dropParent, nodes) {
 
     if (url) {
       if (!title || title === url) {
-        const tab = state.tabs.find(t => t.url === url)
+        const tab = this.state.tabs.find(t => t.url === url)
         if (tab) title = tab.title
       }
 
@@ -267,7 +267,7 @@ async function dropToBookmarks(state, event, dropIndex, dropParent, nodes) {
 /**
  * Open bookmarks in new window
  */
-function openBookmarksInNewWin(state, ids, incognito) {
+function openBookmarksInNewWin(ids, incognito) {
   const urls = []
   const walker = nodes => {
     for (let node of nodes) {
@@ -279,7 +279,7 @@ function openBookmarksInNewWin(state, ids, incognito) {
       if (node.children) walker(node.children)
     }
   }
-  walker(state.bookmarks)
+  walker(this.state.bookmarks)
 
   return browser.windows.create({ url: urls, incognito })
 }
@@ -287,9 +287,9 @@ function openBookmarksInNewWin(state, ids, incognito) {
 /**
  * Open bookmarks
  */
-async function openBookmarksInPanel(state, ids, panelId) {
-  const pi = state.panels.findIndex(p => p.cookieStoreId === panelId)
-  const p = state.panels[pi]
+async function openBookmarksInPanel(ids, panelId) {
+  const pi = this.state.panels.findIndex(p => p.cookieStoreId === panelId)
+  const p = this.state.panels[pi]
   if (!p) return
 
   let index = p.endIndex + 1
@@ -308,16 +308,16 @@ async function openBookmarksInPanel(state, ids, panelId) {
       if (node.children) walker(node.children)
     }
   }
-  walker(state.bookmarks)
+  walker(this.state.bookmarks)
 
-  Actions.setPanel(state, pi)
+  Actions.setPanel(pi)
 
   const idMap = []
   for (let node of toOpen) {
     const isDir = node.type === 'folder'
-    if (isDir && !state.tabsTree) continue
+    if (isDir && !this.state.tabsTree) continue
     const createdTab = await browser.tabs.create({
-      windowId: state.windowId,
+      windowId: this.state.windowId,
       index: index++,
       url: node.url ? node.url : Utils.getGroupUrl(node.title),
       cookieStoreId: panelId,
@@ -331,7 +331,7 @@ async function openBookmarksInPanel(state, ids, panelId) {
 /**
  * Start bookmark creation
  */
-function startBookmarkCreation(state, type, target) {
+function startBookmarkCreation(type, target) {
   let parentId
   if (target.type === 'bookmark') parentId = target.parentId
   if (target.type === 'folder') parentId = target.id
@@ -341,16 +341,16 @@ function startBookmarkCreation(state, type, target) {
     return
   }
 
-  state.bookmarkEditorTarget = { type, parentId }
-  state.bookmarkEditor = true
+  this.state.bookmarkEditorTarget = { type, parentId }
+  this.state.bookmarkEditor = true
 }
 
 /**
  * Start bookmark editing
  */
-function startBookmarkEditing(state, node) {
-  state.bookmarkEditorTarget = node
-  state.bookmarkEditor = true
+function startBookmarkEditing(node) {
+  this.state.bookmarkEditorTarget = node
+  this.state.bookmarkEditor = true
 }
 
 /**
@@ -365,15 +365,15 @@ async function removeBookmarks(ids) {
 /**
  * Collapse all bookmarks folders
  */
-function collapseAllBookmarks(state) {
+function collapseAllBookmarks() {
   const walker = nodes => {
     for (let n of nodes) {
       if (n.type === 'folder') n.expanded = false
       if (n.children) walker(n.children)
     }
   }
-  walker(state.bookmarks)
-  saveBookmarksTree(state)
+  walker(this.state.bookmarks)
+  Actions.saveBookmarksTree()
 }
 
 export default {

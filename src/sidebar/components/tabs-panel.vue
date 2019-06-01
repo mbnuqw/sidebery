@@ -26,7 +26,6 @@
 <script>
 import Utils from '../../utils'
 import EventBus from '../../event-bus'
-import Store from '../store'
 import State from '../store/state'
 import Actions from '../actions'
 import ScrollBox from './scroll-box'
@@ -107,12 +106,12 @@ export default {
     onMouseDown(e) {
       if (e.button === 0) {
         const la = State.tabsPanelLeftClickAction
-        if (la === 'prev') return Actions.switchPanel(State, -1)
+        if (la === 'prev') return Actions.switchPanel(-1)
         if (la === 'expand') {
           if (!State.tabsTree) return
           const activeTab = State.tabs.find(t => t.active)
           if (!activeTab || !activeTab.isParent) return
-          return Actions.toggleBranch(State, activeTab.id)
+          return Actions.toggleBranch(activeTab.id)
         }
       }
 
@@ -123,13 +122,13 @@ export default {
 
       if (e.button === 2) {
         const ra = State.tabsPanelRightClickAction
-        if (ra === 'next') return Actions.switchPanel(State, 1)
+        if (ra === 'next') return Actions.switchPanel(1)
         if (ra === 'dash') return EventBus.$emit('openDashboard', State.panelIndex)
         if (ra === 'expand') {
           if (!State.tabsTree) return
           const activeTab = State.tabs.find(t => t.active)
           if (!activeTab || !activeTab.isParent) return
-          return Actions.toggleBranch(State, activeTab.id)
+          return Actions.toggleBranch(activeTab.id)
         }
       }
     },
@@ -146,11 +145,11 @@ export default {
 
         if (e.deltaY > 0) {
           if (State.wheelBlockTimeout) return
-          Actions.switchTab(State, Store.getters, globaly, e.ctrlKey, 1)
+          Actions.switchTab(globaly, e.ctrlKey, 1)
         }
         if (e.deltaY < 0) {
           if (State.wheelBlockTimeout) return
-          Actions.switchTab(State, Store.getters, globaly, e.ctrlKey, -1)
+          Actions.switchTab(globaly, e.ctrlKey, -1)
         }
       }
     },
@@ -262,7 +261,7 @@ export default {
      * Create new tab
      */
     createTab() {
-      Actions.createTab(State, this.storeId)
+      Actions.createTab(this.storeId)
     },
   },
 }

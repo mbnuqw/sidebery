@@ -141,50 +141,6 @@ describe('Global utilities', () => {
     })
   })
 
-  describe('updateTabsTree()', () => {
-    test('Building tree', () => {
-      const tabs = [
-        { id: 0, index: 0, invisible: false, isParent: false, parentId: -1, folded: false, lvl: 0 },
-        { id: 1, index: 1, invisible: false, isParent: false, parentId: -1, folded: false, lvl: 0 },
-        { id: 2, index: 2, invisible: false, isParent: false, parentId: -1, folded: false, lvl: 0 },
-        { id: 3, index: 3, invisible: false, isParent: false, parentId: 1, folded: false, lvl: 0 },
-        { id: 4, index: 4, invisible: false, isParent: true, parentId: 3, folded: false, lvl: 0 },
-        { id: 5, index: 5, invisible: false, isParent: false, parentId: -1, folded: false, lvl: 0 },
-      ]
-      const tabsMap = [...tabs]
-      Utils.updateTabsTree({ tabs, tabsMap, tabsTree: true })
-      expect(tabs).toEqual([
-        { id: 0, index: 0, invisible: false, isParent: false, parentId: -1, folded: false, lvl: 0 },
-        { id: 1, index: 1, invisible: false, isParent: true, parentId: -1, folded: false, lvl: 0 },
-        { id: 2, index: 2, invisible: false, isParent: false, parentId: 1, folded: false, lvl: 1 },
-        { id: 3, index: 3, invisible: false, isParent: true, parentId: 1, folded: false, lvl: 1 },
-        { id: 4, index: 4, invisible: false, isParent: false, parentId: 3, folded: false, lvl: 2 },
-        { id: 5, index: 5, invisible: false, isParent: false, parentId: -1, folded: false, lvl: 0 },
-      ])
-    })
-
-    test('Tree level limit', () => {
-      const tabs = [
-        { id: 0, index: 0, invisible: false, isParent: false, parentId: -1, folded: false, lvl: 0 },
-        { id: 1, index: 1, invisible: false, isParent: false, parentId: 0, folded: false, lvl: 0 },
-        { id: 2, index: 2, invisible: false, isParent: false, parentId: 1, folded: true, lvl: 0 },
-        { id: 3, index: 3, invisible: false, isParent: false, parentId: -1, folded: false, lvl: 0 },
-        { id: 4, index: 4, invisible: false, isParent: false, parentId: 3, folded: false, lvl: 0 },
-        { id: 5, index: 5, invisible: false, isParent: false, parentId: 2, folded: false, lvl: 0 },
-      ]
-      const tabsMap = [...tabs]
-      Utils.updateTabsTree({ tabs, tabsMap, tabsTree: true, tabsTreeLimit: 2 })
-      expect(tabs).toEqual([
-        { id: 0, index: 0, invisible: false, isParent: true, parentId: -1, folded: false, lvl: 0 },
-        { id: 1, index: 1, invisible: false, isParent: true, parentId: 0, folded: false, lvl: 1 },
-        { id: 2, index: 2, invisible: false, isParent: false, parentId: 1, folded: false, lvl: 2 },
-        { id: 3, index: 3, invisible: false, isParent: false, parentId: 1, folded: false, lvl: 2 },
-        { id: 4, index: 4, invisible: false, isParent: false, parentId: 1, folded: false, lvl: 2 },
-        { id: 5, index: 5, invisible: false, isParent: false, parentId: 1, folded: false, lvl: 2 },
-      ])
-    })
-  })
-
   // commonSubStr
   describe('commonSubStr()', () => {
     test('Find common part of strings', () => {

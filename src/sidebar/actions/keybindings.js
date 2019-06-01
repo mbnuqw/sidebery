@@ -1,31 +1,32 @@
 import EventBus from '../../event-bus'
 import CommonActions from '../../actions/keybindings'
-import Getters from '../store/getters'
 import Actions from '.'
 
-function kb_next_panel(state) {
-  Actions.switchPanel(state, 1)
+function kb_next_panel() {
+  Actions.switchPanel(1)
 }
 
-function kb_prev_panel(state) {
-  Actions.switchPanel(state, -1)
+function kb_prev_panel() {
+  Actions.switchPanel(-1)
 }
 
-function kb_new_tab_on_panel(state) {
-  let panel = Getters.panels[state.lastPanelIndex]
+function kb_new_tab_on_panel() {
+  let panel = this.state.panels[this.state.lastPanelIndex]
   if (panel.cookieStoreId) {
     Actions.createTab(panel.cookieStoreId)
   }
 }
 
-function kb_new_tab_in_group(state) {
-  const panel = Getters.panels[state.panelIndex]
+function kb_new_tab_in_group() {
+  const panel = this.state.panels[this.state.panelIndex]
+  const tabs = this.state.tabs
   if (!panel || !panel.tabs) return
 
   // Find active/selected tab
   let activeTab
-  if (state.selected.length > 0) {
-    activeTab = state.tabsMap[state.selected[state.selected.length - 1]]
+  if (this.state.selected.length > 0) {
+    const lastIndex = this.state.selected.length - 1
+    activeTab = this.state.tabsMap[this.state.selected[lastIndex]]
   } else {
     activeTab = panel.tabs.find(t => t.active)
   }
@@ -40,7 +41,7 @@ function kb_new_tab_in_group(state) {
       parentId = activeTab.id
     } else {
       parentId = activeTab.parentId
-      while (state.tabs[index] && state.tabs[index].lvl > activeTab.lvl) {
+      while (tabs[index] && tabs[index].lvl > activeTab.lvl) {
         index++
       }
     }
@@ -50,17 +51,17 @@ function kb_new_tab_in_group(state) {
   browser.tabs.create({
     index,
     cookieStoreId: panel.cookieStoreId,
-    windowId: state.windowId,
+    windowId: this.state.windowId,
     openerTabId: parentId,
   })
 }
 
-function kb_rm_tab_on_panel(state) {
-  if (state.selected.length > 0) {
-    Actions.removeTabs(state, state.selected)
+function kb_rm_tab_on_panel() {
+  if (this.state.selected.length > 0) {
+    Actions.removeTabs(this.state.selected)
   } else {
-    let activeTab = state.tabs.find(t => t && t.active)
-    Actions.removeTabs(state, [activeTab.id])
+    let activeTab = this.state.tabs.find(t => t && t.active)
+    Actions.removeTabs([activeTab.id])
   }
 }
 
@@ -68,9 +69,9 @@ function kb_activate() {
   EventBus.$emit('keyActivate')
 }
 
-function kb_reset_selection(state) {
-  Actions.resetSelection(state)
-  Actions.closeCtxMenu(state)
+function kb_reset_selection() {
+  Actions.resetSelection()
+  Actions.closeCtxMenu()
 }
 
 function kb_select_all() {

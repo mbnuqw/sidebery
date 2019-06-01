@@ -1,18 +1,18 @@
 import CommonActions from '../../actions/menu'
-import Actions from '.'
 import BookmarksOptions from '../config/bookmarks-menu'
 import TabsOptions from '../config/tabs-menu'
+import Actions from '.'
 
 const OPTIONS = { ...BookmarksOptions, ...TabsOptions }
 
 /**
  * Open context menu
  */
-async function openCtxMenu(state, el, node) {
+async function openCtxMenu(el, node) {
   const nodeType = typeof node.id === 'number' ? 'tab' : 'bookmark'
-  const options = nodeType === 'tab' ? state.tabsMenu : state.bookmarksMenu
-
-  state.otherWindows = (await browser.windows.getAll()).filter(w => w.id !== state.windowId)
+  const options = nodeType === 'tab' ? this.state.tabsMenu : this.state.bookmarksMenu
+  const allWindows = await browser.windows.getAll()
+  this.state.otherWindows = allWindows.filter(w => w.id !== this.state.windowId)
 
   const inline = []
   let opts = []
@@ -32,21 +32,21 @@ async function openCtxMenu(state, el, node) {
     if (option) opts = opts.concat(option)
   }
 
-  state.ctxMenu = {
+  this.state.ctxMenu = {
     el,
     inline,
     opts,
-    off: () => Actions.resetSelection(state),
+    off: () => Actions.resetSelection(),
   }
 }
 
 /**
  * Close context menu
  */
-function closeCtxMenu(state) {
-  if (state.ctxMenu) {
-    if (state.ctxMenu.off) state.ctxMenu.off()
-    state.ctxMenu = null
+function closeCtxMenu() {
+  if (this.state.ctxMenu) {
+    if (this.state.ctxMenu.off) this.state.ctxMenu.off()
+    this.state.ctxMenu = null
   }
 }
 

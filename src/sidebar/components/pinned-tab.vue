@@ -135,11 +135,11 @@ export default {
      */
     onDoubleClick() {
       let dc = State.tabDoubleClick
-      if (dc === 'reload') Actions.reloadTabs(State, [this.tab.id])
-      if (dc === 'duplicate') Actions.duplicateTabs(State, [this.tab.id])
-      if (dc === 'pin') Actions.repinTabs(State, [this.tab.id])
-      if (dc === 'mute') Actions.remuteTabs(State, [this.tab.id])
-      if (dc === 'clear_cookies') Actions.clearTabsCookies(State, [this.tab.id])
+      if (dc === 'reload') Actions.reloadTabs([this.tab.id])
+      if (dc === 'duplicate') Actions.duplicateTabs([this.tab.id])
+      if (dc === 'pin') Actions.repinTabs([this.tab.id])
+      if (dc === 'mute') Actions.remuteTabs([this.tab.id])
+      if (dc === 'clear_cookies') Actions.clearTabsCookies([this.tab.id])
     },
 
     /**
@@ -159,11 +159,11 @@ export default {
         // Long-click action
         this.hodorL = setTimeout(() => {
           let llc = State.tabLongLeftClick
-          if (llc === 'reload') Actions.reloadTabs(State, [this.tab.id])
-          if (llc === 'duplicate') Actions.duplicateTabs(State, [this.tab.id])
-          if (llc === 'pin') Actions.repinTabs(State, [this.tab.id])
-          if (llc === 'mute') Actions.remuteTabs(State, [this.tab.id])
-          if (llc === 'clear_cookies') Actions.clearTabsCookies(State, [this.tab.id])
+          if (llc === 'reload') Actions.reloadTabs([this.tab.id])
+          if (llc === 'duplicate') Actions.duplicateTabs([this.tab.id])
+          if (llc === 'pin') Actions.repinTabs([this.tab.id])
+          if (llc === 'mute') Actions.remuteTabs([this.tab.id])
+          if (llc === 'clear_cookies') Actions.clearTabsCookies([this.tab.id])
           this.hodorL = null
         }, 250)
       }
@@ -175,11 +175,11 @@ export default {
         this.hodorR = setTimeout(() => {
           this.$emit('stop-selection')
           let lrc = State.tabLongRightClick
-          if (lrc === 'reload') Actions.reloadTabs(State, [this.tab.id])
-          if (lrc === 'duplicate') Actions.duplicateTabs(State, [this.tab.id])
-          if (lrc === 'pin') Actions.repinTabs(State, [this.tab.id])
-          if (lrc === 'mute') Actions.remuteTabs(State, [this.tab.id])
-          if (lrc === 'clear_cookies') Actions.clearTabsCookies(State, [this.tab.id])
+          if (lrc === 'reload') Actions.reloadTabs([this.tab.id])
+          if (lrc === 'duplicate') Actions.duplicateTabs([this.tab.id])
+          if (lrc === 'pin') Actions.repinTabs([this.tab.id])
+          if (lrc === 'mute') Actions.remuteTabs([this.tab.id])
+          if (lrc === 'clear_cookies') Actions.clearTabsCookies([this.tab.id])
           this.hodorR = null
         }, 250)
       }
@@ -196,7 +196,7 @@ export default {
         this.hodorR = clearTimeout(this.hodorR)
 
         // Select this tab
-        Actions.closeCtxMenu(State)
+        Actions.closeCtxMenu()
         State.selected = [this.tab.id]
         this.selected = true
         this.$emit('stop-selection')
@@ -226,7 +226,7 @@ export default {
      */
     onTabMenu(id) {
       if (id !== this.tab.id) return
-      Actions.openCtxMenu(State, this.$el, this.tab)
+      Actions.openCtxMenu(this.$el, this.tab)
     },
 
     /**
@@ -322,7 +322,7 @@ export default {
         let base64 = canvas.toDataURL('image/png')
         let hn = this.tab.url.split('/')[2]
         if (!hn) return
-        Actions.setFavicon(State, hn, base64)
+        Actions.setFavicon(hn, base64)
       }
     },
 

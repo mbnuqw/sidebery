@@ -21,7 +21,6 @@
 
 <script>
 import EventBus from '../../event-bus'
-import Store from '../store'
 import State from '../store/state'
 import Actions from '../actions'
 import PinnedTab from './pinned-tab'
@@ -57,11 +56,11 @@ export default {
 
         if (e.deltaY > 0) {
           if (State.wheelBlockTimeout) return
-          Actions.switchTab(State, Store.getters, globaly, e.ctrlKey, 1, true)
+          Actions.switchTab(globaly, e.ctrlKey, 1, true)
         }
         if (e.deltaY < 0) {
           if (State.wheelBlockTimeout) return
-          Actions.switchTab(State, Store.getters, globaly, e.ctrlKey, -1, true)
+          Actions.switchTab(globaly, e.ctrlKey, -1, true)
         }
       }
     },
@@ -84,7 +83,7 @@ export default {
       if (this.dragPointed === true) dropIndex = this.pinnedTabs[this.pinnedTabs.length - 1].index + 1
       else if (this.pointedTabIndex > -1) dropIndex = this.pointedTabIndex
 
-      Actions.dropToTabs(State, e, dropIndex, -1, State.dragNodes, true)
+      Actions.dropToTabs(e, dropIndex, -1, State.dragNodes, true)
 
       if (State.dragNodes) {
         if (State.dragNodes[0].type === 'tab') EventBus.$emit('deselectTab')

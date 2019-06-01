@@ -3,9 +3,9 @@ import Logs from '../logs'
 /**
  * Load keybindings
  */
-async function loadKeybindings(state) {
+async function loadKeybindings() {
   let commands = await browser.commands.getAll()
-  state.keybindings = commands
+  this.state.keybindings = commands
   Logs.push('[INFO] Keybindings loaded')
 }
 

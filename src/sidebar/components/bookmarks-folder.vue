@@ -128,7 +128,7 @@ export default {
      */
     onMouseUp(e) {
       if (e.button === 2) {
-        Actions.closeCtxMenu(State)
+        Actions.closeCtxMenu()
         // Select this bookmark
         if (!State.selected.length) {
           State.selected = [this.node.id]
@@ -147,8 +147,8 @@ export default {
         return
       }
       if (this.node.type === 'folder') {
-        if (!this.node.expanded) Actions.expandBookmark(State, this.node.id)
-        else Actions.foldBookmark(State, this.node.id)
+        if (!this.node.expanded) Actions.expandBookmark(this.node.id)
+        else Actions.foldBookmark(this.node.id)
       }
       if (this.node.type === 'bookmark') {
         this.openUrl(State.openBookmarkNewTab, true)
@@ -175,7 +175,7 @@ export default {
      */
     onBookmarkMenu(id) {
       if (id !== this.node.id) return
-      Actions.openCtxMenu(State, this.$el.childNodes[0], this.node)
+      Actions.openCtxMenu(this.$el.childNodes[0], this.node)
     },
 
     /**
