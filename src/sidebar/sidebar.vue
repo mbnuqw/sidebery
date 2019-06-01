@@ -98,19 +98,19 @@
 <script>
 import Vue from 'vue'
 import initNoiseBgDirective from '../directives/noise-bg.js'
-import Utils from '../libs/utils.js'
+import Utils from '../utils.js'
 import EventBus from '../event-bus'
 import Store from './store'
 import State from './store/state.js'
 import Actions from './actions'
 import CtxMenu from './components/context-menu'
-import WindowInput from './components/inputs/window'
-import BookmarksDashboard from './components/dashboards/bookmarks.vue'
-import DefaultTabsDashboard from './components/dashboards/default-tabs.vue'
-import TabsDashboard from './components/dashboards/containered-tabs'
-import BookmarksPanel from './components/panels/bookmarks'
-import TabsPanel from './components/panels/tabs'
-import PinnedDock from './components/panels/pinned-dock'
+import BookmarksDashboard from './components/bookmarks-dashboard'
+import DefaultTabsDashboard from './components/default-tabs-dashboard'
+import TabsDashboard from './components/containered-tabs-dashboard'
+import BookmarksPanel from './components/bookmarks-panel'
+import TabsPanel from './components/tabs-panel'
+import WindowInput from './components/window-select-input'
+import PinnedDock from './components/pinned-tabs-dock'
 
 const noiseBg = initNoiseBgDirective(State, Store)
 Vue.directive('noise', noiseBg)

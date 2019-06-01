@@ -1,0 +1,26 @@
+@import '../../mixins'
+
+// For:
+// - color-select.vue
+// - icon-select.vue
+
+.IconSelectField
+  box(relative)
+  padding: 2px 0
+  margin: 0 12px 0 16px
+  cursor: pointer
+
+  &.-no-top-margin
+    margin-top: 0
+
+// ---
+// -- Label
+// -
+.IconSelectField .label
+  box(relative)
+  text(s: rem(14))
+  color: var(--label-fg)
+  opacity: .8
+
+.IconSelectField:hover .label
+  opacity: 1

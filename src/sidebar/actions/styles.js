@@ -1,5 +1,5 @@
-import Utils from '../../libs/utils'
-import Logs from '../../libs/logs'
+import Utils from '../../utils'
+import Logs from '../../logs'
 import EventBus from '../../event-bus'
 import CommonActions from '../../actions/styles'
 

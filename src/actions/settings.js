@@ -1,4 +1,4 @@
-import Logs from '../libs/logs'
+import Logs from '../logs'
 
 /**
  * Try to load settings from local storage.

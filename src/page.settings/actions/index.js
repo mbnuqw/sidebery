@@ -1,5 +1,5 @@
 // import Utils from '../libs/utils'
-import Logs from '../../libs/logs'
+import Logs from '../../logs'
 import MenuActions from './menu'
 import KeybindingsActions from './keybindings'
 import SettingsActions from './settings'

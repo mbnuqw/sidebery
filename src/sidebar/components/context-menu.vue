@@ -1,5 +1,5 @@
 <template lang="pug">
-.CtxMenu(:data-active="aIsActive || bIsActive", @mouseenter="onME", @mouseleave="onML")
+.CtxMenu(:data-active="aIsActive || bIsActive" @mouseenter="onME" @mouseleave="onML")
   .container(:data-active="aIsActive")
     .box(ref="aBox", :style="aPosStyle")
       .inline-group(

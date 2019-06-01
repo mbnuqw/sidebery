@@ -1,5 +1,5 @@
-import Utils from '../../libs/utils'
-import Logs from '../../libs/logs'
+import Utils from '../../utils'
+import Logs from '../../logs'
 import Actions from '.'
 import EventBus from '../../event-bus'
 

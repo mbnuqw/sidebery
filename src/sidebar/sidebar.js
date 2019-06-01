@@ -23,7 +23,7 @@ export default new Vue({
   },
 
   computed: {
-    ...mapGetters(['defaultCtxId', 'panels', 'pinnedTabs']),
+    ...mapGetters(['pinnedTabs']),
 
     pinnedTabsPosition() {
       if (!this.pinnedTabs.length) return 'none'

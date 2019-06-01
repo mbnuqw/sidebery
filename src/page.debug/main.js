@@ -1,6 +1,6 @@
 import { CUSTOM_STYLES } from '../sidebar/store/state'
-import { noiseBg } from '../libs/noise-bg'
-import Utils from '../libs/utils'
+import { noiseBg } from '../noise-bg'
+import Utils from '../utils'
 
 void (async function() {
   // Load settings and set theme

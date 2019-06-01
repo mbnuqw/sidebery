@@ -14,7 +14,7 @@
  *   .a:0:5   - alpha (hex)
  *   .s:0:5   - spread (decimal)
  */
-import { noiseBg } from '../libs/noise-bg'
+import { noiseBg } from '../noise-bg'
 
 const DefaultWidth = 300
 const DefaultHeight = 300

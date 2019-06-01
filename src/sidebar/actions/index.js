@@ -1,4 +1,4 @@
-import Logs from '../../libs/logs'
+import Logs from '../../logs'
 import KeybindingsActions from '../../actions/keybindings'
 import EventBus from '../../event-bus'
 import SettingsActions from './settings'

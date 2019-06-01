@@ -1,77 +1,8 @@
-import { DEFAULT_SETTINGS, SETTINGS_OPTIONS } from '../../settings.js'
 import Manifest from '../../../addon/manifest.json'
-import { translate } from '../../mixins/dict'
-
-export const DEFAULT_CTX = 'firefox-default'
-export const PRIVATE_CTX = 'firefox-private'
-export const DEFAULT_PANELS = [
-  {
-    type: 'bookmarks',
-    id: 'bookmarks',
-    name: translate('bookmarks_dashboard.title'),
-    icon: 'icon_bookmarks',
-    dashboard: 'BookmarksDashboard',
-    panel: 'BookmarksPanel',
-    lockedPanel: false,
-    bookmarks: true,
-  },
-  {
-    type: 'private',
-    id: PRIVATE_CTX,
-    name: translate('private_dashboard.title'),
-    icon: 'icon_tabs',
-    cookieStoreId: PRIVATE_CTX,
-    dashboard: 'DefaultTabsDashboard',
-    panel: 'TabsPanel',
-    private: true,
-    tabs: [],
-    startIndex: -1,
-    endIndex: -1,
-  },
-  {
-    type: 'default',
-    id: DEFAULT_CTX,
-    name: translate('default_dashboard.title'),
-    icon: 'icon_tabs',
-    cookieStoreId: DEFAULT_CTX,
-    dashboard: 'DefaultTabsDashboard',
-    panel: 'TabsPanel',
-    lockedTabs: false,
-    lockedPanel: false,
-    proxyConfig: null,
-    noEmpty: false,
-    lastActiveTab: -1,
-    tabs: [],
-    startIndex: -1,
-    endIndex: -1,
-  },
-]
-
-export const DEFAULT_TABS_MENU = [
-  ['undoRmTab', 'mute', 'reload', 'bookmark'],
-  'moveToNewWin',
-  'moveToNewPrivWin',
-  'moveToAnotherWin',
-  'moveToWin',
-  'moveToCtr',
-  'pin',
-  'discard',
-  'group',
-  'flatten',
-  'clearCookies',
-  'close',
-]
-
-export const DEFAULT_BOOKMARKS_MENU = [
-  'openInNewWin',
-  'openInNewPrivWin',
-  'openInCtr',
-  'createBookmark',
-  'createFolder',
-  'createSeparator',
-  'edit',
-  'delete',
-]
+import { DEFAULT_SETTINGS, SETTINGS_OPTIONS } from '../../settings.js'
+import { DEFAULT_TABS_MENU } from '../config/tabs-menu'
+import { DEFAULT_BOOKMARKS_MENU } from '../config/bookmarks-menu'
+import { PRIVATE_CTX, DEFAULT_CTX, DEFAULT_PANELS } from '../config/panels'
 
 export default {
   version: Manifest.version,

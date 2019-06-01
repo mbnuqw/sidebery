@@ -1,7 +1,7 @@
 import CommonActions from '../../actions/menu'
 import Actions from '.'
-import BookmarksOptions from '../menu/bookmarks'
-import TabsOptions from '../menu/tabs'
+import BookmarksOptions from '../config/bookmarks-menu'
+import TabsOptions from '../config/tabs-menu'
 
 const OPTIONS = { ...BookmarksOptions, ...TabsOptions }
 

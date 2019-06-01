@@ -1,8 +1,8 @@
 import EventBus from '../../event-bus'
-import Logs from '../../libs/logs'
+import Logs from '../../logs'
 import Actions from '.'
 import ReqHandler from '../proxy'
-import { DEFAULT_PANELS } from '../store/state'
+import { DEFAULT_PANELS } from '../config/panels'
 
 let recalcPanelScrollTimeout, updateReqHandlerTimeout, savePanelsTimeout
 
@@ -30,7 +30,6 @@ async function loadPanels(state) {
   // ---------------------------- UNTIL 3.1.0 --------------------------------
   let panels = DEFAULT_PANELS
   if (!ans || !ans.panels) Logs.push('[WARN] Cannot load panels')
-  // if (ans && ans.panels && ans.panels.length) panels = ans.panels
 
   // allright, this is tmp
   if (ans && ans.panels && ans.panels.length) {

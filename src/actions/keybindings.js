@@ -1,4 +1,4 @@
-import Logs from '../libs/logs'
+import Logs from '../logs'
 
 /**
  * Load keybindings
