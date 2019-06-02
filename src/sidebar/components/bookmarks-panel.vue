@@ -128,6 +128,8 @@ export default {
      * Handle creating bookmark
      */
     onCreated(id, bookmark) {
+      if (!State.bookmarks.length) return
+
       let added = false
       if (bookmark.type === 'bookmark') bookmark.host = bookmark.url.split('/')[2]
       if (bookmark.type === 'folder' && !bookmark.children) bookmark.children = []
@@ -165,6 +167,8 @@ export default {
      * Handle bookmark change
      */
     onChanged(id, info) {
+      if (!State.bookmarks.length) return
+
       const oldUrl = State.bookmarksMap[id].url
       if (oldUrl !== info.url && State.bookmarksUrlMap[oldUrl]) {
         const iob = State.bookmarksUrlMap[oldUrl].findIndex(b => b.id === id)
@@ -200,6 +204,8 @@ export default {
      * Handle moving bookmark
      */
     onMoved(id, info) {
+      if (!State.bookmarks.length) return
+
       let node
       let removed = false
       const rmWalk = nodes => {
@@ -240,6 +246,8 @@ export default {
      * Handle removing bookmark node
      */
     onRemoved(id, info) {
+      if (!State.bookmarks.length) return
+
       let removed = false
       let url
       const rmWalk = nodes => {

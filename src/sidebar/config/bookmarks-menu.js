@@ -42,7 +42,7 @@ export default {
         label: translate('menu.bookmark.open_in_default_panel'),
         icon: 'icon_tabs',
         action: 'openBookmarksInPanel',
-        args: [ State.selected, State.defaultCtxId ],
+        args: [State.selected, State.defaultCtxId],
       })
     }
 
@@ -53,7 +53,7 @@ export default {
           icon: c.icon,
           color: c.colorCode,
           action: 'openBookmarksInPanel',
-          args: [ State.selected, c.cookieStoreId ],
+          args: [State.selected, c.cookieStoreId],
         })
       }
     }
@@ -109,7 +109,7 @@ export default {
       label: translate('menu.bookmark.delete_bookmark'),
       icon: 'icon_close',
       action: 'removeBookmarks',
-      args: [...State.selected],
+      args: [State.selected],
     }
   },
 }

@@ -925,6 +925,9 @@ export default {
       if (change.hasOwnProperty('pinned') && !change.pinned) {
         let pi = State.panels.findIndex(p => p.cookieStoreId === tab.cookieStoreId)
         if (pi === -1) return
+        let panel = State.panels[pi]
+        panel.tabs.splice(localTab.index - panel.startIndex + 1, 0, localTab)
+        Actions.updatePanelsRanges()
         let p = State.panels[pi]
         if (p && p.tabs) browser.tabs.move(tabId, { index: p.endIndex })
         if (tab.active) Actions.setPanel(pi)
@@ -933,6 +936,8 @@ export default {
       // Handle pinned tab
       if (change.hasOwnProperty('pinned') && change.pinned) {
         let panel = State.panels.find(p => p.cookieStoreId === tab.cookieStoreId)
+        panel.tabs.splice(localTab.index - panel.startIndex, 1)
+        Actions.updatePanelsRanges()
         if (panel.noEmpty && panel.tabs.length === 1) {
           browser.tabs.create({
             windowId: State.windowId,
@@ -1115,15 +1120,17 @@ export default {
         if (State.tabs[i]) State.tabs[i].index = i
       }
 
-      // Cut tab from panel
-      const panel = State.panels.find(p => p.cookieStoreId === movedTab.cookieStoreId)
-      if (panel && panel.tabs) {
-        let t = panel.tabs[info.fromIndex - panel.startIndex]
-        if (t && t.id === movedTab.id) {
-          panel.tabs.splice(info.fromIndex - panel.startIndex, 1)
+      // Move tab in panel
+      if (!State.tabsMap[id].pinned) {
+        const panel = State.panels.find(p => p.cookieStoreId === movedTab.cookieStoreId)
+        if (panel && panel.tabs) {
+          let t = panel.tabs[info.fromIndex - panel.startIndex]
+          if (t && t.id === movedTab.id) {
+            panel.tabs.splice(info.fromIndex - panel.startIndex, 1)
+          }
+          panel.tabs.splice(info.toIndex - panel.startIndex, 0, movedTab)
+          Actions.updatePanelsRanges()
         }
-        panel.tabs.splice(info.toIndex - panel.startIndex, 0, movedTab)
-        Actions.updatePanelsRanges()
       }
 
       // Calc tree levels
