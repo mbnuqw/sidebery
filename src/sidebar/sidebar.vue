@@ -36,7 +36,7 @@
       .nav-bar(@wheel.stop.prevent="onNavWheel")
         .nav-btn(
           v-for="(btn, i) in nav"
-          :key="btn.cookieStoreId || btn.name"
+          :key="btn.cookieStoreId + btn.name"
           :data-loading="btn.loading"
           :data-updated="btn.updated"
           :data-proxified="btn.proxified"
@@ -73,7 +73,7 @@
         v-for="(c, i) in $store.state.panels"
         v-if="panelVisible(i)"
         ref="panels"
-        :key="c.cookieStoreId || c.name"
+        :key="c.cookieStoreId + c.name"
         :is="c.panel"
         :data-pos="getPanelPos(i)"
         :tabs="c.tabs"
@@ -100,6 +100,7 @@ import Vue from 'vue'
 import initNoiseBgDirective from '../directives/noise-bg.js'
 import Utils from '../utils.js'
 import EventBus from '../event-bus'
+import { DEFAULT_CTX_ID, DEFAULT_CTX_TABS_PANEL } from './config/panels'
 import Store from './store'
 import State from './store/state.js'
 import Actions from './actions'
@@ -710,24 +711,17 @@ export default {
      * contextualIdentities.onCreated
      */
     onCreatedContainer({ contextualIdentity }) {
+      const panel = Utils.cloneObject(DEFAULT_CTX_TABS_PANEL)
+      panel.cookieStoreId = contextualIdentity.cookieStoreId
+      panel.name = contextualIdentity.name
+      panel.colorCode = contextualIdentity.colorCode
+      panel.color = contextualIdentity.color
+      panel.icon = contextualIdentity.icon
+      panel.iconUrl = contextualIdentity.iconUrl
+
       State.containers.push(contextualIdentity)
-      State.panels.push({
-        ...contextualIdentity,
-        type: 'ctx',
-        id: contextualIdentity.cookieStoreId,
-        dashboard: 'TabsDashboard',
-        panel: 'TabsPanel',
-        lockedTabs: false,
-        lockedPanel: false,
-        proxy: null,
-        proxified: false,
-        noEmpty: false,
-        includeHostsActive: false,
-        includeHosts: '',
-        excludeHostsActive: false,
-        excludeHosts: '',
-        lastActiveTab: -1,
-      })
+      State.panels.push(panel)
+      State.panelsMap[panel.cookieStoreId] = panel
 
       // Check if we have some updates
       // for container with this name
@@ -739,6 +733,9 @@ export default {
 
         Actions.savePanels()
       }
+
+      // Update panels ranges
+      Actions.updatePanelsRanges()
     },
 
     /**
@@ -761,6 +758,7 @@ export default {
       // Remove container
       State.containers.splice(ctxIndex, 1)
       State.panels.splice(ctrIndex, 1)
+      Vue.delete(State.panelsMap, id)
 
       // Switch to prev panel
       if (State.panelIndex >= State.panels.length) {
@@ -772,6 +770,9 @@ export default {
         Actions.updateReqHandler()
         Actions.savePanels()
       }
+
+      // Update panels ranges
+      Actions.updatePanelsRanges()
     },
 
     /**
@@ -811,7 +812,7 @@ export default {
       Actions.resetSelection()
 
       // If new tab is out of panel, move it to the end of this panel
-      let panel = State.panels.find(p => p.cookieStoreId === tab.cookieStoreId)
+      let panel = State.panelsMap[tab.cookieStoreId]
       let endIndex = panel.tabs.length ? panel.endIndex + 1 : panel.endIndex
       if (tab.index > endIndex || tab.index < panel.startIndex) {
         browser.tabs.move(tab.id, { index: endIndex })
@@ -923,19 +924,17 @@ export default {
 
       // Handle unpinned tab
       if (change.hasOwnProperty('pinned') && !change.pinned) {
-        let pi = State.panels.findIndex(p => p.cookieStoreId === tab.cookieStoreId)
-        if (pi === -1) return
-        let panel = State.panels[pi]
+        let panel = State.panelsMap[tab.cookieStoreId]
+        if (!panel) return
         panel.tabs.splice(localTab.index - panel.startIndex + 1, 0, localTab)
         Actions.updatePanelsRanges()
-        let p = State.panels[pi]
-        if (p && p.tabs) browser.tabs.move(tabId, { index: p.endIndex })
-        if (tab.active) Actions.setPanel(pi)
+        if (panel && panel.tabs) browser.tabs.move(tabId, { index: panel.endIndex })
+        if (tab.active) Actions.setPanel(panel.index)
       }
 
       // Handle pinned tab
       if (change.hasOwnProperty('pinned') && change.pinned) {
-        let panel = State.panels.find(p => p.cookieStoreId === tab.cookieStoreId)
+        let panel = State.panelsMap[tab.cookieStoreId]
         panel.tabs.splice(localTab.index - panel.startIndex, 1)
         Actions.updatePanelsRanges()
         if (panel.noEmpty && panel.tabs.length === 1) {
@@ -958,8 +957,8 @@ export default {
             if (tab.pinned && State.pinnedTabsPosition !== 'panel') {
               this.$set(State.updatedTabs, tab.id, -1)
             } else {
-              let pi = State.panels.findIndex(p => p.cookieStoreId === tab.cookieStoreId)
-              this.$set(State.updatedTabs, tab.id, pi)
+              let panel = State.panelsMap[tab.cookieStoreId]
+              this.$set(State.updatedTabs, tab.id, panel.index)
             }
           }
         }
@@ -1122,7 +1121,7 @@ export default {
 
       // Move tab in panel
       if (!State.tabsMap[id].pinned) {
-        const panel = State.panels.find(p => p.cookieStoreId === movedTab.cookieStoreId)
+        const panel = State.panelsMap[movedTab.cookieStoreId]
         if (panel && panel.tabs) {
           let t = panel.tabs[info.fromIndex - panel.startIndex]
           if (t && t.id === movedTab.id) {
@@ -1219,13 +1218,12 @@ export default {
 
       // Find panel of activated tab
       if (tab.pinned && State.pinnedTabsPosition !== 'panel') return
-      const panelIndex = State.panels.findIndex(p => p.cookieStoreId === tab.cookieStoreId)
-      const tabPanel = State.panels[panelIndex]
-      if (panelIndex === -1) return
+      const tabPanel = State.panelsMap[tab.cookieStoreId]
+      if (!tabPanel) return
 
       // Switch to activated tab's panel
       if (!currentPanel || !currentPanel.lockedPanel) {
-        Actions.setPanel(panelIndex)
+        Actions.setPanel(tabPanel.index)
       }
 
       // Reopen dashboard
@@ -1252,7 +1250,7 @@ export default {
       }
 
       tabPanel.lastActiveTab = info.tabId
-      if (!tab.pinned) EventBus.$emit('scrollToTab', panelIndex, info.tabId)
+      if (!tab.pinned) EventBus.$emit('scrollToTab', tabPanel.index, info.tabId)
 
       // If activated tab is group - reinit it
       if (Utils.isGroupUrl(tab.url)) {
@@ -1365,7 +1363,7 @@ export default {
 
         if (target.type === 'bookmark') {
           if (State.openBookmarkNewTab) {
-            let index = State.defaultPanel.endIndex + 1
+            let index = State.panelsMap[DEFAULT_CTX_ID].endIndex + 1
             browser.tabs.create({ index, url: target.url, active: true })
           } else {
             browser.tabs.update({ url: target.url })

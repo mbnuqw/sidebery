@@ -1,5 +1,6 @@
-import State from '../store/state'
 import { translate } from '../../mixins/dict'
+import State from '../store/state'
+import { DEFAULT_CTX_ID } from '../config/panels'
 
 export const DEFAULT_BOOKMARKS_MENU = [
   'openInNewWin',
@@ -42,7 +43,7 @@ export default {
         label: translate('menu.bookmark.open_in_default_panel'),
         icon: 'icon_tabs',
         action: 'openBookmarksInPanel',
-        args: [State.selected, State.defaultCtxId],
+        args: [State.selected, DEFAULT_CTX_ID],
       })
     }
 

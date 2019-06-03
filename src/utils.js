@@ -449,6 +449,41 @@ function findSuccessorTab(state, tab, exclude) {
   return target
 }
 
+/**
+ * Clone Array
+ */
+function cloneArray(arr) {
+  const out = []
+  for (let item of arr) {
+    if (Array.isArray(item)) {
+      out.push(cloneArray(item))
+    } else if (typeof item === 'object' && item !== null) {
+      out.push(cloneObject(item))
+    } else {
+      out.push(item)
+    }
+  }
+  return out
+}
+
+/**
+ * Clone Object
+ */
+function cloneObject(obj) {
+  const out = {}
+  for (let prop in obj) {
+    if (!obj.hasOwnProperty(prop)) continue
+    if (Array.isArray(obj[prop])) {
+      out[prop] = cloneArray(obj[prop])
+    } else if (typeof obj[prop] === 'object' && obj[prop] !== null) {
+      out[prop] = cloneObject(obj[prop])
+    } else {
+      out[prop] = obj[prop]
+    }
+  }
+  return out
+}
+
 export default {
   uid,
   asap,
@@ -470,4 +505,6 @@ export default {
   getGroupId,
   getGroupUrl,
   findSuccessorTab,
+  cloneArray,
+  cloneObject,
 }

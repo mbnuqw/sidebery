@@ -143,7 +143,6 @@
 
 
 <script>
-import { mapGetters } from 'vuex'
 import TextInput from '../../components/text-input'
 import ToggleField from '../../components/toggle-field'
 import SelectField from '../../components/select-field'
@@ -208,8 +207,6 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['panels']),
-
     id() {
       return this.conf.cookieStoreId || ''
     },
@@ -234,8 +231,8 @@ export default {
 
     tabsCount() {
       if (!this.id) return 0
-      if (!this.panels[this.index] || !this.panels[this.index].tabs) return 0
-      return this.panels[this.index].tabs.length
+      if (!State.panels[this.index] || !State.panels[this.index].tabs) return 0
+      return State.panels[this.index].tabs.length
     },
 
     proxied() {
@@ -411,7 +408,7 @@ export default {
     async togglePanelNoEmpty() {
       this.conf.noEmpty = !this.conf.noEmpty
       if (this.conf.noEmpty) {
-        const panel = State.panels.find(p => p.cookieStoreId === this.id)
+        const panel = State.panelsMap[this.id]
         if (panel && panel.tabs && !panel.tabs.length) {
           await browser.tabs.create({
             windowId: State.windowId,
@@ -494,7 +491,7 @@ export default {
         }
       }
 
-      const panel = this.panels.find(p => p.id === this.id)
+      const panel = State.panelsMap[this.id]
       if (!panel || !panel.tabs) return
 
       this.conf.proxy = {

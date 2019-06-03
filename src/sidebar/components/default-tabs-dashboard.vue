@@ -29,6 +29,7 @@
 import ToggleField from '../../components/toggle-field'
 import State from '../store/state'
 import Actions from '../actions'
+import { DEFAULT_CTX_ID } from '../config/panels'
 
 export default {
   components: {
@@ -60,8 +61,7 @@ export default {
     async togglePanelNoEmpty() {
       this.conf.noEmpty = !this.conf.noEmpty
       if (this.conf.noEmpty) {
-        const defaultId = State.defaultCtxId
-        const panel = State.panels.find(p => p.cookieStoreId === defaultId)
+        const panel = State.panelsMap[DEFAULT_CTX_ID]
         if (panel && panel.tabs && !panel.tabs.length) {
           await browser.tabs.create({
             windowId: State.windowId,

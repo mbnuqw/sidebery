@@ -1,4 +1,5 @@
 import { DEFAULT_CTX } from '../store/state'
+import { DEFAULT_CTX_ID } from '../config/panels'
 import Actions from '.'
 
 /**
@@ -97,12 +98,9 @@ async function applySnapshot(snapshot) {
   // Restore tabs
   const tabsMap = {}
   for (let tab of snapshot.tabs) {
-    let panelIndex = this.state.panels.findIndex(p => p.cookieStoreId === tab.cookieStoreId)
-    let panel = this.state.panels[panelIndex]
-    if (!panel) {
-      panel = this.state.defaultPanel
-      panelIndex = this.state.private ? 1 : 2
-    }
+    let panel = this.state.panelsMap[tab.cookieStoreId]
+    let panelIndex = panel ? panel.index : this.state.private ? 1 : 2
+    if (!panel) panel = this.state.panelsMap[DEFAULT_CTX_ID]
 
     // Get group url
     if (tab.url.startsWith('moz') && tab.url.includes('/group.html')) {

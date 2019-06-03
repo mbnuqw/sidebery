@@ -1,6 +1,7 @@
 import Utils from '../../utils'
 import Logs from '../../logs'
 import EventBus from '../../event-bus'
+import { DEFAULT_CTX_ID } from '../config/panels'
 import Actions from '.'
 
 let TabsTreeSaveTimeout
@@ -15,7 +16,7 @@ async function loadTabs() {
   let activeTab
 
   // Check order of tabs and get moves for normalizing
-  const ctxs = [this.state.defaultCtxId].concat(
+  const ctxs = [DEFAULT_CTX_ID].concat(
     this.state.panels.filter(c => c.type === 'ctx').map(c => c.cookieStoreId)
   )
   const moves = []
@@ -66,8 +67,8 @@ async function loadTabs() {
   const activePanelIsTabs = activePanel.panel === 'TabsPanel'
   const activePanelIsOk = activeTab.cookieStoreId === activePanel.cookieStoreId
   if (!activeTab.pinned && activePanelIsTabs && !activePanelIsOk) {
-    const index = this.state.panels.findIndex(p => p.cookieStoreId === activeTab.cookieStoreId)
-    if (index !== -1) this.state.panelIndex = index
+    const panel = this.state.panelsMap[activeTab.cookieStoreId]
+    if (panel) this.state.panelIndex = panel.index
   }
 
   // Restore tree levels
@@ -190,7 +191,7 @@ function scrollToActiveTab() {
  */
 function createTab(ctxId) {
   if (!ctxId) return
-  let p = this.state.panels.find(p => p.cookieStoreId === ctxId)
+  let p = this.state.panelsMap[ctxId]
   if (!p || !p.tabs) return
   let index = p.tabs.length ? p.endIndex + 1 : p.startIndex
   browser.tabs.create({ index, cookieStoreId: ctxId, windowId: this.state.windowId })
@@ -203,7 +204,7 @@ async function removeTabs(tabIds) {
   if (!tabIds || !tabIds.length) return
   if (!this.state.tabsMap[tabIds[0]]) return
   const ctxId = this.state.tabsMap[tabIds[0]].cookieStoreId
-  const panel = this.state.panels.find(p => p.cookieStoreId === ctxId)
+  const panel = this.state.panelsMap[ctxId]
   if (!panel) return
 
   let tabsMap = {}

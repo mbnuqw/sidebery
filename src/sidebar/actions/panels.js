@@ -1,8 +1,15 @@
 import EventBus from '../../event-bus'
 import Logs from '../../logs'
+import Utils from '../../utils'
 import Actions from '.'
 import ReqHandler from '../proxy'
-import { DEFAULT_PANELS } from '../config/panels'
+import {
+  DEFAULT_PANELS,
+  DEFAULT_BOOKMARKS_PANEL,
+  DEFAULT_PRIVATE_TABS_PANEL,
+  DEFAULT_TABS_PANEL,
+  DEFAULT_CTX_TABS_PANEL,
+} from '../config/panels'
 
 let recalcPanelScrollTimeout, updateReqHandlerTimeout, savePanelsTimeout
 
@@ -15,7 +22,7 @@ async function loadPanels() {
   const containers = await browser.contextualIdentities.query({})
   if (!containers) {
     Logs.push('[WARN] Cannot load contextual identities')
-    this.state.panels = DEFAULT_PANELS
+    this.state.panels = Utils.cloneArray(DEFAULT_PANELS)
     return
   }
 
@@ -28,78 +35,108 @@ async function loadPanels() {
     ans.panels = ans.containers
   }
   // ---------------------------- UNTIL 3.1.0 --------------------------------
-  let panels = DEFAULT_PANELS
   if (!ans || !ans.panels) Logs.push('[WARN] Cannot load panels')
 
-  // allright, this is tmp
-  if (ans && ans.panels && ans.panels.length) {
-    panels[0].lockedPanel = ans.panels[0].lockedPanel
-    // ---
-    panels[2].noEmpty = ans.panels[2].noEmpty
-    panels[2].lastActiveTab = ans.panels[2].lastActiveTab
-    panels[2].lockedPanel = ans.panels[2].lockedPanel
-    panels[2].lockedTabs = ans.panels[2].lockedTabs
-  }
+  const panels = []
+  const panelsMap = {}
+  for (let i = 0; i < ans.panels.length; i++) {
+    const loadedPanel = ans.panels[i]
 
-  // Merge saved containers and queried contextualIdentities
-  for (let ctx of containers) {
-    let panel = panels.find(p => p.cookieStoreId === ctx.cookieStoreId && p.type === 'ctx')
-    if (!panel) {
-      panels.push({
-        ...ctx,
-        type: 'ctx',
-        id: ctx.cookieStoreId,
-        dashboard: 'TabsDashboard',
-        panel: 'TabsPanel',
-        lockedTabs: false,
-        lockedPanel: false,
-        proxy: null,
-        proxified: false,
-        noEmpty: false,
-        includeHostsActive: false,
-        includeHosts: '',
-        excludeHostsActive: false,
-        excludeHosts: '',
-        lastActiveTab: -1,
-        tabs: [],
-        startIndex: -1,
-        endIndex: -1,
-      })
-    } else {
-      panel.colorCode = ctx.colorCode
-      panel.color = ctx.color
-      panel.icon = ctx.icon
-      panel.iconUrl = ctx.iconUrl
-      panel.name = ctx.name
-      if (panel.lockedTabs === undefined) panel.lockedTabs = false
-      if (panel.lockedPanel === undefined) panel.lockedPanel = false
-      if (panel.proxy === undefined) panel.proxy = null
-      if (panel.proxified === undefined) panel.proxified = false
-      if (panel.noEmpty === undefined) panel.noEmpty = false
-      if (panel.includeHostsActive === undefined) panel.includeHostsActive = false
-      if (panel.includeHosts === undefined) panel.includeHosts = ''
-      if (panel.excludeHostsActive === undefined) panel.excludeHostsActive = false
-      if (panel.excludeHosts === undefined) panel.excludeHosts = ''
-      if (panel.lastActiveTab === undefined) panel.lastActiveTab = -1
-      panel.tabs = []
-      panel.startIndex = -1
-      panel.endIndex = -1
+    // Bookmarks panel
+    if (loadedPanel.type === 'bookmarks') {
+      let panel = Utils.cloneObject(DEFAULT_BOOKMARKS_PANEL)
+      panel.index = i
+      panel.lockedPanel = loadedPanel.lockedPanel
+      panels.push(panel)
+      panelsMap['bookmarks'] = panel
+    }
+
+    // Private panel
+    if (loadedPanel.type === 'private') {
+      panels.push(Utils.cloneObject(DEFAULT_PRIVATE_TABS_PANEL))
+    }
+
+    // Default panel
+    if (loadedPanel.type === 'default') {
+      let panel = Utils.cloneObject(DEFAULT_TABS_PANEL)
+      panel.index = i
+      panel.lastActiveTab = loadedPanel.lastActiveTab
+      panel.lockedPanel = loadedPanel.lockedPanel
+      panel.lockedTabs = loadedPanel.lockedTabs
+      panel.noEmpty = loadedPanel.noEmpty
+      panels.push(panel)
+      panelsMap[panel.cookieStoreId] = panel
+    }
+
+    // Container panel
+    if (loadedPanel.type === 'ctx') {
+      const container = containers.find(c => c.cookieStoreId === loadedPanel.cookieStoreId)
+      const panel = Utils.cloneObject(DEFAULT_CTX_TABS_PANEL)
+
+      // Native container props
+      if (container) {
+        panel.cookieStoreId = container.cookieStoreId
+        panel.name = container.name
+        panel.colorCode = container.colorCode
+        panel.color = container.color
+        panel.icon = container.icon
+        panel.iconUrl = container.iconUrl
+      } else {
+        const conf = {
+          name: loadedPanel.name,
+          color: loadedPanel.color,
+          icon: loadedPanel.icon,
+        }
+        const newCtr = await browser.contextualIdentities.create(conf)
+        panel.cookieStoreId = newCtr.cookieStoreId
+        panel.name = newCtr.name
+        panel.colorCode = newCtr.colorCode
+        panel.color = newCtr.color
+        panel.icon = newCtr.icon
+        panel.iconUrl = newCtr.iconUrl
+      }
+
+      // Sidebery props
+      panel.index = i
+      panel.lockedTabs = loadedPanel.lockedTabs
+      panel.lockedPanel = loadedPanel.lockedPanel
+      panel.proxy = loadedPanel.proxy
+      panel.proxified = loadedPanel.proxified
+      panel.noEmpty = loadedPanel.noEmpty
+      panel.includeHostsActive = loadedPanel.includeHostsActive
+      panel.includeHosts = loadedPanel.includeHosts
+      panel.excludeHostsActive = loadedPanel.excludeHostsActive
+      panel.excludeHosts = loadedPanel.excludeHosts
+      panel.lastActiveTab = loadedPanel.lastActiveTab
+
+      panels.push(panel)
+      panelsMap[panel.cookieStoreId] = panel
     }
   }
 
-  // Clean up
-  const toRemove = []
-  for (let ctr of panels) {
-    if (ctr.type !== 'ctx') continue
-    if (!containers.find(c => c.cookieStoreId === ctr.id)) toRemove.push(ctr.id)
-  }
-  for (let id of toRemove) {
-    const rIndex = panels.findIndex(c => c.id === id)
-    if (rIndex !== -1) panels.splice(rIndex, 1)
+  // Append not-saved native containers
+  for (let container of containers) {
+    if (!panelsMap[container.cookieStoreId]) {
+      let panel = Utils.cloneObject(DEFAULT_CTX_TABS_PANEL)
+      panel.cookieStoreId = container.cookieStoreId
+      panel.name = container.name
+      panel.colorCode = container.colorCode
+      panel.color = container.color
+      panel.icon = container.icon
+      panel.iconUrl = container.iconUrl
+      const len = panels.push(panel)
+      panel.index = len - 1
+      panelsMap[panel.cookieStoreId] = panel
+    }
   }
 
   this.state.containers = containers
   this.state.panels = panels
+  this.state.panelsMap = panelsMap
+
+  if (this.state.panelIndex >= this.state.panels.length) {
+    this.state.panelIndex = this.state.private ? 1 : 2
+  }
 
   // Set requests handler (if needed)
   Actions.updateReqHandler()
@@ -161,7 +198,10 @@ function updatePanelsTabs() {
  */
 function updatePanelsRanges() {
   let lastIndex = this.getters.pinnedTabs.length
-  for (let panel of this.state.panels) {
+  let countOfPanels = this.state.panels.length
+  for (let i = 0; i < countOfPanels; i++) {
+    let panel = this.state.panels[i]
+    panel.index = i
     if (panel.panel !== 'TabsPanel') continue
     if (panel.tabs.length) {
       lastIndex = panel.tabs[panel.tabs.length - 1].index
@@ -333,8 +373,9 @@ async function switchPanel(dir = 0) {
  * Find panel with active tab and switch to it.
  */
 function goToActiveTabPanel() {
-  const panelIndex = this.state.panels.findIndex(p => p.tabs.find(t => t.active))
-  if (panelIndex > -1) Actions.switchToPanel(panelIndex)
+  const activeTab = this.state.tabs.find(t => t.active)
+  const panel = this.state.panelsMap[activeTab.cookieStoreId]
+  if (panel) Actions.switchToPanel(panel.index)
 }
 
 /**

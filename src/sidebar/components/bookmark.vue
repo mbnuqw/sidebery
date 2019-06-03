@@ -16,6 +16,7 @@
 import EventBus from '../../event-bus'
 import State from '../store/state'
 import Actions from '../actions'
+import { DEFAULT_CTX_ID } from '../config/panels'
 
 export default {
   props: {
@@ -184,7 +185,7 @@ export default {
       if (!this.node.url) return
 
       if (inNewTab) {
-        let index = State.defaultPanel.endIndex + 1
+        let index = State.panelsMap[DEFAULT_CTX_ID].endIndex + 1
         browser.tabs.create({
           index,
           windowId: State.windowId,

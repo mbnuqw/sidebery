@@ -288,8 +288,7 @@ function openBookmarksInNewWin(ids, incognito) {
  * Open bookmarks
  */
 async function openBookmarksInPanel(ids, panelId) {
-  const pi = this.state.panels.findIndex(p => p.cookieStoreId === panelId)
-  const p = this.state.panels[pi]
+  const p = this.state.panelsMap[panelId]
   if (!p) return
 
   let index = p.endIndex + 1
@@ -310,7 +309,7 @@ async function openBookmarksInPanel(ids, panelId) {
   }
   walker(this.state.bookmarks)
 
-  Actions.setPanel(pi)
+  Actions.setPanel(p.index)
 
   const idMap = []
   for (let node of toOpen) {
