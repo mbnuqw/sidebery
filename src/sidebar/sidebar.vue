@@ -990,10 +990,10 @@ export default {
       if (!State.tabsMap[tabId]) return
       let creatingNewTab
       const tab = State.tabsMap[tabId]
-      const panel = Utils.getPanelOf(State.panels, tab)
+      const panel = State.panelsMap[tab.cookieStoreId]
 
       // Recreate locked tab
-      if (panel && panel.lockedTabs && tab.url.startsWith('http')) {
+      if (!tab.pinned && panel && panel.lockedTabs && tab.url.startsWith('http')) {
         browser.tabs.create({
           windowId: State.windowId,
           index: tab.index,
@@ -1005,7 +1005,7 @@ export default {
       }
 
       // No-empty
-      if (panel && panel.noEmpty && panel.tabs && panel.tabs.length === 1) {
+      if (!tab.pinned && panel && panel.noEmpty && panel.tabs && panel.tabs.length === 1) {
         if (!creatingNewTab) {
           browser.tabs.create({
             windowId: State.windowId,
@@ -1050,7 +1050,7 @@ export default {
 
       // Remove tab from panel
       if (panel && panel.tabs) {
-        panel.tabs.splice(tab.index - panel.startIndex, 1)
+        if (!tab.pinned) panel.tabs.splice(tab.index - panel.startIndex, 1)
         Actions.updatePanelsRanges()
       }
 

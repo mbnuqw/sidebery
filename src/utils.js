@@ -115,17 +115,6 @@ function strSize(str) {
 }
 
 /**
- * Get panel by tab obj.
- */
-function getPanelOf(panels, tab) {
-  if (tab.pinned) return null
-  for (let i = 1; i < panels.length; i++) {
-    if (panels[i].cookieStoreId === tab.cookieStoreId) return panels[i]
-  }
-  return null
-}
-
-/**
  * Get date string from unix seconds
  */
 function uDate(sec) {
@@ -491,7 +480,6 @@ export default {
   sleep,
   strSize,
   bytesToStr,
-  getPanelOf,
   uDate,
   uTime,
   uElapsed,

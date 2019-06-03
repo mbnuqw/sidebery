@@ -86,25 +86,6 @@ describe('Global utilities', () => {
     })
   })
 
-  // getPanelOf
-  describe('getPanelOf()', () => {
-    test('Get panel by tab', async () => {
-      const panels = [
-        {},
-        {
-          pinned: true,
-          tabs: [{ cookieStoreId: 'a', pinned: true }, { cookieStoreId: 'b', pinned: true }],
-        },
-        { cookieStoreId: 'a', tabs: [{ cookieStoreId: 'a' }, { cookieStoreId: 'a' }] },
-      ]
-      const tab1 = { cookieStoreId: 'b', pinned: true }
-      const tab2 = { cookieStoreId: 'a', pinned: false }
-
-      expect(Utils.getPanelOf(panels, tab1)).toBe(null)
-      expect(Utils.getPanelOf(panels, tab2).cookieStoreId).toBe('a')
-    })
-  })
-
   // uDate
   describe('uDate()', () => {
     test('Convert unix seconds to readable date format yyyy.mm.dd', async () => {
