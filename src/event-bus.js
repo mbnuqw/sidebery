@@ -16,10 +16,9 @@ export function InitMsgHandling(state, actions) {
 
     // Run action
     if (msg.action && actions[msg.action]) {
-      let args = msg.args || []
-      if (msg.injectState) args.unshift(state)
-      if (msg.arg) args.push(msg.arg)
-      actions[msg.action](...args)
+      if (msg.arg) actions[msg.action](msg.arg)
+      else if (msg.args) actions[msg.action](...msg.args)
+      else actions[msg.action]()
     }
   })
 }
