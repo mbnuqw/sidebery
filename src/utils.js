@@ -274,22 +274,6 @@ async function getDescFromDragEvent(event) {
 }
 
 /**
- * Find bookmark
- */
-function findBookmark(bookmarks, id) {
-  let target, n
-  const findWalk = nodes => {
-    for (n of nodes) {
-      if (n.id === id) return (target = n)
-      if (n.children) findWalk(n.children)
-      if (target) return
-    }
-  }
-  findWalk(bookmarks)
-  return target
-}
-
-/**
  * Check if string is group url
  */
 function isGroupUrl(url) {
@@ -488,7 +472,6 @@ export default {
   commonSubStr,
   getUrlFromDragEvent,
   getDescFromDragEvent,
-  findBookmark,
   isGroupUrl,
   getGroupId,
   getGroupUrl,

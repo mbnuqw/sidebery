@@ -1353,7 +1353,7 @@ export default {
       }
 
       if (type === 'bookmark') {
-        const target = Utils.findBookmark(State.bookmarks, targetId)
+        const target = State.bookmarksMap[targetId]
         if (!target) return
 
         if (target.type === 'folder') {
@@ -1545,7 +1545,7 @@ export default {
       const targetSlot = this.itemSlots.find(s => s.id === targetId)
       let target
       if (type === 'tab') target = State.tabsMap[targetId]
-      if (type === 'bookmark') target = Utils.findBookmark(State.bookmarks, targetId)
+      if (type === 'bookmark') target = State.bookmarksMap[targetId]
 
       if (!target) return
       const offset = this.panelTopOffset - this.panelScrollEl.scrollTop
