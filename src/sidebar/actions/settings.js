@@ -60,7 +60,7 @@ function updateSettings(settings) {
   }
 
   if (look) {
-    Actions.initTheme()
+    Actions.initTheme('settings')
   }
 }
 

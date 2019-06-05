@@ -23,14 +23,14 @@ export default new Vue({
   },
 
   async created() {
-    Actions.loadStyles(State)
-    Actions.loadCurrentWindowInfo(State)
-    Actions.loadPlatformInfo(State)
-    Actions.loadBrowserInfo(State)
-    await Actions.loadSettings(State)
-    // await Actions.loadState(State)
-    // await Actions.loadContainers(State)
-    Actions.loadKeybindings(State)
+    Actions.loadStyles()
+    Actions.loadCurrentWindowInfo()
+    Actions.loadPlatformInfo()
+    Actions.loadBrowserInfo()
+    await Actions.loadSettings()
+    // await Actions.loadState()
+    // await Actions.loadContainers()
+    Actions.loadKeybindings()
 
     // Store.dispatch('loadKeybindings')
     // Store.dispatch('loadSnapshots')

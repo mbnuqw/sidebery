@@ -1,7 +1,7 @@
 /**
  * Load predefined theme and apply it
  */
-function initTheme() {
+function initTheme(target) {
   let themeLinkEl = document.getElementById('theme_link')
   if (!themeLinkEl) {
     themeLinkEl = document.createElement('link')
@@ -10,7 +10,7 @@ function initTheme() {
     themeLinkEl.rel = 'stylesheet'
   }
 
-  themeLinkEl.href = `../themes/${this.state.look}.css`
+  themeLinkEl.href = `../themes/${this.state.look}/${target}.css`
   document.head.appendChild(themeLinkEl)
 }
 

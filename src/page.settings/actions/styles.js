@@ -3,7 +3,7 @@ import Utils from '../../utils'
 import Logs from '../../logs'
 import EventBus from '../../event-bus'
 import CommonActions from '../../actions/styles'
-import Actions from '../store.actions'
+import Actions from '../actions'
 
 /**
  * Get stored custom css

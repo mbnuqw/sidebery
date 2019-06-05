@@ -1,6 +1,6 @@
-import { DEFAULT_SETTINGS, SETTINGS_OPTIONS } from '../../settings.js'
-import Manifest from '../../addon/manifest.json'
+import Manifest from '../../../addon/manifest.json'
 import { translate } from '../../mixins/dict'
+import { DEFAULT_SETTINGS, SETTINGS_OPTIONS } from '../../settings.js'
 
 export const DEFAULT_CTX = 'firefox-default'
 export const PRIVATE_CTX = 'firefox-private'

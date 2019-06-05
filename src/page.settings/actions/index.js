@@ -1,5 +1,7 @@
 // import Utils from '../libs/utils'
 import Logs from '../../logs'
+import Store from '../store'
+import State from '../store/state'
 import MenuActions from './menu'
 import KeybindingsActions from './keybindings'
 import SettingsActions from './settings'
@@ -8,48 +10,48 @@ import StylesActions from './styles'
 /**
  * Load current window info
  */
-async function loadCurrentWindowInfo(state) {
+async function loadCurrentWindowInfo() {
   const win = await browser.windows.getCurrent()
-  state.private = win.incognito
-  state.windowId = win.id
+  this.state.private = win.incognito
+  this.state.windowId = win.id
 }
 
 /**
  * Load platform info
  */
-async function loadPlatformInfo(state) {
+async function loadPlatformInfo() {
   const info = await browser.runtime.getPlatformInfo()
-  state.osInfo = info
-  state.os = info.os
+  this.state.osInfo = info
+  this.state.os = info.os
 }
 
 /**
  * Load browser info
  */
-async function loadBrowserInfo(state) {
+async function loadBrowserInfo() {
   const info = await browser.runtime.getBrowserInfo()
-  state.ffInfo = info
-  state.ffVer = parseInt(info.version.slice(0, 2))
-  if (isNaN(state.ffVer)) state.ffVer = 0
+  this.state.ffInfo = info
+  this.state.ffVer = parseInt(info.version.slice(0, 2))
+  if (isNaN(this.state.ffVer)) this.state.ffVer = 0
 }
 
 /**
  * Retrieve current permissions
  */
-async function loadPermissions(state) {
-  state.permAllUrls = await browser.permissions.contains({ origins: ['<all_urls>'] })
-  state.permTabHide = await browser.permissions.contains({ permissions: ['tabHide'] })
+async function loadPermissions() {
+  this.state.permAllUrls = await browser.permissions.contains({ origins: ['<all_urls>'] })
+  this.state.permTabHide = await browser.permissions.contains({ permissions: ['tabHide'] })
 
-  if (!state.permTabHide) {
-    state.hideInact = false
-    state.hideFoldedTabs = false
-    SettingsActions.saveSettings(state)
+  if (!this.state.permTabHide) {
+    this.state.hideInact = false
+    this.state.hideFoldedTabs = false
+    Actions.saveSettings()
   }
 
   Logs.push('[INFO] Permissions loaded')
 }
 
-export default {
+const Actions = {
   ...SettingsActions,
   ...KeybindingsActions,
   ...MenuActions,
@@ -60,6 +62,15 @@ export default {
   loadBrowserInfo,
   loadPermissions,
 }
+
+// Inject vuex getters and state in actions
+for (let action in Actions) {
+  if (!Actions.hasOwnProperty(action)) continue
+
+  Actions[action] = Actions[action].bind({ getters: Store.getters, state: State })
+}
+
+export default Actions
 
 // import Logs from '../libs/logs'
 // import SavedStateActions from './actions/saved-state'
