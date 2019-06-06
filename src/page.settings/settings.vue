@@ -378,7 +378,6 @@
 
 
 <script>
-import Store from './store'
 import State from './store/state'
 import Actions from './actions'
 import ToggleField from '../components/toggle-field'
@@ -433,8 +432,8 @@ export default {
      * Set new value of option and save settings
      */
     setOpt(key, val) {
-      Store.commit('setSetting', { key, val })
-      Actions.saveSettings(State)
+      Actions.setSetting(key, val)
+      Actions.saveSettings()
     },
 
     /**
@@ -580,7 +579,7 @@ export default {
      * Reset all keybindings
      */
     resetKeybindings() {
-      Actions.resetKeybindings(State)
+      Actions.resetKeybindings()
     },
 
     /**
@@ -590,7 +589,7 @@ export default {
       if (State.permAllUrls) {
         await browser.permissions.remove({ origins: ['<all_urls>'] })
         browser.runtime.sendMessage({ action: 'loadPermissions' })
-        Actions.loadPermissions(State)
+        Actions.loadPermissions()
       } else {
         const request = { origins: ['<all_urls>'], permissions: [] }
         browser.permissions.request(request).then(allowed => {
@@ -608,7 +607,7 @@ export default {
         await browser.runtime.sendMessage({ action: 'showAllTabs' })
         await browser.permissions.remove({ permissions: ['tabHide'] })
         browser.runtime.sendMessage({ action: 'loadPermissions' })
-        Actions.loadPermissions(State)
+        Actions.loadPermissions()
       } else {
         const request = { origins: [], permissions: ['tabHide'] }
         browser.permissions.request(request).then(allowed => {
@@ -624,7 +623,7 @@ export default {
     toggleSnapshots(name) {
       const v = !State.snapshotsTargets[name]
       State.snapshotsTargets = { ...State.snapshotsTargets, [name]: v }
-      Actions.saveSettings(State)
+      Actions.saveSettings()
     },
 
     /**
@@ -676,8 +675,8 @@ export default {
      * Reset settings
      */
     resetSettings() {
-      Actions.resetSettings(State)
-      Actions.saveSettings(State)
+      Actions.resetSettings()
+      Actions.saveSettings()
     },
   },
 }

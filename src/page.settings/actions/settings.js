@@ -5,35 +5,35 @@ import Actions from './index'
 /**
  * Set setting value
  */
-function setSetting(state, keyVal) {
-  if (!DEFAULT_SETTINGS.hasOwnProperty(keyVal.key)) return
-  state[keyVal.key] = keyVal.val
+function setSetting(key, val) {
+  if (!DEFAULT_SETTINGS.hasOwnProperty(key)) return
+  this.state[key] = val
 }
 
 /**
  * Reset settings to defaults
  * and store them to local storage
  */
-function resetSettings(state) {
+function resetSettings() {
   // Reset settings
   for (const key in DEFAULT_SETTINGS) {
     if (!DEFAULT_SETTINGS.hasOwnProperty(key)) continue
-    if (state[key] == null || state[key] == undefined) continue
-    state[key] = DEFAULT_SETTINGS[key]
+    if (this.state[key] == null || this.state[key] == undefined) continue
+    this.state[key] = DEFAULT_SETTINGS[key]
   }
 }
 
 /**
  * Save settings to local storage
  */
-async function saveSettings(state) {
-  if (!state.settingsLoaded || !state.windowFocused) return
+async function saveSettings() {
+  if (!this.state.settingsLoaded || !this.state.windowFocused) return
   let settings = {}
   for (const key in DEFAULT_SETTINGS) {
     if (!DEFAULT_SETTINGS.hasOwnProperty(key)) continue
-    if (state[key] == null || state[key] == undefined) continue
-    if (state[key] instanceof Object) settings[key] = JSON.parse(JSON.stringify(state[key]))
-    else settings[key] = state[key]
+    if (this.state[key] == null || this.state[key] == undefined) continue
+    if (this.state[key] instanceof Object) settings[key] = JSON.parse(JSON.stringify(this.state[key]))
+    else settings[key] = this.state[key]
   }
   await browser.storage.local.set({ settings })
 }
@@ -41,20 +41,20 @@ async function saveSettings(state) {
 /**
  * Update settings
  */
-function updateSettings(state, settings) {
+function updateSettings(settings) {
   if (!settings) return
 
   // Check what values was updated
-  const look = state.look !== settings.look
+  const look = this.state.look !== settings.look
 
   // Update settings
   for (let k in settings) {
     if (!settings.hasOwnProperty(k)) continue
-    if (settings[k] !== undefined) state[k] = settings[k]
+    if (settings[k] !== undefined) this.state[k] = settings[k]
   }
 
   if (look) {
-    Actions.updateTheme(state)
+    Actions.updateTheme()
   }
 }
 

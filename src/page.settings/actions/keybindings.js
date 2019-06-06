@@ -11,13 +11,13 @@ async function updateKeybinding(name, shortcut) {
 /**
  * Reset addon's keybindings
  */
-async function resetKeybindings(state) {
-  state.keybindings.map(async k => {
+async function resetKeybindings() {
+  this.state.keybindings.map(async k => {
     await browser.commands.reset(k.name)
   })
 
   setTimeout(() => {
-    CommonActions.loadKeybindings(state)
+    CommonActions.loadKeybindings(this.state)
   }, 120)
 }
 
