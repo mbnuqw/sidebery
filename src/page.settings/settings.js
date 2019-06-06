@@ -23,6 +23,8 @@ export default new Vue({
   },
 
   async created() {
+    State.instanceType = 'settings'
+
     Actions.loadStyles()
     Actions.loadCurrentWindowInfo()
     Actions.loadPlatformInfo()
