@@ -215,7 +215,7 @@
       optLabel="settings.look_"
       :value="$store.state.look"
       :opts="$store.state.lookOpts"
-      @input="setOpt('look', $event)")
+      @input="setOpt('look', $event), reinitTheme()")
     .separator
     select-field(
       label="settings.switch_theme"
@@ -677,6 +677,14 @@ export default {
     resetSettings() {
       Actions.resetSettings()
       Actions.saveSettings()
+    },
+
+    /**
+     * Reinit theme
+     */
+    reinitTheme() {
+      if (State.look === 'none') return
+      Actions.initTheme()
     },
   },
 }

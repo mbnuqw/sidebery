@@ -32,12 +32,7 @@ export default new Vue({
     Actions.loadPlatformInfo()
     Actions.loadBrowserInfo()
     await Actions.loadSettings()
-    // await Actions.loadState()
-    // await Actions.loadContainers()
+    if (State.look !== 'none') Actions.initTheme()
     Actions.loadKeybindings()
-
-    // Store.dispatch('loadKeybindings')
-    // Store.dispatch('loadSnapshots')
-    // Store.dispatch('loadPermissions')
   },
 })
