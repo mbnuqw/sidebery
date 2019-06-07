@@ -20,7 +20,6 @@
 
     "dev.themes.default": "stylus ./src/styles/themes/default/sidebar.styl ./src/styles/themes/default/settings.styl ./src/styles/themes/default/group.styl -w --out ./addon/themes/default/",
     "dev.themes.tactile": "stylus ./src/styles/themes/tactile/sidebar.styl ./src/styles/themes/tactile/settings.styl ./src/styles/themes/tactile/group.styl -w --out ./addon/themes/tactile/",
-    "dev.themes.none": "stylus ./src/styles/themes/none/index.styl -w --out ./addon/themes/none.css",
 
     "build.sidebar": "parcel build ./src/sidebar/index.html -d ./addon/sidebar/ --public-url ./ --no-autoinstall --no-source-maps",
     "build.group": "parcel build ./src/page.group/group.html -d ./addon/group/ --public-url ./ --no-autoinstall --no-source-maps",

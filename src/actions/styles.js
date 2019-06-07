@@ -1,8 +1,19 @@
+import EventBus from '../event-bus'
+
 /**
  * Load predefined theme and apply it
  */
 function initTheme() {
   let themeLinkEl = document.getElementById('theme_link')
+
+  // Remove theme css
+  if (this.state.look === 'none') {
+    if (themeLinkEl) themeLinkEl.setAttribute('disabled', 'disabled')
+    return
+  } else {
+    if (themeLinkEl) themeLinkEl.removeAttribute('disabled')
+  }
+
   if (!themeLinkEl) {
     themeLinkEl = document.createElement('link')
     themeLinkEl.id = 'theme_link'
@@ -10,8 +21,11 @@ function initTheme() {
     themeLinkEl.rel = 'stylesheet'
   }
 
-  themeLinkEl.href = `../themes/${this.state.look}/${this.state.instanceType}.css`
+  const url = browser.runtime.getURL(`../themes/${this.state.look}/${this.state.instanceType}.css`)
+  if (themeLinkEl.href !== url) themeLinkEl.href = url
   document.head.appendChild(themeLinkEl)
+
+  setTimeout(() => EventBus.$emit('dynVarChange'), 13)
 }
 
 /**

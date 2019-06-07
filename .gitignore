@@ -12,8 +12,6 @@ addon/themes/default/*
 !addon/themes/default/__preserve-dir
 addon/themes/tactile/*
 !addon/themes/tactile/__preserve-dir
-addon/themes/none/*
-!addon/themes/none/__preserve-dir
 addon/styles
 addon/menu
 addon/group
