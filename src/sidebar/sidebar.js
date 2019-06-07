@@ -60,7 +60,7 @@ export default new Vue({
     State.instanceType = 'sidebar'
 
     await Actions.loadSettings()
-    Actions.initTheme()
+    if (State.look !== 'default') Actions.initTheme()
     if (State.customTheme) Actions.loadCustomCSS()
 
     await Actions.loadPanelIndex()

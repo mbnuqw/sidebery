@@ -19,13 +19,11 @@ function initTheme() {
     themeLinkEl.id = 'theme_link'
     themeLinkEl.type = 'text/css'
     themeLinkEl.rel = 'stylesheet'
+    document.head.appendChild(themeLinkEl)
   }
 
-  const url = browser.runtime.getURL(`../themes/${this.state.look}/${this.state.instanceType}.css`)
-  if (themeLinkEl.href !== url) themeLinkEl.href = url
-  document.head.appendChild(themeLinkEl)
-
-  setTimeout(() => EventBus.$emit('dynVarChange'), 13)
+  themeLinkEl.href = `../themes/${this.state.look}/${this.state.instanceType}.css`
+  setTimeout(() => EventBus.$emit('dynVarChange'), 120)
 }
 
 /**
