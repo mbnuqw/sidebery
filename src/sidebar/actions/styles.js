@@ -2,6 +2,7 @@ import Utils from '../../utils'
 import Logs from '../../logs'
 import EventBus from '../../event-bus'
 import CommonActions from '../../actions/styles'
+import { CUSTOM_CSS_VARS } from '../../settings'
 
 /**
  * Load css vars and apply them
@@ -34,8 +35,8 @@ function applyStyles(styles) {
   if (!styles) return
 
   const rootEl = document.getElementById('root')
-  for (let key in styles) {
-    if (!styles.hasOwnProperty(key)) continue
+  for (let key in CUSTOM_CSS_VARS) {
+    if (!CUSTOM_CSS_VARS.hasOwnProperty(key)) continue
 
     if (styles[key]) {
       rootEl.style.setProperty(Utils.toCSSVarName(key), styles[key])
