@@ -424,10 +424,8 @@ export default {
     async toggleIncludeHosts() {
       if (!this.conf.includeHostsActive) {
         if (!State.permAllUrls) {
-          const permUrl = browser.runtime.getURL('permissions/all-urls.html')
-          this.$emit('close')
+          Actions.openSettings('all-urls')
           this.switchProxy('direct')
-          browser.tabs.create({ url: permUrl, windowId: State.windowId })
           return
         }
       }
@@ -453,10 +451,8 @@ export default {
     async toggleExcludeHosts() {
       if (!this.conf.excludeHostsActive) {
         if (!State.permAllUrls) {
-          const permUrl = browser.runtime.getURL('permissions/all-urls.html')
-          this.$emit('close')
+          Actions.openSettings('all-urls')
           this.switchProxy('direct')
-          browser.tabs.create({ url: permUrl, windowId: State.windowId })
           return
         }
       }
@@ -483,10 +479,8 @@ export default {
       // Check permissions
       if (type !== 'direct') {
         if (!State.permAllUrls) {
-          const url = browser.runtime.getURL('permissions/all-urls.html')
-          this.$emit('close')
+          Actions.openSettings('all-urls')
           this.switchProxy('direct')
-          browser.tabs.create({ url, windowId: State.windowId })
           return
         }
       }

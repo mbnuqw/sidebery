@@ -28,14 +28,6 @@ const GROUP = scripts['dev.group'].split(' ')
 const GROUP_CMD = GROUP[0]
 const GROUP_OPT = GROUP.slice(1)
 
-const PERM_URL = scripts['dev.perm.url'].split(' ')
-const PERM_URL_CMD = PERM_URL[0]
-const PERM_URL_OPT = PERM_URL.slice(1)
-
-const PERM_HIDE = scripts['dev.perm.hide'].split(' ')
-const PERM_HIDE_CMD = PERM_HIDE[0]
-const PERM_HIDE_OPT = PERM_HIDE.slice(1)
-
 const DBG = scripts['dev.debug'].split(' ')
 const DBG_CMD = DBG[0]
 const DBG_OPT = DBG.slice(1)
@@ -76,14 +68,6 @@ Sidebar.stderr.on('data', data => errOut('[Sidebar ERROR] ', data))
 // const Group = spawn(GROUP_CMD, GROUP_OPT, EXEC_CONFIG)
 // Group.stdout.on('data', data => logOut('[Group] ', data))
 // Group.stderr.on('data', data => errOut('[Group ERROR] ', data))
-
-// const PermUrl = spawn(PERM_URL_CMD, PERM_URL_OPT, EXEC_CONFIG)
-// PermUrl.stdout.on('data', data => logOut('[PermUrl] ', data))
-// PermUrl.stderr.on('data', data => errOut('[PermUrl ERROR] ', data))
-
-// const PermHide = spawn(PERM_HIDE_CMD, PERM_HIDE_OPT, EXEC_CONFIG)
-// PermHide.stdout.on('data', data => logOut('[PermHide] ', data))
-// PermHide.stderr.on('data', data => errOut('[PermHide ERROR] ', data))
 
 const Debug = spawn(DBG_CMD, DBG_OPT, EXEC_CONFIG)
 Debug.stdout.on('data', data => logOut('[Debug] ', data))

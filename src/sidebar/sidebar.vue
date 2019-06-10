@@ -64,7 +64,7 @@
       .settings-btn(
         v-if="!$store.state.hideSettingsBtn"
         :title="t('nav.settings_tooltip')"
-        @click="openSettings")
+        @click="act('openSettings')")
         svg: use(xlink:href="#icon_settings")
 
     //- Panels
@@ -1687,16 +1687,6 @@ export default {
       }
     },
     // ---
-
-    /**
-     * Toggle settings
-     */
-    openSettings() {
-      const url = browser.runtime.getURL('settings/settings.html')
-      const existedTab = State.tabs.find(t => t.url === url)
-      if (existedTab) browser.tabs.update(existedTab.id, { active: true })
-      else browser.tabs.create({ url, windowId: State.windowId })
-    },
 
     /**
      * Update sidebar width value.

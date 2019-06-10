@@ -313,7 +313,10 @@
   section
     h2 {{t('settings.permissions_title')}}
 
-    div
+    .permission(
+      ref="allUrls"
+      :data-highlight="highlight.allUrls"
+      @click="onHighlighClick('allUrls')")
       toggle-field(
         label="settings.all_urls_label"
         :inline="true"
@@ -323,7 +326,10 @@
 
     .separator
 
-    div
+    .permission(
+      ref="tabHide"
+      :data-highlight="highlight.tabHide"
+      @click="onHighlighClick('tabHide')")
       toggle-field(
         label="settings.tab_hide_label"
         :inline="true"
@@ -398,6 +404,10 @@ export default {
   data() {
     return {
       faviCache: null,
+      highlight: {
+        allUrls: false,
+        tabHide: false,
+      },
     }
   },
 
@@ -425,6 +435,11 @@ export default {
       body += `> Extension: ${State.version}  \n`
       return ISSUE_URL + '?body=' + encodeURIComponent(body)
     }
+  },
+
+  mounted() {
+    window.addEventListener('hashchange', this.updateActiveSection)
+    setTimeout(() => this.updateActiveSection(), 1000)
   },
 
   methods: {
@@ -463,8 +478,7 @@ export default {
      */
     toggleHideInact() {
       if (!State.hideInact && !State.permTabHide) {
-        const url = browser.runtime.getURL('permissions/tab-hide.html')
-        browser.tabs.create({ url, windowId: State.windowId })
+        location.hash = 'tab-hide'
         return
       }
 
@@ -476,8 +490,7 @@ export default {
      */
     toggleHideFoldedTabs() {
       if (!State.hideFoldedTabs && !State.permTabHide) {
-        const url = browser.runtime.getURL('permissions/tab-hide.html')
-        browser.tabs.create({ url, windowId: State.windowId })
+        location.hash = 'tab-hide'
         return
       }
 
@@ -685,6 +698,42 @@ export default {
     reinitTheme() {
       if (State.look === 'none') return
       Actions.initTheme()
+    },
+
+    /**
+     * Check url hash and update active section
+     */
+    updateActiveSection() {
+      const hash = location.hash ? location.hash.slice(1) : location.hash
+
+      // Reset highlighting
+      if (hash[hash.length - 1] !== '_') {
+        for (let area in this.highlight) {
+          if (!this.highlight.hasOwnProperty(area)) continue
+          this.$set(this.highlight, area, false)
+        }
+      }
+
+      if (hash === 'all-urls' && this.$refs.allUrls) {
+        location.hash = 'all-urls_'
+        this.$refs.allUrls.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        this.highlight.allUrls = true
+      }
+
+      if (hash === 'tab-hide' && this.$refs.tabHide) {
+        location.hash = 'tab-hide_'
+        this.$refs.tabHide.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        this.highlight.tabHide = true
+      }
+    },
+
+    /**
+     * Handle click on highlighed area
+     * 
+     * @param {string} name
+     */
+    onHighlighClick(name) {
+      this.highlight[name] = false
     },
   },
 }

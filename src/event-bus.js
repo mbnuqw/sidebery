@@ -2,9 +2,12 @@ import Vue from 'vue'
 const eb = new Vue()
 
 /**
- * Init global msg exchange
+ * Init global msg exchange.
+ * 
+ * @param state - global vuex state
+ * @param actions
  */
-export function InitMsgHandling(state, actions) {
+export function initMsgHandling(state, actions) {
   // Handle messages from other parts of extension.
   browser.runtime.onMessage.addListener(msg => {
     if (!msg.name && !msg.action) return

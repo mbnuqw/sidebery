@@ -1,14 +1,18 @@
 import Vue from 'vue'
 import { mapGetters } from 'vuex'
-import EventBus from '../event-bus'
+import EventBus, { initMsgHandling } from '../event-bus'
 import Sidebar from './sidebar.vue'
 import Dict from '../mixins/dict'
+import { initActionsMixin } from '../mixins/act'
 import Store from './store'
 import State from './store/state'
 import Actions from './actions'
 
 if (!State.tabsMap) State.tabsMap = []
 Vue.mixin(Dict)
+Vue.mixin(initActionsMixin(Actions))
+
+initMsgHandling(State, Actions)
 
 export default new Vue({
   el: '#root',

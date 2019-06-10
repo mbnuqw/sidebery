@@ -426,11 +426,7 @@ async function bookmarkTabs(tabIds) {
  * Clear all cookies of tab urls
  */
 async function clearTabsCookies(tabIds) {
-  if (!this.state.permAllUrls) {
-    const url = browser.runtime.getURL('permissions/all-urls.html')
-    browser.tabs.create({ url, windowId: this.state.windowId })
-    return
-  }
+  if (!this.state.permAllUrls) return Actions.openSettings('all-urls')
 
   for (let tabId of tabIds) {
     let tab = this.state.tabsMap[tabId]

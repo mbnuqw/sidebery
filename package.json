@@ -7,8 +7,6 @@
     "dev.sidebar": "parcel watch ./src/sidebar/sidebar.js -d ./addon/sidebar/ --public-url ./ --no-autoinstall --log-level 4",
     "dev.group": "parcel watch ./src/page.group/group.html -d ./addon/group/ --public-url ./ --no-autoinstall --log-level 4",
     "dev.settings": "parcel watch ./src/page.settings/settings.js -d ./addon/settings/ --public-url ./ --no-autoinstall --log-level 4",
-    "dev.perm.url": "parcel watch ./src/page.permissions/all-urls.html -d ./addon/permissions/ --public-url ./ --no-autoinstall",
-    "dev.perm.hide": "parcel watch ./src/page.permissions/tab-hide.html -d ./addon/permissions/ --public-url ./ --no-autoinstall",
     "dev.debug": "parcel watch ./src/page.debug/debug.html -d ./addon/debug/ --public-url ./ --no-autoinstall",
     "dev.menu": "parcel watch ./src/page.menu/menu.html -d ./addon/menu/ --public-url ./ --no-autoinstall",
     "dev.styles": "parcel watch ./src/page.styles/styles.html -d ./addon/styles/ --public-url ./ --no-autoinstall",
@@ -38,7 +36,6 @@
 
     "clear.cache": "rm -rf .cache",
     "clear.group": "rm -rf addon/group",
-    "clear.permissions": "rm -rf addon/permissions",
     "clear.debug": "rm -rf addon/debug",
     "clear.settings": "rm -rf addon/settings",
     "clear.menu": "rm -rf addon/menu",

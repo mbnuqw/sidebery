@@ -231,3 +231,14 @@ footer
   pos(0, 0)
   opacity: 0
   z-index: -1
+
+.Settings .permission[data-highlight]
+  box(relative)
+
+.Settings .permission[data-highlight]:before
+  content: ''
+  box(absolute)
+  pos(-8px, -8px)
+  size(calc(100% + 16px), same)
+  outline: 2px dashed var(--false-fg)
+  outline-offset: -2px

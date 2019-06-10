@@ -65,6 +65,27 @@ function updateSettings(settings) {
 }
 
 /**
+ * Open/activate settings page.
+ * 
+ * @param {string} [section] - url-encoded string
+ */
+function openSettings(section) {
+  let url = browser.runtime.getURL('settings/settings.html')
+  let existedTab = this.state.tabs.find(t => t.url.startsWith(url))
+
+  if (section) url += '#' + section
+  if (existedTab) {
+    if (existedTab.url === url) {
+      browser.tabs.update(existedTab.id, { active: true })
+    } else {
+      browser.tabs.update(existedTab.id, { url, active: true })
+    }
+  } else {
+    browser.tabs.create({ url, windowId: this.state.windowId })
+  }
+}
+
+/**
  * Provide window-wise debug data
  */
 async function getWindowDbgInfo() {
@@ -208,6 +229,7 @@ export default {
   ...CommonActions,
 
   updateSettings,
+  openSettings,
   getWindowDbgInfo,
   getCommonDbgInfo,
   getCssSelectors,
