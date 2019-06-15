@@ -9,10 +9,18 @@
 // -- Label
 // -
 .StyleField .label
-  box(relative)
+  box(relative, flex)
   text(s: rem(15))
+  justify-content: space-between
+  align-items: center
   color: var(--label-fg)
   transition: color var(--d-fast)
+
+.StyleField .var
+  text(monospace, s: rem(11))
+  text-align: right
+  margin-left: 12px
+  color: var(--info-fg)
 
 .StyleField:hover .label
   color: var(--label-fg-hover)

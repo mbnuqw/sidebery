@@ -9,7 +9,7 @@ import {
   DEFAULT_PRIVATE_TABS_PANEL,
   DEFAULT_TABS_PANEL,
   DEFAULT_CTX_TABS_PANEL,
-} from '../config/panels'
+} from '../../defaults'
 
 let recalcPanelScrollTimeout, updateReqHandlerTimeout, savePanelsTimeout
 
@@ -305,7 +305,7 @@ function switchToPanel(index) {
   Actions.resetSelection()
   Actions.setPanel(index)
 
-  if (this.state.dashboardOpened) EventBus.$emit('openDashboard', this.state.panelIndex)
+  if (this.state.dashboardIsOpen) EventBus.$emit('openDashboard', this.state.panelIndex)
   const panel = this.state.panels[this.state.panelIndex]
   if (panel.noEmpty && panel.tabs && !panel.tabs.length) {
     Actions.createTab(panel.cookieStoreId)
@@ -358,7 +358,7 @@ async function switchPanel(dir = 0) {
     Actions.activateLastActiveTabOf(this.state.panelIndex)
   }
 
-  if (this.state.dashboardOpened) EventBus.$emit('openDashboard', this.state.panelIndex)
+  if (this.state.dashboardIsOpen) EventBus.$emit('openDashboard', this.state.panelIndex)
   let panel = this.state.panels[this.state.panelIndex]
   if (panel.noEmpty && panel.tabs && !panel.tabs.length) {
     Actions.createTab(panel.cookieStoreId)

@@ -1,6 +1,8 @@
 <template lang="pug">
 .StyleField(:data-active="!!value")
-  .label {{t(label)}}
+  .label
+    .desc {{t(label)}}
+    .var {{name}}
   .input-group
     text-input.text-input(
       :value="value"
@@ -26,6 +28,7 @@ export default {
     value: String,
     or: String,
     label: String,
+    name: String,
     optFill: String,
     opts: Array,
   },

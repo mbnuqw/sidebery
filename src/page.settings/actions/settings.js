@@ -1,4 +1,4 @@
-import { DEFAULT_SETTINGS } from '../../settings'
+import { DEFAULT_SETTINGS } from '../../defaults'
 import CommonActions from '../../actions/settings'
 import Actions from './index'
 

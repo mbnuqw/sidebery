@@ -1,0 +1,154 @@
+@import '../../mixins'
+
+.StylesEditor
+  box(absolute, flex)
+  size(100%, same)
+  pos(0, 0)
+  align-items: stretch
+  overflow: hidden
+  background-color: var(--bg)
+
+.StylesEditor .wrapper
+  box(flex)
+  flex-flow: column
+  flex: 1 0 100%
+
+// ---
+// -- Vars
+// -
+.StylesEditor .vars
+  box(relative)
+  size(55%, 100%)
+  overflow-y: auto
+  flex-wrap: wrap
+  justify-content: flex-start
+  align-items: flex-start
+
+.StylesEditor h1
+  box(relative)
+  size(100%)
+  text(s: 2.5rem, w: 700)
+  padding: 30px 0
+  color: var(--label-fg)
+  text-align: center
+
+.StylesEditor .separator
+  box(relative)
+  size(100%, 1px)
+  background-color: #00000032
+  box-shadow: 0 1px 0 0 #78787816
+  margin: 8px 0
+
+.StylesEditor > .title
+  box(relative)
+  text(s: rem(24))
+  color: var(--title-fg)
+  padding: 12px 16px
+
+.StylesEditor .box
+  box(relative, grid)
+  grid-gap: 50px 0
+  padding: 8px 0 16px
+
+.StylesEditor section
+  box(relative)
+  size(100%, max-w: 400px)
+  margin: 0 auto
+  padding: 2px 0 32px
+
+.StylesEditor  section > h2
+  box(relative)
+  size(100%)
+  text(s: rem(28), w: 400)
+  color: var(--title-fg)
+  text-align: center
+  margin: 28px 0 24px
+
+.StylesEditor .label
+  text(s: rem(16))
+
+.StylesEditor input
+  text(s: rem(15))
+
+.StylesEditor .ctrls
+  box(relative, flex)
+  grid-gap: 8px 8px
+  justify-content: center
+  flex-flow: wrap
+  margin: 5px 16px 24px
+
+.StylesEditor .btn
+  size(auto)
+  padding: 5px 16px
+
+// ---
+// -- CSS
+// -
+.StylesEditor .css
+  box(relative, flex)
+  size(45%)
+  flex-flow: column
+  background-color: #00000016
+  overflow-y: auto
+  overflow-x: hidden
+  box-shadow: inset 0 0 8px 0 #00000036, inset 1px 0 0 0 #00000016
+
+.StylesEditor .css h1
+  margin-bottom: 8px
+
+.StylesEditor .css nav
+  box(relative, flex)
+  justify-content: center
+  align-items: center
+
+.StylesEditor .nav-item
+  text(s: rem(16))
+  color: var(--inactive-fg)
+  padding: 3px 12px
+  -moz-user-select: none
+  cursor: pointer
+  &:hover
+    color: var(--info-fg)
+  &[data-active]
+    color: var(--active-fg)
+
+.StylesEditor .editor-box
+  box(relative, flex)
+  flex-flow: column
+  flex: 1 0 auto
+  padding: 16px
+
+.StylesEditor .editor
+  box(relative, border-box)
+  size(100%)
+  text(monospace, s: rem(11))
+  flex: 1 0 auto
+  color: var(--true-fg)
+  -webkit-appearance: none
+  border: none
+  outline: none
+  margin: 0
+  padding: 0
+  background-color: transparent
+  resize: none
+  z-index: 1
+
+  &:focus + .placeholder
+    opacity: .7
+
+.StylesEditor .editor-box > .placeholder
+  box(absolute)
+  text(monospace, s: rem(11))
+  color: var(--true-fg)
+  white-space: pre
+  transition: opacity var(--d-fast)
+
+  &[data-hidden]
+    opacity: 0
+
+.StylesEditor .awesome
+  box(absolute)
+  pos(b: 32px, r: -120px)
+  text(s: rem(68), w: 700)
+  color: #00000008
+  white-space: pre

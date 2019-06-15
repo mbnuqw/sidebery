@@ -30,10 +30,11 @@ function initTheme() {
  * Load custom css and apply it
  */
 async function loadCustomCSS() {
-  let ans = await browser.storage.local.get('css')
-  if (!ans || !ans.css) return
+  const fieldName = this.state.instanceType + 'CSS'
+  let ans = await browser.storage.local.get(fieldName)
+  if (!ans || !ans[fieldName]) return
 
-  applyCustomCSS(ans.css)
+  this.actions.applyCustomCSS(ans[fieldName])
 }
 
 /**

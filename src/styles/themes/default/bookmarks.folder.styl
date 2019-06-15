@@ -81,22 +81,22 @@
   color: var(--bookmarks-folder-closed-fg-active)
 
 .Folder[data-expanded][data-parent] > .body > .title
-  color: var(--bookmarks-folder-open-fg)
+  color: var(--bookmarks-folder-expanded-fg)
   mask: linear-gradient(-90deg, transparent 12px, #000000 24px, #000000)
   transform: translateX(12px)
 .Folder[data-expanded][data-parent] > .body:hover > .title
-  color: var(--bookmarks-folder-open-fg-hover)
+  color: var(--bookmarks-folder-expanded-fg-hover)
 .Folder[data-expanded][data-parent] > .body:active > .title
-  color: var(--bookmarks-folder-open-fg-active)
+  color: var(--bookmarks-folder-expanded-fg-active)
 
 // Empty folder
 .Folder:not([data-parent]) > .body > .title
   color: var(--bookmarks-folder-empty-fg)
 
-.Folder[data-opened][data-parent] > .body > .title
-.Folder[data-opened][data-parent] > .body:hover > .title
-.Folder[data-opened][data-parent] > .body:active > .title
-  color: var(--bookmarks-opened-fg)
+.Folder[data-open][data-parent] > .body > .title
+.Folder[data-open][data-parent] > .body:hover > .title
+.Folder[data-open][data-parent] > .body:active > .title
+  color: var(--bookmarks-open-bookmark-fg)
 
 .Folder[data-selected] > .body > .title
   color: var(--tabs-selected-fg)
@@ -138,7 +138,7 @@
     box(absolute)
     pos(0, 0)
     size(100%, same)
-    fill: var(--bookmarks-folder-open-fg)
+    fill: var(--bookmarks-folder-expanded-fg)
     transform: rotateZ(-90deg)
     transition: transform var(--d-fast)
 

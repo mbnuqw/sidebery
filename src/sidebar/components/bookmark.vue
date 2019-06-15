@@ -1,7 +1,7 @@
 <template lang="pug">
 .Bookmark(
   :data-selected="selected"
-  :data-opened="node.opened"
+  :data-open="node.isOpen"
   :data-favless="!favicon")
   .body(:title="tooltip", @click="onClick", @mousedown="onMouseDown", @mouseup="onMouseUp")
     .drag-layer(draggable="true", @dragstart="onDragStart")
@@ -16,7 +16,7 @@
 import EventBus from '../../event-bus'
 import State from '../store/state'
 import Actions from '../actions'
-import { DEFAULT_CTX_ID } from '../config/panels'
+import { DEFAULT_CTX_ID } from '../../defaults'
 
 export default {
   props: {
@@ -98,7 +98,7 @@ export default {
         return
       }
       
-      if (State.actOpenedTab && this.node.opened) {
+      if (State.activateOpenBookmarkTab && this.node.isOpen) {
         const tab = State.tabs.find(t => t.url === this.node.url)
         if (tab) {
           browser.tabs.update(tab.id, { active: true })

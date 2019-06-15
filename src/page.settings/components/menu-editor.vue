@@ -1,5 +1,5 @@
 <template lang="pug">
-.CtxMenuBuilder
+.MenuEditor: .wrapper(v-noise:300.g:12:af.a:0:42.s:0:9="")
   h1 Context Menu
   section
     h2 {{t('menu.editor.tabs_title')}}
@@ -52,14 +52,16 @@
         .opt-btn.-up(@click="restoreBookmarkOpt(opt)"): svg: use(xlink:href="#icon_expand")
 
     .ctrls: .btn(@click="resetBookmarksMenu") {{t('menu.editor.reset')}}
-
+  
+  FooterSection
 </template>
 
 
 <script>
-import State from '../sidebar/store.state'
-import Store from '../sidebar/store'
-import { DEFAULT_TABS_MENU, DEFAULT_BOOKMARKS_MENU } from '../sidebar/store.state'
+import State from '../store/state'
+import Actions from '../actions'
+import { DEFAULT_TABS_MENU, DEFAULT_BOOKMARKS_MENU } from '../store/state'
+import FooterSection from './footer'
 
 const TABS_MENU_OPTS = {
   'undoRmTab': 'menu.tab.undo',
@@ -91,6 +93,10 @@ const BOOKMARKS_MENU_OPTS = {
 }
 
 export default {
+  components: {
+    FooterSection,
+  },
+
   data() {
     return {
       active: false,
@@ -163,7 +169,7 @@ export default {
       const empty = State.tabsMenu.findIndex(inline => inline.length === 0)
       if (empty !== -1) State.tabsMenu.splice(empty, 1)
 
-      Store.dispatch('saveCtxMenu')
+      Actions.saveCtxMenu()
     },
 
     /**
@@ -192,7 +198,7 @@ export default {
       const empty = State.tabsMenu.findIndex(inline => inline.length === 0)
       if (empty !== -1) State.tabsMenu.splice(empty, 1)
 
-      Store.dispatch('saveCtxMenu')
+      Actions.saveCtxMenu()
     },
 
     /**
@@ -200,7 +206,7 @@ export default {
      */
     restoreTabOpt(opt) {
       State.tabsMenu.push(opt)
-      Store.dispatch('saveCtxMenu')
+      Actions.saveCtxMenu()
     },
 
     /**
@@ -208,7 +214,7 @@ export default {
      */
     resetTabsMenu() {
       State.tabsMenu = JSON.parse(JSON.stringify(DEFAULT_TABS_MENU))
-      Store.dispatch('saveCtxMenu')
+      Actions.saveCtxMenu()
     },
 
     /**
@@ -238,7 +244,7 @@ export default {
       const empty = State.bookmarksMenu.findIndex(inline => inline.length === 0)
       if (empty !== -1) State.bookmarksMenu.splice(empty, 1)
 
-      Store.dispatch('saveCtxMenu')
+      Actions.saveCtxMenu()
     },
 
     /**
@@ -265,7 +271,7 @@ export default {
       const empty = State.bookmarksMenu.findIndex(inline => inline.length === 0)
       if (empty !== -1) State.bookmarksMenu.splice(empty, 1)
 
-      Store.dispatch('saveCtxMenu')
+      Actions.saveCtxMenu()
     },
 
     /**
@@ -273,7 +279,7 @@ export default {
      */
     restoreBookmarkOpt(opt) {
       State.bookmarksMenu.push(opt)
-      Store.dispatch('saveCtxMenu')
+      Actions.saveCtxMenu()
     },
 
     /**
@@ -281,104 +287,8 @@ export default {
      */
     resetBookmarksMenu() {
       State.bookmarksMenu = JSON.parse(JSON.stringify(DEFAULT_BOOKMARKS_MENU))
-      Store.dispatch('saveCtxMenu')
+      Actions.saveCtxMenu()
     },
   },
 }
 </script>
-
-
-<style lang="stylus">
-@import '../styles/mixins'
-
-.CtxMenuBuilder
-  box(relative)
-  size(100%, max-w: 400px)
-  flex-wrap: wrap
-  justify-content: flex-start
-  align-items: flex-start
-
-.CtxMenuBuilder h1
-  box(relative)
-  size(100%)
-  text(s: 2.5rem, w: 700)
-  padding: 30px 0
-  color: var(--label-fg)
-  text-align: center
-
-.CtxMenuBuilder section
-  box(relative, grid)
-  grid-gap: 8px 0
-  padding: 2px 0 32px
-
-.CtxMenuBuilder section > h2
-  box(relative)
-  size(100%)
-  text(s: rem(28), w: 400)
-  color: var(--title-fg)
-  text-align: center
-  margin: 28px 0 24px
-
-.CtxMenuBuilder .menu-group
-  box(relative)
-  size(100%)
-  overflow: hidden
-  padding: 2px 0 2px 0
-  
-.CtxMenuBuilder .group-title
-  box(relative)
-  text(s: rem(18))
-  color: var(--sub-title-fg)
-  padding: 3px 0
-
-.CtxMenuBuilder .opt
-  box(relative, flex)
-  align-items: center
-  padding: 0 0 0 8px
-  &:hover
-    .opt-title
-      opacity: 1
-    .opt-btn
-      opacity: .8
-
-  .opt-title
-    box(relative)
-    text(s: rem(15))
-    color: var(--label-fg)
-    white-space: nowrap
-    overflow: hidden
-    text-overflow: ellipsis
-    padding: 2px 5px 2px 0
-    margin: 0 auto 0 0
-    opacity: .7
-
-  .opt-btn
-    box(relative)
-    size(22px, same)
-    fill: var(--title-fg)
-    flex-shrink: 0
-    flex-grow: 0
-    cursor: pointer
-    opacity: .2
-    &.-up svg
-      transform: rotateZ(180deg)
-    &:hover
-      opacity: 1
-    &:active
-      opacity: .7
-    svg
-      box(absolute)
-      size(16px, same)
-      pos(calc(50% - 8px), same)
-
-.CtxMenuBuilder .ctrls
-  box(relative, flex)
-  grid-gap: 8px 8px
-  justify-content: center
-  flex-wrap: wrap
-  margin: 5px 16px
-
-.CtxMenuBuilder .btn
-  size(auto)
-  padding: 5px 16px
-</style>

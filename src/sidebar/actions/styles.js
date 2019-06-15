@@ -2,7 +2,7 @@ import Utils from '../../utils'
 import Logs from '../../logs'
 import EventBus from '../../event-bus'
 import CommonActions from '../../actions/styles'
-import { CUSTOM_CSS_VARS } from '../../settings'
+import { CUSTOM_CSS_VARS } from '../../defaults'
 
 /**
  * Load css vars and apply them

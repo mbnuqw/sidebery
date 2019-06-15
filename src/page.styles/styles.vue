@@ -405,19 +405,19 @@
       @toggle="toggleStyle('bookmarks_folder_closed_fg_active')")
     .separator
     color-style-field(
-      label="styles.bookmarks_opened_dir_fg_color"
+      label="styles.bookmarks_open_dir_fg_color"
       v-model="$store.state.customStyles.bookmarks_folder_open_fg"
       @change="updateStyle('bookmarks_folder_open_fg')"
       @toggle="toggleStyle('bookmarks_folder_open_fg')")
     .separator
     color-style-field(
-      label="styles.bookmarks_opened_dir_fg_color_hover"
+      label="styles.bookmarks_open_dir_fg_color_hover"
       v-model="$store.state.customStyles.bookmarks_folder_open_fg_hover"
       @change="updateStyle('bookmarks_folder_open_fg_hover')"
       @toggle="toggleStyle('bookmarks_folder_open_fg_hover')")
     .separator
     color-style-field(
-      label="styles.bookmarks_opened_dir_fg_color_active"
+      label="styles.bookmarks_open_dir_fg_color_active"
       v-model="$store.state.customStyles.bookmarks_folder_open_fg_active"
       @change="updateStyle('bookmarks_folder_open_fg_active')"
       @toggle="toggleStyle('bookmarks_folder_open_fg_active')")
@@ -429,10 +429,10 @@
       @toggle="toggleStyle('bookmarks_folder_empty_fg')")
     .separator
     color-style-field(
-      label="styles.bookmarks_opened_fg_color"
-      v-model="$store.state.customStyles.bookmarks_opened_fg"
-      @change="updateStyle('bookmarks_opened_fg')"
-      @toggle="toggleStyle('bookmarks_opened_fg')")
+      label="styles.bookmarks_open_fg_color"
+      v-model="$store.state.customStyles.bookmarks_open_bookmark_fg"
+      @change="updateStyle('bookmarks_open_bookmark_fg')"
+      @toggle="toggleStyle('bookmarks_open_bookmark_fg')")
 
   .ctrls: .btn(@click="resetStyles") {{t('styles.reset_styles')}}
 </template>

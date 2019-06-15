@@ -29,7 +29,7 @@
 import ToggleField from '../../components/toggle-field'
 import State from '../store/state'
 import Actions from '../actions'
-import { DEFAULT_CTX_ID } from '../config/panels'
+import { DEFAULT_CTX_ID } from '../../defaults'
 
 export default {
   components: {

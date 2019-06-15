@@ -40,13 +40,13 @@
 .Folder:not([data-selected]) > .body:active
   background-color: var(--bookmarks-node-bg-active)
 
-.Folder[data-opened] > .body:before
+.Folder[data-open] > .body:before
   content: ''
   box(absolute)
   size(4px, 4px)
   pos(calc(50% - 2px), r: 6px)
   border-radius: 50%
-  background-color: var(--bookmarks-opened-fg)
+  background-color: var(--bookmarks-open-bookmark-fg)
 
 // ---
 // -- Drag layer
@@ -81,17 +81,17 @@
 
 .Folder[data-expanded][data-parent] > .body > .title
   text-shadow: 1px 1px 0 #ffffff00
-  color: var(--bookmarks-folder-open-fg)
+  color: var(--bookmarks-folder-expanded-fg)
 .Folder[data-expanded][data-parent] > .body:hover > .title
-  color: var(--bookmarks-folder-open-fg-hover)
+  color: var(--bookmarks-folder-expanded-fg-hover)
 .Folder[data-expanded][data-parent] > .body:active > .title
-  color: var(--bookmarks-folder-open-fg-active)
+  color: var(--bookmarks-folder-expanded-fg-active)
 
 // Empty folder
 .Folder:not([data-parent]) > .body > .title
   color: var(--bookmarks-folder-empty-fg)
 
-.Folder[data-opened][data-parent] > .body > .title
+.Folder[data-open][data-parent] > .body > .title
   mask: linear-gradient(-90deg, transparent 16px, #000000 28px, #000000)
 
 .Folder[data-selected] > .body > .title
@@ -128,7 +128,7 @@
   opacity: 1
   > svg
     transform: rotateZ(0deg)
-    fill: var(--bookmarks-folder-open-fg)
+    fill: var(--bookmarks-folder-expanded-fg)
 
 // ---
 // -- Vue transitions

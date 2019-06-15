@@ -1,9 +1,6 @@
 import CommonActions from '../../actions/menu'
-import BookmarksOptions from '../config/bookmarks-menu'
-import TabsOptions from '../config/tabs-menu'
+import { MENU_OPTIONS } from '../../defaults'
 import Actions from '.'
-
-const OPTIONS = { ...BookmarksOptions, ...TabsOptions }
 
 /**
  * Open context menu
@@ -21,14 +18,14 @@ async function openCtxMenu(el, node) {
     if (optName instanceof Array) {
       let inlineMenu = []
       for (let iOpt of optName) {
-        const option = OPTIONS[iOpt](node)
+        const option = MENU_OPTIONS[iOpt](this.state, node)
         if (option) inlineMenu = inlineMenu.concat(option)
       }
       inline.push(inlineMenu)
       continue
     }
 
-    const option = OPTIONS[optName](node)
+    const option = MENU_OPTIONS[optName](this.state, node)
     if (option) opts = opts.concat(option)
   }
 

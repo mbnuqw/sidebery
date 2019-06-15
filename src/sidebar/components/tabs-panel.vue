@@ -19,7 +19,6 @@
         :tab="t"
         @start-selection="$emit('start-selection', $event)"
         @stop-selection="$emit('stop-selection')")
-  .dbg {{$store.state.panels[index].startIndex}} - {{$store.state.panels[index].endIndex}} - {{$store.state.panels[index].index}}
 </template>
 
 

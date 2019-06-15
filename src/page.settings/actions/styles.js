@@ -7,24 +7,31 @@ import Actions from '../actions'
 
 /**
  * Get stored custom css
+ * 
+ * @param {string} target - 'sidebar', 'settings' or 'group'
  */
-async function getCustomCSS() {
-  let ans = await browser.storage.local.get('css')
-  if (!ans || !ans.customTheme) return ''
-  return ans.css
+async function getCustomCSS(target) {
+  const fieldName = target + 'CSS'
+  let ans = await browser.storage.local.get(fieldName)
+  if (!ans || !ans[fieldName]) return ''
+  return ans[fieldName]
 }
 
 /**
- * Apply custom theme and save it
+ * Apply custom css and save it
+ * 
+ * @param {string} target - 'sidebar', 'settings' or 'group'
+ * @param {string} css
  */
-function setCustomCSS(css) {
-  CommonActions.applyCustomCSS(css)
+function setCustomCSS(target, css) {
+  const fieldName = target + 'CSS'
+  if (target === 'settings') Actions.applyCustomCSS(css)
 
-  if (css) this.state.customCSS = true
-  else this.state.customCSS = false
+  if (css) Vue.set(this.state, fieldName, true)
+  else Vue.set(this.state, fieldName, false)
 
   Actions.saveSettings()
-  browser.storage.local.set({ css })
+  browser.storage.local.set({ [fieldName]: css })
 }
 
 /**

@@ -132,8 +132,8 @@ export default {
       if (bookmark.type === 'bookmark') bookmark.host = bookmark.url.split('/')[2]
       if (bookmark.type === 'folder' && !bookmark.children) bookmark.children = []
       if (bookmark.type === 'folder') bookmark.expanded = false
-      if (State.selOpenedBookmarks && bookmark.url) {
-        bookmark.opened = !!State.tabs.find(t => t.url === bookmark.url)
+      if (State.highlightOpenBookmarks && bookmark.url) {
+        bookmark.isOpen = !!State.tabs.find(t => t.url === bookmark.url)
       }
 
       const parent = State.bookmarksMap[bookmark.parentId]

@@ -1,7 +1,8 @@
 import Manifest from '../../../addon/manifest.json'
-import { DEFAULT_SETTINGS, SETTINGS_OPTIONS } from '../../settings.js'
-import { DEFAULT_TABS_MENU } from '../config/tabs-menu'
-import { DEFAULT_BOOKMARKS_MENU } from '../config/bookmarks-menu'
+import Utils from '../../utils'
+import { DEFAULT_SETTINGS, SETTINGS_OPTIONS } from '../../defaults'
+import { DEFAULT_TABS_MENU } from '../../defaults'
+import { DEFAULT_BOOKMARKS_MENU } from '../../defaults'
 
 export default {
   version: Manifest.version,
@@ -14,14 +15,14 @@ export default {
   windowFocused: true,
   tabHeight: 30,
 
-  tabsMenu: JSON.parse(JSON.stringify(DEFAULT_TABS_MENU)),
-  bookmarksMenu: JSON.parse(JSON.stringify(DEFAULT_BOOKMARKS_MENU)),
+  tabsMenu: Utils.cloneArray(DEFAULT_TABS_MENU),
+  bookmarksMenu: Utils.cloneArray(DEFAULT_BOOKMARKS_MENU),
 
   // --- Global State
   ctxMenu: null,
   winChoosing: false,
 
-  dashboardOpened: false,
+  dashboardIsOpen: false,
   recalcScrollNeeded: false,
   selected: [],
   wheelBlockTimeout: null,

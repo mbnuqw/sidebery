@@ -6,18 +6,6 @@
 @import './btn'
 @import './scroll-box'
 
-@import './field.icon-select'
-@import './field.select'
-@import './field.style-color'
-@import './field.style'
-@import './field.toggle'
-
-@import './input.color'
-@import './input.icon-select'
-@import './input.select'
-@import './input.text'
-@import './input.toggle'
-
 html
   box(relative)
   size(h: 100%)
@@ -25,17 +13,17 @@ html
 
 body
   box(relative)
-  size(100%)
+  size(100%, same)
   text(sans-serif, smooth: on)
+  overflow: hidden
   padding: 0
   margin: 0
-  -moz-user-select: none
   a
     text-decoration: none
 
 .root
   box(relative, flex, border-box)
-  size(100%)
+  size(100%, same)
   flex-direction: column
   align-items: center
   padding: 0 8px
@@ -89,11 +77,14 @@ footer
 // -- Settings root component
 // -
 .Settings
+  box(absolute)
+  pos(0, 0)
+  size(100%, same)
+  overflow-y: auto
+
+.wrapper
   box(relative)
-  size(100%, max-w: 400px)
-  flex-wrap: wrap
-  justify-content: flex-start
-  align-items: flex-start
+  size(100%)
 
 .Settings h1
   box(relative)
@@ -105,7 +96,9 @@ footer
 
 .Settings section
   box(relative, grid)
+  size(calc(100% - 16px), max-w: 400px)
   padding: 2px 8px 32px
+  margin: 0 auto
 
 .Settings section > h2
   box(relative)
@@ -219,17 +212,29 @@ footer
   opacity: 0
   z-index: -1
 
-.Settings .github
-  box(relative, block)
-  size(23px, same)
-  margin: 24px auto 8px
-  padding: 0
-  opacity: .5
-  &:hover
-    opacity: .8
-  &:active
-    opacity: .5
-  > svg
-    box(absolute)
-    size(100%, same)
-    fill: #646464
+.Settings .permission[data-highlight]
+  box(relative)
+
+.Settings .permission[data-highlight]:before
+  content: ''
+  box(absolute)
+  pos(-8px, -8px)
+  size(calc(100% + 16px), same)
+  outline: 2px dashed var(--false-fg)
+  outline-offset: -2px
+
+@import './field.icon-select'
+@import './field.select'
+@import './field.style-color'
+@import './field.style'
+@import './field.toggle'
+
+@import './input.color'
+@import './input.icon-select'
+@import './input.select'
+@import './input.text'
+@import './input.toggle'
+
+@import './menu-editor'
+@import './styles-editor'
+@import './debug'

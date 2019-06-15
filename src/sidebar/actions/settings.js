@@ -1,7 +1,7 @@
 import Utils from '../../utils'
 import Logs from '../../logs'
 import CommonActions from '../../actions/settings'
-import { DEFAULT_SETTINGS } from '../../settings'
+import { DEFAULT_SETTINGS } from '../../defaults'
 import Actions from '.'
 
 /**
@@ -129,7 +129,7 @@ async function getCommonDbgInfo() {
     // Get sanitized clone
     const panelClone = JSON.parse(JSON.stringify(panel))
 
-    if (panelClone.tabs) panelClone.tabs = panelClone.tabs.length
+    if (panelClone.tabs) delete panelClone.tabs
     delete panelClone.name
     delete panelClone.iconUrl
     delete panelClone.includeHosts

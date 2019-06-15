@@ -1,6 +1,8 @@
 <template lang="pug">
 .ColorField(:data-active="!!value")
-  .label {{t(label)}}
+  .label
+    .desc {{t(label)}}
+    .var {{name}}
   .input-group
     color-input.color-input(
       v-debounce:input.128="debouncedInput"
@@ -23,6 +25,7 @@ export default {
   props: {
     value: String,
     label: String,
+    name: String,
     optFill: String,
     opts: Array,
   },

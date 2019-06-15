@@ -1,9 +1,9 @@
 <template lang="pug">
-.Settings
+.Settings: .wrapper(v-noise:300.g:12:af.a:0:42.s:0:9="")
   h1 Settings
   section
     h2 {{t('settings.general_title')}}
-    toggle-field(
+    ToggleField(
       label="settings.native_scrollbars"
       :value="$store.state.nativeScrollbars"
       @input="setOpt('nativeScrollbars', $event)")
@@ -16,7 +16,7 @@
       @input="setOpt('autoHideCtxMenu', $event)")
     .separator
     .ctrls
-      .btn(@click="openPage('menu/menu')") {{t('settings.ctx_menu_editor')}}
+      .btn(@click="switchView('menu-editor')") {{t('settings.ctx_menu_editor')}}
 
   section
     h2 {{t('settings.nav_title')}}
@@ -179,17 +179,17 @@
       @input="setOpt('autoRemoveOther', $event)")
     .separator
     toggle-field(
-      label="settings.sel_opened_bookmarks"
+      label="settings.highlight_open_bookmarks"
       :inactive="!$store.state.bookmarksPanel"
-      :value="$store.state.selOpenedBookmarks"
-      @input="setOpt('selOpenedBookmarks', $event)")
+      :value="$store.state.highlightOpenBookmarks"
+      @input="setOpt('highlightOpenBookmarks', $event)")
     .sub-fields
       .separator
       toggle-field(
-        label="settings.act_opened_tab"
-        :inactive="!$store.state.bookmarksPanel || !$store.state.selOpenedBookmarks"
-        :value="$store.state.actOpenedTab"
-        @input="setOpt('actOpenedTab', $event)")
+        label="settings.activate_open_bookmark_tab"
+        :inactive="!$store.state.bookmarksPanel || !$store.state.highlightOpenBookmarks"
+        :value="$store.state.activateOpenBookmarkTab"
+        @input="setOpt('activateOpenBookmarkTab', $event)")
 
   section
     h2 {{t('settings.appearance_title')}}
@@ -225,8 +225,7 @@
       @input="setOpt('theme', $event)")
     .separator
     .ctrls
-      .btn(@click="openPage('theme/theme')") {{t('settings.edit_theme')}}
-      .btn(@click="openPage('styles/styles')") {{t('settings.edit_styles')}}
+      .btn(@click="switchView('styles-editor')") {{t('settings.edit_styles')}}
 
   section
     h2 {{t('settings.mouse_title')}}
@@ -315,7 +314,7 @@
 
     .permission(
       ref="allUrls"
-      :data-highlight="highlight.allUrls"
+      :data-highlight="$store.state.highlight.allUrls"
       @click="onHighlighClick('allUrls')")
       toggle-field(
         label="settings.all_urls_label"
@@ -328,7 +327,7 @@
 
     .permission(
       ref="tabHide"
-      :data-highlight="highlight.tabHide"
+      :data-highlight="$store.state.highlight.tabHide"
       @click="onHighlighClick('tabHide')")
       toggle-field(
         label="settings.tab_hide_label"
@@ -339,24 +338,24 @@
 
   section
     h2 {{t('settings.snapshots_title')}}
-    .inline-fields
-      toggle-field(
-        label="settings.snapshots_pinned_label"
-        :inline="true"
-        :value="$store.state.snapshotsTargets.pinned"
-        @input="toggleSnapshots('pinned')")
-      toggle-field(
-        label="settings.snapshots_default_label"
-        :inline="true"
-        :value="$store.state.snapshotsTargets.default"
-        @input="toggleSnapshots('default')")
-      toggle-field(
-        v-for="c in snapshotContainers"
-        :label="c.name"
-        :color="c.color"
-        :inline="true"
-        :value="c.active"
-        @input="toggleSnapshots(c.id)")
+    //- .inline-fields
+    //-   toggle-field(
+    //-     label="settings.snapshots_pinned_label"
+    //-     :inline="true"
+    //-     :value="$store.state.snapshotsTargets.pinned"
+    //-     @input="toggleSnapshots('pinned')")
+    //-   toggle-field(
+    //-     label="settings.snapshots_default_label"
+    //-     :inline="true"
+    //-     :value="$store.state.snapshotsTargets.default"
+    //-     @input="toggleSnapshots('default')")
+    //-   toggle-field(
+    //-     v-for="c in snapshotContainers"
+    //-     :label="c.name"
+    //-     :color="c.color"
+    //-     :inline="true"
+    //-     :value="c.active"
+    //-     @input="toggleSnapshots(c.id)")
     .separator
     .ctrls
       .btn(@click="viewAllSnapshots") {{t('settings.snapshots_view_label')}}
@@ -377,9 +376,11 @@
     h2 {{t('settings.help_title')}}
 
     .ctrls
-      .btn(@click="openDebugInfo") {{t('settings.debug_info')}}
+      .btn(@click="switchView('debug')") {{t('settings.debug_info')}}
       a.btn(tabindex="-1", :href="issueLink") {{t('settings.repo_bug')}}
       .btn.-warn(@click="resetSettings") {{t('settings.reset_settings')}}
+
+  footer-section
 </template>
 
 
@@ -389,6 +390,7 @@ import Actions from './actions'
 import ToggleField from '../components/toggle-field'
 import SelectField from '../components/select-field'
 import InfoField from '../components/info-field'
+import FooterSection from './components/footer'
 
 const VALID_SHORTCUT = /^((Ctrl|Alt|Command|MacCtrl)\+)((Shift|Alt)\+)?([A-Z0-9]|Comma|Period|Home|End|PageUp|PageDown|Space|Insert|Delete|Up|Down|Left|Right|F\d\d?)$|^((Ctrl|Alt|Command|MacCtrl)\+)?((Shift|Alt)\+)?(F\d\d?)$/
 const SPEC_KEYS = /^(Comma|Period|Home|End|PageUp|PageDown|Space|Insert|Delete|F\d\d?)$/
@@ -399,32 +401,18 @@ export default {
     ToggleField,
     SelectField,
     InfoField,
+    FooterSection,
   },
 
   data() {
     return {
       faviCache: null,
-      highlight: {
-        allUrls: false,
-        tabHide: false,
-      },
     }
   },
 
   computed: {
     activateAfterClosingNextOrPrev() {
       return State.activateAfterClosing === 'next' || State.activateAfterClosing === 'prev'
-    },
-
-    snapshotContainers() {
-      return State.ctxs.map(c => {
-        return {
-          id: c.cookieStoreId,
-          name: c.name,
-          color: c.colorCode,
-          active: !!State.snapshotsTargets[c.cookieStoreId],
-        }
-      })
     },
 
     issueLink() {
@@ -438,8 +426,22 @@ export default {
   },
 
   mounted() {
-    window.addEventListener('hashchange', this.updateActiveSection)
-    setTimeout(() => this.updateActiveSection(), 1000)
+    const allUrlsField = this.$refs.allUrls
+    const allUrlsGetter = Object.getOwnPropertyDescriptor(State.highlight, 'allUrls').get
+    const tabHideField = this.$refs.tabHide
+    const tabHideGetter = Object.getOwnPropertyDescriptor(State.highlight, 'tabHide').get
+    const scrollConf = { behavior: 'smooth', block: 'center' }
+    this.$watch(allUrlsGetter, (val) => {
+      if (val) allUrlsField.scrollIntoView(scrollConf)
+    })
+    this.$watch(tabHideGetter, (val) => {
+      if (val) tabHideField.scrollIntoView(scrollConf)
+    })
+
+    // Force auto scroll
+    State.highlight.allUrls = false
+    State.highlight.tabHide = false
+    setTimeout(Actions.updateActiveView, 13)
   },
 
   methods: {
@@ -466,11 +468,12 @@ export default {
     },
 
     /**
-     * Open page with context menu builder
+     * Switch to view of settings page
+     * 
+     * @param {string} name - url hash
      */
-    openCtxMenuBuilder() {
-      const url = browser.runtime.getURL('menu/menu.html')
-      browser.tabs.create({ url, windowId: State.windowId })
+    switchView(name) {
+      location.hash = name
     },
 
     /**
@@ -701,39 +704,13 @@ export default {
     },
 
     /**
-     * Check url hash and update active section
-     */
-    updateActiveSection() {
-      const hash = location.hash ? location.hash.slice(1) : location.hash
-
-      // Reset highlighting
-      if (hash[hash.length - 1] !== '_') {
-        for (let area in this.highlight) {
-          if (!this.highlight.hasOwnProperty(area)) continue
-          this.$set(this.highlight, area, false)
-        }
-      }
-
-      if (hash === 'all-urls' && this.$refs.allUrls) {
-        location.hash = 'all-urls_'
-        this.$refs.allUrls.scrollIntoView({ behavior: 'smooth', block: 'center' })
-        this.highlight.allUrls = true
-      }
-
-      if (hash === 'tab-hide' && this.$refs.tabHide) {
-        location.hash = 'tab-hide_'
-        this.$refs.tabHide.scrollIntoView({ behavior: 'smooth', block: 'center' })
-        this.highlight.tabHide = true
-      }
-    },
-
-    /**
      * Handle click on highlighed area
-     * 
-     * @param {string} name
      */
     onHighlighClick(name) {
-      this.highlight[name] = false
+      if (State.highlight[name]) {
+        history.replaceState({}, '', location.origin + location.pathname)
+      }
+      this.$set(State.highlight, name, false)
     },
   },
 }

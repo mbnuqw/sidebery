@@ -1,17 +1,24 @@
 import Vue from 'vue'
 import initNoiseBgDirective from '../directives/noise-bg'
+import Debounce from '../directives/debounce'
 import Dict from '../mixins/dict'
 import { initMsgHandling } from '../event-bus'
 import Store from './store'
 import State from './store/state'
 import Actions from './actions'
 import Settings from './settings.vue'
+import MenuEditor from './components/menu-editor.vue'
+import StylesEditor from './components/styles-editor.vue'
+import Debug from './components/debug.vue'
+
+Actions.updateActiveView()
 
 if (!State.tabsMap) State.tabsMap = []
 Vue.mixin(Dict)
 
 const noiseBg = initNoiseBgDirective(State, Store)
 Vue.directive('noise', noiseBg)
+Vue.directive('debounce', Debounce)
 
 initMsgHandling(State, Actions)
 
@@ -21,6 +28,9 @@ export default new Vue({
 
   components: {
     Settings,
+    MenuEditor,
+    StylesEditor,
+    Debug,
   },
 
   data() {
@@ -28,6 +38,8 @@ export default new Vue({
   },
 
   async created() {
+    window.addEventListener('hashchange', Actions.updateActiveView)
+
     State.instanceType = 'settings'
 
     Actions.loadStyles()
@@ -35,6 +47,7 @@ export default new Vue({
     Actions.loadPlatformInfo()
     Actions.loadBrowserInfo()
     Actions.loadPermissions()
+    Actions.loadCtxMenu()
     await Actions.loadSettings()
     if (State.look !== 'none') Actions.initTheme()
     Actions.loadKeybindings()

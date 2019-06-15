@@ -1,5 +1,5 @@
 import { DEFAULT_CTX } from '../store/state'
-import { DEFAULT_CTX_ID } from '../config/panels'
+import { DEFAULT_CTX_ID } from '../../defaults'
 import Actions from '.'
 
 /**

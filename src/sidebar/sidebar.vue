@@ -1,7 +1,7 @@
 <template lang="pug">
 .Sidebar(
   v-noise:300.g:12:af.a:0:42.s:0:9=""
-  :data-dashboard="$store.state.dashboardOpened"
+  :data-dashboard="$store.state.dashboardIsOpen"
   :data-drag="dragMode"
   :data-pointer="pointerMode"
   :data-nav-inline="$store.state.navBarInline"
@@ -85,7 +85,7 @@
       transition(name="panel")
         window-input(v-if="$store.state.panelIndex === -5" :data-pos="windowInputPos")
       transition(name="dashboard")
-        .dashboard-box(v-if="$store.state.dashboardOpened")
+        .dashboard-box(v-if="$store.state.dashboardIsOpen")
           component.dashboard(
             :data-pos="windowInputPos"
             :is="dashboard.dashboard"
@@ -100,7 +100,7 @@ import Vue from 'vue'
 import initNoiseBgDirective from '../directives/noise-bg.js'
 import Utils from '../utils.js'
 import EventBus from '../event-bus'
-import { DEFAULT_CTX_ID, DEFAULT_CTX_TABS_PANEL } from './config/panels'
+import { DEFAULT_CTX_ID, DEFAULT_CTX_TABS_PANEL } from '../defaults'
 import Store from './store'
 import State from './store/state.js'
 import Actions from './actions'
@@ -673,7 +673,7 @@ export default {
       if (State.panelIndex !== i) {
         Actions.switchToPanel(i)
       } else if (State.panels[i].cookieStoreId) {
-        if (State.dashboardOpened) {
+        if (State.dashboardIsOpen) {
           this.closeDashboard()
         } else {
           browser.tabs.create({
@@ -729,7 +729,7 @@ export default {
         State.panelIndex = State.panels.length - 1
         State.lastPanelIndex = State.panelIndex
 
-        if (State.dashboardOpened) this.openDashboard(State.panelIndex)
+        if (State.dashboardIsOpen) this.openDashboard(State.panelIndex)
 
         Actions.savePanels()
       }
@@ -802,9 +802,9 @@ export default {
     onCreatedTab(tab) {
       if (tab.windowId !== State.windowId) return
 
-      if (State.selOpenedBookmarks && State.bookmarksUrlMap && State.bookmarksUrlMap[tab.url]) {
+      if (State.highlightOpenBookmarks && State.bookmarksUrlMap && State.bookmarksUrlMap[tab.url]) {
         for (let b of State.bookmarksUrlMap[tab.url]) {
-          b.opened = true
+          b.isOpen = true
         }
       }
 
@@ -893,15 +893,15 @@ export default {
       // Url
       if (change.hasOwnProperty('url')) {
         if (change.url !== localTab.url) {
-          if (State.selOpenedBookmarks && State.bookmarksUrlMap) {
+          if (State.highlightOpenBookmarks && State.bookmarksUrlMap) {
             if (State.bookmarksUrlMap[localTab.url]) {
               for (let b of State.bookmarksUrlMap[localTab.url]) {
-                b.opened = false
+                b.isOpen = false
               }
             }
             if (State.bookmarksUrlMap[change.url]) {
               for (let b of State.bookmarksUrlMap[change.url]) {
-                b.opened = true
+                b.isOpen = true
               }
             }
           }
@@ -1076,13 +1076,13 @@ export default {
         }
       }
 
-      // Remove opened flag from bookmark
-      if (State.selOpenedBookmarks && State.bookmarksUrlMap && State.bookmarksUrlMap[tab.url]) {
+      // Remove isOpen flag from bookmark
+      if (State.highlightOpenBookmarks && State.bookmarksUrlMap && State.bookmarksUrlMap[tab.url]) {
         for (let t of State.tabs) {
           if (t.url === tab.url) return
         }
         for (let b of State.bookmarksUrlMap[tab.url]) {
-          b.opened = false
+          b.isOpen = false
         }
       }
     },
@@ -1227,7 +1227,7 @@ export default {
       }
 
       // Reopen dashboard
-      if (State.dashboardOpened) {
+      if (State.dashboardIsOpen) {
         if (this.dashboard.cookieStoreId !== this.nav[State.panelIndex].cookieStoreId) {
           this.openDashboard(State.panelIndex)
         }
@@ -1670,7 +1670,7 @@ export default {
       if (i === State.panels.length) i = -1
       Actions.closeCtxMenu()
       Actions.resetSelection()
-      State.dashboardOpened = true
+      State.dashboardIsOpen = true
       State.panelIndex = i
       if (i === -1) this.dashboard = { dashboard: 'TabsDashboard', name: '', new: true }
       else if (i >= 0) this.dashboard = this.nav[i]
@@ -1680,7 +1680,7 @@ export default {
      * Close nav menu.
      */
     closeDashboard() {
-      State.dashboardOpened = false
+      State.dashboardIsOpen = false
       this.dashboard = null
       if (State.panelIndex < 0 && State.lastPanelIndex >= 0) {
         State.panelIndex = State.lastPanelIndex

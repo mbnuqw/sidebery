@@ -1,47 +1,14 @@
-@import '../styles/mixins'
-@import '../styles/themes/default/vars'
+@import '../../mixins'
 
-html
-  box(relative)
-  size(h: 100%)
-
-body
-  box(relative, flex)
-  size(rel(100%, -16px), min-h: 100%)
-  text(sans-serif, smooth: on)
-  margin: 0
-  flex-direction: column
-  align-items: center
-  padding: 0 8px
+.Debug
+  box(absolute)
+  size(100%, same)
+  pos(0, 0)
+  -moz-user-select: text
+  overflow-y: auto
   background-color: var(--bg)
 
-body input
-  -webkit-appearance: none
-  border: none
-  outline: none
-  margin: 0
-  padding: 0
-  background-color: transparent
-  resize: none
-  z-index: 1
-
-.hidden
-.hidden-assets
-  box(absolute)
-  pos(0, 0)
-  size(0, 0)
-  overflow: hidden
-  opacity: 0
-
-.logo
-  box(relative)
-  size(36px, same)
-  padding: 0 36px
-  margin: 50px auto
-  fill: #646464
-  opacity: .24
-
-.title
+.Debug h1
   box(relative)
   size(100%)
   text(s: 2.5rem, w: 700)
@@ -49,7 +16,7 @@ body input
   color: var(--title-fg)
   text-align: center
 
-h2
+.Debug h2
   box(relative)
   size(100%)
   text(s: 2rem, w: 400)
@@ -57,36 +24,36 @@ h2
   text-align: center
   padding: 15px 0
 
-.info
+.Debug .info
   box(relative, flex)
   size(100%, )
   flex-wrap: wrap
   justify-content: center
   padding: 0 0 16px
 
-  section
-    box(relative, flex)
-    size(250px)
-    align-items: center
-    flex-direction: column
-    padding: 0 0 32px
+.Debug section
+  box(relative, flex)
+  size(250px)
+  align-items: center
+  flex-direction: column
+  padding: 0 0 32px
 
-  .sub
-    box(relative)
-    size(100%, max-w: 200px)
-    padding: 0 8px
+.Debug .sub
+  box(relative)
+  size(100%, max-w: 200px)
+  padding: 0 8px
 
-    .label
-      text(s: rem(14))
+  .label
+    text(s: rem(14))
 
-.separator
+.Debug .separator
   box(relative)
   size(100%, 1px, max-w: 220px)
   background-color: #00000032
   box-shadow: 0 1px 0 0 #78787816
   margin: 3px 0
 
-.field
+.Debug .field
   box(relative, flex)
   size(calc(100% - 16px), max-w: 200px)
   justify-content: space-between
@@ -109,7 +76,7 @@ h2
     &.-info
       color: var(--active-fg)
 
-.windows
+.Debug .windows
   box(relative, flex)
   size(100%)
   flex-wrap: wrap
@@ -121,15 +88,31 @@ h2
     size(100%)
     flex-wrap: wrap
     justify-content: center
-    padding: 0 0 32px
+    padding: 0 0 16px
 
-  .init
-    box(relative, flex)
+  .logs
+    box(relative)
     size(250px)
+    align-items: flex-start
+
+  .log
+    box(relative, flex)
+    text(monospace, s: rem(11))
     justify-content: flex-start
-    flex-direction: column
-    padding: 0 0 32px
-  
+    align-items: center
+    padding: 0 0 0 3px
+    color: var(--info-fg)
+    &:before
+      content: ''
+      box(absolute)
+      size(5px, same)
+      pos(l: -8px)
+      border-radius: 50%
+    &[data-type="info"]:before
+      background-color: var(--true-fg)
+    &[data-type="warn"]:before
+      background-color: var(--false-fg)
+
   .tabs
     box(relative, flex)
     size(320px)
@@ -174,7 +157,7 @@ h2
     text(s: rem(9))
     color: var(--info-fg)
 
-.data
+.Debug .data
   box(relative, flex)
   size(100%)
   flex-wrap: wrap

@@ -1,7 +1,7 @@
 import Utils from '../../utils'
 import Logs from '../../logs'
 import EventBus from '../../event-bus'
-import { DEFAULT_CTX_ID } from '../config/panels'
+import { DEFAULT_CTX_ID } from '../../defaults'
 import Actions from '.'
 
 let TabsTreeSaveTimeout
@@ -46,9 +46,9 @@ async function loadTabs() {
     t.invisible = false
     t.lvl = 0
     t.host = t.url.split('/')[2] || ''
-    if (this.state.selOpenedBookmarks && this.state.bookmarksUrlMap && this.state.bookmarksUrlMap[t.url]) {
+    if (this.state.highlightOpenBookmarks && this.state.bookmarksUrlMap && this.state.bookmarksUrlMap[t.url]) {
       for (let b of this.state.bookmarksUrlMap[t.url]) {
-        b.opened = true
+        b.isOpen = true
       }
     }
     this.state.tabsMap[t.id] = t

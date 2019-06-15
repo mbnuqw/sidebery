@@ -19,9 +19,9 @@ export function initMsgHandling(state, actions) {
 
     // Run action
     if (msg.action && actions[msg.action]) {
-      if (msg.arg) actions[msg.action](msg.arg)
-      else if (msg.args) actions[msg.action](...msg.args)
-      else actions[msg.action]()
+      if (msg.arg) return actions[msg.action](msg.arg)
+      if (msg.args) return actions[msg.action](...msg.args)
+      return actions[msg.action]()
     }
   })
 }

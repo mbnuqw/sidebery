@@ -1,0 +1,94 @@
+@import '../../mixins'
+
+.MenuEditor
+  box(absolute)
+  size(100%, same)
+  pos(0, 0)
+  overflow-y: auto
+  background-color: var(--bg)
+
+.MenuEditor h1
+  box(relative)
+  size(100%)
+  text(s: 2.5rem, w: 700)
+  padding: 30px 0
+  color: var(--label-fg)
+  text-align: center
+
+.MenuEditor section
+  box(relative, grid)
+  size(100%, max-w: 400px)
+  grid-gap: 8px 0
+  padding: 2px 0 32px
+  margin: 0 auto
+
+.MenuEditor section > h2
+  box(relative)
+  size(100%)
+  text(s: rem(28), w: 400)
+  color: var(--title-fg)
+  text-align: center
+  margin: 28px 0 24px
+
+.MenuEditor .menu-group
+  box(relative)
+  size(100%)
+  overflow: hidden
+  padding: 2px 0 2px 0
+  
+.MenuEditor .group-title
+  box(relative)
+  text(s: rem(18))
+  color: var(--sub-title-fg)
+  padding: 3px 0
+
+.MenuEditor .opt
+  box(relative, flex)
+  align-items: center
+  padding: 0 0 0 8px
+  &:hover
+    .opt-title
+      opacity: 1
+    .opt-btn
+      opacity: .8
+
+  .opt-title
+    box(relative)
+    text(s: rem(15))
+    color: var(--label-fg)
+    white-space: nowrap
+    overflow: hidden
+    text-overflow: ellipsis
+    padding: 2px 5px 2px 0
+    margin: 0 auto 0 0
+    opacity: .7
+
+  .opt-btn
+    box(relative)
+    size(22px, same)
+    fill: var(--title-fg)
+    flex-shrink: 0
+    flex-grow: 0
+    cursor: pointer
+    opacity: .2
+    &.-up svg
+      transform: rotateZ(180deg)
+    &:hover
+      opacity: 1
+    &:active
+      opacity: .7
+    svg
+      box(absolute)
+      size(16px, same)
+      pos(calc(50% - 8px), same)
+
+.MenuEditor .ctrls
+  box(relative, flex)
+  grid-gap: 8px 8px
+  justify-content: center
+  flex-wrap: wrap
+  margin: 5px 16px
+
+.MenuEditor .btn
+  size(auto)
+  padding: 5px 16px

@@ -3,7 +3,7 @@
   :data-expanded="node.expanded"
   :data-parent="isParent"
   :data-selected="selected"
-  :data-opened="opened")
+  :data-open="isOpen")
   .body(:title="tooltip" @click="onClick" @mousedown="onMouseDown" @mouseup="onMouseUp")
     .drag-layer(draggable="true" @dragstart="onDragStart")
     .exp(v-if="isParent")
@@ -59,13 +59,13 @@ export default {
       return `${this.node.title}: ${this.node.children.length}`
     },
 
-    opened() {
-      if (!State.selOpenedBookmarks) return false
+    isOpen() {
+      if (!State.highlightOpenBookmarks) return false
       if (!this.node.children) return false
       let i, n, target = this.node.children
       for (i = 0; target && i < target.length; i++) {
         n = target[i]
-        if (n.opened) {
+        if (n.isOpen) {
           istack.length = 0
           tstack.length = 0
           return true

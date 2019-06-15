@@ -65,7 +65,7 @@ export default new Vue({
 
     await Actions.loadSettings()
     if (State.look !== 'default') Actions.initTheme()
-    if (State.customTheme) Actions.loadCustomCSS()
+    if (State.sidebarCSS) Actions.loadCustomCSS()
 
     await Actions.loadPanelIndex()
     await Actions.loadPanels()
@@ -136,6 +136,9 @@ export default new Vue({
       }
       if (changes.bookmarksMenu) {
         State.bookmarksMenu = changes.bookmarksMenu.newValue
+      }
+      if (changes.sidebarCSS) {
+        Actions.applyCustomCSS(changes.sidebarCSS.newValue)
       }
     },
 

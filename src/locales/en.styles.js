@@ -83,11 +83,11 @@ export default {
   'styles.bookmarks_closed_dir_fg_color': { message: 'Closed folder color' },
   'styles.bookmarks_closed_dir_fg_color_hover': { message: 'Closed folder color on hover' },
   'styles.bookmarks_closed_dir_fg_color_active': { message: 'Closed folder color on click' },
-  'styles.bookmarks_opened_dir_fg_color': { message: 'Opened folder color' },
-  'styles.bookmarks_opened_dir_fg_color_hover': { message: 'Opened folder color on hover' },
-  'styles.bookmarks_opened_dir_fg_color_active': { message: 'Opened folder color on click' },
+  'styles.bookmarks_open_dir_fg_color': { message: 'Expanded folder color' },
+  'styles.bookmarks_open_dir_fg_color_hover': { message: 'Expanded folder color on hover' },
+  'styles.bookmarks_open_dir_fg_color_active': { message: 'Expanded folder color on click' },
   'styles.bookmarks_empty_dir_fg_color': { message: 'Empty folder color' },
-  'styles.bookmarks_opened_fg_color': { message: 'Opened bookmark color' },
+  'styles.bookmarks_open_fg_color': { message: 'Open bookmark color' },
 
   'styles.reset_styles': { message: 'Reset' },
 }
