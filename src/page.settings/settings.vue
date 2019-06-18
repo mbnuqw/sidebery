@@ -338,27 +338,9 @@
 
   section
     h2 {{t('settings.snapshots_title')}}
-    //- .inline-fields
-    //-   toggle-field(
-    //-     label="settings.snapshots_pinned_label"
-    //-     :inline="true"
-    //-     :value="$store.state.snapshotsTargets.pinned"
-    //-     @input="toggleSnapshots('pinned')")
-    //-   toggle-field(
-    //-     label="settings.snapshots_default_label"
-    //-     :inline="true"
-    //-     :value="$store.state.snapshotsTargets.default"
-    //-     @input="toggleSnapshots('default')")
-    //-   toggle-field(
-    //-     v-for="c in snapshotContainers"
-    //-     :label="c.name"
-    //-     :color="c.color"
-    //-     :inline="true"
-    //-     :value="c.active"
-    //-     @input="toggleSnapshots(c.id)")
     .separator
     .ctrls
-      .btn(@click="viewAllSnapshots") {{t('settings.snapshots_view_label')}}
+      .btn(@click="switchView('snapshots')") {{t('settings.snapshots_view_label')}}
       .btn(@click="createSnapshot") {{t('settings.make_snapshot')}}
       .btn.-warn(@click="removeAllSnapshots") {{t('settings.rm_all_snapshots')}}
 

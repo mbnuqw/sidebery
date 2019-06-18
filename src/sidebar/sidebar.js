@@ -88,6 +88,9 @@ export default new Vue({
     // Hide / show tabs
     Actions.updateTabsVisability()
 
+    // Create base snapshot
+    Actions.createBaseSnapshot()
+    // Actions.createSnapshot()
     EventBus.$on('CreateSnapshot', () => Actions.makeSnapshot())
   },
 
@@ -96,6 +99,10 @@ export default new Vue({
     Store.watch(Object.getOwnPropertyDescriptor(State, 'fontSize').get, function() {
       Actions.updateFontSize()
     })
+
+    setTimeout(() => {
+      Actions.openSettings('snapshots')
+    }, 1500)
   },
 
   beforeDestroy() {

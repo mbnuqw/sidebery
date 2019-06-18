@@ -1,0 +1,89 @@
+@import '../../mixins'
+
+.Snapshots
+  box(absolute, flex)
+  size(100%, same)
+  pos(0, 0)
+  align-items: stretch
+  overflow: hidden
+  background-color: var(--bg)
+
+.Snapshots .wrapper
+  box(flex)
+  size(100%, same)
+
+// ---
+// -- Timeline
+// -
+.Snapshots .timeline-box
+  box(flex)
+  size(30%, 100%)
+  flex-flow: column
+  overflow-y: auto
+  z-index: 1
+  box-shadow: 0 0 0 1px #00000016, 0 0 8px 0 #00000032
+
+.Snapshots .timeline
+  box(relative)
+  flex: 1
+
+.Snapshots .ruler
+  box(absolute)
+  pos(25px, 9px)
+  size(1px, 100%)
+  background-color: var(--inactive-fg)
+  border-radius: 3px
+
+.Snapshots .snapshot-card
+  box(relative, flex)
+  size(100%, 50px)
+  flex-flow: column
+  justify-content: center
+  &:hover
+    background-color: #00000016
+  
+  &[data-active]
+    background-color: #00000032
+
+.Snapshots .snapshot-card .point
+  box(absolute)
+  background-color: var(--info-fg)
+  border-radius: 50%
+.Snapshots .snapshot-card[data-type="base"] .point
+  size(11px, same)
+  pos(20px, 4px)
+  background-color: var(--active-fg)
+.Snapshots .snapshot-card[data-type="layer"] .point
+  size(7px, same)
+  pos(22px, 6px)
+.Snapshots .snapshot-card[data-event="tab-created"] .point
+  background-color: var(--true-fg)
+.Snapshots .snapshot-card[data-event="tab-removed"] .point
+  background-color: var(--false-fg)
+
+
+.Snapshots .snapshot-card .event
+  box(relative)
+  text(s: rem(13))
+  color: var(--label-fg)
+  padding-left: 24px
+  white-space: nowrap
+
+.Snapshots .snapshot-card .elapsed
+  box(relative)
+  text(s: rem(12))
+  color: var(--info-fg)
+  padding-left: 24px
+  white-space: nowrap
+
+// ---
+// -- Snapshot
+// -
+.Snapshots .snapshot-box
+  box(flex)
+  size(70%, 100%)
+  flex-flow: column
+  flex: 1
+
+.Snapshots .snapshot
+  flex: 1

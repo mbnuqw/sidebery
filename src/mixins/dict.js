@@ -7,6 +7,7 @@ import EnNav from '../locales/en.nav'
 import EnMenu from '../locales/en.menu'
 import EnSettings from '../locales/en.settings'
 import EnStyles from '../locales/en.styles'
+import EnSnapshots from '../locales/en.snapshots'
 import Ru from '../../addon/_locales/ru/messages.json'
 import RuButtons from '../locales/ru.buttons'
 import RuDashboards from '../locales/ru.dashboards'
@@ -15,6 +16,7 @@ import RuNav from '../locales/ru.nav'
 import RuMenu from '../locales/ru.menu'
 import RuSettings from '../locales/ru.settings'
 import RuStyles from '../locales/ru.styles'
+import RuSnapshots from '../locales/ru.snapshots'
 
 export const Locales = {
   en: {
@@ -26,6 +28,7 @@ export const Locales = {
     ...EnMenu,
     ...EnSettings,
     ...EnStyles,
+    ...EnSnapshots,
   },
   ru: {
     ...Ru,
@@ -36,6 +39,7 @@ export const Locales = {
     ...RuMenu,
     ...RuSettings,
     ...RuStyles,
+    ...RuSnapshots,
   },
 }
 

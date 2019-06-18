@@ -734,6 +734,8 @@ export default {
         Actions.savePanels()
       }
 
+      Actions.createSnapLayer(panel.cookieStoreId, 'container', panel)
+
       // Update panels ranges
       Actions.updatePanelsRanges()
     },
@@ -771,6 +773,8 @@ export default {
         Actions.savePanels()
       }
 
+      Actions.createSnapLayer(id)
+
       // Update panels ranges
       Actions.updatePanelsRanges()
     },
@@ -783,6 +787,16 @@ export default {
       let ctxIndex = State.containers.findIndex(c => c.cookieStoreId === id)
       let panelIndex = State.panels.findIndex(c => c.cookieStoreId === id)
       if (ctxIndex === -1 || panelIndex === -1) return
+
+      if (State.panels[panelIndex].color !== contextualIdentity.color) {
+        Actions.createSnapLayer(id, 'color', contextualIdentity.color)
+      }
+      if (State.panels[panelIndex].icon !== contextualIdentity.icon) {
+        Actions.createSnapLayer(id, 'icon', contextualIdentity.icon)
+      }
+      if (State.panels[panelIndex].name !== contextualIdentity.name) {
+        Actions.createSnapLayer(id, 'name', contextualIdentity.name)
+      }
 
       State.containers.splice(ctxIndex, 1, contextualIdentity)
       State.panels[panelIndex].color = contextualIdentity.color
@@ -879,6 +893,8 @@ export default {
       }
 
       Actions.recalcPanelScroll()
+      Actions.createSnapLayer(tab.id, 'tab', tab)
+      // Actions.createSnapshot()
     },
 
     /**
@@ -909,6 +925,13 @@ export default {
           if (change.url.startsWith('about:')) localTab.favIconUrl = ''
           else Actions.saveTabsTree()
         }
+        Actions.createSnapLayer(tabId, 'url', change.url)
+        // Actions.createSnapshot()
+      }
+
+      // Handle title change
+      if (change.hasOwnProperty('title')) {
+        Actions.createSnapLayer(tabId, 'title', change.title)
       }
 
       // Handle favicon change
@@ -1076,6 +1099,9 @@ export default {
         }
       }
 
+      Actions.createSnapLayer(tabId)
+      // Actions.createSnapshot()
+
       // Remove isOpen flag from bookmark
       if (State.highlightOpenBookmarks && State.bookmarksUrlMap && State.bookmarksUrlMap[tab.url]) {
         for (let t of State.tabs) {
@@ -1150,6 +1176,9 @@ export default {
           if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
         }
       }
+
+      Actions.createSnapLayer(id, info.toIndex)
+      // Actions.createSnapshot()
     },
 
     /**

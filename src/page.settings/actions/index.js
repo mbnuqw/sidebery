@@ -58,7 +58,7 @@ function updateActiveView() {
   const hash = location.hash ? location.hash.slice(1) : location.hash
 
   if (hash === 'all-urls') {
-    document.title = 'Settings'
+    document.title = 'Sidebery / Settings'
     this.state.activeView = 'Settings'
     this.state.highlight.allUrls = true
     this.state.highlight.tabHide = false
@@ -66,7 +66,7 @@ function updateActiveView() {
   }
 
   if (hash === 'tab-hide') {
-    document.title = 'Settings'
+    document.title = 'Sidebery / Settings'
     this.state.activeView = 'Settings'
     this.state.highlight.allUrls = false
     this.state.highlight.tabHide = true
@@ -74,7 +74,7 @@ function updateActiveView() {
   }
 
   if (hash === 'menu-editor') {
-    document.title = 'Menu Editor'
+    document.title = 'Sidebery / Menu Editor'
     this.state.activeView = 'MenuEditor'
     this.state.highlight.allUrls = false
     this.state.highlight.tabHide = false
@@ -82,7 +82,7 @@ function updateActiveView() {
   }
 
   if (hash === 'debug') {
-    document.title = 'Debug'
+    document.title = 'Sidebery / Debug'
     this.state.activeView = 'Debug'
     this.state.highlight.allUrls = false
     this.state.highlight.tabHide = false
@@ -90,8 +90,16 @@ function updateActiveView() {
   }
 
   if (hash === 'styles-editor') {
-    document.title = 'Styles Editor'
+    document.title = 'Sidebery / Styles Editor'
     this.state.activeView = 'StylesEditor'
+    this.state.highlight.allUrls = false
+    this.state.highlight.tabHide = false
+    return
+  }
+
+  if (hash === 'snapshots') {
+    document.title = 'Sidebery / Snapshots'
+    this.state.activeView = 'Snapshots'
     this.state.highlight.allUrls = false
     this.state.highlight.tabHide = false
     return

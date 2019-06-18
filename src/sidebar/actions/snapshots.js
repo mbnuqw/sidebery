@@ -1,6 +1,9 @@
 import { DEFAULT_CTX } from '../store/state'
 import { DEFAULT_CTX_ID } from '../../defaults'
 import Actions from '.'
+import Utils from '../../utils'
+
+let createSnapLayerTimeout, createSnapshotTimeout
 
 /**
  * Make snapshot
@@ -90,6 +93,137 @@ async function makeSnapshot() {
 }
 
 /**
+ * Create snapshot
+ */
+async function createSnapshot(delay = 5000) {
+  if (createSnapshotTimeout) clearTimeout(createSnapshotTimeout)
+  createSnapshotTimeout = setTimeout(async () => {
+    createSnapshotTimeout = null
+
+    // Load snapshots
+    let snapshots = []
+    const ans = await browser.storage.local.get('snapshots')
+    if (ans && ans.snapshots) snapshots = ans.snapshots
+
+    // Gather snapshot data
+    let items = []
+    for (let panel of this.state.panels) {
+      if (!panel.tabs || !panel.tabs.length) continue
+      // Add panel info
+      items.push([ panel.cookieStoreId, panel.color, panel.icon, panel.name ])
+
+      // Go through tabs
+      for (let tab of panel.tabs) {
+        items.push([ tab.id, tab.url, tab.title, tab.lvl ])
+      }
+    }
+
+    // Append new snapshot and save
+    snapshots.push({
+      id: Utils.uid(),
+      time: Date.now(),
+      windowId: this.state.windowId,
+      items,
+    })
+    browser.storage.local.set({ snapshots })
+  }, delay)
+}
+
+/**
+ * Create base snapshot
+ */
+async function createBaseSnapshot() {
+  // // Gather containers info
+  // const containers = []
+  // for (let c of this.state.containers) {
+  //   containers.push([c.cookieStoreId, c.color, c.icon, c.name])
+  // }
+
+  // // Gather tabs info
+  // const tabs = []
+  // for (let tab of this.state.tabs) {
+  //   tabs.push([ tab.id, tab.url, tab.title, tab.lvl ])
+  // }
+
+  // Gather snapshot data
+  let items = []
+  for (let panel of this.state.panels) {
+    if (!panel.tabs || !panel.tabs.length) continue
+    // Add panel info
+    items.push([ panel.cookieStoreId, panel.color, panel.icon, panel.name ])
+
+    // Go through tabs
+    for (let tab of panel.tabs) {
+      items.push([ tab.id, tab.url, tab.title, tab.lvl ])
+    }
+  }
+
+  // Create snapshot
+  const snapshot = {
+    id: Utils.uid(),
+    time: Math.trunc(Date.now()/1000),
+    windowId: this.state.windowId,
+    items,
+  }
+  this.state.snapshot = snapshot
+
+  // Retrieve base-snapshots and snapLayers
+  let snapshots = []
+  const ans = await browser.storage.local.get(['snapshots', 'snapLayers'])
+
+  // Append current base snapshot
+  if (ans && ans.snapshots) snapshots = ans.snapshots
+  snapshots.push(snapshot)
+
+  // Set snapLayers of previous base-snapshot
+  if (ans && ans.snapLayers && ans.snapLayers.length) {
+    for (let i = snapshots.length; i--;) {
+      if (snapshots[i].id === ans.snapLayers[0][0]) {
+        snapshots[i].layers = ans.snapLayers
+        break
+      }
+    }
+  }
+  this.state.snapLayers = []
+
+  // Save snapshots and reset snapLayers
+  browser.storage.local.set({ snapshots, snapLayers: [] })
+}
+
+/**
+ * Create snapshot layer
+ */
+function createSnapLayer(id, key, val) {
+  if (!this.state.snapshot) return
+
+  const layer = [ this.state.snapshot.id, Math.trunc(Date.now()/1000), id ]
+
+  if (key === 'tab') {
+    layer.push(val.index, val.url, val.title, val.lvl, val.cookieStoreId)
+  } else if (key === 'container') {
+    layer.push(val.color, val.icon, val.name)
+  } else if (key === 'move') {
+    layer.push(val)
+  } else if (key !== undefined) {
+    layer.push(key[0], val)
+  }
+
+  this.state.snapLayers.push(layer)
+
+  if (createSnapLayerTimeout) clearTimeout(createSnapLayerTimeout)
+  createSnapLayerTimeout = setTimeout(async () => {
+    createSnapLayerTimeout = null
+
+    const ans = await browser.storage.local.get('snapLayers')
+    if (ans && ans.snapLayers) {
+      let snapLayers = ans.snapLayers.concat(this.state.snapLayers)
+      browser.storage.local.set({ snapLayers })
+      this.state.snapLayers = []
+    }
+  }, 750)
+}
+
+/**
  * Restore contexs and tabs from snapshot
  */
 async function applySnapshot(snapshot) {
@@ -138,6 +272,9 @@ async function loadSnapshots() {
 
 export default {
   makeSnapshot,
+  createSnapshot,
+  createBaseSnapshot,
+  createSnapLayer,
   applySnapshot,
   loadSnapshots,
 }
