@@ -43,8 +43,7 @@
           :data-active="panelIs(i)"
           :data-hidden="btn.hidden"
           :data-index="btn.relIndex"
-          :data-colorized="!!btn.colorCode"
-          :style="{'--ctx': btn.colorCode}"
+          :data-color="btn.color"
           :title="getTooltip(i)"
           @click="onNavClick(i)"
           @dragenter="onNavDragEnter(i)"
@@ -714,10 +713,8 @@ export default {
       const panel = Utils.cloneObject(DEFAULT_CTX_TABS_PANEL)
       panel.cookieStoreId = contextualIdentity.cookieStoreId
       panel.name = contextualIdentity.name
-      panel.colorCode = contextualIdentity.colorCode
       panel.color = contextualIdentity.color
       panel.icon = contextualIdentity.icon
-      panel.iconUrl = contextualIdentity.iconUrl
 
       State.containers.push(contextualIdentity)
       State.panels.push(panel)
@@ -800,9 +797,7 @@ export default {
 
       State.containers.splice(ctxIndex, 1, contextualIdentity)
       State.panels[panelIndex].color = contextualIdentity.color
-      State.panels[panelIndex].colorCode = contextualIdentity.colorCode
       State.panels[panelIndex].icon = contextualIdentity.icon
-      State.panels[panelIndex].iconUrl = contextualIdentity.iconUrl
       State.panels[panelIndex].name = contextualIdentity.name
 
       if (State.windowFocused) Actions.savePanels()
@@ -953,6 +948,7 @@ export default {
         Actions.updatePanelsRanges()
         if (panel && panel.tabs) browser.tabs.move(tabId, { index: panel.endIndex })
         if (tab.active) Actions.setPanel(panel.index)
+        Actions.createSnapLayer(tabId, 'pin', false)
       }
 
       // Handle pinned tab
@@ -967,6 +963,7 @@ export default {
             cookieStoreId: panel.cookieStoreId,
           })
         }
+        Actions.createSnapLayer(tabId, 'pin', true)
       }
 
       // Handle title change
@@ -1177,7 +1174,7 @@ export default {
         }
       }
 
-      Actions.createSnapLayer(id, info.toIndex)
+      Actions.createSnapLayer(id, 'move', info.toIndex)
       // Actions.createSnapshot()
     },
 

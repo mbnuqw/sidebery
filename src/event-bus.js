@@ -19,9 +19,13 @@ export function initMsgHandling(state, actions) {
 
     // Run action
     if (msg.action && actions[msg.action]) {
-      if (msg.arg) return actions[msg.action](msg.arg)
-      if (msg.args) return actions[msg.action](...msg.args)
-      return actions[msg.action]()
+      let result
+      if (msg.arg) result = actions[msg.action](msg.arg)
+      else if (msg.args) result = actions[msg.action](...msg.args)
+      else result = actions[msg.action]()
+
+      if (result instanceof Promise) return result
+      else return Promise.resolve(result)
     }
   })
 }

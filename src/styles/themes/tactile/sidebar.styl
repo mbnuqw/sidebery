@@ -201,13 +201,13 @@
 .Sidebar .nav-btn > svg
   box(absolute)
   size(16px, same)
-  fill: var(--ctx, var(--nav-btn-fg))
+  fill: var(--panel-fg, var(--nav-btn-fg))
   transform: translateZ(0)
   transition: opacity var(--d-fast)
 
-#root[data-style="light"] .Sidebar .nav-btn[data-colorized] > svg
+#root[data-style="light"] .Sidebar .nav-btn[data-color] > svg
   fill: var(--nav-btn-fg) !important
-  filter: drop-shadow(1px 0 0 var(--ctx)) drop-shadow(-1px 0 0 var(--ctx)) drop-shadow(0 -1px 0 var(--ctx)) drop-shadow(0 1px 0 var(--ctx))
+  filter: drop-shadow(1px 0 0 var(--panel-fg)) drop-shadow(-1px 0 0 var(--panel-fg)) drop-shadow(0 -1px 0 var(--panel-fg)) drop-shadow(0 1px 0 var(--panel-fg))
 
 .Sidebar .nav-btn[data-updated] > svg
   mask: radial-gradient(

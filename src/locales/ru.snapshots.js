@@ -5,6 +5,8 @@ export default {
   'snapshot.event.tab-url-changed': { message: 'Url таба изменен' },
   'snapshot.event.tab-title-changed': { message: 'Название таба изменено' },
   'snapshot.event.tab-lvl-changed': { message: 'Поддерево таба изменено' },
+  'snapshot.event.tab-pin': { message: 'Таб закреплен' },
+  'snapshot.event.tab-unpin': { message: 'Таб раскреплен' },
   'snapshot.event.ctr-created': { message: 'Контейнер создан' },
   'snapshot.event.ctr-removed': { message: 'Контейнер удален' },
   'snapshot.event.ctr-color-changed': { message: 'Цвет контейнера изменен' },

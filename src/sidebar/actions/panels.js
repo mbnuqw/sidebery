@@ -77,10 +77,8 @@ async function loadPanels() {
       if (container) {
         panel.cookieStoreId = container.cookieStoreId
         panel.name = container.name
-        panel.colorCode = container.colorCode
         panel.color = container.color
         panel.icon = container.icon
-        panel.iconUrl = container.iconUrl
       } else {
         const conf = {
           name: loadedPanel.name,
@@ -90,10 +88,8 @@ async function loadPanels() {
         const newCtr = await browser.contextualIdentities.create(conf)
         panel.cookieStoreId = newCtr.cookieStoreId
         panel.name = newCtr.name
-        panel.colorCode = newCtr.colorCode
         panel.color = newCtr.color
         panel.icon = newCtr.icon
-        panel.iconUrl = newCtr.iconUrl
       }
 
       // Sidebery props
@@ -120,10 +116,8 @@ async function loadPanels() {
       let panel = Utils.cloneObject(DEFAULT_CTX_TABS_PANEL)
       panel.cookieStoreId = container.cookieStoreId
       panel.name = container.name
-      panel.colorCode = container.colorCode
       panel.color = container.color
       panel.icon = container.icon
-      panel.iconUrl = container.iconUrl
       const len = panels.push(panel)
       panel.index = len - 1
       panelsMap[panel.cookieStoreId] = panel
@@ -223,10 +217,8 @@ async function savePanels() {
   for (let panel of this.state.panels) {
     output.push({
       cookieStoreId: panel.cookieStoreId,
-      colorCode: panel.colorCode,
       color: panel.color,
       icon: panel.icon,
-      iconUrl: panel.iconUrl,
       name: panel.name,
 
       type: panel.type,
@@ -460,6 +452,13 @@ function turnOffReqHandler() {
   }
 }
 
+/**
+ * Returns active panel info
+ */
+function getActivePanel() {
+  return Utils.cloneObject(this.state.panels[this.state.panelIndex])
+}
+
 export default {
   loadPanels,
   updatePanels,
@@ -478,4 +477,5 @@ export default {
   updateReqHandlerDebounced,
   turnOnReqHandler,
   turnOffReqHandler,
+  getActivePanel,
 }

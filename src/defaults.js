@@ -322,9 +322,9 @@ export const MENU_OPTIONS = {
     for (let c of state.containers) {
       if (node.cookieStoreId === c.cookieStoreId) continue
       opts.push({
-        label: translate('menu.tab.reopen_in_') + `||${c.colorCode}>>${c.name}`,
+        label: translate('menu.tab.reopen_in_') + `||${c.color}>>${c.name}`,
         icon: c.icon,
-        color: c.colorCode,
+        color: c.color,
         action: 'moveTabsToCtx',
         args: [state.selected, c.cookieStoreId],
       })
@@ -463,9 +463,9 @@ export const MENU_OPTIONS = {
     if (!state.private) {
       for (let c of state.containers) {
         opts.push({
-          label: translate('menu.bookmark.open_in_') + `||${c.colorCode}>>${c.name}`,
+          label: translate('menu.bookmark.open_in_') + `||${c.color}>>${c.name}`,
           icon: c.icon,
-          color: c.colorCode,
+          color: c.color,
           action: 'openBookmarksInPanel',
           args: [state.selected, c.cookieStoreId],
         })

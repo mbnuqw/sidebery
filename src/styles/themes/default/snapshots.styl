@@ -15,75 +15,228 @@
 // ---
 // -- Timeline
 // -
-.Snapshots .timeline-box
-  box(flex)
-  size(30%, 100%)
-  flex-flow: column
+.Snapshots .timeline
+  size(h: 100%)
+  flex: 1 0 auto
   overflow-y: auto
+  overflow-x: hidden
   z-index: 1
   box-shadow: 0 0 0 1px #00000016, 0 0 8px 0 #00000032
-
-.Snapshots .timeline
-  box(relative)
-  flex: 1
-
-.Snapshots .ruler
-  box(absolute)
-  pos(25px, 9px)
-  size(1px, 100%)
-  background-color: var(--inactive-fg)
-  border-radius: 3px
+  background-attachment: local
 
 .Snapshots .snapshot-card
   box(relative, flex)
-  size(100%, 50px)
-  flex-flow: column
-  justify-content: center
+  size(h: 26px, min-w: max-content)
+  align-items: center
+  // flex-flow: column
+  // justify-content: center
+  padding: 0 8px 0 24px
+  cursor: default
   &:hover
     background-color: #00000016
-  
+
   &[data-active]
     background-color: #00000032
 
+.Snapshots .snapshot-card[data-type="base"]
+  size(h: 30px)
+
+// .Snapshots .snapshot-card[data-type="layer"]
+//   padding-left: 32px
+
 .Snapshots .snapshot-card .point
   box(absolute)
+  pos(calc(50% - 2px), 10px)
+  size(4px, same)
   background-color: var(--info-fg)
+  box-shadow: 0 0 0 1px #00000032
   border-radius: 50%
 .Snapshots .snapshot-card[data-type="base"] .point
-  size(11px, same)
-  pos(20px, 4px)
-  background-color: var(--active-fg)
-.Snapshots .snapshot-card[data-type="layer"] .point
-  size(7px, same)
-  pos(22px, 6px)
+  background-color: var(--title-fg)
+.Snapshots .snapshot-card[data-event="ctr-created"] .point
 .Snapshots .snapshot-card[data-event="tab-created"] .point
   background-color: var(--true-fg)
 .Snapshots .snapshot-card[data-event="tab-removed"] .point
+.Snapshots .snapshot-card[data-event="ctr-removed"] .point
   background-color: var(--false-fg)
-
+.Snapshots .snapshot-card[data-event="tab-moved"] .point
+.Snapshots .snapshot-card[data-event="ctr-color-changed"] .point
+  background-color: var(--yellow)
+.Snapshots .snapshot-card[data-event="tab-url-changed"] .point
+.Snapshots .snapshot-card[data-event="ctr-name-changed"] .point
+  background-color: var(--blue)
+.Snapshots .snapshot-card[data-event="tab-title-changed"] .point
+.Snapshots .snapshot-card[data-event="ctr-icon-changed"] .point
+  background-color: var(--purple)
 
 .Snapshots .snapshot-card .event
   box(relative)
-  text(s: rem(13))
-  color: var(--label-fg)
-  padding-left: 24px
+  text(s: rem(12))
+  color: var(--info-fg)
   white-space: nowrap
+  margin: 0 auto 0 0
+
+.Snapshots .snapshot-card[data-type="base"] .event
+  box(none)
 
 .Snapshots .snapshot-card .elapsed
   box(relative)
   text(s: rem(12))
   color: var(--info-fg)
-  padding-left: 24px
   white-space: nowrap
+
+.Snapshots .snapshot-card[data-type="base"] .elapsed
+  text(s: rem(13))
+  color: var(--title-fg)
+
+// .Snapshots .snapshot-card[data-type="layer"] .elapsed
+//   box(none)
 
 // ---
 // -- Snapshot
 // -
-.Snapshots .snapshot-box
+.Snapshots .snapshot
   box(flex)
   size(70%, 100%)
   flex-flow: column
-  flex: 1
+  flex: 1 0 auto
 
-.Snapshots .snapshot
-  flex: 1
+.Snapshots .ctrls
+  box(relative, flex)
+  flex-flow: wrap
+  justify-content: center
+  align-items: center
+  grid-gap: 12px
+  padding: 12px 16px 16px
+  &:before
+    content: ''
+    box(absolute)
+    pos(b: 0, l: 0)
+    size(100%, 1px)
+    background-color: var(--border-fg)
+
+.Snapshots .ctrls > .title
+  box(relative)
+  text(s: rem(24))
+  color: var(--title-fg)
+  flex: 1 1
+
+.Snapshots .containers
+  box(relative, flex)
+  flex-flow: wrap
+  overflow-y: auto
+  background-attachment: local
+  &:before
+    content: ''
+    box(absolute)
+    pos(0, 0)
+    size(100%, 1px)
+    background-color: var(--border-flare-fg)
+
+.Snapshots .container
+  size(calc(33.33% - 16px))
+  padding: 6px 8px 3px
+
+  @media screen and (max-width: 1200px)
+    size(calc(50% - 16px))
+
+  @media screen and (max-width: 840px)
+    size(calc(100% - 16px))
+
+.Snapshots .container .info
+  box(relative, flex)
+  align-items: center
+
+.Snapshots .container[data-target] .info:before
+  content: ''
+  box(absolute)
+  pos(0, 0)
+  size(2px, 100%)
+  background-color: var(--active-fg)
+
+.Snapshots .info .icon
+  box(relative)
+  size(16px, same)
+  fill: var(--panel-fg)
+  margin: 8px
+
+  > svg
+    box(absolute)
+    size(100%, same)
+
+.Snapshots .info .name
+  text(s: rem(15))
+  color: var(--label-fg)
+
+.Snapshots .tabs
+  box(flex)
+  flex-flow: column
+
+.Snapshots .tabs > .placeholder
+  box(relative)
+  size(100%, 30px)
+  transform: translateZ(0)
+  &:before
+    content: ''
+    box(absolute)
+    size(4px, same)
+    pos(calc(50% - 2px), 8px)
+    border-radius: 50%
+    background-color: var(--inactive-fg)
+    box-shadow: 8px 0 0 0 var(--inactive-fg), 16px 0 0 0 var(--inactive-fg)
+
+.Snapshots .tab
+  box(relative, flex)
+  flex-flow: column
+  justify-content: center
+  padding: 3px 8px
+  cursor: default
+  outline: none
+  border: none
+  &:hover
+    background-color: #00000016
+
+.Snapshots .tab[data-target]:before
+  content: ''
+  box(absolute)
+  pos(0, 0)
+  size(2px, 100%)
+  background-color: var(--active-fg)
+
+for i in 1..12
+  .Snapshots .tab[data-lvl=\"{i}\"]
+    margin-left: (8px * i)
+
+.Snapshots .tab > .pin
+  box(absolute, none)
+  size(16px, same)
+  pos(calc(50% - 8px), 8px)
+  > svg
+    box(absolute)
+    size(100%, same)
+    fill: var(--info-fg)
+
+.Snapshots .tab[data-pinned] > .pin
+  box(block)
+
+.Snapshots .tab > .title
+.Snapshots .tab > .url
+  box(relative)
+  white-space: nowrap
+  overflow: hidden
+  text-overflow: ellipsis
+  text-decoration: none
+  outline: none
+  border: none
+
+.Snapshots .tab[data-pinned] > .title
+.Snapshots .tab[data-pinned] > .url
+  margin-left: 24px
+
+.Snapshots .tab > .title
+  text(s: rem(12))
+  color: var(--label-fg)
+
+.Snapshots .tab > .url
+  text(s: rem(11))
+  color: var(--info-fg)

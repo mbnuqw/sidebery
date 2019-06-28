@@ -13,7 +13,7 @@
       label="container_dashboard.icon_label"
       :value="icon"
       :opts="iconOpts"
-      :optFill="colorCode"
+      :optFill="color"
       @input="updateIcon")
 
     color-select-field(
@@ -193,14 +193,14 @@ export default {
         'chill',
       ],
       colorOpts: [
-        { color: 'blue', colorCode: '#37adff' },
-        { color: 'turquoise', colorCode: '#00c79a' },
-        { color: 'green', colorCode: '#51cd00' },
-        { color: 'yellow', colorCode: '#ffcb00' },
-        { color: 'orange', colorCode: '#ff9f00' },
-        { color: 'red', colorCode: '#ff613d' },
-        { color: 'pink', colorCode: '#ff4bda' },
-        { color: 'purple', colorCode: '#af51f5' },
+        'blue',
+        'turquoise',
+        'green',
+        'yellow',
+        'orange',
+        'red',
+        'pink',
+        'purple',
       ],
       proxyOpts: ['http', 'https', 'socks4', 'socks', 'direct'],
     }
@@ -221,12 +221,6 @@ export default {
 
     color() {
       return this.conf.color || 'blue'
-    },
-
-    colorCode() {
-      const colorOption = this.colorOpts.find(c => c.color === this.color)
-      if (colorOption) return colorOption.colorCode
-      else return this.colorOpts[0].colorCode
     },
 
     tabsCount() {
@@ -319,7 +313,7 @@ export default {
       }
     },
 
-    async update() {
+    async updateContainer() {
       if (!this.name || !this.id) return
       await browser.contextualIdentities.update(this.id, {
         name: this.name,
@@ -329,19 +323,32 @@ export default {
     },
 
     updateName() {
+      if (!this.name) return
+
       // Create new container or update
-      if (this.name && !this.id) this.createNew()
-      else this.update()
+      if (!this.id) this.createNew()
+      else {
+        Actions.createSnapLayer(this.id, 'name', this.name)
+        this.updateContainer()
+      }
     },
 
     async updateIcon(icon) {
+      if (this.conf.icon !== icon) {
+        Actions.createSnapLayer(this.id, 'icon', icon)
+      }
+
       this.conf.icon = icon
-      this.update()
+      this.updateContainer()
     },
 
     async updateColor(color) {
+      if (this.conf.color !== color) {
+        Actions.createSnapLayer(this.id, 'color', color)
+      }
+
       this.conf.color = color
-      this.update()
+      this.updateContainer()
     },
 
     async createNew() {

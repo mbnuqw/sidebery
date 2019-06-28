@@ -10,11 +10,11 @@
           v-for="(opt, i) in iOpts"
           :data-width="btnWidth(iOpts, i)"
           :data-selected="isSelected(opt)"
+          :data-color="opt.color"
           :title="getTitle(opt.label)"
           @click="onClick(opt)"
           @mousedown.stop="")
-          svg(:style="{fill: opt.color}")
-            use(:xlink:href="'#' + opt.icon")
+          svg: use(:xlink:href="'#' + opt.icon")
       .opt(
         v-for="(opt, i) in aOpts"
         :key="opt.label"
@@ -24,7 +24,8 @@
         @mousedown.stop="")
         span(
           v-for="out in parseLabel(opt.label)"
-          :style="{color: out.color, fontWeight: out.w}") {{out.label}}
+          :data-color="out.color"
+          :style="{fontWeight: out.w}") {{out.label}}
   .container(:data-active="bIsActive")
     .box(ref="bBox", :style="bPosStyle")
       .inline-group(
@@ -35,11 +36,11 @@
           v-for="(opt, i) in iOpts"
           :data-width="btnWidth(iOpts, i)"
           :data-selected="isSelected(opt)"
+          :data-color="opt.color"
           :title="getTitle(opt.label)"
           @click="onClick(opt)"
           @mousedown.stop="")
-          svg(:style="{fill: opt.color}")
-            use(:xlink:href="'#' + opt.icon")
+          svg: use(:xlink:href="'#' + opt.icon")
       .opt(
         v-for="(opt, i) in bOpts"
         :key="opt.label"
@@ -49,7 +50,8 @@
         @mousedown.stop="")
         span(
           v-for="out in parseLabel(opt.label)"
-          :style="{color: out.color, fontWeight: out.w}") {{out.label}}
+          :data-color="out.color"
+          :style="{fontWeight: out.w}") {{out.label}}
 </template>
 
 

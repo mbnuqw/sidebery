@@ -11,6 +11,7 @@
   :data-updated="updated"
   :data-drop-slot="dropSlot"
   :data-close-btn="$store.state.showTabRmBtn"
+  :data-color="color"
 
   :title="tooltip"
   @contextmenu.prevent.stop=""
@@ -36,7 +37,7 @@
     .audio-badge
       svg.-loud: use(xlink:href="#icon_loud_badge")
       svg.-mute: use(xlink:href="#icon_mute_badge")
-  .ctx(v-if="ctx && ctxColor", :style="{background: ctxColor}")
+  .ctx(v-if="ctx && color", :style="{background: color}")
   .title(v-if="withTitle") {{tab.title}}
   .close(v-if="$store.state.showTabRmBtn", @mousedown.stop="close", @mouseup.stop="")
     svg: use(xlink:href="#icon_remove")
@@ -83,9 +84,9 @@ export default {
       else return State.favicons[this.tab.host] || this.tab.favIconUrl
     },
 
-    ctxColor() {
-      const ctx = State.containers.find(c => c.cookieStoreId === this.tab.cookieStoreId)
-      if (ctx && ctx.colorCode) return ctx.colorCode
+    color() {
+      const panel = State.panelsMap[this.tab.cookieStoreId]
+      if (panel && panel.color) return panel.color
       else return ''
     },
 

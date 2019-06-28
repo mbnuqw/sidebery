@@ -72,6 +72,7 @@ function updateSettings(settings) {
 function openSettings(section) {
   let url = browser.runtime.getURL('settings/settings.html')
   let existedTab = this.state.tabs.find(t => t.url.startsWith(url))
+  let activePanel = this.state.panels[this.state.panelIndex]
 
   if (section) url += '#' + section
   if (existedTab) {
@@ -81,7 +82,9 @@ function openSettings(section) {
       browser.tabs.update(existedTab.id, { url, active: true })
     }
   } else {
-    browser.tabs.create({ url, windowId: this.state.windowId })
+    const conf = { url, windowId: this.state.windowId }
+    if (activePanel.tabs) conf.cookieStoreId = activePanel.cookieStoreId
+    browser.tabs.create(conf)
   }
 }
 
@@ -131,7 +134,6 @@ async function getCommonDbgInfo() {
 
     if (panelClone.tabs) delete panelClone.tabs
     delete panelClone.name
-    delete panelClone.iconUrl
     delete panelClone.includeHosts
     delete panelClone.excludeHosts
     delete panelClone.proxy

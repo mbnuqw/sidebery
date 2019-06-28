@@ -58,7 +58,6 @@ async function makeSnapshot() {
         name: panel.name,
         icon: panel.icon,
         color: panel.color,
-        colorCode: panel.colorCode,
       })
     }
   }
@@ -133,22 +132,13 @@ async function createSnapshot(delay = 5000) {
  * Create base snapshot
  */
 async function createBaseSnapshot() {
-  // // Gather containers info
-  // const containers = []
-  // for (let c of this.state.containers) {
-  //   containers.push([c.cookieStoreId, c.color, c.icon, c.name])
-  // }
-
-  // // Gather tabs info
-  // const tabs = []
-  // for (let tab of this.state.tabs) {
-  //   tabs.push([ tab.id, tab.url, tab.title, tab.lvl ])
-  // }
-
   // Gather snapshot data
   let items = []
+  for (let tab of this.getters.pinnedTabs) {
+    items.push([ tab.id, tab.url, tab.title, tab.lvl, tab.cookieStoreId ])
+  }
   for (let panel of this.state.panels) {
-    if (!panel.tabs || !panel.tabs.length) continue
+    if (!panel.tabs || panel.private) continue
     // Add panel info
     items.push([ panel.cookieStoreId, panel.color, panel.icon, panel.name ])
 
@@ -199,11 +189,11 @@ function createSnapLayer(id, key, val) {
   const layer = [ this.state.snapshot.id, Math.trunc(Date.now()/1000), id ]
 
   if (key === 'tab') {
-    layer.push(val.index, val.url, val.title, val.lvl, val.cookieStoreId)
+    layer.push(val.index, val.url, val.title, val.lvl, val.pinned, val.cookieStoreId)
   } else if (key === 'container') {
     layer.push(val.color, val.icon, val.name)
   } else if (key === 'move') {
-    layer.push(val)
+    layer.push(val, this.state.tabsMap[id].lvl)
   } else if (key !== undefined) {
     layer.push(key[0], val)
   }

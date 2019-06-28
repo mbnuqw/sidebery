@@ -1159,6 +1159,16 @@ function updateTabsTree(startIndex = 0, endIndex = -1) {
   }
 }
 
+/**
+ * Find tab with given properties and return it
+ */
+function queryTab(props) {
+  const tab = this.state.tabs.find(t => {
+    return Object.keys(props).every(p => t[p] === props[p])
+  })
+  if (tab) return Utils.cloneObject(tab)
+}
+
 export default {
   loadTabs,
   saveTabsTree,
@@ -1193,4 +1203,5 @@ export default {
   getGroupInfo,
   createTabAfter,
   updateTabsTree,
+  queryTab,
 }

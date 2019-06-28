@@ -1,7 +1,11 @@
 <template lang="pug">
 .IconSelectInput
-  .icon(v-for="o in opts" :data-active="o === value" @click="select(o)")
-    svg(:style="{ fill }"): use(:xlink:href="'#' + o")
+  .icon(
+    v-for="o in opts"
+    :data-active="o === value"
+    :data-color="fill"
+    @click="select(o)")
+    svg: use(:xlink:href="'#' + o")
 </template>
 
 
