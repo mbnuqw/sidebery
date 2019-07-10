@@ -107,6 +107,20 @@ function resetSelection() {
   }
 }
 
+/**
+ * Set 'storageIsLocked' flag to true
+ */
+function lockStorage() {
+  this.state.storageIsLocked = true
+}
+
+/**
+ * Set 'storageIsLocked' flag to false
+ */
+function unlockStorage() {
+  this.state.storageIsLocked = false
+}
+
 const Actions = {
   ...SettingsActions,
   ...KeybindingsActions,
@@ -123,6 +137,8 @@ const Actions = {
   getAllWindows,
   undoRmTab,
   resetSelection,
+  lockStorage,
+  unlockStorage,
 }
 
 // Inject vuex getters and state in actions

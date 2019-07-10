@@ -102,6 +102,14 @@ export default {
 
   // --- Snapshots
   'settings.snapshots_title': { message: 'Снепшоты' },
+  'settings.snap_history_mode': { message: 'Режим полного журналирования' },
+  'settings.snap_interval': { message: 'Интервал авто-снепшотов' },
+  'settings.snap_interval_900000': { message: '15мин' },
+  'settings.snap_interval_1800000': { message: '30мин' },
+  'settings.snap_interval_3600000': { message: '1ч' },
+  'settings.snap_interval_7200000': { message: '2ч' },
+  'settings.snap_interval_18000000': { message: '5ч' },
+  'settings.snap_interval_none': { message: 'выкл' },
   'settings.snapshots_pinned_label': { message: 'Закрепленные' },
   'settings.snapshots_default_label': { message: 'Стандартные' },
   'settings.snapshots_view_label': { message: 'Просмотреть снепшоты' },

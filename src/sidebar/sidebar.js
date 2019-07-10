@@ -1,8 +1,9 @@
 import Vue from 'vue'
 import { mapGetters } from 'vuex'
-import EventBus, { initMsgHandling } from '../event-bus'
+import { initMsgHandling } from '../event-bus'
 import Sidebar from './sidebar.vue'
 import Dict from '../mixins/dict'
+// import Utils from '../utils'
 import { initActionsMixin } from '../mixins/act'
 import Store from './store'
 import State from './store/state'
@@ -88,10 +89,21 @@ export default new Vue({
     // Hide / show tabs
     Actions.updateTabsVisability()
 
-    // Create base snapshot
-    Actions.createBaseSnapshot()
-    // Actions.createSnapshot()
-    EventBus.$on('CreateSnapshot', () => Actions.makeSnapshot())
+    // Connect to background instance
+    const connectInfo = JSON.stringify({
+      instanceType: State.instanceType,
+      windowId: State.windowId,
+    })
+    State.bg = browser.runtime.connect({ name: connectInfo })
+
+    // Setup snapshots
+    // if (State.snapHistoryMode) Actions.createBaseSnapshot()
+    if (State.snapHistoryMode) {
+      State.bg.postMessage({
+        action: 'createBaseSnapshotDebounced'
+      })
+    }
+    Actions.scheduleSnapshots()
   },
 
   mounted() {
@@ -100,9 +112,9 @@ export default new Vue({
       Actions.updateFontSize()
     })
 
-    setTimeout(() => {
-      Actions.openSettings('snapshots')
-    }, 1500)
+    // setTimeout(() => {
+    //   Actions.openSettings('snapshots')
+    // }, 1500)
   },
 
   beforeDestroy() {

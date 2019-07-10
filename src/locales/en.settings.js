@@ -102,6 +102,14 @@ export default {
 
   // --- Snapshots
   'settings.snapshots_title': { message: 'Snapshots' },
+  'settings.snap_history_mode': { message: 'Full journaling mode' },
+  'settings.snap_interval': { message: 'Auto-snapshots interval' },
+  'settings.snap_interval_900000': { message: '15min' },
+  'settings.snap_interval_1800000': { message: '30min' },
+  'settings.snap_interval_3600000': { message: '1hr' },
+  'settings.snap_interval_7200000': { message: '2hr' },
+  'settings.snap_interval_18000000': { message: '5hr' },
+  'settings.snap_interval_none': { message: 'none' },
   'settings.snapshots_pinned_label': { message: 'Pinned' },
   'settings.snapshots_default_label': { message: 'Default' },
   'settings.snapshots_view_label': { message: 'View snapshots' },

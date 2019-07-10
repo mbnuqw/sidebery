@@ -12,9 +12,9 @@
         :data-event="s.event"
         :data-active="activeSnapshot.id === s.id"
         @click="activeSnapshot = s")
-        .point
-        .event {{t('snapshot.event.' + s.event)}}
-        .elapsed {{s.date}} - {{s.time}}
+        .date-time(v-if="s.type === 'base'") {{s.date}} - {{s.time}}
+        .info(v-if="s.type === 'base'") window {{s.windowId}} - {{s.tabsCount}} tabs
+        .info(v-if="s.type === 'layer'") {{s.time}} - {{t('snapshot.event.' + s.event)}}
     .snapshot
       .ctrls(v-noise:300.g:12:af.a:0:42.s:0:9="")
         .title(@wheel="onTimelineWheel") {{activeSnapshot.date}} - {{activeSnapshot.time}}
@@ -123,7 +123,8 @@ export default {
         containers: clonedContainers,
         date: Utils.uDate(snapshot.time),
         time: Utils.uTime(snapshot.time),
-        elapsed: Utils.uElapsed(snapshot.time, now)
+        elapsed: Utils.uElapsed(snapshot.time, now),
+        tabsCount: tabs.length,
       })
 
       if (snapshot.layers) {

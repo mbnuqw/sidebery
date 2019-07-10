@@ -889,7 +889,6 @@ export default {
 
       Actions.recalcPanelScroll()
       Actions.createSnapLayer(tab.id, 'tab', tab)
-      // Actions.createSnapshot()
     },
 
     /**
@@ -921,7 +920,6 @@ export default {
           else Actions.saveTabsTree()
         }
         Actions.createSnapLayer(tabId, 'url', change.url)
-        // Actions.createSnapshot()
       }
 
       // Handle title change
@@ -1097,7 +1095,6 @@ export default {
       }
 
       Actions.createSnapLayer(tabId)
-      // Actions.createSnapshot()
 
       // Remove isOpen flag from bookmark
       if (State.highlightOpenBookmarks && State.bookmarksUrlMap && State.bookmarksUrlMap[tab.url]) {
@@ -1175,7 +1172,6 @@ export default {
       }
 
       Actions.createSnapLayer(id, 'move', info.toIndex)
-      // Actions.createSnapshot()
     },
 
     /**

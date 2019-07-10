@@ -3,7 +3,7 @@ import { DEFAULT_CTX_ID } from '../../defaults'
 import Actions from '.'
 import Utils from '../../utils'
 
-let createSnapLayerTimeout, createSnapshotTimeout
+let createSnapLayerTimeout, snapshotNeeded, snapLayersBuf = []
 
 /**
  * Make snapshot
@@ -92,46 +92,48 @@ async function makeSnapshot() {
 }
 
 /**
- * Create snapshot
+ * Schedule snapshots
  */
-async function createSnapshot(delay = 5000) {
-  if (createSnapshotTimeout) clearTimeout(createSnapshotTimeout)
-  createSnapshotTimeout = setTimeout(async () => {
-    createSnapshotTimeout = null
-
-    // Load snapshots
-    let snapshots = []
-    const ans = await browser.storage.local.get('snapshots')
-    if (ans && ans.snapshots) snapshots = ans.snapshots
-
-    // Gather snapshot data
-    let items = []
-    for (let panel of this.state.panels) {
-      if (!panel.tabs || !panel.tabs.length) continue
-      // Add panel info
-      items.push([ panel.cookieStoreId, panel.color, panel.icon, panel.name ])
-
-      // Go through tabs
-      for (let tab of panel.tabs) {
-        items.push([ tab.id, tab.url, tab.title, tab.lvl ])
+function scheduleSnapshots() {
+  if (this.state.snapIntervalID) clearInterval(this.state.snapIntervalID)
+  if (this.state.snapInterval) {
+    this.state.snapIntervalID = setInterval(() => {
+      if (snapshotNeeded) {
+        Actions.createBaseSnapshot()
+        snapshotNeeded = false
       }
-    }
+    }, this.state.snapInterval)
+  }
+}
 
-    // Append new snapshot and save
-    snapshots.push({
-      id: Utils.uid(),
-      time: Date.now(),
-      windowId: this.state.windowId,
-      items,
-    })
-    browser.storage.local.set({ snapshots })
-  }, delay)
+/**
+ * Create snapshot
+ * ...
+ * Full history mode: true / false
+ * Auto snapshots each: 15min, 30min, 1hr, 5hr, 1day
+ *   number input...
+ * Snapshots limit type: size, time, count
+ * Snapshots limit value: _______
+ * Backup snapshots to bookmarks: /Bookmarks Menu/snapshots
+ *   when?
+ * Suggest to restore snapshot (session) on new window opening
+ */
+async function createSnapshot(id, key, val) {
+  // browser.runtime.sendMessage({
+  //   instanceType: 'bg',
+  //   action: 'createSnapshot',
+  //   args: [id, key, val],
+  // })
+  // if (this.state.snapHistoryMode) Actions.createSnapLayer(id, key, val)
+  // else snapshotNeeded = true
 }
 
 /**
  * Create base snapshot
  */
 async function createBaseSnapshot() {
+  console.log('[DEBUG] createBaseSnapshot');
+
   // Gather snapshot data
   let items = []
   for (let tab of this.getters.pinnedTabs) {
@@ -184,9 +186,10 @@ async function createBaseSnapshot() {
  * Create snapshot layer
  */
 function createSnapLayer(id, key, val) {
-  if (!this.state.snapshot) return
+  // if (!this.state.snapshot) return
+  console.log('[DEBUG] createSnapLayer');
 
-  const layer = [ this.state.snapshot.id, Math.trunc(Date.now()/1000), id ]
+  const layer = [ Math.trunc(Date.now()/1000), id ]
 
   if (key === 'tab') {
     layer.push(val.index, val.url, val.title, val.lvl, val.pinned, val.cookieStoreId)
@@ -198,18 +201,34 @@ function createSnapLayer(id, key, val) {
     layer.push(key[0], val)
   }
 
-  this.state.snapLayers.push(layer)
+  snapLayersBuf.push(layer)
 
   if (createSnapLayerTimeout) clearTimeout(createSnapLayerTimeout)
   createSnapLayerTimeout = setTimeout(async () => {
     createSnapLayerTimeout = null
 
-    const ans = await browser.storage.local.get('snapLayers')
-    if (ans && ans.snapLayers) {
-      let snapLayers = ans.snapLayers.concat(this.state.snapLayers)
-      browser.storage.local.set({ snapLayers })
-      this.state.snapLayers = []
-    }
+    this.state.bg.postMessage({
+      action: 'appendSnapLayers',
+      args: [this.state.windowId, snapLayersBuf],
+    })
+    snapLayersBuf = []
+
+    // This can lead to data-race
+    // ...I can send message to all 'sidebar' instances
+    // to tell 'em: Hey I use storage so wait a bit...
+    // But how to handle this message?
+    // Ok, two ways:
+    // I. Wait until storage will be free (buffer storage set / release it)
+    // II. Just skip write (this time) and keep writing layers in local
+    // ---
+    // Problems with locking storage:
+    // - It async and I cannot garatee safety of lock
+    // const ans = await browser.storage.local.get('snapLayers')
+    // if (ans && ans.snapLayers) {
+    //   let snapLayers = ans.snapLayers.concat(this.state.snapLayers)
+    //   browser.storage.local.set({ snapLayers })
+    //   this.state.snapLayers = []
+    // }
   }, 750)
 }
 
@@ -260,11 +279,21 @@ async function loadSnapshots() {
   this.state.snapshots.reverse()
 }
 
+/**
+ * Retrieve snapshots data
+ */
+async function gimmeSnapshotData() {
+  return Promise.resolve(this.state.windowId)
+}
+
 export default {
   makeSnapshot,
+  scheduleSnapshots,
   createSnapshot,
   createBaseSnapshot,
   createSnapLayer,
   applySnapshot,
   loadSnapshots,
+
+  gimmeSnapshotData,
 }

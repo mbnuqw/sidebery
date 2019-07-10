@@ -26,71 +26,54 @@
 
 .Snapshots .snapshot-card
   box(relative, flex)
-  size(h: 26px, min-w: max-content)
-  align-items: center
-  // flex-flow: column
-  // justify-content: center
-  padding: 0 8px 0 24px
+  size(min-w: max-content)
+  flex-flow: column
+  padding: 12px 8px
   cursor: default
   &:hover
     background-color: #00000016
 
   &[data-active]
     background-color: #00000032
+  
+  &[data-type="layer"]
+    padding: 8px
+  
+  &[data-type="base"]:before
+    content: ''
+    box(absolute)
+    pos(b: 0, l: 0)
+    size(100%, 1px)
+    background-color: var(--border-fg)
+    box-shadow: 0 1px 0 0 var(--border-flare-fg)
 
-.Snapshots .snapshot-card[data-type="base"]
-  size(h: 30px)
+.Snapshots .snapshot-card .date-time
+  box(relative)
+  text(s: rem(15))
+  color: var(--label-fg)
+  padding: 0 0 2px
 
-// .Snapshots .snapshot-card[data-type="layer"]
-//   padding-left: 32px
-
-.Snapshots .snapshot-card .point
-  box(absolute)
-  pos(calc(50% - 2px), 10px)
-  size(4px, same)
-  background-color: var(--info-fg)
-  box-shadow: 0 0 0 1px #00000032
-  border-radius: 50%
-.Snapshots .snapshot-card[data-type="base"] .point
-  background-color: var(--title-fg)
-.Snapshots .snapshot-card[data-event="ctr-created"] .point
-.Snapshots .snapshot-card[data-event="tab-created"] .point
-  background-color: var(--true-fg)
-.Snapshots .snapshot-card[data-event="tab-removed"] .point
-.Snapshots .snapshot-card[data-event="ctr-removed"] .point
-  background-color: var(--false-fg)
-.Snapshots .snapshot-card[data-event="tab-moved"] .point
-.Snapshots .snapshot-card[data-event="ctr-color-changed"] .point
-  background-color: var(--yellow)
-.Snapshots .snapshot-card[data-event="tab-url-changed"] .point
-.Snapshots .snapshot-card[data-event="ctr-name-changed"] .point
-  background-color: var(--blue)
-.Snapshots .snapshot-card[data-event="tab-title-changed"] .point
-.Snapshots .snapshot-card[data-event="ctr-icon-changed"] .point
-  background-color: var(--purple)
-
-.Snapshots .snapshot-card .event
+.Snapshots .snapshot-card .info
   box(relative)
   text(s: rem(12))
   color: var(--info-fg)
+
+.Snapshots .snapshot-card .window
+  box(relative)
   white-space: nowrap
   margin: 0 auto 0 0
 
-.Snapshots .snapshot-card[data-type="base"] .event
-  box(none)
-
-.Snapshots .snapshot-card .elapsed
+.Snapshots .snapshot-card .tabs-count
+.Snapshots .snapshot-card .ctx-tabs-count
   box(relative)
   text(s: rem(12))
+  margin: 0 0 0 8px
+
+.Snapshots .snapshot-card .tabs-count
   color: var(--info-fg)
-  white-space: nowrap
 
-.Snapshots .snapshot-card[data-type="base"] .elapsed
-  text(s: rem(13))
-  color: var(--title-fg)
-
-// .Snapshots .snapshot-card[data-type="layer"] .elapsed
-//   box(none)
+.Snapshots .snapshot-card .ctx-tabs-count
+  color: var(--panel-fg, var(--info-fg))
 
 // ---
 // -- Snapshot

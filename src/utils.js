@@ -68,8 +68,7 @@ function asap(cb, delay) {
 /**
  * Debounce function call
  */
-function debounce(cb, delay, instant) {
-  const ctx = {}
+function debounce(cb, delay, instant, ctx = {}) {
   ctx.func = val => {
     if (ctx.busy) clearTimeout(ctx.busy)
     else if (instant) {

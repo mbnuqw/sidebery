@@ -338,6 +338,17 @@
 
   section
     h2 {{t('settings.snapshots_title')}}
+    toggle-field(
+      label="settings.snap_history_mode"
+      :value="$store.state.snapHistoryMode"
+      @input="setOpt('snapHistoryMode', $event)")
+    .separator
+    select-field(
+      label="settings.snap_interval"
+      optLabel="settings.snap_interval_"
+      :value="$store.state.snapInterval"
+      :opts="$store.state.snapIntervalOpts"
+      @input="setOpt('snapInterval', $event)")
     .separator
     .ctrls
       .btn(@click="switchView('snapshots')") {{t('settings.snapshots_view_label')}}
@@ -654,7 +665,7 @@ export default {
     removeAllSnapshots() {
       browser.storage.local.set({ snapshots: [] })
     },
-    
+
     /**
      * Open debug info page
      */
