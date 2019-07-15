@@ -37,8 +37,10 @@
     background-color: #00000032
   
   &[data-type="layer"]
-    padding: 8px
-  
+    flex-flow: row
+    justify-content: space-between
+    padding: 4px 8px
+
   &[data-type="base"]:before
     content: ''
     box(absolute)
@@ -50,13 +52,21 @@
 .Snapshots .snapshot-card .date-time
   box(relative)
   text(s: rem(15))
-  color: var(--label-fg)
+  color: var(--title-fg)
   padding: 0 0 2px
+
+.Snapshots .snapshot-card[data-type="layer"] .date-time
+    text(s: rem(12))
+    color: var(--info-fg)
 
 .Snapshots .snapshot-card .info
   box(relative)
   text(s: rem(12))
   color: var(--info-fg)
+
+.Snapshots .snapshot-card[data-type="layer"] .info
+    text(s: rem(12))
+    color: var(--label-fg)
 
 .Snapshots .snapshot-card .window
   box(relative)
@@ -104,9 +114,11 @@
   color: var(--title-fg)
   flex: 1 1
 
-.Snapshots .containers
+.Snapshots .windows
   box(relative, flex)
-  flex-flow: wrap
+  flex: 1
+  flex-flow: column
+  align-items: center
   overflow-y: auto
   background-attachment: local
   &:before
@@ -116,39 +128,14 @@
     size(100%, 1px)
     background-color: var(--border-flare-fg)
 
-.Snapshots .container
-  size(calc(33.33% - 16px))
-  padding: 6px 8px 3px
+.Snapshots .window
+  size(50%)
+  padding: 12px 8px 8px
 
-  @media screen and (max-width: 1200px)
-    size(calc(50% - 16px))
-
-  @media screen and (max-width: 840px)
-    size(calc(100% - 16px))
-
-.Snapshots .container .info
-  box(relative, flex)
-  align-items: center
-
-.Snapshots .container[data-target] .info:before
-  content: ''
-  box(absolute)
-  pos(0, 0)
-  size(2px, 100%)
-  background-color: var(--active-fg)
-
-.Snapshots .info .icon
-  box(relative)
-  size(16px, same)
-  fill: var(--panel-fg)
-  margin: 8px
-
-  > svg
-    box(absolute)
-    size(100%, same)
-
-.Snapshots .info .name
-  text(s: rem(15))
+.Snapshots .name
+  text(s: rem(28))
+  padding: 8px 0
+  text-align: center
   color: var(--label-fg)
 
 .Snapshots .tabs
@@ -188,19 +175,30 @@
 
 for i in 1..12
   .Snapshots .tab[data-lvl=\"{i}\"]
-    margin-left: (8px * i)
+    margin-left: (10px * i)
 
-.Snapshots .tab > .pin
-  box(absolute, none)
+.Snapshots .tab > .icon
+  box(absolute)
   size(16px, same)
   pos(calc(50% - 8px), 8px)
-  > svg
+  > svg.ctr
     box(absolute)
     size(100%, same)
-    fill: var(--info-fg)
+    fill: var(--panel-fg)
+  > svg.pin
+    box(absolute)
+    pos(b: -3px, r: -3px)
+    size(11px, same)
+    fill: var(--label-fg)
 
-.Snapshots .tab[data-pinned] > .pin
-  box(block)
+.Snapshots .tab[data-pinned] svg.ctr
+  mask: radial-gradient(
+    circle at calc(100% - 2px) calc(100% - 2px),
+    #00000024,
+    #00000024 7px,
+    #000000 8px,
+    #000000
+  )
 
 .Snapshots .tab > .title
 .Snapshots .tab > .url
@@ -208,13 +206,10 @@ for i in 1..12
   white-space: nowrap
   overflow: hidden
   text-overflow: ellipsis
+  margin-left: 24px
   text-decoration: none
   outline: none
   border: none
-
-.Snapshots .tab[data-pinned] > .title
-.Snapshots .tab[data-pinned] > .url
-  margin-left: 24px
 
 .Snapshots .tab > .title
   text(s: rem(12))

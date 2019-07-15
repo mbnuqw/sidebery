@@ -67,6 +67,29 @@ function onTabDetached(id, info) {
   detachedTabs[id] = tabWindow.tabs.splice(info.oldPosition, 1)[0]
 }
 
+/**
+ * updateTabsTree
+ */
+async function updateTabsTree() {
+  const receiving = [], windows = []
+  for (let windowId in this.windows) {
+    if (!this.windows.hasOwnProperty(windowId)) continue
+    receiving.push(browser.runtime.sendMessage({
+      windowId: this.windows[windowId].id,
+      instanceType: 'sidebar',
+      action: 'getTabsTree',
+    }))
+    windows.push(this.windows[windowId])
+  }
+
+  const trees = await Promise.all(receiving)
+  for (let i = 0; i < trees.length; i++) {
+    for (let tab of windows[i].tabs) {
+      tab.lvl = trees[i][String(tab.id)] || 0
+    }
+  }
+}
+
 export default {
   onTabCreated,
   onTabRemoved,
@@ -74,4 +97,5 @@ export default {
   onTabMoved,
   onTabAttached,
   onTabDetached,
+  updateTabsTree,
 }

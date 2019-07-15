@@ -1,20 +1,20 @@
-import Actions, { initActions } from '../actions/index.js'
-import { initMessaging } from './msg.js'
+import Actions, { injectInActions } from '../actions/index.js'
 
 void async function main() {
+  const state = injectInActions()
+
   // Init first-need stuff
   initToolbarButton()
-  initMessaging()
+  Actions.initGlobalMessaging()
+  Actions.initMessaging()
 
   // Load settings
   const ans = await browser.storage.local.get({ settings: {} })
-  const settings = ans ? ans.settings : {}
+  state.settings = ans ? ans.settings : {}
 
-  const containers = await getContainers()
-  const windows = await getWindows()
-  loadTabs(windows)
-
-  initActions({ settings, windows, containers })
+  state.containers = await getContainers()
+  state.windows = await getWindows()
+  loadTabs(state.windows)
 
   // Setup event listeners for
   // windows
@@ -34,7 +34,8 @@ void async function main() {
   browser.tabs.onAttached.addListener(Actions.onTabAttached)
   browser.tabs.onDetached.addListener(Actions.onTabDetached)
 
-  Actions.scheduleSnapshots()
+  if (!state.settings.tabsTree) Actions.scheduleSnapshots()
+  else Actions.onFirstSidebarInit(Actions.scheduleSnapshots)
 }()
 
 /**

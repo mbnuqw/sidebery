@@ -107,33 +107,9 @@ function scheduleSnapshots() {
 }
 
 /**
- * Create snapshot
- * ...
- * Full history mode: true / false
- * Auto snapshots each: 15min, 30min, 1hr, 5hr, 1day
- *   number input...
- * Snapshots limit type: size, time, count
- * Snapshots limit value: _______
- * Backup snapshots to bookmarks: /Bookmarks Menu/snapshots
- *   when?
- * Suggest to restore snapshot (session) on new window opening
- */
-async function createSnapshot(id, key, val) {
-  // browser.runtime.sendMessage({
-  //   instanceType: 'bg',
-  //   action: 'createSnapshot',
-  //   args: [id, key, val],
-  // })
-  // if (this.state.snapHistoryMode) Actions.createSnapLayer(id, key, val)
-  // else snapshotNeeded = true
-}
-
-/**
  * Create base snapshot
  */
 async function createBaseSnapshot() {
-  console.log('[DEBUG] createBaseSnapshot');
-
   // Gather snapshot data
   let items = []
   for (let tab of this.getters.pinnedTabs) {
@@ -153,7 +129,7 @@ async function createBaseSnapshot() {
   // Create snapshot
   const snapshot = {
     id: Utils.uid(),
-    time: Math.trunc(Date.now()/1000),
+    time: Date.now(),
     windowId: this.state.windowId,
     items,
   }
@@ -186,19 +162,21 @@ async function createBaseSnapshot() {
  * Create snapshot layer
  */
 function createSnapLayer(id, key, val) {
-  // if (!this.state.snapshot) return
-  console.log('[DEBUG] createSnapLayer');
-
-  const layer = [ Math.trunc(Date.now()/1000), id ]
+  const layer = { id, t: Date.now() }
+  if (key !== undefined) layer.key = key
 
   if (key === 'tab') {
-    layer.push(val.index, val.url, val.title, val.lvl, val.pinned, val.cookieStoreId)
-  } else if (key === 'container') {
-    layer.push(val.color, val.icon, val.name)
-  } else if (key === 'move') {
-    layer.push(val, this.state.tabsMap[id].lvl)
-  } else if (key !== undefined) {
-    layer.push(key[0], val)
+    layer.index = val.index
+    layer.url = val.url
+    layer.title = val.title
+    layer.lvl = val.lvl
+    layer.pinned = val.pinned
+    layer.ctr = val.cookieStoreId
+  } else if (key === 'tab-mv') {
+    layer.index = val
+    layer.lvl = this.state.tabsMap[id].lvl
+  } else if (val !== undefined) {
+    layer.val = val
   }
 
   snapLayersBuf.push(layer)
@@ -212,23 +190,6 @@ function createSnapLayer(id, key, val) {
       args: [this.state.windowId, snapLayersBuf],
     })
     snapLayersBuf = []
-
-    // This can lead to data-race
-    // ...I can send message to all 'sidebar' instances
-    // to tell 'em: Hey I use storage so wait a bit...
-    // But how to handle this message?
-    // Ok, two ways:
-    // I. Wait until storage will be free (buffer storage set / release it)
-    // II. Just skip write (this time) and keep writing layers in local
-    // ---
-    // Problems with locking storage:
-    // - It async and I cannot garatee safety of lock
-    // const ans = await browser.storage.local.get('snapLayers')
-    // if (ans && ans.snapLayers) {
-    //   let snapLayers = ans.snapLayers.concat(this.state.snapLayers)
-    //   browser.storage.local.set({ snapLayers })
-    //   this.state.snapLayers = []
-    // }
   }, 750)
 }
 
@@ -289,7 +250,6 @@ async function gimmeSnapshotData() {
 export default {
   makeSnapshot,
   scheduleSnapshots,
-  createSnapshot,
   createBaseSnapshot,
   createSnapLayer,
   applySnapshot,

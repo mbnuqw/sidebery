@@ -95,15 +95,6 @@ export default new Vue({
       windowId: State.windowId,
     })
     State.bg = browser.runtime.connect({ name: connectInfo })
-
-    // Setup snapshots
-    // if (State.snapHistoryMode) Actions.createBaseSnapshot()
-    if (State.snapHistoryMode) {
-      State.bg.postMessage({
-        action: 'createBaseSnapshotDebounced'
-      })
-    }
-    Actions.scheduleSnapshots()
   },
 
   mounted() {

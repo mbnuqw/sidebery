@@ -327,26 +327,15 @@ export default {
 
       // Create new container or update
       if (!this.id) this.createNew()
-      else {
-        Actions.createSnapLayer(this.id, 'name', this.name)
-        this.updateContainer()
-      }
+      else this.updateContainer()
     },
 
     async updateIcon(icon) {
-      if (this.conf.icon !== icon) {
-        Actions.createSnapLayer(this.id, 'icon', icon)
-      }
-
       this.conf.icon = icon
       this.updateContainer()
     },
 
     async updateColor(color) {
-      if (this.conf.color !== color) {
-        Actions.createSnapLayer(this.id, 'color', color)
-      }
-
       this.conf.color = color
       this.updateContainer()
     },

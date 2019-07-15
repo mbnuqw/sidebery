@@ -116,7 +116,7 @@ const noiseBg = initNoiseBgDirective(State, Store)
 Vue.directive('noise', noiseBg)
 
 const URL_HOST_PATH_RE = /^([a-z0-9-]{1,63}\.)+\w+(:\d+)?\/[A-Za-z0-9-._~:/?#[\]%@!$&'()*+,;=]*$/
-const ADD_CTX_BTN = { icon: 'icon_plus_v2', hidden: false }
+const ADD_CTR_BTN = { icon: 'icon_plus_v2', hidden: false }
 
 // --- Vue Component ---
 export default {
@@ -192,8 +192,8 @@ export default {
       }
 
       if (!State.private && !State.hideAddBtn) {
-        ADD_CTX_BTN.hidden = false
-        out.push(ADD_CTX_BTN)
+        ADD_CTR_BTN.hidden = false
+        out.push(ADD_CTR_BTN)
       }
 
       if (!State.navBarInline) return out
@@ -731,8 +731,6 @@ export default {
         Actions.savePanels()
       }
 
-      Actions.createSnapLayer(panel.cookieStoreId, 'container', panel)
-
       // Update panels ranges
       Actions.updatePanelsRanges()
     },
@@ -770,8 +768,6 @@ export default {
         Actions.savePanels()
       }
 
-      Actions.createSnapLayer(id)
-
       // Update panels ranges
       Actions.updatePanelsRanges()
     },
@@ -784,16 +780,6 @@ export default {
       let ctxIndex = State.containers.findIndex(c => c.cookieStoreId === id)
       let panelIndex = State.panels.findIndex(c => c.cookieStoreId === id)
       if (ctxIndex === -1 || panelIndex === -1) return
-
-      if (State.panels[panelIndex].color !== contextualIdentity.color) {
-        Actions.createSnapLayer(id, 'color', contextualIdentity.color)
-      }
-      if (State.panels[panelIndex].icon !== contextualIdentity.icon) {
-        Actions.createSnapLayer(id, 'icon', contextualIdentity.icon)
-      }
-      if (State.panels[panelIndex].name !== contextualIdentity.name) {
-        Actions.createSnapLayer(id, 'name', contextualIdentity.name)
-      }
 
       State.containers.splice(ctxIndex, 1, contextualIdentity)
       State.panels[panelIndex].color = contextualIdentity.color
@@ -919,12 +905,12 @@ export default {
           if (change.url.startsWith('about:')) localTab.favIconUrl = ''
           else Actions.saveTabsTree()
         }
-        Actions.createSnapLayer(tabId, 'url', change.url)
+        Actions.createSnapLayer(tabId, 'tab-url', change.url)
       }
 
       // Handle title change
       if (change.hasOwnProperty('title')) {
-        Actions.createSnapLayer(tabId, 'title', change.title)
+        Actions.createSnapLayer(tabId, 'tab-title', change.title)
       }
 
       // Handle favicon change
@@ -946,7 +932,7 @@ export default {
         Actions.updatePanelsRanges()
         if (panel && panel.tabs) browser.tabs.move(tabId, { index: panel.endIndex })
         if (tab.active) Actions.setPanel(panel.index)
-        Actions.createSnapLayer(tabId, 'pin', false)
+        Actions.createSnapLayer(tabId, 'tab-unpin')
       }
 
       // Handle pinned tab
@@ -961,7 +947,7 @@ export default {
             cookieStoreId: panel.cookieStoreId,
           })
         }
-        Actions.createSnapLayer(tabId, 'pin', true)
+        Actions.createSnapLayer(tabId, 'tab-pin')
       }
 
       // Handle title change
@@ -1171,7 +1157,7 @@ export default {
         }
       }
 
-      Actions.createSnapLayer(id, 'move', info.toIndex)
+      Actions.createSnapLayer(id, 'tab-mv', info.toIndex)
     },
 
     /**

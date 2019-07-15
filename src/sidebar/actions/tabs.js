@@ -1169,6 +1169,17 @@ function queryTab(props) {
   if (tab) return Utils.cloneObject(tab)
 }
 
+/**
+ * getTabsTree
+ */
+function getTabsTree() {
+  const tree = {}
+  for (let tab of this.state.tabs) {
+    if (tab.lvl > 0) tree[tab.id] = tab.lvl
+  }
+  return tree
+}
+
 export default {
   loadTabs,
   saveTabsTree,
@@ -1204,4 +1215,5 @@ export default {
   createTabAfter,
   updateTabsTree,
   queryTab,
+  getTabsTree,
 }
