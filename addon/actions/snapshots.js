@@ -99,6 +99,9 @@ async function createBaseSnapshot() {
   browser.storage.local.set({ lastSnapTime: currentSnapshot.time })
   await browser.storage.local.set({ snapshots, snapLayers: { global: [], windows: {} } })
   snapshotsReady = true
+
+  // Return snapshot
+  return currentSnapshot
 }
 function createBaseSnapshotDebounced(delay = 750) {
   if (baseSnapshotTimeout) clearTimeout(baseSnapshotTimeout)
@@ -170,8 +173,6 @@ async function scheduleSnapshots() {
   if (elapsed >= this.settings.snapInterval) Actions.createBaseSnapshot()
   else nextTimeout = this.settings.snapInterval - elapsed
 
-  console.log('[DEBUG] scheduleSnapshots', nextTimeout);
-
   Actions.scheduleNextSnapshot(nextTimeout)
 }
 
@@ -179,7 +180,6 @@ async function scheduleSnapshots() {
  * Schedule next snapshot with given delay time
  */
 function scheduleNextSnapshot(nextTimeout) {
-  console.log('[DEBUG] scheduleNextSnapshot');
   setTimeout(() => {
     nextTimeout = this.settings.snapInterval
     Actions.createBaseSnapshot()

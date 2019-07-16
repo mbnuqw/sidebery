@@ -1,5 +1,10 @@
 <template lang="pug">
 .Snapshots
+  .ctrls(v-noise:300.g:12:af.a:0:42.s:0:9="" @wheel="onTimelineWheel")
+    .title(v-if="activeSnapshot") {{activeSnapshot.date}} - {{activeSnapshot.time}}
+    .btn(@click="createSnapshot") Create
+    .btn(@click="applySnapshot(activeSnapshot)") Apply
+    .btn.-warn(@click="removeSnapshot(activeSnapshot)") Remove
   .wrapper(v-if="activeSnapshot")
     .timeline(v-noise:300.g:12:af.a:0:42.s:0:9="")
       .snapshot-card(
@@ -17,11 +22,6 @@
         .info(v-if="s.type === 'layer'") {{t('snapshot.event.' + s.event)}}
         .date-time(v-if="s.type === 'layer'") {{s.time}}
     .snapshot
-      .ctrls(v-noise:300.g:12:af.a:0:42.s:0:9="" @wheel="onTimelineWheel")
-        .title {{activeSnapshot.date}} - {{activeSnapshot.time}}
-        .btn Apply
-        .btn Apply in new window
-        .btn.-warn Remove
       .windows(v-if="activeSnapshot" v-noise:300.g:12:af.a:0:42.s:0:9="")
         .window(
           v-for="(win, _, i) in activeSnapshot.windowsById"
@@ -100,140 +100,7 @@ export default {
     // Normalize snapshots
     const now = Math.trunc(Date.now() / 1000)
     for (let snapshot of snapshots) {
-      let windowsById = {}
-      let layers = snapshot.layers || []
-      let tabsCount = 0
-      let container
-
-      // Windows
-      for (let winId in snapshot.windows) {
-        if (!snapshot.windows.hasOwnProperty(winId)) continue
-
-        const window = { id: winId, tabs: [] }
-        snapshot.containersById[DEFAULT_CTR.id] = DEFAULT_CTR
-
-        // Items
-        for (let item of snapshot.windows[winId].items) {
-          // Container / Tab
-          if (typeof item === 'string') {
-            container = snapshot.containersById[item]
-          } else {
-            tabsCount++
-            // Pinned / Normal tabs
-            if (!container) {
-              item.pinned = true
-              item.lvl = 0
-            } else {
-              item.pinned = false
-              item.ctr = container.id
-            }
-            window.tabs.push(item)
-          }
-        }
-
-        for (let layer of snapshot.windows[winId].layers) {
-          layer.winId = winId
-        }
-        layers = layers.concat(snapshot.windows[winId].layers)
-
-        windowsById[winId] = window
-      }
-
-      const time = Math.trunc(snapshot.time/1000)
-      parsedSnapshots.push({
-        id: snapshot.id,
-        type: 'base',
-        event: 'init',
-        windowsById: Utils.cloneObject(windowsById),
-        containersById: Utils.cloneObject(snapshot.containersById),
-        date: Utils.uDate(time),
-        time: Utils.uTime(time),
-        elapsed: Utils.uElapsed(time, now),
-        winCount: Object.keys(windowsById).length,
-        tabsCount,
-      })
-
-      layers.sort((a, b) => a.t - b.t)
-      for (let i = 0; i < layers.length; i++) {
-        const layer = layers[i]
-        // const winId = layer.winId
-        let event = layer.key
-        let ctr, tab, targetId
-
-        if (typeof layer.id === 'number') {
-          if (!windowsById[layer.winId]) break
-          let tabs = windowsById[layer.winId].tabs
-
-          // Tab Created
-          if (layer.key === 'tab') {
-            tab = layer
-            tabs.splice(layer.index, 0, tab)
-          }
-
-          // Tab Removed
-          else if (layer.key === undefined) {
-            const index = tabs.findIndex(t => t.id === layer.id)
-            tabs.splice(index, 1)
-            event = 'tab-rm'
-          }
-
-          // Tab Moved
-          else if (layer.key === 'tab-mv') {
-            const index = tabs.findIndex(t => t.id === layer.id)
-            tab = tabs.splice(index, 1)[0]
-            tab.lvl = layer.lvl
-            tabs.splice(layer.index, 0, tab)
-          }
-
-          // ...
-          else {
-            tab = tabs.find(t => t.id === layer.id)
-            if (layer.key === 'tab-url') tab.url = layer.val
-            if (layer.key === 'tab-title') tab.title = layer.val
-            if (layer.key === 'tab-lvl') tab.lvl = layer.val
-            if (layer.key === 'tab-pin') tab.pinned = true
-            if (layer.key === 'tab-unpin') tab.pinned = false
-          }
-        } else {
-          // Container Created
-          if (layer.key === 'ctr') {
-            ctr = layer
-            snapshot.containersById[layer.id] = ctr
-          }
-
-          // Container Removed
-          else if (layer.key === undefined) {
-            delete snapshot.containersById[layer.id]
-            event = 'ctr-rm'
-          }
-
-          // ...
-          else {
-            ctr = snapshot.containersById[layer.id]
-            if (layer.key === 'ctr-color') ctr.color = layer.val
-            if (layer.key === 'ctr-icon') ctr.icon = layer.val
-            if (layer.key === 'ctr-name') ctr.name = layer.val
-          }
-        }
-
-        // Get id of target
-        if (tab) targetId = tab.id
-        if (ctr) targetId = ctr.id
-
-        // Append snapshot
-        let time = Math.trunc(layer.t/1000)
-        parsedSnapshots.push({
-          id: snapshot.id + i,
-          type: 'layer',
-          event,
-          date: Utils.uDate(time),
-          time: Utils.uTime(time),
-          targetId,
-          elapsed: Utils.uElapsed(time, now),
-          windowsById: Utils.cloneObject(windowsById),
-          containersById: Utils.cloneObject(snapshot.containersById),
-        })
-      }
+      parsedSnapshots.push(normalizeSnapshot(snapshot, now))
     }
     parsedSnapshots.reverse()
 
@@ -286,11 +153,92 @@ export default {
     },
 
     /**
+     * Create new snapshot
+     */
+    async createSnapshot() {
+      const snapshot = await browser.runtime.sendMessage({
+        instanceType: 'bg',
+        windowId: -1,
+        action: 'createBaseSnapshot',
+      })
+
+      const now = Math.trunc(Date.now()/1000)
+      this.snapshots.unshift(normalizeSnapshot(snapshot, now))
+
+      this.activeSnapshot = this.snapshots[0]
+    },
+
+    /**
+     * Apply snapshot
+     */
+    applySnapshot(snapshot) {
+      console.log('[DEBUG] ok, apply this', snapshot);
+    },
+    
+    /**
+     * Remove snapshot
+     */
+    removeSnapshot(snapshot) {
+      console.log('[DEBUG] remove', snapshot);
+    },
+
+    /**
      * Returns icon id
      */
     getCtrIcon(id) {
       return this.activeSnapshot.containersById[id].icon
-    }
+    },
   },
+}
+
+/**
+ * Normalize snapshot
+ */
+function normalizeSnapshot(snapshot, now) {
+  let container, tabsCount = 0
+  let windowsById = {}
+
+  // Windows
+  for (let winId in snapshot.windows) {
+    if (!snapshot.windows.hasOwnProperty(winId)) continue
+
+    const window = { id: winId, tabs: [] }
+    snapshot.containersById[DEFAULT_CTR.id] = DEFAULT_CTR
+
+    // Items
+    for (let item of snapshot.windows[winId].items) {
+      // Container / Tab
+      if (typeof item === 'string') {
+        container = snapshot.containersById[item]
+      } else {
+        tabsCount++
+        // Pinned / Normal tabs
+        if (!container) {
+          item.pinned = true
+          item.lvl = 0
+        } else {
+          item.pinned = false
+          item.ctr = container.id
+        }
+        window.tabs.push(item)
+      }
+    }
+
+    windowsById[winId] = window
+  }
+
+  const time = Math.trunc(snapshot.time/1000)
+  return {
+    id: snapshot.id,
+    type: 'base',
+    event: 'init',
+    windowsById: Utils.cloneObject(windowsById),
+    containersById: Utils.cloneObject(snapshot.containersById),
+    date: Utils.uDate(time),
+    time: Utils.uTime(time),
+    elapsed: Utils.uElapsed(time, now),
+    winCount: Object.keys(windowsById).length,
+    tabsCount,
+  }
 }
 </script>

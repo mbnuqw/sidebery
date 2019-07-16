@@ -4,13 +4,37 @@
   box(absolute, flex)
   size(100%, same)
   pos(0, 0)
+  flex-flow: column
   align-items: stretch
   overflow: hidden
   background-color: var(--bg)
 
+.Snapshots .ctrls
+  box(relative, flex)
+  size(h: 64px)
+  flex-flow: wrap
+  justify-content: center
+  align-items: center
+  grid-gap: 12px
+  padding: 0 16px
+  background-color: var(--bg)
+  z-index: 2
+  &:before
+    content: ''
+    box(absolute)
+    pos(b: 0, l: 0)
+    size(100%, 1px)
+    background-color: var(--border-fg)
+
+.Snapshots .ctrls > .title
+  box(relative)
+  text(s: rem(24))
+  color: var(--title-fg)
+  flex: 1 1
+
 .Snapshots .wrapper
   box(flex)
-  size(100%, same)
+  size(100%, calc(100% - 64px))
 
 // ---
 // -- Timeline
@@ -93,26 +117,6 @@
   size(70%, 100%)
   flex-flow: column
   flex: 1 0 auto
-
-.Snapshots .ctrls
-  box(relative, flex)
-  flex-flow: wrap
-  justify-content: center
-  align-items: center
-  grid-gap: 12px
-  padding: 12px 16px 16px
-  &:before
-    content: ''
-    box(absolute)
-    pos(b: 0, l: 0)
-    size(100%, 1px)
-    background-color: var(--border-fg)
-
-.Snapshots .ctrls > .title
-  box(relative)
-  text(s: rem(24))
-  color: var(--title-fg)
-  flex: 1 1
 
 .Snapshots .windows
   box(relative, flex)
