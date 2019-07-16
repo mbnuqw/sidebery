@@ -338,11 +338,11 @@
 
   section
     h2 {{t('settings.snapshots_title')}}
-    toggle-field(
-      label="settings.snap_history_mode"
-      :value="$store.state.snapHistoryMode"
-      @input="setOpt('snapHistoryMode', $event)")
-    .separator
+    //- toggle-field(
+    //-   label="settings.snap_history_mode"
+    //-   :value="$store.state.snapHistoryMode"
+    //-   @input="setOpt('snapHistoryMode', $event)")
+    //- .separator
     select-field(
       label="settings.snap_interval"
       optLabel="settings.snap_interval_"
@@ -352,8 +352,7 @@
     .separator
     .ctrls
       .btn(@click="switchView('snapshots')") {{t('settings.snapshots_view_label')}}
-      .btn(@click="createSnapshot") {{t('settings.make_snapshot')}}
-      .btn.-warn(@click="removeAllSnapshots") {{t('settings.rm_all_snapshots')}}
+      //- .btn.-warn(@click="removeAllSnapshots") {{t('settings.rm_all_snapshots')}}
 
   //- section
   //-   h2 {{t('settings.favi_title')}}

@@ -156,6 +156,7 @@ export default {
      * Create new snapshot
      */
     async createSnapshot() {
+      // TODO: show loading spinner or something...
       const snapshot = await browser.runtime.sendMessage({
         instanceType: 'bg',
         windowId: -1,
@@ -171,10 +172,16 @@ export default {
     /**
      * Apply snapshot
      */
-    applySnapshot(snapshot) {
-      console.log('[DEBUG] ok, apply this', snapshot);
+    async applySnapshot(snapshot) {
+      // TODO: show loading spinner or something...
+      await browser.runtime.sendMessage({
+        instanceType: 'bg',
+        windowId: -1,
+        action: 'applySnapshot',
+        arg: snapshot,
+      })
     },
-    
+
     /**
      * Remove snapshot
      */

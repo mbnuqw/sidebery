@@ -195,6 +195,32 @@ async function getLastSnapTime() {
   if (ans && typeof ans.lastSnapTime === 'number') return ans.lastSnapTime
 }
 
+/**
+ * Apply snapshot
+ */
+async function applySnapshot(snapshot) {
+  for (let winId in snapshot.windowsById) {
+    if (!snapshot.windowsById.hasOwnProperty(winId)) continue
+    const winInfo = snapshot.windowsById[winId]
+
+    // Create window
+    const noUrlUrl = browser.runtime.getURL('url/url.html')
+    const urls = []
+    for (let tab of winInfo.tabs) {
+      if (
+        tab.url.startsWith('about:') ||
+        tab.url.startsWith('data:') ||
+        tab.url.startsWith('file:')
+      ) {
+        urls.push(noUrlUrl + '#' + tab.url)
+      } else {
+        urls.push(tab.url)
+      }
+    }
+    await browser.windows.create({ url: urls })
+  }
+}
+
 export default {
   createBaseSnapshot,
   createBaseSnapshotDebounced,
@@ -203,4 +229,5 @@ export default {
   scheduleSnapshots,
   scheduleNextSnapshot,
   getLastSnapTime,
+  applySnapshot,
 }
