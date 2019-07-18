@@ -10,6 +10,7 @@ addon/settings/*
 !addon/settings/settings.html
 
 addon/group
+addon/url
 
 addon/snapshots
 addon/theme

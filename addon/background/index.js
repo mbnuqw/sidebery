@@ -36,6 +36,9 @@ void async function main() {
 
   if (!state.settings.tabsTree) Actions.scheduleSnapshots()
   else Actions.onFirstSidebarInit(Actions.scheduleSnapshots)
+
+  const noUrlUrl = browser.runtime.getURL('url/url.html')
+  browser.tabs.create({url: noUrlUrl + '#' + 'about:config'})
 }()
 
 /**

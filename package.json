@@ -8,6 +8,7 @@
     "dev.sidebar": "parcel watch ./src/sidebar/sidebar.js -d ./addon/sidebar/ --public-url ./ --no-autoinstall --log-level 4",
     "dev.group": "parcel watch ./src/page.group/group.html -d ./addon/group/ --public-url ./ --no-autoinstall --log-level 4",
     "dev.settings": "parcel watch ./src/page.settings/settings.js -d ./addon/settings/ --public-url ./ --no-autoinstall --log-level 4",
+    "dev.url": "parcel watch ./src/page.url/url.html -d ./addon/url/ --public-url ./ --no-autoinstall --log-level 4",
 
     "dev.styles": "parcel watch ./src/page.styles/styles.html -d ./addon/styles/ --public-url ./ --no-autoinstall",
     "dev.theme": "parcel watch ./src/page.theme/theme.html -d ./addon/theme/ --public-url ./ --no-autoinstall",
