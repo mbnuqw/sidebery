@@ -159,7 +159,7 @@ export default {
       const snapshot = await browser.runtime.sendMessage({
         instanceType: 'bg',
         windowId: -1,
-        action: 'createBaseSnapshot',
+        action: 'createSnapshot',
       })
 
       const now = Math.trunc(Date.now()/1000)

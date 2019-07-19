@@ -874,7 +874,6 @@ export default {
       }
 
       Actions.recalcPanelScroll()
-      Actions.createSnapLayer(tab.id, 'tab', tab)
     },
 
     /**
@@ -905,12 +904,6 @@ export default {
           if (change.url.startsWith('about:')) localTab.favIconUrl = ''
           else Actions.saveTabsTree()
         }
-        Actions.createSnapLayer(tabId, 'tab-url', change.url)
-      }
-
-      // Handle title change
-      if (change.hasOwnProperty('title')) {
-        Actions.createSnapLayer(tabId, 'tab-title', change.title)
       }
 
       // Handle favicon change
@@ -932,7 +925,6 @@ export default {
         Actions.updatePanelsRanges()
         if (panel && panel.tabs) browser.tabs.move(tabId, { index: panel.endIndex })
         if (tab.active) Actions.setPanel(panel.index)
-        Actions.createSnapLayer(tabId, 'tab-unpin')
       }
 
       // Handle pinned tab
@@ -947,7 +939,6 @@ export default {
             cookieStoreId: panel.cookieStoreId,
           })
         }
-        Actions.createSnapLayer(tabId, 'tab-pin')
       }
 
       // Handle title change
@@ -1080,8 +1071,6 @@ export default {
         }
       }
 
-      Actions.createSnapLayer(tabId)
-
       // Remove isOpen flag from bookmark
       if (State.highlightOpenBookmarks && State.bookmarksUrlMap && State.bookmarksUrlMap[tab.url]) {
         for (let t of State.tabs) {
@@ -1156,8 +1145,6 @@ export default {
           if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
         }
       }
-
-      Actions.createSnapLayer(id, 'tab-mv', info.toIndex)
     },
 
     /**

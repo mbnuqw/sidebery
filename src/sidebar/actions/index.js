@@ -8,7 +8,6 @@ import FaviconsActions from './favicons'
 import PanelsActions from './panels'
 import TabsActions from './tabs'
 import BookmarksActions from './bookmarks'
-import SnapshotsActions from './snapshots'
 import StylesActions from './styles'
 import CtxMenuActions from './menu'
 
@@ -128,7 +127,6 @@ const Actions = {
   ...PanelsActions,
   ...TabsActions,
   ...BookmarksActions,
-  ...SnapshotsActions,
   ...StylesActions,
   ...CtxMenuActions,
 

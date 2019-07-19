@@ -15,8 +15,8 @@ export const SETTINGS_OPTIONS = {
   pinnedTabsPositionOpts: ['panel', 'top', 'left', 'right'],
   tabsTreeLimitOpts: [1, 2, 3, 4, 5, 'none'],
   fontSizeOpts: ['xs', 's', 'm', 'l', 'xl', 'xxl'],
-  themeOpts: ['dark', 'light'],
-  lookOpts: ['default', 'tactile', 'none'],
+  styleOpts: ['dark', 'light'],
+  themeOpts: ['default', 'tactile', 'none'],
   snapIntervalOpts: [900000, 1800000, 3600000, 7200000, 18000000, 'none'],
   snapIntervalUnits: [
     { label: 'm', from: v => v*60000, into: v => v/60000 },
@@ -72,14 +72,13 @@ export const DEFAULT_SETTINGS = {
   fontSize: 'm',
   bgNoise: true,
   animations: true,
-  theme: 'dark',
-  look: 'default', //.....? skin
+  theme: 'default',
+  style: 'dark',
   settingsCSS: false,
   sidebarCSS: false,
   groupCSS: false,
 
   // Snapshots
-  snapHistoryMode: false,
   snapInterval: 'none',
   snapshotsTargets: { pinned: true },
 

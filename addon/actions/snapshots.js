@@ -7,7 +7,7 @@ let snapshotsReady = true
 /**
  * Create base snapshot
  */
-async function createBaseSnapshot() {
+async function createSnapshot() {
   snapshotsReady = false
 
   // Get containers info
@@ -103,9 +103,9 @@ async function createBaseSnapshot() {
   // Return snapshot
   return currentSnapshot
 }
-function createBaseSnapshotDebounced(delay = 750) {
+function createSnapshotDebounced(delay = 750) {
   if (baseSnapshotTimeout) clearTimeout(baseSnapshotTimeout)
-  baseSnapshotTimeout = setTimeout(Actions.createBaseSnapshot, delay)
+  baseSnapshotTimeout = setTimeout(Actions.createSnapshot, delay)
 }
 
 /**
@@ -113,7 +113,7 @@ function createBaseSnapshotDebounced(delay = 750) {
  */
 function appendSnapLayers(windowId, layers) {
   if (!currentSnapshot) {
-    Actions.createBaseSnapshot()
+    Actions.createSnapshot()
     return
   }
 
@@ -170,7 +170,7 @@ async function scheduleSnapshots() {
   if (currentSnapshot) elapsed = currentTime - currentSnapshot.time
   else elapsed = currentTime - await Actions.getLastSnapTime()
 
-  if (elapsed >= this.settings.snapInterval) Actions.createBaseSnapshot()
+  if (elapsed >= this.settings.snapInterval) Actions.createSnapshot()
   else nextTimeout = this.settings.snapInterval - elapsed
 
   Actions.scheduleNextSnapshot(nextTimeout)
@@ -182,7 +182,7 @@ async function scheduleSnapshots() {
 function scheduleNextSnapshot(nextTimeout) {
   setTimeout(() => {
     nextTimeout = this.settings.snapInterval
-    Actions.createBaseSnapshot()
+    Actions.createSnapshot()
     Actions.scheduleNextSnapshot(nextTimeout)
   }, nextTimeout)
 }
@@ -222,8 +222,8 @@ async function applySnapshot(snapshot) {
 }
 
 export default {
-  createBaseSnapshot,
-  createBaseSnapshotDebounced,
+  createSnapshot,
+  createSnapshotDebounced,
   appendSnapLayers,
   saveSnapLayers,
   scheduleSnapshots,

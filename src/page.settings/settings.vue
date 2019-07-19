@@ -211,18 +211,18 @@
       @input="setOpt('bgNoise', $event)")
     .separator
     select-field(
-      label="settings.look"
-      optLabel="settings.look_"
-      :value="$store.state.look"
-      :opts="$store.state.lookOpts"
-      @input="setOpt('look', $event), reinitTheme()")
-    .separator
-    select-field(
-      label="settings.switch_theme"
+      label="settings.theme"
       optLabel="settings.theme_"
       :value="$store.state.theme"
       :opts="$store.state.themeOpts"
-      @input="setOpt('theme', $event)")
+      @input="setOpt('theme', $event), reinitTheme()")
+    .separator
+    select-field(
+      label="settings.switch_style"
+      optLabel="settings.style_"
+      :value="$store.state.style"
+      :opts="$store.state.styleOpts"
+      @input="setOpt('style', $event)")
     .separator
     .ctrls
       .btn(@click="switchView('styles-editor')") {{t('settings.edit_styles')}}
@@ -338,11 +338,6 @@
 
   section
     h2 {{t('settings.snapshots_title')}}
-    //- toggle-field(
-    //-   label="settings.snap_history_mode"
-    //-   :value="$store.state.snapHistoryMode"
-    //-   @input="setOpt('snapHistoryMode', $event)")
-    //- .separator
     select-field(
       label="settings.snap_interval"
       optLabel="settings.snap_interval_"
@@ -649,16 +644,6 @@ export default {
     },
 
     /**
-     * Create snapshot
-     */
-    createSnapshot() {
-      browser.runtime.sendMessage({
-        name: 'CreateSnapshot',
-        windowId: State.windowId,
-      })
-    },
-
-    /**
      * Remove snapshot
      */
     removeAllSnapshots() {
@@ -691,7 +676,7 @@ export default {
      * Reinit theme
      */
     reinitTheme() {
-      if (State.look === 'none') return
+      if (State.theme === 'none') return
       Actions.initTheme()
     },
 

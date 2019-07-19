@@ -20,9 +20,7 @@ function updateSettings(settings) {
   const updateTree = this.state.tabsTreeLimit !== settings.tabsTreeLimit
   const updateInvisTabs = this.state.hideFoldedTabs !== settings.hideFoldedTabs
   const toggleBookmarks = this.state.bookmarksPanel !== settings.bookmarksPanel
-  const look = this.state.look !== settings.look
-  const snapHistoryMode = this.state.snapHistoryMode !== settings.snapHistoryMode
-  const snapInterval = this.state.snapInterval !== settings.snapInterval
+  const theme = this.state.theme !== settings.theme
 
   // Update settings of this instance
   for (let k in settings) {
@@ -61,16 +59,8 @@ function updateSettings(settings) {
     else this.state.bookmarks = []
   }
 
-  if (look) {
+  if (theme) {
     Actions.initTheme()
-  }
-
-  if (snapHistoryMode && this.state.snapHistoryMode && !this.state.snapshot) {
-    Actions.createBaseSnapshot()
-  }
-
-  if (snapInterval) {
-    Actions.scheduleSnapshots()
   }
 }
 

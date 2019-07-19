@@ -6,10 +6,10 @@ void (async function() {
   // Load settings and set theme
   let ans = await browser.storage.local.get('settings')
   let settings = ans.settings
-  let theme = settings ? settings.theme : 'dark'
+  let style = settings ? settings.style : 'dark'
 
-  // Set theme class
-  document.body.classList.add('-' + theme)
+  // Set style class
+  document.body.classList.add('-' + style)
 
   // Set background noise
   if (settings.bgNoise) {

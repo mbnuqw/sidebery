@@ -45,7 +45,7 @@ function updateSettings(settings) {
   if (!settings) return
 
   // Check what values was updated
-  const look = this.state.look !== settings.look
+  const theme = this.state.theme !== settings.theme
 
   // Update settings
   for (let k in settings) {
@@ -53,7 +53,7 @@ function updateSettings(settings) {
     if (settings[k] !== undefined) this.state[k] = settings[k]
   }
 
-  if (look) {
+  if (theme) {
     Actions.initTheme()
   }
 }

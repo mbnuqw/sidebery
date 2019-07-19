@@ -7,7 +7,7 @@ function initTheme() {
   let themeLinkEl = document.getElementById('theme_link')
 
   // Remove theme css
-  if (this.state.look === 'none') {
+  if (this.state.theme === 'none') {
     if (themeLinkEl) themeLinkEl.setAttribute('disabled', 'disabled')
     return
   } else {
@@ -22,7 +22,7 @@ function initTheme() {
     document.head.appendChild(themeLinkEl)
   }
 
-  themeLinkEl.href = `../themes/${this.state.look}/${this.state.instanceType}.css`
+  themeLinkEl.href = `../themes/${this.state.theme}/${this.state.instanceType}.css`
   setTimeout(() => EventBus.$emit('dynVarChange'), 120)
 }
 
