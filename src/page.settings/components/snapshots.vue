@@ -12,13 +12,12 @@
         ref="snapshots"
         :key="s.id"
         :id="s.id"
-        :title="s.date + ' - ' + s.time"
         :data-type="s.type"
         :data-event="s.event"
         :data-active="activeSnapshot.id === s.id"
         @click="activeSnapshot = s")
         .date-time(v-if="s.type === 'base'") {{s.date}} - {{s.time}}
-        .info(v-if="s.type === 'base'") {{s.winCount}} windows - {{s.tabsCount}} tabs
+        .info(v-if="s.type === 'base'") {{s.winCount}} windows / {{s.ctrCount}} containers / {{s.tabsCount}} tabs / ~ {{s.size}}
         .info(v-if="s.type === 'layer'") {{t('snapshot.event.' + s.event)}}
         .date-time(v-if="s.type === 'layer'") {{s.time}}
     .snapshot
@@ -185,8 +184,24 @@ export default {
     /**
      * Remove snapshot
      */
-    removeSnapshot(snapshot) {
-      console.log('[DEBUG] remove', snapshot);
+    async removeSnapshot(snapshot) {
+      const { snapshots } = await browser.storage.local.get({ snapshots: [] })
+
+      const indexStored = snapshots.findIndex(s => s.id === snapshot.id)
+      if (indexStored === -1) return
+      snapshots.splice(indexStored, 1)
+
+      let indexLocal = this.snapshots.findIndex(s => s.id === snapshot.id)
+      if (indexLocal === -1) return
+      this.snapshots.splice(indexLocal, 1)
+
+      if (this.snapshots[indexLocal]) {
+        this.activeSnapshot = this.snapshots[indexLocal]
+      } else if (this.snapshots[indexLocal + 1]) {
+        this.activeSnapshot = this.snapshots[indexLocal + 1]
+      } else if (this.snapshots[indexLocal - 1]) {
+        this.activeSnapshot = this.snapshots[indexLocal - 1]
+      }
     },
 
     /**
@@ -244,7 +259,9 @@ function normalizeSnapshot(snapshot, now) {
     date: Utils.uDate(time),
     time: Utils.uTime(time),
     elapsed: Utils.uElapsed(time, now),
+    size: Utils.strSize(JSON.stringify(snapshot)),
     winCount: Object.keys(windowsById).length,
+    ctrCount: Object.keys(snapshot.containersById).length,
     tabsCount,
   }
 }
