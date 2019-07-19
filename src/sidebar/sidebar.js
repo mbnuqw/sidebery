@@ -103,9 +103,9 @@ export default new Vue({
       Actions.updateFontSize()
     })
 
-    // setTimeout(() => {
-    //   Actions.openSettings('snapshots')
-    // }, 1500)
+    setTimeout(() => {
+      Actions.openSettings('snapshots')
+    }, 1500)
   },
 
   beforeDestroy() {

@@ -18,7 +18,6 @@
   grid-gap: 12px
   padding: 0 16px
   background-color: var(--bg)
-  z-index: 2
   &:before
     content: ''
     box(absolute)
@@ -34,7 +33,7 @@
 
 .Snapshots .wrapper
   box(flex)
-  size(100%, calc(100% - 64px))
+  size(100%, same)
 
 // ---
 // -- Timeline
@@ -42,10 +41,29 @@
 .Snapshots .timeline
   size(h: 100%)
   flex: 1 0 auto
+  z-index: 1
+  overflow: hidden
+  box-shadow: 0 0 0 1px #00000016, 0 0 8px 0 #00000032
+
+.Snapshots .timeline .ctrls
+  padding: 0
+  align-items: flex-start
+
+.Snapshots .timeline .btn
+  box(flex)
+  size(100%, calc(100% - 1px))
+  text(s: rem(18))
+  justify-content: center
+  align-items: center
+  border-radius: 0
+  padding: 0
+
+.Snapshots .cards
+  box(relative)
+  size(100%, calc(100% - 64px))
+  flex: 1 0 auto
   overflow-y: auto
   overflow-x: hidden
-  z-index: 1
-  box-shadow: 0 0 0 1px #00000016, 0 0 8px 0 #00000032
   background-attachment: local
 
 .Snapshots .snapshot-card

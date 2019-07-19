@@ -1,26 +1,28 @@
 <template lang="pug">
 .Snapshots
-  .ctrls(v-noise:300.g:12:af.a:0:42.s:0:9="" @wheel="onTimelineWheel")
-    .title(v-if="activeSnapshot") {{activeSnapshot.date}} - {{activeSnapshot.time}}
-    .btn(@click="createSnapshot") Create
-    .btn(@click="applySnapshot(activeSnapshot)") Apply
-    .btn.-warn(@click="removeSnapshot(activeSnapshot)") Remove
   .wrapper(v-if="activeSnapshot")
-    .timeline(v-noise:300.g:12:af.a:0:42.s:0:9="")
-      .snapshot-card(
-        v-for="s in snapshots"
-        ref="snapshots"
-        :key="s.id"
-        :id="s.id"
-        :data-type="s.type"
-        :data-event="s.event"
-        :data-active="activeSnapshot.id === s.id"
-        @click="activeSnapshot = s")
-        .date-time(v-if="s.type === 'base'") {{s.date}} - {{s.time}}
-        .info(v-if="s.type === 'base'") {{s.winCount}} windows / {{s.ctrCount}} containers / {{s.tabsCount}} tabs / ~ {{s.size}}
-        .info(v-if="s.type === 'layer'") {{t('snapshot.event.' + s.event)}}
-        .date-time(v-if="s.type === 'layer'") {{s.time}}
+    .timeline
+      .ctrls
+        .btn(@click="createSnapshot") Create snapshot
+      .cards(v-noise:300.g:12:af.a:0:42.s:0:9="")
+        .snapshot-card(
+          v-for="s in snapshots"
+          ref="snapshots"
+          :key="s.id"
+          :id="s.id"
+          :data-type="s.type"
+          :data-event="s.event"
+          :data-active="activeSnapshot.id === s.id"
+          @click="activeSnapshot = s")
+          .date-time(v-if="s.type === 'base'") {{s.date}} - {{s.time}}
+          .info(v-if="s.type === 'base'") {{s.winCount}} windows / {{s.ctrCount}} containers / {{s.tabsCount}} tabs / ~ {{s.size}}
+          .info(v-if="s.type === 'layer'") {{t('snapshot.event.' + s.event)}}
+          .date-time(v-if="s.type === 'layer'") {{s.time}}
     .snapshot
+      .ctrls(v-noise:300.g:12:af.a:0:42.s:0:9="" @wheel="onTimelineWheel")
+        .title(v-if="activeSnapshot") {{activeSnapshot.date}} - {{activeSnapshot.time}}
+        .btn(@click="applySnapshot(activeSnapshot)") Apply
+        .btn.-warn(@click="removeSnapshot(activeSnapshot)") Remove
       .windows(v-if="activeSnapshot" v-noise:300.g:12:af.a:0:42.s:0:9="")
         .window(
           v-for="(win, _, i) in activeSnapshot.windowsById"
@@ -190,6 +192,7 @@ export default {
       const indexStored = snapshots.findIndex(s => s.id === snapshot.id)
       if (indexStored === -1) return
       snapshots.splice(indexStored, 1)
+      browser.storage.local.set({ snapshots })
 
       let indexLocal = this.snapshots.findIndex(s => s.id === snapshot.id)
       if (indexLocal === -1) return
