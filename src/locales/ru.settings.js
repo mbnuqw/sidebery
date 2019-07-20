@@ -104,11 +104,18 @@ export default {
   'settings.snapshots_title': { message: 'Снепшоты' },
   'settings.snap_history_mode': { message: 'Режим полного журналирования' },
   'settings.snap_interval': { message: 'Интервал авто-снепшотов' },
-  'settings.snap_interval_900000': { message: '15мин' },
-  'settings.snap_interval_1800000': { message: '30мин' },
-  'settings.snap_interval_3600000': { message: '1ч' },
-  'settings.snap_interval_7200000': { message: '2ч' },
-  'settings.snap_interval_18000000': { message: '5ч' },
+  'settings.snap_interval_min': {
+    message: ['минута', 'минуты', 'минут'],
+    plur: [/^(1|(\d*?)[^1]1)$/, /^([234]|(\d*?)[^1][234])$/],
+  },
+  'settings.snap_interval_hr': {
+    message: ['час', 'часа', 'часов'],
+    plur: [/^(1|(\d*?)[^1]1)$/, /^([234]|(\d*?)[^1][234])$/],
+  },
+  'settings.snap_interval_day': {
+    message: ['день', 'дня', 'дней'],
+    plur: [/^(1|(\d*?)[^1]1)$/, /^([234]|(\d*?)[^1][234])$/],
+  },
   'settings.snap_interval_none': { message: 'выкл' },
   'settings.snapshots_pinned_label': { message: 'Закрепленные' },
   'settings.snapshots_default_label': { message: 'Стандартные' },

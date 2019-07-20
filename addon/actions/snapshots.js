@@ -1,15 +1,12 @@
 import Actions from './index.js'
 
-let currentSnapshot, snapWinLayersBuf = {}, snapGlobLayersBuf = []
-let baseSnapshotTimeout, appendSnapLayersTimeout
-let snapshotsReady = true
+let currentSnapshot
+let baseSnapshotTimeout
 
 /**
  * Create base snapshot
  */
 async function createSnapshot() {
-  snapshotsReady = false
-
   // Get containers info
   const containersById = []
   for (let containerId in this.containers) {
@@ -73,32 +70,11 @@ async function createSnapshot() {
     windows,
   }
 
-  let { snapshots, snapLayers } = await browser.storage.local.get({
-    snapshots: [],
-    snapLayers: { global: [], windows: {} },
-  })
-
-  // Append snapLayers of previous base-snapshot
-  const prevSnapshot = snapshots[snapshots.length - 1]
-  if (prevSnapshot) {
-    if (!prevSnapshot.layers) prevSnapshot.layers = snapLayers.global
-    else prevSnapshot.layers = prevSnapshot.layers.concat(snapLayers.global)
-
-    for (let winId in snapLayers.windows) {
-      if (!snapLayers.windows.hasOwnProperty(winId)) continue
-      const prevSnapWin = prevSnapshot.windows[winId]
-      if (!prevSnapWin) continue
-      if (!prevSnapWin.layers) prevSnapWin.layers = snapLayers.windows[winId]
-      else prevSnapWin.layers = prevSnapWin.layers.concat(snapLayers.windows[winId])
-    }
-  }
-
+  let { snapshots } = await browser.storage.local.get({ snapshots: [] })
   snapshots.push(currentSnapshot)
 
   // Save snapshots and reset snapLayers
-  browser.storage.local.set({ lastSnapTime: currentSnapshot.time })
-  await browser.storage.local.set({ snapshots, snapLayers: { global: [], windows: {} } })
-  snapshotsReady = true
+  await browser.storage.local.set({ snapshots, lastSnapTime: currentSnapshot.time })
 
   // Return snapshot
   return currentSnapshot
@@ -109,69 +85,24 @@ function createSnapshotDebounced(delay = 750) {
 }
 
 /**
- * Append snapshot layers
- */
-function appendSnapLayers(windowId, layers) {
-  if (!currentSnapshot) {
-    Actions.createSnapshot()
-    return
-  }
-
-  if (windowId === -1) {
-    if (!Array.isArray(layers)) snapGlobLayersBuf.push(layers)
-    else snapGlobLayersBuf = snapGlobLayersBuf.concat(layers)
-  } else {
-    if (!snapWinLayersBuf[windowId]) snapWinLayersBuf[windowId] = layers
-    else snapWinLayersBuf[windowId] = snapWinLayersBuf[windowId].concat(layers)
-  }
-
-  if (appendSnapLayersTimeout) clearTimeout(appendSnapLayersTimeout)
-  appendSnapLayersTimeout = setTimeout(() => {
-    appendSnapLayersTimeout = null
-    Actions.saveSnapLayers()
-  }, 500)
-}
-
-/**
- * Save snapshot layers
- */
-async function saveSnapLayers() {
-  if (!snapshotsReady) return
-
-  let { snapLayers } = await browser.storage.local.get({
-    snapLayers: { global: [], windows: {} }
-  })
-
-  // Globaly
-  snapLayers.global = snapLayers.global.concat(snapGlobLayersBuf)
-
-  // Per-window
-  for (let winId in snapWinLayersBuf) {
-    if (!snapWinLayersBuf.hasOwnProperty(winId)) continue
-    
-    if (!snapLayers.windows[winId]) {
-      snapLayers.windows[winId] = snapWinLayersBuf[winId]
-    } else {
-      snapLayers.windows[winId] = snapLayers.windows[winId].concat(snapWinLayersBuf[winId])
-    }
-  }
-
-  browser.storage.local.set({ snapLayers })
-  snapGlobLayersBuf = []
-  snapWinLayersBuf = {}
-}
-
-/**
  * Schedule snapshots
  */
 async function scheduleSnapshots() {
+  let interval = this.settings.snapInterval
+  const unit = this.settings.snapIntervalUnit
+  if (!interval || typeof interval !== 'number') return
+  if (unit === 'min') interval = this.settings.snapInterval * 60000
+  if (unit === 'hr') interval = this.settings.snapInterval * 3600000
+  if (unit === 'day') interval = this.settings.snapInterval * 86400000
+  if (interval < 5000) return
+
   const currentTime = Date.now()
-  let elapsed, nextTimeout = this.settings.snapInterval
+  let elapsed, nextTimeout = interval
   if (currentSnapshot) elapsed = currentTime - currentSnapshot.time
   else elapsed = currentTime - await Actions.getLastSnapTime()
 
-  if (elapsed >= this.settings.snapInterval) Actions.createSnapshot()
-  else nextTimeout = this.settings.snapInterval - elapsed
+  if (elapsed >= interval) Actions.createSnapshot()
+  else nextTimeout = interval - elapsed
 
   Actions.scheduleNextSnapshot(nextTimeout)
 }
@@ -224,8 +155,6 @@ async function applySnapshot(snapshot) {
 export default {
   createSnapshot,
   createSnapshotDebounced,
-  appendSnapLayers,
-  saveSnapLayers,
   scheduleSnapshots,
   scheduleNextSnapshot,
   getLastSnapTime,

@@ -297,7 +297,7 @@
       .keybinding(
         :is-focused="k.focus"
         @click="changeKeybinding(k, i)")
-        .label {{t(k.description, 'settings')}}
+        .label {{t('settings.' + k.description)}}
         .value {{normalizeShortcut(k.shortcut)}}
         input(
           type="text"
@@ -338,12 +338,14 @@
 
   section
     h2 {{t('settings.snapshots_title')}}
-    select-field(
+    num-field(
       label="settings.snap_interval"
-      optLabel="settings.snap_interval_"
+      unitLabel="settings.snap_interval_"
       :value="$store.state.snapInterval"
-      :opts="$store.state.snapIntervalOpts"
-      @input="setOpt('snapInterval', $event)")
+      :or="'none'"
+      :unit="$store.state.snapIntervalUnit"
+      :unitOpts="$store.state.snapIntervalUnitOpts"
+      @input="setOpt('snapInterval', $event[0]), setOpt('snapIntervalUnit', $event[1])")
     .separator
     .ctrls
       .btn(@click="switchView('snapshots')") {{t('settings.snapshots_view_label')}}
@@ -376,6 +378,7 @@ import State from './store/state'
 import Actions from './actions'
 import ToggleField from '../components/toggle-field'
 import SelectField from '../components/select-field'
+import NumField from '../components/num-field'
 import InfoField from '../components/info-field'
 import FooterSection from './components/footer'
 
@@ -387,6 +390,7 @@ export default {
   components: {
     ToggleField,
     SelectField,
+    NumField,
     InfoField,
     FooterSection,
   },

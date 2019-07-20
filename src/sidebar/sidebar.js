@@ -104,7 +104,7 @@ export default new Vue({
     })
 
     setTimeout(() => {
-      Actions.openSettings('snapshots')
+      Actions.openSettings()
     }, 1500)
   },
 

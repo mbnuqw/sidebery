@@ -17,11 +17,7 @@ export const SETTINGS_OPTIONS = {
   fontSizeOpts: ['xs', 's', 'm', 'l', 'xl', 'xxl'],
   styleOpts: ['dark', 'light'],
   themeOpts: ['default', 'tactile', 'none'],
-  snapIntervalOpts: [900000, 1800000, 3600000, 7200000, 18000000, 'none'],
-  snapIntervalUnits: [
-    { label: 'm', from: v => v*60000, into: v => v/60000 },
-    { label: 'h', from: v => v*3600000, into: v => v/3600000 },
-  ],
+  snapIntervalUnitOpts: ['min', 'hr', 'day'],
 }
 
 export const DEFAULT_SETTINGS = {
@@ -79,8 +75,8 @@ export const DEFAULT_SETTINGS = {
   groupCSS: false,
 
   // Snapshots
-  snapInterval: 'none',
-  snapshotsTargets: { pinned: true },
+  snapInterval: 0,
+  snapIntervalUnit: 'min',
 
   // Mouse
   hScrollThroughPanels: false,

@@ -3,7 +3,7 @@
   .opt(
     v-for="o in opts"
     :data-none="o === noneOpt"
-    :data-active="o === value") {{t(label + o)}}
+    :data-active="o === value") {{t(label + o, plurNum)}}
 </template>
 
 
@@ -13,6 +13,7 @@ export default {
     value: [String, Number],
     opts:  Array,
     label: String,
+    plurNum: [String, Number],
     noneOpt: {
       type: String,
       default: () => 'none'

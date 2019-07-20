@@ -79,9 +79,10 @@ export default {
     },
 
     onInput(e) {
-      if (this.filter) e.target.value = this.filter(e)
+      let value = this.filter(e)
+      if (this.filter) e.target.value = value
       this.recalcTextHeight()
-      this.$emit('input', this.$refs.text.value)
+      this.$emit('input', value)
     },
 
     onChange() {

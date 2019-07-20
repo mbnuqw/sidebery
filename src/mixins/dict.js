@@ -49,39 +49,30 @@ if (!Locales[LANG]) LANG = 'en'
 /**
  *  Get dict value
  **/
-export function translate(id, group) {
+export function translate(id, plurNum) {
   if (!id) return ''
-  if (group) id = `${group}.${id}`
   if (!Locales[LANG][id] || Locales[LANG][id].message === undefined) return id
-  return Locales[LANG][id].message
-}
 
-/**
- * Get right plural translation
- */
-export function plurTrans(id, val) {
-  if (!id) return ''
-  if (!Locales[LANG][id] || Locales[LANG][id].message === undefined) return id
-  const forms = Locales[LANG][id].message.split('|')
-  if (forms.length === 1) return Locales[LANG][id].message
-  const ranges = Locales[LANG][id].description.split('|').map(range => {
-    if (!range) return null
-    return range.split(',').map(v => {
-      const num = parseInt(v)
-      if (isNaN(num)) return 0
-      return num
-    })
-  })
-  const i = ranges.findIndex(r => {
-    if (r) return r.includes(val)
-    else return true
-  })
-  return forms[i]
+  if (Locales[LANG][id].message.constructor === String) return Locales[LANG][id].message
+  if (Locales[LANG][id].message.constructor === Array) {
+    let i, record = Locales[LANG][id]
+
+    for (i = 0; i < record.plur.length; i++) {
+      let range = record.plur[i]
+      if (range === plurNum) return record.message[i]
+
+      if (range.constructor === Array && range[0] <= plurNum && range[1] >= plurNum) {
+        return record.message[i]
+      }
+      if (range.constructor === RegExp && range.test(plurNum)) {
+        return record.message[i]
+      }
+    }
+    return record.message[i]
+  }
+  return id
 }
 
 export default {
-  methods: {
-    t: translate,
-    pt: plurTrans,
-  },
+  methods: { t: translate },
 }
