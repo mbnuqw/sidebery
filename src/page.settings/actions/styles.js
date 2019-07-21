@@ -37,23 +37,23 @@ function setCustomCSS(target, css) {
 /**
  * Load css vars and apply them
  */
-async function loadStyles() {
-  let ans = await browser.storage.local.get('styles')
-  let loadedStyles = ans.styles
-  if (!loadedStyles) {
+async function loadCSSVars() {
+  let ans = await browser.storage.local.get('cssVars')
+  let loadedVars = ans.cssVars
+  if (!loadedVars) {
     Logs.push('[WARN] Cannot load styles')
     return
   }
 
   const rootEl = document.getElementById('root')
-  for (let key in this.state.customStyles) {
-    if (!this.state.customStyles.hasOwnProperty(key)) continue
+  for (let key in this.state.cssVars) {
+    if (!this.state.cssVars.hasOwnProperty(key)) continue
 
-    if (loadedStyles[key] !== undefined) {
-      this.state.customStyles[key] = loadedStyles[key]
+    if (loadedVars[key] !== undefined) {
+      this.state.cssVars[key] = loadedVars[key]
     }
-    if (loadedStyles[key]) {
-      rootEl.style.setProperty(Utils.toCSSVarName(key), loadedStyles[key])
+    if (loadedVars[key]) {
+      rootEl.style.setProperty(Utils.toCSSVarName(key), loadedVars[key])
     }
   }
 
@@ -64,21 +64,21 @@ async function loadStyles() {
 /**
  * Save custom styles
  */
-async function saveStyles() {
+async function saveCSSVars() {
   await browser.storage.local.set({
-    styles: JSON.parse(JSON.stringify(this.state.customStyles)),
+    cssVars: JSON.parse(JSON.stringify(this.state.cssVars)),
   })
 }
 
 /**
  * Apply provided styles
  */
-function applyStyles(styles) {
+function applyCSSVars(styles) {
   if (!styles) return
 
   const rootEl = document.getElementById('root')
-  for (let key in this.state.customStyles) {
-    if (!this.state.customStyles.hasOwnProperty(key)) continue
+  for (let key in this.state.cssVars) {
+    if (!this.state.cssVars.hasOwnProperty(key)) continue
 
     if (styles[key]) {
       rootEl.style.setProperty(Utils.toCSSVarName(key), styles[key])
@@ -93,9 +93,9 @@ function applyStyles(styles) {
 /**
  * Set custom style
  */
-function setStyle(key, val) {
+function setCSSVar(key, val) {
   const rootEl = document.getElementById('root')
-  Vue.set(this.state.customStyles, key, val)
+  Vue.set(this.state.cssVars, key, val)
   rootEl.style.setProperty(Utils.toCSSVarName(key), val)
   setTimeout(() => EventBus.$emit('dynVarChange'), 256)
 }
@@ -103,9 +103,9 @@ function setStyle(key, val) {
 /**
  * Remove custom style
  */
-function removeStyle(key) {
+function removeCSSVar(key) {
   const rootEl = document.getElementById('root')
-  Vue.set(this.state.customStyles, key, null)
+  Vue.set(this.state.cssVars, key, null)
   rootEl.style.removeProperty(Utils.toCSSVarName(key))
   setTimeout(() => EventBus.$emit('dynVarChange'), 256)
 }
@@ -116,9 +116,9 @@ export default {
   getCustomCSS,
   setCustomCSS,
 
-  loadStyles,
-  saveStyles,
-  applyStyles,
-  setStyle,
-  removeStyle,
+  loadCSSVars,
+  saveCSSVars,
+  applyCSSVars,
+  setCSSVar,
+  removeCSSVar,
 }

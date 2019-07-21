@@ -77,7 +77,7 @@ export default new Vue({
 
     await Actions.loadTabs()
     await Actions.loadCtxMenu()
-    await Actions.loadStyles()
+    await Actions.loadCSSVars()
     Actions.scrollToActiveTab()
     Actions.loadKeybindings()
     Actions.loadFavicons()
@@ -135,8 +135,8 @@ export default new Vue({
       if (changes.settings) {
         Actions.updateSettings(changes.settings.newValue)
       }
-      if (changes.styles) {
-        Actions.applyStyles(changes.styles.newValue)
+      if (changes.cssVars) {
+        Actions.applyCSSVars(changes.cssVars.newValue)
       }
       if (changes.panels && !State.windowFocused) {
         Actions.updatePanels(changes.panels.newValue)

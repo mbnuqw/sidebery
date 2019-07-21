@@ -7,20 +7,20 @@ import { CUSTOM_CSS_VARS } from '../../defaults'
 /**
  * Load css vars and apply them
  */
-async function loadStyles() {
-  let ans = await browser.storage.local.get('styles')
-  let loadedStyles = ans.styles
-  if (!loadedStyles) {
+async function loadCSSVars() {
+  let ans = await browser.storage.local.get('cssVars')
+  let loadedVars = ans.cssVars
+  if (!loadedVars) {
     Logs.push('[WARN] Cannot load styles')
     return
   }
 
   const rootEl = document.getElementById('root')
-  for (let key in loadedStyles) {
-    if (!loadedStyles.hasOwnProperty(key)) continue
+  for (let key in loadedVars) {
+    if (!loadedVars.hasOwnProperty(key)) continue
 
-    if (loadedStyles[key]) {
-      rootEl.style.setProperty(Utils.toCSSVarName(key), loadedStyles[key])
+    if (loadedVars[key]) {
+      rootEl.style.setProperty(Utils.toCSSVarName(key), loadedVars[key])
     }
   }
 
@@ -31,7 +31,7 @@ async function loadStyles() {
 /**
  * Apply provided styles
  */
-function applyStyles(styles) {
+function applyCSSVars(styles) {
   if (!styles) return
 
   const rootEl = document.getElementById('root')
@@ -51,6 +51,6 @@ function applyStyles(styles) {
 export default {
   ...CommonActions,
 
-  loadStyles,
-  applyStyles,
+  loadCSSVars,
+  applyCSSVars,
 }

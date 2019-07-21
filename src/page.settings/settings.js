@@ -44,7 +44,7 @@ export default new Vue({
 
     State.instanceType = 'settings'
 
-    Actions.loadStyles()
+    Actions.loadCSSVars()
     Actions.loadCurrentWindowInfo()
     Actions.loadPlatformInfo()
     Actions.loadBrowserInfo()

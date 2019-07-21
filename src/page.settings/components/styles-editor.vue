@@ -5,84 +5,84 @@
     section
       h2 {{t('styles.common_title')}}
       color-style-field(
-        v-model="$store.state.customStyles.bg"
+        v-model="$store.state.cssVars.bg"
         :label="'styles.bg_color'"
         :name="'--bg'"
         @change="updateStyle('bg')"
         @toggle="toggleStyle('bg')")
       .separator
       color-style-field(
-        v-model="$store.state.customStyles.title_fg"
+        v-model="$store.state.cssVars.title_fg"
         :label="'styles.title_color'"
         :name="'--title-fg'"
         @change="updateStyle('title_fg')"
         @toggle="toggleStyle('title_fg')")
       .separator
       color-style-field(
-        v-model="$store.state.customStyles.sub_title_fg"
+        v-model="$store.state.cssVars.sub_title_fg"
         :label="'styles.sub_title_color'"
         :name="'--sub-title-fg'"
         @change="updateStyle('sub_title_fg')"
         @toggle="toggleStyle('sub_title_fg')")
       .separator
       color-style-field(
-        v-model="$store.state.customStyles.label_fg"
+        v-model="$store.state.cssVars.label_fg"
         :label="'styles.label_color'"
         :name="'--label-fg'"
         @change="updateStyle('label_fg')"
         @toggle="toggleStyle('label_fg')")
       .separator
       color-style-field(
-        v-model="$store.state.customStyles.label_fg_hover"
+        v-model="$store.state.cssVars.label_fg_hover"
         :label="'styles.label_color_hover'"
         :name="'--label-fg-hover'"
         @change="updateStyle('label_fg_hover')"
         @toggle="toggleStyle('label_fg_hover')")
       .separator
       color-style-field(
-        v-model="$store.state.customStyles.label_fg_active"
+        v-model="$store.state.cssVars.label_fg_active"
         :label="'styles.label_color_active'"
         :name="'--label-fg-active'"
         @change="updateStyle('label_fg_active')"
         @toggle="toggleStyle('label_fg_active')")
       .separator
       color-style-field(
-        v-model="$store.state.customStyles.info_fg"
+        v-model="$store.state.cssVars.info_fg"
         :label="'styles.info_color'"
         :name="'--info-fg'"
         @change="updateStyle('info_fg')"
         @toggle="toggleStyle('info_fg')")
       .separator
       color-style-field(
-        v-model="$store.state.customStyles.true_fg"
+        v-model="$store.state.cssVars.true_fg"
         :label="'styles.true_color'"
         :name="'--true-fg'"
         @change="updateStyle('true_fg')"
         @toggle="toggleStyle('true_fg')")
       .separator
       color-style-field(
-        v-model="$store.state.customStyles.false_fg"
+        v-model="$store.state.cssVars.false_fg"
         :label="'styles.false_color'"
         :name="'--false-fg'"
         @change="updateStyle('false_fg')"
         @toggle="toggleStyle('false_fg')")
       .separator
       color-style-field(
-        v-model="$store.state.customStyles.active_fg"
+        v-model="$store.state.cssVars.active_fg"
         :label="'styles.active_color'"
         :name="'--active-fg'"
         @change="updateStyle('active_fg')"
         @toggle="toggleStyle('active_fg')")
       .separator
       color-style-field(
-        v-model="$store.state.customStyles.inactive_fg"
+        v-model="$store.state.cssVars.inactive_fg"
         :label="'styles.inactive_color'"
         :name="'--inactive-fg'"
         @change="updateStyle('inactive_fg')"
         @toggle="toggleStyle('inactive_fg')")
       .separator
       color-style-field(
-        v-model="$store.state.customStyles.favicons_placehoder_bg"
+        v-model="$store.state.cssVars.favicons_placehoder_bg"
         :label="'styles.favi_placeholder_color'"
         :name="'--favicons-placehoder-bg'"
         @change="updateStyle('favicons_placehoder_bg')"
@@ -91,42 +91,42 @@
     section
       h2 {{t('styles.buttons_title')}}
       color-style-field(
-        v-model="$store.state.customStyles.btn_bg"
+        v-model="$store.state.cssVars.btn_bg"
         :label="'styles.btn_bg_color'"
         :name="'--btn-bg'"
         @change="updateStyle('btn_bg')"
         @toggle="toggleStyle('btn_bg')")
       .separator
       color-style-field(
-        v-model="$store.state.customStyles.btn_bg_hover"
+        v-model="$store.state.cssVars.btn_bg_hover"
         :label="'styles.btn_bg_color_hover'"
         :name="'--btn-bg-hover'"
         @change="updateStyle('btn_bg_hover')"
         @toggle="toggleStyle('btn_bg_hover')")
       .separator
       color-style-field(
-        v-model="$store.state.customStyles.btn_bg_active"
+        v-model="$store.state.cssVars.btn_bg_active"
         :label="'styles.btn_bg_color_active'"
         :name="'--btn-bg-active'"
         @change="updateStyle('btn_bg_active')"
         @toggle="toggleStyle('btn_bg_active')")
       .separator
       color-style-field(
-        v-model="$store.state.customStyles.btn_fg"
+        v-model="$store.state.cssVars.btn_fg"
         :label="'styles.btn_fg_color'"
         :name="'--btn-fg'"
         @change="updateStyle('btn_fg')"
         @toggle="toggleStyle('btn_fg')")
       .separator
       color-style-field(
-        v-model="$store.state.customStyles.btn_fg_hover"
+        v-model="$store.state.cssVars.btn_fg_hover"
         :label="'styles.btn_fg_color_hover'"
         :name="'--btn-fg-hover'"
         @change="updateStyle('btn_fg_hover')"
         @toggle="toggleStyle('btn_fg_hover')")
       .separator
       color-style-field(
-        v-model="$store.state.customStyles.btn_fg_active"
+        v-model="$store.state.cssVars.btn_fg_active"
         :label="'styles.btn_fg_color_active'"
         :name="'--btn-fg-active'"
         @change="updateStyle('btn_fg_active')"
@@ -135,7 +135,7 @@
     section
       h2 {{t('styles.scroll_box_title')}}
       style-field(
-        v-model="$store.state.customStyles.scroll_progress_h"
+        v-model="$store.state.cssVars.scroll_progress_h"
         :label="'styles.scroll_progress_height'"
         :name="'--scroll-progress-h'"
         :or="'---'"
@@ -143,7 +143,7 @@
         @toggle="toggleStyle('scroll_progress_h')")
       .separator
       color-style-field(
-        v-model="$store.state.customStyles.scroll_progress_bg"
+        v-model="$store.state.cssVars.scroll_progress_bg"
         :label="'styles.scroll_progress_color'"
         :name="'--scroll-progress-bg'"
         @change="updateStyle('scroll_progress_bg')"
@@ -152,7 +152,7 @@
     section
       h2 {{t('styles.menu_title')}}
       style-field(
-        v-model="$store.state.customStyles.ctx_menu_font"
+        v-model="$store.state.cssVars.ctx_menu_font"
         :label="'styles.menu_font'"
         :name="'--ctx-menu-font'"
         or="---"
@@ -160,21 +160,21 @@
         @toggle="toggleStyle('ctx_menu_font')")
       .separator
       color-style-field(
-        v-model="$store.state.customStyles.ctx_menu_bg"
+        v-model="$store.state.cssVars.ctx_menu_bg"
         :label="'styles.menu_bg_color'"
         :name="'--ctx-menu-bg'"
         @change="updateStyle('ctx_menu_bg')"
         @toggle="toggleStyle('ctx_menu_bg')")
       .separator
       color-style-field(
-        v-model="$store.state.customStyles.ctx_menu_fg"
+        v-model="$store.state.cssVars.ctx_menu_fg"
         :label="'styles.menu_opt_fg_color'"
         :name="'--ctx-menu-fg'"
         @change="updateStyle('ctx_menu_fg')"
         @toggle="toggleStyle('ctx_menu_fg')")
       .separator
       color-style-field(
-        v-model="$store.state.customStyles.ctx_menu_bg_hover"
+        v-model="$store.state.cssVars.ctx_menu_bg_hover"
         :label="'styles.menu_opt_fg_color_hover'"
         :name="'--ctx-menu-bg-hover'"
         @change="updateStyle('ctx_menu_bg_hover')"
@@ -183,14 +183,14 @@
     section
       h2 {{t('styles.nav_title')}}
       color-style-field(
-        v-model="$store.state.customStyles.nav_btn_fg"
+        v-model="$store.state.cssVars.nav_btn_fg"
         :label="'styles.nav_fg_color'"
         :name="'--nav-btn-fg'"
         @change="updateStyle('nav_btn_fg')"
         @toggle="toggleStyle('nav_btn_fg')")
       .separator
       style-field(
-        v-model="$store.state.customStyles.nav_btn_width"
+        v-model="$store.state.cssVars.nav_btn_width"
         :label="'styles.nav_btn_width'"
         :name="'--nav-btn-width'"
         or="---"
@@ -198,7 +198,7 @@
         @toggle="toggleStyle('nav_btn_width')")
       .separator
       style-field(
-        v-model="$store.state.customStyles.nav_btn_height"
+        v-model="$store.state.cssVars.nav_btn_height"
         :label="'styles.nav_btn_height'"
         :name="'--nav-btn-height'"
         or="---"
@@ -208,7 +208,7 @@
     section
       h2 {{t('styles.pinned_dock_title')}}
       style-field(
-        v-model="$store.state.customStyles.pinned_dock_overlay_bg"
+        v-model="$store.state.cssVars.pinned_dock_overlay_bg"
         :label="'styles.pinned_dock_overlay_bg'"
         :name="'--pinned-dock-overlay-bg'"
         :or="'---'"
@@ -216,7 +216,7 @@
         @toggle="toggleStyle('pinned_dock_overlay_bg')")
       .separator
       style-field(
-        v-model="$store.state.customStyles.pinned_dock_overlay_shadow"
+        v-model="$store.state.cssVars.pinned_dock_overlay_shadow"
         :label="'styles.pinned_dock_overlay_shadow'"
         :name="'--pinned-dock-overlay-shadow'"
         :or="'---'"
@@ -226,7 +226,7 @@
     section
       h2 {{t('styles.tabs_title')}}
       style-field(
-        v-model="$store.state.customStyles.tabs_height"
+        v-model="$store.state.cssVars.tabs_height"
         :label="'styles.tabs_height'"
         :name="'--tabs-height'"
         :or="'---'"
@@ -234,7 +234,7 @@
         @toggle="toggleStyle('tabs_height')")
       .separator
       style-field(
-        v-model="$store.state.customStyles.tabs_indent"
+        v-model="$store.state.cssVars.tabs_indent"
         :label="'styles.tabs_indent'"
         :name="'--tabs-indent'"
         :or="'---'"
@@ -242,7 +242,7 @@
         @toggle="toggleStyle('tabs_indent')")
       .separator
       style-field(
-        v-model="$store.state.customStyles.tabs_font"
+        v-model="$store.state.cssVars.tabs_font"
         :label="'styles.tabs_font'"
         :name="'--tabs-font'"
         :or="'---'"
@@ -250,7 +250,7 @@
         @toggle="toggleStyle('tabs_font')")
       .separator
       style-field(
-        v-model="$store.state.customStyles.tabs_count_font"
+        v-model="$store.state.cssVars.tabs_count_font"
         :label="'styles.tabs_count_font'"
         :name="'--tabs-count-font'"
         :or="'---'"
@@ -258,70 +258,70 @@
         @toggle="toggleStyle('tabs_count_font')")
       .separator
       color-style-field(
-        v-model="$store.state.customStyles.tabs_fg"
+        v-model="$store.state.cssVars.tabs_fg"
         :label="'styles.tabs_fg_color'"
         :name="'--tabs-fg'"
         @change="updateStyle('tabs_fg')"
         @toggle="toggleStyle('tabs_fg')")
       .separator
       color-style-field(
-        v-model="$store.state.customStyles.tabs_fg_hover"
+        v-model="$store.state.cssVars.tabs_fg_hover"
         :label="'styles.tabs_fg_color_hover'"
         :name="'--tabs-fg-hover'"
         @change="updateStyle('tabs_fg_hover')"
         @toggle="toggleStyle('tabs_fg_hover')")
       .separator
       color-style-field(
-        v-model="$store.state.customStyles.tabs_fg_active"
+        v-model="$store.state.cssVars.tabs_fg_active"
         :label="'styles.tabs_fg_color_active'"
         :name="'--tabs-fg-active'"
         @change="updateStyle('tabs_fg_active')"
         @toggle="toggleStyle('tabs_fg_active')")
       .separator
       color-style-field(
-        v-model="$store.state.customStyles.tabs_bg_hover"
+        v-model="$store.state.cssVars.tabs_bg_hover"
         :label="'styles.tabs_bg_color_hover'"
         :name="'--tabs-bg-hover'"
         @change="updateStyle('tabs_bg_hover')"
         @toggle="toggleStyle('tabs_bg_hover')")
       .separator
       color-style-field(
-        v-model="$store.state.customStyles.tabs_bg_active"
+        v-model="$store.state.cssVars.tabs_bg_active"
         :label="'styles.tabs_bg_color_active'"
         :name="'--tabs-bg-active'"
         @change="updateStyle('tabs_bg_active')"
         @toggle="toggleStyle('tabs_bg_active')")
       .separator
       color-style-field(
-        v-model="$store.state.customStyles.tabs_activated_bg"
+        v-model="$store.state.cssVars.tabs_activated_bg"
         :label="'styles.tabs_active_bg_color'"
         :name="'--tabs-activated-bg'"
         @change="updateStyle('tabs_activated_bg')"
         @toggle="toggleStyle('tabs_activated_bg')")
       .separator
       color-style-field(
-        v-model="$store.state.customStyles.tabs_activated_fg"
+        v-model="$store.state.cssVars.tabs_activated_fg"
         :label="'styles.tabs_active_fg_color'"
         :name="'--tabs-activated-fg'"
         @change="updateStyle('tabs_activated_fg')"
         @toggle="toggleStyle('tabs_activated_fg')")
       .separator
       color-style-field(
-        v-model="$store.state.customStyles.tabs_selected_bg"
+        v-model="$store.state.cssVars.tabs_selected_bg"
         :label="'styles.tabs_selected_bg_color'"
         :name="'--tabs-selected-bg'"
         @change="updateStyle('tabs_selected_bg')"
         @toggle="toggleStyle('tabs_selected_bg')")
       .separator
       color-style-field(
-        v-model="$store.state.customStyles.tabs_selected_fg"
+        v-model="$store.state.cssVars.tabs_selected_fg"
         :label="'styles.tabs_selected_fg_color'"
         :name="'--tabs-selected-fg'"
         @change="updateStyle('tabs_selected_fg')"
         @toggle="toggleStyle('tabs_selected_fg')")
       .separator
       style-field(
-        v-model="$store.state.customStyles.tabs_border"
+        v-model="$store.state.cssVars.tabs_border"
         :label="'styles.tabs_border'"
         :name="'--tabs-border'"
         :or="'---'"
@@ -329,7 +329,7 @@
         @toggle="toggleStyle('tabs_border')")
       .separator
       style-field(
-        v-model="$store.state.customStyles.tabs_activated_border"
+        v-model="$store.state.cssVars.tabs_activated_border"
         :label="'styles.tabs_activated_border'"
         :name="'--tabs-activated-border'"
         :or="'---'"
@@ -337,7 +337,7 @@
         @toggle="toggleStyle('tabs_activated_border')")
       .separator
       style-field(
-        v-model="$store.state.customStyles.tabs_selected_border"
+        v-model="$store.state.cssVars.tabs_selected_border"
         :label="'styles.tabs_selected_border'"
         :name="'--tabs-selected-border'"
         :or="'---'"
@@ -345,7 +345,7 @@
         @toggle="toggleStyle('tabs_selected_border')")
       .separator
       style-field(
-        v-model="$store.state.customStyles.tabs_shadow"
+        v-model="$store.state.cssVars.tabs_shadow"
         :label="'styles.tabs_shadow'"
         :name="'--tabs-shadow'"
         :or="'---'"
@@ -353,7 +353,7 @@
         @toggle="toggleStyle('tabs_shadow')")
       .separator
       style-field(
-        v-model="$store.state.customStyles.tabs_activated_shadow"
+        v-model="$store.state.cssVars.tabs_activated_shadow"
         :label="'styles.tabs_activated_shadow'"
         :name="'--tabs-activated-shadow'"
         :or="'---'"
@@ -361,7 +361,7 @@
         @toggle="toggleStyle('tabs_activated_shadow')")
       .separator
       style-field(
-        v-model="$store.state.customStyles.tabs_selected_shadow"
+        v-model="$store.state.cssVars.tabs_selected_shadow"
         :label="'styles.tabs_selected_shadow'"
         :name="'--tabs-selected-shadow'"
         :or="'---'"
@@ -371,7 +371,7 @@
     section
       h2 {{t('styles.bookmarks_title')}}
       style-field(
-        v-model="$store.state.customStyles.bookmarks_bookmark_height"
+        v-model="$store.state.cssVars.bookmarks_bookmark_height"
         :label="'styles.bookmarks_bookmark_height'"
         :name="'--bookmarks-bookmark-height'"
         :or="'---'"
@@ -379,7 +379,7 @@
         @toggle="toggleStyle('bookmarks_bookmark_height')")
       .separator
       style-field(
-        v-model="$store.state.customStyles.bookmarks_folder_height"
+        v-model="$store.state.cssVars.bookmarks_folder_height"
         :label="'styles.bookmarks_folder_height'"
         :name="'--bookmarks-folder-height'"
         :or="'---'"
@@ -387,7 +387,7 @@
         @toggle="toggleStyle('bookmarks_folder_height')")
       .separator
       style-field(
-        v-model="$store.state.customStyles.bookmarks_separator_height"
+        v-model="$store.state.cssVars.bookmarks_separator_height"
         :label="'styles.bookmarks_separator_height'"
         :name="'--bookmarks-separator-height'"
         :or="'---'"
@@ -395,7 +395,7 @@
         @toggle="toggleStyle('bookmarks_separator_height')")
       .separator
       style-field(
-        v-model="$store.state.customStyles.bookmarks_bookmark_font"
+        v-model="$store.state.cssVars.bookmarks_bookmark_font"
         :label="'styles.bookmarks_bookmark_font'"
         :name="'--bookmarks-bookmark-font'"
         :or="'---'"
@@ -403,7 +403,7 @@
         @toggle="toggleStyle('bookmarks_bookmark_font')")
       .separator
       style-field(
-        v-model="$store.state.customStyles.bookmarks_folder_font"
+        v-model="$store.state.cssVars.bookmarks_folder_font"
         :label="'styles.bookmarks_folder_font'"
         :name="'--bookmarks-folder-font'"
         :or="'---'"
@@ -411,91 +411,91 @@
         @toggle="toggleStyle('bookmarks_folder_font')")
       .separator
       color-style-field(
-        v-model="$store.state.customStyles.bookmarks_node_title_fg"
+        v-model="$store.state.cssVars.bookmarks_node_title_fg"
         :label="'styles.bookmarks_fg_color'"
         :name="'--bookmarks-node-title-fg'"
         @change="updateStyle('bookmarks_node_title_fg')"
         @toggle="toggleStyle('bookmarks_node_title_fg')")
       .separator
       color-style-field(
-        v-model="$store.state.customStyles.bookmarks_node_title_fg_hover"
+        v-model="$store.state.cssVars.bookmarks_node_title_fg_hover"
         :label="'styles.bookmarks_fg_color_hover'"
         :name="'--bookmarks-node-title-fg-hover'"
         @change="updateStyle('bookmarks_node_title_fg_hover')"
         @toggle="toggleStyle('bookmarks_node_title_fg_hover')")
       .separator
       color-style-field(
-        v-model="$store.state.customStyles.bookmarks_node_title_fg_active"
+        v-model="$store.state.cssVars.bookmarks_node_title_fg_active"
         :label="'styles.bookmarks_fg_color_active'"
         :name="'--bookmarks-node-title-fg-active'"
         @change="updateStyle('bookmarks_node_title_fg_active')"
         @toggle="toggleStyle('bookmarks_node_title_fg_active')")
       .separator
       color-style-field(
-        v-model="$store.state.customStyles.bookmarks_node_bg_hover"
+        v-model="$store.state.cssVars.bookmarks_node_bg_hover"
         :label="'styles.bookmarks_bg_color_hover'"
         :name="'--bookmarks-node-bg-hover'"
         @change="updateStyle('bookmarks_node_bg_hover')"
         @toggle="toggleStyle('bookmarks_node_bg_hover')")
       .separator
       color-style-field(
-        v-model="$store.state.customStyles.bookmarks_node_bg_active"
+        v-model="$store.state.cssVars.bookmarks_node_bg_active"
         :label="'styles.bookmarks_bg_color_active'"
         :name="'--bookmarks-node-bg-active'"
         @change="updateStyle('bookmarks_node_bg_active')"
         @toggle="toggleStyle('bookmarks_node_bg_active')")
       .separator
       color-style-field(
-        v-model="$store.state.customStyles.bookmarks_folder_closed_fg"
+        v-model="$store.state.cssVars.bookmarks_folder_closed_fg"
         :label="'styles.bookmarks_closed_dir_fg_color'"
         :name="'--bookmarks-folder-closed-fg'"
         @change="updateStyle('bookmarks_folder_closed_fg')"
         @toggle="toggleStyle('bookmarks_folder_closed_fg')")
       .separator
       color-style-field(
-        v-model="$store.state.customStyles.bookmarks_folder_closed_fg_hover"
+        v-model="$store.state.cssVars.bookmarks_folder_closed_fg_hover"
         :label="'styles.bookmarks_closed_dir_fg_color_hover'"
         :name="'--bookmarks-folder-closed-fg-hover'"
         @change="updateStyle('bookmarks_folder_closed_fg_hover')"
         @toggle="toggleStyle('bookmarks_folder_closed_fg_hover')")
       .separator
       color-style-field(
-        v-model="$store.state.customStyles.bookmarks_folder_closed_fg_active"
+        v-model="$store.state.cssVars.bookmarks_folder_closed_fg_active"
         :label="'styles.bookmarks_closed_dir_fg_color_active'"
         :name="'--bookmarks-folder-closed-fg-active'"
         @change="updateStyle('bookmarks_folder_closed_fg_active')"
         @toggle="toggleStyle('bookmarks_folder_closed_fg_active')")
       .separator
       color-style-field(
-        v-model="$store.state.customStyles.bookmarks_folder_open_fg"
+        v-model="$store.state.cssVars.bookmarks_folder_open_fg"
         :label="'styles.bookmarks_open_dir_fg_color'"
         :name="'--bookmarks-folder-expanded-fg'"
         @change="updateStyle('bookmarks_folder_open_fg')"
         @toggle="toggleStyle('bookmarks_folder_open_fg')")
       .separator
       color-style-field(
-        v-model="$store.state.customStyles.bookmarks_folder_open_fg_hover"
+        v-model="$store.state.cssVars.bookmarks_folder_open_fg_hover"
         :label="'styles.bookmarks_open_dir_fg_color_hover'"
         :name="'--bookmarks-folder-expanded-fg-hover'"
         @change="updateStyle('bookmarks_folder_open_fg_hover')"
         @toggle="toggleStyle('bookmarks_folder_open_fg_hover')")
       .separator
       color-style-field(
-        v-model="$store.state.customStyles.bookmarks_folder_open_fg_active"
+        v-model="$store.state.cssVars.bookmarks_folder_open_fg_active"
         :label="'styles.bookmarks_open_dir_fg_color_active'"
         :name="'--bookmarks-folder-expanded-fg-active'"
         @change="updateStyle('bookmarks_folder_open_fg_active')"
         @toggle="toggleStyle('bookmarks_folder_open_fg_active')")
       .separator
       color-style-field(
-        v-model="$store.state.customStyles.bookmarks_folder_empty_fg"
+        v-model="$store.state.cssVars.bookmarks_folder_empty_fg"
         :label="'styles.bookmarks_empty_dir_fg_color'"
         :name="'--bookmarks-folder-empty-fg'"
         @change="updateStyle('bookmarks_folder_empty_fg')"
         @toggle="toggleStyle('bookmarks_folder_empty_fg')")
       .separator
       color-style-field(
-        v-model="$store.state.customStyles.bookmarks_open_bookmark_fg"
+        v-model="$store.state.cssVars.bookmarks_open_bookmark_fg"
         :label="'styles.bookmarks_open_fg_color'"
         :name="'--bookmarks-open-bookmark-fg'"
         @change="updateStyle('bookmarks_open_bookmark_fg')"
@@ -556,24 +556,17 @@ export default {
 
   methods: {
     /**
-     * Get current state of theme parameter
-     */
-    isStyleOn(key) {
-      return !!this.$store.state.customStyles[key]
-    },
-
-    /**
      * Toggle style
      */
     toggleStyle(key) {
-      if (State.customStyles[key]) {
-        Actions.removeStyle(key)
-        Actions.saveStyles()
+      if (State.cssVars[key]) {
+        Actions.removeCSSVar(key)
+        Actions.saveCSSVars()
       } else {
         const compStyle = getComputedStyle(this.$el)
         const value = compStyle.getPropertyValue(Utils.toCSSVarName(key)).trim()
-        Actions.setStyle(key, value)
-        Actions.saveStyles()
+        Actions.setCSSVar(key, value)
+        Actions.saveCSSVars()
       }
     },
 
@@ -581,20 +574,20 @@ export default {
      * Update style
      */
     updateStyle(key) {
-      if (!State.customStyles[key]) return
-      Actions.setStyle(key, State.customStyles[key])
-      Actions.saveStyles()
+      if (!State.cssVars[key]) return
+      Actions.setCSSVar(key, State.cssVars[key])
+      Actions.saveCSSVars()
     },
 
     /**
      * Reset custom styles
      */
     resetStyles() {
-      this.$store.state.customStyles = CUSTOM_CSS_VARS
+      this.$store.state.cssVars = CUSTOM_CSS_VARS
       for (let key of Object.keys(CUSTOM_CSS_VARS)) {
-        Actions.removeStyle(key)
+        Actions.removeCSSVar(key)
       }
-      Actions.saveStyles()
+      Actions.saveCSSVars()
     },
 
     /**

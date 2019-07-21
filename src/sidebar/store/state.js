@@ -46,7 +46,6 @@ export default {
   keybindings: [],
   permAllUrls: false,
   permTabHide: false,
-  settingsLoaded: false,
 
   // --- Cached
   favicons: {},

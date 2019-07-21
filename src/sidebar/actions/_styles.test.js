@@ -13,34 +13,34 @@ beforeEach(() => {
   browser.windows = {}
 })
 
-describe('loadStyles', () => {
+describe('loadCSSVars', () => {
   test('load empty styles', async () => {
     const state = {}
     browser.storage.local.get = jest.fn(() => {
       return {}
     })
 
-    await StylesActions.loadStyles({ state })
-    expect(state.customStyles).toBeUndefined()
+    await StylesActions.loadCSSVars({ state })
+    expect(state.cssVars).toBeUndefined()
   })
 })
 
-describe('saveStyles', () => {
+describe('saveCSSVars', () => {
   test('save styles', async () => {
     const state = {
-      customStyles: {},
+      cssVars: {},
     }
     browser.storage.local.set = jest.fn()
 
-    await StylesActions.saveStyles({ state })
+    await StylesActions.saveCSSVars({ state })
     expect(browser.storage.local.set).toBeCalledWith({ styles: {} })
   })
 })
 
-describe('applyStyles', () => {
+describe('applyCSSVars', () => {
   test('apply styles', async () => {
     const state = {
-      customStyles: {
+      cssVars: {
         bg: '#123456',
       },
     }
@@ -51,7 +51,7 @@ describe('applyStyles', () => {
     }
     document.getElementById = jest.fn(() => rootEl)
 
-    await StylesActions.applyStyles({ state }, { bg: '#456789' })
+    await StylesActions.applyCSSVars({ state }, { bg: '#456789' })
     expect(rootEl.style.setProperty).toBeCalledWith('--bg', '#456789')
   })
 })
@@ -59,29 +59,29 @@ describe('applyStyles', () => {
 describe('setStyle', () => {
   test('set style', async () => {
     const state = {
-      customStyles: {},
+      cssVars: {},
     }
     const rootEl = {
       style: { setProperty: jest.fn() },
     }
     document.getElementById = jest.fn(() => rootEl)
 
-    await StylesActions.setStyle({ state }, { key: 'bg', val: '#456789' })
+    await StylesActions.setCSSVar({ state }, { key: 'bg', val: '#456789' })
     expect(rootEl.style.setProperty).toBeCalledWith('--bg', '#456789')
   })
 })
 
-describe('removeStyle', () => {
+describe('removeCSSVar', () => {
   test('remove style', async () => {
     const state = {
-      customStyles: {},
+      cssVars: {},
     }
     const rootEl = {
       style: { removeProperty: jest.fn() },
     }
     document.getElementById = jest.fn(() => rootEl)
 
-    await StylesActions.removeStyle({ state }, 'bg')
+    await StylesActions.removeCSSVar({ state }, 'bg')
     expect(rootEl.style.removeProperty).toBeCalledWith('--bg')
   })
 })
