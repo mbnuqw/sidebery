@@ -1,5 +1,7 @@
 <template lang="pug">
-.Settings: .wrapper(v-noise:300.g:12:af.a:0:42.s:0:9="")
+.Settings(
+  v-noise:300.g:12:af.a:0:42.s:0:9=""
+  @scroll.passive="scrollY = $event.target.scrollTop")
   h1 Settings
   section
     h2 {{t('settings.general_title')}}
@@ -406,6 +408,7 @@ export default {
 
   data() {
     return {
+      scrollY: 0,
       faviCache: null,
     }
   },
@@ -442,6 +445,10 @@ export default {
     State.highlight.allUrls = false
     State.highlight.tabHide = false
     setTimeout(Actions.updateActiveView, 13)
+  },
+
+  activated() {
+    if (this.scrollY) this.$el.scrollTop = this.scrollY
   },
 
   methods: {
