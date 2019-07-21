@@ -1,5 +1,7 @@
 import Actions from './index.js'
 
+const MIN_SNAP_INTERVAL = 5000
+
 let currentSnapshot
 let baseSnapshotTimeout
 
@@ -57,10 +59,7 @@ async function createSnapshot() {
       })
     }
 
-    windows[windowId] = {
-      layers: [],
-      items,
-    }
+    windows[windowId] = { items }
   }
 
   currentSnapshot = {
@@ -71,12 +70,16 @@ async function createSnapshot() {
   }
 
   let { snapshots } = await browser.storage.local.get({ snapshots: [] })
+
+  const lastSnapshot = snapshots[snapshots.length - 1]
+  if (compareSnapshots(lastSnapshot, currentSnapshot)) return
+
   snapshots.push(currentSnapshot)
 
-  // Save snapshots and reset snapLayers
+  snapshots = await Actions.limitSnapshots(snapshots)
+
   await browser.storage.local.set({ snapshots, lastSnapTime: currentSnapshot.time })
 
-  // Return snapshot
   return currentSnapshot
 }
 function createSnapshotDebounced(delay = 750) {
@@ -88,13 +91,8 @@ function createSnapshotDebounced(delay = 750) {
  * Schedule snapshots
  */
 async function scheduleSnapshots() {
-  let interval = this.settings.snapInterval
-  const unit = this.settings.snapIntervalUnit
-  if (!interval || typeof interval !== 'number') return
-  if (unit === 'min') interval = this.settings.snapInterval * 60000
-  if (unit === 'hr') interval = this.settings.snapInterval * 3600000
-  if (unit === 'day') interval = this.settings.snapInterval * 86400000
-  if (interval < 5000) return
+  let interval = Actions.getSnapInterval()
+  if (interval < MIN_SNAP_INTERVAL) return
 
   const currentTime = Date.now()
   let elapsed, nextTimeout = interval
@@ -112,7 +110,8 @@ async function scheduleSnapshots() {
  */
 function scheduleNextSnapshot(nextTimeout) {
   setTimeout(() => {
-    nextTimeout = this.settings.snapInterval
+    nextTimeout = Actions.getSnapInterval()
+    if (nextTimeout < MIN_SNAP_INTERVAL) return
     Actions.createSnapshot()
     Actions.scheduleNextSnapshot(nextTimeout)
   }, nextTimeout)
@@ -152,6 +151,77 @@ async function applySnapshot(snapshot) {
   }
 }
 
+/**
+ * Limit snapshots
+ */
+async function limitSnapshots(snapshots) {
+  const resultToStore = !snapshots
+  const limit = this.settings.snapLimit
+  const unit = this.settings.snapLimitUnit
+
+  if (!limit) return
+
+  let normLimit = limit
+  if (unit === 'day') normLimit = Date.now() - limit * 86400000
+  if (unit === 'kb') normLimit = limit * 1024
+
+  if (!snapshots) {
+    const ans = await browser.storage.local.get({ snapshots: [] })
+    snapshots = ans.snapshots
+    if (!snapshots.length) return
+  }
+
+  let i, accum = 0
+  for (i = snapshots.length; i--;) {
+    let snapshot = snapshots[i]
+
+    if (unit === 'snap') {
+      accum++
+      if (accum > normLimit) break
+    }
+
+    if (unit === 'kb') {
+      accum += new Blob([JSON.stringify(snapshot)]).size
+      if (accum > normLimit) break
+    }
+
+    if (unit === 'day') {
+      accum = snapshot.time
+      if (accum < normLimit) break
+    }
+  }
+
+  i++
+  if (!resultToStore) return snapshots.slice(i)
+  else await browser.storage.local.set({ snapshots: snapshots.slice(i) })
+}
+
+/**
+ * Get normalized snapshot interval in ms
+ */
+function getSnapInterval() {
+  let interval = this.settings.snapInterval
+  const unit = this.settings.snapIntervalUnit
+  if (!interval || typeof interval !== 'number') return 0
+  if (unit === 'min') interval = this.settings.snapInterval * 60000
+  if (unit === 'hr') interval = this.settings.snapInterval * 3600000
+  if (unit === 'day') interval = this.settings.snapInterval * 86400000
+  return interval
+}
+
+/**
+ * Compare two snapshots
+ */
+function compareSnapshots(s1, s2) {
+  const s1WinJSON = JSON.stringify(s1.windows)
+  const s2WinJSON = JSON.stringify(s2.windows)
+  if (s1WinJSON === s2WinJSON) {
+    const s1CtrJSON = JSON.stringify(s1.containersById)
+    const s2CtrJSON = JSON.stringify(s2.containersById)
+    if (s1CtrJSON === s2CtrJSON) return true
+  }
+}
+
 export default {
   createSnapshot,
   createSnapshotDebounced,
@@ -159,4 +229,6 @@ export default {
   scheduleNextSnapshot,
   getLastSnapTime,
   applySnapshot,
+  limitSnapshots,
+  getSnapInterval,
 }

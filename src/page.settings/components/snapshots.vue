@@ -163,6 +163,7 @@ export default {
         windowId: -1,
         action: 'createSnapshot',
       })
+      if (!snapshot) return
 
       const now = Math.trunc(Date.now()/1000)
       this.snapshots.unshift(normalizeSnapshot(snapshot, now))

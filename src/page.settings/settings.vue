@@ -347,6 +347,15 @@
       :unitOpts="$store.state.snapIntervalUnitOpts"
       @input="setOpt('snapInterval', $event[0]), setOpt('snapIntervalUnit', $event[1])")
     .separator
+    num-field(
+      label="settings.snap_limit"
+      unitLabel="settings.snap_limit_"
+      :value="$store.state.snapLimit"
+      :or="'none'"
+      :unit="$store.state.snapLimitUnit"
+      :unitOpts="$store.state.snapLimitUnitOpts"
+      @input="setOpt('snapLimit', $event[0]), setOpt('snapLimitUnit', $event[1])")
+    .separator
     .ctrls
       .btn(@click="switchView('snapshots')") {{t('settings.snapshots_view_label')}}
       //- .btn.-warn(@click="removeAllSnapshots") {{t('settings.rm_all_snapshots')}}

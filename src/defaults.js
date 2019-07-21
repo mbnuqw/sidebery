@@ -18,6 +18,7 @@ export const SETTINGS_OPTIONS = {
   styleOpts: ['dark', 'light'],
   themeOpts: ['default', 'tactile', 'none'],
   snapIntervalUnitOpts: ['min', 'hr', 'day'],
+  snapLimitUnitOpts: ['snap', 'kb', 'day'],
 }
 
 export const DEFAULT_SETTINGS = {
@@ -77,6 +78,8 @@ export const DEFAULT_SETTINGS = {
   // Snapshots
   snapInterval: 0,
   snapIntervalUnit: 'min',
+  snapLimit: 0,
+  snapLimitUnit: 'snap',
 
   // Mouse
   hScrollThroughPanels: false,

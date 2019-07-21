@@ -36,8 +36,10 @@ function initMessaging() {
       if (!this.windows[info.windowId]) return
       connectedSidebars[info.windowId] = port
       port.onMessage.addListener(onSidebarMsg)
-      if (firstSidebarInitHandler) firstSidebarInitHandler()
-      // this.windows[info.windowId].sidebarReady = true
+      if (firstSidebarInitHandler) {
+        firstSidebarInitHandler()
+        firstSidebarInitHandler = null
+      }
     }
 
     // Handle disconnect

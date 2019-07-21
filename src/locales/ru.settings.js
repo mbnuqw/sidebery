@@ -117,6 +117,19 @@ export default {
     plur: [/^(1|(\d*?)[^1]1)$/, /^([234]|(\d*?)[^1][234])$/],
   },
   'settings.snap_interval_none': { message: 'выкл' },
+  'settings.snap_limit': { message: 'Snapshots limit' },
+  'settings.snap_limit_snap': {
+    message: ['снепшот', 'снепшота', 'снепшотов'],
+    plur: [/^(1|(\d*?)[^1]1)$/, /^([234]|(\d*?)[^1][234])$/],
+  },
+  'settings.snap_limit_kb': {
+    message: ['кбайта', 'кбайт'],
+    plur: [/^([234]|(\d*?)[^1][234])$/],
+  },
+  'settings.snap_limit_day': {
+    message: ['день', 'дня', 'дней'],
+    plur: [/^(1|(\d*?)[^1]1)$/, /^([234]|(\d*?)[^1][234])$/],
+  },
   'settings.snapshots_pinned_label': { message: 'Закрепленные' },
   'settings.snapshots_default_label': { message: 'Стандартные' },
   'settings.snapshots_view_label': { message: 'Просмотреть снепшоты' },
