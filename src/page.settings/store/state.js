@@ -2,7 +2,6 @@ import Manifest from '../../../addon/manifest.json'
 import { DEFAULT_SETTINGS, SETTINGS_OPTIONS } from '../../defaults'
 import { DEFAULT_TABS_MENU } from '../../defaults'
 import { DEFAULT_BOOKMARKS_MENU } from '../../defaults'
-import { CUSTOM_CSS_VARS } from '../../defaults'
 
 export default {
   version: Manifest.version,
@@ -26,7 +25,6 @@ export default {
   ...SETTINGS_OPTIONS,
   ...DEFAULT_SETTINGS,
   settingsLoaded: false,
-  cssVars: CUSTOM_CSS_VARS, // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
   snapshots: [],
   keybindings: [],
 
