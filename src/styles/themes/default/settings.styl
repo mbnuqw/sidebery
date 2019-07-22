@@ -26,9 +26,31 @@ body
   size(100%, same)
   flex-direction: column
   align-items: center
-  padding: 0 8px
-  margin: 0
   background-color: var(--bg)
+
+.root > .nav
+  box(relative, flex)
+  size(100%, 64px)
+  justify-content: center
+  align-items: center
+  background-color: var(--bg)
+  z-index: 1
+  padding: 0
+  &:before
+    content: ''
+    box(absolute)
+    size(100%, 1px)
+    pos(b: 0, l: 0)
+    background-color: var(--border-fg)
+
+.root > .nav > .option
+  box(relative)
+  text(s: rem(18))
+  color: var(--inactive-fg)
+  padding: 8px 16px
+  cursor: pointer
+  &[data-active]
+    color: var(--active-fg)
 
 // --- Hidden elements ---
 .hidden
@@ -73,15 +95,34 @@ footer
     cursor: default
     opacity: .24
 
+
+.settings-enter-active
+.settings-leave-active
+  transition: z-index var(--d-fast), transform var(--d-fast), opacity var(--d-fast)
+.settings-enter
+  opacity: 0
+.settings-enter-to
+  opacity: 1
+.settings-leave
+  opacity: 1
+.settings-leave-to
+  opacity: 0
+
 // ---
 // -- Settings root component
 // -
 .Settings
   box(absolute)
-  pos(0, 0)
-  size(100%, same)
+  pos(64px, 0)
+  size(100%, calc(100% - 64px))
   overflow-y: auto
   background-attachment: local
+  &:before
+    content: ''
+    box(absolute)
+    size(100%, 1px)
+    pos(0, 0)
+    background-color: var(--border-flare-fg)
 
 .wrapper
   box(relative)

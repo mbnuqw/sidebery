@@ -54,4 +54,13 @@ export default new Vue({
     if (State.theme !== 'none') Actions.initTheme()
     Actions.loadKeybindings()
   },
+
+  methods: {
+    /**
+     * Update url hash
+     */
+    navigateTo(urlHash) {
+      location.hash = urlHash
+    }
+  },
 })

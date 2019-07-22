@@ -2,11 +2,17 @@
 
 .Debug
   box(absolute)
-  size(100%, same)
-  pos(0, 0)
+  size(100%, calc(100% - 64px))
+  pos(64px, 0)
   -moz-user-select: text
   overflow-y: auto
   background-color: var(--bg)
+  &:before
+    content: ''
+    box(absolute)
+    size(100%, 1px)
+    pos(0, 0)
+    background-color: var(--border-flare-fg)
 
 .Debug h1
   box(relative)
@@ -19,14 +25,14 @@
 .Debug h2
   box(relative)
   size(100%)
-  text(s: 2rem, w: 400)
+  text(s: rem(28), w: 400)
   color: var(--sub-title-fg)
   text-align: center
-  padding: 15px 0
+  padding: 8px 0 15px
 
 .Debug .info
   box(relative, flex)
-  size(100%, )
+  size(100%)
   flex-wrap: wrap
   justify-content: center
   padding: 0 0 16px

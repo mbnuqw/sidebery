@@ -2,10 +2,16 @@
 
 .MenuEditor
   box(absolute)
-  size(100%, same)
-  pos(0, 0)
+  size(100%, calc(100% - 64px))
+  pos(64px, 0)
   overflow-y: auto
   background-color: var(--bg)
+  &:before
+    content: ''
+    box(absolute)
+    size(100%, 1px)
+    pos(0, 0)
+    background-color: var(--border-flare-fg)
 
 .MenuEditor h1
   box(relative)

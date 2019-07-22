@@ -562,12 +562,12 @@ export default {
     toggleCSSVar(key) {
       if (this.cssVars[key]) {
         this.removeCSSVar(key)
-        Actions.saveCSSVars()
+        Actions.saveCSSVars(this.cssVars)
       } else {
         const compStyle = getComputedStyle(this.$el)
         const value = compStyle.getPropertyValue(Utils.toCSSVarName(key)).trim()
         this.setCSSVar(key, value)
-        Actions.saveCSSVars()
+        Actions.saveCSSVars(this.cssVars)
       }
     },
 
@@ -577,7 +577,7 @@ export default {
     updateCSSVar(key) {
       if (!this.cssVars[key]) return
       this.setCSSVar(key, this.cssVars[key])
-      Actions.saveCSSVars()
+      Actions.saveCSSVars(this.cssVars)
     },
 
     /**
@@ -604,7 +604,7 @@ export default {
       for (let key of Object.keys(CUSTOM_CSS_VARS)) {
         this.removeCSSVar(key)
       }
-      Actions.saveCSSVars()
+      Actions.saveCSSVars(this.cssVars)
     },
 
     /**

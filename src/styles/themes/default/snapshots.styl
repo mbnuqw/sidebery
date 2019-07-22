@@ -2,12 +2,19 @@
 
 .Snapshots
   box(absolute, flex)
-  size(100%, same)
-  pos(0, 0)
+  size(100%, calc(100% - 64px))
+  pos(64px, 0)
   flex-flow: column
   align-items: stretch
   overflow: hidden
   background-color: var(--bg)
+  &:before
+    content: ''
+    box(absolute)
+    size(100%, 1px)
+    pos(0, 0)
+    z-index: 2
+    background-color: var(--border-flare-fg)
 
 .Snapshots .ctrls
   box(relative, flex)

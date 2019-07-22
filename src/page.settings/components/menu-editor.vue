@@ -1,6 +1,6 @@
 <template lang="pug">
 .MenuEditor: .wrapper(v-noise:300.g:12:af.a:0:42.s:0:9="")
-  h1 Context Menu
+  //- h1 Context Menu
   section
     h2 {{t('menu.editor.tabs_title')}}
 

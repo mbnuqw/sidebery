@@ -2,7 +2,7 @@
 .Settings(
   v-noise:300.g:12:af.a:0:42.s:0:9=""
   @scroll.passive="scrollY = $event.target.scrollTop")
-  h1 Settings
+  //- h1 Settings
   section
     h2 {{t('settings.general_title')}}
     ToggleField(
