@@ -120,7 +120,6 @@ export default new Vue({
     onFocusWindow(id) {
       State.windowFocused = id === State.windowId
       if (State.windowFocused) {
-        if (State.tabsTree) Actions.saveTabsTree(0)
         Actions.savePanelIndex()
       }
     },
