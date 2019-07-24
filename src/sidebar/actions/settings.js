@@ -146,7 +146,7 @@ async function getCommonDbgInfo() {
   try {
     storage.overal = Utils.strSize(JSON.stringify(stored))
     storage.favicons = Utils.strSize(JSON.stringify(stored.favicons))
-    storage.faviconsCount = Object.keys(stored.favicons).length
+    storage.faviconsCount = stored.favicons.length
     storage.tabs = Utils.strSize(JSON.stringify(stored.tabsTreeState))
     storage.snapshots = Utils.strSize(JSON.stringify(stored.snapshots))
     storage.panels = Utils.strSize(JSON.stringify(stored.panels))

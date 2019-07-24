@@ -86,8 +86,8 @@ export default {
     },
 
     favicon() {
-      if (this.tab.status === 'loading') return State.favicons[this.tab.host]
-      else return this.tab.favIconUrl || State.favicons[this.tab.host]
+      if (this.tab.status === 'loading') return State.favicons[State.favUrls[this.tab.url]]
+      else return this.tab.favIconUrl || State.favicons[State.favUrls[this.tab.url]]
     },
 
     tooltip() {
@@ -359,9 +359,7 @@ export default {
         ctx.imageSmoothingEnabled = false
         ctx.drawImage(e.target, 0, 0, e.target.naturalWidth, e.target.naturalHeight)
         let base64 = canvas.toDataURL('image/png')
-        let hn = this.tab.url.split('/')[2]
-        if (!hn) return
-        Actions.setFavicon(hn, base64)
+        Actions.setFavicon(this.tab.url, base64)
       }
     },
 

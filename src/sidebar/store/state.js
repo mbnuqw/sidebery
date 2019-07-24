@@ -48,5 +48,6 @@ export default {
   permTabHide: false,
 
   // --- Cached
-  favicons: {},
+  favicons: [],
+  favUrls: {},
 }

@@ -32,8 +32,7 @@ export default {
 
   computed: {
     favicon() {
-      if (!this.node.host) return
-      return State.favicons[this.node.host]
+      return State.favicons[State.favUrls[this.node.url]]
     },
 
     tooltip() {

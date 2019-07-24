@@ -910,8 +910,7 @@ export default {
       // If favicon is base64 string - store it in cache
       if (change.favIconUrl) {
         if (change.favIconUrl.startsWith('data:')) {
-          const hostname = tab.url.split('/')[2]
-          Actions.setFavicon(hostname, change.favIconUrl)
+          Actions.setFavicon(tab.url, change.favIconUrl)
         } else if (change.favIconUrl.startsWith('chrome:')) {
           change.favIconUrl = ''
         }

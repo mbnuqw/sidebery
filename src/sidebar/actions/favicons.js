@@ -8,12 +8,13 @@ let saveFaviconsTimeout
  * Load cached favicons
  */
 async function loadFavicons() {
-  let ans = await browser.storage.local.get('favicons')
-  if (!ans.favicons) {
-    Logs.push('[WARN] Cannot load favicons')
-    return
-  }
-  this.state.favicons = ans.favicons
+  let { favicons, favUrls } = await browser.storage.local.get({
+    favicons: [],
+    favUrls: {},
+  })
+
+  this.state.favicons = favicons
+  this.state.favUrls = favUrls
   Logs.push('[INFO] Favicons loaded')
 }
 
@@ -21,12 +22,15 @@ async function loadFavicons() {
  * Store favicon to global state and
  * save to localstorage
  */
-function setFavicon(hostname, icon) {
-  if (!hostname) return
-  Vue.set(this.state.favicons, hostname, icon)
+function setFavicon(url, icon) {
+  if (!url || !icon) return
 
   // Do not cache favicon if it too big
   if (icon.length > 100000) return
+
+  let index = this.state.favicons.indexOf(icon)
+  if (index === -1) index = this.state.favicons.push(icon) - 1
+  Vue.set(this.state.favUrls, url, index)
 
   // Do not cache favicon in private mode
   if (this.state.private) return
@@ -40,7 +44,10 @@ function setFavicon(hostname, icon) {
 async function saveFaviconsDebounced() {
   if (saveFaviconsTimeout) clearTimeout(saveFaviconsTimeout)
   saveFaviconsTimeout = setTimeout(() => {
-    browser.storage.local.set({ favicons: { ...this.state.favicons } })
+    browser.storage.local.set({
+      favicons: this.state.favicons,
+      favUrls: {...this.state.favUrls},
+    })
   }, 500)
 }
 
@@ -48,42 +55,46 @@ async function saveFaviconsDebounced() {
  * Remove (all|unneeded) cached favicons
  */
 async function clearFaviCache(all) {
-  const hosts = []
-  for (let t of this.state.tabs) {
-    let hn = t.url.split('/')[2]
-    if (!hn) continue
-    if (!hosts.includes(hn)) hosts.push(hn)
-  }
-
   // Remove all favs
   if (all) {
     this.state.favicons = {}
-    await browser.storage.local.set({ favicons: {} })
+    await browser.storage.local.set({ favicons: [], favUrls: {} })
     return
+  }
+
+  let urls = this.state.tabs.map(t => t.url)
+
+  if (this.state.bookmarksPanel && !this.state.bookmarks.length) {
+    await Actions.loadBookmarks()
   }
 
   // Remove only unused
   const hWalk = nodes => {
     for (let n of nodes) {
-      if (n.url) {
-        let hn = n.url.split('/')[2]
-        if (!hn) continue
-        if (!hosts.includes(hn)) hosts.push(hn)
-      }
+      if (n.url) urls.push(n.url)
       if (n.children) hWalk(n.children)
     }
   }
   hWalk(this.state.bookmarks)
 
-  for (const hn in this.state.favicons) {
-    if (!this.state.favicons.hasOwnProperty(hn)) continue
-    if (hosts.includes(hn)) continue
-    delete this.state.favicons[hn]
+  // Removes links (url - faviconIndex)
+  for (let url in this.state.favUrls) {
+    if (!this.state.favUrls.hasOwnProperty(url)) continue
+    if (urls.includes(url)) continue
+    delete this.state.favUrls[url]
   }
 
-  let favs = { ...this.state.favicons }
-  await browser.storage.local.set({ favicons: favs })
-  this.state.favicons = favs
+  // Remove favicons
+  let indexesInUse = Object.values(this.state.favUrls)
+  for (let i = 0; i < this.state.favicons.length; i++) {
+    if (indexesInUse.includes(i)) continue
+    this.state.favicons[i] = null
+  }
+
+  await browser.storage.local.set({
+    favicons: this.state.favicons,
+    favUrls: {...this.state.favUrls},
+  })
 }
 
 /**
