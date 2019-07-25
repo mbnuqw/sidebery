@@ -36,6 +36,11 @@
       label="settings.hide_add_btn"
       :value="$store.state.hideAddBtn"
       @input="setOpt('hideAddBtn', $event)")
+    .separator
+    toggle-field(
+      label="settings.nav_btn_count"
+      :value="$store.state.navBtnCount"
+      @input="setOpt('navBtnCount', $event)")
 
   section
     h2 {{t('settings.tabs_title')}}

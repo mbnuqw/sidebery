@@ -32,6 +32,7 @@ export const DEFAULT_SETTINGS = {
   navBarInline: true,
   hideSettingsBtn: false,
   hideAddBtn: false,
+  navBtnCount: false,
 
   // Tabs
   activateLastTabOnPanelSwitching: true,

@@ -17,8 +17,10 @@ async function loadBookmarks() {
   // Normalize objects before vue
   this.state.bookmarksMap = {}
   this.state.bookmarksUrlMap = {}
-  const walker = nodes => {
+  let count = 0
+  let walker = nodes => {
     for (let n of nodes) {
+      count++
       this.state.bookmarksMap[n.id] = n
       if (n.type === 'bookmark') {
         n.host = n.url.split('/')[2]
@@ -62,6 +64,7 @@ async function loadBookmarks() {
   }
 
   this.state.bookmarks = bookmarks[0].children
+  this.state.bookmarksCount = count
   EventBus.$emit('panelLoadingOk', 0)
 
   Logs.push('[INFO] Bookmarks loaded')

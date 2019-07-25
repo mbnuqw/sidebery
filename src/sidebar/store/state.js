@@ -36,6 +36,7 @@ export default {
   updatedTabs: {},
 
   bookmarks: [],
+  bookmarksCount: 0,
   bookmarkEditor: false,
   bookmarkEditorTarget: null,
 

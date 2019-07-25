@@ -58,6 +58,7 @@
           .err-badge
             svg: use(xlink:href="#icon_err")
           .progress-spinner
+          .len(v-if="$store.state.navBtnCount && btn.len") {{btn.len}}
 
       //- Settings
       .settings-btn(
@@ -171,6 +172,7 @@ export default {
       for (i = 0; i < State.panels.length; i++) {
         const btn = State.panels[i]
         btn.loading = this.loading[i]
+        btn.len = btn.tabs ? btn.tabs.length : State.bookmarksCount
         btn.hidden = false
         btn.inactive = false
 
