@@ -101,10 +101,6 @@ export default new Vue({
     Store.watch(Object.getOwnPropertyDescriptor(State, 'fontSize').get, function() {
       Actions.updateFontSize()
     })
-
-    setTimeout(() => {
-      Actions.openSettings()
-    }, 1500)
   },
 
   beforeDestroy() {

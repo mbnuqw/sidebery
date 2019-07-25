@@ -22,6 +22,15 @@ export default {
   'settings.hide_add_btn': { message: 'Скрывать кнопку "Новый контейнер"' },
   'settings.nav_btn_count': { message: 'Показывать количество табов/закладок' },  
 
+  // --- Group page
+  'settings.group_title': { message: 'Группа' },
+  'settings.group_layout': { message: 'Отображение' },
+  'settings.group_layout_grid': { message: 'сетка' },
+  'settings.group_layout_list': { message: 'список' },
+  'settings.group_view': { message: 'Показывать табы' },
+  'settings.group_view_all': { message: 'все наследники' },
+  'settings.group_view_offsprings': { message: 'только прямые потомки' },
+
   // --- Tabs
   'settings.tabs_title': { message: 'Табы' },
   'settings.activate_last_tab_on_panel_switching': {

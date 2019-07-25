@@ -22,6 +22,15 @@ export default {
   'settings.hide_add_btn': { message: 'Hide "New container" button' },
   'settings.nav_btn_count': { message: 'Show count of tabs/bookmarks' },
 
+  // --- Group page
+  'settings.group_title': { message: 'Group page' },
+  'settings.group_layout': { message: 'Layout of tabs' },
+  'settings.group_layout_grid': { message: 'grid' },
+  'settings.group_layout_list': { message: 'list' },
+  'settings.group_view': { message: 'Showed tabs' },
+  'settings.group_view_all': { message: 'all descendants' },
+  'settings.group_view_offsprings': { message: 'offsprings only' },
+
   // --- Tabs
   'settings.tabs_title': { message: 'Tabs' },
   'settings.activate_last_tab_on_panel_switching': {

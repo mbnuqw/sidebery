@@ -1,15 +1,14 @@
-import { CUSTOM_STYLES } from '../sidebar/store/state'
+import { DEFAULT_SETTINGS, CUSTOM_CSS_VARS } from '../defaults'
 import { noiseBg } from '../noise-bg'
 import Utils from '../utils'
 
 void (async function() {
   // Load settings and set theme
-  let ans = await browser.storage.local.get('settings')
-  let settings = ans.settings
+  let { settings } = await browser.storage.local.get({ settings: DEFAULT_SETTINGS })
   let style = settings ? settings.style : 'dark'
 
   // Set style class
-  document.body.classList.add('-' + style)
+  document.body.setAttribute('data-style', style)
 
   // Set background noise
   if (settings.bgNoise) {
@@ -27,14 +26,11 @@ void (async function() {
   }
 
   // Set user styles
-  ans = await browser.storage.local.get('styles')
-  let loadedStyles = ans.styles
-  if (loadedStyles) {
-    for (let key in CUSTOM_STYLES) {
-      if (!CUSTOM_STYLES.hasOwnProperty(key)) continue
-      if (loadedStyles[key]) {
-        document.body.style.setProperty(Utils.toCSSVarName(key), loadedStyles[key])
-      }
+  let { cssVars } = await browser.storage.local.get({ cssVars: {} })
+  for (let key in CUSTOM_CSS_VARS) {
+    if (!CUSTOM_CSS_VARS.hasOwnProperty(key)) continue
+    if (cssVars[key]) {
+      document.body.style.setProperty(Utils.toCSSVarName(key), cssVars[key])
     }
   }
 

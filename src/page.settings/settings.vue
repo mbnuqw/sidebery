@@ -43,6 +43,23 @@
       @input="setOpt('navBtnCount', $event)")
 
   section
+    h2 {{t('settings.group_title')}}
+    .separator
+    select-field(
+      label="settings.group_layout"
+      optLabel="settings.group_layout_"
+      :value="$store.state.groupLayout"
+      :opts="$store.state.groupLayoutOpts"
+      @input="setOpt('groupLayout', $event)")
+    .separator
+    select-field(
+      label="settings.group_view"
+      optLabel="settings.group_view_"
+      :value="$store.state.groupView"
+      :opts="$store.state.groupViewOpts"
+      @input="setOpt('groupView', $event)")
+
+  section
     h2 {{t('settings.tabs_title')}}
     toggle-field(
       label="settings.activate_last_tab_on_panel_switching"
