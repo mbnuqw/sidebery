@@ -205,10 +205,6 @@ export default {
     importDebugInfo(json) {
       this.parseDebugInfo(JSON.parse(json))
     },
-
-    /**
-     * 
-     */
   },
 }
 </script>

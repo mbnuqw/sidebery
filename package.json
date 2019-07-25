@@ -7,8 +7,8 @@
     "dev.bg": "parcel watch ./src/background.js -d ./addon/ --public-url ./ --no-autoinstall --log-level 4",
     "dev.sidebar": "parcel watch ./src/sidebar/sidebar.js -d ./addon/sidebar/ --public-url ./ --no-autoinstall --log-level 4",
     "dev.group": "parcel watch ./src/page.group/group.html -d ./addon/group/ --public-url ./ --no-autoinstall --log-level 4",
-    "dev.settings": "parcel watch ./src/page.settings/settings.js -d ./addon/settings/ --public-url ./ --no-autoinstall --log-level 4",
     "dev.url": "parcel watch ./src/page.url/url.html -d ./addon/url/ --public-url ./ --no-autoinstall --log-level 4",
+    "dev.settings": "parcel watch ./src/page.settings/settings.js -d ./addon/settings/ --public-url ./ --no-autoinstall --log-level 4",
 
     "dev.styles": "parcel watch ./src/page.styles/styles.html -d ./addon/styles/ --public-url ./ --no-autoinstall",
     "dev.theme": "parcel watch ./src/page.theme/theme.html -d ./addon/theme/ --public-url ./ --no-autoinstall",
@@ -25,6 +25,7 @@
     "build.bg": "parcel build ./src/background.js -d ./addon/ --public-url ./ --no-autoinstall --no-source-maps",
     "build.sidebar": "parcel build ./src/sidebar/index.html -d ./addon/sidebar/ --public-url ./ --no-autoinstall --no-source-maps",
     "build.group": "parcel build ./src/page.group/group.html -d ./addon/group/ --public-url ./ --no-autoinstall --no-source-maps",
+    "build.url": "parcel build ./src/page.url/url.html -d ./addon/url/ --public-url ./ --no-autoinstall --no-source-maps",
     "build.perm.url": "parcel build ./src/page.permissions/all-urls.html -d ./addon/permissions/ --public-url ./ --no-autoinstall --no-source-maps",
     "build.perm.hide": "parcel build ./src/page.permissions/tab-hide.html -d ./addon/permissions/ --public-url ./ --no-autoinstall --no-source-maps",
     "build.debug": "parcel build ./src/page.debug/debug.html -d ./addon/debug/ --public-url ./ --no-autoinstall --no-source-maps --no-minify",
@@ -38,6 +39,7 @@
 
     "clear.cache": "rm -rf .cache",
     "clear.group": "rm -rf addon/group",
+    "clear.url": "rm -rf addon/url",
     "clear.debug": "rm -rf addon/debug",
     "clear.settings": "rm -rf addon/settings",
     "clear.menu": "rm -rf addon/menu",
