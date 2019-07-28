@@ -3,14 +3,12 @@ import { noiseBg } from '../noise-bg'
 import Utils from '../utils'
 
 void (async function() {
-  // Load settings and set theme
   let { settings } = await browser.storage.local.get({ settings: DEFAULT_SETTINGS })
-  let style = settings ? settings.style : 'dark'
 
-  // Set style class
-  document.body.setAttribute('data-style', style)
+  document.body.setAttribute('data-style', settings.style)
+  document.body.setAttribute('data-layout', settings.groupLayout)
+  document.body.setAttribute('data-animations', settings.animations ? 'fast' : 'none')
 
-  // Set background noise
   if (settings.bgNoise) {
     noiseBg(document.body, {
       width: 300,
@@ -51,6 +49,22 @@ void (async function() {
       init(win.id, hash, lastState).then(state => (lastState = state))
     }
   })
+
+  // TMPTMPTMPTMPT
+  document.body.addEventListener('contextmenu', e => {
+    e.preventDefault()
+    e.stopPropagation()
+  })
+  document.body.addEventListener('mousedown', e => {
+    if (e.button !== 2) return
+    if (settings.groupLayout === 'grid') {
+      settings.groupLayout = 'list'
+    } else {
+      settings.groupLayout = 'grid'
+    }
+    document.body.setAttribute('data-layout', settings.groupLayout)
+  })
+  // TMPTMPTMPTMPT
 })()
 
 /**
@@ -87,9 +101,9 @@ async function init(windowId, hash, lastState) {
   const checkSumStr = JSON.stringify(checkSum)
   if (lastState === checkSumStr) return checkSumStr
 
-  // Render tabs
+  const tabsBoxEl = document.getElementById('tabs')
+
   if (groupInfo && groupInfo.tabs) {
-    const tabsBoxEl = document.getElementById('tabs')
 
     // Cleanup
     while (tabsBoxEl.lastChild) {
@@ -111,6 +125,18 @@ async function init(windowId, hash, lastState) {
     }
   }
 
+  let newTabEl = document.createElement('div')
+  newTabEl.classList.add('new-tab')
+  newTabEl.setAttribute('title', 'Create new tab')
+  tabsBoxEl.appendChild(newTabEl)
+  newTabEl.addEventListener('click', () => {
+    let lastTab = groupInfo.tabs[groupInfo.tabs.length - 1]
+    browser.tabs.create({
+      index: lastTab.index + 1,
+      openerTabId: groupInfo.id,
+    })
+  })
+
   // Load screens
   loadScreens(groupInfo.tabs)
 
@@ -121,32 +147,36 @@ async function init(windowId, hash, lastState) {
  * Create tab element
  */
 function createTabEl(info) {
-  const el = document.createElement('div')
-  el.classList.add('tab-wrapper')
-  el.title = info.url
-
   info.tabEl = document.createElement('div')
   info.tabEl.classList.add('tab')
+  info.tabEl.title = info.url
 
   info.bgEl = document.createElement('div')
   info.bgEl.classList.add('bg')
   info.tabEl.appendChild(info.bgEl)
 
-  const infoEl = document.createElement('div')
+  if (info.favIconUrl) {
+    let favEl = document.createElement('div')
+    favEl.classList.add('fav')
+    favEl.style.backgroundImage = `url(${info.favIconUrl})`
+    info.tabEl.appendChild(favEl)
+  }
+
+  let infoEl = document.createElement('div')
   infoEl.classList.add('info')
   info.tabEl.appendChild(infoEl)
 
-  const titleEl = document.createElement('h3')
+  let titleEl = document.createElement('h3')
+  titleEl.classList.add('tab-title')
   titleEl.innerText = info.title
   infoEl.appendChild(titleEl)
 
-  const urlEl = document.createElement('p')
-  urlEl.classList.add('url')
+  let urlEl = document.createElement('p')
+  urlEl.classList.add('tab-url')
   urlEl.innerText = info.url
   infoEl.appendChild(urlEl)
 
-  el.appendChild(info.tabEl)
-  return el
+  return info.tabEl
 }
 
 /**
@@ -156,9 +186,6 @@ function loadScreens(tabs) {
   for (let tab of tabs) {
     if (tab.discarded) {
       tab.tabEl.classList.add('-discarded')
-      tab.bgEl.style.backgroundImage = `url(${tab.favIconUrl})`
-      tab.bgEl.style.backgroundPosition = 'center'
-      tab.bgEl.style.filter = 'blur(32px)'
       continue
     }
 

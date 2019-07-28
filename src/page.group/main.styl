@@ -43,86 +43,161 @@ body input
   text(s: 2.5rem, w: 700)
   text-align: center
   color: var(--label-fg)
-  margin: 50px 0 50px
+  margin: 20px 0 24px
 
 .tabs
-  box(flex)
-  size(100%, max-w: 960px, min-h: 128px)
+  box(grid)
+  size(100%, max-w: 960px)
   flex-wrap: wrap
   margin: 0 0 auto
+body[data-layout="grid"] .tabs
+  grid-template-columns: 1fr 1fr 1fr
+  grid-gap: 16px
+  @media screen and (max-width: 720px)
+    grid-template-columns: 1fr 1fr
+  @media screen and (max-width: 450px)
+    grid-template-columns: 1fr
+body[data-layout="list"] .tabs
+  grid-template-columns: 1fr
+  grid-gap: 8px
 
-.tab-wrapper
-  box(relative, flex)
-  size(rel(33.3%, -16px), 240px)
-  justify-content: center
-  align-items: center
-  padding: 8px
+.new-tab
+  box(relative)
+  size(100%)
+  background-color: #78787812
+  overflow: hidden
+  cursor: pointer
+  transition: box-shadow var(--d-norm)
+  box-shadow: 0 0 0 1px #00000024, 0 2px 5px 0 #00000032
+  &:before
+    content: ''
+    box(absolute)
+    pos(calc(50% - 1px), calc(50% - 8px))
+    size(16px, 2px)
+    background-color: var(--info-fg)
+  &:after
+    content: ''
+    box(absolute)
+    pos(calc(50% - 8px), calc(50% - 1px))
+    size(2px, 16px)
+    background-color: var(--info-fg)
+  &:hover
+    box-shadow: 0 0 0 1px #00000032, 0 2px 5px 0 #00000046
+  &:active
+    opacity: .8
+body[data-layout="grid"] .new-tab
+  size(h: 128px)
+  border-radius: 6px
+body[data-layout="list"] .new-tab
+  size(h: 48px)
+  border-radius: 3px
 
 .tab
   box(relative, flex)
-  size(100%, same)
-  flex-direction: column
-  align-items: flex-start
-  justify-content: flex-end
-  border-radius: 6px
+  size(100%)
   background-color: #78787824
   overflow: hidden
   cursor: pointer
   transition: box-shadow var(--d-norm)
-  box-shadow: 0 0 0 1px #00000024,
-              0 2px 5px 0 #00000032
+  box-shadow: 0 0 0 1px #00000024, 0 2px 5px 0 #00000032
   &:hover
-    box-shadow: 0 0 0 1px #00000032,
-              0 2px 5px 0 #00000046
+    box-shadow: 0 0 0 1px #00000032, 0 2px 5px 0 #00000046
   &:active
     opacity: .8
+body[data-layout="grid"] .tab
+  size(h: 128px)
+  flex-flow: column
+  align-items: flex-start
+  border-radius: 6px
+body[data-layout="list"] .tab
+  size(h: 48px)
+  flex-flow: row
+  align-items: center
+  border-radius: 3px
 
-  .bg
-    box(absolute)
-    size(100%, same)
-    background-size: cover
-    background-repeat: no-repeat
-    border-radius: 6.5px
-    z-index: 0
+.bg
+  background-size: cover
+  background-repeat: no-repeat
+  z-index: 0
+  transition: opacity var(--d-norm)
+body[data-layout="grid"] .bg
+  box(absolute)
+  size(100%, 128px)
+  border-radius: 6.5px
+  opacity: .03
+body[data-layout="grid"] .tab:not(.-discarded):hover .bg
+  opacity: 1
+body[data-layout="list"] .bg
+  box(relative)
+  size(48px, same)
+  border-radius: 3px
+  background-color: #00000012
+  box-shadow: 0 0 0 1px var(--border-fg), inset 0 0 8px 0 #00000032
 
-  .info
-    box(relative)
-    pos(l: 0, b: 0)
-    size(100%)
-    z-index: 2
-    padding: 8px 0 0
-    background-color: var(--bg)
-    opacity: .92
-    transition: opacity var(--d-norm)
-    box-shadow: 0 -1px 0 0 #00000024,
-                0 0 16px 0 #00000046
-  &:hover .info
-    opacity: 1
+.fav
+  box(absolute)
+  pos(16px, same)
+  size(16px, same)
+  background-size: cover
+  background-repeat: no-repeat
+  border-radius: 3px
+  overflow: hidden
+  // background-color: var(--bg)
+  // box-shadow: 0 0 0 1px #00000032, 0 0 8px 0 #00000032
+  filter: drop-shadow(0 0 1px #00000032) drop-shadow(0 0 8px #00000032)
+body[data-layout="grid"] .fav
+  pos(auto, 12px, b: 12px)
+// .tab.-discarded .fav
+//   pos(16px, same)
 
-  h3
-    box(relative)
-    size(h: 48px)
-    text(s: 18px, w: 400, h: 24px)
-    margin: 0 16px 8px
-    overflow: hidden
-    color: var(--title-fg)
-    text-shadow: 0 1px 8px #00000024
+.info
+  box(relative)
+  size(100%)
+  z-index: 2
+  transition: opacity var(--d-norm)
+body[data-layout="grid"] .info
+  pos(l: 0, b: 0)
+  padding: 8px 0 0
+body[data-layout="grid"] .tab:not(.-discarded):hover .info
+  opacity: 0
+body[data-layout="list"] .info
+  padding: 0
+  flex: 1 1
+  margin: 0 8px 0 10px
+  overflow: hidden
+.tab.-discarded .info
+  opacity: .5
 
-  .url
-    box(relative)
-    size(max-w: rel(100%, -32px))
-    text(s: 15px, w: 400)
-    margin: 0 16px 12px
-    overflow: hidden
-    color: var(--info-fg)
-    white-space: nowrap
-    text-overflow: ellipsis
-    text-shadow: 0 1px 8px #00000024
+.tab-title
+  box(relative)
+  text(w: 400)
+  padding: 0
+  overflow: hidden
+  color: var(--title-fg)
+  text-shadow: 0 1px 8px #00000024
+body[data-layout="grid"] .tab-title
+  text(s: 18px, h: 24px)
+  margin: 0 12px 8px
+body[data-layout="list"] .tab-title
+  text(s: 16px)
+  margin: 0
+  overflow: hidden
+  white-space: nowrap
+  text-overflow: ellipsis
 
-@media screen and (max-width: 720px)
-  .tab-wrapper
-    size(rel(50%, -16px))
-
-@media screen and (max-width: 450px)
-  .tab-wrapper
-    size(rel(100%, -16px))
+.tab-url
+  box(relative)
+  size(max-w: rel(100%, -24px))
+  text(s: 15px, w: 400)
+  overflow: hidden
+  color: var(--info-fg)
+  white-space: nowrap
+  text-overflow: ellipsis
+  text-shadow: 0 1px 8px #00000024
+body[data-layout="grid"] .tab-url
+  // size(h: 48px)
+  text(s: 15px)
+  margin: 0 12px 12px
+body[data-layout="list"] .tab-url
+  text(s: 14px)
+  margin: 0

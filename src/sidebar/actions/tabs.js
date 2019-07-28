@@ -1062,6 +1062,7 @@ async function getGroupInfo(groupId) {
     if (tab.lvl <= groupTab.lvl) break
     out.tabs.push({
       id: tab.id,
+      index: tab.index,
       title: tab.title,
       url: tab.url,
       discarded: tab.discarded,
