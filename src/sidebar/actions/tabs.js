@@ -1054,6 +1054,7 @@ async function getGroupInfo(groupId) {
 
   const out = {
     id: groupTab.id,
+    index: groupTab.index,
     tabs: [],
   }
 
@@ -1063,6 +1064,7 @@ async function getGroupInfo(groupId) {
     out.tabs.push({
       id: tab.id,
       index: tab.index,
+      lvl: tab.lvl - groupTab.lvl - 1,
       title: tab.title,
       url: tab.url,
       discarded: tab.discarded,

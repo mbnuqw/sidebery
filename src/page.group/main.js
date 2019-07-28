@@ -49,22 +49,6 @@ void (async function() {
       init(win.id, hash, lastState).then(state => (lastState = state))
     }
   })
-
-  // TMPTMPTMPTMPT
-  document.body.addEventListener('contextmenu', e => {
-    e.preventDefault()
-    e.stopPropagation()
-  })
-  document.body.addEventListener('mousedown', e => {
-    if (e.button !== 2) return
-    if (settings.groupLayout === 'grid') {
-      settings.groupLayout = 'list'
-    } else {
-      settings.groupLayout = 'grid'
-    }
-    document.body.setAttribute('data-layout', settings.groupLayout)
-  })
-  // TMPTMPTMPTMPT
 })()
 
 /**
@@ -131,6 +115,7 @@ async function init(windowId, hash, lastState) {
   tabsBoxEl.appendChild(newTabEl)
   newTabEl.addEventListener('click', () => {
     let lastTab = groupInfo.tabs[groupInfo.tabs.length - 1]
+    if (lastTab === undefined) lastTab = groupInfo.index
     browser.tabs.create({
       index: lastTab.index + 1,
       openerTabId: groupInfo.id,
@@ -150,6 +135,7 @@ function createTabEl(info) {
   info.tabEl = document.createElement('div')
   info.tabEl.classList.add('tab')
   info.tabEl.title = info.url
+  info.tabEl.setAttribute('data-lvl', info.lvl)
 
   info.bgEl = document.createElement('div')
   info.bgEl.classList.add('bg')
@@ -176,7 +162,53 @@ function createTabEl(info) {
   urlEl.innerText = info.url
   infoEl.appendChild(urlEl)
 
+  let ctrlsEl = document.createElement('div')
+  ctrlsEl.classList.add('ctrls')
+  info.tabEl.appendChild(ctrlsEl)
+
+  if (!info.url.startsWith('about:')) {
+    let discardBtnEl = createButton('icon_discard', 'discard-btn', event => {
+      event.stopPropagation()
+      browser.tabs.discard(info.id)
+      info.tabEl.classList.add('-discarded')
+    })
+    ctrlsEl.appendChild(discardBtnEl)
+  }
+
+  let reloadBtnEl = createButton('icon_reload', 'reload-btn', event => {
+    event.stopPropagation()
+    browser.tabs.reload(info.id)
+  })
+  ctrlsEl.appendChild(reloadBtnEl)
+
+  let closeBtnEl = createButton('icon_close', 'close-btn', event => {
+    event.stopPropagation()
+    browser.tabs.remove(info.id)
+    info.tabEl.style.display = 'none'
+  })
+  ctrlsEl.appendChild(closeBtnEl)
+
   return info.tabEl
+}
+
+/**
+ * Create button element
+ */
+function createButton(svgId, className, clickHandler) {
+  let btnEl = document.createElement('div')
+  btnEl.classList.add('btn', className)
+
+  let svgEl = document.createElementNS('http://www.w3.org/2000/svg', 'svg')  
+  svgEl.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:xlink', 'http://www.w3.org/1999/xlink')
+  btnEl.appendChild(svgEl)
+
+  let useEl = document.createElementNS('http://www.w3.org/2000/svg', 'use')  
+  useEl.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', '#' + svgId)
+  svgEl.appendChild(useEl)
+
+  btnEl.addEventListener('click', clickHandler)
+
+  return btnEl
 }
 
 /**
@@ -189,7 +221,6 @@ function loadScreens(tabs) {
       continue
     }
 
-    // Set loading start
     browser.tabs.captureTab(tab.id, { format: 'jpeg', quality: 90 }).then(screen => {
       tab.bgEl.style.backgroundImage = `url(${screen})`
     })
