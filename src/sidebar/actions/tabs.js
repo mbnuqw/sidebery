@@ -1200,6 +1200,28 @@ function getTabsTree() {
   return tree
 }
 
+function notifyGroup(tab, msg) {
+  if (this.state.tabsTree && tab.lvl > 0) {
+    let parentTab = this.state.tabsMap[tab.parentId]
+    if (Utils.isGroupUrl(parentTab.url)) {
+      if (!msg) {
+        msg = {
+          name: 'created',
+          id: tab.id,
+          index: tab.index,
+          lvl: parentTab.lvl - tab.lvl - 1,
+          title: tab.title,
+          url: tab.url,
+          discarded: tab.discarded,
+          favIconUrl: tab.favIconUrl,
+        }
+      }
+
+      browser.tabs.sendMessage(parentTab.id, msg)
+    }
+  }
+}
+
 export default {
   loadTabs,
   restoreTabsTree,
@@ -1236,4 +1258,5 @@ export default {
   updateTabsTree,
   queryTab,
   getTabsTree,
+  notifyGroup,
 }

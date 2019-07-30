@@ -2,6 +2,8 @@ import { DEFAULT_SETTINGS, CUSTOM_CSS_VARS } from '../defaults'
 import { noiseBg } from '../noise-bg'
 import Utils from '../utils'
 
+let tabsBoxEl, groupTabId, groupTabIndex, tabs = []
+
 void (async function() {
   let { settings } = await browser.storage.local.get({ settings: DEFAULT_SETTINGS })
 
@@ -37,16 +39,25 @@ void (async function() {
   const hash = decodeURI(window.location.hash.slice(1))
 
   // Init page
-  let lastState
-  lastState = await init(win.id, hash, lastState)
+  await init(win.id, hash)
 
-  // Set listener for reinit request
+  // Set listeners
   browser.runtime.onMessage.addListener(msg => {
     if (msg.windowId !== undefined && msg.windowId !== win.id) return
+    if (msg.instanceType !== undefined && msg.instanceType !== 'group') return
 
-    const hash = decodeURI(window.location.hash.slice(1))
-    if (msg.name === 'reinit_group' && decodeURI(msg.arg) === hash) {
-      init(win.id, hash, lastState).then(state => (lastState = state))
+    if (msg.name === 'created') onTabCreated(msg)
+
+    if (msg.name === 'loaded') {
+      let tabInfo = tabs.find(t => t.id === msg.id)
+      if (!tabInfo) return
+      onTabLoaded(tabInfo, msg)
+    }
+
+    if (msg.name === 'rm') {
+      let tabInfo = tabs.find(t => t.id === msg.tabId)
+      if (!tabInfo) return
+      onTabRemoved(tabInfo)
     }
   })
 })()
@@ -54,7 +65,7 @@ void (async function() {
 /**
  * Init group page
  */
-async function init(windowId, hash, lastState) {
+async function init(windowId, hash) {
   // Set title of group page
   const titleEl = document.getElementById('title')
   const hashData = hash.split(':id:')
@@ -76,104 +87,90 @@ async function init(windowId, hash, lastState) {
     windowId,
     arg: hash,
   })
-  if (!groupInfo || !groupInfo.tabs) return lastState
+  if (!groupInfo || !groupInfo.tabs) return
 
-  // Check for changes
-  const checkSum = groupInfo.tabs.map(t => {
-    return [t.title, t.url, t.discarded]
-  })
-  const checkSumStr = JSON.stringify(checkSum)
-  if (lastState === checkSumStr) return checkSumStr
+  tabs = groupInfo.tabs
+  groupTabId = groupInfo.id
+  groupTabIndex = groupInfo.index
+  tabsBoxEl = document.getElementById('tabs')
 
-  const tabsBoxEl = document.getElementById('tabs')
-
-  if (groupInfo && groupInfo.tabs) {
-
-    // Cleanup
-    while (tabsBoxEl.lastChild) {
-      tabsBoxEl.removeChild(tabsBoxEl.lastChild)
-    }
-
-    for (let info of groupInfo.tabs) {
-      info.el = createTabEl(info)
-      tabsBoxEl.appendChild(info.el)
-
-      // Set click listeners
-      info.el.addEventListener('click', async () => {
-        await browser.runtime.sendMessage({
-          action: 'expTabsBranch',
-          arg: groupInfo.id,
-        })
-        browser.tabs.update(info.id, { active: true })
-      })
-    }
+  // Cleanup
+  while (tabsBoxEl.lastChild) {
+    tabsBoxEl.removeChild(tabsBoxEl.lastChild)
   }
 
+  for (let tab of tabs) {
+    createTabEl(tab, event => onTabClick(event, tab))
+    tabsBoxEl.appendChild(tab.el)
+    loadScreenshot(tab)
+  }
+
+  createNewTabButton()
+}
+
+/**
+ * Create new-tab button
+ */
+function createNewTabButton() {
   let newTabEl = document.createElement('div')
   newTabEl.classList.add('new-tab')
   newTabEl.setAttribute('title', 'Create new tab')
   tabsBoxEl.appendChild(newTabEl)
-  newTabEl.addEventListener('click', () => {
-    let lastTab = groupInfo.tabs[groupInfo.tabs.length - 1]
-    if (lastTab === undefined) lastTab = groupInfo.index
+
+  newTabEl.addEventListener('mousedown', event => {
+    let lastTab = tabs[tabs.length - 1]
     browser.tabs.create({
-      index: lastTab.index + 1,
-      openerTabId: groupInfo.id,
+      index: (lastTab ? lastTab.index : groupTabIndex) + 1,
+      openerTabId: groupTabId,
+      active: event.button === 0 ? true : false,
     })
   })
-
-  // Load screens
-  loadScreens(groupInfo.tabs)
-
-  return checkSumStr
 }
 
 /**
  * Create tab element
  */
-function createTabEl(info) {
-  info.tabEl = document.createElement('div')
-  info.tabEl.classList.add('tab')
-  info.tabEl.title = info.url
-  info.tabEl.setAttribute('data-lvl', info.lvl)
+function createTabEl(info, clickHandler) {
+  info.el = document.createElement('div')
+  info.el.classList.add('tab')
+  info.el.title = info.url
+  info.el.setAttribute('id', 'tab_' + info.id)
+  info.el.setAttribute('data-lvl', info.lvl)
+  info.el.setAttribute('data-discarded', info.discarded)
 
   info.bgEl = document.createElement('div')
   info.bgEl.classList.add('bg')
-  info.tabEl.appendChild(info.bgEl)
+  info.el.appendChild(info.bgEl)
 
-  if (info.favIconUrl) {
-    let favEl = document.createElement('div')
-    favEl.classList.add('fav')
-    favEl.style.backgroundImage = `url(${info.favIconUrl})`
-    info.tabEl.appendChild(favEl)
-  }
+  info.favEl = document.createElement('div')
+  info.favEl.classList.add('fav')
+  info.favEl.style.backgroundImage = `url(${info.favIconUrl})`
+  info.el.appendChild(info.favEl)
 
   let infoEl = document.createElement('div')
   infoEl.classList.add('info')
-  info.tabEl.appendChild(infoEl)
+  info.el.appendChild(infoEl)
 
-  let titleEl = document.createElement('h3')
-  titleEl.classList.add('tab-title')
-  titleEl.innerText = info.title
-  infoEl.appendChild(titleEl)
+  info.titleEl = document.createElement('h3')
+  info.titleEl.classList.add('tab-title')
+  info.titleEl.innerText = info.title
+  infoEl.appendChild(info.titleEl)
 
-  let urlEl = document.createElement('p')
-  urlEl.classList.add('tab-url')
-  urlEl.innerText = info.url
-  infoEl.appendChild(urlEl)
+  info.urlEl = document.createElement('p')
+  info.urlEl.classList.add('tab-url')
+  info.urlEl.innerText = info.url
+  infoEl.appendChild(info.urlEl)
 
   let ctrlsEl = document.createElement('div')
   ctrlsEl.classList.add('ctrls')
-  info.tabEl.appendChild(ctrlsEl)
+  info.el.appendChild(ctrlsEl)
 
-  if (!info.url.startsWith('about:')) {
-    let discardBtnEl = createButton('icon_discard', 'discard-btn', event => {
-      event.stopPropagation()
-      browser.tabs.discard(info.id)
-      info.tabEl.classList.add('-discarded')
-    })
-    ctrlsEl.appendChild(discardBtnEl)
-  }
+  let discardBtnEl = createButton('icon_discard', 'discard-btn', event => {
+    event.stopPropagation()
+    browser.tabs.discard(info.id)
+    info.el.setAttribute('data-discarded', true)
+  })
+  ctrlsEl.appendChild(discardBtnEl)
 
   let reloadBtnEl = createButton('icon_reload', 'reload-btn', event => {
     event.stopPropagation()
@@ -184,11 +181,10 @@ function createTabEl(info) {
   let closeBtnEl = createButton('icon_close', 'close-btn', event => {
     event.stopPropagation()
     browser.tabs.remove(info.id)
-    info.tabEl.style.display = 'none'
   })
   ctrlsEl.appendChild(closeBtnEl)
 
-  return info.tabEl
+  info.el.addEventListener('mousedown', clickHandler)
 }
 
 /**
@@ -206,7 +202,7 @@ function createButton(svgId, className, clickHandler) {
   useEl.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', '#' + svgId)
   svgEl.appendChild(useEl)
 
-  btnEl.addEventListener('click', clickHandler)
+  btnEl.addEventListener('mousedown', clickHandler)
 
   return btnEl
 }
@@ -214,15 +210,67 @@ function createButton(svgId, className, clickHandler) {
 /**
  * Load screenshots
  */
-function loadScreens(tabs) {
-  for (let tab of tabs) {
-    if (tab.discarded) {
-      tab.tabEl.classList.add('-discarded')
-      continue
-    }
+function loadScreenshot(tab) {
+  if (tab.discarded) return
+  browser.tabs.captureTab(tab.id, { format: 'jpeg', quality: 90 }).then(screen => {
+    tab.bgEl.style.backgroundImage = `url(${screen})`
+  })
+}
 
-    browser.tabs.captureTab(tab.id, { format: 'jpeg', quality: 90 }).then(screen => {
-      tab.bgEl.style.backgroundImage = `url(${screen})`
-    })
+/**
+ * Handle tab click
+ */
+async function onTabClick(event, tab) {
+  await browser.runtime.sendMessage({
+    action: 'expTabsBranch',
+    arg: groupTabId,
+  })
+  browser.tabs.update(tab.id, { active: true })
+}
+
+/**
+ * Handle tab loaded event
+ */
+function onTabLoaded(tab, info) {
+  tab.title = info.title
+  tab.url = info.title
+
+  tab.titleEl.innerText = info.title
+  tab.urlEl.innerText = info.url
+  tab.favEl.style.backgroundImage = `url(${info.favIconUrl})`
+  tab.el.setAttribute('data-discarded', tab.discarded)
+
+  browser.tabs.captureTab(tab.id, { format: 'jpeg', quality: 90 }).then(screen => {
+    tab.bgEl.style.backgroundImage = `url(${screen})`
+  })
+}
+
+/**
+ * Handle removing tab
+ */
+function onTabRemoved(tab) {
+  const index = tabs.findIndex(t => t.index === tab.index)
+  if (index === -1) return
+  tabs.splice(index, 1)
+  tab.el.remove()
+}
+
+/**
+ * Handle creating tab
+ */
+function onTabCreated(tab) {
+  createTabEl(tab, event => onTabClick(event, tab))
+
+  const index = tabs.findIndex(t => t.index === tab.index)
+  if (index === -1) {
+    tabsBoxEl.lastChild.before(tab.el)
+    tabs.push(tab)
+  } else {
+    tabs[index].el.before(tab.el)
+    tabs.splice(index, 0, tab)
   }
+
+  browser.tabs.captureTab(tab.id, { format: 'jpeg', quality: 90 }).then(screen => {
+    tab.bgEl.style.backgroundImage = `url(${screen})`
+  })
 }

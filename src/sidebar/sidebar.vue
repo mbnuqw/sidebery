@@ -864,6 +864,7 @@ export default {
         }
 
         Actions.saveTabsTree()
+        Actions.notifyGroup(tab)
       }
 
       // Update succession
@@ -886,6 +887,17 @@ export default {
 
       const localTab = State.tabsMap[tabId]
       if (!localTab) return
+
+      // Loaded
+      if (change.hasOwnProperty('status') && change.status === 'complete') {
+        Actions.notifyGroup(localTab, {
+          name: 'loaded',
+          id: localTab.id,
+          url: localTab.url,
+          title: localTab.title,
+          favIconUrl: localTab.favIconUrl,
+        })
+      }
 
       // Url
       if (change.hasOwnProperty('url')) {
@@ -1081,6 +1093,11 @@ export default {
           b.isOpen = false
         }
       }
+
+      Actions.notifyGroup(tab, {
+        name: 'rm',
+        tabId: tab.id,
+      })
     },
 
     /**
@@ -1247,16 +1264,6 @@ export default {
 
       tabPanel.lastActiveTab = info.tabId
       if (!tab.pinned) EventBus.$emit('scrollToTab', tabPanel.index, info.tabId)
-
-      // If activated tab is group - reinit it
-      if (Utils.isGroupUrl(tab.url)) {
-        const groupId = Utils.getGroupId(tab.url)
-        browser.runtime.sendMessage({
-          name: 'reinit_group',
-          windowId: State.windowId,
-          arg: groupId,
-        })
-      }
 
       // Update succession
       if (State.activateAfterClosing !== 'none') {
