@@ -51,13 +51,6 @@
       :value="$store.state.groupLayout"
       :opts="$store.state.groupLayoutOpts"
       @input="setOpt('groupLayout', $event)")
-    .separator
-    select-field(
-      label="settings.group_view"
-      optLabel="settings.group_view_"
-      :value="$store.state.groupView"
-      :opts="$store.state.groupViewOpts"
-      @input="setOpt('groupView', $event)")
 
   section
     h2 {{t('settings.tabs_title')}}

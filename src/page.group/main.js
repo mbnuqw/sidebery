@@ -4,6 +4,7 @@ import Utils from '../utils'
 
 const tabsBoxEl = document.getElementById('tabs')
 let newTabEl, groupTabId, groupTabIndex, tabs = []
+let groupLen
 
 void (async function() {
   let { settings } = await browser.storage.local.get({ settings: DEFAULT_SETTINGS })
@@ -64,6 +65,7 @@ void (async function() {
   tabs = groupInfo.tabs
   groupTabId = groupInfo.id
   groupTabIndex = groupInfo.index
+  groupLen = groupInfo.len
 
   while (tabsBoxEl.lastChild) {
     tabsBoxEl.removeChild(tabsBoxEl.lastChild)
@@ -96,6 +98,7 @@ function onGroupUpdated(msg) {
   let i
   groupTabId = msg.id
   groupTabIndex = msg.index
+  groupLen = msg.len
 
   for (i = 0; i < msg.tabs.length; i++) {
     let newTab = msg.tabs[i]
@@ -105,8 +108,7 @@ function onGroupUpdated(msg) {
       newTabEl.before(newTab.el)
       tabs[i] = newTab
     } else {
-      updateTabEl(oldTab, newTab)
-      Object.assign(tabs[i], newTab)
+      updateTab(oldTab, newTab)
     }
   }
 
@@ -132,6 +134,7 @@ function onTabCreated(tab) {
     tabs.splice(index, 0, tab)
   }
 
+  groupLen++
   browser.tabs.captureTab(tab.id, { format: 'jpeg', quality: 90 }).then(screen => {
     tab.bgEl.style.backgroundImage = `url(${screen})`
   })
@@ -173,6 +176,7 @@ function onTabRemoved(msg) {
   if (index === -1) return
   tabs[index].el.remove()
   tabs.splice(index, 1)
+  groupLen--
 }
 
 /**
@@ -186,7 +190,7 @@ function createNewTabButton() {
 
   newTabEl.addEventListener('mousedown', event => {
     browser.tabs.create({
-      index: groupTabIndex + tabs.length + 1,
+      index: groupTabIndex + groupLen + 1,
       openerTabId: groupTabId,
       active: event.button === 0 ? true : false,
     })
@@ -223,7 +227,8 @@ function createTabEl(info, clickHandler) {
 
   info.urlEl = document.createElement('p')
   info.urlEl.classList.add('tab-url')
-  info.urlEl.innerText = info.url
+  if (info.url.startsWith('moz-ext')) info.urlEl.innerText = ''
+  else info.urlEl.innerText = info.url
   infoEl.appendChild(info.urlEl)
 
   let ctrlsEl = document.createElement('div')
@@ -311,11 +316,17 @@ async function onTabClick(event, tab) {
 }
 
 /**
- * Update tab's DOM element properties if needed
+ * Update tab
  */
-function updateTabEl(oldTab, newTab) {
-  if (oldTab.title !== newTab.title) oldTab.titleEl.innerText = newTab.title
-  if (oldTab.url !== newTab.url) oldTab.urlEl.innerText = newTab.url
+function updateTab(oldTab, newTab) {
+  let titleChanged = oldTab.title !== newTab.title
+  let urlChanged = oldTab.url !== newTab.url
+
+  if (titleChanged) oldTab.titleEl.innerText = newTab.title
+  if (urlChanged) {
+    if (newTab.url.startsWith('moz-ext')) oldTab.urlEl.innerText = ''
+    else oldTab.urlEl.innerText = newTab.url
+  }
   if (oldTab.lvl !== newTab.lvl) oldTab.el.setAttribute('data-lvl', newTab.lvl)
   if (oldTab.discarded !== newTab.discarded) {
     oldTab.el.setAttribute('data-discarded', newTab.discarded)
@@ -323,7 +334,8 @@ function updateTabEl(oldTab, newTab) {
   if (oldTab.favIconUrl !== newTab.favIconUrl) {
     oldTab.favEl.style.backgroundImage = `url(${newTab.favIconUrl})`
   }
-  if (oldTab.url !== newTab.url || oldTab.title !== newTab.title) {
-    loadScreenshot(oldTab)
-  }
+
+  Object.assign(oldTab, newTab)
+
+  if (titleChanged || urlChanged) loadScreenshot(oldTab)
 }

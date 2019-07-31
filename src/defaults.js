@@ -3,7 +3,6 @@ import { translate } from './mixins/dict'
 export const SETTINGS_OPTIONS = {
   autoHideCtxMenuOpts: [250, 500, 1000, 'none'],
   groupLayoutOpts: ['grid', 'list'],
-  groupViewOpts: ['all', 'offsprings'],
   scrollThroughTabsOpts: ['panel', 'global', 'none'],
   tabDoubleClickOpts: ['reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'exp', 'new_after', 'none'],
   tabLongLeftClickOpts: ['reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'new_after', 'none'],
@@ -38,7 +37,6 @@ export const DEFAULT_SETTINGS = {
 
   // Group page
   groupLayout: 'grid',
-  groupView: 'offsprings',
 
   // Tabs
   activateLastTabOnPanelSwitching: true,

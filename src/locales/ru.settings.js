@@ -27,9 +27,6 @@ export default {
   'settings.group_layout': { message: 'Отображение' },
   'settings.group_layout_grid': { message: 'сетка' },
   'settings.group_layout_list': { message: 'список' },
-  'settings.group_view': { message: 'Показывать табы' },
-  'settings.group_view_all': { message: 'все наследники' },
-  'settings.group_view_offsprings': { message: 'только прямые потомки' },
 
   // --- Tabs
   'settings.tabs_title': { message: 'Табы' },

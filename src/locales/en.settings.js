@@ -27,9 +27,6 @@ export default {
   'settings.group_layout': { message: 'Layout of tabs' },
   'settings.group_layout_grid': { message: 'grid' },
   'settings.group_layout_list': { message: 'list' },
-  'settings.group_view': { message: 'Showed tabs' },
-  'settings.group_view_all': { message: 'all descendants' },
-  'settings.group_view_offsprings': { message: 'offsprings only' },
 
   // --- Tabs
   'settings.tabs_title': { message: 'Tabs' },
