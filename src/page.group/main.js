@@ -122,7 +122,7 @@ function onGroupUpdated(msg) {
 /**
  * Handle creating tab
  */
-function onTabCreated(tab) {
+async function onTabCreated(tab) {
   createTabEl(tab, event => onTabClick(event, tab))
 
   let index = tab.index - groupTabIndex - 1
@@ -135,9 +135,9 @@ function onTabCreated(tab) {
   }
 
   groupLen++
-  browser.tabs.captureTab(tab.id, { format: 'jpeg', quality: 90 }).then(screen => {
-    tab.bgEl.style.backgroundImage = `url(${screen})`
-  })
+  await Utils.sleep(256)
+  let screen = await browser.tabs.captureTab(tab.id, { format: 'jpeg', quality: 90 })
+  tab.bgEl.style.backgroundImage = `url(${screen})`
 }
 
 /**
@@ -309,6 +309,7 @@ async function updateScreenshots() {
  */
 async function onTabClick(event, tab) {
   await browser.runtime.sendMessage({
+    instanceType: 'sidebar',
     action: 'expTabsBranch',
     arg: groupTabId,
   })
