@@ -2,7 +2,8 @@ import { DEFAULT_SETTINGS, CUSTOM_CSS_VARS } from '../defaults'
 import { noiseBg } from '../noise-bg'
 import Utils from '../utils'
 
-let tabsBoxEl, groupTabId, groupTabIndex, tabs = []
+const tabsBoxEl = document.getElementById('tabs')
+let newTabEl, groupTabId, groupTabIndex, tabs = []
 
 void (async function() {
   let { settings } = await browser.storage.local.get({ settings: DEFAULT_SETTINGS })
@@ -38,34 +39,6 @@ void (async function() {
   const win = await browser.windows.getCurrent()
   const hash = decodeURI(window.location.hash.slice(1))
 
-  // Init page
-  await init(win.id, hash)
-
-  // Set listeners
-  browser.runtime.onMessage.addListener(msg => {
-    if (msg.windowId !== undefined && msg.windowId !== win.id) return
-    if (msg.instanceType !== undefined && msg.instanceType !== 'group') return
-
-    if (msg.name === 'created') onTabCreated(msg)
-
-    if (msg.name === 'loaded') {
-      let tabInfo = tabs.find(t => t.id === msg.id)
-      if (!tabInfo) return
-      onTabLoaded(tabInfo, msg)
-    }
-
-    if (msg.name === 'rm') {
-      let tabInfo = tabs.find(t => t.id === msg.tabId)
-      if (!tabInfo) return
-      onTabRemoved(tabInfo)
-    }
-  })
-})()
-
-/**
- * Init group page
- */
-async function init(windowId, hash) {
   // Set title of group page
   const titleEl = document.getElementById('title')
   const hashData = hash.split(':id:')
@@ -81,10 +54,9 @@ async function init(windowId, hash) {
     window.location.hash = `#${encodeURI(normTitle)}:id:${groupId}`
   })
 
-  // Get list of tabs
   const groupInfo = await browser.runtime.sendMessage({
     action: 'getGroupInfo',
-    windowId,
+    windowId: win.id,
     arg: hash,
   })
   if (!groupInfo || !groupInfo.tabs) return
@@ -92,9 +64,7 @@ async function init(windowId, hash) {
   tabs = groupInfo.tabs
   groupTabId = groupInfo.id
   groupTabIndex = groupInfo.index
-  tabsBoxEl = document.getElementById('tabs')
 
-  // Cleanup
   while (tabsBoxEl.lastChild) {
     tabsBoxEl.removeChild(tabsBoxEl.lastChild)
   }
@@ -102,25 +72,121 @@ async function init(windowId, hash) {
   for (let tab of tabs) {
     createTabEl(tab, event => onTabClick(event, tab))
     tabsBoxEl.appendChild(tab.el)
-    loadScreenshot(tab)
   }
 
   createNewTabButton()
+  updateScreenshots()
+
+  // Set listeners
+  browser.runtime.onMessage.addListener(msg => {
+    if (msg.windowId !== undefined && msg.windowId !== win.id) return
+    if (msg.instanceType !== undefined && msg.instanceType !== 'group') return
+
+    if (msg.name === 'update') onGroupUpdated(msg)
+    if (msg.name === 'create') onTabCreated(msg)
+    if (msg.name === 'updateTab') onTabUpdated(msg)
+    if (msg.name === 'remove') onTabRemoved(msg)
+  })
+})()
+
+/**
+ * Handle group page update msg
+ */
+function onGroupUpdated(msg) {
+  let i
+  groupTabId = msg.id
+  groupTabIndex = msg.index
+
+  for (i = 0; i < msg.tabs.length; i++) {
+    let newTab = msg.tabs[i]
+    let oldTab = tabs[i]
+    if (!oldTab) {
+      createTabEl(newTab, event => onTabClick(event, newTab))
+      newTabEl.before(newTab.el)
+      tabs[i] = newTab
+    } else {
+      updateTabEl(oldTab, newTab)
+      Object.assign(tabs[i], newTab)
+    }
+  }
+
+  for (;i < tabs.length; i++) {
+    let tab = tabs[i]
+    tab.el.remove()
+    tabs.splice(i, 1)
+  }
+}
+
+/**
+ * Handle creating tab
+ */
+function onTabCreated(tab) {
+  createTabEl(tab, event => onTabClick(event, tab))
+
+  let index = tab.index - groupTabIndex - 1
+  if (index === -1 || index === tabs.length) {
+    newTabEl.before(tab.el)
+    tabs.push(tab)
+  } else {
+    tabs[index].el.before(tab.el)
+    tabs.splice(index, 0, tab)
+  }
+
+  browser.tabs.captureTab(tab.id, { format: 'jpeg', quality: 90 }).then(screen => {
+    tab.bgEl.style.backgroundImage = `url(${screen})`
+  })
+}
+
+/**
+ * Handle tab update msg
+ */
+function onTabUpdated(msg) {
+  let tab = tabs.find(t => t.id === msg.id)
+  if (!tab) return
+
+  tab.el.setAttribute('data-status', msg.status)
+  if (msg.status === 'complete') {
+    tab.favEl.style.backgroundImage = `url(${msg.favIconUrl})`
+    browser.tabs.captureTab(tab.id, { format: 'jpeg', quality: 90 }).then(screen => {
+      tab.bgEl.style.backgroundImage = `url(${screen})`
+    })
+  }
+
+  tab.titleEl.innerText = msg.title
+  tab.title = msg.title
+
+  tab.urlEl.innerText = msg.url
+  tab.url = msg.url
+
+  tab.el.setAttribute('data-discarded', msg.discarded)
+  tab.discarded = msg.discarded
+
+  tab.el.setAttribute('data-lvl', msg.lvl)
+  tab.lvl = msg.lvl
+}
+
+/**
+ * Handle tab remove msg
+ */
+function onTabRemoved(msg) {
+  let index = tabs.findIndex(t => t.id === msg.id)
+  if (index === -1) return
+  tabs[index].el.remove()
+  tabs.splice(index, 1)
 }
 
 /**
  * Create new-tab button
  */
 function createNewTabButton() {
-  let newTabEl = document.createElement('div')
+  newTabEl = document.createElement('div')
   newTabEl.classList.add('new-tab')
   newTabEl.setAttribute('title', 'Create new tab')
   tabsBoxEl.appendChild(newTabEl)
 
   newTabEl.addEventListener('mousedown', event => {
-    let lastTab = tabs[tabs.length - 1]
     browser.tabs.create({
-      index: (lastTab ? lastTab.index : groupTabIndex) + 1,
+      index: groupTabIndex + tabs.length + 1,
       openerTabId: groupTabId,
       active: event.button === 0 ? true : false,
     })
@@ -134,7 +200,6 @@ function createTabEl(info, clickHandler) {
   info.el = document.createElement('div')
   info.el.classList.add('tab')
   info.el.title = info.url
-  info.el.setAttribute('id', 'tab_' + info.id)
   info.el.setAttribute('data-lvl', info.lvl)
   info.el.setAttribute('data-discarded', info.discarded)
 
@@ -174,7 +239,16 @@ function createTabEl(info, clickHandler) {
 
   let reloadBtnEl = createButton('icon_reload', 'reload-btn', event => {
     event.stopPropagation()
-    browser.tabs.reload(info.id)
+    if (event.button === 0) browser.tabs.reload(info.id)
+    if (event.button === 1) {
+      let index = tabs.findIndex(t => t.id === info.id)
+      browser.tabs.create({
+        url: info.url,
+        index: groupTabIndex + index + 1,
+        openerTabId: info.id,
+        active: false,
+      })
+    }
   })
   ctrlsEl.appendChild(reloadBtnEl)
 
@@ -210,11 +284,19 @@ function createButton(svgId, className, clickHandler) {
 /**
  * Load screenshots
  */
-function loadScreenshot(tab) {
+async function loadScreenshot(tab) {
   if (tab.discarded) return
-  browser.tabs.captureTab(tab.id, { format: 'jpeg', quality: 90 }).then(screen => {
-    tab.bgEl.style.backgroundImage = `url(${screen})`
-  })
+  let screen = await browser.tabs.captureTab(tab.id, { format: 'jpeg', quality: 90 })
+  tab.bgEl.style.backgroundImage = `url(${screen})`
+}
+
+/**
+ * Sequentially update screenshots
+ */
+async function updateScreenshots() {
+  for (let tab of tabs) {
+    await loadScreenshot(tab)
+  }
 }
 
 /**
@@ -229,48 +311,19 @@ async function onTabClick(event, tab) {
 }
 
 /**
- * Handle tab loaded event
+ * Update tab's DOM element properties if needed
  */
-function onTabLoaded(tab, info) {
-  tab.title = info.title
-  tab.url = info.title
-
-  tab.titleEl.innerText = info.title
-  tab.urlEl.innerText = info.url
-  tab.favEl.style.backgroundImage = `url(${info.favIconUrl})`
-  tab.el.setAttribute('data-discarded', tab.discarded)
-
-  browser.tabs.captureTab(tab.id, { format: 'jpeg', quality: 90 }).then(screen => {
-    tab.bgEl.style.backgroundImage = `url(${screen})`
-  })
-}
-
-/**
- * Handle removing tab
- */
-function onTabRemoved(tab) {
-  const index = tabs.findIndex(t => t.index === tab.index)
-  if (index === -1) return
-  tabs.splice(index, 1)
-  tab.el.remove()
-}
-
-/**
- * Handle creating tab
- */
-function onTabCreated(tab) {
-  createTabEl(tab, event => onTabClick(event, tab))
-
-  const index = tabs.findIndex(t => t.index === tab.index)
-  if (index === -1) {
-    tabsBoxEl.lastChild.before(tab.el)
-    tabs.push(tab)
-  } else {
-    tabs[index].el.before(tab.el)
-    tabs.splice(index, 0, tab)
+function updateTabEl(oldTab, newTab) {
+  if (oldTab.title !== newTab.title) oldTab.titleEl.innerText = newTab.title
+  if (oldTab.url !== newTab.url) oldTab.urlEl.innerText = newTab.url
+  if (oldTab.lvl !== newTab.lvl) oldTab.el.setAttribute('data-lvl', newTab.lvl)
+  if (oldTab.discarded !== newTab.discarded) {
+    oldTab.el.setAttribute('data-discarded', newTab.discarded)
   }
-
-  browser.tabs.captureTab(tab.id, { format: 'jpeg', quality: 90 }).then(screen => {
-    tab.bgEl.style.backgroundImage = `url(${screen})`
-  })
+  if (oldTab.favIconUrl !== newTab.favIconUrl) {
+    oldTab.favEl.style.backgroundImage = `url(${newTab.favIconUrl})`
+  }
+  if (oldTab.url !== newTab.url || oldTab.title !== newTab.title) {
+    loadScreenshot(oldTab)
+  }
 }

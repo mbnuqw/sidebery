@@ -4,7 +4,7 @@ import EventBus from '../../event-bus'
 import { DEFAULT_CTX_ID } from '../../defaults'
 import Actions from '.'
 
-let TabsTreeSaveTimeout
+let TabsTreeSaveTimeout, updateGroupTabTimeouit
 
 /**
  * Load all tabs for current window
@@ -1041,8 +1041,6 @@ async function groupTabs(tabIds) {
  * Get grouped tabs (for group page)
  */
 async function getGroupInfo(groupId) {
-  await Utils.sleep(128)
-
   const idData = groupId.split(':id:')
   const title = idData[0]
   const id = idData[1]
@@ -1063,7 +1061,6 @@ async function getGroupInfo(groupId) {
     if (tab.lvl <= groupTab.lvl) break
     out.tabs.push({
       id: tab.id,
-      index: tab.index,
       lvl: tab.lvl - groupTab.lvl - 1,
       title: tab.title,
       url: tab.url,
@@ -1200,26 +1197,49 @@ function getTabsTree() {
   return tree
 }
 
-function notifyGroup(tab, msg) {
-  if (this.state.tabsTree && tab.lvl > 0) {
-    let parentTab = this.state.tabsMap[tab.parentId]
-    if (Utils.isGroupUrl(parentTab.url)) {
-      if (!msg) {
-        msg = {
-          name: 'created',
-          id: tab.id,
-          index: tab.index,
-          lvl: parentTab.lvl - tab.lvl - 1,
-          title: tab.title,
-          url: tab.url,
-          discarded: tab.discarded,
-          favIconUrl: tab.favIconUrl,
-        }
-      }
+function getGroupTab(tab) {
+  if (!this.state.tabsTree && !tab.lvl) return
 
-      browser.tabs.sendMessage(parentTab.id, msg)
-    }
+  let i = tab.lvl || 0
+  while (i--) {
+    tab = this.state.tabsMap[tab.parentId]
+    if (tab && Utils.isGroupUrl(tab.url)) return tab
   }
+}
+
+function updateGroupTab(groupTab) {
+  if (updateGroupTabTimeouit) clearTimeout(updateGroupTabTimeouit)
+  updateGroupTabTimeouit = setTimeout(() => {
+    let tabsCount = this.state.tabs.length
+    let tabs = []
+    for (let i = groupTab.index + 1; i < tabsCount; i++) {
+      let tab = this.state.tabs[i]
+      if (this.state.tabs[i].lvl <= groupTab.lvl) break
+
+      tabs.push({
+        id: tab.id,
+        index: tab.index,
+        lvl: tab.lvl - groupTab.lvl - 1,
+        title: tab.title,
+        url: tab.url,
+        discarded: tab.discarded,
+        favIconUrl: tab.favIconUrl,
+      })
+    }
+
+    browser.tabs.sendMessage(groupTab.id, {
+      name: 'update',
+      id: groupTab.id,
+      index: groupTab.index,
+      tabs,
+    })
+
+    updateGroupTabTimeouit = null
+  }, 256)
+}
+
+function resetUpdateGroupTabTimeout() {
+  if (updateGroupTabTimeouit) clearTimeout(updateGroupTabTimeouit)
 }
 
 export default {
@@ -1258,5 +1278,7 @@ export default {
   updateTabsTree,
   queryTab,
   getTabsTree,
-  notifyGroup,
+  getGroupTab,
+  updateGroupTab,
+  resetUpdateGroupTabTimeout,
 }

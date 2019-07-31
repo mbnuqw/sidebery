@@ -32,7 +32,7 @@ function onTabUpdated(tabId, change, tab) {
   if (!this.windows[tab.windowId]) return
   const tabWindow = this.windows[tab.windowId]
   for (let i = 0; i < tabWindow.tabs.length; i++) {
-    if (tabWindow.tabs[i].id === tabId) {
+    if (tabWindow.tabs[i] && tabWindow.tabs[i].id === tabId) {
       tabWindow.tabs.splice(i, 1, tab)
       break
     }

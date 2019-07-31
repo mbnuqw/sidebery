@@ -864,7 +864,19 @@ export default {
         }
 
         Actions.saveTabsTree()
-        Actions.notifyGroup(tab)
+        const groupTab = Actions.getGroupTab(tab)
+        if (groupTab) {
+          browser.tabs.sendMessage(groupTab.id, {
+            name: 'create',
+            id: tab.id,
+            index: tab.index,
+            lvl: tab.lvl - groupTab.lvl - 1,
+            title: tab.title,
+            url: tab.url,
+            discarded: tab.discarded,
+            favIconUrl: tab.favIconUrl,
+          })
+        }
       }
 
       // Update succession
@@ -888,15 +900,22 @@ export default {
       const localTab = State.tabsMap[tabId]
       if (!localTab) return
 
-      // Loaded
-      if (change.hasOwnProperty('status') && change.status === 'complete') {
-        Actions.notifyGroup(localTab, {
-          name: 'loaded',
-          id: localTab.id,
-          url: localTab.url,
-          title: localTab.title,
-          favIconUrl: localTab.favIconUrl,
-        })
+      // Status change
+      if (change.hasOwnProperty('status')) {
+        const groupTab = Actions.getGroupTab(localTab)
+        if (groupTab) {
+          let updateData = {
+            name: 'updateTab',
+            id: localTab.id,
+            status: change.status,
+            title: localTab.title,
+            url: localTab.url,
+            lvl: localTab.lvl - groupTab.lvl - 1,
+            discarded: localTab.discarded,
+          }
+          if (change.status === 'complete') updateData.favIconUrl = localTab.favIconUrl
+          browser.tabs.sendMessage(groupTab.id, updateData)
+        }
       }
 
       // Url
@@ -954,7 +973,6 @@ export default {
         }
       }
 
-      // Handle title change
       let inact = Date.now() - tab.lastAccessed
       if (change.hasOwnProperty('title') && !tab.active && inact > 5000) {
         // If prev url starts with 'http' and current url same as prev
@@ -1094,10 +1112,13 @@ export default {
         }
       }
 
-      Actions.notifyGroup(tab, {
-        name: 'rm',
-        tabId: tab.id,
-      })
+      const groupTab = Actions.getGroupTab(tab)
+      if (groupTab) {
+        browser.tabs.sendMessage(groupTab.id, {
+          name: 'remove',
+          id: tab.id,
+        })
+      }
     },
 
     /**
@@ -1269,6 +1290,12 @@ export default {
       if (State.activateAfterClosing !== 'none') {
         const target = Utils.findSuccessorTab(State, tab)
         if (target) browser.tabs.moveInSuccession([tab.id], target.id)
+      }
+
+      if (State.tabsTree && Utils.isGroupUrl(tab.url)) {
+        Actions.updateGroupTab(tab)
+      } else {
+        Actions.resetUpdateGroupTabTimeout()
       }
     },
 
