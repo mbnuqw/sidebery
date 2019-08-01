@@ -126,8 +126,11 @@ export default {
         if (ra === 'expand') {
           if (!State.tabsTree) return
           const activeTab = State.tabs.find(t => t.active)
-          if (!activeTab || !activeTab.isParent) return
-          return Actions.toggleBranch(activeTab.id)
+          if (!activeTab) return
+          let targetTab = activeTab
+          if (!targetTab.isParent) targetTab = State.tabsMap[targetTab.parentId]
+          if (!targetTab) return
+          return Actions.toggleBranch(targetTab.id)
         }
       }
     },
