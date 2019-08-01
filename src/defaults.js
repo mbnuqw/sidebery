@@ -190,10 +190,10 @@ export const DEFAULT_BOOKMARKS_PANEL = {
 }
 
 export const DEFAULT_PRIVATE_TABS_PANEL = {
-  type: 'private',
+  type: 'default',
   id: PRIVATE_CTX,
   name: translate('private_dashboard.title'),
-  icon: 'icon_tabs',
+  icon: 'icon_private',
   cookieStoreId: PRIVATE_CTX,
   dashboard: 'DefaultTabsDashboard',
   panel: 'TabsPanel',

@@ -134,11 +134,18 @@
 
   .delimiter(v-if="id")
 
-  .options(v-if="id")
+  .options(v-if="id && tabsCount")
     .opt(v-if="tabsCount" @click="dedupTabs") {{t('tabs_dashboard.dedup_tabs')}}
     .opt(v-if="tabsCount" @click="reloadAllTabs") {{t('tabs_dashboard.reload_all_tabs')}}
     .opt(v-if="tabsCount" @click="closeAllTabs") {{t('tabs_dashboard.close_all_tabs')}}
-    .opt.-warn(@click="remove") {{t('tabs_dashboard.delete_container')}}
+
+  .dash-ctrls(v-if="id")
+    .ctrl-left(@click="move(-1)")
+      svg: use(xlink:href="#icon_expand")
+    .ctrl-rm(@click="remove" :title="t('tabs_dashboard.delete_container')")
+      svg: use(xlink:href="#icon_remove")
+    .ctrl-right(@click="move(1)")
+      svg: use(xlink:href="#icon_expand")
 </template>
 
 
@@ -377,6 +384,10 @@ export default {
       if (!this.id) return
       browser.contextualIdentities.remove(this.id)
       this.$emit('close')
+    },
+
+    move(step) {
+      Actions.movePanel(this.id, step)
     },
 
     async init() {

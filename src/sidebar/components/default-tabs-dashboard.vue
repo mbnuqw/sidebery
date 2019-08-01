@@ -2,19 +2,20 @@
 .Dashboard(v-noise:300.g:12:af.a:0:42.s:0:9="")
   h2 {{conf.name}}
 
-  toggle-field(
-    label="dashboard.lock_panel_label"
-    :title="t('dashboard.lock_panel_tooltip')"
-    :value="conf.lockedPanel"
-    :inline="true"
-    @input="togglePanelLock")
+  .fields
+    toggle-field(
+      label="dashboard.lock_panel_label"
+      :title="t('dashboard.lock_panel_tooltip')"
+      :value="conf.lockedPanel"
+      :inline="true"
+      @input="togglePanelLock")
 
-  toggle-field(
-    label="dashboard.no_empty_label"
-    :title="t('dashboard.no_empty_tooltip')"
-    :value="conf.noEmpty"
-    :inline="true"
-    @input="togglePanelNoEmpty")
+    toggle-field(
+      label="dashboard.no_empty_label"
+      :title="t('dashboard.no_empty_tooltip')"
+      :value="conf.noEmpty"
+      :inline="true"
+      @input="togglePanelNoEmpty")
 
   .delimiter
 
@@ -22,6 +23,12 @@
     .opt(v-if="haveTabs", @click="dedupTabs") {{t('tabs_dashboard.dedup_tabs')}}
     .opt(v-if="haveTabs", @click="reloadAllTabs") {{t('tabs_dashboard.reload_all_tabs')}}
     .opt(v-if="haveTabs", @click="closeAllTabs") {{t('tabs_dashboard.close_all_tabs')}}
+
+  .dash-ctrls
+    .ctrl-left(@click="move(-1)")
+      svg: use(xlink:href="#icon_expand")
+    .ctrl-right(@click="move(1)")
+      svg: use(xlink:href="#icon_expand")
 </template>
 
 
@@ -96,6 +103,10 @@ export default {
       if (!this.conf.tabs || this.conf.tabs.length === 0) return
       browser.tabs.remove(this.conf.tabs.map(t => t.id))
       this.$emit('close')
+    },
+
+    move(step) {
+      Actions.movePanel(DEFAULT_CTX_ID, step)
     },
   },
 }

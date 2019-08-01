@@ -1,7 +1,6 @@
 import Utils from '../../utils'
 import Logs from '../../logs'
 import EventBus from '../../event-bus'
-import { DEFAULT_CTX_ID } from '../../defaults'
 import Actions from '.'
 
 let TabsTreeSaveTimeout, updateGroupTabTimeouit
@@ -9,32 +8,17 @@ let TabsTreeSaveTimeout, updateGroupTabTimeouit
 /**
  * Load all tabs for current window
  */
-async function loadTabs() {
-  const windowId = browser.windows.WINDOW_ID_CURRENT
-  const tabs = await browser.tabs.query({ windowId })
-  const activePanel = this.state.panels[this.state.panelIndex]
+async function loadTabs(fresh = true) {
+  let windowId = browser.windows.WINDOW_ID_CURRENT
+  let tabs = await browser.tabs.query({ windowId })
+  let activePanel = this.state.panels[this.state.panelIndex] || this.state.panels[1]
   let activeTab
 
-  // Check order of tabs and get moves for normalizing
-  const ctxs = [DEFAULT_CTX_ID].concat(
-    this.state.panels.filter(c => c.type === 'ctx').map(c => c.cookieStoreId)
-  )
-  const moves = []
-  let index = tabs.filter(t => t.pinned).length
-  let offset = 0
-  for (let i = 0; i < ctxs.length; i++) {
-    const ctx = ctxs[i]
-    for (let j = 0; j < tabs.length; j++) {
-      const tab = tabs[j]
-      if (tab.pinned) continue
-      if (tab.cookieStoreId !== ctx) continue
+  let normOrderMoves = Actions.getOrderNormMoves(tabs)
+  await Actions.normalizeTabsOrder(normOrderMoves)
 
-      if (index !== tab.index + offset) {
-        moves.push([tab.id, index])
-        offset++
-      }
-      index++
-    }
+  if (normOrderMoves.length) {
+    tabs = await browser.tabs.query({ windowId })
   }
 
   // Set tabs initial props and update state
@@ -57,18 +41,14 @@ async function loadTabs() {
   }
   this.state.tabs = tabs
 
-  // Normalize order
-  for (let move of moves) {
-    await browser.tabs.move(move[0], { index: move[1] })
-  }
-  if (moves.length) Logs.push('[INFO] Tabs order was normalized')
-
   // Switch to panel with active tab
-  const activePanelIsTabs = activePanel.panel === 'TabsPanel'
-  const activePanelIsOk = activeTab.cookieStoreId === activePanel.cookieStoreId
-  if (!activeTab.pinned && activePanelIsTabs && !activePanelIsOk) {
-    const panel = this.state.panelsMap[activeTab.cookieStoreId]
-    if (panel) this.state.panelIndex = panel.index
+  if (fresh) {
+    const activePanelIsTabs = activePanel.panel === 'TabsPanel'
+    const activePanelIsOk = activeTab.cookieStoreId === activePanel.cookieStoreId
+    if (!activeTab.pinned && activePanelIsTabs && !activePanelIsOk) {
+      const panel = this.state.panelsMap[activeTab.cookieStoreId]
+      if (panel) this.state.panelIndex = panel.index
+    }
   }
 
   // Restore tree levels
@@ -86,6 +66,46 @@ async function loadTabs() {
   Actions.updatePanelsTabs()
 
   Logs.push('[INFO] Tabs loaded')
+}
+
+/**
+ * Check order of tabs and get moves for normalizing
+ */
+function getOrderNormMoves(tabs) {
+  // Check order of tabs and get moves for normalizing
+  const ctxs = this.state.panels
+    .filter(c => c.type === 'default' || c.type === 'ctx')
+    .map(c => c.cookieStoreId)
+  const moves = []
+  let index = tabs.filter(t => t.pinned).length
+  let offset = 0
+  for (let i = 0; i < ctxs.length; i++) {
+    const ctx = ctxs[i]
+    for (let j = 0; j < tabs.length; j++) {
+      const tab = tabs[j]
+      if (tab.pinned) continue
+      if (tab.cookieStoreId !== ctx) continue
+
+      if (index !== tab.index + offset) {
+        moves.push([tab.id, index])
+        offset++
+      }
+      index++
+    }
+  }
+  return moves
+}
+
+/**
+ * Normalize order of tabs
+ */
+async function normalizeTabsOrder(moves) {
+  this.state.ignoreMovingTabs = true
+  for (let move of moves) {
+    await browser.tabs.move(move[0], { index: move[1] })
+  }
+  if (moves.length) Logs.push('[INFO] Tabs order was normalized')
+  this.state.ignoreMovingTabs = false
 }
 
 /**
@@ -1260,6 +1280,8 @@ function resetUpdateGroupTabTimeout() {
 
 export default {
   loadTabs,
+  getOrderNormMoves,
+  normalizeTabsOrder,
   restoreTabsTree,
   saveTabsTree,
   scrollToActiveTab,

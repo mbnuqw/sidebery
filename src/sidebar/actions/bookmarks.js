@@ -7,11 +7,12 @@ import Actions from '.'
  * Load bookmarks and restore tree state
  */
 async function loadBookmarks() {
-  EventBus.$emit('panelLoadingStart', 0)
+  let panelIndex = this.state.panels.findIndex(p => p.bookmarks)
+  EventBus.$emit('panelLoadingStart', panelIndex)
   let bookmarks = await browser.bookmarks.getTree()
   if (!bookmarks || !bookmarks.length) {
     Logs.push('[ERROR] Cannot load bookmarks')
-    EventBus.$emit('panelLoadingErr', 0)
+    EventBus.$emit('panelLoadingErr', panelIndex)
   }
 
   // Normalize objects before vue
@@ -65,7 +66,7 @@ async function loadBookmarks() {
 
   this.state.bookmarks = bookmarks[0].children
   this.state.bookmarksCount = count
-  EventBus.$emit('panelLoadingOk', 0)
+  EventBus.$emit('panelLoadingOk', panelIndex)
 
   Logs.push('[INFO] Bookmarks loaded')
 }

@@ -36,12 +36,6 @@ export default new Vue({
   },
 
   beforeCreate() {
-    browser.windows.getCurrent()
-      .then(win => {
-        State.private = win.incognito
-        State.windowId = win.id
-      })
-
     browser.runtime.getPlatformInfo()
       .then(osInfo => {
         State.osInfo = osInfo
@@ -63,6 +57,10 @@ export default new Vue({
 
     State.instanceType = 'sidebar'
 
+    let currentWindow = await browser.windows.getCurrent()
+    State.private = currentWindow.incognito
+    State.windowId = currentWindow.id
+
     await Actions.loadSettings()
     if (State.theme !== 'default') Actions.initTheme()
     if (State.sidebarCSS) Actions.loadCustomCSS()
@@ -70,7 +68,7 @@ export default new Vue({
     await Actions.loadPanelIndex()
     await Actions.loadPanels()
 
-    if (State.bookmarksPanel && State.panelIndex === 0) {
+    if (State.bookmarksPanel && State.panels[State.panelIndex].type === 'bookmarks') {
       await Actions.loadBookmarks()
     }
 
@@ -132,7 +130,7 @@ export default new Vue({
       if (changes.cssVars) {
         Actions.applyCSSVars(changes.cssVars.newValue)
       }
-      if (changes.panels && !State.windowFocused) {
+      if (changes.panels && !State.windowFocused && !State.private) {
         Actions.updatePanels(changes.panels.newValue)
       }
       if (changes.tabsMenu) {

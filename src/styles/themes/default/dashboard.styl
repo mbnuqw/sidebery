@@ -3,7 +3,6 @@
 .Dashboard
   box(relative, flex)
   flex-direction: column
-  grid-gap: 3px 0
 
 .Dashboard > h2
   box(relative)
@@ -11,6 +10,11 @@
   color: var(--title-fg)
   margin: 12px 12px 12px
   padding: 0
+
+.Dashboard .fields
+  box(relative, flex)
+  flex-direction: column
+  grid-gap: 3px 0
 
 .delimiter
   box(relative, none)
@@ -25,11 +29,14 @@
   flex-wrap: wrap
   flex-direction: column
   justify-content: flex-start
-  padding: 8px 0 8px
+  padding: 8px 0
+  box-shadow: inset 0 -1px 0 0 var(--border-fg)
 
 .Dashboard .options
   margin: 8px 0 0
-  box-shadow: inset 0 1px 0 0 var(--border-flare-fg), 0 -1px 0 0 var(--border-fg)
+  box-shadow: inset 0 1px 0 0 var(--border-flare-fg),
+              0 -1px 0 0 var(--border-fg),
+              inset 0 -1px 0 0 var(--border-fg)
 
 .options > .opt
   box(relative)
@@ -47,3 +54,42 @@
     &:hover
       background-color: var(--ctx-menu-warn-bg-hover)
       color: var(--ctx-menu-fg)
+
+.dash-ctrls
+  box(relative, flex)
+  box-shadow: inset 0 1px 0 0 var(--border-flare-fg)
+
+.dash-ctrls .ctrl-left
+.dash-ctrls .ctrl-rm
+.dash-ctrls .ctrl-right
+  box(relative, flex)
+  size(h: 30px)
+  flex: 1
+  padding: 1px 0 0
+  cursor: pointer
+  > svg
+    box(absolute)
+    pos(calc(50% - 8px), same)
+    size(16px, same)
+    fill: var(--label-fg)
+  &:hover
+    background-color: #00000032
+  &:active
+    opacity: .7
+
+.dash-ctrls .ctrl-left > svg
+  transform: rotate(90deg)
+
+.dash-ctrls .ctrl-rm
+  > svg
+    pos(calc(50% - 10px), same)
+    size(20px, same)
+    fill: var(--false-fg)
+  &:hover
+    background-color: var(--false-bg)
+    > svg
+      fill: var(--label-fg)
+
+.dash-ctrls .ctrl-right > svg
+  size(16px, same)
+  transform: rotate(-90deg)

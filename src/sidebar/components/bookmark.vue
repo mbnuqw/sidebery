@@ -193,7 +193,8 @@ export default {
         })
       } else {
         browser.tabs.update({ url: this.node.url })
-        if (withFocus && !this.panels[0].lockedPanel) Actions.goToActiveTabPanel()
+        let panel = State.panels.find(p => p.bookmarks)
+        if (withFocus && !panel.lockedPanel) Actions.goToActiveTabPanel()
       }
 
       if (this.node.parentId === 'unfiled_____' && State.autoRemoveOther) {

@@ -98,7 +98,7 @@ export default {
     })
 
     // Render
-    if (State.panelIndex === 0) {
+    if (State.panelIndex === this.index) {
       this.renderable = true
       setTimeout(() => {
         this.visible = true

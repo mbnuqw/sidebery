@@ -177,15 +177,15 @@ export default {
         btn.inactive = false
 
         // Hide buttons
-        if (
-          (!State.bookmarksPanel && i === 0) ||
-          (!State.private && i === 1) ||
-          (State.private && i > 1)
-        ) {
-          btn.hidden = true
-          btn.inactive = true
-          if (State.panelIndex > i) hideOffset++
-        }
+        // if (
+        //   (!State.bookmarksPanel && i === 0) ||
+        //   (!State.private && i === 1) ||
+        //   (State.private && i > 1)
+        // ) {
+        //   btn.hidden = true
+        //   btn.inactive = true
+        //   if (State.panelIndex > i) hideOffset++
+        // }
 
         btn.updated = this.updatedPanels.includes(i)
         if (i === State.panelIndex) btn.updated = false
@@ -1125,6 +1125,7 @@ export default {
      */
     onMovedTab(id, info) {
       if (info.windowId !== State.windowId) return
+      if (State.ignoreMovingTabs) return
 
       if (!State.movingTabs) State.movingTabs = []
       else State.movingTabs.splice(State.movingTabs.indexOf(id), 1)

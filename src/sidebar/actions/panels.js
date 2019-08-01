@@ -44,31 +44,31 @@ async function loadPanels() {
     // Bookmarks panel
     if (loadedPanel.type === 'bookmarks') {
       let panel = Utils.cloneObject(DEFAULT_BOOKMARKS_PANEL)
-      panel.index = i
+      panel.index = panels.length
       panel.lockedPanel = loadedPanel.lockedPanel
       panels.push(panel)
       panelsMap['bookmarks'] = panel
     }
 
-    // Private panel
-    if (loadedPanel.type === 'private') {
-      panels.push(Utils.cloneObject(DEFAULT_PRIVATE_TABS_PANEL))
-    }
-
     // Default panel
     if (loadedPanel.type === 'default') {
-      let panel = Utils.cloneObject(DEFAULT_TABS_PANEL)
-      panel.index = i
+      let panel
+      if (this.state.private) {
+        panel = Utils.cloneObject(DEFAULT_PRIVATE_TABS_PANEL)
+      } else {
+        panel = Utils.cloneObject(DEFAULT_TABS_PANEL)
+        panel.lockedPanel = loadedPanel.lockedPanel
+        panel.lockedTabs = loadedPanel.lockedTabs
+        panel.noEmpty = loadedPanel.noEmpty
+      }
+      panel.index = panels.length
       panel.lastActiveTab = loadedPanel.lastActiveTab
-      panel.lockedPanel = loadedPanel.lockedPanel
-      panel.lockedTabs = loadedPanel.lockedTabs
-      panel.noEmpty = loadedPanel.noEmpty
       panels.push(panel)
       panelsMap[panel.cookieStoreId] = panel
     }
 
     // Container panel
-    if (loadedPanel.type === 'ctx') {
+    if (loadedPanel.type === 'ctx' && !this.state.private) {
       const container = containers.find(c => c.cookieStoreId === loadedPanel.cookieStoreId)
       const panel = Utils.cloneObject(DEFAULT_CTX_TABS_PANEL)
 
@@ -92,7 +92,7 @@ async function loadPanels() {
       }
 
       // Sidebery props
-      panel.index = i
+      panel.index = panels.length
       panel.lockedTabs = loadedPanel.lockedTabs
       panel.lockedPanel = loadedPanel.lockedPanel
       panel.proxy = loadedPanel.proxy
@@ -110,16 +110,18 @@ async function loadPanels() {
   }
 
   // Append not-saved native containers
-  for (let container of containers) {
-    if (!panelsMap[container.cookieStoreId]) {
-      let panel = Utils.cloneObject(DEFAULT_CTX_TABS_PANEL)
-      panel.cookieStoreId = container.cookieStoreId
-      panel.name = container.name
-      panel.color = container.color
-      panel.icon = container.icon
-      const len = panels.push(panel)
-      panel.index = len - 1
-      panelsMap[panel.cookieStoreId] = panel
+  if (!this.state.private) {
+    for (let container of containers) {
+      if (!panelsMap[container.cookieStoreId]) {
+        let panel = Utils.cloneObject(DEFAULT_CTX_TABS_PANEL)
+        panel.cookieStoreId = container.cookieStoreId
+        panel.name = container.name
+        panel.color = container.color
+        panel.icon = container.icon
+        const len = panels.push(panel)
+        panel.index = len - 1
+        panelsMap[panel.cookieStoreId] = panel
+      }
     }
   }
 
@@ -128,7 +130,7 @@ async function loadPanels() {
   this.state.panelsMap = panelsMap
 
   if (this.state.panelIndex >= this.state.panels.length) {
-    this.state.panelIndex = this.state.private ? 1 : 2
+    this.state.panelIndex = 1
   }
 
   Logs.push('[INFO] Containers loaded')
@@ -140,10 +142,18 @@ async function loadPanels() {
 async function updatePanels(newPanels) {
   if (!newPanels) return
 
-  for (let panel of this.state.panels) {
-    const newPanel = newPanels.find(nc => nc.id === panel.id)
-    if (!newPanel) continue
+  let panels = []
+  let indexChanged = false
+  for (let i = 0; i < newPanels.length; i++) {
+    let newPanel = newPanels[i]
+    let panel = this.state.panels.find(p => {
+      return p.type === newPanel.type && p.cookieStoreId === newPanel.cookieStoreId
+    })
+    if (!panel) continue
 
+    if (indexChanged || panel.index !== i) indexChanged = true
+
+    panel.index = i
     panel.lockedTabs = newPanel.lockedTabs
     panel.lockedPanel = newPanel.lockedPanel
     panel.proxy = newPanel.proxy
@@ -154,7 +164,13 @@ async function updatePanels(newPanels) {
     panel.excludeHostsActive = newPanel.excludeHostsActive
     panel.excludeHosts = newPanel.excludeHosts
     panel.lastActiveTab = newPanel.lastActiveTab
+
+    panels.push(panel)
   }
+
+  this.state.panels = panels
+
+  if (indexChanged) Actions.loadTabs(false)
 }
 
 /**
@@ -371,6 +387,24 @@ function getActivePanel() {
   return Utils.cloneObject(this.state.panels[this.state.panelIndex])
 }
 
+async function movePanel(id, step) {
+  let index = this.state.panels.findIndex(p => p.cookieStoreId === id)
+  if (index === -1) return
+  if (index + step < 0) return
+  if (index + step >= this.state.panels.length) return
+
+  let panel = this.state.panels.splice(index, 1)[0]
+  this.state.panels.splice(index + step, 0, panel)
+  this.state.panelIndex = index + step
+  for (let i = 0; i < this.state.panels.length; i++) {
+    this.state.panels[i].index = i
+  }
+
+  await Actions.loadTabs(false)
+
+  Actions.savePanels()
+}
+
 export default {
   loadPanels,
   updatePanels,
@@ -386,4 +420,5 @@ export default {
   switchPanel,
   goToActiveTabPanel,
   getActivePanel,
+  movePanel,
 }
