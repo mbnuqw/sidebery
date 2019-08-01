@@ -766,7 +766,6 @@ export default {
       }
 
       if (State.windowFocused) {
-        Actions.updateReqHandler()
         Actions.savePanels()
       }
 

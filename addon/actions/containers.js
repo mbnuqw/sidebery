@@ -1,4 +1,4 @@
-import Actions from './index.js'
+import Actions from '../actions.js'
 
 /**
  * Handle new container
@@ -34,17 +34,7 @@ function onContainerRemoved({ contextualIdentity }) {
 function onContainerUpdated(info) {
   const ctr = info.contextualIdentity
   const id = ctr.cookieStoreId
-  const snapLayer = { id, t: Date.now() }
 
-  let key
-  if (this.containers[id].name !== ctr.name) key = 'name'
-  if (this.containers[id].icon !== ctr.icon) key = 'icon'
-  if (this.containers[id].color !== ctr.color) key = 'color'
-
-  snapLayer.key = 'ctr-' + key
-  snapLayer.val = ctr[key]
-
-  Actions.appendSnapLayers(-1, snapLayer)
   this.containers[id] = ctr
 }
 

@@ -1,4 +1,4 @@
-import Actions from './index.js'
+import Actions from '../actions.js'
 
 const MIN_SNAP_INTERVAL = 5000
 

@@ -2,7 +2,6 @@ import EventBus from '../../event-bus'
 import Logs from '../../logs'
 import Utils from '../../utils'
 import Actions from '.'
-import ReqHandler from '../proxy'
 import {
   DEFAULT_PANELS,
   DEFAULT_BOOKMARKS_PANEL,
@@ -11,7 +10,7 @@ import {
   DEFAULT_CTX_TABS_PANEL,
 } from '../../defaults'
 
-let recalcPanelScrollTimeout, updateReqHandlerTimeout, savePanelsTimeout
+let recalcPanelScrollTimeout, savePanelsTimeout
 
 /**
  * Load Contextual Identities and containers
@@ -132,9 +131,6 @@ async function loadPanels() {
     this.state.panelIndex = this.state.private ? 1 : 2
   }
 
-  // Set requests handler (if needed)
-  Actions.updateReqHandler()
-
   Logs.push('[INFO] Containers loaded')
 }
 
@@ -159,8 +155,6 @@ async function updatePanels(newPanels) {
     panel.excludeHosts = newPanel.excludeHosts
     panel.lastActiveTab = newPanel.lastActiveTab
   }
-
-  Actions.updateReqHandlerDebounced()
 }
 
 /**
@@ -371,88 +365,6 @@ function goToActiveTabPanel() {
 }
 
 /**
- * Update request handler
- */
-async function updateReqHandler() {
-  this.state.proxies = {}
-  this.state.includeHostsRules = []
-  this.state.excludeHostsRules = {}
-
-  for (let ctr of this.state.panels) {
-    // Proxy
-    if (ctr.proxified && ctr.proxy) this.state.proxies[ctr.id] = { ...ctr.proxy }
-
-    // Include rules
-    if (ctr.includeHostsActive) {
-      for (let rawRule of ctr.includeHosts.split('\n')) {
-        let rule = rawRule.trim()
-        if (!rule) continue
-
-        if (rule[0] === '/' && rule[rule.length - 1] === '/') {
-          rule = new RegExp(rule.slice(1, rule.length - 1))
-        }
-
-        this.state.includeHostsRules.push({ ctx: ctr.id, value: rule })
-      }
-    }
-
-    // Exclude rules
-    if (ctr.excludeHostsActive) {
-      this.state.excludeHostsRules[ctr.id] = ctr.excludeHosts
-        .split('\n')
-        .map(r => {
-          let rule = r.trim()
-
-          if (rule[0] === '/' && rule[rule.length - 1] === '/') {
-            rule = new RegExp(rule.slice(1, rule.length - 1))
-          }
-
-          return rule
-        })
-        .filter(r => r)
-    }
-  }
-
-  // Turn on request handler
-  const incRulesOk = this.state.includeHostsRules.length > 0
-  const excRulesOk = Object.keys(this.state.excludeHostsRules).length > 0
-  const proxyOk = Object.keys(this.state.proxies).length > 0
-  if (incRulesOk || excRulesOk || proxyOk) Actions.turnOnReqHandler()
-  else Actions.turnOffReqHandler()
-}
-
-/**
- * Update request handler debounced
- */
-function updateReqHandlerDebounced() {
-  if (updateReqHandlerTimeout) clearTimeout(updateReqHandlerTimeout)
-  updateReqHandlerTimeout = setTimeout(() => {
-    Actions.updateReqHandler()
-    updateReqHandlerTimeout = null
-  }, 500)
-}
-
-/**
- * Set request handler
- */
-function turnOnReqHandler() {
-  if (this.state.private) return
-  if (!browser.proxy.onRequest.hasListener(ReqHandler)) {
-    browser.proxy.onRequest.addListener(ReqHandler, { urls: ['<all_urls>'] })
-  }
-}
-
-/**
- * Unset request handler
- */
-function turnOffReqHandler() {
-  if (this.state.private) return
-  if (browser.proxy.onRequest.hasListener(ReqHandler)) {
-    browser.proxy.onRequest.removeListener(ReqHandler)
-  }
-}
-
-/**
  * Returns active panel info
  */
 function getActivePanel() {
@@ -473,9 +385,5 @@ export default {
   switchToPanel,
   switchPanel,
   goToActiveTabPanel,
-  updateReqHandler,
-  updateReqHandlerDebounced,
-  turnOnReqHandler,
-  turnOffReqHandler,
   getActivePanel,
 }

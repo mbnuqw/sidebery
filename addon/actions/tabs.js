@@ -9,6 +9,7 @@ function onTabCreated(tab) {
   const tabWindow = this.windows[tab.windowId]
   if (tabWindow.tabs) tabWindow.tabs.splice(tab.index, 1, tab)
   else tabWindow.tabs = [tab]
+  this.tabsMap[tab.id] = tab
 }
 
 /**
@@ -17,12 +18,10 @@ function onTabCreated(tab) {
 function onTabRemoved(tabId, info) {
   if (!this.windows[info.windowId] || info.isWindowClosing) return
   const tabWindow = this.windows[info.windowId]
-  for (let i = 0; i < tabWindow.tabs.length; i++) {
-    if (tabWindow.tabs[i].id === tabId) {
-      tabWindow.tabs.splice(i, 1)
-      break
-    }
-  }
+  let tab = this.tabsMap[tabId]
+  if (!tab) tab = tabWindow.tabs.find(t => t.id === tabId)
+  tabWindow.tabs.splice(tab.index, 1)
+  this.tabsMap[tabId] = undefined
 }
 
 /**

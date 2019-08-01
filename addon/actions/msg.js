@@ -1,4 +1,4 @@
-import Actions from '../actions/index.js'
+import Actions from '../actions.js'
 
 const connectedSidebars = {}
 let firstSidebarInitHandler

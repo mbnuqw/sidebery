@@ -428,7 +428,6 @@ export default {
 
       this.conf.includeHostsActive = !this.conf.includeHostsActive
       Actions.savePanels()
-      Actions.updateReqHandler()
       await this.$nextTick()
 
       if (this.$refs.scrollBox) this.$refs.scrollBox.recalcScroll()
@@ -437,7 +436,6 @@ export default {
 
     onIncludeHostsInput(value) {
       this.conf.includeHosts = value
-      Actions.updateReqHandlerDebounced()
     },
 
     onIncludeHostsChange() {
@@ -455,7 +453,6 @@ export default {
 
       this.conf.excludeHostsActive = !this.conf.excludeHostsActive
       Actions.savePanels()
-      Actions.updateReqHandler()
       await this.$nextTick()
       
       if (this.$refs.scrollBox) this.$refs.scrollBox.recalcScroll()
@@ -464,7 +461,6 @@ export default {
 
     onExcludeHostsInput(value) {
       this.conf.excludeHosts = value
-      Actions.updateReqHandlerDebounced()
     },
 
     onExcludeHostsChange() {
@@ -497,7 +493,6 @@ export default {
       else this.conf.proxified = this.proxyHostValid && this.proxyPortValid
 
       Actions.savePanels()
-      Actions.updateReqHandler()
 
       await this.$nextTick()
       
@@ -510,7 +505,6 @@ export default {
       this.conf.proxified = this.proxyHostValid && this.proxyPortValid
 
       Actions.savePanelsDebounced()
-      if (this.proxyHostValid) Actions.updateReqHandlerDebounced()
     },
 
     onProxyPortInput(value) {
@@ -519,7 +513,6 @@ export default {
       this.conf.proxified = this.proxyHostValid && this.proxyPortValid
 
       Actions.savePanelsDebounced()
-      if (this.proxyPortValid) Actions.updateReqHandlerDebounced()
     },
 
     onProxyUsernameInput(value) {
@@ -527,8 +520,6 @@ export default {
       this.conf.proxy.username = value
 
       Actions.savePanelsDebounced()
-      Actions.updateReqHandlerDebounced()
-      
     },
 
     onProxyPasswordInput(value) {
@@ -536,7 +527,6 @@ export default {
       this.conf.proxy.password = value
 
       Actions.savePanelsDebounced()
-      Actions.updateReqHandlerDebounced()
     },
 
     toggleProxyDns() {
@@ -544,7 +534,6 @@ export default {
       this.conf.proxy.proxyDNS = !this.conf.proxy.proxyDNS
 
       Actions.savePanels()
-      Actions.updateReqHandler()
     },
 
     onFieldKeydown(e, nextFieldName, prevFieldName) {
