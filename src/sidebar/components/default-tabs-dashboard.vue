@@ -24,7 +24,7 @@
     .opt(v-if="haveTabs", @click="reloadAllTabs") {{t('tabs_dashboard.reload_all_tabs')}}
     .opt(v-if="haveTabs", @click="closeAllTabs") {{t('tabs_dashboard.close_all_tabs')}}
 
-  .dash-ctrls
+  .dash-ctrls(v-if="!$store.state.private")
     .ctrl-left(@click="move(-1)")
       svg: use(xlink:href="#icon_expand")
     .ctrl-right(@click="move(1)")

@@ -388,7 +388,10 @@ function getActivePanel() {
 }
 
 async function movePanel(id, step) {
-  let index = this.state.panels.findIndex(p => p.cookieStoreId === id)
+  let index
+  if (id === 'bookmarks') index = this.state.panels.findIndex(p => p.bookmarks)
+  else index = this.state.panels.findIndex(p => p.cookieStoreId === id)
+
   if (index === -1) return
   if (index + step < 0) return
   if (index + step >= this.state.panels.length) return

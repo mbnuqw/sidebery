@@ -14,6 +14,12 @@
   .options
     .opt(@click="reloadBookmarks") {{t('bookmarks_dashboard.reload_bookmarks_tree')}}
     .opt(@click="collapseAll") {{t('bookmarks_dashboard.collapse_all_folders')}}
+
+  .dash-ctrls(v-if="!$store.state.private")
+    .ctrl-left(@click="move(-1)")
+      svg: use(xlink:href="#icon_expand")
+    .ctrl-right(@click="move(1)")
+      svg: use(xlink:href="#icon_expand")
 </template>
 
 
@@ -55,6 +61,10 @@ export default {
     reloadBookmarks() {
       Actions.reloadBookmarks()
       this.$emit('close')
+    },
+
+    move(step) {
+      Actions.movePanel('bookmarks', step)
     },
   },
 }
