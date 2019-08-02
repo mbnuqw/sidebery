@@ -41,6 +41,11 @@
       label="settings.nav_btn_count"
       :value="$store.state.navBtnCount"
       @input="setOpt('navBtnCount', $event)")
+    .separator
+    toggle-field(
+      label="settings.hide_empty_panels"
+      :value="$store.state.hideEmptyPanels"
+      @input="setOpt('hideEmptyPanels', $event)")
 
   section
     h2 {{t('settings.group_title')}}

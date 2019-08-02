@@ -57,13 +57,15 @@
 
 .dash-ctrls
   box(relative, flex)
+  flex-flow: wrap
   box-shadow: inset 0 1px 0 0 var(--border-flare-fg)
 
+.dash-ctrls .ctrl-panel
 .dash-ctrls .ctrl-left
 .dash-ctrls .ctrl-rm
 .dash-ctrls .ctrl-right
   box(relative, flex)
-  size(h: 30px)
+  size(h: 30px, min-w: 30px)
   flex: 1
   padding: 1px 0 0
   cursor: pointer
@@ -76,6 +78,9 @@
     background-color: #00000032
   &:active
     opacity: .7
+
+.dash-ctrls .ctrl-panel > svg
+  fill: var(--panel-fg)
 
 .dash-ctrls .ctrl-left > svg
   transform: rotate(90deg)

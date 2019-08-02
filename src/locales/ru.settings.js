@@ -21,6 +21,7 @@ export default {
   'settings.hide_settings_btn': { message: 'Скрывать кнопку "Настройки"' },
   'settings.hide_add_btn': { message: 'Скрывать кнопку "Новый контейнер"' },
   'settings.nav_btn_count': { message: 'Показывать количество табов/закладок' },  
+  'settings.hide_empty_panels': { message: 'Скрывать пустые панели' },
 
   // --- Group page
   'settings.group_title': { message: 'Группа' },

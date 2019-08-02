@@ -40,15 +40,15 @@
           :data-loading="btn.loading"
           :data-updated="btn.updated"
           :data-proxified="btn.proxified"
-          :data-active="panelIs(i)"
+          :data-active="$store.state.panelIndex === i"
           :data-hidden="btn.hidden"
           :data-index="btn.relIndex"
           :data-color="btn.color"
-          :title="getTooltip(i)"
-          @click="onNavClick(i)"
+          :title="btn.tooltip || getTooltip(i)"
+          @click="onNavClick(i, btn.type)"
           @dragenter="onNavDragEnter(i)"
           @dragleave="onNavDragLeave(i)"
-          @mousedown.right="openDashboard(i)")
+          @mousedown.right="onNavRightClick(i, btn.type)")
           svg: use(:xlink:href="'#' + btn.icon")
           .proxy-badge
             svg: use(xlink:href="#icon_proxy")
@@ -79,7 +79,7 @@
         :tabs="c.tabs"
         :index="i"
         :store-id="c.cookieStoreId"
-        :active="panelIs(i)"
+        :active="$store.state.panelIndex === i"
         @start-selection="startSelection"
         @stop-selection="stopSelection")
       transition(name="panel")
@@ -98,6 +98,7 @@
 <script>
 import Vue from 'vue'
 import initNoiseBgDirective from '../directives/noise-bg.js'
+import { translate } from '../mixins/dict.js'
 import Utils from '../utils.js'
 import EventBus from '../event-bus'
 import { DEFAULT_CTX_ID, DEFAULT_CTX_TABS_PANEL } from '../defaults'
@@ -108,6 +109,7 @@ import CtxMenu from './components/context-menu'
 import BookmarksDashboard from './components/bookmarks-dashboard'
 import DefaultTabsDashboard from './components/default-tabs-dashboard'
 import TabsDashboard from './components/containered-tabs-dashboard'
+import HiddenPanelsDashboard from './components/hidden-panels-dashboard'
 import BookmarksPanel from './components/bookmarks-panel'
 import TabsPanel from './components/tabs-panel'
 import WindowInput from './components/window-select-input'
@@ -117,7 +119,20 @@ const noiseBg = initNoiseBgDirective(State, Store)
 Vue.directive('noise', noiseBg)
 
 const URL_HOST_PATH_RE = /^([a-z0-9-]{1,63}\.)+\w+(:\d+)?\/[A-Za-z0-9-._~:/?#[\]%@!$&'()*+,;=]*$/
-const ADD_CTR_BTN = { icon: 'icon_plus_v2', hidden: false }
+const HIDDEN_CTR_BTN = {
+  type: 'hidden',
+  name: 'hidden',
+  icon: 'icon_expand',
+  hidden: false,
+  tooltip: translate('nav.show_hidden_tooltip'),
+}
+const ADD_CTR_BTN = {
+  type: 'new',
+  name: 'new',
+  icon: 'icon_plus_v2',
+  hidden: false,
+  tooltip: translate('nav.add_ctx_tooltip'),
+}
 
 // --- Vue Component ---
 export default {
@@ -126,6 +141,7 @@ export default {
     BookmarksDashboard,
     DefaultTabsDashboard,
     TabsDashboard,
+    HiddenPanelsDashboard,
     BookmarksPanel,
     TabsPanel,
     WindowInput,
@@ -162,12 +178,10 @@ export default {
     nav() {
       let cap = ~~(this.width / this.navBtnWidth)
       if (!State.hideSettingsBtn) cap -= 1
-      let halfCap = cap >> 1
-      let invModCap = cap % halfCap ^ 1
 
-      let i, k, r
+      let i, r
       let out = []
-      let hideOffset = 0
+      let emptyPanel = false
 
       for (i = 0; i < State.panels.length; i++) {
         const btn = State.panels[i]
@@ -176,21 +190,26 @@ export default {
         btn.hidden = false
         btn.inactive = false
 
-        // Hide buttons
-        // if (
-        //   (!State.bookmarksPanel && i === 0) ||
-        //   (!State.private && i === 1) ||
-        //   (State.private && i > 1)
-        // ) {
-        //   btn.hidden = true
-        //   btn.inactive = true
-        //   if (State.panelIndex > i) hideOffset++
-        // }
+        if (!State.bookmarksPanel && btn.bookmarks) {
+          btn.hidden = true
+          btn.inactive = true
+        }
+
+        if (State.hideEmptyPanels && btn.tabs && !btn.tabs.length) {
+          btn.hidden = true
+          btn.inactive = true
+          emptyPanel = true
+        }
 
         btn.updated = this.updatedPanels.includes(i)
         if (i === State.panelIndex) btn.updated = false
 
         out.push(btn)
+      }
+
+      if (emptyPanel && State.hideEmptyPanels) {
+        HIDDEN_CTR_BTN.hidden = false
+        out.push(HIDDEN_CTR_BTN)
       }
 
       if (!State.private && !State.hideAddBtn) {
@@ -200,14 +219,29 @@ export default {
 
       if (!State.navBarInline) return out
 
-      let p = State.panelIndex - hideOffset
-      let vis = out.length - hideOffset
-      for (i = 0, k = 0, r = 0; i < out.length; i++) {
-        if (out[i].hidden) continue
-        if (p - k > halfCap && vis - k > cap) out[i].hidden = true
-        if (p - k < invModCap - halfCap && k > cap - 1) out[i].hidden = true
-        if (!out[i].hidden) out[i].relIndex = r++
-        k++
+      let index
+      let p = State.panelIndex
+      let n = State.panelIndex
+      let dir = 1
+      while (p >= 0 || n < out.length) {
+        if (dir > 0) index = ++n
+        else index = --p
+
+        if (!out[index]) {
+          dir *= -1
+          continue
+        }
+
+        if (out[index].hidden) continue
+        if (cap <= 1) out[index].hidden = true
+
+        cap--
+        dir *= -1
+      }
+
+      r = 0
+      for (let btn of out) {
+        if (!btn.hidden) btn.relIndex = r++
       }
 
       return out
@@ -669,11 +703,13 @@ export default {
     /**
      * Navigation button click hadler
      */
-    onNavClick(i) {
-      if (i === State.panels.length) return this.openDashboard(-1)
-      if (State.panelIndex !== i) {
-        Actions.switchToPanel(i)
-      } else if (State.panels[i].cookieStoreId) {
+    onNavClick(i, type) {
+      if (type === 'new') return this.openDashboard(-1)
+      if (type === 'hidden') return this.openDashboard(-2)
+
+      if (State.panelIndex !== i) return Actions.switchToPanel(i)
+
+      if (State.panels[i].cookieStoreId) {
         if (State.dashboardIsOpen) {
           this.closeDashboard()
         } else {
@@ -686,11 +722,20 @@ export default {
     },
 
     /**
+     * Nav button right click handler
+     */
+    onNavRightClick(i, type) {
+      if (type === 'new') return this.openDashboard(-1)
+      if (type === 'hidden') return this.openDashboard(-2)
+
+      this.openDashboard(i)
+    },
+
+    /**
      * Navigation button dragenter handler
      */
     onNavDragEnter(i) {
-      // Skip last button (AddNewContianer)
-      if (i === this.nav.length - 1) return
+      if (i >= this.nav.length - 1) return
       this.navDragEnterIndex = i
       if (this.navDragEnterTimeout) clearTimeout(this.navDragEnterTimeout)
       this.navDragEnterTimeout = setTimeout(() => {
@@ -702,6 +747,7 @@ export default {
      * Navigation button dragleave handler
      */
     onNavDragLeave(i) {
+      if (i >= this.nav.length - 1) return
       if (this.navDragEnterTimeout && this.navDragEnterIndex === i) {
         clearTimeout(this.navDragEnterTimeout)
       }
@@ -1697,17 +1743,28 @@ export default {
      * Open panel menu by nav index.
      */
     async openDashboard(i) {
-      if (i === State.panels.length) i = -1
+      if (i < -2 || i >= State.panels.length) return
+
       Actions.closeCtxMenu()
       Actions.resetSelection()
       State.dashboardIsOpen = true
+
+      if (i === -2) {
+        this.dashboard = {
+          dashboard: 'HiddenPanelsDashboard',
+          panels: this.nav.filter(b => !b.bookmarks && b.inactive),
+        }
+        return
+      }
+
       State.panelIndex = i
+
       if (i === -1) this.dashboard = { dashboard: 'TabsDashboard', name: '', new: true }
-      else if (i >= 0) this.dashboard = this.nav[i]
+      else this.dashboard = this.nav[i]
     },
 
     /**
-     * Close nav menu.
+     * Close dashboard
      */
     closeDashboard() {
       State.dashboardIsOpen = false

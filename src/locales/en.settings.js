@@ -21,6 +21,7 @@ export default {
   'settings.hide_settings_btn': { message: 'Hide settings button' },
   'settings.hide_add_btn': { message: 'Hide "New container" button' },
   'settings.nav_btn_count': { message: 'Show count of tabs/bookmarks' },
+  'settings.hide_empty_panels': { message: 'Hide empty panels' },
 
   // --- Group page
   'settings.group_title': { message: 'Group page' },

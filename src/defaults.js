@@ -34,6 +34,7 @@ export const DEFAULT_SETTINGS = {
   hideSettingsBtn: false,
   hideAddBtn: false,
   navBtnCount: false,
+  hideEmptyPanels: false,
 
   // Group page
   groupLayout: 'grid',
