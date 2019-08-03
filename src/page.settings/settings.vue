@@ -413,6 +413,12 @@
     h2 {{t('settings.help_title')}}
 
     .ctrls
+      a.btn(ref="exportData" @mouseenter="genExportData") Export Data
+      .btn(type="file")
+        .label Import Data
+        input(type="file" ref="importData" accept="application/json" @input="importData")
+
+    .ctrls
       .btn(@click="switchView('debug')") {{t('settings.debug_info')}}
       a.btn(tabindex="-1", :href="issueLink") {{t('settings.repo_bug')}}
       .btn.-warn(@click="resetSettings") {{t('settings.reset_settings')}}
@@ -422,6 +428,7 @@
 
 
 <script>
+import Utils from '../utils'
 import State from './store/state'
 import Actions from './actions'
 import ToggleField from '../components/toggle-field'
@@ -745,6 +752,68 @@ export default {
         history.replaceState({}, '', location.origin + location.pathname)
       }
       this.$set(State.highlight, name, false)
+    },
+
+    /**
+     * Generate export addon data
+     */
+    async genExportData() {
+      let { settings } = await browser.storage.local.get({ settings: {} })
+      let { snapshots } = await browser.storage.local.get({ snapshots: [] })
+      let { panels } = await browser.storage.local.get({ panels: [] })
+      let { cssVars } = await browser.storage.local.get({ cssVars: {} })
+      let { sidebarCSS } = await browser.storage.local.get({ sidebarCSS: '' })
+      let { groupCSS } = await browser.storage.local.get({ groupCSS: '' })
+      let { settingsCSS } = await browser.storage.local.get({ settingsCSS: '' })
+      
+      let data = {
+        ver: browser.runtime.getManifest().version,
+        settings,
+        snapshots,
+        panels,
+        cssVars,
+        sidebarCSS,
+        groupCSS,
+        settingsCSS,
+      }
+      let dataJSON = JSON.stringify(data)
+      let file = new Blob([dataJSON], { type: 'application/json' })
+      let now = Date.now()
+      let date = Utils.uDate(now, '.')
+      let time = Utils.uTime(now, '.')
+
+      this.$refs.exportData.href = URL.createObjectURL(file)
+      this.$refs.exportData.download = `sidebery-settings-${date}-${time}.json`
+      this.$refs.exportData.title = `sidebery-settings-${date}-${time}.json`
+    },
+
+    /**
+     * Import addon data
+     */
+    importData(importEvent) {
+      let file = importEvent.target.files[0]
+      let reader = new FileReader()
+      reader.onload = fileEvent => {
+        this.applyImportedData(fileEvent.target.result)
+      }
+      reader.readAsText(file)
+    },
+
+    /**
+     * Parse imported data
+     */
+    applyImportedData(dataJSON) {
+      let data = JSON.parse(dataJSON)
+
+      // ...check version and do format convertation if needed
+
+      if (data.settings) browser.storage.local.set({ settings: data.settings })
+      if (data.snapshots) browser.storage.local.set({ snapshots: data.snapshots })
+      if (data.panels) browser.storage.local.set({ panels: data.panels })
+      if (data.cssVars) browser.storage.local.set({ cssVars: data.cssVars })
+      if (data.sidebarCSS) browser.storage.local.set({ sidebarCSS: data.sidebarCSS })
+      if (data.groupCSS) browser.storage.local.set({ groupCSS: data.groupCSS })
+      if (data.settingsCSS) browser.storage.local.set({ settingsCSS: data.settingsCSS })
     },
   },
 }

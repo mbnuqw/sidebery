@@ -99,9 +99,8 @@ export default {
     })
 
     // Normalize snapshots
-    const now = Math.trunc(Date.now() / 1000)
     for (let snapshot of snapshots) {
-      parsedSnapshots.push(normalizeSnapshot(snapshot, now))
+      parsedSnapshots.push(normalizeSnapshot(snapshot, Date.now()))
     }
     parsedSnapshots.reverse()
 
@@ -165,8 +164,7 @@ export default {
       })
       if (!snapshot) return
 
-      const now = Math.trunc(Date.now()/1000)
-      this.snapshots.unshift(normalizeSnapshot(snapshot, now))
+      this.snapshots.unshift(normalizeSnapshot(snapshot, Date.now()))
 
       this.activeSnapshot = this.snapshots[0]
     },
@@ -253,16 +251,15 @@ function normalizeSnapshot(snapshot, now) {
     windowsById[winId] = window
   }
 
-  const time = Math.trunc(snapshot.time/1000)
   return {
     id: snapshot.id,
     type: 'base',
     event: 'init',
     windowsById: Utils.cloneObject(windowsById),
     containersById: Utils.cloneObject(snapshot.containersById),
-    date: Utils.uDate(time),
-    time: Utils.uTime(time),
-    elapsed: Utils.uElapsed(time, now),
+    date: Utils.uDate(snapshot.time),
+    time: Utils.uTime(snapshot.time),
+    elapsed: Utils.uElapsed(snapshot.time, now),
     size: Utils.strSize(JSON.stringify(snapshot)),
     winCount: Object.keys(windowsById).length,
     ctrCount: Object.keys(snapshot.containersById).length,
