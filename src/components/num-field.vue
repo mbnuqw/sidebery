@@ -1,5 +1,5 @@
 <template lang="pug">
-.NumField(:data-active="!!value")
+.NumField(:data-active="!!value" :data-inactive="inactive")
   .label {{t(label)}}
   .input-group
     text-input.text-input(
@@ -30,7 +30,8 @@ export default {
   props: {
     label: String,
     value: [ Number, String ],
-    or: String,
+    or: [ Number, String ],
+    inactive: Boolean,
     unit: String,
     unitOpts: Array,
     unitLabel: String,

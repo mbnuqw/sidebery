@@ -77,6 +77,16 @@ export default {
   'settings.rm_folded_tabs': { message: 'Закрывать свернутые табы вместе с родительским' },
   'settings.tabs_child_count': { message: 'Показывать количество потомков' },
   'settings.tabs_lvl_dots': { message: 'Показывать отметки уровней табов' },
+  'settings.discard_folded': { message: 'Выгружать свернутые табы' },
+  'settings.discard_folded_delay': { message: 'Через' },
+  'settings.discard_folded_delay_sec': {
+    message: ['секунда', 'секунды', 'секунд'],
+    plur: [/^(1|(\d*?)[^1]1)$/, /^([234]|(\d*?)[^1][234])$/],
+  },
+  'settings.discard_folded_delay_min': {
+    message: ['минута', 'минуты', 'минут'],
+    plur: [/^(1|(\d*?)[^1]1)$/, /^([234]|(\d*?)[^1][234])$/],
+  },
 
   // --- Bookmarks
   'settings.bookmarks_title': { message: 'Закладки' },

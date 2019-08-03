@@ -740,6 +740,22 @@ function foldTabsBranch(tabId) {
     if (target) browser.tabs.moveInSuccession([tab.id], target.id)
   }
 
+  if (this.state.discardFolded) {
+    if (this.state.discardFoldedDelay === 0) {
+      toHide.map(id => browser.tabs.discard(id))
+    } else {
+      let delayMS = this.state.discardFoldedDelay
+      if (this.state.discardFoldedDelayUnit === 'sec') delayMS *= 1000
+      if (this.state.discardFoldedDelayUnit === 'min') delayMS *= 60000
+      setTimeout(() => {
+        let stillValid = toHide.every(id => {
+          return this.state.tabsMap[id] && this.state.tabsMap[id].invisible
+        })
+        if (stillValid) browser.tabs.discard(toHide)
+      }, delayMS)
+    }
+  }
+
   if (this.state.hideFoldedTabs && toHide.length) {
     browser.tabs.hide(toHide)
   }

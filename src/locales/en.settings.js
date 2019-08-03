@@ -77,6 +77,10 @@ export default {
   'settings.rm_folded_tabs': { message: 'Auto close folded child tabs' },
   'settings.tabs_child_count': { message: 'Show count of descendants' },
   'settings.tabs_lvl_dots': { message: 'Show marks of tabs levels' },
+  'settings.discard_folded': { message: 'Discard folded tabs' },
+  'settings.discard_folded_delay': { message: 'With delay' },
+  'settings.discard_folded_delay_sec': { message: ['second', 'seconds'], plur: [1] },
+  'settings.discard_folded_delay_min': { message: ['minute', 'minutes'], plur: [1] },
 
   // --- Bookmarks
   'settings.bookmarks_title': { message: 'Bookmarks' },

@@ -4,6 +4,7 @@ export const SETTINGS_OPTIONS = {
   autoHideCtxMenuOpts: [250, 500, 1000, 'none'],
   groupLayoutOpts: ['grid', 'list'],
   scrollThroughTabsOpts: ['panel', 'global', 'none'],
+  discardFoldedDelayUnitOpts: ['sec', 'min'],
   tabDoubleClickOpts: ['reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'exp', 'new_after', 'none'],
   tabLongLeftClickOpts: ['reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'new_after', 'none'],
   tabLongRightClickOpts: ['reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'new_after', 'none'],
@@ -62,6 +63,9 @@ export const DEFAULT_SETTINGS = {
   rmFoldedTabs: false,
   tabsChildCount: true,
   tabsLvlDots: false,
+  discardFolded: false,
+  discardFoldedDelay: 0,
+  discardFoldedDelayUnit: 'sec',
 
   // Bookmarks
   bookmarksPanel: true,
