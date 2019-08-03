@@ -173,6 +173,7 @@ export default {
   'settings.tabs_panel_action_next': { message: 'след. панель' },
   'settings.tabs_panel_action_dash': { message: 'меню панели' },
   'settings.tabs_panel_action_expand': { message: 'развернуть/свернуть' },
+  'settings.tabs_panel_action_parent': { message: 'перейти к родительскому табу' },
   'settings.tabs_panel_action_none': { message: 'выкл' },
 
   // --- Keybindings

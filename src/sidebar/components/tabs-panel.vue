@@ -108,9 +108,17 @@ export default {
         if (la === 'prev') return Actions.switchPanel(-1)
         if (la === 'expand') {
           if (!State.tabsTree) return
+          let targetTab = State.tabs.find(t => t.active)
+          if (!targetTab) return
+          if (!targetTab.isParent) targetTab = State.tabsMap[targetTab.parentId]
+          if (!targetTab) return
+          return Actions.toggleBranch(targetTab.id)
+        }
+        if (la === 'parent') {
+          if (!State.tabsTree) return
           const activeTab = State.tabs.find(t => t.active)
-          if (!activeTab || !activeTab.isParent) return
-          return Actions.toggleBranch(activeTab.id)
+          if (!activeTab || !State.tabsMap[activeTab.parentId]) return
+          browser.tabs.update(activeTab.parentId, { active: true })
         }
       }
 
@@ -125,12 +133,17 @@ export default {
         if (ra === 'dash') return EventBus.$emit('openDashboard', State.panelIndex)
         if (ra === 'expand') {
           if (!State.tabsTree) return
-          const activeTab = State.tabs.find(t => t.active)
-          if (!activeTab) return
-          let targetTab = activeTab
+          let targetTab = State.tabs.find(t => t.active)
+          if (!targetTab) return
           if (!targetTab.isParent) targetTab = State.tabsMap[targetTab.parentId]
           if (!targetTab) return
           return Actions.toggleBranch(targetTab.id)
+        }
+        if (ra === 'parent') {
+          if (!State.tabsTree) return
+          const activeTab = State.tabs.find(t => t.active)
+          if (!activeTab || !State.tabsMap[activeTab.parentId]) return
+          browser.tabs.update(activeTab.parentId, { active: true })
         }
       }
     },

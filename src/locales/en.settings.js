@@ -155,6 +155,7 @@ export default {
   'settings.tabs_panel_action_next': { message: 'next panel' },
   'settings.tabs_panel_action_dash': { message: 'open dashboard' },
   'settings.tabs_panel_action_expand': { message: 'expand/fold' },
+  'settings.tabs_panel_action_parent': { message: 'activate parent tab' },
   'settings.tabs_panel_action_none': { message: 'none' },
 
   // --- Keybindings
