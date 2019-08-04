@@ -1,5 +1,5 @@
 <template lang="pug">
-.Separator(:data-selected="selected")
+.Separator(:data-selected="selected" @contextmenu="onCtxMenu")
   .body(@click="onClick" @mousedown="onMouseDown" @mouseup="onMouseUp")
     .drag-layer(draggable="true" @dragstart="onDragStart")
 </template>
@@ -35,6 +35,19 @@ export default {
   },
 
   methods: {
+    /**
+     * Handle context menu
+     */
+    onCtxMenu(e) {
+      if (!State.ctxMenuNative) {
+        e.stopPropagation()
+        e.preventDefault()
+        return
+      }
+
+      State.menuCtx = { type: 'bookmark', el: this.$el, item: this.node }
+    },
+
     /**
      * Handle mouse down event.
      */

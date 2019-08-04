@@ -29,7 +29,9 @@
     "storage",
     "proxy",
     "bookmarks",
-    "sessions"
+    "sessions",
+    "menus",
+    "menus.overrideContext"
   ],
   
   "optional_permissions": [

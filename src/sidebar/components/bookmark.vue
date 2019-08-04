@@ -2,7 +2,8 @@
 .Bookmark(
   :data-selected="selected"
   :data-open="node.isOpen"
-  :data-favless="!favicon")
+  :data-favless="!favicon"
+  @contextmenu="onCtxMenu")
   .body(:title="tooltip", @click="onClick", @mousedown="onMouseDown", @mouseup="onMouseUp")
     .drag-layer(draggable="true", @dragstart="onDragStart")
     .fav
@@ -53,6 +54,19 @@ export default {
   },
 
   methods: {
+    /**
+     * Handle context menu
+     */
+    onCtxMenu(e) {
+      if (!State.ctxMenuNative) {
+        e.stopPropagation()
+        e.preventDefault()
+        return
+      }
+
+      State.menuCtx = { type: 'bookmark', el: this.$el, item: this.node }
+    },
+
     /**
      * Handle mouse down event.
      */

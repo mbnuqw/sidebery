@@ -13,6 +13,7 @@ export default {
   'settings.autoHide_ctx_menu_500': { message: '0.5s' },
   'settings.autoHide_ctx_menu_1000': { message: '1s' },
   'settings.autoHide_ctx_menu_none': { message: 'none' },
+  'settings.ctx_menu_native': { message: 'Use native context menu' },
   'settings.ctx_menu_editor': { message: 'Edit context menu' },
 
   // --- Navigation bar

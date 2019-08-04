@@ -17,7 +17,7 @@
 
   :style="{ transform: 'translateY(' + position + 'px)' }"
   :title="tooltip"
-  @contextmenu.prevent.stop=""
+  @contextmenu="onCtxMenu"
   @mousedown="onMouseDown"
   @mouseup="onMouseUp"
   @mouseleave="onMouseLeave"
@@ -134,6 +134,19 @@ export default {
   },
 
   methods: {
+    /**
+     * Handle context menu
+     */
+    onCtxMenu(e) {
+      if (!State.ctxMenuNative) {
+        e.stopPropagation()
+        e.preventDefault()
+        return
+      }
+
+      State.menuCtx = { type: 'tab', el: this.$el, item: this.tab }
+    },
+
     /**
      * Double click handler
      */

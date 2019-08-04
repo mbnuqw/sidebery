@@ -51,6 +51,8 @@ export default new Vue({
   },
 
   async created() {
+    browser.windows.onCreated.addListener(this.onWindowCreated)
+    browser.windows.onRemoved.addListener(this.onWindowRemoved)
     browser.windows.onFocusChanged.addListener(this.onFocusWindow)
     browser.storage.onChanged.addListener(this.onChangeStorage)
     browser.commands.onCommand.addListener(this.onCmd)
@@ -60,6 +62,10 @@ export default new Vue({
     let currentWindow = await browser.windows.getCurrent()
     State.private = currentWindow.incognito
     State.windowId = currentWindow.id
+    browser.windows.getAll()
+      .then(windows => {
+        State.otherWindows = windows.filter(w => w.id !== State.windowId)
+      })
 
     await Actions.loadSettings()
     if (State.theme !== 'default') Actions.initTheme()
@@ -108,6 +114,24 @@ export default new Vue({
   },
 
   methods: {
+    /**
+     * Handle new window
+     */
+    onWindowCreated(window) {
+      if (window.id === State.windowId) return
+      if (!State.otherWindows) State.otherWindows = []
+      State.otherWindows.push(window)
+    },
+
+    /**
+     * Handle window removng
+     */
+    onWindowRemoved(windowId) {
+      if (windowId === State.windowId || !State.otherWindows) return
+      let index = State.otherWindows.findIndex(w => w.id === windowId)
+      if (index >= 0) State.otherWindows.splice(index, 1)
+    },
+
     /**
      * Set currently focused window
      */

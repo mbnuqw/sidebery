@@ -10,6 +10,11 @@
       :value="$store.state.nativeScrollbars"
       @input="setOpt('nativeScrollbars', $event)")
     .separator
+    ToggleField(
+      label="settings.ctx_menu_native"
+      :value="$store.state.ctxMenuNative"
+      @input="setOpt('ctxMenuNative', $event)")
+    .separator
     select-field(
       label="settings.autoHide_ctx_menu"
       optLabel="settings.autoHide_ctx_menu_"

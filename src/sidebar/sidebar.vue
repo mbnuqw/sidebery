@@ -6,7 +6,7 @@
   :data-pointer="pointerMode"
   :data-nav-inline="$store.state.navBarInline"
   @wheel="onWheel"
-  @contextmenu.prevent.stop=""
+  @contextmenu="onCtxMenu"
   @dragover.prevent="onDragMove"
   @dragenter="onDragEnter"
   @dragleave="onDragLeave"
@@ -334,6 +334,30 @@ export default {
    */
   methods: {
     /**
+     * Handle context menu
+     */
+    onCtxMenu(e) {
+      if (!State.ctxMenuNative) {
+        e.stopPropagation()
+        e.preventDefault()
+      }
+
+      if (State.menuCtx) {
+        let nativeCtx = { context: State.menuCtx.type }
+        if (State.menuCtx.type === 'tab') nativeCtx.tabId = State.menuCtx.item.id
+        if (State.menuCtx.type === 'bookmark') nativeCtx.bookmarkId = State.menuCtx.item.id
+        browser.menus.overrideContext(nativeCtx)
+
+        if (!State.selected.length) State.selected = [State.menuCtx.item.id]
+        Actions.openCtxMenu(State.menuCtx.el, State.menuCtx.item)
+      } else {
+        e.preventDefault()
+      }
+
+      State.menuCtx = null
+    },
+
+    /**
      * Sidebar wheel event handler
      */
     onWheel(e) {
@@ -419,6 +443,7 @@ export default {
      * Start selection
      */
     startSelection(info) {
+      if (State.ctxMenuNative) return
       this.selectionStart = info
       this.selectY = info.clientY
     },

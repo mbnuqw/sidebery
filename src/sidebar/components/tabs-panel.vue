@@ -1,6 +1,5 @@
 <template lang="pug">
 .TabsPanel(
-  @contextmenu.prevent.stop=""
   @wheel="onWheel"
   @mousedown="onMouseDown"
   @dblclick="onDoubleClick")

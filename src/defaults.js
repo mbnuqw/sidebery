@@ -27,6 +27,7 @@ export const DEFAULT_SETTINGS = {
   // General
   nativeScrollbars: false,
   autoHideCtxMenu: 'none',
+  ctxMenuNative: false,
   ctxMenuTopActions: false,
   ctxMenuInlineCtr: false,
 
@@ -328,6 +329,8 @@ export const MENU_OPTIONS = {
     if (node.cookieStoreId !== 'firefox-default') {
       opts.push({
         label: translate('menu.tab.reopen_in_default_panel'),
+        nativeLabel: 'Default container',
+        nativeParentLabel: 'menu.tab.reopen_in_',
         icon: 'icon_tabs',
         action: 'moveTabsToCtx',
         args: [state.selected, 'firefox-default'],
@@ -338,6 +341,8 @@ export const MENU_OPTIONS = {
       if (node.cookieStoreId === c.cookieStoreId) continue
       opts.push({
         label: translate('menu.tab.reopen_in_') + `||${c.color}>>${c.name}`,
+        nativeLabel: c.name,
+        nativeParentLabel: translate('menu.tab.reopen_in_'),
         icon: c.icon,
         color: c.color,
         action: 'moveTabsToCtx',
@@ -463,12 +468,14 @@ export const MENU_OPTIONS = {
   },
 
   openInCtr: (state, node) => {
-    if (node.type === 'separaztor') return
+    if (node.type === 'separator') return
     const opts = []
 
     if (node.type === 'folder' || state.selected.length > 1) {
       opts.push({
         label: translate('menu.bookmark.open_in_default_panel'),
+        nativeLabel: 'Default container',
+        nativeParentLabel: translate('menu.bookmark.open_in_'),
         icon: 'icon_tabs',
         action: 'openBookmarksInPanel',
         args: [state.selected, DEFAULT_CTX_ID],
@@ -479,6 +486,8 @@ export const MENU_OPTIONS = {
       for (let c of state.containers) {
         opts.push({
           label: translate('menu.bookmark.open_in_') + `||${c.color}>>${c.name}`,
+          nativeLabel: c.name,
+          nativeParentLabel: translate('menu.bookmark.open_in_'),
           icon: c.icon,
           color: c.color,
           action: 'openBookmarksInPanel',
@@ -541,4 +550,15 @@ export const MENU_OPTIONS = {
       args: [state.selected],
     }
   },
+}
+
+export const RGB_COLORS = {
+  blue: '#37adff',
+  turquoise: '#00c79a',
+  green: '#51cd00',
+  yellow: '#ffcb00',
+  orange: '#ff9f00',
+  red: '#ff613d',
+  pink: '#ff4bda',
+  purple: '#af51f5',
 }
