@@ -128,7 +128,8 @@ export default {
     onCreated(id, bookmark) {
       if (!State.bookmarks.length) return
 
-      // let added = false
+      bookmark.sel = false
+      bookmark.isOpen = false
       if (bookmark.type === 'bookmark') bookmark.host = bookmark.url.split('/')[2]
       if (bookmark.type === 'folder' && !bookmark.children) bookmark.children = []
       if (bookmark.type === 'folder') bookmark.expanded = false

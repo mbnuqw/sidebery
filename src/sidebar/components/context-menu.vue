@@ -110,23 +110,19 @@ export default {
       let h = this.$root.$el.offsetHeight
 
       if (c) {
-        let rect
-        if (c.el.start && c.el.end) rect = { top: c.el.start, bottom: c.el.end, left: 120, right: 120 }
-        else rect = c.el.getBoundingClientRect()
-
         if (this.aOpts.length) {
           this.bOpts = c.opts
           this.bInline = c.inline
+          this.bPos = c.y
           this.bIsActive = true
           this.aIsActive = false
           this.$nextTick(() => {
-            this.bDown = this.$refs.bBox.offsetHeight + rect.bottom < h
-            this.bPos = this.bDown ? rect.bottom : rect.top
-            const fullWidth = this.$el.offsetWidth
-            const menuWidth = this.$refs.bBox.offsetWidth
-            if (rect.right < fullWidth - menuWidth) this.bX = rect.right
-            else if (rect.left > menuWidth) this.bX = rect.left - menuWidth
-            else this.bX = this.$el.offsetWidth - menuWidth
+            this.bDown = this.$refs.bBox.offsetHeight + c.y < h
+            let fullWidth = this.$el.offsetWidth
+            let menuWidth = this.$refs.bBox.offsetWidth
+            if (c.x < fullWidth - menuWidth) this.bX = c.x
+            else if (c.x > menuWidth) this.bX = c.x - menuWidth
+            else this.bX = fullWidth - menuWidth
           })
           setTimeout(() => {
             this.aOpts = []
@@ -135,16 +131,16 @@ export default {
         } else {
           this.aOpts = c.opts
           this.aInline = c.inline
+          this.aPos = c.y
           this.aIsActive = true
           this.bIsActive = false
           this.$nextTick(() => {
-            this.aDown = this.$refs.aBox.offsetHeight + rect.bottom < h
-            this.aPos = this.aDown ? rect.bottom : rect.top
-            const fullWidth = this.$el.offsetWidth
-            const menuWidth = this.$refs.aBox.offsetWidth
-            if (rect.right < fullWidth - menuWidth) this.aX = rect.right
-            else if (rect.left > menuWidth) this.aX = rect.left - menuWidth
-            else this.aX = this.$el.offsetWidth - menuWidth
+            this.aDown = this.$refs.aBox.offsetHeight + c.y < h
+            let fullWidth = this.$el.offsetWidth
+            let menuWidth = this.$refs.aBox.offsetWidth
+            if (c.x < fullWidth - menuWidth) this.aX = c.x
+            else if (c.x > menuWidth) this.aX = c.x - menuWidth
+            else this.aX = fullWidth - menuWidth
           })
           setTimeout(() => {
             this.bOpts = []

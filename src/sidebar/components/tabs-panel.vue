@@ -102,6 +102,9 @@ export default {
 
   methods: {
     onMouseDown(e) {
+      if (e.target.draggable) return
+      if (State.selected.length) return
+
       if (e.button === 0) {
         const la = State.tabsPanelLeftClickAction
         if (la === 'prev') return Actions.switchPanel(-1)

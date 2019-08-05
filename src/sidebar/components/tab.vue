@@ -3,7 +3,7 @@
   :data-active="tab.active"
   :data-status="tab.status"
   :data-progress="loading"
-  :data-selected="selected"
+  :data-selected="tab.sel"
   :data-favless="!favicon"
   :data-audible="tab.audible"
   :data-muted="tab.mutedInfo.muted"
@@ -76,7 +76,6 @@ export default {
   data() {
     return {
       loading: false,
-      selected: false,
     }
   },
 
@@ -118,9 +117,6 @@ export default {
     EventBus.$on('tabLoadingEnd', this.loadingEnd)
     EventBus.$on('tabLoadingOk', this.loadingOk)
     EventBus.$on('tabLoadingErr', this.loadingErr)
-    EventBus.$on('selectTab', this.onTabSelection)
-    EventBus.$on('deselectTab', this.onTabDeselection)
-    EventBus.$on('openTabMenu', this.onTabMenu)
   },
 
   beforeDestroy() {
@@ -128,9 +124,6 @@ export default {
     EventBus.$off('tabLoadingEnd', this.loadingEnd)
     EventBus.$off('tabLoadingOk', this.loadingOk)
     EventBus.$off('tabLoadingErr', this.loadingErr)
-    EventBus.$off('selectTab', this.onTabSelection)
-    EventBus.$off('deselectTab', this.onTabDeselection)
-    EventBus.$off('openTabMenu', this.onTabMenu)
   },
 
   methods: {
@@ -172,6 +165,31 @@ export default {
       }
 
       if (e.button === 0) {
+        if (e.ctrlKey) {
+          if (!this.tab.sel) Actions.selectItem(this.tab.id)
+          else Actions.deselectItem(this.tab.id)
+          return
+        }
+        if (e.shiftKey) {
+          if (!State.selected.length) {
+            Actions.selectItem(this.tab.id)
+          } else {
+            let first = State.tabsMap[State.selected[0]]
+            for (let id of State.selected) {
+              State.tabsMap[id].sel = false
+            }
+            State.selected = [first.id]
+            let minIndex = Math.min(first.index, this.tab.index)
+            let maxIndex = Math.max(first.index, this.tab.index)
+
+            for (let i = minIndex; i <= maxIndex; i++) {
+              State.tabs[i].sel = true
+              if (i !== first.index) State.selected.push(State.tabs[i].id)
+            }
+          }
+          return
+        }
+
         // Activate tab (if nothing selected)
         if (!State.selected.length) {
           browser.tabs.update(this.tab.id, { active: true })
@@ -222,8 +240,11 @@ export default {
       if (e.button === 0 && this.hodorL) {
         this.hodorL = clearTimeout(this.hodorL)
       }
+
       if (e.button === 2 && this.hodorR) {
         this.hodorR = clearTimeout(this.hodorR)
+
+        if (e.ctrlKey || e.shiftKey) return
 
         // Select this tab
         if (this.tab.isParent && this.tab.folded) {
@@ -235,41 +256,12 @@ export default {
           }
           toSelect.map(id => EventBus.$emit('selectTab', id))
           State.selected = [...toSelect]
-          Actions.openCtxMenu(this.$el, this.tab)
         } else {
         // Select only current tab 
           Actions.closeCtxMenu()
-          State.selected = [this.tab.id]
-          this.selected = true
+          Actions.selectItem(this.tab.id)
         }
       }
-    },
-
-    /**
-     * Handle tab-selection event
-     */
-    onTabSelection(id) {
-      if (this.tab.id === id) {
-        this.selected = true
-        this.hodorR = clearTimeout(this.hodorR)
-      }
-    },
-  
-    /**
-     * Handle tab-deselection event
-     */
-    onTabDeselection(id) {
-      if (!id) this.selected = false
-      if (id && this.tab.id === id) this.selected = false
-    },
-
-    /**
-     * Open tab[s] menu
-     */
-    onTabMenu(id) {
-      if (id !== this.tab.id) return
-      if (this.tab.invisible) return
-      Actions.openCtxMenu(this.$el, this.tab)
     },
 
     /**

@@ -1,10 +1,9 @@
 <template lang="pug">
 .Bookmark(
-  :data-selected="selected"
+  :data-selected="node.sel"
   :data-open="node.isOpen"
-  :data-favless="!favicon"
-  @contextmenu="onCtxMenu")
-  .body(:title="tooltip", @click="onClick", @mousedown="onMouseDown", @mouseup="onMouseUp")
+  :data-favless="!favicon")
+  .body(:title="tooltip" @mousedown="onMouseDown" @mouseup="onMouseUp" @contextmenu="onCtxMenu")
     .drag-layer(draggable="true", @dragstart="onDragStart")
     .fav
       .placeholder: svg: use(xlink:href="#icon_ff")
@@ -26,9 +25,7 @@ export default {
   },
 
   data() {
-    return {
-      selected: false,
-    }
+    return {}
   },
 
   computed: {
@@ -39,18 +36,6 @@ export default {
     tooltip() {
       return `${this.node.title}\n${this.node.url}`
     },
-  },
-
-  created() {
-    EventBus.$on('selectBookmark', this.onBookmarkSelection)
-    EventBus.$on('deselectBookmark', this.onBookmarkDeselection)
-    EventBus.$on('openBookmarkMenu', this.onBookmarkMenu)
-  },
-
-  beforeDestroy() {
-    EventBus.$off('selectBookmark', this.onBookmarkSelection)
-    EventBus.$off('deselectBookmark', this.onBookmarkDeselection)
-    EventBus.$off('openBookmarkMenu', this.onBookmarkMenu)
   },
 
   methods: {
@@ -71,11 +56,32 @@ export default {
      * Handle mouse down event.
      */
     onMouseDown(e) {
+      if (e.button === 0 && e.ctrlKey) {
+        if (!this.node.sel) Actions.selectItem(this.node.id)
+        else Actions.deselectItem(this.node.id)
+        return
+      }
+
+      if (e.button === 0 && !State.selected.length) {
+        if (State.activateOpenBookmarkTab && this.node.isOpen) {
+          const tab = State.tabs.find(t => t.url === this.node.url)
+          if (tab) {
+            browser.tabs.update(tab.id, { active: true })
+            return
+          }
+        }
+        this.openUrl(State.openBookmarkNewTab, true)
+      }
+
       if (e.button === 1) {
         e.preventDefault()
-        if (State.selected.length) EventBus.$emit('deselectBookmark')
-        else this.openUrl(true, false)
+        if (State.selected.length) {
+          Actions.resetSelection()
+          return
+        }
+        this.openUrl(true, false)
       }
+    
       if (e.button === 2) {
         e.stopPropagation()
         this.$emit('start-selection', {
@@ -92,56 +98,10 @@ export default {
      */
     onMouseUp(e) {
       if (e.button === 2) {
+        if (e.ctrlKey || e.shiftKey) return
         Actions.closeCtxMenu()
-        // Select this bookmark
-        if (!State.selected.length) {
-          State.selected = [this.node.id]
-          this.selected = true
-        }
+        Actions.selectItem(this.node.id)
       }
-    },
-
-    /**
-     * Handle click event. 
-     */
-    onClick() {
-      if (State.selected.length) {
-        State.selected = []
-        EventBus.$emit('deselectBookmark')
-        return
-      }
-      
-      if (State.activateOpenBookmarkTab && this.node.isOpen) {
-        const tab = State.tabs.find(t => t.url === this.node.url)
-        if (tab) {
-          browser.tabs.update(tab.id, { active: true })
-          return
-        }
-      }
-      this.openUrl(State.openBookmarkNewTab, true)
-    },
-
-    /**
-     * Handle bookmark selection
-     */
-    onBookmarkSelection(id) {
-      if (this.node.id === id) this.selected = true
-    },
-
-    /**
-     * Handle bookmark deselection
-     */
-    onBookmarkDeselection(id) {
-      if (!id) this.selected = false
-      if (id && this.node.id === id) this.selected = false
-    },
-
-    /**
-     * Open bookmark menu
-     */
-    onBookmarkMenu(id) {
-      if (id !== this.node.id) return
-      Actions.openCtxMenu(this.$el.childNodes[0], this.node)
     },
 
     /**

@@ -2,10 +2,9 @@
 .Folder(
   :data-expanded="node.expanded"
   :data-parent="isParent"
-  :data-selected="selected"
-  :data-open="isOpen"
-  @contextmenu="onCtxMenu")
-  .body(:title="tooltip" @click="onClick" @mousedown="onMouseDown" @mouseup="onMouseUp")
+  :data-selected="node.sel"
+  :data-open="isOpen")
+  .body(:title="tooltip" @mousedown="onMouseDown" @mouseup="onMouseUp" @contextmenu="onCtxMenu")
     .drag-layer(draggable="true" @dragstart="onDragStart")
     .exp(v-if="isParent")
       svg: use(xlink:href="#icon_expand")
@@ -46,9 +45,7 @@ export default {
   },
 
   data() {
-    return {
-      selected: false,
-    }
+    return {}
   },
 
   computed: {
@@ -91,18 +88,6 @@ export default {
     },
   },
 
-  created() {
-    EventBus.$on('selectBookmark', this.onBookmarkSelection)
-    EventBus.$on('deselectBookmark', this.onBookmarkDeselection)
-    EventBus.$on('openBookmarkMenu', this.onBookmarkMenu)
-  },
-
-  beforeDestroy() {
-    EventBus.$off('selectBookmark', this.onBookmarkSelection)
-    EventBus.$off('deselectBookmark', this.onBookmarkDeselection)
-    EventBus.$off('openBookmarkMenu', this.onBookmarkMenu)
-  },
-
   methods: {
     /**
      * Handle context menu
@@ -123,11 +108,19 @@ export default {
      * Handle mouse down event.
      */
     onMouseDown(e) {
-      if (e.button === 1) {
-        e.preventDefault()
-        if (State.selected.length) EventBus.$emit('deselectBookmark')
-        else this.openUrl(true, false)
+      if (e.button === 0 && e.ctrlKey) {
+        if (!this.node.sel) Actions.selectItem(this.node.id)
+        else Actions.deselectItem(this.node.id)
+        return
       }
+
+      if (e.button === 0 && !State.selected.length) {
+        if (!this.node.expanded) Actions.expandBookmark(this.node.id)
+        else Actions.foldBookmark(this.node.id)
+      }
+
+      if (e.button === 1) e.preventDefault()
+
       if (e.button === 2) {
         e.stopPropagation()
         this.$emit('start-selection', {
@@ -145,53 +138,8 @@ export default {
     onMouseUp(e) {
       if (e.button === 2) {
         Actions.closeCtxMenu()
-        // Select this bookmark
-        if (!State.selected.length) {
-          State.selected = [this.node.id]
-          this.selected = true
-        }
+        Actions.selectItem(this.node.id)
       }
-    },
-
-    /**
-     * Handle click event. 
-     */
-    onClick() {
-      if (State.selected.length) {
-        State.selected = []
-        EventBus.$emit('deselectBookmark')
-        return
-      }
-      if (this.node.type === 'folder') {
-        if (!this.node.expanded) Actions.expandBookmark(this.node.id)
-        else Actions.foldBookmark(this.node.id)
-      }
-      if (this.node.type === 'bookmark') {
-        this.openUrl(State.openBookmarkNewTab, true)
-      }
-    },
-
-    /**
-     * Handle bookmark selection
-     */
-    onBookmarkSelection(id) {
-      if (this.node.id === id) this.selected = true
-    },
-
-    /**
-     * Handle bookmark deselection
-     */
-    onBookmarkDeselection(id) {
-      if (!id) this.selected = false
-      if (id && this.node.id === id) this.selected = false
-    },
-
-    /**
-     * Open bookmark menu
-     */
-    onBookmarkMenu(id) {
-      if (id !== this.node.id) return
-      Actions.openCtxMenu(this.$el.childNodes[0], this.node)
     },
 
     /**

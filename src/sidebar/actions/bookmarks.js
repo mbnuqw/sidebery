@@ -23,6 +23,7 @@ async function loadBookmarks() {
     for (let n of nodes) {
       count++
       this.state.bookmarksMap[n.id] = n
+      n.sel = false
       if (n.type === 'bookmark') {
         n.host = n.url.split('/')[2]
         if (this.state.highlightOpenBookmarks) {

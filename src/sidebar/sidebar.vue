@@ -386,7 +386,7 @@ export default {
       if (this.selectionStart && !this.selection && Math.abs(e.clientY - this.selectY) > 5) {
         Actions.closeCtxMenu()
         this.selection = true
-        State.selected.push(this.selectionStart.id) // ..if group, add children too
+        Actions.selectItem(this.selectionStart.id)
 
         let eventName
         if (this.selectionStart.type === 'tab') eventName = 'selectTab'
@@ -424,15 +424,15 @@ export default {
           if (slot.end >= topY && slot.start + 1 <= bottomY) {
             if (!State.selected.includes(slot.id)) {
               State.selected.push(slot.id)
-              if (slot.type === 'tab') EventBus.$emit('selectTab', slot.id)
-              if (slot.type === 'bookmark') EventBus.$emit('selectBookmark', slot.id)
+              if (slot.type === 'tab') State.tabsMap[slot.id].sel = true
+              if (slot.type === 'bookmark') State.bookmarksMap[slot.id].sel = true
             }
           } else {
           // Outside
             if (State.selected.includes(slot.id)) {
               State.selected.splice(State.selected.indexOf(slot.id), 1)
-              if (slot.type === 'tab') EventBus.$emit('deselectTab', slot.id)
-              if (slot.type === 'bookmark') EventBus.$emit('deselectBookmark', slot.id)
+              if (slot.type === 'tab') State.tabsMap[slot.id].sel = false
+              if (slot.type === 'bookmark') State.bookmarksMap[slot.id].sel = false
             }
           }
         }
@@ -455,12 +455,6 @@ export default {
       this.selectionStart = null
       this.selection = false
       this.selectY = 0
-
-      if (State.selected.length) {
-        const target = State.selected[State.selected.length - 1]
-        if (typeof target === 'number') EventBus.$emit('openTabMenu', target)
-        if (typeof target === 'string') EventBus.$emit('openBookmarkMenu', target)
-      }
     },
 
     /**
@@ -646,13 +640,14 @@ export default {
      * Mouse up event handler
      */
     onMouseUp(e) {
-      if (e.button === 0) {
+      if (e.button === 0 && !e.ctrlKey && !e.shiftKey) {
         Actions.closeCtxMenu()
         Actions.resetSelection()
       }
 
       if (e.button === 2) {
         if (this.selectionStart) this.stopSelection()
+        Actions.openCtxMenu(e.clientX, e.clientY)
       }
     },
 
@@ -896,6 +891,7 @@ export default {
       if (tab.parentId === undefined) tab.parentId = -1
       else tab.openerTabId = tab.parentId
       tab.lvl = 0
+      tab.sel = false
       tab.invisible = false
       tab.favIconUrl = ''
       tab.host = ''

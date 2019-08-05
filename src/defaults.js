@@ -322,11 +322,12 @@ export const MENU_OPTIONS = {
     }
   },
 
-  moveToCtr: (state, node) => {
+  moveToCtr: (state) => {
     if (state.private) return
-    const opts = []
+    let opts = []
+    let firstNode = state.tabsMap[state.selected[0]]
 
-    if (node.cookieStoreId !== 'firefox-default') {
+    if (firstNode.cookieStoreId !== 'firefox-default') {
       opts.push({
         label: translate('menu.tab.reopen_in_default_panel'),
         nativeLabel: 'Default container',
@@ -338,7 +339,7 @@ export const MENU_OPTIONS = {
     }
 
     for (let c of state.containers) {
-      if (node.cookieStoreId === c.cookieStoreId) continue
+      if (firstNode.cookieStoreId === c.cookieStoreId) continue
       opts.push({
         label: translate('menu.tab.reopen_in_') + `||${c.color}>>${c.name}`,
         nativeLabel: c.name,
@@ -353,8 +354,9 @@ export const MENU_OPTIONS = {
     return opts
   },
 
-  pin: (state, node) => {
-    const wut = node.pinned ? 'unpin' : 'pin'
+  pin: (state) => {
+    let firstNode = state.tabsMap[state.selected[0]]
+    let wut = firstNode.pinned ? 'unpin' : 'pin'
     return {
       label: translate('menu.tab.' + wut),
       icon: 'icon_pin',
@@ -381,19 +383,21 @@ export const MENU_OPTIONS = {
     }
   },
 
-  mute: (state, node) => {
-    const wut = node.mutedInfo.muted ? 'unmute' : 'mute'
+  mute: (state) => {
+    let firstNode = state.tabsMap[state.selected[0]]
+    const wut = firstNode.mutedInfo.muted ? 'unmute' : 'mute'
     return {
       label: translate('menu.tab.' + wut),
-      icon: node.mutedInfo.muted ? 'icon_loud' : 'icon_mute',
+      icon: firstNode.mutedInfo.muted ? 'icon_loud' : 'icon_mute',
       action: wut + 'Tabs',
       args: [state.selected],
     }
   },
 
-  discard: (state, node) => {
+  discard: (state) => {
+    let firstNode = state.tabsMap[state.selected[0]]
     if (state.selected.length === 1) {
-      if (node.active || node.discarded) return
+      if (firstNode.active || firstNode.discarded) return
     }
     return {
       label: translate('menu.tab.discard'),
@@ -403,8 +407,9 @@ export const MENU_OPTIONS = {
     }
   },
 
-  group: (state, node) => {
-    if (!state.tabsTree || node.pinned) return
+  group: (state) => {
+    let firstNode = state.tabsMap[state.selected[0]]
+    if (!state.tabsTree || firstNode.pinned) return
     return {
       label: translate('menu.tab.group'),
       icon: 'icon_group_tabs',
@@ -413,10 +418,11 @@ export const MENU_OPTIONS = {
     }
   },
 
-  flatten: (state, node) => {
+  flatten: (state) => {
     if (state.selected.length <= 1) return
-    if (state.selected.every(t => node.lvl === state.tabsMap[t].lvl)) return
-    if (!state.tabsTree || node.pinned) return
+    let firstNode = state.tabsMap[state.selected[0]]
+    if (state.selected.every(t => firstNode.lvl === state.tabsMap[t].lvl)) return
+    if (!state.tabsTree || firstNode.pinned) return
     return {
       label: translate('menu.tab.flatten'),
       icon: 'icon_flatten',
@@ -447,7 +453,8 @@ export const MENU_OPTIONS = {
   // 
   // --- Bookmarks options ---
   // 
-  openInNewWin: (state, node) => {
+  openInNewWin: (state) => {
+    let node = state.bookmarksMap[state.selected[0]]
     if (node.type === 'separator') return
     return {
       label: translate('menu.bookmark.open_in_new_window'),
@@ -457,7 +464,8 @@ export const MENU_OPTIONS = {
     }
   },
 
-  openInNewPrivWin: (state, node) => {
+  openInNewPrivWin: (state) => {
+    let node = state.bookmarksMap[state.selected[0]]
     if (node.type === 'separator') return
     return {
       label: translate('menu.bookmark.open_in_new_priv_window'),
@@ -467,9 +475,10 @@ export const MENU_OPTIONS = {
     }
   },
 
-  openInCtr: (state, node) => {
+  openInCtr: (state) => {
+    let node = state.bookmarksMap[state.selected[0]]
     if (node.type === 'separator') return
-    const opts = []
+    let opts = []
 
     if (node.type === 'folder' || state.selected.length > 1) {
       opts.push({
@@ -499,7 +508,8 @@ export const MENU_OPTIONS = {
     return opts
   },
 
-  createBookmark: (state, node) => {
+  createBookmark: (state) => {
+    let node = state.bookmarksMap[state.selected[0]]
     if (node.type !== 'folder') return
     return {
       label: translate('menu.bookmark.create_bookmark'),
@@ -509,7 +519,8 @@ export const MENU_OPTIONS = {
     }
   },
 
-  createFolder: (state, node) => {
+  createFolder: (state) => {
+    let node = state.bookmarksMap[state.selected[0]]
     if (node.type !== 'folder') return
     return {
       label: translate('menu.bookmark.create_folder'),
@@ -519,7 +530,8 @@ export const MENU_OPTIONS = {
     }
   },
 
-  createSeparator: (state, node) => {
+  createSeparator: (state) => {
+    let node = state.bookmarksMap[state.selected[0]]
     if (node.type !== 'folder') return
     return {
       label: translate('menu.bookmark.create_separator'),
@@ -529,8 +541,9 @@ export const MENU_OPTIONS = {
     }
   },
 
-  edit: (state, node) => {
+  edit: (state) => {
     if (state.selected.length > 1) return
+    let node = state.bookmarksMap[state.selected[0]]
     if (node.type === 'separator') return
     if (node.parentId === 'root________') return
     return {
@@ -541,7 +554,8 @@ export const MENU_OPTIONS = {
     }
   },
 
-  delete: (state, node) => {
+  delete: (state) => {
+    let node = state.bookmarksMap[state.selected[0]]
     if (node.parentId === 'root________') return
     return {
       label: translate('menu.bookmark.delete_bookmark'),

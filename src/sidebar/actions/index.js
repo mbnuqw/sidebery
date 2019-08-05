@@ -1,5 +1,4 @@
 import Logs from '../../logs'
-import EventBus from '../../event-bus'
 import Store from '../store'
 import State from '../store/state'
 import SettingsActions from './settings'
@@ -96,14 +95,40 @@ async function undoRmTab() {
 }
 
 /**
+ * Select item
+ */
+function selectItem(id) {
+  if (typeof id === 'number') this.state.tabsMap[id].sel = true
+  else this.state.bookmarksMap[id].sel = true
+  if (!this.state.selected.includes(id)) this.state.selected.push(id)
+}
+
+/**
+ * Deselect item
+ */
+function deselectItem(id) {
+  if (typeof id === 'number') this.state.tabsMap[id].sel = false
+  else this.state.bookmarksMap[id].sel = false
+  let index = State.selected.indexOf(id)
+  if (index >= 0) State.selected.splice(index, 1)
+}
+
+/**
  * Reset selection.
  */
 function resetSelection() {
-  if (this.state.selected.length > 0) {
-    this.state.selected = []
-    EventBus.$emit('deselectTab')
-    EventBus.$emit('deselectBookmark')
+  if (!this.state.selected.length) return
+  let id = this.state.selected[0]
+  if (typeof id === 'number') {
+    for (let id of this.state.selected) {
+      this.state.tabsMap[id].sel = false
+    }
+  } else {
+    for (let id of this.state.selected) {
+      this.state.bookmarksMap[id].sel = false
+    }
   }
+  this.state.selected = []
 }
 
 /**
@@ -134,6 +159,8 @@ const Actions = {
   loadPermissions,
   getAllWindows,
   undoRmTab,
+  selectItem,
+  deselectItem,
   resetSelection,
   lockStorage,
   unlockStorage,

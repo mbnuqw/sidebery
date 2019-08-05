@@ -4,13 +4,21 @@ import Actions from '.'
 
 const xmlSerializer = new XMLSerializer()
 
+// Action.selectTab(tabId)
+// Action.selectTabs([tabId])
+// Action.deselectTab(tabId)
+// Action.deselectTab([tabId])
+
+
+
 /**
  * Open context menu
  */
-async function openCtxMenu(el, node) {
+async function openCtxMenu(x, y) {
   if (this.state.ctxMenuNative) browser.menus.removeAll()
+  if (!this.state.selected.length) return
 
-  const nodeType = typeof node.id === 'number' ? 'tab' : 'bookmark'
+  const nodeType = typeof this.state.selected[0] === 'number' ? 'tab' : 'bookmark'
   const options = nodeType === 'tab' ? this.state.tabsMenu : this.state.bookmarksMenu
 
   const inline = []
@@ -20,7 +28,7 @@ async function openCtxMenu(el, node) {
     if (optName instanceof Array) {
       let inlineMenu = []
       for (let iOpt of optName) {
-        const option = MENU_OPTIONS[iOpt](this.state, node)
+        const option = MENU_OPTIONS[iOpt](this.state)
         if (!option) continue
         if (this.state.ctxMenuNative) createNativeOption(nodeType, option)
         else inlineMenu = inlineMenu.concat(option)
@@ -29,7 +37,7 @@ async function openCtxMenu(el, node) {
       continue
     }
 
-    const option = MENU_OPTIONS[optName](this.state, node)
+    const option = MENU_OPTIONS[optName](this.state)
     if (!option) continue
     if (this.state.ctxMenuNative) createNativeOption(nodeType, option)
     else opts = opts.concat(option)
@@ -38,7 +46,8 @@ async function openCtxMenu(el, node) {
   if (this.state.ctxMenuNative) return Actions.resetSelection()
 
   this.state.ctxMenu = {
-    el,
+    x,
+    y,
     inline,
     opts,
     off: () => Actions.resetSelection(),
