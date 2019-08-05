@@ -562,3 +562,22 @@ export const RGB_COLORS = {
   pink: '#ff4bda',
   purple: '#af51f5',
 }
+
+export const VALID_STORED_PROPS = [
+  'settings',
+  'panels',
+  'favicons',
+  'favUrls',
+  'favAutoCleanTime',
+  'cssVars',
+  'sidebarCSS',
+  'groupCSS',
+  'settingsCSS',
+  'panelIndex',
+  'snapshots',
+  'lastSnapTime',
+  'tabsTrees',
+  'expandedBookmarks',
+  'tabsMenu',
+  'bookmarksMenu',
+]

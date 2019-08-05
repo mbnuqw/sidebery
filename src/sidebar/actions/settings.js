@@ -145,11 +145,21 @@ async function getCommonDbgInfo() {
   const storage = {}
   try {
     storage.overal = Utils.strSize(JSON.stringify(stored))
-    storage.favicons = Utils.strSize(JSON.stringify(stored.favicons))
-    storage.faviconsCount = stored.favicons.length
-    storage.tabs = Utils.strSize(JSON.stringify(stored.tabsTreeState))
-    storage.snapshots = Utils.strSize(JSON.stringify(stored.snapshots))
-    storage.panels = Utils.strSize(JSON.stringify(stored.panels))
+    storage.props = []
+    for (let prop in stored) {
+      if (!stored.hasOwnProperty(prop)) continue
+      let size = new Blob([JSON.stringify(stored[prop])]).size
+      storage.props.push({
+        name: prop,
+        size: size,
+        sizeStr: Utils.bytesToStr(size),
+      })
+    }
+    // storage.favicons = Utils.strSize(JSON.stringify(stored.favicons))
+    // storage.faviconsCount = stored.favicons.length
+    // storage.tabs = Utils.strSize(JSON.stringify(stored.tabsTreeState))
+    // storage.snapshots = Utils.strSize(JSON.stringify(stored.snapshots))
+    // storage.panels = Utils.strSize(JSON.stringify(stored.panels))
   } catch (err) {
     // nothing to do...
   }

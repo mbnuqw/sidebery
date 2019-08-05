@@ -4,23 +4,6 @@
 
   .info
     h2 General info
-    section
-      .field
-        .label Storage:
-        .value {{storageUsedAll}}
-      .separator
-      .sub
-        .field
-          .label Favicons:
-          .value {{storageFavsCount}}: {{storageUsedFavs}}
-        .separator
-        .field
-          .label Tabs Tree:
-          .value {{storageUsedTabsTree}}
-        .separator
-        .field
-          .label Snapshots:
-          .value {{storageUsedSnapshots}}
 
     section
       .field
@@ -58,6 +41,17 @@
           .label Max Depth:
           .value {{bookmarksMaxDepth}}
 
+  .info
+    h2 Storage (~{{storageOveral}})
+    .storage-viewer(v-if="storageData" @click="storageData = ''") {{storageData}}
+    .storage-section
+      .storage-prop(v-for="info in storage" :data-depr="info.depr")
+        .name {{info.name}}
+        .size ~{{info.sizeStr}}
+        .del-btn(@click="deleteStoredData(info.name)") delete
+        .open-btn(@click="openStoredData(info.name)") open
+        .depr(v-if="!storageValid") deprecated
+
   .windows
     .window(v-for="w in windows" :key="w.id")
       h2.title Window \#{{w.id}}
@@ -85,6 +79,7 @@
 
 
 <script>
+import { VALID_STORED_PROPS } from '../../defaults'
 import FooterSection from './footer'
 
 export default {
@@ -94,11 +89,10 @@ export default {
 
   data() {
     return {
-      storageUsedAll: '-',
-      storageUsedFavs: '-',
-      storageFavsCount: 0,
-      storageUsedTabsTree: '-',
-      storageUsedSnapshots: '-',
+      storageOveral: '-',
+      storage: [],
+      storageValid: true,
+      storageData: '',
       windowsCount: 0,
       containersCount: 0,
       tabsCount: 0,
@@ -122,6 +116,15 @@ export default {
       instanceType: 'sidebar',
     })
     if (!info) return
+
+    this.storageOveral = info.storage.overal
+    this.storage = info.storage.props
+      .sort((a, b) => b.size - a.size)
+      .map(p => {
+        p.depr = !VALID_STORED_PROPS.includes(p.name)
+        return p
+      })
+    this.storageValid = this.storage.every(p => !p.depr)
 
     for (let win of windows) {
       const winInfo = await browser.runtime.sendMessage({
@@ -204,6 +207,24 @@ export default {
      */
     importDebugInfo(json) {
       this.parseDebugInfo(JSON.parse(json))
+    },
+
+    /**
+     * Delete stored property
+     */
+    deleteStoredData(prop) {
+      browser.storage.local.remove(prop)
+      window.location.reload()
+    },
+
+    /**
+     * Get stored data and show it
+     */
+    async openStoredData(prop) {
+      let ans = await browser.storage.local.get(prop)
+      if (!ans || !ans[prop]) return
+
+      this.storageData = JSON.stringify(ans[prop], null, 2)
     },
   },
 }
