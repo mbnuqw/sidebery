@@ -6,6 +6,7 @@
   pos(64px, 0)
   overflow-y: auto
   background-color: var(--bg)
+  background-attachment: local
   &:before
     content: ''
     box(absolute)
@@ -13,18 +14,9 @@
     pos(0, 0)
     background-color: var(--border-flare-fg)
 
-.MenuEditor h1
-  box(relative)
-  size(100%)
-  text(s: 2.5rem, w: 700)
-  padding: 30px 0
-  color: var(--label-fg)
-  text-align: center
-
 .MenuEditor section
   box(relative, grid)
   size(100%, max-w: 400px)
-  grid-gap: 8px 0
   padding: 2px 0 32px
   margin: 0 auto
 
@@ -40,18 +32,19 @@
   box(relative)
   size(100%)
   overflow: hidden
-  padding: 2px 0 2px 0
+  padding: 0
   
 .MenuEditor .group-title
   box(relative)
-  text(s: rem(18))
-  color: var(--sub-title-fg)
-  padding: 3px 0
+  text(s: rem(16))
+  color: var(--label-fg)
+  padding: 0
+  margin: 2px 0 2px 22px
 
 .MenuEditor .opt
   box(relative, flex)
   align-items: center
-  padding: 0 0 0 8px
+  padding: 0
   &:hover
     .opt-title
       opacity: 1
@@ -60,7 +53,7 @@
 
   .opt-title
     box(relative)
-    text(s: rem(15))
+    text(s: rem(16))
     color: var(--label-fg)
     white-space: nowrap
     overflow: hidden
@@ -68,6 +61,7 @@
     padding: 2px 5px 2px 0
     margin: 0 auto 0 0
     opacity: .7
+    cursor: default
 
   .opt-btn
     box(relative)
@@ -79,6 +73,13 @@
     opacity: .2
     &.-up svg
       transform: rotateZ(180deg)
+    &.-in svg
+      transform: rotateZ(-90deg)
+    &.-rm
+      fill: var(--false-fg)
+    &.-rm svg
+      size(18px, same)
+      pos(calc(50% - 9px), same)
     &:hover
       opacity: 1
     &:active
@@ -87,6 +88,14 @@
       box(absolute)
       size(16px, same)
       pos(calc(50% - 8px), same)
+.MenuEditor .menu-group[data-type="sub"] .opt
+  padding: 0 0 0 42px
+.MenuEditor .menu-group.-dis .opt
+  padding: 0 0 0 22px
+  opacity: .32
+  cursor: pointer
+.MenuEditor .menu-group.-dis .opt .opt-title
+  cursor: pointer
 
 .MenuEditor .ctrls
   box(relative, flex)

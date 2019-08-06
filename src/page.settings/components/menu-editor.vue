@@ -1,55 +1,59 @@
 <template lang="pug">
-.MenuEditor: .wrapper(v-noise:300.g:12:af.a:0:42.s:0:9="")
-  //- h1 Context Menu
+.MenuEditor(v-noise:300.g:12:af.a:0:42.s:0:9="")
+
   section
     h2 {{t('menu.editor.tabs_title')}}
 
-    .menu-group(v-for="(group, gi) in inlineTabsMenu")
-      .group-title {{t('menu.editor.inline_group_title')}}
-      .opt(v-for="(opt, i) in group", :title="t(tabsOpts[opt])")
-        .opt-title {{t(tabsOpts[opt])}}
-        .opt-btn(@click="downTabOpt(opt, i, gi)"): svg: use(xlink:href="#icon_expand")
-        .opt-btn.-up(v-if="gi > 0 || group.length > 1", @click="upTabOpt(opt, i, gi)")
+    .menu-group(v-for="(group, i) in tabsMenu" :data-type="group.type")
+      TextInput.group-title(
+        v-if="group.type === 'sub'"
+        :value="group.name"
+        :or="t('menu.editor.inline_group_title')"
+        @input="onSubMenuNameInput('tabs', i, $event)")
+      .opt(v-for="(opt, i) in group.options", :title="t(tabsOpts[opt])")
+        .opt-btn.-in(
+          v-if="group.type === 'list'"
+          @click="createSubMenu('tabs', opt)")
           svg: use(xlink:href="#icon_expand")
-
-    .menu-group(v-if="listTabsMenu.length")
-      .group-title {{t('menu.editor.list_title')}}
-      .opt(v-for="(opt, i) in listTabsMenu", :title="t(tabsOpts[opt])")
         .opt-title {{t(tabsOpts[opt])}}
-        .opt-btn(@click="downTabOpt(opt, i, -1)"): svg: use(xlink:href="#icon_expand")
-        .opt-btn.-up(@click="upTabOpt(opt, i, -1)"): svg: use(xlink:href="#icon_expand")
+        .opt-btn(@click="downOpt('tabs', opt)"): svg: use(xlink:href="#icon_expand")
+        .opt-btn.-up(@click="upOpt('tabs', opt)"): svg: use(xlink:href="#icon_expand")
+        .opt-btn.-rm(@click="disableOpt('tabs', opt)"): svg: use(xlink:href="#icon_remove")
 
-    .menu-group(v-if="disabledTabsMenu.length")
-      .group-title {{t('menu.editor.disabled_title')}}
-      .opt(v-for="opt in disabledTabsMenu", :title="t(tabsOpts[opt])")
+    .menu-group.-dis(v-if="disabledTabsMenu.length")
+      .opt(
+        v-for="opt in disabledTabsMenu"
+        :title="t(tabsOpts[opt])"
+        @click="restoreOption('tabs', opt)")
         .opt-title {{t(tabsOpts[opt])}}
-        .opt-btn.-up(@click="restoreTabOpt(opt)"): svg: use(xlink:href="#icon_expand")
 
     .ctrls: .btn(@click="resetTabsMenu") {{t('menu.editor.reset')}}
 
   section
     h2 {{t('menu.editor.bookmarks_title')}}
 
-    .menu-group(v-for="(group, gi) in inlineBookmarksMenu")
-      .group-title {{t('menu.editor.inline_group_title')}}
-      .opt(v-for="(opt, i) in group", :title="t(bookmarksOpts[opt])")
-        .opt-title {{t(bookmarksOpts[opt])}}
-        .opt-btn(@click="downBookmarkOpt(opt, i, gi)"): svg: use(xlink:href="#icon_expand")
-        .opt-btn.-up(v-if="gi > 0 || group.length > 1", @click="upBookmarkOpt(opt, i, gi)")
+    .menu-group(v-for="(group, i) in bookmarksMenu" :data-type="group.type")
+      TextInput.group-title(
+        v-if="group.type === 'sub'"
+        :value="group.name"
+        :or="t('menu.editor.inline_group_title')"
+        @input="onSubMenuNameInput('bookmarks', i, $event)")
+      .opt(v-for="(opt, i) in group.options", :title="t(bookmarksOpts[opt])")
+        .opt-btn.-in(
+          v-if="group.type === 'list'"
+          @click="createSubMenu('bookmarks', opt)")
           svg: use(xlink:href="#icon_expand")
-
-    .menu-group(v-if="listBookmarksMenu.length")
-      .group-title {{t('menu.editor.list_title')}}
-      .opt(v-for="(opt, i) in listBookmarksMenu", :title="t(bookmarksOpts[opt])")
         .opt-title {{t(bookmarksOpts[opt])}}
-        .opt-btn(@click="downBookmarkOpt(opt, i, -1)"): svg: use(xlink:href="#icon_expand")
-        .opt-btn.-up(@click="upBookmarkOpt(opt, i, -1)"): svg: use(xlink:href="#icon_expand")
+        .opt-btn(@click="downOpt('bookmarks', opt)"): svg: use(xlink:href="#icon_expand")
+        .opt-btn.-up(@click="upOpt('bookmarks', opt)"): svg: use(xlink:href="#icon_expand")
+        .opt-btn.-rm(@click="disableOpt('bookmarks', opt)"): svg: use(xlink:href="#icon_remove")
 
-    .menu-group(v-if="disabledBookmarksMenu.length")
-      .group-title {{t('menu.editor.disabled_title')}}
-      .opt(v-for="opt in disabledBookmarksMenu", :title="t(bookmarksOpts[opt])")
+    .menu-group.-dis(v-if="disabledBookmarksMenu.length")
+      .opt(
+        v-for="opt in disabledBookmarksMenu"
+        :title="t(bookmarksOpts[opt])"
+        @click="restoreOption('bookmarks', opt)")
         .opt-title {{t(bookmarksOpts[opt])}}
-        .opt-btn.-up(@click="restoreBookmarkOpt(opt)"): svg: use(xlink:href="#icon_expand")
 
     .ctrls: .btn(@click="resetBookmarksMenu") {{t('menu.editor.reset')}}
   
@@ -60,7 +64,8 @@
 <script>
 import State from '../store/state'
 import Actions from '../actions'
-import { DEFAULT_TABS_MENU, DEFAULT_BOOKMARKS_MENU } from '../store/state'
+import { DEFAULT_TABS_MENU, DEFAULT_BOOKMARKS_MENU } from '../../defaults'
+import TextInput from '../../components/text-input'
 import FooterSection from './footer'
 
 const TABS_MENU_OPTS = {
@@ -94,6 +99,7 @@ const BOOKMARKS_MENU_OPTS = {
 
 export default {
   components: {
+    TextInput,
     FooterSection,
   },
 
@@ -106,179 +112,81 @@ export default {
   },
 
   computed: {
-    inlineTabsMenu() {
-      return State.tabsMenu.filter(m => m instanceof Array)
-    },
-
-    listTabsMenu() {
-      return State.tabsMenu.filter(m => !(m instanceof Array))
+    tabsMenu() {
+      let out = []
+      let group = {}
+      for (let item of State.tabsMenu) {
+        if (typeof item === 'string') {
+          if (group.type !== 'list') {
+            group = { type: 'list', name: '', options: [] }
+            out.push(group)
+          }
+          group.options.push(item)
+        }
+        if (item instanceof Array) {
+          if (group.type !== 'sub') {
+            group = { type: 'sub', name: '' }
+            if (item[0] instanceof Object) {
+              group.name = item[0].name
+              group.options = item.slice(1)
+            } else {
+              group.options = item
+            }
+            out.push(group)
+            group = {}
+          }
+        }
+      }
+      return out
     },
 
     disabledTabsMenu() {
       const all = Object.keys(TABS_MENU_OPTS)
-      return all.filter(action => {
-        const usedInInline = this.inlineTabsMenu.some(m => m.includes(action))
-        const usedInList = this.listTabsMenu.includes(action)
-        return !usedInInline && !usedInList
-      })
+      const active = State.tabsMenu.reduce((a, v) => a.concat(v), [])
+      return all.filter(option => !active.includes(option))
     },
 
-    inlineBookmarksMenu() {
-      return State.bookmarksMenu.filter(m => m instanceof Array)
-    },
-
-    listBookmarksMenu() {
-      return State.bookmarksMenu.filter(m => !(m instanceof Array))
+    bookmarksMenu() {
+      let out = []
+      let group = {}
+      for (let item of State.bookmarksMenu) {
+        if (typeof item === 'string') {
+          if (group.type !== 'list') {
+            group = { type: 'list', name: '', options: [] }
+            out.push(group)
+          }
+          group.options.push(item)
+        }
+        if (item instanceof Array) {
+          if (group.type !== 'sub') {
+            group = { type: 'sub', name: '' }
+            if (item[0] instanceof Object) {
+              group.name = item[0].name
+              group.options = item.slice(1)
+            } else {
+              group.options = item
+            }
+            out.push(group)
+            group = {}
+          }
+        }
+      }
+      return out
     },
 
     disabledBookmarksMenu() {
       const all = Object.keys(BOOKMARKS_MENU_OPTS)
-      return all.filter(action => {
-        const usedInInline = this.inlineBookmarksMenu.some(m => m.includes(action))
-        const usedInList = this.listBookmarksMenu.includes(action)
-        return !usedInInline && !usedInList
-      })
+      const active = State.bookmarksMenu.reduce((a, v) => a.concat(v), [])
+      return all.filter(option => !active.includes(option))
     },
   },
 
   methods: {
     /**
-     * Move tab option up
-     */
-    upTabOpt(opt, i, gi) {
-      if (gi > -1) {
-        State.tabsMenu[gi].splice(i, 1)
-        if (i === 0) {
-          // Create new inline group or push to upper group
-          if (gi === 0) State.tabsMenu.unshift([opt])
-          else State.tabsMenu[gi - 1].push(opt)
-        } else {
-          State.tabsMenu[gi].splice(i - 1, 0, opt)
-        }
-      } else {
-        const globalIndex = i + this.inlineTabsMenu.length
-        State.tabsMenu.splice(globalIndex, 1)
-        if (i === 0) {
-          if (!this.inlineTabsMenu.length) State.tabsMenu.unshift([opt])
-          else State.tabsMenu[this.inlineTabsMenu.length - 1].push(opt)
-        } else {
-          State.tabsMenu.splice(globalIndex - 1, 0, opt)
-        }
-      }
-
-      const empty = State.tabsMenu.findIndex(inline => inline.length === 0)
-      if (empty !== -1) State.tabsMenu.splice(empty, 1)
-
-      Actions.saveCtxMenu()
-    },
-
-    /**
-     * Move tab option down
-     */
-    downTabOpt(opt, i, gi) {
-      if (gi > -1) {
-        State.tabsMenu[gi].splice(i, 1)
-        if (i === State.tabsMenu[gi].length) {
-          if (gi === this.inlineTabsMenu.length - 1) {
-            State.tabsMenu.splice(this.inlineTabsMenu.length, 0, opt)
-          } else {
-            State.tabsMenu[gi + 1].unshift(opt)
-          }
-        } else {
-          State.tabsMenu[gi].splice(i + 1, 0, opt)
-        }
-      } else {
-        const globalIndex = i + this.inlineTabsMenu.length
-        State.tabsMenu.splice(globalIndex, 1)
-        if (globalIndex !== State.tabsMenu.length) {
-          State.tabsMenu.splice(globalIndex + 1, 0, opt)
-        }
-      }
-
-      const empty = State.tabsMenu.findIndex(inline => inline.length === 0)
-      if (empty !== -1) State.tabsMenu.splice(empty, 1)
-
-      Actions.saveCtxMenu()
-    },
-
-    /**
-     * Restore tab option
-     */
-    restoreTabOpt(opt) {
-      State.tabsMenu.push(opt)
-      Actions.saveCtxMenu()
-    },
-
-    /**
      * Reset tabs menu
      */
     resetTabsMenu() {
       State.tabsMenu = JSON.parse(JSON.stringify(DEFAULT_TABS_MENU))
-      Actions.saveCtxMenu()
-    },
-
-    /**
-     * Move bookmark option up
-     */
-    upBookmarkOpt(opt, i, gi) {
-      if (gi > -1) {
-        State.bookmarksMenu[gi].splice(i, 1)
-        if (i === 0) {
-          // Create new inline group or push to upper group
-          if (gi === 0) State.bookmarksMenu.unshift([opt])
-          else State.bookmarksMenu[gi - 1].push(opt)
-        } else {
-          State.bookmarksMenu[gi].splice(i - 1, 0, opt)
-        }
-      } else {
-        const globalIndex = i + this.inlineBookmarksMenu.length
-        State.bookmarksMenu.splice(globalIndex, 1)
-        if (i === 0) {
-          if (!this.inlineBookmarksMenu.length) State.bookmarksMenu.unshift([opt])
-          else State.bookmarksMenu[this.inlineBookmarksMenu.length - 1].push(opt)
-        } else {
-          State.bookmarksMenu.splice(globalIndex - 1, 0, opt)
-        }
-      }
-
-      const empty = State.bookmarksMenu.findIndex(inline => inline.length === 0)
-      if (empty !== -1) State.bookmarksMenu.splice(empty, 1)
-
-      Actions.saveCtxMenu()
-    },
-
-    /**
-     * Move bookmark option down
-     */
-    downBookmarkOpt(opt, i, gi) {
-      if (gi > -1) {
-        State.bookmarksMenu[gi].splice(i, 1)
-        if (i === State.bookmarksMenu[gi].length) {
-          if (gi === this.inlineBookmarksMenu.length - 1) {
-            State.bookmarksMenu.splice(this.inlineBookmarksMenu.length, 0, opt)
-          } else {
-            State.bookmarksMenu[gi + 1].unshift(opt)
-          }
-        } else {
-          State.bookmarksMenu[gi].splice(i + 1, 0, opt)
-        }
-      } else {
-        const globalIndex = i + this.inlineBookmarksMenu.length
-        State.bookmarksMenu.splice(globalIndex, 1)
-        if (globalIndex !== State.bookmarksMenu.length) State.bookmarksMenu.splice(globalIndex + 1, 0, opt)
-      }
-
-      const empty = State.bookmarksMenu.findIndex(inline => inline.length === 0)
-      if (empty !== -1) State.bookmarksMenu.splice(empty, 1)
-
-      Actions.saveCtxMenu()
-    },
-
-    /**
-     * Restore bookarks option
-     */
-    restoreBookmarkOpt(opt) {
-      State.bookmarksMenu.push(opt)
       Actions.saveCtxMenu()
     },
 
@@ -289,6 +197,176 @@ export default {
       State.bookmarksMenu = JSON.parse(JSON.stringify(DEFAULT_BOOKMARKS_MENU))
       Actions.saveCtxMenu()
     },
+
+    /**
+     * Restore option
+     */
+    restoreOption(type, opt) {
+      let menu = State[type + 'Menu']
+      if (!menu) return
+
+      menu.push(opt)
+      Actions.saveCtxMenu()
+    },
+
+    /**
+     * Disable option
+     */
+    disableOpt(type, opt) {
+      let menu = State[type + 'Menu']
+      if (!menu) return
+
+      for (let i = 0; i < menu.length; i++) {
+
+        if (menu[i] === opt) {
+          menu.splice(i, 1)
+          break
+        }
+
+        if (menu[i] instanceof Array) {
+          let index = menu[i].indexOf(opt)
+          if (index === -1) continue
+
+          menu[i].splice(index, 1)
+          break
+        }
+      }
+
+      this.normalizeMenu(menu)
+
+      Actions.saveCtxMenu()
+    },
+
+    /**
+     * Create sub-menu
+     */
+    createSubMenu(type, opt) {
+      let menu = State[type + 'Menu']
+      if (!menu) return
+
+      for (let i = 0; i < menu.length; i++) {
+
+        if (menu[i] === opt) {
+          menu.splice(i, 1, [opt])
+          break
+        }
+      }
+
+      Actions.saveCtxMenu()
+    },
+
+    /**
+     * Handle input of menu name
+     */
+    onSubMenuNameInput(type, i, value) {
+      let menu = State[type + 'Menu']
+      if (!menu) return
+
+      let targetMenu = menu[i]
+      if (!targetMenu) return
+
+      if (typeof targetMenu[0] !== 'object') {
+        targetMenu.unshift({ name: value })
+      } else {
+        targetMenu[0].name = value
+      }
+
+      if (this.menuNameTimeout) clearTimeout(this.menuNameTimeout)
+      this.menuNameTimeout = setTimeout(() => {
+        this.menuNameTimeout = undefined
+        Actions.saveCtxMenu()
+      }, 500)
+    },
+
+    /**
+     * Move option down
+     */
+    downOpt(type, opt) {
+      let menu = State[type + 'Menu']
+      if (!menu) return
+
+      for (let i = 0; i < menu.length; i++) {
+
+        if (menu[i] === opt) {
+          menu.splice(i, 1)
+          if (!menu[i]) break
+          if (typeof menu[i] === 'string') menu.splice(i + 1, 0, opt)
+          else if (typeof menu[i][0] === 'string') menu[i].unshift(opt)
+          else if (typeof menu[i][0] === 'object') menu[i].splice(1, 0, opt)
+          break
+        }
+
+        if (menu[i] instanceof Array) {
+          let index = menu[i].indexOf(opt)
+          if (index === -1) continue
+
+          menu[i].splice(index, 1)
+          if (!menu[i][index]) menu.splice(i + 1, 0, opt)
+          else menu[i].splice(index + 1, 0, opt)
+          break
+        }
+      }
+
+      this.normalizeMenu(menu)
+
+      Actions.saveCtxMenu()
+    },
+
+    /**
+     * Move option up
+     */
+    upOpt(type, opt) {
+      let menu = State[type + 'Menu']
+      if (!menu) return
+
+      for (let i = 0; i < menu.length; i++) {
+
+        if (menu[i] === opt) {
+          menu.splice(i, 1)
+          if (!menu[i-1]) break
+          if (typeof menu[i-1] === 'string') menu.splice(i-1, 0, opt)
+          else menu[i-1].push(opt)
+          break
+        }
+
+        if (menu[i] instanceof Array) {
+          let index = menu[i].indexOf(opt)
+          if (index === -1) continue
+
+          menu[i].splice(index, 1)
+          if (!menu[i][index-1] || typeof menu[i][index-1] === 'object') {
+            menu.splice(i, 0, opt)
+          } else {
+            menu[i].splice(index-1, 0, opt)
+          }
+          break
+        }
+      }
+
+      this.normalizeMenu(menu)
+
+      Actions.saveCtxMenu()
+    },
+
+    /**
+     * Normalize menu
+     */
+    normalizeMenu(menu) {
+      for (let i = 0; i < menu.length; i++) {
+        if (menu[i] instanceof Array) {
+          if (!menu[i].length) {
+            menu.splice(i, 1)
+            i--
+            continue
+          }
+          if (typeof menu[i][0] === 'object' && menu[i].length === 1) {
+            menu.splice(i, 1)
+            i--
+            continue
+          }
+        }
+      }
+    }
   },
 }
 </script>

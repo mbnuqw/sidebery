@@ -330,8 +330,6 @@ export const MENU_OPTIONS = {
     if (firstNode.cookieStoreId !== 'firefox-default') {
       opts.push({
         label: translate('menu.tab.reopen_in_default_panel'),
-        nativeLabel: 'Default container',
-        nativeParentLabel: 'menu.tab.reopen_in_',
         icon: 'icon_tabs',
         action: 'moveTabsToCtx',
         args: [state.selected, 'firefox-default'],
@@ -342,8 +340,7 @@ export const MENU_OPTIONS = {
       if (firstNode.cookieStoreId === c.cookieStoreId) continue
       opts.push({
         label: translate('menu.tab.reopen_in_') + `||${c.color}>>${c.name}`,
-        nativeLabel: c.name,
-        nativeParentLabel: translate('menu.tab.reopen_in_'),
+        nativeLabel: translate('menu.tab.reopen_in_') + c.name,
         icon: c.icon,
         color: c.color,
         action: 'moveTabsToCtx',

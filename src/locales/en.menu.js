@@ -41,7 +41,7 @@ export default {
   'menu.editor.reset': { message: 'Reset' },
   'menu.editor.tabs_title': { message: 'Tabs' },
   'menu.editor.bookmarks_title': { message: 'Bookmarks' },
-  'menu.editor.inline_group_title': { message: 'Inline group' },
+  'menu.editor.inline_group_title': { message: 'Sub-menu...' },
   'menu.editor.list_title': { message: 'List' },
   'menu.editor.disabled_title': { message: 'Disabled' },
 }

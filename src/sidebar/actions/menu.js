@@ -4,13 +4,6 @@ import Actions from '.'
 
 const xmlSerializer = new XMLSerializer()
 
-// Action.selectTab(tabId)
-// Action.selectTabs([tabId])
-// Action.deselectTab(tabId)
-// Action.deselectTab([tabId])
-
-
-
 /**
  * Open context menu
  */
@@ -27,10 +20,17 @@ async function openCtxMenu(x, y) {
   for (let optName of options) {
     if (optName instanceof Array) {
       let inlineMenu = []
-      for (let iOpt of optName) {
-        const option = MENU_OPTIONS[iOpt](this.state)
+      let parentId
+      for (let subOpt of optName) {
+        if (typeof subOpt === 'object') {
+          if (this.state.ctxMenuNative && subOpt.name) {
+            parentId = createNativeSubMenuOption(nodeType, subOpt.name)
+          }
+          continue
+        }
+        const option = MENU_OPTIONS[subOpt](this.state)
         if (!option) continue
-        if (this.state.ctxMenuNative) createNativeOption(nodeType, option)
+        if (this.state.ctxMenuNative) createNativeOption(nodeType, option, parentId)
         else inlineMenu = inlineMenu.concat(option)
       }
       inline.push(inlineMenu)
@@ -86,6 +86,16 @@ function createNativeOption(ctx, option, parentId) {
   }
 
   browser.menus.create(optProps)
+}
+
+function createNativeSubMenuOption(ctx, title) {
+  let optProps = {
+    type: 'normal',
+    contexts: [ctx],
+    viewTypes: ['sidebar'],
+    title: title,
+  }
+  return browser.menus.create(optProps)
 }
 
 /**
