@@ -763,24 +763,18 @@ export default {
      * Generate export addon data
      */
     async genExportData() {
-      let { settings } = await browser.storage.local.get({ settings: {} })
-      let { snapshots } = await browser.storage.local.get({ snapshots: [] })
-      let { panels } = await browser.storage.local.get({ panels: [] })
-      let { cssVars } = await browser.storage.local.get({ cssVars: {} })
-      let { sidebarCSS } = await browser.storage.local.get({ sidebarCSS: '' })
-      let { groupCSS } = await browser.storage.local.get({ groupCSS: '' })
-      let { settingsCSS } = await browser.storage.local.get({ settingsCSS: '' })
-      
-      let data = {
-        ver: browser.runtime.getManifest().version,
-        settings,
-        snapshots,
-        panels,
-        cssVars,
-        sidebarCSS,
-        groupCSS,
-        settingsCSS,
-      }
+      let data = await browser.storage.local.get({
+        settings: {},
+        snapshots: [],
+        panels: [],
+        cssVars:  {},
+        sidebarCSS: '',
+        groupCSS: '',
+        settingsCSS: '',
+        tabsMenu: [],
+        bookmarksMenu: [],
+      })
+      data.ver = browser.runtime.getManifest().version
       let dataJSON = JSON.stringify(data)
       let file = new Blob([dataJSON], { type: 'application/json' })
       let now = Date.now()
@@ -812,13 +806,17 @@ export default {
 
       // ...check version and do format convertation if needed
 
-      if (data.settings) browser.storage.local.set({ settings: data.settings })
-      if (data.snapshots) browser.storage.local.set({ snapshots: data.snapshots })
-      if (data.panels) browser.storage.local.set({ panels: data.panels })
-      if (data.cssVars) browser.storage.local.set({ cssVars: data.cssVars })
-      if (data.sidebarCSS) browser.storage.local.set({ sidebarCSS: data.sidebarCSS })
-      if (data.groupCSS) browser.storage.local.set({ groupCSS: data.groupCSS })
-      if (data.settingsCSS) browser.storage.local.set({ settingsCSS: data.settingsCSS })
+      let toStore = {}
+      if (data.settings) toStore.settings = data.settings
+      if (data.snapshots) toStore.snapshots = data.snapshots
+      if (data.panels) toStore.panels = data.panels
+      if (data.cssVars) toStore.cssVars = data.cssVars
+      if (data.sidebarCSS) toStore.sidebarCSS = data.sidebarCSS
+      if (data.groupCSS) toStore.groupCSS = data.groupCSS
+      if (data.settingsCSS) toStore.settingsCSS = data.settingsCSS
+      if (data.tabsMenu) toStore.tabsMenu = data.tabsMenu
+      if (data.bookmarksMenu) toStore.bookmarksMenu = data.bookmarksMenu
+      browser.storage.local.set(toStore)
     },
   },
 }
