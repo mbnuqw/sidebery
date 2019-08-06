@@ -10,11 +10,11 @@ let baseSnapshotTimeout
  */
 async function createSnapshot() {
   // Get containers info
-  const containersById = []
+  const containersById = {}
   for (let containerId in this.containers) {
     if (!this.containers.hasOwnProperty(containerId)) continue
-    containersById[this.containers[containerId].cookieStoreId] = {
-      id: this.containers[containerId].cookieStoreId,
+    containersById[containerId] = {
+      id: containerId,
       color: this.containers[containerId].color,
       icon: this.containers[containerId].icon,
       name: this.containers[containerId].name,
@@ -131,23 +131,7 @@ async function getLastSnapTime() {
 async function applySnapshot(snapshot) {
   for (let winId in snapshot.windowsById) {
     if (!snapshot.windowsById.hasOwnProperty(winId)) continue
-    const winInfo = snapshot.windowsById[winId]
-
-    // Create window
-    const noUrlUrl = browser.runtime.getURL('url/url.html')
-    const urls = []
-    for (let tab of winInfo.tabs) {
-      if (
-        tab.url.startsWith('about:') ||
-        tab.url.startsWith('data:') ||
-        tab.url.startsWith('file:')
-      ) {
-        urls.push(noUrlUrl + '#' + tab.url)
-      } else {
-        urls.push(tab.url)
-      }
-    }
-    await browser.windows.create({ url: urls })
+    await Actions.openSnapshotWindow(snapshot, winId)
   }
 }
 
@@ -158,20 +142,75 @@ async function openSnapshotWindow(snapshot, winId) {
   let winInfo = snapshot.windowsById[winId]
   if (!winInfo) return
 
-  const noUrlUrl = browser.runtime.getURL('url/url.html')
-  const urls = []
+  let defaultTabs = []
+  let containeredTabs = []
   for (let tab of winInfo.tabs) {
-    if (
-      tab.url.startsWith('about:') ||
-      tab.url.startsWith('data:') ||
-      tab.url.startsWith('file:')
-    ) {
-      urls.push(noUrlUrl + '#' + tab.url)
+    if (tab.ctr === 'firefox-default') {
+      defaultTabs.push(tab)
     } else {
-      urls.push(tab.url)
+      containeredTabs.push(tab)
     }
   }
-  await browser.windows.create({ url: urls })
+
+  let firstDefaultTab = defaultTabs.shift()
+  let newWindow = await browser.windows.create({
+    url: normalizeUrl(firstDefaultTab.url)
+  })
+
+  for (let tab of defaultTabs) {
+    await browser.tabs.create({
+      windowId: newWindow.id,
+      url: normalizeUrl(tab.url),
+      discarded: true,
+      active: false,
+    })
+  }
+
+  for (let tab of containeredTabs) {
+    let snapCtr = snapshot.containersById[tab.ctr]
+    if (!snapCtr) continue
+
+    const localCtrs = Object.values(this.containers)
+    const localCtr = localCtrs.find(c => c.name === snapCtr.name)
+
+    if (localCtr) {
+      await browser.tabs.create({
+        windowId: newWindow.id,
+        url: normalizeUrl(tab.url),
+        cookieStoreId: localCtr.cookieStoreId,
+        discarded: true,
+        active: false,
+      })
+    } else {
+      let newCtr = await browser.contextualIdentities.create({
+        name: snapCtr.name,
+        color: snapCtr.color,
+        icon: snapCtr.icon,
+      })
+      await browser.tabs.create({
+        windowId: newWindow.id,
+        url: normalizeUrl(tab.url),
+        cookieStoreId: newCtr.cookieStoreId,
+        discarded: true,
+        active: false,
+      })
+    }
+  }
+}
+
+/**
+ * Prepare url to be opened by sidebery
+ */
+function normalizeUrl(url) {
+  if (
+    url.startsWith('about:') ||
+    url.startsWith('data:') ||
+    url.startsWith('file:')
+  ) {
+    return browser.runtime.getURL('url/url.html') + '#' + url
+  } else {
+    return url
+  }
 }
 
 /**

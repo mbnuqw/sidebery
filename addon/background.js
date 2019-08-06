@@ -30,7 +30,7 @@ void async function main() {
   browser.tabs.onCreated.addListener(Actions.onTabCreated)
   browser.tabs.onRemoved.addListener(Actions.onTabRemoved)
   browser.tabs.onUpdated.addListener(Actions.onTabUpdated, {
-    properties: [ 'pinned', 'title' ],
+    properties: [ 'pinned', 'title', 'status' ],
   })
   browser.tabs.onMoved.addListener(Actions.onTabMoved)
   browser.tabs.onAttached.addListener(Actions.onTabAttached)
