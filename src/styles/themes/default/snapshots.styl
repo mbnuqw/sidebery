@@ -164,8 +164,25 @@
 .Snapshots .name
   text(s: rem(28))
   padding: 8px 0
+  margin-right: auto
   text-align: center
   color: var(--label-fg)
+
+.Snapshots .win-ctrls
+  box(relative, flex)
+  justify-content: center
+  align-items: center
+
+.Snapshots .text-btn
+  box(relative)
+  text(s: rem(14))
+  color: var(--active-fg)
+  cursor: pointer
+  padding: 2px 8px
+  &:hover
+    opaicty: .7
+  &:active
+    opaicty: .5
 
 .Snapshots .tabs
   box(flex)

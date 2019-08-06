@@ -28,7 +28,9 @@
           v-for="(win, _, i) in activeSnapshot.windowsById"
           v-if="win.tabs.length"
           :key="win.id")
-          .name Window {{'#' + (i + 1)}}
+          .win-ctrls
+            .name Window {{'#' + (i + 1)}}
+            .btn(@click="openWindow(activeSnapshot, win.id)") Open
           .tabs
             a.tab(
               v-for="tab in win.tabs"
@@ -179,6 +181,18 @@ export default {
         windowId: -1,
         action: 'applySnapshot',
         arg: snapshot,
+      })
+    },
+
+    /**
+     * Open window with listed tabs
+     */
+    async openWindow(snapshot, winId) {
+      await browser.runtime.sendMessage({
+        instanceType: 'bg',
+        windowId: -1,
+        action: 'openSnapshotWindow',
+        args: [snapshot, winId],
       })
     },
 

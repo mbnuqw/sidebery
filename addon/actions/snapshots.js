@@ -152,6 +152,29 @@ async function applySnapshot(snapshot) {
 }
 
 /**
+ * Open window
+ */
+async function openSnapshotWindow(snapshot, winId) {
+  let winInfo = snapshot.windowsById[winId]
+  if (!winInfo) return
+
+  const noUrlUrl = browser.runtime.getURL('url/url.html')
+  const urls = []
+  for (let tab of winInfo.tabs) {
+    if (
+      tab.url.startsWith('about:') ||
+      tab.url.startsWith('data:') ||
+      tab.url.startsWith('file:')
+    ) {
+      urls.push(noUrlUrl + '#' + tab.url)
+    } else {
+      urls.push(tab.url)
+    }
+  }
+  await browser.windows.create({ url: urls })
+}
+
+/**
  * Limit snapshots
  */
 async function limitSnapshots(snapshots) {
@@ -229,6 +252,7 @@ export default {
   scheduleNextSnapshot,
   getLastSnapTime,
   applySnapshot,
+  openSnapshotWindow,
   limitSnapshots,
   getSnapInterval,
 }
