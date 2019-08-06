@@ -23,6 +23,7 @@
   flex-wrap: wrap
   justify-content: flex-start
   align-items: flex-start
+  background-attachment: local
   &:before
     content: ''
     box(absolute)
@@ -58,7 +59,7 @@
 
 .StylesEditor section
   box(relative)
-  size(100%, max-w: 400px)
+  size(100%, max-w: 420px)
   margin: 0 auto
   padding: 2px 0 32px
 
@@ -98,19 +99,18 @@
   overflow-y: auto
   overflow-x: hidden
   box-shadow: inset 0 0 8px 0 #00000036, inset 1px 0 0 0 #00000016
-
-.StylesEditor .css h1
-  margin-bottom: 8px
+  background-attachment: local
 
 .StylesEditor .css nav
   box(relative, flex)
   justify-content: center
   align-items: center
+  padding: 32px 0 0
 
 .StylesEditor .nav-item
-  text(s: rem(16))
+  text(s: rem(18))
   color: var(--inactive-fg)
-  padding: 3px 12px
+  padding: 8px 12px
   -moz-user-select: none
   cursor: pointer
   &:hover

@@ -1,7 +1,6 @@
 <template lang="pug">
 .StylesEditor
-  .vars: .wrapper(v-noise:300.g:12:af.a:0:42.s:0:9="")
-    h1 Variables
+  .vars(v-noise:300.g:12:af.a:0:42.s:0:9="")
     section
       h2 {{t('styles.common_title')}}
       color-style-field(
@@ -504,7 +503,6 @@
     .ctrls: .btn(@click="resetCSSVars") {{t('styles.reset_styles')}}
   
   .css: .wrapper(v-noise:300.g:12:af.a:0:42.s:0:9="")
-    h1 CSS
     nav
       .nav-item(
         :data-active="cssTarget === 'sidebar'"
@@ -518,11 +516,12 @@
     .awesome CSS&#10;IS&#10;AWESOME
     .editor-box
       textarea.editor(
+        ref="cssEditor"
         v-model="customCSS"
         @input="onInput"
         @keydown.tab.prevent=""
         @change="applyCssDebounced")
-      .placeholder(:data-hidden="!!customCSS") ...
+      .placeholder(:data-hidden="!!customCSS") CSS...
 </template>
 
 
@@ -553,6 +552,12 @@ export default {
   async created() {
     this.cssVars = await Actions.getCSSVars()
     this.customCSS = await Actions.getCustomCSS(this.cssTarget)
+    this.$nextTick(() => {
+      if (this.$refs.cssEditor) {
+        this.$refs.cssEditor.style.height = '0px'
+        this.$refs.cssEditor.style.height = this.$refs.cssEditor.scrollHeight + 'px'
+      }
+    })
   },
 
   methods: {
