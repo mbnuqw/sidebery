@@ -101,10 +101,6 @@ export default {
 
   data() {
     return {
-      // !!!!!!!!!!!!
-      // !!!!!!!!!!!! to globalize:
-      // !!!!!!!!!!!! - recalcDynVars too...
-      // !!!!!!!!!!!!
       dragMode: false,
       pointerMode: 'none',
       pointerExpanding: false,
@@ -190,7 +186,7 @@ export default {
 
         EventBus.$emit('updatePanelBounds')
 
-        const scroll = this.panelScrollEl ? this.panelScrollEl.scrollTop : 0
+        const scroll = State.panelScrollEl ? State.panelScrollEl.scrollTop : 0
         const startY = this.selectionStart.clientY - State.panelTopOffset + scroll
         const firstItem = State.itemSlots.find(s => s.start <= startY && s.end >= startY)
         if (firstItem) {
@@ -200,7 +196,7 @@ export default {
       }
 
       if (this.selection) {
-        const scroll = this.panelScrollEl ? this.panelScrollEl.scrollTop : 0
+        const scroll = State.panelScrollEl ? State.panelScrollEl.scrollTop : 0
         const startY = this.selectionStart.clientY - State.panelTopOffset + scroll
         const y = e.clientY - State.panelTopOffset + scroll
         const topY = Math.min(startY, y)
@@ -261,9 +257,9 @@ export default {
       if (!State.itemSlots) return
 
       let dragNode = State.dragNodes ? State.dragNodes[0] : null
-      let scroll = this.panelScrollEl ? this.panelScrollEl.scrollTop : 0
+      let scroll = State.panelScrollEl ? State.panelScrollEl.scrollTop : 0
       let y = e.clientY - State.panelTopOffset + scroll
-      let x = e.clientX - this.panelLeftOffset
+      let x = e.clientX - State.panelLeftOffset
       
       // Hide pointer if cursor out of drop area
       if (!this.pointerYLock && y < 0) {
@@ -496,50 +492,6 @@ export default {
       if (State.dragNodes) Actions.resetSelection()
       this.resetDrag()
       State.dragNodes = null
-    },
-
-    /**
-     * Start panel loading
-     */
-    onPanelLoadingStart(i) {
-      State.panelsLoading[i] = true
-      State.panelsLoading = [...State.panelsLoading]
-      if (State.panelsLoadingTimers[i]) {
-        clearTimeout(State.panelsLoadingTimers[i])
-        State.panelsLoadingTimers[i] = null
-      }
-    },
-
-    /**
-     * Stop panel loading
-     */
-    onPanelLoadingEnd(i) {
-      State.panelsLoading[i] = false
-      State.panelsLoading = [...State.panelsLoading]
-    },
-
-    /**
-     * Set panel state to 'ok' for 2s
-     */
-    onPanelLoadingOk(i) {
-      State.panelsLoading[i] = 'ok'
-      State.panelsLoading = [...State.panelsLoading]
-      State.panelsLoadingTimers[i] = setTimeout(() => {
-        this.onPanelLoadingEnd(i)
-        State.panelsLoadingTimers[i] = null
-      }, 2000)
-    },
-
-    /**
-     * Set panel state to 'err' or 2s
-     */
-    onPanelLoadingErr(i) {
-      this.loading[i] = 'err'
-      this.loading = [...this.loading]
-      this.loadingTimers[i] = setTimeout(() => {
-        this.onPanelLoadingEnd(i)
-        this.loadingTimers[i] = null
-      }, 2000)
     },
 
     /**
