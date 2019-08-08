@@ -7,7 +7,7 @@
     :ctx="storeId"
     @start-selection="$emit('start-selection', $event)"
     @stop-selection="$emit('stop-selection')")
-  scroll-box(ref="scrollBox", :lock="scrollLock")
+  scroll-box(ref="scrollBox")
     .container(:style="{ height: scrollHeight }")
       tab(
         v-for="(t, i) in tabs"
@@ -60,10 +60,6 @@ export default {
   },
 
   computed: {
-    scrollLock() {
-      return State.scrollThroughTabs !== 'none'
-    },
-
     scrollHeight() {
       let h = PRE_SCROLL
       for (let t of this.tabs) {
@@ -156,6 +152,10 @@ export default {
 
     onWheel(e) {
       if (State.scrollThroughTabs !== 'none') {
+        if (this.scrollBoxEl && State.scrollThroughTabsExceptOverflow) {
+          if (this.scrollBoxEl.scrollHeight > this.scrollBoxEl.offsetHeight) return
+        }
+        e.preventDefault()
         const globaly = State.scrollThroughTabs === 'global' || e.shiftKey
 
         if (e.deltaY > 0) {

@@ -291,6 +291,12 @@
         :value="$store.state.scrollThroughVisibleTabs"
         :inactive="!$store.state.tabsTree || $store.state.scrollThroughTabs === 'none'"
         @input="setOpt('scrollThroughVisibleTabs', $event)")
+      .separator
+      toggle-field(
+        label="settings.scroll_through_tabs_except_overflow"
+        :value="$store.state.scrollThroughTabsExceptOverflow"
+        :inactive="$store.state.scrollThroughTabs === 'none'"
+        @input="setOpt('scrollThroughTabsExceptOverflow', $event)")
     .separator
     select-field(
       label="settings.tab_double_click"

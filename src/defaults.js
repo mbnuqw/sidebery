@@ -96,6 +96,7 @@ export const DEFAULT_SETTINGS = {
   hScrollThroughPanels: false,
   scrollThroughTabs: 'none',
   scrollThroughVisibleTabs: false,
+  scrollThroughTabsExceptOverflow: true,
   tabDoubleClick: 'none',
   tabLongLeftClick: 'none',
   tabLongRightClick: 'none',
