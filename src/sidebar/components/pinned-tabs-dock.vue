@@ -20,7 +20,6 @@
 
 
 <script>
-import EventBus from '../../event-bus'
 import State from '../store/state'
 import Actions from '../actions'
 import PinnedTab from './pinned-tab'
@@ -85,10 +84,7 @@ export default {
 
       Actions.dropToTabs(e, dropIndex, -1, State.dragNodes, true)
 
-      if (State.dragNodes) {
-        if (State.dragNodes[0].type === 'tab') EventBus.$emit('deselectTab')
-        else EventBus.$emit('deselectBookmark')
-      }
+      if (State.dragNodes) Actions.resetSelection()
 
       this.pointedTabIndex = -1
       this.dragPointed = false

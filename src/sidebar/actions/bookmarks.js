@@ -1,18 +1,18 @@
-import EventBus from '../../event-bus'
 import Utils from '../../utils'
 import Logs from '../../logs'
-import Actions from '.'
+import Actions from '../actions'
 
 /**
  * Load bookmarks and restore tree state
  */
 async function loadBookmarks() {
   let panelIndex = this.state.panels.findIndex(p => p.bookmarks)
-  EventBus.$emit('panelLoadingStart', panelIndex)
+  this.state.panels[panelIndex].loading = true
   let bookmarks = await browser.bookmarks.getTree()
   if (!bookmarks || !bookmarks.length) {
     Logs.push('[ERROR] Cannot load bookmarks')
-    EventBus.$emit('panelLoadingErr', panelIndex)
+    this.state.panels[panelIndex].loading = 'err'
+    setTimeout(() => {this.state.panels[panelIndex].loading = false}, 2000)
   }
 
   // Normalize objects before vue
@@ -67,7 +67,8 @@ async function loadBookmarks() {
 
   this.state.bookmarks = bookmarks[0].children
   this.state.bookmarksCount = count
-  EventBus.$emit('panelLoadingOk', panelIndex)
+  this.state.panels[panelIndex].loading = 'ok'
+  setTimeout(() => {this.state.panels[panelIndex].loading = false}, 2000)
 
   Logs.push('[INFO] Bookmarks loaded')
 }
@@ -104,7 +105,9 @@ async function saveBookmarksTree() {
  * prev state.
  */
 async function reloadBookmarks() {
-  EventBus.$emit('panelLoadingStart', 0)
+  let panel = this.state.panels.find(p => p.bookmarks)
+  panel.loading = true
+
   try {
     let tree = await browser.bookmarks.getTree()
 
@@ -119,10 +122,12 @@ async function reloadBookmarks() {
     walker(tree[0].children)
 
     this.state.bookmarks = tree[0].children
-    EventBus.$emit('panelLoadingOk', 0)
+    panel.loading = 'ok'
+    setTimeout(() => { panel.loading = false }, 2000)
   } catch (err) {
     this.state.bookmarks = []
-    EventBus.$emit('panelLoadingErr', 0)
+    panel.loading = 'err'
+    setTimeout(() => { panel.loading = false }, 2000)
   }
 }
 

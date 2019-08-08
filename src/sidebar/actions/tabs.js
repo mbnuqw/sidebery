@@ -1,7 +1,7 @@
 import Utils from '../../utils'
 import Logs from '../../logs'
 import EventBus from '../../event-bus'
-import Actions from '.'
+import Actions from '../actions'
 
 let TabsTreeSaveTimeout, updateGroupTabTimeouit
 

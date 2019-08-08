@@ -1,14 +1,39 @@
 import Logs from '../../logs'
-import Store from '../store'
-import State from '../store/state'
-import SettingsActions from './settings'
-import KeybindingsActions from './keybindings'
-import FaviconsActions from './favicons'
-import PanelsActions from './panels'
-import TabsActions from './tabs'
-import BookmarksActions from './bookmarks'
-import StylesActions from './styles'
-import CtxMenuActions from './menu'
+
+/**
+ * Load platform info
+ */
+function loadPlatformInfo() {
+  browser.runtime.getPlatformInfo()
+    .then(osInfo => {
+      this.state.osInfo = osInfo
+      this.state.os = osInfo.os
+    })
+}
+
+/**
+ * Load windows info
+ */
+async function loadWindowInfo() {
+  let currentWindow = await browser.windows.getCurrent()
+  this.state.private = currentWindow.incognito
+  this.state.windowId = currentWindow.id
+  browser.windows.getAll()
+    .then(windows => {
+      this.state.otherWindows = windows.filter(w => w.id !== this.state.windowId)
+    })
+}
+
+/**
+ * Connect to background script
+ */
+function connectToBG() {
+  const connectInfo = JSON.stringify({
+    instanceType: this.state.instanceType,
+    windowId: this.state.windowId,
+  })
+  this.state.bg = browser.runtime.connect({ name: connectInfo })
+}
 
 /**
  * Show window-select panel
@@ -58,7 +83,7 @@ async function loadPermissions() {
       if (c.includeHostsActive) c.includeHostsActive = false
       if (c.excludeHostsActive) c.excludeHostsActive = false
     })
-    Actions.savePanels()
+    this.actions.savePanels()
   }
 
   if (!this.state.permTabHide) {
@@ -109,8 +134,8 @@ function selectItem(id) {
 function deselectItem(id) {
   if (typeof id === 'number') this.state.tabsMap[id].sel = false
   else this.state.bookmarksMap[id].sel = false
-  let index = State.selected.indexOf(id)
-  if (index >= 0) State.selected.splice(index, 1)
+  let index = this.state.selected.indexOf(id)
+  if (index >= 0) this.state.selected.splice(index, 1)
 }
 
 /**
@@ -145,16 +170,17 @@ function unlockStorage() {
   this.state.storageIsLocked = false
 }
 
-const Actions = {
-  ...SettingsActions,
-  ...KeybindingsActions,
-  ...FaviconsActions,
-  ...PanelsActions,
-  ...TabsActions,
-  ...BookmarksActions,
-  ...StylesActions,
-  ...CtxMenuActions,
+/**
+ * Update sidebar width
+ */
+function updateSidebarWidth() {
+  this.state.width = document.body.offsetWidth
+}
 
+export default {
+  loadPlatformInfo,
+  loadWindowInfo,
+  connectToBG,
   chooseWin,
   loadPermissions,
   getAllWindows,
@@ -164,17 +190,5 @@ const Actions = {
   resetSelection,
   lockStorage,
   unlockStorage,
+  updateSidebarWidth,
 }
-
-// Inject vuex getters and state in actions
-for (let action in Actions) {
-  if (!Actions.hasOwnProperty(action)) continue
-
-  Actions[action] = Actions[action].bind({
-    getters: Store.getters,
-    state: State,
-    actions: Actions,
-  })
-}
-
-export default Actions

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Logs from '../../logs'
-import Actions from '.'
+import Actions from '../actions'
 
 let saveFaviconsTimeout
 

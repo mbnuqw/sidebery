@@ -1,7 +1,7 @@
 import EventBus from '../../event-bus'
 import Logs from '../../logs'
 import Utils from '../../utils'
-import Actions from '.'
+import Actions from '../actions'
 import {
   DEFAULT_PANELS,
   DEFAULT_BOOKMARKS_PANEL,
@@ -10,7 +10,7 @@ import {
   DEFAULT_CTX_TABS_PANEL,
 } from '../../defaults'
 
-let recalcPanelScrollTimeout, savePanelsTimeout
+let recalcPanelScrollTimeout, savePanelsTimeout, updatePanelBoundsTimeout
 
 /**
  * Load Contextual Identities and containers
@@ -92,6 +92,7 @@ async function loadPanels() {
       }
 
       // Sidebery props
+      panel.loading = false
       panel.index = panels.length
       panel.lockedTabs = loadedPanel.lockedTabs
       panel.lockedPanel = loadedPanel.lockedPanel
@@ -291,12 +292,23 @@ function savePanelIndex() {
 /**
  * Breadcast recalc panel's scroll event.
  */
-function recalcPanelScroll() {
+function recalcPanelScroll(delay = 200) {
   if (recalcPanelScrollTimeout) clearTimeout(recalcPanelScrollTimeout)
   recalcPanelScrollTimeout = setTimeout(() => {
     EventBus.$emit('recalcPanelScroll')
     recalcPanelScrollTimeout = null
-  }, 200)
+  }, delay)
+}
+
+/**
+ * Breadcast recalc panel's scroll event.
+ */
+function updatePanelBoundsDebounced(delay = 256) {
+  if (updatePanelBoundsTimeout) clearTimeout(updatePanelBoundsTimeout)
+  updatePanelBoundsTimeout = setTimeout(() => {
+    EventBus.$emit('updatePanelBounds')
+    updatePanelBoundsTimeout = null
+  }, delay)
 }
 
 /**
@@ -307,7 +319,7 @@ function switchToPanel(index) {
   Actions.resetSelection()
   Actions.setPanel(index)
 
-  if (this.state.dashboardIsOpen) EventBus.$emit('openDashboard', this.state.panelIndex)
+  if (this.state.dashboardIsOpen) Actions.openDashboard(this.state.panelIndex)
   const panel = this.state.panels[this.state.panelIndex]
   if (panel.noEmpty && panel.tabs && !panel.tabs.length) {
     Actions.createTab(panel.cookieStoreId)
@@ -319,7 +331,7 @@ function switchToPanel(index) {
 
   Actions.recalcPanelScroll()
   Actions.updateTabsVisability()
-  EventBus.$emit('panelSwitched')
+  Actions.updatePanelBoundsDebounced()
   Actions.savePanelIndex()
 }
 
@@ -360,7 +372,7 @@ async function switchPanel(dir = 0) {
     Actions.activateLastActiveTabOf(this.state.panelIndex)
   }
 
-  if (this.state.dashboardIsOpen) EventBus.$emit('openDashboard', this.state.panelIndex)
+  if (this.state.dashboardIsOpen) Actions.openDashboard(this.state.panelIndex)
   let panel = this.state.panels[this.state.panelIndex]
   if (panel.noEmpty && panel.tabs && !panel.tabs.length) {
     Actions.createTab(panel.cookieStoreId)
@@ -368,7 +380,7 @@ async function switchPanel(dir = 0) {
 
   Actions.recalcPanelScroll()
   Actions.updateTabsVisability()
-  EventBus.$emit('panelSwitched')
+  Actions.updatePanelBoundsDebounced()
 }
 
 /**
@@ -419,6 +431,7 @@ export default {
   setPanel,
   savePanelIndex,
   recalcPanelScroll,
+  updatePanelBoundsDebounced,
   switchToPanel,
   switchPanel,
   goToActiveTabPanel,

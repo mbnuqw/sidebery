@@ -86,31 +86,16 @@ export default {
   },
 
   async created() {
-    browser.bookmarks.onCreated.addListener(this.onCreated)
-    browser.bookmarks.onChanged.addListener(this.onChanged)
-    browser.bookmarks.onMoved.addListener(this.onMoved)
-    browser.bookmarks.onRemoved.addListener(this.onRemoved)
-
-    // Setup global events listeners
-    EventBus.$on('recalcPanelScroll', () => {
-      if (this.index !== State.panelIndex) return
-      this.recalcScroll()
-    })
-
-    // Render
+    // Render if this panel is active
     if (State.panelIndex === this.index) {
       this.renderable = true
-      setTimeout(() => {
-        this.visible = true
-      }, 16)
+      setTimeout(() => { this.visible = true }, 16)
     }
   },
 
-  beforeDestroy() {
-    browser.bookmarks.onCreated.removeListener(this.onCreated)
-    browser.bookmarks.onChanged.removeListener(this.onChanged)
-    browser.bookmarks.onMoved.removeListener(this.onMoved)
-    browser.bookmarks.onRemoved.removeListener(this.onRemoved)
+  mounted() {
+    EventBus.$on('recalcPanelScroll', this.recalcScroll)
+    EventBus.$on('updatePanelBounds', this.updatePanelBounds)
   },
 
   methods: {
@@ -123,116 +108,16 @@ export default {
     },
 
     /**
-     * Handle creating bookmark
-     */
-    onCreated(id, bookmark) {
-      if (!State.bookmarks.length) return
-
-      bookmark.sel = false
-      bookmark.isOpen = false
-      if (bookmark.type === 'bookmark') bookmark.host = bookmark.url.split('/')[2]
-      if (bookmark.type === 'folder' && !bookmark.children) bookmark.children = []
-      if (bookmark.type === 'folder') bookmark.expanded = false
-      if (State.highlightOpenBookmarks && bookmark.url) {
-        bookmark.isOpen = !!State.tabs.find(t => t.url === bookmark.url)
-      }
-
-      const parent = State.bookmarksMap[bookmark.parentId]
-      if (parent && parent.children) {
-        parent.children.splice(bookmark.index, 0, bookmark)
-      }
-
-      State.bookmarksMap[id] = bookmark
-      if (bookmark.url) {
-        if (State.bookmarksUrlMap[bookmark.url]) {
-          State.bookmarksUrlMap[bookmark.url].push(bookmark)
-        } else {
-          State.bookmarksUrlMap[bookmark.url] = [bookmark]
-        }
-      }
-    },
-
-    /**
-     * Handle bookmark change
-     */
-    onChanged(id, info) {
-      if (!State.bookmarks.length) return
-
-      const oldUrl = State.bookmarksMap[id].url
-      if (oldUrl !== info.url && State.bookmarksUrlMap[oldUrl]) {
-        const iob = State.bookmarksUrlMap[oldUrl].findIndex(b => b.id === id)
-        if (iob > -1) State.bookmarksUrlMap[oldUrl].splice(iob, 1)
-      }
-
-      const bookmark = State.bookmarksMap[id]
-      if (bookmark) {
-        if (bookmark.title !== info.title) bookmark.title = info.title
-        if (bookmark.url !== info.url) {
-          bookmark.url = info.url
-          bookmark.host = info.url.split('/')[2]
-          if (State.bookmarksUrlMap[info.url]) {
-            State.bookmarksUrlMap[info.url].push(bookmark)
-          } else {
-            State.bookmarksUrlMap[info.url] = [bookmark]
-          }
-        }
-      }
-    },
-
-    /**
-     * Handle moving bookmark
-     */
-    onMoved(id, info) {
-      if (!State.bookmarks.length) return
-
-      const oldParent = State.bookmarksMap[info.oldParentId]
-      const newParent = State.bookmarksMap[info.parentId]
-
-      if (oldParent && newParent) {
-        const node = oldParent.children.splice(info.oldIndex, 1)[0]
-        for (let i = info.oldIndex; i < oldParent.children.length; i++) {
-          oldParent.children[i].index--
-        }
-
-        node.index = info.index
-        node.parentId = info.parentId
-
-        newParent.children.splice(node.index, 0, node)
-        for (let i = info.index + 1; i < newParent.children.length; i++) {
-          newParent.children[i].index++
-        }
-      }
-
-      Actions.saveBookmarksTree(State)
-    },
-
-    /**
-     * Handle removing bookmark node
-     */
-    onRemoved(id, info) {
-      if (!State.bookmarks.length) return
-
-      const parent = State.bookmarksMap[info.parentId]
-      const node = State.bookmarksMap[id]
-      const url = node ? node.url : undefined
-      if (parent) {
-        parent.children.splice(info.index, 1)
-        for (let i = info.index; i < parent.children.length; i++) {
-          parent.children[i].index--
-        }
-      }
-
-      State.bookmarksMap[id] = undefined
-      if (url && State.bookmarksUrlMap[url]) {
-        const ib = State.bookmarksUrlMap[url].findIndex(b => b.id === id)
-        if (ib > -1) State.bookmarksUrlMap[url].splice(ib, 1)
-      }
-    },
-
-    /**
      * Calculate bookmarks bounds
      */
-    getItemsBounds() {
+    updatePanelBounds() {
+      if (State.panelIndex !== this.index) return
+
+      const b = this.$el.getBoundingClientRect()
+      State.panelTopOffset = b.top
+      State.panelLeftOffset = b.left
+      State.panelScrollEl = this.getScrollEl()
+
       // probe bookmarks height
       const compStyle = getComputedStyle(this.$el)
       const fhRaw = compStyle.getPropertyValue('--bookmarks-folder-height')
@@ -296,7 +181,7 @@ export default {
       }
       walker(State.bookmarks)
 
-      return bounds
+      State.itemSlots = bounds
     },
 
     /**
@@ -308,17 +193,10 @@ export default {
     },
 
     /**
-     * Return top offset of panel
-     */
-    getTopOffset() {
-      const b = this.$el.getBoundingClientRect()
-      return b.top
-    },
-
-    /**
      * Recalculate scroll possition
      */
     recalcScroll() {
+      if (this.index !== State.panelIndex) return
       if (this.$refs.scrollBox) {
         this.$refs.scrollBox.recalcScroll()
       }

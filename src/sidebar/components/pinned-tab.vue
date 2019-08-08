@@ -3,7 +3,7 @@
   :data-active="tab.active"
   :data-status="tab.status"
   :data-progress="loading"
-  :data-selected="selected"
+  :data-selected="tab.sel"
   :data-favless="!favicon"
   :data-audible="tab.audible"
   :data-muted="tab.mutedInfo.muted"
@@ -67,7 +67,6 @@ export default {
       menu: false,
       faviErr: false,
       loading: false,
-      selected: false,
       dropSlot: false,
     }
   },
@@ -115,9 +114,6 @@ export default {
     EventBus.$on('tabLoadingEnd', this.loadingEnd)
     EventBus.$on('tabLoadingOk', this.loadingOk)
     EventBus.$on('tabLoadingErr', this.loadingErr)
-    EventBus.$on('selectTab', this.onTabSelection)
-    EventBus.$on('deselectTab', this.onTabDeselection)
-    EventBus.$on('openTabMenu', this.onTabMenu)
   },
 
   beforeDestroy() {
@@ -125,9 +121,6 @@ export default {
     EventBus.$off('tabLoadingEnd', this.loadingEnd)
     EventBus.$off('tabLoadingOk', this.loadingOk)
     EventBus.$off('tabLoadingErr', this.loadingErr)
-    EventBus.$off('selectTab', this.onTabSelection)
-    EventBus.$off('deselectTab', this.onTabDeselection)
-    EventBus.$off('openTabMenu', this.onTabMenu)
   },
 
   methods: {

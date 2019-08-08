@@ -77,10 +77,8 @@ export default {
     this.topOffset = this.$el.getBoundingClientRect().top
     this.scrollBoxEl = this.$refs.scrollBox.getScrollBox()
 
-    EventBus.$on('recalcPanelScroll', () => {
-      if (this.index !== State.panelIndex) return
-      this.recalcScroll()
-    })
+    EventBus.$on('recalcPanelScroll', this.recalcScroll)
+    EventBus.$on('updatePanelBounds', this.updatePanelBounds)
 
     EventBus.$on('scrollToTab', (panelIndex, tabId) => {
       if (panelIndex !== this.index) return
@@ -132,7 +130,7 @@ export default {
       if (e.button === 2) {
         const ra = State.tabsPanelRightClickAction
         if (ra === 'next') return Actions.switchPanel(1)
-        if (ra === 'dash') return EventBus.$emit('openDashboard', State.panelIndex)
+        if (ra === 'dash') return Actions.openDashboard(State.panelIndex)
         if (ra === 'expand') {
           if (!State.tabsTree) return
           let targetTab = State.tabs.find(t => t.active)
@@ -191,17 +189,25 @@ export default {
     },
 
     /**
-     * Calculate tabs bounds
+     * reCalculate tabs bounds, panel's size and so on...
      */
-    getItemsBounds() {
-      if (!this.$refs.tabs) return []
-      if (!this.$refs.tabs.length) return []
+    updatePanelBounds() {
+      if (State.panelIndex !== this.index) return
+
+      const scollEl = this.$refs.scrollBox.getScrollBox()
+      const b = scollEl.getBoundingClientRect()
+      State.panelTopOffset = b.top
+      State.panelLeftOffset = b.left
+      State.panelScrollEl = this.getScrollEl()
+
+      if (!this.$refs.tabs) return
+      if (!this.$refs.tabs.length) return
 
       // probe tabs heights
       const compStyle = getComputedStyle(this.$el)
       const thRaw = compStyle.getPropertyValue('--tabs-height')
       const th = Utils.parseCSSNum(thRaw.trim())[0]
-      if (th === 0) return []
+      if (th === 0) return
       const half = th >> 1
       const e = (half >> 1) + 2
 
@@ -227,7 +233,7 @@ export default {
         overallHeight += th
       }
 
-      return bounds
+      State.itemSlots = bounds
     },
 
     /**
@@ -239,18 +245,10 @@ export default {
     },
 
     /**
-     * Return top offset of panel
-     */
-    getTopOffset() {
-      const scollEl = this.$refs.scrollBox.getScrollBox()
-      const b = scollEl.getBoundingClientRect()
-      return b.top
-    },
-
-    /**
      * Recalc scroll wrapper.
      */
     recalcScroll() {
+      if (this.index !== State.panelIndex) return
       if (this.$refs.scrollBox) {
         this.$refs.scrollBox.recalcScroll()
       }

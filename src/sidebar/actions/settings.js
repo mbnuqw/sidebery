@@ -2,7 +2,7 @@ import Utils from '../../utils'
 import Logs from '../../logs'
 import CommonActions from '../../actions/settings'
 import { DEFAULT_SETTINGS } from '../../defaults'
-import Actions from '.'
+import Actions from '../actions'
 
 /**
  * Update settings
@@ -155,11 +155,6 @@ async function getCommonDbgInfo() {
         sizeStr: Utils.bytesToStr(size),
       })
     }
-    // storage.favicons = Utils.strSize(JSON.stringify(stored.favicons))
-    // storage.faviconsCount = stored.favicons.length
-    // storage.tabs = Utils.strSize(JSON.stringify(stored.tabsTreeState))
-    // storage.snapshots = Utils.strSize(JSON.stringify(stored.snapshots))
-    // storage.panels = Utils.strSize(JSON.stringify(stored.panels))
   } catch (err) {
     // nothing to do...
   }

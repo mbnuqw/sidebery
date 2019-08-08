@@ -8,12 +8,13 @@ export default {
   version: Manifest.version,
   osInfo: null,
   os: null,
-  ffInfo: null,
-  ffVer: null,
   private: browser.extension.inIncognitoContext,
   windowId: 0,
   windowFocused: true,
+
+  width: 250,
   tabHeight: 30,
+  navBtnWidth: 34,
 
   tabsMenu: Utils.cloneArray(DEFAULT_TABS_MENU),
   bookmarksMenu: Utils.cloneArray(DEFAULT_BOOKMARKS_MENU),
@@ -23,6 +24,7 @@ export default {
   winChoosing: false,
 
   dashboardIsOpen: false,
+  dashboard: null,
   recalcScrollNeeded: false,
   selected: [],
   wheelBlockTimeout: null,

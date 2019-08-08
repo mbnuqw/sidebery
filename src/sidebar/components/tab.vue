@@ -250,14 +250,16 @@ export default {
         if (this.tab.isParent && this.tab.folded) {
         // Select whole branch if tab is folded
           Actions.resetSelection()
-          const toSelect = [this.tab.id]
-          for (let tab of State.tabs) {
-            if (toSelect.includes(tab.parentId)) toSelect.push(tab.id)
+          State.selected.push(this.tab.id)
+          for (let tab, i = this.tab.index + 1; i < State.tabs.length; i++) {
+            tab = State.tabs[i]
+            if (tab.lvl <= this.tab.lvl) break
+
+            tab.sel = true
+            State.selected.push(tab.id)
           }
-          toSelect.map(id => EventBus.$emit('selectTab', id))
-          State.selected = [...toSelect]
         } else {
-        // Select only current tab 
+        // Select only current tab
           Actions.closeCtxMenu()
           Actions.selectItem(this.tab.id)
         }
@@ -378,13 +380,15 @@ export default {
       // Select whole branch and show menu
       if (e.button === 2) {
         Actions.resetSelection()
-        const toSelect = [this.tab.id]
-        for (let tab of State.tabs) {
-          if (toSelect.includes(tab.parentId)) toSelect.push(tab.id)
+        State.selected.push(this.tab.id)
+        for (let tab, i = this.tab.index + 1; i < State.tabs.length; i++) {
+          tab = State.tabs[i]
+          if (tab.lvl <= this.tab.lvl) break
+
+          tab.sel = true
+          State.selected.push(tab.id)
         }
-        toSelect.map(id => EventBus.$emit('selectTab', id))
-        State.selected = [...toSelect]
-        Actions.openCtxMenu(this.$el, this.tab)
+        Actions.openCtxMenu(e.clientX, e.clientY)
       }
     },
 
