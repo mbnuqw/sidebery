@@ -1094,6 +1094,11 @@ async function getGroupInfo(groupId) {
     tabs: [],
   }
 
+  let parentTab = this.state.tabsMap[groupTab.parentId]
+  if (parentTab && Utils.isGroupUrl(parentTab.url)) {
+    out.parentId = parentTab.id
+  }
+
   let subGroupLvl = null
   for (let i = groupTab.index + 1; i < this.state.tabs.length; i++) {
     const tab = this.state.tabs[i]
@@ -1106,6 +1111,7 @@ async function getGroupInfo(groupId) {
 
     out.tabs.push({
       id: tab.id,
+      index: tab.index,
       lvl: tab.lvl - groupTab.lvl - 1,
       title: tab.title,
       url: tab.url,
@@ -1259,6 +1265,7 @@ function updateGroupTab(groupTab) {
     let tabs = []
     let subGroupLvl = null
     let len = 0
+
     for (let i = groupTab.index + 1; i < tabsCount; i++) {
       let tab = this.state.tabs[i]
       if (tab.lvl <= groupTab.lvl) break
@@ -1279,13 +1286,20 @@ function updateGroupTab(groupTab) {
       })
     }
 
-    browser.tabs.sendMessage(groupTab.id, {
+    let msg = {
       name: 'update',
       id: groupTab.id,
       index: groupTab.index,
       len,
       tabs,
-    })
+    }
+
+    let parentTab = this.state.tabsMap[groupTab.parentId]
+    if (parentTab && Utils.isGroupUrl(parentTab.url)) {
+      msg.parentId = parentTab.id
+    }
+
+    browser.tabs.sendMessage(groupTab.id, msg)
 
     updateGroupTabTimeouit = null
   }, 256)

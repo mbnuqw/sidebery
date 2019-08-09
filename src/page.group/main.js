@@ -4,7 +4,7 @@ import Utils from '../utils'
 
 const tabsBoxEl = document.getElementById('tabs')
 let newTabEl, groupTabId, groupTabIndex, tabs = []
-let groupLen
+let groupLen, groupParentId
 
 void (async function() {
   let { settings } = await browser.storage.local.get({ settings: DEFAULT_SETTINGS })
@@ -66,6 +66,7 @@ void (async function() {
   groupTabId = groupInfo.id
   groupTabIndex = groupInfo.index
   groupLen = groupInfo.len
+  groupParentId = groupInfo.parentId
 
   while (tabsBoxEl.lastChild) {
     tabsBoxEl.removeChild(tabsBoxEl.lastChild)
@@ -78,6 +79,15 @@ void (async function() {
 
   createNewTabButton()
   updateScreenshots()
+
+  document.body.addEventListener('mousedown', e => {
+    if (e.button === 2 && groupParentId) {
+      e.preventDefault()
+      browser.tabs.update(groupParentId, { active: true })
+    }
+  })
+
+  document.body.addEventListener('contextmenu', e => e.preventDefault())
 
   // Set listeners
   browser.runtime.onMessage.addListener(msg => {
@@ -99,6 +109,7 @@ function onGroupUpdated(msg) {
   groupTabId = msg.id
   groupTabIndex = msg.index
   groupLen = msg.len
+  groupParentId = msg.parentId
 
   for (i = 0; i < msg.tabs.length; i++) {
     let newTab = msg.tabs[i]
@@ -189,6 +200,7 @@ function createNewTabButton() {
   tabsBoxEl.appendChild(newTabEl)
 
   newTabEl.addEventListener('mousedown', event => {
+    event.stopPropagation()
     browser.tabs.create({
       index: groupTabIndex + groupLen + 1,
       openerTabId: groupTabId,
@@ -308,6 +320,7 @@ async function updateScreenshots() {
  * Handle tab click
  */
 async function onTabClick(event, tab) {
+  event.stopPropagation()
   await browser.runtime.sendMessage({
     instanceType: 'sidebar',
     action: 'expTabsBranch',
