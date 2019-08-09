@@ -6,7 +6,6 @@ function onBookmarkCreated(id, bookmark) {
 
   bookmark.sel = false
   bookmark.isOpen = false
-  if (bookmark.type === 'bookmark') bookmark.host = bookmark.url.split('/')[2]
   if (bookmark.type === 'folder' && !bookmark.children) bookmark.children = []
   if (bookmark.type === 'folder') bookmark.expanded = false
   if (this.state.highlightOpenBookmarks && bookmark.url) {
@@ -16,6 +15,9 @@ function onBookmarkCreated(id, bookmark) {
   const parent = this.state.bookmarksMap[bookmark.parentId]
   if (parent && parent.children) {
     parent.children.splice(bookmark.index, 0, bookmark)
+    for (let i = bookmark.index + 1; i < parent.children.length; i++) {
+      parent.children[i].index++
+    }
   }
 
   this.state.bookmarksMap[id] = bookmark
