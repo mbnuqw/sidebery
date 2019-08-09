@@ -198,6 +198,7 @@ export default {
         'pet',
         'tree',
         'chill',
+        'fence',
       ],
       colorOpts: [
         'blue',
