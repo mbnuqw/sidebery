@@ -287,7 +287,7 @@ function getGroupId(url) {
   return url.slice(idIndex)
 }
 
-function getGroupUrl(name) {
+function createGroupUrl(name) {
   const urlBase = browser.runtime.getURL('group/group.html')
   return urlBase + `#${encodeURI(name)}:id:${uid()}`
 }
@@ -456,6 +456,21 @@ function cloneObject(obj) {
   return out
 }
 
+/**
+ * Prepare url to be opened by sidebery
+ */
+function normalizeUrl(url) {
+  if (
+    url.startsWith('about:') ||
+    url.startsWith('data:') ||
+    url.startsWith('file:')
+  ) {
+    return browser.runtime.getURL('url/url.html') + '#' + url
+  } else {
+    return url
+  }
+}
+
 export default {
   uid,
   asap,
@@ -473,8 +488,9 @@ export default {
   getDescFromDragEvent,
   isGroupUrl,
   getGroupId,
-  getGroupUrl,
+  createGroupUrl,
   findSuccessorTab,
   cloneArray,
   cloneObject,
+  normalizeUrl,
 }

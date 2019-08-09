@@ -328,10 +328,12 @@ async function openBookmarksInPanel(ids, panelId) {
     const createdTab = await browser.tabs.create({
       windowId: this.state.windowId,
       index: index++,
-      url: node.url ? node.url : Utils.getGroupUrl(node.title),
+      url: node.url ? Utils.normalizeUrl(node.url) : Utils.createGroupUrl(node.title),
+      title: node.title,
       cookieStoreId: panelId,
       active: false,
       openerTabId: idMap[node.parentId],
+      discarded: true,
     })
     if (isDir) idMap[node.id] = createdTab.id
   }

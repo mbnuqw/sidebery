@@ -642,28 +642,27 @@ async function moveTabsToWin(tabIds, window) {
 async function moveTabsToCtx(tabIds, ctxId) {
   const ids = [...tabIds]
   const oldNewMap = {}
-  const tabs = []
   for (let id of ids) {
     const tab = this.state.tabsMap[id]
     if (!tab) continue
-    tabs.push({
-      id: tab.id,
-      url: tab.url,
-      parentId: tab.parentId,
-      folded: tab.folded,
-    })
-  }
 
-  for (let tab of tabs) {
-    // Create / remove
-    const newTab = await browser.tabs.create({
+    let createConf = {
+      active: false,
       windowId: this.state.windowId,
       cookieStoreId: ctxId,
-      url: tab.url.indexOf('http') ? null : tab.url,
-    })
+      url: Utils.normalizeUrl(tab.url),
+      title: tab.title,
+      discarded: tabIds.length > 1,
+    }
+
+    if (!tab.active) {
+      createConf.discarded = true
+      createConf.title = tab.title
+    }
+
+    const newTab = await browser.tabs.create(createConf)
     await browser.tabs.remove(tab.id)
 
-    // Update values
     oldNewMap[tab.id] = newTab.id
     if (tab.parentId > -1) {
       this.state.tabsMap[newTab.id].parentId = oldNewMap[tab.parentId]
@@ -931,20 +930,28 @@ async function dropToTabs(event, dropIndex, dropParent, nodes, pin) {
       let opener = dropParent < 0 ? undefined : dropParent
       for (let i = 0; i < nodes.length; i++) {
         const node = nodes[i]
+
         if (node.type === 'separator') continue
         if (!this.state.tabsTree && node.type === 'folder') continue
         if (this.state.tabsTreeLimit > 0 && node.type === 'folder') continue
 
         if (oldNewMap[node.parentId] >= 0) opener = oldNewMap[node.parentId]
-        const info = await browser.tabs.create({
-          active: !(parent && parent.folded),
+        let createConf = {
+          active: false,
           cookieStoreId: destCtx,
           index: dropIndex + i,
           openerTabId: opener,
-          url: node.url ? node.url : Utils.getGroupUrl(node.title),
+          url: node.url ? Utils.normalizeUrl(node.url) : Utils.createGroupUrl(node.title),
           windowId: this.state.windowId,
           pinned: pin,
-        })
+        }
+
+        if (!node.active) {
+          createConf.discarded = true
+          createConf.title = node.title
+        }
+
+        const info = await browser.tabs.create(createConf)
         oldNewMap[node.id] = info.id
         if (this.state.tabsMap[info.id] && opener) {
           this.state.tabsMap[info.id].parentId = opener
@@ -1056,7 +1063,7 @@ async function groupTabs(tabIds) {
     cookieStoreId: tabs[0].cookieStoreId,
     index: tabs[0].index,
     openerTabId: tabs[0].parentId < 0 ? undefined : tabs[0].parentId,
-    url: Utils.getGroupUrl(groupTitle),
+    url: Utils.createGroupUrl(groupTitle),
     windowId: this.state.windowId,
   })
 
