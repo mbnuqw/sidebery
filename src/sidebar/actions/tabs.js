@@ -3,6 +3,8 @@ import Logs from '../../logs'
 import EventBus from '../../event-bus'
 import Actions from '../actions'
 
+const URL_WITHOUT_PROTOCOL_RE = /^(.+\.)\/?(.+\/)?\w+/
+
 let TabsTreeSaveTimeout, updateGroupTabTimeouit
 
 /**
@@ -351,8 +353,11 @@ function reloadTabs(tabIds = []) {
   for (let tabId of tabIds) {
     const tab = this.state.tabsMap[tabId]
     if (!tab) continue
-    // if tab loading and haven't yet url
-    if (tab.url === 'about:blank' && tab.status === 'loading') continue
+    if (tab.url === 'about:blank' && URL_WITHOUT_PROTOCOL_RE.test(tab.title)) {
+      browser.tabs.update(tabId, { url: 'https://' + tab.title })
+      continue
+    }
+    if (tab.url.startsWith('about:') && tab.status === 'loading') continue
     browser.tabs.reload(tabId)
   }
 }
