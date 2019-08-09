@@ -21,6 +21,7 @@ function updateSettings(settings) {
   const updateInvisTabs = this.state.hideFoldedTabs !== settings.hideFoldedTabs
   const toggleBookmarks = this.state.bookmarksPanel !== settings.bookmarksPanel
   const theme = this.state.theme !== settings.theme
+  const highlightOpenBookmarks = this.state.highlightOpenBookmarks !== settings.highlightOpenBookmarks
 
   // Update settings of this instance
   for (let k in settings) {
@@ -57,6 +58,16 @@ function updateSettings(settings) {
   if (toggleBookmarks) {
     if (this.state.bookmarksPanel) Actions.loadBookmarks()
     else this.state.bookmarks = []
+  }
+
+  if (highlightOpenBookmarks && this.state.bookmarksUrlMap) {
+    for (let tab of this.state.tabs) {
+      let bookmarks = this.state.bookmarksUrlMap[tab.url]
+      if (!bookmarks) continue
+      for (let bookmark of bookmarks) {
+        bookmark.isOpen = this.state.highlightOpenBookmarks
+      }
+    }
   }
 
   if (theme) {
