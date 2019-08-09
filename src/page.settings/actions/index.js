@@ -105,7 +105,7 @@ function updateActiveView() {
     return
   }
 
-  document.title = 'Settings'
+  document.title = 'Sidebery / Settings'
   this.state.activeView = 'Settings'
 }
 
