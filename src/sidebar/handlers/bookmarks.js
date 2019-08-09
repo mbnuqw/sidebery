@@ -47,7 +47,6 @@ function onBookmarkChanged(id, info) {
     if (bookmark.title !== info.title) bookmark.title = info.title
     if (bookmark.url !== info.url) {
       bookmark.url = info.url
-      bookmark.host = info.url.split('/')[2]
       if (this.state.bookmarksUrlMap[info.url]) {
         this.state.bookmarksUrlMap[info.url].push(bookmark)
       } else {

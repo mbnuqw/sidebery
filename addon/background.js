@@ -40,6 +40,8 @@ void async function main() {
 
   if (!state.settings.tabsTree) Actions.scheduleSnapshots()
   else Actions.onFirstSidebarInit(Actions.scheduleSnapshots)
+
+  Actions.clearFaviCacheAfter(86420)
 }()
 
 /**

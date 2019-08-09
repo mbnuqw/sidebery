@@ -32,7 +32,6 @@ async function loadTabs(fresh = true) {
     t.invisible = false
     t.lvl = 0
     t.sel = false
-    t.host = t.url.split('/')[2] || ''
     if (this.state.highlightOpenBookmarks && this.state.bookmarksUrlMap && this.state.bookmarksUrlMap[t.url]) {
       for (let b of this.state.bookmarksUrlMap[t.url]) {
         b.isOpen = true

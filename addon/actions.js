@@ -5,6 +5,7 @@ import PanelsActions from './actions/panels.js'
 import TabsActions from './actions/tabs.js'
 import MsgActions from './actions/msg.js'
 import ProxyActions from './actions/proxy.js'
+import FaviconsActions from './actions/favicons.js'
 
 const Actions = {
   ...SnapshotsActions,
@@ -14,6 +15,7 @@ const Actions = {
   ...TabsActions,
   ...MsgActions,
   ...ProxyActions,
+  ...FaviconsActions,
 }
 
 /**

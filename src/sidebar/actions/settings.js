@@ -110,7 +110,6 @@ async function getWindowDbgInfo() {
     const tabClone = JSON.parse(JSON.stringify(tab))
 
     delete tabClone.title
-    delete tabClone.host
     delete tabClone.width
     delete tabClone.height
     delete tabClone.lastAccessed

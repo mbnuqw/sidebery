@@ -39,8 +39,6 @@ function onCreatedTab(tab) {
   tab.sel = false
   tab.invisible = false
   tab.favIconUrl = ''
-  tab.host = ''
-  if (tab.url) tab.host = tab.url.split('/')[2] || ''
 
   // Put new tab in tabs list
   this.state.tabsMap[tab.id] = tab
@@ -144,7 +142,6 @@ function onUpdatedTab(tabId, change, tab) {
           }
         }
       }
-      localTab.host = change.url.split('/')[2] || ''
       if (change.url.startsWith('about:')) localTab.favIconUrl = ''
       else this.actions.saveTabsTree()
     }

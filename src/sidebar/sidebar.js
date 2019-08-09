@@ -65,7 +65,6 @@ export default new Vue({
     Actions.loadKeybindings()
     Actions.loadFavicons()
     Actions.loadPermissions()
-    Actions.tryClearFaviCache(86400)
     Actions.updateTabsVisability()
     Actions.connectToBG()
 

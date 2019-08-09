@@ -25,7 +25,6 @@ async function loadBookmarks() {
       this.state.bookmarksMap[n.id] = n
       n.sel = false
       if (n.type === 'bookmark') {
-        n.host = n.url.split('/')[2]
         if (this.state.highlightOpenBookmarks) {
           n.isOpen = !!this.state.tabs.find(t => t.url === n.url)
         } else {
@@ -114,7 +113,6 @@ async function reloadBookmarks() {
     // Normalize objects before vue
     const walker = nodes => {
       for (let n of nodes) {
-        if (n.type === 'bookmark') n.host = n.url.split('/')[2]
         if (n.type === 'folder') n.expanded = false
         if (n.children) walker(n.children)
       }
