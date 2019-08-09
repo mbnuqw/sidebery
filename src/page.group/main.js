@@ -169,7 +169,8 @@ function onTabUpdated(msg) {
   tab.titleEl.innerText = msg.title
   tab.title = msg.title
 
-  tab.urlEl.innerText = msg.url
+  if (msg.url.startsWith('moz-ext')) tab.urlEl.innerText = ''
+  else tab.urlEl.innerText = msg.url
   tab.url = msg.url
 
   tab.el.setAttribute('data-discarded', msg.discarded)
