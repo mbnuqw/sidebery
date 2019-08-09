@@ -1,6 +1,5 @@
 <template lang="pug">
-.Debug: .wrapper(v-noise:300.g:12:af.a:0:42.s:0:9="")
-  //- h1 Debug
+.Debug(v-noise:300.g:12:af.a:0:42.s:0:9="")
 
   .info
     h2 General info
