@@ -18,7 +18,7 @@
   
   .ctrls
     .btn(@click="onOk") {{t(okBtnLabel)}}
-    .btn(@click="onCancel") {{t('btn.cancel')}}
+    .btn.-warn(@click="onCancel") {{t('btn.cancel')}}
 </template>
 
 
