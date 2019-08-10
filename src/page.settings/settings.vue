@@ -58,6 +58,11 @@
       :value="$store.state.navMidClickAction"
       :opts="$store.state.navMidClickActionOpts"
       @input="setOpt('navMidClickAction', $event)")
+    .separator
+    toggle-field(
+      label="settings.nav_switch_panels_wheel"
+      :value="$store.state.navSwitchPanelsWheel"
+      @input="setOpt('navSwitchPanelsWheel', $event)")
 
   section
     h2 {{t('settings.group_title')}}

@@ -39,6 +39,7 @@ export const DEFAULT_SETTINGS = {
   navBtnCount: false,
   hideEmptyPanels: false,
   navMidClickAction: 'none',
+  navSwitchPanelsWheel: true,
 
   // Group page
   groupLayout: 'grid',

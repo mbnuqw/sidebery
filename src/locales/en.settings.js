@@ -26,6 +26,7 @@ export default {
   'settings.nav_mid_click': { message: 'Middle click on panel button' },
   'settings.nav_mid_click_rm_all': { message: 'close all tabs' },
   'settings.nav_mid_click_none': { message: 'none' },
+  'settings.nav_switch_panels_wheel': { message: 'Switch panels with mouse wheel' },
 
   // --- Group page
   'settings.group_title': { message: 'Group page' },

@@ -142,8 +142,10 @@ export default {
      * Navigation wheel event handler
      */
     onNavWheel(e) {
-      if (e.deltaY > 0) return Actions.switchPanel(1)
-      if (e.deltaY < 0) return Actions.switchPanel(-1)
+      if (State.navSwitchPanelsWheel) {
+        if (e.deltaY > 0) return Actions.switchPanel(1)
+        if (e.deltaY < 0) return Actions.switchPanel(-1)
+      }
     },
 
     /**
