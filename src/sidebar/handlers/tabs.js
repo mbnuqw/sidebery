@@ -244,7 +244,7 @@ function onRemovedTab(tabId, info) {
       browser.tabs.create({
         windowId: this.state.windowId,
         index: panel.startIndex,
-        cookieStoreId: panel.id,
+        cookieStoreId: panel.cookieStoreId,
         active: true,
       })
     }

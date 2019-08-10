@@ -824,7 +824,7 @@ async function dropToTabs(event, dropIndex, dropParent, nodes, pin) {
 
   // Tabs or Bookmarks
   if (nodes && nodes.length) {
-    let samePanel = nodes[0].ctx === currentPanel.id
+    let samePanel = nodes[0].ctx === destCtx
     if (pin && currentPanel.panel !== 'TabsPanel') samePanel = true
 
     // Move tabs

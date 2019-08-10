@@ -233,7 +233,6 @@ async function savePanels() {
       name: panel.name,
 
       type: panel.type,
-      id: panel.id,
       dashboard: panel.dashboard,
       panel: panel.panel,
       lockedTabs: panel.lockedTabs,
