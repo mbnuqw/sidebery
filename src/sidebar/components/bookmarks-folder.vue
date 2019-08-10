@@ -68,7 +68,7 @@ export default {
           tstack.length = 0
           return true
         }
-        if (n.children) {
+        if (n.children && n.children.length) {
           if (i < target.length - 1) {
             tstack.push(target)
             istack.push(i)

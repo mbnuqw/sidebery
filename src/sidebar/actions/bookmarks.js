@@ -24,11 +24,10 @@ async function loadBookmarks() {
       count++
       this.state.bookmarksMap[n.id] = n
       n.sel = false
+      n.isOpen = false
       if (n.type === 'bookmark') {
         if (this.state.highlightOpenBookmarks) {
           n.isOpen = !!this.state.tabs.find(t => t.url === n.url)
-        } else {
-          n.isOpen = false
         }
         if (this.state.bookmarksUrlMap[n.url]) {
           this.state.bookmarksUrlMap[n.url].push(n)
@@ -36,10 +35,7 @@ async function loadBookmarks() {
           this.state.bookmarksUrlMap[n.url] = [n]
         }
       }
-      if (n.type === 'folder') {
-        n.expanded = false
-        n.isOpen = false
-      }
+      if (n.type === 'folder') n.expanded = false
       if (n.children) walker(n.children)
     }
   }
