@@ -2,6 +2,7 @@ import { translate } from './mixins/dict'
 
 export const SETTINGS_OPTIONS = {
   autoHideCtxMenuOpts: [250, 500, 1000, 'none'],
+  navMidClickActionOpts: ['rm_all', 'none'],
   groupLayoutOpts: ['grid', 'list'],
   scrollThroughTabsOpts: ['panel', 'global', 'none'],
   discardFoldedDelayUnitOpts: ['sec', 'min'],
@@ -37,6 +38,7 @@ export const DEFAULT_SETTINGS = {
   hideAddBtn: false,
   navBtnCount: false,
   hideEmptyPanels: false,
+  navMidClickAction: 'none',
 
   // Group page
   groupLayout: 'grid',

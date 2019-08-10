@@ -377,7 +377,7 @@ export default {
 
     closeAllTabs() {
       if (!this.conf.tabs || this.conf.tabs.length === 0) return
-      browser.tabs.remove(this.conf.tabs.map(t => t.id))
+      Actions.removeTabs(this.conf.tabs.map(t => t.id))
       this.$emit('close')
     },
 

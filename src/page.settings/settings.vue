@@ -51,6 +51,13 @@
       label="settings.hide_empty_panels"
       :value="$store.state.hideEmptyPanels"
       @input="setOpt('hideEmptyPanels', $event)")
+    .separator
+    select-field(
+      label="settings.nav_mid_click"
+      optLabel="settings.nav_mid_click_"
+      :value="$store.state.navMidClickAction"
+      :opts="$store.state.navMidClickActionOpts"
+      @input="setOpt('navMidClickAction', $event)")
 
   section
     h2 {{t('settings.group_title')}}

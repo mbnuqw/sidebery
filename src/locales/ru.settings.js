@@ -23,6 +23,9 @@ export default {
   'settings.hide_add_btn': { message: 'Скрывать кнопку "Новый контейнер"' },
   'settings.nav_btn_count': { message: 'Показывать количество табов/закладок' },  
   'settings.hide_empty_panels': { message: 'Скрывать пустые панели' },
+  'settings.nav_mid_click': { message: 'Клик средней кнопкой мыши по кнопке панели' },
+  'settings.nav_mid_click_rm_all': { message: 'закрыть все табы' },
+  'settings.nav_mid_click_none': { message: 'ничего' },
 
   // --- Group page
   'settings.group_title': { message: 'Группа' },

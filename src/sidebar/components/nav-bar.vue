@@ -15,6 +15,7 @@
       @click="onNavClick(i, btn.type)"
       @dragenter="onNavDragEnter(i)"
       @dragleave="onNavDragLeave(i)"
+      @mousedown.middle="onNavMidClick(btn)"
       @mousedown.right="onNavRightClick(i, btn.type)")
       svg: use(:xlink:href="'#' + btn.icon")
       .proxy-badge
@@ -174,6 +175,16 @@ export default {
       if (type === 'hidden') return Actions.openDashboard(-2)
 
       Actions.openDashboard(i)
+    },
+
+    /**
+     * Handle middle click on nav button
+     */
+    onNavMidClick(btn) {
+      if (State.navMidClickAction === 'rm_all') {
+        if (!btn.tabs || !btn.tabs.length) return
+        Actions.removeTabs(btn.tabs.map(t => t.id))
+      }
     },
 
     /**

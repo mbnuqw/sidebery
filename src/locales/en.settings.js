@@ -23,6 +23,9 @@ export default {
   'settings.hide_add_btn': { message: 'Hide "New container" button' },
   'settings.nav_btn_count': { message: 'Show count of tabs/bookmarks' },
   'settings.hide_empty_panels': { message: 'Hide empty panels' },
+  'settings.nav_mid_click': { message: 'Middle click on panel button' },
+  'settings.nav_mid_click_rm_all': { message: 'close all tabs' },
+  'settings.nav_mid_click_none': { message: 'none' },
 
   // --- Group page
   'settings.group_title': { message: 'Group page' },
