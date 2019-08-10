@@ -9,6 +9,7 @@
     .exp(v-if="isParent")
       svg: use(xlink:href="#icon_expand")
     .title(v-if="node.title") {{node.title}}
+    .len(v-if="$store.state.showBookmarkLen && node.children.length") {{node.children.length}}
   transition(name="expand")
     .children(v-if="isParent" v-show="node.expanded" :title="node.title")
       component.child(

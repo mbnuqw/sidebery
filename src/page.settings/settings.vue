@@ -235,6 +235,12 @@
       @input="setOpt('autoRemoveOther', $event)")
     .separator
     toggle-field(
+      label="settings.show_bookmark_len"
+      :inactive="!$store.state.bookmarksPanel"
+      :value="$store.state.showBookmarkLen"
+      @input="setOpt('showBookmarkLen', $event)")
+    .separator
+    toggle-field(
       label="settings.highlight_open_bookmarks"
       :inactive="!$store.state.bookmarksPanel"
       :value="$store.state.highlightOpenBookmarks"

@@ -93,6 +93,7 @@ export default {
   'settings.open_bookmark_new_tab': { message: 'Open bookmark in new tab' },
   'settings.auto_close_bookmarks': { message: 'Auto-close folders' },
   'settings.auto_rm_other': { message: 'Delete open bookmarks from "Other Bookmarks" folder' },
+  'settings.show_bookmark_len': { message: 'Show folder size' },
   'settings.highlight_open_bookmarks': { message: 'Highlight open bookmarks' },
   'settings.activate_open_bookmark_tab': { message: 'Go to open tab instead of opening new one' },
 
