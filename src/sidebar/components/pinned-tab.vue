@@ -14,7 +14,7 @@
   :data-color="color"
 
   :title="tooltip"
-  @contextmenu.prevent.stop=""
+  @contextmenu="onCtxMenu"
   @mousedown="onMouseDown"
   @mouseup="onMouseUp"
   @mouseleave="onMouseLeave"
@@ -27,7 +27,7 @@
     @drop="onDragLeave")
   .fav
     .placeholder: svg: use(:xlink:href="favPlaceholder")
-    img(:src="favicon", @load.passive="onFaviconLoad")
+    img(:src="favicon" @load.passive="onFaviconLoad")
     .update-badge
     .ok-badge
       svg: use(xlink:href="#icon_ok")
@@ -37,9 +37,9 @@
     .audio-badge
       svg.-loud: use(xlink:href="#icon_loud_badge")
       svg.-mute: use(xlink:href="#icon_mute_badge")
-  .ctx(v-if="ctx && color", :style="{background: color}")
+  .ctx(v-if="ctx && color" :style="{background: color}")
   .title(v-if="withTitle") {{tab.title}}
-  .close(v-if="$store.state.showTabRmBtn", @mousedown.stop="close", @mouseup.stop="")
+  .close(v-if="$store.state.showTabRmBtn" @mousedown.stop="close" @mouseup.stop="")
     svg: use(xlink:href="#icon_remove")
 </template>
 
@@ -125,6 +125,19 @@ export default {
 
   methods: {
     /**
+     * Handle context menu
+     */
+    onCtxMenu(e) {
+      if (!State.ctxMenuNative) {
+        e.stopPropagation()
+        e.preventDefault()
+        return
+      }
+
+      State.menuCtx = { type: 'tab', el: this.$el, item: this.tab }
+    },
+
+    /**
      * Double click handler
      */
     onDoubleClick() {
@@ -147,8 +160,16 @@ export default {
       }
 
       if (e.button === 0) {
+        if (e.ctrlKey) {
+          if (!this.tab.sel) Actions.selectItem(this.tab.id)
+          else Actions.deselectItem(this.tab.id)
+          return
+        }
+
         // Activate tab
-        browser.tabs.update(this.tab.id, { active: true })
+        if (!State.selected.length) {
+          browser.tabs.update(this.tab.id, { active: true })
+        }
 
         // Long-click action
         this.hodorL = setTimeout(() => {
@@ -189,38 +210,12 @@ export default {
       if (e.button === 2 && this.hodorR) {
         this.hodorR = clearTimeout(this.hodorR)
 
+        if (e.ctrlKey) return
+
         // Select this tab
         Actions.closeCtxMenu()
-        State.selected = [this.tab.id]
-        this.selected = true
-        this.$emit('stop-selection')
+        Actions.selectItem(this.tab.id)
       }
-    },
-
-    /**
-     * Handle tab-selection event
-     */
-    onTabSelection(id) {
-      if (this.tab.id === id) {
-        this.selected = true
-        this.hodorR = clearTimeout(this.hodorR)
-      }
-    },
-  
-    /**
-     * Handle tab-deselection event
-     */
-    onTabDeselection(id) {
-      if (!id) this.selected = false
-      if (id && this.tab.id === id) this.selected = false
-    },
-
-    /**
-     * Open tab[s] menu
-     */
-    onTabMenu(id) {
-      if (id !== this.tab.id) return
-      Actions.openCtxMenu(this.$el, this.tab)
     },
 
     /**
