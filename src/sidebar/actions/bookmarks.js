@@ -100,36 +100,6 @@ async function saveBookmarksTree() {
 }
 
 /**
- * Reload bookmarks without restoring
- * prev state.
- */
-async function reloadBookmarks() {
-  let panel = this.state.panels.find(p => p.bookmarks)
-  panel.loading = true
-
-  try {
-    let tree = await browser.bookmarks.getTree()
-
-    // Normalize objects before vue
-    const walker = nodes => {
-      for (let n of nodes) {
-        if (n.type === 'folder') n.expanded = false
-        if (n.children) walker(n.children)
-      }
-    }
-    walker(tree[0].children)
-
-    this.state.bookmarks = tree[0].children
-    panel.loading = 'ok'
-    setTimeout(() => { panel.loading = false }, 2000)
-  } catch (err) {
-    this.state.bookmarks = []
-    panel.loading = 'err'
-    setTimeout(() => { panel.loading = false }, 2000)
-  }
-}
-
-/**
  * Expand bookmark folder
  */
 function expandBookmark(nodeId) {
@@ -388,7 +358,6 @@ function collapseAllBookmarks() {
 export default {
   loadBookmarks,
   saveBookmarksTree,
-  reloadBookmarks,
   expandBookmark,
   foldBookmark,
   dropToBookmarks,

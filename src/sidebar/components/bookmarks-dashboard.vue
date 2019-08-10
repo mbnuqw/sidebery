@@ -59,7 +59,7 @@ export default {
     },
 
     reloadBookmarks() {
-      Actions.reloadBookmarks()
+      Actions.loadBookmarks()
       this.$emit('close')
     },
 
