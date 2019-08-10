@@ -183,16 +183,25 @@ async function openSnapshotWindow(snapshot, winId) {
     }
   }
 
-  for (let tab of tabs) {
-    await browser.tabs.create({
+  let parents = [], oldNewMap = {}
+  for (let i = 0; i < tabs.length; i++) {
+    let prevTab = tabs[i-1]
+    let tab = tabs[i]
+
+    if (prevTab && prevTab.lvl < tab.lvl) parents.push(oldNewMap[tab.id])
+    if (prevTab && prevTab.lvl > tab.lvl) parents.pop()
+
+    let createdTab = await browser.tabs.create({
       windowId: newWindow.id,
       url: normalizeUrl(tab.url),
       active: false,
       pinned: tab.pinned,
       discarded: !tab.pinned,
       title: !tab.pinned ? tab.title : undefined,
-      cookieStoreId: containers[tab.ctr]
+      cookieStoreId: containers[tab.ctr],
+      openerTabId: parents[parents.length - 1],
     })
+    oldNewMap[tab.id] = createdTab.id
   }
 }
 
