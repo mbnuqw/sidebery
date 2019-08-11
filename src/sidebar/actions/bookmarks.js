@@ -262,7 +262,8 @@ function openBookmarksInNewWin(ids, incognito) {
  * Open bookmarks
  */
 async function openBookmarksInPanel(ids, panelId) {
-  const p = this.state.panelsMap[panelId]
+  let bookmarksPanel = this.state.panelsMap['bookmarks']
+  let p = this.state.panelsMap[panelId]
   if (!p) return
 
   let index = p.endIndex + 1
@@ -283,10 +284,17 @@ async function openBookmarksInPanel(ids, panelId) {
   }
   walker(this.state.bookmarks)
 
-  Actions.setPanel(p.index)
+  if (!bookmarksPanel.lockedPanel) {
+    Actions.setPanel(p.index)
+  }
 
   const idMap = []
   for (let node of toOpen) {
+
+    if (node.parentId === 'unfiled_____' && this.state.autoRemoveOther) {
+      await browser.bookmarks.removeTree(node.id)
+    }
+
     const isDir = node.type === 'folder'
     if (isDir && !this.state.tabsTree) continue
     const createdTab = await browser.tabs.create({
