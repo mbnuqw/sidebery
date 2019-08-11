@@ -154,31 +154,33 @@ export default {
       })
     },
 
-    openUrl(inNewTab, withFocus) {
+    async openUrl(inNewTab, withFocus) {
       if (!this.node.url) return
+      let url = this.node.url
+
+      if (this.node.parentId === 'unfiled_____' && State.autoRemoveOther) {
+        await this.remove()
+      }
 
       if (inNewTab) {
         let index = State.panelsMap[DEFAULT_CTX_ID].endIndex + 1
         browser.tabs.create({
           index,
           windowId: State.windowId,
-          url: this.node.url,
+          url,
           active: withFocus,
         })
       } else {
-        browser.tabs.update({ url: this.node.url })
+        browser.tabs.update({ url })
         let panel = State.panels.find(p => p.bookmarks)
         if (withFocus && !panel.lockedPanel) Actions.goToActiveTabPanel()
       }
 
-      if (this.node.parentId === 'unfiled_____' && State.autoRemoveOther) {
-        this.remove()
-      }
     },
 
-    remove() {
-      if (!this.isParent) browser.bookmarks.remove(this.node.id)
-      else browser.bookmarks.removeTree(this.node.id)
+    async remove() {
+      if (!this.isParent) await browser.bookmarks.remove(this.node.id)
+      else await browser.bookmarks.removeTree(this.node.id)
     },
   },
 }
