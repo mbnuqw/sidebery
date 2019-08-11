@@ -379,7 +379,10 @@ export default {
 
       // Select whole branch and show menu
       if (e.button === 2) {
+        if (e.ctrlKey || e.shiftKey) return
+
         Actions.resetSelection()
+        this.tab.sel = true
         State.selected.push(this.tab.id)
         for (let tab, i = this.tab.index + 1; i < State.tabs.length; i++) {
           tab = State.tabs[i]
@@ -388,7 +391,6 @@ export default {
           tab.sel = true
           State.selected.push(tab.id)
         }
-        Actions.openCtxMenu(e.clientX, e.clientY)
       }
     },
 
