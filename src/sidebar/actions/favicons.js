@@ -26,15 +26,13 @@ function setFavicon(url, icon) {
   if (icon.length > 123456) return
 
   let index = this.state.favicons.indexOf(icon)
-  let alreadyCached = index > -1
-  if (index === -1) this.state.favicons.indexOf(null)
+  let alreadyCached = index > -1 && this.state.favUrls[url] !== undefined
+
+  if (index === -1) index = this.state.favicons.indexOf(null)
   if (index === -1) index = this.state.favicons.push(icon) - 1
-  Vue.set(this.state.favUrls, url, index)
+  if (index > -1) Vue.set(this.state.favUrls, url, index)
 
-  // Do not cache favicon in private mode
-  if (this.state.private || alreadyCached) return
-
-  if (!this.state.bg) return
+  if (this.state.private || alreadyCached || !this.state.bg) return
   this.state.bg.postMessage({
     action: 'saveFavicon',
     args: [url, icon],

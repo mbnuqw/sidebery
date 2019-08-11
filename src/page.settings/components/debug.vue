@@ -132,6 +132,8 @@ export default {
         windowId: win.id,
       })
 
+      win.tabs = []
+      win.logs = []
       if (winInfo) Object.assign(win, winInfo)
     }
     info.windows = windows

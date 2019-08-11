@@ -130,6 +130,7 @@ function onUpdatedTab(tabId, change, tab) {
   // Url
   if (change.hasOwnProperty('url')) {
     if (change.url !== localTab.url) {
+      this.actions.saveTabsTree()
       if (this.state.highlightOpenBookmarks && this.state.bookmarksUrlMap) {
         if (this.state.bookmarksUrlMap[localTab.url]) {
           for (let b of this.state.bookmarksUrlMap[localTab.url]) {
@@ -142,8 +143,16 @@ function onUpdatedTab(tabId, change, tab) {
           }
         }
       }
-      if (change.url.startsWith('about:')) localTab.favIconUrl = ''
-      else this.actions.saveTabsTree()
+      if (
+        change.url.startsWith('about:') ||
+        change.url.startsWith('file:') ||
+        change.url.startsWith('ftp:')
+      ) {
+        localTab.favIconUrl = ''
+      }
+      if (localTab.favIconUrl && this.state.favUrls[change.url] === undefined) {
+        this.actions.setFavicon(tab.url, localTab.favIconUrl)
+      }
     }
   }
 
