@@ -20,6 +20,7 @@ function onBookmarkCreated(id, bookmark) {
     }
   }
 
+  this.state.bookmarksCount++
   this.state.bookmarksMap[id] = bookmark
   if (bookmark.url) {
     if (this.state.bookmarksUrlMap[bookmark.url]) {
@@ -99,6 +100,7 @@ function onBookmarkRemoved(id, info) {
     }
   }
 
+  this.state.bookmarksCount--
   this.state.bookmarksMap[id] = undefined
   if (url && this.state.bookmarksUrlMap[url]) {
     const ib = this.state.bookmarksUrlMap[url].findIndex(b => b.id === id)
