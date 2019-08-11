@@ -250,6 +250,7 @@ export default {
         if (this.tab.isParent && this.tab.folded) {
         // Select whole branch if tab is folded
           Actions.resetSelection()
+          this.tab.sel = true
           State.selected.push(this.tab.id)
           for (let tab, i = this.tab.index + 1; i < State.tabs.length; i++) {
             tab = State.tabs[i]
