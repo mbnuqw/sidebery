@@ -263,16 +263,6 @@ export default {
     },
 
     /**
-     * Return styles for fake drag tabs
-     */
-    dragTabStyle(tab) {
-      return {
-        transform: `translate(0px, ${tab.top}px)`,
-        height: tab.h + 'px',
-      }
-    },
-
-    /**
      * Create new tab
      */
     createTab() {

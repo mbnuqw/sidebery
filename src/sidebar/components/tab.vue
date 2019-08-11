@@ -460,11 +460,6 @@ export default {
         this.loadingTimer = null
       }, 2000)
     },
-
-    // ??? remove
-    height() {
-      return this.$el.offsetHeight
-    },
   },
 }
 </script>
