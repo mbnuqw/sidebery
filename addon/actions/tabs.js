@@ -1,5 +1,5 @@
 const detachedTabs = [], tabsTreesByWin = {}
-let TabsTreeSaveTimeout
+let tabsTreeSaveTimeout
 
 /**
  * Handle new tab
@@ -68,8 +68,8 @@ function saveTabsTree(windowId, treeState, delay = 300) {
   if (!treeState || !treeState.length) return
   tabsTreesByWin[windowId] = treeState
 
-  if (TabsTreeSaveTimeout) clearTimeout(TabsTreeSaveTimeout)
-  TabsTreeSaveTimeout = setTimeout(async () => {
+  if (tabsTreeSaveTimeout) clearTimeout(tabsTreeSaveTimeout)
+  tabsTreeSaveTimeout = setTimeout(async () => {
     const tabsTrees = []
     for (let winId in tabsTreesByWin) {
       if (!tabsTreesByWin.hasOwnProperty(winId)) continue
@@ -77,7 +77,7 @@ function saveTabsTree(windowId, treeState, delay = 300) {
     }
 
     browser.storage.local.set({ tabsTrees })
-    TabsTreeSaveTimeout = null
+    tabsTreeSaveTimeout = null
   }, delay)
 }
 

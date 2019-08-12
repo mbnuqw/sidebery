@@ -111,6 +111,65 @@ async function normalizeTabsOrder(moves) {
 }
 
 /**
+ * Find start index of tree tabs branch in provided array of tabs.
+ */
+function findBranchStartIndex(array, subArray, startIndex) {
+  for (let t of subArray) {
+    t.isGroup = Utils.isGroupUrl(t.url)
+  }
+
+  for (let i = startIndex; i < array.length; i++) {
+    let similarity = 0
+    let startOffset = 0, innerOffset = 0
+    for (let j = 0; j < subArray.length; j++) {
+      let a = array[i+j-innerOffset]
+      let s = subArray[j]
+      if (!a) return -1
+      if (a.url === s.url && a.cookieStoreId === s.ctx) {
+        similarity++
+      } else if (s.isGroup) {
+        similarity++
+        if (!similarity) startOffset++
+        else innerOffset++
+      }
+    }
+    if (similarity === subArray.length) return i + startOffset
+  }
+  return -1
+}
+
+/**
+ * Create new group tab with provided props
+ */
+async function restoreGroupTab(tabInfo, index, parents) {
+  let groupId = Utils.getGroupId(tabInfo.url)
+  let restoredTab = await browser.tabs.create({
+    windowId: this.state.windowId,
+    index,
+    url: browser.runtime.getURL('group/group.html') + `#${groupId}`,
+    title: decodeURIComponent(groupId.split(':id:')[0]),
+    cookieStoreId: tabInfo.ctx,
+    active: false,
+    discarded: true,
+  })
+
+  if (tabInfo.isParent) parents[tabInfo.id] = restoredTab.id
+  restoredTab.isParent = tabInfo.isParent
+  restoredTab.parentId = parents[tabInfo.parentId] || -1
+  restoredTab.folded = tabInfo.folded
+  restoredTab.lvl = 0
+  restoredTab.invisible = false
+  restoredTab.sel = false
+
+  this.state.tabs.splice(index, 0, restoredTab)
+  this.state.tabsMap[restoredTab.id] = restoredTab
+
+  for (let k = index + 1; k < this.state.tabs.length; k++) {
+    this.state.tabs[k].index++
+  }
+}
+
+/**
  * Restore tabs tree
  */
 async function restoreTabsTree() {
@@ -118,69 +177,38 @@ async function restoreTabsTree() {
 
   perTree:
   for (let tree of tabsTrees) {
-    const parents = []
-    let offset = 0
+    let parents = []
+    let tabIndex = 0
 
-    perTab:
-    for (let i = 0; i < tree.length; i++) {
-      // Saved nodes
-      const savedTab = tree[i]
+    // Separate tree into branches
+    let branches = tree.reduce((a, v) => {
+      if (v.parentId === -1) a.push([v])
+      else if (a[a.length - 1]) a[a.length - 1].push(v)
+      return a
+    }, [])
 
-      // Current tab
-      let tab = this.state.tabs[savedTab.index - offset]
-      if (!tab) continue perTree
+    for (let branch of branches) {
 
-      const sameUrl = savedTab.url === tab.url
-      const isGroup = Utils.isGroupUrl(savedTab.url)
-      if (isGroup) {
-        let nextUrlOk = true
+      let branchIndex = findBranchStartIndex(this.state.tabs, branch, tabIndex)
+      if (branchIndex === -1) continue perTree
+      else tabIndex = branchIndex
 
-        // Check if next non-group tab is ok
-        for (let j = i + 1; j < tree.length; j++) {
-          const nextTab = tree[j]
-          if (!nextTab) continue perTree
-          nextUrlOk = nextTab.url === tab.url
-          if (!Utils.isGroupUrl(nextTab.url)) continue perTree
+      for (let treeTab of branch) {
+        let tab = this.state.tabs[tabIndex]
+        if (tab.url === treeTab.url) {
+          if (treeTab.isParent) parents[treeTab.id] = tab.id
+          tab.isParent = treeTab.isParent
+          tab.parentId = parents[treeTab.parentId] || -1
+          tab.folded = treeTab.folded
+        } else {
+          await Actions.restoreGroupTab(treeTab, tabIndex, parents)
         }
-
-        // Removed group
-        if (!sameUrl && nextUrlOk) {
-          const groupId = Utils.getGroupId(savedTab.url)
-          const parent = parents[savedTab.parentId]
-          const rTab = await browser.tabs.create({
-            windowId: this.state.windowId,
-            index: savedTab.index,
-            url: browser.runtime.getURL('group/group.html') + `#${groupId}`,
-            cookieStoreId: savedTab.ctx,
-            active: false,
-          })
-
-          tab = this.state.tabsMap[rTab.id]
-          tab.isParent = savedTab.isParent
-          tab.folded = savedTab.folded
-          if (savedTab.isParent) parents[savedTab.id] = tab
-          if (parent) tab.parentId = parent.id
-          continue perTab
-        }
-      }
-
-      // Check if this is actual target tab
-      if (!sameUrl && tab.status === 'complete') continue perTree
-      if (tab.cookieStoreId !== savedTab.ctx) continue perTree
-
-      tab.isParent = savedTab.isParent
-      tab.folded = savedTab.folded
-      if (savedTab.isParent) parents[savedTab.id] = tab
-      if (parents[savedTab.parentId]) {
-        tab.parentId = parents[savedTab.parentId].id
+        tabIndex++
       }
     }
-
     break
   }
   Actions.updateTabsTree()
-
-  Logs.push('[INFO] Tabs tree restored')
 }
 
 /**
@@ -1324,6 +1352,7 @@ export default {
   loadTabs,
   getOrderNormMoves,
   normalizeTabsOrder,
+  restoreGroupTab,
   restoreTabsTree,
   saveTabsTree,
   scrollToActiveTab,

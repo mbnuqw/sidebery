@@ -67,6 +67,7 @@ export default new Vue({
     Actions.loadPermissions()
     Actions.updateTabsVisability()
     Actions.connectToBG()
+    Actions.saveTabsTree()
 
     Handlers.setupContainersListeners()
     Handlers.setupTabsListeners()
