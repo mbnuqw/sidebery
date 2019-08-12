@@ -189,8 +189,10 @@
 // ---
 // -- Color of current panel
 // -
-#root
+#root[data-style="dark"]
   --active-panel-fg: #ffffff
+#root[data-style="light"]
+  --active-panel-fg: #323232
 #root[data-color="blue"]
   --active-panel-fg: #37adff
 #root[data-color="turquoise"]
@@ -211,8 +213,10 @@
 // ---
 // -- Local color of panel
 // -
-#root
+#root[data-style="dark"]
   --panel-fg: #ffffff
+#root[data-style="light"]
+  --panel-fg: #323232
 [data-color="blue"]
   --panel-fg: #37adff
 [data-color="turquoise"]
