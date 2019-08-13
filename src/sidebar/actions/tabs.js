@@ -32,6 +32,7 @@ async function loadTabs(fresh = true) {
     t.invisible = false
     t.lvl = 0
     t.sel = false
+    t.updated = false
     if (this.state.highlightOpenBookmarks && this.state.bookmarksUrlMap && this.state.bookmarksUrlMap[t.url]) {
       for (let b of this.state.bookmarksUrlMap[t.url]) {
         b.isOpen = true
@@ -160,6 +161,7 @@ async function restoreGroupTab(tabInfo, index, parents) {
   restoredTab.lvl = 0
   restoredTab.invisible = false
   restoredTab.sel = false
+  restoredTab.updated = false
 
   this.state.tabs.splice(index, 0, restoredTab)
   this.state.tabsMap[restoredTab.id] = restoredTab

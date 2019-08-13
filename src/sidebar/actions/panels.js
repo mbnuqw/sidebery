@@ -27,14 +27,15 @@ async function loadPanels() {
 
   // Get saved panels
   // Changed storage: containers -> panels
-  let ans = await browser.storage.local.get('panels')
+  let ans = await browser.storage.local.get({ panels: Utils.cloneArray(DEFAULT_PANELS) })
   // ---------------------------- UNTIL 3.1.0 --------------------------------
-  if (!ans || !ans.panels) {
-    ans = await browser.storage.local.get('containers')
-    ans.panels = ans.containers
-  }
+  // !! USE SPECIAL FUNCTION FOR CONVERTING !!
+  // if (!ans || !ans.panels || !ans.panels.length) {
+  //   ans = await browser.storage.local.get({ containers: Utils.cloneArray(DEFAULT_PANELS) })
+  //   ans.panels = ans.containers
+  // }
+  // !! USE SPECIAL FUNCTION FOR CONVERTING !!
   // ---------------------------- UNTIL 3.1.0 --------------------------------
-  if (!ans || !ans.panels) Logs.push('[WARN] Cannot load panels')
 
   const panels = []
   const panelsMap = {}

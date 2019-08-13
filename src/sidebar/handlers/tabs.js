@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import Utils from '../../utils'
 
 const URL_HOST_PATH_RE = /^([a-z0-9-]{1,63}\.)+\w+(:\d+)?\/[A-Za-z0-9-._~:/?#[\]%@!$&'()*+,;=]*$/
@@ -39,6 +38,7 @@ function onCreatedTab(tab) {
   tab.sel = false
   tab.invisible = false
   tab.favIconUrl = ''
+  tab.updated = false
 
   // Put new tab in tabs list
   this.state.tabsMap[tab.id] = tab
@@ -196,12 +196,10 @@ function onUpdatedTab(tabId, change, tab) {
     if (localTab.url.startsWith('http') && localTab.url === tab.url) {
       // and if title doesn't looks like url
       if (!URL_HOST_PATH_RE.test(localTab.title) && !URL_HOST_PATH_RE.test(tab.title)) {
-        // Mark tab as updated
-        if (tab.pinned && this.state.pinnedTabsPosition !== 'panel') {
-          Vue.set(this.state.updatedTabs, tab.id, -1)
-        } else {
-          let panel = this.state.panelsMap[tab.cookieStoreId]
-          Vue.set(this.state.updatedTabs, tab.id, panel.index)
+        let panel = this.state.panelsMap[tab.cookieStoreId]
+        localTab.updated = true
+        if (!tab.pinned || this.state.pinnedTabsPosition === 'panel') {
+          if (!panel.updated.includes(tabId)) panel.updated.push(tabId)
         }
       }
     }
@@ -298,7 +296,10 @@ function onRemovedTab(tabId, info) {
   }
 
   // Remove updated flag
-  Vue.delete(this.state.updatedTabs, tabId)
+  if (panel && panel.tabs) {
+    let i = panel.updated.indexOf(tabId)
+    panel.updated.splice(i, 1)
+  }
 
   if (!this.state.removingTabs.length) this.actions.recalcPanelScroll()
 
@@ -466,7 +467,12 @@ function onActivatedTab(info) {
   this.state.activeTabId = info.tabId
 
   // Remove updated flag
-  Vue.delete(this.state.updatedTabs, info.tabId)
+  tab.updated = false
+  let panel = this.state.panelsMap[tab.cookieStoreId]
+  if (panel) {
+    let i = panel.updated.indexOf(tab.id)
+    panel.updated.splice(i, 1)
+  }
 
   // Find panel of activated tab
   if (tab.pinned && this.state.pinnedTabsPosition !== 'panel') return

@@ -8,7 +8,7 @@
   :data-audible="tab.audible"
   :data-muted="tab.mutedInfo.muted"
   :data-discarded="tab.discarded"
-  :data-updated="updated"
+  :data-updated="tab.updated"
   :data-drop-slot="dropSlot"
   :data-close-btn="$store.state.showTabRmBtn"
   :data-color="color"
@@ -73,10 +73,6 @@ export default {
 
   computed: {
     ...mapGetters(['showTabRmBtn']),
-
-    updated() {
-      return !!State.updatedTabs[this.tab.id]
-    },
 
     favicon() {
       if (this.tab.status === 'loading') return State.favicons[State.favUrls[this.tab.url]]

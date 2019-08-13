@@ -5,7 +5,7 @@
       v-for="(btn, i) in nav"
       :key="btn.cookieStoreId + btn.name"
       :data-loading="btn.loading"
-      :data-updated="btn.updated"
+      :data-updated="$store.state.panelIndex !== i && !!btn.updated && !!btn.updated.length"
       :data-proxified="btn.proxified"
       :data-active="$store.state.panelIndex === i"
       :data-hidden="btn.hidden"

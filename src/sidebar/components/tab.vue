@@ -8,7 +8,7 @@
   :data-audible="tab.audible"
   :data-muted="tab.mutedInfo.muted"
   :data-discarded="tab.discarded"
-  :data-updated="updated"
+  :data-updated="tab.updated"
   :data-lvl="tab.lvl"
   :data-parent="tab.isParent"
   :data-folded="tab.folded"
@@ -80,10 +80,6 @@ export default {
   },
 
   computed: {
-    updated() {
-      return !!State.updatedTabs[this.tab.id]
-    },
-
     favicon() {
       if (this.tab.status === 'loading') return State.favicons[State.favUrls[this.tab.url]]
       else return this.tab.favIconUrl || State.favicons[State.favUrls[this.tab.url]]

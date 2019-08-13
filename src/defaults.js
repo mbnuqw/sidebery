@@ -199,6 +199,7 @@ export const DEFAULT_BOOKMARKS_PANEL = {
   panel: 'BookmarksPanel',
   lockedPanel: false,
   bookmarks: true,
+  updated: [],
 }
 
 export const DEFAULT_PRIVATE_TABS_PANEL = {
@@ -214,6 +215,7 @@ export const DEFAULT_PRIVATE_TABS_PANEL = {
   tabs: [],
   startIndex: -1,
   endIndex: -1,
+  updated: [],
 }
 
 export const DEFAULT_TABS_PANEL = {
@@ -233,6 +235,7 @@ export const DEFAULT_TABS_PANEL = {
   tabs: [],
   startIndex: -1,
   endIndex: -1,
+  updated: [],
 }
 
 export const DEFAULT_CTX_TABS_PANEL = {
@@ -253,6 +256,7 @@ export const DEFAULT_CTX_TABS_PANEL = {
   tabs: [],
   startIndex: -1,
   endIndex: -1,
+  updated: [],
 }
 
 export const DEFAULT_PANELS = [

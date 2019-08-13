@@ -117,13 +117,6 @@ export default {
     windowInputPos() {
       return State.panelIndex === -5 ? 'center' : 'right'
     },
-
-    /**
-     * List of updated panels
-     */
-    updatedPanels() {
-      return Object.values(State.updatedTabs)
-    },
   },
 
   // --- Created Hook ---
