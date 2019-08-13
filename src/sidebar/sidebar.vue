@@ -64,6 +64,7 @@
 
 <script>
 import Vue from 'vue'
+import { PRE_SCROLL } from '../defaults'
 import initNoiseBgDirective from '../directives/noise-bg.js'
 import Utils from '../utils.js'
 import EventBus from '../event-bus'
@@ -179,9 +180,9 @@ export default {
 
         EventBus.$emit('updatePanelBounds')
 
-        const scroll = State.panelScrollEl ? State.panelScrollEl.scrollTop : 0
-        const startY = this.selectionStart.clientY - State.panelTopOffset + scroll
-        const firstItem = State.itemSlots.find(s => s.start <= startY && s.end >= startY)
+        let scroll = State.panelScrollEl ? State.panelScrollEl.scrollTop : 0
+        this.startY = this.selectionStart.clientY - State.panelTopOffset + scroll
+        let firstItem = State.itemSlots.find(s => s.start <= this.startY && s.end >= this.startY)
         if (firstItem) {
           this.selectionStart.clientY = firstItem.center + State.panelTopOffset - scroll
         }
@@ -189,13 +190,18 @@ export default {
       }
 
       if (this.selection) {
-        const scroll = State.panelScrollEl ? State.panelScrollEl.scrollTop : 0
-        const startY = this.selectionStart.clientY - State.panelTopOffset + scroll
-        const y = e.clientY - State.panelTopOffset + scroll
-        const topY = Math.min(startY, y)
-        const bottomY = Math.max(startY, y)
+        let scroll = State.panelScrollEl ? State.panelScrollEl.scrollTop : 0
+        let y = e.clientY - State.panelTopOffset + scroll
+        let topY = Math.min(this.startY, y)
+        let bottomY = Math.max(this.startY, y)
 
-        const slotUnderCursor = State.itemSlots.find(s => s.start <= y && s.end >= y)
+        if (y - scroll < PRE_SCROLL) {
+          State.panelScrollEl.scrollTop = scroll - 15
+        } else if (y - scroll > State.panelScrollEl.offsetHeight - PRE_SCROLL) {
+          State.panelScrollEl.scrollTop = scroll + 15
+        }
+
+        let slotUnderCursor = State.itemSlots.find(s => s.start <= y && s.end >= y)
         if (slotUnderCursor) {
           if (slotUnderCursor.id === this.slotUnderCursor) return
           this.slotUnderCursor = slotUnderCursor.id

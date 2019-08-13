@@ -24,13 +24,12 @@
 <script>
 import Utils from '../../utils'
 import EventBus from '../../event-bus'
+import { PRE_SCROLL } from '../../defaults'
 import State from '../store/state'
 import Actions from '../actions'
 import ScrollBox from './scroll-box'
 import PinnedDock from './pinned-tabs-dock'
 import Tab from './tab'
-
-const PRE_SCROLL = 64
 
 export default {
   components: {

@@ -185,6 +185,8 @@ export const CUSTOM_CSS_VARS = {
   bookmarks_open_bookmark_fg: null,
 }
 
+export const PRE_SCROLL = 64
+
 export const DEFAULT_CTX = 'firefox-default'
 export const PRIVATE_CTX = 'firefox-private'
 export const DEFAULT_CTX_ID = browser.extension.inIncognitoContext ? PRIVATE_CTX : DEFAULT_CTX
