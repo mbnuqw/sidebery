@@ -23,12 +23,7 @@ function onCmd(name) {
     this.handlers.onKeyNewTabInGroup()
     break
   case 'rm_tab_on_panel':
-    if (this.state.selected.length > 0) {
-      this.actions.removeTabs(this.state.selected)
-    } else {
-      let activeTab = this.state.tabs.find(t => t && t.active)
-      this.actions.removeTabs([activeTab.id])
-    }
+    this.handlers.onKeyRmSelection()
     break
   case 'activate':
     this.handlers.onKeyActivate()
@@ -108,6 +103,13 @@ function onKeyActivate() {
     }
 
     if (target.type === 'bookmark') {
+      if (this.state.activateOpenBookmarkTab && target.isOpen) {
+        let tab = this.state.tabs.find(t => t.url === target.url)
+        if (tab) {
+          browser.tabs.update(tab.id, { active: true })
+          return
+        }
+      }
       if (this.state.openBookmarkNewTab) {
         let index = this.state.panelsMap[DEFAULT_CTX_ID].endIndex + 1
         browser.tabs.create({ index, url: target.url, active: true })
@@ -326,8 +328,22 @@ function onKeyMenu() {
   if (!target) return
   const offset = this.state.panelTopOffset - this.state.panelScrollEl.scrollTop
   const start = targetSlot.start + offset
-  const end = targetSlot.end + offset
-  this.actions.openCtxMenu({ start, end }, target)
+  this.actions.openCtxMenu(16, start + 15)
+}
+
+/**
+ * Handler removing selected items or active tab
+ */
+function onKeyRmSelection() {
+  let selected = [...this.state.selected]
+  if (selected.length > 0) {
+    this.actions.resetSelection()
+    if (typeof selected[0] === 'number') this.actions.removeTabs(selected)
+    else if (typeof selected[0] === 'string') this.actions.removeBookmarks(selected)
+  } else {
+    let activeTab = this.state.tabs.find(t => t && t.active)
+    this.actions.removeTabs([activeTab.id])
+  }
 }
 
 /**
@@ -353,6 +369,7 @@ export default {
   onKeySelectExpand,
   onKeySelectAll,
   onKeyMenu,
+  onKeyRmSelection,
   setupKeybindingListeners,
   resetKeybindingListeners,
 }

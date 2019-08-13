@@ -176,7 +176,7 @@ export default {
   'settings.prev_panel': { message: 'Previous panel' },
   'settings.open_new_tab_in_curr_panel': { message: 'Open new tab in current container' },
   'settings.open_new_tab_after': { message: 'Open new tab after current one' },
-  'settings.close_tab': { message: 'Close tab and stay on current container' },
+  'settings.close_tab': { message: 'Remove selected items or active tab' },
   'settings.select_all': { message: 'Select all' },
   'settings.up': { message: 'Up' },
   'settings.down': { message: 'Down' },
