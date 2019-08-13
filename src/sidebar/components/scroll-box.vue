@@ -89,6 +89,10 @@ export default {
     getScrollBox() {
       return this.$refs.scrollBox
     },
+
+    getScrollableBox() {
+      return this.$refs.scrollContent
+    },
   },
 }
 </script>

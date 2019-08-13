@@ -96,6 +96,7 @@ export default {
   mounted() {
     EventBus.$on('recalcPanelScroll', this.recalcScroll)
     EventBus.$on('updatePanelBounds', this.updatePanelBounds)
+    EventBus.$on('scrollBookmarksToEdge', this.scrollToEdge)
   },
 
   methods: {
@@ -199,6 +200,24 @@ export default {
       if (this.index !== State.panelIndex) return
       if (this.$refs.scrollBox) {
         this.$refs.scrollBox.recalcScroll()
+      }
+    },
+
+    /**
+     * Try to scroll to bottom / top
+     */
+    scrollToEdge() {
+      let scrollBoxEl = this.getScrollEl()
+      if (!scrollBoxEl) return
+
+      if (!this.$refs.scrollBox) return
+      let scrollableBoxEl = this.$refs.scrollBox.getScrollableBox()
+      if (!scrollableBoxEl) return
+      
+      if (scrollBoxEl.scrollTop === 0) {
+        scrollableBoxEl.scrollIntoView({ behavior: 'smooth', block: 'end'})
+      } else {
+        scrollableBoxEl.scrollIntoView({ behavior: 'smooth', block: 'start'})
       }
     },
   },

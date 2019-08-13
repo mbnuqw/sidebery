@@ -39,6 +39,7 @@
 
 <script>
 import { translate } from '../../mixins/dict.js'
+import EventBus from '../../event-bus'
 import State from '../store/state.js'
 import Actions from '../actions'
 
@@ -156,6 +157,8 @@ export default {
       if (type === 'hidden') return Actions.openDashboard(-2)
 
       if (State.panelIndex !== i) return Actions.switchToPanel(i)
+
+      if (State.panels[i].bookmarks) return EventBus.$emit('scrollBookmarksToEdge')
 
       if (State.panels[i].cookieStoreId) {
         if (State.dashboardIsOpen) {
