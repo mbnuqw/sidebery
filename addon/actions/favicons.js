@@ -4,6 +4,18 @@ let faviconsSaveTimeout
 let faviconsToSave = []
 
 /**
+ * Load favicons
+ */
+async function loadFavicons() {
+  let { favicons, favUrls } = await browser.storage.local.get({
+    favicons: [],
+    favUrls: {}
+  })
+  this.favicons = favicons
+  this.favUrls = favUrls
+}
+
+/**
  * Save favicon
  */
 function saveFavicon(url, icon) {
@@ -13,21 +25,16 @@ function saveFavicon(url, icon) {
   faviconsSaveTimeout = setTimeout(async () => {
     faviconsSaveTimeout = null
 
-    let { favicons, favUrls } = await browser.storage.local.get({
-      favicons: [],
-      favUrls: {}
-    })
-
     for (let [url, fav] of faviconsToSave) {
-      let index = favicons.indexOf(fav)
-      if (index === -1) index = favicons.indexOf(null)
-      if (index === -1) index = favicons.push(icon) - 1
-      if (index > -1) favicons[index] = icon
+      let index = this.favicons.indexOf(fav)
+      if (index === -1) index = this.favicons.indexOf(null)
+      if (index === -1) index = this.favicons.push(icon) - 1
+      if (index > -1) this.favicons[index] = icon
 
-      favUrls[url] = index
+      this.favUrls[url] = index
     }
 
-    browser.storage.local.set({ favicons, favUrls })
+    browser.storage.local.set({ favicons: this.favicons, favUrls: this.favUrls })
 
     faviconsToSave = []
   }, 1000)
@@ -40,6 +47,8 @@ async function clearFaviCache(all) {
   // Remove all favs
   if (all) {
     await browser.storage.local.set({ favicons: [], favUrls: {} })
+    this.favicons = []
+    this.favUrls = {}
     return
   }
 
@@ -78,7 +87,9 @@ async function clearFaviCache(all) {
     favicons[i] = null
   }
 
-  await browser.storage.local.set({ favicons: favicons, favUrls: favUrls })
+  this.favicons = favicons
+  this.favUrls = favUrls
+  await browser.storage.local.set({ favicons, favUrls })
 }
 
 /**
@@ -100,6 +111,7 @@ async function clearFaviCacheAfter(timeSec) {
 }
 
 export default {
+  loadFavicons,
   saveFavicon,
   clearFaviCache,
   clearFaviCacheAfter,

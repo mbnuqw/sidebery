@@ -41,6 +41,7 @@ void async function main() {
   if (!state.settings.tabsTree) Actions.scheduleSnapshots()
   else Actions.onFirstSidebarInit(Actions.scheduleSnapshots)
 
+  Actions.loadFavicons()
   Actions.clearFaviCacheAfter(86420)
 }()
 
