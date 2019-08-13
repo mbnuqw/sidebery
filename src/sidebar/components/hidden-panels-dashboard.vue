@@ -4,8 +4,10 @@
     .ctrl-panel(
       v-for="panel in conf.panels"
       :data-color="panel.color"
+      :title="panel.name"
       @click="clickHandler(panel.cookieStoreId)")
       svg: use(:xlink:href="'#' + panel.icon")
+      .title {{panel.name}}
 </template>
 
 

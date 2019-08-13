@@ -79,8 +79,11 @@
   &:active
     opacity: .7
 
-.dash-ctrls .ctrl-panel > svg
-  fill: var(--panel-fg)
+.dash-ctrls .ctrl-panel
+  > svg
+    fill: var(--panel-fg)
+  > .title
+    box(none)
 
 .dash-ctrls .ctrl-left > svg
   transform: rotate(90deg)
