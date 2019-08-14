@@ -26,15 +26,13 @@
     @dragleave="onDragLeave"
     @drop="onDragLeave")
   .fav
-    .placeholder: svg: use(:xlink:href="favPlaceholder")
+    .placeholder(v-if="!favicon"): svg: use(:xlink:href="favPlaceholder")
     img(:src="favicon" @load.passive="onFaviconLoad")
     .update-badge
-    .ok-badge
-      svg: use(xlink:href="#icon_ok")
-    .err-badge
-      svg: use(xlink:href="#icon_err")
-    .progress-spinner
-    .audio-badge
+    transition(name="tab-part"): .ok-badge(v-if="loading === 'ok'"): svg: use(xlink:href="#icon_ok")
+    transition(name="tab-part"): .err-badge(v-if="loading === 'err'"): svg: use(xlink:href="#icon_err")
+    transition(name="tab-part"): .progress-spinner(v-if="loading === true || tab.status === 'loading'")
+    transition(name="tab-part"): .audio-badge(v-if="tab.audible || tab.mutedInfo.muted")
       svg.-loud: use(xlink:href="#icon_loud_badge")
       svg.-mute: use(xlink:href="#icon_mute_badge")
   .ctx(v-if="ctx && color" :style="{background: color}")

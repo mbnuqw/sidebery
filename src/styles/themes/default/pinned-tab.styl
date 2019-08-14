@@ -193,9 +193,7 @@
   size(12px, same)
   pos(b: -5px, r: -5px)
   border-radius: 50%
-  opacity: 0
   overflow: hidden
-  transition: opacity var(--d-norm)
   border-top: 2px solid var(--tabs-loading-fg)
   border-left: 2px solid var(--inactive-fg)
   border-right: 2px solid var(--inactive-fg)
@@ -204,10 +202,6 @@
 .PinnedTab[data-progress] .progress-spinner
 .PinnedTab[data-status="loading"] .progress-spinner
   animation: progress-animation .5s infinite linear
-
-.PinnedTab[data-progress="true"] .progress-spinner
-.PinnedTab[data-status="loading"] .progress-spinner
-  opacity: 1
 
 // ---
 // -- Updated (highlight) badge
@@ -235,9 +229,6 @@
   size(12px, same)
   pos(b: -5px, r: -5px)
   border-radius: 50%
-  opacity: 0
-  transform: scale(0.7, 0.7)
-  transition: opacity var(--d-norm), transform var(--d-norm)
   > svg
     box(absolute)
     size(100%, same)
@@ -248,11 +239,6 @@
 .PinnedTab .err-badge > svg
   fill: var(--false-fg)
 
-.PinnedTab[data-progress="ok"] .ok-badge
-.PinnedTab[data-progress="err"] .err-badge
-  opacity: 1
-  transform: scale(1, 1)
-
 // ---
 // -- Audio badge
 // -
@@ -261,20 +247,13 @@
   size(10px, same)
   pos(b: -4px, r: -4px)
   border-radius: 50%
-  opacity: 0
-  transform: scale(0.7, 0.7)
-  transition: opacity var(--d-norm), transform var(--d-norm), z-index var(--d-norm)
+  transition: transform var(--d-fast)
   > svg
     box(absolute)
     size(100%, same)
     fill: var(--label-fg)
     opacity: 0
-    transition: opacity var(--d-norm)
-
-.PinnedTab[data-audible] .audio-badge
-.PinnedTab[data-muted] .audio-badge
-  opacity: 1
-  transform: scale(1, 1)
+    transition: opacity var(--d-fast)
 
 .PinnedTab[data-audible] .audio-badge > svg.-loud
   opacity: 1

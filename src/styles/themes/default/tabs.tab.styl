@@ -109,14 +109,11 @@
   pos(0, 24px)
   size(16px, 100%)
   z-index: 1
-  opacity: 0
-  transform: translateX(-100%)
-  transition: opacity var(--d-fast), transform var(--d-fast)
   > svg
     box(absolute)
     pos(calc(50% - 5px), 6px)
     size(11px, same)
-    fill: var(--tabs-fg)
+    fill: var(--notice-fg)
     transition: opacity var(--d-fast)
   > svg.-mute
     opacity: 0
@@ -127,10 +124,9 @@
   z-index: 20
   transform: translateX(0)
   &:hover
-    opacity: 1
+    opacity: .7
   &:active
     opacity: .5
-    transition: none
 
 .Tab[data-audible] .audio
   > svg.-loud
@@ -278,9 +274,7 @@
   size(12px, same)
   pos(b: -4px, r: -4px)
   border-radius: 50%
-  opacity: 0
   overflow: hidden
-  transition: opacity var(--d-norm)
   border-top: 2px solid var(--tabs-loading-fg)
   border-left: 2px solid var(--inactive-fg)
   border-right: 2px solid var(--inactive-fg)
@@ -288,9 +282,6 @@
 
 .Tab[data-progress] .progress-spinner
   animation: progress-animation .5s infinite linear
-
-.Tab[data-progress="true"] .progress-spinner
-  opacity: 1
 
 // ---
 // -- Update / highlight badge
@@ -318,17 +309,9 @@
   size(12px, same)
   pos(b: -4px, r: -4px)
   border-radius: 50%
-  opacity: 0
-  transform: scale(0.7, 0.7)
-  transition: opacity var(--d-norm), transform var(--d-norm)
   > svg
     box(absolute)
     size(100%, same)
-
-.Tab[data-progress="ok"] .ok-badge
-.Tab[data-progress="err"] .err-badge
-  opacity: 1
-  transform: scale(1, 1)
 
 .Tab .ok-badge > svg
   fill: var(--true-fg)
@@ -472,3 +455,18 @@
 
 .Tab:hover .close
   opacity: 1
+
+// ---
+// -- Transitions
+// -
+.tab-part-enter-active
+.tab-part-leave-active
+  transition: opacity var(--d-fast)
+.tab-part-enter
+  opacity: 0
+.tab-part-enter-to
+  opacity: 1
+.tab-part-leave
+  opacity: 1
+.tab-part-leave-to
+  opacity: 0

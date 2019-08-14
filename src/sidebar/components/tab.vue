@@ -28,25 +28,23 @@
     @dragstart="onDragStart"
     @dragenter="onDragEnter"
     @dragleave="onDragLeave")
-  .audio(@mousedown.stop="", @click="onAudioClick")
+  .audio(v-if="tab.audible || tab.mutedInfo.muted" @mousedown.stop="" @click="onAudioClick")
     svg.-loud: use(xlink:href="#icon_loud_badge")
     svg.-mute: use(xlink:href="#icon_mute_badge")
   .fav
-    .placeholder: svg: use(:xlink:href="favPlaceholder")
-    img(:src="favicon", @load.passive="onFaviconLoad")
-    .exp(@dblclick.prevent.stop="", @mousedown.stop="onExp"): svg: use(xlink:href="#icon_expand")
+    .placeholder(v-if="!favicon"): svg: use(:xlink:href="favPlaceholder")
+    img(:src="favicon" @load.passive="onFaviconLoad")
+    .exp(v-if="tab.isParent" @dblclick.prevent.stop="" @mousedown.stop="onExp"): svg: use(xlink:href="#icon_expand")
     .update-badge
-    .ok-badge
-      svg: use(xlink:href="#icon_ok")
-    .err-badge
-      svg: use(xlink:href="#icon_err")
-    .progress-spinner
+    transition(name="tab-part"): .ok-badge(v-if="loading === 'ok'"): svg: use(xlink:href="#icon_ok")
+    transition(name="tab-part"): .err-badge(v-if="loading === 'err'"): svg: use(xlink:href="#icon_err")
+    transition(name="tab-part"): .progress-spinner(v-if="loading === true")
     .child-count(v-if="childCount && tab.folded") {{childCount}}
-  .close(v-if="$store.state.showTabRmBtn", @mousedown.stop="onCloseClick", @mouseup.stop="")
+  .close(v-if="$store.state.showTabRmBtn" @mousedown.stop="onCloseClick" @mouseup.stop="")
     svg: use(xlink:href="#icon_remove")
   .t-box
     .title {{tab.title}}
-    .loading
+    transition(name="tab-part"): .loading(v-if="tab.status === 'loading'")
       svg.-a: use(xlink:href="#icon_load")
       svg.-b: use(xlink:href="#icon_load")
       svg.-c: use(xlink:href="#icon_load")
