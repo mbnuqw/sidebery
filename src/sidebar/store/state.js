@@ -29,8 +29,8 @@ export default {
   selected: [],
   wheelBlockTimeout: null,
 
-  lastPanelIndex: browser.extension.inIncognitoContext ? 1 : 2,
-  panelIndex: browser.extension.inIncognitoContext ? 1 : 2,
+  lastPanelIndex: 1,
+  panelIndex: 1,
 
   containers: [],
   panels: [],
