@@ -312,6 +312,10 @@ async function removeTabs(tabIds) {
     })
   }
 
+  if (tabs.length === panel.tabs.length && !panel.noEmpty) {
+    this.actions.switchPanel(-1)
+  }
+
   // Update successorTabId if there are active tab
   if (tabs.length < panel.tabs.length) {
     const activeTab = tabs.find(t => t.active)
