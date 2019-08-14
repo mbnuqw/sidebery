@@ -111,6 +111,11 @@ function onUpdatedTab(tabId, change, tab) {
 
   // Status change
   if (change.hasOwnProperty('status')) {
+    if (change.status === 'complete') {
+      if (localTab.favIconUrl && this.state.favUrls[localTab.url] === undefined) {
+        this.actions.setFavicon(localTab.url, localTab.favIconUrl)
+      }
+    }
     const groupTab = this.actions.getGroupTab(localTab)
     if (groupTab) {
       let updateData = {
@@ -149,9 +154,6 @@ function onUpdatedTab(tabId, change, tab) {
         change.url.startsWith('ftp:')
       ) {
         localTab.favIconUrl = ''
-      }
-      if (localTab.favIconUrl && this.state.favUrls[change.url] === undefined) {
-        this.actions.setFavicon(tab.url, localTab.favIconUrl)
       }
     }
   }
