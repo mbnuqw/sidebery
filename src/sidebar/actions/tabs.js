@@ -1032,6 +1032,14 @@ async function dropToTabs(event, dropIndex, dropParent, nodes, pin) {
   if (!nodes) {
     const url = await Utils.getUrlFromDragEvent(event)
 
+    let prevTab = this.state.tabs[dropIndex - 1]
+    if (prevTab && prevTab.folded) {
+      for (let tab; dropIndex < this.state.tabs.length; dropIndex++) {
+        tab = this.state.tabs[dropIndex]
+        if (tab.lvl <= prevTab.lvl) break
+      }
+    }
+
     if (url && destCtx) {
       browser.tabs.create({
         active: true,
