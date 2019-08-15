@@ -326,6 +326,24 @@ async function removeTabs(tabIds) {
   }
 
   browser.tabs.remove(toRemove)
+
+  this.actions.checkRemovedTabs()
+}
+
+/**
+ * Helper function for checking if some of tabs
+ * wasn't removed (e.g. tabs with onbeforeunload)
+ */
+function checkRemovedTabs() {
+  if (this._checkRemovedTabsTimeout) clearTimeout(this._checkRemovedTabsTimeout)
+  this._checkRemovedTabsTimeout = setTimeout(() => {
+    this._checkRemovedTabsTimeout = null
+
+    if (!this.state.removingTabs || !this.state.removingTabs.length) return
+    for (let tabId of this.state.removingTabs) {
+      if (this.state.tabsMap[tabId]) this.state.tabsMap[tabId].invisible = false
+    }
+  }, 500)
 }
 
 /**
@@ -1364,6 +1382,7 @@ export default {
   scrollToActiveTab,
   createTab,
   removeTabs,
+  checkRemovedTabs,
   switchTab,
   reloadTabs,
   discardTabs,
