@@ -1,4 +1,5 @@
 import { DEFAULT_CTX_ID } from '../../defaults'
+import EventBus from '../../event-bus'
 import Handlers from '../handlers'
 
 let selStartIndex
@@ -11,10 +12,10 @@ function onCmd(name) {
 
   switch (name) {
   case 'next_panel':
-    this.actions.switchPanel(1)
+    this.handlers.onKeyNextPanel()
     break
   case 'prev_panel':
-    this.actions.switchPanel(-1)
+    this.handlers.onKeyPrevPanel()
     break
   case 'new_tab_on_panel':
     this.handlers.onKeyNewTabInPanel()
@@ -57,6 +58,11 @@ function onCmd(name) {
  * Handle shortcut 'activate'
  */
 function onKeyActivate() {
+  if (this.state.panelIndex === this.state.panels.length) {
+    EventBus.$emit('createTabInHiddenPanel')
+    return
+  }
+
   if (this.state.ctxMenu) {
     this.eventBus.$emit('activateOption')
     return
@@ -347,6 +353,46 @@ function onKeyRmSelection() {
 }
 
 /**
+ * Switch panel to the next
+ */
+function onKeyNextPanel() {
+  if (this.state.hideEmptyPanels) {
+    // Check next panel
+    let panel, i = this.state.panelIndex
+    if (this.state.panelIndex < this.state.panels.length) {
+      for (i = this.state.panelIndex + 1; i < this.state.panels.length; i++) {
+        panel = this.state.panels[i]
+        if (!panel.inactive) break
+      }
+    }
+
+    // If current panel is the last open hidden panels dashboard
+    if (i === this.state.panels.length) {
+      this.state.panelIndex = i
+      this.actions.openDashboard(-2)
+      EventBus.$emit('selectHiddenPanel', 1)
+      return
+    }
+  }
+
+  this.actions.switchPanel(1)
+}
+
+/**
+ * Switch panel to the prev
+ */
+function onKeyPrevPanel() {
+  if (this.state.hideEmptyPanels) {
+    if (this.state.panelIndex === this.state.panels.length) {
+      EventBus.$emit('selectHiddenPanel', -1)
+      return
+    }
+  }
+
+  this.actions.switchPanel(-1)
+}
+
+/**
  * Setup keybinding listeners
  */
 function setupKeybindingListeners() {
@@ -370,6 +416,8 @@ export default {
   onKeySelectAll,
   onKeyMenu,
   onKeyRmSelection,
+  onKeyNextPanel,
+  onKeyPrevPanel,
   setupKeybindingListeners,
   resetKeybindingListeners,
 }

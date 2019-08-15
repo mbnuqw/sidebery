@@ -2,6 +2,10 @@ import Actions from '../actions'
 
 /**
  * Open panel menu by nav index.
+ * 
+ * Special values:
+ * -1 - new container
+ * -2 - hidden panels
  */
 async function openDashboard(i) {
   if (i < -2 || i >= this.state.panels.length) return
