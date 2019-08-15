@@ -268,6 +268,7 @@ async function loadPanelIndex() {
   if (!this.state.private && ans.panelIndex !== 1) {
     if (ans.panelIndex >= 0) {
       this.state.panelIndex = ans.panelIndex
+      this.state.lastPanelIndex = this.state.panelIndex
     }
   }
 }
