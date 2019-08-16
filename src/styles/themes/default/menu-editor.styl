@@ -51,6 +51,13 @@
     .opt-btn
       opacity: .8
 
+  &[data-separator]:before
+    content: ''
+    box(relative)
+    size(100%, 1px)
+    background-color: var(--border-fg)
+    box-shadow: 0 1px 0 0 var(--border-flare-fg)
+
   .opt-title
     box(relative)
     text(s: rem(16))
@@ -96,6 +103,8 @@
   cursor: pointer
 .MenuEditor .menu-group.-dis .opt .opt-title
   cursor: pointer
+.MenuEditor .opt[data-separator] .opt-btn.-in
+  opacity: 0
 
 .MenuEditor .ctrls
   box(relative, flex)

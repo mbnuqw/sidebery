@@ -10,7 +10,7 @@
         :value="group.name"
         :or="t('menu.editor.inline_group_title')"
         @input="onSubMenuNameInput('tabs', i, $event)")
-      .opt(v-for="(opt, i) in group.options", :title="t(tabsOpts[opt])")
+      .opt(v-for="(opt, i) in group.options" :data-separator="opt.startsWith('separator')" :title="t(tabsOpts[opt])")
         .opt-btn.-in(
           v-if="group.type === 'list'"
           @click="createSubMenu('tabs', opt)")
@@ -27,7 +27,10 @@
         @click="restoreOption('tabs', opt)")
         .opt-title {{t(tabsOpts[opt])}}
 
-    .ctrls: .btn(@click="resetTabsMenu") {{t('menu.editor.reset')}}
+    .ctrls
+      .btn(@click="resetTabsMenu") {{t('menu.editor.reset')}}
+      .btn(@click="createSeparator('tabs')") {{t('menu.editor.create_separator')}}
+
 
   section
     h2 {{t('menu.editor.bookmarks_title')}}
@@ -38,7 +41,7 @@
         :value="group.name"
         :or="t('menu.editor.inline_group_title')"
         @input="onSubMenuNameInput('bookmarks', i, $event)")
-      .opt(v-for="(opt, i) in group.options", :title="t(bookmarksOpts[opt])")
+      .opt(v-for="(opt, i) in group.options" :data-separator="opt.startsWith('separator')" :title="t(bookmarksOpts[opt])")
         .opt-btn.-in(
           v-if="group.type === 'list'"
           @click="createSubMenu('bookmarks', opt)")
@@ -55,7 +58,9 @@
         @click="restoreOption('bookmarks', opt)")
         .opt-title {{t(bookmarksOpts[opt])}}
 
-    .ctrls: .btn(@click="resetBookmarksMenu") {{t('menu.editor.reset')}}
+    .ctrls
+      .btn(@click="resetBookmarksMenu") {{t('menu.editor.reset')}}
+      .btn(@click="createSeparator('bookmarks')") {{t('menu.editor.create_separator')}}
   
   FooterSection
 </template>
@@ -366,7 +371,17 @@ export default {
           }
         }
       }
-    }
+    },
+
+    /**
+     * Create separator
+     */
+    createSeparator(type) {
+      let menu = State[type + 'Menu']
+      if (!menu) return
+
+      menu.push(String(Math.random()).replace('0.', 'separator-'))
+    },
   },
 }
 </script>

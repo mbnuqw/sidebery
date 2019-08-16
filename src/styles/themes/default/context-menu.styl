@@ -65,6 +65,14 @@
     pos(calc(50% - 8px), calc(50% - 8px))
     opacity: .8
     fill: var(--panel-fg, var(--ctx-menu-fg))
+  &[data-separator]
+    size(0px, min-w: 0px, max-w: 0px)
+    &:before
+      content: ''
+      box(absolute)
+      pos(0, 0)
+      size(1px, 100%)
+      background-color: #00000032
 
 .CtxMenu .list-group
   box(relative)
@@ -102,3 +110,10 @@
     background-color: var(--ctx-menu-bg-hover)
   &:active
     opacity: .7
+  &[data-separator]
+    padding: 2px 0
+  &[data-separator]:before
+    content: ''
+    box(relative)
+    size(100%, 1px)
+    background-color: #00000032

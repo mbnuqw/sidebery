@@ -27,7 +27,8 @@ async function openCtxMenu(x, y) {
           }
           continue
         }
-        const option = MENU_OPTIONS[subOpt](this.state)
+        let optGen = MENU_OPTIONS[subOpt]
+        let option = optGen ? optGen(this.state) : 'separator'
         if (!option) continue
         if (this.state.ctxMenuNative) createNativeOption(nodeType, option, parentId)
         else inlineMenu.options = inlineMenu.options.concat(option)
@@ -36,7 +37,8 @@ async function openCtxMenu(x, y) {
       continue
     }
 
-    const option = MENU_OPTIONS[optName](this.state)
+    let optGen = MENU_OPTIONS[optName]
+    let option = optGen ? optGen(this.state) : 'separator'
     if (!option) continue
     if (this.state.ctxMenuNative) {
       createNativeOption(nodeType, option)
@@ -61,6 +63,15 @@ async function openCtxMenu(x, y) {
 }
 
 function createNativeOption(ctx, option, parentId) {
+  if (option === 'separator') {
+    browser.menus.create({
+      type: 'separator',
+      contexts: [ctx],
+      parentId,
+    })
+    return
+  }
+
   if (option instanceof Array) {
     for (let opt of option) {
       createNativeOption(ctx, opt, parentId)

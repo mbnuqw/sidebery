@@ -15,6 +15,7 @@
           v-for="(opt, i) in group.options"
           :data-width="btnWidth(group.options)"
           :data-selected="isSelected(opt)"
+          :data-separator="isSeparator(opt)"
           :data-color="opt.color"
           :title="getTitle(opt.label)"
           @click="onClick(opt)"
@@ -23,8 +24,8 @@
         .opt(
           v-if="!group.inline"
           v-for="(opt, i) in group.options"
-          :key="opt.label"
           :data-selected="isSelected(opt)"
+          :data-separator="isSeparator(opt)"
           :title="getTitle(opt.label)"
           @click="onClick(opt)"
           @mousedown.stop="")
@@ -43,6 +44,7 @@
           v-for="(opt, i) in group.options"
           :data-width="btnWidth(group.options)"
           :data-selected="isSelected(opt)"
+          :data-separator="isSeparator(opt)"
           :data-color="opt.color"
           :title="getTitle(opt.label)"
           @click="onClick(opt)"
@@ -53,6 +55,7 @@
           v-for="(opt, i) in group.options"
           :key="opt.label"
           :data-selected="isSelected(opt)"
+          :data-separator="isSeparator(opt)"
           :title="getTitle(opt.label)"
           @click="onClick(opt)"
           @mousedown.stop="")
@@ -200,7 +203,7 @@ export default {
     },
 
     btnWidth(opts) {
-      if (opts.length > 5) return 'wrap'
+      if (opts.filter(o => typeof o !== 'string').length > 5) return 'wrap'
       else 'norm'
     },
 
@@ -209,7 +212,12 @@ export default {
       return opts[this.selected] === opt
     },
 
+    isSeparator(opt) {
+      return typeof opt === 'string' && opt.startsWith('separator')
+    },
+
     parseLabel(input) {
+      if (!input) return []
       return input.split('||').map(part => {
         let parsed = part.split('>>')
         return {
@@ -221,6 +229,7 @@ export default {
     },
 
     getTitle(input) {
+      if (!input) return ''
       return input
         .split('||')
         .map(part => {
