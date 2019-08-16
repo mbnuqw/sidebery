@@ -6,6 +6,19 @@
 @import './btn'
 @import './scroll-box'
 
+@import './field.icon-select'
+@import './field.select'
+@import './field.style-color'
+@import './field.style'
+@import './field.num'
+@import './field.toggle'
+
+@import './input.color'
+@import './input.icon-select'
+@import './input.select'
+@import './input.text'
+@import './input.toggle'
+
 html
   box(relative)
   size(h: 100%)
@@ -172,10 +185,20 @@ footer
   .label
     text(s: rem(16))
 
+.Settings .SelectField
+  box(flex)
+
+.Settings .SelectField > .label
+  margin-right: auto
+
+.Settings .SelectField > .SelectInput
+  size(max-w: 50%)
+  justify-content: flex-end
+
 .Settings .sub-fields
   box(relative)
   grid-gap: 16px 0
-  margin: 0 12px 0 16px
+  margin: 0 0 0 24px
 
 .Settings .ctrls
   box(relative, flex)
@@ -266,19 +289,6 @@ footer
   size(calc(100% + 16px), same)
   outline: 2px dashed var(--false-fg)
   outline-offset: -2px
-
-@import './field.icon-select'
-@import './field.select'
-@import './field.style-color'
-@import './field.style'
-@import './field.num'
-@import './field.toggle'
-
-@import './input.color'
-@import './input.icon-select'
-@import './input.select'
-@import './input.text'
-@import './input.toggle'
 
 @import './menu-editor'
 @import './styles-editor'

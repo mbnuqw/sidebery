@@ -3,3 +3,287 @@
 
 @import './vars'
 @import './animations'
+
+html
+  box(relative)
+  size(h: 100%)
+
+body
+  box(relative, flex)
+  size(rel(100%, -16px), min-h: 100%)
+  text(sans-serif, smooth: on)
+  margin: 0
+  flex-direction: column
+  justify-content: space-between
+  align-items: center
+  padding: 0 8px
+  background-color: var(--bg)
+
+.hidden
+.hidden-assets
+  box(absolute)
+  pos(0, 0)
+  size(0, 0)
+  overflow: hidden
+  opacity: 0
+
+body h2
+  max-width: 450px
+  text-align: center
+
+body input
+  -webkit-appearance: none
+  border: none
+  outline: none
+  margin: 0
+  padding: 0
+  background-color: transparent
+  resize: none
+  z-index: 1
+
+.title
+  box(relative, block)
+  size(100%)
+  text(s: 2.5rem, w: 700)
+  text-align: center
+  color: var(--label-fg)
+  margin: 20px 0 24px
+
+.tabs
+  box(grid)
+  size(100%, max-w: 960px)
+  flex-wrap: wrap
+  margin: 0 0 auto
+body[data-layout="grid"] .tabs
+  grid-template-columns: 1fr 1fr 1fr
+  grid-gap: 16px
+  @media screen and (max-width: 720px)
+    grid-template-columns: 1fr 1fr
+  @media screen and (max-width: 450px)
+    grid-template-columns: 1fr
+body[data-layout="list"] .tabs
+  grid-template-columns: 1fr
+  grid-gap: 8px
+
+.new-tab
+  box(relative)
+  size(100%)
+  background-color: #78787812
+  overflow: hidden
+  cursor: pointer
+  transition: box-shadow var(--d-norm)
+  box-shadow: 0 0 0 1px #00000024, 0 2px 5px 0 #00000032
+  &:before
+    content: ''
+    box(absolute)
+    pos(calc(50% - 1px), calc(50% - 8px))
+    size(16px, 2px)
+    background-color: var(--info-fg)
+  &:after
+    content: ''
+    box(absolute)
+    pos(calc(50% - 8px), calc(50% - 1px))
+    size(2px, 16px)
+    background-color: var(--info-fg)
+  &:hover
+    box-shadow: 0 0 0 1px #00000032, 0 2px 5px 0 #00000046
+  &:active
+    opacity: .8
+body[data-layout="grid"] .new-tab
+  size(h: 128px)
+  border-radius: 6px
+body[data-layout="list"] .new-tab
+  size(h: 48px)
+  border-radius: 3px
+
+.tab
+  box(relative, flex)
+  size(100%)
+  background-color: #78787824
+  overflow: hidden
+  cursor: pointer
+  transition: box-shadow var(--d-norm)
+  box-shadow: 0 0 0 1px #00000024, 0 2px 5px 0 #00000032
+  &:hover
+    box-shadow: 0 0 0 1px #00000032, 0 2px 5px 0 #00000046
+  &:active
+    opacity: .8
+body[data-layout="grid"] .tab
+  size(h: 128px)
+  flex-flow: column
+  align-items: flex-start
+  border-radius: 6px
+body[data-layout="list"] .tab
+  size(h: 48px)
+  flex-flow: row
+  align-items: center
+  border-radius: 3px
+body[data-layout="list"] .tab[data-lvl="1"]
+  size(calc(100% - 15px))
+  margin-left: 15px
+body[data-layout="list"] .tab[data-lvl="2"]
+  size(calc(100% - 29px))
+  margin-left: 29px
+body[data-layout="list"] .tab[data-lvl="3"]
+  size(calc(100% - 42px))
+  margin-left: 42px
+body[data-layout="list"] .tab[data-lvl="4"]
+  size(calc(100% - 54px))
+  margin-left: 54px
+body[data-layout="list"] .tab[data-lvl="5"]
+  size(calc(100% - 65px))
+  margin-left: 65px
+body[data-layout="list"] .tab[data-lvl="6"]
+  size(calc(100% - 75px))
+  margin-left: 75px
+
+.bg
+  background-size: cover
+  background-repeat: no-repeat
+  z-index: 0
+  transition: opacity var(--d-norm)
+body[data-layout="grid"] .bg
+  box(absolute)
+  size(100%, 128px)
+  border-radius: 6.5px
+  opacity: .03
+body[data-layout="grid"] .tab:not([data-discarded="true"]):hover .bg
+  opacity: .04
+body[data-layout="list"] .bg
+  box(relative)
+  size(48px, same)
+  border-radius: 3px
+  background-color: #00000012
+  box-shadow: 0 0 0 1px var(--border-fg), inset 0 0 8px 0 #00000032
+body[data-layout="list"] .tab[data-discarded="true"] .bg
+  opacity: .05
+
+.fav
+  box(absolute)
+  pos(16px, same)
+  size(16px, same)
+  background-size: cover
+  background-repeat: no-repeat
+  border-radius: 3px
+  overflow: hidden
+  filter: drop-shadow(0 0 1px #00000032) drop-shadow(0 0 8px #00000032)
+body[data-layout="grid"] .fav
+  pos(auto, 12px, b: 12px)
+
+.info
+  box(relative)
+  size(100%)
+  z-index: 2
+  transition: opacity var(--d-norm)
+body[data-layout="grid"] .info
+  pos(l: 0, b: 0)
+  padding: 8px 0 0
+body[data-layout="list"] .info
+  padding: 0
+  flex: 1 1
+  margin: 0 8px 0 10px
+  overflow: hidden
+.tab[data-discarded="true"] .info
+  opacity: .4
+
+.tab-title
+  box(relative)
+  text(w: 400)
+  padding: 0
+  overflow: hidden
+  color: var(--title-fg)
+  text-shadow: 0 1px 8px #00000024
+body[data-layout="grid"] .tab-title
+  size(max-h: 48px)
+  text(s: 18px, h: 24px)
+  margin: 0 12px 8px
+body[data-layout="list"] .tab-title
+  text(s: 16px)
+  margin: 0
+  overflow: hidden
+  white-space: nowrap
+  text-overflow: ellipsis
+
+.tab-url
+  box(relative)
+  text(w: 400)
+  overflow: hidden
+  color: var(--info-fg)
+  white-space: nowrap
+  text-overflow: ellipsis
+  text-shadow: 0 1px 8px #00000024
+body[data-layout="grid"] .tab-url
+  size(h: 24px, max-w: rel(100%, -24px))
+  text(s: 15px)
+  margin: 0 12px
+body[data-layout="list"] .tab-url
+  text(s: 14px)
+  margin: 0
+
+.tab .ctrls
+  box(relative, flex)
+  size(h: 100%)
+  align-items: center
+  justify-content: flex-end
+  flex-shrink: 0
+  margin-top: auto
+body[data-layout="grid"] .tab .ctrls
+  size(100%, 40px)
+body[data-layout="list"] .tab .ctrls
+  size(h: 100%)
+
+.ctrls .btn
+  box(relative)
+body[data-layout="grid"] .ctrls .btn
+  size(40px, same)
+body[data-layout="list"] .ctrls .btn
+  size(48px, same)
+
+.ctrls .btn svg
+  box(absolute)
+  pos(calc(50% - 8px), same)
+  size(16px, same)
+  fill: var(--info-fg)
+.ctrls .btn:hover svg
+  fill: var(--label-fg)
+.tab[data-discarded="true"] .ctrls .btn.discard-btn svg
+  fill: var(--inactive-fg)
+.ctrls .btn.close-btn:hover svg
+  fill: var(--false-fg)
+.ctrls .btn:active svg
+  opacity: .7
+
+footer
+  box(relative, flex)
+  margin: 0 auto
+  padding: 50px 0
+  justify-content: center
+  align-items: center
+  color: var(--inactive-fg)
+
+  .github
+  .amo
+    box(relative)
+    size(24px, same)
+    opacity: .5
+    transition: opacity var(--d-fast)
+    &:hover
+      opacity: 1
+    &:active
+      opacity: .7
+    svg
+      box(absolute)
+      size(100%, same)
+      fill: #646464
+  
+  .amo svg
+    pos(-5px, r: 3px)
+    transform: rotateZ(-45deg)
+
+  .logo
+    box(relative)
+    size(36px, same)
+    padding: 0 36px
+    fill: #646464
+    cursor: default
+    opacity: .24

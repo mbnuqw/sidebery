@@ -6,8 +6,8 @@
   "scripts": {
     "dev.bg": "parcel watch ./src/background.js -d ./addon/ --public-url ./ --no-autoinstall --log-level 4",
     "dev.sidebar": "parcel watch ./src/sidebar/sidebar.js -d ./addon/sidebar/ --public-url ./ --no-autoinstall --log-level 4",
-    "dev.group": "parcel watch ./src/page.group/group.html -d ./addon/group/ --public-url ./ --no-autoinstall --log-level 4",
-    "dev.url": "parcel watch ./src/page.url/url.html -d ./addon/url/ --public-url ./ --no-autoinstall --log-level 4",
+    "dev.group": "parcel watch ./src/page.group/group.js -d ./addon/group/ --public-url ./ --no-autoinstall --log-level 4",
+    "dev.url": "parcel watch ./src/page.url/url.js -d ./addon/url/ --public-url ./ --no-autoinstall --log-level 4",
     "dev.settings": "parcel watch ./src/page.settings/settings.js -d ./addon/settings/ --public-url ./ --no-autoinstall --log-level 4",
 
     "dev.styles": "parcel watch ./src/page.styles/styles.html -d ./addon/styles/ --public-url ./ --no-autoinstall",
@@ -19,8 +19,8 @@
     "dev.ext.beta": "web-ext run --source-dir ./addon -f firefox-beta --keep-profile-changes --firefox-profile ./build/profile-beta",
     "dev.ext.nightly": "web-ext run --source-dir ./addon -f firefox-nightly --keep-profile-changes --firefox-profile ./build/profile-nightly",
 
-    "dev.themes.default": "stylus ./src/styles/themes/default/sidebar.styl ./src/styles/themes/default/settings.styl ./src/styles/themes/default/group.styl -w --out ./addon/themes/default/",
-    "dev.themes.tactile": "stylus ./src/styles/themes/tactile/sidebar.styl ./src/styles/themes/tactile/settings.styl ./src/styles/themes/tactile/group.styl -w --out ./addon/themes/tactile/",
+    "dev.themes.default": "stylus ./src/styles/themes/default/sidebar.styl ./src/styles/themes/default/settings.styl ./src/styles/themes/default/group.styl ./src/styles/themes/default/url.styl -w --out ./addon/themes/default/",
+    "dev.themes.tactile": "stylus ./src/styles/themes/tactile/sidebar.styl ./src/styles/themes/tactile/url.styl ./src/styles/themes/tactile/group.styl -w --out ./addon/themes/tactile/",
 
     "build.bg": "parcel build ./src/background.js -d ./addon/ --public-url ./ --no-autoinstall --no-source-maps",
     "build.sidebar": "parcel build ./src/sidebar/index.html -d ./addon/sidebar/ --public-url ./ --no-autoinstall --no-source-maps",

@@ -9,8 +9,11 @@ addon/sidebar/*
 addon/settings/*
 !addon/settings/settings.html
 
-addon/group
-addon/url
+addon/group/*
+!addon/group/group.html
+
+addon/url/*
+!addon/url/url.html
 
 addon/snapshots
 addon/theme

@@ -51,7 +51,6 @@ export default new Vue({
     Actions.loadPermissions()
     Actions.loadCtxMenu()
     await Actions.loadSettings()
-    if (State.theme !== 'none') Actions.initTheme()
     Actions.loadKeybindings()
   },
 

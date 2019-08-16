@@ -13,6 +13,9 @@ void (async function() {
   document.body.setAttribute('data-layout', settings.groupLayout)
   document.body.setAttribute('data-animations', settings.animations ? 'fast' : 'none')
 
+  initTheme(settings.theme)
+  loadCustomCSS()
+
   if (settings.bgNoise) {
     noiseBg(document.body, {
       width: 300,
@@ -202,6 +205,7 @@ function createNewTabButton() {
 
   newTabEl.addEventListener('mousedown', event => {
     event.stopPropagation()
+    event.preventDefault()
     browser.tabs.create({
       index: groupTabIndex + groupLen + 1,
       openerTabId: groupTabId,
@@ -353,4 +357,63 @@ function updateTab(oldTab, newTab) {
   Object.assign(oldTab, newTab)
 
   if (titleChanged || urlChanged) loadScreenshot(oldTab)
+}
+
+/**
+ * Load predefined theme and apply it
+ */
+function initTheme(theme) {
+  let themeLinkEl = document.getElementById('theme_link')
+
+  // Remove theme css
+  if (theme === 'none') {
+    if (themeLinkEl) themeLinkEl.setAttribute('disabled', 'disabled')
+    return
+  } else {
+    if (themeLinkEl) themeLinkEl.removeAttribute('disabled')
+  }
+
+  if (!themeLinkEl) {
+    themeLinkEl = document.createElement('link')
+    themeLinkEl.id = 'theme_link'
+    themeLinkEl.type = 'text/css'
+    themeLinkEl.rel = 'stylesheet'
+    document.head.appendChild(themeLinkEl)
+  }
+
+  themeLinkEl.href = `../themes/${theme}/group.css`
+}
+
+/**
+ * Load custom css and apply it
+ */
+async function loadCustomCSS() {
+  let ans = await browser.storage.local.get('groupCSS')
+  if (!ans || !ans.groupCSS) return
+
+  applyCustomCSS(ans.groupCSS)
+}
+
+/**
+ * Update custom css
+ */
+function applyCustomCSS(css) {
+  // Find or create new style element
+  let customStyleEl = document.getElementById('custom_css')
+  if (!customStyleEl) {
+    customStyleEl = document.createElement('style')
+    customStyleEl.id = 'custom_css'
+    customStyleEl.type = 'text/css'
+    customStyleEl.rel = 'stylesheet'
+    document.head.appendChild(customStyleEl)
+  } else {
+    while (customStyleEl.lastChild) {
+      customStyleEl.removeChild(customStyleEl.lastChild)
+    }
+  }
+
+  // Apply css
+  if (css) {
+    customStyleEl.appendChild(document.createTextNode(css))
+  }
 }

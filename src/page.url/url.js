@@ -7,6 +7,8 @@ void (async function() {
   let { settings } = await browser.storage.local.get({ settings: DEFAULT_SETTINGS })
   let style = settings ? settings.style : 'dark'
 
+  initTheme(settings.theme)
+
   // Set style
   document.body.setAttribute('data-style', style)
 
@@ -47,3 +49,28 @@ void (async function() {
     selection.addRange(range)
   })
 })()
+
+/**
+ * Load predefined theme and apply it
+ */
+function initTheme(theme) {
+  let themeLinkEl = document.getElementById('theme_link')
+
+  // Remove theme css
+  if (theme === 'none') {
+    if (themeLinkEl) themeLinkEl.setAttribute('disabled', 'disabled')
+    return
+  } else {
+    if (themeLinkEl) themeLinkEl.removeAttribute('disabled')
+  }
+
+  if (!themeLinkEl) {
+    themeLinkEl = document.createElement('link')
+    themeLinkEl.id = 'theme_link'
+    themeLinkEl.type = 'text/css'
+    themeLinkEl.rel = 'stylesheet'
+    document.head.appendChild(themeLinkEl)
+  }
+
+  themeLinkEl.href = `../themes/${theme}/url.css`
+}

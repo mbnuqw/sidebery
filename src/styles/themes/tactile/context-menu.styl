@@ -48,7 +48,7 @@
   size(auto, 30px, min-w: 30px)
   flex-grow: 1
   flex-shrink: 0
-  &[data-width="5"]
+  &[data-width="wrap"]
     size(20%)
     flex-grow: 0
   &:hover
@@ -63,7 +63,15 @@
     size(16px, same)
     pos(calc(50% - 8px), calc(50% - 8px))
     opacity: .8
-    fill: var(--ctx-menu-fg)
+    fill: var(--panel-fg, var(--ctx-menu-fg))
+  &[data-separator]
+    size(0px, min-w: 0px, max-w: 0px)
+    &:before
+      content: ''
+      box(absolute)
+      pos(0, 0)
+      size(1px, 100%)
+      background-color: var(--ctx-menu-border-fg)
 
 .CtxMenu .opt
   box(relative, flex)
@@ -94,3 +102,10 @@
     background-color: var(--ctx-menu-bg-hover)
   &:active
     opacity: .7
+  &[data-separator]
+    padding: 2px 0
+  &[data-separator]:before
+    content: ''
+    box(relative)
+    size(100%, 1px)
+    background-color: var(--ctx-menu-border-fg)

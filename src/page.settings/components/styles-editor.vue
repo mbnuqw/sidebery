@@ -510,9 +510,6 @@
       .nav-item(
         :data-active="cssTarget === 'group'"
         @click="selectCssTarget('group')") Group page
-      .nav-item(
-        :data-active="cssTarget === 'settings'"
-        @click="selectCssTarget('settings')") Settings page
     .awesome CSS&#10;IS&#10;AWESOME
     .editor-box
       textarea.editor(
