@@ -41,7 +41,7 @@ export default {
   'menu.editor.reset': { message: 'Сброс' },
   'menu.editor.tabs_title': { message: 'Табы' },
   'menu.editor.bookmarks_title': { message: 'Закладки' },
-  'menu.editor.inline_group_title': { message: 'Подменю...' },
+  'menu.editor.inline_group_title': { message: 'Название подменю...' },
   'menu.editor.list_title': { message: 'Список' },
   'menu.editor.disabled_title': { message: 'Отключено' },
 }

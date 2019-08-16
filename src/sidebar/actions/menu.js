@@ -14,12 +14,11 @@ async function openCtxMenu(x, y) {
   const nodeType = typeof this.state.selected[0] === 'number' ? 'tab' : 'bookmark'
   const options = nodeType === 'tab' ? this.state.tabsMenu : this.state.bookmarksMenu
 
-  const inline = []
   let opts = []
 
   for (let optName of options) {
     if (optName instanceof Array) {
-      let inlineMenu = []
+      let inlineMenu = { inline: true, options: [] }
       let parentId
       for (let subOpt of optName) {
         if (typeof subOpt === 'object') {
@@ -31,16 +30,24 @@ async function openCtxMenu(x, y) {
         const option = MENU_OPTIONS[subOpt](this.state)
         if (!option) continue
         if (this.state.ctxMenuNative) createNativeOption(nodeType, option, parentId)
-        else inlineMenu = inlineMenu.concat(option)
+        else inlineMenu.options = inlineMenu.options.concat(option)
       }
-      inline.push(inlineMenu)
+      opts.push(inlineMenu)
       continue
     }
 
     const option = MENU_OPTIONS[optName](this.state)
     if (!option) continue
-    if (this.state.ctxMenuNative) createNativeOption(nodeType, option)
-    else opts = opts.concat(option)
+    if (this.state.ctxMenuNative) {
+      createNativeOption(nodeType, option)
+    } else {
+      let lastGroup = opts[opts.length - 1]
+      if (!lastGroup || lastGroup.inline) {
+        lastGroup = { inline: false, options: [] }
+        opts.push(lastGroup)
+      }
+      lastGroup.options = lastGroup.options.concat(option)
+    }
   }
 
   if (this.state.ctxMenuNative) return Actions.resetSelection()
@@ -48,7 +55,6 @@ async function openCtxMenu(x, y) {
   this.state.ctxMenu = {
     x,
     y,
-    inline,
     opts,
     off: () => Actions.resetSelection(),
   }

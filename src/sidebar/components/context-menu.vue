@@ -1,57 +1,65 @@
 <template lang="pug">
-.CtxMenu(:data-active="aIsActive || bIsActive" @mouseenter="onME" @mouseleave="onML")
+.CtxMenu(
+  :data-active="aIsActive || bIsActive"
+  @mouseenter="onME"
+  @mouseleave="onML"
+  @wheel.prevent.stop="")
   .container(:data-active="aIsActive")
-    .box(ref="aBox", :style="aPosStyle")
-      .inline-group(
-        v-for="iOpts in aInline"
-        v-if="iOpts.length"
-        @wheel.prevent.stop="")
+    .box(ref="aBox" :style="aPosStyle")
+      div(
+        v-for="group in aMenuGroups"
+        v-if="group.options.length"
+        :class="group.inline ? 'inline-group' : 'list-group'")
         .icon-opt(
-          v-for="(opt, i) in iOpts"
-          :data-width="btnWidth(iOpts, i)"
+          v-if="group.inline"
+          v-for="(opt, i) in group.options"
+          :data-width="btnWidth(group.options)"
           :data-selected="isSelected(opt)"
           :data-color="opt.color"
           :title="getTitle(opt.label)"
           @click="onClick(opt)"
           @mousedown.stop="")
           svg: use(:xlink:href="'#' + opt.icon")
-      .opt(
-        v-for="(opt, i) in aOpts"
-        :key="opt.label"
-        :data-selected="isSelected(opt)"
-        :title="getTitle(opt.label)"
-        @click="onClick(opt)"
-        @mousedown.stop="")
-        span(
-          v-for="out in parseLabel(opt.label)"
-          :data-color="out.color"
-          :style="{fontWeight: out.w}") {{out.label}}
+        .opt(
+          v-if="!group.inline"
+          v-for="(opt, i) in group.options"
+          :key="opt.label"
+          :data-selected="isSelected(opt)"
+          :title="getTitle(opt.label)"
+          @click="onClick(opt)"
+          @mousedown.stop="")
+          span(
+            v-for="out in parseLabel(opt.label)"
+            :data-color="out.color"
+            :style="{fontWeight: out.w}") {{out.label}}
   .container(:data-active="bIsActive")
-    .box(ref="bBox", :style="bPosStyle")
-      .inline-group(
-        v-for="iOpts in bInline"
-        v-if="iOpts.length"
-        @wheel.prevent.stop="")
+    .box(ref="bBox" :style="bPosStyle")
+      div(
+        v-for="group in bMenuGroups"
+        v-if="group.options.length"
+        :class="group.inline ? 'inline-group' : 'list-group'")
         .icon-opt(
-          v-for="(opt, i) in iOpts"
-          :data-width="btnWidth(iOpts, i)"
+          v-if="group.inline"
+          v-for="(opt, i) in group.options"
+          :data-width="btnWidth(group.options)"
           :data-selected="isSelected(opt)"
           :data-color="opt.color"
           :title="getTitle(opt.label)"
           @click="onClick(opt)"
           @mousedown.stop="")
           svg: use(:xlink:href="'#' + opt.icon")
-      .opt(
-        v-for="(opt, i) in bOpts"
-        :key="opt.label"
-        :data-selected="isSelected(opt)"
-        :title="getTitle(opt.label)"
-        @click="onClick(opt)"
-        @mousedown.stop="")
-        span(
-          v-for="out in parseLabel(opt.label)"
-          :data-color="out.color"
-          :style="{fontWeight: out.w}") {{out.label}}
+        .opt(
+          v-if="!group.inline"
+          v-for="(opt, i) in group.options"
+          :key="opt.label"
+          :data-selected="isSelected(opt)"
+          :title="getTitle(opt.label)"
+          @click="onClick(opt)"
+          @mousedown.stop="")
+          span(
+            v-for="out in parseLabel(opt.label)"
+            :data-color="out.color"
+            :style="{fontWeight: out.w}") {{out.label}}
 </template>
 
 
@@ -65,14 +73,12 @@ export default {
   data() {
     return {
       aIsActive: false,
-      aOpts: [],
-      aInline: [],
+      aMenuGroups: [],
       aPos: 0,
       aX: 0,
       aDown: true,
       bIsActive: false,
-      bOpts: [],
-      bInline: [],
+      bMenuGroups: [],
       bPos: 0,
       bX: 0,
       bDown: true,
@@ -87,7 +93,7 @@ export default {
       return style
     },
     aAll() {
-      return this.aInline.reduce((a, v) => a.concat(v), []).concat(this.aOpts)
+      return this.aMenuGroups.reduce((a, v) => a.concat(v.options), [])
     },
     bPosStyle() {
       let style = { transform: `translateY(${this.bPos}px) translateX(${this.bX}px)` }
@@ -95,7 +101,7 @@ export default {
       return style
     },
     bAll() {
-      return this.bInline.reduce((a, v) => a.concat(v), []).concat(this.bOpts)
+      return this.bMenuGroups.reduce((a, v) => a.concat(v.options), [])
     },
   },
 
@@ -110,9 +116,8 @@ export default {
       let h = this.$root.$el.offsetHeight
 
       if (c) {
-        if (this.aOpts.length) {
-          this.bOpts = c.opts
-          this.bInline = c.inline
+        if (this.aMenuGroups.length) {
+          this.bMenuGroups = c.opts
           this.bPos = c.y
           this.bIsActive = true
           this.aIsActive = false
@@ -124,13 +129,9 @@ export default {
             else if (c.x > menuWidth) this.bX = c.x - menuWidth
             else this.bX = fullWidth - menuWidth
           })
-          setTimeout(() => {
-            this.aOpts = []
-            this.aInline = []
-          }, 128)
+          setTimeout(() => { this.aMenuGroups = [] }, 128)
         } else {
-          this.aOpts = c.opts
-          this.aInline = c.inline
+          this.aMenuGroups = c.opts
           this.aPos = c.y
           this.aIsActive = true
           this.bIsActive = false
@@ -142,10 +143,7 @@ export default {
             else if (c.x > menuWidth) this.aX = c.x - menuWidth
             else this.aX = fullWidth - menuWidth
           })
-          setTimeout(() => {
-            this.bOpts = []
-            this.bInline = []
-          }, 128)
+          setTimeout(() => { this.bMenuGroups = [] }, 128)
         }
       }
 
@@ -201,12 +199,9 @@ export default {
       this.onClick(opts[this.selected])
     },
 
-    btnWidth(opts, i) {
-      if (i < 5) return 0
-      const k = opts.length % 5
-      const p = opts.length - k
-      if (i < p) return 0
-      else return 5
+    btnWidth(opts) {
+      if (opts.length > 5) return 'wrap'
+      else 'norm'
     },
 
     isSelected(opt) {
