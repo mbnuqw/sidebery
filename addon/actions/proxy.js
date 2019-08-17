@@ -13,8 +13,8 @@ function requestHandler(info) {
     // Inlude rules
     for (let rule of this.includeHostsRules) {
       let ok
-      if ((typeof rule.value)[0] === 's') ok = info.url.indexOf(rule.value) !== -1
-      else ok = rule.value.test(info.url)
+      if (rule.value.test) ok = rule.value.test(info.url)
+      else ok = info.url.indexOf(rule.value) !== -1
 
       if (ok && info.cookieStoreId !== rule.ctx) {
         if (incHistory[info.cookieStoreId] === info.url) {
