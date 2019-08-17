@@ -28,7 +28,7 @@
     @dragstart="onDragStart"
     @dragenter="onDragEnter"
     @dragleave="onDragLeave")
-  .audio(v-if="tab.audible || tab.mutedInfo.muted" @mousedown.stop="" @click="onAudioClick")
+  transition(name="tab-part"): .audio(v-if="tab.audible || tab.mutedInfo.muted" @mousedown.stop="" @click="onAudioClick")
     svg.-loud: use(xlink:href="#icon_loud_badge")
     svg.-mute: use(xlink:href="#icon_mute_badge")
   .fav
