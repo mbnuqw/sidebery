@@ -21,11 +21,15 @@ function requestHandler(info) {
 
   // Check hosts rules
   if (info.type === 'main_frame') {
-    // Inlude rules
+    let includedUrl
+
+    // Include rules
     for (let rule of this.includeHostsRules) {
       let ok
       if (rule.value.test) ok = rule.value.test(info.url)
       else ok = info.url.indexOf(rule.value) !== -1
+
+      if (!includedUrl) includedUrl = ok
 
       if (ok && info.cookieStoreId !== rule.ctx) {
         if (incHistory[info.cookieStoreId] === info.url) {
@@ -40,11 +44,11 @@ function requestHandler(info) {
     }
 
     // Exclude rules
-    if (this.excludeHostsRules[info.cookieStoreId]) {
+    if (!includedUrl && this.excludeHostsRules[info.cookieStoreId]) {
       for (let rule of this.excludeHostsRules[info.cookieStoreId]) {
         let ok
-        if ((typeof rule)[0] === 's') ok = info.url.indexOf(rule) !== -1
-        else ok = rule.test(info.url)
+        if (rule.test) ok = rule.test(info.url)
+        else ok = info.url.indexOf(rule) !== -1
 
         if (ok) {
           recreateTab(tab, info)
