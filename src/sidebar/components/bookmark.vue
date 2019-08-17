@@ -62,17 +62,6 @@ export default {
         return
       }
 
-      if (e.button === 0 && !State.selected.length) {
-        if (State.activateOpenBookmarkTab && this.node.isOpen) {
-          const tab = State.tabs.find(t => t.url === this.node.url)
-          if (tab) {
-            browser.tabs.update(tab.id, { active: true })
-            return
-          }
-        }
-        this.openUrl(State.openBookmarkNewTab, true)
-      }
-
       if (e.button === 1) {
         e.preventDefault()
         if (State.selected.length) {
@@ -97,6 +86,17 @@ export default {
      * Handle mouseup event
      */
     onMouseUp(e) {
+      if (e.button === 0 && !State.selected.length) {
+        if (State.activateOpenBookmarkTab && this.node.isOpen) {
+          const tab = State.tabs.find(t => t.url === this.node.url)
+          if (tab) {
+            browser.tabs.update(tab.id, { active: true })
+            return
+          }
+        }
+        this.openUrl(State.openBookmarkNewTab, true)
+      }
+
       if (e.button === 2) {
         if (e.ctrlKey || e.shiftKey) return
         Actions.closeCtxMenu()

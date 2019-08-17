@@ -7,7 +7,7 @@ let tabsTreeSaveTimeout
 function onTabCreated(tab) {
   if (!this.windows[tab.windowId]) return
   const tabWindow = this.windows[tab.windowId]
-  if (tabWindow.tabs) tabWindow.tabs.splice(tab.index, 1, tab)
+  if (tabWindow.tabs) tabWindow.tabs.splice(tab.index, 0, tab)
   else tabWindow.tabs = [tab]
   this.tabsMap[tab.id] = tab
 }
@@ -49,7 +49,7 @@ function onTabAttached(id, info) {
   if (!this.windows[info.newWindowId]) return
   if (!detachedTabs[id]) return
   const tabWindow = this.windows[info.newWindowId]
-  tabWindow.tabs.splice(info.newPosition, 1, detachedTabs[id])
+  tabWindow.tabs.splice(info.newPosition, 0, detachedTabs[id])
 }
 
 /**

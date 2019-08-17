@@ -115,11 +115,6 @@ export default {
         return
       }
 
-      if (e.button === 0 && !State.selected.length) {
-        if (!this.node.expanded) Actions.expandBookmark(this.node.id)
-        else Actions.foldBookmark(this.node.id)
-      }
-
       if (e.button === 1) e.preventDefault()
 
       if (e.button === 2) {
@@ -137,6 +132,11 @@ export default {
      * Handle mouseup event
      */
     onMouseUp(e) {
+      if (e.button === 0 && !State.selected.length) {
+        if (!this.node.expanded) Actions.expandBookmark(this.node.id)
+        else Actions.foldBookmark(this.node.id)
+      }
+
       if (e.button === 2) {
         Actions.closeCtxMenu()
         Actions.selectItem(this.node.id)
