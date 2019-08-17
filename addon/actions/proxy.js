@@ -1,6 +1,6 @@
 import Actions from '../actions.js'
 
-let updateReqHandlerTimeout
+let updateReqHandlerTimeout, incHistory = {}
 
 function requestHandler(info) {
   if (!this.tabsMap) return
@@ -17,6 +17,11 @@ function requestHandler(info) {
       else ok = rule.value.test(info.url)
 
       if (ok && info.cookieStoreId !== rule.ctx) {
+        if (incHistory[info.cookieStoreId] === info.url) {
+          incHistory[info.cookieStoreId] = null
+          break
+        }
+
         browser.tabs.create({
           windowId: tab.windowId,
           url: info.url,
@@ -25,6 +30,7 @@ function requestHandler(info) {
           pinned: tab.pinned,
         })
         browser.tabs.remove(tab.id)
+        incHistory[rule.ctx] = info.url
         return
       }
     }
