@@ -2,6 +2,17 @@ import Actions from '../actions.js'
 
 let updateReqHandlerTimeout, incHistory = {}
 
+async function recreateTab(tab, info, cookieStoreId) {
+  await browser.tabs.remove(tab.id)
+  browser.tabs.create({
+    windowId: tab.windowId,
+    url: info.url,
+    cookieStoreId,
+    active: tab.active,
+    pinned: tab.pinned,
+  })
+}
+
 function requestHandler(info) {
   if (!this.tabsMap) return
 
@@ -22,14 +33,7 @@ function requestHandler(info) {
           break
         }
 
-        browser.tabs.create({
-          windowId: tab.windowId,
-          url: info.url,
-          cookieStoreId: rule.ctx,
-          active: tab.active,
-          pinned: tab.pinned,
-        })
-        browser.tabs.remove(tab.id)
+        recreateTab(tab, info, rule.ctx)
         incHistory[rule.ctx] = info.url
         return
       }
@@ -43,13 +47,8 @@ function requestHandler(info) {
         else ok = rule.test(info.url)
 
         if (ok) {
-          browser.tabs.create({
-            windowId: tab.windowId,
-            url: info.url,
-            active: tab.active,
-            pinned: tab.pinned,
-          })
-          browser.tabs.remove(tab.id)
+          recreateTab(tab, info)
+          incHistory['firefox-default'] = info.url
           return
         }
       }

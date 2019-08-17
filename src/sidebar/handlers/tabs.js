@@ -254,7 +254,7 @@ function onRemovedTab(tabId, info) {
         windowId: this.state.windowId,
         index: panel.startIndex,
         cookieStoreId: panel.cookieStoreId,
-        active: true,
+        active: tab.active,
       })
     }
   }
