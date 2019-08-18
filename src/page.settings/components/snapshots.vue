@@ -41,7 +41,7 @@
               :data-target="tab.id === activeSnapshot.targetId"
               :data-lvl="tab.lvl"
               :data-pinned="tab.pinned"
-              :data-color="activeSnapshot.containersById[tab.ctr].color"
+              :data-color="getCtrColor(tab.ctr)"
               @click.stop.prevent="onTabClick(tab)")
               .icon
                 svg.ctr: use(:xlink:href="'#' + getCtrIcon(tab.ctr)")
@@ -220,11 +220,18 @@ export default {
       }
     },
 
+    getCtrColor(id) {
+      let container = this.activeSnapshot.containersById[id]
+      if (container) return this.activeSnapshot.containersById[id].color
+    },
+
     /**
      * Returns icon id
      */
     getCtrIcon(id) {
-      return this.activeSnapshot.containersById[id].icon
+      let container = this.activeSnapshot.containersById[id]
+      if (container) return this.activeSnapshot.containersById[id].icon
+      else return 'icon_tabs'
     },
   },
 }
