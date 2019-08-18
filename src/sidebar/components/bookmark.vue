@@ -6,8 +6,8 @@
   .body(:title="tooltip" @mousedown="onMouseDown" @mouseup="onMouseUp" @contextmenu="onCtxMenu")
     .drag-layer(draggable="true", @dragstart="onDragStart")
     .fav
-      .placeholder: svg: use(xlink:href="#icon_ff")
-      img(:src="favicon")
+      .placeholder(v-if="!favicon"): svg: use(xlink:href="#icon_ff")
+      img(v-if="favicon" :src="favicon")
     .title(v-if="node.title") {{node.title}}
 </template>
 
