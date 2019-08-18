@@ -2,9 +2,8 @@
 .PinnedTab(
   :data-active="tab.active"
   :data-status="tab.status"
-  :data-progress="tab.loading"
+  :data-progress="tab.loading || (tab.status === 'loading' && !tab.discarded)"
   :data-selected="tab.sel"
-  :data-favless="!favicon"
   :data-audible="tab.audible"
   :data-muted="tab.mutedInfo.muted"
   :data-discarded="tab.discarded"
@@ -31,7 +30,7 @@
     .update-badge
     transition(name="tab-part"): .ok-badge(v-if="tab.loading === 'ok'"): svg: use(xlink:href="#icon_ok")
     transition(name="tab-part"): .err-badge(v-if="tab.loading === 'err'"): svg: use(xlink:href="#icon_err")
-    transition(name="tab-part"): .progress-spinner(v-if="tab.loading === true || tab.status === 'loading'")
+    transition(name="tab-part"): .progress-spinner(v-if="tab.loading === true || (tab.status === 'loading' && !tab.discarded)")
     transition(name="tab-part"): .audio-badge(v-if="tab.audible || tab.mutedInfo.muted")
       svg.-loud: use(xlink:href="#icon_loud_badge")
       svg.-mute: use(xlink:href="#icon_mute_badge")
@@ -40,6 +39,7 @@
   .close(v-if="$store.state.showTabRmBtn" @mousedown.stop="close" @mouseup.stop="")
     svg: use(xlink:href="#icon_remove")
 </template>
+
 
 <script>
 import { mapGetters } from 'vuex'

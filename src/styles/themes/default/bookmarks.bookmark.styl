@@ -76,18 +76,11 @@
   box(absolute)
   size(16px, same)
   pos(0, 0)
-  opacity: 0
-  transform: translateY(4px)
-  transition: opacity var(--d-fast), transform var(--d-fast)
   > svg
     box(absolute)
     size(100%, same)
     pos(0, 0)
     fill: var(--favicons-placehoder-bg)
-
-.Bookmark[data-favless] .fav .placeholder
-  opacity: 1
-  transform: translateY(0)
 
 // ---
 // -- Favicon's image
@@ -97,10 +90,6 @@
   pos(0, 0)
   size(100%, same)
   transition: opacity var(--d-fast), transform var(--d-fast)
-
-.Bookmark[data-favless] .fav > img
-  opacity: 0
-  transform: translateY(-4px)
 
 // ---
 // -- Title

@@ -104,18 +104,11 @@
   box(absolute)
   size(16px, same)
   pos(0, 0)
-  opacity: 0
-  transform: translateY(4px)
-  transition: opacity var(--d-fast), transform var(--d-fast)
   > svg
     box(absolute)
     size(100%, same)
     pos(0, 0)
     fill: var(--favicons-placehoder-bg)
-
-.PinnedTab[data-favless] .placeholder
-  opacity: 1
-  transform: translateY(0)
 
 .PinnedTab[data-updated] .placeholder
   mask: radial-gradient(
@@ -150,12 +143,6 @@
 .PinnedTab .fav > img
   box(absolute)
   size(100%, same)
-  transform: translateY(0)
-  transition: opacity var(--d-fast), transform var(--d-fast)
-
-.PinnedTab[data-favless] .fav > img
-  opacity: 0
-  transform: translateY(-4px)
 
 .PinnedTab[data-updated] .fav > img
   mask: radial-gradient(
@@ -263,7 +250,7 @@
 
 .PinnedTab[data-progress] .audio-badge
 .PinnedTab[data-status="loading"] .audio-badge
-  transform: scale(1, 1) translateX(-13px)
+  transform: translateX(-13px)
 
 // ---
 // -- Loaded animation

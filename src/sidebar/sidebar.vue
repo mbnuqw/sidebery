@@ -59,7 +59,6 @@
             :conf="$store.state.dashboard"
             :index="$store.state.panelIndex"
             @close="act('closeDashboard')")
-  .dbg(v-if="$store.state.panels[$store.state.panelIndex]") {{$store.state.panelIndex}}: {{$store.state.panels[$store.state.panelIndex].startIndex}} - {{$store.state.panels[$store.state.panelIndex].endIndex}}
 </template>
 
 

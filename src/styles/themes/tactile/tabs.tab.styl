@@ -186,9 +186,6 @@
   box(absolute)
   size(16px, same)
   pos(0, 0)
-  opacity: 0
-  transform: translateY(4px)
-  transition: opacity var(--d-fast), transform var(--d-fast)
   filter: drop-shadow(1px 1px 0 var(--text-edge-color))
   > svg
     box(absolute)
@@ -196,8 +193,8 @@
     pos(0, 0)
     fill: var(--favicons-placehoder-bg)
 
-.Tab[data-parent][data-favless] .fav:hover .placeholder
-.Tab[data-parent][data-folded][data-favless] .fav .placeholder
+.Tab[data-parent] .fav:hover .placeholder
+.Tab[data-parent][data-folded] .fav .placeholder
   // Dim if combined with exp icon
   opacity: .5
 
@@ -219,20 +216,15 @@
     #000000
   )
 
-.Tab[data-favless] .fav .placeholder
-  opacity: 1
-  transform: translateY(0)
-
 // ---
 // -- Favicon image
 // -
 .Tab .fav > img
   box(absolute)
   size(100%, same)
-  transition: opacity var(--d-fast), transform var(--d-fast)
 
-.Tab[data-parent]:not([data-favless]) .fav:hover > img
-.Tab[data-parent][data-folded]:not([data-favless]) .fav > img
+.Tab[data-parent] .fav:hover > img
+.Tab[data-parent][data-folded] .fav > img
   // Dim if combined with exp icon
   opacity: .2
 
@@ -253,11 +245,6 @@
     #000000 8px,
     #000000
   )
-
-.Tab[data-favless] .fav > img
-  opacity: 0
-  transform: translateY(-4px)
-  transition: none
 
 // ---
 // -- Tabs group expand icon
@@ -419,9 +406,6 @@
 
 .Tab[data-selected] .title
   color: var(--tabs-selected-fg)
-
-.Tab[data-status="loading"] .title
-  transform: translateX(11px)
 
 // ---
 // -- Loading
