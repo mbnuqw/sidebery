@@ -74,8 +74,17 @@ export default {
 
     EventBus.$on('recalcPanelScroll', this.recalcScroll)
     EventBus.$on('updatePanelBounds', this.updatePanelBounds)
+    EventBus.$on('scrollToTab', this.scrollToTab)
+  },
 
-    EventBus.$on('scrollToTab', (panelIndex, tabId) => {
+  beforeDestroy() {
+    EventBus.$off('recalcPanelScroll', this.recalcScroll)
+    EventBus.$off('updatePanelBounds', this.updatePanelBounds)
+    EventBus.$off('scrollToTab', this.scrollToTab)
+  },
+
+  methods: {
+    scrollToTab(panelIndex, tabId) {
       if (panelIndex !== this.index) return
       if (!this.scrollBoxEl) return
       const sh = this.scrollBoxEl.offsetHeight
@@ -90,10 +99,8 @@ export default {
       if (h + PRE_SCROLL > sh + this.scrollBoxEl.scrollTop) {
         this.scrollBoxEl.scrollTop = h - sh + PRE_SCROLL
       }
-    })
-  },
+    },
 
-  methods: {
     onMouseDown(e) {
       if (e.target.draggable) return
       if (State.selected.length) return

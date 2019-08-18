@@ -41,8 +41,12 @@ export default {
     this.topOffset = this.$el.getBoundingClientRect().top
     this.$nextTick(() => this.recalcScroll())
 
-    const onresize = Utils.asap(() => this.recalcScroll(), 128)
-    window.addEventListener('resize', onresize.func)
+    this.recalcScrollAsap = Utils.asap(() => this.recalcScroll(), 128)
+    window.addEventListener('resize', this.recalcScrollAsap.func)
+  },
+
+  beforeDestroy() {
+    window.removeEventListener('resize', this.recalcScrollAsap.func)
   },
 
   methods: {

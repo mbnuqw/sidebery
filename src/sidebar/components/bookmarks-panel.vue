@@ -99,6 +99,12 @@ export default {
     EventBus.$on('scrollBookmarksToEdge', this.scrollToEdge)
   },
 
+  beforeDestroy() {
+    EventBus.$off('recalcPanelScroll', this.recalcScroll)
+    EventBus.$off('updatePanelBounds', this.updatePanelBounds)
+    EventBus.$off('scrollBookmarksToEdge', this.scrollToEdge)
+  },
+
   methods: {
     onClick() {
       Actions.closeCtxMenu()
