@@ -452,7 +452,7 @@ export const MENU_OPTIONS = {
   },
 
   close: (state) => {
-    if (state.selected.length <= 1) return
+    if (state.selected.length <= 1 && !state.tabsMap[state.selected[0]].pinned) return
     return {
       label: translate('menu.tab.close'),
       icon: 'icon_close',
