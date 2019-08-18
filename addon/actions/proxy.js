@@ -3,14 +3,14 @@ import Actions from '../actions.js'
 let updateReqHandlerTimeout, incHistory = {}
 
 async function recreateTab(tab, info, cookieStoreId) {
-  await browser.tabs.remove(tab.id)
-  browser.tabs.create({
+  await browser.tabs.create({
     windowId: tab.windowId,
     url: info.url,
     cookieStoreId,
     active: tab.active,
     pinned: tab.pinned,
   })
+  browser.tabs.remove(tab.id)
 }
 
 function requestHandler(info) {
