@@ -45,6 +45,7 @@ async function openCtxMenu(x, y) {
     } else {
       let lastGroup = opts[opts.length - 1]
       if (!lastGroup || lastGroup.inline) {
+        if (option === 'separator') continue
         lastGroup = { inline: false, options: [] }
         opts.push(lastGroup)
       }
