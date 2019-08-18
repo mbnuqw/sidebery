@@ -64,12 +64,14 @@ function onTabCreated(tab) {
         tab.lvl = nextTab.lvl
       }
     } else {
-      tab.parentId = tab.openerTabId
-      const start = panel.startIndex
-      const parent = this.state.tabsMap[tab.parentId]
-      this.actions.updateTabsTree(start, tab.index + 1)
-      if (this.state.autoFoldTabs && parent && !parent.folded) {
-        this.actions.expTabsBranch(tab.parentId)
+      let parent = this.state.tabsMap[tab.openerTabId]
+      if (parent.cookieStoreId === tab.cookieStoreId) {
+        tab.parentId = tab.openerTabId
+        const start = panel.startIndex
+        this.actions.updateTabsTree(start, tab.index + 1)
+        if (this.state.autoFoldTabs && !parent.folded) {
+          this.actions.expTabsBranch(tab.parentId)
+        }
       }
     }
 
