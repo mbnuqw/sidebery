@@ -346,11 +346,11 @@ function switchToPanel(index) {
  */
 function switchToNeighbourPanel() {
   let target
-
+  
   if (this.state.panelIndex < 0) target = this.state.panels[0]
 
   if (!target) {
-    for (let i = this.state.panelIndex; i > 0; i--) {
+    for (let i = this.state.panelIndex - 1; i > 0; i--) {
       if (this.state.panels[i] && !this.state.panels[i].inactive) {
         target = this.state.panels[i]
         break
@@ -359,7 +359,7 @@ function switchToNeighbourPanel() {
   }
 
   if (!target) {
-    for (let i = this.state.panelIndex; i < this.state.panels.length; i++) {
+    for (let i = this.state.panelIndex + 1; i < this.state.panels.length; i++) {
       if (this.state.panels[i] && !this.state.panels[i].inactive) {
         target = this.state.panels[i]
         break

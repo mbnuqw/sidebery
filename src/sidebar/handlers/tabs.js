@@ -209,7 +209,7 @@ function onUpdatedTab(tabId, change, tab) {
         cookieStoreId: panel.cookieStoreId,
       })
     } else if (!panel.tabs.length) {
-      this.actions.switchPanel(-1)
+      this.actions.switchToNeighbourPanel()
     }
   }
 }
