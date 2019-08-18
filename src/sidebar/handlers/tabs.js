@@ -5,7 +5,7 @@ const URL_HOST_PATH_RE = /^([a-z0-9-]{1,63}\.)+\w+(:\d+)?\/[A-Za-z0-9-._~:/?#[\]
 /**
  * tabs.onCreated
  */
-function onCreatedTab(tab) {
+function onTabCreated(tab) {
   if (tab.windowId !== this.state.windowId) return
 
   if (this.state.highlightOpenBookmarks && this.state.bookmarksUrlMap && this.state.bookmarksUrlMap[tab.url]) {
@@ -104,7 +104,7 @@ function onCreatedTab(tab) {
 /**
  * tabs.onUpdated
  */
-function onUpdatedTab(tabId, change, tab) {
+function onTabUpdated(tabId, change, tab) {
   if (tab.windowId !== this.state.windowId) return
 
   const localTab = this.state.tabsMap[tabId]
@@ -218,7 +218,7 @@ function onUpdatedTab(tabId, change, tab) {
 /**
  * tabs.onRemoved
  */
-function onRemovedTab(tabId, info) {
+function onTabRemoved(tabId, info) {
   if (info.windowId !== this.state.windowId) return
 
   if (!this.state.removingTabs) this.state.removingTabs = []
@@ -344,7 +344,7 @@ function onRemovedTab(tabId, info) {
 /**
  * tabs.onMoved
  */
-function onMovedTab(id, info) {
+function onTabMoved(id, info) {
   if (info.windowId !== this.state.windowId) return
   if (this.state.ignoreMovingTabs) return
 
@@ -410,17 +410,17 @@ function onMovedTab(id, info) {
 /**
  * tabs.onDetached
  */
-function onDetachedTab(id, info) {
+function onTabDetached(id, info) {
   if (info.oldWindowId !== this.state.windowId) return
   const tab = this.state.tabsMap[id]
   if (tab) tab.folded = false
-  this.onRemovedTab(id, { windowId: this.state.windowId })
+  this.handlers.onTabRemoved(id, { windowId: this.state.windowId })
 }
 
 /**
  * tabs.onAttached
  */
-async function onAttachedTab(id, info) {
+async function onTabAttached(id, info) {
   if (info.newWindowId !== this.state.windowId) return
 
   if (!this.state.attachingTabs) this.state.attachingTabs = []
@@ -436,7 +436,7 @@ async function onAttachedTab(id, info) {
   tab.windowId = this.state.windowId
   tab.index = info.newPosition
 
-  this.onCreatedTab(tab)
+  this.handlers.onTabCreated(tab)
 
   if (tab.active) browser.tabs.update(tab.id, { active: true })
 }
@@ -444,7 +444,7 @@ async function onAttachedTab(id, info) {
 /**
  * tabs.onActivated
  */
-function onActivatedTab(info) {
+function onTabActivated(info) {
   if (info.windowId !== this.state.windowId) return
 
   const currentPanel = this.state.panels[this.state.panelIndex]
@@ -529,8 +529,8 @@ function onActivatedTab(info) {
  * Setup listeners
  */
 function setupTabsListeners() {
-  browser.tabs.onCreated.addListener(this.handlers.onCreatedTab)
-  browser.tabs.onUpdated.addListener(this.handlers.onUpdatedTab, {
+  browser.tabs.onCreated.addListener(this.handlers.onTabCreated)
+  browser.tabs.onUpdated.addListener(this.handlers.onTabUpdated, {
     properties: [
       'audible',
       'discarded',
@@ -542,34 +542,34 @@ function setupTabsListeners() {
       'title',
     ],
   })
-  browser.tabs.onRemoved.addListener(this.handlers.onRemovedTab)
-  browser.tabs.onMoved.addListener(this.handlers.onMovedTab)
-  browser.tabs.onDetached.addListener(this.handlers.onDetachedTab)
-  browser.tabs.onAttached.addListener(this.handlers.onAttachedTab)
-  browser.tabs.onActivated.addListener(this.handlers.onActivatedTab)
+  browser.tabs.onRemoved.addListener(this.handlers.onTabRemoved)
+  browser.tabs.onMoved.addListener(this.handlers.onTabMoved)
+  browser.tabs.onDetached.addListener(this.handlers.onTabDetached)
+  browser.tabs.onAttached.addListener(this.handlers.onTabAttached)
+  browser.tabs.onActivated.addListener(this.handlers.onTabActivated)
 }
 
 /**
  * Remove listeners
  */
 function resetTabsListeners() {
-  browser.tabs.onCreated.removeListener(this.handlers.onCreatedTab)
-  browser.tabs.onUpdated.removeListener(this.handlers.onUpdatedTab)
-  browser.tabs.onRemoved.removeListener(this.handlers.onRemovedTab)
-  browser.tabs.onMoved.removeListener(this.handlers.onMovedTab)
-  browser.tabs.onDetached.removeListener(this.handlers.onDetachedTab)
-  browser.tabs.onAttached.removeListener(this.handlers.onAttachedTab)
-  browser.tabs.onActivated.removeListener(this.handlers.onActivatedTab)
+  browser.tabs.onCreated.removeListener(this.handlers.onTabCreated)
+  browser.tabs.onUpdated.removeListener(this.handlers.onTabUpdated)
+  browser.tabs.onRemoved.removeListener(this.handlers.onTabRemoved)
+  browser.tabs.onMoved.removeListener(this.handlers.onTabMoved)
+  browser.tabs.onDetached.removeListener(this.handlers.onTabDetached)
+  browser.tabs.onAttached.removeListener(this.handlers.onTabAttached)
+  browser.tabs.onActivated.removeListener(this.handlers.onTabActivated)
 }
 
 export default {
-  onCreatedTab,
-  onUpdatedTab,
-  onRemovedTab,
-  onMovedTab,
-  onAttachedTab,
-  onDetachedTab,
-  onActivatedTab,
+  onTabCreated,
+  onTabUpdated,
+  onTabRemoved,
+  onTabMoved,
+  onTabAttached,
+  onTabDetached,
+  onTabActivated,
   setupTabsListeners,
   resetTabsListeners,
 }
