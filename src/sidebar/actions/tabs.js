@@ -710,14 +710,12 @@ async function moveTabsToCtx(tabIds, ctxId) {
   for (let id of ids) {
     const tab = this.state.tabsMap[id]
     if (!tab) continue
-
+ 
     let createConf = {
       active: false,
       windowId: this.state.windowId,
       cookieStoreId: ctxId,
       url: Utils.normalizeUrl(tab.url),
-      title: tab.title,
-      discarded: tabIds.length > 1,
     }
 
     if (!tab.active) {
