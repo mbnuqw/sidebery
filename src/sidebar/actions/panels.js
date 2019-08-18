@@ -39,6 +39,7 @@ async function loadPanels() {
 
   const panels = []
   const panelsMap = {}
+  let saveNeeded
   for (let i = 0; i < ans.panels.length; i++) {
     const loadedPanel = ans.panels[i]
 
@@ -90,6 +91,7 @@ async function loadPanels() {
         panel.name = newCtr.name
         panel.color = newCtr.color
         panel.icon = newCtr.icon
+        if (!saveNeeded) saveNeeded = true
       }
 
       // Sidebery props
@@ -123,6 +125,7 @@ async function loadPanels() {
         const len = panels.push(panel)
         panel.index = len - 1
         panelsMap[panel.cookieStoreId] = panel
+        if (!saveNeeded) saveNeeded = true
       }
     }
   }
@@ -134,6 +137,8 @@ async function loadPanels() {
   if (this.state.panelIndex >= this.state.panels.length) {
     this.state.panelIndex = 1
   }
+
+  if (saveNeeded) Actions.savePanels()
 
   Logs.push('[INFO] Containers loaded')
 }
