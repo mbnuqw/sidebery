@@ -168,30 +168,6 @@ function onUpdatedTab(tabId, change, tab) {
     }
   }
 
-  // Handle unpinned tab
-  if (change.hasOwnProperty('pinned') && !change.pinned) {
-    let panel = this.state.panelsMap[tab.cookieStoreId]
-    if (!panel) return
-    panel.tabs.splice(localTab.index - panel.startIndex + 1, 0, localTab)
-    this.actions.updatePanelsRanges()
-    if (panel && panel.tabs) browser.tabs.move(tabId, { index: panel.endIndex })
-    if (tab.active) this.actions.setPanel(panel.index)
-  }
-
-  // Handle pinned tab
-  if (change.hasOwnProperty('pinned') && change.pinned) {
-    let panel = this.state.panelsMap[tab.cookieStoreId]
-    panel.tabs.splice(localTab.index - panel.startIndex, 1)
-    this.actions.updatePanelsRanges()
-    if (panel.noEmpty && panel.tabs.length === 1) {
-      browser.tabs.create({
-        windowId: this.state.windowId,
-        index: panel.startIndex,
-        cookieStoreId: panel.cookieStoreId,
-      })
-    }
-  }
-
   let inact = Date.now() - tab.lastAccessed
   if (change.hasOwnProperty('title') && !tab.active && inact > 5000) {
     // If prev url starts with 'http' and current url same as prev
@@ -210,8 +186,31 @@ function onUpdatedTab(tabId, change, tab) {
   // Update tab object
   Object.assign(localTab, change)
 
+  // Handle unpinned tab
+  if (change.hasOwnProperty('pinned') && !change.pinned) {
+    let panel = this.state.panelsMap[tab.cookieStoreId]
+    if (!panel) return
+    if (panel && panel.tabs) browser.tabs.move(tabId, { index: panel.endIndex - 1 })
+    panel.tabs.splice(localTab.index - panel.startIndex + 1, 0, localTab)
+    this.actions.updatePanelsRanges()
+    if (tab.active) this.actions.setPanel(panel.index)
+  }
+
+  // Handle pinned tab
   if (change.hasOwnProperty('pinned') && change.pinned) {
+    let panel = this.state.panelsMap[tab.cookieStoreId]
+    panel.tabs.splice(localTab.index - panel.startIndex, 1)
+    this.actions.updatePanelsRanges()
     this.actions.updateTabsTree()
+    if (panel.noEmpty && !panel.tabs.length) {
+      browser.tabs.create({
+        windowId: this.state.windowId,
+        index: panel.startIndex,
+        cookieStoreId: panel.cookieStoreId,
+      })
+    } else if (!panel.tabs.length) {
+      this.actions.switchPanel(-1)
+    }
   }
 }
 

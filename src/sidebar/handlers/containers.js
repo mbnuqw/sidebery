@@ -12,6 +12,8 @@ function onCreatedContainer({ contextualIdentity }) {
   panel.color = contextualIdentity.color
   panel.icon = contextualIdentity.icon
 
+  panel.index = this.state.panels.length
+
   this.state.containers.push(contextualIdentity)
   this.state.panels.push(panel)
   this.state.panelsMap[panel.cookieStoreId] = panel
