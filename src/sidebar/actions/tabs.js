@@ -33,6 +33,7 @@ async function loadTabs(fresh = true) {
     t.lvl = 0
     t.sel = false
     t.updated = false
+    t.loading = false
     if (this.state.highlightOpenBookmarks && this.state.bookmarksUrlMap && this.state.bookmarksUrlMap[t.url]) {
       for (let b of this.state.bookmarksUrlMap[t.url]) {
         b.isOpen = true
@@ -162,6 +163,7 @@ async function restoreGroupTab(tabInfo, index, parents) {
   restoredTab.invisible = false
   restoredTab.sel = false
   restoredTab.updated = false
+  restoredTab.loading = false
 
   this.state.tabs.splice(index, 0, restoredTab)
   this.state.tabsMap[restoredTab.id] = restoredTab
@@ -526,7 +528,7 @@ async function clearTabsCookies(tabIds) {
     let tab = this.state.tabsMap[tabId]
     if (!tab) continue
 
-    EventBus.$emit('tabLoadingStart', tab.id)
+    tab.loading = true
 
     let url = new URL(tab.url)
     let domain = url.hostname
@@ -535,7 +537,8 @@ async function clearTabsCookies(tabIds) {
       .join('.')
 
     if (!domain) {
-      EventBus.$emit('tabLoadingErr', tab.id)
+      tab.loading = 'err'
+      setTimeout(() => { tab.loading = false }, 2000)
       continue
     }
 
@@ -557,8 +560,14 @@ async function clearTabsCookies(tabIds) {
     })
 
     Promise.all(clearing)
-      .then(() => setTimeout(() => EventBus.$emit('tabLoadingOk', tab.id), 250))
-      .catch(() => setTimeout(() => EventBus.$emit('tabLoadingErr', tab.id), 250))
+      .then(() => {
+        setTimeout(() => { tab.loading = 'ok' }, 250)
+        setTimeout(() => { tab.loading = false }, 2000)
+      })
+      .catch(() => {
+        setTimeout(() => { tab.loading = 'err' }, 250)
+        setTimeout(() => { tab.loading = false }, 2000)
+      })
   }
 }
 

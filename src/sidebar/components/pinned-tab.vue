@@ -2,7 +2,7 @@
 .PinnedTab(
   :data-active="tab.active"
   :data-status="tab.status"
-  :data-progress="loading"
+  :data-progress="tab.loading"
   :data-selected="tab.sel"
   :data-favless="!favicon"
   :data-audible="tab.audible"
@@ -29,9 +29,9 @@
     .placeholder(v-if="!favicon"): svg: use(:xlink:href="favPlaceholder")
     img(:src="favicon" @load.passive="onFaviconLoad")
     .update-badge
-    transition(name="tab-part"): .ok-badge(v-if="loading === 'ok'"): svg: use(xlink:href="#icon_ok")
-    transition(name="tab-part"): .err-badge(v-if="loading === 'err'"): svg: use(xlink:href="#icon_err")
-    transition(name="tab-part"): .progress-spinner(v-if="loading === true || tab.status === 'loading'")
+    transition(name="tab-part"): .ok-badge(v-if="tab.loading === 'ok'"): svg: use(xlink:href="#icon_ok")
+    transition(name="tab-part"): .err-badge(v-if="tab.loading === 'err'"): svg: use(xlink:href="#icon_err")
+    transition(name="tab-part"): .progress-spinner(v-if="tab.loading === true || tab.status === 'loading'")
     transition(name="tab-part"): .audio-badge(v-if="tab.audible || tab.mutedInfo.muted")
       svg.-loud: use(xlink:href="#icon_loud_badge")
       svg.-mute: use(xlink:href="#icon_mute_badge")
@@ -64,7 +64,6 @@ export default {
     return {
       menu: false,
       faviErr: false,
-      loading: false,
       dropSlot: false,
     }
   },
@@ -101,20 +100,6 @@ export default {
       if (this.tab.url.startsWith('about:performance')) return '#icon_perf'
       return '#icon_ff'
     },
-  },
-
-  created() {
-    EventBus.$on('tabLoadingStart', this.loadingStart)
-    EventBus.$on('tabLoadingEnd', this.loadingEnd)
-    EventBus.$on('tabLoadingOk', this.loadingOk)
-    EventBus.$on('tabLoadingErr', this.loadingErr)
-  },
-
-  beforeDestroy() {
-    EventBus.$off('tabLoadingStart', this.loadingStart)
-    EventBus.$off('tabLoadingEnd', this.loadingEnd)
-    EventBus.$off('tabLoadingOk', this.loadingOk)
-    EventBus.$off('tabLoadingErr', this.loadingErr)
   },
 
   methods: {
@@ -303,14 +288,8 @@ export default {
         ctx.imageSmoothingEnabled = false
         ctx.drawImage(e.target, 0, 0, e.target.naturalWidth, e.target.naturalHeight)
         let base64 = canvas.toDataURL('image/png')
-        // let hn = this.tab.url.split('/')[2]
-        // if (!hn) return
         Actions.setFavicon(this.tab.url, base64)
       }
-    },
-
-    onFaviconErr() {
-      this.faviErr = true
     },
 
     /**
@@ -318,43 +297,6 @@ export default {
      */
     close() {
       this.$emit('remove', this.tab)
-    },
-
-    loadingStart(id) {
-      if (id !== this.tab.id) return
-      this.loading = true
-      if (this.loadingTimer) {
-        clearTimeout(this.loadingTimer)
-        this.loadingTimer = null
-      }
-    },
-
-    loadingEnd(id) {
-      if (id !== this.tab.id) return
-      this.loading = false
-    },
-
-    loadingOk(id) {
-      if (id !== this.tab.id) return
-      this.loading = 'ok'
-      this.loadingTimer = setTimeout(() => {
-        this.loadingEnd(id)
-        this.loadingTimer = null
-      }, 2000)
-    },
-
-    loadingErr(id) {
-      if (id !== this.tab.id) return
-      this.loading = 'err'
-      this.loadingTimer = setTimeout(() => {
-        this.loadingEnd(id)
-        this.loadingTimer = null
-      }, 2000)
-    },
-
-    // ??? remove
-    height() {
-      return this.$el.offsetHeight
     },
   },
 }

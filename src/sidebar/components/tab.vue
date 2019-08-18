@@ -2,7 +2,7 @@
 .Tab(
   :data-active="tab.active"
   :data-status="tab.status"
-  :data-progress="loading"
+  :data-progress="tab.loading"
   :data-selected="tab.sel"
   :data-favless="!favicon"
   :data-audible="tab.audible"
@@ -36,9 +36,9 @@
     img(:src="favicon" @load.passive="onFaviconLoad")
     .exp(v-if="tab.isParent" @dblclick.prevent.stop="" @mousedown.stop="onExp"): svg: use(xlink:href="#icon_expand")
     .update-badge
-    transition(name="tab-part"): .ok-badge(v-if="loading === 'ok'"): svg: use(xlink:href="#icon_ok")
-    transition(name="tab-part"): .err-badge(v-if="loading === 'err'"): svg: use(xlink:href="#icon_err")
-    transition(name="tab-part"): .progress-spinner(v-if="loading === true")
+    transition(name="tab-part"): .ok-badge(v-if="tab.loading === 'ok'"): svg: use(xlink:href="#icon_ok")
+    transition(name="tab-part"): .err-badge(v-if="tab.loading === 'err'"): svg: use(xlink:href="#icon_err")
+    transition(name="tab-part"): .progress-spinner(v-if="tab.loading === true")
     .child-count(v-if="childCount && tab.folded") {{childCount}}
   .close(v-if="$store.state.showTabRmBtn" @mousedown.stop="onCloseClick" @mouseup.stop="")
     svg: use(xlink:href="#icon_remove")
@@ -72,9 +72,7 @@ export default {
   },
 
   data() {
-    return {
-      loading: false,
-    }
+    return {}
   },
 
   computed: {
@@ -104,20 +102,6 @@ export default {
       if (this.tab.url.startsWith('about:performance')) return '#icon_perf'
       return '#icon_ff'
     },
-  },
-
-  created() {
-    EventBus.$on('tabLoadingStart', this.loadingStart)
-    EventBus.$on('tabLoadingEnd', this.loadingEnd)
-    EventBus.$on('tabLoadingOk', this.loadingOk)
-    EventBus.$on('tabLoadingErr', this.loadingErr)
-  },
-
-  beforeDestroy() {
-    EventBus.$off('tabLoadingStart', this.loadingStart)
-    EventBus.$off('tabLoadingEnd', this.loadingEnd)
-    EventBus.$off('tabLoadingOk', this.loadingOk)
-    EventBus.$off('tabLoadingErr', this.loadingErr)
   },
 
   methods: {
@@ -423,37 +407,37 @@ export default {
       Actions.removeTabs(toRemove)
     },
 
-    loadingStart(id) {
-      if (id !== this.tab.id) return
-      this.loading = true
-      if (this.loadingTimer) {
-        clearTimeout(this.loadingTimer)
-        this.loadingTimer = null
-      }
-    },
+    // loadingStart(id) {
+    //   if (id !== this.tab.id) return
+    //   this.loading = true
+    //   if (this.loadingTimer) {
+    //     clearTimeout(this.loadingTimer)
+    //     this.loadingTimer = null
+    //   }
+    // },
 
-    loadingEnd(id) {
-      if (id !== this.tab.id) return
-      this.loading = false
-    },
+    // loadingEnd(id) {
+    //   if (id !== this.tab.id) return
+    //   this.loading = false
+    // },
 
-    loadingOk(id) {
-      if (id !== this.tab.id) return
-      this.loading = 'ok'
-      this.loadingTimer = setTimeout(() => {
-        this.loadingEnd(id)
-        this.loadingTimer = null
-      }, 2000)
-    },
+    // loadingOk(id) {
+    //   if (id !== this.tab.id) return
+    //   this.loading = 'ok'
+    //   this.loadingTimer = setTimeout(() => {
+    //     this.loadingEnd(id)
+    //     this.loadingTimer = null
+    //   }, 2000)
+    // },
 
-    loadingErr(id) {
-      if (id !== this.tab.id) return
-      this.loading = 'err'
-      this.loadingTimer = setTimeout(() => {
-        this.loadingEnd(id)
-        this.loadingTimer = null
-      }, 2000)
-    },
+    // loadingErr(id) {
+    //   if (id !== this.tab.id) return
+    //   this.loading = 'err'
+    //   this.loadingTimer = setTimeout(() => {
+    //     this.loadingEnd(id)
+    //     this.loadingTimer = null
+    //   }, 2000)
+    // },
   },
 }
 </script>

@@ -39,6 +39,7 @@ function onCreatedTab(tab) {
   tab.invisible = false
   tab.favIconUrl = ''
   tab.updated = false
+  tab.loading = false
 
   // Put new tab in tabs list
   this.state.tabsMap[tab.id] = tab
