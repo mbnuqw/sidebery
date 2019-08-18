@@ -1,12 +1,14 @@
 <template lang="pug">
-.Dashboard(v-noise:300.g:12:af.a:0:42.s:0:9="")
-  .dash-ctrls(v-if="!$store.state.private")
+.Dashboard(v-noise:300.g:12:af.a:0:42.s:0:9="" @dragenter="onDragEnter" @dragleave="onDragLeave")
+  .dash-ctrls(v-if="!$store.state.private" ref="hm")
     .ctrl-panel(
       v-for="(panel, i) in conf.panels"
       :data-color="panel.color"
       :data-active="selected === i"
       :title="panel.name"
       @click="clickHandler(panel.cookieStoreId)"
+      @dragenter="onPanelDragEnter(panel, i)"
+      @drop="onPanelDrop($event, panel, i)"
       @mousedown.right="openDashboard(panel)")
       svg: use(:xlink:href="'#' + panel.icon")
       .title {{panel.name}}
@@ -69,6 +71,23 @@ export default {
         cookieStoreId: panel.cookieStoreId,
         active: true,
       })
+    },
+
+    onDragEnter(event) {
+      this.dragEnterTarget = event.target
+    },
+
+    onDragLeave(event) {
+      if (event.target !== this.dragEnterTarget) return
+      this.$emit('close')
+    },
+
+    onPanelDragEnter(panel, i) {
+      this.selected = i
+    },
+
+    onPanelDrop(event, panel) {
+      State.panelIndex = panel.index
     },
 
     openDashboard(panel) {

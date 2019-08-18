@@ -480,6 +480,11 @@ export default {
       if (this.dropParent === undefined) this.dropParent = -1
       if (this.dropParent === null) this.dropParent = -1
 
+      if (State.dashboardIsOpen) {
+        this.dropParent = -1
+        this.dropIndex = State.panels[State.panelIndex].startIndex
+      }
+
       if (State.panels[State.panelIndex].tabs) {
         Actions.dropToTabs(e, this.dropIndex, this.dropParent, State.dragNodes)
       }
@@ -491,6 +496,11 @@ export default {
       if (State.dragNodes) Actions.resetSelection()
       this.resetDrag()
       State.dragNodes = null
+
+      if (State.dashboardIsOpen) {
+        State.dashboardIsOpen = false
+        State.dashboard = null
+      }
     },
 
     /**

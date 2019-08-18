@@ -1000,7 +1000,7 @@ async function dropToTabs(event, dropIndex, dropParent, nodes, pin) {
 
         if (oldNewMap[node.parentId] >= 0) opener = oldNewMap[node.parentId]
         let createConf = {
-          active: false,
+          active: node.active,
           cookieStoreId: destCtx,
           index: dropIndex + i,
           openerTabId: opener,

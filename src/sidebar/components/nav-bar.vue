@@ -197,9 +197,16 @@ export default {
      */
     onNavDragEnter(i) {
       if (i >= this.nav.length - 1) return
+
       this.navDragEnterIndex = i
       if (this.navDragEnterTimeout) clearTimeout(this.navDragEnterTimeout)
       this.navDragEnterTimeout = setTimeout(() => {
+        this.navDragEnterTimeout = null
+        if (this.nav[i].type === 'hidden') {
+          Actions.openDashboard(-2)
+          return
+        }
+        if (State.dashboardIsOpen) Actions.closeDashboard()
         Actions.switchToPanel(i)
       }, 300)
     },
