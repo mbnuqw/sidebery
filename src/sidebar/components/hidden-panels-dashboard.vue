@@ -6,7 +6,8 @@
       :data-color="panel.color"
       :data-active="selected === i"
       :title="panel.name"
-      @click="clickHandler(panel.cookieStoreId)")
+      @click="clickHandler(panel.cookieStoreId)"
+      @mousedown.right="openDashboard(panel)")
       svg: use(:xlink:href="'#' + panel.icon")
       .title {{panel.name}}
 </template>
@@ -15,6 +16,7 @@
 <script>
 import EventBus from '../../event-bus'
 import State from '../store/state'
+import Actions from '../actions'
 
 export default {
   props: {
@@ -67,6 +69,13 @@ export default {
         cookieStoreId: panel.cookieStoreId,
         active: true,
       })
+    },
+
+    openDashboard(panel) {
+      this.$emit('close')
+      setTimeout(() => {
+        Actions.openDashboard(panel.index)
+      }, 33)
     },
   },
 }

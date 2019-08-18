@@ -34,8 +34,13 @@ async function openDashboard(i) {
 function closeDashboard() {
   this.state.dashboardIsOpen = false
   this.state.dashboard = null
+
   if (this.state.panelIndex < 0 && this.state.lastPanelIndex >= 0) {
     this.state.panelIndex = this.state.lastPanelIndex
+  }
+
+  if (this.state.panels[this.state.panelIndex].inactive) {
+    this.actions.switchToNeighbourPanel()
   }
 }
 

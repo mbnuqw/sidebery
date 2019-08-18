@@ -342,6 +342,37 @@ function switchToPanel(index) {
 }
 
 /**
+ * Try to find not hidden neighbour panel
+ */
+function switchToNeighbourPanel() {
+  let target
+
+  if (this.state.panelIndex < 0) target = this.state.panels[0]
+
+  if (!target) {
+    for (let i = this.state.panelIndex; i > 0; i--) {
+      if (this.state.panels[i] && !this.state.panels[i].inactive) {
+        target = this.state.panels[i]
+        break
+      }
+    }
+  }
+
+  if (!target) {
+    for (let i = this.state.panelIndex; i < this.state.panels.length; i++) {
+      if (this.state.panels[i] && !this.state.panels[i].inactive) {
+        target = this.state.panels[i]
+        break
+      }
+    }
+  }
+
+  if (target) {
+    this.actions.switchToPanel(target.index)
+  }
+}
+
+/**
  * Switch panel.
  */
 async function switchPanel(dir = 0) {
@@ -439,6 +470,7 @@ export default {
   recalcPanelScroll,
   updatePanelBoundsDebounced,
   switchToPanel,
+  switchToNeighbourPanel,
   switchPanel,
   goToActiveTabPanel,
   getActivePanel,
