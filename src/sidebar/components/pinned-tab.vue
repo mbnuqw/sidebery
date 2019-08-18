@@ -35,7 +35,7 @@
     transition(name="tab-part"): .audio-badge(v-if="tab.audible || tab.mutedInfo.muted")
       svg.-loud: use(xlink:href="#icon_loud_badge")
       svg.-mute: use(xlink:href="#icon_mute_badge")
-  .ctx(v-if="ctx && color" :style="{background: color}")
+  .ctx(v-if="ctx && color")
   .title(v-if="withTitle") {{tab.title}}
   .close(v-if="$store.state.showTabRmBtn" @mousedown.stop="close" @mouseup.stop="")
     svg: use(xlink:href="#icon_remove")
