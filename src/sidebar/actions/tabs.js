@@ -312,7 +312,7 @@ async function removeTabs(tabIds) {
     })
   }
 
-  if (tabs.length === panel.tabs.length && !panel.noEmpty) {
+  if (tabs.length === panel.tabs.length && !panel.noEmpty && this.state.panelIndex === panel.index) {
     this.actions.switchPanel(-1)
   }
 
