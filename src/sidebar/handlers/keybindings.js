@@ -368,12 +368,16 @@ function onKeyNextPanel() {
 
     // If current panel is the last open hidden panels dashboard
     if (i === this.state.panels.length) {
+      let hiddenPanels = this.state.panels.filter(b => !b.bookmarks && b.inactive)
+      if (!hiddenPanels.length) return
+
       this.state.panelIndex = i
       this.actions.openDashboard(-2)
       EventBus.$emit('selectHiddenPanel', 1)
       return
     }
   }
+
 
   this.actions.switchPanel(1)
 }
