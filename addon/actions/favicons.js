@@ -29,9 +29,11 @@ function saveFavicon(url, icon) {
       let index = this.favicons.indexOf(fav)
       if (index === -1) index = this.favicons.indexOf(null)
       if (index === -1) index = this.favicons.push(icon) - 1
-      if (index > -1) this.favicons[index] = icon
 
-      this.favUrls[url] = index
+      if (index > -1) {
+        this.favicons[index] = icon
+        this.favUrls[url] = index
+      }
     }
 
     browser.storage.local.set({ favicons: this.favicons, favUrls: this.favUrls })

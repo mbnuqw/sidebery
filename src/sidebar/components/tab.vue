@@ -31,8 +31,8 @@
     svg.-loud: use(xlink:href="#icon_loud_badge")
     svg.-mute: use(xlink:href="#icon_mute_badge")
   .fav
-    transition(name="tab-part"): .placeholder(v-if="!favicon"): svg: use(:xlink:href="favPlaceholder")
-    transition(name="tab-part"): img(v-if="favicon" :src="favicon" @load.passive="onFaviconLoad")
+    transition(name="tab-part"): .placeholder(v-if="!tab.favIconUrl"): svg: use(:xlink:href="favPlaceholder")
+    transition(name="tab-part"): img(v-if="tab.favIconUrl" :src="tab.favIconUrl" @load.passive="onFaviconLoad")
     .exp(v-if="tab.isParent" @dblclick.prevent.stop="" @mousedown.stop="onExp"): svg: use(xlink:href="#icon_expand")
     .update-badge
     transition(name="tab-part"): .ok-badge(v-if="tab.loading === 'ok'"): svg: use(xlink:href="#icon_ok")

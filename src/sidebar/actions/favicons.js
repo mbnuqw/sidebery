@@ -10,6 +10,11 @@ async function loadFavicons() {
     favUrls: {},
   })
 
+  for (let tab of this.state.tabs) {
+    if (tab.favIconUrl) continue
+    if (favicons[favUrls[tab.url]]) tab.favIconUrl = favicons[favUrls[tab.url]]
+  }
+
   this.state.favicons = favicons
   this.state.favUrls = favUrls
   Logs.push('[INFO] Favicons loaded')

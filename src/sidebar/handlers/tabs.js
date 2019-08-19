@@ -115,10 +115,13 @@ function onTabUpdated(tabId, change, tab) {
   // Status change
   if (change.hasOwnProperty('status')) {
     if (change.status === 'complete') {
-      if (localTab.favIconUrl && this.state.favUrls[localTab.url] === undefined) {
-        this.actions.setFavicon(localTab.url, localTab.favIconUrl)
-      }
+      browser.tabs.get(localTab.id)
+        .then(tabInfo => {
+          if (tabInfo.favIconUrl) localTab.favIconUrl = tabInfo.favIconUrl
+          else localTab.favIconUrl = ''
+        })
     }
+
     const groupTab = this.actions.getGroupTab(localTab)
     if (groupTab) {
       let updateData = {
@@ -151,11 +154,7 @@ function onTabUpdated(tabId, change, tab) {
           }
         }
       }
-      if (
-        change.url.startsWith('about:') ||
-        change.url.startsWith('file:') ||
-        change.url.startsWith('ftp:')
-      ) {
+      if (!change.url.startsWith(localTab.url.slice(0, 16))) {
         localTab.favIconUrl = ''
       }
     }

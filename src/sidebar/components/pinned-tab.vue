@@ -25,8 +25,8 @@
     @dragleave="onDragLeave"
     @drop="onDragLeave")
   .fav
-    .placeholder(v-if="!favicon"): svg: use(:xlink:href="favPlaceholder")
-    img(:src="favicon" @load.passive="onFaviconLoad")
+    transition(name="tab-part"): .placeholder(v-if="!tab.favIconUrl"): svg: use(:xlink:href="favPlaceholder")
+    transition(name="tab-part"): img(v-if="tab.favIconUrl" :src="tab.favIconUrl" @load.passive="onFaviconLoad")
     .update-badge
     transition(name="tab-part"): .ok-badge(v-if="tab.loading === 'ok'"): svg: use(xlink:href="#icon_ok")
     transition(name="tab-part"): .err-badge(v-if="tab.loading === 'err'"): svg: use(xlink:href="#icon_err")
