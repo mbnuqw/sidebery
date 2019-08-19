@@ -44,8 +44,7 @@
     border: var(--tabs-activated-border)
     box-shadow: var(--tabs-activated-shadow)
   
-  &[data-status="loading"]
-  &[data-progress="true"]
+  &[data-loading="true"]
     cursor: progress
 
   &[data-selected]
@@ -176,7 +175,7 @@
     #000000
   )
 
-.Tab[data-progress] .placeholder
+.Tab[data-loading] .placeholder
     mask: radial-gradient(
       circle at calc(100% - 2px) calc(100% - 2px),
       #00000024,
@@ -206,7 +205,7 @@
     #000000
   )
 
-.Tab[data-progress] .fav > img
+.Tab[data-loading] .fav > img
     mask: radial-gradient(
       circle at calc(100% - 2px) calc(100% - 2px),
       #00000024,
@@ -270,7 +269,7 @@
   transform: scale(0.7, 0.7)
   transition: opacity var(--d-norm), transform var(--d-norm)
 
-.Tab:not([data-progress])[data-updated] .update-badge
+.Tab:not([data-loading])[data-updated] .update-badge
   opacity: 1
   transform: scale(1, 1)
 
@@ -303,6 +302,10 @@
   font: var(--tabs-count-font)
   text-align: center
   color: var(--tabs-fg)
+  transition: opacity var(--d-fast)
+
+.Tab[data-loading] .fav > .child-count
+  opacity: 0
 
 // ---
 // -- Context highlight

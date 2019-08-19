@@ -54,7 +54,7 @@
   &[data-discarded]
     opacity: .5
   
-  &[data-status="loading"]
+  &[data-loading="true"]
     cursor: progress
 
 #root[data-pinned-tabs-position="panel"][data-pinned-tabs-list]
@@ -91,8 +91,7 @@
   transition: none
   opacity: .5
 
-.PinnedTab[data-status="loading"]:not([data-audible]):not([data-muted]) .fav
-.PinnedTab[data-progress="true"]:not([data-audible]):not([data-muted]) .fav
+.PinnedTab[data-loading="true"]:not([data-audible]):not([data-muted]) .fav
   cursor: progress
 
 // ---
@@ -118,8 +117,7 @@
     #000000
   )
 
-.PinnedTab[data-status="loading"] .placeholder
-.PinnedTab[data-progress] .placeholder
+.PinnedTab[data-loading] .placeholder
 .PinnedTab[data-audible] .placeholder
 .PinnedTab[data-muted] .placeholder
   mask: radial-gradient(
@@ -130,10 +128,8 @@
     #000000
   )
 
-.PinnedTab[data-progress][data-muted] .placeholder
-.PinnedTab[data-progress][data-audible] .placeholder
-.PinnedTab[data-status="loading"][data-muted] .placeholder
-.PinnedTab[data-status="loading"][data-audible] .placeholder
+.PinnedTab[data-loading][data-muted] .placeholder
+.PinnedTab[data-loading][data-audible] .placeholder
   mask: linear-gradient(0deg, #00000024, #00000024 8px, #000000 9px, #000000)
 
 // ---
@@ -152,8 +148,7 @@
     #000000
   )
 
-.PinnedTab[data-status="loading"] .fav > img
-.PinnedTab[data-progress] .fav > img
+.PinnedTab[data-loading] .fav > img
 .PinnedTab[data-audible] .fav > img
 .PinnedTab[data-muted] .fav > img
   mask: radial-gradient(
@@ -164,10 +159,8 @@
     #000000
   )
 
-.PinnedTab[data-progress][data-muted] .fav > img
-.PinnedTab[data-progress][data-audible] .fav > img
-.PinnedTab[data-status="loading"][data-muted] .fav > img
-.PinnedTab[data-status="loading"][data-audible] .fav > img
+.PinnedTab[data-loading][data-muted] .fav > img
+.PinnedTab[data-loading][data-audible] .fav > img
   mask: linear-gradient(0deg, #00000024, #00000024 8px, #000000 9px, #000000)
 
 
@@ -198,7 +191,7 @@
   transform: scale(0.7, 0.7)
   transition: opacity var(--d-norm), transform var(--d-norm)
 
-.PinnedTab[data-updated]:not([data-status="loading"]):not([data-progress]):not([data-audible]):not([data-muted]) .update-badge
+.PinnedTab[data-updated]:not([data-loading]):not([data-audible]):not([data-muted]) .update-badge
   opacity: 1
   transform: scale(1, 1)
 
@@ -224,8 +217,8 @@
 .PinnedTab .err-badge > svg
   fill: var(--false-fg)
 
-.PinnedTab[data-progress="ok"] .ok-badge
-.PinnedTab[data-progress="err"] .err-badge
+.PinnedTab[data-loading="ok"] .ok-badge
+.PinnedTab[data-loading="err"] .err-badge
   opacity: 1
   transform: scale(1, 1)
 
@@ -257,8 +250,7 @@
 .PinnedTab[data-muted] svg.-mute
   opacity: 1
 
-.PinnedTab[data-progress] .audio-badge
-.PinnedTab[data-status="loading"] .audio-badge
+.PinnedTab[data-loading] .audio-badge
   transform: scale(1, 1) translateX(-13px)
 
 // ---

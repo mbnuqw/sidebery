@@ -2,7 +2,7 @@
 .Tab(
   :data-active="tab.active"
   :data-status="tab.status"
-  :data-progress="tab.loading || (tab.status === 'loading' && !tab.discarded)"
+  :data-loading="loading"
   :data-selected="tab.sel"
   :data-audible="tab.audible"
   :data-muted="tab.mutedInfo.muted"
@@ -35,9 +35,9 @@
     transition(name="tab-part"): img(v-if="tab.favIconUrl" :src="tab.favIconUrl" @load.passive="onFaviconLoad")
     .exp(v-if="tab.isParent" @dblclick.prevent.stop="" @mousedown.stop="onExp"): svg: use(xlink:href="#icon_expand")
     .update-badge
-    transition(name="tab-part"): .ok-badge(v-if="tab.loading === 'ok'"): svg: use(xlink:href="#icon_ok")
-    transition(name="tab-part"): .err-badge(v-if="tab.loading === 'err'"): svg: use(xlink:href="#icon_err")
-    transition(name="tab-part"): .progress-spinner(v-if="tab.loading === true || (tab.status === 'loading' && !tab.discarded)")
+    transition(name="tab-part"): .ok-badge(v-if="loading === 'ok'"): svg: use(xlink:href="#icon_ok")
+    transition(name="tab-part"): .err-badge(v-if="loading === 'err'"): svg: use(xlink:href="#icon_err")
+    transition(name="tab-part"): .progress-spinner(v-if="loading === true")
     .child-count(v-if="childCount && tab.folded") {{childCount}}
   .close(v-if="$store.state.showTabRmBtn" @mousedown.stop="onCloseClick" @mouseup.stop="")
     svg: use(xlink:href="#icon_remove")
@@ -73,6 +73,11 @@ export default {
     favicon() {
       if (this.tab.status === 'loading') return State.favicons[State.favUrls[this.tab.url]]
       else return this.tab.favIconUrl || State.favicons[State.favUrls[this.tab.url]]
+    },
+
+    loading() {
+      if (this.tab.loading) return this.tab.loading
+      return this.tab.status === 'loading'
     },
 
     tooltip() {
