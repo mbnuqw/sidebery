@@ -353,14 +353,15 @@
 // -
 .Tab .complete-fx
   box(absolute)
-  size(100%, same)
-  pos(0, 0)
-  background-image: linear-gradient(90deg, #00000000, var(--tabs-loading-fg))
+  size(100%, calc(100% - 3px))
+  pos(b: 2px, r: 0)
+  border-radius: 2px
+  background-image: linear-gradient(-90deg, #00000000, var(--tabs-loading-fg))
   opacity: 0
-  transform: translateX(-100%)
+  transform: translateX(100%)
 
 .Tab[data-status="complete"] .complete-fx
-  animation: complete-animation .3s
+  animation: complete-animation .4s
 
 // ---
 // -- Title box
