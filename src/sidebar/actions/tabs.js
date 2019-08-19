@@ -874,190 +874,208 @@ async function toggleBranch(tabId) {
  * Drop to tabs panel
  */
 async function dropToTabs(event, dropIndex, dropParent, nodes, pin) {
-  const currentPanel = this.state.panels[this.state.panelIndex]
-  const destCtx = currentPanel.cookieStoreId
-  const parent = this.state.tabsMap[dropParent]
-  const toHide = []
-  const toShow = []
+  let currentPanel = this.state.panels[this.state.panelIndex]
+  let destCtx = currentPanel.cookieStoreId
   if (dropIndex === -1) dropIndex = currentPanel.endIndex + 1
 
   // Tabs or Bookmarks
   if (nodes && nodes.length) {
-    let samePanel = nodes[0].ctx === destCtx
-    if (pin && currentPanel.panel !== 'TabsPanel') samePanel = true
+    let globalPin = pin && currentPanel.panel !== 'TabsPanel'
+    let sameContainer = nodes[0].ctx === destCtx
 
     // Move tabs
-    if (nodes[0].type === 'tab' && samePanel && !event.ctrlKey) {
-      // Move to different window
-      if (nodes[0].windowId !== this.state.windowId) {
-        this.state.attachingTabs = [...nodes]
-        for (let i = 0; i < nodes.length; i++) {
-          const index = dropIndex + i
-          await browser.tabs.move(nodes[i].id, { windowId: this.state.windowId, index })
-        }
-        return
-      }
-
-      // Check if tabs was dropped to same place
-      const inside = dropIndex > nodes[0].index && dropIndex <= nodes[nodes.length - 1].index
-      const inFirst = nodes[0].id === dropParent
-      const inLast = nodes[nodes.length - 1].id === dropParent
-      if (inside || inFirst || inLast) return
-
-      // Normalize dropIndex for tabs droped to the same panel
-      // If dropIndex is greater that first tab index - decrease it by 1
-      dropIndex = dropIndex <= nodes[0].index ? dropIndex : dropIndex - 1
-
-      // Get dragged tabs
-      const tabs = []
-      for (let n of nodes) {
-        let tab = this.state.tabsMap[n.id]
-        if (!tab) return
-        tabs.push(tab)
-      }
-
-      let pinTab = pin && !tabs[0].pinned
-      let unpinTab = !pin && tabs[0].pinned
-
-      // Unpin tab
-      if (unpinTab) {
-        for (let t of tabs) {
-          await browser.tabs.update(t.id, { pinned: false })
-        }
-      }
-
-      // Pin tab
-      if (pinTab) {
-        for (let t of tabs) {
-          // Skip group tab
-          if (t.url.startsWith('moz-extension')) continue
-          // Flatten
-          t.lvl = 0
-          t.parentId = -1
-          // Pin tab
-          await browser.tabs.update(t.id, { pinned: true })
-        }
-      }
-
-      // Move if target index is different or pinned state changed
-      const moveIndexOk = tabs[0].index !== dropIndex && tabs[tabs.length - 1].index !== dropIndex
-      if (moveIndexOk || pinTab || unpinTab) {
-        this.state.movingTabs = tabs.map(t => t.id)
-        browser.tabs.move([...this.state.movingTabs], { windowId: this.state.windowId, index: dropIndex })
-      }
-
-      // Update tabs tree
-      if (this.state.tabsTree) {
-        // Get parent tab parameters
-        let parentId = parent ? parent.id : -1
-
-        // Set first tab parentId and other parameters
-        tabs[0].parentId = parentId
-
-        // Get level offset for gragged branch
-        let lvlOffset = tabs[0].lvl
-
-        for (let i = 1; i < tabs.length; i++) {
-          // const prevTab = tabs[i - 1]
-          const tab = tabs[i]
-
-          // Flat nodes below first node's level
-          if (tabs[i].lvl <= lvlOffset) {
-            tab.parentId = parentId
-            tab.folded = false
-          }
-
-          // Update invisibility of tabs
-          if (parent && parent.folded) {
-            if (this.state.hideFoldedTabs && !tab.hidden) toHide.push(tab.id)
-          } else if (tab.parentId === parentId) {
-            if (this.state.hideFoldedTabs && tab.hidden) toShow.push(tab.id)
-          }
-        }
-
-        // If there are no moving, just update tabs tree
-        if (!moveIndexOk) {
-          Actions.updateTabsTree(currentPanel.startIndex, currentPanel.endIndex + 1)
-        }
-      }
-
-      // If first tab is not invisible, activate it
-      if (!tabs[0].invisible) browser.tabs.update(tabs[0].id, { active: true })
-
-      // Hide/Show tabs
-      if (toHide.length) browser.tabs.hide(toHide)
-      if (toShow.length) browser.tabs.show(toShow)
+    if (nodes[0].type === 'tab' && (sameContainer || globalPin) && !event.ctrlKey) {
+      this.actions.moveDroppedNodes(dropIndex, dropParent, nodes, pin, currentPanel)
     } else {
-      // Create new tabs
-      const oldNewMap = []
-      let opener = dropParent < 0 ? undefined : dropParent
-      for (let i = 0; i < nodes.length; i++) {
-        const node = nodes[i]
-
-        if (node.type === 'separator') continue
-        if (!this.state.tabsTree && node.type === 'folder') continue
-        if (this.state.tabsTreeLimit > 0 && node.type === 'folder') continue
-
-        if (oldNewMap[node.parentId] >= 0) opener = oldNewMap[node.parentId]
-        let createConf = {
-          active: node.active,
-          cookieStoreId: destCtx,
-          index: dropIndex + i,
-          openerTabId: opener,
-          url: node.url ? Utils.normalizeUrl(node.url) : Utils.createGroupUrl(node.title),
-          windowId: this.state.windowId,
-          pinned: pin,
-        }
-
-        if (!node.active) {
-          createConf.discarded = true
-          createConf.title = node.title
-        }
-
-        const info = await browser.tabs.create(createConf)
-        oldNewMap[node.id] = info.id
-        if (this.state.tabsMap[info.id] && opener) {
-          this.state.tabsMap[info.id].parentId = opener
-        }
-      }
-
-      // Remove source tabs
-      if (nodes[0].type === 'tab' && !event.ctrlKey) {
-        const toRemove = nodes.map(n => n.id)
-        this.state.removingTabs = [...toRemove]
-        await browser.tabs.remove(toRemove)
-      }
-
-      // Update tabs tree if there are no tabs was deleted
-      if (nodes[0].type !== 'tab' || event.ctrlKey) {
-        Actions.updateTabsTree(dropIndex - 1, dropIndex + nodes.length)
-      }
+      this.actions.recreateDroppedNodes(event, dropIndex, dropParent, nodes, pin, destCtx)
     }
   }
 
   // Native event
   if (!nodes) {
-    const url = await Utils.getUrlFromDragEvent(event)
+    this.actions.dropToTabsNative(event, dropIndex, dropParent, destCtx, pin)
+  }
+}
 
-    let prevTab = this.state.tabs[dropIndex - 1]
-    if (prevTab && prevTab.folded) {
-      for (let tab; dropIndex < this.state.tabs.length; dropIndex++) {
-        tab = this.state.tabs[dropIndex]
-        if (tab.lvl <= prevTab.lvl) break
+/**
+ * Move dropped tabs in current panel / pinned dock
+ */
+async function moveDroppedNodes(dropIndex, dropParent, nodes, pin, currentPanel) {
+  let parent = this.state.tabsMap[dropParent]
+  let parentId = parent ? parent.id : -1
+  let toHide = []
+  let toShow = []
+  let sameWindow = nodes[0].windowId === this.state.windowId
+
+  // Move to different window
+  if (!sameWindow) {
+    this.state.attachingTabs = [...nodes]
+    for (let i = 0; i < nodes.length; i++) {
+      const index = dropIndex + i
+      await browser.tabs.move(nodes[i].id, { windowId: this.state.windowId, index })
+    }
+    return
+  }
+
+  // Check if tabs was dropped to same place
+  const inside = dropIndex > nodes[0].index && dropIndex <= nodes[nodes.length - 1].index
+  const inFirst = nodes[0].id === dropParent
+  const inLast = nodes[nodes.length - 1].id === dropParent
+  if (inside || inFirst || inLast) return
+
+  // Normalize dropIndex for tabs droped to the same panel
+  // If dropIndex is greater that first tab index - decrease it by 1
+  dropIndex = dropIndex <= nodes[0].index ? dropIndex : dropIndex - 1
+
+  // Get dragged tabs
+  const tabs = []
+  for (let n of nodes) {
+    let tab = this.state.tabsMap[n.id]
+    if (!tab) return
+    tabs.push(tab)
+  }
+
+  let pinTab = pin && !tabs[0].pinned
+  let unpinTab = !pin && tabs[0].pinned
+
+  // Unpin tab
+  if (unpinTab) {
+    for (let t of tabs) {
+      await browser.tabs.update(t.id, { pinned: false })
+    }
+  }
+
+  // Pin tab
+  if (pinTab) {
+    for (let t of tabs) {
+      t.lvl = 0
+      t.parentId = -1
+      await browser.tabs.update(t.id, { pinned: true })
+    }
+  }
+
+  // Move if target index is different or pinned state changed
+  const moveIndexOk = tabs[0].index !== dropIndex && tabs[tabs.length - 1].index !== dropIndex
+  if (moveIndexOk || pinTab || unpinTab) {
+    this.state.movingTabs = tabs.map(t => t.id)
+    browser.tabs.move([...this.state.movingTabs], { windowId: this.state.windowId, index: dropIndex })
+  }
+
+  // Update tabs tree
+  if (this.state.tabsTree) {
+    // Set first tab parentId and other parameters
+    tabs[0].parentId = parentId
+
+    // Get level offset for gragged branch
+    let minLvl = tabs[0].lvl
+    
+    if (parent && parent.folded) {
+      let activeDroppedTab = tabs.find(t => t.active)
+      if (activeDroppedTab) browser.tabs.update(parentId, { active: true })
+    }
+
+    for (let i = 0; i < tabs.length; i++) {
+      const tab = tabs[i]
+
+      // Flat nodes below first node's level
+      if (tabs[i].lvl <= minLvl) {
+        tab.parentId = parentId
+      }
+
+      // Update invisibility of tabs
+      if (parent && parent.folded) {
+        if (this.state.hideFoldedTabs && !tab.hidden) toHide.push(tab.id)
+      } else if (tab.parentId === parentId) {
+        if (this.state.hideFoldedTabs && tab.hidden) toShow.push(tab.id)
       }
     }
 
-    if (url && destCtx) {
-      browser.tabs.create({
-        active: true,
-        url,
-        index: dropIndex,
-        openerTabId: dropParent < 0 ? undefined : dropParent,
-        cookieStoreId: destCtx,
-        windowId: this.state.windowId,
-        pinned: pin,
-      })
+    // If there are no moving, just update tabs tree
+    if (!moveIndexOk) {
+      Actions.updateTabsTree(currentPanel.startIndex, currentPanel.endIndex + 1)
+      Actions.saveTabsTree()
     }
+  }
+
+  // Hide/Show tabs
+  if (toHide.length) browser.tabs.hide(toHide)
+  if (toShow.length) browser.tabs.show(toShow)
+}
+
+/**
+ * Recreate dropped nodes
+ */
+async function recreateDroppedNodes(event, dropIndex, dropParent, nodes, pin, destCtx) {
+  // Create new tabs
+  const oldNewMap = []
+  let opener = dropParent < 0 ? undefined : dropParent
+  for (let i = 0; i < nodes.length; i++) {
+    const node = nodes[i]
+
+    if (node.type === 'separator') continue
+    if (!this.state.tabsTree && node.type === 'folder') continue
+    if (this.state.tabsTreeLimit > 0 && node.type === 'folder') continue
+
+    if (oldNewMap[node.parentId] >= 0) opener = oldNewMap[node.parentId]
+    let createConf = {
+      active: node.active,
+      cookieStoreId: destCtx,
+      index: dropIndex + i,
+      openerTabId: opener,
+      url: node.url ? Utils.normalizeUrl(node.url) : Utils.createGroupUrl(node.title),
+      windowId: this.state.windowId,
+      pinned: pin,
+    }
+
+    if (!node.active && nodes.length > 1) {
+      createConf.discarded = true
+      createConf.title = node.title
+    }
+
+    const info = await browser.tabs.create(createConf)
+    oldNewMap[node.id] = info.id
+    if (this.state.tabsMap[info.id] && opener) {
+      this.state.tabsMap[info.id].parentId = opener
+    }
+  }
+
+  // Remove source tabs
+  if (nodes[0].type === 'tab' && !event.ctrlKey) {
+    const toRemove = nodes.map(n => n.id)
+    this.state.removingTabs = [...toRemove]
+    await browser.tabs.remove(toRemove)
+  }
+
+  // Update tabs tree if there are no tabs was deleted
+  if (nodes[0].type !== 'tab' || event.ctrlKey) {
+    Actions.updateTabsTree(dropIndex - 1, dropIndex + nodes.length)
+  }
+}
+
+/**
+ * Parse native drop event and create tab
+ */
+async function dropToTabsNative(event, dropIndex, dropParent, destCtx, pin) {
+  let url = await Utils.getUrlFromDragEvent(event)
+
+  let prevTab = this.state.tabs[dropIndex - 1]
+  if (prevTab && prevTab.folded) {
+    for (let tab; dropIndex < this.state.tabs.length; dropIndex++) {
+      tab = this.state.tabs[dropIndex]
+      if (tab.lvl <= prevTab.lvl) break
+    }
+  }
+
+  if (url && destCtx) {
+    browser.tabs.create({
+      active: true,
+      url,
+      index: dropIndex,
+      openerTabId: dropParent < 0 ? undefined : dropParent,
+      cookieStoreId: destCtx,
+      windowId: this.state.windowId,
+      pinned: pin,
+    })
   }
 }
 
@@ -1419,15 +1437,21 @@ export default {
   foldTabsBranch,
   expTabsBranch,
   toggleBranch,
+
   dropToTabs,
+  moveDroppedNodes,
+  recreateDroppedNodes,
+  dropToTabsNative,
+
   flattenTabs,
   groupTabs,
   getGroupInfo,
+  getGroupTab,
+  updateGroupTab,
+  resetUpdateGroupTabTimeout,
+
   createTabAfter,
   updateTabsTree,
   queryTab,
   getTabsTree,
-  getGroupTab,
-  updateGroupTab,
-  resetUpdateGroupTabTimeout,
 }
