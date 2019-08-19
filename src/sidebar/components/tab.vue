@@ -400,38 +400,6 @@ export default {
       }
       Actions.removeTabs(toRemove)
     },
-
-    // loadingStart(id) {
-    //   if (id !== this.tab.id) return
-    //   this.loading = true
-    //   if (this.loadingTimer) {
-    //     clearTimeout(this.loadingTimer)
-    //     this.loadingTimer = null
-    //   }
-    // },
-
-    // loadingEnd(id) {
-    //   if (id !== this.tab.id) return
-    //   this.loading = false
-    // },
-
-    // loadingOk(id) {
-    //   if (id !== this.tab.id) return
-    //   this.loading = 'ok'
-    //   this.loadingTimer = setTimeout(() => {
-    //     this.loadingEnd(id)
-    //     this.loadingTimer = null
-    //   }, 2000)
-    // },
-
-    // loadingErr(id) {
-    //   if (id !== this.tab.id) return
-    //   this.loading = 'err'
-    //   this.loadingTimer = setTimeout(() => {
-    //     this.loadingEnd(id)
-    //     this.loadingTimer = null
-    //   }, 2000)
-    // },
   },
 }
 </script>

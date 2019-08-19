@@ -114,7 +114,7 @@ function onTabUpdated(tabId, change, tab) {
 
   // Status change
   if (change.hasOwnProperty('status')) {
-    if (change.status === 'complete') {
+    if (change.status === 'complete' && !localTab.url.startsWith('about')) {
       browser.tabs.get(localTab.id)
         .then(tabInfo => {
           if (tabInfo.favIconUrl) localTab.favIconUrl = tabInfo.favIconUrl
