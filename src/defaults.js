@@ -465,8 +465,10 @@ export const MENU_OPTIONS = {
   // --- Bookmarks options ---
   // 
   openInNewWin: (state) => {
-    let node = state.bookmarksMap[state.selected[0]]
-    if (node.type === 'separator') return
+    let allSeparators = state.selected.every(id => {
+      return state.bookmarksMap[id].type === 'separator'
+    })
+    if (allSeparators) return
     return {
       label: translate('menu.bookmark.open_in_new_window'),
       icon: 'icon_new_win',
@@ -476,8 +478,10 @@ export const MENU_OPTIONS = {
   },
 
   openInNewPrivWin: (state) => {
-    let node = state.bookmarksMap[state.selected[0]]
-    if (node.type === 'separator') return
+    let allSeparators = state.selected.every(id => {
+      return state.bookmarksMap[id].type === 'separator'
+    })
+    if (allSeparators) return
     return {
       label: translate('menu.bookmark.open_in_new_priv_window'),
       icon: 'icon_private',
@@ -488,7 +492,10 @@ export const MENU_OPTIONS = {
 
   openInCtr: (state) => {
     let node = state.bookmarksMap[state.selected[0]]
-    if (node.type === 'separator') return
+    let allSeparators = state.selected.every(id => {
+      return state.bookmarksMap[id].type === 'separator'
+    })
+    if (allSeparators) return
     let opts = []
 
     if (node.type === 'folder' || state.selected.length > 1) {
