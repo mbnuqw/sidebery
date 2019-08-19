@@ -37,6 +37,7 @@
 
 .CtxMenu .inline-group
   box(relative, flex)
+  size(max-w: 200px)
   overflow: hidden
   flex-wrap: wrap
   &:not(:last-of-type)
@@ -72,6 +73,15 @@
       pos(0, 0)
       size(1px, 100%)
       background-color: var(--ctx-menu-border-fg)
+#root[data-style="light"] .CtxMenu .icon-opt[data-color] > svg
+  fill: var(--ctx-menu-fg) !important
+  filter: drop-shadow(1px 0 0 var(--panel-fg)) drop-shadow(-1px 0 0 var(--panel-fg)) drop-shadow(0 -1px 0 var(--panel-fg)) drop-shadow(0 1px 0 var(--panel-fg))
+
+.CtxMenu .list-group
+  box(relative)
+  &:not(:last-of-type)
+    padding: 0 0 1px
+    box-shadow: inset 0 -1px 0 0 var(--ctx-menu-border-fg)
 
 .CtxMenu .opt
   box(relative, flex)
