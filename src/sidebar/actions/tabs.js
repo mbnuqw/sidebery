@@ -178,11 +178,15 @@ async function restoreGroupTab(tabInfo, index, parents) {
  */
 async function restoreTabsTree() {
   const { tabsTrees } = await browser.storage.local.get({ tabsTrees: [] })
+  let pinnedTabsCount = 0
+  for (; pinnedTabsCount < this.state.tabs.length; pinnedTabsCount++) {
+    if (!this.state.tabs[pinnedTabsCount].pinned) break
+  }
 
   perTree:
   for (let tree of tabsTrees) {
     let parents = []
-    let tabIndex = 0
+    let tabIndex = pinnedTabsCount
 
     // Separate tree into branches
     let branches = tree.reduce((a, v) => {
@@ -192,6 +196,7 @@ async function restoreTabsTree() {
     }, [])
 
     for (let branch of branches) {
+      if (branch.length <= 1) continue perTree
 
       let branchIndex = findBranchStartIndex(this.state.tabs, branch, tabIndex)
       if (branchIndex === -1) continue perTree
