@@ -4,49 +4,32 @@
   "description": "Manage your tabs and bookmarks in sidebar",
   "main": "index.js",
   "scripts": {
-    "dev.bg": "parcel watch ./src/background.js -d ./addon/ --public-url ./ --no-autoinstall --log-level 4",
     "dev.sidebar": "parcel watch ./src/sidebar/sidebar.js -d ./addon/sidebar/ --public-url ./ --no-autoinstall --log-level 4",
+    "dev.settings": "parcel watch ./src/page.settings/settings.js -d ./addon/settings/ --public-url ./ --no-autoinstall --log-level 4",
     "dev.group": "parcel watch ./src/page.group/group.js -d ./addon/group/ --public-url ./ --no-autoinstall --log-level 4",
     "dev.url": "parcel watch ./src/page.url/url.js -d ./addon/url/ --public-url ./ --no-autoinstall --log-level 4",
-    "dev.settings": "parcel watch ./src/page.settings/settings.js -d ./addon/settings/ --public-url ./ --no-autoinstall --log-level 4",
-
-    "dev.styles": "parcel watch ./src/page.styles/styles.html -d ./addon/styles/ --public-url ./ --no-autoinstall",
-    "dev.theme": "parcel watch ./src/page.theme/theme.html -d ./addon/theme/ --public-url ./ --no-autoinstall",
-    "dev.snapshots": "parcel watch ./src/page.snapshots/snapshots.html -d ./addon/snapshots/ --public-url ./ --no-autoinstall",
-
+    "dev.themes.default": "stylus ./src/styles/themes/default/sidebar.styl ./src/styles/themes/default/settings.styl ./src/styles/themes/default/group.styl ./src/styles/themes/default/url.styl -w --out ./addon/themes/default/",
+    "dev.themes.tactile": "stylus ./src/styles/themes/tactile/sidebar.styl ./src/styles/themes/tactile/url.styl ./src/styles/themes/tactile/group.styl -w --out ./addon/themes/tactile/",
     "dev.ext.esr": "web-ext run --source-dir ./addon -f firefox-esr --keep-profile-changes --firefox-profile ./build/profile-esr",
     "dev.ext": "web-ext run --source-dir ./addon -f firefox --keep-profile-changes --firefox-profile ./build/profile-stable",
     "dev.ext.beta": "web-ext run --source-dir ./addon -f firefox-beta --keep-profile-changes --firefox-profile ./build/profile-beta",
     "dev.ext.nightly": "web-ext run --source-dir ./addon -f firefox-nightly --keep-profile-changes --firefox-profile ./build/profile-nightly",
 
-    "dev.themes.default": "stylus ./src/styles/themes/default/sidebar.styl ./src/styles/themes/default/settings.styl ./src/styles/themes/default/group.styl ./src/styles/themes/default/url.styl -w --out ./addon/themes/default/",
-    "dev.themes.tactile": "stylus ./src/styles/themes/tactile/sidebar.styl ./src/styles/themes/tactile/url.styl ./src/styles/themes/tactile/group.styl -w --out ./addon/themes/tactile/",
-
-    "build.bg": "parcel build ./src/background.js -d ./addon/ --public-url ./ --no-autoinstall --no-source-maps",
-    "build.sidebar": "parcel build ./src/sidebar/index.html -d ./addon/sidebar/ --public-url ./ --no-autoinstall --no-source-maps",
-    "build.group": "parcel build ./src/page.group/group.html -d ./addon/group/ --public-url ./ --no-autoinstall --no-source-maps",
-    "build.url": "parcel build ./src/page.url/url.html -d ./addon/url/ --public-url ./ --no-autoinstall --no-source-maps",
-    "build.perm.url": "parcel build ./src/page.permissions/all-urls.html -d ./addon/permissions/ --public-url ./ --no-autoinstall --no-source-maps",
-    "build.perm.hide": "parcel build ./src/page.permissions/tab-hide.html -d ./addon/permissions/ --public-url ./ --no-autoinstall --no-source-maps",
-    "build.debug": "parcel build ./src/page.debug/debug.html -d ./addon/debug/ --public-url ./ --no-autoinstall --no-source-maps --no-minify",
-    "build.settings": "parcel build ./src/page.settings/settings.html -d ./addon/settings/ --public-url ./ --no-autoinstall --no-source-maps --no-minify",
-    "build.menu": "parcel build ./src/page.menu/menu.html -d ./addon/menu/ --public-url ./ --no-autoinstall --no-source-maps --no-minify",
-    "build.styles": "parcel build ./src/page.styles/styles.html -d ./addon/styles/ --public-url ./ --no-autoinstall --no-source-maps --no-minify",
-    "build.theme": "parcel build ./src/page.theme/theme.html -d ./addon/theme/ --public-url ./ --no-autoinstall --no-source-maps --no-minify",
-    "build.snapshots": "parcel build ./src/page.snapshots/snapshots.html -d ./addon/snapshots/ --public-url ./ --no-autoinstall --no-source-maps --no-minify",
+    "build.sidebar": "parcel build ./src/sidebar/sidebar.js -d ./addon/sidebar/ --public-url ./ --no-autoinstall --no-source-maps",
+    "build.settings": "parcel build ./src/page.settings/settings.js -d ./addon/settings/ --public-url ./ --no-autoinstall --no-source-maps",
+    "build.group": "parcel build ./src/page.group/group.js -d ./addon/group/ --public-url ./ --no-autoinstall --no-source-maps",
+    "build.url": "parcel build ./src/page.url/url.js -d ./addon/url/ --public-url ./ --no-autoinstall --no-source-maps",
+    "build.themes.default": "stylus ./src/styles/themes/default/sidebar.styl ./src/styles/themes/default/settings.styl ./src/styles/themes/default/group.styl ./src/styles/themes/default/url.styl -c --out ./addon/themes/default/",
+    "build.themes.tactile": "stylus ./src/styles/themes/tactile/sidebar.styl ./src/styles/themes/tactile/url.styl ./src/styles/themes/tactile/group.styl -c --out ./addon/themes/tactile/",
     "build.ext": "web-ext build --source-dir ./addon -a dist/ -i *.lock ./package.json",
-    "build": "node ./build/release.js",
 
     "clear.cache": "rm -rf .cache",
-    "clear.group": "rm -rf addon/group",
-    "clear.url": "rm -rf addon/url",
-    "clear.debug": "rm -rf addon/debug",
-    "clear.settings": "rm -rf addon/settings",
-    "clear.menu": "rm -rf addon/menu",
-    "clear.styles": "rm -rf addon/styles",
-    "clear.theme": "rm -rf addon/theme",
-    "clear.snapshots": "rm -rf addon/snapshots",
-    "clear.full": "rm -rf node_modules package-lock.json",
+    "clear.npm": "rm -rf node_modules package-lock.json",
+    "clear.sidebar": "find ./addon/sidebar -type f -not -name index.html -delete",
+    "clear.settings": "find ./addon/settings -type f -not -name settings.html -delete",
+    "clear.group": "find ./addon/group -type f -not -name group.html -delete",
+    "clear.url": "find ./addon/url -type f -not -name url.html -delete",
+    "clear.themes": "find ./addon/themes/ -type f -not -name __preserve-dir -delete",
 
     "lint": "web-ext lint -s ./addon",
     "test": "./node_modules/.bin/jest"
@@ -89,7 +72,7 @@
     "vue": "./node_modules/vue/dist/vue.esm.js"
   },
   "browserslist": [
-    "Firefox > 60"
+    "Firefox > 64"
   ],
   "jest": {
     "moduleFileExtensions": [
