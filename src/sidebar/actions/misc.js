@@ -1,5 +1,7 @@
 import Logs from '../../logs'
 
+let upgrading = false
+
 /**
  * Load platform info
  */
@@ -22,6 +24,30 @@ async function loadWindowInfo() {
     .then(windows => {
       this.state.otherWindows = windows.filter(w => w.id !== this.state.windowId)
     })
+}
+
+/**
+ * Stop upgrading process
+ */
+function startUpgrading() {
+  upgrading = true
+  this.state.upgrading = true
+
+  return new Promise(res => {
+    setInterval(() => {
+      if (!upgrading) res()
+    }, 1000)
+  })
+}
+
+/**
+ * Stop upgrading process
+ */
+function stopUpgrading() {
+  upgrading = false
+  setTimeout(() => {
+    this.state.upgrading = false
+  }, 2000)
 }
 
 /**
@@ -191,4 +217,6 @@ export default {
   lockStorage,
   unlockStorage,
   updateSidebarWidth,
+  startUpgrading,
+  stopUpgrading,
 }

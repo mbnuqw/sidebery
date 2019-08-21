@@ -126,7 +126,11 @@ const Actions = {
 for (let action in Actions) {
   if (!Actions.hasOwnProperty(action)) continue
 
-  Actions[action] = Actions[action].bind({ getters: Store.getters, state: State })
+  Actions[action] = Actions[action].bind({
+    getters: Store.getters,
+    state: State,
+    actions: Actions,
+  })
 }
 
 export default Actions

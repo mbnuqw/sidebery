@@ -24,7 +24,6 @@ export default {
 
   ...SETTINGS_OPTIONS,
   ...DEFAULT_SETTINGS,
-  settingsLoaded: false,
   snapshots: [],
   keybindings: [],
 

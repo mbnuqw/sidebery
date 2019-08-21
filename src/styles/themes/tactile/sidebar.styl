@@ -452,7 +452,29 @@
     transform: translateX(100%)
 
 // ---
-// -- Settings Transitions
+// -- Upgrading banner
+// -
+.Sidebar .upgrading
+  box(absolute)
+  size(100%, same)
+  pos(0, 0)
+  background-color: var(--bg)
+  z-index: 10000
+  cursor: wait
+
+.Sidebar .upgrading .info
+  box(absolute)
+  size(100%)
+  pos(calc(50% - 32px), l: 0)
+  text(s: rem(18), w: 700)
+  text-shadow: var(--info-fg)
+  text-align: center
+  color: var(--inactive-fg)
+  padding: 8px
+  animation: upgrading-info 1s infinite
+
+// ---
+// -- Transitions
 // -
 .Sidebar
   .panel-enter-active
@@ -472,6 +494,18 @@
   .panel-leave-to
     transform: translateX(100%)
     z-index: 0
+
+  .upgrading-enter-active
+  .upgrading-leave-active
+    transition: transform var(--d-norm), opacity var(--d-norm)
+  .upgrading-enter
+    opacity: 0
+  .upgrading-enter-to
+    opacity: 1
+  .upgrading-leave
+    opacity: 1
+  .upgrading-leave-to
+    opacity: 0
 
   .dashboard-enter-active
   .dashboard-leave-active

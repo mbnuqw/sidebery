@@ -26,6 +26,7 @@ export const SETTINGS_OPTIONS = {
 
 export const DEFAULT_SETTINGS = {
   // General
+  version: browser.runtime.getManifest().version,
   nativeScrollbars: false,
   autoHideCtxMenu: 'none',
   ctxMenuNative: false,
@@ -86,7 +87,6 @@ export const DEFAULT_SETTINGS = {
   animations: true,
   theme: 'default',
   style: 'dark',
-  settingsCSS: false,
   sidebarCSS: false,
   groupCSS: false,
 
@@ -604,7 +604,6 @@ export const VALID_STORED_PROPS = [
   'cssVars',
   'sidebarCSS',
   'groupCSS',
-  'settingsCSS',
   'panelIndex',
   'snapshots',
   'lastSnapTime',

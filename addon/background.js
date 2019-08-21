@@ -9,8 +9,9 @@ void async function main() {
   Actions.initMessaging()
 
   // Load settings
-  const ans = await browser.storage.local.get({ settings: {} })
-  state.settings = ans ? ans.settings : {}
+  let { settings } = await browser.storage.local.get({ settings: null })
+  await Actions.checkVersion(settings)
+  state.settings = settings ? settings : {}
 
   state.tabsMap = []
   state.containers = await getContainers()

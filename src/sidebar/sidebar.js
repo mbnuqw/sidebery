@@ -47,12 +47,14 @@ export default new Vue({
 
     await Actions.loadWindowInfo()
     await Actions.loadSettings()
+    console.log('[DEBUG] SB windowInfo and settings loaded', State.windowId);
 
     if (State.theme !== 'default') Actions.initTheme()
     if (State.sidebarCSS) Actions.loadCustomCSS()
 
     await Actions.loadPanelIndex()
     await Actions.loadPanels()
+    console.log('[DEBUG] SB panels loaded', State.windowId);
 
     if (State.bookmarksPanel && State.panels[State.panelIndex].bookmarks) {
       await Actions.loadBookmarks()
@@ -73,6 +75,7 @@ export default new Vue({
     Handlers.setupTabsListeners()
     Handlers.setupBookmarksListeners()
     Handlers.setupResizeHandler()
+    console.log('[DEBUG] SB initialization complete!', State.windowId);
   },
 
   mounted() {

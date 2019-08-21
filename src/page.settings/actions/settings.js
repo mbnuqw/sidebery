@@ -27,7 +27,6 @@ function resetSettings() {
  * Save settings to local storage
  */
 async function saveSettings() {
-  if (!this.state.settingsLoaded || !this.state.windowFocused) return
   let settings = {}
   for (const key in DEFAULT_SETTINGS) {
     if (!DEFAULT_SETTINGS.hasOwnProperty(key)) continue

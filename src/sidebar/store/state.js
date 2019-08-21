@@ -6,6 +6,7 @@ import { DEFAULT_BOOKMARKS_MENU } from '../../defaults'
 
 export default {
   version: Manifest.version,
+  upgrading: false,
   osInfo: null,
   os: null,
   private: browser.extension.inIncognitoContext,
