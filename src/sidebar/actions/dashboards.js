@@ -37,9 +37,11 @@ function closeDashboard() {
 
   if (this.state.panelIndex < 0 && this.state.lastPanelIndex >= 0) {
     this.state.panelIndex = this.state.lastPanelIndex
+    return
   }
 
-  if (this.state.panels[this.state.panelIndex].inactive) {
+  let currentPanel = this.state.panels[this.state.panelIndex]
+  if (currentPanel && currentPanel.inactive) {
     this.actions.switchToNeighbourPanel()
   }
 }
