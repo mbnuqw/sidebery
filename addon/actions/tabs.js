@@ -2,6 +2,23 @@ const detachedTabs = [], tabsTreesByWin = {}
 let tabsTreeSaveTimeout
 
 /**
+ * Load tabs
+ */
+async function loadTabs(windows, tabsMap) {
+  const tabs = await browser.tabs.query({})
+  for (let tab of tabs) {
+    if (!windows[tab.windowId]) continue
+
+    const tabWindow = windows[tab.windowId]
+    if (tabWindow.tabs) tabWindow.tabs.push(tab)
+    else tabWindow.tabs = [tab]
+
+    tabsMap[tab.id] = tab
+  }
+}
+
+
+/**
  * Handle new tab
  */
 function onTabCreated(tab) {
@@ -104,7 +121,20 @@ async function updateTabsTree() {
   }
 }
 
+function setupTabsListeners() {
+  browser.tabs.onCreated.addListener(this.actions.onTabCreated)
+  browser.tabs.onRemoved.addListener(this.actions.onTabRemoved)
+  browser.tabs.onUpdated.addListener(this.actions.onTabUpdated, {
+    properties: [ 'pinned', 'title', 'status' ],
+  })
+  browser.tabs.onMoved.addListener(this.actions.onTabMoved)
+  browser.tabs.onAttached.addListener(this.actions.onTabAttached)
+  browser.tabs.onDetached.addListener(this.actions.onTabDetached)
+}
+
 export default {
+  loadTabs,
+
   onTabCreated,
   onTabRemoved,
   onTabUpdated,
@@ -113,4 +143,6 @@ export default {
   onTabDetached,
   updateTabsTree,
   saveTabsTree,
+
+  setupTabsListeners,
 }

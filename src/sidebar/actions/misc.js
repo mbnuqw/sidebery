@@ -54,6 +54,7 @@ function stopUpgrading() {
  * Connect to background script
  */
 function connectToBG() {
+  console.log('[DEBUG] SB: Connect to bg...');
   const connectInfo = JSON.stringify({
     instanceType: this.state.instanceType,
     windowId: this.state.windowId,

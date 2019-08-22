@@ -6,13 +6,22 @@ import Actions from '../actions.js'
  */
 async function checkVersion(settings) {
   if (!settings) return
-  if (!settings.version) await Actions.upgradeToV3(settings)
+  if (!settings.version) {
+    return new Promise(res => {
+      this.actions.onFirstSidebarInit(async () => {
+        await Actions.upgradeToV3(settings)
+        res()
+      })
+    })
+  }
 }
 
 /**
  * Upgrade stored values to version 3.x.x
  */
 async function upgradeToV3(settings) {
+  console.log('[DEBUG] BG upgradeToV3');
+
   // --- Settings ---
   settings.version = browser.runtime.getManifest().version
   if (['dark', 'light'].includes(settings.theme)) {
@@ -20,7 +29,7 @@ async function upgradeToV3(settings) {
     settings.theme = 'default'
   }
   delete settings.snapshotsTargets
-  await browser.storage.local.set({ settings })
+  console.log('[DEBUG] BG settings upgraded');
 
   // --- Custom CSS vars ---
   let { styles } = await browser.storage.local.get({ styles: null })
@@ -28,9 +37,43 @@ async function upgradeToV3(settings) {
     await browser.storage.local.set({ cssVars: styles })
     await browser.storage.local.remove('styles')
   }
+  console.log('[DEBUG] BG custom css vars upgraded');
 
   // --- Favicons ---
-  await browser.storage.local.remove('favicons')
+  let { favicons } = await browser.storage.local.get({ favicons: null })
+  if (favicons && !Array.isArray(favicons)) {
+    let newFavicons = []
+    let favUrls = {}
+    let tabs = await browser.tabs.query({})
+    let urlsInUse = tabs.map(t => t.url)
+    let bookmarks = await browser.bookmarks.getTree()
+    
+    let walker = nodes => {
+      for (let n of nodes) {
+        if (n.type === 'bookmark') urlsInUse.push(n.url)
+        if (n.children) walker(n.children)
+      }
+    }
+    walker(bookmarks[0].children)
+
+    let favHosts = Object.keys(favicons)
+    for (let url of urlsInUse) {
+      if (!url) continue
+      for (let favHost of favHosts) {
+        if (!favHost) continue
+        let host = url.split('/')[2] || ''
+        if (host === favHost) {
+          let index = newFavicons.indexOf(favicons[favHost])
+          if (index === -1) index = newFavicons.push(favicons[favHost]) - 1
+          favUrls[url] = index
+          break
+        }
+      }
+    }
+    await browser.storage.local.set({ favicons: newFavicons, favUrls })
+  } else {
+    await browser.storage.local.remove('favicons')
+  }
 
   // --- Panels ---
   let { containers } = await browser.storage.local.get({ containers: null })
@@ -38,11 +81,49 @@ async function upgradeToV3(settings) {
     await browser.storage.local.set({ panels: containers })
     await browser.storage.local.remove('containers')
   }
+  console.log('[DEBUG] BG panels upgraded');
 
   // --- Snapshots ---
   let { snapshots } = await browser.storage.local.get({ snapshots: null })
   if (snapshots) {
-    // ... convert old snapshots to new ...
+    console.log('[DEBUG] BG convert snapshots:', JSON.stringify(snapshots, null, 2));
+    if (snapshots.length) {
+      for (let snapshot of snapshots) {
+        snapshot.time = snapshot.time * 1000
+        snapshot.id = Math.random().toString(16).replace('0.', Date.now().toString(16))
+        snapshot.containersById = {}
+        if (snapshot.ctxs) {
+          for (let ctx of snapshot.ctxs) {
+            snapshot.containersById[ctx.cookieStoreId] = {
+              id: ctx.cookieStoreId,
+              color: ctx.color,
+              icon: ctx.icon,
+              name: ctx.name,
+            }
+          }
+          delete snapshot.ctxs
+        }
+        snapshot.windows = { '1': { items: [] } }
+        if (snapshot.tabs) {
+          let containerId
+          for (let tab of snapshot.tabs) {
+            if (tab.pinned) {
+              tab.ctr = tab.cookieStoreId
+              snapshot.windows['1'].items.push(tab)
+              continue
+            }
+            if (containerId !== tab.cookieStoreId) {
+              containerId = tab.cookieStoreId
+              snapshot.windows['1'].items.push(tab.cookieStoreId)
+            }
+            snapshot.windows['1'].items.push(tab)
+          }
+          delete snapshot.tabs
+        }
+      }
+    }
+    await browser.storage.local.set({ snapshots })
+    console.log('[DEBUG] BG converted snapshots:', JSON.stringify(snapshots, null, 2));
   }
 
   // --- Tree ---
@@ -50,12 +131,16 @@ async function upgradeToV3(settings) {
     tabsTreeState: null,
   })
   if (tabsTreeState) {
-    // ... convert old tree state ...
+    if (tabsTreeState.length) {
+      await browser.storage.local.set({ tabsTrees: [tabsTreeState] })
+    }
+    await browser.storage.local.remove('tabsTreeState')
+    console.log('[DEBUG] BG convert tabs tree:', tabsTreeState);
   }
 
-  setTimeout(() => {
-    browser.runtime.sendMessage({ action: 'stopUpgrading' })
-  }, 3000)
+  await browser.storage.local.set({ settings })
+  browser.runtime.sendMessage({ action: 'stopUpgrading' })
+  console.log('[DEBUG] BG upgraded!');
 }
 
 export default {

@@ -1,7 +1,7 @@
 import Actions from '../actions.js'
 
 const connectedSidebars = {}
-let firstSidebarInitHandler
+let firstSidebarInitHandlers = []
 
 /**
  * Init global message handler
@@ -36,9 +36,12 @@ function initMessaging() {
       if (!this.windows[info.windowId]) return
       connectedSidebars[info.windowId] = port
       port.onMessage.addListener(onSidebarMsg)
-      if (firstSidebarInitHandler) {
-        firstSidebarInitHandler()
-        firstSidebarInitHandler = null
+      if (firstSidebarInitHandlers) {
+        console.log('[DEBUG] BG onFirstSidebarInit');
+        for (let handler of firstSidebarInitHandlers) {
+          handler()
+        }
+        firstSidebarInitHandlers = null
       }
     }
 
@@ -58,7 +61,8 @@ function initMessaging() {
  * Handle first sidebar init
  */
 function onFirstSidebarInit(handler) {
-  firstSidebarInitHandler = handler
+  if (!firstSidebarInitHandlers) return handler()
+  firstSidebarInitHandlers.push(handler)
 }
 
 /**

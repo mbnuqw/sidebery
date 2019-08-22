@@ -40,6 +40,7 @@ export default new Vue({
   },
 
   async created() {
+    console.log('[DEBUG] SETTINGS Start init process');
     window.addEventListener('hashchange', Actions.updateActiveView)
 
     State.instanceType = 'settings'
@@ -48,10 +49,11 @@ export default new Vue({
     Actions.loadCurrentWindowInfo()
     Actions.loadPlatformInfo()
     Actions.loadBrowserInfo()
-    Actions.loadPermissions()
+    Actions.loadPermissions(true)
     Actions.loadCtxMenu()
     await Actions.loadSettings()
     Actions.loadKeybindings()
+    console.log('[DEBUG] SETTINGS init complete!');
   },
 
   methods: {

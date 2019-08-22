@@ -10,7 +10,9 @@ async function loadSettings() {
   })
 
   // Check version
+  console.log('[DEBUG] LoadSettings: version:', settings.version);
   if (!settings.version && this.actions.startUpgrading) {
+    console.log('[DEBUG] LoadSettings: upgrade needed');
     await this.actions.startUpgrading()
     let ans = await browser.storage.local.get({
       settings: DEFAULT_SETTINGS

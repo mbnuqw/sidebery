@@ -38,14 +38,14 @@ async function loadBrowserInfo() {
 /**
  * Retrieve current permissions
  */
-async function loadPermissions() {
+async function loadPermissions(init) {
   this.state.permAllUrls = await browser.permissions.contains({ origins: ['<all_urls>'] })
   this.state.permTabHide = await browser.permissions.contains({ permissions: ['tabHide'] })
 
   if (!this.state.permTabHide) {
     this.state.hideInact = false
     this.state.hideFoldedTabs = false
-    Actions.saveSettings()
+    if (!init) Actions.saveSettings()
   }
 
   Logs.push('[INFO] Permissions loaded')

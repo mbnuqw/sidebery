@@ -37,6 +37,7 @@ export default new Vue({
   },
 
   async created() {
+    console.log('[DEBUG] SB: Start initialization process...');
     State.instanceType = 'sidebar'
 
     Actions.loadPlatformInfo()
@@ -46,6 +47,7 @@ export default new Vue({
     Handlers.setupKeybindingListeners()
 
     await Actions.loadWindowInfo()
+    Actions.connectToBG()
     await Actions.loadSettings()
     console.log('[DEBUG] SB windowInfo and settings loaded', State.windowId);
 
@@ -68,7 +70,6 @@ export default new Vue({
     Actions.loadFavicons()
     Actions.loadPermissions()
     Actions.updateTabsVisability()
-    Actions.connectToBG()
     Actions.saveTabsTree()
 
     Handlers.setupContainersListeners()
