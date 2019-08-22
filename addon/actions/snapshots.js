@@ -72,7 +72,7 @@ async function createSnapshot() {
   let { snapshots } = await browser.storage.local.get({ snapshots: [] })
 
   const lastSnapshot = snapshots[snapshots.length - 1]
-  if (compareSnapshots(lastSnapshot, currentSnapshot)) return
+  if (lastSnapshot && compareSnapshots(lastSnapshot, currentSnapshot)) return
 
   snapshots.push(currentSnapshot)
 
@@ -229,7 +229,7 @@ async function limitSnapshots(snapshots) {
   const limit = this.settings.snapLimit
   const unit = this.settings.snapLimitUnit
 
-  if (!limit) return
+  if (!limit) return snapshots
 
   let normLimit = limit
   if (unit === 'day') normLimit = Date.now() - limit * 86400000
@@ -262,6 +262,7 @@ async function limitSnapshots(snapshots) {
   }
 
   i++
+
   if (!resultToStore) return snapshots.slice(i)
   else await browser.storage.local.set({ snapshots: snapshots.slice(i) })
 }

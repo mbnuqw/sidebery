@@ -1,10 +1,10 @@
 <template lang="pug">
 .Snapshots
-  .wrapper(v-if="activeSnapshot")
+  .wrapper
     .timeline
       .ctrls
         .btn(@click="createSnapshot") Create snapshot
-      .cards(v-noise:300.g:12:af.a:0:42.s:0:9="")
+      .cards(v-noise:300.g:12:af.a:0:42.s:0:9="" :data-empty="!snapshots.length")
         .snapshot-card(
           v-for="s in snapshots"
           ref="snapshots"
@@ -13,16 +13,16 @@
           :data-type="s.type"
           :data-event="s.event"
           :data-active="activeSnapshot.id === s.id"
-          @click="activeSnapshot = s")
+          @click="(activeSnapshot = s)")
           .date-time(v-if="s.type === 'base'") {{s.date}} - {{s.time}}
           .info(v-if="s.type === 'base'") {{s.winCount}} windows / {{s.ctrCount}} containers / {{s.tabsCount}} tabs / ~ {{s.size}}
           .info(v-if="s.type === 'layer'") {{t('snapshot.event.' + s.event)}}
           .date-time(v-if="s.type === 'layer'") {{s.time}}
     .snapshot
-      .ctrls(v-noise:300.g:12:af.a:0:42.s:0:9="" @wheel="onTimelineWheel")
+      .ctrls(v-noise:300.g:12:af.a:0:42.s:0:9="" @wheel="onTimelineWheel" :data-empty="!activeSnapshot")
         .title(v-if="activeSnapshot") {{activeSnapshot.date}} - {{activeSnapshot.time}}
-        .btn(@click="applySnapshot(activeSnapshot)") Apply
-        .btn.-warn(@click="removeSnapshot(activeSnapshot)") Remove
+        .btn(v-if="activeSnapshot" @click="applySnapshot(activeSnapshot)") Apply
+        .btn.-warn(v-if="activeSnapshot" @click="removeSnapshot(activeSnapshot)") Remove
       .windows(v-if="activeSnapshot" v-noise:300.g:12:af.a:0:42.s:0:9="")
         .window(
           v-for="(win, _, i) in activeSnapshot.windowsById"
@@ -158,7 +158,6 @@ export default {
      * Create new snapshot
      */
     async createSnapshot() {
-      // TODO: show loading spinner or something...
       const snapshot = await browser.runtime.sendMessage({
         instanceType: 'bg',
         windowId: -1,
@@ -210,6 +209,11 @@ export default {
       let indexLocal = this.snapshots.findIndex(s => s.id === snapshot.id)
       if (indexLocal === -1) return
       this.snapshots.splice(indexLocal, 1)
+
+      if (!this.snapshots.length) {
+        this.activeSnapshot = null
+        return
+      }
 
       if (this.snapshots[indexLocal]) {
         this.activeSnapshot = this.snapshots[indexLocal]

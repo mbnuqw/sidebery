@@ -31,6 +31,15 @@
     pos(b: 0, l: 0)
     size(100%, 1px)
     background-color: var(--border-fg)
+  &[data-empty]
+    size(h: 100%)
+    &:after
+      content: '...'
+      box(absolute)
+      pos(50%, same)
+      text(s: rem(28))
+      color: var(--inactive-fg)
+      transform: translate(-50%, -50%)
 
 .Snapshots .ctrls > .title
   box(relative)
@@ -72,6 +81,14 @@
   overflow-y: auto
   overflow-x: hidden
   background-attachment: local
+  &[data-empty]:after
+    content: '...'
+    box(absolute)
+    pos(50%, same)
+    text(s: rem(28))
+    color: var(--inactive-fg)
+    transform: translate(-50%, -50%)
+
 
 .Snapshots .snapshot-card
   box(relative, flex)
