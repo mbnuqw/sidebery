@@ -53,28 +53,6 @@
   z-index: 25
 
 // ---
-// -- Audio
-// -
-.PinnedTab .audio
-  box(absolute)
-  pos(0, 24px)
-  size(16px, 100%)
-  z-index: 1
-  opacity: 0
-  transform: translateX(-100%)
-  transition: opacity var(--d-fast), transform var(--d-fast)
-
-  > svg
-    box(absolute)
-    pos(9px, 6px)
-    size(11px, same)
-    fill: var(--tabs-fg)
-    transition: opacity var(--d-fast)
-
-  > svg.-mute
-    opacity: 0
-
-// ---
 // -- Favicon
 // -
 .PinnedTab .fav
@@ -232,8 +210,6 @@
     transition: opacity var(--d-fast)
 
 .PinnedTab[data-audible] .audio-badge > svg.-loud
-  opacity: 1
-
 .PinnedTab[data-muted] .audio-badge > svg.-mute
   opacity: 1
 
@@ -337,9 +313,6 @@
   opacity: 0
   &:hover > svg
     fill: #ea4335
-  &:active > svg
-    transition: none
-    fill: #fa5335
   > svg
     box(absolute)
     pos(calc(50% - 8px), same)

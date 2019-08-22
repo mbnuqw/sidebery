@@ -227,11 +227,9 @@
 // -
 .PinnedTab .audio-badge
   box(absolute)
-  size(12px, same)
-  pos(b: -5px, r: -5px)
+  size(10px, same)
+  pos(b: -4px, r: -4px)
   border-radius: 50%
-  opacity: 0
-  transform: scale(0.7, 0.7)
   filter: drop-shadow(1px 1px 0 var(--text-edge-color))
   transition: opacity var(--d-norm), transform var(--d-norm), z-index var(--d-norm)
   > svg
@@ -241,13 +239,8 @@
     opacity: 0
     transition: opacity var(--d-norm)
 
-.PinnedTab[data-audible] .audio-badge
-.PinnedTab[data-muted] .audio-badge
-  opacity: 1
-  transform: scale(1, 1)
-
-.PinnedTab[data-audible] svg.-loud
-.PinnedTab[data-muted] svg.-mute
+.PinnedTab[data-audible] .audio-badge > svg.-loud
+.PinnedTab[data-muted] .audio-badge > svg.-mute
   opacity: 1
 
 .PinnedTab[data-loading] .audio-badge
@@ -343,21 +336,21 @@
 .PinnedTab .close
   box(absolute, none)
   pos(0, r: 0)
-  size(31px)
+  size(30px)
   height: var(--tabs-height)
   cursor: pointer
   z-index: 30
   opacity: 0
   &:hover > svg
-    fill: #ea4335
-  &:active > svg
-    transition: none
-    fill: #fa5335
+    fill: var(--tabs-close-hover-fg)
+    stroke: var(--tabs-close-hover-fg)
   > svg
     box(absolute)
-    pos(calc(50% - 8px), same)
-    size(17px, same)
-    fill: #a63626
+    pos(calc(50% - 7px), same)
+    size(15px, same)
+    fill: var(--tabs-close-fg)
+    stroke: var(--tabs-close-fg)
+    stroke-width: .5px
     transition: fill var(--d-fast)
 
 #root[data-pinned-tabs-position="panel"][data-pinned-tabs-list]
