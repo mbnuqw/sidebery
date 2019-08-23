@@ -1,7 +1,6 @@
 import Actions, { injectInActions } from './actions.js'
 
 void async function main() {
-  console.log('[DEBUG] BG: Start initialization process...');
   const state = injectInActions()
   state.actions = Actions
 
@@ -33,5 +32,4 @@ void async function main() {
 
   Actions.loadFavicons()
   Actions.clearFaviCacheAfter(86420)
-  console.log('[DEBUG] BG: Initialized!');
 }()

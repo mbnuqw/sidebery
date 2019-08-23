@@ -37,7 +37,6 @@ function initMessaging() {
       connectedSidebars[info.windowId] = port
       port.onMessage.addListener(onSidebarMsg)
       if (firstSidebarInitHandlers) {
-        console.log('[DEBUG] BG onFirstSidebarInit');
         for (let handler of firstSidebarInitHandlers) {
           handler()
         }

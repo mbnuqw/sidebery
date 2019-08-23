@@ -20,8 +20,6 @@ async function checkVersion(settings) {
  * Upgrade stored values to version 3.x.x
  */
 async function upgradeToV3(settings) {
-  console.log('[DEBUG] BG upgradeToV3');
-
   // --- Settings ---
   settings.version = browser.runtime.getManifest().version
   if (['dark', 'light'].includes(settings.theme)) {
@@ -29,7 +27,6 @@ async function upgradeToV3(settings) {
     settings.theme = 'default'
   }
   delete settings.snapshotsTargets
-  console.log('[DEBUG] BG settings upgraded');
 
   // --- Custom CSS vars ---
   let { styles } = await browser.storage.local.get({ styles: null })
@@ -37,7 +34,6 @@ async function upgradeToV3(settings) {
     await browser.storage.local.set({ cssVars: styles })
     await browser.storage.local.remove('styles')
   }
-  console.log('[DEBUG] BG custom css vars upgraded');
 
   // --- Favicons ---
   let { favicons } = await browser.storage.local.get({ favicons: null })
@@ -81,12 +77,10 @@ async function upgradeToV3(settings) {
     await browser.storage.local.set({ panels: containers })
     await browser.storage.local.remove('containers')
   }
-  console.log('[DEBUG] BG panels upgraded');
 
   // --- Snapshots ---
   let { snapshots } = await browser.storage.local.get({ snapshots: null })
   if (snapshots) {
-    console.log('[DEBUG] BG convert snapshots:', JSON.stringify(snapshots, null, 2));
     if (snapshots.length) {
       for (let snapshot of snapshots) {
         snapshot.time = snapshot.time * 1000
@@ -123,7 +117,6 @@ async function upgradeToV3(settings) {
       }
     }
     await browser.storage.local.set({ snapshots })
-    console.log('[DEBUG] BG converted snapshots:', JSON.stringify(snapshots, null, 2));
   }
 
   // --- Tree ---
@@ -135,12 +128,10 @@ async function upgradeToV3(settings) {
       await browser.storage.local.set({ tabsTrees: [tabsTreeState] })
     }
     await browser.storage.local.remove('tabsTreeState')
-    console.log('[DEBUG] BG convert tabs tree:', tabsTreeState);
   }
 
   await browser.storage.local.set({ settings })
   browser.runtime.sendMessage({ action: 'stopUpgrading' })
-  console.log('[DEBUG] BG upgraded!');
 }
 
 export default {
