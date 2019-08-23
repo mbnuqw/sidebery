@@ -662,12 +662,13 @@ async function moveTabsToNewWin(tabIds, incognito) {
  * otherwise show window-choosing menu.
  */
 async function moveTabsToWin(tabIds, window) {
-  const ids = [...tabIds]
-  const windowId = window ? window.id : await Actions.chooseWin()
-  const win = (await Actions.getAllWindows()).find(w => w.id === windowId)
-  const tabs = []
+  let ids = [...tabIds]
+  let windowId = window ? window.id : await Actions.chooseWin()
+  let win = this.state.otherWindows.find(w => w.id === windowId)
+
+  let tabs = []
   for (let id of ids) {
-    const tab = this.state.tabsMap[id]
+    let tab = this.state.tabsMap[id]
     if (!tab) continue
     tabs.push({
       id: tab.id,

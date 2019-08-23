@@ -37,7 +37,11 @@ function onTabCreated(tab) {
   tab.lvl = 0
   tab.sel = false
   tab.invisible = false
-  tab.favIconUrl = ''
+  if (tab.favIconUrl) {
+    if (tab.favIconUrl.startsWith('chrome')) tab.favIconUrl = ''
+  } else {
+    tab.favIconUrl = ''
+  }
   tab.updated = false
   tab.loading = false
   tab.warn = false

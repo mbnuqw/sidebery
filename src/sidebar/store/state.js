@@ -12,6 +12,7 @@ export default {
   private: browser.extension.inIncognitoContext,
   windowId: 0,
   windowFocused: true,
+  otherWindows: [],
 
   width: 250,
   tabHeight: 30,
