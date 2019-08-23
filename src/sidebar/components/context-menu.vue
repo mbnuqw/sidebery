@@ -16,7 +16,7 @@
           :data-width="btnWidth(group.options)"
           :data-selected="isSelected(opt)"
           :data-separator="isSeparator(opt)"
-          :data-color="opt.color"
+          :data-color="opt.color ? opt.color : false"
           :title="getTitle(opt.label)"
           @click="onClick(opt)"
           @mousedown.stop="")
@@ -31,7 +31,7 @@
           @mousedown.stop="")
           span(
             v-for="out in parseLabel(opt.label)"
-            :data-color="out.color"
+            :data-color="out.color ? opt.color : false"
             :style="{fontWeight: out.w}") {{out.label}}
   .container(:data-active="bIsActive")
     .box(ref="bBox" :style="bPosStyle")
@@ -45,7 +45,7 @@
           :data-width="btnWidth(group.options)"
           :data-selected="isSelected(opt)"
           :data-separator="isSeparator(opt)"
-          :data-color="opt.color"
+          :data-color="opt.color ? opt.color : false"
           :title="getTitle(opt.label)"
           @click="onClick(opt)"
           @mousedown.stop="")
@@ -61,7 +61,7 @@
           @mousedown.stop="")
           span(
             v-for="out in parseLabel(opt.label)"
-            :data-color="out.color"
+            :data-color="out.color ? opt.color : false"
             :style="{fontWeight: out.w}") {{out.label}}
 </template>
 
