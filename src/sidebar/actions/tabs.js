@@ -34,6 +34,10 @@ async function loadTabs(fresh = true) {
     t.sel = false
     t.updated = false
     t.loading = false
+    t.warn = false
+    if (t.favIconUrl === 'chrome://global/skin/icons/warning.svg') {
+      t.warn = true
+    }
     if (this.state.highlightOpenBookmarks && this.state.bookmarksUrlMap && this.state.bookmarksUrlMap[t.url]) {
       for (let b of this.state.bookmarksUrlMap[t.url]) {
         b.isOpen = true
@@ -164,6 +168,7 @@ async function restoreGroupTab(tabInfo, index, parents) {
   restoredTab.sel = false
   restoredTab.updated = false
   restoredTab.loading = false
+  restoredTab.warn = false
 
   this.state.tabs.splice(index, 0, restoredTab)
   this.state.tabsMap[restoredTab.id] = restoredTab

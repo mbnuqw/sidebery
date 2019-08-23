@@ -40,6 +40,10 @@ function onTabCreated(tab) {
   tab.favIconUrl = ''
   tab.updated = false
   tab.loading = false
+  tab.warn = false
+  if (tab.favIconUrl === 'chrome://global/skin/icons/warning.svg') {
+    tab.warn = true
+  }
 
   // Put new tab in tabs list
   this.state.tabsMap[tab.id] = tab
@@ -117,8 +121,14 @@ function onTabUpdated(tabId, change, tab) {
     if (change.status === 'complete' && !localTab.url.startsWith('about')) {
       browser.tabs.get(localTab.id)
         .then(tabInfo => {
-          if (tabInfo.favIconUrl) localTab.favIconUrl = tabInfo.favIconUrl
-          else localTab.favIconUrl = ''
+          if (tabInfo.favIconUrl && !tabInfo.favIconUrl.startsWith('chrome:')) {
+            localTab.favIconUrl = tabInfo.favIconUrl
+          } else {
+            if (change.favIconUrl === 'chrome://global/skin/icons/warning.svg') {
+              localTab.warn = true
+            }
+            localTab.favIconUrl = ''
+          }
         })
     }
 
@@ -166,6 +176,9 @@ function onTabUpdated(tabId, change, tab) {
     if (change.favIconUrl.startsWith('data:')) {
       this.actions.setFavicon(tab.url, change.favIconUrl)
     } else if (change.favIconUrl.startsWith('chrome:')) {
+      if (change.favIconUrl === 'chrome://global/skin/icons/warning.svg') {
+        localTab.warn = true
+      }
       change.favIconUrl = ''
     }
   }

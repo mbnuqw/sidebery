@@ -96,6 +96,7 @@ export default {
     },
 
     favPlaceholder() {
+      if (this.tab.warn) return '#icon_warn'
       if (PNG_RE.test(this.tab.url)) return '#icon_png'
       if (JPG_RE.test(this.tab.url)) return '#icon_jpg'
       if (PDF_RE.test(this.tab.url)) return '#icon_pdf'

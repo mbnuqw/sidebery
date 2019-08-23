@@ -89,6 +89,7 @@ export default {
     },
 
     favPlaceholder() {
+      if (this.tab.warn) return '#icon_warn'
       if (this.tab.url.startsWith('moz-extension:') && GROUP_RE.test(this.tab.url)) {
         return '#icon_group'
       }
