@@ -79,7 +79,7 @@ export default {
   'settings.hide_folded_tabs': { message: 'Hide folded tabs' },
   'settings.auto_fold_tabs': { message: 'Auto fold tabs' },
   'settings.auto_exp_tabs': { message: 'Auto expand tab on activation' },
-  'settings.rm_folded_tabs': { message: 'Auto close folded child tabs' },
+  'settings.rm_folded_tabs': { message: 'Close folded child tabs along with parent' },
   'settings.tabs_child_count': { message: 'Show count of descendants on the folded tab' },
   'settings.tabs_lvl_dots': { message: 'Show marks of tabs levels' },
   'settings.discard_folded': { message: 'Discard folded tabs' },
