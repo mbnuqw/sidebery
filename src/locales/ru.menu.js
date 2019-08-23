@@ -40,6 +40,10 @@ export default {
   // --- Editor
   'menu.editor.reset': { message: 'Сброс' },
   'menu.editor.create_separator': { message: 'Создать разделитель' },
+  'menu.editor.create_sub_tooltip': { message: 'Создать подменю' },
+  'menu.editor.up_tooltip': { message: 'Вверх' },
+  'menu.editor.down_tooltip': { message: 'Вниз' },
+  'menu.editor.disable_tooltip': { message: 'Отключить' },
   'menu.editor.tabs_title': { message: 'Табы' },
   'menu.editor.bookmarks_title': { message: 'Закладки' },
   'menu.editor.inline_group_title': { message: 'Название подменю...' },

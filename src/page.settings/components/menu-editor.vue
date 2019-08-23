@@ -10,15 +10,24 @@
         :value="group.name"
         :or="t('menu.editor.inline_group_title')"
         @input="onSubMenuNameInput('tabs', i, $event)")
-      .opt(v-for="(opt, i) in group.options" :data-separator="opt.startsWith('separator')" :title="t(tabsOpts[opt])")
+      .opt(v-for="(opt, i) in group.options"
+        :data-separator="opt.startsWith('separator')"
+        :title="t(tabsOpts[opt])")
         .opt-btn.-in(
           v-if="group.type === 'list'"
+          :title="t('menu.editor.create_sub_tooltip')"
           @click="createSubMenu('tabs', opt)")
           svg: use(xlink:href="#icon_expand")
         .opt-title {{t(tabsOpts[opt])}}
-        .opt-btn(@click="downOpt('tabs', opt)"): svg: use(xlink:href="#icon_expand")
-        .opt-btn.-up(@click="upOpt('tabs', opt)"): svg: use(xlink:href="#icon_expand")
-        .opt-btn.-rm(@click="disableOpt('tabs', opt)"): svg: use(xlink:href="#icon_remove")
+        .opt-btn(
+          :title="t('menu.editor.down_tooltip')"
+          @click="downOpt('tabs', opt)"): svg: use(xlink:href="#icon_expand")
+        .opt-btn.-up(
+          :title="t('menu.editor.up_tooltip')"
+          @click="upOpt('tabs', opt)"): svg: use(xlink:href="#icon_expand")
+        .opt-btn.-rm(
+          :title="t('menu.editor.disable_tooltip')"
+          @click="disableOpt('tabs', opt)"): svg: use(xlink:href="#icon_remove")
 
     .menu-group.-dis(v-if="disabledTabsMenu.length")
       .opt(

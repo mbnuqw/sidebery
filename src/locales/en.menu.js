@@ -40,6 +40,10 @@ export default {
   // --- Editor
   'menu.editor.reset': { message: 'Reset' },
   'menu.editor.create_separator': { message: 'Create separator' },
+  'menu.editor.create_sub_tooltip': { message: 'Create sub-menu' },
+  'menu.editor.up_tooltip': { message: 'Move up' },
+  'menu.editor.down_tooltip': { message: 'Move down' },
+  'menu.editor.disable_tooltip': { message: 'Disable' },
   'menu.editor.tabs_title': { message: 'Tabs' },
   'menu.editor.bookmarks_title': { message: 'Bookmarks' },
   'menu.editor.inline_group_title': { message: 'Sub-menu label...' },
