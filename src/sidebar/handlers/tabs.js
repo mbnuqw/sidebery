@@ -73,7 +73,7 @@ function onTabCreated(tab) {
       }
     } else {
       let parent = this.state.tabsMap[tab.openerTabId]
-      if (parent.cookieStoreId === tab.cookieStoreId) {
+      if (parent && parent.cookieStoreId === tab.cookieStoreId) {
         tab.parentId = tab.openerTabId
         const start = panel.startIndex
         this.actions.updateTabsTree(start, tab.index + 1)
