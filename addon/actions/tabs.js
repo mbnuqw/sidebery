@@ -82,14 +82,14 @@ function onTabDetached(id, info) {
  * Save tabs tree
  */
 function saveTabsTree(windowId, treeState, delay = 300) {
-  if (!treeState || !treeState.length) return
+  if (!treeState) return
   tabsTreesByWin[windowId] = treeState
 
   if (tabsTreeSaveTimeout) clearTimeout(tabsTreeSaveTimeout)
   tabsTreeSaveTimeout = setTimeout(async () => {
     const tabsTrees = []
     for (let tree of Object.values(tabsTreesByWin)) {
-      tabsTrees.push(tree)
+      if (tree.length) tabsTrees.push(tree)
     }
 
     browser.storage.local.set({ tabsTrees })

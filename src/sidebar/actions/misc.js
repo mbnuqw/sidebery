@@ -160,10 +160,15 @@ function selectItem(id) {
  * Deselect item
  */
 function deselectItem(id) {
-  if (typeof id === 'number') this.state.tabsMap[id].sel = false
-  else this.state.bookmarksMap[id].sel = false
-  let index = this.state.selected.indexOf(id)
-  if (index >= 0) this.state.selected.splice(index, 1)
+  let item
+  if (typeof id === 'number') item = this.state.tabsMap[id]
+  else item = this.state.bookmarksMap[id]
+
+  if (item) {
+    item.sel = false
+    let index = this.state.selected.indexOf(id)
+    if (index >= 0) this.state.selected.splice(index, 1)
+  }
 }
 
 /**

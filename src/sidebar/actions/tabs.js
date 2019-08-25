@@ -642,74 +642,61 @@ async function moveTabsToNewWin(tabIds, incognito) {
 }
 
 /**
- * Try to restore tree for listed tabs
- */
-// function restoreTabsTree(tabs) {
-//   if (!this.state.tabsTree) return
-
-//   for (let info of tabs) {
-//     const tab = this.state.tabsMap[info.id]
-//     if (!tab) return
-//     tab.parentId = info.parentId
-//     tab.folded = info.folded
-//   }
-
-//   Actions.updateTabsTree()
-// }
-
-/**
  *  Move tabs to window if provided,
  * otherwise show window-choosing menu.
  */
 async function moveTabsToWin(tabIds, window) {
   let ids = [...tabIds]
   let windowId = window ? window.id : await Actions.chooseWin()
-  let win = this.state.otherWindows.find(w => w.id === windowId)
 
   let tabs = []
   for (let id of ids) {
     let tab = this.state.tabsMap[id]
     if (!tab) continue
-    tabs.push({
-      id: tab.id,
-      url: tab.url,
-      parentId: tab.parentId,
-      folded: tab.folded,
-    })
+    tabs.push(Utils.cloneObject(tab))
   }
 
-  if (this.state.private === win.incognito) {
+  await browser.runtime.sendMessage({
+    windowId: windowId,
+    action: 'moveTabsToThisWin',
+    args: [tabs, this.state.private],
+  })
+
+  if (this.state.tabsTree) this.actions.saveTabsTree()
+}
+
+async function moveTabsToThisWin(tabs, fromPrivate) {
+  if (this.state.private === fromPrivate) {
+    if (!this.state.attachingTabs) this.state.attachingTabs = [...tabs]
+    else this.state.attachingTabs.push(...tabs)
+
+    let containerId = tabs[0].cookieStoreId
+    let panel = this.state.panelsMap[containerId]
+    let index = panel ? panel.endIndex : -1
+    if (panel && !panel.tabs.length) index--
+
     for (let tab of tabs) {
-      await browser.tabs.move(tab.id, { windowId, index: -1 })
+      if (index > -1) index++
+      await browser.tabs.move(tab.id, {
+        windowId: this.state.windowId,
+        index,
+      })
     }
   } else {
     const oldNewMap = {}
     for (let tab of tabs) {
-      // Create / remove
-      const newTab = await browser.tabs.create({ url: tab.url, windowId })
+      let conf = { url: tab.url, windowId: this.state.windowId }
+
+      if (oldNewMap[tab.parentId]) conf.openerTabId = oldNewMap[tab.parentId]
+
+      const newTab = await browser.tabs.create(conf)
       browser.tabs.remove(tab.id)
 
-      // Update values
       oldNewMap[tab.id] = newTab.id
-      tab.id = oldNewMap[tab.id]
-      if (tab.parentId > -1) {
-        tab.parentId = oldNewMap[tab.parentId] || -1
-      }
     }
   }
 
-  if (this.state.tabsTree) {
-    // Ok, this is just tmp solution
-    // with timeout...
-    // ~~~~~~~ REWRITE THIS ~~~~~~~~
-    await Utils.sleep(1000)
-    browser.runtime.sendMessage({
-      windowId: win.id,
-      action: 'restoreTabsTree',
-      arg: tabs,
-    })
-    // ~~~~~~~ REWRITE THIS ~~~~~~~~
-  }
+  return true
 }
 
 /**
@@ -1440,11 +1427,15 @@ export default {
   duplicateTabs,
   bookmarkTabs,
   clearTabsCookies,
+
   moveTabsToNewWin,
   moveTabsToWin,
+  moveTabsToThisWin,
   moveTabsToCtx,
+
   showAllTabs,
   updateTabsVisability,
+
   foldTabsBranch,
   expTabsBranch,
   toggleBranch,
