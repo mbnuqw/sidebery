@@ -123,9 +123,7 @@ const Actions = {
 }
 
 // Inject vuex getters and state in actions
-for (let action in Actions) {
-  if (!Actions.hasOwnProperty(action)) continue
-
+for (let action of Object.keys(Actions)) {
   Actions[action] = Actions[action].bind({
     getters: Store.getters,
     state: State,

@@ -18,8 +18,7 @@ async function loadSettings() {
     settings = ans.settings
   }
 
-  for (const key in settings) {
-    if (!settings.hasOwnProperty(key)) continue
+  for (const key of Object.keys(settings)) {
     if (settings[key] === undefined) continue
     this.state[key] = settings[key]
   }

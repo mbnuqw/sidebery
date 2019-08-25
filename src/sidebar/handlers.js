@@ -21,10 +21,8 @@ const Handlers = {
 }
 
 // Inject vuex getters and state in actions
-for (let handler in Handlers) {
-  if (!Handlers.hasOwnProperty(handler)) continue
-
-  Handlers[handler] = Handlers[handler].bind({
+for (let key of Object.keys(Handlers)) {
+  Handlers[key] = Handlers[key].bind({
     getters: Store.getters,
     state: State,
     actions: Actions,

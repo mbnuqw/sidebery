@@ -6,7 +6,7 @@ import Actions from './index'
  * Set setting value
  */
 function setSetting(key, val) {
-  if (!DEFAULT_SETTINGS.hasOwnProperty(key)) return
+  if (DEFAULT_SETTINGS[key] === undefined) return
   this.state[key] = val
 }
 
@@ -16,8 +16,7 @@ function setSetting(key, val) {
  */
 function resetSettings() {
   // Reset settings
-  for (const key in DEFAULT_SETTINGS) {
-    if (!DEFAULT_SETTINGS.hasOwnProperty(key)) continue
+  for (let key of Object.keys(DEFAULT_SETTINGS)) {
     if (this.state[key] == null || this.state[key] == undefined) continue
     this.state[key] = DEFAULT_SETTINGS[key]
   }
@@ -28,8 +27,7 @@ function resetSettings() {
  */
 async function saveSettings() {
   let settings = {}
-  for (const key in DEFAULT_SETTINGS) {
-    if (!DEFAULT_SETTINGS.hasOwnProperty(key)) continue
+  for (const key of Object.keys(DEFAULT_SETTINGS)) {
     if (this.state[key] == null || this.state[key] == undefined) continue
     if (this.state[key] instanceof Object) settings[key] = JSON.parse(JSON.stringify(this.state[key]))
     else settings[key] = this.state[key]
@@ -47,8 +45,7 @@ function updateSettings(settings) {
   const theme = this.state.theme !== settings.theme
 
   // Update settings
-  for (let k in settings) {
-    if (!settings.hasOwnProperty(k)) continue
+  for (let k of Object.keys(settings)) {
     if (settings[k] !== undefined) this.state[k] = settings[k]
   }
 

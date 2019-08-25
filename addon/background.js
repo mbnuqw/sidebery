@@ -19,7 +19,7 @@ void async function main() {
   state.settings = settings ? settings : {}
 
   Actions.loadPanels()
-  Actions.loadTabs(state.windows, state.tabsMap)
+  await Actions.loadTabs(state.windows, state.tabsMap)
 
   // Setup event listeners for
   Actions.setupWindowsListeners()

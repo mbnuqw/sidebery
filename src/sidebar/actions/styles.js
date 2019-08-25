@@ -16,9 +16,7 @@ async function loadCSSVars() {
   }
 
   const rootEl = document.getElementById('root')
-  for (let key in loadedVars) {
-    if (!loadedVars.hasOwnProperty(key)) continue
-
+  for (let key of Object.keys(loadedVars)) {
     if (loadedVars[key]) {
       rootEl.style.setProperty(Utils.toCSSVarName(key), loadedVars[key])
     }
@@ -35,9 +33,7 @@ function applyCSSVars(styles) {
   if (!styles) return
 
   const rootEl = document.getElementById('root')
-  for (let key in CUSTOM_CSS_VARS) {
-    if (!CUSTOM_CSS_VARS.hasOwnProperty(key)) continue
-
+  for (let key of Object.keys(CUSTOM_CSS_VARS)) {
     if (styles[key]) {
       rootEl.style.setProperty(Utils.toCSSVarName(key), styles[key])
     } else {

@@ -88,9 +88,8 @@ function saveTabsTree(windowId, treeState, delay = 300) {
   if (tabsTreeSaveTimeout) clearTimeout(tabsTreeSaveTimeout)
   tabsTreeSaveTimeout = setTimeout(async () => {
     const tabsTrees = []
-    for (let winId in tabsTreesByWin) {
-      if (!tabsTreesByWin.hasOwnProperty(winId)) continue
-      tabsTrees.push(tabsTreesByWin[winId])
+    for (let tree of Object.values(tabsTreesByWin)) {
+      tabsTrees.push(tree)
     }
 
     browser.storage.local.set({ tabsTrees })
@@ -103,14 +102,13 @@ function saveTabsTree(windowId, treeState, delay = 300) {
  */
 async function updateTabsTree() {
   const receiving = [], windows = []
-  for (let windowId in this.windows) {
-    if (!this.windows.hasOwnProperty(windowId)) continue
+  for (let window of Object.values(this.windows)) {
     receiving.push(browser.runtime.sendMessage({
-      windowId: this.windows[windowId].id,
+      windowId: window.id,
       instanceType: 'sidebar',
       action: 'getTabsTree',
     }))
-    windows.push(this.windows[windowId])
+    windows.push(window)
   }
 
   const trees = await Promise.all(receiving)

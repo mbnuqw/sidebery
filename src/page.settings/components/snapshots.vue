@@ -83,8 +83,7 @@ export default {
       if (!prevSnapshot.layers) prevSnapshot.layers = snapLayers.global
       else prevSnapshot.layers = prevSnapshot.layers.concat(snapLayers.global)
 
-      for (let winId in snapLayers.windows) {
-        if (!snapLayers.windows.hasOwnProperty(winId)) continue
+      for (let winId of Object.keys(snapLayers.windows)) {
         const prevSnapWin = prevSnapshot.windows[winId]
         if (!prevSnapWin) continue
         if (!prevSnapWin.layers) prevSnapWin.layers = snapLayers.windows[winId]
@@ -248,9 +247,7 @@ function normalizeSnapshot(snapshot, now) {
   let windowsById = {}
 
   // Windows
-  for (let winId in snapshot.windows) {
-    if (!snapshot.windows.hasOwnProperty(winId)) continue
-
+  for (let winId of Object.keys(snapshot.windows)) {
     const window = { id: winId, tabs: [] }
     snapshot.containersById[DEFAULT_CTR.id] = DEFAULT_CTR
 

@@ -24,8 +24,7 @@ function updateSettings(settings) {
   const highlightOpenBookmarks = this.state.highlightOpenBookmarks !== settings.highlightOpenBookmarks
 
   // Update settings of this instance
-  for (let k in settings) {
-    if (!settings.hasOwnProperty(k)) continue
+  for (let k of Object.keys(settings)) {
     if (settings[k] !== undefined) this.state[k] = settings[k]
   }
 
@@ -131,8 +130,7 @@ async function getWindowDbgInfo() {
 async function getCommonDbgInfo() {
   // Settings
   const settings = {}
-  for (let sKey in DEFAULT_SETTINGS) {
-    if (!DEFAULT_SETTINGS.hasOwnProperty(sKey)) continue
+  for (let sKey of Object.keys(DEFAULT_SETTINGS)) {
     settings[sKey] = this.state[sKey]
   }
 
@@ -156,8 +154,7 @@ async function getCommonDbgInfo() {
   try {
     storage.overal = Utils.strSize(JSON.stringify(stored))
     storage.props = []
-    for (let prop in stored) {
-      if (!stored.hasOwnProperty(prop)) continue
+    for (let prop of Object.keys(stored)) {
       let size = new Blob([JSON.stringify(stored[prop])]).size
       storage.props.push({
         name: prop,

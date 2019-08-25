@@ -11,8 +11,7 @@ let baseSnapshotTimeout
 async function createSnapshot() {
   // Get containers info
   const containersById = {}
-  for (let containerId in this.containers) {
-    if (!this.containers.hasOwnProperty(containerId)) continue
+  for (let containerId of Object.keys(this.containers)) {
     containersById[containerId] = {
       id: containerId,
       color: this.containers[containerId].color,
@@ -26,8 +25,7 @@ async function createSnapshot() {
 
   // Get tabs info per window
   const windows = {}
-  for (let windowId in this.windows) {
-    if (!this.windows.hasOwnProperty(windowId)) continue
+  for (let windowId of Object.keys(this.windows)) {
     const window = this.windows[windowId]
     const items = []
 
@@ -129,8 +127,7 @@ async function getLastSnapTime() {
  * Apply snapshot
  */
 async function applySnapshot(snapshot) {
-  for (let winId in snapshot.windowsById) {
-    if (!snapshot.windowsById.hasOwnProperty(winId)) continue
+  for (let winId of Object.keys(snapshot.windowsById)) {
     await Actions.openSnapshotWindow(snapshot, winId)
   }
 }

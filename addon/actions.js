@@ -28,10 +28,8 @@ const Actions = {
  * Inject any stuff to these actions
  */
 export function injectInActions(injectable = {}) {
-  for (let action in Actions) {
-    if (!Actions.hasOwnProperty(action)) continue
-
-    Actions[action] = Actions[action].bind(injectable)
+  for (let key of Object.keys(Actions)) {
+    Actions[key] = Actions[key].bind(injectable)
   }
   Actions.initialized = true
   return injectable

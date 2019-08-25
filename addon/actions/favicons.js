@@ -59,12 +59,9 @@ async function clearFaviCache(all) {
     favUrls: {}
   })
 
-  let urls = []
-
-  for (let tabId in this.tabsMap) {
-    if (!this.tabsMap.hasOwnProperty(tabId)) continue
-    urls.push(this.tabsMap[tabId].url)
-  }
+  let urls = Object.values(this.windows).reduce((a, v) => {
+    return a.concat(v.tabs.map(t => t.url))
+  }, [])
 
   let bookmarksRoot = await browser.bookmarks.getTree()
   const hWalk = nodes => {
@@ -76,8 +73,7 @@ async function clearFaviCache(all) {
   hWalk(bookmarksRoot[0].children)
 
   // Removes links (url - faviconIndex)
-  for (let url in favUrls) {
-    if (!favUrls.hasOwnProperty(url)) continue
+  for (let url of Object.keys(favUrls)) {
     if (urls.includes(url)) continue
     delete favUrls[url]
   }

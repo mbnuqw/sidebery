@@ -443,8 +443,7 @@ function cloneArray(arr) {
  */
 function cloneObject(obj) {
   const out = {}
-  for (let prop in obj) {
-    if (!obj.hasOwnProperty(prop)) continue
+  for (let prop of Object.keys(obj)) {
     if (Array.isArray(obj[prop])) {
       out[prop] = cloneArray(obj[prop])
     } else if (typeof obj[prop] === 'object' && obj[prop] !== null) {

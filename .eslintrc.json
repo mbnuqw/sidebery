@@ -13,6 +13,7 @@
     "linebreak-style": ["error", "unix"],
     "quotes": ["error", "single"],
     "semi": ["error", "never"],
+    "require-atomic-updates": "off",
     "vue/html-self-closing": "off",
     "vue/require-default-prop": "off"
   },

@@ -32,11 +32,9 @@ void (async function() {
 
   // Set user styles
   let { cssVars } = await browser.storage.local.get({ cssVars: {} })
-  for (let key in CUSTOM_CSS_VARS) {
-    if (!CUSTOM_CSS_VARS.hasOwnProperty(key)) continue
-    if (cssVars[key]) {
-      document.body.style.setProperty(Utils.toCSSVarName(key), cssVars[key])
-    }
+  for (let key of Object.keys(CUSTOM_CSS_VARS)) {
+    if (!cssVars[key]) continue
+    document.body.style.setProperty(Utils.toCSSVarName(key), cssVars[key])
   }
 
   // Load current window and get url-hash

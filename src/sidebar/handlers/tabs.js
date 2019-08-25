@@ -121,7 +121,7 @@ function onTabUpdated(tabId, change, tab) {
   if (!localTab) return
 
   // Status change
-  if (change.hasOwnProperty('status')) {
+  if (change.status !== undefined) {
     if (change.status === 'complete' && !localTab.url.startsWith('about')) {
       browser.tabs.get(localTab.id)
         .then(tabInfo => {
@@ -153,7 +153,7 @@ function onTabUpdated(tabId, change, tab) {
   }
 
   // Url
-  if (change.hasOwnProperty('url')) {
+  if (change.url !== undefined) {
     if (change.url !== localTab.url) {
       this.actions.saveTabsTree()
       if (this.state.highlightOpenBookmarks && this.state.bookmarksUrlMap) {
@@ -188,7 +188,7 @@ function onTabUpdated(tabId, change, tab) {
   }
 
   let inact = Date.now() - tab.lastAccessed
-  if (change.hasOwnProperty('title') && !tab.active && inact > 5000) {
+  if (change.title !== undefined && !tab.active && inact > 5000) {
     // If prev url starts with 'http' and current url same as prev
     if (localTab.url.startsWith('http') && localTab.url === tab.url) {
       // and if title doesn't looks like url
@@ -206,7 +206,7 @@ function onTabUpdated(tabId, change, tab) {
   Object.assign(localTab, change)
 
   // Handle unpinned tab
-  if (change.hasOwnProperty('pinned') && !change.pinned) {
+  if (change.pinned !== undefined && !change.pinned) {
     let panel = this.state.panelsMap[tab.cookieStoreId]
     if (!panel) return
     if (panel && panel.tabs) browser.tabs.move(tabId, { index: panel.endIndex - 1 })
@@ -216,7 +216,7 @@ function onTabUpdated(tabId, change, tab) {
   }
 
   // Handle pinned tab
-  if (change.hasOwnProperty('pinned') && change.pinned) {
+  if (change.pinned !== undefined && change.pinned) {
     let panel = this.state.panelsMap[tab.cookieStoreId]
     panel.tabs.splice(localTab.index - panel.startIndex, 1)
     this.actions.updatePanelsRanges()
