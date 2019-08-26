@@ -30,11 +30,13 @@
 .Bookmark > .body:hover
   background-color: var(--bookmarks-node-bg-hover)
 
-.Bookmark[data-selected] > .body
-  background-color: var(--tabs-selected-bg)
-
-.Bookmark:not([is-selected]) > .body:active
+.Bookmark > .body:active
   background-color: var(--bookmarks-node-bg-active)
+
+.Bookmark[data-selected] > .body
+.Bookmark[data-selected] > .body:hover
+.Bookmark[data-selected] > .body:active
+  background-color: var(--tabs-selected-bg)
 
 .Bookmark[data-open] > .body:before
   content: ''
