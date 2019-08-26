@@ -888,6 +888,10 @@ async function moveDroppedNodes(dropIndex, dropParent, nodes, pin, currentPanel)
 
   // Move to different window
   if (!sameWindow) {
+    let firstNode = nodes[0]
+    for (let node of nodes) {
+      if (node.lvl <= firstNode.lvl) node.parentId = parentId
+    }
     this.state.attachingTabs = [...nodes]
     for (let i = 0; i < nodes.length; i++) {
       const index = dropIndex + i
