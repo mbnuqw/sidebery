@@ -586,59 +586,21 @@ async function clearTabsCookies(tabIds) {
  * and then move other tabs.
  */
 async function moveTabsToNewWin(tabIds, incognito) {
-  const first = tabIds.shift()
-  const firstTab = this.state.tabsMap[first]
-  if (!firstTab) return
-  const rest = [...tabIds]
-  const restTabs = rest.map(id => {
+  let tabs = tabIds.map(id => {
     const tab = this.state.tabsMap[id]
-    return {
-      id: tab.id,
-      url: tab.url,
-      parentId: tab.parentId,
-      folded: tab.folded,
-    }
+    return Utils.cloneObject(tab)
   })
 
-  let win
+  let win = await browser.windows.create({ incognito })
+  let firstTab = win.tabs[0]
 
-  if (this.state.private === !!incognito) {
-    win = await browser.windows.create({ tabId: first, incognito })
-    for (let id of rest) {
-      await browser.tabs.move(id, { windowId: win.id, index: -1 })
-    }
-  } else {
-    win = await browser.windows.create({ url: firstTab.url, incognito })
-    const firstNewTab = win.tabs[0]
-    const oldNewMap = { [firstTab.id]: firstNewTab.id }
+  await browser.runtime.sendMessage({
+    instanceType: 'bg',
+    action: 'moveTabsToWin',
+    args: [win.id, tabs, this.state.private, firstTab.id],
+  })
 
-    browser.tabs.remove(first)
-    for (let tab of restTabs) {
-      // Create / remove
-      const newTab = await browser.tabs.create({ windowId: win.id, url: tab.url })
-      browser.tabs.remove(tab.id)
-
-      // Update values
-      oldNewMap[tab.id] = newTab.id
-      tab.id = oldNewMap[tab.id]
-      if (tab.parentId > -1) {
-        tab.parentId = oldNewMap[tab.parentId] || -1
-      }
-    }
-  }
-
-  if (this.state.tabsTree) {
-    // Ok, this is just tmp solution
-    // with timeout...
-    // ~~~~~~~ REWRITE THIS ~~~~~~~~
-    await Utils.sleep(1000)
-    browser.runtime.sendMessage({
-      windowId: win.id,
-      action: 'restoreTabsTree',
-      arg: restTabs,
-    })
-    // ~~~~~~~ REWRITE THIS ~~~~~~~~
-  }
+  if (this.state.tabsTree) this.actions.saveTabsTree()
 }
 
 /**
@@ -658,6 +620,7 @@ async function moveTabsToWin(tabIds, window) {
 
   await browser.runtime.sendMessage({
     windowId: windowId,
+    instanceType: 'sidebar',
     action: 'moveTabsToThisWin',
     args: [tabs, this.state.private],
   })
@@ -665,6 +628,9 @@ async function moveTabsToWin(tabIds, window) {
   if (this.state.tabsTree) this.actions.saveTabsTree()
 }
 
+/**
+ * Move (or reopen) provided tabs in current window.
+ */
 async function moveTabsToThisWin(tabs, fromPrivate) {
   if (this.state.private === fromPrivate) {
     if (!this.state.attachingTabs) this.state.attachingTabs = [...tabs]
@@ -689,7 +655,7 @@ async function moveTabsToThisWin(tabs, fromPrivate) {
 
       if (oldNewMap[tab.parentId]) conf.openerTabId = oldNewMap[tab.parentId]
 
-      const newTab = await browser.tabs.create(conf)
+      let newTab = await browser.tabs.create(conf)
       browser.tabs.remove(tab.id)
 
       oldNewMap[tab.id] = newTab.id

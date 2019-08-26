@@ -46,7 +46,6 @@ export default new Vue({
     Handlers.setupKeybindingListeners()
 
     await Actions.loadWindowInfo()
-    Actions.connectToBG()
     await Actions.loadSettings()
 
     if (State.theme !== 'default') Actions.initTheme()
@@ -73,6 +72,8 @@ export default new Vue({
     Handlers.setupTabsListeners()
     Handlers.setupBookmarksListeners()
     Handlers.setupResizeHandler()
+
+    Actions.connectToBG()
   },
 
   mounted() {

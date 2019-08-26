@@ -2,6 +2,7 @@ import Actions from '../actions.js'
 
 const connectedSidebars = {}
 let firstSidebarInitHandlers = []
+let connectPending = []
 
 /**
  * Init global message handler
@@ -36,11 +37,17 @@ function initMessaging() {
       if (!this.windows[info.windowId]) return
       connectedSidebars[info.windowId] = port
       port.onMessage.addListener(onSidebarMsg)
+
       if (firstSidebarInitHandlers) {
         for (let handler of firstSidebarInitHandlers) {
           handler()
         }
         firstSidebarInitHandlers = null
+      }
+
+      for (let waiting of connectPending) {
+        if (waiting.winId !== info.windowId) continue
+        waiting.resolve(true)
       }
     }
 
@@ -65,6 +72,29 @@ function onFirstSidebarInit(handler) {
 }
 
 /**
+ * Wait for connecting sidebery instance of
+ * target window.
+ */
+async function waitForSidebarConnect(winId, limit = 1000) {
+  let waitingId = String(Math.random())
+  let waiting = new Promise(res => {
+    connectPending.push({
+      id: waitingId,
+      winId,
+      resolve: res,
+    })
+
+    setTimeout(() => {
+      let index = connectPending.findIndex(w => w.id === waitingId)
+      if (index > -1) connectPending.splice(index, 1)
+      res(false)
+    }, limit)
+  })
+
+  return waiting
+}
+
+/**
  * Handle message from sidebar
  */
 function onSidebarMsg(msg) {
@@ -81,4 +111,5 @@ export default {
   initMessaging,
   onSidebarMsg,
   onFirstSidebarInit,
+  waitForSidebarConnect,
 }
