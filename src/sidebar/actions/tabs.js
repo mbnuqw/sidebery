@@ -586,10 +586,19 @@ async function clearTabsCookies(tabIds) {
  * and then move other tabs.
  */
 async function moveTabsToNewWin(tabIds, incognito) {
-  let tabs = tabIds.map(id => {
+  let tabs = []
+  for (let id of tabIds) {
     const tab = this.state.tabsMap[id]
-    return Utils.cloneObject(tab)
-  })
+    if (!tab) continue
+    tabs.push(Utils.cloneObject(tab))
+    if (tab.folded) {
+      for (let i = tab.index + 1; i < this.state.tabs.length; i++) {
+        let childTab = this.state.tabs[i]
+        if (childTab.lvl <= tab.lvl) break
+        tabs.push(Utils.cloneObject(childTab))
+      }
+    }
+  }
 
   let win = await browser.windows.create({ incognito })
   let firstTab = win.tabs[0]
@@ -608,14 +617,20 @@ async function moveTabsToNewWin(tabIds, incognito) {
  * otherwise show window-choosing menu.
  */
 async function moveTabsToWin(tabIds, window) {
-  let ids = [...tabIds]
   let windowId = window ? window.id : await Actions.chooseWin()
 
   let tabs = []
-  for (let id of ids) {
+  for (let id of tabIds) {
     let tab = this.state.tabsMap[id]
     if (!tab) continue
     tabs.push(Utils.cloneObject(tab))
+    if (tab.folded) {
+      for (let i = tab.index + 1; i < this.state.tabs.length; i++) {
+        let childTab = this.state.tabs[i]
+        if (childTab.lvl <= tab.lvl) break
+        tabs.push(Utils.cloneObject(childTab))
+      }
+    }
   }
 
   await browser.runtime.sendMessage({

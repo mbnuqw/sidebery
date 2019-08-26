@@ -161,6 +161,7 @@ export default {
             let maxIndex = Math.max(first.index, this.tab.index)
 
             for (let i = minIndex; i <= maxIndex; i++) {
+              if (State.tabs[i].invisible) continue
               State.tabs[i].sel = true
               if (i !== first.index) State.selected.push(State.tabs[i].id)
             }
