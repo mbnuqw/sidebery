@@ -162,7 +162,7 @@ function selectItem(id) {
 function deselectItem(id) {
   let item
   if (typeof id === 'number') item = this.state.tabsMap[id]
-  else item = this.state.bookmarksMap[id]
+  else if (this.state.bookmarksMap) item = this.state.bookmarksMap[id]
 
   if (item) {
     item.sel = false

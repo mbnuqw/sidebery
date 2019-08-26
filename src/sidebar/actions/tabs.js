@@ -992,6 +992,7 @@ async function recreateDroppedNodes(event, dropIndex, dropParent, nodes, pin, de
   // Create new tabs
   const oldNewMap = []
   let opener = dropParent < 0 ? undefined : dropParent
+
   for (let i = 0; i < nodes.length; i++) {
     let node = nodes[i]
 
@@ -1021,9 +1022,6 @@ async function recreateDroppedNodes(event, dropIndex, dropParent, nodes, pin, de
 
     const info = await browser.tabs.create(createConf)
     oldNewMap[node.id] = info.id
-    if (this.state.tabsMap[info.id] && opener) {
-      this.state.tabsMap[info.id].parentId = opener
-    }
   }
 
   // Remove source tabs
@@ -1337,6 +1335,7 @@ function getGroupTab(tab) {
   let i = tab.lvl || 0
   while (i--) {
     tab = this.state.tabsMap[tab.parentId]
+    if (!tab) return
     if (tab && Utils.isGroupUrl(tab.url)) return tab
   }
 }

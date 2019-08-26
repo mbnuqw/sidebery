@@ -85,7 +85,7 @@ function onTabCreated(tab) {
 
     this.actions.saveTabsTree()
     const groupTab = this.actions.getGroupTab(tab)
-    if (groupTab) {
+    if (groupTab && !groupTab.discarded) {
       browser.tabs.sendMessage(groupTab.id, {
         name: 'create',
         id: tab.id,
@@ -137,7 +137,7 @@ function onTabUpdated(tabId, change, tab) {
     }
 
     const groupTab = this.actions.getGroupTab(localTab)
-    if (groupTab) {
+    if (groupTab && !groupTab.discarded) {
       let updateData = {
         name: 'updateTab',
         id: localTab.id,
@@ -351,7 +351,7 @@ function onTabRemoved(tabId, info) {
   }
 
   const groupTab = this.actions.getGroupTab(tab)
-  if (groupTab) {
+  if (groupTab && !groupTab.discarded) {
     browser.tabs.sendMessage(groupTab.id, {
       name: 'remove',
       id: tab.id,

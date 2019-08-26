@@ -159,12 +159,11 @@ export default {
           if (toDrag.includes(node.parentId)) {
             toDrag.push(node.id)
             nodesToDrag.push(node)
-          }
-          if (State.selected.includes(node.id)) {
+          } else if (State.selected.includes(node.id)) {
             toDrag.push(node.id)
             nodesToDrag.push(node)
           }
-          if (node.type === 'folder') walker(node.children)
+          if (node.children) walker(node.children)
         }
       }
       walker(State.bookmarks)
