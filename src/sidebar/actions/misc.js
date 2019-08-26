@@ -149,10 +149,12 @@ async function undoRmTab() {
  * Select item
  */
 function selectItem(id) {
-  let target = this.state.tabsMap[id]
+  let target
+  if (typeof id === 'number') target = this.state.tabsMap[id]
+  else if (this.state.bookmarksMap) target = this.state.bookmarksMap[id]
   if (!target) return
-  if (typeof id === 'number') target.sel = true
-  else this.state.bookmarksMap[id].sel = true
+
+  target.sel = true
   if (!this.state.selected.includes(id)) this.state.selected.push(id)
 }
 
