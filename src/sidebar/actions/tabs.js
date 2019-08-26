@@ -993,21 +993,25 @@ async function recreateDroppedNodes(event, dropIndex, dropParent, nodes, pin, de
   const oldNewMap = []
   let opener = dropParent < 0 ? undefined : dropParent
   for (let i = 0; i < nodes.length; i++) {
-    const node = nodes[i]
+    let node = nodes[i]
 
     if (node.type === 'separator') continue
     if (!this.state.tabsTree && node.type === 'folder') continue
     if (this.state.tabsTreeLimit > 0 && node.type === 'folder') continue
 
-    if (oldNewMap[node.parentId] >= 0) opener = oldNewMap[node.parentId]
     let createConf = {
       active: node.active,
       cookieStoreId: destCtx,
       index: dropIndex + i,
-      openerTabId: opener,
       url: node.url ? Utils.normalizeUrl(node.url) : Utils.createGroupUrl(node.title),
       windowId: this.state.windowId,
       pinned: pin,
+    }
+
+    if (oldNewMap[node.parentId] >= 0) {
+      createConf.openerTabId = oldNewMap[node.parentId]
+    } else {
+      createConf.openerTabId = opener
     }
 
     if (!node.active && nodes.length > 1) {
