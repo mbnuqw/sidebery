@@ -41,37 +41,38 @@ export default new Vue({
 
     Actions.loadPlatformInfo()
 
-    Handlers.setupWindowsListeners()
-    Handlers.setupStorageListeners()
-    Handlers.setupKeybindingListeners()
-
     await Actions.loadWindowInfo()
+    Handlers.setupWindowsListeners()
+
     await Actions.loadSettings()
+    Handlers.setupStorageListeners()
+    Handlers.setupResizeHandler()
 
     if (State.theme !== 'default') Actions.initTheme()
     if (State.sidebarCSS) Actions.loadCustomCSS()
 
     await Actions.loadPanelIndex()
     await Actions.loadPanels()
+    Handlers.setupContainersListeners()
 
     if (State.bookmarksPanel && State.panels[State.panelIndex].bookmarks) {
       await Actions.loadBookmarks()
     }
+    Handlers.setupBookmarksListeners()
 
     await Actions.loadTabs()
+    Handlers.setupTabsListeners()
+
+    Actions.loadKeybindings()
+    Handlers.setupKeybindingListeners()
+
     await Actions.loadCtxMenu()
     await Actions.loadCSSVars()
     Actions.scrollToActiveTab()
-    Actions.loadKeybindings()
     Actions.loadFavicons()
     Actions.loadPermissions()
     Actions.updateTabsVisability()
     Actions.saveTabsTree()
-
-    Handlers.setupContainersListeners()
-    Handlers.setupTabsListeners()
-    Handlers.setupBookmarksListeners()
-    Handlers.setupResizeHandler()
 
     Actions.connectToBG()
   },
