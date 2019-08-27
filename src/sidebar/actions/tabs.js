@@ -188,6 +188,10 @@ async function restoreTabsTree() {
     if (!this.state.tabs[pinnedTabsCount].pinned) break
   }
 
+  for (let tab of this.state.tabs) {
+    if (tab.openerTabId > -1) tab.parentId = tab.openerTabId
+  }
+
   perTree:
   for (let tree of tabsTrees) {
     let parents = []
