@@ -61,12 +61,12 @@ void (async function() {
     windowId: win.id,
     arg: hash,
   })
-  if (!groupInfo || !groupInfo.tabs) return
+  if (!groupInfo) return
 
-  tabs = groupInfo.tabs
-  groupTabId = groupInfo.id
-  groupTabIndex = groupInfo.index
-  groupLen = groupInfo.len
+  tabs = groupInfo.tabs || []
+  groupTabId = groupInfo.id || ''
+  groupTabIndex = groupInfo.index || 0
+  groupLen = groupInfo.len || 0
   groupParentId = groupInfo.parentId
 
   while (tabsBoxEl.lastChild) {
