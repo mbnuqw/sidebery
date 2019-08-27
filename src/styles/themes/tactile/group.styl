@@ -68,7 +68,7 @@ body[data-layout="list"] .tabs
 .new-tab
   box(relative)
   size(100%)
-  background-color: #32323224
+  background-color: #ffffff16
   overflow: hidden
   cursor: pointer
   transition: box-shadow var(--d-norm)
@@ -99,7 +99,7 @@ body[data-layout="list"] .new-tab
 .tab
   box(relative, flex)
   size(100%)
-  background-color: #64646424
+  background-color: #ffffff24
   background-image: linear-gradient(0deg, #00000032, #00000000)
   overflow: hidden
   cursor: pointer
@@ -147,9 +147,9 @@ body[data-layout="grid"] .bg
   box(absolute)
   size(100%, 128px)
   border-radius: 6.5px
-  opacity: .03
+  opacity: .05
 body[data-layout="grid"] .tab:not([data-discarded="true"]):hover .bg
-  opacity: .04
+  opacity: .08
 body[data-layout="list"] .bg
   box(relative)
   size(48px, same)
@@ -167,7 +167,7 @@ body[data-layout="list"] .tab[data-discarded="true"] .bg
   background-repeat: no-repeat
   border-radius: 3px
   overflow: hidden
-  filter: drop-shadow(0 0 1px #00000032) drop-shadow(0 0 8px #00000032)
+  filter: drop-shadow(0 0 1px #00000032) drop-shadow(0 0 3px #00000032)
 body[data-layout="grid"] .fav
   pos(auto, 12px, b: 12px)
 
