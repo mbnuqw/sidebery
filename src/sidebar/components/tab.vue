@@ -29,7 +29,7 @@
   transition(name="tab-part"): .audio(v-if="tab.audible || tab.mutedInfo.muted" @mousedown.stop="" @click="onAudioClick")
     svg.-loud: use(xlink:href="#icon_loud_badge")
     svg.-mute: use(xlink:href="#icon_mute_badge")
-  .fav
+  .fav(@dragstart.stop.prevent="")
     transition(name="tab-part"): .placeholder(v-if="!tab.favIconUrl"): svg: use(:xlink:href="favPlaceholder")
     transition(name="tab-part"): img(v-if="tab.favIconUrl" :src="tab.favIconUrl" @load.passive="onFaviconLoad")
     .exp(v-if="tab.isParent" @dblclick.prevent.stop="" @mousedown.stop="onExp"): svg: use(xlink:href="#icon_expand")
