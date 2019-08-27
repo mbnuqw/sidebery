@@ -241,21 +241,49 @@ async function dropToBookmarks(event, dropIndex, dropParent, nodes) {
 /**
  * Open bookmarks in new window
  */
-function openBookmarksInNewWin(ids, incognito) {
-  const urls = []
-  const walker = nodes => {
+async function openBookmarksInNewWin(ids, incognito) {
+  let toOpen = []
+  let walker = nodes => {
     for (let node of nodes) {
       if (ids.includes(node.parentId)) {
-        if (node.children) ids.push(node.id)
-        if (node.url) urls.push(node.url)
+        toOpen.push(node)
+        ids.push(node.id)
+      } else if (ids.includes(node.id)) {
+        toOpen.push(node)
       }
-      if (node.url && ids.includes(node.id)) urls.push(node.url)
       if (node.children) walker(node.children)
     }
   }
   walker(this.state.bookmarks)
 
-  return browser.windows.create({ url: urls, incognito })
+  let win = await browser.windows.create({ incognito })
+  let firstTab = win.tabs[0]
+
+  let oldNewMap = {}
+  let index = 1
+  for (let node of toOpen) {
+    let conf = {
+      windowId: win.id,
+      discarded: true,
+      title: node.title,
+      index,
+    }
+
+    if (node.type === 'bookmark') conf.url = node.url
+    if (node.type === 'folder' && this.state.tabsTree) {
+      conf.url = Utils.createGroupUrl(node.title)
+    }
+
+    if (!conf.url) continue
+
+    if (oldNewMap[node.parentId]) conf.openerTabId = oldNewMap[node.parentId]
+
+    let tab = await browser.tabs.create(conf)
+    oldNewMap[node.id] = tab.id
+    index++
+  }
+
+  browser.tabs.remove(firstTab.id)
 }
 
 /**
