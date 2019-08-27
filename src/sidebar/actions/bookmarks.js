@@ -259,6 +259,12 @@ async function openBookmarksInNewWin(ids, incognito) {
   let win = await browser.windows.create({ incognito })
   let firstTab = win.tabs[0]
 
+  await browser.runtime.sendMessage({
+    instanceType: 'bg',
+    action: 'waitForSidebarConnect',
+    args: [win.id, 7000],
+  })
+
   let oldNewMap = {}
   let index = 1
   for (let node of toOpen) {

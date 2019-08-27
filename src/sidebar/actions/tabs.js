@@ -1391,6 +1391,7 @@ function updateGroupTab(groupTab) {
     }
 
     browser.tabs.sendMessage(groupTab.id, msg)
+      .catch(() => {/** itsokay **/})
 
     updateGroupTabTimeouit = null
   }, 256)

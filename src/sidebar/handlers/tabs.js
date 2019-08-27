@@ -95,7 +95,7 @@ function onTabCreated(tab) {
         url: tab.url,
         discarded: tab.discarded,
         favIconUrl: tab.favIconUrl,
-      })
+      }).catch(() => {/** itsokay **/})
     }
   }
 
@@ -149,6 +149,7 @@ function onTabUpdated(tabId, change, tab) {
       }
       if (change.status === 'complete') updateData.favIconUrl = localTab.favIconUrl
       browser.tabs.sendMessage(groupTab.id, updateData)
+        .catch(() => {/** itsokay **/})
     }
   }
 
@@ -352,10 +353,8 @@ function onTabRemoved(tabId, info) {
 
   const groupTab = this.actions.getGroupTab(tab)
   if (groupTab && !groupTab.discarded) {
-    browser.tabs.sendMessage(groupTab.id, {
-      name: 'remove',
-      id: tab.id,
-    })
+    browser.tabs.sendMessage(groupTab.id, { name: 'remove', id: tab.id})
+      .catch(() => {/** itsokay **/})
   }
 }
 
