@@ -21,7 +21,7 @@
   @mouseup="onMouseUp"
   @mouseleave="onMouseLeave"
   @dblclick.prevent.stop="onDoubleClick"): .lvl-wrapper
-  .complete-fx
+  transition(name="tab-complete"): .complete-fx(v-if="tab.status === 'loading'")
   .drag-layer(
     draggable="true"
     @dragstart="onDragStart"
@@ -73,6 +73,10 @@ export default {
     favicon() {
       if (this.tab.status === 'loading') return State.favicons[State.favUrls[this.tab.url]]
       else return this.tab.favIconUrl || State.favicons[State.favUrls[this.tab.url]]
+    },
+
+    isNewTab() {
+      return this.tab.url === 'about:newtab'
     },
 
     loading() {
