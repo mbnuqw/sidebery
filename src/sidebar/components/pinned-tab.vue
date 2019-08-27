@@ -1,7 +1,6 @@
 <template lang="pug">
 .PinnedTab(
   :data-active="tab.active"
-  :data-status="tab.status"
   :data-loading="loading"
   :data-selected="tab.sel"
   :data-audible="tab.audible"
@@ -18,7 +17,7 @@
   @mouseup="onMouseUp"
   @mouseleave="onMouseLeave"
   @dblclick.prevent.stop="onDoubleClick")
-  .complete-fx
+  transition(name="tab-complete"): .complete-fx(v-if="tab.status === 'loading'")
   .drag-layer(draggable="true"
     @dragstart="onDragStart"
     @dragenter="onDragEnter"

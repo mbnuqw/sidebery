@@ -1,7 +1,6 @@
 <template lang="pug">
 .Tab(
   :data-active="tab.active"
-  :data-status="tab.status"
   :data-loading="loading"
   :data-selected="tab.sel"
   :data-audible="tab.audible"
