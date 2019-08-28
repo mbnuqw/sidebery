@@ -31,7 +31,7 @@ function saveFavicon(url, icon) {
       if (index === -1) index = this.favicons.push(icon) - 1
 
       if (index > -1) {
-        this.favicons[index] = icon
+        this.favicons[index] = fav
         this.favUrls[url] = index
       }
     }

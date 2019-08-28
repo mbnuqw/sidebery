@@ -26,9 +26,8 @@ async function loadFavicons() {
  */
 function setFavicon(url, icon) {
   if (!url || !icon) return
-
-  // Do not cache favicon if it too big
   if (icon.length > 123456) return
+  if (url.startsWith('about')) return
 
   let index = this.state.favicons.indexOf(icon)
   let alreadyCached = index > -1 && this.state.favUrls[url] !== undefined
