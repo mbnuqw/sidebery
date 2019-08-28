@@ -88,7 +88,7 @@ export default {
           btn.inactive = true
         }
 
-        if (State.hideEmptyPanels && btn.tabs && !btn.tabs.length) {
+        if (State.hideEmptyPanels && btn.tabs && !btn.tabs.length && State.panelIndex !== i) {
           btn.hidden = true
           btn.inactive = true
           emptyPanel = true
