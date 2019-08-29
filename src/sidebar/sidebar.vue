@@ -6,7 +6,7 @@
   :data-pointer="pointerMode"
   :data-nav-inline="$store.state.navBarInline"
   @wheel="onWheel"
-  @contextmenu="onCtxMenu"
+  @contextmenu.stop.prevent=""
   @dragover.prevent="onDragMove"
   @dragenter="onDragEnter"
   @dragleave="onDragLeave"
@@ -15,7 +15,8 @@
   @mouseleave="onMouseLeave"
   @mousedown="onMouseDown"
   @mouseup="onMouseUp"
-  @mousemove.passive="onMouseMove")
+  @mousemove.passive="onMouseMove"
+  @focusout="onFocusOut")
 
   transition(name="upgrading"): .upgrading(
     v-if="$store.state.upgrading"
@@ -28,10 +29,7 @@
     .arrow(:data-expanding="pointerExpanding" @animationend="onPointerExpanded")
 
   //- Pinned tabs dock
-  pinned-dock(
-    v-if="$store.state.pinnedTabsPosition !== 'panel'"
-    @start-selection="startSelection"
-    @stop-selection="stopSelection")
+  pinned-dock(v-if="$store.state.pinnedTabsPosition !== 'panel'")
 
   .box(ref="box")
     .dimmer(@mousedown="act('closeDashboard')")
@@ -51,9 +49,7 @@
         :index="i"
         :panel="c"
         :store-id="c.cookieStoreId"
-        :active="$store.state.panelIndex === i"
-        @start-selection="startSelection"
-        @stop-selection="stopSelection")
+        :active="$store.state.panelIndex === i")
       transition(name="panel")
         window-input(v-if="$store.state.panelIndex === -5" :data-pos="windowInputPos")
       transition(name="dashboard")
@@ -137,27 +133,21 @@ export default {
    */
   methods: {
     /**
-     * Handle context menu
+     * onFocusOut
      */
-    onCtxMenu(e) {
-      if (!State.ctxMenuNative) {
-        e.stopPropagation()
-        e.preventDefault()
+    onFocusOut(e) {
+      if (e.explicitOriginalTarget === e.target) {
+        Actions.resetSelection()
       }
+    },
 
-      if (State.menuCtx) {
-        let nativeCtx = { context: State.menuCtx.type }
-        if (State.menuCtx.type === 'tab') nativeCtx.tabId = State.menuCtx.item.id
-        if (State.menuCtx.type === 'bookmark') nativeCtx.bookmarkId = State.menuCtx.item.id
-        browser.menus.overrideContext(nativeCtx)
-
-        if (!State.selected.length) State.selected = [State.menuCtx.item.id]
-        Actions.openCtxMenu(State.menuCtx.el, State.menuCtx.item)
-      } else {
-        e.preventDefault()
-      }
-
-      State.menuCtx = null
+    /**
+     * Mousedown Mid
+     */
+    onMouseDownMid(e) {
+      this.close()
+      Actions.blockWheel()
+      e.preventDefault()
     },
 
     /**
@@ -176,25 +166,25 @@ export default {
      * MouseMove event handler
      */
     onMouseMove(e) {
-      if (!this.selectionStart) return
+      if (!State.multiSelectionStart) return
 
-      if (this.selectionStart && !this.selection && Math.abs(e.clientY - this.selectY) > 5) {
+      if (State.multiSelectionStart && !State.multiSelection && Math.abs(e.clientY - State.multiSelectionY) > 5) {
         Actions.closeCtxMenu()
-        this.selection = true
-        Actions.selectItem(this.selectionStart.id)
+        State.multiSelection = true
+        Actions.selectItem(State.multiSelectionStart.id)
 
         EventBus.$emit('updatePanelBounds')
 
         let scroll = State.panelScrollEl ? State.panelScrollEl.scrollTop : 0
-        this.startY = this.selectionStart.clientY - State.panelTopOffset + scroll
+        this.startY = State.multiSelectionStart.clientY - State.panelTopOffset + scroll
         let firstItem = State.itemSlots.find(s => s.start <= this.startY && s.end >= this.startY)
         if (firstItem) {
-          this.selectionStart.clientY = firstItem.center + State.panelTopOffset - scroll
+          State.multiSelectionStart.clientY = firstItem.center + State.panelTopOffset - scroll
         }
         return
       }
 
-      if (this.selection) {
+      if (State.multiSelection) {
         let scroll = State.panelScrollEl ? State.panelScrollEl.scrollTop : 0
         let y = e.clientY - State.panelTopOffset + scroll
         let topY = Math.min(this.startY, y)
@@ -232,24 +222,6 @@ export default {
           }
         }
       }
-    },
-
-    /**
-     * Start selection
-     */
-    startSelection(info) {
-      if (State.ctxMenuNative) return
-      this.selectionStart = info
-      this.selectY = info.clientY
-    },
-
-    /**
-     * Stop selection
-     */
-    stopSelection() {
-      this.selectionStart = null
-      this.selection = false
-      this.selectY = 0
     },
 
     /**
@@ -411,23 +383,11 @@ export default {
      * Mouse down event handler
      */
     onMouseDown(e) {
+      Actions.resetSelection()
+
       if (e.button === 1) {
-        if (State.wheelBlockTimeout) {
-          clearTimeout(State.wheelBlockTimeout)
-          State.wheelBlockTimeout = null
-        }
-        State.wheelBlockTimeout = setTimeout(() => {
-          State.wheelBlockTimeout = null
-        }, 500)
-      }
-
-      if (e.button < 2) {
-        if (this.selectionStart) this.stopSelection()
-      }
-
-      if (e.button > 0) {
-        Actions.closeCtxMenu()
-        Actions.resetSelection()
+        Actions.blockWheel()
+        e.preventDefault()
       }
     },
 
@@ -440,10 +400,8 @@ export default {
         Actions.resetSelection()
       }
 
-      if (e.button === 2) {
-        if (this.selectionStart) this.stopSelection()
-        Actions.openCtxMenu(e.clientX, e.clientY)
-      }
+      if (State.multiSelectionStart) Actions.stopMultiSelection()
+      if (e.button === 2) Actions.openCtxMenu(e.clientX, e.clientY)
     },
 
     /**

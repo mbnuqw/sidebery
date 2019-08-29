@@ -12,9 +12,9 @@
   :data-color="color"
 
   :title="tooltip"
-  @contextmenu="onCtxMenu"
-  @mousedown="onMouseDown"
-  @mouseup="onMouseUp"
+  @contextmenu.stop="onCtxMenu"
+  @mousedown.stop="onMouseDown"
+  @mouseup.stop="onMouseUp"
   @mouseleave="onMouseLeave"
   @dblclick.prevent.stop="onDoubleClick")
   transition(name="tab-complete"): .complete-fx(v-if="tab.status === 'loading'")
@@ -109,16 +109,145 @@ export default {
 
   methods: {
     /**
+     * Mousedown handler
+     */
+    onMouseDown(e) {
+      Actions.closeCtxMenu()
+      if (e.button === 0) this.onMouseDownLeft(e)
+      if (e.button === 1) this.onMouseDownMid(e)
+      if (e.button === 2) this.onMouseDownRight(e)
+    },
+
+    /**
+     * Mousedown Left
+     */
+    onMouseDownLeft(e) {
+      if (e.ctrlKey) {
+        if (State.selected.length && typeof State.selected[0] !== 'number') {
+          return
+        }
+        if (!this.tab.sel) Actions.selectItem(this.tab.id)
+        else Actions.deselectItem(this.tab.id)
+        return
+      }
+
+      if (e.shiftKey) {
+        if (!State.selected.length) {
+          Actions.selectItem(this.tab.id)
+        } else {
+          let first = State.tabsMap[State.selected[0]]
+          for (let id of State.selected) {
+            State.tabsMap[id].sel = false
+          }
+          State.selected = [first.id]
+          let minIndex = Math.min(first.index, this.tab.index)
+          let maxIndex = Math.max(first.index, this.tab.index)
+
+          for (let i = minIndex; i <= maxIndex; i++) {
+            if (State.tabs[i].invisible) continue
+            State.tabs[i].sel = true
+            if (i !== first.index) State.selected.push(State.tabs[i].id)
+          }
+        }
+        e.preventDefault()
+        return
+      }
+
+      if (State.selected.length && !this.tab.sel) {
+        Actions.resetSelection()
+      }
+
+      // Activate tab (if nothing selected)
+      if (!State.selected.length) {
+        browser.tabs.update(this.tab.id, { active: true })
+      }
+
+      // Long-click action
+      this.longClickActionLeft = setTimeout(() => {
+        if (State.dragNodes) return
+        let llc = State.tabLongLeftClick
+        if (llc === 'reload') Actions.reloadTabs([this.tab.id])
+        if (llc === 'duplicate') Actions.duplicateTabs([this.tab.id])
+        if (llc === 'pin') Actions.repinTabs([this.tab.id])
+        if (llc === 'mute') Actions.remuteTabs([this.tab.id])
+        if (llc === 'clear_cookies') Actions.clearTabsCookies([this.tab.id])
+        if (llc === 'new_after') Actions.createTabAfter(this.tab.id)
+        this.longClickActionLeft = null
+      }, 250)
+    },
+
+    /**
+     * Mousedown Mid
+     */
+    onMouseDownMid(e) {
+      this.close()
+      Actions.blockWheel()
+      e.preventDefault()
+    },
+
+    /**
+     * Mousedown Right
+     */
+    onMouseDownRight() {
+      if (!State.ctxMenuNative) {
+        Actions.resetSelection()
+      }
+
+      // Long-click action
+      this.longClickActionRight = setTimeout(() => {
+        Actions.stopMultiSelection()
+        let lrc = State.tabLongRightClick
+        if (lrc === 'reload') Actions.reloadTabs([this.tab.id])
+        if (lrc === 'duplicate') Actions.duplicateTabs([this.tab.id])
+        if (lrc === 'pin') Actions.repinTabs([this.tab.id])
+        if (lrc === 'mute') Actions.remuteTabs([this.tab.id])
+        if (lrc === 'clear_cookies') Actions.clearTabsCookies([this.tab.id])
+        if (lrc === 'new_after') Actions.createTabAfter(this.tab.id)
+        this.longClickActionRight = null
+      }, 250)
+    },
+
+    /**
+     * Handle mouseup event
+     */
+    onMouseUp(e) {
+      if (e.button === 0 && this.longClickActionLeft) {
+        this.longClickActionLeft = clearTimeout(this.longClickActionLeft)
+      }
+
+      if (e.button === 2) {
+        if (this.longClickActionRight) {
+          this.longClickActionRight = clearTimeout(this.longClickActionRight)
+        }
+
+        if (e.ctrlKey || e.shiftKey) return
+
+        Actions.stopMultiSelection()
+        if (!State.ctxMenuNative) Actions.selectItem(this.tab.id)
+        Actions.openCtxMenu(e.clientX, e.clientY)
+      }
+    },
+
+    /**
      * Handle context menu
      */
     onCtxMenu(e) {
-      if (!State.ctxMenuNative) {
+      if (!State.ctxMenuNative || e.ctrlKey || e.shiftKey) {
         e.stopPropagation()
         e.preventDefault()
         return
       }
 
-      State.menuCtx = { type: 'tab', el: this.$el, item: this.tab }
+      if (!e.ctrlKey && !e.shiftKey && !this.tab.sel) {
+        Actions.resetSelection()
+      }
+
+      let nativeCtx = { context: 'tab', tabId: this.tab.id }
+      browser.menus.overrideContext(nativeCtx)
+
+      if (!State.selected.length) Actions.selectItem(this.tab.id)
+
+      Actions.openCtxMenu()
     },
 
     /**
@@ -134,80 +263,11 @@ export default {
     },
 
     /**
-     * Mousedown handler
-     */
-    onMouseDown(e) {
-      if (e.button === 1) {
-        this.close()
-        e.preventDefault()
-        e.stopPropagation()
-      }
-
-      if (e.button === 0) {
-        if (e.ctrlKey) {
-          if (!this.tab.sel) Actions.selectItem(this.tab.id)
-          else Actions.deselectItem(this.tab.id)
-          return
-        }
-
-        // Activate tab
-        if (!State.selected.length) {
-          browser.tabs.update(this.tab.id, { active: true })
-        }
-
-        // Long-click action
-        this.hodorL = setTimeout(() => {
-          let llc = State.tabLongLeftClick
-          if (llc === 'reload') Actions.reloadTabs([this.tab.id])
-          if (llc === 'duplicate') Actions.duplicateTabs([this.tab.id])
-          if (llc === 'pin') Actions.repinTabs([this.tab.id])
-          if (llc === 'mute') Actions.remuteTabs([this.tab.id])
-          if (llc === 'clear_cookies') Actions.clearTabsCookies([this.tab.id])
-          this.hodorL = null
-        }, 250)
-      }
-
-      if (e.button === 2) {
-        e.preventDefault()
-        e.stopPropagation()
-        // Long-click action
-        this.hodorR = setTimeout(() => {
-          this.$emit('stop-selection')
-          let lrc = State.tabLongRightClick
-          if (lrc === 'reload') Actions.reloadTabs([this.tab.id])
-          if (lrc === 'duplicate') Actions.duplicateTabs([this.tab.id])
-          if (lrc === 'pin') Actions.repinTabs([this.tab.id])
-          if (lrc === 'mute') Actions.remuteTabs([this.tab.id])
-          if (lrc === 'clear_cookies') Actions.clearTabsCookies([this.tab.id])
-          this.hodorR = null
-        }, 250)
-      }
-    },
-
-    /**
-     * Handle mouseup event
-     */
-    onMouseUp(e) {
-      if (e.button === 0 && this.hodorL) {
-        this.hodorL = clearTimeout(this.hodorL)
-      }
-      if (e.button === 2 && this.hodorR) {
-        this.hodorR = clearTimeout(this.hodorR)
-
-        if (e.ctrlKey) return
-
-        // Select this tab
-        Actions.closeCtxMenu()
-        Actions.selectItem(this.tab.id)
-      }
-    },
-
-    /**
      * Handle mouseleave event
      */
     onMouseLeave() {
-      if (this.hodorL) this.hodorL = clearTimeout(this.hodorL)
-      if (this.hodorR) this.hodorR = clearTimeout(this.hodorR)
+      if (this.longClickActionLeft) this.longClickActionLeft = clearTimeout(this.longClickActionLeft)
+      if (this.longClickActionRight) this.longClickActionRight = clearTimeout(this.longClickActionRight)
     },
 
     /**

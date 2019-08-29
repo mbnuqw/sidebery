@@ -3,8 +3,12 @@
   :data-selected="node.sel"
   :data-open="node.isOpen"
   :data-favless="!favicon")
-  .body(:title="tooltip" @mousedown="onMouseDown" @mouseup="onMouseUp" @contextmenu="onCtxMenu")
-    .drag-layer(draggable="true", @dragstart="onDragStart")
+  .body(
+    :title="tooltip"
+    @mousedown.stop="onMouseDown"
+    @mouseup.stop="onMouseUp"
+    @contextmenu.stop="onCtxMenu")
+    .drag-layer(draggable="true" @dragstart="onDragStart")
     .fav
       .placeholder(v-if="!favicon"): svg: use(xlink:href="#icon_ff")
       img(v-if="favicon" :src="favicon")
@@ -40,45 +44,82 @@ export default {
 
   methods: {
     /**
-     * Handle context menu
-     */
-    onCtxMenu(e) {
-      if (!State.ctxMenuNative) {
-        e.stopPropagation()
-        e.preventDefault()
-        return
-      }
-
-      State.menuCtx = { type: 'bookmark', el: this.$el, item: this.node }
-    },
-
-    /**
      * Handle mouse down event.
      */
     onMouseDown(e) {
-      if (e.button === 0 && e.ctrlKey) {
+      if (e.button === 0) this.onMouseDownLeft(e)
+      if (e.button === 1) this.onMouseDownMid(e)
+      if (e.button === 2) this.onMouseDownRight(e)
+    },
+
+    /**
+     * Mousedown Left
+     */
+    onMouseDownLeft(e) {
+      if (e.ctrlKey) {
+        if (State.selected.length && typeof State.selected[0] !== 'string') {
+          return
+        }
         if (!this.node.sel) Actions.selectItem(this.node.id)
         else Actions.deselectItem(this.node.id)
         return
       }
 
-      if (e.button === 1) {
-        e.preventDefault()
-        if (State.selected.length) {
-          Actions.resetSelection()
-          return
+      if (e.shiftKey) {
+        if (!State.selected.length) {
+          Actions.selectItem(this.node.id)
+        } else {
+          if (typeof State.selected[0] === 'number') return
+
+          EventBus.$emit('updatePanelBounds')
+
+          let first = State.bookmarksMap[State.selected[0]]
+          for (let id of State.selected) {
+            if (first.id === id) continue
+            State.bookmarksMap[id].sel = false
+          }
+          State.selected = [first.id]
+
+          let inside = false
+          for (let slot of State.itemSlots) {
+            if (slot.id === first.id || slot.id === this.node.id) {
+              if (!inside) inside = true
+              else break
+            }
+            if (inside) {
+              State.bookmarksMap[slot.id].sel = true
+              State.selected.push(slot.id)
+            }
+          }
         }
-        this.openUrl(true, false)
+        return
       }
-    
-      if (e.button === 2) {
-        e.stopPropagation()
-        this.$emit('start-selection', {
+    },
+
+    /**
+     * Mousedown Mid
+     */
+    onMouseDownMid(e) {
+      e.preventDefault()
+      if (State.selected.length) {
+        Actions.resetSelection()
+        return
+      }
+      this.openUrl(true, false)
+    },
+
+    /**
+     * Mousedown Right
+     */
+    onMouseDownRight(e) {
+      if (!State.ctxMenuNative) {
+        Actions.resetSelection()
+        Actions.startMultiSelection({
           type: 'bookmark',
           clientY: e.clientY,
           ctrlKey: e.ctrlKey,
           id: this.node.id,
-        }, [this.node])
+        })
       }
     },
 
@@ -86,7 +127,14 @@ export default {
      * Handle mouseup event
      */
     onMouseUp(e) {
-      if (e.button === 0 && !State.selected.length) {
+      if (e.button === 0) {
+        if (e.ctrlKey || e.shiftKey) return
+
+        if (State.selected.length && !this.node.sel) {
+          Actions.resetSelection()
+          return
+        }
+
         if (State.activateOpenBookmarkTab && this.node.isOpen) {
           const tab = State.tabs.find(t => t.url === this.node.url)
           if (tab) {
@@ -99,9 +147,33 @@ export default {
 
       if (e.button === 2) {
         if (e.ctrlKey || e.shiftKey) return
-        Actions.closeCtxMenu()
-        Actions.selectItem(this.node.id)
+
+        Actions.stopMultiSelection()
+        if (!State.ctxMenuNative) Actions.selectItem(this.node.id)
+        Actions.openCtxMenu(e.clientX, e.clientY)
       }
+    },
+
+    /**
+     * Handle context menu
+     */
+    onCtxMenu(e) {
+      if (!State.ctxMenuNative || e.ctrlKey || e.shiftKey) {
+        e.stopPropagation()
+        e.preventDefault()
+        return
+      }
+
+      if (!e.ctrlKey && !e.shiftKey && !this.node.sel) {
+        Actions.resetSelection()
+      }
+
+      let nativeCtx = { context: 'bookmark', bookmarkId: this.node.id }
+      browser.menus.overrideContext(nativeCtx)
+
+      if (!State.selected.length) Actions.selectItem(this.node.id)
+
+      Actions.openCtxMenu()
     },
 
     /**

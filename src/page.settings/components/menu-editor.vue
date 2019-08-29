@@ -9,7 +9,7 @@
         v-if="group.type === 'sub'"
         :value="group.name"
         :or="t('menu.editor.inline_group_title')"
-        @input="onSubMenuNameInput('tabs', i, $event)")
+        @input="onSubMenuNameInput('tabs', group.i, $event)")
       .opt(v-for="(opt, i) in group.options"
         :data-separator="opt.startsWith('separator')"
         :title="t(tabsOpts[opt])")
@@ -49,7 +49,7 @@
         v-if="group.type === 'sub'"
         :value="group.name"
         :or="t('menu.editor.inline_group_title')"
-        @input="onSubMenuNameInput('bookmarks', i, $event)")
+        @input="onSubMenuNameInput('bookmarks', group.i, $event)")
       .opt(v-for="(opt, i) in group.options" :data-separator="opt.startsWith('separator')" :title="t(bookmarksOpts[opt])")
         .opt-btn.-in(
           v-if="group.type === 'list'"
@@ -129,17 +129,18 @@ export default {
     tabsMenu() {
       let out = []
       let group = {}
-      for (let item of State.tabsMenu) {
+      for (let i = 0; i < State.tabsMenu.length; i++) {
+        let item = State.tabsMenu[i]
         if (typeof item === 'string') {
           if (group.type !== 'list') {
-            group = { type: 'list', name: '', options: [] }
+            group = { type: 'list', name: '', options: [], i }
             out.push(group)
           }
           group.options.push(item)
         }
         if (item instanceof Array) {
           if (group.type !== 'sub') {
-            group = { type: 'sub', name: '' }
+            group = { type: 'sub', name: '', i }
             if (item[0] instanceof Object) {
               group.name = item[0].name
               group.options = item.slice(1)
@@ -163,17 +164,18 @@ export default {
     bookmarksMenu() {
       let out = []
       let group = {}
-      for (let item of State.bookmarksMenu) {
+      for (let i = 0; i < State.bookmarksMenu.length; i++) {
+        let item = State.bookmarksMenu[i]
         if (typeof item === 'string') {
           if (group.type !== 'list') {
-            group = { type: 'list', name: '', options: [] }
+            group = { type: 'list', name: '', options: [], i }
             out.push(group)
           }
           group.options.push(item)
         }
         if (item instanceof Array) {
           if (group.type !== 'sub') {
-            group = { type: 'sub', name: '' }
+            group = { type: 'sub', name: '', i }
             if (item[0] instanceof Object) {
               group.name = item[0].name
               group.options = item.slice(1)

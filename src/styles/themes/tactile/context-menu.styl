@@ -73,6 +73,9 @@
       pos(0, 0)
       size(1px, 100%)
       background-color: var(--ctx-menu-border-fg)
+  &[data-inactive]
+    opacity: .3
+    background-color: #00000000
 #root[data-style="light"] .CtxMenu .icon-opt[data-color] > svg
   fill: var(--ctx-menu-fg) !important
   filter: drop-shadow(1px 0 0 var(--panel-fg)) drop-shadow(-1px 0 0 var(--panel-fg)) drop-shadow(0 -1px 0 var(--panel-fg)) drop-shadow(0 1px 0 var(--panel-fg))
@@ -122,6 +125,11 @@
     box(relative)
     size(100%, 1px)
     background-color: var(--ctx-menu-border-fg)
+  &[data-inactive]
+    opacity: .3
+    &:hover:before
+    &[data-selected]
+      background-color: #00000000
 #root[data-style="light"] .CtxMenu .opt > span[data-color]
   size(auto)
   padding: 0 2px

@@ -3,21 +3,16 @@
   @wheel="onWheel"
   @mousedown="onMouseDown"
   @dblclick="onDoubleClick")
-  pinned-dock(v-if="$store.state.pinnedTabsPosition === 'panel'"
-    :ctx="storeId"
-    @start-selection="$emit('start-selection', $event)"
-    @stop-selection="$emit('stop-selection')")
+  pinned-dock(v-if="$store.state.pinnedTabsPosition === 'panel'" :ctx="storeId")
   scroll-box(ref="scrollBox")
-    .container(:style="{ height: scrollHeight }")
+    .container
       tab(
         v-for="(t, i) in tabs"
         ref="tabs"
         :key="t.id"
         :position="getTabYPosition(i)"
         :child-count="getChildrenCount(i)"
-        :tab="t"
-        @start-selection="$emit('start-selection', $event)"
-        @stop-selection="$emit('stop-selection')")
+        :tab="t")
 </template>
 
 
@@ -58,15 +53,15 @@ export default {
     }
   },
 
-  computed: {
-    scrollHeight() {
-      let h = PRE_SCROLL
-      for (let t of this.tabs) {
-        if (!t.invisible) h += State.tabHeight
-      }
-      return `${h}px`
-    },
-  },
+  // computed: {
+  //   scrollHeight() {
+  //     let h = PRE_SCROLL
+  //     for (let t of this.tabs) {
+  //       if (!t.invisible) h += State.tabHeight
+  //     }
+  //     return `${h}px`
+  //   },
+  // },
 
   mounted() {
     this.topOffset = this.$el.getBoundingClientRect().top

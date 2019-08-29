@@ -9,9 +9,9 @@
       :inline="true"
       :value="$store.state.nativeScrollbars"
       @input="setOpt('nativeScrollbars', $event)")
-    //- label(for="nativeScrollbars") {{t('settings.native_scrollbars')}}
-    //- input(name="nativeScrollbars" type="checkbox" v-model="$store.state.nativeScrollbars")
-    .separator
+
+  section
+    h2 {{t('settings.ctx_menu_title')}}
     ToggleField(
       label="settings.ctx_menu_native"
       :inline="true"
@@ -21,9 +21,16 @@
     select-field(
       label="settings.autoHide_ctx_menu"
       optLabel="settings.autoHide_ctx_menu_"
+      :inactive="$store.state.ctxMenuNative"
       :value="$store.state.autoHideCtxMenu"
       :opts="$store.state.autoHideCtxMenuOpts"
       @input="setOpt('autoHideCtxMenu', $event)")
+    .separator
+    ToggleField(
+      label="settings.ctx_menu_render_inact"
+      :inline="true"
+      :value="$store.state.ctxMenuRenderInact"
+      @input="setOpt('ctxMenuRenderInact', $event)")
     .separator
     .ctrls
       .btn(@click="switchView('menu-editor')") {{t('settings.ctx_menu_editor')}}

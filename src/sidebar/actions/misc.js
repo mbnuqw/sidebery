@@ -206,6 +206,37 @@ function unlockStorage() {
 }
 
 /**
+ * Block wheel for 500ms
+ */
+function blockWheel() {
+  if (this.state.wheelBlockTimeout) {
+    clearTimeout(this.state.wheelBlockTimeout)
+    this.state.wheelBlockTimeout = null
+  }
+  this.state.wheelBlockTimeout = setTimeout(() => {
+    this.state.wheelBlockTimeout = null
+  }, 500)
+}
+
+/**
+ * Start multi selection
+ */
+function startMultiSelection(info) {
+  if (this.state.ctxMenuNative) return
+  this.state.multiSelectionStart = info
+  this.state.multiSelectionY = info.clientY
+}
+
+/**
+ * Stop multi selection
+ */
+function stopMultiSelection() {
+  this.state.multiSelectionStart = null
+  this.state.multiSelection = false
+  this.state.multiSelectionY = 0
+}
+
+/**
  * Update sidebar width
  */
 function updateSidebarWidth() {
@@ -228,4 +259,7 @@ export default {
   updateSidebarWidth,
   startUpgrading,
   stopUpgrading,
+  blockWheel,
+  startMultiSelection,
+  stopMultiSelection,
 }

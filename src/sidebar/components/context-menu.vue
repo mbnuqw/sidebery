@@ -17,6 +17,7 @@
           :data-selected="isSelected(opt)"
           :data-separator="isSeparator(opt)"
           :data-color="opt.color ? opt.color : false"
+          :data-inactive="opt.inactive"
           :title="getTitle(opt.label)"
           @click="onClick(opt)"
           @mousedown.stop="")
@@ -26,6 +27,7 @@
           v-for="(opt, i) in group.options"
           :data-selected="isSelected(opt)"
           :data-separator="isSeparator(opt)"
+          :data-inactive="opt.inactive"
           :title="getTitle(opt.label)"
           @click="onClick(opt)"
           @mousedown.stop="")
@@ -46,6 +48,7 @@
           :data-selected="isSelected(opt)"
           :data-separator="isSeparator(opt)"
           :data-color="opt.color ? opt.color : false"
+          :data-inactive="opt.inactive"
           :title="getTitle(opt.label)"
           @click="onClick(opt)"
           @mousedown.stop="")
@@ -56,6 +59,7 @@
           :key="opt.label"
           :data-selected="isSelected(opt)"
           :data-separator="isSeparator(opt)"
+          :data-inactive="opt.inactive"
           :title="getTitle(opt.label)"
           @click="onClick(opt)"
           @mousedown.stop="")
@@ -169,6 +173,7 @@ export default {
     },
 
     onClick(opt) {
+      if (opt.inactive) return
       if (typeof opt.action === 'string') {
         Actions[opt.action](...opt.args)
       }

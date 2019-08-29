@@ -1,6 +1,6 @@
 <template lang="pug">
 .ScrollBox(@wheel="onWheel")
-  .progress(ref="scroll", :data-scrolling="scrolling")
+  .progress(ref="scroll" :data-scrolling="scrolling")
   .top-shadow(:data-show="topOverflow")
   .bottom-shadow(:data-show="bottomOverflow")
   .scroll-container(

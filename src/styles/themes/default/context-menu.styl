@@ -73,6 +73,9 @@
       pos(0, 0)
       size(1px, 100%)
       background-color: #00000032
+  &[data-inactive]
+    opacity: .3
+    background-color: #00000000
 
 .CtxMenu .list-group
   box(relative)
@@ -118,3 +121,8 @@
     box(relative)
     size(100%, 1px)
     background-color: #00000032
+  &[data-inactive]
+    opacity: .3
+    &:hover:before
+    &[data-selected]
+      background-color: #00000000

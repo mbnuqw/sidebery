@@ -14,6 +14,7 @@ export default {
   'settings.autoHide_ctx_menu_1000': { message: '1 сек.' },
   'settings.autoHide_ctx_menu_none': { message: 'никогда' },
   'settings.ctx_menu_native': { message: 'Использовать системное контекстное меню' },
+  'settings.ctx_menu_render_inact': { message: 'Отображать неактивные элементы' },
   'settings.ctx_menu_editor': { message: 'Редактировать меню' },
 
   // --- Navigation bar

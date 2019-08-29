@@ -14,6 +14,7 @@ export default {
   'settings.autoHide_ctx_menu_1000': { message: '1s' },
   'settings.autoHide_ctx_menu_none': { message: 'none' },
   'settings.ctx_menu_native': { message: 'Use native context menu' },
+  'settings.ctx_menu_render_inact': { message: 'Render inactive options' },
   'settings.ctx_menu_editor': { message: 'Edit context menu' },
 
   // --- Navigation bar

@@ -28,10 +28,11 @@ export const DEFAULT_SETTINGS = {
   // General
   version: browser.runtime.getManifest().version,
   nativeScrollbars: false,
-  autoHideCtxMenu: 'none',
+
+  // Context menu
   ctxMenuNative: false,
-  ctxMenuTopActions: false,
-  ctxMenuInlineCtr: false,
+  autoHideCtxMenu: 'none',
+  ctxMenuRenderInact: false,
 
   // Nav bar
   navBarInline: true,
@@ -317,23 +318,27 @@ export const MENU_OPTIONS = {
   }),
 
   moveToAnotherWin: (state) => {
-    if (state.otherWindows.length !== 1) return
-    return {
+    let option = {
       label: translate('menu.tab.move_to_another_window'),
       icon: 'icon_window',
       action: 'moveTabsToWin',
       args: [state.selected, state.otherWindows[0]],
     }
+    if (state.otherWindows.length !== 1) option.inactive = true
+    if (!state.ctxMenuRenderInact && option.inactive) return
+    return option
   },
 
   moveToWin: (state) => {
-    if (state.otherWindows.length <= 1) return
-    return {
+    let option = {
       label: translate('menu.tab.move_to_window_'),
       icon: 'icon_windows',
       action: 'moveTabsToWin',
       args: [state.selected],
     }
+    if (state.otherWindows.length <= 1) option.inactive = true
+    if (!state.ctxMenuRenderInact && option.inactive) return
+    return option
   },
 
   moveToCtr: (state) => {
@@ -407,40 +412,48 @@ export const MENU_OPTIONS = {
   },
 
   discard: (state) => {
-    let firstNode = state.tabsMap[state.selected[0]]
-    if (state.selected.length === 1) {
-      if (firstNode.active || firstNode.discarded) return
-    }
-    return {
+    let option = {
       label: translate('menu.tab.discard'),
       icon: 'icon_discard',
       action: 'discardTabs',
       args: [state.selected],
     }
+    let firstNode = state.tabsMap[state.selected[0]]
+    if (state.selected.length === 1) {
+      if (firstNode.active || firstNode.discarded) option.inactive = true
+    }
+    if (!state.ctxMenuRenderInact && option.inactive) return
+    return option
   },
 
   group: (state) => {
-    let firstNode = state.tabsMap[state.selected[0]]
-    if (!state.tabsTree || firstNode.pinned) return
-    return {
+    let option = {
       label: translate('menu.tab.group'),
       icon: 'icon_group_tabs',
       action: 'groupTabs',
       args: [state.selected],
     }
+    let firstNode = state.tabsMap[state.selected[0]]
+    if (!state.tabsTree || firstNode.pinned) option.inactive = true
+    if (!state.ctxMenuRenderInact && option.inactive) return
+    return option
   },
 
   flatten: (state) => {
-    if (state.selected.length <= 1) return
-    let firstNode = state.tabsMap[state.selected[0]]
-    if (state.selected.every(t => firstNode.lvl === state.tabsMap[t].lvl)) return
-    if (!state.tabsTree || firstNode.pinned) return
-    return {
+    let option = {
       label: translate('menu.tab.flatten'),
       icon: 'icon_flatten',
       action: 'flattenTabs',
       args: [state.selected],
     }
+    if (state.selected.length <= 1) option.inactive = true
+    let firstNode = state.tabsMap[state.selected[0]]
+    if (state.selected.every(t => firstNode.lvl === state.tabsMap[t].lvl)) {
+      option.inactive = true
+    }
+    if (!state.tabsTree || firstNode.pinned) option.inactive = true
+    if (!state.ctxMenuRenderInact && option.inactive) return
+    return option
   },
 
   clearCookies: (state) => {
@@ -453,13 +466,17 @@ export const MENU_OPTIONS = {
   },
 
   close: (state) => {
-    if (state.selected.length <= 1 && !state.tabsMap[state.selected[0]].pinned) return
-    return {
+    let option = {
       label: translate('menu.tab.close'),
       icon: 'icon_close',
       action: 'removeTabs',
       args: [state.selected],
     }
+    if (state.selected.length < 2 && !state.tabsMap[state.selected[0]].pinned) {
+      option.inactive = true
+    }
+    if (!state.ctxMenuRenderInact && option.inactive) return
+    return option
   },
 
   // 
@@ -469,26 +486,30 @@ export const MENU_OPTIONS = {
     let allSeparators = state.selected.every(id => {
       return state.bookmarksMap[id].type === 'separator'
     })
-    if (allSeparators) return
-    return {
+    let option = {
       label: translate('menu.bookmark.open_in_new_window'),
       icon: 'icon_new_win',
       action: 'openBookmarksInNewWin',
       args: [state.selected],
     }
+    if (allSeparators) option.inactive = true
+    if (!state.ctxMenuRenderInact && option.inactive) return
+    return option
   },
 
   openInNewPrivWin: (state) => {
     let allSeparators = state.selected.every(id => {
       return state.bookmarksMap[id].type === 'separator'
     })
-    if (allSeparators) return
-    return {
+    let option = {
       label: translate('menu.bookmark.open_in_new_priv_window'),
       icon: 'icon_private',
       action: 'openBookmarksInNewWin',
       args: [state.selected, true],
     }
+    if (allSeparators) option.inactive = true
+    if (!state.ctxMenuRenderInact && option.inactive) return
+    return option
   },
 
   openInCtr: (state) => {
@@ -496,16 +517,16 @@ export const MENU_OPTIONS = {
     let allSeparators = state.selected.every(id => {
       return state.bookmarksMap[id].type === 'separator'
     })
-    if (allSeparators) return
+    if (allSeparators && !state.ctxMenuRenderInact) return
     let opts = []
 
     if (node.type === 'folder' || state.selected.length > 1) {
       opts.push({
         label: translate('menu.bookmark.open_in_default_panel'),
         nativeLabel: 'Default container',
-        nativeParentLabel: translate('menu.bookmark.open_in_'),
         icon: 'icon_tabs',
         action: 'openBookmarksInPanel',
+        inactive: allSeparators,
         args: [state.selected, DEFAULT_CTX_ID],
       })
     }
@@ -515,11 +536,11 @@ export const MENU_OPTIONS = {
         if (c.type !== 'ctx') continue
         opts.push({
           label: translate('menu.bookmark.open_in_') + `||${c.color}>>${c.name}`,
-          nativeLabel: c.name,
-          nativeParentLabel: translate('menu.bookmark.open_in_'),
+          nativeLabel: translate('menu.bookmark.open_in_') + c.name,
           icon: c.icon,
           color: c.color,
           action: 'openBookmarksInPanel',
+          inactive: allSeparators,
           args: [state.selected, c.cookieStoreId],
         })
       }
@@ -530,59 +551,69 @@ export const MENU_OPTIONS = {
 
   createBookmark: (state) => {
     let node = state.bookmarksMap[state.selected[0]]
-    if (node.type !== 'folder') return
-    return {
+    let option = {
       label: translate('menu.bookmark.create_bookmark'),
       icon: 'icon_plus_b',
       action: 'startBookmarkCreation',
       args: ['bookmark', node],
     }
+    if (node.type !== 'folder') option.inactive = true
+    if (!state.ctxMenuRenderInact && option.inactive) return
+    return option
   },
 
   createFolder: (state) => {
     let node = state.bookmarksMap[state.selected[0]]
-    if (node.type !== 'folder') return
-    return {
+    let option = {
       label: translate('menu.bookmark.create_folder'),
       icon: 'icon_plus_f',
       action: 'startBookmarkCreation',
       args: ['folder', node],
     }
+    if (node.type !== 'folder') option.inactive = true
+    if (!state.ctxMenuRenderInact && option.inactive) return
+    return option
   },
 
   createSeparator: (state) => {
     let node = state.bookmarksMap[state.selected[0]]
-    if (node.type !== 'folder') return
-    return {
+    let option = {
       label: translate('menu.bookmark.create_separator'),
       icon: 'icon_plus_s',
       action: 'startBookmarkCreation',
       args: ['separator', node],
     }
+    if (node.type !== 'folder') option.inactive = true
+    if (!state.ctxMenuRenderInact && option.inactive) return
+    return option
   },
 
   edit: (state) => {
-    if (state.selected.length > 1) return
     let node = state.bookmarksMap[state.selected[0]]
-    if (node.type === 'separator') return
-    if (node.parentId === 'root________') return
-    return {
+    let option = {
       label: translate('menu.bookmark.edit_bookmark'),
       icon: 'icon_edit',
       action: 'startBookmarkEditing',
       args: [node],
     }
+    if (state.selected.length > 1) option.inactive = true
+    if (node.type === 'separator') option.inactive = true
+    if (node.parentId === 'root________') option.inactive = true
+    if (!state.ctxMenuRenderInact && option.inactive) return
+    return option
   },
 
   delete: (state) => {
     let node = state.bookmarksMap[state.selected[0]]
-    if (node.parentId === 'root________') return
-    return {
+    let option = {
       label: translate('menu.bookmark.delete_bookmark'),
       icon: 'icon_close',
       action: 'removeBookmarks',
       args: [state.selected],
     }
+    if (node.parentId === 'root________') option.inactive = true
+    if (!state.ctxMenuRenderInact && option.inactive) return
+    return option
   },
 }
 
