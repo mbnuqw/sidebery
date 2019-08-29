@@ -107,6 +107,7 @@ export default {
   // --- Appearance
   'settings.appearance_title': { message: 'Вид' },
   'settings.font_size': { message: 'Размер шрифта' },
+  'settings.font_size_xxs': { message: 'XXS' },
   'settings.font_size_xs': { message: 'XS' },
   'settings.font_size_s': { message: 'S' },
   'settings.font_size_m': { message: 'M' },

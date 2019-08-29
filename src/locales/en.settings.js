@@ -101,6 +101,7 @@ export default {
   // --- Appearance
   'settings.appearance_title': { message: 'Appearance' },
   'settings.font_size': { message: 'Font size' },
+  'settings.font_size_xxs': { message: 'XXS' },
   'settings.font_size_xs': { message: 'XS' },
   'settings.font_size_s': { message: 'S' },
   'settings.font_size_m': { message: 'M' },

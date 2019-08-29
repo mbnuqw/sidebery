@@ -31,7 +31,8 @@ async function loadSettings() {
  */
 function updateFontSize() {
   const htmlEl = document.documentElement
-  if (this.state.fontSize === 'xs') htmlEl.style.fontSize = '13.5px'
+  if (this.state.fontSize === 'xxs') htmlEl.style.fontSize = '13px'
+  else if (this.state.fontSize === 'xs') htmlEl.style.fontSize = '13.5px'
   else if (this.state.fontSize === 's') htmlEl.style.fontSize = '14px'
   else if (this.state.fontSize === 'm') htmlEl.style.fontSize = '14.5px'
   else if (this.state.fontSize === 'l') htmlEl.style.fontSize = '15px'

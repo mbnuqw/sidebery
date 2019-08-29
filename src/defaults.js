@@ -17,7 +17,7 @@ export const SETTINGS_OPTIONS = {
   activateAfterClosingNextRuleOpts: ['tree', 'any'],
   pinnedTabsPositionOpts: ['panel', 'top', 'left', 'right'],
   tabsTreeLimitOpts: [1, 2, 3, 4, 5, 'none'],
-  fontSizeOpts: ['xs', 's', 'm', 'l', 'xl', 'xxl'],
+  fontSizeOpts: ['xxs', 'xs', 's', 'm', 'l', 'xl', 'xxl'],
   styleOpts: ['dark', 'light'],
   themeOpts: ['default', 'tactile', 'none'],
   snapIntervalUnitOpts: ['min', 'hr', 'day'],
@@ -39,7 +39,7 @@ export const DEFAULT_SETTINGS = {
   hideSettingsBtn: false,
   hideAddBtn: false,
   navBtnCount: false,
-  hideEmptyPanels: false,
+  hideEmptyPanels: true,
   navMidClickAction: 'none',
   navSwitchPanelsWheel: true,
 
