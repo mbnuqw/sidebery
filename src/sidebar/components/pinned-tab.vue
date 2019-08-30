@@ -30,9 +30,9 @@
     transition(name="tab-part"): .ok-badge(v-if="loading === 'ok'"): svg: use(xlink:href="#icon_ok")
     transition(name="tab-part"): .err-badge(v-if="loading === 'err'"): svg: use(xlink:href="#icon_err")
     transition(name="tab-part"): .progress-spinner(v-if="loading === true")
-    transition(name="tab-part"): .audio-badge(v-if="tab.audible || tab.mutedInfo.muted")
-      svg.-loud: use(xlink:href="#icon_loud_badge")
-      svg.-mute: use(xlink:href="#icon_mute_badge")
+  transition(name="tab-part"): .audio-badge(v-if="tab.audible || tab.mutedInfo.muted" @mousedown.stop="" @click="onAudioClick")
+    svg.-loud: use(xlink:href="#icon_loud_badge")
+    svg.-mute: use(xlink:href="#icon_mute_badge")
   .ctx(v-if="ctx && color")
   .title(v-if="withTitle") {{tab.title}}
   .close(v-if="$store.state.showTabRmBtn" @mousedown.stop="close" @mouseup.stop="")
@@ -345,6 +345,13 @@ export default {
         clearTimeout(this.dragEnterTimeout)
         this.dragEnterTimeout = null
       }
+    },
+
+    /**
+     * Handle click on audio button
+     */
+    onAudioClick() {
+      Actions.remuteTabs([this.tab.id])
     },
 
     /**

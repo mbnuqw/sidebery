@@ -2,7 +2,7 @@
 
 .PinnedTab
   box(relative, flex)
-  size(32px, same)
+  size(34px, 32px)
   overflow: hidden
   justify-content: center
   align-items: center
@@ -199,8 +199,9 @@
 .PinnedTab .audio-badge
   box(absolute)
   size(10px, same)
-  pos(b: -4px, r: -4px)
+  pos(18px, same)
   border-radius: 50%
+  z-index: 30
   transition: transform var(--d-fast)
   > svg
     box(absolute)
@@ -208,6 +209,13 @@
     fill: var(--label-fg)
     opacity: 0
     transition: opacity var(--d-fast)
+
+  &:hover
+    opacity: .7
+
+#root[data-pinned-tabs-position="panel"][data-pinned-tabs-list]
+  .PinnedTab .audio-badge
+    pos(17px, same)
 
 .PinnedTab[data-audible] .audio-badge > svg.-loud
 .PinnedTab[data-muted] .audio-badge > svg.-mute
