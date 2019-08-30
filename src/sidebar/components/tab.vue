@@ -199,6 +199,7 @@ export default {
       this.longClickActionRightFired = false
       this.longClickActionRight = setTimeout(() => {
         Actions.stopMultiSelection()
+        Actions.resetSelection()
         let lrc = State.tabLongRightClick
         if (lrc === 'reload') Actions.reloadTabs([this.tab.id])
         if (lrc === 'duplicate') Actions.duplicateTabs([this.tab.id])
