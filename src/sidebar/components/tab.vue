@@ -185,9 +185,7 @@ export default {
      * Mousedown Right
      */
     onMouseDownRight(e) {
-      State.rClicked = this.tab.id
-
-      if (!State.ctxMenuNative) {
+      if (!State.ctxMenuNative && !this.tab.sel) {
         Actions.resetSelection()
         Actions.startMultiSelection({
           type: 'tab',
@@ -198,6 +196,7 @@ export default {
       }
 
       // Long-click action
+      this.longClickActionRightFired = false
       this.longClickActionRight = setTimeout(() => {
         Actions.stopMultiSelection()
         let lrc = State.tabLongRightClick
@@ -208,6 +207,7 @@ export default {
         if (lrc === 'clear_cookies') Actions.clearTabsCookies([this.tab.id])
         if (lrc === 'new_after') Actions.createTabAfter(this.tab.id)
         this.longClickActionRight = null
+        this.longClickActionRightFired = true
       }, 250)
     },
 
@@ -228,7 +228,9 @@ export default {
 
         Actions.stopMultiSelection()
         if (State.ctxMenuBlockTimeout) return
-        if (!State.ctxMenuNative) this.select()
+        if (!State.ctxMenuNative && !this.longClickActionRightFired) {
+          this.select()
+        }
         Actions.openCtxMenu(e.clientX, e.clientY)
       }
     },
@@ -237,7 +239,12 @@ export default {
      * Handle context menu
      */
     onCtxMenu(e) {
-      if (!State.ctxMenuNative || e.ctrlKey || e.shiftKey) {
+      if (
+        this.longClickActionRightFired ||
+        !State.ctxMenuNative ||
+        e.ctrlKey ||
+        e.shiftKey
+      ) {
         e.stopPropagation()
         e.preventDefault()
         return
