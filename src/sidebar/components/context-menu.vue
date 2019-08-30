@@ -175,10 +175,12 @@ export default {
     onClick(opt) {
       if (opt.inactive) return
       if (typeof opt.action === 'string') {
-        Actions[opt.action](...opt.args)
+        if (opt.args) Actions[opt.action](...opt.args)
+        else Actions[opt.action]()
       }
       if (typeof opt.action === 'function') {
-        opt.action(...opt.args)
+        if (opt.args) opt.action(...opt.args)
+        else Actions[opt.action]()
       }
       Actions.closeCtxMenu()
     },
