@@ -5,7 +5,7 @@
   @dblclick="onDoubleClick")
   pinned-dock(v-if="$store.state.pinnedTabsPosition === 'panel'" :ctx="storeId")
   scroll-box(ref="scrollBox")
-    .container
+    .container(:style="{ height: scrollHeight }")
       tab(
         v-for="(t, i) in tabs"
         ref="tabs"
@@ -53,15 +53,15 @@ export default {
     }
   },
 
-  // computed: {
-  //   scrollHeight() {
-  //     let h = PRE_SCROLL
-  //     for (let t of this.tabs) {
-  //       if (!t.invisible) h += State.tabHeight
-  //     }
-  //     return `${h}px`
-  //   },
-  // },
+  computed: {
+    scrollHeight() {
+      let h = PRE_SCROLL
+      for (let t of this.tabs) {
+        if (!t.invisible) h += State.tabHeight
+      }
+      return `${h}px`
+    },
+  },
 
   mounted() {
     this.topOffset = this.$el.getBoundingClientRect().top
