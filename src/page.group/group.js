@@ -240,8 +240,10 @@ function createTabEl(info, clickHandler) {
   info.titleEl.innerText = info.title
   infoEl.appendChild(info.titleEl)
 
-  info.urlEl = document.createElement('p')
+  info.urlEl = document.createElement('a')
   info.urlEl.classList.add('tab-url')
+  info.urlEl.setAttribute('href', info.url)
+  info.urlEl.addEventListener('click', e => e.preventDefault())
   if (info.url.startsWith('moz-ext')) info.urlEl.innerText = ''
   else info.urlEl.innerText = info.url
   infoEl.appendChild(info.urlEl)
@@ -278,7 +280,8 @@ function createTabEl(info, clickHandler) {
   })
   ctrlsEl.appendChild(closeBtnEl)
 
-  info.el.addEventListener('mousedown', clickHandler)
+  info.el.addEventListener('mousedown', e => e.stopPropagation())
+  info.el.addEventListener('click', clickHandler)
 }
 
 /**
