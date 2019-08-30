@@ -112,7 +112,7 @@ export default {
      * Mousedown handler
      */
     onMouseDown(e) {
-      Actions.closeCtxMenu()
+      if (State.ctxMenu) State.ctxMenu = null
       if (e.button === 0) this.onMouseDownLeft(e)
       if (e.button === 1) this.onMouseDownMid(e)
       if (e.button === 2) this.onMouseDownRight(e)
