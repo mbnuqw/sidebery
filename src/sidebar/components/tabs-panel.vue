@@ -125,6 +125,7 @@ export default {
       }
 
       if (e.button === 2) {
+        Actions.blockCtxMenu()
         const ra = State.tabsPanelRightClickAction
         if (ra === 'next') return Actions.switchPanel(1)
         if (ra === 'dash') return Actions.openDashboard(State.panelIndex)

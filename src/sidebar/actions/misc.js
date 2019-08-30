@@ -219,6 +219,19 @@ function blockWheel() {
 }
 
 /**
+ * Block ctx menu for 500ms
+ */
+function blockCtxMenu() {
+  if (this.state.ctxMenuBlockTimeout) {
+    clearTimeout(this.state.ctxMenuBlockTimeout)
+    this.state.ctxMenuBlockTimeout = null
+  }
+  this.state.ctxMenuBlockTimeout = setTimeout(() => {
+    this.state.ctxMenuBlockTimeout = null
+  }, 500)
+}
+
+/**
  * Start multi selection
  */
 function startMultiSelection(info) {
@@ -260,6 +273,7 @@ export default {
   startUpgrading,
   stopUpgrading,
   blockWheel,
+  blockCtxMenu,
   startMultiSelection,
   stopMultiSelection,
 }

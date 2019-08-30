@@ -185,6 +185,8 @@ export default {
      * Mousedown Right
      */
     onMouseDownRight(e) {
+      State.rClicked = this.tab.id
+
       if (!State.ctxMenuNative) {
         Actions.resetSelection()
         Actions.startMultiSelection({
@@ -225,6 +227,7 @@ export default {
         if (e.ctrlKey || e.shiftKey) return
 
         Actions.stopMultiSelection()
+        if (State.ctxMenuBlockTimeout) return
         if (!State.ctxMenuNative) this.select()
         Actions.openCtxMenu(e.clientX, e.clientY)
       }
@@ -242,6 +245,12 @@ export default {
 
       if (!e.ctrlKey && !e.shiftKey && !this.tab.sel) {
         Actions.resetSelection()
+      }
+
+      if (State.ctxMenuBlockTimeout) {
+        e.stopPropagation()
+        e.preventDefault()
+        return
       }
 
       let nativeCtx = { context: 'tab', tabId: this.tab.id }
