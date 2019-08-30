@@ -15,14 +15,6 @@
   box(absolute)
   pos(0, b: 0)
   size(100%, 0px)
-  z-index: -1
-  opacity: 0
-  transform: translateX(16px)
-  transition: opacity var(--d-fast), z-index var(--d-fast), transform var(--d-fast)
-  &[data-active]
-    opacity: 1
-    z-index: 100
-    transform: translateX(0)
 
 .CtxMenu .box
   box(absolute)
@@ -140,3 +132,26 @@
   color: var(--ctx-menu-fg) !important
   background-color: var(--panel-fg)
   mask: none
+
+// ---
+// -- Transitions
+// -
+.menu-enter-active
+.menu-leave-active
+  transition: transform var(--d-fast), opacity var(--d-fast)
+.menu-enter
+  z-index: -1
+  opacity: 0
+  transform: translateX(16px)
+.menu-enter-to
+  z-index: 100
+  opacity: 1
+  transform: translateX(0)
+.menu-leave
+  z-index: 100
+  opacity: 1
+  transform: translateX(0)
+.menu-leave-to
+  z-index: -1
+  opacity: 0
+  transform: translateX(16px)

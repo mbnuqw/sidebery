@@ -4,7 +4,7 @@
   @mouseenter="onME"
   @mouseleave="onML"
   @wheel.prevent.stop="")
-  .container(:data-active="aIsActive")
+  transition(name="menu"): .container(v-show="aIsActive")
     .box(ref="aBox" :style="aPosStyle")
       div(
         v-for="group in aMenuGroups"
@@ -35,7 +35,7 @@
             v-for="out in parseLabel(opt.label)"
             :data-color="out.color ? opt.color : false"
             :style="{fontWeight: out.w}") {{out.label}}
-  .container(:data-active="bIsActive")
+  transition(name="menu"): .container(v-show="bIsActive")
     .box(ref="bBox" :style="bPosStyle")
       div(
         v-for="group in bMenuGroups"
