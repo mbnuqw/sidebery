@@ -26,6 +26,10 @@ async function upgradeToV3(settings) {
     settings.style = settings.theme
     settings.theme = 'default'
   }
+  if (settings.rmFoldedTabs) {
+    settings.rmChildTabs = 'folded'
+    delete settings.rmFoldedTabs
+  }
   delete settings.snapshotsTargets
 
   // --- Custom CSS vars ---

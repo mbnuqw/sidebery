@@ -200,12 +200,13 @@
       :value="$store.state.autoExpandTabs"
       @input="setOpt('autoExpandTabs', $event)")
     .separator
-    toggle-field(
-      label="settings.rm_folded_tabs"
-      :inline="true"
+    select-field(
+      label="settings.rm_child_tabs"
+      optLabel="settings.rm_child_tabs_"
       :inactive="!$store.state.tabsTree"
-      :value="$store.state.rmFoldedTabs"
-      @input="setOpt('rmFoldedTabs', $event)")
+      :value="$store.state.rmChildTabs"
+      :opts="$store.state.rmChildTabsOpts"
+      @input="setOpt('rmChildTabs', $event)")
     .separator
     toggle-field(
       label="settings.tabs_child_count"

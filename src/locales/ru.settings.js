@@ -80,7 +80,10 @@ export default {
   'settings.hide_folded_tabs': { message: 'Скрывать свернутые табы' },
   'settings.auto_fold_tabs': { message: 'Автоматически сворачивать табы' },
   'settings.auto_exp_tabs': { message: 'Автоматически разворачивать табы' },
-  'settings.rm_folded_tabs': { message: 'Закрывать свернутые табы вместе с родительским' },
+  'settings.rm_child_tabs': { message: 'Закрывать дочерние табы вместе с родительским' },
+  'settings.rm_child_tabs_all': { message: 'все' },
+  'settings.rm_child_tabs_folded': { message: 'свернутые' },
+  'settings.rm_child_tabs_none': { message: 'выкл' },
   'settings.tabs_child_count': { message: 'Показывать количество потомков на свернутом табе' },
   'settings.tabs_lvl_dots': { message: 'Показывать отметки уровней табов' },
   'settings.discard_folded': { message: 'Выгружать свернутые табы' },
@@ -128,7 +131,6 @@ export default {
 
   // --- Snapshots
   'settings.snapshots_title': { message: 'Снепшоты' },
-  'settings.snap_history_mode': { message: 'Режим полного журналирования' },
   'settings.snap_interval': { message: 'Интервал авто-снепшотов' },
   'settings.snap_interval_min': {
     message: ['минута', 'минуты', 'минут'],
@@ -156,8 +158,6 @@ export default {
     message: ['день', 'дня', 'дней'],
     plur: [/^(1|(\d*?)[^1]1)$/, /^([234]|(\d*?)[^1][234])$/],
   },
-  'settings.snapshots_pinned_label': { message: 'Закрепленные' },
-  'settings.snapshots_default_label': { message: 'Стандартные' },
   'settings.snapshots_view_label': { message: 'Просмотреть снепшоты' },
   'settings.make_snapshot': { message: 'Создать снепшот' },
   'settings.rm_all_snapshots': { message: 'Удалить все снепшоты' },

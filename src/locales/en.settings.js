@@ -80,7 +80,10 @@ export default {
   'settings.hide_folded_tabs': { message: 'Hide folded tabs' },
   'settings.auto_fold_tabs': { message: 'Auto fold tabs' },
   'settings.auto_exp_tabs': { message: 'Auto expand tab on activation' },
-  'settings.rm_folded_tabs': { message: 'Close folded child tabs along with parent' },
+  'settings.rm_child_tabs': { message: 'Close child tabs along with parent' },
+  'settings.rm_child_tabs_all': { message: 'all' },
+  'settings.rm_child_tabs_folded': { message: 'folded' },
+  'settings.rm_child_tabs_none': { message: 'none' },
   'settings.tabs_child_count': { message: 'Show count of descendants on the folded tab' },
   'settings.tabs_lvl_dots': { message: 'Show marks of tabs levels' },
   'settings.discard_folded': { message: 'Discard folded tabs' },
@@ -122,7 +125,6 @@ export default {
 
   // --- Snapshots
   'settings.snapshots_title': { message: 'Snapshots' },
-  'settings.snap_history_mode': { message: 'Full journaling mode' },
   'settings.snap_interval': { message: 'Auto-snapshots interval' },
   'settings.snap_interval_min': { message: ['minute', 'minutes'], plur: [1] },
   'settings.snap_interval_hr': { message: ['hour', 'hours'], plur: [1] },
@@ -132,8 +134,6 @@ export default {
   'settings.snap_limit_snap': { message: ['snapshot', 'snapshots'], plur: [1] },
   'settings.snap_limit_kb': { message: ['kbyte', 'kbytes'], plur: [1] },
   'settings.snap_limit_day': { message: ['day', 'days'], plur: [1] },
-  'settings.snapshots_pinned_label': { message: 'Pinned' },
-  'settings.snapshots_default_label': { message: 'Default' },
   'settings.snapshots_view_label': { message: 'View snapshots' },
   'settings.make_snapshot': { message: 'Create snapshot' },
   'settings.rm_all_snapshots': { message: 'Remove all snapshots' },
