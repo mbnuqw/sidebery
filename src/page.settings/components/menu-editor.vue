@@ -1,7 +1,7 @@
 <template lang="pug">
-.MenuEditor(v-noise:300.g:12:af.a:0:42.s:0:9="")
+.MenuEditor(v-noise:300.g:12:af.a:0:42.s:0:9="" @click="resetSelection")
 
-  section
+  section(@click.stop="" @wheel="moveSelected($event, 'tabs')")
     h2 {{t('menu.editor.tabs_title')}}
 
     .menu-group(v-for="(group, i) in tabsMenu" :data-type="group.type")
@@ -11,23 +11,32 @@
         :or="t('menu.editor.inline_group_title')"
         @input="onSubMenuNameInput('tabs', group.i, $event)")
       .opt(v-for="(opt, i) in group.options"
+        :title="t(tabsOpts[opt])"
         :data-separator="opt.startsWith('separator')"
-        :title="t(tabsOpts[opt])")
+        :data-selected="selected === opt"
+        @click="select(opt)")
         .opt-btn.-in(
           v-if="group.type === 'list'"
           :title="t('menu.editor.create_sub_tooltip')"
-          @click="createSubMenu('tabs', opt)")
+          @click.stop="createSubMenu('tabs', opt)")
           svg: use(xlink:href="#icon_expand")
+
         .opt-title {{t(tabsOpts[opt])}}
+
         .opt-btn(
           :title="t('menu.editor.down_tooltip')"
-          @click="downOpt('tabs', opt)"): svg: use(xlink:href="#icon_expand")
+          @click.stop="downOpt('tabs', opt)")
+          svg: use(xlink:href="#icon_expand")
+
         .opt-btn.-up(
           :title="t('menu.editor.up_tooltip')"
-          @click="upOpt('tabs', opt)"): svg: use(xlink:href="#icon_expand")
+          @click.stop="upOpt('tabs', opt)")
+          svg: use(xlink:href="#icon_expand")
+
         .opt-btn.-rm(
           :title="t('menu.editor.disable_tooltip')"
-          @click="disableOpt('tabs', opt)"): svg: use(xlink:href="#icon_remove")
+          @click.stop="disableOpt('tabs', opt)")
+          svg: use(xlink:href="#icon_remove")
 
     .menu-group.-dis(v-if="disabledTabsMenu.length")
       .opt(
@@ -41,7 +50,7 @@
       .btn(@click="createSeparator('tabs')") {{t('menu.editor.create_separator')}}
 
 
-  section
+  section(@click.stop="" @wheel="moveSelected($event, 'bookmarks')")
     h2 {{t('menu.editor.bookmarks_title')}}
 
     .menu-group(v-for="(group, i) in bookmarksMenu" :data-type="group.type")
@@ -50,15 +59,34 @@
         :value="group.name"
         :or="t('menu.editor.inline_group_title')"
         @input="onSubMenuNameInput('bookmarks', group.i, $event)")
-      .opt(v-for="(opt, i) in group.options" :data-separator="opt.startsWith('separator')" :title="t(bookmarksOpts[opt])")
+      .opt(
+        v-for="(opt, i) in group.options"
+        :title="t(bookmarksOpts[opt])"
+        :data-separator="opt.startsWith('separator')"
+        :data-selected="selected === opt"
+        @click="select(opt)")
         .opt-btn.-in(
           v-if="group.type === 'list'"
-          @click="createSubMenu('bookmarks', opt)")
+          :title="t('menu.editor.create_sub_tooltip')"
+          @click.stop="createSubMenu('bookmarks', opt)")
           svg: use(xlink:href="#icon_expand")
+
         .opt-title {{t(bookmarksOpts[opt])}}
-        .opt-btn(@click="downOpt('bookmarks', opt)"): svg: use(xlink:href="#icon_expand")
-        .opt-btn.-up(@click="upOpt('bookmarks', opt)"): svg: use(xlink:href="#icon_expand")
-        .opt-btn.-rm(@click="disableOpt('bookmarks', opt)"): svg: use(xlink:href="#icon_remove")
+
+        .opt-btn(
+          :title="t('menu.editor.down_tooltip')"
+          @click.stop="downOpt('bookmarks', opt)")
+          svg: use(xlink:href="#icon_expand")
+
+        .opt-btn.-up(
+          :title="t('menu.editor.up_tooltip')"
+          @click.stop="upOpt('bookmarks', opt)")
+          svg: use(xlink:href="#icon_expand")
+
+        .opt-btn.-rm(
+          :title="t('menu.editor.disable_tooltip')"
+          @click.stop="disableOpt('bookmarks', opt)")
+          svg: use(xlink:href="#icon_remove")
 
     .menu-group.-dis(v-if="disabledBookmarksMenu.length")
       .opt(
@@ -119,6 +147,7 @@ export default {
 
   data() {
     return {
+      selected: '',
       active: false,
       tabsOpts: TABS_MENU_OPTS,
       bookmarksOpts: BOOKMARKS_MENU_OPTS,
@@ -198,6 +227,31 @@ export default {
   },
 
   methods: {
+    /**
+     * Select option
+     */
+    select(opt) {
+      if (this.selected === opt) this.selected = ''
+      else this.selected = opt
+    },
+
+    /**
+     * Reset selection
+     */
+    resetSelection() {
+      this.selected = ''
+    },
+
+    /**
+     * Move selected option
+     */
+    moveSelected(e, type) {
+      if (!this.selected) return
+      e.preventDefault()
+      if (e.deltaY > 0) this.downOpt(type, this.selected)
+      if (e.deltaY < 0) this.upOpt(type, this.selected)
+    },
+
     /**
      * Reset tabs menu
      */
@@ -301,6 +355,8 @@ export default {
       let menu = State[type + 'Menu']
       if (!menu) return
 
+      if (menu[menu.length - 1] === opt) return
+
       for (let i = 0; i < menu.length; i++) {
 
         if (menu[i] === opt) {
@@ -334,6 +390,8 @@ export default {
     upOpt(type, opt) {
       let menu = State[type + 'Menu']
       if (!menu) return
+
+      if (menu[0] === opt) return
 
       for (let i = 0; i < menu.length; i++) {
 
