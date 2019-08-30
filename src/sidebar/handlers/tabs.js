@@ -472,7 +472,7 @@ function onTabActivated(info) {
   const currentPanel = this.state.panels[this.state.panelIndex]
 
   // Reset selection
-  this.actions.resetSelection()
+  if (!this.state.dragNodes) this.actions.resetSelection()
 
   // Update previous active tab and store his id
   let prevActive = this.state.tabsMap[info.previousTabId]
