@@ -1252,11 +1252,13 @@ function updateTabsTree(startIndex = 0, endIndex = -1) {
   const maxLvl = typeof this.state.tabsTreeLimit === 'number' ? this.state.tabsTreeLimit : 123
 
   // Reset parent-flags of the last tab
-  this.state.tabs[this.state.tabs.length - 1].isParent = false
-  this.state.tabs[this.state.tabs.length - 1].folded = false
+  if (this.state.tabs[endIndex - 1]) {
+    this.state.tabs[endIndex - 1].isParent = false
+    this.state.tabs[endIndex - 1].folded = false
+  }
 
-  for (let i = startIndex; i < endIndex; i++) {
-    const t = this.state.tabs[i]
+  for (let pt, t, i = startIndex; i < endIndex; i++) {
+    t = this.state.tabs[i]
     if (!t) return
     if (t.pinned) {
       t.parentId = -1
@@ -1266,7 +1268,7 @@ function updateTabsTree(startIndex = 0, endIndex = -1) {
       t.folded = false
       continue
     }
-    const pt = this.state.tabs[i - 1]
+    pt = this.state.tabs[i - 1]
 
     let parent = this.state.tabsMap[t.parentId]
     if (parent && (parent.pinned || parent.index >= t.index)) parent = undefined
