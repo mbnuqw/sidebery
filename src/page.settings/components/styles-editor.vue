@@ -506,10 +506,10 @@
     nav
       .nav-item(
         :data-active="cssTarget === 'sidebar'"
-        @click="selectCssTarget('sidebar')") Sidebar
+        @click="selectCssTarget('sidebar')") {{t('styles.css_sidebar')}}
       .nav-item(
         :data-active="cssTarget === 'group'"
-        @click="selectCssTarget('group')") Group page
+        @click="selectCssTarget('group')") {{t('styles.css_group')}}
     .awesome CSS&#10;IS&#10;AWESOME
     .editor-box
       textarea.editor(

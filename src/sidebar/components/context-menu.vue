@@ -33,8 +33,7 @@
           @mousedown.stop="")
           span(
             v-for="out in parseLabel(opt.label)"
-            :data-color="out.color ? opt.color : false"
-            :style="{fontWeight: out.w}") {{out.label}}
+            :data-color="out.color ? opt.color : false") {{out.label}}
   transition(name="menu"): .container(v-show="bIsActive")
     .box(ref="bBox" :style="bPosStyle")
       div(
@@ -65,8 +64,7 @@
           @mousedown.stop="")
           span(
             v-for="out in parseLabel(opt.label)"
-            :data-color="out.color ? opt.color : false"
-            :style="{fontWeight: out.w}") {{out.label}}
+            :data-color="out.color ? opt.color : false") {{out.label}}
 </template>
 
 
@@ -75,8 +73,13 @@ import EventBus from '../../event-bus'
 import Store from '../store'
 import State from '../store/state'
 import Actions from '../actions'
+import ScrollBox from './scroll-box'
 
 export default {
+  components: {
+    ScrollBox
+  },
+
   data() {
     return {
       aIsActive: false,

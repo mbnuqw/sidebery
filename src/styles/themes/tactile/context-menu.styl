@@ -130,8 +130,17 @@
   flex-shrink: 1
   text-overflow: ellipsis
   color: var(--ctx-menu-fg) !important
-  background-color: var(--panel-fg)
   mask: none
+  box-shadow: 0 0 0 1px var(--panel-fg)
+  &:before
+    content: ''
+    box(absolute)
+    size(100%, same)
+    pos(0, 0)
+    background-color: var(--panel-fg)
+    border-radius: 2px
+    z-index: -1
+    opacity: .3
 
 // ---
 // -- Transitions

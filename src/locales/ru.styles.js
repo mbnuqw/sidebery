@@ -87,4 +87,7 @@ export default {
   'styles.bookmarks_empty_dir_fg_color': { message: 'Цвет пустой папки' },
 
   'styles.reset_styles': { message: 'Сбросить' },
+
+  'styles.css_sidebar': { message: 'Боковая панель' },
+  'styles.css_group': { message: 'Групповая страница' },
 }

@@ -90,4 +90,7 @@ export default {
   'styles.bookmarks_open_fg_color': { message: 'Open bookmark color' },
 
   'styles.reset_styles': { message: 'Reset' },
+
+  'styles.css_sidebar': { message: 'Sidebar' },
+  'styles.css_group': { message: 'Group page' },
 }
