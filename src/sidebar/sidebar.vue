@@ -21,7 +21,7 @@
   transition(name="upgrading"): .upgrading(
     v-if="$store.state.upgrading"
     v-noise:300.g:12:af.a:0:42.s:0:9="")
-    .info Upgrading...
+    .info {{t('upgrading')}}
 
   ctx-menu
 

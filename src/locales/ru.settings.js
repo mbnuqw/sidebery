@@ -2,6 +2,12 @@ export default {
   'settings.opt_true': { message: 'вкл' },
   'settings.opt_false': { message: 'выкл' },
 
+  'settings.nav_settings': { message: 'Настройки' },
+  'settings.nav_menu': { message: 'Меню' },
+  'settings.nav_styles': { message: 'Стили' },
+  'settings.nav_snapshots': { message: 'Снепшоты' },
+  'settings.nav_debug': { message: 'Отладка' },
+
   // --- General
   'settings.general_title': { message: 'Основные' },
   'settings.native_scrollbars': { message: 'Использовать системные скроллбары' },
@@ -9,9 +15,9 @@ export default {
   // --- Context menu
   'settings.ctx_menu_title': { message: 'Контекстное меню' },
   'settings.autoHide_ctx_menu': { message: 'Скрывать контекстное меню' },
-  'settings.autoHide_ctx_menu_250': { message: '0.25 сек.' },
-  'settings.autoHide_ctx_menu_500': { message: '0.5 сек.' },
-  'settings.autoHide_ctx_menu_1000': { message: '1 сек.' },
+  'settings.autoHide_ctx_menu_250': { message: '0.25сек' },
+  'settings.autoHide_ctx_menu_500': { message: '0.5сек' },
+  'settings.autoHide_ctx_menu_1000': { message: '1сек' },
   'settings.autoHide_ctx_menu_none': { message: 'никогда' },
   'settings.ctx_menu_native': { message: 'Использовать системное контекстное меню' },
   'settings.ctx_menu_render_inact': { message: 'Отображать неактивные элементы' },
@@ -122,7 +128,7 @@ export default {
   'settings.style_light': { message: 'светлый' },
   'settings.theme': { message: 'Тема' },
   'settings.theme_default': { message: 'стандартная' },
-  'settings.theme_tactile': { message: 'осязаемый' },
+  'settings.theme_tactile': { message: 'тактильная' },
   'settings.theme_none': { message: 'нет' },
   'settings.bg_noise': { message: 'Матовый задный фон' },
   'settings.animations': { message: 'Анимации' },
@@ -235,10 +241,11 @@ export default {
 
   // --- Help
   'settings.help_title': { message: 'Помошь' },
-  'settings.debug_info': { message: 'Debug info' },
+  'settings.debug_info': { message: 'Отладочная информация' },
   'settings.repo_issue': { message: 'Создать github issue' },
-  'settings.repo_bug': { message: 'Report a bug' },
-  'settings.repo_req': { message: 'Feature request' },
+  'settings.repo_bug': { message: 'Сообщить об ошибке' },
   'settings.reset_settings': { message: 'Сбросить настройки' },
   'settings.ref_rm': { message: 'Will be removed, open issue if you need this feature.' },
+  'settings.help_exp_data': { message: 'Экспорт данных' },
+  'settings.help_imp_data': { message: 'Импорт данных' },
 }

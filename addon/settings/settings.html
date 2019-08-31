@@ -61,23 +61,23 @@
       <div
         class="option"
         :data-active="$store.state.activeView === 'Settings'"
-        @click="navigateTo('')">Settings</div>
+        @click="navigateTo('')">{{t('settings.nav_settings')}}</div>
       <div
         class="option"
         :data-active="$store.state.activeView === 'MenuEditor'"
-        @click="navigateTo('menu-editor')">Menu</div>
+        @click="navigateTo('menu-editor')">{{t('settings.nav_menu')}}</div>
       <div
         class="option"
         :data-active="$store.state.activeView === 'StylesEditor'"
-        @click="navigateTo('styles-editor')">Styles</div>
+        @click="navigateTo('styles-editor')">{{t('settings.nav_styles')}}</div>
       <div
         class="option"
         :data-active="$store.state.activeView === 'Snapshots'"
-        @click="navigateTo('snapshots')">Snapshots</div>
+        @click="navigateTo('snapshots')">{{t('settings.nav_snapshots')}}</div>
       <div
         class="option"
         :data-active="$store.state.activeView === 'Debug'"
-        @click="navigateTo('debug')">Debug</div>
+        @click="navigateTo('debug')">{{t('settings.nav_debug')}}</div>
     </nav>
 
     <transition name="settings">

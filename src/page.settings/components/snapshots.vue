@@ -3,7 +3,7 @@
   .wrapper
     .timeline
       .ctrls
-        .btn(@click="createSnapshot") Create snapshot
+        .btn(@click="createSnapshot") {{t('snapshot.btn_create_snapshot')}}
       .cards(v-noise:300.g:12:af.a:0:42.s:0:9="" :data-empty="!snapshots.length")
         .snapshot-card(
           v-for="s in snapshots"
@@ -15,22 +15,22 @@
           :data-active="activeSnapshot.id === s.id"
           @click="(activeSnapshot = s)")
           .date-time(v-if="s.type === 'base'") {{s.date}} - {{s.time}}
-          .info(v-if="s.type === 'base'") {{s.winCount}} windows / {{s.ctrCount}} containers / {{s.tabsCount}} tabs / ~ {{s.size}}
+          .info(v-if="s.type === 'base'") {{getSnapInfo(s)}}
           .info(v-if="s.type === 'layer'") {{t('snapshot.event.' + s.event)}}
           .date-time(v-if="s.type === 'layer'") {{s.time}}
     .snapshot
       .ctrls(v-noise:300.g:12:af.a:0:42.s:0:9="" @wheel="onTimelineWheel" :data-empty="!activeSnapshot")
         .title(v-if="activeSnapshot") {{activeSnapshot.date}} - {{activeSnapshot.time}}
-        .btn(v-if="activeSnapshot" @click="applySnapshot(activeSnapshot)") Apply
-        .btn.-warn(v-if="activeSnapshot" @click="removeSnapshot(activeSnapshot)") Remove
+        .btn(v-if="activeSnapshot" @click="applySnapshot(activeSnapshot)") {{t('snapshot.btn_apply')}}
+        .btn.-warn(v-if="activeSnapshot" @click="removeSnapshot(activeSnapshot)") {{t('snapshot.btn_remove')}}
       .windows(v-if="activeSnapshot" v-noise:300.g:12:af.a:0:42.s:0:9="")
         .window(
           v-for="(win, _, i) in activeSnapshot.windowsById"
           v-if="win.tabs.length"
           :key="win.id")
           .win-ctrls
-            .name Window {{'#' + (i + 1)}}
-            .btn(@click="openWindow(activeSnapshot, win.id)") Open
+            .name {{t('snapshot.window_title') + ' #' + (i + 1)}}
+            .btn(@click="openWindow(activeSnapshot, win.id)") {{t('snapshot.btn_open')}}
           .tabs
             a.tab(
               v-for="tab in win.tabs"
@@ -53,6 +53,7 @@
 
 <script>
 import Utils from '../../utils'
+import { translate } from '../../mixins/dict'
 
 const SCROLL_CONF = { behavior: 'smooth', block: 'center' }
 const DEFAULT_CTR = {
@@ -235,6 +236,16 @@ export default {
       let container = this.activeSnapshot.containersById[id]
       if (container) return this.activeSnapshot.containersById[id].icon
       else return 'icon_tabs'
+    },
+
+    /**
+     * Get snapshot info
+     */
+    getSnapInfo(s) {
+      return `${s.winCount} ${translate('snapshot.snap_win', s.winCount)} / ` +
+        `${s.ctrCount} ${translate('snapshot.snap_ctr', s.ctrCount)} / ` +
+        `${s.tabsCount} ${translate('snapshot.snap_tab', s.tabsCount)} / ` +
+        `~ ${s.size}`
     },
   },
 }

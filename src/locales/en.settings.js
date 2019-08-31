@@ -2,6 +2,12 @@ export default {
   'settings.opt_true': { message: 'on' },
   'settings.opt_false': { message: 'off' },
 
+  'settings.nav_settings': { message: 'Settings' },
+  'settings.nav_menu': { message: 'Menu' },
+  'settings.nav_styles': { message: 'Styles' },
+  'settings.nav_snapshots': { message: 'Snapshots' },
+  'settings.nav_debug': { message: 'Debug' },
+
   // --- General
   'settings.general_title': { message: 'General' },
   'settings.native_scrollbars': { message: 'Use native scroll-bars' },
@@ -214,7 +220,8 @@ export default {
   'settings.debug_info': { message: 'Debug info' },
   'settings.repo_issue': { message: 'Open issue' },
   'settings.repo_bug': { message: 'Report a bug' },
-  'settings.repo_req': { message: 'Feature request' },
   'settings.reset_settings': { message: 'Reset settings' },
   'settings.ref_rm': { message: 'Will be removed, open issue if you need this feature.' },
+  'settings.help_exp_data': { message: 'Export Data' },
+  'settings.help_imp_data': { message: 'Import Data' },
 }

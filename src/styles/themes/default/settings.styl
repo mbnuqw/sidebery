@@ -154,7 +154,7 @@ footer
 
 .Settings section
   box(relative, grid)
-  size(calc(100% - 16px), max-w: 400px)
+  size(calc(100% - 16px), max-w: 480px)
   padding: 2px 8px 32px
   margin: 0 auto
 
@@ -175,13 +175,14 @@ footer
 
 .Settings .ToggleField
 .Settings .SelectField
+  margin: 0 16px
 
   .ToggleInput
   .SelectInput
 
     .opt
       text(s: rem(15))
-      margin: 0 8px 0 0
+      margin: 0 0 0 8px
 
   .label
     text(s: rem(16))
@@ -193,8 +194,10 @@ footer
   margin-right: auto
 
 .Settings .SelectField > .SelectInput
-  size(max-w: 50%)
+  size(max-w: 55%)
   justify-content: flex-end
+  margin-left: auto
+  padding-left: 16px
 
 .Settings .sub-fields
   box(relative)
@@ -213,7 +216,7 @@ footer
   box(relative, flex)
   grid-gap: 16px 8px
   flex-wrap: wrap
-  margin: 0 12px 0 16px
+  margin: 0 16px
 
 .Settings .box > .label
   box(relative)

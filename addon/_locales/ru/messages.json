@@ -32,5 +32,7 @@
   "permissions.tabHide.btn": { "message": "Запросить разрешение 'Скрытие табов'" },
   "permissions.all_urls.note": {
     "message": "Это разрешение можно отозвать в настройках, секции 'Разрешения'."
-  }
+  },
+
+  "upgrading": { "message": "Обновление..." }
 }

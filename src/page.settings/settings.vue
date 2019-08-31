@@ -469,25 +469,14 @@
     .separator
     .ctrls
       .btn(@click="switchView('snapshots')") {{t('settings.snapshots_view_label')}}
-      //- .btn.-warn(@click="removeAllSnapshots") {{t('settings.rm_all_snapshots')}}
-
-  //- section
-  //-   h2 {{t('settings.favi_title')}}
-  //-   info-field(
-  //-     label="settings.cached_favics"
-  //-     :value="faviCache"
-  //-     @click="calcFaviCache")
-  //-   .ctrls
-  //-     .btn(@click="clearFaviCache(false)") {{t('settings.rm_unused_favi_cache')}}
-  //-     .btn.-warn(@click="clearFaviCache(true)") {{t('settings.rm_favi_cache')}}
 
   section
     h2 {{t('settings.help_title')}}
 
     .ctrls
-      a.btn(ref="exportData" @mouseenter="genExportData") Export Data
+      a.btn(ref="exportData" @mouseenter="genExportData") {{t('settings.help_exp_data')}}
       .btn(type="file")
-        .label Import Data
+        .label {{t('settings.help_imp_data')}}
         input(type="file" ref="importData" accept="application/json" @input="importData")
 
     .ctrls

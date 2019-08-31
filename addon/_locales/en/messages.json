@@ -32,5 +32,7 @@
   "permissions.tabHide.btn": { "message": "Request 'Hiding tabs' permission" },
   "permissions.all_urls.note": {
     "message": "This can be undone in sidebery settings section 'permissions'."
-  }
+  },
+
+  "upgrading": { "message": "Upgrading..." }
 }
