@@ -34,6 +34,7 @@ async function loadTabs(fresh = true) {
     t.sel = false
     t.updated = false
     t.loading = false
+    t.status = 'complete'
     t.warn = false
     if (t.favIconUrl === 'chrome://global/skin/icons/warning.svg') {
       t.warn = true
