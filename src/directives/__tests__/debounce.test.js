@@ -1,4 +1,4 @@
-import Debounce from './debounce'
+import Debounce from '../debounce'
 
 describe('Debounce vue directive', () => {
   describe('bind()', () => {

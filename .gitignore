@@ -2,6 +2,7 @@
 .vscode
 dist
 node_modules
+coverage
 
 addon/sidebar/*
 !addon/sidebar/index.html

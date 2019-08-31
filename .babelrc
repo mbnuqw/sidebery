@@ -1,14 +1,19 @@
 {
   "presets": [
     [
-      "env",
+      "@babel/preset-env",
       {
         "targets": {
-          "browsers": ["Firefox > 64"]
+          "browsers": ["last 1 Chrome version"]
         },
-        "useBuiltIns": true
+        "loose": true,
+        "useBuiltIns": "usage",
+        "corejs": 2
       }
     ]
   ],
-  "plugins": ["transform-object-rest-spread"]
+  "plugins": [
+    "@babel/plugin-proposal-object-rest-spread",
+    "@babel/plugin-transform-modules-commonjs",
+  ]
 }

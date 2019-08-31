@@ -1,5 +1,4 @@
-import Utils from './utils'
-import { Locales } from './mixins/dict'
+import Utils from '../utils'
 
 describe('Global utilities', () => {
   // uid
@@ -90,7 +89,7 @@ describe('Global utilities', () => {
   describe('uDate()', () => {
     test('Convert unix seconds to readable date format yyyy.mm.dd', async () => {
       const somewhen = new Date('2024/04/04')
-      expect(Utils.uDate(~~(somewhen.getTime() / 1000))).toBe('2024.04.04')
+      expect(Utils.uDate(somewhen.getTime())).toBe('2024.04.04')
     })
   })
 
@@ -98,27 +97,7 @@ describe('Global utilities', () => {
   describe('uTime()', () => {
     test('Convert unix seconds to readable time format hr:min:sec', async () => {
       const somewhen = new Date('2024/04/04 15:24')
-      expect(Utils.uTime(~~(somewhen.getTime() / 1000))).toBe('15:24:00')
-    })
-  })
-
-  // uElapsed
-  describe('uElapsed()', () => {
-    test('Get elapsed time string from unix seconds', async () => {
-      Locales['en']['elapsed.now'] = { message: 'a' }
-      Locales['en']['elapsed.min'] = { message: 'b' }
-      Locales['en']['elapsed.hr'] = { message: 'c' }
-      Locales['en']['elapsed.day'] = { message: 'd' }
-      Locales['en']['elapsed.week'] = { message: 'e' }
-      Locales['en']['elapsed.month'] = { message: 'f' }
-      Locales['en']['elapsed.year'] = { message: 'y' }
-
-      expect(Utils.uElapsed(10, 15)).toBe('a')
-      expect(Utils.uElapsed(10, 95)).toBe('1 b')
-      expect(Utils.uElapsed(10, 7500)).toBe('2 c')
-      expect(Utils.uElapsed(10, 320000)).toBe('3 d')
-      expect(Utils.uElapsed(10, 2000000)).toBe('3 e')
-      expect(Utils.uElapsed(10, 36000000)).toBe('1 y')
+      expect(Utils.uTime(somewhen.getTime())).toBe('15:24:00')
     })
   })
 

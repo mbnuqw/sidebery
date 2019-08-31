@@ -1,19 +1,5 @@
 const MsgHandlers = []
 
-// const browser = {
-//   bookmarks: {},
-//   commands: {},
-//   contextualIdentities: {},
-//   extension: {},
-//   i18n: {},
-//   proxy: {},
-//   permissions: {},
-//   runtime: {},
-//   storage: {},
-//   tabs: {},
-//   windows: {},
-// }
-
 const browser = {
   bookmarks: {},
   commands: {

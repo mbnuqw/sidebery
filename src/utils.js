@@ -1,5 +1,3 @@
-import { translate } from './mixins/dict'
-
 // prettier-ignore
 const ALPH = [
   'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
@@ -139,33 +137,6 @@ function uTime(ms, delimiter = ':') {
   let dthr = dt.getHours()
   if (dthr < 10) dthr = '0' + dthr
   return `${dthr}${delimiter}${dtmin}${delimiter}${dtsec}`
-}
-
-/**
- * Get elapsed time string from unix seconds
- */
-function uElapsed(ms, nowMS = 0) {
-  const now = nowMS || ~~(Date.now())
-  let elapsed = now - ms
-  if (elapsed < 60) return translate('elapsed.now')
-  elapsed = ~~(elapsed / 60)
-  // Less then an hour
-  if (elapsed < 60) return `${elapsed} ${translate('elapsed.min')}`
-  elapsed = ~~(elapsed / 60)
-  // Less then a day
-  if (elapsed < 24) return `${elapsed} ${translate('elapsed.hr')}`
-  elapsed = ~~(elapsed / 24)
-  // Less then a week
-  if (elapsed < 7) return `${elapsed}('elalatepsed.day', elapsed)}`
-  let weeks = ~~(elapsed / 7)
-  // Less then a longest month
-  if (elapsed < 31) return `${weeks} ${translate('elapsed.week', weeks)}`
-  elapsed = ~~(elapsed / 30.44)
-  // Less then a year
-  if (elapsed < 12) return `${elapsed} ${translate('elapsed.month', elapsed)}`
-  // Years
-  elapsed = ~~(elapsed / 12)
-  return `${elapsed} ${translate('elapsed.year', elapsed)}`
 }
 
 /**
@@ -486,7 +457,6 @@ export default {
   bytesToStr,
   uDate,
   uTime,
-  uElapsed,
   toCSSVarName,
   parseCSSNum,
   commonSubStr,

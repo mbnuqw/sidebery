@@ -102,7 +102,7 @@ export default {
 
     // Normalize snapshots
     for (let snapshot of snapshots) {
-      parsedSnapshots.push(normalizeSnapshot(snapshot, Date.now()))
+      parsedSnapshots.push(normalizeSnapshot(snapshot))
     }
     parsedSnapshots.reverse()
 
@@ -165,7 +165,7 @@ export default {
       })
       if (!snapshot) return
 
-      this.snapshots.unshift(normalizeSnapshot(snapshot, Date.now()))
+      this.snapshots.unshift(normalizeSnapshot(snapshot))
 
       this.activeSnapshot = this.snapshots[0]
     },
@@ -253,7 +253,7 @@ export default {
 /**
  * Normalize snapshot
  */
-function normalizeSnapshot(snapshot, now) {
+function normalizeSnapshot(snapshot) {
   let container, tabsCount = 0
   let windowsById = {}
 
@@ -292,7 +292,6 @@ function normalizeSnapshot(snapshot, now) {
     containersById: Utils.cloneObject(snapshot.containersById),
     date: Utils.uDate(snapshot.time),
     time: Utils.uTime(snapshot.time),
-    elapsed: Utils.uElapsed(snapshot.time, now),
     size: Utils.strSize(JSON.stringify(snapshot)),
     winCount: Object.keys(windowsById).length,
     ctrCount: Object.keys(snapshot.containersById).length,
