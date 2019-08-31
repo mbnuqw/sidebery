@@ -97,6 +97,11 @@ export default {
 
     favPlaceholder() {
       if (this.tab.warn) return '#icon_warn'
+      if (this.tab.url.startsWith('moz-extension:')) {
+        if (this.tab.url.indexOf('/settings/settings.html', 38) !== -1) {
+          return '#icon_settings'
+        }
+      }
       if (PNG_RE.test(this.tab.url)) return '#icon_png'
       if (JPG_RE.test(this.tab.url)) return '#icon_jpg'
       if (PDF_RE.test(this.tab.url)) return '#icon_pdf'
