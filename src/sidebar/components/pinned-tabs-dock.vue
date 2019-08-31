@@ -42,7 +42,7 @@ export default {
 
   computed: {
     pinnedTabs() {
-      const pinned = this.$store.getters.pinnedTabs
+      let pinned = this.$store.getters.pinnedTabs
       if (this.ctx) return pinned.filter(t => t.cookieStoreId === this.ctx)
       else return pinned
     },

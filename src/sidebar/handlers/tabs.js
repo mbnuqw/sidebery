@@ -19,9 +19,11 @@ function onTabCreated(tab) {
 
   // If new tab is out of panel, move it to the end of this panel
   let panel = this.state.panelsMap[tab.cookieStoreId]
-  let endIndex = panel.tabs.length ? panel.endIndex + 1 : panel.endIndex
-  if (tab.index > endIndex || tab.index < panel.startIndex) {
-    browser.tabs.move(tab.id, { index: endIndex })
+  if (!tab.pinned) {
+    let endIndex = panel.tabs.length ? panel.endIndex + 1 : panel.endIndex
+    if (tab.index > endIndex || tab.index < panel.startIndex) {
+      browser.tabs.move(tab.id, { index: endIndex })
+    }
   }
 
   // Shift tabs after inserted one. (NOT detected by vue)
@@ -54,13 +56,14 @@ function onTabCreated(tab) {
   this.state.tabs.splice(tab.index, 0, tab)
 
   // Put new tab in panel
-  if (panel && panel.tabs) {
+  if (!tab.pinned && panel && panel.tabs) {
     let targetIndex = tab.index - panel.startIndex
     if (targetIndex <= panel.tabs.length) {
       panel.tabs.splice(tab.index - panel.startIndex, 0, tab)
       this.actions.updatePanelsRanges()
     }
   }
+  if (tab.pinned) this.actions.updatePanelsRanges()
 
   // Update tree
   if (this.state.tabsTree && !tab.pinned) {
@@ -219,7 +222,10 @@ function onTabUpdated(tabId, change, tab) {
   // Handle pinned tab
   if (change.pinned !== undefined && change.pinned) {
     let panel = this.state.panelsMap[tab.cookieStoreId]
-    panel.tabs.splice(localTab.index - panel.startIndex, 1)
+    let index = localTab.index - panel.startIndex
+    if (panel.tabs[index] && panel.tabs[index].id === localTab.id) {
+      panel.tabs.splice(localTab.index - panel.startIndex, 1)
+    }
     this.actions.updatePanelsRanges()
     this.actions.updateTabsTree()
     if (panel.noEmpty && !panel.tabs.length) {
@@ -237,7 +243,7 @@ function onTabUpdated(tabId, change, tab) {
 /**
  * tabs.onRemoved
  */
-function onTabRemoved(tabId, info) {
+function onTabRemoved(tabId, info, childfree) {
   if (info.windowId !== this.state.windowId) return
 
   if (!this.state.removingTabs) this.state.removingTabs = []
@@ -279,7 +285,7 @@ function onTabRemoved(tabId, info) {
   }
 
   // Handle child tabs
-  if (this.state.tabsTree && tab.isParent) {
+  if (this.state.tabsTree && tab.isParent && !childfree) {
     const toRemove = []
     for (let i = tab.index + 1; i < this.state.tabs.length; i++) {
       const t = this.state.tabs[i]
@@ -436,7 +442,7 @@ function onTabDetached(id, info) {
   if (info.oldWindowId !== this.state.windowId) return
   const tab = this.state.tabsMap[id]
   if (tab) tab.folded = false
-  this.handlers.onTabRemoved(id, { windowId: this.state.windowId })
+  this.handlers.onTabRemoved(id, { windowId: this.state.windowId }, true)
 }
 
 /**

@@ -42,6 +42,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import Utils from '../../utils'
 import EventBus from '../../event-bus'
 import State from '../store/state'
 import Actions from '../actions'
@@ -300,18 +301,12 @@ export default {
       e.dataTransfer.effectAllowed = 'move'
       const dragData = tabsToDrag.map(t => {
         return {
+          ...Utils.cloneObject(this.tab),
           type: 'tab',
-          id: t.id,
-          parentId: t.parentId,
-          index: t.index,
-          pinned: true,
-          lvl: 0,
           ctx: t.cookieStoreId,
-          incognito: State.private,
           windowId: State.windowId,
           panel: State.panelIndex,
-          url: t.url,
-          title: t.title,
+          incognito: State.private,
         }
       })
       EventBus.$emit('dragStart', dragData)

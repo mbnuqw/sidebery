@@ -663,9 +663,9 @@ async function moveTabsToThisWin(tabs, fromPrivate) {
       if (index > -1) index++
       let [t] = await browser.tabs.move(tab.id, {
         windowId: this.state.windowId,
-        index,
+        index: tab.pinned ? 0 : index,
       })
-      tab.discarded = !!t.discarded
+      if (t) tab.discarded = !!t.discarded
     }
   } else {
     const oldNewMap = {}
@@ -898,7 +898,15 @@ async function moveDroppedNodes(dropIndex, dropParent, nodes, pin, currentPanel)
     }
     this.state.attachingTabs = [...nodes]
     for (let i = 0; i < nodes.length; i++) {
-      const index = dropIndex + i
+      let index = dropIndex + i
+      if (nodes[i].pinned && !pin) {
+        await browser.tabs.update(nodes[i].id, { pinned: false })
+        nodes[i].pinned = false
+      }
+      if (!nodes[i].pinned && pin) {
+        await browser.tabs.update(nodes[i].id, { pinned: true })
+        nodes[i].pinned = true
+      }
       let [t] = await browser.tabs.move(nodes[i].id, {
         windowId: this.state.windowId,
         index,
