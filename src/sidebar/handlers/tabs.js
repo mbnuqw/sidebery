@@ -131,8 +131,10 @@ function onTabUpdated(tabId, change, tab) {
           if (tabInfo.favIconUrl && !tabInfo.favIconUrl.startsWith('chrome:')) {
             localTab.favIconUrl = tabInfo.favIconUrl
           } else {
-            if (change.favIconUrl === 'chrome://global/skin/icons/warning.svg') {
+            if (tabInfo.favIconUrl === 'chrome://global/skin/icons/warning.svg') {
               localTab.warn = true
+            } else if (localTab.warn) {
+              localTab.warn = false
             }
             localTab.favIconUrl = ''
           }
