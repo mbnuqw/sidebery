@@ -36,7 +36,7 @@ export default {
   'settings.nav_switch_panels_wheel': { message: 'Переключать панели с помощью колеса мыши' },
 
   // --- Group page
-  'settings.group_title': { message: 'Группа' },
+  'settings.group_title': { message: 'Групповая страница' },
   'settings.group_layout': { message: 'Отображение' },
   'settings.group_layout_grid': { message: 'сетка' },
   'settings.group_layout_list': { message: 'список' },
