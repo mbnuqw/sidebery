@@ -80,7 +80,10 @@ async function chooseWin() {
       let tab = w.tabs.find(t => t.active)
       if (!tab) return
       if (w.focused) return
-      let screen = await browser.tabs.captureTab(tab.id)
+      let screen
+      if (browser.tabs.captureTab) {
+        screen = await browser.tabs.captureTab(tab.id)
+      }
       return {
         id: w.id,
         title: w.title,

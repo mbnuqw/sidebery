@@ -1,10 +1,10 @@
 <template lang="pug">
 .WindowSelectInput(:data-ready="isReady" @click="cancel")
   scroll-box(ref="scrollBox")
-    .box(v-for="(w, i) in $store.state.winChoosing", :key="w.id")
+    .box(v-for="(w, i) in $store.state.winChoosing" :key="w.id")
       .win(@click.stop="w.choose")
         .title {{w.title}}
-        img(:src="w.screen", @load="onScreenLoad(i)")
+        img(v-if="w.screen" :src="w.screen" @load="onScreenLoad(i)")
 </template>
 
 
@@ -24,6 +24,7 @@ export default {
   computed: {
     isReady() {
       if (!State.winChoosing || !State.winChoosing.length) return false
+      if (!State.winChoosing[0].screen) return true
       return State.winChoosing.reduce((o, w) => o && w.loaded, true)
     },
   },
