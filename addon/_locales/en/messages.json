@@ -5,34 +5,5 @@
   },
   "ActionTitle": { "message": "Open Sidebery" },
 
-  "elapsed.now": { "message": "just now" },
-  "elapsed.min": { "message": "min ago" },
-  "elapsed.hr": { "message": "hr ago" },
-  "elapsed.day": {
-    "message": "day ago|days ago",
-    "description": "1|"
-  },
-  "elapsed.week": {
-    "message": "week ago|weeks ago",
-    "description": "1|"
-  },
-  "elapsed.month": {
-    "message": "month ago|months ago",
-    "description": "1|"
-  },
-  "elapsed.year": {
-    "message": "year ago|years ago",
-    "description": "1|"
-  },
-
-  "permissions.all_urls.title": { "message": "Permissions" },
-  "permissions.all_urls.logo": { "message": "Sidebery" },
-  "permissions.all_urls.msg": { "message": "Invoked action requires some additional permissions:" },
-  "permissions.all_urls.btn": { "message": "Request 'Websites data' permission" },
-  "permissions.tabHide.btn": { "message": "Request 'Hiding tabs' permission" },
-  "permissions.all_urls.note": {
-    "message": "This can be undone in sidebery settings section 'permissions'."
-  },
-
   "upgrading": { "message": "Upgrading..." }
 }

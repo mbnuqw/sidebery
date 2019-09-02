@@ -3,36 +3,5 @@
   "ExtDesc": { "message": "Управление табами и закладками в боковой панели." },
   "ActionTitle": { "message": "Открыть Sidebery" },
 
-  "elapsed.now": { "message": "только что" },
-  "elapsed.min": { "message": "мин назад" },
-  "elapsed.hr": { "message": "ч назад" },
-  "elapsed.day": {
-    "message": "день назад|дня назад|дней назад",
-    "description": "1,21,31|2,3,4,22,23,24|"
-  },
-  "elapsed.week": {
-    "message": "неделя назад|недели назад",
-    "description": "1|"
-  },
-  "elapsed.month": {
-    "message": "месяц назад|месяцa назад|месяцев назад",
-    "description": "1|2,3,4|"
-  },
-  "elapsed.year": {
-    "message": "год назад|года назад|лет назад",
-    "description": "1,21|2,3,4,22,23,24|"
-  },
-
-  "permissions.all_urls.title": { "message": "Разрешения" },
-  "permissions.all_urls.logo": { "message": "Sidebery" },
-  "permissions.all_urls.msg": {
-    "message": "Вызванное действие требует дополнительных разрешений:"
-  },
-  "permissions.all_urls.btn": { "message": "Запросить разрешение 'Данные веб-сайтов'" },
-  "permissions.tabHide.btn": { "message": "Запросить разрешение 'Скрытие табов'" },
-  "permissions.all_urls.note": {
-    "message": "Это разрешение можно отозвать в настройках, секции 'Разрешения'."
-  },
-
   "upgrading": { "message": "Обновление..." }
 }

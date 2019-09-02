@@ -1,4 +1,3 @@
-/*global browser:true*/
 import En from '../../addon/_locales/en/messages.json'
 import EnButtons from '../locales/en.buttons'
 import EnDashboards from '../locales/en.dashboards'
