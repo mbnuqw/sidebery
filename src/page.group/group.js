@@ -9,8 +9,8 @@ let groupLen, groupParentId
 void (async function() {
   let { settings } = await browser.storage.local.get({ settings: DEFAULT_SETTINGS })
 
-  document.body.setAttribute('data-style', settings.style)
-  document.body.setAttribute('data-layout', settings.groupLayout)
+  document.body.setAttribute('data-style', settings.style || 'dark')
+  document.body.setAttribute('data-layout', settings.groupLayout || 'grid')
   document.body.setAttribute('data-animations', settings.animations ? 'fast' : 'none')
 
   initTheme(settings.theme)
