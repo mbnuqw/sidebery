@@ -46,8 +46,8 @@ function initMessaging() {
       }
 
       for (let waiting of connectPending) {
-        if (waiting.winId !== info.windowId) continue
-        waiting.resolve(true)
+        if (waiting.winId === null) waiting.resolve(true)
+        else if (waiting.winId === info.windowId) waiting.resolve(true)
       }
     }
 

@@ -12,9 +12,7 @@ async function loadSettings() {
   // Check version
   if (!settings.version && this.actions.startUpgrading) {
     await this.actions.startUpgrading()
-    let ans = await browser.storage.local.get({
-      settings: DEFAULT_SETTINGS
-    })
+    let ans = await browser.storage.local.get({ settings: DEFAULT_SETTINGS })
     settings = ans.settings
   }
 

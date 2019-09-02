@@ -6,14 +6,7 @@ import Actions from '../actions.js'
  */
 async function checkVersion(settings) {
   if (!settings) return
-  if (!settings.version) {
-    return new Promise(res => {
-      this.actions.onFirstSidebarInit(async () => {
-        await Actions.upgradeToV3(settings)
-        res()
-      })
-    })
-  }
+  if (!settings.version) return await Actions.upgradeToV3(settings)
 }
 
 /**
@@ -135,7 +128,6 @@ async function upgradeToV3(settings) {
   }
 
   await browser.storage.local.set({ settings })
-  browser.runtime.sendMessage({ action: 'stopUpgrading' })
 }
 
 export default {

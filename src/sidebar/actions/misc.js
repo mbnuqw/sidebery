@@ -1,6 +1,5 @@
 import Logs from '../../logs'
-
-let upgrading = false
+import { DEFAULT_SETTINGS } from '../../defaults'
 
 /**
  * Load platform info
@@ -30,24 +29,30 @@ async function loadWindowInfo() {
  * Stop upgrading process
  */
 function startUpgrading() {
-  upgrading = true
   this.state.upgrading = true
 
   return new Promise(res => {
-    setInterval(() => {
-      if (!upgrading) res()
-    }, 1000)
-  })
-}
+    let tryCount = 0
 
-/**
- * Stop upgrading process
- */
-function stopUpgrading() {
-  upgrading = false
-  setTimeout(() => {
-    this.state.upgrading = false
-  }, 2000)
+    let upgradingInterval = setInterval(async () => {
+      let { settings } = await browser.storage.local.get({
+        settings: DEFAULT_SETTINGS,
+      })
+
+      if (settings.version) {
+        this.state.upgrading = false
+        clearInterval(upgradingInterval)
+        return res(true)
+      }
+
+      if (tryCount >= 5) {
+        await browser.storage.local.remove('settings')
+        clearInterval(upgradingInterval)
+        return res(false)
+      }
+      tryCount++
+    }, 2000)
+  })
 }
 
 /**
@@ -271,7 +276,6 @@ export default {
   unlockStorage,
   updateSidebarWidth,
   startUpgrading,
-  stopUpgrading,
   blockWheel,
   blockCtxMenu,
   startMultiSelection,
