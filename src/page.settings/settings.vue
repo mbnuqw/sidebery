@@ -540,10 +540,18 @@ export default {
     const tabHideGetter = Object.getOwnPropertyDescriptor(State.highlight, 'tabHide').get
     const scrollConf = { behavior: 'smooth', block: 'center' }
     this.$watch(allUrlsGetter, (val) => {
-      if (val) allUrlsField.scrollIntoView(scrollConf)
+      if (val) {
+        setTimeout(() => {
+          allUrlsField.scrollIntoView(scrollConf)
+        }, 50)
+      }
     })
     this.$watch(tabHideGetter, (val) => {
-      if (val) tabHideField.scrollIntoView(scrollConf)
+      if (val) {
+        setTimeout(() => {
+          tabHideField.scrollIntoView(scrollConf)
+        }, 50)
+      }
     })
 
     // Force auto scroll
