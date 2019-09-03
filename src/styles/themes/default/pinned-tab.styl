@@ -217,7 +217,7 @@
   .PinnedTab .audio-badge
     pos(17px, same)
 
-.PinnedTab[data-audible] .audio-badge > svg.-loud
+.PinnedTab[data-audible]:not([data-muted]) .audio-badge > svg.-loud
 .PinnedTab[data-muted] .audio-badge > svg.-mute
   opacity: 1
 
