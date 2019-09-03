@@ -123,6 +123,12 @@ function onTabUpdated(tabId, change, tab) {
   const localTab = this.state.tabsMap[tabId]
   if (!localTab) return
 
+  // Discarded
+  if (change.discarded !== undefined) {
+    if (localTab.status === 'loading') localTab.status = 'complete'
+    if (localTab.loading) localTab.loading = false
+  }
+
   // Status change
   if (change.status !== undefined) {
     if (change.status === 'complete' && !localTab.url.startsWith('about')) {
