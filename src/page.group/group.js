@@ -148,8 +148,7 @@ async function onTabCreated(tab) {
 
   groupLen++
   await Utils.sleep(256)
-  let screen = await browser.tabs.captureTab(tab.id, { format: 'jpeg', quality: 90 })
-  tab.bgEl.style.backgroundImage = `url(${screen})`
+  loadScreenshot(tab)
 }
 
 /**
@@ -162,9 +161,7 @@ function onTabUpdated(msg) {
   tab.el.setAttribute('data-status', msg.status)
   if (msg.status === 'complete') {
     tab.favEl.style.backgroundImage = `url(${msg.favIconUrl})`
-    browser.tabs.captureTab(tab.id, { format: 'jpeg', quality: 90 }).then(screen => {
-      tab.bgEl.style.backgroundImage = `url(${screen})`
-    })
+    loadScreenshot(tab)
   }
 
   tab.titleEl.innerText = msg.title
@@ -309,6 +306,7 @@ function createButton(svgId, className, clickHandler) {
  */
 async function loadScreenshot(tab) {
   if (tab.discarded) return
+  if (!browser.tabs.captureTab) return
   let screen = await browser.tabs.captureTab(tab.id, { format: 'jpeg', quality: 90 })
   tab.bgEl.style.backgroundImage = `url(${screen})`
 }
