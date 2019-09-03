@@ -1411,6 +1411,13 @@ function resetUpdateGroupTabTimeout() {
   if (updateGroupTabTimeouit) clearTimeout(updateGroupTabTimeouit)
 }
 
+function updateActiveGroupPage() {
+  let activeTab = this.state.tabs.find(t => t.active)
+  if (Utils.isGroupUrl(activeTab.url)) {
+    this.actions.updateGroupTab(updateGroupTab)
+  }
+}
+
 export default {
   loadTabs,
   getOrderNormMoves,
@@ -1459,6 +1466,7 @@ export default {
   getGroupTab,
   updateGroupTab,
   resetUpdateGroupTabTimeout,
+  updateActiveGroupPage,
 
   createTabAfter,
   updateTabsTree,

@@ -75,6 +75,7 @@ export default new Vue({
     Actions.saveTabsTree()
 
     Actions.connectToBG()
+    Actions.updateActiveGroupPage()
   },
 
   mounted() {
