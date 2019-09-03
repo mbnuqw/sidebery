@@ -1,0 +1,171 @@
+@import '../../mixins'
+
+.Folder
+  box(relative)
+  padding: 0 0 0 12px
+  margin: 0
+  border-top-left-radius: 3px
+  border-bottom-left-radius: 3px
+  &:before
+    content: ''
+    box(absolute)
+    pos(0, r: 0)
+    size(100vw, 100%)
+    background-color: var(--tabs-selected-bg)
+    z-index: -1
+    opacity: 0
+    transform: scale(0, 0)
+    transition: opacity var(--d-fast),
+                z-index var(--d-fast),
+                transform 0s var(--d-fast)
+
+.Folder[data-selected]
+  &:before
+    opacity: 1
+    z-index: 0
+    transform: scale(1, 1)
+    transition: opacity var(--d-fast),
+                z-index var(--d-fast),
+                transform 0s 0s
+
+// ---
+// -- Body of node
+// -
+.Folder > .body
+  box(relative, flex)
+  height: var(--bookmarks-folder-height)
+  align-items: center
+  cursor: pointer
+  transform: translateZ(0)
+  transition: opacity var(--d-fast)
+  &:before
+    content: ''
+    box(absolute)
+    pos(0, r: 0)
+    size(100vw, 100%)
+
+.Folder:not([data-selected]) > .body:hover:before
+  background-color: var(--bookmarks-node-bg-hover)
+
+.Folder:not([data-selected]) > .body:active:before
+  background-color: var(--bookmarks-node-bg-active)
+
+// ---
+// -- Drag layer
+// -
+.Folder .drag-layer
+  box(absolute)
+  size(100%, same)
+  pos(0, 0)
+  z-index: 15
+
+// ---
+// -- Title
+// -
+.Folder .title
+  box(relative)
+  size(100%)
+  font: var(--bookmarks-folder-font)
+  color: var(--bookmarks-folder-closed-fg)
+  white-space: nowrap
+  overflow: hidden
+  transition: transform var(--d-fast), color var(--d-fast)
+  mask: linear-gradient(-90deg, transparent, #000000 12px, #000000)
+
+.Folder > .body:hover > .title
+  transition: transform var(--d-fast)
+  color: var(--bookmarks-folder-closed-fg-hover)
+
+.Folder > .body:active > .title
+  transition: transform var(--d-fast)
+  color: var(--bookmarks-folder-closed-fg-active)
+
+.Folder[data-expanded][data-parent] > .body > .title
+  color: var(--bookmarks-folder-expanded-fg)
+  mask: linear-gradient(-90deg, transparent 12px, #000000 24px, #000000)
+  transform: translateX(12px)
+.Folder[data-expanded][data-parent] > .body:hover > .title
+  color: var(--bookmarks-folder-expanded-fg-hover)
+.Folder[data-expanded][data-parent] > .body:active > .title
+  color: var(--bookmarks-folder-expanded-fg-active)
+
+// Empty folder
+.Folder:not([data-parent]) > .body > .title
+  color: var(--bookmarks-folder-empty-fg)
+
+.Folder[data-open][data-parent] > .body > .title
+.Folder[data-open][data-parent] > .body:hover > .title
+.Folder[data-open][data-parent] > .body:active > .title
+  color: var(--bookmarks-open-bookmark-fg)
+
+.Folder[data-selected] > .body > .title
+  color: var(--tabs-selected-fg)
+
+// ---
+// -- Count of children
+// -
+.Folder .len
+  box(relative)
+  text(s: rem(12))
+  padding: 0 8px
+  color: var(--info-fg)
+
+// ---
+// -- Children box
+// -
+.Folder .children
+  box(relative)
+  transform: translateZ(0)
+
+// ---
+// -- Level ruler
+// -
+.Folder .children:before
+  content: ''
+  box(absolute)
+  size(1px, calc(100% - 11px))
+  pos(0, 1px)
+  background-color: #72727264
+  opacity: .5
+  transition: opacity var(--d-slow)
+
+.Folder .children:hover:before
+  opacity: 1
+
+// ---
+// -- Expand icon
+// -
+.Folder .exp
+  box(absolute)
+  size(15px, same)
+  margin: 1px 2px 0 0
+  flex-shrink: 0
+  transform: translateX(-14px)
+  opacity: 0
+  transition: transform var(--d-fast), opacity var(--d-fast)
+  > svg
+    box(absolute)
+    pos(0, 0)
+    size(100%, same)
+    fill: var(--bookmarks-folder-expanded-fg)
+    transform: rotateZ(-90deg)
+    transition: transform var(--d-fast)
+
+.Folder[data-expanded][data-parent] > .body > .exp
+  transform: translateX(-6px)
+  opacity: 1
+  > svg
+    transform: rotateZ(0deg)
+
+// ---
+// -- Vue transitions
+// -
+.expand-enter-active
+  transition: opacity var(--d-norm), transform var(--d-fast)
+.expand-enter
+  opacity: 0
+  transform: translateX(-12px)
+.expand-enter-to
+.expand-leave
+  opacity: 1
+  transform: translateX(0)

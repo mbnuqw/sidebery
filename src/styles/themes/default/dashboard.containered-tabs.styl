@@ -1,0 +1,75 @@
+@import '../../mixins'
+
+.ContainerDashboard
+  box(flex)
+  flex-direction: column
+
+.ContainerDashboard > .title
+  text(s: rem(24), w: 400)
+  color: var(--title-fg)
+  margin: 12px 12px 12px
+
+.ContainerDashboard .scroll-box
+  box-shadow: 0 -1px 0 0 var(--border-fg), 0 1px 0 0 var(--border-flare-fg)
+
+.ContainerDashboard .scoll-wrapper
+  box(relative, grid)
+  grid-gap: 3px 0
+  padding: 8px 0 12px
+  box-shadow: inset 0 1px 0 0 var(--border-flare-fg), inset 0 -1px 0 0 var(--border-fg)
+
+.ContainerDashboard .box
+  box(relative)
+  padding: 0 0 0 8px
+
+.ContainerDashboard .scroll-box
+  size(max-h: calc(100vh - 200px))
+  flex-grow: 1
+  flex-shrink: 1
+
+.ContainerDashboard .field
+  box(relative)
+  margin: 0 16px
+
+.ContainerDashboard .field > .input
+  box(relative, flex)
+  flex-wrap: wrap
+
+// Option icon
+.ContainerDashboard .input > .icon
+  box(relative, flex)
+  size(26px, same)
+  justify-content: center
+  align-items: center
+  margin: 0
+  opacity: .5
+  border-radius: 3px
+  filter: grayscale(0.5)
+  &:hover
+    opacity: .7
+  &[data-active]
+    opacity: 1
+    filter: grayscale(0)
+  
+  > svg
+    box(absolute)
+    size(16px, same)
+    transition: opacity var(--d-fast)
+
+.ContainerDashboard .field > .text
+  text(s: rem(14))
+  margin: 2px 0 0
+  transition: color 1s
+  > input
+  > textarea
+    padding: 0 0 2px
+    color: var(--false-fg)
+  &[valid] > input
+  &[valid] > textarea
+    color: var(--true-fg)
+  &[valid="fine"] > input
+  &[valid="fine"] > textarea
+    color: var(--active-fg)
+  > .placeholder
+    padding: 0 0 2px
+    color: var(--label-fg)

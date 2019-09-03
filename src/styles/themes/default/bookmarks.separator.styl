@@ -1,0 +1,67 @@
+@import '../../mixins'
+
+.Separator
+  box(relative)
+  padding: 0 0 0 12px
+  margin: 0
+  border-top-left-radius: 3px
+  border-bottom-left-radius: 3px
+  &:before
+    content: ''
+    box(absolute)
+    pos(0, r: 0)
+    size(100vw, 100%)
+    background-color: var(--tabs-selected-bg)
+    z-index: -1
+    opacity: 0
+    transform: scale(0, 0)
+    transition: opacity var(--d-fast),
+                z-index var(--d-fast),
+                transform 0s var(--d-fast)
+
+  &[data-selected]
+    &:before
+      opacity: 1
+      z-index: 0
+      transform: scale(1, 1)
+      transition: opacity var(--d-fast),
+                  z-index var(--d-fast),
+                  transform 0s 0s
+
+// ---
+// -- Body
+// -
+.Separator .body
+  box(relative, flex)
+  height: var(--bookmarks-separator-height)
+  align-items: center
+  cursor: pointer
+  transform: translateZ(0)
+  transition: opacity var(--d-fast)
+  &:before
+    content: ''
+    box(absolute)
+    pos(0, r: 0)
+    size(100vw, 100%)
+  &:after
+    content: ''
+    box(absolute)
+    pos(8px, l: 8px)
+    size(calc(100% - 16px), 1px)
+    background-color: #00000036
+    box-shadow: 0 1px 0 0 #ffffff08
+
+.Separator:not([data-selected]) .body:hover:before
+  background-color: var(--bookmarks-node-bg-hover)
+
+.Separator:not([data-selected]) .body:active:before
+  background-color: var(--bookmarks-node-bg-active)
+
+// ---
+// -- Drag layer
+// -
+.Separator .drag-layer
+  box(absolute)
+  size(100%, same)
+  pos(0, 0)
+  z-index: 15

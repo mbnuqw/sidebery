@@ -1,7 +1,7 @@
 export default {
   // --- Bookmark
   'menu.bookmark.open_in_new_window': { message: 'Open in new window' },
-  'menu.bookmark.open_in_new_priv_window': { message: 'Open in new private window' },
+  'menu.bookmark.open_in_new_priv_window': { message: 'Open in private window' },
   'menu.bookmark.open_in_ctr_': { message: 'Open in container...' },
   'menu.bookmark.open_in_default_panel': { message: 'Open' },
   'menu.bookmark.open_in_': { message: 'Open in ' },
@@ -14,7 +14,7 @@ export default {
   // --- Tab
   'menu.tab.undo': { message: 'Undo close tab' },
   'menu.tab.move_to_new_window': { message: 'Move to new window' },
-  'menu.tab.move_to_new_priv_window': { message: 'Move to new private window' },
+  'menu.tab.move_to_new_priv_window': { message: 'Move to private window' },
   'menu.tab.move_to_another_window': { message: 'Move to another window' },
   'menu.tab.move_to_window_': { message: 'Move to window...' },
   'menu.tab.reopen_in_priv_window': { message: 'Reopen in private window' },
@@ -39,9 +39,14 @@ export default {
 
   // --- Editor
   'menu.editor.reset': { message: 'Reset' },
+  'menu.editor.create_separator': { message: 'Create separator' },
+  'menu.editor.create_sub_tooltip': { message: 'Create sub-menu' },
+  'menu.editor.up_tooltip': { message: 'Move up' },
+  'menu.editor.down_tooltip': { message: 'Move down' },
+  'menu.editor.disable_tooltip': { message: 'Disable' },
   'menu.editor.tabs_title': { message: 'Tabs' },
   'menu.editor.bookmarks_title': { message: 'Bookmarks' },
-  'menu.editor.inline_group_title': { message: 'Inline group' },
+  'menu.editor.inline_group_title': { message: 'Sub-menu label...' },
   'menu.editor.list_title': { message: 'List' },
   'menu.editor.disabled_title': { message: 'Disabled' },
 }

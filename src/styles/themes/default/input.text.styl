@@ -1,0 +1,53 @@
+@import '../../mixins'
+
+.inherit-text-styles
+  font-family: inherit
+  font-size: inherit
+  font-weight: inherit
+  line-height: inherit
+  letter-spacing: inherit
+  text-indent: inherit
+  text-align: inherit
+  color: inherit
+
+.TextInput
+  box(relative)
+  &[data-wrong]
+    animation: shake-animation .3s, err-blink-animation .6s
+
+// ---
+// -- Input
+// -
+.TextInput input
+.TextInput textarea
+  @extend .inherit-text-styles
+  box(relative, block)
+  size(100%)
+  -webkit-appearance: none
+  border: none
+  outline: none
+  margin: 0
+  padding: 0
+  background-color: transparent
+  resize: none
+  z-index: 1
+
+// ---
+// -- Placeholder
+// -
+.TextInput .placeholder
+  @extend .inherit-text-styles
+  box(absolute)
+  pos(0, 0)
+  padding: 0
+  margin: 0
+  opacity: 0
+  transform: translateX(16px)
+  transition: opacity var(--d-fast), transform var(--d-fast)
+
+.TextInput[data-empty] .placeholder
+  opacity: .5
+  transform: translateX(0)
+
+.TextInput[data-active] .placeholder
+  transform: translateX(3px)

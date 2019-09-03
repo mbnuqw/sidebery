@@ -15,7 +15,7 @@ export default {
   'bookmarks_dashboard.collapse_all_folders': { message: 'Свернуть все папки' },
 
   // --- Tabs
-  'tabs_dashboard.dedup_tabs': { message: 'Закрыть дубликаты вкладок' },
+  'tabs_dashboard.dedup_tabs': { message: 'Закрыть дубликаты табов' },
   'tabs_dashboard.close_all_tabs': { message: 'Закрыть все табы' },
   'tabs_dashboard.reload_all_tabs': { message: 'Перезагрузить все табы' },
   'tabs_dashboard.delete_container': { message: 'Удалить контейнер' },

@@ -2,33 +2,51 @@
 
 [![https://addons.mozilla.org/en-US/firefox/addon/sidebery/](https://addons.cdn.mozilla.net/static/img/addons-buttons/AMO-button_2.png)](https://addons.mozilla.org/en-US/firefox/addon/sidebery/)
 
+
 ## About
 
-Sidebery combines vertical layout of tabs with Firefox's containers to provide more convenient way of working with big amount of opened pages. It aims to be fast and beautiful and gives a lot of options for customizing. Some of key features:
+Sidebery combines vertical layout of tabs with Firefox's containers to provide the more convenient way of working with a big amount of open pages. It aims to be fast and beautiful and gives a lot of options for customizing. Some of the key features:
 
 ### Vertical tabs layout (flat or tree)
 
-You can use simple flat list of tabs or tree structure. Tree layout allows you to fold sub-tries, creates groups with custom name to organize opened pages.
+You can use a simple flat list of tabs or tree structure. Tree layout allows you to fold sub-tries, creates groups with a custom name to organize open pages.
 
-### Bookmarks panel for easy access
+### Bookmarks panel
 
-Simple catalogs of your bookmarks. You can drag and drop links or tabs to create bookmarks and vice-versa.
+Simple catalogs of your bookmarks. You can drag and drop links or tabs to create bookmarks and vice-versa. Basic operations: open in new window / create / edit / delete.
+
+Other bookmarks features: 
+- Automatically delete an open bookmark from "Other Bookmarks" folder.
+- Highlight open bookmarks and activate its tab instead of opening new on clicking.
 
 ### Advanced containers management
 
-Isolate your internet activity with Firefox's containers. Sidebery separates containers by panels and allow you to switch between them with mouse or keyboard shortcuts. With this addon you also can set proxy for different containers, use "include" and "exclude" rules to control what page should be opened in which container.
+Isolate your internet activity with Firefox's containers. Sidebery separates containered tabs by panels and allows you to switch between them with the mouse or keyboard shortcuts.
+
+### Containers proxy, include and exclude rules
+
+With this addon, you also can set proxy for different containers, use "include" and "exclude" rules to control what page should be open in which container.
+
+### Customizable context menu
+
+Sidebery allows you to change the context menu for tabs and bookmarks. You can enable/disable/move different options, create sub-menus/separators.
 
 ### Multi-selection with right mouse button or keyboard shortcuts
 
-Select multiple tabs or bookmarks to apply actions to them or drag and drop them.
+You can select multiple tabs or bookmarks only with the mouse - push right mouse button and then move the cursor to adjust selection range.  
+`note: This feature is not working with the native context menu.`
+
+Also, you can use ctrl+click/shift+click method or use keyboard shortcuts.
 
 ### Customizable styles
 
-Sidebery provides the way to customize some of style properties like colors, sizes, fonts of different elements.
+Sidebery provides full control of styles for sidebar and group page via variables and custom CSS.  
+`note: css selectors can be changed in the next version`
 
 ### Snapshots
 
-You can create snapshots of currently opened tabs and their tree structure and restore them later.
+You can setup auto snapshots that will keep info about open windows and tabs.
+
 
 ---
 
@@ -39,72 +57,74 @@ Shortcut `ctrl+E` (default) or click on Sidebery button.
 
 __Create new tab__  
 `ctrl+T` - In default container.  
-`ctrl+space` - In currently active container.  
-`ctrl+shift+space` - after currently active tab.  
-Middle click on panel - in currently active container.  
-Left click on panel's icon - in currently active container.  
-...other methods may be found in settings  
+`ctrl+space` - In active panel.  
+`ctrl+shift+space` - after active tab.  
+Also "Middle click on panel", "Left click on panel's icon" and other configurable methods...  
 
 __Switch between containers__  
 `alt+Comma(<)` - to previous panel  
 `alt+Period(>)` - to next panel  
-Scroll on navigation strip  
-Horizontal scroll (configurable)  
+Scroll on navigation strip - (optional)  
+Horizontal scroll - (optional)  
 
 __Switch between tabs__  
 `ctrl+PgUp/PgDown` - firefox's defaults  
 `alt+Up/Down` + `alt+space` - select tab and activate it  
-Scroll (configurable)  
+Scroll - (optional)  
 
 __Open dashboard of panel__  
-Right-click on panel's icon
+Right-click on panel's icon  
+
+__Expand/Fold parent tab__  
+Click on favicon of target tab.  
+
+__Expand/Fold tabs or bookmarks while dragging elements__  
+Move mouse cursor to pointer's triangle.  
+
+__Select all descendants of tab__  
+Right click on favicon.  
+
+__Close whole tabs branch__  
+Right click on close button.  
+
+__Switch panel while dragging elements__  
+Move mouse cursor to panel's icon.  
 
 ---
 
 ## Tips and Tricks
-__To expand/fold tabs or bookmarks while dragging elements__ - move mouse cursor to pointer's triangle.  
-__To expand/fold tab__ - left click on favicon.  
-__To select all descendants of tab__ - right click on favicon.  
-__To close tab all it's descendants__ - right click on close button.  
-__To switch to some panel while dragging elements__ - move mouse cursor to panel's icon.  
 
-### Hide/customize native panels
+### userChrome.css
 
 In 'Profile Directory' `(Menu > Help > Troubleshooting Information > Profile Directory)`
 create folder `chrome` with file `userChrome.css`:
 
 ```css
-@-moz-document url("chrome://browser/content/browser.xul") {
-  /* --- Completely hide tabs strip  --- */
-  #TabsToolbar {
-    visibility: collapse !important;
-  }
-  /* --- OR Hide tabs strip only in fullscreen --- */
-  /* #TabsToolbar[inFullscreen="true"] {
-    visibility: collapse !important;
-  } */
+@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
 
-  /* --- Preserve top panel height (macos) --- */
-  /* #TabsToolbar {
-    height: 30px !important;
-  } */
+/* ...your css here... */
+```
 
-  /* --- Hide content of top bar --- */
-  /* #TabsToolbar > * {
-    visibility: collapse;
-  } */
+To find and inspect browser's selectors open [Browser Toolbox](https://developer.mozilla.org/en-US/docs/Tools/Browser_Toolbox).
 
-  /* --- Hide sidebar top-menu --- */
-  #sidebar-header {
-    visibility: collapse;
-  }
+__Completely hide tabs strip__  
+```css
+#TabsToolbar {
+  display: none;
+}
+```
 
-  /* --- Customize border between sidebar and page --- */
-  /* #sidebar-splitter {
-    width: 2px !important;
-    border: none !important;
-    background-color: #242424 !important;
-  } */
+__Hide tabs strip only in fullscreen__  
+```css
+#TabsToolbar[inFullscreen="true"] {
+  display: none;
+}
+```
+
+__Hide sidebar top-menu__  
+```css
+#sidebar-header {
+  display: none;
 }
 ```
 
@@ -117,8 +137,8 @@ create folder `chrome` with file `userChrome.css`:
 > Tests: Jest
 
 Install dependencies: `npm install`  
-Start dev: `npm run dev`  
-Build to ./dist: `npm run build`
+Build all parts of addon: `npm run build`  
+Create addon archive in ./dist: `npm run build.ext`
 
 ---
 

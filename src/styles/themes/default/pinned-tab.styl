@@ -1,0 +1,333 @@
+@import '../../mixins'
+
+.PinnedTab
+  box(relative, flex)
+  size(34px, 32px)
+  overflow: hidden
+  justify-content: center
+  align-items: center
+  border: var(--tabs-border)
+  box-shadow: var(--tabs-shadow)
+  transform: translateZ(0)
+  transition: opacity var(--d-fast), transform .12s
+
+  &:hover
+    background-color: var(--tabs-bg-hover)
+
+  &:active
+  &[data-active]:active
+    background-color: var(--tabs-bg-active)
+
+  &[data-active]
+    background-color: var(--tabs-activated-bg)
+    border: var(--tabs-activated-border)
+    box-shadow: var(--tabs-activated-shadow)
+
+  &[data-selected]
+  &[data-selected]:active
+    z-index: 10
+    background-color: var(--tabs-selected-bg)
+    border: var(--tabs-selected-border)
+    box-shadow: var(--tabs-selected-shadow)
+  
+  &[data-discarded]
+    opacity: .5
+  
+  &[data-loading="true"]
+    cursor: progress
+
+#root[data-pinned-tabs-position="panel"][data-pinned-tabs-list]
+  .PinnedTab
+    size(100%)
+    justify-content: flex-start
+    height: var(--tabs-height)
+    padding-left: 1px
+
+// ---
+// -- Drag layer
+// -
+.PinnedTab .drag-layer
+  box(absolute)
+  size(100%, same)
+  pos(0, 0)
+  z-index: 25
+
+// ---
+// -- Favicon
+// -
+.PinnedTab .fav
+  box(relative)
+  size(16px, same)
+  margin: 0 6px
+  flex-shrink: 0
+  opacity: 1
+  z-index: 20
+  transition: opacity var(--d-fast), transform var(--d-fast)
+
+.PinnedTab:hover .fav
+  opacity: .7
+
+.PinnedTab:active .fav
+  transition: none
+  opacity: .5
+
+.PinnedTab[data-loading="true"]:not([data-audible]):not([data-muted]) .fav
+  cursor: progress
+
+// ---
+// -- Favicon placeholer
+// -
+.PinnedTab .placeholder
+  box(absolute)
+  size(16px, same)
+  pos(0, 0)
+  > svg
+    box(absolute)
+    size(100%, same)
+    pos(0, 0)
+    fill: var(--favicons-placehoder-bg)
+
+.PinnedTab[data-updated] .placeholder
+  mask: radial-gradient(
+    circle at calc(100% - 2px) calc(100% - 2px),
+    #00000024,
+    #00000024 4px,
+    #000000 5px,
+    #000000
+  )
+
+.PinnedTab[data-loading] .placeholder
+.PinnedTab[data-audible] .placeholder
+.PinnedTab[data-muted] .placeholder
+  mask: radial-gradient(
+    circle at calc(100% - 1px) calc(100% - 1px),
+    #00000024,
+    #00000024 7px,
+    #000000 8px,
+    #000000
+  )
+
+.PinnedTab[data-loading][data-muted] .placeholder
+.PinnedTab[data-loading][data-audible] .placeholder
+  mask: linear-gradient(0deg, #00000024, #00000024 8px, #000000 9px, #000000)
+
+// ---
+// -- Favicon image
+// -
+.PinnedTab .fav > img
+  box(absolute)
+  size(100%, same)
+
+.PinnedTab[data-updated] .fav > img
+  mask: radial-gradient(
+    circle at calc(100% - 2px) calc(100% - 2px),
+    #00000024,
+    #00000024 4px,
+    #000000 5px,
+    #000000
+  )
+
+.PinnedTab[data-loading] .fav > img
+.PinnedTab[data-audible] .fav > img
+.PinnedTab[data-muted] .fav > img
+  mask: radial-gradient(
+    circle at calc(100% - 1px) calc(100% - 1px),
+    #00000024,
+    #00000024 7px,
+    #000000 8px,
+    #000000
+  )
+
+.PinnedTab[data-loading][data-muted] .fav > img
+.PinnedTab[data-loading][data-audible] .fav > img
+  mask: linear-gradient(0deg, #00000024, #00000024 8px, #000000 9px, #000000)
+
+
+// ---
+// -- Loading / Progress animation
+// -
+.PinnedTab .progress-spinner
+  box(absolute, border-box)
+  size(12px, same)
+  pos(b: -5px, r: -5px)
+  border-radius: 50%
+  border-top: 2px solid var(--progress-fg)
+  border-left: 2px solid var(--progress-bg)
+  border-right: 2px solid var(--progress-bg)
+  border-bottom: 2px solid var(--progress-bg)
+  animation: progress-animation .5s infinite linear
+
+// ---
+// -- Updated (highlight) badge
+// -
+.PinnedTab .update-badge
+  box(absolute)
+  size(6px, same)
+  pos(b: -1px, r: -1px)
+  border-radius: 50%
+  background-color: var(--tabs-update-badge-bg)
+  opacity: 0
+  transform: scale(0.7, 0.7)
+  transition: opacity var(--d-norm), transform var(--d-norm)
+
+.PinnedTab[data-updated]:not([data-loading]):not([data-audible]):not([data-muted]) .update-badge
+  opacity: 1
+  transform: scale(1, 1)
+
+// ---
+// -- Ok / Error badges
+// -
+.PinnedTab .ok-badge
+.PinnedTab .err-badge
+  box(absolute)
+  size(12px, same)
+  pos(b: -5px, r: -5px)
+  border-radius: 50%
+  > svg
+    box(absolute)
+    size(100%, same)
+
+.PinnedTab .ok-badge > svg
+  fill: var(--true-fg)
+
+.PinnedTab .err-badge > svg
+  fill: var(--false-fg)
+
+// ---
+// -- Audio badge
+// -
+.PinnedTab .audio-badge
+  box(absolute)
+  size(10px, same)
+  pos(18px, same)
+  border-radius: 50%
+  z-index: 30
+  transition: transform var(--d-fast)
+  > svg
+    box(absolute)
+    size(100%, same)
+    fill: var(--label-fg)
+    opacity: 0
+    transition: opacity var(--d-fast)
+
+  &:hover
+    opacity: .7
+
+#root[data-pinned-tabs-position="panel"][data-pinned-tabs-list]
+  .PinnedTab .audio-badge
+    pos(17px, same)
+
+.PinnedTab[data-audible] .audio-badge > svg.-loud
+.PinnedTab[data-muted] .audio-badge > svg.-mute
+  opacity: 1
+
+.PinnedTab[data-loading] .audio-badge
+  transform: translateX(-13px)
+
+// ---
+// -- Loaded animation
+// -
+.PinnedTab .complete-fx
+  box(absolute)
+  size(100%, same)
+  pos(0, 0)
+  background-image: linear-gradient(90deg, #00000000, var(--tabs-loading-fg))
+  opacity: 0
+  transform: translateX(-100%)
+
+// ---
+// -- Container badge
+// -
+.PinnedTab .ctx
+  box(absolute)
+  pos(3px, 3px)
+  size(7px, 7px)
+  border-radius: 50%
+  z-index: 2000
+  box-shadow: inset 0 0 1px 0 var(--title-fg)
+  background-color: var(--panel-fg)
+
+// ---
+// -- Drop slot
+// -
+.PinnedTab:before
+  content: ''
+  box(absolute)
+  size(100%, same)
+  pos(1px, 1px)
+  opacity: 0
+  transition: opacity var(--d-fast)
+
+.PinnedTab[data-drop-slot]:before
+  opacity: 1
+
+#root[data-pinned-tabs-position="panel"][data-pinned-tabs-list]
+  .PinnedTab:before
+    box-shadow: 0 -1px 0 0 var(--tabs-update-badge-bg)
+
+#root[data-pinned-tabs-position="panel"]
+#root[data-pinned-tabs-position="top"]
+  .PinnedTab:before
+    box-shadow: -1px 0 0 0 var(--tabs-update-badge-bg)
+
+#root[data-pinned-tabs-position="left"]
+#root[data-pinned-tabs-position="right"]
+  .PinnedTab:before
+    box-shadow: 0 -1px 0 0 var(--tabs-update-badge-bg)
+
+// ---
+// -- Title
+// -
+.PinnedTab .title
+  box(relative)
+  flex-grow: 1
+  font: var(--tabs-font)
+  color: var(--tabs-fg)
+  padding: 0 1px
+  transition: color .2s
+  white-space: nowrap
+  overflow: hidden
+  transition: transform var(--d-fast), color var(--d-fast), mask var(--d-fast)
+  mask: linear-gradient(-90deg, transparent, #000000 12px, #000000)
+
+.PinnedTab[data-active] .title
+  color: var(--tabs-activated-fg)
+
+.PinnedTab:hover .title
+.PinnedTab[data-active]:hover .title
+  color: var(--tabs-fg-hover)
+
+.PinnedTab[data-selected] .title
+.PinnedTab[data-selected]:active .title
+  color: var(--tabs-selected-fg)
+
+#root[data-pinned-tabs-position="panel"][data-pinned-tabs-list]
+  .PinnedTab[data-close-btn]:hover .title
+    mask: linear-gradient(-90deg, transparent, transparent 25px, #000000 50px, #000000)
+
+// ---
+// -- Close button
+// -
+.PinnedTab .close
+  box(absolute, none)
+  pos(0, r: 0)
+  size(31px)
+  height: var(--tabs-height)
+  cursor: pointer
+  z-index: 30
+  opacity: 0
+  &:hover > svg
+    fill: #ea4335
+  > svg
+    box(absolute)
+    pos(calc(50% - 8px), same)
+    size(17px, same)
+    fill: #a63626
+    transition: fill var(--d-fast)
+
+#root[data-pinned-tabs-position="panel"][data-pinned-tabs-list]
+  .PinnedTab[data-close-btn] .close
+    box(block)
+
+  .PinnedTab[data-close-btn]:hover .close
+    opacity: 1

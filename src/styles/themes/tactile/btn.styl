@@ -1,0 +1,38 @@
+@import '../../mixins'
+
+.btn
+  box(relative)
+  size(max-w: 100%)
+  text(s: rem(14))
+  padding: 3px 6px
+  white-space: nowrap
+  text-overflow: ellipsis
+  overflow: hidden
+  cursor: pointer
+  text-align: center
+  -moz-user-select: none
+
+  transition: background-color var(--d-fast), color var(--d-fast), box-shadow var(--d-fast)
+  transform: translateZ(0)
+  color: var(--btn-fg)
+  background-color: var(--btn-bg)
+  background-image: linear-gradient(0deg, #00000012, #ffffff08)
+  border-radius: var(--btn-roundness)
+  box-shadow: var(--btn-shadow)
+  &.-warn
+    background-color: var(--btn-warn-bg)
+    &:hover
+      background-color: var(--btn-warn-bg-hover)
+    &:active
+      background-color: var(--btn-warn-bg-active)
+  &:hover
+    filter: brightness(0.97)
+    background-color: var(--btn-bg-hover)
+    color: var(--btn-fg-hover)
+    box-shadow: var(--btn-shadow-hover)
+  &:active
+    transition: none
+    filter: brightness(0.86)
+    background-color: var(--btn-bg-active)
+    color: var(--btn-fg-active)
+    box-shadow: var(--btn-shadow-active)

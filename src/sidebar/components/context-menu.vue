@@ -1,72 +1,94 @@
 <template lang="pug">
-.CtxMenu(:is-active="aIsActive || bIsActive", @mouseenter="onME", @mouseleave="onML")
-  .container(:is-active="aIsActive")
-    .box(ref="aBox", :style="aPosStyle")
-      .inline-group(
-        v-for="iOpts in aInline"
-        v-if="iOpts.length"
-        @wheel.prevent.stop="")
+.CtxMenu(
+  :data-active="aIsActive || bIsActive"
+  @mouseenter="onME"
+  @mouseleave="onML"
+  @wheel.prevent.stop="")
+  transition(name="menu"): .container(v-show="aIsActive")
+    .box(ref="aBox" :style="aPosStyle")
+      div(
+        v-for="group in aMenuGroups"
+        v-if="group.options.length"
+        :class="group.inline ? 'inline-group' : 'list-group'")
         .icon-opt(
-          v-for="(opt, i) in iOpts"
-          :btn-width="btnWidth(iOpts, i)"
+          v-if="group.inline"
+          v-for="(opt, i) in group.options"
+          :data-width="btnWidth(group.options)"
+          :data-selected="isSelected(opt)"
+          :data-separator="isSeparator(opt)"
+          :data-color="opt.color ? opt.color : false"
+          :data-inactive="opt.inactive"
           :title="getTitle(opt.label)"
-          :is-selected="isSelected(opt)"
           @click="onClick(opt)"
           @mousedown.stop="")
-          svg(:style="{fill: opt.color}")
-            use(:xlink:href="'#' + opt.icon")
-      .opt(v-for="(opt, i) in aOpts"
-        :key="opt.label"
-        :title="getTitle(opt.label)"
-        :is-selected="isSelected(opt)"
-        @click="onClick(opt)"
-        @mousedown.stop="")
-        span(v-for="out in parseLabel(opt.label)"
-          :style="{color: out.color, fontWeight: out.w}") {{out.label}}
-  .container(:is-active="bIsActive")
-    .box(ref="bBox", :style="bPosStyle")
-      .inline-group(
-        v-for="iOpts in bInline"
-        v-if="iOpts.length"
-        @wheel.prevent.stop="")
-        .icon-opt(
-          v-for="(opt, i) in iOpts"
-          :btn-width="btnWidth(iOpts, i)"
+          svg: use(:xlink:href="'#' + opt.icon")
+        .opt(
+          v-if="!group.inline"
+          v-for="(opt, i) in group.options"
+          :data-selected="isSelected(opt)"
+          :data-separator="isSeparator(opt)"
+          :data-inactive="opt.inactive"
           :title="getTitle(opt.label)"
-          :is-selected="isSelected(opt)"
           @click="onClick(opt)"
           @mousedown.stop="")
-          svg(:style="{fill: opt.color}")
-            use(:xlink:href="'#' + opt.icon")
-      .opt(v-for="(opt, i) in bOpts"
-        :key="opt.label"
-        :title="getTitle(opt.label)"
-        :is-selected="isSelected(opt)"
-        @click="onClick(opt)"
-        @mousedown.stop="")
-        span(v-for="out in parseLabel(opt.label)"
-          :style="{color: out.color, fontWeight: out.w}") {{out.label}}
+          span(
+            v-for="out in parseLabel(opt.label)"
+            :data-color="out.color ? opt.color : false") {{out.label}}
+  transition(name="menu"): .container(v-show="bIsActive")
+    .box(ref="bBox" :style="bPosStyle")
+      div(
+        v-for="group in bMenuGroups"
+        v-if="group.options.length"
+        :class="group.inline ? 'inline-group' : 'list-group'")
+        .icon-opt(
+          v-if="group.inline"
+          v-for="(opt, i) in group.options"
+          :data-width="btnWidth(group.options)"
+          :data-selected="isSelected(opt)"
+          :data-separator="isSeparator(opt)"
+          :data-color="opt.color ? opt.color : false"
+          :data-inactive="opt.inactive"
+          :title="getTitle(opt.label)"
+          @click="onClick(opt)"
+          @mousedown.stop="")
+          svg: use(:xlink:href="'#' + opt.icon")
+        .opt(
+          v-if="!group.inline"
+          v-for="(opt, i) in group.options"
+          :key="opt.label"
+          :data-selected="isSelected(opt)"
+          :data-separator="isSeparator(opt)"
+          :data-inactive="opt.inactive"
+          :title="getTitle(opt.label)"
+          @click="onClick(opt)"
+          @mousedown.stop="")
+          span(
+            v-for="out in parseLabel(opt.label)"
+            :data-color="out.color ? opt.color : false") {{out.label}}
 </template>
 
 
 <script>
+import EventBus from '../../event-bus'
 import Store from '../store'
-import State from '../store.state'
-import Getters from '../store.getters'
-import EventBus from '../event-bus'
+import State from '../store/state'
+import Actions from '../actions'
+import ScrollBox from './scroll-box'
 
 export default {
+  components: {
+    ScrollBox
+  },
+
   data() {
     return {
       aIsActive: false,
-      aOpts: [],
-      aInline: [],
+      aMenuGroups: [],
       aPos: 0,
       aX: 0,
       aDown: true,
       bIsActive: false,
-      bOpts: [],
-      bInline: [],
+      bMenuGroups: [],
       bPos: 0,
       bX: 0,
       bDown: true,
@@ -81,7 +103,7 @@ export default {
       return style
     },
     aAll() {
-      return this.aInline.reduce((a, v) => a.concat(v), []).concat(this.aOpts)
+      return this.aMenuGroups.reduce((a, v) => a.concat(v.options), [])
     },
     bPosStyle() {
       let style = { transform: `translateY(${this.bPos}px) translateX(${this.bX}px)` }
@@ -89,7 +111,7 @@ export default {
       return style
     },
     bAll() {
-      return this.bInline.reduce((a, v) => a.concat(v), []).concat(this.bOpts)
+      return this.bMenuGroups.reduce((a, v) => a.concat(v.options), [])
     },
   },
 
@@ -97,53 +119,41 @@ export default {
     EventBus.$on('selectOption', this.onSelectOption)
     EventBus.$on('activateOption', this.onActivateOption)
 
-    Store.watch(Getters.ctxMenu, (c, p) => {
+    Store.watch(Object.getOwnPropertyDescriptor(State, 'ctxMenu').get, (c, p) => {
       if (this.leaveT) clearTimeout(this.leaveT)
       this.selected = -1
 
       let h = this.$root.$el.offsetHeight
 
       if (c) {
-        let rect
-        if (c.el.start && c.el.end) rect = { top: c.el.start, bottom: c.el.end, left: 120, right: 120 }
-        else rect = c.el.getBoundingClientRect()
-
-        if (this.aOpts.length) {
-          this.bOpts = c.opts
-          this.bInline = c.inline
+        if (this.aMenuGroups.length) {
+          this.bMenuGroups = c.opts
+          this.bPos = c.y
           this.bIsActive = true
           this.aIsActive = false
           this.$nextTick(() => {
-            this.bDown = this.$refs.bBox.offsetHeight + rect.bottom < h
-            this.bPos = this.bDown ? rect.bottom : rect.top
-            const fullWidth = this.$el.offsetWidth
-            const menuWidth = this.$refs.bBox.offsetWidth
-            if (rect.right < fullWidth - menuWidth) this.bX = rect.right
-            else if (rect.left > menuWidth) this.bX = rect.left - menuWidth
-            else this.bX = this.$el.offsetWidth - menuWidth
+            this.bDown = this.$refs.bBox.offsetHeight + c.y < h
+            let fullWidth = this.$el.offsetWidth
+            let menuWidth = this.$refs.bBox.offsetWidth
+            if (c.x < fullWidth - menuWidth) this.bX = c.x
+            else if (c.x > menuWidth) this.bX = c.x - menuWidth
+            else this.bX = fullWidth - menuWidth
           })
-          setTimeout(() => {
-            this.aOpts = []
-            this.aInline = []
-          }, 128)
+          setTimeout(() => { this.aMenuGroups = [] }, 128)
         } else {
-          this.aOpts = c.opts
-          this.aInline = c.inline
+          this.aMenuGroups = c.opts
+          this.aPos = c.y
           this.aIsActive = true
           this.bIsActive = false
           this.$nextTick(() => {
-            this.aDown = this.$refs.aBox.offsetHeight + rect.bottom < h
-            this.aPos = this.aDown ? rect.bottom : rect.top
-            const fullWidth = this.$el.offsetWidth
-            const menuWidth = this.$refs.aBox.offsetWidth
-            if (rect.right < fullWidth - menuWidth) this.aX = rect.right
-            else if (rect.left > menuWidth) this.aX = rect.left - menuWidth
-            else this.aX = this.$el.offsetWidth - menuWidth
+            this.aDown = this.$refs.aBox.offsetHeight + c.y < h
+            let fullWidth = this.$el.offsetWidth
+            let menuWidth = this.$refs.aBox.offsetWidth
+            if (c.x < fullWidth - menuWidth) this.aX = c.x
+            else if (c.x > menuWidth) this.aX = c.x - menuWidth
+            else this.aX = fullWidth - menuWidth
           })
-          setTimeout(() => {
-            this.bOpts = []
-            this.bInline = []
-          }, 128)
+          setTimeout(() => { this.bMenuGroups = [] }, 128)
         }
       }
 
@@ -161,18 +171,21 @@ export default {
     onML() {
       if (State.autoHideCtxMenu === 'none') return
       this.leaveT = setTimeout(() => {
-        Store.commit('closeCtxMenu')
+        Actions.closeCtxMenu()
       }, State.autoHideCtxMenu)
     },
 
     onClick(opt) {
+      if (opt.inactive) return
       if (typeof opt.action === 'string') {
-        Store.dispatch(opt.action, opt.args)
+        if (opt.args) Actions[opt.action](...opt.args)
+        else Actions[opt.action]()
       }
       if (typeof opt.action === 'function') {
-        opt.action(...opt.args)
+        if (opt.args) opt.action(...opt.args)
+        else Actions[opt.action]()
       }
-      Store.commit('closeCtxMenu')
+      Actions.closeCtxMenu()
     },
 
     onSelectOption(dir) {
@@ -199,12 +212,9 @@ export default {
       this.onClick(opts[this.selected])
     },
 
-    btnWidth(opts, i) {
-      if (i < 5) return 0
-      const k = opts.length % 5
-      const p = opts.length - k
-      if (i < p) return 0
-      else return 5
+    btnWidth(opts) {
+      if (opts.filter(o => typeof o !== 'string').length > 5) return 'wrap'
+      else 'norm'
     },
 
     isSelected(opt) {
@@ -212,7 +222,12 @@ export default {
       return opts[this.selected] === opt
     },
 
+    isSeparator(opt) {
+      return typeof opt === 'string' && opt.startsWith('separator')
+    },
+
     parseLabel(input) {
+      if (!input) return []
       return input.split('||').map(part => {
         let parsed = part.split('>>')
         return {
@@ -224,6 +239,7 @@ export default {
     },
 
     getTitle(input) {
+      if (!input) return ''
       return input
         .split('||')
         .map(part => {
@@ -235,102 +251,3 @@ export default {
   },
 }
 </script>
-
-
-<style lang="stylus">
-@import '../../styles/mixins'
-
-.CtxMenu
-  box(absolute)
-  size(100%, 1px, max-h: 100%)
-  pos(0, 0)
-  z-index: -1
-  opacity: 0
-  transition: opacity var(--d-fast), z-index var(--d-fast)
-  &[is-active]
-    opacity: 1
-    z-index: 5000
-
-.CtxMenu .container
-  box(absolute)
-  pos(0, b: 0)
-  size(100%, 0px)
-  z-index: -1
-  opacity: 0
-  transform: translateX(16px)
-  transition: opacity var(--d-fast), z-index var(--d-fast), transform var(--d-fast)
-  &[is-active]
-    opacity: 1
-    z-index: 100
-    transform: translateX(0)
-
-.CtxMenu .box
-  box(absolute)
-  size(max-w: calc(100% - 28px), min-w: 160px)
-  z-index: 30
-  padding: 0 0 0 0
-  margin: 0
-  overflow: hidden
-  border-radius: 3px
-  background-color: var(--ctx-menu-bg)
-  box-shadow: var(--ctx-menu-shadow)
-
-.CtxMenu .inline-group
-  box(relative, flex)
-  overflow: hidden
-  flex-wrap: wrap
-  &:not(:last-of-type)
-    padding: 0 0 1px
-    box-shadow: inset 0 -1px 0 0 #00000032
-
-.CtxMenu .icon-opt
-  box(relative)
-  size(auto, 30px, min-w: 30px)
-  flex-grow: 1
-  flex-shrink: 0
-  &[btn-width="5"]
-    size(20%)
-    flex-grow: 0
-  &:hover
-  &[is-selected]
-    background-color: var(--ctx-menu-bg-hover)
-    svg
-      opacity: 1
-  &:active
-    opacity: .7
-  svg
-    box(absolute)
-    size(16px, same)
-    pos(calc(50% - 8px), calc(50% - 8px))
-    opacity: .8
-    fill: var(--ctx-menu-fg)
-
-.CtxMenu .opt
-  box(relative, flex)
-  font: var(--ctx-menu-font)
-  align-items: center
-  justify-content: flex-start
-  padding: 2px 0 2px 8px
-  color: var(--ctx-menu-fg)
-  white-space: pre
-  > span
-    box(relative)
-    &:last-of-type
-      size(100%)
-      mask: linear-gradient(-90deg, transparent, #000000 12px, #000000)
-      padding: 0 12px 0 0
-  &:before
-    content: ''
-    box(absolute)
-    size(100%, same)
-    pos(0, 0)
-  &:first-of-type
-    padding-top: 4px
-  &:last-of-type
-    padding-bottom: 4px
-  &:hover:before
-  &[is-selected]
-    background-color: var(--ctx-menu-bg-hover)
-  &:active
-    opacity: .7
-</style>

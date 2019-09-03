@@ -1,0 +1,118 @@
+@import '../../mixins'
+
+.Bookmark
+  box(relative)
+  margin: 0
+  border-top-left-radius: 3px
+  border-bottom-left-radius: 3px
+
+// ---
+// -- Body
+// -
+.Bookmark > .body
+  box(relative, flex)
+  height: var(--bookmarks-bookmark-height)
+  align-items: center
+  cursor: pointer
+  transform: translateZ(0)
+  transition: opacity var(--d-fast)
+  overflow: hidden
+  border-top-left-radius: 2px
+  border-bottom-left-radius: 2px
+  background-color: #ffffff16
+  background-image: linear-gradient(0deg, #00000016, #00000000)
+  box-shadow: inset 0 1px 0 0 #ffffff12,
+              inset 1px 0 0 0 var(--border-fg),
+              0 -1px 0 0 var(--border-fg),
+              inset 0 -1px 0 0 var(--border-fg),
+              0 1px 8px 0 #00000024
+
+.Bookmark > .body:hover
+  background-color: var(--bookmarks-node-bg-hover)
+
+.Bookmark > .body:active
+  background-color: var(--bookmarks-node-bg-active)
+
+.Bookmark[data-selected] > .body
+.Bookmark[data-selected] > .body:hover
+.Bookmark[data-selected] > .body:active
+  background-color: var(--tabs-selected-bg)
+
+.Bookmark[data-open] > .body:before
+  content: ''
+  box(absolute)
+  size(4px, 4px)
+  pos(calc(50% - 2px), r: 4px)
+  border-radius: 50%
+  background-color: var(--bookmarks-open-bookmark-fg)
+
+// ---
+// -- Drag layer
+// -
+.Bookmark .drag-layer
+  box(absolute)
+  size(100%, same)
+  pos(0, 0)
+  z-index: 15
+
+// ---
+// -- Favicon
+// -
+.Bookmark .fav
+  box(relative)
+  size(16px, same)
+  flex-shrink: 0
+  margin: 0 4px 0 5px
+  z-index: 20
+  transition: opacity var(--d-fast), transform var(--d-fast)
+
+// ---
+// -- Placeholder of favicon
+// -
+.Bookmark .fav > .placeholder
+  box(absolute)
+  size(16px, same)
+  pos(0, 0)
+  filter: drop-shadow(1px 1px 0 #ffffff16)
+  > svg
+    box(absolute)
+    size(100%, same)
+    pos(0, 0)
+    fill: var(--favicons-placehoder-bg)
+
+// ---
+// -- Favicon's image
+// -
+.Bookmark .fav > img
+  box(absolute)
+  pos(0, 0)
+  size(100%, same)
+  transition: opacity var(--d-fast), transform var(--d-fast)
+
+// ---
+// -- Title
+// -
+.Bookmark .title
+  box(relative)
+  size(100%)
+  font: var(--bookmarks-bookmark-font)
+  color: var(--bookmarks-node-title-fg)
+  text-shadow: 1px 1px 0 var(--text-edge-color)
+  white-space: nowrap
+  overflow: hidden
+  transition: transform var(--d-fast), color var(--d-fast)
+  mask: linear-gradient(-90deg, transparent, #000000 12px, #000000)
+
+.Bookmark:hover .title
+  transition: transform var(--d-fast)
+  color: var(--bookmarks-node-title-fg-hover)
+
+.Bookmark:active .title
+  transition: none
+  color: var(--bookmarks-node-title-fg-active)
+
+.Bookmark[data-open] .title
+  mask: linear-gradient(-90deg, transparent 12px, #000000 24px, #000000)
+
+.Bookmark[data-selected] .title
+  color: var(--tabs-selected-fg)

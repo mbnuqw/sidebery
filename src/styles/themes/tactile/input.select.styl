@@ -1,0 +1,34 @@
+@import '../../mixins'
+
+.SelectInput
+  box(relative, flex)
+  grid-gap: 1px 1px
+  flex-wrap: wrap
+  justify-content: stretch
+  align-items: stretch
+  cursor: pointer
+  margin-top: 5px
+  overflow: hidden
+  border-radius: 3px
+  box-shadow: 0 0 0 1px var(--border-fg), 0 1px 3px 0 #00000032
+  transform: translateZ(0)
+
+.SelectInput > .opt
+  box(relative)
+  text(s: rem(12), w: 700)
+  flex-grow: 1
+  padding: 1px 6px
+  color: var(--inactive-fg)
+  transition: color var(--d-fast)
+  text-transform: uppercase
+  background-color: #00000012
+  background-image: linear-gradient(0deg, #ffffff08, #00000012)
+  text-align: center
+  box-shadow: 0 0 0 1px var(--border-fg)
+  &[data-active]
+    color: #ffffff
+    background-color: var(--active-bg)
+    background-image: linear-gradient(0deg, #00000012, #ffffff08)
+    box-shadow: 0 0 0 1px var(--border-fg), 0 1px 3px 0 #00000032
+    &[data-none]
+      background-color: var(--false-bg)

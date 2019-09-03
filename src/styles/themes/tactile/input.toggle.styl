@@ -1,0 +1,49 @@
+@import '../../mixins'
+
+.ToggleInput
+  box(relative, flex)
+  flex-wrap: wrap
+  cursor: pointer
+  margin-top: 5px
+  transform: translateZ(0)
+
+  &[data-active]
+    .opt.-true
+      color: #ffffff
+      box-shadow: 0 0 0 1px var(--border-fg), 0 1px 3px 0 #00000032
+      background-color: var(--true-bg)
+      background-image: linear-gradient(0deg, #00000012, #ffffff08)
+    .opt.-false
+      color: var(--inactive-fg)
+      box-shadow: 0 0 0 1px var(--border-fg)
+      background-color: #00000012
+      background-image: linear-gradient(0deg, #ffffff08, #00000012)
+
+// ---
+// -- Option
+// -
+.ToggleInput .opt
+  box(relative)
+  text(s: rem(12), w: 700)
+  margin: 0 1px 0 0
+  padding: 2px 5px
+  color: var(--inactive-fg)
+  transition: color var(--d-fast)
+  background-color: #00000012
+  box-shadow: 0 0 0 1px var(--border-fg)
+  background-image: linear-gradient(0deg, #ffffff08, #00000012)
+  text-transform: uppercase
+
+  &:first-of-type
+    border-top-left-radius: 3px
+    border-bottom-left-radius: 3px
+
+  &:last-of-type
+    border-top-right-radius: 3px
+    border-bottom-right-radius: 3px
+
+  &.-false
+    color: #ffffff
+    box-shadow: 0 0 0 1px var(--border-fg), 0 1px 3px 0 #00000032
+    background-color: var(--false-bg)
+    background-image: linear-gradient(0deg, #00000012, #ffffff08)

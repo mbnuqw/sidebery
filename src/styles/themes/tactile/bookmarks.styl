@@ -1,0 +1,50 @@
+@import '../../mixins'
+
+.Bookmarks
+  overflow: hidden
+
+.Bookmarks .bookmarks-wrapper
+  box(relative)
+  padding-bottom: 64px
+  box-shadow: inset 0 1px 0 0 #ffffff08
+
+.Bookmarks[data-unrenderable]
+  cursor: progress
+
+// ---
+// -- Root nodes
+// -
+.Bookmarks .node
+  box(relative)
+  opacity: 1
+  transition: opacity var(--d-fast)
+
+.Bookmarks[data-unrenderable] .node
+  box(none)
+
+.Bookmarks[data-invisible] .node
+  opacity: 0
+
+// ---
+// -- Editor Transitions
+// -
+.Bookmarks
+  .editor-enter-active
+  .editor-leave-active
+    transition: opacity var(--d-fast), z-index var(--d-fast), transform var(--d-fast)
+  .editor-enter
+    transform: translateY(100%)
+    opacity: 0
+    z-index: 0
+  .editor-enter-to
+    transform: translateY(0)
+    opacity: 1
+    z-index: 10
+  .editor-leave
+    transform: translateY(0)
+    opacity: 1
+    z-index: 10
+  .editor-leave-to
+    transform: translateY(100%)
+    opacity: 0
+    z-index: 0

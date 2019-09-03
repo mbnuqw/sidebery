@@ -1,7 +1,7 @@
 export default {
   // --- Bookmark
   'menu.bookmark.open_in_new_window': { message: 'Открыть в новом окне' },
-  'menu.bookmark.open_in_new_priv_window': { message: 'Открыть в новом приватном окне' },
+  'menu.bookmark.open_in_new_priv_window': { message: 'Открыть в приватном окне' },
   'menu.bookmark.open_in_ctr_': { message: 'Открыть в контейнере...' },
   'menu.bookmark.open_in_default_panel': { message: 'Открыть' },
   'menu.bookmark.open_in_': { message: 'Открыть в ' },
@@ -14,7 +14,7 @@ export default {
   // --- Tab
   'menu.tab.undo': { message: 'Восстановить удаленный таб' },
   'menu.tab.move_to_new_window': { message: 'Переместить в новое окно' },
-  'menu.tab.move_to_new_priv_window': { message: 'Переместить в новое приватное окно' },
+  'menu.tab.move_to_new_priv_window': { message: 'Переместить в приватное окно' },
   'menu.tab.move_to_another_window': { message: 'Переместить в другое окно' },
   'menu.tab.move_to_window_': { message: 'Переместить в окно...' },
   'menu.tab.reopen_in_priv_window': { message: 'Открыть в приватном окне' },
@@ -39,9 +39,14 @@ export default {
 
   // --- Editor
   'menu.editor.reset': { message: 'Сброс' },
+  'menu.editor.create_separator': { message: 'Создать разделитель' },
+  'menu.editor.create_sub_tooltip': { message: 'Создать подменю' },
+  'menu.editor.up_tooltip': { message: 'Вверх' },
+  'menu.editor.down_tooltip': { message: 'Вниз' },
+  'menu.editor.disable_tooltip': { message: 'Отключить' },
   'menu.editor.tabs_title': { message: 'Табы' },
   'menu.editor.bookmarks_title': { message: 'Закладки' },
-  'menu.editor.inline_group_title': { message: 'Иконки' },
+  'menu.editor.inline_group_title': { message: 'Название подменю...' },
   'menu.editor.list_title': { message: 'Список' },
   'menu.editor.disabled_title': { message: 'Отключено' },
 }

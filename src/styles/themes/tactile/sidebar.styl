@@ -1,0 +1,526 @@
+@import '../../mixins'
+@import '../../base'
+
+@import './vars'
+@import './animations'
+
+@import './btn'
+@import './scroll-box'
+@import './context-menu'
+@import './bookmarks-editor'
+
+@import './tabs'
+@import './tabs.tab'
+
+@import './pinned-dock'
+@import './pinned-tab'
+
+@import './bookmarks'
+@import './bookmarks.separator'
+@import './bookmarks.folder'
+@import './bookmarks.bookmark'
+
+@import './dashboard'
+@import './dashboard.containered-tabs'
+
+@import './field.info'
+@import './field.icon-select'
+@import './field.select'
+@import './field.style-color'
+@import './field.style'
+@import './field.toggle'
+
+@import './input.color'
+@import './input.icon-select'
+@import './input.select'
+@import './input.text'
+@import './input.toggle'
+@import './input.window-select'
+
+// ---
+// -- Root vue element
+// -
+.root
+  box(relative)
+  size(100%, 100%)
+  background-color: var(--bg)
+
+// ---
+// -- Sidebar root element
+// -
+.Sidebar
+  box(relative, flex)
+  size(100%, same)
+  flex-direction: column
+  overflow: hidden
+
+#root[data-pinned-tabs-position="top"] > .Sidebar
+  flex-direction: column
+#root[data-pinned-tabs-position="left"] > .Sidebar
+  flex-direction: row
+#root[data-pinned-tabs-position="right"] > .Sidebar
+  flex-direction: row-reverse
+
+// ---
+// -- Main container
+// -
+.Sidebar > .box
+  box(relative, flex)
+  size(100%, same)
+  flex-direction: column
+
+// ---
+// -- Dimmer layer
+// -
+.Sidebar .dimmer
+  box(absolute)
+  pos(0, 0)
+  size(100%, same)
+  background-color: #00000064
+  z-index: -1
+  opacity: 0
+  transition: z-index var(--d-fast), opacity var(--d-fast)
+
+.Sidebar[data-dashboard] .dimmer
+  z-index: 500
+  opacity: 1
+
+// ---
+// -- Navigation
+// -
+.Sidebar .nav
+  box(relative, flex)
+  size(100%)
+  min-height: var(--nav-btn-height)
+  z-index: 2000
+  background-color: var(--bg)
+  box-shadow: inset 0 -1px 0 0 var(--border-fg), inset 0 1px 0 0 var(--border-fg), 0 0 12px 0 #00000000
+  translate: box-shadow var(--d-fast)
+  &:before
+    content: ''
+    box(absolute)
+    pos(0, 0)
+    size(100%, same)
+    background-image: linear-gradient(180deg, #00000000, #00000032)
+
+.Sidebar[data-dashboard] .nav
+  box-shadow: inset 0 -1px 0 0 var(--border-fg), inset 0 1px 0 0 var(--border-fg), 0 0 12px 0 #00000032
+
+// ---
+// -- Dashboard wrapper
+// -
+.Sidebar .dashboard-box
+  box(absolute, flex)
+  size(100%, max-h: calc(100% - 64px))
+  pos(0, 0)
+  flex-direction: column
+  z-index: 1000
+  box-shadow: 0 1px 12px 0 #00000056, 0 0 0 1px var(--border-fg)
+  background-color: var(--bg)
+  // background-color: #787878
+
+// ---
+// -- Dashboard
+// -
+.Sidebar .dashboard
+  size(100%, same)
+  overflow: hidden
+
+// ---
+// -- Nav bar
+// -
+.Sidebar .nav-bar
+  box(relative, flex)
+  flex-wrap: wrap
+  flex-grow: 1
+  overflow: hidden
+
+.Sidebar[data-nav-inline] .nav-bar
+  flex-wrap: nowrap
+
+// ---
+// -- Navigational button
+// -
+.Sidebar .nav-btn
+  box(relative, flex)
+  width: var(--nav-btn-width)
+  height: var(--nav-btn-height)
+  justify-content: center
+  margin: 0 -1px -1px 0
+  align-items: center
+  flex-shrink: 0
+  overflow: hidden
+  border-radius: 2px
+  z-index: 10
+  transition: opacity var(--d-fast), transform var(--d-fast), z-index var(--d-fast)
+
+  // for dragenter
+  &:before
+    content: ''
+    box(absolute)
+    size(100%, same)
+    pos(0, 0)
+    z-index: 1
+
+  &:hover
+    background-color: #00000008
+    box-shadow: inset 0 0 0 1px #00000024, inset 0 0 8px 0 #00000012
+
+  &[data-active]
+    background-color: #00000016
+    box-shadow: inset 0 0 0 1px var(--border-active-fg), inset 0 0 8px 0 #00000016
+
+  &:active
+    background-color: #00000024
+    box-shadow: inset 0 0 0 1px var(--border-active-fg), inset 0 0 8px 0 #00000018
+
+  &[data-hidden]
+    box(none)
+
+  &[data-loading]
+    cursor: progress
+
+
+.Sidebar[data-nav-inline] .nav-btn
+  box(absolute)
+
+  &[data-hidden]
+    box(flex)
+    opacity: 0
+    z-index: -1
+    transform: scale(0, 0)
+
+  // Button x position
+  for i in 0..24
+    &[data-index=\"{i}\"]
+      transform: "translateX(calc(var(--nav-btn-width) * %s - %spx))" % (i i)
+
+// ---
+// -- Nav button icon
+// -
+.Sidebar .nav-btn > svg
+  box(absolute)
+  size(16px, same)
+  fill: var(--panel-fg, var(--nav-btn-fg))
+  transform: translateZ(0)
+  transition: opacity var(--d-fast)
+
+#root[data-style="light"] .Sidebar .nav-btn[data-color] > svg
+  fill: var(--nav-btn-fg) !important
+  filter: drop-shadow(1px 0 0 var(--panel-fg)) drop-shadow(-1px 0 0 var(--panel-fg)) drop-shadow(0 -1px 0 var(--panel-fg)) drop-shadow(0 1px 0 var(--panel-fg))
+
+.Sidebar .nav-btn[data-updated] > svg
+  mask: radial-gradient(
+    circle at calc(100% - 2px) calc(100% - 2px),
+    #00000024,
+    #00000024 4px,
+    #000000 5px,
+    #000000
+  )
+
+.Sidebar .nav-btn[data-proxified] > svg
+.Sidebar .nav-btn[data-loading] > svg
+  mask: radial-gradient(
+    circle at calc(100% - 2px) calc(100% - 2px),
+    #00000024,
+    #00000024 7px,
+    #000000 8px,
+    #000000
+  )
+
+// ---
+// -- Progress spinner
+// -
+.Sidebar .nav-btn .progress-spinner
+  box(absolute, border-box)
+  size(12px, same)
+  pos(50%, 50%)
+  border-radius: 50%
+  opacity: 0
+  overflow: hidden
+  transition: opacity var(--d-norm)
+  border-top: 2px solid var(--progress-fg)
+  border-left: 2px solid var(--progress-bg)
+  border-right: 2px solid var(--progress-bg)
+  border-bottom: 2px solid var(--progress-bg)
+
+.Sidebar .nav-btn[data-loading] .progress-spinner
+  animation: progress-animation .5s infinite linear
+
+.Sidebar .nav-btn[data-loading="true"] .progress-spinner
+  opacity: 1
+
+// ---
+// -- Update / Highlight badge
+// -
+.Sidebar .nav-btn .update-badge
+  box(absolute)
+  size(6px, same)
+  pos(calc(50% + 3px), calc(50% + 3px))
+  border-radius: 50%
+  background-color: var(--nav-btn-update-badge-bg)
+  opacity: 0
+  transform: scale(0.7, 0.7)
+  transition: opacity var(--d-norm), transform var(--d-norm)
+
+.Sidebar .nav-btn[data-updated]:not([data-proxified]) .update-badge
+  opacity: 1
+  transform: scale(1, 1)
+
+// ---
+// -- Proxy badge
+// -
+.Sidebar .nav-btn .proxy-badge
+  box(absolute)
+  size(10px, same)
+  pos(calc(50% + 1px), calc(50% + 1px))
+  fill: var(--nav-btn-fg)
+  opacity: 0
+  transform: scale(0.7, 0.7)
+  transition: opacity var(--d-norm), transform var(--d-norm)
+  > svg
+    box(absolute)
+    size(100%, same)
+
+.Sidebar .nav-btn[data-proxified] .proxy-badge
+  opacity: 1
+  transform: scale(1, 1)
+
+// ---
+// -- Ok / Err badge
+// -
+.Sidebar .nav-btn .ok-badge
+.Sidebar .nav-btn .err-badge
+  box(absolute)
+  size(12px, same)
+  pos(50%, 50%)
+  border-radius: 50%
+  opacity: 0
+  transform: scale(0.7, 0.7)
+  transition: opacity var(--d-norm), transform var(--d-norm)
+  > svg
+    box(absolute)
+    size(100%, same)
+
+.Sidebar .nav-btn[data-loading="ok"] .ok-badge
+.Sidebar .nav-btn[data-loading="err"] .err-badge
+  opacity: 1
+  transform: scale(1, 1)
+
+.Sidebar .nav-btn .ok-badge > svg
+  fill: var(--true-fg)
+
+.Sidebar .nav-btn .err-badge > svg
+  fill: var(--false-fg)
+
+// ---
+// -- Length of panel
+// -
+.Sidebar .nav-btn .len
+  box(absolute, flex)
+  pos(0, r: 0)
+  size(min-w: 14px, h: 14px)
+  text(s: rem(11))
+  padding: 0 3px
+  justify-content: center
+  align-items: center
+  color: #ffffff
+  background-color: var(--border-fg)
+  border-radius: 2px
+  text-shadow: 0 0 1px #000000
+
+// ---
+// -- Settings button
+// -
+.Sidebar .settings-btn
+  box(relative, flex)
+  width: var(--nav-btn-width)
+  height: var(--nav-btn-height)
+  justify-content: center
+  align-items: center
+  border-radius: 2px
+  flex-shrink: 0
+  > svg
+    box(absolute)
+    size(16px, same)
+    fill: var(--nav-btn-fg)
+    transition: opacity var(--d-fast)
+
+  &:hover
+    background-color: #00000008
+    box-shadow: inset 0 0 0 1px #00000024, inset 0 0 8px 0 #00000012
+
+  &:active
+    background-color: #00000024
+    box-shadow: inset 0 0 0 1px #00000032, inset 0 0 8px 0 #00000018
+
+// ---
+// -- Move pointer
+// -
+.Sidebar .pointer
+  box(absolute)
+  size(32px, 24px)
+  pos(0, 0)
+  z-index: -1
+  opacity: 0
+  transition: z-index var(--d-fast), opacity var(--d-fast), transform var(--d-fast)
+  &:after
+    content: ''
+    box(absolute)
+    size(100vw, 2px)
+    pos(11px, 6px)
+    background-color: var(--nav-btn-update-badge-bg)
+    opacity: 0
+    transition: opacity var(--d-fast)
+
+.Sidebar[data-drag] .pointer
+  opacity: 1
+  z-index: 100
+
+.Sidebar[data-pointer="between"] .pointer:after
+  opacity: 1
+
+.Sidebar[data-pointer^="inside"] .pointer:after
+  opacity: 0
+
+#root[data-pinned-tabs-position="left"] .Sidebar .pointer
+  pos(l: 35px)
+
+// ---
+// -- Arrow of drag pointer
+// -
+.Sidebar .arrow
+  box(absolute)
+  size(100%, same)
+  pos(0, 0)
+  opacity: 1
+  transition: opacity var(--d-fast)
+  &:before
+    content: ''
+    box(absolute)
+    size(16px, 16px)
+    pos(4px, -11px)
+    transform: rotateZ(45deg)
+    box-shadow: inset 0 0 0 2px var(--nav-btn-update-badge-bg)
+    transition: background-color var(--d-fast)
+  &:after
+    content: ''
+    box(absolute)
+    size(16px, 16px)
+    pos(4px, -11px)
+    opacity: 0
+    transform: rotateZ(45deg)
+    box-shadow: inset -1px 1px 0 0 var(--nav-btn-update-badge-bg)
+
+.Sidebar[data-pointer="none"] .arrow
+  opacity: 0
+
+.Sidebar[data-pointer="inside-fold"] .arrow:before
+  background-color: var(--nav-btn-update-badge-bg)
+
+.Sidebar .arrow[data-expanding]
+  animation: pointer-expand-arrow .3s
+
+.Sidebar .arrow[data-expanding]:after
+  animation: pointer-expand-pulse .5s
+
+// ---
+// -- Container of panels
+// -
+.Sidebar .panel-box
+  box(relative)
+  flex-grow: 2
+
+// ---
+// -- Panel
+// -
+.Sidebar .panel
+  box(absolute, flex)
+  pos(0, 0)
+  size(100%, same)
+  flex-direction: column
+  transition: transform var(--d-fast), opacity var(--d-fast), z-index var(--d-fast)
+  opacity: 0
+  z-index: 0
+  &[data-pos="center"]
+    z-index: 10
+    opacity: 1
+    transform: translateX(0)
+  &[data-pos="left"]
+    transform: translateX(-100%)
+  &[data-pos="right"]
+    transform: translateX(100%)
+
+// ---
+// -- Upgrading banner
+// -
+.Sidebar .upgrading
+  box(absolute)
+  size(100%, same)
+  pos(0, 0)
+  background-color: var(--bg)
+  z-index: 10000
+  cursor: wait
+
+.Sidebar .upgrading .info
+  box(absolute)
+  size(100%)
+  pos(calc(50% - 32px), l: 0)
+  text(s: rem(18), w: 700)
+  text-shadow: var(--info-fg)
+  text-align: center
+  color: var(--inactive-fg)
+  padding: 8px
+  animation: upgrading-info 1s infinite
+
+// ---
+// -- Transitions
+// -
+.Sidebar
+  .panel-enter-active
+  .panel-leave-active
+    transition: z-index var(--d-fast), transform var(--d-fast)
+  .panel-enter
+    transform: translateX(100%)
+    z-index: 0
+  .panel-enter-to
+    transform: translateX(0)
+    opacity: 1
+    z-index: 10
+  .panel-leave
+    transform: translateX(0)
+    opacity: 1
+    z-index: 10
+  .panel-leave-to
+    transform: translateX(100%)
+    z-index: 0
+
+  .upgrading-enter-active
+  .upgrading-leave-active
+    transition: transform var(--d-norm), opacity var(--d-norm)
+  .upgrading-enter
+    opacity: 0
+  .upgrading-enter-to
+    opacity: 1
+  .upgrading-leave
+    opacity: 1
+  .upgrading-leave-to
+    opacity: 0
+
+  .dashboard-enter-active
+  .dashboard-leave-active
+    transition: z-index var(--d-fast), transform var(--d-fast)
+  .dashboard-enter
+    transform: translateY(-100%)
+    z-index: 0
+  .dashboard-enter-to
+    transform: translateY(0)
+    opacity: 1
+    z-index: 1000
+  .dashboard-leave
+    transform: translateY(0)
+    opacity: 1
+    z-index: 1000
+  .dashboard-leave-to
+    transform: translateY(-100%)
+    z-index: 0

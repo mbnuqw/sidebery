@@ -1,7 +1,4 @@
 @import './mixins'
-@import './vars'
-@import './btn'
-@import './dashboard'
 
 html
   box(relative)
@@ -11,13 +8,16 @@ body
   box(relative)
   size(100%, 100%)
   text(smooth: on)
+  padding: 0
+  margin: 0
   a
     text-decoration: none
 
-.root
-  box(relative)
-  size(100%, 100%)
-  background-color: var(--bg)
+// --- Remove dotted outline ---
+:focus
+  outline: none
+::-moz-focus-inner
+  border: 0
 
 // --- Hidden elements ---
 .hidden
@@ -27,3 +27,10 @@ body
   size(0, 0)
   overflow: hidden
   opacity: 0
+
+.dbg
+  box(absolute)
+  pos(b: 0, l: 0)
+  text(f: monospace, s: rem(11), c: #ffffff)
+  padding: 8px
+  z-index: 10000

@@ -81,10 +81,13 @@ export default {
   'styles.bookmarks_closed_dir_fg_color': { message: 'Цвет закрытой папки' },
   'styles.bookmarks_closed_dir_fg_color_hover': { message: 'Цвет закрытой папки при наведении курсора' },
   'styles.bookmarks_closed_dir_fg_color_active': { message: 'Цвет закрытой папки при клике' },
-  'styles.bookmarks_opened_dir_fg_color': { message: 'Цвет отрытой папки' },
-  'styles.bookmarks_opened_dir_fg_color_hover': { message: 'Цвет отрытой папки при наведении курсора' },
-  'styles.bookmarks_opened_dir_fg_color_active': { message: 'Цвет отрытой папки при клике' },
+  'styles.bookmarks_open_dir_fg_color': { message: 'Цвет отрытой папки' },
+  'styles.bookmarks_open_dir_fg_color_hover': { message: 'Цвет отрытой папки при наведении курсора' },
+  'styles.bookmarks_open_dir_fg_color_active': { message: 'Цвет отрытой папки при клике' },
   'styles.bookmarks_empty_dir_fg_color': { message: 'Цвет пустой папки' },
 
   'styles.reset_styles': { message: 'Сбросить' },
+
+  'styles.css_sidebar': { message: 'Боковая панель' },
+  'styles.css_group': { message: 'Групповая страница' },
 }

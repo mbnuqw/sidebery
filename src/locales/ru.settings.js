@@ -2,6 +2,12 @@ export default {
   'settings.opt_true': { message: 'вкл' },
   'settings.opt_false': { message: 'выкл' },
 
+  'settings.nav_settings': { message: 'Настройки' },
+  'settings.nav_menu': { message: 'Меню' },
+  'settings.nav_styles': { message: 'Стили' },
+  'settings.nav_snapshots': { message: 'Снепшоты' },
+  'settings.nav_debug': { message: 'Отладка' },
+
   // --- General
   'settings.general_title': { message: 'Основные' },
   'settings.native_scrollbars': { message: 'Использовать системные скроллбары' },
@@ -9,11 +15,31 @@ export default {
   // --- Context menu
   'settings.ctx_menu_title': { message: 'Контекстное меню' },
   'settings.autoHide_ctx_menu': { message: 'Скрывать контекстное меню' },
-  'settings.autoHide_ctx_menu_250': { message: '0.25 сек.' },
-  'settings.autoHide_ctx_menu_500': { message: '0.5 сек.' },
-  'settings.autoHide_ctx_menu_1000': { message: '1 сек.' },
+  'settings.autoHide_ctx_menu_250': { message: '0.25сек' },
+  'settings.autoHide_ctx_menu_500': { message: '0.5сек' },
+  'settings.autoHide_ctx_menu_1000': { message: '1сек' },
   'settings.autoHide_ctx_menu_none': { message: 'никогда' },
+  'settings.ctx_menu_native': { message: 'Использовать системное контекстное меню' },
+  'settings.ctx_menu_render_inact': { message: 'Отображать неактивные элементы' },
   'settings.ctx_menu_editor': { message: 'Редактировать меню' },
+
+  // --- Navigation bar
+  'settings.nav_title': { message: 'Навигация' },
+  'settings.nav_bar_inline': { message: 'В одну строку' },
+  'settings.hide_settings_btn': { message: 'Скрывать кнопку "Настройки"' },
+  'settings.hide_add_btn': { message: 'Скрывать кнопку "Новый контейнер"' },
+  'settings.nav_btn_count': { message: 'Показывать количество табов/закладок' },  
+  'settings.hide_empty_panels': { message: 'Скрывать пустые панели' },
+  'settings.nav_mid_click': { message: 'Клик средней кнопкой мыши по кнопке панели' },
+  'settings.nav_mid_click_rm_all': { message: 'закрыть все табы' },
+  'settings.nav_mid_click_none': { message: 'ничего' },
+  'settings.nav_switch_panels_wheel': { message: 'Переключать панели с помощью колеса мыши' },
+
+  // --- Group page
+  'settings.group_title': { message: 'Групповая страница' },
+  'settings.group_layout': { message: 'Отображение' },
+  'settings.group_layout_grid': { message: 'сетка' },
+  'settings.group_layout_list': { message: 'список' },
 
   // --- Tabs
   'settings.tabs_title': { message: 'Табы' },
@@ -47,7 +73,7 @@ export default {
   'settings.pinned_tabs_list': { message: 'Показывать заголовки закрепленных табов' },
 
   // --- Tabs tree
-  'settings.pinned_tabs_tree': { message: 'Древовидное отображение табов' },
+  'settings.tabs_tree_title': { message: 'Древовидное отображение табов' },
   'settings.tabs_tree_layout': { message: 'Древовидное отображение табов' },
   'settings.group_on_open_layout': { message: 'Создать поддерево при открытии ссылки в новом табе' },
   'settings.tabs_tree_limit': { message: 'Максимальный уровень вложенности табов' },
@@ -60,9 +86,22 @@ export default {
   'settings.hide_folded_tabs': { message: 'Скрывать свернутые табы' },
   'settings.auto_fold_tabs': { message: 'Автоматически сворачивать табы' },
   'settings.auto_exp_tabs': { message: 'Автоматически разворачивать табы' },
-  'settings.rm_folded_tabs': { message: 'Закрывать свернутые табы вместе с родительским' },
-  'settings.tabs_child_count': { message: 'Показывать количество потомков' },
+  'settings.rm_child_tabs': { message: 'Закрывать дочерние табы вместе с родительским' },
+  'settings.rm_child_tabs_all': { message: 'все' },
+  'settings.rm_child_tabs_folded': { message: 'свернутые' },
+  'settings.rm_child_tabs_none': { message: 'выкл' },
+  'settings.tabs_child_count': { message: 'Показывать количество потомков на свернутом табе' },
   'settings.tabs_lvl_dots': { message: 'Показывать отметки уровней табов' },
+  'settings.discard_folded': { message: 'Выгружать свернутые табы' },
+  'settings.discard_folded_delay': { message: 'Через' },
+  'settings.discard_folded_delay_sec': {
+    message: ['секунда', 'секунды', 'секунд'],
+    plur: [/^(1|(\d*?)[^1]1)$/, /^([234]|(\d*?)[^1][234])$/],
+  },
+  'settings.discard_folded_delay_min': {
+    message: ['минута', 'минуты', 'минут'],
+    plur: [/^(1|(\d*?)[^1]1)$/, /^([234]|(\d*?)[^1][234])$/],
+  },
 
   // --- Bookmarks
   'settings.bookmarks_title': { message: 'Закладки' },
@@ -70,27 +109,61 @@ export default {
   'settings.open_bookmark_new_tab': { message: 'Открывать закладку в новом табе' },
   'settings.auto_close_bookmarks': { message: 'Автоматически закрывать папки' },
   'settings.auto_rm_other': { message: 'Удалять открытые закладки из папки "Другие закладки"' },
+  'settings.show_bookmark_len': { message: 'Показывать размер папки' },
+  'settings.highlight_open_bookmarks': { message: 'Выделять открытые закладки' },
+  'settings.activate_open_bookmark_tab': { message: 'Переходить на открытую вкладку вместо открытия новой' },
 
   // --- Appearance
   'settings.appearance_title': { message: 'Вид' },
   'settings.font_size': { message: 'Размер шрифта' },
+  'settings.font_size_xxs': { message: 'XXS' },
   'settings.font_size_xs': { message: 'XS' },
   'settings.font_size_s': { message: 'S' },
   'settings.font_size_m': { message: 'M' },
   'settings.font_size_l': { message: 'L' },
   'settings.font_size_xl': { message: 'XL' },
   'settings.font_size_xxl': { message: 'XXL' },
-  'settings.switch_theme': { message: 'Тема' },
-  'settings.theme_dark': { message: 'темная' },
-  'settings.theme_light': { message: 'светлая' },
+  'settings.switch_style': { message: 'Стиль' },
+  'settings.style_dark': { message: 'темный' },
+  'settings.style_light': { message: 'светлый' },
+  'settings.theme': { message: 'Тема' },
+  'settings.theme_default': { message: 'стандартная' },
+  'settings.theme_tactile': { message: 'тактильная' },
+  'settings.theme_none': { message: 'нет' },
   'settings.bg_noise': { message: 'Матовый задный фон' },
   'settings.animations': { message: 'Анимации' },
   'settings.edit_styles': { message: 'Редактировать стили' },
+  'settings.edit_theme': { message: 'Редактировать тему' },
 
   // --- Snapshots
   'settings.snapshots_title': { message: 'Снепшоты' },
-  'settings.snapshots_pinned_label': { message: 'Закрепленные' },
-  'settings.snapshots_default_label': { message: 'Стандартные' },
+  'settings.snap_interval': { message: 'Интервал авто-снепшотов' },
+  'settings.snap_interval_min': {
+    message: ['минута', 'минуты', 'минут'],
+    plur: [/^(1|(\d*?)[^1]1)$/, /^([234]|(\d*?)[^1][234])$/],
+  },
+  'settings.snap_interval_hr': {
+    message: ['час', 'часа', 'часов'],
+    plur: [/^(1|(\d*?)[^1]1)$/, /^([234]|(\d*?)[^1][234])$/],
+  },
+  'settings.snap_interval_day': {
+    message: ['день', 'дня', 'дней'],
+    plur: [/^(1|(\d*?)[^1]1)$/, /^([234]|(\d*?)[^1][234])$/],
+  },
+  'settings.snap_interval_none': { message: 'выкл' },
+  'settings.snap_limit': { message: 'Snapshots limit' },
+  'settings.snap_limit_snap': {
+    message: ['снепшот', 'снепшота', 'снепшотов'],
+    plur: [/^(1|(\d*?)[^1]1)$/, /^([234]|(\d*?)[^1][234])$/],
+  },
+  'settings.snap_limit_kb': {
+    message: ['кбайта', 'кбайт'],
+    plur: [/^([234]|(\d*?)[^1][234])$/],
+  },
+  'settings.snap_limit_day': {
+    message: ['день', 'дня', 'дней'],
+    plur: [/^(1|(\d*?)[^1]1)$/, /^([234]|(\d*?)[^1][234])$/],
+  },
   'settings.snapshots_view_label': { message: 'Просмотреть снепшоты' },
   'settings.make_snapshot': { message: 'Создать снепшот' },
   'settings.rm_all_snapshots': { message: 'Удалить все снепшоты' },
@@ -104,7 +177,8 @@ export default {
   'settings.scroll_through_tabs_panel': { message: 'на панели' },
   'settings.scroll_through_tabs_global': { message: 'глобально' },
   'settings.scroll_through_tabs_none': { message: 'выкл' },
-  'settings.scroll_through_visible_tabs': { message: 'Только видимые' },
+  'settings.scroll_through_visible_tabs': { message: 'Пропускать свернутые' },
+  'settings.scroll_through_tabs_except_overflow': { message: 'За исключением случаев, когда панель переполнена' },
   'settings.tab_double_click': { message: 'Двойной клик по табу' },
   'settings.tab_long_left_click': { message: 'Длительное нажатие левой кнопки мыши по табу' },
   'settings.tab_long_right_click': { message: 'Длительное нажатие правой кнопки мыши по табу' },
@@ -124,6 +198,7 @@ export default {
   'settings.tabs_panel_action_next': { message: 'след. панель' },
   'settings.tabs_panel_action_dash': { message: 'меню панели' },
   'settings.tabs_panel_action_expand': { message: 'развернуть/свернуть' },
+  'settings.tabs_panel_action_parent': { message: 'перейти к родительскому табу' },
   'settings.tabs_panel_action_none': { message: 'выкл' },
 
   // --- Keybindings
@@ -133,7 +208,7 @@ export default {
   'settings.prev_panel': { message: 'Предыдущая панель' },
   'settings.open_new_tab_in_curr_panel': { message: 'Открыть новый таб в текущем контейнере' },
   'settings.open_new_tab_after': { message: 'Открыть новый таб после текущего' },
-  'settings.close_tab': { message: 'Закрыть таб' },
+  'settings.close_tab': { message: 'Удалить выделенные элементы или активный таб' },
   'settings.select_all': { message: 'Выделить все' },
   'settings.up': { message: 'Вверх' },
   'settings.down': { message: 'Вниз' },
@@ -166,10 +241,11 @@ export default {
 
   // --- Help
   'settings.help_title': { message: 'Помошь' },
-  'settings.debug_info': { message: 'Debug info' },
+  'settings.debug_info': { message: 'Отладочная информация' },
   'settings.repo_issue': { message: 'Создать github issue' },
-  'settings.repo_bug': { message: 'Report a bug' },
-  'settings.repo_req': { message: 'Feature request' },
+  'settings.repo_bug': { message: 'Сообщить об ошибке' },
   'settings.reset_settings': { message: 'Сбросить настройки' },
   'settings.ref_rm': { message: 'Will be removed, open issue if you need this feature.' },
+  'settings.help_exp_data': { message: 'Экспорт данных' },
+  'settings.help_imp_data': { message: 'Импорт данных' },
 }

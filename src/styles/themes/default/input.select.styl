@@ -1,0 +1,20 @@
+@import '../../mixins'
+
+.SelectInput
+  box(relative, flex)
+  flex-wrap: wrap
+  cursor: pointer
+
+// ---
+// -- Option
+// -
+.SelectInput .opt
+  box(relative)
+  text(s: rem(14))
+  margin: 0 7px 0 0
+  color: var(--inactive-fg)
+  transition: color var(--d-fast)
+  &[data-active]
+    color: var(--active-fg)
+    &[data-none]
+      color: var(--false-fg)

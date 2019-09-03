@@ -1,0 +1,82 @@
+@import '../../mixins'
+
+.ScrollBox
+  box(relative)
+  size(100%, same)
+  overflow: hidden
+
+// ---
+// -- Container of scrollable element
+// -
+.ScrollBox > .scroll-container
+  box(relative)
+  size(calc(100% + 32px), 100%)
+  overflow-x: hidden
+  overflow-y: auto
+
+#root[data-native-scrollbar] .ScrollBox > .scroll-container
+  size(100%)
+
+// ---
+// -- Scroll shadows
+// -
+.ScrollBox > .top-shadow
+.ScrollBox > .bottom-shadow
+  box(absolute)
+  size(100%, 12px)
+  z-index: 999
+  opacity: 0
+  transition: opacity var(--d-norm)
+  &[data-show]
+    opacity: 1
+
+.ScrollBox > .top-shadow
+  pos(-12px, 0)
+  box-shadow: 0 1px 12px 0 #00000064
+
+.ScrollBox > .bottom-shadow
+  pos(b: -12px, l: 0)
+  box-shadow: 0 -1px 12px 0 #00000064
+
+// ---
+// -- Progress bar
+// -
+.ScrollBox > .progress
+  box(absolute)
+  pos(0, -100vw)
+  size(100vw)
+  height: var(--scroll-progress-h)
+  background-color: var(--scroll-progress-bg)
+  z-index: 1000
+  opacity: 0
+  transform: translateZ(0)
+  transition: opacity .3s
+  &[data-scrolling]
+    opacity: 1
+
+#root[data-pinned-tabs-position="left"]
+#root[data-pinned-tabs-position="right"]
+  .ScrollBox > .progress
+    width: calc(100vw - 33px)
+    left: calc(-100vw + 33px)
+
+#root[data-native-scrollbar]
+  .ScrollBox > .progress
+    box(none)
+
+// ---
+// -- Scrollable element
+// -
+.ScrollBox > .scroll-container > .scrollable
+  box(relative)
+  size(100vw, min-h: 100%)
+  background-color: var(--bg)
+
+#root[data-pinned-tabs-position="left"]
+#root[data-pinned-tabs-position="right"]
+  .ScrollBox > .scroll-container > .scrollable
+    width: calc(100vw - 33px)
+
+#root[data-native-scrollbar]
+  .ScrollBox > .scroll-container > .scrollable
+    size(100%)

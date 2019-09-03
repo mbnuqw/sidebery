@@ -1,4 +1,3 @@
-/*global browser:true*/
 import En from '../../addon/_locales/en/messages.json'
 import EnButtons from '../locales/en.buttons'
 import EnDashboards from '../locales/en.dashboards'
@@ -7,6 +6,7 @@ import EnNav from '../locales/en.nav'
 import EnMenu from '../locales/en.menu'
 import EnSettings from '../locales/en.settings'
 import EnStyles from '../locales/en.styles'
+import EnSnapshots from '../locales/en.snapshots'
 import Ru from '../../addon/_locales/ru/messages.json'
 import RuButtons from '../locales/ru.buttons'
 import RuDashboards from '../locales/ru.dashboards'
@@ -15,6 +15,7 @@ import RuNav from '../locales/ru.nav'
 import RuMenu from '../locales/ru.menu'
 import RuSettings from '../locales/ru.settings'
 import RuStyles from '../locales/ru.styles'
+import RuSnapshots from '../locales/ru.snapshots'
 
 export const Locales = {
   en: {
@@ -26,6 +27,7 @@ export const Locales = {
     ...EnMenu,
     ...EnSettings,
     ...EnStyles,
+    ...EnSnapshots,
   },
   ru: {
     ...Ru,
@@ -36,6 +38,7 @@ export const Locales = {
     ...RuMenu,
     ...RuSettings,
     ...RuStyles,
+    ...RuSnapshots,
   },
 }
 
@@ -45,39 +48,30 @@ if (!Locales[LANG]) LANG = 'en'
 /**
  *  Get dict value
  **/
-export function Translate(id, group) {
+export function translate(id, plurNum) {
   if (!id) return ''
-  if (group) id = `${group}.${id}`
   if (!Locales[LANG][id] || Locales[LANG][id].message === undefined) return id
-  return Locales[LANG][id].message
-}
 
-/**
- * Get right plural translation
- */
-export function PlurTrans(id, val) {
-  if (!id) return ''
-  if (!Locales[LANG][id] || Locales[LANG][id].message === undefined) return id
-  const forms = Locales[LANG][id].message.split('|')
-  if (forms.length === 1) return Locales[LANG][id].message
-  const ranges = Locales[LANG][id].description.split('|').map(range => {
-    if (!range) return null
-    return range.split(',').map(v => {
-      const num = parseInt(v)
-      if (isNaN(num)) return 0
-      return num
-    })
-  })
-  const i = ranges.findIndex(r => {
-    if (r) return r.includes(val)
-    else return true
-  })
-  return forms[i]
+  if (Locales[LANG][id].message.constructor === String) return Locales[LANG][id].message
+  if (Locales[LANG][id].message.constructor === Array) {
+    let i, record = Locales[LANG][id]
+
+    for (i = 0; i < record.plur.length; i++) {
+      let range = record.plur[i]
+      if (range === plurNum) return record.message[i]
+
+      if (range.constructor === Array && range[0] <= plurNum && range[1] >= plurNum) {
+        return record.message[i]
+      }
+      if (range.constructor === RegExp && range.test(plurNum)) {
+        return record.message[i]
+      }
+    }
+    return record.message[i]
+  }
+  return id
 }
 
 export default {
-  methods: {
-    t: Translate,
-    pt: PlurTrans,
-  },
+  methods: { t: translate },
 }

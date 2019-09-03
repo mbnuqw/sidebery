@@ -1,0 +1,59 @@
+@import '../../mixins'
+
+.NumField
+  box(relative)
+  padding: 2px 0
+  margin: 0 12px 0 16px
+
+  &[data-inactive]
+    opacity: .2
+    cursor: default
+
+// ---
+// -- Label
+// -
+.NumField .label
+  box(relative, flex)
+  text(s: rem(15))
+  justify-content: space-between
+  align-items: center
+  color: var(--label-fg)
+  transition: color var(--d-fast)
+  -moz-user-select: none
+
+.NumField:hover .label
+  color: var(--label-fg-hover)
+
+// ---
+// -- Inputs container
+// -
+.NumField .input-group
+  box(relative, flex)
+  align-items: center
+  margin: 6px 0 0
+  -moz-user-select: none
+
+// ---
+// -- Text input
+// -
+.NumField .text-input
+  box(relative)
+  size(100%)
+  text(s: rem(15))
+  color: var(--true-fg)
+  margin: 0 16px 0 0
+  transform: opacity var(--d-fast)
+
+.NumField .unit-input
+  box(relative)
+  flex: 1 0 auto
+  -moz-user-select: none
+
+.NumField:not([data-active]) .text-input
+  color: var(--inactive-fg)
+
+// ---
+// -- Toggle input
+// -
+.NumField .toggle
+  flex-shrink: 0

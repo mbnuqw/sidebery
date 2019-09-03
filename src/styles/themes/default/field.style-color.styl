@@ -1,0 +1,58 @@
+@import '../../mixins'
+
+.ColorField
+  box(relative)
+  padding: 2px 0
+  margin: 0 12px 0 16px
+  -moz-user-select: none
+
+  &.-no-top-margin
+    margin-top: 0
+
+// ---
+// -- Label
+// -
+.ColorField .label
+  box(relative, flex)
+  text(s: rem(15))
+  justify-content: space-between
+  align-items: center
+  color: var(--label-fg)
+  transition: color var(--d-fast)
+
+.ColorField .var
+  text(monospace, s: rem(11))
+  text-align: right
+  margin-left: 12px
+  color: var(--info-fg)
+
+.ColorField:hover  .label
+  color: var(--label-fg-hover)
+
+// ---
+// -- Container of inputs
+// -
+.ColorField .input-group
+  box(relative, flex)
+  align-items: center
+  margin: 6px 0 0
+
+// ---
+// -- Color input
+// -
+.ColorField .color-input
+  box(relative)
+  size(100%)
+  text(s: rem(15))
+  color: var(--label-fg)
+  margin: 0 16px 0 0
+  transform: opacity var(--d-fast)
+
+.ColorField:not([data-active]) .color-input
+  opacity: .5
+
+// ---
+// -- Toggle input
+// -
+.ColorField .toggle
+  flex-shrink: 0

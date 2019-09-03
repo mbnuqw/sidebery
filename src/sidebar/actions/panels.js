@@ -1,327 +1,470 @@
-import EventBus from '../event-bus'
-import Utils from '../../libs/utils'
-import ReqHandler from '../proxy'
-import { DEFAULT_PANELS } from '../store.state'
+import EventBus from '../../event-bus'
+import Logs from '../../logs'
+import Utils from '../../utils'
+import Actions from '../actions'
+import {
+  DEFAULT_PANELS,
+  DEFAULT_BOOKMARKS_PANEL,
+  DEFAULT_PRIVATE_TABS_PANEL,
+  DEFAULT_TABS_PANEL,
+  DEFAULT_CTX_TABS_PANEL,
+} from '../../defaults'
 
-let recalcPanelScrollTimeout, updateReqHandlerTimeout, saveContainersTimeout
+let recalcPanelScrollTimeout, savePanelsTimeout, updatePanelBoundsTimeout
+
+/**
+ * Load Contextual Identities and containers
+ * and merge them
+ */
+async function loadPanels() {
+  // Get contextual identities
+  const containers = await browser.contextualIdentities.query({})
+  if (!containers) {
+    Logs.push('[WARN] Cannot load contextual identities')
+    this.state.panels = Utils.cloneArray(DEFAULT_PANELS)
+    return
+  }
+
+  let ans = await browser.storage.local.get({
+    panels: Utils.cloneArray(DEFAULT_PANELS)
+  })
+
+  const panels = []
+  const panelsMap = {}
+  let saveNeeded
+  for (let i = 0; i < ans.panels.length; i++) {
+    const loadedPanel = ans.panels[i]
+
+    // Bookmarks panel
+    if (loadedPanel.type === 'bookmarks') {
+      let panel = Utils.cloneObject(DEFAULT_BOOKMARKS_PANEL)
+      panel.index = panels.length
+      panel.lockedPanel = loadedPanel.lockedPanel
+      panels.push(panel)
+      panelsMap['bookmarks'] = panel
+    }
+
+    // Default panel
+    if (loadedPanel.type === 'default') {
+      let panel
+      if (this.state.private) {
+        panel = Utils.cloneObject(DEFAULT_PRIVATE_TABS_PANEL)
+      } else {
+        panel = Utils.cloneObject(DEFAULT_TABS_PANEL)
+        panel.lockedPanel = loadedPanel.lockedPanel
+        panel.lockedTabs = loadedPanel.lockedTabs
+        panel.noEmpty = loadedPanel.noEmpty
+      }
+      panel.index = panels.length
+      panel.lastActiveTab = loadedPanel.lastActiveTab
+      panels.push(panel)
+      panelsMap[panel.cookieStoreId] = panel
+    }
+
+    // Container panel
+    if (loadedPanel.type === 'ctx' && !this.state.private) {
+      const container = containers.find(c => c.cookieStoreId === loadedPanel.cookieStoreId)
+      const panel = Utils.cloneObject(DEFAULT_CTX_TABS_PANEL)
+
+      // Native container props
+      if (container) {
+        panel.cookieStoreId = container.cookieStoreId
+        panel.name = container.name
+        panel.color = container.color
+        panel.icon = container.icon
+      } else {
+        const conf = {
+          name: loadedPanel.name,
+          color: loadedPanel.color,
+          icon: loadedPanel.icon,
+        }
+        const newCtr = await browser.contextualIdentities.create(conf)
+        panel.cookieStoreId = newCtr.cookieStoreId
+        panel.name = newCtr.name
+        panel.color = newCtr.color
+        panel.icon = newCtr.icon
+        if (!saveNeeded) saveNeeded = true
+      }
+
+      // Sidebery props
+      panel.loading = false
+      panel.index = panels.length
+      panel.lockedTabs = loadedPanel.lockedTabs
+      panel.lockedPanel = loadedPanel.lockedPanel
+      panel.proxy = loadedPanel.proxy
+      panel.proxified = loadedPanel.proxified
+      panel.noEmpty = loadedPanel.noEmpty
+      panel.includeHostsActive = loadedPanel.includeHostsActive
+      panel.includeHosts = loadedPanel.includeHosts
+      panel.excludeHostsActive = loadedPanel.excludeHostsActive
+      panel.excludeHosts = loadedPanel.excludeHosts
+      panel.lastActiveTab = loadedPanel.lastActiveTab
+
+      panels.push(panel)
+      panelsMap[panel.cookieStoreId] = panel
+    }
+  }
+
+  // Append not-saved native containers
+  if (!this.state.private) {
+    for (let container of containers) {
+      if (!panelsMap[container.cookieStoreId]) {
+        let panel = Utils.cloneObject(DEFAULT_CTX_TABS_PANEL)
+        panel.cookieStoreId = container.cookieStoreId
+        panel.name = container.name
+        panel.color = container.color
+        panel.icon = container.icon
+        const len = panels.push(panel)
+        panel.index = len - 1
+        panelsMap[panel.cookieStoreId] = panel
+        if (!saveNeeded) saveNeeded = true
+      }
+    }
+  }
+
+  this.state.containers = containers
+  this.state.panels = panels
+  this.state.panelsMap = panelsMap
+
+  if (this.state.panelIndex >= this.state.panels.length) {
+    this.state.panelIndex = 1
+  }
+
+  if (saveNeeded) Actions.savePanels()
+
+  Logs.push('[INFO] Containers loaded')
+}
+
+/**
+ * Update panels settings
+ */
+async function updatePanels(newPanels) {
+  if (!newPanels) return
+
+  let panels = []
+  let indexChanged = false
+  for (let i = 0; i < newPanels.length; i++) {
+    let newPanel = newPanels[i]
+    let panel = this.state.panels.find(p => {
+      return p.type === newPanel.type && p.cookieStoreId === newPanel.cookieStoreId
+    })
+    if (!panel) continue
+
+    if (indexChanged || panel.index !== i) indexChanged = true
+
+    panel.index = i
+    panel.lockedTabs = newPanel.lockedTabs
+    panel.lockedPanel = newPanel.lockedPanel
+    panel.proxy = newPanel.proxy
+    panel.proxified = newPanel.proxified
+    panel.noEmpty = newPanel.noEmpty
+    panel.includeHostsActive = newPanel.includeHostsActive
+    panel.includeHosts = newPanel.includeHosts
+    panel.excludeHostsActive = newPanel.excludeHostsActive
+    panel.excludeHosts = newPanel.excludeHosts
+    panel.lastActiveTab = newPanel.lastActiveTab
+
+    panels.push(panel)
+  }
+
+  this.state.panels = panels
+
+  if (indexChanged) Actions.loadTabs(false)
+}
+
+/**
+ * Update tabs per panel with range indexes
+ */
+function updatePanelsTabs() {
+  let lastIndex = this.getters.pinnedTabs.length
+  for (let panel of this.state.panels) {
+    if (panel.panel !== 'TabsPanel') continue
+
+    panel.tabs = []
+    for (let t of this.state.tabs) {
+      if (t.pinned) continue
+      if (t.cookieStoreId === panel.cookieStoreId) panel.tabs.push(t)
+    }
+    if (panel.tabs.length) {
+      lastIndex = panel.tabs[panel.tabs.length - 1].index
+      panel.startIndex = panel.tabs[0].index
+      panel.endIndex = lastIndex++
+    } else {
+      panel.startIndex = lastIndex
+      panel.endIndex = panel.startIndex
+    }
+  }
+}
+
+/**
+ * Update panels ranges
+ */
+function updatePanelsRanges() {
+  let lastIndex = this.getters.pinnedTabs.length
+  let countOfPanels = this.state.panels.length
+  for (let i = 0; i < countOfPanels; i++) {
+    let panel = this.state.panels[i]
+    panel.index = i
+    if (panel.panel !== 'TabsPanel') continue
+    if (panel.tabs.length) {
+      lastIndex = panel.tabs[panel.tabs.length - 1].index
+      panel.startIndex = panel.tabs[0].index
+      panel.endIndex = lastIndex++
+    } else {
+      panel.startIndex = lastIndex
+      panel.endIndex = panel.startIndex
+    }
+  }
+}
+
+/**
+ * Save panels
+ */
+async function savePanels() {
+  if (!this.state.windowFocused) return
+  const output = []
+  for (let panel of this.state.panels) {
+    output.push({
+      cookieStoreId: panel.cookieStoreId,
+      color: panel.color,
+      icon: panel.icon,
+      name: panel.name,
+
+      type: panel.type,
+      dashboard: panel.dashboard,
+      panel: panel.panel,
+      lockedTabs: panel.lockedTabs,
+      lockedPanel: panel.lockedPanel,
+      proxy: panel.proxy,
+      proxified: panel.proxified,
+      noEmpty: panel.noEmpty,
+      includeHostsActive: panel.includeHostsActive,
+      includeHosts: panel.includeHosts,
+      excludeHostsActive: panel.excludeHostsActive,
+      excludeHosts: panel.excludeHosts,
+      lastActiveTab: panel.lastActiveTab,
+      private: panel.private,
+      bookmarks: panel.bookmarks,
+    })
+  }
+  const cleaned = JSON.parse(JSON.stringify(output))
+  await browser.storage.local.set({ panels: cleaned })
+}
+function savePanelsDebounced() {
+  if (savePanelsTimeout) clearTimeout(savePanelsTimeout)
+  savePanelsTimeout = setTimeout(() => Actions.savePanels(), 500)
+}
+
+/**
+ * Try to load saved sidebar state
+ */
+async function loadPanelIndex() {
+  let ans = await browser.storage.local.get('panelIndex')
+  if (!ans) return
+
+  if (!this.state.private && ans.panelIndex !== 1) {
+    if (ans.panelIndex >= 0) {
+      this.state.panelIndex = ans.panelIndex
+      this.state.lastPanelIndex = this.state.panelIndex
+    }
+  }
+}
+
+/**
+ * Set panel index
+ */
+function setPanel(newIndex) {
+  if (this.state.panelIndex === newIndex) return
+  this.state.panelIndex = newIndex
+  if (newIndex >= 0) this.state.lastPanelIndex = newIndex
+}
+
+/**
+ * Save panel index
+ */
+function savePanelIndex() {
+  if (!this.state.windowFocused || this.state.private) return
+  browser.storage.local.set({ panelIndex: this.state.panelIndex })
+}
+
+/**
+ * Breadcast recalc panel's scroll event.
+ */
+function recalcPanelScroll(delay = 200) {
+  if (recalcPanelScrollTimeout) clearTimeout(recalcPanelScrollTimeout)
+  recalcPanelScrollTimeout = setTimeout(() => {
+    EventBus.$emit('recalcPanelScroll')
+    recalcPanelScrollTimeout = null
+  }, delay)
+}
+
+/**
+ * Breadcast recalc panel's scroll event.
+ */
+function updatePanelBoundsDebounced(delay = 256) {
+  if (updatePanelBoundsTimeout) clearTimeout(updatePanelBoundsTimeout)
+  updatePanelBoundsTimeout = setTimeout(() => {
+    EventBus.$emit('updatePanelBounds')
+    updatePanelBoundsTimeout = null
+  }, delay)
+}
+
+/**
+ * Switch current active panel by index
+ */
+function switchToPanel(index) {
+  Actions.closeCtxMenu()
+  Actions.resetSelection()
+  Actions.setPanel(index)
+
+  if (this.state.dashboardIsOpen) Actions.openDashboard(this.state.panelIndex)
+  const panel = this.state.panels[this.state.panelIndex]
+  if (panel.noEmpty && panel.tabs && !panel.tabs.length) {
+    Actions.createTab(panel.cookieStoreId)
+  }
+
+  if (this.state.activateLastTabOnPanelSwitching) {
+    Actions.activateLastActiveTabOf(this.state.panelIndex)
+  }
+
+  Actions.recalcPanelScroll()
+  Actions.updateTabsVisability()
+  Actions.updatePanelBoundsDebounced()
+  Actions.savePanelIndex()
+}
+
+/**
+ * Try to find not hidden neighbour panel
+ */
+function switchToNeighbourPanel() {
+  let target
+  
+  if (this.state.panelIndex < 0) target = this.state.panels[0]
+
+  if (!target) {
+    for (let i = this.state.panelIndex - 1; i > 0; i--) {
+      if (this.state.panels[i] && !this.state.panels[i].inactive) {
+        target = this.state.panels[i]
+        break
+      }
+    }
+  }
+
+  if (!target) {
+    for (let i = this.state.panelIndex + 1; i < this.state.panels.length; i++) {
+      if (this.state.panels[i] && !this.state.panels[i].inactive) {
+        target = this.state.panels[i]
+        break
+      }
+    }
+  }
+
+  if (target) {
+    this.actions.switchToPanel(target.index)
+  }
+}
+
+/**
+ * Switch panel.
+ */
+async function switchPanel(dir = 0) {
+  // Debounce switching
+  if (this.state.switchPanelPause) return
+  this.state.switchPanelPause = setTimeout(() => {
+    clearTimeout(this.state.switchPanelPause)
+    this.state.switchPanelPause = null
+  }, 128)
+
+  Actions.closeCtxMenu()
+  Actions.resetSelection()
+
+  // Restore prev front panel
+  if (this.state.panelIndex < 0) {
+    if (this.state.lastPanelIndex < 0) this.state.panelIndex = 0
+    else this.state.panelIndex = this.state.lastPanelIndex - dir
+  }
+
+  // Update panel index
+  let i = this.state.panelIndex + dir
+  for (; this.state.panels[i]; i += dir) {
+    const p = this.state.panels[i]
+    if (this.state.skipEmptyPanels && p.tabs && !p.tabs.length) continue
+    if (!p.inactive) break
+  }
+  if (this.state.panels[i]) {
+    this.state.panelIndex = i
+    Actions.savePanelIndex()
+  }
+  this.state.lastPanelIndex = this.state.panelIndex
+
+  if (this.state.activateLastTabOnPanelSwitching) {
+    Actions.activateLastActiveTabOf(this.state.panelIndex)
+  }
+
+  if (this.state.dashboardIsOpen) Actions.openDashboard(this.state.panelIndex)
+  let panel = this.state.panels[this.state.panelIndex]
+  if (panel.noEmpty && panel.tabs && !panel.tabs.length) {
+    Actions.createTab(panel.cookieStoreId)
+  }
+
+  Actions.recalcPanelScroll()
+  Actions.updateTabsVisability()
+  Actions.updatePanelBoundsDebounced()
+}
+
+/**
+ * Find panel with active tab and switch to it.
+ */
+function goToActiveTabPanel() {
+  const activeTab = this.state.tabs.find(t => t.active)
+  const panel = this.state.panelsMap[activeTab.cookieStoreId]
+  if (panel) Actions.switchToPanel(panel.index)
+}
+
+/**
+ * Returns active panel info
+ */
+function getActivePanel() {
+  return Utils.cloneObject(this.state.panels[this.state.panelIndex])
+}
+
+async function movePanel(id, step) {
+  let index
+  if (id === 'bookmarks') index = this.state.panels.findIndex(p => p.bookmarks)
+  else index = this.state.panels.findIndex(p => p.cookieStoreId === id)
+
+  if (index === -1) return
+  if (index + step < 0) return
+  if (index + step >= this.state.panels.length) return
+
+  let panel = this.state.panels.splice(index, 1)[0]
+  this.state.panels.splice(index + step, 0, panel)
+  this.state.panelIndex = index + step
+  for (let i = 0; i < this.state.panels.length; i++) {
+    this.state.panels[i].index = i
+  }
+
+  await Actions.loadTabs(false)
+
+  Actions.savePanels()
+}
 
 export default {
-  /**
-   * Load Contextual Identities and containers
-   * and merge them
-   */
-  async loadContainers({ state, dispatch }) {
-    // Get contextual identities
-    const ctxs = await browser.contextualIdentities.query({})
-
-    // Get saved containers
-    let ans = await browser.storage.local.get('containers')
-    let containers = ans.containers
-    if (!containers || !containers.length) containers = DEFAULT_PANELS
-
-    // Merge saved containers and queried contextualIdentities
-    for (let ctx of ctxs) {
-      let ctr = containers.find(c => c.id === ctx.cookieStoreId && c.type === 'ctx')
-      if (!ctr) {
-        containers.push({
-          ...ctx,
-          type: 'ctx',
-          id: ctx.cookieStoreId,
-          dashboard: 'TabsDashboard',
-          panel: 'TabsPanel',
-          lockedTabs: false,
-          lockedPanel: false,
-          proxy: null,
-          proxified: false,
-          noEmpty: false,
-          includeHostsActive: false,
-          includeHosts: '',
-          excludeHostsActive: false,
-          excludeHosts: '',
-          lastActiveTab: -1,
-        })
-      } else {
-        ctr.colorCode = ctx.colorCode
-        ctr.color = ctx.color
-        ctr.icon = ctx.icon
-        ctr.iconUrl = ctx.iconUrl
-        ctr.name = ctx.name
-        if (ctr.lockedTabs === undefined) ctr.lockedTabs = false
-        if (ctr.lockedPanel === undefined) ctr.lockedPanel = false
-        if (ctr.proxy === undefined) ctr.proxy = null
-        if (ctr.proxified === undefined) ctr.proxified = false
-        if (ctr.noEmpty === undefined) ctr.noEmpty = false
-        if (ctr.includeHostsActive === undefined) ctr.includeHostsActive = false
-        if (ctr.includeHosts === undefined) ctr.includeHosts = ''
-        if (ctr.excludeHostsActive === undefined) ctr.excludeHostsActive = false
-        if (ctr.excludeHosts === undefined) ctr.excludeHosts = ''
-        if (ctr.lastActiveTab === undefined) ctr.lastActiveTab = -1
-      }
-    }
-
-    // Clean up
-    const toRemove = []
-    for (let ctr of containers) {
-      if (ctr.type !== 'ctx') continue
-      if (!ctxs.find(c => c.cookieStoreId === ctr.id)) toRemove.push(ctr.id)
-    }
-    for (let id of toRemove) {
-      const rIndex = containers.findIndex(c => c.id === id)
-      if (rIndex !== -1) containers.splice(rIndex, 1)
-    }
-
-    state.ctxs = ctxs
-    state.containers = containers
-
-    // Set requests handler (if needed)
-    dispatch('updateReqHandler')
-  },
-
-  /**
-   * Update containers data
-   */
-  async updateContainers({ state, dispatch }, containers) {
-    if (!containers) return
-
-    for (let localCtr of state.containers) {
-      const newCtr = containers.find(nc => nc.id === localCtr.id)
-      if (!newCtr) continue
-
-      localCtr.lockedTabs = newCtr.lockedTabs
-      localCtr.lockedPanel = newCtr.lockedPanel
-      localCtr.proxy = newCtr.proxy
-      localCtr.proxified = newCtr.proxified
-      localCtr.noEmpty = newCtr.noEmpty
-      localCtr.includeHostsActive = newCtr.includeHostsActive
-      localCtr.includeHosts = newCtr.includeHosts
-      localCtr.excludeHostsActive = newCtr.excludeHostsActive
-      localCtr.excludeHosts = newCtr.excludeHosts
-      localCtr.lastActiveTab = newCtr.lastActiveTab
-    }
-
-    dispatch('updateReqHandlerDebounced')
-  },
-
-  /**
-   * Save containers
-   */
-  async saveContainers({ state }) {
-    if (!state.windowFocused) return
-    const output = []
-    for (let ctr of state.containers) {
-      output.push({
-        cookieStoreId: ctr.cookieStoreId,
-        colorCode: ctr.colorCode,
-        color: ctr.color,
-        icon: ctr.icon,
-        iconUrl: ctr.iconUrl,
-        name: ctr.name,
-
-        type: ctr.type,
-        id: ctr.id,
-        dashboard: ctr.dashboard,
-        panel: ctr.panel,
-        lockedTabs: ctr.lockedTabs,
-        lockedPanel: ctr.lockedPanel,
-        proxy: ctr.proxy,
-        proxified: ctr.proxified,
-        noEmpty: ctr.noEmpty,
-        includeHostsActive: ctr.includeHostsActive,
-        includeHosts: ctr.includeHosts,
-        excludeHostsActive: ctr.excludeHostsActive,
-        excludeHosts: ctr.excludeHosts,
-        lastActiveTab: ctr.lastActiveTab,
-        private: ctr.private,
-        bookmarks: ctr.bookmarks,
-      })
-    }
-    const cleaned = JSON.parse(JSON.stringify(output))
-    await browser.storage.local.set({ containers: cleaned })
-  },
-  saveContainersDebounced({ dispatch }) {
-    if (saveContainersTimeout) clearTimeout(saveContainersTimeout)
-    saveContainersTimeout = setTimeout(() => dispatch('saveContainers'), 500)
-  },
-
-  /**
-   * Create new conte...
-   */
-  async createContext(_, { name, color, icon }) {
-    const details = { name, color, icon }
-    return await browser.contextualIdentities.create(details)
-  },
-
-  /**
-   * Breadcast recalc panel's scroll event.
-   */
-  recalcPanelScroll() {
-    if (recalcPanelScrollTimeout) clearTimeout(recalcPanelScrollTimeout)
-    recalcPanelScrollTimeout = setTimeout(() => {
-      EventBus.$emit('recalcPanelScroll')
-      recalcPanelScrollTimeout = null
-    }, 200)
-  },
-
-  /**
-   * Switch current active panel by index
-   */
-  switchToPanel({ state, getters, commit, dispatch }, index) {
-    commit('closeSettings')
-    commit('closeCtxMenu')
-    commit('resetSelection')
-    commit('setPanel', index)
-    if (state.dashboardOpened) EventBus.$emit('openDashboard', state.panelIndex)
-    const panel = getters.panels[state.panelIndex]
-    if (panel.noEmpty && panel.tabs && !panel.tabs.length) {
-      dispatch('createTab', panel.cookieStoreId)
-    }
-
-    if (state.activateLastTabOnPanelSwitching) {
-      dispatch('activateLastActiveTabOf', state.panelIndex)
-    }
-
-    dispatch('recalcPanelScroll')
-    if (state.hideInact) dispatch('hideInactPanelsTabs')
-    EventBus.$emit('panelSwitched')
-    dispatch('savePanelIndex')
-  },
-
-  /**
-   * Switch panel.
-   */
-  async switchPanel({ state, commit, getters, dispatch }, dir = 0) {
-    // Debounce switching
-    if (state.switchPanelPause) return
-    state.switchPanelPause = setTimeout(() => {
-      clearTimeout(state.switchPanelPause)
-      state.switchPanelPause = null
-    }, 128)
-
-    commit('closeCtxMenu')
-    commit('resetSelection')
-
-    // Restore prev front panel
-    if (state.panelIndex < 0) {
-      if (state.lastPanelIndex < 0) state.panelIndex = 0
-      else state.panelIndex = state.lastPanelIndex - dir
-    }
-
-    // Update panel index
-    let i = state.panelIndex + dir
-    for (; getters.panels[i]; i += dir) {
-      const p = getters.panels[i]
-      if (state.skipEmptyPanels && p.tabs && !p.tabs.length) continue
-      if (!p.inactive) break
-    }
-    if (getters.panels[i]) {
-      state.panelIndex = i
-      dispatch('savePanelIndex')
-    }
-    state.lastPanelIndex = state.panelIndex
-
-    if (state.activateLastTabOnPanelSwitching) {
-      dispatch('activateLastActiveTabOf', state.panelIndex)
-    }
-
-    if (state.dashboardOpened) EventBus.$emit('openDashboard', state.panelIndex)
-    let panel = getters.panels[state.panelIndex]
-    if (panel.noEmpty && panel.tabs && !panel.tabs.length) {
-      dispatch('createTab', panel.cookieStoreId)
-    }
-
-    dispatch('recalcPanelScroll')
-    if (state.hideInact) dispatch('hideInactPanelsTabs')
-    EventBus.$emit('panelSwitched')
-  },
-
-  /**
-   * Find active tab panel and switch to it.
-   */
-  goToActiveTabPanel({ getters, dispatch }) {
-    let i = Utils.GetPanelIndex(getters.panels)
-    if (i === -1) return
-    dispatch('switchToPanel', i)
-  },
-
-  /**
-   * Update request handler
-   */
-  async updateReqHandler({ state, dispatch }) {
-    state.proxies = {}
-    state.includeHostsRules = []
-    state.excludeHostsRules = {}
-
-    for (let ctr of state.containers) {
-      // Proxy
-      if (ctr.proxified && ctr.proxy) state.proxies[ctr.id] = { ...ctr.proxy }
-
-      // Include rules
-      if (ctr.includeHostsActive) {
-        for (let rawRule of ctr.includeHosts.split('\n')) {
-          let rule = rawRule.trim()
-          if (!rule) continue
-
-          if (rule[0] === '/' && rule[rule.length - 1] === '/') {
-            rule = new RegExp(rule.slice(1, rule.length - 1))
-          }
-
-          state.includeHostsRules.push({ ctx: ctr.id, value: rule })
-        }
-      }
-
-      // Exclude rules
-      if (ctr.excludeHostsActive) {
-        state.excludeHostsRules[ctr.id] = ctr.excludeHosts
-          .split('\n')
-          .map(r => {
-            let rule = r.trim()
-
-            if (rule[0] === '/' && rule[rule.length - 1] === '/') {
-              rule = new RegExp(rule.slice(1, rule.length - 1))
-            }
-
-            return rule
-          })
-          .filter(r => r)
-      }
-    }
-
-    // Turn on request handler
-    const incRulesOk = state.includeHostsRules.length > 0
-    const excRulesOk = Object.keys(state.excludeHostsRules).length > 0
-    const proxyOk = Object.keys(state.proxies).length > 0
-    if (incRulesOk || excRulesOk || proxyOk) dispatch('turnOnReqHandler')
-    else dispatch('turnOffReqHandler')
-  },
-
-  /**
-   * Update request handler debounced
-   */
-  updateReqHandlerDebounced({ dispatch }) {
-    if (updateReqHandlerTimeout) clearTimeout(updateReqHandlerTimeout)
-    updateReqHandlerTimeout = setTimeout(() => {
-      dispatch('updateReqHandler')
-      updateReqHandlerTimeout = null
-    }, 500)
-  },
-
-  /**
-   * Set request handler
-   */
-  turnOnReqHandler({ state }) {
-    if (state.private) return
-    if (!browser.proxy.onRequest.hasListener(ReqHandler)) {
-      browser.proxy.onRequest.addListener(ReqHandler, { urls: ['<all_urls>'] })
-    }
-  },
-
-  /**
-   * Unset request handler
-   */
-  turnOffReqHandler({ state }) {
-    if (state.private) return
-    if (browser.proxy.onRequest.hasListener(ReqHandler)) {
-      browser.proxy.onRequest.removeListener(ReqHandler)
-    }
-  },
+  loadPanels,
+  updatePanels,
+  updatePanelsTabs,
+  updatePanelsRanges,
+  savePanels,
+  savePanelsDebounced,
+  loadPanelIndex,
+  setPanel,
+  savePanelIndex,
+  recalcPanelScroll,
+  updatePanelBoundsDebounced,
+  switchToPanel,
+  switchToNeighbourPanel,
+  switchPanel,
+  goToActiveTabPanel,
+  getActivePanel,
+  movePanel,
 }
