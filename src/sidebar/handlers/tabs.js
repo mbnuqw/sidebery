@@ -124,7 +124,7 @@ function onTabUpdated(tabId, change, tab) {
   if (!localTab) return
 
   // Discarded
-  if (change.discarded !== undefined) {
+  if (change.discarded !== undefined && change.discarded) {
     if (localTab.status === 'loading') localTab.status = 'complete'
     if (localTab.loading) localTab.loading = false
   }
