@@ -1,6 +1,6 @@
 {
   "name": "sidebery",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "description": "Manage your tabs and bookmarks in sidebar",
   "main": "index.js",
   "scripts": {
@@ -14,7 +14,6 @@
     "dev.ext": "web-ext run --source-dir ./addon -f firefox --keep-profile-changes --firefox-profile ./build/profile-stable",
     "dev.ext.beta": "web-ext run --source-dir ./addon -f firefox-beta --keep-profile-changes --firefox-profile ./build/profile-beta",
     "dev.ext.nightly": "web-ext run --source-dir ./addon -f firefox-nightly --keep-profile-changes --firefox-profile ./build/profile-nightly",
-
     "build.sidebar": "parcel build ./src/sidebar/sidebar.js -d ./addon/sidebar/ --public-url ./ --no-autoinstall --no-source-maps --no-cache",
     "build.settings": "parcel build ./src/page.settings/settings.js -d ./addon/settings/ --public-url ./ --no-autoinstall --no-source-maps --no-cache",
     "build.group": "parcel build ./src/page.group/group.js -d ./addon/group/ --public-url ./ --no-autoinstall --no-source-maps --no-cache",
@@ -24,7 +23,6 @@
     "build.themes": "npm run build.themes.default && npm run build.themes.tactile",
     "build.ext": "web-ext build --source-dir ./addon -a dist/ -i *.lock ./package.json",
     "build": "npm run build.sidebar && npm run build.settings && npm run build.group && npm run build.url && npm run build.themes",
-
     "clear.cache": "rm -rf .cache",
     "clear.npm": "rm -rf node_modules package-lock.json",
     "clear.sidebar": "find ./addon/sidebar -type f -not -name index.html -delete",
@@ -33,7 +31,6 @@
     "clear.url": "find ./addon/url -type f -not -name url.html -delete",
     "clear.themes": "find ./addon/themes/ -type f -not -name __preserve-dir -delete",
     "clear": "npm run clear.cache && npm run clear.sidebar && npm run clear.settings && npm run clear.group && npm run clear.url && npm run clear.themes",
-
     "lint": "web-ext lint -s ./addon",
     "test": "./node_modules/.bin/jest"
   },

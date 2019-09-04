@@ -5,12 +5,12 @@
   @dblclick="onDoubleClick")
   pinned-dock(v-if="$store.state.pinnedTabsPosition === 'panel'" :ctx="storeId")
   scroll-box(ref="scrollBox")
-    .container(:style="{ height: scrollHeight }")
-      tab(
+    .container
+      transition-group(name="tab" tag="div"): tab(
         v-for="(t, i) in tabs"
+        v-if="!t.invisible"
         ref="tabs"
         :key="t.id"
-        :position="getTabYPosition(i)"
         :child-count="getChildrenCount(i)"
         :tab="t")
 </template>
@@ -51,16 +51,6 @@ export default {
       dragTabs: [],
       dragEls: [],
     }
-  },
-
-  computed: {
-    scrollHeight() {
-      let h = PRE_SCROLL
-      for (let t of this.tabs) {
-        if (!t.invisible) h += State.tabHeight
-      }
-      return `${h}px`
-    },
   },
 
   mounted() {
@@ -169,14 +159,6 @@ export default {
           Actions.switchTab(globaly, e.ctrlKey, -1)
         }
       }
-    },
-
-    getTabYPosition(i) {
-      let out = i
-      while (i--) {
-        if (this.tabs[i].invisible) out--
-      }
-      return out * State.tabHeight
     },
 
     getChildrenCount(i) {

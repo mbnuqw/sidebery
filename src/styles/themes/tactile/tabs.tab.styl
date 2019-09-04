@@ -1,14 +1,13 @@
 @import '../../mixins'
 
 .Tab
-  box(absolute, flex)
+  box(relative, flex)
   pos(r: 0)
   width: 100%
   height: var(--tabs-height)
   align-items: center
   z-index: 10
-  transform: translateZ(0)
-  transition: opacity var(--d-fast), transform var(--d-fast)
+  transform-origin: 50% 0%
 
   &:before
     content: ''
@@ -43,25 +42,25 @@
     background-color: var(--tabs-bg-active)
 
   &[data-lvl="1"]
-    width: calc(100% - var(--tabs-indent))
+    margin-left: var(--tabs-indent)
   &[data-lvl="2"]
-    width: calc(100% - var(--tabs-indent) * 2)
+    margin-left: calc(var(--tabs-indent) * 2)
   &[data-lvl="3"]
-    width: calc(100% - var(--tabs-indent) * 3)
+    margin-left: calc(var(--tabs-indent) * 3)
   &[data-lvl="4"]
-    width: calc(100% - var(--tabs-indent) * 4)
+    margin-left: calc(var(--tabs-indent) * 4)
   &[data-lvl="5"]
-    width: calc(100% - var(--tabs-indent) * 5)
+    margin-left: calc(var(--tabs-indent) * 5)
   &[data-lvl="6"]
-    width: calc(100% - var(--tabs-indent) * 6)
+    margin-left: calc(var(--tabs-indent) * 6)
   &[data-lvl="7"]
-    width: calc(100% - var(--tabs-indent) * 7)
+    margin-left: calc(var(--tabs-indent) * 7)
   &[data-lvl="8"]
-    width: calc(100% - var(--tabs-indent) * 8)
+    margin-left: calc(var(--tabs-indent) * 8)
   &[data-lvl="9"]
-    width: calc(100% - var(--tabs-indent) * 9)
+    margin-left: calc(var(--tabs-indent) * 9)
   &[data-lvl="10"]
-    width: calc(100% - var(--tabs-indent) * 10)
+    margin-left: calc(var(--tabs-indent) * 10)
 
   &[data-active]
     &:before
@@ -88,12 +87,8 @@
     &:before
       background-color: var(--tabs-selected-bg)
 
-  &[data-discarded]
+  &[data-discarded] > .lvl-wrapper
     opacity: .5
-
-  &[data-invisible]
-    opacity: 0
-    z-index: -1
 
 // ---
 // -- Level Wrapper
@@ -102,7 +97,7 @@
   box(relative, flex)
   size(100%, same)
   align-items: center
-  transition: opacity var(--d-fast), transform var(--d-fast)
+  transition: opacity var(--d-fast)
   &:before
     content: ''
     box(absolute, none)
@@ -435,6 +430,26 @@
 // ---
 // -- Transitions
 // -
+.tab-enter-active
+.tab-leave-active
+  transition: transform var(--d-fast), opacity var(--d-fast)
+.tab-leave-active
+  box(absolute)
+.tab-move
+  transition: transform var(--d-fast), opacity var(--d-fast)
+.tab-enter
+  opacity: 0
+  transform: scale(1, 0.8)
+.tab-enter-to
+  opacity: 1
+  transform: scale(1, 1)
+.tab-leave
+  opacity: 0
+  transform: scale(1, 1)
+.tab-leave-to
+  opacity: 0
+  transform: scale(1, 0.8)
+
 .tab-part-enter-active
 .tab-part-leave-active
   transition: transform var(--d-fast), opacity var(--d-fast)
