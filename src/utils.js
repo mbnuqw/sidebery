@@ -381,7 +381,7 @@ function findSuccessorTab(state, tab, exclude) {
   }
 
   // Previously active tab
-  if (state.activateAfterClosing === 'prev_act') {
+  if (state.actTabs && state.activateAfterClosing === 'prev_act') {
     let targetId
     for (let i = state.actTabs.length; i--; ) {
       targetId = state.actTabs[i]
