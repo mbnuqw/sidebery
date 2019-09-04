@@ -31,7 +31,7 @@
     svg.-mute: use(xlink:href="#icon_mute_badge")
   .fav(@dragstart.stop.prevent="")
     transition(name="tab-part"): .placeholder(v-if="!tab.favIconUrl"): svg: use(:xlink:href="favPlaceholder")
-    transition(name="tab-part"): img(v-if="tab.favIconUrl" :src="tab.favIconUrl" @load.passive="onFaviconLoad")
+    transition(name="tab-part"): img(v-if="tab.favIconUrl" :src="tab.favIconUrl")
     .exp(v-if="tab.isParent" @dblclick.prevent.stop="" @mousedown.stop="onExp"): svg: use(xlink:href="#icon_expand")
     .update-badge
     transition(name="tab-part"): .ok-badge(v-if="loading === 'ok'"): svg: use(xlink:href="#icon_ok")
@@ -69,11 +69,6 @@ export default {
   },
 
   computed: {
-    favicon() {
-      if (this.tab.status === 'loading') return State.favicons[State.favUrls[this.tab.url]]
-      else return this.tab.favIconUrl || State.favicons[State.favUrls[this.tab.url]]
-    },
-
     isNewTab() {
       return this.tab.url === 'about:newtab'
     },
@@ -368,25 +363,6 @@ export default {
       if (this.dragEnterTimeout) {
         clearTimeout(this.dragEnterTimeout)
         this.dragEnterTimeout = null
-      }
-    },
-
-    /**
-     * If favicon is just url to some image,
-     * wait until it is loaded, convert to base64 and
-     * store result to cache.
-     */
-    onFaviconLoad(e) {
-      if (!this.favicon) return
-      if (this.favicon.startsWith('http')) {
-        let canvas = document.createElement('canvas')
-        let ctx = canvas.getContext('2d')
-        canvas.width = e.target.naturalWidth
-        canvas.height = e.target.naturalHeight
-        ctx.imageSmoothingEnabled = false
-        ctx.drawImage(e.target, 0, 0, e.target.naturalWidth, e.target.naturalHeight)
-        let base64 = canvas.toDataURL('image/png')
-        Actions.setFavicon(this.tab.url, base64)
       }
     },
 
