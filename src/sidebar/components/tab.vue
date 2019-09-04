@@ -12,8 +12,6 @@
   :data-folded="tab.folded"
   :data-invisible="tab.invisible"
   :data-close-btn="$store.state.showTabRmBtn"
-
-  :style="{ transform: 'translateY(' + position + 'px)' }"
   :title="tooltip"
   @contextmenu.stop="onCtxMenu"
   @mousedown.stop="onMouseDown"
@@ -56,7 +54,6 @@ const GROUP_RE = /\/group\/group\.html/
 
 export default {
   props: {
-    position: Number,
     childCount: Number,
     tab: {
       type: Object,
