@@ -481,7 +481,7 @@
 
     .ctrls
       .btn(@click="switchView('debug')") {{t('settings.debug_info')}}
-      a.btn(tabindex="-1", :href="issueLink") {{t('settings.repo_bug')}}
+      a.btn(tabindex="-1" :href="issueLink" @mouseenter="updateIssueLink") {{t('settings.repo_bug')}}
       .btn.-warn(@click="resetSettings") {{t('settings.reset_settings')}}
 
   footer-section
@@ -515,6 +515,11 @@ export default {
     return {
       scrollY: 0,
       faviCache: null,
+      winCount: 0,
+      ctrCount: 0,
+      tabsCount: 0,
+      storageSize: 0,
+      storedProps: [],
     }
   },
 
@@ -529,6 +534,19 @@ export default {
       let body = `\n\n\n> OS: ${State.osInfo.os} ${State.osInfo.arch}  \n`
       body += `> Firefox: ${State.ffInfo.version}  \n`
       body += `> Extension: ${State.version}  \n`
+      body += '> <details><summary>Debug Info</summary>\n'
+      body += '> <pre><code>\n'
+      if (this.winCount) body += `> - Windows: ${this.winCount}\n`
+      if (this.ctrCount) body += `> - Containers: ${this.ctrCount}\n`
+      if (this.tabsCount) body += `> - Tabs: ${this.tabsCount}\n`
+      if (this.storageSize) body += `> - Storage: ~ ${this.storageSize}\n`
+      if (this.storedProps.length) {
+        body += '> - Stored props:\n'
+        body += `>     ${this.storedProps.join(',\n>     ')}\n`
+      }
+      body += '> \n'
+      body += '> </code></pre>\n'
+      body += '> </details>'
       return ISSUE_URL + '?body=' + encodeURIComponent(body)
     }
   },
@@ -873,6 +891,26 @@ export default {
       if (data.tabsMenu) toStore.tabsMenu = data.tabsMenu
       if (data.bookmarksMenu) toStore.bookmarksMenu = data.bookmarksMenu
       browser.storage.local.set(toStore)
+    },
+
+    /**
+     * Update issueLink
+     */
+    async updateIssueLink() {
+      let windows = await browser.windows.getAll({})
+      let ctrs = await browser.contextualIdentities.query({})
+      let tabs = await browser.tabs.query({})
+      let stored = await browser.storage.local.get()
+      this.winCount = windows.length
+      this.ctrCount = ctrs.length
+      this.tabsCount = tabs.length
+      try {
+        this.storageSize = Utils.strSize(JSON.stringify(stored))
+        this.storedProps = Object.keys(stored)
+      } catch (err) {
+        this.storageSize = 0
+        this.storedProps = []
+      }
     },
   },
 }

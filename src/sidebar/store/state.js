@@ -1,11 +1,9 @@
-import Manifest from '../../../addon/manifest.json'
 import Utils from '../../utils'
 import { DEFAULT_SETTINGS, SETTINGS_OPTIONS } from '../../defaults'
 import { DEFAULT_TABS_MENU } from '../../defaults'
 import { DEFAULT_BOOKMARKS_MENU } from '../../defaults'
 
 export default {
-  version: Manifest.version,
   upgrading: false,
   osInfo: null,
   os: null,

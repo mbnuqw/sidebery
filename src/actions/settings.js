@@ -16,6 +16,8 @@ async function loadSettings() {
     settings = ans.settings
   }
 
+  settings.version = browser.runtime.getManifest().version
+
   for (const key of Object.keys(settings)) {
     if (settings[key] === undefined) continue
     this.state[key] = settings[key]
