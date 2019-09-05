@@ -128,6 +128,71 @@ __Hide sidebar top-menu__
 }
 ```
 
+__Dynamic sidebar__  
+Thanks [@ongots](https://github.com/ongots)  
+- Set navigation button width to 30px (Settings/Styles/Navigation Strip)
+- Set width of pinned tabs to 30px (Settings/Styles/Sidebar css):
+  ```css
+  .PinnedTab {
+    width: 30px;
+  }
+  ```
+- Add in userChrome.css
+  ```css
+  #sidebar-header {
+    display: none;
+  }
+  #sidebar-splitter {
+    width: 0 !important;
+  }
+  #main-window #appcontent {
+    margin-left: 30px
+  }
+  #main-window #sidebar-box {
+    position: fixed;
+    display: block;
+    min-width: 0px !important;
+    max-width: none !important;
+    width: 30px !important;
+    height: calc(100% - 61px); /* 61px - height of #navigator-toolbox */
+    overflow: hidden;
+    box-shadow: 0 0 8px 0 #00000064, 1px 0 0 0 #212121;
+    transition: all 0.12s;
+  }
+  #main-window #sidebar {
+    position: absolute;
+    min-width: 0px !important;
+    max-width: none !important;
+    left: 0;
+    top: 0;
+    right: auto;
+    bottom: auto;
+    width: 30px;
+    height: 100%;
+  }
+
+  /* Completely (almost) hide in fullscreen */
+  #main-window[inFullscreen] #appcontent {
+    margin-left: 1px
+  }
+  #main-window[inFullscreen] #sidebar-box,
+  #main-window[inFullscreen] #sidebar {
+    width: 1px !important;
+  }
+
+  /* Show on hover */
+  #main-window #sidebar-box:hover,
+  #main-window[inFullscreen] #sidebar-box:hover,
+  #main-window #sidebar-box:hover #sidebar,
+  #main-window[inFullscreen] #sidebar-box:hover #sidebar {
+    height: 100% !important;
+    width: 250px !important;
+  }
+  #main-window #sidebar-box:hover #sidebar:before {
+    transform: translateX(-100%);
+  }
+  ```
+
 ---
 
 ## Build
