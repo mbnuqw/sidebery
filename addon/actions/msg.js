@@ -78,6 +78,8 @@ function onFirstSidebarInit(handler) {
 async function waitForSidebarConnect(winId, limit = 1000) {
   let waitingId = String(Math.random())
   let waiting = new Promise(res => {
+    if (connectedSidebars[winId]) return res(true)
+
     connectPending.push({
       id: waitingId,
       winId,

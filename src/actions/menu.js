@@ -6,11 +6,12 @@ import Logs from '../logs'
 async function loadCtxMenu() {
   let ans = await browser.storage.local.get(['tabsMenu', 'bookmarksMenu']) || {}
 
-  if (ans.tabsMenu) {
+  if (ans.tabsMenu && ans.tabsMenu.length) {
     this.state.tabsMenu = ans.tabsMenu
     Logs.push('[INFO] Tabs menu loaded')
   }
-  if (ans.bookmarksMenu) {
+
+  if (ans.bookmarksMenu && ans.bookmarksMenu.length) {
     this.state.bookmarksMenu = ans.bookmarksMenu
     Logs.push('[INFO] Bookmarks menu loaded')
   }

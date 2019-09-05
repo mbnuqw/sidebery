@@ -296,7 +296,7 @@ function createButton(svgId, className, clickHandler) {
   useEl.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', '#' + svgId)
   svgEl.appendChild(useEl)
 
-  btnEl.addEventListener('mousedown', clickHandler)
+  btnEl.addEventListener('click', clickHandler)
 
   return btnEl
 }

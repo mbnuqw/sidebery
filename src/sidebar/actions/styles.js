@@ -8,20 +8,15 @@ import { CUSTOM_CSS_VARS } from '../../defaults'
  * Load css vars and apply them
  */
 async function loadCSSVars() {
-  let ans = await browser.storage.local.get('cssVars')
-  let loadedVars = ans.cssVars
-  if (!loadedVars) {
-    Logs.push('[WARN] Cannot load styles')
-    return
-  }
+  let { cssVars } = await browser.storage.local.get({ cssVars: CUSTOM_CSS_VARS })
 
   const rootEl = document.getElementById('root')
-  for (let key of Object.keys(loadedVars)) {
-    if (loadedVars[key]) {
-      rootEl.style.setProperty(Utils.toCSSVarName(key), loadedVars[key])
+  for (let key of Object.keys(cssVars)) {
+    if (cssVars[key]) {
+      rootEl.style.setProperty(Utils.toCSSVarName(key), cssVars[key])
     }
   }
-
+  
   EventBus.$emit('dynVarChange')
   Logs.push('[INFO] Styles loaded')
 }

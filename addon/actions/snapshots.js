@@ -141,21 +141,15 @@ async function openSnapshotWindow(snapshot, winId) {
 
   let containers = {}
   let tabs = []
-  let firstTabUrl
   for (let tab of winInfo.tabs) {
     containers[tab.ctr] = tab.ctr
-
-    if (!tab.pinned && tab.ctr === 'firefox-default' && !firstTabUrl) {
-      firstTabUrl = tab.url
-      continue
-    }
-
     tabs.push(tab)
   }
 
-  let newWindow = await browser.windows.create({
-    url: normalizeUrl(firstTabUrl)
-  })
+  let newWindow = await browser.windows.create()
+  let firstTab = newWindow.tabs[0]
+
+  await this.actions.waitForSidebarConnect(newWindow.id, 5000)
 
   for (let ctrId of Object.keys(containers)) {
     if (ctrId === 'firefox-default') continue
@@ -180,13 +174,11 @@ async function openSnapshotWindow(snapshot, winId) {
     }
   }
 
-  let parents = [], oldNewMap = {}
+  let parents = [], oldNewMap = []
   for (let i = 0; i < tabs.length; i++) {
-    let prevTab = tabs[i-1]
     let tab = tabs[i]
 
-    if (prevTab && prevTab.lvl < tab.lvl) parents.push(oldNewMap[tab.id])
-    if (prevTab && prevTab.lvl > tab.lvl) parents.pop()
+    parents[tab.lvl] = tab.id
 
     let createdTab = await browser.tabs.create({
       windowId: newWindow.id,
@@ -196,10 +188,12 @@ async function openSnapshotWindow(snapshot, winId) {
       discarded: !tab.pinned,
       title: !tab.pinned ? tab.title : undefined,
       cookieStoreId: containers[tab.ctr],
-      openerTabId: parents[parents.length - 1],
+      openerTabId: oldNewMap[parents[tab.lvl - 1]],
     })
     oldNewMap[tab.id] = createdTab.id
   }
+
+  if (firstTab) browser.tabs.remove(firstTab.id)
 }
 
 /**
