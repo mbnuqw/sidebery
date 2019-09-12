@@ -221,6 +221,7 @@ function updatePanelsRanges() {
  * Save panels
  */
 async function savePanels() {
+  if (this.state.private) return
   if (!this.state.windowFocused) return
   const output = []
   for (let panel of this.state.panels) {
