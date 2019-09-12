@@ -70,7 +70,7 @@ export default new Vue({
     await Actions.loadCSSVars()
     Actions.scrollToActiveTab()
     Actions.loadFavicons()
-    Actions.loadPermissions()
+    Actions.loadPermissions(true)
     Actions.updateTabsVisability()
     Actions.saveTabsTree()
 
