@@ -29,6 +29,18 @@ async function loadPanels() {
     panels: Utils.cloneArray(DEFAULT_PANELS)
   })
 
+  // Check if default panels are present
+  let bookmarksPanelIndex = ans.panels.findIndex(p => p.type === 'bookmarks')
+  let defaultPanelIndex = ans.panels.findIndex(p => p.type === 'default')
+  if (bookmarksPanelIndex === -1 && this.state.bookmarksPanel) {
+    ans.panels.unshift(Utils.cloneObject(DEFAULT_BOOKMARKS_PANEL))
+    bookmarksPanelIndex = 0
+  }
+  if (defaultPanelIndex === -1) {
+    let defaultPanelClone = Utils.cloneObject(DEFAULT_TABS_PANEL)
+    ans.panels.splice(bookmarksPanelIndex + 1, 0, defaultPanelClone)
+  }
+
   const panels = []
   const panelsMap = {}
   let saveNeeded
@@ -221,6 +233,7 @@ function updatePanelsRanges() {
  * Save panels
  */
 async function savePanels() {
+  if (this.state.private) return
   if (!this.state.windowFocused) return
   const output = []
   for (let panel of this.state.panels) {

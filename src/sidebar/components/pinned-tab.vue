@@ -211,8 +211,13 @@ export default {
      * Handle mouseup event
      */
     onMouseUp(e) {
-      if (e.button === 0 && this.longClickActionLeft) {
-        this.longClickActionLeft = clearTimeout(this.longClickActionLeft)
+      if (e.button === 0) {
+        if (State.selected.length && !e.ctrlKey && !e.shiftKey) {
+          browser.tabs.update(this.tab.id, { active: true })
+        }
+        if (this.longClickActionLeft) {
+          this.longClickActionLeft = clearTimeout(this.longClickActionLeft)
+        }
       }
 
       if (e.button === 2) {
