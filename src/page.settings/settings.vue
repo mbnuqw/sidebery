@@ -480,9 +480,28 @@
         input(type="file" ref="importData" accept="application/json" @input="importData")
 
     .ctrls
-      .btn(@click="switchView('debug')") {{t('settings.debug_info')}}
-      a.btn(tabindex="-1" :href="issueLink" @mouseenter="updateIssueLink") {{t('settings.repo_bug')}}
+      .btn(@click="showDbgDetails") {{t('settings.debug_info')}}
+      a.btn(
+        tabindex="-1"
+        href="https://github.com/mbnuqw/sidebery/issues/new/choose"
+        @mouseenter="updateIssueLink") {{t('settings.repo_bug')}}
       .btn.-warn(@click="resetSettings") {{t('settings.reset_settings')}}
+
+    .separator
+
+    .ctrls
+      .info(v-if="$store.state.osInfo") OS: {{$store.state.osInfo.os}}
+      .info(v-if="$store.state.ffInfo") Firefox: {{$store.state.ffInfo.version}}
+      .info Addon: {{$store.state.version}}
+
+  .details-box(
+    v-if="dbgDetails"
+    v-noise:300.g:12:af.a:0:42.s:0:9=""
+    @scroll.stop="")
+    .box
+      .btn(@click="copyDebugDetail") COPY
+      .btn.-warn(@click="dbgDetails = ''") CLOSE
+    .json {{dbgDetails}}
 
   footer-section
 </template>
@@ -490,6 +509,7 @@
 
 <script>
 import Utils from '../utils'
+import { DEFAULT_SETTINGS } from '../defaults'
 import State from './store/state'
 import Actions from './actions'
 import ToggleField from '../components/toggle-field'
@@ -513,6 +533,7 @@ export default {
 
   data() {
     return {
+      dbgDetails: '',
       scrollY: 0,
       faviCache: null,
       winCount: 0,
@@ -911,6 +932,120 @@ export default {
         this.storageSize = 0
         this.storedProps = []
       }
+    },
+
+    /**
+     * Show debug details
+     */
+    async showDbgDetails() {
+      let dbg = {}
+
+      dbg.settings = {}
+      for (let prop of Object.keys(DEFAULT_SETTINGS)) {
+        dbg.settings[prop] = State[prop]
+      }
+
+      try {
+        dbg.permissions = {
+          allUrls: State.permAllUrls,
+          tabHide: State.permTabHide,
+          actualAllUrls: await browser.permissions.contains({ origins: ['<all_urls>'] }),
+          actualTabHide: await browser.permissions.contains({ permissions: ['tabHide'] }),
+        }
+      } catch (err) {
+        dbg.permissions = err.toString()
+      }
+
+      try {
+        let stored = await browser.storage.local.get()
+        dbg.storage = {
+          size: Utils.strSize(JSON.stringify(stored)),
+          props: {},
+        }
+        for (let prop of Object.keys(stored)) {
+          dbg.storage.props[prop] = Utils.strSize(JSON.stringify(stored[prop]))
+        }
+      } catch (err) {
+        dbg.storage = err.toString()
+      }
+
+      try {
+        let { panels } = await browser.storage.local.get('panels')
+        dbg.panels = []
+        for (let panel of panels) {
+          let clone = Utils.cloneObject(panel)
+          if (clone.name) clone.name = clone.name.length
+          if (clone.icon) clone.icon = '...'
+          if (clone.color) clone.color = '...'
+          if (clone.includeHosts) clone.includeHosts = clone.includeHosts.length
+          if (clone.excludeHosts) clone.excludeHosts = clone.excludeHosts.length
+          if (clone.proxy) clone.proxy = '...'
+          dbg.panels.push(clone)
+        }
+      } catch (err) {
+        dbg.panels = err.toString()
+      }
+
+      try {
+        let { cssVars } = await browser.storage.local.get('cssVars')
+        dbg.cssVars = {}
+        for (let prop of Object.keys(cssVars)) {
+          if (cssVars[prop]) dbg.cssVars[prop] = cssVars[prop]
+        }
+      } catch (err) {
+        dbg.cssVars = err.toString()
+      }
+
+      try {
+        let { sidebarCSS, groupCSS } = await browser.storage.local.get([
+          'sidebarCSS',
+          'groupCSS',
+        ])
+        dbg.sidebarCSSLen = sidebarCSS.length
+        dbg.groupCSSLen = groupCSS.length
+      } catch (err) {
+        // nothing...
+      }
+
+      try {
+        let windows = await browser.windows.getAll({ populate: true })
+        dbg.windows = []
+        for (let w of windows) {
+          dbg.windows.push({
+            state: w.state,
+            incognito: w.incognito,
+            tabsCount: w.tabs.length,
+            logs: await browser.runtime.sendMessage({
+              windowId: w.id,
+              action: 'getLogs',
+            }),
+          })
+        }
+      } catch (err) {
+        dbg.windows = err.toString()
+      }
+
+      try {
+        let ans = await browser.storage.local.get([
+          'tabsMenu',
+          'bookmarksMenu',
+        ])
+        dbg.tabsMenu = ans.tabsMenu
+        dbg.bookmarksMenu = ans.bookmarksMenu
+      } catch (err) {
+        dbg.tabsMenu = err.toString()
+        dbg.bookmarksMenu = err.toString()
+      }
+
+      this.dbgDetails = JSON.stringify(dbg, null, 2)
+    },
+
+    /**
+     * Copy debug info
+     */
+    copyDebugDetail() {
+      if (!this.dbgDetails) return
+      navigator.clipboard.writeText(this.dbgDetails)
     },
   },
 }

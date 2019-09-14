@@ -297,6 +297,49 @@ footer
   outline: 2px dashed var(--false-fg)
   outline-offset: -2px
 
+.Settings .details-box
+  box(fixed, flex)
+  size(100vw, 100vh)
+  pos(0, 0)
+  flex-flow: column
+  align-items: center
+  background-color: var(--bg)
+  background-attachment: local
+  z-index: 1
+  overflow-x: hidden
+  overflow-y: auto
+
+.Settings .details-box > .box
+  box(fixed)
+  pos(32px, r: 32px)
+  align-items: flex-end
+  z-index: 1
+
+.Settings .details-box .copy-btn
+.Settings .details-box .close-btn
+  box(relative)
+  text(s: rem(18))
+  padding: 8px 16px
+  color: var(--active-fg)
+  z-index: 1
+  cursor: pointer
+  &:hover
+    opacity: .7
+  &:active
+    opacity: .5
+
+.Settings .details-box .close-btn
+  color: var(--false-fg)
+
+.Settings .details-box .json
+  box(relative)
+  size(max-w: 100%)
+  text(monospace, s: rem(11))
+  padding: 32px 40px
+  white-space: pre-wrap
+  word-break: break-word
+  color: var(--label-fg)
+
 @import './menu-editor'
 @import './styles-editor'
 @import './snapshots'
