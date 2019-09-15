@@ -144,23 +144,23 @@ function onTabUpdated(tabId, change, tab) {
             }
             localTab.favIconUrl = ''
           }
-        })
-    }
 
-    const groupTab = this.actions.getGroupTab(localTab)
-    if (groupTab && !groupTab.discarded) {
-      let updateData = {
-        name: 'updateTab',
-        id: localTab.id,
-        status: change.status,
-        title: localTab.title,
-        url: localTab.url,
-        lvl: localTab.lvl - groupTab.lvl - 1,
-        discarded: localTab.discarded,
-      }
-      if (change.status === 'complete') updateData.favIconUrl = localTab.favIconUrl
-      browser.tabs.sendMessage(groupTab.id, updateData)
-        .catch(() => {/** itsokay **/})
+          let groupTab = this.actions.getGroupTab(localTab)
+          if (groupTab && !groupTab.discarded) {
+            let updateData = {
+              name: 'updateTab',
+              id: localTab.id,
+              status: change.status,
+              title: localTab.title,
+              url: localTab.url,
+              lvl: localTab.lvl - groupTab.lvl - 1,
+              discarded: localTab.discarded,
+            }
+            if (change.status === 'complete') updateData.favIconUrl = localTab.favIconUrl
+            browser.tabs.sendMessage(groupTab.id, updateData)
+              .catch(() => {/** itsokay **/})
+          }
+        })
     }
   }
 
@@ -189,6 +189,7 @@ function onTabUpdated(tabId, change, tab) {
   // Handle favicon change
   // If favicon is base64 string - store it in cache
   if (change.favIconUrl) {
+    console.log('[DEBUG] SIDEBAR: tabUpdated favicon')
     if (change.favIconUrl.startsWith('data:')) {
       this.actions.setFavicon(tab.url, change.favIconUrl)
     } else if (change.favIconUrl.startsWith('chrome:')) {
