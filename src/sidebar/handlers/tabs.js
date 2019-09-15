@@ -189,7 +189,6 @@ function onTabUpdated(tabId, change, tab) {
   // Handle favicon change
   // If favicon is base64 string - store it in cache
   if (change.favIconUrl) {
-    console.log('[DEBUG] SIDEBAR: tabUpdated favicon')
     if (change.favIconUrl.startsWith('data:')) {
       this.actions.setFavicon(tab.url, change.favIconUrl)
     } else if (change.favIconUrl.startsWith('chrome:')) {
