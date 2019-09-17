@@ -1003,6 +1003,7 @@ async function recreateDroppedNodes(event, dropIndex, dropParent, nodes, pin, de
   // Create new tabs
   const oldNewMap = []
   let opener = dropParent < 0 ? undefined : dropParent
+  let firstNode = nodes[0]
 
   for (let i = 0; i < nodes.length; i++) {
     let node = nodes[i]
@@ -1012,13 +1013,15 @@ async function recreateDroppedNodes(event, dropIndex, dropParent, nodes, pin, de
     if (this.state.tabsTreeLimit > 0 && node.type === 'folder') continue
 
     let createConf = {
-      active: node.active,
       cookieStoreId: destCtx,
       index: dropIndex + i,
       url: node.url ? Utils.normalizeUrl(node.url) : Utils.createGroupUrl(node.title),
       windowId: this.state.windowId,
       pinned: pin,
     }
+
+    if (firstNode.type === 'tab') createConf.active = node.active
+    else createConf.active = firstNode.id === node.id
 
     if (oldNewMap[node.parentId] >= 0) {
       createConf.openerTabId = oldNewMap[node.parentId]
@@ -1031,14 +1034,14 @@ async function recreateDroppedNodes(event, dropIndex, dropParent, nodes, pin, de
   }
 
   // Remove source tabs
-  if (nodes[0].type === 'tab' && !event.ctrlKey) {
+  if (firstNode.type === 'tab' && !event.ctrlKey) {
     const toRemove = nodes.map(n => n.id)
     this.state.removingTabs = [...toRemove]
     await browser.tabs.remove(toRemove)
   }
 
   // Update tabs tree if there are no tabs was deleted
-  if (nodes[0].type !== 'tab' || event.ctrlKey) {
+  if (firstNode.type !== 'tab' || event.ctrlKey) {
     Actions.updateTabsTree(dropIndex - 1, dropIndex + nodes.length)
   }
 }
