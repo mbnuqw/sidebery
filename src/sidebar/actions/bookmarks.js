@@ -335,11 +335,9 @@ async function openBookmarksInPanel(ids, panelId) {
       windowId: this.state.windowId,
       index: index++,
       url: node.url ? Utils.normalizeUrl(node.url) : Utils.createGroupUrl(node.title),
-      title: node.title,
       cookieStoreId: panelId,
       active: false,
       openerTabId: idMap[node.parentId],
-      discarded: true,
     })
     if (isDir) idMap[node.id] = createdTab.id
   }

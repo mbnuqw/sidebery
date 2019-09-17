@@ -154,10 +154,8 @@ async function restoreGroupTab(tabInfo, index, parents) {
     windowId: this.state.windowId,
     index,
     url: browser.runtime.getURL('group/group.html') + `#${groupId}`,
-    title: decodeURIComponent(groupId.split(':id:')[0]),
     cookieStoreId: tabInfo.ctx,
     active: false,
-    discarded: true,
   })
 
   if (tabInfo.isParent) parents[tabInfo.id] = restoredTab.id
@@ -687,32 +685,30 @@ async function moveTabsToThisWin(tabs, fromPrivate) {
  * Move tabs (reopen url) in provided context.
  */
 async function moveTabsToCtx(tabIds, ctxId) {
-  const ids = [...tabIds]
-  const oldNewMap = {}
+  let ids = [...tabIds]
+  let oldNewMap = {}
   for (let id of ids) {
-    const tab = this.state.tabsMap[id]
+    let tab = this.state.tabsMap[id]
     if (!tab) continue
  
     let createConf = {
-      active: false,
+      active: tab.active,
       windowId: this.state.windowId,
       cookieStoreId: ctxId,
       url: Utils.normalizeUrl(tab.url),
     }
 
-    if (!tab.active) {
-      createConf.discarded = true
-      createConf.title = tab.title
+    if (oldNewMap[tab.parentId] >= 0) {
+      createConf.openerTabId = oldNewMap[tab.parentId]
     }
 
-    const newTab = await browser.tabs.create(createConf)
-    await browser.tabs.remove(tab.id)
+    let newTab = await browser.tabs.create(createConf)
 
     oldNewMap[tab.id] = newTab.id
-    if (tab.parentId > -1) {
-      this.state.tabsMap[newTab.id].parentId = oldNewMap[tab.parentId]
-    }
   }
+
+  this.state.removingTabs = [...ids]
+  await browser.tabs.remove(ids)
 
   if (this.state.tabsTree) {
     Actions.updateTabsTree()
@@ -1028,11 +1024,6 @@ async function recreateDroppedNodes(event, dropIndex, dropParent, nodes, pin, de
       createConf.openerTabId = oldNewMap[node.parentId]
     } else {
       createConf.openerTabId = opener
-    }
-
-    if (!node.active && nodes.length > 1) {
-      createConf.discarded = true
-      createConf.title = node.title
     }
 
     const info = await browser.tabs.create(createConf)
