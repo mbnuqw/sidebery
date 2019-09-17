@@ -333,12 +333,10 @@ async function removeTabs(tabIds) {
   }
 
   // Update successorTabId if there are active tab
-  if (tabs.length < panel.tabs.length) {
-    const activeTab = tabs.find(t => t.active)
-    if (activeTab) {
-      const target = Utils.findSuccessorTab(this.state, activeTab, tabs.map(t => t.id))
-      if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
-    }
+  let activeTab = tabs.find(t => t.active)
+  if (activeTab) {
+    let target = Utils.findSuccessorTab(this.state, activeTab, tabs.map(t => t.id))
+    if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
   }
 
   browser.tabs.remove(toRemove)
