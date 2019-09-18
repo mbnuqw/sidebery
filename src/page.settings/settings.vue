@@ -1075,7 +1075,7 @@ export default {
     async deleteStoredData(prop) {
       if (window.confirm(translate('settings.storage_delete_confirm') + `"${prop}"?`)) {
         await browser.storage.local.remove(prop)
-        this.calcStorageInfo()
+        browser.runtime.reload()
       }
     },
   },
