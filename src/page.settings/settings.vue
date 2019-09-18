@@ -529,7 +529,6 @@ import FooterSection from './components/footer'
 
 const VALID_SHORTCUT = /^((Ctrl|Alt|Command|MacCtrl)\+)((Shift|Alt)\+)?([A-Z0-9]|Comma|Period|Home|End|PageUp|PageDown|Space|Insert|Delete|Up|Down|Left|Right|F\d\d?)$|^((Ctrl|Alt|Command|MacCtrl)\+)?((Shift|Alt)\+)?(F\d\d?)$/
 const SPEC_KEYS = /^(Comma|Period|Home|End|PageUp|PageDown|Space|Insert|Delete|F\d\d?)$/
-const ISSUE_URL = 'https://github.com/mbnuqw/sidebery/issues/new'
 
 export default {
   components: {
@@ -558,28 +557,6 @@ export default {
     activateAfterClosingNextOrPrev() {
       return State.activateAfterClosing === 'next' || State.activateAfterClosing === 'prev'
     },
-
-    issueLink() {
-      if (!State.osInfo || !State.ffInfo) return ISSUE_URL
-
-      let body = `\n\n\n> OS: ${State.osInfo.os} ${State.osInfo.arch}  \n`
-      body += `> Firefox: ${State.ffInfo.version}  \n`
-      body += `> Extension: ${State.version}  \n`
-      body += '> <details><summary>Debug Info</summary>\n'
-      body += '> <pre><code>\n'
-      if (this.winCount) body += `> - Windows: ${this.winCount}\n`
-      if (this.ctrCount) body += `> - Containers: ${this.ctrCount}\n`
-      if (this.tabsCount) body += `> - Tabs: ${this.tabsCount}\n`
-      if (this.storageSize) body += `> - Storage: ~ ${this.storageSize}\n`
-      if (this.storedProps.length) {
-        body += '> - Stored props:\n'
-        body += `>     ${this.storedProps.join(',\n>     ')}\n`
-      }
-      body += '> \n'
-      body += '> </code></pre>\n'
-      body += '> </details>'
-      return ISSUE_URL + '?body=' + encodeURIComponent(body)
-    }
   },
 
   mounted() {
@@ -832,20 +809,6 @@ export default {
      */
     removeAllSnapshots() {
       browser.storage.local.set({ snapshots: [] })
-    },
-
-    /**
-     * Open debug info page
-     */
-    async openDebugInfo() {
-      let url = browser.runtime.getURL('debug/debug.html')
-      const tab = await browser.tabs.getCurrent()
-      const conf = { url, windowId: State.windowId }
-      if (tab) {
-        conf.openerTabId = tab.id
-        conf.index = tab.index + 1
-      }
-      browser.tabs.create(conf)
     },
 
     /**

@@ -6,7 +6,6 @@ export default {
   'settings.nav_menu': { message: 'Меню' },
   'settings.nav_styles': { message: 'Стили' },
   'settings.nav_snapshots': { message: 'Снепшоты' },
-  'settings.nav_debug': { message: 'Отладка' },
 
   'settings.ctrl_copy': { message: 'СКОПИРОВАТЬ' },
   'settings.ctrl_close': { message: 'ЗАКРЫТЬ' },
