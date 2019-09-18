@@ -471,6 +471,15 @@
       .btn(@click="switchView('snapshots')") {{t('settings.snapshots_view_label')}}
 
   section
+    h2 {{t('settings.storage_title')}} (~{{storageOveral}})
+    .storage-section
+      .storage-prop(v-for="info in storedProps")
+        .name {{info.name}}
+        .size ~{{info.sizeStr}}
+        .del-btn(@click="deleteStoredData(info.name)") {{t('settings.storage_delete_prop')}}
+        .open-btn(@click="openStoredData(info.name)") {{t('settings.storage_open_prop')}}
+
+  section
     h2 {{t('settings.help_title')}}
 
     .ctrls
@@ -483,8 +492,7 @@
       .btn(@click="showDbgDetails") {{t('settings.debug_info')}}
       a.btn(
         tabindex="-1"
-        href="https://github.com/mbnuqw/sidebery/issues/new/choose"
-        @mouseenter="updateIssueLink") {{t('settings.repo_bug')}}
+        href="https://github.com/mbnuqw/sidebery/issues/new/choose") {{t('settings.repo_bug')}}
       .btn.-warn(@click="resetSettings") {{t('settings.reset_settings')}}
 
     .separator
@@ -499,8 +507,8 @@
     v-noise:300.g:12:af.a:0:42.s:0:9=""
     @scroll.stop="")
     .box
-      .btn(@click="copyDebugDetail") COPY
-      .btn.-warn(@click="dbgDetails = ''") CLOSE
+      .btn(@click="copyDebugDetail") {{t('settings.ctrl_copy')}}
+      .btn.-warn(@click="dbgDetails = ''") {{t('settings.ctrl_close')}}
     .json {{dbgDetails}}
 
   footer-section
@@ -509,6 +517,7 @@
 
 <script>
 import Utils from '../utils'
+import { translate } from '../mixins/dict'
 import { DEFAULT_SETTINGS } from '../defaults'
 import State from './store/state'
 import Actions from './actions'
@@ -541,6 +550,7 @@ export default {
       tabsCount: 0,
       storageSize: 0,
       storedProps: [],
+      storageOveral: '-',
     }
   },
 
@@ -597,6 +607,8 @@ export default {
     State.highlight.allUrls = false
     State.highlight.tabHide = false
     setTimeout(Actions.updateActiveView, 13)
+
+    this.calcStorageInfo()
   },
 
   activated() {
@@ -877,8 +889,8 @@ export default {
       let time = Utils.uTime(now, '.')
 
       this.$refs.exportData.href = URL.createObjectURL(file)
-      this.$refs.exportData.download = `sidebery-settings-${date}-${time}.json`
-      this.$refs.exportData.title = `sidebery-settings-${date}-${time}.json`
+      this.$refs.exportData.download = `sidebery-data-${date}-${time}.json`
+      this.$refs.exportData.title = `sidebery-data-${date}-${time}.json`
     },
 
     /**
@@ -912,26 +924,6 @@ export default {
       if (data.tabsMenu) toStore.tabsMenu = data.tabsMenu
       if (data.bookmarksMenu) toStore.bookmarksMenu = data.bookmarksMenu
       browser.storage.local.set(toStore)
-    },
-
-    /**
-     * Update issueLink
-     */
-    async updateIssueLink() {
-      let windows = await browser.windows.getAll({})
-      let ctrs = await browser.contextualIdentities.query({})
-      let tabs = await browser.tabs.query({})
-      let stored = await browser.storage.local.get()
-      this.winCount = windows.length
-      this.ctrCount = ctrs.length
-      this.tabsCount = tabs.length
-      try {
-        this.storageSize = Utils.strSize(JSON.stringify(stored))
-        this.storedProps = Object.keys(stored)
-      } catch (err) {
-        this.storageSize = 0
-        this.storedProps = []
-      }
     },
 
     /**
@@ -1046,6 +1038,51 @@ export default {
     copyDebugDetail() {
       if (!this.dbgDetails) return
       navigator.clipboard.writeText(this.dbgDetails)
+    },
+
+    /**
+     * Calculate storage info
+     */
+    async calcStorageInfo() {
+      let stored
+      try {
+        stored = await browser.storage.local.get()
+      } catch (err) {
+        return
+      }
+
+      this.storageOveral = Utils.strSize(JSON.stringify(stored))
+      this.storedProps = Object.keys(stored)
+        .map(key => {
+          let value = stored[key]
+          let size = new Blob([JSON.stringify(value)]).size
+          return {
+            name: key,
+            size,
+            sizeStr: Utils.strSize(JSON.stringify(value)),
+          }
+        })
+        .sort((a, b) => b.size - a.size)
+    },
+
+    /**
+     * Show stored data
+     */
+    async openStoredData(prop) {
+      let ans = await browser.storage.local.get(prop)
+      if (ans && ans[prop] !== undefined) {
+        this.dbgDetails = JSON.stringify(ans[prop], null, 2)
+      }
+    },
+
+    /**
+     * Delete stored data
+     */
+    async deleteStoredData(prop) {
+      if (window.confirm(translate('settings.storage_delete_confirm') + `"${prop}"?`)) {
+        await browser.storage.local.remove(prop)
+        this.calcStorageInfo()
+      }
     },
   },
 }
