@@ -1,13 +1,11 @@
 export default {
   // --- General
-  'dashboard.sync_label': { message: 'Синхронизация' },
-  'dashboard.sync_tooltip': { message: 'Автоматически открывать синхронизированные вкладки на этой панели (используя синхронизацию Firefox)' },
   'dashboard.lock_panel_label': { message: 'Заблокировать панель' },
   'dashboard.lock_panel_tooltip': { message: 'Запретить автоматическое переключение с этой панели' },
   'dashboard.lock_tabs_label': { message: 'Заблокировать табы' },
   'dashboard.lock_tabs_tooltip': { message: 'Запретить закрытие вкладок на этой панели' },
-  'dashboard.no_empty_label': { message: 'No empty' },
-  'dashboard.no_empty_tooltip': { message: 'Предотвратить опустошение этой панели' },
+  'dashboard.no_empty_label': { message: 'Предотвращать опустошение' },
+  'dashboard.no_empty_tooltip': { message: 'Предотвращать опустошение этой панели' },
 
   // --- Bookmarks
   'bookmarks_dashboard.title': { message: 'Закладки' },
@@ -45,8 +43,8 @@ export default {
   'container_dashboard.proxy_socks4': { message: 'socks4' },
   'container_dashboard.proxy_socks': { message: 'socks5' },
   'container_dashboard.proxy_direct': { message: 'выкл' },
-  'container_dashboard.rules_include': { message: 'Include urls' },
-  'container_dashboard.rules_include_tooltip': { message: 'Reopen tabs with matched urls in this panel.\nNewline separated list of "substrings" or "/regex/":\n    example.com\n    /^(some)?regex$/\n    ...' },
-  'container_dashboard.rules_exclude': { message: 'Exclude urls' },
-  'container_dashboard.rules_exclude_tooltip': { message: 'Reopen tabs with matched url in default panel.\nNewline separated list of "substrings" or "/regex/":\n    example.com\n    /^(some)?regex$/\n    ...' },
+  'container_dashboard.rules_include': { message: 'Включать табы' },
+  'container_dashboard.rules_include_tooltip': { message: 'Переоткрывать табы с совпадающими url в этой панели.\nПострочный список правил "substrings" или "/regex/":\n    example.com\n    /^(some)?regex$/\n    ...' },
+  'container_dashboard.rules_exclude': { message: 'Исключать табы' },
+  'container_dashboard.rules_exclude_tooltip': { message: 'Переоткрывать табы с совпадающими url из этой панели в стандартной.\nПострочный список правил "substrings" или "/regex/":\n    example.com\n    /^(some)?regex$/\n    ...' },
 }
