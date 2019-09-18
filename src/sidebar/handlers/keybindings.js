@@ -114,6 +114,11 @@ function onKeyActivate() {
           return
         }
       }
+
+      if (target.parentId === 'unfiled_____' && this.state.autoRemoveOther) {
+        browser.bookmarks.remove(target.id)
+      }
+
       if (this.state.openBookmarkNewTab) {
         let index = this.state.panelsMap[DEFAULT_CTX_ID].endIndex + 1
         browser.tabs.create({ index, url: target.url, active: true })
