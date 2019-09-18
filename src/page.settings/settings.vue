@@ -1029,6 +1029,37 @@ export default {
         dbg.bookmarksMenu = err.toString()
       }
 
+      try {
+        let bookmarks = await browser.bookmarks.getTree()
+        let bookmarksCount = 0
+        let foldersCount = 0
+        let separatorsCount = 0
+        let lvl = 0, maxDepth = 0
+        let walker = nodes => {
+          if (lvl > maxDepth) maxDepth = lvl
+          for (let node of nodes) {
+            if (node.type === 'bookmark') bookmarksCount++
+            if (node.type === 'folder') foldersCount++
+            if (node.type === 'separator') separatorsCount++
+            if (node.children) {
+              lvl++
+              walker(node.children)
+              lvl--
+            }
+          }
+        }
+        walker(bookmarks[0].children)
+
+        dbg.bookmarks = {
+          bookmarksCount,
+          foldersCount,
+          separatorsCount,
+          maxDepth,
+        }
+      } catch (err) {
+        dbg.bookmarks = err.toString()
+      }
+
       this.dbgDetails = JSON.stringify(dbg, null, 2)
     },
 
