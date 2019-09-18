@@ -249,10 +249,18 @@ function saveTabsTree(delay = 300) {
       }
     }
 
-    this.state.bg.postMessage({
-      action: 'saveTabsTree',
-      args: [this.state.windowId, tabsTreeState],
-    })
+    if (this.state.bg && !this.state.bg.error) {
+      this.state.bg.postMessage({
+        action: 'saveTabsTree',
+        args: [this.state.windowId, tabsTreeState],
+      })
+    } else {
+      browser.runtime.sendMessage({
+        instanceType: 'bg',
+        action: 'saveTabsTree',
+        args: [this.state.windowId, tabsTreeState],
+      })
+    }
     TabsTreeSaveTimeout = null
   }, delay)
 }
