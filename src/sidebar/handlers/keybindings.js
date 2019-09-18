@@ -2,8 +2,6 @@ import { DEFAULT_CTX_ID } from '../../defaults'
 import EventBus from '../../event-bus'
 import Handlers from '../handlers'
 
-let selStartIndex
-
 /**
  * Keybindings router
  */
@@ -264,7 +262,7 @@ function onKeySelectExpand(dir) {
     if (this.state.selected.length === 1) {
       const selId = this.state.selected[0]
       let index = this.state.itemSlots.findIndex(t => t.id === selId)
-      selStartIndex = index
+      this.selStartIndex = index
       this.selEndIndex = index + dir
     } else {
       this.selEndIndex = this.selEndIndex + dir
@@ -272,8 +270,8 @@ function onKeySelectExpand(dir) {
     if (this.selEndIndex < 0) this.selEndIndex = 0
     if (this.selEndIndex >= this.state.itemSlots.length) this.selEndIndex = this.state.itemSlots.length - 1
 
-    let minIndex = Math.min(selStartIndex, this.selEndIndex)
-    let maxIndex = Math.max(selStartIndex, this.selEndIndex)
+    let minIndex = Math.min(this.selStartIndex, this.selEndIndex)
+    let maxIndex = Math.max(this.selStartIndex, this.selEndIndex)
 
     const all = []
     for (let i = minIndex; i <= maxIndex; i++) {
@@ -286,7 +284,7 @@ function onKeySelectExpand(dir) {
     }
 
     const toDeselect = this.state.selected.filter(id => !all.includes(id))
-    toDeselect.forEach(id => this.actions.selectItem(id))
+    toDeselect.forEach(id => this.actions.deselectItem(id))
   }
 
   // Update scroll position
