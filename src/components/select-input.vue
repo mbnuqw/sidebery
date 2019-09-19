@@ -1,9 +1,10 @@
 <template lang="pug">
-.SelectInput(@mousedown="select")
+.SelectInput
   .opt(
     v-for="o in opts"
     :data-none="o === noneOpt"
-    :data-active="o === value") {{t(label + o, plurNum)}}
+    :data-active="o === value"
+    @mousedown.stop="select(o)") {{t(label + o, plurNum)}}
 </template>
 
 
@@ -25,13 +26,8 @@ export default {
   },
 
   methods: {
-    select(e) {
-      let i = this.opts.indexOf(this.value)
-      if (e.button === 0) i++
-      if (e.button === 2) i--
-      if (i >= this.opts.length) i = 0
-      if (i < 0) i = this.opts.length - 1
-      this.$emit('input', this.opts[i])
+    select(option) {
+      this.$emit('input', option)
     },
   },
 }

@@ -471,6 +471,15 @@
       .btn(@click="switchView('snapshots')") {{t('settings.snapshots_view_label')}}
 
   section
+    h2 {{t('settings.storage_title')}} (~{{storageOveral}})
+    .storage-section
+      .storage-prop(v-for="info in storedProps")
+        .name {{info.name}}
+        .size ~{{info.sizeStr}}
+        .del-btn(@click="deleteStoredData(info.name)") {{t('settings.storage_delete_prop')}}
+        .open-btn(@click="openStoredData(info.name)") {{t('settings.storage_open_prop')}}
+
+  section
     h2 {{t('settings.help_title')}}
 
     .ctrls
@@ -480,9 +489,27 @@
         input(type="file" ref="importData" accept="application/json" @input="importData")
 
     .ctrls
-      .btn(@click="switchView('debug')") {{t('settings.debug_info')}}
-      a.btn(tabindex="-1" :href="issueLink" @mouseenter="updateIssueLink") {{t('settings.repo_bug')}}
+      .btn(@click="showDbgDetails") {{t('settings.debug_info')}}
+      a.btn(
+        tabindex="-1"
+        href="https://github.com/mbnuqw/sidebery/issues/new/choose") {{t('settings.repo_bug')}}
       .btn.-warn(@click="resetSettings") {{t('settings.reset_settings')}}
+
+    .separator
+
+    .ctrls
+      .info(v-if="$store.state.osInfo") OS: {{$store.state.osInfo.os}}
+      .info(v-if="$store.state.ffInfo") Firefox: {{$store.state.ffInfo.version}}
+      .info Addon: {{$store.state.version}}
+
+  .details-box(
+    v-if="dbgDetails"
+    v-noise:300.g:12:af.a:0:42.s:0:9=""
+    @scroll.stop="")
+    .box
+      .btn(@click="copyDebugDetail") {{t('settings.ctrl_copy')}}
+      .btn.-warn(@click="dbgDetails = ''") {{t('settings.ctrl_close')}}
+    .json {{dbgDetails}}
 
   footer-section
 </template>
@@ -490,6 +517,8 @@
 
 <script>
 import Utils from '../utils'
+import { translate } from '../mixins/dict'
+import { DEFAULT_SETTINGS } from '../defaults'
 import State from './store/state'
 import Actions from './actions'
 import ToggleField from '../components/toggle-field'
@@ -500,7 +529,6 @@ import FooterSection from './components/footer'
 
 const VALID_SHORTCUT = /^((Ctrl|Alt|Command|MacCtrl)\+)((Shift|Alt)\+)?([A-Z0-9]|Comma|Period|Home|End|PageUp|PageDown|Space|Insert|Delete|Up|Down|Left|Right|F\d\d?)$|^((Ctrl|Alt|Command|MacCtrl)\+)?((Shift|Alt)\+)?(F\d\d?)$/
 const SPEC_KEYS = /^(Comma|Period|Home|End|PageUp|PageDown|Space|Insert|Delete|F\d\d?)$/
-const ISSUE_URL = 'https://github.com/mbnuqw/sidebery/issues/new'
 
 export default {
   components: {
@@ -513,6 +541,7 @@ export default {
 
   data() {
     return {
+      dbgDetails: '',
       scrollY: 0,
       faviCache: null,
       winCount: 0,
@@ -520,6 +549,7 @@ export default {
       tabsCount: 0,
       storageSize: 0,
       storedProps: [],
+      storageOveral: '-',
     }
   },
 
@@ -527,28 +557,6 @@ export default {
     activateAfterClosingNextOrPrev() {
       return State.activateAfterClosing === 'next' || State.activateAfterClosing === 'prev'
     },
-
-    issueLink() {
-      if (!State.osInfo || !State.ffInfo) return ISSUE_URL
-
-      let body = `\n\n\n> OS: ${State.osInfo.os} ${State.osInfo.arch}  \n`
-      body += `> Firefox: ${State.ffInfo.version}  \n`
-      body += `> Extension: ${State.version}  \n`
-      body += '> <details><summary>Debug Info</summary>\n'
-      body += '> <pre><code>\n'
-      if (this.winCount) body += `> - Windows: ${this.winCount}\n`
-      if (this.ctrCount) body += `> - Containers: ${this.ctrCount}\n`
-      if (this.tabsCount) body += `> - Tabs: ${this.tabsCount}\n`
-      if (this.storageSize) body += `> - Storage: ~ ${this.storageSize}\n`
-      if (this.storedProps.length) {
-        body += '> - Stored props:\n'
-        body += `>     ${this.storedProps.join(',\n>     ')}\n`
-      }
-      body += '> \n'
-      body += '> </code></pre>\n'
-      body += '> </details>'
-      return ISSUE_URL + '?body=' + encodeURIComponent(body)
-    }
   },
 
   mounted() {
@@ -576,6 +584,8 @@ export default {
     State.highlight.allUrls = false
     State.highlight.tabHide = false
     setTimeout(Actions.updateActiveView, 13)
+
+    this.calcStorageInfo()
   },
 
   activated() {
@@ -802,20 +812,6 @@ export default {
     },
 
     /**
-     * Open debug info page
-     */
-    async openDebugInfo() {
-      let url = browser.runtime.getURL('debug/debug.html')
-      const tab = await browser.tabs.getCurrent()
-      const conf = { url, windowId: State.windowId }
-      if (tab) {
-        conf.openerTabId = tab.id
-        conf.index = tab.index + 1
-      }
-      browser.tabs.create(conf)
-    },
-
-    /**
      * Reset settings
      */
     resetSettings() {
@@ -856,8 +852,8 @@ export default {
       let time = Utils.uTime(now, '.')
 
       this.$refs.exportData.href = URL.createObjectURL(file)
-      this.$refs.exportData.download = `sidebery-settings-${date}-${time}.json`
-      this.$refs.exportData.title = `sidebery-settings-${date}-${time}.json`
+      this.$refs.exportData.download = `sidebery-data-${date}-${time}.json`
+      this.$refs.exportData.title = `sidebery-data-${date}-${time}.json`
     },
 
     /**
@@ -894,22 +890,192 @@ export default {
     },
 
     /**
-     * Update issueLink
+     * Show debug details
      */
-    async updateIssueLink() {
-      let windows = await browser.windows.getAll({})
-      let ctrs = await browser.contextualIdentities.query({})
-      let tabs = await browser.tabs.query({})
-      let stored = await browser.storage.local.get()
-      this.winCount = windows.length
-      this.ctrCount = ctrs.length
-      this.tabsCount = tabs.length
+    async showDbgDetails() {
+      let dbg = {}
+
+      dbg.settings = {}
+      for (let prop of Object.keys(DEFAULT_SETTINGS)) {
+        dbg.settings[prop] = State[prop]
+      }
+
       try {
-        this.storageSize = Utils.strSize(JSON.stringify(stored))
-        this.storedProps = Object.keys(stored)
+        dbg.permissions = {
+          allUrls: State.permAllUrls,
+          tabHide: State.permTabHide,
+          actualAllUrls: await browser.permissions.contains({ origins: ['<all_urls>'] }),
+          actualTabHide: await browser.permissions.contains({ permissions: ['tabHide'] }),
+        }
       } catch (err) {
-        this.storageSize = 0
-        this.storedProps = []
+        dbg.permissions = err.toString()
+      }
+
+      try {
+        let stored = await browser.storage.local.get()
+        dbg.storage = {
+          size: Utils.strSize(JSON.stringify(stored)),
+          props: {},
+        }
+        for (let prop of Object.keys(stored)) {
+          dbg.storage.props[prop] = Utils.strSize(JSON.stringify(stored[prop]))
+        }
+      } catch (err) {
+        dbg.storage = err.toString()
+      }
+
+      try {
+        let { panels } = await browser.storage.local.get('panels')
+        dbg.panels = []
+        for (let panel of panels) {
+          let clone = Utils.cloneObject(panel)
+          if (clone.name) clone.name = clone.name.length
+          if (clone.icon) clone.icon = '...'
+          if (clone.color) clone.color = '...'
+          if (clone.includeHosts) clone.includeHosts = clone.includeHosts.length
+          if (clone.excludeHosts) clone.excludeHosts = clone.excludeHosts.length
+          if (clone.proxy) clone.proxy = '...'
+          dbg.panels.push(clone)
+        }
+      } catch (err) {
+        dbg.panels = err.toString()
+      }
+
+      try {
+        let { cssVars } = await browser.storage.local.get('cssVars')
+        dbg.cssVars = {}
+        for (let prop of Object.keys(cssVars)) {
+          if (cssVars[prop]) dbg.cssVars[prop] = cssVars[prop]
+        }
+      } catch (err) {
+        dbg.cssVars = err.toString()
+      }
+
+      try {
+        let { sidebarCSS, groupCSS } = await browser.storage.local.get([
+          'sidebarCSS',
+          'groupCSS',
+        ])
+        dbg.sidebarCSSLen = sidebarCSS.length
+        dbg.groupCSSLen = groupCSS.length
+      } catch (err) {
+        // nothing...
+      }
+
+      try {
+        let windows = await browser.windows.getAll({ populate: true })
+        dbg.windows = []
+        for (let w of windows) {
+          dbg.windows.push({
+            state: w.state,
+            incognito: w.incognito,
+            tabsCount: w.tabs.length,
+            logs: await browser.runtime.sendMessage({
+              windowId: w.id,
+              action: 'getLogs',
+            }),
+          })
+        }
+      } catch (err) {
+        dbg.windows = err.toString()
+      }
+
+      try {
+        let ans = await browser.storage.local.get([
+          'tabsMenu',
+          'bookmarksMenu',
+        ])
+        dbg.tabsMenu = ans.tabsMenu
+        dbg.bookmarksMenu = ans.bookmarksMenu
+      } catch (err) {
+        dbg.tabsMenu = err.toString()
+        dbg.bookmarksMenu = err.toString()
+      }
+
+      try {
+        let bookmarks = await browser.bookmarks.getTree()
+        let bookmarksCount = 0
+        let foldersCount = 0
+        let separatorsCount = 0
+        let lvl = 0, maxDepth = 0
+        let walker = nodes => {
+          if (lvl > maxDepth) maxDepth = lvl
+          for (let node of nodes) {
+            if (node.type === 'bookmark') bookmarksCount++
+            if (node.type === 'folder') foldersCount++
+            if (node.type === 'separator') separatorsCount++
+            if (node.children) {
+              lvl++
+              walker(node.children)
+              lvl--
+            }
+          }
+        }
+        walker(bookmarks[0].children)
+
+        dbg.bookmarks = {
+          bookmarksCount,
+          foldersCount,
+          separatorsCount,
+          maxDepth,
+        }
+      } catch (err) {
+        dbg.bookmarks = err.toString()
+      }
+
+      this.dbgDetails = JSON.stringify(dbg, null, 2)
+    },
+
+    /**
+     * Copy debug info
+     */
+    copyDebugDetail() {
+      if (!this.dbgDetails) return
+      navigator.clipboard.writeText(this.dbgDetails)
+    },
+
+    /**
+     * Calculate storage info
+     */
+    async calcStorageInfo() {
+      let stored
+      try {
+        stored = await browser.storage.local.get()
+      } catch (err) {
+        return
+      }
+
+      this.storageOveral = Utils.strSize(JSON.stringify(stored))
+      this.storedProps = Object.keys(stored)
+        .map(key => {
+          let value = stored[key]
+          let size = new Blob([JSON.stringify(value)]).size
+          return {
+            name: key,
+            size,
+            sizeStr: Utils.strSize(JSON.stringify(value)),
+          }
+        })
+        .sort((a, b) => b.size - a.size)
+    },
+
+    /**
+     * Show stored data
+     */
+    async openStoredData(prop) {
+      let ans = await browser.storage.local.get(prop)
+      if (ans && ans[prop] !== undefined) {
+        this.dbgDetails = JSON.stringify(ans[prop], null, 2)
+      }
+    },
+
+    /**
+     * Delete stored data
+     */
+    async deleteStoredData(prop) {
+      if (window.confirm(translate('settings.storage_delete_confirm') + `"${prop}"?`)) {
+        await browser.storage.local.remove(prop)
+        browser.runtime.reload()
       }
     },
   },

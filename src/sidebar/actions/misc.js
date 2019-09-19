@@ -264,6 +264,13 @@ function updateSidebarWidth() {
   this.state.width = document.body.offsetWidth
 }
 
+/**
+ * getLogs
+ */
+function getLogs() {
+  return Logs
+}
+
 export default {
   loadPlatformInfo,
   loadWindowInfo,
@@ -283,4 +290,5 @@ export default {
   blockCtxMenu,
   startMultiSelection,
   stopMultiSelection,
+  getLogs,
 }

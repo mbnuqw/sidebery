@@ -264,7 +264,8 @@ function createGroupUrl(name) {
 }
 
 /**
- * Find successor tab
+ * Find successor tab (tab that will be activated
+ * after removing currenly active tab)
  */
 function findSuccessorTab(state, tab, exclude) {
   let target
@@ -304,7 +305,8 @@ function findSuccessorTab(state, tab, exclude) {
     }
 
     if (!target) {
-      for (let i = tab.index, prev; i--; ) {
+      let i, prev
+      for (i = tab.index; i--; ) {
         prev = state.tabs[i]
 
         // Prev tab is out of target panel
@@ -323,6 +325,18 @@ function findSuccessorTab(state, tab, exclude) {
         if (prev.cookieStoreId === tab.cookieStoreId) {
           target = prev
           break
+        }
+      }
+
+      // Or just non-invisible tab
+      if (!target) {
+        while (i > -1) {
+          prev = state.tabs[i]
+          if (!prev.invisible) {
+            target = prev
+            break
+          }
+          i--
         }
       }
     }

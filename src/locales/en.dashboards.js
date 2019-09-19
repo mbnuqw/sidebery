@@ -1,7 +1,5 @@
 export default {
   // --- General
-  'dashboard.sync_label': { message: 'Sync' },
-  'dashboard.sync_tooltip': { message: 'Auto-open synchronized tabs on this panel (using Firefox sync)' },
   'dashboard.lock_panel_label': { message: 'Lock panel' },
   'dashboard.lock_panel_tooltip': { message: 'Prevent auto-switching from this panel' },
   'dashboard.lock_tabs_label': { message: 'Lock tabs' },

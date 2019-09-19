@@ -80,10 +80,6 @@
         class="option"
         :data-active="$store.state.activeView === 'Snapshots'"
         @click="navigateTo('snapshots')">{{t('settings.nav_snapshots')}}</div>
-      <div
-        class="option"
-        :data-active="$store.state.activeView === 'Debug'"
-        @click="navigateTo('debug')">{{t('settings.nav_debug')}}</div>
     </nav>
 
     <transition name="settings">

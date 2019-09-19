@@ -144,23 +144,23 @@ function onTabUpdated(tabId, change, tab) {
             }
             localTab.favIconUrl = ''
           }
-        })
-    }
 
-    const groupTab = this.actions.getGroupTab(localTab)
-    if (groupTab && !groupTab.discarded) {
-      let updateData = {
-        name: 'updateTab',
-        id: localTab.id,
-        status: change.status,
-        title: localTab.title,
-        url: localTab.url,
-        lvl: localTab.lvl - groupTab.lvl - 1,
-        discarded: localTab.discarded,
-      }
-      if (change.status === 'complete') updateData.favIconUrl = localTab.favIconUrl
-      browser.tabs.sendMessage(groupTab.id, updateData)
-        .catch(() => {/** itsokay **/})
+          let groupTab = this.actions.getGroupTab(localTab)
+          if (groupTab && !groupTab.discarded) {
+            let updateData = {
+              name: 'updateTab',
+              id: localTab.id,
+              status: change.status,
+              title: localTab.title,
+              url: localTab.url,
+              lvl: localTab.lvl - groupTab.lvl - 1,
+              discarded: localTab.discarded,
+            }
+            if (change.status === 'complete') updateData.favIconUrl = localTab.favIconUrl
+            browser.tabs.sendMessage(groupTab.id, updateData)
+              .catch(() => {/** itsokay **/})
+          }
+        })
     }
   }
 

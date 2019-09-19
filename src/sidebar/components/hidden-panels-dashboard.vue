@@ -1,6 +1,6 @@
 <template lang="pug">
 .Dashboard(v-noise:300.g:12:af.a:0:42.s:0:9="" @dragenter="onDragEnter" @dragleave="onDragLeave")
-  .dash-ctrls(v-if="!$store.state.private" ref="hm")
+  .dash-ctrls(v-if="!$store.state.private")
     .ctrl-panel(
       v-for="(panel, i) in conf.panels"
       :data-color="panel.color"

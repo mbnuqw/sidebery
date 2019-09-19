@@ -6,7 +6,9 @@ export default {
   'settings.nav_menu': { message: 'Menu' },
   'settings.nav_styles': { message: 'Styles' },
   'settings.nav_snapshots': { message: 'Snapshots' },
-  'settings.nav_debug': { message: 'Debug' },
+
+  'settings.ctrl_copy': { message: 'COPY' },
+  'settings.ctrl_close': { message: 'CLOSE' },
 
   // --- General
   'settings.general_title': { message: 'General' },
@@ -202,18 +204,11 @@ export default {
   'settings.tab_hide_label': { message: 'Hiding tabs:' },
   'settings.tab_hide_info': { message: 'Required for:\n- Hiding tabs on inactive panels\n- Hiding folded tabs' },
 
-  // --- Favicons
-  'settings.favi_title': { message: 'Favicons' },
-  'settings.cached_favics': { message: 'Cached favicons size' },
-  'settings.cached_favics_unknown': { message: 'unknown - click to recalc' },
-  'settings.rm_unused_favi_cache': { message: 'Remove unused favicons' },
-  'settings.rm_favi_cache': { message: 'Remove all favicons' },
-
-  // --- Sync
-  'settings.sync_title': { message: 'Sync' },
-  'settings.sync_data_size': { message: 'Sync data size' },
-  'settings.sync_data_size_unknown': { message: 'unknown - click to recalc' },
-  'settings.rm_sync_data': { message: 'Remove sync data' },
+  // --- Storage
+  'settings.storage_title': { message: 'Storage' },
+  'settings.storage_delete_prop': { message: 'delete' },
+  'settings.storage_open_prop': { message: 'open' },
+  'settings.storage_delete_confirm': { message: 'Delete property ' },
 
   // --- Help
   'settings.help_title': { message: 'Help' },

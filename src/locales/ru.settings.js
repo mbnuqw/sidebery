@@ -6,7 +6,9 @@ export default {
   'settings.nav_menu': { message: 'Меню' },
   'settings.nav_styles': { message: 'Стили' },
   'settings.nav_snapshots': { message: 'Снепшоты' },
-  'settings.nav_debug': { message: 'Отладка' },
+
+  'settings.ctrl_copy': { message: 'СКОПИРОВАТЬ' },
+  'settings.ctrl_close': { message: 'ЗАКРЫТЬ' },
 
   // --- General
   'settings.general_title': { message: 'Основные' },
@@ -226,18 +228,11 @@ export default {
   'settings.tab_hide_label': { message: 'Скрытие табов:' },
   'settings.tab_hide_info': { message: 'Необходимо для:\n- Скрывания табов неактивных панелей\n- Скрывания свернутых табов' },
 
-  // --- Favicons
-  'settings.favi_title': { message: 'Иконки сайтов' },
-  'settings.cached_favics': { message: 'Размер кэшированных иконок' },
-  'settings.cached_favics_unknown': { message: 'не определено - кликни для обновления' },
-  'settings.rm_unused_favi_cache': { message: 'Удалить неиспользуемые иконки' },
-  'settings.rm_favi_cache': { message: 'Удалить кэш иконок' },
-
-  // --- Sync
-  'settings.sync_title': { message: 'Синхронизация' },
-  'settings.sync_data_size': { message: 'Размер данных для синхронизации' },
-  'settings.sync_data_size_unknown': { message: 'не определено - кликни для обновления' },
-  'settings.rm_sync_data': { message: 'Удалить данные синхронизации' },
+  // --- Storage
+  'settings.storage_title': { message: 'Данные' },
+  'settings.storage_delete_prop': { message: 'удалить' },
+  'settings.storage_open_prop': { message: 'открыть' },
+  'settings.storage_delete_confirm': { message: 'Удалить поле ' },
 
   // --- Help
   'settings.help_title': { message: 'Помошь' },

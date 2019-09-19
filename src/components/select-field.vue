@@ -1,11 +1,15 @@
 <template lang="pug">
-.SelectField(:data-inline="inline" :data-inactive="inactive" @mousedown="select")
+.SelectField(
+  :data-inline="inline"
+  :data-inactive="inactive"
+  @mousedown="switchOption")
   .label {{t(label)}}
   select-input(
     :label="optLabel"
     :value="value"
     :opts="opts"
-    :noneOpt="noneOpt")
+    :noneOpt="noneOpt"
+    @input="select")
 </template>
 
 
@@ -32,7 +36,7 @@ export default {
   },
 
   methods: {
-    select(e) {
+    switchOption(e) {
       if (this.inactive) return
       let i = this.opts.indexOf(this.value)
       if (e.button === 0) i++
@@ -40,6 +44,10 @@ export default {
       if (i >= this.opts.length) i = 0
       if (i < 0) i = this.opts.length - 1
       this.$emit('input', this.opts[i])
+    },
+
+    select(option) {
+      this.$emit('input', option)
     },
   },
 }

@@ -10,7 +10,6 @@ import Settings from './settings.vue'
 import MenuEditor from './components/menu-editor.vue'
 import StylesEditor from './components/styles-editor.vue'
 import Snapshots from './components/snapshots.vue'
-import Debug from './components/debug.vue'
 
 Actions.updateActiveView()
 
@@ -32,7 +31,6 @@ export default new Vue({
     MenuEditor,
     StylesEditor,
     Snapshots,
-    Debug,
   },
 
   data() {

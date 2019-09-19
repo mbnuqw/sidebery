@@ -209,6 +209,7 @@ export default {
         'red',
         'pink',
         'purple',
+        'toolbar',
       ],
       proxyOpts: ['http', 'https', 'socks4', 'socks', 'direct'],
     }

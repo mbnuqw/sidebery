@@ -12,7 +12,7 @@ export default {
   'styles.false_color': { message: 'Цвет отрицания' },
   'styles.active_color': { message: 'Цвет активной опции' },
   'styles.inactive_color': { message: 'Цвет неактивной опции' },
-  'styles.favi_placeholder_color': { message: 'Favicons placeholder color' },
+  'styles.favi_placeholder_color': { message: 'Цвет заглушки фавиконки' },
 
   // --- Buttons
   'styles.buttons_title': { message: 'Кнопки' },
@@ -38,6 +38,8 @@ export default {
   // --- Navigation Strip
   'styles.nav_title': { message: 'Полоса навигации' },
   'styles.nav_fg_color': { message: 'Основной цвет' },
+  'styles.nav_btn_width': { message: 'Ширина кнопки' },
+  'styles.nav_btn_height': { message: 'Высота кнопки' },
 
   // --- Pinned dock
   'styles.pinned_dock_title': { message: 'Область закрепленных табов' },
@@ -81,10 +83,11 @@ export default {
   'styles.bookmarks_closed_dir_fg_color': { message: 'Цвет закрытой папки' },
   'styles.bookmarks_closed_dir_fg_color_hover': { message: 'Цвет закрытой папки при наведении курсора' },
   'styles.bookmarks_closed_dir_fg_color_active': { message: 'Цвет закрытой папки при клике' },
-  'styles.bookmarks_open_dir_fg_color': { message: 'Цвет отрытой папки' },
-  'styles.bookmarks_open_dir_fg_color_hover': { message: 'Цвет отрытой папки при наведении курсора' },
-  'styles.bookmarks_open_dir_fg_color_active': { message: 'Цвет отрытой папки при клике' },
+  'styles.bookmarks_open_dir_fg_color': { message: 'Цвет открытой папки' },
+  'styles.bookmarks_open_dir_fg_color_hover': { message: 'Цвет открытой папки при наведении курсора' },
+  'styles.bookmarks_open_dir_fg_color_active': { message: 'Цвет открытой папки при клике' },
   'styles.bookmarks_empty_dir_fg_color': { message: 'Цвет пустой папки' },
+  'styles.bookmarks_open_fg_color': { message: 'Цвет открытой закладки' },
 
   'styles.reset_styles': { message: 'Сбросить' },
 

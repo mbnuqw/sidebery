@@ -81,14 +81,6 @@ function updateActiveView() {
     return
   }
 
-  if (hash === 'debug') {
-    document.title = 'Sidebery / Debug'
-    this.state.activeView = 'Debug'
-    this.state.highlight.allUrls = false
-    this.state.highlight.tabHide = false
-    return
-  }
-
   if (hash === 'styles-editor') {
     document.title = 'Sidebery / Styles Editor'
     this.state.activeView = 'StylesEditor'
