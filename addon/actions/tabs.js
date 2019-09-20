@@ -33,7 +33,7 @@ function onTabCreated(tab) {
  */
 function onTabRemoved(tabId, info) {
   if (!this.windows[info.windowId] || info.isWindowClosing) return
-  const tabWindow = this.windows[info.windowId]
+  let tabWindow = this.windows[info.windowId]
   let index = tabWindow.tabs.findIndex(t => t.id === tabId)
   if (index === -1) return
   tabWindow.tabs.splice(index, 1)
@@ -53,8 +53,10 @@ function onTabUpdated(tabId, change) {
  */
 function onTabMoved(id, info) {
   if (!this.windows[info.windowId]) return
-  const tabWindow = this.windows[info.windowId]
-  const movedTab = tabWindow.tabs.splice(info.fromIndex, 1)[0]
+  let tabWindow = this.windows[info.windowId]
+
+  if (!tabWindow.tabs) return
+  let movedTab = tabWindow.tabs.splice(info.fromIndex, 1)[0]
   tabWindow.tabs.splice(info.toIndex, 0, movedTab)
 }
 
