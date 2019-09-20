@@ -2,16 +2,22 @@ import Actions, { injectInActions } from './actions.js'
 
 void async function main() {
   const state = injectInActions()
+
   state.actions = Actions
+  state.tabsMap = []
 
   // Init first-need stuff
   Actions.initToolbarButton()
   Actions.initGlobalMessaging()
   Actions.initMessaging()
 
+  // Load containers
   state.containers = await Actions.getContainers()
+  Actions.setupContainersListeners()
+
+  // Load windows
   state.windows = await Actions.getWindows()
-  state.tabsMap = []
+  Actions.setupWindowsListeners()
 
   // Load settings
   let { settings } = await browser.storage.local.get({ settings: null })
@@ -20,11 +26,9 @@ void async function main() {
 
   Actions.loadPanels()
   await Actions.loadTabs(state.windows, state.tabsMap)
-
-  // Setup event listeners for
-  Actions.setupWindowsListeners()
-  Actions.setupContainersListeners()
+  await Actions.backupTabsTrees()
   Actions.setupTabsListeners()
+
   Actions.setupStorageListeners()
 
   if (!state.settings.tabsTree) Actions.scheduleSnapshots()

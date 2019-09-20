@@ -17,7 +17,6 @@ async function loadTabs(windows, tabsMap) {
   }
 }
 
-
 /**
  * Handle new tab
  */
@@ -76,6 +75,22 @@ function onTabDetached(id, info) {
   if (!this.windows[info.oldWindowId]) return
   const tabWindow = this.windows[info.oldWindowId]
   detachedTabs[id] = tabWindow.tabs.splice(info.oldPosition, 1)[0]
+}
+
+/**
+ * Load tabs trees
+ */
+async function backupTabsTrees() {
+  let trees
+  try {
+    let ans = await browser.storage.local.get({ tabsTrees: [] })
+    trees = ans.tabsTrees
+  } catch (err) {
+    // Logs.push('[ERROR:BG] backupTabsTrees: ' + err.toString())
+    return
+  }
+
+  await browser.storage.local.set({ prevTabsTrees: trees })
 }
 
 /**
@@ -177,6 +192,7 @@ export default {
   onTabDetached,
 
   updateTabsTree,
+  backupTabsTrees,
   saveTabsTree,
   moveTabsToWin,
 
