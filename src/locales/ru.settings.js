@@ -107,9 +107,9 @@ export default {
 
   // --- Bookmarks
   'settings.bookmarks_title': { message: 'Закладки' },
-  'settings.bookmarks_panel': { message: 'Панель заладок' },
+  'settings.bookmarks_panel': { message: 'Панель закладок' },
   'settings.open_bookmark_new_tab': { message: 'Открывать закладку в новом табе' },
-  'settings.auto_close_bookmarks': { message: 'Автоматически закрывать папки' },
+  'settings.auto_close_bookmarks': { message: 'Автоматически сворачивать папки' },
   'settings.auto_rm_other': { message: 'Удалять открытые закладки из папки "Другие закладки"' },
   'settings.show_bookmark_len': { message: 'Показывать размер папки' },
   'settings.highlight_open_bookmarks': { message: 'Выделять открытые закладки' },
@@ -132,7 +132,7 @@ export default {
   'settings.theme_default': { message: 'стандартная' },
   'settings.theme_tactile': { message: 'тактильная' },
   'settings.theme_none': { message: 'нет' },
-  'settings.bg_noise': { message: 'Матовый задный фон' },
+  'settings.bg_noise': { message: 'Матовый задний фон' },
   'settings.animations': { message: 'Анимации' },
   'settings.edit_styles': { message: 'Редактировать стили' },
   'settings.edit_theme': { message: 'Редактировать тему' },
@@ -218,13 +218,13 @@ export default {
   'settings.down_shift': { message: 'Вниз с выделением' },
   'settings.activate': { message: 'Активировать выделенное' },
   'settings.menu': { message: 'Открыть меню' },
-  'settings.reset_selection': { message: 'Сбросить выделенние' },
+  'settings.reset_selection': { message: 'Сбросить выделение' },
   'settings.reset_kb': { message: 'Сбросить клав. настройки' },
 
   // --- Permissions
   'settings.permissions_title': { message: 'Разрешения' },
   'settings.all_urls_label': { message: 'Данные веб-сайтов:' },
-  'settings.all_urls_info': { message: 'Необходимо для:\n- Удаления куков\n- Прокси' },
+  'settings.all_urls_info': { message: 'Необходимо для:\n- Удаления cookies\n- Прокси' },
   'settings.tab_hide_label': { message: 'Скрытие табов:' },
   'settings.tab_hide_info': { message: 'Необходимо для:\n- Скрывания табов неактивных панелей\n- Скрывания свернутых табов' },
 
@@ -235,7 +235,7 @@ export default {
   'settings.storage_delete_confirm': { message: 'Удалить поле ' },
 
   // --- Help
-  'settings.help_title': { message: 'Помошь' },
+  'settings.help_title': { message: 'Помощь' },
   'settings.debug_info': { message: 'Отладочная информация' },
   'settings.repo_issue': { message: 'Создать github issue' },
   'settings.repo_bug': { message: 'Сообщить об ошибке' },
