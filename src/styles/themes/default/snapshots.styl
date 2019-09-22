@@ -1,20 +1,12 @@
 @import '../../mixins'
 
 .Snapshots
-  box(absolute, flex)
-  size(100%, calc(100% - 64px))
-  pos(64px, 0)
+  box(relative, flex)
+  size(100%, 100%)
   flex-flow: column
   align-items: stretch
   overflow: hidden
   background-color: var(--bg)
-  &:before
-    content: ''
-    box(absolute)
-    size(100%, 1px)
-    pos(0, 0)
-    z-index: 2
-    background-color: var(--border-flare-fg)
 
 .Snapshots .ctrls
   box(relative, flex)
@@ -158,7 +150,6 @@
   box(flex)
   size(70%, 100%)
   flex-flow: column
-  flex: 1 0 auto
 
 .Snapshots .windows
   box(relative, flex)
@@ -175,7 +166,7 @@
     background-color: var(--border-flare-fg)
 
 .Snapshots .window
-  size(50%)
+  size(calc(100% - 32px), max-w: 640px)
   padding: 12px 8px 8px
   &:last-of-type
     padding-bottom: 32px

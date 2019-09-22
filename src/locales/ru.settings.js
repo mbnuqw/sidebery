@@ -3,8 +3,27 @@ export default {
   'settings.opt_false': { message: 'выкл' },
 
   'settings.nav_settings': { message: 'Настройки' },
-  'settings.nav_menu': { message: 'Меню' },
-  'settings.nav_styles': { message: 'Стили' },
+  'settings.nav_settings_general': { message: 'Основные' },
+  'settings.nav_settings_menu': { message: 'Меню' },
+  'settings.nav_settings_nav': { message: 'Навигация' },
+  'settings.nav_settings_group': { message: 'Групповая страница' },
+  'settings.nav_settings_tabs': { message: 'Табы' },
+  'settings.nav_settings_pinned_tabs': { message: 'Закрепленные табы' },
+  'settings.nav_settings_tabs_tree': { message: 'Дерево табов' },
+  'settings.nav_settings_bookmarks': { message: 'Закладки' },
+  'settings.nav_settings_appearance': { message: 'Вид' },
+  'settings.nav_settings_snapshots': { message: 'Снепшоты' },
+  'settings.nav_settings_mouse': { message: 'Мышь' },
+  'settings.nav_settings_keybindings': { message: 'Клавиши' },
+  'settings.nav_settings_permissions': { message: 'Разрешения' },
+  'settings.nav_settings_storage': { message: 'Данные' },
+  'settings.nav_settings_help': { message: 'Помощь' },
+
+  'settings.nav_menu': { message: 'Редактор меню' },
+  'settings.nav_menu_tabs': { message: 'Табы' },
+  'settings.nav_menu_bookmarks': { message: 'Закладки' },
+
+  'settings.nav_styles': { message: 'Редактор стилей' },
   'settings.nav_snapshots': { message: 'Снепшоты' },
 
   'settings.ctrl_copy': { message: 'СКОПИРОВАТЬ' },
@@ -153,7 +172,7 @@ export default {
     plur: [/^(1|(\d*?)[^1]1)$/, /^([234]|(\d*?)[^1][234])$/],
   },
   'settings.snap_interval_none': { message: 'выкл' },
-  'settings.snap_limit': { message: 'Snapshots limit' },
+  'settings.snap_limit': { message: 'Лимиты' },
   'settings.snap_limit_snap': {
     message: ['снепшот', 'снепшота', 'снепшотов'],
     plur: [/^(1|(\d*?)[^1]1)$/, /^([234]|(\d*?)[^1][234])$/],

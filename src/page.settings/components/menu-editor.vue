@@ -1,7 +1,7 @@
 <template lang="pug">
-.MenuEditor(v-noise:300.g:12:af.a:0:42.s:0:9="" @click="resetSelection")
+.MenuEditor(v-noise:300.g:12:af.a:0:42.s:0:9="" @click="resetSelection" @scroll.passive="onScroll")
 
-  section(@click.stop="" @wheel="moveSelected($event, 'tabs')")
+  section(ref="menu_editor_tabs" @click.stop="" @wheel="moveSelected($event, 'tabs')")
     h2 {{t('menu.editor.tabs_title')}}
 
     .menu-group(v-for="(group, i) in tabsMenu" :data-type="group.type")
@@ -50,7 +50,7 @@
       .btn(@click="createSeparator('tabs')") {{t('menu.editor.create_separator')}}
 
 
-  section(@click.stop="" @wheel="moveSelected($event, 'bookmarks')")
+  section(ref="menu_editor_bookmarks" @click.stop="" @wheel="moveSelected($event, 'bookmarks')")
     h2 {{t('menu.editor.bookmarks_title')}}
 
     .menu-group(v-for="(group, i) in bookmarksMenu" :data-type="group.type")
@@ -139,6 +139,11 @@ const BOOKMARKS_MENU_OPTS = {
   'delete': 'menu.bookmark.delete_bookmark',
 }
 
+const SECTIONS = [
+  'menu_editor_tabs',
+  'menu_editor_bookmarks',
+]
+
 export default {
   components: {
     TextInput,
@@ -226,7 +231,28 @@ export default {
     },
   },
 
+  mounted() {
+    State.menuEditorRefs = this.$refs
+  },
+
   methods: {
+    /**
+     * Handle scroll event
+     */
+    onScroll(e) {
+      if (State.navLock) return
+
+      for (let name, i = SECTIONS.length; i--;) {
+        name = SECTIONS[i]
+        if (!this.$refs[name]) break
+
+        if (e.target.scrollTop >= this.$refs[name].offsetTop - 8) {
+          State.activeSection = name
+          break
+        }
+      }
+    },
+
     /**
      * Select option
      */

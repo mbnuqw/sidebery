@@ -55,47 +55,82 @@ async function loadPermissions(init) {
  * Check url hash and update active view
  */
 function updateActiveView() {
-  const hash = location.hash ? location.hash.slice(1) : location.hash
+  let hash = location.hash ? location.hash.slice(1) : location.hash
+  let scrollHighlightConf = { behavior: 'smooth', block: 'center' }
+  let scrollSectionConf = { behavior: 'smooth', block: 'start' }
 
   if (hash === 'all-urls') {
+    setTimeout(() => {
+      if (hash !== undefined && this.state.settingsRefs) {
+        let el = this.state.settingsRefs.all_urls
+        if (el) el.scrollIntoView(scrollHighlightConf)
+      }
+    }, 250)
+    
     document.title = 'Sidebery / Settings'
     this.state.activeView = 'Settings'
-    this.state.highlight.allUrls = true
-    this.state.highlight.tabHide = false
+    this.state.highlightedField = 'all_urls'
     return
   }
 
   if (hash === 'tab-hide') {
+    setTimeout(() => {
+      if (hash !== undefined && this.state.settingsRefs) {
+        let el = this.state.settingsRefs.tab_hide
+        if (el) el.scrollIntoView(scrollHighlightConf)
+      }
+    }, 250)
+
     document.title = 'Sidebery / Settings'
     this.state.activeView = 'Settings'
-    this.state.highlight.allUrls = false
-    this.state.highlight.tabHide = true
+    this.state.highlightedField = 'tab_hide'
     return
   }
 
-  if (hash === 'menu-editor') {
+  if (this.__navLockTimeout) clearTimeout(this.__navLockTimeout)
+  this.state.navLock = true
+  this.state.activeSection = hash
+  this.__navLockTimeout = setTimeout(() => {
+    this.state.navLock = false
+  }, 1250)
+
+  if (hash.startsWith('menu_editor')) {
+    setTimeout(() => {
+      if (hash !== undefined && this.state.menuEditorRefs) {
+        let el = this.state.menuEditorRefs[hash]
+        if (el) el.scrollIntoView(scrollSectionConf)
+      }
+    }, this.state.activeView === 'MenuEditor' ? 0 : 250)
+
     document.title = 'Sidebery / Menu Editor'
     this.state.activeView = 'MenuEditor'
-    this.state.highlight.allUrls = false
-    this.state.highlight.tabHide = false
+    // this.state.activeSection = 'menu_editor_tabs'
+    this.state.highlightedField = ''
     return
   }
 
-  if (hash === 'styles-editor') {
+  if (hash.startsWith('styles_editor')) {
     document.title = 'Sidebery / Styles Editor'
     this.state.activeView = 'StylesEditor'
-    this.state.highlight.allUrls = false
-    this.state.highlight.tabHide = false
+    this.state.activeSection = 'styles_editor'
+    this.state.highlightedField = ''
     return
   }
 
-  if (hash === 'snapshots') {
+  if (hash.startsWith('snapshots')) {
     document.title = 'Sidebery / Snapshots'
     this.state.activeView = 'Snapshots'
-    this.state.highlight.allUrls = false
-    this.state.highlight.tabHide = false
+    this.state.activeSection = 'snapshots'
+    this.state.highlightedField = ''
     return
   }
+
+  setTimeout(() => {
+    if (hash !== undefined && this.state.settingsRefs) {
+      let el = this.state.settingsRefs[hash]
+      if (el) el.scrollIntoView(scrollSectionConf)
+    }
+  }, this.state.activeView === 'Settings' ? 0 : 250)
 
   document.title = 'Sidebery / Settings'
   this.state.activeView = 'Settings'

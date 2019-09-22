@@ -14,6 +14,9 @@ export default {
   windowFocused: true,
 
   activeView: 'Settings',
+  activeSection: 'settings_general',
+  navLock: false,
+  highlightedField: '',
   highlight: {
     allUrls: false,
     tabHide: false,
