@@ -54,10 +54,11 @@
 <script>
 import Utils from '../../utils'
 import { translate } from '../../mixins/dict'
+import { DEFAULT_CTX } from '../../defaults'
 
 const SCROLL_CONF = { behavior: 'smooth', block: 'center' }
 const DEFAULT_CTR = {
-  id: 'firefox-default',
+  id: DEFAULT_CTX,
   name: 'Default',
   icon: 'icon_tabs',
   color: 'default',
