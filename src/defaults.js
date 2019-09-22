@@ -189,8 +189,12 @@ export const CUSTOM_CSS_VARS = {
 
 export const PRE_SCROLL = 64
 
-export const DEFAULT_CTX = 'firefox-default'
-export const PRIVATE_CTX = 'firefox-private'
+export const prefix = (() => {
+  if (navigator.userAgent.includes('IceCat')) return 'icecat'
+  return 'firefox'
+})()
+export const DEFAULT_CTX = prefix + '-default'
+export const PRIVATE_CTX = prefix + '-private'
 export const DEFAULT_CTX_ID = browser.extension.inIncognitoContext ? PRIVATE_CTX : DEFAULT_CTX
 export const DEFAULT_BOOKMARKS_PANEL = {
   type: 'bookmarks',
@@ -347,12 +351,12 @@ export const MENU_OPTIONS = {
     let opts = []
     let firstNode = state.tabsMap[state.selected[0]]
 
-    if (firstNode.cookieStoreId !== 'firefox-default') {
+    if (firstNode.cookieStoreId !== DEFAULT_CTX) {
       opts.push({
         label: translate('menu.tab.reopen_in_default_panel'),
         icon: 'icon_tabs',
         action: 'moveTabsToCtx',
-        args: [state.selected, 'firefox-default'],
+        args: [state.selected, DEFAULT_CTX],
       })
     }
 

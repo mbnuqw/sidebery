@@ -3,8 +3,27 @@ export default {
   'settings.opt_false': { message: 'выкл' },
 
   'settings.nav_settings': { message: 'Настройки' },
-  'settings.nav_menu': { message: 'Меню' },
-  'settings.nav_styles': { message: 'Стили' },
+  'settings.nav_settings_general': { message: 'Основные' },
+  'settings.nav_settings_menu': { message: 'Меню' },
+  'settings.nav_settings_nav': { message: 'Навигация' },
+  'settings.nav_settings_group': { message: 'Групповая страница' },
+  'settings.nav_settings_tabs': { message: 'Табы' },
+  'settings.nav_settings_pinned_tabs': { message: 'Закрепленные табы' },
+  'settings.nav_settings_tabs_tree': { message: 'Дерево табов' },
+  'settings.nav_settings_bookmarks': { message: 'Закладки' },
+  'settings.nav_settings_appearance': { message: 'Вид' },
+  'settings.nav_settings_snapshots': { message: 'Снепшоты' },
+  'settings.nav_settings_mouse': { message: 'Мышь' },
+  'settings.nav_settings_keybindings': { message: 'Клавиши' },
+  'settings.nav_settings_permissions': { message: 'Разрешения' },
+  'settings.nav_settings_storage': { message: 'Данные' },
+  'settings.nav_settings_help': { message: 'Помощь' },
+
+  'settings.nav_menu': { message: 'Редактор меню' },
+  'settings.nav_menu_tabs': { message: 'Табы' },
+  'settings.nav_menu_bookmarks': { message: 'Закладки' },
+
+  'settings.nav_styles': { message: 'Редактор стилей' },
   'settings.nav_snapshots': { message: 'Снепшоты' },
 
   'settings.ctrl_copy': { message: 'СКОПИРОВАТЬ' },
@@ -107,9 +126,9 @@ export default {
 
   // --- Bookmarks
   'settings.bookmarks_title': { message: 'Закладки' },
-  'settings.bookmarks_panel': { message: 'Панель заладок' },
+  'settings.bookmarks_panel': { message: 'Панель закладок' },
   'settings.open_bookmark_new_tab': { message: 'Открывать закладку в новом табе' },
-  'settings.auto_close_bookmarks': { message: 'Автоматически закрывать папки' },
+  'settings.auto_close_bookmarks': { message: 'Автоматически сворачивать папки' },
   'settings.auto_rm_other': { message: 'Удалять открытые закладки из папки "Другие закладки"' },
   'settings.show_bookmark_len': { message: 'Показывать размер папки' },
   'settings.highlight_open_bookmarks': { message: 'Выделять открытые закладки' },
@@ -132,7 +151,7 @@ export default {
   'settings.theme_default': { message: 'стандартная' },
   'settings.theme_tactile': { message: 'тактильная' },
   'settings.theme_none': { message: 'нет' },
-  'settings.bg_noise': { message: 'Матовый задный фон' },
+  'settings.bg_noise': { message: 'Матовый задний фон' },
   'settings.animations': { message: 'Анимации' },
   'settings.edit_styles': { message: 'Редактировать стили' },
   'settings.edit_theme': { message: 'Редактировать тему' },
@@ -153,7 +172,7 @@ export default {
     plur: [/^(1|(\d*?)[^1]1)$/, /^([234]|(\d*?)[^1][234])$/],
   },
   'settings.snap_interval_none': { message: 'выкл' },
-  'settings.snap_limit': { message: 'Snapshots limit' },
+  'settings.snap_limit': { message: 'Лимиты' },
   'settings.snap_limit_snap': {
     message: ['снепшот', 'снепшота', 'снепшотов'],
     plur: [/^(1|(\d*?)[^1]1)$/, /^([234]|(\d*?)[^1][234])$/],
@@ -218,13 +237,13 @@ export default {
   'settings.down_shift': { message: 'Вниз с выделением' },
   'settings.activate': { message: 'Активировать выделенное' },
   'settings.menu': { message: 'Открыть меню' },
-  'settings.reset_selection': { message: 'Сбросить выделенние' },
+  'settings.reset_selection': { message: 'Сбросить выделение' },
   'settings.reset_kb': { message: 'Сбросить клав. настройки' },
 
   // --- Permissions
   'settings.permissions_title': { message: 'Разрешения' },
   'settings.all_urls_label': { message: 'Данные веб-сайтов:' },
-  'settings.all_urls_info': { message: 'Необходимо для:\n- Удаления куков\n- Прокси' },
+  'settings.all_urls_info': { message: 'Необходимо для:\n- Удаления cookies\n- Прокси' },
   'settings.tab_hide_label': { message: 'Скрытие табов:' },
   'settings.tab_hide_info': { message: 'Необходимо для:\n- Скрывания табов неактивных панелей\n- Скрывания свернутых табов' },
 
@@ -235,7 +254,7 @@ export default {
   'settings.storage_delete_confirm': { message: 'Удалить поле ' },
 
   // --- Help
-  'settings.help_title': { message: 'Помошь' },
+  'settings.help_title': { message: 'Помощь' },
   'settings.debug_info': { message: 'Отладочная информация' },
   'settings.repo_issue': { message: 'Создать github issue' },
   'settings.repo_bug': { message: 'Сообщить об ошибке' },

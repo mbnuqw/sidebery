@@ -1,8 +1,8 @@
 <template lang="pug">
 .Settings(
   v-noise:300.g:12:af.a:0:42.s:0:9=""
-  @scroll.passive="scrollY = $event.target.scrollTop")
-  section
+  @scroll.passive="onScroll")
+  section(ref="settings_general")
     h2 {{t('settings.general_title')}}
     ToggleField(
       label="settings.native_scrollbars"
@@ -10,7 +10,7 @@
       :value="$store.state.nativeScrollbars"
       @input="setOpt('nativeScrollbars', $event)")
 
-  section
+  section(ref="settings_menu")
     h2 {{t('settings.ctx_menu_title')}}
     ToggleField(
       label="settings.ctx_menu_native"
@@ -33,9 +33,9 @@
       @input="setOpt('ctxMenuRenderInact', $event)")
     .separator
     .ctrls
-      .btn(@click="switchView('menu-editor')") {{t('settings.ctx_menu_editor')}}
+      .btn(@click="switchView('menu_editor')") {{t('settings.ctx_menu_editor')}}
 
-  section
+  section(ref="settings_nav")
     h2 {{t('settings.nav_title')}}
     toggle-field(
       label="settings.nav_bar_inline"
@@ -80,7 +80,7 @@
       :value="$store.state.navSwitchPanelsWheel"
       @input="setOpt('navSwitchPanelsWheel', $event)")
 
-  section
+  section(ref="settings_group")
     h2 {{t('settings.group_title')}}
     .separator
     select-field(
@@ -90,7 +90,7 @@
       :opts="$store.state.groupLayoutOpts"
       @input="setOpt('groupLayout', $event)")
 
-  section
+  section(ref="settings_tabs")
     h2 {{t('settings.tabs_title')}}
     toggle-field(
       label="settings.activate_last_tab_on_panel_switching"
@@ -140,7 +140,7 @@
         :opts="$store.state.activateAfterClosingNextRuleOpts"
         @input="setOpt('activateAfterClosingNextRule', $event)")
 
-  section
+  section(ref="settings_pinned_tabs")
     h2 {{t('settings.pinned_tabs_title')}}
     select-field(
       label="settings.pinned_tabs_position"
@@ -156,7 +156,7 @@
       :value="$store.state.pinnedTabsList"
       @input="setOpt('pinnedTabsList', $event)")
 
-  section
+  section(ref="settings_tabs_tree")
     h2 {{t('settings.tabs_tree_title')}}
     toggle-field(i
       label="settings.tabs_tree_layout"
@@ -240,7 +240,7 @@
         :unitOpts="$store.state.discardFoldedDelayUnitOpts"
         @input="setOpt('discardFoldedDelay', $event[0]), setOpt('discardFoldedDelayUnit', $event[1])")
 
-  section
+  section(ref="settings_bookmarks")
     h2 {{t('settings.bookmarks_title')}}
     toggle-field(
       label="settings.bookmarks_panel"
@@ -291,7 +291,7 @@
         :value="$store.state.activateOpenBookmarkTab"
         @input="setOpt('activateOpenBookmarkTab', $event)")
 
-  section
+  section(ref="settings_appearance")
     h2 {{t('settings.appearance_title')}}
     select-field(
       label="settings.font_size"
@@ -327,9 +327,9 @@
       @input="setOpt('style', $event)")
     .separator
     .ctrls
-      .btn(@click="switchView('styles-editor')") {{t('settings.edit_styles')}}
+      .btn(@click="switchView('styles_editor')") {{t('settings.edit_styles')}}
 
-  section
+  section(ref="settings_mouse")
     h2 {{t('settings.mouse_title')}}
     toggle-field(
       label="settings.h_scroll_through_panels"
@@ -402,7 +402,7 @@
       :opts="$store.state.tabsPanelRightClickActionOpts"
       @input="setOpt('tabsPanelRightClickAction', $event)")
 
-  section
+  section(ref="settings_keybindings")
     h2 {{t('settings.kb_title')}}
     .hm(v-for="(k, i) in $store.state.keybindings", :key="k.name")
       .keybinding(
@@ -420,13 +420,13 @@
       .separator
     .ctrls: .btn(@click="resetKeybindings") {{t('settings.reset_kb')}}
 
-  section
+  section(ref="settings_permissions")
     h2 {{t('settings.permissions_title')}}
 
     .permission(
-      ref="allUrls"
-      :data-highlight="$store.state.highlight.allUrls"
-      @click="onHighlighClick('allUrls')")
+      ref="all_urls"
+      :data-highlight="$store.state.highlightedField === 'all_urls'"
+      @click="onHighlighClick('all_urls')")
       toggle-field(
         label="settings.all_urls_label"
         :inline="true"
@@ -437,9 +437,9 @@
     .separator
 
     .permission(
-      ref="tabHide"
-      :data-highlight="$store.state.highlight.tabHide"
-      @click="onHighlighClick('tabHide')")
+      ref="tab_hide"
+      :data-highlight="$store.state.highlightedField === 'tab_hide'"
+      @click="onHighlighClick('tab_hide')")
       toggle-field(
         label="settings.tab_hide_label"
         :inline="true"
@@ -447,7 +447,7 @@
         @input="togglePermTabHide")
       .box: .info {{t('settings.tab_hide_info')}}
 
-  section
+  section(ref="settings_snapshots")
     h2 {{t('settings.snapshots_title')}}
     num-field(
       label="settings.snap_interval"
@@ -470,7 +470,7 @@
     .ctrls
       .btn(@click="switchView('snapshots')") {{t('settings.snapshots_view_label')}}
 
-  section
+  section(ref="settings_storage")
     h2 {{t('settings.storage_title')}} (~{{storageOveral}})
     .storage-section
       .storage-prop(v-for="info in storedProps")
@@ -479,7 +479,7 @@
         .del-btn(@click="deleteStoredData(info.name)") {{t('settings.storage_delete_prop')}}
         .open-btn(@click="openStoredData(info.name)") {{t('settings.storage_open_prop')}}
 
-  section
+  section(ref="settings_help")
     h2 {{t('settings.help_title')}}
 
     .ctrls
@@ -529,6 +529,23 @@ import FooterSection from './components/footer'
 
 const VALID_SHORTCUT = /^((Ctrl|Alt|Command|MacCtrl)\+)((Shift|Alt)\+)?([A-Z0-9]|Comma|Period|Home|End|PageUp|PageDown|Space|Insert|Delete|Up|Down|Left|Right|F\d\d?)$|^((Ctrl|Alt|Command|MacCtrl)\+)?((Shift|Alt)\+)?(F\d\d?)$/
 const SPEC_KEYS = /^(Comma|Period|Home|End|PageUp|PageDown|Space|Insert|Delete|F\d\d?)$/
+const SECTIONS = [
+  'settings_general',
+  'settings_menu',
+  'settings_nav',
+  'settings_group',
+  'settings_tabs',
+  'settings_pinned_tabs',
+  'settings_tabs_tree',
+  'settings_bookmarks',
+  'settings_appearance',
+  'settings_mouse',
+  'settings_keybindings',
+  'settings_permissions',
+  'settings_snapshots',
+  'settings_storage',
+  'settings_help',
+]
 
 export default {
   components: {
@@ -560,31 +577,7 @@ export default {
   },
 
   mounted() {
-    const allUrlsField = this.$refs.allUrls
-    const allUrlsGetter = Object.getOwnPropertyDescriptor(State.highlight, 'allUrls').get
-    const tabHideField = this.$refs.tabHide
-    const tabHideGetter = Object.getOwnPropertyDescriptor(State.highlight, 'tabHide').get
-    const scrollConf = { behavior: 'smooth', block: 'center' }
-    this.$watch(allUrlsGetter, (val) => {
-      if (val) {
-        setTimeout(() => {
-          allUrlsField.scrollIntoView(scrollConf)
-        }, 50)
-      }
-    })
-    this.$watch(tabHideGetter, (val) => {
-      if (val) {
-        setTimeout(() => {
-          tabHideField.scrollIntoView(scrollConf)
-        }, 50)
-      }
-    })
-
-    // Force auto scroll
-    State.highlight.allUrls = false
-    State.highlight.tabHide = false
-    setTimeout(Actions.updateActiveView, 13)
-
+    State.settingsRefs = this.$refs
     this.calcStorageInfo()
   },
 
@@ -593,6 +586,25 @@ export default {
   },
 
   methods: {
+    /**
+     * Handle scroll event
+     */
+    onScroll(e) {
+      this.scrollY = e.target.scrollTop
+
+      if (State.navLock) return
+
+      for (let name, i = SECTIONS.length; i--;) {
+        name = SECTIONS[i]
+        if (!this.$refs[name]) break
+
+        if (e.target.scrollTop >= this.$refs[name].offsetTop - 8) {
+          State.activeSection = name
+          break
+        }
+      }
+    },
+
     /**
      * Set new value of option and save settings
      */
@@ -617,7 +629,7 @@ export default {
 
     /**
      * Switch to view of settings page
-     * 
+     *
      * @param {string} name - url hash
      */
     switchView(name) {
@@ -823,10 +835,10 @@ export default {
      * Handle click on highlighed area
      */
     onHighlighClick(name) {
-      if (State.highlight[name]) {
+      if (State.highlightedField === name) {
         history.replaceState({}, '', location.origin + location.pathname)
       }
-      this.$set(State.highlight, name, false)
+      State.highlightedField = ''
     },
 
     /**
@@ -837,7 +849,7 @@ export default {
         settings: {},
         snapshots: [],
         panels: [],
-        cssVars:  {},
+        cssVars: {},
         sidebarCSS: '',
         groupCSS: '',
         settingsCSS: '',
@@ -952,10 +964,7 @@ export default {
       }
 
       try {
-        let { sidebarCSS, groupCSS } = await browser.storage.local.get([
-          'sidebarCSS',
-          'groupCSS',
-        ])
+        let { sidebarCSS, groupCSS } = await browser.storage.local.get(['sidebarCSS', 'groupCSS'])
         dbg.sidebarCSSLen = sidebarCSS.length
         dbg.groupCSSLen = groupCSS.length
       } catch (err) {
@@ -981,10 +990,7 @@ export default {
       }
 
       try {
-        let ans = await browser.storage.local.get([
-          'tabsMenu',
-          'bookmarksMenu',
-        ])
+        let ans = await browser.storage.local.get(['tabsMenu', 'bookmarksMenu'])
         dbg.tabsMenu = ans.tabsMenu
         dbg.bookmarksMenu = ans.bookmarksMenu
       } catch (err) {
@@ -997,7 +1003,8 @@ export default {
         let bookmarksCount = 0
         let foldersCount = 0
         let separatorsCount = 0
-        let lvl = 0, maxDepth = 0
+        let lvl = 0,
+          maxDepth = 0
         let walker = nodes => {
           if (lvl > maxDepth) maxDepth = lvl
           for (let node of nodes) {

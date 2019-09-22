@@ -17,7 +17,6 @@ async function loadTabs(windows, tabsMap) {
   }
 }
 
-
 /**
  * Handle new tab
  */
@@ -34,7 +33,7 @@ function onTabCreated(tab) {
  */
 function onTabRemoved(tabId, info) {
   if (!this.windows[info.windowId] || info.isWindowClosing) return
-  const tabWindow = this.windows[info.windowId]
+  let tabWindow = this.windows[info.windowId]
   let index = tabWindow.tabs.findIndex(t => t.id === tabId)
   if (index === -1) return
   tabWindow.tabs.splice(index, 1)
@@ -54,8 +53,10 @@ function onTabUpdated(tabId, change) {
  */
 function onTabMoved(id, info) {
   if (!this.windows[info.windowId]) return
-  const tabWindow = this.windows[info.windowId]
-  const movedTab = tabWindow.tabs.splice(info.fromIndex, 1)[0]
+  let tabWindow = this.windows[info.windowId]
+
+  if (!tabWindow.tabs) return
+  let movedTab = tabWindow.tabs.splice(info.fromIndex, 1)[0]
   tabWindow.tabs.splice(info.toIndex, 0, movedTab)
 }
 
@@ -76,6 +77,22 @@ function onTabDetached(id, info) {
   if (!this.windows[info.oldWindowId]) return
   const tabWindow = this.windows[info.oldWindowId]
   detachedTabs[id] = tabWindow.tabs.splice(info.oldPosition, 1)[0]
+}
+
+/**
+ * Load tabs trees
+ */
+async function backupTabsTrees() {
+  let trees
+  try {
+    let ans = await browser.storage.local.get({ tabsTrees: [] })
+    trees = ans.tabsTrees
+  } catch (err) {
+    // Logs.push('[ERROR:BG] backupTabsTrees: ' + err.toString())
+    return
+  }
+
+  await browser.storage.local.set({ prevTabsTrees: trees })
 }
 
 /**
@@ -177,6 +194,7 @@ export default {
   onTabDetached,
 
   updateTabsTree,
+  backupTabsTrees,
   saveTabsTree,
   moveTabsToWin,
 

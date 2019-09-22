@@ -1,18 +1,11 @@
 @import '../../mixins'
 
 .MenuEditor
-  box(absolute)
-  size(100%, calc(100% - 64px))
-  pos(64px, 0)
+  box(relative)
+  size(100%, 100%)
   overflow-y: auto
   background-color: var(--bg)
   background-attachment: local
-  &:before
-    content: ''
-    box(absolute)
-    size(100%, 1px)
-    pos(0, 0)
-    background-color: var(--border-flare-fg)
 
 .MenuEditor section
   box(relative, grid)

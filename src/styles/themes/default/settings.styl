@@ -37,7 +37,7 @@ body
 .root
   box(relative, flex, border-box)
   size(100%, same)
-  flex-direction: column
+  // flex-direction: row
   align-items: center
   background-color: var(--bg)
 
@@ -46,30 +46,49 @@ body
 
 .root > .nav
   box(relative, flex)
-  size(100%, 64px)
-  justify-content: center
-  align-items: center
-  background-color: var(--bg)
+  size(h: 100%)
+  flex-flow: column
+  justify-content: flex-start
+  align-items: flex-start
+  background-color: #00000008
   z-index: 1
   padding: 0
   &:before
     content: ''
     box(absolute)
-    size(100%, 1px)
-    pos(b: 0, l: 0)
+    size(1px, 100%)
+    pos(0, r: 0)
     background-color: var(--border-fg)
+  &:after
+    content: ''
+    box(absolute)
+    size(1px, 100%)
+    pos(0, r: -1px)
+    background-color: var(--border-flare-fg)
 
-.root > .nav > .option
+  > div
+    size(h: 100%)
+    overflow-y: auto
+    overflow-x: hidden
+
+.root > .nav .option
+.root > .nav .sub-option
   box(relative)
+  size(calc(100% - 40px))
   text(s: rem(18))
   color: var(--inactive-fg)
-  padding: 8px 16px
+  padding: 10px 24px 6px 16px
+  white-space: nowrap
   cursor: pointer
   -moz-user-select: none
   &:hover
     color: var(--info-fg)
   &[data-active]
     color: var(--active-fg)
+
+.root > .nav .sub-option
+  text(s: rem(16))
+  padding: 2px 24px 2px 32px
 
 // --- Hidden elements ---
 .hidden
@@ -131,17 +150,10 @@ footer
 // -- Settings root component
 // -
 .Settings
-  box(absolute)
-  pos(64px, 0)
-  size(100%, calc(100% - 64px))
+  box(relative)
+  size(100%, 100%)
   overflow-y: auto
   background-attachment: local
-  &:before
-    content: ''
-    box(absolute)
-    size(100%, 1px)
-    pos(0, 0)
-    background-color: var(--border-flare-fg)
 
 .wrapper
   box(relative)

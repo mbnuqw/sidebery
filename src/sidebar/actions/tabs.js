@@ -181,7 +181,12 @@ async function restoreGroupTab(tabInfo, index, parents) {
  * Restore tabs tree
  */
 async function restoreTabsTree() {
-  const { tabsTrees } = await browser.storage.local.get({ tabsTrees: [] })
+  let { tabsTrees, prevTabsTrees } = await browser.storage.local.get({
+    tabsTrees: [],
+    prevTabsTrees: [],
+  })
+  tabsTrees = tabsTrees.concat(prevTabsTrees)
+
   let pinnedTabsCount = 0
   for (; pinnedTabsCount < this.state.tabs.length; pinnedTabsCount++) {
     if (!this.state.tabs[pinnedTabsCount].pinned) break

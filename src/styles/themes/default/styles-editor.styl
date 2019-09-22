@@ -1,9 +1,8 @@
 @import '../../mixins'
 
 .StylesEditor
-  box(absolute, flex)
-  size(100%, calc(100% - 64px))
-  pos(64px, 0)
+  box(relative, flex)
+  size(100%, 100%)
   align-items: stretch
   overflow: hidden
   background-color: var(--bg)
@@ -59,7 +58,7 @@
 
 .StylesEditor section
   box(relative)
-  size(100%, max-w: 420px)
+  size(100%, max-w: 460px)
   margin: 0 auto
   padding: 2px 0 32px
 
