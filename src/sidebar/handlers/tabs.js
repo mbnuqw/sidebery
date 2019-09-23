@@ -155,8 +155,8 @@ function onTabUpdated(tabId, change, tab) {
               url: localTab.url,
               lvl: localTab.lvl - groupTab.lvl - 1,
               discarded: localTab.discarded,
+              favIconUrl: localTab.favIconUrl || this.state.favicons[this.state.favUrls[localTab.url]],
             }
-            if (change.status === 'complete') updateData.favIconUrl = localTab.favIconUrl
             browser.tabs.sendMessage(groupTab.id, updateData)
               .catch(() => {/** itsokay **/})
           }
