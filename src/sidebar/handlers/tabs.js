@@ -131,7 +131,7 @@ function onTabUpdated(tabId, change, tab) {
 
   // Status change
   if (change.status !== undefined) {
-    if (change.status === 'complete' && !localTab.url.startsWith('about')) {
+    if (change.status === 'complete' && !tab.url.startsWith('about')) {
       browser.tabs.get(localTab.id)
         .then(tabInfo => {
           if (tabInfo.favIconUrl && !tabInfo.favIconUrl.startsWith('chrome:')) {
