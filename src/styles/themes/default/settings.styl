@@ -437,6 +437,17 @@ footer
   opacity: 0
   z-index: -1
 
+.Settings .permission
+  box(relative)
+
+  &:not(:first-of-type):after
+    content: ''
+    box(absolute)
+    pos(0, 1px)
+    size(calc(100% - 2px), 1px)
+    background-color: var(--border-flare-fg)
+    box-shadow: 0 -1px 0 0 var(--border-fg)
+
 .Settings .permission[data-highlight]
   box(relative)
 
