@@ -11,7 +11,7 @@
     @input="onNameInput"
     @keydown.enter.prevent="onEnter")
 
-  select-field.-no-top-margin(
+  select-field.-no-separator(
     v-if="isContainer"
     label="container_dashboard.icon_label"
     :value="icon"

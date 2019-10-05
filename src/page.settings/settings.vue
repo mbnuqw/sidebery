@@ -430,20 +430,19 @@
 
   section(ref="settings_keybindings")
     h2 {{t('settings.kb_title')}}
-    .hm(v-for="(k, i) in $store.state.keybindings", :key="k.name")
-      .keybinding(
-        :is-focused="k.focus"
-        @click="changeKeybinding(k, i)")
-        .label {{t('settings.' + k.description)}}
-        .value {{normalizeShortcut(k.shortcut)}}
-        input(
-          type="text"
-          ref="keybindingInputs"
-          tabindex="-1"
-          @blur="onKBBlur(k, i)"
-          @keydown.prevent.stop="onKBKey($event, k, i)"
-          @keyup.prevent.stop="onKBKeyUp($event, k, i)")
-      .separator
+    .keybinding(
+      v-for="(k, i) in $store.state.keybindings", :key="k.name"
+      :is-focused="k.focus"
+      @click="changeKeybinding(k, i)")
+      .label {{t('settings.' + k.description)}}
+      .value {{normalizeShortcut(k.shortcut)}}
+      input(
+        type="text"
+        ref="keybindingInputs"
+        tabindex="-1"
+        @blur="onKBBlur(k, i)"
+        @keydown.prevent.stop="onKBKey($event, k, i)"
+        @keyup.prevent.stop="onKBKeyUp($event, k, i)")
     .ctrls: .btn(@click="resetKeybindings") {{t('settings.reset_kb')}}
 
   section(ref="settings_permissions")

@@ -195,7 +195,7 @@ footer
   grid-gap: 8px 8px
   justify-content: center
   flex-wrap: wrap
-  margin: 5px 16px
+  margin: 8px 16px 5px
 
 // --- Panel card ---
 .Settings .panel-card
@@ -209,6 +209,13 @@ footer
     background-color: #00000016
     opacity: 0
     transition: opacity var(--d-fast)
+  &:not(:first-of-type):after
+    content: ''
+    box(absolute)
+    pos(0, 1px)
+    size(calc(100% - 2px), 1px)
+    background-color: var(--border-flare-fg)
+    box-shadow: 0 -1px 0 0 var(--border-fg)
   &:hover:before
     opacity: 1
   &:active:before
@@ -374,14 +381,29 @@ footer
   flex-direction: row
   justify-content: space-between
   align-items: flex-start
-  padding: 2px 0
-  margin: 0 8px 0 16px
+  padding: 6px 16px
   cursor: pointer
-  opacity: .8
-  &:hover
+  &:before
+    content: ''
+    box(absolute)
+    pos(0, 0)
+    size(100%, same)
+    border-radius: 3px
+    background-color: #00000012
+    opacity: 0
+    transition: opacity var(--d-fast)
+  &:not(:first-of-type):after
+    content: ''
+    box(absolute)
+    pos(0, 1px)
+    size(calc(100% - 2px), 1px)
+    background-color: var(--border-flare-fg)
+    box-shadow: 0 -1px 0 0 var(--border-fg)
+  &:hover:before
     opacity: 1
-  &:active
-    opacity: .7
+  &:active:before
+    transition: none
+    opacity: .5
   &[is-focused]
     opacity: 1
     > .value
@@ -392,14 +414,14 @@ footer
 
 .Settings .keybinding > .label
   box(relative)
-  text(s: rem(14))
+  text(s: rem(16))
   color: var(--label-fg)
   margin: 0 6px 0 0
   transition: color var(--d-fast)
 
 .Settings .keybinding > .value
   box(relative)
-  text(s: rem(12))
+  text(s: rem(13))
   padding: 2px 6px
   margin: 1px 0 0 0
   color: var(--label-fg)

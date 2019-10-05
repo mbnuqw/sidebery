@@ -37,12 +37,26 @@
     opacity: 0
     transition: opacity var(--d-fast)
 
+  &:not(:first-of-type):after
+    content: ''
+    box(absolute)
+    pos(0, 1px)
+    size(calc(100% - 2px), 1px)
+    background-color: var(--border-flare-fg)
+    box-shadow: 0 -1px 0 0 var(--border-fg)
+
+  &.-no-separator:after
+    box(none)
+
   &:hover:before
     opacity: 1
 
   &:active:before
     transition: none
     opacity: .5
+
+  &[data-inactive]
+    opacity: .3
 
 // ---
 // -- Label
@@ -57,11 +71,8 @@
   color: var(--label-fg)
   transition: color var(--d-fast)
 
-.ToggleField[data-inactive] .label
-.SelectField[data-inactive] .label
-.TextField[data-inactive] .label
-  opacity: .2
-  cursor: default
+.SelectField .label
+  size(max-w: 45%)
 
 // ---
 // -- Note
@@ -81,7 +92,7 @@
 .ToggleInput
 .SelectInput
   box(relative, flex)
-  size(max-w: 55%)
+  size(max-w: calc(55% - 16px))
   justify-content: flex-end
   padding: 8px 0 8px 16px
   flex-wrap: wrap
@@ -112,11 +123,6 @@
     transition: opacity var(--d-fast)
   &:hover > svg
     opacity: .5
-
-.ToggleInput[data-inactive] .opt
-.SelectInput[data-inactive] .opt
-  opacity: .2
-  cursor: default
 
 .SelectInput .opt:hover
   color: var(--info-fg)
@@ -151,8 +157,10 @@
     size(calc(100% + 4px), calc(100% + 4px))
     box-shadow: 0 1px 0 0 var(--inactive-fg)
     transform: translateZ(0)
-    opacity: .3
+    opacity: 0
     transition: opacity var(--d-norm), box-shadow var(--d-norm)
+  &:hover:before
+    opacity: .3
   &[data-active]:before
     opacity: 1
     box-shadow: 0 1px 0 0 var(--active-fg)
@@ -333,6 +341,17 @@
     opacity: 0
     transition: opacity var(--d-fast)
 
+  &:not(:first-of-type):after
+    content: ''
+    box(absolute)
+    pos(0, 1px)
+    size(calc(100% - 2px), 1px)
+    background-color: var(--border-flare-fg)
+    box-shadow: 0 -1px 0 0 var(--border-fg)
+
+  &.-no-separator:after
+    box(none)
+
   &:hover:before
     opacity: 1
 
@@ -366,7 +385,6 @@
 .StyleField .input-group
   box(relative, flex)
   align-items: center
-  // margin: 6px 0 0
 
 // ---
 // -- Color input
