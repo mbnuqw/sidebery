@@ -522,13 +522,6 @@ function onTabActivated(info) {
     this.actions.setPanel(tabPanel.index)
   }
 
-  // Reopen dashboard
-  if (this.state.dashboardIsOpen) {
-    if (this.state.dashboard.cookieStoreId !== this.state.panels[this.state.panelIndex].cookieStoreId) {
-      this.actions.openDashboard(this.state.panelIndex)
-    }
-  }
-
   // Auto expand tabs group
   if (this.state.autoExpandTabs && tab.isParent && tab.folded && !this.dragMode) {
     let prevActiveChild

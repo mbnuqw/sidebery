@@ -7,6 +7,7 @@ export default {
   'settings.nav_settings_menu': { message: 'Menu' },
   'settings.nav_settings_nav': { message: 'Navigation bar' },
   'settings.nav_settings_group': { message: 'Group page' },
+  'settings.nav_settings_panels': { message: 'Panels' },
   'settings.nav_settings_tabs': { message: 'Tabs' },
   'settings.nav_settings_pinned_tabs': { message: 'Pinned tabs' },
   'settings.nav_settings_tabs_tree': { message: 'Tabs tree' },
@@ -62,6 +63,11 @@ export default {
   'settings.group_layout_grid': { message: 'grid' },
   'settings.group_layout_list': { message: 'list' },
 
+  // --- Panels
+  'settings.panels_title': { message: 'Panels' },
+  'settings.panel_remove_confirm_1': { message: 'Delete ' },
+  'settings.panel_remove_confirm_2': { message: ' panel?\nAll tabs of this panel and their cookies will also be removed.' },
+
   // --- Tabs
   'settings.tabs_title': { message: 'Tabs' },
   'settings.activate_last_tab_on_panel_switching': {
@@ -69,7 +75,6 @@ export default {
   },
   'settings.skip_empty_panels': { message: 'Skip empty panels on switching' },
   'settings.show_tab_rm_btn': { message: 'Show close button on mouse hover' },
-  'settings.no_empty_default': { message: 'Create new tab on emptying default panel' },
   'settings.hide_inactive_panel_tabs': { message: 'Hide tabs of inactive panels' },
   'settings.activate_after_closing': { message: 'After closing current tab activate' },
   'settings.activate_after_closing_next': { message: 'next tab' },

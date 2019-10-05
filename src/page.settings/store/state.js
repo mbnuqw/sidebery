@@ -15,12 +15,15 @@ export default {
 
   activeView: 'Settings',
   activeSection: 'settings_general',
+  selectedPanel: null,
   navLock: false,
   highlightedField: '',
   highlight: {
     allUrls: false,
     tabHide: false,
   },
+
+  panels: [],
 
   tabsMenu: JSON.parse(JSON.stringify(DEFAULT_TABS_MENU)),
   bookmarksMenu: JSON.parse(JSON.stringify(DEFAULT_BOOKMARKS_MENU)),

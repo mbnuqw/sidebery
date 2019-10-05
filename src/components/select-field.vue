@@ -9,6 +9,8 @@
     :value="value"
     :opts="opts"
     :noneOpt="noneOpt"
+    :color="color"
+    :icon="icon"
     @input="select")
 </template>
 
@@ -28,6 +30,8 @@ export default {
     inline: Boolean,
     optLabel: String,
     opts: Array,
+    color: String,
+    icon: String,
     noneOpt: String,
   },
 
@@ -43,7 +47,10 @@ export default {
       if (e.button === 2) i--
       if (i >= this.opts.length) i = 0
       if (i < 0) i = this.opts.length - 1
-      this.$emit('input', this.opts[i])
+
+      let selected = this.opts[i]
+      if (selected && selected.value) this.$emit('input', selected.value)
+      else this.$emit('input', selected)
     },
 
     select(option) {

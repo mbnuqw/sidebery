@@ -18,16 +18,12 @@ function onCreatedContainer({ contextualIdentity }) {
   this.state.panels.push(panel)
   this.state.panelsMap[panel.cookieStoreId] = panel
 
-  // Check if we have some updates
-  // for container with this name
   if (this.state.windowFocused) {
     this.state.panelIndex = this.state.panels.length - 1
     this.state.lastPanelIndex = this.state.panelIndex
-
-    if (this.state.dashboardIsOpen) this.actions.openDashboard(this.state.panelIndex)
-
-    this.actions.savePanels()
   }
+
+  this.actions.savePanels()
 
   // Update panels ranges
   this.actions.updatePanelsRanges()
@@ -61,9 +57,7 @@ async function onRemovedContainer({ contextualIdentity }) {
     this.state.lastPanelIndex = this.state.panelIndex
   }
 
-  if (this.state.windowFocused) {
-    this.actions.savePanels()
-  }
+  this.actions.savePanels()
 
   // Update panels ranges
   this.actions.updatePanelsRanges()
@@ -83,7 +77,7 @@ function onUpdatedContainer({ contextualIdentity }) {
   this.state.panels[panelIndex].icon = contextualIdentity.icon
   this.state.panels[panelIndex].name = contextualIdentity.name
 
-  if (this.state.windowFocused) this.actions.savePanels()
+  this.actions.savePanels()
 }
 
 /**

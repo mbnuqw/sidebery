@@ -19,12 +19,9 @@ export default {
   tabsMenu: Utils.cloneArray(DEFAULT_TABS_MENU),
   bookmarksMenu: Utils.cloneArray(DEFAULT_BOOKMARKS_MENU),
 
-  // --- Global State
   ctxMenu: null,
   winChoosing: false,
-
-  dashboardIsOpen: false,
-  dashboard: null,
+  hiddenPanelsBar: false,
   recalcScrollNeeded: false,
   selected: [],
   wheelBlockTimeout: null,
@@ -41,15 +38,14 @@ export default {
   bookmarkEditor: false,
   bookmarkEditorTarget: null,
 
-  // --- Settings
   ...SETTINGS_OPTIONS,
   ...DEFAULT_SETTINGS,
+
   snapshots: [],
   keybindings: [],
   permAllUrls: false,
   permTabHide: false,
 
-  // --- Cached
   favicons: [],
   favUrls: {},
 }

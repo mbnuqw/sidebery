@@ -6,18 +6,8 @@
 @import './btn'
 @import './scroll-box'
 
-@import './field.icon-select'
-@import './field.select'
-@import './field.style-color'
-@import './field.style'
-@import './field.num'
-@import './field.toggle'
+@import './inputs'
 
-@import './input.color'
-@import './input.icon-select'
-@import './input.select'
-@import './input.text'
-@import './input.toggle'
 
 html
   box(relative)
@@ -75,9 +65,9 @@ body
 .root > .nav .sub-option
   box(relative)
   size(calc(100% - 40px))
-  text(s: rem(18))
+  text(s: rem(19))
   color: var(--inactive-fg)
-  padding: 10px 24px 6px 16px
+  padding: 12px 24px 3px 16px
   white-space: nowrap
   cursor: pointer
   -moz-user-select: none
@@ -85,10 +75,12 @@ body
     color: var(--info-fg)
   &[data-active]
     color: var(--active-fg)
+  &:last-of-type
+    padding-bottom: 12px
 
 .root > .nav .sub-option
   text(s: rem(16))
-  padding: 2px 24px 2px 32px
+  padding: 3px 28px 3px 36px
 
 // --- Hidden elements ---
 .hidden
@@ -188,28 +180,7 @@ footer
   box-shadow: 0 1px 0 0 #78787816
   margin: 8px 0
 
-.Settings .ToggleField
-.Settings .SelectField
-  margin: 0 16px
-
-  .ToggleInput
-  .SelectInput
-
-    .opt
-      text(s: rem(15))
-      margin: 0 0 0 8px
-
-  .label
-    text(s: rem(16))
-
-.Settings .SelectField
-  box(flex)
-
-.Settings .SelectField > .label
-  margin-right: auto
-
-.Settings .SelectField > .SelectInput
-  size(max-w: 55%)
+.Settings .IconSelectField > .IconSelectInput
   justify-content: flex-end
   margin-left: auto
   padding-left: 16px
@@ -225,6 +196,152 @@ footer
   justify-content: center
   flex-wrap: wrap
   margin: 5px 16px
+
+// --- Panel card ---
+.Settings .panel-card
+  box(relative, flex)
+  &:before
+    content: ''
+    box(absolute)
+    pos(0, 0)
+    size(100%, same)
+    border-radius: 3px
+    background-color: #00000016
+    opacity: 0
+    transition: opacity var(--d-fast)
+  &:hover:before
+    opacity: 1
+  &:active:before
+    transition: none
+    opacity: .7
+
+.Settings .panel-card-body
+  box(relative, flex)
+  align-items: center
+  padding: 8px 8px 8px 12px
+  flex-grow: 1
+  opacity: .7
+  cursor: pointer
+  transition: opacity var(--d-fast)
+
+.Settings .panel-card-icon
+  box(relative)
+  size(16px, same)
+  flex-shrink: 0
+  margin: 2px 8px 2px 0
+  > svg
+    box(absolute)
+    size(100%, same)
+    fill: var(--panel-fg, var(--info-fg))
+
+.Settings .panel-card-name
+  box(relative)
+  text(s: rem(18))
+  color: var(--label-fg)
+  cursor: pointer
+  -moz-user-select: none
+
+.Settings .panel-card-ctrls
+  box(relative, flex)
+  margin: 0 8px
+  align-items: center
+
+.Settings .panel-card-ctrl
+  box(relative)
+  size(24px, same)
+  margin: 0 2px
+  cursor: pointer
+  opacity: .5
+  &:hover
+    opacity: 1
+  &:active
+    opacity: .5
+  > svg
+    box(absolute)
+    size(16px, same)
+    pos(4px, same)
+    fill: var(--label-fg)
+  &.-up > svg
+    transform: rotateZ(180deg)
+  &.-rm > svg
+    fill: var(--false-fg)
+  &[data-inactive]
+    cursor: default
+    opacity: .2
+
+.Settings .panel-config-layer
+  box(fixed, flex)
+  pos(0, 0)
+  size(100vw, 100vh)
+  flex-direction: column
+  justify-content: flex-start
+  align-items: center
+  z-index: 1
+  &:before
+    content: ''
+    box(absolute)
+    pos(0, 0)
+    size(100%, same)
+    background-color: var(--bg)
+    opacity: .5
+  &:after
+    content: ''
+    box(relative)
+    size(100%, 64px)
+    flex-shrink: 10     
+
+.Settings .panel-config-box
+  box(relative)
+  size(calc(100vw - 8px), max-w: 540px, min-h: 32px)
+  margin: 16px 0
+  overflow: hidden
+  background-color: var(--bg)
+  border-radius: 3px
+  box-shadow: 0 1px 3px 0 #00000032,
+              0 0 0 1px var(--border-fg),
+              inset 0 1px 0 0 var(--border-flare-fg)
+
+.panel-enter-active
+.panel-leave-active
+  transition: transform var(--d-fast), opacity var(--d-fast)
+.panel-leave-active
+  box(absolute)
+.panel-move
+  transition: transform var(--d-fast), opacity var(--d-fast)
+.panel-enter
+  opacity: 0
+  transform: scale(1, 0.8)
+.panel-enter-to
+  opacity: 1
+  transform: scale(1, 1)
+.panel-leave
+  opacity: 0
+  transform: scale(1, 1)
+.panel-leave-to
+  opacity: 0
+  transform: scale(1, 0.8)
+
+.panel-config-enter-active
+.panel-config-leave-active
+  transition: opacity var(--d-fast)
+  .panel-config-box
+    transition: transform var(--d-fast)
+.panel-config-enter
+  opacity: 0
+  .panel-config-box
+    transform: translateY(32px)
+.panel-config-enter-to
+  opacity: 1
+  .panel-config-box
+    transform: translateY(0)
+.panel-config-leave
+  opacity: 1
+  .panel-config-box
+    transform: translateY(0)
+.panel-config-leave-to
+  opacity: 0
+  .panel-config-box
+    transform: translateY(32px)
 
 // --- Container ---
 .Settings .box
@@ -403,6 +520,7 @@ footer
   margin: 0 auto
   color: var(--label-fg)
 
+@import './panel-config'
 @import './menu-editor'
 @import './styles-editor'
 @import './snapshots'

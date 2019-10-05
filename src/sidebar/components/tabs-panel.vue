@@ -118,7 +118,6 @@ export default {
         Actions.blockCtxMenu()
         const ra = State.tabsPanelRightClickAction
         if (ra === 'next') return Actions.switchPanel(1)
-        if (ra === 'dash') return Actions.openDashboard(State.panelIndex)
         if (ra === 'expand') {
           if (!State.tabsTree) return
           let targetTab = State.tabs.find(t => t.active)

@@ -4,7 +4,7 @@
   @scroll.passive="onScroll")
   section(ref="settings_general")
     h2 {{t('settings.general_title')}}
-    ToggleField(
+    ToggleField.-first.-last(
       label="settings.native_scrollbars"
       :inline="true"
       :value="$store.state.nativeScrollbars"
@@ -12,12 +12,12 @@
 
   section(ref="settings_menu")
     h2 {{t('settings.ctx_menu_title')}}
-    ToggleField(
+    ToggleField.-first(
       label="settings.ctx_menu_native"
       :inline="true"
       :value="$store.state.ctxMenuNative"
       @input="setOpt('ctxMenuNative', $event)")
-    .separator
+    //- .separator
     select-field(
       label="settings.autoHide_ctx_menu"
       optLabel="settings.autoHide_ctx_menu_"
@@ -25,13 +25,13 @@
       :value="$store.state.autoHideCtxMenu"
       :opts="$store.state.autoHideCtxMenuOpts"
       @input="setOpt('autoHideCtxMenu', $event)")
-    .separator
-    ToggleField(
+    //- .separator
+    ToggleField.-last(
       label="settings.ctx_menu_render_inact"
       :inline="true"
       :value="$store.state.ctxMenuRenderInact"
       @input="setOpt('ctxMenuRenderInact', $event)")
-    .separator
+    //- .separator
     .ctrls
       .btn(@click="switchView('menu_editor')") {{t('settings.ctx_menu_editor')}}
 
@@ -42,39 +42,33 @@
       :inline="true"
       :value="$store.state.navBarInline"
       @input="setOpt('navBarInline', $event)")
-    .separator
+    //- .separator
     toggle-field(
       label="settings.hide_settings_btn"
       :inline="true"
       :value="$store.state.hideSettingsBtn"
       @input="setOpt('hideSettingsBtn', $event)")
-    .separator
-    toggle-field(
-      label="settings.hide_add_btn"
-      :inline="true"
-      :value="$store.state.hideAddBtn"
-      @input="setOpt('hideAddBtn', $event)")
-    .separator
+    //- .separator
     toggle-field(
       label="settings.nav_btn_count"
       :inline="true"
       :value="$store.state.navBtnCount"
       @input="setOpt('navBtnCount', $event)")
-    .separator
+    //- .separator
     toggle-field(
       label="settings.hide_empty_panels"
       :inline="true"
       :value="$store.state.hideEmptyPanels"
       @input="setOpt('hideEmptyPanels', $event)")
-    .separator
+    //- .separator
     select-field(
       label="settings.nav_mid_click"
       optLabel="settings.nav_mid_click_"
       :value="$store.state.navMidClickAction"
       :opts="$store.state.navMidClickActionOpts"
       @input="setOpt('navMidClickAction', $event)")
-    .separator
-    toggle-field(
+    //- .separator
+    toggle-field.-last(
       label="settings.nav_switch_panels_wheel"
       :inline="true"
       :value="$store.state.navSwitchPanelsWheel"
@@ -82,13 +76,45 @@
 
   section(ref="settings_group")
     h2 {{t('settings.group_title')}}
-    .separator
-    select-field(
+    //- .separator
+    select-field.-last(
       label="settings.group_layout"
       optLabel="settings.group_layout_"
       :value="$store.state.groupLayout"
       :opts="$store.state.groupLayoutOpts"
       @input="setOpt('groupLayout', $event)")
+
+  section(ref="settings_panels")
+    h2 {{t('settings.panels_title')}}
+    transition-group(name="panel" tag="div"): .panel-card(
+      v-for="(panel, i) in $store.state.panels"
+      :key="panel.cookieStoreId || panel.type"
+      :data-color="panel.color"
+      :data-first="i === 0"
+      :data-last="i === $store.state.panels.length - 1")
+      .panel-card-body(@click="$store.state.selectedPanel = panel")
+        .panel-card-icon: svg: use(:xlink:href="'#' + panel.icon")
+        .panel-card-name {{panel.name}}
+      .panel-card-ctrls
+        .panel-card-ctrl.-down(
+          :data-inactive="i === $store.state.panels.length - 1"
+          @click="movePanel(panel, 1)")
+          svg: use(xlink:href="#icon_expand")
+        .panel-card-ctrl.-up(
+          :data-inactive="i === 0"
+          @click="movePanel(panel, -1)")
+          svg: use(xlink:href="#icon_expand")
+        .panel-card-ctrl.-rm(
+          :data-inactive="panel.type === 'bookmarks' || panel.type === 'default'"
+          @click="removePanel(panel)")
+          svg: use(xlink:href="#icon_delete")
+    .ctrls: .btn(@click="createPanel") Create panel
+    transition(name="panel-config")
+      .panel-config-layer(
+        v-if="$store.state.selectedPanel"
+        @click="$store.state.selectedPanel = null")
+        .panel-config-box(@click.stop="")
+          panel-config.dashboard(:conf="$store.state.selectedPanel")
 
   section(ref="settings_tabs")
     h2 {{t('settings.tabs_title')}}
@@ -97,25 +123,25 @@
       :inline="true"
       :value="$store.state.activateLastTabOnPanelSwitching"
       @input="setOpt('activateLastTabOnPanelSwitching', $event)")
-    .separator
+    //- .separator
     toggle-field(
       label="settings.skip_empty_panels"
       :inline="true"
       :value="$store.state.skipEmptyPanels"
       @input="setOpt('skipEmptyPanels', $event)")
-    .separator
+    //- .separator
     toggle-field(
       label="settings.show_tab_rm_btn"
       :inline="true"
       :value="$store.state.showTabRmBtn"
       @input="setOpt('showTabRmBtn', $event)")
-    .separator
+    //- .separator
     toggle-field(
       label="settings.hide_inactive_panel_tabs"
       :inline="true"
       :value="$store.state.hideInact"
       @input="toggleHideInact")
-    .separator
+    //- .separator
     select-field(
       label="settings.activate_after_closing"
       optLabel="settings.activate_after_closing_"
@@ -123,7 +149,7 @@
       :opts="$store.state.activateAfterClosingOpts"
       @input="setOpt('activateAfterClosing', $event)")
     .sub-fields
-      .separator
+      //- .separator
       select-field(
         label="settings.activate_after_closing_prev_rule"
         optLabel="settings.activate_after_closing_rule_"
@@ -131,8 +157,8 @@
         :inactive="!activateAfterClosingNextOrPrev"
         :opts="$store.state.activateAfterClosingPrevRuleOpts"
         @input="setOpt('activateAfterClosingPrevRule', $event)")
-      .separator
-      select-field(
+      //- .separator
+      select-field.-last(
         label="settings.activate_after_closing_next_rule"
         optLabel="settings.activate_after_closing_rule_"
         :value="$store.state.activateAfterClosingNextRule"
@@ -148,8 +174,8 @@
       :value="$store.state.pinnedTabsPosition"
       :opts="$store.state.pinnedTabsPositionOpts"
       @input="setOpt('pinnedTabsPosition', $event)")
-    .separator
-    toggle-field(
+    //- .separator
+    toggle-field.-last(
       label="settings.pinned_tabs_list"
       :inline="true"
       :inactive="$store.state.pinnedTabsPosition !== 'panel'"
@@ -163,14 +189,14 @@
       :inline="true"
       :value="$store.state.tabsTree"
       @input="setOpt('tabsTree', $event)")
-    .separator
+    //- .separator
     toggle-field(
       label="settings.group_on_open_layout"
       :inline="true"
       :inactive="!$store.state.tabsTree"
       :value="$store.state.groupOnOpen"
       @input="setOpt('groupOnOpen', $event)")
-    .separator
+    //- .separator
     select-field(
       label="settings.tabs_tree_limit"
       optLabel="settings.tabs_tree_limit_"
@@ -178,28 +204,28 @@
       :value="$store.state.tabsTreeLimit"
       :opts="$store.state.tabsTreeLimitOpts"
       @input="setOpt('tabsTreeLimit', $event)")
-    .separator
+    //- .separator
     toggle-field(
       label="settings.hide_folded_tabs"
       :inline="true"
       :inactive="!$store.state.tabsTree"
       :value="$store.state.hideFoldedTabs"
       @input="toggleHideFoldedTabs")
-    .separator
+    //- .separator
     toggle-field(
       label="settings.auto_fold_tabs"
       :inline="true"
       :inactive="!$store.state.tabsTree"
       :value="$store.state.autoFoldTabs"
       @input="setOpt('autoFoldTabs', $event)")
-    .separator
+    //- .separator
     toggle-field(
       label="settings.auto_exp_tabs"
       :inline="true"
       :inactive="!$store.state.tabsTree"
       :value="$store.state.autoExpandTabs"
       @input="setOpt('autoExpandTabs', $event)")
-    .separator
+    //- .separator
     select-field(
       label="settings.rm_child_tabs"
       optLabel="settings.rm_child_tabs_"
@@ -207,21 +233,21 @@
       :value="$store.state.rmChildTabs"
       :opts="$store.state.rmChildTabsOpts"
       @input="setOpt('rmChildTabs', $event)")
-    .separator
+    //- .separator
     toggle-field(
       label="settings.tabs_child_count"
       :inline="true"
       :inactive="!$store.state.tabsTree"
       :value="$store.state.tabsChildCount"
       @input="setOpt('tabsChildCount', $event)")
-    .separator
+    //- .separator
     toggle-field(
       label="settings.tabs_lvl_dots"
       :inline="true"
       :inactive="!$store.state.tabsTree"
       :value="$store.state.tabsLvlDots"
       @input="setOpt('tabsLvlDots', $event)")
-    .separator
+    //- .separator
     toggle-field(
       label="settings.discard_folded"
       :inline="true"
@@ -229,8 +255,8 @@
       :value="$store.state.discardFolded"
       @input="setOpt('discardFolded', $event)")
     .sub-fields
-      .separator
-      num-field(
+      //- .separator
+      num-field.-last(
         label="settings.discard_folded_delay"
         unitLabel="settings.discard_folded_delay_"
         :inactive="!$store.state.tabsTree || !$store.state.discardFolded"
@@ -247,35 +273,35 @@
       :inline="true"
       :value="$store.state.bookmarksPanel"
       @input="setOpt('bookmarksPanel', $event)")
-    .separator
+    //- .separator
     toggle-field(
       label="settings.open_bookmark_new_tab"
       :inline="true"
       :inactive="!$store.state.bookmarksPanel"
       :value="$store.state.openBookmarkNewTab"
       @input="setOpt('openBookmarkNewTab', $event)")
-    .separator
+    //- .separator
     toggle-field(
       label="settings.auto_close_bookmarks"
       :inline="true"
       :inactive="!$store.state.bookmarksPanel"
       :value="$store.state.autoCloseBookmarks"
       @input="setOpt('autoCloseBookmarks', $event)")
-    .separator
+    //- .separator
     toggle-field(
       label="settings.auto_rm_other"
       :inline="true"
       :inactive="!$store.state.bookmarksPanel"
       :value="$store.state.autoRemoveOther"
       @input="setOpt('autoRemoveOther', $event)")
-    .separator
+    //- .separator
     toggle-field(
       label="settings.show_bookmark_len"
       :inline="true"
       :inactive="!$store.state.bookmarksPanel"
       :value="$store.state.showBookmarkLen"
       @input="setOpt('showBookmarkLen', $event)")
-    .separator
+    //- .separator
     toggle-field(
       label="settings.highlight_open_bookmarks"
       :inline="true"
@@ -283,8 +309,8 @@
       :value="$store.state.highlightOpenBookmarks"
       @input="setOpt('highlightOpenBookmarks', $event)")
     .sub-fields
-      .separator
-      toggle-field(
+      //- .separator
+      toggle-field.-last(
         label="settings.activate_open_bookmark_tab"
         :inline="true"
         :inactive="!$store.state.bookmarksPanel || !$store.state.highlightOpenBookmarks"
@@ -299,33 +325,33 @@
       :value="$store.state.fontSize"
       :opts="$store.state.fontSizeOpts"
       @input="setOpt('fontSize', $event)")
-    .separator
+    //- .separator
     toggle-field(
       label="settings.animations"
       :inline="true"
       :value="$store.state.animations"
       @input="setOpt('animations', $event)")
-    .separator
+    //- .separator
     toggle-field(
       label="settings.bg_noise"
       :inline="true"
       :value="$store.state.bgNoise"
       @input="setOpt('bgNoise', $event)")
-    .separator
+    //- .separator
     select-field(
       label="settings.theme"
       optLabel="settings.theme_"
       :value="$store.state.theme"
       :opts="$store.state.themeOpts"
       @input="setOpt('theme', $event)")
-    .separator
-    select-field(
+    //- .separator
+    select-field.-last(
       label="settings.switch_style"
       optLabel="settings.style_"
       :value="$store.state.style"
       :opts="$store.state.styleOpts"
       @input="setOpt('style', $event)")
-    .separator
+    //- .separator
     .ctrls
       .btn(@click="switchView('styles_editor')") {{t('settings.edit_styles')}}
 
@@ -336,7 +362,7 @@
       :inline="true"
       :value="$store.state.hScrollThroughPanels"
       @input="setOpt('hScrollThroughPanels', $event)")
-    .separator
+    //- .separator
     select-field(
       label="settings.scroll_through_tabs"
       optLabel="settings.scroll_through_tabs_"
@@ -344,49 +370,49 @@
       :opts="$store.state.scrollThroughTabsOpts"
       @input="setOpt('scrollThroughTabs', $event)")
     .sub-fields
-      .separator
+      //- .separator
       toggle-field(
         label="settings.scroll_through_visible_tabs"
         :inline="true"
         :value="$store.state.scrollThroughVisibleTabs"
         :inactive="!$store.state.tabsTree || $store.state.scrollThroughTabs === 'none'"
         @input="setOpt('scrollThroughVisibleTabs', $event)")
-      .separator
+      //- .separator
       toggle-field(
         label="settings.scroll_through_tabs_except_overflow"
         :inline="true"
         :value="$store.state.scrollThroughTabsExceptOverflow"
         :inactive="$store.state.scrollThroughTabs === 'none'"
         @input="setOpt('scrollThroughTabsExceptOverflow', $event)")
-    .separator
+    //- .separator
     select-field(
       label="settings.tab_double_click"
       optLabel="settings.tab_action_"
       :value="$store.state.tabDoubleClick"
       :opts="$store.state.tabDoubleClickOpts"
       @input="setOpt('tabDoubleClick', $event)")
-    .separator
+    //- .separator
     select-field(
       label="settings.tab_long_left_click"
       optLabel="settings.tab_action_"
       :value="$store.state.tabLongLeftClick"
       :opts="$store.state.tabLongLeftClickOpts"
       @input="setOpt('tabLongLeftClick', $event)")
-    .separator
+    //- .separator
     select-field(
       label="settings.tab_long_right_click"
       optLabel="settings.tab_action_"
       :value="$store.state.tabLongRightClick"
       :opts="$store.state.tabLongRightClickOpts"
       @input="setOpt('tabLongRightClick', $event)")
-    .separator
+    //- .separator
     select-field(
       label="settings.tabs_panel_left_click_action"
       optLabel="settings.tabs_panel_action_"
       :value="$store.state.tabsPanelLeftClickAction"
       :opts="$store.state.tabsPanelLeftClickActionOpts"
       @input="setOpt('tabsPanelLeftClickAction', $event)")
-    .separator
+    //- .separator
     select-field(
       label="settings.tabs_panel_double_click_action"
       optLabel="settings.tabs_panel_action_"
@@ -394,8 +420,8 @@
       :value="$store.state.tabsPanelDoubleClickAction"
       :opts="$store.state.tabsPanelDoubleClickActionOpts"
       @input="setOpt('tabsPanelDoubleClickAction', $event)")
-    .separator
-    select-field(
+    //- .separator
+    select-field.-last(
       label="settings.tabs_panel_right_click_action"
       optLabel="settings.tabs_panel_action_"
       :value="$store.state.tabsPanelRightClickAction"
@@ -431,10 +457,8 @@
         label="settings.all_urls_label"
         :inline="true"
         :value="$store.state.permAllUrls"
+        :note="t('settings.all_urls_info')"
         @input="togglePermAllUrls")
-      .box: .info {{t('settings.all_urls_info')}}
-
-    .separator
 
     .permission(
       ref="tab_hide"
@@ -444,8 +468,8 @@
         label="settings.tab_hide_label"
         :inline="true"
         :value="$store.state.permTabHide"
+        :note="t('settings.tab_hide_info')"
         @input="togglePermTabHide")
-      .box: .info {{t('settings.tab_hide_info')}}
 
   section(ref="settings_snapshots")
     h2 {{t('settings.snapshots_title')}}
@@ -457,7 +481,7 @@
       :unit="$store.state.snapIntervalUnit"
       :unitOpts="$store.state.snapIntervalUnitOpts"
       @input="setOpt('snapInterval', $event[0]), setOpt('snapIntervalUnit', $event[1])")
-    .separator
+    //- .separator
     num-field(
       label="settings.snap_limit"
       unitLabel="settings.snap_limit_"
@@ -466,7 +490,7 @@
       :unit="$store.state.snapLimitUnit"
       :unitOpts="$store.state.snapLimitUnitOpts"
       @input="setOpt('snapLimit', $event[0]), setOpt('snapLimitUnit', $event[1])")
-    .separator
+    //- .separator
     .ctrls
       .btn(@click="switchView('snapshots')") {{t('settings.snapshots_view_label')}}
 
@@ -495,7 +519,7 @@
         href="https://github.com/mbnuqw/sidebery/issues/new/choose") {{t('settings.repo_bug')}}
       .btn.-warn(@click="resetSettings") {{t('settings.reset_settings')}}
 
-    .separator
+    //- .separator
 
     .ctrls
       .info(v-if="$store.state.osInfo") OS: {{$store.state.osInfo.os}}
@@ -519,12 +543,13 @@
 import Utils from '../utils'
 import { translate } from '../mixins/dict'
 import { DEFAULT_SETTINGS } from '../defaults'
+import { DEFAULT_CTX_TABS_PANEL } from '../defaults'
 import State from './store/state'
 import Actions from './actions'
 import ToggleField from '../components/toggle-field'
 import SelectField from '../components/select-field'
 import NumField from '../components/num-field'
-import InfoField from '../components/info-field'
+import PanelConfig from './components/panel-config'
 import FooterSection from './components/footer'
 
 const VALID_SHORTCUT = /^((Ctrl|Alt|Command|MacCtrl)\+)((Shift|Alt)\+)?([A-Z0-9]|Comma|Period|Home|End|PageUp|PageDown|Space|Insert|Delete|Up|Down|Left|Right|F\d\d?)$|^((Ctrl|Alt|Command|MacCtrl)\+)?((Shift|Alt)\+)?(F\d\d?)$/
@@ -534,6 +559,7 @@ const SECTIONS = [
   'settings_menu',
   'settings_nav',
   'settings_group',
+  'settings_panels',
   'settings_tabs',
   'settings_pinned_tabs',
   'settings_tabs_tree',
@@ -552,8 +578,8 @@ export default {
     ToggleField,
     SelectField,
     NumField,
-    InfoField,
     FooterSection,
+    PanelConfig,
   },
 
   data() {
@@ -1084,6 +1110,56 @@ export default {
         await browser.storage.local.remove(prop)
         browser.runtime.reload()
       }
+    },
+
+    /**
+     * Remove panel
+     */
+    async removePanel(panel) {
+      if (!panel || !panel.name) return
+      if (panel.type !== 'ctx') return
+
+      let preMsg = translate('settings.panel_remove_confirm_1')
+      let postMsg = translate('settings.panel_remove_confirm_2')
+      if (window.confirm(preMsg + panel.name + postMsg)) {
+        if (panel.cookieStoreId) {
+          await browser.contextualIdentities.remove(panel.cookieStoreId)
+        }
+        let index = State.panels.findIndex(p => {
+          return p.cookieStoreId === panel.cookieStoreId
+        })
+        if (index > -1) State.panels.splice(index, 1)
+      }
+    },
+
+    /**
+     * Move panel
+     */
+    movePanel(panel, dir) {
+      Actions.movePanel(panel.cookieStoreId || panel.id, dir)
+    },
+
+    /**
+     * Create panel-container
+     */
+    async createPanel() {
+      const details = {
+        name: 'New Panel ' + (State.panels.length - 1),
+        color: 'blue',
+        icon: 'fingerprint',
+      }
+      let container = await browser.contextualIdentities.create(details)
+      State.panels.push({
+        ...DEFAULT_CTX_TABS_PANEL,
+        ...container,
+        id: container.cookieStoreId,
+        cookieStoreId: container.cookieStoreId,
+        name: container.name,
+        icon: container.icon,
+        color: container.color,
+      })
+
+      State.selectedPanel = State.panels[State.panels.length - 1]
     },
   },
 }

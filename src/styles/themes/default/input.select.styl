@@ -2,16 +2,20 @@
 
 .SelectInput
   box(relative, flex)
+  size(max-w: 55%)
+  justify-content: flex-end
+  padding-left: 16px
   flex-wrap: wrap
+  grid-gap: 8px 8px
   cursor: pointer
+
 
 // ---
 // -- Option
 // -
 .SelectInput .opt
   box(relative)
-  text(s: rem(14))
-  margin: 0 7px 0 0
+  text(s: rem(15))
   color: var(--inactive-fg)
   transition: color var(--d-fast)
   &:hover

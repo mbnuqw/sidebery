@@ -1,7 +1,7 @@
 <template lang="pug">
 .ToggleInput(:data-active="value" @click="toggle")
-  .opt.-true {{t('settings.opt_true')}}
   .opt.-false {{t('settings.opt_false')}}
+  .opt.-true {{t('settings.opt_true')}}
 </template>
 
 

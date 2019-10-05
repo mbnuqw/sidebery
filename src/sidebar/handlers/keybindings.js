@@ -375,7 +375,7 @@ function onKeyNextPanel() {
       if (!hiddenPanels.length) return
 
       this.state.panelIndex = i
-      this.actions.openDashboard(-2)
+      this.state.hiddenPanelsBar = true
       EventBus.$emit('selectHiddenPanel', 1)
       return
     }

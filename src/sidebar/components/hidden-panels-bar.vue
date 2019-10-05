@@ -1,34 +1,32 @@
 <template lang="pug">
-.Dashboard(v-noise:300.g:12:af.a:0:42.s:0:9="" @dragenter="onDragEnter" @dragleave="onDragLeave")
-  .dash-ctrls(v-if="!$store.state.private")
-    .ctrl-panel(
-      v-for="(panel, i) in conf.panels"
-      :data-color="panel.color"
-      :data-active="selected === i"
-      :title="panel.name"
-      @click="clickHandler(panel.cookieStoreId)"
-      @dragenter="onPanelDragEnter(panel, i)"
-      @drop="onPanelDrop($event, panel, i)"
-      @mousedown.right="openDashboard(panel)")
-      svg: use(:xlink:href="'#' + panel.icon")
-      .title {{panel.name}}
+.HiddenPanelsBar(v-noise:300.g:12:af.a:0:42.s:0:9="" @dragenter="onDragEnter" @dragleave="onDragLeave")
+  .hidden-panel(
+    v-for="(panel, i) in hiddenPanels"
+    :data-color="panel.color"
+    :data-active="selected === i"
+    :title="panel.name"
+    @click="clickHandler(panel.cookieStoreId)"
+    @dragenter="onPanelDragEnter(panel, i)"
+    @drop="onPanelDrop($event, panel, i)"
+    @mousedown.right="onPanelRightClick(panel)")
+    svg: use(:xlink:href="'#' + panel.icon")
 </template>
 
 
 <script>
 import EventBus from '../../event-bus'
 import State from '../store/state'
-import Actions from '../actions'
 
 export default {
-  props: {
-    conf: Object,
-    index: Number,
-  },
-
   data() {
     return {
       selected: -1,
+    }
+  },
+
+  computed: {
+    hiddenPanels() {
+      return State.panels.filter(b => !b.bookmarks && b.inactive)
     }
   },
 
@@ -44,7 +42,7 @@ export default {
 
   methods: {
     clickHandler(cookieStoreId) {
-      this.$emit('close')
+      State.hiddenPanelsBar = false
       browser.tabs.create({
         windowId: browser.windows.WINDOW_ID_CURRENT,
         cookieStoreId,
@@ -53,19 +51,19 @@ export default {
     },
 
     onSelectHiddenPanel(dir) {
-      if (this.selected + dir >= this.conf.panels.length) return
+      if (this.selected + dir >= this.hiddenPanels.length) return
       if (this.selected + dir < 0) {
-        this.$emit('close')
+        State.hiddenPanelsBar = false
         State.panelIndex = State.lastPanelIndex
       }
       this.selected += dir
     },
 
     onCreateTabInHiddenPanel() {
-      let panel = this.conf.panels[this.selected]
+      let panel = this.hiddenPanels[this.selected]
       if (!panel || panel.bookmarks) return
 
-      this.$emit('close')
+      State.hiddenPanelsBar = false
       browser.tabs.create({
         windowId: browser.windows.WINDOW_ID_CURRENT,
         cookieStoreId: panel.cookieStoreId,
@@ -79,7 +77,7 @@ export default {
 
     onDragLeave(event) {
       if (event.target !== this.dragEnterTarget) return
-      this.$emit('close')
+      State.hiddenPanelsBar = false
     },
 
     onPanelDragEnter(panel, i) {
@@ -90,11 +88,8 @@ export default {
       State.panelIndex = panel.index
     },
 
-    openDashboard(panel) {
-      this.$emit('close')
-      setTimeout(() => {
-        Actions.openDashboard(panel.index)
-      }, 33)
+    onPanelRightClick() {
+      // ...
     },
   },
 }

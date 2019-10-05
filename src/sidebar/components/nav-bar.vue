@@ -50,13 +50,6 @@ const HIDDEN_CTR_BTN = {
   hidden: false,
   tooltip: translate('nav.show_hidden_tooltip'),
 }
-const ADD_CTR_BTN = {
-  type: 'new',
-  name: 'new',
-  icon: 'icon_plus_v2',
-  hidden: false,
-  tooltip: translate('nav.add_ctx_tooltip'),
-}
 
 export default {
   data: function() {
@@ -100,11 +93,6 @@ export default {
       if (emptyPanel && State.hideEmptyPanels) {
         HIDDEN_CTR_BTN.hidden = false
         out.push(HIDDEN_CTR_BTN)
-      }
-
-      if (!State.private && !State.hideAddBtn) {
-        ADD_CTR_BTN.hidden = false
-        out.push(ADD_CTR_BTN)
       }
 
       if (!State.navBarInline) return out
@@ -153,22 +141,20 @@ export default {
      * Navigation button click hadler
      */
     onNavClick(i, type) {
-      if (type === 'new') return Actions.openDashboard(-1)
-      if (type === 'hidden') return Actions.openDashboard(-2)
+      if (type === 'hidden') {
+        State.hiddenPanelsBar = true
+        return
+      }
 
       if (State.panelIndex !== i) return Actions.switchToPanel(i)
 
       if (State.panels[i].bookmarks) return EventBus.$emit('scrollBookmarksToEdge')
 
       if (State.panels[i].cookieStoreId) {
-        if (State.dashboardIsOpen) {
-          Actions.closeDashboard()
-        } else {
-          browser.tabs.create({
-            windowId: State.windowId,
-            cookieStoreId: State.panels[i].cookieStoreId,
-          })
-        }
+        browser.tabs.create({
+          windowId: State.windowId,
+          cookieStoreId: State.panels[i].cookieStoreId,
+        })
       }
     },
 
@@ -176,10 +162,7 @@ export default {
      * Nav button right click handler
      */
     onNavRightClick(i, type) {
-      if (type === 'new') return Actions.openDashboard(-1)
-      if (type === 'hidden') return Actions.openDashboard(-2)
-
-      Actions.openDashboard(i)
+      if (type === 'hidden') State.hiddenPanelsBar = true
     },
 
     /**
@@ -196,17 +179,17 @@ export default {
      * Navigation button dragenter handler
      */
     onNavDragEnter(i) {
-      if (i >= this.nav.length - 1) return
+      if (i > this.nav.length) return
 
       this.navDragEnterIndex = i
       if (this.navDragEnterTimeout) clearTimeout(this.navDragEnterTimeout)
       this.navDragEnterTimeout = setTimeout(() => {
         this.navDragEnterTimeout = null
         if (this.nav[i].type === 'hidden') {
-          Actions.openDashboard(-2)
+          State.hiddenPanelsBar = true
           return
         }
-        if (State.dashboardIsOpen) Actions.closeDashboard()
+        if (State.hiddenPanelsBar) State.hiddenPanelsBar = false
         Actions.switchToPanel(i)
       }, 300)
     },

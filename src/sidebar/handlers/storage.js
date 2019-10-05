@@ -10,7 +10,7 @@ function onChangeStorage(changes, type) {
   if (changes.cssVars) {
     this.actions.applyCSSVars(changes.cssVars.newValue)
   }
-  if (changes.panels && !this.state.windowFocused && !this.state.private) {
+  if (changes.panels && !this.state.private) {
     this.actions.updatePanels(changes.panels.newValue)
   }
   if (changes.tabsMenu) {

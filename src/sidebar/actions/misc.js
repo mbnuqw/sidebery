@@ -110,7 +110,6 @@ async function loadPermissions(init) {
   this.state.permTabHide = await browser.permissions.contains({ permissions: ['tabHide'] })
 
   if (!this.state.permAllUrls) {
-    this.state.proxiedPanels = {}
     this.state.panels.map(c => {
       if (c.proxified) c.proxified = false
       if (c.proxy) c.proxy.type = 'direct'

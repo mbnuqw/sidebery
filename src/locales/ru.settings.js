@@ -7,6 +7,7 @@ export default {
   'settings.nav_settings_menu': { message: 'Меню' },
   'settings.nav_settings_nav': { message: 'Навигация' },
   'settings.nav_settings_group': { message: 'Групповая страница' },
+  'settings.nav_settings_panels': { message: 'Панели' },
   'settings.nav_settings_tabs': { message: 'Табы' },
   'settings.nav_settings_pinned_tabs': { message: 'Закрепленные табы' },
   'settings.nav_settings_tabs_tree': { message: 'Дерево табов' },
@@ -62,6 +63,11 @@ export default {
   'settings.group_layout_grid': { message: 'сетка' },
   'settings.group_layout_list': { message: 'список' },
 
+  // --- Panels
+  'settings.panels_title': { message: 'Панели' },
+  'settings.panel_remove_confirm_1': { message: 'Удалить панель ' },
+  'settings.panel_remove_confirm_2': { message: ' ?\nВсе табы этой панели и их cookies будут также удалены.' },
+
   // --- Tabs
   'settings.tabs_title': { message: 'Табы' },
   'settings.activate_last_tab_on_panel_switching': {
@@ -69,7 +75,6 @@ export default {
   },
   'settings.skip_empty_panels': { message: 'Пропускать пустые контейнеры при переключении' },
   'settings.show_tab_rm_btn': { message: 'Показывать кнопку закрытия таба при наведении курсора' },
-  'settings.no_empty_default': { message: 'Создавать новую вкладку при опустошении стандартной панели' },
   'settings.hide_inactive_panel_tabs': { message: 'Скрывать табы неактивных панелей' },
   'settings.activate_after_closing': { message: 'После закрытия текущей вкладки активировать' },
   'settings.activate_after_closing_next': { message: 'следующую' },

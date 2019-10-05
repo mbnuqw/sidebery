@@ -50,6 +50,7 @@ export default new Vue({
     Actions.loadCtxMenu()
     await Actions.loadSettings()
     Actions.loadKeybindings()
+    Actions.loadPanels()
   },
 
   methods: {

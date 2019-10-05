@@ -10,7 +10,7 @@ import {
   DEFAULT_CTX_TABS_PANEL,
 } from '../../defaults'
 
-let recalcPanelScrollTimeout, savePanelsTimeout, updatePanelBoundsTimeout
+let recalcPanelScrollTimeout, updatePanelBoundsTimeout
 
 /**
  * Load Contextual Identities and containers
@@ -68,7 +68,6 @@ async function loadPanels() {
         panel.noEmpty = loadedPanel.noEmpty
       }
       panel.index = panels.length
-      panel.lastActiveTab = loadedPanel.lastActiveTab
       panels.push(panel)
       panelsMap[panel.cookieStoreId] = panel
     }
@@ -110,7 +109,6 @@ async function loadPanels() {
       panel.includeHosts = loadedPanel.includeHosts
       panel.excludeHostsActive = loadedPanel.excludeHostsActive
       panel.excludeHosts = loadedPanel.excludeHosts
-      panel.lastActiveTab = loadedPanel.lastActiveTab
 
       panels.push(panel)
       panelsMap[panel.cookieStoreId] = panel
@@ -174,7 +172,6 @@ async function updatePanels(newPanels) {
     panel.includeHosts = newPanel.includeHosts
     panel.excludeHostsActive = newPanel.excludeHostsActive
     panel.excludeHosts = newPanel.excludeHosts
-    panel.lastActiveTab = newPanel.lastActiveTab
 
     panels.push(panel)
   }
@@ -255,17 +252,16 @@ async function savePanels() {
       includeHosts: panel.includeHosts,
       excludeHostsActive: panel.excludeHostsActive,
       excludeHosts: panel.excludeHosts,
-      lastActiveTab: panel.lastActiveTab,
       private: panel.private,
       bookmarks: panel.bookmarks,
     })
   }
   const cleaned = JSON.parse(JSON.stringify(output))
-  await browser.storage.local.set({ panels: cleaned })
-}
-function savePanelsDebounced() {
-  if (savePanelsTimeout) clearTimeout(savePanelsTimeout)
-  savePanelsTimeout = setTimeout(() => Actions.savePanels(), 500)
+  browser.runtime.sendMessage({
+    instanceType: 'bg',
+    action: 'savePanels',
+    arg: cleaned,
+  })
 }
 
 /**
@@ -330,7 +326,6 @@ function switchToPanel(index) {
   Actions.resetSelection()
   Actions.setPanel(index)
 
-  if (this.state.dashboardIsOpen) Actions.openDashboard(this.state.panelIndex)
   const panel = this.state.panels[this.state.panelIndex]
   if (panel.noEmpty && panel.tabs && !panel.tabs.length) {
     Actions.createTab(panel.cookieStoreId)
@@ -414,7 +409,6 @@ async function switchPanel(dir = 0) {
     Actions.activateLastActiveTabOf(this.state.panelIndex)
   }
 
-  if (this.state.dashboardIsOpen) Actions.openDashboard(this.state.panelIndex)
   let panel = this.state.panels[this.state.panelIndex]
   if (panel.noEmpty && panel.tabs && !panel.tabs.length) {
     Actions.createTab(panel.cookieStoreId)
@@ -441,26 +435,26 @@ function getActivePanel() {
   return Utils.cloneObject(this.state.panels[this.state.panelIndex])
 }
 
-async function movePanel(id, step) {
-  let index
-  if (id === 'bookmarks') index = this.state.panels.findIndex(p => p.bookmarks)
-  else index = this.state.panels.findIndex(p => p.cookieStoreId === id)
+// async function movePanel(id, step) {
+//   let index
+//   if (id === 'bookmarks') index = this.state.panels.findIndex(p => p.bookmarks)
+//   else index = this.state.panels.findIndex(p => p.cookieStoreId === id)
 
-  if (index === -1) return
-  if (index + step < 0) return
-  if (index + step >= this.state.panels.length) return
+//   if (index === -1) return
+//   if (index + step < 0) return
+//   if (index + step >= this.state.panels.length) return
 
-  let panel = this.state.panels.splice(index, 1)[0]
-  this.state.panels.splice(index + step, 0, panel)
-  this.state.panelIndex = index + step
-  for (let i = 0; i < this.state.panels.length; i++) {
-    this.state.panels[i].index = i
-  }
+//   let panel = this.state.panels.splice(index, 1)[0]
+//   this.state.panels.splice(index + step, 0, panel)
+//   this.state.panelIndex = index + step
+//   for (let i = 0; i < this.state.panels.length; i++) {
+//     this.state.panels[i].index = i
+//   }
 
-  await Actions.loadTabs(false)
+//   await Actions.loadTabs(false)
 
-  Actions.savePanels()
-}
+//   Actions.savePanels()
+// }
 
 export default {
   loadPanels,
@@ -468,7 +462,6 @@ export default {
   updatePanelsTabs,
   updatePanelsRanges,
   savePanels,
-  savePanelsDebounced,
   loadPanelIndex,
   setPanel,
   savePanelIndex,
@@ -479,5 +472,5 @@ export default {
   switchPanel,
   goToActiveTabPanel,
   getActivePanel,
-  movePanel,
+  // movePanel,
 }
