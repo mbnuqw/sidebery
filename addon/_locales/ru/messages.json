@@ -3,5 +3,7 @@
   "ExtDesc": { "message": "Управление табами и закладками в боковой панели." },
   "ActionTitle": { "message": "Открыть Sidebery" },
 
-  "upgrading": { "message": "Обновление..." }
+  "upgrading": { "message": "Обновление..." },
+  "unhandled_url": { "message": "Неподдерживаемый URL" },
+  "copy": { "message": "Скопировать" }
 }

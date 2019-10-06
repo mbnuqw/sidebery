@@ -3,6 +3,16 @@ import { noiseBg } from '../noise-bg'
 import Utils from '../utils'
 
 void (async function() {
+  let linkEl = document.getElementById('url')
+  let copyBtnEl = document.getElementById('copy_btn')
+
+  // Update labels
+  let pageTitle = browser.i18n.getMessage('unhandled_url')
+  if (pageTitle) document.title = pageTitle
+
+  let copyBtnLabel = browser.i18n.getMessage('copy')
+  if (copyBtnLabel) copyBtnEl.innerText = copyBtnLabel
+
   // Load settings and set theme
   let { settings } = await browser.storage.local.get({ settings: DEFAULT_SETTINGS })
   let style = settings ? settings.style : 'dark'
@@ -38,13 +48,17 @@ void (async function() {
   const hash = location.hash
   if (!hash) return
   const url = hash.slice(1)
-  const linkEl = document.getElementById('url')
   linkEl.innerText = url
   linkEl.addEventListener('click', () => {
     const selection = window.getSelection()
     const range = new window.Range()
     range.selectNode(linkEl)
     selection.addRange(range)
+  })
+
+  // Setup copy button
+  copyBtnEl.addEventListener('click', () => {
+    navigator.clipboard.writeText(url)
   })
 })()
 
