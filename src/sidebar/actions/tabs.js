@@ -138,6 +138,8 @@ function findBranchStartIndex(array, subArray, startIndex) {
         similarity++
         if (!similarity) startOffset++
         else innerOffset++
+      } else if (a.active && a.url === 'about:blank') {
+        similarity++
       }
     }
     if (similarity === subArray.length) return i + startOffset
@@ -217,7 +219,7 @@ async function restoreTabsTree() {
 
       for (let treeTab of branch) {
         let tab = this.state.tabs[tabIndex]
-        if (tab.url === treeTab.url) {
+        if (tab.url === treeTab.url || (tab.active && tab.url === 'about:blank')) {
           if (treeTab.isParent) parents[treeTab.id] = tab.id
           tab.isParent = treeTab.isParent
           tab.parentId = parents[treeTab.parentId] || -1
