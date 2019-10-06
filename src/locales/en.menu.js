@@ -11,6 +11,9 @@ export default {
   'menu.bookmark.edit_bookmark': { message: 'Edit' },
   'menu.bookmark.delete_bookmark': { message: 'Delete' },
 
+  // --- Bookmarks panel
+  'menu.bookmark.collapse_all': { message: 'Collapse all folders' },
+
   // --- Tab
   'menu.tab.undo': { message: 'Undo close tab' },
   'menu.tab.move_to_new_window': { message: 'Move to new window' },
@@ -37,6 +40,16 @@ export default {
   'menu.tab.duplicate': { message: 'Duplicate' },
   'menu.tab.close': { message: 'Close' },
 
+  // --- Tabs panel
+  'menu.tabs_panel.mute_all_audible': { message: 'Mute all audible tabs' },
+  'menu.tabs_panel.dedup': { message: 'Close tabs duplicates' },
+  'menu.tabs_panel.reload': { message: 'Reload tabs' },
+  'menu.tabs_panel.discard': { message: 'Discard tabs' },
+  'menu.tabs_panel.close': { message: 'Close tabs' },
+
+  // --- Common ---
+  'menu.common.conf': { message: 'Configure panel' },
+
   // --- Editor
   'menu.editor.reset': { message: 'Reset' },
   'menu.editor.create_separator': { message: 'Create separator' },
@@ -45,7 +58,9 @@ export default {
   'menu.editor.down_tooltip': { message: 'Move down' },
   'menu.editor.disable_tooltip': { message: 'Disable' },
   'menu.editor.tabs_title': { message: 'Tabs' },
+  'menu.editor.tabs_panel_title': { message: 'Tabs panel' },
   'menu.editor.bookmarks_title': { message: 'Bookmarks' },
+  'menu.editor.bookmarks_panel_title': { message: 'Bookmarks panel' },
   'menu.editor.inline_group_title': { message: 'Sub-menu label...' },
   'menu.editor.list_title': { message: 'List' },
   'menu.editor.disabled_title': { message: 'Disabled' },

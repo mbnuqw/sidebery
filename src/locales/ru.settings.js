@@ -22,7 +22,9 @@ export default {
 
   'settings.nav_menu': { message: 'Редактор меню' },
   'settings.nav_menu_tabs': { message: 'Табы' },
+  'settings.nav_menu_tabs_panel': { message: 'Панель табов' },
   'settings.nav_menu_bookmarks': { message: 'Закладки' },
+  'settings.nav_menu_bookmarks_panel': { message: 'Панель закладок' },
 
   'settings.nav_styles': { message: 'Редактор стилей' },
   'settings.nav_snapshots': { message: 'Снепшоты' },
@@ -222,9 +224,9 @@ export default {
   'settings.tabs_panel_action_tab': { message: 'создать таб' },
   'settings.tabs_panel_action_prev': { message: 'пред. панель' },
   'settings.tabs_panel_action_next': { message: 'след. панель' },
-  'settings.tabs_panel_action_dash': { message: 'меню панели' },
   'settings.tabs_panel_action_expand': { message: 'развернуть/свернуть' },
   'settings.tabs_panel_action_parent': { message: 'перейти к родительскому табу' },
+  'settings.tabs_panel_action_menu': { message: 'открыть меню' },
   'settings.tabs_panel_action_none': { message: 'выкл' },
 
   // --- Keybindings

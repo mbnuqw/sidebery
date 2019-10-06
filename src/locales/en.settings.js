@@ -22,7 +22,9 @@ export default {
 
   'settings.nav_menu': { message: 'Menu editor' },
   'settings.nav_menu_tabs': { message: 'Tabs' },
+  'settings.nav_menu_tabs_panel': { message: 'Tabs panel' },
   'settings.nav_menu_bookmarks': { message: 'Bookmarks' },
+  'settings.nav_menu_bookmarks_panel': { message: 'Bookmarks panel' },
 
   'settings.nav_styles': { message: 'Styles editor' },
   'settings.nav_snapshots': { message: 'Snapshots viewer' },
@@ -198,9 +200,9 @@ export default {
   'settings.tabs_panel_action_tab': { message: 'create tab' },
   'settings.tabs_panel_action_prev': { message: 'previous panel' },
   'settings.tabs_panel_action_next': { message: 'next panel' },
-  'settings.tabs_panel_action_dash': { message: 'open dashboard' },
   'settings.tabs_panel_action_expand': { message: 'expand/fold' },
   'settings.tabs_panel_action_parent': { message: 'activate parent tab' },
+  'settings.tabs_panel_action_menu': { message: 'show menu' },
   'settings.tabs_panel_action_none': { message: 'none' },
 
   // --- Keybindings

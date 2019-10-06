@@ -7,17 +7,24 @@ const xmlSerializer = new XMLSerializer()
 /**
  * Open context menu
  */
-async function openCtxMenu(x, y) {
+async function openCtxMenu(type, x, y) {
   if (this.state.ctxMenuNative) browser.menus.removeAll()
   if (!this.state.selected.length) return
 
   let nodeType, options, opts = []
-  if (typeof this.state.selected[0] === 'number') {
+  if (type === 'tab') {
     nodeType = 'tab'
     options = this.state.tabsMenu
-  } else {
+  }
+  else if (type === 'bookmark') {
     nodeType = 'bookmark'
     options = this.state.bookmarksMenu
+  }
+  else if (type === 'tabsPanel') {
+    options = this.state.tabsPanelMenu
+  }
+  else if (type === 'bookmarksPanel') {
+    options = this.state.bookmarksPanelMenu
   }
 
   for (let optName of options) {
@@ -125,6 +132,7 @@ function normalizeMenu(menu, isNative) {
 }
 
 function createNativeOption(ctx, option, parentId, parentName) {
+  if (!ctx) ctx = 'all'
   if (option === 'separator') {
     browser.menus.create({
       type: 'separator',
@@ -180,6 +188,7 @@ function createNativeOption(ctx, option, parentId, parentName) {
 }
 
 function createNativeSubMenuOption(ctx, title) {
+  if (!ctx) ctx = 'all'
   let optProps = {
     type: 'normal',
     contexts: [ctx],

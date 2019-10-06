@@ -8,7 +8,8 @@
     @click="clickHandler(panel.cookieStoreId)"
     @dragenter="onPanelDragEnter(panel, i)"
     @drop="onPanelDrop($event, panel, i)"
-    @mousedown.right="onPanelRightClick(panel)")
+    @mousedown.right="onPanelRightClick(panel)"
+    @mouseup.right="onNavRightMouseup($event, panel.index)")
     svg: use(:xlink:href="'#' + panel.icon")
 </template>
 
@@ -16,6 +17,7 @@
 <script>
 import EventBus from '../../event-bus'
 import State from '../store/state'
+import Actions from  '../actions'
 
 export default {
   data() {
@@ -57,6 +59,26 @@ export default {
         State.panelIndex = State.lastPanelIndex
       }
       this.selected += dir
+    },
+
+    /**
+     * Handle right mouseup event
+     */
+    onNavRightMouseup(e, i) {
+      if (State.selected.length) return
+
+      let panel = State.panels[i]
+      if (!panel) return
+
+      e.stopPropagation()
+
+      let type
+      if (panel.type === 'bookmarks') type = 'bookmarksPanel'
+      else if (panel.type === 'default') type = 'tabsPanel'
+      else if (panel.type === 'ctx') type = 'tabsPanel'
+
+      State.selected = [panel]
+      Actions.openCtxMenu(type, e.clientX, e.clientY)
     },
 
     onCreateTabInHiddenPanel() {

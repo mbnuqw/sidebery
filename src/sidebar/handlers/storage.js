@@ -16,8 +16,14 @@ function onChangeStorage(changes, type) {
   if (changes.tabsMenu) {
     this.state.tabsMenu = changes.tabsMenu.newValue
   }
+  if (changes.tabsPanelMenu) {
+    this.state.tabsPanelMenu = changes.tabsPanelMenu.newValue
+  }
   if (changes.bookmarksMenu) {
     this.state.bookmarksMenu = changes.bookmarksMenu.newValue
+  }
+  if (changes.bookmarksPanelMenu) {
+    this.state.bookmarksPanelMenu = changes.bookmarksPanelMenu.newValue
   }
   if (changes.sidebarCSS) {
     this.actions.applyCustomCSS(changes.sidebarCSS.newValue)

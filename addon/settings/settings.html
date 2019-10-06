@@ -151,8 +151,16 @@
           @click="navigateTo('menu_editor_tabs')">{{t('settings.nav_menu_tabs')}}</div>
         <div
           class="sub-option"
+          :data-active="$store.state.activeSection === 'menu_editor_tabs_panel'"
+          @click="navigateTo('menu_editor_tabs_panel')">{{t('settings.nav_menu_tabs_panel')}}</div>
+        <div
+          class="sub-option"
           :data-active="$store.state.activeSection === 'menu_editor_bookmarks'"
           @click="navigateTo('menu_editor_bookmarks')">{{t('settings.nav_menu_bookmarks')}}</div>
+        <div
+          class="sub-option"
+          :data-active="$store.state.activeSection === 'menu_editor_bookmarks_panel'"
+          @click="navigateTo('menu_editor_bookmarks_panel')">{{t('settings.nav_menu_bookmarks_panel')}}</div>
 
         <div
           class="option"

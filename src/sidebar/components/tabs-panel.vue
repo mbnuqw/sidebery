@@ -1,7 +1,9 @@
 <template lang="pug">
 .TabsPanel(
   @wheel="onWheel"
+  @contextmenu.stop="onNavCtxMenu"
   @mousedown="onMouseDown"
+  @mouseup.right="onRightMouseUp"
   @dblclick="onDoubleClick")
   pinned-dock(v-if="$store.state.pinnedTabsPosition === 'panel'" :ctx="storeId")
   scroll-box(ref="scrollBox")
@@ -133,6 +135,53 @@ export default {
           browser.tabs.update(activeTab.parentId, { active: true })
         }
       }
+    },
+
+    onRightMouseUp(e) {
+      if (State.tabsPanelRightClickAction !== 'menu') return
+      if (State.selected.length) return
+
+      let panel = State.panels[this.index]
+      if (!panel) return
+
+      e.stopPropagation()
+
+      let type
+      if (panel.type === 'bookmarks') type = 'bookmarksPanel'
+      else if (panel.type === 'default') type = 'tabsPanel'
+      else if (panel.type === 'ctx') type = 'tabsPanel'
+
+      State.selected = [panel]
+      Actions.openCtxMenu(type, e.clientX, e.clientY)
+    },
+
+    /**
+     * Handle context menu event
+     */
+    onNavCtxMenu(e) {
+      if (
+        !State.ctxMenuNative ||
+        e.ctrlKey ||
+        e.shiftKey
+      ) {
+        e.stopPropagation()
+        e.preventDefault()
+        return
+      }
+
+      let panel = State.panels[this.index]
+      if (!panel) return
+
+      let nativeCtx = { showDefaults: false }
+      browser.menus.overrideContext(nativeCtx)
+
+      let type
+      if (panel.type === 'bookmarks') type = 'bookmarksPanel'
+      else if (panel.type === 'default') type = 'tabsPanel'
+      else if (panel.type === 'ctx') type = 'tabsPanel'
+      if (!State.selected.length) State.selected = [panel]
+
+      Actions.openCtxMenu(type)
     },
 
     onDoubleClick() {

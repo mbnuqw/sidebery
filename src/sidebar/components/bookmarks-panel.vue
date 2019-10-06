@@ -1,5 +1,9 @@
 <template lang="pug">
-.Bookmarks(:data-unrenderable="!renderable" :data-invisible="!visible" @click="onClick")
+.Bookmarks(
+  :data-unrenderable="!renderable"
+  :data-invisible="!visible" @click="onClick"
+  @contextmenu.stop="onNavCtxMenu"
+  @mouseup.right="onRightMouseUp")
   scroll-box(ref="scrollBox"): .bookmarks-wrapper
     component.node(
       v-for="n in $store.state.bookmarks"
@@ -112,6 +116,52 @@ export default {
 
     onStartSelection(event) {
       this.$emit('start-selection', event)
+    },
+
+    onRightMouseUp(e) {
+      if (State.selected.length) return Actions.resetSelection()
+
+      let panel = State.panels[this.index]
+      if (!panel) return
+
+      e.stopPropagation()
+
+      let type
+      if (panel.type === 'bookmarks') type = 'bookmarksPanel'
+      else if (panel.type === 'default') type = 'tabsPanel'
+      else if (panel.type === 'ctx') type = 'tabsPanel'
+
+      State.selected = [panel]
+      Actions.openCtxMenu(type, e.clientX, e.clientY)
+    },
+
+    /**
+     * Handle context menu event
+     */
+    onNavCtxMenu(e) {
+      if (
+        !State.ctxMenuNative ||
+        e.ctrlKey ||
+        e.shiftKey
+      ) {
+        e.stopPropagation()
+        e.preventDefault()
+        return
+      }
+
+      let panel = State.panels[this.index]
+      if (!panel) return
+
+      let nativeCtx = { showDefaults: false }
+      browser.menus.overrideContext(nativeCtx)
+
+      let type
+      if (panel.type === 'bookmarks') type = 'bookmarksPanel'
+      else if (panel.type === 'default') type = 'tabsPanel'
+      else if (panel.type === 'ctx') type = 'tabsPanel'
+      if (!State.selected.length) State.selected = [panel]
+
+      Actions.openCtxMenu(type)
     },
 
     /**

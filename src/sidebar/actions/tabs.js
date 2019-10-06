@@ -529,6 +529,25 @@ async function duplicateTabs(tabIds) {
 }
 
 /**
+ * Close tabs duplicates
+ */
+function dedupTabs(tabIds) {
+  if (!tabIds || !tabIds.length) return
+
+  let urls = []
+  let toRemove = []
+  for (let id of tabIds) {
+    let tab = this.state.tabsMap[id]
+    if (!tab) return
+
+    if (urls.includes(tab.url)) toRemove.push(tab.id)
+    else urls.push(tab.url)
+  }
+
+  this.actions.removeTabs(toRemove)
+}
+
+/**
  * Create bookmarks from tabs
  */
 async function bookmarkTabs(tabIds) {
@@ -1445,6 +1464,7 @@ export default {
   unmuteTabs,
   remuteTabs,
   duplicateTabs,
+  dedupTabs,
   bookmarkTabs,
   clearTabsCookies,
 

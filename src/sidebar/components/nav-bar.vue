@@ -15,8 +15,10 @@
       @click="onNavClick(i, btn.type)"
       @dragenter="onNavDragEnter(i)"
       @dragleave="onNavDragLeave(i)"
+      @contextmenu.stop="onNavCtxMenu($event, i)"
       @mousedown.middle="onNavMidClick(btn)"
-      @mousedown.right="onNavRightClick(i, btn.type)")
+      @mousedown.right="onNavRightClick(i, btn.type)"
+      @mouseup.right="onNavRightMouseup($event, i)")
       svg: use(:xlink:href="'#' + btn.icon")
       .proxy-badge
         svg: use(xlink:href="#icon_proxy")
@@ -138,6 +140,41 @@ export default {
     },
 
     /**
+     * Handle context menu event
+     */
+    onNavCtxMenu(e, i) {
+      if (
+        !State.ctxMenuNative ||
+        e.ctrlKey ||
+        e.shiftKey
+      ) {
+        e.stopPropagation()
+        e.preventDefault()
+        return
+      }
+
+      let panel = State.panels[i]
+      if (!panel) return
+
+      if (State.ctxMenuBlockTimeout) {
+        e.stopPropagation()
+        e.preventDefault()
+        return
+      }
+
+      let nativeCtx = { showDefaults: false }
+      browser.menus.overrideContext(nativeCtx)
+
+      let type
+      if (panel.type === 'bookmarks') type = 'bookmarksPanel'
+      else if (panel.type === 'default') type = 'tabsPanel'
+      else if (panel.type === 'ctx') type = 'tabsPanel'
+      if (!State.selected.length) State.selected = [panel]
+
+      Actions.openCtxMenu(type)
+    },
+
+    /**
      * Navigation button click hadler
      */
     onNavClick(i, type) {
@@ -173,6 +210,26 @@ export default {
         if (!btn.tabs || !btn.tabs.length) return
         Actions.removeTabs(btn.tabs.map(t => t.id))
       }
+    },
+
+    /**
+     * Handle right mouseup event
+     */
+    onNavRightMouseup(e, i) {
+      if (State.selected.length) return Actions.resetSelection()
+
+      let panel = State.panels[i]
+      if (!panel) return
+
+      e.stopPropagation()
+
+      let type
+      if (panel.type === 'bookmarks') type = 'bookmarksPanel'
+      else if (panel.type === 'default') type = 'tabsPanel'
+      else if (panel.type === 'ctx') type = 'tabsPanel'
+
+      State.selected = [panel]
+      Actions.openCtxMenu(type, e.clientX, e.clientY)
     },
 
     /**

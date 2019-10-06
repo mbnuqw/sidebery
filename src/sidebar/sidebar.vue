@@ -389,7 +389,15 @@ export default {
       }
 
       if (State.multiSelectionStart) Actions.stopMultiSelection()
-      if (e.button === 2) Actions.openCtxMenu(e.clientX, e.clientY)
+      if (e.button === 2) {
+        let type
+        if (State.selected[0]) {
+          if (typeof State.selected[0] === 'string') type = 'bookmark'
+          if (typeof State.selected[0] === 'number') type = 'tab'
+        }
+        // NOTE: check type === undefined case
+        Actions.openCtxMenu(type, e.clientX, e.clientY)
+      }
     },
 
     /**

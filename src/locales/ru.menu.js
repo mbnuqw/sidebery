@@ -11,6 +11,9 @@ export default {
   'menu.bookmark.edit_bookmark': { message: 'Редактировать' },
   'menu.bookmark.delete_bookmark': { message: 'Удалить' },
 
+  // --- Bookmarks panel
+  'menu.bookmark.collapse_all': { message: 'Свернуть все папки' },
+
   // --- Tab
   'menu.tab.undo': { message: 'Восстановить удаленный таб' },
   'menu.tab.move_to_new_window': { message: 'Переместить в новое окно' },
@@ -37,6 +40,16 @@ export default {
   'menu.tab.duplicate': { message: 'Дублировать' },
   'menu.tab.close': { message: 'Закрыть' },
 
+  // --- Tabs panel
+  'menu.tabs_panel.mute_all_audible': { message: 'Выключить звук' },
+  'menu.tabs_panel.dedup': { message: 'Закрыть дубликаты' },
+  'menu.tabs_panel.reload': { message: 'Перезагрузить табы' },
+  'menu.tabs_panel.discard': { message: 'Выгрузить табы' },
+  'menu.tabs_panel.close': { message: 'Закрыть табы' },
+
+  // --- Common ---
+  'menu.common.conf': { message: 'Настройки панели' },
+
   // --- Editor
   'menu.editor.reset': { message: 'Сброс' },
   'menu.editor.create_separator': { message: 'Создать разделитель' },
@@ -45,7 +58,9 @@ export default {
   'menu.editor.down_tooltip': { message: 'Вниз' },
   'menu.editor.disable_tooltip': { message: 'Отключить' },
   'menu.editor.tabs_title': { message: 'Табы' },
+  'menu.editor.tabs_panel_title': { message: 'Панель табов' },
   'menu.editor.bookmarks_title': { message: 'Закладки' },
+  'menu.editor.bookmarks_panel_title': { message: 'Панель закладок' },
   'menu.editor.inline_group_title': { message: 'Название подменю...' },
   'menu.editor.list_title': { message: 'Список' },
   'menu.editor.disabled_title': { message: 'Отключено' },

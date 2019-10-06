@@ -69,7 +69,7 @@ export default {
         if (!State.selected.length) {
           Actions.selectItem(this.node.id)
         } else {
-          if (typeof State.selected[0] === 'number') return
+          if (typeof State.selected[0] !== 'string') return
 
           EventBus.$emit('updatePanelBounds')
 
@@ -150,7 +150,7 @@ export default {
 
         Actions.stopMultiSelection()
         if (!State.ctxMenuNative) Actions.selectItem(this.node.id)
-        Actions.openCtxMenu(e.clientX, e.clientY)
+        Actions.openCtxMenu('bookmark', e.clientX, e.clientY)
       }
     },
 
@@ -173,7 +173,7 @@ export default {
 
       if (!State.selected.length) Actions.selectItem(this.node.id)
 
-      Actions.openCtxMenu()
+      Actions.openCtxMenu('bookmark')
     },
 
     /**

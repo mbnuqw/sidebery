@@ -64,6 +64,9 @@ async function loadPermissions(init) {
  */
 function updateActiveView() {
   let hash = location.hash ? location.hash.slice(1) : location.hash
+  let hashArg = hash.split('.')
+  hash = hashArg[0]
+  let arg = hashArg[1]
   let scrollHighlightConf = { behavior: 'smooth', block: 'center' }
   let scrollSectionConf = { behavior: 'smooth', block: 'start' }
 
@@ -137,6 +140,15 @@ function updateActiveView() {
     if (hash !== undefined && this.state.settingsRefs) {
       let el = this.state.settingsRefs[hash]
       if (el) el.scrollIntoView(scrollSectionConf)
+    }
+
+    if (arg) {
+      if (hash === 'settings_panels') {
+        let panel = this.state.panels.find(p => p.cookieStoreId === arg)
+        if (panel) {
+          this.state.selectedPanel = panel
+        }
+      }
     }
   }, this.state.activeView === 'Settings' ? 0 : 250)
 

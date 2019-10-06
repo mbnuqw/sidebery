@@ -11,7 +11,7 @@ export const SETTINGS_OPTIONS = {
   tabLongRightClickOpts: ['reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'new_after', 'none'],
   tabsPanelLeftClickActionOpts: ['prev', 'expand', 'parent', 'none'],
   tabsPanelDoubleClickActionOpts: ['tab', 'none'],
-  tabsPanelRightClickActionOpts: ['next', 'expand', 'parent', 'none'],
+  tabsPanelRightClickActionOpts: ['next', 'expand', 'parent', 'menu', 'none'],
   activateAfterClosingOpts: ['prev_act', 'next', 'prev', 'none'],
   activateAfterClosingPrevRuleOpts: ['tree', 'visible', 'any'],
   activateAfterClosingNextRuleOpts: ['tree', 'any'],
@@ -290,6 +290,23 @@ export const DEFAULT_BOOKMARKS_MENU = [
   'createSeparator',
   'edit',
   'delete',
+]
+
+export const DEFAULT_TABS_PANEL_MENU = [
+  'undoRmTab',
+  'muteAllAudibleTabs',
+  'reloadTabs',
+  'discardTabs',
+  'closeTabsDuplicates',
+  'closeTabs',
+  'separator',
+  'openPanelConfig',
+]
+
+export const DEFAULT_BOOKMARKS_PANEL_MENU = [
+  'collapseAllFolders',
+  'separator',
+  'openPanelConfig',
 ]
 
 export const MENU_OPTIONS = {
@@ -611,6 +628,120 @@ export const MENU_OPTIONS = {
       args: [state.selected],
     }
     if (node.parentId === 'root________') option.inactive = true
+    if (!state.ctxMenuRenderInact && option.inactive) return
+    return option
+  },
+
+  // 
+  // --- Tabs panel options ---
+  //
+  muteAllAudibleTabs: (state) => {
+    let panel = state.selected[0]
+    if (!panel || !panel.tabs) return
+
+    let tabs = panel.tabs.filter(t => t.audible).map(t => t.id)
+
+    let option = {
+      label: translate('menu.tabs_panel.mute_all_audible'),
+      icon: 'icon_mute',
+      action: 'muteTabs',
+      args: [tabs],
+    }
+    if (!tabs.length) option.inactive = true
+    if (!state.ctxMenuRenderInact && option.inactive) return
+    return option
+  },
+  closeTabsDuplicates: (state) => {
+    let panel = state.selected[0]
+    if (!panel || !panel.tabs) return
+
+    let tabs = panel.tabs.map(t => t.id)
+    let option = {
+      label: translate('menu.tabs_panel.dedup'),
+      icon: 'icon_dedup_tabs',
+      action: 'dedupTabs',
+      args: [tabs],
+    }
+    if (!tabs.length) option.inactive = true
+    if (!state.ctxMenuRenderInact && option.inactive) return
+    return option
+  },
+  reloadTabs: (state) => {
+    let panel = state.selected[0]
+    if (!panel || !panel.tabs) return
+
+    let tabs = panel.tabs.map(t => t.id)
+    let option = {
+      label: translate('menu.tabs_panel.reload'),
+      icon: 'icon_reload',
+      action: 'reloadTabs',
+      args: [tabs],
+    }
+    if (!tabs.length) option.inactive = true
+    if (!state.ctxMenuRenderInact && option.inactive) return
+    return option
+  },
+  discardTabs: (state) => {
+    let panel = state.selected[0]
+    if (!panel || !panel.tabs) return
+
+    let tabs = panel.tabs.map(t => t.id)
+    let option = {
+      label: translate('menu.tabs_panel.discard'),
+      icon: 'icon_discard',
+      action: 'discardTabs',
+      args: [tabs],
+    }
+    if (!tabs.length) option.inactive = true
+    if (!state.ctxMenuRenderInact && option.inactive) return
+    return option
+  },
+  closeTabs: (state) => {
+    let panel = state.selected[0]
+    if (!panel || !panel.tabs) return
+
+    let tabs = panel.tabs.map(t => t.id)
+    let option = {
+      label: translate('menu.tabs_panel.close'),
+      icon: 'icon_close',
+      action: 'removeTabs',
+      args: [tabs],
+    }
+    if (!tabs.length) option.inactive = true
+    if (!state.ctxMenuRenderInact && option.inactive) return
+    return option
+  },
+
+  // 
+  // --- Bookmarks panel options ---
+  //
+  collapseAllFolders: (state) => {
+    let panel = state.selected[0]
+    if (!panel || !state.bookmarks.length) return
+
+    let option = {
+      label: translate('menu.bookmark.collapse_all'),
+      icon: 'icon_collapse_all',
+      action: 'collapseAllBookmarks',
+      args: [],
+    }
+    if (!state.ctxMenuRenderInact && option.inactive) return
+    return option
+  },
+
+  //
+  // --- Common panels ---
+  //
+  openPanelConfig: (state) => {
+    let panel = state.selected[0]
+    if (!panel) return
+
+    let option = {
+      label: translate('menu.common.conf'),
+      icon: 'icon_panel_config',
+      action: 'openSettings',
+      args: ['settings_panels.' + panel.cookieStoreId],
+    }
     if (!state.ctxMenuRenderInact && option.inactive) return
     return option
   },

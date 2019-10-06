@@ -190,7 +190,7 @@ function resetSelection() {
     for (let id of this.state.selected) {
       this.state.tabsMap[id].sel = false
     }
-  } else {
+  } else if (typeof id === 'string') {
     for (let id of this.state.selected) {
       this.state.bookmarksMap[id].sel = false
     }

@@ -231,7 +231,7 @@ export default {
         if (!State.ctxMenuNative && !this.longClickActionRightFired) {
           Actions.selectItem(this.tab.id)
         }
-        Actions.openCtxMenu(e.clientX, e.clientY)
+        Actions.openCtxMenu('tab', e.clientX, e.clientY)
       }
     },
 
@@ -259,7 +259,7 @@ export default {
 
       if (!State.selected.length) Actions.selectItem(this.tab.id)
 
-      Actions.openCtxMenu()
+      Actions.openCtxMenu('tab')
     },
 
     /**
