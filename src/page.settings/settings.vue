@@ -501,6 +501,8 @@
         .size ~{{info.sizeStr}}
         .del-btn(@click="deleteStoredData(info.name)") {{t('settings.storage_delete_prop')}}
         .open-btn(@click="openStoredData(info.name)") {{t('settings.storage_open_prop')}}
+    .ctrls
+      .btn(@click="calcStorageInfo") {{t('settings.update_storage_info')}}
 
   section(ref="settings_help")
     h2 {{t('settings.help_title')}}

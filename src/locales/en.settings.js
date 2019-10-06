@@ -235,6 +235,7 @@ export default {
   'settings.storage_delete_prop': { message: 'delete' },
   'settings.storage_open_prop': { message: 'open' },
   'settings.storage_delete_confirm': { message: 'Delete property ' },
+  'settings.update_storage_info': { message: 'Update' },
 
   // --- Help
   'settings.help_title': { message: 'Help' },

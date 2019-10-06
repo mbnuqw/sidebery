@@ -259,6 +259,7 @@ export default {
   'settings.storage_delete_prop': { message: 'удалить' },
   'settings.storage_open_prop': { message: 'открыть' },
   'settings.storage_delete_confirm': { message: 'Удалить поле ' },
+  'settings.update_storage_info': { message: 'Обновить' },
 
   // --- Help
   'settings.help_title': { message: 'Помощь' },
