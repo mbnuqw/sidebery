@@ -169,8 +169,27 @@ body[data-layout="list"] .tab[data-discarded="true"] .bg
   border-radius: 3px
   overflow: hidden
   filter: drop-shadow(0 0 1px #00000032) drop-shadow(0 0 8px #00000032)
+  transition: opacity var(--d-norm)
 body[data-layout="grid"] .fav
   pos(auto, 12px, b: 12px)
+.tab[data-fav="false"] .fav
+  opacity: 0
+
+.fav-placeholder
+  box(absolute)
+  pos(16px, same)
+  size(16px, same)
+  filter: drop-shadow(0 0 1px #00000032) drop-shadow(0 0 8px #00000032)
+  transition: opacity var(--d-norm)
+  > svg
+    box(absolute)
+    pos(0, 0)
+    size(100%, same)
+    fill: var(--favicons-placehoder-bg)
+body[data-layout="grid"] .fav-placeholder
+  pos(auto, 12px, b: 12px)
+.tab[data-fav="true"] .fav-placeholder
+  opacity: 0
 
 .info
   box(relative)

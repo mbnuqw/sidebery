@@ -2,6 +2,11 @@ import { DEFAULT_SETTINGS, CUSTOM_CSS_VARS } from '../defaults'
 import { noiseBg } from '../noise-bg'
 import Utils from '../utils'
 
+const PNG_RE = /(\.png)([?#].*)?$/i
+const JPG_RE = /(\.jpe?g)([?#].*)?$/i
+const PDF_RE = /(\.pdf)([?#].*)?$/i
+const GROUP_BASE = browser.runtime.getURL('group/group.html')
+
 const tabsBoxEl = document.getElementById('tabs')
 let newTabEl, groupTabId, groupTabIndex, tabs = []
 let groupLen, groupParentId
@@ -160,6 +165,7 @@ function onTabUpdated(msg) {
 
   tab.el.setAttribute('data-status', msg.status)
   if (msg.status === 'complete') {
+    tab.el.setAttribute('data-fav', !!msg.favIconUrl)
     tab.favEl.style.backgroundImage = `url(${msg.favIconUrl})`
     loadScreenshot(tab)
   }
@@ -170,6 +176,8 @@ function onTabUpdated(msg) {
   if (msg.url.startsWith('moz-ext')) tab.urlEl.innerText = ''
   else tab.urlEl.innerText = msg.url
   tab.url = msg.url
+
+  setSvgId(tab.favPlaceholderSvgEl, getFavPlaceholder(msg.url))
 
   tab.el.setAttribute('data-discarded', msg.discarded)
   tab.discarded = msg.discarded
@@ -218,6 +226,7 @@ function createTabEl(info, clickHandler) {
   info.el.title = info.url
   info.el.setAttribute('data-lvl', info.lvl)
   info.el.setAttribute('data-discarded', info.discarded)
+  info.el.setAttribute('data-fav', !!info.favIconUrl)
 
   info.bgEl = document.createElement('div')
   info.bgEl.classList.add('bg')
@@ -227,6 +236,13 @@ function createTabEl(info, clickHandler) {
   info.favEl.classList.add('fav')
   info.favEl.style.backgroundImage = `url(${info.favIconUrl})`
   info.el.appendChild(info.favEl)
+
+  info.favPlaceholderEl = document.createElement('div')
+  info.favPlaceholderEl.classList.add('fav-placeholder')
+  let iconId = getFavPlaceholder(info.url)
+  info.favPlaceholderSvgEl = createSvgIcon(iconId)
+  info.favPlaceholderEl.appendChild(info.favPlaceholderSvgEl)
+  info.el.appendChild(info.favPlaceholderEl)
 
   let infoEl = document.createElement('div')
   infoEl.classList.add('info')
@@ -288,17 +304,50 @@ function createButton(svgId, className, clickHandler) {
   let btnEl = document.createElement('div')
   btnEl.classList.add('btn', className)
 
+  let svgEl = createSvgIcon(svgId)
+  btnEl.appendChild(svgEl)
+
+  btnEl.addEventListener('click', clickHandler)
+
+  return btnEl
+}
+
+/**
+ * Create svg element with use tag
+ */
+function createSvgIcon(svgId) {
   let svgEl = document.createElementNS('http://www.w3.org/2000/svg', 'svg')  
   svgEl.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:xlink', 'http://www.w3.org/1999/xlink')
-  btnEl.appendChild(svgEl)
 
   let useEl = document.createElementNS('http://www.w3.org/2000/svg', 'use')  
   useEl.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', '#' + svgId)
   svgEl.appendChild(useEl)
 
-  btnEl.addEventListener('click', clickHandler)
+  return svgEl
+}
 
-  return btnEl
+/**
+ * Set id for use tag
+ */
+function setSvgId(svgEl, svgId) {
+  let useEl = svgEl.childNodes[0]
+  if (!useEl) return
+  useEl.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', '#' + svgId)
+}
+
+/**
+ * Get favicon placeholder for given url
+ */
+function getFavPlaceholder(url) {
+  if (url.startsWith(GROUP_BASE)) return 'icon_group'
+  if (PNG_RE.test(url)) return 'icon_png'
+  if (JPG_RE.test(url)) return 'icon_jpg'
+  if (PDF_RE.test(url)) return 'icon_pdf'
+  if (url.startsWith('file:')) return 'icon_local_file'
+  if (url.startsWith('about:preferences')) return 'icon_pref'
+  if (url.startsWith('about:addons')) return 'icon_addons'
+  if (url.startsWith('about:performance')) return 'icon_perf'
+  return 'icon_ff'
 }
 
 /**
@@ -344,12 +393,14 @@ function updateTab(oldTab, newTab) {
   if (urlChanged) {
     if (newTab.url.startsWith('moz-ext')) oldTab.urlEl.innerText = ''
     else oldTab.urlEl.innerText = newTab.url
+    setSvgId(oldTab.favPlaceholderSvgEl, getFavPlaceholder(newTab.url))
   }
   if (oldTab.lvl !== newTab.lvl) oldTab.el.setAttribute('data-lvl', newTab.lvl)
   if (oldTab.discarded !== newTab.discarded) {
     oldTab.el.setAttribute('data-discarded', newTab.discarded)
   }
   if (oldTab.favIconUrl !== newTab.favIconUrl) {
+    oldTab.el.setAttribute('data-fav', !!newTab.favIconUrl)
     oldTab.favEl.style.backgroundImage = `url(${newTab.favIconUrl})`
   }
 
