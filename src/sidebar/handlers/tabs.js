@@ -77,11 +77,22 @@ function onTabCreated(tab) {
     } else {
       let parent = this.state.tabsMap[tab.openerTabId]
       if (parent && parent.cookieStoreId === tab.cookieStoreId) {
-        tab.parentId = tab.openerTabId
-        const start = panel.startIndex
-        this.actions.updateTabsTree(start, tab.index + 1)
-        if (this.state.autoFoldTabs && !parent.folded) {
-          this.actions.expTabsBranch(tab.parentId)
+        let insideBranch = false
+        for (let t, i = parent.index + 1; i < this.state.tabs.length; i++) {
+          t = this.state.tabs[i]
+          insideBranch = t.id === tab.id
+          if (insideBranch) break
+          if (t.lvl <= parent.lvl) break
+        }
+        if (insideBranch) {
+          tab.parentId = tab.openerTabId
+          const start = panel.startIndex
+          this.actions.updateTabsTree(start, tab.index + 1)
+          if (this.state.autoFoldTabs && !parent.folded) {
+            this.actions.expTabsBranch(tab.parentId)
+          }
+        } else {
+          browser.tabs.update(tab.id, { openerTabId: tab.id })
         }
       }
     }
