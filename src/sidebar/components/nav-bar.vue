@@ -13,6 +13,7 @@
       :data-color="btn.color"
       :title="btn.tooltip || getTooltip(i)"
       @click="onNavClick(i, btn.type)"
+      @drop="onPanelDrop($event, btn)"
       @dragenter="onNavDragEnter(i)"
       @dragleave="onNavDragLeave(i)"
       @contextmenu.stop="onNavCtxMenu($event, i)"
@@ -258,6 +259,23 @@ export default {
       if (i >= this.nav.length - 1) return
       if (this.navDragEnterTimeout && this.navDragEnterIndex === i) {
         clearTimeout(this.navDragEnterTimeout)
+      }
+    },
+
+    /**
+     * Drop to panel's button
+     */
+    onPanelDrop(event, panel) {
+      event.stopPropagation()
+      event.preventDefault()
+      if (!State.dragNodes || !State.dragNodes.length) return
+      let firstNode = State.dragNodes[0]
+      let ids = State.dragNodes.map(n => n.id)
+      if (typeof firstNode.id === 'number') {
+        Actions.moveTabsToCtx(ids, panel.cookieStoreId)
+      }
+      if (typeof firstNode.id === 'string') {
+        Actions.openBookmarksInPanel(ids, panel.cookieStoreId)
       }
     },
 
