@@ -62,6 +62,7 @@ async function openCtxMenu(type, x, y) {
   }
 
   opts = normalizeMenu(opts, this.state.ctxMenuNative)
+  if (!opts.length) return
 
   if (this.state.ctxMenuNative) {
     let parentId, parentName
