@@ -8,6 +8,7 @@
     @click="clickHandler(panel.cookieStoreId)"
     @dragenter="onPanelDragEnter(panel, i)"
     @drop="onPanelDrop($event, panel, i)"
+    @contextmenu.stop="onNavCtxMenu($event, panel.index)"
     @mousedown.right="onPanelRightClick(panel)"
     @mouseup.right="onNavRightMouseup($event, panel.index)")
     svg: use(:xlink:href="'#' + panel.icon")
@@ -79,6 +80,41 @@ export default {
 
       State.selected = [panel]
       Actions.openCtxMenu(type, e.clientX, e.clientY)
+    },
+
+    /**
+     * Handle context menu event
+     */
+    onNavCtxMenu(e, i) {
+      if (
+        !State.ctxMenuNative ||
+        e.ctrlKey ||
+        e.shiftKey
+      ) {
+        e.stopPropagation()
+        e.preventDefault()
+        return
+      }
+
+      let panel = State.panels[i]
+      if (!panel) return
+
+      if (State.ctxMenuBlockTimeout) {
+        e.stopPropagation()
+        e.preventDefault()
+        return
+      }
+
+      let nativeCtx = { showDefaults: false }
+      browser.menus.overrideContext(nativeCtx)
+
+      let type
+      if (panel.type === 'bookmarks') type = 'bookmarksPanel'
+      else if (panel.type === 'default') type = 'tabsPanel'
+      else if (panel.type === 'ctx') type = 'tabsPanel'
+      if (!State.selected.length) State.selected = [panel]
+
+      Actions.openCtxMenu(type)
     },
 
     onCreateTabInHiddenPanel() {
