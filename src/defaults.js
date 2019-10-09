@@ -48,6 +48,7 @@ export const DEFAULT_SETTINGS = {
   groupLayout: 'grid',
 
   // Tabs
+  activateOnMouseUp: false,
   activateLastTabOnPanelSwitching: true,
   skipEmptyPanels: false,
   showTabRmBtn: true,

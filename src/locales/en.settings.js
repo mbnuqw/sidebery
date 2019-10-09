@@ -72,6 +72,7 @@ export default {
 
   // --- Tabs
   'settings.tabs_title': { message: 'Tabs' },
+  'settings.activate_on_mouseup': { message: 'Activate tab on mouse button release' },
   'settings.activate_last_tab_on_panel_switching': {
     message: 'Activate last active tab on panels switching',
   },

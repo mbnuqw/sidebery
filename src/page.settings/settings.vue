@@ -119,6 +119,11 @@
   section(ref="settings_tabs")
     h2 {{t('settings.tabs_title')}}
     toggle-field(
+      label="settings.activate_on_mouseup"
+      :inline="true"
+      :value="$store.state.activateOnMouseUp"
+      @input="setOpt('activateOnMouseUp', $event)")
+    toggle-field(
       label="settings.activate_last_tab_on_panel_switching"
       :inline="true"
       :value="$store.state.activateLastTabOnPanelSwitching"

@@ -72,6 +72,7 @@ export default {
 
   // --- Tabs
   'settings.tabs_title': { message: 'Табы' },
+  'settings.activate_on_mouseup': { message: 'Активировать таб при отпускании кнопки мыши' },
   'settings.activate_last_tab_on_panel_switching': {
     message: 'Активировать последний активный таб при переключении панелей',
   },
