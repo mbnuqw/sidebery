@@ -188,6 +188,10 @@ export default {
       if (State.tabsPanelLeftClickAction !== 'none') return
       const da = State.tabsPanelDoubleClickAction
       if (da === 'tab') return this.createTab()
+      if (da === 'collapse') {
+        let panel = State.panels[this.index]
+        if (panel) return Actions.foldAllInactiveBranches(panel.tabs)
+      }
     },
 
     onWheel(e) {

@@ -885,7 +885,7 @@ async function toggleBranch(tabId) {
 /**
  * Collaplse all inactive branches.
  */
-function foldAllInactiveBranches(tabs) {
+function foldAllInactiveBranches(tabs = []) {
   let isBranchActive = false
   for (let i = tabs.length; i--; ) {
     let tab = tabs[i]

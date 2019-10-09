@@ -203,6 +203,7 @@ export default {
   'settings.tabs_panel_action_expand': { message: 'expand/fold' },
   'settings.tabs_panel_action_parent': { message: 'activate parent tab' },
   'settings.tabs_panel_action_menu': { message: 'show menu' },
+  'settings.tabs_panel_action_collapse': { message: 'collapse inactive branches' },
   'settings.tabs_panel_action_none': { message: 'none' },
 
   // --- Keybindings

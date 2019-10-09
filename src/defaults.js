@@ -10,7 +10,7 @@ export const SETTINGS_OPTIONS = {
   tabLongLeftClickOpts: ['reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'new_after', 'none'],
   tabLongRightClickOpts: ['reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'new_after', 'none'],
   tabsPanelLeftClickActionOpts: ['prev', 'expand', 'parent', 'none'],
-  tabsPanelDoubleClickActionOpts: ['tab', 'none'],
+  tabsPanelDoubleClickActionOpts: ['collapse', 'tab', 'none'],
   tabsPanelRightClickActionOpts: ['next', 'expand', 'parent', 'menu', 'none'],
   activateAfterClosingOpts: ['prev_act', 'next', 'prev', 'none'],
   activateAfterClosingPrevRuleOpts: ['tree', 'visible', 'any'],

@@ -227,6 +227,7 @@ export default {
   'settings.tabs_panel_action_expand': { message: 'развернуть/свернуть' },
   'settings.tabs_panel_action_parent': { message: 'перейти к родительскому табу' },
   'settings.tabs_panel_action_menu': { message: 'открыть меню' },
+  'settings.tabs_panel_action_collapse': { message: 'свернуть неактивные ветки' },
   'settings.tabs_panel_action_none': { message: 'выкл' },
 
   // --- Keybindings
