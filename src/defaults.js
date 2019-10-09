@@ -297,6 +297,7 @@ export const DEFAULT_TABS_PANEL_MENU = [
   'muteAllAudibleTabs',
   'reloadTabs',
   'discardTabs',
+  'collapseInactiveBranches',
   'closeTabsDuplicates',
   'closeTabs',
   'separator',
@@ -708,6 +709,21 @@ export const MENU_OPTIONS = {
       args: [tabs],
     }
     if (!tabs.length) option.inactive = true
+    if (!state.ctxMenuRenderInact && option.inactive) return
+    return option
+  },
+  collapseInactiveBranches: (state) => {
+    let panel = state.selected[0]
+    if (!panel || !panel.tabs) return
+    if (!state.tabsTree) return
+
+    let option = {
+      label: translate('menu.tabs_panel.collapse_inact_branches'),
+      icon: 'icon_collapse_all',
+      action: 'foldAllInactiveBranches',
+      args: [panel.tabs],
+    }
+    if (panel.tabs.length < 3) option.inactive = true
     if (!state.ctxMenuRenderInact && option.inactive) return
     return option
   },

@@ -883,6 +883,25 @@ async function toggleBranch(tabId) {
 }
 
 /**
+ * Collaplse all inactive branches.
+ */
+function foldAllInactiveBranches(tabs) {
+  let isBranchActive = false
+  for (let i = tabs.length; i--; ) {
+    let tab = tabs[i]
+    if (!tab) break
+    if (tab.active && (tab.lvl > 0 || tab.isParent)) isBranchActive = true
+    if (tab.isParent && tab.parentId === -1) {
+      if (isBranchActive) {
+        isBranchActive = false
+        continue
+      }
+      this.actions.foldTabsBranch(tab.id)
+    }
+  }
+}
+
+/**
  * Drop to tabs panel
  */
 async function dropToTabs(event, dropIndex, dropParent, nodes, pin) {
@@ -1481,6 +1500,7 @@ export default {
   foldTabsBranch,
   expTabsBranch,
   toggleBranch,
+  foldAllInactiveBranches,
 
   dropToTabs,
   moveDroppedNodes,

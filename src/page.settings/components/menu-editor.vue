@@ -243,6 +243,7 @@ const TABS_PANEL_MENU_OPTS = {
   'undoRmTab': 'menu.tab.undo',
   'reloadTabs': 'menu.tabs_panel.reload',
   'discardTabs': 'menu.tabs_panel.discard',
+  'collapseInactiveBranches': 'menu.tabs_panel.collapse_inact_branches',
   'closeTabs': 'menu.tabs_panel.close',
   'openPanelConfig': 'menu.common.conf',
 }

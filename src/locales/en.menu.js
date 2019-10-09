@@ -46,6 +46,7 @@ export default {
   'menu.tabs_panel.reload': { message: 'Reload tabs' },
   'menu.tabs_panel.discard': { message: 'Discard tabs' },
   'menu.tabs_panel.close': { message: 'Close tabs' },
+  'menu.tabs_panel.collapse_inact_branches': { message: 'Collapse inactive branches' },
 
   // --- Common ---
   'menu.common.conf': { message: 'Configure panel' },
