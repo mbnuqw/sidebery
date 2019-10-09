@@ -49,7 +49,7 @@
       .btn(@click="resetTabsMenu") {{t('menu.editor.reset')}}
       .btn(@click="createSeparator('tabs')") {{t('menu.editor.create_separator')}}
 
-  section(ref="menu_editor_tabs_panel" @click.stop="" @wheel="moveSelected($event, 'tabs_panel')")
+  section(ref="menu_editor_tabs_panel" @click.stop="" @wheel="moveSelected($event, 'tabsPanel')")
     h2 {{t('menu.editor.tabs_panel_title')}}
 
     .menu-group(v-for="(group, i) in tabsPanelMenu" :data-type="group.type")
@@ -146,7 +146,7 @@
       .btn(@click="resetBookmarksMenu") {{t('menu.editor.reset')}}
       .btn(@click="createSeparator('bookmarks')") {{t('menu.editor.create_separator')}}
   
-  section(ref="menu_editor_bookmarks_panel" @click.stop="" @wheel="moveSelected($event, 'bookmarks_panel')")
+  section(ref="menu_editor_bookmarks_panel" @click.stop="" @wheel="moveSelected($event, 'bookmarksPanel')")
     h2 {{t('menu.editor.bookmarks_panel_title')}}
 
     .menu-group(v-for="(group, i) in bookmarksPanelMenu" :data-type="group.type")
