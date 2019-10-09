@@ -5,7 +5,7 @@ export default {
   'settings.nav_settings': { message: 'Настройки' },
   'settings.nav_settings_general': { message: 'Основные' },
   'settings.nav_settings_menu': { message: 'Меню' },
-  'settings.nav_settings_nav': { message: 'Навигация' },
+  'settings.nav_settings_nav': { message: 'Панель навигации' },
   'settings.nav_settings_group': { message: 'Групповая страница' },
   'settings.nav_settings_panels': { message: 'Панели' },
   'settings.nav_settings_tabs': { message: 'Табы' },
@@ -48,7 +48,7 @@ export default {
   'settings.ctx_menu_editor': { message: 'Редактировать меню' },
 
   // --- Navigation bar
-  'settings.nav_title': { message: 'Навигация' },
+  'settings.nav_title': { message: 'Панель навигации' },
   'settings.nav_bar_inline': { message: 'В одну строку' },
   'settings.hide_settings_btn': { message: 'Скрывать кнопку "Настройки"' },
   'settings.hide_add_btn': { message: 'Скрывать кнопку "Новый контейнер"' },
