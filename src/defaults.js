@@ -773,6 +773,8 @@ export const RGB_COLORS = {
   red: '#ff613d',
   pink: '#ff4bda',
   purple: '#af51f5',
+  light: '#323232',
+  dark: '#cecece',
 }
 
 export const VALID_STORED_PROPS = [
