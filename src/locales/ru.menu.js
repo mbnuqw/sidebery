@@ -46,7 +46,7 @@ export default {
   'menu.tabs_panel.reload': { message: 'Перезагрузить табы' },
   'menu.tabs_panel.discard': { message: 'Выгрузить табы' },
   'menu.tabs_panel.close': { message: 'Закрыть табы' },
-  'menu.tabs_panel.collapse_inact_branches': { message: 'свернуть неактивные ветки' },
+  'menu.tabs_panel.collapse_inact_branches': { message: 'Свернуть неактивные ветки' },
 
   // --- Common ---
   'menu.common.conf': { message: 'Настройки панели' },
