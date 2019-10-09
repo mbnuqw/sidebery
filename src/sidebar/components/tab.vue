@@ -352,9 +352,10 @@ export default {
       if (this.tab.invisible) return
       if (this.dragEnterTimeout) clearTimeout(this.dragEnterTimeout)
       this.dragEnterTimeout = setTimeout(() => {
+        if (!State.dragNodes) return
         browser.tabs.update(this.tab.id, { active: true })
         this.dragEnterTimeout = null
-      }, 640)
+      }, 750)
     },
 
     /**
