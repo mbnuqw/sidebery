@@ -142,13 +142,11 @@ function updateActiveView() {
       if (el) el.scrollIntoView(scrollSectionConf)
     }
 
-    if (arg) {
-      if (hash === 'settings_panels') {
+    if (arg && hash === 'settings_panels') {
+      setTimeout(() => {
         let panel = this.state.panels.find(p => p.cookieStoreId === arg)
-        if (panel) {
-          this.state.selectedPanel = panel
-        }
-      }
+        if (panel) this.state.selectedPanel = panel
+      }, 120)
     }
   }, this.state.activeView === 'Settings' ? 0 : 250)
 
