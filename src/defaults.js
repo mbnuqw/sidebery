@@ -281,13 +281,13 @@ export const DEFAULT_TABS_MENU = [
     { name: translate('menu.tab.reopen_in_sub_menu_name') },
     'moveToCtr',
   ],
-  'separator-4',
+  'separator-2',
   'pin',
   'discard',
-  'separator-2',
+  'separator-3',
   'group',
   'flatten',
-  'separator-3',
+  'separator-4',
   'clearCookies',
   'close',
 ]
@@ -299,11 +299,11 @@ export const DEFAULT_BOOKMARKS_MENU = [
     'openInNewPrivWin',
     'openInCtr'
   ],
-  'separator-2',
+  'separator-5',
   'createBookmark',
   'createFolder',
   'createSeparator',
-  'separator-1',
+  'separator-6',
   'edit',
   'delete',
 ]
@@ -315,17 +315,17 @@ export const DEFAULT_TABS_PANEL_MENU = [
     'reloadTabs',
     'discardTabs',
   ],
-  'separator-2',
+  'separator-7',
   'collapseInactiveBranches',
   'closeTabsDuplicates',
   'closeTabs',
-  'separator-1',
+  'separator-8',
   'openPanelConfig',
 ]
 
 export const DEFAULT_BOOKMARKS_PANEL_MENU = [
   'collapseAllFolders',
-  'separator-1',
+  'separator-9',
   'openPanelConfig',
 ]
 
