@@ -153,8 +153,8 @@ function createNativeOption(ctx, option, parentId, parentName) {
   let icon
   if (option.icon) {
     let rgbColor = RGB_COLORS[option.color]
-    let alpha = option.inactive ? '24' : '64'
-    if (!rgbColor) rgbColor = RGB_COLORS[this.state.style] + alpha
+    let alpha = option.inactive ? '64' : 'ff'
+    if (!rgbColor) rgbColor = '#686868' + alpha
 
     let s = xmlSerializer.serializeToString(document.getElementById(option.icon))
     s = '<svg fill="' + rgbColor + '" ' + s.slice(5)
