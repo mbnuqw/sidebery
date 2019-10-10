@@ -215,7 +215,7 @@ export default {
   'settings.tab_action_duplicate': { message: 'дублировать' },
   'settings.tab_action_pin': { message: 'закрепить' },
   'settings.tab_action_mute': { message: 'выключить звук' },
-  'settings.tab_action_clear_cookies': { message: 'удалить куки' },
+  'settings.tab_action_clear_cookies': { message: 'удалить cookies' },
   'settings.tab_action_exp': { message: 'развернуть' },
   'settings.tab_action_new_after': { message: 'новый таб' },
   'settings.tab_action_none': { message: 'выкл' },

@@ -32,7 +32,7 @@ export default {
   'menu.tab.unpin': { message: 'Открепить' },
   'menu.tab.mute': { message: 'Выключить звук' },
   'menu.tab.unmute': { message: 'Включить звук' },
-  'menu.tab.clear_cookies': { message: 'Удалить куки' },
+  'menu.tab.clear_cookies': { message: 'Удалить cookies' },
   'menu.tab.discard': { message: 'Выгрузить' },
   'menu.tab.bookmark': { message: 'В закладки' },
   'menu.tab.bookmarks': { message: 'В закладки' },
