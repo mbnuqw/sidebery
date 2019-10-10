@@ -252,7 +252,7 @@ export default {
   // --- Permissions
   'settings.permissions_title': { message: 'Разрешения' },
   'settings.all_urls_label': { message: 'Данные веб-сайтов:' },
-  'settings.all_urls_info': { message: 'Необходимо для:\n- Удаления cookies\n- Прокси' },
+  'settings.all_urls_info': { message: 'Необходимо для:\n- Удаления cookies\n- Прокси и url-правил контейнеров\n- Скриншотов на групповой странице и на панели выбора окна' },
   'settings.tab_hide_label': { message: 'Скрытие табов:' },
   'settings.tab_hide_info': { message: 'Необходимо для:\n- Скрывания табов неактивных панелей\n- Скрывания свернутых табов' },
 
