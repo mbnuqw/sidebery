@@ -93,6 +93,8 @@ Move mouse cursor to panel's icon.
 
 ### userChrome.css
 
+> Note: Starting with Firefox 69 you have to enable toolkit.legacyUserProfileCustomizations.stylesheets in about:config.
+
 In 'Profile Directory' `(Menu > Help > Troubleshooting Information > Profile Directory)`
 create folder `chrome` with file `userChrome.css`:
 
