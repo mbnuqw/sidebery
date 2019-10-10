@@ -17,7 +17,6 @@
       :inline="true"
       :value="$store.state.ctxMenuNative"
       @input="setOpt('ctxMenuNative', $event)")
-    //- .separator
     select-field(
       label="settings.autoHide_ctx_menu"
       optLabel="settings.autoHide_ctx_menu_"
@@ -25,13 +24,11 @@
       :value="$store.state.autoHideCtxMenu"
       :opts="$store.state.autoHideCtxMenuOpts"
       @input="setOpt('autoHideCtxMenu', $event)")
-    //- .separator
     ToggleField.-last(
       label="settings.ctx_menu_render_inact"
       :inline="true"
       :value="$store.state.ctxMenuRenderInact"
       @input="setOpt('ctxMenuRenderInact', $event)")
-    //- .separator
     .ctrls
       .btn(@click="switchView('menu_editor')") {{t('settings.ctx_menu_editor')}}
 
@@ -42,32 +39,27 @@
       :inline="true"
       :value="$store.state.navBarInline"
       @input="setOpt('navBarInline', $event)")
-    //- .separator
     toggle-field(
       label="settings.hide_settings_btn"
       :inline="true"
       :value="$store.state.hideSettingsBtn"
       @input="setOpt('hideSettingsBtn', $event)")
-    //- .separator
     toggle-field(
       label="settings.nav_btn_count"
       :inline="true"
       :value="$store.state.navBtnCount"
       @input="setOpt('navBtnCount', $event)")
-    //- .separator
     toggle-field(
       label="settings.hide_empty_panels"
       :inline="true"
       :value="$store.state.hideEmptyPanels"
       @input="setOpt('hideEmptyPanels', $event)")
-    //- .separator
     select-field(
       label="settings.nav_mid_click"
       optLabel="settings.nav_mid_click_"
       :value="$store.state.navMidClickAction"
       :opts="$store.state.navMidClickActionOpts"
       @input="setOpt('navMidClickAction', $event)")
-    //- .separator
     toggle-field.-last(
       label="settings.nav_switch_panels_wheel"
       :inline="true"
@@ -76,7 +68,6 @@
 
   section(ref="settings_group")
     h2 {{t('settings.group_title')}}
-    //- .separator
     select-field.-last(
       label="settings.group_layout"
       optLabel="settings.group_layout_"
@@ -128,25 +119,21 @@
       :inline="true"
       :value="$store.state.activateLastTabOnPanelSwitching"
       @input="setOpt('activateLastTabOnPanelSwitching', $event)")
-    //- .separator
     toggle-field(
       label="settings.skip_empty_panels"
       :inline="true"
       :value="$store.state.skipEmptyPanels"
       @input="setOpt('skipEmptyPanels', $event)")
-    //- .separator
     toggle-field(
       label="settings.show_tab_rm_btn"
       :inline="true"
       :value="$store.state.showTabRmBtn"
       @input="setOpt('showTabRmBtn', $event)")
-    //- .separator
     toggle-field(
       label="settings.hide_inactive_panel_tabs"
       :inline="true"
       :value="$store.state.hideInact"
       @input="toggleHideInact")
-    //- .separator
     select-field(
       label="settings.activate_after_closing"
       optLabel="settings.activate_after_closing_"
@@ -154,7 +141,6 @@
       :opts="$store.state.activateAfterClosingOpts"
       @input="setOpt('activateAfterClosing', $event)")
     .sub-fields
-      //- .separator
       select-field(
         label="settings.activate_after_closing_prev_rule"
         optLabel="settings.activate_after_closing_rule_"
@@ -162,7 +148,6 @@
         :inactive="!activateAfterClosingNextOrPrev"
         :opts="$store.state.activateAfterClosingPrevRuleOpts"
         @input="setOpt('activateAfterClosingPrevRule', $event)")
-      //- .separator
       select-field.-last(
         label="settings.activate_after_closing_next_rule"
         optLabel="settings.activate_after_closing_rule_"
@@ -179,7 +164,6 @@
       :value="$store.state.pinnedTabsPosition"
       :opts="$store.state.pinnedTabsPositionOpts"
       @input="setOpt('pinnedTabsPosition', $event)")
-    //- .separator
     toggle-field.-last(
       label="settings.pinned_tabs_list"
       :inline="true"
@@ -194,14 +178,12 @@
       :inline="true"
       :value="$store.state.tabsTree"
       @input="setOpt('tabsTree', $event)")
-    //- .separator
     toggle-field(
       label="settings.group_on_open_layout"
       :inline="true"
       :inactive="!$store.state.tabsTree"
       :value="$store.state.groupOnOpen"
       @input="setOpt('groupOnOpen', $event)")
-    //- .separator
     select-field(
       label="settings.tabs_tree_limit"
       optLabel="settings.tabs_tree_limit_"
@@ -209,28 +191,24 @@
       :value="$store.state.tabsTreeLimit"
       :opts="$store.state.tabsTreeLimitOpts"
       @input="setOpt('tabsTreeLimit', $event)")
-    //- .separator
     toggle-field(
       label="settings.hide_folded_tabs"
       :inline="true"
       :inactive="!$store.state.tabsTree"
       :value="$store.state.hideFoldedTabs"
       @input="toggleHideFoldedTabs")
-    //- .separator
     toggle-field(
       label="settings.auto_fold_tabs"
       :inline="true"
       :inactive="!$store.state.tabsTree"
       :value="$store.state.autoFoldTabs"
       @input="setOpt('autoFoldTabs', $event)")
-    //- .separator
     toggle-field(
       label="settings.auto_exp_tabs"
       :inline="true"
       :inactive="!$store.state.tabsTree"
       :value="$store.state.autoExpandTabs"
       @input="setOpt('autoExpandTabs', $event)")
-    //- .separator
     select-field(
       label="settings.rm_child_tabs"
       optLabel="settings.rm_child_tabs_"
@@ -238,21 +216,18 @@
       :value="$store.state.rmChildTabs"
       :opts="$store.state.rmChildTabsOpts"
       @input="setOpt('rmChildTabs', $event)")
-    //- .separator
     toggle-field(
       label="settings.tabs_child_count"
       :inline="true"
       :inactive="!$store.state.tabsTree"
       :value="$store.state.tabsChildCount"
       @input="setOpt('tabsChildCount', $event)")
-    //- .separator
     toggle-field(
       label="settings.tabs_lvl_dots"
       :inline="true"
       :inactive="!$store.state.tabsTree"
       :value="$store.state.tabsLvlDots"
       @input="setOpt('tabsLvlDots', $event)")
-    //- .separator
     toggle-field(
       label="settings.discard_folded"
       :inline="true"
@@ -260,7 +235,6 @@
       :value="$store.state.discardFolded"
       @input="setOpt('discardFolded', $event)")
     .sub-fields
-      //- .separator
       num-field.-last(
         label="settings.discard_folded_delay"
         unitLabel="settings.discard_folded_delay_"
@@ -278,35 +252,30 @@
       :inline="true"
       :value="$store.state.bookmarksPanel"
       @input="setOpt('bookmarksPanel', $event)")
-    //- .separator
     toggle-field(
       label="settings.open_bookmark_new_tab"
       :inline="true"
       :inactive="!$store.state.bookmarksPanel"
       :value="$store.state.openBookmarkNewTab"
       @input="setOpt('openBookmarkNewTab', $event)")
-    //- .separator
     toggle-field(
       label="settings.auto_close_bookmarks"
       :inline="true"
       :inactive="!$store.state.bookmarksPanel"
       :value="$store.state.autoCloseBookmarks"
       @input="setOpt('autoCloseBookmarks', $event)")
-    //- .separator
     toggle-field(
       label="settings.auto_rm_other"
       :inline="true"
       :inactive="!$store.state.bookmarksPanel"
       :value="$store.state.autoRemoveOther"
       @input="setOpt('autoRemoveOther', $event)")
-    //- .separator
     toggle-field(
       label="settings.show_bookmark_len"
       :inline="true"
       :inactive="!$store.state.bookmarksPanel"
       :value="$store.state.showBookmarkLen"
       @input="setOpt('showBookmarkLen', $event)")
-    //- .separator
     toggle-field(
       label="settings.highlight_open_bookmarks"
       :inline="true"
@@ -314,7 +283,6 @@
       :value="$store.state.highlightOpenBookmarks"
       @input="setOpt('highlightOpenBookmarks', $event)")
     .sub-fields
-      //- .separator
       toggle-field.-last(
         label="settings.activate_open_bookmark_tab"
         :inline="true"
@@ -330,33 +298,28 @@
       :value="$store.state.fontSize"
       :opts="$store.state.fontSizeOpts"
       @input="setOpt('fontSize', $event)")
-    //- .separator
     toggle-field(
       label="settings.animations"
       :inline="true"
       :value="$store.state.animations"
       @input="setOpt('animations', $event)")
-    //- .separator
     toggle-field(
       label="settings.bg_noise"
       :inline="true"
       :value="$store.state.bgNoise"
       @input="setOpt('bgNoise', $event)")
-    //- .separator
     select-field(
       label="settings.theme"
       optLabel="settings.theme_"
       :value="$store.state.theme"
       :opts="$store.state.themeOpts"
       @input="setOpt('theme', $event)")
-    //- .separator
     select-field.-last(
       label="settings.switch_style"
       optLabel="settings.style_"
       :value="$store.state.style"
       :opts="$store.state.styleOpts"
       @input="setOpt('style', $event)")
-    //- .separator
     .ctrls
       .btn(@click="switchView('styles_editor')") {{t('settings.edit_styles')}}
 
@@ -367,7 +330,6 @@
       :inline="true"
       :value="$store.state.hScrollThroughPanels"
       @input="setOpt('hScrollThroughPanels', $event)")
-    //- .separator
     select-field(
       label="settings.scroll_through_tabs"
       optLabel="settings.scroll_through_tabs_"
@@ -375,49 +337,42 @@
       :opts="$store.state.scrollThroughTabsOpts"
       @input="setOpt('scrollThroughTabs', $event)")
     .sub-fields
-      //- .separator
       toggle-field(
         label="settings.scroll_through_visible_tabs"
         :inline="true"
         :value="$store.state.scrollThroughVisibleTabs"
         :inactive="!$store.state.tabsTree || $store.state.scrollThroughTabs === 'none'"
         @input="setOpt('scrollThroughVisibleTabs', $event)")
-      //- .separator
       toggle-field(
         label="settings.scroll_through_tabs_except_overflow"
         :inline="true"
         :value="$store.state.scrollThroughTabsExceptOverflow"
         :inactive="$store.state.scrollThroughTabs === 'none'"
         @input="setOpt('scrollThroughTabsExceptOverflow', $event)")
-    //- .separator
     select-field(
       label="settings.tab_double_click"
       optLabel="settings.tab_action_"
       :value="$store.state.tabDoubleClick"
       :opts="$store.state.tabDoubleClickOpts"
       @input="setOpt('tabDoubleClick', $event)")
-    //- .separator
     select-field(
       label="settings.tab_long_left_click"
       optLabel="settings.tab_action_"
       :value="$store.state.tabLongLeftClick"
       :opts="$store.state.tabLongLeftClickOpts"
       @input="setOpt('tabLongLeftClick', $event)")
-    //- .separator
     select-field(
       label="settings.tab_long_right_click"
       optLabel="settings.tab_action_"
       :value="$store.state.tabLongRightClick"
       :opts="$store.state.tabLongRightClickOpts"
       @input="setOpt('tabLongRightClick', $event)")
-    //- .separator
     select-field(
       label="settings.tabs_panel_left_click_action"
       optLabel="settings.tabs_panel_action_"
       :value="$store.state.tabsPanelLeftClickAction"
       :opts="$store.state.tabsPanelLeftClickActionOpts"
       @input="setOpt('tabsPanelLeftClickAction', $event)")
-    //- .separator
     select-field(
       label="settings.tabs_panel_double_click_action"
       optLabel="settings.tabs_panel_action_"
@@ -425,7 +380,6 @@
       :value="$store.state.tabsPanelDoubleClickAction"
       :opts="$store.state.tabsPanelDoubleClickActionOpts"
       @input="setOpt('tabsPanelDoubleClickAction', $event)")
-    //- .separator
     select-field.-last(
       label="settings.tabs_panel_right_click_action"
       optLabel="settings.tabs_panel_action_"
@@ -485,7 +439,6 @@
       :unit="$store.state.snapIntervalUnit"
       :unitOpts="$store.state.snapIntervalUnitOpts"
       @input="setOpt('snapInterval', $event[0]), setOpt('snapIntervalUnit', $event[1])")
-    //- .separator
     num-field(
       label="settings.snap_limit"
       unitLabel="settings.snap_limit_"
@@ -494,7 +447,6 @@
       :unit="$store.state.snapLimitUnit"
       :unitOpts="$store.state.snapLimitUnitOpts"
       @input="setOpt('snapLimit', $event[0]), setOpt('snapLimitUnit', $event[1])")
-    //- .separator
     .ctrls
       .btn(@click="switchView('snapshots')") {{t('settings.snapshots_view_label')}}
 

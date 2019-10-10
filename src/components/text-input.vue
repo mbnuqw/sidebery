@@ -110,11 +110,6 @@ export default {
 
     error() {
       this.wrongValueAnimation = true
-      // this.$el.classList.add('err')
-      // this.$el.classList.remove('err-animation')
-      // this.$el.offsetHeight
-      // this.$el.classList.add('err-animation')
-      // this.$el.classList.remove('err')
     },
 
     onAnimationEnd() {

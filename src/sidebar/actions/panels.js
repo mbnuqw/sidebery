@@ -435,27 +435,6 @@ function getActivePanel() {
   return Utils.cloneObject(this.state.panels[this.state.panelIndex])
 }
 
-// async function movePanel(id, step) {
-//   let index
-//   if (id === 'bookmarks') index = this.state.panels.findIndex(p => p.bookmarks)
-//   else index = this.state.panels.findIndex(p => p.cookieStoreId === id)
-
-//   if (index === -1) return
-//   if (index + step < 0) return
-//   if (index + step >= this.state.panels.length) return
-
-//   let panel = this.state.panels.splice(index, 1)[0]
-//   this.state.panels.splice(index + step, 0, panel)
-//   this.state.panelIndex = index + step
-//   for (let i = 0; i < this.state.panels.length; i++) {
-//     this.state.panels[i].index = i
-//   }
-
-//   await Actions.loadTabs(false)
-
-//   Actions.savePanels()
-// }
-
 export default {
   loadPanels,
   updatePanels,
@@ -472,5 +451,4 @@ export default {
   switchPanel,
   goToActiveTabPanel,
   getActivePanel,
-  // movePanel,
 }

@@ -115,7 +115,6 @@ function updateActiveView() {
 
     document.title = 'Sidebery / Menu Editor'
     this.state.activeView = 'MenuEditor'
-    // this.state.activeSection = 'menu_editor_tabs'
     this.state.highlightedField = ''
     return
   }
