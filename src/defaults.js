@@ -33,12 +33,11 @@ export const DEFAULT_SETTINGS = {
   // Context menu
   ctxMenuNative: false,
   autoHideCtxMenu: 'none',
-  ctxMenuRenderInact: false,
+  ctxMenuRenderInact: true,
 
   // Nav bar
   navBarInline: true,
   hideSettingsBtn: false,
-  hideAddBtn: false,
   navBtnCount: false,
   hideEmptyPanels: true,
   navMidClickAction: 'none',
@@ -62,7 +61,7 @@ export const DEFAULT_SETTINGS = {
   pinnedTabsList: false,
 
   // Tabs tree
-  tabsTree: false,
+  tabsTree: true,
   groupOnOpen: true,
   tabsTreeLimit: 'none',
   hideFoldedTabs: false,
@@ -109,7 +108,7 @@ export const DEFAULT_SETTINGS = {
   tabLongRightClick: 'none',
   tabsPanelLeftClickAction: 'none',
   tabsPanelDoubleClickAction: 'tab',
-  tabsPanelRightClickAction: 'none',
+  tabsPanelRightClickAction: 'menu',
 }
 
 export const CUSTOM_CSS_VARS = {
