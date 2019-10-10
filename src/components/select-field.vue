@@ -3,15 +3,16 @@
   :data-inline="inline"
   :data-inactive="inactive"
   @mousedown="switchOption")
-  .label {{t(label)}}
-  select-input(
-    :label="optLabel"
-    :value="value"
-    :opts="opts"
-    :noneOpt="noneOpt"
-    :color="color"
-    :icon="icon"
-    @input="select")
+  .body
+    .label {{t(label)}}
+    select-input(
+      :label="optLabel"
+      :value="value"
+      :opts="opts"
+      :noneOpt="noneOpt"
+      :color="color"
+      :icon="icon"
+      @input="select")
 </template>
 
 

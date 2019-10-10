@@ -21,6 +21,7 @@
   size(min-h: 42px)
   justify-content: space-between
   align-items: center
+  flex-wrap: wrap
   padding: 0 16px
   flex-shrink: 0
   cursor: pointer
@@ -57,6 +58,16 @@
   &[data-inactive]
     opacity: .3
 
+.ToggleField .body
+.SelectField .body
+.NumField .body
+.TextField .body
+  box(relative, flex)
+  size(100%)
+  justify-content: space-between
+  align-items: center
+  flex-wrap: nowrap
+
 // ---
 // -- Label
 // -
@@ -81,6 +92,7 @@
   padding: 0 0 8px 16px
   white-space: pre-wrap
   color: var(--info-fg)
+  -moz-user-select: text
 
 // ---
 // -- Input
