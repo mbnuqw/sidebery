@@ -72,9 +72,6 @@ __Switch between tabs__
 `alt+Up/Down` + `alt+space` - select tab and activate it  
 Scroll - (optional)  
 
-__Open dashboard of panel__  
-Right-click on panel's icon  
-
 __Expand/Fold parent tab__  
 Click on favicon of target tab.  
 
