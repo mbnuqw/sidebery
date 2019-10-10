@@ -1,5 +1,6 @@
 export default {
   // --- Bookmark
+  'menu.bookmark.open_in_sub_menu_name': { message: 'Открыть в' },
   'menu.bookmark.open_in_new_window': { message: 'Открыть в новом окне' },
   'menu.bookmark.open_in_new_priv_window': { message: 'Открыть в приватном окне' },
   'menu.bookmark.open_in_ctr_': { message: 'Открыть в контейнере...' },
@@ -16,12 +17,14 @@ export default {
 
   // --- Tab
   'menu.tab.undo': { message: 'Восстановить удаленный таб' },
+  'menu.tab.move_to_sub_menu_name': { message: 'Переместить в' },
   'menu.tab.move_to_new_window': { message: 'Переместить в новое окно' },
   'menu.tab.move_to_new_priv_window': { message: 'Переместить в приватное окно' },
   'menu.tab.move_to_another_window': { message: 'Переместить в другое окно' },
   'menu.tab.move_to_window_': { message: 'Переместить в окно...' },
   'menu.tab.reopen_in_priv_window': { message: 'Открыть в приватном окне' },
   'menu.tab.reopen_in_default_panel': { message: 'Открыть в стандартном контейнере' },
+  'menu.tab.reopen_in_sub_menu_name': { message: 'Открыть в' },
   'menu.tab.reopen_in_ctr_': { message: 'Открыть в контейнере...' },
   'menu.tab.reopen_in_': { message: 'Открыть в ' },
   'menu.tab.reopen_in_another_window': { message: 'Открыть в другом окне' },

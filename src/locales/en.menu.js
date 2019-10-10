@@ -1,5 +1,6 @@
 export default {
   // --- Bookmark
+  'menu.bookmark.open_in_sub_menu_name': { message: 'Open in' },
   'menu.bookmark.open_in_new_window': { message: 'Open in new window' },
   'menu.bookmark.open_in_new_priv_window': { message: 'Open in private window' },
   'menu.bookmark.open_in_ctr_': { message: 'Open in container...' },
@@ -16,12 +17,14 @@ export default {
 
   // --- Tab
   'menu.tab.undo': { message: 'Undo close tab' },
+  'menu.tab.move_to_sub_menu_name': { message: 'Move to' },
   'menu.tab.move_to_new_window': { message: 'Move to new window' },
   'menu.tab.move_to_new_priv_window': { message: 'Move to private window' },
   'menu.tab.move_to_another_window': { message: 'Move to another window' },
   'menu.tab.move_to_window_': { message: 'Move to window...' },
   'menu.tab.reopen_in_priv_window': { message: 'Reopen in private window' },
   'menu.tab.reopen_in_default_panel': { message: 'Reopen in default container' },
+  'menu.tab.reopen_in_sub_menu_name': { message: 'Reopen in' },
   'menu.tab.reopen_in_ctr_': { message: 'Reopen in container...' },
   'menu.tab.reopen_in_': { message: 'Reopen in ' },
   'menu.tab.reopen_in_another_window': { message: 'Reopen in another window' },

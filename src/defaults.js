@@ -269,45 +269,63 @@ export const DEFAULT_PANELS = [
 
 export const DEFAULT_TABS_MENU = [
   ['undoRmTab', 'mute', 'reload', 'bookmark'],
-  'moveToNewWin',
-  'moveToNewPrivWin',
-  'moveToAnotherWin',
-  'moveToWin',
-  'moveToCtr',
+  'separator-1',
+  [
+    { name: translate('menu.tab.move_to_sub_menu_name') },
+    'moveToNewWin',
+    'moveToNewPrivWin',
+    'moveToAnotherWin',
+    'moveToWin',
+  ],
+  [
+    { name: translate('menu.tab.reopen_in_sub_menu_name') },
+    'moveToCtr',
+  ],
+  'separator-4',
   'pin',
   'discard',
+  'separator-2',
   'group',
   'flatten',
+  'separator-3',
   'clearCookies',
   'close',
 ]
 
 export const DEFAULT_BOOKMARKS_MENU = [
-  'openInNewWin',
-  'openInNewPrivWin',
-  'openInCtr',
+  [
+    { name: translate('menu.bookmark.open_in_sub_menu_name') },
+    'openInNewWin',
+    'openInNewPrivWin',
+    'openInCtr'
+  ],
+  'separator-2',
   'createBookmark',
   'createFolder',
   'createSeparator',
+  'separator-1',
   'edit',
   'delete',
 ]
 
 export const DEFAULT_TABS_PANEL_MENU = [
-  'undoRmTab',
-  'muteAllAudibleTabs',
-  'reloadTabs',
-  'discardTabs',
+  [
+    'undoRmTab',
+    'muteAllAudibleTabs',
+    'reloadTabs',
+    'discardTabs',
+  ],
+  'separator-2',
   'collapseInactiveBranches',
   'closeTabsDuplicates',
   'closeTabs',
-  'separator',
+  'separator-1',
   'openPanelConfig',
 ]
 
 export const DEFAULT_BOOKMARKS_PANEL_MENU = [
   'collapseAllFolders',
-  'separator',
+  'separator-1',
   'openPanelConfig',
 ]
 

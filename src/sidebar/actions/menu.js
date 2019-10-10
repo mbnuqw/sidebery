@@ -122,7 +122,7 @@ function normalizeMenu(menu, isNative) {
     if (!group.options.length) return false
     if (group.options[0].name && group.options.length === 1) return false
     if (group.options.length === 1 && group.options[0] === 'separator') {
-      return false
+      return isNative
     }
     return true
   })
@@ -153,7 +153,8 @@ function createNativeOption(ctx, option, parentId, parentName) {
   let icon
   if (option.icon) {
     let rgbColor = RGB_COLORS[option.color]
-    if (!rgbColor) rgbColor = RGB_COLORS[this.state.style] + '64'
+    let alpha = option.inactive ? '24' : '64'
+    if (!rgbColor) rgbColor = RGB_COLORS[this.state.style] + alpha
 
     let s = xmlSerializer.serializeToString(document.getElementById(option.icon))
     s = '<svg fill="' + rgbColor + '" ' + s.slice(5)
