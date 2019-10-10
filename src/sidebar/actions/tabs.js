@@ -56,7 +56,10 @@ async function loadTabs(fresh = true) {
     const activePanelIsOk = activeTab.cookieStoreId === activePanel.cookieStoreId
     if (!activeTab.pinned && activePanelIsTabs && !activePanelIsOk) {
       const panel = this.state.panelsMap[activeTab.cookieStoreId]
-      if (panel) this.state.panelIndex = panel.index
+      if (panel) {
+        this.state.panelIndex = panel.index
+        this.state.lastPanelIndex = panel.index
+      }
     }
   }
 
