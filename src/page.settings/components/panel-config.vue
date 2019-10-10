@@ -151,7 +151,7 @@ const PROXY_HOST_RE = /^.{3,65536}$/
 const PROXY_PORT_RE = /^\d{2,5}$/
 
 export default {
-  name: 'ContainerDashboard',
+  name: 'PanelConfig',
 
   components: {
     TextInput,
@@ -371,7 +371,6 @@ export default {
         if (panel && panel.tabs && !panel.tabs.length) {
           await browser.tabs.create({
             windowId: State.windowId,
-            index: panel.startIndex,
             cookieStoreId: panel.cookieStoreId,
             active: true,
           })
