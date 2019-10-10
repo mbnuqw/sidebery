@@ -525,8 +525,6 @@
         href="https://github.com/mbnuqw/sidebery/issues/new/choose") {{t('settings.repo_bug')}}
       .btn.-warn(@click="resetSettings") {{t('settings.reset_settings')}}
 
-    //- .separator
-
     .ctrls
       .info(v-if="$store.state.osInfo") OS: {{$store.state.osInfo.os}}
       .info(v-if="$store.state.ffInfo") Firefox: {{$store.state.ffInfo.version}}
@@ -859,8 +857,10 @@ export default {
      * Reset settings
      */
     resetSettings() {
-      Actions.resetSettings()
-      Actions.saveSettings()
+      if (window.confirm(translate('settings.reset_confirm'))) {
+        Actions.resetSettings()
+        Actions.saveSettings()
+      }
     },
 
     /**

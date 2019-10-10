@@ -269,6 +269,7 @@ export default {
   'settings.repo_issue': { message: 'Создать github issue' },
   'settings.repo_bug': { message: 'Сообщить об ошибке' },
   'settings.reset_settings': { message: 'Сбросить настройки' },
+  'settings.reset_confirm': { message: 'Вы уверены, что хотите сбросить настройки?' },
   'settings.ref_rm': { message: 'Will be removed, open issue if you need this feature.' },
   'settings.help_exp_data': { message: 'Экспорт данных' },
   'settings.help_imp_data': { message: 'Импорт данных' },

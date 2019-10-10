@@ -245,6 +245,7 @@ export default {
   'settings.repo_issue': { message: 'Open issue' },
   'settings.repo_bug': { message: 'Report a bug' },
   'settings.reset_settings': { message: 'Reset settings' },
+  'settings.reset_confirm': { message: 'Are you sure you want to reset settings?' },
   'settings.ref_rm': { message: 'Will be removed, open issue if you need this feature.' },
   'settings.help_exp_data': { message: 'Export Data' },
   'settings.help_imp_data': { message: 'Import Data' },
