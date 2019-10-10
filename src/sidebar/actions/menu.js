@@ -7,17 +7,24 @@ const xmlSerializer = new XMLSerializer()
 /**
  * Open context menu
  */
-async function openCtxMenu(x, y) {
+async function openCtxMenu(type, x, y) {
   if (this.state.ctxMenuNative) browser.menus.removeAll()
   if (!this.state.selected.length) return
 
   let nodeType, options, opts = []
-  if (typeof this.state.selected[0] === 'number') {
+  if (type === 'tab') {
     nodeType = 'tab'
     options = this.state.tabsMenu
-  } else {
+  }
+  else if (type === 'bookmark') {
     nodeType = 'bookmark'
     options = this.state.bookmarksMenu
+  }
+  else if (type === 'tabsPanel') {
+    options = this.state.tabsPanelMenu
+  }
+  else if (type === 'bookmarksPanel') {
+    options = this.state.bookmarksPanelMenu
   }
 
   for (let optName of options) {
@@ -55,6 +62,7 @@ async function openCtxMenu(x, y) {
   }
 
   opts = normalizeMenu(opts, this.state.ctxMenuNative)
+  if (!opts.length) return
 
   if (this.state.ctxMenuNative) {
     let parentId, parentName
@@ -65,7 +73,7 @@ async function openCtxMenu(x, y) {
           parentName = opt.name
           continue
         }
-        createNativeOption(nodeType, opt, parentId, parentName)
+        this.actions.createNativeOption(nodeType, opt, parentId, parentName)
       }
       parentId = undefined
       parentName = undefined
@@ -114,7 +122,7 @@ function normalizeMenu(menu, isNative) {
     if (!group.options.length) return false
     if (group.options[0].name && group.options.length === 1) return false
     if (group.options.length === 1 && group.options[0] === 'separator') {
-      return false
+      return isNative
     }
     return true
   })
@@ -125,6 +133,7 @@ function normalizeMenu(menu, isNative) {
 }
 
 function createNativeOption(ctx, option, parentId, parentName) {
+  if (!ctx) ctx = 'all'
   if (option === 'separator') {
     browser.menus.create({
       type: 'separator',
@@ -136,15 +145,19 @@ function createNativeOption(ctx, option, parentId, parentName) {
 
   if (option instanceof Array) {
     for (let opt of option) {
-      createNativeOption(ctx, opt, parentId)
+      this.actions.createNativeOption(ctx, opt, parentId)
     }
     return
   }
 
   let icon
-  if (option.icon && RGB_COLORS[option.color]) {
+  if (option.icon) {
+    let rgbColor = RGB_COLORS[option.color]
+    let alpha = option.inactive ? '64' : 'ff'
+    if (!rgbColor) rgbColor = '#686868' + alpha
+
     let s = xmlSerializer.serializeToString(document.getElementById(option.icon))
-    s = '<svg fill="' + RGB_COLORS[option.color] + '" ' + s.slice(5)
+    s = '<svg fill="' + rgbColor + '" ' + s.slice(5)
     icon = 'data:image/svg+xml;base64,' + window.btoa(s)
   }
 
@@ -173,13 +186,14 @@ function createNativeOption(ctx, option, parentId, parentName) {
       if (!option.args) option.action()
       else option.action(...option.args)
     }
-    Actions.resetSelection()
+    this.actions.resetSelection()
   }
 
   browser.menus.create(optProps)
 }
 
 function createNativeSubMenuOption(ctx, title) {
+  if (!ctx) ctx = 'all'
   let optProps = {
     type: 'normal',
     contexts: [ctx],
@@ -204,4 +218,5 @@ export default {
 
   openCtxMenu,
   closeCtxMenu,
+  createNativeOption,
 }

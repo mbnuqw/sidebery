@@ -25,7 +25,7 @@ export default {
   'private_dashboard.title': { message: 'Приватные табы' },
 
   // --- Default tabs
-  'default_dashboard.title': { message: 'Табы' },
+  'default_dashboard.title': { message: 'Стандартные табы' },
   'default_dashboard.close_all_tabs': { message: 'Закрыть все табы' },
 
   // --- Container

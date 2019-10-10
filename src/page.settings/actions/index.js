@@ -1,5 +1,5 @@
-// import Utils from '../libs/utils'
-import Logs from '../../logs'
+import Utils from '../../utils'
+import { DEFAULT_PANELS } from '../../defaults'
 import Store from '../store'
 import State from '../store/state'
 import MenuActions from './menu'
@@ -42,13 +42,21 @@ async function loadPermissions(init) {
   this.state.permAllUrls = await browser.permissions.contains({ origins: ['<all_urls>'] })
   this.state.permTabHide = await browser.permissions.contains({ permissions: ['tabHide'] })
 
+  if (!this.state.permAllUrls) {
+    this.state.panels.map(c => {
+      if (c.proxified) c.proxified = false
+      if (c.proxy) c.proxy.type = 'direct'
+      if (c.includeHostsActive) c.includeHostsActive = false
+      if (c.excludeHostsActive) c.excludeHostsActive = false
+    })
+    if (!init) this.actions.savePanels()
+  }
+
   if (!this.state.permTabHide) {
     this.state.hideInact = false
     this.state.hideFoldedTabs = false
     if (!init) Actions.saveSettings()
   }
-
-  Logs.push('[INFO] Permissions loaded')
 }
 
 /**
@@ -56,6 +64,9 @@ async function loadPermissions(init) {
  */
 function updateActiveView() {
   let hash = location.hash ? location.hash.slice(1) : location.hash
+  let hashArg = hash.split('.')
+  hash = hashArg[0]
+  let arg = hashArg[1]
   let scrollHighlightConf = { behavior: 'smooth', block: 'center' }
   let scrollSectionConf = { behavior: 'smooth', block: 'start' }
 
@@ -104,7 +115,6 @@ function updateActiveView() {
 
     document.title = 'Sidebery / Menu Editor'
     this.state.activeView = 'MenuEditor'
-    // this.state.activeSection = 'menu_editor_tabs'
     this.state.highlightedField = ''
     return
   }
@@ -130,10 +140,97 @@ function updateActiveView() {
       let el = this.state.settingsRefs[hash]
       if (el) el.scrollIntoView(scrollSectionConf)
     }
+
+    if (arg && hash === 'settings_panels') {
+      setTimeout(() => {
+        let panel = this.state.panels.find(p => p.cookieStoreId === arg)
+        if (panel) this.state.selectedPanel = panel
+      }, 120)
+    }
   }, this.state.activeView === 'Settings' ? 0 : 250)
 
   document.title = 'Sidebery / Settings'
   this.state.activeView = 'Settings'
+}
+
+/**
+ * Load panels
+ */
+async function loadPanels() {
+  let ans = await browser.storage.local.get({
+    panels: Utils.cloneArray(DEFAULT_PANELS)
+  })
+
+  if (ans && ans.panels) {
+    this.state.panels = ans.panels
+  }
+}
+
+/**
+ * Clean up panels info and run savePanels action in background
+ */
+async function savePanels() {
+  const output = []
+  for (let panel of this.state.panels) {
+    output.push({
+      cookieStoreId: panel.cookieStoreId,
+      color: panel.color,
+      icon: panel.icon,
+      name: panel.name,
+
+      type: panel.type,
+      panel: panel.panel,
+      lockedTabs: panel.lockedTabs,
+      lockedPanel: panel.lockedPanel,
+      proxy: panel.proxy,
+      proxified: panel.proxified,
+      noEmpty: panel.noEmpty,
+      includeHostsActive: panel.includeHostsActive,
+      includeHosts: panel.includeHosts,
+      excludeHostsActive: panel.excludeHostsActive,
+      excludeHosts: panel.excludeHosts,
+      private: panel.private,
+      bookmarks: panel.bookmarks,
+    })
+  }
+  const cleaned = JSON.parse(JSON.stringify(output))
+  browser.runtime.sendMessage({
+    instanceType: 'bg',
+    action: 'savePanels',
+    arg: cleaned
+  })
+}
+function savePanelsDebounced() {
+  if (this._savePanelsTimeout) clearTimeout(this._savePanelsTimeout)
+  this._savePanelsTimeout = setTimeout(() => Actions.savePanels(), 500)
+}
+
+async function movePanel(id, step) {
+  let index
+  if (id === 'bookmarks') index = this.state.panels.findIndex(p => p.bookmarks)
+  else index = this.state.panels.findIndex(p => p.cookieStoreId === id)
+
+  if (index === -1) return
+  if (index + step < 0) return
+  if (index + step >= this.state.panels.length) return
+
+  let panel = this.state.panels.splice(index, 1)[0]
+  this.state.panels.splice(index + step, 0, panel)
+  this.state.panelIndex = index + step
+  for (let i = 0; i < this.state.panels.length; i++) {
+    this.state.panels[i].index = i
+  }
+
+  Actions.savePanels()
+
+  let windows = await browser.windows.getAll()
+  for (let window of windows) {
+    browser.runtime.sendMessage({
+      instanceType: 'sidebar',
+      windowId: window.id,
+      action: 'loadTabs'
+    })
+  }
 }
 
 const Actions = {
@@ -147,6 +244,11 @@ const Actions = {
   loadBrowserInfo,
   loadPermissions,
   updateActiveView,
+
+  loadPanels,
+  savePanels,
+  savePanelsDebounced,
+  movePanel,
 }
 
 // Inject vuex getters and state in actions

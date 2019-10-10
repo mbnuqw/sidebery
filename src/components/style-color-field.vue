@@ -1,5 +1,5 @@
 <template lang="pug">
-.ColorField(:data-active="!!value")
+.StyleField(:data-active="!!value")
   .label
     .desc {{t(label)}}
     .var {{name}}

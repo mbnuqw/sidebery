@@ -5,8 +5,9 @@ export default {
   'settings.nav_settings': { message: 'Настройки' },
   'settings.nav_settings_general': { message: 'Основные' },
   'settings.nav_settings_menu': { message: 'Меню' },
-  'settings.nav_settings_nav': { message: 'Навигация' },
+  'settings.nav_settings_nav': { message: 'Панель навигации' },
   'settings.nav_settings_group': { message: 'Групповая страница' },
+  'settings.nav_settings_panels': { message: 'Панели' },
   'settings.nav_settings_tabs': { message: 'Табы' },
   'settings.nav_settings_pinned_tabs': { message: 'Закрепленные табы' },
   'settings.nav_settings_tabs_tree': { message: 'Дерево табов' },
@@ -21,7 +22,9 @@ export default {
 
   'settings.nav_menu': { message: 'Редактор меню' },
   'settings.nav_menu_tabs': { message: 'Табы' },
+  'settings.nav_menu_tabs_panel': { message: 'Панель табов' },
   'settings.nav_menu_bookmarks': { message: 'Закладки' },
+  'settings.nav_menu_bookmarks_panel': { message: 'Панель закладок' },
 
   'settings.nav_styles': { message: 'Редактор стилей' },
   'settings.nav_snapshots': { message: 'Снепшоты' },
@@ -45,7 +48,7 @@ export default {
   'settings.ctx_menu_editor': { message: 'Редактировать меню' },
 
   // --- Navigation bar
-  'settings.nav_title': { message: 'Навигация' },
+  'settings.nav_title': { message: 'Панель навигации' },
   'settings.nav_bar_inline': { message: 'В одну строку' },
   'settings.hide_settings_btn': { message: 'Скрывать кнопку "Настройки"' },
   'settings.hide_add_btn': { message: 'Скрывать кнопку "Новый контейнер"' },
@@ -62,14 +65,19 @@ export default {
   'settings.group_layout_grid': { message: 'сетка' },
   'settings.group_layout_list': { message: 'список' },
 
+  // --- Panels
+  'settings.panels_title': { message: 'Панели' },
+  'settings.panel_remove_confirm_1': { message: 'Удалить панель ' },
+  'settings.panel_remove_confirm_2': { message: ' ?\nВсе табы этой панели и их cookies будут также удалены.' },
+
   // --- Tabs
   'settings.tabs_title': { message: 'Табы' },
+  'settings.activate_on_mouseup': { message: 'Активировать таб при отпускании кнопки мыши' },
   'settings.activate_last_tab_on_panel_switching': {
     message: 'Активировать последний активный таб при переключении панелей',
   },
   'settings.skip_empty_panels': { message: 'Пропускать пустые контейнеры при переключении' },
   'settings.show_tab_rm_btn': { message: 'Показывать кнопку закрытия таба при наведении курсора' },
-  'settings.no_empty_default': { message: 'Создавать новую вкладку при опустошении стандартной панели' },
   'settings.hide_inactive_panel_tabs': { message: 'Скрывать табы неактивных панелей' },
   'settings.activate_after_closing': { message: 'После закрытия текущей вкладки активировать' },
   'settings.activate_after_closing_next': { message: 'следующую' },
@@ -207,7 +215,7 @@ export default {
   'settings.tab_action_duplicate': { message: 'дублировать' },
   'settings.tab_action_pin': { message: 'закрепить' },
   'settings.tab_action_mute': { message: 'выключить звук' },
-  'settings.tab_action_clear_cookies': { message: 'удалить куки' },
+  'settings.tab_action_clear_cookies': { message: 'удалить cookies' },
   'settings.tab_action_exp': { message: 'развернуть' },
   'settings.tab_action_new_after': { message: 'новый таб' },
   'settings.tab_action_none': { message: 'выкл' },
@@ -217,9 +225,10 @@ export default {
   'settings.tabs_panel_action_tab': { message: 'создать таб' },
   'settings.tabs_panel_action_prev': { message: 'пред. панель' },
   'settings.tabs_panel_action_next': { message: 'след. панель' },
-  'settings.tabs_panel_action_dash': { message: 'меню панели' },
   'settings.tabs_panel_action_expand': { message: 'развернуть/свернуть' },
   'settings.tabs_panel_action_parent': { message: 'перейти к родительскому табу' },
+  'settings.tabs_panel_action_menu': { message: 'открыть меню' },
+  'settings.tabs_panel_action_collapse': { message: 'свернуть неактивные ветки' },
   'settings.tabs_panel_action_none': { message: 'выкл' },
 
   // --- Keybindings
@@ -243,7 +252,7 @@ export default {
   // --- Permissions
   'settings.permissions_title': { message: 'Разрешения' },
   'settings.all_urls_label': { message: 'Данные веб-сайтов:' },
-  'settings.all_urls_info': { message: 'Необходимо для:\n- Удаления cookies\n- Прокси' },
+  'settings.all_urls_info': { message: 'Необходимо для:\n- Удаления cookies\n- Прокси и url-правил контейнеров\n- Скриншотов на групповой странице и на панели выбора окна' },
   'settings.tab_hide_label': { message: 'Скрытие табов:' },
   'settings.tab_hide_info': { message: 'Необходимо для:\n- Скрывания табов неактивных панелей\n- Скрывания свернутых табов' },
 
@@ -252,6 +261,7 @@ export default {
   'settings.storage_delete_prop': { message: 'удалить' },
   'settings.storage_open_prop': { message: 'открыть' },
   'settings.storage_delete_confirm': { message: 'Удалить поле ' },
+  'settings.update_storage_info': { message: 'Обновить' },
 
   // --- Help
   'settings.help_title': { message: 'Помощь' },
@@ -259,6 +269,7 @@ export default {
   'settings.repo_issue': { message: 'Создать github issue' },
   'settings.repo_bug': { message: 'Сообщить об ошибке' },
   'settings.reset_settings': { message: 'Сбросить настройки' },
+  'settings.reset_confirm': { message: 'Вы уверены, что хотите сбросить настройки?' },
   'settings.ref_rm': { message: 'Will be removed, open issue if you need this feature.' },
   'settings.help_exp_data': { message: 'Экспорт данных' },
   'settings.help_imp_data': { message: 'Импорт данных' },

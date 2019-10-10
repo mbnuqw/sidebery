@@ -149,7 +149,7 @@ export default {
       }
 
       // Activate tab (if nothing selected)
-      if (!State.selected.length) {
+      if (!State.selected.length && !State.activateOnMouseUp) {
         browser.tabs.update(this.tab.id, { active: true })
       }
 
@@ -212,7 +212,7 @@ export default {
      */
     onMouseUp(e) {
       if (e.button === 0) {
-        if (State.selected.length && !e.ctrlKey && !e.shiftKey) {
+        if ((State.selected.length || State.activateOnMouseUp) && !e.ctrlKey && !e.shiftKey) {
           browser.tabs.update(this.tab.id, { active: true })
         }
         if (this.longClickActionLeft) {
@@ -232,7 +232,7 @@ export default {
         if (!State.ctxMenuNative && !this.longClickActionRightFired) {
           this.select()
         }
-        Actions.openCtxMenu(e.clientX, e.clientY)
+        Actions.openCtxMenu('tab', e.clientX, e.clientY)
       }
     },
 
@@ -266,7 +266,7 @@ export default {
 
       if (!State.selected.length) this.select()
 
-      Actions.openCtxMenu()
+      Actions.openCtxMenu('tab')
     },
 
     /**
@@ -352,9 +352,10 @@ export default {
       if (this.tab.invisible) return
       if (this.dragEnterTimeout) clearTimeout(this.dragEnterTimeout)
       this.dragEnterTimeout = setTimeout(() => {
+        if (!State.dragNodes) return
         browser.tabs.update(this.tab.id, { active: true })
         this.dragEnterTimeout = null
-      }, 640)
+      }, 750)
     },
 
     /**

@@ -7,6 +7,7 @@ export default {
   'settings.nav_settings_menu': { message: 'Menu' },
   'settings.nav_settings_nav': { message: 'Navigation bar' },
   'settings.nav_settings_group': { message: 'Group page' },
+  'settings.nav_settings_panels': { message: 'Panels' },
   'settings.nav_settings_tabs': { message: 'Tabs' },
   'settings.nav_settings_pinned_tabs': { message: 'Pinned tabs' },
   'settings.nav_settings_tabs_tree': { message: 'Tabs tree' },
@@ -21,7 +22,9 @@ export default {
 
   'settings.nav_menu': { message: 'Menu editor' },
   'settings.nav_menu_tabs': { message: 'Tabs' },
+  'settings.nav_menu_tabs_panel': { message: 'Tabs panel' },
   'settings.nav_menu_bookmarks': { message: 'Bookmarks' },
+  'settings.nav_menu_bookmarks_panel': { message: 'Bookmarks panel' },
 
   'settings.nav_styles': { message: 'Styles editor' },
   'settings.nav_snapshots': { message: 'Snapshots viewer' },
@@ -62,14 +65,19 @@ export default {
   'settings.group_layout_grid': { message: 'grid' },
   'settings.group_layout_list': { message: 'list' },
 
+  // --- Panels
+  'settings.panels_title': { message: 'Panels' },
+  'settings.panel_remove_confirm_1': { message: 'Delete ' },
+  'settings.panel_remove_confirm_2': { message: ' panel?\nAll tabs of this panel and their cookies will also be removed.' },
+
   // --- Tabs
   'settings.tabs_title': { message: 'Tabs' },
+  'settings.activate_on_mouseup': { message: 'Activate tab on mouse button release' },
   'settings.activate_last_tab_on_panel_switching': {
     message: 'Activate last active tab on panels switching',
   },
   'settings.skip_empty_panels': { message: 'Skip empty panels on switching' },
   'settings.show_tab_rm_btn': { message: 'Show close button on mouse hover' },
-  'settings.no_empty_default': { message: 'Create new tab on emptying default panel' },
   'settings.hide_inactive_panel_tabs': { message: 'Hide tabs of inactive panels' },
   'settings.activate_after_closing': { message: 'After closing current tab activate' },
   'settings.activate_after_closing_next': { message: 'next tab' },
@@ -193,9 +201,10 @@ export default {
   'settings.tabs_panel_action_tab': { message: 'create tab' },
   'settings.tabs_panel_action_prev': { message: 'previous panel' },
   'settings.tabs_panel_action_next': { message: 'next panel' },
-  'settings.tabs_panel_action_dash': { message: 'open dashboard' },
   'settings.tabs_panel_action_expand': { message: 'expand/fold' },
   'settings.tabs_panel_action_parent': { message: 'activate parent tab' },
+  'settings.tabs_panel_action_menu': { message: 'show menu' },
+  'settings.tabs_panel_action_collapse': { message: 'collapse inactive branches' },
   'settings.tabs_panel_action_none': { message: 'none' },
 
   // --- Keybindings
@@ -219,7 +228,7 @@ export default {
   // --- Permissions
   'settings.permissions_title': { message: 'Permissions' },
   'settings.all_urls_label': { message: 'Websites data:' },
-  'settings.all_urls_info': { message: 'Required for:\n- Cleaning cookies\n- Proxy' },
+  'settings.all_urls_info': { message: 'Required for:\n- Cleaning cookies\n- Proxy and url rules of containers\n- Screenshots for the group page and windows selection panel' },
   'settings.tab_hide_label': { message: 'Hiding tabs:' },
   'settings.tab_hide_info': { message: 'Required for:\n- Hiding tabs on inactive panels\n- Hiding folded tabs' },
 
@@ -228,6 +237,7 @@ export default {
   'settings.storage_delete_prop': { message: 'delete' },
   'settings.storage_open_prop': { message: 'open' },
   'settings.storage_delete_confirm': { message: 'Delete property ' },
+  'settings.update_storage_info': { message: 'Update' },
 
   // --- Help
   'settings.help_title': { message: 'Help' },
@@ -235,6 +245,7 @@ export default {
   'settings.repo_issue': { message: 'Open issue' },
   'settings.repo_bug': { message: 'Report a bug' },
   'settings.reset_settings': { message: 'Reset settings' },
+  'settings.reset_confirm': { message: 'Are you sure you want to reset settings?' },
   'settings.ref_rm': { message: 'Will be removed, open issue if you need this feature.' },
   'settings.help_exp_data': { message: 'Export Data' },
   'settings.help_imp_data': { message: 'Import Data' },

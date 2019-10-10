@@ -49,6 +49,53 @@
       .btn(@click="resetTabsMenu") {{t('menu.editor.reset')}}
       .btn(@click="createSeparator('tabs')") {{t('menu.editor.create_separator')}}
 
+  section(ref="menu_editor_tabs_panel" @click.stop="" @wheel="moveSelected($event, 'tabsPanel')")
+    h2 {{t('menu.editor.tabs_panel_title')}}
+
+    .menu-group(v-for="(group, i) in tabsPanelMenu" :data-type="group.type")
+      TextInput.group-title(
+        v-if="group.type === 'sub'"
+        :value="group.name"
+        :or="t('menu.editor.inline_group_title')"
+        @input="onSubMenuNameInput('tabs', group.i, $event)")
+      .opt(v-for="(opt, i) in group.options"
+        :title="t(tabsPanelOpts[opt])"
+        :data-separator="opt.startsWith('separator')"
+        :data-selected="selected === opt"
+        @click="select(opt)")
+        .opt-btn.-in(
+          v-if="group.type === 'list'"
+          :title="t('menu.editor.create_sub_tooltip')"
+          @click.stop="createSubMenu('tabsPanel', opt)")
+          svg: use(xlink:href="#icon_expand")
+
+        .opt-title {{t(tabsPanelOpts[opt])}}
+
+        .opt-btn(
+          :title="t('menu.editor.down_tooltip')"
+          @click.stop="downOpt('tabsPanel', opt)")
+          svg: use(xlink:href="#icon_expand")
+
+        .opt-btn.-up(
+          :title="t('menu.editor.up_tooltip')"
+          @click.stop="upOpt('tabsPanel', opt)")
+          svg: use(xlink:href="#icon_expand")
+
+        .opt-btn.-rm(
+          :title="t('menu.editor.disable_tooltip')"
+          @click.stop="disableOpt('tabsPanel', opt)")
+          svg: use(xlink:href="#icon_remove")
+
+    .menu-group.-dis(v-if="disabledTabsPanelMenu.length")
+      .opt(
+        v-for="opt in disabledTabsPanelMenu"
+        :title="t(tabsPanelOpts[opt])"
+        @click="restoreOption('tabsPanel', opt)")
+        .opt-title {{t(tabsPanelOpts[opt])}}
+
+    .ctrls
+      .btn(@click="resetTabsPanelMenu") {{t('menu.editor.reset')}}
+      .btn(@click="createSeparator('tabsPanel')") {{t('menu.editor.create_separator')}}
 
   section(ref="menu_editor_bookmarks" @click.stop="" @wheel="moveSelected($event, 'bookmarks')")
     h2 {{t('menu.editor.bookmarks_title')}}
@@ -99,6 +146,55 @@
       .btn(@click="resetBookmarksMenu") {{t('menu.editor.reset')}}
       .btn(@click="createSeparator('bookmarks')") {{t('menu.editor.create_separator')}}
   
+  section(ref="menu_editor_bookmarks_panel" @click.stop="" @wheel="moveSelected($event, 'bookmarksPanel')")
+    h2 {{t('menu.editor.bookmarks_panel_title')}}
+
+    .menu-group(v-for="(group, i) in bookmarksPanelMenu" :data-type="group.type")
+      TextInput.group-title(
+        v-if="group.type === 'sub'"
+        :value="group.name"
+        :or="t('menu.editor.inline_group_title')"
+        @input="onSubMenuNameInput('bookmarksPanel', group.i, $event)")
+      .opt(
+        v-for="(opt, i) in group.options"
+        :title="t(bookmarksPanelOpts[opt])"
+        :data-separator="opt.startsWith('separator')"
+        :data-selected="selected === opt"
+        @click="select(opt)")
+        .opt-btn.-in(
+          v-if="group.type === 'list'"
+          :title="t('menu.editor.create_sub_tooltip')"
+          @click.stop="createSubMenu('bookmarksPanel', opt)")
+          svg: use(xlink:href="#icon_expand")
+
+        .opt-title {{t(bookmarksPanelOpts[opt])}}
+
+        .opt-btn(
+          :title="t('menu.editor.down_tooltip')"
+          @click.stop="downOpt('bookmarksPanel', opt)")
+          svg: use(xlink:href="#icon_expand")
+
+        .opt-btn.-up(
+          :title="t('menu.editor.up_tooltip')"
+          @click.stop="upOpt('bookmarksPanel', opt)")
+          svg: use(xlink:href="#icon_expand")
+
+        .opt-btn.-rm(
+          :title="t('menu.editor.disable_tooltip')"
+          @click.stop="disableOpt('bookmarksPanel', opt)")
+          svg: use(xlink:href="#icon_remove")
+
+    .menu-group.-dis(v-if="disabledBookmarksPanelMenu.length")
+      .opt(
+        v-for="opt in disabledBookmarksPanelMenu"
+        :title="t(bookmarksPanelOpts[opt])"
+        @click="restoreOption('bookmarksPanel', opt)")
+        .opt-title {{t(bookmarksPanelOpts[opt])}}
+
+    .ctrls
+      .btn(@click="resetBookmarksPanelMenu") {{t('menu.editor.reset')}}
+      .btn(@click="createSeparator('bookmarksPanel')") {{t('menu.editor.create_separator')}}
+
   FooterSection
 </template>
 
@@ -107,6 +203,8 @@
 import State from '../store/state'
 import Actions from '../actions'
 import { DEFAULT_TABS_MENU, DEFAULT_BOOKMARKS_MENU } from '../../defaults'
+import { DEFAULT_TABS_PANEL_MENU } from '../../defaults'
+import { DEFAULT_BOOKMARKS_PANEL_MENU } from '../../defaults'
 import TextInput from '../../components/text-input'
 import FooterSection from './footer'
 
@@ -139,9 +237,27 @@ const BOOKMARKS_MENU_OPTS = {
   'delete': 'menu.bookmark.delete_bookmark',
 }
 
+const TABS_PANEL_MENU_OPTS = {
+  'muteAllAudibleTabs': 'menu.tabs_panel.mute_all_audible',
+  'closeTabsDuplicates': 'menu.tabs_panel.dedup',
+  'undoRmTab': 'menu.tab.undo',
+  'reloadTabs': 'menu.tabs_panel.reload',
+  'discardTabs': 'menu.tabs_panel.discard',
+  'collapseInactiveBranches': 'menu.tabs_panel.collapse_inact_branches',
+  'closeTabs': 'menu.tabs_panel.close',
+  'openPanelConfig': 'menu.common.conf',
+}
+
+const BOOKMARKS_PANEL_MENU_OPTS = {
+  'collapseAllFolders': 'menu.bookmark.collapse_all',
+  'openPanelConfig': 'menu.common.conf',
+}
+
 const SECTIONS = [
   'menu_editor_tabs',
+  'menu_editor_tabs_panel',
   'menu_editor_bookmarks',
+  'menu_editor_bookmarks_panel',
 ]
 
 export default {
@@ -155,7 +271,9 @@ export default {
       selected: '',
       active: false,
       tabsOpts: TABS_MENU_OPTS,
+      tabsPanelOpts: TABS_PANEL_MENU_OPTS,
       bookmarksOpts: BOOKMARKS_MENU_OPTS,
+      bookmarksPanelOpts: BOOKMARKS_PANEL_MENU_OPTS,
     }
   },
 
@@ -195,6 +313,41 @@ export default {
       return all.filter(option => !active.includes(option))
     },
 
+    tabsPanelMenu() {
+      let out = []
+      let group = {}
+      for (let i = 0; i < State.tabsPanelMenu.length; i++) {
+        let item = State.tabsPanelMenu[i]
+        if (typeof item === 'string') {
+          if (group.type !== 'list') {
+            group = { type: 'list', name: '', options: [], i }
+            out.push(group)
+          }
+          group.options.push(item)
+        }
+        if (item instanceof Array) {
+          if (group.type !== 'sub') {
+            group = { type: 'sub', name: '', i }
+            if (item[0] instanceof Object) {
+              group.name = item[0].name
+              group.options = item.slice(1)
+            } else {
+              group.options = item
+            }
+            out.push(group)
+            group = {}
+          }
+        }
+      }
+      return out
+    },
+
+    disabledTabsPanelMenu() {
+      const all = Object.keys(TABS_PANEL_MENU_OPTS)
+      const active = State.tabsPanelMenu.reduce((a, v) => a.concat(v), [])
+      return all.filter(option => !active.includes(option))
+    },
+
     bookmarksMenu() {
       let out = []
       let group = {}
@@ -227,6 +380,41 @@ export default {
     disabledBookmarksMenu() {
       const all = Object.keys(BOOKMARKS_MENU_OPTS)
       const active = State.bookmarksMenu.reduce((a, v) => a.concat(v), [])
+      return all.filter(option => !active.includes(option))
+    },
+
+    bookmarksPanelMenu() {
+      let out = []
+      let group = {}
+      for (let i = 0; i < State.bookmarksPanelMenu.length; i++) {
+        let item = State.bookmarksPanelMenu[i]
+        if (typeof item === 'string') {
+          if (group.type !== 'list') {
+            group = { type: 'list', name: '', options: [], i }
+            out.push(group)
+          }
+          group.options.push(item)
+        }
+        if (item instanceof Array) {
+          if (group.type !== 'sub') {
+            group = { type: 'sub', name: '', i }
+            if (item[0] instanceof Object) {
+              group.name = item[0].name
+              group.options = item.slice(1)
+            } else {
+              group.options = item
+            }
+            out.push(group)
+            group = {}
+          }
+        }
+      }
+      return out
+    },
+
+    disabledBookmarksPanelMenu() {
+      const all = Object.keys(BOOKMARKS_PANEL_MENU_OPTS)
+      const active = State.bookmarksPanelMenu.reduce((a, v) => a.concat(v), [])
       return all.filter(option => !active.includes(option))
     },
   },
@@ -285,12 +473,20 @@ export default {
       State.tabsMenu = JSON.parse(JSON.stringify(DEFAULT_TABS_MENU))
       Actions.saveCtxMenu()
     },
+    resetTabsPanelMenu() {
+      State.tabsPanelMenu = JSON.parse(JSON.stringify(DEFAULT_TABS_PANEL_MENU))
+      Actions.saveCtxMenu()
+    },
 
     /**
      * Reset bookmarks menu
      */
     resetBookmarksMenu() {
       State.bookmarksMenu = JSON.parse(JSON.stringify(DEFAULT_BOOKMARKS_MENU))
+      Actions.saveCtxMenu()
+    },
+    resetBookmarksPanelMenu() {
+      State.bookmarksPanelMenu = JSON.parse(JSON.stringify(DEFAULT_BOOKMARKS_PANEL_MENU))
       Actions.saveCtxMenu()
     },
 

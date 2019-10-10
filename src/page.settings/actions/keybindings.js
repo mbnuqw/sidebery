@@ -1,4 +1,3 @@
-// import Logs from '../../libs/logs'
 import CommonActions from '../../actions/keybindings'
 
 /**

@@ -30,21 +30,6 @@
     pos(0, 0)
     background-color: var(--border-flare-fg)
 
-.StylesEditor h1
-  box(relative)
-  size(100%)
-  text(s: 2.5rem, w: 700)
-  padding: 30px 0
-  color: var(--label-fg)
-  text-align: center
-
-.StylesEditor .separator
-  box(relative)
-  size(100%, 1px)
-  background-color: #00000032
-  box-shadow: 0 1px 0 0 #78787816
-  margin: 8px 0
-
 .StylesEditor > .title
   box(relative)
   text(s: rem(24))
@@ -57,7 +42,7 @@
   padding: 8px 0 16px
 
 .StylesEditor section
-  box(relative)
+  box(relative, grid)
   size(100%, max-w: 460px)
   margin: 0 auto
   padding: 2px 0 32px

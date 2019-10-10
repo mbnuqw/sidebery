@@ -1,0 +1,26 @@
+@import '../../mixins'
+
+.PanelConfig
+  box(relative, flex)
+  size(calc(100% - 64px), calc(100% - 32px))
+  flex-direction: column
+  overflow-y: auto
+  padding: 32px 32px 0 32px
+  background-attachment: local
+  &:after
+    content: ''
+    box(relative)
+    size(100%, 32px)
+    flex-shrink: 0
+
+.PanelConfig > h2
+.PanelConfig > .title
+  box(relative)
+  text(s: rem(28), w: 400)
+  color: var(--title-fg)
+  margin: 0 12px 24px
+  padding: 0
+
+.PanelConfig .field
+  box(relative)
+  padding: 0 0 16px

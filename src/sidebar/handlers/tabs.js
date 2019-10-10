@@ -77,11 +77,22 @@ function onTabCreated(tab) {
     } else {
       let parent = this.state.tabsMap[tab.openerTabId]
       if (parent && parent.cookieStoreId === tab.cookieStoreId) {
-        tab.parentId = tab.openerTabId
-        const start = panel.startIndex
-        this.actions.updateTabsTree(start, tab.index + 1)
-        if (this.state.autoFoldTabs && !parent.folded) {
-          this.actions.expTabsBranch(tab.parentId)
+        let insideBranch = false
+        for (let t, i = parent.index + 1; i < this.state.tabs.length; i++) {
+          t = this.state.tabs[i]
+          insideBranch = t.id === tab.id
+          if (insideBranch) break
+          if (t.lvl <= parent.lvl) break
+        }
+        if (insideBranch) {
+          tab.parentId = tab.openerTabId
+          const start = panel.startIndex
+          this.actions.updateTabsTree(start, tab.index + 1)
+          if (this.state.autoFoldTabs && !parent.folded) {
+            this.actions.expTabsBranch(tab.parentId)
+          }
+        } else {
+          browser.tabs.update(tab.id, { openerTabId: tab.id })
         }
       }
     }
@@ -131,7 +142,7 @@ function onTabUpdated(tabId, change, tab) {
 
   // Status change
   if (change.status !== undefined) {
-    if (change.status === 'complete' && !localTab.url.startsWith('about')) {
+    if (change.status === 'complete' && !tab.url.startsWith('about')) {
       browser.tabs.get(localTab.id)
         .then(tabInfo => {
           if (tabInfo.favIconUrl && !tabInfo.favIconUrl.startsWith('chrome:')) {
@@ -155,8 +166,8 @@ function onTabUpdated(tabId, change, tab) {
               url: localTab.url,
               lvl: localTab.lvl - groupTab.lvl - 1,
               discarded: localTab.discarded,
+              favIconUrl: localTab.favIconUrl || this.state.favicons[this.state.favUrls[localTab.url]],
             }
-            if (change.status === 'complete') updateData.favIconUrl = localTab.favIconUrl
             browser.tabs.sendMessage(groupTab.id, updateData)
               .catch(() => {/** itsokay **/})
           }
@@ -520,13 +531,6 @@ function onTabActivated(info) {
   // Switch to activated tab's panel
   if (!currentPanel || !currentPanel.lockedPanel) {
     this.actions.setPanel(tabPanel.index)
-  }
-
-  // Reopen dashboard
-  if (this.state.dashboardIsOpen) {
-    if (this.state.dashboard.cookieStoreId !== this.state.panels[this.state.panelIndex].cookieStoreId) {
-      this.actions.openDashboard(this.state.panelIndex)
-    }
   }
 
   // Auto expand tabs group

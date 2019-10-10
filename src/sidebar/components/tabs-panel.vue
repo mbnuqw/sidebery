@@ -1,7 +1,9 @@
 <template lang="pug">
 .TabsPanel(
   @wheel="onWheel"
+  @contextmenu.stop="onNavCtxMenu"
   @mousedown="onMouseDown"
+  @mouseup.right="onRightMouseUp"
   @dblclick="onDoubleClick")
   pinned-dock(v-if="$store.state.pinnedTabsPosition === 'panel'" :ctx="storeId")
   scroll-box(ref="scrollBox")
@@ -118,7 +120,6 @@ export default {
         Actions.blockCtxMenu()
         const ra = State.tabsPanelRightClickAction
         if (ra === 'next') return Actions.switchPanel(1)
-        if (ra === 'dash') return Actions.openDashboard(State.panelIndex)
         if (ra === 'expand') {
           if (!State.tabsTree) return
           let targetTab = State.tabs.find(t => t.active)
@@ -136,10 +137,61 @@ export default {
       }
     },
 
+    onRightMouseUp(e) {
+      if (State.tabsPanelRightClickAction !== 'menu') return
+      if (State.selected.length) return
+
+      let panel = State.panels[this.index]
+      if (!panel) return
+
+      e.stopPropagation()
+
+      let type
+      if (panel.type === 'bookmarks') type = 'bookmarksPanel'
+      else if (panel.type === 'default') type = 'tabsPanel'
+      else if (panel.type === 'ctx') type = 'tabsPanel'
+
+      State.selected = [panel]
+      Actions.openCtxMenu(type, e.clientX, e.clientY)
+    },
+
+    /**
+     * Handle context menu event
+     */
+    onNavCtxMenu(e) {
+      if (
+        !State.ctxMenuNative ||
+        e.ctrlKey ||
+        e.shiftKey
+      ) {
+        e.stopPropagation()
+        e.preventDefault()
+        return
+      }
+
+      let panel = State.panels[this.index]
+      if (!panel) return
+
+      let nativeCtx = { showDefaults: false }
+      browser.menus.overrideContext(nativeCtx)
+
+      let type
+      if (panel.type === 'bookmarks') type = 'bookmarksPanel'
+      else if (panel.type === 'default') type = 'tabsPanel'
+      else if (panel.type === 'ctx') type = 'tabsPanel'
+      if (!State.selected.length) State.selected = [panel]
+
+      Actions.openCtxMenu(type)
+    },
+
     onDoubleClick() {
       if (State.tabsPanelLeftClickAction !== 'none') return
       const da = State.tabsPanelDoubleClickAction
       if (da === 'tab') return this.createTab()
+      if (da === 'collapse') {
+        let panel = State.panels[this.index]
+        if (panel) return Actions.foldAllInactiveBranches(panel.tabs)
+      }
     },
 
     onWheel(e) {

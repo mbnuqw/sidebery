@@ -93,7 +93,9 @@ function openSettings(section) {
     }
   } else {
     const conf = { url, windowId: this.state.windowId }
-    if (activePanel.tabs) conf.cookieStoreId = activePanel.cookieStoreId
+    if (activePanel && activePanel.tabs) {
+      conf.cookieStoreId = activePanel.cookieStoreId
+    }
     browser.tabs.create(conf)
   }
 }

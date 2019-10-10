@@ -337,7 +337,7 @@ function onKeyMenu() {
   if (!target) return
   const offset = this.state.panelTopOffset - this.state.panelScrollEl.scrollTop
   const start = targetSlot.start + offset
-  this.actions.openCtxMenu(16, start + 15)
+  this.actions.openCtxMenu(type, 16, start + 15)
 }
 
 /**
@@ -375,7 +375,7 @@ function onKeyNextPanel() {
       if (!hiddenPanels.length) return
 
       this.state.panelIndex = i
-      this.actions.openDashboard(-2)
+      this.state.hiddenPanelsBar = true
       EventBus.$emit('selectHiddenPanel', 1)
       return
     }

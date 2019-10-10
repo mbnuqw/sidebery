@@ -1,7 +1,7 @@
 <template lang="pug">
 .Sidebar(
   v-noise:300.g:12:af.a:0:42.s:0:9=""
-  :data-dashboard="$store.state.dashboardIsOpen"
+  :data-hidden-panels-bar="$store.state.hiddenPanelsBar"
   :data-drag="dragMode"
   :data-pointer="pointerMode"
   :data-nav-inline="$store.state.navBarInline"
@@ -32,7 +32,7 @@
   pinned-dock(v-if="$store.state.pinnedTabsPosition !== 'panel'")
 
   .box(ref="box")
-    .dimmer(@mousedown="act('closeDashboard')")
+    .dimmer(@mousedown="$store.state.hiddenPanelsBar = false")
 
     //- Navigation
     nav-bar
@@ -52,14 +52,8 @@
         :active="$store.state.panelIndex === i")
       transition(name="panel")
         window-input(v-if="$store.state.panelIndex === -5" :data-pos="windowInputPos")
-      transition(name="dashboard")
-        .dashboard-box(v-if="$store.state.dashboardIsOpen")
-          component.dashboard(
-            :data-pos="windowInputPos"
-            :is="$store.state.dashboard.dashboard"
-            :conf="$store.state.dashboard"
-            :index="$store.state.panelIndex"
-            @close="act('closeDashboard')")
+      transition(name="hidden-panels-bar")
+        hidden-panels-bar(v-if="$store.state.hiddenPanelsBar")
 </template>
 
 
@@ -74,10 +68,7 @@ import State from './store/state.js'
 import Actions from './actions'
 import CtxMenu from './components/context-menu'
 import NavBar from './components/nav-bar'
-import BookmarksDashboard from './components/bookmarks-dashboard'
-import DefaultTabsDashboard from './components/default-tabs-dashboard'
-import TabsDashboard from './components/containered-tabs-dashboard'
-import HiddenPanelsDashboard from './components/hidden-panels-dashboard'
+import HiddenPanelsBar from './components/hidden-panels-bar'
 import BookmarksPanel from './components/bookmarks-panel'
 import TabsPanel from './components/tabs-panel'
 import WindowInput from './components/window-select-input'
@@ -91,10 +82,7 @@ export default {
   components: {
     CtxMenu,
     NavBar,
-    BookmarksDashboard,
-    DefaultTabsDashboard,
-    TabsDashboard,
-    HiddenPanelsDashboard,
+    HiddenPanelsBar,
     BookmarksPanel,
     TabsPanel,
     WindowInput,
@@ -401,7 +389,15 @@ export default {
       }
 
       if (State.multiSelectionStart) Actions.stopMultiSelection()
-      if (e.button === 2) Actions.openCtxMenu(e.clientX, e.clientY)
+      if (e.button === 2) {
+        let type
+        if (State.selected[0]) {
+          if (typeof State.selected[0] === 'string') type = 'bookmark'
+          if (typeof State.selected[0] === 'number') type = 'tab'
+        }
+        // NOTE: check type === undefined case
+        Actions.openCtxMenu(type, e.clientX, e.clientY)
+      }
     },
 
     /**
@@ -443,9 +439,10 @@ export default {
       if (this.dropParent === undefined) this.dropParent = -1
       if (this.dropParent === null) this.dropParent = -1
 
-      if (State.dashboardIsOpen) {
+      if (State.hiddenPanelsBar) {
         this.dropParent = -1
         this.dropIndex = State.panels[State.panelIndex].startIndex
+        State.hiddenPanelsBar = false
       }
 
       if (State.panels[State.panelIndex].tabs) {
@@ -459,11 +456,6 @@ export default {
       if (State.dragNodes) Actions.resetSelection()
       this.resetDrag()
       State.dragNodes = null
-
-      if (State.dashboardIsOpen) {
-        State.dashboardIsOpen = false
-        State.dashboard = null
-      }
     },
 
     /**

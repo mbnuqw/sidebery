@@ -10,14 +10,20 @@ function onChangeStorage(changes, type) {
   if (changes.cssVars) {
     this.actions.applyCSSVars(changes.cssVars.newValue)
   }
-  if (changes.panels && !this.state.windowFocused && !this.state.private) {
+  if (changes.panels && !this.state.private) {
     this.actions.updatePanels(changes.panels.newValue)
   }
   if (changes.tabsMenu) {
     this.state.tabsMenu = changes.tabsMenu.newValue
   }
+  if (changes.tabsPanelMenu) {
+    this.state.tabsPanelMenu = changes.tabsPanelMenu.newValue
+  }
   if (changes.bookmarksMenu) {
     this.state.bookmarksMenu = changes.bookmarksMenu.newValue
+  }
+  if (changes.bookmarksPanelMenu) {
+    this.state.bookmarksPanelMenu = changes.bookmarksPanelMenu.newValue
   }
   if (changes.sidebarCSS) {
     this.actions.applyCustomCSS(changes.sidebarCSS.newValue)

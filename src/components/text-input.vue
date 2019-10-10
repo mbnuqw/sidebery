@@ -2,6 +2,7 @@
 .TextInput(
   :data-active="isActive"
   :data-empty="!value"
+  :data-valid="valid"
   :data-wrong="wrongValueAnimation"
   @animationend="onAnimationEnd")
   input(
@@ -41,6 +42,7 @@
 export default {
   props: {
     value: [String, Number],
+    valid: [String, Boolean],
     padding: {
       type: Number,
       default: () => 0,
@@ -50,7 +52,7 @@ export default {
     line: Boolean,
     tabindex: {
       type: String,
-      default: () => '-1'
+      default: () => '0'
     },
     password: Boolean,
   },
@@ -108,11 +110,6 @@ export default {
 
     error() {
       this.wrongValueAnimation = true
-      // this.$el.classList.add('err')
-      // this.$el.classList.remove('err-animation')
-      // this.$el.offsetHeight
-      // this.$el.classList.add('err-animation')
-      // this.$el.classList.remove('err')
     },
 
     onAnimationEnd() {

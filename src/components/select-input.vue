@@ -1,10 +1,13 @@
 <template lang="pug">
-.SelectInput
+.SelectInput(:data-color="color")
   .opt(
     v-for="o in opts"
     :data-none="o === noneOpt"
-    :data-active="o === value"
-    @mousedown.stop="select(o)") {{t(label + o, plurNum)}}
+    :data-color="o.color ? o.color : false"
+    :data-active="isActive(o)"
+    @mousedown.stop="select(o)")
+      svg(v-if="icon || o.icon"): use(:xlink:href="'#' + (icon || o.icon)")
+      p(v-else) {{t(label + o, plurNum)}}
 </template>
 
 
@@ -15,6 +18,8 @@ export default {
     opts:  Array,
     label: String,
     plurNum: [String, Number],
+    color: String,
+    icon: String,
     noneOpt: {
       type: String,
       default: () => 'none'
@@ -26,8 +31,14 @@ export default {
   },
 
   methods: {
+    isActive(opt) {
+      if (opt && opt.value !== undefined) return opt.value === this.value
+      else return this.value === opt
+    },
+
     select(option) {
-      this.$emit('input', option)
+      if (option && option.value) this.$emit('input', option.value)
+      else this.$emit('input', option)
     },
   },
 }

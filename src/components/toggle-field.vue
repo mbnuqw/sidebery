@@ -1,7 +1,9 @@
 <template lang="pug">
 .ToggleField(:data-inline="inline" :data-inactive="inactive" @click="toggle")
-  .label(:style="{ color }") {{t(label)}}
-  toggle-input.input(:value="value")
+  .body
+    .label(:style="{ color }") {{t(label)}}
+    toggle-input.input(:value="value")
+  .note(v-if="note") {{note}}
 </template>
 
 
@@ -20,6 +22,7 @@ export default {
     field: Boolean,
     inline: Boolean,
     color: String,
+    note: String,
   },
 
   data() {

@@ -56,7 +56,10 @@ async function loadTabs(fresh = true) {
     const activePanelIsOk = activeTab.cookieStoreId === activePanel.cookieStoreId
     if (!activeTab.pinned && activePanelIsTabs && !activePanelIsOk) {
       const panel = this.state.panelsMap[activeTab.cookieStoreId]
-      if (panel) this.state.panelIndex = panel.index
+      if (panel) {
+        this.state.panelIndex = panel.index
+        this.state.lastPanelIndex = panel.index
+      }
     }
   }
 
@@ -138,6 +141,8 @@ function findBranchStartIndex(array, subArray, startIndex) {
         similarity++
         if (!similarity) startOffset++
         else innerOffset++
+      } else if (a.active && a.url === 'about:blank') {
+        similarity++
       }
     }
     if (similarity === subArray.length) return i + startOffset
@@ -217,7 +222,7 @@ async function restoreTabsTree() {
 
       for (let treeTab of branch) {
         let tab = this.state.tabs[tabIndex]
-        if (tab.url === treeTab.url) {
+        if (tab.url === treeTab.url || (tab.active && tab.url === 'about:blank')) {
           if (treeTab.isParent) parents[treeTab.id] = tab.id
           tab.isParent = treeTab.isParent
           tab.parentId = parents[treeTab.parentId] || -1
@@ -526,6 +531,25 @@ async function duplicateTabs(tabIds) {
       openerTabId: tabId,
     })
   }
+}
+
+/**
+ * Close tabs duplicates
+ */
+function dedupTabs(tabIds) {
+  if (!tabIds || !tabIds.length) return
+
+  let urls = []
+  let toRemove = []
+  for (let id of tabIds) {
+    let tab = this.state.tabsMap[id]
+    if (!tab) return
+
+    if (urls.includes(tab.url)) toRemove.push(tab.id)
+    else urls.push(tab.url)
+  }
+
+  this.actions.removeTabs(toRemove)
 }
 
 /**
@@ -859,6 +883,25 @@ async function toggleBranch(tabId) {
   if (!rootTab) return
   if (rootTab.folded) Actions.expTabsBranch(tabId)
   else Actions.foldTabsBranch(tabId)
+}
+
+/**
+ * Collaplse all inactive branches.
+ */
+function foldAllInactiveBranches(tabs = []) {
+  let isBranchActive = false
+  for (let i = tabs.length; i--; ) {
+    let tab = tabs[i]
+    if (!tab) break
+    if (tab.active && (tab.lvl > 0 || tab.isParent)) isBranchActive = true
+    if (tab.isParent && tab.parentId === -1) {
+      if (isBranchActive) {
+        isBranchActive = false
+        continue
+      }
+      this.actions.foldTabsBranch(tab.id)
+    }
+  }
 }
 
 /**
@@ -1445,6 +1488,7 @@ export default {
   unmuteTabs,
   remuteTabs,
   duplicateTabs,
+  dedupTabs,
   bookmarkTabs,
   clearTabsCookies,
 
@@ -1459,6 +1503,7 @@ export default {
   foldTabsBranch,
   expTabsBranch,
   toggleBranch,
+  foldAllInactiveBranches,
 
   dropToTabs,
   moveDroppedNodes,

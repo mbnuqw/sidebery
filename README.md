@@ -72,9 +72,6 @@ __Switch between tabs__
 `alt+Up/Down` + `alt+space` - select tab and activate it  
 Scroll - (optional)  
 
-__Open dashboard of panel__  
-Right-click on panel's icon  
-
 __Expand/Fold parent tab__  
 Click on favicon of target tab.  
 
@@ -95,6 +92,8 @@ Move mouse cursor to panel's icon.
 ## Tips and Tricks
 
 ### userChrome.css
+
+> Note: Starting with Firefox 69 you have to enable toolkit.legacyUserProfileCustomizations.stylesheets in about:config.
 
 In 'Profile Directory' `(Menu > Help > Troubleshooting Information > Profile Directory)`
 create folder `chrome` with file `userChrome.css`:

@@ -153,18 +153,18 @@ export function noiseBg(target, conf = {}) {
   ctx.putImageData(raw, 0, 0)
 
   // Get base64 image data and store it in cache
-  // let img = canvasEl.toDataURL(`image/png`, 1)
-  let img = canvasEl.mozGetAsFile('bg.png')
-  img = URL.createObjectURL(img)
-  CACHE[cKey] = img
+  canvasEl.toBlob(img => {
+    img = URL.createObjectURL(img)
+    CACHE[cKey] = img
 
-  // Add background to target
-  if (typeof target === 'string') {
-    let styleEl = document.createElement('style')
-    document.head.appendChild(styleEl)
-    let stylShit = styleEl.sheet
-    stylShit.insertRule(`${target} { background-image: url(${img}); }`, 0)
-  } else if (target.nodeType === 1) {
-    target.style.backgroundImage = `url(${img})`
-  }
+    // Add background to target
+    if (typeof target === 'string') {
+      let styleEl = document.createElement('style')
+      document.head.appendChild(styleEl)
+      let stylShit = styleEl.sheet
+      stylShit.insertRule(`${target} { background-image: url(${img}); }`, 0)
+    } else if (target.nodeType === 1) {
+      target.style.backgroundImage = `url(${img})`
+    }
+  })
 }

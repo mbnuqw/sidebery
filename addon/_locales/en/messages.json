@@ -5,5 +5,7 @@
   },
   "ActionTitle": { "message": "Open Sidebery" },
 
-  "upgrading": { "message": "Upgrading..." }
+  "upgrading": { "message": "Upgrading..." },
+  "unhandled_url": { "message": "Unhandled URL" },
+  "copy": { "message": "Copy" }
 }
