@@ -14,10 +14,19 @@ function onSidebarResize() {
 }
 
 /**
+ * Handle click on browserAction button
+ */
+function onBroActionClick(tab) {
+  if (tab.windowId !== this.state.windowId) return
+  browser.sidebarAction.close()
+}
+
+/**
  * Setup listeners
  */
 function setupResizeHandler() {
   window.addEventListener('resize', this.handlers.onSidebarResize)
+  browser.browserAction.onClicked.addListener(this.handlers.onBroActionClick)
 }
 
 /**
@@ -25,10 +34,12 @@ function setupResizeHandler() {
  */
 function resetResizeHandler() {
   window.removeEventListener('resize', this.handlers.onSidebarResize)
+  browser.browserAction.onClicked.removeListener(this.handlers.onBroActionClick)
 }
 
 export default {
   onSidebarResize,
+  onBroActionClick,
   setupResizeHandler,
   resetResizeHandler,
 }
