@@ -43,7 +43,6 @@ void (async function() {
   }
 
   // Load current window and get url-hash
-  const win = await browser.windows.getCurrent()
   const hash = decodeURI(window.location.hash.slice(1))
 
   // Set title of group page
@@ -61,15 +60,16 @@ void (async function() {
     window.location.hash = `#${encodeURI(normTitle)}:id:${groupId}`
   })
 
-  const groupInfo = await browser.runtime.sendMessage({
+  let tabInfo = await browser.tabs.getCurrent()
+  let groupInfo = await browser.runtime.sendMessage({
     action: 'getGroupInfo',
-    windowId: win.id,
-    arg: hash,
+    windowId: tabInfo.windowId,
+    arg: tabInfo.id,
   })
   if (!groupInfo) return
 
   tabs = groupInfo.tabs || []
-  groupTabId = groupInfo.id || ''
+  groupTabId = groupInfo.id || -1
   groupTabIndex = groupInfo.index || 0
   groupLen = groupInfo.len || 0
   groupParentId = groupInfo.parentId
@@ -97,7 +97,7 @@ void (async function() {
 
   // Set listeners
   browser.runtime.onMessage.addListener(msg => {
-    if (msg.windowId !== undefined && msg.windowId !== win.id) return
+    if (msg.windowId !== undefined && msg.windowId !== tabInfo.windowId) return
     if (msg.instanceType !== undefined && msg.instanceType !== 'group') return
 
     if (msg.name === 'update') onGroupUpdated(msg)
@@ -167,6 +167,7 @@ function onTabUpdated(msg) {
   if (msg.status === 'complete') {
     tab.el.setAttribute('data-fav', !!msg.favIconUrl)
     tab.favEl.style.backgroundImage = `url(${msg.favIconUrl})`
+    tab.favIconUrl = msg.favIconUrl
     loadScreenshot(tab)
   }
 
@@ -393,6 +394,8 @@ function updateTab(oldTab, newTab) {
   if (urlChanged) {
     if (newTab.url.startsWith('moz-ext')) oldTab.urlEl.innerText = ''
     else oldTab.urlEl.innerText = newTab.url
+    oldTab.urlEl.setAttribute('href', newTab.url)
+    oldTab.el.title = newTab.url
     setSvgId(oldTab.favPlaceholderSvgEl, getFavPlaceholder(newTab.url))
   }
   if (oldTab.lvl !== newTab.lvl) oldTab.el.setAttribute('data-lvl', newTab.lvl)

@@ -3,9 +3,6 @@ name: Bug report
 about: Something is not working
 ---
 
-## Description
-
-
 ## Steps to reproduce
 
 

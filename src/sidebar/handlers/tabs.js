@@ -160,10 +160,10 @@ function onTabUpdated(tabId, change, tab) {
           if (groupTab && !groupTab.discarded) {
             let updateData = {
               name: 'updateTab',
-              id: localTab.id,
+              id: tab.id,
               status: change.status,
-              title: localTab.title,
-              url: localTab.url,
+              title: tab.title,
+              url: tab.url,
               lvl: localTab.lvl - groupTab.lvl - 1,
               discarded: localTab.discarded,
               favIconUrl: localTab.favIconUrl || this.state.favicons[this.state.favUrls[localTab.url]],

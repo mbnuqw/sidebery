@@ -2,7 +2,7 @@
  * Handle click on browser-action button
  */
 function initToolbarButton() {
-  browser.browserAction.onClicked.addListener(() => {
+  browser.browserAction.onClicked.addListener(async () => {
     browser.sidebarAction.open()
   })
 }

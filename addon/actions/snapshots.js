@@ -148,6 +148,7 @@ async function openSnapshotWindow(snapshot, winId) {
 
   let newWindow = await browser.windows.create()
   let firstTab = newWindow.tabs[0]
+  let tabIndex = newWindow.tabs.length
 
   await this.actions.waitForSidebarConnect(newWindow.id, 5000)
 
@@ -182,6 +183,7 @@ async function openSnapshotWindow(snapshot, winId) {
 
     let createdTab = await browser.tabs.create({
       windowId: newWindow.id,
+      index: tabIndex,
       url: normalizeUrl(tab.url),
       active: false,
       pinned: tab.pinned,
@@ -191,6 +193,7 @@ async function openSnapshotWindow(snapshot, winId) {
       openerTabId: oldNewMap[parents[tab.lvl - 1]],
     })
     oldNewMap[tab.id] = createdTab.id
+    tabIndex++
   }
 
   if (firstTab) browser.tabs.remove(firstTab.id)

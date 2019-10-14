@@ -155,14 +155,16 @@ function findBranchStartIndex(array, subArray, startIndex) {
  */
 async function restoreGroupTab(tabInfo, index, parents) {
   let groupId = Utils.getGroupId(tabInfo.url)
+  let url = browser.runtime.getURL('group/group.html') + `#${groupId}`
   let restoredTab = await browser.tabs.create({
     windowId: this.state.windowId,
     index,
-    url: browser.runtime.getURL('group/group.html') + `#${groupId}`,
+    url,
     cookieStoreId: tabInfo.ctx,
     active: false,
   })
 
+  restoredTab.url = url
   if (tabInfo.isParent) parents[tabInfo.id] = restoredTab.id
   restoredTab.isParent = tabInfo.isParent
   restoredTab.parentId = parents[tabInfo.parentId] || -1
@@ -889,18 +891,33 @@ async function toggleBranch(tabId) {
  * Collaplse all inactive branches.
  */
 function foldAllInactiveBranches(tabs = []) {
-  let isBranchActive = false
-  for (let i = tabs.length; i--; ) {
-    let tab = tabs[i]
-    if (!tab) break
-    if (tab.active && (tab.lvl > 0 || tab.isParent)) isBranchActive = true
-    if (tab.isParent && tab.parentId === -1) {
-      if (isBranchActive) {
-        isBranchActive = false
-        continue
-      }
-      this.actions.foldTabsBranch(tab.id)
+  let toFold = []
+  let activeTab
+  let actParentId
+
+  for (let tab of tabs) {
+    if (tab.active && (tab.lvl > 0 || tab.isParent)) {
+      activeTab = tab
+      actParentId = tab.parentId
+      continue
     }
+
+    if (tab.isParent && !tab.folded) {
+      if (activeTab) {
+        if (tab.lvl > activeTab.lvl) continue
+        else activeTab = null
+      }
+      toFold.push(tab)
+    }
+  }
+
+  for (let tab, i = toFold.length; i--; ) {
+    tab = toFold[i]
+    if (tab.id === actParentId) {
+      actParentId = tab.parentId
+      continue
+    }
+    this.actions.foldTabsBranch(tab.id)
   }
 }
 
@@ -1224,13 +1241,7 @@ async function groupTabs(tabIds) {
  * Get grouped tabs (for group page)
  */
 async function getGroupInfo(groupId) {
-  const idData = groupId.split(':id:')
-  const title = idData[0]
-  const id = idData[1]
-  const groupTab = this.state.tabs.find(t => {
-    if (id) return t.url.endsWith(id)
-    else return t.title === title && t.url.startsWith('moz')
-  })
+  let groupTab = this.state.tabsMap[groupId]
   if (!groupTab) return {}
 
   const out = {
