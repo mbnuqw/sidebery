@@ -229,7 +229,7 @@ export default {
 
         Actions.stopMultiSelection()
         if (State.ctxMenuBlockTimeout) return
-        if (!State.ctxMenuNative && !this.longClickActionRightFired) {
+        if (!State.selected.length && !State.ctxMenuNative && !this.longClickActionRightFired) {
           this.select()
         }
         Actions.openCtxMenu('tab', e.clientX, e.clientY)
