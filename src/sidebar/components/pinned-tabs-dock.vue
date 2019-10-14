@@ -88,6 +88,7 @@ export default {
 
       this.pointedTabIndex = -1
       this.dragPointed = false
+      State.dragNodes = null
     },
 
     async removeTab(index, tab) {
