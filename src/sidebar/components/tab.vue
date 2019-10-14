@@ -154,6 +154,7 @@ export default {
       }
 
       // Long-click action
+      this.longClickActionLeftFired = false
       this.longClickActionLeft = setTimeout(() => {
         if (State.dragNodes) return
         let llc = State.tabLongLeftClick
@@ -163,8 +164,9 @@ export default {
         if (llc === 'mute') Actions.remuteTabs([this.tab.id])
         if (llc === 'clear_cookies') Actions.clearTabsCookies([this.tab.id])
         if (llc === 'new_after') Actions.createTabAfter(this.tab.id)
+        if (llc !== 'none') this.longClickActionLeftFired = true
         this.longClickActionLeft = null
-      }, 250)
+      }, 300)
     },
 
     /**
@@ -202,9 +204,9 @@ export default {
         if (lrc === 'mute') Actions.remuteTabs([this.tab.id])
         if (lrc === 'clear_cookies') Actions.clearTabsCookies([this.tab.id])
         if (lrc === 'new_after') Actions.createTabAfter(this.tab.id)
+        if (lrc !== 'none') this.longClickActionRightFired = true
         this.longClickActionRight = null
-        this.longClickActionRightFired = true
-      }, 250)
+      }, 300)
     },
 
     /**
@@ -212,7 +214,11 @@ export default {
      */
     onMouseUp(e) {
       if (e.button === 0) {
-        if ((State.selected.length || State.activateOnMouseUp) && !e.ctrlKey && !e.shiftKey) {
+        if (
+          (State.selected.length || State.activateOnMouseUp) &&
+          !this.longClickActionLeftFired &&
+          !e.ctrlKey && !e.shiftKey
+        ) {
           browser.tabs.update(this.tab.id, { active: true })
         }
         if (this.longClickActionLeft) {
