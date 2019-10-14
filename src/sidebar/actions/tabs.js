@@ -891,18 +891,33 @@ async function toggleBranch(tabId) {
  * Collaplse all inactive branches.
  */
 function foldAllInactiveBranches(tabs = []) {
-  let isBranchActive = false
-  for (let i = tabs.length; i--; ) {
-    let tab = tabs[i]
-    if (!tab) break
-    if (tab.active && (tab.lvl > 0 || tab.isParent)) isBranchActive = true
-    if (tab.isParent && tab.parentId === -1) {
-      if (isBranchActive) {
-        isBranchActive = false
-        continue
-      }
-      this.actions.foldTabsBranch(tab.id)
+  let toFold = []
+  let activeTab
+  let actParentId
+
+  for (let tab of tabs) {
+    if (tab.active && (tab.lvl > 0 || tab.isParent)) {
+      activeTab = tab
+      actParentId = tab.parentId
+      continue
     }
+
+    if (tab.isParent && !tab.folded) {
+      if (activeTab) {
+        if (tab.lvl > activeTab.lvl) continue
+        else activeTab = null
+      }
+      toFold.push(tab)
+    }
+  }
+
+  for (let tab, i = toFold.length; i--; ) {
+    tab = toFold[i]
+    if (tab.id === actParentId) {
+      actParentId = tab.parentId
+      continue
+    }
+    this.actions.foldTabsBranch(tab.id)
   }
 }
 
