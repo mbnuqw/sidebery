@@ -12,8 +12,8 @@ void async function main() {
   Actions.initMessaging()
 
   // Load containers
-  state.containers = await Actions.getContainers()
   Actions.setupContainersListeners()
+  await Actions.loadContainers()
 
   // Load windows
   state.windows = await Actions.getWindows()
@@ -24,7 +24,6 @@ void async function main() {
   await Actions.checkVersion(settings)
   state.settings = settings ? settings : {}
 
-  Actions.loadPanels()
   await Actions.loadTabs(state.windows, state.tabsMap)
   await Actions.backupTabsTrees()
   Actions.setupTabsListeners()
@@ -34,6 +33,7 @@ void async function main() {
   if (!state.settings.tabsTree) Actions.scheduleSnapshots()
   else Actions.onFirstSidebarInit(Actions.scheduleSnapshots)
 
+  Actions.loadPermissions()
   Actions.loadFavicons()
   Actions.clearFaviCacheAfter(86420)
 }()

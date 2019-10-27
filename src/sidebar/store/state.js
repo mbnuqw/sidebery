@@ -3,7 +3,7 @@ import { DEFAULT_SETTINGS, SETTINGS_OPTIONS } from '../../defaults'
 import { DEFAULT_TABS_MENU } from '../../defaults'
 import { DEFAULT_BOOKMARKS_MENU } from '../../defaults'
 import { DEFAULT_TABS_PANEL_MENU } from '../../defaults'
-import { DEFAULT_BOOKMARKS_PANEL_MENU } from '../../defaults'
+import { BOOKMARKS_PANEL_MENU } from '../../defaults'
 
 export default {
   upgrading: false,
@@ -21,7 +21,7 @@ export default {
   tabsMenu: Utils.cloneArray(DEFAULT_TABS_MENU),
   bookmarksMenu: Utils.cloneArray(DEFAULT_BOOKMARKS_MENU),
   tabsPanelMenu: Utils.cloneArray(DEFAULT_TABS_PANEL_MENU),
-  bookmarksPanelMenu: Utils.cloneArray(DEFAULT_BOOKMARKS_PANEL_MENU),
+  bookmarksPanelMenu: Utils.cloneArray(BOOKMARKS_PANEL_MENU),
 
   ctxMenu: null,
   winChoosing: false,
@@ -33,7 +33,7 @@ export default {
   lastPanelIndex: 1,
   panelIndex: 1,
 
-  containers: [],
+  containers: {},
   panels: [],
   tabs: [],
 

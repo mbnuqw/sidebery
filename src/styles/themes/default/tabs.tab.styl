@@ -303,16 +303,6 @@
   opacity: 0
 
 // ---
-// -- Context highlight
-// -
-.Tab .ctx
-  box(absolute)
-  pos(b: 10px, l: 0px)
-  size(2px, 10px)
-  z-index: 2000
-  box-shadow: 0 0 2px 0 #00000024
-
-// ---
 // -- Complete animation
 // -
 .Tab .complete-fx
@@ -366,6 +356,17 @@
 
 .Tab[data-selected] .title
   color: var(--tabs-selected-fg)
+
+// ---
+// -- Container highlight
+// -
+.Tab .ctx
+  box(absolute)
+  pos(4px, r: 0)
+  size(2px, calc(100% - 8px))
+  z-index: 2000
+  box-shadow: inset -1px 0 0 0 #00000032
+  background-color: var(--panel-fg)
 
 // ---
 // -- Close button

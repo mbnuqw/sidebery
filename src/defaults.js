@@ -23,6 +23,7 @@ export const SETTINGS_OPTIONS = {
   themeOpts: ['default', 'tactile', 'none'],
   snapIntervalUnitOpts: ['min', 'hr', 'day'],
   snapLimitUnitOpts: ['snap', 'kb', 'day'],
+  panelTypeOpts: ['tabs', 'ctx'],
 }
 
 export const DEFAULT_SETTINGS = {
@@ -196,28 +197,29 @@ export const prefix = (() => {
 export const DEFAULT_CTX = prefix + '-default'
 export const PRIVATE_CTX = prefix + '-private'
 export const DEFAULT_CTX_ID = browser.extension.inIncognitoContext ? PRIVATE_CTX : DEFAULT_CTX
-export const DEFAULT_BOOKMARKS_PANEL = {
+
+export const BOOKMARKS_PANEL = {
   type: 'bookmarks',
   id: 'bookmarks',
   cookieStoreId: 'bookmarks',
   name: translate('bookmarks_dashboard.title'),
   icon: 'icon_bookmarks',
   loading: false,
-  panel: 'BookmarksPanel',
   lockedPanel: false,
   bookmarks: true,
+
   updated: [],
 }
 
-export const DEFAULT_PRIVATE_TABS_PANEL = {
+export const PRIVATE_TABS_PANEL = {
   type: 'default',
   id: PRIVATE_CTX,
   name: translate('private_dashboard.title'),
   icon: 'icon_private',
   loading: false,
   cookieStoreId: PRIVATE_CTX,
-  panel: 'TabsPanel',
   private: true,
+
   tabs: [],
   startIndex: -1,
   endIndex: -1,
@@ -231,39 +233,50 @@ export const DEFAULT_TABS_PANEL = {
   icon: 'icon_tabs',
   loading: false,
   cookieStoreId: DEFAULT_CTX,
-  panel: 'TabsPanel',
   lockedTabs: false,
   lockedPanel: false,
-  proxyConfig: null,
   noEmpty: false,
+
   tabs: [],
   startIndex: -1,
   endIndex: -1,
   updated: [],
 }
 
-export const DEFAULT_CTX_TABS_PANEL = {
+export const CTX_PANEL = {
   type: 'ctx',
-  panel: 'TabsPanel',
   loading: false,
   lockedTabs: false,
   lockedPanel: false,
-  proxy: null,
-  proxified: false,
   noEmpty: false,
-  includeHostsActive: false,
-  includeHosts: '',
-  excludeHostsActive: false,
-  excludeHosts: '',
+
   tabs: [],
   startIndex: -1,
   endIndex: -1,
   updated: [],
 }
 
+export const TABS_PANEL = {
+  type: 'tabs',
+  customIconSrc: '',
+  customIcon: '',
+  loading: false,
+  lockedTabs: false,
+  lockedPanel: false,
+  noEmpty: false,
+
+  tabs: [],
+  startIndex: -1,
+  endIndex: -1,
+  updated: [],
+}
+
+export const DEFAULT_PANEL = browser.extension.inIncognitoContext ?
+  PRIVATE_TABS_PANEL : DEFAULT_TABS_PANEL
+
 export const DEFAULT_PANELS = [
-  DEFAULT_BOOKMARKS_PANEL,
-  browser.extension.inIncognitoContext ? DEFAULT_PRIVATE_TABS_PANEL : DEFAULT_TABS_PANEL,
+  BOOKMARKS_PANEL,
+  DEFAULT_PANEL,
 ]
 
 export const DEFAULT_TABS_MENU = [
@@ -322,7 +335,7 @@ export const DEFAULT_TABS_PANEL_MENU = [
   'openPanelConfig',
 ]
 
-export const DEFAULT_BOOKMARKS_PANEL_MENU = [
+export const BOOKMARKS_PANEL_MENU = [
   'collapseAllFolders',
   'separator-9',
   'openPanelConfig',
@@ -381,17 +394,16 @@ export const MENU_OPTIONS = {
     let opts = []
     let firstNode = state.tabsMap[state.selected[0]]
 
-    if (firstNode.cookieStoreId !== DEFAULT_CTX) {
+    if (firstNode.cookieStoreId !== DEFAULT_CTX_ID) {
       opts.push({
         label: translate('menu.tab.reopen_in_default_panel'),
         icon: 'icon_tabs',
         action: 'moveTabsToCtx',
-        args: [state.selected, DEFAULT_CTX],
+        args: [state.selected, DEFAULT_CTX_ID],
       })
     }
 
-    for (let c of state.panels) {
-      if (c.type !== 'ctx') continue
+    for (let c of Object.values(state.containers)) {
       if (firstNode.cookieStoreId === c.cookieStoreId) continue
       opts.push({
         label: translate('menu.tab.reopen_in_') + `||${c.color}>>${c.name}`,
@@ -399,7 +411,7 @@ export const MENU_OPTIONS = {
         icon: c.icon,
         color: c.color,
         action: 'moveTabsToCtx',
-        args: [state.selected, c.cookieStoreId],
+        args: [state.selected, c.id],
       })
     }
 

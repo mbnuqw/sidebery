@@ -179,6 +179,7 @@
 // -- Nav button icon
 // -
 .Sidebar .nav-btn > svg
+.Sidebar .nav-btn > img
   box(absolute)
   size(16px, same)
   fill: var(--panel-fg, var(--nav-btn-fg))
@@ -186,6 +187,7 @@
   transition: opacity var(--d-fast)
 
 .Sidebar .nav-btn[data-updated] > svg
+.Sidebar .nav-btn[data-updated] > img
   mask: radial-gradient(
     circle at calc(100% - 2px) calc(100% - 2px),
     #00000024,
@@ -196,6 +198,8 @@
 
 .Sidebar .nav-btn[data-proxified] > svg
 .Sidebar .nav-btn[data-loading] > svg
+.Sidebar .nav-btn[data-proxified] > img
+.Sidebar .nav-btn[data-loading] > img
   mask: radial-gradient(
     circle at calc(100% - 2px) calc(100% - 2px),
     #00000024,

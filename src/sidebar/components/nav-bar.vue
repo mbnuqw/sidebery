@@ -20,7 +20,8 @@
       @mousedown.middle="onNavMidClick(btn)"
       @mousedown.right="onNavRightClick(i, btn.type)"
       @mouseup.right="onNavRightMouseup($event, i)")
-      svg: use(:xlink:href="'#' + btn.icon")
+      img(v-if="!!btn.customIcon" :src="btn.customIcon")
+      svg(v-else): use(:xlink:href="'#' + btn.icon")
       .proxy-badge
         svg: use(xlink:href="#icon_proxy")
       .update-badge
@@ -170,6 +171,7 @@ export default {
       if (panel.type === 'bookmarks') type = 'bookmarksPanel'
       else if (panel.type === 'default') type = 'tabsPanel'
       else if (panel.type === 'ctx') type = 'tabsPanel'
+      else if (panel.type === 'tabs') type = 'tabsPanel'
       if (!State.selected.length) State.selected = [panel]
 
       Actions.openCtxMenu(type)
@@ -228,6 +230,7 @@ export default {
       if (panel.type === 'bookmarks') type = 'bookmarksPanel'
       else if (panel.type === 'default') type = 'tabsPanel'
       else if (panel.type === 'ctx') type = 'tabsPanel'
+      else if (panel.type === 'tabs') type = 'tabsPanel'
 
       State.selected = [panel]
       Actions.openCtxMenu(type, e.clientX, e.clientY)

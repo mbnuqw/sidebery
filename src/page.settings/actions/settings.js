@@ -1,6 +1,5 @@
 import { DEFAULT_SETTINGS } from '../../defaults'
 import CommonActions from '../../actions/settings'
-import Actions from './index'
 
 /**
  * Set setting value
@@ -50,7 +49,7 @@ function updateSettings(settings) {
   }
 
   if (theme) {
-    Actions.initTheme()
+    this.actions.initTheme()
   }
 }
 

@@ -13,14 +13,27 @@ let TabsTreeSaveTimeout, updateGroupTabTimeouit
 async function loadTabs(fresh = true) {
   let windowId = browser.windows.WINDOW_ID_CURRENT
   let tabs = await browser.tabs.query({ windowId })
+  let tabsPanelIds = await Promise.all(tabs.map(t => {
+    return browser.sessions.getTabValue(t.id, 'panelId')
+  }))
   let activePanel = this.state.panels[this.state.panelIndex] || this.state.panels[1]
   let activeTab
 
-  let normOrderMoves = Actions.getOrderNormMoves(tabs)
-  await Actions.normalizeTabsOrder(normOrderMoves)
+  let [normOrderMoves, normTabsPanels] =
+    Actions.getOrderNormMoves(tabs, tabsPanelIds)
+
+  if (normTabsPanels.length) {
+    await Promise.all(normTabsPanels.map(tabPanel => {
+      return browser.sessions.setTabValue(tabPanel[0], 'panelId', tabPanel[1])
+    }))
+  }
 
   if (normOrderMoves.length) {
+    await Actions.normalizeTabsOrder(normOrderMoves)
     tabs = await browser.tabs.query({ windowId })
+    tabsPanelIds = await Promise.all(tabs.map(t => {
+      return browser.sessions.getTabValue(t.id, 'panelId')
+    }))
   }
 
   // Set tabs initial props and update state
@@ -47,6 +60,8 @@ async function loadTabs(fresh = true) {
     this.state.tabsMap[t.id] = t
     if (!t.favIconUrl || t.favIconUrl.startsWith('chrome:')) t.favIconUrl = ''
     if (t.active) activeTab = t
+    if (tabsPanelIds[t.index]) t.panelId = tabsPanelIds[t.index]
+    else t.panelId = null
   }
   this.state.tabs = tabs
 
@@ -83,21 +98,29 @@ async function loadTabs(fresh = true) {
 /**
  * Check order of tabs and get moves for normalizing
  */
-function getOrderNormMoves(tabs) {
-  // Check order of tabs and get moves for normalizing
-  const ctxs = this.state.panels
-    .filter(c => c.type === 'default' || c.type === 'ctx')
-    .map(c => c.cookieStoreId)
-  const moves = []
+function getOrderNormMoves(tabs, tabsPanelIds) {
+  let moves = []
+  let tabsPanels = []
   let index = tabs.filter(t => t.pinned).length
   let offset = 0
-  for (let i = 0; i < ctxs.length; i++) {
-    const ctx = ctxs[i]
-    for (let j = 0; j < tabs.length; j++) {
-      const tab = tabs[j]
-      if (tab.pinned) continue
-      if (tab.cookieStoreId !== ctx) continue
+  let type, panelId
+  for (let panel of this.state.panels) {
+    type = panel.type
+    if (type === 'bookmarks') continue
 
+    for (let tab, j = 0; j < tabs.length; j++) {
+      tab = tabs[j]
+      panelId = tabsPanelIds[tab.index]
+      if (tab.pinned) continue
+      if (type === 'ctx' && tab.cookieStoreId !== panel.cookieStoreId) continue
+      if (type === 'default' || type === 'tabs') {
+        if (!panelId) tabsPanelIds[tab.index] = panel.id
+        if (this.state.panelsMap[panelId] && panelId !== panel.id) continue
+      }
+
+      if (type === 'ctx' && panelId !== panel.id) {
+        tabsPanels.push([tab.id, panel.id])
+      }
       if (index !== tab.index + offset) {
         moves.push([tab.id, index])
         offset++
@@ -105,7 +128,7 @@ function getOrderNormMoves(tabs) {
       index++
     }
   }
-  return moves
+  return [moves, tabsPanels]
 }
 
 /**
@@ -308,7 +331,7 @@ async function removeTabs(tabIds) {
   if (!tabIds || !tabIds.length) return
   if (!this.state.tabsMap[tabIds[0]]) return
   const ctxId = this.state.tabsMap[tabIds[0]].cookieStoreId
-  const panel = this.state.panelsMap[ctxId]
+  const panel = this.actions.getTabPanel(tabIds[0])
   if (!panel) return
 
   let tabsMap = {}
@@ -394,13 +417,13 @@ function switchTab(globaly, cycle, step, pinned) {
     if (globaly) {
       tabs = []
       for (let p of this.state.panels) {
-        if (!p.cookieStoreId) continue
+        if (!p.tabs) continue
         for (let t of this.state.tabs) {
-          if (t.cookieStoreId === p.cookieStoreId) tabs.push(t)
+          if (t.panelId === p.id) tabs.push(t)
         }
       }
     } else {
-      tabs = this.state.tabs.filter(t => t.cookieStoreId === panel.cookieStoreId)
+      tabs = this.state.tabs.filter(t => t.panelId === panel.id)
     }
   } else {
     if (pinned) tabs = this.getters.pinnedTabs
@@ -726,16 +749,23 @@ async function moveTabsToThisWin(tabs, fromPrivate) {
 async function moveTabsToCtx(tabIds, ctxId) {
   let ids = [...tabIds]
   let oldNewMap = {}
+  let ctxPanel = this.state.panels.find(p => {
+    return p.type === 'ctx' && p.cookieStoreId === ctxId
+  })
+  let index = ctxPanel ? ctxPanel.endIndex + 1 : -1
   for (let id of ids) {
     let tab = this.state.tabsMap[id]
     if (!tab) continue
- 
+
     let createConf = {
       active: tab.active,
       windowId: this.state.windowId,
       cookieStoreId: ctxId,
       url: Utils.normalizeUrl(tab.url),
     }
+
+    if (index === -1) createConf.index = tab.index
+    else createConf.index = index++
 
     if (oldNewMap[tab.parentId] >= 0) {
       createConf.openerTabId = oldNewMap[tab.parentId]
@@ -932,7 +962,9 @@ async function dropToTabs(event, dropIndex, dropParent, nodes, pin) {
   // Tabs or Bookmarks
   if (nodes && nodes.length) {
     let globalPin = pin && currentPanel.panel !== 'TabsPanel'
-    let sameContainer = nodes[0].ctx === destCtx
+    let srcPanel = this.state.panelsMap[nodes[0].panelId]
+    let ctxChange = currentPanel.type === 'ctx' || srcPanel.type === 'ctx'
+    let sameContainer = ctxChange ? nodes[0].ctx === destCtx : true
 
     // Move tabs
     if (nodes[0].type === 'tab' && (sameContainer || globalPin) && !event.ctrlKey) {
@@ -999,6 +1031,7 @@ async function moveDroppedNodes(dropIndex, dropParent, nodes, pin, currentPanel)
   for (let n of nodes) {
     let tab = this.state.tabsMap[n.id]
     if (!tab) return
+    tab.destPanelId = currentPanel.id
     tabs.push(tab)
   }
 

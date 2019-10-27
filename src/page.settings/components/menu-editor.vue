@@ -204,7 +204,7 @@ import State from '../store/state'
 import Actions from '../actions'
 import { DEFAULT_TABS_MENU, DEFAULT_BOOKMARKS_MENU } from '../../defaults'
 import { DEFAULT_TABS_PANEL_MENU } from '../../defaults'
-import { DEFAULT_BOOKMARKS_PANEL_MENU } from '../../defaults'
+import { BOOKMARKS_PANEL_MENU } from '../../defaults'
 import TextInput from '../../components/text-input'
 import FooterSection from './footer'
 
@@ -486,7 +486,7 @@ export default {
       Actions.saveCtxMenu()
     },
     resetBookmarksPanelMenu() {
-      State.bookmarksPanelMenu = JSON.parse(JSON.stringify(DEFAULT_BOOKMARKS_PANEL_MENU))
+      State.bookmarksPanelMenu = JSON.parse(JSON.stringify(BOOKMARKS_PANEL_MENU))
       Actions.saveCtxMenu()
     },
 

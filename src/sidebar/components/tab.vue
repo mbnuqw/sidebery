@@ -12,6 +12,7 @@
   :data-folded="tab.folded"
   :data-invisible="tab.invisible"
   :data-close-btn="$store.state.showTabRmBtn"
+  :data-color="color"
   :title="tooltip"
   @contextmenu.stop="onCtxMenu"
   @mousedown.stop="onMouseDown"
@@ -38,7 +39,8 @@
     .child-count(v-if="childCount && tab.folded") {{childCount}}
   .close(v-if="$store.state.showTabRmBtn" @mousedown.stop="onCloseClick" @mouseup.stop="")
     svg: use(xlink:href="#icon_remove")
-  .t-box: .title {{tab.title}}
+  .ctx(v-if="color")
+  .t-box: .title {{tab.index}} - {{tab.id}} {{tab.title}}
 </template>
 
 
@@ -73,6 +75,12 @@ export default {
     loading() {
       if (this.tab.loading) return this.tab.loading
       return this.tab.status === 'loading'
+    },
+
+    color() {
+      let container = State.containers[this.tab.cookieStoreId]
+      if (container) return container.color
+      return false
     },
 
     tooltip() {

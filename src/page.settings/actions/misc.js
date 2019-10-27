@@ -1,12 +1,3 @@
-import Utils from '../../utils'
-import { DEFAULT_PANELS } from '../../defaults'
-import Store from '../store'
-import State from '../store/state'
-import MenuActions from './menu'
-import KeybindingsActions from './keybindings'
-import SettingsActions from './settings'
-import StylesActions from './styles'
-
 /**
  * Load current window info
  */
@@ -55,7 +46,7 @@ async function loadPermissions(init) {
   if (!this.state.permTabHide) {
     this.state.hideInact = false
     this.state.hideFoldedTabs = false
-    if (!init) Actions.saveSettings()
+    if (!init) this.actions.saveSettings()
   }
 }
 
@@ -153,111 +144,10 @@ function updateActiveView() {
   this.state.activeView = 'Settings'
 }
 
-/**
- * Load panels
- */
-async function loadPanels() {
-  let ans = await browser.storage.local.get({
-    panels: Utils.cloneArray(DEFAULT_PANELS)
-  })
-
-  if (ans && ans.panels) {
-    this.state.panels = ans.panels
-  }
-}
-
-/**
- * Clean up panels info and run savePanels action in background
- */
-async function savePanels() {
-  const output = []
-  for (let panel of this.state.panels) {
-    output.push({
-      cookieStoreId: panel.cookieStoreId,
-      color: panel.color,
-      icon: panel.icon,
-      name: panel.name,
-
-      type: panel.type,
-      panel: panel.panel,
-      lockedTabs: panel.lockedTabs,
-      lockedPanel: panel.lockedPanel,
-      proxy: panel.proxy,
-      proxified: panel.proxified,
-      noEmpty: panel.noEmpty,
-      includeHostsActive: panel.includeHostsActive,
-      includeHosts: panel.includeHosts,
-      excludeHostsActive: panel.excludeHostsActive,
-      excludeHosts: panel.excludeHosts,
-      private: panel.private,
-      bookmarks: panel.bookmarks,
-    })
-  }
-  const cleaned = JSON.parse(JSON.stringify(output))
-  browser.runtime.sendMessage({
-    instanceType: 'bg',
-    action: 'savePanels',
-    arg: cleaned
-  })
-}
-function savePanelsDebounced() {
-  if (this._savePanelsTimeout) clearTimeout(this._savePanelsTimeout)
-  this._savePanelsTimeout = setTimeout(() => Actions.savePanels(), 500)
-}
-
-async function movePanel(id, step) {
-  let index
-  if (id === 'bookmarks') index = this.state.panels.findIndex(p => p.bookmarks)
-  else index = this.state.panels.findIndex(p => p.cookieStoreId === id)
-
-  if (index === -1) return
-  if (index + step < 0) return
-  if (index + step >= this.state.panels.length) return
-
-  let panel = this.state.panels.splice(index, 1)[0]
-  this.state.panels.splice(index + step, 0, panel)
-  this.state.panelIndex = index + step
-  for (let i = 0; i < this.state.panels.length; i++) {
-    this.state.panels[i].index = i
-  }
-
-  Actions.savePanels()
-
-  let windows = await browser.windows.getAll()
-  for (let window of windows) {
-    browser.runtime.sendMessage({
-      instanceType: 'sidebar',
-      windowId: window.id,
-      action: 'loadTabs'
-    })
-  }
-}
-
-const Actions = {
-  ...SettingsActions,
-  ...KeybindingsActions,
-  ...MenuActions,
-  ...StylesActions,
-
+export default {
   loadCurrentWindowInfo,
   loadPlatformInfo,
   loadBrowserInfo,
   loadPermissions,
   updateActiveView,
-
-  loadPanels,
-  savePanels,
-  savePanelsDebounced,
-  movePanel,
 }
-
-// Inject vuex getters and state in actions
-for (let action of Object.keys(Actions)) {
-  Actions[action] = Actions[action].bind({
-    getters: Store.getters,
-    state: State,
-    actions: Actions,
-  })
-}
-
-export default Actions

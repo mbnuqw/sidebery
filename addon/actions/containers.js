@@ -1,20 +1,79 @@
+import { DEFAULT_CONTAINER } from '../defaults.js'
+
 /**
- * Get containers
+ * Load containers (ff + sidebery data)
  */
-async function getContainers() {
-  const containers = await browser.contextualIdentities.query({})
-  const containersMap = {}
-  for (let container of containers) {
-    containersMap[container.cookieStoreId] = container
+async function loadContainers() {
+  let ffContainers = await browser.contextualIdentities.query({})
+  let { containers } = await browser.storage.local.get({ containers: {} })
+
+  for (let ffContainer of ffContainers) {
+    let container = containers[ffContainer.cookieStoreId]
+    if (!container) {
+      container = { ...DEFAULT_CONTAINER }
+      containers[ffContainer.cookieStoreId] = container
+    }
+
+    container.id = ffContainer.cookieStoreId
+    container.name = ffContainer.name
+    container.icon = ffContainer.icon
+    container.color = ffContainer.color
   }
-  return containersMap
+
+  for (let container of Object.values(containers)) {
+    let ffContainer = ffContainers.find(c => c.cookieStoreId === container.id)
+    if (!ffContainer) {
+      await browser.contextualIdentities.create({
+        name: container.name,
+        color: container.color,
+        icon: container.icon,
+      })
+      delete containers[container.id]
+      continue
+    }
+
+    for (let k of Object.keys(DEFAULT_CONTAINER)) {
+      if (container[k] === undefined) container[k] = DEFAULT_CONTAINER[k]
+    }
+  }
+
+  this.containers = containers
+  this.actions.updateReqHandler()
+}
+
+/**
+ * Save containers (sidebery data)
+ */
+function saveContainers(delay = 300) {
+  if (this._saveContainersTimeout) clearTimeout(this._saveContainersTimeout)
+  this._saveContainersTimeout = setTimeout(() => {
+    this._saveContainersTimeout = null
+    browser.storage.local.set({ containers: this.containers })
+  }, delay)
+}
+
+/**
+ * Update containers data (on storage change)
+ */
+function updateContainers(newContainers) {
+  if (!newContainers) return
+  this.containers = newContainers
+  this.actions.updateReqHandlerDebounced()
 }
 
 /**
  * Handle new container
  */
 function onContainerCreated({ contextualIdentity }) {
-  this.containers[contextualIdentity.cookieStoreId] = contextualIdentity
+  let cid = contextualIdentity.cookieStoreId
+  let container = { ...DEFAULT_CONTAINER }
+  container.id = cid
+  container.name = contextualIdentity.name
+  container.icon = contextualIdentity.icon
+  container.color = contextualIdentity.color
+  this.containers[cid] = container
+
+  this.actions.saveContainers()
 }
 
 /**
@@ -22,16 +81,26 @@ function onContainerCreated({ contextualIdentity }) {
  */
 function onContainerRemoved({ contextualIdentity }) {
   delete this.containers[contextualIdentity.cookieStoreId]
+
+  this.actions.saveContainers()
 }
 
 /**
  * Handle container update
  */
 function onContainerUpdated(info) {
-  const ctr = info.contextualIdentity
-  const id = ctr.cookieStoreId
+  let ctr = info.contextualIdentity
+  let id = ctr.cookieStoreId
+  if (!ctr) {
+    // console.warn('[DEBUG] BG.onContainerUpdated: Cannot find container')
+    return
+  }
 
-  this.containers[id] = ctr
+  this.containers[id].name = ctr.name
+  this.containers[id].icon = ctr.icon
+  this.containers[id].color = ctr.color
+
+  this.actions.saveContainers()
 }
 
 function setupContainersListeners() {
@@ -41,7 +110,9 @@ function setupContainersListeners() {
 }
 
 export default {
-  getContainers,
+  loadContainers,
+  saveContainers,
+  updateContainers,
 
   onContainerCreated,
   onContainerRemoved,

@@ -105,19 +105,9 @@ async function chooseWin() {
 /**
  * Retrieve current permissions
  */
-async function loadPermissions(init) {
+async function loadPermissions() {
   this.state.permAllUrls = await browser.permissions.contains({ origins: ['<all_urls>'] })
   this.state.permTabHide = await browser.permissions.contains({ permissions: ['tabHide'] })
-
-  if (!this.state.permAllUrls) {
-    this.state.panels.map(c => {
-      if (c.proxified) c.proxified = false
-      if (c.proxy) c.proxy.type = 'direct'
-      if (c.includeHostsActive) c.includeHostsActive = false
-      if (c.excludeHostsActive) c.excludeHostsActive = false
-    })
-    if (!init) this.actions.savePanels()
-  }
 
   if (!this.state.permTabHide) {
     this.state.hideInact = false

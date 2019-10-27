@@ -13,6 +13,7 @@
       :color="color"
       :icon="icon"
       @input="select")
+  .note(v-if="note") {{note}}
 </template>
 
 
@@ -34,6 +35,7 @@ export default {
     color: String,
     icon: String,
     noneOpt: String,
+    note: String,
   },
 
   data() {

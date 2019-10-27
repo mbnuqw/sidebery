@@ -75,16 +75,39 @@
       :opts="$store.state.groupLayoutOpts"
       @input="setOpt('groupLayout', $event)")
 
+  section(ref="settings_containers")
+    h2 {{t('settings.containers_title')}}
+    transition-group(name="panel" tag="div"): .panel-card(
+      v-for="(container, id) in $store.state.containers"
+      :key="container.id"
+      :data-color="container.color")
+      .panel-card-body(@click="$store.state.selectedContainer = container")
+        .panel-card-icon: svg: use(:xlink:href="'#' + container.icon")
+        .panel-card-name {{container.name}}
+      .panel-card-ctrls
+        .panel-card-ctrl.-rm(
+          @click="removeContainer(container)")
+          svg: use(xlink:href="#icon_delete")
+    .ctrls: .btn(@click="createContainer") Create container
+    transition(name="panel-config")
+      .panel-config-layer(
+        v-if="$store.state.selectedContainer"
+        @click="$store.state.selectedContainer = null")
+        .panel-config-box(@click.stop="")
+          container-config.dashboard(:conf="$store.state.selectedContainer")
+
   section(ref="settings_panels")
     h2 {{t('settings.panels_title')}}
     transition-group(name="panel" tag="div"): .panel-card(
       v-for="(panel, i) in $store.state.panels"
-      :key="panel.cookieStoreId || panel.type"
+      :key="panel.id"
       :data-color="panel.color"
       :data-first="i === 0"
       :data-last="i === $store.state.panels.length - 1")
       .panel-card-body(@click="$store.state.selectedPanel = panel")
-        .panel-card-icon: svg: use(:xlink:href="'#' + panel.icon")
+        .panel-card-icon
+          img(v-if="panel.customIcon" :src="panel.customIcon")
+          svg(v-else): use(:xlink:href="'#' + panel.icon")
         .panel-card-name {{panel.name}}
       .panel-card-ctrls
         .panel-card-ctrl.-down(
@@ -499,12 +522,13 @@
 import Utils from '../utils'
 import { translate } from '../mixins/dict'
 import { DEFAULT_SETTINGS } from '../defaults'
-import { DEFAULT_CTX_TABS_PANEL } from '../defaults'
+import { DEFAULT_TABS_PANEL } from '../defaults'
 import State from './store/state'
 import Actions from './actions'
 import ToggleField from '../components/toggle-field'
 import SelectField from '../components/select-field'
 import NumField from '../components/num-field'
+import ContainerConfig from './components/container-config'
 import PanelConfig from './components/panel-config'
 import FooterSection from './components/footer'
 
@@ -515,6 +539,7 @@ const SECTIONS = [
   'settings_menu',
   'settings_nav',
   'settings_group',
+  'settings_containers',
   'settings_panels',
   'settings_tabs',
   'settings_pinned_tabs',
@@ -535,6 +560,7 @@ export default {
     SelectField,
     NumField,
     FooterSection,
+    ContainerConfig,
     PanelConfig,
   },
 
@@ -1071,22 +1097,28 @@ export default {
     },
 
     /**
+     * Remove container
+     */
+    async removeContainer(container) {
+      await browser.contextualIdentities.remove(container.id)
+      Actions.loadContainers()
+    },
+
+    /**
      * Remove panel
      */
     async removePanel(panel) {
       if (!panel || !panel.name) return
-      if (panel.type !== 'ctx') return
+      if (panel.type === 'bookmarks') return
+      if (panel.type === 'default') return
 
       let preMsg = translate('settings.panel_remove_confirm_1')
       let postMsg = translate('settings.panel_remove_confirm_2')
       if (window.confirm(preMsg + panel.name + postMsg)) {
-        if (panel.cookieStoreId) {
-          await browser.contextualIdentities.remove(panel.cookieStoreId)
-        }
-        let index = State.panels.findIndex(p => {
-          return p.cookieStoreId === panel.cookieStoreId
-        })
+        let index = State.panels.findIndex(p => p.id === panel.id)
         if (index > -1) State.panels.splice(index, 1)
+        delete State.panelsMap[panel.id]
+        Actions.savePanels()
       }
     },
 
@@ -1094,30 +1126,34 @@ export default {
      * Move panel
      */
     movePanel(panel, dir) {
-      Actions.movePanel(panel.cookieStoreId || panel.id, dir)
+      Actions.movePanel(panel.id, dir)
+    },
+
+    /**
+     * Create container
+     */
+    async createContainer() {
+      let containersCount = Object.keys(State.containers).length
+      await browser.contextualIdentities.create({
+        name: 'New Container ' + (containersCount + 1),
+        color: 'blue',
+        icon: 'fingerprint',
+      })
+      Actions.loadContainers()
     },
 
     /**
      * Create panel-container
      */
     async createPanel() {
-      const details = {
-        name: 'New Panel ' + (State.panels.length - 1),
-        color: 'blue',
-        icon: 'fingerprint',
-      }
-      let container = await browser.contextualIdentities.create(details)
-      State.panels.push({
-        ...DEFAULT_CTX_TABS_PANEL,
-        ...container,
-        id: container.cookieStoreId,
-        cookieStoreId: container.cookieStoreId,
-        name: container.name,
-        icon: container.icon,
-        color: container.color,
-      })
-
-      State.selectedPanel = State.panels[State.panels.length - 1]
+      let panel = Utils.cloneObject(DEFAULT_TABS_PANEL)
+      panel.id = Utils.uid()
+      panel.type = 'tabs'
+      panel.cookieStoreId = ''
+      panel.name = 'New Panel ' + (State.panels.length + 1)
+      State.panels.push(panel)
+      State.panelsMap[panel.id] = panel
+      Actions.savePanels()
     },
   },
 }

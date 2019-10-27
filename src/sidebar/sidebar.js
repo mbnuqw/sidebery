@@ -1,13 +1,24 @@
 import Vue from 'vue'
 import { mapGetters } from 'vuex'
-import { initMsgHandling } from '../event-bus'
+import EventBus, { initMsgHandling } from '../event-bus'
 import Sidebar from './sidebar.vue'
 import Dict from '../mixins/dict'
 import { initActionsMixin } from '../mixins/act'
 import Store from './store'
 import State from './store/state'
-import Actions from './actions'
-import Handlers from './handlers'
+import Actions, { injectInActions } from './actions'
+import Handlers, { injectInHandlers } from './handlers'
+
+const GLOB_CTX = {
+  getters: Store.getters,
+  state: State,
+  actions: Actions,
+  handlers: Handlers,
+  eventBus: EventBus,
+}
+
+injectInActions(GLOB_CTX)
+injectInHandlers(GLOB_CTX)
 
 if (!State.tabsMap) State.tabsMap = []
 Vue.mixin(Dict)
@@ -50,6 +61,8 @@ export default new Vue({
 
     if (State.theme !== 'default') Actions.initTheme()
     if (State.sidebarCSS) Actions.loadCustomCSS()
+
+    await Actions.loadContainers()
 
     await Actions.loadPanelIndex()
     await Actions.loadPanels()

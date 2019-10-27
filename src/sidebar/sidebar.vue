@@ -40,15 +40,15 @@
     //- Panels
     .panel-box
       component.panel(
-        v-for="(c, i) in $store.state.panels"
+        v-for="(panel, i) in $store.state.panels"
         ref="panels"
-        :key="c.cookieStoreId + c.name"
-        :is="c.panel"
+        :key="panel.id"
+        :is="getPanelComponent(panel)"
         :data-pos="getPanelPos(i)"
-        :tabs="c.tabs"
+        :tabs="panel.tabs"
         :index="i"
-        :panel="c"
-        :store-id="c.cookieStoreId"
+        :panel="panel"
+        :store-id="panel.cookieStoreId"
         :active="$store.state.panelIndex === i")
       transition(name="panel")
         window-input(v-if="$store.state.panelIndex === -5" :data-pos="windowInputPos")
@@ -120,6 +120,11 @@ export default {
    * --- Methods ---
    */
   methods: {
+    getPanelComponent(panel) {
+      if (panel.type === 'bookmarks') return 'BookmarksPanel'
+      return 'TabsPanel'
+    },
+
     /**
      * onFocusOut
      */

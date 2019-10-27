@@ -5,7 +5,10 @@
   @mousedown="onMouseDown"
   @mouseup.right="onRightMouseUp"
   @dblclick="onDoubleClick")
-  pinned-dock(v-if="$store.state.pinnedTabsPosition === 'panel'" :ctx="storeId")
+  pinned-dock(
+    v-if="$store.state.pinnedTabsPosition === 'panel'"
+    :panel-type="panel.type"
+    :ctx="storeId")
   scroll-box(ref="scrollBox")
     .container
       transition-group(name="tab" tag="div"): tab(
@@ -15,6 +18,13 @@
         :key="t.id"
         :child-count="getChildrenCount(i)"
         :tab="t")
+  .dbg.
+    ID: {{panel.id}}
+    Type: {{panel.type}}
+    CID: {{panel.cookieStoreId}}
+    Tabs count: {{panel.tabs.length}}
+    Start index: {{panel.startIndex}}
+    End index: {{panel.endIndex}}
 </template>
 
 
@@ -42,6 +52,7 @@ export default {
     },
     index: Number,
     storeId: String,
+    panel: Object,
   },
 
   data() {
@@ -150,6 +161,7 @@ export default {
       if (panel.type === 'bookmarks') type = 'bookmarksPanel'
       else if (panel.type === 'default') type = 'tabsPanel'
       else if (panel.type === 'ctx') type = 'tabsPanel'
+      else if (panel.type === 'tabs') type = 'tabsPanel'
 
       State.selected = [panel]
       Actions.openCtxMenu(type, e.clientX, e.clientY)
@@ -179,6 +191,7 @@ export default {
       if (panel.type === 'bookmarks') type = 'bookmarksPanel'
       else if (panel.type === 'default') type = 'tabsPanel'
       else if (panel.type === 'ctx') type = 'tabsPanel'
+      else if (panel.type === 'tabs') type = 'tabsPanel'
       if (!State.selected.length) State.selected = [panel]
 
       Actions.openCtxMenu(type)
@@ -302,7 +315,19 @@ export default {
      * Create new tab
      */
     createTab() {
-      Actions.createTab(this.storeId)
+      // Get target index (TODO: use user settings)
+      let index = this.panel.startIndex + this.panel.tabs.length
+
+      let config = {
+        index,
+        windowId: State.windowId
+      }
+
+      if (this.panel.type === 'ctx') {
+        config.cookieStoreId = this.panel.cookieStoreId
+      }
+
+      browser.tabs.create(config)
     },
   },
 }

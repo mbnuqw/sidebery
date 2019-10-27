@@ -68,9 +68,9 @@ function updateReqHandler() {
   this.includeHostsRules = []
   this.excludeHostsRules = {}
 
-  for (let ctr of this.panels) {
+  for (let ctr of Object.values(this.containers)) {
     // Proxy
-    if (ctr.proxified && ctr.proxy) this.proxies[ctr.cookieStoreId] = { ...ctr.proxy }
+    if (ctr.proxified && ctr.proxy) this.proxies[ctr.id] = { ...ctr.proxy }
 
     // Include rules
     if (ctr.includeHostsActive) {
@@ -82,13 +82,13 @@ function updateReqHandler() {
           rule = new RegExp(rule.slice(1, rule.length - 1))
         }
 
-        this.includeHostsRules.push({ ctx: ctr.cookieStoreId, value: rule })
+        this.includeHostsRules.push({ ctx: ctr.id, value: rule })
       }
     }
 
     // Exclude rules
     if (ctr.excludeHostsActive) {
-      this.excludeHostsRules[ctr.cookieStoreId] = ctr.excludeHosts
+      this.excludeHostsRules[ctr.id] = ctr.excludeHosts
         .split('\n')
         .map(r => {
           let rule = r.trim()

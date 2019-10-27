@@ -1,4 +1,5 @@
 import Utils from '../../utils'
+import { DEFAULT_CTX_ID } from '../../defaults'
 
 const URL_HOST_PATH_RE = /^([a-z0-9-]{1,63}\.)+\w+(:\d+)?\/[A-Za-z0-9-._~:/?#[\]%@!$&'()*+,;=]*$/
 
@@ -17,8 +18,20 @@ function onTabCreated(tab) {
   this.actions.closeCtxMenu()
   this.actions.resetSelection()
 
+  // Get panel of target tab
+  let panel
+  let activePanel = this.state.panels[this.state.panelIndex]
+  let ctxPanel = this.state.panels.find(p => {
+    return p.type === 'ctx' && p.cookieStoreId === tab.cookieStoreId
+  })
+
+  if (ctxPanel) panel = ctxPanel
+  else if (activePanel.type === 'tabs') panel = activePanel
+  else panel = this.state.panelsMap[DEFAULT_CTX_ID]
+  browser.sessions.setTabValue(tab.id, 'panelId', panel.id)
+
   // If new tab is out of panel, move it to the end of this panel
-  let panel = this.state.panelsMap[tab.cookieStoreId]
+  // let panel = this.state.panelsMap[tab.cookieStoreId]
   if (!tab.pinned) {
     let endIndex = panel.tabs.length ? panel.endIndex + 1 : panel.endIndex
     if (tab.index > endIndex || tab.index < panel.startIndex) {
@@ -32,6 +45,7 @@ function onTabCreated(tab) {
   }
 
   // Set default custom props (for reactivity)
+  tab.panelId = panel.id
   tab.isParent = false
   tab.folded = false
   if (tab.parentId === undefined) tab.parentId = -1
@@ -70,13 +84,13 @@ function onTabCreated(tab) {
     if (tab.openerTabId === undefined) {
       // Set tab tree level
       const nextTab = this.state.tabs[tab.index + 1]
-      if (nextTab && tab.cookieStoreId === nextTab.cookieStoreId) {
+      if (nextTab && tab.panelId === nextTab.panelId) {
         tab.parentId = nextTab.parentId
         tab.lvl = nextTab.lvl
       }
     } else {
       let parent = this.state.tabsMap[tab.openerTabId]
-      if (parent && parent.cookieStoreId === tab.cookieStoreId) {
+      if (parent && parent.panelId === tab.panelId) {
         let insideBranch = false
         for (let t, i = parent.index + 1; i < this.state.tabs.length; i++) {
           t = this.state.tabs[i]
@@ -123,6 +137,7 @@ function onTabCreated(tab) {
   }
 
   this.actions.recalcPanelScroll()
+  // this.actions.savePanelsRangesDebounced()
 }
 
 /**
@@ -276,8 +291,8 @@ function onTabRemoved(tabId, info, childfree) {
   // Try to get removed tab and his panel
   if (!this.state.tabsMap[tabId]) return
   let creatingNewTab
-  const tab = this.state.tabsMap[tabId]
-  const panel = this.state.panelsMap[tab.cookieStoreId]
+  let tab = this.state.tabsMap[tabId]
+  let panel = this.state.panelsMap[tab.panelId]
 
   // Recreate locked tab
   if (!tab.pinned && panel && panel.lockedTabs && tab.url.startsWith('http')) {
@@ -386,6 +401,8 @@ function onTabRemoved(tabId, info, childfree) {
     browser.tabs.sendMessage(groupTab.id, { name: 'remove', id: tab.id})
       .catch(() => {/** itsokay **/})
   }
+
+  this.actions.savePanelsRangesDebounced()
 }
 
 /**
@@ -423,13 +440,31 @@ function onTabMoved(id, info) {
 
   // Move tab in panel
   if (!this.state.tabsMap[id].pinned) {
-    const panel = this.state.panelsMap[movedTab.cookieStoreId]
-    if (panel && panel.tabs) {
-      let t = panel.tabs[info.fromIndex - panel.startIndex]
+    let srcPanel = this.state.panelsMap[movedTab.panelId]
+    let destPanel = this.state.panelsMap[movedTab.destPanelId]
+    movedTab.destPanelId = undefined
+    if (!destPanel) {
+      destPanel = this.state.panels.find(p => {
+        if (p.type === 'ctx' && p.cookieStoreId === movedTab.cookieStoreId) {
+          return true
+        }
+        return info.toIndex >= p.startIndex && info.toIndex <= (p.endIndex + 1)
+      })
+    }
+
+    if (srcPanel && srcPanel.tabs && destPanel && destPanel.tabs) {
+      let t = srcPanel.tabs[info.fromIndex - srcPanel.startIndex]
       if (t && t.id === movedTab.id) {
-        panel.tabs.splice(info.fromIndex - panel.startIndex, 1)
+        srcPanel.tabs.splice(info.fromIndex - srcPanel.startIndex, 1)
       }
-      panel.tabs.splice(info.toIndex - panel.startIndex, 0, movedTab)
+      let panelIndex = info.toIndex - destPanel.startIndex
+      if (srcPanel !== destPanel) {
+        srcPanel.lastActiveTab = null
+        browser.sessions.setTabValue(movedTab.id, 'panelId', destPanel.id)
+        panelIndex++
+      }
+      destPanel.tabs.splice(panelIndex, 0, movedTab)
+      movedTab.panelId = destPanel.id
       this.actions.updatePanelsRanges()
     }
   }
@@ -452,6 +487,8 @@ function onTabMoved(id, info) {
       if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
     }
   }
+
+  this.actions.savePanelsRangesDebounced()
 }
 
 /**
@@ -517,7 +554,7 @@ function onTabActivated(info) {
 
   // Remove updated flag
   tab.updated = false
-  let panel = this.state.panelsMap[tab.cookieStoreId]
+  let panel = this.state.panelsMap[tab.panelId]
   if (panel) {
     let i = panel.updated.indexOf(tab.id)
     panel.updated.splice(i, 1)
@@ -525,12 +562,11 @@ function onTabActivated(info) {
 
   // Find panel of activated tab
   if (tab.pinned && this.state.pinnedTabsPosition !== 'panel') return
-  const tabPanel = this.state.panelsMap[tab.cookieStoreId]
-  if (!tabPanel) return
+  if (!panel) return
 
   // Switch to activated tab's panel
   if (!currentPanel || !currentPanel.lockedPanel) {
-    this.actions.setPanel(tabPanel.index)
+    this.actions.setPanel(panel.index)
   }
 
   // Auto expand tabs group
@@ -549,8 +585,8 @@ function onTabActivated(info) {
     this.actions.expTabsBranch(tab.parentId)
   }
 
-  tabPanel.lastActiveTab = info.tabId
-  if (!tab.pinned) this.eventBus.$emit('scrollToTab', tabPanel.index, info.tabId)
+  panel.lastActiveTab = info.tabId
+  if (!tab.pinned) this.eventBus.$emit('scrollToTab', panel.index, info.tabId)
 
   // Update succession
   if (this.state.activateAfterClosing !== 'none') {

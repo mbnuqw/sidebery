@@ -7,6 +7,7 @@ export default {
   'settings.nav_settings_menu': { message: 'Menu' },
   'settings.nav_settings_nav': { message: 'Navigation bar' },
   'settings.nav_settings_group': { message: 'Group page' },
+  'settings.nav_settings_containers': { message: 'Containers' },
   'settings.nav_settings_panels': { message: 'Panels' },
   'settings.nav_settings_tabs': { message: 'Tabs' },
   'settings.nav_settings_pinned_tabs': { message: 'Pinned tabs' },
@@ -65,10 +66,20 @@ export default {
   'settings.group_layout_grid': { message: 'grid' },
   'settings.group_layout_list': { message: 'list' },
 
+  // --- Containers
+  'settings.containers_title': { message: 'Containers' },
+
   // --- Panels
   'settings.panels_title': { message: 'Panels' },
-  'settings.panel_remove_confirm_1': { message: 'Delete ' },
-  'settings.panel_remove_confirm_2': { message: ' panel?\nAll tabs of this panel and their cookies will also be removed.' },
+  'settings.panel_remove_confirm_1': { message: 'Delete "' },
+  'settings.panel_remove_confirm_2': { message: '" panel?\nAll tabs of this panel will also be removed.' },
+  'settings.panel_type_label': { message: 'Type' },
+  'settings.panel_type_tabs': { message: 'tabs' },
+  'settings.panel_type_ctx': { message: 'container' },
+  'settings.panel_container_label': { message: 'Container' },
+  'settings.panel_container_note_unset': { message: 'Please, select container.\nNote: Changing this option may cause reordering of the tabs.' },
+  'settings.panel_container_note': { message: 'Note: Changing this option may cause reordering of the tabs.' },
+  'settings.panel_icon_custom': { message: 'custom' },
 
   // --- Tabs
   'settings.tabs_title': { message: 'Tabs' },
