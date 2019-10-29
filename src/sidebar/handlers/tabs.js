@@ -1,5 +1,4 @@
 import Utils from '../../utils'
-import { DEFAULT_CTX_ID } from '../../defaults'
 
 const URL_HOST_PATH_RE = /^([a-z0-9-]{1,63}\.)+\w+(:\d+)?\/[A-Za-z0-9-._~:/?#[\]%@!$&'()*+,;=]*$/
 
@@ -18,46 +17,40 @@ function onTabCreated(tab) {
   this.actions.closeCtxMenu()
   this.actions.resetSelection()
 
-  // Get panel of target tab
-  let panel
-  let activePanel = this.state.panels[this.state.panelIndex]
-  let ctxPanel = this.state.panels.find(p => {
-    return p.type === 'ctx' && p.cookieStoreId === tab.cookieStoreId
-  })
-
-  if (ctxPanel) panel = ctxPanel
-  else if (activePanel.type === 'tabs') panel = activePanel
-  else panel = this.state.panelsMap[DEFAULT_CTX_ID]
+  // Get target panel
+  let panel = this.actions.getPanelForNewTab(tab)
   browser.sessions.setTabValue(tab.id, 'panelId', panel.id)
 
-  // If new tab is out of panel, move it to the end of this panel
-  // let panel = this.state.panelsMap[tab.cookieStoreId]
-  if (!tab.pinned) {
-    let endIndex = panel.tabs.length ? panel.endIndex + 1 : panel.endIndex
-    if (tab.index > endIndex || tab.index < panel.startIndex) {
-      browser.tabs.move(tab.id, { index: endIndex })
-    }
+  // Get target index
+  let index = this.actions.getIndexForNewTab(panel, tab)
+
+  let treeAllowed = this.state.moveNewTabParent === 'first_child' ||
+    this.state.moveNewTabParent === 'last_child'
+
+  // If new tab has wrong possition - move it
+  if (!tab.pinned && tab.index !== index) {
+    browser.tabs.move(tab.id, { index })
+    tab.destPanelId = panel.id
   }
 
   // Shift tabs after inserted one. (NOT detected by vue)
-  for (let i = tab.index; i < this.state.tabs.length; i++) {
+  for (let i = index; i < this.state.tabs.length; i++) {
     this.state.tabs[i].index++
   }
 
   // Set default custom props (for reactivity)
   tab.panelId = panel.id
+  tab.index = index
   tab.isParent = false
   tab.folded = false
+  if (!treeAllowed && tab.openerTabId) tab.parentId = undefined
   if (tab.parentId === undefined) tab.parentId = -1
   else tab.openerTabId = tab.parentId
   tab.lvl = 0
   tab.sel = false
   tab.invisible = false
-  if (tab.favIconUrl) {
-    if (tab.favIconUrl.startsWith('chrome')) tab.favIconUrl = ''
-  } else {
-    tab.favIconUrl = ''
-  }
+  if (!tab.favIconUrl) tab.favIconUrl = ''
+  else if (tab.favIconUrl.startsWith('chrome')) tab.favIconUrl = ''
   tab.updated = false
   tab.loading = false
   tab.warn = false
@@ -67,13 +60,13 @@ function onTabCreated(tab) {
 
   // Put new tab in tabs list
   this.state.tabsMap[tab.id] = tab
-  this.state.tabs.splice(tab.index, 0, tab)
+  this.state.tabs.splice(index, 0, tab)
 
   // Put new tab in panel
   if (!tab.pinned && panel && panel.tabs) {
-    let targetIndex = tab.index - panel.startIndex
+    let targetIndex = index - panel.startIndex
     if (targetIndex <= panel.tabs.length) {
-      panel.tabs.splice(tab.index - panel.startIndex, 0, tab)
+      panel.tabs.splice(targetIndex, 0, tab)
       this.actions.updatePanelsRanges()
     }
   }
@@ -83,14 +76,14 @@ function onTabCreated(tab) {
   if (this.state.tabsTree && !tab.pinned) {
     if (tab.openerTabId === undefined) {
       // Set tab tree level
-      const nextTab = this.state.tabs[tab.index + 1]
+      let nextTab = this.state.tabs[tab.index + 1]
       if (nextTab && tab.panelId === nextTab.panelId) {
         tab.parentId = nextTab.parentId
         tab.lvl = nextTab.lvl
       }
     } else {
       let parent = this.state.tabsMap[tab.openerTabId]
-      if (parent && parent.panelId === tab.panelId) {
+      if (parent && parent.panelId === tab.panelId && treeAllowed) {
         let insideBranch = false
         for (let t, i = parent.index + 1; i < this.state.tabs.length; i++) {
           t = this.state.tabs[i]
@@ -231,7 +224,7 @@ function onTabUpdated(tabId, change, tab) {
     if (localTab.url.startsWith('http') && localTab.url === tab.url) {
       // and if title doesn't looks like url
       if (!URL_HOST_PATH_RE.test(localTab.title) && !URL_HOST_PATH_RE.test(tab.title)) {
-        let panel = this.state.panelsMap[tab.cookieStoreId]
+        let panel = this.state.panelsMap[localTab.panelId]
         localTab.updated = true
         if (!tab.pinned || this.state.pinnedTabsPosition === 'panel') {
           if (!panel.updated.includes(tabId)) panel.updated.push(tabId)
@@ -245,7 +238,7 @@ function onTabUpdated(tabId, change, tab) {
 
   // Handle unpinned tab
   if (change.pinned !== undefined && !change.pinned) {
-    let panel = this.state.panelsMap[tab.cookieStoreId]
+    let panel = this.state.panelsMap[localTab.panelId]
     if (!panel) return
     if (panel && panel.tabs) browser.tabs.move(tabId, { index: panel.endIndex - 1 })
     panel.tabs.splice(localTab.index - panel.startIndex + 1, 0, localTab)
@@ -255,10 +248,10 @@ function onTabUpdated(tabId, change, tab) {
 
   // Handle pinned tab
   if (change.pinned !== undefined && change.pinned) {
-    let panel = this.state.panelsMap[tab.cookieStoreId]
+    let panel = this.state.panelsMap[localTab.panelId]
     let index = localTab.index - panel.startIndex
     if (panel.tabs[index] && panel.tabs[index].id === localTab.id) {
-      panel.tabs.splice(localTab.index - panel.startIndex, 1)
+      panel.tabs.splice(index, 1)
     }
     this.actions.updatePanelsRanges()
     this.actions.updateTabsTree()
@@ -420,6 +413,10 @@ function onTabMoved(id, info) {
     this.actions.resetSelection()
   }
 
+  // Check if target tab already placed
+  let tabAtTargetPlace = this.state.tabs[info.toIndex]
+  if (tabAtTargetPlace && tabAtTargetPlace.id === id) return
+
   // Move tab in tabs array
   let movedTab = this.state.tabs.splice(info.fromIndex, 1)[0]
   if (!movedTab) {
@@ -439,9 +436,10 @@ function onTabMoved(id, info) {
   }
 
   // Move tab in panel
-  if (!this.state.tabsMap[id].pinned) {
+  if (!movedTab.pinned) {
     let srcPanel = this.state.panelsMap[movedTab.panelId]
     let destPanel = this.state.panelsMap[movedTab.destPanelId]
+    if (movedTab.destPanelId) movedTab.invisible = true
     movedTab.destPanelId = undefined
     if (!destPanel) {
       destPanel = this.state.panels.find(p => {
@@ -461,7 +459,6 @@ function onTabMoved(id, info) {
       if (srcPanel !== destPanel) {
         srcPanel.lastActiveTab = null
         browser.sessions.setTabValue(movedTab.id, 'panelId', destPanel.id)
-        panelIndex++
       }
       destPanel.tabs.splice(panelIndex, 0, movedTab)
       movedTab.panelId = destPanel.id
@@ -541,9 +538,13 @@ function onTabActivated(info) {
   if (prevActive) {
     prevActive.active = false
 
-    if (!this.state.actTabs) this.state.actTabs = []
-    if (this.state.actTabs.length > 128) this.state.actTabs = this.state.actTabs.slice(32)
-    this.state.actTabs.push(prevActive.id)
+    let actTabsBox
+    if (this.state.activateAfterClosingGlobal) actTabsBox = this.state
+    else actTabsBox = this.state.panelsMap[prevActive.panelId] || this.state
+
+    if (!actTabsBox.actTabs) actTabsBox.actTabs = []
+    if (actTabsBox.actTabs.length > 128) actTabsBox.actTabs = actTabsBox.actTabs.slice(32)
+    actTabsBox.actTabs.push(prevActive.id)
   }
 
   // Update tabs and find activated one

@@ -173,6 +173,14 @@ footer
   text-align: center
   margin: 28px 0 24px
 
+// .Settings .sub-title
+//   box(relative)
+//   size(100%)
+//   text(s: rem(21), w: 400)
+//   color: var(--sub-title-fg)
+//   margin: 16px 0 8px
+//   text-align: center
+
 .Settings .separator
   box(relative)
   size(100%, 1px)
@@ -189,6 +197,14 @@ footer
   box(relative)
   grid-gap: 16px 0
   margin: 0 0 0 24px
+
+  &:not(:first-of-type):after
+    content: ''
+    box(absolute)
+    pos(0, 1px)
+    size(calc(100% - 2px), 1px)
+    background-color: var(--border-flare-fg)
+    box-shadow: 0 -1px 0 0 var(--border-fg)
 
 .Settings .ctrls
   box(relative, flex)

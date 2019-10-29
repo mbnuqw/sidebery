@@ -134,6 +134,10 @@
           @click="navigateTo('settings_tabs')">{{t('settings.nav_settings_tabs')}}</div>
         <div
           class="sub-option"
+          :data-active="$store.state.activeSection === 'settings_new_tab_position'"
+          @click="navigateTo('settings_new_tab_position')">{{t('settings.nav_settings_new_tab_position')}}</div>
+        <div
+          class="sub-option"
           :data-active="$store.state.activeSection === 'settings_pinned_tabs'"
           @click="navigateTo('settings_pinned_tabs')">{{t('settings.nav_settings_pinned_tabs')}}</div>
         <div

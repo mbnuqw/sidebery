@@ -24,6 +24,9 @@ export const SETTINGS_OPTIONS = {
   snapIntervalUnitOpts: ['min', 'hr', 'day'],
   snapLimitUnitOpts: ['snap', 'kb', 'day'],
   panelTypeOpts: ['tabs', 'ctx'],
+  moveNewTabPinOpts: ['start', 'end'],
+  moveNewTabParentOpts: ['sibling', 'first_child', 'last_child', 'start', 'end'],
+  moveNewTabOpts: ['start', 'end', 'after'],
 }
 
 export const DEFAULT_SETTINGS = {
@@ -56,6 +59,13 @@ export const DEFAULT_SETTINGS = {
   activateAfterClosing: 'next',
   activateAfterClosingPrevRule: 'visible',
   activateAfterClosingNextRule: 'tree',
+  activateAfterClosingGlobal: false,
+
+  // New tab position
+  moveNewTabPin: 'start',
+  moveNewTabParent: 'last_child',
+  moveNewTabParentActPanel: false,
+  moveNewTab: 'end',
 
   // Pinned tabs
   pinnedTabsPosition: 'panel',

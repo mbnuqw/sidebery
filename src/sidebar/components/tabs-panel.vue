@@ -315,13 +315,8 @@ export default {
      * Create new tab
      */
     createTab() {
-      // Get target index (TODO: use user settings)
-      let index = this.panel.startIndex + this.panel.tabs.length
-
-      let config = {
-        index,
-        windowId: State.windowId
-      }
+      let index = Actions.getIndexForNewTab(this.panel)
+      let config = { index, windowId: State.windowId }
 
       if (this.panel.type === 'ctx') {
         config.cookieStoreId = this.panel.cookieStoreId

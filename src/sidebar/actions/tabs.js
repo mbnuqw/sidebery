@@ -1,6 +1,7 @@
 import Utils from '../../utils'
 import Logs from '../../logs'
 import EventBus from '../../event-bus'
+import { DEFAULT_CTX_ID } from '../../defaults'
 import Actions from '../actions'
 
 const URL_WITHOUT_PROTOCOL_RE = /^(.+\.)\/?(.+\/)?\w+/
@@ -62,6 +63,7 @@ async function loadTabs(fresh = true) {
     if (t.active) activeTab = t
     if (tabsPanelIds[t.index]) t.panelId = tabsPanelIds[t.index]
     else t.panelId = null
+    if (t.active) this.state.activeTabId = t.id
   }
   this.state.tabs = tabs
 
@@ -1510,6 +1512,90 @@ function updateActiveGroupPage() {
   }
 }
 
+function getPanelForNewTab(tab) {
+  let panel, parentTab = this.state.tabsMap[tab.openerTabId]
+
+  if (tab.cookieStoreId !== DEFAULT_CTX_ID) {
+    panel = this.state.panels.find(p => {
+      return p.type === 'ctx' && p.cookieStoreId === tab.cookieStoreId
+    })
+  }
+
+  if (!panel && parentTab) {
+    panel = this.state.panelsMap[parentTab.panelId]
+    let activePanel = this.state.panels[this.state.panelIndex]
+    if (this.state.moveNewTabParentActPanel && panel !== activePanel) {
+      panel = null
+    }
+  }
+
+  if (!panel && !parentTab && this.state.moveNewTab === 'after') {
+    let activeTab = this.state.tabsMap[this.state.activeTabId]
+    panel = this.state.panelsMap[activeTab.panelId]
+  }
+
+  if (!panel) panel = this.state.panels[this.state.panelIndex]
+
+  if (
+    panel &&
+    panel.type === 'ctx' &&
+    panel.cookieStoreId !== tab.cookieStoreId
+  ) panel = null
+
+  if (!panel || !panel.tabs) panel = this.state.panelsMap[DEFAULT_CTX_ID]
+
+  return panel
+}
+
+/**
+ * Find and return index for new tab
+ * 
+ * @param {Object} panel
+ * @param {Object} [tab]
+ */
+function getIndexForNewTab(panel, tab) {
+  let parent = this.state.tabsMap[tab ? tab.openerTabId : null]
+  let endIndex = panel.tabs.length ? panel.endIndex + 1 : panel.endIndex
+  let activeTab = this.state.tabsMap[this.state.activeTabId]
+
+  if (parent && parent.pinned) {
+    if (this.state.moveNewTabPin === 'start') return panel.startIndex
+    if (this.state.moveNewTabPin === 'end') return endIndex
+  }
+
+  if (parent && !parent.pinned && parent.panelId === panel.id) {
+    if (
+      this.state.moveNewTabParent === 'sibling' ||
+      this.state.moveNewTabParent === 'last_child'
+    ) {
+      let tab, index = parent.index + 1
+      for (; index < this.state.tabs.length; index++) {
+        tab = this.state.tabs[index]
+        if (tab.lvl <= parent.lvl) break
+      }
+      return index
+    }
+    if (this.state.moveNewTabParent === 'first_child') return parent.index + 1
+    if (this.state.moveNewTabParent === 'start') return panel.startIndex
+    if (this.state.moveNewTabParent === 'end') return endIndex
+  }
+
+  if (this.state.moveNewTab === 'start') return panel.startIndex
+  if (this.state.moveNewTab === 'end') return endIndex
+  if (this.state.moveNewTab === 'after') {
+    if (!activeTab || activeTab.panelId !== panel.id) {
+      return endIndex
+    } else {
+      let tab, index = activeTab.index + 1
+      for (; index < this.state.tabs.length; index++) {
+        tab = this.state.tabs[index]
+        if (tab.lvl <= activeTab.lvl) break
+      }
+      return index
+    }
+  }
+}
+
 export default {
   loadTabs,
   getOrderNormMoves,
@@ -1566,4 +1652,7 @@ export default {
   updateTabsTree,
   queryTab,
   getTabsTree,
+
+  getPanelForNewTab,
+  getIndexForNewTab,
 }

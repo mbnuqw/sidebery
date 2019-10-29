@@ -163,8 +163,9 @@
       :value="$store.state.activateAfterClosing"
       :opts="$store.state.activateAfterClosingOpts"
       @input="setOpt('activateAfterClosing', $event)")
-    .sub-fields
+    .sub-fields(v-if="$store.state.activateAfterClosing !== 'none'")
       select-field(
+        v-if="activateAfterClosingNextOrPrev"
         label="settings.activate_after_closing_prev_rule"
         optLabel="settings.activate_after_closing_rule_"
         :value="$store.state.activateAfterClosingPrevRule"
@@ -172,12 +173,44 @@
         :opts="$store.state.activateAfterClosingPrevRuleOpts"
         @input="setOpt('activateAfterClosingPrevRule', $event)")
       select-field.-last(
+        v-if="activateAfterClosingNextOrPrev"
         label="settings.activate_after_closing_next_rule"
         optLabel="settings.activate_after_closing_rule_"
         :value="$store.state.activateAfterClosingNextRule"
         :inactive="!activateAfterClosingNextOrPrev"
         :opts="$store.state.activateAfterClosingNextRuleOpts"
         @input="setOpt('activateAfterClosingNextRule', $event)")
+      toggle-field(
+        v-if="$store.state.activateAfterClosing === 'prev_act'"
+        label="settings.activate_after_closing_global"
+        :value="$store.state.activateAfterClosingGlobal"
+        @input="setOpt('activateAfterClosingGlobal', $event)")
+
+  section(ref="settings_new_tab_position")
+    h2 {{t('settings.new_tab_position')}}
+    select-field(
+      label="settings.move_new_tab_pin"
+      optLabel="settings.move_new_tab_pin_"
+      :value="$store.state.moveNewTabPin"
+      :opts="$store.state.moveNewTabPinOpts"
+      @input="setOpt('moveNewTabPin', $event)")
+    select-field(
+      label="settings.move_new_tab_parent"
+      optLabel="settings.move_new_tab_parent_"
+      :value="$store.state.moveNewTabParent"
+      :opts="$store.state.moveNewTabParentOpts"
+      @input="setOpt('moveNewTabParent', $event)")
+    .sub-fields
+      toggle-field(
+        label="settings.move_new_tab_parent_act_panel"
+        :value="$store.state.moveNewTabParentActPanel"
+        @input="setOpt('moveNewTabParentActPanel', $event)")
+    select-field(
+      label="settings.move_new_tab"
+      optLabel="settings.move_new_tab_"
+      :value="$store.state.moveNewTab"
+      :opts="$store.state.moveNewTabOpts"
+      @input="setOpt('moveNewTab', $event)")
 
   section(ref="settings_pinned_tabs")
     h2 {{t('settings.pinned_tabs_title')}}
@@ -542,6 +575,7 @@ const SECTIONS = [
   'settings_containers',
   'settings_panels',
   'settings_tabs',
+  'settings_new_tab_position',
   'settings_pinned_tabs',
   'settings_tabs_tree',
   'settings_bookmarks',

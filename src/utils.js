@@ -286,7 +286,7 @@ function findSuccessorTab(state, tab, exclude) {
       if (isNextTree && next.lvl < tab.lvl) break
 
       // Next tab is out of target panel
-      if (next.cookieStoreId !== tab.cookieStoreId || next.pinned !== tab.pinned) break
+      if (next.panelId !== tab.panelId || next.pinned !== tab.pinned) break
     
       // Next tab excluded
       if (exclude && exclude.includes(next.id)) continue
@@ -298,7 +298,7 @@ function findSuccessorTab(state, tab, exclude) {
       if (rmChild && next.lvl > tab.lvl) continue
 
       // OK: Next tab is in current panel
-      if (next.cookieStoreId === tab.cookieStoreId) {
+      if (next.panelId === tab.panelId) {
         target = next
         break
       }
@@ -310,7 +310,7 @@ function findSuccessorTab(state, tab, exclude) {
         prev = state.tabs[i]
 
         // Prev tab is out of target panel
-        if (prev.cookieStoreId !== tab.cookieStoreId || prev.pinned !== tab.pinned) break
+        if (prev.panelId !== tab.panelId || prev.pinned !== tab.pinned) break
 
         // Prev tab is excluded
         if (exclude && exclude.includes(prev.id)) continue
@@ -322,7 +322,7 @@ function findSuccessorTab(state, tab, exclude) {
         if (isPrevVisible && prev.invisible) continue
 
         // OK: Prev tab is in target panel
-        if (prev.cookieStoreId === tab.cookieStoreId) {
+        if (prev.panelId === tab.panelId) {
           target = prev
           break
         }
@@ -348,7 +348,7 @@ function findSuccessorTab(state, tab, exclude) {
       prev = state.tabs[i]
 
       // Prev tab is out of target panel
-      if (prev.cookieStoreId !== tab.cookieStoreId || prev.pinned !== tab.pinned) break
+      if (prev.panelId !== tab.panelId || prev.pinned !== tab.pinned) break
 
       // Prev tab is excluded
       if (exclude && exclude.includes(prev.id)) continue
@@ -360,7 +360,7 @@ function findSuccessorTab(state, tab, exclude) {
       if (isPrevVisible && prev.invisible) continue
 
       // OK: Prev tab is in target panel
-      if (prev.cookieStoreId === tab.cookieStoreId) {
+      if (prev.panelId === tab.panelId) {
         target = prev
         break
       }
@@ -374,7 +374,7 @@ function findSuccessorTab(state, tab, exclude) {
         if (isNextTree && next.lvl < tab.lvl) break
 
         // Next tab is out of target panel
-        if (next.cookieStoreId !== tab.cookieStoreId || next.pinned !== tab.pinned) break
+        if (next.panelId !== tab.panelId || next.pinned !== tab.pinned) break
       
         // Next tab excluded
         if (exclude && exclude.includes(next.id)) continue
@@ -386,7 +386,7 @@ function findSuccessorTab(state, tab, exclude) {
         if (rmChild && next.lvl > tab.lvl) continue
 
         // OK: Next tab is in current panel
-        if (next.cookieStoreId === tab.cookieStoreId) {
+        if (next.panelId === tab.panelId) {
           target = next
           break
         }
@@ -395,10 +395,16 @@ function findSuccessorTab(state, tab, exclude) {
   }
 
   // Previously active tab
-  if (state.actTabs && state.activateAfterClosing === 'prev_act') {
+  if (state.activateAfterClosing === 'prev_act') {
+    let actTabsBox
+    if (state.activateAfterClosingGlobal) actTabsBox = state
+    else actTabsBox = state.panelsMap[tab.panelId] || state
+
+    if (!actTabsBox.actTabs) return
+
     let targetId
-    for (let i = state.actTabs.length; i--; ) {
-      targetId = state.actTabs[i]
+    for (let i = actTabsBox.actTabs.length; i--; ) {
+      targetId = actTabsBox.actTabs[i]
 
       // Tab excluded
       if (exclude && exclude.includes(targetId)) continue
