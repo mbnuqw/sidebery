@@ -1059,8 +1059,19 @@ async function moveDroppedNodes(dropIndex, dropParent, nodes, pin, currentPanel)
   // Move if target index is different or pinned state changed
   const moveIndexOk = tabs[0].index !== dropIndex && tabs[tabs.length - 1].index !== dropIndex
   if (moveIndexOk || pinTab || unpinTab) {
-    this.state.movingTabs = tabs.map(t => t.id)
+    this.state.movingTabs = []
+    for (let tab of tabs) {
+      tab.destPanelId = currentPanel.id
+      this.state.movingTabs.push(tab.id)
+    }
     browser.tabs.move([...this.state.movingTabs], { windowId: this.state.windowId, index: dropIndex })
+  }
+
+  if (tabs[0].panelId !== currentPanel.id) {
+    for (let tab of tabs) {
+      tab.panelId = currentPanel.id
+    }
+    this.actions.updatePanelsTabs()
   }
 
   // Update tabs tree
