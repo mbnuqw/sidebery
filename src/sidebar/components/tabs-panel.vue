@@ -249,8 +249,10 @@ export default {
       State.panelLeftOffset = b.left
       State.panelScrollEl = this.getScrollEl()
 
-      if (!this.$refs.tabs) return
-      if (!this.$refs.tabs.length) return
+      if (!this.$refs.tabs || !this.$refs.tabs.length) {
+        State.itemSlots = []
+        return
+      }
 
       // probe tabs heights
       const compStyle = getComputedStyle(this.$el)

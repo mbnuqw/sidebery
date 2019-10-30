@@ -1,5 +1,5 @@
 <template lang="pug">
-.nav(v-noise:300.g:12:af.a:0:42.s:0:9="" ref="nav")
+.nav(v-noise:300.g:12:af.a:0:42.s:0:9="" ref="nav" @dragleave="onDragLeave" @dragenter="onDragEnter")
   .nav-bar(@wheel.stop.prevent="onNavWheel")
     .nav-btn(
       v-for="(btn, i) in nav"
@@ -252,7 +252,7 @@ export default {
         }
         if (State.hiddenPanelsBar) State.hiddenPanelsBar = false
         Actions.switchToPanel(i)
-      }, 300)
+      }, 500)
     },
 
     /**
@@ -261,6 +261,16 @@ export default {
     onNavDragLeave(i) {
       if (i >= this.nav.length - 1) return
       if (this.navDragEnterTimeout && this.navDragEnterIndex === i) {
+        clearTimeout(this.navDragEnterTimeout)
+      }
+    },
+
+    onDragEnter(event) {
+      this.enteredTarget = event.target
+    },
+
+    onDragLeave(event) {
+      if (this.enteredTarget === event.target) {
         clearTimeout(this.navDragEnterTimeout)
       }
     },
