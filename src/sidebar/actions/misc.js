@@ -260,6 +260,22 @@ function getLogs() {
   return Logs
 }
 
+function confirm(msg) {
+  return new Promise(res => {
+    this.state.confirm = {
+      msg,
+      ok: () => {
+        this.state.confirm = null
+        res(true)
+      },
+      cancel: () => {
+        this.state.confirm = null
+        res(false)
+      },
+    }
+  })
+}
+
 export default {
   loadPlatformInfo,
   loadWindowInfo,
@@ -280,4 +296,5 @@ export default {
   startMultiSelection,
   stopMultiSelection,
   getLogs,
+  confirm,
 }

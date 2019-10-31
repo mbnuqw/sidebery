@@ -131,6 +131,12 @@
 
   section(ref="settings_tabs")
     h2 {{t('settings.tabs_title')}}
+    select-field(
+      label="settings.warn_on_multi_tab_close"
+      optLabel="settings.warn_on_multi_tab_close_"
+      :value="$store.state.warnOnMultiTabClose"
+      :opts="$store.state.warnOnMultiTabCloseOpts"
+      @input="setOpt('warnOnMultiTabClose', $event)")
     toggle-field(
       label="settings.activate_on_mouseup"
       :inline="true"
@@ -311,6 +317,12 @@
       :inline="true"
       :value="$store.state.bookmarksPanel"
       @input="setOpt('bookmarksPanel', $event)")
+    select-field(
+      label="settings.warn_on_multi_bookmark_delete"
+      optLabel="settings.warn_on_multi_bookmark_delete_"
+      :value="$store.state.warnOnMultiBookmarkDelete"
+      :opts="$store.state.warnOnMultiBookmarkDeleteOpts"
+      @input="setOpt('warnOnMultiBookmarkDelete', $event)")
     toggle-field(
       label="settings.open_bookmark_new_tab"
       :inline="true"

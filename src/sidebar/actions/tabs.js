@@ -332,34 +332,50 @@ function createTab(ctxId) {
 async function removeTabs(tabIds) {
   if (!tabIds || !tabIds.length) return
   if (!this.state.tabsMap[tabIds[0]]) return
-  const ctxId = this.state.tabsMap[tabIds[0]].cookieStoreId
-  const panel = this.actions.getTabPanel(tabIds[0])
+  let panelId = this.state.tabsMap[tabIds[0]].panelId
+  let panel = this.state.panelsMap[panelId]
+  // const ctxId = this.state.tabsMap[tabIds[0]].cookieStoreId
+  // const panel = this.actions.getTabPanel(tabIds[0])
   if (!panel) return
 
   let tabsMap = {}
+  let hasInvisibleTab = false
   for (let id of tabIds) {
     let tab = this.state.tabsMap[id]
     if (!tab) continue
-    if (tab.cookieStoreId !== ctxId) continue
+    if (tab.panelId !== panelId) continue
     if (panel.lockedTabs && !tab.url.startsWith('about')) continue
 
     tabsMap[id] = tab
-    tab.invisible = true
+    if (tab.invisible) hasInvisibleTab = true
 
     if (
       this.state.rmChildTabs === 'folded' && tab.folded ||
       this.state.rmChildTabs === 'all'
     ) {
-      for (let i = tab.index + 1; i < this.state.tabs.length; i++) {
-        if (this.state.tabs[i].lvl <= tab.lvl) break
-        tabsMap[this.state.tabs[i].id] = this.state.tabs[i]
+      for (let t, i = tab.index + 1; i < this.state.tabs.length; i++) {
+        t = this.state.tabs[i]
+        if (t.lvl <= tab.lvl) break
+        if (t.invisible) hasInvisibleTab = true
+        tabsMap[t.id] = t
       }
     }
   }
 
+  let count = Object.keys(tabsMap).length
+  let warn = this.state.warnOnMultiTabClose === 'any' ||
+    (hasInvisibleTab && this.state.warnOnMultiTabClose === 'collapsed')
+  if (warn && count > 1) {
+    let ok = await this.actions.confirm(`Are you sure you want to close ${count} tabs?`)
+    if (!ok) return
+  }
+
   // Set tabs to be removed
   const tabs = Object.values(tabsMap).sort((a, b) => a.index - b.index)
-  const toRemove = tabs.map(t => t.id)
+  const toRemove = tabs.map(t => {
+    t.invisible = true
+    return t.id
+  })
   if (this.state.removingTabs && this.state.removingTabs.length) {
     this.state.removingTabs = [...this.state.removingTabs, ...toRemove]
   } else {
@@ -368,11 +384,9 @@ async function removeTabs(tabIds) {
 
   // No-empty panels
   if (tabs.length === panel.tabs.length && panel.noEmpty) {
-    await browser.tabs.create({
-      windowId: this.state.windowId,
-      index: panel.startIndex,
-      cookieStoreId: ctxId,
-    })
+    let conf = { windowId: this.state.windowId, index: panel.startIndex }
+    if (panel.type === 'ctx') conf.cookieStoreId = panel.cookieStoreId
+    await browser.tabs.create(conf)
   }
 
   // Update successorTabId if there are active tab

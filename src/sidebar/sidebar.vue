@@ -23,21 +23,17 @@
     v-noise:300.g:12:af.a:0:42.s:0:9="")
     .info {{t('upgrading')}}
 
-  ctx-menu
+  Confirm
+  CtxMenu
 
   .pointer(ref="pointer")
     .arrow(:data-expanding="pointerExpanding" @animationend="onPointerExpanded")
 
-  //- Pinned tabs dock
-  pinned-dock(v-if="$store.state.pinnedTabsPosition !== 'panel'")
+  PinnedDock(v-if="$store.state.pinnedTabsPosition !== 'panel'")
 
   .box(ref="box")
     .dimmer(@mousedown="$store.state.hiddenPanelsBar = false")
-
-    //- Navigation
-    nav-bar
-
-    //- Panels
+    NavBar
     .panel-box
       component.panel(
         v-for="(panel, i) in $store.state.panels"
@@ -51,9 +47,9 @@
         :store-id="panel.cookieStoreId"
         :active="$store.state.panelIndex === i")
       transition(name="panel")
-        window-input(v-if="$store.state.panelIndex === -5" :data-pos="windowInputPos")
+        WindowInput(v-if="$store.state.panelIndex === -5" :data-pos="windowInputPos")
       transition(name="hidden-panels-bar")
-        hidden-panels-bar(v-if="$store.state.hiddenPanelsBar")
+        HiddenPanelsBar(v-if="$store.state.hiddenPanelsBar")
 </template>
 
 
@@ -73,6 +69,7 @@ import BookmarksPanel from './components/bookmarks-panel'
 import TabsPanel from './components/tabs-panel'
 import WindowInput from './components/window-select-input'
 import PinnedDock from './components/pinned-tabs-dock'
+import Confirm from './components/confirm'
 
 const noiseBg = initNoiseBgDirective(State, Store)
 Vue.directive('noise', noiseBg)
@@ -87,6 +84,7 @@ export default {
     TabsPanel,
     WindowInput,
     PinnedDock,
+    Confirm,
   },
 
   data() {

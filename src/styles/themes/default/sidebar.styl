@@ -109,6 +109,53 @@
   overflow: hidden
 
 // ---
+// -- Confirm
+// -
+.Confirm
+  box(absolute, flex)
+  pos(0, 0)
+  size(100%, same)
+  justify-content: center
+  align-items: center
+  z-index: 5000
+  background-color: #00000036
+
+.Confirm .msg-box
+  box(relative)
+  size(100%)
+  margin-bottom: 64px
+  background-color: var(--bg)
+  box-shadow: 0 0 0 1px #00000016,
+              0 0 16px 0 #00000032,
+              inset 0 1px 0 0 var(--border-flare-fg)
+
+.Confirm h2
+  box(relative)
+  text(s: rem(21), w: 700)
+  color: var(--title-fg)
+  margin: 16px 0
+  padding: 0
+  text-align: center
+
+.Confirm .msg
+  box(relative)
+  text(s: rem(16))
+  padding: 0 8px
+  color: var(--label-fg)
+  text-align: center
+
+.Confirm .ctrls
+  box(relative, flex)
+  margin: 16px 0 0
+
+.Confirm .btn
+  size(min-w: 50%)
+  text(s: rem(16))
+  padding: 8px 0
+  border-radius: 0
+
+
+// ---
 // -- Nav bar
 // -
 .Sidebar .nav-bar
@@ -532,3 +579,25 @@
   .hidden-panels-bar-leave-to
     transform: translateY(-100%)
     z-index: 0
+
+  .confirm-enter-active
+  .confirm-leave-active
+    transition: opacity var(--d-fast)
+    .msg-box
+      transition: transform var(--d-fast)
+  .confirm-enter
+    opacity: 0
+    .msg-box
+      transform: translateY(32px)
+  .confirm-enter-to
+    opacity: 1
+    .msg-box
+      transform: translateY(0)
+  .confirm-leave
+    opacity: 1
+    .msg-box
+      transform: translateY(0)
+  .confirm-leave-to
+    opacity: 0
+    .msg-box
+      transform: translateY(32px)

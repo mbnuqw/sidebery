@@ -277,11 +277,6 @@ export default {
       nodes.push(this.node)
       this.$emit('start-selection', event, nodes)
     },
-
-    remove() {
-      if (!this.isParent) browser.bookmarks.remove(this.node.id)
-      else browser.bookmarks.removeTree(this.node.id)
-    },
   },
 }
 </script>

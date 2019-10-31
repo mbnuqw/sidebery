@@ -52,4 +52,6 @@ export default {
 
   favicons: [],
   favUrls: {},
+
+  confirm: null,
 }

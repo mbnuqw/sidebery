@@ -84,6 +84,10 @@ export default {
 
   // --- Tabs
   'settings.tabs_title': { message: 'Tabs' },
+  'settings.warn_on_multi_tab_close': { message: 'Warn on trying close multiple tabs' },
+  'settings.warn_on_multi_tab_close_any': { message: 'any' },
+  'settings.warn_on_multi_tab_close_collapsed': { message: 'collapsed' },
+  'settings.warn_on_multi_tab_close_none': { message: 'none' },
   'settings.activate_on_mouseup': { message: 'Activate tab on mouse button release' },
   'settings.activate_last_tab_on_panel_switching': {
     message: 'Activate last active tab on panels switching',
@@ -163,6 +167,10 @@ export default {
   // --- Bookmarks
   'settings.bookmarks_title': { message: 'Bookmarks' },
   'settings.bookmarks_panel': { message: 'Bookmarks panel' },
+  'settings.warn_on_multi_bookmark_delete': { message: 'Warn on trying delete multiple bookmarks' },
+  'settings.warn_on_multi_bookmark_delete_any': { message: 'any' },
+  'settings.warn_on_multi_bookmark_delete_collapsed': { message: 'collapsed' },
+  'settings.warn_on_multi_bookmark_delete_none': { message: 'none' },
   'settings.open_bookmark_new_tab': { message: 'Open bookmark in new tab' },
   'settings.mid_click_bookmark': { message: 'Middle click on the bookmark' },
   'settings.mid_click_bookmark_open_new_tab': { message: 'open in new tab' },

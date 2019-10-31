@@ -28,6 +28,8 @@ export const SETTINGS_OPTIONS = {
   moveNewTabParentOpts: ['sibling', 'first_child', 'last_child', 'start', 'end'],
   moveNewTabOpts: ['start', 'end', 'after'],
   midClickBookmarkOpts: ['open_new_tab', 'edit', 'delete'],
+  warnOnMultiTabCloseOpts: ['any', 'collapsed', 'none'],
+  warnOnMultiBookmarkDeleteOpts: ['any', 'collapsed', 'none'],
 }
 
 export const DEFAULT_SETTINGS = {
@@ -52,6 +54,7 @@ export const DEFAULT_SETTINGS = {
   groupLayout: 'grid',
 
   // Tabs
+  warnOnMultiTabClose: 'collapsed',
   activateOnMouseUp: false,
   activateLastTabOnPanelSwitching: true,
   skipEmptyPanels: false,
@@ -89,6 +92,7 @@ export const DEFAULT_SETTINGS = {
 
   // Bookmarks
   bookmarksPanel: true,
+  warnOnMultiBookmarkDelete: 'collapsed',
   openBookmarkNewTab: false,
   midClickBookmark: 'open_new_tab',
   actMidClickTab: false,

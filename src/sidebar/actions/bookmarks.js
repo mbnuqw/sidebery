@@ -372,6 +372,33 @@ function startBookmarkEditing(node) {
  * Remove bookmarks
  */
 async function removeBookmarks(ids) {
+  let count = 0
+  let hasCollapsed = false
+  let walker = nodes => {
+    for (let n of nodes) {
+      count++
+      if (n.children && n.children.length) {
+        if (!n.expanded) hasCollapsed = true
+        walker(n.children)
+      }
+    }
+  }
+  for (let id of ids) {
+    let n = this.state.bookmarksMap[id]
+    count++
+    if (n.children && n.children.length) {
+      if (!n.expanded) hasCollapsed = true
+      walker(n.children)
+    }
+  }
+
+  let warn = this.state.warnOnMultiBookmarkDelete === 'any' ||
+    (this.state.warnOnMultiBookmarkDelete === 'collapsed' && hasCollapsed)
+  if (warn && count > 1) {
+    let ok = await this.actions.confirm('Are you sure you want to delete multiple folders/bookmarks?')
+    if (!ok) return
+  }
+
   for (let id of ids) {
     await browser.bookmarks.removeTree(id)
   }
