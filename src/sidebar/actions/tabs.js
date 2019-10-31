@@ -550,12 +550,24 @@ async function duplicateTabs(tabIds) {
   for (let tabId of tabIds) {
     let tab = this.state.tabsMap[tabId]
     if (!tab) continue
+
+    let index = tab.index + 1
+    for (let t; index < this.state.tabs.length; index++) {
+      t = this.state.tabs[index]
+      if (t.lvl <= tab.lvl) break
+    }
+
+    if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
+    this.state.newTabsPosition[index] = {
+      panel: tab.panelId,
+      parent: tab.parentId,
+    }
+
     await browser.tabs.create({
       windowId: this.state.windowId,
-      index: tab.index + 1,
+      index,
       cookieStoreId: tab.cookieStoreId,
-      url: tab.url,
-      openerTabId: tabId,
+      url: Utils.normalizeUrl(tab.url),
     })
   }
 }

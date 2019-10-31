@@ -1,4 +1,5 @@
 import Utils from '../../utils'
+import { DEFAULT_CTX_ID } from '../../defaults'
 
 const URL_HOST_PATH_RE = /^([a-z0-9-]{1,63}\.)+\w+(:\d+)?\/[A-Za-z0-9-._~:/?#[\]%@!$&'()*+,;=]*$/
 
@@ -17,12 +18,19 @@ function onTabCreated(tab) {
   this.actions.closeCtxMenu()
   this.actions.resetSelection()
 
-  // Get target panel
-  let panel = this.actions.getPanelForNewTab(tab)
+  // Get target panel and index
+  let panel, index
+  if (this.state.newTabsPosition && this.state.newTabsPosition[tab.index]) {
+    let position = this.state.newTabsPosition[tab.index]
+    panel = this.state.panelsMap[position.panel]
+    if (!panel) panel = this.state.panelsMap[DEFAULT_CTX_ID]
+    index = tab.index
+    tab.openerTabId = position.parent
+  } else {
+    panel = this.actions.getPanelForNewTab(tab)
+    index = this.actions.getIndexForNewTab(panel, tab)
+  }
   browser.sessions.setTabValue(tab.id, 'panelId', panel.id)
-
-  // Get target index
-  let index = this.actions.getIndexForNewTab(panel, tab)
 
   let treeAllowed = this.state.moveNewTabParent === 'first_child' ||
     this.state.moveNewTabParent === 'last_child'

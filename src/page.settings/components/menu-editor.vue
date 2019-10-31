@@ -219,6 +219,7 @@ const TABS_MENU_OPTS = {
   'moveToWin': 'menu.tab.move_to_window_',
   'moveToCtr': 'menu.tab.reopen_in_ctr_',
   'mute': 'menu.tab.mute',
+  'duplicate': 'menu.tab.duplicate',
   'discard': 'menu.tab.discard',
   'group': 'menu.tab.group',
   'flatten': 'menu.tab.flatten',

@@ -305,6 +305,7 @@ export const DEFAULT_TABS_MENU = [
   ],
   'separator-2',
   'pin',
+  'duplicate',
   'discard',
   'separator-3',
   'group',
@@ -444,6 +445,15 @@ export const MENU_OPTIONS = {
       label: translate('menu.tab.reload'),
       icon: 'icon_reload',
       action: 'reloadTabs',
+      args: [state.selected],
+    }
+  },
+
+  duplicate: (state) => {
+    return {
+      label: translate('menu.tab.duplicate'),
+      icon: 'icon_duplicate',
+      action: 'duplicateTabs',
       args: [state.selected],
     }
   },
