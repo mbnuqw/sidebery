@@ -132,6 +132,9 @@ export default {
       }
 
       if (e.shiftKey) {
+        if (State.shiftSelAct && !State.selected.length) {
+          if (State.activeTabId > -1) Actions.selectItem(State.activeTabId)
+        }
         if (!State.selected.length) {
           Actions.selectItem(this.tab.id)
         } else {

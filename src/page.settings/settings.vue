@@ -4,15 +4,14 @@
   @scroll.passive="onScroll")
   section(ref="settings_general")
     h2 {{t('settings.general_title')}}
-    ToggleField.-first.-last(
+    ToggleField(
       label="settings.native_scrollbars"
-      :inline="true"
       :value="$store.state.nativeScrollbars"
       @input="setOpt('nativeScrollbars', $event)")
 
   section(ref="settings_menu")
     h2 {{t('settings.ctx_menu_title')}}
-    ToggleField.-first(
+    ToggleField(
       label="settings.ctx_menu_native"
       :inline="true"
       :value="$store.state.ctxMenuNative"
@@ -24,7 +23,7 @@
       :value="$store.state.autoHideCtxMenu"
       :opts="$store.state.autoHideCtxMenuOpts"
       @input="setOpt('autoHideCtxMenu', $event)")
-    ToggleField.-last(
+    ToggleField(
       label="settings.ctx_menu_render_inact"
       :inline="true"
       :value="$store.state.ctxMenuRenderInact"
@@ -185,6 +184,10 @@
         label="settings.activate_after_closing_global"
         :value="$store.state.activateAfterClosingGlobal"
         @input="setOpt('activateAfterClosingGlobal', $event)")
+    ToggleField(
+      label="settings.shift_selection_from_active"
+      :value="$store.state.shiftSelAct"
+      @input="setOpt('shiftSelAct', $event)")
 
   section(ref="settings_new_tab_position")
     h2 {{t('settings.new_tab_position')}}

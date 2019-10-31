@@ -60,6 +60,7 @@ export const DEFAULT_SETTINGS = {
   activateAfterClosingPrevRule: 'visible',
   activateAfterClosingNextRule: 'tree',
   activateAfterClosingGlobal: false,
+  shiftSelAct: true,
 
   // New tab position
   moveNewTabPin: 'start',

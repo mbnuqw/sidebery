@@ -102,6 +102,7 @@ export default {
   'settings.activate_after_closing_rule_visible': { message: 'visible' },
   'settings.activate_after_closing_rule_any': { message: 'any' },
   'settings.activate_after_closing_global': { message: 'Globally' },
+  'settings.shift_selection_from_active': { message: 'Start shift+click selection from the active tab' },
 
   // --- New tab position
   'settings.new_tab_position': { message: 'New tab position' },
