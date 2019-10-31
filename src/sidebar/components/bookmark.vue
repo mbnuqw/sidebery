@@ -105,7 +105,13 @@ export default {
         Actions.resetSelection()
         return
       }
-      this.openUrl(true, false)
+      if (State.midClickBookmark === 'open_new_tab') {
+        this.openUrl(true, State.actMidClickTab)
+      } else if (State.midClickBookmark === 'edit') {
+        Actions.startBookmarkEditing(this.node)
+      } else if (State.midClickBookmark === 'delete') {
+        Actions.removeBookmarks([this.node.id])
+      }
     },
 
     /**

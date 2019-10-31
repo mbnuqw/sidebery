@@ -317,6 +317,20 @@
       :inactive="!$store.state.bookmarksPanel"
       :value="$store.state.openBookmarkNewTab"
       @input="setOpt('openBookmarkNewTab', $event)")
+    select-field(
+      label="settings.mid_click_bookmark"
+      optLabel="settings.mid_click_bookmark_"
+      :inactive="!$store.state.tabsTree"
+      :value="$store.state.midClickBookmark"
+      :opts="$store.state.midClickBookmarkOpts"
+      @input="setOpt('midClickBookmark', $event)")
+    .sub-fields(v-if="$store.state.midClickBookmark === 'open_new_tab'")
+      toggle-field(
+        label="settings.act_mid_click_tab"
+        :inline="true"
+        :inactive="!$store.state.bookmarksPanel"
+        :value="$store.state.actMidClickTab"
+        @input="setOpt('actMidClickTab', $event)")
     toggle-field(
       label="settings.auto_close_bookmarks"
       :inline="true"

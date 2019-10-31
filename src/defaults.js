@@ -27,6 +27,7 @@ export const SETTINGS_OPTIONS = {
   moveNewTabPinOpts: ['start', 'end'],
   moveNewTabParentOpts: ['sibling', 'first_child', 'last_child', 'start', 'end'],
   moveNewTabOpts: ['start', 'end', 'after'],
+  midClickBookmarkOpts: ['open_new_tab', 'edit', 'delete'],
 }
 
 export const DEFAULT_SETTINGS = {
@@ -89,6 +90,8 @@ export const DEFAULT_SETTINGS = {
   // Bookmarks
   bookmarksPanel: true,
   openBookmarkNewTab: false,
+  midClickBookmark: 'open_new_tab',
+  actMidClickTab: false,
   autoCloseBookmarks: false,
   autoRemoveOther: false,
   highlightOpenBookmarks: false,
