@@ -650,7 +650,6 @@ export const MENU_OPTIONS = {
       action: 'startBookmarkCreation',
       args: ['bookmark', node],
     }
-    if (node.type !== 'folder') option.inactive = true
     if (!state.ctxMenuRenderInact && option.inactive) return
     return option
   },
@@ -663,7 +662,6 @@ export const MENU_OPTIONS = {
       action: 'startBookmarkCreation',
       args: ['folder', node],
     }
-    if (node.type !== 'folder') option.inactive = true
     if (!state.ctxMenuRenderInact && option.inactive) return
     return option
   },
@@ -676,7 +674,6 @@ export const MENU_OPTIONS = {
       action: 'startBookmarkCreation',
       args: ['separator', node],
     }
-    if (node.type !== 'folder') option.inactive = true
     if (!state.ctxMenuRenderInact && option.inactive) return
     return option
   },

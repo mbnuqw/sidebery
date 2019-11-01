@@ -347,16 +347,19 @@ async function openBookmarksInPanel(ids, panelId) {
  * Start bookmark creation
  */
 function startBookmarkCreation(type, target) {
-  let parentId
-  if (target.type === 'bookmark') parentId = target.parentId
-  if (target.type === 'folder') parentId = target.id
+  let parentId, index = 0
+  if (target.type === 'bookmark' || target.type === 'separator') {
+    parentId = target.parentId
+    index = target.index + 1
+  }
+  else if (target.type === 'folder') parentId = target.id
 
   if (type === 'separator') {
-    browser.bookmarks.create({ parentId, type: 'separator', index: 0 })
+    browser.bookmarks.create({ parentId, type: 'separator', index })
     return
   }
 
-  this.state.bookmarkEditorTarget = { type, parentId }
+  this.state.bookmarkEditorTarget = { type, parentId, index }
   this.state.bookmarkEditor = true
 }
 

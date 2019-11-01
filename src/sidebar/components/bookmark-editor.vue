@@ -185,12 +185,13 @@ export default {
      * Create new bookmark node
      */
     createNode() {
+      let index = State.bookmarkEditorTarget.index || 0
       browser.bookmarks.create({
         parentId: this.path[this.path.length - 1].id,
         title: this.title,
         type: this.type,
         url: this.url,
-        index: 0,
+        index,
       })
 
       this.tabindex = '-1'

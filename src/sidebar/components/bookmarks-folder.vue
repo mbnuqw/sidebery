@@ -153,10 +153,10 @@ export default {
     onMouseDownMid(e) {
       e.preventDefault()
       if (State.selected.length) {
+        Actions.closeCtxMenu()
         Actions.resetSelection()
         return
       }
-      this.openUrl(true, false)
     },
 
     /**
