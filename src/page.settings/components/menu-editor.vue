@@ -221,6 +221,7 @@ const TABS_MENU_OPTS = {
   'mute': 'menu.tab.mute',
   'duplicate': 'menu.tab.duplicate',
   'discard': 'menu.tab.discard',
+  'copyUrls': 'menu.copy_urls',
   'group': 'menu.tab.group',
   'flatten': 'menu.tab.flatten',
   'clearCookies': 'menu.tab.clear_cookies',
@@ -234,6 +235,7 @@ const BOOKMARKS_MENU_OPTS = {
   'createBookmark': 'menu.bookmark.create_bookmark',
   'createFolder': 'menu.bookmark.create_folder',
   'createSeparator': 'menu.bookmark.create_separator',
+  'copyUrls': 'menu.copy_urls',
   'edit': 'menu.bookmark.edit_bookmark',
   'delete': 'menu.bookmark.delete_bookmark',
 }

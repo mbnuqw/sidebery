@@ -514,6 +514,17 @@
         :note="t('settings.tab_hide_info')"
         @input="togglePermTabHide")
 
+    .permission(
+      ref="clipboard_write"
+      :data-highlight="$store.state.highlightedField === 'clipboard_write'"
+      @click="onHighlighClick('clipboard_write')")
+      toggle-field(
+        label="settings.clipboard_write_label"
+        :inline="true"
+        :value="$store.state.permClipboardWrite"
+        :note="t('settings.clipboard_write_info')"
+        @input="togglePermClipboardWrite")
+
   section(ref="settings_snapshots")
     h2 {{t('settings.snapshots_title')}}
     num-field(
@@ -860,6 +871,20 @@ export default {
         browser.permissions.request(request).then(allowed => {
           browser.runtime.sendMessage({ action: 'loadPermissions' })
           State.permTabHide = allowed
+        })
+      }
+    },
+
+    async togglePermClipboardWrite() {
+      if (State.permClipboardWrite) {
+        await browser.permissions.remove({ permissions: ['clipboardWrite'] })
+        browser.runtime.sendMessage({ action: 'loadPermissions' })
+        Actions.loadPermissions()
+      } else {
+        const request = { origins: [], permissions: ['clipboardWrite'] }
+        browser.permissions.request(request).then(allowed => {
+          browser.runtime.sendMessage({ action: 'loadPermissions' })
+          State.permClipboardWrite = allowed
         })
       }
     },

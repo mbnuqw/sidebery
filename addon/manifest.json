@@ -36,7 +36,8 @@
   
   "optional_permissions": [
     "<all_urls>",
-    "tabHide"
+    "tabHide",
+    "clipboardWrite"
   ],
 
   "sidebar_action": {

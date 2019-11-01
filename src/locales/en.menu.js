@@ -52,6 +52,8 @@ export default {
   'menu.tabs_panel.collapse_inact_branches': { message: 'Collapse inactive branches' },
 
   // --- Common ---
+  'menu.copy_url': { message: 'Copy url' },
+  'menu.copy_urls': { message: 'Copy urls' },
   'menu.common.conf': { message: 'Configure panel' },
 
   // --- Editor

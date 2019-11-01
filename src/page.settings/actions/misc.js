@@ -32,6 +32,7 @@ async function loadBrowserInfo() {
 async function loadPermissions(init) {
   this.state.permAllUrls = await browser.permissions.contains({ origins: ['<all_urls>'] })
   this.state.permTabHide = await browser.permissions.contains({ permissions: ['tabHide'] })
+  this.state.permClipboardWrite = await browser.permissions.contains({ permissions: ['clipboardWrite'] })
 
   if (!this.state.permAllUrls) {
     this.state.panels.map(c => {
@@ -86,6 +87,20 @@ function updateActiveView() {
     document.title = 'Sidebery / Settings'
     this.state.activeView = 'Settings'
     this.state.highlightedField = 'tab_hide'
+    return
+  }
+
+  if (hash === 'clipboard-write') {
+    setTimeout(() => {
+      if (hash !== undefined && this.state.settingsRefs) {
+        let el = this.state.settingsRefs.clipboard_write
+        if (el) el.scrollIntoView(scrollHighlightConf)
+      }
+    }, 250)
+
+    document.title = 'Sidebery / Settings'
+    this.state.activeView = 'Settings'
+    this.state.highlightedField = 'clipboard_write'
     return
   }
 

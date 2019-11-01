@@ -315,6 +315,7 @@ export const DEFAULT_TABS_MENU = [
   'pin',
   'duplicate',
   'discard',
+  'copyUrls',
   'separator-3',
   'group',
   'flatten',
@@ -335,6 +336,7 @@ export const DEFAULT_BOOKMARKS_MENU = [
   'createFolder',
   'createSeparator',
   'separator-6',
+  'copyUrls',
   'edit',
   'delete',
 ]
@@ -361,6 +363,22 @@ export const BOOKMARKS_PANEL_MENU = [
 ]
 
 export const MENU_OPTIONS = {
+  // 
+  // --- Common ---
+  // 
+  copyUrls: (state) => {
+    let label = 'menu.copy_url'
+    if (state.selected.length > 1) label += 's'
+
+    let option = {
+      label: translate(label),
+      action: 'copyUrls',
+      args: [state.selected],
+    }
+
+    return option
+  },
+
   // 
   // --- Tabs options ---
   // 

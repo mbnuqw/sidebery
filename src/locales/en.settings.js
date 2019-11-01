@@ -278,6 +278,8 @@ export default {
   'settings.all_urls_info': { message: 'Required for:\n- Cleaning cookies\n- Proxy and url rules of containers\n- Screenshots for the group page and windows selection panel' },
   'settings.tab_hide_label': { message: 'Hiding tabs:' },
   'settings.tab_hide_info': { message: 'Required for:\n- Hiding tabs on inactive panels\n- Hiding folded tabs' },
+  'settings.clipboard_write_label': { message: 'Clipboard write:' },
+  'settings.clipboard_write_info': { message: 'Required for:\n- Copying urls of tabs/bookmarks through context menu' },
 
   // --- Storage
   'settings.storage_title': { message: 'Storage' },

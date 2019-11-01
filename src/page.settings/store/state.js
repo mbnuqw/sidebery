@@ -24,6 +24,7 @@ export default {
   highlight: {
     allUrls: false,
     tabHide: false,
+    clipboardWrite: false,
   },
 
   containers: {},
@@ -41,4 +42,5 @@ export default {
 
   permAllUrls: false,
   permTabHide: false,
+  permClipboardWrite: false,
 }

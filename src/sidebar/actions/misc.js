@@ -108,6 +108,7 @@ async function chooseWin() {
 async function loadPermissions() {
   this.state.permAllUrls = await browser.permissions.contains({ origins: ['<all_urls>'] })
   this.state.permTabHide = await browser.permissions.contains({ permissions: ['tabHide'] })
+  this.state.permClipboardWrite = await browser.permissions.contains({ permissions: ['clipboardWrite'] })
 
   if (!this.state.permTabHide) {
     this.state.hideInact = false
@@ -276,6 +277,36 @@ function confirm(msg) {
   })
 }
 
+function copyUrls(ids) {
+  if (!this.state.permClipboardWrite) return this.actions.openSettings('clipboard-write')
+
+  let urls = []
+  let idType = typeof ids[0]
+  if (idType === 'string') {
+    const walker = (nodes) => {
+      for (let node of nodes) {
+        if (node.type === 'separator') continue
+        if (ids.includes(node.id)) continue
+        if (node.url) urls.push(node.url)
+        if (node.children) walker(node.children)
+      }
+    }
+    for (let id of ids) {
+      let node = this.state.bookmarksMap[id]
+      if (!node || node.type === 'separator') continue
+      if (node.url) urls.push(node.url)
+      if (node.children) walker(node.children)
+    }
+  } else if (idType === 'number') {
+    for (let id of ids) {
+      let tab = this.state.tabsMap[id]
+      if (tab) urls.push(tab.url)
+    }
+  }
+
+  navigator.clipboard.writeText(urls.join('\n').trim())
+}
+
 export default {
   loadPlatformInfo,
   loadWindowInfo,
@@ -297,4 +328,5 @@ export default {
   stopMultiSelection,
   getLogs,
   confirm,
+  copyUrls,
 }

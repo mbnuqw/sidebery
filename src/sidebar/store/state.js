@@ -49,6 +49,7 @@ export default {
   keybindings: [],
   permAllUrls: false,
   permTabHide: false,
+  permClipboardWrite: false,
 
   favicons: [],
   favUrls: {},
