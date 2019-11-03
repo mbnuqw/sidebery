@@ -90,6 +90,7 @@ export const DEFAULT_SETTINGS = {
   discardFolded: false,
   discardFoldedDelay: 0,
   discardFoldedDelayUnit: 'sec',
+  tabsTreeBookmarks: true,
 
   // Bookmarks
   bookmarksPanel: true,

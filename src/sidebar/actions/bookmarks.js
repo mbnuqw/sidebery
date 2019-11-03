@@ -204,13 +204,51 @@ async function dropToBookmarks(event, dropIndex, dropParent, nodes) {
         await browser.bookmarks.move(b.id, { parentId: dropParent, index: dropIndex })
       }
     } else {
-      for (let n of nodes) {
-        await browser.bookmarks.create({
-          url: n.url,
-          title: n.title,
-          index: dropIndex,
-          parentId: dropParent,
-        })
+      if (this.state.tabsTreeBookmarks) {
+        let folders = {}
+        for (let tab of nodes) {
+          if (tab.isParent) folders[tab.id] = []
+          if (tab.parentId && folders[tab.parentId]) folders[tab.parentId].push(tab)
+        }
+        for (let tab of nodes) {
+          let parent = folders[tab.parentId]
+          if (!parent && tab.parentId >= 0) {
+            let parentTab = this.state.tabsMap[tab.parentId]
+            while (parentTab) {
+              parent = folders[parentTab.id]
+              if (parent) break
+              parentTab = this.state.tabsMap[parentTab.parentId]
+            }
+          }
+          let parentId = parent && parent.id ? parent.id : dropParent
+
+          if (folders[tab.id] && folders[tab.id].length) {
+            let conf = { title: tab.title, type: 'folder', parentId }
+            if (parentId === dropParent) conf.index = dropIndex++
+            let folder = await browser.bookmarks.create(conf)
+            folders[tab.id] = folder
+            if (tab.url.startsWith('moz-extension')) continue
+            await browser.bookmarks.create({
+              title: tab.title,
+              url: tab.url,
+              parentId: folder.id,
+            })
+            continue
+          }
+
+          let conf = { title: tab.title, url: tab.url, parentId }
+          if (parentId === dropParent) conf.index = dropIndex++
+          await browser.bookmarks.create(conf)
+        }
+      } else {
+        for (let n of nodes) {
+          await browser.bookmarks.create({
+            url: n.url,
+            title: n.title,
+            index: dropIndex++,
+            parentId: dropParent,
+          })
+        }
       }
     }
   }

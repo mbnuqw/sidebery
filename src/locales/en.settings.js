@@ -164,6 +164,7 @@ export default {
   'settings.discard_folded_delay': { message: 'With delay' },
   'settings.discard_folded_delay_sec': { message: ['second', 'seconds'], plur: [1] },
   'settings.discard_folded_delay_min': { message: ['minute', 'minutes'], plur: [1] },
+  'settings.tabs_tree_bookmarks': { message: 'Preserve tree on creating bookmarks' },
 
   // --- Bookmarks
   'settings.bookmarks_title': { message: 'Bookmarks' },

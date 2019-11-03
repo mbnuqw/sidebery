@@ -313,6 +313,12 @@
         :unit="$store.state.discardFoldedDelayUnit"
         :unitOpts="$store.state.discardFoldedDelayUnitOpts"
         @input="setOpt('discardFoldedDelay', $event[0]), setOpt('discardFoldedDelayUnit', $event[1])")
+    toggle-field(
+      label="settings.tabs_tree_bookmarks"
+      :inline="true"
+      :inactive="!$store.state.tabsTree"
+      :value="$store.state.tabsTreeBookmarks"
+      @input="setOpt('tabsTreeBookmarks', $event)")
 
   section(ref="settings_bookmarks")
     h2 {{t('settings.bookmarks_title')}}

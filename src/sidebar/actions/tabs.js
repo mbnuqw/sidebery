@@ -618,14 +618,68 @@ async function bookmarkTabs(tabIds) {
     if (!dirId) return
   }
 
-  for (let tabId of tabIds) {
-    let tab = this.state.tabsMap[tabId]
-    if (!tab) continue
-    await browser.bookmarks.create({
-      title: tab.title,
-      url: tab.url,
-      parentId: dirId,
-    })
+  let sorted = tabIds.sort((a, b) => {
+    let aTab = this.state.tabsMap[a]
+    let bTab = this.state.tabsMap[b]
+    if (!aTab || !bTab) return 0
+    return aTab.index - bTab.index
+  })
+
+  if (this.state.tabsTreeBookmarks) {
+    let folders = {}
+    for (let tabId of sorted) {
+      let tab = this.state.tabsMap[tabId]
+      if (!tab) continue
+      if (tab.isParent) folders[tab.id] = []
+      if (tab.parentId && folders[tab.parentId]) folders[tab.parentId].push(tab)
+    }
+    for (let tabId of sorted) {
+      let tab = this.state.tabsMap[tabId]
+      if (!tab) continue
+
+      let parent = folders[tab.parentId]
+      if (!parent && tab.parentId >= 0) {
+        let parentTab = this.state.tabsMap[tab.parentId]
+        while (parentTab) {
+          parent = folders[parentTab.id]
+          if (parent) break
+          parentTab = this.state.tabsMap[parentTab.parentId]
+        }
+      }
+      let parentId = parent && parent.id ? parent.id : dirId
+
+      if (folders[tab.id] && folders[tab.id].length) {
+        let folder = await browser.bookmarks.create({
+          title: tab.title,
+          type: 'folder',
+          parentId,
+        })
+        folders[tab.id] = folder
+        if (tab.url.startsWith('moz-extension')) continue
+        await browser.bookmarks.create({
+          title: tab.title,
+          url: tab.url,
+          parentId: folder.id,
+        })
+        continue
+      }
+
+      await browser.bookmarks.create({
+        title: tab.title,
+        url: tab.url,
+        parentId,
+      })
+    }
+  } else {
+    for (let tabId of sorted) {
+      let tab = this.state.tabsMap[tabId]
+      if (!tab) continue
+      await browser.bookmarks.create({
+        title: tab.title,
+        url: tab.url,
+        parentId: dirId,
+      })
+    }
   }
   EventBus.$emit('panelLoadingOk', 0)
 }
