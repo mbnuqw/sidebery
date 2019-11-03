@@ -4,7 +4,7 @@
   :data-invisible="!visible" @click="onClick"
   @contextmenu.stop="onNavCtxMenu"
   @mouseup.right="onRightMouseUp")
-  scroll-box(ref="scrollBox"): .bookmarks-wrapper
+  ScrollBox(ref="scrollBox"): .bookmarks-wrapper
     component.node(
       v-for="n in $store.state.bookmarks"
       :is="n.type"
@@ -12,7 +12,8 @@
       :node="n"
       @start-selection="onStartSelection")
   transition(name="editor")
-    bookmark-editor.editor(v-if="$store.state.bookmarkEditor")
+    BookmarkEditor.editor(v-if="$store.state.bookmarkEditor")
+  SelectBookmarksFolderBar
 </template>
 
 
@@ -25,6 +26,7 @@ import ScrollBox from './scroll-box'
 import Bookmark from './bookmark'
 import Folder from './bookmarks-folder'
 import BookmarkEditor from './bookmark-editor'
+import SelectBookmarksFolderBar from './select-bookmarks-folder-bar'
 
 export default {
   components: {
@@ -32,6 +34,7 @@ export default {
     Bookmark,
     Folder,
     BookmarkEditor,
+    SelectBookmarksFolderBar,
   },
 
   props: {

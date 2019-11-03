@@ -194,6 +194,10 @@
       label="settings.shift_selection_from_active"
       :value="$store.state.shiftSelAct"
       @input="setOpt('shiftSelAct', $event)")
+    ToggleField(
+      label="settings.ask_new_bookmark_place"
+      :value="$store.state.askNewBookmarkPlace"
+      @input="setOpt('askNewBookmarkPlace', $event)")
 
   section(ref="settings_new_tab_position")
     h2 {{t('settings.new_tab_position')}}

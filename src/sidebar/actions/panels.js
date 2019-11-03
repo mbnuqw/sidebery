@@ -215,6 +215,13 @@ function setPanel(newIndex) {
   if (this.state.panelIndex === newIndex) return
   this.state.panelIndex = newIndex
   if (newIndex >= 0) this.state.lastPanelIndex = newIndex
+
+  if (this.state.selectBookmarkFolder) {
+    if (this.state.selectBookmarkFolder.cancel) {
+      this.state.selectBookmarkFolder.cancel()
+    }
+    this.state.selectBookmarkFolder = null
+  }
 }
 
 /**
@@ -333,6 +340,12 @@ async function switchPanel(dir = 0) {
     this.actions.savePanelIndex()
   }
   this.state.lastPanelIndex = this.state.panelIndex
+  if (this.state.selectBookmarkFolder) {
+    if (this.state.selectBookmarkFolder.cancel) {
+      this.state.selectBookmarkFolder.cancel()
+    }
+    this.state.selectBookmarkFolder = null
+  }
 
   if (this.state.activateLastTabOnPanelSwitching) {
     this.actions.activateLastActiveTabOf(this.state.panelIndex)
@@ -376,7 +389,7 @@ export default {
   getTabPanel,
 
   loadPanelIndex,
-  setPanel,  
+  setPanel,
 
   savePanelsRanges,
   savePanelsRangesDebounced,

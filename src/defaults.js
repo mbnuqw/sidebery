@@ -65,6 +65,7 @@ export const DEFAULT_SETTINGS = {
   activateAfterClosingNextRule: 'tree',
   activateAfterClosingGlobal: false,
   shiftSelAct: true,
+  askNewBookmarkPlace: false,
 
   // New tab position
   moveNewTabPin: 'start',

@@ -610,10 +610,22 @@ function dedupTabs(tabIds) {
  */
 async function bookmarkTabs(tabIds) {
   EventBus.$emit('panelLoadingStart', 0)
+
+  let dirId = 'unfiled_____'
+
+  if (this.state.askNewBookmarkPlace) {
+    dirId = await this.actions.askNewBookmarkFolder(dirId)
+    if (!dirId) return
+  }
+
   for (let tabId of tabIds) {
     let tab = this.state.tabsMap[tabId]
     if (!tab) continue
-    await browser.bookmarks.create({ title: tab.title, url: tab.url })
+    await browser.bookmarks.create({
+      title: tab.title,
+      url: tab.url,
+      parentId: dirId,
+    })
   }
   EventBus.$emit('panelLoadingOk', 0)
 }

@@ -107,6 +107,7 @@ export default {
   'settings.activate_after_closing_rule_any': { message: 'any' },
   'settings.activate_after_closing_global': { message: 'Globally' },
   'settings.shift_selection_from_active': { message: 'Start shift+click selection from the active tab' },
+  'settings.ask_new_bookmark_place': { message: 'Ask where to store bookmarks' },
 
   // --- New tab position
   'settings.new_tab_position': { message: 'New tab position' },

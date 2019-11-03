@@ -181,6 +181,13 @@ export default {
       if (e.button === 0) {
         if (e.ctrlKey || e.shiftKey) return
 
+        if (State.selectBookmarkFolder && !this.node.sel) {
+          Actions.resetSelection()
+          Actions.selectItem(this.node.id)
+          State.selectBookmarkFolder.id = this.node.id
+          return
+        }
+
         if (State.selected.length && !this.node.sel) {
           Actions.resetSelection()
           return

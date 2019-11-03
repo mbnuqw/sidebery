@@ -307,6 +307,36 @@ function copyUrls(ids) {
   navigator.clipboard.writeText(urls.join('\n').trim())
 }
 
+function askNewBookmarkFolder(defaultValue) {
+  return new Promise(res => {
+    let bookmarksPanel = this.state.panels.find(p => p.type === 'bookmarks')
+    if (!bookmarksPanel) res(defaultValue)
+
+    this.state.panelIndex = bookmarksPanel.index
+
+    if (defaultValue !== undefined) this.actions.selectItem(defaultValue)
+
+    this.state.selectBookmarkFolder = {
+      id: '',
+      ok: () => {
+        let id = this.state.selectBookmarkFolder.id
+        this.state.selectBookmarkFolder = null
+        if (this.state.lastPanelIndex !== undefined) {
+          this.actions.setPanel(this.state.lastPanelIndex)
+        }
+        res(id)
+      },
+      cancel: () => {
+        this.state.selectBookmarkFolder = null
+        if (this.state.lastPanelIndex !== undefined) {
+          this.actions.setPanel(this.state.lastPanelIndex)
+        }
+        res(null)
+      },
+    }
+  })
+}
+
 export default {
   loadPlatformInfo,
   loadWindowInfo,
@@ -329,4 +359,5 @@ export default {
   getLogs,
   confirm,
   copyUrls,
+  askNewBookmarkFolder,
 }

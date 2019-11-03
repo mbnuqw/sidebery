@@ -154,6 +154,40 @@
   padding: 8px 0
   border-radius: 0
 
+// ---
+// -- SelectFolderBar
+// -
+.SelectBookmarksFolderBar
+  box(relative)
+  size(100%)
+  background-color: var(--bg)
+  box-shadow: 0 0 0 1px var(--border-fg),
+              inset 0 1px 0 0 var(--border-flare-fg)
+
+.SelectBookmarksFolderBar h2
+  box(relative)
+  text(s: rem(21), w: 700)
+  color: var(--title-fg)
+  margin: 16px 0
+  padding: 0
+  text-align: center
+
+.SelectBookmarksFolderBar .folder-title
+  box(relative)
+  text(s: rem(16))
+  color: var(--active-fg)
+  padding: 0 8px
+  text-align: center
+
+.SelectBookmarksFolderBar .ctrls
+  box(relative, flex)
+  margin: 24px 0 0
+
+.SelectBookmarksFolderBar .btn
+  size(min-w: 50%)
+  text(s: rem(16))
+  padding: 8px 0
+  border-radius: 0
 
 // ---
 // -- Nav bar

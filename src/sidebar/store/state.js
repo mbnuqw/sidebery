@@ -55,4 +55,5 @@ export default {
   favUrls: {},
 
   confirm: null,
+  selectBookmarkFolder: null,
 }
