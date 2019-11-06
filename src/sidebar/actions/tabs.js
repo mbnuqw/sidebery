@@ -1391,6 +1391,11 @@ async function groupTabs(tabIds) {
   }
 
   // Find index and create group tab
+  if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
+  this.state.newTabsPosition[tabs[0].index] = {
+    panel: tabs[0].panelId,
+    parent: tabs[0].parentId,
+  }
   const groupTab = await browser.tabs.create({
     active: !(parent && parent.folded),
     cookieStoreId: tabs[0].cookieStoreId,
