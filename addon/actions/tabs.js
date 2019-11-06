@@ -80,6 +80,43 @@ function onTabDetached(id, info) {
 }
 
 /**
+ * Backup tabs data
+ */
+async function backupTabsData() {
+  let tabsData
+  try {
+    let storage = await browser.storage.local.get({ tabsData })
+    tabsData = storage.tabsData
+  } catch (err) {
+    // Logs.push('[ERROR:BG] backupTabsData: ', err.toString())
+    return
+  }
+  
+  await browser.storage.local.set({ prevTabsData: tabsData })
+}
+
+/**
+ * Save tabs of panels
+ */
+function saveTabsData(windowId, tabs, delay = 300) {
+  if (!tabs) return
+  if (!this._tabsDataByWin) this._tabsDataByWin = {}
+  this._tabsDataByWin[windowId] = tabs
+
+  if (this._saveTabsDataTimeout) clearTimeout(this._saveTabsDataTimeout)
+  this._saveTabsDataTimeout = setTimeout(() => {
+    this._saveTabsDataTimeout = null
+
+    let tabsData = []
+    for (let tabs of Object.values(this._tabsDataByWin)) {
+      if (tabs.length) tabsData.push(tabs)
+    }
+
+    browser.storage.local.set({ tabsData })
+  }, delay)
+}
+
+/**
  * Load tabs trees
  */
 async function backupTabsTrees() {
@@ -109,7 +146,7 @@ function saveTabsTree(windowId, treeState, delay = 300) {
       if (tree.length) tabsTrees.push(tree)
     }
 
-    browser.storage.local.set({ tabsTrees })
+    await browser.storage.local.set({ tabsTrees })
     tabsTreeSaveTimeout = null
   }, delay)
 }
@@ -194,6 +231,8 @@ export default {
   onTabDetached,
 
   updateTabsTree,
+  backupTabsData,
+  saveTabsData,
   backupTabsTrees,
   saveTabsTree,
   moveTabsToWin,

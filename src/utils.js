@@ -468,6 +468,72 @@ function normalizeUrl(url) {
   }
 }
 
+function normalizeTab(tab, defaultPanelId) {
+  if (tab.isParent === undefined) tab.isParent = false
+  if (tab.folded === undefined) tab.folded = false
+  if (tab.invisible === undefined) tab.invisible = false
+  if (tab.parentId === undefined) tab.parentId = -1
+  if (tab.panelId === undefined) tab.panelId = defaultPanelId
+  if (tab.lvl === undefined) tab.lvl = 0
+  if (tab.sel === undefined) tab.sel = false
+  if (tab.updated === undefined) tab.updated = false
+  if (tab.loading === undefined) tab.loading = false
+  if (tab.status === undefined) tab.status = 'complete'
+  if (tab.warn === undefined) tab.warn = false
+  if (tab.favIconUrl === 'chrome://global/skin/icons/warning.svg') {
+    tab.warn = true
+  }
+  if (tab.favIconUrl === undefined) tab.favIconUrl = ''
+  else if (tab.favIconUrl.startsWith('chrome:')) tab.favIconUrl = ''
+}
+
+function findDataForTabs(tabs, data) {
+  let maxEqualityCounter = 1
+  let result
+
+  for (let winTabs of data) {
+    let offset = 0, equalityCounter = 0
+
+    perTab:
+    for (let tab, tabData, i = 0; i < winTabs.length; i++) {
+      tab = tabs[i - offset]
+      if (!tab) break
+      tabData = winTabs[i]
+
+      if (isGroupUrl(tabData.url) && tabData.url !== tab.url) {
+        tabData.index = i - offset
+        tabData.isMissedGroup = true
+        offset++
+        continue
+      }
+
+      if (tabData.url === tab.url || (tab.active && tab.url === 'about:blank')) {
+        tabData.index = i - offset
+        equalityCounter++
+      } else {
+        for (let j = i - offset + 1; j < tabs.length; j++) {
+          if (tabs[j] && tabs[j].url === tabData.url) {
+            tabData.index = j
+            offset = i - j
+            equalityCounter++
+            continue perTab
+          }
+        }
+        offset++
+      }
+    }
+
+    if (maxEqualityCounter <= equalityCounter) {
+      maxEqualityCounter = equalityCounter
+      result = winTabs
+    }
+
+    if (equalityCounter === tabs.length) break
+  }
+
+  return result || []
+}
+
 export default {
   uid,
   asap,
@@ -489,4 +555,6 @@ export default {
   cloneArray,
   cloneObject,
   normalizeUrl,
+  normalizeTab,
+  findDataForTabs,
 }

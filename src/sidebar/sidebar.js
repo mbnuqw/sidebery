@@ -85,7 +85,7 @@ export default new Vue({
     Actions.loadFavicons()
     Actions.loadPermissions(true)
     Actions.updateTabsVisability()
-    Actions.saveTabsTree()
+    Actions.saveTabsData()
 
     Actions.connectToBG()
     Actions.updateActiveGroupPage()

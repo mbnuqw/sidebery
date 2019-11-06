@@ -112,7 +112,7 @@ function onTabCreated(tab) {
       }
     }
 
-    this.actions.saveTabsTree()
+    this.actions.saveTabsData()
     const groupTab = this.actions.getGroupTab(tab)
     if (groupTab && !groupTab.discarded) {
       browser.tabs.sendMessage(groupTab.id, {
@@ -194,7 +194,7 @@ function onTabUpdated(tabId, change, tab) {
   // Url
   if (change.url !== undefined) {
     if (change.url !== localTab.url) {
-      this.actions.saveTabsTree()
+      this.actions.saveTabsData()
       if (this.state.highlightOpenBookmarks && this.state.bookmarksUrlMap) {
         if (this.state.bookmarksUrlMap[localTab.url]) {
           for (let b of this.state.bookmarksUrlMap[localTab.url]) {
@@ -375,7 +375,7 @@ function onTabRemoved(tabId, info, childfree) {
     const startIndex = panel ? panel.startIndex : 0
     const endIndex = panel ? panel.endIndex + 1 : -1
     this.actions.updateTabsTree(startIndex, endIndex)
-    this.actions.saveTabsTree()
+    this.actions.saveTabsData()
   }
 
   // Update succession
@@ -481,7 +481,7 @@ function onTabMoved(id, info) {
     const startIndex = panelOk ? panel.startIndex : 0
     const endIndex = panelOk ? panel.endIndex + 1 : -1
     this.actions.updateTabsTree(startIndex, endIndex)
-    this.actions.saveTabsTree()
+    this.actions.saveTabsData()
   }
 
   // Update succession

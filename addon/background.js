@@ -25,7 +25,7 @@ void async function main() {
   state.settings = settings ? settings : {}
 
   await Actions.loadTabs(state.windows, state.tabsMap)
-  await Actions.backupTabsTrees()
+  await Actions.backupTabsData()
   Actions.setupTabsListeners()
 
   Actions.setupStorageListeners()
