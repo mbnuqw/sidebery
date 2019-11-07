@@ -87,7 +87,10 @@
 
 
 <script>
+import Utils from '../../utils'
 import { DEFAULT_CTX } from '../../defaults'
+import { CTX_PANEL_STATE } from '../../defaults'
+import { TABS_PANEL_STATE } from '../../defaults'
 import TextInput from '../../components/text-input'
 import ToggleField from '../../components/toggle-field'
 import SelectField from '../../components/select-field'
@@ -233,18 +236,28 @@ export default {
     },
 
     setType(value) {
+      let index = State.panels.findIndex(p => p.id === this.conf.id)
+      if (index === -1) return
+
+      let panel
       if (this.conf.type === 'ctx' && value !== 'ctx') {
-        this.conf.cookieStoreId = ''
-        this.conf.icon = 'icon_tabs'
-        this.conf.color = ''
-        this.conf.type = value
+        panel = Utils.cloneObject(TABS_PANEL_STATE)
+        panel.id = this.conf.id
+        panel.name = this.conf.name
+        State.panelsMap[this.conf.id] = panel
+        State.panels.splice(index, 1, panel)
+        State.selectedPanel = panel
         Actions.savePanels()
       }
       if (this.conf.type !== 'ctx' && value === 'ctx') {
-        if (this.availableContainers.length) {
-          this.conf.cookieStoreId = ''
-        }
-        this.conf.type = value
+        panel = Utils.cloneObject(CTX_PANEL_STATE)
+        panel.id = this.conf.id
+        panel.name = this.conf.name
+        panel.icon = this.conf.icon
+        panel.color = this.conf.color
+        State.panelsMap[this.conf.id] = panel
+        State.panels.splice(index, 1, panel)
+        State.selectedPanel = panel
       }
     },
 

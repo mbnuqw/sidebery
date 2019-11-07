@@ -1,6 +1,8 @@
 import EventBus from '../../event-bus'
 import Utils from '../../utils'
 import CommonActions from '../../actions/panels'
+import { CTX_PANEL_STATE, TABS_PANEL_STATE } from '../../defaults'
+import { BOOKMARKS_PANEL, DEFAULT_TABS_PANEL } from '../../defaults'
 import { CTX_PANEL, TABS_PANEL } from '../../defaults'
 
 let recalcPanelScrollTimeout, updatePanelBoundsTimeout
@@ -23,38 +25,42 @@ async function updatePanels(newPanels) {
     }
   }
 
-  let updateNeeded = false
+  // TODO: handle moved panels
+  // TODO: go through newPanels
+  // TODO: check if index and panel index is not the same
+  // TODO: reset tabs listeners, move tabs, setup tabs listeners
+
   let panels = []
-  let reloadNeeded = false
+  let updateNeeded = false
+  
+  // TODO: check bookmarks and default tabs panels - same as in loadPanels
+
+  let panelDefs
   for (let i = 0; i < newPanels.length; i++) {
     let newPanel = newPanels[i]
     let panel = this.state.panels.find(p => p.id === newPanel.id)
+
     if (!panel) {
       updateNeeded = true
-      if (newPanel.type === 'ctx') panel = Utils.cloneObject(CTX_PANEL)
-      if (newPanel.type === 'tabs') panel = Utils.cloneObject(TABS_PANEL)
-      if (!panel) continue
-      panel.id = newPanel.id
+      if (newPanel.type === 'ctx') {
+        panel = Utils.normalizePanel(newPanel, CTX_PANEL_STATE)
+      } else if (newPanel.type === 'tabs') {
+        panel = Utils.normalizePanel(newPanel, TABS_PANEL_STATE)
+      }
     }
 
-    if (panel.index !== i) reloadNeeded = true
-    if (panel.cookieStoreId !== newPanel.cookieStoreId) {
-      await Promise.all(panel.tabs.map(t => {
-        return browser.sessions.removeTabValue(t.id, 'panelId')
-      }))
-      reloadNeeded = true
-    }
+    if (panel.type !== newPanel.type) updateNeeded = true
 
     panel.index = i
-    panel.cookieStoreId = newPanel.cookieStoreId
-    panel.name = newPanel.name
-    panel.icon = newPanel.icon
-    panel.color = newPanel.color
-    if (newPanel.type === 'tabs') panel.customIcon = newPanel.customIcon
-    panel.lockedTabs = newPanel.lockedTabs
-    panel.lockedPanel = newPanel.lockedPanel
-    panel.noEmpty = newPanel.noEmpty
-    panel.newTabCtx = newPanel.newTabCtx
+
+    if (newPanel.type === 'bookmarks') panelDefs = BOOKMARKS_PANEL
+    if (newPanel.type === 'default') panelDefs = DEFAULT_TABS_PANEL
+    if (newPanel.type === 'ctx') panelDefs = CTX_PANEL
+    if (newPanel.type === 'tabs') panelDefs = TABS_PANEL
+
+    for (let k of Object.keys(panelDefs)) {
+      if (newPanel[k] !== undefined) panel[k] = newPanel[k]
+    }
 
     panels.push(panel)
   }
@@ -62,11 +68,11 @@ async function updatePanels(newPanels) {
   this.state.panels = panels
 
   if (updateNeeded) this.actions.updatePanelsTabs()
-  if (reloadNeeded) {
-    this.handlers.resetTabsListeners()
-    await this.actions.loadTabs(false)
-    this.handlers.setupTabsListeners()
-  }
+  // if (reloadNeeded) {
+  //   this.handlers.resetTabsListeners()
+  //   await this.actions.loadTabs(false)
+  //   this.handlers.setupTabsListeners()
+  // }
 }
 
 /**

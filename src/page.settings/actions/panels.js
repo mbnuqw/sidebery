@@ -1,29 +1,24 @@
+import { BOOKMARKS_PANEL } from '../../defaults'
+import { DEFAULT_TABS_PANEL } from '../../defaults'
+import { CTX_PANEL } from '../../defaults'
+import { TABS_PANEL } from '../../defaults'
+import Utils from '../../utils'
 import CommonActions from '../../actions/panels'
-
 
 /**
  * Clean up panels info and run savePanels action in background
  */
 async function savePanels() {
-  const output = []
+  let output = [], panelDefs
   for (let panel of this.state.panels) {
     if (panel.type === 'ctx' && !panel.cookieStoreId) panel.type = 'tabs'
-    output.push({
-      type: panel.type,
-      id: panel.id,
-      name: panel.name,
-      icon: panel.icon,
-      color: panel.color,
-      customIconSrc: panel.customIconSrc,
-      customIcon: panel.customIcon,
-      cookieStoreId: panel.cookieStoreId,
-      lockedPanel: panel.lockedPanel,
-      lockedTabs: panel.lockedTabs,
-      noEmpty: panel.noEmpty,
-      newTabCtx: panel.newTabCtx,
-      private: panel.private,
-      bookmarks: panel.bookmarks,
-    })
+
+    if (panel.type === 'bookmarks') panelDefs = BOOKMARKS_PANEL
+    else if (panel.type === 'default') panelDefs = DEFAULT_TABS_PANEL
+    else if (panel.type === 'ctx') panelDefs = CTX_PANEL
+    else if (panel.type === 'tabs') panelDefs = TABS_PANEL
+
+    output.push(Utils.normalizePanel(panel, panelDefs))
   }
   browser.storage.local.set({ panels: output })
 }

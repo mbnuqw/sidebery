@@ -605,7 +605,7 @@
 import Utils from '../utils'
 import { translate } from '../mixins/dict'
 import { DEFAULT_SETTINGS } from '../defaults'
-import { DEFAULT_TABS_PANEL } from '../defaults'
+import { TABS_PANEL } from '../defaults'
 import State from './store/state'
 import Actions from './actions'
 import ToggleField from '../components/toggle-field'
@@ -1244,10 +1244,8 @@ export default {
      * Create panel-container
      */
     async createPanel() {
-      let panel = Utils.cloneObject(DEFAULT_TABS_PANEL)
+      let panel = Utils.cloneObject(TABS_PANEL)
       panel.id = Utils.uid()
-      panel.type = 'tabs'
-      panel.cookieStoreId = ''
       panel.name = 'New Panel ' + (State.panels.length + 1)
       State.panels.push(panel)
       State.panelsMap[panel.id] = panel

@@ -534,6 +534,14 @@ function findDataForTabs(tabs, data) {
   return result || []
 }
 
+function normalizePanel(panel, defaults) {
+  let result = cloneObject(defaults)
+  for (let key of Object.keys(defaults)) {
+    if (panel[key] !== undefined) result[key] = panel[key]
+  }
+  return result
+}
+
 export default {
   uid,
   asap,
@@ -557,4 +565,5 @@ export default {
   normalizeUrl,
   normalizeTab,
   findDataForTabs,
+  normalizePanel,
 }

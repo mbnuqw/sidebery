@@ -224,10 +224,12 @@ export const BOOKMARKS_PANEL = {
   cookieStoreId: 'bookmarks',
   name: translate('bookmarks_dashboard.title'),
   icon: 'icon_bookmarks',
-  loading: false,
-  lockedPanel: false,
   bookmarks: true,
-
+  lockedPanel: false,
+}
+export const BOOKMARKS_PANEL_STATE = {
+  ...BOOKMARKS_PANEL,
+  loading: false,
   updated: [],
 }
 
@@ -236,10 +238,12 @@ export const PRIVATE_TABS_PANEL = {
   id: PRIVATE_CTX,
   name: translate('private_dashboard.title'),
   icon: 'icon_private',
-  loading: false,
   cookieStoreId: PRIVATE_CTX,
   private: true,
-
+}
+export const PRIVATE_TABS_PANEL_STATE = {
+  ...PRIVATE_TABS_PANEL,
+  loading: false,
   tabs: [],
   startIndex: -1,
   endIndex: -1,
@@ -251,13 +255,15 @@ export const DEFAULT_TABS_PANEL = {
   id: DEFAULT_CTX,
   name: translate('default_dashboard.title'),
   icon: 'icon_tabs',
-  loading: false,
   cookieStoreId: DEFAULT_CTX,
   lockedTabs: false,
   lockedPanel: false,
   noEmpty: false,
   newTabCtx: DEFAULT_CTX,
-
+}
+export const DEFAULT_TABS_PANEL_STATE = {
+  ...DEFAULT_TABS_PANEL,
+  loading: false,
   tabs: [],
   startIndex: -1,
   endIndex: -1,
@@ -266,11 +272,18 @@ export const DEFAULT_TABS_PANEL = {
 
 export const CTX_PANEL = {
   type: 'ctx',
-  loading: false,
+  id: '',
+  cookieStoreId: '',
+  name: '',
+  icon: '',
+  color: '',
   lockedTabs: false,
   lockedPanel: false,
   noEmpty: false,
-
+}
+export const CTX_PANEL_STATE = {
+  ...CTX_PANEL,
+  loading: false,
   tabs: [],
   startIndex: -1,
   endIndex: -1,
@@ -279,26 +292,32 @@ export const CTX_PANEL = {
 
 export const TABS_PANEL = {
   type: 'tabs',
+  id: '',
+  name: '',
+  icon: 'icon_tabs',
+  color: 'toolbar',
   customIconSrc: '',
   customIcon: '',
-  loading: false,
   lockedTabs: false,
   lockedPanel: false,
   noEmpty: false,
   newTabCtx: DEFAULT_CTX,
-
+}
+export const TABS_PANEL_STATE = {
+  ...TABS_PANEL,
+  loading: false,
   tabs: [],
   startIndex: -1,
   endIndex: -1,
   updated: [],
 }
 
-export const DEFAULT_PANEL = browser.extension.inIncognitoContext ?
-  PRIVATE_TABS_PANEL : DEFAULT_TABS_PANEL
+export const DEFAULT_PANEL_STATE = browser.extension.inIncognitoContext ?
+  PRIVATE_TABS_PANEL_STATE : DEFAULT_TABS_PANEL_STATE
 
-export const DEFAULT_PANELS = [
-  BOOKMARKS_PANEL,
-  DEFAULT_PANEL,
+export const DEFAULT_PANELS_STATE = [
+  BOOKMARKS_PANEL_STATE,
+  DEFAULT_PANEL_STATE,
 ]
 
 export const DEFAULT_TABS_MENU = [

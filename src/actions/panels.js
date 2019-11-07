@@ -1,10 +1,10 @@
 import Utils from '../utils'
 import {
-  DEFAULT_PANELS,
-  BOOKMARKS_PANEL,
-  DEFAULT_PANEL,
-  CTX_PANEL,
-  TABS_PANEL,
+  DEFAULT_PANELS_STATE,
+  BOOKMARKS_PANEL_STATE,
+  DEFAULT_PANEL_STATE,
+  CTX_PANEL_STATE,
+  TABS_PANEL_STATE,
 } from '../defaults'
 
 /**
@@ -13,44 +13,43 @@ import {
  */
 async function loadPanels() {
   let { panels } = await browser.storage.local.get({
-    panels: Utils.cloneArray(DEFAULT_PANELS)
+    panels: Utils.cloneArray(DEFAULT_PANELS_STATE)
   })
 
   // Check if default panels are present
   let bookmarksPanelIndex = panels.findIndex(p => p.type === 'bookmarks')
   let defaultPanelIndex = panels.findIndex(p => p.type === 'default')
   if (bookmarksPanelIndex === -1 && this.state.bookmarksPanel) {
-    panels.unshift(Utils.cloneObject(BOOKMARKS_PANEL))
+    panels.unshift(Utils.cloneObject(BOOKMARKS_PANEL_STATE))
     bookmarksPanelIndex = 0
   }
   if (defaultPanelIndex === -1) {
-    let defaultPanelClone = Utils.cloneObject(DEFAULT_PANEL)
+    let defaultPanelClone = Utils.cloneObject(DEFAULT_PANEL_STATE)
     panels.splice(bookmarksPanelIndex + 1, 0, defaultPanelClone)
   }
 
   // Normalize
-  let defaultPanel, panelsMap = {}
+  let panelDefs, panelsMap = {}, normPanels = []
   for (let i = 0; i < panels.length; i++) {
-    let panel = panels[i]
+    let panel
+    let loadedPanel = panels[i]
+
+    if (loadedPanel.type === 'bookmarks') panelDefs = BOOKMARKS_PANEL_STATE
+    else if (loadedPanel.type === 'default') panelDefs = DEFAULT_PANEL_STATE
+    else if (loadedPanel.type === 'ctx') panelDefs = CTX_PANEL_STATE
+    else if (loadedPanel.type === 'tabs') panelDefs = TABS_PANEL_STATE
+    else continue
+
+    panel = Utils.normalizePanel(loadedPanel, panelDefs)
+
     panel.index = i
     if (!panel.id) panel.id = Utils.uid()
 
-    if (panel.type === 'bookmarks') defaultPanel = BOOKMARKS_PANEL
-    else if (panel.type === 'default') defaultPanel = DEFAULT_PANEL
-    else if (panel.type === 'ctx') defaultPanel = CTX_PANEL
-    else if (panel.type === 'tabs') defaultPanel = TABS_PANEL
-    else defaultPanel = null
-
-    if (defaultPanel) {
-      for (let k of Object.keys(defaultPanel)) {
-        if (panel[k] === undefined) panel[k] = defaultPanel[k]
-      }
-    }
-
+    normPanels.push(panel)
     panelsMap[panel.id] = panel
   }
 
-  this.state.panels = panels
+  this.state.panels = normPanels
   this.state.panelsMap = panelsMap
 }
 

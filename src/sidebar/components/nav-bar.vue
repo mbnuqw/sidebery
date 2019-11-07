@@ -3,7 +3,7 @@
   .nav-bar(@wheel.stop.prevent="onNavWheel")
     .nav-btn(
       v-for="(btn, i) in nav"
-      :key="btn.cookieStoreId + btn.name"
+      :key="btn.id"
       :data-loading="btn.loading"
       :data-updated="$store.state.panelIndex !== i && !!btn.updated && !!btn.updated.length"
       :data-proxified="btn.proxified"
