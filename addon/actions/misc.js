@@ -5,6 +5,13 @@ function initToolbarButton() {
   browser.browserAction.onClicked.addListener(async () => {
     browser.sidebarAction.open()
   })
+
+  browser.menus.create({
+    id: 'open_settings',
+    title: 'Open settings',
+    onclick: () => browser.runtime.openOptionsPage(),
+    contexts: ['browser_action']
+  })
 }
 
 /**
