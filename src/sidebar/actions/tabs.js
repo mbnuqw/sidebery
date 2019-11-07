@@ -1471,23 +1471,38 @@ function createTabAfter(tabId) {
   if (!targetTab) return
 
   // Get index and parentId for new tab
-  let parentId
+  let parentId = targetTab.parentId
   let index = targetTab.index + 1
-  if (targetTab.isParent && !targetTab.folded) {
-    parentId = targetTab.id
-  } else {
-    parentId = targetTab.parentId
-    while (this.state.tabs[index] && this.state.tabs[index].lvl > targetTab.lvl) {
-      index++
-    }
+  while (this.state.tabs[index] && this.state.tabs[index].lvl > targetTab.lvl) {
+    index++
   }
-  if (parentId < 0) parentId = undefined
 
+  if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
+  this.state.newTabsPosition[index] = {
+    panel: targetTab.panelId,
+    parent: parentId,
+  }
+
+  if (parentId < 0) parentId = undefined
   browser.tabs.create({
     index,
     cookieStoreId: targetTab.cookieStoreId,
     windowId: this.state.windowId,
     openerTabId: parentId,
+  })
+}
+
+/**
+ * Create child tab
+ */
+function createChildTab(tabId) {
+  let targetTab = this.state.tabsMap[tabId]
+
+  browser.tabs.create({
+    index: targetTab.index + 1,
+    cookieStoreId: targetTab.cookieStoreId,
+    windowId: this.state.windowId,
+    openerTabId: targetTab.id,
   })
 }
 
@@ -1797,6 +1812,8 @@ export default {
   updateActiveGroupPage,
 
   createTabAfter,
+  createChildTab,
+
   updateTabsTree,
   queryTab,
   getTabsTree,

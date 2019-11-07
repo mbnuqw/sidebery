@@ -175,6 +175,7 @@ export default {
         if (llc === 'mute') Actions.remuteTabs([this.tab.id])
         if (llc === 'clear_cookies') Actions.clearTabsCookies([this.tab.id])
         if (llc === 'new_after') Actions.createTabAfter(this.tab.id)
+        if (llc === 'new_child') Actions.createChildTab(this.tab.id)
         if (llc !== 'none') this.longClickActionLeftFired = true
         this.longClickActionLeft = null
       }, 300)
@@ -215,6 +216,7 @@ export default {
         if (lrc === 'mute') Actions.remuteTabs([this.tab.id])
         if (lrc === 'clear_cookies') Actions.clearTabsCookies([this.tab.id])
         if (lrc === 'new_after') Actions.createTabAfter(this.tab.id)
+        if (lrc === 'new_child') Actions.createChildTab(this.tab.id)
         if (lrc !== 'none') this.longClickActionRightFired = true
         this.longClickActionRight = null
       }, 300)
@@ -298,6 +300,7 @@ export default {
       if (dc === 'clear_cookies') Actions.clearTabsCookies([this.tab.id])
       if (dc === 'exp' && this.tab.isParent) Actions.toggleBranch(this.tab.id)
       if (dc === 'new_after') Actions.createTabAfter(this.tab.id)
+      if (dc === 'new_child') Actions.createChildTab(this.tab.id)
     },
 
     /**

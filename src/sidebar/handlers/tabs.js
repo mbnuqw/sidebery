@@ -26,6 +26,7 @@ function onTabCreated(tab) {
     if (!panel) panel = this.state.panelsMap[DEFAULT_CTX_ID]
     index = tab.index
     tab.openerTabId = position.parent
+    delete this.state.newTabsPosition[tab.index]
   } else {
     panel = this.actions.getPanelForNewTab(tab)
     index = this.actions.getIndexForNewTab(panel, tab)
