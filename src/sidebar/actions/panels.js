@@ -54,6 +54,7 @@ async function updatePanels(newPanels) {
     panel.lockedTabs = newPanel.lockedTabs
     panel.lockedPanel = newPanel.lockedPanel
     panel.noEmpty = newPanel.noEmpty
+    panel.newTabCtx = newPanel.newTabCtx
 
     panels.push(panel)
   }

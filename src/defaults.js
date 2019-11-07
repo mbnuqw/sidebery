@@ -256,6 +256,7 @@ export const DEFAULT_TABS_PANEL = {
   lockedTabs: false,
   lockedPanel: false,
   noEmpty: false,
+  newTabCtx: DEFAULT_CTX,
 
   tabs: [],
   startIndex: -1,
@@ -284,6 +285,7 @@ export const TABS_PANEL = {
   lockedTabs: false,
   lockedPanel: false,
   noEmpty: false,
+  newTabCtx: DEFAULT_CTX,
 
   tabs: [],
   startIndex: -1,

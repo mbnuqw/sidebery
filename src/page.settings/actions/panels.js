@@ -20,6 +20,7 @@ async function savePanels() {
       lockedPanel: panel.lockedPanel,
       lockedTabs: panel.lockedTabs,
       noEmpty: panel.noEmpty,
+      newTabCtx: panel.newTabCtx,
       private: panel.private,
       bookmarks: panel.bookmarks,
     })

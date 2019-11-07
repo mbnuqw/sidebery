@@ -61,7 +61,6 @@
     label="dashboard.lock_panel_label"
     :title="t('dashboard.lock_panel_tooltip')"
     :value="conf.lockedPanel"
-    :inline="true"
     @input="togglePanelLock")
 
   toggle-field(
@@ -69,7 +68,6 @@
     label="dashboard.lock_tabs_label"
     :title="t('dashboard.lock_tabs_tooltip')"
     :value="conf.lockedTabs"
-    :inline="true"
     @input="toggleTabsLock")
 
   toggle-field(
@@ -77,12 +75,19 @@
     label="dashboard.no_empty_label"
     :title="t('dashboard.no_empty_tooltip')"
     :value="conf.noEmpty"
-    :inline="true"
     @input="togglePanelNoEmpty")
+
+  select-field(
+    v-if="isDefault || isTabs"
+    label="dashboard.new_tab_ctx"
+    :value="newTabCtx"
+    :opts="newTabCtxOpts"
+    @input="togglePanelNewTabCtx")
 </template>
 
 
 <script>
+import { DEFAULT_CTX } from '../../defaults'
 import TextInput from '../../components/text-input'
 import ToggleField from '../../components/toggle-field'
 import SelectField from '../../components/select-field'
@@ -196,6 +201,17 @@ export default {
 
     color() {
       return this.conf.color || 'toolbar'
+    },
+    
+    newTabCtx() {
+      return this.conf.newTabCtx || DEFAULT_CTX
+    },
+
+    newTabCtxOpts() {
+      return [
+        { value: DEFAULT_CTX, color: 'toolbar', icon: 'icon_tabs' },
+        ...this.availableContainers,
+      ]
     },
   },
 
@@ -356,6 +372,11 @@ export default {
 
     async togglePanelNoEmpty() {
       this.conf.noEmpty = !this.conf.noEmpty
+      Actions.savePanels()
+    },
+
+    togglePanelNewTabCtx(value) {
+      this.conf.newTabCtx = value
       Actions.savePanels()
     },
   },

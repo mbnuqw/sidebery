@@ -6,6 +6,7 @@ export default {
   'dashboard.lock_tabs_tooltip': { message: 'Prevent closing tabs on this panel' },
   'dashboard.no_empty_label': { message: 'No empty' },
   'dashboard.no_empty_tooltip': { message: 'Prevent emptying of this panel' },
+  'dashboard.new_tab_ctx': { message: 'Container of new tab' },
 
   // --- Bookmarks
   'bookmarks_dashboard.title': { message: 'Bookmarks' },

@@ -322,6 +322,8 @@ export default {
 
       if (this.panel.type === 'ctx') {
         config.cookieStoreId = this.panel.cookieStoreId
+      } else {
+        config.cookieStoreId = this.panel.newTabCtx
       }
 
       browser.tabs.create(config)
