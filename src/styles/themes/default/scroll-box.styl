@@ -60,6 +60,10 @@
     width: calc(100vw - 33px)
     left: calc(-100vw + 33px)
 
+#root[data-nav-layout="vertical"] .ScrollBox > .progress
+  width: calc(100vw - 34px)
+  left: calc(-100vw + 34px)
+
 #root[data-native-scrollbar]
   .ScrollBox > .progress
     box(none)
@@ -76,6 +80,10 @@
 #root[data-pinned-tabs-position="right"]
   .ScrollBox > .scroll-container > .scrollable
     width: calc(100vw - 33px)
+
+#root[data-nav-layout="vertical"]
+  .ScrollBox > .scroll-container > .scrollable
+    width: calc(100vw - 34px)
 
 #root[data-native-scrollbar]
   .ScrollBox > .scroll-container > .scrollable

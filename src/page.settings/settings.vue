@@ -33,11 +33,18 @@
 
   section(ref="settings_nav")
     h2 {{t('settings.nav_title')}}
-    toggle-field(
-      label="settings.nav_bar_inline"
-      :inline="true"
-      :value="$store.state.navBarInline"
-      @input="setOpt('navBarInline', $event)")
+    select-field(
+      label="settings.nav_bar_layout"
+      optLabel="settings.nav_bar_layout_"
+      :value="$store.state.navBarLayout"
+      :opts="$store.state.navBarLayoutOpts"
+      @input="switchNavBarLayout")
+    .sub-fields
+      toggle-field(
+        label="settings.nav_bar_inline"
+        :inactive="$store.state.navBarLayout === 'vertical'"
+        :value="$store.state.navBarInline"
+        @input="setOpt('navBarInline', $event)")
     toggle-field(
       label="settings.hide_settings_btn"
       :inline="true"
@@ -231,7 +238,7 @@
       label="settings.pinned_tabs_position"
       optLabel="settings.pinned_tabs_position_"
       :value="$store.state.pinnedTabsPosition"
-      :opts="$store.state.pinnedTabsPositionOpts"
+      :opts="pinnedTabsPositionOpts"
       @input="setOpt('pinnedTabsPosition', $event)")
     toggle-field.-last(
       label="settings.pinned_tabs_list"
@@ -666,6 +673,15 @@ export default {
     activateAfterClosingNextOrPrev() {
       return State.activateAfterClosing === 'next' || State.activateAfterClosing === 'prev'
     },
+
+    pinnedTabsPositionOpts() {
+      let isNavVertical = State.navBarLayout === 'vertical'
+      return State.pinnedTabsPositionOpts.filter(o => {
+        if (isNavVertical && o === 'left') return false
+        if (isNavVertical && o === 'right') return false
+        return true
+      })
+    },
   },
 
   mounted() {
@@ -750,6 +766,23 @@ export default {
       }
 
       this.setOpt('hideFoldedTabs', !State.hideFoldedTabs)
+    },
+
+    /**
+     * hm
+     */
+    switchNavBarLayout(value) {
+      State.navBarLayout = value
+      if (value === 'vertical') {
+        if (State.navBarInline) State.navBarInline = false
+        if (
+          State.pinnedTabsPosition === 'left' ||
+          State.pinnedTabsPosition === 'right'
+        ) {
+          State.pinnedTabsPosition = 'panel'
+        }
+      }
+      Actions.saveSettings()
     },
 
     /**

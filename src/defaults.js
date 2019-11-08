@@ -30,6 +30,7 @@ export const SETTINGS_OPTIONS = {
   midClickBookmarkOpts: ['open_new_tab', 'edit', 'delete'],
   warnOnMultiTabCloseOpts: ['any', 'collapsed', 'none'],
   warnOnMultiBookmarkDeleteOpts: ['any', 'collapsed', 'none'],
+  navBarLayoutOpts: ['horizontal', 'vertical'],
 }
 
 export const DEFAULT_SETTINGS = {
@@ -43,6 +44,7 @@ export const DEFAULT_SETTINGS = {
   ctxMenuRenderInact: true,
 
   // Nav bar
+  navBarLayout: 'horizontal',
   navBarInline: true,
   hideSettingsBtn: false,
   navBtnCount: false,

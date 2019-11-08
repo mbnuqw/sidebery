@@ -56,7 +56,11 @@
 .Sidebar > .box
   box(relative, flex)
   size(100%, same)
+
+#root[data-nav-layout="horizontal"] .Sidebar > .box
   flex-direction: column
+#root[data-nav-layout="vertical"] .Sidebar > .box
+  flex-direction: row
 
 // ---
 // -- Dimmer layer
@@ -79,15 +83,23 @@
 // -
 .Sidebar .nav
   box(relative, flex)
-  size(100%)
   min-height: var(--nav-btn-height)
   z-index: 2000
   background-color: var(--bg)
-  box-shadow: inset 0 -1px 0 0 var(--border-fg), 0 0 12px 0 #00000000
   translate: box-shadow var(--d-fast)
 
 .Sidebar[data-hidden-panels-bar] .nav
   box-shadow: inset 0 -1px 0 0 var(--border-fg), 0 0 12px 0 var(--border-fg)
+
+#root[data-nav-layout="horizontal"] .Sidebar .nav
+  size(100%)
+  box-shadow: inset 0 -1px 0 0 var(--border-fg), 0 0 12px 0 #00000000
+#root[data-nav-layout="vertical"] .Sidebar .nav
+  size(34px)
+  flex-direction: column
+  box-shadow: 1px 0 0 0 var(--border-flare-fg),
+              inset -1px 0 0 0 var(--border-fg),
+              inset 0 1px 0 0 var(--border-flare-fg)
 
 // ---
 // -- Dashboard wrapper
@@ -200,6 +212,11 @@
 
 .Sidebar[data-nav-inline] .nav-bar
   flex-wrap: nowrap
+
+#root[data-nav-layout="horizontal"] .Sidebar .nav-bar
+  flex-direction: row
+#root[data-nav-layout="vertical"] .Sidebar .nav-bar
+  flex-direction: column
 
 // ---
 // -- Navigational button
@@ -441,6 +458,7 @@
   opacity: 0
 
 #root[data-pinned-tabs-position="left"] .Sidebar .pointer
+#root[data-nav-layout="vertical"] .Sidebar .pointer
   pos(l: 35px)
 
 // ---
