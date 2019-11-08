@@ -236,7 +236,7 @@ export default {
   'settings.open_sidebar_panel': { message: 'Открыть панель' },
   'settings.next_panel': { message: 'Следующая панель' },
   'settings.prev_panel': { message: 'Предыдущая панель' },
-  'settings.open_new_tab_in_curr_panel': { message: 'Открыть новый таб в текущем контейнере' },
+  'settings.open_new_tab_in_curr_panel': { message: 'Открыть новый таб в текущей панели' },
   'settings.open_new_tab_after': { message: 'Открыть новый таб после текущего' },
   'settings.close_tab': { message: 'Удалить выделенные элементы или активный таб' },
   'settings.select_all': { message: 'Выделить все' },
