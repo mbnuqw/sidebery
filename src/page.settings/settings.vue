@@ -441,13 +441,16 @@
     .sub-fields
       toggle-field(
         label="settings.scroll_through_visible_tabs"
-        :inline="true"
         :value="$store.state.scrollThroughVisibleTabs"
         :inactive="!$store.state.tabsTree || $store.state.scrollThroughTabs === 'none'"
         @input="setOpt('scrollThroughVisibleTabs', $event)")
       toggle-field(
+        label="settings.scroll_through_tabs_skip_discarded"
+        :value="$store.state.scrollThroughTabsSkipDiscarded"
+        :inactive="$store.state.scrollThroughTabs === 'none'"
+        @input="setOpt('scrollThroughTabsSkipDiscarded', $event)")
+      toggle-field(
         label="settings.scroll_through_tabs_except_overflow"
-        :inline="true"
         :value="$store.state.scrollThroughTabsExceptOverflow"
         :inactive="$store.state.scrollThroughTabs === 'none'"
         @input="setOpt('scrollThroughTabsExceptOverflow', $event)")

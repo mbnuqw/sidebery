@@ -485,7 +485,16 @@ function switchTab(globaly, cycle, step, pinned) {
     else tabs = globaly ? this.state.tabs : panel.tabs
   }
   if (!tabs || !tabs.length) return
-  if (this.state.scrollThroughVisibleTabs) tabs = tabs.filter(t => !t.invisible)
+
+  let visibleOnly = this.state.scrollThroughVisibleTabs
+  let skipDiscarded = this.state.scrollThroughTabsSkipDiscarded
+  if (visibleOnly || skipDiscarded) {
+    tabs = tabs.filter(t => {
+      if (visibleOnly && t.invisible) return false
+      if (skipDiscarded && t.discarded) return false
+      return true
+    })
+  }
 
   let index = tabs.findIndex(t => t.active)
   if (step > 0) {

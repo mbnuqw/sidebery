@@ -235,6 +235,7 @@ export default {
   'settings.scroll_through_tabs_global': { message: 'global' },
   'settings.scroll_through_tabs_none': { message: 'none' },
   'settings.scroll_through_visible_tabs': { message: 'Skip folded tabs' },
+  'settings.scroll_through_tabs_skip_discarded': { message: 'Skip discarded tabs' },
   'settings.scroll_through_tabs_except_overflow': { message: 'Except if panel is overflowed' },
   'settings.tab_double_click': { message: 'Double click on tab' },
   'settings.tab_long_left_click': { message: 'Long left click on tab' },
