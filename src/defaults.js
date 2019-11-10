@@ -398,6 +398,7 @@ export const MENU_OPTIONS = {
 
     let option = {
       label: translate(label),
+      icon: 'icon_link',
       action: 'copyUrls',
       args: [state.selected],
     }
