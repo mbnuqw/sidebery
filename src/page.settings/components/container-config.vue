@@ -26,7 +26,7 @@
     :title="t('container_dashboard.rules_include_tooltip')"
     :value="conf.includeHostsActive"
     @input="toggleIncludeHosts")
-  .sub-fields(v-if="conf.includeHostsActive")
+  .sub-fields.-nosep(v-if="conf.includeHostsActive")
     .field
       text-input.text(
         ref="includeHostsInput"
@@ -40,7 +40,7 @@
     :title="t('container_dashboard.rules_exclude_tooltip')"
     :value="conf.excludeHostsActive"
     @input="toggleExcludeHosts")
-  .sub-fields(v-if="conf.excludeHostsActive")
+  .sub-fields.-nosep(v-if="conf.excludeHostsActive")
     .field
       text-input.text(
         ref="excludeHostsInput"

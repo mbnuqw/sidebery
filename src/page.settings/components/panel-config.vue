@@ -83,6 +83,21 @@
     :value="newTabCtx"
     :opts="newTabCtxOpts"
     @input="togglePanelNewTabCtx")
+  
+  toggle-field(
+    v-if="isTabs"
+    label="dashboard.url_rules"
+    :value="conf.urlRulesActive"
+    @input="toggleUrlRules")
+  .sub-fields.-nosep(v-if="conf.urlRulesActive")
+    .field
+      text-input.text(
+        ref="urlRulesInput"
+        or="---"
+        :value="conf.urlRules"
+        :valid="urlRulesValid"
+        @input="onUrlRulesInput")
+
 </template>
 
 
@@ -215,6 +230,10 @@ export default {
         { value: DEFAULT_CTX, color: 'toolbar', icon: 'icon_tabs' },
         ...this.availableContainers,
       ]
+    },
+
+    urlRulesValid() {
+      return this.conf.urlRules.length > 1
     },
   },
 
@@ -370,7 +389,8 @@ export default {
     async init() {
       await this.$nextTick()
       if (this.$refs.name) this.$refs.name.recalcTextHeight()
-      if (this.$refs.scrollBox) this.$refs.scrollBox.recalcScroll()
+      // if (this.$refs.scrollBox) this.$refs.scrollBox.recalcScroll()
+      if (this.$refs.urlRulesInput) this.$refs.urlRulesInput.recalcTextHeight()
     },
 
     togglePanelLock() {
@@ -391,6 +411,28 @@ export default {
     togglePanelNewTabCtx(value) {
       this.conf.newTabCtx = value
       Actions.savePanels()
+    },
+
+    async toggleUrlRules() {
+      if (!this.conf.urlRulesActive) {
+        if (!State.permAllUrls) {
+          window.location.hash = 'all-urls'
+          State.selectedPanel = null
+          return
+        }
+      }
+
+      this.conf.urlRulesActive = !this.conf.urlRulesActive
+      Actions.savePanels()
+      await this.$nextTick()
+
+      // if (this.$refs.scrollBox) this.$refs.scrollBox.recalcScroll()
+      if (this.$refs.urlRulesInput) this.$refs.urlRulesInput.focus()
+    },
+
+    onUrlRulesInput(value) {
+      this.conf.urlRules = value
+      Actions.savePanelsDebounced()
     },
   },
 }

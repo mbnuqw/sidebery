@@ -45,6 +45,10 @@ async function loadPanels() {
     panel.index = i
     if (!panel.id) panel.id = Utils.uid()
 
+    if (panel.urlRulesActive && panel.urlRules) {
+      this.actions.parsePanelUrlRules(panel)
+    }
+
     normPanels.push(panel)
     panelsMap[panel.id] = panel
   }
@@ -53,6 +57,22 @@ async function loadPanels() {
   this.state.panelsMap = panelsMap
 }
 
+function parsePanelUrlRules(panel) {
+  if (!this.state.urlRules) this.state.urlRules = []
+
+  for (let rawRule of panel.urlRules.split('\n')) {
+    let rule = rawRule.trim()
+    if (!rule) continue
+
+    if (rule[0] === '/' && rule[rule.length - 1] === '/') {
+      rule = new RegExp(rule.slice(1, rule.length - 1))
+    }
+
+    this.state.urlRules.push({ panelId: panel.id, value: rule })
+  }
+}
+
 export default {
   loadPanels,
+  parsePanelUrlRules,
 }

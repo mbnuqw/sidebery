@@ -36,6 +36,7 @@ async function updatePanels(newPanels) {
   // TODO: check bookmarks and default tabs panels - same as in loadPanels
 
   let panelDefs
+  this.state.urlRules = []
   for (let i = 0; i < newPanels.length; i++) {
     let newPanel = newPanels[i]
     let panel = this.state.panels.find(p => p.id === newPanel.id)
@@ -50,6 +51,12 @@ async function updatePanels(newPanels) {
     }
 
     if (panel.type !== newPanel.type) updateNeeded = true
+    if (
+      panel.urlRulesActive !== newPanel.urlRulesActive ||
+      panel.urlRules !== newPanel.urlRules
+    ) {
+      this.actions.parsePanelUrlRules(panel)
+    }
 
     panel.index = i
 
@@ -264,7 +271,7 @@ function updatePanelBoundsDebounced(delay = 256) {
 /**
  * Switch current active panel by index
  */
-function switchToPanel(index) {
+function switchToPanel(index, withoutTabActivation) {
   this.actions.closeCtxMenu()
   this.actions.resetSelection()
   this.actions.setPanel(index)
@@ -274,7 +281,7 @@ function switchToPanel(index) {
     this.actions.createTab(panel.cookieStoreId)
   }
 
-  if (this.state.activateLastTabOnPanelSwitching) {
+  if (this.state.activateLastTabOnPanelSwitching && !withoutTabActivation) {
     this.actions.activateLastActiveTabOf(this.state.panelIndex)
   }
 

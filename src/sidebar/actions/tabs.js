@@ -6,7 +6,7 @@ import Actions from '../actions'
 
 const URL_WITHOUT_PROTOCOL_RE = /^(.+\.)\/?(.+\/)?\w+/
 
-let TabsTreeSaveTimeout, updateGroupTabTimeouit
+let TabsTreeSaveTimeout, updateGroupTabTimeouit, urlRuleHistory = {}
 
 /**
  * Load all tabs for current window
@@ -926,6 +926,26 @@ async function moveTabsToCtx(tabIds, ctxId) {
   }
 }
 
+// /**
+//  * Move tabs to panel
+//  */
+// function moveTabsToPanel(tabIds, panelId) {
+//   let ids = [...tabIds]
+//   let panel = this.state.panelsMap[panelId]
+//   if (!panel) return
+
+//   let index = this.actions.
+
+//   this.state.movingTabs = []
+//   for (let tabId of tabIds) {
+//     let tab = this.state.tabsMap[tabId]
+//     if (!tab) continue
+//     tab.destPanelId = panelId
+//     this.state.movingTabs.push(tab.id)
+//   }
+//   browser.tabs.move([...this.state.movingTabs], { windowId: this.state.windowId, index: dropIndex })
+// }
+
 /**
  * Show all tabs
  */
@@ -1767,6 +1787,42 @@ function getIndexForNewTab(panel, tab) {
   }
 }
 
+/**
+ * Check url rules of panels and move tab if needed
+ */
+function checkUrlRules(url, tab) {
+  for (let rule of this.state.urlRules) {
+    if (tab.panelId === rule.panelId) continue
+
+    let ok
+    if (rule.value.test) ok = rule.value.test(url)
+    else ok = url.indexOf(rule.value) !== -1
+
+    if (ok) {
+      if (urlRuleHistory[tab.panelId] === url) {
+        urlRuleHistory[tab.panelId] = null
+        break
+      }
+
+      let panel = this.state.panelsMap[rule.panelId]
+      if (!panel) break
+      let index = this.actions.getIndexForNewTab(panel, tab)
+      if (index !== tab.index) {
+        tab.destPanelId = rule.panelId
+        browser.tabs.move(tab.id, { windowId: this.state.windowId, index })
+      } else {
+        tab.panelId = panel.id
+        this.actions.updatePanelsTabs()
+      }
+      urlRuleHistory[rule.panelId] = url
+
+      if (tab.active) this.actions.switchToPanel(panel.index, true)
+
+      break
+    }
+  }
+}
+
 export default {
   loadTabs,
   getOrderNormMoves,
@@ -1798,6 +1854,7 @@ export default {
   moveTabsToWin,
   moveTabsToThisWin,
   moveTabsToCtx,
+  // moveTabsToPanel,
 
   showAllTabs,
   updateTabsVisability,
@@ -1829,4 +1886,6 @@ export default {
 
   getPanelForNewTab,
   getIndexForNewTab,
+
+  checkUrlRules,
 }

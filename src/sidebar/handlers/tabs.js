@@ -38,8 +38,8 @@ function onTabCreated(tab) {
 
   // If new tab has wrong possition - move it
   if (!tab.pinned && tab.index !== index) {
-    browser.tabs.move(tab.id, { index })
     tab.destPanelId = panel.id
+    browser.tabs.move(tab.id, { index })
   }
 
   // Shift tabs after inserted one. (NOT detected by vue)
@@ -210,6 +210,15 @@ function onTabUpdated(tabId, change, tab) {
       }
       if (!change.url.startsWith(localTab.url.slice(0, 16))) {
         localTab.favIconUrl = ''
+      }
+      if (
+        this.state.urlRules &&
+        this.state.urlRules.length &&
+        !localTab.pinned &&
+        localTab.panelId &&
+        change.url !== 'about:blank'
+      ) {
+        this.actions.checkUrlRules(change.url, localTab)
       }
     }
   }
@@ -448,7 +457,10 @@ function onTabMoved(id, info) {
   if (!movedTab.pinned) {
     let srcPanel = this.state.panelsMap[movedTab.panelId]
     let destPanel = this.state.panelsMap[movedTab.destPanelId]
-    if (movedTab.destPanelId) movedTab.invisible = true
+    if (movedTab.destPanelId) {
+      // TODO: wtf is this ???
+      // movedTab.invisible = true
+    }
     movedTab.destPanelId = undefined
     if (!destPanel) {
       destPanel = this.state.panels.find(p => {
@@ -467,7 +479,7 @@ function onTabMoved(id, info) {
       let panelIndex = info.toIndex - destPanel.startIndex
       if (srcPanel !== destPanel) {
         srcPanel.lastActiveTab = null
-        browser.sessions.setTabValue(movedTab.id, 'panelId', destPanel.id)
+        if (srcPanel.index < destPanel.index) panelIndex++
       }
       destPanel.tabs.splice(panelIndex, 0, movedTab)
       movedTab.panelId = destPanel.id
