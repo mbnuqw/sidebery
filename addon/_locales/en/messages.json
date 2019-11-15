@@ -5,6 +5,9 @@
   },
   "ActionTitle": { "message": "Open Sidebery" },
 
+  "proxy_popup.title_prefix": { "message": "" },
+  "proxy_popup.title_postfix": { "message": " container's proxy" },
+
   "upgrading": { "message": "Upgrading..." },
   "unhandled_url": { "message": "Unhandled URL" },
   "copy": { "message": "Copy" }

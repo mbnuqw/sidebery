@@ -1,5 +1,6 @@
 import Actions from '../actions.js'
 
+const BG_URL = browser.runtime.getURL('background.html')
 let updateReqHandlerTimeout, incHistory = {}
 
 async function recreateTab(tab, info, cookieStoreId) {
@@ -13,14 +14,73 @@ async function recreateTab(tab, info, cookieStoreId) {
   browser.tabs.remove(tab.id)
 }
 
+async function checkIpInfoThroughIPIFY_ORG(cookieStoreId) {
+  if (!cookieStoreId || !this.proxies[cookieStoreId]) return
+  this.ipCheckCtx = cookieStoreId
+
+  let info, result = {}
+
+  try {
+    info = await fetch('https://api.ipify.org', {
+      cache: 'reload',
+    }).then(res => res.text())
+  } catch (err) {
+    return null
+  }
+
+  if (info) result.ip = info
+
+  return result
+}
+
+async function checkIpInfoThroughEXTREME_IP_LOOKUP_COM(cookieStoreId) {
+  if (!cookieStoreId || !this.proxies[cookieStoreId]) return
+  this.ipCheckCtx = cookieStoreId
+
+  let info, result = {}
+
+  try {
+    info = await fetch('https://extreme-ip-lookup.com/json', {
+      cache: 'reload',
+    }).then(r => r.json())
+  } catch (err) {
+    return null
+  }
+  if (!info) return null
+
+  if (info.status !== 'success') return null
+  if (info.query) result.ip = info.query
+  if (info.country) result.country = info.country
+
+  return result
+}
+
+async function checkIpInfo(cookieStoreId) {
+  let result
+  result = await this.actions.checkIpInfoThroughEXTREME_IP_LOOKUP_COM(cookieStoreId)
+  if (!result) {
+    result = await this.actions.checkIpInfoThroughIPIFY_ORG(cookieStoreId)
+  }
+
+  return result
+}
+
 function requestHandler(info) {
   if (!this.tabsMap) return
 
   let tab = this.tabsMap[info.tabId]
-  if (!tab) return
+
+  // Proxify requests for checking ip and other info
+  if (!tab && this.ipCheckCtx && info.type === 'xmlhttprequest') {
+    if (info.originUrl === BG_URL && this.proxies[this.ipCheckCtx]) {
+      let ctx = this.ipCheckCtx
+      this.ipCheckCtx = null
+      return this.proxies[ctx]
+    }
+  }
 
   // Check hosts rules
-  if (info.type === 'main_frame') {
+  if (tab && info.type === 'main_frame') {
     let includedUrl
 
     // Include rules
@@ -108,6 +168,25 @@ function updateReqHandler() {
   const excRulesOk = Object.keys(this.excludeHostsRules).length > 0
   const proxyOk = Object.keys(this.proxies).length > 0
 
+  // Update proxy badges
+  if (proxyOk) {
+    for (let tab of Object.values(this.tabsMap)) {
+      if (this.proxies[tab.cookieStoreId] && !tab.proxified) {
+        tab.proxified = true
+        this.actions.showProxyBadge(tab.id)
+      }
+      if (!this.proxies[tab.cookieStoreId] && tab.proxified) {
+        tab.proxified = false
+        this.actions.hideProxyBadge(tab.id)
+      }
+    }
+  } else {
+    for (let tab of Object.values(this.tabsMap)) {
+      tab.proxified = false
+      this.actions.hideProxyBadge(tab.id)
+    }
+  }
+
   if (incRulesOk || excRulesOk || proxyOk) Actions.turnOnReqHandler()
   else Actions.turnOffReqHandler()
 }
@@ -133,6 +212,9 @@ function turnOffReqHandler() {
 }
 
 export default {
+  checkIpInfoThroughIPIFY_ORG,
+  checkIpInfoThroughEXTREME_IP_LOOKUP_COM,
+  checkIpInfo,
   requestHandler,
   updateReqHandler,
   updateReqHandlerDebounced,

@@ -16,6 +16,9 @@ addon/group/*
 addon/url/*
 !addon/url/url.html
 
+addon/proxy/*
+!addon/proxy/proxy.html
+
 addon/snapshots
 addon/theme
 addon/styles

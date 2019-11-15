@@ -147,9 +147,16 @@ function updateActiveView() {
       if (el) el.scrollIntoView(scrollSectionConf)
     }
 
+    if (arg && hash === 'settings_containers') {
+      setTimeout(() => {
+        let container = this.state.containers[arg]
+        if (container) this.state.selectedContainer = container
+      }, 120)
+    }
+
     if (arg && hash === 'settings_panels') {
       setTimeout(() => {
-        let panel = this.state.panels.find(p => p.cookieStoreId === arg)
+        let panel = this.state.panels.find(p => p.id === arg)
         if (panel) this.state.selectedPanel = panel
       }, 120)
     }

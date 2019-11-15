@@ -45,7 +45,48 @@ function onTabRemoved(tabId, info) {
  */
 function onTabUpdated(tabId, change) {
   let targetTab = this.tabsMap[tabId]
-  if (targetTab) Object.assign(targetTab, change)
+  if (!targetTab) return
+
+  Object.assign(targetTab, change)
+
+  if (this.proxies[targetTab.cookieStoreId]) {
+    targetTab.proxified = true
+    this.actions.showProxyBadgeDebounced(tabId)
+  }
+  if (!this.proxies[targetTab.cookieStoreId]) {
+    targetTab.proxified = false
+    this.actions.hideProxyBadge(tabId)
+  }
+}
+
+function showProxyBadge(tabId) {
+  let tab = this.tabsMap[tabId]
+  let container = this.containers[tab.cookieStoreId]
+  if (!container) return
+
+  browser.pageAction.setIcon({
+    path: {
+      '16': this.images.proxyIcon,
+      '32': this.images.proxyIcon,
+    },
+    tabId,
+  })
+  let titlePre = browser.i18n.getMessage('proxy_popup.title_prefix')
+  let titlePost = browser.i18n.getMessage('proxy_popup.title_postfix')
+  let title = titlePre + container.name + titlePost
+  browser.pageAction.setTitle({ title, tabId })
+  browser.pageAction.show(tabId)
+}
+function showProxyBadgeDebounced(tabId, delay = 500) {
+  if (this._showProxyBadgeTimeout) clearTimeout(this._showProxyBadgeTimeout)
+  this._showProxyBadgeTimeout = setTimeout(() => {
+    this.actions.showProxyBadge(tabId)
+  }, delay)
+}
+
+function hideProxyBadge(tabId) {
+  browser.pageAction.hide(tabId)
+  browser.pageAction.setTitle({ title: 'Sidebery proxy off', tabId })
 }
 
 /**
@@ -229,6 +270,10 @@ export default {
   onTabMoved,
   onTabAttached,
   onTabDetached,
+
+  showProxyBadge,
+  showProxyBadgeDebounced,
+  hideProxyBadge,
 
   updateTabsTree,
   backupTabsData,

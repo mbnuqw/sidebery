@@ -5,6 +5,7 @@ void async function main() {
 
   state.actions = Actions
   state.tabsMap = []
+  state.images = {}
 
   // Init first-need stuff
   Actions.initToolbarButton()
@@ -36,4 +37,6 @@ void async function main() {
   Actions.loadPermissions()
   Actions.loadFavicons()
   Actions.clearFaviCacheAfter(86420)
+  Actions.setupFirefoxThemeListeners()
+  Actions.loadFirefoxTheme()
 }()

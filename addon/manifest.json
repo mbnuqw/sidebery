@@ -49,6 +49,16 @@
     "default_panel": "./sidebar/index.html"
   },
 
+  "page_action": {
+    "browser_style": false,
+    "default_icon": {
+      "16": "./assets/proxy-off.svg",
+      "32": "./assets/proxy-off.svg"
+    },
+    "default_title": "Sidebery proxy off",
+    "default_popup": "./proxy/proxy.html"
+  },
+
   "commands": {
     "_execute_sidebar_action": {
       "suggested_key": {

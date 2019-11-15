@@ -858,7 +858,7 @@ export const MENU_OPTIONS = {
       label: translate('menu.common.conf'),
       icon: 'icon_panel_config',
       action: 'openSettings',
-      args: ['settings_panels.' + panel.cookieStoreId],
+      args: ['settings_panels.' + panel.id],
     }
     if (!state.ctxMenuRenderInact && option.inactive) return
     return option
