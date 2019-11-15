@@ -13,8 +13,8 @@
   "description": "__MSG_ExtDesc__",
   "homepage_url": "https://github.com/mbnuqw/sidebery",
   "icons": {
-    "48": "./assets/logo-df-48.png",
-    "96": "./assets/logo-df-96.png"
+    "48": "./assets/logo.svg",
+    "96": "./assets/logo.svg"
   },
 
   "options_ui": {
@@ -42,8 +42,8 @@
 
   "sidebar_action": {
     "default_icon": {
-      "16": "./assets/logo-g-16.png",
-      "32": "./assets/logo-g-32.png"
+      "16": "./assets/logo-native.svg",
+      "32": "./assets/logo-native.svg"
     },
     "default_title": "Sidebery",
     "default_panel": "./sidebar/index.html"
@@ -52,8 +52,8 @@
   "page_action": {
     "browser_style": false,
     "default_icon": {
-      "16": "./assets/proxy-off.svg",
-      "32": "./assets/proxy-off.svg"
+      "16": "./assets/proxy-native.svg",
+      "32": "./assets/proxy-native.svg"
     },
     "default_title": "Sidebery proxy off",
     "default_popup": "./proxy/proxy.html"
@@ -153,19 +153,19 @@
 
   "browser_action": {
     "default_icon": {
-      "16": "./assets/logo-g-16.png",
-      "32": "./assets/logo-g-32.png"
+      "16": "./assets/logo-native.svg",
+      "32": "./assets/logo-native.svg"
     },
     "default_title": "__MSG_ActionTitle__",
     "theme_icons": [
       {
-        "light": "./assets/logo-gl-16.png",
-        "dark": "./assets/logo-gd-16.png",
+        "light": "./assets/logo-native-light.svg",
+        "dark": "./assets/logo-native-dark.svg",
         "size": 16
       },
       {
-        "light": "./assets/logo-gl-32.png",
-        "dark": "./assets/logo-gd-32.png",
+        "light": "./assets/logo-native-light.svg",
+        "dark": "./assets/logo-native-dark.svg",
         "size": 32
       }
     ]

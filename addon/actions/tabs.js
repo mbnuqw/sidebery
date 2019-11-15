@@ -14,6 +14,11 @@ async function loadTabs(windows, tabsMap) {
     else tabWindow.tabs = [tab]
 
     tabsMap[tab.id] = tab
+
+    if (this.proxies[tab.cookieStoreId]) {
+      tab.proxified = true
+      this.actions.showProxyBadge(tab.id)
+    }
   }
 }
 
@@ -64,13 +69,6 @@ function showProxyBadge(tabId) {
   let container = this.containers[tab.cookieStoreId]
   if (!container) return
 
-  browser.pageAction.setIcon({
-    path: {
-      '16': this.images.proxyIcon,
-      '32': this.images.proxyIcon,
-    },
-    tabId,
-  })
   let titlePre = browser.i18n.getMessage('proxy_popup.title_prefix')
   let titlePost = browser.i18n.getMessage('proxy_popup.title_postfix')
   let title = titlePre + container.name + titlePost
