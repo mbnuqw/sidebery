@@ -176,6 +176,8 @@ function deselectItem(id) {
  */
 function resetSelection() {
   if (!this.state.selected.length) return
+  if (this._preserveSelection) return
+  if (this._preserveSelectionOnce) return this._preserveSelectionOnce = false
   let id = this.state.selected[0]
   if (typeof id === 'number') {
     for (let id of this.state.selected) {

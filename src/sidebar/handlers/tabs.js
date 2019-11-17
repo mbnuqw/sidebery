@@ -559,13 +559,15 @@ function onTabActivated(info) {
   if (prevActive) {
     prevActive.active = false
 
-    let actTabsBox
-    if (this.state.activateAfterClosingGlobal) actTabsBox = this.state
-    else actTabsBox = this.state.panelsMap[prevActive.panelId] || this.state
+    let box = this.state
+    if (!box.actTabs) box.actTabs = []
+    if (box.actTabs.length > 128) box.actTabs = box.actTabs.slice(32)
+    box.actTabs.push(prevActive.id)
 
-    if (!actTabsBox.actTabs) actTabsBox.actTabs = []
-    if (actTabsBox.actTabs.length > 128) actTabsBox.actTabs = actTabsBox.actTabs.slice(32)
-    actTabsBox.actTabs.push(prevActive.id)
+    box = this.state.panelsMap[prevActive.panelId]
+    if (!box.actTabs) box.actTabs = []
+    if (box.actTabs.length > 128) box.actTabs = box.actTabs.slice(32)
+    box.actTabs.push(prevActive.id)
   }
 
   // Update tabs and find activated one

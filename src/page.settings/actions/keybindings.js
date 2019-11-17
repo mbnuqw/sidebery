@@ -16,7 +16,7 @@ async function resetKeybindings() {
   })
 
   setTimeout(() => {
-    CommonActions.loadKeybindings(this.state)
+    this.actions.loadKeybindings(this.state)
   }, 120)
 }
 

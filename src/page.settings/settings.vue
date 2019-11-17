@@ -498,7 +498,7 @@
       v-for="(k, i) in $store.state.keybindings", :key="k.name"
       :is-focused="k.focus"
       @click="changeKeybinding(k, i)")
-      .label {{t('settings.' + k.description)}}
+      .label {{k.description}}
       .value {{normalizeShortcut(k.shortcut)}}
       input(
         type="text"
@@ -817,6 +817,7 @@ export default {
      * Normalize (system-wise) shortcut label
      */
     normalizeShortcut(s) {
+      if (!s) return '---'
       if (State.os === 'mac') {
         return s.replace('Command', '⌘').replace('MacCtrl', 'Ctrl')
       }
