@@ -73,7 +73,12 @@ export default new Vue({
     }
     Handlers.setupBookmarksListeners()
 
-    await Actions.loadTabs()
+    if (State.stateStorage === 'global') {
+      await Actions.loadTabsFromGlobalStorage()
+    }
+    if (State.stateStorage === 'session') {
+      await Actions.loadTabsFromSessionStorage()
+    }
     Handlers.setupTabsListeners()
 
     Actions.loadKeybindings()
@@ -85,7 +90,7 @@ export default new Vue({
     Actions.loadFavicons()
     Actions.loadPermissions(true)
     Actions.updateTabsVisability()
-    Actions.saveTabsData()
+    if (State.stateStorage === 'global') Actions.saveTabsData()
 
     Actions.connectToBG()
     Actions.updateActiveGroupPage()

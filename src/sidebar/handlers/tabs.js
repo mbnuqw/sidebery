@@ -113,7 +113,9 @@ function onTabCreated(tab) {
       }
     }
 
-    this.actions.saveTabsData()
+    if (this.state.stateStorage === 'global') this.actions.saveTabsData()
+    if (this.state.stateStorage === 'session') this.actions.saveTabData(tab)
+
     const groupTab = this.actions.getGroupTab(tab)
     if (groupTab && !groupTab.discarded) {
       browser.tabs.sendMessage(groupTab.id, {
@@ -139,7 +141,6 @@ function onTabCreated(tab) {
   }
 
   this.actions.recalcPanelScroll()
-  // this.actions.savePanelsRangesDebounced()
 }
 
 /**
@@ -195,7 +196,7 @@ function onTabUpdated(tabId, change, tab) {
   // Url
   if (change.url !== undefined) {
     if (change.url !== localTab.url) {
-      this.actions.saveTabsData()
+      if (this.state.stateStorage === 'global') this.actions.saveTabsData()
       if (this.state.highlightOpenBookmarks && this.state.bookmarksUrlMap) {
         if (this.state.bookmarksUrlMap[localTab.url]) {
           for (let b of this.state.bookmarksUrlMap[localTab.url]) {
@@ -385,7 +386,10 @@ function onTabRemoved(tabId, info, childfree) {
     const startIndex = panel ? panel.startIndex : 0
     const endIndex = panel ? panel.endIndex + 1 : -1
     this.actions.updateTabsTree(startIndex, endIndex)
-    this.actions.saveTabsData()
+  }
+
+  if (!this.state.removingTabs.length) {
+    if (this.state.stateStorage === 'global') this.actions.saveTabsData()
   }
 
   // Update succession
@@ -494,8 +498,13 @@ function onTabMoved(id, info) {
     const startIndex = panelOk ? panel.startIndex : 0
     const endIndex = panelOk ? panel.endIndex + 1 : -1
     this.actions.updateTabsTree(startIndex, endIndex)
+  }
+
+  if (this.state.stateStorage === 'global' && !this.state.movingTabs.length) {
     this.actions.saveTabsData()
   }
+  if (this.state.stateStorage === 'session') this.actions.saveTabData(movedTab)
+
 
   // Update succession
   if (!this.state.movingTabs.length && this.state.activateAfterClosing !== 'none') {

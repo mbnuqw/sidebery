@@ -31,12 +31,14 @@ export const SETTINGS_OPTIONS = {
   warnOnMultiTabCloseOpts: ['any', 'collapsed', 'none'],
   warnOnMultiBookmarkDeleteOpts: ['any', 'collapsed', 'none'],
   navBarLayoutOpts: ['horizontal', 'vertical'],
+  stateStorageOpts: ['global', 'session'],
 }
 
 export const DEFAULT_SETTINGS = {
   // General
   version: browser.runtime.getManifest().version,
   nativeScrollbars: false,
+  stateStorage: 'global',
 
   // Context menu
   ctxMenuNative: false,

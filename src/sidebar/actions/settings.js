@@ -22,6 +22,7 @@ function updateSettings(settings) {
   const toggleBookmarks = this.state.bookmarksPanel !== settings.bookmarksPanel
   const theme = this.state.theme !== settings.theme
   const highlightOpenBookmarks = this.state.highlightOpenBookmarks !== settings.highlightOpenBookmarks
+  let stateStorage = this.state.stateStorage !== settings.stateStorage
 
   // Update settings of this instance
   for (let k of Object.keys(settings)) {
@@ -71,6 +72,20 @@ function updateSettings(settings) {
 
   if (theme) {
     Actions.initTheme()
+  }
+
+  if (stateStorage) {
+    if (this.state.stateStorage === 'global') this.actions.saveTabsData()
+    if (this.state.stateStorage === 'session') {
+      for (let tab of this.state.tabs) {
+        browser.sessions.setTabValue(tab.id, 'data', {
+          id: tab.id,
+          panelId: tab.panelId,
+          parentId: tab.parentId,
+          folded: tab.folded,
+        })
+      }
+    }
   }
 }
 

@@ -8,6 +8,12 @@
       label="settings.native_scrollbars"
       :value="$store.state.nativeScrollbars"
       @input="setOpt('nativeScrollbars', $event)")
+    SelectField(
+      label="settings.state_storage"
+      optLabel="settings.state_storage_"
+      :value="$store.state.stateStorage"
+      :opts="$store.state.stateStorageOpts"
+      @input="setOpt('stateStorage', $event)")
 
   section(ref="settings_menu")
     h2 {{t('settings.ctx_menu_title')}}

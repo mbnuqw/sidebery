@@ -37,6 +37,9 @@ export default {
   // --- General
   'settings.general_title': { message: 'General' },
   'settings.native_scrollbars': { message: 'Use native scroll-bars' },
+  'settings.state_storage': { message: 'State storage type' },
+  'settings.state_storage_global': { message: 'global' },
+  'settings.state_storage_session': { message: 'session' },
 
   // --- Context menu
   'settings.ctx_menu_title': { message: 'Context menu' },
