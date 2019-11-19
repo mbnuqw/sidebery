@@ -36,6 +36,7 @@ export default {
   containers: {},
   panels: [],
   tabs: [],
+  groupTabs: {},
 
   bookmarks: [],
   bookmarksCount: 0,

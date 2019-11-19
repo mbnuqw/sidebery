@@ -84,7 +84,14 @@ function updateSettings(settings) {
           parentId: tab.parentId,
           folded: tab.folded,
         })
+        if (Utils.isGroupUrl(tab.url)) {
+          if (!this.state.groupTabs) this.state.groupTabs = {}
+          this.state.groupTabs[tab.id] = true
+        } else if (this.state.groupTabs[tab.id]) {
+          this.state.groupTabs[tab.id] = false
+        }
       }
+      this.actions.saveGroups()
     }
   }
 }

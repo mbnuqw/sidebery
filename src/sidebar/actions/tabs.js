@@ -9,7 +9,7 @@ const URL_WITHOUT_PROTOCOL_RE = /^(.+\.)\/?(.+\/)?\w+/
 let TabsTreeSaveTimeout, updateGroupTabTimeouit, urlRuleHistory = {}
 
 /**
- * Load all tabs for current window
+ * Load tabs using global storage
  */
 async function loadTabsFromGlobalStorage() {
   let windowId = browser.windows.WINDOW_ID_CURRENT
@@ -101,9 +101,16 @@ async function loadTabsFromGlobalStorage() {
   Logs.push('[INFO] Tabs loaded')
 }
 
+/**
+ * Load tabs using session storage
+ */
 async function loadTabsFromSessionStorage() {
   let windowId = browser.windows.WINDOW_ID_CURRENT
-  let tabs = await browser.tabs.query({ windowId })
+  let [ tabs, groups ] = await Promise.all([
+    browser.tabs.query({ windowId }),
+    browser.sessions.getWindowValue(this.state.windowId, 'groups')
+  ])
+  if (!groups) groups = {}
   let tabsData = await Promise.all(tabs.map(t => {
     return browser.sessions.getTabValue(t.id, 'data')
   }))
@@ -126,7 +133,40 @@ async function loadTabsFromSessionStorage() {
     }
 
     if (dt) {
-      t.panelId = dt.panelId
+      if (dt.parentId > -1 && oldNewMap[dt.parentId] === undefined && groups[dt.parentId]) {
+        let group = groups[dt.parentId]
+
+        let toRestore = [group]
+        while (oldNewMap[group.parentId] === undefined && groups[group.parentId]) {
+          group = groups[group.parentId]
+          toRestore.unshift(group)
+        }
+
+        for (let group, j = 0; j < toRestore.length; j++) {
+          group = toRestore[j]
+          let url = browser.runtime.getURL('group/group.html') + `#${group.groupId}`
+          let groupTab = await browser.tabs.create({
+            windowId: this.state.windowId,
+            index: i + j,
+            url,
+            cookieStoreId: group.ctx,
+            active: false,
+          })
+          groupTab.url = url
+
+          tabs.splice(i + j, 0, groupTab)
+          tabsData.splice(i + j, 0, group)
+          for (let k = i + j + 1; k < tabs.length; k++) {
+            tabs[k].index = k
+          }
+          oldNewMap[group.id] = groupTab.id
+        }
+
+        i--
+        continue
+      }
+
+      t.panelId = dt.panelId || DEFAULT_CTX_ID
       if (oldNewMap[dt.parentId] !== undefined) {
         t.parentId = oldNewMap[dt.parentId]
       }
@@ -140,45 +180,6 @@ async function loadTabsFromSessionStorage() {
       this.state.activeTabId = t.id
     }
   }
-
-  // tabsData = Utils.findDataForTabs(tabs, tabsData)
-  // if (!tabsData.length) {
-  //   let storage = await browser.storage.local.get({ prevTabsTrees: [] } )
-  //   tabsData = Utils.findDataForTabs(tabs, storage.prevTabsTrees)
-  // }
-
-  // let idsMap = {}
-  // for (let tab, tabData, i = 0; i < tabsData.length; i++) {
-  //   tabData = tabsData[i]
-  //   if (!tabData || tabData.index === undefined) continue
-
-  //   // Recreate group tab (e.g. after addon was disabled-enabled)
-  //   if (!tab && tabData.isMissedGroup) {
-  //     let groupId = Utils.getGroupId(tabData.url)
-  //     let url = browser.runtime.getURL('group/group.html') + `#${groupId}`
-  //     let restoredTab = await browser.tabs.create({
-  //       windowId: this.state.windowId,
-  //       index: tabData.index,
-  //       url,
-  //       cookieStoreId: tabData.ctx,
-  //       active: false,
-  //     })
-  //     Utils.normalizeTab(restoredTab)
-  //     tabs.splice(tabData.index, 0, restoredTab)
-  //     this.state.tabsMap[restoredTab.id] = restoredTab
-  //     for (let i = tabData.index + 1; i < tabs.length; i++) {
-  //       tabs[i].index = i
-  //     }
-  //   }
-
-  //   tab = tabs[tabData.index]
-  //   if (!tab) break
-
-  //   tab.panelId = tabData.panelId || DEFAULT_CTX_ID
-  //   if (idsMap[tabData.parentId] >= 0) tab.parentId = idsMap[tabData.parentId]
-  //   tab.folded = tabData.folded
-  //   idsMap[tabData.id] = tab.id
-  // }
 
   this.state.tabs = tabs
   Actions.updateTabsTree()
@@ -202,6 +203,8 @@ async function loadTabsFromSessionStorage() {
 
   // Update panels
   Actions.updatePanelsTabs()
+
+  this.state.tabs.forEach(t => this.actions.saveTabData(t))
 
   Logs.push('[INFO] Tabs loaded')
 }
@@ -255,36 +258,6 @@ async function loadTabsFromSessionStorage() {
 // }
 
 // /**
-//  * Find start index of tree tabs branch in provided array of tabs.
-//  */
-// function findBranchStartIndex(array, subArray, startIndex) {
-//   for (let t of subArray) {
-//     t.isGroup = Utils.isGroupUrl(t.url)
-//   }
-
-//   for (let i = startIndex; i < array.length; i++) {
-//     let similarity = 0
-//     let startOffset = 0, innerOffset = 0
-//     for (let j = 0; j < subArray.length; j++) {
-//       let a = array[i+j-innerOffset]
-//       let s = subArray[j]
-//       if (!a) return -1
-//       if (a.url === s.url && a.cookieStoreId === s.ctx) {
-//         similarity++
-//       } else if (s.isGroup) {
-//         similarity++
-//         if (!similarity) startOffset++
-//         else innerOffset++
-//       } else if (a.active && a.url === 'about:blank') {
-//         similarity++
-//       }
-//     }
-//     if (similarity === subArray.length) return i + startOffset
-//   }
-//   return -1
-// }
-
-// /**
 //  * Create new group tab with provided props
 //  */
 // async function restoreGroupTab(tabInfo, index, parents) {
@@ -316,62 +289,6 @@ async function loadTabsFromSessionStorage() {
 //   for (let k = index + 1; k < this.state.tabs.length; k++) {
 //     this.state.tabs[k].index++
 //   }
-// }
-
-// /**
-//  * Restore tabs tree
-//  */
-// async function restoreTabsTree() {
-//   let { tabsTrees, prevTabsTrees } = await browser.storage.local.get({
-//     tabsTrees: [],
-//     prevTabsTrees: [],
-//   })
-//   tabsTrees = tabsTrees.concat(prevTabsTrees)
-
-//   let pinnedTabsCount = 0
-//   for (; pinnedTabsCount < this.state.tabs.length; pinnedTabsCount++) {
-//     if (!this.state.tabs[pinnedTabsCount].pinned) break
-//   }
-
-//   for (let tab of this.state.tabs) {
-//     if (tab.openerTabId > -1) tab.parentId = tab.openerTabId
-//   }
-
-//   perTree:
-//   for (let tree of tabsTrees) {
-//     let parents = []
-//     let tabIndex = pinnedTabsCount
-
-//     // Separate tree into branches
-//     let branches = tree.reduce((a, v) => {
-//       if (v.parentId === -1) a.push([v])
-//       else if (a[a.length - 1]) a[a.length - 1].push(v)
-//       return a
-//     }, [])
-
-//     for (let branch of branches) {
-//       if (branch.length <= 1) continue perTree
-
-//       let branchIndex = findBranchStartIndex(this.state.tabs, branch, tabIndex)
-//       if (branchIndex === -1) continue perTree
-//       else tabIndex = branchIndex
-
-//       for (let treeTab of branch) {
-//         let tab = this.state.tabs[tabIndex]
-//         if (tab.url === treeTab.url || (tab.active && tab.url === 'about:blank')) {
-//           if (treeTab.isParent) parents[treeTab.id] = tab.id
-//           tab.isParent = treeTab.isParent
-//           tab.parentId = parents[treeTab.parentId] || -1
-//           tab.folded = treeTab.folded
-//         } else {
-//           await Actions.restoreGroupTab(treeTab, tabIndex, parents)
-//         }
-//         tabIndex++
-//       }
-//     }
-//     break
-//   }
-//   Actions.updateTabsTree()
 // }
 
 /**
@@ -413,12 +330,45 @@ function saveTabsData(delay = 300) {
 function saveTabData(tabOrId) {
   if (tabOrId.id === undefined) tabOrId = this.state.tabsMap[tabOrId]
   if (!tabOrId) return
+
   browser.sessions.setTabValue(tabOrId.id, 'data', {
     id: tabOrId.id,
     panelId: tabOrId.panelId,
     parentId: tabOrId.parentId,
     folded: tabOrId.folded,
   })
+}
+
+function saveGroups(delay = 300) {
+  if (!this.state.groupTabs) return
+  if (!this._saveGroupsTimeout) clearTimeout(this._saveGroupsTimeout)
+  this._saveGroupsTimeout = setTimeout(() => {
+    this._saveGroupsTimeout = null
+    let groups = {}
+
+    for (let id of Object.keys(this.state.groupTabs)) {
+      if (!this.state.groupTabs[id]) continue
+      let groupTab = this.state.tabsMap[id]
+      if (!groupTab) continue
+      let prevTab = this.state.tabs[groupTab.index - 1]
+      let nextTab = this.state.tabs[groupTab.index + 1]
+      let groupInfo = {
+        id,
+        index: groupTab.index,
+        ctx: groupTab.cookieStoreId,
+        groupId: Utils.getGroupId(groupTab.url),
+        panelId: groupTab.panelId,
+        parentId: groupTab.parentId,
+        folded: groupTab.folded,
+        url: groupTab.url,
+      }
+      if (prevTab) groupInfo.prevTab = prevTab.id
+      if (nextTab) groupInfo.nextTab = nextTab.id
+      groups[id] = groupInfo
+    }
+
+    browser.sessions.setWindowValue(this.state.windowId, 'groups', groups)
+  }, delay)
 }
 
 /**
@@ -490,8 +440,6 @@ async function removeTabs(tabIds) {
   if (!this.state.tabsMap[tabIds[0]]) return
   let panelId = this.state.tabsMap[tabIds[0]].panelId
   let panel = this.state.panelsMap[panelId]
-  // const ctxId = this.state.tabsMap[tabIds[0]].cookieStoreId
-  // const panel = this.actions.getTabPanel(tabIds[0])
   if (!panel) return
 
   let tabsMap = {}
@@ -1961,6 +1909,8 @@ export default {
   saveTabsTree,
   saveTabsData,
   saveTabData,
+  saveGroups,
+
   scrollToActiveTab,
   createTab,
   removeTabs,

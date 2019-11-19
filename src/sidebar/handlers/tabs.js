@@ -1,6 +1,7 @@
 import Utils from '../../utils'
 import { DEFAULT_CTX_ID } from '../../defaults'
 
+const GROUP_URL = browser.runtime.getURL('/group/group.html')
 const URL_HOST_PATH_RE = /^([a-z0-9-]{1,63}\.)+\w+(:\d+)?\/[A-Za-z0-9-._~:/?#[\]%@!$&'()*+,;=]*$/
 
 /**
@@ -140,6 +141,11 @@ function onTabCreated(tab) {
     }
   }
 
+  if (this.state.stateStorage === 'session' && tab.url.startsWith(GROUP_URL)) {
+    this.state.groupTabs[tab.id] = true
+    this.actions.saveGroups()
+  }
+
   this.actions.recalcPanelScroll()
 }
 
@@ -211,6 +217,14 @@ function onTabUpdated(tabId, change, tab) {
       }
       if (!change.url.startsWith(localTab.url.slice(0, 16))) {
         localTab.favIconUrl = ''
+      }
+      if (this.state.stateStorage === 'session') {
+        if (change.url.startsWith(GROUP_URL)) {
+          this.state.groupTabs[localTab.id] = true
+          this.actions.saveGroups()
+        } else if (this.state.groupTabs[localTab.id]) {
+          this.state.groupTabs[localTab.id] = false
+        }
       }
       if (
         this.state.urlRules &&
@@ -366,6 +380,10 @@ function onTabRemoved(tabId, info, childfree) {
   }
   this.state.tabsMap[tabId] = undefined
   this.state.tabs.splice(tab.index, 1)
+  if (this.state.stateStorage === 'session' && this.state.groupTabs[tabId]) {
+    this.state.groupTabs[tabId] = false
+    this.actions.saveGroups()
+  }
 
   // Remove tab from panel
   if (panel && panel.tabs) {
