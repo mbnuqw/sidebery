@@ -114,6 +114,7 @@ export default {
   'settings.activate_after_closing_global': { message: 'Globally' },
   'settings.shift_selection_from_active': { message: 'Start shift+click selection from the active tab' },
   'settings.ask_new_bookmark_place': { message: 'Ask where to store bookmarks' },
+  'settings.tabs_rm_undo_note': { message: 'Show undo notification on closing multiple tabs' },
 
   // --- New tab position
   'settings.new_tab_position': { message: 'New tab position' },

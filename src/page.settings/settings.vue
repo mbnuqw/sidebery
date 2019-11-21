@@ -211,6 +211,10 @@
       label="settings.ask_new_bookmark_place"
       :value="$store.state.askNewBookmarkPlace"
       @input="setOpt('askNewBookmarkPlace', $event)")
+    ToggleField(
+      label="settings.tabs_rm_undo_note"
+      :value="$store.state.tabsRmUndoNote"
+      @input="setOpt('tabsRmUndoNote', $event)")
 
   section(ref="settings_new_tab_position")
     h2 {{t('settings.new_tab_position')}}
