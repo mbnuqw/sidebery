@@ -203,13 +203,13 @@
 .Sidebar .nav-btn > svg
   box(absolute)
   size(16px, same)
-  fill: var(--panel-fg, var(--nav-btn-fg))
+  fill: var(--container-fg, var(--nav-btn-fg))
   transform: translateZ(0)
   transition: opacity var(--d-fast)
 
 #root[data-style="light"] .Sidebar .nav-btn[data-color] > svg
   fill: var(--nav-btn-fg) !important
-  filter: drop-shadow(1px 0 0 var(--panel-fg)) drop-shadow(-1px 0 0 var(--panel-fg)) drop-shadow(0 -1px 0 var(--panel-fg)) drop-shadow(0 1px 0 var(--panel-fg))
+  filter: drop-shadow(1px 0 0 var(--container-fg)) drop-shadow(-1px 0 0 var(--container-fg)) drop-shadow(0 -1px 0 var(--container-fg)) drop-shadow(0 1px 0 var(--container-fg))
 
 .Sidebar .nav-btn[data-updated] > svg
   mask: radial-gradient(
@@ -499,7 +499,7 @@
     box(absolute)
     pos(calc(50% - 8px), same)
     size(16px, same)
-    fill: var(--panel-fg)
+    fill: var(--container-fg)
   &:hover
     background-color: #00000032
   &:active
@@ -509,7 +509,7 @@
 
 #root[data-style="light"] .HiddenPanelsBar .hidden-panel[data-color] > svg
   fill: var(--nav-btn-fg) !important
-  filter: drop-shadow(1px 0 0 var(--panel-fg)) drop-shadow(-1px 0 0 var(--panel-fg)) drop-shadow(0 -1px 0 var(--panel-fg)) drop-shadow(0 1px 0 var(--panel-fg))
+  filter: drop-shadow(1px 0 0 var(--container-fg)) drop-shadow(-1px 0 0 var(--container-fg)) drop-shadow(0 -1px 0 var(--container-fg)) drop-shadow(0 1px 0 var(--container-fg))
 
 // ---
 // -- Transitions
