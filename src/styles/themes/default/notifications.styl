@@ -13,22 +13,12 @@
   flex-direction: column
   flex-shrink: 0
   margin: 8px
-  padding: 6px 0
+  padding: 4px 0 0
   background-color: var(--ctx-menu-bg)
   border-radius: 3px
   overflow: hidden
   box-shadow: 0 0 0 1px var(--border-active-fg),
               0 0 16px 0 #00000032
-  cursor: pointer
-
-  &:before
-    content: ''
-    box(absolute)
-    pos(0, 0)
-    size(100%, same)
-    background-color: #565656
-    opacity: 0
-    transition: opacity var(--d-fast)
 
   &:after
     content: ''
@@ -45,13 +35,15 @@
     transition: none
     opacity: 0
 
+  &[data-timeout]:after
+    animation: notif-timeout var(--timeout) linear
+
 .Notifications .title
   box(relative)
   size(100%)
   text(s: rem(17), w: 700)
   color: var(--title-fg)
-  text-align: center
-  padding: 2px 12px
+  padding: 4px 12px
 
 .Notifications .msg
   box(relative)
@@ -59,7 +51,38 @@
   text(s: rem(12))
   color: var(--info-fg)
   padding: 0 12px 2px
+
+.Notifications .ctrls
+  box(relative, flex)
+  margin: 5px 0 0
+  box-shadow: 0 -1px 0 0 var(--border-active-fg)
+
+.Notifications .ctrl
+  box(relative)
+  text(s: rem(14))
+  flex-grow: 1
+  padding: 5px 8px
   text-align: center
+  color: var(--info-fg)
+  cursor: pointer
+  &:not(:last-of-type)
+    margin-right: 1px
+    box-shadow: 1px 0 0 0 var(--border-active-fg)
+  &:before
+    content: ''
+    box(absolute)
+    pos(0, 0)
+    size(100%, same)
+    background-color: #565656
+    opacity: 0
+    transition: opacity var(--d-fast)
+
+  &:hover:before
+    opacity: .1
+  
+  &:active:before
+    transition: none
+    opacity: 0
 
 .notification-enter-active
 .notification-leave-active
@@ -70,13 +93,21 @@
   transition: transform var(--d-fast), opacity var(--d-fast)
 .notification-enter
   opacity: 0
-  transform: scale(1, 0.8)
+  transform: translateY(100%)
 .notification-enter-to
   opacity: 1
-  transform: scale(1, 1)
+  transform: translateY(0)
 .notification-leave
   opacity: 0
-  transform: scale(1, 1)
+  transform: translateY(0)
 .notification-leave-to
   opacity: 0
-  transform: scale(1, 0.8)
+  transform: translateY(100%)
+
+@keyframes notif-timeout
+  0%
+    opacity: 1
+  90%
+    opacity: 0
+  100%
+    opacity: 0

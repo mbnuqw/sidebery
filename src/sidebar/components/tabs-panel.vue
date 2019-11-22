@@ -18,13 +18,13 @@
         :key="t.id"
         :child-count="getChildrenCount(i)"
         :tab="t")
-  .dbg.
-    ID: {{panel.id}}
-    Type: {{panel.type}}
-    CID: {{panel.cookieStoreId}}
-    Tabs count: {{panel.tabs.length}}
-    Start index: {{panel.startIndex}}
-    End index: {{panel.endIndex}}
+  //- .dbg.
+  //-   ID: {{panel.id}}
+  //-   Type: {{panel.type}}
+  //-   CID: {{panel.cookieStoreId}}
+  //-   Tabs count: {{panel.tabs.length}}
+  //-   Start index: {{panel.startIndex}}
+  //-   End index: {{panel.endIndex}}
 </template>
 
 

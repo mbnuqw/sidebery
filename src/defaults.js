@@ -70,7 +70,7 @@ export const DEFAULT_SETTINGS = {
   activateAfterClosingGlobal: false,
   shiftSelAct: true,
   askNewBookmarkPlace: false,
-  tabsRmUndoNote: true,
+  tabsRmUndoNote: false,
 
   // New tab position
   moveNewTabPin: 'start',

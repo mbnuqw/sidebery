@@ -50,6 +50,7 @@
         WindowInput(v-if="$store.state.panelIndex === -5" :data-pos="windowInputPos")
       transition(name="hidden-panels-bar")
         HiddenPanelsBar(v-if="$store.state.hiddenPanelsBar")
+  Notifications
 </template>
 
 
@@ -70,6 +71,7 @@ import TabsPanel from './components/tabs-panel'
 import WindowInput from './components/window-select-input'
 import PinnedDock from './components/pinned-tabs-dock'
 import Confirm from './components/confirm'
+import Notifications from './components/notifications'
 
 const noiseBg = initNoiseBgDirective(State, Store)
 Vue.directive('noise', noiseBg)
@@ -85,6 +87,7 @@ export default {
     WindowInput,
     PinnedDock,
     Confirm,
+    Notifications,
   },
 
   data() {

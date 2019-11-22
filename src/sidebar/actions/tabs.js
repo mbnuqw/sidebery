@@ -1,6 +1,7 @@
 import Utils from '../../utils'
 import Logs from '../../logs'
 import EventBus from '../../event-bus'
+import { translate } from '../../mixins/dict'
 import { DEFAULT_CTX_ID } from '../../defaults'
 import Actions from '../actions'
 
@@ -475,8 +476,10 @@ async function removeTabs(tabIds) {
   }
 
   // Set tabs to be removed
-  const tabs = Object.values(tabsMap).sort((a, b) => a.index - b.index)
-  const toRemove = tabs.map(t => {
+  let parents = {}
+  let tabs = Object.values(tabsMap).sort((a, b) => a.index - b.index)
+  let toRemove = tabs.map(t => {
+    parents[t.id] = t.parentId
     t.invisible = true
     return t.id
   })
@@ -498,6 +501,34 @@ async function removeTabs(tabIds) {
   if (activeTab) {
     let target = Utils.findSuccessorTab(this.state, activeTab, tabs.map(t => t.id))
     if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
+  }
+
+  if (tabs.length > 1 && this.state.tabsRmUndoNote && !warn) {
+    this.actions.notify({
+      title: tabs.length + translate('notif.tabs_rm_post', tabs.length),
+      ctrl: translate('notif.undo_ctrl'),
+      callback: async () => {
+        let oldNewIds = {}
+        for (let i = 0; i < tabs.length; i++) {
+          let tab = tabs[i]
+          let panel = this.state.panelsMap[tab.panelId]
+          if (!panel) continue
+          if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
+          this.state.newTabsPosition[tab.index + i] = {
+            panel: panel.id,
+            parent: oldNewIds[parents[tab.id]],
+          }
+
+          let newTab = await browser.tabs.create({
+            windowId: this.state.windowId,
+            index: tab.index + i,
+            url: Utils.normalizeUrl(tab.url),
+            cookieStoreId: tab.cookieStoreId,
+          })
+          oldNewIds[tab.id] = newTab.id
+        }
+      },
+    })
   }
 
   browser.tabs.remove(toRemove)

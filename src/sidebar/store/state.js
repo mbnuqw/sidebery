@@ -57,4 +57,6 @@ export default {
 
   confirm: null,
   selectBookmarkFolder: null,
+  
+  notifications: [],
 }

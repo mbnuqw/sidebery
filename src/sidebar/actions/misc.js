@@ -347,6 +347,7 @@ function notify(config, timeout = 5000) {
   let id = Utils.uid()
   config.id = id
   config.lvl = 'info'
+  config.timeout = timeout
   if (timeout) {
     config.timer = setTimeout(() => {
       let index = this.state.notifications.findIndex(n => n.id === id)

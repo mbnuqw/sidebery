@@ -16,6 +16,11 @@ function onTabCreated(tab) {
     }
   }
 
+  // console.log('[DEBUG] hm', tab.index, this.state.tabs[tab.index])
+  // if (this.state.tabs[tab.index] && this.state.tabs[tab.index].id === tab.id) {
+  //   return
+  // }
+
   this.actions.closeCtxMenu()
   this.actions.resetSelection()
 
@@ -23,6 +28,7 @@ function onTabCreated(tab) {
   let panel, index
   if (this.state.newTabsPosition && this.state.newTabsPosition[tab.index]) {
     let position = this.state.newTabsPosition[tab.index]
+    console.log('[DEBUG] got position', position)
     panel = this.state.panelsMap[position.panel]
     if (!panel) panel = this.state.panelsMap[DEFAULT_CTX_ID]
     index = tab.index
