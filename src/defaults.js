@@ -108,6 +108,7 @@ export const DEFAULT_SETTINGS = {
   highlightOpenBookmarks: false,
   activateOpenBookmarkTab: false,
   showBookmarkLen: false,
+  bookmarksRmUndoNote: false,
 
   // Appearance
   fontSize: 'm',

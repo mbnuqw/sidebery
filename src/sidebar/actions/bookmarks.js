@@ -1,5 +1,6 @@
 import Utils from '../../utils'
 import Logs from '../../logs'
+import { translate } from '../../mixins/dict'
 import Actions from '../actions'
 
 /**
@@ -415,9 +416,11 @@ function startBookmarkEditing(node) {
 async function removeBookmarks(ids) {
   let count = 0
   let hasCollapsed = false
+  let deleted = []
   let walker = nodes => {
     for (let n of nodes) {
       count++
+      deleted.push(n)
       if (n.children && n.children.length) {
         if (!n.expanded) hasCollapsed = true
         walker(n.children)
@@ -427,6 +430,7 @@ async function removeBookmarks(ids) {
   for (let id of ids) {
     let n = this.state.bookmarksMap[id]
     count++
+    deleted.push(n)
     if (n.children && n.children.length) {
       if (!n.expanded) hasCollapsed = true
       walker(n.children)
@@ -442,6 +446,30 @@ async function removeBookmarks(ids) {
 
   for (let id of ids) {
     await browser.bookmarks.removeTree(id)
+  }
+
+  if (count > 1 && this.state.bookmarksRmUndoNote && !warn) {
+    this.actions.notify({
+      title: count + translate('notif.bookmarks_rm_post', count),
+      ctrl: translate('notif.undo_ctrl'),
+      callback: async () => {
+        let oldNewIds = {}
+        let offset = 0
+        let prevParent
+        for (let n of deleted) {
+          if (prevParent !== n.parentId) offset = 0
+          let conf = { type: n.type, index: n.index + offset }
+          if (this.state.bookmarksMap[n.parentId]) conf.parentId = n.parentId
+          if (oldNewIds[n.parentId]) conf.parentId = oldNewIds[n.parentId]
+          if (n.type !== 'separator') conf.title = n.title
+          if (n.type === 'bookmark') conf.url = n.url
+          let newNode = await browser.bookmarks.create(conf)
+          prevParent = n.parentId
+          oldNewIds[n.id] = newNode.id
+          offset++
+        }
+      },
+    })
   }
 }
 
