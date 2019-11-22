@@ -1,0 +1,82 @@
+@import '../../mixins'
+
+.Notifications
+  box(absolute, flex)
+  pos(b: 0, l: 0)
+  size(100%, 0)
+  flex-direction: column
+  justify-content: flex-end
+  z-index: 5000
+
+.Notifications .notification
+  box(relative, flex)
+  flex-direction: column
+  flex-shrink: 0
+  margin: 8px
+  padding: 6px 0
+  background-color: var(--ctx-menu-bg)
+  border-radius: 3px
+  overflow: hidden
+  box-shadow: 0 0 0 1px var(--border-active-fg),
+              0 0 16px 0 #00000032
+  cursor: pointer
+
+  &:before
+    content: ''
+    box(absolute)
+    pos(0, 0)
+    size(100%, same)
+    background-color: #565656
+    opacity: 0
+    transition: opacity var(--d-fast)
+
+  &:after
+    content: ''
+    box(absolute)
+    size(5px, 5px)
+    pos(3px, r: 3px)
+    background-color: var(--notice-fg)
+    border-radius: 3px
+
+  &:hover:before
+    opacity: .1
+  
+  &:active:before
+    transition: none
+    opacity: 0
+
+.Notifications .title
+  box(relative)
+  size(100%)
+  text(s: rem(17), w: 700)
+  color: var(--title-fg)
+  text-align: center
+  padding: 2px 12px
+
+.Notifications .msg
+  box(relative)
+  size(100%)
+  text(s: rem(12))
+  color: var(--info-fg)
+  padding: 0 12px 2px
+  text-align: center
+
+.notification-enter-active
+.notification-leave-active
+  transition: transform var(--d-fast), opacity var(--d-fast)
+.notification-leave-active
+  box(absolute)
+.notification-move
+  transition: transform var(--d-fast), opacity var(--d-fast)
+.notification-enter
+  opacity: 0
+  transform: scale(1, 0.8)
+.notification-enter-to
+  opacity: 1
+  transform: scale(1, 1)
+.notification-leave
+  opacity: 0
+  transform: scale(1, 1)
+.notification-leave-to
+  opacity: 0
+  transform: scale(1, 0.8)

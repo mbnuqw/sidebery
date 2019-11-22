@@ -1,4 +1,5 @@
 import Logs from '../../logs'
+import Utils from '../../utils'
 import { DEFAULT_SETTINGS } from '../../defaults'
 
 /**
@@ -339,6 +340,22 @@ function askNewBookmarkFolder(defaultValue) {
   })
 }
 
+/**
+ * Show notification
+ */
+function notify(config, timeout = 5000) {
+  let id = Utils.uid()
+  config.id = id
+  config.lvl = 'info'
+  if (timeout) {
+    config.timer = setTimeout(() => {
+      let index = this.state.notifications.findIndex(n => n.id === id)
+      if (index !== -1) this.state.notifications.splice(index, 1)
+    }, timeout)
+  }
+  this.state.notifications.push(config)
+}
+
 export default {
   loadPlatformInfo,
   loadWindowInfo,
@@ -362,4 +379,5 @@ export default {
   confirm,
   copyUrls,
   askNewBookmarkFolder,
+  notify,
 }
