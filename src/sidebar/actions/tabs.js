@@ -1866,10 +1866,10 @@ function getIndexForNewTab(panel, tab) {
       this.state.moveNewTabParent === 'sibling' ||
       this.state.moveNewTabParent === 'last_child'
     ) {
-      let tab, index = parent.index + 1
+      let t, index = parent.index + 1
       for (; index < this.state.tabs.length; index++) {
-        tab = this.state.tabs[index]
-        if (tab.lvl <= parent.lvl) break
+        t = this.state.tabs[index]
+        if (t.lvl <= parent.lvl) break
       }
       return index
     }
@@ -1888,6 +1888,28 @@ function getIndexForNewTab(panel, tab) {
       for (; index < this.state.tabs.length; index++) {
         tab = this.state.tabs[index]
         if (tab.lvl <= activeTab.lvl) break
+      }
+      return index
+    }
+  }
+  if (this.state.moveNewTab === 'first_child') {
+    if (!activeTab || activeTab.panelId !== panel.id) {
+      return endIndex
+    } else {
+      if (tab) tab.openerTabId = activeTab.id
+      console.log('[DEBUG] target index', activeTab.index + 1)
+      return activeTab.index + 1
+    }
+  }
+  if (this.state.moveNewTab === 'last_child') {
+    if (!activeTab || activeTab.panelId !== panel.id) {
+      return endIndex
+    } else {
+      if (tab) tab.openerTabId = activeTab.id
+      let t, index = activeTab.index + 1
+      for (; index < this.state.tabs.length; index++) {
+        t = this.state.tabs[index]
+        if (t.lvl <= activeTab.lvl) break
       }
       return index
     }

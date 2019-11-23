@@ -16,11 +16,6 @@ function onTabCreated(tab) {
     }
   }
 
-  // console.log('[DEBUG] hm', tab.index, this.state.tabs[tab.index])
-  // if (this.state.tabs[tab.index] && this.state.tabs[tab.index].id === tab.id) {
-  //   return
-  // }
-
   this.actions.closeCtxMenu()
   this.actions.resetSelection()
 
@@ -38,7 +33,7 @@ function onTabCreated(tab) {
     panel = this.actions.getPanelForNewTab(tab)
     index = this.actions.getIndexForNewTab(panel, tab)
   }
-  browser.sessions.setTabValue(tab.id, 'panelId', panel.id)
+  console.log('[DEBUG] got index:', index)
 
   let treeAllowed = this.state.moveNewTabParent === 'first_child' ||
     this.state.moveNewTabParent === 'last_child'

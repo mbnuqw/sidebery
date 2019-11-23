@@ -19,7 +19,6 @@
     h2 {{t('settings.ctx_menu_title')}}
     ToggleField(
       label="settings.ctx_menu_native"
-      :inline="true"
       :value="$store.state.ctxMenuNative"
       @input="setOpt('ctxMenuNative', $event)")
     select-field(
@@ -31,7 +30,6 @@
       @input="setOpt('autoHideCtxMenu', $event)")
     ToggleField(
       label="settings.ctx_menu_render_inact"
-      :inline="true"
       :value="$store.state.ctxMenuRenderInact"
       @input="setOpt('ctxMenuRenderInact', $event)")
     .ctrls
@@ -53,17 +51,14 @@
         @input="setOpt('navBarInline', $event)")
     toggle-field(
       label="settings.hide_settings_btn"
-      :inline="true"
       :value="$store.state.hideSettingsBtn"
       @input="setOpt('hideSettingsBtn', $event)")
     toggle-field(
       label="settings.nav_btn_count"
-      :inline="true"
       :value="$store.state.navBtnCount"
       @input="setOpt('navBtnCount', $event)")
     toggle-field(
       label="settings.hide_empty_panels"
-      :inline="true"
       :value="$store.state.hideEmptyPanels"
       @input="setOpt('hideEmptyPanels', $event)")
     select-field(
@@ -74,7 +69,6 @@
       @input="setOpt('navMidClickAction', $event)")
     toggle-field.-last(
       label="settings.nav_switch_panels_wheel"
-      :inline="true"
       :value="$store.state.navSwitchPanelsWheel"
       @input="setOpt('navSwitchPanelsWheel', $event)")
 
@@ -152,27 +146,22 @@
       @input="setOpt('warnOnMultiTabClose', $event)")
     toggle-field(
       label="settings.activate_on_mouseup"
-      :inline="true"
       :value="$store.state.activateOnMouseUp"
       @input="setOpt('activateOnMouseUp', $event)")
     toggle-field(
       label="settings.activate_last_tab_on_panel_switching"
-      :inline="true"
       :value="$store.state.activateLastTabOnPanelSwitching"
       @input="setOpt('activateLastTabOnPanelSwitching', $event)")
     toggle-field(
       label="settings.skip_empty_panels"
-      :inline="true"
       :value="$store.state.skipEmptyPanels"
       @input="setOpt('skipEmptyPanels', $event)")
     toggle-field(
       label="settings.show_tab_rm_btn"
-      :inline="true"
       :value="$store.state.showTabRmBtn"
       @input="setOpt('showTabRmBtn', $event)")
     toggle-field(
       label="settings.hide_inactive_panel_tabs"
-      :inline="true"
       :value="$store.state.hideInact"
       @input="toggleHideInact")
     select-field(
@@ -252,7 +241,6 @@
       @input="setOpt('pinnedTabsPosition', $event)")
     toggle-field.-last(
       label="settings.pinned_tabs_list"
-      :inline="true"
       :inactive="$store.state.pinnedTabsPosition !== 'panel'"
       :value="$store.state.pinnedTabsList"
       @input="setOpt('pinnedTabsList', $event)")
@@ -261,12 +249,10 @@
     h2 {{t('settings.tabs_tree_title')}}
     toggle-field(i
       label="settings.tabs_tree_layout"
-      :inline="true"
       :value="$store.state.tabsTree"
       @input="setOpt('tabsTree', $event)")
     toggle-field(
       label="settings.group_on_open_layout"
-      :inline="true"
       :inactive="!$store.state.tabsTree"
       :value="$store.state.groupOnOpen"
       @input="setOpt('groupOnOpen', $event)")
@@ -279,19 +265,16 @@
       @input="setOpt('tabsTreeLimit', $event)")
     toggle-field(
       label="settings.hide_folded_tabs"
-      :inline="true"
       :inactive="!$store.state.tabsTree"
       :value="$store.state.hideFoldedTabs"
       @input="toggleHideFoldedTabs")
     toggle-field(
       label="settings.auto_fold_tabs"
-      :inline="true"
       :inactive="!$store.state.tabsTree"
       :value="$store.state.autoFoldTabs"
       @input="setOpt('autoFoldTabs', $event)")
     toggle-field(
       label="settings.auto_exp_tabs"
-      :inline="true"
       :inactive="!$store.state.tabsTree"
       :value="$store.state.autoExpandTabs"
       @input="setOpt('autoExpandTabs', $event)")
@@ -304,19 +287,16 @@
       @input="setOpt('rmChildTabs', $event)")
     toggle-field(
       label="settings.tabs_child_count"
-      :inline="true"
       :inactive="!$store.state.tabsTree"
       :value="$store.state.tabsChildCount"
       @input="setOpt('tabsChildCount', $event)")
     toggle-field(
       label="settings.tabs_lvl_dots"
-      :inline="true"
       :inactive="!$store.state.tabsTree"
       :value="$store.state.tabsLvlDots"
       @input="setOpt('tabsLvlDots', $event)")
     toggle-field(
       label="settings.discard_folded"
-      :inline="true"
       :inactive="!$store.state.tabsTree"
       :value="$store.state.discardFolded"
       @input="setOpt('discardFolded', $event)")
@@ -407,12 +387,10 @@
       @input="setOpt('fontSize', $event)")
     toggle-field(
       label="settings.animations"
-      :inline="true"
       :value="$store.state.animations"
       @input="setOpt('animations', $event)")
     toggle-field(
       label="settings.bg_noise"
-      :inline="true"
       :value="$store.state.bgNoise"
       @input="setOpt('bgNoise', $event)")
     select-field(
@@ -434,7 +412,6 @@
     h2 {{t('settings.mouse_title')}}
     toggle-field(
       label="settings.h_scroll_through_panels"
-      :inline="true"
       :value="$store.state.hScrollThroughPanels"
       @input="setOpt('hScrollThroughPanels', $event)")
     select-field(
@@ -523,7 +500,6 @@
       @click="onHighlighClick('all_urls')")
       toggle-field(
         label="settings.all_urls_label"
-        :inline="true"
         :value="$store.state.permAllUrls"
         :note="t('settings.all_urls_info')"
         @input="togglePermAllUrls")
@@ -534,7 +510,6 @@
       @click="onHighlighClick('tab_hide')")
       toggle-field(
         label="settings.tab_hide_label"
-        :inline="true"
         :value="$store.state.permTabHide"
         :note="t('settings.tab_hide_info')"
         @input="togglePermTabHide")
