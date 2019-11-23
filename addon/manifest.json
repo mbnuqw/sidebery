@@ -94,6 +94,12 @@
       },
       "description": "__MSG_KbOpenNewTabAfter__"
     },
+    "new_tab_as_first_child": {
+      "description": "__MSG_KbOpenNewTabAsFirstChild__"
+    },
+    "new_tab_as_last_child": {
+      "description": "__MSG_KbOpenNewTabAsLastChild__"
+    },
     "rm_tab_on_panel": {
       "suggested_key": {
         "default": "Ctrl+Delete",

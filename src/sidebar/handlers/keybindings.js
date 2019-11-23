@@ -1,6 +1,6 @@
 import { DEFAULT_CTX_ID } from '../../defaults'
-import Utils from '../../utils'
 import EventBus from '../../event-bus'
+import Utils from '../../utils'
 import Handlers from '../handlers'
 
 /**
@@ -21,6 +21,12 @@ function onCmd(name) {
     break
   case 'new_tab_in_group':
     this.handlers.onKeyNewTabInGroup()
+    break
+  case 'new_tab_as_first_child':
+    this.handlers.onKeyNewTabAsFirstChild()
+    break
+  case 'new_tab_as_last_child':
+    this.handlers.onKeyNewTabAsLastChild()
     break
   case 'rm_tab_on_panel':
     this.handlers.onKeyRmSelection()
@@ -739,6 +745,48 @@ function onKeyMoveTabsDown() {
   }, 256)
 }
 
+function onKeyNewTabAsFirstChild() {
+  let activeTab = this.state.tabs.find(t => t.active)
+  if (!activeTab) return
+
+  if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
+  this.state.newTabsPosition[activeTab.index + 1] = {
+    panel: activeTab.panelId,
+    parent: activeTab.id,
+  }
+
+  browser.tabs.create({
+    index: activeTab.index + 1,
+    cookieStoreId: activeTab.cookieStoreId,
+    windowId: this.state.windowId,
+    openerTabId: activeTab.id,
+  })
+}
+
+function onKeyNewTabAsLastChild() {
+  let activeTab = this.state.tabs.find(t => t.active)
+  if (!activeTab) return
+
+  let index = activeTab.index + 1
+  for (let t; index < this.state.tabs.length; index++) {
+    t = this.state.tabs[index]
+    if (t.lvl <= activeTab.lvl) break
+  }
+
+  if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
+  this.state.newTabsPosition[activeTab.index + 1] = {
+    panel: activeTab.panelId,
+    parent: activeTab.id,
+  }
+
+  browser.tabs.create({
+    index,
+    cookieStoreId: activeTab.cookieStoreId,
+    windowId: this.state.windowId,
+    openerTabId: activeTab.id,
+  })
+}
+
 /**
  * Setup keybinding listeners
  */
@@ -775,6 +823,8 @@ export default {
   onKeyTabsOutdent,
   onKeyMoveTabsUp,
   onKeyMoveTabsDown,
+  onKeyNewTabAsFirstChild,
+  onKeyNewTabAsLastChild,
   setupKeybindingListeners,
   resetKeybindingListeners,
 }
