@@ -321,10 +321,12 @@ export default {
       let index = Actions.getIndexForNewTab(this.panel, tabShell)
       let config = { index, windowId: State.windowId }
 
-      if (!State.newTabsPosition) State.newTabsPosition = {}
-      State.newTabsPosition[index] = {
-        parent: tabShell.openerTabId,
-        panel: this.panel.id
+      if (index !== undefined) {
+        if (!State.newTabsPosition) State.newTabsPosition = {}
+        State.newTabsPosition[index] = {
+          parent: tabShell.openerTabId,
+          panel: this.panel.id,
+        }
       }
 
       if (this.panel.type === 'ctx') {

@@ -31,10 +31,22 @@ function onTabCreated(tab) {
   } else {
     panel = this.actions.getPanelForNewTab(tab)
     index = this.actions.getIndexForNewTab(panel, tab)
+    if (index === undefined) {
+      index = tab.index
+      if (panel.startIndex > index || panel.endIndex + 1 < index) {
+        panel = this.state.panels.find(p => {
+          return p.startIndex <= index && p.endIndex + 1 >= index
+        })
+      }
+    }
   }
 
-  let treeAllowed = this.state.moveNewTabParent === 'first_child' ||
-    this.state.moveNewTabParent === 'last_child'
+  let treeAllowed =
+    this.state.moveNewTabParent === 'first_child' ||
+    this.state.moveNewTabParent === 'last_child' ||
+    this.state.moveNewTabParent === 'none' ||
+    this.state.moveNewTab === 'first_child' ||
+    this.state.moveNewTab === 'last_child'
 
   // If new tab has wrong possition - move it
   if (!tab.pinned && tab.index !== index) {
