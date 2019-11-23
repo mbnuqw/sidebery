@@ -20,7 +20,7 @@ function onCmd(name) {
     this.handlers.onKeyNewTabInPanel()
     break
   case 'new_tab_in_group':
-    this.handlers.onKeyNewTabInGroup()
+    this.handlers.onKeyNewTabAfter()
     break
   case 'new_tab_as_first_child':
     this.handlers.onKeyNewTabAsFirstChild()
@@ -195,45 +195,35 @@ function onKeyNewTabInPanel() {
 }
 
 /**
- * New tab in group
+ * New tab after active
  */
-function onKeyNewTabInGroup() {
-  const panel = this.state.panels[this.state.panelIndex]
-  const tabs = this.state.tabs
-  if (!panel || !panel.tabs) return
+function onKeyNewTabAfter() {
+  let activeTab = this.state.tabs.find(t => t.active)
+  if (!activeTab) return
 
-  // Find active/selected tab
-  let activeTab
-  if (this.state.selected.length > 0) {
-    const lastIndex = this.state.selected.length - 1
-    activeTab = this.state.tabsMap[this.state.selected[lastIndex]]
-  } else {
-    activeTab = panel.tabs.find(t => t.active)
+  let index = activeTab.index + 1
+  for (let t; index < this.state.tabs.length; index++) {
+    t = this.state.tabs[index]
+    if (t.lvl <= activeTab.lvl) break
   }
 
-  // Get index and parentId for new tab
-  let index, parentId
-  if (!activeTab) {
-    index = panel.tabs.length ? panel.endIndex + 1 : panel.startIndex
-  } else {
-    index = activeTab.index + 1
-    if (activeTab.isParent && !activeTab.folded) {
-      parentId = activeTab.id
-    } else {
-      parentId = activeTab.parentId
-      while (tabs[index] && tabs[index].lvl > activeTab.lvl) {
-        index++
-      }
-    }
-    if (parentId < 0) parentId = undefined
+  if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
+  this.state.newTabsPosition[activeTab.index + 1] = {
+    panel: activeTab.panelId,
+    parent: activeTab.parentId,
   }
 
-  browser.tabs.create({
+  let conf = {
     index,
-    cookieStoreId: panel.cookieStoreId,
+    cookieStoreId: activeTab.cookieStoreId,
     windowId: this.state.windowId,
-    openerTabId: parentId,
-  })
+  }
+
+  if (activeTab.parentId > -1) {
+    conf.openerTabId = activeTab.parentId
+  }
+
+  browser.tabs.create(conf)
 }
 
 /**
@@ -805,7 +795,7 @@ export default {
   onCmd,
   onKeyActivate,
   onKeyNewTabInPanel,
-  onKeyNewTabInGroup,
+  onKeyNewTabAfter,
   onKeySelect,
   onKeySelectExpand,
   onKeySelectAll,
