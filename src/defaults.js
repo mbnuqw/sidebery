@@ -311,6 +311,8 @@ export const TABS_PANEL = {
   lockedPanel: false,
   noEmpty: false,
   newTabCtx: DEFAULT_CTX,
+  moveTabCtx: 'none',
+  dropTabCtx: 'none',
   urlRulesActive: false,
   urlRules: '',
 }

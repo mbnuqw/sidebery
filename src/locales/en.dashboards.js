@@ -7,6 +7,9 @@ export default {
   'dashboard.no_empty_label': { message: 'No empty' },
   'dashboard.no_empty_tooltip': { message: 'Prevent emptying of this panel' },
   'dashboard.new_tab_ctx': { message: 'Container of new tab' },
+  'dashboard.move_tab_ctx': { message: 'Move tabs of selected container to this panel' },
+  'dashboard.move_tab_ctx_none': { message: 'none' },
+  'dashboard.drop_tab_ctx': { message: 'Reopen tabs dropped to this panel in' },
   'dashboard.url_rules': { message: 'Move tabs with matched urls to this panel' },
   'container_dashboard.custom_icon_note': { message: 'Base64, url or text. Text values syntax: "text::color::CSS-font-value"' },
 

@@ -10,22 +10,22 @@
     @input="onNameInput")
   h2(v-if="isContainer") {{conf.name}}
 
-  select-field.-no-separator(
-    v-if="isCustom"
-    label="settings.panel_type_label"
-    optLabel="settings.panel_type_"
-    :value="conf.type"
-    :opts="$store.state.panelTypeOpts"
-    :color="color"
-    @input="setType")
+  //- select-field.-no-separator(
+  //-   v-if="isCustom"
+  //-   label="settings.panel_type_label"
+  //-   optLabel="settings.panel_type_"
+  //-   :value="conf.type"
+  //-   :opts="$store.state.panelTypeOpts"
+  //-   :color="color"
+  //-   @input="setType")
 
-  select-field(
-    v-if="isContainer"
-    label="settings.panel_container_label"
-    :value="conf.cookieStoreId"
-    :opts="availableContainers"
-    :note="t(panelContainerNote)"
-    @input="setContainer")
+  //- select-field(
+  //-   v-if="isContainer"
+  //-   label="settings.panel_container_label"
+  //-   :value="conf.cookieStoreId"
+  //-   :opts="availableContainers"
+  //-   :note="t(panelContainerNote)"
+  //-   @input="setContainer")
 
   select-field(
     v-if="isTabs && !conf.customIconSrc"
@@ -85,6 +85,22 @@
     :value="newTabCtx"
     :opts="newTabCtxOpts"
     @input="togglePanelNewTabCtx")
+
+  select-field(
+    v-if="isDefault || isTabs"
+    label="dashboard.move_tab_ctx"
+    optLabel="dashboard.move_tab_ctx_"
+    :value="conf.moveTabCtx"
+    :opts="moveTabCtxOpts"
+    @input="togglePanelMoveTabCtx")
+
+  select-field(
+    v-if="isDefault || isTabs"
+    label="dashboard.drop_tab_ctx"
+    optLabel="dashboard.drop_tab_ctx_"
+    :value="conf.dropTabCtx"
+    :opts="dropTabCtxOpts"
+    @input="togglePanelDropTabCtx")
   
   toggle-field(
     v-if="isTabs"
@@ -152,6 +168,19 @@ export default {
         { value: 'icon_search', icon: 'icon_search' },
         { value: 'icon_lock', icon: 'icon_lock' },
         { value: 'icon_edu', icon: 'icon_edu' },
+        { value: 'fingerprint', icon: 'fingerprint' },
+        { value: 'briefcase', icon: 'briefcase' },
+        { value: 'dollar', icon: 'dollar' },
+        { value: 'cart', icon: 'cart' },
+        { value: 'circle', icon: 'circle' },
+        { value: 'gift', icon: 'gift' },
+        { value: 'vacation', icon: 'vacation' },
+        { value: 'food', icon: 'food' },
+        { value: 'fruit', icon: 'fruit' },
+        { value: 'pet', icon: 'pet' },
+        { value: 'tree', icon: 'tree' },
+        { value: 'chill', icon: 'chill' },
+        { value: 'fence', icon: 'fence' },
       ],
       colorOpts: [
         { value: 'blue', color: 'blue' },
@@ -231,6 +260,20 @@ export default {
       return [
         { value: DEFAULT_CTX, color: 'toolbar', icon: 'icon_tabs' },
         ...this.availableContainers,
+      ]
+    },
+
+    moveTabCtxOpts() {
+      return [
+        ...this.availableContainers,
+        { value: 'none', color: 'inactive', icon: 'icon_none' },
+      ]
+    },
+
+    dropTabCtxOpts() {
+      return [
+        ...this.availableContainers,
+        { value: 'none', color: 'inactive', icon: 'icon_none' },
       ]
     },
 
@@ -412,6 +455,16 @@ export default {
 
     togglePanelNewTabCtx(value) {
       this.conf.newTabCtx = value
+      Actions.savePanels()
+    },
+
+    togglePanelMoveTabCtx(value) {
+      this.conf.moveTabCtx = value
+      Actions.savePanels()
+    },
+
+    togglePanelDropTabCtx(value) {
+      this.conf.dropTabCtx = value
       Actions.savePanels()
     },
 
