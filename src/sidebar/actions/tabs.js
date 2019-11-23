@@ -1897,7 +1897,6 @@ function getIndexForNewTab(panel, tab) {
       return endIndex
     } else {
       if (tab) tab.openerTabId = activeTab.id
-      console.log('[DEBUG] target index', activeTab.index + 1)
       return activeTab.index + 1
     }
   }

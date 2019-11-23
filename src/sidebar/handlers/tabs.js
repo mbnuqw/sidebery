@@ -23,7 +23,6 @@ function onTabCreated(tab) {
   let panel, index
   if (this.state.newTabsPosition && this.state.newTabsPosition[tab.index]) {
     let position = this.state.newTabsPosition[tab.index]
-    console.log('[DEBUG] got position', position)
     panel = this.state.panelsMap[position.panel]
     if (!panel) panel = this.state.panelsMap[DEFAULT_CTX_ID]
     index = tab.index
@@ -33,7 +32,6 @@ function onTabCreated(tab) {
     panel = this.actions.getPanelForNewTab(tab)
     index = this.actions.getIndexForNewTab(panel, tab)
   }
-  console.log('[DEBUG] got index:', index)
 
   let treeAllowed = this.state.moveNewTabParent === 'first_child' ||
     this.state.moveNewTabParent === 'last_child'
