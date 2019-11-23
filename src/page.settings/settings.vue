@@ -273,6 +273,14 @@
       :inactive="!$store.state.tabsTree"
       :value="$store.state.autoFoldTabs"
       @input="setOpt('autoFoldTabs', $event)")
+    .sub-fields(v-if="$store.state.autoFoldTabs")
+      select-field(
+        label="settings.auto_fold_tabs_except"
+        optLabel="settings.auto_fold_tabs_except_"
+        :inactive="!$store.state.tabsTree"
+        :value="$store.state.autoFoldTabsExcept"
+        :opts="$store.state.autoFoldTabsExceptOpts"
+        @input="setOpt('autoFoldTabsExcept', $event)")
     toggle-field(
       label="settings.auto_exp_tabs"
       :inactive="!$store.state.tabsTree"

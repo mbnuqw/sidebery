@@ -32,6 +32,7 @@ export const SETTINGS_OPTIONS = {
   warnOnMultiBookmarkDeleteOpts: ['any', 'collapsed', 'none'],
   navBarLayoutOpts: ['horizontal', 'vertical'],
   stateStorageOpts: ['global', 'session'],
+  autoFoldTabsExceptOpts: [1, 2, 3, 4, 5, 'none'],
 }
 
 export const DEFAULT_SETTINGS = {
@@ -88,6 +89,7 @@ export const DEFAULT_SETTINGS = {
   tabsTreeLimit: 'none',
   hideFoldedTabs: false,
   autoFoldTabs: false,
+  autoFoldTabsExcept: 'none',
   autoExpandTabs: false,
   rmChildTabs: 'none',
   tabsChildCount: true,

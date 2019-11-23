@@ -1139,10 +1139,12 @@ function expTabsBranch(tabId) {
   const preserve = []
   const tab = this.state.tabsMap[tabId]
   if (!tab) return
+  tab.lastAccessed = Date.now()
+  let autoFold = []
   if (tab.invisible) Actions.expTabsBranch(tab.parentId)
   for (let t of this.state.tabs) {
     if (this.state.autoFoldTabs && t.id !== tabId && t.isParent && !t.folded && tab.lvl === t.lvl) {
-      Actions.foldTabsBranch(t.id)
+      autoFold.push(t)
     }
     if (t.id === tabId) t.folded = false
     if (t.id !== tabId && t.folded) preserve.push(t.id)
@@ -1151,6 +1153,17 @@ function expTabsBranch(tabId) {
         toShow.push(t.id)
         t.invisible = false
       }
+    }
+  }
+
+  // Auto fold
+  if (this.state.autoFoldTabs) {
+    autoFold.sort((a, b) => a.lastAccessed - b.lastAccessed)
+    if (this.state.autoFoldTabsExcept > 0) {
+      autoFold = autoFold.slice(0, -this.state.autoFoldTabsExcept)
+    }
+    for (let t of autoFold) {
+      Actions.foldTabsBranch(t.id)
     }
   }
 

@@ -612,6 +612,7 @@ function onTabActivated(info) {
   let tab = this.state.tabsMap[info.tabId]
   if (!tab) return
   tab.active = true
+  tab.lastAccessed = Date.now()
   this.state.activeTabId = info.tabId
 
   // Remove updated flag
