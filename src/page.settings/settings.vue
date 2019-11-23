@@ -12,6 +12,7 @@
       label="settings.state_storage"
       optLabel="settings.state_storage_"
       :value="$store.state.stateStorage"
+      :note="t('settings.state_storage_note')"
       :opts="$store.state.stateStorageOpts"
       @input="setOpt('stateStorage', $event)")
 

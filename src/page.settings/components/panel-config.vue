@@ -45,17 +45,19 @@
     @input="setColor")
 
   .TextField.custom-icon(v-if="isTabs")
-    .label Custom icon
-    text-input(
-      ref="input"
-      v-debounce.500="updateCustomIcon"
-      :value="conf.customIconSrc"
-      :line="true"
-      @input="onCustomIconInput")
-    img(v-if="customIconUrl" :src="customIconUrl" @load="onCustomIconLoad")
-    .btn(
-      v-if="customIconType === 'url' && !customIconUrl"
-      @click="loadCustomIcon") Load
+    .body
+      .label Custom icon
+      text-input(
+        ref="input"
+        v-debounce.500="updateCustomIcon"
+        :value="conf.customIconSrc"
+        :line="true"
+        @input="onCustomIconInput")
+      img(v-if="customIconUrl" :src="customIconUrl" @load="onCustomIconLoad")
+      .btn(
+        v-if="customIconType === 'url' && !customIconUrl"
+        @click="loadCustomIcon") Load
+    .note {{t('container_dashboard.custom_icon_note')}}
 
   toggle-field(
     label="dashboard.lock_panel_label"

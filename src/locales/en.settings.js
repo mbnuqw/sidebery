@@ -40,6 +40,7 @@ export default {
   'settings.state_storage': { message: 'State storage type' },
   'settings.state_storage_global': { message: 'global' },
   'settings.state_storage_session': { message: 'session' },
+  'settings.state_storage_note': { message: 'global - fast but inaccurate in some rare cases\nsession - more accurate but slower and data may be lost with session' },
 
   // --- Context menu
   'settings.ctx_menu_title': { message: 'Context menu' },

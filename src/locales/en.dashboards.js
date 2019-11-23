@@ -8,6 +8,7 @@ export default {
   'dashboard.no_empty_tooltip': { message: 'Prevent emptying of this panel' },
   'dashboard.new_tab_ctx': { message: 'Container of new tab' },
   'dashboard.url_rules': { message: 'Move tabs with matched urls to this panel' },
+  'container_dashboard.custom_icon_note': { message: 'Base64, url or text. Text values syntax: "text::color::CSS-font-value"' },
 
   // --- Bookmarks
   'bookmarks_dashboard.title': { message: 'Bookmarks' },
