@@ -1827,7 +1827,7 @@ function getPanelForNewTab(tab) {
     }
   }
 
-  if (!panel && !parentTab && this.state.moveNewTab === 'after') {
+  if (!panel && !parentTab && (this.state.moveNewTab === 'after' || this.state.moveNewTab === 'first_child' || this.state.moveNewTab === 'last_child')) {
     let activeTab = this.state.tabsMap[this.state.activeTabId]
     panel = this.state.panelsMap[activeTab.panelId]
   }
