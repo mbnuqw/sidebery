@@ -328,7 +328,9 @@ export default {
         }
       }
 
-      config.cookieStoreId = this.panel.newTabCtx
+      if (this.panel.newTabCtx !== 'none') {
+        config.cookieStoreId = this.panel.newTabCtx
+      }
 
       browser.tabs.create(config)
     },

@@ -76,14 +76,6 @@
     :opts="moveTabCtxOpts"
     @input="togglePanelMoveTabCtx")
 
-  select-field(
-    v-if="isDefault || isTabs"
-    label="dashboard.drop_tab_ctx"
-    optLabel="dashboard.drop_tab_ctx_"
-    :value="dropTabCtx"
-    :opts="dropTabCtxOpts"
-    @input="togglePanelDropTabCtx")
-  
   toggle-field(
     v-if="isTabs"
     label="dashboard.url_rules"
@@ -235,6 +227,7 @@ export default {
       return [
         { value: DEFAULT_CTX, color: 'toolbar', icon: 'icon_tabs' },
         ...this.availableContainers,
+        { value: 'none', color: 'inactive', icon: 'icon_none' },
       ]
     },
 
@@ -243,17 +236,6 @@ export default {
     },
 
     moveTabCtxOpts() {
-      return [
-        ...this.availableContainers,
-        { value: 'none', color: 'inactive', icon: 'icon_none' },
-      ]
-    },
-
-    dropTabCtx() {
-      return this.conf.dropTabCtx || 'none'
-    },
-
-    dropTabCtxOpts() {
       return [
         ...this.availableContainers,
         { value: 'none', color: 'inactive', icon: 'icon_none' },
@@ -404,11 +386,6 @@ export default {
 
     togglePanelMoveTabCtx(value) {
       this.conf.moveTabCtx = value
-      Actions.savePanels()
-    },
-
-    togglePanelDropTabCtx(value) {
-      this.conf.dropTabCtx = value
       Actions.savePanels()
     },
 

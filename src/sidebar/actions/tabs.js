@@ -1227,13 +1227,14 @@ function foldAllInactiveBranches(tabs = []) {
  */
 async function dropToTabs(event, dropIndex, dropParent, nodes, pin) {
   let activePanel = this.state.panels[this.state.panelIndex]
-  let destCtx = activePanel.cookieStoreId
+  let destCtx = DEFAULT_CTX_ID
+  if (activePanel.newTabCtx !== 'none') destCtx = activePanel.newTabCtx
   if (dropIndex === -1) dropIndex = activePanel.endIndex + 1
 
   // Tabs or Bookmarks
   if (nodes && nodes.length) {
     let globalPin = pin && activePanel.panel !== 'TabsPanel'
-    let ctxChange = activePanel.dropTabCtx !== 'none' && nodes[0].cookieStoreId !== activePanel.dropTabCtx
+    let ctxChange = activePanel.newTabCtx !== 'none' && nodes[0].cookieStoreId !== activePanel.newTabCtx
     let sameContainer = ctxChange ? nodes[0].ctx === destCtx : true
 
     // Move tabs
@@ -1394,6 +1395,7 @@ async function recreateDroppedNodes(event, dropIndex, dropParent, nodes, pin, de
   const oldNewMap = []
   let opener = dropParent < 0 ? undefined : dropParent
   let firstNode = nodes[0]
+  let activePanel = this.state.panels[this.state.panelIndex]
 
   for (let i = 0; i < nodes.length; i++) {
     let node = nodes[i]
@@ -1417,6 +1419,12 @@ async function recreateDroppedNodes(event, dropIndex, dropParent, nodes, pin, de
       createConf.openerTabId = oldNewMap[node.parentId]
     } else {
       createConf.openerTabId = opener
+    }
+
+    if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
+    this.state.newTabsPosition[dropIndex + i] = {
+      panel: activePanel.id,
+      parent: createConf.openerTabId,
     }
 
     const info = await browser.tabs.create(createConf)
@@ -1825,7 +1833,6 @@ function getPanelForNewTab(tab) {
 
   if (tab.cookieStoreId !== DEFAULT_CTX_ID) {
     panel = this.state.panels.find(p => p.moveTabCtx === tab.cookieStoreId)
-    console.log('[DEBUG] hm', panel)
   }
 
   if (!panel && parentTab) {
@@ -1843,7 +1850,13 @@ function getPanelForNewTab(tab) {
 
   if (!panel) panel = this.state.panels[this.state.panelIndex]
 
-  if (panel && panel.moveTabCtx !== tab.cookieStoreId) panel = null
+  if (
+    panel &&
+    panel.newTabCtx !== 'none' &&
+    panel.newTabCtx !== tab.cookieStoreId
+  ) {
+    panel = null
+  }
 
   if (!panel || !panel.tabs) panel = this.state.panelsMap[DEFAULT_CTX_ID]
 

@@ -310,9 +310,8 @@ export const TABS_PANEL = {
   lockedTabs: false,
   lockedPanel: false,
   noEmpty: false,
-  newTabCtx: DEFAULT_CTX,
+  newTabCtx: 'none',
   moveTabCtx: 'none',
-  dropTabCtx: 'none',
   urlRulesActive: false,
   urlRules: '',
 }
