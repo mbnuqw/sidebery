@@ -51,7 +51,7 @@ export default {
   'settings.nav_title': { message: 'Панель навигации' },
   'settings.nav_bar_inline': { message: 'В одну строку' },
   'settings.hide_settings_btn': { message: 'Скрывать кнопку "Настройки"' },
-  'settings.hide_add_btn': { message: 'Скрывать кнопку "Новый контейнер"' },
+  'settings.hide_add_btn': { message: 'Скрывать кнопку "Создать панель"' },
   'settings.nav_btn_count': { message: 'Показывать количество табов/закладок' },  
   'settings.hide_empty_panels': { message: 'Скрывать пустые панели' },
   'settings.nav_mid_click': { message: 'Клик средней кнопкой мыши по кнопке панели' },

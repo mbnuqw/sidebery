@@ -51,6 +51,10 @@
         :value="$store.state.navBarInline"
         @input="setOpt('navBarInline', $event)")
     toggle-field(
+      label="settings.hide_add_btn"
+      :value="$store.state.hideAddBtn"
+      @input="setOpt('hideAddBtn', $event)")
+    toggle-field(
       label="settings.hide_settings_btn"
       :value="$store.state.hideSettingsBtn"
       @input="setOpt('hideSettingsBtn', $event)")

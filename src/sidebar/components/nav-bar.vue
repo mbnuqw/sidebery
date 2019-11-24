@@ -43,6 +43,8 @@
 
 <script>
 import { translate } from '../../mixins/dict.js'
+import Utils from '../../utils'
+import { TABS_PANEL_STATE } from '../../defaults'
 import EventBus from '../../event-bus'
 import State from '../store/state.js'
 import Actions from '../actions'
@@ -53,6 +55,14 @@ const HIDDEN_PANEL_BTN = {
   icon: 'icon_expand',
   hidden: false,
   tooltip: translate('nav.show_hidden_tooltip'),
+}
+
+const ADD_PANEL_BTN = {
+  type: 'add',
+  name: 'add',
+  icon: 'icon_plus_v2',
+  hidden: false,
+  tooltip: translate('nav.add_panel_tooltip'),
 }
 
 export default {
@@ -98,6 +108,8 @@ export default {
         HIDDEN_PANEL_BTN.hidden = false
         out.push(HIDDEN_PANEL_BTN)
       }
+
+      if (State.hideAddBtn) out.push(ADD_PANEL_BTN)
 
       if (!State.navBarInline) return out
 
@@ -182,6 +194,16 @@ export default {
     onNavClick(i, type) {
       if (type === 'hidden') {
         State.hiddenPanelsBar = true
+        return
+      }
+      if (type === 'add') {
+        let panel = Utils.cloneObject(TABS_PANEL_STATE)
+        panel.id = Utils.uid()
+        panel.name = 'New Panel ' + (State.panels.length + 1)
+        State.panels.push(panel)
+        State.panelsMap[panel.id] = panel
+        Actions.savePanels()
+        Actions.updatePanelsTabs()
         return
       }
 

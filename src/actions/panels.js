@@ -4,6 +4,9 @@ import {
   BOOKMARKS_PANEL_STATE,
   DEFAULT_PANEL_STATE,
   TABS_PANEL_STATE,
+  BOOKMARKS_PANEL,
+  DEFAULT_TABS_PANEL,
+  TABS_PANEL,
 } from '../defaults'
 
 /**
@@ -70,7 +73,28 @@ function parsePanelUrlRules(panel) {
   }
 }
 
+/**
+ * Clean up panels info and run savePanels action in background
+ */
+async function savePanels() {
+  let output = [], panelDefs
+  for (let panel of this.state.panels) {
+    if (panel.type === 'bookmarks') panelDefs = BOOKMARKS_PANEL
+    else if (panel.type === 'default') panelDefs = DEFAULT_TABS_PANEL
+    else if (panel.type === 'tabs') panelDefs = TABS_PANEL
+
+    output.push(Utils.normalizePanel(panel, panelDefs))
+  }
+  browser.storage.local.set({ panels: output })
+}
+function savePanelsDebounced() {
+  if (this._savePanelsTimeout) clearTimeout(this._savePanelsTimeout)
+  this._savePanelsTimeout = setTimeout(() => this.actions.savePanels(), 500)
+}
+
 export default {
   loadPanels,
   parsePanelUrlRules,
+  savePanels,
+  savePanelsDebounced,
 }
