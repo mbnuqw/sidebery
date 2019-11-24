@@ -47,7 +47,7 @@ import EventBus from '../../event-bus'
 import State from '../store/state.js'
 import Actions from '../actions'
 
-const HIDDEN_CTR_BTN = {
+const HIDDEN_PANEL_BTN = {
   type: 'hidden',
   name: 'hidden',
   icon: 'icon_expand',
@@ -95,8 +95,8 @@ export default {
       }
 
       if (emptyPanel && State.hideEmptyPanels) {
-        HIDDEN_CTR_BTN.hidden = false
-        out.push(HIDDEN_CTR_BTN)
+        HIDDEN_PANEL_BTN.hidden = false
+        out.push(HIDDEN_PANEL_BTN)
       }
 
       if (!State.navBarInline) return out
