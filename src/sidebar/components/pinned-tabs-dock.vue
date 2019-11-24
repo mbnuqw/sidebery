@@ -32,6 +32,7 @@ export default {
   props: {
     ctx: String,
     panelType: String,
+    panelId: String,
   },
 
   data() {
@@ -44,18 +45,7 @@ export default {
   computed: {
     pinnedTabs() {
       let pinned = this.$store.getters.pinnedTabs
-      if (this.panelType === 'ctx' && this.ctx) {
-        return pinned.filter(t => t.cookieStoreId === this.ctx)
-      }
-      if (this.panelType === 'default' || this.panelType === 'tabs') {
-        return pinned.filter(t => {
-          let ctxPanel = State.panels.find(p => {
-            return p.type === 'ctx' && p.cookieStoreId === t.cookieStoreId
-          })
-          return !ctxPanel
-        })
-      }
-      return pinned
+      return pinned.filter(t => t.panelId === this.panelId)
     },
   },
 

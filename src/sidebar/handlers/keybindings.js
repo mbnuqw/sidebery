@@ -178,12 +178,7 @@ function onKeyNewTabInPanel() {
 
   let config = { windowId: this.state.windowId }
   config.index = this.actions.getIndexForNewTab(panel, config)
-
-  if (panel.type === 'ctx') {
-    config.cookieStoreId = panel.cookieStoreId
-  } else if (panel.newTabCtx) {
-    config.cookieStoreId = panel.newTabCtx
-  }
+  config.cookieStoreId = panel.newTabCtx
 
   if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
   this.state.newTabsPosition[config.index] = {

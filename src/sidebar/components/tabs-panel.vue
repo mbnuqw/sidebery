@@ -8,6 +8,7 @@
   pinned-dock(
     v-if="$store.state.pinnedTabsPosition === 'panel'"
     :panel-type="panel.type"
+    :panel-id="panel.id"
     :ctx="storeId")
   scroll-box(ref="scrollBox")
     .container
@@ -160,7 +161,6 @@ export default {
       let type
       if (panel.type === 'bookmarks') type = 'bookmarksPanel'
       else if (panel.type === 'default') type = 'tabsPanel'
-      else if (panel.type === 'ctx') type = 'tabsPanel'
       else if (panel.type === 'tabs') type = 'tabsPanel'
 
       State.selected = [panel]
@@ -190,7 +190,6 @@ export default {
       let type
       if (panel.type === 'bookmarks') type = 'bookmarksPanel'
       else if (panel.type === 'default') type = 'tabsPanel'
-      else if (panel.type === 'ctx') type = 'tabsPanel'
       else if (panel.type === 'tabs') type = 'tabsPanel'
       if (!State.selected.length) State.selected = [panel]
 
@@ -329,11 +328,7 @@ export default {
         }
       }
 
-      if (this.panel.type === 'ctx') {
-        config.cookieStoreId = this.panel.cookieStoreId
-      } else {
-        config.cookieStoreId = this.panel.newTabCtx
-      }
+      config.cookieStoreId = this.panel.newTabCtx
 
       browser.tabs.create(config)
     },

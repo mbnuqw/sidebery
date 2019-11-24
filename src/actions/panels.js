@@ -3,7 +3,6 @@ import {
   DEFAULT_PANELS_STATE,
   BOOKMARKS_PANEL_STATE,
   DEFAULT_PANEL_STATE,
-  CTX_PANEL_STATE,
   TABS_PANEL_STATE,
 } from '../defaults'
 
@@ -36,7 +35,6 @@ async function loadPanels() {
 
     if (loadedPanel.type === 'bookmarks') panelDefs = BOOKMARKS_PANEL_STATE
     else if (loadedPanel.type === 'default') panelDefs = DEFAULT_PANEL_STATE
-    else if (loadedPanel.type === 'ctx') panelDefs = CTX_PANEL_STATE
     else if (loadedPanel.type === 'tabs') panelDefs = TABS_PANEL_STATE
     else continue
 

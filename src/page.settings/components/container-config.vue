@@ -102,7 +102,6 @@
 
 
 <script>
-import Vue from 'vue'
 import TextInput from '../../components/text-input'
 import ToggleField from '../../components/toggle-field'
 import SelectField from '../../components/select-field'
@@ -255,30 +254,17 @@ export default {
 
     updateName() {
       if (!this.name) return
-      this.updateBindedPanel('name', this.name)
       this.updateContainer()
     },
 
     async updateIcon(icon) {
       this.conf.icon = icon
-      this.updateBindedPanel('icon', icon)
       this.updateContainer()
     },
 
     async updateColor(color) {
       this.conf.color = color
-      this.updateBindedPanel('color', color)
       this.updateContainer()
-    },
-
-    updateBindedPanel(key, value) {
-      for (let p of State.panels) {
-        if (p.type === 'ctx' && p.cookieStoreId === this.conf.id) {
-          Vue.set(p, key, value)
-          Actions.savePanels()
-          break
-        }
-      }
     },
 
     async init() {

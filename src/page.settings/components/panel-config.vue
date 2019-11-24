@@ -8,24 +8,6 @@
     :value="conf.name"
     :or="t('container_dashboard.name_placeholder')"
     @input="onNameInput")
-  h2(v-if="isContainer") {{conf.name}}
-
-  //- select-field.-no-separator(
-  //-   v-if="isCustom"
-  //-   label="settings.panel_type_label"
-  //-   optLabel="settings.panel_type_"
-  //-   :value="conf.type"
-  //-   :opts="$store.state.panelTypeOpts"
-  //-   :color="color"
-  //-   @input="setType")
-
-  //- select-field(
-  //-   v-if="isContainer"
-  //-   label="settings.panel_container_label"
-  //-   :value="conf.cookieStoreId"
-  //-   :opts="availableContainers"
-  //-   :note="t(panelContainerNote)"
-  //-   @input="setContainer")
 
   select-field(
     v-if="isTabs && !conf.customIconSrc"
@@ -90,7 +72,7 @@
     v-if="isDefault || isTabs"
     label="dashboard.move_tab_ctx"
     optLabel="dashboard.move_tab_ctx_"
-    :value="conf.moveTabCtx"
+    :value="moveTabCtx"
     :opts="moveTabCtxOpts"
     @input="togglePanelMoveTabCtx")
 
@@ -98,7 +80,7 @@
     v-if="isDefault || isTabs"
     label="dashboard.drop_tab_ctx"
     optLabel="dashboard.drop_tab_ctx_"
-    :value="conf.dropTabCtx"
+    :value="dropTabCtx"
     :opts="dropTabCtxOpts"
     @input="togglePanelDropTabCtx")
   
@@ -120,10 +102,7 @@
 
 
 <script>
-import Utils from '../../utils'
 import { DEFAULT_CTX } from '../../defaults'
-import { CTX_PANEL_STATE } from '../../defaults'
-import { TABS_PANEL_STATE } from '../../defaults'
 import TextInput from '../../components/text-input'
 import ToggleField from '../../components/toggle-field'
 import SelectField from '../../components/select-field'
@@ -211,10 +190,6 @@ export default {
       return this.conf.type !== 'bookmarks' && this.conf.type !== 'default'
     },
 
-    isContainer() {
-      return this.conf.type === 'ctx'
-    },
-
     isTabs() {
       return this.conf.type === 'tabs'
     },
@@ -223,7 +198,7 @@ export default {
       let result = []
       for (let container of Object.values(State.containers)) {
         let boundPanel = State.panels.find(p => {
-          return p.id !== this.conf.id && p.cookieStoreId === container.id
+          return p.id !== this.conf.id && p.moveTabCtx === container.id
         })
         if (boundPanel) continue
         result.push({
@@ -263,11 +238,19 @@ export default {
       ]
     },
 
+    moveTabCtx() {
+      return this.conf.moveTabCtx || 'none'
+    },
+
     moveTabCtxOpts() {
       return [
         ...this.availableContainers,
         { value: 'none', color: 'inactive', icon: 'icon_none' },
       ]
+    },
+
+    dropTabCtx() {
+      return this.conf.dropTabCtx || 'none'
     },
 
     dropTabCtxOpts() {
@@ -297,45 +280,6 @@ export default {
     onNameInput(value) {
       this.conf.name = value
       if (value) Actions.savePanelsDebounced()
-    },
-
-    setType(value) {
-      let index = State.panels.findIndex(p => p.id === this.conf.id)
-      if (index === -1) return
-
-      let panel
-      if (this.conf.type === 'ctx' && value !== 'ctx') {
-        panel = Utils.cloneObject(TABS_PANEL_STATE)
-        panel.id = this.conf.id
-        panel.name = this.conf.name
-        State.panelsMap[this.conf.id] = panel
-        State.panels.splice(index, 1, panel)
-        State.selectedPanel = panel
-        Actions.savePanels()
-      }
-      if (this.conf.type !== 'ctx' && value === 'ctx') {
-        panel = Utils.cloneObject(CTX_PANEL_STATE)
-        panel.id = this.conf.id
-        panel.name = this.conf.name
-        panel.icon = this.conf.icon
-        panel.color = this.conf.color
-        State.panelsMap[this.conf.id] = panel
-        State.panels.splice(index, 1, panel)
-        State.selectedPanel = panel
-      }
-    },
-
-    setContainer(value) {
-      this.conf.cookieStoreId = value
-
-      let targetContainer = State.containers[value]
-      if (targetContainer) {
-        this.conf.name = targetContainer.name
-        this.conf.icon = targetContainer.icon
-        this.conf.color = targetContainer.color
-      }
-
-      Actions.savePanels()
     },
 
     setIcon(value) {

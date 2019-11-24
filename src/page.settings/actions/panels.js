@@ -1,6 +1,5 @@
 import { BOOKMARKS_PANEL } from '../../defaults'
 import { DEFAULT_TABS_PANEL } from '../../defaults'
-import { CTX_PANEL } from '../../defaults'
 import { TABS_PANEL } from '../../defaults'
 import Utils from '../../utils'
 import CommonActions from '../../actions/panels'
@@ -11,11 +10,8 @@ import CommonActions from '../../actions/panels'
 async function savePanels() {
   let output = [], panelDefs
   for (let panel of this.state.panels) {
-    if (panel.type === 'ctx' && !panel.cookieStoreId) panel.type = 'tabs'
-
     if (panel.type === 'bookmarks') panelDefs = BOOKMARKS_PANEL
     else if (panel.type === 'default') panelDefs = DEFAULT_TABS_PANEL
-    else if (panel.type === 'ctx') panelDefs = CTX_PANEL
     else if (panel.type === 'tabs') panelDefs = TABS_PANEL
 
     output.push(Utils.normalizePanel(panel, panelDefs))

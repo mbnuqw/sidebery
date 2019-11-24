@@ -495,12 +495,13 @@ function onTabMoved(id, info) {
       // movedTab.invisible = true
     }
     movedTab.destPanelId = undefined
-    if (!destPanel) {
+    if (
+      !destPanel ||
+      destPanel.startIndex > info.toIndex ||
+      destPanel.endIndex + 1 < info.toIndex
+    ) {
       destPanel = this.state.panels.find(p => {
-        if (p.type === 'ctx' && p.cookieStoreId === movedTab.cookieStoreId) {
-          return true
-        }
-        return info.toIndex >= p.startIndex && info.toIndex <= (p.endIndex + 1)
+        return info.toIndex >= p.startIndex && info.toIndex <= p.endIndex + 1
       })
     }
 

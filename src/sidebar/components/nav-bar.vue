@@ -170,7 +170,6 @@ export default {
       let type
       if (panel.type === 'bookmarks') type = 'bookmarksPanel'
       else if (panel.type === 'default') type = 'tabsPanel'
-      else if (panel.type === 'ctx') type = 'tabsPanel'
       else if (panel.type === 'tabs') type = 'tabsPanel'
       if (!State.selected.length) State.selected = [panel]
 
@@ -229,7 +228,6 @@ export default {
       let type
       if (panel.type === 'bookmarks') type = 'bookmarksPanel'
       else if (panel.type === 'default') type = 'tabsPanel'
-      else if (panel.type === 'ctx') type = 'tabsPanel'
       else if (panel.type === 'tabs') type = 'tabsPanel'
 
       State.selected = [panel]

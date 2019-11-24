@@ -492,7 +492,7 @@ async function removeTabs(tabIds) {
   // No-empty panels
   if (tabs.length === panel.tabs.length && panel.noEmpty) {
     let conf = { windowId: this.state.windowId, index: panel.startIndex }
-    if (panel.type === 'ctx') conf.cookieStoreId = panel.cookieStoreId
+    conf.cookieStoreId = panel.newTabCtx
     await browser.tabs.create(conf)
   }
 
@@ -982,14 +982,12 @@ async function moveTabsToThisWin(tabs, fromPrivate) {
 }
 
 /**
- * Move tabs (reopen url) in provided context.
+ * Reopen tabs in provided container.
  */
 async function moveTabsToCtx(tabIds, ctxId) {
   let ids = [...tabIds]
   let oldNewMap = {}
-  let ctxPanel = this.state.panels.find(p => {
-    return p.type === 'ctx' && p.cookieStoreId === ctxId
-  })
+  let ctxPanel = this.state.panels.find(p => p.moveTabCtx === ctxId)
   let index = ctxPanel ? ctxPanel.endIndex + 1 : -1
   for (let id of ids) {
     let tab = this.state.tabsMap[id]
@@ -1228,20 +1226,19 @@ function foldAllInactiveBranches(tabs = []) {
  * Drop to tabs panel
  */
 async function dropToTabs(event, dropIndex, dropParent, nodes, pin) {
-  let currentPanel = this.state.panels[this.state.panelIndex]
-  let destCtx = currentPanel.cookieStoreId
-  if (dropIndex === -1) dropIndex = currentPanel.endIndex + 1
+  let activePanel = this.state.panels[this.state.panelIndex]
+  let destCtx = activePanel.cookieStoreId
+  if (dropIndex === -1) dropIndex = activePanel.endIndex + 1
 
   // Tabs or Bookmarks
   if (nodes && nodes.length) {
-    let globalPin = pin && currentPanel.panel !== 'TabsPanel'
-    let ctxChange = currentPanel.type === 'ctx' &&
-      nodes[0].cookieStoreId !== currentPanel.cookieStoreId
+    let globalPin = pin && activePanel.panel !== 'TabsPanel'
+    let ctxChange = activePanel.dropTabCtx !== 'none' && nodes[0].cookieStoreId !== activePanel.dropTabCtx
     let sameContainer = ctxChange ? nodes[0].ctx === destCtx : true
 
     // Move tabs
     if (nodes[0].type === 'tab' && (sameContainer || globalPin) && !event.ctrlKey) {
-      this.actions.moveDroppedNodes(dropIndex, dropParent, nodes, pin, currentPanel)
+      this.actions.moveDroppedNodes(dropIndex, dropParent, nodes, pin, activePanel)
     } else {
       this.actions.recreateDroppedNodes(event, dropIndex, dropParent, nodes, pin, destCtx)
     }
@@ -1827,9 +1824,8 @@ function getPanelForNewTab(tab) {
   let panel, parentTab = this.state.tabsMap[tab.openerTabId]
 
   if (tab.cookieStoreId !== DEFAULT_CTX_ID) {
-    panel = this.state.panels.find(p => {
-      return p.type === 'ctx' && p.cookieStoreId === tab.cookieStoreId
-    })
+    panel = this.state.panels.find(p => p.moveTabCtx === tab.cookieStoreId)
+    console.log('[DEBUG] hm', panel)
   }
 
   if (!panel && parentTab) {
@@ -1847,11 +1843,7 @@ function getPanelForNewTab(tab) {
 
   if (!panel) panel = this.state.panels[this.state.panelIndex]
 
-  if (
-    panel &&
-    panel.type === 'ctx' &&
-    panel.cookieStoreId !== tab.cookieStoreId
-  ) panel = null
+  if (panel && panel.moveTabCtx !== tab.cookieStoreId) panel = null
 
   if (!panel || !panel.tabs) panel = this.state.panelsMap[DEFAULT_CTX_ID]
 

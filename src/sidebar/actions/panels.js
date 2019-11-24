@@ -1,9 +1,9 @@
 import EventBus from '../../event-bus'
 import Utils from '../../utils'
 import CommonActions from '../../actions/panels'
-import { CTX_PANEL_STATE, TABS_PANEL_STATE } from '../../defaults'
+import { TABS_PANEL_STATE } from '../../defaults'
 import { BOOKMARKS_PANEL, DEFAULT_TABS_PANEL } from '../../defaults'
-import { CTX_PANEL, TABS_PANEL } from '../../defaults'
+import { TABS_PANEL } from '../../defaults'
 
 let recalcPanelScrollTimeout, updatePanelBoundsTimeout
 
@@ -43,11 +43,7 @@ async function updatePanels(newPanels) {
 
     if (!panel) {
       updateNeeded = true
-      if (newPanel.type === 'ctx') {
-        panel = Utils.normalizePanel(newPanel, CTX_PANEL_STATE)
-      } else if (newPanel.type === 'tabs') {
-        panel = Utils.normalizePanel(newPanel, TABS_PANEL_STATE)
-      }
+      panel = Utils.normalizePanel(newPanel, TABS_PANEL_STATE)
     }
 
     if (panel.type !== newPanel.type) updateNeeded = true
@@ -62,7 +58,6 @@ async function updatePanels(newPanels) {
 
     if (newPanel.type === 'bookmarks') panelDefs = BOOKMARKS_PANEL
     if (newPanel.type === 'default') panelDefs = DEFAULT_TABS_PANEL
-    if (newPanel.type === 'ctx') panelDefs = CTX_PANEL
     if (newPanel.type === 'tabs') panelDefs = TABS_PANEL
 
     for (let k of Object.keys(panelDefs)) {
@@ -176,9 +171,7 @@ function getTabPanel(tab) {
   if (!tab) return null
 
   for (let panel of this.state.panels) {
-    if (panel.type === 'ctx' && tab.cookieStoreId === panel.cookieStoreId) {
-      return panel
-    }
+    if (tab.cookieStoreId === panel.moveTabCtx) return panel
     if (panel.startIndex <= tab.index && panel.endIndex >= tab.index) {
       return panel
     }
