@@ -205,9 +205,14 @@ async function updateTabsTree() {
   }
 
   const trees = await Promise.all(receiving)
-  for (let i = 0; i < trees.length; i++) {
+  for (let info, i = 0; i < trees.length; i++) {
+    info = trees[i]
+    if (!info) continue
     for (let tab of windows[i].tabs) {
-      if (trees[i]) tab.lvl = trees[i][String(tab.id)] || 0
+      let tabInfo = info[String(tab.id)]
+      if (!tabInfo) continue
+      tab.lvl = tabInfo.lvl
+      tab.panelId = tabInfo.panel
     }
   }
 }

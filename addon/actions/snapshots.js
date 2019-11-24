@@ -20,6 +20,9 @@ async function createSnapshot() {
     }
   }
 
+  // Get panels info
+  let { panels } = await browser.storage.local.get({ panels: [] })
+
   // Update tree structure
   if (this.settings.tabsTree) await Actions.updateTabsTree()
 
@@ -29,31 +32,15 @@ async function createSnapshot() {
     const window = this.windows[windowId]
     const items = []
 
-    let containerId
     for (let tab of window.tabs) {
-      // Add pinned tab
-      if (tab.pinned) {
-        items.push({
-          id: tab.id,
-          url: tab.url,
-          title: tab.title,
-          ctr: tab.cookieStoreId,
-        })
-        continue
-      }
-
-      // Add container id
-      if (containerId !== tab.cookieStoreId) {
-        containerId = tab.cookieStoreId
-        items.push(containerId)
-      }
-
-      // Add tab
       items.push({
         id: tab.id,
+        pinned: tab.pinned,
         url: tab.url,
         title: tab.title,
         lvl: tab.lvl,
+        ctr: tab.cookieStoreId,
+        panel: tab.panelId,
       })
     }
 
@@ -64,6 +51,7 @@ async function createSnapshot() {
     id: Math.random().toString(16).replace('0.', Date.now().toString(16)),
     time: Date.now(),
     containersById,
+    panels,
     windows,
   }
 

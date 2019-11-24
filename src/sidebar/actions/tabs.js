@@ -1753,7 +1753,7 @@ function queryTab(props) {
 function getTabsTree() {
   const tree = {}
   for (let tab of this.state.tabs) {
-    if (tab.lvl > 0) tree[tab.id] = tab.lvl
+    tree[tab.id] = { lvl: tab.lvl, panel: tab.panelId }
   }
   return tree
 }
