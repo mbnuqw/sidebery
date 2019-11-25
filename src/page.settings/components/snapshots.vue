@@ -91,6 +91,7 @@
 import Utils from '../../utils'
 import { translate } from '../../mixins/dict'
 import { DEFAULT_CTX } from '../../defaults'
+import State from '../store/state'
 
 const SCROLL_CONF = { behavior: 'smooth', block: 'center' }
 const DEFAULT_CTR = {
@@ -175,7 +176,7 @@ export default {
       const tabInfo = await browser.runtime.sendMessage({
         instanceType: 'sidebar',
         action: 'queryTab',
-        arg: { url: tab[1], pinned: tab[4], cookieStoreId: tab[5] },
+        arg: { url: tab.url, pinned: tab.pinned, cookieStoreId: tab.ctr },
       })
       if (tabInfo) return browser.tabs.update(tabInfo.id, { active: true })
 
@@ -184,9 +185,12 @@ export default {
         intanceType: 'sidebar',
         action: 'getActivePanel',
       })
-      const tabConf = { url: tab[1] }
-      if (activePanel && activePanel.tabs) {
-        tabConf.cookieStoreId = activePanel.cookieStoreId
+      const tabConf = {
+        url: Utils.normalizeUrl(tab.url),
+        windowId: State.windowId,
+      }
+      if (activePanel && activePanel.tabs && activePanel.newTabCtx !== 'none') {
+        tabConf.cookieStoreId = activePanel.newTabCtx
       }
       browser.tabs.create(tabConf)
     },
