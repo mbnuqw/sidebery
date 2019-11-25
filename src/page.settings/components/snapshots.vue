@@ -23,31 +23,67 @@
         .title(v-if="activeSnapshot") {{activeSnapshot.date}} - {{activeSnapshot.time}}
         .btn(v-if="activeSnapshot" @click="applySnapshot(activeSnapshot)") {{t('snapshot.btn_apply')}}
         .btn.-warn(v-if="activeSnapshot" @click="removeSnapshot(activeSnapshot)") {{t('snapshot.btn_remove')}}
-      .windows(v-if="activeSnapshot" v-noise:300.g:12:af.a:0:42.s:0:9="")
-        .window(
-          v-for="(win, _, i) in activeSnapshot.windowsById"
-          v-if="win.tabs.length"
-          :key="win.id")
-          .win-ctrls
-            .name {{t('snapshot.window_title') + ' #' + (i + 1)}}
-            .btn(@click="openWindow(activeSnapshot, win.id)") {{t('snapshot.btn_open')}}
-          .tabs
-            a.tab(
-              v-for="tab in win.tabs"
-              target="_blank"
-              :title="tab.title"
-              :id="tab.id"
-              :href="tab.url"
-              :data-target="tab.id === activeSnapshot.targetId"
-              :data-lvl="tab.lvl"
-              :data-pinned="tab.pinned"
-              :data-color="getCtrColor(tab.ctr)"
-              @click.stop.prevent="onTabClick(tab)")
-              .icon
-                svg.ctr: use(:xlink:href="'#' + getCtrIcon(tab.ctr)")
-                svg.pin(v-if="tab.pinned"): use(xlink:href="#icon_pin")
-              .title {{tab.title}}
-              .url {{tab.url}}
+      .snapshot-content(v-if="activeSnapshot" v-noise:300.g:12:af.a:0:42.s:0:9="")
+        h2 Containers
+        .containers
+          .container(
+            v-for="container of activeSnapshot.containersById"
+            :key="container.id"
+            :data-color="container.color")
+            .container-icon
+              svg: use(:xlink:href="'#' + container.icon")
+            .container-name {{container.name}}
+            .container-ctrls
+              .btn Create
+        h2 Panels
+        .containers
+          .container(
+            v-for="panel of activeSnapshot.panels"
+            :key="panel.id"
+            :data-color="panel.color")
+            .container-icon
+              svg: use(:xlink:href="'#' + panel.icon")
+            .container-name {{panel.name}}
+            .container-ctrls
+              .btn Create
+        h2 Tabs
+        .windows
+          .window(
+            v-for="(win, _, i) in activeSnapshot.windowsById"
+            v-if="win.panels.length"
+            :key="win.id")
+            .win-ctrls
+              .name {{t('snapshot.window_title') + ' #' + (i + 1)}}
+              .btn(@click="openWindow(activeSnapshot, win.id)") {{t('snapshot.btn_open')}}
+            .panels
+              .panel(
+                v-for="panel in win.panels"
+                v-if="panel.tabs.length"
+                :key="panel.id")
+                .panel-info(:data-color="panel.color")
+                  .panel-icon
+                    img(v-if="panel.customIcon" :src="panel.customIcon")
+                    svg(v-else): use(:xlink:href="'#' + panel.icon")
+                  .panel-name {{panel.name}}
+                .tabs
+                  a.tab(
+                    v-for="tab in panel.tabs"
+                    target="_blank"
+                    :key="tab.id"
+                    :title="tab.title"
+                    :id="tab.id"
+                    :href="tab.url"
+                    :data-target="tab.id === activeSnapshot.targetId"
+                    :data-lvl="tab.lvl"
+                    :data-pinned="tab.pinned"
+                    :data-color="tab.ctrColor"
+                    @click.stop.prevent="onTabClick(tab)")
+                    .icon
+                      svg.ctr(v-if="tab.ctrIcon"): use(:xlink:href="'#' + tab.ctrIcon")
+                      .hm(v-else) {{tab.flof}}
+                      svg.pin(v-if="tab.pinned"): use(xlink:href="#icon_pin")
+                    .title {{tab.title}}
+                    .url {{tab.url}}
 </template>
 
 
@@ -255,31 +291,47 @@ export default {
  * Normalize snapshot
  */
 function normalizeSnapshot(snapshot) {
-  let container, tabsCount = 0
+  let tabsCount = 0
   let windowsById = {}
 
   // Windows
   for (let winId of Object.keys(snapshot.windows)) {
-    const window = { id: winId, tabs: [] }
+    const window = { id: winId, panels: [] }
     snapshot.containersById[DEFAULT_CTR.id] = DEFAULT_CTR
 
-    // Items
+    // Normalize tabs
     for (let item of snapshot.windows[winId].items) {
-      // Container / Tab
-      if (typeof item === 'string') {
-        container = snapshot.containersById[item]
-      } else {
-        tabsCount++
-        // Pinned / Normal tabs
-        if (!container) {
-          item.pinned = true
-          item.lvl = 0
-        } else {
-          item.pinned = false
-          item.ctr = container.id
+      if (!item.lvl) item.lvl = 0
+      if (!item.ctr) item.ctr = DEFAULT_CTR.id
+      if (!item.panel) item.panel = DEFAULT_CTR.id
+      let flofi = item.url.indexOf('//')
+      if (flofi !== -1) item.flof = item.url[flofi + 2].toUpperCase()
+      else item.flof = item.url[0].toUpperCase()
+    }
+
+    // Panels
+    for (let panel of snapshot.panels) {
+      if (panel.type !== 'default' && panel.type !== 'tabs') continue
+      let tabs = []
+
+      // Tabs
+      for (let tab of snapshot.windows[winId].items) {
+        if (panel.id !== tab.panel) continue
+        if (tab.ctr !== DEFAULT_CTR.id) {
+          tab.ctrIcon = snapshot.containersById[tab.ctr].icon
+          tab.ctrColor = snapshot.containersById[tab.ctr].color
         }
-        window.tabs.push(item)
+        tabs.push(tab)
+        tabsCount++
       }
+
+      window.panels.push({
+        name: panel.name,
+        icon: panel.icon,
+        color: panel.color,
+        customIcon: panel.customIcon,
+        tabs: tabs,
+      })
     }
 
     windowsById[winId] = window
@@ -291,6 +343,7 @@ function normalizeSnapshot(snapshot) {
     event: 'init',
     windowsById: Utils.cloneObject(windowsById),
     containersById: Utils.cloneObject(snapshot.containersById),
+    panels: Utils.cloneArray(snapshot.panels),
     date: Utils.uDate(snapshot.time),
     time: Utils.uTime(snapshot.time),
     size: Utils.strSize(JSON.stringify(snapshot)),
