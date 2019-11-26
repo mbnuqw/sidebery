@@ -24,29 +24,30 @@
         .btn(v-if="activeSnapshot" @click="applySnapshot(activeSnapshot)") {{t('snapshot.btn_apply')}}
         .btn.-warn(v-if="activeSnapshot" @click="removeSnapshot(activeSnapshot)") {{t('snapshot.btn_remove')}}
       .snapshot-content(v-if="activeSnapshot" v-noise:300.g:12:af.a:0:42.s:0:9="")
-        h2 Containers
-        .containers
-          .container(
-            v-for="container of activeSnapshot.containersById"
-            :key="container.id"
-            :data-color="container.color")
-            .container-icon
-              svg: use(:xlink:href="'#' + container.icon")
-            .container-name {{container.name}}
-            .container-ctrls
-              .btn Create
-        h2 Panels
-        .containers
-          .container(
-            v-for="panel of activeSnapshot.panels"
-            :key="panel.id"
-            :data-color="panel.color")
-            .container-icon
-              svg: use(:xlink:href="'#' + panel.icon")
-            .container-name {{panel.name}}
-            .container-ctrls
-              .btn Create
-        h2 Tabs
+        //- h2 Containers
+        //- .containers
+        //-   .container(
+        //-     v-for="container of activeSnapshot.containersById"
+        //-     :key="container.id"
+        //-     :data-color="container.color")
+        //-     .container-icon
+        //-       svg: use(:xlink:href="'#' + container.icon")
+        //-     .container-name {{container.name}}
+        //-     .container-ctrls
+        //-       .btn Create
+        //- h2 Panels
+        //- .containers
+        //-   .container(
+        //-     v-for="panel of activeSnapshot.panels"
+        //-     :key="panel.id"
+        //-     :data-color="panel.color")
+        //-     .container-icon
+        //-       img(v-if="panel.customIcon" :src="panel.customIcon")
+        //-       svg(v-else): use(:xlink:href="'#' + panel.icon")
+        //-     .container-name {{panel.name}}
+        //-     .container-ctrls
+        //-       .btn Create
+        //- h2 Tabs
         .windows
           .window(
             v-for="(win, _, i) in activeSnapshot.windowsById"
@@ -92,6 +93,7 @@ import Utils from '../../utils'
 import { translate } from '../../mixins/dict'
 import { DEFAULT_CTX } from '../../defaults'
 import State from '../store/state'
+import Actions from '../actions'
 
 const SCROLL_CONF = { behavior: 'smooth', block: 'center' }
 const DEFAULT_CTR = {
@@ -216,6 +218,9 @@ export default {
      */
     async applySnapshot(snapshot) {
       // TODO: show loading spinner or something...
+      snapshot = Utils.cloneObject(snapshot)
+      await this.restoreContainers(snapshot.containersById)
+      await this.restorePanels(snapshot)
       await browser.runtime.sendMessage({
         instanceType: 'bg',
         windowId: -1,
@@ -228,12 +233,60 @@ export default {
      * Open window with listed tabs
      */
     async openWindow(snapshot, winId) {
-      await browser.runtime.sendMessage({
+      snapshot = Utils.cloneObject(snapshot)
+      await this.restoreContainers(snapshot.containersById)
+      await this.restorePanels(snapshot)
+      browser.runtime.sendMessage({
         instanceType: 'bg',
         windowId: -1,
         action: 'openSnapshotWindow',
         args: [snapshot, winId],
       })
+    },
+
+    async restoreContainers(containers) {
+      let ffContainers = await browser.contextualIdentities.query({})
+
+      for (let ctr of Object.values(containers)) {
+        let localCtr = ffContainers.find(c => {
+          return c.name === ctr.name && c.icon === ctr.icon && c.color === ctr.color
+        })
+        if (localCtr) {
+          ctr.newId = localCtr.cookieStoreId
+        } else {
+          let newCtr = await browser.contextualIdentities.create({
+            name: ctr.name,
+            color: ctr.color,
+            icon: ctr.icon,
+          })
+          ctr.newId = newCtr.cookieStoreId
+        }
+      }
+    },
+
+    async restorePanels(snapshot) {
+      let { panels } = await browser.storage.local.get({ panels: [] })
+
+      for (let snapPanel of snapshot.panels) {
+        let localPanel = panels.find(p => p.id === snapPanel.id)
+        if (localPanel) continue
+
+        let panel = Utils.cloneObject(snapPanel)
+        State.panels.push(panel)
+        State.panelsMap[panel.id] = panel
+        Actions.savePanelsDebounced()
+      }
+
+
+      for (let win of Object.values(snapshot.windowsById)) {
+        let normPanels = []
+        for (let panel of State.panels) {
+          let snapPanel = win.panels.find(p => p.id === panel.id)
+          if (!snapPanel) continue
+          normPanels.push(snapPanel)
+        }
+        win.panels = normPanels
+      }
     },
 
     /**
@@ -298,6 +351,21 @@ function normalizeSnapshot(snapshot) {
   let tabsCount = 0
   let windowsById = {}
 
+  // Conatiners
+  let containersById = {}
+  for (let ctrId of Object.keys(snapshot.containersById)) {
+    if (ctrId === DEFAULT_CTX) continue
+    containersById[ctrId] = snapshot.containersById[ctrId]
+  }
+
+  // Panels
+  let panels = []
+  for (let panel of snapshot.panels) {
+    if (panel.id === DEFAULT_CTX) continue
+    if (panel.type === 'bookmarks') continue
+    panels.push(panel)
+  }
+
   // Windows
   for (let winId of Object.keys(snapshot.windows)) {
     const window = { id: winId, panels: [] }
@@ -330,6 +398,7 @@ function normalizeSnapshot(snapshot) {
       }
 
       window.panels.push({
+        id: panel.id,
         name: panel.name,
         icon: panel.icon,
         color: panel.color,
@@ -346,13 +415,13 @@ function normalizeSnapshot(snapshot) {
     type: 'base',
     event: 'init',
     windowsById: Utils.cloneObject(windowsById),
-    containersById: Utils.cloneObject(snapshot.containersById),
-    panels: Utils.cloneArray(snapshot.panels),
+    containersById: Utils.cloneObject(containersById),
+    panels: Utils.cloneArray(panels),
     date: Utils.uDate(snapshot.time),
     time: Utils.uTime(snapshot.time),
     size: Utils.strSize(JSON.stringify(snapshot)),
     winCount: Object.keys(windowsById).length,
-    ctrCount: Object.keys(snapshot.containersById).length,
+    ctrCount: Object.keys(containersById).length,
     tabsCount,
   }
 }

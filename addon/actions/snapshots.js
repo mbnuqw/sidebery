@@ -127,64 +127,40 @@ async function openSnapshotWindow(snapshot, winId) {
   let winInfo = snapshot.windowsById[winId]
   if (!winInfo) return
 
-  let containers = {}
+  let containers = snapshot.containersById
   let tabs = []
-  for (let tab of winInfo.tabs) {
-    containers[tab.ctr] = tab.ctr
-    tabs.push(tab)
+
+  for (let panel of winInfo.panels) {
+    tabs = tabs.concat(panel.tabs)
   }
 
-  let newWindow = await browser.windows.create()
-  let firstTab = newWindow.tabs[0]
-  let tabIndex = newWindow.tabs.length
-
-  await this.actions.waitForSidebarConnect(newWindow.id, 5000)
-
-  for (let ctrId of Object.keys(containers)) {
-    if (ctrId === 'firefox-default') continue
-
-    let snapCtr = snapshot.containersById[ctrId]
-    if (!snapCtr) {
-      containers[ctrId] = false
-      continue
-    }
-
-    let localCtrs = Object.values(this.containers)
-    let localCtr = localCtrs.find(c => c.name === snapCtr.name)
-    if (!localCtr) {
-      let newCtr = await browser.contextualIdentities.create({
-        name: snapCtr.name,
-        color: snapCtr.color,
-        icon: snapCtr.icon,
-      })
-      containers[ctrId] = newCtr.cookieStoreId
-    } else {
-      containers[ctrId] = localCtr.cookieStoreId
-    }
+  let tabsInfo = []
+  for (let tab of tabs) {
+    tabsInfo.push({ lvl: tab.lvl, panelId: tab.panel })
   }
-
-  let parents = [], oldNewMap = []
+  let tabsInfoStr = encodeURIComponent(JSON.stringify(tabsInfo))
+  let newWindow = await browser.windows.create({
+    url: 'about:blank#snapshot' + tabsInfoStr,
+  })
+  let parents = []
+  let creating = []
   for (let i = 0; i < tabs.length; i++) {
     let tab = tabs[i]
+    let ctr = containers[tab.ctr]
+    let ctrId = ctr ? ctr.newId : undefined
 
     parents[tab.lvl] = tab.id
 
-    let createdTab = await browser.tabs.create({
+    creating.push(browser.tabs.create({
       windowId: newWindow.id,
-      index: tabIndex,
       url: normalizeUrl(tab.url),
       active: false,
       pinned: tab.pinned,
-      discarded: !tab.pinned,
-      title: !tab.pinned ? tab.title : undefined,
-      cookieStoreId: containers[tab.ctr],
-      openerTabId: oldNewMap[parents[tab.lvl - 1]],
-    })
-    oldNewMap[tab.id] = createdTab.id
-    tabIndex++
+      cookieStoreId: ctrId,
+    }))
   }
 
-  if (firstTab) browser.tabs.remove(firstTab.id)
+  await Promise.all(creating)
 }
 
 /**

@@ -19,6 +19,10 @@ async function loadTabsFromGlobalStorage() {
     browser.storage.local.get({ tabsData: [] }),
   ])
 
+  if (tabs[0].url.startsWith('about:blank#snapshot')) {
+    return await this.actions.loadTabsFromSnapshot(tabs)
+  }
+
   let activePanel = this.state.panels[this.state.panelIndex] || this.state.panels[1]
   let tabsData = storage ? storage.tabsData : []
   let activeTab
@@ -80,10 +84,11 @@ async function loadTabsFromGlobalStorage() {
   Actions.updateTabsTree()
 
   // Switch to panel with active tab
-  const activePanelIsTabs = activePanel.panel === 'TabsPanel'
-  const activePanelIsOk = activeTab.cookieStoreId === activePanel.cookieStoreId
+  let activePanelIsTabs = activePanel.type === 'tabs' ||
+    activePanel.type === 'default'
+  let activePanelIsOk = activeTab.cookieStoreId === activePanel.cookieStoreId
   if (!activeTab.pinned && activePanelIsTabs && !activePanelIsOk) {
-    const panel = this.state.panelsMap[activeTab.cookieStoreId]
+    let panel = this.state.panelsMap[activeTab.cookieStoreId]
     if (panel) {
       this.state.panelIndex = panel.index
       this.state.lastPanelIndex = panel.index
@@ -92,7 +97,7 @@ async function loadTabsFromGlobalStorage() {
 
   // Update succession
   if (this.state.activateAfterClosing !== 'none' && activeTab) {
-    const target = Utils.findSuccessorTab(this.state, activeTab)
+    let target = Utils.findSuccessorTab(this.state, activeTab)
     if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
   }
 
@@ -111,6 +116,9 @@ async function loadTabsFromSessionStorage() {
     browser.tabs.query({ windowId }),
     browser.sessions.getWindowValue(this.state.windowId, 'groups')
   ])
+  if (tabs[0].url.startsWith('about:blank#snapshot')) {
+    return await this.actions.loadTabsFromSnapshot(tabs)
+  }
   if (!groups) groups = {}
   let tabsData = await Promise.all(tabs.map(t => {
     return browser.sessions.getTabValue(t.id, 'data')
@@ -183,13 +191,14 @@ async function loadTabsFromSessionStorage() {
   }
 
   this.state.tabs = tabs
-  Actions.updateTabsTree()
+  this.actions.updateTabsTree()
 
   // Switch to panel with active tab
-  const activePanelIsTabs = activePanel.panel === 'TabsPanel'
-  const activePanelIsOk = activeTab.cookieStoreId === activePanel.cookieStoreId
+  let activePanelIsTabs = activePanel.type === 'tabs' ||
+    activePanel.type === 'default'
+  let activePanelIsOk = activeTab.cookieStoreId === activePanel.cookieStoreId
   if (!activeTab.pinned && activePanelIsTabs && !activePanelIsOk) {
-    const panel = this.state.panelsMap[activeTab.cookieStoreId]
+    let panel = this.state.panelsMap[activeTab.cookieStoreId]
     if (panel) {
       this.state.panelIndex = panel.index
       this.state.lastPanelIndex = panel.index
@@ -198,16 +207,117 @@ async function loadTabsFromSessionStorage() {
 
   // Update succession
   if (this.state.activateAfterClosing !== 'none' && activeTab) {
-    const target = Utils.findSuccessorTab(this.state, activeTab)
+    let target = Utils.findSuccessorTab(this.state, activeTab)
     if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
   }
 
   // Update panels
-  Actions.updatePanelsTabs()
+  this.actions.updatePanelsTabs()
 
   this.state.tabs.forEach(t => this.actions.saveTabData(t))
 
   Logs.push('[INFO] Tabs loaded')
+}
+
+/**
+ * Load tabs using info from the first tab (e.g. for snapshots)
+ */
+async function loadTabsFromSnapshot(tabs) {
+  let firstTab = tabs[0]
+  let secondTab = tabs[1]
+  let tabsInfoStr = firstTab.url.slice(20)
+  let tabsInfo = JSON.parse(decodeURIComponent(tabsInfoStr))
+  let activePanel = this.state.panels[this.state.panelIndex] || this.state.panels[1]
+
+  // Wait for all tabs
+  if (tabsInfo.length !== tabs.length - 1) {
+    let polling
+    await new Promise(res => {
+      setTimeout(() => {
+        clearInterval(polling)
+        res()
+      }, 10000)
+
+      polling = setInterval(async () => {
+        tabs = await browser.tabs.query({ windowId: this.state.windowId })
+        if (tabsInfo.length === tabs.length - 1) {
+          clearInterval(polling)
+          res()
+        }
+      }, 1234)
+    })
+  }
+
+  await browser.tabs.update(secondTab.id, { active: true })
+  secondTab.active = true
+  await browser.tabs.remove(firstTab.id)
+  tabs.shift()
+
+  Utils.normalizeTab(firstTab, DEFAULT_CTX_ID)
+
+  let parents = [], activeTab
+  for (let prevTab, tab, info, i = 0; i < tabsInfo.length; i++) {
+    info = tabsInfo[i]
+    prevTab = tabs[i - 1]
+    tab = tabs[i]
+    tab.index = i
+
+    Utils.normalizeTab(tab, DEFAULT_CTX_ID)
+
+    if (this.state.highlightOpenBookmarks && this.state.bookmarksUrlMap && this.state.bookmarksUrlMap[tab.url]) {
+      for (let b of this.state.bookmarksUrlMap[tab.url]) {
+        b.isOpen = true
+      }
+    }
+
+    tab.lvl = info.lvl
+    tab.panelId = info.panelId
+
+    if (prevTab) {
+      if (prevTab.lvl < tab.lvl) {
+        tab.parentId = prevTab.id
+        parents[tab.lvl] = prevTab.id
+      }
+      else if (prevTab.lvl === tab.lvl) {
+        tab.parentId = prevTab.parentId
+      }
+      else if (prevTab.lvl > tab.lvl) {
+        if (tab.lvl > 0) tab.parentId = parents[tab.lvl]
+      }
+    }
+
+
+    this.state.tabsMap[tab.id] = tab
+
+    if (tab.active) {
+      activeTab = tab
+      this.state.activeTabId = tab.id
+    }
+  }
+
+  this.state.tabs = tabs
+  this.actions.updateTabsTree()
+
+  // Switch to panel with active tab
+  let activePanelIsTabs = activePanel.type === 'tabs' ||
+    activePanel.type === 'default'
+  let activePanelIsOk = activeTab.cookieStoreId === activePanel.cookieStoreId
+  if (!activeTab.pinned && activePanelIsTabs && !activePanelIsOk) {
+    let panel = this.state.panelsMap[activeTab.cookieStoreId]
+    if (panel) {
+      this.state.panelIndex = panel.index
+      this.state.lastPanelIndex = panel.index
+    }
+  }
+
+  // Update succession
+  if (this.state.activateAfterClosing !== 'none' && activeTab) {
+    let target = Utils.findSuccessorTab(this.state, activeTab)
+    if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
+  }
+
+  // Update panels
+  this.actions.updatePanelsTabs()
 }
 
 // /**
@@ -1972,6 +2082,7 @@ function checkUrlRules(url, tab) {
 export default {
   loadTabsFromGlobalStorage,
   loadTabsFromSessionStorage,
+  loadTabsFromSnapshot,
   // getOrderNormMoves,
   // normalizeTabsOrder,
   // restoreGroupTab,
