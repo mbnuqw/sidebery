@@ -569,6 +569,7 @@
         .open-btn(@click="openStoredData(info.name)") {{t('settings.storage_open_prop')}}
     .ctrls
       .btn(@click="calcStorageInfo") {{t('settings.update_storage_info')}}
+      .btn.-warn(@click="clearStorage") {{t('settings.clear_storage_info')}}
 
   section(ref="settings_help")
     h2 {{t('settings.help_title')}}
@@ -1280,6 +1281,13 @@ export default {
       State.panels.push(panel)
       State.panelsMap[panel.id] = panel
       Actions.savePanels()
+    },
+
+    async clearStorage() {
+      if (window.confirm(translate('settings.clear_storage_confirm'))) {
+        await browser.storage.local.clear()
+        browser.runtime.reload()
+      }
     },
   },
 }

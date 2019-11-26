@@ -309,6 +309,8 @@ export default {
   'settings.storage_open_prop': { message: 'open' },
   'settings.storage_delete_confirm': { message: 'Delete property ' },
   'settings.update_storage_info': { message: 'Update' },
+  'settings.clear_storage_info': { message: 'Clear' },
+  'settings.clear_storage_confirm': { message: 'Are you sure you want to delete all data of Sidebery?' },
 
   // --- Help
   'settings.help_title': { message: 'Help' },
