@@ -2079,6 +2079,25 @@ function checkUrlRules(url, tab) {
   }
 }
 
+function updateHighlightedTabs(delay = 250) {
+  if (this._updateHighlightedTabsTimeout) {
+    clearTimeout(this._updateHighlightedTabsTimeout)
+  }
+  this._updateHighlightedTabsTimeout = setTimeout(() => {
+    this._updateHighlightedTabsTimeout = null
+    let conf = { windowId: this.state.windowId, populate: false, tabs: [] }
+    let activeTab = this.state.tabsMap[this.state.activeTabId]
+    if (activeTab) conf.tabs.push(activeTab.index)
+
+    for (let tabId of this.state.selected) {
+      let tab = this.state.tabsMap[tabId]
+      conf.tabs.push(tab.index)
+    }
+
+    browser.tabs.highlight(conf)
+  }, delay)
+}
+
 export default {
   loadTabsFromGlobalStorage,
   loadTabsFromSessionStorage,
@@ -2149,4 +2168,5 @@ export default {
   getIndexForNewTab,
 
   checkUrlRules,
+  updateHighlightedTabs,
 }

@@ -203,14 +203,20 @@ export default {
           if (slot.end >= topY && slot.start + 1 <= bottomY) {
             if (!State.selected.includes(slot.id)) {
               State.selected.push(slot.id)
-              if (slot.type === 'tab') State.tabsMap[slot.id].sel = true
+              if (slot.type === 'tab') {
+                State.tabsMap[slot.id].sel = true
+                if (State.nativeHighlight) Actions.updateHighlightedTabs()
+              }
               if (slot.type === 'bookmark') State.bookmarksMap[slot.id].sel = true
             }
           } else {
           // Outside
             if (State.selected.includes(slot.id)) {
               State.selected.splice(State.selected.indexOf(slot.id), 1)
-              if (slot.type === 'tab') State.tabsMap[slot.id].sel = false
+              if (slot.type === 'tab') {
+                State.tabsMap[slot.id].sel = false
+                if (State.nativeHighlight) Actions.updateHighlightedTabs()
+              }
               if (slot.type === 'bookmark') State.bookmarksMap[slot.id].sel = false
             }
           }

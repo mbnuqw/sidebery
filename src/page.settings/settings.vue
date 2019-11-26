@@ -209,6 +209,10 @@
       label="settings.tabs_rm_undo_note"
       :value="$store.state.tabsRmUndoNote"
       @input="setOpt('tabsRmUndoNote', $event)")
+    ToggleField(
+      label="settings.native_highlight"
+      :value="$store.state.nativeHighlight"
+      @input="setOpt('nativeHighlight', $event)")
 
   section(ref="settings_new_tab_position")
     h2 {{t('settings.new_tab_position')}}

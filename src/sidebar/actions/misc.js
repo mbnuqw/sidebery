@@ -155,6 +155,7 @@ function selectItem(id) {
 
   target.sel = true
   if (!this.state.selected.includes(id)) this.state.selected.push(id)
+  if (this.state.nativeHighlight) this.actions.updateHighlightedTabs(120)
 }
 
 /**
@@ -184,6 +185,7 @@ function resetSelection() {
     for (let id of this.state.selected) {
       this.state.tabsMap[id].sel = false
     }
+    if (this.state.nativeHighlight) this.actions.updateHighlightedTabs(120)
   } else if (typeof id === 'string') {
     for (let id of this.state.selected) {
       this.state.bookmarksMap[id].sel = false
