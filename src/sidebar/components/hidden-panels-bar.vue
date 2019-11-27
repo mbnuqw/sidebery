@@ -5,7 +5,7 @@
     :data-color="panel.color"
     :data-active="selected === i"
     :title="panel.name"
-    @click="clickHandler(panel.cookieStoreId)"
+    @click="clickHandler(panel)"
     @dragenter="onPanelDragEnter(panel, i)"
     @drop="onPanelDrop($event, panel, i)"
     @contextmenu.stop="onNavCtxMenu($event, panel.index)"
@@ -45,13 +45,9 @@ export default {
   },
 
   methods: {
-    clickHandler(cookieStoreId) {
+    clickHandler(panel) {
       State.hiddenPanelsBar = false
-      browser.tabs.create({
-        windowId: browser.windows.WINDOW_ID_CURRENT,
-        cookieStoreId,
-        active: true,
-      })
+      Actions.createTabInPanel(panel)
     },
 
     onSelectHiddenPanel(dir) {

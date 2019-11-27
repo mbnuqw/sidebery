@@ -125,7 +125,7 @@ export default {
 
       if (e.button === 1) {
         e.preventDefault()
-        this.createTab()
+        Actions.createTabInPanel(this.panel)
       }
 
       if (e.button === 2) {
@@ -199,7 +199,7 @@ export default {
     onDoubleClick() {
       if (State.tabsPanelLeftClickAction !== 'none') return
       const da = State.tabsPanelDoubleClickAction
-      if (da === 'tab') return this.createTab()
+      if (da === 'tab') return Actions.createTabInPanel(this.panel)
       if (da === 'collapse') {
         let panel = State.panels[this.index]
         if (panel) return Actions.foldAllInactiveBranches(panel.tabs)
@@ -310,29 +310,6 @@ export default {
     isDragged(id) {
       if (!this.drag) return false
       return this.drag.id === id && this.drag.dragged
-    },
-
-    /**
-     * Create new tab
-     */
-    createTab() {
-      let tabShell = {}
-      let index = Actions.getIndexForNewTab(this.panel, tabShell)
-      let config = { index, windowId: State.windowId }
-
-      if (index !== undefined) {
-        if (!State.newTabsPosition) State.newTabsPosition = {}
-        State.newTabsPosition[index] = {
-          parent: tabShell.openerTabId,
-          panel: this.panel.id,
-        }
-      }
-
-      if (this.panel.newTabCtx !== 'none') {
-        config.cookieStoreId = this.panel.newTabCtx
-      }
-
-      browser.tabs.create(config)
     },
   },
 }

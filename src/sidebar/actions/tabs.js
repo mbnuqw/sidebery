@@ -1771,6 +1771,29 @@ function createChildTab(tabId) {
 }
 
 /**
+ * Create new tab in panel
+ */
+function createTabInPanel(panel) {
+  let tabShell = {}
+  let index = this.actions.getIndexForNewTab(panel, tabShell)
+  let config = { index, windowId: this.state.windowId }
+
+  if (index !== undefined) {
+    if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
+    this.state.newTabsPosition[index] = {
+      parent: tabShell.openerTabId,
+      panel: panel.id,
+    }
+  }
+
+  if (panel.newTabCtx !== 'none') {
+    config.cookieStoreId = panel.newTabCtx
+  }
+
+  browser.tabs.create(config)
+}
+
+/**
  * Normalize tree levels
  */
 function updateTabsTree(startIndex = 0, endIndex = -1) {
@@ -2159,6 +2182,7 @@ export default {
 
   createTabAfter,
   createChildTab,
+  createTabInPanel,
 
   updateTabsTree,
   queryTab,
