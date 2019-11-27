@@ -43,7 +43,7 @@ async function updatePanels(newPanels) {
 
     if (!panel) {
       updateNeeded = true
-      panel = Utils.normalizePanel(newPanel, TABS_PANEL_STATE)
+      panel = Utils.normalizeObject(newPanel, TABS_PANEL_STATE)
     }
 
     if (panel.type !== newPanel.type) updateNeeded = true

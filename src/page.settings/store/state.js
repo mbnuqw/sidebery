@@ -19,6 +19,8 @@ export default {
   activeSection: 'settings_general',
   selectedContainer: null,
   selectedPanel: null,
+  exportConfig: false,
+  importConfig: false,
   navLock: false,
   highlightedField: '',
   highlight: {

@@ -326,9 +326,14 @@ export const TABS_PANEL_STATE = {
   updated: [],
 }
 
+export const DEFAULT_PANEL = browser.extension.inIncognitoContext ?
+  PRIVATE_TABS_PANEL : DEFAULT_TABS_PANEL
 export const DEFAULT_PANEL_STATE = browser.extension.inIncognitoContext ?
   PRIVATE_TABS_PANEL_STATE : DEFAULT_TABS_PANEL_STATE
-
+export const DEFAULT_PANELS = [
+  BOOKMARKS_PANEL,
+  DEFAULT_PANEL,
+]
 export const DEFAULT_PANELS_STATE = [
   BOOKMARKS_PANEL_STATE,
   DEFAULT_PANEL_STATE,

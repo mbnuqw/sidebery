@@ -41,7 +41,7 @@ async function loadPanels() {
     else if (loadedPanel.type === 'tabs') panelDefs = TABS_PANEL_STATE
     else continue
 
-    panel = Utils.normalizePanel(loadedPanel, panelDefs)
+    panel = Utils.normalizeObject(loadedPanel, panelDefs)
 
     panel.index = i
     if (!panel.id) panel.id = Utils.uid()
@@ -83,7 +83,7 @@ async function savePanels() {
     else if (panel.type === 'default') panelDefs = DEFAULT_TABS_PANEL
     else if (panel.type === 'tabs') panelDefs = TABS_PANEL
 
-    output.push(Utils.normalizePanel(panel, panelDefs))
+    output.push(Utils.normalizeObject(panel, panelDefs))
   }
   browser.storage.local.set({ panels: output })
 }

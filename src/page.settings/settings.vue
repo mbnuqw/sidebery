@@ -579,16 +579,41 @@
     h2 {{t('settings.help_title')}}
 
     .ctrls
-      a.btn(ref="exportData" @mouseenter="genExportData") {{t('settings.help_exp_data')}}
+      a.btn(@click="$store.state.exportConfig = true") {{t('settings.help_exp_data')}}
       .btn(type="file")
         .label {{t('settings.help_imp_data')}}
         input(type="file" ref="importData" accept="application/json" @input="importData")
+
+    transition(name="panel-config")
+      .panel-config-layer(
+        v-if="$store.state.exportConfig"
+        @click="$store.state.exportConfig = false")
+        .panel-config-box(@click.stop="")
+          ExportConfig.dashboard(:conf="$store.state.exportConfig")
+
+    transition(name="panel-config")
+      .panel-config-layer(
+        v-if="$store.state.importConfig"
+        @click="$store.state.importConfig = false")
+        .panel-config-box(@click.stop="")
+          ImportConfig.dashboard(:conf="$store.state.importConfig")
 
     .ctrls
       .btn(@click="showDbgDetails") {{t('settings.debug_info')}}
       a.btn(
         tabindex="-1"
-        href="https://github.com/mbnuqw/sidebery/issues/new/choose") {{t('settings.repo_bug')}}
+        href="https://github.com/mbnuqw/sidebery/issues") {{t('settings.repo_issues')}}
+
+    .ctrls
+      a.btn(
+        tabindex="-1"
+        href="https://github.com/mbnuqw/sidebery/issues/new?template=Feature_request.md") {{t('settings.repo_feature')}}
+      a.btn(
+        tabindex="-1"
+        href="https://github.com/mbnuqw/sidebery/issues/new?template=Bug_report.md") {{t('settings.repo_bug')}}
+
+    .ctrls
+      .btn.-warn(@click="reloadAddon") {{t('settings.reload_addon')}}
       .btn.-warn(@click="resetSettings") {{t('settings.reset_settings')}}
 
     .ctrls
@@ -621,6 +646,8 @@ import SelectField from '../components/select-field'
 import NumField from '../components/num-field'
 import ContainerConfig from './components/container-config'
 import PanelConfig from './components/panel-config'
+import ExportConfig from './components/export-config'
+import ImportConfig from './components/import-config'
 import FooterSection from './components/footer'
 
 const VALID_SHORTCUT = /^((Ctrl|Alt|Command|MacCtrl)\+)((Shift|Alt)\+)?([A-Z0-9]|Comma|Period|Home|End|PageUp|PageDown|Space|Insert|Delete|Up|Down|Left|Right|F\d\d?)$|^((Ctrl|Alt|Command|MacCtrl)\+)?((Shift|Alt)\+)?(F\d\d?)$/
@@ -654,6 +681,8 @@ export default {
     FooterSection,
     ContainerConfig,
     PanelConfig,
+    ExportConfig,
+    ImportConfig,
   },
 
   data() {
@@ -1018,7 +1047,18 @@ export default {
       let file = importEvent.target.files[0]
       let reader = new FileReader()
       reader.onload = fileEvent => {
-        this.applyImportedData(fileEvent.target.result)
+        let jsonStr = fileEvent.target.result
+        if (!jsonStr) return
+
+        let importedData
+        try {
+          importedData = JSON.parse(jsonStr)
+        } catch (err) {
+          // nothing
+        }
+
+        if (!importedData) return
+        State.importConfig = importedData
       }
       reader.readAsText(file)
     },
@@ -1292,6 +1332,10 @@ export default {
         await browser.storage.local.clear()
         browser.runtime.reload()
       }
+    },
+
+    reloadAddon() {
+      browser.runtime.reload()
     },
   },
 }
