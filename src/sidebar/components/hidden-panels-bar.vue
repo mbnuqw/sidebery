@@ -11,7 +11,8 @@
     @contextmenu.stop="onNavCtxMenu($event, panel.index)"
     @mousedown.right="onPanelRightClick(panel)"
     @mouseup.right="onNavRightMouseup($event, panel.index)")
-    svg: use(:xlink:href="'#' + panel.icon")
+    img(v-if="!!panel.customIcon" :src="panel.customIcon")
+    svg(v-else): use(:xlink:href="'#' + panel.icon")
 </template>
 
 
