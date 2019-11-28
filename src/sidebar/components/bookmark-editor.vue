@@ -17,8 +17,7 @@
       @keydown="onUrlKD")
   
   .ctrls
-    //- .btn(@click="onOk") {{t(okBtnLabel)}}
-    .btn(@click="onOk") Сохранить
+    .btn(@click="onOk") {{t(okBtnLabel)}}
     .btn.-warn(@click="onCancel") {{t('btn.cancel')}}
 </template>
 
