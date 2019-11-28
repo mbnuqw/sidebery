@@ -45,8 +45,10 @@ function onBookmarkChanged(id, info) {
 
   const bookmark = this.state.bookmarksMap[id]
   if (bookmark) {
-    if (bookmark.title !== info.title) bookmark.title = info.title
-    if (bookmark.url !== info.url) {
+    if (info.title !== undefined && bookmark.title !== info.title) {
+      bookmark.title = info.title
+    }
+    if (info.url !== undefined && bookmark.url !== info.url) {
       bookmark.url = info.url
       if (this.state.bookmarksUrlMap[info.url]) {
         this.state.bookmarksUrlMap[info.url].push(bookmark)
