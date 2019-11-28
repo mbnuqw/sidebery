@@ -4,7 +4,7 @@
   box(absolute)
   size(100%)
   pos(b: 0, l: 0)
-  padding: 0 0 16px
+  padding: 0 0 8px
   background-color: var(--bg)
   z-index: 100
   box-shadow: 0 -1px 12px 0 #00000056, 0 -1px 0 0 #00000012
@@ -34,10 +34,13 @@
   box(relative, flex)
   align-items: center
   justify-content: center
-  padding: 0 12px
-  margin: 16px 0 0
+  padding: 0 8px
+  margin: 8px 0 0
+  flex-wrap: wrap
 
 .BEditor .ctrls > .btn
+  size(min-w: max-content)
   text(s: rem(15))
   padding: 5px 12px
-  margin: 0 8px
+  margin: 4px
+  flex-grow: 1
