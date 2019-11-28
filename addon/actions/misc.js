@@ -20,6 +20,7 @@ function initToolbarButton() {
 async function loadPermissions() {
   this.permAllUrls = await browser.permissions.contains({ origins: ['<all_urls>'] })
   this.permTabHide = await browser.permissions.contains({ permissions: ['tabHide'] })
+  this.permWebRequestBlocking = await browser.permissions.contains({ permissions: ['webRequest', 'webRequestBlocking'] })
 
   if (!this.permAllUrls) {
     for (let c of Object.values(this.containers)) {
@@ -27,6 +28,13 @@ async function loadPermissions() {
       if (c.proxy) c.proxy.type = 'direct'
       if (c.includeHostsActive) c.includeHostsActive = false
       if (c.excludeHostsActive) c.excludeHostsActive = false
+      if (c.userAgentActive) c.userAgentActive = false
+    }
+  }
+
+  if (!this.permWebRequestBlocking) {
+    for (let c of Object.values(this.containers)) {
+      if (c.userAgentActive) c.userAgentActive = false
     }
   }
 }

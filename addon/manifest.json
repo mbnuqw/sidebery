@@ -37,7 +37,9 @@
   "optional_permissions": [
     "<all_urls>",
     "tabHide",
-    "clipboardWrite"
+    "clipboardWrite",
+    "webRequest",
+    "webRequestBlocking"
   ],
 
   "sidebar_action": {

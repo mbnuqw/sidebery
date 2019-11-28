@@ -33,21 +33,30 @@ async function loadPermissions(init) {
   this.state.permAllUrls = await browser.permissions.contains({ origins: ['<all_urls>'] })
   this.state.permTabHide = await browser.permissions.contains({ permissions: ['tabHide'] })
   this.state.permClipboardWrite = await browser.permissions.contains({ permissions: ['clipboardWrite'] })
+  this.state.permWebRequestBlocking = await browser.permissions.contains({ permissions: ['webRequest', 'webRequestBlocking'] })
 
   if (!this.state.permAllUrls) {
-    this.state.panels.map(c => {
+    for (let c of Object.values(this.state.containers)) {
       if (c.proxified) c.proxified = false
       if (c.proxy) c.proxy.type = 'direct'
       if (c.includeHostsActive) c.includeHostsActive = false
       if (c.excludeHostsActive) c.excludeHostsActive = false
-    })
-    if (!init) this.actions.savePanels()
+      if (c.userAgentActive) c.userAgentActive = false
+    }
+    if (!init) this.actions.saveContainersDebounced()
   }
 
   if (!this.state.permTabHide) {
     this.state.hideInact = false
     this.state.hideFoldedTabs = false
     if (!init) this.actions.saveSettings()
+  }
+
+  if (!this.state.permWebRequestBlocking) {
+    for (let c of Object.values(this.state.containers)) {
+      if (c.userAgentActive) c.userAgentActive = false
+    }
+    if (!init) this.actions.saveContainersDebounced()
   }
 }
 
@@ -101,6 +110,20 @@ function updateActiveView() {
     document.title = 'Sidebery / Settings'
     this.state.activeView = 'Settings'
     this.state.highlightedField = 'clipboard_write'
+    return
+  }
+
+  if (hash === 'web-request-blocking') {
+    setTimeout(() => {
+      if (hash !== undefined && this.state.settingsRefs) {
+        let el = this.state.settingsRefs.web_request_blocking
+        if (el) el.scrollIntoView(scrollHighlightConf)
+      }
+    }, 250)
+
+    document.title = 'Sidebery / Settings'
+    this.state.activeView = 'Settings'
+    this.state.highlightedField = 'web_request_blocking'
     return
   }
 

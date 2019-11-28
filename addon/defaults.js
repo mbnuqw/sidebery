@@ -9,4 +9,6 @@ export const DEFAULT_CONTAINER = {
   includeHosts: '',
   excludeHostsActive: false,
   excludeHosts: '',
+  userAgentActive: false,
+  userAgent: '',
 }

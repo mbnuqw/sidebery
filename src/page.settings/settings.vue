@@ -542,6 +542,17 @@
         :note="t('settings.clipboard_write_info')"
         @input="togglePermClipboardWrite")
 
+    .permission(
+      ref="web_request_blocking"
+      :data-highlight="$store.state.highlightedField === 'web_request_blocking'"
+      @click="onHighlighClick('web_request_blocking')")
+      toggle-field(
+        label="settings.web_request_blocking_label"
+        :inline="true"
+        :value="$store.state.permWebRequestBlocking"
+        :note="t('settings.web_request_blocking_info')"
+        @input="togglePermWebRequestBlocking")
+
   section(ref="settings_snapshots")
     h2 {{t('settings.snapshots_title')}}
     num-field(
@@ -959,6 +970,21 @@ export default {
         browser.permissions.request(request).then(allowed => {
           browser.runtime.sendMessage({ action: 'loadPermissions' })
           State.permClipboardWrite = allowed
+        })
+      }
+    },
+
+    async togglePermWebRequestBlocking() {
+      if (State.permWebRequestBlocking) {
+        await browser.permissions.remove({ permissions: ['webRequest', 'webRequestBlocking'] })
+        browser.runtime.sendMessage({ action: 'loadPermissions' })
+        Actions.loadPermissions()
+      } else {
+        const request = { origins: ['<all_urls>'], permissions: ['webRequest', 'webRequestBlocking'] }
+        browser.permissions.request(request).then(allowed => {
+          browser.runtime.sendMessage({ action: 'loadPermissions' })
+          State.permWebRequestBlocking = allowed
+          State.permAllUrls = allowed
         })
       }
     },

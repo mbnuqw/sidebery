@@ -123,10 +123,21 @@ function requestHandler(info) {
   if (this.proxies[info.cookieStoreId]) return this.proxies[info.cookieStoreId]
 }
 
+function headersHandler(info) {
+  if (this.userAgents[info.cookieStoreId]) {
+    let h = info.requestHeaders.find(rh => rh.name === 'User-Agent')
+    if (h) {
+      h.value = this.userAgents[info.cookieStoreId]
+      return { requestHeaders: info.requestHeaders }
+    }
+  }
+}
+
 function updateReqHandler() {
   this.proxies = {}
   this.includeHostsRules = []
   this.excludeHostsRules = {}
+  this.userAgents = {}
 
   for (let ctr of Object.values(this.containers)) {
     // Proxy
@@ -161,12 +172,18 @@ function updateReqHandler() {
         })
         .filter(r => r)
     }
+
+    // User agents
+    if (ctr.userAgentActive) {
+      this.userAgents[ctr.id] = ctr.userAgent
+    }
   }
 
   // Turn on request handler
   const incRulesOk = this.includeHostsRules.length > 0
   const excRulesOk = Object.keys(this.excludeHostsRules).length > 0
   const proxyOk = Object.keys(this.proxies).length > 0
+  const userAgentsOk = Object.keys(this.userAgents).length > 0
 
   // Update proxy badges
   if (proxyOk) {
@@ -189,6 +206,9 @@ function updateReqHandler() {
 
   if (incRulesOk || excRulesOk || proxyOk) Actions.turnOnReqHandler()
   else Actions.turnOffReqHandler()
+
+  if (userAgentsOk) Actions.turnOnHeadersHandler()
+  else Actions.turnOffHeadersHandler()
 }
 
 function updateReqHandlerDebounced() {
@@ -211,13 +231,28 @@ function turnOffReqHandler() {
   }
 }
 
+function turnOnHeadersHandler() {
+  if (!browser.webRequest.onBeforeSendHeaders.hasListener(Actions.headersHandler)) {
+    browser.webRequest.onBeforeSendHeaders.addListener(Actions.headersHandler, { urls: ['<all_urls>'] }, ['blocking', 'requestHeaders'])
+  }
+}
+
+function turnOffHeadersHandler() {
+  if (browser.webRequest.onBeforeSendHeaders.hasListener(Actions.headersHandler)) {
+    browser.webRequest.onBeforeSendHeaders.removeListener(Actions.headersHandler)
+  }
+}
+
 export default {
   checkIpInfoThroughIPIFY_ORG,
   checkIpInfoThroughEXTREME_IP_LOOKUP_COM,
   checkIpInfo,
   requestHandler,
+  headersHandler,
   updateReqHandler,
   updateReqHandlerDebounced,
   turnOnReqHandler,
   turnOffReqHandler,
+  turnOnHeadersHandler,
+  turnOffHeadersHandler,
 }

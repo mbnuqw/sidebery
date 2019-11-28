@@ -53,4 +53,5 @@ export default {
   'container_dashboard.rules_include_tooltip': { message: 'Reopen tabs with matched urls in this panel.\nNewline separated list of "substrings" or "/regex/":\n    example.com\n    /^(some)?regex$/\n    ...' },
   'container_dashboard.rules_exclude': { message: 'Exclude urls' },
   'container_dashboard.rules_exclude_tooltip': { message: 'Reopen tabs with matched url in default panel.\nNewline separated list of "substrings" or "/regex/":\n    example.com\n    /^(some)?regex$/\n    ...' },
+  'container_dashboard.user_agent': { message: 'User Agent' },
 }

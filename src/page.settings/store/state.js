@@ -27,6 +27,7 @@ export default {
     allUrls: false,
     tabHide: false,
     clipboardWrite: false,
+    webRequestBlocking: false,
   },
 
   containers: {},
@@ -45,4 +46,5 @@ export default {
   permAllUrls: false,
   permTabHide: false,
   permClipboardWrite: false,
+  permWebRequestBlocking: false,
 }

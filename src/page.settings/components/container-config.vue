@@ -98,6 +98,19 @@
       :value="proxyDNS"
       :inline="true"
       @input="toggleProxyDns")
+
+  toggle-field(
+    label="container_dashboard.user_agent"
+    :value="conf.userAgentActive"
+    @input="toggleUserAgent")
+  .sub-fields.-nosep(v-if="conf.userAgentActive")
+    .field
+      text-input.text(
+        ref="userAgentInput"
+        or="---"
+        :line="true"
+        :value="conf.userAgent"
+        @input="onUserAgentInput")
 </template>
 
 
@@ -283,7 +296,7 @@ export default {
       if (!this.conf.includeHostsActive) {
         if (!State.permAllUrls) {
           window.location.hash = 'all-urls'
-          State.selectedPanel = null
+          State.selectedContainer = null
           this.switchProxy('direct')
           return
         }
@@ -306,7 +319,7 @@ export default {
       if (!this.conf.excludeHostsActive) {
         if (!State.permAllUrls) {
           window.location.hash = 'all-urls'
-          State.selectedPanel = null
+          State.selectedContainer = null
           this.switchProxy('direct')
           return
         }
@@ -330,8 +343,8 @@ export default {
       if (type !== 'direct') {
         if (!State.permAllUrls) {
           window.location.hash = 'all-urls'
-          State.selectedPanel = null
           this.switchProxy('direct')
+          State.selectedContainer = null
           return
         }
       }
@@ -401,6 +414,34 @@ export default {
         }
         e.preventDefault()
       }
+    },
+
+    async toggleUserAgent() {
+      if (!this.conf.userAgentActive) {
+        if (!State.permWebRequestBlocking) {
+          window.location.hash = 'web-request-blocking'
+          this.conf.excludeHostsActive = false
+          State.selectedContainer = null
+          return
+        } else if (!State.permAllUrls) {
+          window.location.hash = 'all-urls'
+          this.conf.excludeHostsActive = false
+          State.selectedContainer = null
+          return
+        }
+      }
+
+      this.conf.userAgentActive = !this.conf.userAgentActive
+      Actions.saveContainers()
+      await this.$nextTick()
+      
+      if (this.$refs.scrollBox) this.$refs.scrollBox.recalcScroll()
+      if (this.$refs.userAgentInput) this.$refs.userAgentInput.focus()
+    },
+
+    onUserAgentInput(value) {
+      this.conf.userAgent = value
+      Actions.saveContainersDebounced()
     },
   },
 }

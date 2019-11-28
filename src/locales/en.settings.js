@@ -298,11 +298,13 @@ export default {
   // --- Permissions
   'settings.permissions_title': { message: 'Permissions' },
   'settings.all_urls_label': { message: 'Websites data:' },
-  'settings.all_urls_info': { message: 'Required for:\n- Cleaning cookies\n- Proxy and url rules of containers\n- Screenshots for the group page and windows selection panel' },
+  'settings.all_urls_info': { message: 'Required for:\n- Cleaning cookies\n- Proxy and url rules of containers\n- Screenshots for the group page and windows selection panel\n- Changing the User-Agent per container' },
   'settings.tab_hide_label': { message: 'Hiding tabs:' },
   'settings.tab_hide_info': { message: 'Required for:\n- Hiding tabs on inactive panels\n- Hiding folded tabs' },
   'settings.clipboard_write_label': { message: 'Clipboard write:' },
   'settings.clipboard_write_info': { message: 'Required for:\n- Copying urls of tabs/bookmarks through context menu' },
+  'settings.web_request_blocking_label': { message: 'Web requests blocking' },
+  'settings.web_request_blocking_info': { message: 'Required for:\n- Changing the User-Agent per container' },
 
   // --- Storage
   'settings.storage_title': { message: 'Storage' },
