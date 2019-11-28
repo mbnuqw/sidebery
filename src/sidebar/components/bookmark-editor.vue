@@ -1,24 +1,25 @@
 <template lang="pug">
-.BEditor(v-noise:300.g:12:af.a:0:42.s:0:9="")
-  .field.-title
-    text-input.input(
-      ref="title"
-      v-model="title"
-      :or="t(titlePlaceholder)"
-      :tabindex="tabindex"
-      @keydown="onTitleKD")
-  .field.-url(v-if="isBookmark")
-    text-input.input(
-      ref="url"
-      v-model="url"
-      :or="t('bookmarks_editor.url_placeholder')"
-      :tabindex="tabindex"
-      :line="true"
-      @keydown="onUrlKD")
-  
-  .ctrls
-    .btn(@click="onOk") {{t(okBtnLabel)}}
-    .btn.-warn(@click="onCancel") {{t('btn.cancel')}}
+.BEditor(@click="$store.state.bookmarkEditor = false")
+  .editor-panel(v-noise:300.g:12:af.a:0:42.s:0:9="" @click.stop="")
+    .field.-title
+      text-input.input(
+        ref="title"
+        v-model="title"
+        :or="t(titlePlaceholder)"
+        :tabindex="tabindex"
+        @keydown="onTitleKD")
+    .field.-url(v-if="isBookmark")
+      text-input.input(
+        ref="url"
+        v-model="url"
+        :or="t('bookmarks_editor.url_placeholder')"
+        :tabindex="tabindex"
+        :line="true"
+        @keydown="onUrlKD")
+    
+    .ctrls
+      .btn(@click="onOk") {{t(okBtnLabel)}}
+      .btn.-warn(@click="onCancel") {{t('btn.cancel')}}
 </template>
 
 

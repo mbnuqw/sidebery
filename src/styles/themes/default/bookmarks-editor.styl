@@ -2,16 +2,31 @@
 
 .BEditor
   box(absolute)
-  size(100%)
+  size(100%, same)
   pos(b: 0, l: 0)
+  z-index: 1000
+  transform: translateZ(0)
+  &:before
+    content: ''
+    box(absolute)
+    pos(0, 0)
+    size(100%, same)
+    background-color: var(--bg)
+    opacity: .7
+
+.BEditor .editor-panel
+  box(absolute)
+  pos(b: 0, l: 0)
+  size(100%)
   padding: 0 0 8px
   background-color: var(--bg)
-  z-index: 100
-  box-shadow: 0 -1px 12px 0 #00000056, 0 -1px 0 0 #00000012
+  transform: translateZ(0)
+  box-shadow: 0 -1px 12px 0 #00000056,
+              0 -1px 0 0 #00000012
 
 .BEditor .field
   box(relative)
-  margin: 12px 16px 0
+  margin: 8px 12px 0
   &.-title
     > .input
       text(s: rem(18))
