@@ -238,6 +238,20 @@ footer
     transition: none
     opacity: .7
 
+.Settings .panel-placeholder
+  box(relative, flex)
+  size(100%, 32px)
+  justify-content: center
+  align-items: center
+  &:before
+    content: ''
+    box(relative)
+    size(5px, same)
+    border-radius: 50%
+    transform: translateZ(0)
+    background-color: var(--inactive-fg)
+    box-shadow: 8px 0 0 0 var(--inactive-fg), -8px 0 0 0 var(--inactive-fg)
+
 .Settings .panel-card-body
   box(relative, flex)
   align-items: center

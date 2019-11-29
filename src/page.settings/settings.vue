@@ -99,6 +99,7 @@
         .panel-card-ctrl.-rm(
           @click="removeContainer(container)")
           svg: use(xlink:href="#icon_delete")
+    .panel-placeholder(v-if="!Object.keys($store.state.containers).length")
     .ctrls: .btn(@click="createContainer") Create container
     transition(name="panel-config")
       .panel-config-layer(
