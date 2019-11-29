@@ -65,6 +65,7 @@ async function updatePanels(newPanels) {
     }
 
     panels.push(panel)
+    if (!this.state.panelsMap[panel.id]) this.state.panelsMap[panel.id] = panel
   }
 
   this.state.panels = panels
