@@ -8,12 +8,13 @@ import Actions from '../actions'
  */
 async function loadBookmarks() {
   let panelIndex = this.state.panels.findIndex(p => p.bookmarks)
-  this.state.panels[panelIndex].loading = true
+  let panel = this.state.panels[panelIndex]
+  panel.loading = true
   let bookmarks = await browser.bookmarks.getTree()
   if (!bookmarks || !bookmarks.length) {
     Logs.push('[ERROR] Cannot load bookmarks')
-    this.state.panels[panelIndex].loading = 'err'
-    setTimeout(() => {this.state.panels[panelIndex].loading = false}, 2000)
+    panel.loading = 'err'
+    setTimeout(() => {panel.loading = false}, 2000)
   }
 
   // Normalize objects before vue
@@ -63,8 +64,8 @@ async function loadBookmarks() {
 
   this.state.bookmarks = bookmarks[0].children
   this.state.bookmarksCount = count
-  this.state.panels[panelIndex].loading = 'ok'
-  setTimeout(() => {this.state.panels[panelIndex].loading = false}, 2000)
+  panel.loading = 'ok'
+  setTimeout(() => {panel.loading = false}, 2000)
 
   Logs.push('[INFO] Bookmarks loaded')
 }

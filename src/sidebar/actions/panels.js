@@ -25,21 +25,19 @@ async function updatePanels(newPanels) {
     }
   }
 
-  // TODO: handle moved panels
-  // TODO: go through newPanels
-  // TODO: check if index and panel index is not the same
-  // TODO: reset tabs listeners, move tabs, setup tabs listeners
-
   let panels = []
   let updateNeeded = false
-  
-  // TODO: check bookmarks and default tabs panels - same as in loadPanels
+  let reloadNeeded = false
 
   let panelDefs
   this.state.urlRules = []
   for (let i = 0; i < newPanels.length; i++) {
     let newPanel = newPanels[i]
     let panel = this.state.panels.find(p => p.id === newPanel.id)
+
+    if (panel && panel.index !== i && panel.tabs && panel.tabs.length) {
+      reloadNeeded = true
+    }
 
     if (!panel) {
       updateNeeded = true
@@ -69,11 +67,28 @@ async function updatePanels(newPanels) {
   this.state.panels = panels
 
   if (updateNeeded) this.actions.updatePanelsTabs()
-  // if (reloadNeeded) {
-  //   this.handlers.resetTabsListeners()
-  //   await this.actions.loadTabs(false)
-  //   this.handlers.setupTabsListeners()
-  // }
+  if (reloadNeeded) {
+    this.handlers.resetTabsListeners()
+
+    let index = 0
+    let windowId = this.state.windowId
+    let allTabs = []
+    for (let panel of this.state.panels) {
+      if (!panel.tabs || !panel.tabs.length) continue
+      for (let tab of panel.tabs) {
+        if (tab.index !== index) {
+          await browser.tabs.move(tab.id, { windowId, index })
+        }
+        allTabs.push(tab)
+        index++
+      }
+    }
+    allTabs.forEach((t, i) => t.index = i)
+    this.state.tabs = allTabs
+
+    this.handlers.setupTabsListeners()
+    this.actions.updatePanelsTabs()
+  }
 }
 
 /**

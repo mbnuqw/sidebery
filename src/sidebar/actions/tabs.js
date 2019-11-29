@@ -328,7 +328,7 @@ async function loadTabsFromSnapshot(tabs) {
 // /**
 //  * Check order of tabs and get moves for normalizing
 //  */
-// function getOrderNormMoves(tabs, tabsPanelIds) {
+// function getOrderNormMoves(tabs) {
 //   let moves = []
 //   let tabsPanels = []
 //   let index = tabs.filter(t => t.pinned).length
