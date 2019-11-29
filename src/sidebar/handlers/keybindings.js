@@ -175,18 +175,7 @@ function onKeyActivate() {
 function onKeyNewTabInPanel() {
   let panel = this.state.panels[this.state.lastPanelIndex]
   if (!panel) return
-
-  let config = { windowId: this.state.windowId }
-  config.index = this.actions.getIndexForNewTab(panel, config)
-  config.cookieStoreId = panel.newTabCtx
-
-  if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
-  this.state.newTabsPosition[config.index] = {
-    panel: panel.id,
-    parent: -1,
-  }
-
-  browser.tabs.create(config)
+  this.actions.createTabInPanel(panel)
 }
 
 /**

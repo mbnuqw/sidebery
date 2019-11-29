@@ -117,13 +117,8 @@ export default {
     onCreateTabInHiddenPanel() {
       let panel = this.hiddenPanels[this.selected]
       if (!panel || panel.bookmarks) return
-
+      Actions.createTabInPanel(panel)
       State.hiddenPanelsBar = false
-      browser.tabs.create({
-        windowId: browser.windows.WINDOW_ID_CURRENT,
-        cookieStoreId: panel.cookieStoreId,
-        active: true,
-      })
     },
 
     onDragEnter(event) {
