@@ -1778,11 +1778,12 @@ function createChildTab(tabId) {
 /**
  * Create new tab in panel
  */
-function createTabInPanel(panel) {
+function createTabInPanel(panel, url) {
   let tabShell = {}
   let index = this.actions.getIndexForNewTab(panel, tabShell)
   let config = { index, windowId: this.state.windowId }
 
+  if (url) config.url = url
   if (index !== undefined) {
     if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
     this.state.newTabsPosition[index] = {
@@ -2074,7 +2075,7 @@ function getIndexForNewTab(panel, tab) {
 /**
  * Check url rules of panels and move tab if needed
  */
-function checkUrlRules(url, tab) {
+async function checkUrlRules(url, tab) {
   for (let rule of this.state.urlRules) {
     if (tab.panelId === rule.panelId) continue
 
@@ -2091,6 +2092,14 @@ function checkUrlRules(url, tab) {
       let panel = this.state.panelsMap[rule.panelId]
       if (!panel) break
       let index = this.actions.getIndexForNewTab(panel, tab)
+
+      if (panel.newTabCtx !== 'none' && tab.cookieStoreId !== panel.newTabCtx) {
+        await browser.tabs.remove(tab.id)
+        this.actions.createTabInPanel(panel, tab.url)
+        return
+      }
+
+      if (index > tab.index) index--
       if (index !== tab.index) {
         tab.destPanelId = rule.panelId
         browser.tabs.move(tab.id, { windowId: this.state.windowId, index })

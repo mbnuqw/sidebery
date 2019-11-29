@@ -47,10 +47,8 @@ async function updatePanels(newPanels) {
     }
 
     if (panel.type !== newPanel.type) updateNeeded = true
-    if (
-      panel.urlRulesActive !== newPanel.urlRulesActive ||
-      panel.urlRules !== newPanel.urlRules
-    ) {
+
+    if (panel.urlRulesActive && panel.urlRules) {
       this.actions.parsePanelUrlRules(panel)
     }
 

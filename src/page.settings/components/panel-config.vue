@@ -220,7 +220,7 @@ export default {
     },
     
     newTabCtx() {
-      return this.conf.newTabCtx || DEFAULT_CTX
+      return this.conf.newTabCtx || 'none'
     },
 
     newTabCtxOpts() {
