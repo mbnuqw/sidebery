@@ -102,13 +102,13 @@ function onBookmarkRemoved(id, info) {
     }
   }
 
-  this.state.bookmarksCount--
+  this.actions.updateBookmarksCounter()
   this.state.bookmarksMap[id] = undefined
   if (url && this.state.bookmarksUrlMap[url]) {
     const ib = this.state.bookmarksUrlMap[url].findIndex(b => b.id === id)
     if (ib > -1) this.state.bookmarksUrlMap[url].splice(ib, 1)
   }
-} 
+}
 
 /**
  * Setup listeners

@@ -487,6 +487,26 @@ function collapseAllBookmarks() {
   Actions.saveBookmarksTree()
 }
 
+/**
+ * Update bookmarks counter
+ */
+function updateBookmarksCounter(delay = 500) {
+  if (this._updateBookmarksCounterTimeout) {
+    clearTimeout(this._updateBookmarksCounterTimeout)
+  }
+  this._updateBookmarksCounterTimeout = setTimeout(() => {
+    let count = 0
+    let walker = nodes => {
+      for (let n of nodes) {
+        count++
+        if (n.children) walker(n.children)
+      }
+    }
+    walker(this.state.bookmarks)
+    this.state.bookmarksCount = count
+  }, delay)
+}
+
 export default {
   loadBookmarks,
   saveBookmarksTree,
@@ -499,4 +519,5 @@ export default {
   startBookmarkEditing,
   removeBookmarks,
   collapseAllBookmarks,
+  updateBookmarksCounter,
 }
