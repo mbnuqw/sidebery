@@ -6,11 +6,11 @@
       :key="btn.id"
       :data-loading="btn.loading"
       :data-updated="$store.state.panelIndex !== i && !!btn.updated && !!btn.updated.length"
-      :data-proxified="btn.proxified"
       :data-active="$store.state.panelIndex === i"
       :data-hidden="btn.hidden"
       :data-index="btn.relIndex"
       :data-color="btn.color"
+      :data-type="btn.type"
       :title="btn.tooltip || getTooltip(i)"
       @click="onNavClick(i, btn.type)"
       @drop="onPanelDrop($event, btn)"
@@ -52,6 +52,7 @@ import Actions from '../actions'
 const HIDDEN_PANEL_BTN = {
   type: 'hidden',
   name: 'hidden',
+  id: 'hidden',
   icon: 'icon_expand',
   hidden: false,
   tooltip: translate('nav.show_hidden_tooltip'),
@@ -60,6 +61,7 @@ const HIDDEN_PANEL_BTN = {
 const ADD_PANEL_BTN = {
   type: 'add',
   name: 'add',
+  id: 'add',
   icon: 'icon_plus_v2',
   hidden: false,
   tooltip: translate('nav.add_panel_tooltip'),
