@@ -74,7 +74,11 @@ async function loadTabsFromGlobalStorage() {
     tab = tabs[tabData.index]
     if (!tab) break
 
-    tab.panelId = tabData.panelId || DEFAULT_CTX_ID
+    if (tabData.panelId && this.state.panelsMap[tabData.panelId]) {
+      tab.panelId = tabData.panelId
+    } else {
+      tab.panelId = DEFAULT_CTX_ID
+    }
     if (idsMap[tabData.parentId] >= 0) tab.parentId = idsMap[tabData.parentId]
     tab.folded = tabData.folded
     idsMap[tabData.id] = tab.id
@@ -175,7 +179,8 @@ async function loadTabsFromSessionStorage() {
         continue
       }
 
-      t.panelId = dt.panelId || DEFAULT_CTX_ID
+      if (dt.panelId && this.state.panelsMap[dt.panelId]) t.panelId = dt.panelId
+      else t.panelId = DEFAULT_CTX_ID
       if (oldNewMap[dt.parentId] !== undefined) {
         t.parentId = oldNewMap[dt.parentId]
       }
