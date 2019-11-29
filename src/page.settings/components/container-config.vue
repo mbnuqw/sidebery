@@ -402,7 +402,7 @@ export default {
       if (!this.conf.id || !this.conf.proxy) return
       this.conf.proxy.proxyDNS = !this.conf.proxy.proxyDNS
 
-      Actions.savePanels()
+      Actions.saveContainers()
     },
 
     onFieldKeydown(e, nextFieldName, prevFieldName) {
