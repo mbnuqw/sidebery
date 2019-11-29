@@ -359,8 +359,8 @@ export default {
 
     async init() {
       await this.$nextTick()
+      if (this.conf.customIcon) this.customIconUrl = this.conf.customIcon
       if (this.$refs.name) this.$refs.name.recalcTextHeight()
-      // if (this.$refs.scrollBox) this.$refs.scrollBox.recalcScroll()
       if (this.$refs.urlRulesInput) this.$refs.urlRulesInput.recalcTextHeight()
     },
 
