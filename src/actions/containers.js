@@ -24,7 +24,10 @@ async function loadContainers() {
 
   for (let container of Object.values(containers)) {
     let ffContainer = ffContainers.find(c => c.cookieStoreId === container.id)
-    if (!ffContainer) continue
+    if (!ffContainer) {
+      delete containers[container.id]
+      continue
+    }
 
     for (let k of Object.keys(DEFAULT_CONTAINER)) {
       if (container[k] === undefined) container[k] = DEFAULT_CONTAINER[k]
