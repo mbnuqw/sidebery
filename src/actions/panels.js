@@ -34,6 +34,7 @@ function setupPanels(panels) {
   if (defaultPanelIndex === -1) {
     let defaultPanelClone = Utils.cloneObject(DEFAULT_PANEL_STATE)
     panels.splice(bookmarksPanelIndex + 1, 0, defaultPanelClone)
+    defaultPanelIndex = 1
   }
 
   // Normalize
@@ -61,6 +62,10 @@ function setupPanels(panels) {
     }
     if (panel.moveTabCtx !== 'none' && !this.state.containers[panel.moveTabCtx]) {
       panel.moveTabCtx = 'none'
+    }
+
+    if (!normPanels[this.state.panelIndex]) {
+      this.state.panelIndex = defaultPanelIndex
     }
 
     normPanels.push(panel)

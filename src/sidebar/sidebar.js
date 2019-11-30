@@ -54,7 +54,6 @@ export default new Vue({
     State.instanceType = 'sidebar'
 
     Actions.loadPlatformInfo()
-
     let [ storage, currentWindow, ffContainers ] = await Promise.all([
       browser.storage.local.get({
         settings: DEFAULT_SETTINGS,
