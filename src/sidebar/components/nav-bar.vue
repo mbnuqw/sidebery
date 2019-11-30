@@ -206,6 +206,7 @@ export default {
         State.panelsMap[panel.id] = panel
         Actions.savePanels()
         Actions.updatePanelsTabs()
+        State.panelIndex = State.panels.length - 1
         return
       }
 
