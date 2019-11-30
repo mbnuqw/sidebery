@@ -101,7 +101,7 @@ function updateSettings(settings) {
  * 
  * @param {string} [section] - url-encoded string
  */
-function openSettings(section) {
+async function openSettings(section) {
   let url = browser.runtime.getURL('settings/settings.html')
   let existedTab = this.state.tabs.find(t => t.url.startsWith(url))
   let activePanel = this.state.panels[this.state.panelIndex]
@@ -111,7 +111,8 @@ function openSettings(section) {
     if (existedTab.url === url) {
       browser.tabs.update(existedTab.id, { active: true })
     } else {
-      browser.tabs.update(existedTab.id, { url, active: true })
+      await browser.tabs.update(existedTab.id, { url, active: true })
+      browser.tabs.reload(existedTab.id)
     }
   } else {
     const conf = { url, windowId: this.state.windowId }
