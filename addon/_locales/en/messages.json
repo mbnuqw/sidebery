@@ -3,7 +3,7 @@
   "ExtDesc": {
     "message": "Addon for managing tabs, containers (contextual identities) and bookmarks in sidebar. Supports both flat and tree tabs layouts, per-container include/exclude rules, proxy configs for each container and much more."
   },
-  "ActionTitle": { "message": "Open Sidebery" },
+  "ActionTitle": { "message": "Toggle Sidebery sidebar" },
 
   "KbOpenSidebarPanel": { "message": "Open/Close sidebar panel" },
   "KbNextPanel": { "message": "Switch to next panel" },
