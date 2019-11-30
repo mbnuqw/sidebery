@@ -75,7 +75,7 @@ export default new Vue({
 
     Actions.loadSettings(settings),
 
-    Actions.loadContainers(containers, ffContainers),
+    Actions.setupContainers(containers, ffContainers),
     Handlers.setupContainersListeners()
 
     Handlers.setupStorageListeners()
@@ -85,7 +85,7 @@ export default new Vue({
     if (State.sidebarCSS) Actions.loadCustomCSS()
 
     Actions.loadPanelIndex(panelIndex),
-    Actions.loadPanels(panels)
+    Actions.setupPanels(panels)
 
     if (State.bookmarksPanel && State.panels[State.panelIndex].bookmarks) {
       await Actions.loadBookmarks()

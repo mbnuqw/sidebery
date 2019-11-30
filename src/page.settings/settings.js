@@ -65,8 +65,8 @@ export default new Vue({
     Actions.loadCtxMenu()
     Actions.loadSettings(settings)
     Actions.loadKeybindings()
-    Actions.loadContainers(containers, ffContainers)
-    Actions.loadPanels(panels)
+    Actions.setupContainers(containers, ffContainers)
+    Actions.setupPanels(panels)
   },
 
   methods: {

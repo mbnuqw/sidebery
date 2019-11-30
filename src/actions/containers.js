@@ -3,9 +3,18 @@ import Utils from '../utils'
 import { DEFAULT_CONTAINER } from '../../addon/defaults'
 
 /**
- * Load containers (ff + sidebery data)
+ * Load and setup containers (ff + sidebery data)
  */
-function loadContainers(containers, ffContainers) {
+async function loadContainers() {
+  let ffContainers = await browser.contextualIdentities.query({})
+  let { containers } = await browser.storage.local.get({ containers: {} })
+  this.actions.setupContainers(containers, ffContainers)
+}
+
+/**
+ * Normalize containers data and put it in state
+ */
+function setupContainers(containers, ffContainers) {
   for (let ffContainer of ffContainers) {
     let container = containers[ffContainer.cookieStoreId]
     if (!container) {
@@ -36,4 +45,5 @@ function loadContainers(containers, ffContainers) {
 
 export default {
   loadContainers,
+  setupContainers,
 }
