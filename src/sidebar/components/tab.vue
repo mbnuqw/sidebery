@@ -31,7 +31,12 @@
   .fav(@dragstart.stop.prevent="")
     transition(name="tab-part"): .placeholder(v-if="!tab.favIconUrl"): svg: use(:xlink:href="favPlaceholder")
     transition(name="tab-part"): img(v-if="tab.favIconUrl" :src="tab.favIconUrl")
-    .exp(v-if="tab.isParent" @dblclick.prevent.stop="" @mousedown.stop="onExp"): svg: use(xlink:href="#icon_expand")
+    .exp(
+      v-if="tab.isParent"
+      @dblclick.prevent.stop=""
+      @mousedown.stop="onExp"
+      @mouseup.stop="")
+      svg: use(xlink:href="#icon_expand")
     .update-badge
     transition(name="tab-part"): .ok-badge(v-if="loading === 'ok'"): svg: use(xlink:href="#icon_ok")
     transition(name="tab-part"): .err-badge(v-if="loading === 'err'"): svg: use(xlink:href="#icon_err")
