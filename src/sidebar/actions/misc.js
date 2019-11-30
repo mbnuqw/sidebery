@@ -16,8 +16,7 @@ function loadPlatformInfo() {
 /**
  * Load windows info
  */
-async function loadWindowInfo() {
-  let currentWindow = await browser.windows.getCurrent()
+function loadWindowInfo(currentWindow) {
   this.state.private = currentWindow.incognito
   this.state.windowId = currentWindow.id
   browser.windows.getAll()

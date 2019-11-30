@@ -1,6 +1,5 @@
 import Utils from '../utils'
 import {
-  DEFAULT_PANELS_STATE,
   BOOKMARKS_PANEL_STATE,
   DEFAULT_PANEL_STATE,
   TABS_PANEL_STATE,
@@ -13,11 +12,7 @@ import {
  * Load Contextual Identities and containers
  * and merge them
  */
-async function loadPanels() {
-  let { panels } = await browser.storage.local.get({
-    panels: Utils.cloneArray(DEFAULT_PANELS_STATE)
-  })
-
+function loadPanels(panels) {
   // Check if default panels are present
   let bookmarksPanelIndex = panels.findIndex(p => p.type === 'bookmarks')
   let defaultPanelIndex = panels.findIndex(p => p.type === 'default')

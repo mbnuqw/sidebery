@@ -2,7 +2,10 @@ import Vue from 'vue'
 import initNoiseBgDirective from '../directives/noise-bg'
 import Debounce from '../directives/debounce'
 import Dict from '../mixins/dict'
+import Utils from '../utils'
 import { initMsgHandling } from '../event-bus'
+import { DEFAULT_SETTINGS } from '../defaults'
+import { DEFAULT_PANELS_STATE } from '../defaults'
 import Store from './store'
 import State from './store/state'
 import Actions from './actions'
@@ -42,16 +45,28 @@ export default new Vue({
 
     State.instanceType = 'settings'
 
+    let [ storage, ffContainers ] = await Promise.all([
+      browser.storage.local.get({
+        settings: DEFAULT_SETTINGS,
+        containers: {},
+        panels: Utils.cloneArray(DEFAULT_PANELS_STATE)
+      }),
+      browser.contextualIdentities.query({}),
+    ])
+    let settings = storage.settings
+    let containers = storage.containers
+    let panels = storage.panels
+
     Actions.loadCSSVars()
     Actions.loadCurrentWindowInfo()
     Actions.loadPlatformInfo()
     Actions.loadBrowserInfo()
     Actions.loadPermissions(true)
     Actions.loadCtxMenu()
-    await Actions.loadSettings()
+    Actions.loadSettings(settings)
     Actions.loadKeybindings()
-    Actions.loadContainers()
-    Actions.loadPanels()
+    Actions.loadContainers(containers, ffContainers)
+    Actions.loadPanels(panels)
   },
 
   methods: {

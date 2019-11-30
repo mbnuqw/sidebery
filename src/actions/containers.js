@@ -5,10 +5,7 @@ import { DEFAULT_CONTAINER } from '../../addon/defaults'
 /**
  * Load containers (ff + sidebery data)
  */
-async function loadContainers() {
-  let ffContainers = await browser.contextualIdentities.query({})
-  let { containers } = await browser.storage.local.get({ containers: {} })
-
+function loadContainers(containers, ffContainers) {
   for (let ffContainer of ffContainers) {
     let container = containers[ffContainer.cookieStoreId]
     if (!container) {

@@ -218,13 +218,10 @@ function updatePanelsRanges() {
 /**
  * Try to load saved sidebar state
  */
-async function loadPanelIndex() {
-  let ans = await browser.storage.local.get('panelIndex')
-  if (!ans) return
-
-  if (!this.state.private && ans.panelIndex !== 1) {
-    if (ans.panelIndex >= 0) {
-      this.state.panelIndex = ans.panelIndex
+function loadPanelIndex(panelIndex) {
+  if (!this.state.private && panelIndex !== 1) {
+    if (panelIndex >= 0) {
+      this.state.panelIndex = panelIndex
       this.state.lastPanelIndex = this.state.panelIndex
     }
   }

@@ -4,11 +4,7 @@ import { DEFAULT_SETTINGS } from '../defaults'
 /**
  * Try to load settings from local storage.
  */
-async function loadSettings() {
-  let { settings } = await browser.storage.local.get({
-    settings: DEFAULT_SETTINGS
-  })
-
+async function loadSettings(settings) {
   // Check version
   if (!settings.version && this.actions.startUpgrading) {
     await this.actions.startUpgrading()
