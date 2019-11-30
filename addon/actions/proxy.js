@@ -188,6 +188,7 @@ function updateReqHandler() {
   // Update proxy badges
   if (proxyOk) {
     for (let tab of Object.values(this.tabsMap)) {
+      if (!tab) continue
       if (this.proxies[tab.cookieStoreId] && !tab.proxified) {
         tab.proxified = true
         this.actions.showProxyBadge(tab.id)
@@ -199,6 +200,7 @@ function updateReqHandler() {
     }
   } else {
     for (let tab of Object.values(this.tabsMap)) {
+      if (!tab) continue
       tab.proxified = false
       this.actions.hideProxyBadge(tab.id)
     }

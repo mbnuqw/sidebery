@@ -42,7 +42,7 @@ function onTabRemoved(tabId, info) {
   let index = tabWindow.tabs.findIndex(t => t.id === tabId)
   if (index === -1) return
   tabWindow.tabs.splice(index, 1)
-  this.tabsMap[tabId] = undefined
+  delete this.tabsMap[tabId]
 }
 
 /**
