@@ -1301,7 +1301,12 @@ export default {
      */
     async removeContainer(container) {
       await browser.contextualIdentities.remove(container.id)
+      for (let panel of State.panels) {
+        if (panel.newTabCtx === container.id) panel.newTabCtx = 'none'
+        if (panel.moveTabCtx === container.id) panel.moveTabCtx = 'none'
+      }
       Actions.loadContainers()
+      Actions.savePanels()
     },
 
     /**

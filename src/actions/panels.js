@@ -56,6 +56,13 @@ function setupPanels(panels) {
       this.actions.parsePanelUrlRules(panel)
     }
 
+    if (panel.newTabCtx !== 'none' && !this.state.containers[panel.newTabCtx]) {
+      panel.newTabCtx = 'none'
+    }
+    if (panel.moveTabCtx !== 'none' && !this.state.containers[panel.moveTabCtx]) {
+      panel.moveTabCtx = 'none'
+    }
+
     normPanels.push(panel)
     panelsMap[panel.id] = panel
   }

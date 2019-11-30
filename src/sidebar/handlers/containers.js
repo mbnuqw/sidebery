@@ -4,6 +4,11 @@
 async function onRemovedContainer({ contextualIdentity }) {
   let id = contextualIdentity.cookieStoreId
 
+  for (let panel of this.state.panels) {
+    if (panel.newTabCtx === id) panel.newTabCtx = 'none'
+    if (panel.moveTabCtx === id) panel.moveTabCtx = 'none'
+  }
+
   // Close tabs
   const orphanTabs = this.state.tabs.filter(t => t.cookieStoreId === id)
   this.state.removingTabs = orphanTabs.map(t => t.id)
