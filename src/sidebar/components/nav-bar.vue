@@ -111,7 +111,7 @@ export default {
         out.push(HIDDEN_PANEL_BTN)
       }
 
-      if (State.hideAddBtn) out.push(ADD_PANEL_BTN)
+      if (!State.hideAddBtn) out.push(ADD_PANEL_BTN)
 
       if (!State.navBarInline) return out
 

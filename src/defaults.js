@@ -49,7 +49,7 @@ export const DEFAULT_SETTINGS = {
   // Nav bar
   navBarLayout: 'horizontal',
   navBarInline: true,
-  hideAddBtn: true,
+  hideAddBtn: false,
   hideSettingsBtn: false,
   navBtnCount: false,
   hideEmptyPanels: true,
