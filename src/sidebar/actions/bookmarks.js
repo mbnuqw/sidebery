@@ -418,6 +418,7 @@ async function removeBookmarks(ids) {
   let count = 0
   let hasCollapsed = false
   let deleted = []
+  let idsToRemove = []
   let walker = nodes => {
     for (let n of nodes) {
       count++
@@ -430,8 +431,10 @@ async function removeBookmarks(ids) {
   }
   for (let id of ids) {
     let n = this.state.bookmarksMap[id]
+    if (ids.includes(n.parentId)) continue
     count++
     deleted.push(n)
+    idsToRemove.push(id)
     if (n.children && n.children.length) {
       if (!n.expanded) hasCollapsed = true
       walker(n.children)
@@ -445,7 +448,7 @@ async function removeBookmarks(ids) {
     if (!ok) return
   }
 
-  for (let id of ids) {
+  for (let id of idsToRemove) {
     await browser.bookmarks.removeTree(id)
   }
 
