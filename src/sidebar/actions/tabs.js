@@ -266,6 +266,7 @@ async function loadTabsFromSnapshot(tabs) {
     prevTab = tabs[i - 1]
     tab = tabs[i]
     tab.index = i
+    tab.loading = false
 
     Utils.normalizeTab(tab, DEFAULT_CTX_ID)
 
