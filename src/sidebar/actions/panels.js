@@ -88,6 +88,7 @@ async function updatePanels(newPanels) {
 
     this.handlers.setupTabsListeners()
     this.actions.updatePanelsTabs()
+    if (this.state.stateStorage === 'global') this.actions.saveTabsData()
   }
 }
 
