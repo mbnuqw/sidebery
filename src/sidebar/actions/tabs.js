@@ -1411,6 +1411,7 @@ async function moveDroppedNodes(dropIndex, dropParent, nodes, pin, currentPanel)
 
   // Normalize dropIndex for tabs droped to the same panel
   // If dropIndex is greater that first tab index - decrease it by 1
+  let actualDropIndex = dropIndex
   dropIndex = dropIndex <= nodes[0].index ? dropIndex : dropIndex - 1
 
   // Get dragged tabs
@@ -1441,23 +1442,33 @@ async function moveDroppedNodes(dropIndex, dropParent, nodes, pin, currentPanel)
     }
   }
 
+  let differentPanel = tabs[0].panelId !== currentPanel.id
+
   // Move if target index is different or pinned state changed
   const moveIndexOk = tabs[0].index !== dropIndex && tabs[tabs.length - 1].index !== dropIndex
   if (moveIndexOk || pinTab || unpinTab) {
     this.state.movingTabs = []
+    let index = 0
     for (let tab of tabs) {
-      tab.destPanelId = currentPanel.id
+      index = this.state.tabs.indexOf(tab, index)
+      this.state.tabs.splice(index, 1)
       this.state.movingTabs.push(tab.id)
+    }
+    let targetIndex = actualDropIndex
+    if (tabs[0].index < actualDropIndex) targetIndex = actualDropIndex - tabs.length
+    this.state.tabs.splice(targetIndex, 0, ...tabs)
+    for (let i = 0; i < this.state.tabs.length; i++) {
+      this.state.tabs[i].index = i
     }
     browser.tabs.move([...this.state.movingTabs], { windowId: this.state.windowId, index: dropIndex })
   }
 
-  if (tabs[0].panelId !== currentPanel.id) {
+  if (differentPanel) {
     for (let tab of tabs) {
       tab.panelId = currentPanel.id
     }
-    this.actions.updatePanelsTabs()
   }
+  this.actions.updatePanelsTabs()
 
   // Update tabs tree
   if (this.state.tabsTree) {
@@ -1489,12 +1500,10 @@ async function moveDroppedNodes(dropIndex, dropParent, nodes, pin, currentPanel)
     }
 
     // If there are no moving, just update tabs tree
-    if (!moveIndexOk) {
-      Actions.updateTabsTree(currentPanel.startIndex, currentPanel.endIndex + 1)
-      if (this.state.stateStorage === 'global') Actions.saveTabsData()
-      if (this.state.stateStorage === 'session') {
-        tabs.forEach(t => this.actions.saveTabData(t))
-      }
+    Actions.updateTabsTree(currentPanel.startIndex, currentPanel.endIndex + 1)
+    if (this.state.stateStorage === 'global') Actions.saveTabsData()
+    if (this.state.stateStorage === 'session') {
+      tabs.forEach(t => this.actions.saveTabData(t))
     }
   }
 

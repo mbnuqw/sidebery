@@ -458,14 +458,17 @@ function onTabMoved(id, info) {
 
   if (!this.state.movingTabs) this.state.movingTabs = []
   else this.state.movingTabs.splice(this.state.movingTabs.indexOf(id), 1)
+  let mvLen = this.state.movingTabs.length
 
-  if (!this.state.movingTabs.length) {
+  if (!mvLen) {
     this.actions.closeCtxMenu()
     this.actions.resetSelection()
   }
 
   // Check if target tab already placed
-  let tabAtTargetPlace = this.state.tabs[info.toIndex]
+  let toIndex = info.toIndex
+  if (info.toIndex > info.fromIndex) toIndex = toIndex - mvLen
+  let tabAtTargetPlace = this.state.tabs[toIndex]
   if (tabAtTargetPlace && tabAtTargetPlace.id === id) return
 
   // Move tab in tabs array
