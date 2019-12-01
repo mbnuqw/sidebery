@@ -308,7 +308,25 @@ export default {
       let firstNode = State.dragNodes[0]
       let ids = State.dragNodes.map(n => n.id)
       if (typeof firstNode.id === 'number') {
-        Actions.moveTabsToCtx(ids, panel.cookieStoreId)
+        State.panelIndex = panel.index
+        if (panel.newTabCtx !== 'none' && panel.newTabCtx !== firstNode.ctx) {
+          Actions.recreateDroppedNodes(
+            null,
+            panel.endIndex + 1,
+            -1,
+            State.dragNodes,
+            false,
+            panel.newTabCtx
+          )
+        } else {
+          Actions.moveDroppedNodes(
+            panel.endIndex + 1,
+            -1,
+            State.dragNodes,
+            false,
+            panel,
+          )
+        }
       }
       if (typeof firstNode.id === 'string') {
         Actions.openBookmarksInPanel(ids, panel.cookieStoreId)
