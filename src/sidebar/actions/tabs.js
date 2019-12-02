@@ -1982,6 +1982,7 @@ function getPanelForNewTab(tab) {
 
   if (tab.cookieStoreId !== DEFAULT_CTX_ID) {
     panel = this.state.panels.find(p => p.moveTabCtx === tab.cookieStoreId)
+    if (panel) return panel
   }
 
   if (!panel && parentTab) {
