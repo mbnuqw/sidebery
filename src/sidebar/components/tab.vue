@@ -258,7 +258,7 @@ export default {
         if (!State.selected.length && !State.ctxMenuNative && !this.longClickActionRightFired) {
           this.select()
         }
-        Actions.openCtxMenu('tab', e.clientX, e.clientY)
+        if (!State.ctxMenuNative) Actions.openCtxMenu('tab', e.clientX, e.clientY)
       }
     },
 

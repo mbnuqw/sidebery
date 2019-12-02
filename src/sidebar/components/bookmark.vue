@@ -155,8 +155,10 @@ export default {
         if (e.ctrlKey || e.shiftKey) return
 
         Actions.stopMultiSelection()
-        if (!State.ctxMenuNative) Actions.selectItem(this.node.id)
-        Actions.openCtxMenu('bookmark', e.clientX, e.clientY)
+        if (!State.ctxMenuNative) {
+          Actions.selectItem(this.node.id)
+          Actions.openCtxMenu('bookmark', e.clientX, e.clientY)
+        }
       }
     },
 
