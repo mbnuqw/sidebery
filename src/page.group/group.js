@@ -216,6 +216,10 @@ function createNewTabButton() {
       active: event.button === 0 ? true : false,
     })
   })
+  newTabEl.addEventListener('mouseup', event => {
+    event.stopPropagation()
+    event.preventDefault()
+  })
 }
 
 /**
