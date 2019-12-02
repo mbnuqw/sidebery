@@ -234,6 +234,7 @@ export default {
 
       let dragNode = State.dragNodes ? State.dragNodes[0] : null
       let scroll = State.panelScrollEl ? State.panelScrollEl.scrollTop : 0
+      let slotsLen = State.itemSlots.length
       let y = e.clientY - State.panelTopOffset + scroll
       let x = e.clientX - State.panelLeftOffset
       
@@ -266,10 +267,10 @@ export default {
       if (this.pointerXLock || this.pointerYLock) return
 
       // Empty
-      if (State.itemSlots.length === 0) {
-        const pos = State.panelTopOffset - scroll - 12
-        if (!this.pointerXLock && !this.pointerYLock && this.pointerPos !== pos) {
-          this.pointerPos = pos
+      if (slotsLen === 0) {
+        this.pos = State.panelTopOffset - scroll - 12
+        if (!this.pointerXLock && !this.pointerYLock && this.pointerPos !== this.pos) {
+          this.pointerPos = this.pos
           this.$refs.pointer.style.transform = `translateY(${this.pointerPos}px)`
           this.pointerMode = 'between'
           this.dropParent = -1
@@ -279,11 +280,11 @@ export default {
       }
 
       // End
-      if (y > State.itemSlots[State.itemSlots.length - 1].bottom) {
-        const slot = State.itemSlots[State.itemSlots.length - 1]
-        const pos = slot.end - 12 + State.panelTopOffset - scroll
-        if (!this.pointerXLock && !this.pointerYLock && this.pointerPos !== pos) {
-          this.pointerPos = pos
+      if (y > State.itemSlots[slotsLen - 1].bottom) {
+        let slot = State.itemSlots[slotsLen - 1]
+        this.pos = slot.end - 12 + State.panelTopOffset - scroll
+        if (!this.pointerXLock && !this.pointerYLock && this.pointerPos !== this.pos) {
+          this.pointerPos = this.pos
           this.$refs.pointer.style.transform = `translateY(${this.pointerPos}px)`
           this.pointerMode = 'between'
           this.dropParent = slot.parent
@@ -293,18 +294,18 @@ export default {
         return
       }
 
-      for (let i = 0; i < State.itemSlots.length; i++) {
-        const slot = State.itemSlots[i]
+      for (let slot, i = 0; i < slotsLen; i++) {
+        slot = State.itemSlots[i]
         // Skip
         if (y > slot.end || y < slot.start) continue
         // Between
         if (slot.in ? y < slot.top : y < slot.center) {
-          const prevSlot = State.itemSlots[i - 1]
-          const pos = slot.start - 12 + State.panelTopOffset - scroll
-          if (!this.pointerXLock && !this.pointerYLock && this.pointerPos !== pos) {
-            this.pointerPos = pos
+          this.pos = slot.start - 12 + State.panelTopOffset - scroll
+          if (!this.pointerXLock && !this.pointerYLock && this.pointerPos !== this.pos) {
+            this.pointerPos = this.pos
             this.$refs.pointer.style.transform = `translateY(${this.pointerPos}px)`
             this.pointerMode = 'between'
+            let prevSlot = State.itemSlots[i - 1]
             let dragNodeIsTab = dragNode ? dragNode.type === 'tab' : false
   
             if (!prevSlot) {
@@ -331,9 +332,9 @@ export default {
         }
         // Inside
         if (slot.in && y < slot.bottom && (State.tabsTree || !State.panelIndex)) {
-          const pos = slot.center - 12 + State.panelTopOffset - scroll
-          if (!this.pointerXLock && !this.pointerYLock && this.pointerPos !== pos) {
-            this.pointerPos = pos
+          this.pos = slot.center - 12 + State.panelTopOffset - scroll
+          if (!this.pointerXLock && !this.pointerYLock && this.pointerPos !== this.pos) {
+            this.pointerPos = this.pos
             this.$refs.pointer.style.transform = `translateY(${this.pointerPos}px)`
             this.pointerMode = slot.folded ? 'inside-fold' : 'inside-exp'
             this.dropParent = slot.id
