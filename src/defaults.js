@@ -478,7 +478,7 @@ export const MENU_OPTIONS = {
       opts.push({
         label: translate('menu.tab.reopen_in_default_panel'),
         icon: 'icon_tabs',
-        action: 'moveTabsToCtx',
+        action: 'reopenTabsInCtx',
         args: [state.selected, DEFAULT_CTX_ID],
       })
     }
@@ -490,7 +490,7 @@ export const MENU_OPTIONS = {
         nativeLabel: translate('menu.tab.reopen_in_') + c.name,
         icon: c.icon,
         color: c.color,
-        action: 'moveTabsToCtx',
+        action: 'reopenTabsInCtx',
         args: [state.selected, c.id],
       })
     }
@@ -661,7 +661,7 @@ export const MENU_OPTIONS = {
         label: translate('menu.bookmark.open_in_default_panel'),
         nativeLabel: 'Default container',
         icon: 'icon_tabs',
-        action: 'openBookmarksInPanel',
+        action: 'openBookmarksInCtx',
         inactive: allSeparators,
         args: [state.selected, DEFAULT_CTX_ID],
       })
@@ -674,7 +674,7 @@ export const MENU_OPTIONS = {
           nativeLabel: translate('menu.bookmark.open_in_') + c.name,
           icon: c.icon,
           color: c.color,
-          action: 'openBookmarksInPanel',
+          action: 'openBookmarksInCtx',
           inactive: allSeparators,
           args: [state.selected, c.id],
         })

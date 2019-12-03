@@ -329,7 +329,7 @@ export default {
         }
       }
       if (typeof firstNode.id === 'string') {
-        Actions.openBookmarksInPanel(ids, panel.cookieStoreId)
+        Actions.openBookmarksInCtx(ids, panel.cookieStoreId)
       }
     },
 

@@ -1,6 +1,7 @@
 import Utils from '../../utils'
 import Logs from '../../logs'
 import { translate } from '../../mixins/dict'
+import { DEFAULT_CTX_ID } from '../../defaults'
 import Actions from '../actions'
 
 /**
@@ -335,10 +336,10 @@ async function openBookmarksInNewWin(ids, incognito) {
 /**
  * Open bookmarks
  */
-async function openBookmarksInPanel(ids, panelId) {
+async function openBookmarksInCtx(ids, ctxId) {
   let bookmarksPanel = this.state.panelsMap['bookmarks']
-  let p = this.state.panelsMap[panelId]
-  if (!p) return
+  let p = this.state.panels.find(p => p.moveTabCtx === ctxId)
+  if (!p) p = this.state.panelsMap[DEFAULT_CTX_ID]
 
   let index = p.endIndex + 1
 
@@ -369,16 +370,30 @@ async function openBookmarksInPanel(ids, panelId) {
       await browser.bookmarks.removeTree(node.id)
     }
 
-    const isDir = node.type === 'folder'
+    let isDir = node.type === 'folder'
     if (isDir && !this.state.tabsTree) continue
-    const createdTab = await browser.tabs.create({
+
+    let conf = {
       windowId: this.state.windowId,
       index: index++,
       url: node.url ? Utils.normalizeUrl(node.url) : Utils.createGroupUrl(node.title),
-      cookieStoreId: panelId,
+      cookieStoreId: ctxId,
       active: false,
-      openerTabId: idMap[node.parentId],
-    })
+      openerTabId: idMap[node.parentId]
+    }
+
+    if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
+    this.state.newTabsPosition[conf.index] = {
+      parent: idMap[node.parentId],
+      panel: p.id,
+    }
+
+    if (ctxId === DEFAULT_CTX_ID) {
+      conf.title = node.title
+      conf.discarded = true
+    }
+
+    let createdTab = await browser.tabs.create(conf)
     if (isDir) idMap[node.id] = createdTab.id
   }
 }
@@ -518,7 +533,7 @@ export default {
   foldBookmark,
   dropToBookmarks,
   openBookmarksInNewWin,
-  openBookmarksInPanel,
+  openBookmarksInCtx,
   startBookmarkCreation,
   startBookmarkEditing,
   removeBookmarks,

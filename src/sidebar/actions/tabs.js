@@ -1101,7 +1101,7 @@ async function moveTabsToThisWin(tabs, fromPrivate) {
 /**
  * Reopen tabs in provided container.
  */
-async function moveTabsToCtx(tabIds, ctxId) {
+async function reopenTabsInCtx(tabIds, ctxId) {
   let idsMap = {}
   let panel = this.state.panels.find(p => p.moveTabCtx === ctxId)
   let index = panel ? panel.endIndex + 1 : -1
@@ -2207,7 +2207,7 @@ export default {
   moveTabsToNewWin,
   moveTabsToWin,
   moveTabsToThisWin,
-  moveTabsToCtx,
+  reopenTabsInCtx,
   // moveTabsToPanel,
 
   showAllTabs,
