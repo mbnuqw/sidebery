@@ -668,8 +668,7 @@ export const MENU_OPTIONS = {
     }
 
     if (!state.private) {
-      for (let c of state.panels) {
-        if (c.type !== 'ctx') continue
+      for (let c of Object.values(state.containers)) {
         opts.push({
           label: translate('menu.bookmark.open_in_') + `||${c.color}>>${c.name}`,
           nativeLabel: translate('menu.bookmark.open_in_') + c.name,
@@ -677,7 +676,7 @@ export const MENU_OPTIONS = {
           color: c.color,
           action: 'openBookmarksInPanel',
           inactive: allSeparators,
-          args: [state.selected, c.cookieStoreId],
+          args: [state.selected, c.id],
         })
       }
     }
