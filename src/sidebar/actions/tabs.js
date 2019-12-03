@@ -1102,35 +1102,60 @@ async function moveTabsToThisWin(tabs, fromPrivate) {
  * Reopen tabs in provided container.
  */
 async function moveTabsToCtx(tabIds, ctxId) {
-  let ids = [...tabIds]
-  let oldNewMap = {}
-  let ctxPanel = this.state.panels.find(p => p.moveTabCtx === ctxId)
-  let index = ctxPanel ? ctxPanel.endIndex + 1 : -1
-  for (let id of ids) {
-    let tab = this.state.tabsMap[id]
-    if (!tab) continue
+  let idsMap = {}
+  let panel = this.state.panels.find(p => p.moveTabCtx === ctxId)
+  let index = panel ? panel.endIndex + 1 : -1
+  if (!panel) panel = this.state.panels[this.state.panelIndex]
 
+  let tabs = []
+  for (let id of tabIds) {
+    let tab = this.state.tabsMap[id]
+    tabs.push({
+      id: tab.id,
+      index: tab.index,
+      url: tab.url,
+      title: tab.title,
+      parentId: tab.parentId,
+      active: tab.active,
+    })
+  }
+  tabs.sort((a, b) => a.index - b.index)
+  let ids = tabs.map(t => t.id)
+
+  this.state.removingTabs = [...ids]
+  await browser.tabs.remove(ids)
+
+  for (let tab of tabs) {
     let createConf = {
       active: tab.active,
       windowId: this.state.windowId,
       cookieStoreId: ctxId,
-      url: Utils.normalizeUrl(tab.url),
+      url: tab.url,
+    }
+
+    if (ctxId === DEFAULT_CTX_ID && !tab.active) {
+      createConf.title = tab.title
+      createConf.discarded = true
     }
 
     if (index === -1) createConf.index = tab.index
     else createConf.index = index++
 
-    if (oldNewMap[tab.parentId] >= 0) {
-      createConf.openerTabId = oldNewMap[tab.parentId]
+    if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
+    this.state.newTabsPosition[createConf.index] = {
+      parent: tab.parentId,
+      panel: panel.id,
+    }
+    if (idsMap[tab.parentId] >= 0) {
+      createConf.openerTabId = idsMap[tab.parentId]
+      this.state.newTabsPosition[createConf.index].parent = idsMap[tab.parentId] 
     }
 
     let newTab = await browser.tabs.create(createConf)
 
-    oldNewMap[tab.id] = newTab.id
+    idsMap[tab.id] = newTab.id
+    tab.newId = newTab.id
   }
-
-  this.state.removingTabs = [...ids]
-  await browser.tabs.remove(ids)
 
   if (this.state.tabsTree) {
     Actions.updateTabsTree()
