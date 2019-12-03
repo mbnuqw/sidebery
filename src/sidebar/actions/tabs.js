@@ -53,7 +53,7 @@ async function loadTabsFromGlobalStorage() {
     if (!tabData || tabData.index === undefined) continue
 
     // Recreate group tab (e.g. after addon was disabled-enabled)
-    if (!tab && tabData.isMissedGroup) {
+    if (tabData.isMissedGroup) {
       let groupId = Utils.getGroupId(tabData.url)
       let url = browser.runtime.getURL('group/group.html') + `#${groupId}`
       let restoredTab = await browser.tabs.create({
@@ -63,11 +63,12 @@ async function loadTabsFromGlobalStorage() {
         cookieStoreId: tabData.ctx,
         active: false,
       })
-      Utils.normalizeTab(restoredTab)
+      restoredTab.url = url
+      Utils.normalizeTab(restoredTab, DEFAULT_CTX_ID)
       tabs.splice(tabData.index, 0, restoredTab)
       this.state.tabsMap[restoredTab.id] = restoredTab
-      for (let i = tabData.index + 1; i < tabs.length; i++) {
-        tabs[i].index = i
+      for (let j = tabData.index; j < tabs.length; j++) {
+        tabs[j].index = j
       }
     }
 

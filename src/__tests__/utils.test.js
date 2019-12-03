@@ -121,4 +121,215 @@ describe('Global utilities', () => {
       expect(common2).toBe('just one')
     })
   })
+
+  // id: tab.id,
+  // panelId: tab.panelId,
+  // parentId: tab.parentId,
+  // folded: tab.folded,
+  // url: tab.url,
+  // ctx: tab.cookieStoreId,
+
+  // findDataForTabs
+  describe('findDataForTabs()', () => {
+    test('No changes', () => {
+      const tabs = [
+        { id: 0, index: 0, url: 'u0' },
+        { id: 1, index: 1, url: 'u1' },
+        { id: 2, index: 2, url: 'u2' },
+        { id: 3, index: 3, url: 'u3' },
+        { id: 4, index: 4, url: 'u4' },
+        { id: 5, index: 5, url: 'u5' },
+        { id: 6, index: 6, url: 'u6' },
+      ]
+      const tabsData = [
+        [
+          { id: 10, panelId: 'p0', parentId: -1, folded: false, url: 'another', ctx: 'd' }
+        ],
+        [
+          { id: 10, panelId: 'p0', parentId: -1, folded: false, url: 'u0', ctx: 'd' },
+          { id: 11, panelId: 'p0', parentId: -1, folded: false, url: 'u1', ctx: 'd' },
+          { id: 12, panelId: 'p0', parentId: -1, folded: false, url: 'u2', ctx: 'd' },
+          { id: 13, panelId: 'p0', parentId: -1, folded: false, url: 'u3', ctx: 'd' },
+          { id: 14, panelId: 'p0', parentId: -1, folded: false, url: 'u4', ctx: 'd' },
+          { id: 15, panelId: 'p0', parentId: -1, folded: false, url: 'u5', ctx: 'd' },
+          { id: 16, panelId: 'p0', parentId: -1, folded: false, url: 'u6', ctx: 'd' },
+        ],
+      ]
+
+      const result = Utils.findDataForTabs(tabs, tabsData)
+      expect(result).toEqual([
+        { id: 10, panelId: 'p0', parentId: -1, folded: false, url: 'u0', ctx: 'd', index: 0 },
+        { id: 11, panelId: 'p0', parentId: -1, folded: false, url: 'u1', ctx: 'd', index: 1 },
+        { id: 12, panelId: 'p0', parentId: -1, folded: false, url: 'u2', ctx: 'd', index: 2 },
+        { id: 13, panelId: 'p0', parentId: -1, folded: false, url: 'u3', ctx: 'd', index: 3 },
+        { id: 14, panelId: 'p0', parentId: -1, folded: false, url: 'u4', ctx: 'd', index: 4 },
+        { id: 15, panelId: 'p0', parentId: -1, folded: false, url: 'u5', ctx: 'd', index: 5 },
+        { id: 16, panelId: 'p0', parentId: -1, folded: false, url: 'u6', ctx: 'd', index: 6 },
+      ])
+    })
+
+    test('Missed group pages', () => {
+      const tabs = [
+        { id: 0, index: 0, url: 'u0' },
+        { id: 1, index: 1, url: 'u1' },
+        { id: 2, index: 2, url: 'u2' },
+        { id: 3, index: 3, url: 'u3' },
+        { id: 4, index: 4, url: 'u4' },
+        { id: 5, index: 5, url: 'u5' },
+        { id: 6, index: 6, url: 'u6' },
+      ]
+      const tabsData = [
+        [
+          { id: 10, panelId: 'p0', parentId: -1, folded: false, url: 'another', ctx: 'd' }
+        ],
+        [
+          { id: 10, panelId: 'p0', parentId: -1, folded: false, url: 'u0', ctx: 'd' },
+          { id: 11, panelId: 'p0', parentId: -1, folded: false, url: 'u1', ctx: 'd' },
+          { id: 12, panelId: 'p0', parentId: -1, folded: false, url: 'u2', ctx: 'd' },
+          { id: 13, panelId: 'p0', parentId: -1, folded: false, url: 'moz.../group.html', ctx: 'd' },
+          { id: 14, panelId: 'p0', parentId: 13, folded: false, url: 'moz.../group.html', ctx: 'd' },
+          { id: 15, panelId: 'p0', parentId: 14, folded: false, url: 'u3', ctx: 'd' },
+          { id: 16, panelId: 'p0', parentId: -1, folded: false, url: 'u4', ctx: 'd' },
+          { id: 17, panelId: 'p0', parentId: -1, folded: false, url: 'u5', ctx: 'd' },
+          { id: 18, panelId: 'p0', parentId: -1, folded: false, url: 'u6', ctx: 'd' },
+        ],
+      ]
+
+      const result = Utils.findDataForTabs(tabs, tabsData)
+      expect(result).toEqual([
+        { id: 10, panelId: 'p0', parentId: -1, folded: false, index: 0, url: 'u0', ctx: 'd' },
+        { id: 11, panelId: 'p0', parentId: -1, folded: false, index: 1, url: 'u1', ctx: 'd' },
+        { id: 12, panelId: 'p0', parentId: -1, folded: false, index: 2, url: 'u2', ctx: 'd' },
+        { id: 13, panelId: 'p0', parentId: -1, folded: false, index: 3, url: 'moz.../group.html', ctx: 'd', isMissedGroup: true },
+        { id: 14, panelId: 'p0', parentId: 13, folded: false, index: 4, url: 'moz.../group.html', ctx: 'd', isMissedGroup: true },
+        { id: 15, panelId: 'p0', parentId: 14, folded: false, index: 5, url: 'u3', ctx: 'd' },
+        { id: 16, panelId: 'p0', parentId: -1, folded: false, index: 6, url: 'u4', ctx: 'd' },
+        { id: 17, panelId: 'p0', parentId: -1, folded: false, index: 7, url: 'u5', ctx: 'd' },
+        { id: 18, panelId: 'p0', parentId: -1, folded: false, index: 8, url: 'u6', ctx: 'd' },
+      ])
+    })
+
+    test('Missed tab', () => {
+      const tabs = [
+        { id: 0, index: 0, url: 'u0' },
+        { id: 2, index: 1, url: 'u2' },
+        { id: 3, index: 2, url: 'u3' },
+        { id: 4, index: 3, url: 'u4' },
+        { id: 5, index: 4, url: 'u5' },
+        { id: 6, index: 5, url: 'u6' },
+      ]
+      const tabsData = [
+        [
+          { id: 10, panelId: 'p0', parentId: -1, folded: false, url: 'another', ctx: 'd' }
+        ],
+        [
+          { id: 10, panelId: 'p0', parentId: -1, folded: false, url: 'u0', ctx: 'd' },
+          { id: 11, panelId: 'p0', parentId: -1, folded: false, url: 'u1', ctx: 'd' },
+          { id: 12, panelId: 'p0', parentId: -1, folded: false, url: 'u2', ctx: 'd' },
+          { id: 13, panelId: 'p0', parentId: -1, folded: false, url: 'moz.../group.html', ctx: 'd' },
+          { id: 14, panelId: 'p0', parentId: 13, folded: false, url: 'moz.../group.html', ctx: 'd' },
+          { id: 15, panelId: 'p0', parentId: 14, folded: false, url: 'u3', ctx: 'd' },
+          { id: 16, panelId: 'p0', parentId: -1, folded: false, url: 'u4', ctx: 'd' },
+          { id: 17, panelId: 'p0', parentId: -1, folded: false, url: 'u5', ctx: 'd' },
+          { id: 18, panelId: 'p0', parentId: -1, folded: false, url: 'u6', ctx: 'd' },
+        ],
+      ]
+
+      const result = Utils.findDataForTabs(tabs, tabsData)
+      expect(result).toEqual([
+        { id: 10, panelId: 'p0', parentId: -1, folded: false, index: 0, url: 'u0', ctx: 'd' },
+        { id: 11, panelId: 'p0', parentId: -1, folded: false, index: undefined, url: 'u1', ctx: 'd' },
+        { id: 12, panelId: 'p0', parentId: -1, folded: false, index: 1, url: 'u2', ctx: 'd' },
+        { id: 13, panelId: 'p0', parentId: -1, folded: false, index: 2, url: 'moz.../group.html', ctx: 'd', isMissedGroup: true },
+        { id: 14, panelId: 'p0', parentId: 13, folded: false, index: 3, url: 'moz.../group.html', ctx: 'd', isMissedGroup: true },
+        { id: 15, panelId: 'p0', parentId: 14, folded: false, index: 4, url: 'u3', ctx: 'd' },
+        { id: 16, panelId: 'p0', parentId: -1, folded: false, index: 5, url: 'u4', ctx: 'd' },
+        { id: 17, panelId: 'p0', parentId: -1, folded: false, index: 6, url: 'u5', ctx: 'd' },
+        { id: 18, panelId: 'p0', parentId: -1, folded: false, index: 7, url: 'u6', ctx: 'd' },
+      ])
+    })
+
+    test('Extra tab', () => {
+      const tabs = [
+        { id: 0, index: 0, url: 'u0' },
+        { id: 22, index: 1, url: 'uE' },
+        { id: 2, index: 2, url: 'u1' },
+        { id: 2, index: 3, url: 'u2' },
+        { id: 3, index: 4, url: 'u3' },
+        { id: 4, index: 5, url: 'u4' },
+        { id: 5, index: 6, url: 'u5' },
+        { id: 6, index: 7, url: 'u6' },
+      ]
+      const tabsData = [
+        [
+          { id: 10, panelId: 'p0', parentId: -1, folded: false, url: 'another', ctx: 'd' }
+        ],
+        [
+          { id: 10, panelId: 'p0', parentId: -1, folded: false, url: 'u0', ctx: 'd' },
+          { id: 11, panelId: 'p0', parentId: -1, folded: false, url: 'u1', ctx: 'd' },
+          { id: 12, panelId: 'p0', parentId: -1, folded: false, url: 'u2', ctx: 'd' },
+          { id: 13, panelId: 'p0', parentId: -1, folded: false, url: 'moz.../group.html', ctx: 'd' },
+          { id: 14, panelId: 'p0', parentId: 13, folded: false, url: 'moz.../group.html', ctx: 'd' },
+          { id: 15, panelId: 'p0', parentId: 14, folded: false, url: 'u3', ctx: 'd' },
+          { id: 16, panelId: 'p0', parentId: -1, folded: false, url: 'u4', ctx: 'd' },
+          { id: 17, panelId: 'p0', parentId: -1, folded: false, url: 'u5', ctx: 'd' },
+          { id: 18, panelId: 'p0', parentId: -1, folded: false, url: 'u6', ctx: 'd' },
+        ],
+      ]
+
+      const result = Utils.findDataForTabs(tabs, tabsData)
+      expect(result).toEqual([
+        { id: 10, panelId: 'p0', parentId: -1, folded: false, index: 0, url: 'u0', ctx: 'd' },
+        { id: 11, panelId: 'p0', parentId: -1, folded: false, index: 2, url: 'u1', ctx: 'd' },
+        { id: 12, panelId: 'p0', parentId: -1, folded: false, index: 3, url: 'u2', ctx: 'd' },
+        { id: 13, panelId: 'p0', parentId: -1, folded: false, index: 4, url: 'moz.../group.html', ctx: 'd', isMissedGroup: true },
+        { id: 14, panelId: 'p0', parentId: 13, folded: false, index: 5, url: 'moz.../group.html', ctx: 'd', isMissedGroup: true },
+        { id: 15, panelId: 'p0', parentId: 14, folded: false, index: 6, url: 'u3', ctx: 'd' },
+        { id: 16, panelId: 'p0', parentId: -1, folded: false, index: 7, url: 'u4', ctx: 'd' },
+        { id: 17, panelId: 'p0', parentId: -1, folded: false, index: 8, url: 'u5', ctx: 'd' },
+        { id: 18, panelId: 'p0', parentId: -1, folded: false, index: 9, url: 'u6', ctx: 'd' },
+      ])
+    })
+
+    test('Changed url', () => {
+      const tabs = [
+        { id: 0, index: 0, url: 'u0' },
+        { id: 1, index: 1, url: 'uE' },
+        { id: 2, index: 2, url: 'u2' },
+        { id: 3, index: 3, url: 'u3' },
+        { id: 4, index: 4, url: 'u4' },
+        { id: 5, index: 5, url: 'u5' },
+        { id: 6, index: 6, url: 'u6' },
+      ]
+      const tabsData = [
+        [
+          { id: 10, panelId: 'p0', parentId: -1, folded: false, url: 'another', ctx: 'd' }
+        ],
+        [
+          { id: 10, panelId: 'p0', parentId: -1, folded: false, url: 'u0', ctx: 'd' },
+          { id: 11, panelId: 'p0', parentId: -1, folded: false, url: 'u1', ctx: 'd' },
+          { id: 12, panelId: 'p0', parentId: -1, folded: false, url: 'u2', ctx: 'd' },
+          { id: 13, panelId: 'p0', parentId: -1, folded: false, url: 'moz.../group.html', ctx: 'd' },
+          { id: 14, panelId: 'p0', parentId: 13, folded: false, url: 'moz.../group.html', ctx: 'd' },
+          { id: 15, panelId: 'p0', parentId: 14, folded: false, url: 'u3', ctx: 'd' },
+          { id: 16, panelId: 'p0', parentId: -1, folded: false, url: 'u4', ctx: 'd' },
+          { id: 17, panelId: 'p0', parentId: -1, folded: false, url: 'u5', ctx: 'd' },
+          { id: 18, panelId: 'p0', parentId: -1, folded: false, url: 'u6', ctx: 'd' },
+        ],
+      ]
+
+      const result = Utils.findDataForTabs(tabs, tabsData)
+      expect(result).toEqual([
+        { id: 10, panelId: 'p0', parentId: -1, folded: false, index: 0, url: 'u0', ctx: 'd' },
+        { id: 11, panelId: 'p0', parentId: -1, folded: false, index: undefined, url: 'u1', ctx: 'd' },
+        { id: 12, panelId: 'p0', parentId: -1, folded: false, index: 2, url: 'u2', ctx: 'd' },
+        { id: 13, panelId: 'p0', parentId: -1, folded: false, index: 3, url: 'moz.../group.html', ctx: 'd', isMissedGroup: true },
+        { id: 14, panelId: 'p0', parentId: 13, folded: false, index: 4, url: 'moz.../group.html', ctx: 'd', isMissedGroup: true },
+        { id: 15, panelId: 'p0', parentId: 14, folded: false, index: 5, url: 'u3', ctx: 'd' },
+        { id: 16, panelId: 'p0', parentId: -1, folded: false, index: 6, url: 'u4', ctx: 'd' },
+        { id: 17, panelId: 'p0', parentId: -1, folded: false, index: 7, url: 'u5', ctx: 'd' },
+        { id: 18, panelId: 'p0', parentId: -1, folded: false, index: 8, url: 'u6', ctx: 'd' },
+      ])
+    })
+  })
 })

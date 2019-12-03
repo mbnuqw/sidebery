@@ -487,39 +487,49 @@ function normalizeTab(tab, defaultPanelId) {
   else if (tab.favIconUrl.startsWith('chrome:')) tab.favIconUrl = ''
 }
 
+/**
+ * Find suitable tabs data for current window
+ */
 function findDataForTabs(tabs, data) {
   let maxEqualityCounter = 1
   let result
 
   for (let winTabs of data) {
-    let offset = 0, equalityCounter = 0
+    let equalityCounter = 0
+    let gOffset = 0
 
     perTab:
-    for (let tab, tabData, i = 0; i < winTabs.length; i++) {
-      tab = tabs[i - offset]
+    for (let tab, tabData, i = 0, k = 0; i < winTabs.length; i++, k++) {
+      tab = tabs[k]
       if (!tab) break
       tabData = winTabs[i]
 
+      // Saved tab is a group and its missing
       if (isGroupUrl(tabData.url) && tabData.url !== tab.url) {
-        tabData.index = i - offset
+        tabData.index = k + gOffset
         tabData.isMissedGroup = true
-        offset++
+        k--
+        gOffset++
         continue
       }
 
+      // Match
       if (tabData.url === tab.url || (tab.active && tab.url === 'about:blank')) {
-        tabData.index = i - offset
+        tabData.index = k + gOffset
         equalityCounter++
-      } else {
-        for (let j = i - offset + 1; j < tabs.length; j++) {
+      }
+      // No match
+      else {
+        // Try to find corresponding local tab
+        for (let j = k + 1; j < k + 5; j++) {
           if (tabs[j] && tabs[j].url === tabData.url) {
-            tabData.index = j
-            offset = i - j
+            k = j
+            tabData.index = k + gOffset
             equalityCounter++
             continue perTab
           }
         }
-        offset++
+        k--
       }
     }
 
