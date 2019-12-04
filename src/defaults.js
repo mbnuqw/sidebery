@@ -198,7 +198,8 @@ export const CUSTOM_CSS_VARS = {
   tabs_shadow: null,
   tabs_activated_shadow: null,
   tabs_selected_shadow: null,
-
+  tabs_lvl_indicator_bg: null,
+  
   bookmarks_bookmark_height: null,
   bookmarks_folder_height: null,
   bookmarks_separator_height: null,
