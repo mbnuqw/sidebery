@@ -45,8 +45,7 @@
   .close(v-if="$store.state.showTabRmBtn" @mousedown.stop="onCloseClick" @mouseup.stop="")
     svg: use(xlink:href="#icon_remove")
   .ctx(v-if="color")
-  .t-box: .title {{tab.index}} - {{tab.id}} - {{tab.panelId[0]}} {{tab.title}}
-  //- .t-box: .title {{tab.title}}
+  .t-box: .title {{tab.title}}
 </template>
 
 
