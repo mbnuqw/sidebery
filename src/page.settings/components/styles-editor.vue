@@ -366,7 +366,15 @@
         :or="'---'"
         @change="updateCSSVar('tabs_selected_shadow')"
         @toggle="toggleCSSVar('tabs_selected_shadow')")
-
+        
+      style-field(
+        v-model="cssVars.tabs_lvl_indicator_bg"
+        :label="'styles.tabs_lvl_indicator_bg'"
+        :name="'--tabs-lvl-indicator-bg'"
+        :or="'---'"
+        @change="updateCSSVar('tabs_lvl_indicator_bg')"
+        @toggle="toggleCSSVar('tabs_lvl_indicator_bg')")
+        
     section
       h2 {{t('styles.bookmarks_title')}}
       style-field(
