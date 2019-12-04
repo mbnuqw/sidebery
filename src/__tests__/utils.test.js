@@ -122,13 +122,6 @@ describe('Global utilities', () => {
     })
   })
 
-  // id: tab.id,
-  // panelId: tab.panelId,
-  // parentId: tab.parentId,
-  // folded: tab.folded,
-  // url: tab.url,
-  // ctx: tab.cookieStoreId,
-
   // findDataForTabs
   describe('findDataForTabs()', () => {
     test('No changes', () => {
