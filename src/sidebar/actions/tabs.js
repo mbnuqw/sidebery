@@ -91,9 +91,9 @@ async function loadTabsFromGlobalStorage() {
   // Switch to panel with active tab
   let activePanelIsTabs = activePanel.type === 'tabs' ||
     activePanel.type === 'default'
-  let activePanelIsOk = activeTab.cookieStoreId === activePanel.cookieStoreId
+  let activePanelIsOk = activeTab.panelId === activePanel.id
   if (!activeTab.pinned && activePanelIsTabs && !activePanelIsOk) {
-    let panel = this.state.panelsMap[activeTab.cookieStoreId]
+    let panel = this.state.panelsMap[activeTab.panelId]
     if (panel) {
       this.state.panelIndex = panel.index
       this.state.lastPanelIndex = panel.index

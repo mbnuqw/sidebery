@@ -64,10 +64,6 @@ function setupPanels(panels) {
       panel.moveTabCtx = 'none'
     }
 
-    if (!normPanels[this.state.panelIndex]) {
-      this.state.panelIndex = defaultPanelIndex
-    }
-
     normPanels.push(panel)
     panelsMap[panel.id] = panel
   }
