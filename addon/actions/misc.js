@@ -19,7 +19,6 @@ function initToolbarButton() {
  */
 async function loadPermissions() {
   this.permAllUrls = await browser.permissions.contains({ origins: ['<all_urls>'] })
-  this.permTabHide = await browser.permissions.contains({ permissions: ['tabHide'] })
   this.permWebRequestBlocking = await browser.permissions.contains({ permissions: ['webRequest', 'webRequestBlocking'] })
 
   if (!this.permAllUrls) {
