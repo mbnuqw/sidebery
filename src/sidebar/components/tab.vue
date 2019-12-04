@@ -35,7 +35,7 @@
       v-if="tab.isParent"
       @dblclick.prevent.stop=""
       @mousedown.stop="onExp"
-      @mouseup.stop="")
+      @mouseup.left.stop="")
       svg: use(xlink:href="#icon_expand")
     .update-badge
     transition(name="tab-part"): .ok-badge(v-if="loading === 'ok'"): svg: use(xlink:href="#icon_ok")
