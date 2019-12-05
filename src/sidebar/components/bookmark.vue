@@ -118,7 +118,7 @@ export default {
      * Mousedown Right
      */
     onMouseDownRight(e) {
-      if (!State.ctxMenuNative) {
+      if (!State.ctxMenuNative && !this.node.sel) {
         Actions.resetSelection()
         Actions.startMultiSelection({
           type: 'bookmark',
