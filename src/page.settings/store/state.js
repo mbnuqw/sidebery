@@ -23,12 +23,6 @@ export default {
   importConfig: false,
   navLock: false,
   highlightedField: '',
-  highlight: {
-    allUrls: false,
-    tabHide: false,
-    clipboardWrite: false,
-    webRequestBlocking: false,
-  },
 
   containers: {},
   panels: [],
