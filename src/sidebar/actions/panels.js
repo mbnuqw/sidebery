@@ -21,7 +21,10 @@ async function updatePanels(newPanels) {
         if (this.state.panelIndex === 0) this.state.panelIndex++
         else this.state.panelIndex--
       }
+      if (this.state.panelIndex > panel.index) this.state.panelIndex--
       await this.actions.removeTabs(panel.tabs.map(t => t.id))
+      this.actions.savePanelIndex()
+      break
     }
   }
 
