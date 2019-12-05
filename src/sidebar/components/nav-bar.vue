@@ -273,6 +273,7 @@ export default {
           State.hiddenPanelsBar = true
           return
         }
+        if (this.nav[i].type === 'add') return
         if (State.hiddenPanelsBar) State.hiddenPanelsBar = false
         Actions.switchToPanel(i)
       }, 500)
