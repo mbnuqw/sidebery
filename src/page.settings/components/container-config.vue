@@ -96,7 +96,6 @@
       v-if="isSomeSocks"
       label="container_dashboard.proxy_dns_label"
       :value="proxyDNS"
-      :inline="true"
       @input="toggleProxyDns")
 
   toggle-field(

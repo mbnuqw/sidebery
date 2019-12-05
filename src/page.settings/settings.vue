@@ -538,7 +538,6 @@
       @click="onHighlighClick('clipboard_write')")
       toggle-field(
         label="settings.clipboard_write_label"
-        :inline="true"
         :value="$store.state.permClipboardWrite"
         :note="t('settings.clipboard_write_info')"
         @input="togglePermClipboardWrite")
@@ -549,7 +548,6 @@
       @click="onHighlighClick('web_request_blocking')")
       toggle-field(
         label="settings.web_request_blocking_label"
-        :inline="true"
         :value="$store.state.permWebRequestBlocking"
         :note="t('settings.web_request_blocking_info')"
         @input="togglePermWebRequestBlocking")
