@@ -42,7 +42,7 @@
     transition(name="tab-part"): .err-badge(v-if="loading === 'err'"): svg: use(xlink:href="#icon_err")
     transition(name="tab-part"): .progress-spinner(v-if="loading === true")
     .child-count(v-if="childCount && tab.folded") {{childCount}}
-  .close(v-if="$store.state.showTabRmBtn" @mousedown.stop="onCloseClick" @mouseup.stop="")
+  .close(v-if="$store.state.showTabRmBtn" @mousedown.stop="onCloseClick" @mouseup.stop="" @contextmenu.stop.prevent="")
     svg: use(xlink:href="#icon_remove")
   .ctx(v-if="color")
   .t-box: .title {{tab.index}} - {{tab.id}} - {{tab.panelId[0]}} {{tab.title}}
