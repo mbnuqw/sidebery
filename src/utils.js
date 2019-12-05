@@ -457,6 +457,7 @@ function cloneObject(obj) {
  * Prepare url to be opened by sidebery
  */
 function normalizeUrl(url) {
+  if (url === 'about:newtab') return undefined
   if (
     url.startsWith('about:') ||
     url.startsWith('data:') ||
