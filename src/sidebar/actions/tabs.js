@@ -1121,7 +1121,7 @@ async function reopenTabsInCtx(tabIds, ctxId) {
     tabs.push({
       id: tab.id,
       index: tab.index,
-      url: tab.url,
+      url: Utils.normalizeUrl(tab.url),
       title: tab.title,
       parentId: tab.parentId,
       active: tab.active,
