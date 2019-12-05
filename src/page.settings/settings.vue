@@ -1298,13 +1298,17 @@ export default {
      * Remove container
      */
     async removeContainer(container) {
-      await browser.contextualIdentities.remove(container.id)
-      for (let panel of State.panels) {
-        if (panel.newTabCtx === container.id) panel.newTabCtx = 'none'
-        if (panel.moveTabCtx === container.id) panel.moveTabCtx = 'none'
+      let preMsg = translate('settings.contianer_remove_confirm_prefix')
+      let postMsg = translate('settings.contianer_remove_confirm_postfix')
+      if (window.confirm(preMsg + container.name + postMsg)) {
+        await browser.contextualIdentities.remove(container.id)
+        for (let panel of State.panels) {
+          if (panel.newTabCtx === container.id) panel.newTabCtx = 'none'
+          if (panel.moveTabCtx === container.id) panel.moveTabCtx = 'none'
+        }
+        Actions.loadContainers()
+        Actions.savePanels()
       }
-      Actions.loadContainers()
-      Actions.savePanels()
     },
 
     /**

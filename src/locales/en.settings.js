@@ -76,6 +76,8 @@ export default {
 
   // --- Containers
   'settings.containers_title': { message: 'Containers' },
+  'settings.contianer_remove_confirm_prefix': { message: 'Are you sure you want to delete "' },
+  'settings.contianer_remove_confirm_postfix': { message: '" container?' },
 
   // --- Panels
   'settings.panels_title': { message: 'Panels' },
