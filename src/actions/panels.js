@@ -68,6 +68,10 @@ function setupPanels(panels) {
     panelsMap[panel.id] = panel
   }
 
+  if (!normPanels[this.state.panelIndex]) {
+    this.state.panelIndex = defaultPanelIndex
+  }
+
   this.state.panels = normPanels
   this.state.panelsMap = panelsMap
 }

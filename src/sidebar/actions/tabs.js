@@ -48,6 +48,7 @@ async function loadTabsFromGlobalStorage() {
   }
 
   let idsMap = {}
+  let prevTab
   for (let tab, tabData, i = 0; i < tabsData.length; i++) {
     tabData = tabsData[i]
     if (!tabData || tabData.index === undefined) continue
@@ -78,11 +79,18 @@ async function loadTabsFromGlobalStorage() {
     if (tabData.panelId && this.state.panelsMap[tabData.panelId]) {
       tab.panelId = tabData.panelId
     } else {
-      tab.panelId = DEFAULT_CTX_ID
+      if (prevTab) {
+        tab.panelId = prevTab.panelId
+      } else {
+        let firstTabsPanel = this.state.panels.find(p => p.tabs)
+        if (firstTabsPanel) tab.panelId = firstTabsPanel.id
+        else tab.panelId = DEFAULT_CTX_ID
+      }
     }
     if (idsMap[tabData.parentId] >= 0) tab.parentId = idsMap[tabData.parentId]
     tab.folded = tabData.folded
     idsMap[tabData.id] = tab.id
+    prevTab = tab
   }
 
   this.state.tabs = tabs
