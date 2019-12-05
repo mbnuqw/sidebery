@@ -6,6 +6,7 @@ void async function main() {
   state.actions = Actions
   state.tabsMap = []
   state.images = {}
+  state.windows = {}
 
   // Init first-need stuff
   Actions.initToolbarButton()

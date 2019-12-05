@@ -1,7 +1,7 @@
 import Actions from '../actions.js'
 
 const BG_URL = browser.runtime.getURL('background.html')
-let updateReqHandlerTimeout, incHistory = {}
+let updateReqHandlerTimeout, handledReqId, incHistory = {}
 
 async function recreateTab(tab, info, cookieStoreId) {
   await browser.tabs.create({
@@ -80,7 +80,8 @@ function requestHandler(info) {
   }
 
   // Check hosts rules
-  if (tab && info.type === 'main_frame') {
+  if (tab && info.type === 'main_frame' && handledReqId !== info.requestId) {
+    handledReqId = info.requestId
     let includedUrl
 
     // Include rules
@@ -234,13 +235,19 @@ function turnOffReqHandler() {
 }
 
 function turnOnHeadersHandler() {
-  if (!browser.webRequest.onBeforeSendHeaders.hasListener(Actions.headersHandler)) {
+  if (
+    browser.webRequest &&
+    !browser.webRequest.onBeforeSendHeaders.hasListener(Actions.headersHandler)
+  ) {
     browser.webRequest.onBeforeSendHeaders.addListener(Actions.headersHandler, { urls: ['<all_urls>'] }, ['blocking', 'requestHeaders'])
   }
 }
 
 function turnOffHeadersHandler() {
-  if (browser.webRequest.onBeforeSendHeaders.hasListener(Actions.headersHandler)) {
+  if (
+    browser.webRequest &&
+    browser.webRequest.onBeforeSendHeaders.hasListener(Actions.headersHandler)
+  ) {
     browser.webRequest.onBeforeSendHeaders.removeListener(Actions.headersHandler)
   }
 }
