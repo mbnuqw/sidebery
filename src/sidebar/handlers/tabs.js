@@ -292,15 +292,18 @@ function onTabUpdated(tabId, change, tab) {
 
   // Handle pinned tab
   if (change.pinned !== undefined && change.pinned) {
-    if (this.state.pinTabsPanels && this.state.pinTabsPanels[tabId]) {
-      localTab.panelId = this.state.pinTabsPanels[tabId]
-      this.state.pinTabsPanels.splice(tabId, 1)
-    }
     let panel = this.state.panelsMap[localTab.panelId]
     let index = localTab.index - panel.startIndex
     if (panel.tabs[index] && panel.tabs[index].id === localTab.id) {
       panel.tabs.splice(index, 1)
     }
+
+    if (localTab.prevPanelId && localTab.moveTime) {
+      if (localTab.moveTime + 1000 > Date.now()) {
+        localTab.panelId = localTab.prevPanelId
+      }
+    }
+
     this.actions.updatePanelsRanges()
     this.actions.updateTabsTree()
     if (panel.noEmpty && !panel.tabs.length) {
@@ -482,6 +485,9 @@ function onTabMoved(id, info) {
     movedTab = this.state.tabs.splice(i, 1)[0]
   }
   if (!movedTab) return
+
+  movedTab.moveTime = Date.now()
+  movedTab.prevPanelId = movedTab.panelId
 
   this.state.tabs.splice(info.toIndex, 0, movedTab)
   this.actions.recalcPanelScroll()

@@ -47,6 +47,7 @@ import Utils from '../../utils'
 import { TABS_PANEL_STATE } from '../../defaults'
 import EventBus from '../../event-bus'
 import State from '../store/state.js'
+import { getters } from '../store'
 import Actions from '../actions'
 
 const HIDDEN_PANEL_BTN = {
@@ -85,6 +86,7 @@ export default {
       let i, r
       let out = []
       let emptyPanel = false
+      let pinnedTabs
 
       for (i = 0; i < State.panels.length; i++) {
         const btn = State.panels[i]
@@ -97,7 +99,19 @@ export default {
           btn.inactive = true
         }
 
-        if (State.hideEmptyPanels && btn.tabs && !btn.tabs.length && State.panelIndex !== i) {
+        if (btn.tabs && State.pinnedTabsPosition === 'panel') {
+          let pinned = getters.pinnedTabs.filter(t => t.panelId === btn.id)
+          pinnedTabs = pinned.length > 0
+          btn.len += pinned.length
+        }
+
+        if (
+          State.hideEmptyPanels &&
+          btn.tabs &&
+          !btn.tabs.length &&
+          State.panelIndex !== i &&
+          !pinnedTabs
+        ) {
           btn.hidden = true
           btn.inactive = true
           emptyPanel = true
