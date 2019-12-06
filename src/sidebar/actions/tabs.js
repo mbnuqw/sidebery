@@ -2035,7 +2035,7 @@ function getPanelForNewTab(tab) {
 
   if (!panel && !parentTab && (this.state.moveNewTab === 'after' || this.state.moveNewTab === 'first_child' || this.state.moveNewTab === 'last_child')) {
     let activeTab = this.state.tabsMap[this.state.activeTabId]
-    panel = this.state.panelsMap[activeTab.panelId]
+    if (!activeTab.pinned) panel = this.state.panelsMap[activeTab.panelId]
   }
 
   if (!panel) panel = this.state.panels[this.state.panelIndex]
@@ -2091,6 +2091,8 @@ function getIndexForNewTab(panel, tab) {
   if (this.state.moveNewTab === 'after') {
     if (!activeTab || activeTab.panelId !== panel.id) {
       return endIndex
+    } else if (activeTab.pinned) {
+      return panel.startIndex
     } else {
       let tab, index = activeTab.index + 1
       for (; index < this.state.tabs.length; index++) {
@@ -2103,6 +2105,8 @@ function getIndexForNewTab(panel, tab) {
   if (this.state.moveNewTab === 'first_child') {
     if (!activeTab || activeTab.panelId !== panel.id) {
       return endIndex
+    } else if (activeTab.pinned) {
+      return panel.startIndex
     } else {
       if (tab) tab.openerTabId = activeTab.id
       return activeTab.index + 1
@@ -2111,6 +2115,8 @@ function getIndexForNewTab(panel, tab) {
   if (this.state.moveNewTab === 'last_child') {
     if (!activeTab || activeTab.panelId !== panel.id) {
       return endIndex
+    } else if (activeTab.pinned) {
+      return panel.startIndex
     } else {
       if (tab) tab.openerTabId = activeTab.id
       let t, index = activeTab.index + 1
