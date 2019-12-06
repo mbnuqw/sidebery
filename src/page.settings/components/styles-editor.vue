@@ -367,7 +367,7 @@
         @change="updateCSSVar('tabs_selected_shadow')"
         @toggle="toggleCSSVar('tabs_selected_shadow')")
         
-      style-field(
+      color-style-field(
         v-model="cssVars.tabs_lvl_indicator_bg"
         :label="'styles.tabs_lvl_indicator_bg'"
         :name="'--tabs-lvl-indicator-bg'"
