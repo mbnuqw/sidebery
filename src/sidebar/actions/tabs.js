@@ -53,6 +53,11 @@ async function loadTabsFromGlobalStorage() {
     tabData = tabsData[i]
     if (!tabData || tabData.index === undefined) continue
 
+    if (tabData.parentId === undefined) tabData.parentId = -1
+    if (tabData.panelId === undefined) tabData.panelId = DEFAULT_CTX_ID
+    if (tabData.folded === undefined) tabData.folded = false
+    if (tabData.ctx === undefined) tabData.ctx = DEFAULT_CTX_ID
+
     // Recreate group tab (e.g. after addon was disabled-enabled)
     if (tabData.isMissedGroup) {
       let groupId = Utils.getGroupId(tabData.url)
@@ -425,14 +430,12 @@ function saveTabsData(delay = 300) {
   this._saveTabsDataTimeout = setTimeout(() => {
     let data = []
     for (let tab of this.state.tabs) {
-      data.push({
-        id: tab.id,
-        panelId: tab.panelId,
-        parentId: tab.parentId,
-        folded: tab.folded,
-        url: tab.url,
-        ctx: tab.cookieStoreId,
-      })
+      let info = { id: tab.id, url: tab.url }
+      if (tab.parentId > -1) info.parentId = tab.parentId
+      if (tab.panelId !== DEFAULT_CTX_ID) info.panelId = tab.panelId
+      if (tab.folded) info.folded = tab.folded
+      if (tab.cookieStoreId !== DEFAULT_CTX_ID) info.ctx = tab.cookieStoreId
+      data.push(info)
     }
 
     if (this.state.bg && !this.state.bg.error) {
