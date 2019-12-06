@@ -67,7 +67,7 @@ export default {
   'styles.tabs_shadow': { message: 'Shadow' },
   'styles.tabs_activated_shadow': { message: 'Active tab shadow' },
   'styles.tabs_selected_shadow': { message: 'Selected tab shadow' },
-  'styles.tabs_lvl_indicator_bg': { message: 'Tab Level Indicator Color'},
+  'styles.tabs_lvl_indicator_bg': { message: 'Tab level indicator color'},
 
   // --- Bookmarks
   'styles.bookmarks_title': { message: 'Bookmarks' },
