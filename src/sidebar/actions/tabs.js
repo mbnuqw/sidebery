@@ -49,6 +49,7 @@ async function loadTabsFromGlobalStorage() {
 
   let idsMap = {}
   let prevTab
+  let pIndex = 0
   for (let tab, tabData, i = 0; i < tabsData.length; i++) {
     tabData = tabsData[i]
     if (!tabData || tabData.index === undefined) continue
@@ -81,8 +82,10 @@ async function loadTabsFromGlobalStorage() {
     tab = tabs[tabData.index]
     if (!tab) break
 
-    if (tabData.panelId && this.state.panelsMap[tabData.panelId]) {
+    let panel = this.state.panelsMap[tabData.panelId]
+    if (panel && (tab.pinned || panel.index >= pIndex)) {
       tab.panelId = tabData.panelId
+      if (!tab.pinned) pIndex = panel.index
     } else {
       if (prevTab) {
         tab.panelId = prevTab.panelId
