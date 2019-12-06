@@ -292,6 +292,10 @@ function onTabUpdated(tabId, change, tab) {
 
   // Handle pinned tab
   if (change.pinned !== undefined && change.pinned) {
+    if (this.state.pinTabsPanels && this.state.pinTabsPanels[tabId]) {
+      localTab.panelId = this.state.pinTabsPanels[tabId]
+      this.state.pinTabsPanels.splice(tabId, 1)
+    }
     let panel = this.state.panelsMap[localTab.panelId]
     let index = localTab.index - panel.startIndex
     if (panel.tabs[index] && panel.tabs[index].id === localTab.id) {

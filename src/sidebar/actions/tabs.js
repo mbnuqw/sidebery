@@ -782,13 +782,16 @@ function activateLastActiveTabOf(panelIndex) {
  * (un)Pin tabs
  */
 function pinTabs(tabIds) {
+  if (!this.state.pinTabsPanels) this.state.pinTabsPanels = []
   for (let tabId of tabIds) {
     let tab = this.state.tabsMap[tabId]
     if (!tab) continue
+    this.state.pinTabsPanels[tab.id] = tab.panelId
     for (let i = tab.index + 1; i < this.state.tabs.length; i++) {
       const child = this.state.tabs[i]
       if (child.lvl <= tab.lvl) break
       if (child.parentId === tab.id) child.parentId = tab.parentId
+      this.state.pinTabsPanels[child.id] = child.panelId
     }
     browser.tabs.update(tabId, { pinned: true })
   }
@@ -1469,9 +1472,11 @@ async function moveDroppedNodes(dropIndex, dropParent, nodes, pin, currentPanel)
 
   // Pin tab
   if (pinTab) {
+    if (!this.state.pinTabsPanels) this.state.pinTabsPanels = []
     for (let t of tabs) {
       t.lvl = 0
       t.parentId = -1
+      this.state.pinTabsPanels[t.id] = t.panelId
       await browser.tabs.update(t.id, { pinned: true })
     }
   }
