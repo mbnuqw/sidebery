@@ -67,6 +67,7 @@ export default {
   'styles.tabs_shadow': { message: 'Тень' },
   'styles.tabs_activated_shadow': { message: 'Тень активного таба' },
   'styles.tabs_selected_shadow': { message: 'Тень выделенного таба' },
+  'styles.tabs_lvl_indicator_bg': { message: 'Цвет индикатора уровня вкладки'},
 
   // --- Bookmarks
   'styles.bookmarks_title': { message: 'Закладки' },
