@@ -1,4 +1,7 @@
 import Actions, { injectInActions } from './actions.js'
+import { initLogs } from './logs.js'
+
+initLogs('bg')
 
 void async function main() {
   const state = injectInActions()

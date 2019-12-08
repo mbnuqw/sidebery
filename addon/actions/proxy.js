@@ -1,14 +1,26 @@
+import { log } from '../logs.js'
 import Actions from '../actions.js'
 
 const BG_URL = browser.runtime.getURL('background.html')
+const PROXY_BLOCK = { type: 'socks', ip: '0.0.0.0', port: '0', proxyDNS: true }
 let updateReqHandlerTimeout, handledReqId, incHistory = {}
 
 async function recreateTab(tab, info, cookieStoreId) {
+  try {
+    await browser.runtime.sendMessage({
+      instanceType: 'sidebar',
+      windowId: tab.windowId,
+      action: 'handleReopening',
+      arg: tab.id,
+    })
+  } catch (err) { /* itsokay */ }
+  log('recreate tab at', tab.index)
   await browser.tabs.create({
     windowId: tab.windowId,
     url: info.url,
     cookieStoreId,
     active: tab.active,
+    index: tab.index,
     pinned: tab.pinned,
   })
   browser.tabs.remove(tab.id)
@@ -100,7 +112,7 @@ function requestHandler(info) {
 
         recreateTab(tab, info, rule.ctx)
         incHistory[rule.ctx] = info.url
-        return
+        return PROXY_BLOCK
       }
     }
 
@@ -114,7 +126,7 @@ function requestHandler(info) {
         if (ok) {
           recreateTab(tab, info)
           incHistory['firefox-default'] = info.url
-          return
+          return PROXY_BLOCK
         }
       }
     }

@@ -1,3 +1,5 @@
+import { log } from '../logs.js'
+
 const detachedTabs = [], tabsTreesByWin = {}
 let tabsTreeSaveTimeout
 
@@ -27,10 +29,16 @@ async function loadTabs(windows, tabsMap) {
  */
 function onTabCreated(tab) {
   if (!this.windows[tab.windowId]) return
+  log('onTabCreated', tab.id, tab.index)
   const tabWindow = this.windows[tab.windowId]
   if (tabWindow.tabs) tabWindow.tabs.splice(tab.index, 0, tab)
   else tabWindow.tabs = [tab]
   this.tabsMap[tab.id] = tab
+
+  let len = tabWindow.tabs.length
+  for (let i = tab.index; i < len; i++) {
+    tabWindow.tabs[i].index = i
+  }
 }
 
 /**
@@ -38,11 +46,17 @@ function onTabCreated(tab) {
  */
 function onTabRemoved(tabId, info) {
   if (!this.windows[info.windowId] || info.isWindowClosing) return
+  log('onTabRemoved', tabId)
   let tabWindow = this.windows[info.windowId]
   let index = tabWindow.tabs.findIndex(t => t.id === tabId)
   if (index === -1) return
   tabWindow.tabs.splice(index, 1)
   delete this.tabsMap[tabId]
+
+  let len = tabWindow.tabs.length
+  for (let i = index; i < len; i++) {
+    tabWindow.tabs[i].index = i
+  }
 }
 
 /**
@@ -52,20 +66,24 @@ function onTabUpdated(tabId, change) {
   let targetTab = this.tabsMap[tabId]
   if (!targetTab) return
 
+  log('onTabUpdated', tabId, change)
+
   Object.assign(targetTab, change)
 
   if (this.proxies[targetTab.cookieStoreId]) {
     targetTab.proxified = true
     this.actions.showProxyBadgeDebounced(tabId)
   }
-  if (!this.proxies[targetTab.cookieStoreId]) {
+  if (!this.proxies[targetTab.cookieStoreId] && targetTab.proxified) {
     targetTab.proxified = false
     this.actions.hideProxyBadge(tabId)
   }
 }
 
 function showProxyBadge(tabId) {
+  log('showProxyBadge', tabId)
   let tab = this.tabsMap[tabId]
+  if (!tab) return
   let container = this.containers[tab.cookieStoreId]
   if (!container) return
 
@@ -83,6 +101,7 @@ function showProxyBadgeDebounced(tabId, delay = 500) {
 }
 
 function hideProxyBadge(tabId) {
+  log('hideProxyBadge', tabId)
   browser.pageAction.hide(tabId)
   browser.pageAction.setTitle({ title: 'Sidebery proxy off', tabId })
 }
@@ -94,9 +113,15 @@ function onTabMoved(id, info) {
   if (!this.windows[info.windowId]) return
   let tabWindow = this.windows[info.windowId]
 
+  log('onTabMoved', id)
+
   if (!tabWindow.tabs) return
   let movedTab = tabWindow.tabs.splice(info.fromIndex, 1)[0]
   tabWindow.tabs.splice(info.toIndex, 0, movedTab)
+
+  for (let i = tabWindow.tabs.length; i--;) {
+    tabWindow.tabs[i].index = i
+  }
 }
 
 /**

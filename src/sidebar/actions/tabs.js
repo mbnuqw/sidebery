@@ -1,3 +1,4 @@
+import { log } from '../../../addon/logs'
 import Utils from '../../utils'
 import Logs from '../../logs'
 import EventBus from '../../event-bus'
@@ -2192,6 +2193,19 @@ function updateHighlightedTabs(delay = 250) {
   }, delay)
 }
 
+function handleReopening(tabId) {
+  let targetTab = this.state.tabsMap[tabId]
+  if (!targetTab) return
+
+  log('handleReopening', tabId, targetTab.index)
+
+  if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
+  this.state.newTabsPosition[targetTab.index] = {
+    parent: targetTab.parentId,
+    panel: targetTab.panelId,
+  }
+}
+
 export default {
   loadTabsFromGlobalStorage,
   loadTabsFromSessionStorage,
@@ -2264,4 +2278,5 @@ export default {
 
   checkUrlRules,
   updateHighlightedTabs,
+  handleReopening,
 }

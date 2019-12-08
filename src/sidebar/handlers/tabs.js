@@ -1,3 +1,4 @@
+import { log } from '../../../addon/logs'
 import Utils from '../../utils'
 import { DEFAULT_CTX_ID } from '../../defaults'
 
@@ -9,6 +10,8 @@ const URL_HOST_PATH_RE = /^([a-z0-9-]{1,63}\.)+\w+(:\d+)?\/[A-Za-z0-9-._~:/?#[\]
  */
 function onTabCreated(tab) {
   if (tab.windowId !== this.state.windowId) return
+
+  log('onTabCreated', tab.id, tab.index)
 
   if (this.state.highlightOpenBookmarks && this.state.bookmarksUrlMap && this.state.bookmarksUrlMap[tab.url]) {
     for (let b of this.state.bookmarksUrlMap[tab.url]) {
@@ -23,9 +26,10 @@ function onTabCreated(tab) {
   let panel, index
 
   // Reopened tab
-  if (this.state.removedTabs) {
+  if (this.state.removedTabs && this.state.removedTabs.length) {
     let lastRmTab = this.state.removedTabs[this.state.removedTabs.length - 1]
     if (lastRmTab.index === tab.index && lastRmTab.title === tab.title) {
+      log('reopened tab', lastRmTab.title)
       if (this.state.panelsMap[lastRmTab.panel]) {
         panel = this.state.panelsMap[lastRmTab.panel]
         index = tab.index
@@ -45,6 +49,7 @@ function onTabCreated(tab) {
       index = tab.index
       tab.openerTabId = position.parent
       delete this.state.newTabsPosition[tab.index]
+      log('predefined position', index, panel.id)
     } else {
       panel = this.actions.getPanelForNewTab(tab)
       index = this.actions.getIndexForNewTab(panel, tab)
@@ -56,8 +61,10 @@ function onTabCreated(tab) {
           })
         }
       }
+      log('calculated position', index, panel.id)
     }
   }
+
 
   let treeAllowed =
     this.state.moveNewTabParent === 'first_child' ||
@@ -184,6 +191,8 @@ function onTabCreated(tab) {
 function onTabUpdated(tabId, change, tab) {
   if (tab.windowId !== this.state.windowId) return
 
+  log('onTabUpdated', tabId, Object.keys(change))
+
   const localTab = this.state.tabsMap[tabId]
   if (!localTab) return
 
@@ -224,6 +233,12 @@ function onTabUpdated(tabId, change, tab) {
             browser.tabs.sendMessage(groupTab.id, updateData)
               .catch(() => {/** itsokay **/})
           }
+        })
+        .catch(() => {
+          // If I close containered tab opened from bg script
+          // I'll get 'updated' event with 'status': 'complete'
+          // and since tab is in 'removing' state I'll get this
+          // error.
         })
     }
   }
@@ -341,6 +356,8 @@ function onTabUpdated(tabId, change, tab) {
  */
 function onTabRemoved(tabId, info, childfree) {
   if (info.windowId !== this.state.windowId) return
+
+  log('onTabRemoved', tabId)
 
   if (!this.state.removingTabs) this.state.removingTabs = []
   else this.state.removingTabs.splice(this.state.removingTabs.indexOf(tabId), 1)
@@ -489,6 +506,8 @@ function onTabRemoved(tabId, info, childfree) {
 function onTabMoved(id, info) {
   if (info.windowId !== this.state.windowId) return
   if (this.state.ignoreMovingTabs) return
+
+  log('onTabMoved', id)
 
   if (!this.state.movingTabs) this.state.movingTabs = []
   else this.state.movingTabs.splice(this.state.movingTabs.indexOf(id), 1)
