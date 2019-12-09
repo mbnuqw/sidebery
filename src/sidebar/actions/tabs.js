@@ -653,12 +653,18 @@ async function removeTabs(tabIds) {
             parent: oldNewIds[parents[tab.id]],
           }
 
-          let newTab = await browser.tabs.create({
+          let conf = {
             windowId: this.state.windowId,
             index: tab.index + i,
             url: Utils.normalizeUrl(tab.url),
             cookieStoreId: tab.cookieStoreId,
-          })
+            active: false,
+          }
+          if (conf.cookieStoreId === DEFAULT_CTX_ID) {
+            conf.discarded = true
+            conf.title = tab.title
+          }
+          let newTab = await browser.tabs.create(conf)
           oldNewIds[tab.id] = newTab.id
         }
       },
