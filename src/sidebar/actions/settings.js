@@ -56,8 +56,19 @@ function updateSettings(settings) {
   }
 
   if (toggleBookmarks) {
-    if (this.state.bookmarksPanel) Actions.loadBookmarks()
-    else this.state.bookmarks = []
+    if (this.state.bookmarksPanel) {
+      Actions.loadBookmarks()
+    } else {
+      this.state.bookmarks = []
+
+      let index = this.state.panels.findIndex(p => p.type === 'bookmarks')
+      if (this.state.panelIndex === index) {
+        index = this.state.panels.findIndex(p => {
+          return p.type !== 'bookmarks' && !p.hidden
+        })
+        if (index !== -1) this.state.panelIndex = index
+      }
+    }
   }
 
   if (highlightOpenBookmarks && this.state.bookmarksUrlMap) {
