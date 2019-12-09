@@ -1624,6 +1624,13 @@ async function recreateDroppedNodes(event, dropIndex, dropParent, nodes, pin, de
 async function dropToTabsNative(event, dropIndex, dropParent, destCtx, pin) {
   let url = await Utils.getUrlFromDragEvent(event)
 
+  if (!url) {
+    let query = await Utils.getDataFromDragEvent(event, ['text/plain'])
+    let conf = { query }
+    if (dropParent > -1) conf.tabId = dropParent
+    if (query) return browser.search.search(conf)
+  }
+
   let prevTab = this.state.tabs[dropIndex - 1]
   if (prevTab && prevTab.folded) {
     for (let tab; dropIndex < this.state.tabs.length; dropIndex++) {

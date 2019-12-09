@@ -31,7 +31,8 @@
     "bookmarks",
     "sessions",
     "menus",
-    "menus.overrideContext"
+    "menus.overrideContext",
+    "search"
   ],
   
   "optional_permissions": [

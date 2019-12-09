@@ -16,7 +16,8 @@
     "semi": ["error", "never"],
     "require-atomic-updates": "off",
     "vue/html-self-closing": "off",
-    "vue/require-default-prop": "off"
+    "vue/require-default-prop": "off",
+    "no-async-promise-executor": "off"
   },
   "globals": {
     "process": true,

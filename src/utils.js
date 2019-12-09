@@ -197,26 +197,51 @@ function commonSubStr(strings) {
 }
 
 /**
- * Try to find url in dragged items and return first valid
+ * Retrieve data from drag event.
  */
-async function getUrlFromDragEvent(event) {
-  return new Promise(res => {
+async function getDataFromDragEvent(event, types = [], checkReg) {
+  return new Promise(async res => {
     if (!event.dataTransfer) return res()
 
     for (let item of event.dataTransfer.items) {
       if (item.kind !== 'string') continue
-      const typeOk =
+      const typeOk = types.some(t => t === item.type)
+      if (!typeOk) continue
+
+      let output = await _getStringFromDragItem(item)
+      if (!checkReg) return res(output)
+      else if (checkReg.test(output)) res(output)
+    }
+
+    res()
+  })
+}
+
+async function _getStringFromDragItem(item) {
+  return new Promise(res => item.getAsString(s => res(s)))
+}
+
+/**
+ * Try to find url in dragged items and return first valid
+ */
+async function getUrlFromDragEvent(event) {
+  return new Promise(async (res) => {
+    if (!event.dataTransfer) return res()
+    let typeOk
+
+    for (let item of event.dataTransfer.items) {
+      if (item.kind !== 'string') continue
+      typeOk =
         item.type === 'text/x-moz-url-data' ||
         item.type === 'text/uri-list' ||
         item.type === 'text/x-moz-text-internal'
-
       if (!typeOk) continue
 
-      item.getAsString(s => {
-        if (URL_RE.test(s)) res(s)
-        else res()
-      })
+      let output = await _getStringFromDragItem(item)
+      if (URL_RE.test(output)) return res(output)
     }
+
+    res()
   })
 }
 
@@ -224,7 +249,7 @@ async function getUrlFromDragEvent(event) {
  * Try to get desciption string from drag event
  */
 async function getDescFromDragEvent(event) {
-  return new Promise(res => {
+  return new Promise(async (res) => {
     if (!event.dataTransfer) return res()
     let typeOk
 
@@ -233,13 +258,12 @@ async function getDescFromDragEvent(event) {
       typeOk = item.type === 'text/x-moz-url-desc'
 
       if (typeOk) {
-        item.getAsString(s => res(s))
+        res(await _getStringFromDragItem(item))
         break
       }
     }
 
-    if (typeOk) setTimeout(() => res(), 1000)
-    else res()
+    res()
   })
 }
 
@@ -565,6 +589,7 @@ export default {
   toCSSVarName,
   parseCSSNum,
   commonSubStr,
+  getDataFromDragEvent,
   getUrlFromDragEvent,
   getDescFromDragEvent,
   isGroupUrl,
