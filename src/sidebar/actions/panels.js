@@ -387,8 +387,11 @@ async function switchPanel(dir = 0) {
  * Find panel with active tab and switch to it.
  */
 function goToActiveTabPanel() {
-  const activeTab = this.state.tabs.find(t => t.active)
-  const panel = this.state.panelsMap[activeTab.cookieStoreId]
+  let activeTab = this.state.tabsMap[this.state.activeTabId]
+  if (!activeTab) activeTab = this.state.tabs.find(t => t.active)
+  if (!activeTab) return
+
+  let panel = this.state.panelsMap[activeTab.panelId]
   if (panel) this.actions.switchToPanel(panel.index)
 }
 
