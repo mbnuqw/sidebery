@@ -361,7 +361,7 @@ export default {
      * Close tab
      */
     close() {
-      this.$emit('remove', this.tab)
+      browser.tabs.remove(this.tab.id)
     },
   },
 }

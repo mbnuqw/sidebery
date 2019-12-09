@@ -657,7 +657,7 @@ function onTabActivated(info) {
   }
 
   // Find panel of activated tab
-  if (tab.pinned && this.state.pinnedTabsPosition !== 'panel') return
+  // if (tab.pinned && this.state.pinnedTabsPosition !== 'panel') return
   if (!panel) return
 
   // Switch to activated tab's panel
@@ -687,7 +687,9 @@ function onTabActivated(info) {
   // Update succession
   if (this.state.activateAfterClosing !== 'none') {
     const target = Utils.findSuccessorTab(this.state, tab)
-    if (target) browser.tabs.moveInSuccession([tab.id], target.id)
+    if (target && tab.successorTabId !== target.id) {
+      browser.tabs.moveInSuccession([tab.id], target.id)
+    }
   }
 
   if (this.state.tabsTree && Utils.isGroupUrl(tab.url)) {

@@ -632,7 +632,9 @@ async function removeTabs(tabIds) {
   let activeTab = tabs.find(t => t.active)
   if (activeTab) {
     let target = Utils.findSuccessorTab(this.state, activeTab, tabs.map(t => t.id))
-    if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
+    if (target && activeTab.successorTabId !== target.id) {
+      browser.tabs.moveInSuccession([activeTab.id], target.id)
+    }
   }
 
   if (tabs.length > 1 && this.state.tabsRmUndoNote && !warn) {

@@ -95,22 +95,6 @@ export default {
       this.dragPointed = false
       State.dragNodes = null
     },
-
-    async removeTab(index, tab) {
-      // Activate another pinned tab or first tab of panel
-      if (tab.active) {
-        let toActivate = this.pinnedTabs[index + 1] || this.pinnedTabs[index - 1]
-        if (!toActivate) {
-          let panel = State.panels[State.panelIndex]
-          if (!panel || !panel.tabs) panel = State.panels[State.lastPanelIndex]
-          if (panel && panel.tabs) toActivate = panel.tabs[0]
-        }
-
-        if (toActivate) await browser.tabs.update(toActivate.id, { active: true })
-      }
-
-      browser.tabs.remove(tab.id)
-    },
   },
 }
 </script>
