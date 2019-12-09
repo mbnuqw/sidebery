@@ -200,9 +200,14 @@ export default {
       }
 
       if (this.selected >= 0) {
-        this.selected += dir
-        if (this.selected < 0) this.selected = 0
-        if (this.selected >= opts.length) this.selected = opts.length - 1
+        let i = this.selected + dir
+
+        while(opts[i] && (opts[i] === 'separator' || opts[i].inactive)) {
+          i += dir
+        }
+
+        if (i < 0 || i >= opts.length) return
+        this.selected = i
       }
     },
 
