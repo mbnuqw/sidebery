@@ -25,44 +25,26 @@ function onTabCreated(tab) {
   // Get target panel and index
   let panel, index
 
-  // Reopened tab
-  if (this.state.removedTabs && this.state.removedTabs.length) {
-    let lastRmTab = this.state.removedTabs[this.state.removedTabs.length - 1]
-    if (lastRmTab.index === tab.index && lastRmTab.title === tab.title) {
-      log('reopened tab', lastRmTab.title)
-      if (this.state.panelsMap[lastRmTab.panel]) {
-        panel = this.state.panelsMap[lastRmTab.panel]
-        index = tab.index
-        if (this.state.tabsMap[lastRmTab.parent]) {
-          tab.openerTabId = lastRmTab.parent
-        }
-      }
-      this.state.removedTabs.pop()
-    }
-  }
-
-  if (index === undefined) {
-    if (this.state.newTabsPosition && this.state.newTabsPosition[tab.index]) {
-      let position = this.state.newTabsPosition[tab.index]
-      panel = this.state.panelsMap[position.panel]
-      if (!panel) panel = this.state.panelsMap[DEFAULT_CTX_ID]
+  if (this.state.newTabsPosition && this.state.newTabsPosition[tab.index]) {
+    let position = this.state.newTabsPosition[tab.index]
+    panel = this.state.panelsMap[position.panel]
+    if (!panel) panel = this.state.panelsMap[DEFAULT_CTX_ID]
+    index = tab.index
+    tab.openerTabId = position.parent
+    delete this.state.newTabsPosition[tab.index]
+    log('predefined position', index, panel.id)
+  } else {
+    panel = this.actions.getPanelForNewTab(tab)
+    index = this.actions.getIndexForNewTab(panel, tab)
+    if (index === undefined) {
       index = tab.index
-      tab.openerTabId = position.parent
-      delete this.state.newTabsPosition[tab.index]
-      log('predefined position', index, panel.id)
-    } else {
-      panel = this.actions.getPanelForNewTab(tab)
-      index = this.actions.getIndexForNewTab(panel, tab)
-      if (index === undefined) {
-        index = tab.index
-        if (panel.startIndex > index || panel.endIndex + 1 < index) {
-          panel = this.state.panels.find(p => {
-            return p.startIndex <= index && p.endIndex + 1 >= index
-          })
-        }
+      if (panel.startIndex > index || panel.endIndex + 1 < index) {
+        panel = this.state.panels.find(p => {
+          return p.startIndex <= index && p.endIndex + 1 >= index
+        })
       }
-      log('calculated position', index, panel.id)
     }
+    log('calculated position', index, panel.id)
   }
 
 
@@ -372,15 +354,6 @@ function onTabRemoved(tabId, info, childfree) {
   if (!tab) return
   let creatingNewTab
   let panel = this.state.panelsMap[tab.panelId]
-
-  if (!this.state.removedTabs) this.state.removedTabs = []
-  this.state.removedTabs.push({
-    index: tab.index,
-    title: tab.title,
-    panel: tab.panelId,
-    parent: tab.parentId,
-  })
-  if (this.state.removedTabs.length > 96) this.state.removedTabs.splice(0, 32)
 
   // Recreate locked tab
   if (!tab.pinned && panel && panel.lockedTabs && tab.url.startsWith('http')) {

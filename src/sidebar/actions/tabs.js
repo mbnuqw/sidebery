@@ -1834,6 +1834,7 @@ function createTabInPanel(panel, url) {
   let index = this.actions.getIndexForNewTab(panel, tabShell)
   let config = { index, windowId: this.state.windowId }
 
+  if (index === undefined) index = panel.endIndex
   if (url) config.url = url
   if (index !== undefined) {
     if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
