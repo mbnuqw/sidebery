@@ -1,5 +1,3 @@
-import { log } from '../logs.js'
-
 const detachedTabs = [], tabsTreesByWin = {}
 let tabsTreeSaveTimeout
 
@@ -29,7 +27,6 @@ async function loadTabs(windows, tabsMap) {
  */
 function onTabCreated(tab) {
   if (!this.windows[tab.windowId]) return
-  log('onTabCreated', tab.id, tab.index)
   const tabWindow = this.windows[tab.windowId]
   if (tabWindow.tabs) tabWindow.tabs.splice(tab.index, 0, tab)
   else tabWindow.tabs = [tab]
@@ -46,7 +43,6 @@ function onTabCreated(tab) {
  */
 function onTabRemoved(tabId, info) {
   if (!this.windows[info.windowId] || info.isWindowClosing) return
-  log('onTabRemoved', tabId)
   let tabWindow = this.windows[info.windowId]
   let index = tabWindow.tabs.findIndex(t => t.id === tabId)
   if (index === -1) return
@@ -66,8 +62,6 @@ function onTabUpdated(tabId, change) {
   let targetTab = this.tabsMap[tabId]
   if (!targetTab) return
 
-  log('onTabUpdated', tabId, change)
-
   Object.assign(targetTab, change)
 
   if (this.proxies[targetTab.cookieStoreId]) {
@@ -81,7 +75,6 @@ function onTabUpdated(tabId, change) {
 }
 
 function showProxyBadge(tabId) {
-  log('showProxyBadge', tabId)
   let tab = this.tabsMap[tabId]
   if (!tab) return
   let container = this.containers[tab.cookieStoreId]
@@ -101,7 +94,6 @@ function showProxyBadgeDebounced(tabId, delay = 500) {
 }
 
 function hideProxyBadge(tabId) {
-  log('hideProxyBadge', tabId)
   browser.pageAction.hide(tabId)
   browser.pageAction.setTitle({ title: 'Sidebery proxy off', tabId })
 }
@@ -112,8 +104,6 @@ function hideProxyBadge(tabId) {
 function onTabMoved(id, info) {
   if (!this.windows[info.windowId]) return
   let tabWindow = this.windows[info.windowId]
-
-  log('onTabMoved', id)
 
   if (!tabWindow.tabs) return
   let movedTab = tabWindow.tabs.splice(info.fromIndex, 1)[0]

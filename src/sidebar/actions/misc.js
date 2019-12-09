@@ -1,4 +1,3 @@
-import Logs from '../../logs'
 import Utils from '../../utils'
 import { DEFAULT_SETTINGS } from '../../defaults'
 
@@ -114,8 +113,6 @@ async function loadPermissions() {
     this.state.hideInact = false
     this.state.hideFoldedTabs = false
   }
-
-  Logs.push('[INFO] Permissions loaded')
 }
 
 /**
@@ -265,13 +262,6 @@ function updateSidebarWidth() {
   this.state.width = document.body.offsetWidth
 }
 
-/**
- * getLogs
- */
-function getLogs() {
-  return Logs
-}
-
 function confirm(msg) {
   return new Promise(res => {
     this.state.confirm = {
@@ -384,7 +374,6 @@ export default {
   blockCtxMenu,
   startMultiSelection,
   stopMultiSelection,
-  getLogs,
   confirm,
   copyUrls,
   askNewBookmarkFolder,

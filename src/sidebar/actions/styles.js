@@ -1,5 +1,4 @@
 import Utils from '../../utils'
-import Logs from '../../logs'
 import EventBus from '../../event-bus'
 import CommonActions from '../../actions/styles'
 import { CUSTOM_CSS_VARS } from '../../defaults'
@@ -18,7 +17,6 @@ async function loadCSSVars() {
   }
   
   EventBus.$emit('dynVarChange')
-  Logs.push('[INFO] Styles loaded')
 }
 
 /**

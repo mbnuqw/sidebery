@@ -1,4 +1,3 @@
-import { log } from '../logs.js'
 import Actions from '../actions.js'
 
 const BG_URL = browser.runtime.getURL('background.html')
@@ -14,7 +13,6 @@ async function recreateTab(tab, info, cookieStoreId) {
       arg: tab.id,
     })
   } catch (err) { /* itsokay */ }
-  log('recreate tab at', tab.index)
   await browser.tabs.create({
     windowId: tab.windowId,
     url: info.url,

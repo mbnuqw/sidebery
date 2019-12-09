@@ -60,6 +60,21 @@ async function loadPermissions(init) {
   }
 }
 
+function goToPerm(hash, permId) {
+  let scrollHighlightConf = { behavior: 'smooth', block: 'center' }
+
+  setTimeout(() => {
+    if (hash !== undefined && this.state.settingsRefs) {
+      let el = this.state.settingsRefs[permId]
+      if (el) el.scrollIntoView(scrollHighlightConf)
+    }
+  }, 250)
+  
+  document.title = 'Sidebery / Settings'
+  this.state.activeView = 'Settings'
+  this.state.highlightedField = permId
+}
+
 /**
  * Check url hash and update active view
  */
@@ -68,63 +83,15 @@ function updateActiveView() {
   let hashArg = hash.split('.')
   hash = hashArg[0]
   let arg = hashArg[1]
-  let scrollHighlightConf = { behavior: 'smooth', block: 'center' }
   let scrollSectionConf = { behavior: 'smooth', block: 'start' }
 
-  if (hash === 'all-urls') {
-    setTimeout(() => {
-      if (hash !== undefined && this.state.settingsRefs) {
-        let el = this.state.settingsRefs.all_urls
-        if (el) el.scrollIntoView(scrollHighlightConf)
-      }
-    }, 250)
-    
-    document.title = 'Sidebery / Settings'
-    this.state.activeView = 'Settings'
-    this.state.highlightedField = 'all_urls'
-    return
-  }
-
-  if (hash === 'tab-hide') {
-    setTimeout(() => {
-      if (hash !== undefined && this.state.settingsRefs) {
-        let el = this.state.settingsRefs.tab_hide
-        if (el) el.scrollIntoView(scrollHighlightConf)
-      }
-    }, 250)
-
-    document.title = 'Sidebery / Settings'
-    this.state.activeView = 'Settings'
-    this.state.highlightedField = 'tab_hide'
-    return
-  }
-
+  if (hash === 'all-urls') return this.actions.goToPerm(hash, 'all_urls')
+  if (hash === 'tab-hide') return this.actions.goToPerm(hash, 'tab_hide')
   if (hash === 'clipboard-write') {
-    setTimeout(() => {
-      if (hash !== undefined && this.state.settingsRefs) {
-        let el = this.state.settingsRefs.clipboard_write
-        if (el) el.scrollIntoView(scrollHighlightConf)
-      }
-    }, 250)
-
-    document.title = 'Sidebery / Settings'
-    this.state.activeView = 'Settings'
-    this.state.highlightedField = 'clipboard_write'
-    return
+    return this.actions.goToPerm(hash, 'clipboard_write')
   }
-
   if (hash === 'web-request-blocking') {
-    setTimeout(() => {
-      if (hash !== undefined && this.state.settingsRefs) {
-        let el = this.state.settingsRefs.web_request_blocking
-        if (el) el.scrollIntoView(scrollHighlightConf)
-      }
-    }, 250)
-
-    document.title = 'Sidebery / Settings'
-    this.state.activeView = 'Settings'
-    this.state.highlightedField = 'web_request_blocking'
-    return
+    return this.actions.goToPerm(hash, 'web_request_blocking')
   }
 
   if (this.__navLockTimeout) clearTimeout(this.__navLockTimeout)
@@ -194,5 +161,6 @@ export default {
   loadPlatformInfo,
   loadBrowserInfo,
   loadPermissions,
+  goToPerm,
   updateActiveView,
 }

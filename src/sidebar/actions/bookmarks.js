@@ -1,5 +1,4 @@
 import Utils from '../../utils'
-import Logs from '../../logs'
 import { translate } from '../../mixins/dict'
 import { DEFAULT_CTX_ID } from '../../defaults'
 import Actions from '../actions'
@@ -13,7 +12,6 @@ async function loadBookmarks() {
   panel.loading = true
   let bookmarks = await browser.bookmarks.getTree()
   if (!bookmarks || !bookmarks.length) {
-    Logs.push('[ERROR] Cannot load bookmarks')
     panel.loading = 'err'
     setTimeout(() => {panel.loading = false}, 2000)
   }
@@ -60,15 +58,12 @@ async function loadBookmarks() {
         }
       })
     }
-    Logs.push('[INFO] Bookmarks tree state restored')
   }
 
   this.state.bookmarks = bookmarks[0].children
   this.state.bookmarksCount = count
   panel.loading = 'ok'
   setTimeout(() => {panel.loading = false}, 2000)
-
-  Logs.push('[INFO] Bookmarks loaded')
 }
 
 /**

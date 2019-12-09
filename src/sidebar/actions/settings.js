@@ -1,5 +1,4 @@
 import Utils from '../../utils'
-import Logs from '../../logs'
 import CommonActions from '../../actions/settings'
 import { DEFAULT_SETTINGS } from '../../defaults'
 import Actions from '../actions'
@@ -135,32 +134,6 @@ async function openSettings(section) {
 }
 
 /**
- * Provide window-wise debug data
- */
-async function getWindowDbgInfo() {
-  const tabs = []
-
-  for (let tab of this.state.tabs) {
-    // Get sanitized clone
-    const tabClone = JSON.parse(JSON.stringify(tab))
-
-    delete tabClone.title
-    delete tabClone.width
-    delete tabClone.height
-    delete tabClone.lastAccessed
-    tabClone.muted = tabClone.mutedInfo.muted
-    delete tabClone.mutedInfo
-    tabClone.url = tabClone.url.slice(0, 5) + '...'
-    if (tabClone.favIconUrl && tabClone.favIconUrl.length > 5) {
-      tabClone.favIconUrl = tabClone.favIconUrl.slice(0, 5) + '...'
-    }
-    tabs.push(tabClone)
-  }
-
-  return { logs: Logs, tabs }
-}
-
-/**
  * Provide common debug data
  */
 async function getCommonDbgInfo() {
@@ -280,7 +253,6 @@ export default {
 
   updateSettings,
   openSettings,
-  getWindowDbgInfo,
   getCommonDbgInfo,
   getCssSelectors,
 }

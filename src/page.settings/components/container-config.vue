@@ -107,7 +107,6 @@
       text-input.text(
         ref="userAgentInput"
         or="---"
-        :line="true"
         :value="conf.userAgent"
         @input="onUserAgentInput")
 </template>
@@ -287,6 +286,9 @@ export default {
       }
       if (this.$refs.excludeHostsInput) {
         this.$refs.excludeHostsInput.recalcTextHeight()
+      }
+      if (this.$refs.userAgentInput) {
+        this.$refs.userAgentInput.recalcTextHeight()
       }
       if (this.$refs.scrollBox) this.$refs.scrollBox.recalcScroll()
     },

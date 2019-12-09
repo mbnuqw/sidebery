@@ -11,9 +11,6 @@ import State from './store/state'
 import Sidebar from './sidebar.vue'
 import Actions, { injectInActions } from './actions'
 import Handlers, { injectInHandlers } from './handlers'
-import { initLogs } from '../../addon/logs'
-
-initLogs('sidebar')
 
 const GLOB_CTX = {
   getters: Store.getters,

@@ -166,8 +166,10 @@ export default {
 
       this.activeSnapshot = this.snapshots[index]
 
-      let target = this.$refs.snapshots.find(el => el.id === this.activeSnapshot.id)
-      if (target) target.scrollIntoView(SCROLL_CONF)
+      if (this.$refs.snapshots) {
+        let target = this.$refs.snapshots.find(el => el.id === this.activeSnapshot.id)
+        if (target) target.scrollIntoView(SCROLL_CONF)
+      }
     },
 
     /**

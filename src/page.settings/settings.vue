@@ -176,9 +176,8 @@
       :value="$store.state.activateAfterClosing"
       :opts="$store.state.activateAfterClosingOpts"
       @input="setOpt('activateAfterClosing', $event)")
-    .sub-fields(v-if="$store.state.activateAfterClosing !== 'none'")
+    .sub-fields
       select-field(
-        v-if="activateAfterClosingNextOrPrev"
         label="settings.activate_after_closing_prev_rule"
         optLabel="settings.activate_after_closing_rule_"
         :value="$store.state.activateAfterClosingPrevRule"
@@ -186,7 +185,6 @@
         :opts="$store.state.activateAfterClosingPrevRuleOpts"
         @input="setOpt('activateAfterClosingPrevRule', $event)")
       select-field.-last(
-        v-if="activateAfterClosingNextOrPrev"
         label="settings.activate_after_closing_next_rule"
         optLabel="settings.activate_after_closing_rule_"
         :value="$store.state.activateAfterClosingNextRule"
@@ -194,8 +192,8 @@
         :opts="$store.state.activateAfterClosingNextRuleOpts"
         @input="setOpt('activateAfterClosingNextRule', $event)")
       toggle-field(
-        v-if="$store.state.activateAfterClosing === 'prev_act'"
         label="settings.activate_after_closing_global"
+        :inactive="$store.state.activateAfterClosing !== 'prev_act'"
         :value="$store.state.activateAfterClosingGlobal"
         @input="setOpt('activateAfterClosingGlobal', $event)")
     ToggleField(
@@ -232,6 +230,7 @@
     .sub-fields
       toggle-field(
         label="settings.move_new_tab_parent_act_panel"
+        :inactive="$store.state.moveNewTabParent === 'none'"
         :value="$store.state.moveNewTabParentActPanel"
         @input="setOpt('moveNewTabParentActPanel', $event)")
     select-field(
@@ -283,11 +282,11 @@
       :inactive="!$store.state.tabsTree"
       :value="$store.state.autoFoldTabs"
       @input="setOpt('autoFoldTabs', $event)")
-    .sub-fields(v-if="$store.state.autoFoldTabs")
+    .sub-fields
       select-field(
         label="settings.auto_fold_tabs_except"
         optLabel="settings.auto_fold_tabs_except_"
-        :inactive="!$store.state.tabsTree"
+        :inactive="!$store.state.tabsTree || !$store.state.autoFoldTabs"
         :value="$store.state.autoFoldTabsExcept"
         :opts="$store.state.autoFoldTabsExceptOpts"
         @input="setOpt('autoFoldTabsExcept', $event)")
@@ -358,10 +357,10 @@
       :value="$store.state.midClickBookmark"
       :opts="$store.state.midClickBookmarkOpts"
       @input="setOpt('midClickBookmark', $event)")
-    .sub-fields(v-if="$store.state.midClickBookmark === 'open_new_tab'")
+    .sub-fields
       toggle-field(
         label="settings.act_mid_click_tab"
-        :inactive="!$store.state.bookmarksPanel"
+        :inactive="!$store.state.bookmarksPanel || $store.state.midClickBookmark !== 'open_new_tab'"
         :value="$store.state.actMidClickTab"
         @input="setOpt('actMidClickTab', $event)")
     toggle-field(
@@ -612,15 +611,10 @@
       .btn(@click="showDbgDetails") {{t('settings.debug_info')}}
       a.btn(
         tabindex="-1"
-        href="https://github.com/mbnuqw/sidebery/issues") {{t('settings.repo_issues')}}
-
-    .ctrls
+        href="https://github.com/mbnuqw/sidebery/issues/new?template=Bug_report.md") {{t('settings.repo_bug')}}
       a.btn(
         tabindex="-1"
         href="https://github.com/mbnuqw/sidebery/issues/new?template=Feature_request.md") {{t('settings.repo_feature')}}
-      a.btn(
-        tabindex="-1"
-        href="https://github.com/mbnuqw/sidebery/issues/new?template=Bug_report.md") {{t('settings.repo_bug')}}
 
     .ctrls
       .btn.-warn(@click="reloadAddon") {{t('settings.reload_addon')}}
@@ -1110,9 +1104,9 @@ export default {
     },
 
     /**
-     * Show debug details
+     * Get debug details
      */
-    async showDbgDetails() {
+    async getDbgDetails() {
       let dbg = {}
 
       dbg.settings = {}
@@ -1155,6 +1149,8 @@ export default {
           if (clone.includeHosts) clone.includeHosts = clone.includeHosts.length
           if (clone.excludeHosts) clone.excludeHosts = clone.excludeHosts.length
           if (clone.proxy) clone.proxy = '...'
+          if (clone.customIconSrc) clone.customIconSrc = '...'
+          if (clone.customIcon) clone.customIcon = '...'
           dbg.panels.push(clone)
         }
       } catch (err) {
@@ -1187,10 +1183,6 @@ export default {
             state: w.state,
             incognito: w.incognito,
             tabsCount: w.tabs.length,
-            logs: await browser.runtime.sendMessage({
-              windowId: w.id,
-              action: 'getLogs',
-            }),
           })
         }
       } catch (err) {
@@ -1238,6 +1230,14 @@ export default {
         dbg.bookmarks = err.toString()
       }
 
+      return dbg
+    },
+
+    /**
+     * Show debug details
+     */
+    async showDbgDetails() {
+      let dbg = await this.getDbgDetails()
       this.dbgDetails = JSON.stringify(dbg, null, 2)
     },
 

@@ -319,8 +319,8 @@ export default {
 
   // --- Help
   'settings.help_title': { message: 'Help' },
-  'settings.debug_info': { message: 'Debug info' },
-  'settings.repo_issues': { message: 'Issues' },
+  'settings.debug_info': { message: 'Show debug info' },
+  'settings.repo_issues': { message: 'Open issues' },
   'settings.repo_issue': { message: 'Open issue' },
   'settings.repo_bug': { message: 'Report a bug' },
   'settings.repo_feature': { message: 'Suggest a feature' },

@@ -1,6 +1,4 @@
-import { log } from '../../../addon/logs'
 import Utils from '../../utils'
-import Logs from '../../logs'
 import EventBus from '../../event-bus'
 import { translate } from '../../mixins/dict'
 import { DEFAULT_CTX_ID } from '../../defaults'
@@ -125,8 +123,6 @@ async function loadTabsFromGlobalStorage() {
 
   // Update panels
   Actions.updatePanelsTabs()
-
-  Logs.push('[INFO] Tabs loaded')
 }
 
 /**
@@ -238,8 +234,6 @@ async function loadTabsFromSessionStorage() {
   this.actions.updatePanelsTabs()
 
   this.state.tabs.forEach(t => this.actions.saveTabData(t))
-
-  Logs.push('[INFO] Tabs loaded')
 }
 
 /**
@@ -2212,8 +2206,6 @@ function updateHighlightedTabs(delay = 250) {
 function handleReopening(tabId) {
   let targetTab = this.state.tabsMap[tabId]
   if (!targetTab) return
-
-  log('handleReopening', tabId, targetTab.index)
 
   if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
   this.state.newTabsPosition[targetTab.index] = {

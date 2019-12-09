@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Utils from '../../utils'
-import Logs from '../../logs'
 import { CUSTOM_CSS_VARS } from '../../defaults'
 import CommonActions from '../../actions/styles'
 import Actions from '../actions'
@@ -50,7 +49,6 @@ async function loadCSSVars() {
   let ans = await browser.storage.local.get('cssVars')
   let loadedVars = ans.cssVars
   if (!loadedVars) {
-    Logs.push('[WARN] Cannot load styles')
     return
   }
 
@@ -59,8 +57,6 @@ async function loadCSSVars() {
     if (!loadedVars[key]) continue
     rootEl.style.setProperty(Utils.toCSSVarName(key), loadedVars[key])
   }
-
-  Logs.push('[INFO] Styles loaded')
 }
 
 /**

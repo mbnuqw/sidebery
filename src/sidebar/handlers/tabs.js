@@ -1,4 +1,3 @@
-import { log } from '../../../addon/logs'
 import Utils from '../../utils'
 import { DEFAULT_CTX_ID } from '../../defaults'
 
@@ -10,8 +9,6 @@ const URL_HOST_PATH_RE = /^([a-z0-9-]{1,63}\.)+\w+(:\d+)?\/[A-Za-z0-9-._~:/?#[\]
  */
 function onTabCreated(tab) {
   if (tab.windowId !== this.state.windowId) return
-
-  log('onTabCreated', tab.id, tab.index)
 
   if (this.state.highlightOpenBookmarks && this.state.bookmarksUrlMap && this.state.bookmarksUrlMap[tab.url]) {
     for (let b of this.state.bookmarksUrlMap[tab.url]) {
@@ -32,7 +29,6 @@ function onTabCreated(tab) {
     index = tab.index
     tab.openerTabId = position.parent
     delete this.state.newTabsPosition[tab.index]
-    log('predefined position', index, panel.id)
   } else {
     panel = this.actions.getPanelForNewTab(tab)
     index = this.actions.getIndexForNewTab(panel, tab)
@@ -44,7 +40,6 @@ function onTabCreated(tab) {
         })
       }
     }
-    log('calculated position', index, panel.id)
   }
 
 
@@ -172,8 +167,6 @@ function onTabCreated(tab) {
  */
 function onTabUpdated(tabId, change, tab) {
   if (tab.windowId !== this.state.windowId) return
-
-  log('onTabUpdated', tabId, Object.keys(change))
 
   const localTab = this.state.tabsMap[tabId]
   if (!localTab) return
@@ -339,8 +332,6 @@ function onTabUpdated(tabId, change, tab) {
 function onTabRemoved(tabId, info, childfree) {
   if (info.windowId !== this.state.windowId) return
 
-  log('onTabRemoved', tabId)
-
   if (!this.state.removingTabs) this.state.removingTabs = []
   else this.state.removingTabs.splice(this.state.removingTabs.indexOf(tabId), 1)
 
@@ -479,8 +470,6 @@ function onTabRemoved(tabId, info, childfree) {
 function onTabMoved(id, info) {
   if (info.windowId !== this.state.windowId) return
   if (this.state.ignoreMovingTabs) return
-
-  log('onTabMoved', id)
 
   if (!this.state.movingTabs) this.state.movingTabs = []
   else this.state.movingTabs.splice(this.state.movingTabs.indexOf(id), 1)

@@ -1,4 +1,3 @@
-import Logs from '../logs'
 import { DEFAULT_SETTINGS } from '../defaults'
 
 /**
@@ -18,8 +17,6 @@ async function loadSettings(settings) {
     if (settings[key] === undefined) continue
     this.state[key] = settings[key]
   }
-
-  Logs.push('[INFO] Settings loaded')
 }
 
 /**

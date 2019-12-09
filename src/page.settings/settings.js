@@ -52,6 +52,7 @@ export default new Vue({
         panels: Utils.cloneArray(DEFAULT_PANELS_STATE)
       }),
       browser.contextualIdentities.query({}),
+      Actions.loadKeybindings(),
     ])
     let settings = storage.settings
     let containers = storage.containers
@@ -64,7 +65,6 @@ export default new Vue({
     Actions.loadPermissions(true)
     Actions.loadCtxMenu()
     Actions.loadSettings(settings)
-    Actions.loadKeybindings()
     Actions.setupContainers(containers, ffContainers)
     Actions.setupPanels(panels)
   },
