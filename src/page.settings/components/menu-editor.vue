@@ -5,7 +5,7 @@
     h2 {{t('menu.editor.tabs_title')}}
 
     .menu-group(v-for="(group, i) in tabsMenu" :data-type="group.type")
-      TextInput.group-title(
+      text-input.group-title(
         v-if="group.type === 'sub'"
         :value="group.name"
         :or="t('menu.editor.inline_group_title')"
@@ -53,7 +53,7 @@
     h2 {{t('menu.editor.tabs_panel_title')}}
 
     .menu-group(v-for="(group, i) in tabsPanelMenu" :data-type="group.type")
-      TextInput.group-title(
+      text-input.group-title(
         v-if="group.type === 'sub'"
         :value="group.name"
         :or="t('menu.editor.inline_group_title')"
@@ -101,7 +101,7 @@
     h2 {{t('menu.editor.bookmarks_title')}}
 
     .menu-group(v-for="(group, i) in bookmarksMenu" :data-type="group.type")
-      TextInput.group-title(
+      text-input.group-title(
         v-if="group.type === 'sub'"
         :value="group.name"
         :or="t('menu.editor.inline_group_title')"
@@ -150,7 +150,7 @@
     h2 {{t('menu.editor.bookmarks_panel_title')}}
 
     .menu-group(v-for="(group, i) in bookmarksPanelMenu" :data-type="group.type")
-      TextInput.group-title(
+      text-input.group-title(
         v-if="group.type === 'sub'"
         :value="group.name"
         :or="t('menu.editor.inline_group_title')"

@@ -4,11 +4,11 @@
   @scroll.passive="onScroll")
   section(ref="settings_general")
     h2 {{t('settings.general_title')}}
-    ToggleField(
+    toggle-field(
       label="settings.native_scrollbars"
       :value="$store.state.nativeScrollbars"
       @input="setOpt('nativeScrollbars', $event)")
-    SelectField(
+    select-field(
       label="settings.state_storage"
       optLabel="settings.state_storage_"
       :value="$store.state.stateStorage"
@@ -18,7 +18,7 @@
 
   section(ref="settings_menu")
     h2 {{t('settings.ctx_menu_title')}}
-    ToggleField(
+    toggle-field(
       label="settings.ctx_menu_native"
       :value="$store.state.ctxMenuNative"
       @input="setOpt('ctxMenuNative', $event)")
@@ -29,7 +29,7 @@
       :value="$store.state.autoHideCtxMenu"
       :opts="$store.state.autoHideCtxMenuOpts"
       @input="setOpt('autoHideCtxMenu', $event)")
-    ToggleField(
+    toggle-field(
       label="settings.ctx_menu_render_inact"
       :value="$store.state.ctxMenuRenderInact"
       @input="setOpt('ctxMenuRenderInact', $event)")
@@ -196,19 +196,19 @@
         :inactive="$store.state.activateAfterClosing !== 'prev_act'"
         :value="$store.state.activateAfterClosingGlobal"
         @input="setOpt('activateAfterClosingGlobal', $event)")
-    ToggleField(
+    toggle-field(
       label="settings.shift_selection_from_active"
       :value="$store.state.shiftSelAct"
       @input="setOpt('shiftSelAct', $event)")
-    ToggleField(
+    toggle-field(
       label="settings.ask_new_bookmark_place"
       :value="$store.state.askNewBookmarkPlace"
       @input="setOpt('askNewBookmarkPlace', $event)")
-    ToggleField(
+    toggle-field(
       label="settings.tabs_rm_undo_note"
       :value="$store.state.tabsRmUndoNote"
       @input="setOpt('tabsRmUndoNote', $event)")
-    ToggleField(
+    toggle-field(
       label="settings.native_highlight"
       :value="$store.state.nativeHighlight"
       @input="setOpt('nativeHighlight', $event)")
@@ -389,7 +389,7 @@
         :inactive="!$store.state.bookmarksPanel || !$store.state.highlightOpenBookmarks"
         :value="$store.state.activateOpenBookmarkTab"
         @input="setOpt('activateOpenBookmarkTab', $event)")
-    ToggleField(
+    toggle-field(
       label="settings.bookmarks_rm_undo_note"
       :value="$store.state.bookmarksRmUndoNote"
       @input="setOpt('bookmarksRmUndoNote', $event)")

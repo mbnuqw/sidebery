@@ -2,12 +2,12 @@
 .PanelConfig(v-noise:300.g:12:af.a:0:42.s:0:9="" @wheel="onWheel")
   h2.title {{t('settings.export_title')}}
 
-  ToggleField(label="settings.export_containers" v-model="containers")
-  ToggleField(label="settings.export_panels" v-model="panels")
-  ToggleField(label="settings.export_settings" v-model="settings")
-  ToggleField(label="settings.export_ctx_menu" v-model="ctxMenu")
-  ToggleField(label="settings.export_styles" v-model="styles")
-  ToggleField(label="settings.export_snapshots" v-model="snapshots")
+  toggle-field(label="settings.export_containers" v-model="containers")
+  toggle-field(label="settings.export_panels" v-model="panels")
+  toggle-field(label="settings.export_settings" v-model="settings")
+  toggle-field(label="settings.export_ctx_menu" v-model="ctxMenu")
+  toggle-field(label="settings.export_styles" v-model="styles")
+  toggle-field(label="settings.export_snapshots" v-model="snapshots")
 
   .ctrls
     //- .btn(@click="selectAll") {{t('settings.export_select_all')}}

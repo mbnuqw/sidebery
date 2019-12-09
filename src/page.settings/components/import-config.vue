@@ -2,27 +2,27 @@
 .PanelConfig(v-noise:300.g:12:af.a:0:42.s:0:9="" @wheel="onWheel")
   h2.title Select what to import
 
-  ToggleField(
+  toggle-field(
     label="settings.export_containers"
     v-model="containers"
     :inactive="containersInactive")
-  ToggleField(
+  toggle-field(
     label="settings.export_panels"
     v-model="panels"
     :inactive="panelsInactive")
-  ToggleField(
+  toggle-field(
     label="settings.export_settings"
     v-model="settings"
     :inactive="settingsInactive")
-  ToggleField(
+  toggle-field(
     label="settings.export_ctx_menu"
     v-model="ctxMenu"
     :inactive="ctxMenuInactive")
-  ToggleField(
+  toggle-field(
     label="settings.export_styles"
     v-model="styles"
     :inactive="stylesInactive")
-  ToggleField(
+  toggle-field(
     label="settings.export_snapshots"
     v-model="snapshots"
     :inactive="snapshotsInactive")
