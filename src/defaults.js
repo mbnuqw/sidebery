@@ -76,10 +76,10 @@ export const DEFAULT_SETTINGS = {
   nativeHighlight: false,
 
   // New tab position
-  moveNewTabPin: 'start',
-  moveNewTabParent: 'last_child',
+  moveNewTabPin: 'none',
+  moveNewTabParent: 'none',
   moveNewTabParentActPanel: false,
-  moveNewTab: 'end',
+  moveNewTab: 'none',
 
   // Pinned tabs
   pinnedTabsPosition: 'panel',
