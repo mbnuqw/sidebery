@@ -17,7 +17,8 @@
     "require-atomic-updates": "off",
     "vue/html-self-closing": "off",
     "vue/require-default-prop": "off",
-    "no-async-promise-executor": "off"
+    "no-async-promise-executor": "off",
+    "no-prototype-builtins": "off"
   },
   "globals": {
     "process": true,

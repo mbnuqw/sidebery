@@ -68,9 +68,11 @@ async function openCtxMenu(type, x, y) {
     let parentId, parentName
     for (let group of opts) {
       for (let opt of group.options) {
-        if (opt.name) {
-          parentId = createNativeSubMenuOption(nodeType, opt.name)
-          parentName = opt.name
+        if (opt.hasOwnProperty('name')) {
+          if (opt.name) {
+            parentId = createNativeSubMenuOption(nodeType, opt.name)
+            parentName = opt.name
+          }
           continue
         }
         this.actions.createNativeOption(nodeType, opt, parentId, parentName)
