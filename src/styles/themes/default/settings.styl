@@ -231,13 +231,12 @@ footer
     opacity: .7
 
 .Settings .panel-placeholder
-  box(relative, flex)
+  box(relative)
   size(100%, 32px)
-  justify-content: center
-  align-items: center
   &:before
     content: ''
-    box(relative)
+    box(absolute)
+    pos(5px, calc(50% - 2px))
     size(5px, same)
     border-radius: 50%
     transform: translateZ(0)
