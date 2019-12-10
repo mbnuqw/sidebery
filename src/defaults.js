@@ -379,6 +379,10 @@ export const DEFAULT_BOOKMARKS_MENU = [
   'createFolder',
   'createSeparator',
   'separator-6',
+  'sortByName',
+  'sortByLink',
+  'sortByTime',
+  'separator-7',
   'copyUrls',
   'edit',
   'delete',
@@ -716,6 +720,51 @@ export const MENU_OPTIONS = {
       icon: 'icon_plus_s',
       action: 'startBookmarkCreation',
       args: ['separator', node],
+    }
+    if (!state.ctxMenuRenderInact && option.inactive) return
+    return option
+  },
+
+  sortByName: (state) => {
+    let node = state.bookmarksMap[state.selected[0]]
+    let option = {
+      label: translate('menu.bookmark.sort_by_name'),
+      icon: 'icon_sort_az',
+      action: 'sortBookmarks',
+      args: ['name', state.selected],
+    }
+    if (state.selected.length === 1 && node.type !== 'folder') {
+      option.inactive = true
+    }
+    if (!state.ctxMenuRenderInact && option.inactive) return
+    return option
+  },
+
+  sortByLink: (state) => {
+    let node = state.bookmarksMap[state.selected[0]]
+    let option = {
+      label: translate('menu.bookmark.sort_by_link'),
+      icon: 'icon_sort_url',
+      action: 'sortBookmarks',
+      args: ['link', state.selected],
+    }
+    if (state.selected.length === 1 && node.type !== 'folder') {
+      option.inactive = true
+    }
+    if (!state.ctxMenuRenderInact && option.inactive) return
+    return option
+  },
+
+  sortByTime: (state) => {
+    let node = state.bookmarksMap[state.selected[0]]
+    let option = {
+      label: translate('menu.bookmark.sort_by_time'),
+      icon: 'icon_sort_time',
+      action: 'sortBookmarks',
+      args: ['time', state.selected],
+    }
+    if (state.selected.length === 1 && node.type !== 'folder') {
+      option.inactive = true
     }
     if (!state.ctxMenuRenderInact && option.inactive) return
     return option

@@ -11,6 +11,9 @@ export default {
   'menu.bookmark.create_separator': { message: 'Create separator' },
   'menu.bookmark.edit_bookmark': { message: 'Edit' },
   'menu.bookmark.delete_bookmark': { message: 'Delete' },
+  'menu.bookmark.sort_by_name': { message: 'Sort by name' },
+  'menu.bookmark.sort_by_link': { message: 'Sort by url' },
+  'menu.bookmark.sort_by_time': { message: 'Sort by time' },
 
   // --- Bookmarks panel
   'menu.bookmark.collapse_all': { message: 'Collapse all folders' },

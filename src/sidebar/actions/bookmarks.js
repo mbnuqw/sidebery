@@ -521,6 +521,73 @@ function updateBookmarksCounter(delay = 500) {
   }, delay)
 }
 
+/**
+ * Sort bookmarks
+ */
+async function sortBookmarks(type, nodeIds) {
+  let byName = type === 'name'
+  let byLink = type === 'link'
+  let byTime = type === 'time'
+
+  // Separate nodes by groups (bookmarks with the same parentId)
+  let groups = {}
+  let walker = (nodes) => {
+    for (let node of nodes) {
+      if (node.type === 'separator') continue
+      if (type !== 'link' || node.url) {
+        if (!groups[node.parentId]) groups[node.parentId] = []
+        groups[node.parentId].push(node)
+      }
+      if (node.children && node.expanded) walker(node.children)
+    }
+  }
+  for (let nodeId of nodeIds) {
+    let node = this.state.bookmarksMap[nodeId]
+    if (!node) continue
+    if (node.type === 'separator') continue
+    if (type !== 'link' || node.url) {
+      if (!groups[node.parentId]) groups[node.parentId] = []
+      groups[node.parentId].push(node)
+    }
+    if (node.children && node.expanded) walker(node.children)
+  }
+
+  // Sort
+  for (let nodes of Object.values(groups)) {
+    if (nodes.length === 1) continue
+
+    // Min index - target index to move
+    let minIndex = nodes.reduce((a, v) => Math.min(a, v.index), 9999)
+
+    // Direction
+    let dir, first = nodes[0], last = nodes[nodes.length - 1]
+    if (byName) dir = first.title.localeCompare(last.title)
+    if (byLink) dir = first.url.localeCompare(last.url)
+    if (byTime) dir = first.dateAdded - last.dateAdded
+    if (dir === 0) break
+
+    nodes.sort((aa, bb) => {
+      let a = dir > 0 ? aa : bb
+      let b = dir > 0 ? bb : aa
+
+      if (byName) return a.title.localeCompare(b.title)
+      if (byLink) {
+        let aIndex = a.url.indexOf('://')
+        let bIndex = b.url.indexOf('://')
+        let aLink = aIndex === -1 ? a.url : a.url.slice(aIndex + 3)
+        let bLink = bIndex === -1 ? b.url : b.url.slice(bIndex + 3)
+        return aLink.localeCompare(bLink)
+      }
+      if (byTime) return a.dateAdded - b.dateAdded
+    })
+
+    for (let n, i = 0; i < nodes.length; i++) {
+      n = nodes[i]
+      await browser.bookmarks.move(n.id, { index: minIndex + i })
+    }
+  }
+}
+
 export default {
   loadBookmarks,
   saveBookmarksTree,
@@ -534,4 +601,5 @@ export default {
   removeBookmarks,
   collapseAllBookmarks,
   updateBookmarksCounter,
+  sortBookmarks,
 }
