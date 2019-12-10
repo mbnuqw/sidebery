@@ -11,8 +11,6 @@ async function openCtxMenu(type, x, y) {
   if (!this.state.selected.length) return
   if (!type) return
 
-  if (this.state.ctxMenuNative) browser.menus.removeAll()
-
   let nodeType, options, opts = []
   if (type === 'tab') {
     nodeType = 'tab'

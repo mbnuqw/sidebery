@@ -5,13 +5,6 @@ function initToolbarButton() {
   browser.browserAction.onClicked.addListener(async () => {
     browser.sidebarAction.open()
   })
-
-  browser.menus.create({
-    id: 'open_settings',
-    title: 'Open settings',
-    onclick: () => browser.runtime.openOptionsPage(),
-    contexts: ['browser_action']
-  })
 }
 
 /**
@@ -38,7 +31,29 @@ async function loadPermissions() {
   }
 }
 
+function onMenuHidden() {
+  browser.menus.removeAll()
+
+  browser.menus.create({
+    id: 'open_settings',
+    title: 'Open settings',
+    onclick: () => browser.runtime.openOptionsPage(),
+    contexts: ['browser_action']
+  })
+}
+
+function setupMenuListeners() {
+  browser.menus.onHidden.addListener(this.actions.onMenuHidden)
+}
+
+function resetMenuListeners() {
+  browser.menus.onHidden.removeListener(this.actions.onMenuHidden)
+}
+
 export default {
   initToolbarButton,
   loadPermissions,
+  onMenuHidden,
+  setupMenuListeners,
+  resetMenuListeners,
 }

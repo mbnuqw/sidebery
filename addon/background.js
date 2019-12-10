@@ -38,4 +38,6 @@ void async function main() {
   Actions.loadPermissions()
   Actions.loadFavicons()
   Actions.clearFaviCacheAfter(86420)
+
+  Actions.setupMenuListeners()
 }()
