@@ -462,7 +462,7 @@ async function removeBookmarks(ids) {
     await browser.bookmarks.removeTree(id)
   }
 
-  if (count > 1 && this.state.bookmarksRmUndoNote && !warn) {
+  if (count > 0 && this.state.bookmarksRmUndoNote && !warn) {
     this.actions.notify({
       title: count + translate('notif.bookmarks_rm_post', count),
       ctrl: translate('notif.undo_ctrl'),

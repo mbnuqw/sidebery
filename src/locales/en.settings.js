@@ -204,7 +204,7 @@ export default {
   'settings.show_bookmark_len': { message: 'Show folder size' },
   'settings.highlight_open_bookmarks': { message: 'Highlight open bookmarks' },
   'settings.activate_open_bookmark_tab': { message: 'Go to open tab instead of opening new one' },
-  'settings.bookmarks_rm_undo_note': { message: 'Show undo notification on closing multiple tabs' },
+  'settings.bookmarks_rm_undo_note': { message: 'Show undo notification after deleting bookmarks' },
 
   // --- Appearance
   'settings.appearance_title': { message: 'Appearance' },
