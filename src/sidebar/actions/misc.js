@@ -281,31 +281,42 @@ function confirm(msg) {
 function copyUrls(ids) {
   if (!this.state.permClipboardWrite) return this.actions.openSettings('clipboard-write')
 
-  let urls = []
+  let urls = ''
   let idType = typeof ids[0]
   if (idType === 'string') {
+    let lvl = 0
     const walker = (nodes) => {
       for (let node of nodes) {
         if (node.type === 'separator') continue
         if (ids.includes(node.id)) continue
-        if (node.url) urls.push(node.url)
-        if (node.children) walker(node.children)
+        if (node.url) urls += '\n' + '  '.repeat(lvl) + node.url
+        if (node.children) {
+          urls += '\n' + '  '.repeat(lvl) + node.title
+          lvl++
+          walker(node.children)
+          lvl--
+        }
       }
     }
     for (let id of ids) {
       let node = this.state.bookmarksMap[id]
       if (!node || node.type === 'separator') continue
-      if (node.url) urls.push(node.url)
-      if (node.children) walker(node.children)
+      if (node.url) urls += '\n' + '  '.repeat(lvl) + node.url
+      if (node.children) {
+        urls += '\n' + '  '.repeat(lvl) + node.title
+        lvl++
+        walker(node.children)
+        lvl--
+      }
     }
   } else if (idType === 'number') {
     for (let id of ids) {
       let tab = this.state.tabsMap[id]
-      if (tab) urls.push(tab.url)
+      if (tab) urls += '\n' + '  '.repeat(tab.lvl) + tab.url
     }
   }
 
-  navigator.clipboard.writeText(urls.join('\n').trim())
+  navigator.clipboard.writeText(urls.trim())
 }
 
 function askNewBookmarkFolder(defaultValue) {
