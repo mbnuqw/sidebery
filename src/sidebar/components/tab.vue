@@ -399,7 +399,10 @@ export default {
      */
     onExp(e) {
       // Fold/Expand branch
-      if (e.button === 0) Actions.toggleBranch(this.tab.id)
+      if (e.button === 0) {
+        if (State.ctxMenu) Actions.closeCtxMenu()
+        Actions.toggleBranch(this.tab.id)
+      }
 
       // Select whole branch and show menu
       if (e.button === 2) {
