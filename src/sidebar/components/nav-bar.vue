@@ -241,8 +241,15 @@ export default {
      */
     onNavMidClick(btn) {
       if (State.navMidClickAction === 'rm_all') {
-        if (!btn.tabs || !btn.tabs.length) return
-        Actions.removeTabs(btn.tabs.map(t => t.id))
+        if (!btn.tabs) return
+        let toRemove = btn.tabs.map(t => t.id)
+        if (State.pinnedTabsPosition === 'panel') {
+          for (let pinned of getters.pinnedTabs) {
+            if (pinned.panelId === btn.id) toRemove.push(pinned.id)
+          }
+        }
+
+        if (toRemove.length) Actions.removeTabs(toRemove)
       }
     },
 
