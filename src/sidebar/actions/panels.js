@@ -286,7 +286,7 @@ function switchToPanel(index, withoutTabActivation) {
 
   const panel = this.state.panels[this.state.panelIndex]
   if (panel.noEmpty && panel.tabs && !panel.tabs.length) {
-    this.actions.createTab(panel.cookieStoreId)
+    this.actions.createTabInPanel(panel)
   }
 
   if (this.state.activateLastTabOnPanelSwitching && !withoutTabActivation) {
@@ -375,7 +375,7 @@ async function switchPanel(dir = 0) {
 
   let panel = this.state.panels[this.state.panelIndex]
   if (panel.noEmpty && panel.tabs && !panel.tabs.length) {
-    this.actions.createTab(panel.cookieStoreId)
+    this.actions.createTabInPanel(panel)
   }
 
   this.actions.recalcPanelScroll()

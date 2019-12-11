@@ -87,6 +87,7 @@ function onTabCreated(tab) {
   // Put new tab in panel
   if (!tab.pinned && panel && panel.tabs) {
     let targetIndex = index - panel.startIndex
+    if (panel.tabs.length === 0) targetIndex = 0
     if (targetIndex <= panel.tabs.length) {
       panel.tabs.splice(targetIndex, 0, tab)
       this.actions.updatePanelsRanges()
@@ -315,11 +316,7 @@ function onTabUpdated(tabId, change, tab) {
     this.actions.updateTabsTree()
     if (!panel.tabs.length) {
       if (panel.noEmpty) {
-        browser.tabs.create({
-          windowId: this.state.windowId,
-          index: panel.startIndex,
-          cookieStoreId: panel.cookieStoreId,
-        })
+        this.actions.createTabInPanel(panel)
       } else if (this.state.pinnedTabsPosition !== 'panel') {
         this.actions.switchToNeighbourPanel()
       }
@@ -362,12 +359,7 @@ function onTabRemoved(tabId, info, childfree) {
   // No-empty
   if (!tab.pinned && panel && panel.noEmpty && panel.tabs && panel.tabs.length === 1) {
     if (!creatingNewTab) {
-      browser.tabs.create({
-        windowId: this.state.windowId,
-        index: panel.startIndex,
-        cookieStoreId: panel.cookieStoreId,
-        active: tab.active,
-      })
+      this.actions.createTabInPanel(panel)
     }
   }
 

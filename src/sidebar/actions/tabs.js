@@ -617,9 +617,7 @@ async function removeTabs(tabIds) {
 
   // No-empty panels
   if (tabs.length === panel.tabs.length && panel.noEmpty) {
-    let conf = { windowId: this.state.windowId, index: panel.startIndex }
-    conf.cookieStoreId = panel.newTabCtx
-    await browser.tabs.create(conf)
+    this.actions.createTabInPanel(panel)
   }
 
   // Update successorTabId if there are active tab
