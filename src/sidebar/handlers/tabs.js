@@ -313,14 +313,16 @@ function onTabUpdated(tabId, change, tab) {
 
     this.actions.updatePanelsRanges()
     this.actions.updateTabsTree()
-    if (panel.noEmpty && !panel.tabs.length) {
-      browser.tabs.create({
-        windowId: this.state.windowId,
-        index: panel.startIndex,
-        cookieStoreId: panel.cookieStoreId,
-      })
-    } else if (!panel.tabs.length) {
-      this.actions.switchToNeighbourPanel()
+    if (!panel.tabs.length) {
+      if (panel.noEmpty) {
+        browser.tabs.create({
+          windowId: this.state.windowId,
+          index: panel.startIndex,
+          cookieStoreId: panel.cookieStoreId,
+        })
+      } else if (this.state.pinnedTabsPosition !== 'panel') {
+        this.actions.switchToNeighbourPanel()
+      }
     }
   }
 }
