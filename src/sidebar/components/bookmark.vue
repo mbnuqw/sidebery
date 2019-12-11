@@ -84,7 +84,11 @@ export default {
           for (let slot of State.itemSlots) {
             if (slot.id === first.id || slot.id === this.node.id) {
               if (!inside) inside = true
-              else break
+              else {
+                State.bookmarksMap[slot.id].sel = true
+                State.selected.push(slot.id)
+                break
+              }
             }
             if (inside) {
               State.bookmarksMap[slot.id].sel = true
