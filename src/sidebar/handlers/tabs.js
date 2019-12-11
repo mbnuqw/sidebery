@@ -356,13 +356,6 @@ function onTabRemoved(tabId, info, childfree) {
     creatingNewTab = true
   }
 
-  // No-empty
-  if (!tab.pinned && panel && panel.noEmpty && panel.tabs && panel.tabs.length === 1) {
-    if (!creatingNewTab) {
-      this.actions.createTabInPanel(panel)
-    }
-  }
-
   // Handle child tabs
   if (this.state.tabsTree && tab.isParent && !childfree) {
     const toRemove = []
@@ -408,6 +401,13 @@ function onTabRemoved(tabId, info, childfree) {
   if (panel && panel.tabs) {
     if (!tab.pinned) panel.tabs.splice(tab.index - panel.startIndex, 1)
     this.actions.updatePanelsRanges()
+  }
+
+  // No-empty
+  if (!tab.pinned && panel && panel.noEmpty && panel.tabs && !panel.tabs.length) {
+    if (!creatingNewTab) {
+      this.actions.createTabInPanel(panel)
+    }
   }
 
   // Remove updated flag
