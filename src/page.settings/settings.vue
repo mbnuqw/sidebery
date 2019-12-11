@@ -342,6 +342,7 @@
     select-field(
       label="settings.warn_on_multi_bookmark_delete"
       optLabel="settings.warn_on_multi_bookmark_delete_"
+      :inactive="!$store.state.bookmarksPanel"
       :value="$store.state.warnOnMultiBookmarkDelete"
       :opts="$store.state.warnOnMultiBookmarkDeleteOpts"
       @input="setOpt('warnOnMultiBookmarkDelete', $event)")
@@ -353,7 +354,7 @@
     select-field(
       label="settings.mid_click_bookmark"
       optLabel="settings.mid_click_bookmark_"
-      :inactive="!$store.state.tabsTree"
+      :inactive="!$store.state.bookmarksPanel"
       :value="$store.state.midClickBookmark"
       :opts="$store.state.midClickBookmarkOpts"
       @input="setOpt('midClickBookmark', $event)")
@@ -391,6 +392,7 @@
         @input="setOpt('activateOpenBookmarkTab', $event)")
     toggle-field(
       label="settings.bookmarks_rm_undo_note"
+      :inactive="!$store.state.bookmarksPanel"
       :value="$store.state.bookmarksRmUndoNote"
       @input="setOpt('bookmarksRmUndoNote', $event)")
 
