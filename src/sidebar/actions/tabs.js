@@ -1841,9 +1841,13 @@ function createChildTab(tabId) {
 function createTabInPanel(panel, url) {
   let tabShell = {}
   let index = this.actions.getIndexForNewTab(panel, tabShell)
+  if (index === undefined) {
+    if (!panel.tabs.length) index = panel.endIndex
+    else index = panel.endIndex + 1
+  }
+
   let config = { index, windowId: this.state.windowId }
 
-  if (index === undefined) index = panel.endIndex
   if (url) config.url = url
   if (index !== undefined) {
     if (!this.state.newTabsPosition) this.state.newTabsPosition = {}

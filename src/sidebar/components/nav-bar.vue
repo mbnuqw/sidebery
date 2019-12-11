@@ -225,15 +225,8 @@ export default {
       }
 
       if (State.panelIndex !== i) return Actions.switchToPanel(i)
-
       if (State.panels[i].bookmarks) return EventBus.$emit('scrollBookmarksToEdge')
-
-      if (State.panels[i].cookieStoreId) {
-        browser.tabs.create({
-          windowId: State.windowId,
-          cookieStoreId: State.panels[i].cookieStoreId,
-        })
-      }
+      if (State.panels[i].tabs) return Actions.createTabInPanel(State.panels[i])
     },
 
     /**

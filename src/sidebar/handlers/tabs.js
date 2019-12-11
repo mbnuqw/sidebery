@@ -42,7 +42,6 @@ function onTabCreated(tab) {
     }
   }
 
-
   let treeAllowed =
     this.state.moveNewTabParent === 'first_child' ||
     this.state.moveNewTabParent === 'last_child' ||
