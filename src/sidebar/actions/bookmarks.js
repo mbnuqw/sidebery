@@ -278,9 +278,12 @@ async function dropToBookmarks(event, dropIndex, dropParent, nodes) {
  * Open bookmarks in new window
  */
 async function openBookmarksInNewWin(ids, incognito) {
-  let toOpen = []
+  let toOpen = [], tabsInfo = []
+
+  // Get ordered list of nodes
   let walker = nodes => {
     for (let node of nodes) {
+      if (node.type === 'separator') continue
       if (ids.includes(node.parentId)) {
         toOpen.push(node)
         ids.push(node.id)
@@ -292,23 +295,38 @@ async function openBookmarksInNewWin(ids, incognito) {
   }
   walker(this.state.bookmarks)
 
-  let win = await browser.windows.create({ incognito })
-  let firstTab = win.tabs[0]
+  // Calculate tree levels
+  let lvl = 0, parents = []
+  for (let prev, node, i = 0; i < toOpen.length; i++) {
+    prev = toOpen[i - 1]
+    node = toOpen[i]
 
-  await browser.runtime.sendMessage({
-    instanceType: 'bg',
-    action: 'waitForSidebarConnect',
-    args: [win.id, 7000],
+    if (prev && prev.id === node.parentId) lvl = parents.push(prev)
+    while (prev && prev.id !== node.parentId && prev.parentId !== node.parentId) {
+      prev = parents.pop()
+      lvl = parents.length
+    }
+
+    tabsInfo.push({ lvl, panelId: DEFAULT_CTX_ID })
+  }
+
+  // Open new window
+  let tabsInfoStr = encodeURIComponent(JSON.stringify(tabsInfo))
+  let newWindow = await browser.windows.create({
+    incognito,
+    url: 'about:blank#snapshot' + tabsInfoStr,
   })
 
-  let oldNewMap = {}
+  // Open tabs
   let index = 1
+  let creating = []
   for (let node of toOpen) {
     let conf = {
-      windowId: win.id,
+      windowId: newWindow.id,
       discarded: true,
       title: node.title,
       index,
+      active: false,
     }
 
     if (node.type === 'bookmark') conf.url = node.url
@@ -316,16 +334,11 @@ async function openBookmarksInNewWin(ids, incognito) {
       conf.url = Utils.createGroupUrl(node.title)
     }
 
-    if (!conf.url) continue
-
-    if (oldNewMap[node.parentId]) conf.openerTabId = oldNewMap[node.parentId]
-
-    let tab = await browser.tabs.create(conf)
-    oldNewMap[node.id] = tab.id
+    creating.push(browser.tabs.create(conf))
     index++
   }
 
-  browser.tabs.remove(firstTab.id)
+  await Promise.all(creating)
 }
 
 /**
