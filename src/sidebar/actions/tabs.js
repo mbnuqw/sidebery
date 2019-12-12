@@ -241,7 +241,6 @@ async function loadTabsFromSessionStorage() {
  */
 async function loadTabsFromInlineData(tabs) {
   let firstTab = tabs[0]
-  let secondTab = tabs[1]
   let tabsInfoStr = firstTab.url.slice(20)
   let tabsInfo = JSON.parse(decodeURIComponent(tabsInfoStr))
   let activePanel = this.state.panels[this.state.panelIndex] || this.state.panels[1]
@@ -265,8 +264,12 @@ async function loadTabsFromInlineData(tabs) {
     })
   }
 
+  let secondTab = tabs[1]
+  if (!secondTab) return this.actions.updatePanelsTabs()
+
   await browser.tabs.update(secondTab.id, { active: true })
   secondTab.active = true
+  secondTab.discarded = false
   await browser.tabs.remove(firstTab.id)
   tabs.shift()
 
