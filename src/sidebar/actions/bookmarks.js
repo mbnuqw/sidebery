@@ -580,6 +580,11 @@ async function sortBookmarks(type, nodeIds) {
     if (dir === 0) break
 
     nodes.sort((aa, bb) => {
+      if (aa.type !== bb.type) {
+        if (aa.type === 'folder') return -1
+        if (aa.type === 'bookmark') return 1
+      }
+
       let a = dir > 0 ? aa : bb
       let b = dir > 0 ? bb : aa
 
