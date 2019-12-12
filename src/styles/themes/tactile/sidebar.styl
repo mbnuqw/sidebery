@@ -23,6 +23,9 @@
 @import './input.text'
 @import './input.window-select'
 
+@import './confirm'
+@import './notifications'
+
 // ---
 // -- Root vue element
 // -
@@ -46,6 +49,9 @@
   flex-direction: row
 #root[data-pinned-tabs-position="right"] > .Sidebar
   flex-direction: row-reverse
+
+.Sidebar > .PinnedDock
+  z-index: 2001
 
 // ---
 // -- Main container
@@ -101,8 +107,12 @@
   size(34px)
   flex-direction: column
   box-shadow: 1px 0 0 0 var(--border-flare-fg),
-              inset -1px 0 0 0 var(--border-fg),
-              inset 0 1px 0 0 var(--border-flare-fg)
+              inset -1px 0 0 0 var(--border-fg)
+  &:before
+    box(none)
+
+#root[data-pinned-tabs-position="top"] .Sidebar .nav
+  margin-top: -1px
 
 // ---
 // -- Dashboard wrapper
@@ -197,10 +207,14 @@
     &[data-index=\"{i}\"]
       transform: "translateX(calc(var(--nav-btn-width) * %s - %spx))" % (i i)
 
+#root[data-nav-layout="vertical"] .Sidebar .nav-btn[data-type="hidden"] > svg
+  transform: rotateZ(-90deg)
+
 // ---
 // -- Nav button icon
 // -
 .Sidebar .nav-btn > svg
+.Sidebar .nav-btn > img
   box(absolute)
   size(16px, same)
   fill: var(--container-fg, var(--nav-btn-fg))
@@ -212,6 +226,7 @@
   filter: drop-shadow(1px 0 0 var(--container-fg)) drop-shadow(-1px 0 0 var(--container-fg)) drop-shadow(0 -1px 0 var(--container-fg)) drop-shadow(0 1px 0 var(--container-fg))
 
 .Sidebar .nav-btn[data-updated] > svg
+.Sidebar .nav-btn[data-updated] > img
   mask: radial-gradient(
     circle at calc(100% - 2px) calc(100% - 2px),
     #00000024,
@@ -222,6 +237,8 @@
 
 .Sidebar .nav-btn[data-proxified] > svg
 .Sidebar .nav-btn[data-loading] > svg
+.Sidebar .nav-btn[data-proxified] > img
+.Sidebar .nav-btn[data-loading] > img
   mask: radial-gradient(
     circle at calc(100% - 2px) calc(100% - 2px),
     #00000024,
@@ -480,7 +497,6 @@
 // -
 .HiddenPanelsBar
   box(absolute, flex)
-  size(100%, max-h: calc(100% - 64px))
   pos(0, 0)
   z-index: 1000
   box-shadow: 0 1px 12px 0 #00000056,
@@ -488,14 +504,19 @@
               inset 0 1px 0 0 var(--border-flare-fg)
   background-color: var(--bg)
   flex-flow: wrap
+#root[data-nav-layout="horizontal"] .HiddenPanelsBar
+  size(100%, max-h: calc(100% - 64px))
+#root[data-nav-layout="vertical"] .HiddenPanelsBar
+  size(h: 100%)
+  flex-direction: column
 
 .HiddenPanelsBar .hidden-panel
   box(relative, flex)
   size(h: 30px, min-w: 30px)
   flex: 1
-  padding: 1px 0 0
   cursor: pointer
   > svg
+  > img
     box(absolute)
     pos(calc(50% - 8px), same)
     size(16px, same)
@@ -506,6 +527,11 @@
     opacity: .7
   &[data-active]
     background-color: #00000032
+#root[data-nav-layout="horizontal"] .HiddenPanelsBar .hidden-panel
+  padding: 1px 0 0
+#root[data-nav-layout="vertical"] .HiddenPanelsBar .hidden-panel
+  size(30px, max-h: 32px)
+  padding: 0 0 0 1px
 
 #root[data-style="light"] .HiddenPanelsBar .hidden-panel[data-color] > svg
   fill: var(--nav-btn-fg) !important
@@ -545,6 +571,7 @@
   .upgrading-leave-to
     opacity: 0
 
+#root[data-nav-layout="horizontal"]
   .hidden-panels-bar-enter-active
   .hidden-panels-bar-leave-active
     transition: z-index var(--d-fast), transform var(--d-fast)
@@ -561,4 +588,23 @@
     z-index: 1000
   .hidden-panels-bar-leave-to
     transform: translateY(-100%)
+    z-index: 0
+
+#root[data-nav-layout="vertical"]
+  .hidden-panels-bar-enter-active
+  .hidden-panels-bar-leave-active
+    transition: z-index var(--d-fast), transform var(--d-fast)
+  .hidden-panels-bar-enter
+    transform: translateX(-100%)
+    z-index: 0
+  .hidden-panels-bar-enter-to
+    transform: translateX(0)
+    opacity: 1
+    z-index: 1000
+  .hidden-panels-bar-leave
+    transform: translateX(0)
+    opacity: 1
+    z-index: 1000
+  .hidden-panels-bar-leave-to
+    transform: translateX(-100%)
     z-index: 0

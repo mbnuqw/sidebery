@@ -10,7 +10,7 @@
     "dev.url": "parcel watch ./src/page.url/url.js -d ./addon/url/ --public-url ./ --no-autoinstall --log-level 4",
     "dev.proxy": "parcel watch ./src/popup.proxy/proxy.js -d ./addon/proxy/ --public-url ./ --no-autoinstall --log-level 4",
     "dev.themes.default": "stylus ./src/styles/themes/default/sidebar.styl ./src/styles/themes/default/settings.styl ./src/styles/themes/default/group.styl ./src/styles/themes/default/url.styl ./src/styles/themes/default/proxy.styl -w --out ./addon/themes/default/",
-    "dev.themes.tactile": "stylus ./src/styles/themes/tactile/sidebar.styl ./src/styles/themes/tactile/url.styl ./src/styles/themes/tactile/group.styl -w --out ./addon/themes/tactile/",
+    "dev.themes.tactile": "stylus ./src/styles/themes/tactile/sidebar.styl ./src/styles/themes/tactile/url.styl ./src/styles/themes/tactile/group.styl ./src/styles/themes/tactile/proxy.styl -w --out ./addon/themes/tactile/",
     "dev.ext.esr": "web-ext run --source-dir ./addon -f firefox-esr --keep-profile-changes --firefox-profile ./build/profile-esr",
     "dev.ext": "web-ext run --source-dir ./addon -f firefox --keep-profile-changes --firefox-profile ./build/profile-stable",
     "dev.ext.beta": "web-ext run --source-dir ./addon -f firefox-beta --keep-profile-changes --firefox-profile ./build/profile-beta",
