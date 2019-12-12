@@ -284,6 +284,7 @@ export default {
   'settings.tab_action_exp': { message: 'развернуть' },
   'settings.tab_action_new_after': { message: 'новая вкладка' },
   'settings.tab_action_new_child': { message: 'новая дочерняя вкладка' },
+  'settings.tab_action_close': { message: 'закрыть вкладку' },
   'settings.tab_action_none': { message: 'выкл' },
   'settings.tabs_panel_left_click_action': { message: 'Левый клик по панели с табами' },
   'settings.tabs_panel_double_click_action': { message: 'Двойной клик по панели с табами' },

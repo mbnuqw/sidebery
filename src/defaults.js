@@ -6,7 +6,7 @@ export const SETTINGS_OPTIONS = {
   groupLayoutOpts: ['grid', 'list'],
   scrollThroughTabsOpts: ['panel', 'global', 'none'],
   discardFoldedDelayUnitOpts: ['sec', 'min'],
-  tabDoubleClickOpts: ['reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'exp', 'new_after', 'new_child', 'none'],
+  tabDoubleClickOpts: ['reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'exp', 'new_after', 'new_child', 'close', 'none'],
   tabLongLeftClickOpts: ['reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'new_after', 'new_child', 'none'],
   tabLongRightClickOpts: ['reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'new_after', 'new_child', 'none'],
   tabsPanelLeftClickActionOpts: ['prev', 'expand', 'parent', 'none'],

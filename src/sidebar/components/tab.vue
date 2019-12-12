@@ -308,6 +308,7 @@ export default {
       if (dc === 'exp' && this.tab.isParent) Actions.toggleBranch(this.tab.id)
       if (dc === 'new_after') Actions.createTabAfter(this.tab.id)
       if (dc === 'new_child') Actions.createChildTab(this.tab.id)
+      if (dc === 'close') Actions.removeTabs([this.tab.id])
     },
 
     /**

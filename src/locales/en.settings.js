@@ -262,6 +262,7 @@ export default {
   'settings.tab_action_exp': { message: 'expand' },
   'settings.tab_action_new_after': { message: 'new sibling tab' },
   'settings.tab_action_new_child': { message: 'new child tab' },
+  'settings.tab_action_close': { message: 'close tab' },
   'settings.tab_action_none': { message: 'none' },
   'settings.tabs_panel_left_click_action': { message: 'Left click on tabs panel' },
   'settings.tabs_panel_double_click_action': { message: 'Double click on tabs panel' },

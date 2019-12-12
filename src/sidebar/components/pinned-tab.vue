@@ -278,6 +278,7 @@ export default {
       if (dc === 'pin') Actions.repinTabs([this.tab.id])
       if (dc === 'mute') Actions.remuteTabs([this.tab.id])
       if (dc === 'clear_cookies') Actions.clearTabsCookies([this.tab.id])
+      if (dc === 'close') Actions.removeTabs([this.tab.id])
     },
 
     /**
