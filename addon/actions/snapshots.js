@@ -140,7 +140,7 @@ async function openSnapshotWindow(snapshot, winId) {
   }
   let tabsInfoStr = encodeURIComponent(JSON.stringify(tabsInfo))
   let newWindow = await browser.windows.create({
-    url: 'about:blank#snapshot' + tabsInfoStr,
+    url: 'about:blank#tabsdata' + tabsInfoStr,
   })
   let parents = []
   let creating = []

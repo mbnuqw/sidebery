@@ -314,7 +314,7 @@ async function openBookmarksInNewWin(ids, incognito) {
   let tabsInfoStr = encodeURIComponent(JSON.stringify(tabsInfo))
   let newWindow = await browser.windows.create({
     incognito,
-    url: 'about:blank#snapshot' + tabsInfoStr,
+    url: 'about:blank#tabsdata' + tabsInfoStr,
   })
 
   // Open tabs

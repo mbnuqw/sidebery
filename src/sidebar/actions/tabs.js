@@ -18,8 +18,8 @@ async function loadTabsFromGlobalStorage() {
     browser.storage.local.get({ tabsData: [] }),
   ])
 
-  if (tabs[0].url.startsWith('about:blank#snapshot')) {
-    return await this.actions.loadTabsFromSnapshot(tabs)
+  if (tabs[0].url.startsWith('about:blank#tabsdata')) {
+    return await this.actions.loadTabsFromInlineData(tabs)
   }
 
   let activePanel = this.state.panels[this.state.panelIndex] || this.state.panels[1]
@@ -134,8 +134,8 @@ async function loadTabsFromSessionStorage() {
     browser.tabs.query({ windowId }),
     browser.sessions.getWindowValue(this.state.windowId, 'groups')
   ])
-  if (tabs[0].url.startsWith('about:blank#snapshot')) {
-    return await this.actions.loadTabsFromSnapshot(tabs)
+  if (tabs[0].url.startsWith('about:blank#tabsdata')) {
+    return await this.actions.loadTabsFromInlineData(tabs)
   }
   if (!groups) groups = {}
   let tabsData = await Promise.all(tabs.map(t => {
@@ -239,7 +239,7 @@ async function loadTabsFromSessionStorage() {
 /**
  * Load tabs using info from the first tab (e.g. for snapshots)
  */
-async function loadTabsFromSnapshot(tabs) {
+async function loadTabsFromInlineData(tabs) {
   let firstTab = tabs[0]
   let secondTab = tabs[1]
   let tabsInfoStr = firstTab.url.slice(20)
@@ -1046,7 +1046,7 @@ async function moveTabsToNewWin(tabIds, incognito) {
   let tabsInfoStr = encodeURIComponent(JSON.stringify(tabsInfo))
   let win = await browser.windows.create({
     incognito,
-    url: 'about:blank#snapshot' + tabsInfoStr,
+    url: 'about:blank#tabsdata' + tabsInfoStr,
   })
 
   let moving = [], index = 1
@@ -2254,7 +2254,7 @@ function handleReopening(tabId) {
 export default {
   loadTabsFromGlobalStorage,
   loadTabsFromSessionStorage,
-  loadTabsFromSnapshot,
+  loadTabsFromInlineData,
   // getOrderNormMoves,
   // normalizeTabsOrder,
   // restoreGroupTab,
