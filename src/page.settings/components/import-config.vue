@@ -1,6 +1,6 @@
 <template lang="pug">
 .PanelConfig(v-noise:300.g:12:af.a:0:42.s:0:9="" @wheel="onWheel")
-  h2.title Select what to import
+  h2.title {{t('settings.import_title')}}
 
   toggle-field(
     label="settings.export_containers"
@@ -28,7 +28,7 @@
     :inactive="snapshotsInactive")
 
   .ctrls(:data-inactive="importInactive")
-    a.btn(@click="importData") Import data
+    a.btn(@click="importData") {{t('settings.help_imp_data')}}
 </template>
 
 

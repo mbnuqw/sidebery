@@ -11,6 +11,9 @@ export default {
   'menu.bookmark.create_separator': { message: 'Создать разделитель' },
   'menu.bookmark.edit_bookmark': { message: 'Редактировать' },
   'menu.bookmark.delete_bookmark': { message: 'Удалить' },
+  'menu.bookmark.sort_by_name': { message: 'Сорт. по названию' },
+  'menu.bookmark.sort_by_link': { message: 'Сорт. по адресу' },
+  'menu.bookmark.sort_by_time': { message: 'Сорт. по времени создания' },
 
   // --- Bookmarks panel
   'menu.bookmark.collapse_all': { message: 'Свернуть все папки' },
@@ -52,6 +55,8 @@ export default {
   'menu.tabs_panel.collapse_inact_branches': { message: 'Свернуть неактивные ветки' },
 
   // --- Common ---
+  'menu.copy_url': { message: 'Копировать ссылку' },
+  'menu.copy_urls': { message: 'Копировать ссылки' },
   'menu.common.conf': { message: 'Настройки панели' },
 
   // --- Editor

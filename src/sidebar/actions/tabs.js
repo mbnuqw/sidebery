@@ -600,7 +600,9 @@ async function removeTabs(tabIds) {
   let warn = this.state.warnOnMultiTabClose === 'any' ||
     (hasInvisibleTab && this.state.warnOnMultiTabClose === 'collapsed')
   if (warn && count > 1) {
-    let ok = await this.actions.confirm(`Are you sure you want to close ${count} tabs?`)
+    let pre = translate('confirm.tabs_close_pre', count)
+    let post = translate('confirm.tabs_close_post', count)
+    let ok = await this.actions.confirm(pre + count + post)
     if (!ok) return
   }
 

@@ -467,7 +467,7 @@ async function removeBookmarks(ids) {
   let warn = this.state.warnOnMultiBookmarkDelete === 'any' ||
     (this.state.warnOnMultiBookmarkDelete === 'collapsed' && hasCollapsed)
   if (warn && count > 1) {
-    let ok = await this.actions.confirm('Are you sure you want to delete multiple folders/bookmarks?')
+    let ok = await this.actions.confirm(translate('confirm.bookmarks_delete'))
     if (!ok) return
   }
 

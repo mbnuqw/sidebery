@@ -12,7 +12,6 @@
       label="settings.state_storage"
       optLabel="settings.state_storage_"
       :value="$store.state.stateStorage"
-      :note="t('settings.state_storage_note')"
       :opts="$store.state.stateStorageOpts"
       @input="setOpt('stateStorage', $event)")
 
@@ -100,7 +99,7 @@
           @click="removeContainer(container)")
           svg: use(xlink:href="#icon_delete")
     .panel-placeholder(v-if="!Object.keys($store.state.containers).length")
-    .ctrls: .btn(@click="createContainer") Create container
+    .ctrls: .btn(@click="createContainer") {{t('settings.containers_create_btn')}}
     transition(name="panel-config")
       .panel-config-layer(
         v-if="$store.state.selectedContainer"
@@ -134,7 +133,7 @@
           :data-inactive="panel.type === 'bookmarks' || panel.type === 'default'"
           @click="removePanel(panel)")
           svg: use(xlink:href="#icon_delete")
-    .ctrls: .btn(@click="createPanel") Create panel
+    .ctrls: .btn(@click="createPanel") {{t('settings.panels_create_btn')}}
     transition(name="panel-config")
       .panel-config-layer(
         v-if="$store.state.selectedPanel"

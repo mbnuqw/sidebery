@@ -13,7 +13,7 @@ export default {
   'menu.bookmark.delete_bookmark': { message: 'Delete' },
   'menu.bookmark.sort_by_name': { message: 'Sort by name' },
   'menu.bookmark.sort_by_link': { message: 'Sort by url' },
-  'menu.bookmark.sort_by_time': { message: 'Sort by time' },
+  'menu.bookmark.sort_by_time': { message: 'Sort by creation time' },
 
   // --- Bookmarks panel
   'menu.bookmark.collapse_all': { message: 'Collapse all folders' },

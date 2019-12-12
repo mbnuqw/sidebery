@@ -6,6 +6,11 @@ export default {
   'dashboard.lock_tabs_tooltip': { message: 'Запретить закрытие вкладок на этой панели' },
   'dashboard.no_empty_label': { message: 'Предотвращать опустошение' },
   'dashboard.no_empty_tooltip': { message: 'Предотвращать опустошение этой панели' },
+  'dashboard.new_tab_ctx': { message: 'Контейнер новой вкладки' },
+  'dashboard.move_tab_ctx': { message: 'Перемещать вкладки выбранного контейнера в эту панель' },
+  'dashboard.move_tab_ctx_none': { message: 'ня' },
+  'dashboard.url_rules': { message: 'Перемещать вкладки с совпадающими адресами в эту панель' },
+  'container_dashboard.custom_icon_note': { message: 'Base64, url или символы. Синтакс для символов: "символы::CSS-цвет::CSS-шрифт"' },
 
   // --- Bookmarks
   'bookmarks_dashboard.title': { message: 'Закладки' },
@@ -47,4 +52,5 @@ export default {
   'container_dashboard.rules_include_tooltip': { message: 'Переоткрывать табы с совпадающими url в этой панели.\nПострочный список правил "substrings" или "/regex/":\n    example.com\n    /^(some)?regex$/\n    ...' },
   'container_dashboard.rules_exclude': { message: 'Исключать табы' },
   'container_dashboard.rules_exclude_tooltip': { message: 'Переоткрывать табы с совпадающими url из этой панели в стандартной.\nПострочный список правил "substrings" или "/regex/":\n    example.com\n    /^(some)?regex$/\n    ...' },
+  'container_dashboard.user_agent': { message: 'User Agent' },
 }
