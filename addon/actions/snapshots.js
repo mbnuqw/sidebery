@@ -151,13 +151,20 @@ async function openSnapshotWindow(snapshot, winId) {
 
     parents[tab.lvl] = tab.id
 
-    creating.push(browser.tabs.create({
+    let conf = {
       windowId: newWindow.id,
       url: normalizeUrl(tab.url),
       active: false,
       pinned: tab.pinned,
       cookieStoreId: ctrId,
-    }))
+    }
+
+    if (!tab.pinned && (!ctrId || ctrId.endsWith('-default'))) {
+      conf.discarded = true
+      conf.title = tab.title
+    }
+
+    creating.push(browser.tabs.create(conf))
   }
 
   await Promise.all(creating)
