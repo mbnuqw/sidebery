@@ -11,7 +11,7 @@
       :data-index="btn.relIndex"
       :data-color="btn.color"
       :data-type="btn.type"
-      :title="btn.tooltip || getTooltip(i)"
+      :title="btn.tooltip || btn.name"
       @click="onNavClick(i, btn.type)"
       @drop="onPanelDrop($event, btn)"
       @dragenter="onNavDragEnter(i)"
@@ -346,15 +346,6 @@ export default {
       if (typeof firstNode.id === 'string') {
         Actions.openBookmarksInCtx(ids, panel.cookieStoreId)
       }
-    },
-
-    /**
-     * Get tooltip for button
-     */
-    getTooltip(i) {
-      if (i === State.panels.length) return this.t('nav.add_ctx_tooltip')
-      if (!State.panels[i].tabs) return this.nav[i].name
-      return `${this.nav[i].name}: ${State.panels[i].tabs.length}`
     },
   },
 }
