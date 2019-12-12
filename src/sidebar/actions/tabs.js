@@ -1089,6 +1089,11 @@ async function moveTabsToNewWin(tabIds, incognito) {
 async function moveTabsToWin(tabIds, window) {
   let windowId = window ? window.id : await Actions.chooseWin()
 
+  // Sort
+  tabIds.sort((a, b) => {
+    return this.state.tabsMap[a].index - this.state.tabsMap[b].index
+  })
+
   let tabs = []
   for (let id of tabIds) {
     let tab = this.state.tabsMap[id]
@@ -1103,12 +1108,15 @@ async function moveTabsToWin(tabIds, window) {
     }
   }
 
-  await browser.runtime.sendMessage({
+  let ans = await browser.runtime.sendMessage({
     windowId: windowId,
     instanceType: 'sidebar',
     action: 'moveTabsToThisWin',
     args: [tabs, this.state.private],
   })
+  if (!ans) {
+    await browser.tabs.move(tabs.map(t => t.id), { windowId, index: -1 })
+  }
 
   if (this.state.stateStorage === 'global') this.actions.saveTabsData()
 }
@@ -1117,22 +1125,26 @@ async function moveTabsToWin(tabIds, window) {
  * Move (or reopen) provided tabs in current window.
  */
 async function moveTabsToThisWin(tabs, fromPrivate) {
+  if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
   if (this.state.private === fromPrivate) {
     if (!this.state.attachingTabs) this.state.attachingTabs = [...tabs]
     else this.state.attachingTabs.push(...tabs)
 
-    let containerId = tabs[0].cookieStoreId
-    let panel = this.state.panelsMap[containerId]
-    let index = panel ? panel.endIndex : -1
-    if (panel && !panel.tabs.length) index--
+    let panel = this.state.panelsMap[tabs[0].panelId]
+    let index = panel.tabs.length ? panel.endIndex + 1 : panel.endIndex
 
     for (let tab of tabs) {
-      if (index > -1) index++
-      let [t] = await browser.tabs.move(tab.id, {
+      if (!tab.pinned) {
+        this.state.newTabsPosition[index] = {
+          panel: tab.panelId,
+          parent: tab.parentId,
+        }
+      }
+      browser.tabs.move(tab.id, {
         windowId: this.state.windowId,
         index: tab.pinned ? 0 : index,
       })
-      if (t) tab.discarded = !!t.discarded
+      index++
     }
   } else {
     const oldNewMap = {}
