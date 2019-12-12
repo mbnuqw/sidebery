@@ -1,7 +1,7 @@
 import Utils from '../../utils'
 import EventBus from '../../event-bus'
 import { translate } from '../../mixins/dict'
-import { DEFAULT_CTX_ID } from '../../defaults'
+import { DEFAULT_CTX_ID, DEFAULT_CTX, PRIVATE_CTX } from '../../defaults'
 import Actions from '../actions'
 
 const URL_WITHOUT_PROTOCOL_RE = /^(.+\.)\/?(.+\/)?\w+/
@@ -1014,32 +1014,67 @@ async function clearTabsCookies(tabIds) {
 }
 
 /**
- * Create new window with first tab
- * and then move other tabs.
+ * Move tabs to new window
  */
 async function moveTabsToNewWin(tabIds, incognito) {
-  let tabs = []
+  let tabs = [], toMove = [], tabsInfo = []
+
+  // Sort
+  tabIds.sort((a, b) => {
+    return this.state.tabsMap[a].index - this.state.tabsMap[b].index
+  })
+
+  // Calc and normalize tabs data
   for (let id of tabIds) {
     const tab = this.state.tabsMap[id]
     if (!tab) continue
-    tabs.push(Utils.cloneObject(tab))
+    tabs.push(tab)
+    toMove.push(id)
+    tabsInfo.push({ lvl: tab.lvl, panelId: tab.panelId })
     if (tab.folded) {
       for (let i = tab.index + 1; i < this.state.tabs.length; i++) {
         let childTab = this.state.tabs[i]
         if (childTab.lvl <= tab.lvl) break
-        tabs.push(Utils.cloneObject(childTab))
+        tabs.push(childTab)
+        toMove.push(childTab.id)
+        tabsInfo.push({ lvl: childTab.lvl, panelId: childTab.panelId })
       }
     }
   }
 
-  let win = await browser.windows.create({ incognito })
-  let firstTab = win.tabs[0]
-
-  await browser.runtime.sendMessage({
-    instanceType: 'bg',
-    action: 'moveTabsToWin',
-    args: [win.id, tabs, this.state.private, firstTab.id],
+  // Open new window with tabs data in url of the first tab
+  let tabsInfoStr = encodeURIComponent(JSON.stringify(tabsInfo))
+  let win = await browser.windows.create({
+    incognito,
+    url: 'about:blank#snapshot' + tabsInfoStr,
   })
+
+  let moving = [], index = 1
+  for (let tab of tabs) {
+    if (incognito === this.state.private) {
+      moving.push(browser.tabs.move(tab.id, {
+        windowId: win.id,
+        index: index++,
+      }))
+    } else {
+      let conf = {
+        windowId: win.id,
+        index: index++,
+        url: tab.url,
+        active: false,
+      }
+      if (incognito) conf.cookieStoreId = PRIVATE_CTX
+      else conf.cookieStoreId = DEFAULT_CTX
+      if (tab.cookieStoreId === DEFAULT_CTX_ID) {
+        conf.discarded = true
+        conf.title = tab.title
+      }
+      moving.push(browser.tabs.create(conf))
+      moving.push(browser.tabs.remove(tab.id))
+    }
+  }
+  
+  await Promise.all(moving)
 
   if (this.state.stateStorage === 'global') this.actions.saveTabsData()
 }
