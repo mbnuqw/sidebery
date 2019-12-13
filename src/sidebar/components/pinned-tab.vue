@@ -293,11 +293,17 @@ export default {
      * Handle dragstart event.
      */
     onDragStart(e) {
+      if (!this.longClickActionLeft) return
+
+      // Hide context menu (if any)
+      if (State.ctxMenu) State.ctxMenu = null
+
       // Check what to drag
       const toDrag = [this.tab.id]
-      const tabsToDrag = [this.tab]
+      const tabsToDrag = []
+      if (!State.selected.length) tabsToDrag.push(this.tab)
       for (let tab of State.tabs) {
-        if (toDrag.includes(tab.parentId)) {
+        if (State.selected.includes(tab.id)) {
           toDrag.push(tab.id)
           tabsToDrag.push(tab)
         }
@@ -310,7 +316,7 @@ export default {
       e.dataTransfer.effectAllowed = 'move'
       const dragData = tabsToDrag.map(t => {
         return {
-          ...Utils.cloneObject(this.tab),
+          ...Utils.cloneObject(t),
           type: 'tab',
           ctx: t.cookieStoreId,
           windowId: State.windowId,

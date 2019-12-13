@@ -1522,9 +1522,9 @@ async function moveDroppedNodes(dropIndex, dropParent, nodes, pin, currentPanel)
   // Unpin tab
   if (unpinTab) {
     for (let t of tabs) {
-      t.dropped = true
+      t.unpinning = true
       await browser.tabs.update(t.id, { pinned: false })
-      t.dropped = false
+      t.unpinning = false
     }
   }
 

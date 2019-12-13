@@ -292,7 +292,7 @@ function onTabUpdated(tabId, change, tab) {
   if (change.pinned !== undefined && !change.pinned) {
     let panel = this.state.panelsMap[localTab.panelId]
     if (!panel) return
-    if (!localTab.dropped) {
+    if (!localTab.unpinning) {
       localTab.destPanelId = localTab.panelId
       this.state.tabs.splice(localTab.index, 1)
       this.state.tabs.splice(panel.startIndex - 1, 0, localTab)
@@ -498,9 +498,11 @@ function onTabMoved(id, info) {
     return
   }
 
+  if (this.state.tabsMap[id] && this.state.tabsMap[id].unpinning) return
+
   // Move tab in tabs array
   let movedTab = this.state.tabs.splice(info.fromIndex, 1)[0]
-  if (!movedTab) {
+  if (!movedTab || movedTab.id !== id) {
     const i = this.state.tabs.findIndex(t => t.id === id)
     movedTab = this.state.tabs.splice(i, 1)[0]
   }
@@ -523,10 +525,6 @@ function onTabMoved(id, info) {
   if (!movedTab.pinned) {
     let srcPanel = this.state.panelsMap[movedTab.panelId]
     let destPanel = this.state.panelsMap[movedTab.destPanelId]
-    if (movedTab.destPanelId) {
-      // TODO: wtf is this ???
-      // movedTab.invisible = true
-    }
     movedTab.destPanelId = undefined
     if (
       !destPanel ||
