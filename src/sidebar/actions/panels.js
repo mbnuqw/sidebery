@@ -125,29 +125,6 @@ function updatePanelsTabs() {
   }
 }
 
-/**
- * Save panels tabs ranges
- */
-function savePanelsRanges() {
-  for (let panel of this.state.panels) {
-    if (panel.tabs && panel.tabs.length) {
-      for (let tab of panel.tabs) {
-        if (!tab.panelId || tab.panelId !== panel.id) {
-          browser.sessions.setTabValue(tab.id, 'panelId', panel.id)
-        }
-      }
-    }
-  }
-  // browser.sessions.setWindowValue(this.state.windowId, 'panelsRanges', ranges)
-}
-function savePanelsRangesDebounced(delay = 300) {
-  if (this._savePanelsRangesTimeout) clearTimeout(this._savePanelsRangesTimeout)
-  this._savePanelsRangesTimeout = setTimeout(() => {
-    this._savePanelsRangesTimeout = null
-    this.actions.savePanelsRanges()
-  }, delay)
-}
-
 function getPanelStartIndex(id) {
   let panel = this.state.panelsMap[id]
   if (!panel || !panel.tabs) return -1
@@ -415,9 +392,6 @@ export default {
 
   loadPanelIndex,
   setPanel,
-
-  savePanelsRanges,
-  savePanelsRangesDebounced,
 
   savePanelIndex,
   recalcPanelScroll,

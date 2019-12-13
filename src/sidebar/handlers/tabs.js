@@ -292,9 +292,18 @@ function onTabUpdated(tabId, change, tab) {
   if (change.pinned !== undefined && !change.pinned) {
     let panel = this.state.panelsMap[localTab.panelId]
     if (!panel) return
-    if (panel && panel.tabs) browser.tabs.move(tabId, { index: panel.endIndex - 1 })
-    panel.tabs.splice(localTab.index - panel.startIndex + 1, 0, localTab)
-    this.actions.updatePanelsRanges()
+    if (!localTab.dropped) {
+      localTab.destPanelId = localTab.panelId
+      this.state.tabs.splice(localTab.index, 1)
+      this.state.tabs.splice(panel.startIndex - 1, 0, localTab)
+      panel.tabs.splice(0, 0, localTab)
+      for (let i = panel.startIndex - 1; i < this.state.tabs.length; i++) {
+        this.state.tabs[i].index = i
+      }
+      if (panel && panel.tabs) browser.tabs.move(tabId, { index: panel.startIndex - 1 })
+      this.actions.updatePanelsRanges()
+
+    }
     if (tab.active) this.actions.setPanel(panel.index)
   }
 
@@ -309,6 +318,7 @@ function onTabUpdated(tabId, change, tab) {
     if (localTab.prevPanelId && localTab.moveTime) {
       if (localTab.moveTime + 1000 > Date.now()) {
         localTab.panelId = localTab.prevPanelId
+        panel = this.state.panelsMap[localTab.panelId]
       }
     }
 
@@ -458,8 +468,6 @@ function onTabRemoved(tabId, info, childfree) {
     browser.tabs.sendMessage(groupTab.id, { name: 'remove', id: tab.id})
       .catch(() => {/** itsokay **/})
   }
-
-  this.actions.savePanelsRangesDebounced()
 }
 
 /**
@@ -482,7 +490,13 @@ function onTabMoved(id, info) {
   let toIndex = info.toIndex
   if (info.toIndex > info.fromIndex) toIndex = toIndex - mvLen
   let tabAtTargetPlace = this.state.tabs[toIndex]
-  if (tabAtTargetPlace && tabAtTargetPlace.id === id) return
+  if (tabAtTargetPlace && tabAtTargetPlace.id === id) {
+    if (this.state.stateStorage === 'global' && !this.state.movingTabs.length) {
+      this.actions.saveTabsData()
+    }
+    if (this.state.stateStorage === 'session') this.actions.saveTabData(movedTab)
+    return
+  }
 
   // Move tab in tabs array
   let movedTab = this.state.tabs.splice(info.fromIndex, 1)[0]
@@ -563,8 +577,6 @@ function onTabMoved(id, info) {
       if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
     }
   }
-
-  this.actions.savePanelsRangesDebounced()
 }
 
 /**
