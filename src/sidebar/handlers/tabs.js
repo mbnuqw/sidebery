@@ -644,11 +644,10 @@ function onTabActivated(info) {
   }
 
   // Find panel of activated tab
-  // if (tab.pinned && this.state.pinnedTabsPosition !== 'panel') return
   if (!panel) return
 
   // Switch to activated tab's panel
-  if (!currentPanel || !currentPanel.lockedPanel) {
+  if (!tab.pinned && (!currentPanel || !currentPanel.lockedPanel)) {
     this.actions.setPanel(panel.index)
   }
 
