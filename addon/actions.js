@@ -5,7 +5,6 @@ import TabsActions from './actions/tabs.js'
 import MsgActions from './actions/msg.js'
 import ProxyActions from './actions/proxy.js'
 import FaviconsActions from './actions/favicons.js'
-import UpgradeActions from './actions/upgrade.js'
 import StorageActions from './actions/storage.js'
 import MiscActions from './actions/misc.js'
 
@@ -17,7 +16,6 @@ const Actions = {
   ...MsgActions,
   ...ProxyActions,
   ...FaviconsActions,
-  ...UpgradeActions,
   ...StorageActions,
   ...MiscActions,
 }

@@ -23,7 +23,6 @@ void async function main() {
 
   // Load settings
   let { settings } = await browser.storage.local.get({ settings: null })
-  await Actions.checkVersion(settings)
   state.settings = settings ? settings : {}
 
   await Actions.loadTabs(state.windows, state.tabsMap)

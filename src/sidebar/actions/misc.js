@@ -1,5 +1,4 @@
 import Utils from '../../utils'
-import { DEFAULT_SETTINGS } from '../../defaults'
 
 /**
  * Load platform info
@@ -22,36 +21,6 @@ function loadWindowInfo(currentWindow) {
     .then(windows => {
       this.state.otherWindows = windows.filter(w => w.id !== this.state.windowId)
     })
-}
-
-/**
- * Stop upgrading process
- */
-function startUpgrading() {
-  this.state.upgrading = true
-
-  return new Promise(res => {
-    let tryCount = 0
-
-    let upgradingInterval = setInterval(async () => {
-      let { settings } = await browser.storage.local.get({
-        settings: DEFAULT_SETTINGS,
-      })
-
-      if (settings.version) {
-        this.state.upgrading = false
-        clearInterval(upgradingInterval)
-        return res(true)
-      }
-
-      if (tryCount >= 5) {
-        await browser.storage.local.remove('settings')
-        clearInterval(upgradingInterval)
-        return res(false)
-      }
-      tryCount++
-    }, 2000)
-  })
 }
 
 /**
@@ -380,7 +349,6 @@ export default {
   lockStorage,
   unlockStorage,
   updateSidebarWidth,
-  startUpgrading,
   blockWheel,
   blockCtxMenu,
   startMultiSelection,
