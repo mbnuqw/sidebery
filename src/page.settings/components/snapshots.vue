@@ -92,6 +92,7 @@
 import Utils from '../../utils'
 import { translate } from '../../mixins/dict'
 import { DEFAULT_CTX } from '../../defaults'
+import { DEFAULT_TABS_PANEL } from '../../defaults'
 import State from '../store/state'
 import Actions from '../actions'
 
@@ -383,7 +384,11 @@ function normalizeSnapshot(snapshot) {
       else item.flof = item.url[0].toUpperCase()
     }
 
-    // Panels
+    // Normalize panels
+    let defaultTabs = snapshot.panels.find(p => p.type === 'default')
+    if (!defaultTabs) {
+      snapshot.panels.unshift(Utils.cloneObject(DEFAULT_TABS_PANEL))
+    }
     for (let panel of snapshot.panels) {
       if (panel.type !== 'default' && panel.type !== 'tabs') continue
       let tabs = []
