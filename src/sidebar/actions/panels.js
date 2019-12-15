@@ -196,18 +196,6 @@ function updatePanelsRanges() {
 }
 
 /**
- * Try to load saved sidebar state
- */
-function loadPanelIndex(panelIndex) {
-  if (!this.state.private && panelIndex !== 1) {
-    if (panelIndex >= 0) {
-      this.state.panelIndex = panelIndex
-      this.state.lastPanelIndex = this.state.panelIndex
-    }
-  }
-}
-
-/**
  * Set panel index
  */
 function setPanel(newIndex) {
@@ -390,7 +378,6 @@ export default {
   getPanelEndIndex,
   getTabPanel,
 
-  loadPanelIndex,
   setPanel,
 
   savePanelIndex,

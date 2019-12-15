@@ -4,9 +4,9 @@
 function onStorageChange(changes, type) {
   if (type !== 'local') return
 
-  if (changes.settings) this.settings = changes.settings.newValue
-  if (changes.containers) {
-    this.actions.updateContainers(changes.containers.newValue)
+  if (changes.settings_v4) this.settings = changes.settings_v4.newValue
+  if (changes.containers_v4) {
+    this.actions.updateContainers(changes.containers_v4.newValue)
   }
 }
 

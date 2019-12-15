@@ -10,20 +10,20 @@ import {
 } from '../defaults'
 
 /**
- * Load and setup panels
+ * Normalize panels and put them to state
  */
 async function loadPanels() {
-  let { panels } = await browser.storage.local.get({
-    panels: Utils.cloneArray(DEFAULT_PANELS_STATE)
-  })
-  this.actions.setupPanels(panels)
-}
+  let saveNeeded = false
+  let storage = await browser.storage.local.get({ panels_v4: null, panelIndex: null })
 
-/**
- * Load Contextual Identities and containers
- * and merge them
- */
-function setupPanels(panels) {
+  // Try to use value from prev version
+  if (!storage.panels_v4) {
+    saveNeeded = true
+    storage.panels_v4 = await this.actions.getNormPanels()
+  }
+
+  let panels = storage.panels_v4
+
   // Check if default panels are present
   let bookmarksPanelIndex = panels.findIndex(p => p.type === 'bookmarks')
   let defaultPanelIndex = panels.findIndex(p => p.type === 'default')
@@ -68,12 +68,65 @@ function setupPanels(panels) {
     panelsMap[panel.id] = panel
   }
 
-  if (!normPanels[this.state.panelIndex]) {
-    this.state.panelIndex = defaultPanelIndex
+  // Setup panel index
+  if (!this.state.private) {
+    let actPanel =  normPanels[storage.panelIndex]
+    if (actPanel) this.state.panelIndex = storage.panelIndex
+    else this.state.panelIndex = defaultPanelIndex
+    this.state.lastPanelIndex = this.state.panelIndex
   }
 
   this.state.panels = normPanels
   this.state.panelsMap = panelsMap
+
+  if (saveNeeded) this.actions.savePanels()
+}
+
+/**
+ * Try to load panels from prev version or use defaults
+ */
+async function getNormPanels() {
+  let { panels } = await browser.storage.local.get({ panels: null })
+  if (panels) setTimeout(() => browser.storage.local.remove('panels'), 500)
+  else panels = []
+
+  let result = []
+  for (let old of panels) {
+    let defaults
+    if (old.type === 'bookmarks') defaults = BOOKMARKS_PANEL_STATE
+    else if (old.type === 'default') defaults = DEFAULT_PANEL_STATE
+    else if (old.type === 'ctx') defaults = TABS_PANEL_STATE
+    else continue
+
+    let panel = Utils.cloneObject(defaults)
+
+    if (old.type === 'bookmarks') {
+      if (old.lockedPanel !== undefined) panel.lockedPanel = old.lockedPanel
+    }
+    if (old.type === 'default') {
+      if (old.lockedTabs !== undefined) panel.lockedTabs = old.lockedTabs
+      if (old.lockedPanel !== undefined) panel.lockedPanel = old.lockedPanel
+      if (old.noEmpty !== undefined) panel.noEmpty = old.noEmpty
+      if (old.newTabCtx !== undefined) panel.newTabCtx = old.newTabCtx
+    }
+    if (old.type === 'ctx') {
+      if (old.id !== undefined) panel.id = Utils.uid()
+      if (old.name !== undefined) panel.name = old.name
+      if (old.icon !== undefined) panel.icon = old.icon
+      if (old.color !== undefined) panel.color = old.color
+      if (old.lockedTabs !== undefined) panel.lockedTabs = old.lockedTabs
+      if (old.lockedPanel !== undefined) panel.lockedPanel = old.lockedPanel
+      if (old.noEmpty !== undefined) panel.noEmpty = old.noEmpty
+      panel.newTabCtx = old.cookieStoreId
+      panel.moveTabCtx = old.cookieStoreId
+    }
+
+    result.push(panel)
+  }
+
+  if (result.length < 2) result = Utils.cloneArray(DEFAULT_PANELS_STATE)
+
+  return result
 }
 
 function parsePanelUrlRules(panel) {
@@ -92,7 +145,7 @@ function parsePanelUrlRules(panel) {
 }
 
 /**
- * Clean up panels info and run savePanels action in background
+ * Clean up panels info and save them
  */
 async function savePanels() {
   let output = [], panelDefs
@@ -103,7 +156,7 @@ async function savePanels() {
 
     output.push(Utils.normalizeObject(panel, panelDefs))
   }
-  browser.storage.local.set({ panels: output })
+  browser.storage.local.set({ panels_v4: output })
 }
 function savePanelsDebounced() {
   if (this._savePanelsTimeout) clearTimeout(this._savePanelsTimeout)
@@ -112,7 +165,7 @@ function savePanelsDebounced() {
 
 export default {
   loadPanels,
-  setupPanels,
+  getNormPanels,
   parsePanelUrlRules,
   savePanels,
   savePanelsDebounced,

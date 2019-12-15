@@ -22,19 +22,6 @@ function resetSettings() {
 }
 
 /**
- * Save settings to local storage
- */
-async function saveSettings() {
-  let settings = {}
-  for (const key of Object.keys(DEFAULT_SETTINGS)) {
-    if (this.state[key] == null || this.state[key] == undefined) continue
-    if (this.state[key] instanceof Object) settings[key] = JSON.parse(JSON.stringify(this.state[key]))
-    else settings[key] = this.state[key]
-  }
-  await browser.storage.local.set({ settings })
-}
-
-/**
  * Update settings
  */
 function updateSettings(settings) {
@@ -58,6 +45,5 @@ export default {
 
   setSetting,
   resetSettings,
-  saveSettings,
   updateSettings,
 }

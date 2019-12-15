@@ -1,5 +1,4 @@
-const detachedTabs = [], tabsTreesByWin = {}
-let tabsTreeSaveTimeout
+const detachedTabs = []
 
 /**
  * Load tabs
@@ -139,14 +138,14 @@ function onTabDetached(id, info) {
 async function backupTabsData() {
   let tabsData
   try {
-    let storage = await browser.storage.local.get({ tabsData })
-    tabsData = storage.tabsData
+    let storage = await browser.storage.local.get({ tabsData_v4: tabsData })
+    tabsData = storage.tabsData_v4
   } catch (err) {
     // Logs.push('[ERROR:BG] backupTabsData: ', err.toString())
     return
   }
   
-  await browser.storage.local.set({ prevTabsData: tabsData })
+  await browser.storage.local.set({ prevTabsData_v4: tabsData })
 }
 
 /**
@@ -166,42 +165,7 @@ function saveTabsData(windowId, tabs, delay = 300) {
       if (tabs.length) tabsData.push(tabs)
     }
 
-    browser.storage.local.set({ tabsData })
-  }, delay)
-}
-
-/**
- * Load tabs trees
- */
-async function backupTabsTrees() {
-  let trees
-  try {
-    let ans = await browser.storage.local.get({ tabsTrees: [] })
-    trees = ans.tabsTrees
-  } catch (err) {
-    // Logs.push('[ERROR:BG] backupTabsTrees: ' + err.toString())
-    return
-  }
-
-  await browser.storage.local.set({ prevTabsTrees: trees })
-}
-
-/**
- * Save tabs tree
- */
-function saveTabsTree(windowId, treeState, delay = 300) {
-  if (!treeState) return
-  tabsTreesByWin[windowId] = treeState
-
-  if (tabsTreeSaveTimeout) clearTimeout(tabsTreeSaveTimeout)
-  tabsTreeSaveTimeout = setTimeout(async () => {
-    const tabsTrees = []
-    for (let tree of Object.values(tabsTreesByWin)) {
-      if (tree.length) tabsTrees.push(tree)
-    }
-
-    await browser.storage.local.set({ tabsTrees })
-    tabsTreeSaveTimeout = null
+    browser.storage.local.set({ tabsData_v4: tabsData })
   }, delay)
 }
 
@@ -296,8 +260,6 @@ export default {
   updateTabsTree,
   backupTabsData,
   saveTabsData,
-  backupTabsTrees,
-  saveTabsTree,
   moveTabsToWin,
 
   setupTabsListeners,

@@ -1010,7 +1010,7 @@ export default {
      * Remove snapshot
      */
     removeAllSnapshots() {
-      browser.storage.local.set({ snapshots: [] })
+      browser.storage.local.set({ snapshots_v4: [] })
     },
 
     /**
@@ -1034,33 +1034,6 @@ export default {
     },
 
     /**
-     * Generate export addon data
-     */
-    async genExportData() {
-      let data = await browser.storage.local.get({
-        settings: {},
-        snapshots: [],
-        panels: [],
-        cssVars: {},
-        sidebarCSS: '',
-        groupCSS: '',
-        settingsCSS: '',
-        tabsMenu: [],
-        bookmarksMenu: [],
-      })
-      data.ver = browser.runtime.getManifest().version
-      let dataJSON = JSON.stringify(data)
-      let file = new Blob([dataJSON], { type: 'application/json' })
-      let now = Date.now()
-      let date = Utils.uDate(now, '.')
-      let time = Utils.uTime(now, '.')
-
-      this.$refs.exportData.href = URL.createObjectURL(file)
-      this.$refs.exportData.download = `sidebery-data-${date}-${time}.json`
-      this.$refs.exportData.title = `sidebery-data-${date}-${time}.json`
-    },
-
-    /**
      * Import addon data
      */
     importData(importEvent) {
@@ -1081,27 +1054,6 @@ export default {
         State.importConfig = importedData
       }
       reader.readAsText(file)
-    },
-
-    /**
-     * Parse imported data
-     */
-    applyImportedData(dataJSON) {
-      let data = JSON.parse(dataJSON)
-
-      // ...check version and do format convertation if needed
-
-      let toStore = {}
-      if (data.settings) toStore.settings = data.settings
-      if (data.snapshots) toStore.snapshots = data.snapshots
-      if (data.panels) toStore.panels = data.panels
-      if (data.cssVars) toStore.cssVars = data.cssVars
-      if (data.sidebarCSS) toStore.sidebarCSS = data.sidebarCSS
-      if (data.groupCSS) toStore.groupCSS = data.groupCSS
-      if (data.settingsCSS) toStore.settingsCSS = data.settingsCSS
-      if (data.tabsMenu) toStore.tabsMenu = data.tabsMenu
-      if (data.bookmarksMenu) toStore.bookmarksMenu = data.bookmarksMenu
-      browser.storage.local.set(toStore)
     },
 
     /**

@@ -14,16 +14,16 @@ void (async function() {
   if (copyBtnLabel) copyBtnEl.innerText = copyBtnLabel
 
   // Load settings and set theme
-  let { settings } = await browser.storage.local.get({ settings: DEFAULT_SETTINGS })
-  let style = settings ? settings.style : 'dark'
+  let { settings_v4 } = await browser.storage.local.get({ settings_v4: DEFAULT_SETTINGS })
+  let style = settings_v4 ? settings_v4.style : 'dark'
 
-  initTheme(settings.theme)
+  initTheme(settings_v4.theme)
 
   // Set style
   document.body.setAttribute('data-style', style)
 
   // Set background noise
-  if (settings.bgNoise) {
+  if (settings_v4.bgNoise) {
     noiseBg(document.body, {
       width: 300,
       height: 300,

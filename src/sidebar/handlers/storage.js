@@ -4,17 +4,17 @@
 function onChangeStorage(changes, type) {
   if (type !== 'local') return
 
-  if (changes.settings) {
-    this.actions.updateSettings(changes.settings.newValue)
+  if (changes.settings_v4) {
+    this.actions.updateSettings(changes.settings_v4.newValue)
   }
   if (changes.cssVars) {
     this.actions.applyCSSVars(changes.cssVars.newValue)
   }
-  if (changes.containers && !this.state.private) {
-    this.actions.updateContainers(changes.containers.newValue)
+  if (changes.containers_v4 && !this.state.private) {
+    this.actions.updateContainers(changes.containers_v4.newValue)
   }
-  if (changes.panels && !this.state.private) {
-    this.actions.updatePanels(changes.panels.newValue)
+  if (changes.panels_v4 && !this.state.private) {
+    this.actions.updatePanels(changes.panels_v4.newValue)
   }
   if (changes.tabsMenu) {
     this.state.tabsMenu = changes.tabsMenu.newValue

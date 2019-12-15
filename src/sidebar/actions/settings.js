@@ -56,8 +56,10 @@ function updateSettings(settings) {
 
   if (toggleBookmarks) {
     if (this.state.bookmarksPanel) {
-      Actions.loadBookmarks()
+      this.actions.loadBookmarks()
+      this.handlers.setupBookmarksListeners()
     } else {
+      this.handlers.resetBookmarksListeners()
       this.state.bookmarks = []
 
       let index = this.state.panels.findIndex(p => p.type === 'bookmarks')

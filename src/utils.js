@@ -569,10 +569,10 @@ function findDataForTabs(tabs, data) {
   return result || []
 }
 
-function normalizeObject(panel, defaults) {
+function normalizeObject(obj, defaults) {
   let result = cloneObject(defaults)
   for (let key of Object.keys(defaults)) {
-    if (panel[key] !== undefined) result[key] = panel[key]
+    if (obj[key] !== undefined) result[key] = obj[key]
   }
   return result
 }

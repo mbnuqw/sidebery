@@ -128,9 +128,14 @@ export default {
         await this.importPanels(data, toStore)
       }
 
-      if (this.settings && data.settings) {
+      if (this.settings && (data.settings_v4 || data.settings)) {
         atLeastOne = true
-        toStore.settings = Utils.cloneObject(data.settings)
+        if (data.settings_v4) {
+          toStore.settings_v4 = Utils.cloneObject(data.settings_v4)
+        } else {
+          // todo handle odl settings
+          // toStore.settings = Utils.cloneObject(data.settings)
+        }
       }
 
       if (this.ctxMenu) {
@@ -150,7 +155,8 @@ export default {
 
       if (this.snapshots && data.snapshots) {
         atLeastOne = true
-        toStore.snapshots = Utils.cloneArray(data.snapshots)
+        // TODO: check old version
+        toStore.snapshots_v4 = Utils.cloneArray(data.snapshots_v4)
       }
 
       if (!atLeastOne) return
@@ -162,9 +168,11 @@ export default {
 
     async importContainers(data, storage) {
       let ffContainers = await browser.contextualIdentities.query({})
-      let { containers } = await browser.storage.local.get({ containers: {} })
+      let { containers_v4 } = await browser.storage.local.get({ containers_v4: {} })
 
-      for (let ctr of Object.values(Utils.cloneObject(data.containers))) {
+      // TODO: use data.containers_v4 or data.panels
+
+      for (let ctr of Object.values(Utils.cloneObject(data.containers_v4))) {
         let ffCtr = ffContainers.find(c => {
           return c.name === ctr.name &&
             c.icon === ctr.icon &&
@@ -184,17 +192,19 @@ export default {
           ctr.id = ffCtr.cookieStoreId
         }
 
-        containers[ctr.id] = ctr
+        containers_v4[ctr.id] = ctr
       }
 
-      storage.containers = containers
+      storage.containers_v4 = containers_v4
     },
 
     async importPanels(data, storage) {
-      let { panels } = await browser.storage.local.get({ panels: DEFAULT_PANELS })
+      let { panels_v4 } = await browser.storage.local.get({ panels_v4: DEFAULT_PANELS })
 
-      for (let panel of Utils.cloneArray(data.panels)) {
-        let index = panels.findIndex(p => p.id === panel.id)
+      // TODO: use data.panels_v4 or data.panels
+
+      for (let panel of Utils.cloneArray(data.panels_v4)) {
+        let index = panels_v4.findIndex(p => p.id === panel.id)
 
         let DFLT
         if (panel.type === 'bookmarks') DFLT = BOOKMARKS_PANEL
@@ -202,11 +212,11 @@ export default {
         else if (panel.type === 'tabs') DFLT = TABS_PANEL
         panel = Utils.normalizeObject(panel, DFLT)
 
-        if (index > -1) panels.splice(index, 1, panel)
-        else panels.push(panel)
+        if (index > -1) panels_v4.splice(index, 1, panel)
+        else panels_v4.push(panel)
       }
 
-      storage.panels = panels
+      storage.panels_v4 = panels_v4
     },
   },
 }

@@ -15,15 +15,21 @@ async function loadTabsFromGlobalStorage() {
   let windowId = browser.windows.WINDOW_ID_CURRENT
   let [ tabs, storage ] = await Promise.all([
     browser.tabs.query({ windowId }),
-    browser.storage.local.get({ tabsData: [] }),
+    browser.storage.local.get({ tabsData_v4: null }),
   ])
+
+  // Try to use data from prev version
+  if (!storage.tabsData_v4 && this.state.tabsTree) {
+    let old = await browser.storage.local.get({ tabsTrees: null })
+    if (old.tabsTrees) return await this.actions._old_loadTabs(tabs)
+  }
 
   if (tabs[0].url.startsWith('about:blank#tabsdata')) {
     return await this.actions.loadTabsFromInlineData(tabs)
   }
 
   let activePanel = this.state.panels[this.state.panelIndex] || this.state.panels[1]
-  let tabsData = storage ? storage.tabsData : []
+  let tabsData = storage.tabsData_v4 ? storage.tabsData_v4 : []
   let activeTab
 
   // Set tabs initial props and update state
@@ -42,8 +48,8 @@ async function loadTabsFromGlobalStorage() {
 
   tabsData = Utils.findDataForTabs(tabs, tabsData)
   if (!tabsData.length) {
-    let storage = await browser.storage.local.get({ prevTabsTrees: [] } )
-    tabsData = Utils.findDataForTabs(tabs, storage.prevTabsTrees)
+    let storage = await browser.storage.local.get({ prevTabsData_v4: [] } )
+    tabsData = Utils.findDataForTabs(tabs, storage.prevTabsData_v4)
   }
 
   let idsMap = {}
@@ -340,88 +346,6 @@ async function loadTabsFromInlineData(tabs) {
   // Update panels
   this.actions.updatePanelsTabs()
 }
-
-// /**
-//  * Check order of tabs and get moves for normalizing
-//  */
-// function getOrderNormMoves(tabs) {
-//   let moves = []
-//   let tabsPanels = []
-//   let index = tabs.filter(t => t.pinned).length
-//   let offset = 0
-//   let type, panelId
-//   for (let panel of this.state.panels) {
-//     type = panel.type
-//     if (type === 'bookmarks') continue
-
-//     for (let tab, j = 0; j < tabs.length; j++) {
-//       tab = tabs[j]
-//       panelId = tabsPanelIds[tab.index]
-//       if (tab.pinned) continue
-//       if (type === 'ctx' && tab.cookieStoreId !== panel.cookieStoreId) continue
-//       if (type === 'default' || type === 'tabs') {
-//         if (!panelId) tabsPanelIds[tab.index] = panel.id
-//         if (this.state.panelsMap[panelId] && panelId !== panel.id) continue
-//       }
-
-//       if (type === 'ctx' && panelId !== panel.id) {
-//         tabsPanels.push([tab.id, panel.id])
-//       }
-//       if (index !== tab.index + offset) {
-//         moves.push([tab.id, index])
-//         offset++
-//       }
-//       index++
-//     }
-//   }
-//   return [moves, tabsPanels]
-// }
-
-// /**
-//  * Normalize order of tabs
-//  */
-// async function normalizeTabsOrder(moves) {
-//   this.state.ignoreMovingTabs = true
-//   for (let move of moves) {
-//     await browser.tabs.move(move[0], { index: move[1] })
-//   }
-//   if (moves.length) Logs.push('[INFO] Tabs order was normalized')
-//   this.state.ignoreMovingTabs = false
-// }
-
-// /**
-//  * Create new group tab with provided props
-//  */
-// async function restoreGroupTab(tabInfo, index, parents) {
-//   let groupId = Utils.getGroupId(tabInfo.url)
-//   let url = browser.runtime.getURL('group/group.html') + `#${groupId}`
-//   let restoredTab = await browser.tabs.create({
-//     windowId: this.state.windowId,
-//     index,
-//     url,
-//     cookieStoreId: tabInfo.ctx,
-//     active: false,
-//   })
-
-//   restoredTab.url = url
-//   if (tabInfo.isParent) parents[tabInfo.id] = restoredTab.id
-//   restoredTab.isParent = tabInfo.isParent
-//   restoredTab.parentId = parents[tabInfo.parentId] || -1
-//   restoredTab.folded = tabInfo.folded
-//   restoredTab.lvl = 0
-//   restoredTab.invisible = false
-//   restoredTab.sel = false
-//   restoredTab.updated = false
-//   restoredTab.loading = false
-//   restoredTab.warn = false
-
-//   this.state.tabs.splice(index, 0, restoredTab)
-//   this.state.tabsMap[restoredTab.id] = restoredTab
-
-//   for (let k = index + 1; k < this.state.tabs.length; k++) {
-//     this.state.tabs[k].index++
-//   }
-// }
 
 /**
  * Save tabs data
@@ -1228,26 +1152,6 @@ async function reopenTabsInCtx(tabIds, ctxId) {
     Actions.updateTabsTree()
   }
 }
-
-// /**
-//  * Move tabs to panel
-//  */
-// function moveTabsToPanel(tabIds, panelId) {
-//   let ids = [...tabIds]
-//   let panel = this.state.panelsMap[panelId]
-//   if (!panel) return
-
-//   let index = this.actions.
-
-//   this.state.movingTabs = []
-//   for (let tabId of tabIds) {
-//     let tab = this.state.tabsMap[tabId]
-//     if (!tab) continue
-//     tab.destPanelId = panelId
-//     this.state.movingTabs.push(tab.id)
-//   }
-//   browser.tabs.move([...this.state.movingTabs], { windowId: this.state.windowId, index: dropIndex })
-// }
 
 /**
  * Show all tabs
@@ -2270,14 +2174,179 @@ function handleReopening(tabId) {
   }
 }
 
+// -----------------
+// --- Old stuff ---
+//
+
+/**
+ * Load all tabs for current window
+ */
+async function _old_loadTabs(tabs) {
+  let activeTab
+
+  // Set tabs initial props and update state
+  this.state.tabsMap = []
+  for (let t of tabs) {
+    Utils.normalizeTab(t, DEFAULT_CTX_ID)
+
+    if (this.state.highlightOpenBookmarks && this.state.bookmarksUrlMap && this.state.bookmarksUrlMap[t.url]) {
+      for (let b of this.state.bookmarksUrlMap[t.url]) {
+        b.isOpen = true
+      }
+    }
+    this.state.tabsMap[t.id] = t
+    if (t.active) activeTab = t
+  }
+  this.state.tabs = tabs
+
+  // Restore tree levels
+  if (this.state.tabsTree) {
+    await this.actions._old_restoreTabsTree()
+  }
+
+  for (let tab of tabs) {
+    let p = this.state.panels.find(p => p.moveTabCtx === tab.cookieStoreId)
+    tab.panelId = p ? p.id : DEFAULT_CTX_ID
+  }
+
+  // Update succession
+  if (this.state.activateAfterClosing !== 'none' && activeTab) {
+    const target = Utils.findSuccessorTab(this.state, activeTab)
+    if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
+  }
+
+  // Update panels
+  this.actions.updatePanelsTabs()
+}
+
+/**
+ * Find start index of tree tabs branch in provided array of tabs.
+ */
+function _old_findBranchStartIndex(array, subArray, startIndex) {
+  for (let t of subArray) {
+    t.isGroup = Utils.isGroupUrl(t.url)
+  }
+
+  for (let i = startIndex; i < array.length; i++) {
+    let similarity = 0
+    let startOffset = 0, innerOffset = 0
+    for (let j = 0; j < subArray.length; j++) {
+      let a = array[i+j-innerOffset]
+      let s = subArray[j]
+      if (!a) return -1
+      if (a.url === s.url && a.cookieStoreId === s.ctx) {
+        similarity++
+      } else if (s.isGroup) {
+        similarity++
+        if (!similarity) startOffset++
+        else innerOffset++
+      } else if (a.active && a.url === 'about:blank') {
+        similarity++
+      }
+    }
+    if (similarity === subArray.length) return i + startOffset
+  }
+  return -1
+}
+
+/**
+ * Create new group tab with provided props
+ */
+async function _old_restoreGroupTab(tabInfo, index, parents) {
+  let groupId = Utils.getGroupId(tabInfo.url)
+  let url = browser.runtime.getURL('group/group.html') + `#${groupId}`
+  let restoredTab = await browser.tabs.create({
+    windowId: this.state.windowId,
+    index,
+    url,
+    cookieStoreId: tabInfo.ctx,
+    active: false,
+  })
+
+  restoredTab.url = url
+  if (tabInfo.isParent) parents[tabInfo.id] = restoredTab.id
+  restoredTab.isParent = tabInfo.isParent
+  restoredTab.parentId = parents[tabInfo.parentId] || -1
+  restoredTab.folded = tabInfo.folded
+  restoredTab.lvl = 0
+  restoredTab.invisible = false
+  restoredTab.sel = false
+  restoredTab.updated = false
+  restoredTab.loading = false
+  restoredTab.warn = false
+
+  this.state.tabs.splice(index, 0, restoredTab)
+  this.state.tabsMap[restoredTab.id] = restoredTab
+
+  for (let k = index + 1; k < this.state.tabs.length; k++) {
+    this.state.tabs[k].index++
+  }
+}
+
+/**
+ * Restore tabs tree
+ */
+async function _old_restoreTabsTree() {
+  let { tabsTrees, prevTabsTrees } = await browser.storage.local.get({
+    tabsTrees: [],
+    prevTabsTrees: [],
+  })
+  tabsTrees = tabsTrees.concat(prevTabsTrees)
+
+  let pinnedTabsCount = 0
+  for (; pinnedTabsCount < this.state.tabs.length; pinnedTabsCount++) {
+    if (!this.state.tabs[pinnedTabsCount].pinned) break
+  }
+
+  for (let tab of this.state.tabs) {
+    if (tab.openerTabId > -1) tab.parentId = tab.openerTabId
+  }
+
+  perTree:
+  for (let tree of tabsTrees) {
+    let parents = []
+    let tabIndex = pinnedTabsCount
+
+    // Separate tree into branches
+    let branches = tree.reduce((a, v) => {
+      if (v.parentId === -1) a.push([v])
+      else if (a[a.length - 1]) a[a.length - 1].push(v)
+      return a
+    }, [])
+
+    for (let branch of branches) {
+      if (branch.length <= 1) continue perTree
+
+      let branchIndex = _old_findBranchStartIndex(this.state.tabs, branch, tabIndex)
+      if (branchIndex === -1) continue perTree
+      else tabIndex = branchIndex
+
+      for (let treeTab of branch) {
+        let tab = this.state.tabs[tabIndex]
+        if (tab.url === treeTab.url || (tab.active && tab.url === 'about:blank')) {
+          if (treeTab.isParent) parents[treeTab.id] = tab.id
+          tab.isParent = treeTab.isParent
+          tab.parentId = parents[treeTab.parentId] || -1
+          tab.folded = treeTab.folded
+        } else {
+          await this.actions._old_restoreGroupTab(treeTab, tabIndex, parents)
+        }
+        tabIndex++
+      }
+    }
+    break
+  }
+  Actions.updateTabsTree()
+}
+
+// 
+// --- Old stuff end ---
+// ---------------------
+
 export default {
   loadTabsFromGlobalStorage,
   loadTabsFromSessionStorage,
   loadTabsFromInlineData,
-  // getOrderNormMoves,
-  // normalizeTabsOrder,
-  // restoreGroupTab,
-  // restoreTabsTree,
   saveTabsTree,
   saveTabsData,
   saveTabData,
@@ -2306,7 +2375,6 @@ export default {
   moveTabsToWin,
   moveTabsToThisWin,
   reopenTabsInCtx,
-  // moveTabsToPanel,
 
   showAllTabs,
   updateTabsVisability,
@@ -2343,4 +2411,8 @@ export default {
   checkUrlRules,
   updateHighlightedTabs,
   handleReopening,
+
+  _old_loadTabs,
+  _old_restoreGroupTab,
+  _old_restoreTabsTree,
 }

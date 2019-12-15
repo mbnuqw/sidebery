@@ -2,27 +2,27 @@
  * Load custom context menu
  */
 async function loadCtxMenu() {
-  let ans = await browser.storage.local.get([
+  let storage = await browser.storage.local.get([
     'tabsMenu',
     'tabsPanelMenu',
     'bookmarksMenu',
-    'bookmarksPanelMenu'
+    'bookmarksPanelMenu',
   ]) || {}
 
-  if (ans.tabsMenu && ans.tabsMenu.length) {
-    this.state.tabsMenu = ans.tabsMenu
+  if (storage.tabsMenu && storage.tabsMenu.length) {
+    this.state.tabsMenu = storage.tabsMenu
   }
 
-  if (ans.tabsPanelMenu && ans.tabsPanelMenu.length) {
-    this.state.tabsPanelMenu = ans.tabsPanelMenu
+  if (storage.tabsPanelMenu && storage.tabsPanelMenu.length) {
+    this.state.tabsPanelMenu = storage.tabsPanelMenu
   }
 
-  if (ans.bookmarksMenu && ans.bookmarksMenu.length) {
-    this.state.bookmarksMenu = ans.bookmarksMenu
+  if (storage.bookmarksMenu && storage.bookmarksMenu.length) {
+    this.state.bookmarksMenu = storage.bookmarksMenu
   }
 
-  if (ans.bookmarksPanelMenu && ans.bookmarksPanelMenu.length) {
-    this.state.bookmarksPanelMenu = ans.bookmarksPanelMenu
+  if (storage.bookmarksPanelMenu && storage.bookmarksPanelMenu.length) {
+    this.state.bookmarksPanelMenu = storage.bookmarksPanelMenu
   }
 }
 

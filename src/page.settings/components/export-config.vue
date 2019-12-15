@@ -56,9 +56,9 @@ export default {
 
     async genExportData() {
       let toExport = {}
-      if (this.containers) toExport.containers = {}
-      if (this.panels) toExport.panels = []
-      if (this.settings) toExport.settings = {}
+      if (this.containers) toExport.containers_v4 = {}
+      if (this.panels) toExport.panels_v4 = []
+      if (this.settings) toExport.settings_v4 = {}
       if (this.ctxMenu) {
         toExport.tabsMenu = []
         toExport.bookmarksMenu = []

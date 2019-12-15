@@ -114,24 +114,9 @@ export default {
 
   async created() {
     const parsedSnapshots = []
-    const { snapshots, snapLayers } = await browser.storage.local.get({
-      snapshots: [],
-      snapLayers: { global: [], windows: {} },
+    const { snapshots_v4 } = await browser.storage.local.get({
+      snapshots_v4: []
     })
-
-    // Append snapLayers of previous base-snapshot
-    const prevSnapshot = snapshots[snapshots.length - 1]
-    if (prevSnapshot) {
-      if (!prevSnapshot.layers) prevSnapshot.layers = snapLayers.global
-      else prevSnapshot.layers = prevSnapshot.layers.concat(snapLayers.global)
-
-      for (let winId of Object.keys(snapLayers.windows)) {
-        const prevSnapWin = prevSnapshot.windows[winId]
-        if (!prevSnapWin) continue
-        if (!prevSnapWin.layers) prevSnapWin.layers = snapLayers.windows[winId]
-        else prevSnapWin.layers = prevSnapWin.layers.concat(snapLayers.windows[winId])
-      }
-    }
 
     // Watch 'activeSnapshot' change and scroll to changed target
     const activeSnapshotGetter = Object.getOwnPropertyDescriptor(this, 'activeSnapshot').get
@@ -142,7 +127,7 @@ export default {
     })
 
     // Normalize snapshots
-    for (let snapshot of snapshots) {
+    for (let snapshot of snapshots_v4) {
       parsedSnapshots.push(normalizeSnapshot(snapshot))
     }
     parsedSnapshots.reverse()
@@ -268,10 +253,10 @@ export default {
     },
 
     async restorePanels(snapshot) {
-      let { panels } = await browser.storage.local.get({ panels: [] })
+      let { panels_v4 } = await browser.storage.local.get({ panels_v4: [] })
 
       for (let snapPanel of snapshot.panels) {
-        let localPanel = panels.find(p => p.id === snapPanel.id)
+        let localPanel = panels_v4.find(p => p.id === snapPanel.id)
         if (localPanel) continue
 
         let panel = Utils.cloneObject(snapPanel)
@@ -296,12 +281,12 @@ export default {
      * Remove snapshot
      */
     async removeSnapshot(snapshot) {
-      const { snapshots } = await browser.storage.local.get({ snapshots: [] })
+      const { snapshots_v4 } = await browser.storage.local.get({ snapshots_v4: [] })
 
-      const indexStored = snapshots.findIndex(s => s.id === snapshot.id)
+      const indexStored = snapshots_v4.findIndex(s => s.id === snapshot.id)
       if (indexStored === -1) return
-      snapshots.splice(indexStored, 1)
-      browser.storage.local.set({ snapshots })
+      snapshots_v4.splice(indexStored, 1)
+      browser.storage.local.set({ snapshots_v4 })
 
       let indexLocal = this.snapshots.findIndex(s => s.id === snapshot.id)
       if (indexLocal === -1) return

@@ -2,10 +2,7 @@ import Vue from 'vue'
 import { mapGetters } from 'vuex'
 import EventBus, { initMsgHandling } from '../event-bus'
 import Dict from '../mixins/dict'
-import Utils from '../utils'
 import { initActionsMixin } from '../mixins/act'
-import { DEFAULT_SETTINGS } from '../defaults'
-import { DEFAULT_PANELS_STATE } from '../defaults'
 import Store from './store'
 import State from './store/state'
 import Sidebar from './sidebar.vue'
@@ -54,42 +51,28 @@ export default new Vue({
     State.instanceType = 'sidebar'
 
     Actions.loadPlatformInfo()
-    let [ storage, currentWindow, ffContainers ] = await Promise.all([
-      browser.storage.local.get({
-        settings: DEFAULT_SETTINGS,
-        containers: {},
-        panelIndex: 0,
-        panels: Utils.cloneArray(DEFAULT_PANELS_STATE)
-      }),
-      browser.windows.getCurrent(),
-      browser.contextualIdentities.query({}),
+    await Promise.all([
+      Actions.loadWindowInfo(),
+      Actions.loadSettings(),
+      Actions.loadContainers(),
     ])
-    let settings = storage.settings
-    let containers = storage.containers
-    let panelIndex = storage.panelIndex
-    let panels = storage.panels
-
-    Actions.loadWindowInfo(currentWindow),
+    
     Handlers.setupWindowsListeners()
-
-    Actions.loadSettings(settings),
-
-    Actions.setupContainers(containers, ffContainers),
     Handlers.setupContainersListeners()
-
     Handlers.setupStorageListeners()
     Handlers.setupResizeHandler()
 
     if (State.theme !== 'default') Actions.initTheme()
     if (State.sidebarCSS) Actions.loadCustomCSS()
 
-    Actions.loadPanelIndex(panelIndex),
-    Actions.setupPanels(panels)
+    await Actions.loadPanels()
 
-    if (State.bookmarksPanel && State.panels[State.panelIndex].bookmarks) {
-      await Actions.loadBookmarks()
+    if (State.bookmarksPanel) {
+      if (State.panels[State.panelIndex].bookmarks) {
+        await Actions.loadBookmarks()
+      }
+      Handlers.setupBookmarksListeners()
     }
-    Handlers.setupBookmarksListeners()
 
     if (State.stateStorage === 'global') {
       await Actions.loadTabsFromGlobalStorage()
@@ -102,8 +85,8 @@ export default new Vue({
     Actions.loadKeybindings()
     Handlers.setupKeybindingListeners()
 
-    await Actions.loadCtxMenu()
-    await Actions.loadCSSVars()
+    Actions.loadCtxMenu(),
+    Actions.loadCSSVars(),
     Actions.scrollToActiveTab()
     Actions.loadFavicons()
     Actions.loadPermissions(true)

@@ -21,7 +21,7 @@ async function createSnapshot() {
   }
 
   // Get panels info
-  let { panels } = await browser.storage.local.get({ panels: [] })
+  let { panels_v4 } = await browser.storage.local.get({ panels_v4: [] })
 
   // Update tree structure
   if (this.settings.tabsTree) await Actions.updateTabsTree()
@@ -51,20 +51,23 @@ async function createSnapshot() {
     id: Math.random().toString(16).replace('0.', Date.now().toString(16)),
     time: Date.now(),
     containersById,
-    panels,
+    panels: panels_v4,
     windows,
   }
 
-  let { snapshots } = await browser.storage.local.get({ snapshots: [] })
+  let { snapshots_v4 } = await browser.storage.local.get({ snapshots_v4: [] })
 
-  const lastSnapshot = snapshots[snapshots.length - 1]
+  const lastSnapshot = snapshots_v4[snapshots_v4.length - 1]
   if (lastSnapshot && compareSnapshots(lastSnapshot, currentSnapshot)) return
 
-  snapshots.push(currentSnapshot)
+  snapshots_v4.push(currentSnapshot)
 
-  snapshots = await Actions.limitSnapshots(snapshots)
+  snapshots_v4 = await Actions.limitSnapshots(snapshots_v4)
 
-  await browser.storage.local.set({ snapshots, lastSnapTime: currentSnapshot.time })
+  await browser.storage.local.set({
+    snapshots_v4,
+    lastSnapTime: currentSnapshot.time,
+  })
 
   return currentSnapshot
 }
@@ -201,8 +204,8 @@ async function limitSnapshots(snapshots) {
   if (unit === 'kb') normLimit = limit * 1024
 
   if (!snapshots) {
-    const ans = await browser.storage.local.get({ snapshots: [] })
-    snapshots = ans.snapshots
+    const ans = await browser.storage.local.get({ snapshots_v4: [] })
+    snapshots = ans.snapshots_v4
     if (!snapshots.length) return
   }
 
@@ -229,7 +232,7 @@ async function limitSnapshots(snapshots) {
   i++
 
   if (!resultToStore) return snapshots.slice(i)
-  else await browser.storage.local.set({ snapshots: snapshots.slice(i) })
+  else await browser.storage.local.set({ snapshots_v4: snapshots.slice(i) })
 }
 
 /**
