@@ -4,28 +4,13 @@ import { DEFAULT_SETTINGS } from '../../addon/defaults'
  * Try to load settings from local storage.
  */
 async function loadSettings() {
-  let settings = {}
-  let saveNeeded = false
-  let storage = await browser.storage.local.get({ settings_v4: null })
-
-  // Try to use value from prev version
-  if (!storage.settings_v4) {
-    saveNeeded = true
-    let oldStorage = await browser.storage.local.get({ settings: null })
-    if (oldStorage.settings) {
-      browser.storage.local.remove('settings')
-      settings = oldStorage.settings
-    }
-  }
-
+  let { settings } = await browser.storage.local.get({ settings: {} })
   settings.version = browser.runtime.getManifest().version
 
   for (let key of Object.keys(settings)) {
     if (settings[key] === undefined) continue
     this.state[key] = settings[key]
   }
-
-  if (saveNeeded) this.actions.saveSettings()
 }
 
 /**
@@ -38,7 +23,7 @@ async function saveSettings() {
     if (this.state[key] instanceof Object) settings[key] = JSON.parse(JSON.stringify(this.state[key]))
     else settings[key] = this.state[key]
   }
-  await browser.storage.local.set({ settings_v4: settings })
+  await browser.storage.local.set({ settings: settings })
 }
 
 /**

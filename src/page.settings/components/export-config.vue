@@ -10,7 +10,6 @@
   toggle-field(label="settings.export_snapshots" v-model="snapshots")
 
   .ctrls
-    //- .btn(@click="selectAll") {{t('settings.export_select_all')}}
     a.btn(ref="exportData" @mouseenter="genExportData") {{t('settings.help_exp_data')}}
 </template>
 
@@ -57,7 +56,7 @@ export default {
       let toExport = {}
       if (this.containers) toExport.containers_v4 = {}
       if (this.panels) toExport.panels_v4 = []
-      if (this.settings) toExport.settings_v4 = {}
+      if (this.settings) toExport.settings = {}
       if (this.ctxMenu) {
         toExport.tabsMenu = []
         toExport.bookmarksMenu = []
@@ -67,7 +66,7 @@ export default {
         toExport.sidebarCSS = ''
         toExport.groupCSS = ''
       }
-      if (this.snapshots) toExport.snapshots = []
+      if (this.snapshots) toExport.snapshots_v4 = []
 
       let data = await browser.storage.local.get(toExport)
 

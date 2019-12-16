@@ -65,11 +65,11 @@ export default {
 
   computed: {
     containersInactive() {
-      return !State.importConfig.containers ||
-        !Object.keys(State.importConfig.containers).length
+      return !State.importConfig.containers_v4 ||
+        !Object.keys(State.importConfig.containers_v4).length
     },
     panelsInactive() {
-      return !State.importConfig.panels || !State.importConfig.panels.length
+      return !State.importConfig.panels_v4 || !State.importConfig.panels_v4.length
     },
     settingsInactive() {
       return !State.importConfig.settings
@@ -83,7 +83,7 @@ export default {
         !State.importConfig.groupCSS
     },
     snapshotsInactive() {
-      return !State.importConfig.snapshots
+      return !State.importConfig.snapshots_v4 || !State.importConfig.snapshots_v4.length
     },
     importInactive() {
       return !this.containers &&
@@ -127,13 +127,10 @@ export default {
         await this.importPanels(data, toStore)
       }
 
-      if (this.settings && (data.settings_v4 || data.settings)) {
+      if (this.settings && data.settings) {
         atLeastOne = true
-        if (data.settings_v4) {
-          toStore.settings_v4 = Utils.cloneObject(data.settings_v4)
-        } else {
-          // todo handle odl settings
-          // toStore.settings = Utils.cloneObject(data.settings)
+        if (data.settings) {
+          toStore.settings = Utils.cloneObject(data.settings)
         }
       }
 
@@ -152,9 +149,8 @@ export default {
         if (data.groupCSS) toStore.groupCSS = data.groupCSS
       }
 
-      if (this.snapshots && data.snapshots) {
+      if (this.snapshots && toStore.snapshots_v4) {
         atLeastOne = true
-        // TODO: check old version
         toStore.snapshots_v4 = Utils.cloneArray(data.snapshots_v4)
       }
 
@@ -199,8 +195,6 @@ export default {
 
     async importPanels(data, storage) {
       let { panels_v4 } = await browser.storage.local.get({ panels_v4: DEFAULT_PANELS })
-
-      // TODO: use data.panels_v4 or data.panels
 
       for (let panel of Utils.cloneArray(data.panels_v4)) {
         let index = panels_v4.findIndex(p => p.id === panel.id)

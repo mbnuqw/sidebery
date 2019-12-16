@@ -4,8 +4,8 @@
 function onChangeStorage(changes, type) {
   if (type !== 'local') return
 
-  if (changes.settings_v4) {
-    this.actions.updateSettings(changes.settings_v4.newValue)
+  if (changes.settings) {
+    this.actions.updateSettings(changes.settings.newValue)
   }
   if (changes.cssVars) {
     this.actions.applyCSSVars(changes.cssVars.newValue)

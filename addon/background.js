@@ -22,8 +22,8 @@ void async function main() {
   Actions.setupWindowsListeners()
 
   // Load settings
-  let { settings_v4 } = await browser.storage.local.get({ settings_v4: null })
-  state.settings = settings_v4 ? settings_v4 : {}
+  let { settings } = await browser.storage.local.get({ settings: null })
+  state.settings = settings ? settings : {}
 
   await Actions.loadTabs(state.windows, state.tabsMap)
   await Actions.backupTabsData()
