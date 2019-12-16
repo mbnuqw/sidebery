@@ -73,8 +73,8 @@ export default {
     },
 
     color() {
-      const panel = State.panelsMap[this.tab.cookieStoreId]
-      if (panel && panel.color) return panel.color
+      let ctr = State.containers[this.tab.cookieStoreId]
+      if (ctr && ctr.color) return ctr.color
       else return ''
     },
 
