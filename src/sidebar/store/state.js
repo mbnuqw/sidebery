@@ -1,9 +1,9 @@
-import Utils from '../../utils'
-import { DEFAULT_SETTINGS, SETTINGS_OPTIONS } from '../../defaults'
-import { DEFAULT_TABS_MENU } from '../../defaults'
-import { DEFAULT_BOOKMARKS_MENU } from '../../defaults'
-import { DEFAULT_TABS_PANEL_MENU } from '../../defaults'
-import { BOOKMARKS_PANEL_MENU } from '../../defaults'
+
+import { DEFAULT_SETTINGS, SETTINGS_OPTIONS } from '../../../addon/defaults'
+import { DEFAULT_TABS_MENU } from '../../../addon/defaults'
+import { DEFAULT_BOOKMARKS_MENU } from '../../../addon/defaults'
+import { DEFAULT_TABS_PANEL_MENU } from '../../../addon/defaults'
+import { BOOKMARKS_PANEL_MENU } from '../../../addon/defaults'
 
 export default {
   upgrading: false,

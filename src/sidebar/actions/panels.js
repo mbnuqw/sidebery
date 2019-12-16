@@ -1,9 +1,8 @@
 import EventBus from '../../event-bus'
-import Utils from '../../utils'
 import CommonActions from '../../actions/panels'
-import { TABS_PANEL_STATE } from '../../defaults'
-import { BOOKMARKS_PANEL, DEFAULT_TABS_PANEL } from '../../defaults'
-import { TABS_PANEL } from '../../defaults'
+import { TABS_PANEL_STATE } from '../../../addon/defaults'
+import { BOOKMARKS_PANEL, DEFAULT_TABS_PANEL } from '../../../addon/defaults'
+import { TABS_PANEL } from '../../../addon/defaults'
 
 let recalcPanelScrollTimeout, updatePanelBoundsTimeout
 

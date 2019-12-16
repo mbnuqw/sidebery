@@ -202,9 +202,9 @@
 <script>
 import State from '../store/state'
 import Actions from '../actions'
-import { DEFAULT_TABS_MENU, DEFAULT_BOOKMARKS_MENU } from '../../defaults'
-import { DEFAULT_TABS_PANEL_MENU } from '../../defaults'
-import { BOOKMARKS_PANEL_MENU } from '../../defaults'
+import { DEFAULT_TABS_MENU, DEFAULT_BOOKMARKS_MENU } from '../../../addon/defaults'
+import { DEFAULT_TABS_PANEL_MENU } from '../../../addon/defaults'
+import { BOOKMARKS_PANEL_MENU } from '../../../addon/defaults'
 import TextInput from '../../components/text-input'
 import FooterSection from './footer'
 

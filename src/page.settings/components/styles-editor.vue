@@ -531,10 +531,9 @@
 
 
 <script>
-import Utils from '../../utils'
 import StyleField from '../../components/style-field'
 import ColorStyleField from '../../components/style-color-field'
-import { CUSTOM_CSS_VARS } from '../../defaults'
+import { CUSTOM_CSS_VARS } from '../../../addon/defaults'
 import Actions from '../actions'
 
 let applyTimeout

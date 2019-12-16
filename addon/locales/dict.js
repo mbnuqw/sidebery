@@ -29,7 +29,3 @@ export function translate(id, plurNum) {
   }
   return id
 }
-
-export default {
-  methods: { t: translate },
-}

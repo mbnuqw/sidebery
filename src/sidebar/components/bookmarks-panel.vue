@@ -18,7 +18,6 @@
 
 
 <script>
-import Utils from '../../utils'
 import EventBus from '../../event-bus'
 import State from '../store/state'
 import Actions from '../actions'

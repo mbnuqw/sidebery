@@ -34,11 +34,10 @@
 
 <script>
 import { DEFAULT_CONTAINER } from '../../../addon/defaults'
-import { DEFAULT_PANELS } from '../../defaults'
-import { BOOKMARKS_PANEL } from '../../defaults'
-import { DEFAULT_TABS_PANEL } from '../../defaults'
-import { TABS_PANEL } from '../../defaults'
-import Utils from '../../utils'
+import { DEFAULT_PANELS } from '../../../addon/defaults'
+import { BOOKMARKS_PANEL } from '../../../addon/defaults'
+import { DEFAULT_TABS_PANEL } from '../../../addon/defaults'
+import { TABS_PANEL } from '../../../addon/defaults'
 import ToggleField from '../../components/toggle-field'
 import SelectField from '../../components/select-field'
 import TextField from '../../components/text-field'

@@ -1,5 +1,3 @@
-import Utils from '../../utils'
-
 /**
  * Load platform info
  */

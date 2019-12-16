@@ -1,6 +1,5 @@
-import { DEFAULT_CTX_ID } from '../../defaults'
+import { DEFAULT_CTX_ID } from '../../../addon/defaults'
 import EventBus from '../../event-bus'
-import Utils from '../../utils'
 import Handlers from '../handlers'
 
 /**

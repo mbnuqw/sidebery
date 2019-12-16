@@ -89,10 +89,10 @@
 
 
 <script>
-import Utils from '../../utils'
 import { translate } from '../../mixins/dict'
-import { DEFAULT_CTX } from '../../defaults'
-import { DEFAULT_TABS_PANEL } from '../../defaults'
+import { DEFAULT_CTX } from '../../../addon/defaults'
+import { DEFAULT_TABS_PANEL } from '../../../addon/defaults'
+import { getPrevVerSnapshots } from '../../../addon/actions/snapshots'
 import State from '../store/state'
 import Actions from '../actions'
 
@@ -113,10 +113,11 @@ export default {
   },
 
   async created() {
-    const parsedSnapshots = []
-    const { snapshots_v4 } = await browser.storage.local.get({
-      snapshots_v4: []
+    let parsedSnapshots = []
+    let { snapshots_v4 } = await browser.storage.local.get({
+      snapshots_v4: null
     })
+    if (!snapshots_v4) snapshots_v4 = await getPrevVerSnapshots()
 
     // Watch 'activeSnapshot' change and scroll to changed target
     const activeSnapshotGetter = Object.getOwnPropertyDescriptor(this, 'activeSnapshot').get
@@ -281,7 +282,10 @@ export default {
      * Remove snapshot
      */
     async removeSnapshot(snapshot) {
-      const { snapshots_v4 } = await browser.storage.local.get({ snapshots_v4: [] })
+      let { snapshots_v4 } = await browser.storage.local.get({
+        snapshots_v4: []
+      })
+      if (!snapshots_v4) snapshots_v4 = await getPrevVerSnapshots()
 
       const indexStored = snapshots_v4.findIndex(s => s.id === snapshot.id)
       if (indexStored === -1) return

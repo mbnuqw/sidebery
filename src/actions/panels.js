@@ -1,4 +1,3 @@
-import Utils from '../utils'
 import {
   DEFAULT_PANELS_STATE,
   BOOKMARKS_PANEL_STATE,
@@ -7,7 +6,7 @@ import {
   BOOKMARKS_PANEL,
   DEFAULT_TABS_PANEL,
   TABS_PANEL,
-} from '../defaults'
+} from '../../addon/defaults'
 
 /**
  * Normalize panels and put them to state
@@ -86,9 +85,7 @@ async function loadPanels() {
  * Try to load panels from prev version or use defaults
  */
 async function getNormPanels() {
-  let { panels } = await browser.storage.local.get({ panels: null })
-  if (panels) setTimeout(() => browser.storage.local.remove('panels'), 500)
-  else panels = []
+  let { panels } = await browser.storage.local.get({ panels: [] })
 
   let result = []
   for (let old of panels) {

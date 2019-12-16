@@ -1,7 +1,6 @@
-import Utils from '../../utils'
 import EventBus from '../../event-bus'
 import { translate } from '../../mixins/dict'
-import { DEFAULT_CTX_ID, DEFAULT_CTX, PRIVATE_CTX } from '../../defaults'
+import { DEFAULT_CTX_ID, DEFAULT_CTX, PRIVATE_CTX } from '../../../addon/defaults'
 import Actions from '../actions'
 
 const URL_WITHOUT_PROTOCOL_RE = /^(.+\.)\/?(.+\/)?\w+/

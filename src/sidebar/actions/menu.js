@@ -1,5 +1,5 @@
 import CommonActions from '../../actions/menu'
-import { MENU_OPTIONS, RGB_COLORS } from '../../defaults'
+import { MENU_OPTIONS, RGB_COLORS } from '../../../addon/defaults'
 import Actions from '../actions'
 
 const xmlSerializer = new XMLSerializer()

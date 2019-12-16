@@ -1,5 +1,4 @@
 
-import Utils from '../utils'
 import { DEFAULT_CONTAINER } from '../../addon/defaults'
 
 /**

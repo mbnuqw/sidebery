@@ -30,9 +30,8 @@
 
 
 <script>
-import Utils from '../../utils'
 import EventBus from '../../event-bus'
-import { PRE_SCROLL } from '../../defaults'
+import { PRE_SCROLL } from '../../../addon/defaults'
 import State from '../store/state'
 import Actions from '../actions'
 import ScrollBox from './scroll-box'

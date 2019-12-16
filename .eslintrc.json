@@ -21,6 +21,7 @@
     "no-prototype-builtins": "off"
   },
   "globals": {
+    "Utils": true,
     "process": true,
     "browser": true,
     "global": true,

@@ -1,6 +1,5 @@
-import { DEFAULT_SETTINGS, CUSTOM_CSS_VARS } from '../defaults'
+import { DEFAULT_SETTINGS, CUSTOM_CSS_VARS } from '../../addon/defaults'
 import { noiseBg } from '../noise-bg'
-import Utils from '../utils'
 
 void (async function() {
   let linkEl = document.getElementById('url')

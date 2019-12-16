@@ -43,8 +43,7 @@
 
 <script>
 import { translate } from '../../mixins/dict.js'
-import Utils from '../../utils'
-import { TABS_PANEL_STATE } from '../../defaults'
+import { TABS_PANEL_STATE } from '../../../addon/defaults'
 import EventBus from '../../event-bus'
 import State from '../store/state.js'
 import { getters } from '../store'

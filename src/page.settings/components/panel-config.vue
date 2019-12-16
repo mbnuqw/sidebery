@@ -94,7 +94,7 @@
 
 
 <script>
-import { DEFAULT_CTX } from '../../defaults'
+import { DEFAULT_CTX } from '../../../addon/defaults'
 import TextInput from '../../components/text-input'
 import ToggleField from '../../components/toggle-field'
 import SelectField from '../../components/select-field'

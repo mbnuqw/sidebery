@@ -1,6 +1,5 @@
-import { DEFAULT_SETTINGS, CUSTOM_CSS_VARS } from '../defaults'
+import { DEFAULT_SETTINGS, CUSTOM_CSS_VARS } from '../../addon/defaults'
 import { noiseBg } from '../noise-bg'
-import Utils from '../utils'
 
 const PNG_RE = /(\.png)([?#].*)?$/i
 const JPG_RE = /(\.jpe?g)([?#].*)?$/i

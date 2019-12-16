@@ -1,6 +1,5 @@
 import Vue from 'vue'
-import Utils from '../../utils'
-import { CUSTOM_CSS_VARS } from '../../defaults'
+import { CUSTOM_CSS_VARS } from '../../../addon/defaults'
 import CommonActions from '../../actions/styles'
 import Actions from '../actions'
 

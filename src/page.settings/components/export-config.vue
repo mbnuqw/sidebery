@@ -16,7 +16,6 @@
 
 
 <script>
-import Utils from '../../utils'
 import ToggleField from '../../components/toggle-field'
 
 export default {

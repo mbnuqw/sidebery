@@ -1,5 +1,4 @@
-import Utils from '../../utils'
-import { DEFAULT_CTX_ID } from '../../defaults'
+import { DEFAULT_CTX_ID } from '../../../addon/defaults'
 
 const GROUP_URL = browser.runtime.getURL('/group/group.html')
 const URL_HOST_PATH_RE = /^([a-z0-9-]{1,63}\.)+\w+(:\d+)?\/[A-Za-z0-9-._~:/?#[\]%@!$&'()*+,;=]*$/

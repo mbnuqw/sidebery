@@ -1,7 +1,6 @@
-import Utils from '../../utils'
 import EventBus from '../../event-bus'
 import CommonActions from '../../actions/styles'
-import { CUSTOM_CSS_VARS } from '../../defaults'
+import { CUSTOM_CSS_VARS } from '../../../addon/defaults'
 
 /**
  * Load css vars and apply them

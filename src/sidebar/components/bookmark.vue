@@ -20,7 +20,7 @@
 import EventBus from '../../event-bus'
 import State from '../store/state'
 import Actions from '../actions'
-import { DEFAULT_CTX_ID } from '../../defaults'
+import { DEFAULT_CTX_ID } from '../../../addon/defaults'
 
 export default {
   props: {

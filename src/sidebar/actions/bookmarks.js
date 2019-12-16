@@ -1,6 +1,5 @@
-import Utils from '../../utils'
 import { translate } from '../../mixins/dict'
-import { DEFAULT_CTX_ID } from '../../defaults'
+import { DEFAULT_CTX_ID } from '../../../addon/defaults'
 import Actions from '../actions'
 
 /**

@@ -640,10 +640,9 @@
 
 
 <script>
-import Utils from '../utils'
 import { translate } from '../mixins/dict'
-import { DEFAULT_SETTINGS } from '../defaults'
-import { TABS_PANEL } from '../defaults'
+import { DEFAULT_SETTINGS } from '../../addon/defaults'
+import { TABS_PANEL } from '../../addon/defaults'
 import State from './store/state'
 import Actions from './actions'
 import ToggleField from '../components/toggle-field'

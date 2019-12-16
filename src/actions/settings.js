@@ -1,4 +1,4 @@
-import { DEFAULT_SETTINGS } from '../defaults'
+import { DEFAULT_SETTINGS } from '../../addon/defaults'
 
 /**
  * Try to load settings from local storage.
