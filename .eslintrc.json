@@ -21,6 +21,8 @@
     "no-prototype-builtins": "off"
   },
   "globals": {
+    "Vue": true,
+    "Vuex": true,
     "Utils": true,
     "process": true,
     "browser": true,

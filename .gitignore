@@ -19,6 +19,9 @@ addon/url/*
 addon/proxy/*
 !addon/proxy/proxy.html
 
+addon/vendor/*
+!addon/vendor/vendor.js
+
 addon/snapshots
 addon/theme
 addon/styles

@@ -1,5 +1,3 @@
-import Vue from 'vue'
-import { mapGetters } from 'vuex'
 import EventBus, { initMsgHandling } from '../event-bus'
 import Dict from '../mixins/dict'
 import { initActionsMixin } from '../mixins/act'
@@ -39,10 +37,8 @@ export default new Vue({
   },
 
   computed: {
-    ...mapGetters(['pinnedTabs']),
-
     pinnedTabsPosition() {
-      if (!this.pinnedTabs.length) return 'none'
+      if (!Store.getters.pinnedTabs.length) return 'none'
       return State.pinnedTabsPosition
     },
   },

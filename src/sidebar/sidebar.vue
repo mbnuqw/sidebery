@@ -50,7 +50,6 @@
 
 
 <script>
-import Vue from 'vue'
 import { PRE_SCROLL } from '../../addon/defaults'
 import initNoiseBgDirective from '../directives/noise-bg.js'
 import EventBus from '../event-bus'

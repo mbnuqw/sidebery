@@ -1,5 +1,3 @@
-import Vue from 'vue'
-
 /**
  * Load cached favicons
  */

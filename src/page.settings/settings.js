@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import initNoiseBgDirective from '../directives/noise-bg'
 import Debounce from '../directives/debounce'
 import Dict from '../mixins/dict'

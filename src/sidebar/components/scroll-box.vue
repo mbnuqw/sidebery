@@ -14,7 +14,6 @@
 
 
 <script>
-import Vue from 'vue'
 import Debounce from '../../directives/debounce'
 
 Vue.directive('debounce', Debounce)

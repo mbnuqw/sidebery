@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import { CUSTOM_CSS_VARS } from '../../../addon/defaults'
 import CommonActions from '../../actions/styles'
 import Actions from '../actions'
