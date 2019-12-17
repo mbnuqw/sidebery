@@ -107,9 +107,14 @@ function updatePanelsTabs() {
     panel.tabs = []
     for (i = lastIndex; i < tabsCount; i++) {
       tab = this.state.tabs[i]
-      if (tab.panelId === panel.id) panel.tabs.push(tab)
-      else if (tab.panelId === null) panel.tabs.push(tab)
-      else break
+      if (tab.panelId === panel.id) {
+        panel.tabs.push(tab)
+      } else if (tab.panelId === null) {
+        tab.panelId = panel.id
+        panel.tabs.push(tab)
+      } else {
+        break
+      }
     }
 
     if (panel.tabs.length) {

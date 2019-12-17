@@ -34,7 +34,7 @@ async function loadTabsFromGlobalStorage() {
   // Set tabs initial props and update state
   this.state.tabsMap = []
   for (let t of tabs) {
-    Utils.normalizeTab(t, DEFAULT_CTX_ID)
+    Utils.normalizeTab(t, null)
     if (this.state.highlightOpenBookmarks && this.state.bookmarksUrlMap && this.state.bookmarksUrlMap[t.url]) {
       for (let b of this.state.bookmarksUrlMap[t.url]) {
         b.isOpen = true
@@ -127,7 +127,7 @@ async function loadTabsFromGlobalStorage() {
   }
 
   // Update panels
-  Actions.updatePanelsTabs()
+  this.actions.updatePanelsTabs()
 }
 
 /**
@@ -153,11 +153,13 @@ async function loadTabsFromSessionStorage() {
   // Set tabs initial props and update state
   this.state.tabsMap = []
   let oldNewMap = {}
+  let panel
+  let panelIndex = this.state.panels.findIndex(p => p.tabs)
   for (let dt, t, i = 0; i < tabs.length; i++) {
     t = tabs[i]
     dt = tabsData[i]
 
-    Utils.normalizeTab(t, DEFAULT_CTX_ID)
+    Utils.normalizeTab(t, null)
     if (this.state.highlightOpenBookmarks && this.state.bookmarksUrlMap && this.state.bookmarksUrlMap[t.url]) {
       for (let b of this.state.bookmarksUrlMap[t.url]) {
         b.isOpen = true
@@ -165,6 +167,8 @@ async function loadTabsFromSessionStorage() {
     }
 
     if (dt) {
+      panel = this.state.panelsMap[dt.panelId]
+
       if (dt.parentId > -1 && oldNewMap[dt.parentId] === undefined && groups[dt.parentId]) {
         let group = groups[dt.parentId]
 
@@ -198,8 +202,12 @@ async function loadTabsFromSessionStorage() {
         continue
       }
 
-      if (dt.panelId && this.state.panelsMap[dt.panelId]) t.panelId = dt.panelId
-      else t.panelId = DEFAULT_CTX_ID
+      if (panel && panel.index >= panelIndex) {
+        panelIndex = panel.index
+        t.panelId = dt.panelId
+      } else if (this.state.panels[panelIndex]) {
+        t.panelId = this.state.panels[panelIndex].id
+      }
       if (oldNewMap[dt.parentId] !== undefined) {
         t.parentId = oldNewMap[dt.parentId]
       }
@@ -220,9 +228,9 @@ async function loadTabsFromSessionStorage() {
   // Switch to panel with active tab
   let activePanelIsTabs = activePanel.type === 'tabs' ||
     activePanel.type === 'default'
-  let activePanelIsOk = activeTab.cookieStoreId === activePanel.cookieStoreId
+  let activePanelIsOk = activeTab.panelId === activePanel.id
   if (!activeTab.pinned && activePanelIsTabs && !activePanelIsOk) {
-    let panel = this.state.panelsMap[activeTab.cookieStoreId]
+    let panel = this.state.panelsMap[activeTab.panelId]
     if (panel) {
       this.state.panelIndex = panel.index
       this.state.lastPanelIndex = panel.index
@@ -1846,7 +1854,7 @@ function updateTabsTree(startIndex = 0, endIndex = -1) {
     if (parent && (parent.pinned || parent.index >= t.index)) parent = undefined
 
     // Parent is defined
-    if (parent && !parent.pinned) {
+    if (parent && !parent.pinned && parent.panelId === t.panelId) {
       if (parent.lvl === maxLvl) {
         parent.isParent = false
         parent.folded = false
@@ -1864,7 +1872,7 @@ function updateTabsTree(startIndex = 0, endIndex = -1) {
       if (pt && pt.id !== t.parentId && pt.lvl < t.lvl) {
         for (let j = t.index; j--; ) {
           if (this.state.tabs[j].id === parent.id) break
-          if (this.state.tabs[j].cookieStoreId !== t.cookieStoreId) break
+          if (this.state.tabs[j].panelId !== t.panelId) break
           if (parent.lvl === maxLvl) {
             this.state.tabs[j].parentId = parent.parentId
             this.state.tabs[j].isParent = false
