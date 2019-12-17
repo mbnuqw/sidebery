@@ -630,54 +630,52 @@ function switchTab(globaly, cycle, step, pinned) {
     this.state.switchTabPause = null
   }, 50)
 
-  const panel = this.state.panels[this.state.panelIndex]
-  let tabs
-  if (this.state.pinnedTabsPosition === 'panel') {
-    if (globaly) {
-      tabs = []
-      for (let p of this.state.panels) {
-        if (!p.tabs) continue
-        for (let t of this.state.tabs) {
-          if (t.panelId === p.id) tabs.push(t)
-        }
-      }
-    } else {
-      tabs = this.state.tabs.filter(t => t.panelId === panel.id)
-    }
-  } else {
-    if (pinned) tabs = this.getters.pinnedTabs
-    else tabs = globaly ? this.state.tabs : panel.tabs
-  }
-  if (!tabs || !tabs.length) return
-
+  let pinnedAndPanel = this.state.pinnedTabsPosition === 'panel'
   let visibleOnly = this.state.scrollThroughVisibleTabs
   let skipDiscarded = this.state.scrollThroughTabsSkipDiscarded
-  if (visibleOnly || skipDiscarded) {
-    tabs = tabs.filter(t => {
-      if (visibleOnly && t.invisible) return false
-      if (skipDiscarded && t.discarded) return false
-      return true
-    })
+
+  let activeTab = this.state.tabsMap[this.state.activeTabId]
+  if (!activeTab) activeTab = this.state.tabs.findIndex(t => t.active)
+  if (!activeTab) return
+
+  let activePanel = this.state.panels[this.state.panelIndex]
+  if (!activePanel) return
+
+  let tab, index = activeTab.index, t = true, cycled = false
+
+  if (
+    !pinned && !globaly && activeTab.panelId !== activePanel.id ||
+    !pinned && !pinnedAndPanel && activeTab.pinned
+  ) {
+    if (step > 0) tab = activePanel.tabs[0]
+    if (step < 0) tab = activePanel.tabs[activePanel.tabs.length - 1]
+    if (tab) browser.tabs.update(tab.id, { active: true })
+    return
   }
 
-  let index = tabs.findIndex(t => t.active)
-  if (step > 0) {
-    index += step
-    if (index >= tabs.length) {
-      if (cycle) index = 0
-      else return
+  for (let i = index + step; t; i += step) {
+    t = this.state.tabs[i]
+    if (!t) {
+      if (cycle && !cycled) {
+        if (step > 0) i = 0
+        else i = this.state.tabs.length - 1
+        cycled = t = true
+        continue
+      } else {
+        break
+      }
     }
-  }
-  if (step < 0) {
-    if (index < 0) index = tabs.length
-    index += step
-    if (index < 0) {
-      if (cycle) index = tabs.length - 1
-      else return
-    }
+
+    if (visibleOnly && t.invisible) continue
+    if (skipDiscarded && t.discarded) continue
+    if (pinned && !t.pinned) continue
+    if (!pinned && !globaly && t.panelId !== activeTab.panelId) continue
+    if (!pinned && !pinnedAndPanel && t.pinned) continue
+    tab = t
+    break
   }
 
-  browser.tabs.update(tabs[index].id, { active: true })
+  if (tab && tab !== activeTab) browser.tabs.update(tab.id, { active: true })
 }
 
 /**
