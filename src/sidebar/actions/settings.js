@@ -116,6 +116,7 @@ async function openSettings(section) {
   let url = browser.runtime.getURL('settings/settings.html')
   let existedTab = this.state.tabs.find(t => t.url.startsWith(url))
   let activePanel = this.state.panels[this.state.panelIndex]
+  let activeTab = this.state.tabsMap[this.state.activeTabId]
 
   if (section) url += '#' + section
   if (existedTab) {
@@ -126,11 +127,13 @@ async function openSettings(section) {
       browser.tabs.reload(existedTab.id)
     }
   } else {
-    const conf = { url, windowId: this.state.windowId }
-    if (activePanel && activePanel.tabs && activePanel.cookieStoreId) {
-      conf.cookieStoreId = activePanel.cookieStoreId
+    if (activeTab && activeTab.url === 'about:newtab') {
+      await browser.tabs.update(activeTab.id, { url, active: true })
+    } else if (activePanel && activePanel.tabs) {
+      this.actions.createTabInPanel(activePanel, url)
+    } else {
+      browser.tabs.create({ url, windowId: this.state.windowId })
     }
-    browser.tabs.create(conf)
   }
 }
 
