@@ -699,18 +699,12 @@ function discardTabs(tabIds = []) {
  * Try to activate last active tab on the panel
  */
 function activateLastActiveTabOf(panelIndex) {
-  const p = this.state.panels[panelIndex]
+  let p = this.state.panels[panelIndex]
   if (!p || !p.tabs || !p.tabs.length) return
-  const tab = this.state.tabsMap[p.lastActiveTab]
-  if (tab && tab.cookieStoreId === p.cookieStoreId) {
-    browser.tabs.update(tab.id, { active: true })
-  } else {
-    let lastTab = p.tabs[p.tabs.length - 1]
-    for (let i = p.tabs.length; i-- && lastTab.invisible; ) {
-      lastTab = p.tabs[i]
-    }
-    if (lastTab) browser.tabs.update(lastTab.id, { active: true })
-  }
+
+  let tab = this.state.tabsMap[p.lastActiveTab]
+  if (!tab) tab = p.tabs[p.tabs.length - 1]
+  if (tab) browser.tabs.update(tab.id, { active: true })
 }
 
 /**
