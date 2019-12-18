@@ -17,7 +17,7 @@
   @contextmenu.stop="onCtxMenu"
   @mousedown.stop="onMouseDown"
   @mouseup.stop="onMouseUp"
-  @mouseleave="onMouseLeave"
+  @mouseleave.passive="onMouseLeave"
   @dblclick.prevent.stop="onDoubleClick"): .lvl-wrapper
   transition(name="tab-complete"): .complete-fx(v-if="tab.status === 'loading'")
   .drag-layer(

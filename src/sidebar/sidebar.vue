@@ -5,7 +5,7 @@
   :data-drag="dragMode"
   :data-pointer="pointerMode"
   :data-nav-inline="$store.state.navBarInline"
-  @wheel="onWheel"
+  @wheel.passive="onWheel"
   @contextmenu.stop.prevent=""
   @dragover.prevent="onDragMove"
   @dragenter="onDragEnter"
