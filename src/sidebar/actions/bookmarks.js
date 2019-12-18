@@ -573,6 +573,10 @@ async function sortBookmarks(type, nodeIds) {
 
     // Direction
     let dir, first = nodes[0], last = nodes[nodes.length - 1]
+    if (first.type !== last.type) {
+      first = nodes.find(n => n.type === last.type)
+      if (!first || first === last) first = nodes[0]
+    }
     if (byName) dir = first.title.localeCompare(last.title)
     if (byLink) dir = first.url.localeCompare(last.url)
     if (byTime) dir = first.dateAdded - last.dateAdded
