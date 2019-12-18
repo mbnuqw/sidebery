@@ -55,8 +55,8 @@ export default {
   'menu.tabs_panel.collapse_inact_branches': { message: 'Свернуть неактивные ветки' },
 
   // --- Common ---
-  'menu.copy_url': { message: 'Копировать ссылку' },
-  'menu.copy_urls': { message: 'Копировать ссылки' },
+  'menu.copy_url': { message: 'Копировать адрес' },
+  'menu.copy_urls': { message: 'Копировать адреса' },
   'menu.common.conf': { message: 'Настройки панели' },
 
   // --- Editor
