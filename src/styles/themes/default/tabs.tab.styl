@@ -9,6 +9,7 @@
   border: var(--tabs-border)
   box-shadow: var(--tabs-shadow)
   transform-origin: 50% 0%
+  transition: transform var(--d-fast), opacity var(--d-fast), padding var(--d-fast)
 
   &:hover
     background-color: var(--tabs-bg-hover)
@@ -396,17 +397,14 @@
 // -
 .tab-enter-active
 .tab-leave-active
-  transition: transform var(--d-fast), opacity var(--d-fast)
+  transition: transform var(--d-fast), opacity var(--d-fast), padding var(--d-fast)
 .tab-leave-active
   box(absolute)
 .tab-move
-  transition: transform var(--d-fast), opacity var(--d-fast)
+  transition: transform var(--d-fast), opacity var(--d-fast), padding var(--d-fast)
 .tab-enter
-  opacity: 0
-  transform: scale(1, 0.8)
-.tab-enter-to
   opacity: 1
-  transform: scale(1, 1)
+  transform: scale(1, 0.7)
 .tab-leave
   opacity: 0
   transform: scale(1, 1)
