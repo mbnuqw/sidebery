@@ -72,7 +72,7 @@ export const DEFAULT_SETTINGS = {
   activateAfterClosingGlobal: false,
   shiftSelAct: true,
   askNewBookmarkPlace: false,
-  tabsRmUndoNote: false,
+  tabsRmUndoNote: true,
   nativeHighlight: false,
 
   // New tab position
@@ -112,7 +112,7 @@ export const DEFAULT_SETTINGS = {
   highlightOpenBookmarks: false,
   activateOpenBookmarkTab: false,
   showBookmarkLen: false,
-  bookmarksRmUndoNote: false,
+  bookmarksRmUndoNote: true,
 
   // Appearance
   fontSize: 'm',
