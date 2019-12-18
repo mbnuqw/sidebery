@@ -16,7 +16,6 @@
     "dev.ext": "web-ext run --source-dir ./addon -f firefox --keep-profile-changes --firefox-profile ./build/profile-stable",
     "dev.ext.beta": "web-ext run --source-dir ./addon -f firefox-beta --keep-profile-changes --firefox-profile ./build/profile-beta",
     "dev.ext.nightly": "web-ext run --source-dir ./addon -f firefox-nightly --keep-profile-changes --firefox-profile ./build/profile-nightly",
-
     "build.vendor": "node build/vendor.js -- build",
     "build.sidebar": "parcel build ./src/sidebar/sidebar.js -d ./addon/sidebar/ --public-url ./ --no-autoinstall --no-source-maps --no-cache",
     "build.settings": "parcel build ./src/page.settings/settings.js -d ./addon/settings/ --public-url ./ --no-autoinstall --no-source-maps --no-cache",
@@ -28,7 +27,6 @@
     "build.themes": "npm run build.themes.default && npm run build.themes.tactile",
     "build.ext": "web-ext build --source-dir ./addon -a dist/ -i *.lock ./package.json",
     "build": "npm run build.vendor && npm run build.sidebar && npm run build.settings && npm run build.group && npm run build.proxy && npm run build.url && npm run build.themes",
-
     "clear.cache": "rm -rf .cache",
     "clear.npm": "rm -rf node_modules package-lock.json",
     "clear.sidebar": "find ./addon/sidebar -type f -not -name index.html -delete",
@@ -45,12 +43,12 @@
   "author": "mbnuqw",
   "license": "MIT",
   "devDependencies": {
-    "@babel/core": "7.7.4",
+    "@babel/core": "7.7.5",
     "@babel/plugin-proposal-object-rest-spread": "7.7.4",
-    "@babel/plugin-transform-modules-commonjs": "7.7.4",
-    "@babel/preset-env": "7.7.4",
-    "@vue/component-compiler-utils": "3.0.2",
-    "eslint": "6.7.1",
+    "@babel/plugin-transform-modules-commonjs": "7.7.5",
+    "@babel/preset-env": "7.7.6",
+    "@vue/component-compiler-utils": "3.1.0",
+    "eslint": "6.7.2",
     "eslint-plugin-vue": "6.0.1",
     "jest": "24.9.0",
     "parcel-bundler": "1.12.4",
@@ -58,14 +56,14 @@
     "regenerator-runtime": "0.13.3",
     "stylus": "0.54.7",
     "vue-hot-reload-api": "2.3.4",
-    "vue-server-renderer": "2.6.10",
-    "vue-template-compiler": "2.6.10",
+    "vue-server-renderer": "2.6.11",
+    "vue-template-compiler": "2.6.11",
     "vue-template-es2015-compiler": "1.9.1",
     "web-ext": "3.2.1"
   },
   "dependencies": {
-    "vue": "2.6.10",
-    "vuex": "3.1.1"
+    "vue": "2.6.11",
+    "vuex": "3.1.2"
   },
   "prettier": {
     "semi": false,
