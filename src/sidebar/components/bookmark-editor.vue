@@ -27,7 +27,7 @@
 import TextInput from '../../components/text-input'
 import State from '../store/state'
 
-const URL_RE = /^(http:\/\/|https:\/\/)[a-z0-9]+([-.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/
+const URL_RE = /^(https?:\/\/.+|about:.+)/
 
 export default {
   components: {

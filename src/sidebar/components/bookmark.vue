@@ -251,11 +251,11 @@ export default {
         browser.tabs.create({
           index,
           windowId: State.windowId,
-          url,
+          url: Utils.normalizeUrl(url),
           active: withFocus,
         })
       } else {
-        browser.tabs.update({ url })
+        browser.tabs.update({ url: Utils.normalizeUrl(url) })
         let panel = State.panels.find(p => p.bookmarks)
         if (withFocus && !panel.lockedPanel) Actions.goToActiveTabPanel()
       }
