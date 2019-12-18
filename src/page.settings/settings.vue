@@ -8,12 +8,6 @@
       label="settings.native_scrollbars"
       :value="$store.state.nativeScrollbars"
       @input="setOpt('nativeScrollbars', $event)")
-    select-field(
-      label="settings.state_storage"
-      optLabel="settings.state_storage_"
-      :value="$store.state.stateStorage"
-      :opts="$store.state.stateStorageOpts"
-      @input="setOpt('stateStorage', $event)")
 
   section(ref="settings_menu")
     h2 {{t('settings.ctx_menu_title')}}
@@ -144,11 +138,21 @@
   section(ref="settings_tabs")
     h2 {{t('settings.tabs_title')}}
     select-field(
+      label="settings.state_storage"
+      optLabel="settings.state_storage_"
+      :value="$store.state.stateStorage"
+      :opts="$store.state.stateStorageOpts"
+      @input="setOpt('stateStorage', $event)")
+    select-field(
       label="settings.warn_on_multi_tab_close"
       optLabel="settings.warn_on_multi_tab_close_"
       :value="$store.state.warnOnMultiTabClose"
       :opts="$store.state.warnOnMultiTabCloseOpts"
       @input="setOpt('warnOnMultiTabClose', $event)")
+    toggle-field(
+      label="settings.tabs_rm_undo_note"
+      :value="$store.state.tabsRmUndoNote"
+      @input="setOpt('tabsRmUndoNote', $event)")
     toggle-field(
       label="settings.activate_on_mouseup"
       :value="$store.state.activateOnMouseUp"
@@ -203,10 +207,6 @@
       label="settings.ask_new_bookmark_place"
       :value="$store.state.askNewBookmarkPlace"
       @input="setOpt('askNewBookmarkPlace', $event)")
-    toggle-field(
-      label="settings.tabs_rm_undo_note"
-      :value="$store.state.tabsRmUndoNote"
-      @input="setOpt('tabsRmUndoNote', $event)")
     toggle-field(
       label="settings.native_highlight"
       :value="$store.state.nativeHighlight"
@@ -346,6 +346,11 @@
       :opts="$store.state.warnOnMultiBookmarkDeleteOpts"
       @input="setOpt('warnOnMultiBookmarkDelete', $event)")
     toggle-field(
+      label="settings.bookmarks_rm_undo_note"
+      :inactive="!$store.state.bookmarksPanel"
+      :value="$store.state.bookmarksRmUndoNote"
+      @input="setOpt('bookmarksRmUndoNote', $event)")
+    toggle-field(
       label="settings.open_bookmark_new_tab"
       :inactive="!$store.state.bookmarksPanel"
       :value="$store.state.openBookmarkNewTab"
@@ -389,11 +394,6 @@
         :inactive="!$store.state.bookmarksPanel || !$store.state.highlightOpenBookmarks"
         :value="$store.state.activateOpenBookmarkTab"
         @input="setOpt('activateOpenBookmarkTab', $event)")
-    toggle-field(
-      label="settings.bookmarks_rm_undo_note"
-      :inactive="!$store.state.bookmarksPanel"
-      :value="$store.state.bookmarksRmUndoNote"
-      @input="setOpt('bookmarksRmUndoNote', $event)")
 
   section(ref="settings_appearance")
     h2 {{t('settings.appearance_title')}}
