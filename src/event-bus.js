@@ -2,7 +2,7 @@ const eb = new Vue()
 
 /**
  * Init global msg exchange.
- * 
+ *
  * @param state - global vuex state
  * @param actions
  */

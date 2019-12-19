@@ -1,4 +1,4 @@
-import { translate } from '../../mixins/dict'
+import { translate } from '../../../addon/locales/dict'
 import { DEFAULT_CTX_ID } from '../../../addon/defaults'
 import Actions from '../actions'
 
@@ -12,7 +12,9 @@ async function loadBookmarks() {
   let bookmarks = await browser.bookmarks.getTree()
   if (!bookmarks || !bookmarks.length) {
     panel.loading = 'err'
-    setTimeout(() => {panel.loading = false}, 2000)
+    setTimeout(() => {
+      panel.loading = false
+    }, 2000)
   }
 
   // Normalize objects before vue
@@ -62,7 +64,9 @@ async function loadBookmarks() {
   this.state.bookmarks = bookmarks[0].children
   this.state.bookmarksCount = count
   panel.loading = 'ok'
-  setTimeout(() => {panel.loading = false}, 2000)
+  setTimeout(() => {
+    panel.loading = false
+  }, 2000)
 }
 
 /**
@@ -277,7 +281,8 @@ async function dropToBookmarks(event, dropIndex, dropParent, nodes) {
  * Open bookmarks in new window
  */
 async function openBookmarksInNewWin(ids, incognito) {
-  let toOpen = [], tabsInfo = []
+  let toOpen = []
+  let tabsInfo = []
 
   // Get ordered list of nodes
   let walker = nodes => {
@@ -295,7 +300,8 @@ async function openBookmarksInNewWin(ids, incognito) {
   walker(this.state.bookmarks)
 
   // Calculate tree levels
-  let lvl = 0, parents = []
+  let lvl = 0
+  let parents = []
   for (let prev, node, i = 0; i < toOpen.length; i++) {
     prev = toOpen[i - 1]
     node = toOpen[i]
@@ -372,7 +378,6 @@ async function openBookmarksInCtx(ids, ctxId) {
 
   const idMap = []
   for (let node of toOpen) {
-
     if (node.parentId === 'unfiled_____' && this.state.autoRemoveOther) {
       await browser.bookmarks.removeTree(node.id)
     }
@@ -386,7 +391,7 @@ async function openBookmarksInCtx(ids, ctxId) {
       url: node.url ? Utils.normalizeUrl(node.url) : Utils.createGroupUrl(node.title),
       cookieStoreId: ctxId,
       active: false,
-      openerTabId: idMap[node.parentId]
+      openerTabId: idMap[node.parentId],
     }
 
     if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
@@ -409,12 +414,14 @@ async function openBookmarksInCtx(ids, ctxId) {
  * Start bookmark creation
  */
 function startBookmarkCreation(type, target) {
-  let parentId, index = 0
+  let parentId
+  let index = 0
   if (target.type === 'bookmark' || target.type === 'separator') {
     parentId = target.parentId
     index = target.index + 1
+  } else if (target.type === 'folder') {
+    parentId = target.id
   }
-  else if (target.type === 'folder') parentId = target.id
 
   if (type === 'separator') {
     browser.bookmarks.create({ parentId, type: 'separator', index })
@@ -463,7 +470,8 @@ async function removeBookmarks(ids) {
     }
   }
 
-  let warn = this.state.warnOnMultiBookmarkDelete === 'any' ||
+  let warn =
+    this.state.warnOnMultiBookmarkDelete === 'any' ||
     (this.state.warnOnMultiBookmarkDelete === 'collapsed' && hasCollapsed)
   if (warn && count > 1) {
     let ok = await this.actions.confirm(translate('confirm.bookmarks_delete'))
@@ -543,7 +551,7 @@ async function sortBookmarks(type, nodeIds) {
 
   // Separate nodes by groups (bookmarks with the same parentId)
   let groups = {}
-  let walker = (nodes) => {
+  let walker = nodes => {
     for (let node of nodes) {
       if (node.type === 'separator') continue
       if (type !== 'link' || node.url) {
@@ -572,7 +580,9 @@ async function sortBookmarks(type, nodeIds) {
     let minIndex = nodes.reduce((a, v) => Math.min(a, v.index), 9999)
 
     // Direction
-    let dir, first = nodes[0], last = nodes[nodes.length - 1]
+    let dir
+    let first = nodes[0]
+    let last = nodes[nodes.length - 1]
     if (first.type !== last.type) {
       first = nodes.find(n => n.type === last.type)
       if (!first || first === last) first = nodes[0]

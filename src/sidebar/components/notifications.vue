@@ -15,7 +15,6 @@
         .ctrl(@mousedown="onHideMouseDown($event, info, i)") {{t('notif.hide_ctrl')}}
 </template>
 
-
 <script>
 import State from '../store/state.js'
 import Actions from '../actions'
@@ -57,7 +56,7 @@ export default {
     getTimeoutCSSVar(info) {
       if (!info.timeout) return null
       return { '--timeout': info.timeout + 200 + 'ms' }
-    }
+    },
   },
 }
 </script>

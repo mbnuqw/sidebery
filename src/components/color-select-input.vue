@@ -8,7 +8,6 @@
     svg: use(:xlink:href="'#circle'")
 </template>
 
-
 <script>
 export default {
   props: {

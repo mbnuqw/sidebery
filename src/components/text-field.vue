@@ -17,7 +17,6 @@
     @keydown="$emit('keydown', $event)")
 </template>
 
-
 <script>
 import TextInput from './text-input'
 
@@ -38,7 +37,7 @@ export default {
     line: Boolean,
     tabindex: {
       type: String,
-      default: () => '0'
+      default: () => '0',
     },
     password: Boolean,
     label: String,

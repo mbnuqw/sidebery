@@ -18,7 +18,6 @@
   .to-the-end(v-if="pinnedTabs.length" @dragleave.stop="" @dragenter.stop="")
 </template>
 
-
 <script>
 import State from '../store/state'
 import Actions from '../actions'
@@ -45,8 +44,7 @@ export default {
   computed: {
     pinnedTabs() {
       if (State.pinnedTabsPosition === 'panel') {
-        return this.$store.getters.pinnedTabs
-          .filter(t => t.panelId === this.panelId)
+        return this.$store.getters.pinnedTabs.filter(t => t.panelId === this.panelId)
       } else {
         return this.$store.getters.pinnedTabs
       }
@@ -68,7 +66,7 @@ export default {
         }
       }
     },
-  
+
     onDragEnter(e) {
       if (e.srcElement === this.$el) this.dragPointed = true
     },
@@ -84,7 +82,8 @@ export default {
     onDrop(e) {
       // Get drop index
       let dropIndex = 0
-      if (this.dragPointed === true) dropIndex = this.pinnedTabs[this.pinnedTabs.length - 1].index + 1
+      if (this.dragPointed === true)
+        dropIndex = this.pinnedTabs[this.pinnedTabs.length - 1].index + 1
       else if (this.pointedTabIndex > -1) dropIndex = this.pointedTabIndex
 
       Actions.dropToTabs(e, dropIndex, -1, State.dragNodes, true)

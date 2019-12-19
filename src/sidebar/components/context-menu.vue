@@ -67,7 +67,6 @@
             :data-color="out.color ? opt.color : false") {{out.label}}
 </template>
 
-
 <script>
 import EventBus from '../../event-bus'
 import Store from '../store'
@@ -77,7 +76,7 @@ import ScrollBox from './scroll-box'
 
 export default {
   components: {
-    ScrollBox
+    ScrollBox,
   },
 
   data() {
@@ -139,7 +138,9 @@ export default {
             else if (c.x > menuWidth) this.bX = c.x - menuWidth
             else this.bX = fullWidth - menuWidth
           })
-          setTimeout(() => { this.aMenuGroups = [] }, 128)
+          setTimeout(() => {
+            this.aMenuGroups = []
+          }, 128)
         } else {
           this.aMenuGroups = c.opts
           this.aPos = c.y
@@ -153,7 +154,9 @@ export default {
             else if (c.x > menuWidth) this.aX = c.x - menuWidth
             else this.aX = fullWidth - menuWidth
           })
-          setTimeout(() => { this.bMenuGroups = [] }, 128)
+          setTimeout(() => {
+            this.bMenuGroups = []
+          }, 128)
         }
       }
 
@@ -202,7 +205,7 @@ export default {
       if (this.selected >= 0) {
         let i = this.selected + dir
 
-        while(opts[i] && (opts[i] === 'separator' || opts[i].inactive)) {
+        while (opts[i] && (opts[i] === 'separator' || opts[i].inactive)) {
           i += dir
         }
 

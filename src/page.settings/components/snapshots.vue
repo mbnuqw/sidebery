@@ -87,9 +87,8 @@
                     .url {{tab.url}}
 </template>
 
-
 <script>
-import { translate } from '../../mixins/dict'
+import { translate } from '../../../addon/locales/dict'
 import { DEFAULT_CTX } from '../../../addon/defaults'
 import { DEFAULT_TABS_PANEL } from '../../../addon/defaults'
 import { getPrevVerSnapshots } from '../../../addon/actions/snapshots'
@@ -114,9 +113,7 @@ export default {
 
   async created() {
     let parsedSnapshots = []
-    let { snapshots_v4 } = await browser.storage.local.get({
-      snapshots_v4: null
-    })
+    let { snapshots_v4 } = await browser.storage.local.get({ snapshots_v4: null })
     if (!snapshots_v4) snapshots_v4 = await getPrevVerSnapshots()
 
     // Watch 'activeSnapshot' change and scroll to changed target
@@ -266,7 +263,6 @@ export default {
         Actions.savePanelsDebounced()
       }
 
-
       for (let win of Object.values(snapshot.windowsById)) {
         let normPanels = []
         for (let panel of State.panels) {
@@ -282,9 +278,7 @@ export default {
      * Remove snapshot
      */
     async removeSnapshot(snapshot) {
-      let { snapshots_v4 } = await browser.storage.local.get({
-        snapshots_v4: []
-      })
+      let { snapshots_v4 } = await browser.storage.local.get({ snapshots_v4: [] })
       if (!snapshots_v4) snapshots_v4 = await getPrevVerSnapshots()
 
       const indexStored = snapshots_v4.findIndex(s => s.id === snapshot.id)
@@ -328,10 +322,12 @@ export default {
      * Get snapshot info
      */
     getSnapInfo(s) {
-      return `${s.winCount} ${translate('snapshot.snap_win', s.winCount)} / ` +
+      return (
+        `${s.winCount} ${translate('snapshot.snap_win', s.winCount)} / ` +
         `${s.ctrCount} ${translate('snapshot.snap_ctr', s.ctrCount)} / ` +
         `${s.tabsCount} ${translate('snapshot.snap_tab', s.tabsCount)} / ` +
         `~ ${s.size}`
+      )
     },
   },
 }

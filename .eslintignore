@@ -1,0 +1,7 @@
+addon/sidebar/sidebar.js
+addon/settings/settings.js
+addon/group/group.js
+addon/url/url.js
+addon/proxy/proxy.js
+addon/vendor/*
+!addon/vendor/vendor.js

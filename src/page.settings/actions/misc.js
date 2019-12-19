@@ -32,8 +32,12 @@ async function loadBrowserInfo() {
 async function loadPermissions(init) {
   this.state.permAllUrls = await browser.permissions.contains({ origins: ['<all_urls>'] })
   this.state.permTabHide = await browser.permissions.contains({ permissions: ['tabHide'] })
-  this.state.permClipboardWrite = await browser.permissions.contains({ permissions: ['clipboardWrite'] })
-  this.state.permWebRequestBlocking = await browser.permissions.contains({ permissions: ['webRequest', 'webRequestBlocking'] })
+  this.state.permClipboardWrite = await browser.permissions.contains({
+    permissions: ['clipboardWrite'],
+  })
+  this.state.permWebRequestBlocking = await browser.permissions.contains({
+    permissions: ['webRequest', 'webRequestBlocking'],
+  })
 
   if (!this.state.permAllUrls) {
     for (let c of Object.values(this.state.containers)) {
@@ -69,7 +73,7 @@ function goToPerm(hash, permId) {
       if (el) el.scrollIntoView(scrollHighlightConf)
     }
   }, 250)
-  
+
   document.title = 'Sidebery / Settings'
   this.state.activeView = 'Settings'
   this.state.highlightedField = permId
@@ -102,12 +106,15 @@ function updateActiveView() {
   }, 1250)
 
   if (hash.startsWith('menu_editor')) {
-    setTimeout(() => {
-      if (hash !== undefined && this.state.menuEditorRefs) {
-        let el = this.state.menuEditorRefs[hash]
-        if (el) el.scrollIntoView(scrollSectionConf)
-      }
-    }, this.state.activeView === 'MenuEditor' ? 0 : 250)
+    setTimeout(
+      () => {
+        if (hash !== undefined && this.state.menuEditorRefs) {
+          let el = this.state.menuEditorRefs[hash]
+          if (el) el.scrollIntoView(scrollSectionConf)
+        }
+      },
+      this.state.activeView === 'MenuEditor' ? 0 : 250
+    )
 
     document.title = 'Sidebery / Menu Editor'
     this.state.activeView = 'MenuEditor'
@@ -131,26 +138,29 @@ function updateActiveView() {
     return
   }
 
-  setTimeout(() => {
-    if (hash !== undefined && this.state.settingsRefs) {
-      let el = this.state.settingsRefs[hash]
-      if (el) el.scrollIntoView(scrollSectionConf)
-    }
+  setTimeout(
+    () => {
+      if (hash !== undefined && this.state.settingsRefs) {
+        let el = this.state.settingsRefs[hash]
+        if (el) el.scrollIntoView(scrollSectionConf)
+      }
 
-    if (arg && hash === 'settings_containers') {
-      setTimeout(() => {
-        let container = this.state.containers[arg]
-        if (container) this.state.selectedContainer = container
-      }, 120)
-    }
+      if (arg && hash === 'settings_containers') {
+        setTimeout(() => {
+          let container = this.state.containers[arg]
+          if (container) this.state.selectedContainer = container
+        }, 120)
+      }
 
-    if (arg && hash === 'settings_panels') {
-      setTimeout(() => {
-        let panel = this.state.panels.find(p => p.id === arg)
-        if (panel) this.state.selectedPanel = panel
-      }, 120)
-    }
-  }, this.state.activeView === 'Settings' ? 0 : 250)
+      if (arg && hash === 'settings_panels') {
+        setTimeout(() => {
+          let panel = this.state.panels.find(p => p.id === arg)
+          if (panel) this.state.selectedPanel = panel
+        }, 120)
+      }
+    },
+    this.state.activeView === 'Settings' ? 0 : 250
+  )
 
   document.title = 'Sidebery / Settings'
   this.state.activeView = 'Settings'

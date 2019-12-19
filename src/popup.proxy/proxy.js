@@ -49,7 +49,7 @@ void (async function() {
   checkInfoBtnEl.addEventListener('click', async () => {
     document.body.classList.add('-loading')
 
-    let [ activeTab ] = await browser.tabs.query({
+    let [activeTab] = await browser.tabs.query({
       currentWindow: true,
       active: true,
     })
@@ -126,15 +126,13 @@ function initTheme(theme) {
  * Init title
  */
 async function initTitle() {
-  let [ activeTab ] = await browser.tabs.query({
+  let [activeTab] = await browser.tabs.query({
     currentWindow: true,
     active: true,
   })
   if (!activeTab) return
 
-  let container = await browser.contextualIdentities.get(
-    activeTab.cookieStoreId,
-  )
+  let container = await browser.contextualIdentities.get(activeTab.cookieStoreId)
   if (!container) return
 
   let popupTitleEl = document.getElementById('popup_title')
@@ -151,7 +149,7 @@ async function initTitle() {
  * Init static config
  */
 async function initConfigInfo() {
-  let [ activeTab ] = await browser.tabs.query({
+  let [activeTab] = await browser.tabs.query({
     currentWindow: true,
     active: true,
   })

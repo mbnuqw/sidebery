@@ -13,7 +13,6 @@
     a.btn(ref="exportData" @mouseenter="genExportData") {{t('settings.help_exp_data')}}
 </template>
 
-
 <script>
 import ToggleField from '../../components/toggle-field'
 

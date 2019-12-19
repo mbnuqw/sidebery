@@ -85,7 +85,7 @@ async function updatePanels(newPanels) {
         index++
       }
     }
-    allTabs.forEach((t, i) => t.index = i)
+    allTabs.forEach((t, i) => (t.index = i))
     this.state.tabs = allTabs
 
     this.handlers.setupTabsListeners()
@@ -161,7 +161,7 @@ function getPanelEndIndex(id) {
 
 /**
  *  Find and return panel of the tab.
- * 
+ *
  * @param {object|number} tab - tab object or tabID
  * @return {object|null} panel object or null
  */
@@ -273,7 +273,7 @@ function switchToPanel(index, withoutTabActivation) {
  */
 function switchToNeighbourPanel() {
   let target
-  
+
   if (this.state.panelIndex < 0) target = this.state.panels[0]
 
   if (!target) {

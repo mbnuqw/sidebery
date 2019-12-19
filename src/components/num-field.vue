@@ -16,7 +16,6 @@
       @input="select")
 </template>
 
-
 <script>
 import SelectInput from './select-input'
 import TextInput from './text-input'
@@ -29,8 +28,8 @@ export default {
 
   props: {
     label: String,
-    value: [ Number, String ],
-    or: [ Number, String ],
+    value: [Number, String],
+    or: [Number, String],
     inactive: Boolean,
     unit: String,
     unitOpts: Array,

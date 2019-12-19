@@ -14,7 +14,7 @@ async function loadCSSVars() {
       rootEl.style.setProperty(Utils.toCSSVarName(key), cssVars[key])
     }
   }
-  
+
   EventBus.$emit('dynVarChange')
 }
 

@@ -12,7 +12,8 @@ export function translate(id, plurNum) {
 
   if (dict[id].message.constructor === String) return dict[id].message
   if (dict[id].message.constructor === Array) {
-    let i, record = dict[id]
+    let i
+    let record = dict[id]
 
     for (i = 0; i < record.plur.length; i++) {
       let range = record.plur[i]

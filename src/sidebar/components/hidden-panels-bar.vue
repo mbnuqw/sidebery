@@ -19,11 +19,10 @@
     svg(v-else): use(:xlink:href="'#' + panel.icon")
 </template>
 
-
 <script>
 import EventBus from '../../event-bus'
 import State from '../store/state'
-import Actions from  '../actions'
+import Actions from '../actions'
 
 export default {
   data() {
@@ -35,7 +34,7 @@ export default {
   computed: {
     hiddenPanels() {
       return State.panels.filter(b => !b.bookmarks && b.inactive)
-    }
+    },
   },
 
   created() {
@@ -87,11 +86,7 @@ export default {
      * Handle context menu event
      */
     onNavCtxMenu(e, i) {
-      if (
-        !State.ctxMenuNative ||
-        e.ctrlKey ||
-        e.shiftKey
-      ) {
+      if (!State.ctxMenuNative || e.ctrlKey || e.shiftKey) {
         e.stopPropagation()
         e.preventDefault()
         return

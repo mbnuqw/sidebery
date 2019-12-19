@@ -27,8 +27,8 @@ export default {
   containers: {},
   panels: [],
 
-  tabsMenu: JSON.parse(JSON.stringify(DEFAULT_TABS_MENU)),  
-  tabsPanelMenu: JSON.parse(JSON.stringify(DEFAULT_TABS_PANEL_MENU)),  
+  tabsMenu: JSON.parse(JSON.stringify(DEFAULT_TABS_MENU)),
+  tabsPanelMenu: JSON.parse(JSON.stringify(DEFAULT_TABS_PANEL_MENU)),
   bookmarksMenu: JSON.parse(JSON.stringify(DEFAULT_BOOKMARKS_MENU)),
   bookmarksPanelMenu: JSON.parse(JSON.stringify(BOOKMARKS_PANEL_MENU)),
 

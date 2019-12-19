@@ -1,4 +1,3 @@
-
 import { DEFAULT_CONTAINER } from '../../addon/defaults'
 
 /**
@@ -6,9 +5,9 @@ import { DEFAULT_CONTAINER } from '../../addon/defaults'
  */
 async function loadContainers() {
   let saveNeeded = false
-  let [ ffContainers, storage ] = await Promise.all([
+  let [ffContainers, storage] = await Promise.all([
     browser.contextualIdentities.query({}),
-    browser.storage.local.get({ containers_v4: null })
+    browser.storage.local.get({ containers_v4: null }),
   ])
 
   // Try to use value from prev version

@@ -1,6 +1,6 @@
 import Actions, { injectInActions } from './actions.js'
 
-void async function main() {
+void (async function main() {
   const state = injectInActions()
 
   state.actions = Actions
@@ -39,4 +39,4 @@ void async function main() {
   Actions.clearFaviCacheAfter(86420)
 
   Actions.setupMenuListeners()
-}()
+})()

@@ -25,7 +25,6 @@
         @start-selection="onChildStartSelection")
 </template>
 
-
 <script>
 import EventBus from '../../event-bus'
 import State from '../store/state'
@@ -65,7 +64,9 @@ export default {
     isOpen() {
       if (!State.highlightOpenBookmarks) return false
       if (!this.node.children) return false
-      let i, n, target = this.node.children
+      let i
+      let n
+      let target = this.node.children
       for (i = 0; target && i < target.length; i++) {
         n = target[i]
         if (n.isOpen) {

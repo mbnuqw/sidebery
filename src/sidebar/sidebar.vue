@@ -48,7 +48,6 @@
   Notifications
 </template>
 
-
 <script>
 import { PRE_SCROLL } from '../../addon/defaults'
 import initNoiseBgDirective from '../directives/noise-bg.js'
@@ -155,7 +154,11 @@ export default {
     onMouseMove(e) {
       if (!State.multiSelectionStart) return
 
-      if (State.multiSelectionStart && !State.multiSelection && Math.abs(e.clientY - State.multiSelectionY) > 5) {
+      if (
+        State.multiSelectionStart &&
+        !State.multiSelection &&
+        Math.abs(e.clientY - State.multiSelectionY) > 5
+      ) {
         Actions.closeCtxMenu()
         State.multiSelection = true
         Actions.selectItem(State.multiSelectionStart.id)
@@ -203,7 +206,7 @@ export default {
               if (slot.type === 'bookmark') State.bookmarksMap[slot.id].sel = true
             }
           } else {
-          // Outside
+            // Outside
             if (State.selected.includes(slot.id)) {
               State.selected.splice(State.selected.indexOf(slot.id), 1)
               if (slot.type === 'tab') {
@@ -230,7 +233,7 @@ export default {
       let slotsLen = State.itemSlots.length
       let y = e.clientY - State.panelTopOffset + scroll
       let x = e.clientX - State.panelLeftOffset
-      
+
       // Hide pointer if cursor out of drop area
       if (!this.pointerYLock && y < 0) {
         this.pointerMode = 'none'
@@ -249,7 +252,7 @@ export default {
         this.pointerXLock = true
         return
       }
-      if (this.pointerXLock && this.pointerMode === 'none' && (x > 0 && e.clientX < State.width)) {
+      if (this.pointerXLock && this.pointerMode === 'none' && x > 0 && e.clientX < State.width) {
         this.pointerXLock = false
         if (!this.pointerYLock) {
           this.pointerPos--
@@ -300,7 +303,7 @@ export default {
             this.pointerMode = 'between'
             let prevSlot = State.itemSlots[i - 1]
             let dragNodeIsTab = dragNode ? dragNode.type === 'tab' : false
-  
+
             if (!prevSlot) {
               this.dropParent = -1
               this.dropIndex = slot.index
@@ -416,7 +419,7 @@ export default {
 
       // Turn on drag mode
       this.dragMode = true
-      
+
       // Select dragged nodes
       if (State.dragNodes) {
         for (let n of State.dragNodes) {
@@ -456,7 +459,7 @@ export default {
       }
       if (State.panels[State.panelIndex].bookmarks) {
         if (this.pointerMode.startsWith('inside')) this.dropIndex = 0
-        Actions.dropToBookmarks(e, this.dropIndex, this.dropParent, State.dragNodes,)
+        Actions.dropToBookmarks(e, this.dropIndex, this.dropParent, State.dragNodes)
       }
 
       if (State.dragNodes) Actions.resetSelection()

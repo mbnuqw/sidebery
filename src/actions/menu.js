@@ -2,12 +2,8 @@
  * Load custom context menu
  */
 async function loadCtxMenu() {
-  let storage = await browser.storage.local.get([
-    'tabsMenu',
-    'tabsPanelMenu',
-    'bookmarksMenu',
-    'bookmarksPanelMenu',
-  ]) || {}
+  let props = ['tabsMenu', 'tabsPanelMenu', 'bookmarksMenu', 'bookmarksPanelMenu']
+  let storage = await browser.storage.local.get(props)
 
   if (storage.tabsMenu && storage.tabsMenu.length) {
     this.state.tabsMenu = storage.tabsMenu

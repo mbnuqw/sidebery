@@ -10,19 +10,18 @@
       p(v-else) {{t(label + o, plurNum)}}
 </template>
 
-
 <script>
 export default {
   props: {
     value: [String, Number],
-    opts:  Array,
+    opts: Array,
     label: String,
     plurNum: [String, Number],
     color: String,
     icon: String,
     noneOpt: {
       type: String,
-      default: () => 'none'
+      default: () => 'none',
     },
   },
 

@@ -20,8 +20,12 @@ async function saveSettings() {
   let settings = {}
   for (const key of Object.keys(DEFAULT_SETTINGS)) {
     if (this.state[key] == null || this.state[key] == undefined) continue
-    if (this.state[key] instanceof Object) settings[key] = JSON.parse(JSON.stringify(this.state[key]))
-    else settings[key] = this.state[key]
+    if (this.state[key] instanceof Object) {
+      if (Array.isArray(this.state[key])) settings[key] = Utils.cloneArray(this.state[key])
+      else settings[key] = Utils.cloneObject(this.state[key])
+    } else {
+      settings[key] = this.state[key]
+    }
   }
   await browser.storage.local.set({ settings: settings })
 }

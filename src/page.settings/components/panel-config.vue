@@ -92,7 +92,6 @@
 
 </template>
 
-
 <script>
 import { DEFAULT_CTX } from '../../../addon/defaults'
 import TextInput from '../../components/text-input'
@@ -218,7 +217,7 @@ export default {
     color() {
       return this.conf.color || 'toolbar'
     },
-    
+
     newTabCtx() {
       return this.conf.newTabCtx || 'none'
     },
@@ -236,10 +235,7 @@ export default {
     },
 
     moveTabCtxOpts() {
-      return [
-        ...this.availableContainers,
-        { value: 'none', color: 'inactive', icon: 'icon_none' },
-      ]
+      return [...this.availableContainers, { value: 'none', color: 'inactive', icon: 'icon_none' }]
     },
 
     urlRulesValid() {
@@ -313,11 +309,7 @@ export default {
       canvas.width = event.target.naturalWidth
       canvas.height = event.target.naturalHeight
       ctx.imageSmoothingEnabled = false
-      ctx.drawImage(
-        event.target, 0, 0,
-        event.target.naturalWidth,
-        event.target.naturalHeight
-      )
+      ctx.drawImage(event.target, 0, 0, event.target.naturalWidth, event.target.naturalHeight)
       let base64 = canvas.toDataURL('image/png')
 
       this.conf.customIcon = base64

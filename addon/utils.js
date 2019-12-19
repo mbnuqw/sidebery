@@ -225,7 +225,7 @@ async function _getStringFromDragItem(item) {
  * Try to find url in dragged items and return first valid
  */
 async function getUrlFromDragEvent(event) {
-  return new Promise(async (res) => {
+  return new Promise(async res => {
     if (!event.dataTransfer) return res()
     let typeOk
 
@@ -249,7 +249,7 @@ async function getUrlFromDragEvent(event) {
  * Try to get desciption string from drag event
  */
 async function getDescFromDragEvent(event) {
-  return new Promise(async (res) => {
+  return new Promise(async res => {
     if (!event.dataTransfer) return res()
     let typeOk
 
@@ -311,7 +311,7 @@ function findSuccessorTab(state, tab, exclude) {
 
       // Next tab is out of target panel
       if (next.panelId !== tab.panelId || next.pinned !== tab.pinned) break
-    
+
       // Next tab excluded
       if (exclude && exclude.includes(next.id)) continue
 
@@ -399,7 +399,7 @@ function findSuccessorTab(state, tab, exclude) {
 
         // Next tab is out of target panel
         if (next.panelId !== tab.panelId || next.pinned !== tab.pinned) break
-      
+
         // Next tab excluded
         if (exclude && exclude.includes(next.id)) continue
 
@@ -482,11 +482,7 @@ function cloneObject(obj) {
  */
 function normalizeUrl(url) {
   if (url === 'about:newtab') return undefined
-  if (
-    url.startsWith('about:') ||
-    url.startsWith('data:') ||
-    url.startsWith('file:')
-  ) {
+  if (url.startsWith('about:') || url.startsWith('data:') || url.startsWith('file:')) {
     return browser.runtime.getURL('url/url.html') + '#' + url
   } else {
     return url
@@ -523,8 +519,7 @@ function findDataForTabs(tabs, data) {
     let equalityCounter = 0
     let gOffset = 0
 
-    perTab:
-    for (let tab, tabData, i = 0, k = 0; i < winTabs.length; i++, k++) {
+    perTab: for (let tab, tabData, i = 0, k = 0; i < winTabs.length; i++, k++) {
       tab = tabs[k]
       if (!tab) break
       tabData = winTabs[i]

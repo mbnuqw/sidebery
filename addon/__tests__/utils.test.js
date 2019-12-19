@@ -1,3 +1,4 @@
+/* eslint-disable */
 import Utils from '../utils'
 
 describe('Global utilities', () => {

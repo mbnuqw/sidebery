@@ -49,7 +49,6 @@
   .t-box: .title {{tab.title}}
 </template>
 
-
 <script>
 import EventBus from '../../event-bus'
 import State from '../store/state'
@@ -237,7 +236,8 @@ export default {
         if (
           (State.selected.length || State.activateOnMouseUp) &&
           !this.longClickActionLeftFired &&
-          !e.ctrlKey && !e.shiftKey
+          !e.ctrlKey &&
+          !e.shiftKey
         ) {
           browser.tabs.update(this.tab.id, { active: true })
         }
@@ -266,12 +266,7 @@ export default {
      * Handle context menu
      */
     onCtxMenu(e) {
-      if (
-        this.longClickActionRightFired ||
-        !State.ctxMenuNative ||
-        e.ctrlKey ||
-        e.shiftKey
-      ) {
+      if (this.longClickActionRightFired || !State.ctxMenuNative || e.ctrlKey || e.shiftKey) {
         e.stopPropagation()
         e.preventDefault()
         return
@@ -315,8 +310,12 @@ export default {
      * Handle mouseleave event
      */
     onMouseLeave() {
-      if (this.longClickActionLeft) this.longClickActionLeft = clearTimeout(this.longClickActionLeft)
-      if (this.longClickActionRight) this.longClickActionRight = clearTimeout(this.longClickActionRight)
+      if (this.longClickActionLeft) {
+        this.longClickActionLeft = clearTimeout(this.longClickActionLeft)
+      }
+      if (this.longClickActionRight) {
+        this.longClickActionRight = clearTimeout(this.longClickActionRight)
+      }
     },
 
     /**
@@ -443,7 +442,7 @@ export default {
      */
     select() {
       if (this.tab.isParent && this.tab.folded) {
-      // Select whole branch if tab is folded
+        // Select whole branch if tab is folded
         Actions.resetSelection()
         this.tab.sel = true
         State.selected.push(this.tab.id)
@@ -455,7 +454,7 @@ export default {
           State.selected.push(tab.id)
         }
       } else {
-      // Select only current tab
+        // Select only current tab
         Actions.selectItem(this.tab.id)
       }
     },

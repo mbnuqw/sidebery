@@ -11,7 +11,9 @@ export default {
   'dashboard.move_tab_ctx_none': { message: 'none' },
   'dashboard.drop_tab_ctx': { message: 'Reopen tabs dropped to this panel in' },
   'dashboard.url_rules': { message: 'Move tabs with matched urls to this panel' },
-  'container_dashboard.custom_icon_note': { message: 'Base64, url or text. Text values syntax: "text::color::CSS-font-value"' },
+  'container_dashboard.custom_icon_note': {
+    message: 'Base64, url or text. Text values syntax: "text::color::CSS-font-value"',
+  },
 
   // --- Bookmarks
   'bookmarks_dashboard.title': { message: 'Bookmarks' },
@@ -50,8 +52,14 @@ export default {
   'container_dashboard.proxy_socks': { message: 'socks5' },
   'container_dashboard.proxy_direct': { message: 'none' },
   'container_dashboard.rules_include': { message: 'Include urls' },
-  'container_dashboard.rules_include_tooltip': { message: 'Reopen tabs with matched urls in this panel.\nNewline separated list of "substrings" or "/regex/":\n    example.com\n    /^(some)?regex$/\n    ...' },
+  'container_dashboard.rules_include_tooltip': {
+    message:
+      'Reopen tabs with matched urls in this panel.\nNewline separated list of "substrings" or "/regex/":\n    example.com\n    /^(some)?regex$/\n    ...',
+  },
   'container_dashboard.rules_exclude': { message: 'Exclude urls' },
-  'container_dashboard.rules_exclude_tooltip': { message: 'Reopen tabs with matched url in default panel.\nNewline separated list of "substrings" or "/regex/":\n    example.com\n    /^(some)?regex$/\n    ...' },
+  'container_dashboard.rules_exclude_tooltip': {
+    message:
+      'Reopen tabs with matched url in default panel.\nNewline separated list of "substrings" or "/regex/":\n    example.com\n    /^(some)?regex$/\n    ...',
+  },
   'container_dashboard.user_agent': { message: 'User Agent' },
 }

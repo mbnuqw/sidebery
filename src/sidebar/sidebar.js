@@ -47,12 +47,8 @@ export default new Vue({
     State.instanceType = 'sidebar'
 
     Actions.loadPlatformInfo()
-    await Promise.all([
-      Actions.loadWindowInfo(),
-      Actions.loadSettings(),
-      Actions.loadContainers(),
-    ])
-    
+    await Promise.all([Actions.loadWindowInfo(), Actions.loadSettings(), Actions.loadContainers()])
+
     Handlers.setupWindowsListeners()
     Handlers.setupContainersListeners()
     Handlers.setupStorageListeners()
@@ -81,9 +77,7 @@ export default new Vue({
     Actions.loadKeybindings()
     Handlers.setupKeybindingListeners()
 
-    Actions.loadCtxMenu(),
-    Actions.loadCSSVars(),
-    Actions.scrollToActiveTab()
+    Actions.loadCtxMenu(), Actions.loadCSSVars(), Actions.scrollToActiveTab()
     Actions.loadFavicons()
     Actions.loadPermissions(true)
     Actions.updateTabsVisability()

@@ -60,7 +60,7 @@ export default {
   'settings.nav_bar_inline': { message: 'В одну строку' },
   'settings.hide_settings_btn': { message: 'Скрывать кнопку "Настройки"' },
   'settings.hide_add_btn': { message: 'Скрывать кнопку "Создать панель"' },
-  'settings.nav_btn_count': { message: 'Показывать количество табов/закладок' },  
+  'settings.nav_btn_count': { message: 'Показывать количество табов/закладок' },
   'settings.hide_empty_panels': { message: 'Скрывать пустые панели' },
   'settings.nav_mid_click': { message: 'Клик средней кнопкой мыши по кнопке панели' },
   'settings.nav_mid_click_rm_all': { message: 'закрыть все табы' },
@@ -75,14 +75,18 @@ export default {
 
   // --- Containers
   'settings.containers_title': { message: 'Контейнеры' },
-  'settings.contianer_remove_confirm_prefix': { message: 'Вы действительно хотите удалить контейнер "' },
+  'settings.contianer_remove_confirm_prefix': {
+    message: 'Вы действительно хотите удалить контейнер "',
+  },
   'settings.contianer_remove_confirm_postfix': { message: '"?' },
   'settings.containers_create_btn': { message: 'Создать контейнер' },
 
   // --- Panels
   'settings.panels_title': { message: 'Панели' },
   'settings.panel_remove_confirm_1': { message: 'Удалить панель ' },
-  'settings.panel_remove_confirm_2': { message: ' ?\nВсе табы этой панели и их cookies будут также удалены.' },
+  'settings.panel_remove_confirm_2': {
+    message: ' ?\nВсе табы этой панели и их cookies будут также удалены.',
+  },
   'settings.panels_create_btn': { message: 'Создать панель' },
 
   // --- Tabs
@@ -109,10 +113,14 @@ export default {
   'settings.activate_after_closing_rule_visible': { message: 'видимый' },
   'settings.activate_after_closing_rule_any': { message: 'любой' },
   'settings.activate_after_closing_global': { message: 'Глобально' },
-  'settings.shift_selection_from_active': { message: 'Начинать выделение по shift+клику с активной вкладки' },
+  'settings.shift_selection_from_active': {
+    message: 'Начинать выделение по shift+клику с активной вкладки',
+  },
   'settings.ask_new_bookmark_place': { message: 'Спрашивать куда сохранить закладки' },
   'settings.tabs_rm_undo_note': { message: 'Показывать уведомление о закрытии нескольких вкладок' },
-  'settings.native_highlight': { message: 'Выделять стандартные вкладки (в верхней панели) вместе с вкладками в боковой панели' },
+  'settings.native_highlight': {
+    message: 'Выделять стандартные вкладки (в верхней панели) вместе с вкладками в боковой панели',
+  },
 
   // --- New tab position
   'settings.new_tab_position': { message: 'Позиция новых вкладок' },
@@ -127,7 +135,9 @@ export default {
   'settings.move_new_tab_parent_start': { message: 'начало панели' },
   'settings.move_new_tab_parent_end': { message: 'конец пенели' },
   'settings.move_new_tab_parent_none': { message: 'выкл' },
-  'settings.move_new_tab_parent_act_panel': { message: 'Только если панель родительской вкладки активна' },
+  'settings.move_new_tab_parent_act_panel': {
+    message: 'Только если панель родительской вкладки активна',
+  },
   'settings.move_new_tab': { message: 'Для остальных случаев' },
   'settings.move_new_tab_start': { message: 'начало панели' },
   'settings.move_new_tab_end': { message: 'конец пенели' },
@@ -150,7 +160,9 @@ export default {
   // --- Tabs tree
   'settings.tabs_tree_title': { message: 'Древовидное отображение табов' },
   'settings.tabs_tree_layout': { message: 'Древовидное отображение табов' },
-  'settings.group_on_open_layout': { message: 'Создать поддерево при открытии ссылки в новом табе' },
+  'settings.group_on_open_layout': {
+    message: 'Создать поддерево при открытии ссылки в новом табе',
+  },
   'settings.tabs_tree_limit': { message: 'Максимальный уровень вложенности табов' },
   'settings.tabs_tree_limit_1': { message: '1' },
   'settings.tabs_tree_limit_2': { message: '2' },
@@ -184,12 +196,16 @@ export default {
     message: ['минута', 'минуты', 'минут'],
     plur: [/^(1|(\d*?)[^1]1)$/, /^([234]|(\d*?)[^1][234])$/],
   },
-  'settings.tabs_tree_bookmarks': { message: 'Сохранять древовидную структуру при создании закладок' },
+  'settings.tabs_tree_bookmarks': {
+    message: 'Сохранять древовидную структуру при создании закладок',
+  },
 
   // --- Bookmarks
   'settings.bookmarks_title': { message: 'Закладки' },
   'settings.bookmarks_panel': { message: 'Панель закладок' },
-  'settings.warn_on_multi_bookmark_delete': { message: 'Предупреждать об удалении нескольких закладкок' },
+  'settings.warn_on_multi_bookmark_delete': {
+    message: 'Предупреждать об удалении нескольких закладкок',
+  },
   'settings.warn_on_multi_bookmark_delete_any': { message: 'любых' },
   'settings.warn_on_multi_bookmark_delete_collapsed': { message: 'свернутых' },
   'settings.warn_on_multi_bookmark_delete_none': { message: 'нет' },
@@ -203,8 +219,12 @@ export default {
   'settings.auto_rm_other': { message: 'Удалять открытые закладки из папки "Другие закладки"' },
   'settings.show_bookmark_len': { message: 'Показывать размер папки' },
   'settings.highlight_open_bookmarks': { message: 'Выделять открытые закладки' },
-  'settings.activate_open_bookmark_tab': { message: 'Переходить на открытую вкладку вместо открытия новой' },
-  'settings.bookmarks_rm_undo_note': { message: 'Показывать уведомление об удалении нескольких закладок' },
+  'settings.activate_open_bookmark_tab': {
+    message: 'Переходить на открытую вкладку вместо открытия новой',
+  },
+  'settings.bookmarks_rm_undo_note': {
+    message: 'Показывать уведомление об удалении нескольких закладок',
+  },
 
   // --- Appearance
   'settings.appearance_title': { message: 'Вид' },
@@ -265,14 +285,18 @@ export default {
 
   // --- Mouse
   'settings.mouse_title': { message: 'Мышь' },
-  'settings.h_scroll_through_panels': { message: 'Переключать панели с помощью горизонтальной прокрутки' },
+  'settings.h_scroll_through_panels': {
+    message: 'Переключать панели с помощью горизонтальной прокрутки',
+  },
   'settings.scroll_through_tabs': { message: 'Переключать табы с помощью колеса прокрутки' },
   'settings.scroll_through_tabs_panel': { message: 'на панели' },
   'settings.scroll_through_tabs_global': { message: 'глобально' },
   'settings.scroll_through_tabs_none': { message: 'выкл' },
   'settings.scroll_through_visible_tabs': { message: 'Пропускать свернутые' },
   'settings.scroll_through_tabs_skip_discarded': { message: 'Пропускать выгруженые' },
-  'settings.scroll_through_tabs_except_overflow': { message: 'За исключением случаев, когда панель переполнена' },
+  'settings.scroll_through_tabs_except_overflow': {
+    message: 'За исключением случаев, когда панель переполнена',
+  },
   'settings.tab_double_click': { message: 'Двойной клик по табу' },
   'settings.tab_long_left_click': { message: 'Длительное нажатие левой кнопки мыши по табу' },
   'settings.tab_long_right_click': { message: 'Длительное нажатие правой кнопки мыши по табу' },
@@ -331,13 +355,22 @@ export default {
   // --- Permissions
   'settings.permissions_title': { message: 'Разрешения' },
   'settings.all_urls_label': { message: 'Данные веб-сайтов:' },
-  'settings.all_urls_info': { message: 'Необходимо для:\n- Удаления cookies\n- Прокси и url-правил контейнеров\n- Скриншотов на групповой странице и на панели выбора окна' },
+  'settings.all_urls_info': {
+    message:
+      'Необходимо для:\n- Удаления cookies\n- Прокси и url-правил контейнеров\n- Скриншотов на групповой странице и на панели выбора окна',
+  },
   'settings.tab_hide_label': { message: 'Скрытие табов:' },
-  'settings.tab_hide_info': { message: 'Необходимо для:\n- Скрывания табов неактивных панелей\n- Скрывания свернутых табов' },
+  'settings.tab_hide_info': {
+    message: 'Необходимо для:\n- Скрывания табов неактивных панелей\n- Скрывания свернутых табов',
+  },
   'settings.clipboard_write_label': { message: 'Запись в буфер обмена:' },
-  'settings.clipboard_write_info': { message: 'Необходимо для:\n- Копирования ссылок вкладок/закладок' },
+  'settings.clipboard_write_info': {
+    message: 'Необходимо для:\n- Копирования ссылок вкладок/закладок',
+  },
   'settings.web_request_blocking_label': { message: 'Блокировка веб-запросов' },
-  'settings.web_request_blocking_info': { message: 'Необходимо для:\n- Настройки User-Agent контейнеров' },
+  'settings.web_request_blocking_info': {
+    message: 'Необходимо для:\n- Настройки User-Agent контейнеров',
+  },
 
   // --- Storage
   'settings.storage_title': { message: 'Данные' },

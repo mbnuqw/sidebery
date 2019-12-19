@@ -28,7 +28,6 @@
   //-   End index: {{panel.endIndex}}
 </template>
 
-
 <script>
 import EventBus from '../../event-bus'
 import { PRE_SCROLL } from '../../../addon/defaults'
@@ -170,11 +169,7 @@ export default {
      * Handle context menu event
      */
     onNavCtxMenu(e) {
-      if (
-        !State.ctxMenuNative ||
-        e.ctrlKey ||
-        e.shiftKey
-      ) {
+      if (!State.ctxMenuNative || e.ctrlKey || e.shiftKey) {
         e.stopPropagation()
         e.preventDefault()
         return

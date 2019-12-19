@@ -40,9 +40,8 @@
     svg: use(xlink:href="#icon_settings")
 </template>
 
-
 <script>
-import { translate } from '../../mixins/dict.js'
+import { translate } from '../../../addon/locales/dict.js'
 import { TABS_PANEL_STATE } from '../../../addon/defaults'
 import EventBus from '../../event-bus'
 import State from '../store/state.js'
@@ -70,7 +69,7 @@ const ADD_PANEL_BTN = {
 export default {
   data: function() {
     return {
-      width: 0
+      width: 0,
     }
   },
 
@@ -172,11 +171,7 @@ export default {
      * Handle context menu event
      */
     onNavCtxMenu(e, i) {
-      if (
-        !State.ctxMenuNative ||
-        e.ctrlKey ||
-        e.shiftKey
-      ) {
+      if (!State.ctxMenuNative || e.ctrlKey || e.shiftKey) {
         e.stopPropagation()
         e.preventDefault()
         return
@@ -333,13 +328,7 @@ export default {
             panel.newTabCtx
           )
         } else {
-          Actions.moveDroppedNodes(
-            panel.endIndex + 1,
-            -1,
-            State.dragNodes,
-            false,
-            panel,
-          )
+          Actions.moveDroppedNodes(panel.endIndex + 1, -1, State.dragNodes, false, panel)
         }
       }
       if (typeof firstNode.id === 'string') {

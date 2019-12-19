@@ -529,7 +529,6 @@
       .placeholder(:data-hidden="!!customCSS") CSS...
 </template>
 
-
 <script>
 import StyleField from '../../components/style-field'
 import ColorStyleField from '../../components/style-color-field'

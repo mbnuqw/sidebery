@@ -16,7 +16,6 @@
   SelectBookmarksFolderBar
 </template>
 
-
 <script>
 import EventBus from '../../event-bus'
 import State from '../store/state'
@@ -95,7 +94,9 @@ export default {
     // Render if this panel is active
     if (State.panelIndex === this.index) {
       this.renderable = true
-      setTimeout(() => { this.visible = true }, 16)
+      setTimeout(() => {
+        this.visible = true
+      }, 16)
     }
   },
 
@@ -141,11 +142,7 @@ export default {
      * Handle context menu event
      */
     onNavCtxMenu(e) {
-      if (
-        !State.ctxMenuNative ||
-        e.ctrlKey ||
-        e.shiftKey
-      ) {
+      if (!State.ctxMenuNative || e.ctrlKey || e.shiftKey) {
         e.stopPropagation()
         e.preventDefault()
         return
@@ -183,7 +180,7 @@ export default {
       const fh = Utils.parseCSSNum(fhRaw.trim())[0]
       const fc = fh >> 1
       const fe = fc >> 1
-    
+
       const bhRaw = compStyle.getPropertyValue('--bookmarks-bookmark-height')
       const bh = Utils.parseCSSNum(bhRaw.trim())[0]
       const bc = bh >> 1
@@ -271,11 +268,11 @@ export default {
       if (!this.$refs.scrollBox) return
       let scrollableBoxEl = this.$refs.scrollBox.getScrollableBox()
       if (!scrollableBoxEl) return
-      
+
       if (scrollBoxEl.scrollTop === 0) {
-        scrollableBoxEl.scrollIntoView({ behavior: 'smooth', block: 'end'})
+        scrollableBoxEl.scrollIntoView({ behavior: 'smooth', block: 'end' })
       } else {
-        scrollableBoxEl.scrollIntoView({ behavior: 'smooth', block: 'start'})
+        scrollableBoxEl.scrollIntoView({ behavior: 'smooth', block: 'start' })
       }
     },
   },

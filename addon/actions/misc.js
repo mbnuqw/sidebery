@@ -12,7 +12,9 @@ function initToolbarButton() {
  */
 async function loadPermissions() {
   this.permAllUrls = await browser.permissions.contains({ origins: ['<all_urls>'] })
-  this.permWebRequestBlocking = await browser.permissions.contains({ permissions: ['webRequest', 'webRequestBlocking'] })
+  this.permWebRequestBlocking = await browser.permissions.contains({
+    permissions: ['webRequest', 'webRequestBlocking'],
+  })
 
   if (!this.permAllUrls) {
     for (let c of Object.values(this.containers)) {
@@ -38,7 +40,7 @@ function onMenuHidden() {
     id: 'open_settings',
     title: 'Open settings',
     onclick: () => browser.runtime.openOptionsPage(),
-    contexts: ['browser_action']
+    contexts: ['browser_action'],
   })
 }
 

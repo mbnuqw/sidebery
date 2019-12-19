@@ -9,15 +9,12 @@
     .btn.-warn(@click="onSelectFolderCancel") Cancel
 </template>
 
-
 <script>
 import State from '../store/state'
 
 export default {
   data() {
-    return {
-
-    }
+    return {}
   },
 
   computed: {

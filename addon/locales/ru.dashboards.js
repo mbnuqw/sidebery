@@ -1,7 +1,9 @@
 export default {
   // --- General
   'dashboard.lock_panel_label': { message: 'Заблокировать панель' },
-  'dashboard.lock_panel_tooltip': { message: 'Запретить автоматическое переключение с этой панели' },
+  'dashboard.lock_panel_tooltip': {
+    message: 'Запретить автоматическое переключение с этой панели',
+  },
   'dashboard.lock_tabs_label': { message: 'Заблокировать табы' },
   'dashboard.lock_tabs_tooltip': { message: 'Запретить закрытие вкладок на этой панели' },
   'dashboard.no_empty_label': { message: 'Предотвращать опустошение' },
@@ -10,7 +12,9 @@ export default {
   'dashboard.move_tab_ctx': { message: 'Перемещать вкладки выбранного контейнера в эту панель' },
   'dashboard.move_tab_ctx_none': { message: 'ня' },
   'dashboard.url_rules': { message: 'Перемещать вкладки с совпадающими адресами в эту панель' },
-  'container_dashboard.custom_icon_note': { message: 'Base64, url или символы. Синтакс для символов: "символы::CSS-цвет::CSS-шрифт"' },
+  'container_dashboard.custom_icon_note': {
+    message: 'Base64, url или символы. Синтакс для символов: "символы::CSS-цвет::CSS-шрифт"',
+  },
 
   // --- Bookmarks
   'bookmarks_dashboard.title': { message: 'Закладки' },
@@ -49,8 +53,14 @@ export default {
   'container_dashboard.proxy_socks': { message: 'socks5' },
   'container_dashboard.proxy_direct': { message: 'выкл' },
   'container_dashboard.rules_include': { message: 'Включать табы' },
-  'container_dashboard.rules_include_tooltip': { message: 'Переоткрывать табы с совпадающими url в этой панели.\nПострочный список правил "substrings" или "/regex/":\n    example.com\n    /^(some)?regex$/\n    ...' },
+  'container_dashboard.rules_include_tooltip': {
+    message:
+      'Переоткрывать табы с совпадающими url в этой панели.\nПострочный список правил "substrings" или "/regex/":\n    example.com\n    /^(some)?regex$/\n    ...',
+  },
   'container_dashboard.rules_exclude': { message: 'Исключать табы' },
-  'container_dashboard.rules_exclude_tooltip': { message: 'Переоткрывать табы с совпадающими url из этой панели в стандартной.\nПострочный список правил "substrings" или "/regex/":\n    example.com\n    /^(some)?regex$/\n    ...' },
+  'container_dashboard.rules_exclude_tooltip': {
+    message:
+      'Переоткрывать табы с совпадающими url из этой панели в стандартной.\nПострочный список правил "substrings" или "/regex/":\n    example.com\n    /^(some)?regex$/\n    ...',
+  },
   'container_dashboard.user_agent': { message: 'User Agent' },
 }

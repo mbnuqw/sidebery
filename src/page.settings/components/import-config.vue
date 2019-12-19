@@ -31,7 +31,6 @@
     a.btn(@click="importData") {{t('settings.help_imp_data')}}
 </template>
 
-
 <script>
 import { DEFAULT_CONTAINER } from '../../../addon/defaults'
 import { DEFAULT_PANELS } from '../../../addon/defaults'
@@ -65,8 +64,9 @@ export default {
 
   computed: {
     containersInactive() {
-      return !State.importConfig.containers_v4 ||
-        !Object.keys(State.importConfig.containers_v4).length
+      return (
+        !State.importConfig.containers_v4 || !Object.keys(State.importConfig.containers_v4).length
+      )
     },
     panelsInactive() {
       return !State.importConfig.panels_v4 || !State.importConfig.panels_v4.length
@@ -78,20 +78,24 @@ export default {
       return !State.importConfig.tabsMenu && !State.importConfig.bookmarksMenu
     },
     stylesInactive() {
-      return !State.importConfig.cssVars &&
+      return (
+        !State.importConfig.cssVars &&
         !State.importConfig.sidebarCSS &&
         !State.importConfig.groupCSS
+      )
     },
     snapshotsInactive() {
       return !State.importConfig.snapshots_v4 || !State.importConfig.snapshots_v4.length
     },
     importInactive() {
-      return !this.containers &&
+      return (
+        !this.containers &&
         !this.panels &&
         !this.settings &&
         !this.ctxMenu &&
         !this.styles &&
         !this.snapshots
+      )
     },
   },
 
@@ -165,13 +169,9 @@ export default {
       let ffContainers = await browser.contextualIdentities.query({})
       let { containers_v4 } = await browser.storage.local.get({ containers_v4: {} })
 
-      // TODO: use data.containers_v4 or data.panels
-
       for (let ctr of Object.values(Utils.cloneObject(data.containers_v4))) {
         let ffCtr = ffContainers.find(c => {
-          return c.name === ctr.name &&
-            c.icon === ctr.icon &&
-            c.color === ctr.color
+          return c.name === ctr.name && c.icon === ctr.icon && c.color === ctr.color
         })
 
         ctr = Utils.normalizeObject(ctr, DEFAULT_CONTAINER)

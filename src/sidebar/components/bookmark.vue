@@ -15,7 +15,6 @@
     .title(v-if="node.title") {{node.title}}
 </template>
 
-
 <script>
 import EventBus from '../../event-bus'
 import State from '../store/state'
@@ -259,7 +258,6 @@ export default {
         let panel = State.panels.find(p => p.bookmarks)
         if (withFocus && !panel.lockedPanel) Actions.goToActiveTabPanel()
       }
-
     },
 
     async remove() {

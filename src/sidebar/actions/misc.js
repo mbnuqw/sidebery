@@ -2,11 +2,10 @@
  * Load platform info
  */
 function loadPlatformInfo() {
-  browser.runtime.getPlatformInfo()
-    .then(osInfo => {
-      this.state.osInfo = osInfo
-      this.state.os = osInfo.os
-    })
+  browser.runtime.getPlatformInfo().then(osInfo => {
+    this.state.osInfo = osInfo
+    this.state.os = osInfo.os
+  })
 }
 
 /**
@@ -17,10 +16,9 @@ async function loadWindowInfo() {
 
   this.state.private = currentWindow.incognito
   this.state.windowId = currentWindow.id
-  browser.windows.getAll()
-    .then(windows => {
-      this.state.otherWindows = windows.filter(w => w.id !== this.state.windowId)
-    })
+  browser.windows.getAll().then(windows => {
+    this.state.otherWindows = windows.filter(w => w.id !== this.state.windowId)
+  })
 }
 
 /**
@@ -76,7 +74,9 @@ async function chooseWin() {
 async function loadPermissions() {
   this.state.permAllUrls = await browser.permissions.contains({ origins: ['<all_urls>'] })
   this.state.permTabHide = await browser.permissions.contains({ permissions: ['tabHide'] })
-  this.state.permClipboardWrite = await browser.permissions.contains({ permissions: ['clipboardWrite'] })
+  this.state.permClipboardWrite = await browser.permissions.contains({
+    permissions: ['clipboardWrite'],
+  })
 
   if (!this.state.permTabHide) {
     this.state.hideInact = false
@@ -151,7 +151,7 @@ function deselectItem(id) {
 function resetSelection() {
   if (!this.state.selected.length) return
   if (this._preserveSelection) return
-  if (this._preserveSelectionOnce) return this._preserveSelectionOnce = false
+  if (this._preserveSelectionOnce) return (this._preserveSelectionOnce = false)
   let id = this.state.selected[0]
   if (typeof id === 'number') {
     for (let id of this.state.selected) {
@@ -254,7 +254,7 @@ function copyUrls(ids) {
   let idType = typeof ids[0]
   if (idType === 'string') {
     let lvl = 0
-    const walker = (nodes) => {
+    const walker = nodes => {
       for (let node of nodes) {
         if (node.type === 'separator') continue
         if (ids.includes(node.id)) continue

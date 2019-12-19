@@ -4,7 +4,7 @@ import Actions from '../actions'
 
 /**
  * Get stored custom css
- * 
+ *
  * @param {string} target - 'sidebar', 'settings' or 'group'
  */
 async function getCustomCSS(target) {
@@ -16,7 +16,7 @@ async function getCustomCSS(target) {
 
 /**
  * Apply custom css and save it
- * 
+ *
  * @param {string} target - 'sidebar', 'settings' or 'group'
  * @param {string} css
  */

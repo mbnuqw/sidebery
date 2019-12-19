@@ -1,4 +1,3 @@
-
 import { DEFAULT_SETTINGS, SETTINGS_OPTIONS } from '../../../addon/defaults'
 import { DEFAULT_TABS_MENU } from '../../../addon/defaults'
 import { DEFAULT_BOOKMARKS_MENU } from '../../../addon/defaults'
@@ -57,6 +56,6 @@ export default {
 
   confirm: null,
   selectBookmarkFolder: null,
-  
+
   notifications: [],
 }

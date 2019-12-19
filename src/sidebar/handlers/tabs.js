@@ -9,7 +9,11 @@ const URL_HOST_PATH_RE = /^([a-z0-9-]{1,63}\.)+\w+(:\d+)?\/[A-Za-z0-9-._~:/?#[\]
 function onTabCreated(tab) {
   if (tab.windowId !== this.state.windowId) return
 
-  if (this.state.highlightOpenBookmarks && this.state.bookmarksUrlMap && this.state.bookmarksUrlMap[tab.url]) {
+  if (
+    this.state.highlightOpenBookmarks &&
+    this.state.bookmarksUrlMap &&
+    this.state.bookmarksUrlMap[tab.url]
+  ) {
     for (let b of this.state.bookmarksUrlMap[tab.url]) {
       b.isOpen = true
     }
@@ -131,16 +135,20 @@ function onTabCreated(tab) {
 
     const groupTab = this.actions.getGroupTab(tab)
     if (groupTab && !groupTab.discarded) {
-      browser.tabs.sendMessage(groupTab.id, {
-        name: 'create',
-        id: tab.id,
-        index: tab.index,
-        lvl: tab.lvl - groupTab.lvl - 1,
-        title: tab.title,
-        url: tab.url,
-        discarded: tab.discarded,
-        favIconUrl: tab.favIconUrl,
-      }).catch(() => {/** itsokay **/})
+      browser.tabs
+        .sendMessage(groupTab.id, {
+          name: 'create',
+          id: tab.id,
+          index: tab.index,
+          lvl: tab.lvl - groupTab.lvl - 1,
+          title: tab.title,
+          url: tab.url,
+          discarded: tab.discarded,
+          favIconUrl: tab.favIconUrl,
+        })
+        .catch(() => {
+          /** itsokay **/
+        })
     }
   }
 
@@ -179,7 +187,8 @@ function onTabUpdated(tabId, change, tab) {
   // Status change
   if (change.status !== undefined) {
     if (change.status === 'complete' && !tab.url.startsWith('about')) {
-      browser.tabs.get(localTab.id)
+      browser.tabs
+        .get(localTab.id)
         .then(tabInfo => {
           if (tabInfo.favIconUrl && !tabInfo.favIconUrl.startsWith('chrome:')) {
             localTab.favIconUrl = tabInfo.favIconUrl
@@ -202,10 +211,12 @@ function onTabUpdated(tabId, change, tab) {
               url: tab.url,
               lvl: localTab.lvl - groupTab.lvl - 1,
               discarded: localTab.discarded,
-              favIconUrl: localTab.favIconUrl || this.state.favicons[this.state.favUrls[localTab.url]],
+              favIconUrl:
+                localTab.favIconUrl || this.state.favicons[this.state.favUrls[localTab.url]],
             }
-            browser.tabs.sendMessage(groupTab.id, updateData)
-              .catch(() => {/** itsokay **/})
+            browser.tabs.sendMessage(groupTab.id, updateData).catch(() => {
+              /** itsokay **/
+            })
           }
         })
         .catch(() => {
@@ -301,7 +312,6 @@ function onTabUpdated(tabId, change, tab) {
       }
       if (panel && panel.tabs) browser.tabs.move(tabId, { index: panel.startIndex - 1 })
       this.actions.updatePanelsRanges()
-
     }
     if (tab.active) this.actions.setPanel(panel.index)
   }
@@ -378,10 +388,7 @@ function onTabRemoved(tabId, info, childfree) {
       if (t.lvl <= tab.lvl) break
 
       // Remove folded tabs
-      if (
-        this.state.rmChildTabs === 'folded' && tab.folded ||
-        this.state.rmChildTabs === 'all'
-      ) {
+      if ((this.state.rmChildTabs === 'folded' && tab.folded) || this.state.rmChildTabs === 'all') {
         if (!this.state.removingTabs.includes(t.id)) toRemove.push(t.id)
       }
 
@@ -453,7 +460,11 @@ function onTabRemoved(tabId, info, childfree) {
   }
 
   // Remove isOpen flag from bookmark
-  if (this.state.highlightOpenBookmarks && this.state.bookmarksUrlMap && this.state.bookmarksUrlMap[tab.url]) {
+  if (
+    this.state.highlightOpenBookmarks &&
+    this.state.bookmarksUrlMap &&
+    this.state.bookmarksUrlMap[tab.url]
+  ) {
     for (let t of this.state.tabs) {
       if (t.url === tab.url) return
     }
@@ -464,8 +475,9 @@ function onTabRemoved(tabId, info, childfree) {
 
   const groupTab = this.actions.getGroupTab(tab)
   if (groupTab && !groupTab.discarded) {
-    browser.tabs.sendMessage(groupTab.id, { name: 'remove', id: tab.id})
-      .catch(() => {/** itsokay **/})
+    browser.tabs.sendMessage(groupTab.id, { name: 'remove', id: tab.id }).catch(() => {
+      /** itsokay **/
+    })
   }
 }
 
@@ -564,7 +576,6 @@ function onTabMoved(id, info) {
     this.actions.saveTabsData()
   }
   if (this.state.stateStorage === 'session') this.actions.saveTabData(movedTab)
-
 
   // Update succession
   if (!this.state.movingTabs.length && this.state.activateAfterClosing !== 'none') {

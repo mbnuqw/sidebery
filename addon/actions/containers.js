@@ -5,9 +5,9 @@ import { DEFAULT_CONTAINER } from '../defaults.js'
  */
 async function loadContainers() {
   let saveNeeded = false
-  let [ ffContainers, storage ] = await Promise.all([
+  let [ffContainers, storage] = await Promise.all([
     browser.contextualIdentities.query({}),
-    browser.storage.local.get({ containers_v4: null })
+    browser.storage.local.get({ containers_v4: null }),
   ])
 
   // Try to use value from prev version
@@ -96,7 +96,6 @@ async function getNormContainers(ffContainers) {
 
   return containers
 }
-
 
 /**
  * Save containers (sidebery data)

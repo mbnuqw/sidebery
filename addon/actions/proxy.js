@@ -2,7 +2,9 @@ import Actions from '../actions.js'
 
 const BG_URL = browser.runtime.getURL('background.html')
 const PROXY_BLOCK = { type: 'socks', ip: '0.0.0.0', port: '0', proxyDNS: true }
-let updateReqHandlerTimeout, handledReqId, incHistory = {}
+let updateReqHandlerTimeout
+let handledReqId
+let incHistory = {}
 
 async function recreateTab(tab, info, cookieStoreId) {
   try {
@@ -12,7 +14,9 @@ async function recreateTab(tab, info, cookieStoreId) {
       action: 'handleReopening',
       arg: tab.id,
     })
-  } catch (err) { /* itsokay */ }
+  } catch (err) {
+    /* itsokay */
+  }
   await browser.tabs.create({
     windowId: tab.windowId,
     url: info.url,
@@ -28,7 +32,8 @@ async function checkIpInfoThroughIPIFY_ORG(cookieStoreId) {
   if (!cookieStoreId || !this.proxies[cookieStoreId]) return
   this.ipCheckCtx = cookieStoreId
 
-  let info, result = {}
+  let info
+  let result = {}
 
   try {
     info = await fetch('https://api.ipify.org', {
@@ -47,7 +52,8 @@ async function checkIpInfoThroughEXTREME_IP_LOOKUP_COM(cookieStoreId) {
   if (!cookieStoreId || !this.proxies[cookieStoreId]) return
   this.ipCheckCtx = cookieStoreId
 
-  let info, result = {}
+  let info
+  let result = {}
 
   try {
     info = await fetch('https://extreme-ip-lookup.com/json', {
@@ -249,7 +255,11 @@ function turnOnHeadersHandler() {
     browser.webRequest &&
     !browser.webRequest.onBeforeSendHeaders.hasListener(Actions.headersHandler)
   ) {
-    browser.webRequest.onBeforeSendHeaders.addListener(Actions.headersHandler, { urls: ['<all_urls>'] }, ['blocking', 'requestHeaders'])
+    browser.webRequest.onBeforeSendHeaders.addListener(
+      Actions.headersHandler,
+      { urls: ['<all_urls>'] },
+      ['blocking', 'requestHeaders']
+    )
   }
 }
 

@@ -6,9 +6,38 @@ export const SETTINGS_OPTIONS = {
   groupLayoutOpts: ['grid', 'list'],
   scrollThroughTabsOpts: ['panel', 'global', 'none'],
   discardFoldedDelayUnitOpts: ['sec', 'min'],
-  tabDoubleClickOpts: ['reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'exp', 'new_after', 'new_child', 'close', 'none'],
-  tabLongLeftClickOpts: ['reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'new_after', 'new_child', 'none'],
-  tabLongRightClickOpts: ['reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'new_after', 'new_child', 'none'],
+  tabDoubleClickOpts: [
+    'reload',
+    'duplicate',
+    'pin',
+    'mute',
+    'clear_cookies',
+    'exp',
+    'new_after',
+    'new_child',
+    'close',
+    'none',
+  ],
+  tabLongLeftClickOpts: [
+    'reload',
+    'duplicate',
+    'pin',
+    'mute',
+    'clear_cookies',
+    'new_after',
+    'new_child',
+    'none',
+  ],
+  tabLongRightClickOpts: [
+    'reload',
+    'duplicate',
+    'pin',
+    'mute',
+    'clear_cookies',
+    'new_after',
+    'new_child',
+    'none',
+  ],
   tabsPanelLeftClickActionOpts: ['prev', 'expand', 'parent', 'none'],
   tabsPanelDoubleClickActionOpts: ['collapse', 'tab', 'none'],
   tabsPanelRightClickActionOpts: ['next', 'expand', 'parent', 'menu', 'none'],
@@ -199,7 +228,7 @@ export const CUSTOM_CSS_VARS = {
   tabs_activated_shadow: null,
   tabs_selected_shadow: null,
   tabs_lvl_indicator_bg: null,
-  
+
   bookmarks_bookmark_height: null,
   bookmarks_folder_height: null,
   bookmarks_separator_height: null,
@@ -342,18 +371,14 @@ export const TABS_PANEL_STATE = {
   updated: [],
 }
 
-export const DEFAULT_PANEL = browser.extension.inIncognitoContext ?
-  PRIVATE_TABS_PANEL : DEFAULT_TABS_PANEL
-export const DEFAULT_PANEL_STATE = browser.extension.inIncognitoContext ?
-  PRIVATE_TABS_PANEL_STATE : DEFAULT_TABS_PANEL_STATE
-export const DEFAULT_PANELS = [
-  BOOKMARKS_PANEL,
-  DEFAULT_PANEL,
-]
-export const DEFAULT_PANELS_STATE = [
-  BOOKMARKS_PANEL_STATE,
-  DEFAULT_PANEL_STATE,
-]
+export const DEFAULT_PANEL = browser.extension.inIncognitoContext
+  ? PRIVATE_TABS_PANEL
+  : DEFAULT_TABS_PANEL
+export const DEFAULT_PANEL_STATE = browser.extension.inIncognitoContext
+  ? PRIVATE_TABS_PANEL_STATE
+  : DEFAULT_TABS_PANEL_STATE
+export const DEFAULT_PANELS = [BOOKMARKS_PANEL, DEFAULT_PANEL]
+export const DEFAULT_PANELS_STATE = [BOOKMARKS_PANEL_STATE, DEFAULT_PANEL_STATE]
 
 export const DEFAULT_TABS_MENU = [
   ['undoRmTab', 'mute', 'reload', 'bookmark'],
@@ -365,10 +390,7 @@ export const DEFAULT_TABS_MENU = [
     'moveToAnotherWin',
     'moveToWin',
   ],
-  [
-    { name: translate('menu.tab.reopen_in_sub_menu_name') },
-    'moveToCtr',
-  ],
+  [{ name: translate('menu.tab.reopen_in_sub_menu_name') }, 'moveToCtr'],
   'separator-2',
   'pin',
   'duplicate',
@@ -387,7 +409,7 @@ export const DEFAULT_BOOKMARKS_MENU = [
     { name: translate('menu.bookmark.open_in_sub_menu_name') },
     'openInNewWin',
     'openInNewPrivWin',
-    'openInCtr'
+    'openInCtr',
   ],
   'separator-5',
   'createBookmark',
@@ -404,12 +426,7 @@ export const DEFAULT_BOOKMARKS_MENU = [
 ]
 
 export const DEFAULT_TABS_PANEL_MENU = [
-  [
-    'undoRmTab',
-    'muteAllAudibleTabs',
-    'reloadTabs',
-    'discardTabs',
-  ],
+  ['undoRmTab', 'muteAllAudibleTabs', 'reloadTabs', 'discardTabs'],
   'separator-7',
   'collapseInactiveBranches',
   'closeTabsDuplicates',
@@ -418,17 +435,13 @@ export const DEFAULT_TABS_PANEL_MENU = [
   'openPanelConfig',
 ]
 
-export const BOOKMARKS_PANEL_MENU = [
-  'collapseAllFolders',
-  'separator-9',
-  'openPanelConfig',
-]
+export const BOOKMARKS_PANEL_MENU = ['collapseAllFolders', 'separator-9', 'openPanelConfig']
 
 export const MENU_OPTIONS = {
-  // 
+  //
   // --- Common ---
-  // 
-  copyUrls: (state) => {
+  //
+  copyUrls: state => {
     let label = 'menu.copy_url'
     if (state.selected.length > 1) label += 's'
 
@@ -442,30 +455,30 @@ export const MENU_OPTIONS = {
     return option
   },
 
-  // 
+  //
   // --- Tabs options ---
-  // 
+  //
   undoRmTab: () => ({
     label: translate('menu.tab.undo'),
     icon: 'icon_undo',
     action: 'undoRmTab',
   }),
 
-  moveToNewWin: (state) => ({
+  moveToNewWin: state => ({
     label: translate('menu.tab.move_to_new_window'),
     icon: 'icon_new_win',
     action: 'moveTabsToNewWin',
     args: [state.selected],
   }),
 
-  moveToNewPrivWin: (state) => ({
+  moveToNewPrivWin: state => ({
     label: translate('menu.tab.move_to_new_priv_window'),
     icon: 'icon_private',
     action: 'moveTabsToNewWin',
     args: [state.selected, true],
   }),
 
-  moveToAnotherWin: (state) => {
+  moveToAnotherWin: state => {
     let option = {
       label: translate('menu.tab.move_to_another_window'),
       icon: 'icon_window',
@@ -477,7 +490,7 @@ export const MENU_OPTIONS = {
     return option
   },
 
-  moveToWin: (state) => {
+  moveToWin: state => {
     let option = {
       label: translate('menu.tab.move_to_window_'),
       icon: 'icon_windows',
@@ -489,7 +502,7 @@ export const MENU_OPTIONS = {
     return option
   },
 
-  moveToCtr: (state) => {
+  moveToCtr: state => {
     if (state.private) return
     let opts = []
     let firstNode = state.tabsMap[state.selected[0]]
@@ -518,7 +531,7 @@ export const MENU_OPTIONS = {
     return opts
   },
 
-  pin: (state) => {
+  pin: state => {
     let firstNode = state.tabsMap[state.selected[0]]
     let wut = firstNode.pinned ? 'unpin' : 'pin'
     return {
@@ -529,7 +542,7 @@ export const MENU_OPTIONS = {
     }
   },
 
-  reload: (state) => {
+  reload: state => {
     return {
       label: translate('menu.tab.reload'),
       icon: 'icon_reload',
@@ -538,7 +551,7 @@ export const MENU_OPTIONS = {
     }
   },
 
-  duplicate: (state) => {
+  duplicate: state => {
     return {
       label: translate('menu.tab.duplicate'),
       icon: 'icon_duplicate',
@@ -547,7 +560,7 @@ export const MENU_OPTIONS = {
     }
   },
 
-  bookmark: (state) => {
+  bookmark: state => {
     return {
       label: translate('menu.tab.bookmark'),
       icon: 'icon_star',
@@ -556,7 +569,7 @@ export const MENU_OPTIONS = {
     }
   },
 
-  mute: (state) => {
+  mute: state => {
     let firstNode = state.tabsMap[state.selected[0]]
     const wut = firstNode.mutedInfo.muted ? 'unmute' : 'mute'
     return {
@@ -567,7 +580,7 @@ export const MENU_OPTIONS = {
     }
   },
 
-  discard: (state) => {
+  discard: state => {
     let option = {
       label: translate('menu.tab.discard'),
       icon: 'icon_discard',
@@ -582,7 +595,7 @@ export const MENU_OPTIONS = {
     return option
   },
 
-  group: (state) => {
+  group: state => {
     let option = {
       label: translate('menu.tab.group'),
       icon: 'icon_group_tabs',
@@ -595,7 +608,7 @@ export const MENU_OPTIONS = {
     return option
   },
 
-  flatten: (state) => {
+  flatten: state => {
     let option = {
       label: translate('menu.tab.flatten'),
       icon: 'icon_flatten',
@@ -612,7 +625,7 @@ export const MENU_OPTIONS = {
     return option
   },
 
-  clearCookies: (state) => {
+  clearCookies: state => {
     return {
       label: translate('menu.tab.clear_cookies'),
       icon: 'icon_cookie',
@@ -621,7 +634,7 @@ export const MENU_OPTIONS = {
     }
   },
 
-  close: (state) => {
+  close: state => {
     let option = {
       label: translate('menu.tab.close'),
       icon: 'icon_close',
@@ -635,10 +648,10 @@ export const MENU_OPTIONS = {
     return option
   },
 
-  // 
+  //
   // --- Bookmarks options ---
-  // 
-  openInNewWin: (state) => {
+  //
+  openInNewWin: state => {
     let allSeparators = state.selected.every(id => {
       return state.bookmarksMap[id].type === 'separator'
     })
@@ -653,7 +666,7 @@ export const MENU_OPTIONS = {
     return option
   },
 
-  openInNewPrivWin: (state) => {
+  openInNewPrivWin: state => {
     let allSeparators = state.selected.every(id => {
       return state.bookmarksMap[id].type === 'separator'
     })
@@ -668,7 +681,7 @@ export const MENU_OPTIONS = {
     return option
   },
 
-  openInCtr: (state) => {
+  openInCtr: state => {
     let node = state.bookmarksMap[state.selected[0]]
     let allSeparators = state.selected.every(id => {
       return state.bookmarksMap[id].type === 'separator'
@@ -704,7 +717,7 @@ export const MENU_OPTIONS = {
     return opts
   },
 
-  createBookmark: (state) => {
+  createBookmark: state => {
     let node = state.bookmarksMap[state.selected[0]]
     let option = {
       label: translate('menu.bookmark.create_bookmark'),
@@ -716,7 +729,7 @@ export const MENU_OPTIONS = {
     return option
   },
 
-  createFolder: (state) => {
+  createFolder: state => {
     let node = state.bookmarksMap[state.selected[0]]
     let option = {
       label: translate('menu.bookmark.create_folder'),
@@ -728,7 +741,7 @@ export const MENU_OPTIONS = {
     return option
   },
 
-  createSeparator: (state) => {
+  createSeparator: state => {
     let node = state.bookmarksMap[state.selected[0]]
     let option = {
       label: translate('menu.bookmark.create_separator'),
@@ -740,7 +753,7 @@ export const MENU_OPTIONS = {
     return option
   },
 
-  sortByName: (state) => {
+  sortByName: state => {
     let node = state.bookmarksMap[state.selected[0]]
     let option = {
       label: translate('menu.bookmark.sort_by_name'),
@@ -755,7 +768,7 @@ export const MENU_OPTIONS = {
     return option
   },
 
-  sortByLink: (state) => {
+  sortByLink: state => {
     let node = state.bookmarksMap[state.selected[0]]
     let option = {
       label: translate('menu.bookmark.sort_by_link'),
@@ -770,7 +783,7 @@ export const MENU_OPTIONS = {
     return option
   },
 
-  sortByTime: (state) => {
+  sortByTime: state => {
     let node = state.bookmarksMap[state.selected[0]]
     let option = {
       label: translate('menu.bookmark.sort_by_time'),
@@ -785,7 +798,7 @@ export const MENU_OPTIONS = {
     return option
   },
 
-  edit: (state) => {
+  edit: state => {
     let node = state.bookmarksMap[state.selected[0]]
     let option = {
       label: translate('menu.bookmark.edit_bookmark'),
@@ -800,7 +813,7 @@ export const MENU_OPTIONS = {
     return option
   },
 
-  delete: (state) => {
+  delete: state => {
     let node = state.bookmarksMap[state.selected[0]]
     let option = {
       label: translate('menu.bookmark.delete_bookmark'),
@@ -813,10 +826,10 @@ export const MENU_OPTIONS = {
     return option
   },
 
-  // 
+  //
   // --- Tabs panel options ---
   //
-  muteAllAudibleTabs: (state) => {
+  muteAllAudibleTabs: state => {
     let panel = state.selected[0]
     if (!panel || !panel.tabs) return
 
@@ -832,7 +845,7 @@ export const MENU_OPTIONS = {
     if (!state.ctxMenuRenderInact && option.inactive) return
     return option
   },
-  closeTabsDuplicates: (state) => {
+  closeTabsDuplicates: state => {
     let panel = state.selected[0]
     if (!panel || !panel.tabs) return
 
@@ -847,7 +860,7 @@ export const MENU_OPTIONS = {
     if (!state.ctxMenuRenderInact && option.inactive) return
     return option
   },
-  reloadTabs: (state) => {
+  reloadTabs: state => {
     let panel = state.selected[0]
     if (!panel || !panel.tabs) return
 
@@ -862,7 +875,7 @@ export const MENU_OPTIONS = {
     if (!state.ctxMenuRenderInact && option.inactive) return
     return option
   },
-  discardTabs: (state) => {
+  discardTabs: state => {
     let panel = state.selected[0]
     if (!panel || !panel.tabs) return
 
@@ -877,7 +890,7 @@ export const MENU_OPTIONS = {
     if (!state.ctxMenuRenderInact && option.inactive) return
     return option
   },
-  closeTabs: (state) => {
+  closeTabs: state => {
     let panel = state.selected[0]
     if (!panel || !panel.tabs) return
 
@@ -892,7 +905,7 @@ export const MENU_OPTIONS = {
     if (!state.ctxMenuRenderInact && option.inactive) return
     return option
   },
-  collapseInactiveBranches: (state) => {
+  collapseInactiveBranches: state => {
     let panel = state.selected[0]
     if (!panel || !panel.tabs) return
     if (!state.tabsTree) return
@@ -908,10 +921,10 @@ export const MENU_OPTIONS = {
     return option
   },
 
-  // 
+  //
   // --- Bookmarks panel options ---
   //
-  collapseAllFolders: (state) => {
+  collapseAllFolders: state => {
     let panel = state.selected[0]
     if (!panel || !state.bookmarks.length) return
 
@@ -928,7 +941,7 @@ export const MENU_OPTIONS = {
   //
   // --- Common panels ---
   //
-  openPanelConfig: (state) => {
+  openPanelConfig: state => {
     let panel = state.selected[0]
     if (!panel) return
 

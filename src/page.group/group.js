@@ -7,7 +7,10 @@ const PDF_RE = /(\.pdf)([?#].*)?$/i
 const GROUP_BASE = browser.runtime.getURL('group/group.html')
 
 const tabsBoxEl = document.getElementById('tabs')
-let newTabEl, groupTabId, groupTabIndex, tabs = []
+let newTabEl
+let groupTabId
+let groupTabIndex
+let tabs = []
 let groupLen, groupParentId
 
 void (async function() {
@@ -128,7 +131,7 @@ function onGroupUpdated(msg) {
     }
   }
 
-  for (;i < tabs.length; i++) {
+  for (; i < tabs.length; i++) {
     let tab = tabs[i]
     tab.el.remove()
     tabs.splice(i, 1)
@@ -320,10 +323,14 @@ function createButton(svgId, className, clickHandler) {
  * Create svg element with use tag
  */
 function createSvgIcon(svgId) {
-  let svgEl = document.createElementNS('http://www.w3.org/2000/svg', 'svg')  
-  svgEl.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:xlink', 'http://www.w3.org/1999/xlink')
+  let svgEl = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+  svgEl.setAttributeNS(
+    'http://www.w3.org/2000/xmlns/',
+    'xmlns:xlink',
+    'http://www.w3.org/1999/xlink'
+  )
 
-  let useEl = document.createElementNS('http://www.w3.org/2000/svg', 'use')  
+  let useEl = document.createElementNS('http://www.w3.org/2000/svg', 'use')
   useEl.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', '#' + svgId)
   svgEl.appendChild(useEl)
 

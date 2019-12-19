@@ -111,7 +111,6 @@
         @input="onUserAgentInput")
 </template>
 
-
 <script>
 import TextInput from '../../components/text-input'
 import ToggleField from '../../components/toggle-field'
@@ -329,7 +328,7 @@ export default {
       this.conf.excludeHostsActive = !this.conf.excludeHostsActive
       Actions.saveContainers()
       await this.$nextTick()
-      
+
       if (this.$refs.scrollBox) this.$refs.scrollBox.recalcScroll()
       if (this.$refs.excludeHostsInput) this.$refs.excludeHostsInput.focus()
     },
@@ -365,7 +364,7 @@ export default {
       Actions.saveContainers()
 
       await this.$nextTick()
-      
+
       if (this.$refs.scrollBox) this.$refs.scrollBox.recalcScroll()
     },
 
@@ -435,7 +434,7 @@ export default {
       this.conf.userAgentActive = !this.conf.userAgentActive
       Actions.saveContainers()
       await this.$nextTick()
-      
+
       if (this.$refs.scrollBox) this.$refs.scrollBox.recalcScroll()
       if (this.$refs.userAgentInput) this.$refs.userAgentInput.focus()
     },

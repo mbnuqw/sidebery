@@ -20,7 +20,7 @@ async function movePanel(id, step) {
     browser.runtime.sendMessage({
       instanceType: 'sidebar',
       windowId: window.id,
-      action: 'loadTabs'
+      action: 'loadTabs',
     })
   }
 }

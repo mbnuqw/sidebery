@@ -10,7 +10,6 @@ transition(name="confirm"): .Confirm(v-if="$store.state.confirm" @click="onBgCli
         @click="onCancelClick") {{t('btn.no')}}
 </template>
 
-
 <script>
 import State from '../store/state.js'
 

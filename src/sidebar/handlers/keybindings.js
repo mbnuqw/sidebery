@@ -8,84 +8,33 @@ import Handlers from '../handlers'
 function onCmd(name) {
   if (!this.state.windowFocused) return
 
-  switch (name) {
-  case 'next_panel':
-    this.handlers.onKeyNextPanel()
-    break
-  case 'prev_panel':
-    this.handlers.onKeyPrevPanel()
-    break
-  case 'new_tab_on_panel':
-    this.handlers.onKeyNewTabInPanel()
-    break
-  case 'new_tab_in_group':
-    this.handlers.onKeyNewTabAfter()
-    break
-  case 'new_tab_as_first_child':
-    this.handlers.onKeyNewTabAsFirstChild()
-    break
-  case 'new_tab_as_last_child':
-    this.handlers.onKeyNewTabAsLastChild()
-    break
-  case 'rm_tab_on_panel':
-    this.handlers.onKeyRmSelection()
-    break
-  case 'activate':
-    this.handlers.onKeyActivate()
-    break
-  case 'reset_selection':
+  if (name === 'next_panel') this.handlers.onKeyNextPanel()
+  else if (name === 'prev_panel') this.handlers.onKeyPrevPanel()
+  else if (name === 'new_tab_on_panel') this.handlers.onKeyNewTabInPanel()
+  else if (name === 'new_tab_in_group') this.handlers.onKeyNewTabAfter()
+  else if (name === 'new_tab_as_first_child') this.handlers.onKeyNewTabAsFirstChild()
+  else if (name === 'new_tab_as_last_child') this.handlers.onKeyNewTabAsLastChild()
+  else if (name === 'rm_tab_on_panel') this.handlers.onKeyRmSelection()
+  else if (name === 'activate') this.handlers.onKeyActivate()
+  else if (name === 'reset_selection') {
     this.actions.resetSelection()
     this.actions.closeCtxMenu()
-    break
-  case 'select_all':
-    this.handlers.onKeySelectAll()
-    break
-  case 'up':
-    this.handlers.onKeySelect(-1)
-    break
-  case 'down':
-    this.handlers.onKeySelect(1)
-    break
-  case 'up_shift':
-    this.handlers.onKeySelectExpand(-1)
-    break
-  case 'down_shift':
-    this.handlers.onKeySelectExpand(1)
-    break
-  case 'menu':
-    this.handlers.onKeyMenu()
-    break
-  case 'fold_branch':
-    this.handlers.onKeyFoldBranch()
-    break
-  case 'expand_branch':
-    this.handlers.onKeyExpandBranch()
-    break
-  case 'fold_inact_branches':
-    this.handlers.onKeyFoldInactiveBranches()
-    break
-  case 'activate_prev_active_tab':
-    this.handlers.onKeyActivatePrevActTab()
-    break
-  case 'activate_panel_prev_active_tab':
-    this.handlers.onKeyActivatePanelPrevActTab()
-    break
-  case 'move_tab_to_active':
-    this.handlers.onKeyMoveTabsToAct()
-    break
-  case 'tabs_indent':
-    this.handlers.onKeyTabsIndent()
-    break
-  case 'tabs_outdent':
-    this.handlers.onKeyTabsOutdent()
-    break
-  case 'move_tabs_up':
-    this.handlers.onKeyMoveTabsUp()
-    break
-  case 'move_tabs_down':
-    this.handlers.onKeyMoveTabsDown()
-    break
-  }
+  } else if (name === 'select_all') this.handlers.onKeySelectAll()
+  else if (name === 'up') this.handlers.onKeySelect(-1)
+  else if (name === 'down') this.handlers.onKeySelect(1)
+  else if (name === 'up_shift') this.handlers.onKeySelectExpand(-1)
+  else if (name === 'down_shift') this.handlers.onKeySelectExpand(1)
+  else if (name === 'menu') this.handlers.onKeyMenu()
+  else if (name === 'fold_branch') this.handlers.onKeyFoldBranch()
+  else if (name === 'expand_branch') this.handlers.onKeyExpandBranch()
+  else if (name === 'fold_inact_branches') this.handlers.onKeyFoldInactiveBranches()
+  else if (name === 'activate_prev_active_tab') this.handlers.onKeyActivatePrevActTab()
+  else if (name === 'activate_panel_prev_active_tab') this.handlers.onKeyActivatePanelPrevActTab()
+  else if (name === 'move_tab_to_active') this.handlers.onKeyMoveTabsToAct()
+  else if (name === 'tabs_indent') this.handlers.onKeyTabsIndent()
+  else if (name === 'tabs_outdent') this.handlers.onKeyTabsOutdent()
+  else if (name === 'move_tabs_up') this.handlers.onKeyMoveTabsUp()
+  else if (name === 'move_tabs_down') this.handlers.onKeyMoveTabsDown()
 }
 
 /**
@@ -298,7 +247,9 @@ function onKeySelectExpand(dir) {
       this.selEndIndex = this.selEndIndex + dir
     }
     if (this.selEndIndex < 0) this.selEndIndex = 0
-    if (this.selEndIndex >= this.state.itemSlots.length) this.selEndIndex = this.state.itemSlots.length - 1
+    if (this.selEndIndex >= this.state.itemSlots.length) {
+      this.selEndIndex = this.state.itemSlots.length - 1
+    }
 
     let minIndex = Math.min(this.selStartIndex, this.selEndIndex)
     let maxIndex = Math.max(this.selStartIndex, this.selEndIndex)
@@ -386,7 +337,8 @@ function onKeyRmSelection() {
 function onKeyNextPanel() {
   if (this.state.hideEmptyPanels) {
     // Check next panel
-    let panel, i = this.state.panelIndex
+    let panel
+    let i = this.state.panelIndex
     if (this.state.panelIndex < this.state.panels.length) {
       for (i = this.state.panelIndex + 1; i < this.state.panels.length; i++) {
         panel = this.state.panels[i]
@@ -405,7 +357,6 @@ function onKeyNextPanel() {
       return
     }
   }
-
 
   this.actions.switchPanel(1)
 }
@@ -428,7 +379,7 @@ function onKeyFoldBranch() {
   let selected = [...this.state.selected]
   if (this.state.selected.length) selected = [...this.state.selected]
   else selected = [this.state.activeTabId]
-  
+
   let firstItem = selected[0]
   if (typeof firstItem === 'number') {
     for (let tabId of selected) {
@@ -490,7 +441,7 @@ function onKeyActivatePanelPrevActTab() {
     t = panel.actTabs[i]
     if (t !== this.state.activeTabId) tabId = t
   }
-  
+
   browser.tabs.update(tabId, { active: true })
 }
 
@@ -551,7 +502,7 @@ function onKeyTabsIndent() {
     tab.parentId = parentTab.id
   }
 
-  align.forEach(([a, b]) => a.parentId = b.parentId)
+  align.forEach(([a, b]) => (a.parentId = b.parentId))
 
   this.actions.updateTabsTree()
   if (this.state.stateStorage === 'global') this.actions.saveTabsData()
@@ -565,7 +516,7 @@ function onKeyTabsOutdent() {
   if (this.state.selected.length) selected = [...this.state.selected]
   else selected = [this.state.activeTabId]
 
-  for (let id  of selected) {
+  for (let id of selected) {
     let tab = this.state.tabsMap[id]
     if (!tab) continue
     if (tab.parentId === -1) continue

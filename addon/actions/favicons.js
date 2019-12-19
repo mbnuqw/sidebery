@@ -9,7 +9,7 @@ let faviconsToSave = []
 async function loadFavicons() {
   let { favicons, favUrls } = await browser.storage.local.get({
     favicons: [],
-    favUrls: {}
+    favUrls: {},
   })
   this.favicons = favicons
   this.favUrls = favUrls
@@ -56,7 +56,7 @@ async function clearFaviCache(all) {
 
   let { favicons, favUrls } = await browser.storage.local.get({
     favicons: [],
-    favUrls: {}
+    favUrls: {},
   })
 
   let urls = Object.values(this.windows).reduce((a, v) => {

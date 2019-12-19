@@ -108,7 +108,7 @@ function onTabMoved(id, info) {
   let movedTab = tabWindow.tabs.splice(info.fromIndex, 1)[0]
   tabWindow.tabs.splice(info.toIndex, 0, movedTab)
 
-  for (let i = tabWindow.tabs.length; i--;) {
+  for (let i = tabWindow.tabs.length; i--; ) {
     tabWindow.tabs[i].index = i
   }
 }
@@ -144,7 +144,7 @@ async function backupTabsData() {
     // Logs.push('[ERROR:BG] backupTabsData: ', err.toString())
     return
   }
-  
+
   await browser.storage.local.set({ prevTabsData_v4: tabsData })
 }
 
@@ -173,17 +173,20 @@ function saveTabsData(windowId, tabs, delay = 300) {
  * updateTabsTree
  */
 async function updateTabsTree() {
-  const receiving = [], windows = []
+  let receiving = []
+  let windows = []
   for (let window of Object.values(this.windows)) {
-    receiving.push(browser.runtime.sendMessage({
-      windowId: window.id,
-      instanceType: 'sidebar',
-      action: 'getTabsTree',
-    }))
+    receiving.push(
+      browser.runtime.sendMessage({
+        windowId: window.id,
+        instanceType: 'sidebar',
+        action: 'getTabsTree',
+      })
+    )
     windows.push(window)
   }
 
-  const trees = await Promise.all(receiving)
+  let trees = await Promise.all(receiving)
   for (let info, i = 0; i < trees.length; i++) {
     info = trees[i]
     if (!info) continue
@@ -236,7 +239,7 @@ function setupTabsListeners() {
   browser.tabs.onCreated.addListener(this.actions.onTabCreated)
   browser.tabs.onRemoved.addListener(this.actions.onTabRemoved)
   browser.tabs.onUpdated.addListener(this.actions.onTabUpdated, {
-    properties: [ 'pinned', 'title', 'status' ],
+    properties: ['pinned', 'title', 'status'],
   })
   browser.tabs.onMoved.addListener(this.actions.onTabMoved)
   browser.tabs.onAttached.addListener(this.actions.onTabAttached)

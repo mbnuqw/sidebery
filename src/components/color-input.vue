@@ -20,7 +20,6 @@
     @input="onTextInput")
 </template>
 
-
 <script>
 import TextInput from './text-input'
 

@@ -32,8 +32,8 @@ export default {
   'styles.menu_title': { message: 'Context Menu' },
   'styles.menu_font': { message: 'Font' },
   'styles.menu_bg_color': { message: 'Background color' },
-  'styles.menu_opt_fg_color': { message: 'Option\'s foreground color' },
-  'styles.menu_opt_fg_color_hover': { message: 'Option\'s background color on hover' },
+  'styles.menu_opt_fg_color': { message: "Option's foreground color" },
+  'styles.menu_opt_fg_color_hover': { message: "Option's background color on hover" },
 
   // --- Navigation Strip
   'styles.nav_title': { message: 'Navigation Strip' },
@@ -67,7 +67,7 @@ export default {
   'styles.tabs_shadow': { message: 'Shadow' },
   'styles.tabs_activated_shadow': { message: 'Active tab shadow' },
   'styles.tabs_selected_shadow': { message: 'Selected tab shadow' },
-  'styles.tabs_lvl_indicator_bg': { message: 'Tab level indicator color'},
+  'styles.tabs_lvl_indicator_bg': { message: 'Tab level indicator color' },
 
   // --- Bookmarks
   'styles.bookmarks_title': { message: 'Bookmarks' },

@@ -12,7 +12,6 @@
       slot
 </template>
 
-
 <script>
 import Debounce from '../../directives/debounce'
 
@@ -72,7 +71,7 @@ export default {
       }
       if (contentHeight <= boxHeight) return
 
-      let scrollGripY = contentY / (contentHeight - boxHeight) * 100
+      let scrollGripY = (contentY / (contentHeight - boxHeight)) * 100
       if (this.$refs.scroll) {
         this.$refs.scroll.style.transform = `translateX(${scrollGripY}%)`
       }

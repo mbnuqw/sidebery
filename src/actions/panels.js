@@ -37,7 +37,9 @@ async function loadPanels() {
   }
 
   // Normalize
-  let panelDefs, panelsMap = {}, normPanels = []
+  let panelDefs
+  let panelsMap = {}
+  let normPanels = []
   for (let i = 0; i < panels.length; i++) {
     let panel
     let loadedPanel = panels[i]
@@ -69,7 +71,7 @@ async function loadPanels() {
 
   // Setup panel index
   if (!this.state.private) {
-    let actPanel =  normPanels[storage.panelIndex]
+    let actPanel = normPanels[storage.panelIndex]
     if (actPanel) this.state.panelIndex = storage.panelIndex
     else this.state.panelIndex = defaultPanelIndex
     this.state.lastPanelIndex = this.state.panelIndex
@@ -145,7 +147,8 @@ function parsePanelUrlRules(panel) {
  * Clean up panels info and save them
  */
 async function savePanels() {
-  let output = [], panelDefs
+  let output = []
+  let panelDefs
   for (let panel of this.state.panels) {
     if (panel.type === 'bookmarks') panelDefs = BOOKMARKS_PANEL
     else if (panel.type === 'default') panelDefs = DEFAULT_TABS_PANEL

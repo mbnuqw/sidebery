@@ -7,7 +7,6 @@
         img(v-if="w.screen" :src="w.screen" @load="onScreenLoad(i)")
 </template>
 
-
 <script>
 import State from '../store/state'
 import ScrollBox from './scroll-box'

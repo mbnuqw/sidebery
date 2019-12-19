@@ -83,7 +83,9 @@ export default {
   // --- Panels
   'settings.panels_title': { message: 'Panels' },
   'settings.panel_remove_confirm_1': { message: 'Delete "' },
-  'settings.panel_remove_confirm_2': { message: '" panel?\nAll tabs of this panel will also be removed.' },
+  'settings.panel_remove_confirm_2': {
+    message: '" panel?\nAll tabs of this panel will also be removed.',
+  },
   'settings.panel_icon_custom': { message: 'custom' },
   'settings.panels_create_btn': { message: 'Create panel' },
 
@@ -111,10 +113,14 @@ export default {
   'settings.activate_after_closing_rule_visible': { message: 'visible' },
   'settings.activate_after_closing_rule_any': { message: 'any' },
   'settings.activate_after_closing_global': { message: 'Globally' },
-  'settings.shift_selection_from_active': { message: 'Start shift+click selection from the active tab' },
+  'settings.shift_selection_from_active': {
+    message: 'Start shift+click selection from the active tab',
+  },
   'settings.ask_new_bookmark_place': { message: 'Ask where to store bookmarks' },
   'settings.tabs_rm_undo_note': { message: 'Show undo notification on closing multiple tabs' },
-  'settings.native_highlight': { message: 'Highlight native tabs (in top horizontal bar) along with tabs in sidebar' },
+  'settings.native_highlight': {
+    message: 'Highlight native tabs (in top horizontal bar) along with tabs in sidebar',
+  },
 
   // --- New tab position
   'settings.new_tab_position': { message: 'New tab position' },
@@ -309,13 +315,22 @@ export default {
   // --- Permissions
   'settings.permissions_title': { message: 'Permissions' },
   'settings.all_urls_label': { message: 'Websites data:' },
-  'settings.all_urls_info': { message: 'Required for:\n- Cleaning cookies\n- Proxy and url rules of containers\n- Screenshots for the group page and windows selection panel\n- Changing the User-Agent per container' },
+  'settings.all_urls_info': {
+    message:
+      'Required for:\n- Cleaning cookies\n- Proxy and url rules of containers\n- Screenshots for the group page and windows selection panel\n- Changing the User-Agent per container',
+  },
   'settings.tab_hide_label': { message: 'Hiding tabs:' },
-  'settings.tab_hide_info': { message: 'Required for:\n- Hiding tabs on inactive panels\n- Hiding folded tabs' },
+  'settings.tab_hide_info': {
+    message: 'Required for:\n- Hiding tabs on inactive panels\n- Hiding folded tabs',
+  },
   'settings.clipboard_write_label': { message: 'Clipboard write:' },
-  'settings.clipboard_write_info': { message: 'Required for:\n- Copying urls of tabs/bookmarks through context menu' },
+  'settings.clipboard_write_info': {
+    message: 'Required for:\n- Copying urls of tabs/bookmarks through context menu',
+  },
   'settings.web_request_blocking_label': { message: 'Web requests blocking' },
-  'settings.web_request_blocking_info': { message: 'Required for:\n- Changing the User-Agent per container' },
+  'settings.web_request_blocking_info': {
+    message: 'Required for:\n- Changing the User-Agent per container',
+  },
 
   // --- Storage
   'settings.storage_title': { message: 'Storage' },
@@ -324,7 +339,9 @@ export default {
   'settings.storage_delete_confirm': { message: 'Delete property ' },
   'settings.update_storage_info': { message: 'Update' },
   'settings.clear_storage_info': { message: 'Clear' },
-  'settings.clear_storage_confirm': { message: 'Are you sure you want to delete all data of Sidebery?' },
+  'settings.clear_storage_confirm': {
+    message: 'Are you sure you want to delete all data of Sidebery?',
+  },
 
   // --- Help
   'settings.help_title': { message: 'Help' },

@@ -51,7 +51,9 @@ async function createSnapshot() {
   }
 
   currentSnapshot = {
-    id: Math.random().toString(16).replace('0.', Date.now().toString(16)),
+    id: Math.random()
+      .toString(16)
+      .replace('0.', Date.now().toString(16)),
     time: Date.now(),
     containersById,
     panels: panels_v4,
@@ -88,9 +90,10 @@ async function scheduleSnapshots() {
   if (interval < MIN_SNAP_INTERVAL) return
 
   const currentTime = Date.now()
-  let elapsed, nextTimeout = interval
+  let elapsed
+  let nextTimeout = interval
   if (currentSnapshot) elapsed = currentTime - currentSnapshot.time
-  else elapsed = currentTime - await Actions.getLastSnapTime()
+  else elapsed = currentTime - (await Actions.getLastSnapTime())
 
   if (elapsed >= interval) Actions.createSnapshot()
   else nextTimeout = interval - elapsed
@@ -198,9 +201,10 @@ async function limitSnapshots(snapshots) {
     if (!snapshots.length) return
   }
 
-  let i, accum = 0
-  for (i = snapshots.length; i--;) {
-    let snapshot = snapshots[i]
+  let index
+  let accum = 0
+  for (index = snapshots.length; index--; ) {
+    let snapshot = snapshots[index]
 
     if (unit === 'snap') {
       accum++
@@ -218,10 +222,10 @@ async function limitSnapshots(snapshots) {
     }
   }
 
-  i++
+  index++
 
-  if (!resultToStore) return snapshots.slice(i)
-  else await browser.storage.local.set({ snapshots_v4: snapshots.slice(i) })
+  if (!resultToStore) return snapshots.slice(index)
+  else await browser.storage.local.set({ snapshots_v4: snapshots.slice(index) })
 }
 
 /**

@@ -67,7 +67,7 @@ export default {
   'styles.tabs_shadow': { message: 'Тень' },
   'styles.tabs_activated_shadow': { message: 'Тень активного таба' },
   'styles.tabs_selected_shadow': { message: 'Тень выделенного таба' },
-  'styles.tabs_lvl_indicator_bg': { message: 'Цвет индикатора уровня вкладки'},
+  'styles.tabs_lvl_indicator_bg': { message: 'Цвет индикатора уровня вкладки' },
 
   // --- Bookmarks
   'styles.bookmarks_title': { message: 'Закладки' },
@@ -82,10 +82,14 @@ export default {
   'styles.bookmarks_bg_color_hover': { message: 'Цвет фона при наведении курсора' },
   'styles.bookmarks_bg_color_active': { message: 'Цвет фона при клике' },
   'styles.bookmarks_closed_dir_fg_color': { message: 'Цвет закрытой папки' },
-  'styles.bookmarks_closed_dir_fg_color_hover': { message: 'Цвет закрытой папки при наведении курсора' },
+  'styles.bookmarks_closed_dir_fg_color_hover': {
+    message: 'Цвет закрытой папки при наведении курсора',
+  },
   'styles.bookmarks_closed_dir_fg_color_active': { message: 'Цвет закрытой папки при клике' },
   'styles.bookmarks_open_dir_fg_color': { message: 'Цвет открытой папки' },
-  'styles.bookmarks_open_dir_fg_color_hover': { message: 'Цвет открытой папки при наведении курсора' },
+  'styles.bookmarks_open_dir_fg_color_hover': {
+    message: 'Цвет открытой папки при наведении курсора',
+  },
   'styles.bookmarks_open_dir_fg_color_active': { message: 'Цвет открытой папки при клике' },
   'styles.bookmarks_empty_dir_fg_color': { message: 'Цвет пустой папки' },
   'styles.bookmarks_open_fg_color': { message: 'Цвет открытой закладки' },

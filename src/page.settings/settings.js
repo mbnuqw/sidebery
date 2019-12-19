@@ -41,10 +41,7 @@ export default new Vue({
 
     State.instanceType = 'settings'
 
-    await Promise.all([
-      Actions.loadSettings(),
-      Actions.loadContainers(),
-    ])
+    await Promise.all([Actions.loadSettings(), Actions.loadContainers()])
     await Actions.loadPanels()
 
     Actions.loadKeybindings()
@@ -62,6 +59,6 @@ export default new Vue({
      */
     navigateTo(urlHash) {
       location.hash = urlHash
-    }
+    },
   },
 })

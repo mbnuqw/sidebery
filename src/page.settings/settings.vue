@@ -638,9 +638,8 @@
   footer-section
 </template>
 
-
 <script>
-import { translate } from '../mixins/dict'
+import { translate } from '../../addon/locales/dict'
 import { DEFAULT_SETTINGS } from '../../addon/defaults'
 import { TABS_PANEL } from '../../addon/defaults'
 import State from './store/state'
@@ -736,7 +735,7 @@ export default {
 
       if (State.navLock) return
 
-      for (let name, i = SECTIONS.length; i--;) {
+      for (let name, i = SECTIONS.length; i--; ) {
         name = SECTIONS[i]
         if (!this.$refs[name]) break
 
@@ -809,10 +808,7 @@ export default {
       State.navBarLayout = value
       if (value === 'vertical') {
         if (State.navBarInline) State.navBarInline = false
-        if (
-          State.pinnedTabsPosition === 'left' ||
-          State.pinnedTabsPosition === 'right'
-        ) {
+        if (State.pinnedTabsPosition === 'left' || State.pinnedTabsPosition === 'right') {
           State.pinnedTabsPosition = 'panel'
         }
       }
@@ -973,7 +969,10 @@ export default {
         browser.runtime.sendMessage({ action: 'loadPermissions' })
         Actions.loadPermissions()
       } else {
-        const request = { origins: ['<all_urls>'], permissions: ['webRequest', 'webRequestBlocking'] }
+        const request = {
+          origins: ['<all_urls>'],
+          permissions: ['webRequest', 'webRequestBlocking'],
+        }
         browser.permissions.request(request).then(allowed => {
           browser.runtime.sendMessage({ action: 'loadPermissions' })
           State.permWebRequestBlocking = allowed

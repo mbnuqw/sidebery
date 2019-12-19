@@ -9,17 +9,17 @@ function updateSettings(settings) {
   if (!settings) return
 
   // Check what values was updated
-  const hideInactTabs = this.state.hideInact !== settings.hideInact
-  const updateSuccessions =
+  let hideInactTabs = this.state.hideInact !== settings.hideInact
+  let updateSuccessions =
     this.state.activateAfterClosing !== settings.activateAfterClosing ||
     this.state.activateAfterClosingPrevRule !== settings.activateAfterClosingPrevRule ||
     this.state.activateAfterClosingNextRule !== settings.activateAfterClosingNextRule
-  const resetTree = this.state.tabsTree !== settings.tabsTree && this.state.tabsTree
-  const updateTree = this.state.tabsTreeLimit !== settings.tabsTreeLimit
-  const updateInvisTabs = this.state.hideFoldedTabs !== settings.hideFoldedTabs
-  const toggleBookmarks = this.state.bookmarksPanel !== settings.bookmarksPanel
-  const theme = this.state.theme !== settings.theme
-  const highlightOpenBookmarks = this.state.highlightOpenBookmarks !== settings.highlightOpenBookmarks
+  let resetTree = this.state.tabsTree !== settings.tabsTree && this.state.tabsTree
+  let updateTree = this.state.tabsTreeLimit !== settings.tabsTreeLimit
+  let updateInvisTabs = this.state.hideFoldedTabs !== settings.hideFoldedTabs
+  let toggleBookmarks = this.state.bookmarksPanel !== settings.bookmarksPanel
+  let theme = this.state.theme !== settings.theme
+  let highlightOpenBookmarks = this.state.highlightOpenBookmarks !== settings.highlightOpenBookmarks
   let stateStorage = this.state.stateStorage !== settings.stateStorage
 
   // Update settings of this instance
@@ -109,7 +109,7 @@ function updateSettings(settings) {
 
 /**
  * Open/activate settings page.
- * 
+ *
  * @param {string} [section] - url-encoded string
  */
 async function openSettings(section) {
@@ -183,7 +183,8 @@ async function getCommonDbgInfo() {
   let bookmarksCount = 0
   let foldersCount = 0
   let separatorsCount = 0
-  let lvl = 0, maxDepth = 0
+  let lvl = 0
+  let maxDepth = 0
   const walker = nodes => {
     if (lvl > maxDepth) maxDepth = lvl
     for (let node of nodes) {
@@ -212,9 +213,7 @@ async function getCommonDbgInfo() {
  * Get sidebar css selectors
  */
 function getCssSelectors() {
-  const selectors = [
-    { id: 'root', classList: ['root'], lvl: 0, children: [] }
-  ]
+  const selectors = [{ id: 'root', classList: ['root'], lvl: 0, children: [] }]
   const rootEl = document.getElementById('root')
 
   const walker = (nodes, selectors) => {

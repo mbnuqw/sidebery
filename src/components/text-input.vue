@@ -37,7 +37,6 @@
   .placeholder(v-if="or") {{or}}
 </template>
 
-
 <script>
 export default {
   props: {
@@ -52,7 +51,7 @@ export default {
     line: Boolean,
     tabindex: {
       type: String,
-      default: () => '0'
+      default: () => '0',
     },
     password: Boolean,
   },

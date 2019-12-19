@@ -16,13 +16,12 @@
   .note(v-if="note") {{note}}
 </template>
 
-
 <script>
 import SelectInput from './select-input'
 
 export default {
   components: {
-    SelectInput
+    SelectInput,
   },
 
   props: {
