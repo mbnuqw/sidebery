@@ -397,20 +397,22 @@
 // -
 .tab-enter-active
 .tab-leave-active
-  transition: transform var(--d-fast), opacity var(--d-fast), padding var(--d-fast)
+  transition: transform var(--d-fast), opacity var(--d-fast), padding var(--d-fast), z-index var(--d-fast)
 .tab-leave-active
   box(absolute)
 .tab-move
   transition: transform var(--d-fast), opacity var(--d-fast), padding var(--d-fast)
 .tab-enter
-  opacity: 1
-  transform: scale(1, 0.7)
+  opacity: 0
+  transform: translateY(-50%)
+  z-index: 0
 .tab-leave
   opacity: 0
   transform: scale(1, 1)
 .tab-leave-to
   opacity: 0
-  transform: scale(1, 0.8)
+  z-index: 0
+  transform: translateY(-8px)
 
 .tab-part-enter-active
 .tab-part-leave-active
