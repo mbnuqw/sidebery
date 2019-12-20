@@ -505,7 +505,7 @@ function onTabMoved(id, info) {
     if (this.state.stateStorage === 'global' && !this.state.movingTabs.length) {
       this.actions.saveTabsData()
     }
-    if (this.state.stateStorage === 'session') this.actions.saveTabData(movedTab)
+    if (this.state.stateStorage === 'session') this.actions.saveTabData(id)
     return
   }
 
