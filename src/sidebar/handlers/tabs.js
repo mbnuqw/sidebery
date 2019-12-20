@@ -35,7 +35,9 @@ function onTabCreated(tab) {
   } else {
     panel = this.actions.getPanelForNewTab(tab)
     index = this.actions.getIndexForNewTab(panel, tab)
-    tab.openerTabId = this.actions.getParentForNewTab(panel, tab)
+    if (tab.openerTabId === undefined) {
+      tab.openerTabId = this.actions.getParentForNewTab(panel, tab)
+    }
     if (index === undefined) {
       index = tab.index
       if (panel.startIndex > index || panel.endIndex + 1 < index) {
