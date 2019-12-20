@@ -7,22 +7,26 @@ let handledReqId
 let incHistory = {}
 
 async function recreateTab(tab, info, cookieStoreId) {
+  let index
   try {
-    await browser.runtime.sendMessage({
+    index = await browser.runtime.sendMessage({
       instanceType: 'sidebar',
       windowId: tab.windowId,
       action: 'handleReopening',
-      arg: tab.id,
+      args: [tab.id, cookieStoreId],
     })
   } catch (err) {
     /* itsokay */
   }
+
+  if (index === undefined) index = tab.index
+
   await browser.tabs.create({
     windowId: tab.windowId,
     url: info.url,
     cookieStoreId,
     active: tab.active,
-    index: tab.index,
+    index,
     pinned: tab.pinned,
   })
   browser.tabs.remove(tab.id)

@@ -2205,15 +2205,27 @@ function updateHighlightedTabs(delay = 250) {
   }, delay)
 }
 
-function handleReopening(tabId) {
+function handleReopening(tabId, newCtx) {
   let targetTab = this.state.tabsMap[tabId]
   if (!targetTab) return
 
-  if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
-  this.state.newTabsPosition[targetTab.index] = {
-    parent: targetTab.parentId,
-    panel: targetTab.panelId,
+  let parent = -1
+  let panel = this.state.panels.find(p => p.moveTabCtx === newCtx)
+  let panelId
+  let index
+  if (panel) {
+    index = this.actions.getIndexForNewTab(panel, {})
+    if (index === undefined) index = panel.endIndex
+    panelId = panel.id
+  } else {
+    parent = targetTab.parentId
   }
+  if (index === undefined) index = targetTab.index
+
+  if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
+  this.state.newTabsPosition[index] = { parent, panel: panelId }
+
+  return index
 }
 
 // -----------------

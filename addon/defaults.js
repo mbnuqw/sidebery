@@ -326,26 +326,6 @@ export const DEFAULT_TABS_PANEL_STATE = {
   updated: [],
 }
 
-export const CTX_PANEL = {
-  type: 'ctx',
-  id: '',
-  cookieStoreId: '',
-  name: '',
-  icon: '',
-  color: '',
-  lockedTabs: false,
-  lockedPanel: false,
-  noEmpty: false,
-}
-export const CTX_PANEL_STATE = {
-  ...CTX_PANEL,
-  loading: false,
-  tabs: [],
-  startIndex: -1,
-  endIndex: -1,
-  updated: [],
-}
-
 export const TABS_PANEL = {
   type: 'tabs',
   id: '',

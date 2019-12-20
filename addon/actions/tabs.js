@@ -73,6 +73,20 @@ function onTabUpdated(tabId, change) {
   }
 }
 
+/**
+ * Handle tab activation event
+ */
+function onTabActivated(info) {
+  let tab = this.tabsMap[info.tabId]
+  if (tab) tab.active = true
+
+  let prevTab = this.tabsMap[info.previousTabId]
+  if (prevTab) prevTab.active = false
+}
+
+/**
+ * Show proxy badge (pageActive) for given tab
+ */
 function showProxyBadge(tabId) {
   let tab = this.tabsMap[tabId]
   if (!tab) return
@@ -92,6 +106,9 @@ function showProxyBadgeDebounced(tabId, delay = 500) {
   }, delay)
 }
 
+/**
+ * Hide proxy badge (pageActive) for given tab
+ */
 function hideProxyBadge(tabId) {
   browser.pageAction.hide(tabId)
   browser.pageAction.setTitle({ title: 'Sidebery proxy off', tabId })
@@ -241,6 +258,7 @@ function setupTabsListeners() {
   browser.tabs.onUpdated.addListener(this.actions.onTabUpdated, {
     properties: ['pinned', 'title', 'status'],
   })
+  browser.tabs.onActivated.addListener(this.actions.onTabActivated)
   browser.tabs.onMoved.addListener(this.actions.onTabMoved)
   browser.tabs.onAttached.addListener(this.actions.onTabAttached)
   browser.tabs.onDetached.addListener(this.actions.onTabDetached)
@@ -252,6 +270,7 @@ export default {
   onTabCreated,
   onTabRemoved,
   onTabUpdated,
+  onTabActivated,
   onTabMoved,
   onTabAttached,
   onTabDetached,
