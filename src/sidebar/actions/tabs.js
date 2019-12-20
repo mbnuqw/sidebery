@@ -213,6 +213,11 @@ async function loadTabsFromSessionStorage() {
         continue
       }
 
+      if (Utils.isGroupUrl(t.url)) {
+        if (!this.state.groupTabs) this.state.groupTabs = {}
+        this.state.groupTabs[t.id] = true
+      }
+
       if (panel && panel.index >= panelIndex) {
         panelIndex = panel.index
         t.panelId = dt.panelId

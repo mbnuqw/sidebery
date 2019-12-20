@@ -82,6 +82,7 @@ export default new Vue({
     Actions.loadPermissions(true)
     Actions.updateTabsVisability()
     if (State.stateStorage === 'global') Actions.saveTabsData()
+    if (State.stateStorage === 'session') Actions.saveGroups()
 
     Actions.connectToBG()
     Actions.updateActiveGroupPage()
