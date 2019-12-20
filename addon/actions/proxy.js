@@ -167,7 +167,11 @@ function updateReqHandler() {
         if (!rule) continue
 
         if (rule[0] === '/' && rule[rule.length - 1] === '/') {
-          rule = new RegExp(rule.slice(1, rule.length - 1))
+          try {
+            rule = new RegExp(rule.slice(1, rule.length - 1))
+          } catch (err) {
+            // nothing
+          }
         }
 
         this.includeHostsRules.push({ ctx: ctr.id, value: rule })
