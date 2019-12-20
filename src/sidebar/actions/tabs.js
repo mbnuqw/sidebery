@@ -1281,12 +1281,17 @@ function foldTabsBranch(tabId) {
 function expTabsBranch(tabId) {
   const toShow = []
   const preserve = []
+  let autoFold = []
+
   const tab = this.state.tabsMap[tabId]
   if (!tab) return
+
+  const panel = this.state.panelsMap[tab.panelId]
+  if (!panel) return
+
   tab.lastAccessed = Date.now()
-  let autoFold = []
   if (tab.invisible) Actions.expTabsBranch(tab.parentId)
-  for (let t of this.state.tabs) {
+  for (let t of panel.tabs) {
     if (this.state.autoFoldTabs && t.id !== tabId && t.isParent && !t.folded && tab.lvl === t.lvl) {
       autoFold.push(t)
     }
