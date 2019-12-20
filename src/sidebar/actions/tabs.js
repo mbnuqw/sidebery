@@ -1839,6 +1839,7 @@ function createChildTab(tabId) {
 function createTabInPanel(panel, url) {
   let tabShell = {}
   let index = this.actions.getIndexForNewTab(panel, tabShell)
+  let parentId = this.actions.getParentForNewTab(panel, tabShell)
   if (index === undefined) {
     if (!panel.tabs.length) index = panel.endIndex
     else index = panel.endIndex + 1
@@ -1850,7 +1851,7 @@ function createTabInPanel(panel, url) {
   if (index !== undefined) {
     if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
     this.state.newTabsPosition[index] = {
-      parent: tabShell.openerTabId,
+      parent: parentId,
       panel: panel.id,
     }
   }
@@ -2067,7 +2068,8 @@ function getPanelForNewTab(tab) {
 }
 
 /**
- * Find and return index for new tab
+ * Find and return index for new tab.
+ * Side effect: tab.openerTabId
  *
  * @param {Object} panel
  * @param {Object} [tab]
@@ -2105,11 +2107,10 @@ function getIndexForNewTab(panel, tab) {
     } else if (activeTab.pinned) {
       return panel.startIndex
     } else {
-      let tab
       let index = activeTab.index + 1
-      for (; index < this.state.tabs.length; index++) {
-        tab = this.state.tabs[index]
-        if (tab.lvl <= activeTab.lvl) break
+      for (let t; index < this.state.tabs.length; index++) {
+        t = this.state.tabs[index]
+        if (t.lvl <= activeTab.lvl) break
       }
       return index
     }
@@ -2120,7 +2121,6 @@ function getIndexForNewTab(panel, tab) {
     } else if (activeTab.pinned) {
       return panel.startIndex
     } else {
-      if (tab) tab.openerTabId = activeTab.id
       return activeTab.index + 1
     }
   }
@@ -2130,16 +2130,26 @@ function getIndexForNewTab(panel, tab) {
     } else if (activeTab.pinned) {
       return panel.startIndex
     } else {
-      if (tab) tab.openerTabId = activeTab.id
-      let t
       let index = activeTab.index + 1
-      for (; index < this.state.tabs.length; index++) {
+      for (let t; index < this.state.tabs.length; index++) {
         t = this.state.tabs[index]
         if (t.lvl <= activeTab.lvl) break
       }
       return index
     }
   }
+}
+
+/**
+ * Find and return parent id
+ */
+function getParentForNewTab(panel) {
+  let activeTab = this.state.tabsMap[this.state.activeTabId]
+  if (!activeTab || activeTab.panelId !== panel.id || activeTab.pinned) return
+
+  if (this.state.moveNewTab === 'after') return activeTab.parentId
+  else if (this.state.moveNewTab === 'first_child') return activeTab.id
+  else if (this.state.moveNewTab === 'last_child') return activeTab.id
 }
 
 /**
@@ -2465,6 +2475,7 @@ export default {
 
   getPanelForNewTab,
   getIndexForNewTab,
+  getParentForNewTab,
 
   checkUrlRules,
   updateHighlightedTabs,
