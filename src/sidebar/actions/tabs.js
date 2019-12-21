@@ -229,6 +229,12 @@ async function loadTabsFromSessionStorage() {
       }
       t.folded = dt.folded
       oldNewMap[dt.id] = t.id
+    } else {
+      let prevTab = tabs[i - 1]
+      if (prevTab) {
+        t.parentId = prevTab.parentId
+        t.panelId = prevTab.panelId
+      }
     }
 
     this.state.tabsMap[t.id] = t
