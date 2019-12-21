@@ -1,7 +1,6 @@
 import EventBus from '../../event-bus'
 import { translate } from '../../../addon/locales/dict'
 import { DEFAULT_CTX_ID, DEFAULT_CTX, PRIVATE_CTX } from '../../../addon/defaults'
-import Actions from '../actions'
 
 const URL_WITHOUT_PROTOCOL_RE = /^(.+\.)\/?(.+\/)?\w+/
 
@@ -112,7 +111,8 @@ async function loadTabsFromGlobalStorage() {
   }
 
   this.state.tabs = tabs
-  Actions.updateTabsTree()
+  this.actions.updatePanelsTabs()
+  this.actions.updateTabsTree()
 
   // Switch to panel with active tab
   let activePanelIsTabs = activePanel.type === 'tabs' || activePanel.type === 'default'
@@ -130,9 +130,6 @@ async function loadTabsFromGlobalStorage() {
     let target = Utils.findSuccessorTab(this.state, activeTab)
     if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
   }
-
-  // Update panels
-  this.actions.updatePanelsTabs()
 }
 
 /**
@@ -229,12 +226,6 @@ async function loadTabsFromSessionStorage() {
       }
       t.folded = dt.folded
       oldNewMap[dt.id] = t.id
-    } else {
-      let prevTab = tabs[i - 1]
-      if (prevTab) {
-        t.parentId = prevTab.parentId
-        t.panelId = prevTab.panelId
-      }
     }
 
     this.state.tabsMap[t.id] = t
@@ -245,6 +236,7 @@ async function loadTabsFromSessionStorage() {
   }
 
   this.state.tabs = tabs
+  this.actions.updatePanelsTabs()
   this.actions.updateTabsTree()
 
   // Switch to panel with active tab
@@ -263,9 +255,6 @@ async function loadTabsFromSessionStorage() {
     let target = Utils.findSuccessorTab(this.state, activeTab)
     if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
   }
-
-  // Update panels
-  this.actions.updatePanelsTabs()
 
   this.state.tabs.forEach(t => this.actions.saveTabData(t))
 }
@@ -919,7 +908,7 @@ async function bookmarkTabs(tabIds) {
  * Clear all cookies of tab urls
  */
 async function clearTabsCookies(tabIds) {
-  if (!this.state.permAllUrls) return Actions.openSettings('all-urls')
+  if (!this.state.permAllUrls) return this.actions.openSettings('all-urls')
 
   for (let tabId of tabIds) {
     let tab = this.state.tabsMap[tabId]
@@ -1054,7 +1043,7 @@ async function moveTabsToNewWin(tabIds, incognito) {
  * otherwise show window-choosing menu.
  */
 async function moveTabsToWin(tabIds, window) {
-  let windowId = window ? window.id : await Actions.chooseWin()
+  let windowId = window ? window.id : await this.actions.chooseWin()
 
   // Sort
   tabIds.sort((a, b) => {
@@ -1193,7 +1182,7 @@ async function reopenTabsInCtx(tabIds, ctxId) {
   }
 
   if (this.state.tabsTree) {
-    Actions.updateTabsTree()
+    this.actions.updateTabsTree()
   }
 }
 
@@ -1301,7 +1290,7 @@ function expTabsBranch(tabId) {
   if (!panel) return
 
   tab.lastAccessed = Date.now()
-  if (tab.invisible) Actions.expTabsBranch(tab.parentId)
+  if (tab.invisible) this.actions.expTabsBranch(tab.parentId)
   for (let t of panel.tabs) {
     if (this.state.autoFoldTabs && t.id !== tabId && t.isParent && !t.folded && tab.lvl === t.lvl) {
       autoFold.push(t)
@@ -1323,7 +1312,7 @@ function expTabsBranch(tabId) {
       autoFold = autoFold.slice(0, -this.state.autoFoldTabsExcept)
     }
     for (let t of autoFold) {
-      Actions.foldTabsBranch(t.id)
+      this.actions.foldTabsBranch(t.id)
     }
   }
 
@@ -1346,8 +1335,8 @@ function expTabsBranch(tabId) {
 async function toggleBranch(tabId) {
   const rootTab = this.state.tabsMap[tabId]
   if (!rootTab) return
-  if (rootTab.folded) Actions.expTabsBranch(tabId)
-  else Actions.foldTabsBranch(tabId)
+  if (rootTab.folded) this.actions.expTabsBranch(tabId)
+  else this.actions.foldTabsBranch(tabId)
 }
 
 /**
@@ -1552,8 +1541,8 @@ async function moveDroppedNodes(dropIndex, dropParent, nodes, pin, currentPanel)
     }
 
     // If there are no moving, just update tabs tree
-    Actions.updateTabsTree(currentPanel.startIndex, currentPanel.endIndex + 1)
-    if (this.state.stateStorage === 'global') Actions.saveTabsData()
+    this.actions.updateTabsTree(currentPanel.startIndex, currentPanel.endIndex + 1)
+    if (this.state.stateStorage === 'global') this.actions.saveTabsData()
     if (this.state.stateStorage === 'session') {
       tabs.forEach(t => this.actions.saveTabData(t))
     }
@@ -1617,7 +1606,7 @@ async function recreateDroppedNodes(event, dropIndex, dropParent, nodes, pin, de
 
   // Update tabs tree if there are no tabs was deleted
   if (firstNode.type !== 'tab' || event.ctrlKey) {
-    Actions.updateTabsTree(dropIndex - 1, dropIndex + nodes.length)
+    this.actions.updateTabsTree(dropIndex - 1, dropIndex + nodes.length)
   }
 }
 
@@ -1681,8 +1670,8 @@ function flattenTabs(tabIds) {
     tab.parentId = minLvlTab.parentId
   }
 
-  Actions.updateTabsTree(ttf[0].index - 1, ttf[ttf.length - 1].index + 1)
-  if (this.state.stateStorage === 'global') Actions.saveTabsData()
+  this.actions.updateTabsTree(ttf[0].index - 1, ttf[ttf.length - 1].index + 1)
+  if (this.state.stateStorage === 'global') this.actions.saveTabsData()
   if (this.state.stateStorage === 'session') {
     ttf.forEach(t => this.actions.saveTabData(t))
   }
@@ -1750,8 +1739,8 @@ async function groupTabs(tabIds) {
       tab.folded = false
     }
   }
-  Actions.updateTabsTree(tabs[0].index - 2, tabs[tabs.length - 1].index + 1)
-  if (this.state.stateStorage === 'global') Actions.saveTabsData()
+  this.actions.updateTabsTree(tabs[0].index - 2, tabs[tabs.length - 1].index + 1)
+  if (this.state.stateStorage === 'global') this.actions.saveTabsData()
   if (this.state.stateStorage === 'session') {
     tabs.forEach(t => this.actions.saveTabData(t))
   }
@@ -2415,7 +2404,7 @@ async function _old_restoreTabsTree() {
     }
     break
   }
-  Actions.updateTabsTree()
+  this.actions.updateTabsTree()
 }
 
 //
