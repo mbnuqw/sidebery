@@ -2173,6 +2173,10 @@ async function checkUrlRules(url, tab) {
       if (!panel) break
       let index = this.actions.getIndexForNewTab(panel, tab)
 
+      if (index === undefined) {
+        index = panel.tabs.length ? panel.endIndex + 1 : panel.endIndex
+      }
+
       if (panel.newTabCtx !== 'none' && tab.cookieStoreId !== panel.newTabCtx) {
         await browser.tabs.remove(tab.id)
         this.actions.createTabInPanel(panel, tab.url)
