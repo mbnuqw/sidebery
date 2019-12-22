@@ -536,9 +536,11 @@ function onTabMoved(id, info) {
   }
 
   // Move tab in panel
+  let srcPanel
+  let destPanel
   if (!movedTab.pinned) {
-    let srcPanel = this.state.panelsMap[movedTab.panelId]
-    let destPanel = this.state.panelsMap[movedTab.destPanelId]
+    srcPanel = this.state.panelsMap[movedTab.panelId]
+    destPanel = this.state.panelsMap[movedTab.destPanelId]
     movedTab.destPanelId = undefined
     if (
       !destPanel ||
@@ -568,11 +570,19 @@ function onTabMoved(id, info) {
 
   // Calc tree levels
   if (this.state.tabsTree && !this.state.movingTabs.length) {
-    const panel = this.state.panels[this.state.panelIndex]
-    const panelOk = panel && panel.tabs
-    const startIndex = panelOk ? panel.startIndex : 0
-    const endIndex = panelOk ? panel.endIndex + 1 : -1
-    this.actions.updateTabsTree(startIndex, endIndex)
+    let a = 0
+    let b = -1
+
+    if (srcPanel && srcPanel.tabs && destPanel && destPanel.tabs) {
+      let aIndex = Math.min(srcPanel.index, destPanel.index)
+      let bIndex = Math.max(srcPanel.index, destPanel.index)
+      let aPanel = this.state.panels[aIndex]
+      let bPanel = this.state.panels[bIndex]
+      a = aPanel.startIndex
+      b = bPanel.tabs.length ? bPanel.endIndex + 1 : bPanel.endIndex
+    }
+
+    this.actions.updateTabsTree(a, b)
   }
 
   if (this.state.stateStorage === 'global' && !this.state.movingTabs.length) {
