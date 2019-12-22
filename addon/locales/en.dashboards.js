@@ -1,10 +1,10 @@
 export default {
   // --- General
-  'dashboard.lock_panel_label': { message: 'Lock panel' },
+  'dashboard.lock_panel_label': { message: 'Prevent auto-switching from this panel' },
   'dashboard.lock_panel_tooltip': { message: 'Prevent auto-switching from this panel' },
-  'dashboard.lock_tabs_label': { message: 'Lock tabs' },
+  'dashboard.lock_tabs_label': { message: 'Prevent closing tabs on this panel' },
   'dashboard.lock_tabs_tooltip': { message: 'Prevent closing tabs on this panel' },
-  'dashboard.no_empty_label': { message: 'No empty' },
+  'dashboard.no_empty_label': { message: 'Create new tab after the last one was closed' },
   'dashboard.no_empty_tooltip': { message: 'Prevent emptying of this panel' },
   'dashboard.new_tab_ctx': { message: 'Container of new tab' },
   'dashboard.move_tab_ctx': { message: 'Move tabs of selected container to this panel' },

@@ -1,12 +1,12 @@
 export default {
   // --- General
-  'dashboard.lock_panel_label': { message: 'Заблокировать панель' },
+  'dashboard.lock_panel_label': { message: 'Запретить автоматическое переключение с этой панели' },
   'dashboard.lock_panel_tooltip': {
     message: 'Запретить автоматическое переключение с этой панели',
   },
-  'dashboard.lock_tabs_label': { message: 'Заблокировать табы' },
+  'dashboard.lock_tabs_label': { message: 'Запретить закрытие вкладок на этой панели' },
   'dashboard.lock_tabs_tooltip': { message: 'Запретить закрытие вкладок на этой панели' },
-  'dashboard.no_empty_label': { message: 'Предотвращать опустошение' },
+  'dashboard.no_empty_label': { message: 'Создавать новую вкладку после закрытия последней' },
   'dashboard.no_empty_tooltip': { message: 'Предотвращать опустошение этой панели' },
   'dashboard.new_tab_ctx': { message: 'Контейнер новой вкладки' },
   'dashboard.move_tab_ctx': { message: 'Перемещать вкладки выбранного контейнера в эту панель' },

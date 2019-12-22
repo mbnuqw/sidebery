@@ -43,21 +43,18 @@
 
   toggle-field(
     label="dashboard.lock_panel_label"
-    :title="t('dashboard.lock_panel_tooltip')"
     :value="conf.lockedPanel"
     @input="togglePanelLock")
 
   toggle-field(
     v-if="isDefault || isCustom"
     label="dashboard.lock_tabs_label"
-    :title="t('dashboard.lock_tabs_tooltip')"
     :value="conf.lockedTabs"
     @input="toggleTabsLock")
 
   toggle-field(
     v-if="isDefault || isCustom"
     label="dashboard.no_empty_label"
-    :title="t('dashboard.no_empty_tooltip')"
     :value="conf.noEmpty"
     @input="togglePanelNoEmpty")
 
