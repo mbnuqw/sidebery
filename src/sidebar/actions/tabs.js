@@ -652,7 +652,7 @@ function switchTab(globaly, cycle, step, pinned) {
   if (!activeTab) return
 
   let activePanel = this.state.panels[this.state.panelIndex]
-  if (!activePanel) return
+  if (!activePanel || !activePanel.tabs) return
 
   let tab,
     index = activeTab.index,
