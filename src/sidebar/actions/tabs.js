@@ -1128,7 +1128,8 @@ async function moveTabsToThisWin(tabs, fromPrivate) {
 async function reopenTabsInCtx(tabIds, ctxId) {
   let idsMap = {}
   let panel = this.state.panels.find(p => p.moveTabCtx === ctxId)
-  let index = panel ? panel.endIndex + 1 : -1
+  let index = panel ? panel.endIndex : -1
+  if (panel && panel.tabs.length) index += 1
   if (!panel) panel = this.state.panels[this.state.panelIndex]
 
   let tabs = []
@@ -1145,9 +1146,6 @@ async function reopenTabsInCtx(tabIds, ctxId) {
   }
   tabs.sort((a, b) => a.index - b.index)
   let ids = tabs.map(t => t.id)
-
-  this.state.removingTabs = [...ids]
-  await browser.tabs.remove(ids)
 
   for (let tab of tabs) {
     let createConf = {
@@ -1184,6 +1182,9 @@ async function reopenTabsInCtx(tabIds, ctxId) {
   if (this.state.tabsTree) {
     this.actions.updateTabsTree()
   }
+
+  this.state.removingTabs = [...ids]
+  await browser.tabs.remove(ids)
 }
 
 /**
