@@ -2231,6 +2231,7 @@ function handleReopening(tabId, newCtx) {
   if (panel) {
     index = this.actions.getIndexForNewTab(panel, {})
     if (index === undefined) index = panel.endIndex
+    if (panel.tabs.length) index += 1
     panelId = panel.id
   } else {
     parent = targetTab.parentId
