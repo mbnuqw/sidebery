@@ -2,6 +2,7 @@
 .SelectInput(:data-color="color")
   .opt(
     v-for="o in opts"
+    :title="getTooltip(o)"
     :data-none="o === noneOpt"
     :data-color="o.color ? o.color : false"
     :data-active="isActive(o)"
@@ -38,6 +39,11 @@ export default {
     select(option) {
       if (option && option.value) this.$emit('input', option.value)
       else this.$emit('input', option)
+    },
+
+    getTooltip(option) {
+      if (option && option.tooltip) return option.tooltip
+      return ''
     },
   },
 }

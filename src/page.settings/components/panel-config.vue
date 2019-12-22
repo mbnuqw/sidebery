@@ -193,6 +193,7 @@ export default {
           value: container.id,
           color: container.color,
           icon: container.icon,
+          tooltip: container.name,
         })
       }
       return result
