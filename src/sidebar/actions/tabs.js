@@ -2153,51 +2153,51 @@ function getParentForNewTab(panel) {
 }
 
 /**
- * Check url rules of panels and move tab if needed
+ * Find most appropriate panel id for given url
  */
-async function checkUrlRules(url, tab) {
+function findPanelForUrl(url, excludedPanelId) {
+  if (!this.state.urlRules) return
   for (let rule of this.state.urlRules) {
-    if (tab.panelId === rule.panelId) continue
+    if (excludedPanelId === rule.panelId) continue
 
     let ok
     if (rule.value.test) ok = rule.value.test(url)
     else ok = url.indexOf(rule.value) !== -1
 
-    if (ok) {
-      if (urlRuleHistory[tab.panelId] === url) {
-        urlRuleHistory[tab.panelId] = null
-        break
-      }
-
-      let panel = this.state.panelsMap[rule.panelId]
-      if (!panel) break
-      let index = this.actions.getIndexForNewTab(panel, tab)
-
-      if (index === undefined) {
-        index = panel.tabs.length ? panel.endIndex + 1 : panel.endIndex
-      }
-
-      if (panel.newTabCtx !== 'none' && tab.cookieStoreId !== panel.newTabCtx) {
-        await browser.tabs.remove(tab.id)
-        this.actions.createTabInPanel(panel, tab.url)
-        return
-      }
-
-      if (index > tab.index) index--
-      if (index !== tab.index) {
-        tab.destPanelId = rule.panelId
-        browser.tabs.move(tab.id, { windowId: this.state.windowId, index })
-      } else {
-        tab.panelId = panel.id
-        this.actions.updatePanelsTabs()
-      }
-      urlRuleHistory[rule.panelId] = url
-
-      if (tab.active) this.actions.switchToPanel(panel.index, true)
-
-      break
-    }
+    if (ok) return rule.panelId
   }
+}
+
+/**
+ * Check url rules of panels and move tab if needed
+ */
+async function checkUrlRules(url, tab) {
+  let panelId = this.actions.findPanelForUrl(url, tab.panelId)
+  let panel = this.state.panelsMap[panelId]
+  if (!panel) return
+  let index = this.actions.getIndexForNewTab(panel, tab)
+
+  if (index === undefined) {
+    index = panel.tabs.length ? panel.endIndex + 1 : panel.endIndex
+  }
+
+  if (panel.newTabCtx !== 'none' && tab.cookieStoreId !== panel.newTabCtx) {
+    await browser.tabs.remove(tab.id)
+    this.actions.createTabInPanel(panel, tab.url)
+    return
+  }
+
+  if (index > tab.index) index--
+  if (index !== tab.index) {
+    tab.destPanelId = panelId
+    browser.tabs.move(tab.id, { windowId: this.state.windowId, index })
+  } else {
+    tab.panelId = panel.id
+    this.actions.updatePanelsTabs()
+  }
+  urlRuleHistory[panelId] = url
+
+  if (tab.active) this.actions.switchToPanel(panel.index, true)
 }
 
 function updateHighlightedTabs(delay = 250) {
@@ -2481,6 +2481,7 @@ export default {
   getIndexForNewTab,
   getParentForNewTab,
 
+  findPanelForUrl,
   checkUrlRules,
   updateHighlightedTabs,
   handleReopening,

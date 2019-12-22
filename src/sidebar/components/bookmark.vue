@@ -246,13 +246,22 @@ export default {
       }
 
       if (inNewTab) {
-        let index = State.panelsMap[DEFAULT_CTX_ID].endIndex + 1
-        browser.tabs.create({
-          index,
-          windowId: State.windowId,
-          url: Utils.normalizeUrl(url),
-          active: withFocus,
-        })
+        let panelId = Actions.findPanelForUrl(url) || DEFAULT_CTX_ID
+        let panel = State.panelsMap[panelId]
+        let conf = { windowId: State.windowId, url: Utils.normalizeUrl(url), active: withFocus }
+
+        if (!panel) return
+
+        conf.index = panel.tabs.length ? panel.endIndex + 1 : panel.endIndex
+        if (panel.newTabCtx !== 'none') conf.cookieStoreId = panel.newTabCtx
+
+        if (!State.newTabsPosition) State.newTabsPosition = {}
+        State.newTabsPosition[conf.index] = {
+          parent: -1,
+          panel: panelId,
+        }
+
+        browser.tabs.create(conf)
       } else {
         browser.tabs.update({ url: Utils.normalizeUrl(url) })
         let panel = State.panels.find(p => p.bookmarks)
