@@ -342,6 +342,7 @@ async function loadTabsFromInlineData(tabs) {
   }
 
   this.state.tabs = tabs
+  this.actions.updatePanelsTabs()
   this.actions.updateTabsTree()
 
   // Switch to panel with active tab
@@ -361,8 +362,11 @@ async function loadTabsFromInlineData(tabs) {
     if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
   }
 
-  // Update panels
-  this.actions.updatePanelsTabs()
+  if (this.state.stateStorage === 'global') this.actions.saveTabsData()
+  if (this.state.stateStorage === 'session') {
+    this.state.tabs.forEach(t => this.actions.saveTabData(t))
+    this.actions.saveGroups()
+  }
 }
 
 /**
