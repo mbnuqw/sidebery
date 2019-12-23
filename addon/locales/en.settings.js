@@ -40,7 +40,6 @@ export default {
   'settings.state_storage': { message: 'Tabs state storage type' },
   'settings.state_storage_global': { message: 'global' },
   'settings.state_storage_session': { message: 'session' },
-  // 'settings.state_storage_note': { message: 'global - fast but inaccurate in some rare cases\nsession - more accurate but slower and data may be lost with session' },
 
   // --- Context menu
   'settings.ctx_menu_title': { message: 'Context menu' },
@@ -64,7 +63,7 @@ export default {
   'settings.nav_btn_count': { message: 'Show count of tabs/bookmarks' },
   'settings.hide_empty_panels': { message: 'Hide empty panels' },
   'settings.nav_mid_click': { message: 'Middle click on panel button' },
-  'settings.nav_mid_click_rm_all': { message: 'close all tabs' },
+  'settings.nav_mid_click_rm_all': { message: 'close tabs' },
   'settings.nav_mid_click_none': { message: 'none' },
   'settings.nav_switch_panels_wheel': { message: 'Switch panels with mouse wheel' },
 
