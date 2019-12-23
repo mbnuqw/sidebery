@@ -97,8 +97,9 @@
     &:before
       background-color: var(--tabs-selected-bg)
 
-  &[data-discarded] > .lvl-wrapper
-    opacity: .5
+  &[data-discarded] > .lvl-wrapper > .fav
+  &[data-discarded] > .lvl-wrapper > .t-box
+    opacity: .56
 
 // ---
 // -- Level Wrapper
@@ -395,10 +396,9 @@
   font: var(--tabs-font)
   color: var(--tabs-fg)
   padding: 0 1px
-  transition: color .2s
   white-space: nowrap
   overflow: hidden
-  transition: transform var(--d-fast)
+  transition: color var(--d-fast)
   text-shadow: 1px 1px 0 var(--text-edge-color)
 
 .Tab:hover .title
