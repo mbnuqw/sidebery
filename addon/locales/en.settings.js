@@ -83,7 +83,7 @@ export default {
   'settings.panels_title': { message: 'Panels' },
   'settings.panel_remove_confirm_1': { message: 'Delete "' },
   'settings.panel_remove_confirm_2': {
-    message: '" panel?\nAll tabs of this panel will also be removed.',
+    message: '" panel?\nAll tabs of this panel will be moved to another panel.',
   },
   'settings.panel_icon_custom': { message: 'custom' },
   'settings.panels_create_btn': { message: 'Create panel' },

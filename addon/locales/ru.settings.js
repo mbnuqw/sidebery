@@ -85,7 +85,7 @@ export default {
   'settings.panels_title': { message: 'Панели' },
   'settings.panel_remove_confirm_1': { message: 'Удалить панель ' },
   'settings.panel_remove_confirm_2': {
-    message: ' ?\nВсе табы этой панели и их cookies будут также удалены.',
+    message: ' ?\nВсе табы этой панели будут перемещены в другую панель.',
   },
   'settings.panels_create_btn': { message: 'Создать панель' },
 
