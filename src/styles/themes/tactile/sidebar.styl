@@ -134,6 +134,46 @@
   overflow: hidden
 
 // ---
+// -- SelectFolderBar
+// -
+.SelectBookmarksFolderBar
+  box(relative)
+  size(100%)
+  background-color: var(--bg)
+  box-shadow: 0 0 0 1px var(--border-fg),
+              inset 0 1px 0 0 var(--border-flare-fg)
+
+.SelectBookmarksFolderBar h2
+  box(relative)
+  text(s: rem(21), w: 700)
+  color: var(--title-fg)
+  margin: 16px 0
+  padding: 0
+  text-align: center
+
+.SelectBookmarksFolderBar .folder-title
+  box(relative)
+  text(s: rem(16))
+  color: var(--active-fg)
+  padding: 0 8px
+  text-align: center
+
+.SelectBookmarksFolderBar .ctrls
+  box(relative, flex)
+  align-items: center
+  justify-content: center
+  padding: 0 8px 6px
+  margin: 8px 0 0
+  flex-wrap: wrap
+
+.SelectBookmarksFolderBar .ctrls > .btn
+  size(min-w: max-content)
+  text(s: rem(15))
+  padding: 5px 12px
+  margin: 4px
+  flex-grow: 1
+
+// ---
 // -- Nav bar
 // -
 .Sidebar .nav-bar

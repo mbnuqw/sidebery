@@ -150,13 +150,18 @@
 
 .SelectBookmarksFolderBar .ctrls
   box(relative, flex)
-  margin: 24px 0 0
+  align-items: center
+  justify-content: center
+  padding: 0 8px 6px
+  margin: 8px 0 0
+  flex-wrap: wrap
 
-.SelectBookmarksFolderBar .btn
-  size(min-w: 50%)
-  text(s: rem(16))
-  padding: 8px 0
-  border-radius: 0
+.SelectBookmarksFolderBar .ctrls > .btn
+  size(min-w: max-content)
+  text(s: rem(15))
+  padding: 5px 12px
+  margin: 4px
+  flex-grow: 1
 
 // ---
 // -- Nav bar
