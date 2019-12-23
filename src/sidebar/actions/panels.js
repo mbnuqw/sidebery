@@ -21,13 +21,21 @@ async function updatePanels(newPanels) {
         else this.state.panelIndex--
       }
       if (this.state.panelIndex > panel.index) this.state.panelIndex--
-      await this.actions.removeTabs(panel.tabs.map(t => t.id))
+
+      let prevPanel = this.state.panels[panel.index - 1]
+      panel.tabs.forEach(t => (t.panelId = null))
+      if (!prevPanel || !prevPanel.tabs) {
+        let nextPanel = this.state.panels.find(p => p.id !== panel.id && p.tabs)
+        if (nextPanel) panel.tabs.forEach(t => (t.panelId = nextPanel.id))
+      }
+      this.actions.updatePanelsTabs()
       this.actions.savePanelIndex()
       break
     }
   }
 
   let panels = []
+  let panelsMap = {}
   let updateNeeded = false
   let reloadNeeded = false
 
@@ -63,10 +71,11 @@ async function updatePanels(newPanels) {
     }
 
     panels.push(panel)
-    if (!this.state.panelsMap[panel.id]) this.state.panelsMap[panel.id] = panel
+    panelsMap[panel.id] = panel
   }
 
   this.state.panels = panels
+  this.state.panelsMap = panelsMap
 
   if (updateNeeded) this.actions.updatePanelsTabs()
   if (reloadNeeded) {

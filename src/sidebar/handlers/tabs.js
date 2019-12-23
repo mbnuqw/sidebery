@@ -361,7 +361,7 @@ function onTabRemoved(tabId, info, childfree) {
     this.actions.resetSelection()
   }
 
-  // Try to get removed tab and his panel
+  // Try to get removed tab and its panel
   let tab = this.state.tabsMap[tabId]
   if (!tab) return
   let creatingNewTab
