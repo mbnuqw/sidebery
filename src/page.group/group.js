@@ -14,7 +14,10 @@ let tabs = []
 let groupLen, groupParentId
 
 void (async function() {
-  let { settings } = await browser.storage.local.get({ settings: DEFAULT_SETTINGS })
+  let { settings, cssVars } = await browser.storage.local.get({
+    settings: DEFAULT_SETTINGS,
+    cssVars: {},
+  })
 
   document.body.setAttribute('data-style', settings.style || 'dark')
   document.body.setAttribute('data-layout', settings.groupLayout || 'grid')
@@ -38,7 +41,6 @@ void (async function() {
   }
 
   // Set user styles
-  let { cssVars } = await browser.storage.local.get({ cssVars: {} })
   for (let key of Object.keys(CUSTOM_CSS_VARS)) {
     if (!cssVars[key]) continue
     document.body.style.setProperty(Utils.toCSSVarName(key), cssVars[key])
