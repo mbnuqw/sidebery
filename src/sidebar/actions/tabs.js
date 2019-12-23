@@ -1582,6 +1582,12 @@ async function recreateDroppedNodes(event, dropIndex, dropParent, nodes, pin, de
     if (firstNode.type === 'tab') createConf.active = node.active
     else createConf.active = firstNode.id === node.id
 
+    if (createConf.cookieStoreId === DEFAULT_CTX_ID) {
+      createConf.discarded = true
+      createConf.title = node.title
+      createConf.active = false
+    }
+
     if (oldNewMap[node.parentId] >= 0) {
       createConf.openerTabId = oldNewMap[node.parentId]
     } else {
