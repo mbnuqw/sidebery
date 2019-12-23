@@ -25,12 +25,20 @@ function onTabCreated(tab) {
   // Get target panel and index
   let panel, index
 
+  let treeAllowed =
+    this.state.moveNewTabParent === 'first_child' ||
+    this.state.moveNewTabParent === 'last_child' ||
+    this.state.moveNewTabParent === 'none' ||
+    this.state.moveNewTab === 'first_child' ||
+    this.state.moveNewTab === 'last_child'
+
   if (this.state.newTabsPosition && this.state.newTabsPosition[tab.index]) {
     let position = this.state.newTabsPosition[tab.index]
     panel = this.state.panelsMap[position.panel]
     if (!panel) panel = this.state.panelsMap[DEFAULT_CTX_ID]
     index = tab.index
     tab.openerTabId = position.parent
+    treeAllowed = true
     delete this.state.newTabsPosition[tab.index]
   } else {
     panel = this.actions.getPanelForNewTab(tab)
@@ -47,13 +55,6 @@ function onTabCreated(tab) {
       }
     }
   }
-
-  let treeAllowed =
-    this.state.moveNewTabParent === 'first_child' ||
-    this.state.moveNewTabParent === 'last_child' ||
-    this.state.moveNewTabParent === 'none' ||
-    this.state.moveNewTab === 'first_child' ||
-    this.state.moveNewTab === 'last_child'
 
   // If new tab has wrong possition - move it
   if (!tab.pinned && tab.index !== index) {
