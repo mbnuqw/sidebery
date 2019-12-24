@@ -41,16 +41,16 @@ export default new Vue({
 
     State.instanceType = 'settings'
 
-    await Promise.all([Actions.loadSettings(), Actions.loadContainers()])
+    await Promise.all([Actions.loadSettings(), Actions.loadContainers(), Actions.loadKeybindings()])
     await Actions.loadPanels()
 
-    Actions.loadKeybindings()
     Actions.loadCSSVars()
     Actions.loadCurrentWindowInfo()
     Actions.loadPlatformInfo()
     Actions.loadBrowserInfo()
     Actions.loadPermissions(true)
     Actions.loadCtxMenu()
+    Actions.initialized()
   },
 
   methods: {

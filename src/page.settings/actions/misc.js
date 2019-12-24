@@ -64,15 +64,15 @@ async function loadPermissions(init) {
   }
 }
 
-function goToPerm(hash, permId) {
+async function goToPerm(hash, permId) {
   let scrollHighlightConf = { behavior: 'smooth', block: 'center' }
 
-  setTimeout(() => {
-    if (hash !== undefined && this.state.settingsRefs) {
-      let el = this.state.settingsRefs[permId]
-      if (el) el.scrollIntoView(scrollHighlightConf)
-    }
-  }, 250)
+  await this.actions.waitForInit()
+
+  if (hash !== undefined && this.state.settingsRefs) {
+    let el = this.state.settingsRefs[permId]
+    if (el) el.scrollIntoView(scrollHighlightConf)
+  }
 
   document.title = 'Sidebery / Settings'
   this.state.activeView = 'Settings'
@@ -166,6 +166,18 @@ function updateActiveView() {
   this.state.activeView = 'Settings'
 }
 
+async function waitForInit() {
+  return new Promise(res => {
+    if (this.state.isReady) res()
+    else this.state.readyStateResolve = res
+  })
+}
+
+function initialized() {
+  if (this.state.readyStateResolve) this.state.readyStateResolve()
+  this.state.isReady = true
+}
+
 export default {
   loadCurrentWindowInfo,
   loadPlatformInfo,
@@ -173,4 +185,6 @@ export default {
   loadPermissions,
   goToPerm,
   updateActiveView,
+  waitForInit,
+  initialized,
 }
