@@ -755,20 +755,6 @@ export default {
     },
 
     /**
-     * Open page as a child
-     */
-    async openPage(name) {
-      let url = browser.runtime.getURL(name + '.html')
-      const tab = await browser.tabs.getCurrent()
-      const conf = { url, windowId: State.windowId }
-      if (tab) {
-        conf.openerTabId = tab.id
-        conf.index = tab.index + 1
-      }
-      browser.tabs.create(conf)
-    },
-
-    /**
      * Switch to view of settings page
      *
      * @param {string} name - url hash
@@ -802,7 +788,7 @@ export default {
     },
 
     /**
-     * hm
+     * Switch layout of nav-bar.
      */
     switchNavBarLayout(value) {
       State.navBarLayout = value
@@ -813,22 +799,6 @@ export default {
         }
       }
       Actions.saveSettings()
-    },
-
-    /**
-     * Open page of theme editor
-     */
-    openThemeEditor() {
-      const url = browser.runtime.getURL('theme/theme.html')
-      browser.tabs.create({ url, windowId: State.windowId })
-    },
-
-    /**
-     * Open page of styles editor
-     */
-    openStylesEditor() {
-      const url = browser.runtime.getURL('styles/styles.html')
-      browser.tabs.create({ url, windowId: State.windowId })
     },
 
     /**
@@ -979,29 +949,6 @@ export default {
           State.permAllUrls = allowed
         })
       }
-    },
-
-    /**
-     * Toggle snapshots
-     */
-    toggleSnapshots(name) {
-      const v = !State.snapshotsTargets[name]
-      State.snapshotsTargets = { ...State.snapshotsTargets, [name]: v }
-      Actions.saveSettings()
-    },
-
-    /**
-     * Update snapshots viewer
-     */
-    async viewAllSnapshots() {
-      let url = browser.runtime.getURL('snapshots/snapshots.html')
-      const tab = await browser.tabs.getCurrent()
-      const conf = { url, windowId: State.windowId }
-      if (tab) {
-        conf.openerTabId = tab.id
-        conf.index = tab.index + 1
-      }
-      browser.tabs.create(conf)
     },
 
     /**
