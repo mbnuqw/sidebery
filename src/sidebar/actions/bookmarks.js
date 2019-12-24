@@ -354,7 +354,8 @@ async function openBookmarksInCtx(ids, ctxId) {
   let p = this.state.panels.find(p => p.moveTabCtx === ctxId)
   if (!p) p = this.state.panelsMap[DEFAULT_CTX_ID]
 
-  let index = p.endIndex + 1
+  let index = p.endIndex
+  if (p.tabs.length) index++
 
   const toOpen = []
   const walker = nodes => {
