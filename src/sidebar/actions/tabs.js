@@ -973,7 +973,7 @@ async function clearTabsCookies(tabIds) {
 /**
  * Move tabs to new window
  */
-async function moveTabsToNewWin(tabIds, incognito) {
+async function moveTabsToNewWin(tabIds, incognito = false) {
   let tabs = []
   let toMove = []
   let tabsInfo = []
