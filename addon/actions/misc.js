@@ -48,14 +48,9 @@ function setupMenuListeners() {
   browser.menus.onHidden.addListener(this.actions.onMenuHidden)
 }
 
-function resetMenuListeners() {
-  browser.menus.onHidden.removeListener(this.actions.onMenuHidden)
-}
-
 export default {
   initToolbarButton,
   loadPermissions,
   onMenuHidden,
   setupMenuListeners,
-  resetMenuListeners,
 }
