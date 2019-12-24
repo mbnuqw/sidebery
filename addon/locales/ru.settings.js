@@ -247,6 +247,11 @@ export default {
   'settings.animations': { message: 'Анимации' },
   'settings.edit_styles': { message: 'Редактировать стили' },
   'settings.edit_theme': { message: 'Редактировать тему' },
+  'settings.appearance_notes_title': { message: 'Примечания:' },
+  'settings.appearance_notes': {
+    message:
+      '- Чтобы применить цвет темы к кнопкам Sidebery в интерфейсе браузера, установите «svg.context-properties.content.enabled» в «true» на странице about:config.',
+  },
 
   // --- Snapshots
   'settings.snapshots_title': { message: 'Снепшоты' },

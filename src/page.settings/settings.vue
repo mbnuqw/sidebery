@@ -389,7 +389,7 @@
       :value="$store.state.highlightOpenBookmarks"
       @input="setOpt('highlightOpenBookmarks', $event)")
     .sub-fields
-      toggle-field.-last(
+      toggle-field(
         label="settings.activate_open_bookmark_tab"
         :inactive="!$store.state.bookmarksPanel || !$store.state.highlightOpenBookmarks"
         :value="$store.state.activateOpenBookmarkTab"
@@ -417,12 +417,15 @@
       :value="$store.state.theme"
       :opts="$store.state.themeOpts"
       @input="setOpt('theme', $event)")
-    select-field.-last(
+    select-field(
       label="settings.switch_style"
       optLabel="settings.style_"
       :value="$store.state.style"
       :opts="$store.state.styleOpts"
       @input="setOpt('style', $event)")
+    .note-field
+      .label {{t('settings.appearance_notes_title')}}
+      .note {{t('settings.appearance_notes')}}
     .ctrls
       .btn(@click="switchView('styles_editor')") {{t('settings.edit_styles')}}
 
@@ -485,7 +488,7 @@
       :value="$store.state.tabsPanelDoubleClickAction"
       :opts="$store.state.tabsPanelDoubleClickActionOpts"
       @input="setOpt('tabsPanelDoubleClickAction', $event)")
-    select-field.-last(
+    select-field(
       label="settings.tabs_panel_right_click_action"
       optLabel="settings.tabs_panel_action_"
       :value="$store.state.tabsPanelRightClickAction"

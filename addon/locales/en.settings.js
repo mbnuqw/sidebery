@@ -228,6 +228,11 @@ export default {
   'settings.animations': { message: 'Animations' },
   'settings.edit_styles': { message: 'Edit styles' },
   'settings.edit_theme': { message: 'Edit theme' },
+  'settings.appearance_notes_title': { message: 'Notes:' },
+  'settings.appearance_notes': {
+    message:
+      '- To apply theme color to Sidebery buttons in browser interface set "svg.context-properties.content.enabled" to "true" in about:config page.',
+  },
 
   // --- Snapshots
   'settings.snapshots_title': { message: 'Snapshots' },
