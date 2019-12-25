@@ -22,8 +22,6 @@
       @mouseup.right="onNavRightMouseup($event, i)")
       img(v-if="!!btn.customIcon" :src="btn.customIcon")
       svg(v-else): use(:xlink:href="'#' + btn.icon")
-      .proxy-badge
-        svg: use(xlink:href="#icon_proxy")
       .update-badge
       .ok-badge
         svg: use(xlink:href="#icon_ok")

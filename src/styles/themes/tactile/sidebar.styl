@@ -115,25 +115,6 @@
   margin-top: -1px
 
 // ---
-// -- Dashboard wrapper
-// -
-.Sidebar .dashboard-box
-  box(absolute, flex)
-  size(100%, max-h: calc(100% - 64px))
-  pos(0, 0)
-  flex-direction: column
-  z-index: 1000
-  box-shadow: 0 1px 12px 0 #00000056, 0 0 0 1px var(--border-fg)
-  background-color: var(--bg)
-
-// ---
-// -- Dashboard
-// -
-.Sidebar .dashboard
-  size(100%, same)
-  overflow: hidden
-
-// ---
 // -- SelectFolderBar
 // -
 .SelectBookmarksFolderBar
@@ -322,26 +303,7 @@
   transform: scale(0.7, 0.7)
   transition: opacity var(--d-norm), transform var(--d-norm)
 
-.Sidebar .nav-btn[data-updated]:not([data-proxified]) .update-badge
-  opacity: 1
-  transform: scale(1, 1)
-
-// ---
-// -- Proxy badge
-// -
-.Sidebar .nav-btn .proxy-badge
-  box(absolute)
-  size(10px, same)
-  pos(calc(50% + 1px), calc(50% + 1px))
-  fill: var(--nav-btn-fg)
-  opacity: 0
-  transform: scale(0.7, 0.7)
-  transition: opacity var(--d-norm), transform var(--d-norm)
-  > svg
-    box(absolute)
-    size(100%, same)
-
-.Sidebar .nav-btn[data-proxified] .proxy-badge
+.Sidebar .nav-btn[data-updated] .update-badge
   opacity: 1
   transform: scale(1, 1)
 
