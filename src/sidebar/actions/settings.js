@@ -120,12 +120,8 @@ async function openSettings(section) {
 
   if (section) url += '#' + section
   if (existedTab) {
-    if (existedTab.url === url) {
-      browser.tabs.update(existedTab.id, { active: true })
-    } else {
-      await browser.tabs.update(existedTab.id, { url, active: true })
-      browser.tabs.reload(existedTab.id)
-    }
+    if (existedTab.url === url) browser.tabs.update(existedTab.id, { active: true })
+    else await browser.tabs.update(existedTab.id, { url, active: true })
   } else {
     if (activeTab && activeTab.url === 'about:newtab') {
       await browser.tabs.update(activeTab.id, { url, active: true })
