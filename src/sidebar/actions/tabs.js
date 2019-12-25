@@ -605,7 +605,7 @@ async function removeTabs(tabIds) {
             cookieStoreId: tab.cookieStoreId,
             active: false,
           }
-          if (conf.cookieStoreId === DEFAULT_CTX_ID) {
+          if (conf.cookieStoreId === DEFAULT_CTX_ID && conf.url) {
             conf.discarded = true
             conf.title = tab.title
           }
