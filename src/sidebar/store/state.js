@@ -28,6 +28,7 @@ export default {
   recalcScrollNeeded: false,
   selected: [],
   wheelBlockTimeout: null,
+  dragMode: false,
 
   lastPanelIndex: 1,
   panelIndex: 1,

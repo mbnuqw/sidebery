@@ -280,6 +280,7 @@ export default {
       if (this.navDragEnterTimeout) clearTimeout(this.navDragEnterTimeout)
       this.navDragEnterTimeout = setTimeout(() => {
         this.navDragEnterTimeout = null
+        if (!State.dragMode) return
         if (this.nav[i].type === 'hidden') {
           State.hiddenPanelsBar = true
           return
@@ -316,27 +317,40 @@ export default {
     onPanelDrop(event, panel) {
       event.stopPropagation()
       event.preventDefault()
+
+      Actions.resetSelection()
+      State.dragMode = false
+
       if (!State.dragNodes || !State.dragNodes.length) return
+
       let firstNode = State.dragNodes[0]
       let ids = State.dragNodes.map(n => n.id)
-      if (typeof firstNode.id === 'number') {
-        State.panelIndex = panel.index
-        if (panel.newTabCtx !== 'none' && panel.newTabCtx !== firstNode.ctx) {
-          Actions.recreateDroppedNodes(
-            null,
-            panel.endIndex + 1,
-            -1,
-            State.dragNodes,
-            false,
-            panel.newTabCtx
-          )
-        } else {
-          Actions.moveDroppedNodes(panel.endIndex + 1, -1, State.dragNodes, false, panel)
+
+      if (panel.tabs) {
+        if (typeof firstNode.id === 'number') {
+          State.panelIndex = panel.index
+          let index = panel.tabs.length ? panel.endIndex + 1 : panel.endIndex
+          if (panel.newTabCtx !== 'none' && panel.newTabCtx !== firstNode.ctx) {
+            Actions.recreateDroppedNodes(null, index, -1, State.dragNodes, false, panel.newTabCtx)
+          } else {
+            Actions.moveDroppedNodes(index, -1, State.dragNodes, false, panel)
+          }
+        }
+
+        if (typeof firstNode.id === 'string') {
+          Actions.openBookmarksInCtx(ids, panel.cookieStoreId)
         }
       }
-      if (typeof firstNode.id === 'string') {
-        Actions.openBookmarksInCtx(ids, panel.cookieStoreId)
+
+      if (panel.type === 'bookmarks') {
+        Actions.dropToBookmarks(event, 0, 'unfiled_____', State.dragNodes)
+        panel.loading = 'ok'
+        setTimeout(() => {
+          panel.loading = false
+        }, 2000)
       }
+
+      State.dragNodes = null
     },
   },
 }

@@ -2,7 +2,7 @@
 .Sidebar(
   v-noise:300.g:12:af.a:0:42.s:0:9=""
   :data-hidden-panels-bar="$store.state.hiddenPanelsBar"
-  :data-drag="dragMode"
+  :data-drag="$store.state.dragMode"
   :data-pointer="pointerMode"
   :data-nav-inline="$store.state.navBarInline"
   @wheel.passive="onWheel"
@@ -84,7 +84,6 @@ export default {
 
   data() {
     return {
-      dragMode: false,
       pointerMode: 'none',
       pointerExpanding: false,
     }
@@ -224,7 +223,7 @@ export default {
      * Drag move handler
      */
     onDragMove(e) {
-      if (!this.dragMode) return
+      if (!State.dragMode) return
       if (!this.$refs.pointer) return
       if (!State.itemSlots) return
 
@@ -418,7 +417,7 @@ export default {
       EventBus.$emit('updatePanelBounds')
 
       // Turn on drag mode
-      this.dragMode = true
+      State.dragMode = true
 
       // Select dragged nodes
       if (State.dragNodes) {
@@ -534,7 +533,7 @@ export default {
      * Reset drag-and-drop values
      */
     resetDrag() {
-      this.dragMode = false
+      State.dragMode = false
       this.dropIndex = null
       this.dropParent = null
       this.pointerPos = null
