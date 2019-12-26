@@ -121,12 +121,12 @@ export default {
       let toStore = {}
       let atLeastOne = false
 
-      if (this.containers && data.containers) {
+      if (this.containers && data.containers_v4) {
         atLeastOne = true
         await this.importContainers(data, toStore)
       }
 
-      if (this.panels && data.panels && data.panels.length) {
+      if (this.panels && data.panels_v4 && data.panels_v4.length) {
         atLeastOne = true
         await this.importPanels(data, toStore)
       }
@@ -160,7 +160,7 @@ export default {
 
       if (!atLeastOne) return
 
-      browser.storage.local.set(toStore)
+      await browser.storage.local.set(toStore)
       State.importConfig = false
       browser.runtime.reload()
     },
