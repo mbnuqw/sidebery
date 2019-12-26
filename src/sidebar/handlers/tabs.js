@@ -47,7 +47,11 @@ function onTabCreated(tab) {
       tab.openerTabId = this.actions.getParentForNewTab(panel, tab)
     }
     if (index === undefined) {
-      index = tab.index
+      if (panel.moveTabCtx !== 'none') {
+        index = panel.tabs.length ? panel.endIndex + 1 : panel.endIndex
+      } else {
+        index = tab.index
+      }
       if (panel.startIndex > index || panel.endIndex + 1 < index) {
         let prevTab = this.state.tabs[tab.index - 1]
         let nextTab = this.state.tabs[tab.index + 1]
