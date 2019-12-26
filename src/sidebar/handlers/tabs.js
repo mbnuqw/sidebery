@@ -49,9 +49,12 @@ function onTabCreated(tab) {
     if (index === undefined) {
       index = tab.index
       if (panel.startIndex > index || panel.endIndex + 1 < index) {
-        panel = this.state.panels.find(p => {
-          return p.startIndex <= index && p.endIndex + 1 >= index
-        })
+        let prevTab = this.state.tabs[tab.index - 1]
+        let nextTab = this.state.tabs[tab.index + 1]
+
+        if (prevTab) panel = this.state.panelsMap[prevTab.panelId]
+        else if (nextTab) panel = this.state.panelsMap[nextTab.panelId]
+        else panel = this.state.panels.find(p => p.tabs)
       }
     }
   }

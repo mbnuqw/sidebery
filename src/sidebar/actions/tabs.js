@@ -2092,6 +2092,7 @@ function getIndexForNewTab(panel, tab) {
   if (parent && parent.pinned) {
     if (this.state.moveNewTabPin === 'start') return panel.startIndex
     if (this.state.moveNewTabPin === 'end') return endIndex
+    if (this.state.moveNewTabPin === 'none') return
   }
 
   if (parent && !parent.pinned && parent.panelId === panel.id) {
@@ -2107,6 +2108,7 @@ function getIndexForNewTab(panel, tab) {
     if (this.state.moveNewTabParent === 'first_child') return parent.index + 1
     if (this.state.moveNewTabParent === 'start') return panel.startIndex
     if (this.state.moveNewTabParent === 'end') return endIndex
+    if (this.state.moveNewTabParent === 'none') return
   }
 
   if (this.state.moveNewTab === 'start') return panel.startIndex
