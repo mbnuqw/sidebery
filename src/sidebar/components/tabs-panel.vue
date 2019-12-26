@@ -156,6 +156,8 @@ export default {
 
       e.stopPropagation()
 
+      if (State.ctxMenuNative) return
+
       let type
       if (panel.type === 'bookmarks') type = 'bookmarksPanel'
       else if (panel.type === 'default') type = 'tabsPanel'
@@ -169,7 +171,13 @@ export default {
      * Handle context menu event
      */
     onNavCtxMenu(e) {
-      if (!State.ctxMenuNative || e.ctrlKey || e.shiftKey) {
+      if (
+        !State.ctxMenuNative ||
+        e.ctrlKey ||
+        e.shiftKey ||
+        typeof State.selected[0] === 'number' ||
+        typeof State.selected[0] === 'string'
+      ) {
         e.stopPropagation()
         e.preventDefault()
         return

@@ -259,6 +259,8 @@ export default {
 
       e.stopPropagation()
 
+      if (State.ctxMenuNative) return
+
       let type
       if (panel.type === 'bookmarks') type = 'bookmarksPanel'
       else if (panel.type === 'default') type = 'tabsPanel'

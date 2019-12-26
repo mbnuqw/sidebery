@@ -52,7 +52,7 @@ export default new Vue({
     Handlers.setupWindowsListeners()
     Handlers.setupContainersListeners()
     Handlers.setupStorageListeners()
-    Handlers.setupResizeHandler()
+    Handlers.setupHandlers()
 
     if (State.theme !== 'default') Actions.initTheme()
     if (State.sidebarCSS) Actions.loadCustomCSS()
@@ -103,6 +103,6 @@ export default new Vue({
     Handlers.resetWindowsListeners()
     Handlers.resetStorageListeners()
     Handlers.resetKeybindingListeners()
-    Handlers.resetResizeHandler()
+    Handlers.resetHandlers()
   },
 })
