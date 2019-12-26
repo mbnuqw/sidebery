@@ -380,7 +380,9 @@ export default {
       if (this.dragEnterTimeout) clearTimeout(this.dragEnterTimeout)
       this.dragEnterTimeout = setTimeout(() => {
         this.dragEnterTimeout = null
-        browser.tabs.update(this.tab.id, { active: true })
+        if (State.dragNodes) {
+          browser.tabs.update(this.tab.id, { active: true })
+        }
       }, 750)
     },
 
