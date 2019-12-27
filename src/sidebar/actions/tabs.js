@@ -347,9 +347,9 @@ async function loadTabsFromInlineData(tabs) {
 
   // Switch to panel with active tab
   let activePanelIsTabs = activePanel.type === 'tabs' || activePanel.type === 'default'
-  let activePanelIsOk = activeTab.cookieStoreId === activePanel.cookieStoreId
+  let activePanelIsOk = activeTab.panelId === activePanel.id
   if (!activeTab.pinned && activePanelIsTabs && !activePanelIsOk) {
-    let panel = this.state.panelsMap[activeTab.cookieStoreId]
+    let panel = this.state.panelsMap[activeTab.panelId]
     if (panel) {
       this.state.panelIndex = panel.index
       this.state.lastPanelIndex = panel.index
@@ -977,6 +977,7 @@ async function moveTabsToNewWin(tabIds, incognito = false) {
   let tabs = []
   let toMove = []
   let tabsInfo = []
+  let activeTab
 
   // Sort
   tabIds.sort((a, b) => {
@@ -987,9 +988,11 @@ async function moveTabsToNewWin(tabIds, incognito = false) {
   for (let id of tabIds) {
     const tab = this.state.tabsMap[id]
     if (!tab) continue
+    if (toMove.includes(id)) continue
     tabs.push(tab)
     toMove.push(id)
     tabsInfo.push({ lvl: tab.lvl, panelId: tab.panelId })
+    if (tab.active) activeTab = tab
     if (tab.folded) {
       for (let i = tab.index + 1; i < this.state.tabs.length; i++) {
         let childTab = this.state.tabs[i]
@@ -997,8 +1000,15 @@ async function moveTabsToNewWin(tabIds, incognito = false) {
         tabs.push(childTab)
         toMove.push(childTab.id)
         tabsInfo.push({ lvl: childTab.lvl, panelId: childTab.panelId })
+        if (childTab.active) activeTab = childTab
       }
     }
+  }
+
+  // Update succession
+  if (activeTab) {
+    const target = Utils.findSuccessorTab(this.state, activeTab, toMove)
+    if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
   }
 
   // Open new window with tabs data in url of the first tab
