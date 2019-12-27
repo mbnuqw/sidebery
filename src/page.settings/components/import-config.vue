@@ -242,6 +242,8 @@ export default {
       let ffContainers = await browser.contextualIdentities.query({})
       let { containers_v4 } = await browser.storage.local.get({ containers_v4: {} })
 
+      data.oldNewContainersMap = {}
+
       for (let ctr of Object.values(Utils.cloneObject(data.containers_v4))) {
         let ffCtr = ffContainers.find(c => {
           return c.name === ctr.name && c.icon === ctr.icon && c.color === ctr.color
@@ -255,8 +257,10 @@ export default {
             color: ctr.color,
             icon: ctr.icon,
           })
+          data.oldNewContainersMap[ctr.id] = newCtr.cookieStoreId
           ctr.id = newCtr.cookieStoreId
         } else {
+          data.oldNewContainersMap[ctr.id] = ffCtr.cookieStoreId
           ctr.id = ffCtr.cookieStoreId
         }
 
@@ -271,6 +275,13 @@ export default {
 
       for (let panel of Utils.cloneArray(data.panels_v4)) {
         let index = panels_v4.findIndex(p => p.id === panel.id)
+
+        if (data.oldNewContainersMap && data.oldNewContainersMap[panel.newTabCtx]) {
+          panel.newTabCtx = data.oldNewContainersMap[panel.newTabCtx]
+        }
+        if (data.oldNewContainersMap && data.oldNewContainersMap[panel.moveTabCtx]) {
+          panel.moveTabCtx = data.oldNewContainersMap[panel.moveTabCtx]
+        }
 
         let DFLT
         if (panel.type === 'bookmarks') DFLT = BOOKMARKS_PANEL
