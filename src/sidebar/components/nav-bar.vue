@@ -324,11 +324,10 @@ export default {
       if (!State.dragNodes || !State.dragNodes.length) return
 
       let firstNode = State.dragNodes[0]
-      let ids = State.dragNodes.map(n => n.id)
 
       if (panel.tabs) {
+        State.panelIndex = panel.index
         if (typeof firstNode.id === 'number') {
-          State.panelIndex = panel.index
           let index = panel.tabs.length ? panel.endIndex + 1 : panel.endIndex
           if (panel.newTabCtx !== 'none' && panel.newTabCtx !== firstNode.ctx) {
             Actions.recreateDroppedNodes({}, index, -1, State.dragNodes, false, panel.newTabCtx)
@@ -338,7 +337,10 @@ export default {
         }
 
         if (typeof firstNode.id === 'string') {
-          Actions.openBookmarksInCtx(ids, panel.cookieStoreId)
+          let index = panel.tabs.length ? panel.endIndex + 1 : panel.endIndex
+          let ctx = panel.newTabCtx === 'none' ? undefined : panel.newTabCtx
+
+          Actions.recreateDroppedNodes({}, index, -1, State.dragNodes, false, ctx)
         }
       }
 

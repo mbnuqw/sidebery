@@ -1567,6 +1567,8 @@ async function recreateDroppedNodes(event, dropIndex, dropParent, nodes, pin, de
   let firstNode = nodes[0]
   let activePanel = this.state.panels[this.state.panelIndex]
 
+  if (!destCtx) destCtx = DEFAULT_CTX_ID
+
   for (let i = 0; i < nodes.length; i++) {
     let node = nodes[i]
 
