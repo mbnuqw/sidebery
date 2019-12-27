@@ -616,8 +616,8 @@ async function removeTabs(tabIds) {
     })
   }
 
+  browser.tabs.remove(toRemove)
   this.actions.checkRemovedTabs()
-  await browser.tabs.remove(toRemove)
 }
 
 /**
