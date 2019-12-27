@@ -331,7 +331,7 @@ export default {
           State.panelIndex = panel.index
           let index = panel.tabs.length ? panel.endIndex + 1 : panel.endIndex
           if (panel.newTabCtx !== 'none' && panel.newTabCtx !== firstNode.ctx) {
-            Actions.recreateDroppedNodes(null, index, -1, State.dragNodes, false, panel.newTabCtx)
+            Actions.recreateDroppedNodes({}, index, -1, State.dragNodes, false, panel.newTabCtx)
           } else {
             Actions.moveDroppedNodes(index, -1, State.dragNodes, false, panel)
           }
