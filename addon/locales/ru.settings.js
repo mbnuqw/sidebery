@@ -371,6 +371,7 @@ export default {
   'settings.ref_rm': { message: 'Will be removed, open issue if you need this feature.' },
   'settings.help_exp_data': { message: 'Экспорт' },
   'settings.help_imp_data': { message: 'Импорт' },
+  'settings.help_imp_perm': { message: 'Необходимы дополнительные разрешения' },
   'settings.export_title': { message: 'Выберете данные для экспорта' },
   'settings.import_title': { message: 'Выберете данные для импорта' },
   'settings.export_containers': { message: 'Контейнеры' },

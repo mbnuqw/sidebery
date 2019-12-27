@@ -333,6 +333,7 @@ export default {
   'settings.ref_rm': { message: 'Will be removed, open issue if you need this feature.' },
   'settings.help_exp_data': { message: 'Export' },
   'settings.help_imp_data': { message: 'Import' },
+  'settings.help_imp_perm': { message: 'Additional permissions are required' },
   'settings.export_title': { message: 'Select what to export' },
   'settings.import_title': { message: 'Select what to import' },
   'settings.export_containers': { message: 'Containers' },

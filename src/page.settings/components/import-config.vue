@@ -5,7 +5,8 @@
   toggle-field(
     label="settings.export_containers"
     v-model="containers"
-    :inactive="containersInactive")
+    :inactive="containersInactive"
+    @input="checkPermissions")
   toggle-field(
     label="settings.export_panels"
     v-model="panels"
@@ -13,7 +14,8 @@
   toggle-field(
     label="settings.export_settings"
     v-model="settings"
-    :inactive="settingsInactive")
+    :inactive="settingsInactive"
+    @input="checkPermissions")
   toggle-field(
     label="settings.export_ctx_menu"
     v-model="ctxMenu"
@@ -28,7 +30,8 @@
     :inactive="snapshotsInactive")
 
   .ctrls(:data-inactive="importInactive")
-    a.btn(@click="importData") {{t('settings.help_imp_data')}}
+    a.btn(v-if="permNeeded" @click="requestPermissions") {{t('settings.help_imp_perm')}}
+    a.btn(v-else @click="importData") {{t('settings.help_imp_data')}}
 </template>
 
 <script>
@@ -59,6 +62,10 @@ export default {
       ctxMenu: false,
       styles: false,
       snapshots: false,
+      permNeeded: false,
+      permWebData: false,
+      permTabHide: false,
+      permWebReqBlock: false,
     }
   },
 
@@ -106,6 +113,8 @@ export default {
     if (!this.ctxMenuInactive) this.ctxMenu = true
     if (!this.stylesInactive) this.styles = true
     if (!this.snapshotsInactive) this.snapshots = true
+
+    this.checkPermissions()
   },
 
   methods: {
@@ -163,6 +172,70 @@ export default {
       await browser.storage.local.set(toStore)
       State.importConfig = false
       browser.runtime.reload()
+    },
+
+    checkPermissions() {
+      let webData = false
+      let webReqBlock = false
+      let tabsHide = false
+      this.permWebReqBlock = false
+      this.permWebData = false
+      this.permTabHide = false
+      this.permNeeded = false
+
+      if (this.containers && State.importConfig.containers_v4) {
+        for (let ctr of Object.values(State.importConfig.containers_v4)) {
+          if (ctr.proxified) webData = true
+          if (ctr.includeHostsActive) webData = true
+          if (ctr.excludeHostsActive) webData = true
+          if (ctr.userAgentActive) {
+            webData = true
+            webReqBlock = true
+          }
+        }
+      }
+
+      if (this.settings && State.importConfig.settings) {
+        if (State.importConfig.settings.hideInact) tabsHide = true
+        if (State.importConfig.settings.hideFoldedTabs) tabsHide = true
+      }
+
+      if (webReqBlock && !State.permWebRequestBlocking) {
+        this.permWebReqBlock = true
+        this.permWebData = true
+        this.permNeeded = true
+      }
+      if (webData && !State.permAllUrls) {
+        this.permWebData = true
+        this.permNeeded = true
+      }
+      if (tabsHide && !State.permTabHide) {
+        this.permTabHide = true
+        this.permNeeded = true
+      }
+    },
+
+    requestPermissions() {
+      const request = { origins: [], permissions: [] }
+      if (this.permWebData) request.origins.push('<all_urls>')
+      if (this.permWebReqBlock) request.permissions.push('webRequest', 'webRequestBlocking')
+      if (this.permTabHide) request.permissions.push('tabHide')
+      browser.permissions.request(request).then(allowed => {
+        browser.runtime.sendMessage({ action: 'loadPermissions' })
+        if (this.permWebData) {
+          State.permAllUrls = allowed
+          this.permWebData = !allowed
+        }
+        if (this.permWebReqBlock) {
+          State.permWebRequestBlocking = allowed
+          this.permWebReqBlock = !allowed
+        }
+        if (this.permTabHide) {
+          State.permTabHide = allowed
+          this.permTabHide = !allowed
+        }
+        this.permNeeded = !allowed
+      })
     },
 
     async importContainers(data, storage) {
