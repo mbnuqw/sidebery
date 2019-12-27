@@ -142,9 +142,7 @@ export default {
 
       if (this.settings && data.settings) {
         atLeastOne = true
-        if (data.settings) {
-          toStore.settings = Utils.cloneObject(data.settings)
-        }
+        toStore.settings = Utils.cloneObject(data.settings)
       }
 
       if (this.ctxMenu) {
@@ -162,7 +160,7 @@ export default {
         if (data.groupCSS) toStore.groupCSS = data.groupCSS
       }
 
-      if (this.snapshots && toStore.snapshots_v4) {
+      if (this.snapshots && data.snapshots_v4) {
         atLeastOne = true
         toStore.snapshots_v4 = Utils.cloneArray(data.snapshots_v4)
       }
