@@ -6,26 +6,6 @@
   margin: 0
   border-top-left-radius: 3px
   border-bottom-left-radius: 3px
-  &:before
-    content: ''
-    box(absolute)
-    pos(0, r: 0)
-    size(100vw, 100%)
-    background-color: var(--tabs-selected-bg)
-    z-index: -1
-    opacity: 0
-    transform: scale(0, 0)
-    transition: opacity var(--d-fast),
-                z-index var(--d-fast),
-                transform 0s var(--d-fast)
-
-  &[data-selected]:before
-    opacity: 1
-    z-index: 0
-    transform: scale(1, 1)
-    transition: opacity var(--d-fast),
-                z-index var(--d-fast),
-                transform 0s 0s
 
 // ---
 // -- Body
@@ -42,12 +22,16 @@
     box(absolute)
     pos(0, r: 0)
     size(100vw, 100%)
+    transition: background-color var(--d-fast)
 
-.Bookmark:not([is-selected]) > .body:hover:before
+.Bookmark > .body:hover:before
   background-color: var(--bookmarks-node-bg-hover)
 
-.Bookmark:not([is-selected]) > .body:active:before
+.Bookmark > .body:active:before
   background-color: var(--bookmarks-node-bg-active)
+
+.Bookmark[data-selected] > .body:before
+  background-color: var(--tabs-selected-bg)
 
 // ---
 // -- Drag layer
