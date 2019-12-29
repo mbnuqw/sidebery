@@ -45,7 +45,6 @@ async function loadTabsFromGlobalStorage() {
         b.isOpen = true
       }
     }
-    if (t.pinned && !this.state.panelsMap[t.panelId]) t.panelId = DEFAULT_CTX_ID
     this.state.tabsMap[t.id] = t
     if (t.active) activeTab = t
     if (t.active) this.state.activeTabId = t.id
@@ -109,6 +108,8 @@ async function loadTabsFromGlobalStorage() {
     tab.folded = tabData.folded
     idsMap[tabData.id] = tab.id
     prevTab = tab
+
+    if (tab.pinned && !this.state.panelsMap[tab.panelId]) tab.panelId = DEFAULT_CTX_ID
   }
 
   this.state.tabs = tabs
@@ -175,8 +176,6 @@ async function loadTabsFromSessionStorage() {
       }
     }
 
-    if (t.pinned && !this.state.panelsMap[t.panelId]) t.panelId = DEFAULT_CTX_ID
-
     if (dt) {
       panel = this.state.panelsMap[dt.panelId]
 
@@ -236,6 +235,8 @@ async function loadTabsFromSessionStorage() {
       activeTab = t
       this.state.activeTabId = t.id
     }
+
+    if (t.pinned && !this.state.panelsMap[t.panelId]) t.panelId = DEFAULT_CTX_ID
   }
 
   this.state.tabs = tabs
