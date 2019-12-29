@@ -45,6 +45,7 @@ async function loadTabsFromGlobalStorage() {
         b.isOpen = true
       }
     }
+    if (t.pinned && !this.state.panelsMap[t.panelId]) t.panelId = DEFAULT_CTX_ID
     this.state.tabsMap[t.id] = t
     if (t.active) activeTab = t
     if (t.active) this.state.activeTabId = t.id
@@ -173,6 +174,8 @@ async function loadTabsFromSessionStorage() {
         b.isOpen = true
       }
     }
+
+    if (t.pinned && !this.state.panelsMap[t.panelId]) t.panelId = DEFAULT_CTX_ID
 
     if (dt) {
       panel = this.state.panelsMap[dt.panelId]
