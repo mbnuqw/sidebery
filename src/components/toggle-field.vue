@@ -6,7 +6,6 @@
   .note(v-if="note") {{note}}
 </template>
 
-
 <script>
 import ToggleInput from './toggle-input'
 

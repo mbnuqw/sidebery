@@ -56,7 +56,7 @@
     size(16px, same)
     pos(calc(50% - 8px), calc(50% - 8px))
     opacity: .8
-    fill: var(--panel-fg, var(--ctx-menu-fg))
+    fill: var(--container-fg, var(--ctx-menu-fg))
   &[data-separator]
     size(0px, min-w: 0px, max-w: 0px)
     &:before
@@ -86,7 +86,7 @@
   > span
     box(relative)
     overflow: hidden
-    color: var(--panel-fg, var(--ctx-menu-fg))
+    color: var(--container-fg, var(--ctx-menu-fg))
     flex-shrink: 0
     &:last-of-type
       size(100%)

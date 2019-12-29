@@ -1,13 +1,22 @@
-import Vue from 'vue'
-import { mapGetters } from 'vuex'
-import { initMsgHandling } from '../event-bus'
-import Sidebar from './sidebar.vue'
+import EventBus, { initMsgHandling } from '../event-bus'
 import Dict from '../mixins/dict'
 import { initActionsMixin } from '../mixins/act'
 import Store from './store'
 import State from './store/state'
-import Actions from './actions'
-import Handlers from './handlers'
+import Sidebar from './sidebar.vue'
+import Actions, { injectInActions } from './actions'
+import Handlers, { injectInHandlers } from './handlers'
+
+const GLOB_CTX = {
+  getters: Store.getters,
+  state: State,
+  actions: Actions,
+  handlers: Handlers,
+  eventBus: EventBus,
+}
+
+injectInActions(GLOB_CTX)
+injectInHandlers(GLOB_CTX)
 
 if (!State.tabsMap) State.tabsMap = []
 Vue.mixin(Dict)
@@ -28,10 +37,8 @@ export default new Vue({
   },
 
   computed: {
-    ...mapGetters(['pinnedTabs']),
-
     pinnedTabsPosition() {
-      if (!this.pinnedTabs.length) return 'none'
+      if (!Store.getters.pinnedTabs.length) return 'none'
       return State.pinnedTabsPosition
     },
   },
@@ -40,39 +47,43 @@ export default new Vue({
     State.instanceType = 'sidebar'
 
     Actions.loadPlatformInfo()
+    await Promise.all([Actions.loadWindowInfo(), Actions.loadSettings(), Actions.loadContainers()])
 
-    await Actions.loadWindowInfo()
     Handlers.setupWindowsListeners()
-
-    await Actions.loadSettings()
+    Handlers.setupContainersListeners()
     Handlers.setupStorageListeners()
-    Handlers.setupResizeHandler()
+    Handlers.setupHandlers()
 
     if (State.theme !== 'default') Actions.initTheme()
+    if (State.bgNoise) Actions.applyNoiseBg()
     if (State.sidebarCSS) Actions.loadCustomCSS()
 
-    await Actions.loadPanelIndex()
     await Actions.loadPanels()
-    Handlers.setupContainersListeners()
 
-    if (State.bookmarksPanel && State.panels[State.panelIndex].bookmarks) {
-      await Actions.loadBookmarks()
+    if (State.bookmarksPanel) {
+      if (State.panels[State.panelIndex].bookmarks) {
+        await Actions.loadBookmarks()
+      }
+      Handlers.setupBookmarksListeners()
     }
-    Handlers.setupBookmarksListeners()
 
-    await Actions.loadTabs()
+    if (State.stateStorage === 'global') {
+      await Actions.loadTabsFromGlobalStorage()
+    }
+    if (State.stateStorage === 'session') {
+      await Actions.loadTabsFromSessionStorage()
+    }
     Handlers.setupTabsListeners()
 
     Actions.loadKeybindings()
     Handlers.setupKeybindingListeners()
 
-    await Actions.loadCtxMenu()
-    await Actions.loadCSSVars()
-    Actions.scrollToActiveTab()
+    Actions.loadCtxMenu(), Actions.loadCSSVars(), Actions.scrollToActiveTab()
     Actions.loadFavicons()
     Actions.loadPermissions(true)
     Actions.updateTabsVisability()
-    Actions.saveTabsTree()
+    if (State.stateStorage === 'global') Actions.saveTabsData()
+    if (State.stateStorage === 'session') Actions.saveGroups()
 
     Actions.connectToBG()
     Actions.updateActiveGroupPage()
@@ -93,6 +104,6 @@ export default new Vue({
     Handlers.resetWindowsListeners()
     Handlers.resetStorageListeners()
     Handlers.resetKeybindingListeners()
-    Handlers.resetResizeHandler()
+    Handlers.resetHandlers()
   },
 })

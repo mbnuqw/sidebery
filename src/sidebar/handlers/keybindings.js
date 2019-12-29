@@ -1,4 +1,4 @@
-import { DEFAULT_CTX_ID } from '../../defaults'
+import { DEFAULT_CTX_ID } from '../../../addon/defaults'
 import EventBus from '../../event-bus'
 import Handlers from '../handlers'
 
@@ -8,48 +8,33 @@ import Handlers from '../handlers'
 function onCmd(name) {
   if (!this.state.windowFocused) return
 
-  switch (name) {
-  case 'next_panel':
-    this.handlers.onKeyNextPanel()
-    break
-  case 'prev_panel':
-    this.handlers.onKeyPrevPanel()
-    break
-  case 'new_tab_on_panel':
-    this.handlers.onKeyNewTabInPanel()
-    break
-  case 'new_tab_in_group':
-    this.handlers.onKeyNewTabInGroup()
-    break
-  case 'rm_tab_on_panel':
-    this.handlers.onKeyRmSelection()
-    break
-  case 'activate':
-    this.handlers.onKeyActivate()
-    break
-  case 'reset_selection':
+  if (name === 'next_panel') this.handlers.onKeyNextPanel()
+  else if (name === 'prev_panel') this.handlers.onKeyPrevPanel()
+  else if (name === 'new_tab_on_panel') this.handlers.onKeyNewTabInPanel()
+  else if (name === 'new_tab_in_group') this.handlers.onKeyNewTabAfter()
+  else if (name === 'new_tab_as_first_child') this.handlers.onKeyNewTabAsFirstChild()
+  else if (name === 'new_tab_as_last_child') this.handlers.onKeyNewTabAsLastChild()
+  else if (name === 'rm_tab_on_panel') this.handlers.onKeyRmSelection()
+  else if (name === 'activate') this.handlers.onKeyActivate()
+  else if (name === 'reset_selection') {
     this.actions.resetSelection()
     this.actions.closeCtxMenu()
-    break
-  case 'select_all':
-    this.handlers.onKeySelectAll()
-    break
-  case 'up':
-    this.handlers.onKeySelect(-1)
-    break
-  case 'down':
-    this.handlers.onKeySelect(1)
-    break
-  case 'up_shift':
-    this.handlers.onKeySelectExpand(-1)
-    break
-  case 'down_shift':
-    this.handlers.onKeySelectExpand(1)
-    break
-  case 'menu':
-    this.handlers.onKeyMenu()
-    break
-  }
+  } else if (name === 'select_all') this.handlers.onKeySelectAll()
+  else if (name === 'up') this.handlers.onKeySelect(-1)
+  else if (name === 'down') this.handlers.onKeySelect(1)
+  else if (name === 'up_shift') this.handlers.onKeySelectExpand(-1)
+  else if (name === 'down_shift') this.handlers.onKeySelectExpand(1)
+  else if (name === 'menu') this.handlers.onKeyMenu()
+  else if (name === 'fold_branch') this.handlers.onKeyFoldBranch()
+  else if (name === 'expand_branch') this.handlers.onKeyExpandBranch()
+  else if (name === 'fold_inact_branches') this.handlers.onKeyFoldInactiveBranches()
+  else if (name === 'activate_prev_active_tab') this.handlers.onKeyActivatePrevActTab()
+  else if (name === 'activate_panel_prev_active_tab') this.handlers.onKeyActivatePanelPrevActTab()
+  else if (name === 'move_tab_to_active') this.handlers.onKeyMoveTabsToAct()
+  else if (name === 'tabs_indent') this.handlers.onKeyTabsIndent()
+  else if (name === 'tabs_outdent') this.handlers.onKeyTabsOutdent()
+  else if (name === 'move_tabs_up') this.handlers.onKeyMoveTabsUp()
+  else if (name === 'move_tabs_down') this.handlers.onKeyMoveTabsDown()
 }
 
 /**
@@ -137,51 +122,40 @@ function onKeyActivate() {
  */
 function onKeyNewTabInPanel() {
   let panel = this.state.panels[this.state.lastPanelIndex]
-  if (panel.cookieStoreId) {
-    this.actions.createTab(panel.cookieStoreId)
-  }
+  if (!panel) return
+  this.actions.createTabInPanel(panel)
 }
 
 /**
- * New tab in group
+ * New tab after active
  */
-function onKeyNewTabInGroup() {
-  const panel = this.state.panels[this.state.panelIndex]
-  const tabs = this.state.tabs
-  if (!panel || !panel.tabs) return
+function onKeyNewTabAfter() {
+  let activeTab = this.state.tabs.find(t => t.active)
+  if (!activeTab) return
 
-  // Find active/selected tab
-  let activeTab
-  if (this.state.selected.length > 0) {
-    const lastIndex = this.state.selected.length - 1
-    activeTab = this.state.tabsMap[this.state.selected[lastIndex]]
-  } else {
-    activeTab = panel.tabs.find(t => t.active)
+  let index = activeTab.index + 1
+  for (let t; index < this.state.tabs.length; index++) {
+    t = this.state.tabs[index]
+    if (t.lvl <= activeTab.lvl) break
   }
 
-  // Get index and parentId for new tab
-  let index, parentId
-  if (!activeTab) {
-    index = panel.tabs.length ? panel.endIndex + 1 : panel.startIndex
-  } else {
-    index = activeTab.index + 1
-    if (activeTab.isParent && !activeTab.folded) {
-      parentId = activeTab.id
-    } else {
-      parentId = activeTab.parentId
-      while (tabs[index] && tabs[index].lvl > activeTab.lvl) {
-        index++
-      }
-    }
-    if (parentId < 0) parentId = undefined
+  if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
+  this.state.newTabsPosition[activeTab.index + 1] = {
+    panel: activeTab.panelId,
+    parent: activeTab.parentId,
   }
 
-  browser.tabs.create({
+  let conf = {
     index,
-    cookieStoreId: panel.cookieStoreId,
+    cookieStoreId: activeTab.cookieStoreId,
     windowId: this.state.windowId,
-    openerTabId: parentId,
-  })
+  }
+
+  if (activeTab.parentId > -1) {
+    conf.openerTabId = activeTab.parentId
+  }
+
+  browser.tabs.create(conf)
 }
 
 /**
@@ -273,7 +247,9 @@ function onKeySelectExpand(dir) {
       this.selEndIndex = this.selEndIndex + dir
     }
     if (this.selEndIndex < 0) this.selEndIndex = 0
-    if (this.selEndIndex >= this.state.itemSlots.length) this.selEndIndex = this.state.itemSlots.length - 1
+    if (this.selEndIndex >= this.state.itemSlots.length) {
+      this.selEndIndex = this.state.itemSlots.length - 1
+    }
 
     let minIndex = Math.min(this.selStartIndex, this.selEndIndex)
     let maxIndex = Math.max(this.selStartIndex, this.selEndIndex)
@@ -361,7 +337,8 @@ function onKeyRmSelection() {
 function onKeyNextPanel() {
   if (this.state.hideEmptyPanels) {
     // Check next panel
-    let panel, i = this.state.panelIndex
+    let panel
+    let i = this.state.panelIndex
     if (this.state.panelIndex < this.state.panels.length) {
       for (i = this.state.panelIndex + 1; i < this.state.panels.length; i++) {
         panel = this.state.panels[i]
@@ -381,7 +358,6 @@ function onKeyNextPanel() {
     }
   }
 
-
   this.actions.switchPanel(1)
 }
 
@@ -397,6 +373,342 @@ function onKeyPrevPanel() {
   }
 
   this.actions.switchPanel(-1)
+}
+
+function onKeyFoldBranch() {
+  let selected = [...this.state.selected]
+  if (this.state.selected.length) selected = [...this.state.selected]
+  else selected = [this.state.activeTabId]
+
+  let firstItem = selected[0]
+  if (typeof firstItem === 'number') {
+    for (let tabId of selected) {
+      let tab = this.state.tabsMap[tabId]
+      if (!tab || !tab.isParent || tab.folded) continue
+      this.actions.foldTabsBranch(tabId)
+    }
+  }
+  if (typeof firstItem === 'string') {
+    for (let bookmarkId of selected) {
+      let bookmark = this.state.bookmarksMap[bookmarkId]
+      if (!bookmark || !bookmark.expanded) continue
+      this.actions.foldBookmark(bookmarkId)
+    }
+  }
+}
+
+function onKeyExpandBranch() {
+  let selected = [...this.state.selected]
+  if (this.state.selected.length) selected = [...this.state.selected]
+  else selected = [this.state.activeTabId]
+
+  let firstItem = selected[0]
+  if (typeof firstItem === 'number') {
+    for (let tabId of selected) {
+      let tab = this.state.tabsMap[tabId]
+      if (!tab || !tab.isParent || !tab.folded) continue
+      this.actions.expTabsBranch(tabId)
+    }
+  }
+  if (typeof firstItem === 'string') {
+    for (let bookmarkId of selected) {
+      let bookmark = this.state.bookmarksMap[bookmarkId]
+      if (!bookmark || bookmark.expanded) continue
+      this.actions.expandBookmark(bookmarkId)
+    }
+  }
+}
+
+function onKeyFoldInactiveBranches() {
+  let activePanel = this.state.panels[this.state.panelIndex]
+  if (!activePanel || !activePanel.tabs) return
+
+  this.actions.foldAllInactiveBranches(activePanel.tabs)
+}
+
+function onKeyActivatePrevActTab() {
+  if (!this.state.actTabs || !this.state.actTabs.length) return
+  let tabId = this.state.actTabs[this.state.actTabs.length - 1]
+  browser.tabs.update(tabId, { active: true })
+}
+
+function onKeyActivatePanelPrevActTab() {
+  let panel = this.state.panels[this.state.panelIndex]
+  if (!panel || !panel.tabs || !panel.actTabs) return
+
+  let tabId
+  for (let t, i = panel.actTabs.length; i--; ) {
+    t = panel.actTabs[i]
+    if (t !== this.state.activeTabId) tabId = t
+  }
+
+  browser.tabs.update(tabId, { active: true })
+}
+
+function onKeyMoveTabsToAct() {
+  if (!this.state.selected.length) return
+  if (typeof this.state.selected[0] !== 'number') return
+
+  let meh
+  let tabs = this.state.selected
+    .map(id => {
+      if (id === this.state.activeTabId) meh = true
+      let tab = this.state.tabsMap[id]
+      return {
+        ...Utils.cloneObject(tab),
+        type: 'tab',
+        ctx: tab.cookieStoreId,
+        windowId: this.state.windowId,
+        panel: this.state.panelIndex,
+        incognito: this.state.private,
+      }
+    })
+    .sort((a, b) => a.index - b.index)
+  if (meh) return
+
+  let activeTab = this.state.tabsMap[this.state.activeTabId]
+  if (!activeTab || activeTab.pinned) return
+
+  this.actions.dropToTabs({}, activeTab.index + 1, activeTab.id, tabs, false)
+}
+
+function onKeyTabsIndent() {
+  let selected = [...this.state.selected]
+  if (this.state.selected.length) selected = [...this.state.selected]
+  else selected = [this.state.activeTabId]
+
+  let align = []
+
+  for (let id of selected) {
+    let tab = this.state.tabsMap[id]
+    if (!tab) continue
+
+    let parentTab
+    for (let t, i = tab.index; i--; ) {
+      t = this.state.tabs[i]
+      if (!t || t.panelId !== tab.panelId) continue
+      if (t.lvl < tab.lvl) break
+      if (t.lvl === tab.lvl) {
+        parentTab = t
+        break
+      }
+    }
+    if (!parentTab) continue
+    if (selected.includes(parentTab.id)) {
+      align.push([tab, parentTab])
+      continue
+    }
+
+    tab.parentId = parentTab.id
+  }
+
+  align.forEach(([a, b]) => (a.parentId = b.parentId))
+
+  this.actions.updateTabsTree()
+  if (this.state.stateStorage === 'global') this.actions.saveTabsData()
+  if (this.state.stateStorage === 'session') {
+    selected.forEach(id => this.actions.saveTabData(id))
+  }
+}
+
+function onKeyTabsOutdent() {
+  let selected = [...this.state.selected]
+  if (this.state.selected.length) selected = [...this.state.selected]
+  else selected = [this.state.activeTabId]
+
+  for (let id of selected) {
+    let tab = this.state.tabsMap[id]
+    if (!tab) continue
+    if (tab.parentId === -1) continue
+
+    let parentTab
+    for (let t, i = tab.index; i--; ) {
+      t = this.state.tabs[i]
+      if (!t) continue
+      if (t.lvl < tab.lvl) {
+        parentTab = t
+        break
+      }
+    }
+    if (!parentTab) continue
+    if (selected.includes(parentTab.id)) continue
+
+    tab.parentId = parentTab.parentId
+  }
+
+  this.actions.updateTabsTree()
+  if (this.state.stateStorage === 'global') this.actions.saveTabsData()
+  if (this.state.stateStorage === 'session') {
+    selected.forEach(id => this.actions.saveTabData(id))
+  }
+}
+
+function onKeyMoveTabsUp() {
+  let selected = [...this.state.selected]
+  if (this.state.selected.length) {
+    selected = [...this.state.selected]
+    this._preserveSelection = true
+  } else {
+    selected = [this.state.activeTabId]
+  }
+
+  let toMove = []
+
+  for (let id of selected) {
+    let tab = this.state.tabsMap[id]
+    if (!tab) continue
+
+    toMove.push(tab)
+
+    if (tab.isParent) {
+      for (let t, i = tab.index + 1; i < this.state.tabs.length; i++) {
+        t = this.state.tabs[i]
+        if (t.lvl <= tab.lvl) break
+        if (!selected.includes(t.id)) toMove.push(t)
+      }
+    }
+  }
+
+  toMove = toMove.sort((a, b) => a.index - b.index)
+
+  let firstTab = toMove[0]
+  if (firstTab.index === 0) return
+  let panel = this.state.panelsMap[firstTab.panelId]
+  if (panel && panel.startIndex === firstTab.index) return
+
+  for (let tab of toMove) {
+    if (panel) panel.tabs.splice(tab.index - panel.startIndex, 1)
+    this.state.tabs.splice(tab.index, 1)
+    tab.index--
+    this.state.tabs.splice(tab.index, 0, tab)
+    if (panel) panel.tabs.splice(tab.index - panel.startIndex, 0, tab)
+
+    browser.tabs.move(tab.id, { index: tab.index })
+  }
+
+  for (let i = 0; i < this.state.tabs.length; i++) {
+    this.state.tabs[i].index = i
+  }
+
+  this.actions.updateTabsTree()
+  if (this.state.stateStorage === 'global') this.actions.saveTabsData()
+  if (this.state.stateStorage === 'session') {
+    toMove.forEach(t => this.actions.saveTabData(t))
+  }
+
+  if (this._preserveSelectionTimeout) {
+    clearTimeout(this._preserveSelectionTimeout)
+  }
+  this._preserveSelectionTimeout = setTimeout(() => {
+    this._preserveSelectionTimeout = null
+    this._preserveSelection = false
+  }, 256)
+}
+
+function onKeyMoveTabsDown() {
+  let selected = [...this.state.selected]
+  if (this.state.selected.length) {
+    selected = [...this.state.selected]
+    this._preserveSelection = true
+  } else {
+    selected = [this.state.activeTabId]
+  }
+
+  let toMove = []
+
+  for (let id of selected) {
+    let tab = this.state.tabsMap[id]
+    if (!tab) continue
+
+    toMove.push(tab)
+
+    if (tab.isParent) {
+      for (let t, i = tab.index + 1; i < this.state.tabs.length; i++) {
+        t = this.state.tabs[i]
+        if (t.lvl <= tab.lvl) break
+        if (!selected.includes(t.id)) toMove.push(t)
+      }
+    }
+  }
+
+  toMove = toMove.sort((a, b) => a.index - b.index)
+
+  let lastTab = toMove[toMove.length - 1]
+  if (lastTab.index === this.state.tabs.length) return
+  let panel = this.state.panelsMap[lastTab.panelId]
+  if (panel && panel.endIndex === lastTab.index) return
+
+  for (let tab, i = toMove.length; i--; ) {
+    tab = toMove[i]
+
+    if (panel) panel.tabs.splice(tab.index - panel.startIndex, 1)
+    this.state.tabs.splice(tab.index, 1)
+    tab.index++
+    this.state.tabs.splice(tab.index, 0, tab)
+    if (panel) panel.tabs.splice(tab.index - panel.startIndex, 0, tab)
+
+    browser.tabs.move(tab.id, { index: tab.index })
+  }
+
+  for (let i = 0; i < this.state.tabs.length; i++) {
+    this.state.tabs[i].index = i
+  }
+
+  this.actions.updateTabsTree()
+  if (this.state.stateStorage === 'global') this.actions.saveTabsData()
+  if (this.state.stateStorage === 'session') {
+    toMove.forEach(t => this.actions.saveTabData(t))
+  }
+
+  if (this._preserveSelectionTimeout) {
+    clearTimeout(this._preserveSelectionTimeout)
+  }
+  this._preserveSelectionTimeout = setTimeout(() => {
+    this._preserveSelectionTimeout = null
+    this._preserveSelection = false
+  }, 256)
+}
+
+function onKeyNewTabAsFirstChild() {
+  let activeTab = this.state.tabs.find(t => t.active)
+  if (!activeTab) return
+
+  if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
+  this.state.newTabsPosition[activeTab.index + 1] = {
+    panel: activeTab.panelId,
+    parent: activeTab.id,
+  }
+
+  browser.tabs.create({
+    index: activeTab.index + 1,
+    cookieStoreId: activeTab.cookieStoreId,
+    windowId: this.state.windowId,
+    openerTabId: activeTab.id,
+  })
+}
+
+function onKeyNewTabAsLastChild() {
+  let activeTab = this.state.tabs.find(t => t.active)
+  if (!activeTab) return
+
+  let index = activeTab.index + 1
+  for (let t; index < this.state.tabs.length; index++) {
+    t = this.state.tabs[index]
+    if (t.lvl <= activeTab.lvl) break
+  }
+
+  if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
+  this.state.newTabsPosition[activeTab.index + 1] = {
+    panel: activeTab.panelId,
+    parent: activeTab.id,
+  }
+
+  browser.tabs.create({
+    index,
+    cookieStoreId: activeTab.cookieStoreId,
+    windowId: this.state.windowId,
+    openerTabId: activeTab.id,
+  })
 }
 
 /**
@@ -417,7 +729,7 @@ export default {
   onCmd,
   onKeyActivate,
   onKeyNewTabInPanel,
-  onKeyNewTabInGroup,
+  onKeyNewTabAfter,
   onKeySelect,
   onKeySelectExpand,
   onKeySelectAll,
@@ -425,6 +737,18 @@ export default {
   onKeyRmSelection,
   onKeyNextPanel,
   onKeyPrevPanel,
+  onKeyFoldBranch,
+  onKeyExpandBranch,
+  onKeyFoldInactiveBranches,
+  onKeyActivatePrevActTab,
+  onKeyActivatePanelPrevActTab,
+  onKeyMoveTabsToAct,
+  onKeyTabsIndent,
+  onKeyTabsOutdent,
+  onKeyMoveTabsUp,
+  onKeyMoveTabsDown,
+  onKeyNewTabAsFirstChild,
+  onKeyNewTabAsLastChild,
   setupKeybindingListeners,
   resetKeybindingListeners,
 }

@@ -17,6 +17,8 @@
   grid-gap: 12px
   padding: 0 16px
   background-color: var(--bg)
+  background-image: var(--bg-img)
+  background-size: var(--bg-size)
   &:before
     content: ''
     box(absolute)
@@ -73,6 +75,8 @@
   overflow-y: auto
   overflow-x: hidden
   background-attachment: local
+  background-image: var(--bg-img)
+  background-size: var(--bg-size)
   &[data-empty]:after
     content: '...'
     box(absolute)
@@ -141,7 +145,7 @@
   color: var(--info-fg)
 
 .Snapshots .snapshot-card .ctx-tabs-count
-  color: var(--panel-fg, var(--info-fg))
+  color: var(--container-fg, var(--info-fg))
 
 // ---
 // -- Snapshot
@@ -151,13 +155,15 @@
   size(70%, 100%)
   flex-flow: column
 
-.Snapshots .windows
+.Snapshots .snapshot-content
   box(relative, flex)
   flex: 1
   flex-flow: column
   align-items: center
   overflow-y: auto
   background-attachment: local
+  background-image: var(--bg-img)
+  background-size: var(--bg-size)
   &:before
     content: ''
     box(absolute)
@@ -165,14 +171,62 @@
     size(100%, 1px)
     background-color: var(--border-flare-fg)
 
+.Snapshots .snapshot-content > h2
+  box(relative)
+  size(100%)
+  text(s: rem(32), w: 700)
+  color: var(--title-fg)
+  text-align: center
+  margin: 16px 0 8px
+
+.Snapshots .containers
+  box(relative, flex)
+  size(calc(100% - 32px), max-w: 580px)
+  padding: 0 16px
+  flex-flow: column
+  align-items: center
+  grid-gap: 8px 0
+
+.Snapshots .container
+  box(relative, flex)
+  size(100%)
+  align-items: center
+
+.Snapshots .container-icon
+  box(relative)
+  size(16px, same)
+  > img
+  > svg
+    box(absolute)
+    size(100%, same)
+    fill: var(--container-fg)
+
+.Snapshots .container-name
+  box(relative)
+  text(s: rem(18))
+  color: var(--label-fg)
+  margin: 0 8px
+
+.Snapshots .container-ctrls
+  box(relative, flex)
+  grid-gap: 0 8px
+  margin-left: auto
+
+.Snapshots .windows
+  box(relative, flex)
+  size(calc(100% - 32px), max-w: 580px)
+  padding: 0 16px
+  flex: 1
+  flex-flow: column
+  grid-gap: 16px 0
+
 .Snapshots .window
-  size(calc(100% - 32px), max-w: 640px)
-  padding: 12px 8px 8px
+  size(100%)
   &:last-of-type
     padding-bottom: 32px
 
 .Snapshots .name
-  text(s: rem(28))
+  text(s: rem(24))
   padding: 8px 0
   margin-right: auto
   text-align: center
@@ -193,6 +247,36 @@
     opaicty: .7
   &:active
     opaicty: .5
+
+.Snapshots .panels
+  box(flex)
+  flex-flow: column
+
+.Snapshots .panel
+  box(relative, flex)
+  flex-flow: column
+  padding: 3px 8px
+
+.Snapshots .panel-info
+  box(relative, flex)
+  size(h: 32px)
+  align-items: center
+  margin-top: 2px
+
+.Snapshots .panel-icon
+  box(relative)
+  size(16px, same)
+  > img
+  > svg
+    box(absolute)
+    size(100%, same)
+    fill: var(--container-fg)
+
+.Snapshots .panel-name
+  box(relative)
+  text(s: rem(18))
+  color: var(--label-fg)
+  margin: 0 8px
 
 .Snapshots .tabs
   box(flex)
@@ -234,13 +318,20 @@ for i in 1..12
     margin-left: (10px * i)
 
 .Snapshots .tab > .icon
-  box(absolute)
+  box(absolute, flex)
   size(16px, same)
   pos(calc(50% - 8px), 8px)
+  justify-content: center
+  align-items: center
+  transform: translateZ(0)
+  > .hm
+    box(relative)
+    text(s: 14px, w: 700)
+    color: var(--inactive-fg)
   > svg.ctr
     box(absolute)
     size(100%, same)
-    fill: var(--panel-fg)
+    fill: var(--container-fg)
   > svg.pin
     box(absolute)
     pos(b: -3px, r: -3px)

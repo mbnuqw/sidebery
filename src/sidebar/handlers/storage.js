@@ -10,8 +10,11 @@ function onChangeStorage(changes, type) {
   if (changes.cssVars) {
     this.actions.applyCSSVars(changes.cssVars.newValue)
   }
-  if (changes.panels && !this.state.private) {
-    this.actions.updatePanels(changes.panels.newValue)
+  if (changes.containers_v4 && !this.state.private) {
+    this.actions.updateContainers(changes.containers_v4.newValue)
+  }
+  if (changes.panels_v4 && !this.state.private) {
+    this.actions.updatePanels(changes.panels_v4.newValue)
   }
   if (changes.tabsMenu) {
     this.state.tabsMenu = changes.tabsMenu.newValue

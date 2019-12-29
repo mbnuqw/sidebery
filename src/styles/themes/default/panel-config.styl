@@ -7,6 +7,8 @@
   overflow-y: auto
   padding: 32px 32px 0 32px
   background-attachment: local
+  background-image: var(--bg-img)
+  background-size: var(--bg-size)
   &:after
     content: ''
     box(relative)
@@ -24,3 +26,31 @@
 .PanelConfig .field
   box(relative)
   padding: 0 0 16px
+
+.PanelConfig .label
+  size(max-w: 70%)
+
+.PanelConfig .TextInput
+  line-height: 1.5
+
+.PanelConfig .TextField.custom-icon .TextInput
+  margin-left: 32px
+  flex-grow: 1
+
+.PanelConfig .TextField.custom-icon img
+  box(relative)
+  size(16px, same)
+  margin: 0 0 0 16px
+
+.PanelConfig .TextField.custom-icon .btn
+  text(s: rem(14))
+  padding: 2px 8px
+  margin-left: 8px
+
+.PanelConfig .TextField.custom-icon .note
+  margin-top: 0
+
+.PanelConfig .ctrls[data-inactive]
+  opacity: .3
+  > .btn
+    cursor: default

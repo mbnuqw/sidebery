@@ -85,11 +85,13 @@
 // -- Note
 // -
 .ToggleField .note
+.SelectField .note
+.TextField .note
   box(relative)
   text(s: rem(13)) 
   size(100%)
   margin-top: -8px
-  padding: 0 0 8px 16px
+  padding: 0 0 12px 16px
   white-space: pre-wrap
   color: var(--info-fg)
   -moz-user-select: text
@@ -107,13 +109,16 @@
   grid-gap: 0px 8px
   cursor: pointer
 
+.SelectInput
+  grid-gap: 0px 11px
+
 // ---
 // -- Options
 // -
 .ToggleInput .opt
 .SelectInput .opt
   box(relative)
-  text(s: rem(15))
+  text(s: rem(16))
   color: var(--inactive-fg)
   transform: translateZ(0)
   transition: color var(--d-fast)
@@ -126,7 +131,7 @@
     box(relative, block)
     size(16px, same)
     padding: 4px
-    fill: var(--panel-fg)
+    fill: var(--container-fg)
     border-radius: 3px
     transition: opacity var(--d-fast)
   &:hover > svg
@@ -231,7 +236,7 @@
 // -
 .NumField .label
   box(relative, flex)
-  text(s: rem(15))
+  text(s: rem(16))
   justify-content: space-between
   align-items: center
   color: var(--label-fg)
@@ -255,7 +260,7 @@
 .NumField .text-input
   box(relative)
   size(100%)
-  text(s: rem(15))
+  text(s: rem(16))
   color: var(--true-fg)
   margin: 0 16px 0 0
   transform: opacity var(--d-fast)
@@ -400,7 +405,7 @@
 .StyleField .color-input
   box(relative)
   size(100%)
-  text(s: rem(15))
+  text(s: rem(16))
   color: var(--label-fg)
   margin: 0 16px 0 0
   transform: opacity var(--d-fast)
@@ -414,7 +419,7 @@
 .StyleField .text-input
   box(relative)
   size(100%)
-  text(s: rem(15))
+  text(s: rem(16))
   color: var(--label-fg)
   margin: 0 16px 0 0
   transform: opacity var(--d-fast)

@@ -5,7 +5,11 @@
   @mousedown="onMouseDown"
   @mouseup.right="onRightMouseUp"
   @dblclick="onDoubleClick")
-  pinned-dock(v-if="$store.state.pinnedTabsPosition === 'panel'" :ctx="storeId")
+  pinned-dock(
+    v-if="$store.state.pinnedTabsPosition === 'panel'"
+    :panel-type="panel.type"
+    :panel-id="panel.id"
+    :ctx="storeId")
   scroll-box(ref="scrollBox")
     .container
       transition-group(name="tab" tag="div"): tab(
@@ -15,13 +19,18 @@
         :key="t.id"
         :child-count="getChildrenCount(i)"
         :tab="t")
+  //- .dbg.
+  //-   ID: {{panel.id}}
+  //-   Type: {{panel.type}}
+  //-   CID: {{panel.cookieStoreId}}
+  //-   Tabs count: {{panel.tabs.length}}
+  //-   Start index: {{panel.startIndex}}
+  //-   End index: {{panel.endIndex}}
 </template>
 
-
 <script>
-import Utils from '../../utils'
 import EventBus from '../../event-bus'
-import { PRE_SCROLL } from '../../defaults'
+import { PRE_SCROLL } from '../../../addon/defaults'
 import State from '../store/state'
 import Actions from '../actions'
 import ScrollBox from './scroll-box'
@@ -42,6 +51,7 @@ export default {
     },
     index: Number,
     storeId: String,
+    panel: Object,
   },
 
   data() {
@@ -113,7 +123,7 @@ export default {
 
       if (e.button === 1) {
         e.preventDefault()
-        this.createTab()
+        Actions.createTabInPanel(this.panel)
       }
 
       if (e.button === 2) {
@@ -146,10 +156,12 @@ export default {
 
       e.stopPropagation()
 
+      if (State.ctxMenuNative) return
+
       let type
       if (panel.type === 'bookmarks') type = 'bookmarksPanel'
       else if (panel.type === 'default') type = 'tabsPanel'
-      else if (panel.type === 'ctx') type = 'tabsPanel'
+      else if (panel.type === 'tabs') type = 'tabsPanel'
 
       State.selected = [panel]
       Actions.openCtxMenu(type, e.clientX, e.clientY)
@@ -162,7 +174,9 @@ export default {
       if (
         !State.ctxMenuNative ||
         e.ctrlKey ||
-        e.shiftKey
+        e.shiftKey ||
+        typeof State.selected[0] === 'number' ||
+        typeof State.selected[0] === 'string'
       ) {
         e.stopPropagation()
         e.preventDefault()
@@ -178,7 +192,7 @@ export default {
       let type
       if (panel.type === 'bookmarks') type = 'bookmarksPanel'
       else if (panel.type === 'default') type = 'tabsPanel'
-      else if (panel.type === 'ctx') type = 'tabsPanel'
+      else if (panel.type === 'tabs') type = 'tabsPanel'
       if (!State.selected.length) State.selected = [panel]
 
       Actions.openCtxMenu(type)
@@ -187,7 +201,7 @@ export default {
     onDoubleClick() {
       if (State.tabsPanelLeftClickAction !== 'none') return
       const da = State.tabsPanelDoubleClickAction
-      if (da === 'tab') return this.createTab()
+      if (da === 'tab') return Actions.createTabInPanel(this.panel)
       if (da === 'collapse') {
         let panel = State.panels[this.index]
         if (panel) return Actions.foldAllInactiveBranches(panel.tabs)
@@ -236,8 +250,10 @@ export default {
       State.panelLeftOffset = b.left
       State.panelScrollEl = this.getScrollEl()
 
-      if (!this.$refs.tabs) return
-      if (!this.$refs.tabs.length) return
+      if (!this.$refs.tabs || !this.$refs.tabs.length) {
+        State.itemSlots = []
+        return
+      }
 
       // probe tabs heights
       const compStyle = getComputedStyle(this.$el)
@@ -296,13 +312,6 @@ export default {
     isDragged(id) {
       if (!this.drag) return false
       return this.drag.id === id && this.drag.dragged
-    },
-
-    /**
-     * Create new tab
-     */
-    createTab() {
-      Actions.createTab(this.storeId)
     },
   },
 }

@@ -1,32 +1,32 @@
 <template lang="pug">
-.BEditor(v-noise:300.g:12:af.a:0:42.s:0:9="")
-  .field.-title
-    text-input.input(
-      ref="title"
-      v-model="title"
-      :or="t(titlePlaceholder)"
-      :tabindex="tabindex"
-      @keydown="onTitleKD")
-  .field.-url(v-if="isBookmark")
-    text-input.input(
-      ref="url"
-      v-model="url"
-      :or="t('bookmarks_editor.url_placeholder')"
-      :tabindex="tabindex"
-      :line="true"
-      @keydown="onUrlKD")
-  
-  .ctrls
-    .btn(@click="onOk") {{t(okBtnLabel)}}
-    .btn.-warn(@click="onCancel") {{t('btn.cancel')}}
+.BEditor(@click="$store.state.bookmarkEditor = false")
+  .editor-panel(@click.stop="")
+    .field.-title
+      text-input.input(
+        ref="title"
+        v-model="title"
+        :or="t(titlePlaceholder)"
+        :tabindex="tabindex"
+        @keydown="onTitleKD")
+    .field.-url(v-if="isBookmark")
+      text-input.input(
+        ref="url"
+        v-model="url"
+        :or="t('bookmarks_editor.url_placeholder')"
+        :tabindex="tabindex"
+        :line="true"
+        @keydown="onUrlKD")
+    
+    .ctrls
+      .btn(@click="onOk") {{t(okBtnLabel)}}
+      .btn.-warn(@click="onCancel") {{t('btn.cancel')}}
 </template>
-
 
 <script>
 import TextInput from '../../components/text-input'
 import State from '../store/state'
 
-const URL_RE = /^(http:\/\/|https:\/\/)[a-z0-9]+([-.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/
+const URL_RE = /^(https?:\/\/.+|about:.+)/
 
 export default {
   components: {
@@ -185,12 +185,13 @@ export default {
      * Create new bookmark node
      */
     createNode() {
+      let index = State.bookmarkEditorTarget.index || 0
       browser.bookmarks.create({
         parentId: this.path[this.path.length - 1].id,
         title: this.title,
         type: this.type,
         url: this.url,
-        index: 0,
+        index,
       })
 
       this.tabindex = '-1'

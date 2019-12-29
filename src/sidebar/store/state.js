@@ -1,9 +1,8 @@
-import Utils from '../../utils'
-import { DEFAULT_SETTINGS, SETTINGS_OPTIONS } from '../../defaults'
-import { DEFAULT_TABS_MENU } from '../../defaults'
-import { DEFAULT_BOOKMARKS_MENU } from '../../defaults'
-import { DEFAULT_TABS_PANEL_MENU } from '../../defaults'
-import { DEFAULT_BOOKMARKS_PANEL_MENU } from '../../defaults'
+import { DEFAULT_SETTINGS, SETTINGS_OPTIONS } from '../../../addon/defaults'
+import { DEFAULT_TABS_MENU } from '../../../addon/defaults'
+import { DEFAULT_BOOKMARKS_MENU } from '../../../addon/defaults'
+import { DEFAULT_TABS_PANEL_MENU } from '../../../addon/defaults'
+import { BOOKMARKS_PANEL_MENU } from '../../../addon/defaults'
 
 export default {
   upgrading: false,
@@ -21,7 +20,7 @@ export default {
   tabsMenu: Utils.cloneArray(DEFAULT_TABS_MENU),
   bookmarksMenu: Utils.cloneArray(DEFAULT_BOOKMARKS_MENU),
   tabsPanelMenu: Utils.cloneArray(DEFAULT_TABS_PANEL_MENU),
-  bookmarksPanelMenu: Utils.cloneArray(DEFAULT_BOOKMARKS_PANEL_MENU),
+  bookmarksPanelMenu: Utils.cloneArray(BOOKMARKS_PANEL_MENU),
 
   ctxMenu: null,
   winChoosing: false,
@@ -29,13 +28,15 @@ export default {
   recalcScrollNeeded: false,
   selected: [],
   wheelBlockTimeout: null,
+  dragMode: false,
 
   lastPanelIndex: 1,
   panelIndex: 1,
 
-  containers: [],
+  containers: {},
   panels: [],
   tabs: [],
+  groupTabs: {},
 
   bookmarks: [],
   bookmarksCount: 0,
@@ -49,7 +50,13 @@ export default {
   keybindings: [],
   permAllUrls: false,
   permTabHide: false,
+  permClipboardWrite: false,
 
   favicons: [],
   favUrls: {},
+
+  confirm: null,
+  selectBookmarkFolder: null,
+
+  notifications: [],
 }

@@ -3,6 +3,38 @@
   "ExtDesc": { "message": "Управление табами и закладками в боковой панели." },
   "ActionTitle": { "message": "Открыть Sidebery" },
 
+  "KbOpenSidebarPanel": { "message": "Открыть/Закрыть панель" },
+  "KbNextPanel": { "message": "Переключиться на следующую панель" },
+  "KbPrevPanel": { "message": "Переключиться на предыдущую панель" },
+  "KbOpenNewTabInCurrPanel": { "message": "Открыть новый таб в активной панели" },
+  "KbOpenNewTabAfter": { "message": "Открыть новый таб после активной вкладки" },
+  "KbOpenNewTabAsFirstChild": { "message": "Открыть новый дочерний таб (в начале ветви)" },
+  "KbOpenNewTabAsLastChild": { "message": "Открыть новый дочерний таб (в конце ветви)" },
+  "KbRm": { "message": "Удалить выделенные элементы или активный таб" },
+  "KbSelectAll": { "message": "Выделить все" },
+  "KbUp": { "message": "Вверх" },
+  "KbDown": { "message": "Вниз" },
+  "KbUpShift": { "message": "Вверх с выделением" },
+  "KbDownShift": { "message": "Вниз с выделением" },
+  "KbActivate": { "message": "Активировать выделенное" },
+  "KbMenu": { "message": "Открыть меню" },
+  "KbResetSelection": { "message": "Сбросить выделение" },
+  "KbFoldBranch": { "message": "Свернуть выделенную ветвь" },
+  "KbExpandBranch": { "message": "Развернуть выделенную ветвь" },
+  "KbFoldInactBranches": { "message": "Свернуть неактивные ветви табов" },
+  "KbActPrevActTab": { "message": "Активировать предыдущую активную вкладку" },
+  "KbActPanelPrevActTab": {
+    "message": "Активировать предыдущую активную вкладку на активной панели"
+  },
+  "KbMoveTabToAct": { "message": "Вложить выделенные табы в активную вкладку" },
+  "KbTabsIndent": { "message": "Увеличить уровень вкладки" },
+  "KbTabsOutdent": { "message": "Уменьшить уровень вкладки" },
+  "KbMoveTabsUp": { "message": "Переместить вкладки вверх" },
+  "KbMoveTabsDown": { "message": "Переместить вкладки вниз" },
+
+  "proxy_popup.title_prefix": { "message": "Прокси контейнера \"" },
+  "proxy_popup.title_postfix": { "message": "\"" },
+
   "upgrading": { "message": "Обновление..." },
   "unhandled_url": { "message": "Неподдерживаемый URL" },
   "copy": { "message": "Скопировать" }

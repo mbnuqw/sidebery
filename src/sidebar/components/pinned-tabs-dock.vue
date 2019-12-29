@@ -1,6 +1,5 @@
 <template lang="pug">
 .PinnedDock(
-  v-noise:300.g:12:af.a:0:42.s:0:9=""
   tabindex="-1"
   :data-empty="pinnedTabs.length === 0"
   :data-drag-pointed="dragPointed"
@@ -18,7 +17,6 @@
   .to-the-end(v-if="pinnedTabs.length" @dragleave.stop="" @dragenter.stop="")
 </template>
 
-
 <script>
 import State from '../store/state'
 import Actions from '../actions'
@@ -31,6 +29,8 @@ export default {
 
   props: {
     ctx: String,
+    panelType: String,
+    panelId: String,
   },
 
   data() {
@@ -42,9 +42,11 @@ export default {
 
   computed: {
     pinnedTabs() {
-      let pinned = this.$store.getters.pinnedTabs
-      if (this.ctx) return pinned.filter(t => t.cookieStoreId === this.ctx)
-      else return pinned
+      if (State.pinnedTabsPosition === 'panel') {
+        return this.$store.getters.pinnedTabs.filter(t => t.panelId === this.panelId)
+      } else {
+        return this.$store.getters.pinnedTabs
+      }
     },
   },
 
@@ -63,7 +65,7 @@ export default {
         }
       }
     },
-  
+
     onDragEnter(e) {
       if (e.srcElement === this.$el) this.dragPointed = true
     },
@@ -79,7 +81,8 @@ export default {
     onDrop(e) {
       // Get drop index
       let dropIndex = 0
-      if (this.dragPointed === true) dropIndex = this.pinnedTabs[this.pinnedTabs.length - 1].index + 1
+      if (this.dragPointed === true)
+        dropIndex = this.pinnedTabs[this.pinnedTabs.length - 1].index + 1
       else if (this.pointedTabIndex > -1) dropIndex = this.pointedTabIndex
 
       Actions.dropToTabs(e, dropIndex, -1, State.dragNodes, true)
@@ -89,22 +92,6 @@ export default {
       this.pointedTabIndex = -1
       this.dragPointed = false
       State.dragNodes = null
-    },
-
-    async removeTab(index, tab) {
-      // Activate another pinned tab or first tab of panel
-      if (tab.active) {
-        let toActivate = this.pinnedTabs[index + 1] || this.pinnedTabs[index - 1]
-        if (!toActivate) {
-          let panel = State.panels[State.panelIndex]
-          if (!panel || !panel.tabs) panel = State.panels[State.lastPanelIndex]
-          if (panel && panel.tabs) toActivate = panel.tabs[0]
-        }
-
-        if (toActivate) await browser.tabs.update(toActivate.id, { active: true })
-      }
-
-      browser.tabs.remove(tab.id)
     },
   },
 }

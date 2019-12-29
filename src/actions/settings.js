@@ -1,29 +1,33 @@
-import Logs from '../logs'
-import { DEFAULT_SETTINGS } from '../defaults'
+import { DEFAULT_SETTINGS } from '../../addon/defaults'
 
 /**
  * Try to load settings from local storage.
  */
 async function loadSettings() {
-  let { settings } = await browser.storage.local.get({
-    settings: DEFAULT_SETTINGS
-  })
-
-  // Check version
-  if (!settings.version && this.actions.startUpgrading) {
-    await this.actions.startUpgrading()
-    let ans = await browser.storage.local.get({ settings: DEFAULT_SETTINGS })
-    settings = ans.settings
-  }
-
+  let { settings } = await browser.storage.local.get({ settings: {} })
   settings.version = browser.runtime.getManifest().version
 
-  for (const key of Object.keys(settings)) {
+  for (let key of Object.keys(settings)) {
     if (settings[key] === undefined) continue
     this.state[key] = settings[key]
   }
+}
 
-  Logs.push('[INFO] Settings loaded')
+/**
+ * Save settings to local storage
+ */
+async function saveSettings() {
+  let settings = {}
+  for (const key of Object.keys(DEFAULT_SETTINGS)) {
+    if (this.state[key] == null || this.state[key] == undefined) continue
+    if (this.state[key] instanceof Object) {
+      if (Array.isArray(this.state[key])) settings[key] = Utils.cloneArray(this.state[key])
+      else settings[key] = Utils.cloneObject(this.state[key])
+    } else {
+      settings[key] = this.state[key]
+    }
+  }
+  await browser.storage.local.set({ settings: settings })
 }
 
 /**
@@ -43,5 +47,6 @@ function updateFontSize() {
 
 export default {
   loadSettings,
+  saveSettings,
   updateFontSize,
 }

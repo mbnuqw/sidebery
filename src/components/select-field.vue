@@ -13,15 +13,15 @@
       :color="color"
       :icon="icon"
       @input="select")
+  .note(v-if="note") {{note}}
 </template>
-
 
 <script>
 import SelectInput from './select-input'
 
 export default {
   components: {
-    SelectInput
+    SelectInput,
   },
 
   props: {
@@ -34,6 +34,7 @@ export default {
     color: String,
     icon: String,
     noneOpt: String,
+    note: String,
   },
 
   data() {
@@ -44,6 +45,8 @@ export default {
     switchOption(e) {
       if (this.inactive) return
       let i = this.opts.indexOf(this.value)
+      if (i === -1) i = this.opts.findIndex(o => o.value === this.value)
+      if (i === -1) return
       if (e.button === 0) i++
       if (e.button === 2) i--
       if (i >= this.opts.length) i = 0

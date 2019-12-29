@@ -8,13 +8,13 @@
   },
   "author": "mbnuqw",
   "name": "__MSG_ExtName__",
-  "version": "3.1.1",
+  "version": "4.0.0",
   "default_locale": "en",
   "description": "__MSG_ExtDesc__",
   "homepage_url": "https://github.com/mbnuqw/sidebery",
   "icons": {
-    "48": "./assets/logo-df-48.png",
-    "96": "./assets/logo-df-96.png"
+    "48": "./assets/logo.svg",
+    "96": "./assets/logo.svg"
   },
 
   "options_ui": {
@@ -31,21 +31,35 @@
     "bookmarks",
     "sessions",
     "menus",
-    "menus.overrideContext"
+    "menus.overrideContext",
+    "search"
   ],
   
   "optional_permissions": [
     "<all_urls>",
-    "tabHide"
+    "tabHide",
+    "clipboardWrite",
+    "webRequest",
+    "webRequestBlocking"
   ],
 
   "sidebar_action": {
     "default_icon": {
-      "16": "./assets/logo-g-16.png",
-      "32": "./assets/logo-g-32.png"
+      "16": "./assets/logo-native.svg",
+      "32": "./assets/logo-native.svg"
     },
     "default_title": "Sidebery",
     "default_panel": "./sidebar/index.html"
+  },
+
+  "page_action": {
+    "browser_style": false,
+    "default_icon": {
+      "16": "./assets/proxy-native.svg",
+      "32": "./assets/proxy-native.svg"
+    },
+    "default_title": "Sidebery proxy off",
+    "default_popup": "./proxy/proxy.html"
   },
 
   "commands": {
@@ -55,106 +69,142 @@
         "mac": "MacCtrl+E",
         "windows": "F1"
       },
-      "description": "open_sidebar_panel"
+      "description": "__MSG_KbOpenSidebarPanel__"
     },
     "next_panel": {
       "suggested_key": {
         "default": "Alt+Period"
       },
-      "description": "next_panel"
+      "description": "__MSG_KbNextPanel__"
     },
     "prev_panel": {
       "suggested_key": {
         "default": "Alt+Comma"
       },
-      "description": "prev_panel"
+      "description": "__MSG_KbPrevPanel__"
     },
     "new_tab_on_panel": {
       "suggested_key": {
         "default": "Ctrl+Space",
         "mac": "MacCtrl+Space"
       },
-      "description": "open_new_tab_in_curr_panel"
+      "description": "__MSG_KbOpenNewTabInCurrPanel__"
     },
     "new_tab_in_group": {
       "suggested_key": {
         "default": "Ctrl+Shift+Space",
         "mac": "MacCtrl+Shift+Space"
       },
-      "description": "open_new_tab_after"
+      "description": "__MSG_KbOpenNewTabAfter__"
+    },
+    "new_tab_as_first_child": {
+      "description": "__MSG_KbOpenNewTabAsFirstChild__"
+    },
+    "new_tab_as_last_child": {
+      "description": "__MSG_KbOpenNewTabAsLastChild__"
     },
     "rm_tab_on_panel": {
       "suggested_key": {
         "default": "Ctrl+Delete",
         "mac": "MacCtrl+W"
       },
-      "description": "close_tab"
+      "description": "__MSG_KbRm__"
     },
     "select_all": {
       "suggested_key": {
         "default": "Alt+G"
       },
-      "description": "select_all"
+      "description": "__MSG_KbSelectAll__"
     },
     "up": {
       "suggested_key": {
         "default": "Alt+Up"
       },
-      "description": "up"
+      "description": "__MSG_KbUp__"
     },
     "down": {
       "suggested_key": {
         "default": "Alt+Down"
       },
-      "description": "down"
+      "description": "__MSG_KbDown__"
     },
     "up_shift": {
       "suggested_key": {
         "default": "Alt+Shift+Up"
       },
-      "description": "up_shift"
+      "description": "__MSG_KbUpShift__"
     },
     "down_shift": {
       "suggested_key": {
         "default": "Alt+Shift+Down"
       },
-      "description": "down_shift"
+      "description": "__MSG_KbDownShift__"
     },
     "activate": {
       "suggested_key": {
         "default": "Alt+Space"
       },
-      "description": "activate"
+      "description": "__MSG_KbActivate__"
     },
     "menu": {
       "suggested_key": {
         "default": "Alt+M"
       },
-      "description": "menu"
+      "description": "__MSG_KbMenu__"
     },
     "reset_selection": {
       "suggested_key": {
         "default": "Alt+R"
       },
-      "description": "reset_selection"
+      "description": "__MSG_KbResetSelection__"
+    },
+    "fold_branch": {
+      "description": "__MSG_KbFoldBranch__"
+    },
+    "expand_branch": {
+      "description": "__MSG_KbExpandBranch__"
+    },
+    "fold_inact_branches": {
+      "description": "__MSG_KbFoldInactBranches__"
+    },
+    "activate_prev_active_tab": {
+      "description": "__MSG_KbActPrevActTab__"
+    },
+    "activate_panel_prev_active_tab": {
+      "description": "__MSG_KbActPanelPrevActTab__"
+    },
+    "move_tab_to_active": {
+      "description": "__MSG_KbMoveTabToAct__"
+    },
+    "tabs_indent": {
+      "description": "__MSG_KbTabsIndent__"
+    },
+    "tabs_outdent": {
+      "description": "__MSG_KbTabsOutdent__"
+    },
+    "move_tabs_up": {
+      "description": "__MSG_KbMoveTabsUp__"
+    },
+    "move_tabs_down": {
+      "description": "__MSG_KbMoveTabsDown__"
     }
   },
 
   "browser_action": {
     "default_icon": {
-      "16": "./assets/logo-g-16.png",
-      "32": "./assets/logo-g-32.png"
+      "16": "./assets/logo-native.svg",
+      "32": "./assets/logo-native.svg"
     },
     "default_title": "__MSG_ActionTitle__",
     "theme_icons": [
       {
-        "light": "./assets/logo-gl-16.png",
-        "dark": "./assets/logo-gd-16.png",
+        "light": "./assets/logo-native-light.svg",
+        "dark": "./assets/logo-native-dark.svg",
         "size": 16
       },
       {
-        "light": "./assets/logo-gl-32.png",
-        "dark": "./assets/logo-gd-32.png",
+        "light": "./assets/logo-native-light.svg",
+        "dark": "./assets/logo-native-dark.svg",
         "size": 32
       }
     ]

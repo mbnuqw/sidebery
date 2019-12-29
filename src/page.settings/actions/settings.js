@@ -1,6 +1,5 @@
-import { DEFAULT_SETTINGS } from '../../defaults'
+import { DEFAULT_SETTINGS } from '../../../addon/defaults'
 import CommonActions from '../../actions/settings'
-import Actions from './index'
 
 /**
  * Set setting value
@@ -23,19 +22,6 @@ function resetSettings() {
 }
 
 /**
- * Save settings to local storage
- */
-async function saveSettings() {
-  let settings = {}
-  for (const key of Object.keys(DEFAULT_SETTINGS)) {
-    if (this.state[key] == null || this.state[key] == undefined) continue
-    if (this.state[key] instanceof Object) settings[key] = JSON.parse(JSON.stringify(this.state[key]))
-    else settings[key] = this.state[key]
-  }
-  await browser.storage.local.set({ settings })
-}
-
-/**
  * Update settings
  */
 function updateSettings(settings) {
@@ -50,7 +36,7 @@ function updateSettings(settings) {
   }
 
   if (theme) {
-    Actions.initTheme()
+    this.actions.initTheme()
   }
 }
 
@@ -59,6 +45,5 @@ export default {
 
   setSetting,
   resetSettings,
-  saveSettings,
   updateSettings,
 }

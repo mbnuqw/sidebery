@@ -1,8 +1,7 @@
-import Store from './store'
-import State from './store/state'
 import SettingsActions from './actions/settings'
 import KeybindingsActions from './actions/keybindings'
 import FaviconsActions from './actions/favicons'
+import ContainersActions from './actions/containers'
 import PanelsActions from './actions/panels'
 import TabsActions from './actions/tabs'
 import BookmarksActions from './actions/bookmarks'
@@ -14,6 +13,7 @@ const Actions = {
   ...SettingsActions,
   ...KeybindingsActions,
   ...FaviconsActions,
+  ...ContainersActions,
   ...PanelsActions,
   ...TabsActions,
   ...BookmarksActions,
@@ -23,12 +23,10 @@ const Actions = {
 }
 
 // Inject vuex getters and state in actions
-for (let action of Object.keys(Actions)) {
-  Actions[action] = Actions[action].bind({
-    getters: Store.getters,
-    state: State,
-    actions: Actions,
-  })
+export function injectInActions(injectable = {}) {
+  for (let action of Object.keys(Actions)) {
+    Actions[action] = Actions[action].bind(injectable)
+  }
 }
 
 export default Actions

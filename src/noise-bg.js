@@ -123,12 +123,12 @@ export function noiseBg(target, conf = {}) {
   if (CACHE[cKey]) {
     // Add background to target
     if (typeof target === 'string') {
-      let styleEl = document.createElement('style')
-      document.head.appendChild(styleEl)
-      let stylShit = styleEl.sheet
-      stylShit.insertRule(`${target} { background-image: url(${CACHE[cKey]}); }`, 0)
+      // let styleEl = document.createElement('style')
+      // document.head.appendChild(styleEl)
+      // let stylShit = styleEl.sheet
+      // stylShit.insertRule(`${target} { background-image: url(${CACHE[cKey]}); }`, 0)
     } else if (target.nodeType === 1) {
-      target.style.backgroundImage = `url(${CACHE[cKey]})`
+      target.style.setProperty('--bg-img', `url(${CACHE[cKey]})`)
     }
     return
   }
@@ -159,12 +159,12 @@ export function noiseBg(target, conf = {}) {
 
     // Add background to target
     if (typeof target === 'string') {
-      let styleEl = document.createElement('style')
-      document.head.appendChild(styleEl)
-      let stylShit = styleEl.sheet
-      stylShit.insertRule(`${target} { background-image: url(${img}); }`, 0)
+      // let styleEl = document.createElement('style')
+      // document.head.appendChild(styleEl)
+      // let stylShit = styleEl.sheet
+      // stylShit.insertRule(`${target} { background-image: url(${img}); }`, 0)
     } else if (target.nodeType === 1) {
-      target.style.backgroundImage = `url(${img})`
+      target.style.setProperty('--bg-img', `url(${img})`)
     }
   })
 }

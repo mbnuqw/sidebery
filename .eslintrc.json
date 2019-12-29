@@ -3,22 +3,27 @@
     "browser": true,
     "es6": true
   },
-  "extends": ["eslint:recommended", "plugin:vue/recommended"],
+  "extends": ["eslint:recommended", "plugin:vue/recommended", "plugin:prettier/recommended"],
   "parserOptions": {
     "ecmaVersion": 2018,
     "sourceType": "module"
   },
   "rules": {
     "no-console": 2,
-    "indent": ["error", 2],
+    "indent": ["error", 2, { "SwitchCase": 1 }],
     "linebreak-style": ["error", "unix"],
-    "quotes": ["error", "single"],
+    "quotes": ["error", "single", { "avoidEscape": true }],
     "semi": ["error", "never"],
     "require-atomic-updates": "off",
     "vue/html-self-closing": "off",
-    "vue/require-default-prop": "off"
+    "vue/require-default-prop": "off",
+    "no-async-promise-executor": "off",
+    "no-prototype-builtins": "off"
   },
   "globals": {
+    "Vue": true,
+    "Vuex": true,
+    "Utils": true,
     "process": true,
     "browser": true,
     "global": true,

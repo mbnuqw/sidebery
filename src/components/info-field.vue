@@ -4,7 +4,6 @@
   .info {{value}}
 </template>
 
-
 <script>
 export default {
   props: {

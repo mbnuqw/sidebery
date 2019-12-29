@@ -8,14 +8,11 @@
     tabindex="-1"
     v-debounce:scroll.instant.500="scrollingStartEnd"
     @scroll="recalcScroll")
-    .scrollable(v-noise:300.g:12:af.a:0:42.s:0:9="" ref="scrollContent")
+    .scrollable(ref="scrollContent")
       slot
 </template>
 
-
 <script>
-import Vue from 'vue'
-import Utils from '../../utils'
 import Debounce from '../../directives/debounce'
 
 Vue.directive('debounce', Debounce)
@@ -74,7 +71,7 @@ export default {
       }
       if (contentHeight <= boxHeight) return
 
-      let scrollGripY = contentY / (contentHeight - boxHeight) * 100
+      let scrollGripY = (contentY / (contentHeight - boxHeight)) * 100
       if (this.$refs.scroll) {
         this.$refs.scroll.style.transform = `translateX(${scrollGripY}%)`
       }

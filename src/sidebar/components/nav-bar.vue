@@ -1,17 +1,17 @@
 <template lang="pug">
-.nav(v-noise:300.g:12:af.a:0:42.s:0:9="" ref="nav")
+.nav(ref="nav" @dragleave="onDragLeave" @dragenter="onDragEnter")
   .nav-bar(@wheel.stop.prevent="onNavWheel")
     .nav-btn(
       v-for="(btn, i) in nav"
-      :key="btn.cookieStoreId + btn.name"
+      :key="btn.id"
       :data-loading="btn.loading"
       :data-updated="$store.state.panelIndex !== i && !!btn.updated && !!btn.updated.length"
-      :data-proxified="btn.proxified"
       :data-active="$store.state.panelIndex === i"
       :data-hidden="btn.hidden"
       :data-index="btn.relIndex"
       :data-color="btn.color"
-      :title="btn.tooltip || getTooltip(i)"
+      :data-type="btn.type"
+      :title="btn.tooltip || btn.name"
       @click="onNavClick(i, btn.type)"
       @drop="onPanelDrop($event, btn)"
       @dragenter="onNavDragEnter(i)"
@@ -20,9 +20,8 @@
       @mousedown.middle="onNavMidClick(btn)"
       @mousedown.right="onNavRightClick(i, btn.type)"
       @mouseup.right="onNavRightMouseup($event, i)")
-      svg: use(:xlink:href="'#' + btn.icon")
-      .proxy-badge
-        svg: use(xlink:href="#icon_proxy")
+      img(v-if="!!btn.customIcon" :src="btn.customIcon")
+      svg(v-else): use(:xlink:href="'#' + btn.icon")
       .update-badge
       .ok-badge
         svg: use(xlink:href="#icon_ok")
@@ -39,25 +38,36 @@
     svg: use(xlink:href="#icon_settings")
 </template>
 
-
 <script>
-import { translate } from '../../mixins/dict.js'
+import { translate } from '../../../addon/locales/dict.js'
+import { TABS_PANEL_STATE } from '../../../addon/defaults'
 import EventBus from '../../event-bus'
 import State from '../store/state.js'
+import { getters } from '../store'
 import Actions from '../actions'
 
-const HIDDEN_CTR_BTN = {
+const HIDDEN_PANEL_BTN = {
   type: 'hidden',
   name: 'hidden',
+  id: 'hidden',
   icon: 'icon_expand',
   hidden: false,
   tooltip: translate('nav.show_hidden_tooltip'),
 }
 
+const ADD_PANEL_BTN = {
+  type: 'add',
+  name: 'add',
+  id: 'add',
+  icon: 'icon_plus_v2',
+  hidden: false,
+  tooltip: translate('nav.add_panel_tooltip'),
+}
+
 export default {
   data: function() {
     return {
-      width: 0
+      width: 0,
     }
   },
 
@@ -72,6 +82,7 @@ export default {
       let i, r
       let out = []
       let emptyPanel = false
+      let pinnedTabs
 
       for (i = 0; i < State.panels.length; i++) {
         const btn = State.panels[i]
@@ -84,7 +95,19 @@ export default {
           btn.inactive = true
         }
 
-        if (State.hideEmptyPanels && btn.tabs && !btn.tabs.length && State.panelIndex !== i) {
+        if (btn.tabs && State.pinnedTabsPosition === 'panel') {
+          let pinned = getters.pinnedTabs.filter(t => t.panelId === btn.id)
+          pinnedTabs = pinned.length > 0
+          btn.len += pinned.length
+        }
+
+        if (
+          State.hideEmptyPanels &&
+          btn.tabs &&
+          !btn.tabs.length &&
+          State.panelIndex !== i &&
+          !pinnedTabs
+        ) {
           btn.hidden = true
           btn.inactive = true
           emptyPanel = true
@@ -94,8 +117,13 @@ export default {
       }
 
       if (emptyPanel && State.hideEmptyPanels) {
-        HIDDEN_CTR_BTN.hidden = false
-        out.push(HIDDEN_CTR_BTN)
+        HIDDEN_PANEL_BTN.hidden = false
+        out.push(HIDDEN_PANEL_BTN)
+      }
+
+      if (!State.hideAddBtn) {
+        ADD_PANEL_BTN.hidden = false
+        out.push(ADD_PANEL_BTN)
       }
 
       if (!State.navBarInline) return out
@@ -144,11 +172,7 @@ export default {
      * Handle context menu event
      */
     onNavCtxMenu(e, i) {
-      if (
-        !State.ctxMenuNative ||
-        e.ctrlKey ||
-        e.shiftKey
-      ) {
+      if (!State.ctxMenuNative || e.ctrlKey || e.shiftKey) {
         e.stopPropagation()
         e.preventDefault()
         return
@@ -169,7 +193,7 @@ export default {
       let type
       if (panel.type === 'bookmarks') type = 'bookmarksPanel'
       else if (panel.type === 'default') type = 'tabsPanel'
-      else if (panel.type === 'ctx') type = 'tabsPanel'
+      else if (panel.type === 'tabs') type = 'tabsPanel'
       if (!State.selected.length) State.selected = [panel]
 
       Actions.openCtxMenu(type)
@@ -183,17 +207,21 @@ export default {
         State.hiddenPanelsBar = true
         return
       }
+      if (type === 'add') {
+        let panel = Utils.cloneObject(TABS_PANEL_STATE)
+        panel.id = Utils.uid()
+        panel.name = 'New Panel ' + (State.panels.length + 1)
+        State.panels.push(panel)
+        State.panelsMap[panel.id] = panel
+        Actions.savePanels()
+        Actions.updatePanelsTabs()
+        State.panelIndex = State.panels.length - 1
+        return
+      }
 
       if (State.panelIndex !== i) return Actions.switchToPanel(i)
-
       if (State.panels[i].bookmarks) return EventBus.$emit('scrollBookmarksToEdge')
-
-      if (State.panels[i].cookieStoreId) {
-        browser.tabs.create({
-          windowId: State.windowId,
-          cookieStoreId: State.panels[i].cookieStoreId,
-        })
-      }
+      if (State.panels[i].tabs) return Actions.createTabInPanel(State.panels[i])
     },
 
     /**
@@ -208,8 +236,15 @@ export default {
      */
     onNavMidClick(btn) {
       if (State.navMidClickAction === 'rm_all') {
-        if (!btn.tabs || !btn.tabs.length) return
-        Actions.removeTabs(btn.tabs.map(t => t.id))
+        if (!btn.tabs) return
+        let toRemove = btn.tabs.map(t => t.id)
+        if (State.pinnedTabsPosition === 'panel') {
+          for (let pinned of getters.pinnedTabs) {
+            if (pinned.panelId === btn.id) toRemove.push(pinned.id)
+          }
+        }
+
+        if (toRemove.length) Actions.removeTabs(toRemove)
       }
     },
 
@@ -224,10 +259,12 @@ export default {
 
       e.stopPropagation()
 
+      if (State.ctxMenuNative) return
+
       let type
       if (panel.type === 'bookmarks') type = 'bookmarksPanel'
       else if (panel.type === 'default') type = 'tabsPanel'
-      else if (panel.type === 'ctx') type = 'tabsPanel'
+      else if (panel.type === 'tabs') type = 'tabsPanel'
 
       State.selected = [panel]
       Actions.openCtxMenu(type, e.clientX, e.clientY)
@@ -243,13 +280,15 @@ export default {
       if (this.navDragEnterTimeout) clearTimeout(this.navDragEnterTimeout)
       this.navDragEnterTimeout = setTimeout(() => {
         this.navDragEnterTimeout = null
+        if (!State.dragMode) return
         if (this.nav[i].type === 'hidden') {
           State.hiddenPanelsBar = true
           return
         }
+        if (this.nav[i].type === 'add') return
         if (State.hiddenPanelsBar) State.hiddenPanelsBar = false
         Actions.switchToPanel(i)
-      }, 300)
+      }, 500)
     },
 
     /**
@@ -262,30 +301,58 @@ export default {
       }
     },
 
+    onDragEnter(event) {
+      this.enteredTarget = event.target
+    },
+
+    onDragLeave(event) {
+      if (this.enteredTarget === event.target) {
+        clearTimeout(this.navDragEnterTimeout)
+      }
+    },
+
     /**
      * Drop to panel's button
      */
     onPanelDrop(event, panel) {
       event.stopPropagation()
       event.preventDefault()
-      if (!State.dragNodes || !State.dragNodes.length) return
-      let firstNode = State.dragNodes[0]
-      let ids = State.dragNodes.map(n => n.id)
-      if (typeof firstNode.id === 'number') {
-        Actions.moveTabsToCtx(ids, panel.cookieStoreId)
-      }
-      if (typeof firstNode.id === 'string') {
-        Actions.openBookmarksInPanel(ids, panel.cookieStoreId)
-      }
-    },
 
-    /**
-     * Get tooltip for button
-     */
-    getTooltip(i) {
-      if (i === State.panels.length) return this.t('nav.add_ctx_tooltip')
-      if (!State.panels[i].tabs) return this.nav[i].name
-      return `${this.nav[i].name}: ${State.panels[i].tabs.length}`
+      Actions.resetSelection()
+      State.dragMode = false
+
+      if (!State.dragNodes || !State.dragNodes.length) return
+
+      let firstNode = State.dragNodes[0]
+
+      if (panel.tabs) {
+        State.panelIndex = panel.index
+        if (typeof firstNode.id === 'number') {
+          let index = panel.tabs.length ? panel.endIndex + 1 : panel.endIndex
+          if (panel.newTabCtx !== 'none' && panel.newTabCtx !== firstNode.ctx) {
+            Actions.recreateDroppedNodes({}, index, -1, State.dragNodes, false, panel.newTabCtx)
+          } else {
+            Actions.moveDroppedNodes(index, -1, State.dragNodes, false, panel)
+          }
+        }
+
+        if (typeof firstNode.id === 'string') {
+          let index = panel.tabs.length ? panel.endIndex + 1 : panel.endIndex
+          let ctx = panel.newTabCtx === 'none' ? undefined : panel.newTabCtx
+
+          Actions.recreateDroppedNodes({}, index, -1, State.dragNodes, false, ctx)
+        }
+      }
+
+      if (panel.type === 'bookmarks') {
+        Actions.dropToBookmarks(event, 0, 'unfiled_____', State.dragNodes)
+        panel.loading = 'ok'
+        setTimeout(() => {
+          panel.loading = false
+        }, 2000)
+      }
+
+      State.dragNodes = null
     },
   },
 }

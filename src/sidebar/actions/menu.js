@@ -1,5 +1,5 @@
 import CommonActions from '../../actions/menu'
-import { MENU_OPTIONS, RGB_COLORS } from '../../defaults'
+import { MENU_OPTIONS, RGB_COLORS } from '../../../addon/defaults'
 import Actions from '../actions'
 
 const xmlSerializer = new XMLSerializer()
@@ -8,22 +8,21 @@ const xmlSerializer = new XMLSerializer()
  * Open context menu
  */
 async function openCtxMenu(type, x, y) {
-  if (this.state.ctxMenuNative) browser.menus.removeAll()
   if (!this.state.selected.length) return
+  if (!type) return
 
-  let nodeType, options, opts = []
+  let nodeType,
+    options,
+    opts = []
   if (type === 'tab') {
     nodeType = 'tab'
     options = this.state.tabsMenu
-  }
-  else if (type === 'bookmark') {
+  } else if (type === 'bookmark') {
     nodeType = 'bookmark'
     options = this.state.bookmarksMenu
-  }
-  else if (type === 'tabsPanel') {
+  } else if (type === 'tabsPanel') {
     options = this.state.tabsPanelMenu
-  }
-  else if (type === 'bookmarksPanel') {
+  } else if (type === 'bookmarksPanel') {
     options = this.state.bookmarksPanelMenu
   }
 
@@ -35,7 +34,8 @@ async function openCtxMenu(type, x, y) {
           if (this.state.ctxMenuNative) inlineMenu.options.push(subOpt)
           continue
         }
-        let option, optGen = MENU_OPTIONS[subOpt]
+        let option
+        let optGen = MENU_OPTIONS[subOpt]
         if (subOpt.startsWith('separator')) option = 'separator'
         else if (optGen) option = optGen(this.state)
         if (!option) continue
@@ -47,7 +47,8 @@ async function openCtxMenu(type, x, y) {
       continue
     }
 
-    let option, optGen = MENU_OPTIONS[optName]
+    let option
+    let optGen = MENU_OPTIONS[optName]
     if (optName.startsWith('separator')) option = 'separator'
     else if (optGen) option = optGen(this.state)
     if (!option) continue
@@ -68,9 +69,11 @@ async function openCtxMenu(type, x, y) {
     let parentId, parentName
     for (let group of opts) {
       for (let opt of group.options) {
-        if (opt.name) {
-          parentId = createNativeSubMenuOption(nodeType, opt.name)
-          parentName = opt.name
+        if (opt.hasOwnProperty('name')) {
+          if (opt.name) {
+            parentId = createNativeSubMenuOption(nodeType, opt.name)
+            parentName = opt.name
+          }
           continue
         }
         this.actions.createNativeOption(nodeType, opt, parentId, parentName)

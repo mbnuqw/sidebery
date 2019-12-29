@@ -7,7 +7,6 @@
     .drag-layer(draggable="true" @dragstart="onDragStart")
 </template>
 
-
 <script>
 import EventBus from '../../event-bus'
 import State from '../store/state'
@@ -32,7 +31,7 @@ export default {
       if (e.button === 1) this.onMouseDownMid(e)
       if (e.button === 2) this.onMouseDownRight(e)
     },
-  
+
     /**
      * Mousedown Left
      */
@@ -120,8 +119,10 @@ export default {
         if (e.ctrlKey || e.shiftKey) return
 
         Actions.stopMultiSelection()
-        if (!State.ctxMenuNative) Actions.selectItem(this.node.id)
-        Actions.openCtxMenu('bookmark', e.clientX, e.clientY)
+        if (!State.ctxMenuNative) {
+          Actions.selectItem(this.node.id)
+          Actions.openCtxMenu('bookmark', e.clientX, e.clientY)
+        }
       }
     },
 

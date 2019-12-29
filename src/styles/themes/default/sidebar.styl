@@ -23,6 +23,9 @@
 @import './input.text'
 @import './input.window-select'
 
+@import './confirm'
+@import './notifications'
+
 // ---
 // -- Root vue element
 // -
@@ -30,6 +33,8 @@
   box(relative)
   size(100%, 100%)
   background-color: var(--bg)
+  background-image: var(--bg-img)
+  background-size: var(--bg-size)
 
 // ---
 // -- Sidebar root element
@@ -56,7 +61,11 @@
 .Sidebar > .box
   box(relative, flex)
   size(100%, same)
+
+#root[data-nav-layout="horizontal"] .Sidebar > .box
   flex-direction: column
+#root[data-nav-layout="vertical"] .Sidebar > .box
+  flex-direction: row
 
 // ---
 // -- Dimmer layer
@@ -79,34 +88,66 @@
 // -
 .Sidebar .nav
   box(relative, flex)
-  size(100%)
   min-height: var(--nav-btn-height)
   z-index: 2000
   background-color: var(--bg)
-  box-shadow: inset 0 -1px 0 0 var(--border-fg), 0 0 12px 0 #00000000
-  translate: box-shadow var(--d-fast)
+  background-image: var(--bg-img)
+  background-size: var(--bg-size)
 
 .Sidebar[data-hidden-panels-bar] .nav
   box-shadow: inset 0 -1px 0 0 var(--border-fg), 0 0 12px 0 var(--border-fg)
 
-// ---
-// -- Dashboard wrapper
-// -
-.Sidebar .dashboard-box
-  box(absolute, flex)
-  size(100%, max-h: calc(100% - 64px))
-  pos(0, 0)
+#root[data-nav-layout="horizontal"] .Sidebar .nav
+  size(100%)
+  box-shadow: inset 0 -1px 0 0 var(--border-fg), 0 0 12px 0 #00000000
+#root[data-nav-layout="vertical"] .Sidebar .nav
+  size(34px)
   flex-direction: column
-  z-index: 1000
-  box-shadow: 0 1px 12px 0 #00000056, 0 0 0 1px #00000012
-  background-color: var(--bg)
+  box-shadow: 1px 0 0 0 var(--border-flare-fg),
+              inset -1px 0 0 0 var(--border-fg),
+              inset 0 1px 0 0 var(--border-flare-fg)
 
 // ---
-// -- Dashboard
+// -- SelectFolderBar
 // -
-.Sidebar .dashboard
-  size(100%, same)
-  overflow: hidden
+.SelectBookmarksFolderBar
+  box(relative)
+  size(100%)
+  background-color: var(--bg)
+  background-image: var(--bg-img)
+  background-size: var(--bg-size)
+  box-shadow: 0 0 0 1px var(--border-fg),
+              inset 0 1px 0 0 var(--border-flare-fg)
+
+.SelectBookmarksFolderBar h2
+  box(relative)
+  text(s: rem(21), w: 700)
+  color: var(--title-fg)
+  margin: 16px 0
+  padding: 0
+  text-align: center
+
+.SelectBookmarksFolderBar .folder-title
+  box(relative)
+  text(s: rem(16))
+  color: var(--active-fg)
+  padding: 0 8px
+  text-align: center
+
+.SelectBookmarksFolderBar .ctrls
+  box(relative, flex)
+  align-items: center
+  justify-content: center
+  padding: 0 8px 6px
+  margin: 8px 0 0
+  flex-wrap: wrap
+
+.SelectBookmarksFolderBar .ctrls > .btn
+  size(min-w: max-content)
+  text(s: rem(15))
+  padding: 5px 12px
+  margin: 4px
+  flex-grow: 1
 
 // ---
 // -- Nav bar
@@ -119,6 +160,11 @@
 
 .Sidebar[data-nav-inline] .nav-bar
   flex-wrap: nowrap
+
+#root[data-nav-layout="horizontal"] .Sidebar .nav-bar
+  flex-direction: row
+#root[data-nav-layout="vertical"] .Sidebar .nav-bar
+  flex-direction: column
 
 // ---
 // -- Navigational button
@@ -175,17 +221,22 @@
     &[data-index=\"{i}\"]
       transform: "translateX(calc(var(--nav-btn-width) * %s))" % i
 
+#root[data-nav-layout="vertical"] .Sidebar .nav-btn[data-type="hidden"] > svg
+  transform: rotateZ(-90deg)
+
 // ---
 // -- Nav button icon
 // -
 .Sidebar .nav-btn > svg
+.Sidebar .nav-btn > img
   box(absolute)
   size(16px, same)
-  fill: var(--panel-fg, var(--nav-btn-fg))
+  fill: var(--container-fg, var(--nav-btn-fg))
   transform: translateZ(0)
   transition: opacity var(--d-fast)
 
 .Sidebar .nav-btn[data-updated] > svg
+.Sidebar .nav-btn[data-updated] > img
   mask: radial-gradient(
     circle at calc(100% - 2px) calc(100% - 2px),
     #00000024,
@@ -196,6 +247,8 @@
 
 .Sidebar .nav-btn[data-proxified] > svg
 .Sidebar .nav-btn[data-loading] > svg
+.Sidebar .nav-btn[data-proxified] > img
+.Sidebar .nav-btn[data-loading] > img
   mask: radial-gradient(
     circle at calc(100% - 2px) calc(100% - 2px),
     #00000024,
@@ -239,27 +292,8 @@
   transform: scale(0.7, 0.7)
   transition: opacity var(--d-norm), transform var(--d-norm)
 
-.Sidebar .nav-btn[data-updated]:not([data-proxified]) .update-badge
+.Sidebar .nav-btn[data-updated] .update-badge
   opacity: 1
-  transform: scale(1, 1)
-
-// ---
-// -- Proxy badge
-// -
-.Sidebar .nav-btn .proxy-badge
-  box(absolute)
-  size(10px, same)
-  pos(calc(50% + 1px), calc(50% + 1px))
-  fill: var(--nav-btn-fg)
-  opacity: 0
-  transform: scale(0.7, 0.7)
-  transition: opacity var(--d-norm), transform var(--d-norm)
-  > svg
-    box(absolute)
-    size(100%, same)
-
-.Sidebar .nav-btn[data-proxified] .proxy-badge
-  opacity: .64
   transform: scale(1, 1)
 
 // ---
@@ -294,16 +328,16 @@
 // -
 .Sidebar .nav-btn .len
   box(absolute, flex)
-  pos(2px, r: 2px)
-  size(min-w: 13px, h: 13px)
+  pos(0, r: 0)
+  size(min-w: 15px, h: 15px)
   text(s: rem(10))
-  padding: 0 2px
+  padding: 0 3px
   justify-content: center
   align-items: center
   color: var(--label-fg)
   background-color: var(--bg)
   border-radius: 7px
-  box-shadow: 0 0 0 1px var(--border-fg)
+  box-shadow: inset 0 0 0 1px var(--border-fg)
 
 // ---
 // -- Settings button
@@ -336,7 +370,6 @@
   pos(0, 0)
   z-index: -1
   opacity: 0
-  transition: z-index var(--d-fast), opacity var(--d-fast), transform var(--d-tick)
   &:after
     content: ''
     box(absolute)
@@ -357,6 +390,7 @@
   opacity: 0
 
 #root[data-pinned-tabs-position="left"] .Sidebar .pointer
+#root[data-nav-layout="vertical"] .Sidebar .pointer
   pos(l: 35px)
 
 // ---
@@ -425,58 +459,85 @@
     transform: translateX(100%)
 
 // ---
-// -- Upgrading banner
-// -
-.Sidebar .upgrading
-  box(absolute)
-  size(100%, same)
-  pos(0, 0)
-  background-color: var(--bg)
-  z-index: 10000
-  cursor: wait
-
-.Sidebar .upgrading .info
-  box(absolute)
-  size(100%)
-  pos(calc(50% - 32px), l: 0)
-  text(s: rem(18), w: 700)
-  text-shadow: var(--info-fg)
-  text-align: center
-  color: var(--inactive-fg)
-  padding: 8px
-  animation: upgrading-info 1s infinite
-
-// ---
 // -- Hidden panels bar
 // -
 .HiddenPanelsBar
   box(absolute, flex)
-  size(100%, max-h: calc(100% - 64px))
   pos(0, 0)
   z-index: 1000
   box-shadow: 0 1px 12px 0 #00000056,
               0 0 0 1px var(--border-fg),
               inset 0 1px 0 0 var(--border-flare-fg)
   background-color: var(--bg)
+  background-image: var(--bg-img)
+  background-size: var(--bg-size)
   flex-flow: wrap
+#root[data-nav-layout="horizontal"] .HiddenPanelsBar
+  size(100%, max-h: calc(100% - 64px))
+#root[data-nav-layout="vertical"] .HiddenPanelsBar
+  size(h: 100%)
+  flex-direction: column
 
 .HiddenPanelsBar .hidden-panel
   box(relative, flex)
   size(h: 30px, min-w: 30px)
   flex: 1
-  padding: 1px 0 0
   cursor: pointer
+  > img
   > svg
     box(absolute)
     pos(calc(50% - 8px), same)
     size(16px, same)
-    fill: var(--panel-fg)
+    fill: var(--container-fg)
   &:hover
     background-color: #00000032
   &:active
     opacity: .7
   &[data-active]
     background-color: #00000032
+#root[data-nav-layout="horizontal"] .HiddenPanelsBar .hidden-panel
+  padding: 1px 0 0
+#root[data-nav-layout="vertical"] .HiddenPanelsBar .hidden-panel
+  size(30px, max-h: 32px)
+  padding: 0 0 0 1px
+
+#root[data-nav-layout="horizontal"]
+  .hidden-panels-bar-enter-active
+  .hidden-panels-bar-leave-active
+    transition: z-index var(--d-fast), transform var(--d-fast)
+  .hidden-panels-bar-enter
+    transform: translateY(-100%)
+    z-index: 0
+  .hidden-panels-bar-enter-to
+    transform: translateY(0)
+    opacity: 1
+    z-index: 1000
+  .hidden-panels-bar-leave
+    transform: translateY(0)
+    opacity: 1
+    z-index: 1000
+  .hidden-panels-bar-leave-to
+    transform: translateY(-100%)
+    z-index: 0
+
+#root[data-nav-layout="vertical"]
+  .hidden-panels-bar-enter-active
+  .hidden-panels-bar-leave-active
+    transition: z-index var(--d-fast), transform var(--d-fast)
+  .hidden-panels-bar-enter
+    transform: translateX(-100%)
+    z-index: 0
+  .hidden-panels-bar-enter-to
+    transform: translateX(0)
+    opacity: 1
+    z-index: 1000
+  .hidden-panels-bar-leave
+    transform: translateX(0)
+    opacity: 1
+    z-index: 1000
+  .hidden-panels-bar-leave-to
+    transform: translateX(-100%)
+    z-index: 0
 
 // ---
 // -- Transitions
@@ -498,34 +559,4 @@
     z-index: 10
   .panel-leave-to
     transform: translateX(100%)
-    z-index: 0
-
-  .upgrading-enter-active
-  .upgrading-leave-active
-    transition: transform var(--d-norm), opacity var(--d-norm)
-  .upgrading-enter
-    opacity: 0
-  .upgrading-enter-to
-    opacity: 1
-  .upgrading-leave
-    opacity: 1
-  .upgrading-leave-to
-    opacity: 0
-
-  .hidden-panels-bar-enter-active
-  .hidden-panels-bar-leave-active
-    transition: z-index var(--d-fast), transform var(--d-fast)
-  .hidden-panels-bar-enter
-    transform: translateY(-100%)
-    z-index: 0
-  .hidden-panels-bar-enter-to
-    transform: translateY(0)
-    opacity: 1
-    z-index: 1000
-  .hidden-panels-bar-leave
-    transform: translateY(0)
-    opacity: 1
-    z-index: 1000
-  .hidden-panels-bar-leave-to
-    transform: translateY(-100%)
     z-index: 0

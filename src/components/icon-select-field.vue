@@ -8,13 +8,12 @@
     @input="select")
 </template>
 
-
 <script>
 import SelectIconInput from './icon-select-input'
 
 export default {
   components: {
-    SelectIconInput
+    SelectIconInput,
   },
 
   props: {

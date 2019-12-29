@@ -1,7 +1,3 @@
-import EventBus from '../event-bus'
-import Store from './store'
-import State from './store/state'
-import Actions from './actions'
 import ContainersHandlers from './handlers/containers'
 import TabsHandlers from './handlers/tabs'
 import KeybindingsHandlers from './handlers/keybindings'
@@ -20,15 +16,10 @@ const Handlers = {
   ...MiscHandlers,
 }
 
-// Inject vuex getters and state in actions
-for (let key of Object.keys(Handlers)) {
-  Handlers[key] = Handlers[key].bind({
-    getters: Store.getters,
-    state: State,
-    actions: Actions,
-    handlers: Handlers,
-    eventBus: EventBus,
-  })
+export function injectInHandlers(injectable = {}) {
+  for (let key of Object.keys(Handlers)) {
+    Handlers[key] = Handlers[key].bind(injectable)
+  }
 }
 
 export default Handlers

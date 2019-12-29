@@ -1,15 +1,11 @@
-import Logs from '../../logs'
-import { DEFAULT_SETTINGS } from '../../defaults'
-
 /**
  * Load platform info
  */
 function loadPlatformInfo() {
-  browser.runtime.getPlatformInfo()
-    .then(osInfo => {
-      this.state.osInfo = osInfo
-      this.state.os = osInfo.os
-    })
+  browser.runtime.getPlatformInfo().then(osInfo => {
+    this.state.osInfo = osInfo
+    this.state.os = osInfo.os
+  })
 }
 
 /**
@@ -17,41 +13,11 @@ function loadPlatformInfo() {
  */
 async function loadWindowInfo() {
   let currentWindow = await browser.windows.getCurrent()
+
   this.state.private = currentWindow.incognito
   this.state.windowId = currentWindow.id
-  browser.windows.getAll()
-    .then(windows => {
-      this.state.otherWindows = windows.filter(w => w.id !== this.state.windowId)
-    })
-}
-
-/**
- * Stop upgrading process
- */
-function startUpgrading() {
-  this.state.upgrading = true
-
-  return new Promise(res => {
-    let tryCount = 0
-
-    let upgradingInterval = setInterval(async () => {
-      let { settings } = await browser.storage.local.get({
-        settings: DEFAULT_SETTINGS,
-      })
-
-      if (settings.version) {
-        this.state.upgrading = false
-        clearInterval(upgradingInterval)
-        return res(true)
-      }
-
-      if (tryCount >= 5) {
-        await browser.storage.local.remove('settings')
-        clearInterval(upgradingInterval)
-        return res(false)
-      }
-      tryCount++
-    }, 2000)
+  browser.windows.getAll().then(windows => {
+    this.state.otherWindows = windows.filter(w => w.id !== this.state.windowId)
   })
 }
 
@@ -105,26 +71,17 @@ async function chooseWin() {
 /**
  * Retrieve current permissions
  */
-async function loadPermissions(init) {
+async function loadPermissions() {
   this.state.permAllUrls = await browser.permissions.contains({ origins: ['<all_urls>'] })
   this.state.permTabHide = await browser.permissions.contains({ permissions: ['tabHide'] })
-
-  if (!this.state.permAllUrls) {
-    this.state.panels.map(c => {
-      if (c.proxified) c.proxified = false
-      if (c.proxy) c.proxy.type = 'direct'
-      if (c.includeHostsActive) c.includeHostsActive = false
-      if (c.excludeHostsActive) c.excludeHostsActive = false
-    })
-    if (!init) this.actions.savePanels()
-  }
+  this.state.permClipboardWrite = await browser.permissions.contains({
+    permissions: ['clipboardWrite'],
+  })
 
   if (!this.state.permTabHide) {
     this.state.hideInact = false
     this.state.hideFoldedTabs = false
   }
-
-  Logs.push('[INFO] Permissions loaded')
 }
 
 /**
@@ -157,8 +114,12 @@ async function undoRmTab() {
  */
 function selectItem(id) {
   let target
-  if (typeof id === 'number') target = this.state.tabsMap[id]
-  else if (this.state.bookmarksMap) target = this.state.bookmarksMap[id]
+  if (typeof id === 'number') {
+    target = this.state.tabsMap[id]
+    if (this.state.nativeHighlight) this.actions.updateHighlightedTabs(120)
+  } else if (this.state.bookmarksMap) {
+    target = this.state.bookmarksMap[id]
+  }
   if (!target) return
 
   target.sel = true
@@ -170,8 +131,12 @@ function selectItem(id) {
  */
 function deselectItem(id) {
   let item
-  if (typeof id === 'number') item = this.state.tabsMap[id]
-  else if (this.state.bookmarksMap) item = this.state.bookmarksMap[id]
+  if (typeof id === 'number') {
+    item = this.state.tabsMap[id]
+    if (this.state.nativeHighlight) this.actions.updateHighlightedTabs(120)
+  } else if (this.state.bookmarksMap) {
+    item = this.state.bookmarksMap[id]
+  }
 
   if (item) {
     item.sel = false
@@ -185,11 +150,14 @@ function deselectItem(id) {
  */
 function resetSelection() {
   if (!this.state.selected.length) return
+  if (this._preserveSelection) return
+  if (this._preserveSelectionOnce) return (this._preserveSelectionOnce = false)
   let id = this.state.selected[0]
   if (typeof id === 'number') {
     for (let id of this.state.selected) {
       this.state.tabsMap[id].sel = false
     }
+    if (this.state.nativeHighlight) this.actions.updateHighlightedTabs(120)
   } else if (typeof id === 'string') {
     for (let id of this.state.selected) {
       this.state.bookmarksMap[id].sel = false
@@ -263,11 +231,108 @@ function updateSidebarWidth() {
   this.state.width = document.body.offsetWidth
 }
 
+function confirm(msg) {
+  return new Promise(res => {
+    this.state.confirm = {
+      msg,
+      ok: () => {
+        this.state.confirm = null
+        res(true)
+      },
+      cancel: () => {
+        this.state.confirm = null
+        res(false)
+      },
+    }
+  })
+}
+
+function copyUrls(ids) {
+  if (!this.state.permClipboardWrite) return this.actions.openSettings('clipboard-write')
+
+  let urls = ''
+  let idType = typeof ids[0]
+  if (idType === 'string') {
+    let lvl = 0
+    const walker = nodes => {
+      for (let node of nodes) {
+        if (node.type === 'separator') continue
+        if (ids.includes(node.id)) continue
+        if (node.url) urls += '\n' + '  '.repeat(lvl) + node.url
+        if (node.children) {
+          urls += '\n' + '  '.repeat(lvl) + node.title
+          lvl++
+          walker(node.children)
+          lvl--
+        }
+      }
+    }
+    for (let id of ids) {
+      let node = this.state.bookmarksMap[id]
+      if (!node || node.type === 'separator') continue
+      if (node.url) urls += '\n' + '  '.repeat(lvl) + node.url
+      if (node.children) {
+        urls += '\n' + '  '.repeat(lvl) + node.title
+        lvl++
+        walker(node.children)
+        lvl--
+      }
+    }
+  } else if (idType === 'number') {
+    for (let id of ids) {
+      let tab = this.state.tabsMap[id]
+      if (tab) urls += '\n' + '  '.repeat(tab.lvl) + tab.url
+    }
+  }
+
+  navigator.clipboard.writeText(urls.trim())
+}
+
+function askNewBookmarkFolder(defaultValue) {
+  return new Promise(res => {
+    let bookmarksPanel = this.state.panels.find(p => p.type === 'bookmarks')
+    if (!bookmarksPanel) res(defaultValue)
+
+    this.state.panelIndex = bookmarksPanel.index
+
+    if (defaultValue !== undefined) this.actions.selectItem(defaultValue)
+
+    this.state.selectBookmarkFolder = {
+      id: '',
+      ok: () => {
+        let id = this.state.selectBookmarkFolder.id
+        this.state.selectBookmarkFolder = null
+        if (this.state.lastPanelIndex !== undefined) {
+          this.actions.setPanel(this.state.lastPanelIndex)
+        }
+        res(id)
+      },
+      cancel: () => {
+        this.state.selectBookmarkFolder = null
+        if (this.state.lastPanelIndex !== undefined) {
+          this.actions.setPanel(this.state.lastPanelIndex)
+        }
+        res(null)
+      },
+    }
+  })
+}
+
 /**
- * getLogs
+ * Show notification
  */
-function getLogs() {
-  return Logs
+function notify(config, timeout = 5000) {
+  let id = Utils.uid()
+  config.id = id
+  config.lvl = 'info'
+  config.timeout = timeout
+  if (timeout) {
+    config.timer = setTimeout(() => {
+      let index = this.state.notifications.findIndex(n => n.id === id)
+      if (index !== -1) this.state.notifications.splice(index, 1)
+    }, timeout)
+  }
+  this.state.notifications.push(config)
 }
 
 export default {
@@ -284,10 +349,12 @@ export default {
   lockStorage,
   unlockStorage,
   updateSidebarWidth,
-  startUpgrading,
   blockWheel,
   blockCtxMenu,
   startMultiSelection,
   stopMultiSelection,
-  getLogs,
+  confirm,
+  copyUrls,
+  askNewBookmarkFolder,
+  notify,
 }

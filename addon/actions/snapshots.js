@@ -1,4 +1,7 @@
 import Actions from '../actions.js'
+import { TABS_PANEL } from '../defaults.js'
+import { DEFAULT_TABS_PANEL } from '../defaults.js'
+import { DEFAULT_CTX } from '../defaults.js'
 
 const MIN_SNAP_INTERVAL = 5000
 
@@ -20,6 +23,9 @@ async function createSnapshot() {
     }
   }
 
+  // Get panels info
+  let { panels_v4 } = await browser.storage.local.get({ panels_v4: [] })
+
   // Update tree structure
   if (this.settings.tabsTree) await Actions.updateTabsTree()
 
@@ -29,31 +35,15 @@ async function createSnapshot() {
     const window = this.windows[windowId]
     const items = []
 
-    let containerId
     for (let tab of window.tabs) {
-      // Add pinned tab
-      if (tab.pinned) {
-        items.push({
-          id: tab.id,
-          url: tab.url,
-          title: tab.title,
-          ctr: tab.cookieStoreId,
-        })
-        continue
-      }
-
-      // Add container id
-      if (containerId !== tab.cookieStoreId) {
-        containerId = tab.cookieStoreId
-        items.push(containerId)
-      }
-
-      // Add tab
       items.push({
         id: tab.id,
+        pinned: tab.pinned,
         url: tab.url,
         title: tab.title,
         lvl: tab.lvl,
+        ctr: tab.cookieStoreId,
+        panel: tab.panelId,
       })
     }
 
@@ -61,22 +51,29 @@ async function createSnapshot() {
   }
 
   currentSnapshot = {
-    id: Math.random().toString(16).replace('0.', Date.now().toString(16)),
+    id: Math.random()
+      .toString(16)
+      .replace('0.', Date.now().toString(16)),
     time: Date.now(),
     containersById,
+    panels: panels_v4,
     windows,
   }
 
-  let { snapshots } = await browser.storage.local.get({ snapshots: [] })
+  let { snapshots_v4 } = await browser.storage.local.get({ snapshots_v4: null })
+  if (!snapshots_v4) snapshots_v4 = await getPrevVerSnapshots()
 
-  const lastSnapshot = snapshots[snapshots.length - 1]
+  const lastSnapshot = snapshots_v4[snapshots_v4.length - 1]
   if (lastSnapshot && compareSnapshots(lastSnapshot, currentSnapshot)) return
 
-  snapshots.push(currentSnapshot)
+  snapshots_v4.push(currentSnapshot)
 
-  snapshots = await Actions.limitSnapshots(snapshots)
+  snapshots_v4 = await Actions.limitSnapshots(snapshots_v4)
 
-  await browser.storage.local.set({ snapshots, lastSnapTime: currentSnapshot.time })
+  await browser.storage.local.set({
+    snapshots_v4,
+    lastSnapTime: currentSnapshot.time,
+  })
 
   return currentSnapshot
 }
@@ -93,9 +90,10 @@ async function scheduleSnapshots() {
   if (interval < MIN_SNAP_INTERVAL) return
 
   const currentTime = Date.now()
-  let elapsed, nextTimeout = interval
+  let elapsed
+  let nextTimeout = interval
   if (currentSnapshot) elapsed = currentTime - currentSnapshot.time
-  else elapsed = currentTime - await Actions.getLastSnapTime()
+  else elapsed = currentTime - (await Actions.getLastSnapTime())
 
   if (elapsed >= interval) Actions.createSnapshot()
   else nextTimeout = interval - elapsed
@@ -139,80 +137,47 @@ async function openSnapshotWindow(snapshot, winId) {
   let winInfo = snapshot.windowsById[winId]
   if (!winInfo) return
 
-  let containers = {}
+  let containers = snapshot.containersById
   let tabs = []
-  for (let tab of winInfo.tabs) {
-    containers[tab.ctr] = tab.ctr
-    tabs.push(tab)
+
+  for (let panel of winInfo.panels) {
+    tabs = tabs.concat(panel.tabs)
   }
 
-  let newWindow = await browser.windows.create()
-  let firstTab = newWindow.tabs[0]
-  let tabIndex = newWindow.tabs.length
-
-  await this.actions.waitForSidebarConnect(newWindow.id, 5000)
-
-  for (let ctrId of Object.keys(containers)) {
-    if (ctrId === 'firefox-default') continue
-
-    let snapCtr = snapshot.containersById[ctrId]
-    if (!snapCtr) {
-      containers[ctrId] = false
-      continue
-    }
-
-    let localCtrs = Object.values(this.containers)
-    let localCtr = localCtrs.find(c => c.name === snapCtr.name)
-    if (!localCtr) {
-      let newCtr = await browser.contextualIdentities.create({
-        name: snapCtr.name,
-        color: snapCtr.color,
-        icon: snapCtr.icon,
-      })
-      containers[ctrId] = newCtr.cookieStoreId
-    } else {
-      containers[ctrId] = localCtr.cookieStoreId
-    }
+  let tabsInfo = []
+  for (let tab of tabs) {
+    tabsInfo.push({ lvl: tab.lvl, panelId: tab.panel })
   }
-
-  let parents = [], oldNewMap = []
+  let tabsInfoStr = encodeURIComponent(JSON.stringify(tabsInfo))
+  let newWindow = await browser.windows.create({
+    url: 'about:blank#tabsdata' + tabsInfoStr,
+  })
+  let parents = []
+  let creating = []
   for (let i = 0; i < tabs.length; i++) {
     let tab = tabs[i]
+    let ctr = containers[tab.ctr]
+    let ctrId = ctr ? ctr.newId : undefined
 
     parents[tab.lvl] = tab.id
 
-    let createdTab = await browser.tabs.create({
+    let conf = {
       windowId: newWindow.id,
-      index: tabIndex,
-      url: normalizeUrl(tab.url),
+      url: Utils.normalizeUrl(tab.url),
       active: false,
       pinned: tab.pinned,
-      discarded: !tab.pinned,
-      title: !tab.pinned ? tab.title : undefined,
-      cookieStoreId: containers[tab.ctr],
-      openerTabId: oldNewMap[parents[tab.lvl - 1]],
-    })
-    oldNewMap[tab.id] = createdTab.id
-    tabIndex++
+      cookieStoreId: ctrId,
+    }
+
+    if (!tab.pinned && (!ctrId || ctrId.endsWith('-default'))) {
+      conf.discarded = true
+      conf.title = tab.title
+    }
+
+    creating.push(browser.tabs.create(conf))
   }
 
-  if (firstTab) browser.tabs.remove(firstTab.id)
-}
-
-/**
- * Prepare url to be opened by sidebery
- */
-function normalizeUrl(url) {
-  if (!url) return url
-  if (
-    url.startsWith('about:') ||
-    url.startsWith('data:') ||
-    url.startsWith('file:')
-  ) {
-    return browser.runtime.getURL('url/url.html') + '#' + url
-  } else {
-    return url
-  }
+  await Promise.all(creating)
 }
 
 /**
@@ -230,14 +195,16 @@ async function limitSnapshots(snapshots) {
   if (unit === 'kb') normLimit = limit * 1024
 
   if (!snapshots) {
-    const ans = await browser.storage.local.get({ snapshots: [] })
-    snapshots = ans.snapshots
+    let { snapshots_v4 } = await browser.storage.local.get({ snapshots_v4: null })
+    if (!snapshots_v4) snapshots_v4 = await getPrevVerSnapshots()
+    snapshots = snapshots_v4
     if (!snapshots.length) return
   }
 
-  let i, accum = 0
-  for (i = snapshots.length; i--;) {
-    let snapshot = snapshots[i]
+  let index
+  let accum = 0
+  for (index = snapshots.length; index--; ) {
+    let snapshot = snapshots[index]
 
     if (unit === 'snap') {
       accum++
@@ -255,10 +222,10 @@ async function limitSnapshots(snapshots) {
     }
   }
 
-  i++
+  index++
 
-  if (!resultToStore) return snapshots.slice(i)
-  else await browser.storage.local.set({ snapshots: snapshots.slice(i) })
+  if (!resultToStore) return snapshots.slice(index)
+  else await browser.storage.local.set({ snapshots_v4: snapshots.slice(index) })
 }
 
 /**
@@ -297,4 +264,68 @@ export default {
   openSnapshotWindow,
   limitSnapshots,
   getSnapInterval,
+}
+
+/**
+ * Try to get snapshots from prev version
+ * and convert them.
+ */
+export async function getPrevVerSnapshots() {
+  let { snapshots } = await browser.storage.local.get({ snapshots: null })
+  if (!snapshots) return []
+
+  for (let snapshot of snapshots) {
+    if (!snapshot.id) break
+    if (!snapshot.time) break
+    if (!snapshot.containersById) break
+    if (!snapshot.windows) break
+
+    snapshot.panels = []
+
+    for (let window of Object.values(snapshot.windows)) {
+      let ctr = ''
+      let panels = {}
+      let pinned = true
+      let convertedItems = []
+
+      // Restore panels
+      for (let item of window.items) {
+        if (typeof item !== 'string') continue
+        let p = snapshot.panels.find(p => p.moveTabCtx === item || p.id === item)
+        if (p) continue
+        if (item === DEFAULT_CTX) {
+          p = Utils.cloneObject(DEFAULT_TABS_PANEL)
+          panels[DEFAULT_CTX] = DEFAULT_CTX
+        } else {
+          let ctr = snapshot.containersById[item]
+          p = Utils.cloneObject(TABS_PANEL)
+          p.id = Utils.uid()
+          p.name = ctr.name
+          p.icon = ctr.icon
+          p.color = ctr.color
+          panels[item] = p.id
+        }
+        snapshot.panels.push(p)
+      }
+
+      // Normalize tabs
+      for (let item of window.items) {
+        if (typeof item === 'string') {
+          pinned = false
+          ctr = item
+          continue
+        }
+
+        if (pinned) item.pinned = pinned
+        if (ctr) item.ctr = ctr
+        if (item.lvl === 0) delete item.lvl
+        if (panels[ctr]) item.panel = panels[ctr]
+        convertedItems.push(item)
+      }
+
+      window.items = convertedItems
+    }
+  }
+
+  return snapshots
 }

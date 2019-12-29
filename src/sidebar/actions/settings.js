@@ -1,7 +1,5 @@
-import Utils from '../../utils'
-import Logs from '../../logs'
 import CommonActions from '../../actions/settings'
-import { DEFAULT_SETTINGS } from '../../defaults'
+import { DEFAULT_SETTINGS } from '../../../addon/defaults'
 import Actions from '../actions'
 
 /**
@@ -11,17 +9,19 @@ function updateSettings(settings) {
   if (!settings) return
 
   // Check what values was updated
-  const hideInactTabs = this.state.hideInact !== settings.hideInact
-  const updateSuccessions =
+  let hideInactTabs = this.state.hideInact !== settings.hideInact
+  let updateSuccessions =
     this.state.activateAfterClosing !== settings.activateAfterClosing ||
     this.state.activateAfterClosingPrevRule !== settings.activateAfterClosingPrevRule ||
     this.state.activateAfterClosingNextRule !== settings.activateAfterClosingNextRule
-  const resetTree = this.state.tabsTree !== settings.tabsTree && this.state.tabsTree
-  const updateTree = this.state.tabsTreeLimit !== settings.tabsTreeLimit
-  const updateInvisTabs = this.state.hideFoldedTabs !== settings.hideFoldedTabs
-  const toggleBookmarks = this.state.bookmarksPanel !== settings.bookmarksPanel
-  const theme = this.state.theme !== settings.theme
-  const highlightOpenBookmarks = this.state.highlightOpenBookmarks !== settings.highlightOpenBookmarks
+  let resetTree = this.state.tabsTree !== settings.tabsTree && this.state.tabsTree
+  let updateTree = this.state.tabsTreeLimit !== settings.tabsTreeLimit
+  let updateInvisTabs = this.state.hideFoldedTabs !== settings.hideFoldedTabs
+  let toggleBookmarks = this.state.bookmarksPanel !== settings.bookmarksPanel
+  let theme = this.state.theme !== settings.theme
+  let highlightOpenBookmarks = this.state.highlightOpenBookmarks !== settings.highlightOpenBookmarks
+  let stateStorage = this.state.stateStorage !== settings.stateStorage
+  let bgNoise = this.state.bgNoise !== settings.bgNoise
 
   // Update settings of this instance
   for (let k of Object.keys(settings)) {
@@ -55,8 +55,21 @@ function updateSettings(settings) {
   }
 
   if (toggleBookmarks) {
-    if (this.state.bookmarksPanel) Actions.loadBookmarks()
-    else this.state.bookmarks = []
+    if (this.state.bookmarksPanel) {
+      this.actions.loadBookmarks()
+      this.handlers.setupBookmarksListeners()
+    } else {
+      this.handlers.resetBookmarksListeners()
+      this.state.bookmarks = []
+
+      let index = this.state.panels.findIndex(p => p.type === 'bookmarks')
+      if (this.state.panelIndex === index) {
+        index = this.state.panels.findIndex(p => {
+          return p.type !== 'bookmarks' && !p.hidden
+        })
+        if (index !== -1) this.state.panelIndex = index
+      }
+    }
   }
 
   if (highlightOpenBookmarks && this.state.bookmarksUrlMap) {
@@ -72,58 +85,58 @@ function updateSettings(settings) {
   if (theme) {
     Actions.initTheme()
   }
+
+  if (stateStorage) {
+    if (this.state.stateStorage === 'global') this.actions.saveTabsData()
+    if (this.state.stateStorage === 'session') {
+      for (let tab of this.state.tabs) {
+        browser.sessions.setTabValue(tab.id, 'data', {
+          id: tab.id,
+          panelId: tab.panelId,
+          parentId: tab.parentId,
+          folded: tab.folded,
+        })
+        if (Utils.isGroupUrl(tab.url)) {
+          if (!this.state.groupTabs) this.state.groupTabs = {}
+          this.state.groupTabs[tab.id] = true
+        } else if (this.state.groupTabs[tab.id]) {
+          this.state.groupTabs[tab.id] = false
+        }
+      }
+      this.actions.saveGroups()
+    }
+  }
+
+  if (bgNoise) {
+    if (this.state.bgNoise) this.actions.applyNoiseBg()
+    else this.actions.removeNoiseBg()
+  }
 }
 
 /**
  * Open/activate settings page.
- * 
+ *
  * @param {string} [section] - url-encoded string
  */
-function openSettings(section) {
+async function openSettings(section) {
   let url = browser.runtime.getURL('settings/settings.html')
   let existedTab = this.state.tabs.find(t => t.url.startsWith(url))
   let activePanel = this.state.panels[this.state.panelIndex]
+  let activeTab = this.state.tabsMap[this.state.activeTabId]
 
   if (section) url += '#' + section
   if (existedTab) {
-    if (existedTab.url === url) {
-      browser.tabs.update(existedTab.id, { active: true })
-    } else {
-      browser.tabs.update(existedTab.id, { url, active: true })
-    }
+    if (existedTab.url === url) browser.tabs.update(existedTab.id, { active: true })
+    else await browser.tabs.update(existedTab.id, { url, active: true })
   } else {
-    const conf = { url, windowId: this.state.windowId }
-    if (activePanel && activePanel.tabs) {
-      conf.cookieStoreId = activePanel.cookieStoreId
+    if (activeTab && activeTab.url === 'about:newtab') {
+      await browser.tabs.update(activeTab.id, { url, active: true })
+    } else if (activePanel && activePanel.tabs) {
+      this.actions.createTabInPanel(activePanel, url)
+    } else {
+      browser.tabs.create({ url, windowId: this.state.windowId })
     }
-    browser.tabs.create(conf)
   }
-}
-
-/**
- * Provide window-wise debug data
- */
-async function getWindowDbgInfo() {
-  const tabs = []
-
-  for (let tab of this.state.tabs) {
-    // Get sanitized clone
-    const tabClone = JSON.parse(JSON.stringify(tab))
-
-    delete tabClone.title
-    delete tabClone.width
-    delete tabClone.height
-    delete tabClone.lastAccessed
-    tabClone.muted = tabClone.mutedInfo.muted
-    delete tabClone.mutedInfo
-    tabClone.url = tabClone.url.slice(0, 5) + '...'
-    if (tabClone.favIconUrl && tabClone.favIconUrl.length > 5) {
-      tabClone.favIconUrl = tabClone.favIconUrl.slice(0, 5) + '...'
-    }
-    tabs.push(tabClone)
-  }
-
-  return { logs: Logs, tabs }
 }
 
 /**
@@ -172,7 +185,8 @@ async function getCommonDbgInfo() {
   let bookmarksCount = 0
   let foldersCount = 0
   let separatorsCount = 0
-  let lvl = 0, maxDepth = 0
+  let lvl = 0
+  let maxDepth = 0
   const walker = nodes => {
     if (lvl > maxDepth) maxDepth = lvl
     for (let node of nodes) {
@@ -201,9 +215,7 @@ async function getCommonDbgInfo() {
  * Get sidebar css selectors
  */
 function getCssSelectors() {
-  const selectors = [
-    { id: 'root', classList: ['root'], lvl: 0, children: [] }
-  ]
+  const selectors = [{ id: 'root', classList: ['root'], lvl: 0, children: [] }]
   const rootEl = document.getElementById('root')
 
   const walker = (nodes, selectors) => {
@@ -246,7 +258,6 @@ export default {
 
   updateSettings,
   openSettings,
-  getWindowDbgInfo,
   getCommonDbgInfo,
   getCssSelectors,
 }

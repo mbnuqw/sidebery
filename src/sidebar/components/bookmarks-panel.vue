@@ -4,7 +4,7 @@
   :data-invisible="!visible" @click="onClick"
   @contextmenu.stop="onNavCtxMenu"
   @mouseup.right="onRightMouseUp")
-  scroll-box(ref="scrollBox"): .bookmarks-wrapper
+  ScrollBox(ref="scrollBox"): .bookmarks-wrapper
     component.node(
       v-for="n in $store.state.bookmarks"
       :is="n.type"
@@ -12,12 +12,11 @@
       :node="n"
       @start-selection="onStartSelection")
   transition(name="editor")
-    bookmark-editor.editor(v-if="$store.state.bookmarkEditor")
+    BookmarkEditor.editor(v-if="$store.state.bookmarkEditor")
+  SelectBookmarksFolderBar
 </template>
 
-
 <script>
-import Utils from '../../utils'
 import EventBus from '../../event-bus'
 import State from '../store/state'
 import Actions from '../actions'
@@ -25,6 +24,7 @@ import ScrollBox from './scroll-box'
 import Bookmark from './bookmark'
 import Folder from './bookmarks-folder'
 import BookmarkEditor from './bookmark-editor'
+import SelectBookmarksFolderBar from './select-bookmarks-folder-bar'
 
 export default {
   components: {
@@ -32,6 +32,7 @@ export default {
     Bookmark,
     Folder,
     BookmarkEditor,
+    SelectBookmarksFolderBar,
   },
 
   props: {
@@ -93,7 +94,9 @@ export default {
     // Render if this panel is active
     if (State.panelIndex === this.index) {
       this.renderable = true
-      setTimeout(() => { this.visible = true }, 16)
+      setTimeout(() => {
+        this.visible = true
+      }, 16)
     }
   },
 
@@ -126,10 +129,12 @@ export default {
 
       e.stopPropagation()
 
+      if (State.ctxMenuNative) return
+
       let type
       if (panel.type === 'bookmarks') type = 'bookmarksPanel'
       else if (panel.type === 'default') type = 'tabsPanel'
-      else if (panel.type === 'ctx') type = 'tabsPanel'
+      else if (panel.type === 'tabs') type = 'tabsPanel'
 
       State.selected = [panel]
       Actions.openCtxMenu(type, e.clientX, e.clientY)
@@ -139,11 +144,7 @@ export default {
      * Handle context menu event
      */
     onNavCtxMenu(e) {
-      if (
-        !State.ctxMenuNative ||
-        e.ctrlKey ||
-        e.shiftKey
-      ) {
+      if (!State.ctxMenuNative || e.ctrlKey || e.shiftKey) {
         e.stopPropagation()
         e.preventDefault()
         return
@@ -158,7 +159,7 @@ export default {
       let type
       if (panel.type === 'bookmarks') type = 'bookmarksPanel'
       else if (panel.type === 'default') type = 'tabsPanel'
-      else if (panel.type === 'ctx') type = 'tabsPanel'
+      else if (panel.type === 'tabs') type = 'tabsPanel'
       if (!State.selected.length) State.selected = [panel]
 
       Actions.openCtxMenu(type)
@@ -181,7 +182,7 @@ export default {
       const fh = Utils.parseCSSNum(fhRaw.trim())[0]
       const fc = fh >> 1
       const fe = fc >> 1
-    
+
       const bhRaw = compStyle.getPropertyValue('--bookmarks-bookmark-height')
       const bh = Utils.parseCSSNum(bhRaw.trim())[0]
       const bc = bh >> 1
@@ -269,11 +270,11 @@ export default {
       if (!this.$refs.scrollBox) return
       let scrollableBoxEl = this.$refs.scrollBox.getScrollableBox()
       if (!scrollableBoxEl) return
-      
+
       if (scrollBoxEl.scrollTop === 0) {
-        scrollableBoxEl.scrollIntoView({ behavior: 'smooth', block: 'end'})
+        scrollableBoxEl.scrollIntoView({ behavior: 'smooth', block: 'end' })
       } else {
-        scrollableBoxEl.scrollIntoView({ behavior: 'smooth', block: 'start'})
+        scrollableBoxEl.scrollIntoView({ behavior: 'smooth', block: 'start' })
       }
     },
   },

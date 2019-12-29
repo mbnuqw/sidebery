@@ -4,7 +4,6 @@
   .opt.-true {{t('settings.opt_true')}}
 </template>
 
-
 <script>
 export default {
   props: {

@@ -1,11 +1,11 @@
 <template lang="pug">
-.MenuEditor(v-noise:300.g:12:af.a:0:42.s:0:9="" @click="resetSelection" @scroll.passive="onScroll")
+.MenuEditor(@click="resetSelection" @scroll.passive="onScroll")
 
   section(ref="menu_editor_tabs" @click.stop="" @wheel="moveSelected($event, 'tabs')")
     h2 {{t('menu.editor.tabs_title')}}
 
     .menu-group(v-for="(group, i) in tabsMenu" :data-type="group.type")
-      TextInput.group-title(
+      text-input.group-title(
         v-if="group.type === 'sub'"
         :value="group.name"
         :or="t('menu.editor.inline_group_title')"
@@ -53,7 +53,7 @@
     h2 {{t('menu.editor.tabs_panel_title')}}
 
     .menu-group(v-for="(group, i) in tabsPanelMenu" :data-type="group.type")
-      TextInput.group-title(
+      text-input.group-title(
         v-if="group.type === 'sub'"
         :value="group.name"
         :or="t('menu.editor.inline_group_title')"
@@ -101,7 +101,7 @@
     h2 {{t('menu.editor.bookmarks_title')}}
 
     .menu-group(v-for="(group, i) in bookmarksMenu" :data-type="group.type")
-      TextInput.group-title(
+      text-input.group-title(
         v-if="group.type === 'sub'"
         :value="group.name"
         :or="t('menu.editor.inline_group_title')"
@@ -150,7 +150,7 @@
     h2 {{t('menu.editor.bookmarks_panel_title')}}
 
     .menu-group(v-for="(group, i) in bookmarksPanelMenu" :data-type="group.type")
-      TextInput.group-title(
+      text-input.group-title(
         v-if="group.type === 'sub'"
         :value="group.name"
         :or="t('menu.editor.inline_group_title')"
@@ -198,59 +198,64 @@
   FooterSection
 </template>
 
-
 <script>
 import State from '../store/state'
 import Actions from '../actions'
-import { DEFAULT_TABS_MENU, DEFAULT_BOOKMARKS_MENU } from '../../defaults'
-import { DEFAULT_TABS_PANEL_MENU } from '../../defaults'
-import { DEFAULT_BOOKMARKS_PANEL_MENU } from '../../defaults'
+import { DEFAULT_TABS_MENU, DEFAULT_BOOKMARKS_MENU } from '../../../addon/defaults'
+import { DEFAULT_TABS_PANEL_MENU } from '../../../addon/defaults'
+import { BOOKMARKS_PANEL_MENU } from '../../../addon/defaults'
 import TextInput from '../../components/text-input'
 import FooterSection from './footer'
 
 const TABS_MENU_OPTS = {
-  'undoRmTab': 'menu.tab.undo',
-  'pin': 'menu.tab.pin',
-  'reload': 'menu.tab.reload',
-  'bookmark': 'menu.tab.bookmark',
-  'moveToNewWin': 'menu.tab.move_to_new_window',
-  'moveToNewPrivWin': 'menu.tab.move_to_new_priv_window',
-  'moveToAnotherWin': 'menu.tab.move_to_another_window',
-  'moveToWin': 'menu.tab.move_to_window_',
-  'moveToCtr': 'menu.tab.reopen_in_ctr_',
-  'mute': 'menu.tab.mute',
-  'discard': 'menu.tab.discard',
-  'group': 'menu.tab.group',
-  'flatten': 'menu.tab.flatten',
-  'clearCookies': 'menu.tab.clear_cookies',
-  'close': 'menu.tab.close',
+  undoRmTab: 'menu.tab.undo',
+  pin: 'menu.tab.pin',
+  reload: 'menu.tab.reload',
+  bookmark: 'menu.tab.bookmark',
+  moveToNewWin: 'menu.tab.move_to_new_window',
+  moveToNewPrivWin: 'menu.tab.move_to_new_priv_window',
+  moveToAnotherWin: 'menu.tab.move_to_another_window',
+  moveToWin: 'menu.tab.move_to_window_',
+  moveToCtr: 'menu.tab.reopen_in_ctr_',
+  mute: 'menu.tab.mute',
+  duplicate: 'menu.tab.duplicate',
+  discard: 'menu.tab.discard',
+  copyUrls: 'menu.copy_urls',
+  group: 'menu.tab.group',
+  flatten: 'menu.tab.flatten',
+  clearCookies: 'menu.tab.clear_cookies',
+  close: 'menu.tab.close',
 }
 
 const BOOKMARKS_MENU_OPTS = {
-  'openInNewWin': 'menu.bookmark.open_in_new_window',
-  'openInNewPrivWin': 'menu.bookmark.open_in_new_priv_window',
-  'openInCtr': 'menu.bookmark.open_in_ctr_',
-  'createBookmark': 'menu.bookmark.create_bookmark',
-  'createFolder': 'menu.bookmark.create_folder',
-  'createSeparator': 'menu.bookmark.create_separator',
-  'edit': 'menu.bookmark.edit_bookmark',
-  'delete': 'menu.bookmark.delete_bookmark',
+  openInNewWin: 'menu.bookmark.open_in_new_window',
+  openInNewPrivWin: 'menu.bookmark.open_in_new_priv_window',
+  openInCtr: 'menu.bookmark.open_in_ctr_',
+  createBookmark: 'menu.bookmark.create_bookmark',
+  createFolder: 'menu.bookmark.create_folder',
+  createSeparator: 'menu.bookmark.create_separator',
+  sortByName: 'menu.bookmark.sort_by_name',
+  sortByLink: 'menu.bookmark.sort_by_link',
+  sortByTime: 'menu.bookmark.sort_by_time',
+  copyUrls: 'menu.copy_urls',
+  edit: 'menu.bookmark.edit_bookmark',
+  delete: 'menu.bookmark.delete_bookmark',
 }
 
 const TABS_PANEL_MENU_OPTS = {
-  'muteAllAudibleTabs': 'menu.tabs_panel.mute_all_audible',
-  'closeTabsDuplicates': 'menu.tabs_panel.dedup',
-  'undoRmTab': 'menu.tab.undo',
-  'reloadTabs': 'menu.tabs_panel.reload',
-  'discardTabs': 'menu.tabs_panel.discard',
-  'collapseInactiveBranches': 'menu.tabs_panel.collapse_inact_branches',
-  'closeTabs': 'menu.tabs_panel.close',
-  'openPanelConfig': 'menu.common.conf',
+  muteAllAudibleTabs: 'menu.tabs_panel.mute_all_audible',
+  closeTabsDuplicates: 'menu.tabs_panel.dedup',
+  undoRmTab: 'menu.tab.undo',
+  reloadTabs: 'menu.tabs_panel.reload',
+  discardTabs: 'menu.tabs_panel.discard',
+  collapseInactiveBranches: 'menu.tabs_panel.collapse_inact_branches',
+  closeTabs: 'menu.tabs_panel.close',
+  openPanelConfig: 'menu.common.conf',
 }
 
 const BOOKMARKS_PANEL_MENU_OPTS = {
-  'collapseAllFolders': 'menu.bookmark.collapse_all',
-  'openPanelConfig': 'menu.common.conf',
+  collapseAllFolders: 'menu.bookmark.collapse_all',
+  openPanelConfig: 'menu.common.conf',
 }
 
 const SECTIONS = [
@@ -430,7 +435,7 @@ export default {
     onScroll(e) {
       if (State.navLock) return
 
-      for (let name, i = SECTIONS.length; i--;) {
+      for (let name, i = SECTIONS.length; i--; ) {
         name = SECTIONS[i]
         if (!this.$refs[name]) break
 
@@ -486,7 +491,7 @@ export default {
       Actions.saveCtxMenu()
     },
     resetBookmarksPanelMenu() {
-      State.bookmarksPanelMenu = JSON.parse(JSON.stringify(DEFAULT_BOOKMARKS_PANEL_MENU))
+      State.bookmarksPanelMenu = JSON.parse(JSON.stringify(BOOKMARKS_PANEL_MENU))
       Actions.saveCtxMenu()
     },
 
@@ -509,7 +514,6 @@ export default {
       if (!menu) return
 
       for (let i = 0; i < menu.length; i++) {
-
         if (menu[i] === opt) {
           menu.splice(i, 1)
           break
@@ -537,7 +541,6 @@ export default {
       if (!menu) return
 
       for (let i = 0; i < menu.length; i++) {
-
         if (menu[i] === opt) {
           menu.splice(i, 1, [opt])
           break
@@ -580,7 +583,6 @@ export default {
       if (menu[menu.length - 1] === opt) return
 
       for (let i = 0; i < menu.length; i++) {
-
         if (menu[i] === opt) {
           menu.splice(i, 1)
           if (!menu[i]) break
@@ -616,12 +618,11 @@ export default {
       if (menu[0] === opt) return
 
       for (let i = 0; i < menu.length; i++) {
-
         if (menu[i] === opt) {
           menu.splice(i, 1)
-          if (!menu[i-1]) break
-          if (typeof menu[i-1] === 'string') menu.splice(i-1, 0, opt)
-          else menu[i-1].push(opt)
+          if (!menu[i - 1]) break
+          if (typeof menu[i - 1] === 'string') menu.splice(i - 1, 0, opt)
+          else menu[i - 1].push(opt)
           break
         }
 
@@ -630,10 +631,10 @@ export default {
           if (index === -1) continue
 
           menu[i].splice(index, 1)
-          if (!menu[i][index-1] || typeof menu[i][index-1] === 'object') {
+          if (!menu[i][index - 1] || typeof menu[i][index - 1] === 'object') {
             menu.splice(i, 0, opt)
           } else {
-            menu[i].splice(index-1, 0, opt)
+            menu[i].splice(index - 1, 0, opt)
           }
           break
         }

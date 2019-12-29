@@ -12,11 +12,12 @@
   :data-folded="tab.folded"
   :data-invisible="tab.invisible"
   :data-close-btn="$store.state.showTabRmBtn"
+  :data-color="color"
   :title="tooltip"
   @contextmenu.stop="onCtxMenu"
   @mousedown.stop="onMouseDown"
   @mouseup.stop="onMouseUp"
-  @mouseleave="onMouseLeave"
+  @mouseleave.passive="onMouseLeave"
   @dblclick.prevent.stop="onDoubleClick"): .lvl-wrapper
   transition(name="tab-complete"): .complete-fx(v-if="tab.status === 'loading'")
   .drag-layer(
@@ -30,17 +31,23 @@
   .fav(@dragstart.stop.prevent="")
     transition(name="tab-part"): .placeholder(v-if="!tab.favIconUrl"): svg: use(:xlink:href="favPlaceholder")
     transition(name="tab-part"): img(v-if="tab.favIconUrl" :src="tab.favIconUrl")
-    .exp(v-if="tab.isParent" @dblclick.prevent.stop="" @mousedown.stop="onExp"): svg: use(xlink:href="#icon_expand")
+    .exp(
+      v-if="tab.isParent"
+      @dblclick.prevent.stop=""
+      @mousedown.stop="onExp"
+      @mouseup.left.stop="")
+      svg: use(xlink:href="#icon_expand")
     .update-badge
     transition(name="tab-part"): .ok-badge(v-if="loading === 'ok'"): svg: use(xlink:href="#icon_ok")
     transition(name="tab-part"): .err-badge(v-if="loading === 'err'"): svg: use(xlink:href="#icon_err")
     transition(name="tab-part"): .progress-spinner(v-if="loading === true")
     .child-count(v-if="childCount && tab.folded") {{childCount}}
-  .close(v-if="$store.state.showTabRmBtn" @mousedown.stop="onCloseClick" @mouseup.stop="")
+  .close(v-if="$store.state.showTabRmBtn" @mousedown.stop="onCloseClick" @mouseup.stop="" @contextmenu.stop.prevent="")
     svg: use(xlink:href="#icon_remove")
+  .ctx(v-if="color")
+  //- .t-box: .title {{tab.index}}-{{tab.id}}-{{tab.panelId[0]}} {{tab.title}}
   .t-box: .title {{tab.title}}
 </template>
-
 
 <script>
 import EventBus from '../../event-bus'
@@ -73,6 +80,12 @@ export default {
     loading() {
       if (this.tab.loading) return this.tab.loading
       return this.tab.status === 'loading'
+    },
+
+    color() {
+      let container = State.containers[this.tab.cookieStoreId]
+      if (container) return container.color
+      return false
     },
 
     tooltip() {
@@ -124,6 +137,9 @@ export default {
       }
 
       if (e.shiftKey) {
+        if (State.shiftSelAct && !State.selected.length) {
+          if (State.activeTabId > -1) Actions.selectItem(State.activeTabId)
+        }
         if (!State.selected.length) {
           Actions.selectItem(this.tab.id)
         } else {
@@ -141,6 +157,7 @@ export default {
             if (i !== first.index) State.selected.push(State.tabs[i].id)
           }
         }
+        if (State.nativeHighlight) Actions.updateHighlightedTabs()
         return
       }
 
@@ -164,6 +181,7 @@ export default {
         if (llc === 'mute') Actions.remuteTabs([this.tab.id])
         if (llc === 'clear_cookies') Actions.clearTabsCookies([this.tab.id])
         if (llc === 'new_after') Actions.createTabAfter(this.tab.id)
+        if (llc === 'new_child') Actions.createChildTab(this.tab.id)
         if (llc !== 'none') this.longClickActionLeftFired = true
         this.longClickActionLeft = null
       }, 300)
@@ -204,6 +222,7 @@ export default {
         if (lrc === 'mute') Actions.remuteTabs([this.tab.id])
         if (lrc === 'clear_cookies') Actions.clearTabsCookies([this.tab.id])
         if (lrc === 'new_after') Actions.createTabAfter(this.tab.id)
+        if (lrc === 'new_child') Actions.createChildTab(this.tab.id)
         if (lrc !== 'none') this.longClickActionRightFired = true
         this.longClickActionRight = null
       }, 300)
@@ -217,7 +236,8 @@ export default {
         if (
           (State.selected.length || State.activateOnMouseUp) &&
           !this.longClickActionLeftFired &&
-          !e.ctrlKey && !e.shiftKey
+          !e.ctrlKey &&
+          !e.shiftKey
         ) {
           browser.tabs.update(this.tab.id, { active: true })
         }
@@ -238,7 +258,7 @@ export default {
         if (!State.selected.length && !State.ctxMenuNative && !this.longClickActionRightFired) {
           this.select()
         }
-        Actions.openCtxMenu('tab', e.clientX, e.clientY)
+        if (!State.ctxMenuNative) Actions.openCtxMenu('tab', e.clientX, e.clientY)
       }
     },
 
@@ -246,12 +266,7 @@ export default {
      * Handle context menu
      */
     onCtxMenu(e) {
-      if (
-        this.longClickActionRightFired ||
-        !State.ctxMenuNative ||
-        e.ctrlKey ||
-        e.shiftKey
-      ) {
+      if (this.longClickActionRightFired || !State.ctxMenuNative || e.ctrlKey || e.shiftKey) {
         e.stopPropagation()
         e.preventDefault()
         return
@@ -287,14 +302,20 @@ export default {
       if (dc === 'clear_cookies') Actions.clearTabsCookies([this.tab.id])
       if (dc === 'exp' && this.tab.isParent) Actions.toggleBranch(this.tab.id)
       if (dc === 'new_after') Actions.createTabAfter(this.tab.id)
+      if (dc === 'new_child') Actions.createChildTab(this.tab.id)
+      if (dc === 'close') Actions.removeTabs([this.tab.id])
     },
 
     /**
      * Handle mouseleave event
      */
     onMouseLeave() {
-      if (this.longClickActionLeft) this.longClickActionLeft = clearTimeout(this.longClickActionLeft)
-      if (this.longClickActionRight) this.longClickActionRight = clearTimeout(this.longClickActionRight)
+      if (this.longClickActionLeft) {
+        this.longClickActionLeft = clearTimeout(this.longClickActionLeft)
+      }
+      if (this.longClickActionRight) {
+        this.longClickActionRight = clearTimeout(this.longClickActionRight)
+      }
     },
 
     /**
@@ -358,9 +379,10 @@ export default {
       if (this.tab.invisible) return
       if (this.dragEnterTimeout) clearTimeout(this.dragEnterTimeout)
       this.dragEnterTimeout = setTimeout(() => {
-        if (!State.dragNodes) return
-        browser.tabs.update(this.tab.id, { active: true })
         this.dragEnterTimeout = null
+        if (State.dragNodes) {
+          browser.tabs.update(this.tab.id, { active: true })
+        }
       }, 750)
     },
 
@@ -379,7 +401,10 @@ export default {
      */
     onExp(e) {
       // Fold/Expand branch
-      if (e.button === 0) Actions.toggleBranch(this.tab.id)
+      if (e.button === 0) {
+        if (State.ctxMenu) Actions.closeCtxMenu()
+        Actions.toggleBranch(this.tab.id)
+      }
 
       // Select whole branch and show menu
       if (e.button === 2) {
@@ -419,7 +444,7 @@ export default {
      */
     select() {
       if (this.tab.isParent && this.tab.folded) {
-      // Select whole branch if tab is folded
+        // Select whole branch if tab is folded
         Actions.resetSelection()
         this.tab.sel = true
         State.selected.push(this.tab.id)
@@ -431,7 +456,7 @@ export default {
           State.selected.push(tab.id)
         }
       } else {
-      // Select only current tab
+        // Select only current tab
         Actions.selectItem(this.tab.id)
       }
     },

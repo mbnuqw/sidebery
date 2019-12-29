@@ -15,12 +15,11 @@
     .title(v-if="node.title") {{node.title}}
 </template>
 
-
 <script>
 import EventBus from '../../event-bus'
 import State from '../store/state'
 import Actions from '../actions'
-import { DEFAULT_CTX_ID } from '../../defaults'
+import { DEFAULT_CTX_ID } from '../../../addon/defaults'
 
 export default {
   props: {
@@ -84,7 +83,11 @@ export default {
           for (let slot of State.itemSlots) {
             if (slot.id === first.id || slot.id === this.node.id) {
               if (!inside) inside = true
-              else break
+              else {
+                State.bookmarksMap[slot.id].sel = true
+                State.selected.push(slot.id)
+                break
+              }
             }
             if (inside) {
               State.bookmarksMap[slot.id].sel = true
@@ -105,14 +108,20 @@ export default {
         Actions.resetSelection()
         return
       }
-      this.openUrl(true, false)
+      if (State.midClickBookmark === 'open_new_tab') {
+        this.openUrl(true, State.actMidClickTab)
+      } else if (State.midClickBookmark === 'edit') {
+        Actions.startBookmarkEditing(this.node)
+      } else if (State.midClickBookmark === 'delete') {
+        Actions.removeBookmarks([this.node.id])
+      }
     },
 
     /**
      * Mousedown Right
      */
     onMouseDownRight(e) {
-      if (!State.ctxMenuNative) {
+      if (!State.ctxMenuNative && !this.node.sel) {
         Actions.resetSelection()
         Actions.startMultiSelection({
           type: 'bookmark',
@@ -149,8 +158,10 @@ export default {
         if (e.ctrlKey || e.shiftKey) return
 
         Actions.stopMultiSelection()
-        if (!State.ctxMenuNative) Actions.selectItem(this.node.id)
-        Actions.openCtxMenu('bookmark', e.clientX, e.clientY)
+        if (!State.ctxMenuNative) {
+          Actions.selectItem(this.node.id)
+          Actions.openCtxMenu('bookmark', e.clientX, e.clientY)
+        }
       }
     },
 
@@ -235,19 +246,27 @@ export default {
       }
 
       if (inNewTab) {
-        let index = State.panelsMap[DEFAULT_CTX_ID].endIndex + 1
-        browser.tabs.create({
-          index,
-          windowId: State.windowId,
-          url,
-          active: withFocus,
-        })
+        let panelId = Actions.findPanelForUrl(url) || DEFAULT_CTX_ID
+        let panel = State.panelsMap[panelId]
+        let conf = { windowId: State.windowId, url: Utils.normalizeUrl(url), active: withFocus }
+
+        if (!panel) return
+
+        conf.index = panel.tabs.length ? panel.endIndex + 1 : panel.endIndex
+        if (panel.newTabCtx !== 'none') conf.cookieStoreId = panel.newTabCtx
+
+        if (!State.newTabsPosition) State.newTabsPosition = {}
+        State.newTabsPosition[conf.index] = {
+          parent: -1,
+          panel: panelId,
+        }
+
+        browser.tabs.create(conf)
       } else {
-        browser.tabs.update({ url })
+        browser.tabs.update({ url: Utils.normalizeUrl(url) })
         let panel = State.panels.find(p => p.bookmarks)
         if (withFocus && !panel.lockedPanel) Actions.goToActiveTabPanel()
       }
-
     },
 
     async remove() {

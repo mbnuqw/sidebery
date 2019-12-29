@@ -1,0 +1,74 @@
+@import '../../mixins'
+
+.Confirm
+  box(absolute, flex)
+  pos(0, 0)
+  size(100%, same)
+  justify-content: center
+  align-items: center
+  z-index: 5000
+  background-color: #00000036
+
+.Confirm .msg-box
+  box(relative)
+  size(100%)
+  margin-bottom: 64px
+  background-color: var(--bg)
+  background-image: var(--bg-img)
+  background-size: var(--bg-size)
+  box-shadow: 0 0 0 1px #00000016,
+              0 0 16px 0 #00000032,
+              inset 0 1px 0 0 var(--border-flare-fg)
+
+.Confirm h2
+  box(relative)
+  text(s: rem(21), w: 700)
+  color: var(--title-fg)
+  margin: 16px 0
+  padding: 0
+  text-align: center
+
+.Confirm .msg
+  box(relative)
+  text(s: rem(16))
+  padding: 0 8px
+  color: var(--label-fg)
+  text-align: center
+
+.Confirm .ctrls
+  box(relative, flex)
+  align-items: center
+  justify-content: center
+  padding: 0 8px
+  margin: 12px 0 8px
+  flex-wrap: wrap
+
+.Confirm .ctrls > .btn
+  size(min-w: max-content)
+  text(s: rem(15))
+  padding: 5px 12px
+  margin: 4px
+  flex-grow: 1
+
+
+.confirm-enter-active
+.confirm-leave-active
+  transition: opacity var(--d-fast)
+  .msg-box
+    transition: transform var(--d-fast)
+.confirm-enter
+  opacity: 0
+  .msg-box
+    transform: translateY(32px)
+.confirm-enter-to
+  opacity: 1
+  .msg-box
+    transform: translateY(0)
+.confirm-leave
+  opacity: 1
+  .msg-box
+    transform: translateY(0)
+.confirm-leave-to
+  opacity: 0
+  .msg-box
+    transform: translateY(32px)

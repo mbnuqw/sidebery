@@ -1,10 +1,8 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
 import State from './state'
 
 Vue.use(Vuex)
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
   getters: {
     pinnedTabs: state => {
       let pinned = []
@@ -18,3 +16,6 @@ export default new Vuex.Store({
 
   state: State,
 })
+
+export const getters = store.getters
+export default store

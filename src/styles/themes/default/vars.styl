@@ -14,7 +14,7 @@
     --true-fg: #64df64
     --false-fg: #df6464
     --false-bg: #b93527
-    --active-fg: #64aaff
+    --active-fg: #4993E6
     --inactive-fg: #5c5c5c
     --notice-fg: #00e9fb
     --favicons-placehoder-bg: #ffffff24
@@ -127,10 +127,11 @@
     --tabs-bg-active: #242424af
     --tabs-activated-bg: #242424af
     --tabs-activated-fg: #ffffff
-    --tabs-selected-bg: #245484
+    --tabs-selected-bg: #275ca4
     --tabs-selected-fg: #ffffff
     --tabs-loading-fg: #47cfff
     --tabs-update-badge-bg: #00e9fb
+    --tabs-lvl-indicator-bg: #5c5c5c
   &[data-style="light"]
     --tabs-fg: #323232
     --tabs-fg-hover: #000000
@@ -140,9 +141,10 @@
     --tabs-activated-bg: #cacacaaf
     --tabs-activated-fg: #000000
     --tabs-loading-fg: #146fd9
-    --tabs-selected-bg: #44a4f4
+    --tabs-selected-bg: #458fff
     --tabs-selected-fg: #ffffff
     --tabs-update-badge-bg: #01acda
+    --tabs-lvl-indicator-bg: #a2a2a2
 
   // Bookmarks
   &[data-style="dark"]
@@ -196,49 +198,51 @@
 // -- Color of current panel
 // -
 #root[data-style="dark"]
-  --active-panel-fg: #ffffff
+  --active-container-fg: #ffffff
 #root[data-style="light"]
-  --active-panel-fg: #323232
+  --active-container-fg: #323232
 #root[data-color="blue"]
-  --active-panel-fg: #37adff
+  --active-container-fg: #37adff
 #root[data-color="turquoise"]
-  --active-panel-fg: #00c79a
+  --active-container-fg: #00c79a
 #root[data-color="green"]
-  --active-panel-fg: #51cd00
+  --active-container-fg: #51cd00
 #root[data-color="yellow"]
-  --active-panel-fg: #ffcb00
+  --active-container-fg: #ffcb00
 #root[data-color="orange"]
-  --active-panel-fg: #ff9f00
+  --active-container-fg: #ff9f00
 #root[data-color="red"]
-  --active-panel-fg: #ff613d
+  --active-container-fg: #ff613d
 #root[data-color="pink"]
-  --active-panel-fg: #ff4bda
+  --active-container-fg: #ff4bda
 #root[data-color="purple"]
-  --active-panel-fg: #af51f5
+  --active-container-fg: #af51f5
 
 // ---
 // -- Local color of panel
 // -
 #root[data-style="dark"]
-  --panel-fg: #ffffff
+  --container-fg: #ffffff
 #root[data-style="light"]
-  --panel-fg: #323232
+  --container-fg: #323232
 [data-color="blue"]
-  --panel-fg: #37adff
+  --container-fg: #37adff
 [data-color="turquoise"]
-  --panel-fg: #00c79a
+  --container-fg: #00c79a
 [data-color="green"]
-  --panel-fg: #51cd00
+  --container-fg: #51cd00
 [data-color="yellow"]
-  --panel-fg: #ffcb00
+  --container-fg: #ffcb00
 [data-color="orange"]
-  --panel-fg: #ff9f00
+  --container-fg: #ff9f00
 [data-color="red"]
-  --panel-fg: #ff613d
+  --container-fg: #ff613d
 [data-color="pink"]
-  --panel-fg: #ff4bda
+  --container-fg: #ff4bda
 [data-color="purple"]
-  --panel-fg: #af51f5
+  --container-fg: #af51f5
+[data-color="inactive"]
+  --container-fg: #787878
 
 // ---
 // -- Sizes

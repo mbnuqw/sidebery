@@ -1,5 +1,4 @@
-const detachedTabs = [], tabsTreesByWin = {}
-let tabsTreeSaveTimeout
+const detachedTabs = []
 
 /**
  * Load tabs
@@ -14,6 +13,11 @@ async function loadTabs(windows, tabsMap) {
     else tabWindow.tabs = [tab]
 
     tabsMap[tab.id] = tab
+
+    if (this.proxies[tab.cookieStoreId]) {
+      tab.proxified = true
+      this.actions.showProxyBadge(tab.id)
+    }
   }
 }
 
@@ -26,6 +30,11 @@ function onTabCreated(tab) {
   if (tabWindow.tabs) tabWindow.tabs.splice(tab.index, 0, tab)
   else tabWindow.tabs = [tab]
   this.tabsMap[tab.id] = tab
+
+  let len = tabWindow.tabs.length
+  for (let i = tab.index; i < len; i++) {
+    tabWindow.tabs[i].index = i
+  }
 }
 
 /**
@@ -37,7 +46,12 @@ function onTabRemoved(tabId, info) {
   let index = tabWindow.tabs.findIndex(t => t.id === tabId)
   if (index === -1) return
   tabWindow.tabs.splice(index, 1)
-  this.tabsMap[tabId] = undefined
+  delete this.tabsMap[tabId]
+
+  let len = tabWindow.tabs.length
+  for (let i = index; i < len; i++) {
+    tabWindow.tabs[i].index = i
+  }
 }
 
 /**
@@ -45,7 +59,59 @@ function onTabRemoved(tabId, info) {
  */
 function onTabUpdated(tabId, change) {
   let targetTab = this.tabsMap[tabId]
-  if (targetTab) Object.assign(targetTab, change)
+  if (!targetTab) return
+
+  Object.assign(targetTab, change)
+
+  if (this.proxies[targetTab.cookieStoreId]) {
+    targetTab.proxified = true
+    this.actions.showProxyBadgeDebounced(tabId)
+  }
+  if (!this.proxies[targetTab.cookieStoreId] && targetTab.proxified) {
+    targetTab.proxified = false
+    this.actions.hideProxyBadge(tabId)
+  }
+}
+
+/**
+ * Handle tab activation event
+ */
+function onTabActivated(info) {
+  let tab = this.tabsMap[info.tabId]
+  if (tab) tab.active = true
+
+  let prevTab = this.tabsMap[info.previousTabId]
+  if (prevTab) prevTab.active = false
+}
+
+/**
+ * Show proxy badge (pageActive) for given tab
+ */
+function showProxyBadge(tabId) {
+  let tab = this.tabsMap[tabId]
+  if (!tab) return
+  let container = this.containers[tab.cookieStoreId]
+  if (!container) return
+
+  let titlePre = browser.i18n.getMessage('proxy_popup.title_prefix')
+  let titlePost = browser.i18n.getMessage('proxy_popup.title_postfix')
+  let title = titlePre + container.name + titlePost
+  browser.pageAction.setTitle({ title, tabId })
+  browser.pageAction.show(tabId)
+}
+function showProxyBadgeDebounced(tabId, delay = 500) {
+  if (this._showProxyBadgeTimeout) clearTimeout(this._showProxyBadgeTimeout)
+  this._showProxyBadgeTimeout = setTimeout(() => {
+    this.actions.showProxyBadge(tabId)
+  }, delay)
+}
+
+/**
+ * Hide proxy badge (pageActive) for given tab
+ */
+function hideProxyBadge(tabId) {
+  browser.pageAction.hide(tabId)
+  browser.pageAction.setTitle({ title: 'Sidebery proxy off', tabId })
 }
 
 /**
@@ -58,6 +124,10 @@ function onTabMoved(id, info) {
   if (!tabWindow.tabs) return
   let movedTab = tabWindow.tabs.splice(info.fromIndex, 1)[0]
   tabWindow.tabs.splice(info.toIndex, 0, movedTab)
+
+  for (let i = tabWindow.tabs.length; i--; ) {
+    tabWindow.tabs[i].index = i
+  }
 }
 
 /**
@@ -80,37 +150,39 @@ function onTabDetached(id, info) {
 }
 
 /**
- * Load tabs trees
+ * Backup tabs data
  */
-async function backupTabsTrees() {
-  let trees
+async function backupTabsData() {
+  let tabsData
   try {
-    let ans = await browser.storage.local.get({ tabsTrees: [] })
-    trees = ans.tabsTrees
+    let storage = await browser.storage.local.get({ tabsData_v4: tabsData })
+    tabsData = storage.tabsData_v4
   } catch (err) {
-    // Logs.push('[ERROR:BG] backupTabsTrees: ' + err.toString())
+    // Logs.push('[ERROR:BG] backupTabsData: ', err.toString())
     return
   }
 
-  await browser.storage.local.set({ prevTabsTrees: trees })
+  await browser.storage.local.set({ prevTabsData_v4: tabsData })
 }
 
 /**
- * Save tabs tree
+ * Save tabs of panels
  */
-function saveTabsTree(windowId, treeState, delay = 300) {
-  if (!treeState) return
-  tabsTreesByWin[windowId] = treeState
+function saveTabsData(windowId, tabs, delay = 300) {
+  if (!tabs) return
+  if (!this._tabsDataByWin) this._tabsDataByWin = {}
+  this._tabsDataByWin[windowId] = tabs
 
-  if (tabsTreeSaveTimeout) clearTimeout(tabsTreeSaveTimeout)
-  tabsTreeSaveTimeout = setTimeout(async () => {
-    const tabsTrees = []
-    for (let tree of Object.values(tabsTreesByWin)) {
-      if (tree.length) tabsTrees.push(tree)
+  if (this._saveTabsDataTimeout) clearTimeout(this._saveTabsDataTimeout)
+  this._saveTabsDataTimeout = setTimeout(() => {
+    this._saveTabsDataTimeout = null
+
+    let tabsData = []
+    for (let tabs of Object.values(this._tabsDataByWin)) {
+      if (tabs.length) tabsData.push(tabs)
     }
 
-    browser.storage.local.set({ tabsTrees })
-    tabsTreeSaveTimeout = null
+    browser.storage.local.set({ tabsData_v4: tabsData })
   }, delay)
 }
 
@@ -118,20 +190,28 @@ function saveTabsTree(windowId, treeState, delay = 300) {
  * updateTabsTree
  */
 async function updateTabsTree() {
-  const receiving = [], windows = []
+  let receiving = []
+  let windows = []
   for (let window of Object.values(this.windows)) {
-    receiving.push(browser.runtime.sendMessage({
-      windowId: window.id,
-      instanceType: 'sidebar',
-      action: 'getTabsTree',
-    }))
+    receiving.push(
+      browser.runtime.sendMessage({
+        windowId: window.id,
+        instanceType: 'sidebar',
+        action: 'getTabsTree',
+      })
+    )
     windows.push(window)
   }
 
-  const trees = await Promise.all(receiving)
-  for (let i = 0; i < trees.length; i++) {
+  let trees = await Promise.all(receiving)
+  for (let info, i = 0; i < trees.length; i++) {
+    info = trees[i]
+    if (!info) continue
     for (let tab of windows[i].tabs) {
-      if (trees[i]) tab.lvl = trees[i][String(tab.id)] || 0
+      let tabInfo = info[String(tab.id)]
+      if (!tabInfo) continue
+      tab.lvl = tabInfo.lvl
+      tab.panelId = tabInfo.panel
     }
   }
 }
@@ -176,8 +256,9 @@ function setupTabsListeners() {
   browser.tabs.onCreated.addListener(this.actions.onTabCreated)
   browser.tabs.onRemoved.addListener(this.actions.onTabRemoved)
   browser.tabs.onUpdated.addListener(this.actions.onTabUpdated, {
-    properties: [ 'pinned', 'title', 'status' ],
+    properties: ['pinned', 'title', 'status'],
   })
+  browser.tabs.onActivated.addListener(this.actions.onTabActivated)
   browser.tabs.onMoved.addListener(this.actions.onTabMoved)
   browser.tabs.onAttached.addListener(this.actions.onTabAttached)
   browser.tabs.onDetached.addListener(this.actions.onTabDetached)
@@ -189,13 +270,18 @@ export default {
   onTabCreated,
   onTabRemoved,
   onTabUpdated,
+  onTabActivated,
   onTabMoved,
   onTabAttached,
   onTabDetached,
 
+  showProxyBadge,
+  showProxyBadgeDebounced,
+  hideProxyBadge,
+
   updateTabsTree,
-  backupTabsTrees,
-  saveTabsTree,
+  backupTabsData,
+  saveTabsData,
   moveTabsToWin,
 
   setupTabsListeners,

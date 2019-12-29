@@ -33,15 +33,13 @@
   transition(name="tab-part"): .audio-badge(v-if="tab.audible || tab.mutedInfo.muted" @mousedown.stop="" @click="onAudioClick")
     svg.-loud: use(xlink:href="#icon_loud_badge")
     svg.-mute: use(xlink:href="#icon_mute_badge")
-  .ctx(v-if="ctx && color")
+  .ctx(v-if="color")
   .title(v-if="withTitle") {{tab.title}}
   .close(v-if="$store.state.showTabRmBtn" @mousedown.stop="close" @mouseup.stop="")
     svg: use(xlink:href="#icon_remove")
 </template>
 
-
 <script>
-import Utils from '../../utils'
 import EventBus from '../../event-bus'
 import State from '../store/state'
 import Actions from '../actions'
@@ -74,8 +72,8 @@ export default {
     },
 
     color() {
-      const panel = State.panelsMap[this.tab.cookieStoreId]
-      if (panel && panel.color) return panel.color
+      let ctr = State.containers[this.tab.cookieStoreId]
+      if (ctr && ctr.color) return ctr.color
       else return ''
     },
 
@@ -217,7 +215,8 @@ export default {
         if (
           (State.selected.length || State.activateOnMouseUp) &&
           !this.longClickActionLeftFired &&
-          !e.ctrlKey && !e.shiftKey
+          !e.ctrlKey &&
+          !e.shiftKey
         ) {
           browser.tabs.update(this.tab.id, { active: true })
         }
@@ -237,7 +236,7 @@ export default {
         if (!State.ctxMenuNative && !this.longClickActionRightFired) {
           Actions.selectItem(this.tab.id)
         }
-        Actions.openCtxMenu('tab', e.clientX, e.clientY)
+        if (!State.ctxMenuNative) Actions.openCtxMenu('tab', e.clientX, e.clientY)
       }
     },
 
@@ -245,12 +244,7 @@ export default {
      * Handle context menu
      */
     onCtxMenu(e) {
-      if (
-        this.longClickActionRightFired ||
-        !State.ctxMenuNative ||
-        e.ctrlKey ||
-        e.shiftKey
-      ) {
+      if (this.longClickActionRightFired || !State.ctxMenuNative || e.ctrlKey || e.shiftKey) {
         e.stopPropagation()
         e.preventDefault()
         return
@@ -278,25 +272,34 @@ export default {
       if (dc === 'pin') Actions.repinTabs([this.tab.id])
       if (dc === 'mute') Actions.remuteTabs([this.tab.id])
       if (dc === 'clear_cookies') Actions.clearTabsCookies([this.tab.id])
+      if (dc === 'close') Actions.removeTabs([this.tab.id])
     },
 
     /**
      * Handle mouseleave event
      */
     onMouseLeave() {
-      if (this.longClickActionLeft) this.longClickActionLeft = clearTimeout(this.longClickActionLeft)
-      if (this.longClickActionRight) this.longClickActionRight = clearTimeout(this.longClickActionRight)
+      if (this.longClickActionLeft)
+        this.longClickActionLeft = clearTimeout(this.longClickActionLeft)
+      if (this.longClickActionRight)
+        this.longClickActionRight = clearTimeout(this.longClickActionRight)
     },
 
     /**
      * Handle dragstart event.
      */
     onDragStart(e) {
+      if (!this.longClickActionLeft) return
+
+      // Hide context menu (if any)
+      if (State.ctxMenu) State.ctxMenu = null
+
       // Check what to drag
       const toDrag = [this.tab.id]
-      const tabsToDrag = [this.tab]
+      const tabsToDrag = []
+      if (!State.selected.length) tabsToDrag.push(this.tab)
       for (let tab of State.tabs) {
-        if (toDrag.includes(tab.parentId)) {
+        if (State.selected.includes(tab.id)) {
           toDrag.push(tab.id)
           tabsToDrag.push(tab)
         }
@@ -309,7 +312,7 @@ export default {
       e.dataTransfer.effectAllowed = 'move'
       const dragData = tabsToDrag.map(t => {
         return {
-          ...Utils.cloneObject(this.tab),
+          ...Utils.cloneObject(t),
           type: 'tab',
           ctx: t.cookieStoreId,
           windowId: State.windowId,
@@ -361,7 +364,7 @@ export default {
      * Close tab
      */
     close() {
-      this.$emit('remove', this.tab)
+      browser.tabs.remove(this.tab.id)
     },
   },
 }

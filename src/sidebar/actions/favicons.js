@@ -1,6 +1,3 @@
-import Vue from 'vue'
-import Logs from '../../logs'
-
 /**
  * Load cached favicons
  */
@@ -17,7 +14,6 @@ async function loadFavicons() {
 
   this.state.favicons = favicons
   this.state.favUrls = favUrls
-  Logs.push('[INFO] Favicons loaded')
 }
 
 /**

@@ -8,7 +8,6 @@
     @input="select")
 </template>
 
-
 <script>
 import SelectColorInput from './color-select-input'
 

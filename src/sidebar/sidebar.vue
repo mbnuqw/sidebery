@@ -1,11 +1,10 @@
 <template lang="pug">
 .Sidebar(
-  v-noise:300.g:12:af.a:0:42.s:0:9=""
   :data-hidden-panels-bar="$store.state.hiddenPanelsBar"
-  :data-drag="dragMode"
+  :data-drag="$store.state.dragMode"
   :data-pointer="pointerMode"
   :data-nav-inline="$store.state.navBarInline"
-  @wheel="onWheel"
+  @wheel.passive="onWheel"
   @contextmenu.stop.prevent=""
   @dragover.prevent="onDragMove"
   @dragenter="onDragEnter"
@@ -18,52 +17,39 @@
   @mousemove.passive="onMouseMove"
   @focusout="onFocusOut")
 
-  transition(name="upgrading"): .upgrading(
-    v-if="$store.state.upgrading"
-    v-noise:300.g:12:af.a:0:42.s:0:9="")
-    .info {{t('upgrading')}}
-
-  ctx-menu
+  Confirm
+  CtxMenu
 
   .pointer(ref="pointer")
     .arrow(:data-expanding="pointerExpanding" @animationend="onPointerExpanded")
 
-  //- Pinned tabs dock
-  pinned-dock(v-if="$store.state.pinnedTabsPosition !== 'panel'")
+  PinnedDock(v-if="$store.state.pinnedTabsPosition !== 'panel'")
 
   .box(ref="box")
     .dimmer(@mousedown="$store.state.hiddenPanelsBar = false")
-
-    //- Navigation
-    nav-bar
-
-    //- Panels
+    NavBar
     .panel-box
       component.panel(
-        v-for="(c, i) in $store.state.panels"
+        v-for="(panel, i) in $store.state.panels"
         ref="panels"
-        :key="c.cookieStoreId + c.name"
-        :is="c.panel"
+        :key="panel.id"
+        :is="getPanelComponent(panel)"
         :data-pos="getPanelPos(i)"
-        :tabs="c.tabs"
+        :tabs="panel.tabs"
         :index="i"
-        :panel="c"
-        :store-id="c.cookieStoreId"
+        :panel="panel"
+        :store-id="panel.cookieStoreId"
         :active="$store.state.panelIndex === i")
       transition(name="panel")
-        window-input(v-if="$store.state.panelIndex === -5" :data-pos="windowInputPos")
+        WindowInput(v-if="$store.state.panelIndex === -5" :data-pos="windowInputPos")
       transition(name="hidden-panels-bar")
-        hidden-panels-bar(v-if="$store.state.hiddenPanelsBar")
+        HiddenPanelsBar(v-if="$store.state.hiddenPanelsBar")
+  Notifications
 </template>
 
-
 <script>
-import Vue from 'vue'
-import { PRE_SCROLL } from '../defaults'
-import initNoiseBgDirective from '../directives/noise-bg.js'
-import Utils from '../utils.js'
+import { PRE_SCROLL } from '../../addon/defaults'
 import EventBus from '../event-bus'
-import Store from './store'
 import State from './store/state.js'
 import Actions from './actions'
 import CtxMenu from './components/context-menu'
@@ -73,9 +59,8 @@ import BookmarksPanel from './components/bookmarks-panel'
 import TabsPanel from './components/tabs-panel'
 import WindowInput from './components/window-select-input'
 import PinnedDock from './components/pinned-tabs-dock'
-
-const noiseBg = initNoiseBgDirective(State, Store)
-Vue.directive('noise', noiseBg)
+import Confirm from './components/confirm'
+import Notifications from './components/notifications'
 
 // --- Vue Component ---
 export default {
@@ -87,11 +72,12 @@ export default {
     TabsPanel,
     WindowInput,
     PinnedDock,
+    Confirm,
+    Notifications,
   },
 
   data() {
     return {
-      dragMode: false,
       pointerMode: 'none',
       pointerExpanding: false,
     }
@@ -120,6 +106,11 @@ export default {
    * --- Methods ---
    */
   methods: {
+    getPanelComponent(panel) {
+      if (panel.type === 'bookmarks') return 'BookmarksPanel'
+      return 'TabsPanel'
+    },
+
     /**
      * onFocusOut
      */
@@ -156,7 +147,11 @@ export default {
     onMouseMove(e) {
       if (!State.multiSelectionStart) return
 
-      if (State.multiSelectionStart && !State.multiSelection && Math.abs(e.clientY - State.multiSelectionY) > 5) {
+      if (
+        State.multiSelectionStart &&
+        !State.multiSelection &&
+        Math.abs(e.clientY - State.multiSelectionY) > 5
+      ) {
         Actions.closeCtxMenu()
         State.multiSelection = true
         Actions.selectItem(State.multiSelectionStart.id)
@@ -197,14 +192,20 @@ export default {
           if (slot.end >= topY && slot.start + 1 <= bottomY) {
             if (!State.selected.includes(slot.id)) {
               State.selected.push(slot.id)
-              if (slot.type === 'tab') State.tabsMap[slot.id].sel = true
+              if (slot.type === 'tab') {
+                State.tabsMap[slot.id].sel = true
+                if (State.nativeHighlight) Actions.updateHighlightedTabs()
+              }
               if (slot.type === 'bookmark') State.bookmarksMap[slot.id].sel = true
             }
           } else {
-          // Outside
+            // Outside
             if (State.selected.includes(slot.id)) {
               State.selected.splice(State.selected.indexOf(slot.id), 1)
-              if (slot.type === 'tab') State.tabsMap[slot.id].sel = false
+              if (slot.type === 'tab') {
+                State.tabsMap[slot.id].sel = false
+                if (State.nativeHighlight) Actions.updateHighlightedTabs()
+              }
               if (slot.type === 'bookmark') State.bookmarksMap[slot.id].sel = false
             }
           }
@@ -216,15 +217,16 @@ export default {
      * Drag move handler
      */
     onDragMove(e) {
-      if (!this.dragMode) return
+      if (!State.dragMode) return
       if (!this.$refs.pointer) return
       if (!State.itemSlots) return
 
       let dragNode = State.dragNodes ? State.dragNodes[0] : null
       let scroll = State.panelScrollEl ? State.panelScrollEl.scrollTop : 0
+      let slotsLen = State.itemSlots.length
       let y = e.clientY - State.panelTopOffset + scroll
       let x = e.clientX - State.panelLeftOffset
-      
+
       // Hide pointer if cursor out of drop area
       if (!this.pointerYLock && y < 0) {
         this.pointerMode = 'none'
@@ -243,7 +245,7 @@ export default {
         this.pointerXLock = true
         return
       }
-      if (this.pointerXLock && this.pointerMode === 'none' && (x > 0 && e.clientX < State.width)) {
+      if (this.pointerXLock && this.pointerMode === 'none' && x > 0 && e.clientX < State.width) {
         this.pointerXLock = false
         if (!this.pointerYLock) {
           this.pointerPos--
@@ -254,10 +256,10 @@ export default {
       if (this.pointerXLock || this.pointerYLock) return
 
       // Empty
-      if (State.itemSlots.length === 0) {
-        const pos = State.panelTopOffset - scroll - 12
-        if (!this.pointerXLock && !this.pointerYLock && this.pointerPos !== pos) {
-          this.pointerPos = pos
+      if (slotsLen === 0) {
+        this.pos = State.panelTopOffset - scroll - 12
+        if (!this.pointerXLock && !this.pointerYLock && this.pointerPos !== this.pos) {
+          this.pointerPos = this.pos
           this.$refs.pointer.style.transform = `translateY(${this.pointerPos}px)`
           this.pointerMode = 'between'
           this.dropParent = -1
@@ -267,11 +269,11 @@ export default {
       }
 
       // End
-      if (y > State.itemSlots[State.itemSlots.length - 1].bottom) {
-        const slot = State.itemSlots[State.itemSlots.length - 1]
-        const pos = slot.end - 12 + State.panelTopOffset - scroll
-        if (!this.pointerXLock && !this.pointerYLock && this.pointerPos !== pos) {
-          this.pointerPos = pos
+      if (y > State.itemSlots[slotsLen - 1].bottom) {
+        let slot = State.itemSlots[slotsLen - 1]
+        this.pos = slot.end - 12 + State.panelTopOffset - scroll
+        if (!this.pointerXLock && !this.pointerYLock && this.pointerPos !== this.pos) {
+          this.pointerPos = this.pos
           this.$refs.pointer.style.transform = `translateY(${this.pointerPos}px)`
           this.pointerMode = 'between'
           this.dropParent = slot.parent
@@ -281,20 +283,20 @@ export default {
         return
       }
 
-      for (let i = 0; i < State.itemSlots.length; i++) {
-        const slot = State.itemSlots[i]
+      for (let slot, i = 0; i < slotsLen; i++) {
+        slot = State.itemSlots[i]
         // Skip
         if (y > slot.end || y < slot.start) continue
         // Between
         if (slot.in ? y < slot.top : y < slot.center) {
-          const prevSlot = State.itemSlots[i - 1]
-          const pos = slot.start - 12 + State.panelTopOffset - scroll
-          if (!this.pointerXLock && !this.pointerYLock && this.pointerPos !== pos) {
-            this.pointerPos = pos
+          this.pos = slot.start - 12 + State.panelTopOffset - scroll
+          if (!this.pointerXLock && !this.pointerYLock && this.pointerPos !== this.pos) {
+            this.pointerPos = this.pos
             this.$refs.pointer.style.transform = `translateY(${this.pointerPos}px)`
             this.pointerMode = 'between'
+            let prevSlot = State.itemSlots[i - 1]
             let dragNodeIsTab = dragNode ? dragNode.type === 'tab' : false
-  
+
             if (!prevSlot) {
               this.dropParent = -1
               this.dropIndex = slot.index
@@ -319,9 +321,9 @@ export default {
         }
         // Inside
         if (slot.in && y < slot.bottom && (State.tabsTree || !State.panelIndex)) {
-          const pos = slot.center - 12 + State.panelTopOffset - scroll
-          if (!this.pointerXLock && !this.pointerYLock && this.pointerPos !== pos) {
-            this.pointerPos = pos
+          this.pos = slot.center - 12 + State.panelTopOffset - scroll
+          if (!this.pointerXLock && !this.pointerYLock && this.pointerPos !== this.pos) {
+            this.pointerPos = this.pos
             this.$refs.pointer.style.transform = `translateY(${this.pointerPos}px)`
             this.pointerMode = slot.folded ? 'inside-fold' : 'inside-exp'
             this.dropParent = slot.id
@@ -409,8 +411,8 @@ export default {
       EventBus.$emit('updatePanelBounds')
 
       // Turn on drag mode
-      this.dragMode = true
-      
+      State.dragMode = true
+
       // Select dragged nodes
       if (State.dragNodes) {
         for (let n of State.dragNodes) {
@@ -450,7 +452,7 @@ export default {
       }
       if (State.panels[State.panelIndex].bookmarks) {
         if (this.pointerMode.startsWith('inside')) this.dropIndex = 0
-        Actions.dropToBookmarks(e, this.dropIndex, this.dropParent, State.dragNodes,)
+        Actions.dropToBookmarks(e, this.dropIndex, this.dropParent, State.dragNodes)
       }
 
       if (State.dragNodes) Actions.resetSelection()
@@ -525,7 +527,7 @@ export default {
      * Reset drag-and-drop values
      */
     resetDrag() {
-      this.dragMode = false
+      State.dragMode = false
       this.dropIndex = null
       this.dropParent = null
       this.pointerPos = null

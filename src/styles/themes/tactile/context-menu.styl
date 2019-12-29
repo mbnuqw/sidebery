@@ -56,7 +56,7 @@
     size(16px, same)
     pos(calc(50% - 8px), calc(50% - 8px))
     opacity: .8
-    fill: var(--panel-fg, var(--ctx-menu-fg))
+    fill: var(--container-fg, var(--ctx-menu-fg))
   &[data-separator]
     size(0px, min-w: 0px, max-w: 0px)
     &:before
@@ -70,7 +70,7 @@
     background-color: #00000000
 #root[data-style="light"] .CtxMenu .icon-opt[data-color] > svg
   fill: var(--ctx-menu-fg) !important
-  filter: drop-shadow(1px 0 0 var(--panel-fg)) drop-shadow(-1px 0 0 var(--panel-fg)) drop-shadow(0 -1px 0 var(--panel-fg)) drop-shadow(0 1px 0 var(--panel-fg))
+  filter: drop-shadow(1px 0 0 var(--container-fg)) drop-shadow(-1px 0 0 var(--container-fg)) drop-shadow(0 -1px 0 var(--container-fg)) drop-shadow(0 1px 0 var(--container-fg))
 
 .CtxMenu .list-group
   box(relative)
@@ -90,7 +90,7 @@
   > span
     box(relative)
     overflow: hidden
-    color: var(--panel-fg, var(--ctx-menu-fg))
+    color: var(--container-fg, var(--ctx-menu-fg))
     flex-shrink: 0
     &:last-of-type
       size(100%)
@@ -131,13 +131,13 @@
   text-overflow: ellipsis
   color: var(--ctx-menu-fg) !important
   mask: none
-  box-shadow: 0 0 0 1px var(--panel-fg)
+  box-shadow: 0 0 0 1px var(--container-fg)
   &:before
     content: ''
     box(absolute)
     size(100%, same)
     pos(0, 0)
-    background-color: var(--panel-fg)
+    background-color: var(--container-fg)
     border-radius: 2px
     z-index: -1
     opacity: .3

@@ -9,6 +9,7 @@
   border: var(--tabs-border)
   box-shadow: var(--tabs-shadow)
   transform-origin: 50% 0%
+  transition: transform var(--d-fast), opacity var(--d-fast), padding var(--d-fast)
 
   &:hover
     background-color: var(--tabs-bg-hover)
@@ -54,8 +55,9 @@
     border: var(--tabs-selected-border)
     box-shadow: var(--tabs-selected-shadow)
   
-  &[data-discarded] > .lvl-wrapper
-    opacity: .5
+  &[data-discarded] > .lvl-wrapper > .fav
+  &[data-discarded] > .lvl-wrapper > .t-box
+    opacity: .56
 
 // ---
 // -- Level Wrapper
@@ -75,16 +77,16 @@
 
 #root[data-tabs-tree-lvl-marks] .Tab .lvl-wrapper:before
   box(block)
-  box-shadow: calc(var(--tabs-indent) / -2) 0 0 0 var(--inactive-fg),
-              calc(var(--tabs-indent) * -1.5) 0 0 0 var(--inactive-fg),
-              calc(var(--tabs-indent) * -2.5) 0 0 0 var(--inactive-fg),
-              calc(var(--tabs-indent) * -3.5) 0 0 0 var(--inactive-fg),
-              calc(var(--tabs-indent) * -4.5) 0 0 0 var(--inactive-fg),
-              calc(var(--tabs-indent) * -5.5) 0 0 0 var(--inactive-fg),
-              calc(var(--tabs-indent) * -6.5) 0 0 0 var(--inactive-fg),
-              calc(var(--tabs-indent) * -7.5) 0 0 0 var(--inactive-fg),
-              calc(var(--tabs-indent) * -8.5) 0 0 0 var(--inactive-fg),
-              calc(var(--tabs-indent) * -9.5) 0 0 0 var(--inactive-fg)
+  box-shadow: calc(var(--tabs-indent) / -2) 0 0 0 var(--tabs-lvl-indicator-bg),
+              calc(var(--tabs-indent) * -1.5) 0 0 0 var(--tabs-lvl-indicator-bg),
+              calc(var(--tabs-indent) * -2.5) 0 0 0 var(--tabs-lvl-indicator-bg),
+              calc(var(--tabs-indent) * -3.5) 0 0 0 var(--tabs-lvl-indicator-bg),
+              calc(var(--tabs-indent) * -4.5) 0 0 0 var(--tabs-lvl-indicator-bg),
+              calc(var(--tabs-indent) * -5.5) 0 0 0 var(--tabs-lvl-indicator-bg),
+              calc(var(--tabs-indent) * -6.5) 0 0 0 var(--tabs-lvl-indicator-bg),
+              calc(var(--tabs-indent) * -7.5) 0 0 0 var(--tabs-lvl-indicator-bg),
+              calc(var(--tabs-indent) * -8.5) 0 0 0 var(--tabs-lvl-indicator-bg),
+              calc(var(--tabs-indent) * -9.5) 0 0 0 var(--tabs-lvl-indicator-bg)
 
 // ---
 // -- Drag layer
@@ -303,16 +305,6 @@
   opacity: 0
 
 // ---
-// -- Context highlight
-// -
-.Tab .ctx
-  box(absolute)
-  pos(b: 10px, l: 0px)
-  size(2px, 10px)
-  z-index: 2000
-  box-shadow: 0 0 2px 0 #00000024
-
-// ---
 // -- Complete animation
 // -
 .Tab .complete-fx
@@ -353,10 +345,9 @@
   font: var(--tabs-font)
   color: var(--tabs-fg)
   padding: 0 1px
-  transition: color .2s
   white-space: nowrap
   overflow: hidden
-  transition: transform var(--d-fast), color var(--d-fast)
+  transition: color var(--d-fast)
 
 .Tab[data-active] .title
   color: var(--tabs-activated-fg)
@@ -366,6 +357,17 @@
 
 .Tab[data-selected] .title
   color: var(--tabs-selected-fg)
+
+// ---
+// -- Container highlight
+// -
+.Tab .ctx
+  box(absolute)
+  pos(4px, r: 0)
+  size(2px, calc(100% - 8px))
+  z-index: 2000
+  box-shadow: inset -1px 0 0 0 #00000032
+  background-color: var(--container-fg)
 
 // ---
 // -- Close button
@@ -395,23 +397,22 @@
 // -
 .tab-enter-active
 .tab-leave-active
-  transition: transform var(--d-fast), opacity var(--d-fast)
+  transition: transform var(--d-fast), opacity var(--d-fast), padding var(--d-fast), z-index var(--d-fast)
 .tab-leave-active
   box(absolute)
 .tab-move
-  transition: transform var(--d-fast), opacity var(--d-fast)
+  transition: transform var(--d-fast), opacity var(--d-fast), padding var(--d-fast)
 .tab-enter
   opacity: 0
-  transform: scale(1, 0.8)
-.tab-enter-to
-  opacity: 1
-  transform: scale(1, 1)
+  transform: translateY(-50%)
+  z-index: 0
 .tab-leave
   opacity: 0
   transform: scale(1, 1)
 .tab-leave-to
   opacity: 0
-  transform: scale(1, 0.8)
+  z-index: 0
+  transform: translateY(-8px)
 
 .tab-part-enter-active
 .tab-part-leave-active

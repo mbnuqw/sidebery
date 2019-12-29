@@ -25,7 +25,6 @@
         @start-selection="onChildStartSelection")
 </template>
 
-
 <script>
 import EventBus from '../../event-bus'
 import State from '../store/state'
@@ -65,7 +64,9 @@ export default {
     isOpen() {
       if (!State.highlightOpenBookmarks) return false
       if (!this.node.children) return false
-      let i, n, target = this.node.children
+      let i
+      let n
+      let target = this.node.children
       for (i = 0; target && i < target.length; i++) {
         n = target[i]
         if (n.isOpen) {
@@ -153,10 +154,10 @@ export default {
     onMouseDownMid(e) {
       e.preventDefault()
       if (State.selected.length) {
+        Actions.closeCtxMenu()
         Actions.resetSelection()
         return
       }
-      this.openUrl(true, false)
     },
 
     /**
@@ -181,6 +182,13 @@ export default {
       if (e.button === 0) {
         if (e.ctrlKey || e.shiftKey) return
 
+        if (State.selectBookmarkFolder && !this.node.sel) {
+          Actions.resetSelection()
+          Actions.selectItem(this.node.id)
+          State.selectBookmarkFolder.id = this.node.id
+          return
+        }
+
         if (State.selected.length && !this.node.sel) {
           Actions.resetSelection()
           return
@@ -194,8 +202,10 @@ export default {
         if (e.ctrlKey || e.shiftKey) return
 
         Actions.stopMultiSelection()
-        if (!State.ctxMenuNative) Actions.selectItem(this.node.id)
-        Actions.openCtxMenu('bookmark', e.clientX, e.clientY)
+        if (!State.ctxMenuNative) {
+          Actions.selectItem(this.node.id)
+          Actions.openCtxMenu('bookmark', e.clientX, e.clientY)
+        }
       }
     },
 
@@ -276,11 +286,6 @@ export default {
     onChildStartSelection(event, nodes) {
       nodes.push(this.node)
       this.$emit('start-selection', event, nodes)
-    },
-
-    remove() {
-      if (!this.isParent) browser.bookmarks.remove(this.node.id)
-      else browser.bookmarks.removeTree(this.node.id)
     },
   },
 }

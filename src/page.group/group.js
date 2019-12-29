@@ -1,6 +1,5 @@
-import { DEFAULT_SETTINGS, CUSTOM_CSS_VARS } from '../defaults'
+import { DEFAULT_SETTINGS, CUSTOM_CSS_VARS } from '../../addon/defaults'
 import { noiseBg } from '../noise-bg'
-import Utils from '../utils'
 
 const PNG_RE = /(\.png)([?#].*)?$/i
 const JPG_RE = /(\.jpe?g)([?#].*)?$/i
@@ -8,11 +7,17 @@ const PDF_RE = /(\.pdf)([?#].*)?$/i
 const GROUP_BASE = browser.runtime.getURL('group/group.html')
 
 const tabsBoxEl = document.getElementById('tabs')
-let newTabEl, groupTabId, groupTabIndex, tabs = []
+let newTabEl
+let groupTabId
+let groupTabIndex
+let tabs = []
 let groupLen, groupParentId
 
 void (async function() {
-  let { settings } = await browser.storage.local.get({ settings: DEFAULT_SETTINGS })
+  let { settings, cssVars } = await browser.storage.local.get({
+    settings: DEFAULT_SETTINGS,
+    cssVars: {},
+  })
 
   document.body.setAttribute('data-style', settings.style || 'dark')
   document.body.setAttribute('data-layout', settings.groupLayout || 'grid')
@@ -36,7 +41,6 @@ void (async function() {
   }
 
   // Set user styles
-  let { cssVars } = await browser.storage.local.get({ cssVars: {} })
   for (let key of Object.keys(CUSTOM_CSS_VARS)) {
     if (!cssVars[key]) continue
     document.body.style.setProperty(Utils.toCSSVarName(key), cssVars[key])
@@ -129,7 +133,7 @@ function onGroupUpdated(msg) {
     }
   }
 
-  for (;i < tabs.length; i++) {
+  for (; i < tabs.length; i++) {
     let tab = tabs[i]
     tab.el.remove()
     tabs.splice(i, 1)
@@ -215,6 +219,10 @@ function createNewTabButton() {
       openerTabId: groupTabId,
       active: event.button === 0 ? true : false,
     })
+  })
+  newTabEl.addEventListener('mouseup', event => {
+    event.stopPropagation()
+    event.preventDefault()
   })
 }
 
@@ -317,10 +325,14 @@ function createButton(svgId, className, clickHandler) {
  * Create svg element with use tag
  */
 function createSvgIcon(svgId) {
-  let svgEl = document.createElementNS('http://www.w3.org/2000/svg', 'svg')  
-  svgEl.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:xlink', 'http://www.w3.org/1999/xlink')
+  let svgEl = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+  svgEl.setAttributeNS(
+    'http://www.w3.org/2000/xmlns/',
+    'xmlns:xlink',
+    'http://www.w3.org/1999/xlink'
+  )
 
-  let useEl = document.createElementNS('http://www.w3.org/2000/svg', 'use')  
+  let useEl = document.createElementNS('http://www.w3.org/2000/svg', 'use')
   useEl.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', '#' + svgId)
   svgEl.appendChild(useEl)
 

@@ -1,8 +1,6 @@
-import Utils from '../../utils'
-import Logs from '../../logs'
 import EventBus from '../../event-bus'
 import CommonActions from '../../actions/styles'
-import { CUSTOM_CSS_VARS } from '../../defaults'
+import { CUSTOM_CSS_VARS } from '../../../addon/defaults'
 
 /**
  * Load css vars and apply them
@@ -16,9 +14,8 @@ async function loadCSSVars() {
       rootEl.style.setProperty(Utils.toCSSVarName(key), cssVars[key])
     }
   }
-  
+
   EventBus.$emit('dynVarChange')
-  Logs.push('[INFO] Styles loaded')
 }
 
 /**

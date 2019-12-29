@@ -22,24 +22,34 @@ function onBroActionClick(tab) {
 }
 
 /**
+ * Handle hidding native context menu
+ */
+function onMenuHidden() {
+  this.actions.resetSelection()
+}
+
+/**
  * Setup listeners
  */
-function setupResizeHandler() {
+function setupHandlers() {
   window.addEventListener('resize', this.handlers.onSidebarResize)
   browser.browserAction.onClicked.addListener(this.handlers.onBroActionClick)
+  browser.menus.onHidden.addListener(this.handlers.onMenuHidden)
 }
 
 /**
  * Reset listeners
  */
-function resetResizeHandler() {
+function resetHandlers() {
   window.removeEventListener('resize', this.handlers.onSidebarResize)
   browser.browserAction.onClicked.removeListener(this.handlers.onBroActionClick)
+  browser.menus.onHidden.removeListener(this.handlers.onMenuHidden)
 }
 
 export default {
   onSidebarResize,
   onBroActionClick,
-  setupResizeHandler,
-  resetResizeHandler,
+  onMenuHidden,
+  setupHandlers,
+  resetHandlers,
 }

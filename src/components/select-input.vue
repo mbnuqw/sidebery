@@ -2,6 +2,7 @@
 .SelectInput(:data-color="color")
   .opt(
     v-for="o in opts"
+    :title="getTooltip(o)"
     :data-none="o === noneOpt"
     :data-color="o.color ? o.color : false"
     :data-active="isActive(o)"
@@ -10,19 +11,18 @@
       p(v-else) {{t(label + o, plurNum)}}
 </template>
 
-
 <script>
 export default {
   props: {
     value: [String, Number],
-    opts:  Array,
+    opts: Array,
     label: String,
     plurNum: [String, Number],
     color: String,
     icon: String,
     noneOpt: {
       type: String,
-      default: () => 'none'
+      default: () => 'none',
     },
   },
 
@@ -39,6 +39,11 @@ export default {
     select(option) {
       if (option && option.value) this.$emit('input', option.value)
       else this.$emit('input', option)
+    },
+
+    getTooltip(option) {
+      if (option && option.tooltip) return option.tooltip
+      return ''
     },
   },
 }

@@ -1,20 +1,16 @@
 <template lang="pug">
-.Settings(
-  v-noise:300.g:12:af.a:0:42.s:0:9=""
-  @scroll.passive="onScroll")
+.Settings(@scroll.passive="onScroll")
   section(ref="settings_general")
     h2 {{t('settings.general_title')}}
-    ToggleField.-first.-last(
+    toggle-field(
       label="settings.native_scrollbars"
-      :inline="true"
       :value="$store.state.nativeScrollbars"
       @input="setOpt('nativeScrollbars', $event)")
 
   section(ref="settings_menu")
     h2 {{t('settings.ctx_menu_title')}}
-    ToggleField.-first(
+    toggle-field(
       label="settings.ctx_menu_native"
-      :inline="true"
       :value="$store.state.ctxMenuNative"
       @input="setOpt('ctxMenuNative', $event)")
     select-field(
@@ -24,9 +20,8 @@
       :value="$store.state.autoHideCtxMenu"
       :opts="$store.state.autoHideCtxMenuOpts"
       @input="setOpt('autoHideCtxMenu', $event)")
-    ToggleField.-last(
+    toggle-field(
       label="settings.ctx_menu_render_inact"
-      :inline="true"
       :value="$store.state.ctxMenuRenderInact"
       @input="setOpt('ctxMenuRenderInact', $event)")
     .ctrls
@@ -34,24 +29,32 @@
 
   section(ref="settings_nav")
     h2 {{t('settings.nav_title')}}
+    select-field(
+      label="settings.nav_bar_layout"
+      optLabel="settings.nav_bar_layout_"
+      :value="$store.state.navBarLayout"
+      :opts="$store.state.navBarLayoutOpts"
+      @input="switchNavBarLayout")
+    .sub-fields
+      toggle-field(
+        label="settings.nav_bar_inline"
+        :inactive="$store.state.navBarLayout === 'vertical'"
+        :value="$store.state.navBarInline"
+        @input="setOpt('navBarInline', $event)")
     toggle-field(
-      label="settings.nav_bar_inline"
-      :inline="true"
-      :value="$store.state.navBarInline"
-      @input="setOpt('navBarInline', $event)")
+      label="settings.hide_add_btn"
+      :value="$store.state.hideAddBtn"
+      @input="setOpt('hideAddBtn', $event)")
     toggle-field(
       label="settings.hide_settings_btn"
-      :inline="true"
       :value="$store.state.hideSettingsBtn"
       @input="setOpt('hideSettingsBtn', $event)")
     toggle-field(
       label="settings.nav_btn_count"
-      :inline="true"
       :value="$store.state.navBtnCount"
       @input="setOpt('navBtnCount', $event)")
     toggle-field(
       label="settings.hide_empty_panels"
-      :inline="true"
       :value="$store.state.hideEmptyPanels"
       @input="setOpt('hideEmptyPanels', $event)")
     select-field(
@@ -62,7 +65,6 @@
       @input="setOpt('navMidClickAction', $event)")
     toggle-field.-last(
       label="settings.nav_switch_panels_wheel"
-      :inline="true"
       :value="$store.state.navSwitchPanelsWheel"
       @input="setOpt('navSwitchPanelsWheel', $event)")
 
@@ -75,16 +77,40 @@
       :opts="$store.state.groupLayoutOpts"
       @input="setOpt('groupLayout', $event)")
 
+  section(ref="settings_containers")
+    h2 {{t('settings.containers_title')}}
+    transition-group(name="panel" tag="div"): .panel-card(
+      v-for="(container, id) in $store.state.containers"
+      :key="container.id"
+      :data-color="container.color")
+      .panel-card-body(@click="$store.state.selectedContainer = container")
+        .panel-card-icon: svg: use(:xlink:href="'#' + container.icon")
+        .panel-card-name {{container.name}}
+      .panel-card-ctrls
+        .panel-card-ctrl.-rm(
+          @click="removeContainer(container)")
+          svg: use(xlink:href="#icon_delete")
+    .panel-placeholder(v-if="!Object.keys($store.state.containers).length")
+    .ctrls: .btn(@click="createContainer") {{t('settings.containers_create_btn')}}
+    transition(name="panel-config")
+      .panel-config-layer(
+        v-if="$store.state.selectedContainer"
+        @click="$store.state.selectedContainer = null")
+        .panel-config-box(@click.stop="")
+          container-config.dashboard(:conf="$store.state.selectedContainer")
+
   section(ref="settings_panels")
     h2 {{t('settings.panels_title')}}
     transition-group(name="panel" tag="div"): .panel-card(
       v-for="(panel, i) in $store.state.panels"
-      :key="panel.cookieStoreId || panel.type"
+      :key="panel.id"
       :data-color="panel.color"
       :data-first="i === 0"
       :data-last="i === $store.state.panels.length - 1")
       .panel-card-body(@click="$store.state.selectedPanel = panel")
-        .panel-card-icon: svg: use(:xlink:href="'#' + panel.icon")
+        .panel-card-icon
+          img(v-if="panel.customIcon" :src="panel.customIcon")
+          svg(v-else): use(:xlink:href="'#' + panel.icon")
         .panel-card-name {{panel.name}}
       .panel-card-ctrls
         .panel-card-ctrl.-down(
@@ -99,7 +125,7 @@
           :data-inactive="panel.type === 'bookmarks' || panel.type === 'default'"
           @click="removePanel(panel)")
           svg: use(xlink:href="#icon_delete")
-    .ctrls: .btn(@click="createPanel") Create panel
+    .ctrls: .btn(@click="createPanel") {{t('settings.panels_create_btn')}}
     transition(name="panel-config")
       .panel-config-layer(
         v-if="$store.state.selectedPanel"
@@ -109,29 +135,40 @@
 
   section(ref="settings_tabs")
     h2 {{t('settings.tabs_title')}}
+    select-field(
+      label="settings.state_storage"
+      optLabel="settings.state_storage_"
+      :value="$store.state.stateStorage"
+      :opts="$store.state.stateStorageOpts"
+      @input="setOpt('stateStorage', $event)")
+    select-field(
+      label="settings.warn_on_multi_tab_close"
+      optLabel="settings.warn_on_multi_tab_close_"
+      :value="$store.state.warnOnMultiTabClose"
+      :opts="$store.state.warnOnMultiTabCloseOpts"
+      @input="setOpt('warnOnMultiTabClose', $event)")
+    toggle-field(
+      label="settings.tabs_rm_undo_note"
+      :value="$store.state.tabsRmUndoNote"
+      @input="setOpt('tabsRmUndoNote', $event)")
     toggle-field(
       label="settings.activate_on_mouseup"
-      :inline="true"
       :value="$store.state.activateOnMouseUp"
       @input="setOpt('activateOnMouseUp', $event)")
     toggle-field(
       label="settings.activate_last_tab_on_panel_switching"
-      :inline="true"
       :value="$store.state.activateLastTabOnPanelSwitching"
       @input="setOpt('activateLastTabOnPanelSwitching', $event)")
     toggle-field(
       label="settings.skip_empty_panels"
-      :inline="true"
       :value="$store.state.skipEmptyPanels"
       @input="setOpt('skipEmptyPanels', $event)")
     toggle-field(
       label="settings.show_tab_rm_btn"
-      :inline="true"
       :value="$store.state.showTabRmBtn"
       @input="setOpt('showTabRmBtn', $event)")
     toggle-field(
       label="settings.hide_inactive_panel_tabs"
-      :inline="true"
       :value="$store.state.hideInact"
       @input="toggleHideInact")
     select-field(
@@ -155,6 +192,50 @@
         :inactive="!activateAfterClosingNextOrPrev"
         :opts="$store.state.activateAfterClosingNextRuleOpts"
         @input="setOpt('activateAfterClosingNextRule', $event)")
+      toggle-field(
+        label="settings.activate_after_closing_global"
+        :inactive="$store.state.activateAfterClosing !== 'prev_act'"
+        :value="$store.state.activateAfterClosingGlobal"
+        @input="setOpt('activateAfterClosingGlobal', $event)")
+    toggle-field(
+      label="settings.shift_selection_from_active"
+      :value="$store.state.shiftSelAct"
+      @input="setOpt('shiftSelAct', $event)")
+    toggle-field(
+      label="settings.ask_new_bookmark_place"
+      :value="$store.state.askNewBookmarkPlace"
+      @input="setOpt('askNewBookmarkPlace', $event)")
+    toggle-field(
+      label="settings.native_highlight"
+      :value="$store.state.nativeHighlight"
+      @input="setOpt('nativeHighlight', $event)")
+
+  section(ref="settings_new_tab_position")
+    h2 {{t('settings.new_tab_position')}}
+    select-field(
+      label="settings.move_new_tab_pin"
+      optLabel="settings.move_new_tab_pin_"
+      :value="$store.state.moveNewTabPin"
+      :opts="$store.state.moveNewTabPinOpts"
+      @input="setOpt('moveNewTabPin', $event)")
+    select-field(
+      label="settings.move_new_tab_parent"
+      optLabel="settings.move_new_tab_parent_"
+      :value="$store.state.moveNewTabParent"
+      :opts="$store.state.moveNewTabParentOpts"
+      @input="setOpt('moveNewTabParent', $event)")
+    .sub-fields
+      toggle-field(
+        label="settings.move_new_tab_parent_act_panel"
+        :inactive="$store.state.moveNewTabParent === 'none'"
+        :value="$store.state.moveNewTabParentActPanel"
+        @input="setOpt('moveNewTabParentActPanel', $event)")
+    select-field(
+      label="settings.move_new_tab"
+      optLabel="settings.move_new_tab_"
+      :value="$store.state.moveNewTab"
+      :opts="$store.state.moveNewTabOpts"
+      @input="setOpt('moveNewTab', $event)")
 
   section(ref="settings_pinned_tabs")
     h2 {{t('settings.pinned_tabs_title')}}
@@ -162,11 +243,10 @@
       label="settings.pinned_tabs_position"
       optLabel="settings.pinned_tabs_position_"
       :value="$store.state.pinnedTabsPosition"
-      :opts="$store.state.pinnedTabsPositionOpts"
+      :opts="pinnedTabsPositionOpts"
       @input="setOpt('pinnedTabsPosition', $event)")
     toggle-field.-last(
       label="settings.pinned_tabs_list"
-      :inline="true"
       :inactive="$store.state.pinnedTabsPosition !== 'panel'"
       :value="$store.state.pinnedTabsList"
       @input="setOpt('pinnedTabsList', $event)")
@@ -175,12 +255,10 @@
     h2 {{t('settings.tabs_tree_title')}}
     toggle-field(i
       label="settings.tabs_tree_layout"
-      :inline="true"
       :value="$store.state.tabsTree"
       @input="setOpt('tabsTree', $event)")
     toggle-field(
       label="settings.group_on_open_layout"
-      :inline="true"
       :inactive="!$store.state.tabsTree"
       :value="$store.state.groupOnOpen"
       @input="setOpt('groupOnOpen', $event)")
@@ -193,19 +271,24 @@
       @input="setOpt('tabsTreeLimit', $event)")
     toggle-field(
       label="settings.hide_folded_tabs"
-      :inline="true"
       :inactive="!$store.state.tabsTree"
       :value="$store.state.hideFoldedTabs"
       @input="toggleHideFoldedTabs")
     toggle-field(
       label="settings.auto_fold_tabs"
-      :inline="true"
       :inactive="!$store.state.tabsTree"
       :value="$store.state.autoFoldTabs"
       @input="setOpt('autoFoldTabs', $event)")
+    .sub-fields
+      select-field(
+        label="settings.auto_fold_tabs_except"
+        optLabel="settings.auto_fold_tabs_except_"
+        :inactive="!$store.state.tabsTree || !$store.state.autoFoldTabs"
+        :value="$store.state.autoFoldTabsExcept"
+        :opts="$store.state.autoFoldTabsExceptOpts"
+        @input="setOpt('autoFoldTabsExcept', $event)")
     toggle-field(
       label="settings.auto_exp_tabs"
-      :inline="true"
       :inactive="!$store.state.tabsTree"
       :value="$store.state.autoExpandTabs"
       @input="setOpt('autoExpandTabs', $event)")
@@ -218,19 +301,16 @@
       @input="setOpt('rmChildTabs', $event)")
     toggle-field(
       label="settings.tabs_child_count"
-      :inline="true"
       :inactive="!$store.state.tabsTree"
       :value="$store.state.tabsChildCount"
       @input="setOpt('tabsChildCount', $event)")
     toggle-field(
       label="settings.tabs_lvl_dots"
-      :inline="true"
       :inactive="!$store.state.tabsTree"
       :value="$store.state.tabsLvlDots"
       @input="setOpt('tabsLvlDots', $event)")
     toggle-field(
       label="settings.discard_folded"
-      :inline="true"
       :inactive="!$store.state.tabsTree"
       :value="$store.state.discardFolded"
       @input="setOpt('discardFolded', $event)")
@@ -244,48 +324,71 @@
         :unit="$store.state.discardFoldedDelayUnit"
         :unitOpts="$store.state.discardFoldedDelayUnitOpts"
         @input="setOpt('discardFoldedDelay', $event[0]), setOpt('discardFoldedDelayUnit', $event[1])")
+    toggle-field(
+      label="settings.tabs_tree_bookmarks"
+      :inactive="!$store.state.tabsTree"
+      :value="$store.state.tabsTreeBookmarks"
+      @input="setOpt('tabsTreeBookmarks', $event)")
 
   section(ref="settings_bookmarks")
     h2 {{t('settings.bookmarks_title')}}
     toggle-field(
       label="settings.bookmarks_panel"
-      :inline="true"
       :value="$store.state.bookmarksPanel"
       @input="setOpt('bookmarksPanel', $event)")
+    select-field(
+      label="settings.warn_on_multi_bookmark_delete"
+      optLabel="settings.warn_on_multi_bookmark_delete_"
+      :inactive="!$store.state.bookmarksPanel"
+      :value="$store.state.warnOnMultiBookmarkDelete"
+      :opts="$store.state.warnOnMultiBookmarkDeleteOpts"
+      @input="setOpt('warnOnMultiBookmarkDelete', $event)")
+    toggle-field(
+      label="settings.bookmarks_rm_undo_note"
+      :inactive="!$store.state.bookmarksPanel"
+      :value="$store.state.bookmarksRmUndoNote"
+      @input="setOpt('bookmarksRmUndoNote', $event)")
     toggle-field(
       label="settings.open_bookmark_new_tab"
-      :inline="true"
       :inactive="!$store.state.bookmarksPanel"
       :value="$store.state.openBookmarkNewTab"
       @input="setOpt('openBookmarkNewTab', $event)")
+    select-field(
+      label="settings.mid_click_bookmark"
+      optLabel="settings.mid_click_bookmark_"
+      :inactive="!$store.state.bookmarksPanel"
+      :value="$store.state.midClickBookmark"
+      :opts="$store.state.midClickBookmarkOpts"
+      @input="setOpt('midClickBookmark', $event)")
+    .sub-fields
+      toggle-field(
+        label="settings.act_mid_click_tab"
+        :inactive="!$store.state.bookmarksPanel || $store.state.midClickBookmark !== 'open_new_tab'"
+        :value="$store.state.actMidClickTab"
+        @input="setOpt('actMidClickTab', $event)")
     toggle-field(
       label="settings.auto_close_bookmarks"
-      :inline="true"
       :inactive="!$store.state.bookmarksPanel"
       :value="$store.state.autoCloseBookmarks"
       @input="setOpt('autoCloseBookmarks', $event)")
     toggle-field(
       label="settings.auto_rm_other"
-      :inline="true"
       :inactive="!$store.state.bookmarksPanel"
       :value="$store.state.autoRemoveOther"
       @input="setOpt('autoRemoveOther', $event)")
     toggle-field(
       label="settings.show_bookmark_len"
-      :inline="true"
       :inactive="!$store.state.bookmarksPanel"
       :value="$store.state.showBookmarkLen"
       @input="setOpt('showBookmarkLen', $event)")
     toggle-field(
       label="settings.highlight_open_bookmarks"
-      :inline="true"
       :inactive="!$store.state.bookmarksPanel"
       :value="$store.state.highlightOpenBookmarks"
       @input="setOpt('highlightOpenBookmarks', $event)")
     .sub-fields
-      toggle-field.-last(
+      toggle-field(
         label="settings.activate_open_bookmark_tab"
-        :inline="true"
         :inactive="!$store.state.bookmarksPanel || !$store.state.highlightOpenBookmarks"
         :value="$store.state.activateOpenBookmarkTab"
         @input="setOpt('activateOpenBookmarkTab', $event)")
@@ -300,26 +403,27 @@
       @input="setOpt('fontSize', $event)")
     toggle-field(
       label="settings.animations"
-      :inline="true"
       :value="$store.state.animations"
       @input="setOpt('animations', $event)")
     toggle-field(
       label="settings.bg_noise"
-      :inline="true"
       :value="$store.state.bgNoise"
-      @input="setOpt('bgNoise', $event)")
+      @input="toggleNoiseBg($event)")
     select-field(
       label="settings.theme"
       optLabel="settings.theme_"
       :value="$store.state.theme"
       :opts="$store.state.themeOpts"
       @input="setOpt('theme', $event)")
-    select-field.-last(
+    select-field(
       label="settings.switch_style"
       optLabel="settings.style_"
       :value="$store.state.style"
       :opts="$store.state.styleOpts"
       @input="setOpt('style', $event)")
+    .note-field
+      .label {{t('settings.appearance_notes_title')}}
+      .note {{t('settings.appearance_notes')}}
     .ctrls
       .btn(@click="switchView('styles_editor')") {{t('settings.edit_styles')}}
 
@@ -327,7 +431,6 @@
     h2 {{t('settings.mouse_title')}}
     toggle-field(
       label="settings.h_scroll_through_panels"
-      :inline="true"
       :value="$store.state.hScrollThroughPanels"
       @input="setOpt('hScrollThroughPanels', $event)")
     select-field(
@@ -339,13 +442,16 @@
     .sub-fields
       toggle-field(
         label="settings.scroll_through_visible_tabs"
-        :inline="true"
         :value="$store.state.scrollThroughVisibleTabs"
         :inactive="!$store.state.tabsTree || $store.state.scrollThroughTabs === 'none'"
         @input="setOpt('scrollThroughVisibleTabs', $event)")
       toggle-field(
+        label="settings.scroll_through_tabs_skip_discarded"
+        :value="$store.state.scrollThroughTabsSkipDiscarded"
+        :inactive="$store.state.scrollThroughTabs === 'none'"
+        @input="setOpt('scrollThroughTabsSkipDiscarded', $event)")
+      toggle-field(
         label="settings.scroll_through_tabs_except_overflow"
-        :inline="true"
         :value="$store.state.scrollThroughTabsExceptOverflow"
         :inactive="$store.state.scrollThroughTabs === 'none'"
         @input="setOpt('scrollThroughTabsExceptOverflow', $event)")
@@ -380,7 +486,7 @@
       :value="$store.state.tabsPanelDoubleClickAction"
       :opts="$store.state.tabsPanelDoubleClickActionOpts"
       @input="setOpt('tabsPanelDoubleClickAction', $event)")
-    select-field.-last(
+    select-field(
       label="settings.tabs_panel_right_click_action"
       optLabel="settings.tabs_panel_action_"
       :value="$store.state.tabsPanelRightClickAction"
@@ -393,7 +499,7 @@
       v-for="(k, i) in $store.state.keybindings", :key="k.name"
       :is-focused="k.focus"
       @click="changeKeybinding(k, i)")
-      .label {{t('settings.' + k.description)}}
+      .label {{k.description}}
       .value {{normalizeShortcut(k.shortcut)}}
       input(
         type="text"
@@ -413,7 +519,6 @@
       @click="onHighlighClick('all_urls')")
       toggle-field(
         label="settings.all_urls_label"
-        :inline="true"
         :value="$store.state.permAllUrls"
         :note="t('settings.all_urls_info')"
         @input="togglePermAllUrls")
@@ -424,10 +529,29 @@
       @click="onHighlighClick('tab_hide')")
       toggle-field(
         label="settings.tab_hide_label"
-        :inline="true"
         :value="$store.state.permTabHide"
         :note="t('settings.tab_hide_info')"
         @input="togglePermTabHide")
+
+    .permission(
+      ref="clipboard_write"
+      :data-highlight="$store.state.highlightedField === 'clipboard_write'"
+      @click="onHighlighClick('clipboard_write')")
+      toggle-field(
+        label="settings.clipboard_write_label"
+        :value="$store.state.permClipboardWrite"
+        :note="t('settings.clipboard_write_info')"
+        @input="togglePermClipboardWrite")
+
+    .permission(
+      ref="web_request_blocking"
+      :data-highlight="$store.state.highlightedField === 'web_request_blocking'"
+      @click="onHighlighClick('web_request_blocking')")
+      toggle-field(
+        label="settings.web_request_blocking_label"
+        :value="$store.state.permWebRequestBlocking"
+        :note="t('settings.web_request_blocking_info')"
+        @input="togglePermWebRequestBlocking")
 
   section(ref="settings_snapshots")
     h2 {{t('settings.snapshots_title')}}
@@ -460,21 +584,42 @@
         .open-btn(@click="openStoredData(info.name)") {{t('settings.storage_open_prop')}}
     .ctrls
       .btn(@click="calcStorageInfo") {{t('settings.update_storage_info')}}
+      .btn.-warn(@click="clearStorage") {{t('settings.clear_storage_info')}}
 
   section(ref="settings_help")
     h2 {{t('settings.help_title')}}
 
     .ctrls
-      a.btn(ref="exportData" @mouseenter="genExportData") {{t('settings.help_exp_data')}}
+      a.btn(@click="$store.state.exportConfig = true") {{t('settings.help_exp_data')}}
       .btn(type="file")
         .label {{t('settings.help_imp_data')}}
         input(type="file" ref="importData" accept="application/json" @input="importData")
+
+    transition(name="panel-config")
+      .panel-config-layer(
+        v-if="$store.state.exportConfig"
+        @click="$store.state.exportConfig = false")
+        .panel-config-box(@click.stop="")
+          ExportConfig.dashboard(:conf="$store.state.exportConfig")
+
+    transition(name="panel-config")
+      .panel-config-layer(
+        v-if="$store.state.importConfig"
+        @click="$store.state.importConfig = false")
+        .panel-config-box(@click.stop="")
+          ImportConfig.dashboard(:conf="$store.state.importConfig")
 
     .ctrls
       .btn(@click="showDbgDetails") {{t('settings.debug_info')}}
       a.btn(
         tabindex="-1"
-        href="https://github.com/mbnuqw/sidebery/issues/new/choose") {{t('settings.repo_bug')}}
+        href="https://github.com/mbnuqw/sidebery/issues/new?template=Bug_report.md") {{t('settings.repo_bug')}}
+      a.btn(
+        tabindex="-1"
+        href="https://github.com/mbnuqw/sidebery/issues/new?template=Feature_request.md") {{t('settings.repo_feature')}}
+
+    .ctrls
+      .btn.-warn(@click="reloadAddon") {{t('settings.reload_addon')}}
       .btn.-warn(@click="resetSettings") {{t('settings.reset_settings')}}
 
     .ctrls
@@ -482,10 +627,7 @@
       .info(v-if="$store.state.ffInfo") Firefox: {{$store.state.ffInfo.version}}
       .info Addon: {{$store.state.version}}
 
-  .details-box(
-    v-if="dbgDetails"
-    v-noise:300.g:12:af.a:0:42.s:0:9=""
-    @scroll.stop="")
+  .details-box(v-if="dbgDetails" @scroll.stop="")
     .box
       .btn(@click="copyDebugDetail") {{t('settings.ctrl_copy')}}
       .btn.-warn(@click="dbgDetails = ''") {{t('settings.ctrl_close')}}
@@ -494,18 +636,19 @@
   footer-section
 </template>
 
-
 <script>
-import Utils from '../utils'
-import { translate } from '../mixins/dict'
-import { DEFAULT_SETTINGS } from '../defaults'
-import { DEFAULT_CTX_TABS_PANEL } from '../defaults'
+import { translate } from '../../addon/locales/dict'
+import { DEFAULT_SETTINGS } from '../../addon/defaults'
+import { TABS_PANEL } from '../../addon/defaults'
 import State from './store/state'
 import Actions from './actions'
 import ToggleField from '../components/toggle-field'
 import SelectField from '../components/select-field'
 import NumField from '../components/num-field'
+import ContainerConfig from './components/container-config'
 import PanelConfig from './components/panel-config'
+import ExportConfig from './components/export-config'
+import ImportConfig from './components/import-config'
 import FooterSection from './components/footer'
 
 const VALID_SHORTCUT = /^((Ctrl|Alt|Command|MacCtrl)\+)((Shift|Alt)\+)?([A-Z0-9]|Comma|Period|Home|End|PageUp|PageDown|Space|Insert|Delete|Up|Down|Left|Right|F\d\d?)$|^((Ctrl|Alt|Command|MacCtrl)\+)?((Shift|Alt)\+)?(F\d\d?)$/
@@ -515,8 +658,10 @@ const SECTIONS = [
   'settings_menu',
   'settings_nav',
   'settings_group',
+  'settings_containers',
   'settings_panels',
   'settings_tabs',
+  'settings_new_tab_position',
   'settings_pinned_tabs',
   'settings_tabs_tree',
   'settings_bookmarks',
@@ -535,7 +680,10 @@ export default {
     SelectField,
     NumField,
     FooterSection,
+    ContainerConfig,
     PanelConfig,
+    ExportConfig,
+    ImportConfig,
   },
 
   data() {
@@ -555,6 +703,15 @@ export default {
   computed: {
     activateAfterClosingNextOrPrev() {
       return State.activateAfterClosing === 'next' || State.activateAfterClosing === 'prev'
+    },
+
+    pinnedTabsPositionOpts() {
+      let isNavVertical = State.navBarLayout === 'vertical'
+      return State.pinnedTabsPositionOpts.filter(o => {
+        if (isNavVertical && o === 'left') return false
+        if (isNavVertical && o === 'right') return false
+        return true
+      })
     },
   },
 
@@ -576,7 +733,7 @@ export default {
 
       if (State.navLock) return
 
-      for (let name, i = SECTIONS.length; i--;) {
+      for (let name, i = SECTIONS.length; i--; ) {
         name = SECTIONS[i]
         if (!this.$refs[name]) break
 
@@ -593,20 +750,6 @@ export default {
     setOpt(key, val) {
       Actions.setSetting(key, val)
       Actions.saveSettings()
-    },
-
-    /**
-     * Open page as a child
-     */
-    async openPage(name) {
-      let url = browser.runtime.getURL(name + '.html')
-      const tab = await browser.tabs.getCurrent()
-      const conf = { url, windowId: State.windowId }
-      if (tab) {
-        conf.openerTabId = tab.id
-        conf.index = tab.index + 1
-      }
-      browser.tabs.create(conf)
     },
 
     /**
@@ -643,19 +786,24 @@ export default {
     },
 
     /**
-     * Open page of theme editor
+     * Switch layout of nav-bar.
      */
-    openThemeEditor() {
-      const url = browser.runtime.getURL('theme/theme.html')
-      browser.tabs.create({ url, windowId: State.windowId })
+    switchNavBarLayout(value) {
+      State.navBarLayout = value
+      if (value === 'vertical') {
+        if (State.navBarInline) State.navBarInline = false
+        if (State.pinnedTabsPosition === 'left' || State.pinnedTabsPosition === 'right') {
+          State.pinnedTabsPosition = 'panel'
+        }
+      }
+      Actions.saveSettings()
     },
 
-    /**
-     * Open page of styles editor
-     */
-    openStylesEditor() {
-      const url = browser.runtime.getURL('styles/styles.html')
-      browser.tabs.create({ url, windowId: State.windowId })
+    toggleNoiseBg(value) {
+      State.bgNoise = value
+      if (State.bgNoise) Actions.applyNoiseBg()
+      else Actions.removeNoiseBg()
+      Actions.saveSettings()
     },
 
     /**
@@ -671,6 +819,7 @@ export default {
      * Normalize (system-wise) shortcut label
      */
     normalizeShortcut(s) {
+      if (!s) return '---'
       if (State.os === 'mac') {
         return s.replace('Command', '⌘').replace('MacCtrl', 'Ctrl')
       }
@@ -775,34 +924,43 @@ export default {
       }
     },
 
-    /**
-     * Toggle snapshots
-     */
-    toggleSnapshots(name) {
-      const v = !State.snapshotsTargets[name]
-      State.snapshotsTargets = { ...State.snapshotsTargets, [name]: v }
-      Actions.saveSettings()
+    async togglePermClipboardWrite() {
+      if (State.permClipboardWrite) {
+        await browser.permissions.remove({ permissions: ['clipboardWrite'] })
+        browser.runtime.sendMessage({ action: 'loadPermissions' })
+        Actions.loadPermissions()
+      } else {
+        const request = { origins: [], permissions: ['clipboardWrite'] }
+        browser.permissions.request(request).then(allowed => {
+          browser.runtime.sendMessage({ action: 'loadPermissions' })
+          State.permClipboardWrite = allowed
+        })
+      }
     },
 
-    /**
-     * Update snapshots viewer
-     */
-    async viewAllSnapshots() {
-      let url = browser.runtime.getURL('snapshots/snapshots.html')
-      const tab = await browser.tabs.getCurrent()
-      const conf = { url, windowId: State.windowId }
-      if (tab) {
-        conf.openerTabId = tab.id
-        conf.index = tab.index + 1
+    async togglePermWebRequestBlocking() {
+      if (State.permWebRequestBlocking) {
+        await browser.permissions.remove({ permissions: ['webRequest', 'webRequestBlocking'] })
+        browser.runtime.sendMessage({ action: 'loadPermissions' })
+        Actions.loadPermissions()
+      } else {
+        const request = {
+          origins: ['<all_urls>'],
+          permissions: ['webRequest', 'webRequestBlocking'],
+        }
+        browser.permissions.request(request).then(allowed => {
+          browser.runtime.sendMessage({ action: 'loadPermissions' })
+          State.permWebRequestBlocking = allowed
+          State.permAllUrls = allowed
+        })
       }
-      browser.tabs.create(conf)
     },
 
     /**
      * Remove snapshot
      */
     removeAllSnapshots() {
-      browser.storage.local.set({ snapshots: [] })
+      browser.storage.local.set({ snapshots_v4: [] })
     },
 
     /**
@@ -826,69 +984,32 @@ export default {
     },
 
     /**
-     * Generate export addon data
-     */
-    async genExportData() {
-      let data = await browser.storage.local.get({
-        settings: {},
-        snapshots: [],
-        panels: [],
-        cssVars: {},
-        sidebarCSS: '',
-        groupCSS: '',
-        settingsCSS: '',
-        tabsMenu: [],
-        bookmarksMenu: [],
-      })
-      data.ver = browser.runtime.getManifest().version
-      let dataJSON = JSON.stringify(data)
-      let file = new Blob([dataJSON], { type: 'application/json' })
-      let now = Date.now()
-      let date = Utils.uDate(now, '.')
-      let time = Utils.uTime(now, '.')
-
-      this.$refs.exportData.href = URL.createObjectURL(file)
-      this.$refs.exportData.download = `sidebery-data-${date}-${time}.json`
-      this.$refs.exportData.title = `sidebery-data-${date}-${time}.json`
-    },
-
-    /**
      * Import addon data
      */
     importData(importEvent) {
       let file = importEvent.target.files[0]
       let reader = new FileReader()
       reader.onload = fileEvent => {
-        this.applyImportedData(fileEvent.target.result)
+        let jsonStr = fileEvent.target.result
+        if (!jsonStr) return
+
+        let importedData
+        try {
+          importedData = JSON.parse(jsonStr)
+        } catch (err) {
+          // nothing
+        }
+
+        if (!importedData) return
+        State.importConfig = importedData
       }
       reader.readAsText(file)
     },
 
     /**
-     * Parse imported data
+     * Get debug details
      */
-    applyImportedData(dataJSON) {
-      let data = JSON.parse(dataJSON)
-
-      // ...check version and do format convertation if needed
-
-      let toStore = {}
-      if (data.settings) toStore.settings = data.settings
-      if (data.snapshots) toStore.snapshots = data.snapshots
-      if (data.panels) toStore.panels = data.panels
-      if (data.cssVars) toStore.cssVars = data.cssVars
-      if (data.sidebarCSS) toStore.sidebarCSS = data.sidebarCSS
-      if (data.groupCSS) toStore.groupCSS = data.groupCSS
-      if (data.settingsCSS) toStore.settingsCSS = data.settingsCSS
-      if (data.tabsMenu) toStore.tabsMenu = data.tabsMenu
-      if (data.bookmarksMenu) toStore.bookmarksMenu = data.bookmarksMenu
-      browser.storage.local.set(toStore)
-    },
-
-    /**
-     * Show debug details
-     */
-    async showDbgDetails() {
+    async getDbgDetails() {
       let dbg = {}
 
       dbg.settings = {}
@@ -931,6 +1052,8 @@ export default {
           if (clone.includeHosts) clone.includeHosts = clone.includeHosts.length
           if (clone.excludeHosts) clone.excludeHosts = clone.excludeHosts.length
           if (clone.proxy) clone.proxy = '...'
+          if (clone.customIconSrc) clone.customIconSrc = '...'
+          if (clone.customIcon) clone.customIcon = '...'
           dbg.panels.push(clone)
         }
       } catch (err) {
@@ -963,10 +1086,6 @@ export default {
             state: w.state,
             incognito: w.incognito,
             tabsCount: w.tabs.length,
-            logs: await browser.runtime.sendMessage({
-              windowId: w.id,
-              action: 'getLogs',
-            }),
           })
         }
       } catch (err) {
@@ -1014,6 +1133,14 @@ export default {
         dbg.bookmarks = err.toString()
       }
 
+      return dbg
+    },
+
+    /**
+     * Show debug details
+     */
+    async showDbgDetails() {
+      let dbg = await this.getDbgDetails()
       this.dbgDetails = JSON.stringify(dbg, null, 2)
     },
 
@@ -1071,22 +1198,37 @@ export default {
     },
 
     /**
+     * Remove container
+     */
+    async removeContainer(container) {
+      let preMsg = translate('settings.contianer_remove_confirm_prefix')
+      let postMsg = translate('settings.contianer_remove_confirm_postfix')
+      if (window.confirm(preMsg + container.name + postMsg)) {
+        await browser.contextualIdentities.remove(container.id)
+        for (let panel of State.panels) {
+          if (panel.newTabCtx === container.id) panel.newTabCtx = 'none'
+          if (panel.moveTabCtx === container.id) panel.moveTabCtx = 'none'
+        }
+        Actions.loadContainers()
+        Actions.savePanels()
+      }
+    },
+
+    /**
      * Remove panel
      */
     async removePanel(panel) {
       if (!panel || !panel.name) return
-      if (panel.type !== 'ctx') return
+      if (panel.type === 'bookmarks') return
+      if (panel.type === 'default') return
 
       let preMsg = translate('settings.panel_remove_confirm_1')
       let postMsg = translate('settings.panel_remove_confirm_2')
       if (window.confirm(preMsg + panel.name + postMsg)) {
-        if (panel.cookieStoreId) {
-          await browser.contextualIdentities.remove(panel.cookieStoreId)
-        }
-        let index = State.panels.findIndex(p => {
-          return p.cookieStoreId === panel.cookieStoreId
-        })
+        let index = State.panels.findIndex(p => p.id === panel.id)
         if (index > -1) State.panels.splice(index, 1)
+        delete State.panelsMap[panel.id]
+        Actions.savePanels()
       }
     },
 
@@ -1094,30 +1236,43 @@ export default {
      * Move panel
      */
     movePanel(panel, dir) {
-      Actions.movePanel(panel.cookieStoreId || panel.id, dir)
+      Actions.movePanel(panel.id, dir)
+    },
+
+    /**
+     * Create container
+     */
+    async createContainer() {
+      let containersCount = Object.keys(State.containers).length
+      await browser.contextualIdentities.create({
+        name: 'New Container ' + (containersCount + 1),
+        color: 'blue',
+        icon: 'fingerprint',
+      })
+      Actions.loadContainers()
     },
 
     /**
      * Create panel-container
      */
     async createPanel() {
-      const details = {
-        name: 'New Panel ' + (State.panels.length - 1),
-        color: 'blue',
-        icon: 'fingerprint',
-      }
-      let container = await browser.contextualIdentities.create(details)
-      State.panels.push({
-        ...DEFAULT_CTX_TABS_PANEL,
-        ...container,
-        id: container.cookieStoreId,
-        cookieStoreId: container.cookieStoreId,
-        name: container.name,
-        icon: container.icon,
-        color: container.color,
-      })
+      let panel = Utils.cloneObject(TABS_PANEL)
+      panel.id = Utils.uid()
+      panel.name = 'New Panel ' + (State.panels.length + 1)
+      State.panels.push(panel)
+      State.panelsMap[panel.id] = panel
+      Actions.savePanels()
+    },
 
-      State.selectedPanel = State.panels[State.panels.length - 1]
+    async clearStorage() {
+      if (window.confirm(translate('settings.clear_storage_confirm'))) {
+        await browser.storage.local.clear()
+        browser.runtime.reload()
+      }
+    },
+
+    reloadAddon() {
+      browser.runtime.reload()
     },
   },
 }

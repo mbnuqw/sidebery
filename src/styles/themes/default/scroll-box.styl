@@ -60,6 +60,10 @@
     width: calc(100vw - 33px)
     left: calc(-100vw + 33px)
 
+#root[data-nav-layout="vertical"] .ScrollBox > .progress
+  width: calc(100vw - 34px)
+  left: calc(-100vw + 34px)
+
 #root[data-native-scrollbar]
   .ScrollBox > .progress
     box(none)
@@ -71,11 +75,17 @@
   box(relative)
   size(100vw, min-h: 100%)
   background-color: var(--bg)
+  background-image: var(--bg-img)
+  background-size: var(--bg-size)
 
 #root[data-pinned-tabs-position="left"]
 #root[data-pinned-tabs-position="right"]
   .ScrollBox > .scroll-container > .scrollable
     width: calc(100vw - 33px)
+
+#root[data-nav-layout="vertical"]
+  .ScrollBox > .scroll-container > .scrollable
+    width: calc(100vw - 34px)
 
 #root[data-native-scrollbar]
   .ScrollBox > .scroll-container > .scrollable

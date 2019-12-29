@@ -4,8 +4,10 @@
 function onStorageChange(changes, type) {
   if (type !== 'local') return
 
-  if (changes.panels) this.actions.updatePanels(changes.panels.newValue)
   if (changes.settings) this.settings = changes.settings.newValue
+  if (changes.containers_v4) {
+    this.actions.updateContainers(changes.containers_v4.newValue)
+  }
 }
 
 function setupStorageListeners() {

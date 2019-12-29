@@ -5,15 +5,20 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Sidebery / Settings</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script type="module" src="/vendor/vue.min.js" defer></script>
+  <script type="module" src="/vendor/vuex.min.js" defer></script>
+  <script type="module" src="/globals.js" defer></script>
+  <link rel="stylesheet" type="text/css" href="../themes/default/settings.css">
   <style>
     .root {
       opacity: 0;
     }
   </style>
-  <link rel="stylesheet" type="text/css" href="../themes/default/settings.css">
 </head>
 <body>
   <div class="hidden-assets">
+    <!-- Firefox -->
+    <svg id="icon_ff" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M10.19.16A5.53 5.53 0 0 0 7.7 4.23v.14h.36A3.98 3.98 0 0 1 11.3 6.1l-.15-.07c-.44-.2-1.15-.3-1.54-.24-.12.03-.1.08.07.17a3.1 3.1 0 0 1-.18 5.48c-1.48.7-3.3.3-4.33-.93-.45-.55-.76-1.37-.63-1.65.33-.7 1.2-1.13 2.35-1.17.27-.01.27-.01.36-.06.32-.16.8-.65.82-.83.01-.08.03-.07-.51-.33A4.97 4.97 0 0 1 5.9 5.4a7.42 7.42 0 0 0-.4-.36c-.12-.1-.12-.08-.16-.27a3.32 3.32 0 0 1 0-1.47c.05-.27.03-.28-.26-.14-.52.27-.97.6-1.43 1.04-.28.27-.25.25-.3.15a3.6 3.6 0 0 1-.17-1.3l-.01-.47h-.05c-.24-.03-1.16.77-1.7 1.47A6.84 6.84 0 0 0 .03 7.8a7.57 7.57 0 0 0 1.55 5.07 8.2 8.2 0 0 0 12.85.03 7.57 7.57 0 0 0 1.12-7.22 4.67 4.67 0 0 0-1.6-2.22c-.27-.16-.28-.1-.1.27a7.68 7.68 0 0 1 .55 1.49l-.12-.2c-.39-.7-.77-1.2-1.68-2.21-.86-.95-1.15-1.3-1.52-1.85-.3-.44-.43-.67-.48-.84-.05-.17-.1-.16-.41.04z"/></svg>
     <!-- Github -->
     <svg id="icon_github" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8 0a8 8 0 0 0-2.53 15.59c.4.07.55-.17.55-.38l-.01-1.49c-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.42 7.42 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48l-.01 2.2c0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8a8 8 0 0 0-8-8z"/></svg>
     <!-- Addons -->
@@ -60,6 +65,34 @@
     <svg id="icon_delete" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M6.57 0h4l.93 2h2.92L15 4.9l-.98.2L13.6 3H3.41l-.42 2.1-.98-.2.58-2.9H5.5l1.07-2zM7 2h3l-.5-1H7.57L7 2zM4 4h1v10h7V4h1v11H4V4z"/><path d="M6 13h1V5H6v8zM8 13h1V5H8v8zM10 13h1V5h-1v8z"/></svg>
     <!-- Hide -->
     <svg id="icon_hide" viewBox="0 0 18 16" xmlns="http://www.w3.org/2000/svg"><path d="M11 8a2 2 0 11-4 0 2 2 0 014 0z"/><path d="M3.08 8c2.2 2.07 4.11 3 5.92 3 1.8 0 3.71-.93 5.92-3-2.2-2.07-4.11-3-5.92-3-1.8 0-3.71.93-5.92 3zM9 3.5c2.55 0 4.98 1.42 7.53 3.97l.53.53-.53.53C13.98 11.08 11.55 12.5 9 12.5s-4.98-1.42-7.53-3.97L.94 8l.53-.53C4.02 4.92 6.45 3.5 9 3.5z"/></svg>
+    <!-- Books -->
+    <svg id="icon_books" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M1 3.37c0-.28.22-.5.5-.5h1c.28 0 .5.22.5.5v11a.5.5 0 01-.5.5h-1a.5.5 0 01-.5-.5v-11zM4 5.37c0-.28.22-.5.5-.5h1c.28 0 .5.22.5.5v9a.5.5 0 01-.5.5h-1a.5.5 0 01-.5-.5v-9zM7 4.37c0-.28.22-.5.5-.5h1c.28 0 .5.22.5.5v10a.5.5 0 01-.5.5h-1a.5.5 0 01-.5-.5v-10zM9.15 2.96a.5.5 0 01.33-.63l.95-.3a.5.5 0 01.63.32l3.7 11.4a.5.5 0 01-.32.64l-.95.3a.5.5 0 01-.63-.31L9.16 2.96z"/></svg>
+    <!-- Code -->
+    <svg id="icon_code" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M6.01 14.39a.5.5 0 01-.37-.6L8.4 1.76a.5.5 0 01.6-.37l.98.22a.5.5 0 01.37.6L7.6 14.24a.5.5 0 01-.6.37L6 14.4zM2.98 8.3a.5.5 0 010-.6L5 5a.5.5 0 00-.1-.7l-.8-.6a.5.5 0 00-.7.1L.48 7.7a.5.5 0 000 .6l2.92 3.9a.5.5 0 00.7.1l.8-.6A.5.5 0 005 11L2.98 8.3zm8.92-4.6a.5.5 0 01.7.1l2.93 3.9a.5.5 0 010 .6l-2.93 3.9a.5.5 0 01-.7.1l-.8-.6a.5.5 0 01-.1-.7l2.03-2.7a.5.5 0 000-.6L11 5a.5.5 0 01.1-.7l.8-.6z"/></svg>
+    <!-- Circle -->
+    <svg id="icon_circle" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M8 3a5 5 0 100 10A5 5 0 008 3zM1 8a7 7 0 1114 0A7 7 0 011 8z"/></svg>
+    <!-- Play -->
+    <svg id="icon_play" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M5.54 1.98A1 1 0 004 2.82v10.36a1 1 0 001.54.84l8.13-5.18a1 1 0 000-1.68L5.54 1.98z"/></svg>
+    <!-- Mail -->
+    <svg id="icon_mail" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M1.07 4.48L8 10.5l6.93-6A2 2 0 0115 5v7a2 2 0 01-2 2H3a2 2 0 01-2-2V5a2 2 0 01.07-.52z"/><path d="M1.97 3.28A2 2 0 013 3h10a2 2 0 011.03.28L8 8.51 1.97 3.28z"/></svg>
+    <!-- Man -->
+    <svg id="icon_man" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M10.9 5.36c-.1.49-.29.93-.54 1.3C10 7.34 9.74 8.28 10 9l-2 1.83-1.85-1.68c.35-.68.02-1.62-.4-2.33-.31-.4-.54-.9-.66-1.44-.13-.03-.23-.3-.23-.62 0-.24.06-.44.14-.55v-.12c-.02-.84-.03-1.53.5-2.08S7.23 1 8 1c.82 0 1.96.38 2.5 1 .5.57.5 1.35.5 2.2.08.12.13.32.13.55 0 .32-.1.58-.22.61z"/><path d="M11 9.43l-3 2.75L5 9.44C2.63 10.16 1 11.7 1 13.5c0 .39.08.77.22 1.13A1 1 0 002 15h12a1 1 0 00.78-.37c.14-.36.22-.74.22-1.13 0-1.8-1.64-3.35-4-4.07z"/></svg>
+    <!-- Archive -->
+    <svg id="icon_archive" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M2 2a1 1 0 00-1 1v1h14V3a1 1 0 00-1-1H2z"/><path fill-rule="evenodd" clip-rule="evenodd" d="M2 5h12v8a1 1 0 01-1 1H3a1 1 0 01-1-1V5zm4 2h4v1H6V7z"/></svg>
+    <!-- Clipboard -->
+    <svg id="icon_clipboard" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M6.5 1a.5.5 0 00-.5.5v1c0 .28.22.5.5.5h3a.5.5 0 00.5-.5v-1a.5.5 0 00-.5-.5h-3z"/><path fill-rule="evenodd" clip-rule="evenodd" d="M5 2.5a.5.5 0 00-.5-.5H4a1 1 0 00-1 1v11a1 1 0 001 1h8a1 1 0 001-1V3a1 1 0 00-1-1h-.5a.5.5 0 00-.5.5v.67a1 1 0 01-1 1H6a1 1 0 01-1-1V2.5zM11 6H5v1h6V6zm0 2H5v1h6V8zm-2 2H5v1h4v-1z"/></svg>
+    <!-- Book -->
+    <svg id="icon_book" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M5 1.06a.56.56 0 01.46-.02l7.2 3.05c.2.08.34.28.34.5v9.77c0 .39-.4.65-.77.5l-.38-.16V5.01L5.5 2.33l-.83.41 5.77 2.44c.2.1.34.29.34.5v9.77c0 .4-.41.66-.78.5l-6.66-2.81a.55.55 0 01-.34-.5V2.37c0-.2.12-.4.3-.5L5 1.07zm4.26 6.3l-4.6-2.03v1.1l4.6 2.03v-1.1z"/></svg>
+    <!-- Coffee -->
+    <svg id="icon_coffee" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M8 2h1l1 3H9L8 2z"/><path fill-rule="evenodd" clip-rule="evenodd" d="M2.5 6.06a.5.5 0 00-.5.5v4C2 12.2 4.34 14 6 14h3.5c1.24 0 2.58-.75 3.18-1.82h.2a3.1 3.1 0 003.12-3 3.1 3.1 0 00-3.04-3 .24.24 0 00-.08-.12C12.81 6 12.7 6 12.5 6l-10 .06zM13 10.98v-3.6c.94.07 1.79.85 1.79 1.8 0 .96-.85 1.74-1.79 1.8z"/><path d="M6 2h1l1 3H7L6 2zM4 2h1l1 3H5L4 2z"/></svg>
+    <!-- Search -->
+    <svg id="icon_search" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M9.62 11.03a5.5 5.5 0 111.41-1.41l3.98 3.98c.2.2.2.5 0 .7l-.7.71a.5.5 0 01-.71 0l-3.98-3.98zM10 6.5a3.5 3.5 0 11-7 0 3.5 3.5 0 017 0z"/></svg>
+    <!-- Lock -->
+    <svg id="icon_lock" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M14 9a1 1 0 00-1-1V7A5 5 0 003 7v1a1 1 0 00-1 1v5a1 1 0 001 1h10a1 1 0 001-1V9zM8 4a3 3 0 013 3v1H5V7a3 3 0 013-3zm1 6a1 1 0 01-.5.87V13h-1v-2.13A1 1 0 119 10z"/></svg>
+    <!-- Edu -->
+    <svg id="icon_edu" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M0 6.53L8 1l8 5.53-1.14.78v6.48c0 .33-.26.6-.57.6a.59.59 0 01-.58-.6V7.91L9.13 6.29A1.16 1.16 0 008 5.28c-.63 0-1.14.54-1.14 1.2 0 .68.5 1.22 1.14 1.22.27 0 .53-.1.72-.28l3.85 1.36v.08L8 11.97 0 6.53z"/><path d="M3.43 12.58v-2.5L8 13.17l4.57-3.1v2.5c0 .67-2.05 2.42-4.57 2.42-2.52 0-4.57-1.75-4.57-2.42z"/></svg>
+    <!-- None -->
+    <svg id="icon_none" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 8a4 4 0 01-6.03 3.45l5.48-5.48c.35.6.55 1.29.55 2.03zm-7.45 2.03l5.48-5.48a4 4 0 00-5.48 5.48zM14 8A6 6 0 112 8a6 6 0 0112 0z"/></svg>
   </div>
 
   <div
@@ -69,9 +102,8 @@
     :data-animations="$store.state.animations ? 'fast' : 'none'"
     @contextmenu.prevent.stop="">
 
-    <nav class="nav" v-noise:300.g:12:af.a:0:42.s:0:9="">
+    <nav class="nav">
       <div>
-
         <div
           class="option"
           :data-active="$store.state.activeView === 'Settings'"
@@ -94,12 +126,20 @@
           @click="navigateTo('settings_group')">{{t('settings.nav_settings_group')}}</div>
         <div
           class="sub-option"
+          :data-active="$store.state.activeSection === 'settings_containers'"
+          @click="navigateTo('settings_containers')">{{t('settings.nav_settings_containers')}}</div>
+        <div
+          class="sub-option"
           :data-active="$store.state.activeSection === 'settings_panels'"
           @click="navigateTo('settings_panels')">{{t('settings.nav_settings_panels')}}</div>
         <div
           class="sub-option"
           :data-active="$store.state.activeSection === 'settings_tabs'"
           @click="navigateTo('settings_tabs')">{{t('settings.nav_settings_tabs')}}</div>
+        <div
+          class="sub-option"
+          :data-active="$store.state.activeSection === 'settings_new_tab_position'"
+          @click="navigateTo('settings_new_tab_position')">{{t('settings.nav_settings_new_tab_position')}}</div>
         <div
           class="sub-option"
           :data-active="$store.state.activeSection === 'settings_pinned_tabs'"
@@ -181,6 +221,6 @@
     </transition>
   </div>
 
-  <script src="./settings.js"></script>
+  <script src="./settings.js" defer></script>
 </body>
 </html>
