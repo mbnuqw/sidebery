@@ -1,4 +1,3 @@
-import initNoiseBgDirective from '../directives/noise-bg'
 import Debounce from '../directives/debounce'
 import Dict from '../mixins/dict'
 import { initMsgHandling } from '../event-bus'
@@ -14,9 +13,6 @@ Actions.updateActiveView()
 
 if (!State.tabsMap) State.tabsMap = []
 Vue.mixin(Dict)
-
-const noiseBg = initNoiseBgDirective(State, Store)
-Vue.directive('noise', noiseBg)
 Vue.directive('debounce', Debounce)
 
 initMsgHandling(State, Actions)
@@ -43,6 +39,8 @@ export default new Vue({
 
     await Promise.all([Actions.loadSettings(), Actions.loadContainers(), Actions.loadKeybindings()])
     await Actions.loadPanels()
+
+    if (State.bgNoise) Actions.applyNoiseBg()
 
     Actions.loadCSSVars()
     Actions.loadCurrentWindowInfo()

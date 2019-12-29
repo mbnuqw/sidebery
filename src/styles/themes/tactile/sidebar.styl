@@ -33,6 +33,8 @@
   box(relative)
   size(100%, 100%)
   background-color: var(--bg)
+  background-image: var(--bg-img)
+  background-size: var(--bg-size)
 
 // ---
 // -- Sidebar root element
@@ -89,7 +91,8 @@
   min-height: var(--nav-btn-height)
   z-index: 2000
   background-color: var(--bg)
-  translate: box-shadow var(--d-fast)
+  background-image: var(--bg-img)
+  background-size: var(--bg-size)
   &:before
     content: ''
     box(absolute)
@@ -121,6 +124,8 @@
   box(relative)
   size(100%)
   background-color: var(--bg)
+  background-image: var(--bg-img)
+  background-size: var(--bg-size)
   box-shadow: 0 0 0 1px var(--border-fg),
               inset 0 1px 0 0 var(--border-flare-fg)
 
@@ -483,6 +488,8 @@
               0 0 0 1px var(--border-fg),
               inset 0 1px 0 0 var(--border-flare-fg)
   background-color: var(--bg)
+  background-image: var(--bg-img)
+  background-size: var(--bg-size)
   flex-flow: wrap
 #root[data-nav-layout="horizontal"] .HiddenPanelsBar
   size(100%, max-h: calc(100% - 64px))

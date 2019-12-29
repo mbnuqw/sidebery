@@ -1,7 +1,5 @@
 <template lang="pug">
-.Settings(
-  v-noise:300.g:12:af.a:0:42.s:0:9=""
-  @scroll.passive="onScroll")
+.Settings(@scroll.passive="onScroll")
   section(ref="settings_general")
     h2 {{t('settings.general_title')}}
     toggle-field(
@@ -410,7 +408,7 @@
     toggle-field(
       label="settings.bg_noise"
       :value="$store.state.bgNoise"
-      @input="setOpt('bgNoise', $event)")
+      @input="toggleNoiseBg($event)")
     select-field(
       label="settings.theme"
       optLabel="settings.theme_"
@@ -629,10 +627,7 @@
       .info(v-if="$store.state.ffInfo") Firefox: {{$store.state.ffInfo.version}}
       .info Addon: {{$store.state.version}}
 
-  .details-box(
-    v-if="dbgDetails"
-    v-noise:300.g:12:af.a:0:42.s:0:9=""
-    @scroll.stop="")
+  .details-box(v-if="dbgDetails" @scroll.stop="")
     .box
       .btn(@click="copyDebugDetail") {{t('settings.ctrl_copy')}}
       .btn.-warn(@click="dbgDetails = ''") {{t('settings.ctrl_close')}}
@@ -801,6 +796,13 @@ export default {
           State.pinnedTabsPosition = 'panel'
         }
       }
+      Actions.saveSettings()
+    },
+
+    toggleNoiseBg(value) {
+      State.bgNoise = value
+      if (State.bgNoise) Actions.applyNoiseBg()
+      else Actions.removeNoiseBg()
       Actions.saveSettings()
     },
 

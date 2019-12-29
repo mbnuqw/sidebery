@@ -1,6 +1,6 @@
 <template lang="pug">
 .StylesEditor
-  .vars(v-noise:300.g:12:af.a:0:42.s:0:9="")
+  .vars
     section
       h2 {{t('styles.common_title')}}
       color-style-field(
@@ -510,7 +510,7 @@
 
     .ctrls: .btn(@click="resetCSSVars") {{t('styles.reset_styles')}}
   
-  .css: .wrapper(v-noise:300.g:12:af.a:0:42.s:0:9="")
+  .css: .wrapper
     nav
       .nav-item(
         :data-active="cssTarget === 'sidebar'"

@@ -1,6 +1,5 @@
 <template lang="pug">
 .Sidebar(
-  v-noise:300.g:12:af.a:0:42.s:0:9=""
   :data-hidden-panels-bar="$store.state.hiddenPanelsBar"
   :data-drag="$store.state.dragMode"
   :data-pointer="pointerMode"
@@ -50,9 +49,7 @@
 
 <script>
 import { PRE_SCROLL } from '../../addon/defaults'
-import initNoiseBgDirective from '../directives/noise-bg.js'
 import EventBus from '../event-bus'
-import Store from './store'
 import State from './store/state.js'
 import Actions from './actions'
 import CtxMenu from './components/context-menu'
@@ -64,9 +61,6 @@ import WindowInput from './components/window-select-input'
 import PinnedDock from './components/pinned-tabs-dock'
 import Confirm from './components/confirm'
 import Notifications from './components/notifications'
-
-const noiseBg = initNoiseBgDirective(State, Store)
-Vue.directive('noise', noiseBg)
 
 // --- Vue Component ---
 export default {

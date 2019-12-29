@@ -1,5 +1,5 @@
 <template lang="pug">
-.MenuEditor(v-noise:300.g:12:af.a:0:42.s:0:9="" @click="resetSelection" @scroll.passive="onScroll")
+.MenuEditor(@click="resetSelection" @scroll.passive="onScroll")
 
   section(ref="menu_editor_tabs" @click.stop="" @wheel="moveSelected($event, 'tabs')")
     h2 {{t('menu.editor.tabs_title')}}

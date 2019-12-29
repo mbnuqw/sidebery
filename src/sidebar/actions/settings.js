@@ -21,6 +21,7 @@ function updateSettings(settings) {
   let theme = this.state.theme !== settings.theme
   let highlightOpenBookmarks = this.state.highlightOpenBookmarks !== settings.highlightOpenBookmarks
   let stateStorage = this.state.stateStorage !== settings.stateStorage
+  let bgNoise = this.state.bgNoise !== settings.bgNoise
 
   // Update settings of this instance
   for (let k of Object.keys(settings)) {
@@ -104,6 +105,11 @@ function updateSettings(settings) {
       }
       this.actions.saveGroups()
     }
+  }
+
+  if (bgNoise) {
+    if (this.state.bgNoise) this.actions.applyNoiseBg()
+    else this.actions.removeNoiseBg()
   }
 }
 

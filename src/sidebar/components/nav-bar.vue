@@ -1,5 +1,5 @@
 <template lang="pug">
-.nav(v-noise:300.g:12:af.a:0:42.s:0:9="" ref="nav" @dragleave="onDragLeave" @dragenter="onDragEnter")
+.nav(ref="nav" @dragleave="onDragLeave" @dragenter="onDragEnter")
   .nav-bar(@wheel.stop.prevent="onNavWheel")
     .nav-btn(
       v-for="(btn, i) in nav"

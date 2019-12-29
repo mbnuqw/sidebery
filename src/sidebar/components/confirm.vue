@@ -1,6 +1,6 @@
 <template lang="pug">
 transition(name="confirm"): .Confirm(v-if="$store.state.confirm" @click="onBgClick")
-  .msg-box(v-noise:300.g:12:af.a:0:42.s:0:9="" @click.stop="")
+  .msg-box(@click.stop="")
     h2 {{t('confirm.warn_title')}}
     .msg {{$store.state.confirm.msg}}
     .ctrls

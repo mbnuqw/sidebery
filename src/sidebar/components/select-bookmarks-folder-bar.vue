@@ -1,7 +1,5 @@
 <template lang="pug">
-.SelectBookmarksFolderBar(
-  v-if="$store.state.selectBookmarkFolder"
-  v-noise:300.g:12:af.a:0:42.s:0:9="")
+.SelectBookmarksFolderBar(v-if="$store.state.selectBookmarkFolder")
   h2 Select folder
   .folder-title {{folderName}}
   .ctrls

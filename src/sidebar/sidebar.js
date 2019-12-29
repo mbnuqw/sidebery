@@ -55,6 +55,7 @@ export default new Vue({
     Handlers.setupHandlers()
 
     if (State.theme !== 'default') Actions.initTheme()
+    if (State.bgNoise) Actions.applyNoiseBg()
     if (State.sidebarCSS) Actions.loadCustomCSS()
 
     await Actions.loadPanels()

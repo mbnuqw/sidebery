@@ -1,6 +1,5 @@
 <template lang="pug">
 .HiddenPanelsBar(
-  v-noise:300.g:12:af.a:0:42.s:0:9=""
   @dragenter="onDragEnter"
   @dragleave="onDragLeave"
   @dragover.prevent.stop="")

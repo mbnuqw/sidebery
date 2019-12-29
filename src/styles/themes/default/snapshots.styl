@@ -17,6 +17,8 @@
   grid-gap: 12px
   padding: 0 16px
   background-color: var(--bg)
+  background-image: var(--bg-img)
+  background-size: var(--bg-size)
   &:before
     content: ''
     box(absolute)
@@ -73,6 +75,8 @@
   overflow-y: auto
   overflow-x: hidden
   background-attachment: local
+  background-image: var(--bg-img)
+  background-size: var(--bg-size)
   &[data-empty]:after
     content: '...'
     box(absolute)
@@ -158,6 +162,8 @@
   align-items: center
   overflow-y: auto
   background-attachment: local
+  background-image: var(--bg-img)
+  background-size: var(--bg-size)
   &:before
     content: ''
     box(absolute)

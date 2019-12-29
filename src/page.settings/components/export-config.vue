@@ -1,5 +1,5 @@
 <template lang="pug">
-.PanelConfig(v-noise:300.g:12:af.a:0:42.s:0:9="" @wheel="onWheel")
+.PanelConfig(@wheel="onWheel")
   h2.title {{t('settings.export_title')}}
 
   toggle-field(label="settings.export_containers" v-model="containers")

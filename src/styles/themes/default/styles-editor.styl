@@ -23,6 +23,8 @@
   justify-content: flex-start
   align-items: flex-start
   background-attachment: local
+  background-image: var(--bg-img)
+  background-size: var(--bg-size)
   &:before
     content: ''
     box(absolute)
@@ -43,7 +45,7 @@
 
 .StylesEditor section
   box(relative, grid)
-  size(100%, max-w: 460px)
+  size(100%, max-w: 540px)
   margin: 0 auto
   padding: 2px 0 32px
 
@@ -84,6 +86,8 @@
   overflow-x: hidden
   box-shadow: inset 0 0 8px 0 #00000036, inset 1px 0 0 0 #00000016
   background-attachment: local
+  background-image: var(--bg-img)
+  background-size: var(--bg-size)
 
 .StylesEditor .css nav
   box(relative, flex)

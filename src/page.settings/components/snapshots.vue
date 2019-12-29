@@ -4,7 +4,7 @@
     .timeline
       .ctrls
         .btn(@click="createSnapshot") {{t('snapshot.btn_create_snapshot')}}
-      .cards(v-noise:300.g:12:af.a:0:42.s:0:9="" :data-empty="!snapshots.length")
+      .cards(:data-empty="!snapshots.length")
         .snapshot-card(
           v-for="s in snapshots"
           ref="snapshots"
@@ -19,11 +19,11 @@
           .info(v-if="s.type === 'layer'") {{t('snapshot.event.' + s.event)}}
           .date-time(v-if="s.type === 'layer'") {{s.time}}
     .snapshot
-      .ctrls(v-noise:300.g:12:af.a:0:42.s:0:9="" @wheel="onTimelineWheel" :data-empty="!activeSnapshot")
+      .ctrls(@wheel="onTimelineWheel" :data-empty="!activeSnapshot")
         .title(v-if="activeSnapshot") {{activeSnapshot.date}} - {{activeSnapshot.time}}
         .btn(v-if="activeSnapshot" @click="applySnapshot(activeSnapshot)") {{t('snapshot.btn_apply')}}
         .btn.-warn(v-if="activeSnapshot" @click="removeSnapshot(activeSnapshot)") {{t('snapshot.btn_remove')}}
-      .snapshot-content(v-if="activeSnapshot" v-noise:300.g:12:af.a:0:42.s:0:9="")
+      .snapshot-content(v-if="activeSnapshot")
         //- h2 Containers
         //- .containers
         //-   .container(

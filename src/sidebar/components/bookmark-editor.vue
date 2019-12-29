@@ -1,6 +1,6 @@
 <template lang="pug">
 .BEditor(@click="$store.state.bookmarkEditor = false")
-  .editor-panel(v-noise:300.g:12:af.a:0:42.s:0:9="" @click.stop="")
+  .editor-panel(@click.stop="")
     .field.-title
       text-input.input(
         ref="title"
