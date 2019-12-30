@@ -34,6 +34,7 @@ async function updatePanels(newPanels) {
     }
   }
 
+  let activePanel = this.state.panels[this.state.panelIndex]
   let panels = []
   let panelsMap = {}
   let updateNeeded = false
@@ -77,13 +78,16 @@ async function updatePanels(newPanels) {
   this.state.panels = panels
   this.state.panelsMap = panelsMap
 
+  let activePanelIndex = this.state.panels.indexOf(activePanel)
+  if (activePanelIndex !== -1) this.state.panelIndex = activePanelIndex
+
   if (updateNeeded) this.actions.updatePanelsTabs()
   if (reloadNeeded) {
     this.handlers.resetTabsListeners()
 
-    let index = 0
+    let index = this.getters.pinnedTabs.length
     let windowId = this.state.windowId
-    let allTabs = []
+    let allTabs = [...this.getters.pinnedTabs]
     for (let panel of this.state.panels) {
       if (!panel.tabs || !panel.tabs.length) continue
       for (let tab of panel.tabs) {
