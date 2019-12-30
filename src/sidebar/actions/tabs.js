@@ -2296,29 +2296,27 @@ async function _old_loadTabs(tabs) {
         b.isOpen = true
       }
     }
+
+    let p = this.state.panels.find(p => p.moveTabCtx === t.cookieStoreId)
+    t.panelId = p ? p.id : DEFAULT_CTX_ID
+
     this.state.tabsMap[t.id] = t
     if (t.active) activeTab = t
   }
   this.state.tabs = tabs
 
   // Restore tree levels
-  if (this.state.tabsTree) {
-    await this.actions._old_restoreTabsTree()
-  }
+  if (this.state.tabsTree) await this.actions._old_restoreTabsTree()
 
-  for (let tab of tabs) {
-    let p = this.state.panels.find(p => p.moveTabCtx === tab.cookieStoreId)
-    tab.panelId = p ? p.id : DEFAULT_CTX_ID
-  }
+  // Update panels
+  this.actions.updatePanelsTabs()
+  if (this.state.tabsTree) this.actions.updateTabsTree()
 
   // Update succession
   if (this.state.activateAfterClosing !== 'none' && activeTab) {
     const target = Utils.findSuccessorTab(this.state, activeTab)
     if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
   }
-
-  // Update panels
-  this.actions.updatePanelsTabs()
 }
 
 /**
@@ -2355,7 +2353,7 @@ function _old_findBranchStartIndex(array, subArray, startIndex) {
 /**
  * Create new group tab with provided props
  */
-async function _old_restoreGroupTab(tabInfo, index, parents) {
+async function _old_restoreGroupTab(tabInfo, index, parents, panelId) {
   let groupId = Utils.getGroupId(tabInfo.url)
   let url = browser.runtime.getURL('group/group.html') + `#${groupId}`
   let restoredTab = await browser.tabs.create({
@@ -2367,6 +2365,7 @@ async function _old_restoreGroupTab(tabInfo, index, parents) {
   })
 
   restoredTab.url = url
+  restoredTab.panelId = panelId
   if (tabInfo.isParent) parents[tabInfo.id] = restoredTab.id
   restoredTab.isParent = tabInfo.isParent
   restoredTab.parentId = parents[tabInfo.parentId] || -1
@@ -2431,14 +2430,13 @@ async function _old_restoreTabsTree() {
           tab.parentId = parents[treeTab.parentId] || -1
           tab.folded = treeTab.folded
         } else {
-          await this.actions._old_restoreGroupTab(treeTab, tabIndex, parents)
+          await this.actions._old_restoreGroupTab(treeTab, tabIndex, parents, tab.panelId)
         }
         tabIndex++
       }
     }
     break
   }
-  this.actions.updateTabsTree()
 }
 
 //
