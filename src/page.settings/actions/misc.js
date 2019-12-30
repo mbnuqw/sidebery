@@ -64,15 +64,12 @@ async function loadPermissions(init) {
   }
 }
 
-async function goToPerm(hash, permId) {
+function goToPerm(permId) {
+  if (!this.state.settingsRefs) return
   let scrollHighlightConf = { behavior: 'smooth', block: 'center' }
+  let el = this.state.settingsRefs[permId]
 
-  await this.actions.waitForInit()
-
-  if (hash !== undefined && this.state.settingsRefs) {
-    let el = this.state.settingsRefs[permId]
-    if (el) el.scrollIntoView(scrollHighlightConf)
-  }
+  if (el) el.scrollIntoView(scrollHighlightConf)
 
   document.title = 'Sidebery / Settings'
   this.state.activeView = 'Settings'
@@ -82,21 +79,12 @@ async function goToPerm(hash, permId) {
 /**
  * Check url hash and update active view
  */
-function updateActiveView() {
+async function updateActiveView() {
   let hash = location.hash ? location.hash.slice(1) : location.hash
   let hashArg = hash.split('.')
   hash = hashArg[0]
   let arg = hashArg[1]
   let scrollSectionConf = { behavior: 'smooth', block: 'start' }
-
-  if (hash === 'all-urls') return this.actions.goToPerm(hash, 'all_urls')
-  if (hash === 'tab-hide') return this.actions.goToPerm(hash, 'tab_hide')
-  if (hash === 'clipboard-write') {
-    return this.actions.goToPerm(hash, 'clipboard_write')
-  }
-  if (hash === 'web-request-blocking') {
-    return this.actions.goToPerm(hash, 'web_request_blocking')
-  }
 
   if (this.__navLockTimeout) clearTimeout(this.__navLockTimeout)
   this.state.navLock = true
@@ -104,6 +92,13 @@ function updateActiveView() {
   this.__navLockTimeout = setTimeout(() => {
     this.state.navLock = false
   }, 1250)
+
+  await this.actions.waitForInit()
+
+  if (hash === 'all-urls') return this.actions.goToPerm('all_urls')
+  if (hash === 'tab-hide') return this.actions.goToPerm('tab_hide')
+  if (hash === 'clipboard-write') return this.actions.goToPerm('clipboard_write')
+  if (hash === 'web-request-blocking') return this.actions.goToPerm('web_request_blocking')
 
   if (hash.startsWith('menu_editor')) {
     setTimeout(
