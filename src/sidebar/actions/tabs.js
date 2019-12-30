@@ -24,8 +24,9 @@ async function loadTabsFromGlobalStorage() {
     if (old.tabsTrees) return await this.actions._old_loadTabs(tabs)
   }
 
-  if (tabs[0].url.startsWith('about:blank#tabsdata')) {
-    return await this.actions.loadTabsFromInlineData(tabs)
+  let dataTabIndex = tabs.findIndex(t => t.url.startsWith('about:blank#tabsdata'))
+  if (dataTabIndex !== -1) {
+    return await this.actions.loadTabsFromInlineData(tabs, dataTabIndex)
   }
 
   let activePanel = this.state.panels[this.state.panelIndex] || this.state.panels[1]
@@ -45,7 +46,6 @@ async function loadTabsFromGlobalStorage() {
         b.isOpen = true
       }
     }
-    if (t.pinned && !this.state.panelsMap[t.panelId]) t.panelId = DEFAULT_CTX_ID
     this.state.tabsMap[t.id] = t
     if (t.active) activeTab = t
     if (t.active) this.state.activeTabId = t.id
@@ -109,6 +109,8 @@ async function loadTabsFromGlobalStorage() {
     tab.folded = tabData.folded
     idsMap[tabData.id] = tab.id
     prevTab = tab
+
+    if (tab.pinned && !this.state.panelsMap[tab.panelId]) tab.panelId = DEFAULT_CTX_ID
   }
 
   this.state.tabs = tabs
@@ -142,9 +144,12 @@ async function loadTabsFromSessionStorage() {
     browser.tabs.query({ windowId }),
     browser.sessions.getWindowValue(this.state.windowId, 'groups'),
   ])
-  if (tabs[0].url.startsWith('about:blank#tabsdata')) {
-    return await this.actions.loadTabsFromInlineData(tabs)
+
+  let dataTabIndex = tabs.findIndex(t => t.url.startsWith('about:blank#tabsdata'))
+  if (dataTabIndex !== -1) {
+    return await this.actions.loadTabsFromInlineData(tabs, dataTabIndex)
   }
+
   if (!groups) groups = {}
   let tabsData = await Promise.all(
     tabs.map(t => {
@@ -174,8 +179,6 @@ async function loadTabsFromSessionStorage() {
         b.isOpen = true
       }
     }
-
-    if (t.pinned && !this.state.panelsMap[t.panelId]) t.panelId = DEFAULT_CTX_ID
 
     if (dt) {
       panel = this.state.panelsMap[dt.panelId]
@@ -236,6 +239,8 @@ async function loadTabsFromSessionStorage() {
       activeTab = t
       this.state.activeTabId = t.id
     }
+
+    if (t.pinned && !this.state.panelsMap[t.panelId]) t.panelId = DEFAULT_CTX_ID
   }
 
   this.state.tabs = tabs
@@ -265,9 +270,12 @@ async function loadTabsFromSessionStorage() {
 /**
  * Load tabs using info from the first tab (e.g. for snapshots)
  */
-async function loadTabsFromInlineData(tabs) {
-  let firstTab = tabs[0]
-  let tabsInfoStr = firstTab.url.slice(20)
+async function loadTabsFromInlineData(tabs, dataTabIndex) {
+  // let firstTab = tabs[0]
+  let dataTab = tabs[dataTabIndex]
+  if (!dataTab) return this.actions.updatePanelsTabs()
+
+  let tabsInfoStr = dataTab.url.slice(20)
   let tabsInfo = JSON.parse(decodeURIComponent(tabsInfoStr))
   let activePanel = this.state.panels[this.state.panelIndex] || this.state.panels[1]
 
@@ -290,16 +298,14 @@ async function loadTabsFromInlineData(tabs) {
     })
   }
 
-  let secondTab = tabs[1]
+  let secondTab = tabs[dataTabIndex + 1]
   if (!secondTab) return this.actions.updatePanelsTabs()
 
   await browser.tabs.update(secondTab.id, { active: true })
   secondTab.active = true
   secondTab.discarded = false
-  await browser.tabs.remove(firstTab.id)
-  tabs.shift()
-
-  Utils.normalizeTab(firstTab, DEFAULT_CTX_ID)
+  await browser.tabs.remove(dataTab.id)
+  tabs.splice(dataTabIndex, 1)
 
   let parents = []
   let activeTab
@@ -307,6 +313,8 @@ async function loadTabsFromInlineData(tabs) {
     info = tabsInfo[i]
     prevTab = tabs[i - 1]
     tab = tabs[i]
+    if (!tab) return this.actions.updatePanelsTabs()
+
     tab.index = i
     tab.loading = false
 
@@ -2295,29 +2303,27 @@ async function _old_loadTabs(tabs) {
         b.isOpen = true
       }
     }
+
+    let p = this.state.panels.find(p => p.moveTabCtx === t.cookieStoreId)
+    t.panelId = p ? p.id : DEFAULT_CTX_ID
+
     this.state.tabsMap[t.id] = t
     if (t.active) activeTab = t
   }
   this.state.tabs = tabs
 
   // Restore tree levels
-  if (this.state.tabsTree) {
-    await this.actions._old_restoreTabsTree()
-  }
+  if (this.state.tabsTree) await this.actions._old_restoreTabsTree()
 
-  for (let tab of tabs) {
-    let p = this.state.panels.find(p => p.moveTabCtx === tab.cookieStoreId)
-    tab.panelId = p ? p.id : DEFAULT_CTX_ID
-  }
+  // Update panels
+  this.actions.updatePanelsTabs()
+  if (this.state.tabsTree) this.actions.updateTabsTree()
 
   // Update succession
   if (this.state.activateAfterClosing !== 'none' && activeTab) {
     const target = Utils.findSuccessorTab(this.state, activeTab)
     if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
   }
-
-  // Update panels
-  this.actions.updatePanelsTabs()
 }
 
 /**
@@ -2354,7 +2360,7 @@ function _old_findBranchStartIndex(array, subArray, startIndex) {
 /**
  * Create new group tab with provided props
  */
-async function _old_restoreGroupTab(tabInfo, index, parents) {
+async function _old_restoreGroupTab(tabInfo, index, parents, panelId) {
   let groupId = Utils.getGroupId(tabInfo.url)
   let url = browser.runtime.getURL('group/group.html') + `#${groupId}`
   let restoredTab = await browser.tabs.create({
@@ -2366,6 +2372,7 @@ async function _old_restoreGroupTab(tabInfo, index, parents) {
   })
 
   restoredTab.url = url
+  restoredTab.panelId = panelId
   if (tabInfo.isParent) parents[tabInfo.id] = restoredTab.id
   restoredTab.isParent = tabInfo.isParent
   restoredTab.parentId = parents[tabInfo.parentId] || -1
@@ -2430,14 +2437,13 @@ async function _old_restoreTabsTree() {
           tab.parentId = parents[treeTab.parentId] || -1
           tab.folded = treeTab.folded
         } else {
-          await this.actions._old_restoreGroupTab(treeTab, tabIndex, parents)
+          await this.actions._old_restoreGroupTab(treeTab, tabIndex, parents, tab.panelId)
         }
         tabIndex++
       }
     }
     break
   }
-  this.actions.updateTabsTree()
 }
 
 //

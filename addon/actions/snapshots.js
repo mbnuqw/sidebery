@@ -2,6 +2,7 @@ import Actions from '../actions.js'
 import { TABS_PANEL } from '../defaults.js'
 import { DEFAULT_TABS_PANEL } from '../defaults.js'
 import { DEFAULT_CTX } from '../defaults.js'
+import { DEFAULT_CTX_ID } from '../defaults.js'
 
 const MIN_SNAP_INTERVAL = 5000
 
@@ -138,11 +139,17 @@ async function openSnapshotWindow(snapshot, winId) {
   if (!winInfo) return
 
   let containers = snapshot.containersById
+  let pinnedTabs = []
   let tabs = []
 
   for (let panel of winInfo.panels) {
-    tabs = tabs.concat(panel.tabs)
+    for (let tab of panel.tabs) {
+      if (tab.pinned) pinnedTabs.push(tab)
+      else tabs.push(tab)
+    }
   }
+
+  tabs = pinnedTabs.concat(tabs)
 
   let tabsInfo = []
   for (let tab of tabs) {
@@ -169,7 +176,7 @@ async function openSnapshotWindow(snapshot, winId) {
       cookieStoreId: ctrId,
     }
 
-    if (!tab.pinned && (!ctrId || ctrId.endsWith('-default'))) {
+    if (!tab.pinned && ctrId === DEFAULT_CTX_ID && !tab.url.startsWith('about')) {
       conf.discarded = true
       conf.title = tab.title
     }
