@@ -24,8 +24,9 @@ async function loadTabsFromGlobalStorage() {
     if (old.tabsTrees) return await this.actions._old_loadTabs(tabs)
   }
 
-  if (tabs[0].url.startsWith('about:blank#tabsdata')) {
-    return await this.actions.loadTabsFromInlineData(tabs)
+  let dataTabIndex = tabs.findIndex(t => t.url.startsWith('about:blank#tabsdata'))
+  if (dataTabIndex !== -1) {
+    return await this.actions.loadTabsFromInlineData(tabs, dataTabIndex)
   }
 
   let activePanel = this.state.panels[this.state.panelIndex] || this.state.panels[1]
@@ -143,9 +144,12 @@ async function loadTabsFromSessionStorage() {
     browser.tabs.query({ windowId }),
     browser.sessions.getWindowValue(this.state.windowId, 'groups'),
   ])
-  if (tabs[0].url.startsWith('about:blank#tabsdata')) {
-    return await this.actions.loadTabsFromInlineData(tabs)
+
+  let dataTabIndex = tabs.findIndex(t => t.url.startsWith('about:blank#tabsdata'))
+  if (dataTabIndex !== -1) {
+    return await this.actions.loadTabsFromInlineData(tabs, dataTabIndex)
   }
+
   if (!groups) groups = {}
   let tabsData = await Promise.all(
     tabs.map(t => {
@@ -266,9 +270,12 @@ async function loadTabsFromSessionStorage() {
 /**
  * Load tabs using info from the first tab (e.g. for snapshots)
  */
-async function loadTabsFromInlineData(tabs) {
-  let firstTab = tabs[0]
-  let tabsInfoStr = firstTab.url.slice(20)
+async function loadTabsFromInlineData(tabs, dataTabIndex) {
+  // let firstTab = tabs[0]
+  let dataTab = tabs[dataTabIndex]
+  if (!dataTab) return this.actions.updatePanelsTabs()
+
+  let tabsInfoStr = dataTab.url.slice(20)
   let tabsInfo = JSON.parse(decodeURIComponent(tabsInfoStr))
   let activePanel = this.state.panels[this.state.panelIndex] || this.state.panels[1]
 
@@ -291,16 +298,14 @@ async function loadTabsFromInlineData(tabs) {
     })
   }
 
-  let secondTab = tabs[1]
+  let secondTab = tabs[dataTabIndex + 1]
   if (!secondTab) return this.actions.updatePanelsTabs()
 
   await browser.tabs.update(secondTab.id, { active: true })
   secondTab.active = true
   secondTab.discarded = false
-  await browser.tabs.remove(firstTab.id)
-  tabs.shift()
-
-  Utils.normalizeTab(firstTab, DEFAULT_CTX_ID)
+  await browser.tabs.remove(dataTab.id)
+  tabs.splice(dataTabIndex, 1)
 
   let parents = []
   let activeTab
@@ -308,6 +313,8 @@ async function loadTabsFromInlineData(tabs) {
     info = tabsInfo[i]
     prevTab = tabs[i - 1]
     tab = tabs[i]
+    if (!tab) return this.actions.updatePanelsTabs()
+
     tab.index = i
     tab.loading = false
 
