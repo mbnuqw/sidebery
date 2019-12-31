@@ -381,7 +381,7 @@ function normalizeSnapshot(snapshot) {
       // Tabs
       for (let tab of snapshot.windows[winId].items) {
         if (panel.id !== tab.panel) continue
-        if (tab.ctr !== DEFAULT_CTR.id) {
+        if (tab.ctr !== DEFAULT_CTR.id && snapshot.containersById[tab.ctr]) {
           tab.ctrIcon = snapshot.containersById[tab.ctr].icon
           tab.ctrColor = snapshot.containersById[tab.ctr].color
         }
