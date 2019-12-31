@@ -164,7 +164,7 @@ async function openSnapshotWindow(snapshot, winId) {
   for (let i = 0; i < tabs.length; i++) {
     let tab = tabs[i]
     let ctr = containers[tab.ctr]
-    let ctrId = ctr ? ctr.newId : undefined
+    let ctrId = ctr ? ctr.newId : DEFAULT_CTX_ID
 
     parents[tab.lvl] = tab.id
 

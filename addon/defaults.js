@@ -497,7 +497,7 @@ export const MENU_OPTIONS = {
     }
 
     for (let c of Object.values(state.containers)) {
-      if (firstNode.cookieStoreId === c.cookieStoreId) continue
+      if (firstNode.cookieStoreId === c.id) continue
       opts.push({
         label: translate('menu.tab.reopen_in_') + `||${c.color}>>${c.name}`,
         nativeLabel: translate('menu.tab.reopen_in_') + c.name,
