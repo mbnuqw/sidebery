@@ -47,7 +47,7 @@ function onTabCreated(tab) {
       tab.openerTabId = this.actions.getParentForNewTab(panel, tab)
     }
     if (index === undefined) {
-      if (panel.moveTabCtx !== 'none') {
+      if (panel.moveTabCtx !== 'none' && tab.openerTabId === undefined) {
         index = panel.tabs.length ? panel.endIndex + 1 : panel.endIndex
       } else {
         index = tab.index
