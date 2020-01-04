@@ -358,6 +358,7 @@ function onTabUpdated(tabId, change, tab) {
  */
 function onTabRemoved(tabId, info, childfree) {
   if (info.windowId !== this.state.windowId) return
+  if (info.isWindowClosing) return
 
   if (!this.state.removingTabs) this.state.removingTabs = []
   else this.state.removingTabs.splice(this.state.removingTabs.indexOf(tabId), 1)
