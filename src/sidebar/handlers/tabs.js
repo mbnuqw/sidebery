@@ -173,7 +173,6 @@ function onTabCreated(tab) {
   }
 
   if (this.state.stateStorage === 'session' && tab.url.startsWith(GROUP_URL)) {
-    this.state.groupTabs[tab.id] = true
     this.actions.saveGroups()
   }
 
@@ -258,13 +257,8 @@ function onTabUpdated(tabId, change, tab) {
       if (!change.url.startsWith(localTab.url.slice(0, 16))) {
         localTab.favIconUrl = ''
       }
-      if (this.state.stateStorage === 'session') {
-        if (change.url.startsWith(GROUP_URL)) {
-          this.state.groupTabs[localTab.id] = true
-          this.actions.saveGroups()
-        } else if (this.state.groupTabs[localTab.id]) {
-          this.state.groupTabs[localTab.id] = false
-        }
+      if (this.state.stateStorage === 'session' && change.url.startsWith(GROUP_URL)) {
+        this.actions.saveGroups()
       }
       if (
         this.state.urlRules &&
@@ -318,9 +312,7 @@ function onTabUpdated(tabId, change, tab) {
       this.state.tabs.splice(localTab.index, 1)
       this.state.tabs.splice(panel.startIndex - 1, 0, localTab)
       panel.tabs.splice(0, 0, localTab)
-      for (let i = panel.startIndex - 1; i < this.state.tabs.length; i++) {
-        this.state.tabs[i].index = i
-      }
+      this.actions.updateTabsIndexes()
       if (panel && panel.tabs) browser.tabs.move(tabId, { index: panel.startIndex - 1 })
       this.actions.updatePanelsRanges()
     }
@@ -339,6 +331,7 @@ function onTabUpdated(tabId, change, tab) {
       if (localTab.moveTime + 1000 > Date.now()) {
         localTab.panelId = localTab.prevPanelId
         panel = this.state.panelsMap[localTab.panelId]
+        if (this.state.stateStorage === 'session') this.actions.saveTabData(localTab)
       }
     }
 
@@ -359,6 +352,7 @@ function onTabUpdated(tabId, change, tab) {
  */
 function onTabRemoved(tabId, info, childfree) {
   if (info.windowId !== this.state.windowId) return
+  if (info.isWindowClosing) return
 
   if (!this.state.removingTabs) this.state.removingTabs = []
   else this.state.removingTabs.splice(this.state.removingTabs.indexOf(tabId), 1)
@@ -424,10 +418,6 @@ function onTabRemoved(tabId, info, childfree) {
   }
   this.state.tabsMap[tabId] = undefined
   this.state.tabs.splice(tab.index, 1)
-  if (this.state.stateStorage === 'session' && this.state.groupTabs[tabId]) {
-    this.state.groupTabs[tabId] = false
-    this.actions.saveGroups()
-  }
 
   // Remove tab from panel
   if (panel && panel.tabs) {
@@ -448,25 +438,28 @@ function onTabRemoved(tabId, info, childfree) {
     panel.updated.splice(i, 1)
   }
 
-  if (!this.state.removingTabs.length) this.actions.recalcPanelScroll()
-
-  // Update tree
-  if (this.state.tabsTree && !this.state.removingTabs.length) {
-    const startIndex = panel ? panel.startIndex : 0
-    const endIndex = panel ? panel.endIndex + 1 : -1
-    this.actions.updateTabsTree(startIndex, endIndex)
-  }
-
+  // On removing the last tab
   if (!this.state.removingTabs.length) {
-    if (this.state.stateStorage === 'global') this.actions.saveTabsData()
-  }
+    this.actions.recalcPanelScroll()
 
-  // Update succession
-  if (!this.state.removingTabs.length && this.state.activateAfterClosing !== 'none') {
-    const activeTab = this.state.tabsMap[this.state.activeTabId]
-    if (activeTab && activeTab.active) {
-      const target = Utils.findSuccessorTab(this.state, activeTab)
-      if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
+    // Update tree
+    if (this.state.tabsTree) {
+      const startIndex = panel ? panel.startIndex : 0
+      const endIndex = panel ? panel.endIndex + 1 : -1
+      this.actions.updateTabsTree(startIndex, endIndex)
+    }
+
+    // Save new tabs state
+    if (this.state.stateStorage === 'global') this.actions.saveTabsData()
+    if (this.state.stateStorage === 'session') this.actions.saveGroups()
+
+    // Update succession
+    if (this.state.activateAfterClosing !== 'none') {
+      const activeTab = this.state.tabsMap[this.state.activeTabId]
+      if (activeTab && activeTab.active) {
+        const target = Utils.findSuccessorTab(this.state, activeTab)
+        if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
+      }
     }
   }
 
@@ -476,11 +469,11 @@ function onTabRemoved(tabId, info, childfree) {
     this.state.bookmarksUrlMap &&
     this.state.bookmarksUrlMap[tab.url]
   ) {
-    for (let t of this.state.tabs) {
-      if (t.url === tab.url) return
-    }
-    for (let b of this.state.bookmarksUrlMap[tab.url]) {
-      b.isOpen = false
+    let tabWithSameUrl = this.state.tabs.find(t => t.url === tab.url)
+    if (!tabWithSameUrl) {
+      for (let b of this.state.bookmarksUrlMap[tab.url]) {
+        b.isOpen = false
+      }
     }
   }
 
@@ -539,9 +532,7 @@ function onTabMoved(id, info) {
   // Update tabs indexes.
   const minIndex = Math.min(info.fromIndex, info.toIndex)
   const maxIndex = Math.max(info.fromIndex, info.toIndex)
-  for (let i = minIndex; i <= maxIndex; i++) {
-    if (this.state.tabs[i]) this.state.tabs[i].index = i
-  }
+  this.actions.updateTabsIndexes(minIndex, maxIndex + 1)
 
   // Move tab in panel
   let srcPanel

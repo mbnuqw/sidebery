@@ -13,13 +13,13 @@ void (async function main() {
   Actions.initGlobalMessaging()
   Actions.initMessaging()
 
-  // Load containers
-  Actions.setupContainersListeners()
-  await Actions.loadContainers()
-
   // Load windows
   state.windows = await Actions.getWindows()
   Actions.setupWindowsListeners()
+
+  // Load containers
+  Actions.setupContainersListeners()
+  await Actions.loadContainers()
 
   // Load settings
   let { settings } = await browser.storage.local.get({ settings: null })

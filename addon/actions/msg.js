@@ -34,7 +34,6 @@ function initMessaging() {
     // Setup message handling
     let info = JSON.parse(port.name)
     if (info.instanceType === 'sidebar') {
-      if (!this.windows[info.windowId]) return
       connectedSidebars[info.windowId] = port
       port.onMessage.addListener(onSidebarMsg)
 
@@ -72,31 +71,6 @@ function onFirstSidebarInit(handler) {
 }
 
 /**
- * Wait for connecting sidebery instance of
- * target window.
- */
-async function waitForSidebarConnect(winId, limit = 1000) {
-  let waitingId = String(Math.random())
-  let waiting = new Promise(res => {
-    if (connectedSidebars[winId]) return res(true)
-
-    connectPending.push({
-      id: waitingId,
-      winId,
-      resolve: res,
-    })
-
-    setTimeout(() => {
-      let index = connectPending.findIndex(w => w.id === waitingId)
-      if (index > -1) connectPending.splice(index, 1)
-      res(false)
-    }, limit)
-  })
-
-  return waiting
-}
-
-/**
  * Handle message from sidebar
  */
 function onSidebarMsg(msg) {
@@ -113,5 +87,4 @@ export default {
   initMessaging,
   onSidebarMsg,
   onFirstSidebarInit,
-  waitForSidebarConnect,
 }

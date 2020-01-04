@@ -85,8 +85,8 @@ export default new Vue({
     if (State.stateStorage === 'global') Actions.saveTabsData()
     if (State.stateStorage === 'session') Actions.saveGroups()
 
-    Actions.connectToBG()
     Actions.updateActiveGroupPage()
+    Actions.connectToBG()
   },
 
   mounted() {
