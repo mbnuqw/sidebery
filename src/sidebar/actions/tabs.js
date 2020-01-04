@@ -85,7 +85,6 @@ async function loadTabsFromGlobalStorage() {
 
       // Restore props
       tab.panelId = data.panelId || lastPanel.id
-      // console.log('[DEBUG] 1', tab.panelId)
       if (idsMap[data.parentId] >= 0) tab.parentId = idsMap[data.parentId]
       tab.folded = !!data.folded
       idsMap[data.id] = tab.id
@@ -193,7 +192,7 @@ async function loadTabsFromSessionStorage() {
       }
 
       // Restore props
-      tab.panelId = data.panelId || DEFAULT_CTX_ID
+      tab.panelId = data.panelId || lastPanel.id
       if (idsMap[data.parentId] >= 0) tab.parentId = idsMap[data.parentId]
       tab.folded = !!data.folded
       idsMap[data.id] = tab.id
@@ -432,7 +431,6 @@ function saveTabData(tabOrId) {
     parentId: tabOrId.parentId,
     folded: tabOrId.folded,
     lvl: tabOrId.lvl,
-    index: tabOrId.index,
   })
 }
 

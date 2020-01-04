@@ -337,6 +337,7 @@ function onTabUpdated(tabId, change, tab) {
       if (localTab.moveTime + 1000 > Date.now()) {
         localTab.panelId = localTab.prevPanelId
         panel = this.state.panelsMap[localTab.panelId]
+        if (this.state.stateStorage === 'session') this.actions.saveTabData(localTab)
       }
     }
 
