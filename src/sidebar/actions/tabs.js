@@ -2064,7 +2064,9 @@ function resetUpdateGroupTabTimeout() {
 }
 
 function updateActiveGroupPage() {
-  let activeTab = this.state.tabs.find(t => t.active)
+  let activeTab = this.state.tabsMap[this.state.activeTabId]
+  if (!activeTab) activeTab = this.state.tabs.find(t => t.active)
+  if (!activeTab) return
   if (Utils.isGroupUrl(activeTab.url)) {
     this.actions.updateGroupTab(activeTab)
   }

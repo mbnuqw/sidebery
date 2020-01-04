@@ -216,42 +216,6 @@ async function updateTabsTree() {
   }
 }
 
-/**
- * Move provided tabs to window
- */
-async function moveTabsToWin(winId, tabs, fromPrivate, rmTabId) {
-  let sidebarIsOpen = await browser.sidebarAction.isOpen({ windowId: winId })
-  let isConnected = false
-
-  if (sidebarIsOpen) {
-    isConnected = await this.actions.waitForSidebarConnect(winId, 7000)
-    if (isConnected) {
-      await browser.runtime.sendMessage({
-        instanceType: 'sidebar',
-        windowId: winId,
-        action: 'moveTabsToThisWin',
-        args: [tabs, fromPrivate],
-      })
-    }
-  }
-
-  if (!isConnected) {
-    let win = this.windows[winId]
-    if (win.incognito === fromPrivate) {
-      for (let tab of tabs) {
-        await browser.tabs.move(tab.id, { windowId: winId, index: -1 })
-      }
-    } else {
-      for (let tab of tabs) {
-        await browser.tabs.create({ url: tab.url, windowId: winId })
-        browser.tabs.remove(tab.id)
-      }
-    }
-  }
-
-  if (rmTabId > -1) await browser.tabs.remove(rmTabId)
-}
-
 function setupTabsListeners() {
   browser.tabs.onCreated.addListener(this.actions.onTabCreated)
   browser.tabs.onRemoved.addListener(this.actions.onTabRemoved)
@@ -282,7 +246,6 @@ export default {
   updateTabsTree,
   backupTabsData,
   saveTabsData,
-  moveTabsToWin,
 
   setupTabsListeners,
 }
