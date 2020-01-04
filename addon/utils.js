@@ -526,15 +526,14 @@ function findDataForTabs(tabs, data) {
 
       // Saved tab is a group and its missing
       if (isGroupUrl(tabData.url) && tabData.url !== tab.url) {
-        tabData.index = k + gOffset
         tabData.isMissedGroup = true
         k--
-        gOffset++
         continue
       }
 
       // Match
-      if (tabData.url === tab.url || (tab.active && tab.url === 'about:blank')) {
+      let blindspot = tab.status === 'loading' && tab.url === 'about:blank'
+      if (tabData.url === tab.url || blindspot) {
         tabData.index = k + gOffset
         equalityCounter++
       }

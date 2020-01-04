@@ -91,6 +91,7 @@
       "./test/env-setup.js"
     ],
     "testMatch": [
+      "**/addon/**/__tests__/*.test.js",
       "**/src/**/__tests__/*.test.js"
     ]
   }

@@ -620,6 +620,15 @@ async function sortBookmarks(type, nodeIds) {
   }
 }
 
+function highlightBookmarks(url) {
+  if (!this.state.highlightOpenBookmarks || !this.state.bookmarksUrlMap) return
+  if (!this.state.bookmarksUrlMap[url]) return
+
+  for (let b of this.state.bookmarksUrlMap[url]) {
+    b.isOpen = true
+  }
+}
+
 export default {
   loadBookmarks,
   saveBookmarksTree,
@@ -634,4 +643,5 @@ export default {
   collapseAllBookmarks,
   updateBookmarksCounter,
   sortBookmarks,
+  highlightBookmarks,
 }
