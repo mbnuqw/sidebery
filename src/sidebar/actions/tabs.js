@@ -50,7 +50,7 @@ async function loadTabsFromGlobalStorage() {
   }
 
   // Zip tabs with sidebery data
-  let tabsWithData = tabs.map(t => [t, tabsData.find(d => d.index === t.index && d.url === t.url)])
+  let tabsWithData = tabs.map(t => [t, tabsData.find(d => d.index === t.index)])
 
   // Go through tabs and restore sidebery props
   this.state.tabsMap = []
