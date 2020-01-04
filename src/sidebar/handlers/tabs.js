@@ -173,7 +173,6 @@ function onTabCreated(tab) {
   }
 
   if (this.state.stateStorage === 'session' && tab.url.startsWith(GROUP_URL)) {
-    this.state.groupTabs[tab.id] = true
     this.actions.saveGroups()
   }
 
@@ -258,13 +257,8 @@ function onTabUpdated(tabId, change, tab) {
       if (!change.url.startsWith(localTab.url.slice(0, 16))) {
         localTab.favIconUrl = ''
       }
-      if (this.state.stateStorage === 'session') {
-        if (change.url.startsWith(GROUP_URL)) {
-          this.state.groupTabs[localTab.id] = true
-          this.actions.saveGroups()
-        } else if (this.state.groupTabs[localTab.id]) {
-          this.state.groupTabs[localTab.id] = false
-        }
+      if (this.state.stateStorage === 'session' && change.url.startsWith(GROUP_URL)) {
+        this.actions.saveGroups()
       }
       if (
         this.state.urlRules &&

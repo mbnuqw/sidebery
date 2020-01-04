@@ -435,7 +435,6 @@ function saveTabData(tabOrId) {
 }
 
 function saveGroups(delay = 300) {
-  if (!this.state.groupTabs) return
   if (!this._saveGroupsTimeout) clearTimeout(this._saveGroupsTimeout)
   this._saveGroupsTimeout = setTimeout(() => {
     this._saveGroupsTimeout = null
