@@ -103,6 +103,9 @@ async function loadTabsFromGlobalStorage() {
       }
     }
 
+    // Use openerTabId as fallback for parentId
+    if (tab.parentId === -1 && this.state.tabsMap[tab.openerTabId]) tab.parentId = tab.openerTabId
+
     this.state.tabsMap[tab.id] = tab
 
     // Find active tab
@@ -210,6 +213,9 @@ async function loadTabsFromSessionStorage() {
         }
       }
     }
+
+    // Use openerTabId as fallback for parentId
+    if (tab.parentId === -1 && this.state.tabsMap[tab.openerTabId]) tab.parentId = tab.openerTabId
 
     this.state.tabsMap[tab.id] = tab
 
