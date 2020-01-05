@@ -100,6 +100,7 @@ export default {
   },
   'settings.skip_empty_panels': { message: 'Skip empty panels on switching' },
   'settings.show_tab_rm_btn': { message: 'Show close button on mouse hover' },
+  'settings.show_tab_ctx': { message: 'Show color mark of container' },
   'settings.hide_inactive_panel_tabs': { message: 'Hide tabs of inactive panels' },
   'settings.activate_after_closing': { message: 'After closing current tab activate' },
   'settings.activate_after_closing_next': { message: 'next tab' },

@@ -44,7 +44,7 @@
     .child-count(v-if="childCount && tab.folded") {{childCount}}
   .close(v-if="$store.state.showTabRmBtn" @mousedown.stop="onCloseClick" @mouseup.stop="" @contextmenu.stop.prevent="")
     svg: use(xlink:href="#icon_remove")
-  .ctx(v-if="color")
+  .ctx(v-if="$store.state.showTabCtx && color")
   //- .t-box: .title {{tab.index}}-{{tab.id}}-{{tab.panelId[0]}} {{tab.title}}
   .t-box: .title {{tab.title}}
 </template>

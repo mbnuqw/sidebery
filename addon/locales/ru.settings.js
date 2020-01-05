@@ -101,6 +101,7 @@ export default {
   },
   'settings.skip_empty_panels': { message: 'Пропускать пустые контейнеры при переключении' },
   'settings.show_tab_rm_btn': { message: 'Показывать кнопку закрытия таба при наведении курсора' },
+  'settings.show_tab_ctx': { message: 'Показывать цветовую метку контейнера' },
   'settings.hide_inactive_panel_tabs': { message: 'Скрывать табы неактивных панелей' },
   'settings.activate_after_closing': { message: 'После закрытия текущей вкладки активировать' },
   'settings.activate_after_closing_next': { message: 'следующую' },

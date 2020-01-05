@@ -168,6 +168,10 @@
       :value="$store.state.showTabRmBtn"
       @input="setOpt('showTabRmBtn', $event)")
     toggle-field(
+      label="settings.show_tab_ctx"
+      :value="$store.state.showTabCtx"
+      @input="setOpt('showTabCtx', $event)")
+    toggle-field(
       label="settings.hide_inactive_panel_tabs"
       :value="$store.state.hideInact"
       @input="toggleHideInact")
