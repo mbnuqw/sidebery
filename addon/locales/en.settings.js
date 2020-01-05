@@ -57,6 +57,7 @@ export default {
   'settings.nav_bar_layout': { message: 'Layout' },
   'settings.nav_bar_layout_horizontal': { message: 'horizontal' },
   'settings.nav_bar_layout_vertical': { message: 'vertical' },
+  'settings.nav_bar_layout_hidden': { message: 'hidden' },
   'settings.nav_bar_inline': { message: 'Show navigation bar in one line' },
   'settings.hide_settings_btn': { message: 'Hide settings button' },
   'settings.hide_add_btn': { message: 'Hide "Create panel" button' },

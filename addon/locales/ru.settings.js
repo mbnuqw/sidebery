@@ -57,6 +57,7 @@ export default {
   'settings.nav_bar_layout': { message: 'Расположение' },
   'settings.nav_bar_layout_horizontal': { message: 'горизонтальное' },
   'settings.nav_bar_layout_vertical': { message: 'вертикальное' },
+  'settings.nav_bar_layout_hidden': { message: 'скрытое' },
   'settings.nav_bar_inline': { message: 'В одну строку' },
   'settings.hide_settings_btn': { message: 'Скрывать кнопку "Настройки"' },
   'settings.hide_add_btn': { message: 'Скрывать кнопку "Создать панель"' },

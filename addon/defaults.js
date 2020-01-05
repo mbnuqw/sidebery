@@ -38,7 +38,7 @@ export const SETTINGS_OPTIONS = {
   midClickBookmarkOpts: ['open_new_tab', 'edit', 'delete'],
   warnOnMultiTabCloseOpts: ['any', 'collapsed', 'none'],
   warnOnMultiBookmarkDeleteOpts: ['any', 'collapsed', 'none'],
-  navBarLayoutOpts: ['horizontal', 'vertical'],
+  navBarLayoutOpts: ['horizontal', 'vertical', 'hidden'],
   stateStorageOpts: ['global', 'session'],
   autoFoldTabsExceptOpts: [1, 2, 3, 4, 5, 'none'],
 }

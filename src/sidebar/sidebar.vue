@@ -27,7 +27,7 @@
 
   .box(ref="box")
     .dimmer(@mousedown="$store.state.hiddenPanelsBar = false")
-    NavBar
+    NavBar(v-if="$store.state.navBarLayout !== 'hidden'")
     .panel-box
       component.panel(
         v-for="(panel, i) in $store.state.panels"
