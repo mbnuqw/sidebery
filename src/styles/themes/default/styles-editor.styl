@@ -131,14 +131,23 @@
     opacity: .7
 
 .StylesEditor .editor-box > .placeholder
+.StylesEditor .editor-box > .placeholder-note
   box(absolute)
   text(monospace, s: rem(11))
   color: var(--true-fg)
-  white-space: pre
+  white-space: pre-wrap
+  padding-right: 8px
   transition: opacity var(--d-fast)
 
   &[data-hidden]
     opacity: 0
+  
+.StylesEditor .editor-box > .placeholder-note
+  top: 50px
+  transition: opacity var(--d-fast) var(--d-fast)
+  color: var(--info-fg)
+  -moz-user-select: text
+  z-index: 2
 
 .StylesEditor .awesome
   box(absolute)
