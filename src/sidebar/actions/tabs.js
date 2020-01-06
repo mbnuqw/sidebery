@@ -1882,7 +1882,7 @@ function createChildTab(tabId) {
 function createTabInPanel(panel, url) {
   let tabShell = {}
   let index = this.actions.getIndexForNewTab(panel, tabShell)
-  let parentId = this.actions.getParentForNewTab(panel, tabShell)
+  let parentId = this.actions.getParentForNewTab(panel)
   if (index === undefined) {
     if (!panel.tabs.length) index = panel.endIndex
     else index = panel.endIndex + 1
@@ -2089,7 +2089,7 @@ function getPanelForNewTab(tab) {
   if (!panel && parentTab) {
     panel = this.state.panelsMap[parentTab.panelId]
     let activePanel = this.state.panels[this.state.panelIndex]
-    if (this.state.moveNewTabParentActPanel && panel !== activePanel) {
+    if ((this.state.moveNewTabParentActPanel || parentTab.pinned) && panel !== activePanel) {
       panel = null
     }
   }
@@ -2124,12 +2124,14 @@ function getIndexForNewTab(panel, tab) {
   let endIndex = panel.tabs.length ? panel.endIndex + 1 : panel.endIndex
   let activeTab = this.state.tabsMap[this.state.activeTabId]
 
+  // Place new tab opened from pinned tab
   if (parent && parent.pinned) {
     if (this.state.moveNewTabPin === 'start') return panel.startIndex
     if (this.state.moveNewTabPin === 'end') return endIndex
     if (this.state.moveNewTabPin === 'none') return
   }
 
+  // Place new tab opened from another tab
   if (parent && !parent.pinned && parent.panelId === panel.id) {
     if (this.state.moveNewTabParent === 'sibling' || this.state.moveNewTabParent === 'last_child') {
       let t
@@ -2146,6 +2148,7 @@ function getIndexForNewTab(panel, tab) {
     if (this.state.moveNewTabParent === 'none') return
   }
 
+  // Place new tab (for the other cases)
   if (this.state.moveNewTab === 'start') return panel.startIndex
   if (this.state.moveNewTab === 'end') return endIndex
   if (this.state.moveNewTab === 'after') {
@@ -2190,13 +2193,33 @@ function getIndexForNewTab(panel, tab) {
 /**
  * Find and return parent id
  */
-function getParentForNewTab(panel) {
+function getParentForNewTab(panel, openerTabId) {
   let activeTab = this.state.tabsMap[this.state.activeTabId]
-  if (!activeTab || activeTab.panelId !== panel.id || activeTab.pinned) return
+  let parent = this.state.tabsMap[openerTabId]
 
-  if (this.state.moveNewTab === 'after') return activeTab.parentId
-  else if (this.state.moveNewTab === 'first_child') return activeTab.id
-  else if (this.state.moveNewTab === 'last_child') return activeTab.id
+  // Place new tab opened from pinned tab
+  if (parent && parent.pinned) return
+
+  // Place new tab opened from another tab
+  if (parent && !parent.pinned && parent.panelId === panel.id) {
+    if (this.state.moveNewTabParent === 'sibling') return parent.parentId
+    if (this.state.moveNewTabParent === 'first_child') return openerTabId
+    if (this.state.moveNewTabParent === 'last_child') return openerTabId
+    if (this.state.moveNewTabParent === 'start') return
+    if (this.state.moveNewTabParent === 'end') return
+    if (this.state.moveNewTabParent === 'none') return openerTabId
+  }
+
+  // Place new tab (for the other cases)
+  if (this.state.moveNewTab === 'start') return
+  if (this.state.moveNewTab === 'end') return
+  if (activeTab && activeTab.panelId === panel.id && !activeTab.pinned) {
+    if (this.state.moveNewTab === 'after') return activeTab.parentId
+    else if (this.state.moveNewTab === 'first_child') return activeTab.id
+    else if (this.state.moveNewTab === 'last_child') return activeTab.id
+  }
+
+  return openerTabId
 }
 
 /**

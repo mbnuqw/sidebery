@@ -25,27 +25,18 @@ function onTabCreated(tab) {
   // Get target panel and index
   let panel, index
 
-  let treeAllowed =
-    this.state.moveNewTabParent === 'first_child' ||
-    this.state.moveNewTabParent === 'last_child' ||
-    this.state.moveNewTabParent === 'none' ||
-    this.state.moveNewTab === 'first_child' ||
-    this.state.moveNewTab === 'last_child'
-
   if (this.state.newTabsPosition && this.state.newTabsPosition[tab.index]) {
     let position = this.state.newTabsPosition[tab.index]
     panel = this.state.panelsMap[position.panel]
     if (!panel) panel = this.state.panelsMap[DEFAULT_CTX_ID]
     index = tab.index
     tab.openerTabId = position.parent
-    treeAllowed = true
+    // treeAllowed = true
     delete this.state.newTabsPosition[tab.index]
   } else {
     panel = this.actions.getPanelForNewTab(tab)
     index = this.actions.getIndexForNewTab(panel, tab)
-    if (tab.openerTabId === undefined) {
-      tab.openerTabId = this.actions.getParentForNewTab(panel, tab)
-    }
+    tab.openerTabId = this.actions.getParentForNewTab(panel, tab.openerTabId)
     if (index === undefined) {
       if (panel.moveTabCtx !== 'none' && tab.openerTabId === undefined) {
         index = panel.tabs.length ? panel.endIndex + 1 : panel.endIndex
@@ -74,24 +65,12 @@ function onTabCreated(tab) {
     this.state.tabs[i].index++
   }
 
-  // Set default custom props (for reactivity)
-  tab.panelId = panel.id
+  // Set custom props
+  Utils.normalizeTab(tab, panel.id)
   tab.index = index
-  tab.isParent = false
-  tab.folded = false
-  if (!treeAllowed && tab.openerTabId) tab.parentId = undefined
-  if (tab.parentId === undefined) tab.parentId = -1
-  else tab.openerTabId = tab.parentId
-  tab.lvl = 0
-  tab.sel = false
-  tab.invisible = false
-  if (!tab.favIconUrl) tab.favIconUrl = ''
-  else if (tab.favIconUrl.startsWith('chrome')) tab.favIconUrl = ''
-  tab.updated = false
-  tab.loading = false
-  tab.warn = false
-  if (tab.favIconUrl === 'chrome://global/skin/icons/warning.svg') {
-    tab.warn = true
+  if (tab.openerTabId >= 0) tab.parentId = tab.openerTabId
+  if (!tab.favIconUrl && this.state.favUrls[tab.url] >= 0) {
+    tab.favIconUrl = this.state.favicons[this.state.favUrls[tab.url]] || ''
   }
 
   // Put new tab in tabs list
@@ -120,7 +99,7 @@ function onTabCreated(tab) {
       }
     } else {
       let parent = this.state.tabsMap[tab.openerTabId]
-      if (parent && parent.panelId === tab.panelId && treeAllowed) {
+      if (parent && parent.panelId === tab.panelId) {
         let insideBranch = false
         for (let t, i = parent.index + 1; i < this.state.tabs.length; i++) {
           t = this.state.tabs[i]
