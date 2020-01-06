@@ -4,12 +4,16 @@
     .notification(
       v-for="(info, i) in $store.state.notifications"
       :key="info.id"
+      :data-lvl="info.lvl"
       :data-timeout="!!info.timer"
       :style="getTimeoutCSSVar(info)"
       @mouseenter="onNotifMouseEnter(info)"
       @mouseleave="onNotifMouseLeave(info)")
       .title {{info.title}}
       .msg(v-if="info.msg") {{info.msg}}
+      .progress(v-if="info.progress")
+        .progress-bar
+          .progress-bar-value(:style="{ transform: `translateX(${info.progress.percent}%)` }")
       .ctrls(v-if="info.ctrl")
         .ctrl(@mousedown="onOkMouseDown($event, info, i)") {{info.ctrl}}
         .ctrl(@mousedown="onHideMouseDown($event, info, i)") {{t('notif.hide_ctrl')}}

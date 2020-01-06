@@ -38,23 +38,48 @@
   &[data-timeout]:after
     animation: notif-timeout var(--timeout) linear
 
+  &[data-lvl="progress"]
+    cursor: progress
+
+  &[data-lvl="progress"]:after
+    animation: notif-progress 2s linear infinite
+
 .Notifications .title
   box(relative)
   size(100%)
   text(s: rem(17), w: 700)
   color: var(--title-fg)
-  padding: 4px 12px
+  padding: 4px 12px 9px
 
 .Notifications .msg
   box(relative)
   size(100%)
   text(s: rem(12))
   color: var(--info-fg)
-  padding: 0 12px 2px
+  padding: 0 12px 10px
+
+.Notifications .progress
+  box(relative, flex)
+  justify-content: center
+  align-items: center
+
+.Notifications .progress-bar
+  box(relative)
+  size(calc(100% - 24px), 5px)
+  border-radius: 3px
+  margin: 0 0 10px
+  box-shadow: inset 0 0 0 1px var(--border-active-fg)
+  overflow: hidden
+
+.Notifications .progress-bar-value
+  box(absolute)
+  size(100%, same)
+  pos(0, -100%)
+  background-color: var(--notice-fg)
+  transition: transform var(--d-slow)
 
 .Notifications .ctrls
   box(relative, flex)
-  margin: 5px 0 0
   box-shadow: 0 -1px 0 0 var(--border-active-fg)
 
 .Notifications .ctrl
@@ -111,3 +136,11 @@
     opacity: 0
   100%
     opacity: 0
+
+@keyframes notif-progress
+  0%
+    opacity: 1
+  50%
+    opacity: .5
+  100%
+    opacity: 1
