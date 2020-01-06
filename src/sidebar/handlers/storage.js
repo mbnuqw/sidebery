@@ -31,6 +31,9 @@ function onChangeStorage(changes, type) {
   if (changes.sidebarCSS) {
     this.actions.applyCustomCSS(changes.sidebarCSS.newValue)
   }
+  if (changes.disabledKeybindings) {
+    this.actions.loadKeybindings()
+  }
 }
 
 /**

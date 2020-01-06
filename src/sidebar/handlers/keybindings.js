@@ -8,6 +8,10 @@ import Handlers from '../handlers'
 function onCmd(name) {
   if (!this.state.windowFocused) return
 
+  let kb = this.state.kbMap[name]
+  if (!kb) kb = this.state.keybindings.find(k => k.name === name)
+  if (!kb || !kb.active) return
+
   if (name === 'next_panel') this.handlers.onKeyNextPanel()
   else if (name === 'prev_panel') this.handlers.onKeyPrevPanel()
   else if (name === 'new_tab_on_panel') this.handlers.onKeyNewTabInPanel()

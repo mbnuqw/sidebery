@@ -332,6 +332,7 @@ export default {
   // --- Keybindings
   'settings.kb_title': { message: 'Клавиши' },
   'settings.reset_kb': { message: 'Сбросить клав. настройки' },
+  'settings.toggle_kb': { message: 'Включить / отключить сочетания клавиш' },
 
   // --- Permissions
   'settings.permissions_title': { message: 'Разрешения' },

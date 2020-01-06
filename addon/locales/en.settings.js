@@ -291,6 +291,7 @@ export default {
   // --- Keybindings
   'settings.kb_title': { message: 'Keybindings' },
   'settings.reset_kb': { message: 'Reset Keybindings' },
+  'settings.toggle_kb': { message: 'Enable/Disable Keybindings' },
 
   // --- Permissions
   'settings.permissions_title': { message: 'Permissions' },
