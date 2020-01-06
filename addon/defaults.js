@@ -133,6 +133,7 @@ export const DEFAULT_SETTINGS = {
   groupCSS: false,
 
   // Snapshots
+  snapNotify: true,
   snapInterval: 0,
   snapIntervalUnit: 'min',
   snapLimit: 0,

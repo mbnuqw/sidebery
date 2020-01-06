@@ -1,3 +1,5 @@
+import { translate } from '../../../addon/locales/dict'
+
 /**
  * Load platform info
  */
@@ -335,6 +337,16 @@ function notify(config, timeout = 5000) {
   this.state.notifications.push(config)
 }
 
+function notifyAboutNewSnapshot() {
+  let config = {
+    title: translate('notif.snapshot_created'),
+    ctrl: translate('notif.view_snapshot'),
+    callback: () => this.actions.openSettings('snapshots'),
+  }
+
+  this.actions.notify(config)
+}
+
 function progress(config) {
   let id = Utils.uid()
   config.id = id
@@ -367,5 +379,6 @@ export default {
   copyUrls,
   askNewBookmarkFolder,
   notify,
+  notifyAboutNewSnapshot,
   progress,
 }

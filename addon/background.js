@@ -1,4 +1,5 @@
 import Actions, { injectInActions } from './actions.js'
+import { DEFAULT_SETTINGS } from './defaults.js'
 
 void (async function main() {
   const state = injectInActions()
@@ -22,8 +23,8 @@ void (async function main() {
   await Actions.loadContainers()
 
   // Load settings
-  let { settings } = await browser.storage.local.get({ settings: null })
-  state.settings = settings ? settings : {}
+  let { settings } = await browser.storage.local.get({ settings: {} })
+  state.settings = Utils.normalizeObject(settings, DEFAULT_SETTINGS)
 
   await Actions.loadTabs(state.windows, state.tabsMap)
   await Actions.backupTabsData()

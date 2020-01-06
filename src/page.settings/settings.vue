@@ -565,6 +565,10 @@
 
   section(ref="settings_snapshots")
     h2 {{t('settings.snapshots_title')}}
+    toggle-field(
+      label="settings.snap_notify"
+      :value="$store.state.snapNotify"
+      @input="setOpt('snapNotify', $event)")
     num-field(
       label="settings.snap_interval"
       unitLabel="settings.snap_interval_"
