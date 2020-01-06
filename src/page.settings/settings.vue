@@ -583,6 +583,7 @@
       @input="setOpt('snapLimit', $event[0]), setOpt('snapLimitUnit', $event[1])")
     .ctrls
       .btn(@click="switchView('snapshots')") {{t('settings.snapshots_view_label')}}
+      .btn(@click="createSnapshot") {{t('settings.make_snapshot')}}
 
   section(ref="settings_storage")
     h2 {{t('settings.storage_title')}} (~{{storageOveral}})
@@ -989,6 +990,17 @@ export default {
      */
     removeAllSnapshots() {
       browser.storage.local.set({ snapshots_v4: [] })
+    },
+
+    /**
+     * Create snapshot
+     */
+    async createSnapshot() {
+      await browser.runtime.sendMessage({
+        instanceType: 'bg',
+        windowId: -1,
+        action: 'createSnapshot',
+      })
     },
 
     /**
