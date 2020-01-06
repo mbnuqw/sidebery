@@ -552,12 +552,15 @@ async function sortBookmarks(type, nodeIds) {
 
   // Separate nodes by groups (bookmarks with the same parentId)
   let groups = {}
+  let count = 0
+  let initialCount
   let walker = nodes => {
     for (let node of nodes) {
       if (node.type === 'separator') continue
       if (type !== 'link' || node.url) {
         if (!groups[node.parentId]) groups[node.parentId] = []
         groups[node.parentId].push(node)
+        count++
       }
       if (node.children && node.expanded) walker(node.children)
     }
@@ -569,13 +572,26 @@ async function sortBookmarks(type, nodeIds) {
     if (type !== 'link' || node.url) {
       if (!groups[node.parentId]) groups[node.parentId] = []
       groups[node.parentId].push(node)
+      count++
     }
     if (node.children && node.expanded) walker(node.children)
   }
 
+  initialCount = count
+
+  let progressNotification
+  if (count > 25) {
+    progressNotification = this.actions.progress({
+      title: translate('notif.bookmarks_sort'),
+    })
+  }
+
   // Sort
   for (let nodes of Object.values(groups)) {
-    if (nodes.length === 1) continue
+    if (nodes.length === 1) {
+      count--
+      continue
+    }
 
     // Min index - target index to move
     let minIndex = nodes.reduce((a, v) => Math.min(a, v.index), 9999)
@@ -616,7 +632,20 @@ async function sortBookmarks(type, nodeIds) {
     for (let n, i = 0; i < nodes.length; i++) {
       n = nodes[i]
       await browser.bookmarks.move(n.id, { index: minIndex + i })
+      count--
+      if (progressNotification) {
+        progressNotification.progress.percent = 100 - Math.floor((100 / initialCount) * count)
+      }
     }
+  }
+
+  if (progressNotification) {
+    progressNotification.progress.percent = 100
+
+    setTimeout(() => {
+      let index = this.state.notifications.indexOf(progressNotification)
+      if (index !== -1) this.state.notifications.splice(index, 1)
+    }, 120)
   }
 }
 

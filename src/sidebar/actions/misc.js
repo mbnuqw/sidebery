@@ -335,6 +335,16 @@ function notify(config, timeout = 5000) {
   this.state.notifications.push(config)
 }
 
+function progress(config) {
+  let id = Utils.uid()
+  config.id = id
+  config.lvl = 'progress'
+  config.progress = Vue.observable({ percent: 0 })
+  this.state.notifications.push(config)
+
+  return config
+}
+
 export default {
   loadPlatformInfo,
   loadWindowInfo,
@@ -357,4 +367,5 @@ export default {
   copyUrls,
   askNewBookmarkFolder,
   notify,
+  progress,
 }

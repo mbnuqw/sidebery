@@ -6,4 +6,5 @@ export default {
     message: [' bookmark was removed', ' bookmarks were removed'],
     plur: [1],
   },
+  'notif.bookmarks_sort': { message: 'Sorting bookmarks...' },
 }
