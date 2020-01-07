@@ -4,7 +4,6 @@ import { DEFAULT_CTX_ID, DEFAULT_CTX, PRIVATE_CTX } from '../../../addon/default
 
 const URL_WITHOUT_PROTOCOL_RE = /^(.+\.)\/?(.+\/)?\w+/
 
-let TabsTreeSaveTimeout
 let updateGroupTabTimeouit
 let urlRuleHistory = {}
 
@@ -465,43 +464,6 @@ function saveGroups(delay = 300) {
     }
 
     browser.sessions.setWindowValue(this.state.windowId, 'groups', groups)
-  }, delay)
-}
-
-/**
- * Save tabs tree
- */
-function saveTabsTree(delay = 300) {
-  if (TabsTreeSaveTimeout) clearTimeout(TabsTreeSaveTimeout)
-  TabsTreeSaveTimeout = setTimeout(() => {
-    const tabsTreeState = []
-    for (let t of this.state.tabs) {
-      if (t.isParent || t.parentId > -1) {
-        tabsTreeState.push({
-          id: t.id,
-          index: t.index,
-          url: t.url,
-          ctx: t.cookieStoreId,
-          isParent: t.isParent,
-          folded: t.folded,
-          parentId: t.parentId,
-        })
-      }
-    }
-
-    if (this.state.bg && !this.state.bg.error) {
-      this.state.bg.postMessage({
-        action: 'saveTabsTree',
-        args: [this.state.windowId, tabsTreeState],
-      })
-    } else {
-      browser.runtime.sendMessage({
-        instanceType: 'bg',
-        action: 'saveTabsTree',
-        args: [this.state.windowId, tabsTreeState],
-      })
-    }
-    TabsTreeSaveTimeout = null
   }, delay)
 }
 
@@ -2502,7 +2464,6 @@ export default {
   loadTabsFromGlobalStorage,
   loadTabsFromSessionStorage,
   loadTabsFromInlineData,
-  saveTabsTree,
   saveTabsData,
   saveTabData,
   saveGroups,
