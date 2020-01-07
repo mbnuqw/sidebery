@@ -4,8 +4,9 @@
 function initToolbarButton() {
   createSettingsMenu()
 
-  browser.browserAction.onClicked.addListener(async () => {
-    browser.sidebarAction.open()
+  browser.browserAction.onClicked.addListener(async (_, info) => {
+    if (info && info.button === 1) return browser.runtime.openOptionsPage()
+    else browser.sidebarAction.open()
   })
 }
 

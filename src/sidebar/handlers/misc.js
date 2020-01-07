@@ -16,9 +16,9 @@ function onSidebarResize() {
 /**
  * Handle click on browserAction button
  */
-function onBroActionClick(tab) {
+function onBroActionClick(tab, info) {
   if (tab.windowId !== this.state.windowId) return
-  browser.sidebarAction.close()
+  if (!info || info.button === 0) browser.sidebarAction.close()
 }
 
 /**
