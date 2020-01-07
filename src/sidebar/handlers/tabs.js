@@ -13,25 +13,15 @@ function onTabCreated(tab) {
   this.actions.closeCtxMenu()
   this.actions.resetSelection()
 
-  // Get target panel and index
-  let panel, index
+  let panel, index, prevPos, prevPosPanel
 
-  // Restore porevious position
+  // Get previous position
   if (this._removedTabs) {
-    let prevPosition = this._removedTabs.pop()
-    if (prevPosition && prevPosition.index === tab.index && prevPosition.title === tab.title) {
-      if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
-      let conf = {}
-      let panel = this.state.panelsMap[prevPosition.panelId]
-      let parentTab = this.state.tabsMap[prevPosition.parentId]
-      if (panel) {
-        conf.panel = prevPosition.panelId
-        if (parentTab && parentTab.index < tab.index) conf.parent = prevPosition.parentId
-        this.state.newTabsPosition[tab.index] = conf
-      }
-    }
+    prevPos = this._removedTabs.pop()
+    if (prevPos) prevPosPanel = this.state.panelsMap[prevPos.panelId]
   }
 
+  // Predefined position
   if (this.state.newTabsPosition && this.state.newTabsPosition[tab.index]) {
     let position = this.state.newTabsPosition[tab.index]
     panel = this.state.panelsMap[position.panel]
@@ -39,7 +29,19 @@ function onTabCreated(tab) {
     index = tab.index
     tab.openerTabId = position.parent
     delete this.state.newTabsPosition[tab.index]
-  } else {
+  }
+
+  // Restore previous position of reopened tab
+  else if (prevPos && prevPosPanel && prevPos.index === tab.index && prevPos.title === tab.title) {
+    panel = prevPosPanel
+    index = tab.index
+
+    let parentTab = this.state.tabsMap[prevPos.parentId]
+    if (parentTab && parentTab.index < tab.index) tab.openerTabId = prevPos.parentId
+  }
+
+  // Find appropriate position using the current settings
+  else {
     panel = this.actions.getPanelForNewTab(tab)
     index = this.actions.getIndexForNewTab(panel, tab)
     tab.openerTabId = this.actions.getParentForNewTab(panel, tab.openerTabId)
