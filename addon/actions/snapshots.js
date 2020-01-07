@@ -76,6 +76,15 @@ async function createSnapshot() {
     lastSnapTime: currentSnapshot.time,
   })
 
+  if (this.settings.snapNotify) {
+    let win = await browser.windows.getCurrent({ populate: false })
+    browser.runtime.sendMessage({
+      windowId: win.id,
+      instanceType: 'sidebar',
+      action: 'notifyAboutNewSnapshot',
+    })
+  }
+
   return currentSnapshot
 }
 function createSnapshotDebounced(delay = 750) {

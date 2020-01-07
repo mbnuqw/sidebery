@@ -6,4 +6,7 @@ export default {
     message: [' bookmark was removed', ' bookmarks were removed'],
     plur: [1],
   },
+  'notif.bookmarks_sort': { message: 'Sorting bookmarks...' },
+  'notif.snapshot_created': { message: 'Snapshot created' },
+  'notif.view_snapshot': { message: 'View' },
 }

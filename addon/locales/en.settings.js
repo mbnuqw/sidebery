@@ -57,6 +57,7 @@ export default {
   'settings.nav_bar_layout': { message: 'Layout' },
   'settings.nav_bar_layout_horizontal': { message: 'horizontal' },
   'settings.nav_bar_layout_vertical': { message: 'vertical' },
+  'settings.nav_bar_layout_hidden': { message: 'hidden' },
   'settings.nav_bar_inline': { message: 'Show navigation bar in one line' },
   'settings.hide_settings_btn': { message: 'Hide settings button' },
   'settings.hide_add_btn': { message: 'Hide "Create panel" button' },
@@ -100,6 +101,7 @@ export default {
   },
   'settings.skip_empty_panels': { message: 'Skip empty panels on switching' },
   'settings.show_tab_rm_btn': { message: 'Show close button on mouse hover' },
+  'settings.show_tab_ctx': { message: 'Show color mark of container' },
   'settings.hide_inactive_panel_tabs': { message: 'Hide tabs of inactive panels' },
   'settings.activate_after_closing': { message: 'After closing current tab activate' },
   'settings.activate_after_closing_next': { message: 'next tab' },
@@ -236,6 +238,7 @@ export default {
 
   // --- Snapshots
   'settings.snapshots_title': { message: 'Snapshots' },
+  'settings.snap_notify': { message: 'Show notification after snapshot creation' },
   'settings.snap_interval': { message: 'Auto-snapshots interval' },
   'settings.snap_interval_min': { message: ['minute', 'minutes'], plur: [1] },
   'settings.snap_interval_hr': { message: ['hour', 'hours'], plur: [1] },
@@ -289,6 +292,7 @@ export default {
   // --- Keybindings
   'settings.kb_title': { message: 'Keybindings' },
   'settings.reset_kb': { message: 'Reset Keybindings' },
+  'settings.toggle_kb': { message: 'Enable/Disable Keybindings' },
 
   // --- Permissions
   'settings.permissions_title': { message: 'Permissions' },

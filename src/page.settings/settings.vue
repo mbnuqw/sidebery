@@ -168,6 +168,10 @@
       :value="$store.state.showTabRmBtn"
       @input="setOpt('showTabRmBtn', $event)")
     toggle-field(
+      label="settings.show_tab_ctx"
+      :value="$store.state.showTabCtx"
+      @input="setOpt('showTabCtx', $event)")
+    toggle-field(
       label="settings.hide_inactive_panel_tabs"
       :value="$store.state.hideInact"
       @input="toggleHideInact")
@@ -496,11 +500,11 @@
   section(ref="settings_keybindings")
     h2 {{t('settings.kb_title')}}
     .keybinding(
-      v-for="(k, i) in $store.state.keybindings", :key="k.name"
+      v-for="(k, i) in $store.state.keybindings" :key="k.name"
       :is-focused="k.focus"
-      @click="changeKeybinding(k, i)")
-      .label {{k.description}}
-      .value {{normalizeShortcut(k.shortcut)}}
+      :data-disabled="!k.active")
+      .label(@click="changeKeybinding(k, i)") {{k.description}}
+      .value(@click="changeKeybinding(k, i)") {{normalizeShortcut(k.shortcut)}}
       input(
         type="text"
         ref="keybindingInputs"
@@ -508,7 +512,13 @@
         @blur="onKBBlur(k, i)"
         @keydown.prevent.stop="onKBKey($event, k, i)"
         @keyup.prevent.stop="onKBKeyUp($event, k, i)")
-    .ctrls: .btn(@click="resetKeybindings") {{t('settings.reset_kb')}}
+      toggle-input(
+        v-if="k.name !== '_execute_sidebar_action'"
+        v-model="k.active"
+        @input="toggleKeybinding")
+    .ctrls
+      .btn(@click="resetKeybindings") {{t('settings.reset_kb')}}
+      .btn(@click="toggleKeybindings") {{t('settings.toggle_kb')}}
 
   section(ref="settings_permissions")
     h2 {{t('settings.permissions_title')}}
@@ -555,6 +565,10 @@
 
   section(ref="settings_snapshots")
     h2 {{t('settings.snapshots_title')}}
+    toggle-field(
+      label="settings.snap_notify"
+      :value="$store.state.snapNotify"
+      @input="setOpt('snapNotify', $event)")
     num-field(
       label="settings.snap_interval"
       unitLabel="settings.snap_interval_"
@@ -573,6 +587,7 @@
       @input="setOpt('snapLimit', $event[0]), setOpt('snapLimitUnit', $event[1])")
     .ctrls
       .btn(@click="switchView('snapshots')") {{t('settings.snapshots_view_label')}}
+      .btn(@click="createSnapshot") {{t('settings.make_snapshot')}}
 
   section(ref="settings_storage")
     h2 {{t('settings.storage_title')}} (~{{storageOveral}})
@@ -643,6 +658,7 @@ import { TABS_PANEL } from '../../addon/defaults'
 import State from './store/state'
 import Actions from './actions'
 import ToggleField from '../components/toggle-field'
+import ToggleInput from '../components/toggle-input'
 import SelectField from '../components/select-field'
 import NumField from '../components/num-field'
 import ContainerConfig from './components/container-config'
@@ -677,6 +693,7 @@ const SECTIONS = [
 export default {
   components: {
     ToggleField,
+    ToggleInput,
     SelectField,
     NumField,
     FooterSection,
@@ -810,6 +827,8 @@ export default {
      * Start changing of keybingding
      */
     changeKeybinding(k, i) {
+      if (!k.active) return
+
       this.$refs.keybindingInputs[i].focus()
       this.lastShortcut = State.keybindings[i]
       State.keybindings.splice(i, 1, { ...k, shortcut: 'Press new shortcut', focus: true })
@@ -882,11 +901,28 @@ export default {
       return VALID_SHORTCUT.test(shortcut) && !exists
     },
 
+    toggleKeybinding() {
+      Actions.saveKeybindings()
+    },
+
     /**
      * Reset all keybindings
      */
     resetKeybindings() {
       Actions.resetKeybindings()
+    },
+
+    toggleKeybindings() {
+      let test = State.keybindings[1]
+      if (!test) return
+
+      let state = test.active
+      for (let k of State.keybindings) {
+        if (k.name === '_execute_sidebar_action') continue
+        k.active = !state
+      }
+
+      Actions.saveKeybindings()
     },
 
     /**
@@ -961,6 +997,17 @@ export default {
      */
     removeAllSnapshots() {
       browser.storage.local.set({ snapshots_v4: [] })
+    },
+
+    /**
+     * Create snapshot
+     */
+    async createSnapshot() {
+      await browser.runtime.sendMessage({
+        instanceType: 'bg',
+        windowId: -1,
+        action: 'createSnapshot',
+      })
     },
 
     /**

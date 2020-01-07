@@ -1,5 +1,6 @@
 import { translate } from './locales/dict.js'
 
+// prettier-ignore
 export const SETTINGS_OPTIONS = {
   autoHideCtxMenuOpts: [250, 500, 1000, 'none'],
   navMidClickActionOpts: ['rm_all', 'none'],
@@ -7,36 +8,14 @@ export const SETTINGS_OPTIONS = {
   scrollThroughTabsOpts: ['panel', 'global', 'none'],
   discardFoldedDelayUnitOpts: ['sec', 'min'],
   tabDoubleClickOpts: [
-    'reload',
-    'duplicate',
-    'pin',
-    'mute',
-    'clear_cookies',
-    'exp',
-    'new_after',
-    'new_child',
-    'close',
-    'none',
+    'reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'exp', 'new_after', 'new_child',
+    'close', 'none',
   ],
   tabLongLeftClickOpts: [
-    'reload',
-    'duplicate',
-    'pin',
-    'mute',
-    'clear_cookies',
-    'new_after',
-    'new_child',
-    'none',
+    'reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'new_after', 'new_child', 'none',
   ],
   tabLongRightClickOpts: [
-    'reload',
-    'duplicate',
-    'pin',
-    'mute',
-    'clear_cookies',
-    'new_after',
-    'new_child',
-    'none',
+    'reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'new_after', 'new_child', 'none',
   ],
   tabsPanelLeftClickActionOpts: ['prev', 'expand', 'parent', 'none'],
   tabsPanelDoubleClickActionOpts: ['collapse', 'tab', 'none'],
@@ -59,7 +38,7 @@ export const SETTINGS_OPTIONS = {
   midClickBookmarkOpts: ['open_new_tab', 'edit', 'delete'],
   warnOnMultiTabCloseOpts: ['any', 'collapsed', 'none'],
   warnOnMultiBookmarkDeleteOpts: ['any', 'collapsed', 'none'],
-  navBarLayoutOpts: ['horizontal', 'vertical'],
+  navBarLayoutOpts: ['horizontal', 'vertical', 'hidden'],
   stateStorageOpts: ['global', 'session'],
   autoFoldTabsExceptOpts: [1, 2, 3, 4, 5, 'none'],
 }
@@ -94,6 +73,7 @@ export const DEFAULT_SETTINGS = {
   activateLastTabOnPanelSwitching: true,
   skipEmptyPanels: false,
   showTabRmBtn: true,
+  showTabCtx: true,
   hideInact: false,
   activateAfterClosing: 'next',
   activateAfterClosingPrevRule: 'visible',
@@ -153,6 +133,7 @@ export const DEFAULT_SETTINGS = {
   groupCSS: false,
 
   // Snapshots
+  snapNotify: true,
   snapInterval: 0,
   snapIntervalUnit: 'min',
   snapLimit: 0,

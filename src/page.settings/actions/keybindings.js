@@ -8,6 +8,17 @@ async function updateKeybinding(name, shortcut) {
 }
 
 /**
+ * Save keybindings
+ */
+async function saveKeybindings() {
+  let disabledKeybindings = {}
+  for (let k of this.state.keybindings) {
+    if (!k.active) disabledKeybindings[k.name] = true
+  }
+  await browser.storage.local.set({ disabledKeybindings })
+}
+
+/**
  * Reset addon's keybindings
  */
 async function resetKeybindings() {
@@ -24,5 +35,6 @@ export default {
   ...CommonActions,
 
   updateKeybinding,
+  saveKeybindings,
   resetKeybindings,
 }

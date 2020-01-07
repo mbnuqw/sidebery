@@ -98,4 +98,16 @@ export default {
 
   'styles.css_sidebar': { message: 'Боковая панель' },
   'styles.css_group': { message: 'Групповая страница' },
+  'styles.css_placeholder': { message: 'Write custom CSS here...' },
+  'styles.css_selectors_instruction': {
+    message: `NOTE: To get currently available css-selectors use debugger:
+  - Enter "about:debugging" in the URL bar
+  - In the left-hand menu, click This Firefox (or This Nightly)
+  - Click Inspect next to Sidebery extension
+  - Select frame to inspect
+    - Click on the rectangular icon (with three sections) in top-right area of the debugger page
+    - Select "/sidebar/index.html" for sidebar frame
+    - Select "/group/group.html" for group page frame
+  - Browse "Inspector" tab`,
+  },
 }

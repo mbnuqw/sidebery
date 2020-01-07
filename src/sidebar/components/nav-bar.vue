@@ -30,7 +30,6 @@
       .progress-spinner
       .len(v-if="$store.state.navBtnCount && btn.len") {{btn.len}}
 
-  //- Settings
   .settings-btn(
     v-if="!$store.state.hideSettingsBtn"
     :title="t('nav.settings_tooltip')"
@@ -326,11 +325,19 @@ export default {
       let firstNode = State.dragNodes[0]
 
       if (panel.tabs) {
-        State.panelIndex = panel.index
+        // State.panelIndex = panel.index
         if (typeof firstNode.id === 'number') {
           let index = panel.tabs.length ? panel.endIndex + 1 : panel.endIndex
           if (panel.newTabCtx !== 'none' && panel.newTabCtx !== firstNode.ctx) {
-            Actions.recreateDroppedNodes({}, index, -1, State.dragNodes, false, panel.newTabCtx)
+            Actions.recreateDroppedNodes(
+              {},
+              index,
+              -1,
+              State.dragNodes,
+              false,
+              panel.newTabCtx,
+              panel
+            )
           } else {
             Actions.moveDroppedNodes(index, -1, State.dragNodes, false, panel)
           }
@@ -340,7 +347,7 @@ export default {
           let index = panel.tabs.length ? panel.endIndex + 1 : panel.endIndex
           let ctx = panel.newTabCtx === 'none' ? undefined : panel.newTabCtx
 
-          Actions.recreateDroppedNodes({}, index, -1, State.dragNodes, false, ctx)
+          Actions.recreateDroppedNodes({}, index, -1, State.dragNodes, false, ctx, panel)
         }
       }
 

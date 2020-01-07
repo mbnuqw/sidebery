@@ -2,8 +2,11 @@
  * Handle click on browser-action button
  */
 function initToolbarButton() {
-  browser.browserAction.onClicked.addListener(async () => {
-    browser.sidebarAction.open()
+  createSettingsMenu()
+
+  browser.browserAction.onClicked.addListener(async (_, info) => {
+    if (info && info.button === 1) return browser.runtime.openOptionsPage()
+    else browser.sidebarAction.open()
   })
 }
 
@@ -35,10 +38,14 @@ async function loadPermissions() {
 
 function onMenuHidden() {
   browser.menus.removeAll()
+  createSettingsMenu()
+}
 
+function createSettingsMenu() {
   browser.menus.create({
     id: 'open_settings',
     title: 'Open settings',
+    icons: { '16': 'assets/logo-native.svg' },
     onclick: () => browser.runtime.openOptionsPage(),
     contexts: ['browser_action'],
   })

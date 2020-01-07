@@ -523,10 +523,15 @@
       textarea.editor(
         ref="cssEditor"
         v-model="customCSS"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
         @input="onInput"
         @keydown.tab.prevent=""
         @change="applyCssDebounced")
-      .placeholder(:data-hidden="!!customCSS") CSS...
+      .placeholder(:data-hidden="!!customCSS") {{t('styles.css_placeholder')}}
+      .placeholder-note(:data-hidden="!!customCSS") {{t('styles.css_selectors_instruction')}}
 </template>
 
 <script>

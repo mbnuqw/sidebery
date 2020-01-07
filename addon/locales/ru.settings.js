@@ -57,6 +57,7 @@ export default {
   'settings.nav_bar_layout': { message: 'Расположение' },
   'settings.nav_bar_layout_horizontal': { message: 'горизонтальное' },
   'settings.nav_bar_layout_vertical': { message: 'вертикальное' },
+  'settings.nav_bar_layout_hidden': { message: 'скрытое' },
   'settings.nav_bar_inline': { message: 'В одну строку' },
   'settings.hide_settings_btn': { message: 'Скрывать кнопку "Настройки"' },
   'settings.hide_add_btn': { message: 'Скрывать кнопку "Создать панель"' },
@@ -101,6 +102,7 @@ export default {
   },
   'settings.skip_empty_panels': { message: 'Пропускать пустые контейнеры при переключении' },
   'settings.show_tab_rm_btn': { message: 'Показывать кнопку закрытия таба при наведении курсора' },
+  'settings.show_tab_ctx': { message: 'Показывать цветовую метку контейнера' },
   'settings.hide_inactive_panel_tabs': { message: 'Скрывать табы неактивных панелей' },
   'settings.activate_after_closing': { message: 'После закрытия текущей вкладки активировать' },
   'settings.activate_after_closing_next': { message: 'следующую' },
@@ -255,6 +257,7 @@ export default {
 
   // --- Snapshots
   'settings.snapshots_title': { message: 'Снепшоты' },
+  'settings.snap_notify': { message: 'Показать уведомление после создания снепшота' },
   'settings.snap_interval': { message: 'Интервал авто-снепшотов' },
   'settings.snap_interval_min': {
     message: ['минута', 'минуты', 'минут'],
@@ -330,6 +333,7 @@ export default {
   // --- Keybindings
   'settings.kb_title': { message: 'Клавиши' },
   'settings.reset_kb': { message: 'Сбросить клав. настройки' },
+  'settings.toggle_kb': { message: 'Включить / отключить сочетания клавиш' },
 
   // --- Permissions
   'settings.permissions_title': { message: 'Разрешения' },

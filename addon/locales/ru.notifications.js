@@ -6,4 +6,7 @@ export default {
     message: [' закладка была удалена', ' закладки было удалено', ' закладок было удалено'],
     plur: [/^(1|(\d*?)[^1]1)$/, /^([234]|(\d*?)[^1][234])$/],
   },
+  'notif.bookmarks_sort': { message: 'Сортировка закладок...' },
+  'notif.snapshot_created': { message: 'Снепшот создан' },
+  'notif.view_snapshot': { message: 'Посмотреть' },
 }

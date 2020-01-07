@@ -4,7 +4,6 @@ import { DEFAULT_CTX_ID, DEFAULT_CTX, PRIVATE_CTX } from '../../../addon/default
 
 const URL_WITHOUT_PROTOCOL_RE = /^(.+\.)\/?(.+\/)?\w+/
 
-let TabsTreeSaveTimeout
 let updateGroupTabTimeouit
 let urlRuleHistory = {}
 
@@ -465,43 +464,6 @@ function saveGroups(delay = 300) {
     }
 
     browser.sessions.setWindowValue(this.state.windowId, 'groups', groups)
-  }, delay)
-}
-
-/**
- * Save tabs tree
- */
-function saveTabsTree(delay = 300) {
-  if (TabsTreeSaveTimeout) clearTimeout(TabsTreeSaveTimeout)
-  TabsTreeSaveTimeout = setTimeout(() => {
-    const tabsTreeState = []
-    for (let t of this.state.tabs) {
-      if (t.isParent || t.parentId > -1) {
-        tabsTreeState.push({
-          id: t.id,
-          index: t.index,
-          url: t.url,
-          ctx: t.cookieStoreId,
-          isParent: t.isParent,
-          folded: t.folded,
-          parentId: t.parentId,
-        })
-      }
-    }
-
-    if (this.state.bg && !this.state.bg.error) {
-      this.state.bg.postMessage({
-        action: 'saveTabsTree',
-        args: [this.state.windowId, tabsTreeState],
-      })
-    } else {
-      browser.runtime.sendMessage({
-        instanceType: 'bg',
-        action: 'saveTabsTree',
-        args: [this.state.windowId, tabsTreeState],
-      })
-    }
-    TabsTreeSaveTimeout = null
   }, delay)
 }
 
@@ -1591,13 +1553,13 @@ async function moveDroppedNodes(dropIndex, dropParent, nodes, pin, currentPanel)
 /**
  * Recreate dropped nodes
  */
-async function recreateDroppedNodes(event, dropIndex, dropParent, nodes, pin, destCtx) {
+async function recreateDroppedNodes(event, dropIndex, dropParent, nodes, pin, destCtx, panel) {
   // Create new tabs
   const oldNewMap = []
   let opener = dropParent < 0 ? undefined : dropParent
   let firstNode = nodes[0]
-  let activePanel = this.state.panels[this.state.panelIndex]
 
+  if (!panel) panel = this.state.panels[this.state.panelIndex]
   if (!destCtx) destCtx = DEFAULT_CTX_ID
 
   for (let i = 0; i < nodes.length; i++) {
@@ -1632,7 +1594,7 @@ async function recreateDroppedNodes(event, dropIndex, dropParent, nodes, pin, de
 
     if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
     this.state.newTabsPosition[dropIndex + i] = {
-      panel: activePanel.id,
+      panel: panel.id,
       parent: createConf.openerTabId,
     }
 
@@ -1882,7 +1844,7 @@ function createChildTab(tabId) {
 function createTabInPanel(panel, url) {
   let tabShell = {}
   let index = this.actions.getIndexForNewTab(panel, tabShell)
-  let parentId = this.actions.getParentForNewTab(panel, tabShell)
+  let parentId = this.actions.getParentForNewTab(panel)
   if (index === undefined) {
     if (!panel.tabs.length) index = panel.endIndex
     else index = panel.endIndex + 1
@@ -2089,7 +2051,7 @@ function getPanelForNewTab(tab) {
   if (!panel && parentTab) {
     panel = this.state.panelsMap[parentTab.panelId]
     let activePanel = this.state.panels[this.state.panelIndex]
-    if (this.state.moveNewTabParentActPanel && panel !== activePanel) {
+    if ((this.state.moveNewTabParentActPanel || parentTab.pinned) && panel !== activePanel) {
       panel = null
     }
   }
@@ -2124,12 +2086,14 @@ function getIndexForNewTab(panel, tab) {
   let endIndex = panel.tabs.length ? panel.endIndex + 1 : panel.endIndex
   let activeTab = this.state.tabsMap[this.state.activeTabId]
 
+  // Place new tab opened from pinned tab
   if (parent && parent.pinned) {
     if (this.state.moveNewTabPin === 'start') return panel.startIndex
     if (this.state.moveNewTabPin === 'end') return endIndex
     if (this.state.moveNewTabPin === 'none') return
   }
 
+  // Place new tab opened from another tab
   if (parent && !parent.pinned && parent.panelId === panel.id) {
     if (this.state.moveNewTabParent === 'sibling' || this.state.moveNewTabParent === 'last_child') {
       let t
@@ -2146,6 +2110,7 @@ function getIndexForNewTab(panel, tab) {
     if (this.state.moveNewTabParent === 'none') return
   }
 
+  // Place new tab (for the other cases)
   if (this.state.moveNewTab === 'start') return panel.startIndex
   if (this.state.moveNewTab === 'end') return endIndex
   if (this.state.moveNewTab === 'after') {
@@ -2190,13 +2155,33 @@ function getIndexForNewTab(panel, tab) {
 /**
  * Find and return parent id
  */
-function getParentForNewTab(panel) {
+function getParentForNewTab(panel, openerTabId) {
   let activeTab = this.state.tabsMap[this.state.activeTabId]
-  if (!activeTab || activeTab.panelId !== panel.id || activeTab.pinned) return
+  let parent = this.state.tabsMap[openerTabId]
 
-  if (this.state.moveNewTab === 'after') return activeTab.parentId
-  else if (this.state.moveNewTab === 'first_child') return activeTab.id
-  else if (this.state.moveNewTab === 'last_child') return activeTab.id
+  // Place new tab opened from pinned tab
+  if (parent && parent.pinned) return
+
+  // Place new tab opened from another tab
+  if (parent && !parent.pinned && parent.panelId === panel.id) {
+    if (this.state.moveNewTabParent === 'sibling') return parent.parentId
+    if (this.state.moveNewTabParent === 'first_child') return openerTabId
+    if (this.state.moveNewTabParent === 'last_child') return openerTabId
+    if (this.state.moveNewTabParent === 'start') return
+    if (this.state.moveNewTabParent === 'end') return
+    if (this.state.moveNewTabParent === 'none') return openerTabId
+  }
+
+  // Place new tab (for the other cases)
+  if (this.state.moveNewTab === 'start') return
+  if (this.state.moveNewTab === 'end') return
+  if (activeTab && activeTab.panelId === panel.id && !activeTab.pinned) {
+    if (this.state.moveNewTab === 'after') return activeTab.parentId
+    else if (this.state.moveNewTab === 'first_child') return activeTab.id
+    else if (this.state.moveNewTab === 'last_child') return activeTab.id
+  }
+
+  return openerTabId
 }
 
 /**
@@ -2479,7 +2464,6 @@ export default {
   loadTabsFromGlobalStorage,
   loadTabsFromSessionStorage,
   loadTabsFromInlineData,
-  saveTabsTree,
   saveTabsData,
   saveTabData,
   saveGroups,
