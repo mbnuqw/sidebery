@@ -18,8 +18,8 @@ function onTabCreated(tab) {
 
   // Restore porevious position
   if (this._removedTabs) {
-    let prevPosition = this._removedTabs.find(t => t.index === tab.index && t.title === tab.title)
-    if (prevPosition) {
+    let prevPosition = this._removedTabs.pop()
+    if (prevPosition && prevPosition.index === tab.index && prevPosition.title === tab.title) {
       if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
       let conf = {}
       let panel = this.state.panelsMap[prevPosition.panelId]
@@ -361,8 +361,8 @@ function onTabRemoved(tabId, info, childfree) {
     parentId: tab.parentId,
     panelId: tab.panelId,
   })
-  if (this._removedTabs.length > 100) {
-    this._removedTabs = this._removedTabs.slice(30)
+  if (this._removedTabs.length > 50) {
+    this._removedTabs = this._removedTabs.slice(25)
   }
 
   // Recreate locked tab
