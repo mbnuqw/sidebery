@@ -913,11 +913,14 @@ export default {
     },
 
     toggleKeybindings() {
-      let first = State.keybindings[0]
-      if (!first) return
+      let test = State.keybindings[1]
+      if (!test) return
 
-      if (first.active) State.keybindings.forEach(k => (k.active = false))
-      else State.keybindings.forEach(k => (k.active = true))
+      let state = test.active
+      for (let k of State.keybindings) {
+        if (k.name === '_execute_sidebar_action') continue
+        k.active = !state
+      }
 
       Actions.saveKeybindings()
     },
