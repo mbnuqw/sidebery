@@ -9,21 +9,28 @@ const URL_HOST_PATH_RE = /^([a-z0-9-]{1,63}\.)+\w+(:\d+)?\/[A-Za-z0-9-._~:/?#[\]
 function onTabCreated(tab) {
   if (tab.windowId !== this.state.windowId) return
 
-  if (
-    this.state.highlightOpenBookmarks &&
-    this.state.bookmarksUrlMap &&
-    this.state.bookmarksUrlMap[tab.url]
-  ) {
-    for (let b of this.state.bookmarksUrlMap[tab.url]) {
-      b.isOpen = true
-    }
-  }
-
+  this.actions.highlightBookmarks(tab.url)
   this.actions.closeCtxMenu()
   this.actions.resetSelection()
 
   // Get target panel and index
   let panel, index
+
+  // Restore porevious position
+  if (this._removedTabs) {
+    let prevPosition = this._removedTabs.find(t => t.index === tab.index && t.title === tab.title)
+    if (prevPosition) {
+      if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
+      let conf = {}
+      let panel = this.state.panelsMap[prevPosition.panelId]
+      let parentTab = this.state.tabsMap[prevPosition.parentId]
+      if (panel) {
+        conf.panel = prevPosition.panelId
+        if (parentTab && parentTab.index < tab.index) conf.parent = prevPosition.parentId
+        this.state.newTabsPosition[tab.index] = conf
+      }
+    }
+  }
 
   if (this.state.newTabsPosition && this.state.newTabsPosition[tab.index]) {
     let position = this.state.newTabsPosition[tab.index]
@@ -31,7 +38,6 @@ function onTabCreated(tab) {
     if (!panel) panel = this.state.panelsMap[DEFAULT_CTX_ID]
     index = tab.index
     tab.openerTabId = position.parent
-    // treeAllowed = true
     delete this.state.newTabsPosition[tab.index]
   } else {
     panel = this.actions.getPanelForNewTab(tab)
@@ -346,6 +352,18 @@ function onTabRemoved(tabId, info, childfree) {
   if (!tab) return
   let creatingNewTab
   let panel = this.state.panelsMap[tab.panelId]
+
+  // Update temp list of removed tabs for restoring reopened tabs state
+  if (!this._removedTabs) this._removedTabs = []
+  this._removedTabs.push({
+    index: tab.index,
+    title: tab.title,
+    parentId: tab.parentId,
+    panelId: tab.panelId,
+  })
+  if (this._removedTabs.length > 100) {
+    this._removedTabs = this._removedTabs.slice(30)
+  }
 
   // Recreate locked tab
   if (!tab.pinned && panel && panel.lockedTabs && tab.url.startsWith('http')) {
