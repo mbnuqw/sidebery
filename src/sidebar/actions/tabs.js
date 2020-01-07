@@ -1553,13 +1553,13 @@ async function moveDroppedNodes(dropIndex, dropParent, nodes, pin, currentPanel)
 /**
  * Recreate dropped nodes
  */
-async function recreateDroppedNodes(event, dropIndex, dropParent, nodes, pin, destCtx) {
+async function recreateDroppedNodes(event, dropIndex, dropParent, nodes, pin, destCtx, panel) {
   // Create new tabs
   const oldNewMap = []
   let opener = dropParent < 0 ? undefined : dropParent
   let firstNode = nodes[0]
-  let activePanel = this.state.panels[this.state.panelIndex]
 
+  if (!panel) panel = this.state.panels[this.state.panelIndex]
   if (!destCtx) destCtx = DEFAULT_CTX_ID
 
   for (let i = 0; i < nodes.length; i++) {
@@ -1594,7 +1594,7 @@ async function recreateDroppedNodes(event, dropIndex, dropParent, nodes, pin, de
 
     if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
     this.state.newTabsPosition[dropIndex + i] = {
-      panel: activePanel.id,
+      panel: panel.id,
       parent: createConf.openerTabId,
     }
 
