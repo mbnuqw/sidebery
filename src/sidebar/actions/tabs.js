@@ -1308,7 +1308,14 @@ function expTabsBranch(tabId) {
 
   // Auto fold
   if (this.state.autoFoldTabs) {
-    autoFold.sort((a, b) => a.lastAccessed - b.lastAccessed)
+    autoFold.sort((a, b) => {
+      let aMax = a.lastAccessed
+      let bMax = b.lastAccessed
+      if (a.childLastAccessed) aMax = Math.max(a.lastAccessed, a.childLastAccessed)
+      if (b.childLastAccessed) bMax = Math.max(b.lastAccessed, b.childLastAccessed)
+      return aMax - bMax
+    })
+
     if (this.state.autoFoldTabsExcept > 0) {
       autoFold = autoFold.slice(0, -this.state.autoFoldTabsExcept)
     }

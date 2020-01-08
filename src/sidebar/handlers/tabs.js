@@ -671,17 +671,32 @@ function onTabActivated(info) {
   // Remove updated flag
   tab.updated = false
   let panel = this.state.panelsMap[tab.panelId]
+  if (!panel) return
+
   if (panel) {
     let i = panel.updated.indexOf(tab.id)
     panel.updated.splice(i, 1)
   }
 
-  // Find panel of activated tab
-  if (!panel) return
-
   // Switch to activated tab's panel
   if (!tab.pinned && (!currentPanel || !currentPanel.lockedPanel)) {
     this.actions.setPanel(panel.index)
+  }
+
+  // Propagate access time to parent tabs for autoFolding feature
+  if (
+    this.state.tabsTree &&
+    tab.parentId > -1 &&
+    this.state.autoFoldTabs &&
+    this.state.autoFoldTabsExcept > 0
+  ) {
+    let parent = this.state.tabsMap[tab.parentId]
+    if (parent) {
+      parent.childLastAccessed = tab.lastAccessed
+      while ((parent = this.state.tabsMap[parent.parentId])) {
+        parent.childLastAccessed = tab.lastAccessed
+      }
+    }
   }
 
   // Auto expand tabs group
