@@ -1641,6 +1641,15 @@ async function dropToTabsNative(event, dropIndex, dropParent, destCtx, pin) {
   }
 
   if (url && destCtx) {
+    let panel = this.state.panels[this.state.panelIndex]
+    if (panel && panel.tabs) {
+      if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
+      this.state.newTabsPosition[dropIndex] = {
+        parent: dropParent < 0 ? undefined : dropParent,
+        panel: panel.id,
+      }
+    }
+
     browser.tabs.create({
       active: true,
       url,
