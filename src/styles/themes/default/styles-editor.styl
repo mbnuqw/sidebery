@@ -140,7 +140,9 @@
   transition: opacity var(--d-fast)
 
   &[data-hidden]
+    transition: opacity var(--d-fast), z-index var(--d-fast) var(--d-fast)
     opacity: 0
+    z-index: -1
   
 .StylesEditor .editor-box > .placeholder-note
   top: 50px

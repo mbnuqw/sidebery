@@ -5,7 +5,7 @@
 
 ## About
 
-Sidebery combines vertical layout of tabs with Firefox's containers to provide the more convenient way of working with a big amount of open pages. It aims to be fast and beautiful and gives a lot of options for customizing. Some of the key features:
+Sidebery provides the list of tabs structured in a tree and bookmarks within the customizable panels. It aims to be fast, beautiful* and configurable. Some of the key features:
 
 ### Vertical tabs layout (flat or tree)
 
@@ -13,19 +13,19 @@ You can use a simple flat list of tabs or tree structure. Tree layout allows you
 
 ### Bookmarks panel
 
-Simple catalogs of your bookmarks. You can drag and drop links or tabs to create bookmarks and vice-versa. Basic operations: open in new window / create / edit / delete.
+Simple catalogs of your bookmarks. You can drag and drop links or tabs to create bookmarks and vice-versa. Basic operations: open in new window / sort / create / edit / delete.
 
 Other bookmarks features: 
 - Automatically delete an open bookmark from "Other Bookmarks" folder.
 - Highlight open bookmarks and activate its tab instead of opening new on clicking.
 
-### Advanced containers management
+### Tabs panels
 
-Isolate your internet activity with Firefox's containers. Sidebery separates containered tabs by panels and allows you to switch between them with the mouse or keyboard shortcuts.
+Configurable panels will help you sort your tabs.
 
-### Containers proxy, include and exclude rules
+### Containers management
 
-With this addon, you also can set proxy for different containers, use "include" and "exclude" rules to control what page should be open in which container.
+You can set "Include" and "Exclude" url-rules, proxy config and UserAgent header for each container.
 
 ### Customizable context menu
 
@@ -40,8 +40,18 @@ Also, you can use ctrl+click/shift+click method or use keyboard shortcuts.
 
 ### Customizable styles
 
-Sidebery provides full control of styles for sidebar and group page via variables and custom CSS.  
-`note: css selectors can be changed in the next version`
+Sidebery provides full control of styles for sidebar and group page via variables and custom CSS.
+
+> NOTE: To get currently available css-selectors use debugger:
+>   - Enter "about:debugging" in the URL bar
+>   - In the left-hand menu, click This Firefox (or This Nightly)
+>   - Click Inspect next to Sidebery extension
+>   - Select frame to inspect
+>     - Click on the rectangular icon (with three sections) in top-right area of the debugger page
+>     - Select "/sidebar/index.html" for sidebar frame
+>     - Select "/group/group.html" for group page frame
+>   - Browse "Inspector" tab
+
 
 ### Snapshots
 

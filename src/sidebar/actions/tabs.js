@@ -118,11 +118,13 @@ async function loadTabsFromGlobalStorage() {
   // Switch to panel with active tab
   let activePanelIsTabs = activePanel.type === 'tabs' || activePanel.type === 'default'
   let activePanelIsOk = activeTab.panelId === activePanel.id
+  if (activePanelIsOk) activePanel.lastActiveTab = activeTab.id
   if (!activeTab.pinned && activePanelIsTabs && !activePanelIsOk) {
     let panel = this.state.panelsMap[activeTab.panelId]
     if (panel) {
       this.state.panelIndex = panel.index
       this.state.lastPanelIndex = panel.index
+      panel.lastActiveTab = activeTab.id
     }
   }
 
@@ -229,11 +231,13 @@ async function loadTabsFromSessionStorage() {
   // Switch to panel with active tab
   let activePanelIsTabs = activePanel.type === 'tabs' || activePanel.type === 'default'
   let activePanelIsOk = activeTab.panelId === activePanel.id
+  if (activePanelIsOk) activePanel.lastActiveTab = activeTab.id
   if (!activeTab.pinned && activePanelIsTabs && !activePanelIsOk) {
     let panel = this.state.panelsMap[activeTab.panelId]
     if (panel) {
       this.state.panelIndex = panel.index
       this.state.lastPanelIndex = panel.index
+      panel.lastActiveTab = activeTab.id
     }
   }
 
