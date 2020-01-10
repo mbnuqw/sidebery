@@ -2115,6 +2115,7 @@ function getIndexForNewTab(panel, tab) {
 
   // Place new tab opened from another tab
   if (parent && !parent.pinned && parent.panelId === panel.id) {
+    if (this.state.moveNewTabParent === 'before') return parent.index
     if (this.state.moveNewTabParent === 'sibling' || this.state.moveNewTabParent === 'last_child') {
       let t
       let index = parent.index + 1
@@ -2184,6 +2185,7 @@ function getParentForNewTab(panel, openerTabId) {
 
   // Place new tab opened from another tab
   if (parent && !parent.pinned && parent.panelId === panel.id) {
+    if (this.state.moveNewTabParent === 'before') return parent.parentId
     if (this.state.moveNewTabParent === 'sibling') return parent.parentId
     if (this.state.moveNewTabParent === 'first_child') return openerTabId
     if (this.state.moveNewTabParent === 'last_child') return openerTabId
