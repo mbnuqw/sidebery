@@ -10,7 +10,7 @@ export default {
   'settings.nav_settings_containers': { message: 'Containers' },
   'settings.nav_settings_panels': { message: 'Panels' },
   'settings.nav_settings_tabs': { message: 'Tabs' },
-  'settings.nav_settings_new_tab_position': { message: 'New tab position' },
+  'settings.nav_settings_new_tab_position': { message: 'Position of new tab' },
   'settings.nav_settings_pinned_tabs': { message: 'Pinned tabs' },
   'settings.nav_settings_tabs_tree': { message: 'Tabs tree' },
   'settings.nav_settings_bookmarks': { message: 'Bookmarks' },
@@ -124,7 +124,7 @@ export default {
   },
 
   // --- New tab position
-  'settings.new_tab_position': { message: 'New tab position' },
+  'settings.new_tab_position': { message: 'Position of new tab' },
   'settings.move_new_tab_pin': { message: 'Place new tab opened from pinned tab' },
   'settings.move_new_tab_pin_start': { message: 'panel start' },
   'settings.move_new_tab_pin_end': { message: 'panel end' },
