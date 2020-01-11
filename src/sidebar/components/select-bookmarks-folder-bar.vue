@@ -1,7 +1,9 @@
 <template lang="pug">
 .SelectBookmarksFolderBar(v-if="$store.state.selectBookmarkFolder")
   h2 Select folder
-  .folder-title {{folderName}}
+  .folder-title(
+    :data-wrong="wrongValueAnimation"
+    @animationend="onAnimationEnd") {{folderName}}
   .ctrls
     .btn(@click="onSelectFolderOk") Ok
     .btn.-warn(@click="onSelectFolderCancel") Cancel
@@ -12,7 +14,9 @@ import State from '../store/state'
 
 export default {
   data() {
-    return {}
+    return {
+      wrongValueAnimation: false,
+    }
   },
 
   computed: {
@@ -28,11 +32,20 @@ export default {
 
   methods: {
     onSelectFolderOk() {
+      if (!State.selectBookmarkFolder.id) return this.error()
       if (State.selectBookmarkFolder.ok) State.selectBookmarkFolder.ok()
     },
 
     onSelectFolderCancel() {
       if (State.selectBookmarkFolder.cancel) State.selectBookmarkFolder.cancel()
+    },
+
+    error() {
+      this.wrongValueAnimation = true
+    },
+
+    onAnimationEnd() {
+      this.wrongValueAnimation = false
     },
   },
 }

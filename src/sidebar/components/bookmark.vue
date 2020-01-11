@@ -137,6 +137,7 @@ export default {
      */
     onMouseUp(e) {
       if (e.button === 0) {
+        if (State.selectBookmarkFolder) return
         if (e.ctrlKey || e.shiftKey) return
 
         if (State.selected.length && !this.node.sel) {
