@@ -2076,7 +2076,10 @@ function getPanelForNewTab(tab) {
     }
   }
 
+  // If position of new tab should be related with active one
+  // find the panel of active tab
   let actTabRel =
+    this.state.moveNewTab === 'before' ||
     this.state.moveNewTab === 'after' ||
     this.state.moveNewTab === 'first_child' ||
     this.state.moveNewTab === 'last_child'
@@ -2134,6 +2137,11 @@ function getIndexForNewTab(panel, tab) {
   // Place new tab (for the other cases)
   if (this.state.moveNewTab === 'start') return panel.startIndex
   if (this.state.moveNewTab === 'end') return endIndex
+  if (this.state.moveNewTab === 'before') {
+    if (!activeTab || activeTab.panelId !== panel.id) return endIndex
+    else if (activeTab.pinned) return panel.startIndex
+    else return activeTab.index
+  }
   if (this.state.moveNewTab === 'after') {
     if (!activeTab || activeTab.panelId !== panel.id) {
       return endIndex
@@ -2198,7 +2206,8 @@ function getParentForNewTab(panel, openerTabId) {
   if (this.state.moveNewTab === 'start') return
   if (this.state.moveNewTab === 'end') return
   if (activeTab && activeTab.panelId === panel.id && !activeTab.pinned) {
-    if (this.state.moveNewTab === 'after') return activeTab.parentId
+    if (this.state.moveNewTab === 'before') return activeTab.parentId
+    else if (this.state.moveNewTab === 'after') return activeTab.parentId
     else if (this.state.moveNewTab === 'first_child') return activeTab.id
     else if (this.state.moveNewTab === 'last_child') return activeTab.id
   }

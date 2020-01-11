@@ -34,7 +34,7 @@ export const SETTINGS_OPTIONS = {
   panelTypeOpts: ['tabs', 'ctx'],
   moveNewTabPinOpts: ['start', 'end', 'none'],
   moveNewTabParentOpts: ['before', 'sibling', 'first_child', 'last_child', 'start', 'end', 'none'],
-  moveNewTabOpts: ['start', 'end', 'after', 'first_child', 'last_child', 'none'],
+  moveNewTabOpts: ['start', 'end', 'before', 'after', 'first_child', 'last_child', 'none'],
   midClickBookmarkOpts: ['open_new_tab', 'edit', 'delete'],
   warnOnMultiTabCloseOpts: ['any', 'collapsed', 'none'],
   warnOnMultiBookmarkDeleteOpts: ['any', 'collapsed', 'none'],

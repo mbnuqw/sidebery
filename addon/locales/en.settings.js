@@ -141,6 +141,7 @@ export default {
   'settings.move_new_tab': { message: 'Place new tab (for the other cases)' },
   'settings.move_new_tab_start': { message: 'panel start' },
   'settings.move_new_tab_end': { message: 'panel end' },
+  'settings.move_new_tab_before': { message: 'before active tab' },
   'settings.move_new_tab_after': { message: 'after active tab' },
   'settings.move_new_tab_first_child': { message: 'first child of active tab' },
   'settings.move_new_tab_last_child': { message: 'last child of active tab' },
