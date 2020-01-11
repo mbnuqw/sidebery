@@ -37,15 +37,14 @@ async function createSnapshot() {
     const items = []
 
     for (let tab of window.tabs) {
-      items.push({
-        id: tab.id,
-        pinned: tab.pinned,
-        url: tab.url,
-        title: tab.title,
-        lvl: tab.lvl,
-        ctr: tab.cookieStoreId,
-        panel: tab.panelId,
-      })
+      let item = { id: tab.id, url: tab.url, title: tab.title }
+
+      if (tab.pinned) item.pinned = true
+      if (tab.cookieStoreId !== DEFAULT_CTX_ID) item.ctr = tab.cookieStoreId
+      if (tab.panelId !== DEFAULT_CTX_ID) item.panel = tab.panelId
+      if (tab.lvl > 0) item.lvl = tab.lvl
+
+      items.push(item)
     }
 
     windows[windowId] = { items }
