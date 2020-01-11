@@ -209,6 +209,17 @@ function blockCtxMenu() {
 }
 
 /**
+ * Reset long-click action fired flag
+ */
+function resetLongClickLock() {
+  if (this.state.tabLongClickFired) {
+    setTimeout(() => {
+      this.state.tabLongClickFired = false
+    }, 120)
+  }
+}
+
+/**
  * Start multi selection
  */
 function startMultiSelection(info) {
@@ -370,6 +381,7 @@ export default {
   updateSidebarWidth,
   blockWheel,
   blockCtxMenu,
+  resetLongClickLock,
   startMultiSelection,
   stopMultiSelection,
   confirm,

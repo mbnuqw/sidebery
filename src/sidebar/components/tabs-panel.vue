@@ -148,7 +148,7 @@ export default {
     },
 
     onRightMouseUp(e) {
-      if (State.tabLongRightClickFired) return
+      if (State.tabLongClickFired) return
       if (State.tabsPanelRightClickAction !== 'menu') return
       if (State.selected.length) return
 
@@ -172,20 +172,15 @@ export default {
      * Handle context menu event
      */
     onNavCtxMenu(e) {
-      if (State.tabLongRightClickFired) {
-        State.tabLongRightClickFired = false
-        e.stopPropagation()
-        e.preventDefault()
-        return
-      }
-
       if (
+        State.tabLongClickFired ||
         !State.ctxMenuNative ||
         e.ctrlKey ||
         e.shiftKey ||
         typeof State.selected[0] === 'number' ||
         typeof State.selected[0] === 'string'
       ) {
+        State.tabLongClickFired = false
         e.stopPropagation()
         e.preventDefault()
         return
