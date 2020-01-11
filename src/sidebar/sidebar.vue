@@ -385,6 +385,10 @@ export default {
      * Mouse up event handler
      */
     onMouseUp(e) {
+      setTimeout(() => {
+        State.tabLongRightClickFired = false
+      }, 120)
+
       if (e.button === 0 && !e.ctrlKey && !e.shiftKey) {
         Actions.closeCtxMenu()
         Actions.resetSelection()

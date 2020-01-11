@@ -225,6 +225,7 @@ export default {
         if (lrc === 'new_child') Actions.createChildTab(this.tab.id)
         if (lrc !== 'none') this.longClickActionRightFired = true
         this.longClickActionRight = null
+        State.tabLongRightClickFired = true
       }, 300)
     },
 
@@ -232,6 +233,11 @@ export default {
      * Handle mouseup event
      */
     onMouseUp(e) {
+      setTimeout(() => {
+        State.tabLongRightClickFired = false
+      }, 120)
+      if (State.tabLongRightClickFired) return
+
       if (e.button === 0) {
         if (
           (State.selected.length || State.activateOnMouseUp) &&
@@ -266,6 +272,13 @@ export default {
      * Handle context menu
      */
     onCtxMenu(e) {
+      if (State.tabLongRightClickFired) {
+        State.tabLongRightClickFired = false
+        e.stopPropagation()
+        e.preventDefault()
+        return
+      }
+
       if (this.longClickActionRightFired || !State.ctxMenuNative || e.ctrlKey || e.shiftKey) {
         e.stopPropagation()
         e.preventDefault()
