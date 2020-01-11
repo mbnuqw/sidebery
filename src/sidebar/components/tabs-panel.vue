@@ -148,6 +148,7 @@ export default {
     },
 
     onRightMouseUp(e) {
+      if (State.tabLongClickFired) return
       if (State.tabsPanelRightClickAction !== 'menu') return
       if (State.selected.length) return
 
@@ -172,12 +173,14 @@ export default {
      */
     onNavCtxMenu(e) {
       if (
+        State.tabLongClickFired ||
         !State.ctxMenuNative ||
         e.ctrlKey ||
         e.shiftKey ||
         typeof State.selected[0] === 'number' ||
         typeof State.selected[0] === 'string'
       ) {
+        State.tabLongClickFired = false
         e.stopPropagation()
         e.preventDefault()
         return

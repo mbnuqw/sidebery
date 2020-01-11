@@ -157,12 +157,12 @@ function resetSelection() {
   let id = this.state.selected[0]
   if (typeof id === 'number') {
     for (let id of this.state.selected) {
-      this.state.tabsMap[id].sel = false
+      if (this.state.tabsMap[id]) this.state.tabsMap[id].sel = false
     }
     if (this.state.nativeHighlight) this.actions.updateHighlightedTabs(120)
   } else if (typeof id === 'string') {
     for (let id of this.state.selected) {
-      this.state.bookmarksMap[id].sel = false
+      if (this.state.bookmarksMap[id]) this.state.bookmarksMap[id].sel = false
     }
   }
   this.state.selected = []
@@ -206,6 +206,17 @@ function blockCtxMenu() {
   this.state.ctxMenuBlockTimeout = setTimeout(() => {
     this.state.ctxMenuBlockTimeout = null
   }, 500)
+}
+
+/**
+ * Reset long-click action fired flag
+ */
+function resetLongClickLock() {
+  if (this.state.tabLongClickFired) {
+    setTimeout(() => {
+      this.state.tabLongClickFired = false
+    }, 120)
+  }
 }
 
 /**
@@ -296,9 +307,6 @@ function askNewBookmarkFolder(defaultValue) {
     if (!bookmarksPanel) res(defaultValue)
 
     this.state.panelIndex = bookmarksPanel.index
-
-    if (defaultValue !== undefined) this.actions.selectItem(defaultValue)
-
     this.state.selectBookmarkFolder = {
       id: '',
       ok: () => {
@@ -373,6 +381,7 @@ export default {
   updateSidebarWidth,
   blockWheel,
   blockCtxMenu,
+  resetLongClickLock,
   startMultiSelection,
   stopMultiSelection,
   confirm,

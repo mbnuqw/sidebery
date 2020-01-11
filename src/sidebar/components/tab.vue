@@ -171,7 +171,6 @@ export default {
       }
 
       // Long-click action
-      this.longClickActionLeftFired = false
       this.longClickActionLeft = setTimeout(() => {
         if (State.dragNodes) return
         let llc = State.tabLongLeftClick
@@ -182,7 +181,7 @@ export default {
         if (llc === 'clear_cookies') Actions.clearTabsCookies([this.tab.id])
         if (llc === 'new_after') Actions.createTabAfter(this.tab.id)
         if (llc === 'new_child') Actions.createChildTab(this.tab.id)
-        if (llc !== 'none') this.longClickActionLeftFired = true
+        if (llc !== 'none') State.tabLongClickFired = true
         this.longClickActionLeft = null
       }, 300)
     },
@@ -211,7 +210,6 @@ export default {
       }
 
       // Long-click action
-      this.longClickActionRightFired = false
       this.longClickActionRight = setTimeout(() => {
         Actions.stopMultiSelection()
         Actions.resetSelection()
@@ -223,7 +221,7 @@ export default {
         if (lrc === 'clear_cookies') Actions.clearTabsCookies([this.tab.id])
         if (lrc === 'new_after') Actions.createTabAfter(this.tab.id)
         if (lrc === 'new_child') Actions.createChildTab(this.tab.id)
-        if (lrc !== 'none') this.longClickActionRightFired = true
+        if (lrc !== 'none') State.tabLongClickFired = true
         this.longClickActionRight = null
       }, 300)
     },
@@ -232,13 +230,10 @@ export default {
      * Handle mouseup event
      */
     onMouseUp(e) {
+      if (State.tabLongClickFired) return Actions.resetLongClickLock()
+
       if (e.button === 0) {
-        if (
-          (State.selected.length || State.activateOnMouseUp) &&
-          !this.longClickActionLeftFired &&
-          !e.ctrlKey &&
-          !e.shiftKey
-        ) {
+        if ((State.selected.length || State.activateOnMouseUp) && !e.ctrlKey && !e.shiftKey) {
           browser.tabs.update(this.tab.id, { active: true })
         }
         if (this.longClickActionLeft) {
@@ -255,9 +250,7 @@ export default {
 
         Actions.stopMultiSelection()
         if (State.ctxMenuBlockTimeout) return
-        if (!State.selected.length && !State.ctxMenuNative && !this.longClickActionRightFired) {
-          this.select()
-        }
+        if (!State.selected.length && !State.ctxMenuNative) this.select()
         if (!State.ctxMenuNative) Actions.openCtxMenu('tab', e.clientX, e.clientY)
       }
     },
@@ -266,7 +259,8 @@ export default {
      * Handle context menu
      */
     onCtxMenu(e) {
-      if (this.longClickActionRightFired || !State.ctxMenuNative || e.ctrlKey || e.shiftKey) {
+      if (State.tabLongClickFired || !State.ctxMenuNative || e.ctrlKey || e.shiftKey) {
+        State.tabLongClickFired = false
         e.stopPropagation()
         e.preventDefault()
         return

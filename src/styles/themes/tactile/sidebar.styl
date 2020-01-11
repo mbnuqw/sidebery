@@ -129,7 +129,8 @@
   background-image: var(--bg-img)
   background-size: var(--bg-size)
   box-shadow: 0 0 0 1px var(--border-fg),
-              inset 0 1px 0 0 var(--border-flare-fg)
+              inset 0 1px 0 0 var(--border-flare-fg),
+              0 0 16px 0 #00000032
 
 .SelectBookmarksFolderBar h2
   box(relative)
@@ -145,6 +146,8 @@
   color: var(--active-fg)
   padding: 0 8px
   text-align: center
+  &[data-wrong]
+    animation: shake-animation .3s, err-blink-animation .6s
 
 .SelectBookmarksFolderBar .ctrls
   box(relative, flex)

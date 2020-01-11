@@ -9,6 +9,10 @@ const xmlSerializer = new XMLSerializer()
  */
 async function openCtxMenu(type, x, y) {
   if (!this.state.selected.length) return
+  if (this.state.tabLongClickFired) {
+    this.state.tabLongClickFired = false
+    return
+  }
   if (!type) return
 
   let nodeType,

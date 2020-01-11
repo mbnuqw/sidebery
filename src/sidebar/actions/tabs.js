@@ -315,6 +315,7 @@ async function loadTabsFromInlineData(tabs, dataTabIndex) {
   }
 
   let secondTab = tabs[dataTabIndex + 1]
+  if (!secondTab) secondTab = tabs[dataTabIndex - 1]
   if (!secondTab) return this.actions.updatePanelsTabs()
 
   await browser.tabs.update(secondTab.id, { active: true })
@@ -978,7 +979,9 @@ async function moveTabsToNewWin(tabIds, incognito = false) {
     if (toMove.includes(id)) continue
     tabs.push(tab)
     toMove.push(id)
-    tabsInfo.push({ lvl: tab.lvl, panelId: tab.panelId })
+    let info = { lvl: tab.lvl, panelId: tab.panelId }
+    if (tab.pinned) info.pinned = true
+    tabsInfo.push(info)
     if (tab.active) activeTab = tab
     if (tab.folded) {
       for (let i = tab.index + 1; i < this.state.tabs.length; i++) {
@@ -1009,12 +1012,9 @@ async function moveTabsToNewWin(tabIds, incognito = false) {
   let index = 1
   for (let tab of tabs) {
     if (incognito === this.state.private) {
-      moving.push(
-        browser.tabs.move(tab.id, {
-          windowId: win.id,
-          index: index++,
-        })
-      )
+      let conf = { windowId: win.id }
+      conf.index = tab.pinned ? 0 : index++
+      moving.push(browser.tabs.move(tab.id, conf))
     } else {
       let conf = {
         windowId: win.id,
@@ -2076,7 +2076,10 @@ function getPanelForNewTab(tab) {
     }
   }
 
+  // If position of new tab should be related with active one
+  // find the panel of active tab
   let actTabRel =
+    this.state.moveNewTab === 'before' ||
     this.state.moveNewTab === 'after' ||
     this.state.moveNewTab === 'first_child' ||
     this.state.moveNewTab === 'last_child'
@@ -2115,6 +2118,7 @@ function getIndexForNewTab(panel, tab) {
 
   // Place new tab opened from another tab
   if (parent && !parent.pinned && parent.panelId === panel.id) {
+    if (this.state.moveNewTabParent === 'before') return parent.index
     if (this.state.moveNewTabParent === 'sibling' || this.state.moveNewTabParent === 'last_child') {
       let t
       let index = parent.index + 1
@@ -2133,6 +2137,11 @@ function getIndexForNewTab(panel, tab) {
   // Place new tab (for the other cases)
   if (this.state.moveNewTab === 'start') return panel.startIndex
   if (this.state.moveNewTab === 'end') return endIndex
+  if (this.state.moveNewTab === 'before') {
+    if (!activeTab || activeTab.panelId !== panel.id) return endIndex
+    else if (activeTab.pinned) return panel.startIndex
+    else return activeTab.index
+  }
   if (this.state.moveNewTab === 'after') {
     if (!activeTab || activeTab.panelId !== panel.id) {
       return endIndex
@@ -2184,6 +2193,7 @@ function getParentForNewTab(panel, openerTabId) {
 
   // Place new tab opened from another tab
   if (parent && !parent.pinned && parent.panelId === panel.id) {
+    if (this.state.moveNewTabParent === 'before') return parent.parentId
     if (this.state.moveNewTabParent === 'sibling') return parent.parentId
     if (this.state.moveNewTabParent === 'first_child') return openerTabId
     if (this.state.moveNewTabParent === 'last_child') return openerTabId
@@ -2196,7 +2206,8 @@ function getParentForNewTab(panel, openerTabId) {
   if (this.state.moveNewTab === 'start') return
   if (this.state.moveNewTab === 'end') return
   if (activeTab && activeTab.panelId === panel.id && !activeTab.pinned) {
-    if (this.state.moveNewTab === 'after') return activeTab.parentId
+    if (this.state.moveNewTab === 'before') return activeTab.parentId
+    else if (this.state.moveNewTab === 'after') return activeTab.parentId
     else if (this.state.moveNewTab === 'first_child') return activeTab.id
     else if (this.state.moveNewTab === 'last_child') return activeTab.id
   }

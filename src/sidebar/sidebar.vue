@@ -385,6 +385,8 @@ export default {
      * Mouse up event handler
      */
     onMouseUp(e) {
+      Actions.resetLongClickLock()
+
       if (e.button === 0 && !e.ctrlKey && !e.shiftKey) {
         Actions.closeCtxMenu()
         Actions.resetSelection()
