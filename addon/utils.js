@@ -482,7 +482,13 @@ function cloneObject(obj) {
  */
 function normalizeUrl(url) {
   if (url === 'about:newtab') return undefined
-  if (url.startsWith('about:') || url.startsWith('data:') || url.startsWith('file:')) {
+  if (
+    url.startsWith('chrome:') ||
+    url.startsWith('javascript:') ||
+    url.startsWith('data:') ||
+    url.startsWith('file:') ||
+    url.startsWith('about:')
+  ) {
     return browser.runtime.getURL('url/url.html') + '#' + url
   } else {
     return url
