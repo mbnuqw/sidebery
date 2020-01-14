@@ -19,7 +19,7 @@ export default {
   'menu.bookmark.collapse_all': { message: 'Свернуть все папки' },
 
   // --- Tab
-  'menu.tab.undo': { message: 'Восстановить удаленный таб' },
+  'menu.tab.undo': { message: 'Восстановить закрытую вкладку' },
   'menu.tab.move_to_sub_menu_name': { message: 'Переместить в' },
   'menu.tab.move_to_new_window': { message: 'Переместить в новое окно' },
   'menu.tab.move_to_new_priv_window': { message: 'Переместить в приватное окно' },
@@ -49,9 +49,9 @@ export default {
   // --- Tabs panel
   'menu.tabs_panel.mute_all_audible': { message: 'Выключить звук' },
   'menu.tabs_panel.dedup': { message: 'Закрыть дубликаты' },
-  'menu.tabs_panel.reload': { message: 'Перезагрузить табы' },
-  'menu.tabs_panel.discard': { message: 'Выгрузить табы' },
-  'menu.tabs_panel.close': { message: 'Закрыть табы' },
+  'menu.tabs_panel.reload': { message: 'Перезагрузить вкладки' },
+  'menu.tabs_panel.discard': { message: 'Выгрузить вкладки' },
+  'menu.tabs_panel.close': { message: 'Закрыть вкладки' },
   'menu.tabs_panel.collapse_inact_branches': { message: 'Свернуть неактивные ветки' },
 
   // --- Common ---

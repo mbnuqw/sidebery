@@ -155,7 +155,6 @@ export default {
   'settings.pinned_tabs_position_right': { message: 'right' },
   'settings.pinned_tabs_position_bottom': { message: 'bottom' },
   'settings.pinned_tabs_position_panel': { message: 'panel' },
-  'settings.pinned_tabs_sync': { message: 'Sync pinned tabs' },
   'settings.pinned_tabs_list': { message: 'Show titles of pinned tabs' },
 
   // --- Tabs tree
