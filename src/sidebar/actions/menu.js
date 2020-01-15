@@ -158,7 +158,9 @@ function createNativeOption(ctx, option, parentId, parentName) {
   }
 
   let icon
-  if (option.icon) {
+  if (option.img) {
+    icon = option.img
+  } else if (option.icon) {
     let rgbColor = RGB_COLORS[option.color]
     let alpha = option.inactive ? '64' : 'ff'
     if (!rgbColor) rgbColor = '#686868' + alpha

@@ -30,6 +30,8 @@ export default {
   'menu.tab.reopen_in_sub_menu_name': { message: 'Открыть в' },
   'menu.tab.reopen_in_ctr_': { message: 'Открыть в контейнере...' },
   'menu.tab.reopen_in_': { message: 'Открыть в ' },
+  'menu.tab.move_to_panel_label': { message: 'Переместить в панель...' },
+  'menu.tab.move_to_panel_': { message: 'Переместить в ' },
   'menu.tab.reopen_in_another_window': { message: 'Открыть в другом окне' },
   'menu.tab.reopen_in_window_': { message: 'Открыть в окне...' },
   'menu.tab.group': { message: 'Сгруппировать' },

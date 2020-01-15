@@ -217,6 +217,7 @@ const TABS_MENU_OPTS = {
   moveToAnotherWin: 'menu.tab.move_to_another_window',
   moveToWin: 'menu.tab.move_to_window_',
   moveToCtr: 'menu.tab.reopen_in_ctr_',
+  moveToPanel: 'menu.tab.move_to_panel_label',
   mute: 'menu.tab.mute',
   duplicate: 'menu.tab.duplicate',
   discard: 'menu.tab.discard',

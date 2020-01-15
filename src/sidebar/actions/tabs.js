@@ -1188,6 +1188,20 @@ async function reopenTabsInCtx(tabIds, ctxId) {
 }
 
 /**
+ * Move tabs to panel
+ */
+function moveTabsToPanel(tabIds, panelId) {
+  let tabs = tabIds.map(id => this.state.tabsMap[id])
+  let panel = this.state.panelsMap[panelId]
+  if (!panel) return
+
+  let index = panel.endIndex
+  if (panel.tabs.length > 0) index += 1
+
+  this.actions.moveDroppedNodes(index, -1, tabs, tabs[0].pinned, panel)
+}
+
+/**
  * Show all tabs
  */
 async function showAllTabs() {
@@ -2522,6 +2536,7 @@ export default {
   moveTabsToWin,
   moveTabsToThisWin,
   reopenTabsInCtx,
+  moveTabsToPanel,
 
   showAllTabs,
   updateTabsVisability,

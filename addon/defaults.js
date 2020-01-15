@@ -492,6 +492,27 @@ export const MENU_OPTIONS = {
     return opts
   },
 
+  moveToPanel: state => {
+    let opts = []
+    let firstNode = state.tabsMap[state.selected[0]]
+
+    for (let panel of state.panels) {
+      if (!panel.tabs) continue
+      if (firstNode.panelId === panel.id) continue
+
+      opts.push({
+        label: translate('menu.tab.move_to_panel_') + panel.name,
+        icon: panel.icon,
+        img: panel.customIcon,
+        color: panel.color,
+        action: 'moveTabsToPanel',
+        args: [state.selected, panel.id],
+      })
+    }
+
+    if (opts.length) return opts
+  },
+
   pin: state => {
     let firstNode = state.tabsMap[state.selected[0]]
     let wut = firstNode.pinned ? 'unpin' : 'pin'

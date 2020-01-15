@@ -30,6 +30,8 @@ export default {
   'menu.tab.reopen_in_sub_menu_name': { message: 'Reopen in' },
   'menu.tab.reopen_in_ctr_': { message: 'Reopen in container...' },
   'menu.tab.reopen_in_': { message: 'Reopen in ' },
+  'menu.tab.move_to_panel_label': { message: 'Move to panel...' },
+  'menu.tab.move_to_panel_': { message: 'Move to ' },
   'menu.tab.reopen_in_another_window': { message: 'Reopen in another window' },
   'menu.tab.reopen_in_window_': { message: 'Reopen in window...' },
   'menu.tab.group': { message: 'Group' },

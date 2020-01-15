@@ -21,7 +21,9 @@
           :title="getTitle(opt.label)"
           @click="onClick(opt)"
           @mousedown.stop="")
-          svg: use(:xlink:href="'#' + opt.icon")
+          img(v-if="opt.img" :src="opt.img")
+          svg(v-else): use(:xlink:href="'#' + opt.icon")
+          svg.badge(v-if="opt.badge"): use(:xlink:href="'#' + opt.badge")
         .opt(
           v-if="!group.inline"
           v-for="(opt, i) in group.options"
@@ -51,7 +53,9 @@
           :title="getTitle(opt.label)"
           @click="onClick(opt)"
           @mousedown.stop="")
-          svg: use(:xlink:href="'#' + opt.icon")
+          img(v-if="opt.img" :src="opt.img")
+          svg(v-else): use(:xlink:href="'#' + opt.icon")
+          svg.badge(v-if="opt.badge"): use(:xlink:href="'#' + opt.badge")
         .opt(
           v-if="!group.inline"
           v-for="(opt, i) in group.options"
