@@ -358,15 +358,17 @@ function onTabRemoved(tabId, info, childfree) {
   let panel = this.state.panelsMap[tab.panelId]
 
   // Update temp list of removed tabs for restoring reopened tabs state
-  if (!this._removedTabs) this._removedTabs = []
-  this._removedTabs.push({
-    index: tab.index,
-    title: tab.title,
-    parentId: tab.parentId,
-    panelId: tab.panelId,
-  })
-  if (this._removedTabs.length > 50) {
-    this._removedTabs = this._removedTabs.slice(25)
+  if (tab.url !== 'about:newtab' && tab.url !== 'about:blank') {
+    if (!this._removedTabs) this._removedTabs = []
+    this._removedTabs.push({
+      index: tab.index,
+      title: tab.title,
+      parentId: tab.parentId,
+      panelId: tab.panelId,
+    })
+    if (this._removedTabs.length > 50) {
+      this._removedTabs = this._removedTabs.slice(25)
+    }
   }
 
   // Recreate locked tab
