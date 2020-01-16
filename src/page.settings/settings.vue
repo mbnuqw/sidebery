@@ -138,6 +138,7 @@
     select-field(
       label="settings.state_storage"
       optLabel="settings.state_storage_"
+      :note="t('settings.state_storage_desc')"
       :value="$store.state.stateStorage"
       :opts="$store.state.stateStorageOpts"
       @input="setOpt('stateStorage', $event)")

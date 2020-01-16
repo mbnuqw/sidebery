@@ -37,9 +37,14 @@ export default {
   // --- General
   'settings.general_title': { message: 'General' },
   'settings.native_scrollbars': { message: 'Use native scroll-bars' },
-  'settings.state_storage': { message: 'Tabs state storage type' },
-  'settings.state_storage_global': { message: 'global' },
-  'settings.state_storage_session': { message: 'session' },
+  'settings.state_storage': { message: 'Where to store tabs data' },
+  'settings.state_storage_global': { message: 'global storage' },
+  'settings.state_storage_session': { message: 'session storage' },
+  'settings.state_storage_desc': {
+    message: `- global storage - fast, but inaccurate in rare cases.
+- session storage - more strict, but slower. (Warning: Will be removed along with Browser Session)
+  Note: If you have issues with incorrectly restored tabs, try to reopen sidebar and change this option.`,
+  },
 
   // --- Context menu
   'settings.ctx_menu_title': { message: 'Context menu' },
