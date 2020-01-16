@@ -487,6 +487,7 @@ function normalizeUrl(url) {
     url.startsWith('javascript:') ||
     url.startsWith('data:') ||
     url.startsWith('file:') ||
+    url.startsWith('jar:file:') ||
     url.startsWith('about:')
   ) {
     return browser.runtime.getURL('url/url.html') + '#' + url
