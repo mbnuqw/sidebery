@@ -2073,42 +2073,62 @@ function updateActiveGroupPage() {
   }
 }
 
+/**
+ * Find the nearest panel
+ */
+function findNearestPanel(tabIndex) {
+  let nearestPanel
+  let prevTab = this.state.tabs[tabIndex - 1]
+  let nextTab = this.state.tabs[tabIndex + 1]
+
+  if (prevTab && !prevTab.pinned) nearestPanel = this.state.panelsMap[prevTab.panelId]
+  if (!nearestPanel && nextTab) nearestPanel = this.state.panelsMap[nextTab.panelId]
+  if (!nearestPanel) nearestPanel = this.state.panels.find(p => p.tabs)
+
+  return nearestPanel
+}
+
 function getPanelForNewTab(tab) {
-  let panel
-  let parentTab = this.state.tabsMap[tab.openerTabId]
+  let parentTab = this.state.tabsMap[tab ? tab.openerTabId : null]
+  let activePanel = this.state.panels[this.state.panelIndex]
+  if (!activePanel.tabs) activePanel = null
 
-  if (tab.cookieStoreId !== DEFAULT_CTX_ID) {
-    panel = this.state.panels.find(p => p.moveTabCtx === tab.cookieStoreId)
-    if (panel) return panel
-  }
+  // Find panel with matched moveTabCtx rule
+  let panel = this.state.panels.find(p => p.moveTabCtx === tab.cookieStoreId)
+  let isChildTab = parentTab && !parentTab.pinned
+  if (panel && (!panel.moveTabCtxNoChild || !isChildTab)) return panel
 
-  if (!panel && parentTab) {
-    panel = this.state.panelsMap[parentTab.panelId]
-    let activePanel = this.state.panels[this.state.panelIndex]
-    if ((this.state.moveNewTabParentActPanel || parentTab.pinned) && panel !== activePanel) {
-      panel = null
+  // Find panel for tab opened from pinned tab
+  if (parentTab && parentTab.pinned) {
+    if (this.state.moveNewTabPin === 'start' || this.state.moveNewTabPin === 'end') {
+      return activePanel || this.actions.findNearestPanel(tab.index)
     }
   }
 
-  // If position of new tab should be related with active one
-  // find the panel of active tab
-  let actTabRel =
+  // Find panel for tab opened from another tab
+  if (parentTab && !parentTab.pinned) {
+    let panelOfParent = this.state.panelsMap[parentTab.panelId]
+    if (!this.state.moveNewTabParentActPanel || panelOfParent === activePanel) return panelOfParent
+  }
+
+  // Find panel in other cases
+  if (this.state.moveNewTab === 'start' || this.state.moveNewTab === 'end') {
+    return activePanel || this.actions.findNearestPanel(tab.index)
+  }
+  if (
     this.state.moveNewTab === 'before' ||
     this.state.moveNewTab === 'after' ||
     this.state.moveNewTab === 'first_child' ||
     this.state.moveNewTab === 'last_child'
-  if (!panel && !parentTab && actTabRel) {
+  ) {
     let activeTab = this.state.tabsMap[this.state.activeTabId]
-    if (!activeTab.pinned) panel = this.state.panelsMap[activeTab.panelId]
+    let panelOfActiveTab = this.state.panelsMap[activeTab.panelId]
+
+    if (!activeTab.pinned && panelOfActiveTab) return panelOfActiveTab
+    else return activePanel || this.actions.findNearestPanel(tab.index)
   }
 
-  if (!panel) panel = this.state.panels[this.state.panelIndex]
-
-  if (panel && panel.newTabCtx !== 'none' && panel.newTabCtx !== tab.cookieStoreId) panel = null
-
-  if (!panel || !panel.tabs) panel = this.state.panelsMap[DEFAULT_CTX_ID]
-
-  return panel
+  return this.actions.findNearestPanel(tab.index)
 }
 
 /**
@@ -2127,7 +2147,6 @@ function getIndexForNewTab(panel, tab) {
   if (parent && parent.pinned) {
     if (this.state.moveNewTabPin === 'start') return panel.startIndex
     if (this.state.moveNewTabPin === 'end') return endIndex
-    if (this.state.moveNewTabPin === 'none') return
   }
 
   // Place new tab opened from another tab
@@ -2145,7 +2164,6 @@ function getIndexForNewTab(panel, tab) {
     if (this.state.moveNewTabParent === 'first_child') return parent.index + 1
     if (this.state.moveNewTabParent === 'start') return panel.startIndex
     if (this.state.moveNewTabParent === 'end') return endIndex
-    if (this.state.moveNewTabParent === 'none') return
   }
 
   // Place new tab (for the other cases)
@@ -2193,6 +2211,13 @@ function getIndexForNewTab(panel, tab) {
       return index
     }
   }
+
+  // Check tab is out of range of panel with moveTabCtx rule
+  if (panel.moveTabCtx === tab.cookieStoreId) {
+    if (panel.startIndex > tab.index || endIndex < tab.index) return endIndex
+  }
+
+  return tab.index
 }
 
 /**
@@ -2567,6 +2592,7 @@ export default {
   queryTab,
   getTabsTree,
 
+  findNearestPanel,
   getPanelForNewTab,
   getIndexForNewTab,
   getParentForNewTab,

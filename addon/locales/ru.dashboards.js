@@ -11,6 +11,7 @@ export default {
   'dashboard.new_tab_ctx': { message: 'Контейнер новой вкладки' },
   'dashboard.move_tab_ctx': { message: 'Перемещать вкладки выбранного контейнера в эту панель' },
   'dashboard.move_tab_ctx_none': { message: 'ня' },
+  'dashboard.move_tab_ctx_nochild': { message: 'За исключением дочерних вкладок' },
   'dashboard.url_rules': { message: 'Перемещать вкладки с совпадающими адресами в эту панель' },
   'container_dashboard.custom_icon_note': {
     message: 'Base64, url или символы. Синтакс для символов: "символы::CSS-цвет::CSS-шрифт"',

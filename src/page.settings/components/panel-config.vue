@@ -62,7 +62,7 @@
     v-if="isDefault || isTabs"
     label="dashboard.new_tab_ctx"
     :value="newTabCtx"
-    :opts="newTabCtxOpts"
+    :opts="availableContainers"
     @input="togglePanelNewTabCtx")
 
   select-field(
@@ -70,8 +70,14 @@
     label="dashboard.move_tab_ctx"
     optLabel="dashboard.move_tab_ctx_"
     :value="moveTabCtx"
-    :opts="moveTabCtxOpts"
+    :opts="availableContainers"
     @input="togglePanelMoveTabCtx")
+  .sub-fields
+    toggle-field(
+      label="dashboard.move_tab_ctx_nochild"
+      :inactive="moveTabCtx === 'none'"
+      :value="conf.moveTabCtxNoChild"
+      @input="togglePanelMoveTabCtxNoChild")
 
   toggle-field(
     v-if="isTabs"
@@ -184,6 +190,11 @@ export default {
 
     availableContainers() {
       let result = []
+
+      if (!State.panels.find(p => p.id !== this.conf.id && p.moveTabCtx === DEFAULT_CTX)) {
+        result.push({ value: DEFAULT_CTX, color: 'toolbar', icon: 'icon_tabs' })
+      }
+
       for (let container of Object.values(State.containers)) {
         let boundPanel = State.panels.find(p => {
           return p.id !== this.conf.id && p.moveTabCtx === container.id
@@ -196,6 +207,9 @@ export default {
           tooltip: container.name,
         })
       }
+
+      result.push({ value: 'none', color: 'inactive', icon: 'icon_none' })
+
       return result
     },
 
@@ -220,20 +234,8 @@ export default {
       return this.conf.newTabCtx || 'none'
     },
 
-    newTabCtxOpts() {
-      return [
-        { value: DEFAULT_CTX, color: 'toolbar', icon: 'icon_tabs' },
-        ...this.availableContainers,
-        { value: 'none', color: 'inactive', icon: 'icon_none' },
-      ]
-    },
-
     moveTabCtx() {
       return this.conf.moveTabCtx || 'none'
-    },
-
-    moveTabCtxOpts() {
-      return [...this.availableContainers, { value: 'none', color: 'inactive', icon: 'icon_none' }]
     },
 
     urlRulesValid() {
@@ -376,6 +378,11 @@ export default {
 
     togglePanelMoveTabCtx(value) {
       this.conf.moveTabCtx = value
+      Actions.savePanels()
+    },
+
+    togglePanelMoveTabCtxNoChild(value) {
+      this.conf.moveTabCtxNoChild = value
       Actions.savePanels()
     },
 

@@ -296,7 +296,9 @@ export const DEFAULT_TABS_PANEL = {
   lockedTabs: false,
   lockedPanel: false,
   noEmpty: false,
-  newTabCtx: DEFAULT_CTX,
+  newTabCtx: 'none',
+  moveTabCtx: 'none',
+  moveTabCtxNoChild: true,
 }
 export const DEFAULT_TABS_PANEL_STATE = {
   ...DEFAULT_TABS_PANEL,
@@ -320,6 +322,7 @@ export const TABS_PANEL = {
   noEmpty: false,
   newTabCtx: 'none',
   moveTabCtx: 'none',
+  moveTabCtxNoChild: true,
   urlRulesActive: false,
   urlRules: '',
 }

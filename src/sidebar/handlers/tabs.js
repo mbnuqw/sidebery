@@ -45,23 +45,6 @@ function onTabCreated(tab) {
     panel = this.actions.getPanelForNewTab(tab)
     index = this.actions.getIndexForNewTab(panel, tab)
     tab.openerTabId = this.actions.getParentForNewTab(panel, tab.openerTabId)
-    if (index === undefined) {
-      let prevTab = this.state.tabs[tab.index - 1]
-      if (prevTab && prevTab.panelId !== panel.id) panel = this.state.panelsMap[prevTab.panelId]
-      if (panel.moveTabCtx !== 'none' && tab.openerTabId === undefined) {
-        index = panel.tabs.length ? panel.endIndex + 1 : panel.endIndex
-      } else {
-        index = tab.index
-      }
-      if (panel.startIndex > index || panel.endIndex + 1 < index) {
-        let prevTab = this.state.tabs[tab.index - 1]
-        let nextTab = this.state.tabs[tab.index + 1]
-
-        if (prevTab) panel = this.state.panelsMap[prevTab.panelId]
-        else if (nextTab) panel = this.state.panelsMap[nextTab.panelId]
-        else panel = this.state.panels.find(p => p.tabs)
-      }
-    }
   }
 
   // If new tab has wrong possition - move it

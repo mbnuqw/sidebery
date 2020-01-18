@@ -5,6 +5,7 @@ import {
   TABS_PANEL_STATE,
   BOOKMARKS_PANEL,
   DEFAULT_TABS_PANEL,
+  DEFAULT_CTX,
   TABS_PANEL,
 } from '../../addon/defaults'
 
@@ -58,10 +59,18 @@ async function loadPanels() {
       this.actions.parsePanelUrlRules(panel)
     }
 
-    if (panel.newTabCtx !== 'none' && !this.state.containers[panel.newTabCtx]) {
+    if (
+      panel.newTabCtx !== 'none' &&
+      panel.newTabCtx !== DEFAULT_CTX &&
+      !this.state.containers[panel.newTabCtx]
+    ) {
       panel.newTabCtx = 'none'
     }
-    if (panel.moveTabCtx !== 'none' && !this.state.containers[panel.moveTabCtx]) {
+    if (
+      panel.moveTabCtx !== 'none' &&
+      panel.newTabCtx !== DEFAULT_CTX &&
+      !this.state.containers[panel.moveTabCtx]
+    ) {
       panel.moveTabCtx = 'none'
     }
 
