@@ -1,20 +1,12 @@
-import { Locales, translate } from '../dict'
+import './mock-dict'
+import { translate } from '../../../addon/locales/dict'
 
 describe('Dict', () => {
   test('Tranlation', () => {
-    Locales['en']['a'] = {
-      message: 'A',
-    }
-
     expect(translate('a')).toBe('A')
   })
 
   test('Plural tranlation', () => {
-    Locales['en']['min'] = {
-      message: ['минута', 'минуты', 'минут'],
-      plur: [/^(1|(\d*?)[^1]1)$/, /^([234]|(\d*?)[^1][234])$/],
-    }
-
     expect(translate('min', 1)).toBe('минута')
     expect(translate('min', 21)).toBe('минута')
     expect(translate('min', 31)).toBe('минута')

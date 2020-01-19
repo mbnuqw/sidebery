@@ -194,12 +194,12 @@ describe('Global utilities', () => {
         { id: 10, panelId: 'p0', parentId: -1, folded: false, index: 0, url: 'u0', ctx: 'd' },
         { id: 11, panelId: 'p0', parentId: -1, folded: false, index: 1, url: 'u1', ctx: 'd' },
         { id: 12, panelId: 'p0', parentId: -1, folded: false, index: 2, url: 'u2', ctx: 'd' },
-        { id: 13, panelId: 'p0', parentId: -1, folded: false, index: 3, url: 'moz.../group.html', ctx: 'd', isMissedGroup: true },
-        { id: 14, panelId: 'p0', parentId: 13, folded: false, index: 4, url: 'moz.../group.html', ctx: 'd', isMissedGroup: true },
-        { id: 15, panelId: 'p0', parentId: 14, folded: false, index: 5, url: 'u3', ctx: 'd' },
-        { id: 16, panelId: 'p0', parentId: -1, folded: false, index: 6, url: 'u4', ctx: 'd' },
-        { id: 17, panelId: 'p0', parentId: -1, folded: false, index: 7, url: 'u5', ctx: 'd' },
-        { id: 18, panelId: 'p0', parentId: -1, folded: false, index: 8, url: 'u6', ctx: 'd' },
+        { id: 13, panelId: 'p0', parentId: -1, folded: false, url: 'moz.../group.html', ctx: 'd', isMissedGroup: true },
+        { id: 14, panelId: 'p0', parentId: 13, folded: false, url: 'moz.../group.html', ctx: 'd', isMissedGroup: true },
+        { id: 15, panelId: 'p0', parentId: 14, folded: false, index: 3, url: 'u3', ctx: 'd' },
+        { id: 16, panelId: 'p0', parentId: -1, folded: false, index: 4, url: 'u4', ctx: 'd' },
+        { id: 17, panelId: 'p0', parentId: -1, folded: false, index: 5, url: 'u5', ctx: 'd' },
+        { id: 18, panelId: 'p0', parentId: -1, folded: false, index: 6, url: 'u6', ctx: 'd' },
       ])
     })
 
@@ -232,14 +232,14 @@ describe('Global utilities', () => {
       const result = Utils.findDataForTabs(tabs, tabsData)
       expect(result).toEqual([
         { id: 10, panelId: 'p0', parentId: -1, folded: false, index: 0, url: 'u0', ctx: 'd' },
-        { id: 11, panelId: 'p0', parentId: -1, folded: false, index: undefined, url: 'u1', ctx: 'd' },
+        { id: 11, panelId: 'p0', parentId: -1, folded: false, url: 'u1', ctx: 'd' },
         { id: 12, panelId: 'p0', parentId: -1, folded: false, index: 1, url: 'u2', ctx: 'd' },
-        { id: 13, panelId: 'p0', parentId: -1, folded: false, index: 2, url: 'moz.../group.html', ctx: 'd', isMissedGroup: true },
-        { id: 14, panelId: 'p0', parentId: 13, folded: false, index: 3, url: 'moz.../group.html', ctx: 'd', isMissedGroup: true },
-        { id: 15, panelId: 'p0', parentId: 14, folded: false, index: 4, url: 'u3', ctx: 'd' },
-        { id: 16, panelId: 'p0', parentId: -1, folded: false, index: 5, url: 'u4', ctx: 'd' },
-        { id: 17, panelId: 'p0', parentId: -1, folded: false, index: 6, url: 'u5', ctx: 'd' },
-        { id: 18, panelId: 'p0', parentId: -1, folded: false, index: 7, url: 'u6', ctx: 'd' },
+        { id: 13, panelId: 'p0', parentId: -1, folded: false, url: 'moz.../group.html', ctx: 'd', isMissedGroup: true },
+        { id: 14, panelId: 'p0', parentId: 13, folded: false, url: 'moz.../group.html', ctx: 'd', isMissedGroup: true },
+        { id: 15, panelId: 'p0', parentId: 14, folded: false, index: 2, url: 'u3', ctx: 'd' },
+        { id: 16, panelId: 'p0', parentId: -1, folded: false, index: 3, url: 'u4', ctx: 'd' },
+        { id: 17, panelId: 'p0', parentId: -1, folded: false, index: 4, url: 'u5', ctx: 'd' },
+        { id: 18, panelId: 'p0', parentId: -1, folded: false, index: 5, url: 'u6', ctx: 'd' },
       ])
     })
 
@@ -276,12 +276,12 @@ describe('Global utilities', () => {
         { id: 10, panelId: 'p0', parentId: -1, folded: false, index: 0, url: 'u0', ctx: 'd' },
         { id: 11, panelId: 'p0', parentId: -1, folded: false, index: 2, url: 'u1', ctx: 'd' },
         { id: 12, panelId: 'p0', parentId: -1, folded: false, index: 3, url: 'u2', ctx: 'd' },
-        { id: 13, panelId: 'p0', parentId: -1, folded: false, index: 4, url: 'moz.../group.html', ctx: 'd', isMissedGroup: true },
-        { id: 14, panelId: 'p0', parentId: 13, folded: false, index: 5, url: 'moz.../group.html', ctx: 'd', isMissedGroup: true },
-        { id: 15, panelId: 'p0', parentId: 14, folded: false, index: 6, url: 'u3', ctx: 'd' },
-        { id: 16, panelId: 'p0', parentId: -1, folded: false, index: 7, url: 'u4', ctx: 'd' },
-        { id: 17, panelId: 'p0', parentId: -1, folded: false, index: 8, url: 'u5', ctx: 'd' },
-        { id: 18, panelId: 'p0', parentId: -1, folded: false, index: 9, url: 'u6', ctx: 'd' },
+        { id: 13, panelId: 'p0', parentId: -1, folded: false, url: 'moz.../group.html', ctx: 'd', isMissedGroup: true },
+        { id: 14, panelId: 'p0', parentId: 13, folded: false, url: 'moz.../group.html', ctx: 'd', isMissedGroup: true },
+        { id: 15, panelId: 'p0', parentId: 14, folded: false, index: 4, url: 'u3', ctx: 'd' },
+        { id: 16, panelId: 'p0', parentId: -1, folded: false, index: 5, url: 'u4', ctx: 'd' },
+        { id: 17, panelId: 'p0', parentId: -1, folded: false, index: 6, url: 'u5', ctx: 'd' },
+        { id: 18, panelId: 'p0', parentId: -1, folded: false, index: 7, url: 'u6', ctx: 'd' },
       ])
     })
 
@@ -315,14 +315,14 @@ describe('Global utilities', () => {
       const result = Utils.findDataForTabs(tabs, tabsData)
       expect(result).toEqual([
         { id: 10, panelId: 'p0', parentId: -1, folded: false, index: 0, url: 'u0', ctx: 'd' },
-        { id: 11, panelId: 'p0', parentId: -1, folded: false, index: undefined, url: 'u1', ctx: 'd' },
+        { id: 11, panelId: 'p0', parentId: -1, folded: false, url: 'u1', ctx: 'd' },
         { id: 12, panelId: 'p0', parentId: -1, folded: false, index: 2, url: 'u2', ctx: 'd' },
-        { id: 13, panelId: 'p0', parentId: -1, folded: false, index: 3, url: 'moz.../group.html', ctx: 'd', isMissedGroup: true },
-        { id: 14, panelId: 'p0', parentId: 13, folded: false, index: 4, url: 'moz.../group.html', ctx: 'd', isMissedGroup: true },
-        { id: 15, panelId: 'p0', parentId: 14, folded: false, index: 5, url: 'u3', ctx: 'd' },
-        { id: 16, panelId: 'p0', parentId: -1, folded: false, index: 6, url: 'u4', ctx: 'd' },
-        { id: 17, panelId: 'p0', parentId: -1, folded: false, index: 7, url: 'u5', ctx: 'd' },
-        { id: 18, panelId: 'p0', parentId: -1, folded: false, index: 8, url: 'u6', ctx: 'd' },
+        { id: 13, panelId: 'p0', parentId: -1, folded: false, url: 'moz.../group.html', ctx: 'd', isMissedGroup: true },
+        { id: 14, panelId: 'p0', parentId: 13, folded: false, url: 'moz.../group.html', ctx: 'd', isMissedGroup: true },
+        { id: 15, panelId: 'p0', parentId: 14, folded: false, index: 3, url: 'u3', ctx: 'd' },
+        { id: 16, panelId: 'p0', parentId: -1, folded: false, index: 4, url: 'u4', ctx: 'd' },
+        { id: 17, panelId: 'p0', parentId: -1, folded: false, index: 5, url: 'u5', ctx: 'd' },
+        { id: 18, panelId: 'p0', parentId: -1, folded: false, index: 6, url: 'u6', ctx: 'd' },
       ])
     })
   })
