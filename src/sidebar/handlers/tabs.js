@@ -640,10 +640,12 @@ function onTabActivated(info) {
     if (box.actTabs.length > 128) box.actTabs = box.actTabs.slice(32)
     box.actTabs.push(prevActive.id)
 
-    box = this.state.panelsMap[prevActive.panelId]
-    if (!box.actTabs) box.actTabs = []
-    if (box.actTabs.length > 128) box.actTabs = box.actTabs.slice(32)
-    box.actTabs.push(prevActive.id)
+    if (!prevActive.pinned || this.state.pinnedTabsPosition === 'panel') {
+      box = this.state.panelsMap[prevActive.panelId]
+      if (!box.actTabs) box.actTabs = []
+      if (box.actTabs.length > 128) box.actTabs = box.actTabs.slice(32)
+      box.actTabs.push(prevActive.id)
+    }
   }
 
   // Update tabs and find activated one
