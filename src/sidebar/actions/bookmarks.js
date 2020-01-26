@@ -134,7 +134,7 @@ function expandBookmark(nodeId) {
     parent.expanded = true
   }
 
-  if (this.state.autoCloseBookmarks && !isEmpty) {
+  if (this.state.autoCloseBookmarks && !isEmpty && !this.state.selected.length) {
     for (let n of toFold) {
       n.expanded = false
     }

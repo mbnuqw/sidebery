@@ -112,8 +112,13 @@ export default {
         if (State.selected.length && typeof State.selected[0] !== 'string') {
           return
         }
-        if (!this.node.sel) Actions.selectItem(this.node.id)
-        else Actions.deselectItem(this.node.id)
+        if (!this.node.sel) {
+          Actions.selectItem(this.node.id)
+        } else {
+          Actions.deselectItem(this.node.id)
+          if (!this.node.expanded) Actions.expandBookmark(this.node.id)
+          else Actions.foldBookmark(this.node.id)
+        }
         return
       }
 
