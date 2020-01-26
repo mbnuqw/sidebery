@@ -634,7 +634,7 @@ function switchTab(globaly, cycle, step, pinned) {
     this.state.switchTabPause = null
   }, 50)
 
-  let pinnedAndPanel = this.state.pinnedTabsPosition === 'panel'
+  let pinnedAndPanel = this.state.pinnedTabsPosition === 'panel' || (globaly && cycle)
   let visibleOnly = this.state.scrollThroughVisibleTabs
   let skipDiscarded = this.state.scrollThroughTabsSkipDiscarded
 
@@ -664,8 +664,8 @@ function switchTab(globaly, cycle, step, pinned) {
     t = this.state.tabs[i]
     if (!t) {
       if (cycle && !cycled) {
-        if (step > 0) i = 0
-        else i = this.state.tabs.length - 1
+        if (step > 0) i = -1
+        else i = this.state.tabs.length
         cycled = t = true
         continue
       } else {

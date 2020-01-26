@@ -217,15 +217,16 @@ export default {
           if (this.scrollBoxEl.scrollHeight > this.scrollBoxEl.offsetHeight) return
         }
         e.preventDefault()
-        const globaly = State.scrollThroughTabs === 'global' || e.shiftKey
+        const globaly = (State.scrollThroughTabs === 'global') ^ e.shiftKey
+        const cyclic = State.scrollThroughTabsCyclic ^ e.ctrlKey
 
         if (e.deltaY > 0) {
           if (State.wheelBlockTimeout) return
-          Actions.switchTab(globaly, e.ctrlKey, 1)
+          Actions.switchTab(globaly, cyclic, 1)
         }
         if (e.deltaY < 0) {
           if (State.wheelBlockTimeout) return
-          Actions.switchTab(globaly, e.ctrlKey, -1)
+          Actions.switchTab(globaly, cyclic, -1)
         }
       }
     },

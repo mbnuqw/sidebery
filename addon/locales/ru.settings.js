@@ -313,6 +313,7 @@ export default {
   'settings.scroll_through_tabs_except_overflow': {
     message: 'За исключением случаев, когда панель переполнена',
   },
+  'settings.scroll_through_tabs_cyclic': { message: 'Зациклить' },
   'settings.tab_double_click': { message: 'Двойной клик по табу' },
   'settings.tab_long_left_click': { message: 'Длительное нажатие левой кнопки мыши по табу' },
   'settings.tab_long_right_click': { message: 'Длительное нажатие правой кнопки мыши по табу' },

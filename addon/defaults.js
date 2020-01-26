@@ -145,6 +145,7 @@ export const DEFAULT_SETTINGS = {
   scrollThroughVisibleTabs: false,
   scrollThroughTabsSkipDiscarded: false,
   scrollThroughTabsExceptOverflow: true,
+  scrollThroughTabsCyclic: false,
   tabDoubleClick: 'none',
   tabLongLeftClick: 'none',
   tabLongRightClick: 'none',

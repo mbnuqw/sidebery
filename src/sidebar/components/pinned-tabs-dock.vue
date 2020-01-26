@@ -53,15 +53,16 @@ export default {
   methods: {
     onWheel(e) {
       if (State.pinnedTabsPosition !== 'panel' && State.scrollThroughTabs !== 'none') {
-        const globaly = State.scrollThroughTabs === 'global' || e.shiftKey
+        const globaly = (State.scrollThroughTabs === 'global') ^ e.shiftKey
+        const cyclic = State.scrollThroughTabsCyclic ^ e.ctrlKey
 
         if (e.deltaY > 0) {
           if (State.wheelBlockTimeout) return
-          Actions.switchTab(globaly, e.ctrlKey, 1, true)
+          Actions.switchTab(globaly, cyclic, 1, true)
         }
         if (e.deltaY < 0) {
           if (State.wheelBlockTimeout) return
-          Actions.switchTab(globaly, e.ctrlKey, -1, true)
+          Actions.switchTab(globaly, cyclic, -1, true)
         }
       }
     },

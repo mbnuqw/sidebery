@@ -460,6 +460,11 @@
         :value="$store.state.scrollThroughTabsExceptOverflow"
         :inactive="$store.state.scrollThroughTabs === 'none'"
         @input="setOpt('scrollThroughTabsExceptOverflow', $event)")
+      toggle-field(
+        label="settings.scroll_through_tabs_cyclic"
+        :value="$store.state.scrollThroughTabsCyclic"
+        :inactive="$store.state.scrollThroughTabs === 'none'"
+        @input="setOpt('scrollThroughTabsCyclic', $event)")
     select-field(
       label="settings.tab_double_click"
       optLabel="settings.tab_action_"
