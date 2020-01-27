@@ -202,6 +202,11 @@
         :inactive="$store.state.activateAfterClosing !== 'prev_act'"
         :value="$store.state.activateAfterClosingGlobal"
         @input="setOpt('activateAfterClosingGlobal', $event)")
+      toggle-field(
+        label="settings.activate_after_closing_no_discarded"
+        :inactive="$store.state.activateAfterClosing === 'none'"
+        :value="$store.state.activateAfterClosingNoDiscarded"
+        @input="setOpt('activateAfterClosingNoDiscarded', $event)")
     toggle-field(
       label="settings.shift_selection_from_active"
       :value="$store.state.shiftSelAct"

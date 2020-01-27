@@ -79,6 +79,7 @@ export const DEFAULT_SETTINGS = {
   activateAfterClosingPrevRule: 'visible',
   activateAfterClosingNextRule: 'tree',
   activateAfterClosingGlobal: false,
+  activateAfterClosingNoDiscarded: false,
   shiftSelAct: true,
   askNewBookmarkPlace: false,
   tabsRmUndoNote: true,

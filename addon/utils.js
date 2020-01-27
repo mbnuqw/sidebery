@@ -298,6 +298,7 @@ function findSuccessorTab(state, tab, exclude) {
   let rmChild = state.rmChildTabs === 'all'
   let isPrevTree = state.activateAfterClosingPrevRule === 'tree'
   let isPrevVisible = state.activateAfterClosingPrevRule === 'visible'
+  let skipDiscarded = state.activateAfterClosingNoDiscarded
 
   if (state.removingTabs && !exclude) exclude = state.removingTabs
 
@@ -320,6 +321,9 @@ function findSuccessorTab(state, tab, exclude) {
 
       // Next child tab will be removed too
       if (rmChild && next.lvl > tab.lvl) continue
+
+      // Skip discarded tab
+      if (next.discarded && skipDiscarded) continue
 
       // OK: Next tab is in current panel
       if (next.panelId === tab.panelId) {
@@ -344,6 +348,9 @@ function findSuccessorTab(state, tab, exclude) {
 
         // Prev tab is invisible
         if (isPrevVisible && prev.invisible) continue
+
+        // Skip discarded tab
+        if (prev.discarded && skipDiscarded) continue
 
         // OK: Prev tab is in target panel
         if (prev.panelId === tab.panelId) {
@@ -383,6 +390,9 @@ function findSuccessorTab(state, tab, exclude) {
       // Prev tab is invisible
       if (isPrevVisible && prev.invisible) continue
 
+      // Skip discarded tab
+      if (prev.discarded && skipDiscarded) continue
+
       // OK: Prev tab is in target panel
       if (prev.panelId === tab.panelId) {
         target = prev
@@ -409,6 +419,9 @@ function findSuccessorTab(state, tab, exclude) {
         // Next child tab will be removed too
         if (rmChild && next.lvl > tab.lvl) continue
 
+        // Skip discarded tab
+        if (next.discarded && skipDiscarded) continue
+
         // OK: Next tab is in current panel
         if (next.panelId === tab.panelId) {
           target = next
@@ -426,15 +439,19 @@ function findSuccessorTab(state, tab, exclude) {
 
     if (!actTabsBox.actTabs) return
 
-    let targetId
+    let targetId, prev
     for (let i = actTabsBox.actTabs.length; i--; ) {
       targetId = actTabsBox.actTabs[i]
+      prev = state.tabsMap[targetId]
 
       // Tab excluded
       if (exclude && exclude.includes(targetId)) continue
 
-      if (targetId !== tab.id && state.tabsMap[targetId]) {
-        target = state.tabsMap[targetId]
+      // Skip discarded tab
+      if (prev.discarded && skipDiscarded) continue
+
+      if (targetId !== tab.id && prev) {
+        target = prev
         break
       }
     }

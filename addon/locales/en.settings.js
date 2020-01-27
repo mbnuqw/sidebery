@@ -119,6 +119,7 @@ export default {
   'settings.activate_after_closing_rule_visible': { message: 'visible' },
   'settings.activate_after_closing_rule_any': { message: 'any' },
   'settings.activate_after_closing_global': { message: 'Globally' },
+  'settings.activate_after_closing_no_discarded': { message: 'Ignore discarded tabs' },
   'settings.shift_selection_from_active': {
     message: 'Start shift+click selection from the active tab',
   },
