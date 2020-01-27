@@ -449,10 +449,10 @@ function findSuccessorTab(state, tab, exclude) {
       if (exclude && exclude.includes(targetId)) continue
 
       // Skip discarded tab
-      if (skipDiscarded && prev.discarded) continue
+      if (skipDiscarded && prev && prev.discarded) continue
 
       // Skip invisible tab
-      if (skipFolded && prev.invisible) continue
+      if (skipFolded && prev && prev.invisible) continue
 
       if (targetId !== tab.id && prev) {
         target = prev
