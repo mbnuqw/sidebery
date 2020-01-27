@@ -298,6 +298,7 @@ function findSuccessorTab(state, tab, exclude) {
   let rmChild = state.rmChildTabs === 'all'
   let isPrevTree = state.activateAfterClosingPrevRule === 'tree'
   let isPrevVisible = state.activateAfterClosingPrevRule === 'visible'
+  let skipFolded = state.activateAfterClosingNoFolded
   let skipDiscarded = state.activateAfterClosingNoDiscarded
 
   if (state.removingTabs && !exclude) exclude = state.removingTabs
@@ -323,7 +324,7 @@ function findSuccessorTab(state, tab, exclude) {
       if (rmChild && next.lvl > tab.lvl) continue
 
       // Skip discarded tab
-      if (next.discarded && skipDiscarded) continue
+      if (skipDiscarded && next.discarded) continue
 
       // OK: Next tab is in current panel
       if (next.panelId === tab.panelId) {
@@ -350,7 +351,7 @@ function findSuccessorTab(state, tab, exclude) {
         if (isPrevVisible && prev.invisible) continue
 
         // Skip discarded tab
-        if (prev.discarded && skipDiscarded) continue
+        if (skipDiscarded && prev.discarded) continue
 
         // OK: Prev tab is in target panel
         if (prev.panelId === tab.panelId) {
@@ -391,7 +392,7 @@ function findSuccessorTab(state, tab, exclude) {
       if (isPrevVisible && prev.invisible) continue
 
       // Skip discarded tab
-      if (prev.discarded && skipDiscarded) continue
+      if (skipDiscarded && prev.discarded) continue
 
       // OK: Prev tab is in target panel
       if (prev.panelId === tab.panelId) {
@@ -420,7 +421,7 @@ function findSuccessorTab(state, tab, exclude) {
         if (rmChild && next.lvl > tab.lvl) continue
 
         // Skip discarded tab
-        if (next.discarded && skipDiscarded) continue
+        if (skipDiscarded && next.discarded) continue
 
         // OK: Next tab is in current panel
         if (next.panelId === tab.panelId) {
@@ -448,7 +449,10 @@ function findSuccessorTab(state, tab, exclude) {
       if (exclude && exclude.includes(targetId)) continue
 
       // Skip discarded tab
-      if (prev.discarded && skipDiscarded) continue
+      if (skipDiscarded && prev.discarded) continue
+
+      // Skip invisible tab
+      if (skipFolded && prev.invisible) continue
 
       if (targetId !== tab.id && prev) {
         target = prev

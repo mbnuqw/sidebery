@@ -122,6 +122,7 @@ export default {
   'settings.activate_after_closing_rule_visible': { message: 'видимая' },
   'settings.activate_after_closing_rule_any': { message: 'любая' },
   'settings.activate_after_closing_global': { message: 'Глобально' },
+  'settings.activate_after_closing_no_folded': { message: 'Игнорировать свернутые вкладки' },
   'settings.activate_after_closing_no_discarded': { message: 'Игнорировать выгруженные вкладки' },
   'settings.shift_selection_from_active': {
     message: 'Начинать выделение по shift+клику с активной вкладки',
