@@ -397,9 +397,9 @@ export default {
 
       this.conf.urlRulesActive = !this.conf.urlRulesActive
       Actions.savePanels()
+
       await this.$nextTick()
 
-      // if (this.$refs.scrollBox) this.$refs.scrollBox.recalcScroll()
       if (this.$refs.urlRulesInput) this.$refs.urlRulesInput.focus()
     },
 

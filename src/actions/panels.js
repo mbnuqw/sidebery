@@ -145,7 +145,11 @@ function parsePanelUrlRules(panel) {
     if (!rule) continue
 
     if (rule[0] === '/' && rule[rule.length - 1] === '/') {
-      rule = new RegExp(rule.slice(1, rule.length - 1))
+      try {
+        rule = new RegExp(rule.slice(1, rule.length - 1))
+      } catch (err) {
+        continue
+      }
     }
 
     this.state.urlRules.push({ panelId: panel.id, value: rule })

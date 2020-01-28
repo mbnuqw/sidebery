@@ -57,10 +57,6 @@ async function updatePanels(newPanels) {
 
     if (panel.type !== newPanel.type) updateNeeded = true
 
-    if (panel.urlRulesActive && panel.urlRules) {
-      this.actions.parsePanelUrlRules(panel)
-    }
-
     panel.index = i
 
     if (newPanel.type === 'bookmarks') panelDefs = BOOKMARKS_PANEL
@@ -77,6 +73,11 @@ async function updatePanels(newPanels) {
 
   this.state.panels = panels
   this.state.panelsMap = panelsMap
+
+  // Update url rules
+  for (let panel of panels) {
+    if (panel.urlRulesActive && panel.urlRules) this.actions.parsePanelUrlRules(panel)
+  }
 
   let activePanelIndex = this.state.panels.indexOf(activePanel)
   if (activePanelIndex !== -1) this.state.panelIndex = activePanelIndex

@@ -211,36 +211,34 @@ function onTabUpdated(tabId, change, tab) {
   }
 
   // Url
-  if (change.url !== undefined) {
-    if (change.url !== localTab.url) {
-      if (this.state.stateStorage === 'global') this.actions.saveTabsData()
-      if (this.state.highlightOpenBookmarks && this.state.bookmarksUrlMap) {
-        if (this.state.bookmarksUrlMap[localTab.url]) {
-          for (let b of this.state.bookmarksUrlMap[localTab.url]) {
-            b.isOpen = false
-          }
-        }
-        if (this.state.bookmarksUrlMap[change.url]) {
-          for (let b of this.state.bookmarksUrlMap[change.url]) {
-            b.isOpen = true
-          }
+  if (change.url !== undefined && change.url !== localTab.url) {
+    if (this.state.stateStorage === 'global') this.actions.saveTabsData()
+    if (this.state.highlightOpenBookmarks && this.state.bookmarksUrlMap) {
+      if (this.state.bookmarksUrlMap[localTab.url]) {
+        for (let b of this.state.bookmarksUrlMap[localTab.url]) {
+          b.isOpen = false
         }
       }
-      if (!change.url.startsWith(localTab.url.slice(0, 16))) {
-        localTab.favIconUrl = ''
+      if (this.state.bookmarksUrlMap[change.url]) {
+        for (let b of this.state.bookmarksUrlMap[change.url]) {
+          b.isOpen = true
+        }
       }
-      if (this.state.stateStorage === 'session' && change.url.startsWith(GROUP_URL)) {
-        this.actions.saveGroups()
-      }
-      if (
-        this.state.urlRules &&
-        this.state.urlRules.length &&
-        !localTab.pinned &&
-        localTab.panelId &&
-        change.url !== 'about:blank'
-      ) {
-        this.actions.checkUrlRules(change.url, localTab)
-      }
+    }
+    if (!change.url.startsWith(localTab.url.slice(0, 16))) {
+      localTab.favIconUrl = ''
+    }
+    if (this.state.stateStorage === 'session' && change.url.startsWith(GROUP_URL)) {
+      this.actions.saveGroups()
+    }
+    if (
+      this.state.urlRules &&
+      this.state.urlRules.length &&
+      !localTab.pinned &&
+      localTab.panelId &&
+      change.url !== 'about:blank'
+    ) {
+      this.actions.checkUrlRules(change.url, localTab)
     }
   }
 
