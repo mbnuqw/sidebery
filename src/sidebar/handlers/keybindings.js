@@ -33,7 +33,7 @@ function onCmd(name) {
   else if (name === 'expand_branch') this.handlers.onKeyExpandBranch()
   else if (name === 'fold_inact_branches') this.handlers.onKeyFoldInactiveBranches()
   else if (name === 'activate_prev_active_tab') this.handlers.onKeyActivatePrevActTab()
-  else if (name === 'activate_panel_prev_active_tab') this.handlers.onKeyActivatePanelPrevActTab()
+  else if (name === 'activate_panel_prev_active_tab') this.handlers.onKeyActivatePrevActTab('panel')
   else if (name === 'move_tab_to_active') this.handlers.onKeyMoveTabsToAct()
   else if (name === 'tabs_indent') this.handlers.onKeyTabsIndent()
   else if (name === 'tabs_outdent') this.handlers.onKeyTabsOutdent()
@@ -430,23 +430,28 @@ function onKeyFoldInactiveBranches() {
   this.actions.foldAllInactiveBranches(activePanel.tabs)
 }
 
-function onKeyActivatePrevActTab() {
-  if (!this.state.actTabs || !this.state.actTabs.length) return
-  let tabId = this.state.actTabs[this.state.actTabs.length - 1]
-  browser.tabs.update(tabId, { active: true })
-}
+function onKeyActivatePrevActTab(scope = 'state') {
+  let box
+  if (scope === 'state') box = this.state
+  if (scope === 'panel') box = this.state.panels[this.state.panelIndex]
 
-function onKeyActivatePanelPrevActTab() {
-  let panel = this.state.panels[this.state.panelIndex]
-  if (!panel || !panel.tabs || !panel.actTabs) return
+  if (!box || !box.actTabs || !box.actTabs.length) return
 
-  let tabId
-  for (let t, i = panel.actTabs.length; i--; ) {
-    t = panel.actTabs[i]
-    if (t !== this.state.activeTabId) tabId = t
+  let targetTabId, targetIdIndex, tabId
+  for (let i = box.actTabs.length; i--; ) {
+    tabId = box.actTabs[i]
+    if (this.state.tabsMap[tabId] && tabId !== this.state.activeTabId) {
+      targetIdIndex = i
+      targetTabId = tabId
+      break
+    }
   }
 
-  browser.tabs.update(tabId, { active: true })
+  if (targetTabId !== undefined) {
+    box.actTabs = box.actTabs.slice(0, targetIdIndex)
+    this.state.skipActTabsCollecting = true
+    browser.tabs.update(tabId, { active: true })
+  }
 }
 
 function onKeyMoveTabsToAct() {
@@ -745,7 +750,6 @@ export default {
   onKeyExpandBranch,
   onKeyFoldInactiveBranches,
   onKeyActivatePrevActTab,
-  onKeyActivatePanelPrevActTab,
   onKeyMoveTabsToAct,
   onKeyTabsIndent,
   onKeyTabsOutdent,

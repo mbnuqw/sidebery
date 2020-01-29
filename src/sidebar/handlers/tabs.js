@@ -633,16 +633,20 @@ function onTabActivated(info) {
   if (prevActive) {
     prevActive.active = false
 
-    let box = this.state
-    if (!box.actTabs) box.actTabs = []
-    if (box.actTabs.length > 128) box.actTabs = box.actTabs.slice(32)
-    box.actTabs.push(prevActive.id)
-
-    if (!prevActive.pinned || this.state.pinnedTabsPosition === 'panel') {
-      box = this.state.panelsMap[prevActive.panelId]
+    if (!this.state.skipActTabsCollecting) {
+      let box = this.state
       if (!box.actTabs) box.actTabs = []
       if (box.actTabs.length > 128) box.actTabs = box.actTabs.slice(32)
       box.actTabs.push(prevActive.id)
+
+      if (!prevActive.pinned || this.state.pinnedTabsPosition === 'panel') {
+        box = this.state.panelsMap[prevActive.panelId]
+        if (!box.actTabs) box.actTabs = []
+        if (box.actTabs.length > 128) box.actTabs = box.actTabs.slice(32)
+        box.actTabs.push(prevActive.id)
+      }
+    } else {
+      this.state.skipActTabsCollecting = false
     }
   }
 
