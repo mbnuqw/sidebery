@@ -275,21 +275,23 @@ export default {
     },
 
     updateCustomIcon() {
-      if (!this.conf.customIconSrc) {
+      let normValue = this.conf.customIconSrc.trim()
+
+      if (!normValue) {
         this.customIconType = ''
         this.customIconUrl = ''
         this.conf.customIcon = ''
         return Actions.savePanels()
       }
 
-      if (this.conf.customIconSrc.startsWith('data:image')) {
+      if (normValue.startsWith('data:image')) {
         this.customIconType = 'base64'
-        this.customIconUrl = this.conf.customIconSrc
-        this.conf.customIcon = this.conf.customIconSrc
+        this.customIconUrl = normValue
+        this.conf.customIcon = normValue
         return Actions.savePanels()
       }
 
-      if (URL_RE.test(this.conf.customIconSrc)) {
+      if (URL_RE.test(normValue)) {
         this.customIconType = 'url'
         this.customIconUrl = ''
         return
@@ -346,7 +348,7 @@ export default {
     },
 
     loadCustomIcon() {
-      this.customIconUrl = this.conf.customIconSrc
+      this.customIconUrl = this.conf.customIconSrc.trim()
     },
 
     async init() {
