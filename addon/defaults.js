@@ -629,7 +629,8 @@ export const MENU_OPTIONS = {
       action: 'removeTabs',
       args: [state.selected],
     }
-    if (state.selected.length < 2 && !state.tabsMap[state.selected[0]].pinned) {
+    let minCount = state.ctxMenuRenderInact ? 1 : 2
+    if (state.selected.length < minCount && !state.tabsMap[state.selected[0]].pinned) {
       option.inactive = true
     }
     if (!state.ctxMenuRenderInact && option.inactive) return
