@@ -580,15 +580,23 @@ async function removeTabs(tabIds) {
           let tab = tabs[i]
           let panel = this.state.panelsMap[tab.panelId]
           if (!panel) continue
+
+          let index = tab.index + i
+          let parentId = oldNewIds[parents[tab.id]]
+          if (parentId === undefined && this.state.tabsMap[parents[tab.id]]) {
+            let parent = this.state.tabsMap[parents[tab.id]]
+            if (parent.index < tab.index) parentId = parent.id
+          }
+
           if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
-          this.state.newTabsPosition[tab.index + i] = {
+          this.state.newTabsPosition[index] = {
             panel: panel.id,
-            parent: oldNewIds[parents[tab.id]],
+            parent: parentId,
           }
 
           let conf = {
             windowId: this.state.windowId,
-            index: tab.index + i,
+            index,
             url: Utils.normalizeUrl(tab.url),
             cookieStoreId: tab.cookieStoreId,
             active: false,
