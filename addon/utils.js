@@ -363,12 +363,11 @@ function findSuccessorTab(state, tab, exclude) {
       // Or just non-invisible tab
       if (!target) {
         while (i > -1) {
-          prev = state.tabs[i]
-          if (!prev.invisible) {
-            target = prev
-            break
-          }
-          i--
+          prev = state.tabs[i--]
+          if (skipDiscarded && prev.discarded) continue
+          if (prev.invisible) continue
+          target = prev
+          break
         }
       }
     }
