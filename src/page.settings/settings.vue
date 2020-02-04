@@ -133,6 +133,47 @@
         .panel-config-box(@click.stop="")
           panel-config.dashboard(:conf="$store.state.selectedPanel")
 
+  section(ref="settings_dnd")
+    h2 {{t('settings.dnd_title')}}
+    toggle-field(
+      label="settings.dnd_tab_act"
+      :value="$store.state.dndTabAct"
+      @input="setOpt('dndTabAct', $event)")
+    .sub-fields.-nosep
+      num-field.-inline(
+        label="settings.dnd_tab_act_delay"
+        :inactive="!$store.state.dndTabAct"
+        :value="$store.state.dndTabActDelay"
+        :or="0"
+        @input="setOpt('dndTabActDelay', $event[0])")
+      select-field(
+        label="settings.dnd_mod"
+        optLabel="settings.dnd_mod_"
+        :inactive="!$store.state.dndTabAct"
+        :value="$store.state.dndTabActMod"
+        :opts="$store.state.dndTabActModOpts"
+        @input="setOpt('dndTabActMod', $event)")
+    select-field(
+      label="settings.dnd_exp"
+      optLabel="settings.dnd_exp_"
+      :value="$store.state.dndExp"
+      :opts="$store.state.dndExpOpts"
+      @input="setOpt('dndExp', $event)")
+    .sub-fields.-nosep
+      num-field.-inline(
+        label="settings.dnd_exp_delay"
+        :inactive="$store.state.dndExp === 'none'"
+        :value="$store.state.dndExpDelay"
+        :or="0"
+        @input="setOpt('dndExpDelay', $event[0])")
+      select-field(
+        label="settings.dnd_mod"
+        optLabel="settings.dnd_mod_"
+        :inactive="$store.state.dndExp === 'none'"
+        :value="$store.state.dndExpMod"
+        :opts="$store.state.dndExpModOpts"
+        @input="setOpt('dndExpMod', $event)")
+
   section(ref="settings_tabs")
     h2 {{t('settings.tabs_title')}}
     select-field(
@@ -692,6 +733,7 @@ const SECTIONS = [
   'settings_group',
   'settings_containers',
   'settings_panels',
+  'settings_dnd',
   'settings_tabs',
   'settings_new_tab_position',
   'settings_pinned_tabs',

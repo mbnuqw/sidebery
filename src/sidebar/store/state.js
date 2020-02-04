@@ -29,6 +29,7 @@ export default {
   selected: [],
   wheelBlockTimeout: null,
   dragMode: false,
+  dropParent: null,
 
   lastPanelIndex: 1,
   panelIndex: 1,

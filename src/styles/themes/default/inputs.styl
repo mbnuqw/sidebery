@@ -229,7 +229,11 @@
 // -
 .NumField
   box(block)
-  padding: 8px 16px
+  padding: 8px 16px 2px
+
+  &.-inline
+    box(flex)
+    padding: 0 16px
 
 // ---
 // -- Label
@@ -252,6 +256,7 @@
 .NumField .input-group
   box(relative, flex)
   align-items: center
+  padding: 8px 0
   -moz-user-select: none
 
 // ---
@@ -265,13 +270,21 @@
   margin: 0 16px 0 0
   transform: opacity var(--d-fast)
 
+.NumField.-inline .text-input
+  margin: 0
+  text-align: right
+
 .NumField .unit-input
   box(relative)
   flex: 1 0 auto
+  padding: 0 0 0 16px
   -moz-user-select: none
 
 .NumField:not([data-active]) .text-input
   color: var(--inactive-fg)
+
+.NumField.-inline .unit-input
+  box(none)
 
 // ---
 // -- Toggle input

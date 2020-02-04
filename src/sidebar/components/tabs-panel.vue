@@ -277,6 +277,7 @@ export default {
           id: t.id,
           index: t.index,
           in: true,
+          lvl: t.lvl,
           folded: t.folded,
           parent: t.parentId,
           start: overallHeight,

@@ -170,6 +170,13 @@ function foldBookmark(nodeId) {
   Actions.saveBookmarksTree()
 }
 
+function toggleBookmarksBranch(nodeId) {
+  let node = this.state.bookmarksMap[nodeId]
+  if (!node) return
+  if (node.expanded) this.actions.foldBookmark(nodeId)
+  else this.actions.expandBookmark(nodeId)
+}
+
 /**
  * Drop to bookmarks panel
  */
@@ -663,6 +670,7 @@ export default {
   saveBookmarksTree,
   expandBookmark,
   foldBookmark,
+  toggleBookmarksBranch,
   dropToBookmarks,
   openBookmarksInNewWin,
   openBookmarksInCtx,

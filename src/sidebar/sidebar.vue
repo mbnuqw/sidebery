@@ -4,6 +4,7 @@
   :data-drag="$store.state.dragMode"
   :data-pointer="pointerMode"
   :data-nav-inline="$store.state.navBarInline"
+  :data-panel-type="activePanelType"
   @wheel.passive="onWheel"
   @contextmenu.stop.prevent=""
   @dragover.prevent="onDragMove"
@@ -20,8 +21,12 @@
   Confirm
   CtxMenu
 
-  .pointer(ref="pointer")
-    .arrow(:data-expanding="pointerExpanding" @animationend="onPointerExpanded")
+  .pointer(ref="pointer" :data-lvl="pointerLvl")
+    .arrow(
+      :data-expanding="pointerExpanding"
+      @animationend="onPointerExpanded"
+      @dragenter="onPointerDragenter"
+      @dragleave="onPointerDragleave")
 
   PinnedDock(v-if="$store.state.pinnedTabsPosition !== 'panel'")
 
@@ -80,6 +85,7 @@ export default {
     return {
       pointerMode: 'none',
       pointerExpanding: false,
+      pointerLvl: 0,
     }
   },
 
@@ -92,6 +98,14 @@ export default {
      */
     windowInputPos() {
       return State.panelIndex === -5 ? 'center' : 'right'
+    },
+
+    /**
+     * Type of active panel
+     */
+    activePanelType() {
+      if (State.panels[State.panelIndex]) return State.panels[State.panelIndex].type
+      else return undefined
     },
   },
 
@@ -255,6 +269,10 @@ export default {
 
       if (this.pointerXLock || this.pointerYLock) return
 
+      State.dropLvlOffset = ~~((e.clientX - State.dragXStart) / 10)
+      let lvlChanged = State.prevDropLvlOffset !== State.dropLvlOffset
+      State.prevDropLvlOffset = State.dropLvlOffset
+
       // Empty
       if (slotsLen === 0) {
         this.pos = State.panelTopOffset - scroll - 12
@@ -262,8 +280,9 @@ export default {
           this.pointerPos = this.pos
           this.$refs.pointer.style.transform = `translateY(${this.pointerPos}px)`
           this.pointerMode = 'between'
-          this.dropParent = -1
+          State.dropParent = -1
           this.dropIndex = State.panels[State.panelIndex].startIndex
+          this.pointerLvl = 0
         }
         return
       }
@@ -272,13 +291,17 @@ export default {
       if (y > State.itemSlots[slotsLen - 1].bottom) {
         let slot = State.itemSlots[slotsLen - 1]
         this.pos = slot.end - 12 + State.panelTopOffset - scroll
-        if (!this.pointerXLock && !this.pointerYLock && this.pointerPos !== this.pos) {
+        if (
+          lvlChanged ||
+          (!this.pointerXLock && !this.pointerYLock && this.pointerPos !== this.pos)
+        ) {
           this.pointerPos = this.pos
           this.$refs.pointer.style.transform = `translateY(${this.pointerPos}px)`
           this.pointerMode = 'between'
-          this.dropParent = slot.parent
+          State.dropParent = slot.parent
           if (slot.folded) this.dropIndex = -1
           else this.dropIndex = slot.index + 1
+          this.pointerLvl = State.dropLvlOffset < 0 ? slot.lvl + State.dropLvlOffset : slot.lvl
         }
         return
       }
@@ -286,64 +309,78 @@ export default {
       for (let slot, i = 0; i < slotsLen; i++) {
         slot = State.itemSlots[i]
         // Skip
-        if (y > slot.end || y < slot.start) continue
+        if (!lvlChanged && (y > slot.end || y < slot.start)) continue
         // Between
         if (slot.in ? y < slot.top : y < slot.center) {
           this.pos = slot.start - 12 + State.panelTopOffset - scroll
-          if (!this.pointerXLock && !this.pointerYLock && this.pointerPos !== this.pos) {
+          if (
+            lvlChanged ||
+            (!this.pointerXLock && !this.pointerYLock && this.pointerPos !== this.pos)
+          ) {
             this.pointerPos = this.pos
             this.$refs.pointer.style.transform = `translateY(${this.pointerPos}px)`
-            this.pointerMode = 'between'
             let prevSlot = State.itemSlots[i - 1]
-            let dragNodeIsTab = dragNode ? dragNode.type === 'tab' : false
-
             if (!prevSlot) {
-              this.dropParent = -1
+              State.dropParent = -1
               this.dropIndex = slot.index
+              this.pointerLvl = 0
               break
             }
 
+            let dragNodeIsTab = dragNode ? dragNode.type === 'tab' : false
+            let slotIsTab = slot.type === 'tab'
+
+            let node = slotIsTab ? State.tabsMap[slot.id] : State.bookmarksMap[slot.id]
+            let prevNode = slotIsTab ? State.tabsMap[prevSlot.id] : State.bookmarksMap[prevSlot.id]
+
+            if (prevNode.sel && node.sel) this.pointerMode = 'none'
+            else this.pointerMode = 'between'
+
             if (prevSlot.id === slot.parent) {
               // First child
-              this.dropParent = slot.parent
+              State.dropParent = slot.parent
               this.dropIndex = slot.index
+              this.pointerLvl = prevSlot.lvl + 1
             } else if (dragNodeIsTab && prevSlot.folded) {
               // After folded group
-              this.dropParent = prevSlot.parent
+              State.dropParent = prevSlot.parent
               this.dropIndex = slot.index
+              if (State.dropLvlOffset >= 0) this.pointerLvl = prevSlot.lvl
+              else this.pointerLvl = prevSlot.lvl + State.dropLvlOffset
             } else {
               // Second-Last in group
-              this.dropParent = prevSlot.parent
+              State.dropParent = prevSlot.parent
               this.dropIndex = prevSlot.index + 1
+              this.pointerLvl = prevSlot.lvl
+              if (prevSlot.lvl > slot.lvl && lvlChanged && State.dropLvlOffset < 0) {
+                let lvl = prevSlot.lvl + State.dropLvlOffset
+                if (lvl > prevSlot.lvl) lvl = prevSlot.lvl
+                if (lvl < slot.lvl) lvl = slot.lvl
+                this.pointerLvl = lvl
+              } else {
+                this.pointerLvl = prevSlot.lvl
+              }
             }
           }
           break
         }
+
         // Inside
         if (slot.in && y < slot.bottom && (State.tabsTree || !State.panelIndex)) {
           this.pos = slot.center - 12 + State.panelTopOffset - scroll
           if (!this.pointerXLock && !this.pointerYLock && this.pointerPos !== this.pos) {
             this.pointerPos = this.pos
             this.$refs.pointer.style.transform = `translateY(${this.pointerPos}px)`
-            this.pointerMode = slot.folded ? 'inside-fold' : 'inside-exp'
-            this.dropParent = slot.id
+
+            if (State.selected.includes(slot.id)) this.pointerMode = 'none'
+            else this.pointerMode = 'inside'
+
+            State.dropParent = slot.id
+
             if (slot.type === 'tab') this.dropIndex = slot.index + 1
             else this.dropIndex = 0
-          }
-          if (!this.pointerExpLock && slot.folded && x < 36) {
-            slot.folded = false
-            this.pointerExpLock = true
-            this.expandDropTarget()
-            this.pointerMode = 'inside-exp'
-          }
-          if (this.pointerExpLock && x > 36) {
-            this.pointerExpLock = false
-          }
-          if (!this.pointerExpLock && !slot.folded && x < 36) {
-            slot.folded = true
-            this.pointerExpLock = true
-            this.foldDropTarget()
-            this.pointerMode = 'inside-fold'
+
+            this.pointerLvl = slot.lvl + 1
           }
           break
         }
@@ -440,21 +477,50 @@ export default {
      * Drop event handler
      */
     onDrop(e) {
-      if (this.dropParent === undefined) this.dropParent = -1
-      if (this.dropParent === null) this.dropParent = -1
+      if (State.dropParent === undefined) State.dropParent = -1
+      if (State.dropParent === null) State.dropParent = -1
 
       if (State.hiddenPanelsBar) {
-        this.dropParent = -1
+        State.dropParent = -1
         this.dropIndex = State.panels[State.panelIndex].startIndex
         State.hiddenPanelsBar = false
       }
 
+      if (this.pointerLvl < 0) this.pointerLvl = 0
+
+      // to Tabs
       if (State.panels[State.panelIndex].tabs) {
-        Actions.dropToTabs(e, this.dropIndex, this.dropParent, State.dragNodes)
+        let parentTab = State.tabsMap[State.dropParent]
+        while (parentTab && this.pointerLvl <= parentTab.lvl) {
+          parentTab = State.tabsMap[parentTab.parentId]
+          if (!parentTab) {
+            State.dropParent = -1
+            break
+          }
+          State.dropParent = parentTab.id
+        }
+
+        Actions.dropToTabs(e, this.dropIndex, State.dropParent, State.dragNodes)
       }
+
+      // to Bookmarks
       if (State.panels[State.panelIndex].bookmarks) {
         if (this.pointerMode.startsWith('inside')) this.dropIndex = 0
-        Actions.dropToBookmarks(e, this.dropIndex, this.dropParent, State.dragNodes)
+
+        let parent = State.bookmarksMap[State.dropParent]
+        while (parent && this.pointerLvl <= parent.lvl) {
+          this.dropIndex = parent.index + 1
+          parent = State.bookmarksMap[parent.parentId]
+          if (!parent) {
+            State.dropParent = null
+            break
+          }
+          State.dropParent = parent.id
+        }
+
+        if (State.dropParent && State.dropParent !== 'root________') {
+          Actions.dropToBookmarks(e, this.dropIndex, State.dropParent, State.dragNodes)
+        }
       }
 
       if (State.dragNodes) Actions.resetSelection()
@@ -488,18 +554,14 @@ export default {
      */
     expandDropTarget() {
       if (!this.pointerMode.startsWith('inside')) return
-      if (this.pointerEnterTimeout) return
 
-      if (typeof this.dropParent === 'number') Actions.expTabsBranch(this.dropParent)
-      if (typeof this.dropParent === 'string') Actions.expandBookmark(this.dropParent)
+      if (typeof State.dropParent === 'number') Actions.toggleBranch(State.dropParent)
+      if (typeof State.dropParent === 'string') Actions.toggleBookmarksBranch(State.dropParent)
 
       // Start expand animation
       this.pointerExpanding = true
 
       Actions.updatePanelBoundsDebounced(128)
-      this.pointerEnterTimeout = setTimeout(() => {
-        this.pointerEnterTimeout = null
-      }, 500)
     },
 
     /**
@@ -509,20 +571,21 @@ export default {
       this.pointerExpanding = false
     },
 
-    /**
-     * Fold drop target
-     */
-    foldDropTarget() {
-      if (!this.pointerMode.startsWith('inside')) return
-      if (this.pointerEnterTimeout) return
+    onPointerDragenter(e) {
+      if (State.dndExp !== 'pointer') return
+      if (State.dndExpMod !== 'none' && !e[State.dndExpMod + 'Key']) return
+      if (this.dragExpTimeout) clearTimeout(this.dragExpTimeout)
+      this.dragExpTimeout = setTimeout(() => {
+        this.dragExpTimeout = null
+        if (State.dragMode) this.expandDropTarget()
+      }, State.dndExpDelay)
+    },
 
-      if (typeof this.dropParent === 'number') Actions.foldTabsBranch(this.dropParent)
-      if (typeof this.dropParent === 'string') Actions.foldBookmark(this.dropParent)
-
-      Actions.updatePanelBoundsDebounced(128)
-      this.pointerEnterTimeout = setTimeout(() => {
-        this.pointerEnterTimeout = null
-      }, 500)
+    onPointerDragleave() {
+      if (this.dragExpTimeout) {
+        clearTimeout(this.dragExpTimeout)
+        this.dragExpTimeout = null
+      }
     },
 
     /**
@@ -531,10 +594,11 @@ export default {
     resetDrag() {
       State.dragMode = false
       this.dropIndex = null
-      this.dropParent = null
+      State.dropParent = null
       this.pointerPos = null
       this.pointerMode = 'none'
       this.panelScrollEl = null
+      this.pointerLvl = 0
     },
   },
 }

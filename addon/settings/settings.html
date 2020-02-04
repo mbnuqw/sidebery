@@ -134,6 +134,10 @@
           @click="navigateTo('settings_panels')">{{t('settings.nav_settings_panels')}}</div>
         <div
           class="sub-option"
+          :data-active="$store.state.activeSection === 'settings_dnd'"
+          @click="navigateTo('settings_dnd')">{{t('settings.nav_settings_dnd')}}</div>
+        <div
+          class="sub-option"
           :data-active="$store.state.activeSection === 'settings_tabs'"
           @click="navigateTo('settings_tabs')">{{t('settings.nav_settings_tabs')}}</div>
         <div

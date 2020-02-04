@@ -95,6 +95,21 @@ export default {
   },
   'settings.panels_create_btn': { message: 'Создать панель' },
 
+  // --- Drag and drop
+  'settings.dnd_title': { message: 'Перетаскивание' },
+  'settings.dnd_tab_act': { message: 'Активировать вкладку при наведении' },
+  'settings.dnd_tab_act_delay': { message: 'Задержка (мс)' },
+  'settings.dnd_mod': { message: 'Только при нажатии на' },
+  'settings.dnd_mod_alt': { message: 'alt' },
+  'settings.dnd_mod_shift': { message: 'shift' },
+  'settings.dnd_mod_ctrl': { message: 'ctrl' },
+  'settings.dnd_mod_none': { message: 'выкл' },
+  'settings.dnd_exp': { message: 'Развернуть/свернуть ветвь при наведении на' },
+  'settings.dnd_exp_pointer': { message: 'треугольник указателя' },
+  'settings.dnd_exp_hover': { message: 'вкладку/закладку' },
+  'settings.dnd_exp_none': { message: 'выкл' },
+  'settings.dnd_exp_delay': { message: 'Задержка (мс)' },
+
   // --- Tabs
   'settings.tabs_title': { message: 'Вкладки' },
   'settings.warn_on_multi_tab_close': { message: 'Предупреждать при закрытии нескольких вкладок' },

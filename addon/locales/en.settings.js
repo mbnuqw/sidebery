@@ -9,6 +9,7 @@ export default {
   'settings.nav_settings_group': { message: 'Group page' },
   'settings.nav_settings_containers': { message: 'Containers' },
   'settings.nav_settings_panels': { message: 'Panels' },
+  'settings.nav_settings_dnd': { message: 'Drag and Drop' },
   'settings.nav_settings_tabs': { message: 'Tabs' },
   'settings.nav_settings_new_tab_position': { message: 'Position of new tab' },
   'settings.nav_settings_pinned_tabs': { message: 'Pinned tabs' },
@@ -93,6 +94,21 @@ export default {
   },
   'settings.panel_icon_custom': { message: 'custom' },
   'settings.panels_create_btn': { message: 'Create panel' },
+
+  // --- Drag and drop
+  'settings.dnd_title': { message: 'Drag and Drop' },
+  'settings.dnd_tab_act': { message: 'Activate tab on hover' },
+  'settings.dnd_tab_act_delay': { message: 'Delay (ms)' },
+  'settings.dnd_mod': { message: 'Only with pressed' },
+  'settings.dnd_mod_alt': { message: 'alt' },
+  'settings.dnd_mod_shift': { message: 'shift' },
+  'settings.dnd_mod_ctrl': { message: 'ctrl' },
+  'settings.dnd_mod_none': { message: 'none' },
+  'settings.dnd_exp': { message: 'Expand/Fold the branch on hovering over the' },
+  'settings.dnd_exp_pointer': { message: "pointer's triangle" },
+  'settings.dnd_exp_hover': { message: 'tab/bookmark' },
+  'settings.dnd_exp_none': { message: 'none' },
+  'settings.dnd_exp_delay': { message: 'Delay (ms)' },
 
   // --- Tabs
   'settings.tabs_title': { message: 'Tabs' },

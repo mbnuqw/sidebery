@@ -214,6 +214,8 @@ export default {
       }
       walker(State.bookmarks)
 
+      State.dragXStart = e.clientX
+
       // Set drag info
       e.dataTransfer.setData('text/x-moz-text-internal', this.node.url)
       e.dataTransfer.setData('text/uri-list', this.node.url)

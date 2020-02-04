@@ -9,7 +9,11 @@
     @mousedown.stop="onMouseDown"
     @mouseup.stop="onMouseUp"
     @contextmenu.stop="onCtxMenu")
-    .drag-layer(draggable="true" @dragstart="onDragStart")
+    .drag-layer(
+      draggable="true"
+      @dragstart="onDragStart"
+      @dragenter="onDragEnter"
+      @dragleave="onDragLeave")
     .exp(v-if="isParent")
       svg: use(xlink:href="#icon_expand")
     .title(v-if="node.title") {{node.title}}
@@ -283,6 +287,25 @@ export default {
         name: 'outerDragStart',
         arg: dragData,
       })
+    },
+
+    onDragEnter(e) {
+      if (State.dndExp !== 'hover') return
+      if (State.dndExpMod !== 'none' && !e[State.dndExpMod + 'Key']) return
+      if (this.dragExpTimeout) clearTimeout(this.dragExpTimeout)
+      this.dragExpTimeout = setTimeout(() => {
+        this.dragExpTimeout = null
+        if (!State.dragMode) return
+        Actions.toggleBookmarksBranch(this.node.id)
+        Actions.updatePanelBoundsDebounced(128)
+      }, State.dndExpDelay)
+    },
+
+    onDragLeave() {
+      if (this.dragExpTimeout) {
+        clearTimeout(this.dragExpTimeout)
+        this.dragExpTimeout = null
+      }
     },
 
     /**

@@ -326,15 +326,18 @@ export default {
     /**
      * Handle dragenter event
      */
-    onDragEnter() {
+    onDragEnter(e) {
       this.$emit('dragenter', this.tab.index)
       this.dropSlot = true
 
-      if (this.dragEnterTimeout) clearTimeout(this.dragEnterTimeout)
-      this.dragEnterTimeout = setTimeout(() => {
-        browser.tabs.update(this.tab.id, { active: true })
-        this.dragEnterTimeout = null
-      }, 200)
+      if (State.dndTabAct) {
+        if (State.dndTabActMod !== 'none' && !e[State.dndTabActMod + 'Key']) return
+        if (this.dragActTimeout) clearTimeout(this.dragActTimeout)
+        this.dragActTimeout = setTimeout(() => {
+          this.dragActTimeout = null
+          browser.tabs.update(this.tab.id, { active: true })
+        }, State.dndTabActDelay)
+      }
     },
 
     /**
@@ -343,9 +346,9 @@ export default {
     onDragLeave() {
       this.dropSlot = false
 
-      if (this.dragEnterTimeout) {
-        clearTimeout(this.dragEnterTimeout)
-        this.dragEnterTimeout = null
+      if (this.dragActTimeout) {
+        clearTimeout(this.dragActTimeout)
+        this.dragActTimeout = null
       }
     },
 

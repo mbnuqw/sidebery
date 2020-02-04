@@ -399,10 +399,18 @@
     content: ''
     box(absolute)
     size(100vw, 2px)
-    pos(11px, 6px)
+    pos(11px, 0)
     background-color: var(--nav-btn-update-badge-bg)
     opacity: 0
-    transition: opacity var(--d-fast)
+  &:before
+    content: ''
+    box(absolute)
+    size(0, 0)
+    pos(8px, 0)
+    border-left: 4px solid var(--nav-btn-update-badge-bg)
+    border-right: 4px solid #00000000
+    border-top: 4px solid #00000000
+    border-bottom: 4px solid #00000000
 
 .Sidebar[data-drag] .pointer
   opacity: 1
@@ -411,9 +419,20 @@
 .Sidebar[data-pointer="between"] .pointer:after
   opacity: 1
 
-.Sidebar[data-pointer^="inside"] .pointer:after
+.Sidebar[data-pointer="none"] .pointer:before
+.Sidebar[data-pointer="inside"] .pointer:after
+.Sidebar[data-pointer="inside"] .pointer:before
   transform: translateX(100%)
   opacity: 0
+
+for i in 1..12
+  .Sidebar[data-pointer="between"] .pointer[data-lvl=\"{i}\"]:before
+  .Sidebar[data-pointer="between"] .pointer[data-lvl=\"{i}\"]:after
+    transform: "translateX(calc(var(--tabs-indent) * %s))" % i
+
+  .Sidebar[data-pointer="between"][data-panel-type="bookmarks"] .pointer[data-lvl=\"{i}\"]:before
+  .Sidebar[data-pointer="between"][data-panel-type="bookmarks"] .pointer[data-lvl=\"{i}\"]:after
+    transform: "translateX(calc(var(--bookmarks-indent) * %s))" % i
 
 #root[data-pinned-tabs-position="left"] .Sidebar .pointer
 #root[data-nav-layout="vertical"] .Sidebar .pointer
@@ -427,7 +446,6 @@
   size(100%, same)
   pos(0, 0)
   opacity: 1
-  transition: opacity var(--d-fast)
   &:before
     content: ''
     box(absolute)
@@ -441,15 +459,12 @@
     box(absolute)
     size(16px, 16px)
     pos(4px, -11px)
-    opacity: 0
+    opacity: 1
     transform: rotateZ(45deg)
     box-shadow: inset -1px 1px 0 0 var(--nav-btn-update-badge-bg)
 
 .Sidebar[data-pointer="none"] .arrow
   opacity: 0
-
-.Sidebar[data-pointer="inside-fold"] .arrow:before
-  background-color: var(--nav-btn-update-badge-bg)
 
 .Sidebar .arrow[data-expanding]
   animation: pointer-expand-arrow .3s

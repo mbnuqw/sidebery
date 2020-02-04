@@ -337,6 +337,8 @@ export default {
         }
       }
 
+      State.dragXStart = e.clientX
+
       // Clear selected elements
       State.selected = []
 
@@ -369,22 +371,45 @@ export default {
     /**
      * Handle dragenter event
      */
-    onDragEnter() {
+    onDragEnter(e) {
       if (this.tab.invisible) return
-      if (this.dragEnterTimeout) clearTimeout(this.dragEnterTimeout)
-      this.dragEnterTimeout = setTimeout(() => {
-        this.dragEnterTimeout = null
+
+      if (State.dndTabAct) this.dndActivate(e)
+      if (State.dndExp === 'hover') this.dndExp(e)
+    },
+
+    dndActivate(e) {
+      if (State.dndTabActMod !== 'none' && !e[State.dndTabActMod + 'Key']) return
+      if (this.dragActTimeout) clearTimeout(this.dragActTimeout)
+      this.dragActTimeout = setTimeout(() => {
+        this.dragActTimeout = null
+        if (!State.dragMode) return
         browser.tabs.update(this.tab.id, { active: true })
-      }, 750)
+      }, State.dndTabActDelay)
+    },
+
+    dndExp(e) {
+      if (State.dndExpMod !== 'none' && !e[State.dndExpMod + 'Key']) return
+      if (this.dragExpTimeout) clearTimeout(this.dragExpTimeout)
+      this.dragExpTimeout = setTimeout(() => {
+        this.dragExpTimeout = null
+        if (!State.dragMode) return
+        Actions.toggleBranch(this.tab.id)
+        Actions.updatePanelBoundsDebounced(128)
+      }, State.dndExpDelay)
     },
 
     /**
      * Handle dragleave event
      */
     onDragLeave() {
-      if (this.dragEnterTimeout) {
-        clearTimeout(this.dragEnterTimeout)
-        this.dragEnterTimeout = null
+      if (this.dragActTimeout) {
+        clearTimeout(this.dragActTimeout)
+        this.dragActTimeout = null
+      }
+      if (this.dragExpTimeout) {
+        clearTimeout(this.dragExpTimeout)
+        this.dragExpTimeout = null
       }
     },
 

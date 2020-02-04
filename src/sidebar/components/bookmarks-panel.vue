@@ -194,6 +194,7 @@ export default {
       const se = sc >> 1
 
       let overallHeight = 0
+      let lvl = 0
       let h, c, e
       const bounds = []
       const walker = nodes => {
@@ -216,10 +217,13 @@ export default {
             e = se
           }
 
+          n.lvl = lvl
+
           bounds.push({
             type: 'bookmark',
             id: n.id,
             index: n.index,
+            lvl,
             in: n.type === 'folder',
             folded: !n.expanded,
             parent: n.parentId,
@@ -233,7 +237,9 @@ export default {
           overallHeight += h
 
           if (n.children && n.expanded) {
+            lvl++
             walker(n.children)
+            lvl--
           }
         }
       }

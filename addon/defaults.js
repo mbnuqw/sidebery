@@ -41,13 +41,15 @@ export const SETTINGS_OPTIONS = {
   navBarLayoutOpts: ['horizontal', 'vertical', 'hidden'],
   stateStorageOpts: ['global', 'session'],
   autoFoldTabsExceptOpts: [1, 2, 3, 4, 5, 'none'],
+  dndTabActModOpts: ['alt', 'shift', 'ctrl', 'none'],
+  dndExpOpts: ['pointer', 'hover', 'none'],
+  dndExpModOpts: ['alt', 'shift', 'ctrl', 'none'],
 }
 
 export const DEFAULT_SETTINGS = {
   // General
   version: browser.runtime.getManifest().version,
   nativeScrollbars: false,
-  stateStorage: 'global',
 
   // Context menu
   ctxMenuNative: false,
@@ -67,7 +69,16 @@ export const DEFAULT_SETTINGS = {
   // Group page
   groupLayout: 'grid',
 
+  // Drag and drop
+  dndTabAct: true,
+  dndTabActDelay: 750,
+  dndTabActMod: 'none',
+  dndExp: 'pointer',
+  dndExpDelay: 0,
+  dndExpMod: 'none',
+
   // Tabs
+  stateStorage: 'global',
   warnOnMultiTabClose: 'collapsed',
   activateOnMouseUp: false,
   activateLastTabOnPanelSwitching: true,
