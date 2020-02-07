@@ -165,6 +165,10 @@ export const DEFAULT_SETTINGS = {
   tabsPanelLeftClickAction: 'none',
   tabsPanelDoubleClickAction: 'tab',
   tabsPanelRightClickAction: 'menu',
+
+  // Sync
+  syncSaveSettings: false,
+  syncAutoApply: false,
 }
 
 export const CUSTOM_CSS_VARS = {

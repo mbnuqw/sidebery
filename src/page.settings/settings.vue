@@ -658,6 +658,23 @@
       .btn(@click="calcStorageInfo") {{t('settings.update_storage_info')}}
       .btn.-warn(@click="clearStorage") {{t('settings.clear_storage_info')}}
 
+  section(ref="settings_sync")
+    h2 {{t('settings.sync_title')}}
+    toggle-field(
+      label="settings.sync_save_settings"
+      :value="$store.state.syncSaveSettings"
+      @input="setOpt('syncSaveSettings', $event)")
+    //- toggle-field(
+    //-   label="settings.sync_auto_apply"
+    //-   :value="$store.state.syncAutoApply"
+    //-   @input="setOpt('syncAutoApply', $event)")
+    .sync-data(v-if="syncedSettings")
+      .sync-title {{t('settings.sync_settings_title')}}
+      .sync-info {{syncedSettingsInfo}}
+      .btn.sync-btn(@click="applySyncSettings(syncedSettings)") {{t('settings.sync_apply_btn')}}
+    .ctrls
+      .btn(@click="loadSyncedData") {{t('settings.sync_update_btn')}}
+
   section(ref="settings_help")
     h2 {{t('settings.help_title')}}
 
@@ -745,6 +762,7 @@ const SECTIONS = [
   'settings_permissions',
   'settings_snapshots',
   'settings_storage',
+  'settings_sync',
   'settings_help',
 ]
 
@@ -772,6 +790,8 @@ export default {
       storageSize: 0,
       storedProps: [],
       storageOveral: '-',
+      syncedSettings: null,
+      syncedSettingsInfo: null,
     }
   },
 
@@ -793,6 +813,7 @@ export default {
   mounted() {
     State.settingsRefs = this.$refs
     this.calcStorageInfo()
+    this.loadSyncedData()
   },
 
   activated() {
@@ -1378,6 +1399,29 @@ export default {
 
     reloadAddon() {
       browser.runtime.reload()
+    },
+
+    async loadSyncedData() {
+      let storage = await browser.storage.sync.get({ settings: null, settingsUpdated: null })
+
+      if (storage.settings && storage.settingsUpdated) {
+        let date = Utils.uDate(storage.settingsUpdated)
+        let time = Utils.uTime(storage.settingsUpdated)
+        let size = Utils.strSize(JSON.stringify(storage))
+
+        this.syncedSettings = Utils.cloneObject(storage.settings)
+        this.syncedSettingsInfo = `${date} - ${time} - ${size}`
+      } else {
+        this.syncedSettings = null
+        this.syncedSettingsInfo = null
+      }
+    },
+
+    async applySyncSettings(settings) {
+      if (window.confirm(translate('settings.sync_apply_confirm'))) {
+        await browser.storage.local.set({ settings: Utils.cloneObject(settings) })
+        browser.runtime.reload()
+      }
     },
   },
 }

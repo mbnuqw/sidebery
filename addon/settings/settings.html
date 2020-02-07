@@ -182,6 +182,10 @@
           @click="navigateTo('settings_storage')">{{t('settings.nav_settings_storage')}}</div>
         <div
           class="sub-option"
+          :data-active="$store.state.activeSection === 'settings_sync'"
+          @click="navigateTo('settings_sync')">{{t('settings.nav_settings_sync')}}</div>
+        <div
+          class="sub-option"
           :data-active="$store.state.activeSection === 'settings_help'"
           @click="navigateTo('settings_help')">{{t('settings.nav_settings_help')}}</div>
 

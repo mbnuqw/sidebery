@@ -21,6 +21,7 @@ export default {
   'settings.nav_settings_keybindings': { message: 'Keybindings' },
   'settings.nav_settings_permissions': { message: 'Permissions' },
   'settings.nav_settings_storage': { message: 'Storage' },
+  'settings.nav_settings_sync': { message: 'Sync' },
   'settings.nav_settings_help': { message: 'Help' },
 
   'settings.nav_menu': { message: 'Menu editor' },
@@ -348,6 +349,17 @@ export default {
   'settings.clear_storage_info': { message: 'Clear' },
   'settings.clear_storage_confirm': {
     message: 'Are you sure you want to delete all data of Sidebery?',
+  },
+
+  // --- Sync
+  'settings.sync_title': { message: 'Sync' },
+  'settings.sync_save_settings': { message: 'Save settings to sync storage' },
+  'settings.sync_auto_apply': { message: 'Automatically apply changes' },
+  'settings.sync_settings_title': { message: 'Settings' },
+  'settings.sync_apply_btn': { message: 'Apply' },
+  'settings.sync_update_btn': { message: 'Update synced data' },
+  'settings.sync_apply_confirm': {
+    message: 'Are you sure you want to apply synced data?\n(Extension will be reloaded)',
   },
 
   // --- Help

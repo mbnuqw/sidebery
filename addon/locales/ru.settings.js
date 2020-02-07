@@ -390,6 +390,18 @@ export default {
   'settings.clear_storage_info': { message: 'Удалить все' },
   'settings.clear_storage_confirm': { message: 'Вы действительно хотите удалить все данные?' },
 
+  // --- Sync
+  'settings.sync_title': { message: 'Синхронизация' },
+  'settings.sync_save_settings': { message: 'Сохранять настройки в синхронизируемое хранилище' },
+  'settings.sync_auto_apply': { message: 'Автоматически применять изменения' },
+  'settings.sync_settings_title': { message: 'Настройки' },
+  'settings.sync_apply_btn': { message: 'Применить' },
+  'settings.sync_update_btn': { message: 'Обновить данные' },
+  'settings.sync_apply_confirm': {
+    message:
+      'Вы действительно хотите применить синхронизированные данные?\n(Расширение будет перезагружено)',
+  },
+
   // --- Help
   'settings.help_title': { message: 'Помощь' },
   'settings.debug_info': { message: 'Отладочная информация' },

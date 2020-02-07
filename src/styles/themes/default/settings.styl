@@ -192,7 +192,7 @@ footer
   grid-gap: 8px 8px
   justify-content: center
   flex-wrap: wrap
-  margin: 8px 16px 5px
+  margin: 16px 16px 5px
 
 // --- Panel card ---
 .Settings .panel-card
@@ -613,6 +613,60 @@ footer
 .Settings .half-box
   box(relative)
   size(50%)
+
+
+// --- Sync
+.sync-data
+  box(relative, flex)
+  size(calc(100% - 32px))
+  justify-content: center
+  align-items: center
+  padding: 8px 16px
+
+  &:before
+    content: ''
+    box(absolute)
+    pos(0, 0)
+    size(100%, same)
+    border-radius: 3px
+    background-color: #00000012
+    opacity: 0
+    transition: opacity var(--d-fast)
+
+  &:not(:first-of-type):after
+    content: ''
+    box(absolute)
+    pos(0, 1px)
+    size(calc(100% - 2px), 1px)
+    background-color: var(--border-flare-fg)
+    box-shadow: 0 -1px 0 0 var(--border-fg)
+
+  &.-no-separator:after
+    box(none)
+
+  &:hover:before
+    opacity: 1
+
+  &:active:before
+    transition: none
+    opacity: .5
+
+
+.sync-title
+  box(relative)
+  text(s: rem(16))
+  color: var(--label-fg)
+  margin-right: auto
+
+.sync-info
+  box(relative)
+  text(s: rem(15))
+  color: var(--info-fg)
+
+.btn.sync-btn
+  text(s: rem(14))
+  padding: 3px 8px
+  margin-left: 16px
 
 @import './panel-config'
 @import './menu-editor'

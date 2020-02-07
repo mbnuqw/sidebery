@@ -28,6 +28,10 @@ async function saveSettings() {
     }
   }
   await browser.storage.local.set({ settings: settings })
+
+  if (settings.syncSaveSettings) {
+    await browser.storage.sync.set({ settings, settingsUpdated: Date.now() })
+  }
 }
 
 /**
