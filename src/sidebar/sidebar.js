@@ -41,6 +41,11 @@ export default new Vue({
       if (!Store.getters.pinnedTabs.length) return 'none'
       return State.pinnedTabsPosition
     },
+
+    animations() {
+      if (!Store.state.animations) return 'none'
+      else return Store.state.animationSpeed || 'fast'
+    },
   },
 
   async created() {

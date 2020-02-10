@@ -44,6 +44,7 @@ export const SETTINGS_OPTIONS = {
   dndTabActModOpts: ['alt', 'shift', 'ctrl', 'none'],
   dndExpOpts: ['pointer', 'hover', 'none'],
   dndExpModOpts: ['alt', 'shift', 'ctrl', 'none'],
+  animationSpeedOpts: ['fast', 'norm', 'slow'],
 }
 
 export const DEFAULT_SETTINGS = {
@@ -140,6 +141,7 @@ export const DEFAULT_SETTINGS = {
   fontSize: 'm',
   bgNoise: true,
   animations: true,
+  animationSpeed: 'fast',
   theme: 'default',
   style: 'dark',
   sidebarCSS: false,

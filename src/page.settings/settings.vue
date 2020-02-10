@@ -461,6 +461,14 @@
       label="settings.animations"
       :value="$store.state.animations"
       @input="setOpt('animations', $event)")
+    .sub-fields
+      select-field(
+        label="settings.animation_speed"
+        optLabel="settings.animation_speed_"
+        :inactive="!$store.state.animations"
+        :value="$store.state.animationSpeed"
+        :opts="$store.state.animationSpeedOpts"
+        @input="setOpt('animationSpeed', $event)")
     toggle-field(
       label="settings.bg_noise"
       :value="$store.state.bgNoise"
