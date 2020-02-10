@@ -9,6 +9,7 @@ export default {
   'settings.nav_settings_group': { message: 'Групповая страница' },
   'settings.nav_settings_containers': { message: 'Контейнеры' },
   'settings.nav_settings_panels': { message: 'Панели' },
+  'settings.nav_settings_dnd': { message: 'Перетаскивание' },
   'settings.nav_settings_tabs': { message: 'Вкладки' },
   'settings.nav_settings_new_tab_position': { message: 'Позиция новых вкладок' },
   'settings.nav_settings_pinned_tabs': { message: 'Закрепленные вкладок' },
@@ -20,6 +21,7 @@ export default {
   'settings.nav_settings_keybindings': { message: 'Клавиши' },
   'settings.nav_settings_permissions': { message: 'Разрешения' },
   'settings.nav_settings_storage': { message: 'Данные' },
+  'settings.nav_settings_sync': { message: 'Синхронизация' },
   'settings.nav_settings_help': { message: 'Помощь' },
 
   'settings.nav_menu': { message: 'Редактор меню' },
@@ -42,7 +44,7 @@ export default {
   'settings.state_storage_session': { message: 'сессия браузера' },
   'settings.state_storage_desc': {
     message: `- глобальный стор - быстрое, но неточное в редких случаях.
-- сессия браузера - более строгое, но медленное. (Предупреждение: будет удалено вместе с сессией браузера)
+- сессия браузера - более строгое, но медленное. (Предупреждение: данные табов будут удалены вместе с сессией браузера)
 Если у вас есть проблемы с неправильно восстановленными вкладками, попробуйте перезагрузить боковую панель и изменить эту опцию.`,
   },
 

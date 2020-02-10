@@ -44,7 +44,7 @@ export default {
   'settings.state_storage_session': { message: 'session storage' },
   'settings.state_storage_desc': {
     message: `- global storage - fast, but inaccurate in rare cases.
-- session storage - more strict, but slower. (Warning: Will be removed along with Browser Session)
+- session storage - more strict, but slower. (Warning: Tabs data will be removed along with Browser Session)
   Note: If you have issues with incorrectly restored tabs, try to reopen sidebar and change this option.`,
   },
 
