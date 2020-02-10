@@ -1410,7 +1410,7 @@ function foldAllInactiveBranches(tabs = []) {
 /**
  * Drop to tabs panel
  */
-async function dropToTabs(event, dropIndex, dropParent, nodes, pin) {
+async function dropToTabs(event, dropIndex, dropParent, nodes, pin, isInside) {
   let activePanel = this.state.panels[this.state.panelIndex]
   let destCtx = DEFAULT_CTX_ID
   if (activePanel.newTabCtx !== 'none') destCtx = activePanel.newTabCtx
@@ -1433,7 +1433,7 @@ async function dropToTabs(event, dropIndex, dropParent, nodes, pin) {
 
   // Native event
   if (!nodes) {
-    this.actions.dropToTabsNative(event, dropIndex, dropParent, destCtx, pin)
+    this.actions.dropToTabsNative(event, dropIndex, dropParent, destCtx, pin, isInside)
   }
 }
 
@@ -1655,14 +1655,33 @@ async function recreateDroppedNodes(event, dropIndex, dropParent, nodes, pin, de
 /**
  * Parse native drop event and create tab
  */
-async function dropToTabsNative(event, dropIndex, dropParent, destCtx, pin) {
+async function dropToTabsNative(event, dropIndex, dropParent, destCtx, pin, isInside) {
   let url = await Utils.getUrlFromDragEvent(event)
+  let panel = this.state.panels[this.state.panelIndex]
 
   if (!url) {
     let query = await Utils.getDataFromDragEvent(event, ['text/plain'])
-    let conf = { query }
-    if (dropParent > -1) conf.tabId = dropParent
-    if (query) return browser.search.search(conf)
+    if (query) {
+      let tabId
+      if (!isInside) {
+        if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
+        this.state.newTabsPosition[dropIndex] = {
+          parent: dropParent < 0 ? undefined : dropParent,
+          panel: panel.id,
+        }
+        let searchTab = await browser.tabs.create({
+          index: dropIndex,
+          openerTabId: dropParent < 0 ? undefined : dropParent,
+          cookieStoreId: destCtx,
+          windowId: this.state.windowId,
+          pinned: pin,
+        })
+        tabId = searchTab.id
+      } else if (dropParent > -1) {
+        tabId = dropParent
+      }
+      return browser.search.search({ query, tabId })
+    }
   }
 
   let prevTab = this.state.tabs[dropIndex - 1]
@@ -1674,7 +1693,6 @@ async function dropToTabsNative(event, dropIndex, dropParent, destCtx, pin) {
   }
 
   if (url && destCtx) {
-    let panel = this.state.panels[this.state.panelIndex]
     if (panel && panel.tabs) {
       if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
       this.state.newTabsPosition[dropIndex] = {

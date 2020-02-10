@@ -500,7 +500,8 @@ export default {
           State.dropParent = parentTab.id
         }
 
-        Actions.dropToTabs(e, this.dropIndex, State.dropParent, State.dragNodes)
+        let isInside = this.pointerMode.startsWith('inside')
+        Actions.dropToTabs(e, this.dropIndex, State.dropParent, State.dragNodes, false, isInside)
       }
 
       // to Bookmarks
