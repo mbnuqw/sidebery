@@ -39,6 +39,9 @@ function onCmd(name) {
   else if (name === 'tabs_outdent') this.handlers.onKeyTabsOutdent()
   else if (name === 'move_tabs_up') this.handlers.onKeyMoveTabsUp()
   else if (name === 'move_tabs_down') this.handlers.onKeyMoveTabsDown()
+  else if (name === 'create_snapshot') {
+    browser.runtime.sendMessage({ instanceType: 'bg', windowId: -1, action: 'createSnapshot' })
+  }
 }
 
 /**

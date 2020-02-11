@@ -31,6 +31,7 @@
   "KbTabsOutdent": { "message": "Decrease tab's tree level (outdent)" },
   "KbMoveTabsUp": { "message": "Move tabs up" },
   "KbMoveTabsDown": { "message": "Move tabs down" },
+  "KbCreateSnapshot": { "message": "Create snapshot" },
 
   "proxy_popup.title_prefix": { "message": "" },
   "proxy_popup.title_postfix": { "message": " container's proxy" },

@@ -187,6 +187,9 @@
     },
     "move_tabs_down": {
       "description": "__MSG_KbMoveTabsDown__"
+    },
+    "create_snapshot": {
+      "description": "__MSG_KbCreateSnapshot__"
     }
   },
 
