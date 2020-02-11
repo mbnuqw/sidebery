@@ -72,7 +72,7 @@
     :value="moveTabCtx"
     :opts="availableContainers"
     @input="togglePanelMoveTabCtx")
-  .sub-fields
+  .sub-fields(v-if="isDefault || isTabs")
     toggle-field(
       label="dashboard.move_tab_ctx_nochild"
       :inactive="moveTabCtx === 'none'"
