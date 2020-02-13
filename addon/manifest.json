@@ -190,6 +190,36 @@
     },
     "create_snapshot": {
       "description": "__MSG_KbCreateSnapshot__"
+    },
+    "switch_to_panel_0": {
+      "description": "__MSG_KbSwitchToPanel0__"
+    },
+    "switch_to_panel_1": {
+      "description": "__MSG_KbSwitchToPanel1__"
+    },
+    "switch_to_panel_2": {
+      "description": "__MSG_KbSwitchToPanel2__"
+    },
+    "switch_to_panel_3": {
+      "description": "__MSG_KbSwitchToPanel3__"
+    },
+    "switch_to_panel_4": {
+      "description": "__MSG_KbSwitchToPanel4__"
+    },
+    "switch_to_panel_5": {
+      "description": "__MSG_KbSwitchToPanel5__"
+    },
+    "switch_to_panel_6": {
+      "description": "__MSG_KbSwitchToPanel6__"
+    },
+    "switch_to_panel_7": {
+      "description": "__MSG_KbSwitchToPanel7__"
+    },
+    "switch_to_panel_8": {
+      "description": "__MSG_KbSwitchToPanel8__"
+    },
+    "switch_to_panel_9": {
+      "description": "__MSG_KbSwitchToPanel9__"
     }
   },
 

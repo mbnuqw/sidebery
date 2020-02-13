@@ -41,6 +41,10 @@ function onCmd(name) {
   else if (name === 'move_tabs_down') this.handlers.onKeyMoveTabsDown()
   else if (name === 'create_snapshot') {
     browser.runtime.sendMessage({ instanceType: 'bg', windowId: -1, action: 'createSnapshot' })
+  } else if (name.startsWith('switch_to_panel_')) {
+    let index = parseInt(name.slice(-1))
+    if (isNaN(index) || index >= this.state.panels.length) return
+    this.actions.switchToPanel(parseInt(name.slice(-1)))
   }
 }
 
