@@ -268,6 +268,7 @@ export default {
   // --- Snapshots
   'settings.snapshots_title': { message: 'Snapshots' },
   'settings.snap_notify': { message: 'Show notification after snapshot creation' },
+  'settings.snap_exclude_private': { message: 'Exclude private windows' },
   'settings.snap_interval': { message: 'Auto-snapshots interval' },
   'settings.snap_interval_min': { message: ['minute', 'minutes'], plur: [1] },
   'settings.snap_interval_hr': { message: ['hour', 'hours'], plur: [1] },

@@ -289,6 +289,7 @@ export default {
   // --- Snapshots
   'settings.snapshots_title': { message: 'Снепшоты' },
   'settings.snap_notify': { message: 'Показать уведомление после создания снепшота' },
+  'settings.snap_exclude_private': { message: 'Исключать приватные окна' },
   'settings.snap_interval': { message: 'Интервал авто-снепшотов' },
   'settings.snap_interval_min': {
     message: ['минута', 'минуты', 'минут'],

@@ -34,6 +34,8 @@ async function createSnapshot() {
   const windows = {}
   for (let windowId of Object.keys(this.windows)) {
     const window = this.windows[windowId]
+    if (this.settings.snapExcludePrivate && window.incognito) continue
+
     const items = []
 
     for (let tab of window.tabs) {

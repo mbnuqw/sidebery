@@ -634,6 +634,10 @@
       label="settings.snap_notify"
       :value="$store.state.snapNotify"
       @input="setOpt('snapNotify', $event)")
+    toggle-field(
+      label="settings.snap_exclude_private"
+      :value="$store.state.snapExcludePrivate"
+      @input="setOpt('snapExcludePrivate', $event)")
     num-field(
       label="settings.snap_interval"
       unitLabel="settings.snap_interval_"
