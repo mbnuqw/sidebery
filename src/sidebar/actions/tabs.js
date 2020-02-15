@@ -1662,6 +1662,22 @@ async function dropToTabsNative(event, dropIndex, dropParent, destCtx, pin, isIn
   if (!url) {
     let query = await Utils.getDataFromDragEvent(event, ['text/plain'])
     if (query) {
+      let urls = Utils.findUrls(query)
+      if (urls.length) {
+        let offset = 0
+        for (let url of urls) {
+          await browser.tabs.create({
+            url,
+            index: dropIndex + offset++,
+            openerTabId: dropParent < 0 ? undefined : dropParent,
+            cookieStoreId: destCtx,
+            windowId: this.state.windowId,
+            pinned: pin,
+          })
+        }
+        return
+      }
+
       let tabId
       if (!isInside) {
         if (!this.state.newTabsPosition) this.state.newTabsPosition = {}

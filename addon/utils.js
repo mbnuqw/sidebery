@@ -8,7 +8,7 @@ const ALPH = [
 ]
 const UNDERSCORE_RE = /_/g
 const CSS_NUM_RE = /([\d.]+)(\w*)/
-const URL_RE = /^(https?:\/\/)/
+const URL_RE = /^https?:\/\/.+/
 
 /**
  *  Generate base64-like uid
@@ -598,6 +598,15 @@ function normalizeObject(obj, defaults) {
   return result
 }
 
+function findUrls(str) {
+  let urls = []
+  let words = str.split(/\s|,/)
+  for (let word of words) {
+    if (URL_RE.test(word)) urls.push(word)
+  }
+  return urls
+}
+
 export default {
   uid,
   asap,
@@ -623,4 +632,5 @@ export default {
   normalizeTab,
   findDataForTabs,
   normalizeObject,
+  findUrls,
 }
