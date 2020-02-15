@@ -458,6 +458,8 @@ export default {
           Actions.selectItem(n.id)
         }
       }
+
+      if (!State.dragXStart) State.dragXStart = State.width >> 1
     },
 
     /**
