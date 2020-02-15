@@ -62,7 +62,7 @@ export const DEFAULT_SETTINGS = {
   navBarInline: true,
   hideAddBtn: false,
   hideSettingsBtn: false,
-  navBtnCount: false,
+  navBtnCount: true,
   hideEmptyPanels: true,
   navMidClickAction: 'none',
   navSwitchPanelsWheel: true,
@@ -99,10 +99,10 @@ export const DEFAULT_SETTINGS = {
   nativeHighlight: false,
 
   // New tab position
-  moveNewTabPin: 'none',
-  moveNewTabParent: 'none',
+  moveNewTabPin: 'start',
+  moveNewTabParent: 'last_child',
   moveNewTabParentActPanel: false,
-  moveNewTab: 'none',
+  moveNewTab: 'end',
 
   // Pinned tabs
   pinnedTabsPosition: 'panel',
