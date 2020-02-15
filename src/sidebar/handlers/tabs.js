@@ -354,11 +354,7 @@ function onTabRemoved(tabId, info, childfree) {
 
   // Recreate locked tab
   if (!tab.pinned && panel && panel.lockedTabs && tab.url.startsWith('http')) {
-    if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
-    this.state.newTabsPosition[tab.index] = {
-      parent: tab.parentId,
-      panel: panel.id,
-    }
+    this.actions.setNewTabPosition(tab.index, tab.parentId, panel.id)
     browser.tabs.create({
       windowId: this.state.windowId,
       index: tab.index,

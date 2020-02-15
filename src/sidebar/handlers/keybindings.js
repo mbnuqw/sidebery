@@ -150,11 +150,7 @@ function onKeyNewTabAfter() {
     if (t.lvl <= activeTab.lvl) break
   }
 
-  if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
-  this.state.newTabsPosition[activeTab.index + 1] = {
-    panel: activeTab.panelId,
-    parent: activeTab.parentId,
-  }
+  this.actions.setNewTabPosition(activeTab.index + 1, activeTab.parentId, activeTab.panelId)
 
   let conf = {
     index,
@@ -689,12 +685,7 @@ function onKeyNewTabAsFirstChild() {
   let activeTab = this.state.tabs.find(t => t.active)
   if (!activeTab) return
 
-  if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
-  this.state.newTabsPosition[activeTab.index + 1] = {
-    panel: activeTab.panelId,
-    parent: activeTab.id,
-  }
-
+  this.actions.setNewTabPosition(activeTab.index + 1, activeTab.id, activeTab.panelId)
   browser.tabs.create({
     index: activeTab.index + 1,
     cookieStoreId: activeTab.cookieStoreId,
@@ -713,12 +704,7 @@ function onKeyNewTabAsLastChild() {
     if (t.lvl <= activeTab.lvl) break
   }
 
-  if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
-  this.state.newTabsPosition[activeTab.index + 1] = {
-    panel: activeTab.panelId,
-    parent: activeTab.id,
-  }
-
+  this.actions.setNewTabPosition(activeTab.index + 1, activeTab.id, activeTab.panelId)
   browser.tabs.create({
     index,
     cookieStoreId: activeTab.cookieStoreId,

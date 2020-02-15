@@ -588,11 +588,7 @@ async function removeTabs(tabIds) {
             if (parent.index < tab.index) parentId = parent.id
           }
 
-          if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
-          this.state.newTabsPosition[index] = {
-            panel: panel.id,
-            parent: parentId,
-          }
+          this.actions.setNewTabPosition(index, parentId, panel.id)
 
           let conf = {
             windowId: this.state.windowId,
@@ -794,11 +790,7 @@ async function duplicateTabs(tabIds) {
       if (t.lvl <= tab.lvl) break
     }
 
-    if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
-    this.state.newTabsPosition[index] = {
-      panel: tab.panelId,
-      parent: tab.parentId,
-    }
+    this.actions.setNewTabPosition(index, tab.parentId, tab.panelId)
 
     await browser.tabs.create({
       windowId: this.state.windowId,
@@ -1096,7 +1088,6 @@ async function moveTabsToWin(tabIds, window) {
  * Move (or reopen) provided tabs in current window.
  */
 async function moveTabsToThisWin(tabs, fromPrivate) {
-  if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
   if (this.state.private === fromPrivate) {
     if (!this.state.attachingTabs) this.state.attachingTabs = [...tabs]
     else this.state.attachingTabs.push(...tabs)
@@ -1105,12 +1096,7 @@ async function moveTabsToThisWin(tabs, fromPrivate) {
     let index = panel.tabs.length ? panel.endIndex + 1 : panel.endIndex
 
     for (let tab of tabs) {
-      if (!tab.pinned) {
-        this.state.newTabsPosition[index] = {
-          panel: tab.panelId,
-          parent: tab.parentId,
-        }
-      }
+      if (!tab.pinned) this.actions.setNewTabPosition(index, tab.parentId, tab.panelId)
       browser.tabs.move(tab.id, {
         windowId: this.state.windowId,
         index: tab.pinned ? 0 : index,
@@ -1175,11 +1161,7 @@ async function reopenTabsInCtx(tabIds, ctxId) {
     if (index === -1) createConf.index = tab.index
     else createConf.index = index++
 
-    if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
-    this.state.newTabsPosition[createConf.index] = {
-      parent: tab.parentId,
-      panel: panel.id,
-    }
+    this.actions.setNewTabPosition(createConf.index, tab.parentId, panel.id)
     if (idsMap[tab.parentId] >= 0) {
       createConf.openerTabId = idsMap[tab.parentId]
       this.state.newTabsPosition[createConf.index].parent = idsMap[tab.parentId]
@@ -1629,11 +1611,7 @@ async function recreateDroppedNodes(event, dropIndex, dropParent, nodes, pin, de
       createConf.openerTabId = opener
     }
 
-    if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
-    this.state.newTabsPosition[dropIndex + i] = {
-      panel: panel.id,
-      parent: createConf.openerTabId,
-    }
+    this.actions.setNewTabPosition(dropIndex + i, createConf.openerTabId, panel.id)
 
     const info = await browser.tabs.create(createConf)
     oldNewMap[node.id] = info.id
@@ -1680,11 +1658,7 @@ async function dropToTabsNative(event, dropIndex, dropParent, destCtx, pin, isIn
 
       let tabId
       if (!isInside) {
-        if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
-        this.state.newTabsPosition[dropIndex] = {
-          parent: dropParent < 0 ? undefined : dropParent,
-          panel: panel.id,
-        }
+        this.actions.setNewTabPosition(dropIndex, dropParent, panel.id)
         let searchTab = await browser.tabs.create({
           index: dropIndex,
           openerTabId: dropParent < 0 ? undefined : dropParent,
@@ -1709,13 +1683,7 @@ async function dropToTabsNative(event, dropIndex, dropParent, destCtx, pin, isIn
   }
 
   if (url && destCtx) {
-    if (panel && panel.tabs) {
-      if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
-      this.state.newTabsPosition[dropIndex] = {
-        parent: dropParent < 0 ? undefined : dropParent,
-        panel: panel.id,
-      }
-    }
+    if (panel && panel.tabs) this.actions.setNewTabPosition(dropIndex, dropParent, panel.id)
 
     browser.tabs.create({
       active: true,
@@ -1800,11 +1768,7 @@ async function groupTabs(tabIds) {
   }
 
   // Find index and create group tab
-  if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
-  this.state.newTabsPosition[tabs[0].index] = {
-    panel: tabs[0].panelId,
-    parent: tabs[0].parentId,
-  }
+  this.actions.setNewTabPosition(tabs[0].index, tabs[0].parentId, tabs[0].panelId)
   const groupTab = await browser.tabs.create({
     active: !(parent && parent.folded),
     cookieStoreId: tabs[0].cookieStoreId,
@@ -1889,11 +1853,7 @@ function createTabAfter(tabId) {
     index++
   }
 
-  if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
-  this.state.newTabsPosition[index] = {
-    panel: targetTab.panelId,
-    parent: parentId,
-  }
+  this.actions.setNewTabPosition(index, parentId, targetTab.panelId)
 
   if (parentId < 0) parentId = undefined
   browser.tabs.create({
@@ -1933,13 +1893,7 @@ function createTabInPanel(panel, url) {
   let config = { index, windowId: this.state.windowId }
 
   if (url) config.url = url
-  if (index !== undefined) {
-    if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
-    this.state.newTabsPosition[index] = {
-      parent: parentId,
-      panel: panel.id,
-    }
-  }
+  if (index !== undefined) this.actions.setNewTabPosition(index, parentId, panel.id)
 
   if (panel.newTabCtx !== 'none') {
     config.cookieStoreId = panel.newTabCtx
@@ -2386,8 +2340,7 @@ function handleReopening(tabId, newCtx) {
   }
   if (index === undefined) index = targetTab.index
 
-  if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
-  this.state.newTabsPosition[index] = { parent, panel: panelId }
+  this.actions.setNewTabPosition(index, parent, panelId)
 
   return index
 }
@@ -2401,6 +2354,17 @@ function updateTabsIndexes(fromIndex = 0, toIndex = -1) {
   for (let t, i = fromIndex; i < toIndex; i++) {
     t = tabs[i]
     if (t && t.index !== i) t.index = i
+  }
+}
+
+/**
+ * Set expected position (parent/panel) of new tab by its index
+ */
+function setNewTabPosition(index, parentId, panelId) {
+  if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
+  this.state.newTabsPosition[index] = {
+    parent: parentId < 0 ? undefined : parentId,
+    panel: panelId,
   }
 }
 
@@ -2648,6 +2612,7 @@ export default {
   updateHighlightedTabs,
   handleReopening,
   updateTabsIndexes,
+  setNewTabPosition,
 
   _old_loadTabs,
   _old_restoreGroupTab,

@@ -402,11 +402,7 @@ async function openBookmarksInCtx(ids, ctxId) {
       openerTabId: idMap[node.parentId],
     }
 
-    if (!this.state.newTabsPosition) this.state.newTabsPosition = {}
-    this.state.newTabsPosition[conf.index] = {
-      parent: idMap[node.parentId],
-      panel: p.id,
-    }
+    this.actions.setNewTabPosition(conf.index, idMap[node.parentId], p.id)
 
     if (ctxId === DEFAULT_CTX_ID) {
       conf.title = node.title

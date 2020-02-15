@@ -258,12 +258,7 @@ export default {
         conf.index = panel.tabs.length ? panel.endIndex + 1 : panel.endIndex
         if (panel.newTabCtx !== 'none') conf.cookieStoreId = panel.newTabCtx
 
-        if (!State.newTabsPosition) State.newTabsPosition = {}
-        State.newTabsPosition[conf.index] = {
-          parent: -1,
-          panel: panelId,
-        }
-
+        Actions.setNewTabPosition(conf.index, -1, panelId)
         browser.tabs.create(conf)
       } else {
         browser.tabs.update({ url: Utils.normalizeUrl(url) })
