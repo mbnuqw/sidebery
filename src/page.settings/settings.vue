@@ -1498,7 +1498,7 @@ export default {
           this.fetchingBookmarksFavsDone++
           continue
         }
-        if (!icon || !icon.startsWith('data:image')) {
+        if (!icon || !icon.startsWith('data:image') || icon[icon.length - 1] === ',') {
           this.fetchingBookmarksFavsErrors++
           this.fetchingBookmarksFavsPercent += perc
           this.fetchingBookmarksFavsDone++
