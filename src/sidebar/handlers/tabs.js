@@ -423,7 +423,7 @@ function onTabRemoved(tabId, info, childfree) {
     this.actions.recalcPanelScroll()
 
     // Update tree
-    if (this.state.tabsTree) {
+    if (this.state.tabsTree && panel && panel.tabs && panel.tabs.length) {
       const startIndex = panel ? panel.startIndex : 0
       const endIndex = panel ? panel.endIndex + 1 : -1
       this.actions.updateTabsTree(startIndex, endIndex)
