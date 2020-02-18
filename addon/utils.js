@@ -607,6 +607,27 @@ function findUrls(str) {
   return urls
 }
 
+async function loadBinAsBase64(url) {
+  return new Promise(async res => {
+    let response
+    try {
+      response = await fetch(url, {
+        method: 'GET',
+        mode: 'no-cors',
+        credentials: 'omit',
+      })
+    } catch (err) {
+      return res(null)
+    }
+    if (!response) return res(null)
+
+    let blob = await response.blob()
+    let reader = new FileReader()
+    reader.onload = () => res(reader.result)
+    reader.readAsDataURL(blob)
+  })
+}
+
 export default {
   uid,
   asap,
@@ -633,4 +654,5 @@ export default {
   findDataForTabs,
   normalizeObject,
   findUrls,
+  loadBinAsBase64,
 }

@@ -448,6 +448,14 @@
         :inactive="!$store.state.bookmarksPanel || !$store.state.highlightOpenBookmarks"
         :value="$store.state.activateOpenBookmarkTab"
         @input="setOpt('activateOpenBookmarkTab', $event)")
+    .ctrls
+      .fetch-progress(v-if="fetchingBookmarksFavs")
+        .progress-bar: .progress-lvl(:style="{transform: `translateX(${fetchingBookmarksFavsPercent}%)`}")
+        .progress-info
+          .progress-done {{fetchingBookmarksFavsDone}}/{{fetchingBookmarksFavsAll}} {{t('settings.fetch_bookmarks_favs_done')}}
+          .progress-errors {{fetchingBookmarksFavsErrors}} {{t('settings.fetch_bookmarks_favs_errors')}}
+        .btn(v-if="fetchingBookmarksFavs" @click="stopFetchingBookmarksFavicons") {{t('settings.fetch_bookmarks_favs_stop')}}
+      .btn(v-if="!fetchingBookmarksFavs" @click="fetchBookmarksFavicons") {{t('settings.fetch_bookmarks_favs')}}
 
   section(ref="settings_appearance")
     h2 {{t('settings.appearance_title')}}
@@ -804,6 +812,11 @@ export default {
       storageOveral: '-',
       syncedSettings: null,
       syncedSettingsInfo: null,
+      fetchingBookmarksFavs: false,
+      fetchingBookmarksFavsDone: 0,
+      fetchingBookmarksFavsAll: 0,
+      fetchingBookmarksFavsErrors: 0,
+      fetchingBookmarksFavsPercent: 0,
     }
   },
 
@@ -1434,6 +1447,85 @@ export default {
         await browser.storage.local.set({ settings: Utils.cloneObject(settings) })
         browser.runtime.reload()
       }
+    },
+
+    async fetchBookmarksFavicons() {
+      if (!State.permAllUrls) {
+        location.hash = 'all-urls'
+        return
+      }
+
+      this.fetchingBookmarksFavs = true
+
+      const bookmarksRoot = await browser.bookmarks.getTree()
+      const bookmarksUrls = []
+      const hWalk = nodes => {
+        for (let n of nodes) {
+          if (n.url) bookmarksUrls.push(n.url)
+          if (n.children) hWalk(n.children)
+        }
+      }
+      hWalk(bookmarksRoot[0].children)
+
+      let hosts = {}
+      for (let url of bookmarksUrls) {
+        if (!url.startsWith('http')) continue
+
+        let urlInfo
+        try {
+          urlInfo = new URL(url)
+        } catch (err) {
+          continue
+        }
+
+        let protoHost = urlInfo.protocol + '//' + urlInfo.host
+        if (!hosts[protoHost]) hosts[protoHost] = []
+        hosts[protoHost].push(url)
+      }
+
+      this.fetchingBookmarksFavsAll = Object.keys(hosts).length
+      let perc = 100 / this.fetchingBookmarksFavsAll
+
+      for (let host of Object.keys(hosts)) {
+        if (!this.fetchingBookmarksFavs) break
+
+        let icon
+        try {
+          icon = await Utils.loadBinAsBase64(host + '/favicon.ico')
+        } catch (err) {
+          this.fetchingBookmarksFavsErrors++
+          this.fetchingBookmarksFavsPercent += perc
+          this.fetchingBookmarksFavsDone++
+          continue
+        }
+        if (!icon || !icon.startsWith('data:image')) {
+          this.fetchingBookmarksFavsErrors++
+          this.fetchingBookmarksFavsPercent += perc
+          this.fetchingBookmarksFavsDone++
+          continue
+        }
+
+        this.fetchingBookmarksFavsPercent += perc
+        this.fetchingBookmarksFavsDone++
+        hosts[host].forEach(u => Actions.setFavicon(u, icon))
+      }
+
+      this.stopFetchingBookmarksFavicons()
+    },
+
+    stopFetchingBookmarksFavicons() {
+      this.fetchingBookmarksFavs = false
+      this.fetchingBookmarksFavsAll = 0
+      this.fetchingBookmarksFavsDone = 0
+      this.fetchingBookmarksFavsErrors = 0
+      this.fetchingBookmarksFavsPercent = 0
+
+      setTimeout(() => {
+        browser.runtime.sendMessage({
+          instanceType: 'sidebar',
+          action: 'loadFavicons',
+        })
+      }, 1500)
     },
   },
 }

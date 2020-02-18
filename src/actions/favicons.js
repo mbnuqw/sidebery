@@ -7,9 +7,11 @@ async function loadFavicons() {
     favUrls: {},
   })
 
-  for (let tab of this.state.tabs) {
-    if (tab.favIconUrl) continue
-    if (favicons[favUrls[tab.url]]) tab.favIconUrl = favicons[favUrls[tab.url]]
+  if (this.state.tabs) {
+    for (let tab of this.state.tabs) {
+      if (tab.favIconUrl) continue
+      if (favicons[favUrls[tab.url]]) tab.favIconUrl = favicons[favUrls[tab.url]]
+    }
   }
 
   this.state.favicons = favicons
@@ -32,11 +34,16 @@ function setFavicon(url, icon) {
   if (index === -1) index = this.state.favicons.push(icon) - 1
   if (index > -1) Vue.set(this.state.favUrls, url, index)
 
-  if (this.state.private || alreadyCached || !this.state.bg || this.state.bg.error) return
-  this.state.bg.postMessage({
-    action: 'saveFavicon',
-    args: [url, icon],
-  })
+  if (this.state.private || alreadyCached) return
+  if (this.state.bg && !this.state.bg.error) {
+    this.state.bg.postMessage({ action: 'saveFavicon', args: [url, icon] })
+  } else {
+    browser.runtime.sendMessage({
+      action: 'saveFavicon',
+      instanceType: 'bg',
+      args: [url, icon],
+    })
+  }
 }
 
 export default {

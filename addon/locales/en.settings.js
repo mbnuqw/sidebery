@@ -233,6 +233,10 @@ export default {
   'settings.highlight_open_bookmarks': { message: 'Highlight open bookmarks' },
   'settings.activate_open_bookmark_tab': { message: 'Go to open tab instead of opening new one' },
   'settings.bookmarks_rm_undo_note': { message: 'Show undo notification after deleting bookmarks' },
+  'settings.fetch_bookmarks_favs': { message: 'Fetch favicons' },
+  'settings.fetch_bookmarks_favs_stop': { message: 'Stop fetching' },
+  'settings.fetch_bookmarks_favs_done': { message: 'done' },
+  'settings.fetch_bookmarks_favs_errors': { message: 'errors' },
 
   // --- Appearance
   'settings.appearance_title': { message: 'Appearance' },

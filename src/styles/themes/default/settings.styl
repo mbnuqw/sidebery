@@ -191,8 +191,44 @@ footer
   box(relative, flex)
   grid-gap: 8px 8px
   justify-content: center
+  align-items: center
   flex-wrap: wrap
   margin: 16px 16px 5px
+
+.Settings .fetch-progress
+  box(relative, flex)
+  size(50%)
+  flex-direction: column
+  justify-content: center
+  align-items: center
+
+.Settings .progress-bar
+  box(relative)
+  size(100%, 5px)
+  border-radius: 3px
+  box-shadow: 0 0 0 1px var(--border-fg)
+  overflow: hidden
+  margin-top: 12px
+  background-color: #00000016
+
+.Settings .progress-lvl
+  box(absolute)
+  size(100%, same)
+  pos(l: -100%)
+  background-color: var(--active-fg)
+
+.Settings .progress-info
+  box(relative, flex)
+  size(100%)
+  justify-content: center
+  align-items: center
+
+.Settings .progress-done
+.Settings .progress-errors
+  text(s: rem(11))
+  color: var(--info-fg)
+  margin: 5px 8px 16px
+
 
 // --- Panel card ---
 .Settings .panel-card

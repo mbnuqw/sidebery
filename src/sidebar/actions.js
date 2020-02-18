@@ -1,6 +1,6 @@
+import FaviconsActions from '../actions/favicons'
 import SettingsActions from './actions/settings'
 import KeybindingsActions from './actions/keybindings'
-import FaviconsActions from './actions/favicons'
 import ContainersActions from './actions/containers'
 import PanelsActions from './actions/panels'
 import TabsActions from './actions/tabs'

@@ -254,6 +254,10 @@ export default {
   'settings.bookmarks_rm_undo_note': {
     message: 'Показывать уведомление об удалении нескольких закладок',
   },
+  'settings.fetch_bookmarks_favs': { message: 'Загрузить иконки' },
+  'settings.fetch_bookmarks_favs_stop': { message: 'Остановить загрузку' },
+  'settings.fetch_bookmarks_favs_done': { message: 'завершено' },
+  'settings.fetch_bookmarks_favs_errors': { message: 'ошибок' },
 
   // --- Appearance
   'settings.appearance_title': { message: 'Вид' },

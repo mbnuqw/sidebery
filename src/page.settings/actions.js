@@ -1,3 +1,4 @@
+import FaviconsActions from '../actions/favicons'
 import Store from './store'
 import State from './store/state'
 import MenuActions from './actions/menu'
@@ -9,6 +10,7 @@ import PanelsActions from './actions/panels'
 import MiscActions from './actions/misc'
 
 const Actions = {
+  ...FaviconsActions,
   ...SettingsActions,
   ...KeybindingsActions,
   ...MenuActions,

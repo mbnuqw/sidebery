@@ -49,6 +49,7 @@ export default new Vue({
     Actions.loadPermissions(true)
     Actions.loadCtxMenu()
     Actions.initialized()
+    Actions.loadFavicons()
   },
 
   methods: {
