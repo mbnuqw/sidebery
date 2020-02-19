@@ -170,7 +170,10 @@ export const DEFAULT_SETTINGS = {
   tabsPanelRightClickAction: 'menu',
 
   // Sync
+  syncName: '',
   syncSaveSettings: false,
+  syncSaveCtxMenu: false,
+  syncSaveStyles: false,
   syncAutoApply: false,
 }
 

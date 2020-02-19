@@ -656,7 +656,7 @@ footer
   box(relative, flex)
   size(calc(100% - 32px))
   justify-content: center
-  align-items: center
+  align-items: flex-start
   padding: 8px 16px
 
   &:before
@@ -687,22 +687,34 @@ footer
     transition: none
     opacity: .5
 
-
 .sync-title
   box(relative)
   text(s: rem(16))
   color: var(--label-fg)
+  padding: 2px 0
   margin-right: auto
+
+.sync-list
+  box(relative, flex)
+  flex-direction: column
+  grid-gap: 8px 0
+
+.sync-item
+  box(relative, flex)
+  justify-content: center
+  align-items: center
 
 .sync-info
   box(relative)
-  text(s: rem(15))
+  text(s: rem(12))
   color: var(--info-fg)
+  margin-left: auto
 
 .btn.sync-btn
   text(s: rem(14))
   padding: 3px 8px
-  margin-left: 16px
+  margin-left: 8px
+  margin-right: -2px
 
 @import './panel-config'
 @import './menu-editor'

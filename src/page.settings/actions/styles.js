@@ -20,7 +20,7 @@ async function getCustomCSS(target) {
  * @param {string} target - 'sidebar', 'settings' or 'group'
  * @param {string} css
  */
-function setCustomCSS(target, css) {
+async function setCustomCSS(target, css) {
   const fieldName = target + 'CSS'
   if (target === 'settings') Actions.applyCustomCSS(css)
 
@@ -29,6 +29,8 @@ function setCustomCSS(target, css) {
 
   Actions.saveSettings()
   browser.storage.local.set({ [fieldName]: css })
+
+  if (this.state.syncSaveStyles) this.actions.saveStylesToSync()
 }
 
 /**
@@ -64,6 +66,8 @@ async function saveCSSVars(vars) {
   await browser.storage.local.set({
     cssVars: JSON.parse(JSON.stringify(vars)),
   })
+
+  if (this.state.syncSaveStyles) this.actions.saveStylesToSync(vars)
 }
 
 /**
@@ -82,6 +86,18 @@ function applyCSSVars(vars) {
   }
 }
 
+async function saveStylesToSync(cssVars) {
+  let profileId = await this.actions.getProfileId()
+  let value = {}
+  if (this.state.sidebarCSS) value.sidebarCSS = this.state.sidebarCSS
+  if (this.state.groupCSS) value.groupCSS = this.state.groupCSS
+  if (cssVars) value.cssVars = Utils.cloneObject(cssVars)
+
+  await browser.storage.sync.set({
+    [profileId + '::styles']: { value, time: Date.now(), name: this.state.syncName },
+  })
+}
+
 export default {
   ...CommonActions,
 
@@ -92,4 +108,6 @@ export default {
   loadCSSVars,
   saveCSSVars,
   applyCSSVars,
+
+  saveStylesToSync,
 }

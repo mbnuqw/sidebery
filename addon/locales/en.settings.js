@@ -362,14 +362,19 @@ export default {
 
   // --- Sync
   'settings.sync_title': { message: 'Sync' },
+  'settings.sync_name': { message: 'Profile name for sync' },
+  'settings.sync_name_or': { message: 'e.g: Firefox Beta Home' },
   'settings.sync_save_settings': { message: 'Save settings to sync storage' },
+  'settings.sync_save_ctx_menu': { message: 'Save context menu to sync storage' },
+  'settings.sync_save_styles': { message: 'Save styles to sync storage' },
   'settings.sync_auto_apply': { message: 'Automatically apply changes' },
   'settings.sync_settings_title': { message: 'Settings' },
+  'settings.sync_ctx_menu_title': { message: 'Context menu' },
+  'settings.sync_styles_title': { message: 'Styles' },
   'settings.sync_apply_btn': { message: 'Apply' },
+  'settings.sync_delete_btn': { message: 'Delete' },
   'settings.sync_update_btn': { message: 'Update synced data' },
-  'settings.sync_apply_confirm': {
-    message: 'Are you sure you want to apply synced data?\n(Extension will be reloaded)',
-  },
+  'settings.sync_apply_confirm': { message: 'Are you sure you want to apply synced data?' },
 
   // --- Help
   'settings.help_title': { message: 'Help' },

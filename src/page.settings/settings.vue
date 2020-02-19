@@ -680,18 +680,44 @@
 
   section(ref="settings_sync")
     h2 {{t('settings.sync_title')}}
+    text-field(
+      label="settings.sync_name"
+      :or="t('settings.sync_name_or')"
+      v-model="$store.state.syncName"
+      v-debounce:input.321="setSyncName")
     toggle-field(
       label="settings.sync_save_settings"
       :value="$store.state.syncSaveSettings"
       @input="setOpt('syncSaveSettings', $event)")
-    //- toggle-field(
-    //-   label="settings.sync_auto_apply"
-    //-   :value="$store.state.syncAutoApply"
-    //-   @input="setOpt('syncAutoApply', $event)")
+    toggle-field(
+      label="settings.sync_save_ctx_menu"
+      :value="$store.state.syncSaveCtxMenu"
+      @input="setOpt('syncSaveCtxMenu', $event)")
+    toggle-field(
+      label="settings.sync_save_styles"
+      :value="$store.state.syncSaveStyles"
+      @input="setOpt('syncSaveStyles', $event)")
     .sync-data(v-if="syncedSettings")
       .sync-title {{t('settings.sync_settings_title')}}
-      .sync-info {{syncedSettingsInfo}}
-      .btn.sync-btn(@click="applySyncSettings(syncedSettings)") {{t('settings.sync_apply_btn')}}
+      .sync-list
+        .sync-item(v-for="item in syncedSettings")
+          .sync-info {{item.info}}
+          .btn.sync-btn(@click.stop="applySyncData(item.value)") {{t('settings.sync_apply_btn')}}
+          .btn.sync-btn.-warn(@click.stop="deleteSyncData(item.id)") {{t('settings.sync_delete_btn')}}
+    .sync-data(v-if="syncedCtxMenu")
+      .sync-title {{t('settings.sync_ctx_menu_title')}}
+      .sync-list
+        .sync-item(v-for="item in syncedCtxMenu")
+          .sync-info {{item.info}}
+          .btn.sync-btn(@click.stop="applySyncData(item.value)") {{t('settings.sync_apply_btn')}}
+          .btn.sync-btn.-warn(@click.stop="deleteSyncData(item.id)") {{t('settings.sync_delete_btn')}}
+    .sync-data(v-if="syncedStyles")
+      .sync-title {{t('settings.sync_styles_title')}}
+      .sync-list
+        .sync-item(v-for="item in syncedStyles")
+          .sync-info {{item.info}}
+          .btn.sync-btn(@click.stop="applySyncData(item.value)") {{t('settings.sync_apply_btn')}}
+          .btn.sync-btn.-warn(@click.stop="deleteSyncData(item.id)") {{t('settings.sync_delete_btn')}}
     .ctrls
       .btn(@click="loadSyncedData") {{t('settings.sync_update_btn')}}
 
@@ -754,6 +780,7 @@ import Actions from './actions'
 import ToggleField from '../components/toggle-field'
 import ToggleInput from '../components/toggle-input'
 import SelectField from '../components/select-field'
+import TextField from '../components/text-field'
 import NumField from '../components/num-field'
 import ContainerConfig from './components/container-config'
 import PanelConfig from './components/panel-config'
@@ -791,6 +818,7 @@ export default {
     ToggleField,
     ToggleInput,
     SelectField,
+    TextField,
     NumField,
     FooterSection,
     ContainerConfig,
@@ -811,7 +839,10 @@ export default {
       storedProps: [],
       storageOveral: '-',
       syncedSettings: null,
-      syncedSettingsInfo: null,
+      syncedCtxMenu: null,
+      syncedCtxMenuInfo: null,
+      syncedStyles: null,
+      syncedStylesInfo: null,
       fetchingBookmarksFavs: false,
       fetchingBookmarksFavsDone: 0,
       fetchingBookmarksFavsAll: 0,
@@ -1427,26 +1458,79 @@ export default {
     },
 
     async loadSyncedData() {
-      let storage = await browser.storage.sync.get({ settings: null, settingsUpdated: null })
+      let [syncStorage, profileId] = await Promise.all([
+        browser.storage.sync.get(),
+        Actions.getProfileId(),
+      ])
+      let toRemove = []
+      let data = {}
 
-      if (storage.settings && storage.settingsUpdated) {
-        let date = Utils.uDate(storage.settingsUpdated)
-        let time = Utils.uTime(storage.settingsUpdated)
-        let size = Utils.strSize(JSON.stringify(storage))
+      for (let syncKey of Object.keys(syncStorage)) {
+        let syncData = syncStorage[syncKey]
+        let [syncProfileId, syncPropName] = syncKey.split('::')
 
-        this.syncedSettings = Utils.cloneObject(storage.settings)
-        this.syncedSettingsInfo = `${date} - ${time} - ${size}`
-      } else {
-        this.syncedSettings = null
-        this.syncedSettingsInfo = null
+        if (!syncData || !syncProfileId || !syncPropName) {
+          toRemove.push(syncKey)
+          continue
+        }
+
+        syncData.id = syncKey
+        syncData.info = this.getSyncDataInfoString(syncData, syncProfileId)
+        syncData.sameProfile = profileId === syncProfileId
+        if (!data[syncPropName]) data[syncPropName] = []
+        data[syncPropName].push(syncData)
+      }
+
+      if (data.settings) this.syncedSettings = data.settings
+      else this.syncedSettings = null
+      if (data.ctxMenu) this.syncedCtxMenu = data.ctxMenu
+      else this.syncedCtxMenu = null
+      if (data.styles) this.syncedStyles = data.styles
+      else this.syncedStyles = null
+
+      if (toRemove.length) {
+        browser.storage.sync.remove(toRemove)
       }
     },
 
-    async applySyncSettings(settings) {
+    getSyncDataInfoString(info, profileId) {
+      let name = info.name || profileId
+      let date = Utils.uDate(info.time)
+      let time = Utils.uTime(info.time)
+      let dataJSON = JSON.stringify(info)
+
+      return `${name} - ${date} - ${time} - ${Utils.strSize(dataJSON)}`
+    },
+
+    async applySyncData(data) {
       if (window.confirm(translate('settings.sync_apply_confirm'))) {
-        await browser.storage.local.set({ settings: Utils.cloneObject(settings) })
-        browser.runtime.reload()
+        // Keep sync settings
+        if (data.settings) {
+          data.settings.syncName = State.syncName
+          data.settings.syncSaveSettings = State.syncSaveSettings
+          data.settings.syncSaveCtxMenu = State.syncSaveCtxMenu
+          data.settings.syncSaveStyles = State.syncSaveStyles
+          data.settings.syncAutoApply = State.syncAutoApply
+        }
+
+        await browser.storage.local.set(Utils.cloneObject(data))
+
+        if (data.settings) Actions.loadSettings()
+        if (data.tabsMenu) Actions.loadCtxMenu()
+        if (data.tabsPanelMenu) Actions.loadCtxMenu()
+        if (data.bookmarksMenu) Actions.loadCtxMenu()
+        if (data.bookmarksPanelMenu) Actions.loadCtxMenu()
+        if (data.cssVars) Actions.loadCSSVars()
       }
+    },
+
+    async deleteSyncData(key) {
+      await browser.storage.sync.remove(key)
+      this.loadSyncedData()
+    },
+
+    setSyncName() {
+      this.setOpt('syncName', State.syncName)
     },
 
     async fetchBookmarksFavicons() {

@@ -30,7 +30,14 @@ async function saveSettings() {
   await browser.storage.local.set({ settings: settings })
 
   if (settings.syncSaveSettings) {
-    await browser.storage.sync.set({ settings, settingsUpdated: Date.now() })
+    let profileId = await this.actions.getProfileId()
+    await browser.storage.sync.set({
+      [profileId + '::settings']: {
+        value: { settings },
+        time: Date.now(),
+        name: this.state.syncName,
+      },
+    })
   }
 }
 
@@ -49,8 +56,18 @@ function updateFontSize() {
   else htmlEl.style.fontSize = '14.5px'
 }
 
+async function getProfileId() {
+  let { profileID } = await browser.storage.local.get({ profileID: null })
+  if (!profileID) {
+    profileID = Utils.uid()
+    browser.storage.local.set({ profileID })
+  }
+  return profileID
+}
+
 export default {
   loadSettings,
   saveSettings,
   updateFontSize,
+  getProfileId,
 }

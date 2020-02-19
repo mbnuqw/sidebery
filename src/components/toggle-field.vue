@@ -4,6 +4,7 @@
     .label(:style="{ color }") {{t(label)}}
     toggle-input.input(:value="value")
   .note(v-if="note") {{note}}
+  slot
 </template>
 
 <script>
