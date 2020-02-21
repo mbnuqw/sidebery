@@ -119,11 +119,11 @@ export default {
   'settings.warn_on_multi_tab_close_none': { message: 'none' },
   'settings.activate_on_mouseup': { message: 'Activate tab on mouse button release' },
   'settings.activate_last_tab_on_panel_switching': {
-    message: 'Activate last active tab on panels switching',
+    message: 'Activate last active tab on panel switching',
   },
   'settings.skip_empty_panels': { message: 'Skip empty panels on switching' },
   'settings.show_tab_rm_btn': { message: 'Show close button on mouse hover' },
-  'settings.show_tab_ctx': { message: 'Show color mark of container' },
+  'settings.show_tab_ctx': { message: 'Show colored mark of container' },
   'settings.hide_inactive_panel_tabs': { message: 'Hide tabs of inactive panels' },
   'settings.activate_after_closing': { message: 'After closing current tab activate' },
   'settings.activate_after_closing_next': { message: 'next tab' },
@@ -207,7 +207,7 @@ export default {
   'settings.rm_child_tabs_folded': { message: 'folded' },
   'settings.rm_child_tabs_none': { message: 'none' },
   'settings.tabs_child_count': { message: 'Show count of descendants on the folded tab' },
-  'settings.tabs_lvl_dots': { message: 'Show marks of tabs levels' },
+  'settings.tabs_lvl_dots': { message: 'Show marks to indicate tabs sub-tree levels' },
   'settings.discard_folded': { message: 'Discard folded tabs' },
   'settings.discard_folded_delay': { message: 'With delay' },
   'settings.discard_folded_delay_sec': { message: ['second', 'seconds'], plur: [1] },
@@ -357,7 +357,7 @@ export default {
   'settings.update_storage_info': { message: 'Update' },
   'settings.clear_storage_info': { message: 'Clear' },
   'settings.clear_storage_confirm': {
-    message: 'Are you sure you want to delete all data of Sidebery?',
+    message: 'Are you sure you want to delete all Sidebery data?',
   },
 
   // --- Sync
@@ -385,7 +385,7 @@ export default {
   'settings.repo_feature': { message: 'Suggest a feature' },
   'settings.reset_settings': { message: 'Reset settings' },
   'settings.reset_confirm': { message: 'Are you sure you want to reset settings?' },
-  'settings.ref_rm': { message: 'Will be removed, open issue if you need this feature.' },
+  'settings.ref_rm': { message: 'Will be removed; open an issue if you need this feature.' },
   'settings.help_exp_data': { message: 'Export' },
   'settings.help_imp_data': { message: 'Import' },
   'settings.help_imp_perm': { message: 'Additional permissions are required' },

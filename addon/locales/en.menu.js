@@ -50,7 +50,7 @@ export default {
 
   // --- Tabs panel
   'menu.tabs_panel.mute_all_audible': { message: 'Mute all audible tabs' },
-  'menu.tabs_panel.dedup': { message: 'Close tabs duplicates' },
+  'menu.tabs_panel.dedup': { message: 'Close duplicate tabs' },
   'menu.tabs_panel.reload': { message: 'Reload tabs' },
   'menu.tabs_panel.discard': { message: 'Discard tabs' },
   'menu.tabs_panel.close': { message: 'Close tabs' },
