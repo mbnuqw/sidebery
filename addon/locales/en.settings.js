@@ -113,7 +113,7 @@ export default {
 
   // --- Tabs
   'settings.tabs_title': { message: 'Tabs' },
-  'settings.warn_on_multi_tab_close': { message: 'Warn on trying close multiple tabs' },
+  'settings.warn_on_multi_tab_close': { message: 'Warn on trying to close multiple tabs' },
   'settings.warn_on_multi_tab_close_any': { message: 'any' },
   'settings.warn_on_multi_tab_close_collapsed': { message: 'collapsed' },
   'settings.warn_on_multi_tab_close_none': { message: 'none' },
