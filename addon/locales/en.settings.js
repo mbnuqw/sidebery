@@ -334,7 +334,7 @@ export default {
   'settings.all_urls_label': { message: 'Accessing websites data:' },
   'settings.all_urls_info': {
     message:
-      'Required for:\n- Cleaning cookies\n- Proxy and url rules of containers\n- Screenshots for the group page and windows selection panel\n- Changing the User-Agent per container',
+      'Required for:\n- Cleaning cookies\n- Proxy and URL rules of containers\n- Screenshots for the group page and windows selection panel\n- Changing the User-Agent per container',
   },
   'settings.tab_hide_label': { message: 'Hiding tabs:' },
   'settings.tab_hide_info': {
@@ -342,7 +342,7 @@ export default {
   },
   'settings.clipboard_write_label': { message: 'Writing to clipboard:' },
   'settings.clipboard_write_info': {
-    message: 'Required for:\n- Copying urls of tabs/bookmarks through context menu',
+    message: 'Required for:\n- Copying URLs of tabs/bookmarks through context menu',
   },
   'settings.web_request_blocking_label': { message: 'Blocking web requests:' },
   'settings.web_request_blocking_info': {

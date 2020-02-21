@@ -10,9 +10,9 @@ export default {
   'dashboard.move_tab_ctx': { message: 'Move tab to this panel if it is opened in container:' },
   'dashboard.move_tab_ctx_none': { message: 'none' },
   'dashboard.move_tab_ctx_nochild': { message: 'Except child tabs' },
-  'dashboard.url_rules': { message: 'Move tabs with matched urls to this panel' },
+  'dashboard.url_rules': { message: 'Move tabs with matched URLs to this panel' },
   'container_dashboard.custom_icon_note': {
-    message: 'Base64, url or text. Text values syntax: "text::color::CSS-font-value"',
+    message: 'Base64, URL or text. Text values syntax: "text::color::CSS-font-value"',
   },
 
   // --- Bookmarks
@@ -46,20 +46,20 @@ export default {
   'container_dashboard.proxy_username_placeholder': { message: '---' },
   'container_dashboard.proxy_password_placeholder': { message: '---' },
   'container_dashboard.proxy_dns_label': { message: 'proxy DNS' },
-  'container_dashboard.proxy_http': { message: 'http' },
-  'container_dashboard.proxy_https': { message: 'tls' },
-  'container_dashboard.proxy_socks4': { message: 'socks4' },
-  'container_dashboard.proxy_socks': { message: 'socks5' },
+  'container_dashboard.proxy_http': { message: 'HTTP' },
+  'container_dashboard.proxy_https': { message: 'TLS' },
+  'container_dashboard.proxy_socks4': { message: 'SOCKS4' },
+  'container_dashboard.proxy_socks': { message: 'SOCKS5' },
   'container_dashboard.proxy_direct': { message: 'none' },
-  'container_dashboard.rules_include': { message: 'Include urls' },
+  'container_dashboard.rules_include': { message: 'Include URLs' },
   'container_dashboard.rules_include_tooltip': {
     message:
-      'Reopen tabs with matched urls in this panel.\nNewline separated list of "substrings" or "/regex/":\n    example.com\n    /^(some)?regex$/\n    ...',
+      'Reopen tabs with matched URLs in this panel.\nNewline separated list of "substrings" or "/regex/":\n    example.com\n    /^(some)?regex$/\n    ...',
   },
-  'container_dashboard.rules_exclude': { message: 'Exclude urls' },
+  'container_dashboard.rules_exclude': { message: 'Exclude URLs' },
   'container_dashboard.rules_exclude_tooltip': {
     message:
-      'Reopen tabs with matched url in default panel.\nNewline separated list of "substrings" or "/regex/":\n    example.com\n    /^(some)?regex$/\n    ...',
+      'Reopen tabs with matched URL in default panel.\nNewline separated list of "substrings" or "/regex/":\n    example.com\n    /^(some)?regex$/\n    ...',
   },
   'container_dashboard.user_agent': { message: 'User Agent' },
 }

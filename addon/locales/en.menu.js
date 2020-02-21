@@ -12,7 +12,7 @@ export default {
   'menu.bookmark.edit_bookmark': { message: 'Edit' },
   'menu.bookmark.delete_bookmark': { message: 'Delete' },
   'menu.bookmark.sort_by_name': { message: 'Sort by name' },
-  'menu.bookmark.sort_by_link': { message: 'Sort by url' },
+  'menu.bookmark.sort_by_link': { message: 'Sort by URL' },
   'menu.bookmark.sort_by_time': { message: 'Sort by creation time' },
 
   // --- Bookmarks panel
@@ -57,8 +57,8 @@ export default {
   'menu.tabs_panel.collapse_inact_branches': { message: 'Collapse inactive branches' },
 
   // --- Common ---
-  'menu.copy_url': { message: 'Copy url' },
-  'menu.copy_urls': { message: 'Copy urls' },
+  'menu.copy_url': { message: 'Copy URL' },
+  'menu.copy_urls': { message: 'Copy URLs' },
   'menu.common.conf': { message: 'Configure panel' },
 
   // --- Editor
