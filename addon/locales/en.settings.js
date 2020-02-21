@@ -398,5 +398,5 @@ export default {
   'settings.export_styles': { message: 'Styles' },
   'settings.export_snapshots': { message: 'Snapshots' },
   'settings.export_select_all': { message: 'Select all' },
-  'settings.reload_addon': { message: 'Reload addon' },
+  'settings.reload_addon': { message: 'Reload add-on' },
 }
