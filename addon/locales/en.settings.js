@@ -91,7 +91,7 @@ export default {
   'settings.panels_title': { message: 'Panels' },
   'settings.panel_remove_confirm_1': { message: 'Delete "' },
   'settings.panel_remove_confirm_2': {
-    message: '" panel?\nAll tabs of this panel will be moved to another panel.',
+    message: '" panel?\nAll tabs in this panel will be moved to another panel.',
   },
   'settings.panel_icon_custom': { message: 'custom' },
   'settings.panels_create_btn': { message: 'Create panel' },
@@ -113,17 +113,17 @@ export default {
 
   // --- Tabs
   'settings.tabs_title': { message: 'Tabs' },
-  'settings.warn_on_multi_tab_close': { message: 'Warn on trying close multiple tabs' },
+  'settings.warn_on_multi_tab_close': { message: 'Warn on trying to close multiple tabs' },
   'settings.warn_on_multi_tab_close_any': { message: 'any' },
   'settings.warn_on_multi_tab_close_collapsed': { message: 'collapsed' },
   'settings.warn_on_multi_tab_close_none': { message: 'none' },
   'settings.activate_on_mouseup': { message: 'Activate tab on mouse button release' },
   'settings.activate_last_tab_on_panel_switching': {
-    message: 'Activate last active tab on panels switching',
+    message: 'Activate last active tab on panel switching',
   },
   'settings.skip_empty_panels': { message: 'Skip empty panels on switching' },
   'settings.show_tab_rm_btn': { message: 'Show close button on mouse hover' },
-  'settings.show_tab_ctx': { message: 'Show color mark of container' },
+  'settings.show_tab_ctx': { message: 'Show colored mark of container' },
   'settings.hide_inactive_panel_tabs': { message: 'Hide tabs of inactive panels' },
   'settings.activate_after_closing': { message: 'After closing current tab activate' },
   'settings.activate_after_closing_next': { message: 'next tab' },
@@ -207,7 +207,7 @@ export default {
   'settings.rm_child_tabs_folded': { message: 'folded' },
   'settings.rm_child_tabs_none': { message: 'none' },
   'settings.tabs_child_count': { message: 'Show count of descendants on the folded tab' },
-  'settings.tabs_lvl_dots': { message: 'Show marks of tabs levels' },
+  'settings.tabs_lvl_dots': { message: 'Show marks to indicate tabs sub-tree levels' },
   'settings.discard_folded': { message: 'Discard folded tabs' },
   'settings.discard_folded_delay': { message: 'With delay' },
   'settings.discard_folded_delay_sec': { message: ['second', 'seconds'], plur: [1] },
@@ -297,7 +297,7 @@ export default {
   'settings.scroll_through_tabs_none': { message: 'none' },
   'settings.scroll_through_visible_tabs': { message: 'Skip folded tabs' },
   'settings.scroll_through_tabs_skip_discarded': { message: 'Skip discarded tabs' },
-  'settings.scroll_through_tabs_except_overflow': { message: 'Except if panel is overflowed' },
+  'settings.scroll_through_tabs_except_overflow': { message: 'Except if panel is overflowing' },
   'settings.scroll_through_tabs_cyclic': { message: 'Cyclically' },
   'settings.tab_double_click': { message: 'Double click on tab' },
   'settings.tab_long_left_click': { message: 'Long left click on tab' },
@@ -331,20 +331,20 @@ export default {
 
   // --- Permissions
   'settings.permissions_title': { message: 'Permissions' },
-  'settings.all_urls_label': { message: 'Websites data:' },
+  'settings.all_urls_label': { message: 'Accessing websites data:' },
   'settings.all_urls_info': {
     message:
-      'Required for:\n- Cleaning cookies\n- Proxy and url rules of containers\n- Screenshots for the group page and windows selection panel\n- Changing the User-Agent per container',
+      'Required for:\n- Cleaning cookies\n- Proxy and URL rules of containers\n- Screenshots for the group page and windows selection panel\n- Changing the User-Agent per container',
   },
   'settings.tab_hide_label': { message: 'Hiding tabs:' },
   'settings.tab_hide_info': {
-    message: 'Required for:\n- Hiding tabs on inactive panels\n- Hiding folded tabs',
+    message: 'Required for:\n- Hiding tabs in inactive panels\n- Hiding folded tabs',
   },
-  'settings.clipboard_write_label': { message: 'Clipboard write:' },
+  'settings.clipboard_write_label': { message: 'Writing to clipboard:' },
   'settings.clipboard_write_info': {
-    message: 'Required for:\n- Copying urls of tabs/bookmarks through context menu',
+    message: 'Required for:\n- Copying URLs of tabs/bookmarks through context menu',
   },
-  'settings.web_request_blocking_label': { message: 'Web requests blocking' },
+  'settings.web_request_blocking_label': { message: 'Blocking web requests:' },
   'settings.web_request_blocking_info': {
     message: 'Required for:\n- Changing the User-Agent per container',
   },
@@ -357,7 +357,7 @@ export default {
   'settings.update_storage_info': { message: 'Update' },
   'settings.clear_storage_info': { message: 'Clear' },
   'settings.clear_storage_confirm': {
-    message: 'Are you sure you want to delete all data of Sidebery?',
+    message: 'Are you sure you want to delete all Sidebery data?',
   },
 
   // --- Sync
@@ -385,7 +385,7 @@ export default {
   'settings.repo_feature': { message: 'Suggest a feature' },
   'settings.reset_settings': { message: 'Reset settings' },
   'settings.reset_confirm': { message: 'Are you sure you want to reset settings?' },
-  'settings.ref_rm': { message: 'Will be removed, open issue if you need this feature.' },
+  'settings.ref_rm': { message: 'Will be removed; open an issue if you need this feature.' },
   'settings.help_exp_data': { message: 'Export' },
   'settings.help_imp_data': { message: 'Import' },
   'settings.help_imp_perm': { message: 'Additional permissions are required' },
@@ -398,5 +398,5 @@ export default {
   'settings.export_styles': { message: 'Styles' },
   'settings.export_snapshots': { message: 'Snapshots' },
   'settings.export_select_all': { message: 'Select all' },
-  'settings.reload_addon': { message: 'Reload addon' },
+  'settings.reload_addon': { message: 'Reload add-on' },
 }
