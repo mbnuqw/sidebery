@@ -692,11 +692,11 @@
     toggle-field(
       label="settings.sync_save_ctx_menu"
       :value="$store.state.syncSaveCtxMenu"
-      @input="setOpt('syncSaveCtxMenu', $event)")
+      @input="setOpt('syncSaveCtxMenu', $event), saveSyncCtxMenu()")
     toggle-field(
       label="settings.sync_save_styles"
       :value="$store.state.syncSaveStyles"
-      @input="setOpt('syncSaveStyles', $event)")
+      @input="setOpt('syncSaveStyles', $event), saveSyncStyles()")
     .sync-data(v-if="syncedSettings")
       .sync-title {{t('settings.sync_settings_title')}}
       .sync-list
@@ -1531,6 +1531,26 @@ export default {
 
     setSyncName() {
       this.setOpt('syncName', State.syncName)
+    },
+
+    saveSyncCtxMenu() {
+      if (!State.syncSaveCtxMenu) return
+      Actions.saveCtxMenu()
+    },
+
+    async saveSyncStyles() {
+      if (!State.syncSaveStyles) return
+
+      let [cssVars, sidebarCSS, groupCSS] = await Promise.all([
+        Actions.getCSSVars(),
+        Actions.getCustomCSS('sidebar'),
+        Actions.getCustomCSS('group'),
+      ])
+
+      if (sidebarCSS) State.sidebarCSS = sidebarCSS
+      if (groupCSS) State.groupCSS = groupCSS
+
+      Actions.saveStylesToSync(cssVars)
     },
 
     async fetchBookmarksFavicons() {
