@@ -3,6 +3,7 @@
 dist
 node_modules
 coverage
+wiki
 
 addon/sidebar/*
 !addon/sidebar/index.html
