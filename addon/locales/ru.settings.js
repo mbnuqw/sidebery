@@ -12,7 +12,7 @@ export default {
   'settings.nav_settings_dnd': { message: 'Перетаскивание' },
   'settings.nav_settings_tabs': { message: 'Вкладки' },
   'settings.nav_settings_new_tab_position': { message: 'Позиция новых вкладок' },
-  'settings.nav_settings_pinned_tabs': { message: 'Закрепленные вкладок' },
+  'settings.nav_settings_pinned_tabs': { message: 'Закрепленные вкладки' },
   'settings.nav_settings_tabs_tree': { message: 'Дерево вкладок' },
   'settings.nav_settings_bookmarks': { message: 'Закладки' },
   'settings.nav_settings_appearance': { message: 'Вид' },
