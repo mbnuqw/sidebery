@@ -71,13 +71,13 @@ __Create new tab__
 `ctrl+shift+space` - after active tab.  
 Also "Middle click on panel", "Left click on panel's icon" and other configurable methods...  
 
-__Switch between containers__  
+__Switching between panels__  
 `alt+Comma(<)` - to previous panel  
 `alt+Period(>)` - to next panel  
 Scroll on navigation strip - (optional)  
 Horizontal scroll - (optional)  
 
-__Switch between tabs__  
+__Switching between tabs__  
 `ctrl+PgUp/PgDown` - firefox's defaults  
 `alt+Up/Down` + `alt+space` - select tab and activate it  
 Scroll - (optional)  
