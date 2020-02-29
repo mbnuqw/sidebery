@@ -81,11 +81,11 @@
         @toggle="toggleCSSVar('inactive_fg')")
 
       color-style-field(
-        v-model="cssVars.favicons_placehoder_bg"
+        v-model="cssVars.favicons_placeholder_bg"
         :label="'styles.favi_placeholder_color'"
-        :name="'--favicons-placehoder-bg'"
-        @change="updateCSSVar('favicons_placehoder_bg')"
-        @toggle="toggleCSSVar('favicons_placehoder_bg')")
+        :name="'--favicons-placeholder-bg'"
+        @change="updateCSSVar('favicons_placeholder_bg')"
+        @toggle="toggleCSSVar('favicons_placeholder_bg')")
 
     section
       h2 {{t('styles.buttons_title')}}
