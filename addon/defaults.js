@@ -189,7 +189,7 @@ export const CUSTOM_CSS_VARS = {
   false_fg: null,
   active_fg: null,
   inactive_fg: null,
-  favicons_placehoder_bg: null,
+  favicons_placeholder_bg: null,
 
   btn_bg: null,
   btn_bg_hover: null,
