@@ -762,7 +762,7 @@
       .info(v-if="$store.state.ffInfo") Firefox: {{$store.state.ffInfo.version}}
       .info Addon: {{$store.state.version}}
 
-  .details-box(v-if="dbgDetails" @scroll.stop="")
+  .details-box(v-if="dbgDetails" @wheel="onDbgWheel")
     .box
       .btn(@click="copyDebugDetail") {{t('settings.ctrl_copy')}}
       .btn.-warn(@click="dbgDetails = ''") {{t('settings.ctrl_close')}}
@@ -1630,6 +1630,16 @@ export default {
           action: 'loadFavicons',
         })
       }, 1500)
+    },
+
+    /**
+     * Block scrolling the main page when debug info showed.
+     */
+    onDbgWheel(e) {
+      let scrollOffset = e.target.parentNode.scrollTop
+      let maxScrollOffset = e.target.scrollHeight - e.target.parentNode.offsetHeight
+      if (scrollOffset === 0 && e.deltaY < 0) e.preventDefault()
+      if (scrollOffset === maxScrollOffset && e.deltaY > 0) e.preventDefault()
     },
   },
 }
