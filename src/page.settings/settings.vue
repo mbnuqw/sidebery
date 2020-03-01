@@ -1224,9 +1224,9 @@ export default {
       }
 
       try {
-        let { panels } = await browser.storage.local.get('panels')
+        let { panels_v4 } = await browser.storage.local.get('panels_v4')
         dbg.panels = []
-        for (let panel of panels) {
+        for (let panel of panels_v4) {
           let clone = Utils.cloneObject(panel)
           if (clone.name) clone.name = clone.name.length
           if (clone.icon) clone.icon = '...'
