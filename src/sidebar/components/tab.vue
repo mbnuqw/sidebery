@@ -326,7 +326,7 @@ export default {
       const tabsToDrag = []
       if (!State.selected.length) tabsToDrag.push(this.tab)
       for (let tab of State.tabs) {
-        if (toDrag.includes(tab.parentId)) {
+        if (State.tabsTree && toDrag.includes(tab.parentId)) {
           toDrag.push(tab.id)
           tabsToDrag.push(tab)
           continue
