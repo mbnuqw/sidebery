@@ -1,0 +1,37 @@
+@import '../../mixins'
+@import '../../base'
+
+@import './vars'
+@import './animations'
+
+@import './btn'
+
+html
+  box(relative)
+  size(h: 100%)
+
+body
+  box(relative, flex)
+  size(rel(100%, -16px), min-h: 100%)
+  text(sans-serif, smooth: on)
+  margin: 0
+  flex-direction: column
+  justify-content: center
+  align-items: center
+  padding: 0 8px
+  background-color: var(--bg)
+  background-image: var(--bg-img)
+  background-size: var(--bg-size)
+
+.url
+  box(relative)
+  text(s: rem(24))
+  color: var(--label-fg)
+  padding: 16px
+  margin: 0
+  word-wrap: anywhere
+
+.btn
+  text(s: rem(16))
+  padding: 6px 16px
+  margin-top: 12px

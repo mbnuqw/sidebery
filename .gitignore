@@ -32,6 +32,8 @@ addon/debug
 
 addon/themes/default/*
 !addon/themes/default/__preserve-dir
+addon/themes/minimal/*
+!addon/themes/minimal/__preserve-dir
 addon/themes/tactile/*
 !addon/themes/tactile/__preserve-dir
 

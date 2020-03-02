@@ -253,6 +253,7 @@ export default {
   'settings.style_light': { message: 'light' },
   'settings.theme': { message: 'Theme' },
   'settings.theme_default': { message: 'default' },
+  'settings.theme_minimal': { message: 'minimal' },
   'settings.theme_tactile': { message: 'tactile' },
   'settings.theme_none': { message: 'none' },
   'settings.bg_noise': { message: 'Frosted background' },

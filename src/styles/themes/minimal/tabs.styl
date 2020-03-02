@@ -1,0 +1,10 @@
+@import '../../mixins'
+
+.TabsPanel .container
+  box(relative)
+  size(100%, same, min-h: 100%)
+  padding: 0 0 64px
+  transition: transform var(--d-fast), opacity var(--d-fast)
+  > div
+    box(relative)
+    size(100%, same)

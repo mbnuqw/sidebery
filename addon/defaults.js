@@ -28,7 +28,7 @@ export const SETTINGS_OPTIONS = {
   rmChildTabsOpts: ['all', 'folded', 'none'],
   fontSizeOpts: ['xxs', 'xs', 's', 'm', 'l', 'xl', 'xxl'],
   styleOpts: ['dark', 'light'],
-  themeOpts: ['default', 'tactile', 'none'],
+  themeOpts: ['default', 'minimal', 'tactile', 'none'],
   snapIntervalUnitOpts: ['min', 'hr', 'day'],
   snapLimitUnitOpts: ['snap', 'kb', 'day'],
   panelTypeOpts: ['tabs', 'ctx'],

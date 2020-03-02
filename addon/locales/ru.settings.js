@@ -274,6 +274,7 @@ export default {
   'settings.style_light': { message: 'светлый' },
   'settings.theme': { message: 'Тема' },
   'settings.theme_default': { message: 'стандартная' },
+  'settings.theme_minimal': { message: 'минимальная' },
   'settings.theme_tactile': { message: 'тактильная' },
   'settings.theme_none': { message: 'нет' },
   'settings.bg_noise': { message: 'Матовый задний фон' },

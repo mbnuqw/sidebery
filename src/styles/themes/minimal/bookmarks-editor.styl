@@ -1,0 +1,63 @@
+@import '../../mixins'
+
+.BEditor
+  box(absolute)
+  size(100%, same)
+  pos(b: 0, l: 0)
+  z-index: 1000
+  transform: translateZ(0)
+  &:before
+    content: ''
+    box(absolute)
+    pos(0, 0)
+    size(100%, same)
+    background-color: var(--bg)
+    opacity: .7
+
+.BEditor .editor-panel
+  box(absolute)
+  pos(b: 0, l: 0)
+  size(100%)
+  padding: 0 0 8px
+  background-color: var(--bg)
+  background-image: var(--bg-img)
+  background-size: var(--bg-size)
+  transform: translateZ(0)
+  box-shadow: 0 -1px 12px 0 #00000056,
+              0 -1px 0 0 #00000012
+
+.BEditor .field
+  box(relative)
+  margin: 8px 12px 0
+  &.-title
+    > .input
+      text(s: rem(18))
+      color: var(--title-fg)
+
+.BEditor .field > .input
+  text(s: rem(15))
+  margin: 2px 0 0
+  color: var(--sub-title-fg)
+  transition: color 1s
+  > input
+  > textarea
+  > .placeholder
+    padding: 2px 0
+  &.err
+    transition: none
+    color: var(--false-fg)
+
+.BEditor .ctrls
+  box(relative, flex)
+  align-items: center
+  justify-content: center
+  padding: 0 8px
+  margin: 8px 0 0
+  flex-wrap: wrap
+
+.BEditor .ctrls > .btn
+  size(min-w: max-content)
+  text(s: rem(15))
+  padding: 5px 12px
+  margin: 4px
+  flex-grow: 1

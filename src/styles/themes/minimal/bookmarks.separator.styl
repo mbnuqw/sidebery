@@ -1,0 +1,50 @@
+@import '../../mixins'
+
+.Separator
+  box(relative)
+  padding: 0 0 0 12px
+  margin: 0
+  border-top-left-radius: 3px
+  border-bottom-left-radius: 3px
+
+// ---
+// -- Body
+// -
+.Separator .body
+  box(relative, flex)
+  height: var(--bookmarks-separator-height)
+  align-items: center
+  cursor: pointer
+  transform: translateZ(0)
+  transition: opacity var(--d-fast)
+  &:before
+    content: ''
+    box(absolute)
+    pos(0, r: 0)
+    size(100vw, 100%)
+    transition: background-color var(--d-fast)
+  &:after
+    content: ''
+    box(absolute)
+    pos(8px, l: 8px)
+    size(calc(100% - 16px), 1px)
+    background-color: #00000036
+    box-shadow: 0 1px 0 0 #ffffff08
+
+.Separator .body:hover:before
+  background-color: var(--bookmarks-node-bg-hover)
+
+.Separator .body:active:before
+  background-color: var(--bookmarks-node-bg-active)
+
+.Separator[data-selected] > .body:before
+  background-color: var(--tabs-selected-bg)
+
+// ---
+// -- Drag layer
+// -
+.Separator .drag-layer
+  box(absolute)
+  size(100%, same)
+  pos(0, 0)
+  z-index: 15

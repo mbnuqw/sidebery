@@ -1,0 +1,114 @@
+@import '../../mixins'
+@import '../../base'
+
+@import './vars'
+@import './animations'
+
+@import './btn'
+
+html
+body
+  box(relative, flex, border-box)
+  size(320px)
+  text(sans-serif, smooth: on)
+  margin: 0
+  padding: 0
+  flex-direction: column
+  justify-content: space-between
+  align-items: center
+  background-color: var(--bg)
+  background-image: var(--bg-img)
+  background-size: var(--bg-size)
+  overflow: hidden
+
+header
+  box(relative)
+
+  h2
+    box(relative)
+    text(s: rem(24), w: 700)
+    padding: 16px 16px 24px
+    margin: 0
+    text-align: center
+    color: var(--title-fg)
+
+main
+  box(relative, flex)
+  size(100%)
+  flex-direction: column
+  justify-content: center
+  align-items: center
+
+  .gap
+    box(relative)
+    size(h: 16px)
+
+  .field
+    box(relative, flex)
+    size(calc(100% - 32px))
+    justify-content: space-between
+    align-items: center
+    padding: 3px 16px
+    grid-gap: 16px
+    overflow: hidden
+
+  .label
+    box(relative)
+    size(calc(50% - 8px))
+    text(s: rem(15), w: 700)
+    color: var(--info-fg)
+    overflow: hidden
+    text-overflow: ellipsis
+    text-align: right
+    white-space: nowrap
+
+  .value
+    box(relative)
+    size(calc(50% - 8px))
+    text(s: rem(14))
+    color: var(--label-fg)
+    white-space: nowrap
+    overflow-x: auto
+    scrollbar-width: none
+
+  .ctrls
+    box(relative, flex)
+    size(100%)
+    margin: 32px 0 24px
+    grid-gap: 16px
+    .btn-box
+      box(relative, flex)
+      size(50%)
+    .btn-box:first-of-type
+      justify-content: flex-end
+
+body.-loading
+  cursor: progress
+
+body.-loading .-animate:nth-child(n+1)
+  animation: checking 1s infinite
+body.-loading .-animate:nth-child(n+2)
+  animation: checking 1s .1s infinite
+
+footer
+  box(relative, flex)
+  margin: 0 auto
+  padding: 16px 0
+  justify-content: center
+  align-items: center
+  overflow: hidden
+
+  .logo
+    box(relative)
+    size(36px, same)
+    fill: #646464
+    cursor: default
+    opacity: .24
+
+@keyframes checking
+  0%
+    opacity: 1
+  50%
+    opacity: .3
+  100%
+    opacity: 1

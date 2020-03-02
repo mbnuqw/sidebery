@@ -1,0 +1,103 @@
+@import '../../mixins'
+
+.Bookmark
+  box(relative)
+  padding: 0 0 0 12px
+  margin: 0
+  border-top-left-radius: 3px
+  border-bottom-left-radius: 3px
+
+// ---
+// -- Body
+// -
+.Bookmark > .body
+  box(relative, flex)
+  height: var(--bookmarks-bookmark-height)
+  align-items: center
+  cursor: pointer
+  transform: translateZ(0)
+  transition: opacity var(--d-fast)
+  &:before
+    content: ''
+    box(absolute)
+    pos(0, r: 0)
+    size(100vw, 100%)
+    transition: background-color var(--d-fast)
+
+.Bookmark > .body:hover:before
+  background-color: var(--bookmarks-node-bg-hover)
+
+.Bookmark > .body:active:before
+  background-color: var(--bookmarks-node-bg-active)
+
+.Bookmark[data-selected] > .body:before
+  background-color: var(--tabs-selected-bg)
+
+// ---
+// -- Drag layer
+// -
+.Bookmark .drag-layer
+  box(absolute)
+  size(100%, same)
+  pos(0, 0)
+  z-index: 15
+
+// ---
+// -- Favicon
+// -
+.Bookmark .fav
+  box(relative)
+  size(16px, same)
+  flex-shrink: 0
+  margin: 0 8px 0 0
+  z-index: 20
+  transition: opacity var(--d-fast), transform var(--d-fast)
+
+// ---
+// -- Placeholder of favicon
+// -
+.Bookmark .fav > .placeholder
+  box(absolute)
+  size(16px, same)
+  pos(0, 0)
+  > svg
+    box(absolute)
+    size(100%, same)
+    pos(0, 0)
+    fill: var(--favicons-placeholder-bg)
+
+// ---
+// -- Favicon's image
+// -
+.Bookmark .fav > img
+  box(absolute)
+  pos(0, 0)
+  size(100%, same)
+  transition: opacity var(--d-fast), transform var(--d-fast)
+
+// ---
+// -- Title
+// -
+.Bookmark .title
+  box(relative)
+  size(100%)
+  font: var(--bookmarks-bookmark-font)
+  color: var(--bookmarks-node-title-fg)
+  white-space: nowrap
+  overflow: hidden
+  transition: transform var(--d-fast), color var(--d-fast)
+  mask: linear-gradient(-90deg, transparent, #000000 12px, #000000)
+
+.Bookmark:hover .title
+  transition: transform var(--d-fast)
+  color: var(--bookmarks-node-title-fg-hover)
+
+.Bookmark:active .title
+  transition: none
+  color: var(--bookmarks-node-title-fg-active)
+
+.Bookmark[data-open] .title
+  color: var(--bookmarks-open-bookmark-fg)
+
+.Bookmark[data-selected] .title
+  color: var(--tabs-selected-fg)

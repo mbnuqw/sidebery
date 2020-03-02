@@ -1,0 +1,84 @@
+@import '../../mixins'
+
+.PinnedDock
+  box(relative, flex)
+  z-index: 2000
+  background-color: var(--bg)
+  background-image: var(--bg-img)
+  background-size: var(--bg-size)
+  &[data-empty]
+    box(none)
+
+// Per-Panel
+#root[data-pinned-tabs-position="panel"] .PinnedDock
+  size(100%, auto)
+  flex-wrap: wrap
+  flex-direction: row
+
+// Left
+#root[data-pinned-tabs-position="left"] .PinnedDock
+  size(auto, 100%)
+  flex-direction: column
+
+// Right
+#root[data-pinned-tabs-position="right"] .PinnedDock
+  size(auto, 100%)
+  flex-direction: column
+
+// Top
+#root[data-pinned-tabs-position="top"] .PinnedDock
+  size(100%, auto)
+  flex-wrap: wrap
+  flex-direction: row
+
+// ---
+// -- Background overlay
+// -
+.PinnedDock:before
+  content: ''
+  box(absolute)
+  pos(0, 0)
+  size(100%, same)
+
+#root[data-pinned-tabs-position="panel"][data-pinned-tabs-list] .PinnedDock:before
+  box(none)
+
+// ---
+// -- Separator
+// -
+.PinnedDock:after
+  content: ''
+  box(absolute, none)
+  pos(b: 1px, l: 0)
+  size(100%, 7px)
+
+#root[data-pinned-tabs-position="panel"][data-pinned-tabs-list] .PinnedDock:after
+  box(block)
+
+// ---
+// -- The last drop position
+// -
+.PinnedDock .to-the-end
+  box(relative)
+  opacity: 0
+  transition: opacity var(--d-fast)
+  &:before
+    content: ''
+    box(absolute)
+    pos(0, 0)
+    background-color: var(--tabs-update-badge-bg)
+
+#root[data-pinned-tabs-position="panel"] .PinnedDock .to-the-end
+#root[data-pinned-tabs-position="top"] .PinnedDock .to-the-end
+  size(0, auto)
+  &:before
+    size(1px, auto)
+
+#root[data-pinned-tabs-position="left"] .PinnedDock .to-the-end
+#root[data-pinned-tabs-position="right"] .PinnedDock .to-the-end
+  size(auto, 0)
+  &:before
+    size(auto, 1px)
+
+.PinnedDock[data-drag-pointed] .to-the-end
+  opacity: 1

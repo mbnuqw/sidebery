@@ -1,0 +1,75 @@
+@import '../../mixins'
+
+.inherit-text-styles
+  font-family: inherit
+  font-size: inherit
+  font-weight: inherit
+  line-height: inherit
+  letter-spacing: inherit
+  text-indent: inherit
+  text-align: inherit
+  color: inherit
+
+// ---
+// -- Text input
+// -
+.TextInput
+  box(relative)
+  &:before
+    content: ''
+    box(absolute)
+    pos(-2px, -4px)
+    size(calc(100% + 4px), calc(100% + 4px))
+    box-shadow: 0 1px 0 0 var(--inactive-fg)
+    transform: translateZ(0)
+    opacity: 0
+    transition: opacity var(--d-norm), box-shadow var(--d-norm)
+  &:hover:before
+    opacity: .3
+  &[data-active]:before
+    opacity: 1
+    box-shadow: 0 1px 0 0 var(--active-fg)
+  &[data-valid]:before
+    opacity: 1
+    box-shadow: 0 1px 0 0 var(--true-fg)
+  &[data-wrong]
+    animation: shake-animation .3s, err-blink-animation .6s
+
+// ---
+// -- Input
+// -
+.TextInput input
+.TextInput textarea
+  @extend .inherit-text-styles
+  box(relative, block)
+  size(100%)
+  color: var(--label-fg)
+  -webkit-appearance: none
+  border: none
+  outline: none
+  margin: 0
+  padding: 0
+  background-color: transparent
+  resize: none
+  z-index: 1
+
+// ---
+// -- Placeholder
+// -
+.TextInput .placeholder
+  @extend .inherit-text-styles
+  box(absolute)
+  pos(0, 0)
+  color: var(--inactive-fg)
+  padding: 0
+  margin: 0
+  opacity: 0
+  transform: translateX(16px)
+  transition: opacity var(--d-fast), transform var(--d-fast)
+
+.TextInput[data-empty] .placeholder
+  opacity: 1
+  transform: translateX(0)
+
+.TextInput[data-active] .placeholder
+  transform: translateX(3px)

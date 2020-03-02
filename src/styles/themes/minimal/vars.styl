@@ -1,0 +1,315 @@
+// ---
+// -- Styles
+// -
+#root
+  // Common
+  &[data-style="dark"]
+    --bg: #323232
+    --title-fg: #ffffff
+    --sub-title-fg: #ffffff
+    --label-fg: #ffffff
+    --label-fg-hover: #ffffff
+    --label-fg-active: #aaaaaa
+    --info-fg: #898989
+    --true-fg: #64df64
+    --false-fg: #df6464
+    --false-bg: #b93527
+    --active-fg: #4993E6
+    --inactive-fg: #5c5c5c
+    --notice-fg: #00e9fb
+    --favicons-placeholder-bg: #ffffff30
+    --border-fg: #00000000
+    --border-active-fg: #00000032
+    --border-flare-fg: #ffffff08
+    --progress-fg: #00e9fb
+    --progress-bg: #595959
+  &[data-style="light"]
+    --bg: #fafafa
+    --title-fg: #000000
+    --sub-title-fg: #242424
+    --label-fg: #000000
+    --label-fg-hover: #000000
+    --label-fg-active: #565656
+    --info-fg: #727272
+    --true-fg: #08bc2d
+    --false-fg: #d72f2f
+    --false-bg: #b93527
+    --active-fg: #146fd9
+    --inactive-fg: #a2a2a2
+    --notice-fg: #01acda
+    --favicons-placeholder-bg: #00000060
+    --border-fg: #00000000
+    --border-active-fg: #00000032
+    --border-flare-fg: #ffffff32
+    --progress-fg: #01acda
+    --progress-bg: #a6a6a6
+
+  // Button
+  &[data-style="dark"]
+    --btn-bg: #245484
+    --btn-bg-hover: #295b8f
+    --btn-bg-active: #205386
+    --btn-warn-bg: #b93527
+    --btn-warn-bg-hover: #c93627
+    --btn-warn-bg-active: #b93224
+    --btn-fg: #fafafa
+    --btn-fg-hover: #ffffff
+    --btn-fg-active: #f2f2f2
+    --btn-shadow: 0 1px 2px 0 #00000024, 0 0 0 1px #00000012
+    --btn-shadow-hover: 0 1px 2px 0 #00000032, 0 0 0 1px #00000024
+    --btn-shadow-active: 0 1px 2px 0 #00000000, 0 0 0 1px #00000012
+    --btn-roundness: 3px
+  &[data-style="light"]
+    --btn-bg: #328def
+    --btn-bg-hover: #3995ea
+    --btn-bg-active: #268aef
+    --btn-warn-bg: #ff5538
+    --btn-warn-bg-hover: #ff613d
+    --btn-warn-bg-active: #ff5538
+    --btn-fg: #fafafa
+    --btn-fg-hover: #ffffff
+    --btn-fg-active: #f2f2f2
+    --btn-shadow: 0 1px 2px 0 #00000024, 0 0 0 1px #00000000
+    --btn-shadow-hover: 0 1px 2px 0 #00000032, 0 0 0 1px #00000000
+    --btn-shadow-active: 0 1px 2px 0 #00000000, 0 0 0 1px #00000012
+    --btn-roundness: 3px
+
+  // Scroll Box
+  &[data-style="dark"]
+    --scroll-progress-h: 1px
+    --scroll-progress-bg: #37adef
+  &[data-style="light"]
+    --scroll-progress-h: 2px
+    --scroll-progress-bg: #178dff
+
+  // Context Menu
+  &[data-style="dark"]
+    --ctx-menu-bg: #2a2a2a
+    --ctx-menu-bg-hover: #484848
+    --ctx-menu-warn-bg-hover: #ff613d
+    --ctx-menu-fg: #ffffff
+    --ctx-menu-warn-fg: #ff613d
+  &[data-style="light"]
+    --ctx-menu-bg: #ffffff
+    --ctx-menu-bg-hover: #cacaca
+    --ctx-menu-warn-bg-hover: #ff613d
+    --ctx-menu-fg: #000000
+    --ctx-menu-warn-fg: #ff613d
+
+  // Nav Strip
+  &[data-style="dark"]
+    --nav-btn-fg: #ffffff
+    --nav-btn-bg-focus: #484848
+    --nav-btn-opacity: .8
+    --nav-btn-opacity-hover: .9
+    --nav-btn-opacity-active: .6
+    --nav-btn-activated-bg: #242424aa
+    --nav-btn-activated-opacity: 1
+    --nav-btn-activated-filter: drop-shadow(0 0 1px #00000056)
+    --nav-btn-update-badge-bg: #00e9fb
+  &[data-style="light"]
+    --nav-btn-fg: #646464
+    --nav-btn-bg-focus: #ffffff
+    --nav-btn-opacity: .8
+    --nav-btn-opacity-hover: .9
+    --nav-btn-opacity-active: .6
+    --nav-btn-activated-bg: #cacacaaf
+    --nav-btn-activated-opacity: 1
+    --nav-btn-activated-filter: none
+    --nav-btn-update-badge-bg: #01acda
+
+  // Tabs
+  &[data-style="dark"]
+    --tabs-fg: #aaa
+    --tabs-fg-hover: #cecece
+    --tabs-fg-active: #aaa
+    --tabs-bg-hover: #00000016
+    --tabs-bg-active: #242424af
+    --tabs-activated-bg: #242424af
+    --tabs-activated-fg: #ffffff
+    --tabs-selected-bg: #275ca4
+    --tabs-selected-fg: #ffffff
+    --tabs-loading-fg: #47cfff
+    --tabs-update-badge-bg: #00e9fb
+    --tabs-lvl-indicator-bg: #5c5c5c
+  &[data-style="light"]
+    --tabs-fg: #323232
+    --tabs-fg-hover: #000000
+    --tabs-fg-active: #565656
+    --tabs-bg-hover: #00000012
+    --tabs-bg-active: #cacacaaf
+    --tabs-activated-bg: #cacacaaf
+    --tabs-activated-fg: #000000
+    --tabs-loading-fg: #146fd9
+    --tabs-selected-bg: #458fff
+    --tabs-selected-fg: #ffffff
+    --tabs-update-badge-bg: #01acda
+    --tabs-lvl-indicator-bg: #a2a2a2
+
+  // Bookmarks
+  &[data-style="dark"]
+    --bookmarks-node-title-fg: #bebebe
+    --bookmarks-node-title-fg-hover: #ffffff
+    --bookmarks-node-title-fg-active: #aaaaaa
+    --bookmarks-node-bg-hover: #00000016
+    --bookmarks-node-bg-active: #00000024
+    --bookmarks-folder-closed-fg: #bebebe
+    --bookmarks-folder-closed-fg-hover: #ffffff
+    --bookmarks-folder-closed-fg-active: #787878
+    --bookmarks-folder-expanded-fg: #ffffff
+    --bookmarks-folder-expanded-fg-hover: #dadada
+    --bookmarks-folder-expanded-fg-active: #898989
+    --bookmarks-folder-empty-fg: #646464
+    --bookmarks-drag-gradient: linear-gradient(90deg, #242424, #32323200)
+    --bookmarks-open-bookmark-fg: #64aaff
+  &[data-style="light"]
+    --bookmarks-node-title-fg: #3a3a3a
+    --bookmarks-node-title-fg-hover: #000000
+    --bookmarks-node-title-fg-active: #565656
+    --bookmarks-node-bg-hover: #00000012
+    --bookmarks-node-bg-active: #00000020
+    --bookmarks-folder-closed-fg: #646464
+    --bookmarks-folder-closed-fg-hover: #323232
+    --bookmarks-folder-closed-fg-active: #787878
+    --bookmarks-folder-expanded-fg: #000000
+    --bookmarks-folder-expanded-fg-hover: #323232
+    --bookmarks-folder-expanded-fg-active: #898989
+    --bookmarks-folder-empty-fg: #969696
+    --bookmarks-drag-gradient: linear-gradient(90deg, #cacaca, #fafafa00)
+    --bookmarks-open-bookmark-fg: #146fd9
+
+  // Settings
+  &[data-style="dark"]
+    --settings-snapshot-counter-pinned-fg: #686868
+    --settings-shortcut-fg: #cecece
+    --settings-shortcut-fg-focus: #37adff
+    --settings-shortcut-bg: #484848
+    --settings-shortcut-shadow: 0 0 0 1.2px #565656
+    --settings-shortcut-shadow-focus: 0 0 0 1.2px #37adff
+  &[data-style="light"]
+    --settings-snapshot-counter-pinned-fg: #565656
+    --settings-shortcut-fg: #484848
+    --settings-shortcut-fg-focus: #278dff
+    --settings-shortcut-bg: #ffffff
+    --settings-shortcut-shadow: 0 0 0 1.2px #aaaaaa
+    --settings-shortcut-shadow-focus: 0 0 0 1.2px #37adff
+
+// ---
+// -- Color of current panel
+// -
+#root[data-style="dark"]
+  --active-container-fg: #ffffff
+#root[data-style="light"]
+  --active-container-fg: #323232
+#root[data-color="blue"]
+  --active-container-fg: #37adff
+#root[data-color="turquoise"]
+  --active-container-fg: #00c79a
+#root[data-color="green"]
+  --active-container-fg: #51cd00
+#root[data-color="yellow"]
+  --active-container-fg: #ffcb00
+#root[data-color="orange"]
+  --active-container-fg: #ff9f00
+#root[data-color="red"]
+  --active-container-fg: #ff613d
+#root[data-color="pink"]
+  --active-container-fg: #ff4bda
+#root[data-color="purple"]
+  --active-container-fg: #af51f5
+
+// ---
+// -- Local color of panel
+// -
+#root[data-style="dark"]
+  --container-fg: #ffffff
+#root[data-style="light"]
+  --container-fg: #323232
+[data-color="blue"]
+  --container-fg: #37adff
+[data-color="turquoise"]
+  --container-fg: #00c79a
+[data-color="green"]
+  --container-fg: #51cd00
+[data-color="yellow"]
+  --container-fg: #ffcb00
+[data-color="orange"]
+  --container-fg: #ff9f00
+[data-color="red"]
+  --container-fg: #ff613d
+[data-color="pink"]
+  --container-fg: #ff4bda
+[data-color="purple"]
+  --container-fg: #af51f5
+[data-color="inactive"]
+  --container-fg: #787878
+
+// ---
+// -- Sizes
+// -
+// Nav bar
+#root
+  --nav-btn-width: 34px
+  --nav-btn-height: 32px
+
+// Tabs
+#root
+  --tabs-height: 30px
+  --tabs-indent: 10px
+
+// Bookmarks
+#root
+  --bookmarks-indent: 12px
+  --bookmarks-bookmark-height: 24px
+  --bookmarks-folder-height: 28px
+  --bookmarks-separator-height: 17px
+
+// ---
+// -- Animation
+// -
+#root[data-animations="none"]
+  --d-tick: 0s
+  --d-fast: 0s
+  --d-norm: 0s
+  --d-slow: 0s
+
+#root[data-animations="fast"]
+  --d-tick: .05s
+  --d-fast: .12s
+  --d-norm: .2s
+  --d-slow: .3s
+
+#root[data-animations="norm"]
+  --d-tick: .06s
+  --d-fast: .16s
+  --d-norm: .3s
+  --d-slow: .42s
+
+#root[data-animations="slow"]
+  --d-tick: .1s
+  --d-fast: .2s
+  --d-norm: .3s
+  --d-slow: .5s
+
+// ---
+// -- Misc
+// -
+// Tabs
+#root
+  --tabs-font: rem(16) sans-serif
+  --tabs-count-font: rem(9) sans-serif
+  --tabs-border: none
+  --tabs-activated-border: none
+  --tabs-selected-border: none
+  --tabs-shadow: none
+  --tabs-activated-shadow: none
+  --tabs-selected-shadow: none
+
+// Bookmarks
+#root
+  --bookmarks-bookmark-font: rem(14) sans-serif
+  --bookmarks-folder-font: rem(16) sans-serif
+
+// ContextMenu
+#root
+  --ctx-menu-font: rem(15) sans-serif
