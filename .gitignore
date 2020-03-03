@@ -21,7 +21,7 @@ addon/proxy/*
 !addon/proxy/proxy.html
 
 addon/vendor/*
-!addon/vendor/vendor.js
+!addon/vendor/__preserve-dir
 
 addon/snapshots
 addon/theme
