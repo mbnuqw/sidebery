@@ -1196,8 +1196,12 @@ async function moveTabsToPanel(tabIds, panelId) {
   if (targetPanel.tabs.length > 0) index += 1
 
   await this.actions.moveDroppedNodes(index, -1, tabs, tabs[0].pinned, targetPanel)
-  if (activePanel.tabs.length > 0) {
+  if (this.state.tabsTree && activePanel.tabs.length > 0) {
     this.actions.updateTabsTree(activePanel.startIndex, activePanel.endIndex + 1)
+  }
+  if (this.state.stateStorage === 'global') this.actions.saveTabsData()
+  if (this.state.stateStorage === 'session') {
+    tabs.forEach(t => this.actions.saveTabData(t))
   }
 }
 
@@ -1480,6 +1484,7 @@ async function moveDroppedNodes(dropIndex, dropParent, nodes, pin, currentPanel)
     tab.destPanelId = currentPanel.id
     tabs.push(tab)
   }
+  tabs.sort((a, b) => a.index - b.index)
 
   let pinTab = pin && !tabs[0].pinned
   let unpinTab = !pin && tabs[0].pinned
@@ -1505,8 +1510,10 @@ async function moveDroppedNodes(dropIndex, dropParent, nodes, pin, currentPanel)
   let differentPanel = tabs[0].panelId !== currentPanel.id
 
   // Move if target index is different or pinned state changed
-  const moveIndexOk = tabs[0].index !== dropIndex && tabs[tabs.length - 1].index !== dropIndex
-  if (moveIndexOk || pinTab || unpinTab) {
+  let lastTab = tabs[tabs.length - 1]
+  let moveNeeded = tabs[0].index !== dropIndex && lastTab.index !== dropIndex
+  if (!moveNeeded) moveNeeded = lastTab.index - tabs[0].index + 1 !== tabs.length
+  if (moveNeeded || pinTab || unpinTab) {
     this.state.movingTabs = []
     let index = 0
     for (let tab of tabs) {
