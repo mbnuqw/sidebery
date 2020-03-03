@@ -1184,15 +1184,21 @@ async function reopenTabsInCtx(tabIds, ctxId) {
 /**
  * Move tabs to panel
  */
-function moveTabsToPanel(tabIds, panelId) {
+async function moveTabsToPanel(tabIds, panelId) {
+  let activePanel = this.state.panels[this.state.panelIndex]
+  if (!activePanel || !activePanel.tabs) return
+
   let tabs = tabIds.map(id => this.state.tabsMap[id])
-  let panel = this.state.panelsMap[panelId]
-  if (!panel) return
+  let targetPanel = this.state.panelsMap[panelId]
+  if (!targetPanel) return
 
-  let index = panel.endIndex
-  if (panel.tabs.length > 0) index += 1
+  let index = targetPanel.endIndex
+  if (targetPanel.tabs.length > 0) index += 1
 
-  this.actions.moveDroppedNodes(index, -1, tabs, tabs[0].pinned, panel)
+  await this.actions.moveDroppedNodes(index, -1, tabs, tabs[0].pinned, targetPanel)
+  if (activePanel.tabs.length > 0) {
+    this.actions.updateTabsTree(activePanel.startIndex, activePanel.endIndex + 1)
+  }
 }
 
 /**
