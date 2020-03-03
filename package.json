@@ -35,7 +35,7 @@
     "clear.proxy": "find ./addon/proxy -type f -not -name proxy.html -delete",
     "clear.url": "find ./addon/url -type f -not -name url.html -delete",
     "clear.themes": "find ./addon/themes/ -type f -not -name __preserve-dir -delete",
-    "clear.vendor": "find ./addon/vendor/ -type f -not -name vendor.js -delete",
+    "clear.vendor": "find ./addon/vendor/ -type f -not -name __preserve-dir -delete",
     "clear": "npm run clear.cache && npm run clear.sidebar && npm run clear.settings && npm run clear.group && npm run clear.proxy && npm run clear.url && npm run clear.themes && npm run clear.vendor",
     "lint": "eslint ./addon ./src && web-ext lint -s ./addon",
     "test": "./node_modules/.bin/jest"
