@@ -78,6 +78,15 @@
   background-image: var(--bg-img)
   background-size: var(--bg-size)
 
+#root[data-pinned-tabs-position="left"]
+#root[data-pinned-tabs-position="right"]
+  .ScrollBox > .scroll-container > .scrollable
+    width: calc(100vw - var(--nav-btn-width))
+
+#root[data-nav-layout="vertical"]
+  .ScrollBox > .scroll-container > .scrollable
+    width: calc(100vw - var(--nav-btn-width))
+
 #root[data-native-scrollbar]
   .ScrollBox > .scroll-container > .scrollable
     size(100%)
