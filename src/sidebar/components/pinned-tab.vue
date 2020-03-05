@@ -218,7 +218,7 @@ export default {
 
       if (e.button === 0) {
         if ((State.selected.length || State.activateOnMouseUp) && !e.ctrlKey && !e.shiftKey) {
-          browser.tabs.update(this.tab.id, { active: true })
+          if (this.mouseDownLeft) browser.tabs.update(this.tab.id, { active: true })
         }
         if (this.longClickActionLeft) {
           this.longClickActionLeft = clearTimeout(this.longClickActionLeft)
