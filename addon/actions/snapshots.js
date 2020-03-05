@@ -5,6 +5,7 @@ import { DEFAULT_CTX } from '../defaults.js'
 import { DEFAULT_CTX_ID } from '../defaults.js'
 
 const MIN_SNAP_INTERVAL = 5000
+const MIN_STARTUP_SNAP_INTERVAL = 3600000
 
 let currentSnapshot
 let baseSnapshotTimeout
@@ -106,8 +107,8 @@ async function scheduleSnapshots() {
   if (currentSnapshot) elapsed = currentTime - currentSnapshot.time
   else elapsed = currentTime - (await Actions.getLastSnapTime())
 
-  if (elapsed >= interval) Actions.createSnapshot()
-  else nextTimeout = interval - elapsed
+  if (elapsed >= interval && interval > MIN_STARTUP_SNAP_INTERVAL) Actions.createSnapshot()
+  if (elapsed < interval) nextTimeout = interval - elapsed
 
   Actions.scheduleNextSnapshot(nextTimeout)
 }
