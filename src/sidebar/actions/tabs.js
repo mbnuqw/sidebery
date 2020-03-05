@@ -719,6 +719,9 @@ function activateLastActiveTabOf(panelIndex) {
   let p = this.state.panels[panelIndex]
   if (!p || !p.tabs || !p.tabs.length) return
 
+  let activeTab = this.state.tabsMap[this.state.activeTabId]
+  if (activeTab && activeTab.panelId === p.id) return
+
   let tab
   if (p.actTabs && p.actTabs.length) {
     let tabId = p.actTabs[p.actTabs.length - 1]
