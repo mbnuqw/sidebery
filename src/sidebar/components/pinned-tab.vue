@@ -118,6 +118,8 @@ export default {
      * Mousedown Left
      */
     onMouseDownLeft(e) {
+      this.mouseDownLeft = true
+
       if (e.ctrlKey) {
         if (State.selected.length && typeof State.selected[0] !== 'number') {
           return
@@ -209,7 +211,10 @@ export default {
      * Handle mouseup event
      */
     onMouseUp(e) {
-      if (State.tabLongClickFired) return Actions.resetLongClickLock()
+      if (State.tabLongClickFired) {
+        this.mouseDownLeft = false
+        return Actions.resetLongClickLock()
+      }
 
       if (e.button === 0) {
         if ((State.selected.length || State.activateOnMouseUp) && !e.ctrlKey && !e.shiftKey) {
@@ -218,6 +223,7 @@ export default {
         if (this.longClickActionLeft) {
           this.longClickActionLeft = clearTimeout(this.longClickActionLeft)
         }
+        this.mouseDownLeft = false
       }
 
       if (e.button === 2) {

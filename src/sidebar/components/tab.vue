@@ -130,6 +130,8 @@ export default {
      * Mousedown Left
      */
     onMouseDownLeft(e) {
+      this.mouseDownLeft = true
+
       if (e.ctrlKey) {
         if (!this.tab.sel) Actions.selectItem(this.tab.id)
         else Actions.deselectItem(this.tab.id)
@@ -230,15 +232,19 @@ export default {
      * Handle mouseup event
      */
     onMouseUp(e) {
-      if (State.tabLongClickFired) return Actions.resetLongClickLock()
+      if (State.tabLongClickFired) {
+        this.mouseDownLeft = false
+        return Actions.resetLongClickLock()
+      }
 
       if (e.button === 0) {
         if ((State.selected.length || State.activateOnMouseUp) && !e.ctrlKey && !e.shiftKey) {
-          browser.tabs.update(this.tab.id, { active: true })
+          if (this.mouseDownLeft) browser.tabs.update(this.tab.id, { active: true })
         }
         if (this.longClickActionLeft) {
           this.longClickActionLeft = clearTimeout(this.longClickActionLeft)
         }
+        this.mouseDownLeft = false
       }
 
       if (e.button === 2) {
