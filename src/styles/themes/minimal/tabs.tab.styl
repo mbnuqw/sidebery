@@ -193,6 +193,15 @@
   // Dim if combined with exp icon
   opacity: .2
 
+.Tab[data-updated] .fav > img
+  mask: radial-gradient(
+    circle at calc(100% - 2px) calc(100% - 2px),
+    #00000024,
+    #00000024 3px,
+    #000000 4px,
+    #000000
+  )
+
 .Tab[data-loading] .fav > img
     mask: radial-gradient(
       circle at calc(100% - 2px) calc(100% - 2px),
