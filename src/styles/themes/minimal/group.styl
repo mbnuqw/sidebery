@@ -47,9 +47,10 @@ body input
 .title
   box(relative, block)
   size(100%)
-  text(s: 2.5rem, w: 700)
+  text(s: 2.3rem, w: 700)
   text-align: center
   color: var(--label-fg)
+  opacity: .8
   margin: 20px 0 24px
 
 .tabs
@@ -71,7 +72,7 @@ body[data-layout="list"] .tabs
 .new-tab
   box(relative)
   size(100%)
-  background-color: var(--tabs-bg-hover)
+  background-color: var(--group-new-tab)
   overflow: hidden
   cursor: pointer
   transition: box-shadow var(--d-norm)
@@ -88,7 +89,7 @@ body[data-layout="list"] .tabs
     size(2px, 16px)
     background-color: var(--info-fg)
   &:hover
-    background-color: var(--tabs-bg-active)
+    background-color: var(--group-tab)
   &:active
     opacity: .8
 body[data-layout="grid"] .new-tab
@@ -101,13 +102,13 @@ body[data-layout="list"] .new-tab
 .tab
   box(relative, flex)
   size(100%)
-  background-color: var(--tabs-bg-hover)
+  background-color: var(--group-tab)
   overflow: hidden
   cursor: pointer
   transition: box-shadow var(--d-norm)
   -moz-user-select: none
   &:hover
-    background-color: var(--tabs-bg-active)
+    background-color: var(--group-tab-hover)
   &:active
     opacity: .8
 body[data-layout="grid"] .tab
@@ -165,7 +166,6 @@ body[data-layout="list"] .tab[data-discarded="true"] .bg
   background-repeat: no-repeat
   border-radius: 3px
   overflow: hidden
-  filter: drop-shadow(0 0 1px #00000032) drop-shadow(0 0 8px #00000032)
   transition: opacity var(--d-norm)
 body[data-layout="grid"] .fav
   pos(auto, 12px, b: 12px)
@@ -176,7 +176,6 @@ body[data-layout="grid"] .fav
   box(absolute)
   pos(16px, same)
   size(16px, same)
-  filter: drop-shadow(0 0 1px #00000032) drop-shadow(0 0 8px #00000032)
   transition: opacity var(--d-norm)
   > svg
     box(absolute)

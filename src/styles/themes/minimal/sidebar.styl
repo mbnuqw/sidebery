@@ -95,13 +95,9 @@
   background-image: var(--bg-img)
   background-size: var(--bg-size)
 
-.Sidebar[data-hidden-panels-bar] .nav
-  box-shadow: inset 0 -1px 0 0 var(--border-fg), 0 0 12px 0 var(--border-fg)
-
 #root[data-nav-layout="horizontal"] .Sidebar .nav
 #root[data-nav-layout="hidden"] .Sidebar .nav
   size(100%)
-  box-shadow: inset 0 -1px 0 0 var(--border-fg), 0 0 12px 0 #00000000
 #root[data-nav-layout="vertical"] .Sidebar .nav
   flex-direction: column
 
@@ -480,9 +476,7 @@ for i in 1..12
   box(absolute, flex)
   pos(0, 0)
   z-index: 1000
-  box-shadow: 0 1px 12px 0 #00000056,
-              0 0 0 1px var(--border-fg),
-              inset 0 1px 0 0 var(--border-flare-fg)
+  box-shadow: 0 0 12px 0 #00000056
   background-color: var(--bg)
   background-image: var(--bg-img)
   background-size: var(--bg-size)

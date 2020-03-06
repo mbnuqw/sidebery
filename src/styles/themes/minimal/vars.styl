@@ -18,7 +18,6 @@
     --inactive-fg: #5c5c5c
     --notice-fg: #00e9fb
     --favicons-placeholder-bg: #ffffff30
-    --border-fg: #00000000
     --border-active-fg: #00000032
     --border-flare-fg: #ffffff08
     --progress-fg: #00e9fb
@@ -38,7 +37,6 @@
     --inactive-fg: #a2a2a2
     --notice-fg: #01acda
     --favicons-placeholder-bg: #00000060
-    --border-fg: #00000000
     --border-active-fg: #00000032
     --border-flare-fg: #ffffff32
     --progress-fg: #01acda
@@ -57,7 +55,7 @@
     --btn-fg-active: #f2f2f2
     --btn-shadow: 0 1px 2px 0 #00000024, 0 0 0 1px #00000012
     --btn-shadow-hover: 0 1px 2px 0 #00000032, 0 0 0 1px #00000024
-    --btn-shadow-active: 0 1px 2px 0 #00000000, 0 0 0 1px #00000012
+    --btn-shadow-active: 0 0 0 1px #00000012
     --btn-roundness: 3px
   &[data-style="light"]
     --btn-bg: #328def
@@ -69,9 +67,9 @@
     --btn-fg: #fafafa
     --btn-fg-hover: #ffffff
     --btn-fg-active: #f2f2f2
-    --btn-shadow: 0 1px 2px 0 #00000024, 0 0 0 1px #00000000
-    --btn-shadow-hover: 0 1px 2px 0 #00000032, 0 0 0 1px #00000000
-    --btn-shadow-active: 0 1px 2px 0 #00000000, 0 0 0 1px #00000012
+    --btn-shadow: 0 1px 2px 0 #00000024
+    --btn-shadow-hover: 0 1px 2px 0 #00000032
+    --btn-shadow-active: 0 0 0 1px #00000012
     --btn-roundness: 3px
 
   // Scroll Box
@@ -89,12 +87,14 @@
     --ctx-menu-warn-bg-hover: #ff613d
     --ctx-menu-fg: #ffffff
     --ctx-menu-warn-fg: #ff613d
+    --ctx-menu-shadow: 0 3px 5px 0 #00000028
   &[data-style="light"]
     --ctx-menu-bg: #ffffff
     --ctx-menu-bg-hover: #cacaca
     --ctx-menu-warn-bg-hover: #ff613d
     --ctx-menu-fg: #000000
     --ctx-menu-warn-fg: #ff613d
+    --ctx-menu-shadow: 0 3px 5px 0 #00000012
 
   // Nav Strip
   &[data-style="dark"]
@@ -125,7 +125,7 @@
     --tabs-fg-active: #aaa
     --tabs-bg-hover: #ffffff09
     --tabs-bg-active: #ffffff14
-    --tabs-activated-bg: #ffffff30
+    --tabs-activated-bg: #ffffff24
     --tabs-activated-fg: #ffffff
     --tabs-selected-bg: #275ca4
     --tabs-selected-fg: #ffffff
@@ -138,7 +138,7 @@
     --tabs-fg-active: #565656
     --tabs-bg-hover: #00000009
     --tabs-bg-active: #00000014
-    --tabs-activated-bg: #00000030
+    --tabs-activated-bg: #00000024
     --tabs-activated-fg: #000000
     --tabs-loading-fg: #146fd9
     --tabs-selected-bg: #458fff
@@ -146,13 +146,23 @@
     --tabs-update-badge-bg: #01acda
     --tabs-lvl-indicator-bg: #a2a2a2
 
+  // Group
+  &[data-style="dark"]
+    --group-new-tab: #ffffff05
+    --group-tab: #ffffff09
+    --group-tab-hover: #ffffff10
+  &[data-style="light"]
+    --group-new-tab: #00000005
+    --group-tab: #00000009
+    --group-tab-hover: #00000010
+
   // Bookmarks
   &[data-style="dark"]
     --bookmarks-node-title-fg: #bebebe
     --bookmarks-node-title-fg-hover: #ffffff
     --bookmarks-node-title-fg-active: #aaaaaa
-    --bookmarks-node-bg-hover: #00000016
-    --bookmarks-node-bg-active: #00000024
+    --bookmarks-node-bg-hover: #ffffff10
+    --bookmarks-node-bg-active: #ffffff14
     --bookmarks-folder-closed-fg: #bebebe
     --bookmarks-folder-closed-fg-hover: #ffffff
     --bookmarks-folder-closed-fg-active: #787878
@@ -166,8 +176,8 @@
     --bookmarks-node-title-fg: #3a3a3a
     --bookmarks-node-title-fg-hover: #000000
     --bookmarks-node-title-fg-active: #565656
-    --bookmarks-node-bg-hover: #00000012
-    --bookmarks-node-bg-active: #00000020
+    --bookmarks-node-bg-hover: #00000010
+    --bookmarks-node-bg-active: #00000014
     --bookmarks-folder-closed-fg: #646464
     --bookmarks-folder-closed-fg-hover: #323232
     --bookmarks-folder-closed-fg-active: #787878
