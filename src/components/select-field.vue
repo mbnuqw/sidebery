@@ -2,7 +2,8 @@
 .SelectField(
   :data-inline="inline"
   :data-inactive="inactive"
-  @mousedown="switchOption")
+  @mousedown="switchOption"
+  @contextmenu.stop.prevent="")
   .body
     .label {{t(label)}}
     select-input(
