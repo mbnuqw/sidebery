@@ -164,6 +164,7 @@ function onTabUpdated(tabId, change, tab) {
   if (change.discarded !== undefined && change.discarded) {
     if (localTab.status === 'loading') localTab.status = 'complete'
     if (localTab.loading) localTab.loading = false
+    if (localTab.audible) localTab.audible = false
   }
 
   // Status change
