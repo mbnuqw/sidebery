@@ -1,7 +1,4 @@
 import Actions from '../actions.js'
-import { TABS_PANEL } from '../defaults.js'
-import { DEFAULT_TABS_PANEL } from '../defaults.js'
-import { DEFAULT_CTX } from '../defaults.js'
 import { DEFAULT_CTX_ID } from '../defaults.js'
 
 const MIN_SNAP_INTERVAL = 5000
@@ -64,7 +61,6 @@ async function createSnapshot() {
   }
 
   let { snapshots_v4 } = await browser.storage.local.get({ snapshots_v4: null })
-  if (!snapshots_v4) snapshots_v4 = await getPrevVerSnapshots()
 
   const lastSnapshot = snapshots_v4[snapshots_v4.length - 1]
   if (lastSnapshot && compareSnapshots(lastSnapshot, currentSnapshot)) return
@@ -214,7 +210,6 @@ async function limitSnapshots(snapshots) {
 
   if (!snapshots) {
     let { snapshots_v4 } = await browser.storage.local.get({ snapshots_v4: null })
-    if (!snapshots_v4) snapshots_v4 = await getPrevVerSnapshots()
     snapshots = snapshots_v4
     if (!snapshots.length) return
   }
@@ -282,68 +277,4 @@ export default {
   openSnapshotWindow,
   limitSnapshots,
   getSnapInterval,
-}
-
-/**
- * Try to get snapshots from prev version
- * and convert them.
- */
-export async function getPrevVerSnapshots() {
-  let { snapshots } = await browser.storage.local.get({ snapshots: null })
-  if (!snapshots) return []
-
-  for (let snapshot of snapshots) {
-    if (!snapshot.id) break
-    if (!snapshot.time) break
-    if (!snapshot.containersById) break
-    if (!snapshot.windows) break
-
-    snapshot.panels = []
-
-    for (let window of Object.values(snapshot.windows)) {
-      let ctr = ''
-      let panels = {}
-      let pinned = true
-      let convertedItems = []
-
-      // Restore panels
-      for (let item of window.items) {
-        if (typeof item !== 'string') continue
-        let p = snapshot.panels.find(p => p.moveTabCtx === item || p.id === item)
-        if (p) continue
-        if (item === DEFAULT_CTX) {
-          p = Utils.cloneObject(DEFAULT_TABS_PANEL)
-          panels[DEFAULT_CTX] = DEFAULT_CTX
-        } else {
-          let ctr = snapshot.containersById[item]
-          p = Utils.cloneObject(TABS_PANEL)
-          p.id = Utils.uid()
-          p.name = ctr.name
-          p.icon = ctr.icon
-          p.color = ctr.color
-          panels[item] = p.id
-        }
-        snapshot.panels.push(p)
-      }
-
-      // Normalize tabs
-      for (let item of window.items) {
-        if (typeof item === 'string') {
-          pinned = false
-          ctr = item
-          continue
-        }
-
-        if (pinned) item.pinned = pinned
-        if (ctr) item.ctr = ctr
-        if (item.lvl === 0) delete item.lvl
-        if (panels[ctr]) item.panel = panels[ctr]
-        convertedItems.push(item)
-      }
-
-      window.items = convertedItems
-    }
-  }
-
-  return snapshots
 }
