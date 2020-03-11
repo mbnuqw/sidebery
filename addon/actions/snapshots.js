@@ -60,14 +60,18 @@ async function createSnapshot() {
     windows,
   }
 
-  let { snapshots_v4 } = await browser.storage.local.get({ snapshots_v4: null })
+  let { snapshots_v4 } = await browser.storage.local.get({ snapshots_v4: [] })
 
   const lastSnapshot = snapshots_v4[snapshots_v4.length - 1]
   if (lastSnapshot && compareSnapshots(lastSnapshot, currentSnapshot)) return
 
   snapshots_v4.push(currentSnapshot)
 
-  snapshots_v4 = await Actions.limitSnapshots(snapshots_v4)
+  try {
+    snapshots_v4 = await Actions.limitSnapshots(snapshots_v4)
+  } catch (err) {
+    // TODO: Show warning
+  }
 
   await browser.storage.local.set({
     snapshots_v4,
@@ -209,7 +213,7 @@ async function limitSnapshots(snapshots) {
   if (unit === 'kb') normLimit = limit * 1024
 
   if (!snapshots) {
-    let { snapshots_v4 } = await browser.storage.local.get({ snapshots_v4: null })
+    let { snapshots_v4 } = await browser.storage.local.get({ snapshots_v4: [] })
     snapshots = snapshots_v4
     if (!snapshots.length) return
   }
