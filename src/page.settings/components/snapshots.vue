@@ -92,6 +92,7 @@ import { translate } from '../../../addon/locales/dict'
 import { DEFAULT_CTX } from '../../../addon/defaults'
 import { DEFAULT_TABS_PANEL } from '../../../addon/defaults'
 import { getPrevVerSnapshots } from '../../../addon/actions/snapshots'
+import EventBus from '../../event-bus'
 import State from '../store/state'
 import Actions from '../actions'
 
@@ -132,6 +133,12 @@ export default {
 
     this.snapshots = parsedSnapshots
     this.activeSnapshot = parsedSnapshots[0]
+
+    // on new snapshots
+    EventBus.$on('snapshotCreated', snapshot => {
+      if (!snapshot) return
+      this.snapshots.unshift(normalizeSnapshot(snapshot))
+    })
   },
 
   methods: {

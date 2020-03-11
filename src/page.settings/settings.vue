@@ -775,6 +775,7 @@
 import { translate } from '../../addon/locales/dict'
 import { DEFAULT_SETTINGS } from '../../addon/defaults'
 import { TABS_PANEL } from '../../addon/defaults'
+import EventBus from '../event-bus'
 import State from './store/state'
 import Actions from './actions'
 import ToggleField from '../components/toggle-field'
@@ -1138,11 +1139,13 @@ export default {
      * Create snapshot
      */
     async createSnapshot() {
-      await browser.runtime.sendMessage({
+      const snapshot = await browser.runtime.sendMessage({
         instanceType: 'bg',
         windowId: -1,
         action: 'createSnapshot',
       })
+
+      EventBus.$emit('snapshotCreated', snapshot)
     },
 
     /**
