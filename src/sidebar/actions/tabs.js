@@ -728,7 +728,8 @@ function activateLastActiveTabOf(panelIndex) {
     tab = this.state.tabsMap[tabId]
   }
   if (!tab || tab.panelId !== p.id) tab = p.tabs[0]
-  if (tab && !tab.discarded) browser.tabs.update(tab.id, { active: true })
+  if (tab && tab.discarded) tab = p.tabs.find(t => !t.discarded)
+  if (tab) browser.tabs.update(tab.id, { active: true })
 }
 
 /**
