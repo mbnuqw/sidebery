@@ -23,16 +23,15 @@
     @dragenter="onDragEnter"
     @dragleave="onDragLeave"
     @drop="onDragLeave")
-  .fav
-    transition(name="tab-part"): .placeholder(v-if="!tab.favIconUrl"): svg: use(:xlink:href="favPlaceholder")
-    transition(name="tab-part"): img(v-if="tab.favIconUrl" :src="tab.favIconUrl")
-    .update-badge
-    transition(name="tab-part"): .ok-badge(v-if="loading === 'ok'"): svg: use(xlink:href="#icon_ok")
-    transition(name="tab-part"): .err-badge(v-if="loading === 'err'"): svg: use(xlink:href="#icon_err")
-    transition(name="tab-part"): .progress-spinner(v-if="loading === true")
-  transition(name="tab-part"): .audio-badge(v-if="tab.audible || tab.mutedInfo.muted" @mousedown.stop="" @click="onAudioClick")
-    svg.-loud: use(xlink:href="#icon_loud_badge")
-    svg.-mute: use(xlink:href="#icon_mute_badge")
+  Favicon(
+    :tab="tab"
+    :loading="loading"
+    :favPlaceholder="favPlaceholder"
+    :onExp="onExp")
+  transition(name="tab-part")
+    .audio-badge(v-if="tab.audible || tab.mutedInfo.muted" @mousedown.stop="" @click="onAudioClick")
+      svg.-loud: use(xlink:href="#icon_loud_badge")
+      svg.-mute: use(xlink:href="#icon_mute_badge")
   .ctx(v-if="color")
   .title(v-if="withTitle") {{tab.title}}
   .close(v-if="$store.state.showTabRmBtn" @mousedown.stop="close" @mouseup.stop="")
@@ -43,12 +42,15 @@
 import EventBus from '../../event-bus'
 import State from '../store/state'
 import Actions from '../actions'
+import Favicon from './favicon'
 
 const PNG_RE = /(\.png)([?#].*)?$/i
 const JPG_RE = /(\.jpe?g)([?#].*)?$/i
 const PDF_RE = /(\.pdf)([?#].*)?$/i
 
 export default {
+  components: { Favicon },
+
   props: {
     tab: {
       type: Object,

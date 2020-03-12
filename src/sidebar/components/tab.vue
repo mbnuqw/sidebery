@@ -25,27 +25,23 @@
     @dragstart="onDragStart"
     @dragenter="onDragEnter"
     @dragleave="onDragLeave")
-  transition(name="tab-part"): .audio(v-if="tab.audible || tab.mutedInfo.muted" @mousedown.stop="" @click="onAudioClick")
-    svg.-loud: use(xlink:href="#icon_loud_badge")
-    svg.-mute: use(xlink:href="#icon_mute_badge")
-  .fav(@dragstart.stop.prevent="")
-    transition(name="tab-part"): .placeholder(v-if="!tab.favIconUrl"): svg: use(:xlink:href="favPlaceholder")
-    transition(name="tab-part"): img(v-if="tab.favIconUrl" :src="tab.favIconUrl")
-    .exp(
-      v-if="tab.isParent"
-      @dblclick.prevent.stop=""
-      @mousedown.stop="onExp"
-      @mouseup.left.stop="")
-      svg: use(xlink:href="#icon_expand")
-    .update-badge
-    transition(name="tab-part"): .ok-badge(v-if="loading === 'ok'"): svg: use(xlink:href="#icon_ok")
-    transition(name="tab-part"): .err-badge(v-if="loading === 'err'"): svg: use(xlink:href="#icon_err")
-    transition(name="tab-part"): .progress-spinner(v-if="loading === true")
-    .child-count(v-if="childCount && tab.folded") {{childCount}}
-  .close(v-if="$store.state.showTabRmBtn" @mousedown.stop="onCloseClick" @mouseup.stop="" @contextmenu.stop.prevent="")
+  transition(name="tab-part")
+    .audio(v-if="tab.audible || tab.mutedInfo.muted" @mousedown.stop="" @click="onAudioClick")
+      svg.-loud: use(xlink:href="#icon_loud_badge")
+      svg.-mute: use(xlink:href="#icon_mute_badge")
+  Favicon(
+    :tab="tab"
+    :loading="loading"
+    :favPlaceholder="favPlaceholder"
+    :childCount="childCount"
+    :onExp="onExp")
+  .close(
+    v-if="$store.state.showTabRmBtn"
+    @mousedown.stop="onCloseClick"
+    @mouseup.stop=""
+    @contextmenu.stop.prevent="")
     svg: use(xlink:href="#icon_remove")
   .ctx(v-if="$store.state.showTabCtx && color")
-  //- .t-box: .title {{tab.index}}-{{tab.id}}-{{tab.panelId[0]}} {{tab.title}}
   .t-box: .title {{tab.title}}
 </template>
 
@@ -53,6 +49,7 @@
 import EventBus from '../../event-bus'
 import State from '../store/state'
 import Actions from '../actions'
+import Favicon from './favicon'
 
 const PNG_RE = /(\.png)([?#].*)?$/i
 const JPG_RE = /(\.jpe?g)([?#].*)?$/i
@@ -60,6 +57,8 @@ const PDF_RE = /(\.pdf)([?#].*)?$/i
 const GROUP_RE = /\/group\/group\.html/
 
 export default {
+  components: { Favicon },
+
   props: {
     childCount: Number,
     tab: {
@@ -73,10 +72,6 @@ export default {
   },
 
   computed: {
-    isNewTab() {
-      return this.tab.url === 'about:newtab'
-    },
-
     loading() {
       if (this.tab.loading) return this.tab.loading
       return this.tab.status === 'loading'
