@@ -1,7 +1,7 @@
 <template lang="pug">
-.nav(ref="nav" @dragleave="onDragLeave" @dragenter="onDragEnter")
-  .nav-bar(@wheel.stop.prevent="onNavWheel")
-    .nav-btn(
+.NavigationBar(ref="nav" @dragleave="onDragLeave" @dragenter="onDragEnter")
+  .panels-box(@wheel.stop.prevent="onNavWheel")
+    .panel-btn(
       v-for="(btn, i) in nav"
       :key="btn.id"
       :data-loading="btn.loading"
