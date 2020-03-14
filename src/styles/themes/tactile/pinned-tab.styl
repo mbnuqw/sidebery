@@ -2,7 +2,8 @@
 
 .PinnedTab
   box(relative, flex)
-  size(34px, 32px)
+  width: var(--nav-btn-width)
+  height: var(--nav-btn-height)
   overflow: hidden
   justify-content: center
   align-items: center
@@ -284,7 +285,6 @@
   content: ''
   box(absolute)
   size(100%, same)
-  pos(1px, 1px)
   opacity: 0
   transition: opacity var(--d-fast)
 
@@ -293,16 +293,19 @@
 
 #root[data-pinned-tabs-position="panel"][data-pinned-tabs-list]
   .PinnedTab:before
+    pos(1px, 0)
     box-shadow: 0 -1px 0 0 var(--tabs-update-badge-bg)
 
 #root[data-pinned-tabs-position="panel"]
 #root[data-pinned-tabs-position="top"]
   .PinnedTab:before
+    left: 1px
     box-shadow: -1px 0 0 0 var(--tabs-update-badge-bg)
 
 #root[data-pinned-tabs-position="left"]
 #root[data-pinned-tabs-position="right"]
   .PinnedTab:before
+    top: 1px
     box-shadow: 0 -1px 0 0 var(--tabs-update-badge-bg)
 
 // ---

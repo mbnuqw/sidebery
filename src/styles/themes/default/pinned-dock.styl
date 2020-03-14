@@ -93,15 +93,15 @@
 
 #root[data-pinned-tabs-position="panel"] .PinnedDock .to-the-end
 #root[data-pinned-tabs-position="top"] .PinnedDock .to-the-end
-  size(0, 32px)
   &:before
-    size(1px, 32px)
+    width: 1px
+    height: var(--nav-btn-height)
 
 #root[data-pinned-tabs-position="left"] .PinnedDock .to-the-end
 #root[data-pinned-tabs-position="right"] .PinnedDock .to-the-end
-  size(33px, 0)
   &:before
-    size(33px, 1px)
+    width: var(--nav-btn-width)
+    height: 1px
 
 .PinnedDock[data-drag-pointed] .to-the-end
   opacity: 1
