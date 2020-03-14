@@ -75,7 +75,11 @@ export default {
      * Get list of navigational buttons
      */
     nav() {
-      let cap = ~~(State.width / State.navBtnWidth)
+      let availableWidth = State.width
+      if (State.pinnedTabsPosition === 'left' || State.pinnedTabsPosition === 'right') {
+        availableWidth -= State.navBtnWidth
+      }
+      let cap = ~~(availableWidth / State.navBtnWidth)
       if (!State.hideSettingsBtn) cap -= 1
 
       let i, r
