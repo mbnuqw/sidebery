@@ -10,7 +10,7 @@
 // -
 .ScrollBox > .scroll-container
   box(relative)
-  size(calc(100% + 32px), 100%)
+  size(calc(100% + var(--nav-btn-height)), 100%)
   overflow-x: hidden
   overflow-y: auto
 
@@ -56,13 +56,10 @@
 
 #root[data-pinned-tabs-position="left"]
 #root[data-pinned-tabs-position="right"]
+#root[data-nav-layout="vertical"]
   .ScrollBox > .progress
-    width: calc(100vw - 33px)
-    left: calc(-100vw + 33px)
-
-#root[data-nav-layout="vertical"] .ScrollBox > .progress
-  width: calc(100vw - 34px)
-  left: calc(-100vw + 34px)
+    width: calc(100vw - var(--nav-btn-width))
+    left: calc(-100vw + var(--nav-btn-width))
 
 #root[data-native-scrollbar]
   .ScrollBox > .progress
@@ -80,12 +77,9 @@
 
 #root[data-pinned-tabs-position="left"]
 #root[data-pinned-tabs-position="right"]
-  .ScrollBox > .scroll-container > .scrollable
-    width: calc(100vw - 33px)
-
 #root[data-nav-layout="vertical"]
   .ScrollBox > .scroll-container > .scrollable
-    width: calc(100vw - 34px)
+    width: calc(100vw - var(--nav-btn-width))
 
 #root[data-native-scrollbar]
   .ScrollBox > .scroll-container > .scrollable
