@@ -89,7 +89,7 @@
       .panel-card-ctrls
         .panel-card-ctrl.-rm(
           @click="removeContainer(container)")
-          svg: use(xlink:href="#icon_delete")
+          svg: use(xlink:href="#icon_remove")
     .panel-placeholder(v-if="!Object.keys($store.state.containers).length")
     .ctrls: .btn(@click="createContainer") {{t('settings.containers_create_btn')}}
     transition(name="panel-config")
@@ -124,7 +124,7 @@
         .panel-card-ctrl.-rm(
           :data-inactive="panel.type === 'bookmarks' || panel.type === 'default'"
           @click="removePanel(panel)")
-          svg: use(xlink:href="#icon_delete")
+          svg: use(xlink:href="#icon_remove")
     .ctrls: .btn(@click="createPanel") {{t('settings.panels_create_btn')}}
     transition(name="panel-config")
       .panel-config-layer(
