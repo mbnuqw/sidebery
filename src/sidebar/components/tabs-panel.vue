@@ -123,7 +123,9 @@ export default {
 
       if (e.button === 1) {
         e.preventDefault()
-        Actions.createTabInPanel(this.panel)
+        const ma = State.tabsPanelMiddleClickAction
+        if (ma === 'tab') Actions.createTabInPanel(this.panel)
+        if (ma === 'undo') Actions.undoRmTab()
       }
 
       if (e.button === 2) {
@@ -209,6 +211,7 @@ export default {
         let panel = State.panels[this.index]
         if (panel) return Actions.foldAllInactiveBranches(panel.tabs)
       }
+      if (da === 'undo') Actions.undoRmTab()
     },
 
     onWheel(e) {

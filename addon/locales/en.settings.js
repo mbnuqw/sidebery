@@ -315,6 +315,7 @@ export default {
   'settings.tabs_panel_left_click_action': { message: 'Left click on tabs panel' },
   'settings.tabs_panel_double_click_action': { message: 'Double click on tabs panel' },
   'settings.tabs_panel_right_click_action': { message: 'Right click on tabs panel' },
+  'settings.tabs_panel_middle_click_action': { message: 'Middle click on tabs panel' },
   'settings.tabs_panel_action_tab': { message: 'create tab' },
   'settings.tabs_panel_action_prev': { message: 'previous panel' },
   'settings.tabs_panel_action_next': { message: 'next panel' },
@@ -322,6 +323,7 @@ export default {
   'settings.tabs_panel_action_parent': { message: 'activate parent tab' },
   'settings.tabs_panel_action_menu': { message: 'show menu' },
   'settings.tabs_panel_action_collapse': { message: 'collapse inactive branches' },
+  'settings.tabs_panel_action_undo': { message: 'undo tab close' },
   'settings.tabs_panel_action_none': { message: 'none' },
 
   // --- Keybindings

@@ -18,8 +18,9 @@ export const SETTINGS_OPTIONS = {
     'reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'new_after', 'new_child', 'none',
   ],
   tabsPanelLeftClickActionOpts: ['prev', 'expand', 'parent', 'none'],
-  tabsPanelDoubleClickActionOpts: ['collapse', 'tab', 'none'],
+  tabsPanelDoubleClickActionOpts: ['collapse', 'tab', 'undo', 'none'],
   tabsPanelRightClickActionOpts: ['next', 'expand', 'parent', 'menu', 'none'],
+  tabsPanelMiddleClickActionOpts: ['tab', 'undo', 'none'],
   activateAfterClosingOpts: ['prev_act', 'next', 'prev', 'none'],
   activateAfterClosingPrevRuleOpts: ['tree', 'visible', 'any'],
   activateAfterClosingNextRuleOpts: ['tree', 'any'],
@@ -168,6 +169,7 @@ export const DEFAULT_SETTINGS = {
   tabsPanelLeftClickAction: 'none',
   tabsPanelDoubleClickAction: 'tab',
   tabsPanelRightClickAction: 'menu',
+  tabsPanelMiddleClickAction: 'tab',
 
   // Sync
   syncName: '',

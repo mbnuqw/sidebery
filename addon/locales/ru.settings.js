@@ -365,6 +365,7 @@ export default {
   'settings.tabs_panel_action_parent': { message: 'перейти к родительскому табу' },
   'settings.tabs_panel_action_menu': { message: 'открыть меню' },
   'settings.tabs_panel_action_collapse': { message: 'свернуть неактивные ветки' },
+  'settings.tabs_panel_action_undo': { message: 'восстановить закрытую вкладку' },
   'settings.tabs_panel_action_none': { message: 'выкл' },
 
   // --- Keybindings

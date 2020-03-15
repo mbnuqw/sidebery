@@ -569,6 +569,12 @@
       :value="$store.state.tabsPanelRightClickAction"
       :opts="$store.state.tabsPanelRightClickActionOpts"
       @input="setOpt('tabsPanelRightClickAction', $event)")
+    select-field(
+      label="settings.tabs_panel_middle_click_action"
+      optLabel="settings.tabs_panel_action_"
+      :value="$store.state.tabsPanelMiddleClickAction"
+      :opts="$store.state.tabsPanelMiddleClickActionOpts"
+      @input="setOpt('tabsPanelMiddleClickAction', $event)")
 
   section(ref="settings_keybindings")
     h2 {{t('settings.kb_title')}}
