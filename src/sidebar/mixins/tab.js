@@ -324,7 +324,10 @@ export default {
      */
     onDragEnter(e) {
       if (this.tab.invisible) return
-      if (this.tab.pinned) this.dropSlot = true
+      if (this.tab.pinned) {
+        this.dropSlot = true
+        this.$emit('dragenter', this.tab.index)
+      }
 
       if (State.dndTabAct) this.dndActivate(e)
       if (State.dndExp === 'hover') this.dndExp(e)

@@ -82,9 +82,11 @@ export default {
     onDrop(e) {
       // Get drop index
       let dropIndex = 0
-      if (this.dragPointed === true)
+      if (this.dragPointed === true) {
         dropIndex = this.pinnedTabs[this.pinnedTabs.length - 1].index + 1
-      else if (this.pointedTabIndex > -1) dropIndex = this.pointedTabIndex
+      } else if (this.pointedTabIndex > -1) {
+        dropIndex = this.pointedTabIndex
+      }
 
       Actions.dropToTabs(e, dropIndex, -1, State.dragNodes, true)
 
