@@ -179,6 +179,7 @@ for i in 1..12
     transform: "translateX(calc(var(--bookmarks-indent) * %s + 8px))" % i
 
 #root[data-pinned-tabs-position="left"] .Sidebar .pointer
+  left: calc(var(--tabs-pinned-width) + 1px)
 #root[data-nav-layout="vertical"] .Sidebar .pointer
   left: var(--nav-btn-width)
 

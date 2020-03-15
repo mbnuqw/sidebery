@@ -214,6 +214,8 @@ export const CUSTOM_CSS_VARS = {
   pinned_dock_overlay_shadow: null,
 
   tabs_height: null,
+  tabs_pinned_height: null,
+  tabs_pinned_width: null,
   tabs_indent: null,
   tabs_font: null,
   tabs_count_font: null,

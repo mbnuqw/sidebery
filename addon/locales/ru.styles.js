@@ -49,6 +49,8 @@ export default {
   // --- Tabs
   'styles.tabs_title': { message: 'Табы' },
   'styles.tabs_height': { message: 'Высота таба' },
+  'styles.tabs_pinned_width': { message: 'Ширина закрепленного таба' },
+  'styles.tabs_pinned_height': { message: 'Высота закрепленного таба' },
   'styles.tabs_indent': { message: 'Отступ таба' },
   'styles.tabs_font': { message: 'Шрифт таба' },
   'styles.tabs_count_font': { message: 'Шрифт кол-ва потомков' },

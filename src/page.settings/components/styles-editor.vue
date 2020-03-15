@@ -233,6 +233,22 @@
         @toggle="toggleCSSVar('tabs_height')")
 
       style-field(
+        v-model="cssVars.tabs_pinned_height"
+        :label="'styles.tabs_pinned_height'"
+        :name="'--tabs-pinned-height'"
+        :or="'---'"
+        @change="updateCSSVar('tabs_pinned_height')"
+        @toggle="toggleCSSVar('tabs_pinned_height')")
+
+      style-field(
+        v-model="cssVars.tabs_pinned_width"
+        :label="'styles.tabs_pinned_width'"
+        :name="'--tabs-pinned-width'"
+        :or="'---'"
+        @change="updateCSSVar('tabs_pinned_width')"
+        @toggle="toggleCSSVar('tabs_pinned_width')")
+
+      style-field(
         v-model="cssVars.tabs_indent"
         :label="'styles.tabs_indent'"
         :name="'--tabs-indent'"

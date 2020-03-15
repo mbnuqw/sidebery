@@ -32,8 +32,8 @@ export default {
   'styles.menu_title': { message: 'Context Menu' },
   'styles.menu_font': { message: 'Font' },
   'styles.menu_bg_color': { message: 'Background color' },
-  'styles.menu_opt_fg_color': { message: "Option foreground color" },
-  'styles.menu_opt_fg_color_hover': { message: "Option background color on hover" },
+  'styles.menu_opt_fg_color': { message: 'Option foreground color' },
+  'styles.menu_opt_fg_color_hover': { message: 'Option background color on hover' },
 
   // --- Navigation Strip
   'styles.nav_title': { message: 'Navigation Strip' },
@@ -49,6 +49,8 @@ export default {
   // --- Tabs
   'styles.tabs_title': { message: 'Tabs' },
   'styles.tabs_height': { message: 'Tabs height' },
+  'styles.tabs_pinned_width': { message: 'Pinned tab width' },
+  'styles.tabs_pinned_height': { message: 'Pinned tab height' },
   'styles.tabs_indent': { message: 'Tabs indent' },
   'styles.tabs_font': { message: 'Tabs font' },
   'styles.tabs_count_font': { message: 'Count of descendants font' },
