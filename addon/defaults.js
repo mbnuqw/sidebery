@@ -3,7 +3,7 @@ import { translate } from './locales/dict.js'
 // prettier-ignore
 export const SETTINGS_OPTIONS = {
   autoHideCtxMenuOpts: [250, 500, 1000, 'none'],
-  navMidClickActionOpts: ['rm_all', 'none'],
+  navMidClickActionOpts: ['rm_act_tab', 'rm_all', 'none'],
   groupLayoutOpts: ['grid', 'list'],
   scrollThroughTabsOpts: ['panel', 'global', 'none'],
   discardFoldedDelayUnitOpts: ['sec', 'min'],
@@ -20,7 +20,7 @@ export const SETTINGS_OPTIONS = {
   tabsPanelLeftClickActionOpts: ['prev', 'expand', 'parent', 'none'],
   tabsPanelDoubleClickActionOpts: ['collapse', 'tab', 'undo', 'none'],
   tabsPanelRightClickActionOpts: ['next', 'expand', 'parent', 'menu', 'none'],
-  tabsPanelMiddleClickActionOpts: ['tab', 'undo', 'none'],
+  tabsPanelMiddleClickActionOpts: ['rm_act_tab', 'tab', 'undo', 'none'],
   activateAfterClosingOpts: ['prev_act', 'next', 'prev', 'none'],
   activateAfterClosingPrevRuleOpts: ['tree', 'visible', 'any'],
   activateAfterClosingNextRuleOpts: ['tree', 'any'],

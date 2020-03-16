@@ -71,6 +71,7 @@ export default {
   'settings.nav_btn_count': { message: 'Показывать количество табов/закладок' },
   'settings.hide_empty_panels': { message: 'Скрывать пустые панели' },
   'settings.nav_mid_click': { message: 'Клик средней кнопкой мыши по кнопке панели' },
+  'settings.nav_mid_click_rm_act_tab': { message: 'закрыть активную вкладку' },
   'settings.nav_mid_click_rm_all': { message: 'закрыть табы' },
   'settings.nav_mid_click_none': { message: 'ничего' },
   'settings.nav_switch_panels_wheel': { message: 'Переключать панели с помощью колеса мыши' },
@@ -369,6 +370,7 @@ export default {
   'settings.tabs_panel_action_menu': { message: 'открыть меню' },
   'settings.tabs_panel_action_collapse': { message: 'свернуть неактивные ветки' },
   'settings.tabs_panel_action_undo': { message: 'восстановить закрытую вкладку' },
+  'settings.tabs_panel_action_rm_act_tab': { message: 'закрыть активную вкладку' },
   'settings.tabs_panel_action_none': { message: 'выкл' },
 
   // --- Keybindings

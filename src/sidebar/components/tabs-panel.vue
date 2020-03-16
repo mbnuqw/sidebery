@@ -126,6 +126,12 @@ export default {
         const ma = State.tabsPanelMiddleClickAction
         if (ma === 'tab') Actions.createTabInPanel(this.panel)
         if (ma === 'undo') Actions.undoRmTab()
+        if (ma === 'rm_act_tab') {
+          let actTab = State.tabsMap[State.activeTabId]
+          if (actTab && actTab.panelId === this.panel.id && !actTab.pinned) {
+            Actions.removeTabs([State.activeTabId])
+          }
+        }
       }
 
       if (e.button === 2) {

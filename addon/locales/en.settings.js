@@ -71,6 +71,7 @@ export default {
   'settings.nav_btn_count': { message: 'Show count of tabs/bookmarks' },
   'settings.hide_empty_panels': { message: 'Hide empty panels' },
   'settings.nav_mid_click': { message: 'Middle click on panel button' },
+  'settings.nav_mid_click_rm_act_tab': { message: 'close active tab' },
   'settings.nav_mid_click_rm_all': { message: 'close tabs' },
   'settings.nav_mid_click_none': { message: 'none' },
   'settings.nav_switch_panels_wheel': { message: 'Switch panels with mouse wheel' },
@@ -327,6 +328,7 @@ export default {
   'settings.tabs_panel_action_menu': { message: 'show menu' },
   'settings.tabs_panel_action_collapse': { message: 'collapse inactive branches' },
   'settings.tabs_panel_action_undo': { message: 'undo tab close' },
+  'settings.tabs_panel_action_rm_act_tab': { message: 'close active tab' },
   'settings.tabs_panel_action_none': { message: 'none' },
 
   // --- Keybindings

@@ -249,6 +249,12 @@ export default {
 
         if (toRemove.length) Actions.removeTabs(toRemove)
       }
+      if (State.navMidClickAction === 'rm_act_tab') {
+        let actTab = State.tabsMap[State.activeTabId]
+        if (actTab && actTab.panelId === btn.id && !actTab.pinned) {
+          Actions.removeTabs([State.activeTabId])
+        }
+      }
     },
 
     /**
