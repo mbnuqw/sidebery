@@ -15,6 +15,10 @@ function onTabCreated(tab) {
 
   let panel, index, prevPos, prevPosPanel
 
+  if (this.state.tabsMap[tab.openerTabId] && this.state.tabsMap[tab.openerTabId].pinned) {
+    tab.pinnedParentId = tab.openerTabId
+  }
+
   // Get previous position
   if (this._removedTabs) {
     prevPos = this._removedTabs.pop()

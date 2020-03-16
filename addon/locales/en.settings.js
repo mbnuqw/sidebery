@@ -135,6 +135,9 @@ export default {
   'settings.activate_after_closing_rule_tree': { message: 'tree' },
   'settings.activate_after_closing_rule_visible': { message: 'visible' },
   'settings.activate_after_closing_rule_any': { message: 'any' },
+  'settings.activate_after_closing_pin_rel': {
+    message: 'Preserve relation between pinned tab and its children',
+  },
   'settings.activate_after_closing_global': { message: 'Globally' },
   'settings.activate_after_closing_no_folded': { message: 'Ignore folded tabs' },
   'settings.activate_after_closing_no_discarded': { message: 'Ignore discarded tabs' },

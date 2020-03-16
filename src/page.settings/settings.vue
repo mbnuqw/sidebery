@@ -239,6 +239,11 @@
         :opts="$store.state.activateAfterClosingNextRuleOpts"
         @input="setOpt('activateAfterClosingNextRule', $event)")
       toggle-field(
+        label="settings.activate_after_closing_pin_rel"
+        :inactive="!activateAfterClosingNextOrPrev"
+        :value="$store.state.activateAfterClosingPinRel"
+        @input="setOpt('activateAfterClosingPinRel', $event)")
+      toggle-field(
         label="settings.activate_after_closing_global"
         :inactive="$store.state.activateAfterClosing !== 'prev_act'"
         :value="$store.state.activateAfterClosingGlobal"

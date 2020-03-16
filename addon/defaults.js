@@ -91,6 +91,7 @@ export const DEFAULT_SETTINGS = {
   activateAfterClosing: 'next',
   activateAfterClosingPrevRule: 'visible',
   activateAfterClosingNextRule: 'tree',
+  activateAfterClosingPinRel: false,
   activateAfterClosingGlobal: false,
   activateAfterClosingNoFolded: false,
   activateAfterClosingNoDiscarded: false,
