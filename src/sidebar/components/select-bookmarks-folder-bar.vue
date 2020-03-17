@@ -1,12 +1,12 @@
 <template lang="pug">
 .SelectBookmarksFolderBar(v-if="$store.state.selectBookmarkFolder")
-  h2 Select folder
+  h2 {{t('bookmarks_select_folder.title')}}
   .folder-title(
     :data-wrong="wrongValueAnimation"
     @animationend="onAnimationEnd") {{folderName}}
   .ctrls
-    .btn(@click="onSelectFolderOk") Ok
-    .btn.-warn(@click="onSelectFolderCancel") Cancel
+    .btn(@click="onSelectFolderOk") {{t('bookmarks_select_folder.ok')}}
+    .btn.-warn(@click="onSelectFolderCancel") {{t('bookmarks_select_folder.cancel')}}
 </template>
 
 <script>
