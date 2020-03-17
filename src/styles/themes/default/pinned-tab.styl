@@ -200,7 +200,8 @@
 .PinnedTab .audio-badge
   box(absolute)
   size(10px, same)
-  pos(18px, same)
+  top: calc(50% + 2px)
+  left: calc(50% + 2px)
   border-radius: 50%
   z-index: 30
   transition: transform var(--d-fast)
@@ -216,7 +217,8 @@
 
 #root[data-pinned-tabs-position="panel"][data-pinned-tabs-list]
   .PinnedTab .audio-badge
-    pos(17px, same)
+    top: calc(50% + 2px)
+    left: 17px
 
 .PinnedTab[data-audible]:not([data-muted]) .audio-badge > svg.-loud
 .PinnedTab[data-muted] .audio-badge > svg.-mute
