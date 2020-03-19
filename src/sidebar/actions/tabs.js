@@ -254,7 +254,8 @@ async function recreateParentGroups(tabs, groups, idsMap, index) {
   for (let group, j = 0; j < groups.length; j++) {
     group = groups[j]
     let groupId = Utils.getGroupId(group.url)
-    let url = browser.runtime.getURL('group/group.html') + `#${groupId}`
+    let groupRawParams = Utils.getGroupRawParams(group.url)
+    let url = browser.runtime.getURL('group/group.html') + groupRawParams + `#${groupId}`
     let groupTab = await browser.tabs.create({
       windowId: this.state.windowId,
       index: index + j,
@@ -1744,7 +1745,7 @@ function flattenTabs(tabIds) {
 /**
  * Group tabs
  */
-async function groupTabs(tabIds) {
+async function groupTabs(tabIds, conf = {}) {
   // Get tabs
   const tabs = []
   for (let t of this.state.tabs) {
@@ -1759,33 +1760,36 @@ async function groupTabs(tabIds) {
   if (tabs[0].lvl >= this.state.tabsTreeLimit) return
 
   // Find title for group tab
-  const titles = tabs.map(t => t.title)
-  let commonPart = Utils.commonSubStr(titles)
-  let isOk = commonPart ? commonPart[0] === commonPart[0].toUpperCase() : false
-  let groupTitle = commonPart
-    .replace(/^(\s|\.|_|-|—|–|\(|\)|\/|=|;|:)+/g, ' ')
-    .replace(/(\s|\.|_|-|—|–|\(|\)|\/|=|;|:)+$/g, ' ')
-    .trim()
+  let groupTitle
+  if (conf.title) {
+    groupTitle = conf.title
+  } else {
+    const titles = tabs.map(t => t.title)
+    let commonPart = Utils.commonSubStr(titles)
+    let isOk = commonPart ? commonPart[0] === commonPart[0].toUpperCase() : false
+    groupTitle = commonPart
+      .replace(/^(\s|\.|_|-|—|–|\(|\)|\/|=|;|:)+/g, ' ')
+      .replace(/(\s|\.|_|-|—|–|\(|\)|\/|=|;|:)+$/g, ' ')
+      .trim()
 
-  if (!isOk || groupTitle.length < 4) {
-    const hosts = tabs.filter(t => !t.url.startsWith('about:')).map(t => t.url.split('/')[2])
-    groupTitle = Utils.commonSubStr(hosts)
-    if (groupTitle.startsWith('.')) groupTitle = groupTitle.slice(1)
-    groupTitle = groupTitle.replace(/^www\./, '')
-  }
+    if (!isOk || groupTitle.length < 4) {
+      const hosts = tabs.filter(t => !t.url.startsWith('about:')).map(t => t.url.split('/')[2])
+      groupTitle = Utils.commonSubStr(hosts)
+      if (groupTitle.startsWith('.')) groupTitle = groupTitle.slice(1)
+      groupTitle = groupTitle.replace(/^www\./, '')
+    }
 
-  if (!isOk || groupTitle.length < 4) {
-    groupTitle = tabs[0].title
+    if (!isOk || groupTitle.length < 4) groupTitle = tabs[0].title
   }
 
   // Find index and create group tab
   this.actions.setNewTabPosition(tabs[0].index, tabs[0].parentId, tabs[0].panelId)
   const groupTab = await browser.tabs.create({
-    active: !(parent && parent.folded),
+    active: !!conf.active,
     cookieStoreId: tabs[0].cookieStoreId,
     index: tabs[0].index,
     openerTabId: tabs[0].parentId < 0 ? undefined : tabs[0].parentId,
-    url: Utils.createGroupUrl(groupTitle),
+    url: Utils.createGroupUrl(groupTitle, conf),
     windowId: this.state.windowId,
   })
 

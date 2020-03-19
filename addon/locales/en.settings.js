@@ -136,9 +136,6 @@ export default {
   'settings.activate_after_closing_rule_tree': { message: 'tree' },
   'settings.activate_after_closing_rule_visible': { message: 'visible' },
   'settings.activate_after_closing_rule_any': { message: 'any' },
-  'settings.activate_after_closing_pin_rel': {
-    message: 'Preserve relation between pinned tab and its children',
-  },
   'settings.activate_after_closing_global': { message: 'Globally' },
   'settings.activate_after_closing_no_folded': { message: 'Ignore folded tabs' },
   'settings.activate_after_closing_no_discarded': { message: 'Ignore discarded tabs' },
@@ -184,6 +181,7 @@ export default {
   'settings.pinned_tabs_position_bottom': { message: 'bottom' },
   'settings.pinned_tabs_position_panel': { message: 'panel' },
   'settings.pinned_tabs_list': { message: 'Show titles of pinned tabs' },
+  'settings.pinned_auto_group': { message: 'Group tabs that were opened from a pinned tab' },
 
   // --- Tabs tree
   'settings.tabs_tree_title': { message: 'Tabs tree' },

@@ -239,11 +239,6 @@
         :opts="$store.state.activateAfterClosingNextRuleOpts"
         @input="setOpt('activateAfterClosingNextRule', $event)")
       toggle-field(
-        label="settings.activate_after_closing_pin_rel"
-        :inactive="!activateAfterClosingNextOrPrev"
-        :value="$store.state.activateAfterClosingPinRel"
-        @input="setOpt('activateAfterClosingPinRel', $event)")
-      toggle-field(
         label="settings.activate_after_closing_global"
         :inactive="$store.state.activateAfterClosing !== 'prev_act'"
         :value="$store.state.activateAfterClosingGlobal"
@@ -311,6 +306,10 @@
       :inactive="$store.state.pinnedTabsPosition !== 'panel'"
       :value="$store.state.pinnedTabsList"
       @input="setOpt('pinnedTabsList', $event)")
+    toggle-field.-last(
+      label="settings.pinned_auto_group"
+      :value="$store.state.pinnedAutoGroup"
+      @input="setOpt('pinnedAutoGroup', $event)")
 
   section(ref="settings_tabs_tree")
     h2 {{t('settings.tabs_tree_title')}}

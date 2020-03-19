@@ -278,12 +278,22 @@ function isGroupUrl(url) {
  * Get group id
  */
 function getGroupId(url) {
-  const idIndex = url.indexOf('/group.html') + 12
+  const idIndex = url.lastIndexOf('#') + 1
   return url.slice(idIndex)
 }
 
-function createGroupUrl(name) {
-  const urlBase = browser.runtime.getURL('group/group.html')
+function getGroupRawParams(url) {
+  let startIndex = url.indexOf('?')
+  if (startIndex === -1) return ''
+  let endIndex = url.lastIndexOf('#')
+  return url.substring(startIndex, endIndex)
+}
+
+function createGroupUrl(name, conf) {
+  let urlBase = browser.runtime.getURL('group/group.html')
+  if (conf && conf.pin !== undefined) {
+    urlBase += '?pin=' + conf.pin
+  }
   return urlBase + `#${encodeURI(name)}:id:${uid()}`
 }
 
@@ -300,9 +310,9 @@ function findSuccessorTab(state, tab, exclude) {
   let isPrevVisible = state.activateAfterClosingPrevRule === 'visible'
   let skipFolded = state.activateAfterClosingNoFolded
   let skipDiscarded = state.activateAfterClosingNoDiscarded
-  let pinRel = state.activateAfterClosingPinRel
-  let pinnedParent
-  if (pinRel && tab.pinnedParentId !== undefined) pinnedParent = state.tabsMap[tab.pinnedParentId]
+  // let pinRel = state.activateAfterClosingPinRel
+  // let pinnedParent
+  // if (pinRel && tab.pinnedParentId !== undefined) pinnedParent = state.tabsMap[tab.pinnedParentId]
 
   // if (tab.pinnedParentId !== undefined) {
   //   let pinnedParent = state.tabsMap[tab.pinnedParentId]
@@ -322,8 +332,8 @@ function findSuccessorTab(state, tab, exclude) {
       // Next tab is the last of group and rule is TREE
       if (isNextTree && next.lvl < tab.lvl) break
 
-      // Skip if parent tab is pinned and next tab's parent not the same
-      if (pinnedParent && next.pinnedParentId !== tab.pinnedParentId) continue
+      // // Skip if parent tab is pinned and next tab's parent not the same
+      // if (pinnedParent && next.pinnedParentId !== tab.pinnedParentId) continue
 
       // Next tab is out of target panel
       if (next.panelId !== tab.panelId || next.pinned !== tab.pinned) break
@@ -352,8 +362,8 @@ function findSuccessorTab(state, tab, exclude) {
       for (i = tab.index; i--; ) {
         prev = state.tabs[i]
 
-        // Skip if parent tab is pinned and prev tab's parent not the same
-        if (pinnedParent && prev.pinnedParentId !== tab.pinnedParentId) continue
+        // // Skip if parent tab is pinned and prev tab's parent not the same
+        // if (pinnedParent && prev.pinnedParentId !== tab.pinnedParentId) continue
 
         // Prev tab is out of target panel
         if (prev.panelId !== tab.panelId || prev.pinned !== tab.pinned) break
@@ -395,8 +405,8 @@ function findSuccessorTab(state, tab, exclude) {
     for (let i = tab.index, prev; i--; ) {
       prev = state.tabs[i]
 
-      // Skip if parent tab is pinned and prev tab's parent not the same
-      if (pinnedParent && prev.pinnedParentId !== tab.pinnedParentId) continue
+      // // Skip if parent tab is pinned and prev tab's parent not the same
+      // if (pinnedParent && prev.pinnedParentId !== tab.pinnedParentId) continue
 
       // Prev tab is out of target panel
       if (prev.panelId !== tab.panelId || prev.pinned !== tab.pinned) break
@@ -427,8 +437,8 @@ function findSuccessorTab(state, tab, exclude) {
         // Next tab is the last of group and rule is TREE
         if (isNextTree && next.lvl < tab.lvl) break
 
-        // Skip if parent tab is pinned and next tab's parent not the same
-        if (pinnedParent && next.pinnedParentId !== tab.pinnedParentId) continue
+        // // Skip if parent tab is pinned and next tab's parent not the same
+        // if (pinnedParent && next.pinnedParentId !== tab.pinnedParentId) continue
 
         // Next tab is out of target panel
         if (next.panelId !== tab.panelId || next.pinned !== tab.pinned) break
@@ -483,8 +493,8 @@ function findSuccessorTab(state, tab, exclude) {
     }
   }
 
-  // Pinned parent will be activated
-  if (pinnedParent && !target) return pinnedParent
+  // // Pinned parent will be activated
+  // if (pinnedParent && !target) return pinnedParent
 
   return target
 }
@@ -671,6 +681,7 @@ export default {
   getDescFromDragEvent,
   isGroupUrl,
   getGroupId,
+  getGroupRawParams,
   createGroupUrl,
   findSuccessorTab,
   cloneArray,

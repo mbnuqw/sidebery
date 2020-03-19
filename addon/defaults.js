@@ -91,7 +91,6 @@ export const DEFAULT_SETTINGS = {
   activateAfterClosing: 'next',
   activateAfterClosingPrevRule: 'visible',
   activateAfterClosingNextRule: 'tree',
-  activateAfterClosingPinRel: false,
   activateAfterClosingGlobal: false,
   activateAfterClosingNoFolded: false,
   activateAfterClosingNoDiscarded: false,
@@ -109,6 +108,7 @@ export const DEFAULT_SETTINGS = {
   // Pinned tabs
   pinnedTabsPosition: 'panel',
   pinnedTabsList: false,
+  pinnedAutoGroup: true,
 
   // Tabs tree
   tabsTree: true,

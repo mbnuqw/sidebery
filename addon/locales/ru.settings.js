@@ -139,9 +139,6 @@ export default {
   'settings.activate_after_closing_rule_tree': { message: 'дерево' },
   'settings.activate_after_closing_rule_visible': { message: 'видимая' },
   'settings.activate_after_closing_rule_any': { message: 'любая' },
-  'settings.activate_after_closing_pin_rel': {
-    message: 'Сохранить связь между закрепленной вкладкой и ее дочерними вкладками',
-  },
   'settings.activate_after_closing_global': { message: 'Глобально' },
   'settings.activate_after_closing_no_folded': { message: 'Игнорировать свернутые вкладки' },
   'settings.activate_after_closing_no_discarded': { message: 'Игнорировать выгруженные вкладки' },
@@ -189,6 +186,9 @@ export default {
   'settings.pinned_tabs_position_bottom': { message: 'внизу' },
   'settings.pinned_tabs_position_panel': { message: 'панель' },
   'settings.pinned_tabs_list': { message: 'Показывать заголовки закрепленных табов' },
+  'settings.pinned_auto_group': {
+    message: 'Группировать вкладки, которые были открыты из закрепленной вкладки.',
+  },
 
   // --- Tabs tree
   'settings.tabs_tree_title': { message: 'Древовидное отображение вкладок' },

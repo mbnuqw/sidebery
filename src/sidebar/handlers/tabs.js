@@ -13,10 +13,18 @@ function onTabCreated(tab) {
   this.actions.closeCtxMenu()
   this.actions.resetSelection()
 
-  let panel, index, prevPos, prevPosPanel
+  let panel, index, prevPos, prevPosPanel, createGroup
+  let initialOpener = this.state.tabsMap[tab.openerTabId]
+  let initialOpenerSpec
 
-  if (this.state.tabsMap[tab.openerTabId] && this.state.tabsMap[tab.openerTabId].pinned) {
-    tab.pinnedParentId = tab.openerTabId
+  // Check if opener tab is pinned
+  if (this.state.pinnedAutoGroup && initialOpener && initialOpener.pinned && this.state.tabsTree) {
+    initialOpenerSpec = initialOpener.cookieStoreId + '::' + initialOpener.url
+    let groupTab = this.state.tabs.find(t => {
+      return t.url.startsWith(GROUP_URL) && t.url.lastIndexOf('pin=' + initialOpenerSpec) > -1
+    })
+    if (groupTab) tab.openerTabId = groupTab.id
+    else createGroup = true
   }
 
   // Get previous position
@@ -153,6 +161,14 @@ function onTabCreated(tab) {
   }
 
   this.actions.recalcPanelScroll()
+
+  if (createGroup && !tab.pinned) {
+    this.actions.groupTabs([tab.id], {
+      active: false,
+      title: initialOpener.title,
+      pin: initialOpenerSpec,
+    })
+  }
 }
 
 /**
