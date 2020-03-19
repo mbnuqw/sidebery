@@ -171,9 +171,10 @@ export default {
     updatePanelBounds() {
       if (State.panelIndex !== this.index) return
 
-      const b = this.$el.getBoundingClientRect()
+      const b = this.$refs.scrollBox.$el.getBoundingClientRect()
       State.panelTopOffset = b.top
       State.panelLeftOffset = b.left
+      State.panelRightOffset = b.right
       State.panelScrollEl = this.getScrollEl()
 
       // probe bookmarks height

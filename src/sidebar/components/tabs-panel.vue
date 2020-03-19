@@ -56,7 +56,6 @@ export default {
 
   data() {
     return {
-      topOffset: 0,
       selection: null,
       selectionMenuEl: null,
       drag: null,
@@ -66,7 +65,6 @@ export default {
   },
 
   mounted() {
-    this.topOffset = this.$el.getBoundingClientRect().top
     this.scrollBoxEl = this.$refs.scrollBox.getScrollBox()
 
     EventBus.$on('recalcPanelScroll', this.recalcScroll)
@@ -257,10 +255,10 @@ export default {
     updatePanelBounds() {
       if (State.panelIndex !== this.index) return
 
-      const scollEl = this.$refs.scrollBox.getScrollBox()
-      const b = scollEl.getBoundingClientRect()
+      const b = this.$refs.scrollBox.$el.getBoundingClientRect()
       State.panelTopOffset = b.top
       State.panelLeftOffset = b.left
+      State.panelRightOffset = b.right
       State.panelScrollEl = this.getScrollEl()
 
       if (!this.$refs.tabs || !this.$refs.tabs.length) {

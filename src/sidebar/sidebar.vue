@@ -254,12 +254,17 @@ export default {
           this.pointerMode = 'between'
         }
       }
-      if (!this.pointerXLock && (x < 0 || e.clientX > State.width)) {
+      if (!this.pointerXLock && (x < 0 || e.clientX > State.panelRightOffset)) {
         this.pointerMode = 'none'
         this.pointerXLock = true
         return
       }
-      if (this.pointerXLock && this.pointerMode === 'none' && x > 0 && e.clientX < State.width) {
+      if (
+        this.pointerXLock &&
+        this.pointerMode === 'none' &&
+        x > 0 &&
+        e.clientX < State.panelRightOffset
+      ) {
         this.pointerXLock = false
         if (!this.pointerYLock) {
           this.pointerPos--
@@ -324,6 +329,7 @@ export default {
               State.dropParent = -1
               this.dropIndex = slot.index
               this.pointerLvl = 0
+              this.pointerMode = 'between'
               break
             }
 
