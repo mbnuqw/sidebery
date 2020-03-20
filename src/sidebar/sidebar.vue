@@ -242,12 +242,12 @@ export default {
       let x = e.clientX - State.panelLeftOffset
 
       // Hide pointer if cursor out of drop area
-      if (!this.pointerYLock && y < 0) {
+      if (!this.pointerYLock && e.clientY < State.panelTopOffset) {
         this.pointerMode = 'none'
         this.pointerYLock = true
         return
       }
-      if (this.pointerYLock && this.pointerMode === 'none' && y > 0) {
+      if (this.pointerYLock && this.pointerMode === 'none' && e.clientY > State.panelTopOffset) {
         this.pointerYLock = false
         if (!this.pointerXLock) {
           this.pointerPos--
