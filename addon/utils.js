@@ -310,17 +310,6 @@ function findSuccessorTab(state, tab, exclude) {
   let isPrevVisible = state.activateAfterClosingPrevRule === 'visible'
   let skipFolded = state.activateAfterClosingNoFolded
   let skipDiscarded = state.activateAfterClosingNoDiscarded
-  // let pinRel = state.activateAfterClosingPinRel
-  // let pinnedParent
-  // if (pinRel && tab.pinnedParentId !== undefined) pinnedParent = state.tabsMap[tab.pinnedParentId]
-
-  // if (tab.pinnedParentId !== undefined) {
-  //   let pinnedParent = state.tabsMap[tab.pinnedParentId]
-  //   if (pinnedParent) {
-  //     if (target && target.pinnedParentId === pinnedParent.id) return target
-  //     else return pinnedParent
-  //   }
-  // }
 
   if (state.removingTabs && !exclude) exclude = state.removingTabs
 
@@ -328,12 +317,10 @@ function findSuccessorTab(state, tab, exclude) {
   if (state.activateAfterClosing === 'next') {
     for (let i = tab.index + 1, next; i < state.tabs.length; i++) {
       next = state.tabs[i]
+      if (!next) break
 
       // Next tab is the last of group and rule is TREE
       if (isNextTree && next.lvl < tab.lvl) break
-
-      // // Skip if parent tab is pinned and next tab's parent not the same
-      // if (pinnedParent && next.pinnedParentId !== tab.pinnedParentId) continue
 
       // Next tab is out of target panel
       if (next.panelId !== tab.panelId || next.pinned !== tab.pinned) break
@@ -361,9 +348,7 @@ function findSuccessorTab(state, tab, exclude) {
       let i, prev
       for (i = tab.index; i--; ) {
         prev = state.tabs[i]
-
-        // // Skip if parent tab is pinned and prev tab's parent not the same
-        // if (pinnedParent && prev.pinnedParentId !== tab.pinnedParentId) continue
+        if (!prev) break
 
         // Prev tab is out of target panel
         if (prev.panelId !== tab.panelId || prev.pinned !== tab.pinned) break
@@ -391,6 +376,7 @@ function findSuccessorTab(state, tab, exclude) {
       if (!target) {
         while (i > -1) {
           prev = state.tabs[i--]
+          if (!prev) break
           if (skipDiscarded && prev.discarded) continue
           if (prev.invisible) continue
           target = prev
@@ -404,9 +390,7 @@ function findSuccessorTab(state, tab, exclude) {
   if (state.activateAfterClosing === 'prev') {
     for (let i = tab.index, prev; i--; ) {
       prev = state.tabs[i]
-
-      // // Skip if parent tab is pinned and prev tab's parent not the same
-      // if (pinnedParent && prev.pinnedParentId !== tab.pinnedParentId) continue
+      if (!prev) break
 
       // Prev tab is out of target panel
       if (prev.panelId !== tab.panelId || prev.pinned !== tab.pinned) break
@@ -433,12 +417,10 @@ function findSuccessorTab(state, tab, exclude) {
     if (!target) {
       for (let i = tab.index + 1, next; i < state.tabs.length; i++) {
         next = state.tabs[i]
+        if (!next) break
 
         // Next tab is the last of group and rule is TREE
         if (isNextTree && next.lvl < tab.lvl) break
-
-        // // Skip if parent tab is pinned and next tab's parent not the same
-        // if (pinnedParent && next.pinnedParentId !== tab.pinnedParentId) continue
 
         // Next tab is out of target panel
         if (next.panelId !== tab.panelId || next.pinned !== tab.pinned) break
@@ -492,9 +474,6 @@ function findSuccessorTab(state, tab, exclude) {
       }
     }
   }
-
-  // // Pinned parent will be activated
-  // if (pinnedParent && !target) return pinnedParent
 
   return target
 }
