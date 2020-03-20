@@ -200,6 +200,10 @@ function onTabRemoved(msg) {
   tabs[index].el.remove()
   tabs.splice(index, 1)
   groupLen--
+
+  if (groupLen === 0 && window.location.search.includes('pin=')) {
+    browser.tabs.remove(groupTabId)
+  }
 }
 
 /**
