@@ -207,8 +207,9 @@ export default {
       Actions.openCtxMenu(type)
     },
 
-    onDoubleClick() {
+    onDoubleClick(e) {
       if (State.tabsPanelLeftClickAction !== 'none') return
+      if (!e.target.className) return
       const da = State.tabsPanelDoubleClickAction
       if (da === 'tab') return Actions.createTabInPanel(this.panel)
       if (da === 'collapse') {
