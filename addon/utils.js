@@ -9,6 +9,7 @@ const ALPH = [
 const UNDERSCORE_RE = /_/g
 const CSS_NUM_RE = /([\d.]+)(\w*)/
 const URL_RE = /^https?:\/\/.+/
+const GROUP_URL = browser.runtime.getURL('/group/group.html')
 
 /**
  *  Generate base64-like uid
@@ -312,6 +313,16 @@ function findSuccessorTab(state, tab, exclude) {
   let skipDiscarded = state.activateAfterClosingNoDiscarded
 
   if (state.removingTabs && !exclude) exclude = state.removingTabs
+
+  if (tab.url.startsWith(GROUP_URL)) {
+    let urlInfo = new URL(tab.url)
+    let pin = urlInfo.searchParams.get('pin')
+    if (pin) {
+      let [containerId, url] = pin.split('::')
+      target = state.tabs.find(t => t.pinned && t.cookieStoreId === containerId && t.url === url)
+      if (target) return target
+    }
+  }
 
   // Next tab
   if (state.activateAfterClosing === 'next') {
