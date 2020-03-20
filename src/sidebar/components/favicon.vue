@@ -24,5 +24,5 @@
   transition(name="tab-part")
     .err-badge(v-if="props.loading === 'err'"): svg: use(xlink:href="#icon_err")
   transition(name="tab-part"): .progress-spinner(v-if="props.loading === true")
-  .child-count(v-if="props.childCount && props.tab.folded") {{childCount}}
+  .child-count(v-if="props.childCount && props.tab.folded") {{props.childCount}}
 </template>
