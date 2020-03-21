@@ -51,6 +51,69 @@ body input
   text-align: center
   color: var(--label-fg)
   margin: 20px 0 24px
+body[data-pin] .title
+  box(none)
+
+.pinned-tab
+  box(relative, none)
+  size(100%, max-w: 960px)
+  margin: 64px 8px 16px
+  flex-direction: row
+  flex-wrap: nowrap
+  flex-shrink: 0
+  align-items: center
+  background-color: #78787824
+  overflow: hidden
+  border-radius: 6px
+  cursor: pointer
+  transition: box-shadow var(--d-norm)
+  box-shadow: 0 0 0 1px #00000024, 0 2px 5px 0 #00000032
+  -moz-user-select: none
+  &:hover
+    box-shadow: 0 0 0 1px #00000032, 0 2px 5px 0 #00000046
+  &:active
+    opacity: .8
+body[data-pin] .pinned-tab
+  box(flex)
+
+.pinned-tab-bg
+  box(absolute)
+  size(100%, same)
+  pos(0, 0)
+  background-size: cover
+  background-repeat: no-repeat
+  opacity: .06
+  transition: opacity var(--d-fast)
+.pinned-tab:hover .pinned-tab-bg
+  opacity: .07
+
+.pinned-tab-body
+  box(relative)
+  size(100%)
+
+.pinned-tab-title
+  box(relative)
+  text(s: rem(32), w: 400)
+  text-align: center
+  padding: 16px 0 0
+  margin: 0 12px 8px
+  white-space: nowrap
+  overflow: hidden
+  text-overflow: ellipsis
+  color: var(--title-fg)
+  text-shadow: 0 1px 8px #00000032
+
+.pinned-tab-url
+  box(relative, block)
+  text(s: rem(15), w: 400)
+  text-align: center
+  padding: 0 0 24px
+  margin: 0 12px
+  overflow: hidden
+  color: var(--info-fg)
+  white-space: nowrap
+  text-overflow: ellipsis
+  text-shadow: 0 1px 8px #00000032
 
 .tabs
   box(grid)
@@ -82,14 +145,19 @@ body[data-layout="list"] .tabs
     pos(calc(50% - 1px), calc(50% - 8px))
     size(16px, 2px)
     background-color: var(--info-fg)
+    transition: background-color var(--d-norm)
   &:after
     content: ''
     box(absolute)
     pos(calc(50% - 8px), calc(50% - 1px))
     size(2px, 16px)
     background-color: var(--info-fg)
+    transition: background-color var(--d-norm)
   &:hover
     box-shadow: 0 0 0 1px #00000032, 0 2px 5px 0 #00000046
+    &:before
+    &:after
+      background-color: var(--label-fg)
   &:active
     opacity: .8
 body[data-layout="grid"] .new-tab

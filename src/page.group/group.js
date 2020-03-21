@@ -10,6 +10,7 @@ const tabsBoxEl = document.getElementById('tabs')
 let newTabEl
 let groupTabId
 let groupTabIndex
+let pinTab
 let tabs = []
 let groupLen, groupParentId
 
@@ -77,6 +78,12 @@ void (async function() {
   groupTabIndex = groupInfo.index || 0
   groupLen = groupInfo.len || 0
   groupParentId = groupInfo.parentId
+  pinTab = groupInfo.pin
+
+  if (pinTab) {
+    document.body.setAttribute('data-pin', true)
+    createPinnedTab(pinTab, event => onTabClick(event, pinTab))
+  }
 
   while (tabsBoxEl.lastChild) {
     tabsBoxEl.removeChild(tabsBoxEl.lastChild)
@@ -311,6 +318,25 @@ function createTabEl(info, clickHandler) {
 }
 
 /**
+ * Create pinned tab element on the page
+ */
+function createPinnedTab(info, clickHandler) {
+  info.el = document.getElementById('pinned_tab')
+  info.el.title = info.url
+
+  info.bgEl = document.getElementById('pinned_tab_bg')
+
+  info.titleEl = document.getElementById('pinned_tab_title')
+  info.titleEl.innerText = info.title
+
+  info.urlEl = document.getElementById('pinned_tab_url')
+  info.urlEl.innerText = info.url
+
+  info.el.addEventListener('mousedown', e => e.stopPropagation())
+  info.el.addEventListener('click', clickHandler)
+}
+
+/**
  * Create button element
  */
 function createButton(svgId, className, clickHandler) {
@@ -384,6 +410,8 @@ async function updateScreenshots() {
   for (let tab of tabs) {
     await loadScreenshot(tab)
   }
+
+  if (pinTab) await loadScreenshot(pinTab)
 }
 
 /**

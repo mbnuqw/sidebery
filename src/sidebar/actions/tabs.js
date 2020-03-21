@@ -1829,6 +1829,21 @@ async function getGroupInfo(groupId) {
     out.parentId = parentTab.id
   }
 
+  if (groupTab.url.includes('pin=')) {
+    let urlInfo = new URL(groupTab.url)
+    let pin = urlInfo.searchParams.get('pin')
+    let [ctr, url] = pin.split('::')
+    let pinnedTab = this.state.tabs.find(t => t.pinned && t.cookieStoreId === ctr && t.url === url)
+    if (pinnedTab) {
+      out.pin = {
+        id: pinnedTab.id,
+        title: pinnedTab.title,
+        url: pinnedTab.url,
+        favIconUrl: pinnedTab.favIconUrl,
+      }
+    }
+  }
+
   let subGroupLvl = null
   for (let i = groupTab.index + 1; i < this.state.tabs.length; i++) {
     const tab = this.state.tabs[i]
