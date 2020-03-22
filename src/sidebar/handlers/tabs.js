@@ -511,12 +511,14 @@ function onTabMoved(id, info) {
       this.actions.saveTabsData()
     }
     if (this.state.stateStorage === 'session') this.actions.saveTabData(id)
+    if (this.state.tabsMap[id]) this.state.tabsMap[id].destPanelId = undefined
     return
   }
 
   if (this.state.tabsMap[id] && this.state.tabsMap[id].unpinning) return
 
   // Move tab in tabs array
+  let toTab = this.state.tabs[info.toIndex]
   let movedTab = this.state.tabs.splice(info.fromIndex, 1)[0]
   if (!movedTab || movedTab.id !== id) {
     const i = this.state.tabs.findIndex(t => t.id === id)
@@ -547,9 +549,7 @@ function onTabMoved(id, info) {
       destPanel.startIndex > info.toIndex ||
       destPanel.endIndex + 1 < info.toIndex
     ) {
-      destPanel = this.state.panels.find(p => {
-        return info.toIndex >= p.startIndex && info.toIndex <= p.endIndex + 1
-      })
+      destPanel = this.state.panelsMap[toTab.panelId]
     }
 
     if (srcPanel && srcPanel.tabs && destPanel && destPanel.tabs) {
