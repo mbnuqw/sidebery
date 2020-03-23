@@ -554,8 +554,10 @@ export default {
       const compStyle = getComputedStyle(this.$el)
       const thRaw = compStyle.getPropertyValue('--tabs-height')
       const nbwRaw = compStyle.getPropertyValue('--nav-btn-width')
+      const ptwRaw = compStyle.getPropertyValue('--tabs-pinned-width')
       State.tabHeight = Utils.parseCSSNum(thRaw.trim())[0]
       State.navBtnWidth = Utils.parseCSSNum(nbwRaw.trim())[0]
+      State.pinnedTabWith = Utils.parseCSSNum(ptwRaw.trim())[0]
     },
 
     /**

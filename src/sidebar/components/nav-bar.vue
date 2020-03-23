@@ -77,7 +77,7 @@ export default {
     nav() {
       let availableWidth = State.width
       if (State.pinnedTabsPosition === 'left' || State.pinnedTabsPosition === 'right') {
-        availableWidth -= State.navBtnWidth
+        availableWidth -= State.pinnedTabWith
       }
       let cap = ~~(availableWidth / State.navBtnWidth)
       if (!State.hideSettingsBtn) cap -= 1

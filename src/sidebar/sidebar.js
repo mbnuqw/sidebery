@@ -51,7 +51,6 @@ export default new Vue({
   async created() {
     State.instanceType = 'sidebar'
 
-    Actions.loadPlatformInfo()
     await Promise.all([Actions.loadWindowInfo(), Actions.loadSettings(), Actions.loadContainers()])
 
     Handlers.setupWindowsListeners()

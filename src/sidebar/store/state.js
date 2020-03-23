@@ -1,13 +1,10 @@
-import { DEFAULT_SETTINGS, SETTINGS_OPTIONS } from '../../../addon/defaults'
+import { DEFAULT_SETTINGS } from '../../../addon/defaults'
 import { DEFAULT_TABS_MENU } from '../../../addon/defaults'
 import { DEFAULT_BOOKMARKS_MENU } from '../../../addon/defaults'
 import { DEFAULT_TABS_PANEL_MENU } from '../../../addon/defaults'
 import { BOOKMARKS_PANEL_MENU } from '../../../addon/defaults'
 
 export default {
-  upgrading: false,
-  osInfo: null,
-  os: null,
   private: browser.extension.inIncognitoContext,
   windowId: 0,
   windowFocused: true,
@@ -16,6 +13,7 @@ export default {
   width: 250,
   tabHeight: 30,
   navBtnWidth: 34,
+  pinnedTabWith: 34,
 
   tabsMenu: Utils.cloneArray(DEFAULT_TABS_MENU),
   bookmarksMenu: Utils.cloneArray(DEFAULT_BOOKMARKS_MENU),
@@ -25,7 +23,6 @@ export default {
   ctxMenu: null,
   winChoosing: false,
   hiddenPanelsBar: false,
-  recalcScrollNeeded: false,
   selected: [],
   wheelBlockTimeout: null,
   dragMode: false,
@@ -43,7 +40,6 @@ export default {
   bookmarkEditor: false,
   bookmarkEditorTarget: null,
 
-  ...SETTINGS_OPTIONS,
   ...DEFAULT_SETTINGS,
 
   snapshots: [],

@@ -1,16 +1,6 @@
 import { translate } from '../../../addon/locales/dict'
 
 /**
- * Load platform info
- */
-function loadPlatformInfo() {
-  browser.runtime.getPlatformInfo().then(osInfo => {
-    this.state.osInfo = osInfo
-    this.state.os = osInfo.os
-  })
-}
-
-/**
  * Load windows info
  */
 async function loadWindowInfo() {
@@ -366,7 +356,6 @@ function progress(config) {
 }
 
 export default {
-  loadPlatformInfo,
   loadWindowInfo,
   connectToBG,
   chooseWin,

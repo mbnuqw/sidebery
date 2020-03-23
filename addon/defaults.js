@@ -32,7 +32,6 @@ export const SETTINGS_OPTIONS = {
   themeOpts: ['default', 'tactile', 'none'],
   snapIntervalUnitOpts: ['min', 'hr', 'day'],
   snapLimitUnitOpts: ['snap', 'kb', 'day'],
-  panelTypeOpts: ['tabs', 'ctx'],
   moveNewTabPinOpts: ['start', 'end', 'none'],
   moveNewTabParentOpts: ['before', 'sibling', 'first_child', 'last_child', 'start', 'end', 'none'],
   moveNewTabOpts: ['start', 'end', 'before', 'after', 'first_child', 'last_child', 'none'],
