@@ -334,7 +334,7 @@ function askNewBookmarkFolder(defaultValue) {
 function notify(config, timeout = 5000) {
   let id = Utils.uid()
   config.id = id
-  config.lvl = 'info'
+  if (!config.lvl) config.lvl = 'info'
   config.timeout = timeout
   if (timeout) {
     config.timer = setTimeout(() => {

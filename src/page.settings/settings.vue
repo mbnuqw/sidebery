@@ -742,6 +742,20 @@
   section(ref="settings_help")
     h2 {{t('settings.help_title')}}
 
+    toggle-field(
+      label="settings.tabs_check"
+      :value="$store.state.tabsCheck"
+      @input="setOpt('tabsCheck', $event)")
+    .sub-fields
+      select-field(
+        label="settings.tabs_fix"
+        optLabel="settings.tabs_fix_"
+        :note="t('settings.tabs_fix_desc')"
+        :inactive="!$store.state.tabsCheck"
+        :value="$store.state.tabsFix"
+        :opts="$store.state.tabsFixOpts"
+        @input="setOpt('tabsFix', $event)")
+
     .ctrls
       a.btn(@click="$store.state.exportConfig = true") {{t('settings.help_exp_data')}}
       .btn(type="file")

@@ -399,13 +399,45 @@ function saveTabsData(delay = 300) {
   if (this._saveTabsDataTimeout) clearTimeout(this._saveTabsDataTimeout)
   this._saveTabsDataTimeout = setTimeout(() => {
     let data = []
+    let pinnedLen = 0
     for (let tab of this.state.tabs) {
+      if (tab.pinned) pinnedLen++
       let info = { id: tab.id, url: tab.url }
       if (tab.parentId > -1) info.parentId = tab.parentId
       if (tab.panelId !== DEFAULT_CTX_ID) info.panelId = tab.panelId
       if (tab.folded) info.folded = tab.folded
       if (tab.cookieStoreId !== DEFAULT_CTX_ID) info.ctx = tab.cookieStoreId
       data.push(info)
+    }
+
+    // Check tabs - panels order
+    if (this.state.tabsCheck) {
+      let err = false
+      let index = pinnedLen
+      perPanels: for (let panel of this.state.panels) {
+        if (!panel.tabs || !panel.tabs.length) continue
+        for (let panelTab of panel.tabs) {
+          let globalTab = this.state.tabs[index]
+          if (globalTab.index !== panelTab.index || globalTab.id !== panelTab.id) {
+            err = true
+            break perPanels
+          }
+          index++
+        }
+      }
+      if (index !== this.state.tabs.length) err = true
+      if (err) {
+        if (this.state.tabsFix === 'notify') {
+          this.actions.notify({
+            title: translate('notif.tabs_err'),
+            lvl: 'err',
+            ctrl: translate('notif.tabs_err_fix'),
+            callback: async () => this.actions.tryToReinitTabs(120),
+          })
+        }
+        if (this.state.tabsFix === 'reinit') this.actions.tryToReinitTabs(500)
+        return
+      }
     }
 
     if (this.state.bg && !this.state.bg.error) {
@@ -464,6 +496,15 @@ function saveGroups(delay = 300) {
     }
 
     browser.sessions.setWindowValue(this.state.windowId, 'groups', groups)
+  }, delay)
+}
+
+function tryToReinitTabs(delay = 500) {
+  this.handlers.resetTabsListeners()
+  setTimeout(async () => {
+    if (this.state.stateStorage === 'global') await this.actions.loadTabsFromGlobalStorage()
+    if (this.state.stateStorage === 'session') await this.actions.loadTabsFromSessionStorage()
+    this.handlers.setupTabsListeners()
   }, delay)
 }
 
@@ -2406,6 +2447,7 @@ export default {
   saveTabsData,
   saveTabData,
   saveGroups,
+  tryToReinitTabs,
 
   scrollToActiveTab,
   createTab,

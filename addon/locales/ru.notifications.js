@@ -9,4 +9,6 @@ export default {
   'notif.bookmarks_sort': { message: 'Сортировка закладок...' },
   'notif.snapshot_created': { message: 'Снепшот создан' },
   'notif.view_snapshot': { message: 'Посмотреть' },
+  'notif.tabs_err': { message: 'Обнаружено неправильное положение вкладок' },
+  'notif.tabs_err_fix': { message: 'Обновить вкладки' },
 }

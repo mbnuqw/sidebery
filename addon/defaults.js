@@ -46,6 +46,7 @@ export const SETTINGS_OPTIONS = {
   dndExpOpts: ['pointer', 'hover', 'none'],
   dndExpModOpts: ['alt', 'shift', 'ctrl', 'none'],
   animationSpeedOpts: ['fast', 'norm', 'slow'],
+  tabsFixOpts: ['reinit', 'notify'],
 }
 
 export const DEFAULT_SETTINGS = {
@@ -53,6 +54,8 @@ export const DEFAULT_SETTINGS = {
   version: browser.runtime.getManifest().version,
   nativeScrollbars: false,
   selWinScreenshots: true,
+  tabsCheck: false,
+  tabsFix: 'notify',
 
   // Context menu
   ctxMenuNative: false,

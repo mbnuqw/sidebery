@@ -72,12 +72,8 @@ export default new Vue({
       Handlers.setupBookmarksListeners()
     }
 
-    if (State.stateStorage === 'global') {
-      await Actions.loadTabsFromGlobalStorage()
-    }
-    if (State.stateStorage === 'session') {
-      await Actions.loadTabsFromSessionStorage()
-    }
+    if (State.stateStorage === 'global') await Actions.loadTabsFromGlobalStorage()
+    if (State.stateStorage === 'session') await Actions.loadTabsFromSessionStorage()
     Handlers.setupTabsListeners()
 
     Actions.loadKeybindings()

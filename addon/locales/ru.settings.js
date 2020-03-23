@@ -40,6 +40,13 @@ export default {
   'settings.general_title': { message: 'Основные' },
   'settings.native_scrollbars': { message: 'Использовать системные скроллбары' },
   'settings.sel_win_screenshots': { message: 'Показывать скриншоты в меню выбора окна' },
+  'settings.tabs_check': { message: 'Автоматически проверять правильность расположения вкладок' },
+  'settings.tabs_fix': { message: 'При обнаружении ошибки:' },
+  'settings.tabs_fix_reinit': { message: 'обновить вкладки' },
+  'settings.tabs_fix_notify': { message: 'показать уведомление' },
+  'settings.tabs_fix_desc': {
+    message: 'Предупреждение: Обновление вкладок может привести к их перестановке',
+  },
   'settings.state_storage': { message: 'Тип хранилища состояния вкладок' },
   'settings.state_storage_global': { message: 'глобальный стор' },
   'settings.state_storage_session': { message: 'сессия браузера' },

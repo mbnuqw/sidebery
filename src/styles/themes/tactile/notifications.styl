@@ -38,6 +38,9 @@
   &[data-timeout]:after
     animation: notif-timeout var(--timeout) linear
 
+  &[data-lvl="err"]:after
+    background-color: var(--false-fg)
+
   &[data-lvl="progress"]
     cursor: progress
 
@@ -50,6 +53,8 @@
   text(s: rem(17), w: 700)
   color: var(--title-fg)
   padding: 4px 12px 9px
+.Notifications .notification[data-lvl="err"] .title
+  color: var(--false-fg)
 
 .Notifications .msg
   box(relative)

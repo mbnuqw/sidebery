@@ -9,4 +9,6 @@ export default {
   'notif.bookmarks_sort': { message: 'Sorting bookmarks...' },
   'notif.snapshot_created': { message: 'Snapshot created' },
   'notif.view_snapshot': { message: 'View' },
+  'notif.tabs_err': { message: 'Wrong tabs position detected' },
+  'notif.tabs_err_fix': { message: 'Update tabs' },
 }
