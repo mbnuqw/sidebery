@@ -49,7 +49,7 @@ async function chooseWin() {
       if (!tab) return
       if (w.focused) return
       let screen
-      if (browser.tabs.captureTab) {
+      if (this.state.selWinScreenshots && browser.tabs.captureTab) {
         screen = await browser.tabs.captureTab(tab.id)
       }
       return {

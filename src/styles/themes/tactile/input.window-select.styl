@@ -11,10 +11,12 @@
 // -
 .WindowSelectInput .box
   box(relative)
-  padding: 6px 12px 10px
+  padding: 8px 8px 0
   opacity: 0
   transform: translateY(16px)
   transition: opacity var(--d-fast), transform var(--d-fast)
+  &:last-of-type
+    padding-bottom: 64px
 
 .WindowSelectInput[data-ready]
   .box
@@ -64,6 +66,11 @@
   background-color: var(--bg)
   background-image: linear-gradient(#ffffff08, #00000016)
   box-shadow: 0 1px 0 0 #00000032
+.WindowSelectInput .box[data-no-screenshot] .title
+  text(s: rem(15))
+  padding: 6px 8px
+  margin: 0
+  box-shadow: none
 
 // ---
 // -- Window screenshot

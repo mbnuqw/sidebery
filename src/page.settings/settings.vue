@@ -6,6 +6,10 @@
       label="settings.native_scrollbars"
       :value="$store.state.nativeScrollbars"
       @input="setOpt('nativeScrollbars', $event)")
+    toggle-field(
+      label="settings.sel_win_screenshots"
+      :value="$store.state.selWinScreenshots"
+      @input="setOpt('selWinScreenshots', $event)")
 
   section(ref="settings_menu")
     h2 {{t('settings.ctx_menu_title')}}

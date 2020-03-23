@@ -52,6 +52,7 @@ export const DEFAULT_SETTINGS = {
   // General
   version: browser.runtime.getManifest().version,
   nativeScrollbars: false,
+  selWinScreenshots: true,
 
   // Context menu
   ctxMenuNative: false,

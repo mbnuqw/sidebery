@@ -39,6 +39,7 @@ export default {
   // --- General
   'settings.general_title': { message: 'General' },
   'settings.native_scrollbars': { message: 'Use native scroll-bars' },
+  'settings.sel_win_screenshots': { message: 'Show screenshots in the window selection menu' },
   'settings.state_storage': { message: 'Where to store tabs data' },
   'settings.state_storage_global': { message: 'global storage' },
   'settings.state_storage_session': { message: 'session storage' },

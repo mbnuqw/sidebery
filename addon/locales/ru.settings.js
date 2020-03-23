@@ -39,6 +39,7 @@ export default {
   // --- General
   'settings.general_title': { message: 'Основные' },
   'settings.native_scrollbars': { message: 'Использовать системные скроллбары' },
+  'settings.sel_win_screenshots': { message: 'Показывать скриншоты в меню выбора окна' },
   'settings.state_storage': { message: 'Тип хранилища состояния вкладок' },
   'settings.state_storage_global': { message: 'глобальный стор' },
   'settings.state_storage_session': { message: 'сессия браузера' },
