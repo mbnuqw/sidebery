@@ -179,10 +179,26 @@
   opacity: 1
   z-index: 20
   transition: opacity var(--d-fast), transform var(--d-fast)
+  &:after
+    content: ''
+    box(absolute)
+    pos(b: -7px, l: -7px)
+    size(0, 0)
+    border-top: 3px solid transparent
+    border-bottom: 3px solid transparent
+    border-right: 3px solid var(--notice-fg)
+    border-left: 3px solid transparent
+    transform: rotateZ(-45deg)
+    transition: opacity var(--d-fast)
+    opacity: 0
 
 .Tab:active .fav
   transition: none
   opacity: .7
+
+.Tab[data-unread] .fav
+  &:after
+    opacity: 1
 
 // ---
 // -- Favicon placeholder

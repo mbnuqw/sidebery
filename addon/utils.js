@@ -559,6 +559,7 @@ function normalizeTab(tab, defaultPanelId) {
   }
   if (tab.favIconUrl === undefined) tab.favIconUrl = ''
   else if (tab.favIconUrl.startsWith('chrome:')) tab.favIconUrl = ''
+  if (tab.unread === undefined) tab.unread = false
 }
 
 /**

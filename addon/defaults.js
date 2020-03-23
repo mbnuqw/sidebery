@@ -98,6 +98,7 @@ export const DEFAULT_SETTINGS = {
   askNewBookmarkPlace: false,
   tabsRmUndoNote: true,
   nativeHighlight: false,
+  tabsUnreadMark: false,
 
   // New tab position
   moveNewTabPin: 'start',

@@ -265,6 +265,10 @@
       label="settings.native_highlight"
       :value="$store.state.nativeHighlight"
       @input="setOpt('nativeHighlight', $event)")
+    toggle-field(
+      label="settings.tabs_unread_mark"
+      :value="$store.state.tabsUnreadMark"
+      @input="setOpt('tabsUnreadMark', $event)")
 
   section(ref="settings_new_tab_position")
     h2 {{t('settings.new_tab_position')}}

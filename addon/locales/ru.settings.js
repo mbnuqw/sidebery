@@ -150,6 +150,7 @@ export default {
   'settings.native_highlight': {
     message: 'Выделять стандартные вкладки (в верхней панели) вместе с вкладками в боковой панели',
   },
+  'settings.tabs_unread_mark': { message: 'Показывать метку на непрочитанных вкладках' },
 
   // --- New tab position
   'settings.new_tab_position': { message: 'Позиция новых вкладок' },

@@ -13,6 +13,7 @@
   :data-invisible="tab.invisible"
   :data-close-btn="$store.state.showTabRmBtn"
   :data-color="color"
+  :data-unread="tab.unread"
   :title="tooltip"
   @contextmenu.stop="onCtxMenu"
   @mousedown.stop="onMouseDown"

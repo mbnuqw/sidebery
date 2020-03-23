@@ -73,6 +73,7 @@ function onTabCreated(tab) {
   // Set custom props
   Utils.normalizeTab(tab, panel.id)
   tab.index = index
+  if (this.state.tabsUnreadMark) tab.unread = true
   if (tab.openerTabId >= 0) tab.parentId = tab.openerTabId
   if (!tab.favIconUrl && this.state.favUrls[tab.url] >= 0) {
     tab.favIconUrl = this.state.favicons[this.state.favUrls[tab.url]] || ''
@@ -671,6 +672,7 @@ function onTabActivated(info) {
   let tab = this.state.tabsMap[info.tabId]
   if (!tab) return
   tab.active = true
+  if (this.state.tabsUnreadMark) tab.unread = false
   tab.lastAccessed = Date.now()
   this.state.activeTabId = info.tabId
 

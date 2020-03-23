@@ -147,6 +147,7 @@ export default {
   'settings.native_highlight': {
     message: 'Highlight native tabs (in top horizontal bar) along with tabs in sidebar',
   },
+  'settings.tabs_unread_mark': { message: 'Show the mark on unread tabs' },
 
   // --- New tab position
   'settings.new_tab_position': { message: 'Position of new tab' },
