@@ -410,34 +410,18 @@ function saveTabsData(delay = 300) {
       data.push(info)
     }
 
-    // Check tabs - panels order
-    if (this.state.tabsCheck) {
-      let err = false
-      let index = pinnedLen
-      perPanels: for (let panel of this.state.panels) {
-        if (!panel.tabs || !panel.tabs.length) continue
-        for (let panelTab of panel.tabs) {
-          let globalTab = this.state.tabs[index]
-          if (globalTab.index !== panelTab.index || globalTab.id !== panelTab.id) {
-            err = true
-            break perPanels
-          }
-          index++
-        }
+    // Check tabs and panels ordering
+    if (this.state.tabsCheck && this.actions.checkTabsPositioning(pinnedLen)) {
+      if (this.state.tabsFix === 'notify') {
+        this.actions.notify({
+          title: translate('notif.tabs_err'),
+          lvl: 'err',
+          ctrl: translate('notif.tabs_err_fix'),
+          callback: async () => this.actions.reinitTabs(120),
+        })
       }
-      if (index !== this.state.tabs.length) err = true
-      if (err) {
-        if (this.state.tabsFix === 'notify') {
-          this.actions.notify({
-            title: translate('notif.tabs_err'),
-            lvl: 'err',
-            ctrl: translate('notif.tabs_err_fix'),
-            callback: async () => this.actions.tryToReinitTabs(120),
-          })
-        }
-        if (this.state.tabsFix === 'reinit') this.actions.tryToReinitTabs(500)
-        return
-      }
+      if (this.state.tabsFix === 'reinit') this.actions.reinitTabs(500)
+      return
     }
 
     if (this.state.bg && !this.state.bg.error) {
@@ -499,7 +483,31 @@ function saveGroups(delay = 300) {
   }, delay)
 }
 
-function tryToReinitTabs(delay = 500) {
+/**
+ * Check the tabs positioning
+ */
+function checkTabsPositioning(startIndex) {
+  let err = false
+  let index = startIndex
+  perPanels: for (let panel of this.state.panels) {
+    if (!panel.tabs || !panel.tabs.length) continue
+    for (let panelTab of panel.tabs) {
+      let globalTab = this.state.tabs[index]
+      if (globalTab.index !== panelTab.index || globalTab.id !== panelTab.id) {
+        err = true
+        break perPanels
+      }
+      index++
+    }
+  }
+  if (index !== this.state.tabs.length) err = true
+  return err
+}
+
+/**
+ * Reinitialize tabs
+ */
+function reinitTabs(delay = 500) {
   this.handlers.resetTabsListeners()
   setTimeout(async () => {
     if (this.state.stateStorage === 'global') await this.actions.loadTabsFromGlobalStorage()
@@ -2447,7 +2455,8 @@ export default {
   saveTabsData,
   saveTabData,
   saveGroups,
-  tryToReinitTabs,
+  checkTabsPositioning,
+  reinitTabs,
 
   scrollToActiveTab,
   createTab,
