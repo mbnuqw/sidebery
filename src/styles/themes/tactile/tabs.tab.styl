@@ -392,11 +392,11 @@
   overflow: hidden
   mask: linear-gradient(-90deg, transparent, #000000 12px, #000000)
 
-.Tab[data-close-btn]:hover .t-box
+#root[data-tabs-close-btn] .Tab:hover .t-box
   mask: linear-gradient(-90deg, transparent, transparent 24px, #000000 48px, #000000)
 
-.Tab[data-close-btn][data-audible]:hover .t-box
-.Tab[data-close-btn][data-muted]:hover .t-box
+#root[data-tabs-close-btn] .Tab[data-audible]:hover .t-box
+#root[data-tabs-close-btn] .Tab[data-muted]:hover .t-box
   mask: linear-gradient(-90deg, transparent, transparent 42px, #000000 64px, #000000)
 
 .Tab[data-audible] .t-box
