@@ -55,6 +55,7 @@ export default {
   'menu.tabs_panel.discard': { message: 'Discard tabs' },
   'menu.tabs_panel.close': { message: 'Close tabs' },
   'menu.tabs_panel.collapse_inact_branches': { message: 'Collapse inactive branches' },
+  'menu.tabs_panel.remove_panel': { message: 'Remove panel' },
 
   // --- Common ---
   'menu.copy_url': { message: 'Copy URL' },

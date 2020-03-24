@@ -430,6 +430,7 @@ export const DEFAULT_TABS_PANEL_MENU = [
   'closeTabs',
   'separator-8',
   'openPanelConfig',
+  'removePanel',
 ]
 
 export const BOOKMARKS_PANEL_MENU = ['collapseAllFolders', 'separator-9', 'openPanelConfig']
@@ -936,6 +937,20 @@ export const MENU_OPTIONS = {
       args: [panel.tabs],
     }
     if (panel.tabs.length < 3) option.inactive = true
+    if (!state.ctxMenuRenderInact && option.inactive) return
+    return option
+  },
+  removePanel: state => {
+    let panel = state.selected[0]
+    if (!panel || !panel.tabs) return
+
+    let option = {
+      label: translate('menu.tabs_panel.remove_panel'),
+      icon: 'icon_close',
+      action: 'removePanel',
+      args: [panel.id],
+    }
+    if (panel.type === 'default') option.inactive = true
     if (!state.ctxMenuRenderInact && option.inactive) return
     return option
   },

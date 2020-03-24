@@ -55,6 +55,7 @@ export default {
   'menu.tabs_panel.discard': { message: 'Выгрузить вкладки' },
   'menu.tabs_panel.close': { message: 'Закрыть вкладки' },
   'menu.tabs_panel.collapse_inact_branches': { message: 'Свернуть неактивные ветки' },
+  'menu.tabs_panel.remove_panel': { message: 'Удалить панель' },
 
   // --- Common ---
   'menu.copy_url': { message: 'Копировать адрес' },

@@ -1,5 +1,6 @@
 import EventBus from '../../event-bus'
 import CommonActions from '../../actions/panels'
+import { translate } from '../../../addon/locales/dict.js'
 import { TABS_PANEL_STATE } from '../../../addon/defaults'
 import { BOOKMARKS_PANEL, DEFAULT_TABS_PANEL } from '../../../addon/defaults'
 import { TABS_PANEL } from '../../../addon/defaults'
@@ -385,6 +386,22 @@ function getActivePanel() {
   return Utils.cloneObject(this.state.panels[this.state.panelIndex])
 }
 
+/**
+ * Remove panel
+ */
+async function removePanel(panelId) {
+  let panel = this.state.panelsMap[panelId]
+  let preMsg = translate('settings.panel_remove_confirm_1')
+  let postMsg = translate('settings.panel_remove_confirm_2')
+  let ok = await this.actions.confirm(preMsg + panel.name + postMsg)
+  if (!ok) return
+
+  let index = this.state.panels.findIndex(p => p.id === panelId)
+  if (index > -1) this.state.panels.splice(index, 1)
+  delete this.state.panelsMap[panelId]
+  this.actions.savePanels()
+}
+
 export default {
   ...CommonActions,
 
@@ -406,4 +423,5 @@ export default {
   switchPanel,
   goToActiveTabPanel,
   getActivePanel,
+  removePanel,
 }

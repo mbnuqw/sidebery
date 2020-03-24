@@ -252,6 +252,7 @@ const TABS_PANEL_MENU_OPTS = {
   collapseInactiveBranches: 'menu.tabs_panel.collapse_inact_branches',
   closeTabs: 'menu.tabs_panel.close',
   openPanelConfig: 'menu.common.conf',
+  removePanel: 'menu.tabs_panel.remove_panel',
 }
 
 const BOOKMARKS_PANEL_MENU_OPTS = {
