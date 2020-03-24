@@ -1114,6 +1114,10 @@ async function moveTabsToWin(tabIds, window) {
   for (let id of tabIds) {
     let tab = this.state.tabsMap[id]
     if (!tab) continue
+    if (tab.parentId > -1 && !tabIds.includes(tab.parentId)) {
+      tab.lvl = 0
+      tab.parentId = -1
+    }
     tabs.push(Utils.cloneObject(tab))
     if (tab.folded) {
       for (let i = tab.index + 1; i < this.state.tabs.length; i++) {
