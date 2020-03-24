@@ -5,6 +5,8 @@ const PNG_RE = /(\.png)([?#].*)?$/i
 const JPG_RE = /(\.jpe?g)([?#].*)?$/i
 const PDF_RE = /(\.pdf)([?#].*)?$/i
 const GROUP_BASE = browser.runtime.getURL('group/group.html')
+const PIN_SCREENSHOT_QUALITY = 90
+const SCREENSHOT_QUALITY = 25
 
 const tabsBoxEl = document.getElementById('tabs')
 let newTabEl
@@ -164,7 +166,7 @@ async function onTabCreated(tab) {
 
   groupLen++
   await Utils.sleep(256)
-  loadScreenshot(tab)
+  loadScreenshot(tab, SCREENSHOT_QUALITY)
 }
 
 /**
@@ -179,7 +181,7 @@ function onTabUpdated(msg) {
     tab.el.setAttribute('data-fav', !!msg.favIconUrl)
     tab.favEl.style.backgroundImage = `url(${msg.favIconUrl})`
     tab.favIconUrl = msg.favIconUrl
-    loadScreenshot(tab)
+    loadScreenshot(tab, SCREENSHOT_QUALITY)
   }
 
   tab.titleEl.innerText = msg.title
@@ -396,22 +398,26 @@ function getFavPlaceholder(url) {
 /**
  * Load screenshots
  */
-async function loadScreenshot(tab) {
+async function loadScreenshot(tab, quality = 90) {
   if (tab.discarded) return
   if (!browser.tabs.captureTab) return
-  let screen = await browser.tabs.captureTab(tab.id, { format: 'jpeg', quality: 90 })
-  tab.bgEl.style.backgroundImage = `url(${screen})`
+  try {
+    let screen = await browser.tabs.captureTab(tab.id, { format: 'jpeg', quality })
+    tab.bgEl.style.backgroundImage = `url(${screen})`
+  } catch (err) {
+    // itsok
+  }
 }
 
 /**
  * Sequentially update screenshots
  */
 async function updateScreenshots() {
-  for (let tab of tabs) {
-    await loadScreenshot(tab)
-  }
+  if (pinTab) await loadScreenshot(pinTab, PIN_SCREENSHOT_QUALITY)
 
-  if (pinTab) await loadScreenshot(pinTab)
+  for (let tab of tabs) {
+    await loadScreenshot(tab, SCREENSHOT_QUALITY)
+  }
 }
 
 /**
@@ -453,7 +459,7 @@ function updateTab(oldTab, newTab) {
 
   Object.assign(oldTab, newTab)
 
-  if (titleChanged || urlChanged) loadScreenshot(oldTab)
+  if (titleChanged || urlChanged) loadScreenshot(oldTab, SCREENSHOT_QUALITY)
 }
 
 /**
