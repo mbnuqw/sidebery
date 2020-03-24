@@ -1102,6 +1102,14 @@ async function moveTabsToWin(tabIds, window) {
     return this.state.tabsMap[a].index - this.state.tabsMap[b].index
   })
 
+  // Check if there is active tab and update successor id for it
+  let activeTabId = tabIds.find(id => this.state.tabsMap[id].active)
+  let activeTab = this.state.tabsMap[activeTabId]
+  if (activeTab) {
+    let target = Utils.findSuccessorTab(this.state, activeTab, tabIds)
+    if (target) await browser.tabs.moveInSuccession([activeTab.id], target.id)
+  }
+
   let tabs = []
   for (let id of tabIds) {
     let tab = this.state.tabsMap[id]
