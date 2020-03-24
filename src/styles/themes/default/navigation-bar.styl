@@ -205,25 +205,12 @@
 // -
 .Sidebar .panel-btn .len
   box(absolute)
-  pos(0, r: 0)
+  pos(1px, r: 1px)
   font: var(--tabs-count-font)
-  padding: 0 2px
+  padding: 0 2px 0 2px
   color: var(--title-fg)
-  text-shadow: 1px 0 0 var(--bg),
-               -1px 0 0 var(--bg),
-               0 1px 0 var(--bg),
-               0 -1px 0 var(--bg),
-               0 0 2px var(--bg),
-               0 0 2px var(--bg),
-               0 0 3px var(--bg)
-.Sidebar .panel-btn[data-active] .len
-  text-shadow: 1px 0 0 var(--nav-btn-activated-bg),
-              -1px 0 0 var(--nav-btn-activated-bg),
-              0 1px 0 var(--nav-btn-activated-bg),
-              0 -1px 0 var(--nav-btn-activated-bg),
-              0 0 2px var(--nav-btn-activated-bg),
-              0 0 2px var(--nav-btn-activated-bg),
-              0 0 3px var(--nav-btn-activated-bg)
+  background-color: var(--ctx-menu-bg)
+  border-radius: 5px
 
 // ---
 // -- Settings button
