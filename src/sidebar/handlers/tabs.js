@@ -1,6 +1,7 @@
 import { DEFAULT_CTX_ID } from '../../../addon/defaults'
 
 const GROUP_URL = browser.runtime.getURL('/group/group.html')
+const EXT_HOST = browser.runtime.getURL('').slice(16)
 const URL_HOST_PATH_RE = /^([a-z0-9-]{1,63}\.)+\w+(:\d+)?\/[A-Za-z0-9-._~:/?#[\]%@!$&'()*+,;=]*$/
 
 /**
@@ -277,16 +278,20 @@ function onTabUpdated(tabId, change, tab) {
     }
   }
 
-  let inact = Date.now() - tab.lastAccessed
-  if (change.title !== undefined && !tab.active && inact > 5000) {
-    // If prev url starts with 'http' and current url same as prev
-    if (localTab.url.startsWith('http') && localTab.url === tab.url) {
-      // and if title doesn't looks like url
-      if (!URL_HOST_PATH_RE.test(localTab.title) && !URL_HOST_PATH_RE.test(tab.title)) {
-        let panel = this.state.panelsMap[localTab.panelId]
-        localTab.updated = true
-        if (!tab.pinned || this.state.pinnedTabsPosition === 'panel') {
-          if (!panel.updated.includes(tabId)) panel.updated.push(tabId)
+  if (change.title !== undefined) {
+    if (change.title.startsWith(EXT_HOST)) change.title = localTab.title
+
+    let inact = Date.now() - tab.lastAccessed
+    if (!tab.active && inact > 5000) {
+      // If prev url starts with 'http' and current url same as prev
+      if (localTab.url.startsWith('http') && localTab.url === tab.url) {
+        // and if title doesn't looks like url
+        if (!URL_HOST_PATH_RE.test(localTab.title) && !URL_HOST_PATH_RE.test(tab.title)) {
+          let panel = this.state.panelsMap[localTab.panelId]
+          localTab.updated = true
+          if (!tab.pinned || this.state.pinnedTabsPosition === 'panel') {
+            if (!panel.updated.includes(tabId)) panel.updated.push(tabId)
+          }
         }
       }
     }

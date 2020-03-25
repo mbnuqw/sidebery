@@ -254,14 +254,18 @@ async function recreateParentGroups(tabs, groups, idsMap, index) {
   for (let group, j = 0; j < groups.length; j++) {
     group = groups[j]
     let groupId = Utils.getGroupId(group.url)
+    let rawTitle = groupId.slice(0, -16)
     let groupRawParams = Utils.getGroupRawParams(group.url)
     let url = browser.runtime.getURL('group/group.html') + groupRawParams + `#${groupId}`
+    let discarded = group.ctx === DEFAULT_CTX_ID || !group.ctx
     let groupTab = await browser.tabs.create({
       windowId: this.state.windowId,
       index: index + j,
       url,
       cookieStoreId: group.ctx,
       active: false,
+      discarded,
+      title: discarded ? decodeURI(rawTitle) : undefined,
     })
     groupTab.url = url
 
