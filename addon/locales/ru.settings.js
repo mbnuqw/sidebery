@@ -371,6 +371,7 @@ export default {
   'settings.tabs_panel_left_click_action': { message: 'Левый клик по панели с табами' },
   'settings.tabs_panel_double_click_action': { message: 'Двойной клик по панели с табами' },
   'settings.tabs_panel_right_click_action': { message: 'Правый клик по панели с табами' },
+  'settings.tabs_panel_middle_click_action': { message: 'Средний клик по панели с табами' },
   'settings.tabs_panel_action_tab': { message: 'создать таб' },
   'settings.tabs_panel_action_prev': { message: 'пред. панель' },
   'settings.tabs_panel_action_next': { message: 'след. панель' },
