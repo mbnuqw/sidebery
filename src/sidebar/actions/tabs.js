@@ -1,6 +1,6 @@
 import EventBus from '../../event-bus'
 import { translate } from '../../../addon/locales/dict'
-import { DEFAULT_CTX_ID, DEFAULT_CTX, PRIVATE_CTX } from '../../../addon/defaults'
+import { DEFAULT_CTX_ID, DEFAULT_CTX, PRIVATE_CTX, GROUP_URL } from '../../../addon/defaults'
 
 const URL_WITHOUT_PROTOCOL_RE = /^(.+\.)\/?(.+\/)?\w+/
 
@@ -81,6 +81,8 @@ async function loadTabsFromGlobalStorage() {
       if (idsMap[data.parentId] >= 0) tab.parentId = idsMap[data.parentId]
       tab.folded = !!data.folded
       idsMap[data.id] = tab.id
+
+      if (tab.url.startsWith(GROUP_URL)) this.actions.linkGroupWithPinnedTab(tab, tabs)
 
       // Normalize panelId
       let panel = this.state.panelsMap[tab.panelId]
@@ -195,6 +197,8 @@ async function loadTabsFromSessionStorage() {
       tab.folded = !!data.folded
       idsMap[data.id] = tab.id
 
+      if (tab.url.startsWith(GROUP_URL)) this.actions.linkGroupWithPinnedTab(tab, tabs)
+
       // Normalize panelId
       let panel = this.state.panelsMap[tab.panelId]
       if (!panel) {
@@ -269,6 +273,8 @@ async function recreateParentGroups(tabs, groups, idsMap, index) {
     })
     groupTab.url = url
 
+    if (url.startsWith(GROUP_URL)) this.actions.linkGroupWithPinnedTab(groupTab, tabs)
+
     Utils.normalizeTab(groupTab, null)
 
     tabs.splice(index + j, 0, groupTab)
@@ -280,6 +286,40 @@ async function recreateParentGroups(tabs, groups, idsMap, index) {
     this.state.tabsMap[groupTab.id] = groupTab
     this.actions.saveTabData(groupTab)
   }
+}
+
+/**
+ * Set relGroupId and relPinId props in related pinned and group tabs
+ */
+function linkGroupWithPinnedTab(groupTab, tabs) {
+  let info = new URL(groupTab.url)
+  let pin = info.searchParams.get('pin')
+  if (!pin) return
+
+  let [ctx, url] = pin.split('::')
+  let pinnedTab = tabs.find(t => t.pinned && t.cookieStoreId === ctx && t.url === url)
+  if (!pinnedTab) {
+    info.searchParams.delete('pin')
+    groupTab.url = info.href
+    browser.tabs.update(groupTab.id, { url: info.href })
+    return
+  }
+
+  pinnedTab.relGroupId = groupTab.id
+  groupTab.relPinId = pinnedTab.id
+}
+
+/**
+ * ...
+ */
+async function replaceRelGroupWithPinnedTab(groupTab, pinnedTab) {
+  await browser.tabs.move(pinnedTab.id, { index: groupTab.index - 1 })
+  Utils.sleep(120)
+
+  groupTab.parentId = pinnedTab.id
+  this.actions.updateTabsTree()
+
+  await browser.tabs.remove(groupTab.id)
 }
 
 /**
@@ -1858,6 +1898,15 @@ async function groupTabs(tabIds, conf = {}) {
     windowId: this.state.windowId,
   })
 
+  // Set link between group and pinned tabs
+  if (conf.pinnedTab) {
+    conf.pinnedTab.relGroupId = groupTab.id
+    setTimeout(() => {
+      let localTab = this.state.tabsMap[groupTab.id]
+      if (localTab) localTab.relPinId = conf.pinnedTab.id
+    }, 500)
+  }
+
   // Update parent of selected tabs
   tabs[0].parentId = groupTab.id
   for (let i = 1; i < tabs.length; i++) {
@@ -2473,6 +2522,8 @@ export default {
   saveGroups,
   checkTabsPositioning,
   reinitTabs,
+  linkGroupWithPinnedTab,
+  replaceRelGroupWithPinnedTab,
 
   scrollToActiveTab,
   createTab,

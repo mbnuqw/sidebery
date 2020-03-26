@@ -29,6 +29,26 @@ function onMenuHidden() {
 }
 
 /**
+ * ...
+ */
+function onBgDisconnect(port) {
+  let info
+  try {
+    info = JSON.parse(port.name)
+  } catch (err) {
+    return
+  }
+
+  if (info.windowId !== this.state.windowId) return
+  this.state.bg.onDisconnect.removeListener(this.handlers.onBgDisconnect)
+  this.state.bg = null
+
+  if (this.bgConnectTryCount++ >= 3) return
+
+  this.actions.connectToBG()
+}
+
+/**
  * Setup listeners
  */
 function setupHandlers() {
@@ -50,6 +70,7 @@ export default {
   onSidebarResize,
   onBroActionClick,
   onMenuHidden,
+  onBgDisconnect,
   setupHandlers,
   resetHandlers,
 }

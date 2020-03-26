@@ -264,6 +264,7 @@ export const CUSTOM_CSS_VARS = {
 }
 
 export const PRE_SCROLL = 64
+export const GROUP_URL = browser.runtime.getURL('/group/group.html')
 
 export const prefix = (() => {
   if (navigator.userAgent.includes('IceCat')) return 'icecat'

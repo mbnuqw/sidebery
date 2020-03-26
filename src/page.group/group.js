@@ -84,6 +84,7 @@ void (async function() {
 
   if (pinTab) {
     document.body.setAttribute('data-pin', true)
+    document.title = pinTab.title
     createPinnedTab(pinTab, event => onTabClick(event, pinTab))
   }
 

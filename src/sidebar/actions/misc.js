@@ -21,7 +21,9 @@ function connectToBG() {
     instanceType: this.state.instanceType,
     windowId: this.state.windowId,
   })
+  this.bgConnectTryCount = 0
   this.state.bg = browser.runtime.connect({ name: connectInfo })
+  this.state.bg.onDisconnect.addListener(this.handlers.onBgDisconnect)
 }
 
 /**

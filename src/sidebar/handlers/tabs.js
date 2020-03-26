@@ -1,6 +1,5 @@
-import { DEFAULT_CTX_ID } from '../../../addon/defaults'
+import { DEFAULT_CTX_ID, GROUP_URL } from '../../../addon/defaults'
 
-const GROUP_URL = browser.runtime.getURL('/group/group.html')
 const EXT_HOST = browser.runtime.getURL('').slice(16)
 const URL_HOST_PATH_RE = /^([a-z0-9-]{1,63}\.)+\w+(:\d+)?\/[A-Za-z0-9-._~:/?#[\]%@!$&'()*+,;=]*$/
 
@@ -169,6 +168,7 @@ function onTabCreated(tab) {
       active: false,
       title: initialOpener.title,
       pin: initialOpenerSpec,
+      pinnedTab: initialOpener,
     })
   }
 }
@@ -263,6 +263,13 @@ function onTabUpdated(tabId, change, tab) {
     ) {
       this.actions.checkUrlRules(change.url, localTab)
     }
+    if (localTab.pinned && localTab.relGroupId !== undefined) {
+      let groupTab = this.state.tabsMap[localTab.relGroupId]
+      if (groupTab) {
+        let groupUrl = groupTab.url.replace(localTab.url, change.url)
+        browser.tabs.update(groupTab.id, { url: groupUrl })
+      }
+    }
   }
 
   // Handle favicon change
@@ -303,17 +310,22 @@ function onTabUpdated(tabId, change, tab) {
   // Handle unpinned tab
   if (change.pinned !== undefined && !change.pinned) {
     let panel = this.state.panelsMap[localTab.panelId]
-    if (!panel) return
-    if (!localTab.unpinning) {
-      localTab.destPanelId = localTab.panelId
-      this.state.tabs.splice(localTab.index, 1)
-      this.state.tabs.splice(panel.startIndex - 1, 0, localTab)
-      panel.tabs.splice(0, 0, localTab)
-      this.actions.updateTabsIndexes()
-      if (panel && panel.tabs) browser.tabs.move(tabId, { index: panel.startIndex - 1 })
-      this.actions.updatePanelsRanges()
+    if (panel) {
+      if (!localTab.unpinning) {
+        localTab.destPanelId = localTab.panelId
+        this.state.tabs.splice(localTab.index, 1)
+        this.state.tabs.splice(panel.startIndex - 1, 0, localTab)
+        panel.tabs.splice(0, 0, localTab)
+        this.actions.updateTabsIndexes()
+
+        let relGroupTab = this.state.tabsMap[localTab.relGroupId]
+        if (relGroupTab) this.actions.replaceRelGroupWithPinnedTab(relGroupTab, localTab)
+        else browser.tabs.move(tabId, { index: panel.startIndex - 1 })
+
+        this.actions.updatePanelsRanges()
+      }
+      if (tab.active) this.actions.setPanel(panel.index)
     }
-    if (tab.active) this.actions.setPanel(panel.index)
   }
 
   // Handle pinned tab
@@ -482,6 +494,14 @@ function onTabRemoved(tabId, info, childfree) {
         b.isOpen = false
       }
     }
+  }
+
+  // Reload related group tab
+  if (tab.pinned && this.state.tabsMap[tab.relGroupId]) {
+    let groupTab = this.state.tabsMap[tab.relGroupId]
+    let groupUrl = new URL(groupTab.url)
+    groupUrl.searchParams.delete('pin')
+    browser.tabs.update(tab.relGroupId, { url: groupUrl.href })
   }
 
   const groupTab = this.actions.getGroupTab(tab)
