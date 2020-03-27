@@ -316,6 +316,7 @@
       @input="setOpt('pinnedTabsList', $event)")
     toggle-field.-last(
       label="settings.pinned_auto_group"
+      :inactive="!$store.state.tabsTree"
       :value="$store.state.pinnedAutoGroup"
       @input="setOpt('pinnedAutoGroup', $event)")
 
