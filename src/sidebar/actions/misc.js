@@ -338,6 +338,7 @@ function notify(config, timeout = 5000) {
 }
 
 function notifyAboutNewSnapshot() {
+  if (this.state.snapExcludePrivate && this.state.private) return
   let config = {
     title: translate('notif.snapshot_created'),
     ctrl: translate('notif.view_snapshot'),

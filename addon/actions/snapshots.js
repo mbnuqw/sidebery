@@ -2,10 +2,8 @@ import Actions from '../actions.js'
 import { DEFAULT_CTX_ID } from '../defaults.js'
 
 const MIN_SNAP_INTERVAL = 5000
-const MIN_STARTUP_SNAP_INTERVAL = 3600000
 
 let currentSnapshot
-let baseSnapshotTimeout
 
 /**
  * Create base snapshot
@@ -26,7 +24,7 @@ async function createSnapshot() {
   let { panels_v4 } = await browser.storage.local.get({ panels_v4: [] })
 
   // Update tree structure
-  if (this.settings.tabsTree) await Actions.updateTabsTree()
+  await Actions.updateTabsTree()
 
   // Get tabs info per window
   const windows = {}
@@ -41,7 +39,7 @@ async function createSnapshot() {
 
       if (tab.pinned) item.pinned = true
       if (tab.cookieStoreId !== DEFAULT_CTX_ID) item.ctr = tab.cookieStoreId
-      if (tab.panelId !== DEFAULT_CTX_ID) item.panel = tab.panelId
+      if (tab.panelId && tab.panelId !== DEFAULT_CTX_ID) item.panel = tab.panelId
       if (tab.lvl > 0) item.lvl = tab.lvl
 
       items.push(item)
@@ -70,28 +68,19 @@ async function createSnapshot() {
   try {
     snapshots_v4 = await Actions.limitSnapshots(snapshots_v4)
   } catch (err) {
-    // TODO: Show warning
+    // TODO: Logs
   }
 
-  await browser.storage.local.set({
-    snapshots_v4,
-    lastSnapTime: currentSnapshot.time,
-  })
+  await browser.storage.local.set({ snapshots_v4, lastSnapTime: currentSnapshot.time })
 
   if (this.settings.snapNotify) {
-    let win = await browser.windows.getCurrent({ populate: false })
     browser.runtime.sendMessage({
-      windowId: win.id,
       instanceType: 'sidebar',
       action: 'notifyAboutNewSnapshot',
     })
   }
 
   return currentSnapshot
-}
-function createSnapshotDebounced(delay = 750) {
-  if (baseSnapshotTimeout) clearTimeout(baseSnapshotTimeout)
-  baseSnapshotTimeout = setTimeout(Actions.createSnapshot, delay)
 }
 
 /**
@@ -107,8 +96,8 @@ async function scheduleSnapshots() {
   if (currentSnapshot) elapsed = currentTime - currentSnapshot.time
   else elapsed = currentTime - (await Actions.getLastSnapTime())
 
-  if (elapsed >= interval && interval > MIN_STARTUP_SNAP_INTERVAL) Actions.createSnapshot()
-  if (elapsed < interval) nextTimeout = interval - elapsed
+  if (elapsed >= interval) Actions.createSnapshot()
+  else nextTimeout = interval - elapsed
 
   Actions.scheduleNextSnapshot(nextTimeout)
 }
@@ -119,7 +108,7 @@ async function scheduleSnapshots() {
 function scheduleNextSnapshot(nextTimeout) {
   setTimeout(() => {
     nextTimeout = Actions.getSnapInterval()
-    if (nextTimeout < MIN_SNAP_INTERVAL) return
+    if (nextTimeout < MIN_SNAP_INTERVAL) nextTimeout = MIN_SNAP_INTERVAL
     Actions.createSnapshot()
     Actions.scheduleNextSnapshot(nextTimeout)
   }, nextTimeout)
@@ -233,10 +222,7 @@ async function limitSnapshots(snapshots) {
       if (accum > normLimit) break
     }
 
-    if (unit === 'day') {
-      accum = snapshot.time
-      if (accum < normLimit) break
-    }
+    if (unit === 'day' && snapshot.time < normLimit) break
   }
 
   index++
@@ -273,7 +259,6 @@ function compareSnapshots(s1, s2) {
 
 export default {
   createSnapshot,
-  createSnapshotDebounced,
   scheduleSnapshots,
   scheduleNextSnapshot,
   getLastSnapTime,

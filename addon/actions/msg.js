@@ -2,7 +2,6 @@ import Actions from '../actions.js'
 
 const connectedSidebars = {}
 let firstSidebarInitHandlers = []
-let connectPending = []
 
 /**
  * Init global message handler
@@ -43,11 +42,6 @@ function initMessaging() {
         }
         firstSidebarInitHandlers = null
       }
-
-      for (let waiting of connectPending) {
-        if (waiting.winId === null) waiting.resolve(true)
-        else if (waiting.winId === info.windowId) waiting.resolve(true)
-      }
     }
 
     // Handle disconnect
@@ -60,14 +54,6 @@ function initMessaging() {
       }
     })
   })
-}
-
-/**
- * Handle first sidebar init
- */
-function onFirstSidebarInit(handler) {
-  if (!firstSidebarInitHandlers) return handler()
-  firstSidebarInitHandlers.push(handler)
 }
 
 /**
@@ -86,5 +72,4 @@ export default {
   initGlobalMessaging,
   initMessaging,
   onSidebarMsg,
-  onFirstSidebarInit,
 }

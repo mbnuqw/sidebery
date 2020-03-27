@@ -32,12 +32,14 @@ void (async function main() {
 
   Actions.setupStorageListeners()
 
-  if (!state.settings.tabsTree) Actions.scheduleSnapshots()
-  else Actions.onFirstSidebarInit(Actions.scheduleSnapshots)
-
   Actions.loadPermissions()
   Actions.loadFavicons()
   Actions.clearFaviCacheAfter(86420)
 
   Actions.setupMenuListeners()
+
+  // Defer creating schedule for snapshots
+  setTimeout(() => {
+    Actions.scheduleSnapshots()
+  }, 5000)
 })()

@@ -187,7 +187,7 @@ function saveTabsData(windowId, tabs, delay = 300) {
 }
 
 /**
- * updateTabsTree
+ * Update trees state from sidebars
  */
 async function updateTabsTree() {
   let receiving = []
@@ -203,11 +203,20 @@ async function updateTabsTree() {
     windows.push(window)
   }
 
-  let trees = await Promise.all(receiving)
-  for (let info, i = 0; i < trees.length; i++) {
+  let trees
+  try {
+    trees = await Promise.all(receiving)
+  } catch (err) {
+    trees = []
+  }
+
+  for (let info, i = 0; i < windows.length; i++) {
     info = trees[i]
-    if (!info) continue
     for (let tab of windows[i].tabs) {
+      tab.lvl = undefined
+      tab.panelId = undefined
+
+      if (!info) continue
       let tabInfo = info[String(tab.id)]
       if (!tabInfo) continue
       tab.lvl = tabInfo.lvl
