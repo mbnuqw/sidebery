@@ -53,7 +53,7 @@ export const DEFAULT_SETTINGS = {
   version: browser.runtime.getManifest().version,
   nativeScrollbars: false,
   selWinScreenshots: true,
-  tabsCheck: false,
+  tabsCheck: true,
   tabsFix: 'notify',
 
   // Context menu
