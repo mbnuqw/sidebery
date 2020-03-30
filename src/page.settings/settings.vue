@@ -279,9 +279,15 @@
     select-field(
       label="settings.move_new_tab_pin"
       optLabel="settings.move_new_tab_pin_"
+      :inactive="$store.state.pinnedAutoGroup && $store.state.tabsTree"
       :value="$store.state.moveNewTabPin"
       :opts="$store.state.moveNewTabPinOpts"
       @input="setOpt('moveNewTabPin', $event)")
+    toggle-field(
+      label="settings.pinned_auto_group"
+      :inactive="!$store.state.tabsTree"
+      :value="$store.state.pinnedAutoGroup"
+      @input="setOpt('pinnedAutoGroup', $event)")
     select-field(
       label="settings.move_new_tab_parent"
       optLabel="settings.move_new_tab_parent_"
@@ -309,20 +315,15 @@
       :value="$store.state.pinnedTabsPosition"
       :opts="pinnedTabsPositionOpts"
       @input="setOpt('pinnedTabsPosition', $event)")
-    toggle-field.-last(
+    toggle-field(
       label="settings.pinned_tabs_list"
       :inactive="$store.state.pinnedTabsPosition !== 'panel'"
       :value="$store.state.pinnedTabsList"
       @input="setOpt('pinnedTabsList', $event)")
-    toggle-field.-last(
-      label="settings.pinned_auto_group"
-      :inactive="!$store.state.tabsTree"
-      :value="$store.state.pinnedAutoGroup"
-      @input="setOpt('pinnedAutoGroup', $event)")
 
   section(ref="settings_tabs_tree")
     h2 {{t('settings.tabs_tree_title')}}
-    toggle-field(i
+    toggle-field(
       label="settings.tabs_tree_layout"
       :value="$store.state.tabsTree"
       @input="setOpt('tabsTree', $event)")
