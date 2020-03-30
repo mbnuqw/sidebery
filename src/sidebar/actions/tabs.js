@@ -2295,8 +2295,13 @@ function getIndexForNewTab(panel, tab) {
 
   // Place new tab opened from another tab
   if (parent && !parent.pinned && parent.panelId === panel.id) {
-    if (this.state.moveNewTabParent === 'before') return parent.index
-    if (this.state.moveNewTabParent === 'sibling' || this.state.moveNewTabParent === 'last_child') {
+    if (this.state.moveNewTabParent === 'before' && !tab.autoGroupped) return parent.index
+    if (this.state.moveNewTabParent === 'first_child') return parent.index + 1
+    if (
+      this.state.moveNewTabParent === 'sibling' ||
+      this.state.moveNewTabParent === 'last_child' ||
+      tab.autoGroupped
+    ) {
       let t
       let index = parent.index + 1
       for (; index < this.state.tabs.length; index++) {
@@ -2305,9 +2310,8 @@ function getIndexForNewTab(panel, tab) {
       }
       return index
     }
-    if (this.state.moveNewTabParent === 'first_child') return parent.index + 1
-    if (this.state.moveNewTabParent === 'start') return panel.startIndex
-    if (this.state.moveNewTabParent === 'end') return endIndex
+    if (this.state.moveNewTabParent === 'start' && !tab.autoGroupped) return panel.startIndex
+    if (this.state.moveNewTabParent === 'end' && !tab.autoGroupped) return endIndex
   }
 
   // Place new tab (for the other cases)

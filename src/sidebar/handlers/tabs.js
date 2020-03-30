@@ -13,18 +13,21 @@ function onTabCreated(tab) {
   this.actions.closeCtxMenu()
   this.actions.resetSelection()
 
-  let panel, index, prevPos, prevPosPanel, createGroup
+  let panel, index, prevPos, prevPosPanel, createGroup, initialOpenerSpec, autoGroupTab
   let initialOpener = this.state.tabsMap[tab.openerTabId]
-  let initialOpenerSpec
 
   // Check if opener tab is pinned
   if (this.state.pinnedAutoGroup && initialOpener && initialOpener.pinned && this.state.tabsTree) {
     initialOpenerSpec = initialOpener.cookieStoreId + '::' + initialOpener.url
-    let groupTab = this.state.tabs.find(t => {
+    autoGroupTab = this.state.tabs.find(t => {
       return t.url.startsWith(GROUP_URL) && t.url.lastIndexOf('pin=' + initialOpenerSpec) > -1
     })
-    if (groupTab) tab.openerTabId = groupTab.id
-    else createGroup = true
+    if (autoGroupTab) {
+      tab.openerTabId = autoGroupTab.id
+      tab.autoGroupped = true
+    } else {
+      createGroup = true
+    }
   }
 
   // Get previous position
@@ -56,7 +59,7 @@ function onTabCreated(tab) {
   else {
     panel = this.actions.getPanelForNewTab(tab)
     index = this.actions.getIndexForNewTab(panel, tab)
-    tab.openerTabId = this.actions.getParentForNewTab(panel, tab.openerTabId)
+    if (!autoGroupTab) tab.openerTabId = this.actions.getParentForNewTab(panel, tab.openerTabId)
   }
 
   // If new tab has wrong possition - move it
