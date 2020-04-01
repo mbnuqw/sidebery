@@ -28,7 +28,7 @@ export const SETTINGS_OPTIONS = {
   tabsTreeLimitOpts: [1, 2, 3, 4, 5, 'none'],
   rmChildTabsOpts: ['all', 'folded', 'none'],
   fontSizeOpts: ['xxs', 'xs', 's', 'm', 'l', 'xl', 'xxl'],
-  styleOpts: ['dark', 'light'],
+  styleOpts: ['dark', 'light', 'auto'],
   themeOpts: ['default', 'tactile', 'none'],
   snapIntervalUnitOpts: ['min', 'hr', 'day'],
   snapLimitUnitOpts: ['snap', 'kb', 'day'],
@@ -149,7 +149,7 @@ export const DEFAULT_SETTINGS = {
   animations: true,
   animationSpeed: 'fast',
   theme: 'default',
-  style: 'dark',
+  style: 'auto',
   sidebarCSS: false,
   groupCSS: false,
 

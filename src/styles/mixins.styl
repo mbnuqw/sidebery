@@ -37,6 +37,24 @@ ns(ns, scope = null)
 
 
 // --- mixin
+//  Render blocks for auto and manual styles
+// > style: light|dark
+theme_style(style)
+  if style == dark
+    @media (prefers-color-scheme: dark)
+      &[data-style="auto"]
+        {block}
+    &[data-style="dark"]
+      {block}
+  if style == light
+    @media (prefers-color-scheme: light)
+      &[data-style="auto"]
+        {block}
+    &[data-style="light"]
+      {block}
+
+
+// --- mixin
 //  Media query block with namespace.
 // > w: threshold width
 // > ns: namespace name

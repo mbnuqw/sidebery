@@ -1,9 +1,11 @@
+@import '../../mixins'
+
 // ---
 // -- Styles
 // -
 #root
   // Common
-  &[data-style="dark"]
+  +theme_style(dark)
     --bg: #323232
     --title-fg: #ffffff
     --sub-title-fg: #ffffff
@@ -23,7 +25,7 @@
     --border-flare-fg: #ffffff08
     --progress-fg: #00e9fb
     --progress-bg: #595959
-  &[data-style="light"]
+  +theme_style(light)
     --bg: #fafafa
     --title-fg: #000000
     --sub-title-fg: #242424
@@ -45,7 +47,7 @@
     --progress-bg: #a6a6a6
 
   // Button
-  &[data-style="dark"]
+  +theme_style(dark)
     --btn-bg: #245484
     --btn-bg-hover: #295b8f
     --btn-bg-active: #205386
@@ -59,7 +61,7 @@
     --btn-shadow-hover: 0 1px 2px 0 #00000032, 0 0 0 1px #00000024
     --btn-shadow-active: 0 1px 2px 0 #00000000, 0 0 0 1px #00000012
     --btn-roundness: 3px
-  &[data-style="light"]
+  +theme_style(light)
     --btn-bg: #328def
     --btn-bg-hover: #3995ea
     --btn-bg-active: #268aef
@@ -75,22 +77,22 @@
     --btn-roundness: 3px
 
   // Scroll Box
-  &[data-style="dark"]
+  +theme_style(dark)
     --scroll-progress-h: 1px
     --scroll-progress-bg: #37adef
-  &[data-style="light"]
+  +theme_style(light)
     --scroll-progress-h: 2px
     --scroll-progress-bg: #178dff
 
   // Context Menu
-  &[data-style="dark"]
+  +theme_style(dark)
     --ctx-menu-bg: #2a2a2a
     --ctx-menu-bg-hover: #484848
     --ctx-menu-warn-bg-hover: #ff613d
     --ctx-menu-fg: #ffffff
     --ctx-menu-warn-fg: #ff613d
     --ctx-menu-shadow: 0 0 0 1px #212121, 0 1px 16px 0 #00000048
-  &[data-style="light"]
+  +theme_style(light)
     --ctx-menu-bg: #ffffff
     --ctx-menu-bg-hover: #cacaca
     --ctx-menu-warn-bg-hover: #ff613d
@@ -99,7 +101,7 @@
     --ctx-menu-shadow: 0 0 0 1px #00000016, 0 1px 16px 0 #00000032
 
   // Nav Strip
-  &[data-style="dark"]
+  +theme_style(dark)
     --nav-btn-fg: #ffffff
     --nav-btn-bg-focus: #484848
     --nav-btn-opacity: .8
@@ -109,7 +111,7 @@
     --nav-btn-activated-opacity: 1
     --nav-btn-activated-filter: drop-shadow(0 0 1px #00000056)
     --nav-btn-update-badge-bg: #00e9fb
-  &[data-style="light"]
+  +theme_style(light)
     --nav-btn-fg: #646464
     --nav-btn-bg-focus: #ffffff
     --nav-btn-opacity: .8
@@ -121,7 +123,7 @@
     --nav-btn-update-badge-bg: #01acda
 
   // Tabs
-  &[data-style="dark"]
+  +theme_style(dark)
     --tabs-fg: #aaa
     --tabs-fg-hover: #cecece
     --tabs-fg-active: #aaa
@@ -134,7 +136,7 @@
     --tabs-loading-fg: #47cfff
     --tabs-update-badge-bg: #00e9fb
     --tabs-lvl-indicator-bg: #5c5c5c
-  &[data-style="light"]
+  +theme_style(light)
     --tabs-fg: #323232
     --tabs-fg-hover: #000000
     --tabs-fg-active: #565656
@@ -149,7 +151,7 @@
     --tabs-lvl-indicator-bg: #a2a2a2
 
   // Bookmarks
-  &[data-style="dark"]
+  +theme_style(dark)
     --bookmarks-node-title-fg: #bebebe
     --bookmarks-node-title-fg-hover: #ffffff
     --bookmarks-node-title-fg-active: #aaaaaa
@@ -164,7 +166,7 @@
     --bookmarks-folder-empty-fg: #646464
     --bookmarks-drag-gradient: linear-gradient(90deg, #242424, #32323200)
     --bookmarks-open-bookmark-fg: #64aaff
-  &[data-style="light"]
+  +theme_style(light)
     --bookmarks-node-title-fg: #3a3a3a
     --bookmarks-node-title-fg-hover: #000000
     --bookmarks-node-title-fg-active: #565656
@@ -181,14 +183,14 @@
     --bookmarks-open-bookmark-fg: #146fd9
 
   // Settings
-  &[data-style="dark"]
+  +theme_style(dark)
     --settings-snapshot-counter-pinned-fg: #686868
     --settings-shortcut-fg: #cecece
     --settings-shortcut-fg-focus: #37adff
     --settings-shortcut-bg: #484848
     --settings-shortcut-shadow: 0 0 0 1.2px #565656
     --settings-shortcut-shadow-focus: 0 0 0 1.2px #37adff
-  &[data-style="light"]
+  +theme_style(light)
     --settings-snapshot-counter-pinned-fg: #565656
     --settings-shortcut-fg: #484848
     --settings-shortcut-fg-focus: #278dff
@@ -199,10 +201,11 @@
 // ---
 // -- Color of current panel
 // -
-#root[data-style="dark"]
-  --active-container-fg: #ffffff
-#root[data-style="light"]
-  --active-container-fg: #323232
+#root
+  +theme_style(dark)
+    --active-container-fg: #ffffff
+  +theme_style(light)
+    --active-container-fg: #323232
 #root[data-color="blue"]
   --active-container-fg: #37adff
 #root[data-color="turquoise"]
@@ -223,10 +226,11 @@
 // ---
 // -- Local color of panel
 // -
-#root[data-style="dark"]
-  --container-fg: #ffffff
-#root[data-style="light"]
-  --container-fg: #323232
+#root
+  +theme_style(dark)
+    --container-fg: #ffffff
+  +theme_style(light)
+    --container-fg: #323232
 [data-color="blue"]
   --container-fg: #37adff
 [data-color="turquoise"]

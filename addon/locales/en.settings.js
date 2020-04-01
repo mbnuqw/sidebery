@@ -260,6 +260,7 @@ export default {
   'settings.switch_style': { message: 'Style' },
   'settings.style_dark': { message: 'dark' },
   'settings.style_light': { message: 'light' },
+  'settings.style_auto': { message: 'auto' },
   'settings.theme': { message: 'Theme' },
   'settings.theme_default': { message: 'default' },
   'settings.theme_tactile': { message: 'tactile' },

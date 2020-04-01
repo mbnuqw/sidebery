@@ -5,7 +5,7 @@
 // -
 #root
   // Common
-  &[data-style="dark"]
+  +theme_style(dark)
     --bg: #565656
     --title-fg: #ffffff
     --sub-title-fg: #fafafa
@@ -29,7 +29,7 @@
     --progress-fg: #ffffff
     --progress-bg: #787878
     --badge-fg: #ffffff
-  &[data-style="light"]
+  +theme_style(light)
     --bg: #aaaaaa
     --title-fg: #212121
     --sub-title-fg: #212121
@@ -55,7 +55,7 @@
     --badge-fg: #363636
 
   // Button
-  &[data-style="dark"]
+  +theme_style(dark)
     --btn-bg: #246cef
     --btn-bg-hover: #246cef
     --btn-bg-active: #246cef
@@ -69,7 +69,7 @@
     --btn-shadow-hover: 0 1px 2px 0 #00000032, 0 0 0 1px var(--border-fg)
     --btn-shadow-active: 0 1px 2px 0 #00000000, 0 0 0 1px var(--border-active-fg)
     --btn-roundness: 3px
-  &[data-style="light"]
+  +theme_style(light)
     --btn-bg: #246cef
     --btn-bg-hover: #246cef
     --btn-bg-active: #246cef
@@ -85,15 +85,15 @@
     --btn-roundness: 3px
 
   // Scroll Box
-  &[data-style="dark"]
+  +theme_style(dark)
     --scroll-progress-h: 1px
     --scroll-progress-bg: #ffffff
-  &[data-style="light"]
+  +theme_style(light)
     --scroll-progress-h: 2px
     --scroll-progress-bg: #ffffff
 
   // Context Menu
-  &[data-style="dark"]
+  +theme_style(dark)
     --ctx-menu-bg: #484848
     --ctx-menu-bg-hover: #00000032
     --ctx-menu-warn-bg-hover: #ff613d
@@ -101,7 +101,7 @@
     --ctx-menu-warn-fg: #ff613d
     --ctx-menu-border-fg: #363636
     --ctx-menu-shadow: 0 0 0 1px #363636, 0 1px 16px 0 #00000048
-  &[data-style="light"]
+  +theme_style(light)
     --ctx-menu-bg: #afafaf
     --ctx-menu-bg-hover: #00000032
     --ctx-menu-warn-bg-hover: #ff613d
@@ -111,13 +111,13 @@
     --ctx-menu-shadow: 0 0 0 1px #646464, 0 1px 16px 0 #00000048
 
   // Nav Strip
-  &[data-style="dark"]
+  +theme_style(dark)
     --nav-btn-fg: #cacaca
     --nav-btn-bg-focus: #484848
     --nav-btn-activated-opacity: 1
     --nav-btn-activated-filter: drop-shadow(0 0 1px #00000056)
     --nav-btn-update-badge-bg: #00e9fb
-  &[data-style="light"]
+  +theme_style(light)
     --nav-btn-fg: #484848
     --nav-btn-bg-focus: #484848
     --nav-btn-activated-opacity: 1
@@ -125,7 +125,7 @@
     --nav-btn-update-badge-bg: #00e9fb
 
   // Tabs
-  &[data-style="dark"]
+  +theme_style(dark)
     --tabs-fg: #cacaca
     --tabs-fg-hover: #cacaca
     --tabs-fg-active: #cacaca
@@ -142,7 +142,7 @@
     --tabs-close-fg: #df512d
     --tabs-close-hover-fg: #ff613d
     --tabs-lvl-indicator-bg: #808080
-  &[data-style="light"]
+  +theme_style(light)
     --tabs-fg: #363636
     --tabs-fg-hover: #323232
     --tabs-fg-active: #323232
@@ -161,7 +161,7 @@
     --tabs-lvl-indicator-bg: #606060
 
   // Bookmarks
-  &[data-style="dark"]
+  +theme_style(dark)
     --bookmarks-node-title-fg: #cacaca
     --bookmarks-node-title-fg-hover: #cecece
     --bookmarks-node-title-fg-active: #cecece
@@ -176,7 +176,7 @@
     --bookmarks-folder-empty-fg: #878787
     --bookmarks-drag-gradient: linear-gradient(90deg, #242424, #32323200)
     --bookmarks-open-bookmark-fg: #ffffff
-  &[data-style="light"]
+  +theme_style(light)
     --bookmarks-node-title-fg: #242424
     --bookmarks-node-title-fg-hover: #212121
     --bookmarks-node-title-fg-active: #212121
@@ -193,14 +193,14 @@
     --bookmarks-open-bookmark-fg: #ffffff
 
   // Settings
-  &[data-style="dark"]
+  +theme_style(dark)
     --settings-snapshot-counter-pinned-fg: #686868
     --settings-shortcut-fg: #cecece
     --settings-shortcut-fg-focus: #37adff
     --settings-shortcut-bg: #484848
     --settings-shortcut-shadow: 0 0 0 1.2px #565656
     --settings-shortcut-shadow-focus: 0 0 0 1.2px #37adff
-  &[data-style="light"]
+  +theme_style(light)
     --settings-snapshot-counter-pinned-fg: #565656
     --settings-shortcut-fg: #484848
     --settings-shortcut-fg-focus: #278dff
@@ -211,10 +211,11 @@
 // ---
 // -- Color of current panel
 // -
-#root[data-style="dark"]
-  --active-container-fg: #ffffff
-#root[data-style="light"]
-  --active-container-fg: #484848
+#root
+  +theme_style(dark)
+    --active-container-fg: #ffffff
+  +theme_style(light)
+    --active-container-fg: #484848
 #root[data-color="blue"]
   --active-container-fg: #37adff
 #root[data-color="turquoise"]
@@ -235,28 +236,31 @@
 // ---
 // -- Local color of panel
 // -
-#root[data-style="dark"]
-  --container-fg: #ffffff
-#root[data-style="light"]
-  --container-fg: #323232
-[data-color="blue"]
-  --container-fg: #37adff
-[data-color="turquoise"]
-  --container-fg: #00c79a
-[data-color="green"]
-  --container-fg: #51cd00
-[data-color="yellow"]
-  --container-fg: #ffcb00
-[data-color="orange"]
-  --container-fg: #ff9f00
-[data-color="red"]
-  --container-fg: #ff613d
-[data-color="pink"]
-  --container-fg: #ff4bda
-[data-color="purple"]
-  --container-fg: #af51f5
-[data-color="toolbar"]
-  --container-fg: #ffffff
+#root
+  +theme_style(dark)
+    --container-fg: #ffffff
+  +theme_style(light)
+    --container-fg: #323232
+  [data-color="blue"]
+    --container-fg: #2c9cea
+  [data-color="turquoise"]
+    --container-fg: #00c79a
+  +theme_style(dark)
+    [data-color="green"]
+      --container-fg: #51cd00
+  +theme_style(light)
+    [data-color="green"]
+      --container-fg: #41a400
+  [data-color="yellow"]
+    --container-fg: #ffcb00
+  [data-color="orange"]
+    --container-fg: #ff9f00
+  [data-color="red"]
+    --container-fg: #ff613d
+  [data-color="pink"]
+    --container-fg: #ff4bda
+  [data-color="purple"]
+    --container-fg: #af51f5
 
 // ---
 // -- Sizes

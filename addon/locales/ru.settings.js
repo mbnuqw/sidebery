@@ -285,6 +285,7 @@ export default {
   'settings.switch_style': { message: 'Стиль' },
   'settings.style_dark': { message: 'темный' },
   'settings.style_light': { message: 'светлый' },
+  'settings.style_auto': { message: 'авто' },
   'settings.theme': { message: 'Тема' },
   'settings.theme_default': { message: 'стандартная' },
   'settings.theme_tactile': { message: 'тактильная' },
