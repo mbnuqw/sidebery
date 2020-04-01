@@ -66,8 +66,6 @@ function applyCustomCSS(css) {
  * Render noise-bg image and set css vars (--bg-img, --bg-size)
  */
 function applyNoiseBg() {
-  if (this.state.style === 'auto') return
-
   let conf = {
     width: 300,
     height: 300,
@@ -95,8 +93,6 @@ function applyNoiseBg() {
  * Remove noise bg css vars
  */
 function removeNoiseBg() {
-  if (this.state.style === 'auto') return
-
   let el = document.getElementById('root')
   el.style.removeProperty('--bg-img')
   el.style.removeProperty('--bg-size')
