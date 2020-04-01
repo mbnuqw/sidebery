@@ -136,6 +136,9 @@ export default {
           this.aIsActive = false
           this.$nextTick(() => {
             this.bDown = this.$refs.bBox.offsetHeight + c.y < h
+            if (!this.bDown && this.$refs.bBox.offsetHeight > c.y) {
+              this.bPos -= c.y - this.$refs.bBox.offsetHeight - 1
+            }
             let fullWidth = this.$el.offsetWidth
             let menuWidth = this.$refs.bBox.offsetWidth
             if (c.x < fullWidth - menuWidth) this.bX = c.x
@@ -152,6 +155,9 @@ export default {
           this.bIsActive = false
           this.$nextTick(() => {
             this.aDown = this.$refs.aBox.offsetHeight + c.y < h
+            if (!this.aDown && this.$refs.aBox.offsetHeight > c.y) {
+              this.aPos -= c.y - this.$refs.aBox.offsetHeight - 1
+            }
             let fullWidth = this.$el.offsetWidth
             let menuWidth = this.$refs.aBox.offsetWidth
             if (c.x < fullWidth - menuWidth) this.aX = c.x
