@@ -1841,6 +1841,7 @@ function flattenTabs(tabIds) {
   for (let tab of ttf) {
     tab.lvl = minLvlTab.lvl
     tab.parentId = minLvlTab.parentId
+    if (tab.parentId === -1) browser.tabs.update(tab.id, { openerTabId: tab.id })
   }
 
   this.actions.updateTabsTree(ttf[0].index - 1, ttf[ttf.length - 1].index + 1)
