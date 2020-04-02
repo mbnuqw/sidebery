@@ -1562,6 +1562,7 @@ async function moveDroppedNodes(dropIndex, dropParent, nodes, pin, currentPanel)
       }
       let parentId = nodes[i].parentId > -1 ? nodes[i].parentId : dropParent
       this.actions.setNewTabPosition(index, parentId, currentPanel.id)
+      nodes[i].sel = false
       let [t] = await browser.tabs.move(nodes[i].id, {
         windowId: this.state.windowId,
         index,
