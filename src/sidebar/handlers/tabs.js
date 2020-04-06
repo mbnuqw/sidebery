@@ -8,6 +8,7 @@ const URL_HOST_PATH_RE = /^([a-z0-9-]{1,63}\.)+\w+(:\d+)?\/[A-Za-z0-9-._~:/?#[\]
  */
 function onTabCreated(tab) {
   if (tab.windowId !== this.state.windowId) return
+  if (this.state.tabsDeaf) return
 
   this.actions.highlightBookmarks(tab.url)
   this.actions.closeCtxMenu()
@@ -181,6 +182,7 @@ function onTabCreated(tab) {
  */
 function onTabUpdated(tabId, change, tab) {
   if (tab.windowId !== this.state.windowId) return
+  if (this.state.tabsDeaf) return
 
   const localTab = this.state.tabsMap[tabId]
   if (!localTab) return
@@ -365,6 +367,7 @@ function onTabUpdated(tabId, change, tab) {
 function onTabRemoved(tabId, info, childfree) {
   if (info.windowId !== this.state.windowId) return
   if (info.isWindowClosing) return
+  if (this.state.tabsDeaf) return
 
   if (!this.state.removingTabs) this.state.removingTabs = []
   else this.state.removingTabs.splice(this.state.removingTabs.indexOf(tabId), 1)
@@ -376,7 +379,7 @@ function onTabRemoved(tabId, info, childfree) {
 
   // Try to get removed tab and its panel
   let tab = this.state.tabsMap[tabId]
-  if (!tab) return
+  if (!tab) return this.actions.normalizeTabs()
   let creatingNewTab
   let panel = this.state.panelsMap[tab.panelId]
 
@@ -520,7 +523,7 @@ function onTabRemoved(tabId, info, childfree) {
  */
 function onTabMoved(id, info) {
   if (info.windowId !== this.state.windowId) return
-  if (this.state.ignoreMovingTabs) return
+  if (this.state.tabsDeaf) return
 
   if (!this.state.movingTabs) this.state.movingTabs = []
   else this.state.movingTabs.splice(this.state.movingTabs.indexOf(id), 1)
@@ -548,12 +551,9 @@ function onTabMoved(id, info) {
 
   // Move tab in tabs array
   let toTab = this.state.tabs[info.toIndex]
-  let movedTab = this.state.tabs.splice(info.fromIndex, 1)[0]
-  if (!movedTab || movedTab.id !== id) {
-    const i = this.state.tabs.findIndex(t => t.id === id)
-    movedTab = this.state.tabs.splice(i, 1)[0]
-  }
-  if (!movedTab) return
+  let movedTab = this.state.tabs[info.fromIndex]
+  if (movedTab && movedTab.id === id) this.state.tabs.splice(info.fromIndex, 1)[0]
+  else return this.actions.normalizeTabs()
 
   movedTab.moveTime = Date.now()
   movedTab.prevPanelId = movedTab.panelId
@@ -634,6 +634,7 @@ function onTabMoved(id, info) {
  */
 function onTabDetached(id, info) {
   if (info.oldWindowId !== this.state.windowId) return
+  if (this.state.tabsDeaf) return
   const tab = this.state.tabsMap[id]
   if (tab) tab.folded = false
   this.handlers.onTabRemoved(id, { windowId: this.state.windowId }, true)
@@ -644,6 +645,7 @@ function onTabDetached(id, info) {
  */
 async function onTabAttached(id, info) {
   if (info.newWindowId !== this.state.windowId) return
+  if (this.state.tabsDeaf) return
 
   if (!this.state.attachingTabs) this.state.attachingTabs = []
   const ai = this.state.attachingTabs.findIndex(t => t.id === id)
@@ -668,6 +670,7 @@ async function onTabAttached(id, info) {
  */
 function onTabActivated(info) {
   if (info.windowId !== this.state.windowId) return
+  if (this.state.tabsDeaf) return
 
   const currentPanel = this.state.panels[this.state.panelIndex]
 

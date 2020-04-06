@@ -461,10 +461,10 @@ function saveTabsData(delay = 300) {
           title: translate('notif.tabs_err'),
           lvl: 'err',
           ctrl: translate('notif.tabs_err_fix'),
-          callback: async () => this.actions.reinitTabs(120),
+          callback: async () => this.actions.normalizeTabs(120),
         })
       }
-      if (this.state.tabsFix === 'reinit') this.actions.reinitTabs(500)
+      if (this.state.tabsFix === 'reinit') this.actions.normalizeTabs(500)
       return
     }
 
@@ -549,14 +549,75 @@ function checkTabsPositioning(startIndex) {
 }
 
 /**
- * Reinitialize tabs
+ * Load tabs and normalize order.
  */
-function reinitTabs(delay = 500) {
-  this.handlers.resetTabsListeners()
-  setTimeout(async () => {
-    if (this.state.stateStorage === 'global') await this.actions.loadTabsFromGlobalStorage()
-    if (this.state.stateStorage === 'session') await this.actions.loadTabsFromSessionStorage()
-    this.handlers.setupTabsListeners()
+function normalizeTabs(delay = 500) {
+  if (!this._normTabsTimeout) clearTimeout(this._normTabsTimeout)
+  this._normTabsTimeout = setTimeout(async () => {
+    this._normTabsTimeout = null
+    this.state.tabsDeaf = true
+
+    let panels = []
+    for (let panel of this.state.panels) {
+      if (panel.tabs) panels.push({ id: panel.id, index: -1 })
+    }
+
+    let normTabs = []
+    let nativeTabs = await browser.tabs.query({ windowId: browser.windows.WINDOW_ID_CURRENT })
+    let moves = []
+    let panelId
+    let index = 0
+    let panelIndex = 0
+    for (let nativeTab of nativeTabs) {
+      let tab = this.state.tabs.find(t => t.id === nativeTab.id)
+      if (tab) {
+        tab.index = index++
+        tab.status = 'complete'
+
+        if (!tab.pinned) {
+          if (panels[panelIndex].id !== tab.panelId) {
+            let pi = panels.findIndex(p => {
+              if (p.index === -1) p.index = index - 1
+              return p.id === tab.panelId
+            })
+            if (pi > panelIndex) {
+              panelIndex = pi
+              panels[panelIndex].index = index
+            } else {
+              moves.push([tab.id, panels[pi].index])
+              for (let i = pi; i < panels.length; i++) {
+                panels[i].index++
+              }
+            }
+          } else {
+            panels[panelIndex].index = index
+          }
+        }
+
+        normTabs.push(tab)
+        panelId = tab.panelId
+      } else {
+        Utils.normalizeTab(nativeTab, panelId)
+        normTabs.push(nativeTab)
+      }
+    }
+
+    if (moves.length && !this.state.reinitMoving) {
+      let moving = moves.map(m => browser.tabs.move(m[0], { index: m[1] }))
+      await Promise.all(moving)
+      this.actions.normalizeTabs(0)
+      this.state.reinitMoving = true
+      return
+    }
+
+    this.state.tabs = normTabs
+    this.actions.updatePanelsTabs()
+    this.actions.updateTabsTree()
+
+    this.state.tabsDeaf = false
+
+    if (this.state.stateStorage === 'global') this.actions.saveTabsData()
+    if (this.state.stateStorage === 'session') this.actions.saveGroups()
   }, delay)
 }
 
@@ -2529,7 +2590,7 @@ export default {
   saveTabData,
   saveGroups,
   checkTabsPositioning,
-  reinitTabs,
+  normalizeTabs,
   linkGroupWithPinnedTab,
   replaceRelGroupWithPinnedTab,
 
