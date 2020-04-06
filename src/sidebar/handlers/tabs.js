@@ -52,6 +52,10 @@ function onTabCreated(tab) {
     panel = prevPosPanel
     index = tab.index
 
+    for (let rmTab of this._removedTabs) {
+      if (rmTab.parentId === prevPos.id) rmTab.parentId = tab.id
+    }
+
     let parentTab = this.state.tabsMap[prevPos.parentId]
     if (parentTab && parentTab.index < tab.index) tab.openerTabId = prevPos.parentId
   }
@@ -389,6 +393,7 @@ function onTabRemoved(tabId, info, childfree) {
   if (tab.url !== 'about:newtab' && tab.url !== 'about:blank') {
     if (!this._removedTabs) this._removedTabs = []
     this._removedTabs.push({
+      id: tab.id,
       index: tab.index,
       title: tab.title,
       parentId: tab.parentId,
