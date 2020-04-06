@@ -19,6 +19,7 @@ const browser = {
   },
   permissions: {},
   runtime: {
+    getURL: path => 'moz-extension://blablabla/' + path,
     sendMessage: msg => MsgHandlers.map(h => h(msg)),
     onMessage: { addListener: handler => MsgHandlers.push(handler) },
   },
