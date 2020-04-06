@@ -279,7 +279,6 @@
     select-field(
       label="settings.move_new_tab_pin"
       optLabel="settings.move_new_tab_pin_"
-      :inactive="$store.state.pinnedAutoGroup && $store.state.tabsTree"
       :value="$store.state.moveNewTabPin"
       :opts="$store.state.moveNewTabPinOpts"
       @input="setOpt('moveNewTabPin', $event)")
@@ -313,8 +312,8 @@
       label="settings.pinned_tabs_position"
       optLabel="settings.pinned_tabs_position_"
       :value="$store.state.pinnedTabsPosition"
-      :opts="pinnedTabsPositionOpts"
-      @input="setOpt('pinnedTabsPosition', $event)")
+      :opts="$store.state.pinnedTabsPositionOpts"
+      @input="switchPinnedTabsPosition")
     toggle-field(
       label="settings.pinned_tabs_list"
       :inactive="$store.state.pinnedTabsPosition !== 'panel'"
@@ -890,15 +889,6 @@ export default {
     activateAfterClosingNextOrPrev() {
       return State.activateAfterClosing === 'next' || State.activateAfterClosing === 'prev'
     },
-
-    pinnedTabsPositionOpts() {
-      let isNavVertical = State.navBarLayout === 'vertical'
-      return State.pinnedTabsPositionOpts.filter(o => {
-        if (isNavVertical && o === 'left') return false
-        if (isNavVertical && o === 'right') return false
-        return true
-      })
-    },
   },
 
   mounted() {
@@ -982,6 +972,17 @@ export default {
         if (State.pinnedTabsPosition === 'left' || State.pinnedTabsPosition === 'right') {
           State.pinnedTabsPosition = 'panel'
         }
+      }
+      Actions.saveSettings()
+    },
+
+    /**
+     * Switch pinned tabs bar layout
+     */
+    switchPinnedTabsPosition(value) {
+      State.pinnedTabsPosition = value
+      if (value === 'left' || value === 'right') {
+        if (State.navBarLayout === 'vertical') State.navBarLayout = 'horizontal'
       }
       Actions.saveSettings()
     },
