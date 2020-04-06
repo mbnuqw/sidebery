@@ -19,7 +19,7 @@ function onTabCreated(tab) {
 
   // Check if opener tab is pinned
   if (this.state.pinnedAutoGroup && initialOpener && initialOpener.pinned && this.state.tabsTree) {
-    initialOpenerSpec = initialOpener.cookieStoreId + '::' + initialOpener.url
+    initialOpenerSpec = encodeURIComponent(initialOpener.cookieStoreId + '::' + initialOpener.url)
     autoGroupTab = this.state.tabs.find(t => {
       return t.url.startsWith(GROUP_URL) && t.url.lastIndexOf('pin=' + initialOpenerSpec) > -1
     })
@@ -271,7 +271,9 @@ function onTabUpdated(tabId, change, tab) {
     if (localTab.pinned && localTab.relGroupId !== undefined) {
       let groupTab = this.state.tabsMap[localTab.relGroupId]
       if (groupTab) {
-        let groupUrl = groupTab.url.replace(localTab.url, change.url)
+        let oldUrl = encodeURIComponent(localTab.url)
+        let newUrl = encodeURIComponent(change.url)
+        let groupUrl = groupTab.url.replace(oldUrl, newUrl)
         browser.tabs.update(groupTab.id, { url: groupUrl })
       }
     }

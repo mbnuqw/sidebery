@@ -292,9 +292,7 @@ function getGroupRawParams(url) {
 
 function createGroupUrl(name, conf) {
   let urlBase = browser.runtime.getURL('group/group.html')
-  if (conf && conf.pin !== undefined) {
-    urlBase += '?pin=' + conf.pin
-  }
+  if (conf && conf.pin !== undefined) urlBase += '?pin=' + conf.pin
   return urlBase + `#${encodeURI(name)}:id:${uid()}`
 }
 
