@@ -602,11 +602,10 @@ function normalizeTabs(delay = 500) {
       }
     }
 
-    if (moves.length && !this.state.reinitMoving) {
+    if (moves.length) {
       let moving = moves.map(m => browser.tabs.move(m[0], { index: m[1] }))
       await Promise.all(moving)
       this.actions.normalizeTabs(0)
-      this.state.reinitMoving = true
       return
     }
 
