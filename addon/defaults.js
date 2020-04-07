@@ -465,14 +465,14 @@ export const MENU_OPTIONS = {
 
   moveToNewWin: state => ({
     label: translate('menu.tab.move_to_new_window'),
-    icon: 'icon_new_win',
+    icon: 'icon_move_to_new_normal_window',
     action: 'moveTabsToNewWin',
     args: [state.selected],
   }),
 
   moveToNewPrivWin: state => ({
     label: translate('menu.tab.move_to_new_priv_window'),
-    icon: 'icon_private',
+    icon: 'icon_reopen_in_new_private_window',
     action: 'moveTabsToNewWin',
     args: [state.selected, true],
   }),
@@ -480,7 +480,7 @@ export const MENU_OPTIONS = {
   moveToAnotherWin: state => {
     let option = {
       label: translate('menu.tab.move_to_another_window'),
-      icon: 'icon_window',
+      icon: 'icon_move_to_normal_window',
       action: 'moveTabsToWin',
       args: [state.selected, state.otherWindows[0]],
     }
@@ -492,7 +492,7 @@ export const MENU_OPTIONS = {
   moveToWin: state => {
     let option = {
       label: translate('menu.tab.move_to_window_'),
-      icon: 'icon_windows',
+      icon: 'icon_move_to_windows',
       action: 'moveTabsToWin',
       args: [state.selected],
     }
@@ -693,7 +693,7 @@ export const MENU_OPTIONS = {
     })
     let option = {
       label: translate('menu.bookmark.open_in_new_priv_window'),
-      icon: 'icon_private',
+      icon: 'icon_new_private',
       action: 'openBookmarksInNewWin',
       args: [state.selected, true],
     }
