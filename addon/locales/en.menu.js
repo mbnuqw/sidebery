@@ -47,6 +47,7 @@ export default {
   'menu.tab.reload': { message: 'Reload' },
   'menu.tab.duplicate': { message: 'Duplicate' },
   'menu.tab.close': { message: 'Close' },
+  'menu.tab.close_descendants': { message: 'Close descendants' },
 
   // --- Tabs panel
   'menu.tabs_panel.mute_all_audible': { message: 'Mute all audible tabs' },

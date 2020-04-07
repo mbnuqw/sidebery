@@ -225,6 +225,7 @@ const TABS_MENU_OPTS = {
   group: 'menu.tab.group',
   flatten: 'menu.tab.flatten',
   clearCookies: 'menu.tab.clear_cookies',
+  closeDescendants: 'menu.tab.close_descendants',
   close: 'menu.tab.close',
 }
 

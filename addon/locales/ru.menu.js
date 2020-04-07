@@ -47,6 +47,7 @@ export default {
   'menu.tab.reload': { message: 'Перезагрузить' },
   'menu.tab.duplicate': { message: 'Дублировать' },
   'menu.tab.close': { message: 'Закрыть' },
+  'menu.tab.close_descendants': { message: 'Закрыть потомки' },
 
   // --- Tabs panel
   'menu.tabs_panel.mute_all_audible': { message: 'Выключить звук' },

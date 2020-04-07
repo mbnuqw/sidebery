@@ -645,6 +645,26 @@ function createTab(ctxId) {
 }
 
 /**
+ * Remove tabs descendants
+ */
+async function removeTabsDescendants(tabIds) {
+  if (!tabIds || !tabIds.length) return
+
+  let toRm = []
+  for (let tabId of tabIds) {
+    let tab = this.state.tabsMap[tabId]
+    if (!tab || tabIds.includes(tab.parentId)) continue
+    for (let i = tab.index + 1, t; i < this.state.tabs.length; i++) {
+      t = this.state.tabs[i]
+      if (t.lvl <= tab.lvl) break
+      if (!toRm.includes(t.id)) toRm.push(t.id)
+    }
+  }
+
+  this.actions.removeTabs(toRm)
+}
+
+/**
  * Remove tabs
  */
 async function removeTabs(tabIds) {
@@ -2595,6 +2615,7 @@ export default {
 
   scrollToActiveTab,
   createTab,
+  removeTabsDescendants,
   removeTabs,
   checkRemovedTabs,
   switchTab,

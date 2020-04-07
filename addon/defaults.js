@@ -669,6 +669,23 @@ export const MENU_OPTIONS = {
     return option
   },
 
+  closeDescendants: state => {
+    let option = {
+      label: translate('menu.tab.close_descendants'),
+      icon: 'icon_rm_descendants',
+      action: 'removeTabsDescendants',
+      args: [state.selected],
+    }
+    let hasDescendants = state.selected.some(tabId => {
+      let tab = state.tabsMap[tabId]
+      let nextTab = state.tabs[tab.index + 1]
+      return nextTab && nextTab.parentId === tab.id
+    })
+    if (!hasDescendants) option.inactive = true
+    if (!state.ctxMenuRenderInact && option.inactive) return
+    return option
+  },
+
   //
   // --- Bookmarks options ---
   //
