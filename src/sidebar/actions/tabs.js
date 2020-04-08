@@ -500,7 +500,7 @@ function saveTabData(tabOrId) {
 }
 
 function saveGroups(delay = 300) {
-  if (!this._saveGroupsTimeout) clearTimeout(this._saveGroupsTimeout)
+  if (this._saveGroupsTimeout) clearTimeout(this._saveGroupsTimeout)
   this._saveGroupsTimeout = setTimeout(() => {
     this._saveGroupsTimeout = null
     let groups = {}
@@ -552,10 +552,10 @@ function checkTabsPositioning(startIndex) {
  * Load tabs and normalize order.
  */
 function normalizeTabs(delay = 500) {
-  if (!this._normTabsTimeout) clearTimeout(this._normTabsTimeout)
+  if (this._normTabsTimeout) clearTimeout(this._normTabsTimeout)
   this._normTabsTimeout = setTimeout(async () => {
     this._normTabsTimeout = null
-    this.state.tabsDeaf = true
+    this.state.tabsNormalizing = true
 
     let panels = []
     for (let panel of this.state.panels) {
@@ -602,7 +602,8 @@ function normalizeTabs(delay = 500) {
       }
     }
 
-    if (moves.length) {
+    if (moves.length && !this._normTabsMoving) {
+      this._normTabsMoving = true
       let moving = moves.map(m => browser.tabs.move(m[0], { index: m[1] }))
       await Promise.all(moving)
       this.actions.normalizeTabs(0)
@@ -613,10 +614,12 @@ function normalizeTabs(delay = 500) {
     this.actions.updatePanelsTabs()
     this.actions.updateTabsTree()
 
-    this.state.tabsDeaf = false
+    this.state.tabsNormalizing = false
 
     if (this.state.stateStorage === 'global') this.actions.saveTabsData()
     if (this.state.stateStorage === 'session') this.actions.saveGroups()
+
+    this._normTabsMoving = false
   }, delay)
 }
 
