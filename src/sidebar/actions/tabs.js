@@ -442,6 +442,7 @@ async function loadTabsFromInlineData(tabs, dataTabIndex) {
 function saveTabsData(delay = 300) {
   if (this._saveTabsDataTimeout) clearTimeout(this._saveTabsDataTimeout)
   this._saveTabsDataTimeout = setTimeout(() => {
+    if (this.state.tabsNormalizing) return
     let data = []
     let pinnedLen = 0
     for (let tab of this.state.tabs) {
@@ -552,10 +553,10 @@ function checkTabsPositioning(startIndex) {
  * Load tabs and normalize order.
  */
 function normalizeTabs(delay = 500) {
+  if (!this.state.tabsNormalizing) this.state.tabsNormalizing = true
   if (this._normTabsTimeout) clearTimeout(this._normTabsTimeout)
   this._normTabsTimeout = setTimeout(async () => {
     this._normTabsTimeout = null
-    this.state.tabsNormalizing = true
 
     let panels = []
     for (let panel of this.state.panels) {
@@ -563,6 +564,7 @@ function normalizeTabs(delay = 500) {
     }
 
     let normTabs = []
+    let normTabsMap = []
     let nativeTabs = await browser.tabs.query({ windowId: browser.windows.WINDOW_ID_CURRENT })
     let moves = []
     let panelId
@@ -573,6 +575,7 @@ function normalizeTabs(delay = 500) {
       if (tab) {
         tab.index = index++
         tab.status = 'complete'
+        tab.active = nativeTab.active
 
         if (!tab.pinned) {
           if (panels[panelIndex].id !== tab.panelId) {
@@ -595,10 +598,13 @@ function normalizeTabs(delay = 500) {
         }
 
         normTabs.push(tab)
+        normTabsMap[tab.id] = tab
         panelId = tab.panelId
       } else {
         Utils.normalizeTab(nativeTab, panelId)
         normTabs.push(nativeTab)
+        normTabsMap[nativeTab.id] = nativeTab
+        index++
       }
     }
 
@@ -611,15 +617,15 @@ function normalizeTabs(delay = 500) {
     }
 
     this.state.tabs = normTabs
+    this.state.tabsMap = normTabsMap
     this.actions.updatePanelsTabs()
     this.actions.updateTabsTree()
 
     this.state.tabsNormalizing = false
+    this._normTabsMoving = false
 
     if (this.state.stateStorage === 'global') this.actions.saveTabsData()
     if (this.state.stateStorage === 'session') this.actions.saveGroups()
-
-    this._normTabsMoving = false
   }, delay)
 }
 

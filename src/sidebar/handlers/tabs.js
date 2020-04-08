@@ -186,7 +186,6 @@ function onTabCreated(tab) {
  */
 function onTabUpdated(tabId, change, tab) {
   if (tab.windowId !== this.state.windowId) return
-  if (this.state.tabsNormalizing) return this.actions.normalizeTabs()
 
   const localTab = this.state.tabsMap[tabId]
   if (!localTab) return
