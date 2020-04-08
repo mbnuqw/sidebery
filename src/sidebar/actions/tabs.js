@@ -2213,6 +2213,16 @@ function updateTabsTree(startIndex = 0, endIndex = -1) {
       pt.isParent = false
       pt.folded = false
     }
+
+    // Update openerTabId
+    if (t.parentId === -1 && t.openerTabId !== undefined) {
+      browser.tabs.update(t.id, { openerTabId: t.id })
+      t.openerTabId = undefined
+    }
+    if (t.parentId !== -1 && t.openerTabId !== t.parentId) {
+      browser.tabs.update(t.id, { openerTabId: t.parentId })
+      t.openerTabId = t.parentId
+    }
   }
 }
 
