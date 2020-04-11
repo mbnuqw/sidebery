@@ -308,7 +308,7 @@ export const PRIVATE_TABS_PANEL = {
   type: 'default',
   id: PRIVATE_CTX,
   name: translate('private_dashboard.title'),
-  icon: 'icon_private',
+  icon: 'icon_priv_win',
   cookieStoreId: PRIVATE_CTX,
   private: true,
 }
@@ -384,11 +384,15 @@ export const DEFAULT_TABS_MENU = [
   [
     { name: translate('menu.tab.move_to_sub_menu_name') },
     'moveToNewWin',
-    'moveToNewPrivWin',
-    'moveToAnotherWin',
     'moveToWin',
+    'moveToPanel',
   ],
-  [{ name: translate('menu.tab.reopen_in_sub_menu_name') }, 'moveToCtr'],
+  [
+    { name: translate('menu.tab.reopen_in_sub_menu_name') },
+    'reopenInNewWin',
+    'reopenInWin',
+    'reopenInCtr',
+  ],
   'separator-2',
   'pin',
   'duplicate',
@@ -441,67 +445,119 @@ export const MENU_OPTIONS = {
   // --- Common ---
   //
   copyUrls: state => {
-    let label = 'menu.copy_url'
-    if (state.selected.length > 1) label += 's'
-
-    let option = {
+    let label = state.selected.length > 1 ? 'menu.copy_urls' : 'menu.copy_url'
+    return {
       label: translate(label),
       icon: 'icon_link',
       action: 'copyUrls',
       args: [state.selected],
     }
-
-    return option
   },
 
   //
   // --- Tabs options ---
   //
-  undoRmTab: () => ({
-    label: translate('menu.tab.undo'),
-    icon: 'icon_undo',
-    action: 'undoRmTab',
-  }),
+  undoRmTab: () => ({ label: translate('menu.tab.undo'), icon: 'icon_undo', action: 'undoRmTab' }),
 
-  moveToNewWin: state => ({
-    label: translate('menu.tab.move_to_new_window'),
-    icon: 'icon_move_to_new_normal_window',
-    action: 'moveTabsToNewWin',
-    args: [state.selected],
-  }),
-
-  moveToNewPrivWin: state => ({
-    label: translate('menu.tab.move_to_new_priv_window'),
-    icon: 'icon_reopen_in_new_private_window',
-    action: 'moveTabsToNewWin',
-    args: [state.selected, true],
-  }),
-
-  moveToAnotherWin: state => {
-    let option = {
-      label: translate('menu.tab.move_to_another_window'),
-      icon: 'icon_move_to_normal_window',
-      action: 'moveTabsToWin',
-      args: [state.selected, state.otherWindows[0]],
+  moveToNewWin: state => {
+    let label = state.private ? 'menu.tab.move_to_new_priv_window' : 'menu.tab.move_to_new_window'
+    return {
+      action: 'moveTabsToNewWin',
+      label: translate(label),
+      icon: state.private ? 'icon_move_to_new_priv_win' : 'icon_move_to_new_norm_win',
+      args: [state.selected, state.private],
     }
-    if (state.otherWindows.length !== 1) option.inactive = true
-    if (!state.ctxMenuRenderInact && option.inactive) return
-    return option
   },
 
   moveToWin: state => {
-    let option = {
-      label: translate('menu.tab.move_to_window_'),
-      icon: 'icon_move_to_windows',
-      action: 'moveTabsToWin',
-      args: [state.selected],
+    let option = { action: 'moveTabsToWin' }
+    let wins = state.otherWindows.filter(w => w.incognito === state.private)
+    let winLen = wins.length
+    if (winLen === 0) option.inactive = true
+    if (winLen <= 1) {
+      option.label = translate('menu.tab.move_to_another_window')
+      if (state.private) option.icon = 'icon_move_to_priv_win'
+      else option.icon = 'icon_move_to_norm_win'
+      option.args = [state.selected, wins[0]]
+    } else {
+      option.label = translate('menu.tab.move_to_window_')
+      if (state.private) option.icon = 'icon_move_to_priv_wins'
+      else option.icon = 'icon_move_to_norm_wins'
+      option.args = [
+        state.selected,
+        {
+          title: option.label,
+          filter: w => w.id !== state.windowId && w.incognito === state.private,
+        },
+      ]
     }
-    if (state.otherWindows.length <= 1) option.inactive = true
     if (!state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 
-  moveToCtr: state => {
+  moveToPanel: state => {
+    let opts = []
+    let firstNode = state.tabsMap[state.selected[0]]
+
+    for (let panel of state.panels) {
+      if (!panel.tabs) continue
+      if (firstNode.panelId === panel.id) continue
+
+      opts.push({
+        label: translate('menu.tab.move_to_panel_') + panel.name,
+        icon: panel.icon,
+        img: panel.customIcon,
+        badge: 'icon_move',
+        color: panel.color,
+        action: 'moveTabsToPanel',
+        args: [state.selected, panel.id],
+      })
+    }
+
+    if (opts.length) return opts
+  },
+
+  reopenInNewWin: state => {
+    let label = state.private ? 'reopen_in_new_norm_window' : 'reopen_in_new_priv_window'
+    return {
+      label: translate('menu.tab.' + label),
+      icon: state.private ? 'icon_reopen_in_new_norm_window' : 'icon_reopen_in_new_priv_win',
+      action: 'moveTabsToNewWin',
+      args: [state.selected, !state.private],
+    }
+  },
+
+  reopenInWin: state => {
+    let option = { action: 'moveTabsToWin' }
+    let wins = state.otherWindows.filter(w => w.incognito !== state.private)
+    let winLen = wins.length
+    if (winLen === 0) option.inactive = true
+    if (winLen <= 1) {
+      if (state.private) {
+        option.label = translate('menu.tab.reopen_in_norm_window')
+        option.icon = 'icon_reopen_in_norm_win'
+      } else {
+        option.label = translate('menu.tab.reopen_in_priv_window')
+        option.icon = 'icon_reopen_in_priv_win'
+      }
+      option.args = [state.selected, wins[0]]
+    } else {
+      option.label = translate('menu.tab.reopen_in_window_')
+      if (state.private) option.icon = 'icon_reopen_in_norm_wins'
+      else option.icon = 'icon_reopen_in_priv_wins'
+      option.args = [
+        state.selected,
+        {
+          title: option.label,
+          filter: w => w.id !== state.windowId && w.incognito !== state.private,
+        },
+      ]
+    }
+    if (!state.ctxMenuRenderInact && option.inactive) return
+    return option
+  },
+
+  reopenInCtr: state => {
     if (state.private) return
     let opts = []
     let firstNode = state.tabsMap[state.selected[0]]
@@ -521,6 +577,7 @@ export const MENU_OPTIONS = {
         label: translate('menu.tab.reopen_in_') + `||${c.color}>>${c.name}`,
         nativeLabel: translate('menu.tab.reopen_in_') + c.name,
         icon: c.icon,
+        badge: 'icon_reopen',
         color: c.color,
         action: 'reopenTabsInCtx',
         args: [state.selected, c.id],
@@ -528,27 +585,6 @@ export const MENU_OPTIONS = {
     }
 
     return opts
-  },
-
-  moveToPanel: state => {
-    let opts = []
-    let firstNode = state.tabsMap[state.selected[0]]
-
-    for (let panel of state.panels) {
-      if (!panel.tabs) continue
-      if (firstNode.panelId === panel.id) continue
-
-      opts.push({
-        label: translate('menu.tab.move_to_panel_') + panel.name,
-        icon: panel.icon,
-        img: panel.customIcon,
-        color: panel.color,
-        action: 'moveTabsToPanel',
-        args: [state.selected, panel.id],
-      })
-    }
-
-    if (opts.length) return opts
   },
 
   pin: state => {
@@ -710,7 +746,7 @@ export const MENU_OPTIONS = {
     })
     let option = {
       label: translate('menu.bookmark.open_in_new_priv_window'),
-      icon: 'icon_new_private',
+      icon: 'icon_new_priv_win',
       action: 'openBookmarksInNewWin',
       args: [state.selected, true],
     }

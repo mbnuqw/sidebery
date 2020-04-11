@@ -6,6 +6,17 @@
   size(100%, same)
   flex-direction: column
 
+.WindowSelectInput .title
+  box(relative)
+  text(s: rem(16))
+  font-weight: 700
+  color: var(--title-fg)
+  padding: 12px 8px 8px
+  text-align: center
+  white-space: nowrap
+  overflow: hidden
+  text-overflow: ellipsis
+
 // ---
 // -- Window container
 // -
@@ -54,7 +65,7 @@
 // ---
 // -- Window title
 // -
-.WindowSelectInput .title
+.WindowSelectInput .window-title
   box(relative)
   text(s: rem(14))
   color: var(--title-fg)

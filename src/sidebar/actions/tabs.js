@@ -1227,8 +1227,11 @@ async function moveTabsToNewWin(tabIds, incognito = false) {
  *  Move tabs to window if provided,
  * otherwise show window-choosing menu.
  */
-async function moveTabsToWin(tabIds, window) {
-  let windowId = window ? window.id : await this.actions.chooseWin()
+async function moveTabsToWin(tabIds, windowOrConfig) {
+  let windowId
+  if (!windowOrConfig) windowId = await this.actions.chooseWin()
+  else if (windowOrConfig.id) windowId = windowOrConfig.id
+  else windowId = await this.actions.chooseWin(windowOrConfig)
 
   // Sort
   tabIds.sort((a, b) => {

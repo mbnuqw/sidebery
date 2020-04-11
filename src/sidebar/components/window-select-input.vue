@@ -1,9 +1,10 @@
 <template lang="pug">
 .WindowSelectInput(:data-ready="isReady" @click="cancel")
+  .title(v-if="$store.state.winChoosingTitle") {{$store.state.winChoosingTitle}}
   scroll-box(ref="scrollBox")
     .box(v-for="(w, i) in $store.state.winChoosing" :key="w.id" :data-no-screenshot="!w.screen")
       .win(@click.stop="w.choose")
-        .title {{w.title}}
+        .window-title {{w.title}}
         img(v-if="w.screen" :src="w.screen" @load="onScreenLoad(i)")
 </template>
 

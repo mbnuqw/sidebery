@@ -29,17 +29,17 @@ function connectToBG() {
 /**
  * Show window-select panel
  */
-async function chooseWin() {
+async function chooseWin(config = {}) {
   this.state.winChoosing = []
+  this.state.winChoosingTitle = config.title
   this.state.panelIndex = -5
   let wins = await browser.windows.getAll({ populate: true })
-  wins = wins.filter(w => !w.focused)
+  if (config.filter) wins = wins.filter(config.filter)
 
   return new Promise(res => {
     wins = wins.map(async w => {
       let tab = w.tabs.find(t => t.active)
       if (!tab) return
-      if (w.focused) return
       let screen
       if (this.state.selWinScreenshots && browser.tabs.captureTab) {
         screen = await browser.tabs.captureTab(tab.id)
@@ -50,6 +50,7 @@ async function chooseWin() {
         screen,
         choose: () => {
           this.state.winChoosing = null
+          this.state.winChoosingTitle = null
           this.state.panelIndex = this.state.lastPanelIndex
           res(w.id)
         },

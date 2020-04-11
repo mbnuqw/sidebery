@@ -23,7 +23,7 @@
           @mousedown.stop="")
           img(v-if="opt.img" :src="opt.img")
           svg(v-else): use(:xlink:href="'#' + opt.icon")
-          svg.badge(v-if="opt.badge"): use(:xlink:href="'#' + opt.badge")
+          svg.badge(v-if="opt.badge" :data-img="!!opt.img"): use(:xlink:href="'#' + opt.badge")
         .opt(
           v-if="!group.inline"
           v-for="(opt, i) in group.options"
@@ -55,7 +55,7 @@
           @mousedown.stop="")
           img(v-if="opt.img" :src="opt.img")
           svg(v-else): use(:xlink:href="'#' + opt.icon")
-          svg.badge(v-if="opt.badge"): use(:xlink:href="'#' + opt.badge")
+          svg.badge(v-if="opt.badge" :data-img="!!opt.img"): use(:xlink:href="'#' + opt.badge")
         .opt(
           v-if="!group.inline"
           v-for="(opt, i) in group.options"
@@ -231,8 +231,11 @@ export default {
     },
 
     btnWidth(opts) {
-      if (opts.filter(o => typeof o !== 'string').length > 5) return 'wrap'
-      else 'norm'
+      let len = opts.reduce((a, v) => (v.constructor === String ? a : a + 1), 0)
+      if (len <= 5) return 'norm'
+      if (len === 6) return 3
+      if (len === 8) return 4
+      return 'wrap'
     },
 
     isSelected(opt) {
