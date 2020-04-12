@@ -625,7 +625,10 @@ function normalizeTabs(delay = 500) {
     this._normTabsMoving = false
 
     if (this.state.stateStorage === 'global') this.actions.saveTabsData()
-    if (this.state.stateStorage === 'session') this.actions.saveGroups()
+    if (this.state.stateStorage === 'session') {
+      this.state.tabs.forEach(t => this.actions.saveTabData(t))
+      this.actions.saveGroups()
+    }
   }, delay)
 }
 
