@@ -1,11 +1,15 @@
 import Actions from '../actions.js'
 
 const BG_URL = browser.runtime.getURL('background.html')
-const PROXY_BLOCK = { type: 'socks', ip: '0.0.0.0', port: '0', proxyDNS: true }
+
 let updateReqHandlerTimeout
 let handledReqId
 let incHistory = {}
 
+/**
+ * Create new tab in appropriate container
+ * and then close the original tab.
+ */
 async function recreateTab(tab, info, cookieStoreId) {
   let index
   try {
@@ -29,7 +33,7 @@ async function recreateTab(tab, info, cookieStoreId) {
     index,
     pinned: tab.pinned,
   })
-  browser.tabs.remove(tab.id)
+  await browser.tabs.remove(tab.id)
 }
 
 async function checkIpInfoThroughIPIFY_ORG(cookieStoreId) {
@@ -85,7 +89,11 @@ async function checkIpInfo(cookieStoreId) {
   return result
 }
 
-function requestHandler(info) {
+/**
+ * Handle requests before sending and define proxy
+ * config for them.
+ */
+function proxyReqHandler(info) {
   if (!this.tabsMap) return
 
   let tab = this.tabsMap[info.tabId]
@@ -99,7 +107,9 @@ function requestHandler(info) {
     }
   }
 
-  // Check hosts rules
+  // Check hosts rules, if the rule is matched
+  // return promise with the process of reopening new tab.
+  // This will block request from the original tab.
   if (tab && info.type === 'main_frame' && handledReqId !== info.requestId) {
     handledReqId = info.requestId
     let includedUrl
@@ -118,9 +128,8 @@ function requestHandler(info) {
           break
         }
 
-        recreateTab(tab, info, rule.ctx)
         incHistory[rule.ctx] = info.url
-        return PROXY_BLOCK
+        return recreateTab(tab, info, rule.ctx)
       }
     }
 
@@ -132,9 +141,8 @@ function requestHandler(info) {
         else ok = info.url.indexOf(rule) !== -1
 
         if (ok) {
-          recreateTab(tab, info)
           incHistory['firefox-default'] = info.url
-          return PROXY_BLOCK
+          return recreateTab(tab, info)
         }
       }
     }
@@ -144,6 +152,9 @@ function requestHandler(info) {
   if (this.proxies[info.cookieStoreId]) return this.proxies[info.cookieStoreId]
 }
 
+/**
+ * Handle headers of requests before sending them
+ */
 function headersHandler(info) {
   if (this.userAgents[info.cookieStoreId]) {
     let h = info.requestHeaders.find(rh => rh.name === 'User-Agent')
@@ -154,6 +165,10 @@ function headersHandler(info) {
   }
 }
 
+/**
+ * Update all configs related to requests handling and
+ * set (or remove) event listeners.
+ */
 function updateReqHandler() {
   this.proxies = {}
   this.includeHostsRules = []
@@ -247,14 +262,14 @@ function updateReqHandlerDebounced() {
 }
 
 function turnOnReqHandler() {
-  if (!browser.proxy.onRequest.hasListener(Actions.requestHandler)) {
-    browser.proxy.onRequest.addListener(Actions.requestHandler, { urls: ['<all_urls>'] })
+  if (!browser.proxy.onRequest.hasListener(Actions.proxyReqHandler)) {
+    browser.proxy.onRequest.addListener(Actions.proxyReqHandler, { urls: ['<all_urls>'] })
   }
 }
 
 function turnOffReqHandler() {
-  if (browser.proxy.onRequest.hasListener(Actions.requestHandler)) {
-    browser.proxy.onRequest.removeListener(Actions.requestHandler)
+  if (browser.proxy.onRequest.hasListener(Actions.proxyReqHandler)) {
+    browser.proxy.onRequest.removeListener(Actions.proxyReqHandler)
   }
 }
 
@@ -284,7 +299,7 @@ export default {
   checkIpInfoThroughIPIFY_ORG,
   checkIpInfoThroughEXTREME_IP_LOOKUP_COM,
   checkIpInfo,
-  requestHandler,
+  proxyReqHandler,
   headersHandler,
   updateReqHandler,
   updateReqHandlerDebounced,
