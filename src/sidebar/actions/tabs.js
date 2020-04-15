@@ -1207,12 +1207,12 @@ async function moveTabsToNewWin(tabIds, incognito = false) {
       let conf = {
         windowId: win.id,
         index: index++,
-        url: tab.url,
+        url: Utils.normalizeUrl(tab.url),
         active: false,
       }
       if (incognito) conf.cookieStoreId = PRIVATE_CTX
       else conf.cookieStoreId = DEFAULT_CTX
-      if (tab.cookieStoreId === DEFAULT_CTX_ID) {
+      if (tab.cookieStoreId === DEFAULT_CTX_ID && conf.url) {
         conf.discarded = true
         conf.title = tab.title
       }
@@ -1305,12 +1305,17 @@ async function moveTabsToThisWin(tabs, fromPrivate) {
   } else {
     const oldNewMap = {}
     for (let tab of tabs) {
-      let conf = { url: tab.url, windowId: this.state.windowId }
+      let conf = {
+        url: Utils.normalizeUrl(tab.url),
+        windowId: this.state.windowId,
+        active: tab.active,
+      }
 
       if (oldNewMap[tab.parentId]) conf.openerTabId = oldNewMap[tab.parentId]
 
       let newTab = await browser.tabs.create(conf)
       browser.tabs.remove(tab.id)
+      this.state.removingTabs = [tab.id]
 
       oldNewMap[tab.id] = newTab.id
     }
@@ -2574,7 +2579,9 @@ function updateHighlightedTabs(delay = 250) {
       conf.tabs.push(tab.index)
     }
 
-    browser.tabs.highlight(conf)
+    browser.tabs.highlight(conf).catch(() => {
+      // If tab already removed...
+    })
   }, delay)
 }
 
