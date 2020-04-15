@@ -2,6 +2,7 @@ import { DEFAULT_CTX_ID, GROUP_URL } from '../../../addon/defaults'
 
 const EXT_HOST = browser.runtime.getURL('').slice(16)
 const URL_HOST_PATH_RE = /^([a-z0-9-]{1,63}\.)+\w+(:\d+)?\/[A-Za-z0-9-._~:/?#[\]%@!$&'()*+,;=]*$/
+const NEWTAB_URL = browser.extension.inIncognitoContext ? 'about:privatebrowsing' : 'about:newtab'
 
 /**
  * tabs.onCreated
@@ -389,7 +390,7 @@ function onTabRemoved(tabId, info, childfree) {
   let panel = this.state.panelsMap[tab.panelId]
 
   // Update temp list of removed tabs for restoring reopened tabs state
-  if (tab.url !== 'about:newtab' && tab.url !== 'about:blank') {
+  if (tab.url !== NEWTAB_URL && tab.url !== 'about:blank') {
     if (!this._removedTabs) this._removedTabs = []
     this._removedTabs.push({
       id: tab.id,
