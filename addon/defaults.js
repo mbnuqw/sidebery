@@ -85,7 +85,7 @@ export const DEFAULT_SETTINGS = {
   // Tabs
   stateStorage: 'global',
   warnOnMultiTabClose: 'collapsed',
-  activateOnMouseUp: false,
+  activateOnMouseUp: true,
   activateLastTabOnPanelSwitching: true,
   skipEmptyPanels: false,
   showTabRmBtn: true,
