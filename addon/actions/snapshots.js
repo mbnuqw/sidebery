@@ -176,9 +176,14 @@ async function openSnapshotWindow(snapshot, winId) {
       cookieStoreId: ctrId,
     }
 
-    if (!tab.pinned && ctrId === DEFAULT_CTX_ID && !tab.url.startsWith('about')) {
-      conf.discarded = true
-      conf.title = tab.title
+    if (!tab.pinned && !tab.url.startsWith('about')) {
+      if (ctrId === DEFAULT_CTX_ID) {
+        conf.discarded = true
+        conf.title = tab.title
+      } else {
+        // Workaround for #196, https://bugzilla.mozilla.org/show_bug.cgi?id=1581872
+        conf.url = 'about:blank#url' + conf.url
+      }
     }
 
     creating.push(browser.tabs.create(conf))

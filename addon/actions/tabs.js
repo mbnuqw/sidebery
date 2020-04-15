@@ -82,6 +82,11 @@ function onTabActivated(info) {
 
   let prevTab = this.tabsMap[info.previousTabId]
   if (prevTab) prevTab.active = false
+
+  // Workaround for #196, https://bugzilla.mozilla.org/show_bug.cgi?id=1581872
+  if (tab && tab.url.startsWith('about:blank#url')) {
+    browser.tabs.update(tab.id, { url: tab.url.substring(15) })
+  }
 }
 
 /**
