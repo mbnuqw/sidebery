@@ -159,6 +159,9 @@ export default {
     message: 'Выделять стандартные вкладки (в верхней панели) вместе с вкладками в боковой панели',
   },
   'settings.tabs_unread_mark': { message: 'Показывать метку на непрочитанных вкладках' },
+  'settings.tabs_reload_limit': {
+    message: 'Ограничить количество одновременно перезагружаемых вкладок.',
+  },
 
   // --- New tab position
   'settings.new_tab_position': { message: 'Позиция новых вкладок' },

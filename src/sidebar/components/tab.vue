@@ -2,6 +2,7 @@
 .Tab(
   :data-active="tab.active"
   :data-loading="loading"
+  :data-pending="tab.status === 'pending'"
   :data-selected="tab.sel"
   :data-audible="tab.audible"
   :data-muted="tab.mutedInfo.muted"

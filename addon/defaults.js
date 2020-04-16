@@ -102,6 +102,7 @@ export const DEFAULT_SETTINGS = {
   tabsRmUndoNote: true,
   nativeHighlight: false,
   tabsUnreadMark: false,
+  tabsReloadLimit: 5,
 
   // New tab position
   moveNewTabPin: 'start',

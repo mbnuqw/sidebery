@@ -154,6 +154,7 @@ export default {
     message: 'Highlight native tabs (in top horizontal bar) along with tabs in sidebar',
   },
   'settings.tabs_unread_mark': { message: 'Show the mark on unread tabs' },
+  'settings.tabs_reload_limit': { message: 'Limit the count of simultaneously reloading tabs' },
 
   // --- New tab position
   'settings.new_tab_position': { message: 'Position of new tab' },

@@ -220,6 +220,7 @@
   opacity: .5
 
 .Tab[data-updated] .placeholder
+.Tab[data-pending] .placeholder
   mask: radial-gradient(
     circle at calc(100% - 2px) calc(100% - 2px),
     #00000024,
@@ -250,6 +251,7 @@
   opacity: .2
 
 .Tab[data-updated] .fav > img
+.Tab[data-pending] .fav > img
   mask: radial-gradient(
     circle at calc(100% - 2px) calc(100% - 2px),
     #00000024,
@@ -325,6 +327,11 @@
 .Tab:not([data-loading])[data-updated] .update-badge
   opacity: 1
   transform: scale(1, 1)
+
+.Tab:not([data-loading])[data-pending] .update-badge
+  opacity: 1
+  transform: scale(1, 1)
+  background-color: var(--tabs-fg)
 
 // ---
 // -- Ok / Err badges

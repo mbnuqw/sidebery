@@ -873,16 +873,55 @@ function switchTab(globaly, cycle, step, pinned) {
  * Reload tabs
  */
 function reloadTabs(tabIds = []) {
-  for (let tabId of tabIds) {
-    const tab = this.state.tabsMap[tabId]
-    if (!tab) continue
-    if (tab.url === 'about:blank' && URL_WITHOUT_PROTOCOL_RE.test(tab.title)) {
-      browser.tabs.update(tabId, { url: 'https://' + tab.title })
-      continue
-    }
-    if (tab.url.startsWith('about:') && tab.status === 'loading') continue
-    browser.tabs.reload(tabId)
+  if (!this.state.tabsReloadLimit || typeof this.state.tabsReloadLimit !== 'number') {
+    return tabIds.forEach(id => _reloadTab(this.state.tabsMap[id]))
   }
+
+  const CHECK_INTERVAL = 300
+  const MAX_CHECK_COUNT = 35
+
+  for (let tabId of tabIds) {
+    let tab = this.state.tabsMap[tabId]
+    if (tab) {
+      tab.status = 'pending'
+      tab.reloadingChecks = 1
+    }
+  }
+
+  let reloadingIds = tabIds.splice(0, this.state.tabsReloadLimit)
+  reloadingIds.forEach(id => _reloadTab(this.state.tabsMap[id]))
+
+  if (tabIds.length) {
+    let interval = setInterval(() => {
+      if (!tabIds.length) clearInterval(interval)
+
+      let loading = reloadingIds.filter(id => {
+        let tab = this.state.tabsMap[id]
+        if (!tab || tab.reloadingChecks++ > MAX_CHECK_COUNT) return false
+        return tab.status !== 'complete'
+      })
+
+      for (let i = this.state.tabsReloadLimit - loading.length; i-- > 0; ) {
+        let nextTabId = tabIds.shift()
+        if (!nextTabId) break
+        reloadingIds.push(nextTabId)
+        _reloadTab(this.state.tabsMap[nextTabId])
+      }
+    }, CHECK_INTERVAL)
+  }
+}
+
+/**
+ * Reload tab
+ */
+function _reloadTab(tab) {
+  if (!tab) return
+  if (tab.url === 'about:blank' && URL_WITHOUT_PROTOCOL_RE.test(tab.title)) {
+    browser.tabs.update(tab.id, { url: 'https://' + tab.title })
+    return
+  }
+  if (tab.url.startsWith('about:') && tab.status === 'loading') return
+  browser.tabs.reload(tab.id)
 }
 
 /**

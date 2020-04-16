@@ -273,6 +273,11 @@
       label="settings.tabs_unread_mark"
       :value="$store.state.tabsUnreadMark"
       @input="setOpt('tabsUnreadMark', $event)")
+    count-field.-inline(
+      label="settings.tabs_reload_limit"
+      :value="$store.state.tabsReloadLimit"
+      :min="3"
+      @input="setOpt('tabsReloadLimit', $event)")
 
   section(ref="settings_new_tab_position")
     h2 {{t('settings.new_tab_position')}}
@@ -816,6 +821,7 @@ import ToggleInput from '../components/toggle-input'
 import SelectField from '../components/select-field'
 import TextField from '../components/text-field'
 import NumField from '../components/num-field'
+import CountField from '../components/count-field'
 import ContainerConfig from './components/container-config'
 import PanelConfig from './components/panel-config'
 import ExportConfig from './components/export-config'
@@ -854,6 +860,7 @@ export default {
     SelectField,
     TextField,
     NumField,
+    CountField,
     FooterSection,
     ContainerConfig,
     PanelConfig,
