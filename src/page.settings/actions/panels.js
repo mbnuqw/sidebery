@@ -13,16 +13,7 @@ async function movePanel(id, step) {
     this.state.panels[i].index = i
   }
 
-  this.actions.savePanels()
-
-  let windows = await browser.windows.getAll()
-  for (let window of windows) {
-    browser.runtime.sendMessage({
-      instanceType: 'sidebar',
-      windowId: window.id,
-      action: 'loadTabs',
-    })
-  }
+  this.actions.savePanelsDebounced(1000)
 }
 
 export default {

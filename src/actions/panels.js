@@ -118,9 +118,9 @@ async function savePanels() {
   }
   browser.storage.local.set({ panels_v4: output })
 }
-function savePanelsDebounced() {
+function savePanelsDebounced(delay = 500) {
   if (this._savePanelsTimeout) clearTimeout(this._savePanelsTimeout)
-  this._savePanelsTimeout = setTimeout(() => this.actions.savePanels(), 500)
+  this._savePanelsTimeout = setTimeout(() => this.actions.savePanels(), delay)
 }
 
 export default {

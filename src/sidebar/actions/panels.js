@@ -1,9 +1,9 @@
 import EventBus from '../../event-bus'
 import CommonActions from '../../actions/panels'
 import { translate } from '../../../addon/locales/dict.js'
+import { BOOKMARKS_PANEL_STATE } from '../../../addon/defaults'
+import { DEFAULT_TABS_PANEL_STATE } from '../../../addon/defaults'
 import { TABS_PANEL_STATE } from '../../../addon/defaults'
-import { BOOKMARKS_PANEL, DEFAULT_TABS_PANEL } from '../../../addon/defaults'
-import { TABS_PANEL } from '../../../addon/defaults'
 
 let recalcPanelScrollTimeout, updatePanelBoundsTimeout
 
@@ -13,99 +13,91 @@ let recalcPanelScrollTimeout, updatePanelBoundsTimeout
 async function updatePanels(newPanels) {
   if (!newPanels) return
 
-  // Handle removed panels
-  if (newPanels.length < this.state.panels.length) {
-    for (let panel of this.state.panels) {
-      if (newPanels.find(np => np.id === panel.id)) continue
-      if (this.state.panelIndex === panel.index) {
-        if (this.state.panelIndex === 0) this.state.panelIndex++
-        else this.state.panelIndex--
-      }
-      if (this.state.panelIndex > panel.index) this.state.panelIndex--
-
-      let prevPanel = this.state.panels[panel.index - 1]
-      panel.tabs.forEach(t => (t.panelId = null))
-      if (!prevPanel || !prevPanel.tabs) {
-        let nextPanel = this.state.panels.find(p => p.id !== panel.id && p.tabs)
-        if (nextPanel) panel.tabs.forEach(t => (t.panelId = nextPanel.id))
-      }
-      this.actions.updatePanelsTabs()
-      this.actions.savePanelIndex()
-      break
-    }
-  }
-
-  let activePanel = this.state.panels[this.state.panelIndex]
+  // Normalize panels
   let panels = []
   let panelsMap = {}
-  let updateNeeded = false
-  let reloadNeeded = false
+  for (let i = 0, newPanel; i < newPanels.length; i++) {
+    newPanel = newPanels[i]
 
-  let panelDefs
-  this.state.urlRules = []
-  for (let i = 0; i < newPanels.length; i++) {
-    let newPanel = newPanels[i]
-    let panel = this.state.panels.find(p => p.id === newPanel.id)
+    let defaultState
+    if (newPanel.type === 'bookmarks') defaultState = BOOKMARKS_PANEL_STATE
+    if (newPanel.type === 'default') defaultState = DEFAULT_TABS_PANEL_STATE
+    if (newPanel.type === 'tabs') defaultState = TABS_PANEL_STATE
 
-    if (panel && panel.index !== i && panel.tabs && panel.tabs.length) {
-      reloadNeeded = true
-    }
+    let normPanel = Utils.normalizeObject(newPanel, defaultState)
+    normPanel.index = i
 
-    if (!panel) {
-      updateNeeded = true
-      panel = Utils.normalizeObject(newPanel, TABS_PANEL_STATE)
-    }
-
-    if (panel.type !== newPanel.type) updateNeeded = true
-
-    panel.index = i
-
-    if (newPanel.type === 'bookmarks') panelDefs = BOOKMARKS_PANEL
-    if (newPanel.type === 'default') panelDefs = DEFAULT_TABS_PANEL
-    if (newPanel.type === 'tabs') panelDefs = TABS_PANEL
-
-    for (let k of Object.keys(panelDefs)) {
-      if (newPanel[k] !== undefined) panel[k] = newPanel[k]
-    }
-
-    panels.push(panel)
-    panelsMap[panel.id] = panel
+    panels.push(normPanel)
+    panelsMap[normPanel.id] = normPanel
   }
 
+  // Handle tabs of removed panels
+  let panelId = panels.find(p => p.tabs).id
+  for (let tab of this.state.tabs) {
+    if (!panelsMap[tab.panelId]) tab.panelId = panelId
+    else panelId = tab.panelId
+  }
+
+  // Update active panel
+  let activePanel = this.state.panels[this.state.panelIndex]
+  let newActPanelIndex = panels.findIndex(p => p.id === activePanel.id)
+  if (newActPanelIndex === -1) {
+    let activeTab = this.state.tabs.find(t => t.active)
+    let activeTabPanel = activeTab ? panelsMap[activeTab.panelId] : undefined
+
+    if (activeTabPanel) newActPanelIndex = activeTabPanel.index
+    else newActPanelIndex = 0
+  }
+
+  // Get rearrangements for tabs
+  let moves = []
+  let tabIndex = this.state.tabs.findIndex(t => !t.pinned)
+  if (tabIndex === -1) tabIndex = 0
+  for (let panel of panels) {
+    if (!panel.tabs) continue
+
+    let panelTabs = this.state.tabs.filter(t => !t.pinned && t.panelId === panel.id)
+    for (let tab of panelTabs) {
+      if (tab.index !== tabIndex) moves.push([tab, tabIndex])
+      tabIndex++
+    }
+  }
+
+  // Move tabs
+  this.state.tabsNormalizing = true
+  let moving = []
+  for (let move of moves) {
+    let tab = move[0]
+    if (tab.index !== move[1]) {
+      moving.push(browser.tabs.move(tab.id, { index: move[1] }))
+      this.state.tabs.splice(tab.index, 1)
+      this.state.tabs.splice(move[1], 0, tab)
+      let minIndex = Math.min(tab.index, move[1])
+      let maxIndex = Math.max(tab.index, move[1]) + 1
+      for (let i = minIndex; i < maxIndex; i++) {
+        this.state.tabs[i].index = i
+      }
+    }
+  }
+  await Promise.all(moving)
+  this.state.tabsNormalizing = false
+
+  // Update state
   this.state.panels = panels
   this.state.panelsMap = panelsMap
+  this.state.panelIndex = newActPanelIndex
+  this.actions.updatePanelsTabs()
+  this.actions.savePanelIndex()
 
   // Update url rules
   for (let panel of panels) {
     if (panel.urlRulesActive && panel.urlRules) this.actions.parsePanelUrlRules(panel)
   }
 
-  let activePanelIndex = this.state.panels.indexOf(activePanel)
-  if (activePanelIndex !== -1) this.state.panelIndex = activePanelIndex
-
-  if (updateNeeded) this.actions.updatePanelsTabs()
-  if (reloadNeeded) {
-    this.handlers.resetTabsListeners()
-
-    let index = this.getters.pinnedTabs.length
-    let windowId = this.state.windowId
-    let allTabs = [...this.getters.pinnedTabs]
-    for (let panel of this.state.panels) {
-      if (!panel.tabs || !panel.tabs.length) continue
-      for (let tab of panel.tabs) {
-        if (tab.index !== index) {
-          await browser.tabs.move(tab.id, { windowId, index })
-        }
-        allTabs.push(tab)
-        index++
-      }
-    }
-    allTabs.forEach((t, i) => (t.index = i))
-    this.state.tabs = allTabs
-
-    this.handlers.setupTabsListeners()
-    this.actions.updatePanelsTabs()
-    if (this.state.stateStorage === 'global') this.actions.saveTabsData()
+  // Save state
+  if (this.state.stateStorage === 'global') this.actions.saveTabsData()
+  if (this.state.stateStorage === 'session') {
+    this.state.tabs.forEach(t => this.actions.saveTabData(t))
   }
 }
 
