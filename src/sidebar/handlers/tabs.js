@@ -667,14 +667,12 @@ async function onTabAttached(id, info) {
   const ai = this.state.attachingTabs.findIndex(t => t.id === id)
 
   let tab
-  if (ai > -1) {
-    tab = this.state.attachingTabs.splice(ai, 1)[0]
-  } else {
-    tab = await browser.tabs.get(id)
-  }
+  if (ai > -1) tab = this.state.attachingTabs.splice(ai, 1)[0]
+  else tab = await browser.tabs.get(id)
 
   tab.windowId = this.state.windowId
   tab.index = info.newPosition
+  tab.panelId = undefined
 
   this.handlers.onTabCreated(tab)
 
