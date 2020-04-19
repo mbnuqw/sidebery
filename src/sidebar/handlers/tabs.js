@@ -9,6 +9,7 @@ const NEWTAB_URL = browser.extension.inIncognitoContext ? 'about:privatebrowsing
  */
 function onTabCreated(tab) {
   if (tab.windowId !== this.state.windowId) return
+  if (this.state.ignoreTabsEvents) return
   if (this.state.tabsNormalizing) return this.actions.normalizeTabs()
 
   this.actions.highlightBookmarks(tab.url)
@@ -373,6 +374,7 @@ function onTabUpdated(tabId, change, tab) {
 function onTabRemoved(tabId, info, childfree) {
   if (info.windowId !== this.state.windowId) return
   if (info.isWindowClosing) return
+  if (this.state.ignoreTabsEvents) return
   if (this.state.tabsNormalizing) return this.actions.normalizeTabs()
 
   if (!this.state.removingTabs) this.state.removingTabs = []
@@ -530,6 +532,7 @@ function onTabRemoved(tabId, info, childfree) {
  */
 function onTabMoved(id, info) {
   if (info.windowId !== this.state.windowId) return
+  if (this.state.ignoreTabsEvents) return
   if (this.state.tabsNormalizing) return this.actions.normalizeTabs()
 
   if (!this.state.movingTabs) this.state.movingTabs = []
@@ -641,6 +644,7 @@ function onTabMoved(id, info) {
  */
 function onTabDetached(id, info) {
   if (info.oldWindowId !== this.state.windowId) return
+  if (this.state.ignoreTabsEvents) return
   if (this.state.tabsNormalizing) return this.actions.normalizeTabs()
   const tab = this.state.tabsMap[id]
   if (tab) tab.folded = false
@@ -652,6 +656,7 @@ function onTabDetached(id, info) {
  */
 async function onTabAttached(id, info) {
   if (info.newWindowId !== this.state.windowId) return
+  if (this.state.ignoreTabsEvents) return
   if (this.state.tabsNormalizing) return this.actions.normalizeTabs()
 
   if (!this.state.attachingTabs) this.state.attachingTabs = []
@@ -677,6 +682,7 @@ async function onTabAttached(id, info) {
  */
 function onTabActivated(info) {
   if (info.windowId !== this.state.windowId) return
+  if (this.state.ignoreTabsEvents) return
   if (this.state.tabsNormalizing) return this.actions.normalizeTabs()
 
   const currentPanel = this.state.panels[this.state.panelIndex]

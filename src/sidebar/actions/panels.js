@@ -64,7 +64,7 @@ async function updatePanels(newPanels) {
   }
 
   // Move tabs
-  this.state.tabsNormalizing = true
+  this.state.ignoreTabsEvents = true
   let moving = []
   for (let move of moves) {
     let tab = move[0]
@@ -80,7 +80,7 @@ async function updatePanels(newPanels) {
     }
   }
   await Promise.all(moving)
-  this.state.tabsNormalizing = false
+  this.state.ignoreTabsEvents = false
 
   // Update state
   this.state.panels = panels
