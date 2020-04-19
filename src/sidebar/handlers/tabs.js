@@ -624,6 +624,10 @@ function onTabMoved(id, info) {
     this.actions.updateTabsTree(a, b)
   }
 
+  if (this.state.panelsMap[movedTab.panelId].index !== this.state.panelIndex) {
+    this.actions.setPanel(this.state.panelsMap[movedTab.panelId].index)
+  }
+
   if (this.state.stateStorage === 'global' && !this.state.movingTabs.length) {
     this.actions.saveTabsData()
   }
