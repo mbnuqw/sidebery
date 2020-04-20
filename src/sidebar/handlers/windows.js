@@ -3,6 +3,7 @@
  */
 function onWindowCreated(window) {
   if (window.id === this.state.windowId) return
+  if (window.type !== 'normal') return
   if (!this.state.otherWindows) this.state.otherWindows = []
   this.state.otherWindows.push(window)
 }

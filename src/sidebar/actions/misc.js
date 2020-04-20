@@ -9,7 +9,9 @@ async function loadWindowInfo() {
   this.state.private = currentWindow.incognito
   this.state.windowId = currentWindow.id
   browser.windows.getAll().then(windows => {
-    this.state.otherWindows = windows.filter(w => w.id !== this.state.windowId)
+    this.state.otherWindows = windows.filter(
+      w => w.id !== this.state.windowId && w.type === 'normal'
+    )
   })
 }
 

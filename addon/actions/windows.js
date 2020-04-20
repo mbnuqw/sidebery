@@ -5,6 +5,7 @@ async function getWindows() {
   const windows = await browser.windows.getAll({})
   const windowsMap = {}
   for (let window of windows) {
+    if (window.type !== 'normal') continue
     windowsMap[window.id] = window
   }
   return windowsMap
