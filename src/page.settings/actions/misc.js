@@ -65,9 +65,10 @@ async function loadPermissions(init) {
 }
 
 function goToPerm(permId) {
-  if (!this.state.settingsRefs) return
+  if (!this.state.permissionsRefs) return
   let scrollHighlightConf = { behavior: 'smooth', block: 'center' }
-  let el = this.state.settingsRefs[permId]
+  let el = this.state.permissionsRefs[permId]
+  if (el && el._isVue) el = el.$el
 
   if (el) el.scrollIntoView(scrollHighlightConf)
 
@@ -137,6 +138,7 @@ async function updateActiveView() {
     () => {
       if (hash !== undefined && this.state.settingsRefs) {
         let el = this.state.settingsRefs[hash]
+        if (el && el._isVue) el = el.$el
         if (el) el.scrollIntoView(scrollSectionConf)
       }
 

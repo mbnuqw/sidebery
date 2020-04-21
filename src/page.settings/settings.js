@@ -1,6 +1,8 @@
 import Debounce from '../directives/debounce'
 import Dict from '../mixins/dict'
 import { initMsgHandling } from '../event-bus'
+import SetOption from './mixins/set-option'
+import SwitchView from './mixins/switch-view'
 import Store from './store'
 import State from './store/state'
 import Actions from './actions'
@@ -13,6 +15,8 @@ Actions.updateActiveView()
 
 if (!State.tabsMap) State.tabsMap = []
 Vue.mixin(Dict)
+Vue.mixin(SetOption)
+Vue.mixin(SwitchView)
 Vue.directive('debounce', Debounce)
 
 initMsgHandling(State, Actions)

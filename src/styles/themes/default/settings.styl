@@ -162,12 +162,22 @@ footer
   margin: 0 auto
 
 .Settings section > h2
-  box(relative)
+  box(relative, flex)
   size(100%)
   text(s: rem(29), w: 400)
+  justify-content: center
+  align-items: flex-end
   color: var(--title-fg)
   text-align: center
   margin: 28px 0 24px
+
+.Settings .title-note
+  position: relative
+  width: 0
+  font-size: rem(16)
+  color: var(--info-fg)
+  text-align: center
+  white-space: pre
 
 .Settings .IconSelectField > .IconSelectInput
   justify-content: flex-end
@@ -611,6 +621,8 @@ footer
   align-items: center
   background-color: var(--bg)
   background-attachment: local
+  background-image: var(--bg-img)
+  background-size: var(--bg-size)
   z-index: 1
   overflow: auto
 
