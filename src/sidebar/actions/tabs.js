@@ -927,7 +927,14 @@ function _reloadTab(tab) {
 /**
  * Discard tabs
  */
-function discardTabs(tabIds = []) {
+async function discardTabs(tabIds = []) {
+  if (tabIds.includes(this.state.activeTabId)) {
+    let activeTab = this.state.tabsMap[this.state.activeTabId]
+    if (activeTab) {
+      const target = Utils.findSuccessorTab(this.state, activeTab, tabIds)
+      await browser.tabs.update(target.id, { active: true })
+    }
+  }
   browser.tabs.discard(tabIds)
 }
 

@@ -645,9 +645,7 @@ export const MENU_OPTIONS = {
       args: [state.selected],
     }
     let firstNode = state.tabsMap[state.selected[0]]
-    if (state.selected.length === 1) {
-      if (firstNode.active || firstNode.discarded) option.inactive = true
-    }
+    if (state.selected.length === 1 && firstNode.discarded) option.inactive = true
     if (!state.ctxMenuRenderInact && option.inactive) return
     return option
   },
