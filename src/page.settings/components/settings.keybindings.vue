@@ -14,7 +14,7 @@ section
       @blur="onKBBlur(k, i)"
       @keydown.prevent.stop="onKBKey($event, k, i)"
       @keyup.prevent.stop="onKBKeyUp($event, k, i)")
-    toggle-input(
+    ToggleInput(
       v-if="k.name !== '_execute_sidebar_action'"
       v-model="k.active"
       @input="toggleKeybinding")

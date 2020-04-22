@@ -6,7 +6,7 @@
   @contextmenu.stop.prevent="")
   .body
     .label {{t(label)}}
-    select-input(
+    SelectInput(
       :label="optLabel"
       :value="value"
       :opts="opts"
@@ -36,10 +36,6 @@ export default {
     icon: String,
     noneOpt: String,
     note: String,
-  },
-
-  data() {
-    return {}
   },
 
   methods: {

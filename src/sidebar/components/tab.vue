@@ -20,13 +20,13 @@
   @mouseup.stop="onMouseUp"
   @mouseleave.passive="onMouseLeave"
   @dblclick.prevent.stop="onDoubleClick"): .lvl-wrapper
-  transition(name="tab-complete"): .complete-fx(v-if="tab.status === 'loading'")
+  Transition(name="tab-complete"): .complete-fx(v-if="tab.status === 'loading'")
   .drag-layer(
     draggable="true"
     @dragstart="onDragStart"
     @dragenter="onDragEnter"
     @dragleave="onDragLeave")
-  transition(name="tab-part")
+  Transition(name="tab-part")
     .audio(v-if="tab.audible || tab.mutedInfo.muted" @mousedown.stop="" @click="onAudioClick")
       svg.-loud: use(xlink:href="#icon_loud_badge")
       svg.-mute: use(xlink:href="#icon_mute_badge")

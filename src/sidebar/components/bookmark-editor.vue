@@ -2,14 +2,14 @@
 .BEditor(@click="$store.state.bookmarkEditor = false")
   .editor-panel(@click.stop="")
     .field.-title
-      text-input.input(
+      TextInput.input(
         ref="title"
         v-model="title"
         :or="t(titlePlaceholder)"
         :tabindex="tabindex"
         @keydown="onTitleKD")
     .field.-url(v-if="isBookmark")
-      text-input.input(
+      TextInput.input(
         ref="url"
         v-model="url"
         :or="t('bookmarks_editor.url_placeholder')"

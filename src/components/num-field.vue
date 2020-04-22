@@ -2,13 +2,13 @@
 .NumField(:data-active="!!value" :data-inactive="inactive")
   .label {{t(label)}}
   .input-group
-    text-input.text-input(
+    TextInput.text-input(
       :value="value"
       :line="true"
       :filter="valueFilter"
       @input="onInput"
       @change="onChange")
-    select-input.unit-input(
+    SelectInput.unit-input(
       :value="validUnit"
       :opts="unitOpts"
       :label="unitLabel"
@@ -34,10 +34,6 @@ export default {
     unit: String,
     unitOpts: Array,
     unitLabel: String,
-  },
-
-  data() {
-    return {}
   },
 
   computed: {

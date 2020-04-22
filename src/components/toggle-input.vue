@@ -10,10 +10,6 @@ export default {
     value: Boolean,
   },
 
-  data() {
-    return {}
-  },
-
   methods: {
     toggle() {
       this.$emit('input', !this.value)

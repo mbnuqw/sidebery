@@ -2,14 +2,14 @@
 .PanelConfig(@wheel="onWheel")
   h2(v-if="isBookmarks") {{t('bookmarks_dashboard.title')}}
   h2(v-if="isDefault") {{conf.name}}
-  text-input.title(
+  TextInput.title(
     v-if="isTabs"
     ref="name"
     :value="conf.name"
     :or="t('container_dashboard.name_placeholder')"
     @input="onNameInput")
 
-  select-field(
+  SelectField(
     v-if="isTabs && !conf.customIconSrc"
     label="container_dashboard.icon_label"
     optLabel="settings.panel_icon_"
@@ -18,7 +18,7 @@
     :color="color"
     @input="setIcon")
 
-  select-field(
+  SelectField(
     v-if="isTabs && !conf.customIconSrc"
     label="container_dashboard.color_label"
     :value="color"
@@ -29,7 +29,7 @@
   .TextField.custom-icon(v-if="isTabs")
     .body
       .label Custom icon
-      text-input(
+      TextInput(
         ref="input"
         v-debounce.500="updateCustomIcon"
         :value="conf.customIconSrc"
@@ -41,31 +41,31 @@
         @click="loadCustomIcon") Load
     .note {{t('container_dashboard.custom_icon_note')}}
 
-  toggle-field(
+  ToggleField(
     label="dashboard.lock_panel_label"
     :value="conf.lockedPanel"
     @input="togglePanelLock")
 
-  toggle-field(
+  ToggleField(
     v-if="isDefault || isCustom"
     label="dashboard.lock_tabs_label"
     :value="conf.lockedTabs"
     @input="toggleTabsLock")
 
-  toggle-field(
+  ToggleField(
     v-if="isDefault || isCustom"
     label="dashboard.no_empty_label"
     :value="conf.noEmpty"
     @input="togglePanelNoEmpty")
 
-  select-field(
+  SelectField(
     v-if="isDefault || isTabs"
     label="dashboard.new_tab_ctx"
     :value="newTabCtx"
     :opts="availableContainers"
     @input="togglePanelNewTabCtx")
 
-  select-field(
+  SelectField(
     v-if="isDefault || isTabs"
     label="dashboard.move_tab_ctx"
     optLabel="dashboard.move_tab_ctx_"
@@ -73,20 +73,20 @@
     :opts="availableContainers"
     @input="togglePanelMoveTabCtx")
   .sub-fields(v-if="isDefault || isTabs")
-    toggle-field(
+    ToggleField(
       label="dashboard.move_tab_ctx_nochild"
       :inactive="moveTabCtx === 'none'"
       :value="conf.moveTabCtxNoChild"
       @input="togglePanelMoveTabCtxNoChild")
 
-  toggle-field(
+  ToggleField(
     v-if="isTabs"
     label="dashboard.url_rules"
     :value="conf.urlRulesActive"
     @input="toggleUrlRules")
   .sub-fields.-nosep(v-if="conf.urlRulesActive")
     .field
-      text-input.text(
+      TextInput.text(
         ref="urlRulesInput"
         or="---"
         :value="conf.urlRules"

@@ -1,7 +1,7 @@
 <template lang="pug">
 section
   h2 {{t('settings.panels_title')}}
-  transition-group(name="panel" tag="div"): .panel-card(
+  TransitionGroup(name="panel" tag="div"): .panel-card(
     v-for="(panel, i) in $store.state.panels"
     :key="panel.id"
     :data-color="panel.color"
@@ -26,12 +26,12 @@ section
         @click="removePanel(panel)")
         svg: use(xlink:href="#icon_remove")
   .ctrls: .btn(@click="createPanel") {{t('settings.panels_create_btn')}}
-  transition(name="panel-config")
+  Transition(name="panel-config")
     .panel-config-layer(
       v-if="$store.state.selectedPanel"
       @click="$store.state.selectedPanel = null")
       .panel-config-box(@click.stop="")
-        panel-config.dashboard(:conf="$store.state.selectedPanel")
+        PanelConfig.dashboard(:conf="$store.state.selectedPanel")
 </template>
 
 <script>

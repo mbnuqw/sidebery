@@ -16,18 +16,15 @@
   @mouseup.stop="onMouseUp"
   @mouseleave="onMouseLeave"
   @dblclick.prevent.stop="onDoubleClick")
-  transition(name="tab-complete"): .complete-fx(v-if="tab.status === 'loading'")
-  .drag-layer(draggable="true"
+  Transition(name="tab-complete"): .complete-fx(v-if="tab.status === 'loading'")
+  .drag-layer(
+    draggable="true"
     @dragstart="onDragStart"
     @dragenter="onDragEnter"
     @dragleave="onDragLeave"
     @drop="onDragLeave")
-  Favicon(
-    :tab="tab"
-    :loading="loading"
-    :favPlaceholder="favPlaceholder"
-    :onExp="onExp")
-  transition(name="tab-part")
+  Favicon(:tab="tab" :loading="loading" :favPlaceholder="favPlaceholder" :onExp="onExp")
+  Transition(name="tab-part")
     .audio-badge(v-if="tab.audible || tab.mutedInfo.muted" @mousedown.stop="" @click="onAudioClick")
       svg.-loud: use(xlink:href="#icon_loud_badge")
       svg.-mute: use(xlink:href="#icon_mute_badge")

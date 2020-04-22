@@ -1,13 +1,13 @@
 <template lang="pug">
 section
   h2 {{t('settings.pinned_tabs_title')}}
-  select-field(
+  SelectField(
     label="settings.pinned_tabs_position"
     optLabel="settings.pinned_tabs_position_"
     :value="$store.state.pinnedTabsPosition"
     :opts="$store.state.pinnedTabsPositionOpts"
     @input="switchPinnedTabsPosition")
-  toggle-field(
+  ToggleField(
     label="settings.pinned_tabs_list"
     :inactive="$store.state.pinnedTabsPosition !== 'panel'"
     :value="$store.state.pinnedTabsList"

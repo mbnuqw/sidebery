@@ -2,7 +2,7 @@
 .ToggleField(:data-inline="inline" :data-inactive="inactive" @click="toggle")
   .body
     .label(:style="{ color }") {{t(label)}}
-    toggle-input.input(:value="value")
+    ToggleInput.input(:value="value")
   .note(v-if="note") {{note}}
   slot
 </template>
@@ -23,10 +23,6 @@ export default {
     inline: Boolean,
     color: String,
     note: String,
-  },
-
-  data() {
-    return {}
   },
 
   methods: {

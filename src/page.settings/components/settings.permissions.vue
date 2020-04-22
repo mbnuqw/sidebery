@@ -5,7 +5,7 @@ section
     ref="all_urls"
     :data-highlight="$store.state.highlightedField === 'all_urls'"
     @click="onHighlighClick('all_urls')")
-    toggle-field(
+    ToggleField(
       label="settings.all_urls_label"
       :value="$store.state.permAllUrls"
       :note="t('settings.all_urls_info')"
@@ -14,7 +14,7 @@ section
     ref="tab_hide"
     :data-highlight="$store.state.highlightedField === 'tab_hide'"
     @click="onHighlighClick('tab_hide')")
-    toggle-field(
+    ToggleField(
       label="settings.tab_hide_label"
       :value="$store.state.permTabHide"
       :note="t('settings.tab_hide_info')"
@@ -23,7 +23,7 @@ section
     ref="clipboard_write"
     :data-highlight="$store.state.highlightedField === 'clipboard_write'"
     @click="onHighlighClick('clipboard_write')")
-    toggle-field(
+    ToggleField(
       label="settings.clipboard_write_label"
       :value="$store.state.permClipboardWrite"
       :note="t('settings.clipboard_write_info')"
@@ -32,7 +32,7 @@ section
     ref="web_request_blocking"
     :data-highlight="$store.state.highlightedField === 'web_request_blocking'"
     @click="onHighlighClick('web_request_blocking')")
-    toggle-field(
+    ToggleField(
       label="settings.web_request_blocking_label"
       :value="$store.state.permWebRequestBlocking"
       :note="t('settings.web_request_blocking_info')"

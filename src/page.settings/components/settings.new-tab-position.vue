@@ -1,30 +1,30 @@
 <template lang="pug">
 section
   h2 {{t('settings.new_tab_position')}}
-  select-field(
+  SelectField(
     label="settings.move_new_tab_pin"
     optLabel="settings.move_new_tab_pin_"
     :value="$store.state.moveNewTabPin"
     :opts="$store.state.moveNewTabPinOpts"
     @input="setOpt('moveNewTabPin', $event)")
-  toggle-field(
+  ToggleField(
     label="settings.pinned_auto_group"
     :inactive="!$store.state.tabsTree"
     :value="$store.state.pinnedAutoGroup"
     @input="setOpt('pinnedAutoGroup', $event)")
-  select-field(
+  SelectField(
     label="settings.move_new_tab_parent"
     optLabel="settings.move_new_tab_parent_"
     :value="$store.state.moveNewTabParent"
     :opts="$store.state.moveNewTabParentOpts"
     @input="setOpt('moveNewTabParent', $event)")
   .sub-fields
-    toggle-field(
+    ToggleField(
       label="settings.move_new_tab_parent_act_panel"
       :inactive="$store.state.moveNewTabParent === 'none'"
       :value="$store.state.moveNewTabParentActPanel"
       @input="setOpt('moveNewTabParentActPanel', $event)")
-  select-field(
+  SelectField(
     label="settings.move_new_tab"
     optLabel="settings.move_new_tab_"
     :value="$store.state.moveNewTab"

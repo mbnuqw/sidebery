@@ -18,9 +18,9 @@
       svg: use(xlink:href="#icon_expand")
     .title(v-if="node.title") {{node.title}}
     .len(v-if="$store.state.showBookmarkLen && node.children.length") {{node.children.length}}
-  transition(name="expand")
+  Transition(name="expand")
     .children(v-if="isParent" v-show="node.expanded" :title="node.title")
-      component.child(
+      Component.child(
         v-for="(n, i) in node.children"
         :is="n.type"
         :key="n.id"
@@ -50,10 +50,6 @@ export default {
   props: {
     node: Object,
     editNode: String,
-  },
-
-  data() {
-    return {}
   },
 
   computed: {

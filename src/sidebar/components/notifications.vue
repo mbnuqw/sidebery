@@ -1,6 +1,6 @@
 <template lang="pug">
 .Notifications
-  transition-group(name="notification" tag="div")
+  TransitionGroup(name="notification" tag="div")
     .notification(
       v-for="(info, i) in $store.state.notifications"
       :key="info.id"
@@ -24,10 +24,6 @@ import State from '../store/state.js'
 import Actions from '../actions'
 
 export default {
-  data() {
-    return {}
-  },
-
   methods: {
     onHideMouseDown(e, info, index) {
       State.notifications.splice(index, 1)

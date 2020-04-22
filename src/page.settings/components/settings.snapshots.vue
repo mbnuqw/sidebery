@@ -1,15 +1,15 @@
 <template lang="pug">
 section
   h2 {{t('settings.snapshots_title')}}
-  toggle-field(
+  ToggleField(
     label="settings.snap_notify"
     :value="$store.state.snapNotify"
     @input="setOpt('snapNotify', $event)")
-  toggle-field(
+  ToggleField(
     label="settings.snap_exclude_private"
     :value="$store.state.snapExcludePrivate"
     @input="setOpt('snapExcludePrivate', $event)")
-  num-field(
+  NumField(
     label="settings.snap_interval"
     unitLabel="settings.snap_interval_"
     :value="$store.state.snapInterval"
@@ -17,7 +17,7 @@ section
     :unit="$store.state.snapIntervalUnit"
     :unitOpts="$store.state.snapIntervalUnitOpts"
     @input="setOpt('snapInterval', $event[0]), setOpt('snapIntervalUnit', $event[1])")
-  num-field(
+  NumField(
     label="settings.snap_limit"
     unitLabel="settings.snap_limit_"
     :value="$store.state.snapLimit"

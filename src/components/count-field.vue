@@ -2,13 +2,13 @@
 .CountField(:data-active="value !== off" :data-inactive="inactive" @click="toggle"): .body
   .label {{t(label)}}
   .input-group(@click.stop="")
-    text-input.text-input(
+    TextInput.text-input(
       :value="value"
       :line="true"
       :filter="valueFilter"
       @input="onInput"
       @change="onChange")
-    toggle-input.toggle-input(:value="value !== off" @input="toggle")
+    ToggleInput.toggle-input(:value="value !== off" @input="toggle")
 </template>
 
 <script>
@@ -17,7 +17,6 @@ import ToggleInput from './toggle-input'
 
 export default {
   components: {
-    // SelectInput,
     TextInput,
     ToggleInput,
   },
@@ -32,10 +31,6 @@ export default {
       default: 0,
     },
     min: Number,
-  },
-
-  data() {
-    return {}
   },
 
   methods: {

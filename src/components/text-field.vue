@@ -3,7 +3,7 @@
   :data-inactive="inactive"
   @click="focus")
   .label {{t(label)}}
-  text-input(
+  TextInput(
     ref="input"
     :value="value"
     :padding="padding"
@@ -42,10 +42,6 @@ export default {
     password: Boolean,
     label: String,
     inactive: Boolean,
-  },
-
-  data() {
-    return {}
   },
 
   methods: {

@@ -1,12 +1,12 @@
 <template lang="pug">
 section
   h2 {{t('settings.help_title')}}
-  toggle-field(
+  ToggleField(
     label="settings.tabs_check"
     :value="$store.state.tabsCheck"
     @input="setOpt('tabsCheck', $event)")
   .sub-fields
-    select-field(
+    SelectField(
       label="settings.tabs_fix"
       optLabel="settings.tabs_fix_"
       :note="t('settings.tabs_fix_desc')"
@@ -19,12 +19,14 @@ section
     .btn(type="file")
       .label {{t('settings.help_imp_data')}}
       input(type="file" ref="importData" accept="application/json" @input="importData")
-  transition(name="panel-config")
+  Transition(name="panel-config")
     .panel-config-layer(v-if="$store.state.exportConfig" @click="$store.state.exportConfig = false")
-      .panel-config-box(@click.stop=""): export-config.dashboard(:conf="$store.state.exportConfig")
-  transition(name="panel-config")
+      .panel-config-box(@click.stop="")
+        ExportConfig.dashboard(:conf="$store.state.exportConfig")
+  Transition(name="panel-config")
     .panel-config-layer(v-if="$store.state.importConfig" @click="$store.state.importConfig = false")
-      .panel-config-box(@click.stop=""): import-config.dashboard(:conf="$store.state.importConfig")
+      .panel-config-box(@click.stop="")
+        ImportConfig.dashboard(:conf="$store.state.importConfig")
   .ctrls
     .btn(@click="showDbgDetails") {{t('settings.debug_info')}}
     a.btn(

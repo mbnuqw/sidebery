@@ -2,29 +2,29 @@
 .PanelConfig(@wheel="onWheel")
   h2.title {{t('settings.import_title')}}
 
-  toggle-field(
+  ToggleField(
     label="settings.export_containers"
     v-model="containers"
     :inactive="containersInactive"
     @input="checkPermissions")
-  toggle-field(
+  ToggleField(
     label="settings.export_panels"
     v-model="panels"
     :inactive="panelsInactive")
-  toggle-field(
+  ToggleField(
     label="settings.export_settings"
     v-model="settings"
     :inactive="settingsInactive"
     @input="checkPermissions")
-  toggle-field(
+  ToggleField(
     label="settings.export_ctx_menu"
     v-model="ctxMenu"
     :inactive="ctxMenuInactive")
-  toggle-field(
+  ToggleField(
     label="settings.export_styles"
     v-model="styles"
     :inactive="stylesInactive")
-  toggle-field(
+  ToggleField(
     label="settings.export_snapshots"
     v-model="snapshots"
     :inactive="snapshotsInactive")

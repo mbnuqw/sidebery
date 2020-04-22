@@ -1,7 +1,7 @@
 <template lang="pug">
 section
   h2 {{t('settings.containers_title')}}
-  transition-group(name="panel" tag="div"): .panel-card(
+  TransitionGroup(name="panel" tag="div"): .panel-card(
     v-for="(container, id) in $store.state.containers"
     :key="container.id"
     :data-color="container.color")
@@ -14,12 +14,12 @@ section
         svg: use(xlink:href="#icon_remove")
   .panel-placeholder(v-if="!Object.keys($store.state.containers).length")
   .ctrls: .btn(@click="createContainer") {{t('settings.containers_create_btn')}}
-  transition(name="panel-config")
+  Transition(name="panel-config")
     .panel-config-layer(
       v-if="$store.state.selectedContainer"
       @click="$store.state.selectedContainer = null")
       .panel-config-box(@click.stop="")
-        container-config.dashboard(:conf="$store.state.selectedContainer")
+        ContainerConfig.dashboard(:conf="$store.state.selectedContainer")
 </template>
 
 <script>

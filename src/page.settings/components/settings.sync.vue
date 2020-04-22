@@ -3,20 +3,20 @@ section
   h2
     span {{t('settings.sync_title')}}
     .title-note   (~{{syncedOveral}})
-  text-field(
+  TextField(
     label="settings.sync_name"
     :or="t('settings.sync_name_or')"
     v-model="$store.state.syncName"
     v-debounce:input.321="setSyncName")
-  toggle-field(
+  ToggleField(
     label="settings.sync_save_settings"
     :value="$store.state.syncSaveSettings"
     @input="setOpt('syncSaveSettings', $event)")
-  toggle-field(
+  ToggleField(
     label="settings.sync_save_ctx_menu"
     :value="$store.state.syncSaveCtxMenu"
     @input="setOpt('syncSaveCtxMenu', $event), saveSyncCtxMenu()")
-  toggle-field(
+  ToggleField(
     label="settings.sync_save_styles"
     :value="$store.state.syncSaveStyles"
     @input="setOpt('syncSaveStyles', $event), saveSyncStyles()")

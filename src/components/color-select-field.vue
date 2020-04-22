@@ -1,7 +1,7 @@
 <template lang="pug">
 .IconSelectField
   .label {{t(label)}}
-  select-color-input(
+  SelectColorInput(
     :value="value"
     :opts="opts"
     :fill="optFill"
@@ -21,10 +21,6 @@ export default {
     label: String,
     optFill: String,
     opts: Array,
-  },
-
-  data() {
-    return {}
   },
 
   methods: {

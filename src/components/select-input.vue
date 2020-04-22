@@ -26,10 +26,6 @@ export default {
     },
   },
 
-  data() {
-    return {}
-  },
-
   methods: {
     isActive(opt) {
       if (opt && opt.value !== undefined) return opt.value === this.value

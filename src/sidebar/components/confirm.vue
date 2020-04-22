@@ -1,5 +1,5 @@
 <template lang="pug">
-transition(name="confirm"): .Confirm(v-if="$store.state.confirm" @click="onBgClick")
+Transition(name="confirm"): .Confirm(v-if="$store.state.confirm" @click="onBgClick")
   .msg-box(@click.stop="")
     h2 {{t('confirm.warn_title')}}
     .msg {{$store.state.confirm.msg}}
@@ -14,10 +14,6 @@ transition(name="confirm"): .Confirm(v-if="$store.state.confirm" @click="onBgCli
 import State from '../store/state.js'
 
 export default {
-  data() {
-    return {}
-  },
-
   methods: {
     onBgClick() {
       if (State.confirm.cancel) State.confirm.cancel()

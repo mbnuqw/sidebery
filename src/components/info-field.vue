@@ -11,10 +11,6 @@ export default {
     label: String,
   },
 
-  data() {
-    return {}
-  },
-
   methods: {
     onClick(e) {
       this.$emit('click', e)

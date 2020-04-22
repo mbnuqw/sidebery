@@ -1,7 +1,7 @@
 <template lang="pug">
   section
     h2 {{t('settings.group_title')}}
-    select-field(
+    SelectField(
       label="settings.group_layout"
       optLabel="settings.group_layout_"
       :value="$store.state.groupLayout"

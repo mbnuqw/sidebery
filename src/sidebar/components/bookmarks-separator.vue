@@ -18,10 +18,6 @@ export default {
     node: Object,
   },
 
-  data() {
-    return {}
-  },
-
   methods: {
     /**
      * Handle mouse down event.

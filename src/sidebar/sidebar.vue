@@ -34,20 +34,19 @@
     .dimmer(@mousedown="$store.state.hiddenPanelsBar = false")
     NavBar(v-if="$store.state.navBarLayout !== 'hidden'")
     .panel-box
-      component.panel(
+      Component.panel(
         v-for="(panel, i) in $store.state.panels"
         ref="panels"
         :key="panel.id"
         :is="getPanelComponent(panel)"
         :data-pos="getPanelPos(i)"
-        :tabs="panel.tabs"
         :index="i"
         :panel="panel"
         :store-id="panel.cookieStoreId"
         :active="$store.state.panelIndex === i")
-      transition(name="panel")
+      Transition(name="panel")
         WindowInput(v-if="$store.state.panelIndex === -5" :data-pos="windowInputPos")
-      transition(name="hidden-panels-bar")
+      Transition(name="hidden-panels-bar")
         HiddenPanelsBar(v-if="$store.state.hiddenPanelsBar")
   Notifications
 </template>

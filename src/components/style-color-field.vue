@@ -4,11 +4,11 @@
     .desc {{t(label)}}
     .var {{name}}
   .input-group
-    color-input.color-input(
+    ColorInput.color-input(
       v-debounce:input.128="debouncedInput"
       :value="value"
       @input="onInput")
-    toggle-input.toggle(:value="!!value", @input="toggle")
+    ToggleInput.toggle(:value="!!value", @input="toggle")
 </template>
 
 <script>
@@ -27,10 +27,6 @@ export default {
     name: String,
     optFill: String,
     opts: Array,
-  },
-
-  data() {
-    return {}
   },
 
   methods: {

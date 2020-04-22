@@ -1,25 +1,25 @@
 <template lang="pug">
 .Settings(@scroll.passive="onScroll")
-  general-section(ref="settings_general")
-  menu-section(ref="settings_menu")
-  navbar-section(ref="settings_nav")
-  group-section(ref="settings_group")
-  containers-section(ref="settings_containers")
-  panels-section(ref="settings_panels")
-  dnd-section(ref="settings_dnd")
-  tabs-section(ref="settings_tabs")
-  new-tab-position-section(ref="settings_new_tab_position")
-  pinned-tabs-section(ref="settings_pinned_tabs")
-  tabs-tree-section(ref="settings_tabs_tree")
-  bookmarks-section(ref="settings_bookmarks")
-  appearance-section(ref="settings_appearance")
-  mouse-section(ref="settings_mouse")
-  keybindings-section(ref="settings_keybindings")
-  permissions-section(ref="settings_permissions")
-  snapshots-section(ref="settings_snapshots")
-  storage-section(ref="settings_storage")
-  sync-section(ref="settings_sync")
-  help-section(ref="settings_help")
+  GeneralSection(ref="settings_general")
+  MenuSection(ref="settings_menu")
+  NavbarSection(ref="settings_nav")
+  GroupSection(ref="settings_group")
+  ContainersSection(ref="settings_containers")
+  PanelsSection(ref="settings_panels")
+  DndSection(ref="settings_dnd")
+  TabsSection(ref="settings_tabs")
+  NewTabPositionSection(ref="settings_new_tab_position")
+  PinnedTabsSection(ref="settings_pinned_tabs")
+  TabsTreeSection(ref="settings_tabs_tree")
+  BookmarksSection(ref="settings_bookmarks")
+  AppearanceSection(ref="settings_appearance")
+  MouseSection(ref="settings_mouse")
+  KeybindingsSection(ref="settings_keybindings")
+  PermissionsSection(ref="settings_permissions")
+  SnapshotsSection(ref="settings_snapshots")
+  StorageSection(ref="settings_storage")
+  SyncSection(ref="settings_sync")
+  HelpSection(ref="settings_help")
 
   .details-box(v-if="$store.state.dbgDetails" @wheel="onDbgWheel")
     .box
@@ -27,18 +27,11 @@
       .btn.-warn(@click="$store.state.dbgDetails = ''") {{t('settings.ctrl_close')}}
     .json {{$store.state.dbgDetails}}
 
-  footer-section
+  FooterSection
 </template>
 
 <script>
 import State from './store/state'
-import ToggleField from '../components/toggle-field'
-import ToggleInput from '../components/toggle-input'
-import SelectField from '../components/select-field'
-import TextField from '../components/text-field'
-import NumField from '../components/num-field'
-import CountField from '../components/count-field'
-
 import GeneralSection from './components/settings.general'
 import MenuSection from './components/settings.menu'
 import NavbarSection from './components/settings.navbar'
@@ -86,13 +79,6 @@ const SECTIONS = [
 
 export default {
   components: {
-    ToggleField,
-    ToggleInput,
-    SelectField,
-    TextField,
-    NumField,
-    CountField,
-
     GeneralSection,
     MenuSection,
     NavbarSection,
@@ -113,7 +99,6 @@ export default {
     StorageSection,
     SyncSection,
     HelpSection,
-
     FooterSection,
   },
 

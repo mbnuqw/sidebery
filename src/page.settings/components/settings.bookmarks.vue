@@ -1,28 +1,28 @@
 <template lang="pug">
 section
   h2 {{t('settings.bookmarks_title')}}
-  toggle-field(
+  ToggleField(
     label="settings.bookmarks_panel"
     :value="$store.state.bookmarksPanel"
     @input="setOpt('bookmarksPanel', $event)")
-  select-field(
+  SelectField(
     label="settings.warn_on_multi_bookmark_delete"
     optLabel="settings.warn_on_multi_bookmark_delete_"
     :inactive="!$store.state.bookmarksPanel"
     :value="$store.state.warnOnMultiBookmarkDelete"
     :opts="$store.state.warnOnMultiBookmarkDeleteOpts"
     @input="setOpt('warnOnMultiBookmarkDelete', $event)")
-  toggle-field(
+  ToggleField(
     label="settings.bookmarks_rm_undo_note"
     :inactive="!$store.state.bookmarksPanel"
     :value="$store.state.bookmarksRmUndoNote"
     @input="setOpt('bookmarksRmUndoNote', $event)")
-  toggle-field(
+  ToggleField(
     label="settings.open_bookmark_new_tab"
     :inactive="!$store.state.bookmarksPanel"
     :value="$store.state.openBookmarkNewTab"
     @input="setOpt('openBookmarkNewTab', $event)")
-  select-field(
+  SelectField(
     label="settings.mid_click_bookmark"
     optLabel="settings.mid_click_bookmark_"
     :inactive="!$store.state.bookmarksPanel"
@@ -30,33 +30,33 @@ section
     :opts="$store.state.midClickBookmarkOpts"
     @input="setOpt('midClickBookmark', $event)")
   .sub-fields
-    toggle-field(
+    ToggleField(
       label="settings.act_mid_click_tab"
       :inactive="!$store.state.bookmarksPanel || $store.state.midClickBookmark !== 'open_new_tab'"
       :value="$store.state.actMidClickTab"
       @input="setOpt('actMidClickTab', $event)")
-  toggle-field(
+  ToggleField(
     label="settings.auto_close_bookmarks"
     :inactive="!$store.state.bookmarksPanel"
     :value="$store.state.autoCloseBookmarks"
     @input="setOpt('autoCloseBookmarks', $event)")
-  toggle-field(
+  ToggleField(
     label="settings.auto_rm_other"
     :inactive="!$store.state.bookmarksPanel"
     :value="$store.state.autoRemoveOther"
     @input="setOpt('autoRemoveOther', $event)")
-  toggle-field(
+  ToggleField(
     label="settings.show_bookmark_len"
     :inactive="!$store.state.bookmarksPanel"
     :value="$store.state.showBookmarkLen"
     @input="setOpt('showBookmarkLen', $event)")
-  toggle-field(
+  ToggleField(
     label="settings.highlight_open_bookmarks"
     :inactive="!$store.state.bookmarksPanel"
     :value="$store.state.highlightOpenBookmarks"
     @input="setOpt('highlightOpenBookmarks', $event)")
   .sub-fields
-    toggle-field(
+    ToggleField(
       label="settings.activate_open_bookmark_tab"
       :inactive="!$store.state.bookmarksPanel || !$store.state.highlightOpenBookmarks"
       :value="$store.state.activateOpenBookmarkTab"

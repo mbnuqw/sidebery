@@ -5,13 +5,13 @@
   @contextmenu.stop="onNavCtxMenu"
   @mouseup.right="onRightMouseUp")
   ScrollBox(ref="scrollBox"): .bookmarks-wrapper
-    component.node(
+    Component.node(
       v-for="n in $store.state.bookmarks"
       :is="n.type"
       :key="n.id"
       :node="n"
       @start-selection="onStartSelection")
-  transition(name="editor")
+  Transition(name="editor")
     BookmarkEditor.editor(v-if="$store.state.bookmarkEditor")
   SelectBookmarksFolderBar
 </template>

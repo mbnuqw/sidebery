@@ -7,7 +7,7 @@
   @drop.stop.prevent="onDrop"
   @dragenter="onDragEnter"
   @dragleave="onDragLeave")
-  pinned-tab(
+  PinnedTab(
     v-for="(t, i) in pinnedTabs"
     :key="t.id"
     :tab="t"

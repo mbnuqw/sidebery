@@ -4,13 +4,13 @@
     .desc {{t(label)}}
     .var {{name}}
   .input-group
-    text-input.text-input(
+    TextInput.text-input(
       :value="value"
       :line="true"
       :or="or"
       @input="onInput"
       @change="onChange")
-    toggle-input.toggle(:value="!!value", @input="toggle")
+    ToggleInput.toggle(:value="!!value", @input="toggle")
 </template>
 
 <script>
@@ -30,10 +30,6 @@ export default {
     name: String,
     optFill: String,
     opts: Array,
-  },
-
-  data() {
-    return {}
   },
 
   methods: {

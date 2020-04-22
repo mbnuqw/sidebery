@@ -2,12 +2,12 @@
 .PanelConfig(@wheel="onWheel")
   h2.title {{t('settings.export_title')}}
 
-  toggle-field(label="settings.export_containers" v-model="containers")
-  toggle-field(label="settings.export_panels" v-model="panels")
-  toggle-field(label="settings.export_settings" v-model="settings")
-  toggle-field(label="settings.export_ctx_menu" v-model="ctxMenu")
-  toggle-field(label="settings.export_styles" v-model="styles")
-  toggle-field(label="settings.export_snapshots" v-model="snapshots")
+  ToggleField(label="settings.export_containers" v-model="containers")
+  ToggleField(label="settings.export_panels" v-model="panels")
+  ToggleField(label="settings.export_settings" v-model="settings")
+  ToggleField(label="settings.export_ctx_menu" v-model="ctxMenu")
+  ToggleField(label="settings.export_styles" v-model="styles")
+  ToggleField(label="settings.export_snapshots" v-model="snapshots")
 
   .ctrls
     a.btn(ref="exportData" @mouseenter="genExportData") {{t('settings.help_exp_data')}}

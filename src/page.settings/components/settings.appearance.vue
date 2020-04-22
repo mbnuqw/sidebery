@@ -1,35 +1,35 @@
 <template lang="pug">
 section
   h2 {{t('settings.appearance_title')}}
-  select-field(
+  SelectField(
     label="settings.font_size"
     optLabel="settings.font_size_"
     :value="$store.state.fontSize"
     :opts="$store.state.fontSizeOpts"
     @input="setOpt('fontSize', $event)")
-  toggle-field(
+  ToggleField(
     label="settings.animations"
     :value="$store.state.animations"
     @input="setOpt('animations', $event)")
   .sub-fields
-    select-field(
+    SelectField(
       label="settings.animation_speed"
       optLabel="settings.animation_speed_"
       :inactive="!$store.state.animations"
       :value="$store.state.animationSpeed"
       :opts="$store.state.animationSpeedOpts"
       @input="setOpt('animationSpeed', $event)")
-  toggle-field(
+  ToggleField(
     label="settings.bg_noise"
     :value="$store.state.bgNoise"
     @input="toggleNoiseBg($event)")
-  select-field(
+  SelectField(
     label="settings.theme"
     optLabel="settings.theme_"
     :value="$store.state.theme"
     :opts="$store.state.themeOpts"
     @input="setOpt('theme', $event)")
-  select-field(
+  SelectField(
     label="settings.switch_style"
     optLabel="settings.style_"
     :value="$store.state.style"

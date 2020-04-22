@@ -15,10 +15,6 @@ export default {
     opts: Array,
   },
 
-  data() {
-    return {}
-  },
-
   methods: {
     select(opt) {
       this.$emit('input', opt)

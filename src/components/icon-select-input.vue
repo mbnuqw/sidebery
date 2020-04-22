@@ -16,10 +16,6 @@ export default {
     fill: String,
   },
 
-  data() {
-    return {}
-  },
-
   methods: {
     select(opt) {
       this.$emit('input', opt)

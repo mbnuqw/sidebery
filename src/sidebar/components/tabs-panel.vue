@@ -5,27 +5,20 @@
   @mousedown="onMouseDown"
   @mouseup.right="onRightMouseUp"
   @dblclick="onDoubleClick")
-  pinned-dock(
+  PinnedDock(
     v-if="$store.state.pinnedTabsPosition === 'panel'"
     :panel-type="panel.type"
     :panel-id="panel.id"
     :ctx="storeId")
-  scroll-box(ref="scrollBox")
+  ScrollBox(ref="scrollBox")
     .container
-      transition-group(name="tab" tag="div"): tab(
-        v-for="(t, i) in tabs"
+      TransitionGroup(name="tab" tag="div"): tab(
+        v-for="(t, i) in panel.tabs"
         v-if="!t.invisible"
         ref="tabs"
         :key="t.id"
         :child-count="getChildrenCount(i)"
         :tab="t")
-  //- .dbg.
-  //-   ID: {{panel.id}}
-  //-   Type: {{panel.type}}
-  //-   CID: {{panel.cookieStoreId}}
-  //-   Tabs count: {{panel.tabs.length}}
-  //-   Start index: {{panel.startIndex}}
-  //-   End index: {{panel.endIndex}}
 </template>
 
 <script>
@@ -45,10 +38,6 @@ export default {
   },
 
   props: {
-    tabs: {
-      type: Array,
-      default: () => [],
-    },
     index: Number,
     storeId: String,
     panel: Object,
@@ -84,7 +73,7 @@ export default {
       if (!this.scrollBoxEl) return
       const sh = this.scrollBoxEl.offsetHeight
       let h = 0
-      for (let t of this.tabs) {
+      for (let t of this.panel.tabs) {
         if (!t.invisible) h += State.tabHeight
         if (t.id === tabId) break
       }
@@ -241,10 +230,10 @@ export default {
 
     getChildrenCount(i) {
       if (!State.tabsChildCount) return 0
-      if (!this.tabs[i].isParent) return 0
+      if (!this.panel.tabs[i].isParent) return 0
       let count = 0
-      for (let c = i + 1; c < this.tabs.length; c++) {
-        if (this.tabs[c].lvl <= this.tabs[i].lvl) break
+      for (let c = i + 1; c < this.panel.tabs.length; c++) {
+        if (this.panel.tabs[c].lvl <= this.panel.tabs[i].lvl) break
         count++
       }
       return count
@@ -277,7 +266,7 @@ export default {
 
       let overallHeight = 0
       const bounds = []
-      for (let t of this.tabs) {
+      for (let t of this.panel.tabs) {
         if (t.invisible) continue
 
         bounds.push({

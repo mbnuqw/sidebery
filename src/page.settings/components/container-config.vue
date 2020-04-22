@@ -1,55 +1,55 @@
 <template lang="pug">
 .PanelConfig(@wheel="onWheel")
-  text-input.title(
+  TextInput.title(
     ref="name"
     v-debounce.250="updateName"
     :value="conf.name"
     :or="t('container_dashboard.name_placeholder')"
     @input="onNameInput")
 
-  select-field.-no-separator(
+  SelectField.-no-separator(
     label="container_dashboard.icon_label"
     :value="icon"
     :opts="iconOpts"
     :color="color"
     @input="updateIcon")
 
-  select-field(
+  SelectField(
     label="container_dashboard.color_label"
     :value="color"
     :opts="colorOpts"
     :icon="icon"
     @input="updateColor")
 
-  toggle-field(
+  ToggleField(
     label="container_dashboard.rules_include"
     :title="t('container_dashboard.rules_include_tooltip')"
     :value="conf.includeHostsActive"
     @input="toggleIncludeHosts")
   .sub-fields.-nosep(v-if="conf.includeHostsActive")
     .field
-      text-input.text(
+      TextInput.text(
         ref="includeHostsInput"
         or="---"
         :value="conf.includeHosts"
         :valid="includeHostsValid"
         @input="onIncludeHostsInput")
 
-  toggle-field(
+  ToggleField(
     label="container_dashboard.rules_exclude"
     :title="t('container_dashboard.rules_exclude_tooltip')"
     :value="conf.excludeHostsActive"
     @input="toggleExcludeHosts")
   .sub-fields.-nosep(v-if="conf.excludeHostsActive")
     .field
-      text-input.text(
+      TextInput.text(
         ref="excludeHostsInput"
         or="---"
         :value="conf.excludeHosts"
         :valid="excludeHostsValid"
         @input="onExcludeHostsInput")
 
-  select-field(
+  SelectField(
     label="container_dashboard.proxy_label"
     optLabel="container_dashboard.proxy_"
     noneOpt="direct"
@@ -57,7 +57,7 @@
     :opts="proxyOpts"
     @input="switchProxy")
   .sub-fields(v-if="proxied !== 'direct'")
-    text-field(
+    TextField(
       ref="proxyHost"
       label="Host"
       :or="t('container_dashboard.proxy_host_placeholder')"
@@ -66,7 +66,7 @@
       :valid="proxyHostValid"
       @input="onProxyHostInput"
       @keydown="onFieldKeydown($event, 'proxyPort', 'name')")
-    text-field(
+    TextField(
       ref="proxyPort"
       label="Port"
       :or="t('container_dashboard.proxy_port_placeholder')"
@@ -75,7 +75,7 @@
       :valid="proxyPortValid"
       @input="onProxyPortInput"
       @keydown="onFieldKeydown($event, 'proxyUsername', 'proxyHost')")
-    text-field(
+    TextField(
       ref="proxyUsername"
       label="Username"
       :or="t('container_dashboard.proxy_username_placeholder')"
@@ -83,7 +83,7 @@
       :value="proxyUsername"
       @input="onProxyUsernameInput"
       @keydown="onFieldKeydown($event, 'proxyPassword', 'proxyPort')")
-    text-field(
+    TextField(
       ref="proxyPassword"
       label="Password"
       :or="t('container_dashboard.proxy_password_placeholder')"
@@ -92,19 +92,19 @@
       :password="true"
       @input="onProxyPasswordInput"
       @keydown="onFieldKeydown($event, null, 'proxyUsername')")
-    toggle-field(
+    ToggleField(
       v-if="isSomeSocks"
       label="container_dashboard.proxy_dns_label"
       :value="proxyDNS"
       @input="toggleProxyDns")
 
-  toggle-field(
+  ToggleField(
     label="container_dashboard.user_agent"
     :value="conf.userAgentActive"
     @input="toggleUserAgent")
   .sub-fields.-nosep(v-if="conf.userAgentActive")
     .field
-      text-input.text(
+      TextInput.text(
         ref="userAgentInput"
         or="---"
         :value="conf.userAgent"

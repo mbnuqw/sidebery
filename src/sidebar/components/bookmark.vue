@@ -27,10 +27,6 @@ export default {
     editNode: String,
   },
 
-  data() {
-    return {}
-  },
-
   computed: {
     favicon() {
       return State.favicons[State.favUrls[this.node.url]]
