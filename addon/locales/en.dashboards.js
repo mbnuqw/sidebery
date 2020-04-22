@@ -14,6 +14,8 @@ export default {
   'container_dashboard.custom_icon_note': {
     message: 'Base64, URL or text. Text values syntax: "text::color::CSS-font-value"',
   },
+  'panel_config.custom_icon': { message: 'Custom icon' },
+  'panel_config.custom_icon_load': { message: 'Load' },
 
   // --- Bookmarks
   'bookmarks_dashboard.title': { message: 'Bookmarks' },

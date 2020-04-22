@@ -16,6 +16,8 @@ export default {
   'container_dashboard.custom_icon_note': {
     message: 'Base64, url или символы. Синтакс для символов: "символы::CSS-цвет::CSS-шрифт"',
   },
+  'panel_config.custom_icon': { message: 'Пользовательская иконка' },
+  'panel_config.custom_icon_load': { message: 'Загрузить' },
 
   // --- Bookmarks
   'bookmarks_dashboard.title': { message: 'Закладки' },

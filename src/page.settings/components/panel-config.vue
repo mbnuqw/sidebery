@@ -28,7 +28,7 @@
 
   .TextField.custom-icon(v-if="isTabs")
     .body
-      .label Custom icon
+      .label {{t('panel_config.custom_icon')}}
       TextInput(
         ref="input"
         v-debounce.500="updateCustomIcon"
@@ -38,7 +38,7 @@
       img(v-if="customIconUrl" :src="customIconUrl" @load="onCustomIconLoad")
       .btn(
         v-if="customIconType === 'url' && !customIconUrl"
-        @click="loadCustomIcon") Load
+        @click="loadCustomIcon") {{t('panel_config.custom_icon_load')}}
     .note {{t('container_dashboard.custom_icon_note')}}
 
   ToggleField(
