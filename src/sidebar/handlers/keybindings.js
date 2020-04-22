@@ -52,8 +52,13 @@ function onCmd(name) {
  * Handle shortcut 'activate'
  */
 function onKeyActivate() {
+  if (this.state.panelIndex === -5) {
+    this.eventBus.$emit('chooseWindow')
+    return
+  }
+
   if (this.state.panelIndex === this.state.panels.length) {
-    EventBus.$emit('createTabInHiddenPanel')
+    this.eventBus.$emit('createTabInHiddenPanel')
     return
   }
 
@@ -170,6 +175,11 @@ function onKeyNewTabAfter() {
  */
 function onKeySelect(dir) {
   if (!dir) return
+
+  if (this.state.panelIndex === -5) {
+    this.eventBus.$emit('selectWindow', dir)
+    return
+  }
 
   if (this.state.ctxMenu) {
     this.eventBus.$emit('selectOption', dir)
