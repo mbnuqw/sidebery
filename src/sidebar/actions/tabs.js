@@ -538,7 +538,11 @@ function checkTabsPositioning(startIndex) {
     if (!panel.tabs || !panel.tabs.length) continue
     for (let panelTab of panel.tabs) {
       let globalTab = this.state.tabs[index]
-      if (globalTab.index !== panelTab.index || globalTab.id !== panelTab.id) {
+      if (
+        globalTab.index !== panelTab.index ||
+        globalTab.id !== panelTab.id ||
+        globalTab.panelId !== panel.id
+      ) {
         err = true
         break perPanels
       }
