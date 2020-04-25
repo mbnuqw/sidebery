@@ -140,13 +140,12 @@
   &:after
     content: ''
     box(absolute)
-    pos(b: -7px, l: -7px)
+    pos(b: -4px, l: -4px)
     size(0, 0)
-    border-top: 3px solid transparent
-    border-bottom: 3px solid transparent
-    border-right: 3px solid var(--notice-fg)
-    border-left: 3px solid transparent
-    transform: rotateZ(-45deg)
+    border-top: 2px solid transparent
+    border-bottom: 2px solid var(--notice-fg)
+    border-right: 2px solid transparent
+    border-left: 2px solid var(--notice-fg)
     transition: opacity var(--d-fast)
     opacity: 0
 
@@ -159,7 +158,7 @@
 
 .Tab[data-unread] .fav
   &:after
-    opacity: 1
+    opacity: .8
 
 // ---
 // -- Favicon placeholder
