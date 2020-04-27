@@ -97,7 +97,7 @@ section
   CountField.-inline(
     label="settings.tabs_reload_limit"
     :value="$store.state.tabsReloadLimit"
-    :min="3"
+    :min="1"
     @input="setOpt('tabsReloadLimit', $event)")
 </template>
 
