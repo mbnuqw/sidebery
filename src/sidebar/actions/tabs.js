@@ -876,13 +876,13 @@ function switchTab(globaly, cycle, step, pinned) {
 /**
  * Reload tabs
  */
+const RELOADING_QUEUE = []
+const CHECK_INTERVAL = 300
+const MAX_CHECK_COUNT = 35
 function reloadTabs(tabIds = []) {
   if (!this.state.tabsReloadLimit || typeof this.state.tabsReloadLimit !== 'number') {
     return tabIds.forEach(id => _reloadTab(this.state.tabsMap[id]))
   }
-
-  const CHECK_INTERVAL = 300
-  const MAX_CHECK_COUNT = 35
 
   for (let tabId of tabIds) {
     let tab = this.state.tabsMap[tabId]
@@ -892,12 +892,17 @@ function reloadTabs(tabIds = []) {
     }
   }
 
+  if (RELOADING_QUEUE.length > 0) {
+    return RELOADING_QUEUE.push(...tabIds)
+  }
+
   let reloadingIds = tabIds.splice(0, this.state.tabsReloadLimit)
   reloadingIds.forEach(id => _reloadTab(this.state.tabsMap[id]))
 
-  if (tabIds.length) {
+  RELOADING_QUEUE.push(...tabIds)
+  if (RELOADING_QUEUE.length) {
     let interval = setInterval(() => {
-      if (!tabIds.length) clearInterval(interval)
+      if (!RELOADING_QUEUE.length) clearInterval(interval)
 
       let loading = reloadingIds.filter(id => {
         let tab = this.state.tabsMap[id]
@@ -906,7 +911,7 @@ function reloadTabs(tabIds = []) {
       })
 
       for (let i = this.state.tabsReloadLimit - loading.length; i-- > 0; ) {
-        let nextTabId = tabIds.shift()
+        let nextTabId = RELOADING_QUEUE.shift()
         if (!nextTabId) break
         reloadingIds.push(nextTabId)
         _reloadTab(this.state.tabsMap[nextTabId])
