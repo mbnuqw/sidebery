@@ -642,14 +642,7 @@ async function sortBookmarks(type, nodeIds) {
     }
   }
 
-  if (progressNotification) {
-    progressNotification.progress.percent = 100
-
-    setTimeout(() => {
-      let index = this.state.notifications.indexOf(progressNotification)
-      if (index !== -1) this.state.notifications.splice(index, 1)
-    }, 120)
-  }
+  if (progressNotification) this.actions.finishProgress(progressNotification)
 }
 
 function highlightBookmarks(url) {

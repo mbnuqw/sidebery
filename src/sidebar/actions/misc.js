@@ -361,6 +361,15 @@ function progress(config) {
   return config
 }
 
+function finishProgress(notification, delay = 120) {
+  notification.progress.percent = 100
+
+  setTimeout(() => {
+    let index = this.state.notifications.indexOf(notification)
+    if (index !== -1) this.state.notifications.splice(index, 1)
+  }, delay)
+}
+
 export default {
   loadWindowInfo,
   connectToBG,
@@ -385,4 +394,5 @@ export default {
   notify,
   notifyAboutNewSnapshot,
   progress,
+  finishProgress,
 }

@@ -877,6 +877,7 @@ function switchTab(globaly, cycle, step, pinned) {
  * Reload tabs
  */
 const RELOADING_QUEUE = []
+const RELOADING_STATE = { count: 0 }
 const CHECK_INTERVAL = 300
 const MAX_CHECK_COUNT = 35
 function reloadTabs(tabIds = []) {
@@ -892,8 +893,26 @@ function reloadTabs(tabIds = []) {
     }
   }
 
+  let progressNotification
+  if (tabIds.length > this.state.tabsReloadLimit) {
+    progressNotification = this.actions.progress({
+      title: translate('notif.tabs_reloading'),
+      ctrl: translate('notif.tabs_reloading_stop'),
+      callback: () => {
+        while (RELOADING_QUEUE.length) {
+          let tabId = RELOADING_QUEUE.pop()
+          let tab = this.state.tabsMap[tabId]
+          if (tab && tab.status === 'pending') tab.status = 'complete'
+        }
+      },
+    })
+  }
+
   if (RELOADING_QUEUE.length > 0) {
+    RELOADING_STATE.count += tabIds.length
     return RELOADING_QUEUE.push(...tabIds)
+  } else {
+    RELOADING_STATE.count = tabIds.length
   }
 
   let reloadingIds = tabIds.splice(0, this.state.tabsReloadLimit)
@@ -902,7 +921,10 @@ function reloadTabs(tabIds = []) {
   RELOADING_QUEUE.push(...tabIds)
   if (RELOADING_QUEUE.length) {
     let interval = setInterval(() => {
-      if (!RELOADING_QUEUE.length) clearInterval(interval)
+      if (!RELOADING_QUEUE.length) {
+        if (progressNotification) this.actions.finishProgress(progressNotification)
+        return clearInterval(interval)
+      }
 
       let loading = reloadingIds.filter(id => {
         let tab = this.state.tabsMap[id]
@@ -915,6 +937,11 @@ function reloadTabs(tabIds = []) {
         if (!nextTabId) break
         reloadingIds.push(nextTabId)
         _reloadTab(this.state.tabsMap[nextTabId])
+      }
+
+      if (progressNotification) {
+        let percent = 100 - Math.floor((100 / RELOADING_STATE.count) * RELOADING_QUEUE.length)
+        progressNotification.progress.percent = percent
       }
     }, CHECK_INTERVAL)
   }

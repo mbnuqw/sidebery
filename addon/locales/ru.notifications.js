@@ -11,4 +11,6 @@ export default {
   'notif.view_snapshot': { message: 'Посмотреть' },
   'notif.tabs_err': { message: 'Обнаружено неправильное положение вкладок' },
   'notif.tabs_err_fix': { message: 'Обновить вкладки' },
+  'notif.tabs_reloading': { message: 'Перезагрузка вкладок' },
+  'notif.tabs_reloading_stop': { message: 'Остановить' },
 }
