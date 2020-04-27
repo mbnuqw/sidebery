@@ -1442,7 +1442,14 @@ async function moveTabsToPanel(tabIds, panelId) {
   let activePanel = this.state.panels[this.state.panelIndex]
   if (!activePanel || !activePanel.tabs) return
 
-  let tabs = tabIds.map(id => this.state.tabsMap[id])
+  let tabs = []
+  let activeTab
+  for (let tabId of tabIds) {
+    let tab = this.state.tabsMap[tabId]
+    if (!tab) continue
+    if (tab.active) activeTab = tab
+    tabs.push(tab)
+  }
   let targetPanel = this.state.panelsMap[panelId]
   if (!targetPanel) return
 
@@ -1453,6 +1460,7 @@ async function moveTabsToPanel(tabIds, panelId) {
   if (this.state.tabsTree && activePanel.tabs.length > 0) {
     this.actions.updateTabsTree(activePanel.startIndex, activePanel.endIndex + 1)
   }
+  if (activeTab) this.state.panelIndex = targetPanel.index
   if (this.state.stateStorage === 'global') this.actions.saveTabsData()
   if (this.state.stateStorage === 'session') {
     tabs.forEach(t => this.actions.saveTabData(t))
