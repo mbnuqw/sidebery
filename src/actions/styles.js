@@ -1,5 +1,4 @@
 import EventBus from '../event-bus'
-import { noiseBg } from '../noise-bg'
 
 /**
  * Load predefined theme and apply it
@@ -80,13 +79,7 @@ function applyNoiseBg() {
   let sH = conf.height >> scaleShift
 
   el.style.setProperty('--bg-size', `${sW}px ${sH}px`)
-  noiseBg(el, {
-    width: conf.width,
-    height: conf.height,
-    gray: conf.gray || [0, 255],
-    alpha: conf.alpha || [1, 32],
-    spread: conf.spread || [1, 8],
-  })
+  el.style.setProperty('--bg-img', 'url("/assets/bg/noise-300x300.png")')
 }
 
 /**

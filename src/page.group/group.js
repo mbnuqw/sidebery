@@ -1,5 +1,4 @@
 import { DEFAULT_SETTINGS, CUSTOM_CSS_VARS } from '../../addon/defaults'
-import { noiseBg } from '../noise-bg'
 
 const PNG_RE = /(\.png)([?#].*)?$/i
 const JPG_RE = /(\.jpe?g)([?#].*)?$/i
@@ -30,17 +29,11 @@ void (async function() {
   loadCustomCSS()
 
   if (settings.bgNoise) {
-    noiseBg(document.body, {
-      width: 300,
-      height: 300,
-      gray: [12, 175],
-      alpha: [0, 66],
-      spread: [0, 9],
-    })
     let scaleShift = ~~window.devicePixelRatio
     let sW = 300 >> scaleShift
     let sH = 300 >> scaleShift
-    document.body.style.backgroundSize = `${sW}px ${sH}px`
+    document.body.style.setProperty('--bg-size', `${sW}px ${sH}px`)
+    document.body.style.setProperty('--bg-img', 'url("/assets/bg/noise-300x300.png")')
   }
 
   // Set user styles
