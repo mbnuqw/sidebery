@@ -877,7 +877,6 @@ function switchTab(globaly, cycle, step, pinned) {
  * Reload tabs
  */
 const RELOADING_QUEUE = []
-const RELOADING_STATE = { count: 0 }
 const CHECK_INTERVAL = 300
 const MAX_CHECK_COUNT = 35
 function reloadTabs(tabIds = []) {
@@ -889,24 +888,32 @@ function reloadTabs(tabIds = []) {
   for (let tabId of tabIds) {
     let tab = this.state.tabsMap[tabId]
     if (!tab) continue
-    tab.status = 'pending'
-    tab.reloadingChecks = 1
-    tabs.push(tab)
+
+    if (!RELOADING_QUEUE.includes(tab)) {
+      tab.status = 'pending'
+      tab.reloadingChecks = 1
+      tabs.push(tab)
+    }
+
     if (tab.folded) {
       let parentLvl = tab.lvl
       tab = this.state.tabs[tab.index + 1]
       while (tab && tab.lvl > parentLvl) {
-        if (tab && !tabIds.includes(tab.id)) tabs.push(tab)
+        if (tab && !tabIds.includes(tab.id)) {
+          if (RELOADING_QUEUE.includes(tab)) continue
+          tab.status = 'pending'
+          tab.reloadingChecks = 1
+          tabs.push(tab)
+        }
         tab = this.state.tabs[tab.index + 1]
       }
     }
   }
 
   if (RELOADING_QUEUE.length > 0) {
-    RELOADING_STATE.count += tabs.length
+    let hm = tabs.splice(0, this.state.tabsReloadLimit)
+    hm.forEach(tab => _reloadTab(tab))
     return RELOADING_QUEUE.push(...tabs)
-  } else {
-    RELOADING_STATE.count = tabs.length
   }
 
   let progressNotification
@@ -935,8 +942,7 @@ function reloadTabs(tabIds = []) {
       }
 
       let loading = reloadingTabs.filter(tab => {
-        if (!tab || tab.reloadingChecks++ > MAX_CHECK_COUNT) return false
-        return tab.status !== 'complete'
+        return tab && tab.reloadingChecks++ <= MAX_CHECK_COUNT && tab.status === 'loading'
       })
 
       for (let i = this.state.tabsReloadLimit - loading.length; i-- > 0; ) {
@@ -947,7 +953,8 @@ function reloadTabs(tabIds = []) {
       }
 
       if (progressNotification) {
-        let percent = 100 - Math.floor((100 / RELOADING_STATE.count) * RELOADING_QUEUE.length)
+        let all = RELOADING_QUEUE.length + reloadingTabs.length
+        let percent = 100 - Math.floor((100 / all) * RELOADING_QUEUE.length)
         progressNotification.progress.percent = percent
       }
     }, CHECK_INTERVAL)
