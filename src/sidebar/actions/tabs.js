@@ -885,40 +885,48 @@ function reloadTabs(tabIds = []) {
     return tabIds.forEach(id => _reloadTab(this.state.tabsMap[id]))
   }
 
+  let tabs = []
   for (let tabId of tabIds) {
     let tab = this.state.tabsMap[tabId]
-    if (tab) {
-      tab.status = 'pending'
-      tab.reloadingChecks = 1
+    if (!tab) continue
+    tab.status = 'pending'
+    tab.reloadingChecks = 1
+    tabs.push(tab)
+    if (tab.folded) {
+      let parentLvl = tab.lvl
+      tab = this.state.tabs[tab.index + 1]
+      while (tab && tab.lvl > parentLvl) {
+        if (tab && !tabIds.includes(tab.id)) tabs.push(tab)
+        tab = this.state.tabs[tab.index + 1]
+      }
     }
   }
 
+  if (RELOADING_QUEUE.length > 0) {
+    RELOADING_STATE.count += tabs.length
+    return RELOADING_QUEUE.push(...tabs)
+  } else {
+    RELOADING_STATE.count = tabs.length
+  }
+
   let progressNotification
-  if (tabIds.length > this.state.tabsReloadLimit) {
+  if (tabs.length > this.state.tabsReloadLimit) {
     progressNotification = this.actions.progress({
       title: translate('notif.tabs_reloading'),
       ctrl: translate('notif.tabs_reloading_stop'),
       callback: () => {
         while (RELOADING_QUEUE.length) {
-          let tabId = RELOADING_QUEUE.pop()
-          let tab = this.state.tabsMap[tabId]
+          let tab = RELOADING_QUEUE.pop()
           if (tab && tab.status === 'pending') tab.status = 'complete'
         }
       },
     })
   }
 
-  if (RELOADING_QUEUE.length > 0) {
-    RELOADING_STATE.count += tabIds.length
-    return RELOADING_QUEUE.push(...tabIds)
-  } else {
-    RELOADING_STATE.count = tabIds.length
-  }
+  let reloadingTabs = tabs.splice(0, this.state.tabsReloadLimit)
+  reloadingTabs.forEach(tab => _reloadTab(tab))
 
-  let reloadingIds = tabIds.splice(0, this.state.tabsReloadLimit)
-  reloadingIds.forEach(id => _reloadTab(this.state.tabsMap[id]))
-
-  RELOADING_QUEUE.push(...tabIds)
+  RELOADING_QUEUE.push(...tabs)
   if (RELOADING_QUEUE.length) {
     let interval = setInterval(() => {
       if (!RELOADING_QUEUE.length) {
@@ -926,17 +934,16 @@ function reloadTabs(tabIds = []) {
         return clearInterval(interval)
       }
 
-      let loading = reloadingIds.filter(id => {
-        let tab = this.state.tabsMap[id]
+      let loading = reloadingTabs.filter(tab => {
         if (!tab || tab.reloadingChecks++ > MAX_CHECK_COUNT) return false
         return tab.status !== 'complete'
       })
 
       for (let i = this.state.tabsReloadLimit - loading.length; i-- > 0; ) {
-        let nextTabId = RELOADING_QUEUE.shift()
-        if (!nextTabId) break
-        reloadingIds.push(nextTabId)
-        _reloadTab(this.state.tabsMap[nextTabId])
+        let nextTab = RELOADING_QUEUE.shift()
+        if (!nextTab) break
+        reloadingTabs.push(nextTab)
+        _reloadTab(nextTab)
       }
 
       if (progressNotification) {
