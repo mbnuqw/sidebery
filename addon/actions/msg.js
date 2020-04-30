@@ -33,6 +33,11 @@ function initMessaging() {
     // Setup message handling
     let info = JSON.parse(port.name)
     if (info.instanceType === 'sidebar') {
+      let win = this.windows[info.windowId]
+      win.sidebarPort = port
+
+      if (this.settings.markWindow) browser.windows.update(win.id, { titlePreface: '[Sidebery] ' })
+
       connectedSidebars[info.windowId] = port
       port.onMessage.addListener(onSidebarMsg)
 
@@ -49,6 +54,11 @@ function initMessaging() {
       let info = JSON.parse(port.name)
       let targetPort = connectedSidebars[info.windowId]
       if (info.instanceType === 'sidebar' && targetPort) {
+        let window = this.windows[info.windowId]
+        delete window.sidebarPort
+
+        if (this.settings.markWindow) browser.windows.update(info.windowId, { titlePreface: '' })
+
         targetPort.onMessage.removeListener(onSidebarMsg)
         delete connectedSidebars[info.windowId]
       }

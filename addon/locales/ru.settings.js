@@ -463,4 +463,7 @@ export default {
   'settings.export_snapshots': { message: 'Снепшоты' },
   'settings.export_select_all': { message: 'Выбрать все' },
   'settings.reload_addon': { message: 'Перезагрузить расширение' },
+  'settings.mark_window': {
+    message: "Добавлять префикс '[Sidebery]' к заголовку окна, если Sidebery активен",
+  },
 }

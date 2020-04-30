@@ -55,6 +55,7 @@ export const DEFAULT_SETTINGS = {
   selWinScreenshots: true,
   tabsCheck: true,
   tabsFix: 'notify',
+  markWindow: false,
 
   // Context menu
   ctxMenuNative: false,

@@ -2,6 +2,10 @@
 section
   h2 {{t('settings.help_title')}}
   ToggleField(
+    label="settings.mark_window"
+    :value="$store.state.markWindow"
+    @input="setOpt('markWindow', $event)")
+  ToggleField(
     label="settings.tabs_check"
     :value="$store.state.tabsCheck"
     @input="setOpt('tabsCheck', $event)")
