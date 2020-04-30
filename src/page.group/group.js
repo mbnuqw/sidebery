@@ -66,7 +66,12 @@ void (async function() {
     windowId: tabInfo.windowId,
     arg: tabInfo.id,
   })
-  if (!groupInfo) return
+  if (!groupInfo) {
+    let warnEl = document.getElementById('disconnected_warn')
+    warnEl.innerText = browser.i18n.getMessage('group_disconnected_warn')
+    document.body.setAttribute('data-disconnected', true)
+    return
+  }
 
   tabs = groupInfo.tabs || []
   groupTabId = groupInfo.id || -1

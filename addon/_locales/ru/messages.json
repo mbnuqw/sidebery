@@ -48,5 +48,7 @@
 
   "upgrading": { "message": "Обновление..." },
   "unhandled_url": { "message": "Неподдерживаемый URL" },
-  "copy": { "message": "Скопировать" }
+  "copy": { "message": "Скопировать" },
+
+  "group_disconnected_warn": { "message": "Невозможно подключиться к боковой панели..." }
 }

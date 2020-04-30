@@ -54,6 +54,24 @@ body input
 body[data-pin] .title
   box(none)
 
+.disconnected-warn
+  position: absolute
+  top: 0
+  left: 0
+  z-index: 9999
+  width: 100%
+  height: 100%
+  display: none
+  flex-direction: column
+  justify-content: center
+  align-items: center
+  text-align: center
+  font-size: rem(18)
+  font-weight: 700
+  color: var(--false-fg)
+body[data-disconnected] .disconnected-warn
+  display: flex
+
 .pinned-tab
   box(relative, none)
   size(100%, max-w: 960px)

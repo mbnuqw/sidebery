@@ -48,5 +48,7 @@
 
   "upgrading": { "message": "Upgrading..." },
   "unhandled_url": { "message": "Unhandled URL" },
-  "copy": { "message": "Copy" }
+  "copy": { "message": "Copy" },
+
+  "group_disconnected_warn": { "message": "Cannot connect to the sidebar..." }
 }
