@@ -1,7 +1,7 @@
 <template lang="pug">
 .TextField(
   :data-inactive="inactive"
-  @click="focus")
+  @click="focus"): .body
   .label {{t(label)}}
   TextInput(
     ref="input"

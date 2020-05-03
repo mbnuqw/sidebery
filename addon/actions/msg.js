@@ -36,7 +36,9 @@ function initMessaging() {
       let win = this.windows[info.windowId]
       win.sidebarPort = port
 
-      if (this.settings.markWindow) browser.windows.update(win.id, { titlePreface: '[Sidebery] ' })
+      if (this.settings.markWindow) {
+        browser.windows.update(win.id, { titlePreface: this.settings.markWindowPreface })
+      }
 
       connectedSidebars[info.windowId] = port
       port.onMessage.addListener(onSidebarMsg)

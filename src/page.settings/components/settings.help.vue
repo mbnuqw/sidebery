@@ -5,6 +5,13 @@ section
     label="settings.mark_window"
     :value="$store.state.markWindow"
     @input="setOpt('markWindow', $event)")
+  .sub-fields
+    TextField.-inline(
+      label="settings.mark_window_preface"
+      or="---"
+      :inactive="!$store.state.markWindow"
+      :value="$store.state.markWindowPreface"
+      @input="setOpt('markWindowPreface', $event)")
   ToggleField(
     label="settings.tabs_check"
     :value="$store.state.tabsCheck"
@@ -52,6 +59,7 @@ section
 <script>
 import { translate } from '../../../addon/locales/dict'
 import { DEFAULT_SETTINGS } from '../../../addon/defaults'
+import TextField from '../../components/text-field'
 import ToggleField from '../../components/toggle-field'
 import SelectField from '../../components/select-field'
 import ExportConfig from './export-config'
@@ -60,7 +68,7 @@ import State from '../store/state'
 import Actions from '../actions'
 
 export default {
-  components: { ToggleField, SelectField, ExportConfig, ImportConfig },
+  components: { TextField, ToggleField, SelectField, ExportConfig, ImportConfig },
 
   data() {
     return { tabsCount: 0 }

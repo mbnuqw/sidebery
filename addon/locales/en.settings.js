@@ -417,6 +417,7 @@ export default {
   'settings.export_select_all': { message: 'Select all' },
   'settings.reload_addon': { message: 'Reload add-on' },
   'settings.mark_window': {
-    message: "Add preface '[Sidebery]' to the browser window's title if sidebery is active",
+    message: "Add preface to the browser window's title if sidebery is active",
   },
+  'settings.mark_window_preface': { message: 'Preface value' },
 }

@@ -56,6 +56,7 @@ export const DEFAULT_SETTINGS = {
   tabsCheck: true,
   tabsFix: 'notify',
   markWindow: false,
+  markWindowPreface: '[Sidebery] ',
 
   // Context menu
   ctxMenuNative: false,

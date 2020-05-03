@@ -467,6 +467,7 @@ export default {
   'settings.export_select_all': { message: 'Выбрать все' },
   'settings.reload_addon': { message: 'Перезагрузить расширение' },
   'settings.mark_window': {
-    message: "Добавлять префикс '[Sidebery]' к заголовку окна, если Sidebery активен",
+    message: 'Добавлять префикс к заголовку окна, если Sidebery активен',
   },
+  'settings.mark_window_preface': { message: 'Значение префикса' },
 }
