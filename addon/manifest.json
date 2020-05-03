@@ -111,9 +111,6 @@
       "description": "__MSG_KbRm__"
     },
     "select_all": {
-      "suggested_key": {
-        "default": "Alt+G"
-      },
       "description": "__MSG_KbSelectAll__"
     },
     "up": {
@@ -147,9 +144,6 @@
       "description": "__MSG_KbActivate__"
     },
     "menu": {
-      "suggested_key": {
-        "default": "Alt+M"
-      },
       "description": "__MSG_KbMenu__"
     },
     "reset_selection": {
