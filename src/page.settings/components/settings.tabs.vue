@@ -99,6 +99,12 @@ section
     :value="$store.state.tabsReloadLimit"
     :min="1"
     @input="setOpt('tabsReloadLimit', $event)")
+  .sub-fields
+    ToggleField(
+      label="settings.tabs_reload_limit_notif"
+      :inactive="!($store.state.tabsReloadLimit > 0)"
+      :value="$store.state.tabsReloadLimitNotif"
+      @input="setOpt('tabsReloadLimitNotif', $event)")
 </template>
 
 <script>

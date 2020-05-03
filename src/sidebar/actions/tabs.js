@@ -930,7 +930,7 @@ function reloadTabs(tabIds = []) {
   }
 
   let progressNotification
-  if (tabs.length > this.state.tabsReloadLimit) {
+  if (this.state.tabsReloadLimitNotif && tabs.length > this.state.tabsReloadLimit) {
     progressNotification = this.actions.progress({
       title: translate('notif.tabs_reloading'),
       ctrl: translate('notif.tabs_reloading_stop'),

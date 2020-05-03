@@ -162,6 +162,9 @@ export default {
   'settings.tabs_reload_limit': {
     message: 'Ограничить количество одновременно перезагружаемых вкладок.',
   },
+  'settings.tabs_reload_limit_notif': {
+    message: 'Показывать уведомление со статусом перезагрузки',
+  },
 
   // --- New tab position
   'settings.new_tab_position': { message: 'Позиция новых вкладок' },

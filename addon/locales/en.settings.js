@@ -155,6 +155,9 @@ export default {
   },
   'settings.tabs_unread_mark': { message: 'Show the mark on unread tabs' },
   'settings.tabs_reload_limit': { message: 'Limit the count of simultaneously reloading tabs' },
+  'settings.tabs_reload_limit_notif': {
+    message: 'Show notification with the reloading progress',
+  },
 
   // --- New tab position
   'settings.new_tab_position': { message: 'Position of new tab' },
