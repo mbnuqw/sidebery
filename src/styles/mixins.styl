@@ -41,7 +41,7 @@ ns(ns, scope = null)
 // > style: light|dark
 theme_style(style)
   if style == dark
-    @media (prefers-color-scheme: dark)
+    @media (prefers-color-scheme: dark), (prefers-color-scheme: no-preference)
       &[data-style="auto"]
         {block}
     &[data-style="dark"]
