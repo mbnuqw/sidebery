@@ -149,17 +149,33 @@ export default {
         for (let panel of panels_v4) {
           let clone = Utils.cloneObject(panel)
           if (clone.name) clone.name = clone.name.length
-          if (clone.icon) clone.icon = '...'
           if (clone.color) clone.color = '...'
-          if (clone.includeHosts) clone.includeHosts = clone.includeHosts.length
-          if (clone.excludeHosts) clone.excludeHosts = clone.excludeHosts.length
-          if (clone.proxy) clone.proxy = '...'
-          if (clone.customIconSrc) clone.customIconSrc = '...'
-          if (clone.customIcon) clone.customIcon = '...'
+          if (clone.icon) clone.icon = '...'
+          if (clone.customIconSrc) clone.customIconSrc = clone.customIconSrc.length
+          if (clone.customIcon) clone.customIcon = clone.customIcon.length
+          if (clone.urlRules) clone.urlRules = clone.urlRules.length
           dbg.panels.push(clone)
         }
       } catch (err) {
         dbg.panels = err.toString()
+      }
+
+      try {
+        let { containers_v4 } = await browser.storage.local.get({ containers_v4: {} })
+        dbg.containers = []
+        for (let container of Object.values(containers_v4)) {
+          let clone = Utils.cloneObject(container)
+          if (clone.name) clone.name = clone.name.length
+          if (clone.icon) clone.icon = '...'
+          if (clone.color) clone.color = '...'
+          if (clone.proxy) clone.proxy = clone.proxy.type
+          if (clone.includeHosts) clone.includeHosts = clone.includeHosts.length
+          if (clone.excludeHosts) clone.excludeHosts = clone.excludeHosts.length
+          if (clone.userAgent) clone.userAgent = clone.userAgent.length
+          dbg.containers.push(clone)
+        }
+      } catch (err) {
+        dbg.containers = err.toString()
       }
 
       try {
