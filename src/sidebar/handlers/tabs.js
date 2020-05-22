@@ -673,6 +673,7 @@ async function onTabAttached(id, info) {
   tab.windowId = this.state.windowId
   tab.index = info.newPosition
   tab.panelId = undefined
+  tab.sel = false
 
   this.handlers.onTabCreated(tab)
 
