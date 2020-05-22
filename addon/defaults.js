@@ -491,7 +491,8 @@ export const MENU_OPTIONS = {
         state.selected,
         {
           title: option.label,
-          filter: w => w.id !== state.windowId && w.incognito === state.private,
+          otherWindows: true,
+          filter: w => w.incognito === state.private,
         },
       ]
     }
@@ -553,7 +554,8 @@ export const MENU_OPTIONS = {
         state.selected,
         {
           title: option.label,
-          filter: w => w.id !== state.windowId && w.incognito !== state.private,
+          otherWindows: true,
+          filter: w => w.incognito !== state.private,
         },
       ]
     }

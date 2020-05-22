@@ -35,16 +35,17 @@ async function chooseWin(config = {}) {
   this.state.winChoosing = []
   this.state.winChoosingTitle = config.title
   this.state.panelIndex = -5
-  let wins = await browser.windows.getAll({ populate: true })
+  let wins
+  if (config.otherWindows) wins = this.state.otherWindows
+  else wins = await browser.windows.getAll()
   if (config.filter) wins = wins.filter(config.filter)
 
   return new Promise(res => {
     wins = wins.map(async w => {
-      let tab = w.tabs.find(t => t.active)
-      if (!tab) return
       let screen
       if (this.state.selWinScreenshots && browser.tabs.captureTab) {
-        screen = await browser.tabs.captureTab(tab.id)
+        let [tab] = await browser.tabs.query({ active: true, windowId: w.id })
+        if (tab) screen = await browser.tabs.captureTab(tab.id, { format: 'jpeg', quality: 75 })
       }
       return {
         id: w.id,
