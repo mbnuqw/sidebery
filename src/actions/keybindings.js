@@ -11,6 +11,9 @@ async function loadKeybindings() {
 
   for (let k of commands) {
     k.active = !storage.disabledKeybindings[k.name]
+    if (typeof storage.disabledKeybindings[k.name] === 'string') {
+      k.shortcut = storage.disabledKeybindings[k.name]
+    }
     this.state.kbMap[k.name] = k
   }
 

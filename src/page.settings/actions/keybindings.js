@@ -11,11 +11,17 @@ async function updateKeybinding(name, shortcut) {
  * Save keybindings
  */
 async function saveKeybindings() {
-  let disabledKeybindings = {}
+  let { disabledKeybindings } = await browser.storage.local.get({ disabledKeybindings: {} })
+  let disabled = {}
   for (let k of this.state.keybindings) {
-    if (!k.active) disabledKeybindings[k.name] = true
+    if (!k.active) {
+      disabled[k.name] = k.shortcut
+      browser.commands.update({ name: k.name, shortcut: '' })
+    } else if (typeof disabledKeybindings[k.name] === 'string') {
+      browser.commands.update({ name: k.name, shortcut: disabledKeybindings[k.name] })
+    }
   }
-  await browser.storage.local.set({ disabledKeybindings })
+  await browser.storage.local.set({ disabledKeybindings: disabled })
 }
 
 /**
