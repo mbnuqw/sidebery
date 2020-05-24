@@ -15,7 +15,6 @@ section
       @keydown.prevent.stop="onKBKey($event, k, i)"
       @keyup.prevent.stop="onKBKeyUp($event, k, i)")
     ToggleInput(
-      v-if="k.name !== '_execute_sidebar_action'"
       v-model="k.active"
       @input="toggleKeybinding")
   .ctrls
@@ -130,7 +129,6 @@ export default {
 
       let state = test.active
       for (let k of State.keybindings) {
-        if (k.name === '_execute_sidebar_action') continue
         k.active = !state
       }
 
