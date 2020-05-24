@@ -4,9 +4,12 @@ section
   .keybinding(
     v-for="(k, i) in $store.state.keybindings" :key="k.name"
     :is-focused="k.focus"
+    :data-error="!!k.error"
     :data-disabled="!k.active")
     .label(@click="changeKeybinding(k, i)") {{k.description}}
-    .value(@click="changeKeybinding(k, i)") {{normalizeShortcut(k.shortcut)}}
+    .value(v-if="k.focus") {{inputLabel}}
+    .value(v-else-if="k.error") {{t('settings.kb_err_' + k.error)}}
+    .value(v-else @click="changeKeybinding(k, i)") {{normalizeShortcut(k.shortcut)}}
     input(
       type="text"
       ref="keybindingInputs"
@@ -23,6 +26,7 @@ section
 </template>
 
 <script>
+import { translate } from '../../../addon/locales/dict'
 import ToggleInput from '../../components/toggle-input'
 import State from '../store/state'
 import Actions from '../actions'
@@ -33,16 +37,34 @@ const SPEC_KEYS = /^(Comma|Period|Home|End|PageUp|PageDown|Space|Insert|Delete|F
 export default {
   components: { ToggleInput },
 
+  data() {
+    return {
+      newShortcut: '',
+      errMsg: '',
+    }
+  },
+
+  computed: {
+    inputLabel() {
+      if (this.newShortcut) return this.newShortcut
+      else return translate('settings.kb_input')
+    },
+  },
+
   methods: {
     /**
      * Start changing of keybingding
      */
     changeKeybinding(k, i) {
       if (!k.active) return
+      this.newShortcut = ''
+      this.errMsg = ''
 
       this.$refs.keybindingInputs[i].focus()
       this.lastShortcut = State.keybindings[i]
-      State.keybindings.splice(i, 1, { ...k, shortcut: 'Press new shortcut', focus: true })
+      State.keybindings.splice(i, 1, { ...k, focus: true, error: '' })
+
+      if (this.errTimeout) clearTimeout(this.errTimeout)
     },
 
     /**
@@ -50,9 +72,7 @@ export default {
      */
     normalizeShortcut(s) {
       if (!s) return '---'
-      if (State.os === 'mac') {
-        return s.replace('Command', '⌘').replace('MacCtrl', 'Ctrl')
-      }
+      if (State.os === 'mac') return s.replace('Command', '⌘').replace('MacCtrl', 'Ctrl')
       if (State.os === 'win') return s.replace('Command', 'Win')
       if (State.os === 'linux') return s.replace('Command', 'Super')
       return s
@@ -62,10 +82,18 @@ export default {
      * Handle keybinding blur
      */
     onKBBlur(k, i) {
-      if (!this.lastShortcut) return
+      if (!k.focus) return
+      State.keybindings.splice(i, 1, { ...k, focus: false })
 
-      State.keybindings.splice(i, 1, this.lastShortcut)
-      this.lastShortcut = null
+      if (this.errMsg) {
+        State.keybindings.splice(i, 1, { ...k, focus: false, error: this.errMsg })
+        if (this.errTimeout) clearTimeout(this.errTimeout)
+        this.errTimeout = setTimeout(() => {
+          k = State.keybindings[i]
+          State.keybindings.splice(i, 1, { ...k, error: '' })
+          this.errMsg = ''
+        }, 2000)
+      }
     },
 
     /**
@@ -73,6 +101,12 @@ export default {
      */
     onKBKey(e, k, i) {
       if (e.key === 'Escape') return this.$refs.keybindingInputs[i].blur()
+      if (e.key === 'Delete' && !e.ctrlKey && !e.altKey && !e.shiftKey) {
+        State.keybindings.splice(i, 1, { ...k, shortcut: '', focus: false })
+        Actions.updateKeybinding(k.name, '')
+        this.$nextTick(() => this.$refs.keybindingInputs[i].blur())
+        return
+      }
 
       let shortcut = []
       if (e.ctrlKey) {
@@ -88,12 +122,12 @@ export default {
       else if (SPEC_KEYS.test(e.code)) shortcut.push(e.code)
 
       shortcut = shortcut.join('+')
+      this.newShortcut = shortcut
 
       if (this.checkShortcut(shortcut)) {
-        this.lastShortcut = null
         State.keybindings.splice(i, 1, { ...k, shortcut, focus: false })
         Actions.updateKeybinding(k.name, shortcut)
-        this.$refs.keybindingInputs[i].blur()
+        this.$nextTick(() => this.$refs.keybindingInputs[i].blur())
       }
     },
 
@@ -108,8 +142,11 @@ export default {
      * Validate shortcut
      */
     checkShortcut(shortcut) {
-      let exists = State.keybindings.find(k => k.shortcut === shortcut)
-      return VALID_SHORTCUT.test(shortcut) && !exists
+      let duplicate = State.keybindings.find(k => k.shortcut === shortcut)
+      let valid = VALID_SHORTCUT.test(shortcut)
+      if (duplicate) this.errMsg = 'duplicate'
+      if (!valid) this.errMsg = 'invalid'
+      return valid && !duplicate
     },
 
     toggleKeybinding() {

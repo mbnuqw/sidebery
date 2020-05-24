@@ -505,6 +505,13 @@ footer
       box-shadow: inset 0 0 0 1px var(--active-fg)
     > .label
       color: var(--active-fg)
+  &[data-error]:not([data-disabled])
+    opacity: 1
+    > .value
+      color: var(--false-fg)
+      box-shadow: inset 0 0 0 1px var(--false-fg)
+    > .label
+      color: var(--false-fg)
   &[data-disabled]
     opacity: .3
 

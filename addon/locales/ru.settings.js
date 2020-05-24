@@ -392,6 +392,9 @@ export default {
 
   // --- Keybindings
   'settings.kb_title': { message: 'Клавиши' },
+  'settings.kb_input': { message: 'Нажмете новое сочетание клавиш' },
+  'settings.kb_err_duplicate': { message: 'Уже существует' },
+  'settings.kb_err_invalid': { message: 'Недопустимое сочетание клавиш' },
   'settings.reset_kb': { message: 'Сбросить клав. настройки' },
   'settings.toggle_kb': { message: 'Включить / отключить сочетания клавиш' },
 

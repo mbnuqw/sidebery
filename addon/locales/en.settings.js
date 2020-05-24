@@ -343,6 +343,9 @@ export default {
 
   // --- Keybindings
   'settings.kb_title': { message: 'Keybindings' },
+  'settings.kb_input': { message: 'Press new shortcut' },
+  'settings.kb_err_duplicate': { message: 'Already exists' },
+  'settings.kb_err_invalid': { message: 'Invalid shortcut' },
   'settings.reset_kb': { message: 'Reset Keybindings' },
   'settings.toggle_kb': { message: 'Enable/Disable Keybindings' },
 
