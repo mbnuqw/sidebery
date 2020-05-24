@@ -116,7 +116,7 @@ export const DEFAULT_SETTINGS = {
   // Pinned tabs
   pinnedTabsPosition: 'panel',
   pinnedTabsList: false,
-  pinnedAutoGroup: true,
+  pinnedAutoGroup: false,
 
   // Tabs tree
   tabsTree: true,
