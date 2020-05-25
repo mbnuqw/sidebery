@@ -172,6 +172,7 @@ export default {
   'settings.move_new_tab_parent_last_child': { message: 'last child' },
   'settings.move_new_tab_parent_start': { message: 'panel start' },
   'settings.move_new_tab_parent_end': { message: 'panel end' },
+  'settings.move_new_tab_parent_default': { message: 'default' },
   'settings.move_new_tab_parent_none': { message: 'none' },
   'settings.move_new_tab_parent_act_panel': { message: 'Only if panel of parent tab is active' },
   'settings.move_new_tab': { message: 'Place new tab (for the other cases)' },

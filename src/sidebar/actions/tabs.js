@@ -2544,6 +2544,7 @@ function getIndexForNewTab(panel, tab) {
     }
     if (this.state.moveNewTabParent === 'start' && !tab.autoGroupped) return panel.startIndex
     if (this.state.moveNewTabParent === 'end' && !tab.autoGroupped) return endIndex
+    if (this.state.moveNewTabParent === 'default' && !tab.autoGroupped) return tab.index
   }
 
   // Place new tab (for the other cases)
@@ -2618,6 +2619,7 @@ function getParentForNewTab(panel, openerTabId) {
     if (this.state.moveNewTabParent === 'last_child') return openerTabId
     if (this.state.moveNewTabParent === 'start') return
     if (this.state.moveNewTabParent === 'end') return
+    if (this.state.moveNewTabParent === 'default') return openerTabId
     if (this.state.moveNewTabParent === 'none') return openerTabId
   }
 

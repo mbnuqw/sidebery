@@ -33,7 +33,7 @@ export const SETTINGS_OPTIONS = {
   snapIntervalUnitOpts: ['min', 'hr', 'day'],
   snapLimitUnitOpts: ['snap', 'kb', 'day'],
   moveNewTabPinOpts: ['start', 'end', 'none'],
-  moveNewTabParentOpts: ['before', 'sibling', 'first_child', 'last_child', 'start', 'end', 'none'],
+  moveNewTabParentOpts: ['before', 'sibling', 'first_child', 'last_child', 'start', 'end', 'default', 'none'],
   moveNewTabOpts: ['start', 'end', 'before', 'after', 'first_child', 'last_child', 'none'],
   midClickBookmarkOpts: ['open_new_tab', 'edit', 'delete'],
   warnOnMultiTabCloseOpts: ['any', 'collapsed', 'none'],

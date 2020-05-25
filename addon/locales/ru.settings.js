@@ -179,6 +179,7 @@ export default {
   'settings.move_new_tab_parent_last_child': { message: 'последняя дочерняя' },
   'settings.move_new_tab_parent_start': { message: 'начало панели' },
   'settings.move_new_tab_parent_end': { message: 'конец пенели' },
+  'settings.move_new_tab_parent_default': { message: 'по умолчанию' },
   'settings.move_new_tab_parent_none': { message: 'выкл' },
   'settings.move_new_tab_parent_act_panel': {
     message: 'Только если панель родительской вкладки активна',
