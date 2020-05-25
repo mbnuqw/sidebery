@@ -104,10 +104,6 @@
       "description": "__MSG_KbOpenNewTabAsLastChild__"
     },
     "rm_tab_on_panel": {
-      "suggested_key": {
-        "default": "Ctrl+Delete",
-        "mac": "MacCtrl+W"
-      },
       "description": "__MSG_KbRm__"
     },
     "select_all": {
