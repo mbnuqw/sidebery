@@ -309,7 +309,7 @@ function switchToNeighbourPanel() {
 /**
  * Switch panel.
  */
-async function switchPanel(dir = 0) {
+function switchPanel(dir = 0) {
   // Debounce switching
   if (this.state.switchPanelPause) return
   this.state.switchPanelPause = setTimeout(() => {
@@ -330,6 +330,7 @@ async function switchPanel(dir = 0) {
   let i = this.state.panelIndex + dir
   for (; this.state.panels[i]; i += dir) {
     const p = this.state.panels[i]
+    if (p.skipOnSwitching) continue
     if (this.state.skipEmptyPanels && p.tabs && !p.tabs.length) continue
     if (!p.inactive) break
   }

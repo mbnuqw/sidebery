@@ -53,6 +53,11 @@
     @input="toggleTabsLock")
 
   ToggleField(
+    label="dashboard.skip_on_switching"
+    :value="conf.skipOnSwitching"
+    @input="toggleSkipOnSwitching")
+
+  ToggleField(
     v-if="isDefault || isCustom"
     label="dashboard.no_empty_label"
     :value="conf.noEmpty"
@@ -365,6 +370,11 @@ export default {
 
     toggleTabsLock() {
       this.conf.lockedTabs = !this.conf.lockedTabs
+      Actions.savePanels()
+    },
+
+    toggleSkipOnSwitching() {
+      this.conf.skipOnSwitching = !this.conf.skipOnSwitching
       Actions.savePanels()
     },
 

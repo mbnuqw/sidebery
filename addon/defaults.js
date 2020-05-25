@@ -301,6 +301,7 @@ export const BOOKMARKS_PANEL = {
   icon: 'icon_bookmarks',
   bookmarks: true,
   lockedPanel: false,
+  skipOnSwitching: false,
 }
 export const BOOKMARKS_PANEL_STATE = {
   ...BOOKMARKS_PANEL,
@@ -333,6 +334,7 @@ export const DEFAULT_TABS_PANEL = {
   cookieStoreId: DEFAULT_CTX,
   lockedTabs: false,
   lockedPanel: false,
+  skipOnSwitching: false,
   noEmpty: false,
   newTabCtx: 'none',
   moveTabCtx: 'none',
@@ -357,6 +359,7 @@ export const TABS_PANEL = {
   customIcon: '',
   lockedTabs: false,
   lockedPanel: false,
+  skipOnSwitching: false,
   noEmpty: false,
   newTabCtx: 'none',
   moveTabCtx: 'none',

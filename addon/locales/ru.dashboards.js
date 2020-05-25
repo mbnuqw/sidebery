@@ -6,6 +6,7 @@ export default {
   },
   'dashboard.lock_tabs_label': { message: 'Запретить закрытие вкладок на этой панели' },
   'dashboard.lock_tabs_tooltip': { message: 'Запретить закрытие вкладок на этой панели' },
+  'dashboard.skip_on_switching': { message: 'Пропускать эту панель при переключении панелей' },
   'dashboard.no_empty_label': { message: 'Создавать новую вкладку после закрытия последней' },
   'dashboard.no_empty_tooltip': { message: 'Предотвращать опустошение этой панели' },
   'dashboard.new_tab_ctx': { message: 'Контейнер новой вкладки' },

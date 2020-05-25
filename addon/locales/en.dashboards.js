@@ -4,6 +4,7 @@ export default {
   'dashboard.lock_panel_tooltip': { message: 'Prevent auto-switching from this panel' },
   'dashboard.lock_tabs_label': { message: 'Prevent closing tabs on this panel' },
   'dashboard.lock_tabs_tooltip': { message: 'Prevent closing tabs on this panel' },
+  'dashboard.skip_on_switching': { message: 'Skip this panel when switching panels' },
   'dashboard.no_empty_label': { message: 'Create new tab after the last one is closed' },
   'dashboard.no_empty_tooltip': { message: 'Prevent emptying of this panel' },
   'dashboard.new_tab_ctx': { message: 'Container of new tab' },
