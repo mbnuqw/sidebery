@@ -131,6 +131,7 @@ function onTabCreated(tab) {
             this.actions.expTabsBranch(tab.parentId)
           }
         } else {
+          tab.parentId = -1
           browser.tabs.update(tab.id, { openerTabId: tab.id })
         }
       }
