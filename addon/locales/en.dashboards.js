@@ -8,6 +8,7 @@ export default {
   'dashboard.no_empty_label': { message: 'Create new tab after the last one is closed' },
   'dashboard.no_empty_tooltip': { message: 'Prevent emptying of this panel' },
   'dashboard.new_tab_ctx': { message: 'Container of new tab' },
+  'dashboard.drop_tab_ctx': { message: 'Reopen tab that was dropped to this panel in container:' },
   'dashboard.move_tab_ctx': { message: 'Move tab to this panel if it is opened in container:' },
   'dashboard.move_tab_ctx_none': { message: 'none' },
   'dashboard.move_tab_ctx_nochild': { message: 'Except child tabs' },

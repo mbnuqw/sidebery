@@ -72,6 +72,13 @@
 
   SelectField(
     v-if="isDefault || isTabs"
+    label="dashboard.drop_tab_ctx"
+    :value="dropTabCtx"
+    :opts="availableContainers"
+    @input="togglePanelDropTabCtx")
+
+  SelectField(
+    v-if="isDefault || isTabs"
     label="dashboard.move_tab_ctx"
     optLabel="dashboard.move_tab_ctx_"
     :value="moveTabCtx"
@@ -239,6 +246,10 @@ export default {
       return this.conf.newTabCtx || 'none'
     },
 
+    dropTabCtx() {
+      return this.conf.dropTabCtx || 'none'
+    },
+
     moveTabCtx() {
       return this.conf.moveTabCtx || 'none'
     },
@@ -385,6 +396,11 @@ export default {
 
     togglePanelNewTabCtx(value) {
       this.conf.newTabCtx = value
+      Actions.savePanels()
+    },
+
+    togglePanelDropTabCtx(value) {
+      this.conf.dropTabCtx = value
       Actions.savePanels()
     },
 

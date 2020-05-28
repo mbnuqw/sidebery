@@ -10,6 +10,9 @@ export default {
   'dashboard.no_empty_label': { message: 'Создавать новую вкладку после закрытия последней' },
   'dashboard.no_empty_tooltip': { message: 'Предотвращать опустошение этой панели' },
   'dashboard.new_tab_ctx': { message: 'Контейнер новой вкладки' },
+  'dashboard.drop_tab_ctx': {
+    message: 'Переоткрыть вкладку, переброшенную в эту панель, в контейнере:',
+  },
   'dashboard.move_tab_ctx': { message: 'Перемещать вкладки выбранного контейнера в эту панель' },
   'dashboard.move_tab_ctx_none': { message: 'ня' },
   'dashboard.move_tab_ctx_nochild': { message: 'За исключением дочерних вкладок' },

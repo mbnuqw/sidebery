@@ -337,6 +337,7 @@ export const DEFAULT_TABS_PANEL = {
   skipOnSwitching: false,
   noEmpty: false,
   newTabCtx: 'none',
+  dropTabCtx: 'none',
   moveTabCtx: 'none',
   moveTabCtxNoChild: true,
 }
@@ -362,6 +363,7 @@ export const TABS_PANEL = {
   skipOnSwitching: false,
   noEmpty: false,
   newTabCtx: 'none',
+  dropTabCtx: 'none',
   moveTabCtx: 'none',
   moveTabCtxNoChild: true,
   urlRulesActive: false,

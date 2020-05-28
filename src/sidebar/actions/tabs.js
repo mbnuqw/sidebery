@@ -1726,18 +1726,16 @@ function foldAllInactiveBranches(tabs = []) {
 async function dropToTabs(event, dropIndex, dropParent, nodes, pin, isInside) {
   let activePanel = this.state.panels[this.state.panelIndex]
   let destCtx = DEFAULT_CTX_ID
-  if (activePanel.newTabCtx !== 'none') destCtx = activePanel.newTabCtx
+  if (activePanel.dropTabCtx !== 'none') destCtx = activePanel.dropTabCtx
   if (dropIndex === -1) dropIndex = activePanel.endIndex + 1
 
   // Tabs or Bookmarks
   if (nodes && nodes.length) {
     let globalPin = pin && activePanel.panel !== 'TabsPanel'
-    let ctxChange =
-      activePanel.newTabCtx !== 'none' && nodes[0].cookieStoreId !== activePanel.newTabCtx
-    let sameContainer = ctxChange ? nodes[0].ctx === destCtx : true
+    let ctxChange = event.type && activePanel.dropTabCtx !== 'none' && nodes[0].ctx !== destCtx
 
     // Move tabs
-    if (nodes[0].type === 'tab' && (sameContainer || globalPin) && !event.ctrlKey) {
+    if (nodes[0].type === 'tab' && (!ctxChange || globalPin) && !event.ctrlKey) {
       this.actions.moveDroppedNodes(dropIndex, dropParent, nodes, pin, activePanel)
     } else {
       this.actions.recreateDroppedNodes(event, dropIndex, dropParent, nodes, pin, destCtx)
