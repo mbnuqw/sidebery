@@ -1935,7 +1935,11 @@ async function recreateDroppedNodes(event, dropIndex, dropParent, nodes, pin, de
     if (firstNode.type === 'tab') createConf.active = node.active
     else createConf.active = firstNode.id === node.id
 
-    if (createConf.cookieStoreId === DEFAULT_CTX_ID) {
+    if (
+      createConf.cookieStoreId === DEFAULT_CTX_ID &&
+      createConf.url &&
+      !createConf.url.startsWith('about')
+    ) {
       createConf.discarded = true
       createConf.title = node.title
       createConf.active = false
