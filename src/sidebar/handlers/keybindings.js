@@ -495,9 +495,15 @@ function onKeyMoveTabsToAct() {
 }
 
 function onKeyTabsIndent() {
-  let selected = [...this.state.selected]
+  let selected
   if (this.state.selected.length) selected = [...this.state.selected]
   else selected = [this.state.activeTabId]
+
+  if (!this.state.tabsMap[selected[0]]) return
+
+  selected.sort((a, b) => {
+    return this.state.tabsMap[a].index - this.state.tabsMap[b].index
+  })
 
   let align = []
 
@@ -534,9 +540,15 @@ function onKeyTabsIndent() {
 }
 
 function onKeyTabsOutdent() {
-  let selected = [...this.state.selected]
+  let selected
   if (this.state.selected.length) selected = [...this.state.selected]
   else selected = [this.state.activeTabId]
+
+  if (!this.state.tabsMap[selected[0]]) return
+
+  selected.sort((a, b) => {
+    return this.state.tabsMap[a].index - this.state.tabsMap[b].index
+  })
 
   for (let id of selected) {
     let tab = this.state.tabsMap[id]
