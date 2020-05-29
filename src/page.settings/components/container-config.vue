@@ -196,11 +196,15 @@ export default {
     },
 
     includeHostsValid() {
-      return HOSTS_RULE_RE.test(this.conf.includeHosts)
+      if (!this.conf.includeHosts) return ''
+      if (HOSTS_RULE_RE.test(this.conf.includeHosts)) return 'valid'
+      else return 'invalid'
     },
 
     excludeHostsValid() {
-      return HOSTS_RULE_RE.test(this.conf.excludeHosts)
+      if (!this.conf.excludeHosts) return ''
+      if (HOSTS_RULE_RE.test(this.conf.excludeHosts)) return 'valid'
+      else return 'invalid'
     },
 
     proxyHost() {
@@ -214,11 +218,15 @@ export default {
     },
 
     proxyHostValid() {
-      return PROXY_HOST_RE.test(this.proxyHost)
+      if (!this.proxyHost) return ''
+      if (PROXY_HOST_RE.test(this.proxyHost)) return 'valid'
+      else return 'invalid'
     },
 
     proxyPortValid() {
-      return PROXY_PORT_RE.test(this.proxyPort)
+      if (!this.proxyPort) return ''
+      if (PROXY_PORT_RE.test(this.proxyPort)) return 'valid'
+      else return 'invalid'
     },
 
     proxyUsername() {

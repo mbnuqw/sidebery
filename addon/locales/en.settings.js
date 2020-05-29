@@ -63,6 +63,11 @@ export default {
   'settings.autoHide_ctx_menu_none': { message: 'none' },
   'settings.ctx_menu_native': { message: 'Use native context menu' },
   'settings.ctx_menu_render_inact': { message: 'Render inactive options' },
+  'settings.ctx_menu_ignore_ctr': { message: 'Ignore containers' },
+  'settings.ctx_menu_ignore_ctr_or': { message: 'e.g. /^tmp.+/, Google, Facebook' },
+  'settings.ctx_menu_ignore_ctr_note': {
+    message: 'Use comma-separated list of contaianers names or /regexp/',
+  },
   'settings.ctx_menu_editor': { message: 'Edit context menu' },
 
   // --- Navigation bar

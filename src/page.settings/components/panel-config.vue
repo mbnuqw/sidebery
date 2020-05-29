@@ -255,7 +255,8 @@ export default {
     },
 
     urlRulesValid() {
-      return this.conf.urlRules.length > 1
+      if (this.conf.urlRules.length > 1) return 'valid'
+      else return ''
     },
   },
 

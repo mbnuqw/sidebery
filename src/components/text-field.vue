@@ -1,20 +1,21 @@
 <template lang="pug">
-.TextField(
-  :data-inactive="inactive"
-  @click="focus"): .body
-  .label {{t(label)}}
-  TextInput(
-    ref="input"
-    :value="value"
-    :padding="padding"
-    :or="or"
-    :filter="filter"
-    :line="line"
-    :tabindex="tabindex"
-    :password="password"
-    :valid="valid"
-    @input="$emit('input', $event)"
-    @keydown="$emit('keydown', $event)")
+.TextField(:data-inactive="inactive" @click="focus")
+  .body
+    .label {{t(label)}}
+    TextInput(
+      ref="input"
+      :value="value"
+      :padding="padding"
+      :or="or"
+      :filter="filter"
+      :line="line"
+      :tabindex="tabindex"
+      :password="password"
+      :valid="valid"
+      :width="inputWidth"
+      @input="$emit('input', $event)"
+      @keydown="$emit('keydown', $event)")
+  .note(v-if="note") {{note}}
 </template>
 
 <script>
@@ -42,6 +43,8 @@ export default {
     password: Boolean,
     label: String,
     inactive: Boolean,
+    note: String,
+    inputWidth: String,
   },
 
   methods: {

@@ -22,6 +22,7 @@ function updateSettings(settings) {
   let highlightOpenBookmarks = this.state.highlightOpenBookmarks !== settings.highlightOpenBookmarks
   let stateStorage = this.state.stateStorage !== settings.stateStorage
   let bgNoise = this.state.bgNoise !== settings.bgNoise
+  let ctxMenuCtrIgnore = this.state.ctxMenuIgnoreContainers !== settings.ctxMenuIgnoreContainers
 
   // Update settings of this instance
   for (let k of Object.keys(settings)) {
@@ -104,6 +105,21 @@ function updateSettings(settings) {
   if (bgNoise) {
     if (this.state.bgNoise) this.actions.applyNoiseBg()
     else this.actions.removeNoiseBg()
+  }
+
+  if (ctxMenuCtrIgnore) {
+    if (this.state.ctxMenuIgnoreContainers) {
+      let rules = this.actions.parseCtxMenuContainersRules(this.state.ctxMenuIgnoreContainers)
+      if (rules) {
+        for (let container of Object.values(this.state.containers)) {
+          container.ignoreCtxMenu = this.actions.checkCtxMenuContainer(container, rules)
+        }
+      }
+    } else {
+      for (let container of Object.values(this.state.containers)) {
+        container.ignoreCtxMenu = false
+      }
+    }
   }
 }
 

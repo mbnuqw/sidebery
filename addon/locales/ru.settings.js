@@ -65,6 +65,11 @@ export default {
   'settings.autoHide_ctx_menu_none': { message: 'никогда' },
   'settings.ctx_menu_native': { message: 'Использовать системное контекстное меню' },
   'settings.ctx_menu_render_inact': { message: 'Отображать неактивные элементы' },
+  'settings.ctx_menu_ignore_ctr': { message: 'Не отображать контейнеры' },
+  'settings.ctx_menu_ignore_ctr_or': { message: 'пример: /^tmp.+/, Google, Facebook' },
+  'settings.ctx_menu_ignore_ctr_note': {
+    message: 'Список названий или /regexp/ через запятую',
+  },
   'settings.ctx_menu_editor': { message: 'Редактировать меню' },
 
   // --- Navigation bar

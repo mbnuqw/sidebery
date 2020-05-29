@@ -62,6 +62,7 @@ export const DEFAULT_SETTINGS = {
   ctxMenuNative: false,
   autoHideCtxMenu: 'none',
   ctxMenuRenderInact: true,
+  ctxMenuIgnoreContainers: '',
 
   // Nav bar
   navBarLayout: 'horizontal',
@@ -584,6 +585,7 @@ export const MENU_OPTIONS = {
 
     for (let c of Object.values(state.containers)) {
       if (firstNode.cookieStoreId === c.id) continue
+      if (c.ignoreCtxMenu) continue
       opts.push({
         label: translate('menu.tab.reopen_in_') + `||${c.color}>>${c.name}`,
         nativeLabel: translate('menu.tab.reopen_in_') + c.name,

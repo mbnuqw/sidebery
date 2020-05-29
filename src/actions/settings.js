@@ -65,9 +65,44 @@ async function getProfileId() {
   return profileID
 }
 
+function parseCtxMenuContainersRules(value) {
+  if (!value) return null
+
+  let rules = []
+  try {
+    let rawRules = value.split(',')
+    for (let rule of rawRules) {
+      rule = rule.trim()
+      if (!rule) continue
+      if (rule.startsWith('/') && rule.endsWith('/')) rule = new RegExp(rule.slice(1, -1))
+      rules.push(rule)
+    }
+  } catch (err) {
+    return null
+  }
+
+  if (rules.length) return rules
+  else return null
+}
+
+function checkCtxMenuContainer(container, rules) {
+  if (!container || !rules) return false
+
+  let value = false
+  for (let rule of rules) {
+    if (rule.test) value = rule.test(container.name)
+    else value = rule === container.name
+    if (value) return value
+  }
+
+  return value
+}
+
 export default {
   loadSettings,
   saveSettings,
   updateFontSize,
   getProfileId,
+  parseCtxMenuContainersRules,
+  checkCtxMenuContainer,
 }

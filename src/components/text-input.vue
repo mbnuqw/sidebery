@@ -4,6 +4,7 @@
   :data-empty="!value"
   :data-valid="valid"
   :data-wrong="wrongValueAnimation"
+  :data-width="width"
   @animationend="onAnimationEnd")
   input(
     v-if="line"
@@ -54,6 +55,7 @@ export default {
       default: () => '0',
     },
     password: Boolean,
+    width: String,
   },
 
   data() {

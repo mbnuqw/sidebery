@@ -10,6 +10,7 @@ async function loadContainers() {
     browser.storage.local.get({ containers_v4: null }),
   ])
   let containers = storage.containers_v4 ? storage.containers_v4 : {}
+  let ctxMenuRules = this.actions.parseCtxMenuContainersRules(this.state.ctxMenuIgnoreContainers)
 
   for (let ffContainer of ffContainers) {
     let container = containers[ffContainer.cookieStoreId]
@@ -33,6 +34,10 @@ async function loadContainers() {
 
     for (let k of Object.keys(DEFAULT_CONTAINER)) {
       if (container[k] === undefined) container[k] = DEFAULT_CONTAINER[k]
+    }
+
+    if (ctxMenuRules) {
+      container.ignoreCtxMenu = this.actions.checkCtxMenuContainer(container, ctxMenuRules)
     }
   }
 
