@@ -227,6 +227,9 @@ const TABS_MENU_OPTS = {
   clearCookies: 'menu.tab.clear_cookies',
   closeDescendants: 'menu.tab.close_descendants',
   close: 'menu.tab.close',
+  closeTabsAbove: 'menu.tab.close_above',
+  closeTabsBelow: 'menu.tab.close_below',
+  closeOtherTabs: 'menu.tab.close_other',
 }
 
 const BOOKMARKS_MENU_OPTS = {

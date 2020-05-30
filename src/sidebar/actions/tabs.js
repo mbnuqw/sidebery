@@ -681,6 +681,83 @@ async function removeTabsDescendants(tabIds) {
 }
 
 /**
+ * Remove tabs above
+ */
+function removeTabsAbove(tabIds) {
+  if (!tabIds || !tabIds.length) return
+
+  let minIndex = 999999
+  let startTab
+  for (let id of tabIds) {
+    let tab = this.state.tabsMap[id]
+    if (tab && tab.index < minIndex) {
+      minIndex = tab.index
+      startTab = tab
+    }
+  }
+
+  if (startTab.pinned) return
+
+  let toRm = []
+  for (let i = startTab.index; i--; ) {
+    let tab = this.state.tabs[i]
+    if (!tab || tab.panelId !== startTab.panelId) break
+    toRm.push(tab.id)
+  }
+
+  this.actions.removeTabs(toRm)
+}
+
+/**
+ * Remove tabs below
+ */
+function removeTabsBelow(tabIds) {
+  if (!tabIds || !tabIds.length) return
+
+  let maxIndex = -1
+  let startTab
+  for (let id of tabIds) {
+    let tab = this.state.tabsMap[id]
+    if (tab && tab.index > maxIndex) {
+      maxIndex = tab.index
+      startTab = tab
+    }
+  }
+
+  if (startTab.pinned) return
+
+  let toRm = []
+  for (let i = startTab.index + 1; i < this.state.tabs.length; i++) {
+    let tab = this.state.tabs[i]
+    if (!tab || tab.panelId !== startTab.panelId) break
+    toRm.push(tab.id)
+  }
+
+  this.actions.removeTabs(toRm)
+}
+
+/**
+ * Remove other tabs
+ */
+function removeOtherTabs(tabIds) {
+  if (!tabIds || !tabIds.length) return
+
+  let firstTab = this.state.tabsMap[tabIds[0]]
+  if (!firstTab || firstTab.pinned) return
+
+  let panel = this.state.panelsMap[firstTab.panelId]
+  if (!panel || !panel.tabs) return
+
+  let toRm = []
+  for (let tab of panel.tabs) {
+    if (tabIds.includes(tab.id)) continue
+    toRm.push(tab.id)
+  }
+
+  this.actions.removeTabs(toRm)
+}
+
+/**
  * Remove tabs
  */
 async function removeTabs(tabIds) {
@@ -2770,6 +2847,9 @@ export default {
   scrollToActiveTab,
   createTab,
   removeTabsDescendants,
+  removeTabsAbove,
+  removeTabsBelow,
+  removeOtherTabs,
   removeTabs,
   checkRemovedTabs,
   switchTab,

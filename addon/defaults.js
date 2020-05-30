@@ -733,6 +733,59 @@ export const MENU_OPTIONS = {
     return option
   },
 
+  closeTabsAbove: state => {
+    let option = {
+      label: translate('menu.tab.close_above'),
+      icon: 'icon_close_tabs_above',
+      action: 'removeTabsAbove',
+      args: [state.selected],
+    }
+
+    let tabId = state.selected[0]
+    let tab = state.tabsMap[tabId]
+    let prevTab = state.tabs[tab.index - 1]
+    if (!tab || tab.pinned) option.inactive = true
+    if (!prevTab || prevTab.panelId !== tab.panelId || prevTab.pinned) option.inactive = true
+    if (!state.ctxMenuRenderInact && option.inactive) return
+    return option
+  },
+
+  closeTabsBelow: state => {
+    let option = {
+      label: translate('menu.tab.close_below'),
+      icon: 'icon_close_tabs_below',
+      action: 'removeTabsBelow',
+      args: [state.selected],
+    }
+
+    let tabId = state.selected[0]
+    let tab = state.tabsMap[tabId]
+    let nextTab = state.tabs[tab.index + 1]
+    if (!tab || tab.pinned) option.inactive = true
+    if (!nextTab || nextTab.panelId !== tab.panelId) option.inactive = true
+    if (!state.ctxMenuRenderInact && option.inactive) return
+    return option
+  },
+
+  closeOtherTabs: state => {
+    let option = {
+      label: translate('menu.tab.close_other'),
+      icon: 'icon_close_other_tabs',
+      action: 'removeOtherTabs',
+      args: [state.selected],
+    }
+
+    let tabId = state.selected[0]
+    let tab = state.tabsMap[tabId]
+    if (!tab || tab.pinned) option.inactive = true
+    if (tab) {
+      let panel = state.panelsMap[tab.panelId]
+      if (!panel || panel.tabs.length === 1) option.inactive = true
+    }
+    if (!state.ctxMenuRenderInact && option.inactive) return
+    return option
+  },
+
   //
   // --- Bookmarks options ---
   //

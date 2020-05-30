@@ -52,6 +52,9 @@ export default {
   'menu.tab.duplicate': { message: 'Duplicate' },
   'menu.tab.close': { message: 'Close' },
   'menu.tab.close_descendants': { message: 'Close descendants' },
+  'menu.tab.close_above': { message: 'Close tabs above' },
+  'menu.tab.close_below': { message: 'Close tabs below' },
+  'menu.tab.close_other': { message: 'Close other tabs' },
 
   // --- Tabs panel
   'menu.tabs_panel.mute_all_audible': { message: 'Mute all audible tabs' },

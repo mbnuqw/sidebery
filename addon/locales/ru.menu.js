@@ -53,6 +53,9 @@ export default {
   'menu.tab.duplicate': { message: 'Дублировать' },
   'menu.tab.close': { message: 'Закрыть' },
   'menu.tab.close_descendants': { message: 'Закрыть потомки' },
+  'menu.tab.close_above': { message: 'Закрыть вкладки сверху' },
+  'menu.tab.close_below': { message: 'Закрыть вкладки снизу' },
+  'menu.tab.close_other': { message: 'Закрыть другие вкладки' },
 
   // --- Tabs panel
   'menu.tabs_panel.mute_all_audible': { message: 'Выключить звук' },
