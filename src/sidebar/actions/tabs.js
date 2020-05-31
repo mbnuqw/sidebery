@@ -2314,6 +2314,7 @@ function createTabAfter(tabId) {
  */
 function createChildTab(tabId) {
   let targetTab = this.state.tabsMap[tabId]
+  if (!targetTab) return
 
   browser.tabs.create({
     index: targetTab.index + 1,
