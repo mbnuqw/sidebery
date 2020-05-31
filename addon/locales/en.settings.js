@@ -267,7 +267,7 @@ export default {
   'settings.font_size_l': { message: 'L' },
   'settings.font_size_xl': { message: 'XL' },
   'settings.font_size_xxl': { message: 'XXL' },
-  'settings.switch_style': { message: 'Style' },
+  'settings.switch_style': { message: 'Color scheme' },
   'settings.style_dark': { message: 'dark' },
   'settings.style_light': { message: 'light' },
   'settings.style_auto': { message: 'auto' },
