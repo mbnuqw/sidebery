@@ -253,6 +253,9 @@ export default {
   'settings.tabs_tree_bookmarks': {
     message: 'Сохранять древовидную структуру при создании закладок',
   },
+  'settings.tree_rm_outdent': { message: 'После закрытия родительской вкладки понизить уровень' },
+  'settings.tree_rm_outdent_branch': { message: 'всей ветви' },
+  'settings.tree_rm_outdent_first_child': { message: 'первой дочерней вкладки' },
 
   // --- Bookmarks
   'settings.bookmarks_title': { message: 'Закладки' },

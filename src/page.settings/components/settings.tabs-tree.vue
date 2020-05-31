@@ -77,6 +77,13 @@ section
     :inactive="!$store.state.tabsTree"
     :value="$store.state.tabsTreeBookmarks"
     @input="setOpt('tabsTreeBookmarks', $event)")
+  SelectField(
+    label="settings.tree_rm_outdent"
+    optLabel="settings.tree_rm_outdent_"
+    :inactive="!$store.state.tabsTree"
+    :value="$store.state.treeRmOutdent"
+    :opts="$store.state.treeRmOutdentOpts"
+    @input="setOpt('treeRmOutdent', $event)")
 </template>
 
 <script>

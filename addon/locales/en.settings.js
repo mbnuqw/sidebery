@@ -232,6 +232,9 @@ export default {
   'settings.discard_folded_delay_sec': { message: ['second', 'seconds'], plur: [1] },
   'settings.discard_folded_delay_min': { message: ['minute', 'minutes'], plur: [1] },
   'settings.tabs_tree_bookmarks': { message: 'Preserve tree on creating bookmarks' },
+  'settings.tree_rm_outdent': { message: 'After closing parent tab, outdent' },
+  'settings.tree_rm_outdent_branch': { message: 'whole branch' },
+  'settings.tree_rm_outdent_first_child': { message: 'first child' },
 
   // --- Bookmarks
   'settings.bookmarks_title': { message: 'Bookmarks' },
