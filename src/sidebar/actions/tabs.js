@@ -933,7 +933,15 @@ function switchTab(globaly, cycle, step, pinned) {
     (!pinned && !pinnedAndPanel && activeTab.pinned)
   ) {
     if (step > 0) tab = activePanel.tabs[0]
-    if (step < 0) tab = activePanel.tabs[activePanel.tabs.length - 1]
+    if (step < 0) {
+      for (let i = activePanel.tabs.length, t; i--; ) {
+        t = activePanel.tabs[i]
+        if (visibleOnly && t.invisible) continue
+        if (skipDiscarded && t.discarded) continue
+        tab = t
+        break
+      }
+    }
     if (tab) browser.tabs.update(tab.id, { active: true })
     return
   }
