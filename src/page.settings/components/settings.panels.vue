@@ -1,7 +1,11 @@
 <template lang="pug">
 section
   h2 {{t('settings.panels_title')}}
-  TransitionGroup(name="panel" tag="div"): .panel-card(
+  ToggleField(
+    label="settings.skip_empty_panels"
+    :value="$store.state.skipEmptyPanels"
+    @input="setOpt('skipEmptyPanels', $event)")
+  TransitionGroup(name="panel" tag="div"): .panel-card.-separate(
     v-for="(panel, i) in $store.state.panels"
     :key="panel.id"
     :data-color="panel.color"
@@ -39,10 +43,11 @@ import { translate } from '../../../addon/locales/dict'
 import { TABS_PANEL } from '../../../addon/defaults'
 import State from '../store/state'
 import Actions from '../actions'
+import ToggleField from '../../components/toggle-field'
 import PanelConfig from './panel-config'
 
 export default {
-  components: { PanelConfig },
+  components: { PanelConfig, ToggleField },
 
   methods: {
     /**

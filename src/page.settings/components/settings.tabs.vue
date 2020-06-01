@@ -27,10 +27,6 @@ section
     :value="$store.state.activateLastTabOnPanelSwitching"
     @input="setOpt('activateLastTabOnPanelSwitching', $event)")
   ToggleField(
-    label="settings.skip_empty_panels"
-    :value="$store.state.skipEmptyPanels"
-    @input="setOpt('skipEmptyPanels', $event)")
-  ToggleField(
     label="settings.show_tab_rm_btn"
     :value="$store.state.showTabRmBtn"
     @input="setOpt('showTabRmBtn', $event)")

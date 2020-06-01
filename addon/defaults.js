@@ -78,6 +78,9 @@ export const DEFAULT_SETTINGS = {
   // Group page
   groupLayout: 'grid',
 
+  // Panels
+  skipEmptyPanels: false,
+
   // Drag and drop
   dndTabAct: true,
   dndTabActDelay: 750,
@@ -91,7 +94,6 @@ export const DEFAULT_SETTINGS = {
   warnOnMultiTabClose: 'collapsed',
   activateOnMouseUp: true,
   activateLastTabOnPanelSwitching: true,
-  skipEmptyPanels: false,
   showTabRmBtn: true,
   showTabCtx: true,
   hideInact: false,
