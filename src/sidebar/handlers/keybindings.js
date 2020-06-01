@@ -159,7 +159,7 @@ function onKeyNewTabAfter() {
     if (t.lvl <= activeTab.lvl) break
   }
 
-  this.actions.setNewTabPosition(activeTab.index + 1, activeTab.parentId, activeTab.panelId)
+  this.actions.setNewTabPosition(index, activeTab.parentId, activeTab.panelId)
 
   let conf = {
     index,
