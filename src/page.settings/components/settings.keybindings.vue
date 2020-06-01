@@ -64,7 +64,12 @@ export default {
       this.lastShortcut = State.keybindings[i]
       State.keybindings.splice(i, 1, { ...k, focus: true, error: '' })
 
-      if (this.errTimeout) clearTimeout(this.errTimeout)
+      if (this.errTimeout) {
+        clearTimeout(this.errTimeout)
+        i = State.keybindings.findIndex(k => k.error)
+        k = State.keybindings[i]
+        if (k) State.keybindings.splice(i, 1, { ...k, error: '' })
+      }
     },
 
     /**
