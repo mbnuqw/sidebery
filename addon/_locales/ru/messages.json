@@ -22,10 +22,10 @@
   "KbFoldBranch": { "message": "Свернуть выделенную ветвь" },
   "KbExpandBranch": { "message": "Развернуть выделенную ветвь" },
   "KbFoldInactBranches": { "message": "Свернуть неактивные ветви табов" },
-  "KbActPrevActTab": { "message": "Активировать предыдущую активную вкладку" },
-  "KbActPanelPrevActTab": {
-    "message": "Активировать предыдущую активную вкладку на активной панели"
-  },
+  "KbActPrevActTab": { "message": "История активных вкладок: Назад" },
+  "KbActNextActTab": { "message": "История активных вкладок: Вперед" },
+  "KbActPanelPrevActTab": { "message": "История активных вкладок панели: Назад" },
+  "KbActPanelNextActTab": { "message": "История активных вкладок панели: Вперед" },
   "KbMoveTabToAct": { "message": "Вложить выделенные табы в активную вкладку" },
   "KbTabsIndent": { "message": "Увеличить уровень вкладки" },
   "KbTabsOutdent": { "message": "Уменьшить уровень вкладки" },

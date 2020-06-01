@@ -160,8 +160,14 @@
     "activate_prev_active_tab": {
       "description": "__MSG_KbActPrevActTab__"
     },
+    "activate_next_active_tab": {
+      "description": "__MSG_KbActNextActTab__"
+    },
     "activate_panel_prev_active_tab": {
       "description": "__MSG_KbActPanelPrevActTab__"
+    },
+    "activate_panel_next_active_tab": {
+      "description": "__MSG_KbActPanelNextActTab__"
     },
     "move_tab_to_active": {
       "description": "__MSG_KbMoveTabToAct__"

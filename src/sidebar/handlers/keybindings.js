@@ -32,9 +32,13 @@ function onCmd(name) {
   else if (name === 'fold_branch') this.handlers.onKeyFoldBranch()
   else if (name === 'expand_branch') this.handlers.onKeyExpandBranch()
   else if (name === 'fold_inact_branches') this.handlers.onKeyFoldInactiveBranches()
-  else if (name === 'activate_prev_active_tab') this.handlers.onKeyActivatePrevActTab()
-  else if (name === 'activate_panel_prev_active_tab') this.handlers.onKeyActivatePrevActTab('panel')
-  else if (name === 'move_tab_to_active') this.handlers.onKeyMoveTabsToAct()
+  else if (name === 'activate_prev_active_tab') this.handlers.onKeyActivatePrevActTab('state', -1)
+  else if (name === 'activate_next_active_tab') this.handlers.onKeyActivatePrevActTab('state', 1)
+  else if (name === 'activate_panel_prev_active_tab') {
+    this.handlers.onKeyActivatePrevActTab('panel', -1)
+  } else if (name === 'activate_panel_next_active_tab') {
+    this.handlers.onKeyActivatePrevActTab('panel', 1)
+  } else if (name === 'move_tab_to_active') this.handlers.onKeyMoveTabsToAct()
   else if (name === 'tabs_indent') this.handlers.onKeyTabsIndent()
   else if (name === 'tabs_outdent') this.handlers.onKeyTabsOutdent()
   else if (name === 'move_tabs_up') this.handlers.onKeyMoveTabsUp()
@@ -443,15 +447,23 @@ function onKeyFoldInactiveBranches() {
   this.actions.foldAllInactiveBranches(activePanel.tabs)
 }
 
-function onKeyActivatePrevActTab(scope = 'state') {
+function onKeyActivatePrevActTab(scope = 'state', dir) {
   let box
   if (scope === 'state') box = this.state
   if (scope === 'panel') box = this.state.panels[this.state.panelIndex]
 
   if (!box || !box.actTabs || !box.actTabs.length) return
 
+  if (
+    box.actTabOffset === undefined ||
+    box.actTabOffset < 0 ||
+    box.actTabOffset > box.actTabs.length
+  ) {
+    box.actTabOffset = box.actTabs.length
+  }
+
   let targetTabId, targetIdIndex, tabId
-  for (let i = box.actTabs.length; i--; ) {
+  for (let i = box.actTabOffset + dir; i >= 0 && i < box.actTabs.length; i += dir) {
     tabId = box.actTabs[i]
     if (this.state.tabsMap[tabId] && tabId !== this.state.activeTabId) {
       targetIdIndex = i
@@ -461,7 +473,13 @@ function onKeyActivatePrevActTab(scope = 'state') {
   }
 
   if (targetTabId !== undefined) {
-    box.actTabs = box.actTabs.slice(0, targetIdIndex)
+    if (dir < 0 && targetIdIndex === box.actTabs.length - 1) {
+      let actTab = this.state.tabsMap[this.state.activeTabId]
+      if (scope === 'state' || (scope === 'panel' && actTab && actTab.panelId === box.id)) {
+        box.actTabs.push(this.state.activeTabId)
+      }
+    }
+    box.actTabOffset = targetIdIndex
     this.state.skipActTabsCollecting = true
     browser.tabs.update(tabId, { active: true })
   }

@@ -705,6 +705,10 @@ function onTabActivated(info) {
   // Reset selection
   if (!this.state.dragNodes) this.actions.resetSelection()
 
+  // Get new active tab
+  let tab = this.state.tabsMap[info.tabId]
+  if (!tab) return this.actions.normalizeTabs()
+
   // Update previous active tab and store his id
   let prevActive = this.state.tabsMap[info.previousTabId]
   if (prevActive) {
@@ -713,12 +717,24 @@ function onTabActivated(info) {
     if (!this.state.skipActTabsCollecting) {
       let box = this.state
       if (!box.actTabs) box.actTabs = []
+      if (box.actTabOffset >= 0 && box.actTabOffset < box.actTabs.length) {
+        box.actTabs = box.actTabs.slice(0, box.actTabOffset)
+        box.actTabOffset = undefined
+      }
       if (box.actTabs.length > 128) box.actTabs = box.actTabs.slice(32)
       box.actTabs.push(prevActive.id)
 
       if (!prevActive.pinned || this.state.pinnedTabsPosition === 'panel') {
         box = this.state.panelsMap[prevActive.panelId]
         if (!box.actTabs) box.actTabs = []
+        if (
+          box.actTabOffset >= 0 &&
+          box.actTabOffset < box.actTabs.length &&
+          prevActive.panelId === tab.panelId
+        ) {
+          box.actTabs = box.actTabs.slice(0, box.actTabOffset)
+          box.actTabOffset = undefined
+        }
         if (box.actTabs.length > 128) box.actTabs = box.actTabs.slice(32)
         box.actTabs.push(prevActive.id)
       }
@@ -727,9 +743,6 @@ function onTabActivated(info) {
     }
   }
 
-  // Update tabs and find activated one
-  let tab = this.state.tabsMap[info.tabId]
-  if (!tab) return
   tab.active = true
   if (this.state.tabsUnreadMark) tab.unread = false
   tab.lastAccessed = Date.now()

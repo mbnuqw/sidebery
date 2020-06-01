@@ -1090,7 +1090,11 @@ function activateLastActiveTabOf(panelIndex) {
 
   let tab
   if (p.actTabs && p.actTabs.length) {
-    let tabId = p.actTabs[p.actTabs.length - 1]
+    let index
+    if (p.actTabOffset >= 0 && p.actTabOffset < p.actTabs.length) index = p.actTabOffset
+    else index = p.actTabs.length - 1
+
+    let tabId = p.actTabs[index]
     tab = this.state.tabsMap[tabId]
   }
   if (!tab || tab.panelId !== p.id) tab = p.tabs[0]
