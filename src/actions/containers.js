@@ -25,6 +25,7 @@ async function loadContainers() {
     container.color = ffContainer.color
   }
 
+  this.state.ctxMenuIgnoreContainersRules = {}
   for (let container of Object.values(containers)) {
     let ffContainer = ffContainers.find(c => c.cookieStoreId === container.id)
     if (!ffContainer) {
@@ -37,7 +38,8 @@ async function loadContainers() {
     }
 
     if (ctxMenuRules) {
-      container.ignoreCtxMenu = this.actions.checkCtxMenuContainer(container, ctxMenuRules)
+      let ignore = this.actions.checkCtxMenuContainer(container, ctxMenuRules)
+      this.state.ctxMenuIgnoreContainersRules[container.id] = ignore
     }
   }
 

@@ -108,16 +108,14 @@ function updateSettings(settings) {
   }
 
   if (ctxMenuCtrIgnore) {
+    this.state.ctxMenuIgnoreContainersRules = {}
     if (this.state.ctxMenuIgnoreContainers) {
       let rules = this.actions.parseCtxMenuContainersRules(this.state.ctxMenuIgnoreContainers)
       if (rules) {
         for (let container of Object.values(this.state.containers)) {
-          container.ignoreCtxMenu = this.actions.checkCtxMenuContainer(container, rules)
+          let ignore = this.actions.checkCtxMenuContainer(container, rules)
+          this.state.ctxMenuIgnoreContainersRules[container.id] = ignore
         }
-      }
-    } else {
-      for (let container of Object.values(this.state.containers)) {
-        container.ignoreCtxMenu = false
       }
     }
   }
