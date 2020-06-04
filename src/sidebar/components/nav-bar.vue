@@ -27,6 +27,7 @@
         svg: use(xlink:href="#icon_ok")
       .err-badge
         svg: use(xlink:href="#icon_err")
+      .name(v-if="!btn.internal") {{btn.name}}
       .progress-spinner
       .len(v-if="$store.state.navBtnCount && btn.len") {{btn.len}}
 
@@ -52,6 +53,7 @@ const HIDDEN_PANEL_BTN = {
   icon: 'icon_expand',
   hidden: false,
   tooltip: translate('nav.show_hidden_tooltip'),
+  internal: true,
 }
 
 const ADD_PANEL_BTN = {
@@ -61,6 +63,7 @@ const ADD_PANEL_BTN = {
   icon: 'icon_plus_v2',
   hidden: false,
   tooltip: translate('nav.add_panel_tooltip'),
+  internal: true,
 }
 
 export default {

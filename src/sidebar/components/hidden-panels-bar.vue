@@ -16,6 +16,7 @@
     @mouseup.right="onNavRightMouseup($event, panel.index)")
     img(v-if="!!panel.customIcon" :src="panel.customIcon")
     svg(v-else): use(:xlink:href="'#' + panel.icon")
+    .name {{panel.name}}
 </template>
 
 <script>
