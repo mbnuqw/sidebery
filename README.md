@@ -63,13 +63,14 @@ You can setup auto snapshots that will keep info about open windows and tabs.
 ## Usage
 
 - [User guide](https://github.com/mbnuqw/sidebery/wiki/User-guide)
-  - [Containers](https://github.com/mbnuqw/sidebery/wiki/User-guide)
-  - [Panels](https://github.com/mbnuqw/sidebery/wiki/User-guide)
-  - [Tabs](https://github.com/mbnuqw/sidebery/wiki/User-guide)
-  - [Bookmarks](https://github.com/mbnuqw/sidebery/wiki/User-guide)
+  - [Containers](https://github.com/mbnuqw/sidebery/wiki/User-guide#containers)
+  - [Panels](https://github.com/mbnuqw/sidebery/wiki/User-guide#panels)
+  - [Tabs](https://github.com/mbnuqw/sidebery/wiki/User-guide#tabs)
+  - [Bookmarks](https://github.com/mbnuqw/sidebery/wiki/User-guide#bookmarks)
+  - [Drag and Drop](https://github.com/mbnuqw/sidebery/wiki/User-guide#drag-and-drop)
 - [Firefox Styles Snippets (via userChrome.css)](https://github.com/mbnuqw/sidebery/wiki/Firefox-Styles-Snippets-(via-userChrome.css))
-  - [Completely hide tabs strip](https://github.com/mbnuqw/sidebery/wiki/Firefox-Styles-Snippets-(via-userChrome.css))
-  - [Hide sidebar top-menu](https://github.com/mbnuqw/sidebery/wiki/Firefox-Styles-Snippets-(via-userChrome.css))
+  - [Completely hide tabs strip](https://github.com/mbnuqw/sidebery/wiki/Firefox-Styles-Snippets-(via-userChrome.css)#completely-hide-tabs-strip)
+  - [Hide sidebar top-menu](https://github.com/mbnuqw/sidebery/wiki/Firefox-Styles-Snippets-(via-userChrome.css)#hide-sidebar-top-menu)
 - [Sidebery Styles Snippets](https://github.com/mbnuqw/sidebery/wiki/Sidebery-Styles-Snippets)
 
 
