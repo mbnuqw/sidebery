@@ -1815,7 +1815,7 @@ function foldAllInactiveBranches(tabs = []) {
 async function dropToTabs(event, dropIndex, dropParent, nodes, pin, isInside) {
   let activePanel = this.state.panels[this.state.panelIndex]
   let destCtx = DEFAULT_CTX_ID
-  if (activePanel.dropTabCtx !== 'none') destCtx = activePanel.dropTabCtx
+  if (activePanel.dropTabCtx !== 'none' && activePanel.dropTabCtx) destCtx = activePanel.dropTabCtx
   if (dropIndex === -1) dropIndex = activePanel.endIndex + 1
 
   // Tabs or Bookmarks
