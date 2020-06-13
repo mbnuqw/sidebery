@@ -23,7 +23,7 @@
 
   .details-box(v-if="$store.state.dbgDetails" @wheel="onDbgWheel")
     .box
-      .btn(@click="copyDebugDetail") {{t('settings.ctrl_copy')}}
+      .btn(@click="copyDetails") {{t('settings.ctrl_copy')}}
       .btn.-warn(@click="$store.state.dbgDetails = ''") {{t('settings.ctrl_close')}}
     .json {{$store.state.dbgDetails}}
 
@@ -150,6 +150,14 @@ export default {
       let maxScrollOffset = e.target.scrollHeight - e.target.parentNode.offsetHeight
       if (scrollOffset === 0 && e.deltaY < 0) e.preventDefault()
       if (scrollOffset === maxScrollOffset && e.deltaY > 0) e.preventDefault()
+    },
+
+    /**
+     * Copy debug info
+     */
+    copyDetails() {
+      if (!State.dbgDetails) return
+      navigator.clipboard.writeText(State.dbgDetails)
     },
   },
 }

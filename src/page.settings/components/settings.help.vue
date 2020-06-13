@@ -263,14 +263,6 @@ export default {
     },
 
     /**
-     * Copy debug info
-     */
-    copyDebugDetail() {
-      if (!State.dbgDetails) return
-      navigator.clipboard.writeText(State.dbgDetails)
-    },
-
-    /**
      * Reload addon
      */
     reloadAddon() {
