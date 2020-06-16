@@ -13,6 +13,8 @@ async function loadWindowInfo() {
       w => w.id !== this.state.windowId && w.type === 'normal'
     )
   })
+
+  this.actions.infoLog('Windows info loaded')
 }
 
 /**

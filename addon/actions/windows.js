@@ -17,6 +17,7 @@ async function getWindows() {
 async function onWindowCreated(window) {
   this.windows[window.id] = window
   window.tabs = await browser.tabs.query({ windowId: window.id })
+  this.actions.infoLog('Window created: ' + window.id)
 }
 
 /**
@@ -24,6 +25,7 @@ async function onWindowCreated(window) {
  */
 function onWindowRemoved(windowId) {
   delete this.windows[windowId]
+  this.actions.infoLog('Window removed: ' + windowId)
 }
 
 function setupWindowsListeners() {

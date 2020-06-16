@@ -49,6 +49,8 @@ function initMessaging() {
         }
         firstSidebarInitHandlers = null
       }
+
+      this.actions.infoLog(`Sidebar (win: ${info.windowId}) connected`)
     }
 
     // Handle disconnect
@@ -57,12 +59,16 @@ function initMessaging() {
       let targetPort = connectedSidebars[info.windowId]
       if (info.instanceType === 'sidebar' && targetPort) {
         let window = this.windows[info.windowId]
-        delete window.sidebarPort
 
-        if (this.settings.markWindow) browser.windows.update(info.windowId, { titlePreface: '' })
+        if (window) {
+          delete window.sidebarPort
+          if (this.settings.markWindow) browser.windows.update(info.windowId, { titlePreface: '' })
+        }
 
         targetPort.onMessage.removeListener(onSidebarMsg)
         delete connectedSidebars[info.windowId]
+
+        this.actions.infoLog(`Sidebar (win: ${info.windowId}) disconnected`)
       }
     })
   })

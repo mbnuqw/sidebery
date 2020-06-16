@@ -8,6 +8,8 @@ function initToolbarButton() {
     if (info && info.button === 1) return browser.runtime.openOptionsPage()
     else browser.sidebarAction.open()
   })
+
+  this.actions.infoLog('Toolbar button initialized')
 }
 
 /**
@@ -34,6 +36,8 @@ async function loadPermissions() {
       if (c.userAgentActive) c.userAgentActive = false
     }
   }
+
+  this.actions.infoLog('Permissions loaded')
 }
 
 function onMenuHidden() {

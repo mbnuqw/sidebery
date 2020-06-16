@@ -107,6 +107,7 @@ async function updatePanels(newPanels) {
 function updatePanelsTabs() {
   let lastIndex = this.getters.pinnedTabs.length
   let tabsCount = this.state.tabs.length
+  let eatenTabs = []
   let tab, i
   for (let panel of this.state.panels) {
     if (panel.type === 'bookmarks') continue
@@ -119,6 +120,7 @@ function updatePanelsTabs() {
       } else if (tab.panelId === null) {
         tab.panelId = panel.id
         panel.tabs.push(tab)
+        eatenTabs.push(tab)
       } else {
         break
       }
@@ -133,6 +135,11 @@ function updatePanelsTabs() {
       panel.startIndex = lastIndex
       panel.endIndex = panel.startIndex
     }
+  }
+
+  if (eatenTabs.length) {
+    let info = eatenTabs.map(t => `${t.panelId} <- n${t.index} #${t.id}`).join('\n  ')
+    this.actions.warnLog('Tabs were eaten by panel:\n  ' + info)
   }
 }
 

@@ -100,6 +100,8 @@ async function scheduleSnapshots() {
   else nextTimeout = interval - elapsed
 
   Actions.scheduleNextSnapshot(nextTimeout)
+
+  Actions.infoLog('Auto snapshots scheduled')
 }
 
 /**
