@@ -1,11 +1,11 @@
 {
   "env": {
     "browser": true,
-    "es6": true
+    "es2020": true
   },
   "extends": ["eslint:recommended", "plugin:vue/recommended", "plugin:prettier/recommended"],
   "parserOptions": {
-    "ecmaVersion": 2018,
+    "ecmaVersion": 2020,
     "sourceType": "module"
   },
   "rules": {
@@ -42,5 +42,34 @@
     "require": true,
     "xdescribe": true,
     "xit": true
-  }
+  },
+  "plugins": ["@typescript-eslint"],
+  "overrides": [
+    {
+      "files": ["src/**/*.ts"],
+
+      "extends": [
+        "eslint:recommended",
+        "plugin:vue/recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking",
+        "prettier/@typescript-eslint",
+        "plugin:prettier/recommended"
+      ],
+
+      "parser": "vue-eslint-parser",
+      "parserOptions": {
+        "parser": "@typescript-eslint/parser",
+        "ecmaVersion": 2020,
+        "sourceType": "module",
+        "project": "tsconfig.json",
+        "tsconfigRootDir": "."
+      },
+      "rules": {
+        "@typescript-eslint/no-namespace": "off"
+      },
+      "plugins": []
+    }
+  ]
 }
