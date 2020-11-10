@@ -69,6 +69,11 @@ function onTabCreated(tab) {
     if (!autoGroupTab) tab.openerTabId = this.actions.getParentForNewTab(panel, tab.openerTabId)
   }
 
+  // Put new tab in container if configured so
+  if (panel && panel.newTabCtx !== 'none') {
+    tab.cookieStoreId = panel.newTabCtx
+  }
+
   // If new tab has wrong possition - move it
   if (!tab.pinned && tab.index !== index) {
     tab.destPanelId = panel.id
