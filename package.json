@@ -76,7 +76,7 @@
     "useTabs": false
   },
   "alias": {
-    "vue": "./node_modules/vue/dist/vue.esm.js"
+    "vue": "./node_modules/vue/dist/vue.runtime.esm.js"
   },
   "browserslist": [
     "last 1 Chrome version"
