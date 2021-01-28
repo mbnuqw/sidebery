@@ -199,20 +199,7 @@
     <svg id="icon_close_other_tabs" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M13 0l3 5h-2v1h-2V5h-2l3-5zM.4 4.6L3.8 8 .4 11.4l1.2 1.2L5 9.2l3.4 3.4.6-.6v-1L8 9.7 6.1 8 8 6.3 9 5V4l-.6-.6L5 6.8 1.6 3.4.4 4.6zM15 9V7h-4v2h4zM16 11l-3 5-3-5h2v-1h2v1h2z"/></svg>
   </div>
 
-  <div
-    id="root"
-    class="root"
-    :data-nav-layout="$store.state.navBarLayout"
-    :data-native-scrollbar="$store.state.nativeScrollbars"
-    :data-theme="$store.state.theme"
-    :data-style="$store.state.style"
-    :data-animations="animations"
-    :data-pinned-tabs-position="pinnedTabsPosition"
-    :data-pinned-tabs-list="$store.state.pinnedTabsList"
-    :data-tabs-tree-lvl-marks="$store.state.tabsLvlDots"
-    :data-tabs-close-btn="$store.state.showTabRmBtn">
-    <sidebar ref="sidebar"></sidebar>
-  </div>
+  <div id="app"></div>
 
   <script src="sidebar.js" defer></script>
 </body>

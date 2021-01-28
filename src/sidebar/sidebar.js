@@ -25,28 +25,8 @@ Vue.mixin(initActionsMixin(Actions))
 initMsgHandling(State, Actions)
 
 export default new Vue({
-  el: '#root',
+  el: '#app',
   store: Store,
-
-  components: {
-    Sidebar,
-  },
-
-  data() {
-    return {}
-  },
-
-  computed: {
-    pinnedTabsPosition() {
-      if (!Store.getters.pinnedTabs.length) return 'none'
-      return State.pinnedTabsPosition
-    },
-
-    animations() {
-      if (!Store.state.animations) return 'none'
-      else return Store.state.animationSpeed || 'fast'
-    },
-  },
 
   async created() {
     State.instanceType = 'sidebar'
@@ -106,4 +86,6 @@ export default new Vue({
     Handlers.resetKeybindingListeners()
     Handlers.resetHandlers()
   },
+
+  render: h => h(Sidebar),
 })

@@ -1,54 +1,64 @@
 <template lang="pug">
-.Sidebar(
-  :data-hidden-panels-bar="$store.state.hiddenPanelsBar"
-  :data-drag="$store.state.dragMode"
-  :data-pointer="pointerMode"
-  :data-nav-inline="$store.state.navBarInline"
-  :data-panel-type="activePanelType"
-  @wheel.passive="onWheel"
-  @contextmenu.stop.prevent=""
-  @dragover.prevent="onDragMove"
-  @dragenter="onDragEnter"
-  @dragleave="onDragLeave"
-  @drop.stop.prevent="onDrop"
-  @mouseenter="onMouseEnter"
-  @mouseleave="onMouseLeave"
-  @mousedown="onMouseDown"
-  @mouseup="onMouseUp"
-  @mousemove.passive="onMouseMove"
-  @focusout="onFocusOut")
+#root.root(
+  :data-nav-layout="$store.state.navBarLayout"
+  :data-native-scrollbar="$store.state.nativeScrollbars"
+  :data-theme="$store.state.theme"
+  :data-style="$store.state.style"
+  :data-animations="animations"
+  :data-pinned-tabs-position="pinnedTabsPosition"
+  :data-pinned-tabs-list="$store.state.pinnedTabsList"
+  :data-tabs-tree-lvl-marks="$store.state.tabsLvlDots"
+  :data-tabs-close-btn="$store.state.showTabRmBtn")
+  .Sidebar(
+    :data-hidden-panels-bar="$store.state.hiddenPanelsBar"
+    :data-drag="$store.state.dragMode"
+    :data-pointer="pointerMode"
+    :data-nav-inline="$store.state.navBarInline"
+    :data-panel-type="activePanelType"
+    @wheel.passive="onWheel"
+    @contextmenu.stop.prevent=""
+    @dragover.prevent="onDragMove"
+    @dragenter="onDragEnter"
+    @dragleave="onDragLeave"
+    @drop.stop.prevent="onDrop"
+    @mouseenter="onMouseEnter"
+    @mouseleave="onMouseLeave"
+    @mousedown="onMouseDown"
+    @mouseup="onMouseUp"
+    @mousemove.passive="onMouseMove"
+    @focusout="onFocusOut")
 
-  Confirm
-  CtxMenu
+    Confirm
+    CtxMenu
 
-  .pointer(ref="pointer" :data-lvl="pointerLvl")
-    .arrow(
-      :data-expanding="pointerExpanding"
-      @animationend="onPointerExpanded"
-      @dragenter="onPointerDragenter"
-      @dragleave="onPointerDragleave")
+    .pointer(ref="pointer" :data-lvl="pointerLvl")
+      .arrow(
+        :data-expanding="pointerExpanding"
+        @animationend="onPointerExpanded"
+        @dragenter="onPointerDragenter"
+        @dragleave="onPointerDragleave")
 
-  PinnedDock(v-if="$store.state.pinnedTabsPosition !== 'panel'")
+    PinnedDock(v-if="$store.state.pinnedTabsPosition !== 'panel'")
 
-  .box(ref="box")
-    .dimmer(@mousedown="$store.state.hiddenPanelsBar = false")
-    NavBar(v-if="$store.state.navBarLayout !== 'hidden'")
-    .panel-box
-      Component.panel(
-        v-for="(panel, i) in $store.state.panels"
-        ref="panels"
-        :key="panel.id"
-        :is="getPanelComponent(panel)"
-        :data-pos="getPanelPos(i)"
-        :index="i"
-        :panel="panel"
-        :store-id="panel.cookieStoreId"
-        :active="$store.state.panelIndex === i")
-      Transition(name="panel")
-        WindowInput(v-if="$store.state.panelIndex === -5" :data-pos="windowInputPos")
-      Transition(name="hidden-panels-bar")
-        HiddenPanelsBar(v-if="$store.state.hiddenPanelsBar")
-  Notifications
+    .box(ref="box")
+      .dimmer(@mousedown="$store.state.hiddenPanelsBar = false")
+      NavBar(v-if="$store.state.navBarLayout !== 'hidden'")
+      .panel-box
+        Component.panel(
+          v-for="(panel, i) in $store.state.panels"
+          ref="panels"
+          :key="panel.id"
+          :is="getPanelComponent(panel)"
+          :data-pos="getPanelPos(i)"
+          :index="i"
+          :panel="panel"
+          :store-id="panel.cookieStoreId"
+          :active="$store.state.panelIndex === i")
+        Transition(name="panel")
+          WindowInput(v-if="$store.state.panelIndex === -5" :data-pos="windowInputPos")
+        Transition(name="hidden-panels-bar")
+          HiddenPanelsBar(v-if="$store.state.hiddenPanelsBar")
+    Notifications
 </template>
 
 <script>
@@ -92,6 +102,16 @@ export default {
    * --- Computed ---
    */
   computed: {
+    pinnedTabsPosition() {
+      if (!this.$store.getters.pinnedTabs.length) return 'none'
+      return State.pinnedTabsPosition
+    },
+
+    animations() {
+      if (!this.$store.state.animations) return 'none'
+      else return this.$store.state.animationSpeed || 'fast'
+    },
+
     /**
      * Get window-input-panel position
      */
