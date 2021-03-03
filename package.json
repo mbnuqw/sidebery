@@ -56,7 +56,7 @@
     "eslint-plugin-vue": "6.2.2",
     "jest": "25.4.0",
     "parcel-bundler": "1.12.4",
-    "pug": "2.0.4",
+    "pug": "3.0.1",
     "regenerator-runtime": "0.13.5",
     "stylus": "0.54.7",
     "typescript": "3.9.5",
