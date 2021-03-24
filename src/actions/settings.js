@@ -11,8 +11,6 @@ async function loadSettings() {
     if (settings[key] === undefined) continue
     this.state[key] = settings[key]
   }
-
-  this.actions.infoLog('Settings loaded')
 }
 
 /**

@@ -157,8 +157,6 @@ function onTabCreated(tab) {
           /** itsokay **/
         })
     }
-
-    this.actions.infoLog(`Tab created: n${tab.index} #${tab.id} p${tab.panelId}`)
   }
 
   // Update succession
@@ -539,8 +537,6 @@ function onTabRemoved(tabId, info, childfree) {
       /** itsokay **/
     })
   }
-
-  this.actions.infoLog(`Tab removed: n${tab.index} #${tab.id} p${tab.panelId}`)
 }
 
 /**
@@ -559,8 +555,6 @@ function onTabMoved(id, info) {
     this.actions.closeCtxMenu()
     this.actions.resetSelection()
   }
-
-  this.actions.infoLog(`Tab moving: #${id} ${info.fromIndex} > ${info.toIndex}`)
 
   // Check if target tab already placed
   let toIndex = info.toIndex

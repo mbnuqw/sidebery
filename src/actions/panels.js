@@ -80,7 +80,6 @@ async function loadPanels() {
 
   this.state.panels = normPanels
   this.state.panelsMap = panelsMap
-  this.actions.infoLog('Panels loaded')
 
   if (saveNeeded) this.actions.savePanels()
 }

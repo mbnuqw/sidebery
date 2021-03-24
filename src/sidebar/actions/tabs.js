@@ -108,7 +108,6 @@ async function loadTabsFromGlobalStorage() {
   }
 
   this.state.tabs = tabs
-  this.actions.infoLog('Tabs loaded (from global storage): ' + tabs.length)
   this.actions.updatePanelsTabs()
   this.actions.updateTabsTree()
 
@@ -160,7 +159,6 @@ async function loadTabsFromSessionStorage() {
   let offset = 0
   let activeTab
   let idsMap = {}
-  let logWrongPanels = []
 
   // Set tabs initial props and update state
   this.state.tabsMap = []
@@ -204,7 +202,6 @@ async function loadTabsFromSessionStorage() {
       // Normalize panelId
       let panel = this.state.panelsMap[tab.panelId]
       if (!panel) {
-        logWrongPanels.push(tab.panelId)
         if (tab.pinned) tab.panelId = DEFAULT_CTX_ID
         else tab.panelId = lastPanel.id
       } else {
@@ -225,12 +222,7 @@ async function loadTabsFromSessionStorage() {
     if (tab.active) activeTab = tab
   }
 
-  if (logWrongPanels.length) {
-    this.actions.warnLog('Tabs loading: Cannot find panels: ' + logWrongPanels.join(' '))
-  }
-
   this.state.tabs = tabs
-  this.actions.infoLog('Tabs loaded (from session storage): ' + tabs.length)
   this.actions.updatePanelsTabs()
   this.actions.updateTabsTree()
 
@@ -294,8 +286,6 @@ async function recreateParentGroups(tabs, groups, idsMap, index) {
     this.state.tabsMap[groupTab.id] = groupTab
     this.actions.saveTabData(groupTab)
   }
-
-  this.actions.infoLog(`Recreated ${groups.length} groups at ${index} index`)
 }
 
 /**
@@ -419,7 +409,6 @@ async function loadTabsFromInlineData(tabs, dataTabIndex) {
   }
 
   this.state.tabs = tabs
-  this.actions.infoLog('Tabs loaded (from inline data): ' + tabs.length)
   this.actions.updatePanelsTabs()
   this.actions.updateTabsTree()
 

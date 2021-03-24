@@ -24,8 +24,6 @@ function initTheme() {
 
   themeLinkEl.href = `../themes/${this.state.theme}/${this.state.instanceType}.css`
   setTimeout(() => EventBus.$emit('dynVarChange'), 120)
-
-  this.actions.infoLog('Theme initialized: ' + this.state.theme)
 }
 
 /**
@@ -37,7 +35,6 @@ async function loadCustomCSS() {
   if (!ans || !ans[fieldName]) return
 
   this.actions.applyCustomCSS(ans[fieldName])
-  this.actions.infoLog('Custom CSS loaded')
 }
 
 /**

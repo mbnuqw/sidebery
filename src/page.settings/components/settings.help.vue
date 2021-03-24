@@ -251,12 +251,6 @@ export default {
         dbg.bookmarks = err.toString()
       }
 
-      try {
-        dbg.logs = await browser.runtime.sendMessage({ instanceType: 'bg', action: 'getLogs' })
-      } catch (err) {
-        dbg.logs = err.toString()
-      }
-
       return dbg
     },
 

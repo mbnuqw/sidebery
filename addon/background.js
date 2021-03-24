@@ -9,9 +9,6 @@ void (async function main() {
   state.images = {}
   state.windows = {}
 
-  Actions.initLogs()
-  Actions.infoLog('Initialization start')
-
   // Init first-need stuff
   Actions.initToolbarButton()
   Actions.initGlobalMessaging()

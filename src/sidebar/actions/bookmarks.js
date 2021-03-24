@@ -63,7 +63,6 @@ async function loadBookmarks() {
 
   this.state.bookmarks = bookmarks[0].children
   this.state.bookmarksCount = count
-  this.actions.infoLog('Bookmarks loaded')
   panel.loading = 'ok'
   setTimeout(() => {
     panel.loading = false

@@ -44,7 +44,6 @@ async function loadContainers() {
   }
 
   this.state.containers = containers
-  this.actions.infoLog('Containers loaded')
 
   if (saveNeeded) this.actions.saveContainers()
 }

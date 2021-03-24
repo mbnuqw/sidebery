@@ -6,7 +6,6 @@ import MsgActions from './actions/msg.js'
 import ProxyActions from './actions/proxy.js'
 import FaviconsActions from './actions/favicons.js'
 import StorageActions from './actions/storage.js'
-import LogsActions from './actions/logs.js'
 import MiscActions from './actions/misc.js'
 
 const Actions = {
@@ -18,7 +17,6 @@ const Actions = {
   ...ProxyActions,
   ...FaviconsActions,
   ...StorageActions,
-  ...LogsActions,
   ...MiscActions,
 }
 

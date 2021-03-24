@@ -7,7 +7,6 @@ import TabsActions from './actions/tabs'
 import BookmarksActions from './actions/bookmarks'
 import StylesActions from './actions/styles'
 import CtxMenuActions from './actions/menu'
-import LogsActions from '../actions/logs'
 import MiscActions from './actions/misc'
 
 const Actions = {
@@ -20,7 +19,6 @@ const Actions = {
   ...BookmarksActions,
   ...StylesActions,
   ...CtxMenuActions,
-  ...LogsActions,
   ...MiscActions,
 }
 
