@@ -68,6 +68,7 @@
     "vuex": "3.6.2"
   },
   "prettier": {
+    "arrowParens": "avoid",
     "semi": false,
     "singleQuote": true,
     "trailingComma": "es5",
