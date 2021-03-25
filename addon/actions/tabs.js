@@ -233,9 +233,17 @@ async function updateTabsTree() {
 function setupTabsListeners() {
   browser.tabs.onCreated.addListener(this.actions.onTabCreated)
   browser.tabs.onRemoved.addListener(this.actions.onTabRemoved)
-  browser.tabs.onUpdated.addListener(this.actions.onTabUpdated, {
-    properties: ['pinned', 'title', 'status'],
-  })
+  try {
+    // From v88 (https://bugzilla.mozilla.org/show_bug.cgi?id=1680279)
+    browser.tabs.onUpdated.addListener(this.actions.onTabUpdated, {
+      properties: ['pinned', 'title', 'status', 'url'],
+    })
+  } catch (err) {
+    // Before v88 (Remove after next ESR - v91)
+    browser.tabs.onUpdated.addListener(this.actions.onTabUpdated, {
+      properties: ['pinned', 'title', 'status'],
+    })
+  }
   browser.tabs.onActivated.addListener(this.actions.onTabActivated)
   browser.tabs.onMoved.addListener(this.actions.onTabMoved)
   browser.tabs.onAttached.addListener(this.actions.onTabAttached)

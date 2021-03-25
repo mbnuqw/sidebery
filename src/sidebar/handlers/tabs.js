@@ -821,18 +821,21 @@ function onTabActivated(info) {
  */
 function setupTabsListeners() {
   browser.tabs.onCreated.addListener(this.handlers.onTabCreated)
-  browser.tabs.onUpdated.addListener(this.handlers.onTabUpdated, {
-    properties: [
-      'audible',
-      'discarded',
-      'favIconUrl',
-      'hidden',
-      'mutedInfo',
-      'pinned',
-      'status',
-      'title',
-    ],
-  })
+  try {
+    // From v88 (https://bugzilla.mozilla.org/show_bug.cgi?id=1680279)
+    browser.tabs.onUpdated.addListener(this.handlers.onTabUpdated, {
+      // prettier-ignore
+      properties: ['audible','discarded','favIconUrl','hidden','mutedInfo','pinned','status',
+        'title','url'],
+    })
+  } catch (err) {
+    // Before v88 (Remove after next ESR - v91)
+    browser.tabs.onUpdated.addListener(this.handlers.onTabUpdated, {
+      // prettier-ignore
+      properties: ['audible','discarded','favIconUrl','hidden','mutedInfo','pinned','status',
+        'title'],
+    })
+  }
   browser.tabs.onRemoved.addListener(this.handlers.onTabRemoved)
   browser.tabs.onMoved.addListener(this.handlers.onTabMoved)
   browser.tabs.onDetached.addListener(this.handlers.onTabDetached)
