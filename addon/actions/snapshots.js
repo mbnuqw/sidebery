@@ -49,9 +49,7 @@ async function createSnapshot() {
   }
 
   currentSnapshot = {
-    id: Math.random()
-      .toString(16)
-      .replace('0.', Date.now().toString(16)),
+    id: Math.random().toString(16).replace('0.', Date.now().toString(16)),
     time: Date.now(),
     containersById,
     panels: panels_v4,

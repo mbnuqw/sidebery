@@ -15,7 +15,7 @@ let pinTab
 let tabs = []
 let groupLen, groupParentId
 
-void (async function() {
+void (async function () {
   let { settings, cssVars } = await browser.storage.local.get({
     settings: DEFAULT_SETTINGS,
     cssVars: {},

@@ -45,7 +45,7 @@ function createSettingsMenu() {
   browser.menus.create({
     id: 'open_settings',
     title: 'Open settings',
-    icons: { '16': 'assets/logo-native.svg' },
+    icons: { 16: 'assets/logo-native.svg' },
     onclick: () => browser.runtime.openOptionsPage(),
     contexts: ['browser_action'],
   })

@@ -1,6 +1,6 @@
 import { DEFAULT_SETTINGS, CUSTOM_CSS_VARS } from '../../addon/defaults'
 
-void (async function() {
+void (async function () {
   let linkEl = document.getElementById('url')
   let copyBtnEl = document.getElementById('copy_btn')
 

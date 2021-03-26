@@ -72,7 +72,7 @@ export default new Vue({
   mounted() {
     Actions.updateSidebarWidth()
     Actions.updateFontSize()
-    Store.watch(Object.getOwnPropertyDescriptor(State, 'fontSize').get, function() {
+    Store.watch(Object.getOwnPropertyDescriptor(State, 'fontSize').get, function () {
       Actions.updateFontSize()
     })
   },

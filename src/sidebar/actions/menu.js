@@ -185,7 +185,7 @@ function createNativeOption(ctx, option, parentId, parentName) {
     optProps.title = optProps.title[0].toUpperCase() + optProps.title.slice(1)
   }
 
-  if (icon) optProps.icons = { '16': icon }
+  if (icon) optProps.icons = { 16: icon }
   optProps.onclick = () => {
     if (typeof option.action === 'string') {
       if (!option.args) Actions[option.action]()

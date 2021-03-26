@@ -1294,10 +1294,7 @@ async function clearTabsCookies(tabIds) {
     tab.loading = true
 
     let url = new URL(tab.url)
-    let domain = url.hostname
-      .split('.')
-      .slice(-2)
-      .join('.')
+    let domain = url.hostname.split('.').slice(-2).join('.')
 
     if (!domain) {
       tab.loading = 'err'

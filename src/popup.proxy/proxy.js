@@ -1,6 +1,6 @@
 import { DEFAULT_SETTINGS, CUSTOM_CSS_VARS } from '../../addon/defaults'
 
-void (async function() {
+void (async function () {
   let checkInfoBtnEl = document.getElementById('btn_check_ip')
   let confBtnEl = document.getElementById('btn_conf')
   let ipValueEl = document.getElementById('info_ip')
