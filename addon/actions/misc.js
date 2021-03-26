@@ -18,6 +18,7 @@ async function loadPermissions() {
   this.permWebRequestBlocking = await browser.permissions.contains({
     permissions: ['webRequest', 'webRequestBlocking'],
   })
+  this.permProxy = await browser.permissions.contains({ permissions: ['proxy'] })
 
   if (!this.permAllUrls) {
     for (let c of Object.values(this.containers)) {
@@ -32,6 +33,13 @@ async function loadPermissions() {
   if (!this.permWebRequestBlocking) {
     for (let c of Object.values(this.containers)) {
       if (c.userAgentActive) c.userAgentActive = false
+    }
+  }
+
+  if (!this.permProxy) {
+    for (let c of Object.values(this.containers)) {
+      if (c.proxified) c.proxified = false
+      if (c.proxy) c.proxy.type = 'direct'
     }
   }
 }

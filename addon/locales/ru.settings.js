@@ -426,6 +426,10 @@ export default {
   'settings.web_request_blocking_info': {
     message: 'Необходимо для:\n- Настройки User-Agent контейнеров',
   },
+  'settings.proxy_label': { message: 'Прокси' },
+  'settings.proxy_info': {
+    message: 'Необходимо для:\n- Настройки прокси контейнеров',
+  },
 
   // --- Storage
   'settings.storage_title': { message: 'Данные' },

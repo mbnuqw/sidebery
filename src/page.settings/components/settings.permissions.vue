@@ -37,6 +37,15 @@ section
       :value="$store.state.permWebRequestBlocking"
       :note="t('settings.web_request_blocking_info')"
       @input="togglePermWebRequestBlocking")
+  .permission(
+    ref="proxy"
+    :data-highlight="$store.state.highlightedField === 'proxy'"
+    @click="onHighlighClick('proxy')")
+    ToggleField(
+      label="settings.proxy_label"
+      :value="$store.state.permProxy"
+      :note="t('settings.proxy_info')"
+      @input="togglePermProxy")
 </template>
 
 <script>
@@ -124,6 +133,21 @@ export default {
         browser.permissions.request(request).then(allowed => {
           browser.runtime.sendMessage({ action: 'loadPermissions' })
           State.permWebRequestBlocking = allowed
+          State.permAllUrls = allowed
+        })
+      }
+    },
+
+    async togglePermProxy() {
+      if (State.permProxy) {
+        await browser.permissions.remove({ permissions: ['proxy'] })
+        browser.runtime.sendMessage({ action: 'loadPermissions' })
+        Actions.loadPermissions()
+      } else {
+        const request = { origins: ['<all_urls>'], permissions: ['proxy'] }
+        browser.permissions.request(request).then(allowed => {
+          browser.runtime.sendMessage({ action: 'loadPermissions' })
+          State.permProxy = allowed
           State.permAllUrls = allowed
         })
       }

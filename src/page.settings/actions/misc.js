@@ -38,6 +38,7 @@ async function loadPermissions(init) {
   this.state.permWebRequestBlocking = await browser.permissions.contains({
     permissions: ['webRequest', 'webRequestBlocking'],
   })
+  this.state.permProxy = await browser.permissions.contains({ permissions: ['proxy'] })
 
   if (!this.state.permAllUrls) {
     for (let c of Object.values(this.state.containers)) {
@@ -59,6 +60,14 @@ async function loadPermissions(init) {
   if (!this.state.permWebRequestBlocking) {
     for (let c of Object.values(this.state.containers)) {
       if (c.userAgentActive) c.userAgentActive = false
+    }
+    if (!init) this.actions.saveContainersDebounced()
+  }
+
+  if (!this.state.permProxy) {
+    for (let c of Object.values(this.state.containers)) {
+      if (c.proxified) c.proxified = false
+      if (c.proxy) c.proxy.type = 'direct'
     }
     if (!init) this.actions.saveContainersDebounced()
   }
@@ -100,6 +109,7 @@ async function updateActiveView() {
   if (hash === 'tab-hide') return this.actions.goToPerm('tab_hide')
   if (hash === 'clipboard-write') return this.actions.goToPerm('clipboard_write')
   if (hash === 'web-request-blocking') return this.actions.goToPerm('web_request_blocking')
+  if (hash === 'proxy') return this.actions.goToPerm('proxy')
 
   if (hash.startsWith('menu_editor')) {
     setTimeout(

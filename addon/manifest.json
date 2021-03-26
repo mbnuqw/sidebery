@@ -27,7 +27,6 @@
     "contextualIdentities",
     "cookies",
     "storage",
-    "proxy",
     "bookmarks",
     "sessions",
     "menus",
@@ -38,6 +37,7 @@
   "optional_permissions": [
     "<all_urls>",
     "tabHide",
+    "proxy",
     "clipboardWrite",
     "webRequest",
     "webRequestBlocking"

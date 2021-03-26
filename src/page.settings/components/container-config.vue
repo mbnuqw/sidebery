@@ -354,6 +354,11 @@ export default {
           this.switchProxy('direct')
           State.selectedContainer = null
           return
+        } else if (!State.permProxy) {
+          window.location.hash = 'proxy'
+          this.switchProxy('direct')
+          State.selectedContainer = null
+          return
         }
       }
 

@@ -41,6 +41,7 @@ export default {
   permTabHide: false,
   permClipboardWrite: false,
   permWebRequestBlocking: false,
+  permProxy: false,
 
   dbgDetails: '',
 }

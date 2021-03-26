@@ -262,12 +262,14 @@ function updateReqHandlerDebounced() {
 }
 
 function turnOnReqHandler() {
+  if (!browser.proxy) return
   if (!browser.proxy.onRequest.hasListener(Actions.proxyReqHandler)) {
     browser.proxy.onRequest.addListener(Actions.proxyReqHandler, { urls: ['<all_urls>'] })
   }
 }
 
 function turnOffReqHandler() {
+  if (!browser.proxy) return
   if (browser.proxy.onRequest.hasListener(Actions.proxyReqHandler)) {
     browser.proxy.onRequest.removeListener(Actions.proxyReqHandler)
   }

@@ -377,6 +377,10 @@ export default {
   'settings.web_request_blocking_info': {
     message: 'Required for:\n- Changing the User-Agent per container',
   },
+  'settings.proxy_label': { message: 'Proxy:' },
+  'settings.proxy_info': {
+    message: 'Required for:\n- Per-container proxy',
+  },
 
   // --- Storage
   'settings.storage_title': { message: 'Storage' },

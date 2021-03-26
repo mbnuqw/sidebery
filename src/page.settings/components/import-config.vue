@@ -66,6 +66,7 @@ export default {
       permWebData: false,
       permTabHide: false,
       permWebReqBlock: false,
+      permProxy: false,
     }
   },
 
@@ -176,14 +177,19 @@ export default {
       let webData = false
       let webReqBlock = false
       let tabsHide = false
+      let proxy = false
       this.permWebReqBlock = false
       this.permWebData = false
       this.permTabHide = false
+      this.permProxy = false
       this.permNeeded = false
 
       if (this.containers && State.importConfig.containers_v4) {
         for (let ctr of Object.values(State.importConfig.containers_v4)) {
-          if (ctr.proxified) webData = true
+          if (ctr.proxified) {
+            webData = true
+            proxy = true
+          }
           if (ctr.includeHostsActive) webData = true
           if (ctr.excludeHostsActive) webData = true
           if (ctr.userAgentActive) {
@@ -211,6 +217,10 @@ export default {
         this.permTabHide = true
         this.permNeeded = true
       }
+      if (proxy && !State.permProxy) {
+        this.permProxy = true
+        this.permNeeded = true
+      }
     },
 
     requestPermissions() {
@@ -218,6 +228,7 @@ export default {
       if (this.permWebData) request.origins.push('<all_urls>')
       if (this.permWebReqBlock) request.permissions.push('webRequest', 'webRequestBlocking')
       if (this.permTabHide) request.permissions.push('tabHide')
+      if (this.permProxy) request.permissions.push('proxy')
       browser.permissions.request(request).then(allowed => {
         browser.runtime.sendMessage({ action: 'loadPermissions' })
         if (this.permWebData) {
@@ -231,6 +242,10 @@ export default {
         if (this.permTabHide) {
           State.permTabHide = allowed
           this.permTabHide = !allowed
+        }
+        if (this.permProxy) {
+          State.permProxy = allowed
+          this.permProxy = !allowed
         }
         this.permNeeded = !allowed
       })
