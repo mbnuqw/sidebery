@@ -78,13 +78,10 @@ You can setup auto snapshots that will keep info about open windows and tabs.
 
 ## Build
 
-> Framework: Vue  
-> Bundler: Parcel  
-> Tests: Jest
-
 Install dependencies: `npm install`  
-Build all parts of addon: `npm run build`  
-Create addon archive in ./dist: `npm run build.ext`
+Build all parts of addon in release mode: `npm run build`  
+Run ./addon in browser: `npm run dev.ext[.beta|.nightly]`  
+Create addon archive in ./dist: `npm run build.ext`  
 
 ---
 
