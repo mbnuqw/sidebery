@@ -247,8 +247,6 @@ async function loadTabsFromSessionStorage() {
     let target = Utils.findSuccessorTab(this.state, activeTab)
     if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
   }
-
-  this.state.tabs.forEach(t => this.actions.saveTabData(t))
 }
 
 /**
@@ -429,11 +427,9 @@ async function loadTabsFromInlineData(tabs, dataTabIndex) {
     if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
   }
 
-  if (this.state.stateStorage === 'global') this.actions.saveTabsData()
-  if (this.state.stateStorage === 'session') {
-    this.state.tabs.forEach(t => this.actions.saveTabData(t))
-    this.actions.saveGroups()
-  }
+  this.actions.saveTabsData()
+  this.state.tabs.forEach(t => this.actions.saveTabData(t))
+  this.actions.saveGroups()
 }
 
 /**
@@ -496,7 +492,6 @@ function saveTabData(tabOrId) {
     panelId: tabOrId.panelId,
     parentId: tabOrId.parentId,
     folded: tabOrId.folded,
-    lvl: tabOrId.lvl,
   })
 }
 
@@ -628,11 +623,9 @@ function normalizeTabs(delay = 500) {
     this.state.tabsNormalizing = false
     this._normTabsMoving = false
 
-    if (this.state.stateStorage === 'global') this.actions.saveTabsData()
-    if (this.state.stateStorage === 'session') {
-      this.state.tabs.forEach(t => this.actions.saveTabData(t))
-      this.actions.saveGroups()
-    }
+    this.actions.saveTabsData()
+    this.state.tabs.forEach(t => this.actions.saveTabData(t))
+    this.actions.saveGroups()
   }, delay)
 }
 
@@ -1418,7 +1411,7 @@ async function moveTabsToNewWin(tabIds, incognito = false) {
 
   await Promise.all(moving)
 
-  if (this.state.stateStorage === 'global') this.actions.saveTabsData()
+  this.actions.saveTabsData()
 }
 
 /**
@@ -1475,7 +1468,7 @@ async function moveTabsToWin(tabIds, windowOrConfig) {
     )
   }
 
-  if (this.state.stateStorage === 'global') this.actions.saveTabsData()
+  this.actions.saveTabsData()
 }
 
 /**
@@ -1606,10 +1599,8 @@ async function moveTabsToPanel(tabIds, panelId) {
     this.actions.updateTabsTree(activePanel.startIndex, activePanel.endIndex + 1)
   }
   if (activeTab) this.state.panelIndex = targetPanel.index
-  if (this.state.stateStorage === 'global') this.actions.saveTabsData()
-  if (this.state.stateStorage === 'session') {
-    tabs.forEach(t => this.actions.saveTabData(t))
-  }
+  this.actions.saveTabsData()
+  tabs.forEach(t => this.actions.saveTabData(t))
 }
 
 /**
@@ -1697,8 +1688,8 @@ function foldTabsBranch(tabId) {
   if (this.state.hideFoldedTabs && toHide.length) {
     browser.tabs.hide(toHide)
   }
-  if (this.state.stateStorage === 'global') this.actions.saveTabsData()
-  if (this.state.stateStorage === 'session') this.actions.saveTabData(tabId)
+  this.actions.saveTabsData()
+  this.actions.saveTabData(tabId)
 }
 
 /**
@@ -1758,8 +1749,8 @@ function expTabsBranch(tabId) {
   if (this.state.hideFoldedTabs && toShow.length) {
     browser.tabs.show(toShow)
   }
-  if (this.state.stateStorage === 'global') this.actions.saveTabsData()
-  if (this.state.stateStorage === 'session') this.actions.saveTabData(tabId)
+  this.actions.saveTabsData()
+  this.actions.saveTabData(tabId)
 }
 
 /**
@@ -1980,10 +1971,8 @@ async function moveDroppedNodes(dropIndex, dropParent, nodes, pin, currentPanel)
 
     // If there are no moving, just update tabs tree
     this.actions.updateTabsTree(currentPanel.startIndex, currentPanel.endIndex + 1)
-    if (this.state.stateStorage === 'global') this.actions.saveTabsData()
-    if (this.state.stateStorage === 'session') {
-      tabs.forEach(t => this.actions.saveTabData(t))
-    }
+    this.actions.saveTabsData()
+    tabs.forEach(t => this.actions.saveTabData(t))
   }
 
   // Hide/Show tabs
@@ -2151,10 +2140,8 @@ function flattenTabs(tabIds) {
   }
 
   this.actions.updateTabsTree(ttf[0].index - 1, ttf[ttf.length - 1].index + 1)
-  if (this.state.stateStorage === 'global') this.actions.saveTabsData()
-  if (this.state.stateStorage === 'session') {
-    ttf.forEach(t => this.actions.saveTabData(t))
-  }
+  this.actions.saveTabsData()
+  ttf.forEach(t => this.actions.saveTabData(t))
 }
 
 /**
@@ -2228,10 +2215,8 @@ async function groupTabs(tabIds, conf = {}) {
     }
   }
   this.actions.updateTabsTree(tabs[0].index - 2, tabs[tabs.length - 1].index + 1)
-  if (this.state.stateStorage === 'global') this.actions.saveTabsData()
-  if (this.state.stateStorage === 'session') {
-    tabs.forEach(t => this.actions.saveTabData(t))
-  }
+  this.actions.saveTabsData()
+  tabs.forEach(t => this.actions.saveTabData(t))
 }
 
 /**

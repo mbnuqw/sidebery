@@ -95,10 +95,8 @@ async function updatePanels(newPanels) {
   }
 
   // Save state
-  if (this.state.stateStorage === 'global') this.actions.saveTabsData()
-  if (this.state.stateStorage === 'session') {
-    this.state.tabs.forEach(t => this.actions.saveTabData(t))
-  }
+  this.actions.saveTabsData()
+  this.state.tabs.forEach(t => this.actions.saveTabData(t))
 }
 
 /**

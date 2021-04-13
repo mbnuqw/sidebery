@@ -137,8 +137,8 @@ function onTabCreated(tab) {
       }
     }
 
-    if (this.state.stateStorage === 'global') this.actions.saveTabsData()
-    if (this.state.stateStorage === 'session') this.actions.saveTabData(tab)
+    this.actions.saveTabsData()
+    this.actions.saveTabData(tab)
 
     const groupTab = this.actions.getGroupTab(tab)
     if (groupTab && !groupTab.discarded) {
@@ -168,9 +168,7 @@ function onTabCreated(tab) {
     }
   }
 
-  if (this.state.stateStorage === 'session' && tab.url.startsWith(GROUP_URL)) {
-    this.actions.saveGroups()
-  }
+  if (tab.url.startsWith(GROUP_URL)) this.actions.saveGroups()
 
   this.actions.recalcPanelScroll()
 
@@ -246,7 +244,7 @@ function onTabUpdated(tabId, change, tab) {
 
   // Url
   if (change.url !== undefined && change.url !== localTab.url) {
-    if (this.state.stateStorage === 'global') this.actions.saveTabsData()
+    this.actions.saveTabsData()
     if (this.state.highlightOpenBookmarks && this.state.bookmarksUrlMap) {
       if (this.state.bookmarksUrlMap[localTab.url]) {
         for (let b of this.state.bookmarksUrlMap[localTab.url]) {
@@ -262,9 +260,7 @@ function onTabUpdated(tabId, change, tab) {
     if (!change.url.startsWith(localTab.url.slice(0, 16))) {
       localTab.favIconUrl = ''
     }
-    if (this.state.stateStorage === 'session' && change.url.startsWith(GROUP_URL)) {
-      this.actions.saveGroups()
-    }
+    if (change.url.startsWith(GROUP_URL)) this.actions.saveGroups()
     if (
       this.state.urlRules &&
       this.state.urlRules.length &&
@@ -353,7 +349,7 @@ function onTabUpdated(tabId, change, tab) {
       if (localTab.moveTime + 1000 > Date.now()) {
         localTab.panelId = localTab.prevPanelId
         panel = this.state.panelsMap[localTab.panelId]
-        if (this.state.stateStorage === 'session') this.actions.saveTabData(localTab)
+        this.actions.saveTabData(localTab)
       }
     }
 
@@ -496,8 +492,8 @@ function onTabRemoved(tabId, info, childfree) {
     }
 
     // Save new tabs state
-    if (this.state.stateStorage === 'global') this.actions.saveTabsData()
-    if (this.state.stateStorage === 'session') this.actions.saveGroups()
+    this.actions.saveTabsData()
+    this.actions.saveGroups()
 
     // Update succession
     if (this.state.activateAfterClosing !== 'none') {
@@ -561,10 +557,8 @@ function onTabMoved(id, info) {
   if (info.toIndex > info.fromIndex) toIndex = toIndex - mvLen
   let tabAtTargetPlace = this.state.tabs[toIndex]
   if (tabAtTargetPlace && tabAtTargetPlace.id === id) {
-    if (this.state.stateStorage === 'global' && !this.state.movingTabs.length) {
-      this.actions.saveTabsData()
-    }
-    if (this.state.stateStorage === 'session') this.actions.saveTabData(id)
+    if (!this.state.movingTabs.length) this.actions.saveTabsData()
+    this.actions.saveTabData(id)
     if (this.state.tabsMap[id]) this.state.tabsMap[id].destPanelId = undefined
     return
   }
@@ -640,10 +634,8 @@ function onTabMoved(id, info) {
     this.actions.setPanel(this.state.panelsMap[movedTab.panelId].index)
   }
 
-  if (this.state.stateStorage === 'global' && !this.state.movingTabs.length) {
-    this.actions.saveTabsData()
-  }
-  if (this.state.stateStorage === 'session') this.actions.saveTabData(movedTab)
+  if (!this.state.movingTabs.length) this.actions.saveTabsData()
+  this.actions.saveTabData(movedTab)
 
   // Update succession
   if (!this.state.movingTabs.length && this.state.activateAfterClosing !== 'none') {

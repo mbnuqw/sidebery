@@ -551,10 +551,8 @@ function onKeyTabsIndent() {
   align.forEach(([a, b]) => (a.parentId = b.parentId))
 
   this.actions.updateTabsTree()
-  if (this.state.stateStorage === 'global') this.actions.saveTabsData()
-  if (this.state.stateStorage === 'session') {
-    selected.forEach(id => this.actions.saveTabData(id))
-  }
+  this.actions.saveTabsData()
+  selected.forEach(id => this.actions.saveTabData(id))
 }
 
 function onKeyTabsOutdent() {
@@ -589,10 +587,8 @@ function onKeyTabsOutdent() {
   }
 
   this.actions.updateTabsTree()
-  if (this.state.stateStorage === 'global') this.actions.saveTabsData()
-  if (this.state.stateStorage === 'session') {
-    selected.forEach(id => this.actions.saveTabData(id))
-  }
+  this.actions.saveTabsData()
+  selected.forEach(id => this.actions.saveTabData(id))
 }
 
 function onKeyMoveTabsUp() {
@@ -643,10 +639,8 @@ function onKeyMoveTabsUp() {
   }
 
   this.actions.updateTabsTree()
-  if (this.state.stateStorage === 'global') this.actions.saveTabsData()
-  if (this.state.stateStorage === 'session') {
-    toMove.forEach(t => this.actions.saveTabData(t))
-  }
+  this.actions.saveTabsData()
+  toMove.forEach(t => this.actions.saveTabData(t))
 
   if (this._preserveSelectionTimeout) {
     clearTimeout(this._preserveSelectionTimeout)
@@ -707,10 +701,8 @@ function onKeyMoveTabsDown() {
   }
 
   this.actions.updateTabsTree()
-  if (this.state.stateStorage === 'global') this.actions.saveTabsData()
-  if (this.state.stateStorage === 'session') {
-    toMove.forEach(t => this.actions.saveTabData(t))
-  }
+  this.actions.saveTabsData()
+  toMove.forEach(t => this.actions.saveTabData(t))
 
   if (this._preserveSelectionTimeout) {
     clearTimeout(this._preserveSelectionTimeout)

@@ -20,7 +20,6 @@ function updateSettings(settings) {
   let toggleBookmarks = this.state.bookmarksPanel !== settings.bookmarksPanel
   let theme = this.state.theme !== settings.theme
   let highlightOpenBookmarks = this.state.highlightOpenBookmarks !== settings.highlightOpenBookmarks
-  let stateStorage = this.state.stateStorage !== settings.stateStorage
   let bgNoise = this.state.bgNoise !== settings.bgNoise
   let ctxMenuCtrIgnore = this.state.ctxMenuIgnoreContainers !== settings.ctxMenuIgnoreContainers
 
@@ -85,21 +84,6 @@ function updateSettings(settings) {
 
   if (theme) {
     Actions.initTheme()
-  }
-
-  if (stateStorage) {
-    if (this.state.stateStorage === 'global') this.actions.saveTabsData()
-    if (this.state.stateStorage === 'session') {
-      for (let tab of this.state.tabs) {
-        browser.sessions.setTabValue(tab.id, 'data', {
-          id: tab.id,
-          panelId: tab.panelId,
-          parentId: tab.parentId,
-          folded: tab.folded,
-        })
-      }
-      this.actions.saveGroups()
-    }
   }
 
   if (bgNoise) {

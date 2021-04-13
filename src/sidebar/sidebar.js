@@ -62,8 +62,9 @@ export default new Vue({
     Actions.loadFavicons()
     Actions.loadPermissions(true)
     Actions.updateTabsVisability()
-    if (State.stateStorage === 'global') Actions.saveTabsData()
-    if (State.stateStorage === 'session') Actions.saveGroups()
+    Actions.saveTabsData()
+    Actions.saveGroups()
+    State.tabs.forEach(t => Actions.saveTabData(t))
 
     Actions.updateActiveGroupPage()
     Actions.connectToBG()
