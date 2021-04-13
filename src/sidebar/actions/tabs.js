@@ -83,18 +83,18 @@ async function loadTabsFromGlobalStorage() {
       idsMap[data.id] = tab.id
 
       if (tab.url.startsWith(GROUP_URL)) this.actions.linkGroupWithPinnedTab(tab, tabs)
+    }
 
-      // Normalize panelId
-      let panel = this.state.panelsMap[tab.panelId]
-      if (!panel) {
-        if (tab.pinned) tab.panelId = DEFAULT_CTX_ID
-        else tab.panelId = lastPanel.id
-      } else {
-        if (!tab.pinned) {
-          // Check order of panels
-          if (panel.index < lastPanel.index) tab.panelId = lastPanel.id
-          else lastPanel = panel
-        }
+    // Normalize panelId
+    let panel = this.state.panelsMap[tab.panelId]
+    if (!panel) {
+      if (tab.pinned) tab.panelId = DEFAULT_CTX_ID
+      else tab.panelId = lastPanel.id
+    } else {
+      if (!tab.pinned) {
+        // Check order of panels
+        if (panel.index < lastPanel.index) tab.panelId = lastPanel.id
+        else lastPanel = panel
       }
     }
 
@@ -198,18 +198,18 @@ async function loadTabsFromSessionStorage() {
       idsMap[data.id] = tab.id
 
       if (tab.url.startsWith(GROUP_URL)) this.actions.linkGroupWithPinnedTab(tab, tabs)
+    }
 
-      // Normalize panelId
-      let panel = this.state.panelsMap[tab.panelId]
-      if (!panel) {
-        if (tab.pinned) tab.panelId = DEFAULT_CTX_ID
-        else tab.panelId = lastPanel.id
-      } else {
-        if (!tab.pinned) {
-          // Check order of panels
-          if (panel.index < lastPanel.index) tab.panelId = lastPanel.id
-          else lastPanel = panel
-        }
+    // Normalize panelId
+    let panel = this.state.panelsMap[tab.panelId]
+    if (!panel) {
+      if (tab.pinned) tab.panelId = DEFAULT_CTX_ID
+      else tab.panelId = lastPanel.id
+    } else {
+      if (!tab.pinned) {
+        // Check order of panels
+        if (panel.index < lastPanel.index) tab.panelId = lastPanel.id
+        else lastPanel = panel
       }
     }
 
