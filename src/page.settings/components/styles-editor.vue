@@ -576,12 +576,6 @@ export default {
   async created() {
     this.cssVars = await Actions.getCSSVars()
     this.customCSS = await Actions.getCustomCSS(this.cssTarget)
-    this.$nextTick(() => {
-      if (this.$refs.cssEditor) {
-        this.$refs.cssEditor.style.height = '0px'
-        this.$refs.cssEditor.style.height = this.$refs.cssEditor.scrollHeight + 'px'
-      }
-    })
   },
 
   methods: {
@@ -647,10 +641,7 @@ export default {
     /**
      * Handle input
      */
-    onInput(e) {
-      e.target.style.height = '0px'
-      e.target.style.height = e.target.scrollHeight + 'px'
-
+    onInput() {
       this.applyCssDebounced()
     },
 
