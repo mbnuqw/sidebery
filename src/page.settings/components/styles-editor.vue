@@ -534,7 +534,6 @@
       .nav-item(
         :data-active="cssTarget === 'group'"
         @click="selectCssTarget('group')") {{t('styles.css_group')}}
-    .awesome CSS&#10;IS&#10;AWESOME
     .editor-box
       textarea.editor(
         ref="cssEditor"
