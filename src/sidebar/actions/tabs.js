@@ -155,7 +155,7 @@ async function loadTabsFromSessionStorage() {
   let tabsData = await Promise.all(tabs.map(t => browser.sessions.getTabValue(t.id, 'data')))
 
   let activePanel = this.state.panels[this.state.panelIndex] || this.state.panels[1]
-  let lastPanel = this.state.panels.find(p => p.tabs).id
+  let lastPanel = this.state.panels.find(p => p.tabs)
   let offset = 0
   let activeTab
   let idsMap = {}
