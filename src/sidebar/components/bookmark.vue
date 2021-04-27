@@ -12,7 +12,7 @@
     .fav
       .placeholder(v-if="!favicon"): svg: use(xlink:href="#icon_ff")
       img(v-if="favicon" :src="favicon")
-    .title(v-if="node.title") {{node.title}}
+    .title(v-if="node.title || node.url") {{node.title || node.url}}
 </template>
 
 <script>
@@ -33,7 +33,7 @@ export default {
     },
 
     tooltip() {
-      return `${this.node.title}\n${this.node.url}`
+      return this.node.title ? `${this.node.title}\n${this.node.url}` : this.node.url
     },
   },
 
