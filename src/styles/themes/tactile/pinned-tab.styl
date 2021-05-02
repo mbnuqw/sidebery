@@ -52,8 +52,11 @@
     z-index: 10
     background-color: var(--tabs-selected-bg)
 
-  &[data-discarded]
-    opacity: .5
+  &[data-discarded] > .fav
+  &[data-discarded]:hover > .fav
+  &[data-discarded] > .title
+  &[data-discarded] > .ctx
+    opacity: .56
   
   &[data-loading="true"]
     cursor: progress

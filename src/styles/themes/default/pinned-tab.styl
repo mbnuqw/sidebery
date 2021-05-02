@@ -31,9 +31,12 @@
     border: var(--tabs-selected-border)
     box-shadow: var(--tabs-selected-shadow)
   
-  &[data-discarded]
-    opacity: .5
-  
+  &[data-discarded] > .fav
+  &[data-discarded]:hover > .fav
+  &[data-discarded] > .title
+  &[data-discarded] > .ctx
+    opacity: .56
+
   &[data-loading="true"]
     cursor: progress
 
