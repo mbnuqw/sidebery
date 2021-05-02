@@ -2608,13 +2608,25 @@ function getIndexForNewTab(panel, tab) {
       this.state.moveNewTabParent === 'last_child' ||
       tab.autoGroupped
     ) {
-      let t
-      let index = parent.index + 1
-      for (; index < this.state.tabs.length; index++) {
-        t = this.state.tabs[index]
-        if (t.lvl <= parent.lvl) break
+      if (this.state.tabsTree) {
+        // Use levels to find the end of branch
+        let index = parent.index + 1
+        for (let t; index < this.state.tabs.length; index++) {
+          t = this.state.tabs[index]
+          if (t.lvl <= parent.lvl) break
+        }
+        return index
+      } else {
+        // Use ids map to find the end of branch
+        const ids = { [parent.id]: true }
+        let index = parent.index + 1
+        for (let t; index < this.state.tabs.length; index++) {
+          t = this.state.tabs[index]
+          if (!ids[t.openerTabId]) break
+          ids[t.id] = true
+        }
+        return index
       }
-      return index
     }
     if (this.state.moveNewTabParent === 'start' && !tab.autoGroupped) return panel.startIndex
     if (this.state.moveNewTabParent === 'end' && !tab.autoGroupped) return endIndex
