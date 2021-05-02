@@ -1155,6 +1155,8 @@ function remuteTabs(tabIds) {
  * Duplicate tabs
  */
 async function duplicateTabs(tabIds) {
+  const active = tabIds.length === 1
+
   for (let tabId of tabIds) {
     let tab = this.state.tabsMap[tabId]
     if (!tab) continue
@@ -1166,13 +1168,7 @@ async function duplicateTabs(tabIds) {
     }
 
     this.actions.setNewTabPosition(index, tab.parentId, tab.panelId)
-
-    await browser.tabs.create({
-      windowId: this.state.windowId,
-      index,
-      cookieStoreId: tab.cookieStoreId,
-      url: Utils.normalizeUrl(tab.url),
-    })
+    await browser.tabs.duplicate(tabId, { index, active })
   }
 }
 
