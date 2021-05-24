@@ -694,7 +694,7 @@ function removeTabsAbove(tabIds) {
   let toRm = []
   for (let i = startTab.index; i--; ) {
     let tab = this.state.tabs[i]
-    if (!tab || tab.panelId !== startTab.panelId) break
+    if (!tab || tab.pinned || tab.panelId !== startTab.panelId) break
     toRm.push(tab.id)
   }
 
