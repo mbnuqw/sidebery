@@ -82,7 +82,7 @@ export default {
   'settings.hide_settings_btn': { message: 'Скрывать кнопку "Настройки"' },
   'settings.hide_add_btn': { message: 'Скрывать кнопку "Создать панель"' },
   'settings.nav_btn_count': { message: 'Показывать количество табов/закладок' },
-  'settings.hide_empty_panels': { message: 'Скрывать пустые панели' },
+  'settings.hide_empty_panels': { message: 'Скрывать пустые панели вкладок' },
   'settings.nav_act_tabs_panel_left_click': {
     message: 'Клик левой кнопкой мыши по активной панели вкладок',
   },

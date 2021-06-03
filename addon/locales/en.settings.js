@@ -80,7 +80,7 @@ export default {
   'settings.hide_settings_btn': { message: 'Hide settings button' },
   'settings.hide_add_btn': { message: 'Hide "Create panel" button' },
   'settings.nav_btn_count': { message: 'Show count of tabs/bookmarks' },
-  'settings.hide_empty_panels': { message: 'Hide empty panels' },
+  'settings.hide_empty_panels': { message: 'Hide empty tabs panels' },
   'settings.nav_act_tabs_panel_left_click': { message: 'Left click on active tabs panel' },
   'settings.nav_act_tabs_panel_left_click_new_tab': { message: 'create tab' },
   'settings.nav_act_tabs_panel_left_click_none': { message: 'none' },
