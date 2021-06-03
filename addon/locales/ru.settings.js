@@ -93,7 +93,7 @@ export default {
   },
   'settings.nav_act_bookmarks_panel_left_click_scroll': { message: 'проскроллить к началу/концу' },
   'settings.nav_act_bookmarks_panel_left_click_none': { message: 'ничего' },
-  'settings.nav_mid_click': { message: 'Клик средней кнопкой мыши по кнопке панели' },
+  'settings.nav_mid_click': { message: 'Клик средней кнопкой мыши по панели вкладок' },
   'settings.nav_mid_click_rm_act_tab': { message: 'закрыть активную вкладку' },
   'settings.nav_mid_click_rm_all': { message: 'закрыть табы' },
   'settings.nav_mid_click_none': { message: 'ничего' },
