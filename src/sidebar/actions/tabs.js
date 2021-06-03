@@ -1577,11 +1577,9 @@ async function moveTabsToPanel(tabIds, panelId) {
   if (!activePanel || !activePanel.tabs) return
 
   let tabs = []
-  let activeTab
   for (let tabId of tabIds) {
     let tab = this.state.tabsMap[tabId]
     if (!tab) continue
-    if (tab.active) activeTab = tab
     tabs.push(tab)
   }
   let targetPanel = this.state.panelsMap[panelId]
@@ -1594,7 +1592,6 @@ async function moveTabsToPanel(tabIds, panelId) {
   if (this.state.tabsTree && activePanel.tabs.length > 0) {
     this.actions.updateTabsTree(activePanel.startIndex, activePanel.endIndex + 1)
   }
-  if (activeTab) this.state.panelIndex = targetPanel.index
   this.actions.saveTabsData()
   tabs.forEach(t => this.actions.saveTabData(t))
 }
@@ -1930,8 +1927,13 @@ async function moveDroppedNodes(dropIndex, dropParent, nodes, pin, currentPanel)
   }
 
   if (differentPanel) {
+    let hasActiveTab = false
     for (let tab of tabs) {
+      if (tab.active) hasActiveTab = true
       tab.panelId = currentPanel.id
+    }
+    if (hasActiveTab && this.state.tabsPanelSwitchActMove) {
+      this.state.panelIndex = currentPanel.index
     }
   }
   this.actions.updatePanelsTabs()

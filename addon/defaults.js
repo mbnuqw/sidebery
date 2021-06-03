@@ -114,6 +114,7 @@ export const DEFAULT_SETTINGS = {
   tabsUnreadMark: false,
   tabsReloadLimit: 5,
   tabsReloadLimitNotif: true,
+  tabsPanelSwitchActMove: true,
 
   // New tab position
   moveNewTabPin: 'start',

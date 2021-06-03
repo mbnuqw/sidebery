@@ -180,6 +180,9 @@ export default {
   'settings.tabs_reload_limit_notif': {
     message: 'Показывать уведомление со статусом перезагрузки',
   },
+  'settings.tabs_panel_switch_act_move': {
+    message: 'Переключать панель после перемещения активной вкладки на другую панель',
+  },
 
   // --- New tab position
   'settings.new_tab_position': { message: 'Позиция новых вкладок' },

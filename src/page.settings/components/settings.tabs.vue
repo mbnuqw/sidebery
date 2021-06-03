@@ -101,6 +101,10 @@ section
       :inactive="!($store.state.tabsReloadLimit > 0)"
       :value="$store.state.tabsReloadLimitNotif"
       @input="setOpt('tabsReloadLimitNotif', $event)")
+  ToggleField(
+    label="settings.tabs_panel_switch_act_move"
+    :value="$store.state.tabsPanelSwitchActMove"
+    @input="setOpt('tabsPanelSwitchActMove', $event)")
 </template>
 
 <script>

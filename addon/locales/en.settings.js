@@ -171,6 +171,9 @@ export default {
   'settings.tabs_reload_limit_notif': {
     message: 'Show notification with the reloading progress',
   },
+  'settings.tabs_panel_switch_act_move': {
+    message: 'Switch panel after moving active tab to another panel',
+  },
 
   // --- New tab position
   'settings.new_tab_position': { message: 'Position of new tab' },
