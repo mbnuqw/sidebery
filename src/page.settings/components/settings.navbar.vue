@@ -36,6 +36,12 @@ section
     :opts="$store.state.navActTabsPanelLeftClickActionOpts"
     @input="setOpt('navActTabsPanelLeftClickAction', $event)")
   SelectField(
+    label="settings.nav_act_bookmarks_panel_left_click"
+    optLabel="settings.nav_act_bookmarks_panel_left_click_"
+    :value="$store.state.navActBookmarksPanelLeftClickAction"
+    :opts="$store.state.navActBookmarksPanelLeftClickActionOpts"
+    @input="setOpt('navActBookmarksPanelLeftClickAction', $event)")
+  SelectField(
     label="settings.nav_mid_click"
     optLabel="settings.nav_mid_click_"
     :value="$store.state.navMidClickAction"

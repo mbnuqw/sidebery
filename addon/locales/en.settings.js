@@ -84,6 +84,11 @@ export default {
   'settings.nav_act_tabs_panel_left_click': { message: 'Left click on active tabs panel' },
   'settings.nav_act_tabs_panel_left_click_new_tab': { message: 'create tab' },
   'settings.nav_act_tabs_panel_left_click_none': { message: 'none' },
+  'settings.nav_act_bookmarks_panel_left_click': {
+    message: 'Left click on active bookmarks panel',
+  },
+  'settings.nav_act_bookmarks_panel_left_click_scroll': { message: 'scroll to start/end' },
+  'settings.nav_act_bookmarks_panel_left_click_none': { message: 'none' },
   'settings.nav_mid_click': { message: 'Middle click on panel button' },
   'settings.nav_mid_click_rm_act_tab': { message: 'close active tab' },
   'settings.nav_mid_click_rm_all': { message: 'close tabs' },

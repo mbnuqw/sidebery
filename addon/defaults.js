@@ -4,6 +4,7 @@ import { translate } from './locales/dict.js'
 export const SETTINGS_OPTIONS = {
   autoHideCtxMenuOpts: [250, 500, 1000, 'none'],
   navActTabsPanelLeftClickActionOpts: ['new_tab', 'none'],
+  navActBookmarksPanelLeftClickActionOpts: ['scroll', 'none'],
   navMidClickActionOpts: ['rm_act_tab', 'rm_all', 'none'],
   groupLayoutOpts: ['grid', 'list'],
   scrollThroughTabsOpts: ['panel', 'global', 'none'],
@@ -74,6 +75,7 @@ export const DEFAULT_SETTINGS = {
   navBtnCount: true,
   hideEmptyPanels: true,
   navActTabsPanelLeftClickAction: 'none',
+  navActBookmarksPanelLeftClickAction: 'none',
   navMidClickAction: 'none',
   navSwitchPanelsWheel: true,
 
