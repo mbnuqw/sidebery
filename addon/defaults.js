@@ -3,6 +3,7 @@ import { translate } from './locales/dict.js'
 // prettier-ignore
 export const SETTINGS_OPTIONS = {
   autoHideCtxMenuOpts: [250, 500, 1000, 'none'],
+  navActTabsPanelLeftClickActionOpts: ['new_tab', 'none'],
   navMidClickActionOpts: ['rm_act_tab', 'rm_all', 'none'],
   groupLayoutOpts: ['grid', 'list'],
   scrollThroughTabsOpts: ['panel', 'global', 'none'],
@@ -72,6 +73,7 @@ export const DEFAULT_SETTINGS = {
   hideSettingsBtn: false,
   navBtnCount: true,
   hideEmptyPanels: true,
+  navActTabsPanelLeftClickAction: 'none',
   navMidClickAction: 'none',
   navSwitchPanelsWheel: true,
 

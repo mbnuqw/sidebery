@@ -83,6 +83,11 @@ export default {
   'settings.hide_add_btn': { message: 'Скрывать кнопку "Создать панель"' },
   'settings.nav_btn_count': { message: 'Показывать количество табов/закладок' },
   'settings.hide_empty_panels': { message: 'Скрывать пустые панели' },
+  'settings.nav_act_tabs_panel_left_click': {
+    message: 'Клик левой кнопкой мыши по активной панели вкладок',
+  },
+  'settings.nav_act_tabs_panel_left_click_new_tab': { message: 'создать вкладку' },
+  'settings.nav_act_tabs_panel_left_click_none': { message: 'ничего' },
   'settings.nav_mid_click': { message: 'Клик средней кнопкой мыши по кнопке панели' },
   'settings.nav_mid_click_rm_act_tab': { message: 'закрыть активную вкладку' },
   'settings.nav_mid_click_rm_all': { message: 'закрыть табы' },

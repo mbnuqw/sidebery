@@ -227,7 +227,11 @@ export default {
 
       if (State.panelIndex !== i) return Actions.switchToPanel(i)
       if (State.panels[i].bookmarks) return EventBus.$emit('scrollBookmarksToEdge')
-      if (State.panels[i].tabs) return Actions.createTabInPanel(State.panels[i])
+      if (State.panels[i].tabs) {
+        if (State.navActTabsPanelLeftClickAction === 'new_tab') {
+          return Actions.createTabInPanel(State.panels[i])
+        }
+      }
     },
 
     /**
