@@ -30,8 +30,8 @@ async function loadTabsFromGlobalStorage() {
   let activeTab
 
   const hideInact = this.state.hideInact
-  const toMoveBeforeActivePanel = [];
-  const toMoveAfterActivePanel = [];
+  const toMoveBeforeActivePanel = []
+  const toMoveAfterActivePanel = []
 
   // Find most appropriate data-set to restoring prev tabs state
   tabsData = Utils.findDataForTabs(tabs, tabsData)
@@ -96,7 +96,7 @@ async function loadTabsFromGlobalStorage() {
       else tab.panelId = lastPanel.id
 
       // Record new tabs that need to be repositioned (for keeping new tabs
-      // within active panel when hide inactive panel is enabled) 
+      // within active panel when "hide tabs of inactive panel" is enabled) 
       if (hideInact) {
         if (activePanel.index < lastPanel.index) {
           toMoveAfterActivePanel.push(tab)
@@ -236,7 +236,7 @@ async function loadTabsFromSessionStorage() {
       else tab.panelId = lastPanel.id
 
       // Record new tabs that need to be repositioned (for keeping new tabs
-      // within active panel when hide inactive panel is enabled) 
+      // within active panel when "hide tabs of inactive panel" is enabled) 
       if (hideInact) {
         if (activePanel.index < lastPanel.index) {
           toMoveAfterActivePanel.push(tab)
