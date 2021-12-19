@@ -294,7 +294,6 @@ export default {
       State.selected = []
 
       // Set drag info
-      e.dataTransfer.setData('text/x-moz-text-internal', this.tab.url)
       e.dataTransfer.setData('text/x-moz-url', this.tab.url + '\n' + this.tab.title)
       e.dataTransfer.setData('text/x-moz-url-data', this.tab.url)
       e.dataTransfer.setData('text/x-moz-url-desc', this.tab.title)
