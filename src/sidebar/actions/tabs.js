@@ -29,6 +29,10 @@ async function loadTabsFromGlobalStorage() {
   let idsMap = {}
   let activeTab
 
+  const hideInact = this.state.hideInact
+  const toMoveBeforeActivePanel = []
+  const toMoveAfterActivePanel = []
+
   // Find most appropriate data-set to restoring prev tabs state
   tabsData = Utils.findDataForTabs(tabs, tabsData)
   if (!tabsData.length) {
@@ -90,6 +94,16 @@ async function loadTabsFromGlobalStorage() {
     if (!panel) {
       if (tab.pinned) tab.panelId = DEFAULT_CTX_ID
       else tab.panelId = lastPanel.id
+
+      // Record new tabs that need to be repositioned (for keeping new tabs
+      // within active panel when "hide tabs of inactive panel" is enabled) 
+      if (hideInact) {
+        if (activePanel.index < lastPanel.index) {
+          toMoveAfterActivePanel.push(tab)
+        } else if (activePanel.index > lastPanel.index) {
+          toMoveBeforeActivePanel.push(tab)
+        }
+      }
     } else {
       if (!tab.pinned) {
         // Check order of panels
@@ -132,6 +146,17 @@ async function loadTabsFromGlobalStorage() {
     let target = Utils.findSuccessorTab(this.state, activeTab)
     if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
   }
+
+  // Move tabs
+  if (hideInact) {
+    if (toMoveBeforeActivePanel.length) {
+      await this.actions.moveDroppedNodes(activePanel.startIndex, -1, toMoveBeforeActivePanel, toMoveBeforeActivePanel[0].pinned, activePanel)
+    }
+    if (toMoveAfterActivePanel.length) {
+      let index = activePanel.tabs.length ? activePanel.endIndex + 1 : activePanel.startIndex
+      await this.actions.moveDroppedNodes(index, -1, toMoveAfterActivePanel, toMoveAfterActivePanel[0].pinned, activePanel)
+    }
+  }
 }
 
 /**
@@ -159,6 +184,10 @@ async function loadTabsFromSessionStorage() {
   let offset = 0
   let activeTab
   let idsMap = {}
+
+  const hideInact = this.state.hideInact
+  const toMoveBeforeActivePanel = [];
+  const toMoveAfterActivePanel = [];
 
   // Set tabs initial props and update state
   this.state.tabsMap = []
@@ -205,6 +234,16 @@ async function loadTabsFromSessionStorage() {
     if (!panel) {
       if (tab.pinned) tab.panelId = DEFAULT_CTX_ID
       else tab.panelId = lastPanel.id
+
+      // Record new tabs that need to be repositioned (for keeping new tabs
+      // within active panel when "hide tabs of inactive panel" is enabled) 
+      if (hideInact) {
+        if (activePanel.index < lastPanel.index) {
+          toMoveAfterActivePanel.push(tab)
+        } else if (activePanel.index > lastPanel.index) {
+          toMoveBeforeActivePanel.push(tab)
+        }
+      }
     } else {
       if (!tab.pinned) {
         // Check order of panels
@@ -246,6 +285,17 @@ async function loadTabsFromSessionStorage() {
   if (this.state.activateAfterClosing !== 'none' && activeTab) {
     let target = Utils.findSuccessorTab(this.state, activeTab)
     if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
+  }
+
+  // Move tabs
+  if (hideInact) {
+    if (toMoveBeforeActivePanel.length) {
+      await this.actions.moveDroppedNodes(activePanel.startIndex, -1, toMoveBeforeActivePanel, toMoveBeforeActivePanel[0].pinned, activePanel)
+    }
+    if (toMoveAfterActivePanel.length) {
+      let index = activePanel.tabs.length ? activePanel.endIndex + 1 : activePanel.startIndex
+      await this.actions.moveDroppedNodes(index, -1, toMoveAfterActivePanel, toMoveAfterActivePanel[0].pinned, activePanel)
+    }
   }
 }
 
