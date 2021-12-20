@@ -262,7 +262,6 @@ export default {
       walker(State.bookmarks)
 
       // Set drag info
-      e.dataTransfer.setData('text/x-moz-text-internal', this.node.url)
       e.dataTransfer.setData('text/uri-list', this.node.url)
       e.dataTransfer.setData('text/plain', this.node.url)
       e.dataTransfer.effectAllowed = 'move'
