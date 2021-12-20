@@ -96,7 +96,7 @@ async function loadTabsFromGlobalStorage() {
       else tab.panelId = lastPanel.id
 
       // Record new tabs that need to be repositioned (for keeping new tabs
-      // within active panel when "hide tabs of inactive panel" is enabled) 
+      // within active panel when "hide tabs of inactive panel" is enabled)
       if (hideInact) {
         if (activePanel.index < lastPanel.index) {
           toMoveAfterActivePanel.push(tab)
@@ -150,11 +150,23 @@ async function loadTabsFromGlobalStorage() {
   // Move tabs
   if (hideInact) {
     if (toMoveBeforeActivePanel.length) {
-      await this.actions.moveDroppedNodes(activePanel.startIndex, -1, toMoveBeforeActivePanel, toMoveBeforeActivePanel[0].pinned, activePanel)
+      await this.actions.moveDroppedNodes(
+        activePanel.startIndex,
+        -1,
+        toMoveBeforeActivePanel,
+        toMoveBeforeActivePanel[0].pinned,
+        activePanel
+      )
     }
     if (toMoveAfterActivePanel.length) {
       let index = activePanel.tabs.length ? activePanel.endIndex + 1 : activePanel.startIndex
-      await this.actions.moveDroppedNodes(index, -1, toMoveAfterActivePanel, toMoveAfterActivePanel[0].pinned, activePanel)
+      await this.actions.moveDroppedNodes(
+        index,
+        -1,
+        toMoveAfterActivePanel,
+        toMoveAfterActivePanel[0].pinned,
+        activePanel
+      )
     }
   }
 }
@@ -186,8 +198,8 @@ async function loadTabsFromSessionStorage() {
   let idsMap = {}
 
   const hideInact = this.state.hideInact
-  const toMoveBeforeActivePanel = [];
-  const toMoveAfterActivePanel = [];
+  const toMoveBeforeActivePanel = []
+  const toMoveAfterActivePanel = []
 
   // Set tabs initial props and update state
   this.state.tabsMap = []
@@ -236,7 +248,7 @@ async function loadTabsFromSessionStorage() {
       else tab.panelId = lastPanel.id
 
       // Record new tabs that need to be repositioned (for keeping new tabs
-      // within active panel when "hide tabs of inactive panel" is enabled) 
+      // within active panel when "hide tabs of inactive panel" is enabled)
       if (hideInact) {
         if (activePanel.index < lastPanel.index) {
           toMoveAfterActivePanel.push(tab)
@@ -290,11 +302,23 @@ async function loadTabsFromSessionStorage() {
   // Move tabs
   if (hideInact) {
     if (toMoveBeforeActivePanel.length) {
-      await this.actions.moveDroppedNodes(activePanel.startIndex, -1, toMoveBeforeActivePanel, toMoveBeforeActivePanel[0].pinned, activePanel)
+      await this.actions.moveDroppedNodes(
+        activePanel.startIndex,
+        -1,
+        toMoveBeforeActivePanel,
+        toMoveBeforeActivePanel[0].pinned,
+        activePanel
+      )
     }
     if (toMoveAfterActivePanel.length) {
       let index = activePanel.tabs.length ? activePanel.endIndex + 1 : activePanel.startIndex
-      await this.actions.moveDroppedNodes(index, -1, toMoveAfterActivePanel, toMoveAfterActivePanel[0].pinned, activePanel)
+      await this.actions.moveDroppedNodes(
+        index,
+        -1,
+        toMoveAfterActivePanel,
+        toMoveAfterActivePanel[0].pinned,
+        activePanel
+      )
     }
   }
 }
