@@ -10,15 +10,19 @@
     :panel-type="panel.type"
     :panel-id="panel.id"
     :ctx="storeId")
+  input(
+    type="text"
+    placeholder="Search Tabs"
+    v-model="searchQuery")
   ScrollBox(ref="scrollBox")
     .container
       TransitionGroup(name="tab" tag="div"): tab(
-        v-for="(t, i) in panel.tabs"
-        v-if="!t.invisible"
+        v-for="(tab, i) in panel.tabs"
+        v-if="(!tab.invisible) && (tab.title.toLowerCase().includes(searchQuery.toLowerCase()) || tab.title.toLowerCase().includes(searchQuery.toLowerCase()))"
         ref="tabs"
-        :key="t.id"
+        :key="tab.id"
         :child-count="getChildrenCount(i)"
-        :tab="t")
+        :tab="tab")
 </template>
 
 <script>
@@ -29,6 +33,8 @@ import Actions from '../actions'
 import ScrollBox from './scroll-box'
 import PinnedDock from './pinned-tabs-dock'
 import Tab from './tab'
+
+window.panel = State
 
 export default {
   components: {
@@ -50,6 +56,7 @@ export default {
       drag: null,
       dragTabs: [],
       dragEls: [],
+      searchQuery: ''
     }
   },
 
