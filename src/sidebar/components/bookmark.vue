@@ -1,5 +1,6 @@
 <template lang="pug">
 .Bookmark(
+  v-if="node.title.toLowerCase().includes($store.state.bookmarkSearchQuery.toLowerCase()) | node.url.toLowerCase().includes($store.state.bookmarkSearchQuery.toLowerCase())"
   :data-selected="node.sel"
   :data-open="node.isOpen"
   :data-favless="!favicon")

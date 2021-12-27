@@ -39,7 +39,7 @@ export default {
   bookmarksCount: 0,
   bookmarkEditor: false,
   bookmarkEditorTarget: null,
-
+  bookmarkSearchQuery: '',
   ...DEFAULT_SETTINGS,
 
   snapshots: [],

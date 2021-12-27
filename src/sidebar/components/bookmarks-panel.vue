@@ -4,6 +4,11 @@
   :data-invisible="!visible" @click="onClick"
   @contextmenu.stop="onNavCtxMenu"
   @mouseup.right="onRightMouseUp")
+  input(
+    type="text"
+    placeholder="Search Bookmarks"
+    v-model="$store.state.bookmarkSearchQuery")
+
   ScrollBox(ref="scrollBox"): .bookmarks-wrapper
     Component.node(
       v-for="n in $store.state.bookmarks"
@@ -46,6 +51,7 @@ export default {
       renderable: false,
       visible: false,
       lastScrollY: 0,
+      bookmarkSearchQuery: State.bookmarkSearchQuery
     }
   },
 
