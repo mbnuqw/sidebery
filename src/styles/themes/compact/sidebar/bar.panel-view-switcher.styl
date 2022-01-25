@@ -1,0 +1,47 @@
+@import '../../../mixins'
+
+.PanelViewSwitcherBar
+  position: relative
+  display: flex
+  flex-shrink: 0
+  width: 100%
+  height: 100%
+  grid-gap: 1px
+  overflow: hidden
+  .view-btn
+    position: relative
+    display: flex
+    justify-content: center
+    align-items: center
+    width: 100%
+    min-width: 24px
+    height: 100%
+    overflow: hidden
+    &:before
+      content: ''
+      position: absolute
+      top: 0
+      left: 0
+      width: 100%
+      height: 100%
+      border-radius: 3px
+      background-color: var(--toolbar-fg)
+      opacity: 0
+    > svg
+      position: absolute
+      width: 16px
+      height: 16px
+      fill: var(--toolbar-fg)
+      opacity: .7
+    &:hover:before
+      opacity: .12
+    &[data-active="true"]
+      &:before
+        opacity: .2
+      > svg
+        opacity: 1
+    &:active:before
+      opacity: .16
+
+  .btn-sep
+    display: none

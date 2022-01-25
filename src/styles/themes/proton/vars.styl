@@ -1,0 +1,90 @@
+// ---
+// -- Base colors
+// -
+#root[data-color-scheme="dark"]
+  --frame-bg: var(--ff-frame, var(--ff-toolbar, #282828))
+  --frame-fg: var(--ff-tab-background-text, #ccc)
+  --toolbar-bg: var(--ff-toolbar, #323232)
+  --toolbar-fg:
+    var(--ff-icons,
+    var(--ff-toolbar-text,
+    var(--ff-bookmark-text,
+    var(--ff-icons-attention, #eee))))
+  --hover-bg: #ffffff16
+  --clicked-bg: #ffffff24
+  --active-bg: #ffffff24
+  --active-border: #ffffff00
+  --selected-bg: #ffffff32
+  --selected-border: #ffffff32
+  --status-ok: #64df64
+  --status-err: #df6464
+  --status-active: #4993E6
+  --status-notice: #00e9fb
+  --border: var(--ff-toolbar-bottom-separator, var(--ff-toolbar-top-separator, #212121))
+
+#root[data-color-scheme="light"]
+  --frame-bg: var(--ff-frame, var(--ff-toolbar, #f0f0f0))
+  --frame-fg: var(--ff-tab-background-text, #222)
+  --toolbar-bg: var(--ff-toolbar, #fafafa)
+  --toolbar-fg:
+    var(--ff-icons,
+    var(--ff-toolbar-text,
+    var(--ff-bookmark-text,
+    var(--ff-icons-attention, #111))))
+  --hover-bg: #00000012
+  --clicked-bg: #00000024
+  --active-bg: #00000018
+  --active-border: #00000008
+  --selected-bg: #00000024
+  --selected-border: #00000024
+  --status-ok: #098623
+  --status-err: #d72f2f
+  --status-active: #146fd9
+  --status-notice: #01acda
+  --border: var(--ff-toolbar-bottom-separator, var(--ff-toolbar-top-separator, #dbdbdb))
+
+// ---
+// -- Local color
+// -
+[data-color="blue"]
+  --color: #37adff
+[data-color="turquoise"]
+  --color: #00c79a
+[data-color="green"]
+  --color: #51cd00
+[data-color="yellow"]
+  --color: #ffcb00
+[data-color="orange"]
+  --color: #ff9f00
+[data-color="red"]
+  --color: #ff613d
+[data-color="pink"]
+  --color: #ff4bda
+[data-color="purple"]
+  --color: #af51f5
+[data-color="inactive"]
+  --color: #787878
+
+// ---
+// -- Animation speed
+// -
+#root[data-animations="none"]
+  --d-swift: 0s
+  --d-fast: 0s
+  --d-norm: 0s
+  --d-slow: 0s
+#root[data-animations="fast"]
+  --d-swift: .1s
+  --d-fast: .12s
+  --d-norm: .2s
+  --d-slow: .3s
+#root[data-animations="norm"]
+  --d-swift: .12s
+  --d-fast: .16s
+  --d-norm: .3s
+  --d-slow: .42s
+#root[data-animations="slow"]
+  --d-swift: .16s
+  --d-fast: .2s
+  --d-norm: .3s
+  --d-slow: .5s

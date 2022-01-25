@@ -1,0 +1,57 @@
+@import '../../../mixins'
+
+.PanelPlaceholder
+  position: absolute
+  display: flex
+  justify-content: center
+  align-items: center
+  width: 100%
+  height: 100%
+  top: 0
+  left: 0
+  z-index: 1000
+  background-color: var(--frame-bg)
+  &[data-loading="true"]
+    cursor: progress
+
+.PanelPlaceholder .msg
+  text-align: center
+  font-size: rem(18)
+  font-weight: 700
+  padding: 0 8px
+  color: var(--frame-fg)
+
+.PanelPlaceholder .perm-warn
+  position: absolute
+  width: 100%
+  height: 100%
+  display: flex
+  justify-content: center
+  align-items: center
+  flex-grow: 1
+  flex-direction: column
+  cursor: default
+  box-shadow: inset 0 -1px 0 0 var(--border)
+  outline: 3px dashed var(--status-err); outline-offset: -2px;
+
+.PanelPlaceholder .perm-warn-msg
+  position: relative
+  padding: 0 16px
+  color: var(--frame-fg)
+  font-size: rem(14)
+
+.PanelPlaceholder .perm-warn-btn
+  padding: 5px 10px
+  margin: 16px 8px 0
+  font-size: rem(13)
+
+.panel-placeholder-enter-active
+  transition: opacity var(--d-fast)
+.panel-placeholder-leave-active
+  transition: opacity var(--d-fast) var(--d-fast)
+.panel-placeholder-enter-from
+.panel-placeholder-leave-to
+  opacity: 0
+.panel-placeholder-enter-to
+.panel-placeholder-leave-from
+  opacity: 1

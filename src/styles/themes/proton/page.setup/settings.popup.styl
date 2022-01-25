@@ -1,0 +1,61 @@
+@import '../../../mixins'
+
+.Settings .popup-layer
+  position: fixed
+  display: flex
+  top: 0
+  left: 0
+  width: 100vw
+  height: 100vh
+  flex-direction: column
+  justify-content: flex-start
+  align-items: center
+  z-index: 1
+  &:before
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    background-color: #2228
+    opacity: .5
+  &:after
+    content: ''
+    position: relative
+    width: 100%
+    height: 64px
+    flex-shrink: 10
+
+.Settings .popup-box
+  position: relative
+  width: calc(100vw - 8px)
+  max-width: 640px
+  min-height: 32px
+  margin: 16px 0
+  overflow: hidden
+  background-color: var(--popup-bg)
+  border-radius: 3px
+  box-shadow: var(--popup-shadow)
+
+.popup-enter-active
+.popup-leave-active
+  transition: opacity var(--d-fast)
+  .popup-box
+    transition: transform var(--d-fast)
+.popup-enter-from
+  opacity: 0
+  .popup-box
+    transform: translateY(32px)
+.popup-enter-to
+  opacity: 1
+  .popup-box
+    transform: translateY(0)
+.popup-leave-from
+  opacity: 1
+  .popup-box
+    transform: translateY(0)
+.popup-leave-to
+  opacity: 0
+  .popup-box
+    transform: translateY(32px)

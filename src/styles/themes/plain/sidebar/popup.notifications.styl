@@ -1,0 +1,319 @@
+@import '../../../mixins'
+
+#root
+  --notification-bg: var(--ff-popup, var(--toolbar-bg))
+  --notification-fg: var(--ff-popup-text, var(--toolbar-fg))
+#root[data-color-scheme="dark"]
+  --notification-bg-hover-border: #ffffff08
+#root[data-color-scheme="light"]
+  --notification-bg-hover-border: #00000012
+
+.Notifications
+  position: absolute
+  display: flex
+  bottom: 0
+  left: 0
+  width: 100%
+  height: 0
+  flex-direction: column
+  justify-content: flex-end
+  z-index: 4000
+
+.Notifications .notification
+  position: relative
+  display: flex
+  flex-direction: column
+  flex-shrink: 0
+  margin: 2px
+  padding: 2px 0 0
+  background-color: var(--notification-bg)
+  border-radius: var(--element-roundness)
+  overflow: hidden
+  z-index: 100
+  box-shadow: 0 0 0 1px #00000024,
+              inset 0 0 0 1px #ffffff12,
+              0 1px 8px 0 #00000032
+
+  &:after
+    content: ''
+    position: absolute
+    width: 5px
+    height: 5px
+    top: 3px
+    right: 3px
+    border-radius: 3px
+    background-color: var(--status-notice)
+    z-index: 1
+
+  &:before
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    background-color: var(--notification-fg)
+    opacity: 0
+    transition: opacity var(--d-fast)
+
+  &[data-timeout="true"]:after
+    animation: notif-timeout var(--timeout) linear
+
+  &[data-lvl="err"]:after
+    background-color: var(--status-err)
+
+  &[data-lvl="progress"]
+    cursor: progress
+
+  &[data-lvl="progress"]:after
+    animation: notif-progress 1.7s linear infinite
+  
+  &:hover
+    box-shadow: 0 0 0 1px #00000032,
+                inset 0 0 0 1px #ffffff16,
+                0 1px 8px 0 #00000036
+    &:before
+      opacity: .03
+
+.Notifications .header
+  position: relative
+  display: inline-block
+  align-items: flex-start
+  padding: 4px 8px
+  opacity: .8
+  transition: opacity var(--d-fast)
+.Notifications .notification:hover .header
+  opacity: 1
+
+.Notifications .header .icon
+  position: absolute
+  width: 16px
+  height: 16px
+  margin: 2px 5px 2px 0
+  > img
+  > svg
+    position: absolute
+    width: 16px
+    height: 16px
+    fill: var(--notification-fg)
+    opacity: .7
+.Notifications .notification[data-lvl="info"] .header .icon > svg
+.Notifications .notification[data-lvl="progress"] .header .icon > svg
+  fill: var(--status-active)
+.Notifications .notification[data-lvl="warn"] .header .icon > svg
+  fill: #ffcb00
+.Notifications .notification[data-lvl="err"] .header .icon > svg
+  fill: var(--status-err)
+
+.Notifications .title
+  position: relative
+  display: inline
+  font-size: rem(16)
+  font-weight: 600
+  line-height: 20px
+  color: var(--notification-fg)
+  word-break: break-word
+.Notifications .notification[data-lvl="err"] .title
+  color: var(--status-err)
+
+.Notifications .notification .header .icon + .title
+  padding-left: 22px
+
+.Notifications .favicons
+  position: relative
+  display: flex
+  align-items: center
+  flex-wrap: wrap
+  grid-gap: 2px
+  flex-shrink: 0
+  margin: 0 10px 6px 10px
+
+.Notifications .favicons .favicon
+  position: relative
+  width: 12px
+  height: 12px
+  flex-shrink: 0
+  > img
+  > svg
+    position: absolute
+    right: 0
+    width: 12px
+    height: 12px
+    fill: var(--notification-fg)
+
+.Notifications .details
+  position: relative
+  width: 100%
+  font-size: rem(12)
+  color: var(--notification-fg)
+  padding: 0 8px 6px
+  white-space: pre-wrap
+  opacity: .7
+  transition: opacity var(--d-fast)
+.Notifications .notification:hover .details
+  opacity: .8
+
+.Notifications .msg
+  position: relative
+  width: 100%
+  font-size: rem(12)
+  color: var(--notification-fg)
+  padding: 0 10px 8px
+
+.Notifications .progress
+  position: relative
+  display: flex
+  justify-content: center
+  align-items: center
+
+.Notifications .progress-bar
+  position: relative
+  width: calc(100% - 16px)
+  height: 5px
+  border-radius: 3px
+  margin: 2px 0 8px
+  background-color: #00000032
+  box-shadow: inset 0 0 0 1px #00000016
+  overflow: hidden
+
+.Notifications .progress-bar-value
+  position: absolute
+  top: 0
+  left: -100%
+  width: 100%
+  height: 100%
+  background-color: var(--status-notice)
+  transform: translateX(var(--percent))
+
+.Notifications .progress[data-progress-unknown="true"] .progress-bar
+  background-color: var(--status-notice)
+  &:before
+    content: ''
+    position: absolute
+    top: 0
+    left: -32px
+    width: calc(100% + 32px)
+    height: 100%
+    background-image: repeating-linear-gradient(-45deg, #000, #000 8px, #fff 8px, #fff 16px)
+    opacity: .3
+    animation: unknown-progress .3s linear infinite
+
+@keyframes unknown-progress
+  0%
+    transform: translateX(0)
+  100%
+    transform: translateX(23px)
+
+.Notifications .ctrls
+  position: relative
+  left: 0
+  bottom: 0
+  display: flex
+  width: 100%
+  height: 27px
+  max-height: 30px
+  z-index: 2
+  border-radius: var(--element-roundness)
+  padding: 1px
+  overflow: hidden
+  transition: opacity var(--d-fast)
+  background-color: #00000016
+  &:after
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 1px
+    background-color: #00000016
+
+.Notifications .ctrls .separator
+  position: relative
+  width: 1px
+  flex-shrink: 0
+  background-color: #00000016
+
+.Notifications .ctrl
+  position: relative
+  display: flex
+  height: 25px
+  justify-content: center
+  align-items: center
+  flex-grow: 1
+  padding: 0 5px
+  text-align: center
+  overflow: hidden
+  cursor: pointer
+  &:before
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    box-shadow: 0 0 0 1px var(--element-overlay-border)
+    background-color: var(--element-overlay-bg)
+    opacity: 0
+    border-radius: var(--element-roundness)
+  .label
+    position: relative
+    font-size: rem(14)
+    font-weight: 600
+    color: var(--notification-fg)
+    overflow: hidden
+    white-space: nowrap
+    text-overflow: ellipsis
+    flex-shrink: 1
+    opacity: .7
+  > svg
+    position: relative
+    width: 16px
+    height: 16px
+    fill: var(--notification-fg)
+    flex-shrink: 0
+    opacity: .7
+    
+  &:hover:before
+    opacity: .2
+  &:hover .label
+  &:hover svg
+    opacity: 1
+  &:active:before
+    opacity: .1
+
+  &[data-icon="true"]
+    flex-grow: 0
+    width: 32px
+
+#root .notification-enter-active
+#root .notification-leave-active
+  transition: transform var(--d-fast), opacity var(--d-fast), z-index var(--d-fast)
+#root .notification-leave-active
+  position: absolute
+  width: calc(100% - 4px)
+#root .notification-move
+  transition: transform var(--d-fast), opacity var(--d-fast), z-index var(--d-fast)
+#root .notification-enter-from
+  opacity: 0
+  transform: translateY(16px)
+  z-index: 0
+#root .notification-leave-to
+  opacity: 0
+  z-index: 0
+  transform: translateY(8px)
+
+@keyframes notif-timeout
+  0%
+    opacity: 1
+  90%
+    opacity: 0
+  100%
+    opacity: 0
+
+@keyframes notif-progress
+  0%
+    opacity: 1
+  50%
+    opacity: .3
+  100%
+    opacity: 1

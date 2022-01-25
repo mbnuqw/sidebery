@@ -1,0 +1,115 @@
+@import '../../../mixins'
+
+#root
+  --search-border: var(--ff-border, var(--border, #00000016))
+
+.SearchBar
+  position: relative
+  display: flex
+  justify-content: center
+  align-items: center
+  flex-shrink: 0
+  cursor: text
+  opacity: 1
+  height: 28px
+  margin-bottom: var(--ff-border-width, 1px)
+  z-index: 3000
+  background-color: var(--toolbar-bg)
+  transition: height var(--d-fast), opacity var(--d-fast), z-index var(--d-fast)
+  box-shadow: 0 0 0 var(--ff-border-width, 1px) var(--ff-border, var(--border))
+  &:before
+    content: ''
+    position: absolute
+    top: 2px
+    left: 2px
+    width: calc(100% - 4px)
+    height: calc(100% - 4px)
+    border-radius: 3px
+    background-color: var(--frame-bg)
+    box-shadow: inset 0 0 0 var(--ff-border-width, 1px) var(--search-border)
+  &[data-showed="false"]
+    opacity: 0
+    height: 0
+    z-index: 0
+    margin-bottom: 0
+
+.SearchBar .search-icon
+  position: relative
+  display: flex
+  justify-content: center
+  align-items: center
+  flex-shrink: 0
+  width: 24px
+  height: 100%
+  margin: 0 0 0 4px
+  > svg
+    position: relative
+    width: 16px
+    height: 16px
+    fill: var(--frame-fg)
+    opacity: .7
+    transition: opacity var(--d-fast)
+.SearchBar[data-active="true"] .search-icon > svg
+  opacity: 1
+
+.SearchBar .input
+  position: relative
+  flex-grow: 1
+  height: 100%
+  margin: 0
+  padding: 0
+  border: none
+  outline: none
+  overflow: hidden
+  font-size: rem(16)
+  background-color: #00000000
+  color: var(--frame-fg)
+
+.SearchBar .placeholder
+  position: absolute
+  left: 30px
+  width: 100%
+  padding: 0
+  font-size: rem(16)
+  color: var(--frame-fg)
+  opacity: .7
+  transition: opacity var(--d-fast), transform var(--d-fast)
+.SearchBar:hover .placeholder
+  opacity: 1
+.SearchBar[data-focused="true"] .placeholder
+  opacity: .7
+  transform: translateX(3px)
+.SearchBar[data-filled="true"] .placeholder
+  opacity: 0
+  transform: translateX(16px)
+
+.SearchBar .clear-btn
+  position: relative
+  display: flex
+  justify-content: center
+  align-items: center
+  width: 28px
+  height: 100%
+  cursor: pointer
+  flex-shrink: 0
+  transition: opacity var(--d-fast)
+  > svg
+    position: relative
+    width: 18px
+    height: 18px
+    fill: var(--frame-fg)
+    opacity: .7
+  &:before
+    content: ''
+    position: absolute
+    top: 3px
+    left: 3px
+    width: calc(100% - 6px)
+    height: calc(100% - 6px)
+    border-radius: 3px
+    background-color: var(--frame-fg)
+    opacity: 0
+  &:hover:before
+    opacity: .2
+  &:active:before
+    opacity: .12

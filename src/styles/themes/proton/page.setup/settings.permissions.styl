@@ -1,0 +1,27 @@
+@import '../../../mixins'
+
+.Settings .permission
+  position: relative
+
+  &:not(:first-of-type):after
+    content: ''
+    position: absolute
+    top: 0
+    left: 1px
+    width: calc(100% - 2px)
+    height: 1px
+    background-color: var(--toolbar-fg)
+    opacity: .1
+
+.Settings .permission[data-highlight="true"]
+  position: relative
+
+.Settings .permission[data-highlight="true"]:before
+  content: ''
+  position: absolute
+  top: -8px
+  left: -8px
+  width: calc(100% + 16px)
+  height: calc(100% + 16px)
+  outline: 2px dashed var(--status-err)
+  outline-offset: -2px

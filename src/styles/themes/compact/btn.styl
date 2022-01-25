@@ -1,0 +1,64 @@
+@import '../../mixins'
+
+#root
+  --btn-roundness: 2px
+#root[data-color-scheme="dark"]
+  --btn-fg:
+    var(--ff-icons,
+    var(--ff-bookmark-text,
+    var(--ff-toolbar-text, #fff)))
+#root[data-color-scheme="light"]
+  --btn-fg:
+    var(--ff-icons,
+    var(--ff-bookmark-text,
+    var(--ff-toolbar-text, #000)))
+
+.btn
+  position: relative
+  max-width: 100%
+  font-size: rem(15)
+  padding: 4px 12px
+  white-space: nowrap
+  text-overflow: ellipsis
+  font-weight: 700
+  overflow: hidden
+  cursor: pointer
+  text-align: center
+  -moz-user-select: none
+  color: var(--btn-fg)
+  &.-wide
+    width: 100%
+    min-width: auto
+  &.-wrap
+    white-space: normal
+    text-overflow: clip
+  &.-warn:after
+  &:before
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    background-color: var(--btn-fg)
+    border-radius: var(--btn-roundness)
+    opacity: .1
+  &.-warn:after
+    background-color: #ff2200
+  &:hover:before
+    opacity: .2
+  &:active:before
+    opacity: .08
+  &.-inactive
+    opacity: .3
+    cursor: default
+    &:before
+      opacity: .2
+
+  > input
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    opacity: 0

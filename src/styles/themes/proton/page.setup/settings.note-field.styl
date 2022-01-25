@@ -1,0 +1,40 @@
+@import '../../../mixins'
+
+.Settings .note-field
+  position: relative
+  display: flex
+  min-height: 42px
+  justify-content: space-between
+  align-items: center
+  flex-wrap: wrap
+  padding: 0 16px
+  flex-shrink: 0
+
+  &:not(:first-of-type):after
+    content: ''
+    position: absolute
+    top: 0
+    left: 1px
+    width: calc(100% - 2px)
+    height: 1px
+    background-color: var(--toolbar-fg)
+    opacity: .1
+
+  .label
+    position: relative
+    font-size: rem(16)
+    line-height: 26px
+    padding: 8px 0 4px
+    align-self: flex-start
+    color: var(--toolbar-fg)
+    transition: color var(--d-fast)
+    opacity: .7
+  
+  .note
+    position: relative
+    font-size: rem(14)
+    max-width: 100%
+    padding: 0 0 8px 16px
+    white-space: pre-wrap
+    color: var(--toolbar-fg)
+    opacity: .7

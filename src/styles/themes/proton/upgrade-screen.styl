@@ -1,0 +1,148 @@
+wide-screen-width = 360px
+
+@media (prefers-color-scheme: dark), (prefers-color-scheme: no-preference)
+  #root
+    --bg: #303132
+    --fg: #fff
+    --done-fg: #64df64
+    --active-fg: #4993E6
+    --err-fg: #df6464
+@media (prefers-color-scheme: light)
+  #root
+    --bg: #efefef
+    --fg: #000
+    --done-fg: #098623
+    --active-fg: #146fd9
+    --err-fg: #d72f2f
+
+.UpgradeScreen
+  position: absolute
+  display: flex
+  flex-direction: column
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  z-index: 10000
+  background-color: var(--bg)
+  overflow-y: auto
+  &:before
+    content: ''
+    position: absolute
+    width: 100%
+    height: 100%
+    top: 0
+    left: 0
+    z-index: -1
+    background-color: #000
+    transition: opacity 2s
+    opacity: 0
+    cursor: progress
+.UpgradeScreen[data-continued="true"]:before
+  z-index: 1
+  opacity: .7
+
+.UpgradeScreen .container
+  position: relative
+  display: flex
+  height: 100%
+  flex-direction: column
+  padding: 8px
+  transform: translateZ(0)
+
+.UpgradeScreen .title
+  position: relative
+  margin: 24px 0 8px
+  padding: 0
+  text-align: center
+  font-size: rem(18)
+  font-weight: 700
+  color: var(--fg)
+@media (min-width: wide-screen-width)
+  .UpgradeScreen .title
+    font-size: rem(24)
+    margin: 32px 0 16px
+
+.UpgradeScreen .loading-box
+  position: relative
+
+.UpgradeScreen .LoadingDots
+  position: absolute
+  top: auto
+  height: auto
+.UpgradeScreen[data-loading="false"] .LoadingDots
+  display: none
+
+.UpgradeScreen .progress
+  position: relative
+  width: 100%
+  padding: 0 0 16px
+  margin: auto 0 auto
+
+.UpgradeScreen .progress .list
+  position: relative
+  max-width: 210px
+  margin: 0 auto
+
+.UpgradeScreen .progress .item
+  position: relative
+  margin: 8px 0
+  padding: 0 0 0 13px
+  color: var(--fg)
+  opacity: .7
+  transition: opacity .2s, color .2s
+  &:before
+    content: ''
+    position: absolute
+    top: 9px
+    left: 0
+    width: 5px
+    height: 5px
+    border-radius: 50%
+    background-color: var(--fg)
+    opacity: .3
+    transition: opacity .2s
+.UpgradeScreen .progress .item[data-status="done"]
+  opacity: 1
+  color: var(--done-fg)
+.UpgradeScreen .progress .item[data-status="no"]
+  opacity: .3
+.UpgradeScreen .progress .item[data-status="err"]
+  opacity: 1
+  color: var(--err-fg)
+.UpgradeScreen .progress .item[data-status="in-progress"]
+  opacity: 1
+  color: var(--active-fg)
+  &:before
+    opacity: .7
+
+.UpgradeScreen .progress .label
+  position: relative
+  font-size: rem(16)
+  font-weight: 700
+  line-height: 22px
+
+.UpgradeScreen .progress .status
+  position: relative
+  font-size: rem(14)
+
+.UpgradeScreen .error
+  position: relative
+  max-width: 210px
+  margin: auto
+  text-align: center
+  font-size: rem(14)
+  font-weight: 700
+  color: var(--err-fg)
+
+.UpgradeScreen .controls
+  position: relative
+  display: flex
+  justify-content: center
+  align-items: center
+  flex-direction: column
+  grid-gap: 8px
+  width: 100%
+  padding: 16px 0
+
+

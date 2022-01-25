@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Sidebery Proxy</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      opacity: 0;
+    }
+    body[data-ready="true"] {
+      opacity: 1;
+    }
+  </style>
+  <link rel="stylesheet" type="text/css" href="../themes/plain/proxy.css" id="theme_link">
+</head>
+<body id="root" class="root -animate">
+  <header>
+    <h2 id="popup_title">Sidebery Proxy</h2>
+  </header>
+
+  <main>
+    <div class="field">
+      <div class="label">Type</div>
+      <div id="conf_type" class="value" title="type">---</div>
+    </div>
+    <div class="field">
+      <div class="label">Host</div>
+      <div id="conf_host" class="value" title="host">---</div>
+    </div>
+    <div class="field">
+      <div class="label">Proxy DNS</div>
+      <div id="conf_dns" class="value" title="Proxy dns">---</div>
+    </div>
+    <div class="gap"></div>
+    <div class="field -animate">
+      <div class="label">IP</div>
+      <div id="info_ip" class="value" title="ip address">---</div>
+    </div>
+    <div class="field -animate">
+      <div class="label">Country</div>
+      <div id="info_country" class="value" title="Country">---</div>
+    </div>
+
+    <div class="ctrls">
+      <div class="btn-box">
+        <div id="btn_check_ip" class="btn">Update ip info</div>
+      </div>
+      <div class="btn-box">
+        <div id="btn_conf" class="btn">Configure</div>
+      </div>
+    </div>
+  </main>
+
+  <script type="module" src="./proxy.js" defer></script>
+</body>
+</html>

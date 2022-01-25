@@ -1,0 +1,83 @@
+@import '../../../mixins'
+
+.storage-section
+  position: relative
+
+.storage-section .storage-prop
+  position: relative
+  display: flex
+  width: calc(100% - 16px)
+  align-items: center
+  padding: 2px 8px
+  margin: 0 8px
+  border-radius: 3px
+  grid-gap: 8px
+  &:before
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    border-radius: 3px
+    background-color: var(--toolbar-fg)
+    opacity: 0
+  &:not(:first-of-type):after
+    content: ''
+    position: absolute
+    top: 0
+    left: 4px
+    width: calc(100% - 8px)
+    height: 1px
+    background-color: var(--toolbar-fg)
+    opacity: .1
+  &:hover:before
+    opacity: .06
+  &:active:before
+    opacity: .03
+
+.storage-section .storage-prop .name
+  position: relative
+  font-size: rem(16)
+  color: var(--toolbar-fg)
+  white-space: nowrap
+  overflow: hidden
+  text-overflow: ellipsis
+
+.storage-section .storage-prop .len
+  position: relative
+  font-size: rem(14)
+  color: var(--toolbar-fg)
+  white-space: nowrap
+  opacity: .7
+
+.storage-section .storage-prop .size
+  position: relative
+  font-size: rem(14)
+  color: var(--toolbar-fg)
+  white-space: nowrap
+  margin-left: auto
+  opacity: .7
+
+.storage-section .storage-prop .btn
+  font-size: rem(12)
+  padding: 2px 6px
+  margin: 2px 0
+
+// TEMP
+.storage-section .favs
+  position: relative
+  display: flex
+  flex-wrap: wrap
+  grid-gap: 8px
+  margin: 16px 16px
+  
+.storage-section .fav
+  position: relative
+  width: 16px
+  height: 16px
+  > img
+    position: absolute
+    width: 100%
+    height: 100%
+    image-rendering: -moz-crisp-edges

@@ -1,0 +1,113 @@
+@import '../../../mixins'
+
+.TabsPanel .container
+  position: relative
+  width: 100%
+  height: 100%
+  min-height: 100%
+  padding: 0 0 0 1px
+  transition: transform var(--d-fast), opacity var(--d-fast)
+  // Transition container
+  > div
+    position: relative
+    width: 100%
+    height: 100%
+  // Last item
+  > div > div:last-of-type
+    margin-bottom: 64px
+
+.TabsPanel .scrollable
+  padding: 1px 0 0
+
+.TabsPanel .new-tab-btns
+  position: sticky
+  bottom: 0px
+  left: -1px
+  display: flex
+  width: 100%
+  flex-wrap: wrap
+  z-index: 10
+  grid-gap: 1px
+  background-color: var(--frame-bg)
+  z-index: 1
+  transition: transform var(--d-fast), opacity var(--d-fast), z-index var(--d-fast)
+  &[data-new-tab-bar-position="bottom"]
+    position: relative
+    bottom: auto
+  &:before
+    content: ''
+    position: absolute
+    top: 0
+    left: -8px
+    width: calc(100% + 16px)
+    height: 100%
+    transition: box-shadow var(--d-fast)
+    box-shadow: 0 -10px 12px -10px #00000000, 0 -1px 0 0 #00000000
+
+.ScrollBox .bottom-shadow[data-show="true"] + .scroll-container .new-tab-btns
+  z-index: 9999
+  &:before
+    box-shadow: 0 -10px 12px -10px #00000064, 0 -1px 0 0 #00000008
+
+.TabsPanel .new-tab-bg
+  position: absolute
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  border-radius: 3px
+.TabsPanel .new-tab-btns[data-sel="true"] .new-tab-bg
+  background-color: var(--selected-bg)
+  box-shadow: inset 0 0 0 1px var(--selected-border)
+
+.TabsPanel .new-tab-btn
+  position: relative
+  display: flex
+  justify-content: center
+  align-items: center
+  height: 26px
+  min-width: 26px
+  flex-grow: 1
+  opacity: .7
+  transition: opacity var(--d-fast)
+  border-radius: 3px
+  &:hover
+    background-color: var(--hover-bg)
+  > svg
+  > img
+    position: absolute
+    width: 16px
+    height: 16px
+    fill: var(--color, var(--frame-fg))
+  &.-custom
+    flex-grow: 0
+  > svg.-icon
+  > img.-icon
+    mask: radial-gradient(
+      circle at calc(100% - 1px) calc(100% - 1px),
+      #00000024,
+      #00000024 7px,
+      #000000 8px,
+      #000000
+    )
+  > svg.-badge
+    position: absolute
+    top: calc(50% + 0px)
+    left: calc(50% + 0px)
+    width: 11px
+    height: 11px
+    padding: 2px
+    fill: var(--color, var(--frame-fg))
+  &[data-br="true"]
+    height: 1px
+    width: 100%
+    opacity: 0
+    > svg
+      display: none
+  &:hover
+    opacity: 1
+  &:active
+    transition: none
+    opacity: .5
+  &[data-sel="true"]
+    opacity: 1

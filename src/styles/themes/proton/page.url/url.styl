@@ -1,0 +1,76 @@
+@import '../../../mixins'
+@import '../vars'
+@import '../btn'
+
+html
+  position: relative
+  height: 100%
+
+body
+  position: relative
+  display: flex
+  width: calc(100% - 16px)
+  min-height: 100%
+  font-family: sans-serif
+  -webkit-font-smoothing: antialiased
+  -moz-osx-font-smoothing: grayscale
+  margin: 0
+  flex-direction: column
+  justify-content: center
+  align-items: center
+  padding: 0 8px
+  background-color: var(--frame-bg)
+
+h2
+  position: relative
+  color: var(--frame-fg)
+  font-size: rem(32)
+  padding: 32px 0 16px
+
+main
+  position: relative
+  display: flex
+  justify-content: center
+  align-items: center
+  flex-direction: column
+  width: 100%
+  height: 100%
+  flex-grow: 1
+  padding: 0 0 64px 0
+
+.label
+  position: relative
+  width: calc(100% - 32px)
+  max-width: 720px
+  font-size: rem(14)
+  font-weight: 600
+  color: var(--frame-fg)
+  margin: 0
+  padding: 0 16px
+  opacity: .5
+
+.value
+  position: relative
+  font-size: rem(16)
+  width: calc(100% - 32px)
+  max-width: 720px
+  color: var(--frame-fg)
+  padding: 8px 16px 24px
+  margin: 0
+  word-wrap: anywhere
+
+.btn
+  font-size: rem(16)
+  padding: 8px 18px
+  margin-top: 12px
+
+.note
+  position: relative
+  max-width: 720px
+  font-size: rem(12)
+  color: var(--frame-fg)
+  margin: 8px 16px
+  overflow: hidden
+  opacity: .5
+  a
+    color: var(--frame-fg)

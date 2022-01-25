@@ -1,0 +1,275 @@
+@import '../../../mixins'
+
+.StylesEditor
+  position: relative
+  display: flex
+  width: 100%
+  height: 100%
+  flex-direction: column
+  overflow: hidden
+  background-color: var(--setup-bg)
+
+.StylesEditor .columns
+  position: relative
+  display: flex
+  height: 100%
+  align-items: stretch
+  overflow: hidden
+  box-shadow: inset 0 -1px 0 0 var(--border)
+
+.StylesEditor .wrapper
+  position: relative
+  display: flex
+  width: 100%
+  flex-flow: column
+  flex: 1 0 100%
+
+.StylesEditor nav
+  position: relative
+  display: flex
+  justify-content: center
+  align-items: center
+  padding: 8px 0
+  grid-gap: 2px
+  background-color: var(--setup-bg)
+  background-image: var(--bg-img)
+  background-size: var(--bg-size)
+  box-shadow: inset 0 -1px 0 0 var(--border)
+
+.StylesEditor .nav-item
+  position: relative
+  font-size: rem(18)
+  color: var(--toolbar-fg)
+  padding: 3px 12px
+  -moz-user-select: none
+  cursor: pointer
+  &:before
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    background-color: var(--toolbar-fg-active)
+    border-radius: 4px
+    opacity: 0
+  &:hover
+    &:before
+      opacity: .08
+  &[data-active="true"]
+    color: var(--toolbar-fg-active)
+    &:before
+      opacity: .1
+
+// ---
+// -- Vars
+// -
+.StylesEditor .vars
+  position: relative
+  display: flex
+  flex-direction: column
+  width: 50%
+  height: 100%
+  overflow-y: auto
+  background-attachment: local
+  background-image: var(--bg-img)
+  background-size: var(--bg-size)
+
+.StylesEditor > .title
+  position: relative
+  font-size: rem(24)
+  color: var(--toolbar-fg)
+  padding: 12px 16px
+
+.StylesEditor .box
+  position: relative
+  display: grid
+  grid-gap: 50px 0
+  padding: 8px 0 16px
+
+.StylesEditor section
+  position: relative
+  display: grid
+  width: 100%
+  max-width: 540px
+  margin: 0 auto
+  padding: 2px 0 32px
+  &[data-hidden="true"]
+    display: none
+
+.StylesEditor  section > h2
+  position: relative
+  width: calc(100% - 32px)
+  font-size: rem(28)
+  font-weight: 400
+  color: var(--toolbar-fg)
+  margin: 28px 16px 24px
+
+.StylesEditor .label
+  font-size: rem(16)
+
+.StylesEditor .css-var
+  position: relative
+  display: flex
+  flex-wrap: wrap
+  align-items: center
+  padding: 2px 8px
+
+.StylesEditor .css-var .var-name
+.StylesEditor .css-var .var-value
+  padding: 2px 0
+  font-size: rem(14)
+  white-space: nowrap
+  flex-grow: 1
+
+.StylesEditor .css-var .var-name
+  color: var(--toolbar-fg)
+  margin: 0 auto 0 0
+
+.StylesEditor .css-var .var-value
+  color: var(--toolbar-fg)
+  text-align: right
+  color: var(--toolbar-fg)
+  -webkit-appearance: none
+  border: none
+  outline: none
+  margin: 0
+  padding: 0
+  background-color: transparent
+  z-index: 1
+
+.StylesEditor .ctrls
+  position: relative
+  display: flex
+  grid-gap: 8px 8px
+  justify-content: center
+  flex-flow: wrap
+  margin: 5px 16px 24px
+
+.StylesEditor .btn
+  width: auto
+  padding: 5px 16px
+
+// ---
+// -- CSS
+// -
+.StylesEditor .css
+  position: relative
+  display: flex
+  width: 50%
+  flex-flow: column
+  overflow-y: auto
+  overflow-x: hidden
+  background-attachment: local
+  background-color: var(--setup-bg)
+  background-image: var(--bg-img)
+  background-size: var(--bg-size)
+
+.StylesEditor .editor-box
+  position: relative
+  display: flex
+  flex-flow: column
+  flex: 1 0 auto
+  box-shadow: inset 0 0 8px 0 #00000032, inset 1px 0 0 0 #00000016
+  background-color: #00000012
+
+.StylesEditor .editor
+  position: relative
+  box-sizing: border-box
+  width: 100%
+  font-family: monospace
+  font-size: rem(11)
+  flex: 1 0 auto
+  color: var(--status-ok)
+  -webkit-appearance: none
+  border: none
+  outline: none
+  margin: 0
+  background-color: #00000000
+  padding: 16px
+  resize: none
+  z-index: 1
+
+  &:focus + .placeholder
+    opacity: .7
+
+.StylesEditor .editor-box > .placeholder
+.StylesEditor .editor-box > .placeholder-note
+  position: absolute
+  font-family: monospace
+  font-size: rem(11)
+  color: var(--status-ok)
+  white-space: pre-wrap
+  padding: 16px
+  transition: opacity var(--d-fast)
+
+  &[data-hidden="true"]
+    transition: opacity var(--d-fast), z-index var(--d-fast) var(--d-fast)
+    opacity: 0
+    z-index: -1
+
+.StylesEditor .editor-box > .placeholder-note
+  top: 32px
+  transition: opacity var(--d-fast) var(--d-fast)
+  color: var(--toolbar-fg)
+  -moz-user-select: text
+  z-index: 2
+  padding: 16px
+
+.StylesEditor .bottom-bar
+  position: relative
+  display: flex
+  width: calc(100% - 16px)
+  height: 36px
+  flex-shrink: 0
+  justify-content: center
+  align-items: center
+  grid-gap: 8px
+  padding: 0 8px
+  box-shadow: inset 0 1px 0 var(--border-flare)
+  background-color: var(--setup-bg)
+  background-attachment: local
+  background-image: var(--bg-img)
+  background-size: var(--bg-size)
+
+.StylesEditor .bottom-bar .btn
+  padding: 3px 8px
+  font-size: rem(14)
+  flex-grow: 0
+
+
+.StylesEditor .color-sample
+  position: relative
+  display: flex
+  align-items: center
+  height: 100%
+  margin: 0 0 0 auto
+
+.StylesEditor .color-sample .value
+  position: relative
+  font-size: rem(12)
+  font-family: monospace
+  color: var(--toolbar-fg)
+  z-index: 2
+
+.StylesEditor .color-sample .color
+  position: absolute
+  width: 100%
+  height: 100%
+  opacity: 0
+  -webkit-appearance: none
+  border: none
+  outline: none
+  margin: 0
+  padding: 0
+  background-color: transparent
+  z-index: 1
+  cursor: pointer
+
+.StylesEditor .color-sample .example
+  position: relative
+  width: 18px
+  height: 18px
+  margin: 0 0 0 8px
+  border-radius: 3px
+  background-color: var(--color)

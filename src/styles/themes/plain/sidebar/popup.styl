@@ -1,0 +1,63 @@
+@import '../../../mixins'
+
+#root[data-color-scheme="dark"]
+  --popup-shadow: 0 0 0 1px var(--border),
+                  inset 0 1px 0 0 var(--border-flare),
+                  0 1px 16px 0 #00000048
+#root[data-color-scheme="light"]
+  --popup-shadow: 0 0 0 1px var(--border),
+                  inset 0 1px 0 0 var(--border-flare),
+                  0 1px 16px 0 #00000032
+
+.popup-container
+  position: absolute
+  display: flex
+  justify-content: center
+  align-items: flex-start
+  width: 100%
+  height: 100%
+  z-index: 10000
+  transform: translateZ(0)
+  background-color: #2228
+.popup-container.-centered
+  align-items: center
+
+.popup
+  position: relative
+  display: flex
+  flex-direction: column
+  width: 100%
+  max-width: 320px
+  max-height: calc(100vh - 64px)
+  margin: 32px 0 0
+  overflow: hidden
+  border-radius: 3px
+  background-color: var(--toolbar-bg)
+  box-shadow: var(--popup-shadow)
+.popup-container.-centered .popup
+  margin: 0 2px
+
+.popup h2
+  position: relative
+  font-size: rem(21)
+  font-weight: 700
+  color: var(--toolbar-fg)
+  margin: 0
+  padding: 14px 4px 12px
+  text-align: center
+
+.popup .ctrls
+  position: relative
+  display: flex
+  align-items: center
+  justify-content: center
+  padding: 2px
+  margin: 1px 0 0 0
+  flex-wrap: wrap
+
+.popup .ctrls > .btn
+  min-width: max-content
+  font-size: rem(15)
+  padding: 4px 10px
+  margin: 2px
+  flex-grow: 1

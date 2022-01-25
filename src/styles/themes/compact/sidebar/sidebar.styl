@@ -1,0 +1,316 @@
+@import '../../../mixins'
+
+@import '../vars'
+@import '../btn'
+@import '../animations'
+@import '../inputs'
+
+@import './scroll-box'
+@import './tab'
+@import './bookmark-card'
+@import './bookmark-node'
+@import './bar.pinned-tabs'
+@import './bar.navigation'
+@import './bar.search'
+@import './bar.panel-view-switcher'
+@import './panel.tabs'
+@import './panel.bookmarks'
+@import './panel.trash'
+@import './panel.history'
+@import './panel.downloads'
+@import './panel.stats'
+@import './popup'
+@import './popup.windows'
+@import './popup.confirm'
+@import './popup.context-menu'
+@import './popup.notifications'
+@import './popup.bookmarks'
+@import './popup.panel-config'
+@import './popup.tabs-panel-removing'
+@import './loading-dots'
+@import './panel-placeholder'
+@import './downloads-icon'
+@import './sub-list-title'
+
+html
+  position: relative
+  height: 100%
+
+body
+  position: relative
+  width: 100%
+  height: 100%
+  -webkit-font-smoothing: antialiased
+  -moz-osx-font-smoothing: grayscale
+  padding: 0
+  margin: 0
+
+  a
+    text-decoration: none
+
+// --- Remove dotted outline ---
+:focus
+  outline: none
+
+::-moz-focus-inner
+  border: 0
+
+// --- Hidden elements ---
+.hidden, .hidden-assets
+  position: absolute
+  top: 0
+  left: 0
+  width: 0
+  height: 0
+  overflow: hidden
+  opacity: 0
+
+#root_container
+  position: relative
+  width: 100%
+  height: 100%
+
+#root
+  position: relative
+  display: flex
+  width: 100%
+  height: 100%
+  flex-direction: column
+  overflow: hidden
+  background-color: var(--frame-bg)
+  background-image: var(--bg-img)
+  background-size: var(--bg-size)
+  flex-direction: column
+
+.top-horizontal-box
+  position: relative
+  display: flex
+  flex-direction: column
+  margin: 0 0 1px 0
+
+.main-box
+  position: relative
+  display: flex
+  width: 100%
+  height: 100%
+  flex-direction: row
+  grid-gap: var(--ff-border-width, 1px)
+
+.central-box
+  position: relative
+  display: flex
+  flex-direction: column
+  width: 100%
+  height: 100%
+  flex-grow: 1
+  flex-shrink: 1
+  grid-gap: var(--ff-border-width, 1px)
+
+.main-box .left-vertical-box
+  position: relative
+  display: flex
+  flex-direction: column
+  justify-content: center
+  align-items: center
+  flex-shrink: 0
+  z-index: 200
+  grid-gap: 1px
+
+.main-box .right-vertical-box
+  position: relative
+  display: flex
+  flex-direction: column
+  flex-shrink: 0
+  z-index: 200
+  grid-gap: 1px
+
+// ---
+// -- Panels
+// -
+.panel-box
+  position: relative
+  width: 100%
+  height: 100%
+  flex-grow: 1
+  flex-shrink: 1
+
+.panel
+  position: absolute
+  display: flex
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  flex-direction: column
+  z-index: 10
+  transition: transform var(--d-fast), opacity var(--d-fast), z-index var(--d-fast)
+  &[data-pos="center"]
+    transform: translateX(0)
+    z-index: 10
+    opacity: 1
+  &[data-pos="left"]
+    transform: translateX(-50%)
+    opacity: 0
+    z-index: 0
+  &[data-pos="right"]
+    transform: translateX(50%)
+    opacity: 0
+    z-index: 0
+
+.overlay-panel-enter-active
+.overlay-panel-leave-active
+  transition: transform var(--d-fast), opacity var(--d-fast), z-index var(--d-fast)
+.overlay-panel-enter-from
+  transform: translateY(10%)
+  z-index: 0
+  opacity: 0
+.overlay-panel-enter-to
+  transform: translateY(0)
+  opacity: 1
+  z-index: 100
+.overlay-panel-leave-from
+  transform: translateY(0)
+  opacity: 1
+  z-index: 100
+.overlay-panel-leave-to
+  transform: translateY(10%)
+  z-index: 0
+  opacity: 0
+
+// ---
+// -- Drag image
+// -
+.drag-image
+  position: absolute
+  bottom: 100%
+  right: 100%
+  max-width: 250px
+  padding: 5px 8px 6px
+  box-shadow: inset 0 0 0 1px var(--toolbar-fg)
+  border-radius: 3px
+  background-color: var(--toolbar-bg)
+  white-space: nowrap
+  transform: translateZ(0)
+
+  .drag-image-title
+    width: 100%
+    font-size: rem(16)
+    color: var(--toolbar-fg)
+    overflow: hidden
+    text-overflow: ellipsis
+
+  .drag-image-info
+    width: 100%
+    font-size: rem(12)
+    color: var(--toolbar-fg)
+    white-space: pre
+    overflow: hidden
+    text-overflow: ellipsis
+
+// ---
+// -- Drag and Drop pointer
+// -
+.pointer
+  position: absolute
+  top: 0
+  left: 0
+  width: 32px
+  height: 24px
+  z-index: -1
+  opacity: 0
+  transform: translateY(-100%)
+  &:after, &:before
+    content: ''
+    position: absolute
+    pointer-events: none
+  &:after
+    top: 11px
+    left: 0
+    width: 100vw
+    height: 2px
+    background-color: var(--frame-fg)
+    opacity: 0
+  &:before
+    top: 8px
+    left: 0
+    width: 0
+    height: 0
+    border-left: 4px solid var(--frame-fg)
+    border-right: 4px solid #00000000
+    border-top: 4px solid #00000000
+    border-bottom: 4px solid #00000000
+  &[data-pointer="between"]:after
+    opacity: 1
+  &[data-pointer="none"]:before
+  &[data-pointer="inside"]:after
+  &[data-pointer="inside"]:before
+    transform: translateX(100%)
+    opacity: 0
+  &[data-pointer="none"] .arrow
+    opacity: 0
+#root[data-drag="true"] .pointer
+  opacity: 1
+  z-index: 100
+for i in 1..12
+  .TabsPanel[data-pos="center"] ~ .pointer[data-pointer="between"][data-lvl=\"{i}\"]:before
+  .TabsPanel[data-pos="center"] ~ .pointer[data-pointer="between"][data-lvl=\"{i}\"]:after
+    transform: "translateX(calc(var(--tabs-indent) * %s))" % i
+for i in 1..12
+  .BookmarksPanel[data-pos="center"] ~ .pointer[data-pointer="between"][data-lvl=\"{i}\"]:before
+  .BookmarksPanel[data-pos="center"] ~ .pointer[data-pointer="between"][data-lvl=\"{i}\"]:after
+    transform: "translateX(calc(var(--bookmarks-indent) * %s))" % i
+.pointer .arrow
+  position: absolute
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  opacity: 1
+  &:before, &:after
+    content: ''
+    position: absolute
+    top: 4px
+    left: -11px
+    width: 16px
+    height: 16px
+    transform: rotateZ(45deg)
+  &:before
+    box-shadow: inset 0 0 0 2px var(--frame-fg)
+    transition: background-color var(--d-fast)
+  &:after
+    opacity: 1
+    box-shadow: inset -1px 1px 0 0 var(--frame-fg)
+  &[data-expanding="true"]
+    animation: pointer-expand-arrow .3s
+  &[data-expanding="true"]:after
+    animation: pointer-expand-pulse .5s
+
+// ---
+// -- Drag and Drop Layer
+// -
+.dnd-layer
+  position: absolute
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  z-index: -1
+#root[data-drag="true"] .dnd-layer
+  z-index: 1000
+
+// ---
+// -- Animations
+// -
+@keyframes pointer-expand-arrow
+  0%
+    opacity: 0
+  100%
+    opacity: 1
+
+@keyframes pointer-expand-pulse
+  0%
+    opacity: 1
+    transform: rotateZ(45deg) scale(1, 1)
+  100%
+    opacity: 0
+    transform: rotateZ(45deg) scale(2, 2)

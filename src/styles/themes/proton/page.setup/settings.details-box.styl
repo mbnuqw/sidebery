@@ -1,0 +1,76 @@
+@import '../../../mixins'
+
+.DetailsBox
+  position: fixed
+  display: flex
+  top: 0
+  left: 0
+  width: 100vw
+  height: 100vh
+  flex-flow: column
+  align-items: center
+  background-color: var(--frame-bg)
+  background-attachment: local
+  background-image: var(--bg-img)
+  background-size: var(--bg-size)
+  z-index: 1
+  overflow: auto
+
+.DetailsBox > .box
+  position: fixed
+  top: 24px
+  right: 16px
+  display: flex
+  padding: 8px 16px
+  justify-content: center
+  align-items: center
+  z-index: 1
+  &:before
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    border-radius: 4px
+    background-color: var(--frame-bg)
+    opacity: .9
+
+.DetailsBox .btn
+.DetailsBox .btn
+  font-size: rem(12)
+  font-weight: 700
+  padding: 6px 12px
+
+.DetailsBox .title
+  position: relative
+  color: var(--toolbar-fg)
+  font-size: rem(18)
+  font-weight: 700
+  margin-right: 6px
+
+.DetailsBox .json
+  position: relative
+  max-width: 100%
+  font-family: monospace
+  font-size: rem(11)
+  padding: 70px 40px 32px
+  white-space: pre
+  margin: 0 auto
+  color: var(--toolbar-fg)
+
+.DetailsBox .editor
+  position: relative
+  box-sizing: border-box
+  width: calc(100% - 16px)
+  height: 100%
+  font-family: monospace
+  font-size: rem(12)
+  color: var(--status-ok)
+  -webkit-appearance: none
+  border: none
+  outline: none
+  margin: 0
+  padding: 70px 8px 32px
+  background-color: transparent
+  resize: none

@@ -1,0 +1,27 @@
+// --- func
+//  Convert px value to rem.
+// > px: length in px
+// > base: 1rem length in px (default
+//         font size)
+// < rem value
+// ------------------------------------
+rem(px, base = 16)
+  return (1 / base * px)rem
+
+
+// --- mixin
+//  Render blocks for sys and manual styles
+// > style: light|dark
+theme_style(style)
+  if style == dark
+    @media (prefers-color-scheme: dark), (prefers-color-scheme: no-preference)
+      &[data-color-scheme="sys"]
+        {block}
+    &[data-color-scheme="dark"]
+      {block}
+  if style == light
+    @media (prefers-color-scheme: light)
+      &[data-color-scheme="sys"]
+        {block}
+    &[data-color-scheme="light"]
+      {block}

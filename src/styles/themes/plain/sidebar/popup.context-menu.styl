@@ -1,0 +1,298 @@
+@import '../../../mixins'
+
+#root
+  --ctx-menu-min-width: 160px
+  --ctx-menu-max-width: 200px
+  --ctx-menu-font: rem(15) sans-serif
+  --ctx-menu-bg: var(--ff-popup, var(--toolbar-bg))
+#root[data-color-scheme="dark"]
+  --ctx-menu-fg: var(--ff-popup-text, #ffffff)
+  --ctx-menu-shadow: 0 0 0 1px #212121, 0 1px 16px 0 #00000048
+#root[data-color-scheme="light"]
+  --ctx-menu-fg: var(--ff-popup-text, #000000)
+  --ctx-menu-shadow: 0 0 0 1px #00000016, 0 1px 16px 0 #00000032
+
+.CtxMenu
+  position: absolute
+  top: 0
+  left: 0
+  width: 100%
+  height: 1px
+  max-height: 100%
+  z-index: -1
+  opacity: 0
+  transition: opacity var(--d-swift), z-index var(--d-swift)
+  &[data-active="true"]
+    opacity: 1
+    z-index: 5000
+
+.CtxMenu .container
+  position: absolute
+  top: 0
+  bottom: 0
+  width: 100%
+  height: 0px
+
+.CtxMenu .box
+  position: absolute
+  max-width: calc(100% - 28px)
+  min-width: var(--ctx-menu-min-width)
+  z-index: 30
+  padding: 0 0 0 0
+  margin: 0
+  overflow: hidden
+  border-radius: var(--element-roundness)
+  background-color: var(--toolbar-bg)
+  box-shadow: var(--ctx-menu-shadow)
+  &:before
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    background-color: var(--ctx-menu-bg)
+
+.CtxMenu .inline-group
+  position: relative
+  display: flex
+  max-width: var(--ctx-menu-max-width)
+  overflow: hidden
+  flex-wrap: wrap
+  &:not(:last-of-type)
+    padding-bottom: 2px
+    &:after
+      content: ''
+      position: absolute
+      bottom: 1px
+      left: 0
+      width: 100%
+      height: 1px
+      background-color: #00000032
+
+.CtxMenu .icon-opt
+  position: relative
+  width: auto
+  height: 30px
+  min-width: 30px
+  flex-grow: 1
+  flex-shrink: 0
+  &:before
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    background-color: var(--element-overlay-bg)
+    opacity: 0
+    border-radius: var(--element-roundness)
+  &[data-width="3"]
+    width: 33.3%
+    flex-grow: 0
+  &[data-width="4"]
+    width: 25%
+    flex-grow: 0
+  &[data-width="wrap"]
+    width: 20%
+    flex-grow: 0
+  &:hover:before
+  &[data-selected="true"]:before
+    opacity: .3
+    img
+    svg
+      opacity: 1
+  &:active
+    opacity: .6
+  img
+  svg
+    position: absolute
+    width: 16px
+    height: 16px
+    top: calc(50% - 8px)
+    left: calc(50% - 8px)
+    opacity: .8
+    fill: var(--color, var(--ctx-menu-fg))
+  .badge
+    top: calc(50% + 2px)
+    left: calc(50% - 10px)
+    width: 9px
+    height: 9px
+    opacity: 1
+    &[data-img="true"]
+      fill: var(--ctx-menu-fg)
+  .badge + .icon
+    clip-path: polygon(0% 0, 100% 0%, 100% 100%, 43.75% 100%, 43.75% 62.5%, 0% 62.5%)
+  &[data-separator="true"]
+    width: 0px
+    min-width: 0px
+    max-width: 0px
+    &:after
+      content: ''
+      position: absolute
+      top: 0
+      left: 0
+      width: 1px
+      height: 100%
+      background-color: #00000032
+  &[data-inactive="true"]
+    opacity: .3
+    &:before
+      opacity: 0
+
+.CtxMenu .list-group
+  position: relative
+  max-width: var(--ctx-menu-max-width)
+  &:not(:last-of-type)
+    padding: 0 0 1px
+    box-shadow: inset 0 -1px 0 0 #00000032
+
+.CtxMenu .opt
+  position: relative
+  display: flex
+  font: var(--ctx-menu-font)
+  align-items: center
+  justify-content: flex-start
+  padding: 3px 0 3px 6px
+  white-space: pre
+  &:before
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    background-color: var(--element-overlay-bg)
+    opacity: 0
+    border-radius: var(--element-roundness)
+  .icon-box
+    position: relative
+    width: 16px
+    height: 16px
+    flex-shrink: 0
+    margin: auto 4px auto -3px
+    transform: translateZ(0)
+  .icon
+    position: absolute
+    top: 0
+    left: 0
+    width: 16px
+    height: 16px
+    fill: var(--color, var(--ctx-menu-fg))
+  svg.icon
+    opacity: .7
+  .badge
+    position: absolute
+    top: calc(50% + 2px)
+    left: calc(50% - 10px)
+    width: 9px
+    height: 9px
+    fill: var(--color, var(--ctx-menu-fg))
+    &[data-img="true"]
+      fill: var(--ctx-menu-fg)
+  .badge + .icon
+    clip-path: polygon(0% 0, 100% 0%, 100% 100%, 43.75% 100%, 43.75% 62.5%, 0% 62.5%)
+  .-rotate90
+    transform: rotateZ(90deg)
+  .-rotate-90
+    transform: rotateZ(-90deg)
+  .label
+    position: relative
+    width: 100%
+    overflow: hidden
+    color: var(--color, var(--ctx-menu-fg))
+    mask: linear-gradient(-90deg, transparent, #000000 12px, #000000)
+  &:hover:before
+  &[data-selected="true"]:before
+    opacity: .3
+  &:active
+    opacity: .6
+  &[data-inactive="true"]
+    opacity: .4
+    &:hover:before
+    &[data-selected="true"]:before
+      opacity: 0
+
+// Separator
+.CtxMenu .opt[data-separator="true"]
+  padding: 1px 0
+.CtxMenu .opt[data-separator="true"]:after
+  content: ''
+  position: relative
+  width: 100%
+  height: 1px
+  background-color: #00000032
+.CtxMenu .opt[data-separator="true"]:before
+.CtxMenu .opt[data-separator="true"] .icon-box
+.CtxMenu .opt[data-separator="true"] .label
+  display: none
+
+.CtxMenu .sub-menu-box
+  position: absolute
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  z-index: 1
+
+.CtxMenu .sub-menu
+  position: relative
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  overflow: hidden
+  border-radius: 2px
+  background-color: var(--frame-bg)
+  box-shadow: var(--ctx-menu-shadow)
+  &:before
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    background-color: var(--ctx-menu-bg)
+  .scrollable
+    padding: 1px 0
+
+// ---
+// -- Transitions
+// -
+.menu-enter-active
+.menu-leave-active
+  transition: opacity var(--d-swift)
+.menu-enter-from
+  z-index: -1
+  opacity: 0
+.menu-enter-to
+  z-index: 100
+  opacity: 1
+.menu-leave-from
+  z-index: 100
+  opacity: 1
+.menu-leave-to
+  z-index: -1
+  opacity: 0
+
+.sub-menu-enter-active
+.sub-menu-leave-active
+  transition: opacity var(--d-fast)
+  .sub-menu
+    transition: transform var(--d-fast)
+.sub-menu-enter-from
+  opacity: 0
+  .sub-menu
+    transform: translateX(16px)
+.sub-menu-enter-to
+  opacity: 1
+  .sub-menu
+    transform: translateX(0)
+.sub-menu-leave-from
+  opacity: 1
+  .sub-menu
+    transform: translateX(0)
+.sub-menu-leave-to
+  opacity: 0
+  .sub-menu
+    transform: translateX(16px)

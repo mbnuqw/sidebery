@@ -1,0 +1,466 @@
+@import '../../../mixins'
+
+#root
+  --nav-btn-width: 30px
+  --nav-btn-height: 30px
+#root[data-color-scheme="dark"]
+  --nav-btn-update-badge-bg: #00e9fb
+  --nav-progress-bg: #ffffff16
+#root[data-color-scheme="light"]
+  --nav-btn-update-badge-bg: #01acda
+  --nav-progress-bg: #00000016
+
+// ---
+// -- Navigation
+// -
+.NavigationBar
+  position: relative
+  display: flex
+  min-height: var(--nav-btn-height)
+  flex-shrink: 0
+  background-color: var(--toolbar-bg)
+  box-shadow: inset 1px 1px 0 0 var(--border-flare), 0 0 3px 0 #00000016
+  border-radius: var(--element-roundness)
+  &.-top
+    width: 100%
+    z-index: 3000
+  &.-bottom
+    width: 100%
+    z-index: 3000
+  &.-vert
+    width: 100%
+    flex-direction: column
+    align-items: center
+    &[data-layout="left"]
+      flex-grow: 1
+    &[data-layout="right"]
+      flex-grow: 1
+
+// ---
+// -- Container of panels buttons
+// -
+.NavigationBar .main-items
+  position: relative
+  display: flex
+  flex-wrap: wrap
+  flex-grow: 1
+  flex-direction: row
+  overflow: hidden
+  grid-gap: 1px
+.NavigationBar.-vert  .main-items
+  flex-direction: column
+.NavigationBar.-vert[data-layout="inline"] .main-items
+  flex-wrap: nowrap
+
+// ---
+// -- Navigational button
+// -
+.NavigationBar .nav-item
+  position: relative
+  display: flex
+  width: var(--nav-btn-width)
+  height: var(--nav-btn-height)
+  justify-content: center
+  align-items: center
+  flex-shrink: 0
+  overflow: hidden
+  z-index: 10
+  transition: opacity var(--d-fast), transform var(--d-fast), z-index var(--d-fast)
+
+  &:before
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    box-shadow: inset 0 0 0 1px var(--element-overlay-border)
+    background-color: var(--element-overlay-bg)
+    opacity: 0
+    border-radius: var(--element-roundness)
+
+  // for dragenter zone and drop pointer
+  &:after
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    z-index: 1
+  
+  // for drop target
+  &[data-drop-mode="before"]:before
+    opacity: 1
+    background-color: transparent
+    border-radius: 0
+    box-shadow: inset 1px 0 0 0 var(--nav-btn-update-badge-bg)
+  &[data-drop-mode="after"]:before
+    opacity: 1
+    background-color: transparent
+    border-radius: 0
+    box-shadow: inset -1px 0 0 0 var(--nav-btn-update-badge-bg)
+  &[data-drop-mode="in"]:before
+    opacity: 1
+    background-color: transparent
+    box-shadow: inset 0 0 0 1px var(--nav-btn-update-badge-bg)
+  &[data-drop-mode="in"][data-type="hidden"]:before
+    background-color: #00000012
+    box-shadow: none
+  &[data-drop-mode="in"][data-type="add"] svg
+    fill: var(--nav-btn-update-badge-bg)
+
+  &:not([data-class="space"]):hover:before
+    opacity: .1
+  &:not([data-class="space"]):active:before
+    opacity: .5
+  &[data-active="true"]:before
+    opacity: .3
+  &[data-sel="true"]:before
+    opacity: .5
+
+  &[data-loading="true"]
+    cursor: progress
+
+  &[data-class="space"]
+    opacity: 1
+    &[data-type="dynamic"]
+      flex-grow: 1
+    &[data-type="static"]:after
+      content: ''
+      position: absolute
+      background-color: var(--border)
+
+  &[data-unloaded="true"] > *
+    opacity: .3
+
+.NavigationBar.-top .nav-item[data-class="space"][data-type="dynamic"]
+.NavigationBar.-bottom .nav-item[data-class="space"][data-type="dynamic"]
+  width: auto
+.NavigationBar.-top .nav-item[data-class="space"][data-type="static"]
+.NavigationBar.-bottom .nav-item[data-class="space"][data-type="static"]
+  width: 16px
+  &:after
+    width: 1px
+    height: 16px
+    top: calc(50% - 8px)
+    left: 50%
+    box-shadow: 1px 0 0 0 var(--border-flare)
+.NavigationBar.-vert .nav-item[data-class="space"][data-type="dynamic"]
+  height: auto
+.NavigationBar.-vert .nav-item[data-class="space"][data-type="static"]
+  height: 16px
+  &:after
+    width: 16px
+    height: 1px
+    top: 50%
+    left: calc(50% - 8px)
+    box-shadow: 0 1px 0 0 var(--border-flare)
+
+.NavigationBar[data-layout="wrap"][data-overflowed="true"] .nav-item
+  flex-grow: 1
+  &[data-class="space"]
+    flex-grow: 0
+    width: 0
+
+.NavigationBar[data-hidden-panels-bar="true"] .nav-item[data-type="hidden"]:before
+  opacity: .4
+
+.NavigationBar.-vert .nav-item[data-drop-mode="before"]:before
+  box-shadow: inset 0 1px 0 0 var(--nav-btn-update-badge-bg)
+.NavigationBar.-vert .nav-item[data-drop-mode="after"]:before
+  box-shadow: inset 0 -1px 0 0 var(--nav-btn-update-badge-bg)
+
+.NavigationBar[data-layout="inline"] .main-items .nav-item
+  position: absolute
+
+  &[data-index="-1"]
+    display: flex
+    opacity: 0
+    z-index: -1
+    transform: scale(0, 0)
+  
+  // Button horizontal position
+  for i in 0..24
+    &[data-index=\"{i}\"]
+      transform: "translateX(calc(var(--nav-btn-width) * %s))" % i
+
+.NavigationBar.-vert .nav-item[data-type="hidden"] > svg
+  transform: rotateZ(-90deg)
+
+.NavigationBar.-bottom .nav-item[data-type="hidden"] > svg
+  transform: rotateZ(180deg)
+
+.NavigationBar.-vert[data-layout="right"] .nav-item[data-type="hidden"] > svg
+  transform: rotateZ(90deg)
+
+// ---
+// -- Nav button icon
+// -
+.NavigationBar .nav-item .icon
+  position: absolute
+  width: 16px
+  height: 16px
+  fill: var(--color, var(--toolbar-fg))
+  transform: translateZ(0)
+  transition: opacity var(--d-fast)
+
+.NavigationBar .nav-item[data-updated="true"] > .icon
+.NavigationBar .nav-item[data-updated="true"] > .DownloadsIcon
+.NavigationBar .nav-item[data-loading="ok"] > .icon
+.NavigationBar .nav-item[data-loading="ok"] > .DownloadsIcon
+.NavigationBar .nav-item[data-loading="err"] > .icon
+.NavigationBar .nav-item[data-loading="err"] > .DownloadsIcon
+  mask: radial-gradient(
+    circle at calc(100% - 2px) calc(100% - 2px),
+    #00000024,
+    #00000024 4px,
+    #000000 5px,
+    #000000
+  )
+
+.NavigationBar .nav-item[data-loading="true"] > .icon
+  mask: radial-gradient(
+    circle at calc(100% - 2px) calc(100% - 2px),
+    #00000024,
+    #00000024 7px,
+    #000000 8px,
+    #000000
+  )
+
+// ---
+// -- Sub icon
+// -
+.NavigationBar .nav-item .bookmarks-badge-icon
+  position: absolute
+  width: 10px
+  height: 10px
+  top: calc(50% + 1px)
+  left: calc(50% + 1px)
+  fill: var(--color, var(--toolbar-fg))
+.NavigationBar .nav-item:not([data-unloaded="true"]) .bookmarks-badge-icon
+  opacity: .7
+
+.NavigationBar .nav-item .bookmarks-badge-icon + .icon
+  clip-path: polygon(0% 0, 100% 0%, 100% 50%, 81.25% 50%, 62.5% 62.5%, 62.5% 100%, 0% 100%)
+
+// ---
+// -- Panel name
+// -
+.NavigationBar .nav-item .name
+  display: none
+
+// ---
+// -- Progress spinner
+// -
+.NavigationBar .nav-item .progress-spinner
+  position: absolute
+  box-sizing: border-box
+  top: 50%
+  left: 50%
+  width: 12px
+  height: 12px
+  border-radius: 50%
+  opacity: 0
+  overflow: hidden
+  transition: opacity var(--d-norm)
+  border-top: 2px solid var(--toolbar-fg)
+  border-left: 2px solid var(--nav-progress-bg)
+  border-right: 2px solid var(--nav-progress-bg)
+  border-bottom: 2px solid var(--nav-progress-bg)
+
+.NavigationBar .nav-item[data-loading="true"] .progress-spinner
+  animation: rotating-animation .5s infinite linear
+
+.NavigationBar .nav-item[data-loading="true"] .progress-spinner
+  opacity: 1
+
+// ---
+// -- Update / Highlight badge
+// -
+.NavigationBar .nav-item .badge
+  position: absolute
+  top: calc(50% + 3px)
+  left: calc(50% + 3px)
+  width: 6px
+  height: 6px
+  border-radius: 50%
+  background-color: var(--nav-btn-update-badge-bg)
+  opacity: 0
+  transform: scale(0.7, 0.7)
+  transition: opacity var(--d-norm), transform var(--d-norm), background-color var(--d-norm)
+
+.NavigationBar .nav-item[data-updated="true"] .badge
+.NavigationBar .nav-item[data-loading="ok"] .badge
+.NavigationBar .nav-item[data-loading="err"] .badge
+  opacity: 1
+  transform: scale(1, 1)
+
+.NavigationBar .nav-item[data-loading="ok"] .badge
+  background-color: var(--status-ok)
+
+.NavigationBar .nav-item[data-loading="err"] .badge
+  background-color: var(--status-err)
+
+.NavigationBar .nav-item[data-loading="ok"] .badge
+.NavigationBar .nav-item[data-loading="err"] .badge
+  opacity: 1
+  transform: scale(1, 1)
+
+// ---
+// -- Audio badge
+// -
+.NavigationBar .nav-item .audio
+  position: absolute
+  top: 50%
+  left: 50%
+  width: 14px
+  height: 14px
+  border-radius: 50%
+  background-color: var(--toolbar-bg)
+  box-shadow: inset 0 0 0 1px var(--border)
+  z-index: 2
+  > svg
+    position: absolute
+    top: 1px
+    left: 1px
+    width: 12px
+    height: 12px
+    fill: var(--toolbar-fg)
+    opacity: 0
+    transition: opacity var(--d-fast)
+  &:hover
+    opacity: .7
+  &:active
+    opacity: .5
+.NavigationBar .nav-item[data-audible="true"] .audio .-audible
+  opacity: 1
+.NavigationBar .nav-item[data-paused="true"] .audio .-paused
+  opacity: 1
+.NavigationBar .nav-item[data-muted="true"] .audio .-muted
+  opacity: 1
+
+// ---
+// -- Length of panel
+// -
+.NavigationBar .nav-item .len
+  position: absolute
+  top: 0
+  right: 1px
+  font: var(--tabs-count-font)
+  font-weight: 500
+  color: var(--toolbar-fg)
+  text-shadow: 0 0 2px var(--toolbar-bg),
+               0 0 2px var(--toolbar-bg),
+               0 0 3px var(--toolbar-bg),
+               0 0 3px var(--toolbar-bg)
+  border-radius: 5px
+  transform: translateZ(0)
+
+.NavigationBar .nav-item[data-empty="true"] .len
+  opacity: .5
+
+// ---
+// -- Static controls for inline layout
+// -
+.static-btns
+  position: relative
+  display: flex
+  flex-shrink: 0
+
+// ---
+// -- Hidden panels bar
+// -
+.NavigationBar .hidden-bar-layer
+  position: absolute
+  width: 100vw
+  height: 100vh
+  overflow: hidden
+  z-index: 100
+  background-color: #00000036
+
+.NavigationBar.-top .hidden-bar-layer
+  height: calc(100vh - 100%)
+  top: 100%
+  left: 0
+.NavigationBar.-vert .hidden-bar-layer
+  width: calc(100vw - 100%)
+.NavigationBar.-vert[data-layout="left"] .hidden-bar-layer
+  top: 0
+  left: 100%
+.NavigationBar.-vert[data-layout="right"] .hidden-bar-layer
+  top: 0
+  right: 100%
+
+.NavigationBar .hidden-bar
+  position: absolute
+  display: flex
+  flex-flow: wrap
+  grid-gap: 1px
+  background-color: var(--toolbar-bg)
+  box-shadow: 0 0 12px 0 #00000032,
+              0 0 0 1px var(--border)
+  &:before
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    background-color: #00000016
+    box-shadow: inset 3px 0 3px -3px #00000024
+
+.NavigationBar.-top .hidden-bar
+  width: 100%
+  &:before
+    box-shadow: inset 0 3px 3px -3px #00000024
+.NavigationBar.-vert .hidden-bar
+  height: 100%
+  flex-direction: column
+
+.NavigationBar.-vert[data-layout="right"] .hidden-bar
+  right: 0
+  box-shadow: 0 0 12px 0 #00000032,
+              0 0 0 1px var(--border)
+  &:before
+    box-shadow: inset -3px 0 3px -3px #00000024
+
+.NavigationBar.-top .hidden-bar
+  top: 0
+  left: 0
+
+.NavigationBar
+  .hidden-panels-enter-active
+  .hidden-panels-leave-active
+    transition: z-index var(--d-fast), opacity var(--d-fast)
+    .hidden-bar
+      transition: opacity var(--d-fast), transform var(--d-fast)
+  .hidden-panels-enter-from
+  .hidden-panels-leave-to
+    opacity: 0
+    z-index: 0
+    .hidden-bar
+      transform: translateY(-100%)
+
+.NavigationBar.-vert[data-layout="left"] .hidden-panels-enter-from .hidden-bar
+.NavigationBar.-vert[data-layout="left"] .hidden-panels-leave-to .hidden-bar
+  transform: translateX(-100%)
+
+.NavigationBar.-vert[data-layout="right"] .hidden-panels-enter-from .hidden-bar
+.NavigationBar.-vert[data-layout="right"] .hidden-panels-leave-to .hidden-bar
+  transform: translateX(100%)
+
+// ---
+// -- Badge transition
+// -
+.nav-badge-enter-active
+.nav-badge-leave-active
+  transition: opacity var(--d-fast)
+.nav-badge-enter-from
+  opacity: 0
+.nav-badge-enter-to
+  opacity: 1
+.nav-badge-leave-from
+  opacity: 1
+.nav-badge-leave-to
+  opacity: 0

@@ -1,0 +1,201 @@
+import { translate } from 'src/dict'
+import { PanelType, BookmarksPanelConfig, BookmarksPanel } from 'src/types'
+import { TabsPanelConfig, TabsPanel } from 'src/types'
+import { HistoryPanelConfig, HistoryPanel } from 'src/types'
+import { DownloadsPanelConfig, DownloadsPanel } from 'src/types'
+import { TrashPanelConfig, TrashPanel } from 'src/types'
+import { StatsPanelConfig, StatsPanel } from 'src/types'
+import { NavItemClass } from 'src/types/sidebar'
+
+export const BOOKMARKS_PANEL: BookmarksPanelConfig = {
+  type: PanelType.bookmarks,
+  id: '',
+  name: translate('panel.bookmarks.title'),
+  iconSVG: 'icon_bookmarks',
+  iconIMGSrc: '',
+  iconIMG: '',
+  color: 'toolbar',
+  lockedPanel: false,
+  tempMode: false,
+  skipOnSwitching: false,
+  rootId: 'root________',
+  viewMode: 'tree',
+}
+export const BOOKMARKS_PANEL_STATE: BookmarksPanel = {
+  ...BOOKMARKS_PANEL,
+  class: NavItemClass.panel,
+  bookmarks: [],
+  len: 0,
+  index: -1,
+  sel: false,
+  loading: false,
+  topOffset: 0,
+  leftOffset: 0,
+  rightOffset: 0,
+  scrollEl: null,
+  scrollComponent: null,
+  bounds: [],
+  ready: false,
+}
+
+export const TABS_PANEL_CONFIG: TabsPanelConfig = {
+  type: PanelType.tabs,
+  id: '',
+  name: '',
+  color: 'toolbar',
+  iconSVG: 'icon_tabs',
+  iconIMGSrc: '',
+  iconIMG: '',
+  lockedTabs: false,
+  lockedPanel: false,
+  skipOnSwitching: false,
+  noEmpty: false,
+  newTabCtx: 'none',
+  dropTabCtx: 'none',
+  moveTabCtx: 'none',
+  moveTabCtxNoChild: true,
+  urlRulesActive: false,
+  urlRules: '',
+  bookmarksFolderId: -1,
+  newTabBtns: [],
+}
+export const TABS_PANEL_STATE: TabsPanel = {
+  ...TABS_PANEL_CONFIG,
+  class: NavItemClass.panel,
+  len: 0,
+  index: -1,
+  sel: false,
+  loading: false,
+  topOffset: 0,
+  leftOffset: 0,
+  rightOffset: 0,
+  scrollEl: null,
+  scrollComponent: null,
+  bounds: [],
+  ready: true,
+
+  updatedTabs: [],
+  actTabs: [],
+  startTabIndex: -1,
+  endTabIndex: -1,
+  nextTabIndex: -1,
+  tabs: [],
+  pinnedTabs: [],
+  selNewTab: false,
+}
+
+export const HISTORY_PANEL: HistoryPanelConfig = {
+  type: PanelType.history,
+  id: 'history',
+  name: translate('panel.history.title'),
+  color: 'toolbar',
+  iconSVG: 'icon_clock',
+  tempMode: false,
+  lockedPanel: false,
+  skipOnSwitching: false,
+  viewMode: 'history',
+}
+export const HISTORY_PANEL_STATE: HistoryPanel = {
+  ...HISTORY_PANEL,
+  class: NavItemClass.panel,
+  len: 0,
+  index: -1,
+  sel: false,
+  loading: false,
+  topOffset: 0,
+  leftOffset: 0,
+  rightOffset: 0,
+  scrollEl: null,
+  scrollComponent: null,
+  bounds: [],
+  ready: false,
+}
+
+export const DOWNLOADS_PANEL: DownloadsPanelConfig = {
+  type: PanelType.downloads,
+  id: 'downloads',
+  name: translate('panel.downloads.title'),
+  color: 'toolbar',
+  iconSVG: 'icon_downloads',
+  tempMode: false,
+  lockedPanel: false,
+  skipOnSwitching: false,
+  viewMode: 'history',
+}
+export const DOWNLOADS_PANEL_STATE: DownloadsPanel = {
+  ...DOWNLOADS_PANEL,
+  class: NavItemClass.panel,
+  len: 0,
+  index: -1,
+  sel: false,
+  loading: false,
+  topOffset: 0,
+  leftOffset: 0,
+  rightOffset: 0,
+  scrollEl: null,
+  scrollComponent: null,
+  bounds: [],
+  ready: false,
+}
+
+export const STATS_PANEL: StatsPanelConfig = {
+  type: PanelType.stats,
+  id: 'stats',
+  name: translate('panel.stats.title'),
+  color: 'toolbar',
+  iconSVG: 'icon_stats',
+  tempMode: false,
+  lockedPanel: false,
+  skipOnSwitching: false,
+  viewMode: 'domains',
+}
+export const STATS_PANEL_STATE: StatsPanel = {
+  ...STATS_PANEL,
+  class: NavItemClass.panel,
+  len: 0,
+  index: -1,
+  sel: false,
+  loading: false,
+  topOffset: 0,
+  leftOffset: 0,
+  rightOffset: 0,
+  scrollEl: null,
+  scrollComponent: null,
+  bounds: [],
+  ready: false,
+}
+
+export const TRASH_PANEL: TrashPanelConfig = {
+  type: PanelType.trash,
+  id: 'trash',
+  name: translate('panel.trash.title'),
+  color: 'toolbar',
+  iconSVG: 'icon_trash',
+  tempMode: false,
+  lockedPanel: false,
+  skipOnSwitching: false,
+  viewMode: 'all',
+}
+export const TRASH_PANEL_STATE: TrashPanel = {
+  ...TRASH_PANEL,
+  class: NavItemClass.panel,
+  len: 0,
+  index: -1,
+  sel: false,
+  loading: false,
+  topOffset: 0,
+  leftOffset: 0,
+  rightOffset: 0,
+  scrollEl: null,
+  scrollComponent: null,
+  bounds: [],
+  ready: false,
+}
+
+export const NAV_BTNS_IDS: ID[] = [
+  'settings',
+  'add_tp',
+  'search',
+  'create_snapshot',
+  'remute_audio_tabs',
+]

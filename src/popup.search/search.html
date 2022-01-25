@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    html {
+      padding: 0;
+      margin: 0;
+    }
+    body[data-color-scheme="light"] {
+      --search-bg: var(--ff-popup, var(--ff-frame, #fbfbfb));
+      --search-fg: var(--ff-popup-text, var(--ff-tab-background-text, #000));
+    }
+    body {
+      --search-bg: var(--ff-popup, var(--ff-frame, #333));
+      --search-fg: var(--ff-popup-text, var(--ff-tab-background-text, #fff));
+      background-color: var(--search-bg);
+      padding: 0;
+      margin: 0;
+    }
+    #textInput {
+      position: relative;
+      display: block;
+      width: calc(100% - 56px);
+      font-size: 1.25rem;
+      line-height: 32px;
+      color: var(--search-fg);
+      -webkit-appearance: none;
+      border: none;
+      outline: none;
+      margin: 0;
+      padding: 12px 0 12px 56px;
+      background-color: transparent;
+      resize: none;
+      z-index: 1;
+    }
+    #icon_search {
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      top: 16px;
+      left: 16px;
+      fill: var(--search-fg);
+    }
+  </style>
+</head>
+<body id="root" class="root -animate">
+  <inject>svg://src/assets/search.svg#icon_search</inject>
+  <input id="textInput" type="text" id="hm">
+  <script type="module" src="./search.js" defer></script>
+</body>
+</html>

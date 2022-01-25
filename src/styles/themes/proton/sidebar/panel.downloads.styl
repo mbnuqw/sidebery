@@ -1,0 +1,261 @@
+@import '../../../mixins'
+
+.DownloadsPanel
+  position: absolute
+  display: flex
+  width: 100%
+  height: 100%
+  flex-direction: column
+  z-index: 100
+  transition: transform var(--d-fast), opacity var(--d-fast), z-index var(--d-fast)
+
+.DownloadsPanel .scrollable
+  padding: 1px 0 0
+
+.DownloadsPanel .or
+  text-align: center
+  color: var(--frame-fg)
+  padding: 32px 0 0 0
+  font-size: rem(18)
+  font-weight: 700
+
+.DownloadsPanel .group
+  position: relative
+
+.DownloadsPanel .group-list
+  position: relative
+  padding: 0 0 8px
+
+// ---
+// -- Download item
+// -
+.DownloadItem
+  position: relative
+  margin: 0
+  padding: 9px 1px 9px 1px
+  &:before
+    content: ''
+    position: absolute
+    top: 3px
+    left: 2px
+    width: calc(100% - 4px)
+    height: calc(100% - 6px)
+    border-radius: 4px
+    background-color: var(--frame-fg)
+    opacity: 0
+.DownloadItem:hover:before
+  opacity: .12
+.DownloadItem[data-sel="true"]:before
+  background-color: var(--selected-bg)
+
+.DownloadItem .status-icon
+  position: relative
+  width: 16px
+  height: 16px
+  margin: 2px 0 2px 4px
+  flex-shrink: 0
+.DownloadItem[data-state="in_progress"] .status-icon
+  fill: #37adff
+.DownloadItem[data-state="complete"] .status-icon
+  fill: var(--status-ok)
+.DownloadItem[data-paused="true"] .status-icon
+  fill: #ffcb00
+.DownloadItem[data-paused="false"][data-state="interrupted"] .status-icon
+  fill: #ff613d
+.DownloadItem[data-active="false"] .status-icon
+  fill: var(--frame-fg)
+  opacity: .5
+
+.DownloadItem .line
+  position: relative
+  display: flex
+  min-height: 20px
+  align-items: center
+
+.DownloadItem .line.-url
+  margin: 2px 2px 0 0
+
+.DownloadItem .fav
+  position: relative
+  width: 16px
+  height: 16px
+  flex-shrink: 0
+  margin: 0 0 0 4px
+
+.DownloadItem .fav > svg
+.DownloadItem .fav > img
+  position: absolute
+  top: 0
+  left: 0
+  width: 16px
+  height: 16px
+  fill: var(--frame-fg)
+.DownloadItem .fav > svg
+  opacity: .7
+
+.DownloadItem .line.-title
+  width: 100%
+  overflow: hidden
+.DownloadItem[data-active="true"] .line.-title
+  cursor: pointer
+.DownloadItem[data-active="true"] .line.-title:hover
+  opacity: .7
+.DownloadItem[data-active="true"] .line.-title:active
+  opacity: .5
+.DownloadItem[data-active="true"][data-state="in_progress"][data-paused="false"]:hover .line.-title
+  display: none
+
+.DownloadItem .line.-speed-info
+  display: none
+  width: 100%
+  overflow: hidden
+.DownloadItem[data-active="true"][data-state="in_progress"][data-paused="false"]:hover .line.-speed-info
+  display: flex
+
+.DownloadItem .name
+  position: relative
+  height: 16px
+  font-size: rem(15)
+  color: var(--frame-fg)
+  white-space: nowrap
+  overflow: hidden
+  text-overflow: ellipsis
+  padding: 0 0 0 5px
+
+.DownloadItem .ext
+  position: relative
+  font-size: rem(15)
+  color: var(--frame-fg)
+  white-space: nowrap
+  overflow: hidden
+  flex-shrink: 0
+  padding: 0 4px 0 0
+
+.DownloadItem .left
+  position: relative
+  height: 16px
+  margin: 0 auto 0 0
+  font-size: rem(15)
+  color: var(--frame-fg)
+  white-space: nowrap
+  overflow: hidden
+  text-overflow: ellipsis
+  padding: 0 0 0 5px
+
+.DownloadItem .speed
+  position: relative
+  font-size: rem(15)
+  color: var(--frame-fg)
+  white-space: nowrap
+  overflow: hidden
+  flex-shrink: 0
+  padding: 0 4px 0 0
+
+.DownloadItem .url
+  position: relative
+  height: 16px
+  font-size: rem(14)
+  color: var(--frame-fg)
+  white-space: nowrap
+  overflow: hidden
+  text-overflow: ellipsis
+  padding: 0 0 0 5px
+  cursor: pointer
+  opacity: .7
+  &:hover
+    opacity: .5
+  &:active
+    opacity: .3
+
+.DownloadItem .dir
+  position: relative
+  margin: 0 0 0 5px
+  font-size: rem(14)
+  color: var(--frame-fg)
+  white-space: nowrap
+  overflow: hidden
+  flex-grow: 1
+  mask: linear-gradient(-90deg, transparent, #000000 12px, #000000)
+  opacity: .7
+.DownloadItem[data-active="true"] .dir
+  cursor: pointer
+.DownloadItem[data-active="true"] .dir:hover
+  opacity: .5
+.DownloadItem[data-active="true"] .dir:active
+  opacity: .3
+
+.DownloadItem .size
+  position: relative
+  margin: 0 5px 0 2px
+  font-size: rem(12)
+  color: var(--frame-fg)
+  white-space: nowrap
+  overflow: hidden
+  flex-shrink: 0
+  padding: 1px 0 0 0
+  opacity: .7
+.DownloadItem:not([data-state="complete"]):hover .size
+  display: none
+.DownloadItem[data-paused="false"][data-state="interrupted"] .size
+  color: #ff613d
+
+.DownloadItem .progress
+  position: relative
+  height: 3px
+  margin: 4px 4px 3px
+  border-radius: 2px
+  background-color: #00000024
+  overflow: hidden
+  .progress-bar
+    position: absolute
+    width: 100%
+    height: 100%
+    left: -100%
+    background-color: #37adff
+    overflow: hidden
+    transition: transform var(--d-norm), background-color var(--d-norm)
+.DownloadItem[data-paused="true"] .progress .progress-bar
+  background-color: #ffcb00
+
+.DownloadItem .progress:after
+  content: ''
+  position: absolute
+  width: 200%
+  height: 100%
+  top: 0
+  right: 0
+  background-color: var(--status-ok)
+  opacity: 0
+.DownloadItem[data-state="complete"] .progress:after
+  opacity: 1
+.DownloadItem[data-progressless="true"][data-state="in_progress"] .progress:after
+  opacity: 1
+  background-color: #37adff
+  animation: downloading .7s infinite linear
+  background-image: repeating-linear-gradient(-45deg, #0000 0px, #0000 8px, #0005 8px, #0005 16px)
+.DownloadItem[data-paused="false"][data-state="interrupted"] .progress:after
+  opacity: 1
+  background-color: #ff613d
+
+@keyframes downloading
+  0%
+    transform: translateX(0)
+  100%
+    transform: translateX(22px)
+
+.DownloadItem .ctrl
+  position: relative
+  display: none
+  width: 20px
+  height: 20px
+  padding: 3px 0 1px
+  margin: 0 2px
+  flex-shrink: 0
+  fill: var(--frame-fg)
+  opacity: .7
+  &:hover
+    opacity: 1
+  &:active
+    opacity: .7
+.DownloadItem:not([data-state="complete"]):hover .ctrl
+  display: block

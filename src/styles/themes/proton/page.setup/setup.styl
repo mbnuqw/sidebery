@@ -1,0 +1,203 @@
+@import '../../../mixins'
+
+@import '../vars'
+@import '../btn'
+@import '../animations'
+@import '../inputs'
+@import '../upgrade-screen'
+
+@import './settings'
+@import './settings.sync'
+@import './settings.details-box'
+@import './settings.storage'
+@import './settings.keybindings'
+@import './settings.permissions'
+@import './settings.popup'
+@import './settings.note-field'
+@import './menu-editor'
+@import './styles-editor'
+@import './snapshots'
+@import './popup.config'
+@import '../sidebar/popup'
+@import '../sidebar/popup.bookmarks'
+@import '../sidebar/bookmark-node'
+@import '../sidebar/scroll-box'
+@import '../sidebar/loading-dots'
+
+#root[data-color-scheme="dark"]
+  --frame-bg: #1C1B22
+  --frame-fg: #fbfbfb
+  --toolbar-fg: #fbfbfb
+  --toolbar-fg-active: #00DDFF
+  --popup-bg: #42414D
+  --popup-fg: #fbfbfb
+  --popup-shadow: 0 0 0 1px #1C1B22, 0 1px 16px 0 #00000048
+  --border: #121212
+  --status-active: #2494ff
+  --btn-fg: #afb2b8
+#root[data-color-scheme="light"]
+  --frame-bg: #ffffff
+  --frame-fg: #15141A
+  --toolbar-fg: #15141A
+  --toolbar-fg-active: #0061E0
+  --popup-bg: #ffffff
+  --popup-fg: #15141A
+  --popup-shadow: 0 0 0 1px #00000016, 0 1px 16px 0 #00000032
+  --border: #e2e2e2
+  --status-active: #0a84ff
+  --btn-fg: #24262a
+
+html
+  position: relative
+  height: 100%
+  font-size: 16px
+
+body
+  position: relative
+  width: 100%
+  height: 100%
+  font-family: sans-serif
+  -webkit-font-smoothing: antialiased
+  -moz-osx-font-smoothing: grayscale
+  overflow: hidden
+  padding: 0
+  margin: 0
+  a
+    text-decoration: none
+
+#root_container
+  position: relative
+  width: 100%
+  height: 100%
+
+.root
+  position: relative
+  display: flex
+  box-sizing: border-box
+  width: 100%
+  height: 100%
+  align-items: center
+  background-color: var(--frame-bg)
+
+  &[data-style="true"]
+    opacity: 1
+
+.root > .nav
+  position: relative
+  display: flex
+  height: calc(100% - 32px)
+  flex-flow: column
+  justify-content: flex-start
+  align-items: stretch
+  flex-shrink: 0
+  z-index: 1
+  padding: 16px 20px 16px 16px
+  overflow-y: auto
+  overflow-x: hidden
+
+.root > .nav .option
+.root > .nav .sub-option
+  position: relative
+  display: flex
+  width: calc(100% + 32px)
+  font-size: rem(19)
+  color: var(--toolbar-fg)
+  white-space: pre
+  cursor: pointer
+  -moz-user-select: none
+  opacity: .7
+  overflow: hidden
+  flex-shrink: 0
+  &:hover
+    opacity: 1
+  &[data-active="true"]
+    opacity: 1
+
+  .body
+    position: relative
+    margin: 2px 0
+    padding: 3px 8px
+    &:before
+      content: ''
+      position: absolute
+      top: 0
+      left: 0
+      width: 100%
+      height: 100%
+      border-radius: 4px
+      background-color: var(--toolbar-fg-active)
+      opacity: 0
+  &:hover .body:before
+    opacity: .1
+  &:active .body:before
+    opacity: .05
+  &[data-active="true"] .body
+    color: var(--toolbar-fg-active)
+  &[data-active="true"] .body:before
+    opacity: .2
+
+.root > .nav .sub-option .body
+  font-size: rem(17)
+  margin: 1px 8px 1px 16px
+  padding: 2px 8px
+
+// --- Hidden elements ---
+.hidden
+.hidden-assets
+  position: absolute
+  top: 0
+  left: 0
+  width: 0
+  height: 0
+  overflow: hidden
+  opacity: 0
+
+footer
+  position: relative
+  display: flex
+  margin: 20px auto 50px
+  justify-content: center
+  align-items: center
+
+  .github
+  .amo
+    position: relative
+    width: 24px
+    height: 24px
+    opacity: .5
+    transition: opacity var(--d-fast)
+    &:hover
+      opacity: 1
+    &:active
+      opacity: .7
+    svg
+      position: absolute
+      width: 100%
+      height: 100%
+      fill: #646464
+  
+  .amo svg
+    top: -5px
+    right: 3px
+    transform: rotateZ(-45deg)
+
+  .logo
+    position: relative
+    width: 36px
+    height: 36px
+    padding: 0 36px
+    fill: #646464
+    cursor: default
+    opacity: .24
+
+.view-enter-active
+.view-leave-active
+  transition: z-index var(--d-fast), transform var(--d-fast), opacity var(--d-fast)
+.view-enter-from
+  opacity: 0
+.view-enter-to
+  opacity: 1
+.view-leave-from
+  opacity: 1
+.view-leave-to
+  opacity: 0

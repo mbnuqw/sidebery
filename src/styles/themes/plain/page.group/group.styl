@@ -1,0 +1,427 @@
+@import '../../../mixins'
+@import '../vars'
+
+html
+  position: relative
+  height: 100%
+
+body
+  position: relative
+  display: flex
+  width: calc(100% - 16px)
+  height: auto
+  min-height: 100%
+  font-family: sans-serif
+  -webkit-font-smoothing: antialiased
+  -moz-osx-font-smoothing: grayscale
+  opacity: 1
+  flex-direction: column
+  justify-content: space-between
+  align-items: center
+  padding: 0 8px
+  margin: 0
+  background-color: var(--toolbar-bg)
+  background-image: var(--bg-img)
+  background-size: var(--bg-size)
+
+:focus
+  outline: none
+
+::-moz-focus-inner
+  border: 0
+
+body a
+  text-decoration: none
+
+body h2
+  max-width: 450px
+  text-align: center
+
+body input
+  -webkit-appearance: none
+  border: none
+  outline: none
+  margin: 0
+  padding: 0
+  background-color: transparent
+  resize: none
+  z-index: 1
+
+.title
+  position: relative
+  display: block
+  width: 100%
+  font-size: 2.5rem
+  font-weight: 700
+  text-align: center
+  color: var(--toolbar-fg)
+  margin: 20px 0 24px
+body[data-pin="true"] .title
+  display: none
+
+.disconnected-warn
+  position: absolute
+  top: 0
+  left: 0
+  z-index: 9999
+  width: 100%
+  height: 100%
+  display: none
+  flex-direction: column
+  justify-content: center
+  align-items: center
+  text-align: center
+  font-size: rem(18)
+  font-weight: 700
+  color: var(--status-err)
+body[data-disconnected="true"] .disconnected-warn
+  display: flex
+
+.pinned-tab
+  position: relative
+  display: none
+  width: 100%
+  max-width: 960px
+  margin: 64px 8px 16px
+  flex-direction: row
+  flex-wrap: nowrap
+  flex-shrink: 0
+  align-items: center
+  background-color: #78787824
+  overflow: hidden
+  border-radius: 6px
+  cursor: pointer
+  transition: box-shadow var(--d-norm)
+  box-shadow: 0 0 0 1px #00000024, 0 2px 5px 0 #00000032
+  -moz-user-select: none
+  &:hover
+    box-shadow: 0 0 0 1px #00000032, 0 2px 5px 0 #00000046
+  &:active
+    opacity: .8
+body[data-pin="true"] .pinned-tab
+  display: flex
+
+.pinned-tab-bg
+  position: absolute
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  background-size: cover
+  background-repeat: no-repeat
+  opacity: .06
+  transition: opacity var(--d-fast)
+.pinned-tab:hover .pinned-tab-bg
+  opacity: .07
+
+.pinned-tab-body
+  position: relative
+  width: 100%
+
+.pinned-tab-title
+  position: relative
+  font-size: rem(32)
+  font-weight: 400
+  text-align: center
+  padding: 16px 0 0
+  margin: 0 12px 8px
+  white-space: nowrap
+  overflow: hidden
+  text-overflow: ellipsis
+  color: var(--toolbar-fg)
+  text-shadow: 0 1px 8px #00000032
+
+.pinned-tab-url
+  position: relative
+  display: block
+  font-size: rem(15)
+  font-weight: 400
+  text-align: center
+  padding: 0 0 24px
+  margin: 0 12px
+  overflow: hidden
+  color: var(--toolbar-fg)
+  white-space: nowrap
+  text-overflow: ellipsis
+  text-shadow: 0 1px 8px #00000032
+  opacity: .7
+
+.tabs
+  display: grid
+  width: 100%
+  max-width: 960px
+  flex-wrap: wrap
+  margin: 0 0 auto
+body[data-layout="grid"] .tabs
+  grid-template-columns: 1fr 1fr 1fr
+  grid-gap: 16px
+  @media screen and (max-width: 720px)
+    grid-template-columns: 1fr 1fr
+  @media screen and (max-width: 450px)
+    grid-template-columns: 1fr
+body[data-layout="list"] .tabs
+  grid-template-columns: 1fr
+  grid-gap: 8px
+
+.new-tab
+  position: relative
+  width: 100%
+  background-color: #78787812
+  overflow: hidden
+  cursor: pointer
+  transition: box-shadow var(--d-norm)
+  box-shadow: 0 0 0 1px #00000024, 0 2px 5px 0 #00000032
+  &:before
+    content: ''
+    position: absolute
+    top: calc(50% - 1px)
+    left: calc(50% - 8px)
+    width: 16px
+    height: 2px
+    background-color: var(--toolbar-fg)
+    transition: background-color var(--d-norm)
+    opacity: .7
+  &:after
+    content: ''
+    position: absolute
+    top: calc(50% - 8px)
+    left: calc(50% - 1px)
+    width: 2px
+    height: 16px
+    background-color: var(--toolbar-fg)
+    transition: background-color var(--d-norm)
+    opacity: .7
+  &:hover
+    box-shadow: 0 0 0 1px #00000032, 0 2px 5px 0 #00000046
+    background-color: #78787818
+    &:before
+    &:after
+      background-color: var(--toolbar-fg)
+  &:active
+    opacity: .8
+body[data-layout="grid"] .new-tab
+  height: 128px
+  border-radius: 6px
+body[data-layout="list"] .new-tab
+  height: 48px
+  border-radius: 3px
+
+.tab
+  position: relative
+  display: flex
+  width: 100%
+  background-color: #78787824
+  overflow: hidden
+  cursor: pointer
+  transition: box-shadow var(--d-norm)
+  box-shadow: 0 0 0 1px #00000024, 0 2px 5px 0 #00000032
+  -moz-user-select: none
+  &:hover
+    box-shadow: 0 0 0 1px #00000032, 0 2px 5px 0 #00000046
+  &:active
+    opacity: .8
+body[data-layout="grid"] .tab
+  height: 128px
+  flex-flow: column
+  align-items: flex-start
+  border-radius: 6px
+body[data-layout="list"] .tab
+  height: 48px
+  flex-flow: row
+  align-items: center
+  border-radius: 3px
+body[data-layout="list"] .tab[data-lvl="1"]
+  width: calc(100% - 15px)
+  margin-left: 15px
+body[data-layout="list"] .tab[data-lvl="2"]
+  width: calc(100% - 29px)
+  margin-left: 29px
+body[data-layout="list"] .tab[data-lvl="3"]
+  width: calc(100% - 42px)
+  margin-left: 42px
+body[data-layout="list"] .tab[data-lvl="4"]
+  width: calc(100% - 54px)
+  margin-left: 54px
+body[data-layout="list"] .tab[data-lvl="5"]
+  width: calc(100% - 65px)
+  margin-left: 65px
+body[data-layout="list"] .tab[data-lvl="6"]
+  width: calc(100% - 75px)
+  margin-left: 75px
+
+.bg
+  background-size: cover
+  background-repeat: no-repeat
+  z-index: 0
+  transition: opacity var(--d-norm)
+body[data-layout="grid"] .bg
+  position: absolute
+  width: 100%
+  height: 128px
+  border-radius: 6.5px
+  opacity: .03
+body[data-layout="grid"] .tab:not([data-discarded="true"]):hover .bg
+  opacity: .04
+body[data-layout="list"] .bg
+  position: relative
+  width: 48px
+  height: 48px
+  border-radius: 3px
+  background-color: #00000012
+  box-shadow: 0 0 0 1px var(--border), inset 0 0 8px 0 #00000032
+body[data-layout="list"] .tab[data-discarded="true"] .bg
+  opacity: .05
+
+.fav
+  position: absolute
+  top: 16px
+  left: 16px
+  width: 16px
+  height: 16px
+  background-size: cover
+  background-repeat: no-repeat
+  border-radius: 3px
+  overflow: hidden
+  filter: drop-shadow(0 0 1px #00000032) drop-shadow(0 0 8px #00000032)
+  transition: opacity var(--d-norm)
+body[data-layout="grid"] .fav
+  top: auto
+  left: 12px
+  bottom: 12px
+.tab[data-fav="false"] .fav
+  opacity: 0
+
+.fav-placeholder
+  position: absolute
+  top: 16px
+  left: 16px
+  width: 16px
+  height: 16px
+  filter: drop-shadow(0 0 1px #00000032) drop-shadow(0 0 8px #00000032)
+  transition: opacity var(--d-norm)
+  > svg
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    fill: var(--toolbar-fg)
+    opacity: .7
+body[data-layout="grid"] .fav-placeholder
+  top: auto
+  left: 12px
+  bottom: 12px
+.tab[data-fav="true"] .fav-placeholder
+  opacity: 0
+
+.info
+  position: relative
+  width: 100%
+  z-index: 2
+  transition: opacity var(--d-norm)
+body[data-layout="grid"] .info
+  left: 0
+  bottom: 0
+  padding: 8px 0 0
+body[data-layout="list"] .info
+  padding: 0
+  flex: 1 1
+  margin: 0 8px 0 10px
+  overflow: hidden
+.tab[data-discarded="true"] .info
+  opacity: .4
+
+.tab-title
+  position: relative
+  font-weight: 400
+  padding: 0
+  overflow: hidden
+  color: var(--toolbar-fg)
+  text-shadow: 0 1px 8px #00000024
+body[data-layout="grid"] .tab-title
+  max-height: 48px
+  font-size: 18px
+  line-height: 24px
+  margin: 0 12px 8px
+body[data-layout="list"] .tab-title
+  font-size: 16px
+  margin: 0
+  overflow: hidden
+  white-space: nowrap
+  text-overflow: ellipsis
+
+.tab-url
+  position: relative
+  display: block
+  font-weight: 400
+  overflow: hidden
+  color: var(--toolbar-fg)
+  white-space: nowrap
+  text-overflow: ellipsis
+  text-shadow: 0 1px 8px #00000024
+  opacity: .7
+body[data-layout="grid"] .tab-url
+  height: 24px
+  max-width: calc(100% - 24px)
+  font-size: 15px
+  margin: 0 12px
+body[data-layout="list"] .tab-url
+  font-size: 14px
+  margin: 0
+
+.tab .ctrls
+  position: relative
+  display: flex
+  height: 100%
+  align-items: center
+  justify-content: flex-end
+  flex-shrink: 0
+  margin-top: auto
+body[data-layout="grid"] .tab .ctrls
+  width: 100%
+  height: 40px
+body[data-layout="list"] .tab .ctrls
+  height: 100%
+
+.ctrls .tab-btn
+  position: relative
+body[data-layout="grid"] .ctrls .tab-btn
+  width: 40px
+  height: 40px
+body[data-layout="list"] .ctrls .tab-btn
+  width: 48px
+  height: 48px
+
+.ctrls .tab-btn svg
+  position: absolute
+  top: calc(50% - 8px)
+  left: calc(50% - 8px)
+  width: 16px
+  height: 16px
+  fill: var(--toolbar-fg)
+  opacity: .7
+.ctrls .tab-btn:hover svg
+  opacity: 1
+.tab[data-discarded="true"] .ctrls .tab-btn.discard-btn svg
+  opacity: .5
+.ctrls .tab-btn.close-btn:hover svg
+  fill: var(--status-err)
+.ctrls .tab-btn:active svg
+  opacity: .5
+
+footer
+  position: relative
+  display: flex
+  margin: 0 auto
+  padding: 50px 0
+  justify-content: center
+  align-items: center
+
+  .logo
+    position: relative
+    width: 36px
+    height: 36px
+    padding: 0 36px
+    fill: #646464
+    cursor: default
+    opacity: .24
