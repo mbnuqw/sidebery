@@ -46,6 +46,7 @@ import { Sidebar } from 'src/services/sidebar'
 import { Tabs } from 'src/services/tabs.fg'
 import { Mouse } from 'src/services/mouse'
 import { DnD } from 'src/services/drag-and-drop'
+import { Search } from 'src/services/search'
 
 const props = defineProps<{
   node: Bookmark
@@ -161,6 +162,11 @@ function onMouseUp(e: MouseEvent): void {
     if (!sameTarget) return
     if (Bookmarks.reactive.popup) return
     if (e.ctrlKey || e.shiftKey) return
+
+    if (Search.reactive.rawValue) {
+      Search.stop()
+      Selection.resetSelection()
+    }
 
     if (Selection.isBookmarks()) {
       return Selection.resetSelection()
