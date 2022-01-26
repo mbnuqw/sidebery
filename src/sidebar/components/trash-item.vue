@@ -31,6 +31,7 @@ import { Settings } from 'src/services/settings'
 import { Favicons } from 'src/services/favicons'
 import { Sidebar } from 'src/services/sidebar'
 import Utils from 'src/utils'
+import { Search } from 'src/services/search'
 
 const props = defineProps<{ info: RemovedItem }>()
 const panel = Sidebar.reactive.panelsById.trash as TrashPanel
@@ -100,6 +101,11 @@ function onMouseUp(e: MouseEvent): void {
   if (!sameTarget) return
 
   if (e.button === 0) {
+    if (Search.reactive.rawValue) {
+      Search.stop()
+      Selection.resetSelection()
+    }
+
     if (Trash.isRemovedTab(props.info)) Trash.openTab(props.info)
     else if (Trash.isRemovedBookmark(props.info)) Trash.createBookmark(props.info)
     else if (Trash.isRemovedWindow(props.info)) Trash.openWindow(props.info)
