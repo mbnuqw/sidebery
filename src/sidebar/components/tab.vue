@@ -320,6 +320,12 @@ function select(): void {
 
 function activate(): void {
   if (Mouse.longClickApplied) return
+
+  if (Search.reactive.rawValue) {
+    Search.stop()
+    Selection.resetSelection()
+  }
+
   if (props.tab.id !== Tabs.activeId) browser.tabs.update(props.tab.id, { active: true })
   else if (Settings.reactive.tabsSecondClickActPrev) {
     const history = Tabs.getActiveTabsHistory()
