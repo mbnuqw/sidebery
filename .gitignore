@@ -5,6 +5,5 @@ node_modules
 coverage
 wiki
 addon
-package-lock.json
 build/*
 !build/*.js
