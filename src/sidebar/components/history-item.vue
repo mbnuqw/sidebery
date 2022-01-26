@@ -59,7 +59,14 @@ function onMouseUp(e: MouseEvent): void {
   Mouse.stopLongClick()
   if (!sameTarget) return
 
-  if (e.button === 0) History.openTab(props.item)
+  if (e.button === 0) {
+    if (Search.reactive.rawValue) {
+      Search.stop()
+      Selection.resetSelection()
+    }
+
+    History.openTab(props.item)
+  }
 
   if (e.button === 2) {
     if (e.ctrlKey || e.shiftKey) return
