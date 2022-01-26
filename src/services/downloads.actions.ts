@@ -13,6 +13,8 @@ import { Permissions } from './permissions'
 import { SetupPage } from './setup-page'
 import { Logs } from './logs'
 import { Favicons } from './favicons'
+import { Search } from './search'
+import { Selection } from './selection'
 
 const POLLING_INTERVAL_MS = 1000
 
@@ -275,6 +277,12 @@ export async function reload(item: DownloadItem): Promise<void> {
 
 export function openRef(item: DownloadItem): void {
   if (!item.referrer) return
+
+  if (Search.reactive.rawValue) {
+    Search.stop()
+    Selection.resetSelection()
+  }
+
   const tab = Tabs.list.find(t => t.url === item.referrer)
   if (tab) {
     browser.tabs.update(tab.id, { active: true })
