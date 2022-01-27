@@ -26,7 +26,7 @@
 
 <script lang="ts" setup>
 import { computed, PropType } from 'vue'
-import { Container, MenuType, TabsPanel } from 'src/types'
+import { Container, DstPlaceInfo, ItemInfo, MenuType, Tab, TabsPanel } from 'src/types'
 import { Settings } from 'src/services/settings'
 import { Selection } from 'src/services/selection'
 import { Menu } from 'src/services/menu'
@@ -34,7 +34,8 @@ import { Tabs } from 'src/services/tabs.fg'
 import { Mouse } from 'src/services/mouse'
 import { Containers } from 'src/services/containers'
 import { Favicons } from 'src/services/favicons'
-import { DOMAIN_RE } from 'src/defaults'
+import { CONTAINER_ID, DOMAIN_RE } from 'src/defaults'
+import Utils from 'src/utils'
 
 interface NewTabBtn {
   id: string
@@ -110,8 +111,8 @@ function onNewTabMouseDown(e: MouseEvent, btn?: NewTabBtn): void {
   // Left
   if (e.button === 0) {
     if (e.ctrlKey) {
-      if (!props.panel.selNewTab) Selection.selectNewTabBtn(props.panel.id)
-      else Selection.deselectNewTabBtn(props.panel.id)
+      Mouse.blockWheel()
+      reopen(btn)
       return
     }
 
@@ -193,5 +194,41 @@ function onNewTabCtxMenu(e: MouseEvent): void {
   if (!Selection.isSet()) Selection.selectNewTabBtn(props.panel.id)
 
   Menu.open(MenuType.NewTab)
+}
+
+async function reopen(btn?: NewTabBtn): Promise<void> {
+  let targetTabs: Tab[] = []
+  if (Selection.isTabs()) {
+    const ids = Selection.get()
+    for (const tab of Tabs.list) {
+      if (ids.includes(tab.id)) targetTabs.push(tab)
+    }
+  } else {
+    const activeTab = Tabs.byId[Tabs.activeId]
+    if (activeTab) targetTabs.push(activeTab)
+  }
+
+  if (!targetTabs.length) return
+  if (targetTabs.some(t => t.panelId !== props.panel.id)) return
+
+  const toReopen: ItemInfo[] = []
+  for (const tab of targetTabs) {
+    // Updating url of exited tab
+    if (tab.cookieStoreId === (btn?.containerId ?? CONTAINER_ID) && btn?.url) {
+      await browser.tabs.update(tab.id, { url: btn.url })
+    }
+    // Reopening tab
+    else {
+      const info: ItemInfo = Utils.cloneObject(tab)
+      if (btn?.url) info.url = btn.url
+      else if (!btn?.containerId) info.url = 'about:newtab'
+      toReopen.push(info)
+    }
+  }
+
+  if (toReopen.length > 0) {
+    const dst: DstPlaceInfo = { containerId: btn?.containerId ?? CONTAINER_ID }
+    Tabs.reopen(toReopen, dst)
+  }
 }
 </script>
