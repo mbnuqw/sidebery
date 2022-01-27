@@ -75,6 +75,9 @@
           :class="{'-inactive': !selectedTabsLen}"
           @click="resetSelection()") {{translate('snapshot.sel.reset_sel')}}
         .close-btn(@click="turnOffSelectionMode()"): svg: use(xlink:href="#icon_close")
+
+    .placeholder(v-if="!state.snapshots.length")
+      .btn(@click="createSnapshot()") {{translate('snapshot.btn_create_first')}}
 </template>
 
 <script lang="ts" setup>
@@ -141,17 +144,18 @@ const selectedTabsLen = computed<number>(() => {
 void (async function init(): Promise<void> {
   const snapshots = []
   const stored = await browser.storage.local.get<Stored>('snapshots')
-  if (!stored.snapshots) return Logs.warn('Snapshots: No snapshots')
   if (!stored.snapshots) stored.snapshots = []
 
-  // Normalize snapshots
-  for (let i = stored.snapshots.length; i--; ) {
-    const snapshot = parseSnapshot(stored.snapshots, i)
-    if (snapshot) snapshots.push(snapshot)
-  }
+  if (stored.snapshots.length > 0) {
+    // Normalize snapshots
+    for (let i = stored.snapshots.length; i--; ) {
+      const snapshot = parseSnapshot(stored.snapshots, i)
+      if (snapshot) snapshots.push(snapshot)
+    }
 
-  state.snapshots = snapshots
-  state.activeSnapshot = snapshots[0]
+    state.snapshots = snapshots
+    state.activeSnapshot = snapshots[0]
+  }
 
   Store.onKeyChange('snapshots', onSnapshotsChange)
 })()

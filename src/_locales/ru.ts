@@ -945,6 +945,7 @@ const dict: Record<string, PlurFn | string> = {
   'snapshot.btn_create_snapshot': 'Создать снепшот',
   'snapshot.btn_open_all_win': 'Открыть все окна',
   'snapshot.btn_open_win': 'Открыть окно',
+  'snapshot.btn_create_first': 'Создать первый снепшот',
   'snapshot.snap_win': (n = 0): string => {
     if (NUM_1_RE.test(n.toString())) return 'окно'
     if (NUM_234_RE.test(n.toString())) return 'окна'

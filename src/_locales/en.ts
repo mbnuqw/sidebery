@@ -874,6 +874,7 @@ const dict: Record<string, PlurFn | string> = {
   'snapshot.btn_create_snapshot': 'Create snapshot',
   'snapshot.btn_open_all_win': 'Open all windows',
   'snapshot.btn_open_win': 'Open window',
+  'snapshot.btn_create_first': 'Create first snapshot',
   'snapshot.snap_win': n => (n === 1 ? 'window' : 'windows'),
   'snapshot.snap_ctr': n => (n === 1 ? 'container' : 'containers'),
   'snapshot.snap_tab': n => (n === 1 ? 'tab' : 'tabs'),
