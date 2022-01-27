@@ -17,7 +17,7 @@
                 :data-separator="opt.type === 'separator'"
                 :data-inactive="opt.inactive"
                 :data-color="opt.color ? opt.color : false"
-                :title="opt.label"
+                :title="opt.tooltip ?? opt.label"
                 @mousedown="onMouseDown($event, opt)"
                 @mouseup="onMouseUp($event, opt)")
                 .icon-box(v-if="Settings.reactive.ctxMenuRenderIcons")
@@ -34,7 +34,7 @@
           :data-separator="opt.type === 'separator'"
           :data-color="opt.color ? opt.color : false"
           :data-inactive="opt.inactive"
-          :title="opt.label"
+          :title="opt.tooltip ?? opt.label"
           @mousedown="onMouseDown($event, opt)"
           @mouseup="onMouseUp($event, opt)")
           svg.badge(v-if="opt.badge" :data-img="!!opt.img"): use(:xlink:href="'#' + opt.badge")
@@ -47,7 +47,7 @@
           :data-separator="opt.type === 'separator'"
           :data-inactive="opt.inactive"
           :data-color="opt.color ? opt.color : false"
-          :title="opt.label"
+          :title="opt.tooltip ?? opt.label"
           @mousedown="onMouseDown($event, opt)"
           @mouseup="onMouseUp($event, opt)")
           .icon-box(v-if="Settings.reactive.ctxMenuRenderIcons")
@@ -74,7 +74,7 @@
                 :data-separator="opt.type === 'separator'"
                 :data-inactive="opt.inactive"
                 :data-color="opt.color ? opt.color : false"
-                :title="opt.label"
+                :title="opt.tooltip ?? opt.label"
                 @mousedown="onMouseDown($event, opt)"
                 @mouseup="onMouseUp($event, opt)")
                 .icon-box(v-if="Settings.reactive.ctxMenuRenderIcons")
@@ -91,7 +91,7 @@
           :data-separator="opt.type === 'separator'"
           :data-color="opt.color ? opt.color : false"
           :data-inactive="opt.inactive"
-          :title="opt.label"
+          :title="opt.tooltip ?? opt.label"
           @mousedown="onMouseDown($event, opt)"
           @mouseup="onMouseUp($event, opt)")
           svg.badge(v-if="opt.badge" :data-img="!!opt.img"): use(:xlink:href="'#' + opt.badge")
@@ -105,7 +105,7 @@
           :data-separator="opt.type === 'separator'"
           :data-inactive="opt.inactive"
           :data-color="opt.color ? opt.color : false"
-          :title="opt.label"
+          :title="opt.tooltip ?? opt.label"
           @mousedown="onMouseDown($event, opt)"
           @mouseup="onMouseUp($event, opt)")
           .icon-box(v-if="Settings.reactive.ctxMenuRenderIcons")
@@ -201,8 +201,8 @@ function onMouseDown(e: MouseEvent, opt: MenuOption): void {
 function onMouseUp(e: MouseEvent, opt: MenuOption): void {
   if (!Mouse.isTarget('menu.option', opt.label)) return
 
-  if (e.button === 0) activateOption(opt)
-  else if (e.button === 1) activateOption(opt, true)
+  if (e.button === 0 && !e.altKey) activateOption(opt)
+  else if (e.button === 1 || (e.button === 0 && e.altKey)) activateOption(opt, true)
 }
 
 function selectOption(dir: number): void {

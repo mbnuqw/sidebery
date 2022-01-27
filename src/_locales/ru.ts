@@ -328,6 +328,7 @@ const dict: Record<string, PlurFn | string> = {
   'menu.common.pin_panel': 'Закрепить панель',
   'menu.common.unpin_panel': 'Открепить панель',
   'menu.common.conf': 'Настройки панели',
+  'menu.common.conf_tooltip': 'Настройки панели\nAlt: Базовые настройки панели',
   'menu.panels.unload': 'Выгрузить',
   // - Menu Editor
   'menu.editor.reset': 'Сброс',

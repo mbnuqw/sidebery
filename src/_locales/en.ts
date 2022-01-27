@@ -313,6 +313,7 @@ const dict: Record<string, PlurFn | string> = {
   'menu.common.pin_panel': 'Pin panel',
   'menu.common.unpin_panel': 'Unpin panel',
   'menu.common.conf': 'Configure panel',
+  'menu.common.conf_tooltip': 'Configure panel\nAlt: Basic panel config',
   'menu.panels.unload': 'Unload',
   // - Menu Editor
   'menu.editor.reset': 'Reset',

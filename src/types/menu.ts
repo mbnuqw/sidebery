@@ -26,6 +26,7 @@ export type MenuOptionType = 'option' | 'separator'
 export interface MenuOption {
   type?: MenuOptionType
   label?: string
+  tooltip?: string
   icon?: string
   img?: string
   badge?: string
