@@ -1220,7 +1220,7 @@ export function createTabsPanel(conf?: Partial<TabsPanelConfig>): TabsPanel {
   return Sidebar.reactive.panelsById[panel.id] as TabsPanel
 }
 
-export function createBookmarksPanel(conf?: Partial<BookmarksPanelConfig>): Panel {
+export function createBookmarksPanel(conf?: Partial<BookmarksPanelConfig>): BookmarksPanel {
   const panel = Utils.cloneObject(BOOKMARKS_PANEL_STATE)
 
   if (conf) {
@@ -1696,6 +1696,7 @@ export async function convertToBookmarksPanel(panel: TabsPanel): Promise<void> {
   if (panel.color) bookmarksPanel.color = panel.color
   if (panel.iconIMG) bookmarksPanel.iconIMG = panel.iconIMG
   if (panel.iconIMGSrc) bookmarksPanel.iconIMGSrc = panel.iconIMGSrc
+  bookmarksPanel.autoConvert = true
 
   // Temporarily lock panel to prevent switching from it
   if (isActive && !bookmarksPanel.lockedPanel) {
@@ -1840,7 +1841,7 @@ export async function upgrade(): Promise<void> {
       Sidebar.reactive.upgrading.init = upgradeState.init
       Sidebar.reactive.upgrading.settings = upgradeState.settings
       Sidebar.reactive.upgrading.sidebar = upgradeState.sidebar
-      Sidebar.reactive.upgrading.menu = upgradeState.menu
+      // Sidebar.reactive.upgrading.menu = upgradeState.menu
       Sidebar.reactive.upgrading.snapshots = upgradeState.snapshots
       Sidebar.reactive.upgrading.favicons = upgradeState.favicons
       Sidebar.reactive.upgrading.styles = upgradeState.styles

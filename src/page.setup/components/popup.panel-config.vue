@@ -126,6 +126,13 @@
     :opts="['tree', 'history']"
     @update:value="selectBookmarksViewMode")
 
+  ToggleField(
+    v-if="Utils.isBookmarksPanel(conf)"
+    label="panel.auto_convert"
+    :inactive="rootDirIsFF"
+    :value="conf.autoConvert"
+    @update:value="toggleAutoConvert")
+
   .InfoField.-folder(v-if="isBookmarks")
     .label {{translate('panel.root_id_label')}}
     .value {{rootPath}}
@@ -261,6 +268,10 @@ const rootPath = computed<string>(() => {
   }
 
   return '/' + path.reverse().join('/')
+})
+const rootDirIsFF = computed<boolean>(() => {
+  if (!Utils.isBookmarksPanel(props.conf)) return false
+  return (props.conf.rootId as string).endsWith('___')
 })
 const newTabBtnsText = computed<string>(() => {
   if (!Utils.isTabsPanel(props.conf)) return ''
@@ -527,6 +538,12 @@ function selectBookmarksViewMode(value: string): void {
   if (!Utils.isBookmarksPanel(props.conf)) return
 
   props.conf.viewMode = value
+  Sidebar.saveSidebar()
+}
+
+function toggleAutoConvert(): void {
+  if (!Utils.isBookmarksPanel(props.conf)) return
+  props.conf.autoConvert = !props.conf.autoConvert
   Sidebar.saveSidebar()
 }
 </script>

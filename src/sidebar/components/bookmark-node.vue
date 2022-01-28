@@ -34,7 +34,7 @@ export default { name: 'BookmarkNode' }
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { Bookmark, DragInfo, DragItem, MenuType } from 'src/types'
+import { Bookmark, BookmarksPanel, DragInfo, DragItem, MenuType, TabsPanelConfig } from 'src/types'
 import { DragType, DropType } from 'src/types'
 import { Settings } from 'src/services/settings'
 import { Windows } from 'src/services/windows'
@@ -47,6 +47,9 @@ import { Tabs } from 'src/services/tabs.fg'
 import { Mouse } from 'src/services/mouse'
 import { DnD } from 'src/services/drag-and-drop'
 import { Search } from 'src/services/search'
+import Utils from 'src/utils'
+import { BOOKMARKED_PANEL_CONF_RE } from 'src/defaults'
+import { Logs } from 'src/services/logs'
 
 const props = defineProps<{
   node: Bookmark
@@ -152,12 +155,13 @@ function onFolderFavMouseDown(e: MouseEvent): void {
 /**
  * Handle mouseup event
  */
-function onMouseUp(e: MouseEvent): void {
+async function onMouseUp(e: MouseEvent): Promise<void> {
   const sameTarget = Mouse.isTarget('bookmark', props.node.id)
   Mouse.resetTarget()
 
   const isFolder = props.node.type === 'folder'
 
+  // Left button
   if (e.button === 0) {
     if (!sameTarget) return
     if (Bookmarks.reactive.popup) return
@@ -185,25 +189,45 @@ function onMouseUp(e: MouseEvent): void {
       }
     }
 
-    if (Settings.reactive.activateOpenBookmarkTab && props.node.isOpen) {
-      const tab = Tabs.list.find(t => t.url === props.node.url)
-      if (tab) {
-        browser.tabs.update(tab.id, { active: true })
-        return
-      }
-    }
-
+    // Bookmark
     if (props.node.type === 'bookmark' && props.node.url) {
+      // Auto convert bookmarks panel to source tabs panel
+      const panel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+      if (Utils.isBookmarksPanel(panel) && panel.autoConvert) {
+        try {
+          await convertCurrentPanelToTabsPanel(panel)
+          return
+        } catch (err) {
+          Logs.info('BookmarkNode.onMouseUp: cannot convertCurrentPanelToTabsPanel', err)
+        }
+      }
+
+      // Activate tab if bookmark is opened
+      if (Settings.reactive.activateOpenBookmarkTab && props.node.isOpen) {
+        const tab = Tabs.list.find(t => t.url === props.node.url)
+        if (tab) {
+          browser.tabs.update(tab.id, { active: true })
+          return
+        }
+      }
+
+      // Open tab
       const panelId = Sidebar.findTabsPanelForUrl(props.node.url)
       Bookmarks.open([props.node.id], { panelId }, !Settings.reactive.openBookmarkNewTab, true)
-    } else if (isFolder) {
+    }
+
+    // Folder
+    else if (isFolder) {
       if (!props.node.expanded) {
         Bookmarks.expandBookmark(props.node.id)
       } else {
         Bookmarks.foldBookmark(props.node.id)
       }
     }
-  } else if (e.button === 2) {
+  }
+
+  // Right button
+  else if (e.button === 2) {
     if (e.ctrlKey || e.shiftKey) return
     if (Bookmarks.reactive.popup) return
 
@@ -213,6 +237,51 @@ function onMouseUp(e: MouseEvent): void {
       Menu.open(MenuType.Bookmarks, e.clientX, e.clientY)
     }
   }
+}
+
+async function convertCurrentPanelToTabsPanel(panel: BookmarksPanel): Promise<void> {
+  const rootDir = Bookmarks.reactive.byId[panel.rootId]
+  const panelConfigExec = rootDir ? BOOKMARKED_PANEL_CONF_RE.exec(rootDir?.title) : null
+  const panelConfigJSON = panelConfigExec?.[2]
+  if (!panelConfigJSON) throw 'No src panel config JSON'
+  let panelConfig: TabsPanelConfig | undefined
+  try {
+    panelConfig = JSON.parse(panelConfigJSON)
+  } catch {
+    Logs.warn('BookmarkNode.convertCurrentPanelToTabsPanel: Cannot parse src panel config')
+    throw 'Cannot parse src panel config'
+  }
+  if (!panelConfig) throw 'No src panel config'
+  panelConfig.bookmarksFolderId = panel.rootId
+
+  const index = Sidebar.reactive.nav.indexOf(panel.id)
+  if (index === -1) throw 'Cannot find index'
+
+  // Create tabs panel
+  const isFirstTabsPanel = !Sidebar.hasTabs
+  const tabsPanel = Sidebar.createTabsPanel(panelConfig)
+  Sidebar.reactive.nav[index] = tabsPanel.id
+  delete Sidebar.reactive.panelsById[panel.id]
+  Sidebar.recalcPanels()
+  Sidebar.recalcTabsPanels()
+  Sidebar.activatePanel(tabsPanel.id, false)
+
+  if (isFirstTabsPanel) await Tabs.load()
+
+  // Set src panel's props
+  if (panel.iconSVG) {
+    if (panel.iconSVG === 'icon_bookmarks') tabsPanel.iconSVG = 'icon_tabs'
+    else tabsPanel.iconSVG = panel.iconSVG
+  }
+  if (panel.color) tabsPanel.color = panel.color
+  if (panel.iconIMG) tabsPanel.iconIMG = panel.iconIMG
+  if (panel.iconIMGSrc) tabsPanel.iconIMGSrc = panel.iconIMGSrc
+
+  Sidebar.saveSidebar(300)
+
+  // Open tab
+  const info = { id: 1, url: props.node.url, title: props.node.title, active: true }
+  await Tabs.open([info], { panelId: tabsPanel.id })
 }
 
 /**

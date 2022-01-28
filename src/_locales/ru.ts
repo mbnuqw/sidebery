@@ -178,6 +178,7 @@ const dict: Record<string, PlurFn | string> = {
   'panel.move_tab_ctx_none': 'ня',
   'panel.move_tab_ctx_nochild': 'За исключением дочерних вкладок',
   'panel.url_rules': 'Перемещать вкладки с совпадающими адресами в эту панель',
+  'panel.auto_convert': 'При открытии закладки преобразовать в исходную панель вкладок',
   'panel.custom_icon_note':
     'Base64, url или символы. Синтакс для символов: "символы::CSS-цвет::CSS-шрифт"',
   'panel.custom_icon': 'Пользовательская иконка',

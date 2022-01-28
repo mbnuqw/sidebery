@@ -171,6 +171,7 @@ const dict: Record<string, PlurFn | string> = {
   'panel.move_tab_ctx_none': 'none',
   'panel.move_tab_ctx_nochild': 'Except child tabs',
   'panel.url_rules': 'Move tabs with matched URLs to this panel',
+  'panel.auto_convert': 'Convert to source tabs panel on opening bookmark',
   'panel.custom_icon_note':
     'Base64, URL or text. Text values syntax: "text::color::CSS-font-value"',
   'panel.custom_icon': 'Custom icon',

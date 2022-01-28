@@ -20,6 +20,7 @@ export const BOOKMARKS_PANEL: BookmarksPanelConfig = {
   skipOnSwitching: false,
   rootId: 'root________',
   viewMode: 'tree',
+  autoConvert: false,
 }
 export const BOOKMARKS_PANEL_STATE: BookmarksPanel = {
   ...BOOKMARKS_PANEL,

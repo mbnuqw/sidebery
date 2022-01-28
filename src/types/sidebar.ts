@@ -185,6 +185,7 @@ export interface BookmarksPanelConfig extends PanelCommonConfig {
   rootId: ID
   viewMode: string
   tempMode: boolean
+  autoConvert: boolean
 }
 
 export interface HistoryPanelConfig extends PanelCommonConfig {
