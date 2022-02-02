@@ -83,14 +83,22 @@ async function loadBookmarks(): Promise<void> {
 async function onSaveClick(): Promise<void> {
   if (!Permissions.reactive.bookmarks) return
   state.loadingBar = true
-  await Sidebar.bookmarkTabsPanel(props.tabsPanel.id, true, true)
+  try {
+    await Sidebar.bookmarkTabsPanel(props.tabsPanel.id, true, true)
+  } catch {
+    state.loadingBar = false
+  }
   state.loadingBar = false
 }
 
 async function onRestoreClick(): Promise<void> {
   if (!Permissions.reactive.bookmarks) return
   state.loadingBar = true
-  await Sidebar.restoreFromBookmarks(props.tabsPanel, true)
+  try {
+    await Sidebar.restoreFromBookmarks(props.tabsPanel, true)
+  } catch {
+    state.loadingBar = false
+  }
   state.loadingBar = false
 }
 
