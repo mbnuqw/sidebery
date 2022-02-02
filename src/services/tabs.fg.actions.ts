@@ -943,7 +943,7 @@ export function switchTab(globaly: boolean, cycle: boolean, step: number, pinned
     (!pinned && !globaly && activeTab.panelId !== activePanel.id) ||
     (!pinned && !pinnedAndPanel && activeTab.pinned)
   ) {
-    if (step > 0) targetTabId = panelTabs[0].id
+    if (step > 0) targetTabId = panelTabs[0]?.id ?? NOID
     if (step < 0) {
       for (let i = panelTabs.length, t; i--; ) {
         t = panelTabs[i]
