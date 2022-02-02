@@ -1,0 +1,167 @@
+@import '../../../mixins'
+
+#root
+  --bookmarks-sub-panel-bar-height: 24px
+  --bookmarks-sub-panel-height: 51vh
+
+.BookmarksSubPanel
+  position: relative
+  width: 100%
+  height: var(--bookmarks-sub-panel-bar-height)
+  flex-shrink: 0
+  z-index: 1000
+
+.BookmarksSubPanel .overlay
+  position: absolute
+  display: none
+  width: 100%
+  height: 100vh
+  top: calc(var(--bookmarks-sub-panel-bar-height) - 100vh)
+  background-color: #00000036
+.BookmarksSubPanel[data-active="true"] .overlay
+  display: block
+
+.BookmarksSubPanel .sub-panel
+  position: absolute
+  top: 0
+  height: calc(var(--bookmarks-sub-panel-height) + var(--bookmarks-sub-panel-bar-height))
+  width: 100%
+  transition: transform var(--d-fast)
+  background-color: var(--toolbar-bg)
+  &:before
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    background-color: var(--bg-overlay)
+.BookmarksSubPanel[data-active="true"] .sub-panel
+  transform: translateY(calc(var(--bookmarks-sub-panel-height) * -1))
+  box-shadow: 0 0 8px 0 #00000032
+
+.BookmarksSubPanel .bar
+  position: relative
+  display: flex
+  justify-content: center
+  align-items: center
+  width: 100%
+  top: 0
+  height: var(--bookmarks-sub-panel-bar-height)
+  background-color: var(--toolbar-bg)
+  box-shadow: 0 0 0 var(--ff-border-width, 1px) var(--ff-border, var(--border, #00000016)),
+              inset 1px 1px 0 0 var(--border-flare)
+  &:before
+    content: ''
+    position: absolute
+    display: none
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    background-color: var(--toolbar-bg)
+    z-index: -1
+.BookmarksSubPanel .bar[data-loading="true"]:before
+  display: block
+  z-index: 1
+
+.BookmarksSubPanel .bar[data-loading="true"] .LoadingDots
+  z-index: 1
+  cursor: progress
+
+.BookmarksSubPanel .bar .icon
+  position: relative
+  width: 10px
+  height: 10px
+  flex-shrink: 0
+  fill: var(--toolbar-fg)
+  margin: 4px
+  opacity: .5
+  transition: opacity var(--d-fast)
+.BookmarksSubPanel .bar:hover .icon
+.BookmarksSubPanel[data-active="true"] .bar .icon
+  opacity: .7
+
+.BookmarksSubPanel .bar .grip
+  position: relative
+  width: 100%
+  height: 3px
+  margin: 4px
+  &:before
+  &:after
+    content: ''
+    position: absolute
+    width: 100%
+    height: 1px
+    background-color: var(--toolbar-fg)
+    opacity: .2
+    transition: opacity var(--d-fast)
+  &:before
+    top: 0
+  &:after
+    bottom: 0
+.BookmarksSubPanel .bar:hover .grip
+  &:before
+  &:after
+    opacity: .3
+.BookmarksSubPanel[data-active="true"] .bar .grip
+  &:before
+  &:after
+    opacity: .4
+
+.BookmarksSubPanel .toggle-area
+  position: relative
+  width: 100%
+  height: 100%
+
+.BookmarksSubPanel .bar .icon-btn
+  position: relative
+  width: var(--bookmarks-sub-panel-bar-height)
+  height: var(--bookmarks-sub-panel-bar-height)
+  flex-shrink: 0
+  fill: var(--toolbar-fg)
+  opacity: .5
+  transition: opacity var(--d-fast)
+  > svg
+    position: absolute
+    top: 4px
+    left: 4px
+    width: 16px
+    height: 16px
+  &:before
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    border-radius: 1px
+    background-color: var(--toolbar-fg)
+    opacity: 0
+.BookmarksSubPanel .bar:hover .icon-btn
+  opacity: .7
+.BookmarksSubPanel .bar .icon-btn:hover
+  opacity: .9
+.BookmarksSubPanel .bar .icon-btn:hover:before
+  opacity: .2
+.BookmarksSubPanel .bar .icon-btn:active
+  opacity: .7
+.BookmarksSubPanel .bar .icon-btn:active:before
+  opacity: .1
+
+.BookmarksSubPanel .content
+  position: absolute
+  top: var(--bookmarks-sub-panel-bar-height)
+  margin-top: 1px
+  height: calc(100% - var(--bookmarks-sub-panel-bar-height))
+  width: 100%
+
+.BookmarksSubPanel .bookmarks-tree
+  position: relative
+  padding: 0 0 32px 0
+
+.BookmarksSubPanel .loading-screen
+  position: relative
+  width: 100%
+  height: 100%
+  background-color: var(--toolbar-bg)

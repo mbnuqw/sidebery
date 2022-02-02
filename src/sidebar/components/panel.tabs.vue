@@ -23,18 +23,19 @@
     v-if="Settings.reactive.showNewTabBtns && Settings.reactive.newTabBarPosition === 'bottom'"
     :panel="panel")
 
+  BookmarksSubPanel(v-if="panel.bookmarksFolderId !== NOID" :tabsPanel="panel")
+
   PanelPlaceholder(
     :isLoading="!props.panel.ready"
     :isMsg="isNothingFound"
     :msg="translate('panel.nothing_found')")
-
-  //- .dbg {{props.panel.startTabIndex}} - {{props.panel.endTabIndex}} - {{props.panel.nextTabIndex}}
 </template>
 
 <script lang="ts" setup>
 import { ref, computed, onMounted } from 'vue'
 import { translate } from 'src/dict'
 import { DropType, MenuType, ScrollBoxComponent, Tab, TabsPanel, ReactiveTab } from 'src/types'
+import { NOID } from 'src/defaults'
 import { Settings } from 'src/services/settings'
 import { Selection } from 'src/services/selection'
 import { Menu } from 'src/services/menu'
@@ -47,6 +48,7 @@ import ScrollBox from './scroll-box.vue'
 import TabComponent from './tab.vue'
 import PanelPlaceholder from './panel-placeholder.vue'
 import NewTabBar from './bar.new-tab.vue'
+import BookmarksSubPanel from './sub-panel.bookmarks.vue'
 
 const props = defineProps<{ panel: TabsPanel }>()
 const scrollBox = ref<ScrollBoxComponent | null>(null)
