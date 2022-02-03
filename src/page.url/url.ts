@@ -84,6 +84,6 @@ void (async () => {
 
   // Setup copy button
   copyBtnEl.addEventListener('click', () => {
-    if (url) navigator.clipboard.writeText(url)
+    if (url) navigator.clipboard.writeText(encodeURI(url))
   })
 })()
