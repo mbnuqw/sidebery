@@ -36,6 +36,7 @@ import { Containers } from 'src/services/containers'
 import { Favicons } from 'src/services/favicons'
 import { CONTAINER_ID, DOMAIN_RE } from 'src/defaults'
 import Utils from 'src/utils'
+import { Logs } from 'src/services/logs'
 
 interface NewTabBtn {
   id: string
@@ -227,8 +228,15 @@ async function reopen(btn?: NewTabBtn): Promise<void> {
   }
 
   if (toReopen.length > 0) {
-    const dst: DstPlaceInfo = { containerId: btn?.containerId ?? CONTAINER_ID }
-    Tabs.reopen(toReopen, dst)
+    const dst: DstPlaceInfo = {
+      containerId: btn?.containerId ?? CONTAINER_ID,
+      panelId: props.panel.id,
+    }
+    try {
+      await Tabs.reopen(toReopen, dst)
+    } catch (err) {
+      Logs.err('NewTabBar: Cannot reopen tabs', err)
+    }
   }
 }
 </script>

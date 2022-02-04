@@ -2985,7 +2985,7 @@ export async function reopen(tabsInfo: ItemInfo[], dst: DstPlaceInfo): Promise<v
     return a.index - b.index
   })
 
-  // Save tree to restore
+  // Save tree to restore it later
   const treeUpdate: Record<ID, ID[]> = {}
   for (const info of tabsInfo) {
     const tab = Tabs.byId[info.id]
@@ -3023,17 +3023,19 @@ export async function reopen(tabsInfo: ItemInfo[], dst: DstPlaceInfo): Promise<v
   await browser.tabs.remove(toRemove)
 
   // Fix tree
+  let treeUpdateNeeded = false
   for (const oldId of Object.keys(treeUpdate)) {
     const children = treeUpdate[oldId]
     const newId = idsMap[oldId]
     if (!children?.length || newId === undefined) continue
 
+    if (!treeUpdateNeeded) treeUpdateNeeded = true
     for (const childId of children) {
       const childTab = Tabs.byId[childId]
       if (childTab) childTab.parentId = newId
     }
   }
-  Tabs.updateTabsTree(minIndex, maxIndex + 1)
+  if (treeUpdateNeeded) Tabs.updateTabsTree(minIndex, maxIndex + 1)
 }
 
 export async function open(
