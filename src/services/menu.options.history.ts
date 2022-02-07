@@ -17,4 +17,24 @@ export const historyMenuOptions: Record<string, () => MenuOption | MenuOption[] 
       },
     }
   },
+
+  copyHistoryUrls: () => {
+    const selected = Selection.get()
+    return {
+      label: translate('menu.copy_urls', selected.length),
+      icon: 'icon_link',
+      badge: 'icon_copy_badge',
+      onClick: () => History.copyUrls(selected),
+    }
+  },
+
+  copyHistoryTitles: () => {
+    const selected = Selection.get()
+    return {
+      label: translate('menu.copy_titles', selected.length),
+      icon: 'icon_title',
+      badge: 'icon_copy_badge',
+      onClick: () => History.copyTitles(selected),
+    }
+  },
 }

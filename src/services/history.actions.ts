@@ -5,6 +5,8 @@ import { Favicons } from 'src/services/favicons'
 import { Sidebar } from 'src/services/sidebar'
 import { Tabs } from './tabs.fg'
 import { Windows } from './windows'
+import { Permissions } from './permissions'
+import { SetupPage } from './setup-page'
 
 const UNLIMITED = 1234567
 const LOAD_RANGE = 432_000_000 // 1000*60*60*24*5 - 5 days
@@ -227,4 +229,36 @@ export async function openTab(item: HistoryItem): Promise<void> {
   if (panel) dstInfo.panelId = panel.id
 
   await Tabs.open([tabInfo], dstInfo)
+}
+
+export function copyUrls(ids: ID[]): void {
+  if (!Permissions.reactive.clipboardWrite) {
+    SetupPage.open('clipboard-write')
+    return
+  }
+
+  let urls = ''
+  for (const id of ids) {
+    const item = History.reactive.list.find(i => i.id === id)
+    if (item && item.url) urls += '\n' + item.url
+  }
+
+  const resultString = urls.trim()
+  if (resultString) navigator.clipboard.writeText(resultString)
+}
+
+export function copyTitles(ids: ID[]): void {
+  if (!Permissions.reactive.clipboardWrite) {
+    SetupPage.open('clipboard-write')
+    return
+  }
+
+  let titles = ''
+  for (const id of ids) {
+    const item = History.reactive.list.find(i => i.id === id)
+    if (item && item.title) titles += '\n' + item.title
+  }
+
+  const resultString = titles.trim()
+  if (resultString) navigator.clipboard.writeText(resultString)
 }

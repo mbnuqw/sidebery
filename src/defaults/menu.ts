@@ -92,7 +92,12 @@ export const BOOKMARKS_PANEL_MENU: MenuConf = [
 
 export const TRASH_MENU: MenuConf = ['restoreTrashItem', 'removeTrashItem']
 
-export const HISTORY_MENU: MenuConf = ['open']
+export const HISTORY_MENU: MenuConf = [
+  'open',
+  'separator-1',
+  'copyHistoryUrls',
+  'copyHistoryTitles',
+]
 
 export const DOWNLOADS_MENU: MenuConf = [
   'openFile',
