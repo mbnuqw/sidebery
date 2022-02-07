@@ -159,6 +159,9 @@ export function selectTabsBranch(parentTab: Tab): void {
   Selection.selected.push(parentTab.id)
   firstItem = parentTab.id
 
+  const rParentTab = Tabs.reactive.byId[parentTab.id]
+  if (rParentTab) rParentTab.sel = true
+
   if (Settings.reactive.tabsTree) {
     for (let tab, i = parentTab.index + 1; i < Tabs.list.length; i++) {
       tab = Tabs.list[i]
