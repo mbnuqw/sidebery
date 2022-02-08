@@ -149,6 +149,7 @@ const dict: Record<string, PlurFn | string> = {
   'container.rules_exclude_tooltip':
     'Reopen tabs with matched URL in default container.\nNewline separated list of "substrings" or "/regex/":\n    example.com\n    /^(some)?regex$/\n    ...',
   'container.user_agent': 'User Agent',
+  'container.new_container_name': 'Container',
   // - Panel fast-config popup
   'panel.fast_conf.title_tabs': 'Tabs panel',
   'panel.fast_conf.title_bookmarks': 'Bookmarks panel',
@@ -205,6 +206,7 @@ const dict: Record<string, PlurFn | string> = {
   'menu.browserAction.create_snapshot': 'Create snapshot',
   // - New tab bar
   'menu.new_tab_bar.no_container': 'No Container',
+  'menu.new_tab_bar.new_container': 'In New Container',
   'menu.new_tab_bar.manage_containers': 'Manage Containers',
   // - Bookmark
   'menu.bookmark.open_in_sub_menu_name': 'Open in',

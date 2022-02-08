@@ -124,6 +124,8 @@ export const NEW_TAB_MENU: MenuConf = [
   'separator-10',
   'newTabContainers',
   'separator-11',
+  'newTabNewContainer',
+  'separator-12',
   'manageContainers',
 ]
 

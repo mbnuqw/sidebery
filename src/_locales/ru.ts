@@ -155,6 +155,7 @@ const dict: Record<string, PlurFn | string> = {
   'container.rules_exclude_tooltip':
     'Переоткрывать вкладки с совпадающими url из этого контейнера в стандартном.\nПострочный список правил "substrings" или "/regex/":\n    example.com\n    /^(some)?regex$/\n    ...',
   'container.user_agent': 'User Agent',
+  'container.new_container_name': 'Контейнер',
   // - Panel config popup (sidebar)
   'panel.fast_conf.title_tabs': 'Панель вкладок',
   'panel.fast_conf.title_bookmarks': 'Панель закладок',
@@ -220,6 +221,7 @@ const dict: Record<string, PlurFn | string> = {
   'menu.browserAction.create_snapshot': 'Создать снепшот',
   // - New tab bar
   'menu.new_tab_bar.no_container': 'Не в контейнере',
+  'menu.new_tab_bar.new_container': 'В новом контейнере',
   'menu.new_tab_bar.manage_containers': 'Управление контейнерами',
   // - Bookmark
   'menu.bookmark.open_in_sub_menu_name': 'Открыть в',

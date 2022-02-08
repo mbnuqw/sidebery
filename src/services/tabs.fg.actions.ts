@@ -3288,3 +3288,15 @@ export function copyTitles(ids: ID[]): void {
   const resultString = titles.trim()
   if (resultString) navigator.clipboard.writeText(resultString)
 }
+
+export async function createTabInNewContainer(): Promise<void> {
+  const panel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+  if (!Utils.isTabsPanel(panel)) throw 'Current panel is not TabsPanel'
+
+  const len = Object.keys(Containers.reactive.byId).length
+  const name = translate('container.new_container_name') + ' ' + len.toString()
+  const container = await Containers.create(name, 'toolbar', 'fingerprint')
+
+  const dst: DstPlaceInfo = { panelId: panel.id, containerId: container.id }
+  await Tabs.open([{ id: -1, url: 'about:newtab' }], dst)
+}

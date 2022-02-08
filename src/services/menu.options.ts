@@ -100,13 +100,23 @@ export const menuOptions: Record<string, () => MenuOption | MenuOption[] | undef
       opts.push({
         label: c.name,
         icon: c.icon,
-        badge: 'icon_reopen',
         color: c.color,
         onClick: () => Tabs.createTabInPanel(panel, { cookieStoreId: c.id }),
       })
     }
 
     return opts
+  },
+
+  newTabNewContainer: () => {
+    const panel = Sidebar.reactive.panelsById[Selection.getFirst()]
+    if (!panel) return
+
+    return {
+      label: translate('menu.new_tab_bar.new_container'),
+      icon: 'icon_new_container',
+      onClick: () => Tabs.createTabInNewContainer(),
+    }
   },
 
   manageContainers: () => {
