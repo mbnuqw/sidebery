@@ -1894,7 +1894,7 @@ export async function moveToNewPanel(tabIds: ID[]): Promise<void> {
   Sidebar.saveSidebar(300)
 
   const result = await Sidebar.startFastEditingOfPanel(dstPanel.id, true)
-  if (!result) return Logs.info('Bookmarks: Panel creation canceled')
+  if (!result) return Logs.info('Tabs: Panel creation canceled')
 
   if (isFirstTabsPanel) await Tabs.load()
 
@@ -3296,6 +3296,10 @@ export async function createTabInNewContainer(): Promise<void> {
   const len = Object.keys(Containers.reactive.byId).length
   const name = translate('container.new_container_name') + ' ' + len.toString()
   const container = await Containers.create(name, 'toolbar', 'fingerprint')
+
+  // Open fast config popup
+  const result = await Sidebar.startFastEditingOfContainer(container.id, true)
+  if (!result) return Logs.info('Tabs: Container creation canceled')
 
   const dst: DstPlaceInfo = { panelId: panel.id, containerId: container.id }
   await Tabs.open([{ id: -1, url: 'about:newtab' }], dst)

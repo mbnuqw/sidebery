@@ -1797,6 +1797,30 @@ export function stopFastEditingOfPanel(result: boolean): void {
   Sidebar.reactive.fastPanelConfig = null
 }
 
+export function startFastEditingOfContainer(
+  containerId: ID,
+  removeOnCancel: boolean
+): Promise<boolean> {
+  return new Promise(res => {
+    const container = Containers.reactive.byId[containerId]
+    if (!container) return res(false)
+
+    Sidebar.reactive.fastContainerConfig = {
+      id: container.id,
+      name: container.name,
+      color: container.color,
+      icon: container.icon,
+      removeOnCancel,
+      done: res,
+    }
+  })
+}
+
+export function stopFastEditingOfContainer(result: boolean): void {
+  if (Sidebar.reactive.fastContainerConfig?.done) Sidebar.reactive.fastContainerConfig.done(result)
+  Sidebar.reactive.fastContainerConfig = null
+}
+
 const scrollConf: ScrollToOptions = { behavior: 'smooth', top: 0 }
 export function scrollActivePanel(y: number, offset?: boolean): void {
   const panel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]

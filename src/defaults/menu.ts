@@ -123,7 +123,6 @@ export const NEW_TAB_MENU: MenuConf = [
   'newTabNoContainer',
   'separator-10',
   'newTabContainers',
-  'separator-11',
   'newTabNewContainer',
   'separator-12',
   'manageContainers',

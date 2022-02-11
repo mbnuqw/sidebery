@@ -133,6 +133,8 @@ const dict: Record<string, PlurFn | string> = {
   'popup.tabs_panel_removing.close': 'Закрыть вкладки',
   'popup.tabs_panel_removing.other_win_note':
     'Вкладки этой панели в других окнах будут перемещены на соседнюю панель или оставлены',
+  // - Container fast-config popup
+  'panel.fast_conf.title': 'Контейнер',
   // - Containers config
   'container.name_placeholder': 'Название...',
   'container.icon_label': 'Иконка',

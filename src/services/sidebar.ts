@@ -15,6 +15,7 @@ export interface SidebarReactiveState {
   navBtnWidth: number
 
   fastPanelConfig: FastPanelConfig | null
+  fastContainerConfig: FastContainerConfig | null
   confirm: ConfirmDialog | null
   hiddenPanelsBar: boolean
   tabsPanelRemoving: TabsPanelRemoving | null
@@ -37,6 +38,15 @@ export interface FastPanelConfig {
   done: (result: boolean) => void
 }
 
+export interface FastContainerConfig {
+  id: ID
+  name: string
+  icon: string
+  color: browser.ColorName
+  removeOnCancel: boolean
+  done: (result: boolean) => void
+}
+
 export const Sidebar = {
   reactive: {
     nav: [],
@@ -52,6 +62,7 @@ export const Sidebar = {
     navBtnWidth: 0,
 
     fastPanelConfig: null,
+    fastContainerConfig: null,
     confirm: null,
     hiddenPanelsBar: false,
     tabsPanelRemoving: null,

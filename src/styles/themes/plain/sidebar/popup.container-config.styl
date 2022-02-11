@@ -1,0 +1,46 @@
+@import '../../../mixins'
+
+.ContainerConfigPopup .field
+  position: relative
+  padding: 2px 4px
+  &:first-of-type
+    margin-top: 0
+
+.ContainerConfigPopup .field-label
+  position: relative
+  width: 100%
+  font-size: rem(14)
+  font-weight: 700
+  color: var(--toolbar-fg)
+  opacity: .7
+
+.ContainerConfigPopup .field > .input
+  font-size: rem(16)
+  transition: color 1s
+  margin: 2px 0 11px
+  > input
+  > textarea
+  > .placeholder
+    color: var(--toolbar-fg)
+  &[data-empty="true"] .placeholder
+    opacity: .5
+  &.err
+    transition: none
+    color: var(--status-err)
+  &[data-active="true"]:before
+    box-shadow: inset 0 0 0 1px var(--toolbar-fg)
+
+.ContainerConfigPopup .SelectInput
+  padding: 0
+  justify-content: flex-start
+  max-width: unset
+  .opt
+    display: flex
+    justify-content: center
+    align-items: center
+    height: 26px
+    width: 26px
+    &:before
+      background-color: var(--color, var(--toolbar-fg))
+  svg
+    padding: 0

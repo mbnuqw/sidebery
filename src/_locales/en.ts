@@ -127,6 +127,8 @@ const dict: Record<string, PlurFn | string> = {
   'popup.tabs_panel_removing.close': 'Close tabs',
   'popup.tabs_panel_removing.other_win_note':
     'Note: Tabs of this panel in other windows will be moved to the neighbour panel or left',
+  // - Container fast-config popup
+  'panel.fast_conf.title': 'Container',
   // - Container config popup
   'container.name_placeholder': 'Name...',
   'container.icon_label': 'Icon',
