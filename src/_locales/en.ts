@@ -261,6 +261,7 @@ const dict: Record<string, PlurFn | string> = {
   'menu.tab.reopen_in_priv_window': 'Reopen in private window',
   'menu.tab.reopen_in_window': 'Reopen in window of another type',
   'menu.tab.reopen_in_default_panel': 'Reopen in default container',
+  'menu.tab.reopen_in_new_container': 'Reopen in new container',
   'menu.tab.reopen_in_sub_menu_name': 'Reopen in',
   'menu.tab.reopen_in_ctr_': 'Reopen in container...',
   'menu.tab.reopen_in_': 'Reopen in ',

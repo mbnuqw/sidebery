@@ -10,6 +10,7 @@ import { Sidebar } from 'src/services/sidebar'
 import { Menu } from 'src/services/menu'
 import { Containers } from 'src/services/containers'
 import { ItemInfo } from 'src/types/tabs'
+import { Logs } from './logs'
 
 export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | undefined> = {
   undoRmTab: () => ({
@@ -192,6 +193,20 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     }
 
     return opts
+  },
+
+  reopenInNewCtr: () => {
+    if (Windows.incognito) return
+
+    const option: MenuOption = {
+      label: translate('menu.tab.reopen_in_new_container'),
+      icon: 'icon_new_container',
+      badge: 'icon_reopen',
+      onClick: () => Tabs.reopenTabsInNewContainer(Selection.get()),
+    }
+
+    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    return option
   },
 
   pin: () => {

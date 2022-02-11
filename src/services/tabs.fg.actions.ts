@@ -3293,14 +3293,32 @@ export async function createTabInNewContainer(): Promise<void> {
   const panel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
   if (!Utils.isTabsPanel(panel)) throw 'Current panel is not TabsPanel'
 
+  // Create container
   const len = Object.keys(Containers.reactive.byId).length
   const name = translate('container.new_container_name') + ' ' + len.toString()
   const container = await Containers.create(name, 'toolbar', 'fingerprint')
 
-  // Open fast config popup
+  // Open config popup
   const result = await Sidebar.startFastEditingOfContainer(container.id, true)
   if (!result) return Logs.info('Tabs: Container creation canceled')
 
   const dst: DstPlaceInfo = { panelId: panel.id, containerId: container.id }
   await Tabs.open([{ id: -1, url: 'about:newtab' }], dst)
+}
+
+export async function reopenTabsInNewContainer(tabIds: ID[]): Promise<void> {
+  const firstTab = Tabs.byId[tabIds[0]]
+  if (!firstTab) return
+
+  // Create container
+  const len = Object.keys(Containers.reactive.byId).length
+  const name = translate('container.new_container_name') + ' ' + len.toString()
+  const container = await Containers.create(name, 'toolbar', 'fingerprint')
+
+  // Open config popup
+  const result = await Sidebar.startFastEditingOfContainer(container.id, true)
+  if (!result) return Logs.info('Tabs: Container creation canceled')
+
+  const items = Tabs.getTabsInfo(tabIds)
+  await Tabs.reopen(items, { panelId: firstTab.panelId, containerId: container.id })
 }

@@ -275,6 +275,7 @@ const dict: Record<string, PlurFn | string> = {
   'menu.tab.reopen_in_norm_window': 'Переоткрыть в стандартном окне',
   'menu.tab.reopen_in_priv_window': 'Переоткрыть в приватном окне',
   'menu.tab.reopen_in_default_panel': 'Переоткрыть в стандартном контейнере',
+  'menu.tab.reopen_in_new_container': 'Переоткрыть в новом контейнере',
   'menu.tab.reopen_in_window': 'Переоткрыть в окне другого типа',
   'menu.tab.reopen_in_sub_menu_name': 'Переоткрыть в',
   'menu.tab.reopen_in_ctr_': 'Переоткрыть в контейнере...',

@@ -10,7 +10,7 @@ export const TABS_MENU: MenuConf = [
   },
   {
     name: translate('menu.tab.reopen_in_sub_menu_name'),
-    opts: ['reopenInNewWin', 'reopenInWin', 'reopenInCtr'],
+    opts: ['reopenInNewWin', 'reopenInWin', 'reopenInCtr', 'reopenInNewCtr'],
   },
   'separator-2',
   'pin',
