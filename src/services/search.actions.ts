@@ -16,6 +16,8 @@ import { History } from './history'
 import { Trash } from './trash'
 import { Downloads } from './downloads'
 
+export const INPUT_TIMEOUT = 150
+
 export function init(): void {
   if (Settings.reactive.searchBarMode === 'static') Search.reactive.barIsShowed = true
 }
@@ -30,7 +32,7 @@ export function onOutsideSearchInput(value: string): void {
   clearTimeout(inputTimeout)
   inputTimeout = setTimeout(() => {
     Search.search(Search.reactive.rawValue)
-  }, 128)
+  }, INPUT_TIMEOUT)
 }
 
 export function onOutsideSearchExit(): void {

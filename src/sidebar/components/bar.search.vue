@@ -95,8 +95,8 @@ function onInput(e: Event): void {
 
   clearTimeout(inputTimeout)
   inputTimeout = setTimeout(() => {
-    Search.search(Search.reactive.rawValue)
-  }, 128)
+    Search.search((e.target as HTMLInputElement).value)
+  }, Search.INPUT_TIMEOUT)
 }
 
 function onChange(e: Event): void {
