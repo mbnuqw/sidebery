@@ -168,7 +168,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     if (firstTab.cookieStoreId !== CONTAINER_ID) {
       opts.push({
         label: translate('menu.tab.reopen_in_default_panel'),
-        icon: 'icon_tabs',
+        icon: 'icon_default_container',
         badge: 'icon_reopen',
         onClick: () => {
           const items = Tabs.getTabsInfo(Selection.get())
