@@ -22,10 +22,6 @@
     "page": "page.setup/setup.html"
   },
 
-  "omnibox": {
-    "keyword": "."
-  },
-
   "permissions": [
     "activeTab",
     "tabs",
@@ -35,8 +31,7 @@
     "sessions",
     "menus",
     "menus.overrideContext",
-    "search",
-    "idle"
+    "search"
   ],
   
   "optional_permissions": [
