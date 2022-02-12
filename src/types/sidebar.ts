@@ -34,8 +34,7 @@ export const enum PanelType {
   tabs = 2,
   downloads = 3,
   history = 4,
-  stats = 5,
-  trash = 6,
+  trash = 5,
 }
 
 export const enum ButtonType {
@@ -59,7 +58,6 @@ export const NavItemTypeNames = {
   [PanelType.history]: 'history',
   [PanelType.trash]: 'trash',
   [PanelType.downloads]: 'downloads',
-  [PanelType.stats]: 'stats',
   [ButtonType.settings]: 'settings',
   [ButtonType.add_tp]: 'add_tp',
   [ButtonType.search]: 'search',
@@ -206,19 +204,12 @@ export interface TrashPanelConfig extends PanelCommonConfig {
   tempMode: boolean
 }
 
-export interface StatsPanelConfig extends PanelCommonConfig {
-  type: PanelType.stats
-  viewMode: string
-  tempMode: boolean
-}
-
 export type PanelConfig =
   | BookmarksPanelConfig
   | TabsPanelConfig
   | TrashPanelConfig
   | DownloadsPanelConfig
   | HistoryPanelConfig
-  | StatsPanelConfig
 
 export interface PanelCommonState extends PanelCommonConfig, NavItemState {
   class: NavItemClass
@@ -268,19 +259,9 @@ export interface TrashPanel extends PanelCommonState, TrashPanelConfig {
   type: PanelType.trash
 }
 
-export interface StatsPanel extends PanelCommonState, StatsPanelConfig {
-  type: PanelType.stats
-}
-
 export interface ViewModeBtn {
   id: string
   icon: string
 }
 
-export type Panel =
-  | BookmarksPanel
-  | TabsPanel
-  | TrashPanel
-  | DownloadsPanel
-  | HistoryPanel
-  | StatsPanel
+export type Panel = BookmarksPanel | TabsPanel | TrashPanel | DownloadsPanel | HistoryPanel

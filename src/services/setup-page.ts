@@ -43,7 +43,6 @@ export const nav = [
   { active: false, name: 'settings_bookmarks', sub: true },
   { active: false, name: 'settings_downloads', sub: true },
   { active: false, name: 'settings_history', sub: true },
-  { active: false, name: 'settings_stats', sub: true },
   { active: false, name: 'settings_trash', sub: true },
   { active: false, name: 'settings_appearance', sub: true },
   { active: false, name: 'settings_mouse', sub: true },

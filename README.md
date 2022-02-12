@@ -4,11 +4,9 @@ This is a branch of the next major version of Sidebery.
 
 ## Some notable changes/additions
 
-- Lots of bugs (even more than in v4)
 - Search
 - History panel (experimental)
 - Downloads panel (experimental)
-- Statistics panel (experimental)
 - Trash-bin panel (experimental)
 - Reworked navigation bar
 - Configurable "new tab" buttons bar

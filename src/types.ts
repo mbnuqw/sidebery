@@ -87,7 +87,6 @@ export interface BackupData {
   snapshots?: Snapshot[]
   sidebarCSS?: string
   groupCSS?: string
-  stats?: DomainsStats[]
   favicons?: string[]
   favHashes?: number[]
   favDomains?: Record<string, FavDomain>
@@ -215,12 +214,6 @@ export interface TabsMoveConf {
   dstContainerId?: string
   dstWindowId?: ID
   dstIncognito?: boolean
-}
-
-export interface DomainsStats {
-  date: number
-  domains: Record<string, number>
-  passed?: number
 }
 
 export interface FavDomain {

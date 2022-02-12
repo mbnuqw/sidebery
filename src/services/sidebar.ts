@@ -76,7 +76,6 @@ export const Sidebar = {
   hasBookmarks: false,
   hasHistory: false,
   hasDownloads: false,
-  hasStats: false,
   hasTrash: false,
   urlRules: [] as UrlRule[],
   lastTabsPanelId: NOID,

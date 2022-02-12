@@ -93,7 +93,6 @@ import BookmarksPanel from './components/panel.bookmarks.vue'
 import TrashPanel from './components/panel.trash.vue'
 import HistoryPanel from './components/panel.history.vue'
 import DownloadsPanel from './components/panel.downloads.vue'
-import StatsPanel from './components/panel.stats.vue'
 import SearchBar from './components/bar.search.vue'
 import BookmarksPopup from './components/popup.bookmarks.vue'
 import PanelConfigPopup from './components/popup.panel-config.vue'
@@ -143,7 +142,6 @@ function getPanelComponent(panel: Panel): Component | undefined {
   if (panel.type === PanelType.trash) return TrashPanel
   if (panel.type === PanelType.history) return HistoryPanel
   if (panel.type === PanelType.downloads) return DownloadsPanel
-  if (panel.type === PanelType.stats) return StatsPanel
 }
 
 function onFocusIn(e: FocusEvent): void {

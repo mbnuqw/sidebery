@@ -84,14 +84,6 @@ const dict: Record<string, PlurFn | string> = {
   },
 
   // ---
-  // -- Statistics panel
-  // -
-  'panel.stats.title': 'Статистика',
-  'panel.stats.range_day': 'День',
-  'panel.stats.range_week': 'Неделя',
-  'panel.stats.range_month': 'Месяц',
-
-  // ---
   // -- Trash panel
   // -
   'panel.trash.title': 'Корзина',
@@ -427,7 +419,6 @@ const dict: Record<string, PlurFn | string> = {
   'settings.nav_settings_downloads': 'Загрузки',
   'settings.nav_settings_history': 'История',
   'settings.nav_settings_trash': 'Корзина',
-  'settings.nav_settings_stats': 'Статистика',
   'settings.nav_settings_appearance': 'Вид',
   'settings.nav_settings_snapshots': 'Снепшоты',
   'settings.nav_settings_mouse': 'Мышь',
@@ -498,7 +489,6 @@ const dict: Record<string, PlurFn | string> = {
   'settings.nav_bar.available_elements': 'Доступные элементы',
   'settings.nav_bar_btn_tabs_panel': 'Панель вкладок',
   'settings.nav_bar_btn_bookmarks_panel': 'Панель закладок',
-  'settings.nav_bar_btn_stats': 'Статистика',
   'settings.nav_bar_btn_trash': 'Корзина',
   'settings.nav_bar_btn_history': 'История',
   'settings.nav_bar_btn_downloads': 'Загрузки',
@@ -724,13 +714,6 @@ const dict: Record<string, PlurFn | string> = {
   'settings.history_title': 'История',
   'settings.load_history_on_demand': 'Инициализоровать сервис истории только по необходимости',
 
-  // --- Stats
-  'settings.stats_title': 'Статистика',
-  'settings.stats_week_start': 'Начало недели',
-  'settings.stats_week_start_m': 'понедельник',
-  'settings.stats_week_start_s': 'воскресенье',
-  'settings.load_stats_on_demand': 'Инициализоровать сервис статистики только по необходимости',
-
   // --- Trash
   'settings.trash_title': 'Корзина',
   'settings.load_trash_on_demand': 'Инициализоровать сервис корзины только по необходимости',
@@ -934,7 +917,6 @@ const dict: Record<string, PlurFn | string> = {
   'settings.backup_settings': 'Настройки',
   'settings.backup_styles': 'Стили',
   'settings.backup_snapshots': 'Снепшоты',
-  'settings.backup_stats': 'Статистика',
   'settings.backup_favicons': 'Кэш иконок сайтов',
   'settings.backup_kb': 'Сочетания клавиш',
   'settings.backup_parse_err': 'Неправильный формат импортированных данных',

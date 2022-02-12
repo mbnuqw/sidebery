@@ -35,7 +35,6 @@ export const BTN_ICONS: Record<string, string> = {
   bookmarks_panel: 'icon_bookmarks',
   settings: 'icon_settings',
   history: 'icon_clock',
-  stats: 'icon_stats',
   trash: 'icon_trash',
   downloads: 'icon_downloads',
   sp: 'icon_ellipsis',

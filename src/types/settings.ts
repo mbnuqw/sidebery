@@ -120,10 +120,6 @@ export interface SettingsState {
   showNotifOnDownloadOk: boolean
   showNotifOnDownloadErr: boolean
 
-  // Stats
-  statsWeekStart: typeof SETTINGS_OPTIONS.statsWeekStart[number]
-  loadStatsOnDemand: boolean
-
   // Trash
   loadTrashOnDemand: boolean
 

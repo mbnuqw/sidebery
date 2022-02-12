@@ -1,7 +1,6 @@
 import { Window } from 'src/types'
 import { Windows } from 'src/services/windows'
 import { Logs } from 'src/services/logs'
-import { Stats } from 'src/services/stats'
 import { Sidebar } from 'src/services/sidebar'
 import { Trash } from 'src/services/trash'
 import { Tabs } from 'src/services/tabs.bg'
@@ -74,11 +73,6 @@ function onWindowFocusedBg(windowId: ID): void {
       const window = Windows.byId[id]
       if (window.focused) {
         window.focused = false
-
-        if (Sidebar.hasStats && !window.incognito) {
-          const activeTab = window.tabs?.find(t => t.active)
-          if (activeTab) Stats.update(activeTab.url)
-        }
       }
     }
   }
@@ -89,10 +83,6 @@ function onWindowFocusedBg(windowId: ID): void {
     if (window) {
       Windows.lastFocusedWinId = window.id
       window.focused = true
-      if (Sidebar.hasStats && !window.incognito) {
-        const activeTab = window.tabs?.find(t => t.active)
-        if (activeTab) Stats.update(undefined, activeTab.url)
-      }
     }
   }
 }

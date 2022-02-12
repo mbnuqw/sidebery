@@ -4,7 +4,6 @@ import { GROUP_RE, NOID } from 'src/defaults'
 import { Tabs } from 'src/services/tabs.bg'
 import { Windows } from 'src/services/windows'
 import { Containers } from 'src/services/containers'
-import { Stats } from 'src/services/stats'
 import { Store } from 'src/services/storage'
 import { Trash } from 'src/services/trash'
 import { WebReq } from 'src/services/web-req'
@@ -117,9 +116,6 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo): void {
 
   const tab = Tabs.byId[tabId]
   if (Sidebar.hasTrash && !tab.url.startsWith('ab')) Trash.putTab(tab)
-  if (Sidebar.hasStats && !tabWindow.incognito && tab.active) {
-    Stats.update(tab.url)
-  }
 
   tabWindow.tabs.splice(index, 1)
   delete Tabs.byId[tabId]
@@ -156,11 +152,6 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo): void {
   }
 
   if (change.url) {
-    const tabWindow = Windows.byId[targetTab.windowId]
-    if (Sidebar.hasStats && !tabWindow.incognito && targetTab.active) {
-      Stats.update(targetTab.url, change.url)
-    }
-
     if (Utils.isGroupUrl(change.url)) injectGroupPageScript(targetTab.windowId, tabId)
     if (Utils.isUrlUrl(change.url)) injectUrlPageScript(tabId)
   }
@@ -195,15 +186,6 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
 
   const prevTab = Tabs.byId[info.previousTabId]
   if (prevTab) prevTab.active = false
-
-  const tabWindow = Windows.byId[tab?.windowId]
-  const prevTabWindow = Windows.byId[prevTab?.windowId]
-  const bothIncognito = tabWindow?.incognito && prevTabWindow?.incognito
-  if (Sidebar.hasStats && !bothIncognito) {
-    const prevUrl = prevTabWindow?.incognito ? undefined : prevTab?.url
-    const newUrl = tabWindow?.incognito ? undefined : tab?.url
-    if (prevUrl || newUrl) Stats.update(prevUrl, newUrl)
-  }
 
   // Workaround for #196, https://bugzilla.mozilla.org/show_bug.cgi?id=1581872
   // Should be removed, all matched tabs should be reopened with original url

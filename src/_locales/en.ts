@@ -80,14 +80,6 @@ const dict: Record<string, PlurFn | string> = {
   },
 
   // ---
-  // -- Statistics panel
-  // -
-  'panel.stats.title': 'Statistics',
-  'panel.stats.range_day': 'By days',
-  'panel.stats.range_week': 'By weeks',
-  'panel.stats.range_month': 'By months',
-
-  // ---
   // -- Trash panel
   // -
   'panel.trash.title': 'Trash',
@@ -403,7 +395,6 @@ const dict: Record<string, PlurFn | string> = {
   'settings.nav_settings_downloads': 'Downloads',
   'settings.nav_settings_history': 'History',
   'settings.nav_settings_trash': 'Trash',
-  'settings.nav_settings_stats': 'Statistics',
   'settings.nav_settings_appearance': 'Appearance',
   'settings.nav_settings_snapshots': 'Snapshots',
   'settings.nav_settings_mouse': 'Mouse',
@@ -472,7 +463,6 @@ const dict: Record<string, PlurFn | string> = {
   'settings.nav_bar_btn_bookmarks_panel': 'Bookmarks panel',
   'settings.nav_bar_btn_sp': 'Space',
   'settings.nav_bar_btn_sd': 'Delimiter',
-  'settings.nav_bar_btn_stats': 'Statistics panel',
   'settings.nav_bar_btn_trash': 'Trash panel',
   'settings.nav_bar_btn_history': 'History panel',
   'settings.nav_bar_btn_downloads': 'Downloads panel',
@@ -677,13 +667,6 @@ const dict: Record<string, PlurFn | string> = {
   'settings.history_title': 'History',
   'settings.load_history_on_demand': 'Load history on demand',
 
-  // - Stats
-  'settings.stats_title': 'Statistics',
-  'settings.stats_week_start': 'Start of the week',
-  'settings.stats_week_start_m': 'monday',
-  'settings.stats_week_start_s': 'sunday',
-  'settings.load_stats_on_demand': 'Load statistics on demand',
-
   // - Trash
   'settings.trash_title': 'Trash',
   'settings.load_trash_on_demand': 'Load trash on demand',
@@ -863,7 +846,6 @@ const dict: Record<string, PlurFn | string> = {
   'settings.backup_settings': 'Settings',
   'settings.backup_styles': 'Styles',
   'settings.backup_snapshots': 'Snapshots',
-  'settings.backup_stats': 'Statistics',
   'settings.backup_favicons': 'Sites icons cache',
   'settings.backup_kb': 'Keybindings',
   'settings.backup_parse_err': 'Wrong format of imported data',

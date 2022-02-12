@@ -1,5 +1,5 @@
 import { SettingsState, Container, Snapshot, ContextMenuConfig_v4, CssVars } from 'src/types'
-import { TabCache, DomainsStats, FavDomain } from 'src/types'
+import { TabCache, FavDomain } from 'src/types'
 import { OldPanelConfig, StoredDownloadItem, SidebarConfig, MenuConfs } from 'src/types'
 import { Snapshot_v4 } from './snapshots'
 import { StoredRemovedBookmark, StoredRemovedTab, StoredRemovedWindow } from './trash'
@@ -49,7 +49,6 @@ export interface Stored {
 
   expandedBookmarks?: ID[][] // DEPR
   expandedBookmarkFolders?: ID[]
-  stats?: DomainsStats[]
 
   removedTabs?: StoredRemovedTab[]
   removedWindows?: StoredRemovedWindow[]

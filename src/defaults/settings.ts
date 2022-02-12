@@ -120,10 +120,6 @@ export const DEFAULT_SETTINGS: SettingsState = {
   showNotifOnDownloadOk: false,
   showNotifOnDownloadErr: false,
 
-  // Stats
-  statsWeekStart: 'm',
-  loadStatsOnDemand: true,
-
   // Trash
   loadTrashOnDemand: true,
 
@@ -214,7 +210,6 @@ export const SETTINGS_OPTIONS = {
   dndExpMod: ['alt', 'shift', 'ctrl', 'none'],
   animationSpeed: ['fast', 'norm', 'slow'],
   treeRmOutdent: ['branch', 'first_child'],
-  statsWeekStart: ['m', 's'],
   searchBarMode: ['static', 'dynamic', 'none'],
   newTabBarPosition: ['after_tabs', 'bottom'],
   logLvl: [3, 2, 1, 0],

@@ -1,6 +1,6 @@
 import { GroupConfig, AnyFunc, NavItem, NavBtn, NavSpace, Panel, PanelConfig } from './types'
 import { TabsPanel, BookmarksPanel, PanelType, NavItemClass, HistoryPanel } from './types'
-import { DownloadsPanel, TrashPanel, StatsPanel, SubListTitleInfo } from './types'
+import { DownloadsPanel, TrashPanel, SubListTitleInfo } from './types'
 import { DOMAIN_RE, URL_PAGE_RE, URL_URL } from './defaults'
 import { translate } from './dict'
 
@@ -897,10 +897,6 @@ export function isTrashPanel(panel?: PanelConfig): panel is TrashPanel {
   if (!panel) return false
   return panel.type === PanelType.trash
 }
-export function isStatsPanel(panel?: PanelConfig): panel is StatsPanel {
-  if (!panel) return false
-  return panel.type === PanelType.stats
-}
 export function isSubListTitle(something: any): something is SubListTitleInfo {
   if (!something) return false
   if ((something as Record<string, any>).isSubListTitle) return true
@@ -959,7 +955,6 @@ const Utils = {
   isHistoryPanel,
   isDownloadsPanel,
   isTrashPanel,
-  isStatsPanel,
   isSubListTitle,
 }
 export default Utils

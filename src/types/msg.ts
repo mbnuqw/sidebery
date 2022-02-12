@@ -1,7 +1,7 @@
 import { Tab, TabCache, GroupInfo, TabsTreeData } from './tabs'
 import { Panel } from './sidebar'
 import { NormalizedSnapshot, RemovingSnapshotResult, Snapshot } from './snapshots'
-import { DragInfo, DropType, DomainsStats, ItemInfo, DstPlaceInfo, Notification } from '../types'
+import { DragInfo, DropType, ItemInfo, DstPlaceInfo, Notification } from '../types'
 import { IPCheckResult, UpgradingState } from '../types'
 import { RemovedItem } from './trash'
 import { GroupPageInitData, UrlPageInitData } from 'src/services/tabs.bg.actions'
@@ -36,7 +36,6 @@ export type BgActions = {
   createSnapshot: () => Promise<Snapshot | undefined>
   removeSnapshot: (id: ID) => Promise<RemovingSnapshotResult>
   openSnapshotWindows: (snapshot: NormalizedSnapshot, winIndex?: number) => Promise<void>
-  getStats: () => DomainsStats[]
   saveFavicon: (url: string, icon: string) => void
   checkIpInfo: (cookieStoreId: ID) => Promise<IPCheckResult | null>
   createWindowWithTabs: (

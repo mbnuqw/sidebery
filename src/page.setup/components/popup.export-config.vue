@@ -7,7 +7,6 @@
   ToggleField(v-if="state.hasStyles" label="settings.backup_styles" v-model:value="state.styles")
   ToggleField(label="settings.backup_containers" v-model:value="state.containers")
   ToggleField(label="settings.backup_snapshots" v-model:value="state.snapshots")
-  ToggleField(label="settings.backup_stats" v-model:value="state.stats")
   ToggleField(label="settings.backup_favicons" v-model:value="state.favicons")
   ToggleField(label="settings.backup_kb" v-model:value="state.keybindings")
 
@@ -32,7 +31,6 @@ const state = reactive({
   styles: true,
   containers: true,
   snapshots: true,
-  stats: true,
   favicons: true,
   keybindings: true,
 })
@@ -47,7 +45,6 @@ const allSelected = computed<boolean>(() => {
     (!state.hasStyles || state.styles) &&
     state.containers &&
     state.snapshots &&
-    state.stats &&
     state.favicons &&
     state.keybindings
   return all
@@ -59,7 +56,6 @@ function onAllChanged(): void {
     if (state.hasStyles) state.styles = false
     state.containers = false
     state.snapshots = false
-    state.stats = false
     state.favicons = false
     state.keybindings = false
   } else {
@@ -67,7 +63,6 @@ function onAllChanged(): void {
     if (state.hasStyles) state.styles = true
     state.containers = true
     state.snapshots = true
-    state.stats = true
     state.favicons = true
     state.keybindings = true
   }
@@ -97,9 +92,6 @@ async function genExportData(): Promise<void> {
   }
   if (state.snapshots) {
     storageKeys.push('snapshots')
-  }
-  if (state.stats) {
-    storageKeys.push('stats')
   }
   if (state.favicons) {
     storageKeys.push('favicons')

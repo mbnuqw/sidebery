@@ -4,7 +4,6 @@ import { TabsPanelConfig, TabsPanel } from 'src/types'
 import { HistoryPanelConfig, HistoryPanel } from 'src/types'
 import { DownloadsPanelConfig, DownloadsPanel } from 'src/types'
 import { TrashPanelConfig, TrashPanel } from 'src/types'
-import { StatsPanelConfig, StatsPanel } from 'src/types'
 import { NavItemClass } from 'src/types/sidebar'
 
 export const BOOKMARKS_PANEL: BookmarksPanelConfig = {
@@ -125,33 +124,6 @@ export const DOWNLOADS_PANEL: DownloadsPanelConfig = {
 }
 export const DOWNLOADS_PANEL_STATE: DownloadsPanel = {
   ...DOWNLOADS_PANEL,
-  class: NavItemClass.panel,
-  len: 0,
-  index: -1,
-  sel: false,
-  loading: false,
-  topOffset: 0,
-  leftOffset: 0,
-  rightOffset: 0,
-  scrollEl: null,
-  scrollComponent: null,
-  bounds: [],
-  ready: false,
-}
-
-export const STATS_PANEL: StatsPanelConfig = {
-  type: PanelType.stats,
-  id: 'stats',
-  name: translate('panel.stats.title'),
-  color: 'toolbar',
-  iconSVG: 'icon_stats',
-  tempMode: false,
-  lockedPanel: false,
-  skipOnSwitching: false,
-  viewMode: 'domains',
-}
-export const STATS_PANEL_STATE: StatsPanel = {
-  ...STATS_PANEL,
   class: NavItemClass.panel,
   len: 0,
   index: -1,

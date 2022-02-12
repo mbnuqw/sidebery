@@ -159,7 +159,7 @@ import { FOLDER_NAME_DATA_RE } from 'src/defaults'
 import { DEFAULT_CONTAINER_ID, COLOR_OPTS, PANEL_ICON_OPTS, BKM_OTHER_ID } from 'src/defaults'
 import { BKM_ROOT_ID } from 'src/defaults'
 import { TextInputComponent, PanelConfig, BookmarksPanelConfig, TrashPanelConfig } from 'src/types'
-import { HistoryPanelConfig, StatsPanelConfig, DownloadsPanelConfig } from 'src/types'
+import { HistoryPanelConfig, DownloadsPanelConfig } from 'src/types'
 import { Settings } from 'src/services/settings'
 import { Containers } from 'src/services/containers'
 import { Sidebar } from 'src/services/sidebar'
@@ -286,12 +286,7 @@ onMounted(() => {
 
 function isNotTabsPanel(
   conf: PanelConfig
-): conf is
-  | BookmarksPanelConfig
-  | HistoryPanelConfig
-  | StatsPanelConfig
-  | TrashPanelConfig
-  | DownloadsPanelConfig {
+): conf is BookmarksPanelConfig | HistoryPanelConfig | TrashPanelConfig | DownloadsPanelConfig {
   return !!conf && !Utils.isTabsPanel(conf)
 }
 

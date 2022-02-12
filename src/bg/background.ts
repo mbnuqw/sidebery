@@ -9,7 +9,6 @@ import { Bookmarks } from 'src/services/bookmarks'
 import { Tabs } from 'src/services/tabs.bg'
 import { Store } from 'src/services/storage'
 import { Permissions } from 'src/services/permissions'
-import { Stats } from 'src/services/stats'
 import { Trash } from 'src/services/trash'
 import { Snapshots } from 'src/services/snapshots'
 import { Downloads } from 'src/services/downloads'
@@ -32,7 +31,6 @@ void (async function main() {
     createSnapshot: Snapshots.createSnapshot,
     removeSnapshot: Snapshots.removeSnapshot,
     openSnapshotWindows: Snapshots.openWindows,
-    getStats: Stats.getStats,
     checkIpInfo: WebReq.checkIpInfo,
     saveFavicon: Favicons.saveFavicon,
     createWindowWithTabs: Windows.createWithTabs,
@@ -82,7 +80,6 @@ void (async function main() {
   Snapshots.scheduleSnapshots()
 
   if (Sidebar.hasTrash) Trash.load()
-  if (Sidebar.hasStats) Stats.load()
   if (Sidebar.hasDownloads) Downloads.load()
 
   if (Sidebar.hasBookmarks) {

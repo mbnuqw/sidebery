@@ -22,10 +22,6 @@
     v-model:value="state.snapshots"
     :inactive="snapshotsInactive || !!state.errorMsg")
   ToggleField(
-    label="settings.backup_stats"
-    v-model:value="state.stats"
-    :inactive="statsInactive || !!state.errorMsg")
-  ToggleField(
     label="settings.backup_favicons"
     v-model:value="state.favicons"
     :inactive="faviconsInactive || !!state.errorMsg")
@@ -44,7 +40,7 @@
 <script lang="ts" setup>
 import { ref, reactive, computed, onMounted, PropType } from 'vue'
 import Utils from 'src/utils'
-import { BackupData, Stored, Snapshot, DomainsStats } from 'src/types'
+import { BackupData, Stored, Snapshot } from 'src/types'
 import { translate } from 'src/dict'
 import { DEFAULT_CONTAINER, DEFAULT_SETTINGS } from 'src/defaults'
 import { Sidebar } from 'src/services/sidebar'
@@ -73,7 +69,6 @@ const state = reactive({
   styles: false,
   containers: false,
   snapshots: false,
-  stats: false,
   favicons: false,
   keybindings: false,
 
@@ -89,7 +84,6 @@ const allSelected = computed<boolean>(() => {
     (stylesInactive.value || state.styles) &&
     (containersInactive.value || state.containers) &&
     (snapshotsInactive.value || state.snapshots) &&
-    (statsInactive.value || state.stats) &&
     (faviconsInactive.value || state.favicons) &&
     (keybindingsInactive.value || state.keybindings)
   return all
@@ -121,9 +115,6 @@ const snapshotsInactive = computed((): boolean => {
   const sv4Len = data.snapshots_v4?.length
   return !sLen && !sv4Len
 })
-const statsInactive = computed((): boolean => {
-  return !props.importedData.stats || !props.importedData.stats.length
-})
 const faviconsInactive = computed((): boolean => {
   const data = props.importedData
   return !data.favicons || !data.favHashes || !data.favDomains
@@ -138,7 +129,6 @@ const importInactive = computed((): boolean => {
     !state.styles &&
     !state.containers &&
     !state.snapshots &&
-    !state.stats &&
     !state.favicons &&
     !state.keybindings
   )
@@ -160,7 +150,6 @@ onMounted(() => {
   if (!stylesInactive.value) state.styles = true
   if (!containersInactive.value) state.containers = true
   if (!snapshotsInactive.value) state.snapshots = true
-  if (!statsInactive.value) state.stats = true
   if (!faviconsInactive.value) state.favicons = true
   if (!keybindingsInactive.value) state.keybindings = true
 
@@ -173,7 +162,6 @@ function onAllChanged(): void {
     if (!stylesInactive.value) state.styles = false
     if (!containersInactive.value) state.containers = false
     if (!snapshotsInactive.value) state.snapshots = false
-    if (!statsInactive.value) state.stats = false
     if (!faviconsInactive.value) state.favicons = false
     if (!keybindingsInactive.value) state.keybindings = false
   } else {
@@ -181,7 +169,6 @@ function onAllChanged(): void {
     if (!stylesInactive.value) state.styles = true
     if (!containersInactive.value) state.containers = true
     if (!snapshotsInactive.value) state.snapshots = true
-    if (!statsInactive.value) state.stats = true
     if (!faviconsInactive.value) state.favicons = true
     if (!keybindingsInactive.value) state.keybindings = true
   }
@@ -231,15 +218,6 @@ async function importData(): Promise<void> {
       await importSnapshots(backup, toStore)
     } catch (err) {
       return Logs.err('Backup import: Cannot import snapshots:', err)
-    }
-    atLeastOne = true
-  }
-
-  if (state.stats) {
-    try {
-      await importStats(backup, toStore)
-    } catch (err) {
-      return Logs.err('Backup import: Cannot import statistics:', err)
     }
     atLeastOne = true
   }
@@ -471,25 +449,6 @@ async function importSnapshots(backup: BackupData, toStore: Stored): Promise<voi
   }
 
   toStore.snapshots = allSnapshots
-}
-
-async function importStats(backup: BackupData, toStore: Stored): Promise<void> {
-  if (!backup.stats) throw 'No statistics'
-
-  const storage = await browser.storage.local.get<Stored>('stats')
-  if (!storage.stats) storage.stats = []
-
-  const filteredStoredStats: DomainsStats[] = []
-  for (const storedStat of storage.stats) {
-    const storedDomains = Object.keys(storedStat.domains)
-    if (!storedDomains.length) continue
-
-    const backupStat = backup.stats.find(s => s.date === storedStat.date)
-    if (!backupStat) filteredStoredStats.push(storedStat)
-  }
-
-  toStore.stats = backup.stats.concat(filteredStoredStats)
-  toStore.stats.sort((a, b) => a.date - b.date)
 }
 
 async function importFavicons(backup: BackupData, toStore: Stored): Promise<void> {
