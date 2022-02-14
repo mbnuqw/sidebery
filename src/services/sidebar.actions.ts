@@ -1351,6 +1351,8 @@ export async function bookmarkTabsPanel(
 
   // Config data
   const config = createPanelConfigFromPanel(panel)
+  if (config.iconIMGSrc && config.iconIMGSrc.length > 1000) config.iconIMGSrc = undefined
+  if (config.iconIMG && config.iconIMG.length > 1000) config.iconIMG = undefined
   const confJSON = JSON.stringify(config)
   const dataPrefix = 'data:application/x-sidebery-panel;charset=UTF-8,'
   const folderNameWithConfig = `${folderName} [${dataPrefix}${confJSON}]`
