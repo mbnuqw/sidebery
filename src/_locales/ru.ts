@@ -105,6 +105,7 @@ const dict: Record<string, PlurFn | string> = {
   'popup.bookmarks.name_label': 'Название',
   'popup.bookmarks.location_label': 'Расположение',
   'popup.bookmarks.location_new_folder_placeholder': 'Название новой папки',
+  'popup.bookmarks.recent_locations_label': 'Недавние расположения',
   'popup.bookmarks.save_in_bookmarks': 'Сохранить в закладки',
   'popup.bookmarks.edit_bookmark': 'Редактировать закладку',
   'popup.bookmarks.edit_folder': 'Редактировать папку',

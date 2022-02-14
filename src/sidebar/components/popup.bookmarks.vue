@@ -53,6 +53,15 @@
           :node="node"
           :filter="foldersFilter")
         LoadingDots(v-if="state.loading")
+    .recent-locations(v-if="state.bookmarksRecentFolders.length && !state.showTree")
+      .field-label {{translate('popup.bookmarks.recent_locations_label')}}
+      .recent-folder(
+        v-for="folder of state.bookmarksRecentFolders"
+        :key="folder.id"
+        :data-sel="folder.id === Bookmarks.reactive.popup.location"
+        @click="onRecentFolderClick(folder)")
+        svg.folder-icon: use(xlink:href="#icon_folder")
+        .folder-label {{folder.title}}
     .ctrls
       .btn(
         v-for="ctrl of Bookmarks.reactive.popup.controls"
@@ -64,7 +73,7 @@
 <script lang="ts" setup>
 import { ref, reactive, computed, nextTick } from 'vue'
 import { translate } from 'src/dict'
-import { Bookmark, TextInputComponent } from 'src/types'
+import { Bookmark, Stored, TextInputComponent } from 'src/types'
 import { NOID, BKM_ROOT_ID } from 'src/defaults'
 import { Bookmarks } from 'src/services/bookmarks'
 import { Selection } from 'src/services/selection'
@@ -73,6 +82,7 @@ import ScrollBox from './scroll-box.vue'
 import LoadingDots from './loading-dots.vue'
 import TextInput from '../../components/text-input.vue'
 import Utils from 'src/utils'
+import { Store } from 'src/services/storage'
 
 const nameInput = ref<TextInputComponent | null>(null)
 const urlInput = ref<TextInputComponent | null>(null)
@@ -90,6 +100,7 @@ const state = reactive({
   newFolderMode: false,
   creatingNewFolder: false,
   path: [] as Bookmark[],
+  bookmarksRecentFolders: [] as Bookmark[],
 })
 
 let validateTimeout: number | undefined
@@ -154,10 +165,48 @@ void (async function init() {
   }, 256)
 
   if (!Bookmarks.reactive.tree.length) await Bookmarks.load()
+  loadBookmarksRecentFolders()
   setTimeout(() => (state.loading = false), 120)
 
   validate()
 })()
+
+async function loadBookmarksRecentFolders(): Promise<void> {
+  const stored = await browser.storage.local.get<Stored>('bookmarksRecentFolders')
+  if (!stored.bookmarksRecentFolders || !stored.bookmarksRecentFolders.length) return
+
+  let firstFolderId: ID | undefined
+  const folders = []
+  for (const id of stored.bookmarksRecentFolders) {
+    const folder = Bookmarks.reactive.byId[id]
+    if (folder) {
+      folders.push(folder)
+      if (!firstFolderId) firstFolderId = id
+    }
+  }
+
+  state.bookmarksRecentFolders = folders
+  if (Bookmarks.reactive.popup) Bookmarks.reactive.popup.location = firstFolderId
+}
+
+const RECENT_FOLDERS_LIMIT = 3
+async function saveBookmarksRecentFolders(lastFolderId: ID): Promise<void> {
+  const lastFolder = Bookmarks.reactive.byId[lastFolderId]
+  if (!lastFolder) return
+
+  if (state.bookmarksRecentFolders.some(f => f.id === lastFolderId)) return
+
+  const ids: ID[] = [lastFolderId]
+  const limit = RECENT_FOLDERS_LIMIT - 1
+  for (let i = 0; i < limit; i++) {
+    const folder = state.bookmarksRecentFolders[i]
+    if (!folder) break
+
+    ids.push(folder.id)
+  }
+
+  await Store.set({ bookmarksRecentFolders: ids })
+}
 
 function toggleTree(): void {
   if (!Bookmarks.reactive.popup?.location) return
@@ -273,6 +322,10 @@ function onOk(): void {
     return
   }
 
+  if (Bookmarks.reactive.popup.location) {
+    saveBookmarksRecentFolders(Bookmarks.reactive.popup.location)
+  }
+
   state.tabindex = '-1'
   Selection.resetSelection()
 
@@ -305,5 +358,10 @@ function onCancel(): void {
 
 function foldersFilter(node: Bookmark): boolean {
   return node.type === 'folder'
+}
+
+function onRecentFolderClick(folder: Bookmark): void {
+  if (!Bookmarks.reactive.popup) return
+  Bookmarks.reactive.popup.location = folder.id
 }
 </script>

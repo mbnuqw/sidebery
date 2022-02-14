@@ -99,6 +99,7 @@ const dict: Record<string, PlurFn | string> = {
   'popup.bookmarks.name_label': 'Name',
   'popup.bookmarks.location_label': 'Location',
   'popup.bookmarks.location_new_folder_placeholder': 'New folder name',
+  'popup.bookmarks.recent_locations_label': 'Recent locations',
   'popup.bookmarks.save_in_bookmarks': 'Save in bookmarks',
   'popup.bookmarks.edit_bookmark': 'Edit bookmark',
   'popup.bookmarks.edit_folder': 'Edit folder',

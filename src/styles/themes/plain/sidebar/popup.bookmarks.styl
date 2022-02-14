@@ -137,3 +137,53 @@
 .BookmarksPopup .tree + .ctrls
   margin: 0
   box-shadow: inset 0 1px 0 0 var(--border-flare)
+
+.BookmarksPopup .recent-locations
+  position: relative
+  padding: 2px 0
+  margin: 6px 0 0
+
+.BookmarksPopup .recent-locations .field-label
+  padding: 0 4px 2px
+
+.BookmarksPopup .recent-folder
+  position: relative
+  display: flex
+  justify-content: center
+  align-items: center
+  padding: 3px 4px
+  margin: 1px 0
+  border-radius: 1px
+  &:before, &:after
+    content: ''
+    position: absolute
+    width: 100%
+    height: 100%
+    opacity: 0
+    border-radius: 1px
+  &:before
+    background-color: var(--toolbar-fg)
+  &:after
+    box-shadow: inset 0 0 0 1px var(--toolbar-fg)
+  &:hover:before
+    opacity: .2
+  &[data-sel="true"]:after
+  &[data-sel="true"]:before
+    opacity: .2
+  &:active:before
+    opacity: .1
+
+.BookmarksPopup .folder-icon
+  position: relative
+  width: 16px
+  height: 16px
+  margin: 0 4px 0 0
+
+.BookmarksPopup .folder-label
+  position: relative
+  width: 100%
+  font-size: rem(16)
+  color: var(--toolbar-fg)
+  white-space: nowrap
+  overflow: hidden
+  text-overflow: ellipsis

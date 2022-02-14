@@ -152,3 +152,50 @@
 
 .BookmarksPopup .tree .ctrls
   flex-shrink: 0
+
+.BookmarksPopup .recent-locations
+  position: relative
+  padding: 2px 4px
+  margin: 6px 0 0
+
+.BookmarksPopup .recent-folder
+  position: relative
+  display: flex
+  justify-content: center
+  align-items: center
+  padding: 3px 4px
+  margin: 2px 0
+  border-radius: 4px
+  &:before, &:after
+    content: ''
+    position: absolute
+    width: 100%
+    height: 100%
+    opacity: 0
+    border-radius: 4px
+  &:before
+    background-color: var(--popup-fg)
+  &:after
+    box-shadow: inset 0 0 0 1px var(--popup-fg)
+  &:hover:before
+    opacity: .2
+  &[data-sel="true"]:after
+  &[data-sel="true"]:before
+    opacity: .2
+  &:active:before
+    opacity: .1
+
+.BookmarksPopup .folder-icon
+  position: relative
+  width: 16px
+  height: 16px
+  margin: 0 4px 0 0
+
+.BookmarksPopup .folder-label
+  position: relative
+  width: 100%
+  font-size: rem(16)
+  color: var(--popup-fg)
+  white-space: nowrap
+  overflow: hidden
+  text-overflow: ellipsis

@@ -49,6 +49,7 @@ export interface Stored {
 
   expandedBookmarks?: ID[][] // DEPR
   expandedBookmarkFolders?: ID[]
+  bookmarksRecentFolders?: ID[]
 
   removedTabs?: StoredRemovedTab[]
   removedWindows?: StoredRemovedWindow[]
