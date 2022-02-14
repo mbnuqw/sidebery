@@ -91,6 +91,7 @@ export async function load(): Promise<void> {
         await restoreTabsState()
       } catch (err) {
         if (err === Err.TabsLocked) again()
+        else Logs.err('Tabs.load: Cannot restore tabs state', err)
       }
     },
     interval: 1000,

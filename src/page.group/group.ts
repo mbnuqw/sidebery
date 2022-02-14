@@ -99,7 +99,13 @@ async function main() {
     })
 
   // Load current window and get url-hash
-  const hash = decodeURIComponent(window.location.hash.slice(1))
+  let hash
+  try {
+    hash = decodeURIComponent(window.location.hash.slice(1))
+  } catch (err) {
+    Logs.err('Group: Cannot decode URI component', err)
+    return
+  }
 
   // Set title of group page
   const titleEl = document.getElementById('title') as HTMLInputElement
