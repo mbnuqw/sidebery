@@ -311,7 +311,6 @@ export interface UpgradingState {
   init?: 'done' | 'in-progress' | 'pending' | 'err' | 'no'
   settings?: 'done' | 'in-progress' | 'pending' | 'err' | 'no'
   sidebar?: 'done' | 'in-progress' | 'pending' | 'err' | 'no'
-  // menu?: 'done' | 'in-progress' | 'pending' | 'err' | 'no'
   snapshots?: 'done' | 'in-progress' | 'pending' | 'err' | 'no'
   favicons?: 'done' | 'in-progress' | 'pending' | 'err' | 'no'
   styles?: 'done' | 'in-progress' | 'pending' | 'err' | 'no'

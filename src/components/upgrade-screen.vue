@@ -16,9 +16,6 @@
         .item(:data-status="Sidebar.reactive.upgrading?.sidebar ?? 'pending'")
           .label {{translate('upgrade.panels_nav')}}
           .status {{getStatusLable(Sidebar.reactive.upgrading?.sidebar ?? 'pending')}}
-        //- .item(:data-status="Sidebar.reactive.upgrading?.menu ?? 'pending'")
-        //-   .label {{translate('upgrade.ctx_menu')}}
-        //-   .status {{getStatusLable(Sidebar.reactive.upgrading?.menu ?? 'pending')}}
         .item(:data-status="Sidebar.reactive.upgrading?.snapshots ?? 'pending'")
           .label {{translate('upgrade.snapshots')}}
           .status {{getStatusLable(Sidebar.reactive.upgrading?.snapshots ?? 'pending')}}

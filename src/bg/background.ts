@@ -153,38 +153,6 @@ async function upgrade(): Promise<void> {
     upgrading.sidebar = 'no'
   }
 
-  // Upgrading context menu
-  // upgrading.menu = 'in-progress'
-  // await Utils.sleep(250)
-  // if (
-  //   stored.tabsMenu?.length ||
-  //   stored.tabsPanelMenu?.length ||
-  //   stored.bookmarksMenu?.length ||
-  //   stored.bookmarksPanelMenu?.length
-  // ) {
-  //   if (!newStorage.contextMenu) newStorage.contextMenu = {}
-  //   try {
-  //     if (stored.tabsMenu?.length) {
-  //       newStorage.contextMenu.tabs = Menu.upgradeMenuConf(stored.tabsMenu)
-  //     }
-  //     if (stored.tabsPanelMenu?.length) {
-  //       newStorage.contextMenu.tabsPanel = Menu.upgradeMenuConf(stored.tabsPanelMenu)
-  //     }
-  //     if (stored.bookmarksMenu?.length) {
-  //       newStorage.contextMenu.bookmarks = Menu.upgradeMenuConf(stored.bookmarksMenu)
-  //     }
-  //     if (stored.bookmarksPanelMenu?.length) {
-  //       newStorage.contextMenu.bookmarksPanel = Menu.upgradeMenuConf(stored.bookmarksPanelMenu)
-  //     }
-  //     upgrading.menu = 'done'
-  //   } catch (err) {
-  //     Logs.err('Upgrading: Cannot upgrade menu', err)
-  //     upgrading.menu = 'err'
-  //   }
-  // } else {
-  //   upgrading.menu = 'no'
-  // }
-
   // Upgrading snapshots
   upgrading.snapshots = 'in-progress'
   await Utils.sleep(250)
