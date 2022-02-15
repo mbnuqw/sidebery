@@ -82,7 +82,6 @@ async function main() {
   const result = await Promise.all([
     Msg.req(InstanceType.bg, 'getGroupPageInitData', groupWinId, groupTabId ?? -1),
     Settings.loadSettings(),
-    Styles.loadCustomGroupCSS(),
     waitDOM(),
   ])
   const initData = result[0]
@@ -97,6 +96,7 @@ async function main() {
     .catch(() => {
       document.body.setAttribute('data-color-scheme', 'dark')
     })
+  Styles.loadCustomGroupCSS()
 
   // Load current window and get url-hash
   let hash
