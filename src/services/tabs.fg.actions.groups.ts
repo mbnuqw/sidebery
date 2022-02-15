@@ -6,6 +6,7 @@ import { Logs } from 'src/services/logs'
 import { Windows } from 'src/services/windows'
 import { Settings } from 'src/services/settings'
 import { Tabs } from './tabs.fg'
+import { Favicons } from './favicons'
 
 /**
  * Recreate group tabs
@@ -326,4 +327,28 @@ export function updateActiveGroupPage(): void {
   if (Utils.isGroupUrl(activeTab.url)) {
     updateGroupTab(activeTab)
   }
+}
+
+const updateGroupChildTimeouts: Record<ID, number> = {}
+export function updateGroupChild(groupId: ID, childId: ID, delay = 250): void {
+  clearTimeout(updateGroupChildTimeouts[childId])
+  updateGroupChildTimeouts[childId] = setTimeout(() => {
+    const groupTab = Tabs.byId[groupId]
+    const childTab = Tabs.byId[childId]
+    if (!groupTab || groupTab.discarded || !childTab) return
+
+    const updateData = {
+      name: 'updateTab',
+      id: childTab.id,
+      status: childTab.status,
+      title: childTab.title,
+      url: childTab.url,
+      lvl: childTab.lvl - groupTab.lvl - 1,
+      discarded: childTab.discarded,
+      favIconUrl: childTab.favIconUrl || Favicons.getFavicon(childTab.url),
+    }
+    browser.tabs.sendMessage(groupTab.id, updateData).catch(() => {
+      /** itsokay **/
+    })
+  }, delay)
 }

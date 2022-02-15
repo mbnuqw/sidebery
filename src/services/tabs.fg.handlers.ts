@@ -255,6 +255,8 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
       localTab.mediaPaused = false
       rLocalTab.mediaPaused = false
     }
+    const groupTab = Tabs.getGroupTab(localTab)
+    if (groupTab && !groupTab.discarded) Tabs.updateGroupChild(groupTab.id, tab.id)
   }
 
   // Status change
@@ -279,21 +281,7 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
           }
 
           const groupTab = Tabs.getGroupTab(localTab)
-          if (groupTab && !groupTab.discarded) {
-            const updateData = {
-              name: 'updateTab',
-              id: tab.id,
-              status: change.status,
-              title: tab.title,
-              url: tab.url,
-              lvl: localTab.lvl - groupTab.lvl - 1,
-              discarded: localTab.discarded,
-              favIconUrl: localTab.favIconUrl || Favicons.getFavicon(localTab.url),
-            }
-            browser.tabs.sendMessage(groupTab.id, updateData).catch(() => {
-              /** itsokay **/
-            })
-          }
+          if (groupTab && !groupTab.discarded) Tabs.updateGroupChild(groupTab.id, tab.id)
         })
         .catch(() => {
           // If I close containered tab opened from bg script

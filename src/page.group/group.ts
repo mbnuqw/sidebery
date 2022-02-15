@@ -360,7 +360,6 @@ function createTabEl(info: GroupedTabInfo, clickHandler: (e: MouseEvent) => void
   const discardBtnEl = createTabButton('#icon_discard', 'discard-btn', event => {
     event.stopPropagation()
     Msg.req(InstanceType.bg, 'tabsApiProxy', 'discard', info.id)
-    info.el?.setAttribute('data-discarded', 'true')
   })
   ctrlsEl.appendChild(discardBtnEl)
 
