@@ -734,6 +734,7 @@ const dict: Record<string, PlurFn | string> = {
   'settings.scroll_through_tabs_skip_discarded': 'Skip discarded tabs',
   'settings.scroll_through_tabs_except_overflow': 'Except if panel is overflowing',
   'settings.scroll_through_tabs_cyclic': 'Cyclically',
+  'settings.long_click_delay': 'Long click delay (ms)',
 
   'settings.nav_actions_sub_title': 'Navigation bar actions',
 

@@ -147,6 +147,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   scrollThroughTabsSkipDiscarded: false,
   scrollThroughTabsExceptOverflow: true,
   scrollThroughTabsCyclic: false,
+  longClickDelay: 500,
   tabDoubleClick: 'none',
   tabsSecondClickActPrev: true,
   tabLongLeftClick: 'none',

@@ -24,6 +24,11 @@ section(ref="el")
       label="settings.scroll_through_tabs_cyclic"
       v-model:value="Settings.reactive.scrollThroughTabsCyclic"
       :inactive="Settings.reactive.scrollThroughTabs === 'none'")
+  NumField.-inline(
+    label="settings.long_click_delay"
+    unitLabel="settings.long_click_delay_"
+    v-model:value="Settings.reactive.longClickDelay"
+    :or="300")
 
   .sub-title {{translate('settings.nav_actions_sub_title')}}
   SelectField(
@@ -98,6 +103,7 @@ import { Settings } from 'src/services/settings'
 import { SetupPage } from 'src/services/setup-page'
 import ToggleField from '../../components/toggle-field.vue'
 import SelectField from '../../components/select-field.vue'
+import NumField from '../../components/num-field.vue'
 
 const el = ref<HTMLElement | null>(null)
 

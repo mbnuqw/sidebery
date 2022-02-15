@@ -149,6 +149,7 @@ export interface SettingsState {
   scrollThroughTabsSkipDiscarded: boolean
   scrollThroughTabsExceptOverflow: boolean
   scrollThroughTabsCyclic: boolean
+  longClickDelay: number
   tabDoubleClick: typeof SETTINGS_OPTIONS.tabDoubleClick[number]
   tabsSecondClickActPrev: boolean
   tabLongLeftClick: typeof SETTINGS_OPTIONS.tabLongLeftClick[number]

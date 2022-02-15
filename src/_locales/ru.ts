@@ -805,6 +805,7 @@ const dict: Record<string, PlurFn | string> = {
   'settings.scroll_through_tabs_except_overflow':
     'За исключением случаев, когда панель переполнена',
   'settings.scroll_through_tabs_cyclic': 'Зациклить',
+  'settings.long_click_delay': 'Задержка длительного нажатия (мс)',
   'settings.tab_double_click': 'Двойной клик по вкладке',
   'settings.tab_long_left_click': 'Длительное нажатие левой кнопки мыши по вкладке',
   'settings.tab_long_right_click': 'Длительное нажатие правой кнопки мыши по вкладке',

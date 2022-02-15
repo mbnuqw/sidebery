@@ -160,7 +160,7 @@ export function startLongClick(e: MouseEvent, type: LongClickTargetType, id: ID)
     }
 
     longClickTimeout = undefined
-  }, 300)
+  }, Settings.reactive.longClickDelay)
 }
 
 export function stopLongClick(): void {
