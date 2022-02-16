@@ -97,6 +97,31 @@ function onTabCreated(tab: browser.tabs.Tab): void {
   for (let i = tab.index; i < len; i++) {
     tabWindow.tabs[i].index = i
   }
+
+  // If sidebar is closed and tabs of inactive panels hidden move new tab (if needed)
+  if (tabWindow && !tabWindow.sidebarPort && Settings.reactive.hideInact) {
+    const prevTab = tabWindow.tabs[tab.index - 1]
+    if (prevTab && prevTab.hidden) {
+      for (let i = prevTab.index - 1; i >= 0; i--) {
+        const prevTabN = tabWindow.tabs[i]
+        if (!prevTabN.hidden) {
+          browser.tabs.move(tab.id, { index: i + 1, windowId: tabWindow.id })
+          break
+        }
+      }
+    } else {
+      const nextTab = tabWindow.tabs[tab.index + 1]
+      if (nextTab && nextTab.hidden) {
+        for (let i = nextTab.index + 1; i < tabWindow.tabs.length; i++) {
+          const nextTabN = tabWindow.tabs[i]
+          if (!nextTabN.hidden) {
+            browser.tabs.move(tab.id, { index: i, windowId: tabWindow.id })
+            break
+          }
+        }
+      }
+    }
+  }
 }
 
 /**
@@ -426,7 +451,7 @@ export function setupTabsListeners(): void {
   browser.tabs.onCreated.addListener(onTabCreated)
   browser.tabs.onRemoved.addListener(onTabRemoved)
   browser.tabs.onUpdated.addListener(onTabUpdated, {
-    properties: ['pinned', 'title', 'status', 'favIconUrl', 'url'],
+    properties: ['pinned', 'title', 'status', 'favIconUrl', 'url', 'hidden'],
   })
   browser.tabs.onActivated.addListener(onTabActivated)
   browser.tabs.onMoved.addListener(onTabMoved)
