@@ -90,7 +90,6 @@ import NavigationBar from './components/bar.navigation.vue'
 import WindowsPopup from './components/popup.windows.vue'
 import TabsPanel from './components/panel.tabs.vue'
 import BookmarksPanel from './components/panel.bookmarks.vue'
-import TrashPanel from './components/panel.trash.vue'
 import HistoryPanel from './components/panel.history.vue'
 import DownloadsPanel from './components/panel.downloads.vue'
 import SearchBar from './components/bar.search.vue'
@@ -139,7 +138,6 @@ onMounted(() => {
 function getPanelComponent(panel: Panel): Component | undefined {
   if (panel.type === PanelType.tabs) return TabsPanel
   if (panel.type === PanelType.bookmarks) return BookmarksPanel
-  if (panel.type === PanelType.trash) return TrashPanel
   if (panel.type === PanelType.history) return HistoryPanel
   if (panel.type === PanelType.downloads) return DownloadsPanel
 }

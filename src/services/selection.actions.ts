@@ -6,11 +6,9 @@ import { Windows } from 'src/services/windows'
 import { Bookmarks } from 'src/services/bookmarks'
 import { Sidebar } from 'src/services/sidebar'
 import { Tabs } from 'src/services/tabs.fg'
-import { Trash } from 'src/services/trash'
 import { History } from 'src/services/history'
 import { Downloads } from 'src/services/downloads'
 import { NOID } from 'src/defaults'
-import { RemovedItem } from 'src/types/trash'
 
 let resetStop = false
 let firstItem: ID | null = null
@@ -33,7 +31,6 @@ export const isTabs = (): boolean => selType === SelectionType.Tabs
 export const isBookmarks = (): boolean => selType === SelectionType.Bookmarks
 export const isHistory = (): boolean => selType === SelectionType.History
 export const isDownloads = (): boolean => selType === SelectionType.Downloads
-export const isTrash = (): boolean => selType === SelectionType.Trash
 export const isNavItem = (): boolean => selType === SelectionType.NavItem
 export const isNewTabBar = (): boolean => selType === SelectionType.NewTabBar
 export const isHeader = (): boolean => selType === SelectionType.Header
@@ -71,7 +68,6 @@ export function select(id: ID, type?: SelectionType): void {
   else if (type === SelectionType.Bookmarks) selectBookmark(id)
   else if (type === SelectionType.Downloads) selectDownload(id)
   else if (type === SelectionType.History) selectHistory(id)
-  else if (type === SelectionType.Trash) selectTrash(id)
   else if (type === SelectionType.NavItem) selectNavItem(id)
   else if (type === SelectionType.Header) selectHeader(id)
 }
@@ -242,19 +238,6 @@ export function selectBookmarksRange(aBookmark: Bookmark, bBookmark?: Bookmark):
   if (firstItem === null) firstItem = aBookmark.id
 }
 
-export function selectTrash(id: ID): void {
-  let target: RemovedItem | undefined = Trash.reactive.tabs.find(item => item.id === id)
-  if (!target) target = Trash.reactive.bookmarks.find(item => item.id === id)
-  if (!target) target = Trash.reactive.windows.find(item => item.id === id)
-  if (!target) target = Trash.reactive.prevCache.find(item => item.id === id)
-  if (!target) return
-
-  target.sel = true
-  Selection.selected.push(id)
-  firstItem = id
-  selType = SelectionType.Trash
-}
-
 export function selectHistory(id: ID): void {
   const list = History.reactive.filtered ?? History.reactive.list
   const target = list.find(item => item.id === id)
@@ -329,19 +312,6 @@ export function deselectBookmark(bookmarkId: ID): void {
   if (firstItem === bookmarkId) firstItem = null
 }
 
-export function deselectTrash(id: ID): void {
-  const index = Selection.selected.indexOf(id)
-  if (index >= 0) Selection.selected.splice(index, 1)
-
-  let target: RemovedItem | undefined = Trash.reactive.tabs.find(item => item.id === id)
-  if (!target) target = Trash.reactive.bookmarks.find(item => item.id === id)
-  if (!target) target = Trash.reactive.windows.find(item => item.id === id)
-  if (!target) target = Trash.reactive.prevCache.find(item => item.id === id)
-  if (target) target.sel = false
-  if (!Selection.selected.length) selType = SelectionType.Nothing
-  if (firstItem === id) firstItem = null
-}
-
 export function deselectHistory(id: ID): void {
   const index = Selection.selected.indexOf(id)
   if (index >= 0) Selection.selected.splice(index, 1)
@@ -404,16 +374,6 @@ export function resetSelection(): void {
   if (selType === SelectionType.Bookmarks) {
     for (const id of Selection.selected) {
       const target = Bookmarks.reactive.byId[id]
-      if (target) target.sel = false
-    }
-  }
-
-  if (selType === SelectionType.Trash) {
-    for (const id of Selection.selected) {
-      let target: RemovedItem | undefined = Trash.reactive.tabs.find(item => item.id === id)
-      if (!target) target = Trash.reactive.bookmarks.find(item => item.id === id)
-      if (!target) target = Trash.reactive.windows.find(item => item.id === id)
-      if (!target) target = Trash.reactive.prevCache.find(item => item.id === id)
       if (target) target.sel = false
     }
   }

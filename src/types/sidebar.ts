@@ -1,5 +1,5 @@
 import { BookmarksPanelComponent, ScrollBoxComponent } from '../types'
-import { ReactiveTab, Tab } from './tabs'
+import { ReactiveTab } from './tabs'
 import { Bookmark } from './bookmarks'
 
 export interface NavBtn {
@@ -34,7 +34,6 @@ export const enum PanelType {
   tabs = 2,
   downloads = 3,
   history = 4,
-  trash = 5,
 }
 
 export const enum ButtonType {
@@ -56,7 +55,6 @@ export const NavItemTypeNames = {
   [PanelType.bookmarks]: 'bookmarks',
   [PanelType.tabs]: 'tabs',
   [PanelType.history]: 'history',
-  [PanelType.trash]: 'trash',
   [PanelType.downloads]: 'downloads',
   [ButtonType.settings]: 'settings',
   [ButtonType.add_tp]: 'add_tp',
@@ -198,16 +196,9 @@ export interface DownloadsPanelConfig extends PanelCommonConfig {
   tempMode: boolean
 }
 
-export interface TrashPanelConfig extends PanelCommonConfig {
-  type: PanelType.trash
-  viewMode: string
-  tempMode: boolean
-}
-
 export type PanelConfig =
   | BookmarksPanelConfig
   | TabsPanelConfig
-  | TrashPanelConfig
   | DownloadsPanelConfig
   | HistoryPanelConfig
 
@@ -255,13 +246,9 @@ export interface DownloadsPanel extends PanelCommonState, DownloadsPanelConfig {
   type: PanelType.downloads
 }
 
-export interface TrashPanel extends PanelCommonState, TrashPanelConfig {
-  type: PanelType.trash
-}
-
 export interface ViewModeBtn {
   id: string
   icon: string
 }
 
-export type Panel = BookmarksPanel | TabsPanel | TrashPanel | DownloadsPanel | HistoryPanel
+export type Panel = BookmarksPanel | TabsPanel | DownloadsPanel | HistoryPanel

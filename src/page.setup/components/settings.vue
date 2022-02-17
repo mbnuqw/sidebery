@@ -14,7 +14,6 @@
   BookmarksSection
   DownloadsSection
   HistorySection
-  TrashSection
   AppearanceSection
   MouseSection
   KeybindingsSection
@@ -50,7 +49,6 @@ import TabsTreeSection from './settings.tabs-tree.vue'
 import BookmarksSection from './settings.bookmarks.vue'
 import DownloadsSection from './settings.downloads.vue'
 import HistorySection from './settings.history.vue'
-import TrashSection from './settings.trash.vue'
 import AppearanceSection from './settings.appearance.vue'
 import MouseSection from './settings.mouse.vue'
 import KeybindingsSection from './settings.keybindings.vue'

@@ -120,9 +120,6 @@ export interface SettingsState {
   showNotifOnDownloadOk: boolean
   showNotifOnDownloadErr: boolean
 
-  // Trash
-  loadTrashOnDemand: boolean
-
   // Appearance
   fontSize: typeof SETTINGS_OPTIONS.fontSize[number]
   bgNoise?: boolean // DEPR

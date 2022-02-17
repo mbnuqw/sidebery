@@ -7,7 +7,6 @@ This is a branch of the next major version of Sidebery.
 - Search
 - History panel (experimental)
 - Downloads panel (experimental)
-- Trash-bin panel (experimental)
 - Reworked navigation bar
 - Configurable "new tab" buttons bar
 - Ability to use multiple bookmark panels with different root folders

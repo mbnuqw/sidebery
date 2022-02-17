@@ -2,7 +2,6 @@ import { SettingsState, Container, Snapshot, ContextMenuConfig_v4, CssVars } fro
 import { TabCache, FavDomain } from 'src/types'
 import { OldPanelConfig, StoredDownloadItem, SidebarConfig, MenuConfs } from 'src/types'
 import { Snapshot_v4 } from './snapshots'
-import { StoredRemovedBookmark, StoredRemovedTab, StoredRemovedWindow } from './trash'
 
 export type StoredProps = (keyof Stored)[]
 
@@ -50,10 +49,6 @@ export interface Stored {
   expandedBookmarks?: ID[][] // DEPR
   expandedBookmarkFolders?: ID[]
   bookmarksRecentFolders?: ID[]
-
-  removedTabs?: StoredRemovedTab[]
-  removedWindows?: StoredRemovedWindow[]
-  removedBookmarks?: StoredRemovedBookmark[]
 }
 
 export interface StoredSyncValue {

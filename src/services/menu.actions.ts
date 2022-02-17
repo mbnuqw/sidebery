@@ -12,7 +12,7 @@ import { Mouse } from 'src/services/mouse'
 import { Containers } from 'src/services/containers'
 import { TABS_MENU, TABS_PANEL_MENU } from 'src/defaults/menu'
 import { BOOKMARKS_MENU, BOOKMARKS_PANEL_MENU } from 'src/defaults/menu'
-import { TRASH_MENU, HISTORY_MENU, DOWNLOADS_MENU, NEW_TAB_MENU } from 'src/defaults/menu'
+import { HISTORY_MENU, DOWNLOADS_MENU, NEW_TAB_MENU } from 'src/defaults/menu'
 import { OTHER_PANELS_MENU, DOWNLOADS_PANEL_MENU } from 'src/defaults/menu'
 import { Snapshots } from './snapshots'
 import { translate } from 'src/dict'
@@ -172,8 +172,6 @@ export function open(type: MenuType, x?: number, y?: number, customForced?: bool
   } else if (type === MenuType.Bookmarks) {
     nodeType = 'bookmark'
     blocks = createMenuBlocks(Menu.bookmarksConf, customForced)
-  } else if (type === MenuType.Trash) {
-    blocks = createMenuBlocks(TRASH_MENU, customForced)
   } else if (type === MenuType.History) {
     blocks = createMenuBlocks(HISTORY_MENU, customForced)
   } else if (type === MenuType.Downloads) {

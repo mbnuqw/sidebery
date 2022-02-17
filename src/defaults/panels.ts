@@ -3,7 +3,6 @@ import { PanelType, BookmarksPanelConfig, BookmarksPanel } from 'src/types'
 import { TabsPanelConfig, TabsPanel } from 'src/types'
 import { HistoryPanelConfig, HistoryPanel } from 'src/types'
 import { DownloadsPanelConfig, DownloadsPanel } from 'src/types'
-import { TrashPanelConfig, TrashPanel } from 'src/types'
 import { NavItemClass } from 'src/types/sidebar'
 
 export const BOOKMARKS_PANEL: BookmarksPanelConfig = {
@@ -124,33 +123,6 @@ export const DOWNLOADS_PANEL: DownloadsPanelConfig = {
 }
 export const DOWNLOADS_PANEL_STATE: DownloadsPanel = {
   ...DOWNLOADS_PANEL,
-  class: NavItemClass.panel,
-  len: 0,
-  index: -1,
-  sel: false,
-  loading: false,
-  topOffset: 0,
-  leftOffset: 0,
-  rightOffset: 0,
-  scrollEl: null,
-  scrollComponent: null,
-  bounds: [],
-  ready: false,
-}
-
-export const TRASH_PANEL: TrashPanelConfig = {
-  type: PanelType.trash,
-  id: 'trash',
-  name: translate('panel.trash.title'),
-  color: 'toolbar',
-  iconSVG: 'icon_trash',
-  tempMode: false,
-  lockedPanel: false,
-  skipOnSwitching: false,
-  viewMode: 'all',
-}
-export const TRASH_PANEL_STATE: TrashPanel = {
-  ...TRASH_PANEL,
   class: NavItemClass.panel,
   len: 0,
   index: -1,

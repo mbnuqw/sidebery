@@ -120,9 +120,6 @@ export const DEFAULT_SETTINGS: SettingsState = {
   showNotifOnDownloadOk: false,
   showNotifOnDownloadErr: false,
 
-  // Trash
-  loadTrashOnDemand: true,
-
   // Appearance
   fontSize: 'm',
   animations: true,

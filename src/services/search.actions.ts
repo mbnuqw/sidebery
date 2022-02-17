@@ -6,14 +6,12 @@ import { Sidebar } from 'src/services/sidebar'
 import * as SearchTabs from 'src/services/search.tabs'
 import * as SearchBookmarks from 'src/services/search.bookmarks'
 import * as SearchHistory from 'src/services/search.history'
-import * as SearchTrash from 'src/services/search.trash'
 import * as SearchDownloads from 'src/services/search.downloads'
 import { InstanceType, MenuType, Panel } from 'src/types'
 import { Msg } from './msg'
 import { Menu } from './menu'
 import { Windows } from './windows'
 import { History } from './history'
-import { Trash } from './trash'
 import { Downloads } from './downloads'
 
 export const INPUT_TIMEOUT = 150
@@ -52,7 +50,6 @@ export function next(): void {
   if (Utils.isBookmarksPanel(actPanel)) SearchBookmarks.onBookmarksSearchNext(actPanel)
   if (Utils.isHistoryPanel(actPanel)) SearchHistory.onHistorySearchNext()
   if (Utils.isDownloadsPanel(actPanel)) SearchDownloads.onDownloadsSearchNext()
-  if (Utils.isTrashPanel(actPanel)) SearchTrash.onTrashSearchNext()
 }
 
 export function prev(): void {
@@ -66,7 +63,6 @@ export function prev(): void {
   if (Utils.isBookmarksPanel(actPanel)) SearchBookmarks.onBookmarksSearchPrev(actPanel)
   if (Utils.isHistoryPanel(actPanel)) SearchHistory.onHistorySearchPrev()
   if (Utils.isDownloadsPanel(actPanel)) SearchDownloads.onDownloadsSearchPrev()
-  if (Utils.isTrashPanel(actPanel)) SearchTrash.onTrashSearchPrev()
 }
 
 export function enter(): void {
@@ -85,7 +81,6 @@ export function enter(): void {
   if (Utils.isBookmarksPanel(actPanel)) SearchBookmarks.onBookmarksSearchEnter(actPanel)
   if (Utils.isHistoryPanel(actPanel)) SearchHistory.onHistorySearchEnter()
   if (Utils.isDownloadsPanel(actPanel)) SearchDownloads.onDownloadsSearchEnter()
-  if (Utils.isTrashPanel(actPanel)) SearchTrash.onTrashSearchEnter()
 }
 
 export function selectAll(): void {
@@ -131,7 +126,6 @@ export function search(value?: string): void {
   if (Utils.isTabsPanel(actPanel)) SearchTabs.onTabsSearch(actPanel)
   else if (Utils.isBookmarksPanel(actPanel)) SearchBookmarks.onBookmarksSearch(actPanel)
   else if (Utils.isHistoryPanel(actPanel)) SearchHistory.onHistorySearch()
-  else if (Utils.isTrashPanel(actPanel)) SearchTrash.onTrashSearch()
   else if (Utils.isDownloadsPanel(actPanel)) SearchDownloads.onDownloadsSearch()
 
   if (value === '') {
@@ -153,9 +147,6 @@ export function reset(panel?: Panel): void {
   } else if (Utils.isHistoryPanel(panel)) {
     panel.filteredLen = undefined
     History.reactive.filtered = undefined
-  } else if (Utils.isTrashPanel(panel)) {
-    panel.filteredLen = undefined
-    Trash.reactive.filtered = undefined
   } else if (Utils.isDownloadsPanel(panel)) {
     panel.filteredLen = undefined
     Downloads.reactive.filtered = undefined

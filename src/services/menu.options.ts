@@ -10,14 +10,12 @@ import { Tabs } from 'src/services/tabs.fg'
 import { Containers } from 'src/services/containers'
 import { tabsMenuOptions } from './menu.options.tabs'
 import { bookmarksMenuOptions } from './menu.options.bookmarks'
-import { trashMenuOptions } from './menu.options.trash'
 import { historyMenuOptions } from './menu.options.history'
 import { downloadsMenuOptions } from './menu.options.downloads'
 
 export const menuOptions: Record<string, () => MenuOption | MenuOption[] | undefined> = {
   ...tabsMenuOptions,
   ...bookmarksMenuOptions,
-  ...trashMenuOptions,
   ...historyMenuOptions,
   ...downloadsMenuOptions,
 

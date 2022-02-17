@@ -20,7 +20,6 @@ export * from './types/windows'
 export * from './types/styles'
 export * from './types/bookmarks'
 export * from './types/downloads'
-export * from './types/trash'
 export * from './types/history'
 
 export type PlurFn = (n?: number | string) => string
@@ -295,12 +294,11 @@ export const enum SelectionType {
   Nothing = 0,
   Tabs = 1,
   Bookmarks = 2,
-  Trash = 3,
-  History = 4,
-  Downloads = 5,
-  NewTabBar = 6,
-  NavItem = 7,
-  Header = 8,
+  History = 3,
+  Downloads = 4,
+  NewTabBar = 5,
+  NavItem = 6,
+  Header = 7,
 }
 
 export interface UpgradingState {

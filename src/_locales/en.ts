@@ -80,19 +80,6 @@ const dict: Record<string, PlurFn | string> = {
   },
 
   // ---
-  // -- Trash panel
-  // -
-  'panel.trash.title': 'Trash',
-  'panel.trash.window_info': (n = 0) => {
-    if (n === 1) return '1 tab'
-    else return `${n} tabs`
-  },
-  'panel.trash.bookmark_info': (n = 0) => {
-    if (n === 1) return '1 bookmark'
-    else return `${n} bookmarks`
-  },
-
-  // ---
   // -- Popups
   // -
   // - Bookmarks popup
@@ -299,13 +286,6 @@ const dict: Record<string, PlurFn | string> = {
   'menu.download.remove': 'Delete download',
   'menu.download.pause_all_active': 'Pause all active',
   'menu.download.resume_all_paused': 'Resume all paused',
-  // - Trash
-  'trash.open_tab': 'Open tab',
-  'trash.open_tabs': 'Open tabs',
-  'trash.open_window': 'Open window',
-  'trash.create_bookmark': 'Create bookmark',
-  'trash.recreate_bookmark': 'Recreate bookmark',
-  'trash.remove_from_trash': 'Remove from trash',
   // - Common
   'menu.copy_urls': n => (n === 1 ? 'Copy URL' : 'Copy URLs'),
   'menu.copy_titles': n => (n === 1 ? 'Copy title' : 'Copy titles'),
@@ -395,7 +375,6 @@ const dict: Record<string, PlurFn | string> = {
   'settings.nav_settings_bookmarks': 'Bookmarks',
   'settings.nav_settings_downloads': 'Downloads',
   'settings.nav_settings_history': 'History',
-  'settings.nav_settings_trash': 'Trash',
   'settings.nav_settings_appearance': 'Appearance',
   'settings.nav_settings_snapshots': 'Snapshots',
   'settings.nav_settings_mouse': 'Mouse',
@@ -464,7 +443,6 @@ const dict: Record<string, PlurFn | string> = {
   'settings.nav_bar_btn_bookmarks_panel': 'Bookmarks panel',
   'settings.nav_bar_btn_sp': 'Space',
   'settings.nav_bar_btn_sd': 'Delimiter',
-  'settings.nav_bar_btn_trash': 'Trash panel',
   'settings.nav_bar_btn_history': 'History panel',
   'settings.nav_bar_btn_downloads': 'Downloads panel',
   'settings.nav_bar_btn_settings': 'Settings',
@@ -667,10 +645,6 @@ const dict: Record<string, PlurFn | string> = {
   // - History
   'settings.history_title': 'History',
   'settings.load_history_on_demand': 'Load history on demand',
-
-  // - Trash
-  'settings.trash_title': 'Trash',
-  'settings.load_trash_on_demand': 'Load trash on demand',
 
   // - Appearance
   'settings.appearance_title': 'Appearance',

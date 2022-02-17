@@ -84,21 +84,6 @@ const dict: Record<string, PlurFn | string> = {
   },
 
   // ---
-  // -- Trash panel
-  // -
-  'panel.trash.title': 'Корзина',
-  'panel.trash.window_info': (n = 0) => {
-    if (NUM_1_RE.test(n.toString())) return '1 вкладка'
-    if (NUM_234_RE.test(n.toString())) return `${n} вкладки`
-    return `${n} вкладок`
-  },
-  'panel.trash.bookmark_info': (n = 0) => {
-    if (NUM_1_RE.test(n.toString())) return '1 закладка'
-    if (NUM_234_RE.test(n.toString())) return `${n} закладки`
-    return `${n} закладок`
-  },
-
-  // ---
   // -- Popups
   // -
   // - Bookmarks
@@ -314,13 +299,6 @@ const dict: Record<string, PlurFn | string> = {
   'menu.download.remove': 'Удалить загрузку',
   'menu.download.pause_all_active': 'Приостановить все активные',
   'menu.download.resume_all_paused': 'Продолжить все приостановленные',
-  // - Trash
-  'trash.open_tab': 'Открыть вкладку',
-  'trash.open_tabs': 'Открыть вкладки',
-  'trash.open_window': 'Открыть окно',
-  'trash.create_bookmark': 'Создать закладку',
-  'trash.recreate_bookmark': 'Воссоздать закладку',
-  'trash.remove_from_trash': 'Удалить из корзины',
   // - Common
   'menu.copy_urls': n => (n === 1 ? 'Копировать адрес' : 'Копировать адреса'),
   'menu.copy_titles': n => (n === 1 ? 'Копировать заголовок' : 'Копировать заголовки'),
@@ -419,7 +397,6 @@ const dict: Record<string, PlurFn | string> = {
   'settings.nav_settings_bookmarks': 'Закладки',
   'settings.nav_settings_downloads': 'Загрузки',
   'settings.nav_settings_history': 'История',
-  'settings.nav_settings_trash': 'Корзина',
   'settings.nav_settings_appearance': 'Вид',
   'settings.nav_settings_snapshots': 'Снепшоты',
   'settings.nav_settings_mouse': 'Мышь',
@@ -490,7 +467,6 @@ const dict: Record<string, PlurFn | string> = {
   'settings.nav_bar.available_elements': 'Доступные элементы',
   'settings.nav_bar_btn_tabs_panel': 'Панель вкладок',
   'settings.nav_bar_btn_bookmarks_panel': 'Панель закладок',
-  'settings.nav_bar_btn_trash': 'Корзина',
   'settings.nav_bar_btn_history': 'История',
   'settings.nav_bar_btn_downloads': 'Загрузки',
   'settings.nav_bar_btn_sp': 'Пространство',
@@ -714,10 +690,6 @@ const dict: Record<string, PlurFn | string> = {
   // --- History
   'settings.history_title': 'История',
   'settings.load_history_on_demand': 'Инициализоровать сервис истории только по необходимости',
-
-  // --- Trash
-  'settings.trash_title': 'Корзина',
-  'settings.load_trash_on_demand': 'Инициализоровать сервис корзины только по необходимости',
 
   // --- Appearance
   'settings.appearance_title': 'Вид',

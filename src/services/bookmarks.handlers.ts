@@ -1,7 +1,6 @@
 import { Bookmark } from 'src/types'
 import { NOID } from 'src/defaults'
 import { Bookmarks } from 'src/services/bookmarks'
-import { Trash } from 'src/services/trash'
 import { Settings } from 'src/services/settings'
 import { Sidebar } from 'src/services/sidebar'
 import { Tabs } from 'src/services/tabs.fg'
@@ -185,15 +184,12 @@ function onBookmarkMovedFg(id: ID, info: browser.bookmarks.MoveInfo): void {
   if (Settings.reactive.highlightOpenBookmarks) Bookmarks.markOpenedBookmarksDebounced()
 }
 
+// TODO: rm
 function onBookmarkRemovedBg(id: ID, info: browser.bookmarks.RemoveInfo): void {
   Logs.info('Bookmarks.onBookmarkRemovedBg')
 
   const bookmark = Bookmarks.reactive.byId[id]
   if (!bookmark) return
-
-  if (Sidebar.hasTrash && bookmark.type !== 'separator') {
-    Trash.putBookmark(bookmark)
-  }
 }
 
 function onBookmarkRemovedFg(id: ID, info: browser.bookmarks.RemoveInfo): void {

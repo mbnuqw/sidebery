@@ -13,14 +13,13 @@ export interface MenuConfs {
 export const enum MenuType {
   Tabs = 1,
   Bookmarks = 2,
-  Trash = 3,
-  History = 4,
-  Downloads = 5,
-  DownloadsPanel = 6,
-  NewTab = 7,
-  TabsPanel = 8,
-  BookmarksPanel = 9,
-  Panel = 10,
+  History = 3,
+  Downloads = 4,
+  DownloadsPanel = 5,
+  NewTab = 6,
+  TabsPanel = 7,
+  BookmarksPanel = 8,
+  Panel = 9,
 }
 export type MenuOptionType = 'option' | 'separator'
 export interface MenuOption {

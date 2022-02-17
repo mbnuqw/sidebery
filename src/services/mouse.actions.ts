@@ -19,7 +19,6 @@ type TargetType =
   | 'tab.close'
   | 'tab.new'
   | 'bookmark'
-  | 'trash'
   | 'history'
   | 'download'
   | 'menu.option'

@@ -90,8 +90,6 @@ export const BOOKMARKS_PANEL_MENU: MenuConf = [
   'removePanel',
 ]
 
-export const TRASH_MENU: MenuConf = ['restoreTrashItem', 'removeTrashItem']
-
 export const HISTORY_MENU: MenuConf = [
   'open',
   'separator-1',

@@ -5,7 +5,6 @@ import { Tabs } from 'src/services/tabs.bg'
 import { Windows } from 'src/services/windows'
 import { Containers } from 'src/services/containers'
 import { Store } from 'src/services/storage'
-import { Trash } from 'src/services/trash'
 import { WebReq } from 'src/services/web-req'
 import { Sidebar } from 'src/services/sidebar'
 import { Favicons } from 'src/services/favicons'
@@ -138,9 +137,6 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo): void {
   if (!tabWindow || !tabWindow.tabs) return
   const index = tabWindow.tabs.findIndex(t => t.id === tabId)
   if (index === -1) return
-
-  const tab = Tabs.byId[tabId]
-  if (Sidebar.hasTrash && !tab.url.startsWith('ab')) Trash.putTab(tab)
 
   tabWindow.tabs.splice(index, 1)
   delete Tabs.byId[tabId]

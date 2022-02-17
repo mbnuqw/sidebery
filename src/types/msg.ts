@@ -3,7 +3,6 @@ import { Panel } from './sidebar'
 import { NormalizedSnapshot, RemovingSnapshotResult, Snapshot } from './snapshots'
 import { DragInfo, DropType, ItemInfo, DstPlaceInfo, Notification } from '../types'
 import { IPCheckResult, UpgradingState } from '../types'
-import { RemovedItem } from './trash'
 import { GroupPageInitData, UrlPageInitData } from 'src/services/tabs.bg.actions'
 
 export const enum InstanceType {
@@ -43,7 +42,6 @@ export type BgActions = {
     conf?: browser.windows.CreateData
   ) => Promise<boolean>
   isWindowTabsLocked: (id: ID) => boolean
-  removeTrashItem: (item?: RemovedItem) => void
   getUrlPageInitData: () => Promise<UrlPageInitData>
   getGroupPageInitData: (winId: ID, tabId: ID) => Promise<GroupPageInitData>
   tabsApiProxy: (method: string, ...args: any[]) => Promise<any>

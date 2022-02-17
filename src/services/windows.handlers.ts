@@ -2,7 +2,6 @@ import { Window } from 'src/types'
 import { Windows } from 'src/services/windows'
 import { Logs } from 'src/services/logs'
 import { Sidebar } from 'src/services/sidebar'
-import { Trash } from 'src/services/trash'
 import { Tabs } from 'src/services/tabs.bg'
 import { Info } from 'src/services/info'
 
@@ -51,8 +50,6 @@ function onWindowCreatedFg(window: Window): void {
 function onWindowRemovedBg(windowId: ID): void {
   const window = Windows.byId[windowId]
   if (!window) return
-
-  if (Sidebar.hasTrash && window.type === 'normal') Trash.putWindow(window)
 
   delete Windows.byId[windowId]
   delete Tabs.cacheByWin[windowId]

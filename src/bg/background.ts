@@ -9,7 +9,6 @@ import { Bookmarks } from 'src/services/bookmarks'
 import { Tabs } from 'src/services/tabs.bg'
 import { Store } from 'src/services/storage'
 import { Permissions } from 'src/services/permissions'
-import { Trash } from 'src/services/trash'
 import { Snapshots } from 'src/services/snapshots'
 import { Downloads } from 'src/services/downloads'
 import { Sidebar } from 'src/services/sidebar'
@@ -35,7 +34,6 @@ void (async function main() {
     saveFavicon: Favicons.saveFavicon,
     createWindowWithTabs: Windows.createWithTabs,
     isWindowTabsLocked: Windows.isWindowTabsLocked,
-    removeTrashItem: Trash.removeItem,
     getUrlPageInitData: Tabs.getUrlPageInitData,
     getGroupPageInitData: Tabs.getGroupPageInitData,
     tabsApiProxy: Tabs.tabsApiProxy,
@@ -79,7 +77,6 @@ void (async function main() {
   Menu.setupListeners()
   Snapshots.scheduleSnapshots()
 
-  if (Sidebar.hasTrash) Trash.load()
   if (Sidebar.hasDownloads) Downloads.load()
 
   if (Sidebar.hasBookmarks) {
