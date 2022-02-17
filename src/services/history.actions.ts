@@ -10,22 +10,22 @@ import { SetupPage } from './setup-page'
 
 const UNLIMITED = 1234567
 const LOAD_RANGE = 432_000_000 // 1000*60*60*24*5 - 5 days
-const INIT_LOAD_END_TIME = Date.now()
-const INIT_LOAD_START_TIME = INIT_LOAD_END_TIME - LOAD_RANGE
 
 let lastItemTime = 0
 
 export async function load(): Promise<void> {
   if (!browser.history) return
 
+  const endTime = Date.now()
+  const startTime = endTime - LOAD_RANGE
   const result = await browser.history.search({
     text: '',
-    endTime: INIT_LOAD_END_TIME,
-    startTime: INIT_LOAD_START_TIME,
+    endTime,
+    startTime,
     maxResults: UNLIMITED,
   })
 
-  History.reactive.list = await normalizeHistory(result, INIT_LOAD_START_TIME)
+  History.reactive.list = await normalizeHistory(result, startTime)
   lastItemTime = getLastItemTime() - 1
 
   if (!History.reactive.list.length) await loadMore()
@@ -50,7 +50,7 @@ export async function normalizeHistory(
   const normalized: HistoryItem[] = []
 
   for (const item of items) {
-    // Skip untitled visits (probably redirections)
+    // Skip untitled visits
     if (!item.title) continue
 
     normalizeHistoryItem(item)
