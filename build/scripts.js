@@ -6,6 +6,7 @@ const { parse, compileTemplate, compileScript } = require('@vue/compiler-sfc')
 const { IS_DEV, ADDON_PATH, VUE_DIST } = require('./utils')
 const { treeToList, getTSConfig, colorize, watch, log, logOk, logErr } = require('./utils')
 
+const forChromium = process.argv.includes('--chromium')
 const SRC_DIR = './src'
 const OUTPUT_DIR = ADDON_PATH
 const NORM_SRC_DIR = path.normalize(SRC_DIR)
@@ -15,6 +16,8 @@ const BUNDLES = {
   'src/page.url/url.ts': true,
 }
 const IMPORT_RE = /(^|\n|\r\n|;)(im|ex)port\s?(.*?)"(\.\.?|src|vue)(\/.+?)?"/g
+
+const ESBUILD_DEFINE = forChromium ? { browser: 'chrome' } : undefined
 
 function fixModuleImports(data) {
   return data.replace(IMPORT_RE, (match, p1, p2, p3, p4, p5) => {
@@ -182,6 +185,7 @@ async function compileTSFile(file) {
       minify: !IS_DEV,
       charset: 'utf8',
       sourcemap: 'inline',
+      define: ESBUILD_DEFINE,
     })
   }
   if (result.warnings && result.warnings.length) {
@@ -201,6 +205,7 @@ async function compileTSCode(codeStr, filePath) {
     tsconfigRaw: { compilerOptions: TS_CONFIG },
     sourcefile: filePath,
     loader: 'ts',
+    define: ESBUILD_DEFINE,
   })
   if (result.warnings && result.warnings.length) {
     logErr(`Vue: Error[s] in ${filePath}:`)
@@ -291,8 +296,9 @@ async function main() {
       format: 'esm',
       outdir: ADDON_PATH,
       plugins: [vueComponentsPlugin],
+      define: ESBUILD_DEFINE,
     })
-    // Scripts for injecting (without importing outside modules)
+    // Bundled scripts for injecting
     await esbuild.build({
       entryPoints: ['src/page.group/group.ts', 'src/page.url/url.ts'],
       tsconfig: 'tsconfig.json',
@@ -303,6 +309,7 @@ async function main() {
       bundle: true,
       format: 'esm',
       outdir: ADDON_PATH,
+      define: ESBUILD_DEFINE,
     })
     logOk('Scripts: Done')
   }

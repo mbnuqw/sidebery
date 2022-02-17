@@ -4,7 +4,10 @@ const path = require('path')
 const { IS_DEV, ADDON_PATH, treeToList, watch, log, logOk, VUE_DIST } = require('./utils')
 
 const COPY = {
-  './src/manifest.json': `${ADDON_PATH}/`,
+  './src/manifest.json': {
+    path: `${ADDON_PATH}/`,
+    handler: handleManifest,
+  },
   './src/_locales/en.messages.json': `${ADDON_PATH}/_locales/en/messages.json`,
   './src/_locales/ru.messages.json': `${ADDON_PATH}/_locales/ru/messages.json`,
   './src/assets/bg': `${ADDON_PATH}/assets/bg`,
@@ -69,8 +72,15 @@ async function parseEntries() {
     const info = { src, isDir: srcStats.isDirectory() }
 
     const dst = COPY[src]
-    info.dst = path.resolve(dst)
-    if (dst.endsWith('/')) {
+    let dstPath
+    if (typeof dst === 'string') dstPath = dst
+    else {
+      dstPath = dst.path
+      if (dst.handler) info.srcHandler = dst.handler
+    }
+
+    info.dst = path.resolve(dstPath)
+    if (dstPath.endsWith('/')) {
       info.destDir = info.dst
       if (!info.isDir) info.dst = path.join(info.dst, path.basename(src))
     } else {
@@ -103,11 +113,16 @@ async function copyEntry(info) {
     for (const f of await treeToList(normSrc)) {
       const destDir = path.normalize(f.dir.replace(normSrc, info.dst + path.sep))
 
-      if (f.file) await fs.promises.copyFile(path.join(f.dir, f.file), path.join(destDir, f.file))
-      else await fs.promises.mkdir(destDir, { recursive: true })
+      if (f.file) {
+        const srcPath = path.join(f.dir, f.file)
+        const dstPath = path.join(destDir, f.file)
+        if (info.srcHandler) handleManifest(srcPath, dstPath)
+        else await fs.promises.copyFile(srcPath, dstPath)
+      } else await fs.promises.mkdir(destDir, { recursive: true })
     }
   } else {
-    await fs.promises.copyFile(info.src, info.dst)
+    if (info.srcHandler) await info.srcHandler(info.src, info.dst)
+    else await fs.promises.copyFile(info.src, info.dst)
   }
 }
 
@@ -126,3 +141,48 @@ function main() {
   }
 }
 main()
+
+async function handleManifest(srcPath, dstPath) {
+  const forChromium = process.argv.includes('--chromium')
+
+  // Parse and patch manifest for chromium-based browser
+  if (forChromium) {
+    const srcData = await fs.promises.readFile(srcPath, 'utf-8')
+    const data = JSON.parse(srcData)
+
+    // Remove unsupported keys
+    delete data.page_action
+    delete data.browser_specific_settings
+
+    // Reset commands
+    for (const key of Object.keys(data.commands)) {
+      const cmd = data.commands[key]
+      if (key === '_execute_sidebar_action') {
+        cmd.suggested_key.windows = cmd.suggested_key.default
+      } else {
+        delete cmd.suggested_key
+      }
+    }
+
+    // Clean up permissions
+    const contextualIdentitiesIndex = data.permissions.indexOf('contextualIdentities')
+    if (contextualIdentitiesIndex !== -1) data.permissions.splice(contextualIdentitiesIndex, 1)
+    const menusIndex = data.permissions.indexOf('menus')
+    if (menusIndex !== -1) data.permissions.splice(menusIndex, 1)
+    const menusOverrideContextIndex = data.permissions.indexOf('menus.overrideContext')
+    if (menusOverrideContextIndex !== -1) data.permissions.splice(menusOverrideContextIndex, 1)
+    const tabHideIndex = data.permissions.indexOf('tabHide')
+    if (tabHideIndex !== -1) data.permissions.splice(tabHideIndex, 1)
+    const proxyIndex = data.optional_permissions.indexOf('proxy')
+    if (proxyIndex !== -1) data.optional_permissions.splice(proxyIndex, 1)
+    data.permissions.push('proxy')
+
+    const dstData = JSON.stringify(data)
+    await fs.promises.writeFile(dstPath, dstData)
+  }
+
+  // Copy
+  else {
+    return fs.promises.copyFile(srcPath, dstPath)
+  }
+}
