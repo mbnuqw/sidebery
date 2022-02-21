@@ -48,15 +48,15 @@ export async function showWindowsPopup(config: WindowChoosingDetails = {}): Prom
 
   return new Promise(res => {
     const options = wins.map<Promise<WindowChooseOption>>(async w => {
+      const [tab] = await browser.tabs.query({ active: true, windowId: w.id })
       let screen
       if (Settings.reactive.selWinScreenshots && browser.tabs.captureTab) {
-        const [tab] = await browser.tabs.query({ active: true, windowId: w.id })
         const imageConf: browser.ImageDetails = { format: 'jpeg', quality: 75, scale: 0.5 }
         if (tab) screen = await browser.tabs.captureTab(tab.id, imageConf)
       }
       return {
         id: w.id ?? NOID,
-        title: w.title,
+        title: tab?.title ?? w.title,
         screen,
         sel: false,
         choose: () => {
