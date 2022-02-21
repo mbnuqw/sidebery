@@ -64,9 +64,9 @@
   &[data-separator="true"]:after
     content: ''
     position: relative
-    left: 8px
-    width: calc(100% - 8px)
+    width: 100%
     height: 1px
+    margin: 0 0 0 8px
     background-color: var(--toolbar-fg)
     opacity: .1
     order: -1
@@ -130,7 +130,10 @@
       width: 16px
       height: 16px
 .MenuEditor .menu-group[data-type="sub"] .opt
-  padding: 0 0 0 42px
+  margin: 0 0 0 32px
+  padding: 0 0 0 8px
+  &:after
+    margin: 0
 .MenuEditor .menu-group.-dis .opt
   padding: 0 0 0 22px
   opacity: .32
@@ -138,7 +141,7 @@
 .MenuEditor .menu-group.-dis .opt .opt-title
   cursor: pointer
 .MenuEditor .opt[data-separator="true"] .opt-btn.-in
-  opacity: 0
+  display: none
 
 .MenuEditor .ctrls
   position: relative
