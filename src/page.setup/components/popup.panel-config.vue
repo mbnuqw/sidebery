@@ -155,7 +155,7 @@
 import { ref, reactive, computed, onMounted, nextTick } from 'vue'
 import Utils from 'src/utils'
 import { translate } from 'src/dict'
-import { FOLDER_NAME_DATA_RE } from 'src/defaults'
+import { BKM_MENU_ID, FOLDER_NAME_DATA_RE } from 'src/defaults'
 import { DEFAULT_CONTAINER_ID, COLOR_OPTS, PANEL_ICON_OPTS, BKM_OTHER_ID } from 'src/defaults'
 import { BKM_ROOT_ID } from 'src/defaults'
 import { TextInputComponent, PanelConfig, BookmarksPanelConfig } from 'src/types'
@@ -500,7 +500,7 @@ async function setBookmarksRootId(): Promise<void> {
   const result = await Bookmarks.openBookmarksPopup({
     title: translate('popup.bookmarks.select_root_folder'),
     controls: [{ label: 'btn.save' }],
-    location: BKM_OTHER_ID,
+    location: BKM_MENU_ID,
     locationField: true,
     locationTree: true,
   })

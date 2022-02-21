@@ -165,7 +165,7 @@ void (async function init() {
   }, 256)
 
   if (!Bookmarks.reactive.tree.length) await Bookmarks.load()
-  loadBookmarksRecentFolders()
+  if (Bookmarks.reactive.popup.recentLocations) loadBookmarksRecentFolders()
   setTimeout(() => (state.loading = false), 120)
 
   validate()
@@ -322,7 +322,7 @@ function onOk(): void {
     return
   }
 
-  if (Bookmarks.reactive.popup.location) {
+  if (Bookmarks.reactive.popup.location && Bookmarks.reactive.popup.recentLocations) {
     saveBookmarksRecentFolders(Bookmarks.reactive.popup.location)
   }
 

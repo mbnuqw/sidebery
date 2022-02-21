@@ -1288,7 +1288,8 @@ export async function bookmarkTabsPanel(
       nameField: true,
       location: defaultFolderId,
       locationField: true,
-      locationTree: true,
+      locationTree: false,
+      recentLocations: true,
       controls: [{ label: 'btn.save' }],
       validate: popupState => {
         const ctrl = popupState.controls?.[0]
@@ -1414,7 +1415,8 @@ export async function restoreFromBookmarks(panel: TabsPanel, silent?: boolean): 
       title: translate('popup.bookmarks.restore'),
       location: BKM_OTHER_ID,
       locationField: true,
-      locationTree: true,
+      locationTree: false,
+      recentLocations: true,
       controls: [{ label: 'btn.restore' }],
     })
     if (!result?.location || result?.location === NOID) throw Err.Canceled
@@ -1612,7 +1614,8 @@ export async function convertToBookmarksPanel(panel: TabsPanel): Promise<void> {
       title: translate('popup.bookmarks.convert'),
       location: BKM_OTHER_ID,
       locationField: true,
-      locationTree: true,
+      locationTree: false,
+      recentLocations: true,
       controls: [{ label: translate('popup.bookmarks.convert') }],
     })
     if (!result) {

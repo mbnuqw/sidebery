@@ -867,7 +867,8 @@ export async function move(ids: ID[], dst: DstPlaceInfo): Promise<void> {
       title: translate('popup.bookmarks.move_to'),
       location: firstNode.parentId,
       locationField: true,
-      locationTree: true,
+      locationTree: false,
+      recentLocations: true,
       controls: [{ label: translate('popup.bookmarks.move') }],
     })
     if (result?.location) {

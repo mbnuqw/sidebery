@@ -1476,6 +1476,7 @@ export async function bookmarkTabs(tabIds: ID[]): Promise<void> {
       urlField: true,
       location: parentId,
       locationField: true,
+      recentLocations: true,
       controls: [{ label: 'btn.save' }],
       validate: popupState => {
         popupState.nameValid = !!popupState.name
@@ -1509,7 +1510,8 @@ export async function bookmarkTabs(tabIds: ID[]): Promise<void> {
         title: translate('popup.bookmarks.save_in_bookmarks'),
         location: parentId,
         locationField: true,
-        locationTree: true,
+        locationTree: false,
+        recentLocations: true,
         controls: [{ label: 'btn.save' }],
       })
       if (!result) return

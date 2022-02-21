@@ -23,6 +23,7 @@ export interface BookmarksPopupConfig {
   locationField?: boolean
   locationTree?: boolean
   location?: ID
+  recentLocations?: boolean
   target?: Bookmark
   controls?: BookmarksPopupControlConfig[]
   validate?: (popupState: BookmarksPopupState) => void
