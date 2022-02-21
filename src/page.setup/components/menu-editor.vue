@@ -169,6 +169,7 @@ const TABS_MENU_OPTS: Record<string, string> = {
   reopenInNewWin: 'menu.tab.reopen_in_new_window',
   reopenInWin: 'menu.tab.reopen_in_window',
   reopenInCtr: 'menu.tab.reopen_in_ctr_',
+  reopenInNewCtr: 'menu.tab.reopen_in_new_container',
   mute: 'menu.tab.mute',
   duplicate: 'menu.tab.duplicate',
   discard: 'menu.tab.discard',
