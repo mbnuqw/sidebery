@@ -418,6 +418,7 @@ export async function open(
     if (dst.index === undefined) {
       dst.index = dstPanel?.nextTabIndex ?? Tabs.list.length
     }
+    if (!dst.panelId && dstPanel) dst.panelId = dstPanel.id
   }
 
   const toOpen: ItemInfo[] = []
