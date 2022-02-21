@@ -18,6 +18,7 @@
         :selected="state.selected === opt"
         :isTopLvl="group.type === 'list'"
         :option="opt"
+        :groupTitle="group.name"
         @select="select"
         @createSubMenu="createSubMenu"
         @downOpt="downOpt"
