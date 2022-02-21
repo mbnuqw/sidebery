@@ -1,8 +1,8 @@
 <template lang="pug">
 .ConfigPopup(ref="rootEl" @wheel="onWheel")
-  h2(v-if="isStaticName") {{conf.name}}
+  h2(v-if="isTabsOrBookmarks") {{conf.name}}
   TextInput.title(
-    v-if="!isStaticName"
+    v-if="!isTabsOrBookmarks"
     ref="nameInput"
     :line="true"
     :value="conf.name"
@@ -27,7 +27,7 @@
     @update:value="setIcon")
 
   SelectField(
-    v-if="!conf.iconIMGSrc"
+    v-if="!conf.iconIMGSrc && !isTabsOrBookmarks"
     label="panel.color_label"
     :value="color"
     :opts="COLOR_OPTS"
@@ -203,7 +203,7 @@ const props = defineProps<{ conf: PanelConfig; index?: number }>()
 
 const isBookmarks = computed<boolean>(() => Utils.isBookmarksPanel(props.conf))
 const isTabs = computed<boolean>(() => Utils.isTabsPanel(props.conf))
-const isStaticName = computed<boolean>(() => !isTabs.value && !isBookmarks.value)
+const isTabsOrBookmarks = computed<boolean>(() => !isTabs.value && !isBookmarks.value)
 const containersOpts = computed<ContainerOption[]>(() => {
   const result: ContainerOption[] = []
 
