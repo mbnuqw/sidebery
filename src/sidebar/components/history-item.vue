@@ -4,7 +4,8 @@
   :title="item.tooltip"
   :data-sel="item.sel"
   @mousedown="onMouseDown"
-  @mouseup="onMouseUp")
+  @mouseup="onMouseUp"
+  @contextmenu.stop="onCtxMenu")
   .line
     .fav(:title="'Search this domain'" @mousedown.stop="onFavMouseDown")
       svg(v-if="!item.favicon"): use(xlink:href="#icon_ff")
@@ -87,5 +88,30 @@ function onFavMouseDown(): void {
 
   Search.showBar()
   Search.onOutsideSearchInput(domain)
+}
+
+function onCtxMenu(e: MouseEvent): void {
+  if (Mouse.isLocked() || !Settings.reactive.ctxMenuNative || e.ctrlKey || e.shiftKey) {
+    Mouse.resetClickLock()
+    e.stopPropagation()
+    e.preventDefault()
+    return
+  }
+
+  if (!e.ctrlKey && !e.shiftKey && !props.item.sel) {
+    Selection.resetSelection()
+  }
+
+  if (Menu.isBlocked()) {
+    e.stopPropagation()
+    e.preventDefault()
+    return
+  }
+
+  browser.menus.overrideContext({ showDefaults: false })
+
+  if (!Selection.isSet()) Selection.selectHistory(props.item.id)
+
+  Menu.open(MenuType.History)
 }
 </script>
