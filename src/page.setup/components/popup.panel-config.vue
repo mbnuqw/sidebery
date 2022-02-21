@@ -185,6 +185,8 @@ const BOOKMARKS_PANEL_ICON_OPTS = [
   { value: 'icon_bookmarks', icon: 'icon_bookmarks' },
   ...PANEL_ICON_OPTS,
 ]
+const defaultContainerTooltip = translate('panel.ctr_tooltip_default')
+const noneContainerTooltip = translate('panel.ctr_tooltip_none')
 
 const state = reactive({
   customIconUrl: '',
@@ -205,13 +207,16 @@ const isStaticName = computed<boolean>(() => !isTabs.value && !isBookmarks.value
 const containersOpts = computed<ContainerOption[]>(() => {
   const result: ContainerOption[] = []
 
-  result.push({ value: DEFAULT_CONTAINER_ID, color: 'toolbar', icon: 'icon_tabs' })
-
   for (let c of Object.values(Containers.reactive.byId)) {
     result.push({ value: c.id, color: c.color, icon: c.icon, tooltip: c.name })
   }
 
-  result.push({ value: 'none', color: 'inactive', icon: 'icon_none' })
+  result.push({
+    value: 'none',
+    color: 'inactive',
+    icon: 'icon_none',
+    tooltip: noneContainerTooltip,
+  })
 
   return result
 })
@@ -224,14 +229,24 @@ const availableForAutoMoveContainersOpts = computed<ContainerOption[]>(() => {
   }
 
   if (!used[DEFAULT_CONTAINER_ID]) {
-    result.push({ value: DEFAULT_CONTAINER_ID, color: 'toolbar', icon: 'icon_tabs' })
+    result.push({
+      value: DEFAULT_CONTAINER_ID,
+      color: 'toolbar',
+      icon: 'icon_ff',
+      tooltip: defaultContainerTooltip,
+    })
   }
 
   for (let c of Object.values(Containers.reactive.byId)) {
     if (!used[c.id]) result.push({ value: c.id, color: c.color, icon: c.icon, tooltip: c.name })
   }
 
-  result.push({ value: 'none', color: 'inactive', icon: 'icon_none' })
+  result.push({
+    value: 'none',
+    color: 'inactive',
+    icon: 'icon_none',
+    tooltip: noneContainerTooltip,
+  })
 
   return result
 })

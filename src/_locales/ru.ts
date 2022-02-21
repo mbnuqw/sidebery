@@ -156,8 +156,9 @@ const dict: Record<string, PlurFn | string> = {
   'panel.new_tab_ctx': 'Контейнер новой вкладки',
   'panel.drop_tab_ctx': 'Переоткрыть вкладку, переброшенную в эту панель, в контейнере:',
   'panel.move_tab_ctx': 'Перемещать вкладки выбранного контейнера в эту панель',
-  'panel.move_tab_ctx_none': 'ня',
   'panel.move_tab_ctx_nochild': 'За исключением дочерних вкладок',
+  'panel.ctr_tooltip_none': 'Не задан',
+  'panel.ctr_tooltip_default': 'Без контейнера',
   'panel.url_rules': 'Перемещать вкладки с совпадающими адресами в эту панель',
   'panel.auto_convert': 'При открытии закладки преобразовать в исходную панель вкладок',
   'panel.custom_icon_note':

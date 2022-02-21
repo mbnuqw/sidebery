@@ -151,8 +151,9 @@ const dict: Record<string, PlurFn | string> = {
   'panel.new_tab_ctx': 'Container of new tab',
   'panel.drop_tab_ctx': 'Reopen tab that was dropped to this panel in container:',
   'panel.move_tab_ctx': 'Move tab to this panel if it is opened in container:',
-  'panel.move_tab_ctx_none': 'none',
   'panel.move_tab_ctx_nochild': 'Except child tabs',
+  'panel.ctr_tooltip_none': 'Not set',
+  'panel.ctr_tooltip_default': 'No container',
   'panel.url_rules': 'Move tabs with matched URLs to this panel',
   'panel.auto_convert': 'Convert to source tabs panel on opening bookmark',
   'panel.custom_icon_note':
