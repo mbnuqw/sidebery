@@ -6,9 +6,6 @@ section(ref="el")
     optLabel="settings.group_layout_"
     v-model:value="Settings.reactive.groupLayout"
     :opts="Settings.getOpts('groupLayout')")
-  ToggleField(
-    label="settings.group_screenshots_cache"
-    v-model:value="Settings.reactive.groupScreenshotsCache")
 </template>
 
 <script lang="ts" setup>
@@ -17,7 +14,6 @@ import { translate } from 'src/dict'
 import { Settings } from 'src/services/settings'
 import { SetupPage } from 'src/services/setup-page'
 import SelectField from '../../components/select-field.vue'
-import ToggleField from '../../components/toggle-field.vue'
 
 const el = ref<HTMLElement | null>(null)
 

@@ -33,7 +33,6 @@ export interface SettingsState {
 
   // Group page
   groupLayout: typeof SETTINGS_OPTIONS.groupLayout[number]
-  groupScreenshotsCache: boolean
 
   // Drag and drop
   dndTabAct: boolean

@@ -83,8 +83,6 @@ void (async function main() {
     Bookmarks.setupBookmarksListeners()
     Bookmarks.load()
   }
-
-  Tabs.validateGroupTabsScreenshots()
 })()
 
 function initToolbarButton(): void {

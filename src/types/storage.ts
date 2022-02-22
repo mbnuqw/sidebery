@@ -23,8 +23,6 @@ export interface Stored {
   favUrls?: Record<string, number> // DEPR
   favAutoCleanTime?: number // DEPR
 
-  groupScreenshots?: Record<string, Record<string, string>>
-
   downloads?: StoredDownloadItem[]
 
   sidebar?: SidebarConfig

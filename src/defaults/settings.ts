@@ -31,7 +31,6 @@ export const DEFAULT_SETTINGS: SettingsState = {
 
   // Group page
   groupLayout: 'grid',
-  groupScreenshotsCache: false,
 
   // Panels
   skipEmptyPanels: false,

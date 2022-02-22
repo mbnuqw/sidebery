@@ -48,28 +48,6 @@ export async function loadTabs(): Promise<void> {
   Tabs.deferredEventHandling = []
 }
 
-export async function validateGroupTabsScreenshots(): Promise<void> {
-  if (!Settings.reactive.groupScreenshotsCache) return
-  await Utils.sleep(1500)
-
-  const storage = await browser.storage.local.get<Stored>('groupScreenshots')
-  if (!storage.groupScreenshots) storage.groupScreenshots = {}
-
-  const newScreenshots: Record<string, Record<string, string>> = {}
-  for (const tab of Object.values(Tabs.byId)) {
-    if (!GROUP_RE.test(tab.url)) continue
-
-    const urlParts = tab.url.split(':id:')
-    const groupId = urlParts[urlParts.length - 1]
-    const screenshotsCache = storage.groupScreenshots[groupId]
-    if (!screenshotsCache) continue
-
-    newScreenshots[groupId] = screenshotsCache
-  }
-
-  await browser.storage.local.set<Stored>({ groupScreenshots: newScreenshots })
-}
-
 /**
  * Handle new tab
  */

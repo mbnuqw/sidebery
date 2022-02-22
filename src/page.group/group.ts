@@ -1,5 +1,5 @@
 import Utils from 'src/utils'
-import { GroupPin, GroupedTabInfo, InstanceType, Stored } from 'src/types'
+import { GroupPin, GroupedTabInfo, InstanceType } from 'src/types'
 import { Msg } from 'src/services/msg'
 import { Settings } from 'src/services/settings'
 import { Favicons } from 'src/services/favicons'
@@ -41,7 +41,6 @@ type Msg = MsgUpdated | MsgTabCreated | MsgTabUpdated | MsgTabRemoved
 
 const PIN_SCREENSHOT_QUALITY = 90
 const SCREENSHOT_QUALITY = 25
-const SAVE_SCREENSHOTS_DELAY = 1500
 
 let tabsBoxEl: HTMLElement | null
 let newTabEl: HTMLDivElement
@@ -176,7 +175,6 @@ async function main() {
     if (msg.name === 'remove') onTabRemoved(msg)
   })
 
-  await loadCachedScreenshots()
   updateScreenshots()
 }
 
@@ -229,7 +227,7 @@ async function onTabCreated(tab: GroupedTabInfo) {
 
   groupLen++
   await Utils.sleep(256)
-  loadScreenshot(tab, SCREENSHOT_QUALITY)
+  takeScreenshot(tab, SCREENSHOT_QUALITY)
 }
 
 /**
@@ -244,7 +242,7 @@ function onTabUpdated(msg: MsgTabUpdated) {
     tab.el.setAttribute('data-fav', String(!!msg.favIconUrl))
     if (tab.favEl) tab.favEl.style.backgroundImage = `url(${msg.favIconUrl})`
     tab.favIconUrl = msg.favIconUrl
-    loadScreenshot(tab, SCREENSHOT_QUALITY)
+    takeScreenshot(tab, SCREENSHOT_QUALITY)
   }
 
   if (tab.titleEl) tab.titleEl.innerText = msg.title
@@ -448,17 +446,10 @@ function setSvgId(svgEl: SVGElement, svgId: string) {
   useEl.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', svgId)
 }
 
-async function loadCachedScreenshots(): Promise<void> {
-  if (!Settings.reactive.groupScreenshotsCache) return
-  const storage = await browser.storage.local.get<Stored>('groupScreenshots')
-  if (!storage.groupScreenshots) storage.groupScreenshots = {}
-  if (storage.groupScreenshots[groupId]) screenshots = storage.groupScreenshots[groupId]
-}
-
 /**
- * Load screenshot for tab
+ * Take screenshot of tab
  */
-async function loadScreenshot(tab: GroupedTabInfo | GroupPin, quality = 90) {
+async function takeScreenshot(tab: GroupedTabInfo | GroupPin, quality = 90) {
   if (tab.discarded) {
     const screen = screenshots[tab.url]
     if (tab.bgEl && screen) tab.bgEl.style.backgroundImage = `url(${screen})`
@@ -472,7 +463,6 @@ async function loadScreenshot(tab: GroupedTabInfo | GroupPin, quality = 90) {
     })) as string
     if (tab.bgEl) tab.bgEl.style.backgroundImage = `url(${screen})`
     screenshots[tab.url] = screen
-    saveScreenshots()
   } catch {
     const screen = screenshots[tab.url]
     if (tab.bgEl && screen) tab.bgEl.style.backgroundImage = `url(${screen})`
@@ -485,29 +475,16 @@ async function loadScreenshot(tab: GroupedTabInfo | GroupPin, quality = 90) {
 async function updateScreenshots() {
   const newScreenshots: Record<string, string> = {}
   if (pinTab) {
-    await loadScreenshot(pinTab, PIN_SCREENSHOT_QUALITY)
+    await takeScreenshot(pinTab, PIN_SCREENSHOT_QUALITY)
     newScreenshots[pinTab.url] = screenshots[pinTab.url]
   }
 
   for (const tab of tabs) {
-    await loadScreenshot(tab, SCREENSHOT_QUALITY)
+    await takeScreenshot(tab, SCREENSHOT_QUALITY)
     newScreenshots[tab.url] = screenshots[tab.url]
   }
 
   screenshots = newScreenshots
-}
-
-let saveScreenshotsTimeout: number | undefined
-function saveScreenshots(): void {
-  if (!Settings.reactive.groupScreenshotsCache) return
-  clearTimeout(saveScreenshotsTimeout)
-  saveScreenshotsTimeout = setTimeout(async () => {
-    const storage = await browser.storage.local.get<Stored>('groupScreenshots')
-    if (!storage.groupScreenshots) storage.groupScreenshots = {}
-
-    storage.groupScreenshots[groupId] = screenshots
-    await browser.storage.local.set(storage)
-  }, SAVE_SCREENSHOTS_DELAY)
 }
 
 /**
@@ -554,7 +531,7 @@ function updateTab(oldTab: GroupedTabInfo, newTab: GroupedTabInfo) {
 
   Object.assign(oldTab, newTab)
 
-  if (titleChanged || urlChanged) loadScreenshot(oldTab, SCREENSHOT_QUALITY)
+  if (titleChanged || urlChanged) takeScreenshot(oldTab, SCREENSHOT_QUALITY)
 }
 
 main()

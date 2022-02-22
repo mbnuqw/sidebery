@@ -462,7 +462,6 @@ const dict: Record<string, PlurFn | string> = {
   'settings.group_layout': 'Layout of tabs',
   'settings.group_layout_grid': 'grid',
   'settings.group_layout_list': 'list',
-  'settings.group_screenshots_cache': 'Preserve screenshots',
 
   // - Containers
   'settings.containers_title': 'Containers',
