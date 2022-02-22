@@ -33,7 +33,7 @@
     "menus.overrideContext",
     "search"
   ],
-  
+
   "optional_permissions": [
     "<all_urls>",
     "tabHide",
@@ -216,6 +216,36 @@
     },
     "switch_to_panel_9": {
       "description": "__MSG_KbSwitchToPanel9__"
+    },
+    "move_tab_to_panel_0": {
+      "description": "__MSG_KbMoveTabToPanel0__"
+    },
+    "move_tab_to_panel_1": {
+      "description": "__MSG_KbMoveTabToPanel1__"
+    },
+    "move_tab_to_panel_2": {
+      "description": "__MSG_KbMoveTabToPanel2__"
+    },
+    "move_tab_to_panel_3": {
+      "description": "__MSG_KbMoveTabToPanel3__"
+    },
+    "move_tab_to_panel_4": {
+      "description": "__MSG_KbMoveTabToPanel4__"
+    },
+    "move_tab_to_panel_5": {
+      "description": "__MSG_KbMoveTabToPanel5__"
+    },
+    "move_tab_to_panel_6": {
+      "description": "__MSG_KbMoveTabToPanel6__"
+    },
+    "move_tab_to_panel_7": {
+      "description": "__MSG_KbMoveTabToPanel7__"
+    },
+    "move_tab_to_panel_8": {
+      "description": "__MSG_KbMoveTabToPanel8__"
+    },
+    "move_tab_to_panel_9": {
+      "description": "__MSG_KbMoveTabToPanel9__"
     }
   },
 

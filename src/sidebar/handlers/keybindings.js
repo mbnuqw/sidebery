@@ -49,6 +49,10 @@ function onCmd(name) {
     let index = parseInt(name.slice(-1))
     if (isNaN(index) || index >= this.state.panels.length) return
     this.actions.switchToPanel(parseInt(name.slice(-1)))
+  } else if (name.startsWith('move_tab_to_panel_')) {
+    let index = parseInt(name.slice(-1))
+    if (isNaN(index) || index >= this.state.panels.length) return
+    this.actions.moveTabsToPanel([this.state.activeTabId], this.state.panels[index].id)
   }
 }
 
