@@ -55,6 +55,8 @@ async function createContainer(): Promise<void> {
   container.icon = newFFContainer.icon
   container.color = newFFContainer.color
   Containers.reactive.byId[newFFContainer.cookieStoreId] = container
+
+  SetupPage.reactive.selectedContainer = container
 }
 
 /**
