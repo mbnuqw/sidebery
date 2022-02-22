@@ -2615,6 +2615,9 @@ export async function checkUrlRules(url: string, tab: Tab): Promise<void> {
     browser.tabs.move(tab.id, { windowId: Windows.id, index })
   } else {
     tab.panelId = panel.id
+    Sidebar.recalcTabsPanels()
+    Tabs.cacheTabsData()
+    Tabs.saveTabData(tab.id)
   }
 
   if (tab.active) Sidebar.switchToPanel(panel.id, true)
