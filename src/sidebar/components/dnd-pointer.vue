@@ -5,7 +5,6 @@
   :data-hover="DnD.reactive.pointerHover"
   :data-lvl="DnD.reactive.pointerLvl")
   .arrow(
-    data-dnd-type="pointer"
     :data-expanding="DnD.reactive.pointerExpanding"
     @animationend="DnD.onPointerExpanded")
 </template>

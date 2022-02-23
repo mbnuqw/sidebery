@@ -116,6 +116,7 @@ let _expandTimeout: number | undefined
 function expandTimeout(cb: () => void, delay?: number): void {
   clearTimeout(_expandTimeout)
   if (delay === 0) return cb()
+  if (delay && delay < 0) return
   _expandTimeout = setTimeout(() => cb(), delay ?? Settings.reactive.dndExpDelay)
 }
 function resetExpandTimeout(): void {
@@ -126,6 +127,7 @@ let _tabActivateTimeout: number | undefined
 function tabActivateTimeout(cb: () => void, delay: number): void {
   clearTimeout(_tabActivateTimeout)
   if (delay === 0) return cb()
+  if (delay < 0) return
   _tabActivateTimeout = setTimeout(() => cb(), delay)
 }
 function resetTabActivateTimeout(): void {
@@ -136,6 +138,7 @@ let _panelSwitchTimeout: number | undefined
 function panelSwitchTimeout(cb: () => void, delay: number): void {
   clearTimeout(_panelSwitchTimeout)
   if (delay === 0) return cb()
+  if (delay < 0) return
   _panelSwitchTimeout = setTimeout(() => cb(), delay)
 }
 function resetPanelSwitchTimeout(): void {
@@ -410,44 +413,6 @@ export function onDragEnter(e: DragEvent): void {
     DnD.reactive.dstPanelId = panelId ?? NOID
     DnD.reactive.dstPin = false
   }
-
-  if (type === 'pointer' && DnD.reactive.dstIndex === -1) {
-    const panel = Sidebar.reactive.panelsById[DnD.reactive.dstPanelId]
-    const isTabs = Utils.isTabsPanel(panel)
-    const isBookmarks = Utils.isBookmarksPanel(panel)
-    if (isTabs) {
-      if (Settings.reactive.dndExp === 'pointer') {
-        const delay = assertExpandMod(e) ? 0 : Settings.reactive.dndExpDelay
-        const tab = Tabs.byId[DnD.reactive.dstParentId]
-        if (!tab || !tab.isParent) return
-        if (delay > 0) DnD.reactive.pointerHover = true
-        expandTimeout(() => {
-          DnD.reactive.pointerHover = false
-          DnD.reactive.pointerExpanding = true
-          Tabs.toggleBranch(tab.id)
-          Sidebar.updatePanelBoundsDebounced(128)
-        }, delay)
-      }
-      return
-    }
-
-    if (isBookmarks) {
-      if (Settings.reactive.dndExp === 'pointer') {
-        const delay = assertExpandMod(e) ? 0 : Settings.reactive.dndExpDelay
-        const bookmark = Bookmarks.reactive.byId[DnD.reactive.dstParentId]
-        const isParent = !!bookmark?.children?.length
-        if (!bookmark || !isParent) return
-        if (delay > 0) DnD.reactive.pointerHover = true
-        expandTimeout(() => {
-          DnD.reactive.pointerHover = false
-          DnD.reactive.pointerExpanding = true
-          Bookmarks.toggleBranch(bookmark.id)
-          Sidebar.updatePanelBoundsDebounced(128)
-        }, delay)
-      }
-      return
-    }
-  }
 }
 
 export function onDragLeave(e: DragEvent): void {
@@ -456,6 +421,47 @@ export function onDragLeave(e: DragEvent): void {
   Selection.resetSelection()
   resetDragPointer()
   reset()
+}
+
+function onPointerEnter(e: DragEvent): void {
+  resetTabActivateTimeout()
+
+  const panel = Sidebar.reactive.panelsById[DnD.reactive.dstPanelId]
+  const isTabs = Utils.isTabsPanel(panel)
+  const isBookmarks = Utils.isBookmarksPanel(panel)
+
+  if (isTabs) {
+    if (Settings.reactive.dndExp === 'pointer') {
+      const delay = assertExpandMod(e) ? 0 : Settings.reactive.dndExpDelay
+      const tab = Tabs.byId[DnD.reactive.dstParentId]
+      if (!tab || !tab.isParent) return
+      if (delay !== 0) DnD.reactive.pointerHover = true
+      expandTimeout(() => {
+        DnD.reactive.pointerHover = false
+        DnD.reactive.pointerExpanding = true
+        Tabs.toggleBranch(tab.id)
+        Sidebar.updatePanelBoundsDebounced(128)
+      }, delay)
+    }
+    return
+  }
+
+  if (isBookmarks) {
+    if (Settings.reactive.dndExp === 'pointer') {
+      const delay = assertExpandMod(e) ? 0 : Settings.reactive.dndExpDelay
+      const bookmark = Bookmarks.reactive.byId[DnD.reactive.dstParentId]
+      const isParent = !!bookmark?.children?.length
+      if (!bookmark || !isParent) return
+      if (delay !== 0) DnD.reactive.pointerHover = true
+      expandTimeout(() => {
+        DnD.reactive.pointerHover = false
+        DnD.reactive.pointerExpanding = true
+        Bookmarks.toggleBranch(bookmark.id)
+        Sidebar.updatePanelBoundsDebounced(128)
+      }, delay)
+    }
+    return
+  }
 }
 
 let pointerEl: HTMLElement | null = null
@@ -474,6 +480,7 @@ let pointerPos = 0
 let dropLvlOffset = 0
 let prevDropLvlOffset = 0
 let dropPos = 0
+let inPointerArea = false
 const prevEventKeys = { alt: false, ctrl: false, shift: false }
 const path: ItemBounds[] = []
 export function onDragMove(e: DragEvent): void {
@@ -548,6 +555,18 @@ export function onDragMove(e: DragEvent): void {
   dropLvlOffset = ~~((e.clientX - DnD.startX) / 12)
   const lvlChanged = prevDropLvlOffset !== dropLvlOffset
   prevDropLvlOffset = dropLvlOffset
+
+  // Entering in the pointer aria
+  if (x > 0 && x < 32 && (!inPointerArea || eventKeyChanged)) {
+    inPointerArea = true
+    onPointerEnter(e)
+    return
+  } else if (x > 32 && inPointerArea) {
+    inPointerArea = false
+    DnD.reactive.pointerHover = false
+    pointerPos--
+    resetExpandTimeout()
+  }
 
   // Empty
   if (boundsLen === 0) {
@@ -658,6 +677,12 @@ export function onDragMove(e: DragEvent): void {
         DnD.reactive.pointerLvl = slot.lvl + 1
         DnD.reactive.dstIndex = -1
         DnD.reactive.dstParentId = slot.id
+
+        // Entering in the pointer aria
+        if (x < 32 && Settings.reactive.dndExp === 'pointer') {
+          onPointerEnter(e)
+          break
+        }
 
         // Pointer inside tab - activate / expand
         if (DnD.reactive.dstType === DropType.Tabs) {
