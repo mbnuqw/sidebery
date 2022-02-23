@@ -2,6 +2,7 @@
 .pointer(
   ref="pointerEl"
   :data-pointer="DndPointerModeNames[DnD.reactive.pointerMode]"
+  :data-hover="DnD.reactive.pointerHover"
   :data-lvl="DnD.reactive.pointerLvl")
   .arrow(
     data-dnd-type="pointer"

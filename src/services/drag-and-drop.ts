@@ -20,6 +20,7 @@ export interface DragAndDropState {
   pointerExpanding: boolean
   pointerMode: DndPointerMode
   pointerLvl: number
+  pointerHover: boolean
 
   dstType: DropType
   dstIndex: number
@@ -37,6 +38,7 @@ export const DnD = {
     pointerExpanding: false,
     pointerMode: DndPointerMode.None,
     pointerLvl: 0,
+    pointerHover: false,
     dstType: DropType.Nowhere,
     dstIndex: -1,
     dstParentId: NOID,

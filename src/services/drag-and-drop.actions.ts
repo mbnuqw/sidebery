@@ -109,6 +109,7 @@ function resetDragPointer(): void {
   DnD.reactive.pointerMode = DndPointerMode.None
   DnD.reactive.pointerExpanding = false
   DnD.reactive.pointerLvl = 0
+  DnD.reactive.pointerHover = false
 }
 
 let _expandTimeout: number | undefined
@@ -278,6 +279,8 @@ export function onDragEnter(e: DragEvent): void {
 
   // console.log('[DND] onDragEnter (type, id)', type, id)
 
+  DnD.reactive.pointerHover = false
+
   resetPanelSwitchTimeout()
   resetTabActivateTimeout()
   resetExpandTimeout()
@@ -415,9 +418,11 @@ export function onDragEnter(e: DragEvent): void {
     if (isTabs) {
       if (Settings.reactive.dndExp === 'pointer') {
         const delay = assertExpandMod(e) ? 0 : Settings.reactive.dndExpDelay
+        const tab = Tabs.byId[DnD.reactive.dstParentId]
+        if (!tab || !tab.isParent) return
+        if (delay > 0) DnD.reactive.pointerHover = true
         expandTimeout(() => {
-          const tab = Tabs.byId[DnD.reactive.dstParentId]
-          if (!tab || !tab.isParent) return
+          DnD.reactive.pointerHover = false
           DnD.reactive.pointerExpanding = true
           Tabs.toggleBranch(tab.id)
           Sidebar.updatePanelBoundsDebounced(128)
@@ -429,10 +434,12 @@ export function onDragEnter(e: DragEvent): void {
     if (isBookmarks) {
       if (Settings.reactive.dndExp === 'pointer') {
         const delay = assertExpandMod(e) ? 0 : Settings.reactive.dndExpDelay
+        const bookmark = Bookmarks.reactive.byId[DnD.reactive.dstParentId]
+        const isParent = !!bookmark?.children?.length
+        if (!bookmark || !isParent) return
+        if (delay > 0) DnD.reactive.pointerHover = true
         expandTimeout(() => {
-          const bookmark = Bookmarks.reactive.byId[DnD.reactive.dstParentId]
-          const isParent = !!bookmark?.children?.length
-          if (!bookmark || !isParent) return
+          DnD.reactive.pointerHover = false
           DnD.reactive.pointerExpanding = true
           Bookmarks.toggleBranch(bookmark.id)
           Sidebar.updatePanelBoundsDebounced(128)

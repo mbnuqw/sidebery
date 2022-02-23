@@ -248,6 +248,9 @@ body
     opacity: 0
   &[data-pointer="none"] .arrow
     opacity: 0
+  &[data-hover="true"]:before
+    transform: translateX(0)
+    opacity: 1
 #root[data-drag="true"] .pointer
   opacity: 1
   z-index: 100
