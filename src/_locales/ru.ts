@@ -498,8 +498,8 @@ const dict: Record<string, PlurFn | string> = {
   // --- Drag and drop
   'settings.dnd_title': 'Перетаскивание',
   'settings.dnd_tab_act': 'Активировать вкладку при наведении',
-  'settings.dnd_tab_act_delay': 'Задержка (мс)',
-  'settings.dnd_mod': 'Только при нажатии на',
+  'settings.dnd_tab_act_delay': 'С задержкой (мс)',
+  'settings.dnd_mod': 'При нажатии на',
   'settings.dnd_mod_alt': 'alt',
   'settings.dnd_mod_shift': 'shift',
   'settings.dnd_mod_ctrl': 'ctrl',
@@ -508,7 +508,7 @@ const dict: Record<string, PlurFn | string> = {
   'settings.dnd_exp_pointer': 'треугольник указателя',
   'settings.dnd_exp_hover': 'вкладку/закладку',
   'settings.dnd_exp_none': 'выкл',
-  'settings.dnd_exp_delay': 'Задержка (мс)',
+  'settings.dnd_exp_delay': 'С задержкой (мс)',
 
   // --- Search
   'settings.search_title': 'Поиск',

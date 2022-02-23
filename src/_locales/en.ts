@@ -472,8 +472,8 @@ const dict: Record<string, PlurFn | string> = {
   // - Drag and drop
   'settings.dnd_title': 'Drag and Drop',
   'settings.dnd_tab_act': 'Activate tab on hover',
-  'settings.dnd_tab_act_delay': 'Delay (ms)',
-  'settings.dnd_mod': 'Only with pressed',
+  'settings.dnd_tab_act_delay': 'With delay (ms)',
+  'settings.dnd_mod': 'With pressed key',
   'settings.dnd_mod_alt': 'alt',
   'settings.dnd_mod_shift': 'shift',
   'settings.dnd_mod_ctrl': 'ctrl',
@@ -482,7 +482,7 @@ const dict: Record<string, PlurFn | string> = {
   'settings.dnd_exp_pointer': "pointer's triangle",
   'settings.dnd_exp_hover': 'tab/bookmark',
   'settings.dnd_exp_none': 'none',
-  'settings.dnd_exp_delay': 'Delay (ms)',
+  'settings.dnd_exp_delay': 'With delay (ms)',
 
   // - Search
   'settings.search_title': 'Search',

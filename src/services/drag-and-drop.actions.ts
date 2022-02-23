@@ -112,9 +112,10 @@ function resetDragPointer(): void {
 }
 
 let _expandTimeout: number | undefined
-function expandTimeout(cb: () => void): void {
+function expandTimeout(cb: () => void, delay?: number): void {
   clearTimeout(_expandTimeout)
-  _expandTimeout = setTimeout(() => cb(), Settings.reactive.dndExpDelay)
+  if (delay === 0) return cb()
+  _expandTimeout = setTimeout(() => cb(), delay ?? Settings.reactive.dndExpDelay)
 }
 function resetExpandTimeout(): void {
   clearTimeout(_expandTimeout)
@@ -123,6 +124,7 @@ function resetExpandTimeout(): void {
 let _tabActivateTimeout: number | undefined
 function tabActivateTimeout(cb: () => void, delay: number): void {
   clearTimeout(_tabActivateTimeout)
+  if (delay === 0) return cb()
   _tabActivateTimeout = setTimeout(() => cb(), delay)
 }
 function resetTabActivateTimeout(): void {
@@ -132,6 +134,7 @@ function resetTabActivateTimeout(): void {
 let _panelSwitchTimeout: number | undefined
 function panelSwitchTimeout(cb: () => void, delay: number): void {
   clearTimeout(_panelSwitchTimeout)
+  if (delay === 0) return cb()
   _panelSwitchTimeout = setTimeout(() => cb(), delay)
 }
 function resetPanelSwitchTimeout(): void {
@@ -187,16 +190,14 @@ function getSrcInfo(): SrcPlaceInfo {
 }
 
 function assertExpandMod(e: DragEvent): boolean {
-  if (Settings.reactive.dndExpMod === 'none') return true
-  else if (Settings.reactive.dndExpMod === 'alt' && e.altKey) return true
+  if (Settings.reactive.dndExpMod === 'alt' && e.altKey) return true
   else if (Settings.reactive.dndExpMod === 'shift' && e.shiftKey) return true
   else if (Settings.reactive.dndExpMod === 'ctrl' && e.ctrlKey) return true
   else return false
 }
 
 function assertTabActivateMod(e: DragEvent): boolean {
-  if (Settings.reactive.dndTabActMod === 'none') return true
-  else if (Settings.reactive.dndTabActMod === 'alt' && e.altKey) return true
+  if (Settings.reactive.dndTabActMod === 'alt' && e.altKey) return true
   else if (Settings.reactive.dndTabActMod === 'shift' && e.shiftKey) return true
   else if (Settings.reactive.dndTabActMod === 'ctrl' && e.ctrlKey) return true
   else return false
@@ -391,8 +392,8 @@ export function onDragEnter(e: DragEvent): void {
     if (tab.pinned) DnD.reactive.dstIndex = tab.index
     else DnD.reactive.dstPanelId = tab.panelId
 
-    if (Settings.reactive.dndTabAct && tab.pinned && assertTabActivateMod(e)) {
-      const delay = Settings.reactive.dndTabActDelay
+    if (Settings.reactive.dndTabAct && tab.pinned) {
+      const delay = assertTabActivateMod(e) ? 0 : Settings.reactive.dndTabActDelay
       tabActivateTimeout(() => browser.tabs.update(tab.id, { active: true }), delay)
     }
   }
@@ -412,20 +413,22 @@ export function onDragEnter(e: DragEvent): void {
     const isTabs = Utils.isTabsPanel(panel)
     const isBookmarks = Utils.isBookmarksPanel(panel)
     if (isTabs) {
-      if (Settings.reactive.dndExp === 'pointer' && assertExpandMod(e)) {
+      if (Settings.reactive.dndExp === 'pointer') {
+        const delay = assertExpandMod(e) ? 0 : Settings.reactive.dndExpDelay
         expandTimeout(() => {
           const tab = Tabs.byId[DnD.reactive.dstParentId]
           if (!tab || !tab.isParent) return
           DnD.reactive.pointerExpanding = true
           Tabs.toggleBranch(tab.id)
           Sidebar.updatePanelBoundsDebounced(128)
-        })
+        }, delay)
       }
       return
     }
 
     if (isBookmarks) {
-      if (Settings.reactive.dndExp === 'pointer' && assertExpandMod(e)) {
+      if (Settings.reactive.dndExp === 'pointer') {
+        const delay = assertExpandMod(e) ? 0 : Settings.reactive.dndExpDelay
         expandTimeout(() => {
           const bookmark = Bookmarks.reactive.byId[DnD.reactive.dstParentId]
           const isParent = !!bookmark?.children?.length
@@ -433,7 +436,7 @@ export function onDragEnter(e: DragEvent): void {
           DnD.reactive.pointerExpanding = true
           Bookmarks.toggleBranch(bookmark.id)
           Sidebar.updatePanelBoundsDebounced(128)
-        })
+        }, delay)
       }
       return
     }
@@ -474,13 +477,22 @@ export function onDragMove(e: DragEvent): void {
   const panel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
   if (!panel || !panel.scrollEl) return
 
-  const eventKeyChanged =
-    prevEventKeys.alt !== e.altKey ||
-    prevEventKeys.shift !== e.shiftKey ||
-    prevEventKeys.ctrl !== e.ctrlKey
+  const altKeyChanged = prevEventKeys.alt !== e.altKey
+  const shiftKeyChanged = prevEventKeys.shift !== e.shiftKey
+  const ctrlKeyChanged = prevEventKeys.ctrl !== e.ctrlKey
+  const eventKeyChanged = altKeyChanged || shiftKeyChanged || ctrlKeyChanged
   prevEventKeys.alt = e.altKey
   prevEventKeys.shift = e.shiftKey
   prevEventKeys.ctrl = e.ctrlKey
+
+  // Skip keyup event
+  if (
+    (altKeyChanged && !e.altKey) ||
+    (shiftKeyChanged && !e.shiftKey) ||
+    (ctrlKeyChanged && !e.ctrlKey)
+  ) {
+    return
+  }
 
   // Reenter on target element if alt/shift/ctrl key was pressed
   if (eventKeyChanged && (xLock || yLock)) onDragEnter(e)
@@ -643,15 +655,16 @@ export function onDragMove(e: DragEvent): void {
         // Pointer inside tab - activate / expand
         if (DnD.reactive.dstType === DropType.Tabs) {
           const targetId = slot.id
-          if (Settings.reactive.dndTabAct && assertTabActivateMod(e)) {
-            const delay = Settings.reactive.dndTabActDelay
+          if (Settings.reactive.dndTabAct) {
+            const delay = assertTabActivateMod(e) ? 0 : Settings.reactive.dndTabActDelay
             tabActivateTimeout(() => browser.tabs.update(targetId, { active: true }), delay)
           }
-          if (Settings.reactive.dndExp === 'hover' && assertExpandMod(e)) {
+          if (Settings.reactive.dndExp === 'hover') {
+            const delay = assertExpandMod(e) ? 0 : Settings.reactive.dndExpDelay
             expandTimeout(() => {
               Tabs.toggleBranch(targetId)
               Sidebar.updatePanelBoundsDebounced(128)
-            })
+            }, delay)
           }
         }
 
@@ -660,11 +673,12 @@ export function onDragMove(e: DragEvent): void {
           const targetId = slot.id
           const bookmark = Bookmarks.reactive.byId[targetId]
           const isParent = !!bookmark.children?.length
-          if (isParent && Settings.reactive.dndExp === 'hover' && assertExpandMod(e)) {
+          if (isParent && Settings.reactive.dndExp === 'hover') {
+            const delay = assertExpandMod(e) ? 0 : Settings.reactive.dndExpDelay
             expandTimeout(() => {
               Bookmarks.toggleBranch(targetId)
               Sidebar.updatePanelBoundsDebounced(128)
-            })
+            }, delay)
           }
         }
       }
