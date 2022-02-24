@@ -502,7 +502,7 @@ const dict: Record<string, PlurFn | string> = {
   'settings.skip_empty_panels': 'Skip empty panels on switching',
   'settings.show_tab_rm_btn': 'Show close button on mouse hover',
   'settings.show_tab_ctx': 'Show colored mark of container',
-  'settings.hide_inactive_panel_tabs': 'Hide tabs of inactive panels',
+  'settings.hide_inactive_panel_tabs': 'Hide native tabs of inactive panels',
   'settings.activate_after_closing': 'After closing current tab activate',
   'settings.activate_after_closing_next': 'next tab',
   'settings.activate_after_closing_prev': 'previous tab',
