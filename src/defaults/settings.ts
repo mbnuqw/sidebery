@@ -101,7 +101,6 @@ export const DEFAULT_SETTINGS: SettingsState = {
   openBookmarkNewTab: false,
   midClickBookmark: 'open_new_tab',
   actMidClickTab: false,
-  midClickBookmarkDel: false,
   autoCloseBookmarks: false,
   autoRemoveOther: false,
   highlightOpenBookmarks: false,

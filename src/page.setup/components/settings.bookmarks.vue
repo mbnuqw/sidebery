@@ -25,10 +25,6 @@ section(ref="el")
       label="settings.act_mid_click_tab"
       v-model:value="Settings.reactive.actMidClickTab"
       :inactive="Settings.reactive.midClickBookmark !== 'open_new_tab'")
-    ToggleField(
-      label="settings.mid_click_bookmark_del"
-      v-model:value="Settings.reactive.midClickBookmarkDel"
-      :inactive="Settings.reactive.midClickBookmark !== 'open_new_tab'")
   ToggleField(
     label="settings.auto_close_bookmarks"
     v-model:value="Settings.reactive.autoCloseBookmarks")

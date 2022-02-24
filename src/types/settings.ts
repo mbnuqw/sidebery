@@ -101,7 +101,6 @@ export interface SettingsState {
   openBookmarkNewTab: boolean
   midClickBookmark: typeof SETTINGS_OPTIONS.midClickBookmark[number]
   actMidClickTab: boolean
-  midClickBookmarkDel: boolean
   autoCloseBookmarks: boolean
   autoRemoveOther: boolean
   highlightOpenBookmarks: boolean

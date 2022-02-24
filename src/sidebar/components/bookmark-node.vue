@@ -121,7 +121,6 @@ async function onMouseDown(e: MouseEvent): Promise<void> {
     if (action === 'open_new_tab' && props.node.url) {
       const panelId = Sidebar.findTabsPanelForUrl(props.node.url)
       await Bookmarks.open([props.node.id], { panelId }, false, Settings.reactive.actMidClickTab)
-      if (Settings.reactive.midClickBookmarkDel) Bookmarks.removeBookmarks([props.node.id])
     } else if (action === 'edit') Bookmarks.editBookmarkNode(props.node)
     else if (action === 'delete') Bookmarks.removeBookmarks([props.node.id])
   }

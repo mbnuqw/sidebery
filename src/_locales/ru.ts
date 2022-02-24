@@ -667,7 +667,6 @@ const dict: Record<string, PlurFn | string> = {
   'settings.mid_click_bookmark_edit': 'редактировать',
   'settings.mid_click_bookmark_delete': 'удалять',
   'settings.act_mid_click_tab': 'Активировать вкладку',
-  'settings.mid_click_bookmark_del': 'Удалить закладку',
   'settings.auto_close_bookmarks': 'Автоматически сворачивать папки',
   'settings.auto_rm_other': 'Удалять открытые закладки из папки "Другие закладки"',
   'settings.show_bookmark_len': 'Показывать размер папки',

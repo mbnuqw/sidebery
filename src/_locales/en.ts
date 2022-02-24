@@ -622,7 +622,6 @@ const dict: Record<string, PlurFn | string> = {
   'settings.mid_click_bookmark_edit': 'edit',
   'settings.mid_click_bookmark_delete': 'delete',
   'settings.act_mid_click_tab': 'Activate tab',
-  'settings.mid_click_bookmark_del': 'Delete bookmark',
   'settings.auto_close_bookmarks': 'Auto-close folders',
   'settings.auto_rm_other': 'Delete open bookmarks from "Other Bookmarks" folder',
   'settings.show_bookmark_len': 'Show folder size',
