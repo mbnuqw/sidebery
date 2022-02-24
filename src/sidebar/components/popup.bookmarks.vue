@@ -189,7 +189,7 @@ async function loadBookmarksRecentFolders(): Promise<void> {
   if (Bookmarks.reactive.popup) Bookmarks.reactive.popup.location = firstFolderId
 }
 
-const RECENT_FOLDERS_LIMIT = 3
+const RECENT_FOLDERS_LIMIT = 5
 async function saveBookmarksRecentFolders(lastFolderId: ID): Promise<void> {
   const lastFolder = Bookmarks.reactive.byId[lastFolderId]
   if (!lastFolder) return
