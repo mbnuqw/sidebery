@@ -117,7 +117,10 @@ function onTabCreated(tab: Tab): void {
     panel = Tabs.getPanelForNewTab(tab)
     if (!panel) return Logs.err('Cannot handle new tab: Cannot find target panel')
     index = Tabs.getIndexForNewTab(panel, tab)
-    if (!autoGroupTab) tab.openerTabId = Tabs.getParentForNewTab(panel, tab.openerTabId)
+    if (!autoGroupTab) {
+      if (!Settings.reactive.groupOnOpen) tab.openerTabId = undefined
+      else tab.openerTabId = Tabs.getParentForNewTab(panel, tab.openerTabId)
+    }
   }
 
   // If new tab has wrong possition - move it
