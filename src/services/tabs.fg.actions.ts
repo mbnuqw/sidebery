@@ -1519,7 +1519,7 @@ export async function bookmarkTabs(tabIds: ID[]): Promise<void> {
     }
 
     tabs.sort((a, b) => a.index - b.index)
-    await Bookmarks.createFrom(tabs, { index: 0, parentId })
+    await Bookmarks.createFrom(tabs, { parentId })
   }
 
   // Show notification for silent bookmarks creation
