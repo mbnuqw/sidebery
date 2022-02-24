@@ -24,7 +24,8 @@
   @dblclick.prevent.stop="onDoubleClick"): .body
   //- I can try to completely remove next line (with .complete-fx)
   //- and use .dnd-layer:before or some linear-gradient animation on .body
-  Transition(name="tab-complete"): .complete-fx(v-if="tab.status === TabStatus.Loading")
+  Transition(name="tab-complete")
+    .complete-fx(v-if="tab.status === TabStatus.Loading && Settings.reactive.animations")
   .dnd-layer(draggable="true" data-dnd-type="tab" :data-dnd-id="tab.id" @dragstart="onDragStart" @dragenter="")
   Transition(name="tab-part")
     .audio(
