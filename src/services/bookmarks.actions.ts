@@ -433,6 +433,9 @@ export async function open(
         const info: ItemInfo = { id: node.id, title: node.title }
         if (node.url) info.url = node.url
         if (inRel) info.parentId = node.parentId
+        if (!info.url && info.title && info.title.length > 20) {
+          Bookmarks.removeDataFromTitle(info)
+        }
 
         // Set url for parent node
         const prev = toOpen[toOpen.length - 1]
