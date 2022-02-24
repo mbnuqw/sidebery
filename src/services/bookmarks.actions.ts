@@ -409,7 +409,7 @@ export async function open(
       if (!dstCtxTabsPanel && p.moveTabCtx === dstContainerId) dstCtxTabsPanel = p
     }
   }
-  if (!dstPanel) dstPanel = dstCtxTabsPanel
+  if (!Utils.isTabsPanel(dstPanel)) dstPanel = dstCtxTabsPanel
   if (!dstPanel) dstPanel = dstTabsPanel
   if (Utils.isTabsPanel(dstPanel)) {
     if (dstPanel.newTabCtx && dstPanel.newTabCtx !== 'none' && !dst.containerId) {
