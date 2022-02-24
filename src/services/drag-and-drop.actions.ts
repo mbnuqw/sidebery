@@ -803,9 +803,9 @@ export async function onDrop(e: DragEvent): Promise<void> {
     (fromBookmarksPanel && toTabs)
   ) {
     const dst = getDestInfo()
-    await Tabs.open(DnD.items, dst)
-    const index = dst.index ?? 0
-    Tabs.updateTabsTree(index - 1, index + DnD.items.length)
+    const ids = DnD.items.map(i => i.id)
+
+    await Bookmarks.open(ids, dst)
   }
 
   // Bookmarks to bookmarks
