@@ -12,6 +12,7 @@ import { tabsMenuOptions } from './menu.options.tabs'
 import { bookmarksMenuOptions } from './menu.options.bookmarks'
 import { historyMenuOptions } from './menu.options.history'
 import { downloadsMenuOptions } from './menu.options.downloads'
+import { CONTAINER_ID } from 'src/defaults'
 
 export const menuOptions: Record<string, () => MenuOption | MenuOption[] | undefined> = {
   ...tabsMenuOptions,
@@ -82,7 +83,7 @@ export const menuOptions: Record<string, () => MenuOption | MenuOption[] | undef
     return {
       label: translate('menu.new_tab_bar.no_container'),
       icon: 'icon_plus',
-      onClick: () => Tabs.createTabInPanel(panel),
+      onClick: () => Tabs.createTabInPanel(panel, { cookieStoreId: CONTAINER_ID }),
     }
   },
 

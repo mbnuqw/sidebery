@@ -2226,7 +2226,7 @@ export function createTabInPanel(
   if (conf?.url) config.url = conf.url
   if (conf?.active !== undefined) config.active = conf.active
   if (index !== undefined) setNewTabPosition(index, parentId ?? NOID, panel.id)
-  if (panel.newTabCtx !== 'none') config.cookieStoreId = panel.newTabCtx
+  if (panel.newTabCtx !== 'none' && !conf?.cookieStoreId) config.cookieStoreId = panel.newTabCtx
 
   browser.tabs.create(config)
 }
