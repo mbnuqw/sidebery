@@ -442,7 +442,7 @@ const dict: Record<string, PlurFn | string> = {
   'settings.nav_bookmarks_panel_mid_click': 'Middle click on bookmarks panel',
   'settings.nav_bookmarks_panel_mid_click_convert': 'convert to tabs',
   'settings.nav_bookmarks_panel_mid_click_none': 'none',
-  'settings.nav_switch_panels_wheel': 'Switch panels with mouse wheel',
+  'settings.nav_switch_panels_wheel': 'Switch panels with mouse wheel over navigation bar',
   'settings.nav_bar_enabled': 'Enabled elements',
   'settings.nav_bar.no_elements': 'No elements',
   'settings.nav_bar.available_elements': 'Available elements',

@@ -467,7 +467,8 @@ const dict: Record<string, PlurFn | string> = {
   'settings.nav_bookmarks_panel_mid_click': 'Клик средней кнопкой мыши по панели закладок',
   'settings.nav_bookmarks_panel_mid_click_convert': 'конвертировать во вкладки',
   'settings.nav_bookmarks_panel_mid_click_none': 'ничего',
-  'settings.nav_switch_panels_wheel': 'Переключать панели с помощью колеса мыши',
+  'settings.nav_switch_panels_wheel':
+    'Переключать панели с помощью колеса мыши над панелью навигации',
 
   'settings.nav_bar_enabled': 'Активированные элементы',
   'settings.nav_bar.no_elements': 'Нет элементов',
