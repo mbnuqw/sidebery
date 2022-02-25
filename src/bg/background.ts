@@ -125,6 +125,9 @@ async function upgrade(): Promise<void> {
   if (stored.settings) {
     newStorage.settings = Utils.recreateNormalizedObject(stored.settings, DEFAULT_SETTINGS)
     newStorage.settings.theme = 'proton'
+    if (newStorage.settings.tabDoubleClick !== 'none') {
+      newStorage.settings.tabsSecondClickActPrev = false
+    }
     upgrading.settings = 'done'
   } else {
     upgrading.settings = 'no'
