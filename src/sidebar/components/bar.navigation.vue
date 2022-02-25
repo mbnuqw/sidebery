@@ -278,10 +278,11 @@ function onNavMouseDown(e: MouseEvent, item: NavItem) {
   // Middle click action
   if (e.button === 1) {
     if (item.type === PanelType.tabs) {
-      if (Settings.reactive.navTabsPanelMidClickAction === 'rm_all') {
-        const panel = Sidebar.reactive.panelsById[item.id]
-        if (!Utils.isTabsPanel(panel)) return
+      const panel = Sidebar.reactive.panelsById[item.id]
+      if (!Utils.isTabsPanel(panel)) return
 
+      // Remove tabs
+      if (Settings.reactive.navTabsPanelMidClickAction === 'rm_all') {
         let toRemove = panel.tabs.map(t => t.id)
         if (Settings.reactive.pinnedTabsPosition === 'panel') {
           panel.pinnedTabs.forEach(t => toRemove.push(t.id))
@@ -290,11 +291,28 @@ function onNavMouseDown(e: MouseEvent, item: NavItem) {
         if (toRemove.length) Tabs.removeTabs(toRemove)
       }
 
+      // Remove active tab
       if (Settings.reactive.navTabsPanelMidClickAction === 'rm_act_tab') {
         let actTab = Tabs.byId[Tabs.activeId]
         if (actTab && actTab.panelId === item.id && !actTab.pinned) {
           Tabs.removeTabs([Tabs.activeId])
         }
+      }
+
+      // Discard(unload) tabs
+      if (Settings.reactive.navTabsPanelMidClickAction === 'discard') {
+        const ids = panel.tabs.map(t => t.id)
+        if (ids.length) Tabs.discardTabs(ids)
+      }
+
+      // Save panel to bookmarks
+      if (Settings.reactive.navTabsPanelMidClickAction === 'bookmark') {
+        Sidebar.bookmarkTabsPanel(panel.id, true)
+      }
+
+      // Convert tabs panel to bookmarks panel
+      if (Settings.reactive.navTabsPanelMidClickAction === 'convert') {
+        Sidebar.convertToBookmarksPanel(panel)
       }
     }
 

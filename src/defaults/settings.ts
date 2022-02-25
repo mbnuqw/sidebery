@@ -165,7 +165,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
 export const SETTINGS_OPTIONS = {
   navActTabsPanelLeftClickAction: ['new_tab', 'none'],
   navActBookmarksPanelLeftClickAction: ['scroll', 'none'],
-  navTabsPanelMidClickAction: ['rm_act_tab', 'rm_all', 'none'],
+  navTabsPanelMidClickAction: ['rm_act_tab', 'rm_all', 'discard', 'bookmark', 'convert', 'none'],
 
   groupLayout: ['grid', 'list'],
   scrollThroughTabs: ['panel', 'global', 'none'],

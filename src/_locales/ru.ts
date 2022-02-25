@@ -460,6 +460,9 @@ const dict: Record<string, PlurFn | string> = {
   'settings.nav_tabs_panel_mid_click': 'Клик средней кнопкой мыши по панели вкладок',
   'settings.nav_tabs_panel_mid_click_rm_act_tab': 'закрыть активную вкладку',
   'settings.nav_tabs_panel_mid_click_rm_all': 'закрыть вкладки',
+  'settings.nav_tabs_panel_mid_click_discard': 'выгрузить вкладки',
+  'settings.nav_tabs_panel_mid_click_bookmark': 'сохранить панель в закладки',
+  'settings.nav_tabs_panel_mid_click_convert': 'конвертировать в панель закладок',
   'settings.nav_tabs_panel_mid_click_none': 'ничего',
   'settings.nav_switch_panels_wheel': 'Переключать панели с помощью колеса мыши',
 
