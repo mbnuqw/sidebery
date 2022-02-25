@@ -149,6 +149,7 @@ export interface SettingsState {
   tabsSecondClickActPrev: boolean
   tabLongLeftClick: typeof SETTINGS_OPTIONS.tabLongLeftClick[number]
   tabLongRightClick: typeof SETTINGS_OPTIONS.tabLongRightClick[number]
+  tabCloseMiddleClick: typeof SETTINGS_OPTIONS.tabCloseMiddleClick[number]
   tabsPanelLeftClickAction: typeof SETTINGS_OPTIONS.tabsPanelLeftClickAction[number]
   tabsPanelDoubleClickAction: typeof SETTINGS_OPTIONS.tabsPanelDoubleClickAction[number]
   tabsPanelRightClickAction: typeof SETTINGS_OPTIONS.tabsPanelRightClickAction[number]

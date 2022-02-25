@@ -780,6 +780,7 @@ const dict: Record<string, PlurFn | string> = {
   'settings.tab_double_click': 'Двойной клик по вкладке',
   'settings.tab_long_left_click': 'Длительное нажатие левой кнопки мыши по вкладке',
   'settings.tab_long_right_click': 'Длительное нажатие правой кнопки мыши по вкладке',
+  'settings.tab_close_middle_click': 'Нажатие средней кнопкой мыши по кнопке закрытия вкладки',
 
   'settings.nav_actions_sub_title': 'Действия над навигацией',
 
@@ -793,6 +794,7 @@ const dict: Record<string, PlurFn | string> = {
   'settings.tab_action_new_after': 'новая вкладка',
   'settings.tab_action_new_child': 'новая дочерняя вкладка',
   'settings.tab_action_close': 'закрыть вкладку',
+  'settings.tab_action_discard': 'выгрузить',
   'settings.tab_action_none': 'выкл',
 
   'settings.tabs_panel_actions_sub_title': 'Действия над панелью c вкладками',

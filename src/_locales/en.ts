@@ -715,6 +715,7 @@ const dict: Record<string, PlurFn | string> = {
   'settings.tab_double_click': 'Double click on tab',
   'settings.tab_long_left_click': 'Long left click on tab',
   'settings.tab_long_right_click': 'Long right click on tab',
+  'settings.tab_close_middle_click': 'Middle click on close tab button',
   'settings.tab_action_reload': 'reload',
   'settings.tab_action_duplicate': 'duplicate',
   'settings.tab_action_pin': 'pin',
@@ -724,6 +725,7 @@ const dict: Record<string, PlurFn | string> = {
   'settings.tab_action_new_after': 'new sibling tab',
   'settings.tab_action_new_child': 'new child tab',
   'settings.tab_action_close': 'close tab',
+  'settings.tab_action_discard': 'unload',
   'settings.tab_action_none': 'none',
 
   'settings.tabs_panel_actions_sub_title': 'Tabs panel actions',

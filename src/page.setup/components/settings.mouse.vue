@@ -71,6 +71,11 @@ section(ref="el")
     optLabel="settings.tab_action_"
     v-model:value="Settings.reactive.tabLongRightClick"
     :opts="Settings.getOpts('tabLongRightClick')")
+  SelectField(
+    label="settings.tab_close_middle_click"
+    optLabel="settings.tab_action_"
+    v-model:value="Settings.reactive.tabCloseMiddleClick"
+    :opts="Settings.getOpts('tabCloseMiddleClick')")
 
   .sub-title {{translate('settings.tabs_panel_actions_sub_title')}}
   SelectField.-no-separator(
