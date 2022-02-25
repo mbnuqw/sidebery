@@ -108,11 +108,14 @@ const isPinned = computed<boolean>(() => {
   return true
 })
 
+let closeLock = false
 function onMouseDownClose(e: MouseEvent): void {
+  if (closeLock) return
   Mouse.setTarget('tab.close', props.tab.id)
   if (e.button === 0) Tabs.removeTabs([props.tab.id])
   if (e.button === 1) Tabs.removeTabs([props.tab.id])
   if (e.button === 2) Tabs.removeBranches([props.tab.id])
+  closeLock = true
 }
 
 function onMouseDown(e: MouseEvent): void {

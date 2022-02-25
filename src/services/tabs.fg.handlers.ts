@@ -553,7 +553,7 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, childfree?: bool
   if (!Tabs.removingTabs.length) {
     // Update tree
     if (Settings.reactive.tabsTree && Utils.isTabsPanel(panel) && panel.len) {
-      Tabs.updateTabsTree()
+      Tabs.updateTabsTreeDebounced()
     }
 
     // Save new tabs state

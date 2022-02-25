@@ -2231,6 +2231,14 @@ export function createTabInPanel(
   browser.tabs.create(config)
 }
 
+let updateTabsTreeTimeout: number | undefined
+export function updateTabsTreeDebounced(startIndex = 0, endIndex = -1, delay = 150): void {
+  clearTimeout(updateTabsTreeTimeout)
+  updateTabsTreeTimeout = setTimeout(() => {
+    updateTabsTree(startIndex, endIndex)
+  }, delay)
+}
+
 /**
  * Normalize tree levels
  */
