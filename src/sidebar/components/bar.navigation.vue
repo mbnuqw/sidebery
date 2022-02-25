@@ -316,6 +316,16 @@ function onNavMouseDown(e: MouseEvent, item: NavItem) {
       }
     }
 
+    if (item.type === PanelType.bookmarks) {
+      const panel = Sidebar.reactive.panelsById[item.id]
+      if (!Utils.isBookmarksPanel(panel)) return
+
+      // Convert bookmarks panel to tabs panel
+      if (Settings.reactive.navBookmarksPanelMidClickAction === 'convert') {
+        Sidebar.convertToTabsPanel(panel)
+      }
+    }
+
     if (item.type === ButtonType.create_snapshot) SetupPage.open('snapshots')
 
     if (item.type === ButtonType.remute_audio_tabs) Tabs.switchToFirstAudibleTab()

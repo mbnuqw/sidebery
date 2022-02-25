@@ -27,6 +27,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   navActTabsPanelLeftClickAction: 'none',
   navActBookmarksPanelLeftClickAction: 'none',
   navTabsPanelMidClickAction: 'none',
+  navBookmarksPanelMidClickAction: 'none',
   navSwitchPanelsWheel: true,
 
   // Group page
@@ -166,6 +167,7 @@ export const SETTINGS_OPTIONS = {
   navActTabsPanelLeftClickAction: ['new_tab', 'none'],
   navActBookmarksPanelLeftClickAction: ['scroll', 'none'],
   navTabsPanelMidClickAction: ['rm_act_tab', 'rm_all', 'discard', 'bookmark', 'convert', 'none'],
+  navBookmarksPanelMidClickAction: ['convert', 'none'],
 
   groupLayout: ['grid', 'list'],
   scrollThroughTabs: ['panel', 'global', 'none'],

@@ -46,6 +46,11 @@ section(ref="el")
     optLabel="settings.nav_tabs_panel_mid_click_"
     v-model:value="Settings.reactive.navTabsPanelMidClickAction"
     :opts="Settings.getOpts('navTabsPanelMidClickAction')")
+  SelectField(
+    label="settings.nav_bookmarks_panel_mid_click"
+    optLabel="settings.nav_bookmarks_panel_mid_click_"
+    v-model:value="Settings.reactive.navBookmarksPanelMidClickAction"
+    :opts="Settings.getOpts('navBookmarksPanelMidClickAction')")
   ToggleField.-last(
     label="settings.nav_switch_panels_wheel"
     v-model:value="Settings.reactive.navSwitchPanelsWheel")

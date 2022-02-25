@@ -30,6 +30,7 @@ export interface SettingsState {
   navActTabsPanelLeftClickAction: typeof SETTINGS_OPTIONS.navActTabsPanelLeftClickAction[number]
   navActBookmarksPanelLeftClickAction: typeof SETTINGS_OPTIONS.navActBookmarksPanelLeftClickAction[number]
   navTabsPanelMidClickAction: typeof SETTINGS_OPTIONS.navTabsPanelMidClickAction[number]
+  navBookmarksPanelMidClickAction: typeof SETTINGS_OPTIONS.navBookmarksPanelMidClickAction[number]
 
   // Group page
   groupLayout: typeof SETTINGS_OPTIONS.groupLayout[number]
