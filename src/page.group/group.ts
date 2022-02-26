@@ -453,6 +453,11 @@ async function takeScreenshot(tab: GroupedTabInfo | GroupPin, quality = 90) {
   if (tab.discarded) {
     const screen = screenshots[tab.url]
     if (tab.bgEl && screen) tab.bgEl.style.backgroundImage = `url(${screen})`
+    else if (tab.bgEl && tab.favIconUrl) {
+      tab.bgEl.style.backgroundImage = `url(${tab.favIconUrl})`
+      tab.bgEl.style.filter = 'blur(8px)'
+      if (Settings.reactive.groupLayout === 'list') tab.bgEl.style.left = '-4px'
+    }
     return
   }
 
