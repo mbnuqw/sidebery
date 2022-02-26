@@ -40,10 +40,10 @@ const validUnit = computed((): string => {
   return !props.value ? 'none' : props.unit ?? 'none'
 })
 
-function valueFilter(e: Event): string {
+function valueFilter(e: Event): number {
   const val = parseInt((e.target as HTMLInputElement).value)
-  if (isNaN(val)) return '0'
-  return val.toString()
+  if (isNaN(val)) return 0
+  return val
 }
 function select(unit: string): void {
   if (!props.inactive) emit('update:unit', unit)

@@ -37,11 +37,11 @@ function onChange(): void {
   emit('change', props.value)
 }
 
-function valueFilter(e: Event): string {
+function valueFilter(e: Event): number {
   let val = parseInt((e.target as HTMLInputElement).value)
-  if (isNaN(val)) return '0'
-  else if (props.min !== undefined && val < props.min) return props.min.toString()
-  else return val.toString()
+  if (isNaN(val)) return 0
+  else if (props.min !== undefined && val < props.min) return props.min
+  else return val
 }
 
 function toggle(): void {

@@ -46,7 +46,7 @@ interface TextInputProps {
   valid?: string | boolean
   padding?: number
   or?: string
-  filter?: (e: Event) => string
+  filter?: (e: Event) => any
   line?: boolean
   tabindex?: string
   password?: boolean
