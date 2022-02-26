@@ -215,24 +215,22 @@ export async function getDbgDetails(): Promise<DbgInfo> {
     dbg.storage = (err as Error).toString()
   }
 
-  // try {
-  //   const stored = await browser.storage.local.get<Stored>('panels_v5')
-  //   // let stored = await storage.get('nav')
-  //   if (stored.panels_v5) {
-  //     for (const panel of Object.values(stored.panels_v5.config)) {
-  //       if (panel.name) panel.name = panel.name.length.toString()
-  //       if (panel.iconSVG) panel.iconSVG = '...'
-  //       if (panel.iconIMGSrc) panel.iconIMGSrc = '...len: ' + panel.iconIMGSrc.length.toString()
-  //       if (panel.iconIMG) panel.iconIMG = '...len: ' + panel.iconIMG.length.toString()
-  //       if (Utils.isTabsPanel(panel) && panel.urlRules) {
-  //         panel.urlRules = '...len: ' + panel.urlRules.length.toString()
-  //       }
-  //     }
-  //     dbg.panels = stored.panels_v5
-  //   }
-  // } catch (err) {
-  //   dbg.panels = (err as Error).toString()
-  // }
+  try {
+    const stored = await browser.storage.local.get<Stored>('sidebar')
+    if (stored.sidebar) {
+      for (const panel of Object.values(stored.sidebar.panels)) {
+        panel.name = `len: ${panel.name.length}`
+        if (panel.iconIMGSrc) panel.iconIMGSrc = `len: ${panel.iconIMGSrc.length}`
+        if (panel.iconIMG) panel.iconIMG = `len: ${panel.iconIMG.length}`
+        if (Utils.isTabsPanel(panel) && panel.urlRules) {
+          panel.urlRules = `len: ${panel.urlRules.length}`
+        }
+      }
+      dbg.sidebar = stored.sidebar
+    }
+  } catch (err) {
+    dbg.sidebar = (err as Error).toString()
+  }
 
   try {
     const { containers } = await browser.storage.local.get<Stored>('containers')
