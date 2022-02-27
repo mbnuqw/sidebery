@@ -2601,7 +2601,7 @@ export function getParentForNewTab(panel: Panel, openerTabId?: ID): ID | undefin
 /**
  * Check url rules of tabs panel and move/create tab if needed
  */
-export async function checkUrlRules(url: string, tab: Tab): Promise<void> {
+export async function applyUrlRules(url: string, tab: Tab): Promise<void> {
   const panelId = Sidebar.findTabsPanelForUrl(url, tab.panelId)
   if (panelId === undefined) return
 

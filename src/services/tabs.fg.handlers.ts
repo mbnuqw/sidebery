@@ -314,7 +314,7 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
       localTab.panelId &&
       change.url !== 'about:blank'
     ) {
-      Tabs.checkUrlRules(change.url, localTab)
+      Tabs.applyUrlRules(change.url, localTab)
     }
     if (localTab.pinned && localTab.relGroupId !== undefined) {
       const groupTab = Tabs.byId[localTab.relGroupId]
