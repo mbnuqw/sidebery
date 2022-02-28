@@ -811,7 +811,7 @@ const dict: Record<string, PlurFn | string> = {
   // - Help
   'settings.help_title': 'Help',
   'settings.debug_info': 'Show debug info',
-  'settings.log_lvl': 'Logs level',
+  'settings.log_lvl': 'Log level',
   'settings.log_lvl_0': 'none',
   'settings.log_lvl_1': 'errors',
   'settings.log_lvl_2': 'warnings',
