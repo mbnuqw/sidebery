@@ -430,6 +430,7 @@ const dict: Record<string, PlurFn | string> = {
   'settings.mark_window':
     'Добавлять префикс к заголовку окна, если боковая панель Sidebery активна',
   'settings.mark_window_preface': 'Значение префикса',
+  'settings.storage_btn': 'Данные Sidebery:',
 
   // --- Context menu
   'settings.ctx_menu_title': 'Контекстное меню',
@@ -859,6 +860,7 @@ const dict: Record<string, PlurFn | string> = {
   'settings.update_storage_info': 'Обновить',
   'settings.clear_storage_info': 'Удалить все',
   'settings.clear_storage_confirm': 'Вы действительно хотите удалить все данные?',
+  'settings.favs_title': 'Кэшированные иконки сайтов',
 
   // --- Sync
   'settings.sync_title': 'Синхронизация',

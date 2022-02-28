@@ -16,17 +16,42 @@ section(ref="el")
       or="---"
       v-model:value="Settings.reactive.markWindowPreface"
       :inactive="!Settings.reactive.markWindow")
+  .ctrls
+    .btn(@click="showStorageView") {{translate('settings.storage_btn')}} {{state.storageOveral}}
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { translate } from 'src/dict'
 import { Settings } from 'src/services/settings'
 import { SetupPage } from 'src/services/setup-page'
 import ToggleField from '../../components/toggle-field.vue'
 import TextField from '../../components/text-field.vue'
+import { Stored } from 'src/types'
+import Utils from 'src/utils'
 
 const el = ref<HTMLElement | null>(null)
+const state = reactive({
+  storageOveral: '-',
+})
 
-onMounted(() => SetupPage.registerEl('settings_general', el.value))
+onMounted(() => {
+  SetupPage.registerEl('settings_general', el.value)
+  calcStorageInfo()
+})
+
+function showStorageView(): void {
+  location.hash = 'storage'
+}
+
+async function calcStorageInfo(): Promise<void> {
+  let stored: Stored
+  try {
+    stored = await browser.storage.local.get<Stored>()
+  } catch (err) {
+    return
+  }
+
+  state.storageOveral = Utils.strSize(JSON.stringify(stored))
+}
 </script>

@@ -16,6 +16,7 @@
       component(:is="view")
   
   Transition(name="popup"): BookmarksPopup(v-if="Bookmarks.reactive.popup")
+  Details
 
   UpgradeScreen(v-if="Sidebar.reactive.upgrading")
 </template>
@@ -32,8 +33,10 @@ import SettingsView from './components/settings.vue'
 import MenuEditorView from './components/menu-editor.vue'
 import StylesEditorView from './components/styles-editor.vue'
 import SnapshotsView from './components/snapshots.vue'
+import StorageView from './components/storage.vue'
 import BookmarksPopup from '../sidebar/components/popup.bookmarks.vue'
 import UpgradeScreen from 'src/components/upgrade-screen.vue'
+import Details from './components/settings.details.vue'
 
 const animations = computed(() => (Settings.reactive.animations ? 'fast' : 'none'))
 const view = computed(() => {
@@ -41,6 +44,7 @@ const view = computed(() => {
   if (SetupPage.reactive.activeView === 'menu_editor') return MenuEditorView
   if (SetupPage.reactive.activeView === 'styles_editor') return StylesEditorView
   if (SetupPage.reactive.activeView === 'snapshots') return SnapshotsView
+  if (SetupPage.reactive.activeView === 'storage') return StorageView
   return null
 })
 

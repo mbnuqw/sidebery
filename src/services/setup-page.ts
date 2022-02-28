@@ -1,7 +1,7 @@
 import { Panel, Container, BackupData } from 'src/types'
 import * as SetupPageActions from 'src/services/setup-page.actions'
 
-export type SetupPageView = 'settings' | 'menu_editor' | 'styles_editor' | 'snapshots'
+export type SetupPageView = 'settings' | 'menu_editor' | 'styles_editor' | 'snapshots' | 'storage'
 
 export interface SetupPageNavOption {
   active: boolean
@@ -48,7 +48,6 @@ export const nav = [
   { active: false, name: 'settings_keybindings', sub: true },
   { active: false, name: 'settings_permissions', sub: true },
   { active: false, name: 'settings_snapshots', sub: true },
-  { active: false, name: 'settings_storage', sub: true },
   { active: false, name: 'settings_sync', sub: true },
   { active: false, name: 'settings_help', sub: true },
   { active: false, name: 'menu_editor' },

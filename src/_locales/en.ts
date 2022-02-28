@@ -405,6 +405,7 @@ const dict: Record<string, PlurFn | string> = {
   'settings.update_sidebar_title': "Use active panel's name as sidebar title",
   'settings.mark_window': "Add preface to the browser window's title if Sidebery sidebar is active",
   'settings.mark_window_preface': 'Preface value',
+  'settings.storage_btn': "Sidebery's data:",
 
   // - Context menu
   'settings.ctx_menu_title': 'Context menu',
@@ -788,6 +789,7 @@ const dict: Record<string, PlurFn | string> = {
   'settings.update_storage_info': 'Update',
   'settings.clear_storage_info': 'Clear',
   'settings.clear_storage_confirm': 'Are you sure you want to delete all Sidebery data?',
+  'settings.favs_title': 'Cached favicons',
 
   // - Sync
   'settings.sync_title': 'Sync',

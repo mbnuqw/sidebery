@@ -110,6 +110,14 @@ export async function updateActiveView(): Promise<void> {
     return
   }
 
+  if (hash.startsWith('storage')) {
+    document.title = 'Sidebery / Storage'
+    SetupPage.reactive.activeView = 'storage'
+    SetupPage.reactive.activeSection = 'storage'
+    SetupPage.reactive.highlightedField = ''
+    return
+  }
+
   setTimeout(
     () => {
       if (els[hash]) els[hash].scrollIntoView(scrollSectionConf)

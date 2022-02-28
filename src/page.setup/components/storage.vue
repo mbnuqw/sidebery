@@ -1,22 +1,29 @@
 <template lang="pug">
-section(ref="el")
-  h2
-    span {{translate('settings.storage_title')}}
-    .title-note   (~{{state.storageOveral}})
-  .storage-section
-    .storage-prop(v-for="info in state.storedProps" @click="openStoredData(info.name)")
-      .name {{info.name}}
-      .len(v-if="info.len") {{info.len}}
-      .size {{info.sizeStr}}
-      .btn(@click.stop="openStoredData(info.name)") {{translate('settings.storage_open_prop')}}
-      .btn(@click.stop="editStoredData(info.name)") {{translate('settings.storage_edit_prop')}}
-      .btn.-warn(@click.stop="deleteStoredData(info.name)") {{translate('settings.storage_delete_prop')}}
-    .favs
-      .fav(v-for="fav in state.faviconsCache" :key="fav.tooltip" :title="fav.tooltip")
-        img(:src="fav.favicon")
-  .ctrls
-    .btn(@click="calcStorageInfo") {{translate('settings.update_storage_info')}}
-    .btn.-warn(@click="clearStorage") {{translate('settings.clear_storage_info')}}
+.Settings
+  section(ref="el")
+    h2
+      span {{translate('settings.storage_title')}}
+      .title-note   (~{{state.storageOveral}})
+    .storage-section
+      .storage-prop(v-for="info in state.storedProps" @click="openStoredData(info.name)")
+        .name {{info.name}}
+        .len(v-if="info.len") {{info.len}}
+        .size {{info.sizeStr}}
+        .btn(@click.stop="openStoredData(info.name)") {{translate('settings.storage_open_prop')}}
+        .btn(@click.stop="editStoredData(info.name)") {{translate('settings.storage_edit_prop')}}
+        .btn.-warn(@click.stop="deleteStoredData(info.name)") {{translate('settings.storage_delete_prop')}}
+
+    .ctrls
+      .btn(@click="calcStorageInfo") {{translate('settings.update_storage_info')}}
+      .btn.-warn(@click="clearStorage") {{translate('settings.clear_storage_info')}}
+
+    .storage-section
+      .sub-title {{translate('settings.favs_title')}}
+      .favs
+        .fav(v-for="fav in state.faviconsCache" :key="fav.tooltip" :title="fav.tooltip")
+          img(:src="fav.favicon")
+
+  FooterSection
 </template>
 
 <script lang="ts" setup>
@@ -27,6 +34,7 @@ import { Stored } from 'src/types'
 import { Store } from 'src/services/storage'
 import { SetupPage } from 'src/services/setup-page'
 import { Logs } from 'src/services/logs'
+import FooterSection from './footer-section.vue'
 
 const el = ref<HTMLElement | null>(null)
 const state = reactive({

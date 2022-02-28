@@ -19,12 +19,9 @@
   KeybindingsSection
   PermissionsSection
   SnapshotsSection
-  StorageSection
   SyncSection
   HelpSection
   FooterSection
-
-  Details
 
   .btw: p v{{Info.reactive.addonVer}}
 </template>
@@ -54,10 +51,8 @@ import MouseSection from './settings.mouse.vue'
 import KeybindingsSection from './settings.keybindings.vue'
 import PermissionsSection from './settings.permissions.vue'
 import SnapshotsSection from './settings.snapshots.vue'
-import StorageSection from './settings.storage.vue'
 import SyncSection from './settings.sync.vue'
 import HelpSection from './settings.help.vue'
-import Details from './settings.details.vue'
 import FooterSection from './footer-section.vue'
 
 const rootEl = ref<HTMLElement | null>(null)
