@@ -6,13 +6,6 @@ section(ref="el")
     optLabel="settings.log_lvl_"
     v-model:value="Settings.reactive.logLvl"
     :opts="Settings.getOpts('logLvl')")
-  ToggleField(label="settings.mark_window" v-model:value="Settings.reactive.markWindow")
-  .sub-fields
-    TextField.-inline(
-      label="settings.mark_window_preface"
-      or="---"
-      v-model:value="Settings.reactive.markWindowPreface"
-      :inactive="!Settings.reactive.markWindow")
   .ctrls
     a.btn(@click="SetupPage.reactive.exportDialog = true") {{translate('settings.help_exp_data')}}
     .btn(type="file")
@@ -49,8 +42,6 @@ import { BackupData } from 'src/types'
 import { Logs } from 'src/services/logs'
 import { Settings } from 'src/services/settings'
 import { SetupPage } from 'src/services/setup-page'
-import TextField from '../../components/text-field.vue'
-import ToggleField from '../../components/toggle-field.vue'
 import SelectField from '../../components/select-field.vue'
 import ExportConfig from './popup.export-config.vue'
 import ImportConfig from './popup.import-config.vue'

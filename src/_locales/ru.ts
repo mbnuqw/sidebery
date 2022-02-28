@@ -427,6 +427,9 @@ const dict: Record<string, PlurFn | string> = {
   'settings.sel_win_screenshots': 'Показывать скриншоты в меню выбора окна',
   'settings.update_sidebar_title':
     'Использовать имя активной панели в качестве заголовка боковой панели',
+  'settings.mark_window':
+    'Добавлять префикс к заголовку окна, если боковая панель Sidebery активна',
+  'settings.mark_window_preface': 'Значение префикса',
 
   // --- Context menu
   'settings.ctx_menu_title': 'Контекстное меню',
@@ -903,8 +906,6 @@ const dict: Record<string, PlurFn | string> = {
   'settings.backup_kb': 'Сочетания клавиш',
   'settings.backup_parse_err': 'Неправильный формат импортированных данных',
   'settings.reload_addon': 'Перезагрузить расширение',
-  'settings.mark_window': 'Добавлять префикс к заголовку окна, если Sidebery активен',
-  'settings.mark_window_preface': 'Значение префикса',
 
   // ---
   // -- Snapshots viewer

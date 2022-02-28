@@ -403,6 +403,8 @@ const dict: Record<string, PlurFn | string> = {
   'settings.native_scrollbars_thin': 'Use thin scroll-bars',
   'settings.sel_win_screenshots': 'Show screenshots in the window selection menu',
   'settings.update_sidebar_title': "Use active panel's name as sidebar title",
+  'settings.mark_window': "Add preface to the browser window's title if Sidebery sidebar is active",
+  'settings.mark_window_preface': 'Preface value',
 
   // - Context menu
   'settings.ctx_menu_title': 'Context menu',
@@ -833,8 +835,6 @@ const dict: Record<string, PlurFn | string> = {
   'settings.backup_kb': 'Keybindings',
   'settings.backup_parse_err': 'Wrong format of imported data',
   'settings.reload_addon': 'Reload add-on',
-  'settings.mark_window': "Add preface to the browser window's title if sidebery is active",
-  'settings.mark_window_preface': 'Preface value',
 
   // ---
   // -- Snapshots viewer

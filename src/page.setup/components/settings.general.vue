@@ -9,6 +9,13 @@ section(ref="el")
       v-model:value="Settings.reactive.nativeScrollbarsThin")
   ToggleField(label="settings.sel_win_screenshots" v-model:value="Settings.reactive.selWinScreenshots")
   ToggleField(label="settings.update_sidebar_title" v-model:value="Settings.reactive.updateSidebarTitle")
+  ToggleField(label="settings.mark_window" v-model:value="Settings.reactive.markWindow")
+  .sub-fields
+    TextField.-inline(
+      label="settings.mark_window_preface"
+      or="---"
+      v-model:value="Settings.reactive.markWindowPreface"
+      :inactive="!Settings.reactive.markWindow")
 </template>
 
 <script lang="ts" setup>
@@ -17,6 +24,7 @@ import { translate } from 'src/dict'
 import { Settings } from 'src/services/settings'
 import { SetupPage } from 'src/services/setup-page'
 import ToggleField from '../../components/toggle-field.vue'
+import TextField from '../../components/text-field.vue'
 
 const el = ref<HTMLElement | null>(null)
 
