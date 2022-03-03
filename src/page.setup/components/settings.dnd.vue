@@ -18,7 +18,8 @@ section(ref="el")
     label="settings.dnd_exp"
     optLabel="settings.dnd_exp_"
     v-model:value="Settings.reactive.dndExp"
-    :opts="Settings.getOpts('dndExp')")
+    :opts="Settings.getOpts('dndExp')"
+    :folded="true")
   .sub-fields.-nosep
     NumField.-inline(
       label="settings.dnd_exp_delay"

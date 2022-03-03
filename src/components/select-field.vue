@@ -1,9 +1,12 @@
 <template lang="pug">
 .SelectField(
+  ref="rootEl"
   :data-inline="props.inline"
   :data-inactive="props.inactive"
+  :data-opened="opened"
   @mousedown="switchOption"
-  @contextmenu.stop.prevent)
+  @contextmenu.stop.prevent
+  @blur="onBlur")
   .body
     .label {{translate(props.label)}}
     SelectInput(
@@ -13,11 +16,14 @@
       :noneOpt="props.noneOpt"
       :color="props.color"
       :icon="props.icon"
+      :folded="folded"
+      :opened="opened"
       @update:value="select")
   .note(v-if="props.note") {{props.note}}
 </template>
 
 <script lang="ts" setup>
+import { ref } from 'vue'
 import { translate } from 'src/dict'
 import SelectInput from './select-input.vue'
 
@@ -40,13 +46,24 @@ interface SelectFieldProps {
   icon?: string
   noneOpt?: string | number
   note?: string
+  folded?: boolean
 }
 
 const emit = defineEmits(['update:value'])
 const props = defineProps<SelectFieldProps>()
+const opened = ref(false)
+const rootEl = ref<HTMLElement | null>(null)
 
 function switchOption(e: DOMEvent<MouseEvent>): void {
   if (props.inactive || !props.opts || Array.isArray(props.value)) return
+  if (props.folded) {
+    opened.value = !opened.value
+    if (rootEl.value) {
+      rootEl.value.tabIndex = 0
+      rootEl.value.focus()
+    }
+    return
+  }
   let i = props.value !== undefined ? props.opts.indexOf(props.value) : -1
   if (i === -1) i = props.opts.findIndex(o => (o as InputObjOpt).value === props.value)
   if (i === -1) return
@@ -65,5 +82,12 @@ function switchOption(e: DOMEvent<MouseEvent>): void {
 
 function select(option: string): void {
   emit('update:value', option)
+  opened.value = false
+  if (rootEl.value) rootEl.value.tabIndex = -1
+}
+
+function onBlur(): void {
+  opened.value = false
+  if (rootEl.value) rootEl.value.tabIndex = -1
 }
 </script>

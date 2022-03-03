@@ -14,7 +14,8 @@ section(ref="el")
     label="settings.move_new_tab_parent"
     optLabel="settings.move_new_tab_parent_"
     v-model:value="Settings.reactive.moveNewTabParent"
-    :opts="Settings.getOpts('moveNewTabParent')")
+    :opts="Settings.getOpts('moveNewTabParent')"
+    :folded="true")
   .sub-fields
     ToggleField(
       label="settings.move_new_tab_parent_act_panel"
@@ -24,7 +25,8 @@ section(ref="el")
     label="settings.move_new_tab"
     optLabel="settings.move_new_tab_"
     v-model:value="Settings.reactive.moveNewTab"
-    :opts="Settings.getOpts('moveNewTab')")
+    :opts="Settings.getOpts('moveNewTab')"
+    :folded="true")
 </template>
 
 <script lang="ts" setup>

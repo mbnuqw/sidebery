@@ -79,6 +79,9 @@
   &:before
     content: none
 
+.SelectField[data-opened="true"]
+  z-index: 10
+
 .ToggleField .body
 .SelectField .body
 .CountField .body
@@ -155,6 +158,7 @@
   flex-shrink: 0
   line-height: 26px
   opacity: .7
+  white-space: nowrap
   &:before
     content: ''
     position: absolute
@@ -182,6 +186,59 @@
     opacity: 1
   &:hover:before
     opacity: .1
+
+.SelectInput[data-opened="true"]
+  z-index: 10
+.SelectInput[data-opened="true"] .list
+  display: flex
+
+.SelectInput[data-folded="true"]
+  flex-wrap: nowrap
+
+.SelectInput[data-folded="true"] .opt
+  flex-shrink: 1
+  padding: 3px 0
+  line-height: 20px
+
+.SelectInput[data-folded="true"] .opt[data-active="true"]:before
+.SelectInput[data-folded="true"] .opt[data-active="true"]:after
+  border-top-right-radius: 0
+  border-bottom-right-radius: 0
+.SelectInput[data-folded="true"] .opt[data-active="true"][data-none="true"]:before
+  opacity: 0
+
+.SelectInput .opt.-exp
+  display: flex
+  align-items: center
+  > svg
+    padding: 2px 5px
+  &:before
+    background-color: var(--toolbar-fg)
+    opacity: .1
+    border-radius: 4px
+    border-top-left-radius: 0
+    border-bottom-left-radius: 0
+
+.SelectInput .list
+  position: absolute
+  display: none
+  flex-direction: column
+  grid-gap: 2px 0
+  padding: 2px 3px
+  top: calc(100% - 7px)
+  right: -1px
+  min-width: max-content
+  max-width: 300px
+  min-height: 32px
+  z-index: 1
+  background-color: var(--frame-bg)
+  border-radius: 4px
+  box-shadow: inset 0 0 0 1px var(--border),
+              0 1px 3px 0 #00000032
+
+.SelectInput .list .opt
+  line-height: normal
+  padding: 4px 0
 
 .SelectInput .opt[data-none="true"]:after
 .ToggleInput .opt.-false:after

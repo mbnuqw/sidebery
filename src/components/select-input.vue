@@ -1,18 +1,42 @@
 <template lang="pug">
-.SelectInput(:data-color="props.color")
-  .opt(
-    v-for="opt in props.opts"
-    :title="getTooltip(opt)"
-    :data-none="opt === props.noneOpt"
-    :data-color="getOptColor(opt) ?? false"
-    :data-active="isActive(opt)"
-    @mousedown.stop="select(opt)")
-      svg(v-if="props.icon || getOptIcon(opt)")
-        use(:xlink:href="'#' + (props.icon || getOptIcon(opt))")
-      p(v-else-if="props.label") {{translate(props.label + opt, props.plurNum)}}
+.SelectInput(:data-color="props.color" :data-folded="folded" :data-opened="opened")
+  template(v-if="folded && activeOpt")
+    .opt(
+      :title="getTooltip(activeOpt)"
+      :data-none="activeOpt === props.noneOpt"
+      :data-color="getOptColor(activeOpt) ?? false"
+      data-active="true")
+        svg(v-if="props.icon || getOptIcon(activeOpt)")
+          use(:xlink:href="'#' + (props.icon || getOptIcon(activeOpt))")
+        p(v-else-if="props.label") {{translate(props.label + activeOpt, props.plurNum)}}
+    .opt.-exp(v-if="folded")
+      svg: use(xlink:href="#icon_expand")
+    .list
+      .opt(
+        v-for="opt in inactiveOpts"
+        :title="getTooltip(opt)"
+        :data-none="opt === props.noneOpt"
+        :data-color="getOptColor(opt) ?? false"
+        :data-active="isActive(opt)"
+        @mousedown.stop="select(opt)")
+          svg(v-if="props.icon || getOptIcon(opt)")
+            use(:xlink:href="'#' + (props.icon || getOptIcon(opt))")
+          p(v-else-if="props.label") {{translate(props.label + opt, props.plurNum)}}
+  template(v-else)
+    .opt(
+      v-for="opt in props.opts"
+      :title="getTooltip(opt)"
+      :data-none="opt === props.noneOpt"
+      :data-color="getOptColor(opt) ?? false"
+      :data-active="isActive(opt)"
+      @mousedown.stop="select(opt)")
+        svg(v-if="props.icon || getOptIcon(opt)")
+          use(:xlink:href="'#' + (props.icon || getOptIcon(opt))")
+        p(v-else-if="props.label") {{translate(props.label + opt, props.plurNum)}}
 </template>
 
 <script lang="ts" setup>
+import { computed } from 'vue'
 import { translate } from 'src/dict'
 
 type InputObjOpt = {
@@ -31,10 +55,21 @@ interface SelectInputProps {
   color?: string
   icon?: string
   noneOpt?: string | number
+  folded?: boolean
+  opened?: boolean
 }
 
 const emit = defineEmits(['update:value'])
-const props = withDefaults(defineProps<SelectInputProps>(), { noneOpt: 'none' })
+const props = withDefaults(defineProps<SelectInputProps>(), { noneOpt: 'none', opened: false })
+
+const activeOpt = computed<InputOption>(() => {
+  if (!props.folded) return props.noneOpt
+  return props.opts.find(isActive) ?? props.noneOpt
+})
+const inactiveOpts = computed<InputOption[]>(() => {
+  if (!props.folded) return []
+  return props.opts.filter(opt => !isActive(opt))
+})
 
 function optIsObj(opt: InputOption): opt is InputObjOpt {
   if ((opt as InputObjOpt).value !== undefined || (opt as InputObjOpt).value !== null) return true

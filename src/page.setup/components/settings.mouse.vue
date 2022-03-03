@@ -45,7 +45,8 @@ section(ref="el")
     label="settings.nav_tabs_panel_mid_click"
     optLabel="settings.nav_tabs_panel_mid_click_"
     v-model:value="Settings.reactive.navTabsPanelMidClickAction"
-    :opts="Settings.getOpts('navTabsPanelMidClickAction')")
+    :opts="Settings.getOpts('navTabsPanelMidClickAction')"
+    :folded="true")
   SelectField(
     label="settings.nav_bookmarks_panel_mid_click"
     optLabel="settings.nav_bookmarks_panel_mid_click_"
@@ -61,6 +62,7 @@ section(ref="el")
     optLabel="settings.tab_action_"
     v-model:value="Settings.reactive.tabDoubleClick"
     :opts="Settings.getOpts('tabDoubleClick')"
+    :folded="true"
     @update:value="onTabDoubleClickUpdate")
   ToggleField(
     label="settings.tabs_second_click_act_prev"
@@ -70,12 +72,14 @@ section(ref="el")
     label="settings.tab_long_left_click"
     optLabel="settings.tab_action_"
     v-model:value="Settings.reactive.tabLongLeftClick"
-    :opts="Settings.getOpts('tabLongLeftClick')")
+    :opts="Settings.getOpts('tabLongLeftClick')"
+    :folded="true")
   SelectField(
     label="settings.tab_long_right_click"
     optLabel="settings.tab_action_"
     v-model:value="Settings.reactive.tabLongRightClick"
-    :opts="Settings.getOpts('tabLongRightClick')")
+    :opts="Settings.getOpts('tabLongRightClick')"
+    :folded="true")
   SelectField(
     label="settings.tab_close_middle_click"
     optLabel="settings.tab_action_"
@@ -87,23 +91,27 @@ section(ref="el")
     label="settings.tabs_panel_left_click_action"
     optLabel="settings.tabs_panel_action_"
     v-model:value="Settings.reactive.tabsPanelLeftClickAction"
-    :opts="Settings.getOpts('tabsPanelLeftClickAction')")
+    :opts="Settings.getOpts('tabsPanelLeftClickAction')"
+    :folded="true")
   SelectField(
     label="settings.tabs_panel_double_click_action"
     optLabel="settings.tabs_panel_action_"
     v-model:value="Settings.reactive.tabsPanelDoubleClickAction"
     :inactive="Settings.reactive.tabsPanelLeftClickAction !== 'none'"
-    :opts="Settings.getOpts('tabsPanelDoubleClickAction')")
+    :opts="Settings.getOpts('tabsPanelDoubleClickAction')"
+    :folded="true")
   SelectField(
     label="settings.tabs_panel_right_click_action"
     optLabel="settings.tabs_panel_action_"
     v-model:value="Settings.reactive.tabsPanelRightClickAction"
-    :opts="Settings.getOpts('tabsPanelRightClickAction')")
+    :opts="Settings.getOpts('tabsPanelRightClickAction')"
+    :folded="true")
   SelectField(
     label="settings.tabs_panel_middle_click_action"
     optLabel="settings.tabs_panel_action_"
     v-model:value="Settings.reactive.tabsPanelMiddleClickAction"
-    :opts="Settings.getOpts('tabsPanelMiddleClickAction')")
+    :opts="Settings.getOpts('tabsPanelMiddleClickAction')"
+    :folded="true")
 </template>
 
 <script lang="ts" setup>

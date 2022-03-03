@@ -19,7 +19,8 @@ section(ref="el")
     label="settings.mid_click_bookmark"
     optLabel="settings.mid_click_bookmark_"
     v-model:value="Settings.reactive.midClickBookmark"
-    :opts="Settings.getOpts('midClickBookmark')")
+    :opts="Settings.getOpts('midClickBookmark')"
+    :folded="true")
   .sub-fields
     ToggleField(
       label="settings.act_mid_click_tab"
