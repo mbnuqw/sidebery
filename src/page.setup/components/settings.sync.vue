@@ -2,7 +2,7 @@
 section(ref="el")
   h2
     span {{translate('settings.sync_title')}}
-    .title-note   (~{{state.syncedOveral}})
+    .title-note   (~{{state.syncedOveral}} / 100 kb)
   TextField(
     label="settings.sync_name"
     :or="translate('settings.sync_name_or')"
@@ -27,7 +27,7 @@ section(ref="el")
         .sync-name {{item.name || item.profileId}}
         .sync-info {{item.timeYYYYMMDD}}
         .sync-info {{item.timeHHMM}}
-        .sync-info {{item.size}}
+        .sync-info {{item.size}} / 8 kb
         .btn.sync-btn(@click.stop="applySyncData(item)") {{translate('settings.sync_apply_btn')}}
         .btn.sync-btn.-warn(@click.stop="deleteSyncData(item.id)") {{translate('settings.sync_delete_btn')}}
   .sync-data(v-if="state.syncedCtxMenu")
@@ -37,7 +37,7 @@ section(ref="el")
         .sync-name {{item.name || item.profileId}}
         .sync-info {{item.timeYYYYMMDD}}
         .sync-info {{item.timeHHMM}}
-        .sync-info {{item.size}}
+        .sync-info {{item.size}} / 8kb
         .btn.sync-btn(@click.stop="applySyncData(item)") {{translate('settings.sync_apply_btn')}}
         .btn.sync-btn.-warn(@click.stop="deleteSyncData(item.id)") {{translate('settings.sync_delete_btn')}}
   .sync-data(v-if="state.syncedStyles")
@@ -47,7 +47,7 @@ section(ref="el")
         .sync-name {{item.name || item.profileId}}
         .sync-info {{item.timeYYYYMMDD}}
         .sync-info {{item.timeHHMM}}
-        .sync-info {{item.size}}
+        .sync-info {{item.size}} / 8kb
         .btn.sync-btn(@click.stop="applySyncData(item)") {{translate('settings.sync_apply_btn')}}
         .btn.sync-btn.-warn(@click.stop="deleteSyncData(item.id)") {{translate('settings.sync_delete_btn')}}
   .ctrls
