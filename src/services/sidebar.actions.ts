@@ -504,7 +504,6 @@ export function convertOldPanelsConfigToNew(panels_v4: OldPanelConfig[]): Sideba
       panel.iconSVG = oldPanelConf.icon
       panel.iconIMG = oldPanelConf.customIcon
       panel.iconIMGSrc = oldPanelConf.customIconSrc
-      panel.lockedTabs = oldPanelConf.lockedTabs
       panel.noEmpty = oldPanelConf.noEmpty
       panel.newTabCtx = oldPanelConf.newTabCtx
       panel.dropTabCtx = oldPanelConf.dropTabCtx

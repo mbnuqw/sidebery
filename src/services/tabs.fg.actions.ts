@@ -741,7 +741,6 @@ export async function removeTabs(tabIds: ID[], silent?: boolean): Promise<void> 
     const tab = Tabs.byId[id]
     if (!tab) continue
     if (tab.panelId !== panelId) continue
-    if (panel.lockedTabs && !tab.url.startsWith('about')) continue
 
     tabsMap[id] = tab
     if (tab.invisible) hasInvisibleTab = true

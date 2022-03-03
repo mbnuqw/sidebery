@@ -164,7 +164,6 @@ export interface PanelCommonConfig extends NavItemConfig {
 
 export interface TabsPanelConfig extends PanelCommonConfig {
   type: PanelType.tabs
-  lockedTabs: boolean
   noEmpty: boolean
   newTabCtx: string
   dropTabCtx: string

@@ -60,12 +60,6 @@
     @update:value="toggleTempMode")
 
   ToggleField(
-    v-if="Utils.isTabsPanel(conf)"
-    label="panel.lock_tabs_label"
-    :value="conf.lockedTabs"
-    @update:value="toggleTabsLock")
-
-  ToggleField(
     label="panel.skip_on_switching"
     :value="conf.skipOnSwitching"
     @update:value="toggleSkipOnSwitching")
@@ -436,12 +430,6 @@ function togglePanelLock(): void {
 function toggleTempMode(): void {
   if (!isNotTabsPanel(props.conf)) return
   props.conf.tempMode = !props.conf.tempMode
-  Sidebar.saveSidebar()
-}
-
-function toggleTabsLock(): void {
-  if (!Utils.isTabsPanel(props.conf)) return
-  props.conf.lockedTabs = !props.conf.lockedTabs
   Sidebar.saveSidebar()
 }
 

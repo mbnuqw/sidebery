@@ -45,7 +45,6 @@ export const TABS_PANEL_CONFIG: TabsPanelConfig = {
   iconSVG: 'icon_tabs',
   iconIMGSrc: '',
   iconIMG: '',
-  lockedTabs: false,
   lockedPanel: false,
   skipOnSwitching: false,
   noEmpty: false,

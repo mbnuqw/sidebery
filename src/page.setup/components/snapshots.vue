@@ -103,7 +103,6 @@ const VOID_PANEL_CONF: PanelConfig = {
   iconSVG: 'icon_tabs',
   iconIMGSrc: '',
   iconIMG: '',
-  lockedTabs: false,
   lockedPanel: false,
   skipOnSwitching: false,
   noEmpty: false,

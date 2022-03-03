@@ -481,19 +481,6 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, childfree?: bool
     }
   }
 
-  // Recreate locked tab
-  if (!tab.pinned && Utils.isTabsPanel(panel) && panel.lockedTabs && tab.url.startsWith('http')) {
-    Tabs.setNewTabPosition(tab.index, tab.parentId, panel.id)
-    browser.tabs.create({
-      windowId: Windows.id,
-      index: tab.index,
-      url: tab.url,
-      openerTabId: tab.parentId > -1 ? tab.parentId : undefined,
-      cookieStoreId: tab.cookieStoreId,
-    })
-    creatingNewTab = true
-  }
-
   // Handle child tabs
   if (Settings.reactive.tabsTree && tab.isParent && !childfree) {
     const toRemove = []

@@ -145,7 +145,6 @@ const dict: Record<string, PlurFn | string> = {
   'panel.color_label': 'Color',
   'panel.lock_panel_label': 'Prevent auto-switching from this panel',
   'panel.temp_mode_label': 'Switch back to previously active tabs panel after mouse leave',
-  'panel.lock_tabs_label': 'Prevent closing tabs on this panel',
   'panel.skip_on_switching': 'Skip this panel when switching panels',
   'panel.no_empty_label': 'Create new tab after the last one is closed',
   'panel.new_tab_ctx': 'Container of new tab',
