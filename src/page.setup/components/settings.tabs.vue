@@ -12,7 +12,6 @@ section(ref="el")
     label="settings.activate_last_tab_on_panel_switching"
     v-model:value="Settings.reactive.activateLastTabOnPanelSwitching")
   ToggleField(label="settings.show_tab_rm_btn" v-model:value="Settings.reactive.showTabRmBtn")
-  ToggleField(label="settings.show_tab_ctx" v-model:value="Settings.reactive.showTabCtx")
   ToggleField(
     label="settings.hide_inactive_panel_tabs"
     :value="Settings.reactive.hideInact"

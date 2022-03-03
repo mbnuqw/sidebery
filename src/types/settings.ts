@@ -51,7 +51,6 @@ export interface SettingsState {
   activateOnMouseUp: boolean
   activateLastTabOnPanelSwitching: boolean
   showTabRmBtn: boolean
-  showTabCtx: boolean
   hideInact: boolean
   activateAfterClosing: typeof SETTINGS_OPTIONS.activateAfterClosing[number]
   activateAfterClosingGlobal: boolean

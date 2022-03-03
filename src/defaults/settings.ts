@@ -52,7 +52,6 @@ export const DEFAULT_SETTINGS: SettingsState = {
   activateOnMouseUp: true,
   activateLastTabOnPanelSwitching: true,
   showTabRmBtn: true,
-  showTabCtx: true,
   hideInact: false,
   activateAfterClosing: 'next',
   activateAfterClosingGlobal: false,

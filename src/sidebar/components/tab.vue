@@ -52,7 +52,7 @@
     @mouseup.stop
     @contextmenu.stop.prevent)
     svg: use(xlink:href="#icon_remove")
-  .ctx(v-if="Settings.reactive.showTabCtx && color")
+  .ctx(v-if="color")
   .t-box(v-if="withTitle"): .title {{tab.title}}
 </template>
 

@@ -539,7 +539,6 @@ const dict: Record<string, PlurFn | string> = {
     'Активировать последнюю активную вкладку при переключении панелей',
   'settings.skip_empty_panels': 'Пропускать пустые контейнеры при переключении',
   'settings.show_tab_rm_btn': 'Показывать кнопку закрытия вкладки при наведении курсора',
-  'settings.show_tab_ctx': 'Показывать цветовую метку контейнера',
   'settings.hide_inactive_panel_tabs': 'Скрывать горизонтальные вкладки неактивных панелей',
   'settings.activate_after_closing': 'После закрытия текущей вкладки активировать',
   'settings.activate_after_closing_next': 'следующую',
