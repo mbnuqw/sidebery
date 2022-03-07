@@ -611,7 +611,7 @@ const dict: Record<string, PlurFn | string> = {
 
   // - History
   'settings.history_title': 'History',
-  'settings.load_history_on_demand': 'Load history on demand',
+  'settings.load_history_on_demand': 'Initialize history service on demand',
 
   // - Appearance
   'settings.appearance_title': 'Appearance',
