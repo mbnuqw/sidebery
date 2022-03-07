@@ -744,7 +744,7 @@ const dict: Record<string, PlurFn | string> = {
   'settings.storage_open_prop': 'open',
   'settings.storage_delete_confirm': 'Delete property ',
   'settings.update_storage_info': 'Update',
-  'settings.clear_storage_info': 'Clear',
+  'settings.clear_storage_info': 'Delete everything',
   'settings.clear_storage_confirm': 'Are you sure you want to delete all Sidebery data?',
   'settings.favs_title': 'Cached favicons',
 
