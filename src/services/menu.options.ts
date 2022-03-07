@@ -11,14 +11,12 @@ import { Containers } from 'src/services/containers'
 import { tabsMenuOptions } from './menu.options.tabs'
 import { bookmarksMenuOptions } from './menu.options.bookmarks'
 import { historyMenuOptions } from './menu.options.history'
-import { downloadsMenuOptions } from './menu.options.downloads'
 import { CONTAINER_ID } from 'src/defaults'
 
 export const menuOptions: Record<string, () => MenuOption | MenuOption[] | undefined> = {
   ...tabsMenuOptions,
   ...bookmarksMenuOptions,
   ...historyMenuOptions,
-  ...downloadsMenuOptions,
 
   // ---
   // -- Common panels

@@ -10,7 +10,6 @@ import { Tabs } from 'src/services/tabs.bg'
 import { Store } from 'src/services/storage'
 import { Permissions } from 'src/services/permissions'
 import { Snapshots } from 'src/services/snapshots'
-import { Downloads } from 'src/services/downloads'
 import { Sidebar } from 'src/services/sidebar'
 import { Info } from 'src/services/info'
 import { Menu } from 'src/services/menu'
@@ -76,8 +75,6 @@ void (async function main() {
   Favicons.loadFavicons()
   Menu.setupListeners()
   Snapshots.scheduleSnapshots()
-
-  if (Sidebar.hasDownloads) Downloads.load()
 
   if (Sidebar.hasBookmarks) {
     Bookmarks.setupBookmarksListeners()

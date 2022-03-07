@@ -113,11 +113,6 @@ export interface SettingsState {
   // History
   loadHistoryOnDemand: boolean
 
-  // Downloads
-  loadDownloadsOnDemand: boolean
-  showNotifOnDownloadOk: boolean
-  showNotifOnDownloadErr: boolean
-
   // Appearance
   fontSize: typeof SETTINGS_OPTIONS.fontSize[number]
   bgNoise?: boolean // DEPR

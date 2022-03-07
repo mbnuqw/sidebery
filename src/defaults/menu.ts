@@ -97,26 +97,6 @@ export const HISTORY_MENU: MenuConf = [
   'copyHistoryTitles',
 ]
 
-export const DOWNLOADS_MENU: MenuConf = [
-  'openFile',
-  'openRef',
-  'openDir',
-  'separator-1',
-  'copyFullPath',
-  'copyRef',
-  'copyUrl',
-  'separator-2',
-  'deleteDownload',
-]
-
-export const DOWNLOADS_PANEL_MENU: MenuConf = [
-  'pauseResumeAll',
-  'separator-1',
-  'openPanelConfig',
-  'unloadPanelType',
-  'removePanel',
-]
-
 export const NEW_TAB_MENU: MenuConf = [
   'newTabNoContainer',
   'separator-10',
@@ -126,4 +106,5 @@ export const NEW_TAB_MENU: MenuConf = [
   'manageContainers',
 ]
 
+// TODO: rm
 export const OTHER_PANELS_MENU: MenuConf = ['openPanelConfig', 'unloadPanelType', 'removePanel']

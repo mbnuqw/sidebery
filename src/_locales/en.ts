@@ -59,27 +59,6 @@ const dict: Record<string, PlurFn | string> = {
   'panel.history.req_perm': 'History panel requires "History" permission.',
 
   // ---
-  // -- Downloads panel
-  // -
-  'panel.downloads.title': 'Downloads',
-  'panel.downloads.req_perm': 'Downloads panel requires "Downloads" permission.',
-  'panel.downloads.left': n => {
-    const ms = n as number
-    if (!ms || ms === -1) return 'Soon...'
-    if (ms < 60000) return `${Math.round(ms / 1000)} sec left`
-    if (ms < 3600000) return `${Math.round(ms / 60000)} min left`
-    if (ms < 86400000) return `${Math.round(ms / 3600000)} hr left`
-    return 'Someday...'
-  },
-  'panel.downloads.bps': n => {
-    const bps = n as number
-    if (!n) return '? B/s'
-    if (bps < 1024) return `${bps} B/s`
-    if (bps < 1048576) return `${Math.round(bps / 1024)} KB/s`
-    return `${Math.round(bps / 1048576)} MB/s`
-  },
-
-  // ---
   // -- Popups
   // -
   // - Bookmarks popup
@@ -276,16 +255,6 @@ const dict: Record<string, PlurFn | string> = {
   'menu.tabs_panel.convert_to_bookmarks_panel': 'Convert to bookmarks panel',
   // - History
   'menu.history.open': 'Open',
-  // - Downloads
-  'menu.download.open_file': 'Open file',
-  'menu.download.open_page': 'Open download page',
-  'menu.download.open_dir': 'Open folder',
-  'menu.download.copy_full_path': 'Copy full path',
-  'menu.download.copy_ref': 'Copy referrer URL',
-  'menu.download.copy_url': 'Copy download URL',
-  'menu.download.remove': 'Delete download',
-  'menu.download.pause_all_active': 'Pause all active',
-  'menu.download.resume_all_paused': 'Resume all paused',
   // - Common
   'menu.copy_urls': n => (n === 1 ? 'Copy URL' : 'Copy URLs'),
   'menu.copy_titles': n => (n === 1 ? 'Copy title' : 'Copy titles'),
@@ -373,7 +342,6 @@ const dict: Record<string, PlurFn | string> = {
   'settings.nav_settings_pinned_tabs': 'Pinned tabs',
   'settings.nav_settings_tabs_tree': 'Tabs tree',
   'settings.nav_settings_bookmarks': 'Bookmarks',
-  'settings.nav_settings_downloads': 'Downloads',
   'settings.nav_settings_history': 'History',
   'settings.nav_settings_appearance': 'Appearance',
   'settings.nav_settings_snapshots': 'Snapshots',
@@ -453,7 +421,6 @@ const dict: Record<string, PlurFn | string> = {
   'settings.nav_bar_btn_sp': 'Space',
   'settings.nav_bar_btn_sd': 'Delimiter',
   'settings.nav_bar_btn_history': 'History panel',
-  'settings.nav_bar_btn_downloads': 'Downloads panel',
   'settings.nav_bar_btn_settings': 'Settings',
   'settings.nav_bar_btn_add_tp': 'Create tabs panel',
   'settings.nav_bar_btn_search': 'Search',
@@ -642,12 +609,6 @@ const dict: Record<string, PlurFn | string> = {
   'settings.load_bookmarks_on_demand': 'Load bookmarks on demand',
   'settings.pin_opened_bookmarks_folder': 'Pin opened folder when scrolling',
 
-  // - Downloads
-  'settings.downloads_title': 'Downloads',
-  'settings.load_downloads_on_demand': 'Load downloads on demand',
-  'settings.show_notif_on_download_ok': 'Show notification of successful download',
-  'settings.show_notif_on_download_err': 'Show notification of failed download',
-
   // - History
   'settings.history_title': 'History',
   'settings.load_history_on_demand': 'Load history on demand',
@@ -775,8 +736,6 @@ const dict: Record<string, PlurFn | string> = {
     'Required for:\n- Copying URLs of tabs/bookmarks through context menu',
   'settings.history_label': 'History:',
   'settings.history_info': 'Required for:\n- History panel',
-  'settings.downloads_label': 'Downloads:',
-  'settings.downloads_info': 'Required for:\n- Downloads panel',
 
   // - Storage
   'settings.storage_title': 'Storage',

@@ -32,7 +32,6 @@ export interface SidebarConfig {
 export const enum PanelType {
   bookmarks = 1,
   tabs = 2,
-  downloads = 3,
   history = 4,
 }
 
@@ -55,7 +54,6 @@ export const NavItemTypeNames = {
   [PanelType.bookmarks]: 'bookmarks',
   [PanelType.tabs]: 'tabs',
   [PanelType.history]: 'history',
-  [PanelType.downloads]: 'downloads',
   [ButtonType.settings]: 'settings',
   [ButtonType.add_tp]: 'add_tp',
   [ButtonType.search]: 'search',
@@ -189,17 +187,7 @@ export interface HistoryPanelConfig extends PanelCommonConfig {
   tempMode: boolean
 }
 
-export interface DownloadsPanelConfig extends PanelCommonConfig {
-  type: PanelType.downloads
-  viewMode: string
-  tempMode: boolean
-}
-
-export type PanelConfig =
-  | BookmarksPanelConfig
-  | TabsPanelConfig
-  | DownloadsPanelConfig
-  | HistoryPanelConfig
+export type PanelConfig = BookmarksPanelConfig | TabsPanelConfig | HistoryPanelConfig
 
 export interface PanelCommonState extends PanelCommonConfig, NavItemState {
   class: NavItemClass
@@ -241,13 +229,9 @@ export interface HistoryPanel extends PanelCommonState, HistoryPanelConfig {
   type: PanelType.history
 }
 
-export interface DownloadsPanel extends PanelCommonState, DownloadsPanelConfig {
-  type: PanelType.downloads
-}
-
 export interface ViewModeBtn {
   id: string
   icon: string
 }
 
-export type Panel = BookmarksPanel | TabsPanel | DownloadsPanel | HistoryPanel
+export type Panel = BookmarksPanel | TabsPanel | HistoryPanel

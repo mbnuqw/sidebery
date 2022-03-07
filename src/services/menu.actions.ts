@@ -12,8 +12,8 @@ import { Mouse } from 'src/services/mouse'
 import { Containers } from 'src/services/containers'
 import { TABS_MENU, TABS_PANEL_MENU } from 'src/defaults/menu'
 import { BOOKMARKS_MENU, BOOKMARKS_PANEL_MENU } from 'src/defaults/menu'
-import { HISTORY_MENU, DOWNLOADS_MENU, NEW_TAB_MENU } from 'src/defaults/menu'
-import { OTHER_PANELS_MENU, DOWNLOADS_PANEL_MENU } from 'src/defaults/menu'
+import { HISTORY_MENU, NEW_TAB_MENU } from 'src/defaults/menu'
+import { OTHER_PANELS_MENU } from 'src/defaults/menu'
 import { Snapshots } from './snapshots'
 import { translate } from 'src/dict'
 
@@ -174,10 +174,6 @@ export function open(type: MenuType, x?: number, y?: number, customForced?: bool
     blocks = createMenuBlocks(Menu.bookmarksConf, customForced)
   } else if (type === MenuType.History) {
     blocks = createMenuBlocks(HISTORY_MENU, customForced)
-  } else if (type === MenuType.Downloads) {
-    blocks = createMenuBlocks(DOWNLOADS_MENU, customForced)
-  } else if (type === MenuType.DownloadsPanel) {
-    blocks = createMenuBlocks(DOWNLOADS_PANEL_MENU, customForced)
   } else if (type === MenuType.NewTab) {
     blocks = createMenuBlocks(NEW_TAB_MENU, customForced)
   } else if (type === MenuType.TabsPanel) {

@@ -27,7 +27,6 @@
   svg.bookmarks-badge-icon(v-if="bookmarksBadge")
     use(xlink:href="#icon_bookmarks_badge")
   img.icon(v-if="!!item.iconIMG" :src="item.iconIMG")
-  DownloadsIcon(v-else-if="item.id === 'downloads'")
   svg.icon(v-else-if="item.iconSVG"): use(:xlink:href="'#' + item.iconSVG")
   .badge
   Transition(name="nav-badge")
@@ -77,12 +76,11 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import Utils from 'src/utils'
-import { NavItem, PanelType, DropType, Tab, ReactiveTab } from 'src/types'
+import { NavItem, PanelType, DropType, ReactiveTab } from 'src/types'
 import { NavItemTypeNames, DragType, Panel } from 'src/types'
 import { Sidebar } from 'src/services/sidebar'
 import { DnD } from 'src/services/drag-and-drop'
 import { Settings } from 'src/services/settings'
-import DownloadsIcon from './downloads-icon.vue'
 import { Tabs } from 'src/services/tabs.fg'
 
 const emit = defineEmits(['dragstart', 'drop', 'mousedown', 'mouseup', 'contextmenu'])

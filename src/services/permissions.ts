@@ -6,7 +6,6 @@ export interface PermissionsState {
   tabHide: boolean
   clipboardWrite: boolean
   history: boolean
-  downloads: boolean
 }
 
 export const Permissions = {
@@ -16,7 +15,6 @@ export const Permissions = {
     tabHide: false,
     clipboardWrite: false,
     history: false,
-    downloads: false,
   } as PermissionsState,
 
   ...PermissionsActions,

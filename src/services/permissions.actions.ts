@@ -7,7 +7,6 @@ import { Store } from 'src/services/storage'
 import { Info } from 'src/services/info'
 import { Sidebar } from 'src/services/sidebar'
 import { History } from 'src/services/history'
-import { Downloads } from 'src/services/downloads'
 import { Bookmarks } from 'src/services/bookmarks'
 
 /**
@@ -20,20 +19,17 @@ export async function loadPermissions(): Promise<void> {
     browser.permissions.contains({ permissions: ['tabHide'] }),
     browser.permissions.contains({ permissions: ['clipboardWrite'] }),
     browser.permissions.contains({ permissions: ['history'] }),
-    browser.permissions.contains({ permissions: ['downloads', 'downloads.open'] }),
     browser.permissions.contains({ permissions: ['bookmarks'] }),
   ])
   Permissions.reactive.webData = perms[0]
   Permissions.reactive.tabHide = perms[1]
   Permissions.reactive.clipboardWrite = perms[2]
   Permissions.reactive.history = perms[3]
-  Permissions.reactive.downloads = perms[4]
-  Permissions.reactive.bookmarks = perms[5]
+  Permissions.reactive.bookmarks = perms[4]
 
   if (!Permissions.reactive.webData) onRemovedAllUrls()
   if (!Permissions.reactive.tabHide) onRemovedTabHide()
   if (!Permissions.reactive.history) onRemovedHistory()
-  if (!Permissions.reactive.downloads) onRemovedDownloads()
   if (!Permissions.reactive.bookmarks) onRemovedBookmarks()
 }
 
@@ -41,7 +37,6 @@ function onAdded(info: browser.permissions.Permissions): void {
   const allUrls = info.origins?.includes('<all_urls>')
   const webReqPerms = ['webRequest', 'webRequestBlocking', 'proxy']
   const webReq = webReqPerms.every(s => info.permissions?.includes(s))
-  const downloads = ['downloads', 'downloads.open'].every(s => info.permissions?.includes(s))
   if (allUrls && webReq) Permissions.reactive.webData = true
   if (info.permissions?.includes('tabHide')) Permissions.reactive.tabHide = true
   if (info.permissions?.includes('clipboardWrite')) Permissions.reactive.clipboardWrite = true
@@ -53,17 +48,12 @@ function onAdded(info: browser.permissions.Permissions): void {
     Permissions.reactive.bookmarks = true
     onAddedBookmarks()
   }
-  if (downloads) {
-    Permissions.reactive.downloads = true
-    onAddedDownloads()
-  }
 }
 
 function onRemoved(info: browser.permissions.Permissions): void {
   const allUrls = info.origins?.includes('<all_urls>')
   const webReqPerms = ['webRequest', 'webRequestBlocking', 'proxy']
   const webReq = webReqPerms.some(s => info.permissions?.includes(s))
-  const downloads = ['downloads', 'downloads.open'].some(s => info.permissions?.includes(s))
   if (allUrls || webReq) {
     Permissions.reactive.webData = false
     onRemovedAllUrls()
@@ -86,11 +76,6 @@ function onRemoved(info: browser.permissions.Permissions): void {
   if (info.permissions?.includes('bookmarks')) {
     Permissions.reactive.bookmarks = false
     onRemovedBookmarks()
-  }
-
-  if (downloads) {
-    Permissions.reactive.downloads = false
-    onRemovedDownloads()
   }
 }
 
@@ -212,34 +197,6 @@ function onRemovedHistory(): void {
 function onRemovedHistoryFg(): void {
   if (Info.isSidebar) {
     History.unload()
-  }
-}
-
-///////////////
-// Downloads
-
-function onAddedDownloads(): void {
-  if (!Info.isBg) onAddedDownloadsFg()
-}
-
-function onAddedDownloadsFg(): void {
-  if (Info.isSidebar) {
-    if (!Sidebar.hasDownloads) return
-
-    const panel = Sidebar.reactive.panelsById.downloads
-    if (!panel) return
-
-    if (!panel.ready && Sidebar.reactive.activePanelId === 'downloads') Downloads.load()
-  }
-}
-
-function onRemovedDownloads(): void {
-  if (!Info.isBg) onRemovedDownloadsFg()
-}
-
-function onRemovedDownloadsFg(): void {
-  if (Info.isSidebar) {
-    Downloads.unload()
   }
 }
 

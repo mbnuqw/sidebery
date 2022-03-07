@@ -1,6 +1,6 @@
 import { SettingsState, Container, Snapshot, ContextMenuConfig_v4, CssVars } from 'src/types'
 import { TabCache, FavDomain } from 'src/types'
-import { OldPanelConfig, StoredDownloadItem, SidebarConfig, MenuConfs } from 'src/types'
+import { OldPanelConfig, SidebarConfig, MenuConfs } from 'src/types'
 import { Snapshot_v4 } from './snapshots'
 
 export type StoredProps = (keyof Stored)[]
@@ -22,8 +22,6 @@ export interface Stored {
   favDomains?: Record<string, FavDomain>
   favUrls?: Record<string, number> // DEPR
   favAutoCleanTime?: number // DEPR
-
-  downloads?: StoredDownloadItem[]
 
   sidebar?: SidebarConfig
   panels_v4?: OldPanelConfig[] // DEPR

@@ -41,7 +41,6 @@ export const nav = [
   { active: false, name: 'settings_pinned_tabs', sub: true },
   { active: false, name: 'settings_tabs_tree', sub: true },
   { active: false, name: 'settings_bookmarks', sub: true },
-  { active: false, name: 'settings_downloads', sub: true },
   { active: false, name: 'settings_history', sub: true },
   { active: false, name: 'settings_appearance', sub: true },
   { active: false, name: 'settings_mouse', sub: true },

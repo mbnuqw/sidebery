@@ -12,7 +12,6 @@
   PinnedTabsSection
   TabsTreeSection
   BookmarksSection
-  DownloadsSection
   HistorySection
   AppearanceSection
   MouseSection
@@ -44,7 +43,6 @@ import NewTabPositionSection from './settings.new-tab-position.vue'
 import PinnedTabsSection from './settings.pinned-tabs.vue'
 import TabsTreeSection from './settings.tabs-tree.vue'
 import BookmarksSection from './settings.bookmarks.vue'
-import DownloadsSection from './settings.downloads.vue'
 import HistorySection from './settings.history.vue'
 import AppearanceSection from './settings.appearance.vue'
 import MouseSection from './settings.mouse.vue'

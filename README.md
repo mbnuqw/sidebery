@@ -5,8 +5,7 @@ This is a branch of the next major version of Sidebery.
 ## Some notable changes/additions
 
 - Search
-- History panel (experimental)
-- Downloads panel (experimental)
+- History panel
 - Reworked navigation bar
 - Configurable "new tab" buttons bar
 - Ability to use multiple bookmark panels with different root folders

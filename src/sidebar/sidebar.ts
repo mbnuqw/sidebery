@@ -17,7 +17,6 @@ import { Store } from 'src/services/storage'
 import { DnD } from 'src/services/drag-and-drop'
 import { Permissions } from 'src/services/permissions'
 import { Notifications } from 'src/services/notifications'
-import { Downloads } from 'src/services/downloads'
 import { History } from 'src/services/history'
 import { Search } from 'src/services/search'
 import { Info } from 'src/services/info'
@@ -38,7 +37,6 @@ async function main(): Promise<void> {
   DnD.reactive = reactive(DnD.reactive)
   Permissions.reactive = reactive(Permissions.reactive)
   Notifications.reactive = reactive(Notifications.reactive)
-  Downloads.reactive = reactive(Downloads.reactive)
   History.reactive = reactive(History.reactive)
   Search.reactive = reactive(Search.reactive)
   Styles.reactive = reactive(Styles.reactive)
@@ -104,7 +102,6 @@ async function main(): Promise<void> {
 
   const actPanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
   const initBookmarks = !Settings.reactive.loadBookmarksOnDemand || Utils.isBookmarksPanel(actPanel)
-  const initDownlaods = !Settings.reactive.loadDownloadsOnDemand || Utils.isDownloadsPanel(actPanel)
   const initHistory = !Settings.reactive.loadHistoryOnDemand || Utils.isHistoryPanel(actPanel)
 
   Msg.connectToBg(InstanceType.sidebar, Windows.id)
@@ -112,8 +109,6 @@ async function main(): Promise<void> {
   if (Sidebar.hasTabs) await Tabs.load()
   else await Tabs.loadInShadowMode()
   if (Sidebar.hasBookmarks && initBookmarks) Bookmarks.load()
-  if (Sidebar.hasDownloads && initDownlaods) Downloads.load()
-  else Downloads.setupListeners()
   if (Sidebar.hasHistory && initHistory) History.load()
 
   Menu.loadCtxMenu()

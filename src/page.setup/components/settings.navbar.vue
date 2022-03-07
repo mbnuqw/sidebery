@@ -149,8 +149,7 @@ const availableBtns = computed<(Panel | Btn)[]>(() => {
   // prettier-ignore
   const ids = [
     'tabs_panel', 'bookmarks_panel', 'sp', 'sd',
-    'history', 'downloads', 'search',
-    'add_tp', 'create_snapshot',
+    'history', 'search', 'add_tp', 'create_snapshot',
     'remute_audio_tabs', 'settings',
   ]
 
@@ -208,12 +207,6 @@ function createNavElement(id?: ID): ID | undefined {
       return
     }
     Sidebar.createHistoryPanel().id
-  } else if (id === 'downloads') {
-    if (!Permissions.reactive.downloads) {
-      location.hash = 'downloads'
-      return
-    }
-    Sidebar.createDownloadsPanel().id
   } else if (id === 'sp') id = 'sp-' + Utils.uid()
   else if (id === 'sd') id = 'sd-' + Utils.uid()
 

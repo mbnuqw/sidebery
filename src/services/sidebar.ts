@@ -75,7 +75,6 @@ export const Sidebar = {
   hasTabs: false,
   hasBookmarks: false,
   hasHistory: false,
-  hasDownloads: false,
   urlRules: [] as UrlRule[],
   lastTabsPanelId: NOID,
   scrollPositions: {} as Record<ID, number>,

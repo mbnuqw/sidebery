@@ -6,13 +6,11 @@ import { Sidebar } from 'src/services/sidebar'
 import * as SearchTabs from 'src/services/search.tabs'
 import * as SearchBookmarks from 'src/services/search.bookmarks'
 import * as SearchHistory from 'src/services/search.history'
-import * as SearchDownloads from 'src/services/search.downloads'
 import { InstanceType, MenuType, Panel } from 'src/types'
 import { Msg } from './msg'
 import { Menu } from './menu'
 import { Windows } from './windows'
 import { History } from './history'
-import { Downloads } from './downloads'
 
 export const INPUT_TIMEOUT = 150
 
@@ -49,7 +47,6 @@ export function next(): void {
   if (Utils.isTabsPanel(actPanel)) SearchTabs.onTabsSearchNext(actPanel)
   if (Utils.isBookmarksPanel(actPanel)) SearchBookmarks.onBookmarksSearchNext(actPanel)
   if (Utils.isHistoryPanel(actPanel)) SearchHistory.onHistorySearchNext()
-  if (Utils.isDownloadsPanel(actPanel)) SearchDownloads.onDownloadsSearchNext()
 }
 
 export function prev(): void {
@@ -62,7 +59,6 @@ export function prev(): void {
   if (Utils.isTabsPanel(actPanel)) SearchTabs.onTabsSearchPrev(actPanel)
   if (Utils.isBookmarksPanel(actPanel)) SearchBookmarks.onBookmarksSearchPrev(actPanel)
   if (Utils.isHistoryPanel(actPanel)) SearchHistory.onHistorySearchPrev()
-  if (Utils.isDownloadsPanel(actPanel)) SearchDownloads.onDownloadsSearchPrev()
 }
 
 export function enter(): void {
@@ -80,7 +76,6 @@ export function enter(): void {
   if (Utils.isTabsPanel(actPanel)) SearchTabs.onTabsSearchEnter(actPanel)
   if (Utils.isBookmarksPanel(actPanel)) SearchBookmarks.onBookmarksSearchEnter(actPanel)
   if (Utils.isHistoryPanel(actPanel)) SearchHistory.onHistorySearchEnter()
-  if (Utils.isDownloadsPanel(actPanel)) SearchDownloads.onDownloadsSearchEnter()
 }
 
 export function selectAll(): void {
@@ -126,7 +121,6 @@ export function search(value?: string): void {
   if (Utils.isTabsPanel(actPanel)) SearchTabs.onTabsSearch(actPanel)
   else if (Utils.isBookmarksPanel(actPanel)) SearchBookmarks.onBookmarksSearch(actPanel)
   else if (Utils.isHistoryPanel(actPanel)) SearchHistory.onHistorySearch()
-  else if (Utils.isDownloadsPanel(actPanel)) SearchDownloads.onDownloadsSearch()
 
   if (value === '') {
     for (const id of Sidebar.reactive.nav) {
@@ -147,9 +141,6 @@ export function reset(panel?: Panel): void {
   } else if (Utils.isHistoryPanel(panel)) {
     panel.filteredLen = undefined
     History.reactive.filtered = undefined
-  } else if (Utils.isDownloadsPanel(panel)) {
-    panel.filteredLen = undefined
-    Downloads.reactive.filtered = undefined
   }
 }
 

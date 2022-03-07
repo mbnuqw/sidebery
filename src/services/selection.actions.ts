@@ -7,7 +7,6 @@ import { Bookmarks } from 'src/services/bookmarks'
 import { Sidebar } from 'src/services/sidebar'
 import { Tabs } from 'src/services/tabs.fg'
 import { History } from 'src/services/history'
-import { Downloads } from 'src/services/downloads'
 import { NOID } from 'src/defaults'
 
 let resetStop = false
@@ -30,7 +29,6 @@ export function getLast(): ID {
 export const isTabs = (): boolean => selType === SelectionType.Tabs
 export const isBookmarks = (): boolean => selType === SelectionType.Bookmarks
 export const isHistory = (): boolean => selType === SelectionType.History
-export const isDownloads = (): boolean => selType === SelectionType.Downloads
 export const isNavItem = (): boolean => selType === SelectionType.NavItem
 export const isNewTabBar = (): boolean => selType === SelectionType.NewTabBar
 export const isHeader = (): boolean => selType === SelectionType.Header
@@ -66,7 +64,6 @@ export function select(id: ID, type?: SelectionType): void {
 
   if (type === SelectionType.Tabs) selectTab(id)
   else if (type === SelectionType.Bookmarks) selectBookmark(id)
-  else if (type === SelectionType.Downloads) selectDownload(id)
   else if (type === SelectionType.History) selectHistory(id)
   else if (type === SelectionType.NavItem) selectNavItem(id)
   else if (type === SelectionType.Header) selectHeader(id)
@@ -249,16 +246,6 @@ export function selectHistory(id: ID): void {
   selType = SelectionType.History
 }
 
-export function selectDownload(id: ID): void {
-  const target = Downloads.reactive.byId[id]
-  if (!target) return
-
-  target.sel = true
-  Selection.selected.push(id)
-  firstItem = id
-  selType = SelectionType.Downloads
-}
-
 export function selectNewTabBtn(panelId: ID): void {
   const target = Sidebar.reactive.panelsById[panelId]
   if (!Utils.isTabsPanel(target)) return
@@ -323,16 +310,6 @@ export function deselectHistory(id: ID): void {
   if (firstItem === id) firstItem = null
 }
 
-export function deselectDownload(id: ID): void {
-  const index = Selection.selected.indexOf(id)
-  if (index >= 0) Selection.selected.splice(index, 1)
-
-  const target = Downloads.reactive.byId[id]
-  if (target) target.sel = false
-  if (!Selection.selected.length) selType = SelectionType.Nothing
-  if (firstItem === id) firstItem = null
-}
-
 export function deselectNewTabBtn(panelId: ID): void {
   const index = Selection.selected.indexOf(panelId)
   if (index >= 0) Selection.selected.splice(index, 1)
@@ -382,13 +359,6 @@ export function resetSelection(): void {
     for (const id of Selection.selected) {
       const list = History.reactive.filtered ?? History.reactive.list
       const target = list.find(item => item.id === id)
-      if (target) target.sel = false
-    }
-  }
-
-  if (selType === SelectionType.Downloads) {
-    for (const id of Selection.selected) {
-      const target = Downloads.reactive.byId[id]
       if (target) target.sel = false
     }
   }

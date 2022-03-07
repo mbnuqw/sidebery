@@ -14,8 +14,6 @@ export const enum MenuType {
   Tabs = 1,
   Bookmarks = 2,
   History = 3,
-  Downloads = 4,
-  DownloadsPanel = 5,
   NewTab = 6,
   TabsPanel = 7,
   BookmarksPanel = 8,

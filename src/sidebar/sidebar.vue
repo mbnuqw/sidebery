@@ -67,7 +67,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, onMounted, Component, reactive } from 'vue'
+import { ref, computed, onMounted, Component } from 'vue'
 import { PanelType, Panel, MenuType } from 'src/types'
 import { Settings } from 'src/services/settings'
 import { Sidebar } from 'src/services/sidebar'
@@ -91,7 +91,6 @@ import WindowsPopup from './components/popup.windows.vue'
 import TabsPanel from './components/panel.tabs.vue'
 import BookmarksPanel from './components/panel.bookmarks.vue'
 import HistoryPanel from './components/panel.history.vue'
-import DownloadsPanel from './components/panel.downloads.vue'
 import SearchBar from './components/bar.search.vue'
 import BookmarksPopup from './components/popup.bookmarks.vue'
 import PanelConfigPopup from './components/popup.panel-config.vue'
@@ -139,7 +138,6 @@ function getPanelComponent(panel: Panel): Component | undefined {
   if (panel.type === PanelType.tabs) return TabsPanel
   if (panel.type === PanelType.bookmarks) return BookmarksPanel
   if (panel.type === PanelType.history) return HistoryPanel
-  if (panel.type === PanelType.downloads) return DownloadsPanel
 }
 
 function onFocusIn(e: FocusEvent): void {

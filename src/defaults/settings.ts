@@ -113,11 +113,6 @@ export const DEFAULT_SETTINGS: SettingsState = {
   // History
   loadHistoryOnDemand: true,
 
-  // Downloads
-  loadDownloadsOnDemand: true,
-  showNotifOnDownloadOk: false,
-  showNotifOnDownloadErr: false,
-
   // Appearance
   fontSize: 'm',
   animations: true,

@@ -79,7 +79,6 @@ export async function updateActiveView(): Promise<void> {
   if (hash === 'tab-hide') return goToPerm('tab_hide')
   if (hash === 'clipboard-write') return goToPerm('clipboard_write')
   if (hash === 'history') return goToPerm('history')
-  if (hash === 'downloads') return goToPerm('downloads')
   if (hash === 'bookmarks') return goToPerm('bookmarks')
 
   if (hash.startsWith('menu_editor')) {

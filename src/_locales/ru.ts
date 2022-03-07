@@ -63,27 +63,6 @@ const dict: Record<string, PlurFn | string> = {
   'panel.history.req_perm': 'Панель истории требует разрешения "История".',
 
   // ---
-  // -- Downloads panel
-  // -
-  'panel.downloads.title': 'Загрузки',
-  'panel.downloads.req_perm': 'Панель загрузок требует разрешения "Загрузки".',
-  'panel.downloads.left': n => {
-    const ms = n as number
-    if (!ms || ms === -1) return 'Скоро...'
-    if (ms < 60000) return `${Math.round(ms / 1000)} сек осталось`
-    if (ms < 3600000) return `${Math.round(ms / 60000)} мин осталось`
-    if (ms < 86400000) return `${Math.round(ms / 3600000)} ч осталось`
-    return 'Когда-нибудь...'
-  },
-  'panel.downloads.bps': n => {
-    const bps = n as number
-    if (!n) return '? B/s'
-    if (bps < 1024) return `${bps} B/s`
-    if (bps < 1048576) return `${Math.round(bps / 1024)} KB/s`
-    return `${Math.round(bps / 1048576)} MB/s`
-  },
-
-  // ---
   // -- Popups
   // -
   // - Bookmarks
@@ -289,16 +268,6 @@ const dict: Record<string, PlurFn | string> = {
   'menu.tabs_panel.convert_to_bookmarks_panel': 'Конвертировать в панель закладок',
   // - History
   'menu.history.open': 'Открыть',
-  // - Downloads
-  'menu.download.open_file': 'Открыть файл',
-  'menu.download.open_page': 'Открыть страницу-источник',
-  'menu.download.open_dir': 'Открыть папку',
-  'menu.download.copy_full_path': 'Копировать полный путь файла',
-  'menu.download.copy_ref': 'Копировать адрес страницы источника',
-  'menu.download.copy_url': 'Копировать адрес скачивания',
-  'menu.download.remove': 'Удалить загрузку',
-  'menu.download.pause_all_active': 'Приостановить все активные',
-  'menu.download.resume_all_paused': 'Продолжить все приостановленные',
   // - Common
   'menu.copy_urls': n => (n === 1 ? 'Копировать адрес' : 'Копировать адреса'),
   'menu.copy_titles': n => (n === 1 ? 'Копировать заголовок' : 'Копировать заголовки'),
@@ -395,7 +364,6 @@ const dict: Record<string, PlurFn | string> = {
   'settings.nav_settings_pinned_tabs': 'Закрепленные вкладки',
   'settings.nav_settings_tabs_tree': 'Дерево вкладок',
   'settings.nav_settings_bookmarks': 'Закладки',
-  'settings.nav_settings_downloads': 'Загрузки',
   'settings.nav_settings_history': 'История',
   'settings.nav_settings_appearance': 'Вид',
   'settings.nav_settings_snapshots': 'Снепшоты',
@@ -479,7 +447,6 @@ const dict: Record<string, PlurFn | string> = {
   'settings.nav_bar_btn_tabs_panel': 'Панель вкладок',
   'settings.nav_bar_btn_bookmarks_panel': 'Панель закладок',
   'settings.nav_bar_btn_history': 'История',
-  'settings.nav_bar_btn_downloads': 'Загрузки',
   'settings.nav_bar_btn_sp': 'Пространство',
   'settings.nav_bar_btn_sd': 'Разделитель',
   'settings.nav_bar_btn_settings': 'Настройки',
@@ -689,12 +656,6 @@ const dict: Record<string, PlurFn | string> = {
   'settings.load_bookmarks_on_demand': 'Инициализоровать сервис закладок только по необходимости',
   'settings.pin_opened_bookmarks_folder': 'Закреплять открытую папку при прокрутке',
 
-  // --- Downloads
-  'settings.downloads_title': 'Загрузки',
-  'settings.load_downloads_on_demand': 'Инициализоровать сервис загрузок только по необходимости',
-  'settings.show_notif_on_download_ok': 'Показать уведомление об успешной загрузке',
-  'settings.show_notif_on_download_err': 'Показать уведомление о неудачной загрузке',
-
   // --- History
   'settings.history_title': 'История',
   'settings.load_history_on_demand': 'Инициализоровать сервис истории только по необходимости',
@@ -846,8 +807,6 @@ const dict: Record<string, PlurFn | string> = {
   'settings.clipboard_write_info': 'Необходимо для:\n- Копирования ссылок вкладок/закладок',
   'settings.history_label': 'История:',
   'settings.history_info': 'Необходимо для:\n- Панель истории',
-  'settings.downloads_label': 'Загрузки:',
-  'settings.downloads_info': 'Необходимо для:\n- Панель загрузок',
 
   // --- Storage
   'settings.storage_title': 'Данные',

@@ -42,9 +42,7 @@
     "bookmarks",
     "tabHide",
     "clipboardWrite",
-    "history",
-    "downloads",
-    "downloads.open"
+    "history"
   ],
 
   "sidebar_action": {

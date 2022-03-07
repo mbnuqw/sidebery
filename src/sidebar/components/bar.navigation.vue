@@ -262,7 +262,6 @@ function onNavCtxMenu(e: MouseEvent, item: NavItem) {
   let type: MenuType
   if (panel.type === PanelType.bookmarks) type = MenuType.BookmarksPanel
   else if (panel.type === PanelType.tabs) type = MenuType.TabsPanel
-  else if (panel.type === PanelType.downloads) type = MenuType.DownloadsPanel
   else type = MenuType.Panel
 
   if (!Selection.isSet()) Selection.selectNavItem(panel.id)
@@ -395,7 +394,6 @@ function onNavMouseUp(e: MouseEvent, item: NavItem, inHiddenBar?: boolean) {
     let type: MenuType
     if (item.type === PanelType.bookmarks) type = MenuType.BookmarksPanel
     else if (item.type === PanelType.tabs) type = MenuType.TabsPanel
-    else if (item.type === PanelType.downloads) type = MenuType.DownloadsPanel
     else type = MenuType.Panel
 
     Selection.selectNavItem(item.id)

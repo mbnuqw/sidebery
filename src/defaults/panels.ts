@@ -2,7 +2,6 @@ import { translate } from 'src/dict'
 import { PanelType, BookmarksPanelConfig, BookmarksPanel } from 'src/types'
 import { TabsPanelConfig, TabsPanel } from 'src/types'
 import { HistoryPanelConfig, HistoryPanel } from 'src/types'
-import { DownloadsPanelConfig, DownloadsPanel } from 'src/types'
 import { NavItemClass } from 'src/types/sidebar'
 
 export const BOOKMARKS_PANEL: BookmarksPanelConfig = {
@@ -95,33 +94,6 @@ export const HISTORY_PANEL: HistoryPanelConfig = {
 }
 export const HISTORY_PANEL_STATE: HistoryPanel = {
   ...HISTORY_PANEL,
-  class: NavItemClass.panel,
-  len: 0,
-  index: -1,
-  sel: false,
-  loading: false,
-  topOffset: 0,
-  leftOffset: 0,
-  rightOffset: 0,
-  scrollEl: null,
-  scrollComponent: null,
-  bounds: [],
-  ready: false,
-}
-
-export const DOWNLOADS_PANEL: DownloadsPanelConfig = {
-  type: PanelType.downloads,
-  id: 'downloads',
-  name: translate('panel.downloads.title'),
-  color: 'toolbar',
-  iconSVG: 'icon_downloads',
-  tempMode: false,
-  lockedPanel: false,
-  skipOnSwitching: false,
-  viewMode: 'history',
-}
-export const DOWNLOADS_PANEL_STATE: DownloadsPanel = {
-  ...DOWNLOADS_PANEL,
   class: NavItemClass.panel,
   len: 0,
   index: -1,

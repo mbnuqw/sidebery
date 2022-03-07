@@ -8,7 +8,6 @@ import { BOOKMARKS_PANEL_STATE, TABS_PANEL_STATE, NOID, CONTAINER_ID, Err } from
 import { BOOKMARKS_PANEL, TABS_PANEL_CONFIG, DEFAULT_CONTAINER_ID } from 'src/defaults'
 import { BKM_ROOT_ID, BKM_OTHER_ID, BOOKMARKED_PANEL_CONF_RE } from 'src/defaults'
 import { HISTORY_PANEL, HISTORY_PANEL_STATE, FOLDER_NAME_DATA_RE } from 'src/defaults'
-import { DOWNLOADS_PANEL, DOWNLOADS_PANEL_STATE } from 'src/defaults'
 import { Logs } from 'src/services/logs'
 import { Settings } from 'src/services/settings'
 import { Sidebar } from 'src/services/sidebar'
@@ -21,7 +20,6 @@ import { Tabs } from 'src/services/tabs.fg'
 import { Store } from 'src/services/storage'
 import { DnD } from 'src/services/drag-and-drop'
 import { History } from 'src/services/history'
-import { Downloads } from 'src/services/downloads'
 import { Search } from 'src/services/search'
 import { Info } from './info'
 import { SetupPage } from './setup-page'
@@ -154,7 +152,6 @@ function parseNav(config: SidebarConfig): void {
   Sidebar.hasTabs = false
   Sidebar.hasBookmarks = false
   Sidebar.hasHistory = false
-  Sidebar.hasDownloads = false
 
   for (const id of config.nav) {
     const panel = config.panels[id]
@@ -162,7 +159,6 @@ function parseNav(config: SidebarConfig): void {
       if (!Sidebar.hasTabs && panel.type === PanelType.tabs) Sidebar.hasTabs = true
       if (!Sidebar.hasBookmarks && panel.type === PanelType.bookmarks) Sidebar.hasBookmarks = true
       if (!Sidebar.hasHistory && panel.type === PanelType.history) Sidebar.hasHistory = true
-      if (!Sidebar.hasDownloads && panel.type === PanelType.downloads) Sidebar.hasDownloads = true
     }
   }
 }
@@ -540,7 +536,6 @@ export function recalcPanels(): void {
   Sidebar.hasTabs = false
   Sidebar.hasBookmarks = false
   Sidebar.hasHistory = false
-  Sidebar.hasDownloads = false
 
   for (const id of Sidebar.reactive.nav) {
     if ((id as string).startsWith('sp-')) continue
@@ -563,7 +558,6 @@ export function recalcPanels(): void {
     if (!Sidebar.hasTabs) Sidebar.hasTabs = panel.type === PanelType.tabs
     if (!Sidebar.hasBookmarks) Sidebar.hasBookmarks = panel.type === PanelType.bookmarks
     if (!Sidebar.hasHistory) Sidebar.hasHistory = panel.type === PanelType.history
-    if (!Sidebar.hasDownloads) Sidebar.hasDownloads = panel.type === PanelType.downloads
   }
 
   Sidebar.reactive.panels = panels
@@ -617,14 +611,13 @@ export function moveNavItem(srcIndex: number, dstIndex: number): void {
   Sidebar.saveSidebar(500)
 }
 
-export function createPanelFromConfig(srcPanel: PanelConfig): Panel {
+export function createPanelFromConfig(srcPanel: PanelConfig): Panel | null {
   let panelDefs: Panel
   if (srcPanel.id === DEFAULT_CONTAINER_ID) panelDefs = TABS_PANEL_STATE
   else if (srcPanel.type === PanelType.tabs) panelDefs = TABS_PANEL_STATE
   else if (srcPanel.type === PanelType.bookmarks) panelDefs = BOOKMARKS_PANEL_STATE
   else if (srcPanel.type === PanelType.history) panelDefs = HISTORY_PANEL_STATE
-  else if (srcPanel.type === PanelType.downloads) panelDefs = DOWNLOADS_PANEL_STATE
-  else throw Logs.err('Sidebar: createPanelFromConfig: Unknown panel type')
+  else return null
 
   return Utils.recreateNormalizedObject(srcPanel as Panel, panelDefs)
 }
@@ -636,8 +629,6 @@ function createPanelConfigFromPanel(srcPanel: Panel): PanelConfig {
   if (Utils.isBookmarksPanel(srcPanel))
     return Utils.recreateNormalizedObject(srcPanel, BOOKMARKS_PANEL)
   if (Utils.isHistoryPanel(srcPanel)) return Utils.recreateNormalizedObject(srcPanel, HISTORY_PANEL)
-  if (Utils.isDownloadsPanel(srcPanel))
-    return Utils.recreateNormalizedObject(srcPanel, DOWNLOADS_PANEL)
   throw Logs.err('Sidebar: createPanelConfigFromPanel: Unknown panel type')
 }
 
@@ -646,7 +637,7 @@ function updateSidebarInBg(newConfig?: SidebarConfig | null): void {
   Logs.info('Sidebar.updateSidebarInBg')
   parseNav(newConfig)
 
-  // TODO: Load/Unload services like History/Downloads?
+  // TODO: Load/Unload services like History?
 }
 
 function updateSidebarInSetup(newConfig?: SidebarConfig | null): void {
@@ -696,7 +687,6 @@ async function updateSidebar(newConfig?: SidebarConfig): Promise<void> {
   const prevHasTabsPanels = Sidebar.hasTabs
   const prevHasBookmarksPanels = Sidebar.hasBookmarks
   const prevHasHistoryPanel = Sidebar.hasHistory
-  const prevHasDownloadsPanel = Sidebar.hasDownloads
 
   let tabsSaveNeeded = false
   let tabsPanelId: ID | undefined
@@ -713,7 +703,9 @@ async function updateSidebar(newConfig?: SidebarConfig): Promise<void> {
 
     // or add new panel
     else {
-      panel = createPanelFromConfig(panelConfig)
+      const newPanel = createPanelFromConfig(panelConfig)
+      if (!newPanel) throw Logs.err('Sidebar.updateSidebar: Cannot create new panel')
+      panel = newPanel
       Sidebar.reactive.panelsById[panel.id] = panel
     }
 
@@ -780,9 +772,6 @@ async function updateSidebar(newConfig?: SidebarConfig): Promise<void> {
 
   if (!prevHasHistoryPanel && Sidebar.hasHistory) History.load()
   else if (prevHasHistoryPanel && !Sidebar.hasHistory) History.unload()
-
-  if (!prevHasDownloadsPanel && Sidebar.hasDownloads) Downloads.load()
-  else if (prevHasDownloadsPanel && !Sidebar.hasDownloads) Downloads.unload()
 
   if (Sidebar.hasTabs) {
     // Get rearrangements for tabs
@@ -867,7 +856,6 @@ export function activatePanel(panelId: ID, loadPanels = true): void {
   if (loadPanels && !panel.ready) {
     if (panel.type === PanelType.tabs) loading = Tabs.load()
     if (panel.type === PanelType.bookmarks) loading = Bookmarks.load()
-    if (panel.type === PanelType.downloads) loading = Downloads.load()
     if (panel.type === PanelType.history) loading = History.load()
   }
 
@@ -1161,7 +1149,6 @@ export async function removePanel(panelId: ID): Promise<void> {
   if (Utils.isTabsPanel(panel) && !Sidebar.hasTabs) Tabs.unload()
   if (Utils.isBookmarksPanel(panel) && !Sidebar.hasBookmarks) Bookmarks.unload()
   if (Utils.isHistoryPanel(panel) && !Sidebar.hasHistory) History.unload()
-  if (Utils.isDownloadsPanel(panel) && !Sidebar.hasDownloads) Downloads.unload()
 
   if (tabsSaveNeeded) {
     Tabs.list.forEach(t => Tabs.saveTabData(t.id))
@@ -1216,12 +1203,6 @@ export function createHistoryPanel(): Panel {
   return panel
 }
 
-export function createDownloadsPanel(): Panel {
-  const panel = Utils.cloneObject(DOWNLOADS_PANEL_STATE)
-  Sidebar.reactive.panelsById[panel.id] = panel
-  return panel
-}
-
 export function unloadPanelType(type: PanelType): void {
   const activePanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
   const switchNeeded = activePanel?.type === type
@@ -1233,7 +1214,6 @@ export function unloadPanelType(type: PanelType): void {
   }
 
   if (type === PanelType.bookmarks) Bookmarks.unload()
-  else if (type === PanelType.downloads) Downloads.unload()
   else if (type === PanelType.history) History.unload()
 }
 

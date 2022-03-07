@@ -10,11 +10,11 @@
 
 <script lang="ts" setup>
 import { PropType } from 'vue'
-import { BookmarksPanel, HistoryPanel, DownloadsPanel, ViewModeBtn } from 'src/types'
+import { BookmarksPanel, HistoryPanel, ViewModeBtn } from 'src/types'
 import { Sidebar } from 'src/services/sidebar'
 import { Search } from 'src/services/search'
 
-type PanelWithViewSwitcher = BookmarksPanel | HistoryPanel | DownloadsPanel
+type PanelWithViewSwitcher = BookmarksPanel | HistoryPanel
 
 const props = defineProps({
   panel: { type: Object as PropType<PanelWithViewSwitcher>, required: true },

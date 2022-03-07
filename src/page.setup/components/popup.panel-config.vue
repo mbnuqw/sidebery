@@ -150,10 +150,10 @@ import { ref, reactive, computed, onMounted, nextTick } from 'vue'
 import Utils from 'src/utils'
 import { translate } from 'src/dict'
 import { BKM_MENU_ID, FOLDER_NAME_DATA_RE } from 'src/defaults'
-import { DEFAULT_CONTAINER_ID, COLOR_OPTS, PANEL_ICON_OPTS, BKM_OTHER_ID } from 'src/defaults'
+import { DEFAULT_CONTAINER_ID, COLOR_OPTS, PANEL_ICON_OPTS } from 'src/defaults'
 import { BKM_ROOT_ID } from 'src/defaults'
 import { TextInputComponent, PanelConfig, BookmarksPanelConfig } from 'src/types'
-import { HistoryPanelConfig, DownloadsPanelConfig } from 'src/types'
+import { HistoryPanelConfig } from 'src/types'
 import { Settings } from 'src/services/settings'
 import { Containers } from 'src/services/containers'
 import { Sidebar } from 'src/services/sidebar'
@@ -293,9 +293,7 @@ onMounted(() => {
   if (!Bookmarks.reactive.tree.length) Bookmarks.load()
 })
 
-function isNotTabsPanel(
-  conf: PanelConfig
-): conf is BookmarksPanelConfig | HistoryPanelConfig | DownloadsPanelConfig {
+function isNotTabsPanel(conf: PanelConfig): conf is BookmarksPanelConfig | HistoryPanelConfig {
   return !!conf && !Utils.isTabsPanel(conf)
 }
 

@@ -19,7 +19,6 @@ export * from './types/tabs'
 export * from './types/windows'
 export * from './types/styles'
 export * from './types/bookmarks'
-export * from './types/downloads'
 export * from './types/history'
 
 export type PlurFn = (n?: number | string) => string
@@ -295,7 +294,6 @@ export const enum SelectionType {
   Tabs = 1,
   Bookmarks = 2,
   History = 3,
-  Downloads = 4,
   NewTabBar = 5,
   NavItem = 6,
   Header = 7,
