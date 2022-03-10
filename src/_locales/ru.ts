@@ -171,6 +171,7 @@ const dict: Record<string, PlurFn | string> = {
     if (NUM_234_RE.test(n.toString())) return 'закладки'
     return 'закладок'
   },
+  'dnd.tooltip.nav_item': 'Элемент навигации',
 
   // ---
   // -- Context menu

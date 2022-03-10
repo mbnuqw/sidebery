@@ -73,6 +73,9 @@ function updateTooltip(info: DragInfo): void {
       DnD.reactive.dragTooltipTitle = '---'
       DnD.reactive.dragTooltipInfo = ''
     }
+  } else if (info.type === DragType.NavItem) {
+    DnD.reactive.dragTooltipTitle = translate('dnd.tooltip.nav_item')
+    DnD.reactive.dragTooltipInfo = ''
   } else {
     DnD.reactive.dragTooltipTitle = '---'
     DnD.reactive.dragTooltipInfo = ''

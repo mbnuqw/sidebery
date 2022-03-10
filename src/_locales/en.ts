@@ -158,6 +158,7 @@ const dict: Record<string, PlurFn | string> = {
   'dnd.tooltip.tabs_panel': 'panel',
   'dnd.tooltip.tabs': 'tabs',
   'dnd.tooltip.bookmarks': 'bookmarks',
+  'dnd.tooltip.nav_item': 'Navigation element',
 
   // ---
   // -- Context menu
