@@ -313,7 +313,7 @@ function switchPanel(dir = 0) {
   this.state.switchPanelPause = setTimeout(() => {
     clearTimeout(this.state.switchPanelPause)
     this.state.switchPanelPause = null
-  }, 128)
+  }, 512)
 
   this.actions.closeCtxMenu()
   this.actions.resetSelection()

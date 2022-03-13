@@ -169,8 +169,9 @@ export default {
       if (State.ctxMenu) Actions.closeCtxMenu()
 
       if (State.hScrollThroughPanels) {
-        if (e.deltaX > 0) return Actions.switchPanel(1)
-        if (e.deltaX < 0) return Actions.switchPanel(-1)
+        let threshold = e.deltaMode === 0 ? 8 : 1
+        if (e.deltaX >= threshold) return Actions.switchPanel(1)
+        if (e.deltaX <= -threshold) return Actions.switchPanel(-1)
       }
     },
 
