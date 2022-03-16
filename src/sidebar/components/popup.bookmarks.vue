@@ -194,7 +194,8 @@ async function saveBookmarksRecentFolders(lastFolderId: ID): Promise<void> {
   const lastFolder = Bookmarks.reactive.byId[lastFolderId]
   if (!lastFolder) return
 
-  if (state.bookmarksRecentFolders.some(f => f.id === lastFolderId)) return
+  const recentIndex = state.bookmarksRecentFolders.findIndex(f => f.id === lastFolderId)
+  if (recentIndex !== -1) state.bookmarksRecentFolders.splice(recentIndex, 1)
 
   const ids: ID[] = [lastFolderId]
   const limit = RECENT_FOLDERS_LIMIT - 1
