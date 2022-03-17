@@ -45,7 +45,7 @@
       svg: use(xlink:href="#icon_expand")
     .badge
     Transition(name="tab-part"): .progress-spinner(v-if="loading === true")
-    .child-count(v-if="childCount && tab.folded") {{childCount}}
+    .child-count(v-if="tab.folded && tab.branchLen") {{tab.branchLen}}
   .close(
     v-if="Settings.reactive.showTabRmBtn && !isPinned"
     @mousedown.stop="onMouseDownClose"
@@ -58,7 +58,7 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { Tab, DragInfo, DragItem, DragType, DropType, MenuType, ReactiveTab } from 'src/types'
+import { DragInfo, DragItem, DragType, DropType, MenuType, ReactiveTab } from 'src/types'
 import { TabStatus } from 'src/types'
 import { Settings } from 'src/services/settings'
 import { Windows } from 'src/services/windows'
@@ -72,7 +72,7 @@ import { DnD } from 'src/services/drag-and-drop'
 import { Search } from 'src/services/search'
 import { Favicons } from 'src/services/favicons'
 
-const props = defineProps<{ childCount?: number; tab: ReactiveTab }>()
+const props = defineProps<{ tab: ReactiveTab }>()
 
 const loading = computed((): boolean | 'ok' | 'err' => {
   if (props.tab.status === TabStatus.Loading) return true

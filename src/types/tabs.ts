@@ -48,6 +48,7 @@ export interface ReactiveTab {
   title: string
   url: string
   lvl: number
+  branchLen: number
   sel: boolean
   warn: boolean
   updated: boolean

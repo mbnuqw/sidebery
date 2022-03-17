@@ -10,11 +10,7 @@
   ScrollBox(ref="scrollBox")
     .container
       TransitionGroup(name="tab" tag="div" type="transition")
-        TabComponent(
-          v-for="tab in visibleTabs"
-          :key="tab.id"
-          :child-count="getChildrenCount(tab)"
-          :tab="tab")
+        TabComponent(v-for="tab in visibleTabs" :key="tab.id" :tab="tab")
         NewTabBar(
           v-if="Settings.reactive.showNewTabBtns && Settings.reactive.newTabBarPosition === 'after_tabs'"
           :panel="panel")
@@ -196,21 +192,5 @@ function onWheel(e: WheelEvent): void {
       Tabs.switchTab(globaly, cyclic, -1, false)
     }
   }
-}
-
-function getChildrenCount(rTab: ReactiveTab): number {
-  if (!Settings.reactive.tabsChildCount) return 0
-  if (!rTab.isParent) return 0
-
-  const tab = Tabs.byId[rTab.id]
-  if (!tab) return 0
-
-  let count = 0
-  const tabsLen = Tabs.list.length
-  for (let i = tab.index + 1; i < tabsLen; i++) {
-    if (Tabs.list[i].lvl <= tab.lvl) break
-    count++
-  }
-  return count
 }
 </script>

@@ -39,6 +39,7 @@ export function toReactive(tab: Tab): ReactiveTab {
     title: tab.title,
     url: tab.url,
     lvl: tab.lvl,
+    branchLen: 0,
     sel: tab.sel,
     warn: tab.warn,
     updated: tab.updated,
@@ -1731,7 +1732,7 @@ export async function move(
   }
 
   Sidebar.recalcTabsPanels()
-  // TODO: I need update reactive values manualy or move this recalc to the end
+  // TODO: I need to update reactive values manualy or move this recalc to the end
   // of this function.
 
   const parent = Tabs.byId[dst.parentId]
@@ -1941,6 +1942,41 @@ export function updateTabsVisability(): void {
 }
 
 /**
+ * Recalc length of branch
+ */
+export function recalcBranchLen(id: ID): void {
+  if (!Settings.reactive.tabsChildCount) return
+
+  let tab = Tabs.byId[id]
+  if (!tab) return
+  if (!tab.folded && !tab.invisible) return
+
+  // Find folded parent tab
+  if (tab.invisible && tab.lvl > 0) {
+    let parent: Tab | undefined
+    while ((parent = Tabs.byId[tab.parentId])) {
+      if (parent.folded && !parent.invisible) {
+        tab = parent
+        break
+      }
+    }
+  }
+  if (!tab) return
+
+  const rTab = Tabs.reactive.byId[tab.id]
+  if (!rTab) return
+
+  let count = 0
+  const tabsLen = Tabs.list.length
+  for (let i = tab.index + 1; i < tabsLen; i++) {
+    if (Tabs.list[i].lvl <= tab.lvl) break
+    count++
+  }
+
+  rTab.branchLen = count
+}
+
+/**
  * Hide children of tab
  */
 export function foldTabsBranch(tabId: ID): void {
@@ -1990,6 +2026,7 @@ export function foldTabsBranch(tabId: ID): void {
 
   saveTabData(tabId)
   cacheTabsData()
+  recalcBranchLen(tabId)
 }
 
 /**
@@ -2262,6 +2299,10 @@ export function updateTabsTree(startIndex = 0, endIndex = -1): void {
     }
   }
 
+  let foldedBranchLenCount = 0
+  let foldedBranchLvl = -1
+  let foldedBranchRoot: ReactiveTab | undefined
+
   for (let prevTab, tab, i = startIndex; i < endIndex; i++) {
     tab = Tabs.list[i]
     const rTab = Tabs.reactive.byId[tab.id]
@@ -2360,6 +2401,27 @@ export function updateTabsTree(startIndex = 0, endIndex = -1): void {
       browser.tabs.update(tab.id, { openerTabId: tab.parentId })
       tab.openerTabId = tab.parentId
     }
+
+    // Calc folded branch length
+    if (foldedBranchLvl > -1) {
+      if (tab.lvl <= foldedBranchLvl && foldedBranchRoot) {
+        foldedBranchRoot.branchLen = foldedBranchLenCount
+        foldedBranchLvl = -1
+        foldedBranchLenCount = 0
+        foldedBranchRoot = undefined
+      } else {
+        foldedBranchLenCount++
+      }
+    }
+    if (tab.folded && !tab.invisible && foldedBranchLvl === -1) {
+      foldedBranchLvl = tab.lvl
+      foldedBranchRoot = rTab
+    }
+  }
+
+  // Calc last folded branch length
+  if (foldedBranchLvl > -1 && foldedBranchRoot) {
+    foldedBranchRoot.branchLen = foldedBranchLenCount
   }
 }
 
