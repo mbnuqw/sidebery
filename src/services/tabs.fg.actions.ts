@@ -780,6 +780,7 @@ export async function removeTabs(tabIds: ID[], silent?: boolean): Promise<void> 
     if (rTab) rTab.invisible = true
     return t.id
   })
+  const tabsInfo = Tabs.getTabsInfo(toRemove, true)
   if (Tabs.removingTabs && Tabs.removingTabs.length) {
     Tabs.removingTabs = [...Tabs.removingTabs, ...toRemove]
   } else {
@@ -794,7 +795,7 @@ export async function removeTabs(tabIds: ID[], silent?: boolean): Promise<void> 
   // Update successorTabId if there are active tab
   const activeTab = tabs.find(t => t.active)
   if (activeTab) {
-    const target = findSuccessorTab(activeTab, tabs.map(t => t.id)) // prettier-ignore
+    const target = findSuccessorTab(activeTab, toRemove)
     if (target && activeTab.successorTabId !== target.id) {
       browser.tabs.moveInSuccession([activeTab.id], target.id)
     }
@@ -811,7 +812,7 @@ export async function removeTabs(tabIds: ID[], silent?: boolean): Promise<void> 
       title: String(tabs.length) + translate('notif.tabs_rm_post', tabs.length),
       ctrl: translate('notif.undo_ctrl'),
       favicons: favicons.length ? favicons : undefined,
-      callback: async () => undoRemove(tabs, parents),
+      callback: async () => undoRemove(tabsInfo, parents),
     })
   }
 
@@ -851,17 +852,22 @@ export function isRemovingFinished(checkDelay = 100, stopThreshold = 3): Promise
   })
 }
 
-export async function undoRemove(tabs: Tab[], parents: Record<ID, ID>): Promise<void> {
+export async function undoRemove(tabs: ItemInfo[], parents: Record<ID, ID>): Promise<void> {
+  const firstTab = tabs[0]
+  if (!firstTab) return
+
+  const panel = Sidebar.reactive.panelsById[firstTab.panelId ?? NOID]
+  if (!Utils.isTabsPanel(panel)) return
+
+  const nextTabIndex = panel.nextTabIndex
   const oldNewIds: Record<ID, ID> = {}
   for (let i = 0; i < tabs.length; i++) {
     const tab = tabs[i]
-    const panel = Sidebar.reactive.panelsById[tab.panelId]
-    if (!panel) continue
+    const index = nextTabIndex + i
 
-    const index = tab.index + i
     let parentId = oldNewIds[parents[tab.id]]
     const parent = Tabs.byId[parents[tab.id]]
-    if (parentId === undefined && parent && parent.index < tab.index) {
+    if (parentId === undefined && parent && parent.index < index) {
       parentId = parent.id
     }
 
@@ -871,7 +877,7 @@ export async function undoRemove(tabs: Tab[], parents: Record<ID, ID>): Promise<
       windowId: Windows.id,
       index,
       url: Utils.normalizeUrl(tab.url, tab.title),
-      cookieStoreId: tab.cookieStoreId,
+      cookieStoreId: tab.container,
       active: false,
     }
     if (conf.cookieStoreId === CONTAINER_ID && conf.url) {
@@ -3247,13 +3253,13 @@ export async function open(
   return true
 }
 
-export function getTabsInfo(ids: ID[]): ItemInfo[] {
+export function getTabsInfo(ids: ID[], setPanelId?: boolean): ItemInfo[] {
   const items: ItemInfo[] = []
 
   for (const id of ids) {
     const tab = Tabs.byId[id]
     if (tab) {
-      items.push({
+      const info: ItemInfo = {
         id,
         url: tab.url,
         parentId: tab.parentId,
@@ -3262,7 +3268,9 @@ export function getTabsInfo(ids: ID[]): ItemInfo[] {
         index: tab.index,
         pinned: tab.pinned,
         container: tab.cookieStoreId,
-      })
+      }
+      if (setPanelId) info.panelId = tab.panelId
+      items.push(info)
 
       // Include folded tabs
       if (tab.folded) {
@@ -3270,7 +3278,7 @@ export function getTabsInfo(ids: ID[]): ItemInfo[] {
           const child = Tabs.list[i]
           if (!child.invisible) break
           if (ids.includes(child.id)) continue
-          items.push({
+          const subInfo: ItemInfo = {
             id,
             url: child.url,
             parentId: child.parentId,
@@ -3279,7 +3287,9 @@ export function getTabsInfo(ids: ID[]): ItemInfo[] {
             index: child.index,
             pinned: child.pinned,
             container: child.cookieStoreId,
-          })
+          }
+          if (setPanelId) subInfo.panelId = child.panelId
+          items.push(subInfo)
         }
       }
     }
