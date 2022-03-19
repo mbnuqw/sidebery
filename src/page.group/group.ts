@@ -459,6 +459,11 @@ async function takeScreenshot(tab: GroupedTabInfo | GroupPin, quality = 90) {
       if (Settings.reactive.groupLayout === 'list') tab.bgEl.style.left = '-4px'
     }
     return
+  } else {
+    if (tab.bgEl) {
+      tab.bgEl.style.filter = 'none'
+      if (Settings.reactive.groupLayout === 'list') tab.bgEl.style.left = '0'
+    }
   }
 
   try {
