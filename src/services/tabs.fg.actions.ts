@@ -2276,7 +2276,7 @@ export function updateTabsTreeDebounced(startIndex = 0, endIndex = -1, delay = 1
 }
 
 /**
- * Normalize tree levels
+ * Calculates tree props
  */
 export function updateTabsTree(startIndex = 0, endIndex = -1): void {
   Logs.info(`Tabs.updateTabsTree: ${startIndex} - ${endIndex}`)
