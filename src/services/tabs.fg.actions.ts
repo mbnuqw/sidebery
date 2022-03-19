@@ -2372,6 +2372,7 @@ export function updateTabsTree(startIndex = 0, endIndex = -1): void {
             backTab.parentId = parent.id
           }
           rBackTab.lvl = tab.lvl
+          backTab.lvl = tab.lvl
           rBackTab.invisible = tab.invisible
         }
       }
