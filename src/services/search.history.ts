@@ -12,7 +12,7 @@ export async function onHistorySearch(): Promise<void> {
     try {
       const result = await browser.history.search({
         text: Search.reactive.value,
-        maxResults: 1234567,
+        maxResults: 100,
         startTime: 0,
       })
       History.reactive.filtered = await History.normalizeHistory(result, false)
