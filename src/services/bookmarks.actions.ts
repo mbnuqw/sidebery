@@ -24,6 +24,7 @@ import { Permissions } from './permissions'
 import { SetupPage } from './setup-page'
 import { Containers } from './containers'
 import { DnD } from './drag-and-drop'
+import { Search } from './search'
 
 export async function load(): Promise<void> {
   if (!browser.bookmarks) return
@@ -155,6 +156,7 @@ let saveBookmarksTreeTimeout: number | undefined
 export function saveBookmarksTree(delay = 128): void {
   if (!Windows.focused) return
   if (Bookmarks.reactive.popup) return
+  if (Search.reactive.rawValue) return
 
   clearTimeout(saveBookmarksTreeTimeout)
   saveBookmarksTreeTimeout = setTimeout(() => {

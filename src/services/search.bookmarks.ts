@@ -29,7 +29,7 @@ function searchTreeWalker(
       if (Search.check(n.title) || Search.check(n.url)) filtered.push(n)
     }
     if (n.title && !n.url && n.parentId !== BKM_ROOT_ID && Search.check(n.title)) {
-      if (!n.expanded) n.expanded = true
+      if (n.expanded) n.expanded = false
       folders[n.id] = n
       filtered.push(n)
     }
@@ -81,6 +81,9 @@ export function onBookmarksSearch(activePanel: Panel): void {
       Bookmarks.scrollToBookmarkDebounced(first.id)
     }
   } else {
+    for (const node of Bookmarks.listBookmarks(Bookmarks.reactive.tree)) {
+      if (node.expanded) node.expanded = false
+    }
     for (const id of Bookmarks.expandedBookmarkFolders) {
       const folder = Bookmarks.reactive.byId[id]
       if (folder) folder.expanded = true
@@ -158,7 +161,7 @@ export function onBookmarksSearchEnter(panel?: Panel): void {
   const selId = Selection.getFirst()
   const bookmark = Bookmarks.reactive.byId[selId]
   if (bookmark) {
-    if (bookmark.type === 'folder') Bookmarks.toggleBranch(bookmark.id)
+    if (bookmark.type === 'folder') return Bookmarks.toggleBranch(bookmark.id)
     if (bookmark.type === 'bookmark') Bookmarks.open([bookmark.id], {}, false, true)
   }
 
