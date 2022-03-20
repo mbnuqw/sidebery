@@ -31,7 +31,7 @@ function searchTreeWalker(
     if (n.title && !n.url && n.parentId !== BKM_ROOT_ID && Search.check(n.title)) {
       if (n.expanded) n.expanded = false
       folders[n.id] = n
-      filtered.push(n)
+      filtered.unshift(n)
     }
     if (n.children) searchTreeWalker(n.children, filtered, folders)
   }
