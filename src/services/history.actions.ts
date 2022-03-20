@@ -148,34 +148,6 @@ function normalizeHistoryItem(item: HistoryItem): void {
   }
 }
 
-let loadedList: HistoryItem[] | undefined
-export async function search(query: string): Promise<void> {
-  if (!loadedList) loadedList = History.reactive.list
-
-  const panel = Sidebar.reactive.panelsById.history
-  if (!panel) return
-  else panel.ready = false
-
-  if (query) {
-    try {
-      const result = await browser.history.search({
-        text: query,
-        maxResults: UNLIMITED,
-        startTime: 0,
-      })
-      History.reactive.list = await normalizeHistory(result, true)
-    } catch (err) {
-      History.reactive.list = loadedList
-      loadedList = undefined
-    }
-  } else {
-    History.reactive.list = loadedList
-    loadedList = undefined
-  }
-
-  panel.ready = true
-}
-
 function onVisit(item: HistoryItem): void {
   normalizeHistoryItem(item)
   History.reactive.list.unshift(item)
