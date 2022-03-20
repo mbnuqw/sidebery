@@ -25,7 +25,7 @@ export async function load(): Promise<void> {
     maxResults: UNLIMITED,
   })
 
-  History.reactive.list = await normalizeHistory(result, startTime)
+  History.reactive.list = await normalizeHistory(result, true, startTime)
   lastItemTime = getLastItemTime() - 1
 
   if (!History.reactive.list.length) await loadMore()
@@ -44,6 +44,7 @@ export function unload(): void {
 const cachedVisits: Record<string, browser.history.VisitItem[]> = {}
 export async function normalizeHistory(
   items: browser.history.HistoryItem[],
+  allVisits: boolean,
   after?: number,
   before?: number
 ): Promise<HistoryItem[]> {
@@ -54,7 +55,7 @@ export async function normalizeHistory(
     if (!item.title) continue
 
     normalizeHistoryItem(item)
-    if (item.visitCount !== undefined && item.visitCount > 1 && item.url) {
+    if (allVisits && item.visitCount !== undefined && item.visitCount > 1 && item.url) {
       let visits: browser.history.VisitItem[] | undefined = cachedVisits[item.url]
       if (!visits) {
         visits = await browser.history.getVisits({ url: item.url })
@@ -99,7 +100,7 @@ export async function loadMore(): Promise<void> {
 
   // First check
   if (result.length) {
-    const newItems = await normalizeHistory(result, after, before)
+    const newItems = await normalizeHistory(result, true, after, before)
     if (newItems.length) {
       History.reactive.list.push(...newItems)
       lastItemTime = getLastItemTime() - 1
@@ -117,7 +118,7 @@ export async function loadMore(): Promise<void> {
 
   // Second check
   if (result.length) {
-    const newItems = await normalizeHistory(result, after, before)
+    const newItems = await normalizeHistory(result, true, after, before)
     if (newItems.length) {
       History.reactive.list.push(...newItems)
       lastItemTime = getLastItemTime() - 1
@@ -162,7 +163,7 @@ export async function search(query: string): Promise<void> {
         maxResults: UNLIMITED,
         startTime: 0,
       })
-      History.reactive.list = await normalizeHistory(result)
+      History.reactive.list = await normalizeHistory(result, true)
     } catch (err) {
       History.reactive.list = loadedList
       loadedList = undefined
