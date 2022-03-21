@@ -2,7 +2,10 @@
   "addons": {
     "{3c078156-979c-498b-8990-85f7987dd929}": {
       "updates": [
-
+        {
+          "version": "5.0.0b-10",
+          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.0.0b-10/sidebery-5.0.0b-10-fx.xpi"
+        }
       ]
     }
   }
