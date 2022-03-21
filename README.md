@@ -1,28 +1,32 @@
-# 🚧 Bugsbery v5 <sup><sup><sub>beta</sub></sup></sup> 🚧
+# Sidebery
 
-This is a branch of the next major version of Sidebery.
-
-## Some notable changes/additions
-
-- Search
-- History panel
-- Reworked navigation bar
-- Configurable "new tab" buttons bar
-- Ability to use multiple bookmark panels with different root folders
-- Converting tabs panel to bookmarks panel and vice versa
-- Saving and restoring tabs panel to/from bookmarks folder
-- Proton theme (+ two more)
-- Support of the Firefox theme colors
-- ...and more other <sub><sup><strike>bugs</strike></sup></sub> features
-
----
+Firefox extension for managing tabs and bookmarks in sidebar.
 
 ## Install
 
-> Warning: only for testing, backward compatibility of data not guaranteed
+| Release | Link |
+|---------|------|
+| Stable | [v4.10.0 (addons.mozilla.org)](https://addons.mozilla.org/firefox/addon/sidebery/) |
+| Beta   | [v5.0.0b-10 (Github release)](https://github.com/mbnuqw/sidebery/releases/tag/v5.0.0b-10) |
 
-Only for Developer Edition or Nightly Firefox.  
-Download prebuilt file (unsigned zip archive) from releases page or build it yourself. In `about:config` set "xpinstall.signatures.required" to "false". In `about:addons` click on the "gears" icon, then "Install Add-on From File...".
+> Note: Before installing the beta version make sure to save backup of the addon data (Sidebery settings / Help / Export).
+
+---
+
+## About
+
+Sidebery is a highly configurable sidebar with panels of different types. Some of the key features:
+
+- Vertical tabs panels with tree or flat layout
+- Bookmarks panels
+- (v5) History panel
+- (v5) Search in panels
+- Customizable context menu
+- Customizable styles
+- Snapshots (saved windows/panels/tabs)
+- ...and more
+
+---
 
 ## Build
 
