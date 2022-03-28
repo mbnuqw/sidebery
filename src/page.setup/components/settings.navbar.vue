@@ -25,6 +25,10 @@ section(
       :inactive="Settings.reactive.navBarLayout !== 'vertical'")
   ToggleField(label="settings.nav_btn_count" v-model:value="Settings.reactive.navBtnCount")
   ToggleField(label="settings.hide_empty_panels" v-model:value="Settings.reactive.hideEmptyPanels")
+  NumField.-inline(
+    label="settings.nav_switch_panels_delay"
+    v-model:value="Settings.reactive.navSwitchPanelsDelay"
+    :or="128")
 
   InfoField(label="settings.nav_bar_enabled" :inactive="!availableBtns.length").-sub-title
   .sub-fields
@@ -109,6 +113,7 @@ import { SetupPage } from 'src/services/setup-page'
 import ToggleField from '../../components/toggle-field.vue'
 import SelectField from '../../components/select-field.vue'
 import InfoField from '../../components/info-field.vue'
+import NumField from '../../components/num-field.vue'
 import PanelConfig from './popup.panel-config.vue'
 
 interface Btn {

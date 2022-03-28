@@ -397,6 +397,7 @@ const dict: Record<string, PlurFn | string> = {
   'settings.nav_bar_side_right': 'right',
   'settings.nav_btn_count': 'Show count of tabs/bookmarks',
   'settings.hide_empty_panels': 'Hide empty tabs panels',
+  'settings.nav_switch_panels_delay': 'Min delay between panels switching (ms)',
   'settings.nav_act_tabs_panel_left_click': 'Left click on active tabs panel',
   'settings.nav_act_tabs_panel_left_click_new_tab': 'create tab',
   'settings.nav_act_tabs_panel_left_click_none': 'none',

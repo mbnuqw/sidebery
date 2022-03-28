@@ -422,6 +422,7 @@ const dict: Record<string, PlurFn | string> = {
   'settings.nav_bar_side_right': 'правая',
   'settings.nav_btn_count': 'Показывать количество вкладок/закладок',
   'settings.hide_empty_panels': 'Скрывать пустые панели вкладок',
+  'settings.nav_switch_panels_delay': 'Минимальная задержка между переключениями панелей (мс)',
   'settings.nav_act_tabs_panel_left_click': 'Клик левой кнопкой мыши по активной панели вкладок',
   'settings.nav_act_tabs_panel_left_click_new_tab': 'создать вкладку',
   'settings.nav_act_tabs_panel_left_click_none': 'ничего',

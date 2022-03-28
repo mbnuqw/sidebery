@@ -132,6 +132,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
 
   // Mouse
   hScrollThroughPanels: true,
+  navSwitchPanelsDelay: 128,
   scrollThroughTabs: 'none',
   scrollThroughVisibleTabs: false,
   scrollThroughTabsSkipDiscarded: false,

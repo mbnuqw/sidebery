@@ -951,10 +951,13 @@ let switchPanelPause: number | undefined
 export function switchPanel(dir: 1 | -1, ignoreHidden?: boolean): void {
   // Debounce switching
   if (switchPanelPause) return
-  switchPanelPause = setTimeout(() => {
-    clearTimeout(switchPanelPause)
-    switchPanelPause = undefined
-  }, 128)
+  const delay = Settings.reactive.navSwitchPanelsDelay ?? 128
+  if (delay > 0) {
+    switchPanelPause = setTimeout(() => {
+      clearTimeout(switchPanelPause)
+      switchPanelPause = undefined
+    }, delay)
+  }
 
   Menu.close()
   Selection.resetSelection()
