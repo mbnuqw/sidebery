@@ -214,6 +214,36 @@
     "switch_to_panel_9": {
       "description": "__MSG_KbSwitchToPanel9__"
     },
+    "move_tabs_to_panel_0": {
+      "description": "__MSG_KbMoveTabsToPanel0__"
+    },
+    "move_tabs_to_panel_1": {
+      "description": "__MSG_KbMoveTabsToPanel1__"
+    },
+    "move_tabs_to_panel_2": {
+      "description": "__MSG_KbMoveTabsToPanel2__"
+    },
+    "move_tabs_to_panel_3": {
+      "description": "__MSG_KbMoveTabsToPanel3__"
+    },
+    "move_tabs_to_panel_4": {
+      "description": "__MSG_KbMoveTabsToPanel4__"
+    },
+    "move_tabs_to_panel_5": {
+      "description": "__MSG_KbMoveTabsToPanel5__"
+    },
+    "move_tabs_to_panel_6": {
+      "description": "__MSG_KbMoveTabsToPanel6__"
+    },
+    "move_tabs_to_panel_7": {
+      "description": "__MSG_KbMoveTabsToPanel7__"
+    },
+    "move_tabs_to_panel_8": {
+      "description": "__MSG_KbMoveTabsToPanel8__"
+    },
+    "move_tabs_to_panel_9": {
+      "description": "__MSG_KbMoveTabsToPanel9__"
+    },
     "search": {
       "description": "__MSG_KbSearch__"
     }

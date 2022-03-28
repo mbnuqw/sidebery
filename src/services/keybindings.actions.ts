@@ -173,8 +173,28 @@ function onCmd(name: string): void {
   } else if (name.startsWith('switch_to_panel_')) {
     const panel = Sidebar.reactive.panels[parseInt(name.slice(-1))]
     if (panel) Sidebar.switchToPanel(panel.id)
-  } else if (name === 'search') {
+  } else if (name.startsWith('move_tabs_to_panel_')) onKeyMoveTabsToPanel(parseInt(name[19]))
+  else if (name === 'search') {
     Search.start()
+  }
+}
+
+function onKeyMoveTabsToPanel(targetIndex: number): void {
+  if (isNaN(targetIndex)) return
+
+  let index = -1
+  const panel = Sidebar.reactive.panels.find(p => {
+    if (Utils.isTabsPanel(p)) index++
+    return index === targetIndex
+  })
+  if (!Utils.isTabsPanel(panel)) return
+
+  const targetTabIds = Selection.isTabs() ? Selection.get() : [Tabs.activeId]
+  const probeTab = Tabs.byId[targetTabIds[0]]
+  if (probeTab && probeTab.panelId !== panel.id) {
+    const items = Tabs.getTabsInfo(targetTabIds)
+    const src = { windowId: Windows.id, panelId: probeTab.panelId, pinned: probeTab.pinned }
+    Tabs.move(items, src, { panelId: panel.id, index: panel.nextTabIndex })
   }
 }
 
