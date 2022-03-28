@@ -187,8 +187,9 @@ function onWheel(e: WheelEvent): void {
   // Selection.resetSelection()
 
   if (Settings.reactive.hScrollThroughPanels) {
-    if (e.deltaX > 0) return Sidebar.switchPanel(1, true)
-    if (e.deltaX < 0) return Sidebar.switchPanel(-1, true)
+    let threshold = e.deltaMode === 0 ? 8 : 1
+    if (e.deltaX >= threshold) return Sidebar.switchPanel(1, true)
+    if (e.deltaX <= -threshold) return Sidebar.switchPanel(-1, true)
   }
 }
 
