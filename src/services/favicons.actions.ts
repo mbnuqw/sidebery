@@ -11,6 +11,7 @@ import { Logs } from './logs'
 const SAVE_DELAY = 2000
 const THRESHOLD_BYTES_DIFF = 150 * window.devicePixelRatio
 const SIZE = Math.trunc(16 * window.devicePixelRatio)
+const MAX_COUNT_LIMIT = 2000
 
 let favRescaleCanvas: HTMLCanvasElement | undefined
 let favPrescaleCanvas: HTMLCanvasElement | undefined
@@ -72,6 +73,18 @@ export async function loadFavicons(): Promise<void> {
   }
 }
 
+function limitFavicons(): number {
+  const len = Favicons.reactive.list.length
+  const randomIndex = Math.trunc(Math.random() * len)
+
+  for (const domain of Object.keys(domainsInfo)) {
+    const domainInfo = domainsInfo[domain]
+    if (domainInfo.index === randomIndex) delete domainsInfo[domain]
+  }
+
+  return randomIndex
+}
+
 const saveFaviconTimeouts: Record<string, number | undefined> = {}
 export function saveFavicon(url: string, icon: string): void {
   if (!url || !icon) return
@@ -97,8 +110,13 @@ export function saveFavicon(url: string, icon: string): void {
     // Icon not cached but domainInfo exists - favicon was changed
     if (!iconExists && domainInfo) index = domainInfo.index
 
-    // Append favicon
-    if (index === -1) index = Favicons.reactive.list.length
+    // Check limit and find target index
+    if (index === -1) {
+      // Replace random existed favicon
+      if (!iconExists && Favicons.reactive.list.length >= MAX_COUNT_LIMIT) index = limitFavicons()
+      // Append favicon
+      else index = Favicons.reactive.list.length
+    }
 
     // Resize and set icon
     if (!iconExists) {
