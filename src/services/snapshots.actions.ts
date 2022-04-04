@@ -20,8 +20,9 @@ import { PanelType } from 'src/types/sidebar'
 import { ItemInfo } from 'src/types/tabs'
 import { Info } from './info'
 
-const MIN_SNAP_INTERVAL = 60000
+const MIN_SNAP_INTERVAL = 60_000
 const MIN_LIMITING_COUNT = 1
+const MAX_SIZE_LIMIT = 50_000_000
 
 let currentSnapshot: Snapshot | undefined
 
@@ -120,7 +121,7 @@ export async function createSnapshot(auto = false): Promise<Snapshot | undefined
     const limited = limitSnapshots(stored.snapshots)
     if (limited) stored.snapshots = limited
   } catch (err) {
-    Logs.err('Cannot limit snapshots', err as Error)
+    Logs.err('Cannot limit snapshots', err)
   }
 
   await Store.set({ snapshots: stored.snapshots, lastSnapTime: currentSnapshot.time })
@@ -540,20 +541,22 @@ function limitSnapshots(snapshots: Snapshot[]): Snapshot[] | undefined {
 
   let index = snapshots.length
   let accum = 0
+  let sizeAccum = 0
   while (index--) {
     const snapshot = snapshots[index]
+
+    sizeAccum += new Blob([JSON.stringify(snapshot)]).size
 
     if (unit === 'snap') {
       accum++
       if (accum > normLimit) break
     }
 
-    if (unit === 'kb') {
-      accum += new Blob([JSON.stringify(snapshot)]).size
-      if (accum > normLimit) break
-    }
+    if (unit === 'kb' && sizeAccum > normLimit) break
 
     if (unit === 'day' && snapshot.time < normLimit) break
+
+    if (sizeAccum > MAX_SIZE_LIMIT) break
   }
 
   index++
