@@ -1,6 +1,8 @@
 <template lang="pug">
 section(ref="el")
-  h2 {{translate('settings.snapshots_title')}}
+  h2
+    span {{translate('settings.snapshots_title')}}
+    .title-note   ({{state.snapshotsLen}}: ~{{state.snapshotsSize}})
   ToggleField(label="settings.snap_notify" v-model:value="Settings.reactive.snapNotify")
   ToggleField(label="settings.snap_exclude_private" v-model:value="Settings.reactive.snapExcludePrivate")
   NumField(
@@ -23,21 +25,44 @@ section(ref="el")
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { translate } from 'src/dict'
 import { SETTINGS_OPTIONS } from 'src/defaults'
-import { InstanceType } from 'src/types'
+import { InstanceType, Stored } from 'src/types'
 import { Msg } from 'src/services/msg'
 import { Settings } from 'src/services/settings'
 import { SetupPage } from 'src/services/setup-page'
 import NumField from '../../components/num-field.vue'
 import ToggleField from '../../components/toggle-field.vue'
+import Utils from 'src/utils'
 
 const el = ref<HTMLElement | null>(null)
+const state = reactive({
+  snapshotsLen: '-',
+  snapshotsSize: '-',
+})
 
-onMounted(() => SetupPage.registerEl('settings_snapshots', el.value))
+onMounted(() => {
+  SetupPage.registerEl('settings_snapshots', el.value)
+
+  calcInfo()
+})
 
 async function createSnapshot(): Promise<void> {
-  const snapshot = await Msg.req(InstanceType.bg, 'createSnapshot')
+  await Msg.req(InstanceType.bg, 'createSnapshot')
+  calcInfo()
+}
+
+async function calcInfo(): Promise<void> {
+  let stored: Stored
+  try {
+    stored = await browser.storage.local.get<Stored>('snapshots')
+  } catch (err) {
+    return
+  }
+
+  const snapshots = stored.snapshots ?? []
+  state.snapshotsLen = snapshots.length.toString()
+  state.snapshotsSize = Utils.bytesToStr(new Blob([JSON.stringify(snapshots)]).size)
 }
 </script>
