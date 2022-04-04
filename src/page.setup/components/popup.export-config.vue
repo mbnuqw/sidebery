@@ -21,6 +21,7 @@ import Utils from 'src/utils'
 import { translate } from 'src/dict'
 import { Styles } from 'src/services/styles'
 import ToggleField from '../../components/toggle-field.vue'
+import { Logs } from 'src/services/logs'
 
 const rootEl = ref<HTMLElement | null>(null)
 const exportDataLink = ref<HTMLAnchorElement | null>(null)
@@ -102,7 +103,12 @@ async function genExportData(): Promise<void> {
     storageKeys.push('disabledKeybindings')
   }
 
-  const data = await browser.storage.local.get<Stored>(storageKeys)
+  let data
+  try {
+    data = await browser.storage.local.get<Stored>(storageKeys)
+  } catch (err) {
+    return Logs.err('genExportData: Cannot get storage data', err)
+  }
   const backup: BackupData = { ...data }
   backup.ver = browser.runtime.getManifest().version
 

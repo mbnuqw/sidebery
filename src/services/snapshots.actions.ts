@@ -32,10 +32,16 @@ export async function createSnapshot(auto = false): Promise<Snapshot | undefined
   if (!Info.isBg) return await Msg.req(InstanceType.bg, 'createSnapshot')
 
   // Get snapshot src data and current snapshots list
-  const waiting = await Promise.all([
-    browser.storage.local.get<Stored>(['sidebar', 'containers', 'snapshots']),
-    Tabs.updateBgTabsTreeData(),
-  ])
+  let waiting
+  try {
+    waiting = await Promise.all([
+      browser.storage.local.get<Stored>(['sidebar', 'containers', 'snapshots']),
+      Tabs.updateBgTabsTreeData(),
+    ])
+  } catch (err) {
+    Logs.err('createSnapshot: Cannot get source data', err)
+    return
+  }
   const stored = waiting[0]
   if (!stored) return
   if (!stored.containers) stored.containers = {}
@@ -560,7 +566,13 @@ function limitSnapshots(snapshots: Snapshot[]): Snapshot[] | undefined {
 }
 
 export async function removeSnapshot(id: ID): Promise<RemovingSnapshotResult> {
-  const stored = await browser.storage.local.get<Stored>(['snapshots'])
+  let stored
+  try {
+    stored = await browser.storage.local.get<Stored>(['snapshots'])
+  } catch (err) {
+    Logs.err('removeSnapshot: Cannot get snapshots', err)
+    return RemovingSnapshotResult.Err
+  }
   if (!stored.snapshots) return RemovingSnapshotResult.Err
 
   const index = stored.snapshots.findIndex(s => s.id === id)

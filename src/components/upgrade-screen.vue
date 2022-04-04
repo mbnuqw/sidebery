@@ -40,6 +40,7 @@ import LoadingDots from '../sidebar/components/loading-dots.vue'
 import { BackupData, InstanceType, Stored } from 'src/types'
 import Utils from 'src/utils'
 import { Msg } from 'src/services/msg'
+import { Logs } from 'src/services/logs'
 
 onMounted(() => {
   genBackup()
@@ -70,14 +71,19 @@ function onContinueClick(): void {
 }
 
 async function genBackup(): Promise<void> {
-  const stored = await browser.storage.local.get<Stored>([
-    'containers_v4',
-    'panels_v4',
-    'settings',
-    'tabsMenu',
-    'bookmarksMenu',
-    'snapshots_v4',
-  ])
+  let stored
+  try {
+    stored = await browser.storage.local.get<Stored>([
+      'containers_v4',
+      'panels_v4',
+      'settings',
+      'tabsMenu',
+      'bookmarksMenu',
+      'snapshots_v4',
+    ])
+  } catch (err) {
+    return Logs.err('genBackup: Cannot get stored data for backup', err)
+  }
   const backup: BackupData = { ver: '4.9.5', ...stored }
   const backupJSON = JSON.stringify(backup)
   const file = new Blob([backupJSON], { type: 'application/json' })

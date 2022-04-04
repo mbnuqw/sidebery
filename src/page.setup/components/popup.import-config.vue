@@ -406,7 +406,12 @@ async function importSnapshots(backup: BackupData, toStore: Stored): Promise<voi
 
   if (!backup.snapshots) throw 'No snapshots data'
 
-  const storage = await browser.storage.local.get<Stored>('snapshots')
+  let storage
+  try {
+    storage = await browser.storage.local.get<Stored>('snapshots')
+  } catch (err) {
+    return Logs.err('importSnapshots: Cannot get stored snapshots', err)
+  }
   if (!storage.snapshots) storage.snapshots = []
 
   // Normalize snapshots from backup
@@ -454,7 +459,12 @@ async function importSnapshots(backup: BackupData, toStore: Stored): Promise<voi
 async function importFavicons(backup: BackupData, toStore: Stored): Promise<void> {
   if (!backup.favicons || !backup.favHashes || !backup.favDomains) throw 'No favicons data'
 
-  const storage = await browser.storage.local.get<Stored>(['favicons', 'favHashes', 'favDomains'])
+  let storage
+  try {
+    storage = await browser.storage.local.get<Stored>(['favicons', 'favHashes', 'favDomains'])
+  } catch (err) {
+    return Logs.err('importFavicons: Cannot get stored favicons', err)
+  }
   if (!storage.favicons?.length || !storage.favHashes?.length || !storage.favDomains) {
     storage.favicons = []
     storage.favHashes = []

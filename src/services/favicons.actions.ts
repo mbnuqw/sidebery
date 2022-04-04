@@ -6,6 +6,7 @@ import { Store } from 'src/services/storage'
 import { Tabs } from 'src/services/tabs.fg'
 import { Info } from 'src/services/info'
 import { FILE_RE, GROUP_RE, IMG_RE, MUS_RE, SETTINGS_RE, URL_PAGE_RE, VID_RE } from 'src/defaults'
+import { Logs } from './logs'
 
 const SAVE_DELAY = 2000
 const THRESHOLD_BYTES_DIFF = 150 * window.devicePixelRatio
@@ -23,7 +24,12 @@ let domainsInfo: Record<string, FavDomain> = {}
  * Load favicons
  */
 export async function loadFavicons(): Promise<void> {
-  const storage = await browser.storage.local.get<Stored>(['favicons', 'favHashes', 'favDomains'])
+  let storage
+  try {
+    storage = await browser.storage.local.get<Stored>(['favicons', 'favHashes', 'favDomains'])
+  } catch (err) {
+    return Logs.err('loadFavicons: Cannot get favicons', err)
+  }
   if (!storage.favicons?.length || !storage.favHashes?.length || !storage.favDomains) {
     storage.favicons = []
     storage.favHashes = []

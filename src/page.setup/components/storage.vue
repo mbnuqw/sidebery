@@ -86,15 +86,29 @@ async function calcStorageInfo(): Promise<void> {
 }
 
 async function openStoredData(prop: string): Promise<void> {
-  let ans = await browser.storage.local.get<Stored>(prop)
-  if (ans && ans[prop as keyof Stored] !== undefined) {
+  let stored
+  try {
+    stored = await browser.storage.local.get<Stored>(prop)
+  } catch (err) {
+    SetupPage.reactive.detailsTitle = 'Error: Cannot get value'
+    SetupPage.reactive.detailsText = String(err)
+    return
+  }
+  if (stored && stored[prop as keyof Stored] !== undefined) {
     SetupPage.reactive.detailsTitle = prop
-    SetupPage.reactive.detailsText = JSON.stringify(ans[prop as keyof Stored], null, 2)
+    SetupPage.reactive.detailsText = JSON.stringify(stored[prop as keyof Stored], null, 2)
   }
 }
 
 async function editStoredData(prop: string): Promise<void> {
-  const stored = await browser.storage.local.get<Stored>(prop)
+  let stored
+  try {
+    stored = await browser.storage.local.get<Stored>(prop)
+  } catch (err) {
+    SetupPage.reactive.detailsTitle = 'Error: Cannot get value'
+    SetupPage.reactive.detailsText = String(err)
+    return
+  }
   if (stored?.[prop as keyof Stored] !== undefined) {
     SetupPage.reactive.detailsText = JSON.stringify(stored[prop as keyof Stored], null, 2)
     SetupPage.reactive.detailsTitle = prop
@@ -113,7 +127,11 @@ async function editStoredData(prop: string): Promise<void> {
 
 async function deleteStoredData(prop: string): Promise<void> {
   if (window.confirm(translate('settings.storage_delete_confirm') + `"${prop}"?`)) {
-    await browser.storage.local.remove(prop)
+    try {
+      await browser.storage.local.remove(prop)
+    } catch (err) {
+      return Logs.err('deleteStoredData: Cannot remove value', err)
+    }
     calcStorageInfo()
   }
 }
@@ -121,7 +139,11 @@ async function deleteStoredData(prop: string): Promise<void> {
 async function clearStorage(): Promise<void> {
   if (!window.confirm(translate('settings.clear_storage_confirm'))) return
 
-  await browser.storage.local.clear()
+  try {
+    await browser.storage.local.clear()
+  } catch (err) {
+    return Logs.err('clearStorage: Cannot clean storage', err)
+  }
   browser.runtime.reload()
 }
 </script>

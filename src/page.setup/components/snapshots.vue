@@ -142,7 +142,12 @@ const selectedTabsLen = computed<number>(() => {
 
 void (async function init(): Promise<void> {
   const snapshots = []
-  const stored = await browser.storage.local.get<Stored>('snapshots')
+  let stored
+  try {
+    stored = await browser.storage.local.get<Stored>('snapshots')
+  } catch (err) {
+    return Logs.err('Snapshots.vue: init: Cannot get stored snapshots', err)
+  }
   if (!stored.snapshots) stored.snapshots = []
 
   if (stored.snapshots.length > 0) {
@@ -514,7 +519,12 @@ async function removeSnapshot(snapshot: SnapshotState): Promise<void> {
 }
 
 async function recalcSizes(): Promise<void> {
-  const stored = await browser.storage.local.get<Stored>('snapshots')
+  let stored
+  try {
+    stored = await browser.storage.local.get<Stored>('snapshots')
+  } catch (err) {
+    return Logs.err('Snapshots.vue: recalcSizes: Cannot get snapshots', err)
+  }
   if (!stored.snapshots) return
 
   for (const snapshot of stored.snapshots) {
