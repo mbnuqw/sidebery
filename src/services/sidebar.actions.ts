@@ -435,8 +435,6 @@ export async function loadPanels(): Promise<void> {
     storage.sidebar = createDefaultSidebar()
   }
 
-  Logs.info('Sidebar.loadPanels', storage.sidebar)
-
   const sidebar = storage.sidebar
   const panelConfigs = sidebar?.panels ? Object.values(sidebar?.panels) : []
   if (sidebar?.nav) Sidebar.reactive.nav = sidebar.nav
