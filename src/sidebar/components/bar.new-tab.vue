@@ -87,7 +87,7 @@ const btns = computed<NewTabBtn[]>(() => {
       // Container?
       if (!container) {
         container = Object.values(Containers.reactive.byId).find(c => c.name === part)
-        if (container) {
+        if (container && !Windows.incognito) {
           btn.containerId = container.id
           if (!btn.title) btn.title = container.name
           continue
