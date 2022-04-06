@@ -7,7 +7,10 @@ section(ref="el")
       label="settings.native_scrollbars_thin"
       :inactive="!Settings.reactive.nativeScrollbars"
       v-model:value="Settings.reactive.nativeScrollbarsThin")
-  ToggleField(label="settings.sel_win_screenshots" v-model:value="Settings.reactive.selWinScreenshots")
+  ToggleField(
+    label="settings.sel_win_screenshots"
+    :value="Settings.reactive.selWinScreenshots"
+    @update:value="toggleSelWinScreenshots")
   ToggleField(label="settings.update_sidebar_title" v-model:value="Settings.reactive.updateSidebarTitle")
   ToggleField(label="settings.mark_window" v-model:value="Settings.reactive.markWindow")
   .sub-fields
@@ -29,6 +32,7 @@ import ToggleField from '../../components/toggle-field.vue'
 import TextField from '../../components/text-field.vue'
 import { Stored } from 'src/types'
 import Utils from 'src/utils'
+import { Permissions } from 'src/services/permissions'
 
 const el = ref<HTMLElement | null>(null)
 const state = reactive({
@@ -53,5 +57,13 @@ async function calcStorageInfo(): Promise<void> {
   }
 
   state.storageOveral = Utils.strSize(JSON.stringify(stored))
+}
+
+function toggleSelWinScreenshots(): void {
+  if (!Settings.reactive.selWinScreenshots && !Permissions.reactive.webData) {
+    location.hash = 'all-urls'
+  } else {
+    Settings.reactive.selWinScreenshots = !Settings.reactive.selWinScreenshots
+  }
 }
 </script>

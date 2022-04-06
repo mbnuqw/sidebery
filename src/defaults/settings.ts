@@ -4,7 +4,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   // General
   nativeScrollbars: false,
   nativeScrollbarsThin: true,
-  selWinScreenshots: true,
+  selWinScreenshots: false,
   updateSidebarTitle: true,
   markWindow: false,
   markWindowPreface: '[Sidebery] ',
