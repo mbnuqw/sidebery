@@ -37,6 +37,7 @@ import { Favicons } from 'src/services/favicons'
 import { CONTAINER_ID, DOMAIN_RE } from 'src/defaults'
 import Utils from 'src/utils'
 import { Logs } from 'src/services/logs'
+import { Windows } from 'src/services/windows'
 
 interface NewTabBtn {
   id: string
@@ -156,7 +157,7 @@ function onNewTabMouseUp(e: MouseEvent): void {
   }
 
   if (e.button === 2) {
-    if (e.ctrlKey || e.shiftKey) return
+    if (e.ctrlKey || e.shiftKey || Windows.incognito) return
 
     if (Menu.isBlocked()) return
     if (!Selection.isSet() && !Settings.reactive.ctxMenuNative) {
@@ -169,6 +170,13 @@ function onNewTabMouseUp(e: MouseEvent): void {
 function onNewTabCtxMenu(e: MouseEvent): void {
   // Show menu for selected tabs
   if (Selection.isSet() && Mouse.isTarget('tab')) return
+
+  // Do not show menu if browser window is private
+  if (Windows.incognito) {
+    e.preventDefault()
+    e.stopPropagation()
+    return
+  }
 
   e.stopPropagation()
 
