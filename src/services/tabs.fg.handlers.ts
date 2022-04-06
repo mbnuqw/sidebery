@@ -308,14 +308,14 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
       rLocalTab.favIconUrl = ''
     }
     if (change.url.startsWith(GROUP_URL)) Tabs.saveGroups()
-    if (
-      Sidebar.urlRules?.length &&
-      !localTab.pinned &&
-      localTab.panelId &&
-      change.url !== 'about:blank'
-    ) {
-      Tabs.applyUrlRules(change.url, localTab)
-    }
+    // if (
+    //   Sidebar.urlRules?.length &&
+    //   !localTab.pinned &&
+    //   localTab.panelId &&
+    //   change.url !== 'about:blank'
+    // ) {
+    //   Tabs.applyUrlRules(change.url, localTab)
+    // }
     if (localTab.pinned && localTab.relGroupId !== undefined) {
       const groupTab = Tabs.byId[localTab.relGroupId]
       if (groupTab) {

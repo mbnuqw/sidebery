@@ -98,19 +98,19 @@
       :value="conf.moveTabCtxNoChild"
       @update:value="togglePanelMoveTabCtxNoChild")
 
-  ToggleField(
-    v-if="Utils.isTabsPanel(conf)"
-    label="panel.url_rules"
-    :value="conf.urlRulesActive"
-    @update:value="toggleUrlRules")
-  .sub-fields.-nosep(v-if="Utils.isTabsPanel(conf) && conf.urlRulesActive")
-    .field
-      TextInput.text(
-        ref="urlRulesInput"
-        or="---"
-        :value="conf.urlRules"
-        :valid="urlRulesValid"
-        @update:value="onUrlRulesInput")
+  //- ToggleField(
+  //-   v-if="Utils.isTabsPanel(conf)"
+  //-   label="panel.url_rules"
+  //-   :value="conf.urlRulesActive"
+  //-   @update:value="toggleUrlRules")
+  //- .sub-fields.-nosep(v-if="Utils.isTabsPanel(conf) && conf.urlRulesActive")
+  //-   .field
+  //-     TextInput.text(
+  //-       ref="urlRulesInput"
+  //-       or="---"
+  //-       :value="conf.urlRules"
+  //-       :valid="urlRulesValid"
+  //-       @update:value="onUrlRulesInput")
 
   SelectField(
     v-if="Utils.isBookmarksPanel(conf)"

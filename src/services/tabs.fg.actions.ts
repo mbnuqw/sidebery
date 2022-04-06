@@ -215,6 +215,8 @@ async function restoreTabsState(): Promise<void> {
     const actTabPanel = Sidebar.reactive.panelsById[activeTab.panelId]
     const actTabPanelIsNotActive = actTabPanel?.id !== Sidebar.reactive.activePanelId
 
+    Sidebar.lastTabsPanelId = actTabPanel.id
+
     if (!activeTab.pinned && actTabPanel && actTabPanelIsNotActive) {
       const actPanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
       if (Utils.isTabsPanel(actPanel)) Sidebar.activatePanel(actTabPanel.id, false)
@@ -2666,7 +2668,7 @@ export function getParentForNewTab(panel: Panel, openerTabId?: ID): ID | undefin
   return openerTabId
 }
 
-/**
+/** TODO: Remove
  * Check url rules of tabs panel and move/create tab if needed
  */
 export async function applyUrlRules(url: string, tab: Tab): Promise<void> {

@@ -119,9 +119,9 @@ async function onMouseDown(e: MouseEvent): Promise<void> {
 
     const action = Settings.reactive.midClickBookmark
     if (action === 'open_new_tab') {
-      let panelId
-      if (props.node.url) panelId = Sidebar.findTabsPanelForUrl(props.node.url)
-      else panelId = Sidebar.lastTabsPanelId
+      let panelId = Sidebar.lastTabsPanelId
+      // if (props.node.url) panelId = Sidebar.findTabsPanelForUrl(props.node.url)
+      // else panelId = Sidebar.lastTabsPanelId
       await Bookmarks.open([props.node.id], { panelId }, false, Settings.reactive.actMidClickTab)
     } else if (action === 'edit') Bookmarks.editBookmarkNode(props.node)
     else if (action === 'delete') Bookmarks.removeBookmarks([props.node.id])
@@ -213,7 +213,8 @@ async function onMouseUp(e: MouseEvent): Promise<void> {
       }
 
       // Open tab
-      const panelId = Sidebar.findTabsPanelForUrl(props.node.url)
+      const panelId = Sidebar.lastTabsPanelId
+      // const panelId = Sidebar.findTabsPanelForUrl(props.node.url)
       Bookmarks.open([props.node.id], { panelId }, !Settings.reactive.openBookmarkNewTab, true)
     }
 

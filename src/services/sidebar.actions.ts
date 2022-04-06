@@ -448,7 +448,7 @@ export async function loadPanels(): Promise<void> {
       const newTabContainer = panel.newTabCtx ? Containers.reactive.byId[panel.newTabCtx] : null
       const moveTabContainer = panel.moveTabCtx ? Containers.reactive.byId[panel.moveTabCtx] : null
 
-      if (panel.urlRulesActive && panel.urlRules) parsePanelUrlRules(panel)
+      // if (panel.urlRulesActive && panel.urlRules) parsePanelUrlRules(panel)
       if (panel.newTabCtx !== DEFAULT_CONTAINER_ID && !newTabContainer) panel.newTabCtx = 'none'
       if (panel.moveTabCtx !== DEFAULT_CONTAINER_ID && !moveTabContainer) panel.moveTabCtx = 'none'
     }
@@ -503,8 +503,8 @@ export function convertOldPanelsConfigToNew(panels_v4: OldPanelConfig[]): Sideba
       panel.dropTabCtx = oldPanelConf.dropTabCtx
       panel.moveTabCtx = oldPanelConf.moveTabCtx
       panel.moveTabCtxNoChild = oldPanelConf.moveTabCtxNoChild
-      panel.urlRulesActive = oldPanelConf.urlRulesActive
-      panel.urlRules = oldPanelConf.urlRules
+      // panel.urlRulesActive = oldPanelConf.urlRulesActive
+      // panel.urlRules = oldPanelConf.urlRules
 
       sidebar.panels[panel.id] = panel
       sidebar.nav.push(panel.id)
@@ -561,25 +561,25 @@ export function recalcPanels(): void {
   Sidebar.reactive.panels = panels
 }
 
-function parsePanelUrlRules(panel: TabsPanel): void {
-  if (!panel.urlRules) return
-  if (!Sidebar.urlRules) Sidebar.urlRules = []
+// function parsePanelUrlRules(panel: TabsPanel): void {
+//   if (!panel.urlRules) return
+//   if (!Sidebar.urlRules) Sidebar.urlRules = []
 
-  for (const rawRule of panel.urlRules.split('\n')) {
-    let rule: string | RegExp = rawRule.trim()
-    if (!rule) continue
+//   for (const rawRule of panel.urlRules.split('\n')) {
+//     let rule: string | RegExp = rawRule.trim()
+//     if (!rule) continue
 
-    if (rule[0] === '/' && rule[rule.length - 1] === '/') {
-      try {
-        rule = new RegExp(rule.slice(1, rule.length - 1))
-      } catch (err) {
-        continue
-      }
-    }
+//     if (rule[0] === '/' && rule[rule.length - 1] === '/') {
+//       try {
+//         rule = new RegExp(rule.slice(1, rule.length - 1))
+//       } catch (err) {
+//         continue
+//       }
+//     }
 
-    Sidebar.urlRules.push({ panelId: panel.id, value: rule })
-  }
-}
+//     Sidebar.urlRules.push({ panelId: panel.id, value: rule })
+//   }
+// }
 
 function getSidebarConfig(): SidebarConfig {
   const panels: Record<ID, PanelConfig> = {}
@@ -656,7 +656,7 @@ function updateSidebarInSetup(newConfig?: SidebarConfig | null): void {
       const newTabContainer = panel.newTabCtx ? Containers.reactive.byId[panel.newTabCtx] : null
       const moveTabContainer = panel.moveTabCtx ? Containers.reactive.byId[panel.moveTabCtx] : null
 
-      if (panel.urlRulesActive && panel.urlRules) parsePanelUrlRules(panel)
+      // if (panel.urlRulesActive && panel.urlRules) parsePanelUrlRules(panel)
       if (panel.newTabCtx !== DEFAULT_CONTAINER_ID && !newTabContainer) panel.newTabCtx = 'none'
       if (panel.moveTabCtx !== DEFAULT_CONTAINER_ID && !moveTabContainer) panel.moveTabCtx = 'none'
     }
@@ -679,8 +679,8 @@ async function updateSidebar(newConfig?: SidebarConfig): Promise<void> {
   const oldNavItems = Sidebar.reactive.nav
   Sidebar.reactive.nav = newConfig.nav
 
-  // Reset url rules
-  Sidebar.urlRules = []
+  // // Reset url rules
+  // Sidebar.urlRules = []
 
   const prevHasTabsPanels = Sidebar.hasTabs
   const prevHasBookmarksPanels = Sidebar.hasBookmarks
@@ -713,7 +713,7 @@ async function updateSidebar(newConfig?: SidebarConfig): Promise<void> {
       const newTabContainer = panel.newTabCtx ? Containers.reactive.byId[panel.newTabCtx] : null
       const moveTabContainer = panel.moveTabCtx ? Containers.reactive.byId[panel.moveTabCtx] : null
 
-      if (panel.urlRulesActive && panel.urlRules) parsePanelUrlRules(panel)
+      // if (panel.urlRulesActive && panel.urlRules) parsePanelUrlRules(panel)
       if (panel.newTabCtx !== DEFAULT_CONTAINER_ID && !newTabContainer) panel.newTabCtx = 'none'
       if (panel.moveTabCtx !== DEFAULT_CONTAINER_ID && !moveTabContainer) panel.moveTabCtx = 'none'
     }
@@ -1218,7 +1218,7 @@ export function unloadPanelType(type: PanelType): void {
   else if (type === PanelType.history) History.unload()
 }
 
-/**
+/** TODO: Remove
  * Find most appropriate tabs panel id for given url
  */
 export function findTabsPanelForUrl(url: string, excludedPanelId?: ID): ID | undefined {
