@@ -2222,7 +2222,6 @@ export function createTabAfter(tabId: ID): void {
     index,
     cookieStoreId: targetTab.cookieStoreId,
     windowId: Windows.id,
-    openerTabId: parentId >= 0 ? parentId : undefined,
   })
 }
 
@@ -2233,11 +2232,14 @@ export function createChildTab(tabId: ID, url?: string, containerId?: string): v
   const targetTab = Tabs.byId[tabId]
   if (!targetTab) return
 
+  const targetIndex = targetTab.index + 1
+
+  setNewTabPosition(targetIndex, targetTab.id, targetTab.panelId)
+
   const config: browser.tabs.CreateProperties = {
-    index: targetTab.index + 1,
+    index: targetIndex,
     cookieStoreId: targetTab.cookieStoreId,
     windowId: Windows.id,
-    openerTabId: targetTab.id,
   }
 
   if (url) config.url = url
@@ -3028,7 +3030,6 @@ export async function createFromDragEvent(e: DragEvent, dst: DstPlaceInfo): Prom
         active: true,
         url: result.url,
         index: dst.index,
-        openerTabId: dst.parentId < 0 ? undefined : dst.parentId,
         cookieStoreId: container?.id,
         windowId: Windows.id,
         pinned: dst.pinned,
@@ -3045,7 +3046,6 @@ export async function createFromDragEvent(e: DragEvent, dst: DstPlaceInfo): Prom
       const tab = await browser.tabs.create({
         active: true,
         index: dst.index,
-        openerTabId: dst.parentId < 0 ? undefined : dst.parentId,
         cookieStoreId: container?.id,
         windowId: Windows.id,
         pinned: dst.pinned,

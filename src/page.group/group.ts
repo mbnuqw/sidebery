@@ -363,16 +363,8 @@ function createTabEl(info: GroupedTabInfo, clickHandler: (e: MouseEvent) => void
 
   const reloadBtnEl = createTabButton('#icon_reload', 'reload-btn', event => {
     event.stopPropagation()
-    if (event.button === 0) Msg.req(InstanceType.bg, 'tabsApiProxy', 'reload', info.id)
-    if (event.button === 1) {
-      const index = tabs.findIndex(t => t.id === info.id)
-      Msg.req(InstanceType.bg, 'tabsApiProxy', 'create', {
-        url: info.url,
-        index: groupTabIndex + index + 1,
-        openerTabId: info.id,
-        active: false,
-        windowId: groupWinId,
-      })
+    if (event.button === 0 || event.button === 1) {
+      Msg.req(InstanceType.bg, 'tabsApiProxy', 'reload', info.id)
     }
   })
   ctrlsEl.appendChild(reloadBtnEl)

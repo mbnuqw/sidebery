@@ -165,7 +165,6 @@ export async function groupTabs(tabIds: ID[], conf: GroupConfig = {}): Promise<v
     active: !!conf.active,
     cookieStoreId: tabs[0].cookieStoreId,
     index: tabs[0].index,
-    openerTabId: tabs[0].parentId < 0 ? undefined : tabs[0].parentId,
     url: Utils.createGroupUrl(groupTitle, conf),
     windowId: Windows.id,
   })
