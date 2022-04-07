@@ -1311,6 +1311,18 @@ export function playTabMedia(id?: ID): void {
     allFrames: true,
   })
 }
+export function resetPausedMediaState(panelId: ID): void {
+  const panel = Sidebar.reactive.panelsById[panelId]
+  if (!Utils.isTabsPanel(panel)) return
+
+  for (const rTab of panel.tabs) {
+    const tab = Tabs.byId[rTab.id]
+    if (tab && tab.mediaPaused) {
+      tab.mediaPaused = false
+      rTab.mediaPaused = false
+    }
+  }
+}
 export function pauseTabsMediaOfPanel(id: ID): void {
   if (!Permissions.reactive.webData) {
     SetupPage.open('all-urls')

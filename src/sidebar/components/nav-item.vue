@@ -230,7 +230,8 @@ function onAudioMouseDown(e: MouseEvent): void {
   } else if (audioState.value === AudioState.Muted) {
     unmuteTabs()
   } else if (audioState.value === AudioState.Paused) {
-    playMedia()
+    if (e.button === 0) playMedia()
+    else if (e.button === 1) Tabs.resetPausedMediaState(props.item.id)
   }
 }
 </script>

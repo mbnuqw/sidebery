@@ -309,15 +309,21 @@ function onDragStart(e: DragEvent): void {
   }
 }
 
-function onAudioMouseDown(e: MouseEvent, tab: ReactiveTab): void {
+function onAudioMouseDown(e: MouseEvent, rTab: ReactiveTab): void {
   if (e.button === 0) {
-    if (!tab.mediaPaused) Tabs.remuteTabs([tab.id])
-    else Tabs.playTabMedia(tab.id)
+    if (!rTab.mediaPaused) Tabs.remuteTabs([rTab.id])
+    else Tabs.playTabMedia(rTab.id)
   }
 
   if (e.button === 1) {
-    if (!tab.mediaPaused) Tabs.pauseTabMedia(tab.id)
-    else Tabs.playTabMedia(tab.id)
+    if (!rTab.mediaPaused) Tabs.pauseTabMedia(rTab.id)
+    else {
+      const tab = Tabs.byId[props.tab.id]
+      if (tab) {
+        tab.mediaPaused = false
+        rTab.mediaPaused = false
+      }
+    }
   }
 }
 
