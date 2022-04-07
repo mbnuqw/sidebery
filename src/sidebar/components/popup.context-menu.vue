@@ -2,119 +2,121 @@
 .CtxMenu(:data-active="isActive" @mousedown.stop @mouseup.stop)
   Transition(name="menu" type="transition"): .container(v-show="state.tickActive")
     .box(ref="tickEl" :style="state.tickPosStyle")
-      Transition(name="sub-menu" type="transition")
-        .sub-menu-box(v-if="state.sub" @click="closeSubMenu")
-          .sub-menu(@click.stop)
-            ScrollBox
-              .opt(@click="closeSubMenu")
-                .icon-box
-                  svg.icon.-rotate90: use(xlink:href="#icon_expand")
-                .label.-header {{state.sub.name}}
-              .opt(:data-separator="true")
-              .opt(
-                v-for="opt in state.sub.opts"
-                :data-selected="isSelected(opt)"
-                :data-separator="opt.type === 'separator'"
-                :data-inactive="opt.inactive"
-                :data-color="opt.color ? opt.color : false"
-                :title="opt.tooltip ?? opt.label"
-                @mousedown="onMouseDown($event, opt)"
-                @mouseup="onMouseUp($event, opt)")
-                .icon-box(v-if="Settings.reactive.ctxMenuRenderIcons")
-                  svg.badge(v-if="opt.badge" :data-img="!!opt.img"): use(:xlink:href="'#' + opt.badge")
-                  img.icon(v-if="opt.img" :src="opt.img")
-                  svg.icon(v-else-if="opt.icon"): use(:xlink:href="'#' + opt.icon")
-                .label {{opt.label}}
-      div(v-for="group in state.tickBlocks" :class="`${group.type}-group`")
-        .icon-opt(
-          v-if="group.type === 'inline'"
-          v-for="opt in group.opts"
-          :data-width="btnWidth(group.opts)"
-          :data-selected="isSelected(opt)"
-          :data-separator="opt.type === 'separator'"
-          :data-color="opt.color ? opt.color : false"
-          :data-inactive="opt.inactive"
-          :title="opt.tooltip ?? opt.label"
-          @mousedown="onMouseDown($event, opt)"
-          @mouseup="onMouseUp($event, opt)")
-          svg.badge(v-if="opt.badge" :data-img="!!opt.img"): use(:xlink:href="'#' + opt.badge")
-          img.icon(v-if="opt.img" :src="opt.img")
-          svg.icon(v-else): use(:xlink:href="'#' + opt.icon")
-        .opt(
-          v-if="group.type === 'list'"
-          v-for="opt in group.opts"
-          :data-selected="isSelected(opt)"
-          :data-separator="opt.type === 'separator'"
-          :data-inactive="opt.inactive"
-          :data-color="opt.color ? opt.color : false"
-          :title="opt.tooltip ?? opt.label"
-          @mousedown="onMouseDown($event, opt)"
-          @mouseup="onMouseUp($event, opt)")
-          .icon-box(v-if="Settings.reactive.ctxMenuRenderIcons")
+      ScrollBox
+        Transition(name="sub-menu" type="transition")
+          .sub-menu-box(v-if="state.sub" @click="closeSubMenu")
+            .sub-menu(@click.stop)
+              ScrollBox
+                .opt(@click="closeSubMenu")
+                  .icon-box
+                    svg.icon.-rotate90: use(xlink:href="#icon_expand")
+                  .label.-header {{state.sub.name}}
+                .opt(:data-separator="true")
+                .opt(
+                  v-for="opt in state.sub.opts"
+                  :data-selected="isSelected(opt)"
+                  :data-separator="opt.type === 'separator'"
+                  :data-inactive="opt.inactive"
+                  :data-color="opt.color ? opt.color : false"
+                  :title="opt.tooltip ?? opt.label"
+                  @mousedown="onMouseDown($event, opt)"
+                  @mouseup="onMouseUp($event, opt)")
+                  .icon-box(v-if="Settings.reactive.ctxMenuRenderIcons")
+                    svg.badge(v-if="opt.badge" :data-img="!!opt.img"): use(:xlink:href="'#' + opt.badge")
+                    img.icon(v-if="opt.img" :src="opt.img")
+                    svg.icon(v-else-if="opt.icon"): use(:xlink:href="'#' + opt.icon")
+                  .label {{opt.label}}
+        div(v-for="group in state.tickBlocks" :class="`${group.type}-group`")
+          .icon-opt(
+            v-if="group.type === 'inline'"
+            v-for="opt in group.opts"
+            :data-width="btnWidth(group.opts)"
+            :data-selected="isSelected(opt)"
+            :data-separator="opt.type === 'separator'"
+            :data-color="opt.color ? opt.color : false"
+            :data-inactive="opt.inactive"
+            :title="opt.tooltip ?? opt.label"
+            @mousedown="onMouseDown($event, opt)"
+            @mouseup="onMouseUp($event, opt)")
             svg.badge(v-if="opt.badge" :data-img="!!opt.img"): use(:xlink:href="'#' + opt.badge")
             img.icon(v-if="opt.img" :src="opt.img")
-            svg.icon(v-else-if="opt.icon"): use(:xlink:href="'#' + opt.icon")
-          .label {{opt.label}}
-          .icon-box(v-if="opt.sub")
-            svg.icon.-rotate-90: use(xlink:href="#icon_expand")
+            svg.icon(v-else): use(:xlink:href="'#' + opt.icon")
+          .opt(
+            v-if="group.type === 'list'"
+            v-for="opt in group.opts"
+            :data-selected="isSelected(opt)"
+            :data-separator="opt.type === 'separator'"
+            :data-inactive="opt.inactive"
+            :data-color="opt.color ? opt.color : false"
+            :title="opt.tooltip ?? opt.label"
+            @mousedown="onMouseDown($event, opt)"
+            @mouseup="onMouseUp($event, opt)")
+            .icon-box(v-if="Settings.reactive.ctxMenuRenderIcons")
+              svg.badge(v-if="opt.badge" :data-img="!!opt.img"): use(:xlink:href="'#' + opt.badge")
+              img.icon(v-if="opt.img" :src="opt.img")
+              svg.icon(v-else-if="opt.icon"): use(:xlink:href="'#' + opt.icon")
+            .label {{opt.label}}
+            .icon-box(v-if="opt.sub")
+              svg.icon.-rotate-90: use(xlink:href="#icon_expand")
   Transition(name="menu" type="transition"): .container(v-show="state.tackActive")
     .box(ref="tackEl" :style="state.tackPosStyle")
-      Transition(name="sub-menu" type="transition")
-        .sub-menu-box(v-if="state.sub" @click="closeSubMenu")
-          .sub-menu(@click.stop)
-            ScrollBox
-              .opt(@click="closeSubMenu")
-                .icon-box
-                  svg.icon.-rotate90: use(xlink:href="#icon_expand")
-                .label.-header {{state.sub.name}}
-              .opt(:data-separator="true")
-              .opt(
-                v-for="opt in state.sub.opts"
-                :data-selected="isSelected(opt)"
-                :data-separator="opt.type === 'separator'"
-                :data-inactive="opt.inactive"
-                :data-color="opt.color ? opt.color : false"
-                :title="opt.tooltip ?? opt.label"
-                @mousedown="onMouseDown($event, opt)"
-                @mouseup="onMouseUp($event, opt)")
-                .icon-box(v-if="Settings.reactive.ctxMenuRenderIcons")
-                  svg.badge(v-if="opt.badge" :data-img="!!opt.img"): use(:xlink:href="'#' + opt.badge")
-                  img.icon(v-if="opt.img" :src="opt.img")
-                  svg.icon(v-else-if="opt.icon"): use(:xlink:href="'#' + opt.icon")
-                .label {{opt.label}}
-      div(v-for="group in state.tackBlocks" :class="`${group.type}-group`")
-        .icon-opt(
-          v-if="group.type === 'inline'"
-          v-for="opt in group.opts"
-          :data-width="btnWidth(group.opts)"
-          :data-selected="isSelected(opt)"
-          :data-separator="opt.type === 'separator'"
-          :data-color="opt.color ? opt.color : false"
-          :data-inactive="opt.inactive"
-          :title="opt.tooltip ?? opt.label"
-          @mousedown="onMouseDown($event, opt)"
-          @mouseup="onMouseUp($event, opt)")
-          svg.badge(v-if="opt.badge" :data-img="!!opt.img"): use(:xlink:href="'#' + opt.badge")
-          img.icon(v-if="opt.img" :src="opt.img")
-          svg.icon(v-else): use(:xlink:href="'#' + opt.icon")
-        .opt(
-          v-if="group.type === 'list'"
-          v-for="(opt, i) in group.opts"
-          :key="opt.label"
-          :data-selected="isSelected(opt)"
-          :data-separator="opt.type === 'separator'"
-          :data-inactive="opt.inactive"
-          :data-color="opt.color ? opt.color : false"
-          :title="opt.tooltip ?? opt.label"
-          @mousedown="onMouseDown($event, opt)"
-          @mouseup="onMouseUp($event, opt)")
-          .icon-box(v-if="Settings.reactive.ctxMenuRenderIcons")
+      ScrollBox
+        Transition(name="sub-menu" type="transition")
+          .sub-menu-box(v-if="state.sub" @click="closeSubMenu")
+            .sub-menu(@click.stop)
+              ScrollBox
+                .opt(@click="closeSubMenu")
+                  .icon-box
+                    svg.icon.-rotate90: use(xlink:href="#icon_expand")
+                  .label.-header {{state.sub.name}}
+                .opt(:data-separator="true")
+                .opt(
+                  v-for="opt in state.sub.opts"
+                  :data-selected="isSelected(opt)"
+                  :data-separator="opt.type === 'separator'"
+                  :data-inactive="opt.inactive"
+                  :data-color="opt.color ? opt.color : false"
+                  :title="opt.tooltip ?? opt.label"
+                  @mousedown="onMouseDown($event, opt)"
+                  @mouseup="onMouseUp($event, opt)")
+                  .icon-box(v-if="Settings.reactive.ctxMenuRenderIcons")
+                    svg.badge(v-if="opt.badge" :data-img="!!opt.img"): use(:xlink:href="'#' + opt.badge")
+                    img.icon(v-if="opt.img" :src="opt.img")
+                    svg.icon(v-else-if="opt.icon"): use(:xlink:href="'#' + opt.icon")
+                  .label {{opt.label}}
+        div(v-for="group in state.tackBlocks" :class="`${group.type}-group`")
+          .icon-opt(
+            v-if="group.type === 'inline'"
+            v-for="opt in group.opts"
+            :data-width="btnWidth(group.opts)"
+            :data-selected="isSelected(opt)"
+            :data-separator="opt.type === 'separator'"
+            :data-color="opt.color ? opt.color : false"
+            :data-inactive="opt.inactive"
+            :title="opt.tooltip ?? opt.label"
+            @mousedown="onMouseDown($event, opt)"
+            @mouseup="onMouseUp($event, opt)")
             svg.badge(v-if="opt.badge" :data-img="!!opt.img"): use(:xlink:href="'#' + opt.badge")
             img.icon(v-if="opt.img" :src="opt.img")
-            svg.icon(v-else-if="opt.icon"): use(:xlink:href="'#' + opt.icon")
-          .label {{opt.label}}
-          .icon-box(v-if="opt.sub")
-            svg.icon.-rotate-90: use(xlink:href="#icon_expand")
+            svg.icon(v-else): use(:xlink:href="'#' + opt.icon")
+          .opt(
+            v-if="group.type === 'list'"
+            v-for="(opt, i) in group.opts"
+            :key="opt.label"
+            :data-selected="isSelected(opt)"
+            :data-separator="opt.type === 'separator'"
+            :data-inactive="opt.inactive"
+            :data-color="opt.color ? opt.color : false"
+            :title="opt.tooltip ?? opt.label"
+            @mousedown="onMouseDown($event, opt)"
+            @mouseup="onMouseUp($event, opt)")
+            .icon-box(v-if="Settings.reactive.ctxMenuRenderIcons")
+              svg.badge(v-if="opt.badge" :data-img="!!opt.img"): use(:xlink:href="'#' + opt.badge")
+              img.icon(v-if="opt.img" :src="opt.img")
+              svg.icon(v-else-if="opt.icon"): use(:xlink:href="'#' + opt.icon")
+            .label {{opt.label}}
+            .icon-box(v-if="opt.sub")
+              svg.icon.-rotate-90: use(xlink:href="#icon_expand")
 </template>
 
 <script lang="ts" setup>
