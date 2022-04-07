@@ -78,6 +78,7 @@ export const Sidebar = {
   urlRules: [] as UrlRule[],
   lastTabsPanelId: NOID,
   scrollPositions: {} as Record<ID, number>,
+  convertingPanelLock: false,
 
   panelsTop: 0,
   tabHeight: 0,

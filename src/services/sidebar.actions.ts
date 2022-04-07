@@ -1569,8 +1569,14 @@ export function updateSidebarTitle(delay = 456): void {
 }
 
 export async function convertToBookmarksPanel(panel: TabsPanel): Promise<void> {
+  if (Sidebar.convertingPanelLock) return
+  Sidebar.convertingPanelLock = true
+
   const index = Sidebar.reactive.nav.indexOf(panel.id)
-  if (index === -1) return
+  if (index === -1) {
+    Sidebar.convertingPanelLock = false
+    return
+  }
 
   const isActive = Sidebar.reactive.activePanelId === panel.id
 
@@ -1600,6 +1606,7 @@ export async function convertToBookmarksPanel(panel: TabsPanel): Promise<void> {
     })
     if (!result) {
       Notifications.finishProgress(notif)
+      Sidebar.convertingPanelLock = false
       return
     }
     if (result.location) targetFolderId = result.location
@@ -1610,6 +1617,7 @@ export async function convertToBookmarksPanel(panel: TabsPanel): Promise<void> {
     await Sidebar.bookmarkTabsPanel(panel.id, true, true, targetFolderId)
   } catch {
     Notifications.finishProgress(notif)
+    Sidebar.convertingPanelLock = false
     return
   }
 
@@ -1622,6 +1630,7 @@ export async function convertToBookmarksPanel(panel: TabsPanel): Promise<void> {
   const allRemoved = await Tabs.isRemovingFinished()
   if (!allRemoved) {
     Notifications.finishProgress(notif)
+    Sidebar.convertingPanelLock = false
     return Logs.warn('Sidebar.convertToBookmarksPanel: Cannot remove panel: Panel is not empty')
   }
 
@@ -1658,11 +1667,18 @@ export async function convertToBookmarksPanel(panel: TabsPanel): Promise<void> {
 
   Notifications.finishProgress(notif, 2000)
   notif.title = translate('notif.done')
+  Sidebar.convertingPanelLock = false
 }
 
 export async function convertToTabsPanel(panel: BookmarksPanel): Promise<void> {
+  if (Sidebar.convertingPanelLock) return
+  Sidebar.convertingPanelLock = true
+
   const index = Sidebar.reactive.nav.indexOf(panel.id)
-  if (index === -1) return
+  if (index === -1) {
+    Sidebar.convertingPanelLock = false
+    return
+  }
 
   const notif = Notifications.progress({
     icon: panel.iconIMG || (panel.iconSVG ? '#' + panel.iconSVG : undefined),
@@ -1678,6 +1694,7 @@ export async function convertToTabsPanel(panel: BookmarksPanel): Promise<void> {
   const rootFolder = Bookmarks.reactive.byId[panel.rootId]
   if (!rootFolder) {
     Notifications.finishProgress(notif)
+    Sidebar.convertingPanelLock = false
     return Logs.warn('Sidebar.convertToTabsPanel: No root folder')
   }
 
@@ -1698,6 +1715,7 @@ export async function convertToTabsPanel(panel: BookmarksPanel): Promise<void> {
     await Sidebar.restoreFromBookmarks(tabsPanel, true)
   } catch {
     Notifications.finishProgress(notif)
+    Sidebar.convertingPanelLock = false
     return Logs.warn('Sidebar.convertToTabsPanel: Cannot restore tabs')
   }
 
@@ -1714,6 +1732,7 @@ export async function convertToTabsPanel(panel: BookmarksPanel): Promise<void> {
 
   Notifications.finishProgress(notif, 2000)
   notif.title = translate('notif.done')
+  Sidebar.convertingPanelLock = false
 }
 
 export function startFastEditingOfPanel(panelId: ID, removeOnCancel: boolean): Promise<boolean> {
