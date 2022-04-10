@@ -9,7 +9,7 @@ const COPY = {
     handler: handleManifest,
   },
   './src/_locales/dict.browser.json': {
-    path: `${ADDON_PATH}/_locales`,
+    path: `${ADDON_PATH}/_locales/`,
     handler: handleLocales,
   },
   './src/assets/bg': `${ADDON_PATH}/assets/bg`,
@@ -190,6 +190,7 @@ async function handleManifest(srcPath, dstPath) {
 }
 
 async function handleLocales(srcPath, dstPath) {
+  const dirPath = path.dirname(dstPath)
   const srcData = await fs.promises.readFile(srcPath, 'utf-8')
   const jsonData = JSON.parse(srcData)
 
@@ -211,6 +212,6 @@ async function handleLocales(srcPath, dstPath) {
   for (const lang of Object.keys(langs)) {
     const dict = langs[lang]
     const jsonStr = JSON.stringify(dict)
-    await fs.promises.writeFile(path.join(dstPath, `${lang}.messages.json`), jsonStr)
+    await fs.promises.writeFile(path.join(dirPath, `${lang}.messages.json`), jsonStr)
   }
 }
