@@ -20,8 +20,8 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import { Windows } from 'src/services/windows'
-import ScrollBox from './scroll-box.vue'
-import LoadingDots from './loading-dots.vue'
+import ScrollBox from 'src/components/scroll-box.vue'
+import LoadingDots from 'src/components/loading-dots.vue'
 import { Settings } from 'src/services/settings'
 
 const isReady = computed((): boolean => {

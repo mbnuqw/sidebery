@@ -36,7 +36,7 @@
 import { computed, ref, onMounted } from 'vue'
 import { translate } from 'src/dict'
 import { Sidebar } from 'src/services/sidebar'
-import LoadingDots from '../sidebar/components/loading-dots.vue'
+import LoadingDots from 'src/components/loading-dots.vue'
 import { BackupData, InstanceType, Stored } from 'src/types'
 import Utils from 'src/utils'
 import { Msg } from 'src/services/msg'

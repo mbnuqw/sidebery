@@ -34,7 +34,7 @@ import MenuEditorView from './components/menu-editor.vue'
 import StylesEditorView from './components/styles-editor.vue'
 import SnapshotsView from './components/snapshots.vue'
 import StorageView from './components/storage.vue'
-import BookmarksPopup from '../sidebar/components/popup.bookmarks.vue'
+import BookmarksPopup from 'src/components/popup.bookmarks.vue'
 import UpgradeScreen from 'src/components/upgrade-screen.vue'
 import Details from './components/settings.details.vue'
 

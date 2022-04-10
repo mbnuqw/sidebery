@@ -127,7 +127,7 @@ import { Settings } from 'src/services/settings'
 import { Selection } from 'src/services/selection'
 import { Menu } from 'src/services/menu'
 import { Mouse } from 'src/services/mouse'
-import ScrollBox from 'src/sidebar/components/scroll-box.vue'
+import ScrollBox from 'src/components/scroll-box.vue'
 
 let lastPhase: 'tick' | 'tack' = 'tack'
 

@@ -10,7 +10,7 @@ Transition(name="panel-placeholder")
 
 <script lang="ts" setup>
 import { SetupPage } from 'src/services/setup-page'
-import LoadingDots from './loading-dots.vue'
+import LoadingDots from 'src/components/loading-dots.vue'
 
 const props = defineProps<{
   isLoading?: boolean
