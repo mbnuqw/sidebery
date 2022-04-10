@@ -7,6 +7,9 @@ type DOMEvent<E extends Event, T = any> = E & {
   currentTarget: T
 }
 
+type PlurFn = (n?: number | string) => string
+type Translations = Record<string, Record<string, PlurFn | string>>
+
 interface MozFocusEvent extends FocusEvent {
   explicitOriginalTarget: Node | Element
 }
@@ -17,7 +20,5 @@ interface Window {
   groupTabId?: ID
   groupWinId?: ID
 
-  discardTimeout?: number
-
-  sideberyDictionaries?: Record<string, Record<string, ((n?: number | string) => string) | string>>
+  translations: Record<string, Record<string, PlurFn | string>>
 }

@@ -1,12 +1,12 @@
-import { PlurFn } from 'src/types'
-import en from 'src/_locales/en'
-import ru from 'src/_locales/ru'
+const LANG_REG = browser.i18n.getUILanguage().replace('-', '_')
+export const LANG = LANG_REG.slice(0, 2)
 
-export const LANG = browser.i18n.getUILanguage().slice(0, 2)
-
-// Set dict
-let dict: Record<string, PlurFn | string> = en
-if (LANG === 'ru') dict = ru
+// Set dictionary
+const dict: Record<string, PlurFn | string> = {}
+for (const key of Object.keys(window.translations)) {
+  const prop = window.translations[key]
+  dict[key] = prop[LANG_REG] ?? prop[LANG] ?? prop.en
+}
 
 function isString(r: string | PlurFn): r is string {
   if (r.constructor === String) return true
@@ -17,7 +17,7 @@ export function translate(id?: string, plurNum?: number | string): string {
   if (!id) return ''
 
   const record = dict[id]
-  if (!record) return id
+  if (record === undefined) return id
 
   if (isString(record)) return record
   else return record(plurNum)

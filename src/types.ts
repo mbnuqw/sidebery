@@ -21,8 +21,6 @@ export * from './types/styles'
 export * from './types/bookmarks'
 export * from './types/history'
 
-export type PlurFn = (n?: number | string) => string
-
 export interface ConfirmDialog {
   msg: string
   ok: () => void

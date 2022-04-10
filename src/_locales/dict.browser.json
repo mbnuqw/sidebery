@@ -1,0 +1,262 @@
+{
+  "ExtName": {
+    "en": "Sidebery",
+    "ru": "Sidebery"
+  },
+  "ExtDesc": {
+    "en": "Addon for managing tabs, containers (contextual identities) and bookmarks in sidebar. Supports both flat and tree tabs layouts, per-container include/exclude rules, proxy configs for each container and much more.",
+    "ru": "Управление вкладками и закладками в боковой панели."
+  },
+  "ActionTitle": {
+    "en": "Toggle Sidebery sidebar",
+    "ru": "Открыть Sidebery"
+  },
+
+  "KbOpenSidebarPanel": {
+    "en": "Open/Close sidebar panel",
+    "ru": "Открыть/Закрыть панель"
+  },
+  "KbNextPanel": {
+    "en": "Switch to next panel",
+    "ru": "Переключиться на следующую панель"
+  },
+  "KbPrevPanel": {
+    "en": "Switch to previous panel",
+    "ru": "Переключиться на предыдущую панель"
+  },
+  "KbOpenNewTabInCurrPanel": {
+    "en": "Open new tab in active panel",
+    "ru": "Открыть вкладку в активной панели"
+  },
+  "KbOpenNewTabAfter": {
+    "en": "Open new tab after active tab",
+    "ru": "Открыть вкладку после активной вкладки"
+  },
+  "KbOpenNewTabAsFirstChild": {
+    "en": "Open new tab as the first child of active tab",
+    "ru": "Открыть дочернюю вкладку (в начале ветви)"
+  },
+  "KbOpenNewTabAsLastChild": {
+    "en": "Open new tab as the last child of active tab",
+    "ru": "Открыть дочернюю вкладку (в конце ветви)"
+  },
+  "KbRm": {
+    "en": "Remove selected items or active tab",
+    "ru": "Удалить выделенные элементы или активную вкладку"
+  },
+  "KbSelectAll": {
+    "en": "Select all",
+    "ru": "Выделить все"
+  },
+  "KbUp": {
+    "en": "Select up",
+    "ru": "Выделить вверх"
+  },
+  "KbDown": {
+    "en": "Select down",
+    "ru": "Выделить вниз"
+  },
+  "KbUpShift": {
+    "en": "Select range up",
+    "ru": "Выделить область вверх"
+  },
+  "KbDownShift": {
+    "en": "Select range down",
+    "ru": "Выделить область вниз"
+  },
+  "KbActivate": {
+    "en": "Activate selection",
+    "ru": "Активировать выделенное"
+  },
+  "KbMenu": {
+    "en": "Open menu",
+    "ru": "Открыть меню"
+  },
+  "KbResetSelection": {
+    "en": "Reset selection",
+    "ru": "Сбросить выделение"
+  },
+  "KbFoldBranch": {
+    "en": "Fold selected branch",
+    "ru": "Свернуть выделенную ветвь"
+  },
+  "KbExpandBranch": {
+    "en": "Expand selected branch",
+    "ru": "Развернуть выделенную ветвь"
+  },
+  "KbFoldInactBranches": {
+    "en": "Fold inactive branches",
+    "ru": "Свернуть неактивные ветви вкладок"
+  },
+  "KbActPrevActTab": {
+    "en": "Active tabs history: Back",
+    "ru": "История активных вкладок: Назад"
+  },
+  "KbActNextActTab": {
+    "en": "Active tabs history: Next",
+    "ru": "История активных вкладок: Вперед"
+  },
+  "KbActPanelPrevActTab": {
+    "en": "Active tabs history of panel: Back",
+    "ru": "История активных вкладок панели: Назад"
+  },
+  "KbActPanelNextActTab": {
+    "en": "Active tabs history of panel: Next",
+    "ru": "История активных вкладок панели: Вперед"
+  },
+  "KbMoveTabToAct": {
+    "en": "Move selected tabs to the active tab",
+    "ru": "Вложить выделенные вкладки в активную вкладку"
+  },
+  "KbTabsIndent": {
+    "en": "Increase tab's tree level (indent)",
+    "ru": "Увеличить уровень вкладки"
+  },
+  "KbTabsOutdent": {
+    "en": "Decrease tab's tree level (outdent)",
+    "ru": "Уменьшить уровень вкладки"
+  },
+  "KbMoveTabsUp": {
+    "en": "Move tabs up",
+    "ru": "Переместить вкладки вверх"
+  },
+  "KbMoveTabsDown": {
+    "en": "Move tabs down",
+    "ru": "Переместить вкладки вниз"
+  },
+  "KbCreateSnapshot": {
+    "en": "Create snapshot",
+    "ru": "Создать снепшот"
+  },
+  "KbSwitchToPanel0": {
+    "en": "Switch to first panel",
+    "ru": "Переключиться на первую панель"
+  },
+  "KbSwitchToPanel1": {
+    "en": "Switch to second panel",
+    "ru": "Переключиться на вторую панель"
+  },
+  "KbSwitchToPanel2": {
+    "en": "Switch to third panel",
+    "ru": "Переключиться на третью панель"
+  },
+  "KbSwitchToPanel3": {
+    "en": "Switch to fourth panel",
+    "ru": "Переключиться на четвертую панель"
+  },
+  "KbSwitchToPanel4": {
+    "en": "Switch to fifth panel",
+    "ru": "Переключиться на пятую панель"
+  },
+  "KbSwitchToPanel5": {
+    "en": "Switch to sixth panel",
+    "ru": "Переключиться на шестую панель"
+  },
+  "KbSwitchToPanel6": {
+    "en": "Switch to seventh panel",
+    "ru": "Переключиться на седьмую панель"
+  },
+  "KbSwitchToPanel7": {
+    "en": "Switch to eighth panel",
+    "ru": "Переключиться на восьмую панель"
+  },
+  "KbSwitchToPanel8": {
+    "en": "Switch to ninth panel",
+    "ru": "Переключиться на девятую панель"
+  },
+  "KbSwitchToPanel9": {
+    "en": "Switch to tenth panel",
+    "ru": "Переключиться на десятую панель"
+  },
+  "KbMoveTabsToPanel0": {
+    "en": "Move selected (or active) tabs to first panel",
+    "ru": "Переместить выделенные (или активную) вкладки в первую панель"
+  },
+  "KbMoveTabsToPanel1": {
+    "en": "Move selected (or active) tabs to second panel",
+    "ru": "Переместить выделенные (или активную) вкладки во вторую панель"
+  },
+  "KbMoveTabsToPanel2": {
+    "en": "Move selected (or active) tabs to third panel",
+    "ru": "Переместить выделенные (или активную) вкладки в третью панель"
+  },
+  "KbMoveTabsToPanel3": {
+    "en": "Move selected (or active) tabs to fourth panel",
+    "ru": "Переместить выделенные (или активную) вкладки в четвертую панель"
+  },
+  "KbMoveTabsToPanel4": {
+    "en": "Move selected (or active) tabs to fifth panel",
+    "ru": "Переместить выделенные (или активную) вкладки в пятую панель"
+  },
+  "KbMoveTabsToPanel5": {
+    "en": "Move selected (or active) tabs to sixth panel",
+    "ru": "Переместить выделенные (или активную) вкладки в шестую панель"
+  },
+  "KbMoveTabsToPanel6": {
+    "en": "Move selected (or active) tabs to seventh panel",
+    "ru": "Переместить выделенные (или активную) вкладки в седьмую панель"
+  },
+  "KbMoveTabsToPanel7": {
+    "en": "Move selected (or active) tabs to eighth panel",
+    "ru": "Переместить выделенные (или активную) вкладки в восьмую панель"
+  },
+  "KbMoveTabsToPanel8": {
+    "en": "Move selected (or active) tabs to ninth panel",
+    "ru": "Переместить выделенные (или активную) вкладки в девятую панель"
+  },
+  "KbMoveTabsToPanel9": {
+    "en": "Move selected (or active) tabs to tenth panel",
+    "ru": "Переместить выделенные (или активную) вкладки в десятую панель"
+  },
+  "KbSearch": {
+    "en": "Search",
+    "ru": "Поиск"
+  },
+
+  "proxy_popup_title_prefix": {
+    "en": "Proxy for \"",
+    "ru": "Прокси контейнера '"
+  },
+  "proxy_popup_title_postfix": {
+    "en": "\" container",
+    "ru": "'"
+  },
+
+  "unhandled_url": {
+    "en": "Unhandled URL",
+    "ru": "Неподдерживаемый URL"
+  },
+  "unavailable_url": {
+    "en": "Unavailable URL",
+    "ru": "Недоступный URL"
+  },
+  "page_title": {
+    "en": "Page title",
+    "ru": "Заголовок страницы"
+  },
+  "original_url": {
+    "en": "Original URL",
+    "ru": "Исходная ссылка"
+  },
+  "copy": {
+    "en": "Copy",
+    "ru": "Скопировать"
+  },
+  "copy_url": {
+    "en": "Copy URL",
+    "ru": "Скопировать ссылку"
+  },
+  "api_limit_info": {
+    "en": "Due to security-related API restrictions, Sidebery cannot open this link.",
+    "ru": "Из-за ограничений API, связанных с безопасностью, Sidebery не может открыть эту ссылку."
+  },
+  "api_limit_info_more": {
+    "en": "Read more about this.",
+    "ru": "Узнать больше"
+  },
+
+  "group_disconnected_warn": {
+    "en": "Cannot connect to the sidebar...",
+    "ru": "Невозможно подключиться к боковой панели..."
+  }
+}

@@ -1,15 +1,17 @@
 /* eslint no-console: off */
 const fs = require('fs')
 const path = require('path')
-const { IS_DEV, ADDON_PATH, treeToList, watch, log, logOk, VUE_DIST } = require('./utils')
+const { IS_DEV, ADDON_PATH, treeToList, watch, log, logOk, VUE_DIST, logErr } = require('./utils')
 
 const COPY = {
   './src/manifest.json': {
     path: `${ADDON_PATH}/`,
     handler: handleManifest,
   },
-  './src/_locales/en.messages.json': `${ADDON_PATH}/_locales/en/messages.json`,
-  './src/_locales/ru.messages.json': `${ADDON_PATH}/_locales/ru/messages.json`,
+  './src/_locales/dict.browser.json': {
+    path: `${ADDON_PATH}/_locales`,
+    handler: handleLocales,
+  },
   './src/assets/bg': `${ADDON_PATH}/assets/bg`,
   './src/assets/logo-native-dark.svg': `${ADDON_PATH}/assets/`,
   './src/assets/logo-native-light.svg': `${ADDON_PATH}/assets/`,
@@ -116,7 +118,7 @@ async function copyEntry(info) {
       if (f.file) {
         const srcPath = path.join(f.dir, f.file)
         const dstPath = path.join(destDir, f.file)
-        if (info.srcHandler) handleManifest(srcPath, dstPath)
+        if (info.srcHandler) await info.srcHandler(srcPath, dstPath)
         else await fs.promises.copyFile(srcPath, dstPath)
       } else await fs.promises.mkdir(destDir, { recursive: true })
     }
@@ -184,5 +186,31 @@ async function handleManifest(srcPath, dstPath) {
   // Copy
   else {
     return fs.promises.copyFile(srcPath, dstPath)
+  }
+}
+
+async function handleLocales(srcPath, dstPath) {
+  const srcData = await fs.promises.readFile(srcPath, 'utf-8')
+  const jsonData = JSON.parse(srcData)
+
+  const langs = {}
+
+  for (const key of Object.keys(jsonData)) {
+    const dict = jsonData[key]
+    if (!dict || typeof dict !== 'object') {
+      logErr(`Copy: Locales: No dictionary for: ${key}`)
+      break
+    }
+
+    for (const lang of Object.keys(dict)) {
+      if (!langs[lang]) langs[lang] = {}
+      langs[lang][key] = { message: dict[lang] }
+    }
+  }
+
+  for (const lang of Object.keys(langs)) {
+    const dict = langs[lang]
+    const jsonStr = JSON.stringify(dict)
+    await fs.promises.writeFile(path.join(dstPath, `${lang}.messages.json`), jsonStr)
   }
 }
