@@ -75,6 +75,7 @@ function reqSidebar<T extends InstanceType.sidebar, A extends ActionsKeys<T>>(
   return browser.runtime.sendMessage(msg)
 }
 
+let connectingTimeout: number | undefined
 function connectToBg(instanceType: InstanceType, windowId: ID): void {
   Logs.info('Msg: Connect to background')
 
@@ -82,10 +83,15 @@ function connectToBg(instanceType: InstanceType, windowId: ID): void {
 
   if (Msg.windowId === NOID) Msg.windowId = windowId
 
-  Msg.bgConnectTryCount = 0
   Msg.bg = browser.runtime.connect({ name: connectInfo })
   Msg.bg.onMessage.addListener(onMsgFromBgInFg)
   Msg.bg.onDisconnect.addListener(onBgDisconnect)
+
+  clearTimeout(connectingTimeout)
+  connectingTimeout = setTimeout(() => {
+    if (Msg.bg) Msg.bgConnectTryCount = 0
+    else Logs.err('Cannot connect to background process')
+  }, 120)
 }
 
 function onSidebarMsg<T extends InstanceType, A extends keyof Actions>(msg: Message<T, A>): void {
@@ -115,7 +121,8 @@ function onBgDisconnect(port: browser.runtime.Port): void {
 
   if (Msg.bgConnectTryCount++ >= 3) return
 
-  setTimeout(() => connectToBg(info.instanceType, Msg.windowId), 120)
+  clearTimeout(connectingTimeout)
+  connectingTimeout = setTimeout(() => connectToBg(info.instanceType, Msg.windowId), 120)
 }
 
 function onConnectToBgInBg(port: browser.runtime.Port) {
