@@ -12,7 +12,7 @@ import { Menu } from './menu'
 import { Windows } from './windows'
 import { History } from './history'
 
-export const INPUT_TIMEOUT = 150
+export const INPUT_TIMEOUT = 300
 
 export function init(): void {
   if (Settings.reactive.searchBarMode === 'static') Search.reactive.barIsShowed = true
