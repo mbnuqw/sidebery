@@ -38,7 +38,7 @@ async function copyAndWatch() {
   await copyAllEntries(entries)
 
   const tasks = entries
-    .filter(e => !e.isDir)
+    .filter(e => !e.srcIsDir)
     .map(e => {
       e.files = [e.src]
       return e
@@ -71,7 +71,7 @@ async function parseEntries() {
   const entriesInfo = []
   for (const src of Object.keys(COPY)) {
     const srcStats = await fs.promises.stat(src)
-    const info = { src, isDir: srcStats.isDirectory() }
+    const info = { src, srcIsDir: srcStats.isDirectory() }
 
     const dst = COPY[src]
     let dstPath
@@ -81,12 +81,14 @@ async function parseEntries() {
       if (dst.handler) info.srcHandler = dst.handler
     }
 
-    info.dst = path.resolve(dstPath)
-    if (dstPath.endsWith('/')) {
-      info.destDir = info.dst
-      if (!info.isDir) info.dst = path.join(info.dst, path.basename(src))
-    } else {
-      info.destDir = path.dirname(info.dst)
+    if (dstPath) {
+      info.dst = path.resolve(dstPath)
+      if (dstPath.endsWith('/')) {
+        info.destDir = info.dst
+        if (!info.srcIsDir) info.dst = path.join(info.dst, path.basename(src))
+      } else {
+        info.destDir = path.dirname(info.dst)
+      }
     }
 
     entriesInfo.push(info)
@@ -111,7 +113,7 @@ async function copyEntry(info) {
 
   const normSrc = path.normalize(info.src)
 
-  if (info.isDir) {
+  if (info.srcIsDir) {
     for (const f of await treeToList(normSrc)) {
       const destDir = path.normalize(f.dir.replace(normSrc, info.dst + path.sep))
 
@@ -212,6 +214,7 @@ async function handleLocales(srcPath, dstPath) {
   for (const lang of Object.keys(langs)) {
     const dict = langs[lang]
     const jsonStr = JSON.stringify(dict)
-    await fs.promises.writeFile(path.join(dirPath, `${lang}.messages.json`), jsonStr)
+    await fs.promises.mkdir(path.join(dirPath, lang), { recursive: true })
+    await fs.promises.writeFile(path.join(dirPath, lang, 'messages.json'), jsonStr)
   }
 }
