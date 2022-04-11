@@ -26,8 +26,10 @@ about: Something is not working
 ### Logs
 <details><code>
 <!-- To get logs: 
-     - Open DevTools for sidebery
-        (open this url in new tab: about:devtools-toolbox?id=%7B3c078156-979c-498b-8990-85f7987dd929%7D&type=extension)
-     - Navigate to "console" tab
-     - Copy and paste error messages here -->
+     - Open DevTools 
+       (open this url in new tab: about:devtools-toolbox?id=%7B3c078156-979c-498b-8990-85f7987dd929%7D&type=extension)
+     - Navigate to "console" tab,
+     - Click on the trash bin icon (at the top-left) to clear console,
+     - Then try to reproduce issue
+     - And if any messages appear, copy and paste them here -->
 </code></details>
