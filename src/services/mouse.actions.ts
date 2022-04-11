@@ -129,7 +129,13 @@ export function blockWheel(): void {
 }
 
 let longClickTimeout: number | undefined
-export function startLongClick(e: MouseEvent, type: LongClickTargetType, id: ID): void {
+export function startLongClick(
+  e: MouseEvent,
+  type: LongClickTargetType,
+  id: ID,
+  cb?: () => void
+): void {
+  clearTimeout(longClickTimeout)
   longClickTimeout = setTimeout(() => {
     if (DnD.reactive.isStarted) return
     Mouse.longClickApplied = true
@@ -159,6 +165,8 @@ export function startLongClick(e: MouseEvent, type: LongClickTargetType, id: ID)
     }
 
     longClickTimeout = undefined
+
+    if (cb && clickLock) cb()
   }, Settings.reactive.longClickDelay)
 }
 
