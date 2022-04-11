@@ -49,6 +49,7 @@ async function main(): Promise<void> {
     getTabsTreeData: Tabs.getTabsTreeData,
     moveTabsToThisWin: Tabs.moveToThisWin,
     openTabs: Tabs.open,
+    handleReopening: Tabs.handleReopening,
     getActivePanelInfo: Sidebar.getActivePanelInfo,
     startDrag: DnD.start,
     stopDrag: DnD.reset,

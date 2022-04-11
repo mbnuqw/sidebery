@@ -2716,7 +2716,6 @@ export async function applyUrlRules(url: string, tab: Tab): Promise<void> {
 }
 
 export function handleReopening(tabId: ID, newCtx: string): number | undefined {
-  // console.log(`[DEBUG] tabs.handleReopening(tabId: ${tabId}, newCtx: ${newCtx})`)
   const targetTab = Tabs.byId[tabId]
   if (!targetTab) return
 

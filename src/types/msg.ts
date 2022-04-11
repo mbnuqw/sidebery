@@ -62,6 +62,7 @@ export type SidebarActions = {
   startDrag: (info: DragInfo, dstType?: DropType) => void
   stopDrag: () => void
   getGroupInfo: (groupTabId: ID) => GroupInfo | null
+  handleReopening: (tabId: ID, newCtx: string) => number | undefined
 
   loadFavicons: () => void
   setFavicon: (domain: string, url: string, hash: number, icon: string) => void
