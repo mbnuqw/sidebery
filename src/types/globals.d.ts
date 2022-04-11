@@ -20,5 +20,5 @@ interface Window {
   groupTabId?: ID
   groupWinId?: ID
 
-  translations: Record<string, Record<string, PlurFn | string>>
+  translations: Record<string, Record<string, PlurFn | string>> | undefined
 }
