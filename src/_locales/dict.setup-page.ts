@@ -368,6 +368,10 @@ export const setupPageTranslations: Translations = {
     en: "Sidebery's data:",
     ru: 'Данные Sidebery:',
   },
+  'settings.permissions_btn': {
+    en: 'Permissions',
+    ru: 'Разрешения',
+  },
 
   // - Context menu
   'settings.ctx_menu_title': {

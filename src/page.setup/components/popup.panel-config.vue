@@ -471,7 +471,6 @@ async function toggleUrlRules(): Promise<void> {
   if (!props.conf.urlRulesActive) {
     if (!Permissions.reactive.webData) {
       window.location.hash = 'all-urls'
-      SetupPage.reactive.selectedPanel = null
       return
     }
   }

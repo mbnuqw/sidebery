@@ -1,9 +1,9 @@
 <template lang="pug">
-section(ref="el")
+.ConfigPopup(ref="rootEl" @wheel="onWheel")
   h2 {{translate('settings.permissions_title')}}
   .permission(
     ref="all_urls"
-    :data-highlight="SetupPage.reactive.highlightedField === 'all_urls'"
+    :data-highlight="SetupPage.reactive.permissions === 'all_urls'"
     @click="onHighlighClick('all_urls')")
     ToggleField(
       label="settings.all_urls_label"
@@ -12,7 +12,7 @@ section(ref="el")
       @update:value="togglePermAllUrls")
   .permission(
     ref="bookmarksEl"
-    :data-highlight="SetupPage.reactive.highlightedField === 'bookmarks'"
+    :data-highlight="SetupPage.reactive.permissions === 'bookmarks'"
     @click="onHighlighClick('bookmarks')")
     ToggleField(
       label="settings.perm.bookmarks_label"
@@ -21,7 +21,7 @@ section(ref="el")
       @update:value="togglePermBookmarks")
   .permission(
     ref="tab_hide"
-    :data-highlight="SetupPage.reactive.highlightedField === 'tab_hide'"
+    :data-highlight="SetupPage.reactive.permissions === 'tab_hide'"
     @click="onHighlighClick('tab_hide')")
     ToggleField(
       label="settings.tab_hide_label"
@@ -30,7 +30,7 @@ section(ref="el")
       @update:value="togglePermTabHide")
   .permission(
     ref="clipboard_write"
-    :data-highlight="SetupPage.reactive.highlightedField === 'clipboard_write'"
+    :data-highlight="SetupPage.reactive.permissions === 'clipboard_write'"
     @click="onHighlighClick('clipboard_write')")
     ToggleField(
       label="settings.clipboard_write_label"
@@ -39,7 +39,7 @@ section(ref="el")
       @update:value="togglePermClipboardWrite")
   .permission(
     ref="historyEl"
-    :data-highlight="SetupPage.reactive.highlightedField === 'history'"
+    :data-highlight="SetupPage.reactive.permissions === 'history'"
     @click="onHighlighClick('history')")
     ToggleField(
       label="settings.history_label"
@@ -55,7 +55,7 @@ import { Permissions } from 'src/services/permissions'
 import { SetupPage } from 'src/services/setup-page'
 import ToggleField from '../../components/toggle-field.vue'
 
-const el = ref<HTMLElement | null>(null)
+const rootEl = ref<HTMLElement | null>(null)
 const all_urls = ref<HTMLElement | null>(null)
 const tab_hide = ref<HTMLElement | null>(null)
 const clipboard_write = ref<HTMLElement | null>(null)
@@ -63,7 +63,6 @@ const historyEl = ref<HTMLElement | null>(null)
 const bookmarksEl = ref<HTMLElement | null>(null)
 
 onMounted(() => {
-  SetupPage.registerEl('settings_permissions', el.value)
   SetupPage.registerEl('all_urls', all_urls.value)
   SetupPage.registerEl('tab_hide', tab_hide.value)
   SetupPage.registerEl('clipboard_write', clipboard_write.value)
@@ -71,11 +70,19 @@ onMounted(() => {
   SetupPage.registerEl('bookmarks', bookmarksEl.value)
 })
 
+function onWheel(e: WheelEvent): void {
+  if (!rootEl.value) return
+  const scrollOffset = rootEl.value.scrollTop
+  const maxScrollOffset = rootEl.value.scrollHeight - rootEl.value.offsetHeight
+  if (scrollOffset === 0 && e.deltaY < 0) e.preventDefault()
+  if (scrollOffset === maxScrollOffset && e.deltaY > 0) e.preventDefault()
+}
+
 function onHighlighClick(name: string): void {
-  if (SetupPage.reactive.highlightedField === name) {
+  if (SetupPage.reactive.permissions === name) {
     window.history.replaceState({}, '', location.origin + location.pathname)
   }
-  SetupPage.reactive.highlightedField = ''
+  SetupPage.reactive.permissions = true
 }
 
 function togglePermAllUrls(): void {

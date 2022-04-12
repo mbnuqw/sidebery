@@ -248,7 +248,6 @@ function checkWebDataPerm(): boolean {
     props.conf.includeHostsActive = false
     props.conf.excludeHostsActive = false
     props.conf.userAgentActive = false
-    SetupPage.reactive.selectedContainer = null
     Containers.saveContainers()
     window.location.hash = 'all-urls'
     return false

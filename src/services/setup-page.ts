@@ -13,7 +13,6 @@ export interface SetupPageState {
   nav: SetupPageNavOption[]
   activeView: SetupPageView
   activeSection: string
-  highlightedField: string
   navLock: boolean
 
   selectedContainer: Container | null
@@ -25,6 +24,8 @@ export interface SetupPageState {
 
   exportDialog: boolean
   importedData: BackupData | null
+
+  permissions: string | boolean
 }
 
 export const nav = [
@@ -45,7 +46,6 @@ export const nav = [
   { active: false, name: 'settings_appearance', sub: true },
   { active: false, name: 'settings_mouse', sub: true },
   { active: false, name: 'settings_keybindings', sub: true },
-  { active: false, name: 'settings_permissions', sub: true },
   { active: false, name: 'settings_snapshots', sub: true },
   { active: false, name: 'settings_sync', sub: true },
   { active: false, name: 'settings_help', sub: true },
@@ -67,10 +67,10 @@ export const SetupPage = {
     selectedPanel: null,
     detailsText: '',
     detailsTitle: '',
-    highlightedField: '',
     navLock: false,
     exportDialog: false,
     importedData: null,
+    permissions: false,
   } as SetupPageState,
 
   ...SetupPageActions,
