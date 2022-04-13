@@ -110,7 +110,6 @@ export async function load(): Promise<void> {
   Logs.info('Tabs.load: Save tabs and cache')
   Tabs.updateTabsVisability()
   Tabs.cacheTabsData()
-  Tabs.saveGroups()
   Tabs.list.forEach(t => saveTabData(t.id))
 
   for (const panel of Sidebar.reactive.panels) {
@@ -164,19 +163,17 @@ async function restoreTabsState(): Promise<void> {
   const waitGroup = await Promise.all([
     browser.tabs.query({ windowId }),
     browser.storage.local.get<Stored>('tabsDataCache'),
-    browser.sessions.getWindowValue<Record<ID, SavedGroup>>(Windows.id, 'groups'),
     isWindowTabsLockedRequest,
   ])
   const tabs = waitGroup[0] as Tab[]
   const storage = waitGroup[1]
-  const savedGroups = waitGroup[2] ?? {}
-  const isWindowTabsLocked = waitGroup[3] ?? false
+  const isWindowTabsLocked = waitGroup[2] ?? false
 
   // Check if tabs are locked right now
   if (isWindowTabsLocked) throw Err.TabsLocked
 
   const storedTabsCache = storage.tabsDataCache ? storage.tabsDataCache : []
-  let tabsCache: ParsedTabsCache | undefined
+  let tabsCache: Record<ID, TabCache> | undefined
   let tabsSessionData: TabSessionData[] | undefined
 
   const lastPanel = Sidebar.reactive.panels.find(p => Utils.isTabsPanel(p))
@@ -194,7 +191,7 @@ async function restoreTabsState(): Promise<void> {
 
   // Restore tabs data from cache
   if (tabsCache) {
-    await restoreTabsFromCache(tabs, tabsCache, lastPanel)
+    restoreTabsFromCache(tabs, tabsCache, lastPanel)
   }
 
   // From session data
@@ -202,7 +199,7 @@ async function restoreTabsState(): Promise<void> {
     const querying = tabs.map(t => browser.sessions.getTabValue<TabSessionData>(t.id, 'data'))
     tabsSessionData = (await Promise.all(querying)) ?? []
 
-    await restoreTabsFromSessionData(tabs, tabsSessionData, savedGroups, lastPanel)
+    restoreTabsFromSessionData(tabs, tabsSessionData, lastPanel)
   }
 
   Tabs.list = tabs
@@ -240,11 +237,7 @@ async function restoreTabsState(): Promise<void> {
   Tabs.deferredEventHandling = []
 }
 
-async function restoreTabsFromCache(
-  tabs: Tab[],
-  cache: ParsedTabsCache,
-  lastPanel: Panel
-): Promise<void> {
+function restoreTabsFromCache(tabs: Tab[], cache: Record<ID, TabCache>, lastPanel: Panel): void {
   Logs.info('Tabs.restoreTabsFromCache')
 
   let logWrongPanels: Record<string, null> | undefined
@@ -255,35 +248,13 @@ async function restoreTabsFromCache(
   Tabs.byId = {}
   Tabs.reactive.byId = {}
   for (const tab of [...tabs]) {
-    const data = cache.existedTabs[tab.id]
+    const data = cache[tab.id]
 
     // Normalize tab
     normalizeTab(tab, tab.pinned ? firstPanelId : NOID)
 
     if (data) {
       if (data.parentId === undefined) data.parentId = NOID
-
-      // If parent tab is missed try to find it in groups
-      if (data.parentId > -1 && idsMap[data.parentId] === undefined) {
-        let group = cache.missedGroups[data.parentId]
-
-        if (group) {
-          if (group.parentId === undefined) group.parentId = NOID
-          const toRestore = [group]
-
-          while (group.parentId > -1 && idsMap[group.parentId] === undefined) {
-            group = cache.missedGroups[group.parentId]
-            if (!group) break
-            if (group.parentId === undefined) group.parentId = NOID
-            toRestore.unshift(group)
-          }
-
-          await Tabs.recreateParentGroups(tabs, toRestore, idsMap, tab.index)
-          for (let k = tab.index + 1; k < tabs.length; k++) {
-            tabs[k].index = k
-          }
-        }
-      }
 
       // Restore props
       tab.panelId = data.panelId ?? lastPanel.id
@@ -322,15 +293,13 @@ async function restoreTabsFromCache(
   }
 }
 
-async function restoreTabsFromSessionData(
+function restoreTabsFromSessionData(
   tabs: Tab[],
   tabsData: TabSessionData[],
-  groupsData: Record<ID, SavedGroup>,
   lastPanel: Panel
-): Promise<void> {
+): void {
   Logs.info('Tabs.restoreTabsFromSessionData')
 
-  let offset = 0
   let logWrongPanels: Record<string, null> | undefined
   const firstPanelId = lastPanel.id
   const idsMap: Record<ID, ID> = {}
@@ -340,29 +309,11 @@ async function restoreTabsFromSessionData(
   Tabs.reactive.byId = {}
   for (let data, tab, i = 0; i < tabs.length; i++) {
     tab = tabs[i]
-    data = tabsData[i - offset]
+    data = tabsData[i]
 
     normalizeTab(tab, tab.pinned ? firstPanelId : NOID)
 
     if (data) {
-      // Check if parent tab is missing and it group page
-      if (data.parentId > -1 && idsMap[data.parentId] === undefined && groupsData[data.parentId]) {
-        let group = groupsData[data.parentId]
-
-        const toRestore = [group]
-        while (idsMap[group.parentId] === undefined && groupsData[group.parentId]) {
-          group = groupsData[group.parentId]
-          toRestore.unshift(group)
-        }
-
-        await Tabs.recreateParentGroups(tabs, toRestore, idsMap, tab.index)
-        i += toRestore.length
-        offset += toRestore.length
-        for (let k = tab.index + 1; k < tabs.length; k++) {
-          tabs[k].index = k
-        }
-      }
-
       // Restore props
       tab.panelId = data.panelId || lastPanel.id
       if (idsMap[data.parentId] >= 0) tab.parentId = idsMap[data.parentId]
@@ -407,19 +358,17 @@ async function restoreTabsFromSessionData(
 /**
  * Find suitable tabs data for current window
  */
-interface ParsedTabsCache {
-  existedTabs: Record<ID, TabCache>
-  missedGroups: Record<ID, TabCache>
-}
-function findCachedData(tabs: readonly Tab[], data: TabCache[][]): ParsedTabsCache | undefined {
+function findCachedData(
+  tabs: readonly Tab[],
+  data: TabCache[][]
+): Record<ID, TabCache> | undefined {
   let maxEqualityCounter = 1
-  let result: ParsedTabsCache | undefined
+  let result: Record<ID, TabCache> | undefined
 
   for (const winTabs of data) {
     let equalityCounter = 0
 
     const existedTabs: Record<ID, TabCache> = {}
-    const missedGroups: Record<ID, TabCache> = {}
 
     let dataIndex = 0
     let tabIndex = 0
@@ -427,14 +376,6 @@ function findCachedData(tabs: readonly Tab[], data: TabCache[][]): ParsedTabsCac
       tab = tabs[tabIndex]
       if (!tab) break
       tabData = winTabs[dataIndex]
-
-      // Saved tab is a group and its missing
-      if (Utils.isGroupUrl(tabData.url) && tabData.url !== tab.url) {
-        tabData.isMissedGroup = true
-        missedGroups[tabData.id] = tabData
-        tabIndex--
-        continue
-      }
 
       // Match
       const blindspot = tab.status === 'loading' && tab.url === 'about:blank'
@@ -460,12 +401,7 @@ function findCachedData(tabs: readonly Tab[], data: TabCache[][]): ParsedTabsCac
 
     if (maxEqualityCounter <= equalityCounter) {
       maxEqualityCounter = equalityCounter
-      if (!result) {
-        result = { existedTabs, missedGroups }
-      } else {
-        result.existedTabs = existedTabs
-        result.missedGroups = missedGroups
-      }
+      result = existedTabs
     }
 
     if (equalityCounter === tabs.length) break
@@ -618,7 +554,6 @@ export function normalizeTabs(delay = 500): void {
 
     Tabs.list.forEach(t => saveTabData(t.id))
     cacheTabsData()
-    Tabs.saveGroups()
   }, delay)
 }
 

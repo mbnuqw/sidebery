@@ -217,8 +217,6 @@ function onTabCreated(tab: Tab): void {
     }
   }
 
-  if (tab.url.startsWith(GROUP_URL)) Tabs.saveGroups()
-
   if (createGroup && !tab.pinned && initialOpener) {
     Tabs.groupTabs([tab.id], {
       active: false,
@@ -307,7 +305,6 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
       localTab.favIconUrl = ''
       rLocalTab.favIconUrl = ''
     }
-    if (change.url.startsWith(GROUP_URL)) Tabs.saveGroups()
     // if (
     //   Sidebar.urlRules?.length &&
     //   !localTab.pinned &&

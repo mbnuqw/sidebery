@@ -90,35 +90,6 @@ export async function replaceRelGroupWithPinnedTab(groupTab: Tab, pinnedTab: Tab
   await browser.tabs.remove(groupTab.id)
 }
 
-let saveGroupsTimeout: number | undefined
-export function saveGroups(delay = 300): void {
-  // console.log('[DEBUG] tabs.saveGroups()')
-  clearTimeout(saveGroupsTimeout)
-  saveGroupsTimeout = setTimeout(() => {
-    const groups: Record<ID, SavedGroup> = {}
-
-    for (const tab of Tabs.list) {
-      if (!Utils.isGroupUrl(tab.url)) continue
-      const prevTab = Tabs.list[tab.index - 1]
-      const nextTab = Tabs.list[tab.index + 1]
-      const groupInfo: SavedGroup = {
-        id: tab.id,
-        index: tab.index,
-        ctx: tab.cookieStoreId,
-        panelId: tab.panelId,
-        parentId: tab.parentId,
-        folded: tab.folded,
-        url: tab.url,
-      }
-      if (prevTab) groupInfo.prevTab = prevTab.id
-      if (nextTab) groupInfo.nextTab = nextTab.id
-      groups[tab.id] = groupInfo
-    }
-
-    browser.sessions.setWindowValue(Windows.id, 'groups', groups)
-  }, delay)
-}
-
 /**
  * Group tabs
  */
