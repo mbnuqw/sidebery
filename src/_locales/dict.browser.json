@@ -1,262 +1,326 @@
 {
   "ExtName": {
     "en": "Sidebery",
-    "ru": "Sidebery"
+    "ru": "Sidebery",
+    "zh": "Sidebery"
   },
   "ExtDesc": {
     "en": "Addon for managing tabs, containers (contextual identities) and bookmarks in sidebar. Supports both flat and tree tabs layouts, per-container include/exclude rules, proxy configs for each container and much more.",
-    "ru": "Управление вкладками и закладками в боковой панели."
+    "ru": "Управление вкладками и закладками в боковой панели.",
+    "zh": "用于管理标签、容器（上下文身份）和侧边栏的书签的插件。支持横向、树形标签布局，每个容器的“include”/“exclude”设置，每个容器的代理配置等等。"
   },
   "ActionTitle": {
     "en": "Toggle Sidebery sidebar",
-    "ru": "Открыть Sidebery"
+    "ru": "Открыть Sidebery",
+    "zh": "切换Sidebery侧边栏"
   },
 
   "KbOpenSidebarPanel": {
     "en": "Open/Close sidebar panel",
-    "ru": "Открыть/Закрыть панель"
+    "ru": "Открыть/Закрыть панель",
+    "zh": "打开/关闭侧边栏面板"
   },
   "KbNextPanel": {
     "en": "Switch to next panel",
-    "ru": "Переключиться на следующую панель"
+    "ru": "Переключиться на следующую панель",
+    "zh": "切换到下一个面板"
   },
   "KbPrevPanel": {
     "en": "Switch to previous panel",
-    "ru": "Переключиться на предыдущую панель"
+    "ru": "Переключиться на предыдущую панель",
+    "zh": "切换到上一个面板"
   },
   "KbOpenNewTabInCurrPanel": {
     "en": "Open new tab in active panel",
-    "ru": "Открыть вкладку в активной панели"
+    "ru": "Открыть вкладку в активной панели",
+    "zh": "在活动面板中打开新标签页"
   },
   "KbOpenNewTabAfter": {
     "en": "Open new tab after active tab",
-    "ru": "Открыть вкладку после активной вкладки"
+    "ru": "Открыть вкладку после активной вкладки",
+    "zh": "在活动标签后打开新标签"
   },
   "KbOpenNewTabAsFirstChild": {
     "en": "Open new tab as the first child of active tab",
-    "ru": "Открыть дочернюю вкладку (в начале ветви)"
+    "ru": "Открыть дочернюю вкладку (в начале ветви)",
+    "zh": "打开新标签页作为活动标签的第一个子标签"
   },
   "KbOpenNewTabAsLastChild": {
     "en": "Open new tab as the last child of active tab",
-    "ru": "Открыть дочернюю вкладку (в конце ветви)"
+    "ru": "Открыть дочернюю вкладку (в конце ветви)",
+    "zh": "打开新标签页作为活动标签的最后一个子标签"
   },
   "KbRm": {
     "en": "Remove selected items or active tab",
-    "ru": "Удалить выделенные элементы или активную вкладку"
+    "ru": "Удалить выделенные элементы или активную вкладку",
+    "zh": "删除所选项目或活动标签页"
   },
   "KbSelectAll": {
     "en": "Select all",
-    "ru": "Выделить все"
+    "ru": "Выделить все",
+    "zh": "全选"
   },
   "KbUp": {
     "en": "Select up",
-    "ru": "Выделить вверх"
+    "ru": "Выделить вверх",
+    "zh": "向上选择"
   },
   "KbDown": {
     "en": "Select down",
-    "ru": "Выделить вниз"
+    "ru": "Выделить вниз",
+    "zh": "向下选择"
   },
   "KbUpShift": {
     "en": "Select range up",
-    "ru": "Выделить область вверх"
+    "ru": "Выделить область вверх",
+    "zh": "向上选择区间"
   },
   "KbDownShift": {
     "en": "Select range down",
-    "ru": "Выделить область вниз"
+    "ru": "Выделить область вниз",
+    "zh": "向下选择区间"
   },
   "KbActivate": {
     "en": "Activate selection",
-    "ru": "Активировать выделенное"
+    "ru": "Активировать выделенное",
+    "zh": "激活选择"
   },
   "KbMenu": {
     "en": "Open menu",
-    "ru": "Открыть меню"
+    "ru": "Открыть меню",
+    "zh": "打开菜单"
   },
   "KbResetSelection": {
     "en": "Reset selection",
-    "ru": "Сбросить выделение"
+    "ru": "Сбросить выделение",
+    "zh": "重置选择"
   },
   "KbFoldBranch": {
     "en": "Fold selected branch",
-    "ru": "Свернуть выделенную ветвь"
+    "ru": "Свернуть выделенную ветвь",
+    "zh": "折叠选定的分支"
   },
   "KbExpandBranch": {
     "en": "Expand selected branch",
-    "ru": "Развернуть выделенную ветвь"
+    "ru": "Развернуть выделенную ветвь",
+    "zh": "展开选定的分支"
   },
   "KbFoldInactBranches": {
     "en": "Fold inactive branches",
-    "ru": "Свернуть неактивные ветви вкладок"
+    "ru": "Свернуть неактивные ветви вкладок",
+    "zh": "折叠非活动分支"
   },
   "KbActPrevActTab": {
     "en": "Active tabs history: Back",
-    "ru": "История активных вкладок: Назад"
+    "ru": "История активных вкладок: Назад",
+    "zh": "活动标签历史：返回"
   },
   "KbActNextActTab": {
     "en": "Active tabs history: Next",
-    "ru": "История активных вкладок: Вперед"
+    "ru": "История активных вкладок: Вперед",
+    "zh": "活动标签历史记录：下一步"
   },
   "KbActPanelPrevActTab": {
     "en": "Active tabs history of panel: Back",
-    "ru": "История активных вкладок панели: Назад"
+    "ru": "История активных вкладок панели: Назад",
+    "zh": "面板的活动标签历史记录：返回"
   },
   "KbActPanelNextActTab": {
     "en": "Active tabs history of panel: Next",
-    "ru": "История активных вкладок панели: Вперед"
+    "ru": "История активных вкладок панели: Вперед",
+    "zh": "面板的活动标签历史记录：下一步"
   },
   "KbMoveTabToAct": {
     "en": "Move selected tabs to the active tab",
-    "ru": "Вложить выделенные вкладки в активную вкладку"
+    "ru": "Вложить выделенные вкладки в активную вкладку",
+    "zh": "将选定的标签页移动到活动标签页"
   },
   "KbTabsIndent": {
     "en": "Increase tab's tree level (indent)",
-    "ru": "Увеличить уровень вкладки"
+    "ru": "Увеличить уровень вкладки",
+    "zh": "增加标签页的树级别（缩进）"
   },
   "KbTabsOutdent": {
     "en": "Decrease tab's tree level (outdent)",
-    "ru": "Уменьшить уровень вкладки"
+    "ru": "Уменьшить уровень вкладки",
+    "zh": "减少标签页的树级别（减小缩进）"
   },
   "KbMoveTabsUp": {
     "en": "Move tabs up",
-    "ru": "Переместить вкладки вверх"
+    "ru": "Переместить вкладки вверх",
+    "zh": "上移标签页"
   },
   "KbMoveTabsDown": {
     "en": "Move tabs down",
-    "ru": "Переместить вкладки вниз"
+    "ru": "Переместить вкладки вниз",
+    "zh": "下移标签页"
   },
   "KbCreateSnapshot": {
     "en": "Create snapshot",
-    "ru": "Создать снепшот"
+    "ru": "Создать снепшот",
+    "zh": "创建快照"
   },
   "KbSwitchToPanel0": {
     "en": "Switch to first panel",
-    "ru": "Переключиться на первую панель"
+    "ru": "Переключиться на первую панель",
+    "zh": "切换到第一个面板"
   },
   "KbSwitchToPanel1": {
     "en": "Switch to second panel",
-    "ru": "Переключиться на вторую панель"
+    "ru": "Переключиться на вторую панель",
+    "zh": "切换到第二个面板"
   },
   "KbSwitchToPanel2": {
     "en": "Switch to third panel",
-    "ru": "Переключиться на третью панель"
+    "ru": "Переключиться на третью панель",
+    "zh": "切换到第三个面板"
   },
   "KbSwitchToPanel3": {
     "en": "Switch to fourth panel",
-    "ru": "Переключиться на четвертую панель"
+    "ru": "Переключиться на четвертую панель",
+    "zh": "切换到第四个面板"
   },
   "KbSwitchToPanel4": {
     "en": "Switch to fifth panel",
-    "ru": "Переключиться на пятую панель"
+    "ru": "Переключиться на пятую панель",
+    "zh": "切换到第五个面板"
   },
   "KbSwitchToPanel5": {
     "en": "Switch to sixth panel",
-    "ru": "Переключиться на шестую панель"
+    "ru": "Переключиться на шестую панель",
+    "zh": "切换到第六个面板"
   },
   "KbSwitchToPanel6": {
     "en": "Switch to seventh panel",
-    "ru": "Переключиться на седьмую панель"
+    "ru": "Переключиться на седьмую панель",
+    "zh": "切换到第七个面板"
   },
   "KbSwitchToPanel7": {
     "en": "Switch to eighth panel",
-    "ru": "Переключиться на восьмую панель"
+    "ru": "Переключиться на восьмую панель",
+    "zh": "切换到第八个面板"
   },
   "KbSwitchToPanel8": {
     "en": "Switch to ninth panel",
-    "ru": "Переключиться на девятую панель"
+    "ru": "Переключиться на девятую панель",
+    "zh": "切换到第九个面板"
   },
   "KbSwitchToPanel9": {
     "en": "Switch to tenth panel",
-    "ru": "Переключиться на десятую панель"
+    "ru": "Переключиться на десятую панель",
+    "zh": "切换到第十个面板"
   },
   "KbMoveTabsToPanel0": {
     "en": "Move selected (or active) tabs to first panel",
-    "ru": "Переместить выделенные (или активную) вкладки в первую панель"
+    "ru": "Переместить выделенные (или активную) вкладки в первую панель",
+    "zh": "将选定（或活动）标签页移动到第一个面板"
   },
   "KbMoveTabsToPanel1": {
     "en": "Move selected (or active) tabs to second panel",
-    "ru": "Переместить выделенные (или активную) вкладки во вторую панель"
+    "ru": "Переместить выделенные (или активную) вкладки во вторую панель",
+    "zh": "将选定（或活动）标签页移动到第二个面板"
   },
   "KbMoveTabsToPanel2": {
     "en": "Move selected (or active) tabs to third panel",
-    "ru": "Переместить выделенные (или активную) вкладки в третью панель"
+    "ru": "Переместить выделенные (или активную) вкладки в третью панель",
+    "zh": "将选定（或活动）标签页移动到第三个面板"
   },
   "KbMoveTabsToPanel3": {
     "en": "Move selected (or active) tabs to fourth panel",
-    "ru": "Переместить выделенные (или активную) вкладки в четвертую панель"
+    "ru": "Переместить выделенные (или активную) вкладки в четвертую панель",
+    "zh": "将选定（或活动）标签页移动到第四个面板"
   },
   "KbMoveTabsToPanel4": {
     "en": "Move selected (or active) tabs to fifth panel",
-    "ru": "Переместить выделенные (или активную) вкладки в пятую панель"
+    "ru": "Переместить выделенные (или активную) вкладки в пятую панель",
+    "zh": "将选定（或活动）标签页移动到第五个面板"
   },
   "KbMoveTabsToPanel5": {
     "en": "Move selected (or active) tabs to sixth panel",
-    "ru": "Переместить выделенные (или активную) вкладки в шестую панель"
+    "ru": "Переместить выделенные (или активную) вкладки в шестую панель",
+    "zh": "将选定（或活动）标签页移动到第六个面板"
   },
   "KbMoveTabsToPanel6": {
     "en": "Move selected (or active) tabs to seventh panel",
-    "ru": "Переместить выделенные (или активную) вкладки в седьмую панель"
+    "ru": "Переместить выделенные (или активную) вкладки в седьмую панель",
+    "zh": "将选定（或活动）标签页移动到第七个面板"
   },
   "KbMoveTabsToPanel7": {
     "en": "Move selected (or active) tabs to eighth panel",
-    "ru": "Переместить выделенные (или активную) вкладки в восьмую панель"
+    "ru": "Переместить выделенные (или активную) вкладки в восьмую панель",
+    "zh": "将选定（或活动）标签页移动到第八个面板"
   },
   "KbMoveTabsToPanel8": {
     "en": "Move selected (or active) tabs to ninth panel",
-    "ru": "Переместить выделенные (или активную) вкладки в девятую панель"
+    "ru": "Переместить выделенные (или активную) вкладки в девятую панель",
+    "zh": "将选定（或活动）标签页移动到第九个面板"
   },
   "KbMoveTabsToPanel9": {
     "en": "Move selected (or active) tabs to tenth panel",
-    "ru": "Переместить выделенные (или активную) вкладки в десятую панель"
+    "ru": "Переместить выделенные (или активную) вкладки в десятую панель",
+    "zh": "将选定（或活动）标签页移动到第十个面板"
   },
   "KbSearch": {
     "en": "Search",
-    "ru": "Поиск"
+    "ru": "Поиск",
+    "zh": "搜索"
   },
 
   "proxy_popup_title_prefix": {
     "en": "Proxy for \"",
-    "ru": "Прокси контейнера '"
+    "ru": "Прокси контейнера '",
+    "zh": "代理 \""
   },
   "proxy_popup_title_postfix": {
     "en": "\" container",
-    "ru": "'"
+    "ru": "'",
+    "zh": "\" 容器"
   },
 
   "unhandled_url": {
     "en": "Unhandled URL",
-    "ru": "Неподдерживаемый URL"
+    "ru": "Неподдерживаемый URL",
+    "zh": "未处理的网址"
   },
   "unavailable_url": {
     "en": "Unavailable URL",
-    "ru": "Недоступный URL"
+    "ru": "Недоступный URL",
+    "zh": "网址不可用"
   },
   "page_title": {
     "en": "Page title",
-    "ru": "Заголовок страницы"
+    "ru": "Заголовок страницы",
+    "zh": "页面标题"
   },
   "original_url": {
     "en": "Original URL",
-    "ru": "Исходная ссылка"
+    "ru": "Исходная ссылка",
+    "zh": "原始网址"
   },
   "copy": {
     "en": "Copy",
-    "ru": "Скопировать"
+    "ru": "Скопировать",
+    "zh": "复制"
   },
   "copy_url": {
     "en": "Copy URL",
-    "ru": "Скопировать ссылку"
+    "ru": "Скопировать ссылку",
+    "zh": "复制网址"
   },
   "api_limit_info": {
     "en": "Due to security-related API restrictions, Sidebery cannot open this link.",
-    "ru": "Из-за ограничений API, связанных с безопасностью, Sidebery не может открыть эту ссылку."
+    "ru": "Из-за ограничений API, связанных с безопасностью, Sidebery не может открыть эту ссылку.",
+    "zh": "由于安全相关的 API 限制，Sidebery 无法打开此链接。"
   },
   "api_limit_info_more": {
     "en": "Read more about this.",
-    "ru": "Узнать больше"
+    "ru": "Узнать больше",
+    "zh": "阅读更多关于此信息。"
   },
 
   "group_disconnected_warn": {
     "en": "Cannot connect to the sidebar...",
-    "ru": "Невозможно подключиться к боковой панели..."
+    "ru": "Невозможно подключиться к боковой панели...",
+    "zh": "无法连接到侧边栏..."
   }
 }
