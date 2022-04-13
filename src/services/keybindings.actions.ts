@@ -339,8 +339,7 @@ function onKeySelect(dir: number): void {
 
   Sidebar.updateBounds()
   const activePanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
-  if (!activePanel) return
-  if (!activePanel.bounds?.length) return
+  if (!activePanel?.bounds?.length) return
 
   const actPanelIsTabs = Utils.isTabsPanel(activePanel)
   const selIsSet = Selection.isSet()
@@ -351,7 +350,7 @@ function onKeySelect(dir: number): void {
     selIndex = activePanel.bounds.findIndex(s => s.id === selId)
   } else if (actPanelIsTabs) {
     selIndex = activePanel.bounds.findIndex(s => Tabs.byId[s.id]?.active)
-    selIndex -= dir
+    if (selIndex !== -1) selIndex -= dir
   }
   if (selIndex === -1 && dir < 0) selIndex = activePanel.bounds.length
 
