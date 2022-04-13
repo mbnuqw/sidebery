@@ -11,6 +11,7 @@
     "types": [],
     "outDir": "./addon",
     "baseUrl": ".",
+    "jsx": "preserve",
     "paths": {
       "src/*": ["src/*"]
     },

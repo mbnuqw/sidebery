@@ -21,6 +21,7 @@ section(ref="el")
       :inactive="!Settings.reactive.markWindow")
   .ctrls
     .btn(@click="showStorageView") {{translate('settings.storage_btn')}} {{state.storageOveral}}
+    .btn(@click="showPermissionsPopup") {{translate('settings.permissions_btn')}}
 </template>
 
 <script lang="ts" setup>
@@ -65,5 +66,9 @@ function toggleSelWinScreenshots(): void {
   } else {
     Settings.reactive.selWinScreenshots = !Settings.reactive.selWinScreenshots
   }
+}
+
+function showPermissionsPopup(): void {
+  SetupPage.reactive.permissions = true
 }
 </script>

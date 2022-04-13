@@ -16,13 +16,19 @@
   AppearanceSection
   MouseSection
   KeybindingsSection
-  PermissionsSection
   SnapshotsSection
   SyncSection
   HelpSection
   FooterSection
 
   .btw: p v{{Info.reactive.addonVer}}
+
+  Transition(name="popup")
+    .popup-layer(
+      v-if="SetupPage.reactive.permissions"
+      @click="SetupPage.closePermissionsPopup")
+      .popup-box(@click.stop="")
+        PermissionsPopup
 </template>
 
 <script lang="ts" setup>
@@ -47,10 +53,10 @@ import HistorySection from './settings.history.vue'
 import AppearanceSection from './settings.appearance.vue'
 import MouseSection from './settings.mouse.vue'
 import KeybindingsSection from './settings.keybindings.vue'
-import PermissionsSection from './settings.permissions.vue'
 import SnapshotsSection from './settings.snapshots.vue'
 import SyncSection from './settings.sync.vue'
 import HelpSection from './settings.help.vue'
+import PermissionsPopup from 'src/page.setup/components/popup.permissions.vue'
 import FooterSection from './footer-section.vue'
 
 const rootEl = ref<HTMLElement | null>(null)

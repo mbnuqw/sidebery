@@ -3,9 +3,11 @@ export const LANG = LANG_REG.slice(0, 2)
 
 // Set dictionary
 const dict: Record<string, PlurFn | string> = {}
-for (const key of Object.keys(window.translations)) {
-  const prop = window.translations[key]
-  dict[key] = prop[LANG_REG] ?? prop[LANG] ?? prop.en
+if (window.translations) {
+  for (const key of Object.keys(window.translations)) {
+    const prop = window.translations[key]
+    dict[key] = prop[LANG_REG] ?? prop[LANG] ?? prop.en
+  }
 }
 
 function isString(r: string | PlurFn): r is string {

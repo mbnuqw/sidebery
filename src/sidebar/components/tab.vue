@@ -57,7 +57,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
+import { computed, nextTick } from 'vue'
 import { DragInfo, DragItem, DragType, DropType, MenuType, ReactiveTab } from 'src/types'
 import { TabStatus } from 'src/types'
 import { Settings } from 'src/services/settings'
@@ -157,7 +157,7 @@ function onMouseDown(e: MouseEvent): void {
 
     if (!Selection.isSet() && !Settings.reactive.activateOnMouseUp) activate()
 
-    Mouse.startLongClick(e, 'tab', props.tab.id)
+    Mouse.startLongClick(e, 'tab', props.tab.id, longClickFeedback)
   }
 
   // Middle
@@ -174,8 +174,15 @@ function onMouseDown(e: MouseEvent): void {
       Selection.resetSelection()
       Mouse.startMultiSelection(e, props.tab.id)
     }
-    Mouse.startLongClick(e, 'tab', props.tab.id)
+    Mouse.startLongClick(e, 'tab', props.tab.id, longClickFeedback)
   }
+}
+
+function longClickFeedback(): void {
+  props.tab.status = TabStatus.Loading
+  nextTick(() => {
+    props.tab.status = TabStatus.Complete
+  })
 }
 
 function onMouseUp(e: MouseEvent): void {

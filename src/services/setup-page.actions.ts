@@ -47,13 +47,20 @@ export async function open(section?: string): Promise<void> {
 }
 
 export function goToPerm(permId: string): void {
-  const scrollHighlightConf: ScrollIntoViewOptions = { behavior: 'smooth', block: 'center' }
-  const el = els[permId]
-  if (el) el.scrollIntoView(scrollHighlightConf)
-
   document.title = 'Sidebery / Settings'
   SetupPage.reactive.activeView = 'settings'
-  SetupPage.reactive.highlightedField = permId
+  SetupPage.reactive.permissions = permId
+
+  setTimeout(() => {
+    const scrollHighlightConf: ScrollIntoViewOptions = { behavior: 'smooth', block: 'center' }
+    const el = els[permId]
+    if (el) el.scrollIntoView(scrollHighlightConf)
+  }, 120)
+}
+
+export function closePermissionsPopup(): void {
+  SetupPage.reactive.permissions = false
+  location.hash = ''
 }
 
 /**
@@ -89,7 +96,7 @@ export async function updateActiveView(): Promise<void> {
 
     document.title = 'Sidebery / Menu Editor'
     SetupPage.reactive.activeView = 'menu_editor'
-    SetupPage.reactive.highlightedField = ''
+    SetupPage.reactive.permissions = false
     return
   }
 
@@ -97,7 +104,7 @@ export async function updateActiveView(): Promise<void> {
     document.title = 'Sidebery / Styles Editor'
     SetupPage.reactive.activeView = 'styles_editor'
     SetupPage.reactive.activeSection = 'styles_editor'
-    SetupPage.reactive.highlightedField = ''
+    SetupPage.reactive.permissions = false
     return
   }
 
@@ -105,7 +112,7 @@ export async function updateActiveView(): Promise<void> {
     document.title = 'Sidebery / Snapshots'
     SetupPage.reactive.activeView = 'snapshots'
     SetupPage.reactive.activeSection = 'snapshots'
-    SetupPage.reactive.highlightedField = ''
+    SetupPage.reactive.permissions = false
     return
   }
 
@@ -113,7 +120,7 @@ export async function updateActiveView(): Promise<void> {
     document.title = 'Sidebery / Storage'
     SetupPage.reactive.activeView = 'storage'
     SetupPage.reactive.activeSection = 'storage'
-    SetupPage.reactive.highlightedField = ''
+    SetupPage.reactive.permissions = false
     return
   }
 
