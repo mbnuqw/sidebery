@@ -464,7 +464,6 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, childfree?: bool
     return Tabs.normalizeTabs()
   }
   let creatingNewTab
-  const panel = Sidebar.reactive.panelsById[tab.panelId]
 
   // Update temp list of removed tabs for restoring reopened tabs state
   if (tab.url !== NEWTAB_URL && tab.url !== 'about:blank') {
@@ -489,6 +488,7 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, childfree?: bool
     for (let i = tab.index + 1, t; i < Tabs.list.length; i++) {
       t = Tabs.list[i]
       if (t.lvl <= tab.lvl) break
+      const rt = Tabs.reactive.byId[t.id]
 
       // Remove folded tabs
       if (
@@ -501,10 +501,19 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, childfree?: bool
       // Down level
       if (t.parentId === tab.id) {
         if (outdentOnlyFirstChild) {
-          if (!firstChild) t.parentId = tab.parentId
-          else t.parentId = firstChild.id
+          if (!firstChild) {
+            t.parentId = tab.parentId
+            t.lvl = tab.lvl
+            if (rt) rt.lvl = tab.lvl
+          } else {
+            t.parentId = firstChild.id
+            t.lvl = firstChild.lvl
+            if (rt) rt.lvl = firstChild.lvl
+          }
         } else {
           t.parentId = tab.parentId
+          t.lvl = tab.lvl
+          if (rt) rt.lvl = tab.lvl
         }
       }
 
@@ -526,25 +535,26 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, childfree?: bool
   delete Tabs.reactive.byId[tabId]
   Sidebar.recalcTabsPanels()
 
+  // Get panel of removed tab
+  const panel = Sidebar.reactive.panelsById[tab.panelId]
+  if (!Utils.isTabsPanel(panel)) {
+    Logs.err('Tabs.onTabRemoved: Wrong panel')
+    return
+  }
+
   // No-empty
-  if (!tab.pinned && Utils.isTabsPanel(panel) && panel.noEmpty && !panel.len && !creatingNewTab) {
+  if (!tab.pinned && panel.noEmpty && !panel.len && !creatingNewTab) {
     Tabs.createTabInPanel(panel, { active: false })
   }
 
   // Remove updated flag
-  if (Utils.isTabsPanel(panel) && panel.updatedTabs) {
+  if (panel.updatedTabs.length) {
     Utils.rmFromArray(panel.updatedTabs, tabId)
   }
 
   // On removing the last tab
   if (!Tabs.removingTabs.length) {
-    // Update tree
-    if (Settings.reactive.tabsTree && Utils.isTabsPanel(panel) && panel.len) {
-      Tabs.updateTabsTreeDebounced()
-    }
-
     // Save new tabs state
-    Tabs.saveGroups()
     Tabs.cacheTabsData()
 
     // Update succession
@@ -559,7 +569,6 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, childfree?: bool
     // Switch to another panel if current is hidden
     if (
       Settings.reactive.hideEmptyPanels &&
-      Utils.isTabsPanel(panel) &&
       Sidebar.reactive.activePanelId === panel.id &&
       !panel.tabs.length
     ) {
