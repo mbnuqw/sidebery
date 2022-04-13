@@ -1,6 +1,6 @@
 import Utils from 'src/utils'
 import { DEFAULT_SETTINGS, SETTINGS_OPTIONS } from 'src/defaults'
-import { SettingsState } from 'src/types'
+import { SettingsState, Stored } from 'src/types'
 import { Settings } from 'src/services/settings'
 import { Store } from './storage'
 import { Info } from './info'
@@ -14,12 +14,19 @@ import { Snapshots } from 'src/services/snapshots'
 import { Logs } from './logs'
 
 type Opts = typeof SETTINGS_OPTIONS
-
 export async function loadSettings(): Promise<void> {
-  const { settings } = await browser.storage.local.get({ settings: {} as SettingsState })
+  const stored = await browser.storage.local.get<Stored>('settings')
 
-  Utils.normalizeObject(settings, DEFAULT_SETTINGS)
-  Utils.updateObject(Settings.reactive, settings)
+  if (!stored.settings) {
+    // Respect prefersReducedMotion rule for default settings
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
+    if (prefersReducedMotion?.matches) DEFAULT_SETTINGS.animations = false
+
+    stored.settings = {} as SettingsState
+  }
+
+  Utils.normalizeObject(stored.settings, DEFAULT_SETTINGS)
+  Utils.updateObject(Settings.reactive, stored.settings)
 
   Logs.info('Settings: Loaded')
 }
