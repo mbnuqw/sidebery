@@ -2431,6 +2431,9 @@ function findTabsPanelNearToTabIndex(tabIndex: number): TabsPanel | undefined {
 export function getPanelForNewTab(tab: Tab): TabsPanel | undefined {
   const parentTab = Tabs.byId[tab.openerTabId ?? NOID]
   let activePanel: Panel | undefined = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+  if (!Utils.isTabsPanel(activePanel)) {
+    activePanel = Sidebar.reactive.panelsById[Sidebar.lastTabsPanelId]
+  }
   if (!Utils.isTabsPanel(activePanel)) activePanel = undefined
 
   // Find panel with matched moveTabCtx rule
