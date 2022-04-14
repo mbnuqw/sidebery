@@ -16,10 +16,8 @@ export function initTheme(): void {
 
   // Remove theme css
   if (Settings.reactive.theme === 'none') {
-    if (themeLinkEl) themeLinkEl.setAttribute('disabled', 'disabled')
+    themeLinkEl?.setAttribute('disabled', 'disabled')
     return
-  } else {
-    if (themeLinkEl) themeLinkEl.removeAttribute('disabled')
   }
 
   // Create next theme link
@@ -342,6 +340,8 @@ export function resetFirefoxThemeColors(): void {
 export async function loadCustomSidebarCSS(): Promise<void> {
   const stored = await browser.storage.local.get<Stored>('sidebarCSS')
   applyCustomCSS(stored.sidebarCSS)
+  // Recalculate sizes when custom CSS is changed
+  Sidebar.recalcElementSizesDebounced()
 }
 
 export async function loadCustomGroupCSS(): Promise<void> {
