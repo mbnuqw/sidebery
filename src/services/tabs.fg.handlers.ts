@@ -495,7 +495,8 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, childfree?: bool
         if (!Tabs.removingTabs.includes(t.id)) toRemove.push(t.id)
       }
 
-      // Down level
+      // Down levels
+      // First child
       if (t.parentId === tab.id) {
         if (outdentOnlyFirstChild) {
           if (!firstChild) {
@@ -512,6 +513,13 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, childfree?: bool
           t.lvl = tab.lvl
           if (rt) rt.lvl = tab.lvl
         }
+      }
+
+      // Other tabs in branch
+      else {
+        const newLvl = (Tabs.byId[t.parentId]?.lvl ?? 0) + 1
+        t.lvl = newLvl
+        if (rt) rt.lvl = newLvl
       }
 
       if (!firstChild && t.lvl > tab.lvl) firstChild = t
