@@ -460,6 +460,9 @@ export async function saveStylesToSync(): Promise<void> {
 
 export function setupListeners(): void {
   if (Info.isSidebar) {
-    Store.onKeyChange('sidebarCSS', css => applyCustomCSS(css))
+    Store.onKeyChange('sidebarCSS', css => {
+      applyCustomCSS(css)
+      Sidebar.recalcElementSizesDebounced()
+    })
   }
 }
