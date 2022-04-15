@@ -41,14 +41,14 @@
 
 .HistoryPanel .item
   position: relative
-  margin: 0
-  padding: 2px 0 6px
+  padding: 1px 0 0
+  height: 29px
   &:before
     content: ''
     position: absolute
     top: 1px
-    left: 1px
-    width: calc(100% - 2px)
+    left: 2px
+    width: calc(100% - 4px)
     height: calc(100% - 2px)
     border-radius: 4px
   &:hover:before
@@ -56,12 +56,14 @@
   &:active
     background-color: var(--clicked-bg)
     box-shadow: inset 0 0 0 1px #00000012
-  &[data-sel="true"]
+  &[data-sel="true"]:before
     background-color: var(--selected-bg)
+    box-shadow: inset 0 0 0 1px var(--selected-border)
 
   .line
     position: relative
     display: flex
+    height: 100%
     align-items: center
 
   .fav
@@ -69,7 +71,7 @@
     width: 16px
     height: 16px
     flex-shrink: 0
-    margin: 3px 0 0 4px
+    margin: 0 0 0 6px
     cursor: pointer
     > svg, > img
       position: absolute
@@ -87,7 +89,7 @@
 
   .inline-info
     position: relative
-    margin: 5px 3px 0 5px
+    margin: 0 3px 0 5px
     font-size: rem(12)
     color: var(--frame-fg)
     white-space: nowrap
@@ -98,8 +100,7 @@
   .title
     position: relative
     width: 100%
-    height: 16px
-    margin: 3px 0 0 5px
+    margin: 0 0 0 5px
     font-size: rem(15)
     color: var(--frame-fg)
     white-space: nowrap
