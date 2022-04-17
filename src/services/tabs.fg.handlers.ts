@@ -1,5 +1,5 @@
 import Utils from 'src/utils'
-import { Tab, TabStatus } from 'src/types'
+import { ReactiveTab, Tab, TabStatus } from 'src/types'
 import { NOID, GROUP_URL, CONTAINER_ID } from 'src/defaults'
 import { Logs } from 'src/services/logs'
 import { Windows } from 'src/services/windows'
@@ -263,33 +263,7 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
   // Status change
   if (change.status !== undefined) {
     if (change.status === 'complete' && tab.url[0] !== 'a') {
-      browser.tabs
-        .get(localTab.id)
-        .then(tabInfo => {
-          if (tabInfo.favIconUrl && !tabInfo.favIconUrl.startsWith('chrome:')) {
-            localTab.favIconUrl = tabInfo.favIconUrl
-            rLocalTab.favIconUrl = tabInfo.favIconUrl
-          } else {
-            if (tabInfo.favIconUrl === 'chrome://global/skin/icons/warning.svg') {
-              localTab.warn = true
-              rLocalTab.warn = true
-            } else if (localTab.warn) {
-              localTab.warn = false
-              rLocalTab.warn = false
-            }
-            localTab.favIconUrl = ''
-            rLocalTab.favIconUrl = ''
-          }
-
-          const groupTab = Tabs.getGroupTab(localTab)
-          if (groupTab && !groupTab.discarded) Tabs.updateGroupChild(groupTab.id, tab.id)
-        })
-        .catch(() => {
-          // If I close containered tab opened from bg script
-          // I'll get 'updated' event with 'status': 'complete'
-          // and since tab is in 'removing' state I'll get this
-          // error.
-        })
+      reloadTabFaviconDebounced(localTab, rLocalTab)
     }
     if (change.url && localTab.mediaPaused) {
       localTab.mediaPaused = false
@@ -347,7 +321,7 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
     if (!tab.active && inact > 5000) {
       // If prev url starts with 'http' and current url same as prev
       if (localTab.url.startsWith('http') && localTab.url === tab.url) {
-        // and if title doesn't looks like url
+        // and if title doesn't look like url
         if (!URL_HOST_PATH_RE.test(localTab.title) && !URL_HOST_PATH_RE.test(tab.title)) {
           const panel = Sidebar.reactive.panelsById[localTab.panelId]
           localTab.updated = true
@@ -430,6 +404,41 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
       }
     }
   }
+}
+
+const reloadTabFaviconTimeout: Record<ID, number> = {}
+function reloadTabFaviconDebounced(localTab: Tab, rLocalTab: ReactiveTab, delay = 500): void {
+  clearTimeout(reloadTabFaviconTimeout[localTab.id])
+  reloadTabFaviconTimeout[localTab.id] = setTimeout(() => {
+    delete reloadTabFaviconTimeout[localTab.id]
+    browser.tabs
+      .get(localTab.id)
+      .then(tabInfo => {
+        if (tabInfo.favIconUrl && !tabInfo.favIconUrl.startsWith('chrome:')) {
+          localTab.favIconUrl = tabInfo.favIconUrl
+          rLocalTab.favIconUrl = tabInfo.favIconUrl
+        } else {
+          if (tabInfo.favIconUrl === 'chrome://global/skin/icons/warning.svg') {
+            localTab.warn = true
+            rLocalTab.warn = true
+          } else if (localTab.warn) {
+            localTab.warn = false
+            rLocalTab.warn = false
+          }
+          localTab.favIconUrl = ''
+          rLocalTab.favIconUrl = ''
+        }
+
+        const groupTab = Tabs.getGroupTab(localTab)
+        if (groupTab && !groupTab.discarded) Tabs.updateGroupChild(groupTab.id, localTab.id)
+      })
+      .catch(() => {
+        // If I close containered tab opened from bg script
+        // I'll get 'updated' event with 'status': 'complete'
+        // and since tab is in 'removing' state I'll get this
+        // error.
+      })
+  }, delay)
 }
 
 /**

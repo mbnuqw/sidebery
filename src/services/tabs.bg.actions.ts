@@ -139,14 +139,7 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo): void {
 
   if (change.status !== undefined) {
     if (change.status === 'complete' && targetTab.url[0] !== 'a') {
-      browser.tabs.get(targetTab.id).then(tabInfo => {
-        if (tabInfo.favIconUrl && !tabInfo.favIconUrl.startsWith('chrome:')) {
-          targetTab.favIconUrl = tabInfo.favIconUrl
-        } else {
-          targetTab.favIconUrl = ''
-        }
-        Favicons.saveFavicon(targetTab.url, targetTab.favIconUrl)
-      })
+      reloadTabFaviconDebounced(targetTab)
     }
   }
 
@@ -169,6 +162,22 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo): void {
     targetTab.proxified = false
     hideProxyBadge(tabId)
   }
+}
+
+const reloadTabFaviconTimeout: Record<ID, number> = {}
+function reloadTabFaviconDebounced(targetTab: Tab, delay = 500): void {
+  clearTimeout(reloadTabFaviconTimeout[targetTab.id])
+  reloadTabFaviconTimeout[targetTab.id] = setTimeout(() => {
+    delete reloadTabFaviconTimeout[targetTab.id]
+    browser.tabs.get(targetTab.id).then(tabInfo => {
+      if (tabInfo.favIconUrl && !tabInfo.favIconUrl.startsWith('chrome:')) {
+        targetTab.favIconUrl = tabInfo.favIconUrl
+      } else {
+        targetTab.favIconUrl = ''
+      }
+      Favicons.saveFavicon(targetTab.url, targetTab.favIconUrl)
+    })
+  }, delay)
 }
 
 /**
