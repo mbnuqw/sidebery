@@ -115,11 +115,7 @@ async function main() {
   document.title = title
 
   // Listen chagnes of title
-  titleEl.addEventListener('input', ((e: DOMEvent<Event, HTMLInputElement>) => {
-    const normTitle = e.target.value.trim()
-    document.title = normTitle
-    window.location.hash = `#${encodeURI(normTitle)}:id:${groupId}`
-  }) as (e: Event) => void)
+  titleEl.addEventListener('input', onTitleChange as (e: Event) => void)
 
   if (!initData.groupInfo) {
     const warnEl = document.getElementById('disconnected_warn')
@@ -176,6 +172,17 @@ async function main() {
   })
 
   updateScreenshots()
+}
+
+let onTitleChangeTimeout: number | undefined
+function onTitleChange(e: DOMEvent<Event, HTMLInputElement>): void {
+  clearTimeout(onTitleChangeTimeout)
+  onTitleChangeTimeout = setTimeout(() => {
+    const normTitle = e.target.value.trim()
+    if (!normTitle) return
+    document.title = normTitle
+    window.location.hash = `#${encodeURI(normTitle)}:id:${groupId}`
+  }, 500)
 }
 
 /**
