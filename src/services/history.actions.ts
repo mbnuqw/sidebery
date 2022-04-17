@@ -7,6 +7,7 @@ import { Tabs } from './tabs.fg'
 import { Windows } from './windows'
 import { Permissions } from './permissions'
 import { SetupPage } from './setup-page'
+import { Containers } from './containers'
 
 const UNLIMITED = 1234567
 const LOAD_RANGE = 432_000_000 // 1000*60*60*24*5 - 5 days
@@ -199,7 +200,16 @@ export async function openTab(item: HistoryItem): Promise<void> {
 
   const tabInfo: ItemInfo = { id: 0, url: item.url, title: item.title, active: true }
   const dstInfo: DstPlaceInfo = { windowId: Windows.id, discarded: false }
-  if (panel) dstInfo.panelId = panel.id
+  if (Utils.isTabsPanel(panel)) {
+    dstInfo.panelId = panel.id
+
+    if (item.url) {
+      dstInfo.containerId = Containers.getContainerFor(item.url)
+      if (!dstInfo.containerId && Containers.reactive.byId[panel.newTabCtx]) {
+        dstInfo.containerId = panel.newTabCtx
+      }
+    }
+  }
 
   await Tabs.open([tabInfo], dstInfo)
 }

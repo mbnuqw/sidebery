@@ -1,7 +1,7 @@
 import Utils from 'src/utils'
 import { Stored, Container } from 'src/types'
 import { Containers } from 'src/services/containers'
-import { DEFAULT_CONTAINER } from 'src/defaults'
+import { DEFAULT_CONTAINER, NOID } from 'src/defaults'
 import { Store } from 'src/services/storage'
 import { WebReq } from 'src/services/web-req'
 import { Logs } from 'src/services/logs'
@@ -129,4 +129,35 @@ export function findUnique(
   }
 
   return container
+}
+
+export function getContainerFor(url: string): string | undefined {
+  for (const ctr of Object.values(Containers.reactive.byId)) {
+    // Include rules
+    if (ctr.includeHostsActive) {
+      let matchedContiner = false
+
+      for (const rawRule of ctr.includeHosts.split('\n')) {
+        let rule: RegExp | string = rawRule.trim()
+        if (!rule) continue
+
+        if (rule.startsWith('/') && rule.endsWith('/')) {
+          try {
+            rule = new RegExp(rule.slice(1, rule.length - 1))
+          } catch {
+            // ---
+          }
+
+          if ((Utils.isRegExp(rule) && rule.test(url)) || url.indexOf(rule as string) !== -1) {
+            matchedContiner = true
+            break
+          }
+        }
+      }
+
+      if (matchedContiner) return ctr.id
+    }
+  }
+
+  return
 }
