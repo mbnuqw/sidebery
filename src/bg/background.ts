@@ -216,13 +216,16 @@ async function upgrade(): Promise<void> {
     await browser.storage.local.remove<Stored>(toRemove)
   } catch (err) {
     Logs.err('Upgrade: Cannot remove old storage values', err)
-    // TODO: show error message, ask user to save backup and try to remove everything.
+    try {
+      await browser.storage.local.clear()
+    } catch (err) {
+      Logs.err('Upgrade: Cannot clear storage', err)
+    }
   }
   try {
     await browser.storage.local.set<Stored>(newStorage)
   } catch (err) {
     Logs.err('Upgrade: Cannot set new values', err)
-    // TODO: show error message, ask user to save backup and try to remove everything.
   }
   browser.runtime.reload()
 }

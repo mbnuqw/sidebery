@@ -1826,7 +1826,6 @@ export async function upgrade(): Promise<void> {
       Sidebar.reactive.upgrading.init = upgradeState.init
       Sidebar.reactive.upgrading.settings = upgradeState.settings
       Sidebar.reactive.upgrading.sidebar = upgradeState.sidebar
-      // Sidebar.reactive.upgrading.menu = upgradeState.menu
       Sidebar.reactive.upgrading.snapshots = upgradeState.snapshots
       Sidebar.reactive.upgrading.favicons = upgradeState.favicons
       Sidebar.reactive.upgrading.styles = upgradeState.styles
