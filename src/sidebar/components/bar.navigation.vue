@@ -161,7 +161,6 @@ const staticButtons = computed((): NavBtn[] => {
 
   if (hidden.value.length) {
     result.push(HIDDEN_BTN)
-    // return result
   }
 
   for (const id of Sidebar.reactive.nav) {
@@ -174,7 +173,7 @@ const staticButtons = computed((): NavBtn[] => {
     ) {
       if (hidden.value.find(ni => ni.id === id)) continue
 
-      const name = translate(`settings.nav_bar_btn_${id}`)
+      const name = translate(`nav.btn_${id}`)
       const type = ButtonTypes[id]
       if (!type) continue
 
