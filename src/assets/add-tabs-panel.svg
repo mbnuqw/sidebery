@@ -1,1 +1,1 @@
-<svg id="icon_add_tabs_panel" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M4 3h9v2H4V3zM15 6H4v2h11V6zM4 9h7v2H4V9z"/><path d="M13 9h-1v3H9v1h3v3h1v-3h3v-1h-3V9zM3 9H1v2h2V9zM1 6h2v2H1V6zM3 3H1v2h2V3z"/></svg>
+<svg id="icon_add_tabs_panel" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M2 2h2v2H2V2Zm0 3h2v2H2V5Zm0 3h2v2H2V8Zm3-6h7v2H5V2Zm0 3h9v2H5V5Zm0 3h5v2H5V8Zm7 1h1v3h3v1h-3v3h-1v-3H9v-1h3V9Z"/></svg>
