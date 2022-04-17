@@ -49,9 +49,9 @@ let groupWinId: ID
 let groupTabId: ID
 let groupTabIndex: number
 let pinTab: GroupPin | undefined
-let tabs: GroupedTabInfo[] = []
+let tabs: GroupedTabInfo[]
 let groupLen: number, groupParentId: ID | undefined
-let screenshots: Record<string, string> = {}
+let screenshots: Record<string, string>
 
 function waitDOM(): Promise<void> {
   return new Promise(res => {
@@ -74,6 +74,8 @@ async function main() {
     return
   }
 
+  tabs = []
+  screenshots = {}
   groupWinId = window.groupWinId
   Windows.id = window.groupWinId
   groupTabId = window.groupTabId
