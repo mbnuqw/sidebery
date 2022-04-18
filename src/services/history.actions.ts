@@ -10,6 +10,7 @@ import { SetupPage } from './setup-page'
 import { Containers } from './containers'
 
 const UNLIMITED = 1234567
+const INITIAL_COUNT = 100
 const LOAD_RANGE = 432_000_000 // 1000*60*60*24*5 - 5 days
 
 let lastItemTime = 0
@@ -23,10 +24,11 @@ export async function load(): Promise<void> {
     text: '',
     endTime,
     startTime,
-    maxResults: UNLIMITED,
+    maxResults: INITIAL_COUNT,
   })
 
-  History.reactive.list = await normalizeHistory(result, true, startTime)
+  const lastItemVisitTime = result[result.length - 1]?.lastVisitTime
+  History.reactive.list = await normalizeHistory(result, true, lastItemVisitTime)
   lastItemTime = getLastItemTime() - 1
 
   if (!History.reactive.list.length) await loadMore()
