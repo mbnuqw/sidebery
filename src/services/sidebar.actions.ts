@@ -867,6 +867,7 @@ export function activatePanel(panelId: ID, loadPanels = true): void {
 
   if (Utils.isTabsPanel(prevPanel)) Sidebar.lastTabsPanelId = prevPanel.id
   if (Utils.isBookmarksPanel(panel) && panel.ready) Bookmarks.markOpenedBookmarksIfNeeded()
+  if (Utils.isHistoryPanel(prevPanel)) History.unloadAfter(30_000)
 
   if (DnD.reactive.isStarted) DnD.reactive.dstPanelId = panelId
 

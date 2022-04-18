@@ -42,6 +42,17 @@ export function unload(): void {
   History.resetListeners()
 }
 
+let unloadAfterTimeout: number | undefined
+export function unloadAfter(delay: number): void {
+  clearTimeout(unloadAfterTimeout)
+  unloadAfterTimeout = setTimeout(() => {
+    const historyPanel = Sidebar.reactive.panelsById.history
+    if (Sidebar.reactive.activePanelId !== historyPanel.id && historyPanel.ready) {
+      History.unload()
+    }
+  }, delay)
+}
+
 const cachedVisits: Record<string, browser.history.VisitItem[]> = {}
 export async function normalizeHistory(
   items: browser.history.HistoryItem[],
