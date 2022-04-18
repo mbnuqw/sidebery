@@ -50,6 +50,9 @@ section(ref="el")
         .sync-info {{item.size}} / 8kb
         .btn.sync-btn(@click.stop="applySyncData(item)") {{translate('settings.sync_apply_btn')}}
         .btn.sync-btn.-warn(@click.stop="deleteSyncData(item.id)") {{translate('settings.sync_delete_btn')}}
+  .note-field
+    .label {{translate('settings.sync_notes_title')}}
+    .note {{translate('settings.sync_notes')}}
   .ctrls
     .btn(@click="loadSyncedData") {{translate('settings.sync_update_btn')}}
 </template>

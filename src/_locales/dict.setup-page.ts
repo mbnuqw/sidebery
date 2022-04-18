@@ -2272,6 +2272,19 @@ export const setupPageTranslations: Translations = {
     ru: 'Невозможно применить синхронизированные данные',
     zh_CN: '无法应用同步数据',
   },
+  'settings.sync_notes_title': {
+    en: 'Notes:',
+    ru: 'Примечания:',
+    zh_CN: '说明:',
+  },
+  'settings.sync_notes': {
+    en: `Sidebery uses Firefox syncronization so:
+- You need to login to Firefox account to get it working
+- To be sure that data is uploaded to Firefox sync server you need to press the "Sync now" button in the Firefox settings or in your profile in the main menu (the three-line button)`,
+    ru: `Sidebery использует синхронизацию Firefox, поэтому:
+- Чтобы синхронизация работала, вам нужно зайти в Firefox аккаунт
+- Чтобы быть уверенным в том, что данные загрузились на сервер синхронизации Firefox, необходимо нажать на кнопку "Синхронизировать" в настройках или в вашем профиле в главном меню`,
+  },
 
   // - Help
   'settings.help_title': {
