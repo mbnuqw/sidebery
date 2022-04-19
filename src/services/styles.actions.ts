@@ -396,15 +396,20 @@ export async function hasCustomCSS(): Promise<boolean> {
 export function setCustomCSS(target: CustomCssTarget, css: string): void {
   const fieldName = (target + 'CSS') as CustomCssFieldName
 
+  let settingsChanged = false
   if (fieldName === 'sidebarCSS') {
+    if (Styles.sidebarCSS === css) return
+    if (Settings.reactive.sidebarCSS !== !!css) settingsChanged = true
     Styles.sidebarCSS = css
     Settings.reactive.sidebarCSS = !!css
   } else if (fieldName === 'groupCSS') {
+    if (Styles.groupCSS === css) return
+    if (Settings.reactive.groupCSS !== !!css) settingsChanged = true
     Styles.groupCSS = css
     Settings.reactive.groupCSS = !!css
   }
 
-  Settings.saveSettings()
+  if (settingsChanged) Settings.saveSettings()
   Store.set({ [fieldName]: css })
 
   if (Settings.reactive.syncSaveStyles) saveStylesToSync()
