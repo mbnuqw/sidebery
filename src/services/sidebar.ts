@@ -86,5 +86,7 @@ export const Sidebar = {
   folderHeight: 0,
   separatorHeight: 0,
 
+  reMountSidebar: null as null | (() => void),
+
   ...SidebarActions,
 }

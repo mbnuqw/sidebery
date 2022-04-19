@@ -27,7 +27,6 @@ async function main(): Promise<void> {
   Info.setInstanceType(InstanceType.sidebar)
 
   // Reactivate data for vue
-  Settings.reactive = reactive(Settings.reactive)
   Containers.reactive = reactive(Containers.reactive)
   Sidebar.reactive = reactive(Sidebar.reactive)
   Windows.reactive = reactive(Windows.reactive)
@@ -68,10 +67,6 @@ async function main(): Promise<void> {
   })
   Msg.setupListeners()
 
-  const app = createApp(SidebarRoot)
-
-  app.mount('#root_container')
-
   await Promise.all([
     Windows.loadWindowInfo(),
     Settings.loadSettings(),
@@ -79,6 +74,14 @@ async function main(): Promise<void> {
     Permissions.loadPermissions(),
     Info.loadVersionInfo(),
   ])
+
+  const app = createApp(SidebarRoot)
+  app.mount('#root_container')
+
+  Sidebar.reMountSidebar = () => {
+    createApp(SidebarRoot).mount('#root_container')
+    Styles.initColorScheme()
+  }
 
   if (Info.isMajorUpgrade()) {
     Logs.info('Upgrade needed')

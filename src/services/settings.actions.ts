@@ -157,6 +157,8 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
   if (Info.isSidebar && updateSidebarTitleChanged) Sidebar.updateSidebarTitle(0)
 
   if (pinnedTabsPositionChanged && Sidebar.hasTabs) Sidebar.recalcTabsPanels()
+
+  if (Sidebar.reMountSidebar) Sidebar.reMountSidebar()
 }
 
 export function resetSettings(): void {
