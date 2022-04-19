@@ -396,9 +396,6 @@ export async function hasCustomCSS(): Promise<boolean> {
 export function setCustomCSS(target: CustomCssTarget, css: string): void {
   const fieldName = (target + 'CSS') as CustomCssFieldName
 
-  if (css) Settings.reactive[fieldName] = true
-  else Settings.reactive[fieldName] = false
-
   if (fieldName === 'sidebarCSS') {
     Styles.sidebarCSS = css
     Settings.reactive.sidebarCSS = !!css
