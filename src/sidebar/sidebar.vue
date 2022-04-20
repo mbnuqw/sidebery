@@ -168,9 +168,10 @@ export default {
     onWheel(e) {
       if (State.ctxMenu) Actions.closeCtxMenu()
 
+      const threshold = e.deltaMode === 0 ? 8 : 1
       if (State.hScrollThroughPanels) {
-        if (e.deltaX > 0) return Actions.switchPanel(1)
-        if (e.deltaX < 0) return Actions.switchPanel(-1)
+        if (e.deltaX >= threshold) return Actions.switchPanel(1)
+        if (e.deltaX <= -threshold) return Actions.switchPanel(-1)
       }
     },
 
