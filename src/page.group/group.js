@@ -295,16 +295,7 @@ function createTabEl(info, clickHandler) {
 
   let reloadBtnEl = createButton('icon_reload', 'reload-btn', event => {
     event.stopPropagation()
-    if (event.button === 0) browser.tabs.reload(info.id)
-    if (event.button === 1) {
-      let index = tabs.findIndex(t => t.id === info.id)
-      browser.tabs.create({
-        url: info.url,
-        index: groupTabIndex + index + 1,
-        openerTabId: info.id,
-        active: false,
-      })
-    }
+    if (event.button === 0 || event.button === 1) browser.tabs.reload(info.id)
   })
   ctrlsEl.appendChild(reloadBtnEl)
 

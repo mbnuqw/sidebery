@@ -167,10 +167,6 @@ function onKeyNewTabAfter() {
     windowId: this.state.windowId,
   }
 
-  if (activeTab.parentId > -1) {
-    conf.openerTabId = activeTab.parentId
-  }
-
   browser.tabs.create(conf)
 }
 

@@ -1625,7 +1625,6 @@ async function reopenTabsInCtx(tabIds, ctxId) {
 
     this.actions.setNewTabPosition(createConf.index, tab.parentId, panel.id)
     if (idsMap[tab.parentId] >= 0) {
-      createConf.openerTabId = idsMap[tab.parentId]
       this.state.newTabsPosition[createConf.index].parent = idsMap[tab.parentId]
     }
 
@@ -2131,10 +2130,11 @@ async function dropToTabsNative(event, dropIndex, dropParent, destCtx, pin, isIn
       if (urls.length) {
         let offset = 0
         for (let url of urls) {
+          let index = dropIndex + offset++
+          this.actions.setNewTabPosition(index, dropParent, panel.id)
           await browser.tabs.create({
             url,
-            index: dropIndex + offset++,
-            openerTabId: dropParent < 0 ? undefined : dropParent,
+            index: index,
             cookieStoreId: destCtx,
             windowId: this.state.windowId,
             pinned: pin,
@@ -2148,7 +2148,6 @@ async function dropToTabsNative(event, dropIndex, dropParent, destCtx, pin, isIn
         this.actions.setNewTabPosition(dropIndex, dropParent, panel.id)
         let searchTab = await browser.tabs.create({
           index: dropIndex,
-          openerTabId: dropParent < 0 ? undefined : dropParent,
           cookieStoreId: destCtx,
           windowId: this.state.windowId,
           pinned: pin,
@@ -2176,7 +2175,6 @@ async function dropToTabsNative(event, dropIndex, dropParent, destCtx, pin, isIn
       active: true,
       url,
       index: dropIndex,
-      openerTabId: dropParent < 0 ? undefined : dropParent,
       cookieStoreId: destCtx,
       windowId: this.state.windowId,
       pinned: pin,
@@ -2262,7 +2260,6 @@ async function groupTabs(tabIds, conf = {}) {
     active: !!conf.active,
     cookieStoreId: tabs[0].cookieStoreId,
     index: tabs[0].index,
-    openerTabId: tabs[0].parentId < 0 ? undefined : tabs[0].parentId,
     url: Utils.createGroupUrl(groupTitle, conf),
     windowId: this.state.windowId,
   })
@@ -2371,7 +2368,6 @@ function createTabAfter(tabId) {
     index,
     cookieStoreId: targetTab.cookieStoreId,
     windowId: this.state.windowId,
-    openerTabId: parentId,
   })
 }
 
@@ -2382,11 +2378,13 @@ function createChildTab(tabId) {
   let targetTab = this.state.tabsMap[tabId]
   if (!targetTab) return
 
+  const index = targetTab.index + 1
+
+  this.actions.setNewTabPosition(index, targetTab.id, targetTab.panelId)
   browser.tabs.create({
-    index: targetTab.index + 1,
+    index,
     cookieStoreId: targetTab.cookieStoreId,
     windowId: this.state.windowId,
-    openerTabId: targetTab.id,
   })
 }
 
