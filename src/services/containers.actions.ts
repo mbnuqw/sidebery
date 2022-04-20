@@ -7,6 +7,7 @@ import { WebReq } from 'src/services/web-req'
 import { Logs } from 'src/services/logs'
 import { Menu } from 'src/services/menu'
 import { Info } from 'src/services/info'
+import { Settings } from './settings'
 
 export async function load(): Promise<void> {
   if (Info.isBg) {
@@ -70,7 +71,12 @@ export async function saveContainers(delay?: number): Promise<void> {
 export function updateContainers(newContainers?: Record<ID, Container> | null): void {
   if (!newContainers) return
   Containers.reactive.byId = newContainers
+
   if (Info.isBg) WebReq.updateReqHandlersDebounced()
+
+  if (Info.isSidebar && Settings.reactive.ctxMenuIgnoreContainers) {
+    Menu.parseContainersRules()
+  }
 }
 
 export async function create(name: string, color: string, icon: string): Promise<Container> {
