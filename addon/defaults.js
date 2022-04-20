@@ -94,7 +94,7 @@ export const DEFAULT_SETTINGS = {
   dndExpMod: 'none',
 
   // Tabs
-  stateStorage: 'global',
+  stateStorage: 'session',
   warnOnMultiTabClose: 'collapsed',
   activateOnMouseUp: true,
   activateLastTabOnPanelSwitching: true,
