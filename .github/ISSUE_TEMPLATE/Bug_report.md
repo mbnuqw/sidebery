@@ -17,7 +17,7 @@ about: Something is not working
 ### Addon data
 <details><code>
 <!-- To get addon data: 
-     - Go to the settings page - section "Help"
+     - Go to the Sidebery settings page - section "Help"
      - Click on the "Debug info" button
      - Copy and paste here, inside the <code> tag
      Note: all URLs, titles and other personal info are skipped. -->
