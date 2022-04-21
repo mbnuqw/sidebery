@@ -281,9 +281,15 @@ export function getFavPlaceholder(url: string): string {
   if (FILE_RE.test(url)) return '#icon_local_file'
 
   if (url.startsWith('a')) {
-    if (url.startsWith('about:preferences')) return '#icon_pref'
-    if (url.startsWith('about:addons')) return '#icon_addons'
-    if (url.startsWith('about:performance')) return '#icon_perf'
+    if (url.startsWith('about:new')) return '#icon_ff'
+    if (url.startsWith('about:bla')) return '#icon_ff'
+    if (url.startsWith('about:pre')) return '#icon_pref'
+    if (url.startsWith('about:con')) return '#icon_pref'
+    if (url.startsWith('about:add')) return '#icon_addons'
+    if (url.startsWith('about:per')) return '#icon_perf'
+    if (url.startsWith('about:dev')) return '#icon_code'
+    if (url.startsWith('about:proc')) return '#icon_perf'
+    if (url.startsWith('about:prot')) return '#icon_dashboard'
   }
 
   return '#icon_ff'
