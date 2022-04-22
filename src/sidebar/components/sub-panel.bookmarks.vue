@@ -20,9 +20,8 @@
 
 <script lang="ts" setup>
 import { Bookmarks } from 'src/services/bookmarks'
-import { Bookmark, TabsPanel } from 'src/types'
+import { Bookmark, MenuType, TabsPanel } from 'src/types'
 import { reactive, computed } from 'vue'
-import { Sidebar } from 'src/services/sidebar'
 import ScrollBox from 'src/components/scroll-box.vue'
 import BookmarkNode from 'src/components/bookmark-node.vue'
 import LoadingDots from 'src/components/loading-dots.vue'
@@ -30,6 +29,7 @@ import { Permissions } from 'src/services/permissions'
 import { SetupPage } from 'src/services/setup-page'
 import { Menu } from 'src/services/menu'
 import { Selection } from 'src/services/selection'
+import { Settings } from 'src/services/settings'
 
 const props = defineProps<{ tabsPanel: TabsPanel }>()
 const state = reactive({
@@ -74,30 +74,13 @@ async function loadBookmarks(): Promise<void> {
   state.loading = false
 }
 
-async function onSaveClick(): Promise<void> {
-  if (!Permissions.reactive.bookmarks) return
-  state.loadingBar = true
-  try {
-    await Sidebar.bookmarkTabsPanel(props.tabsPanel.id, true, true)
-  } catch {
-    state.loadingBar = false
-  }
-  state.loadingBar = false
-}
-
-async function onRestoreClick(): Promise<void> {
-  if (!Permissions.reactive.bookmarks) return
-  state.loadingBar = true
-  try {
-    await Sidebar.restoreFromBookmarks(props.tabsPanel, true)
-  } catch {
-    state.loadingBar = false
-  }
-  state.loadingBar = false
-}
-
-function onMouseUp(): void {
+function onMouseUp(e: MouseEvent): void {
   if (Selection.isSet()) Selection.resetSelection()
   if (Menu.isOpen) Menu.close()
+
+  if (e.button === 2 && !Settings.reactive.ctxMenuNative) {
+    Selection.selectNavItem(props.tabsPanel.id)
+    Menu.open(MenuType.TabsPanel, e.clientX, e.clientY)
+  }
 }
 </script>
