@@ -518,8 +518,8 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
       label: translate('menu.tabs_panel.bookmark'),
       icon: 'icon_star',
       badge: 'icon_move_badge',
-      onClick: () => Sidebar.bookmarkTabsPanel(panel.id),
-      onAltClick: () => Sidebar.bookmarkTabsPanel(panel.id, true),
+      onClick: () => Sidebar.bookmarkTabsPanel(panel.id, true),
+      onAltClick: () => Sidebar.bookmarkTabsPanel(panel.id),
     }
 
     return option
