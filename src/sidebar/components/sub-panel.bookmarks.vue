@@ -8,14 +8,8 @@
   .overlay(@click="onOverlayClick")
   .sub-panel
     .bar(:data-loading="state.loadingBar" @click="onBarClick")
-      .icon-btn(title="Save tabs to bookmarks" @click.stop="onSaveClick")
-        svg: use(xlink:href="#icon_save_tabs")
-      .grip
       svg.icon: use(xlink:href="#icon_bookmarks_badge")
       .grip
-      .icon-btn(title="Restore tabs from bookmarks" @click.stop="onRestoreClick")
-        svg: use(xlink:href="#icon_restore_tabs")
-      LoadingDots(v-if="state.loadingBar")
     .content
       ScrollBox(v-if="bookmarks && !state.loading && Permissions.reactive.bookmarks")
         .bookmarks-tree
