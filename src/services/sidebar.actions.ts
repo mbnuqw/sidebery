@@ -1614,25 +1614,29 @@ export async function convertToBookmarksPanel(panel: TabsPanel): Promise<void> {
   }
 
   // Bookmark panel (Create or Update bookmarks)
-  try {
-    await Sidebar.bookmarkTabsPanel(panel.id, true, true, targetFolderId)
-  } catch {
-    Notifications.finishProgress(notif)
-    Sidebar.convertingPanelLock = false
-    return
+  if (panel.tabs.length) {
+    try {
+      await Sidebar.bookmarkTabsPanel(panel.id, true, true, targetFolderId)
+    } catch {
+      Notifications.finishProgress(notif)
+      Sidebar.convertingPanelLock = false
+      return
+    }
   }
 
   // Close tabs
   const tabsIds = panel.tabs.map(t => t.id)
   if (Tabs.list.length === tabsIds.length) await browser.tabs.create({})
-  await Tabs.removeTabs(tabsIds, true)
+  if (tabsIds.length) await Tabs.removeTabs(tabsIds, true)
 
   // Check if all tabs actualy removed
-  const allRemoved = await Tabs.isRemovingFinished()
-  if (!allRemoved) {
-    Notifications.finishProgress(notif)
-    Sidebar.convertingPanelLock = false
-    return Logs.warn('Sidebar.convertToBookmarksPanel: Cannot remove panel: Panel is not empty')
+  if (tabsIds.length) {
+    const allRemoved = await Tabs.isRemovingFinished()
+    if (!allRemoved) {
+      Notifications.finishProgress(notif)
+      Sidebar.convertingPanelLock = false
+      return Logs.warn('Sidebar.convertToBookmarksPanel: Cannot remove panel: Panel is not empty')
+    }
   }
 
   // Create bookmarks panel
