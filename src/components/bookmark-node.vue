@@ -119,9 +119,7 @@ async function onMouseDown(e: MouseEvent): Promise<void> {
 
     const action = Settings.reactive.midClickBookmark
     if (action === 'open_new_tab') {
-      let panelId = Sidebar.lastTabsPanelId
-      // if (props.node.url) panelId = Sidebar.findTabsPanelForUrl(props.node.url)
-      // else panelId = Sidebar.lastTabsPanelId
+      const panelId = getTargetTabsPanelId()
       await Bookmarks.open([props.node.id], { panelId }, false, Settings.reactive.actMidClickTab)
     } else if (action === 'edit') Bookmarks.editBookmarkNode(props.node)
     else if (action === 'delete') Bookmarks.removeBookmarks([props.node.id])
@@ -134,6 +132,14 @@ async function onMouseDown(e: MouseEvent): Promise<void> {
       Mouse.startMultiSelection(e, props.node.id)
     }
   }
+}
+
+function getTargetTabsPanelId(): ID {
+  let panelId = Sidebar.reactive.activePanelId
+  if (!Utils.isTabsPanel(Sidebar.reactive.panelsById[panelId])) {
+    panelId = Sidebar.lastTabsPanelId
+  }
+  return panelId
 }
 
 function onFolderFavMouseDown(e: MouseEvent): void {
@@ -203,8 +209,10 @@ async function onMouseUp(e: MouseEvent): Promise<void> {
         }
       }
 
+      const fromSubPanel = Utils.isTabsPanel(panel)
+
       // Activate tab if bookmark is opened
-      if (Settings.reactive.activateOpenBookmarkTab && props.node.isOpen) {
+      if (Settings.reactive.activateOpenBookmarkTab && props.node.isOpen && !fromSubPanel) {
         const tab = Tabs.list.find(t => t.url === props.node.url)
         if (tab) {
           browser.tabs.update(tab.id, { active: true })
@@ -213,9 +221,9 @@ async function onMouseUp(e: MouseEvent): Promise<void> {
       }
 
       // Open tab
-      const panelId = Sidebar.lastTabsPanelId
-      // const panelId = Sidebar.findTabsPanelForUrl(props.node.url)
-      Bookmarks.open([props.node.id], { panelId }, !Settings.reactive.openBookmarkNewTab, true)
+      const panelId = getTargetTabsPanelId()
+      const inTheSameTab = !fromSubPanel && !Settings.reactive.openBookmarkNewTab
+      Bookmarks.open([props.node.id], { panelId }, inTheSameTab, true)
     }
 
     // Folder
