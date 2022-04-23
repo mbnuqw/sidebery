@@ -108,7 +108,7 @@ export async function load(): Promise<void> {
   if (activeTab && !activeTab.pinned) Tabs.scrollToTab(activeTab.id)
 
   Logs.info('Tabs.load: Save tabs and cache')
-  Tabs.updateTabsVisability()
+  Tabs.updateTabsVisibility()
   Tabs.cacheTabsData()
   Tabs.list.forEach(t => saveTabData(t.id))
 
@@ -1863,10 +1863,10 @@ export async function moveToNewPanel(tabIds: ID[]): Promise<void> {
 }
 
 /**
- * Update tabs visability
+ * Update tabs visibility
  */
-export function updateTabsVisability(): void {
-  // console.log('[DEBUG] tabs.updateTabsVisability()')
+export function updateTabsVisibility(): void {
+  // console.log('[DEBUG] tabs.updateTabsVisibility()')
   const hideFolded = Settings.reactive.hideFoldedTabs
   const hideInact = Settings.reactive.hideInact
 
