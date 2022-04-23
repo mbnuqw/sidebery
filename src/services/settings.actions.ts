@@ -140,7 +140,7 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
   }
 
   if ((hideInactTabs || updateInvisTabs) && Sidebar.hasTabs) {
-    Tabs.updateTabsVisibility()
+    Tabs.updateNativeTabsVisibility()
   }
 
   if (highlightOpenBookmarks && Bookmarks.reactive.byId) {

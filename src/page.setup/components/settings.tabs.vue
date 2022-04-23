@@ -67,7 +67,7 @@ section(ref="el")
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted } from 'vue'
 import { translate } from 'src/dict'
 import { Settings } from 'src/services/settings'
 import { Permissions } from 'src/services/permissions'
@@ -77,11 +77,6 @@ import ToggleField from '../../components/toggle-field.vue'
 import SelectField from '../../components/select-field.vue'
 
 const el = ref<HTMLElement | null>(null)
-
-const activateAfterClosingNextOrPrev = computed(() => {
-  const actAftCls = Settings.reactive.activateAfterClosing
-  return actAftCls === 'next' || actAftCls === 'prev'
-})
 
 function toggleHideInact(): void {
   if (!Settings.reactive.hideInact && !Permissions.reactive.tabHide) location.hash = 'tab-hide'

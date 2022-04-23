@@ -911,7 +911,7 @@ export function switchToPanel(id: ID, withoutTabActivation?: boolean): void {
     Tabs.activateLastActiveTabOf(id)
   }
 
-  if (panel) Tabs.updateTabsVisibility()
+  if (panel) Tabs.updateNativeTabsVisibility()
   if (DnD.reactive.isStarted) updatePanelBoundsDebounced()
   else saveActivePanel()
 }

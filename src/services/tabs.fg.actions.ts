@@ -3,7 +3,7 @@ import { CONTAINER_ID, GROUP_URL, NOID, NEWID, Err, ASKID, MOVEID, PRE_SCROLL } 
 import { BKM_OTHER_ID } from 'src/defaults'
 import { translate } from 'src/dict'
 import { Stored, Tab, Panel, TabCache, ActiveTabsHistory, ReactiveTab, TabStatus } from 'src/types'
-import { SavedGroup, Notification, TabSessionData, TabsTreeData } from 'src/types'
+import { Notification, TabSessionData, TabsTreeData } from 'src/types'
 import { WindowChoosingDetails, SrcPlaceInfo, DstPlaceInfo, ItemInfo } from 'src/types'
 import { InstanceType, TabsPanel, PanelType } from 'src/types'
 import { Tabs } from 'src/services/tabs.fg'
@@ -31,7 +31,7 @@ export function toReactive(tab: Tab): ReactiveTab {
     cookieStoreId: tab.cookieStoreId,
     discarded: tab.discarded ?? false,
     favIconUrl: tab.favIconUrl,
-    invisible: tab.hidden || tab.invisible,
+    invisible: tab.invisible,
     pinned: tab.pinned,
     status: Tabs.getStatus(tab),
     isParent: tab.isParent,
@@ -45,31 +45,6 @@ export function toReactive(tab: Tab): ReactiveTab {
     updated: tab.updated,
     unread: tab.unread,
   }
-}
-
-export function updateReactiveTab(tab: Tab): void {
-  const rTab = Tabs.reactive.byId[tab.id]
-  if (!rTab) return
-
-  rTab.active = tab.active
-  rTab.mediaAudible = tab.audible ?? false
-  rTab.mediaMuted = tab.mutedInfo?.muted ?? false
-  rTab.mediaPaused = tab.mediaPaused
-  rTab.cookieStoreId = tab.cookieStoreId
-  rTab.discarded = tab.discarded ?? false
-  rTab.favIconUrl = tab.favIconUrl
-  rTab.invisible = tab.hidden || tab.invisible
-  rTab.pinned = tab.pinned
-  rTab.status = Tabs.getStatus(tab)
-  rTab.isParent = tab.isParent
-  rTab.folded = tab.folded
-  rTab.title = tab.title
-  rTab.url = tab.url
-  rTab.lvl = tab.lvl
-  rTab.sel = tab.sel
-  rTab.warn = tab.warn
-  rTab.updated = tab.updated
-  rTab.unread = tab.unread
 }
 
 export function getStatus(tab: Tab): TabStatus {
@@ -108,7 +83,7 @@ export async function load(): Promise<void> {
   if (activeTab && !activeTab.pinned) Tabs.scrollToTab(activeTab.id)
 
   Logs.info('Tabs.load: Save tabs and cache')
-  Tabs.updateTabsVisibility()
+  Tabs.updateNativeTabsVisibility()
   Tabs.cacheTabsData()
   Tabs.list.forEach(t => saveTabData(t.id))
 
@@ -1865,8 +1840,7 @@ export async function moveToNewPanel(tabIds: ID[]): Promise<void> {
 /**
  * Update tabs visibility
  */
-export function updateTabsVisibility(): void {
-  // console.log('[DEBUG] tabs.updateTabsVisibility()')
+export function updateNativeTabsVisibility(): void {
   const hideFolded = Settings.reactive.hideFoldedTabs
   const hideInact = Settings.reactive.hideInact
 
