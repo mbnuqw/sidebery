@@ -27,8 +27,7 @@
   height: var(--tabs-height)
   z-index: 10
   overflow: hidden
-  transform-origin: 50% 0%
-  transition: transform var(--d-fast), opacity var(--d-fast), padding var(--d-fast), z-index var(--d-fast)
+  transition: transform var(--d-fast), opacity var(--d-fast), padding var(--d-fast)
 
   &[data-lvl="1"]
     padding-left: var(--tabs-indent)
@@ -476,7 +475,6 @@
   transform: translateY(-6px)
 #root .tab-enter-from
   opacity: 0
-  z-index: 10
   transform: translateY(-8px)
 
 #root .tab-part-enter-active
