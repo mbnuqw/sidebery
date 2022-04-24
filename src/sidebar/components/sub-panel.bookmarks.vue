@@ -5,8 +5,8 @@
   @mousedown.stop=""
   @mouseup.stop="onMouseUp"
   @dblclick.stop="")
-  .overlay(@click="onOverlayClick")
-  .sub-panel
+  .overlay(@click="closeSubPanel")
+  .sub-panel(@mouseleave="onMouseLeave" @mouseenter="onMouseEnter")
     .bar(:data-loading="state.loadingBar" @click="onBarClick")
       svg.icon: use(xlink:href="#icon_bookmarks_badge")
       .grip
@@ -39,14 +39,17 @@ const state = reactive({
   permitted: Permissions.reactive.bookmarks,
 })
 
+const CLOSE_ON_LEAVE_TIMEOUT = 300
+
 const bookmarks = computed<Bookmark[] | undefined>(() => {
   return Bookmarks.reactive.byId[props.tabsPanel.bookmarksFolderId]?.children
 })
 
-function onOverlayClick(): void {
+function closeSubPanel(): void {
   state.active = false
   if (Selection.isSet()) Selection.resetSelection()
   if (Menu.isOpen) Menu.close()
+  clearTimeout(onMouseLeaveTimeout)
 }
 
 function onBarClick(): void {
@@ -82,5 +85,19 @@ function onMouseUp(e: MouseEvent): void {
     Selection.selectNavItem(props.tabsPanel.id)
     Menu.open(MenuType.TabsPanel, e.clientX, e.clientY)
   }
+}
+
+let onMouseLeaveTimeout: number | undefined
+function onMouseLeave(): void {
+  if (state.loading) return
+
+  clearTimeout(onMouseLeaveTimeout)
+  onMouseLeaveTimeout = setTimeout(() => {
+    closeSubPanel()
+  }, CLOSE_ON_LEAVE_TIMEOUT)
+}
+
+function onMouseEnter(): void {
+  clearTimeout(onMouseLeaveTimeout)
 }
 </script>
