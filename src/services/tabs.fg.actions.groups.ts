@@ -1,58 +1,10 @@
 import Utils from 'src/utils'
-import { Tab, SavedGroup, GroupConfig, GroupInfo, GroupedTabInfo, TabCache } from 'src/types'
+import { Tab, GroupConfig, GroupInfo, GroupedTabInfo } from 'src/types'
 import { GroupUpdateInfo } from 'src/types'
-import { NOID, CONTAINER_ID, GROUP_URL } from 'src/defaults'
-import { Logs } from 'src/services/logs'
 import { Windows } from 'src/services/windows'
 import { Settings } from 'src/services/settings'
 import { Tabs } from './tabs.fg'
 import { Favicons } from './favicons'
-
-/**
- * Recreate group tabs
- */
-export async function recreateParentGroups(
-  tabs: Tab[],
-  groups: (SavedGroup | TabCache)[],
-  idsMap: Record<ID, ID>,
-  index: number
-): Promise<void> {
-  for (let group, j = 0; j < groups.length; j++) {
-    group = groups[j]
-    const groupId = Utils.getGroupId(group.url)
-    const rawTitle = groupId.slice(0, -16)
-    const groupRawParams = Utils.getGroupRawParams(group.url)
-    const groupUrl = browser.runtime.getURL('page.group/group.html')
-    const url = `${groupUrl}${groupRawParams}#${groupId}`
-    const discarded = group.ctx === CONTAINER_ID || !group.ctx
-    const groupTab = (await browser.tabs.create({
-      windowId: Windows.id,
-      index: index + j,
-      url,
-      cookieStoreId: group.ctx,
-      active: false,
-      discarded,
-      title: discarded ? decodeURI(rawTitle) : undefined,
-    })) as Tab
-    groupTab.url = url
-
-    if (url.startsWith(GROUP_URL)) linkGroupWithPinnedTab(groupTab, tabs)
-
-    Tabs.normalizeTab(groupTab, NOID)
-
-    tabs.splice(index + j, 0, groupTab)
-    groupTab.panelId = group.panelId || NOID
-    if (group.parentId === undefined) group.parentId = NOID
-    if (idsMap[group.parentId] >= 0) groupTab.parentId = idsMap[group.parentId]
-    groupTab.folded = !!group.folded
-    idsMap[group.id] = groupTab.id
-
-    Tabs.byId[groupTab.id] = groupTab
-    Tabs.reactive.byId[groupTab.id] = Tabs.toReactive(groupTab)
-  }
-
-  Logs.info(`Recreated ${groups.length} groups at ${index} index`)
-}
 
 /**
  * Set relGroupId and relPinId props in related pinned and group tabs
