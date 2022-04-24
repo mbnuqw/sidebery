@@ -26,6 +26,8 @@ about: Something is not working
 ### Logs
 <details><code>
 <!-- To get logs: 
+     - Set logs level to "all" in Sidebery settings page - section "Help"
+     - Reproduce the bug 
      - Open DevTools 
        (open this url in new tab: about:devtools-toolbox?id=%7B3c078156-979c-498b-8990-85f7987dd929%7D&type=extension)
      - Navigate to "console" tab,
