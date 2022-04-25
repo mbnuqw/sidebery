@@ -90,6 +90,7 @@ function onMouseUp(e: MouseEvent): void {
 let onMouseLeaveTimeout: number | undefined
 function onMouseLeave(): void {
   if (state.loading) return
+  if (Menu.isOpen) return
 
   clearTimeout(onMouseLeaveTimeout)
   onMouseLeaveTimeout = setTimeout(() => {
