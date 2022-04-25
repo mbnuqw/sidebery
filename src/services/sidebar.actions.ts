@@ -1534,14 +1534,12 @@ export async function restoreFromBookmarks(panel: TabsPanel, silent?: boolean): 
         cookieStoreId: info.container,
       }
       const isDefaultContainer = !conf.cookieStoreId || conf.cookieStoreId === CONTAINER_ID
+      const parentId = idsMap[info.parentId ?? NOID] ?? NOID
       if (conf.url && !conf.url.startsWith('about') && isDefaultContainer) {
         conf.discarded = true
         conf.title = info.title
       }
-      if (info.parentId && idsMap[info.parentId] !== undefined) {
-        conf.openerTabId = idsMap[info.parentId]
-      }
-      Tabs.setNewTabPosition(index, conf.openerTabId ?? NOID, panel.id)
+      Tabs.setNewTabPosition(index, parentId, panel.id)
       const newTab = await browser.tabs.create(conf)
       idsMap[info.id] = newTab.id
     }
