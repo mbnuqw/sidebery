@@ -1318,43 +1318,58 @@ export async function bookmarkTabsPanel(
   const dataPrefix = 'data:application/x-sidebery-panel;charset=UTF-8,'
   const folderNameWithConfig = `${folderName} [${dataPrefix}${confJSON}]`
 
-  // Create panel folder
-  const parentConf = { title: folderNameWithConfig, index, parentId: parent.id }
-  let folder: Bookmark | undefined
-  try {
-    folder = (await browser.bookmarks.create(parentConf)) as Bookmark
-  } catch (err) {
-    if (!silent) {
-      Logs.err('Sidebar.bookmarkTabsPanel: Cannot create panel folder')
-      const title = translate('notif.tabs_panel_to_bookmarks_err')
-      const details = translate('notif.tabs_panel_to_bookmarks_err.folder')
-      Notifications.err(title, details)
+  // Create/Update panel folder
+  let panelFolder: Bookmark | undefined
+
+  // If panel folder is exists, update its name
+  if (oldFolder) {
+    panelFolder = oldFolder
+    try {
+      await browser.bookmarks.update(panelFolder.id, { title: folderNameWithConfig })
+    } catch (err) {
+      if (!silent) {
+        Logs.err('Sidebar.bookmarkTabsPanel: Cannot update panel folder')
+        const title = translate('notif.tabs_panel_to_bookmarks_err')
+        const details = translate('notif.tabs_panel_to_bookmarks_err.folder_upd')
+        Notifications.err(title, details)
+      }
+      throw err
     }
-    throw err
   }
-  const folderId = folder.id
 
-  // Generate folder content
+  // Or create new folder
+  else {
+    const parentConf = { title: folderNameWithConfig, index, parentId: parent.id }
+    try {
+      panelFolder = (await browser.bookmarks.create(parentConf)) as Bookmark
+    } catch (err) {
+      if (!silent) {
+        Logs.err('Sidebar.bookmarkTabsPanel: Cannot create panel folder')
+        const title = translate('notif.tabs_panel_to_bookmarks_err')
+        const details = translate('notif.tabs_panel_to_bookmarks_err.folder')
+        Notifications.err(title, details)
+      }
+      throw err
+    }
+  }
+
+  const panelFolderId = panelFolder.id
   const items: ItemInfo[] = []
-  const dst: DstPlaceInfo = { index: 0, parentId: folderId }
+  const dst: DstPlaceInfo = { parentId: panelFolderId }
 
-  // Tabs
   for (const rTab of panel.tabs) {
     const tab = Tabs.byId[rTab.id]
     if (!tab) continue
     const info: ItemInfo = { id: tab.id, title: tab.title, url: tab.url, parentId: tab.parentId }
-    if (tab.parentId === NOID) info.parentId = folderId
     if (Containers.reactive.byId[tab.cookieStoreId]) info.container = tab.cookieStoreId
     items.push(info)
   }
 
-  // Create new bookmarks
   try {
-    await Bookmarks.createFrom(items, dst, progress)
+    await Bookmarks.saveToFolder(items, dst, false, progress)
   } catch (err) {
-    browser.bookmarks.removeTree(folderId)
     if (!silent) {
-      Logs.err('Tabs.bookmarkTabsPanel: Cannot create bookmarks', err)
+      Logs.err('Tabs.bookmarkTabsPanel: Cannot save bookmarks', err)
       const title = translate('notif.tabs_panel_to_bookmarks_err')
       const details = translate('notif.tabs_panel_to_bookmarks_err.bookmarks')
       Notifications.err(title, details)
@@ -1362,12 +1377,11 @@ export async function bookmarkTabsPanel(
     throw err
   }
 
-  // Remove old folder tree
-  if (update && oldFolder) await browser.bookmarks.removeTree(oldFolder.id)
-
   // Update and save tabs panel
-  panel.bookmarksFolderId = folderId
-  Sidebar.saveSidebar(300)
+  if (panel.bookmarksFolderId !== panelFolderId) {
+    panel.bookmarksFolderId = panelFolderId
+    Sidebar.saveSidebar(300)
+  }
 
   // Stop progress notification and show notification about successfull opperrattionnn
   if (!silent) {

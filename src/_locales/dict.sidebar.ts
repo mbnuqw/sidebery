@@ -287,6 +287,10 @@ export const sidebarTranslations: Translations = {
     ru: 'Невозможно создать папку для панели',
     zh_CN: '无法创建目标文件夹',
   },
+  'notif.tabs_panel_to_bookmarks_err.folder_upd': {
+    en: 'Cannot update destination folder',
+    ru: 'Невозможно обновить папку для панели',
+  },
   'notif.tabs_panel_to_bookmarks_err.bookmarks': {
     en: 'Cannot create bookmarks',
     ru: 'Невозможно создать закладки',

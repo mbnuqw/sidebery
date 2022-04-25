@@ -916,6 +916,9 @@ export function removeDataFromTitle(item: ItemInfo): string | undefined {
   }
 }
 
+/**
+ * Creates bookmarks in destination folder
+ */
 export async function createFrom(
   items: ItemInfo[],
   dst: DstPlaceInfo,
@@ -974,6 +977,167 @@ export async function createFrom(
       })
 
       if (progress) Notifications.updateProgress(progress, n++, items.length)
+    }
+  }
+}
+
+/**
+ * Creates or reuse bookmarks in destination folder
+ */
+export async function saveToFolder(
+  items: ItemInfo[],
+  dst: DstPlaceInfo,
+  removeOld: boolean,
+  progress?: Notification
+): Promise<void> {
+  if (!dst.parentId) return Logs.warn('Bookmarks: Cannot save bookmarks: No parentId')
+
+  const dstFolder = Bookmarks.reactive.byId[dst.parentId]
+  if (!dstFolder) return Logs.warn('Bookmarks: Cannot save bookmarks: No parent folder')
+
+  const panelFolderId = dstFolder.id
+  const bookmarksList = Array.from(listBookmarks(dstFolder.children))
+  let n = 0
+
+  // Tree
+  if (Settings.reactive.tabsTreeBookmarks) {
+    const idsMap: Partial<Record<ID, ID>> = { [NOID]: panelFolderId }
+    const indexes: Record<ID, number> = { [panelFolderId]: 0 }
+
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i]
+      const nextItem = items[i + 1]
+      const parentFolderId = idsMap[item.parentId ?? NOID]
+      if (parentFolderId === undefined || !item.url) {
+        Logs.warn('Bookmarks: No parentFolderId or url: Continuing')
+        continue
+      }
+
+      // Get target index and update indexes map
+      let index = indexes[parentFolderId]
+      if (index === undefined) {
+        index = 0
+        indexes[parentFolderId] = 0
+      }
+      indexes[parentFolderId] += 1
+
+      // Folder
+      if (nextItem?.parentId === item.id) {
+        const folderIndex = bookmarksList.findIndex(n => {
+          return n.type === 'folder' && n.title === item.title
+        })
+        let folder = bookmarksList[folderIndex]
+        // Folder exists
+        if (folder) {
+          bookmarksList.splice(folderIndex, 1)
+          // Move folder
+          if (folder.index !== index || parentFolderId !== folder.parentId) {
+            await browser.bookmarks.move(folder.id, { index, parentId: parentFolderId })
+          }
+        }
+        // Create folder
+        else {
+          const createConf = { title: item.title, index, parentId: parentFolderId }
+          folder = (await browser.bookmarks.create(createConf)) as Bookmark
+        }
+
+        indexes[folder.id] = 0
+        idsMap[item.id] = folder.id
+
+        if (progress) Notifications.updateProgress(progress, n++, items.length)
+
+        // Bookmark of the parent item
+        if (!GROUP_RE.test(item.url)) {
+          attachContainerInfoToTitle(item)
+          const bookmarkIndex = bookmarksList.findIndex(n => {
+            return n.type === 'bookmark' && n.title === item.title && n.url === item.url
+          })
+          let bookmark = bookmarksList[bookmarkIndex]
+          // Bookmark exists
+          if (bookmark) {
+            bookmarksList.splice(bookmarkIndex, 1)
+            if (bookmark.index !== 0 || folder.id !== bookmark.parentId) {
+              await browser.bookmarks.move(bookmark.id, { index: 0, parentId: folder.id })
+            }
+          }
+          // Create bookmark
+          else {
+            const url = Utils.denormalizeUrl(item.url)
+            const createConf = { title: item.title, url, index, parentId: parentFolderId }
+            bookmark = (await browser.bookmarks.create(createConf)) as Bookmark
+          }
+          indexes[folder.id]++
+        }
+        continue
+      }
+
+      // Bookmark
+      attachContainerInfoToTitle(item)
+      const bookmarkIndex = bookmarksList.findIndex(n => {
+        return n.type === 'bookmark' && n.title === item.title && n.url === item.url
+      })
+      let bookmark = bookmarksList[bookmarkIndex]
+      // Bookmark exists
+      if (bookmark) {
+        bookmarksList.splice(bookmarkIndex, 1)
+        if (bookmark.index !== index || parentFolderId !== bookmark.parentId) {
+          await browser.bookmarks.move(bookmark.id, { index, parentId: parentFolderId })
+        }
+      }
+      // Create bookmark
+      else {
+        const url = Utils.denormalizeUrl(item.url)
+        const createConf = { title: item.title, url, index, parentId: parentFolderId }
+        bookmark = (await browser.bookmarks.create(createConf)) as Bookmark
+      }
+
+      if (progress) Notifications.updateProgress(progress, n++, items.length)
+    }
+  }
+
+  // Plain list
+  else {
+    let index = 0
+
+    for (const item of items) {
+      if (item.url && GROUP_RE.test(item.url)) continue
+
+      attachContainerInfoToTitle(item)
+      const bookmarkIndex = bookmarksList.findIndex(n => {
+        return n.type === 'bookmark' && n.title === item.title && n.url === item.url
+      })
+      let bookmark = bookmarksList[bookmarkIndex]
+      // Bookmark exists
+      if (bookmark) {
+        bookmarksList.splice(bookmarkIndex, 1)
+        if (bookmark.index !== index || panelFolderId !== bookmark.parentId) {
+          await browser.bookmarks.move(bookmark.id, { index, parentId: panelFolderId })
+        }
+      }
+      // Create bookmark
+      else {
+        const url = Utils.denormalizeUrl(item.url)
+        const createConf = { title: item.title, url, index, parentId: panelFolderId }
+        bookmark = (await browser.bookmarks.create(createConf)) as Bookmark
+      }
+
+      if (progress) Notifications.updateProgress(progress, n++, items.length)
+
+      index++
+    }
+  }
+
+  // Remove remained bookmarks
+  for (const node of bookmarksList) {
+    // Remove empty folders
+    if (node.type === 'folder' && node.children && !node.children.length) {
+      await browser.bookmarks.removeTree(node.id)
+    }
+
+    // Remove remained bookmarks
+    else if (removeOld) {
+      if (node.type === 'folder') await browser.bookmarks.removeTree(node.id)
+      else await browser.bookmarks.remove(node.id)
     }
   }
 }
