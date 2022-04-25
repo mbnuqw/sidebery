@@ -314,10 +314,6 @@ function onKeyNewTabAfter(): void {
     windowId: Windows.id,
   }
 
-  if (activeTab.parentId > -1) {
-    conf.openerTabId = activeTab.parentId
-  }
-
   browser.tabs.create(conf)
 }
 

@@ -3157,14 +3157,17 @@ export async function open(
       conf.active = false
     }
 
+    let parentId = NOID
     if (!dst.pinned) {
       if (item.parentId !== undefined && idsMap[item.parentId] >= 0) {
-        conf.openerTabId = idsMap[item.parentId]
-      } else if (parent) conf.openerTabId = parent.id
+        parentId = idsMap[item.parentId] ?? NOID
+      } else if (parent) {
+        parentId = parent.id
+      }
     }
 
     if (index !== undefined) {
-      setNewTabPosition(index, conf.openerTabId ?? NOID, dstPanel?.id ?? NOID)
+      setNewTabPosition(index, parentId, dstPanel?.id ?? NOID)
     }
 
     const tab = await browser.tabs.create(conf)
