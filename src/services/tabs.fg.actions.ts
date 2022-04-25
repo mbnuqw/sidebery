@@ -313,11 +313,7 @@ function restoreTabsFromSessionData(
     }
 
     // Use openerTabId as fallback for parentId
-    if (
-      tab.parentId === -1 &&
-      tab.openerTabId !== undefined &&
-      Tabs.reactive.byId[tab.openerTabId]
-    ) {
+    if (tab.parentId === -1 && tab.openerTabId !== undefined && Tabs.byId[tab.openerTabId]) {
       tab.parentId = tab.openerTabId
     }
 
