@@ -196,7 +196,7 @@ function onBookmarkRemovedFg(id: ID, info: browser.bookmarks.RemoveInfo): void {
   const node = Bookmarks.reactive.byId[id]
   if (!node) return
 
-  const url = node?.url
+  // Remove from tree
   if (parent?.children) {
     parent.children.splice(info.index, 1)
     for (let i = info.index; i < parent.children.length; i++) {
@@ -204,12 +204,21 @@ function onBookmarkRemovedFg(id: ID, info: browser.bookmarks.RemoveInfo): void {
     }
   }
 
+  // Remove from byId object
+  if (node.type === 'folder' && node.children?.length) {
+    for (const child of Bookmarks.listBookmarks(node.children)) {
+      delete Bookmarks.reactive.byId[child.id]
+    }
+  }
   delete Bookmarks.reactive.byId[id]
+
+  // Remove from byUrl object
+  const url = node?.url
   if (url && Bookmarks.reactive.byUrl[url]) {
     const ib = Bookmarks.reactive.byUrl[url].findIndex(b => b.id === id)
     if (ib > -1) Bookmarks.reactive.byUrl[url].splice(ib, 1)
   }
-  Sidebar.recalcBookmarksPanels()
 
+  Sidebar.recalcBookmarksPanels()
   if (Settings.reactive.highlightOpenBookmarks) Bookmarks.markOpenedBookmarksDebounced()
 }
