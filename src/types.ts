@@ -276,6 +276,25 @@ export interface SubListTitleInfo {
   expanded: boolean
 }
 
+export interface Dialog {
+  title: string
+  text?: string
+  buttons: DialogBtn[]
+  result: (answer: string | null) => void
+}
+
+export interface DialogBtn {
+  label: string
+  value: string
+  warn?: boolean
+}
+
+export interface DialogConfig {
+  title: string
+  text?: string
+  buttons: DialogBtn[]
+}
+
 export interface TabsPanelRemoving {
   id: ID
   withMode: (mode: TabsPanelRemovingMode | null) => void
@@ -285,6 +304,16 @@ export const enum TabsPanelRemovingMode {
   Attach = 1,
   SaveAndClose = 2,
   Close = 3,
+}
+
+export interface TabsPanelSaving {
+  id: ID
+  withMode: (mode: TabsPanelSavingMode | null) => void
+}
+
+export const enum TabsPanelSavingMode {
+  Additive = 1,
+  Exclusive = 2,
 }
 
 export const enum SelectionType {

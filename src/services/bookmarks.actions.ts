@@ -1,6 +1,6 @@
 import Utils from 'src/utils'
 import { translate } from 'src/dict'
-import { Bookmark, Panel, Notification } from 'src/types'
+import { Bookmark, Panel, Notification, DialogConfig } from 'src/types'
 import { Stored, BookmarksSortType, DstPlaceInfo, ItemInfo, TabsPanel } from 'src/types'
 import { CONTAINER_ID, NOID, BKM_OTHER_ID, BKM_ROOT_ID, PRE_SCROLL, GROUP_RE } from 'src/defaults'
 import { FOLDER_NAME_DATA_RE, BOOKMARKED_PANEL_CONF_RE } from 'src/defaults'
@@ -931,14 +931,15 @@ export async function createFrom(
 }
 
 /**
- * Creates or reuse bookmarks in destination folder
+ * Creates or reuse bookmarks in destination folder.
+ * Optionally returns list of old unused bookmarks.
  */
 export async function saveToFolder(
   items: ItemInfo[],
   dst: DstPlaceInfo,
   removeOld: boolean,
   progress?: Notification
-): Promise<void> {
+): Promise<Bookmark[] | void> {
   if (!dst.parentId) return Logs.warn('Bookmarks: Cannot save bookmarks: No parentId')
 
   const dstFolder = Bookmarks.reactive.byId[dst.parentId]
@@ -1076,6 +1077,11 @@ export async function saveToFolder(
     }
   }
 
+  if (bookmarksList.length > 0) {
+    const answer = await askWhatToDoWithOldUnusedBookmarks()
+    if (answer === 'delete') removeOld = true
+  }
+
   // Remove remained bookmarks
   for (const node of bookmarksList) {
     // Remove empty folders
@@ -1085,10 +1091,29 @@ export async function saveToFolder(
 
     // Remove remained bookmarks
     else if (removeOld) {
-      if (node.type === 'folder') await browser.bookmarks.removeTree(node.id)
+      if (bookmarksList.find(n => n.id === node.parentId)) continue
+      else if (node.type === 'folder') await browser.bookmarks.removeTree(node.id)
       else await browser.bookmarks.remove(node.id)
     }
   }
+}
+
+async function askWhatToDoWithOldUnusedBookmarks(): Promise<string | null> {
+  const conf: DialogConfig = {
+    title: translate('popup.wtdwOldBookmarks.title'),
+    buttons: [
+      {
+        value: 'delete',
+        label: translate('popup.wtdwOldBookmarks.delete'),
+      },
+      {
+        value: 'leave',
+        label: translate('popup.wtdwOldBookmarks.leave'),
+      },
+    ],
+  }
+
+  return Sidebar.ask(conf)
 }
 
 export function scrollBookmarksToEdge(panel?: Panel): void {

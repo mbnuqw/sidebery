@@ -35,7 +35,7 @@
   Transition(name="popup" type="transition"): BookmarksPopup(v-if="Bookmarks.reactive.popup")
   Transition(name="popup" type="transition"): PanelConfigPopup(v-if="Sidebar.reactive.fastPanelConfig")
   Transition(name="popup" type="transition"): ContainerConfigPopup(v-if="Sidebar.reactive.fastContainerConfig")
-  Transition(name="popup" type="transition"): TabsPanelRemovingPopup(v-if="Sidebar.reactive.tabsPanelRemoving")
+  Transition(name="popup" type="transition"): DialogPopup(v-if="Sidebar.reactive.dialog" :dialog="Sidebar.reactive.dialog")
   CtxMenuPopup
   DragAndDropTooltip
   NotificationsPopup
@@ -95,7 +95,7 @@ import SearchBar from './components/bar.search.vue'
 import BookmarksPopup from 'src/components/popup.bookmarks.vue'
 import PanelConfigPopup from './components/popup.panel-config.vue'
 import ContainerConfigPopup from './components/popup.container-config.vue'
-import TabsPanelRemovingPopup from './components/popup.tabs-panel-removing.vue'
+import DialogPopup from './components/popup.dialog.vue'
 import UpgradeScreen from '../components/upgrade-screen.vue'
 import Utils from 'src/utils'
 
@@ -174,8 +174,8 @@ function onDocumentKeyup(e: KeyboardEvent): void {
     // Conatiner config popup
     if (Sidebar.reactive.fastContainerConfig) Sidebar.stopFastEditingOfContainer(false)
 
-    // Tabs panel removing popup
-    if (Sidebar.reactive.tabsPanelRemoving) Sidebar.reactive.tabsPanelRemoving = null
+    // Dialog popup
+    if (Sidebar.reactive.dialog) Sidebar.reactive.dialog.result(null)
 
     // Search bar
     if (Search.reactive.barIsShowed) Search.stop()

@@ -4,10 +4,12 @@ import { PanelConfig, Panel, Stored, ItemBounds, Tab, Bookmark, DstPlaceInfo } f
 import { Notification, OldPanelConfig, SidebarConfig, BookmarksPanelConfig } from 'src/types'
 import { PanelType, TabsPanel, BookmarksPanel, ScrollBoxComponent, InstanceType } from 'src/types'
 import { TabsPanelConfig, TabsPanelRemovingMode, ItemBoundsType, ReactiveTab } from 'src/types'
+import { TabsPanelSavingMode, DialogConfig } from 'src/types'
 import { BOOKMARKS_PANEL_STATE, TABS_PANEL_STATE, NOID, CONTAINER_ID, Err } from 'src/defaults'
 import { BOOKMARKS_PANEL, TABS_PANEL_CONFIG, DEFAULT_CONTAINER_ID } from 'src/defaults'
 import { BKM_ROOT_ID, BKM_OTHER_ID, BOOKMARKED_PANEL_CONF_RE } from 'src/defaults'
 import { HISTORY_PANEL, HISTORY_PANEL_STATE, FOLDER_NAME_DATA_RE } from 'src/defaults'
+import { BKM_MENU_ID, BKM_MOBILE_ID, BKM_TLBR_ID } from 'src/defaults'
 import { Logs } from 'src/services/logs'
 import { Settings } from 'src/services/settings'
 import { Sidebar } from 'src/services/sidebar'
@@ -1060,13 +1062,68 @@ export function getActivePanelInfo(): Panel {
   return Utils.cloneObject(panel)
 }
 
-export function askHowRemoveTabsPanel(panelId: ID): Promise<TabsPanelRemovingMode | null> {
-  return new Promise<TabsPanelRemovingMode | null>(res => {
-    Sidebar.reactive.tabsPanelRemoving = {
-      id: panelId,
-      withMode: (mode: TabsPanelRemovingMode | null) => {
-        res(mode)
-        Sidebar.reactive.tabsPanelRemoving = null
+export async function askHowRemoveTabsPanel(panelId: ID): Promise<string | null> {
+  const panel = Sidebar.reactive.panelsById[panelId]
+  if (!Utils.isTabsPanel(panel)) return null
+
+  let text
+  if (Windows.otherWindows.length) text = translate('popup.tabs_panel_removing.other_win_note')
+
+  const conf: DialogConfig = {
+    title: translate('popup.tabs_panel_removing.title'),
+    text,
+    buttons: [
+      {
+        value: 'close',
+        label: translate('popup.tabs_panel_removing.close'),
+      },
+      {
+        value: 'close',
+        label: translate('btn.cancel'),
+        warn: true,
+      },
+    ],
+  }
+
+  const isRoot =
+    panel.bookmarksFolderId === BKM_OTHER_ID ||
+    panel.bookmarksFolderId === BKM_MENU_ID ||
+    panel.bookmarksFolderId === BKM_MOBILE_ID ||
+    panel.bookmarksFolderId === BKM_TLBR_ID
+  if (!isRoot) {
+    conf.buttons.unshift({
+      value: 'save',
+      label: translate('popup.tabs_panel_removing.save'),
+    })
+  }
+
+  const otherPanelsExisted = !!Sidebar.reactive.panels.find(p => {
+    return p.type === PanelType.tabs && panelId !== p.id
+  })
+  if (otherPanelsExisted) {
+    conf.buttons.unshift({
+      value: 'attach',
+      label: translate('popup.tabs_panel_removing.attach'),
+    })
+  } else {
+    conf.buttons.unshift({
+      value: 'leave',
+      label: translate('popup.tabs_panel_removing.leave'),
+    })
+  }
+
+  return Sidebar.ask(conf)
+}
+
+export function ask(conf: DialogConfig): Promise<string | null> {
+  return new Promise<string | null>(ok => {
+    Sidebar.reactive.dialog = {
+      title: conf.title,
+      text: conf.text,
+      buttons: conf.buttons,
+      result: (answer: string | null) => {
+        ok(answer)
+        Sidebar.reactive.dialog = null
       },
     }
   })
@@ -1110,13 +1167,13 @@ export async function removePanel(panelId: ID): Promise<void> {
       tabsSaveNeeded = true
 
       const mode = await askHowRemoveTabsPanel(panel.id)
-      if (mode === TabsPanelRemovingMode.Attach) {
+      if (mode === 'attach') {
         attachPanelTabsToNeighbourPanel(panel)
-      } else if (mode === TabsPanelRemovingMode.SaveAndClose) {
+      } else if (mode === 'save') {
         const tabsIds = panel.tabs.map(t => t.id)
         await Sidebar.bookmarkTabsPanel(panel.id, true, true)
         await Tabs.removeTabs(tabsIds, true)
-      } else if (mode === TabsPanelRemovingMode.Close) {
+      } else if (mode === 'close') {
         const tabsIds = panel.tabs.map(t => t.id)
         await Tabs.removeTabs(tabsIds, true)
       } else {
@@ -1367,16 +1424,18 @@ export async function bookmarkTabsPanel(
     items.push(info)
   }
 
-  try {
-    await Bookmarks.saveToFolder(items, dst, false, progress)
-  } catch (err) {
-    if (!silent) {
-      Logs.err('Tabs.bookmarkTabsPanel: Cannot save bookmarks', err)
-      const title = translate('notif.tabs_panel_to_bookmarks_err')
-      const details = translate('notif.tabs_panel_to_bookmarks_err.bookmarks')
-      Notifications.err(title, details)
+  if (items.length) {
+    try {
+      await Bookmarks.saveToFolder(items, dst, false, progress)
+    } catch (err) {
+      if (!silent) {
+        Logs.err('Tabs.bookmarkTabsPanel: Cannot save bookmarks', err)
+        const title = translate('notif.tabs_panel_to_bookmarks_err')
+        const details = translate('notif.tabs_panel_to_bookmarks_err.bookmarks')
+        Notifications.err(title, details)
+      }
+      throw err
     }
-    throw err
   }
 
   // Update and save tabs panel
@@ -1389,15 +1448,7 @@ export async function bookmarkTabsPanel(
   if (!silent) {
     if (progress) Notifications.finishProgress(progress, 120)
     await Utils.sleep(250)
-
-    if (panel.tabs.length) {
-      const note =
-        update && oldFolder
-          ? translate('notif.tabs_panel_updated_bookmarks')
-          : translate('notif.tabs_panel_saved_bookmarks')
-
-      Notifications.notify({ icon: '#icon_bookmarks', title: note })
-    }
+    Notifications.notify({ icon: '#icon_bookmarks', title: translate('notif.done') })
   }
 }
 

@@ -1,4 +1,4 @@
-import { Panel, ConfirmDialog, TabsPanelRemoving, UpgradingState } from 'src/types'
+import { Panel, ConfirmDialog, UpgradingState, Dialog } from 'src/types'
 import { NOID } from 'src/defaults'
 import * as SidebarActions from 'src/services/sidebar.actions'
 
@@ -18,7 +18,7 @@ export interface SidebarReactiveState {
   fastContainerConfig: FastContainerConfig | null
   confirm: ConfirmDialog | null
   hiddenPanelsBar: boolean
-  tabsPanelRemoving: TabsPanelRemoving | null
+  dialog: Dialog | null
 
   selectedHeader: ID
   upgrading: UpgradingState | null
@@ -65,7 +65,7 @@ export const Sidebar = {
     fastContainerConfig: null,
     confirm: null,
     hiddenPanelsBar: false,
-    tabsPanelRemoving: null,
+    dialog: null,
 
     selectedHeader: NOID,
     upgrading: null,

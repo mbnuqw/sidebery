@@ -82,6 +82,19 @@ export const sidebarTranslations: Translations = {
     ru: 'Вкладки этой панели в других окнах будут перемещены на соседнюю панель или оставлены',
     zh_CN: '注意：此面板在其他窗口中的标签页将移动到相邻面板或左侧',
   },
+  // - What to do with old unused bookmarks on saving tabs panel
+  'popup.wtdwOldBookmarks.title': {
+    en: 'Delete unused bookmarks?',
+    ru: 'Удалить неиспользуемые закладки',
+  },
+  'popup.wtdwOldBookmarks.delete': {
+    en: 'Delete',
+    ru: 'Удалить',
+  },
+  'popup.wtdwOldBookmarks.leave': {
+    en: 'Leave',
+    ru: 'Оставить',
+  },
   // - Container fast-config popup
   'panel.fast_conf.title': {
     en: 'Container',

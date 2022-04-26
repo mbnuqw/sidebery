@@ -1,19 +1,24 @@
 @import '../../../mixins'
 
-.TabsPanelRemoving .msg
+.Dialog h2
+  padding: 12px 8px 10px
+  white-space: normal
+  text-overflow: clip
+
+.Dialog .msg
   position: relative
   font-size: rem(16)
   padding: 0 8px
-  color: var(--toolbar-fg)
+  color: var(--popup-fg)
   text-align: center
 
-.TabsPanelRemoving .note
+.Dialog .note
   position: relative
   font-size: rem(14)
   padding: 0 8px 8px
-  color: var(--toolbar-fg)
+  color: var(--popup-fg)
   opacity: .7
 
-.TabsPanelRemoving .ctrls .btn
+.Dialog .ctrls .btn
   text-align: left
   min-width: auto
