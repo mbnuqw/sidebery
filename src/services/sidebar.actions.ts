@@ -1389,12 +1389,15 @@ export async function bookmarkTabsPanel(
   if (!silent) {
     if (progress) Notifications.finishProgress(progress, 120)
     await Utils.sleep(250)
-    const note =
-      update && oldFolder
-        ? translate('notif.tabs_panel_updated_bookmarks')
-        : translate('notif.tabs_panel_saved_bookmarks')
 
-    Notifications.notify({ icon: '#icon_bookmarks', title: note })
+    if (panel.tabs.length) {
+      const note =
+        update && oldFolder
+          ? translate('notif.tabs_panel_updated_bookmarks')
+          : translate('notif.tabs_panel_saved_bookmarks')
+
+      Notifications.notify({ icon: '#icon_bookmarks', title: note })
+    }
   }
 }
 
