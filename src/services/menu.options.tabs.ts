@@ -1,5 +1,5 @@
 import Utils from 'src/utils'
-import { ASKID, CONTAINER_ID, NEWID } from 'src/defaults'
+import { ASKID, CONTAINER_ID, Err, NEWID } from 'src/defaults'
 import { MenuOption, Window, Tab } from 'src/types'
 import { translate } from 'src/dict'
 import { Tabs } from 'src/services/tabs.fg'
@@ -518,8 +518,16 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
       label: translate('menu.tabs_panel.bookmark'),
       icon: 'icon_star',
       badge: 'icon_move_badge',
-      onClick: () => Sidebar.bookmarkTabsPanel(panel.id, true),
-      onAltClick: () => Sidebar.bookmarkTabsPanel(panel.id),
+      onClick: () => {
+        Sidebar.bookmarkTabsPanel(panel.id, true).catch(err => {
+          if (err !== Err.Canceled) Logs.err('Menu.bookmarkTabsPanel', err)
+        })
+      },
+      onAltClick: () => {
+        Sidebar.bookmarkTabsPanel(panel.id).catch(err => {
+          if (err !== Err.Canceled) Logs.err('Menu.bookmarkTabsPanel', err)
+        })
+      },
     }
 
     return option
@@ -533,7 +541,11 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
       label: translate('menu.tabs_panel.restore_from_bookmarks'),
       icon: 'icon_star',
       badge: 'icon_move_out_badge',
-      onClick: () => Sidebar.restoreFromBookmarks(panel),
+      onClick: () => {
+        Sidebar.restoreFromBookmarks(panel).catch(err => {
+          if (err !== Err.Canceled) Logs.err('Menu.restoreFromBookmarks', err)
+        })
+      },
     }
 
     if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return

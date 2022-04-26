@@ -1685,9 +1685,12 @@ export async function convertToBookmarksPanel(panel: TabsPanel): Promise<void> {
   if (panel.tabs.length) {
     try {
       await Sidebar.bookmarkTabsPanel(panel.id, true, true, targetFolderId)
-    } catch {
+    } catch (err) {
       Notifications.finishProgress(notif)
       Sidebar.convertingPanelLock = false
+      if (err !== Err.Canceled) {
+        Logs.err('Sidebar.convertToBookmarksPanel:bookmarkTabsPanel', err)
+      }
       return
     }
   }
@@ -1786,10 +1789,11 @@ export async function convertToTabsPanel(panel: BookmarksPanel): Promise<void> {
   tabsPanel.bookmarksFolderId = panel.rootId
   try {
     await Sidebar.restoreFromBookmarks(tabsPanel, true)
-  } catch {
+  } catch (err) {
     Notifications.finishProgress(notif)
     Sidebar.convertingPanelLock = false
-    return Logs.warn('Sidebar.convertToTabsPanel: Cannot restore tabs')
+    if (err !== Err.Canceled) Logs.err('Sidebar.convertToTabsPanel: Cannot restore tabs', err)
+    return
   }
 
   // Set src panel's props
