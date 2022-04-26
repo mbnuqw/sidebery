@@ -1287,3 +1287,11 @@ export function copyTitles(ids: ID[]): void {
   const resultString = titles.trim()
   if (resultString) navigator.clipboard.writeText(resultString)
 }
+
+export function getTargetTabsPanelId(): ID {
+  let panelId = Sidebar.reactive.activePanelId
+  if (!Utils.isTabsPanel(Sidebar.reactive.panelsById[panelId])) {
+    panelId = Sidebar.lastTabsPanelId
+  }
+  return panelId
+}

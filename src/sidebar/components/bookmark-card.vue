@@ -68,14 +68,6 @@ function getDate(node: Bookmark): string {
   return `${day}, ${hr}:${min}`
 }
 
-function getTargetTabsPanelId(): ID {
-  let panelId = Sidebar.reactive.activePanelId
-  if (!Utils.isTabsPanel(Sidebar.reactive.panelsById[panelId])) {
-    panelId = Sidebar.lastTabsPanelId
-  }
-  return panelId
-}
-
 async function onMouseDown(e: MouseEvent): Promise<void> {
   Mouse.setTarget('bookmark', props.node.id)
   Menu.close()
@@ -102,7 +94,7 @@ async function onMouseDown(e: MouseEvent): Promise<void> {
 
     const action = Settings.reactive.midClickBookmark
     if (action === 'open_new_tab') {
-      let panelId = getTargetTabsPanelId()
+      let panelId = Bookmarks.getTargetTabsPanelId()
       await Bookmarks.open([props.node.id], { panelId }, false, Settings.reactive.actMidClickTab)
     } else if (action === 'edit') Bookmarks.editBookmarkNode(props.node)
     else if (action === 'delete') Bookmarks.removeBookmarks([props.node.id])
@@ -135,7 +127,7 @@ function onMouseUp(e: MouseEvent): void {
     }
 
     if (props.node.type === 'bookmark' && props.node.url) {
-      const panelId = getTargetTabsPanelId()
+      const panelId = Bookmarks.getTargetTabsPanelId()
       Bookmarks.open([props.node.id], { panelId }, !Settings.reactive.openBookmarkNewTab, true)
     }
   } else if (e.button === 2) {

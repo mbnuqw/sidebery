@@ -125,7 +125,7 @@ async function onMouseDown(e: MouseEvent): Promise<void> {
 
     const action = Settings.reactive.midClickBookmark
     if (action === 'open_new_tab') {
-      const panelId = getTargetTabsPanelId()
+      const panelId = Bookmarks.getTargetTabsPanelId()
       await Bookmarks.open([props.node.id], { panelId }, false, Settings.reactive.actMidClickTab)
     } else if (action === 'edit') Bookmarks.editBookmarkNode(props.node)
     else if (action === 'delete') Bookmarks.removeBookmarks([props.node.id])
@@ -138,14 +138,6 @@ async function onMouseDown(e: MouseEvent): Promise<void> {
       Mouse.startMultiSelection(e, props.node.id)
     }
   }
-}
-
-function getTargetTabsPanelId(): ID {
-  let panelId = Sidebar.reactive.activePanelId
-  if (!Utils.isTabsPanel(Sidebar.reactive.panelsById[panelId])) {
-    panelId = Sidebar.lastTabsPanelId
-  }
-  return panelId
 }
 
 function onFolderFavMouseDown(e: MouseEvent): void {
@@ -227,7 +219,7 @@ async function onMouseUp(e: MouseEvent): Promise<void> {
       }
 
       // Open tab
-      const panelId = getTargetTabsPanelId()
+      const panelId = Bookmarks.getTargetTabsPanelId()
       const inTheSameTab = !fromSubPanel && !Settings.reactive.openBookmarkNewTab
       Bookmarks.open([props.node.id], { panelId }, inTheSameTab, true)
     }
