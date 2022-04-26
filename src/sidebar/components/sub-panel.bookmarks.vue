@@ -13,7 +13,7 @@
     .content
       ScrollBox(v-if="bookmarks && !state.loading && Permissions.reactive.bookmarks")
         .bookmarks-tree
-          BookmarkNode.root-node(v-for="node in bookmarks" :key="node.id" :node="node")
+          BookmarkNode.root-node(v-for="node in bookmarks" :key="node.id" :node="node" :panelId="tabsPanel.id")
       .loading-screen(v-else-if="state.loading")
         LoadingDots
 </template>

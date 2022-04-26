@@ -5,7 +5,6 @@ export interface Bookmark extends browser.bookmarks.TreeNode {
   sel?: boolean
   isOpen?: boolean
   isParent?: boolean
-  expanded?: boolean
 }
 
 export type BookmarksSortType = 'name' | 'link' | 'time'

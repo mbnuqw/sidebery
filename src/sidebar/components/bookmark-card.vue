@@ -23,9 +23,8 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import Utils from 'src/utils'
-import { Bookmark, DragInfo, InstanceType, DragType, DropType } from 'src/types'
+import { Bookmark, DragInfo, DragType, DropType } from 'src/types'
 import { MenuType } from 'src/types'
-import { Msg } from 'src/services/msg'
 import { Settings } from 'src/services/settings'
 import { Windows } from 'src/services/windows'
 import { Selection } from 'src/services/selection'
@@ -69,6 +68,14 @@ function getDate(node: Bookmark): string {
   return `${day}, ${hr}:${min}`
 }
 
+function getTargetTabsPanelId(): ID {
+  let panelId = Sidebar.reactive.activePanelId
+  if (!Utils.isTabsPanel(Sidebar.reactive.panelsById[panelId])) {
+    panelId = Sidebar.lastTabsPanelId
+  }
+  return panelId
+}
+
 async function onMouseDown(e: MouseEvent): Promise<void> {
   Mouse.setTarget('bookmark', props.node.id)
   Menu.close()
@@ -77,13 +84,7 @@ async function onMouseDown(e: MouseEvent): Promise<void> {
   if (e.button === 0) {
     if (e.ctrlKey) {
       if (!props.node.sel) Selection.selectBookmark(props.node.id)
-      else {
-        Selection.deselectBookmark(props.node.id)
-        if (props.node.children && props.node.children.length > 0) {
-          if (!props.node.expanded) Bookmarks.expandBookmark(props.node.id)
-          else Bookmarks.foldBookmark(props.node.id)
-        }
-      }
+      else Selection.deselectBookmark(props.node.id)
       return
     }
 
@@ -101,9 +102,7 @@ async function onMouseDown(e: MouseEvent): Promise<void> {
 
     const action = Settings.reactive.midClickBookmark
     if (action === 'open_new_tab') {
-      let panelId = Sidebar.lastTabsPanelId
-      // if (props.node.url) panelId = Sidebar.findTabsPanelForUrl(props.node.url)
-      // else panelId = Sidebar.lastTabsPanelId
+      let panelId = getTargetTabsPanelId()
       await Bookmarks.open([props.node.id], { panelId }, false, Settings.reactive.actMidClickTab)
     } else if (action === 'edit') Bookmarks.editBookmarkNode(props.node)
     else if (action === 'delete') Bookmarks.removeBookmarks([props.node.id])
@@ -136,12 +135,8 @@ function onMouseUp(e: MouseEvent): void {
     }
 
     if (props.node.type === 'bookmark' && props.node.url) {
-      const panelId = Sidebar.lastTabsPanelId
-      // const panelId = Sidebar.findTabsPanelForUrl(props.node.url)
+      const panelId = getTargetTabsPanelId()
       Bookmarks.open([props.node.id], { panelId }, !Settings.reactive.openBookmarkNewTab, true)
-    } else if (props.node.type === 'folder') {
-      if (!props.node.expanded) Bookmarks.expandBookmark(props.node.id)
-      else Bookmarks.foldBookmark(props.node.id)
     }
   } else if (e.button === 2) {
     if (e.ctrlKey || e.shiftKey) return

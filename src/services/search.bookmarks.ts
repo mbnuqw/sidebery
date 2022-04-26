@@ -29,7 +29,7 @@ function searchTreeWalker(
       if (Search.check(n.title) || Search.check(n.url)) filtered.push(n)
     }
     if (n.title && !n.url && n.parentId !== BKM_ROOT_ID && Search.check(n.title)) {
-      if (n.expanded) n.expanded = false
+      // if (n.expanded) n.expanded = false
       folders[n.id] = n
       filtered.unshift(n)
     }
@@ -45,6 +45,8 @@ function searchHistoryWalker(nodes: Bookmark[], filtered: Bookmark[]): void {
 }
 
 let prevActivePanelId: ID | undefined
+let prevExpandedBookmarks: Record<ID, Record<ID, boolean>> | undefined
+let expandedBookmarks: Record<ID, boolean>
 export function onBookmarksSearch(activePanel: Panel): void {
   if (!Bookmarks.reactive.tree.length) return
   if (!Utils.isBookmarksPanel(activePanel)) return
@@ -66,6 +68,16 @@ export function onBookmarksSearch(activePanel: Panel): void {
 
     const filtered: Bookmark[] = []
     if (activePanel.viewMode === 'tree') {
+      // Save expanded folders and close all folders in all panels
+      if (!prevExpandedBookmarks) {
+        prevExpandedBookmarks = Bookmarks.reactive.expanded
+        Bookmarks.reactive.expanded = {}
+      }
+      if (!Bookmarks.reactive.expanded[activePanel.id]) {
+        Bookmarks.reactive.expanded[activePanel.id] = {}
+      }
+      expandedBookmarks = Bookmarks.reactive.expanded[activePanel.id]
+
       searchTreeWalker(bookmarks, filtered)
     } else if (activePanel.viewMode === 'history') {
       searchHistoryWalker(bookmarks, filtered)
@@ -81,13 +93,13 @@ export function onBookmarksSearch(activePanel: Panel): void {
       Bookmarks.scrollToBookmarkDebounced(first.id)
     }
   } else {
-    for (const node of Bookmarks.listBookmarks(Bookmarks.reactive.tree)) {
-      if (node.expanded) node.expanded = false
+    // Restore state of expanded folders
+    if (prevExpandedBookmarks) {
+      Bookmarks.reactive.expanded = prevExpandedBookmarks
+      expandedBookmarks = {}
+      prevExpandedBookmarks = undefined
     }
-    for (const id of Bookmarks.expandedBookmarkFolders) {
-      const folder = Bookmarks.reactive.byId[id]
-      if (folder) folder.expanded = true
-    }
+
     activePanel.filteredBookmarks = undefined
     activePanel.filteredLen = undefined
     if (Search.prevValue) Selection.resetSelection()
@@ -101,7 +113,8 @@ function nextWalker(nodes: Bookmark[]): ID | undefined {
 
     nextWalkerPrevNode = node
 
-    if (node.expanded && node.children) {
+    const isExpanded = expandedBookmarks[node.id]
+    if (isExpanded && node.children) {
       const nextId = nextWalker(node.children)
       if (nextId !== undefined) return nextId
     }
@@ -129,7 +142,8 @@ function prevWalker(nodes: Bookmark[]): ID | undefined {
 
     prevWalkerPrevId = node.id
 
-    if (node.expanded && node.children) {
+    const isExpanded = expandedBookmarks[node.id]
+    if (isExpanded && node.children) {
       const id = prevWalker(node.children)
       if (id !== undefined) return id
     }
@@ -161,7 +175,9 @@ export function onBookmarksSearchEnter(panel?: Panel): void {
   const selId = Selection.getFirst()
   const bookmark = Bookmarks.reactive.byId[selId]
   if (bookmark) {
-    if (bookmark.type === 'folder') return Bookmarks.toggleBranch(bookmark.id)
+    if (bookmark.type === 'folder') {
+      return Bookmarks.toggleBranch(bookmark.id, panel.id)
+    }
     if (bookmark.type === 'bookmark') Bookmarks.open([bookmark.id], {}, false, true)
   }
 
@@ -171,7 +187,8 @@ export function onBookmarksSearchEnter(panel?: Panel): void {
 function* visibleBookmarks(nodes: Bookmark[]): IterableIterator<Bookmark> {
   for (const n of nodes) {
     yield n
-    if (n.children && n.expanded) yield* visibleBookmarks(n.children)
+    const isExpanded = expandedBookmarks[n.id]
+    if (n.children && isExpanded) yield* visibleBookmarks(n.children)
   }
 }
 

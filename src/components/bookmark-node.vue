@@ -2,7 +2,7 @@
 .BookmarkNode(
   :id="'bookmark' + node.id"
   :data-type="node.type"
-  :data-expanded="node.expanded"
+  :data-expanded="expanded"
   :data-parent="!!children?.length"
   :data-selected="node.sel"
   :data-open="node.isOpen")
@@ -18,14 +18,14 @@
       img(v-else :src="favicon")
     .fav(v-else-if="node.type === 'folder'" @mousedown="onFolderFavMouseDown")
       Transition(name="bookmark-expand")
-        svg(v-if="node.expanded")
+        svg(v-if="expanded")
           use(xlink:href="#icon_folder_open")
         svg(v-else)
           use(xlink:href="#icon_folder")
     .title(v-if="node.title || node.url") {{node.title || node.url}}
     .len(v-if="children?.length !== undefined && Settings.reactive.showBookmarkLen") {{children.length}}
-  .children(v-if="(node.expanded) && children?.length" :title="node.title")
-    BookmarkNode(v-for="node in children" :key="node.id" :node="node" :filter="props.filter")
+  .children(v-if="(expanded) && children?.length" :title="node.title")
+    BookmarkNode(v-for="node in children" :key="node.id" :node="node" :filter="props.filter" :panelId="panelId")
 </template>
 
 <script lang="ts">
@@ -53,6 +53,7 @@ import { Logs } from 'src/services/logs'
 
 const props = defineProps<{
   node: Bookmark
+  panelId: ID
   filter?: (n: Bookmark) => boolean
 }>()
 
@@ -71,6 +72,11 @@ const children = computed<Bookmark[] | undefined>(() => {
   if (props.filter) return props.node.children.filter(props.filter)
   else return props.node.children
 })
+const expanded = computed<boolean>(() => {
+  if (!props.node.children) return false
+  if (!props.panelId) return false
+  return !!Bookmarks.reactive.expanded[props.panelId]?.[props.node.id]
+})
 
 async function onMouseDown(e: MouseEvent): Promise<void> {
   Mouse.setTarget('bookmark', props.node.id)
@@ -83,8 +89,8 @@ async function onMouseDown(e: MouseEvent): Promise<void> {
         Selection.resetSelection()
         Selection.selectBookmark(props.node.id)
       } else {
-        if (!props.node.expanded) Bookmarks.expandBookmark(props.node.id)
-        else Bookmarks.foldBookmark(props.node.id)
+        if (!expanded.value) Bookmarks.expandBookmark(props.node.id, props.panelId)
+        else Bookmarks.foldBookmark(props.node.id, props.panelId)
       }
       Bookmarks.reactive.popup.location = props.node.id
       if (Bookmarks.reactive.popup.validate) {
@@ -98,8 +104,8 @@ async function onMouseDown(e: MouseEvent): Promise<void> {
       else {
         Selection.deselectBookmark(props.node.id)
         if (children.value && children.value.length > 0) {
-          if (!props.node.expanded) Bookmarks.expandBookmark(props.node.id)
-          else Bookmarks.foldBookmark(props.node.id)
+          if (!expanded.value) Bookmarks.expandBookmark(props.node.id, props.panelId)
+          else Bookmarks.foldBookmark(props.node.id, props.panelId)
         }
       }
       return
@@ -152,8 +158,8 @@ function onFolderFavMouseDown(e: MouseEvent): void {
     Selection.selectBookmark(props.node.id)
   }
 
-  if (!props.node.expanded) Bookmarks.expandBookmark(props.node.id)
-  else Bookmarks.foldBookmark(props.node.id)
+  if (!expanded.value) Bookmarks.expandBookmark(props.node.id, props.panelId)
+  else Bookmarks.foldBookmark(props.node.id, props.panelId)
 
   Bookmarks.reactive.popup.location = props.node.id
   if (Bookmarks.reactive.popup.validate) Bookmarks.reactive.popup.validate(Bookmarks.reactive.popup)
@@ -184,7 +190,7 @@ async function onMouseUp(e: MouseEvent): Promise<void> {
     }
 
     // Scroll to sticked opened folder
-    if (Settings.reactive.pinOpenedBookmarksFolder && isFolder && props.node.expanded) {
+    if (Settings.reactive.pinOpenedBookmarksFolder && isFolder && expanded.value) {
       const bookmarkEl = document.getElementById('bookmark' + (props.node.id as string))
       const bookmarkBounds = bookmarkEl?.getBoundingClientRect()
       const bookmarkBodyEl = bookmarkEl?.children[0]
@@ -228,10 +234,10 @@ async function onMouseUp(e: MouseEvent): Promise<void> {
 
     // Folder
     else if (isFolder) {
-      if (!props.node.expanded) {
-        Bookmarks.expandBookmark(props.node.id)
+      if (!expanded.value) {
+        Bookmarks.expandBookmark(props.node.id, props.panelId)
       } else {
-        Bookmarks.foldBookmark(props.node.id)
+        Bookmarks.foldBookmark(props.node.id, props.panelId)
       }
     }
   }

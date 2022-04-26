@@ -43,7 +43,7 @@ export interface Stored {
   groupCSS?: string
 
   expandedBookmarks?: ID[][] // DEPR
-  expandedBookmarkFolders?: ID[]
+  expandedBookmarkFolders?: Record<ID, Record<ID, boolean>>
   bookmarksRecentFolders?: ID[]
 }
 

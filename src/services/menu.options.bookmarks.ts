@@ -375,7 +375,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
     const option: MenuOption = {
       label: translate('menu.bookmark.collapse_all'),
       icon: 'icon_collapse_all',
-      onClick: () => Bookmarks.collapseAllBookmarks(),
+      onClick: () => Bookmarks.collapseAllBookmarks(panel.id),
     }
     if (isBookmarksPanel(panel) && panel.viewMode !== 'tree') option.inactive = true
     if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return

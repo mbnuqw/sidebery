@@ -61,10 +61,7 @@ function onBookmarkCreatedFg(id: ID, bookmark: Bookmark): void {
   bookmark.sel = false
   bookmark.isOpen = false
   if (bookmark.type === 'separator') bookmark.url = undefined
-  if (bookmark.type === 'folder') {
-    if (!bookmark.children) bookmark.children = []
-    bookmark.expanded = false
-  }
+  if (bookmark.type === 'folder' && !bookmark.children) bookmark.children = []
 
   if (Settings.reactive.highlightOpenBookmarks && bookmark.url) {
     bookmark.isOpen = !!Tabs.list.find(t => t.url === bookmark.url)

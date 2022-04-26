@@ -62,7 +62,6 @@ async function loadInFg(): Promise<void> {
       n.sel = false
       n.isOpen = false
       if (n.type === 'separator') n.url = undefined
-      else if (n.type === 'folder') n.expanded = false
       else if (n.url) {
         list.push(n)
         if (Bookmarks.reactive.byUrl[n.url]) Bookmarks.reactive.byUrl[n.url].push(n)
@@ -100,25 +99,24 @@ export async function restoreTree(): Promise<void> {
   const expandedBookmarkFolders = stored.expandedBookmarkFolders
 
   if (expandedBookmarkFolders) {
-    Bookmarks.expandedBookmarkFolders = expandedBookmarkFolders
-
-    for (const id of expandedBookmarkFolders) {
-      const bkm = Bookmarks.reactive.byId[id]
-      if (bkm) bkm.expanded = true
+    for (const panelId of Object.keys(expandedBookmarkFolders)) {
+      if (!Sidebar.reactive.panelsById[panelId]) delete expandedBookmarkFolders[panelId]
     }
   }
+
+  Bookmarks.reactive.expanded = expandedBookmarkFolders ?? {}
 }
 
-export function convertOldTreeStruct(struct?: ID[][]): ID[] {
-  if (!struct) return []
+export function convertOldTreeStruct(struct?: ID[][]): Record<ID, Record<ID, boolean>> {
+  if (!struct) return {}
 
-  const output: ID[] = []
+  const output: Record<ID, boolean> = {}
   for (const path of struct) {
     const id = path.pop?.()
-    if (id) output.push(id)
+    if (id) output[id] = true
   }
 
-  return output
+  return { bookmarks: output }
 }
 
 export function unload(): void {
@@ -160,105 +158,57 @@ export function saveBookmarksTree(delay = 128): void {
 
   clearTimeout(saveBookmarksTreeTimeout)
   saveBookmarksTreeTimeout = setTimeout(() => {
-    const expandedBookmarkFolders: ID[] = []
-    const walker = (nodes: Bookmark[]) => {
-      for (let n: Bookmark, i = 0; i < nodes.length; i++) {
-        n = nodes[i]
-        if (!n.children || !n.expanded) continue
-        expandedBookmarkFolders.push(n.id)
-        walker(n.children)
-      }
-    }
-
-    walker(Bookmarks.reactive.tree)
-    Bookmarks.expandedBookmarkFolders = expandedBookmarkFolders
-    Store.set({ expandedBookmarkFolders })
+    const expandedBookmarkFolders = Utils.cloneObject(Bookmarks.reactive.expanded)
+    Store.set({ expandedBookmarkFolders }, 500)
   }, delay)
-}
-
-function getPanelTree(panelId?: ID): Bookmark[] {
-  let tree = Bookmarks.reactive.tree
-  if (panelId !== undefined) {
-    const panel = Sidebar.reactive.panelsById[panelId]
-    if (Utils.isBookmarksPanel(panel)) {
-      const rootNode = Bookmarks.reactive.byId[panel.rootId]
-      if (rootNode && rootNode.children) tree = rootNode.children
-    }
-  }
-  return tree
 }
 
 /**
  * Expand bookmark folder
  */
-export function expandBookmark(nodeId: ID, panelId?: ID): void {
-  let done = false
-  let isEmpty = false
-  const tree = getPanelTree(panelId)
-  const expandPath: Bookmark[] = []
-  const toFold: Bookmark[] = []
-  const walker = (nodes: Bookmark[]) => {
-    if (Settings.reactive.autoCloseBookmarks && nodes.find(c => c.id === nodeId)) {
-      for (const n of nodes) {
-        if (n.expanded) toFold.push(n)
-      }
-    }
-    for (let i = 0; i < nodes.length; i++) {
-      if (nodes[i].type !== 'folder') continue
-      const n = nodes[i]
+export function expandBookmark(nodeId: ID, panelId: ID): void {
+  const node = Bookmarks.reactive.byId[nodeId]
+  if (!node) return
 
-      if (!done && n.children) {
-        expandPath.push(n)
-        if (n.id === nodeId) {
-          isEmpty = !n.children.length
-          done = true
-          return
-        }
-        walker(n.children)
-      }
-    }
-    if (!done) expandPath.pop()
-  }
-  walker(tree)
-
-  expandPath.forEach(b => (b.expanded = true))
-
+  const isEmpty = !node.children?.length
   if (Settings.reactive.autoCloseBookmarks && !isEmpty && !Selection.isBookmarks()) {
-    toFold.forEach(b => (b.expanded = false))
+    Bookmarks.reactive.expanded[panelId] = {}
   }
 
-  /* eslint-disable-next-line */
+  if (!Bookmarks.reactive.expanded[panelId]) Bookmarks.reactive.expanded[panelId] = {}
+  const expandedInPanel = Bookmarks.reactive.expanded[panelId]
+
+  const expandPath: ID[] = [nodeId]
+  let parent = Bookmarks.reactive.byId[node.parentId]
+  while (parent) {
+    expandPath.push(parent.id)
+    parent = Bookmarks.reactive.byId[parent.parentId]
+  }
+
+  for (const id of expandPath) {
+    expandedInPanel[id] = true
+  }
+
   saveBookmarksTree()
 }
 
 /**
  * Fold bookmark folder
  */
-export function foldBookmark(nodeId: ID): void {
-  let done = false
-  const walker = (nodes: Bookmark[]) => {
-    for (const n of nodes) {
-      if (n.id === nodeId) {
-        n.expanded = false
-        done = true
-        return
-      }
+export function foldBookmark(nodeId: ID, panelId: ID): void {
+  if (!Bookmarks.reactive.expanded[panelId]) Bookmarks.reactive.expanded[panelId] = {}
+  delete Bookmarks.reactive.expanded[panelId][nodeId]
 
-      if (!done && n.children) walker(n.children)
-    }
-  }
-  walker(Bookmarks.reactive.tree)
-
-  /* eslint-disable-next-line */
-  Bookmarks.reactive.tree = Bookmarks.reactive.tree
   saveBookmarksTree()
 }
 
-export function toggleBranch(nodeId: ID): void {
+export function toggleBranch(nodeId: ID, panelId: ID): void {
   const node = Bookmarks.reactive.byId[nodeId]
   if (!node) return
-  if (node.expanded) foldBookmark(nodeId)
-  else expandBookmark(nodeId)
+
+  const isExpanded = Bookmarks.reactive.expanded[panelId]?.[nodeId]
+  if (isExpanded) foldBookmark(nodeId, panelId)
+  else expandBookmark(nodeId, panelId)
 }
 
 export function openInNewWindow(ids: ID[], incognito?: boolean): void {
@@ -580,6 +530,7 @@ export function openBookmarksPopup(
 export async function removeBookmarks(ids: ID[]): Promise<void> {
   let count = 0
   let hasCollapsed = false
+  const expandedBookmarks = Bookmarks.reactive.expanded[Sidebar.reactive.activePanelId]
   const deleted: Bookmark[] = []
   const idsToRemove = []
   const favicons: string[] = []
@@ -588,7 +539,8 @@ export async function removeBookmarks(ids: ID[]): Promise<void> {
       count++
       deleted.push(n)
       if (n.children && n.children.length) {
-        if (!n.expanded) hasCollapsed = true
+        const isExpanded = expandedBookmarks?.[n.id]
+        if (!isExpanded) hasCollapsed = true
         walker(n.children)
       }
     }
@@ -606,7 +558,8 @@ export async function removeBookmarks(ids: ID[]): Promise<void> {
     deleted.push(n)
     idsToRemove.push(id)
     if (n.children && n.children.length) {
-      if (!n.expanded) hasCollapsed = true
+      const isExpanded = expandedBookmarks?.[n.id]
+      if (!isExpanded) hasCollapsed = true
       walker(n.children)
     }
   }
@@ -655,14 +608,8 @@ async function undoRemove(deleted: Bookmark[]): Promise<void> {
 /**
  * Collapse all bookmarks folders
  */
-export function collapseAllBookmarks(): void {
-  const walker = (nodes: Bookmark[]) => {
-    for (const n of nodes) {
-      if (n.type === 'folder') n.expanded = false
-      if (n.children) walker(n.children)
-    }
-  }
-  walker(Bookmarks.reactive.tree)
+export function collapseAllBookmarks(panelId: ID): void {
+  Bookmarks.reactive.expanded[panelId] = {}
   saveBookmarksTree()
 }
 
@@ -690,6 +637,8 @@ export async function sortBookmarks(
     else notifIcon = '#icon_sort_time_des'
   }
 
+  const expandedBookmarks = Bookmarks.reactive.expanded[Sidebar.reactive.activePanelId]
+
   // Separate nodes by groups (bookmarks with the same parentId)
   const groups: Record<string, Bookmark[]> = {}
   let count = 0
@@ -701,7 +650,7 @@ export async function sortBookmarks(
         groups[node.parentId].push(node)
         count++
       }
-      if (node.children && node.expanded) walker(node.children)
+      if (node.children && expandedBookmarks?.[node.id]) walker(node.children)
     }
   }
   for (const nodeId of nodeIds) {
@@ -713,7 +662,7 @@ export async function sortBookmarks(
       groups[node.parentId].push(node)
       count++
     }
-    if (node.children && node.expanded) walker(node.children)
+    if (node.children && expandedBookmarks?.[node.id]) walker(node.children)
   }
 
   const initialCount = count

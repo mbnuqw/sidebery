@@ -51,7 +51,8 @@
           v-for="node in Bookmarks.reactive.tree"
           :key="node.id"
           :node="node"
-          :filter="foldersFilter")
+          :filter="foldersFilter"
+          :panelId="'popup'")
         LoadingDots(v-if="state.loading")
     .recent-locations(v-if="state.bookmarksRecentFolders.length && !state.showTree")
       .field-label {{translate('popup.bookmarks.recent_locations_label')}}
@@ -155,10 +156,10 @@ void (async function init() {
       Selection.selectBookmark(popup.location)
 
       if (state.showTree) {
-        Bookmarks.collapseAllBookmarks()
+        Bookmarks.collapseAllBookmarks('popup')
         const folder = Bookmarks.reactive.byId[popup.location]
         if (folder?.parentId && folder.parentId !== BKM_ROOT_ID) {
-          Bookmarks.expandBookmark(folder.parentId)
+          Bookmarks.expandBookmark(folder.parentId, 'popup')
         }
       }
     }
@@ -215,15 +216,15 @@ function toggleTree(): void {
   state.showTree = !state.showTree
 
   if (state.showTree) {
-    Bookmarks.collapseAllBookmarks()
+    Bookmarks.collapseAllBookmarks('popup')
     const folder = Bookmarks.reactive.byId[Bookmarks.reactive.popup.location]
     if (folder?.parentId && folder.parentId !== BKM_ROOT_ID) {
-      Bookmarks.expandBookmark(folder.parentId)
+      Bookmarks.expandBookmark(folder.parentId, 'popup')
+      Selection.selectBookmark(folder.id)
     }
   } else {
     Selection.resetSelection()
-    Bookmarks.collapseAllBookmarks()
-    Bookmarks.restoreTree()
+    delete Bookmarks.reactive.expanded['popup']
   }
 }
 
@@ -330,10 +331,7 @@ function onOk(): void {
   state.tabindex = '-1'
   Selection.resetSelection()
 
-  if (state.showTree) {
-    Bookmarks.collapseAllBookmarks()
-    Bookmarks.restoreTree()
-  }
+  if (state.showTree) delete Bookmarks.reactive.expanded['popup']
 
   Bookmarks.reactive.popup.close({
     name: Bookmarks.reactive.popup.name,
@@ -349,10 +347,7 @@ function onCancel(): void {
   state.tabindex = '-1'
   Selection.resetSelection()
 
-  if (state.showTree) {
-    Bookmarks.collapseAllBookmarks()
-    Bookmarks.restoreTree()
-  }
+  if (state.showTree) delete Bookmarks.reactive.expanded['popup']
 
   Bookmarks.reactive.popup.close()
 }

@@ -7,6 +7,7 @@ export interface BookmarksState {
   byId: Record<ID, Bookmark>
   byUrl: Record<string, Bookmark[]>
   popup: BookmarksPopupState | null
+  expanded: Record<ID, Record<ID, boolean>>
 }
 
 export interface BookmarksPopupControlConfig {
@@ -50,9 +51,8 @@ export const Bookmarks = {
     byId: {},
     byUrl: {},
     popup: null,
+    expanded: {},
   } as BookmarksState,
-
-  expandedBookmarkFolders: [] as ID[],
 
   ...BookmarksHandlers,
   ...BookmarksActions,

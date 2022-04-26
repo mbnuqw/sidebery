@@ -353,6 +353,8 @@ function calcBookmarksTreeBounds(panel: BookmarksPanel): ItemBounds[] {
   const result: ItemBounds[] = []
   if (!Utils.isBookmarksPanel(panel)) return []
 
+  const expandedBookmarks = Bookmarks.reactive.expanded[panel.id]
+
   const fh = Sidebar.folderHeight
   const fc = fh >> 1
   const fe = fc >> 1
@@ -394,7 +396,7 @@ function calcBookmarksTreeBounds(panel: BookmarksPanel): ItemBounds[] {
         index: n.index,
         lvl,
         in: n.type === 'folder',
-        folded: !n.expanded,
+        folded: !expandedBookmarks[n.id],
         parent: n.parentId,
         start: overallHeight,
         top: overallHeight + e,
@@ -405,7 +407,7 @@ function calcBookmarksTreeBounds(panel: BookmarksPanel): ItemBounds[] {
 
       overallHeight += h
 
-      if (n.children && n.expanded) {
+      if (n.children && expandedBookmarks[n.id]) {
         lvl++
         walker(n.children)
         lvl--

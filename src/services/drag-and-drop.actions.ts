@@ -459,7 +459,7 @@ function onPointerEnter(e: DragEvent): void {
       expandTimeout(() => {
         DnD.reactive.pointerHover = false
         DnD.reactive.pointerExpanding = true
-        Bookmarks.toggleBranch(bookmark.id)
+        Bookmarks.toggleBranch(bookmark.id, Sidebar.reactive.activePanelId)
         Sidebar.updatePanelBoundsDebounced(128)
       }, delay)
     }
@@ -711,7 +711,7 @@ export function onDragMove(e: DragEvent): void {
           if (isParent && Settings.reactive.dndExp === 'hover') {
             const delay = assertExpandMod(e) ? 0 : Settings.reactive.dndExpDelay
             expandTimeout(() => {
-              Bookmarks.toggleBranch(targetId)
+              Bookmarks.toggleBranch(targetId, Sidebar.reactive.activePanelId)
               Sidebar.updatePanelBoundsDebounced(128)
             }, delay)
           }

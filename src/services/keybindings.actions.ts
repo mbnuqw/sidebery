@@ -252,8 +252,9 @@ function onKeyActivate(): void {
     if (!target) return
 
     if (target.type === 'folder') {
-      if (target.expanded) Bookmarks.foldBookmark(target.id)
-      else Bookmarks.expandBookmark(target.id)
+      const isExpanded = Bookmarks.reactive.expanded[Sidebar.reactive.activePanelId]?.[target.id]
+      if (isExpanded) Bookmarks.foldBookmark(target.id, Sidebar.reactive.activePanelId)
+      else Bookmarks.expandBookmark(target.id, Sidebar.reactive.activePanelId)
     }
 
     if (target.type === 'bookmark') {
@@ -493,10 +494,12 @@ function onKeyFoldBranch(): void {
       Tabs.foldTabsBranch(tabId)
     }
   } else if (Selection.isBookmarks()) {
+    const activePanelId = Sidebar.reactive.activePanelId
     for (const bookmarkId of Selection) {
       const bookmark = Bookmarks.reactive.byId[bookmarkId]
-      if (!bookmark || !bookmark.expanded) continue
-      Bookmarks.foldBookmark(bookmarkId)
+      const isExpanded = Bookmarks.reactive.expanded[activePanelId]?.[bookmarkId]
+      if (!bookmark || !isExpanded) continue
+      Bookmarks.foldBookmark(bookmarkId, activePanelId)
     }
   }
 }
@@ -511,10 +514,12 @@ function onKeyExpandBranch(): void {
       Tabs.expTabsBranch(tabId)
     }
   } else if (Selection.isBookmarks()) {
+    const activePanelId = Sidebar.reactive.activePanelId
     for (const bookmarkId of Selection) {
       const bookmark = Bookmarks.reactive.byId[bookmarkId]
-      if (!bookmark || bookmark.expanded) continue
-      Bookmarks.expandBookmark(bookmarkId)
+      const isExpanded = Bookmarks.reactive.expanded[activePanelId]?.[bookmarkId]
+      if (!bookmark || isExpanded) continue
+      Bookmarks.expandBookmark(bookmarkId, activePanelId)
     }
   }
 }
