@@ -334,6 +334,14 @@ export const sidebarTranslations: Translations = {
     ru: 'Новая закладка добавлена',
     zh_CN: '书签已添加',
   },
+  'notif.bookmarks_sub_panel.no_root.title': {
+    en: 'Cannot find root folder',
+    ru: 'Невозможно найти корневую папку',
+  },
+  'notif.bookmarks_sub_panel.no_root.details': {
+    en: 'Try to re-save tabs panel',
+    ru: 'Попробуйте пересохранить панель вкладок',
+  },
 }
 
 if (!window.translations) window.translations = sidebarTranslations
