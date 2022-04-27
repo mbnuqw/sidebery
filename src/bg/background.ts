@@ -75,11 +75,6 @@ void (async function main() {
   Favicons.loadFavicons()
   Menu.setupListeners()
   Snapshots.scheduleSnapshots()
-
-  if (Sidebar.hasBookmarks) {
-    Bookmarks.setupBookmarksListeners()
-    Bookmarks.load()
-  }
 })()
 
 function initToolbarButton(): void {

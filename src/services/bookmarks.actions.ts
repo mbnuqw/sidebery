@@ -28,24 +28,7 @@ import { Search } from './search'
 
 export async function load(): Promise<void> {
   if (!browser.bookmarks) return
-  if (Info.isBg) return loadInBg()
-  else return loadInFg()
-}
-
-async function loadInBg(): Promise<void> {
-  const bookmarks = (await browser.bookmarks.getTree()) as Bookmark[]
-
-  if (bookmarks[0]?.children) Bookmarks.reactive.tree = bookmarks[0].children
-  else return
-
-  const walker = (nodes: Bookmark[]) => {
-    for (const n of nodes) {
-      Bookmarks.reactive.byId[n.id] = n
-      if (n.type === 'separator') n.url = undefined
-      if (n.children) walker(n.children)
-    }
-  }
-  walker(bookmarks[0].children)
+  if (!Info.isBg) return loadInFg()
 }
 
 async function loadInFg(): Promise<void> {
