@@ -342,6 +342,10 @@ export const sidebarTranslations: Translations = {
     en: 'Try to re-save tabs panel',
     ru: 'Попробуйте пересохранить панель вкладок',
   },
+  'notif.bookmarks_sub_panel.no_root.save': {
+    en: 'Save',
+    ru: 'Сохранить',
+  },
 }
 
 if (!window.translations) window.translations = sidebarTranslations

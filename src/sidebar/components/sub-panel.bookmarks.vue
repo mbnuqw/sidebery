@@ -64,7 +64,7 @@ function onWrongRootFolder(): void {
     title,
     details,
     lvl: 'err',
-    ctrl: 'Save',
+    ctrl: translate('notif.bookmarks_sub_panel.no_root.save'),
     callback: () => {
       Sidebar.bookmarkTabsPanel(props.tabsPanel.id, true).catch(err => {
         if (err !== Err.Canceled) Logs.err('BookmarksSubPanel.onWrongRootFolder', err)
