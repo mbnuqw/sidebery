@@ -996,7 +996,7 @@ export async function saveToFolder(
           // Create bookmark
           else {
             const url = Utils.denormalizeUrl(item.url)
-            const createConf = { title: item.title, url, index, parentId: parentFolderId }
+            const createConf = { title: item.title, url, index: 0, parentId: folder.id }
             bookmark = (await browser.bookmarks.create(createConf)) as Bookmark
           }
           indexes[folder.id]++
