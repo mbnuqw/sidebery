@@ -13,13 +13,15 @@
 
 .BookmarksSubPanel .overlay
   position: absolute
-  display: none
   width: 100%
-  height: 100vh
+  height: 0
   top: calc(var(--bookmarks-sub-panel-bar-height) - 100vh)
-  background-color: #00000036
+  background-color: var(--frame-bg)
+  opacity: 0
+  transition: opacity var(--d-fast)
 .BookmarksSubPanel[data-active="true"] .overlay
-  display: block
+  height: 100vh
+  opacity: .7
 
 .BookmarksSubPanel .sub-panel
   position: absolute
