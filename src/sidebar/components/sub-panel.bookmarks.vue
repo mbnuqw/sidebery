@@ -30,6 +30,11 @@ import { SetupPage } from 'src/services/setup-page'
 import { Menu } from 'src/services/menu'
 import { Selection } from 'src/services/selection'
 import { Settings } from 'src/services/settings'
+import { translate } from 'src/dict'
+import { Notifications } from 'src/services/notifications'
+import { Err, NOID } from 'src/defaults'
+import { Sidebar } from 'src/services/sidebar'
+import { Logs } from 'src/services/logs'
 
 const props = defineProps<{ tabsPanel: TabsPanel }>()
 const state = reactive({
@@ -52,14 +57,44 @@ function closeSubPanel(): void {
   clearTimeout(onMouseLeaveTimeout)
 }
 
+function onWrongRootFolder(): void {
+  const title = translate('notif.bookmarks_sub_panel.no_root.title')
+  const details = translate('notif.bookmarks_sub_panel.no_root.details')
+  Notifications.notify({
+    title,
+    details,
+    lvl: 'err',
+    ctrl: 'Save',
+    callback: () => {
+      Sidebar.bookmarkTabsPanel(props.tabsPanel.id, true).catch(err => {
+        if (err !== Err.Canceled) Logs.err('BookmarksSubPanel.onWrongRootFolder', err)
+      })
+    },
+  })
+  props.tabsPanel.bookmarksFolderId = NOID
+  Sidebar.saveSidebar()
+}
+
+let bookmarksLoading = false
 function onBarClick(): void {
+  if (bookmarksLoading) return
   if (!Permissions.reactive.bookmarks) {
     SetupPage.open('bookmarks')
     return
   }
 
   if (!bookmarks.value) {
-    loadBookmarks()
+    if (!Bookmarks.reactive.tree.length) {
+      bookmarksLoading = true
+      loadBookmarks().then(() => {
+        bookmarksLoading = false
+        if (!Bookmarks.reactive.byId[props.tabsPanel.bookmarksFolderId]) {
+          onWrongRootFolder()
+        }
+      })
+    } else if (!Bookmarks.reactive.byId[props.tabsPanel.bookmarksFolderId]) {
+      return onWrongRootFolder()
+    }
     state.active = true
   } else {
     state.active = !state.active
