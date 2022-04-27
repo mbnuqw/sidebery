@@ -1506,6 +1506,7 @@ export async function restoreFromBookmarks(panel: TabsPanel, silent?: boolean): 
   }
   Sidebar.saveSidebar()
 
+  const panelTabs = Utils.cloneArray(panel.tabs)
   const idsMap: Record<ID, ID> = {}
   const reusedTabs: Record<ID, Tab> = {}
   const usedAsParent: Record<ID, true> = {}
@@ -1556,7 +1557,7 @@ export async function restoreFromBookmarks(panel: TabsPanel, silent?: boolean): 
     }
 
     // Find existed tab
-    const existedTabIndex = panel.tabs.findIndex(t => {
+    const existedTabIndex = panelTabs.findIndex(t => {
       return (t.url === rawUrl || t.url === info.url) && t.title === info.title && !reusedTabs[t.id]
     })
     const existedReactiveTab = panel.tabs[existedTabIndex]
