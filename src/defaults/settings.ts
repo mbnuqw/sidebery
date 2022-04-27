@@ -41,7 +41,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   dndTabActDelay: 750,
   dndTabActMod: 'none',
   dndExp: 'pointer',
-  dndExpDelay: 0,
+  dndExpDelay: 750,
   dndExpMod: 'none',
 
   // Search
