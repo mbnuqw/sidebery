@@ -235,6 +235,8 @@ function onCtxMenu(e: MouseEvent): void {
   if (!Selection.isSet()) select()
 
   Menu.open(MenuType.Tabs)
+
+  Mouse.stopLongClick()
 }
 
 function onDoubleClick(): void {
