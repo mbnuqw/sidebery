@@ -92,7 +92,7 @@ export const sidebarTranslations: Translations = {
     ru: 'Удалить',
   },
   'popup.wtdwOldBookmarks.leave': {
-    en: 'Leave',
+    en: 'Keep',
     ru: 'Оставить',
   },
   // - Container fast-config popup
