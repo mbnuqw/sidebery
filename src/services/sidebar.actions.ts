@@ -901,7 +901,7 @@ export function switchToPanel(id: ID, withoutTabActivation?: boolean): void {
   Sidebar.activatePanel(id)
 
   const panel = Sidebar.reactive.panelsById[id]
-  if (Utils.isTabsPanel(panel) && panel.noEmpty && !panel.len) {
+  if (Utils.isTabsPanel(panel) && (panel.noEmpty || Settings.reactive.hideInact) && !panel.len) {
     Tabs.createTabInPanel(panel)
   }
 
@@ -914,7 +914,6 @@ export function switchToPanel(id: ID, withoutTabActivation?: boolean): void {
     Tabs.activateLastActiveTabOf(id)
   }
 
-  if (panel) Tabs.updateNativeTabsVisibility()
   if (DnD.reactive.isStarted) updatePanelBoundsDebounced()
   else saveActivePanel()
 }

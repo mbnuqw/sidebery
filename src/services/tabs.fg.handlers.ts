@@ -832,6 +832,9 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
   ) {
     Sidebar.activatePanel(panel.id)
   }
+  if ((!prevActive || prevActive.panelId !== tab.panelId) && Settings.reactive.hideInact) {
+    Tabs.updateNativeTabsVisibility()
+  }
 
   // Propagate access time to parent tabs for autoFolding feature
   if (

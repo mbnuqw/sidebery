@@ -10,7 +10,8 @@ section(ref="el")
   ToggleField(label="settings.activate_on_mouseup" v-model:value="Settings.reactive.activateOnMouseUp")
   ToggleField(
     label="settings.activate_last_tab_on_panel_switching"
-    v-model:value="Settings.reactive.activateLastTabOnPanelSwitching")
+    :value="Settings.reactive.activateLastTabOnPanelSwitching"
+    @update:value="toggleActivateLastTabOnPanelSwitching")
   ToggleField(label="settings.show_tab_rm_btn" v-model:value="Settings.reactive.showTabRmBtn")
   ToggleField(
     label="settings.hide_inactive_panel_tabs"
@@ -78,9 +79,22 @@ import SelectField from '../../components/select-field.vue'
 
 const el = ref<HTMLElement | null>(null)
 
+function toggleActivateLastTabOnPanelSwitching(): void {
+  Settings.reactive.activateLastTabOnPanelSwitching =
+    !Settings.reactive.activateLastTabOnPanelSwitching
+
+  if (!Settings.reactive.activateLastTabOnPanelSwitching && Settings.reactive.hideInact) {
+    Settings.reactive.hideInact = false
+  }
+}
+
 function toggleHideInact(): void {
   if (!Settings.reactive.hideInact && !Permissions.reactive.tabHide) location.hash = 'tab-hide'
   else Settings.reactive.hideInact = !Settings.reactive.hideInact
+
+  if (Settings.reactive.hideInact && !Settings.reactive.activateLastTabOnPanelSwitching) {
+    Settings.reactive.activateLastTabOnPanelSwitching = true
+  }
 }
 
 onMounted(() => SetupPage.registerEl('settings_tabs', el.value))

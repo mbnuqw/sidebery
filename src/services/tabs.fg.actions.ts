@@ -1662,8 +1662,6 @@ export async function move(
   // of this function.
 
   const parent = Tabs.byId[dst.parentId]
-  const toHide: ID[] = []
-  const toShow: ID[] = []
 
   // Update tabs tree
   if (Settings.reactive.tabsTree) {
@@ -1685,13 +1683,6 @@ export async function move(
       if (tabs[i].lvl <= minLvl) {
         tab.parentId = dst.parentId
       }
-
-      // Update invisibility of tabs
-      if (parent && parent.folded) {
-        if (Settings.reactive.hideFoldedTabs && !tab.hidden) toHide.push(tab.id)
-      } else if (tab.parentId === dst.parentId) {
-        if (Settings.reactive.hideFoldedTabs && tab.hidden) toShow.push(tab.id)
-      }
     }
 
     updateTabsTree()
@@ -1700,13 +1691,14 @@ export async function move(
   tabs.forEach(t => saveTabData(t.id))
   cacheTabsData()
 
-  // console.log('[DEBUG] tabs after moving', Utils.cloneArray(Tabs.list))
-
-  // Hide/Show tabs
-  if (toHide.length) browser.tabs.hide(toHide)
-  if (toShow.length) browser.tabs.show(toShow)
-
   if (moving) await moving
+
+  if (
+    Settings.reactive.hideFoldedTabs ||
+    (Settings.reactive.hideInact && dst.panelId !== src.panelId)
+  ) {
+    Tabs.updateNativeTabsVisibility()
+  }
 }
 
 /**
@@ -1840,8 +1832,10 @@ export function updateNativeTabsVisibility(): void {
   const hideFolded = Settings.reactive.hideFoldedTabs
   const hideInact = Settings.reactive.hideInact
 
-  let actPanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
-  if (!actPanel) actPanel = Sidebar.reactive.panelsById[Sidebar.reactive.lastActivePanelId]
+  const actTab = Tabs.byId[Tabs.activeId]
+  if (!actTab) return
+
+  const actPanel = Sidebar.reactive.panelsById[actTab.panelId]
   if (!Utils.isTabsPanel(actPanel)) return
 
   const toShow = []
