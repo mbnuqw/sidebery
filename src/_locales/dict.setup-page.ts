@@ -1885,6 +1885,18 @@ export const setupPageTranslations: Translations = {
     ru: 'Задержка длительного нажатия (мс)',
     zh_CN: '长按延迟（毫秒）',
   },
+  'settings.wheel_threshold': {
+    en: 'Set threshold for switching between panels and tabs with mouse wheel',
+    ru: 'Установить порог для переключения между панелями и вкладками с помощью колесика мыши',
+  },
+  'settings.wheel_threshold_y': {
+    en: 'Vertical scrolling (px)',
+    ru: 'Вертикальная прокрутка (px)',
+  },
+  'settings.wheel_threshold_x': {
+    en: 'Horizontal scrolling (px)',
+    ru: 'Горизонтальная прокрутка (px)',
+  },
 
   'settings.nav_actions_sub_title': {
     en: 'Navigation bar actions',

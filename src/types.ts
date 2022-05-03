@@ -338,3 +338,8 @@ export interface UpgradingState {
   favicons?: 'done' | 'in-progress' | 'pending' | 'err' | 'no'
   styles?: 'done' | 'in-progress' | 'pending' | 'err' | 'no'
 }
+
+export const enum WheelDirection {
+  Horizontal = 1,
+  Vertical = 2,
+}

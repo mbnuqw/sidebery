@@ -56,7 +56,7 @@ import { translate } from 'src/dict'
 import { BTN_ICONS } from 'src/defaults'
 import { NavItemClass, ButtonTypes, DragType, DropType } from 'src/types'
 import { MenuType, DragInfo, DragItem, PanelType } from 'src/types'
-import { ButtonType, SpaceType, NavBtn, NavItem } from 'src/types'
+import { ButtonType, SpaceType, NavBtn, NavItem, WheelDirection } from 'src/types'
 import { Settings } from 'src/services/settings'
 import { Sidebar } from 'src/services/sidebar'
 import { Windows } from 'src/services/windows'
@@ -225,12 +225,12 @@ function getBtnInlineIndex(index: number): number {
   else return -1
 }
 
-function onNavWheel(e: WheelEvent) {
+const onNavWheel = Mouse.getWheelDebouncer(WheelDirection.Vertical, (e: WheelEvent) => {
   if (Settings.reactive.navSwitchPanelsWheel) {
     if (e.deltaY > 0) return Sidebar.switchPanel(1)
     if (e.deltaY < 0) return Sidebar.switchPanel(-1)
   }
-}
+})
 
 function onDrop(e: DragEvent): void {
   if (!droppedOnPanel) DnD.reactive.dstType = DropType.Nowhere

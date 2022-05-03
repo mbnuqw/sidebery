@@ -29,6 +29,20 @@ section(ref="el")
     unitLabel="settings.long_click_delay_"
     v-model:value="Settings.reactive.longClickDelay"
     :or="300")
+  ToggleField(
+    label="settings.wheel_threshold"
+    v-model:value="Settings.reactive.wheelThreshold")
+  .sub-fields
+    NumField.-inline(
+      label="settings.wheel_threshold_y"
+      v-model:value="Settings.reactive.wheelThresholdY"
+      :inactive="!Settings.reactive.wheelThreshold"
+      :or="60")
+    NumField.-inline(
+      label="settings.wheel_threshold_x"
+      v-model:value="Settings.reactive.wheelThresholdX"
+      :inactive="!Settings.reactive.wheelThreshold"
+      :or="10")
 
   .sub-title {{translate('settings.nav_actions_sub_title')}}
   SelectField(

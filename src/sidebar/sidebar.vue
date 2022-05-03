@@ -68,7 +68,7 @@
 
 <script lang="ts" setup>
 import { ref, computed, onMounted, Component } from 'vue'
-import { PanelType, Panel, MenuType } from 'src/types'
+import { PanelType, Panel, MenuType, WheelDirection } from 'src/types'
 import { Settings } from 'src/services/settings'
 import { Sidebar } from 'src/services/sidebar'
 import { Styles } from 'src/services/styles'
@@ -182,16 +182,15 @@ function onDocumentKeyup(e: KeyboardEvent): void {
   }
 }
 
-function onWheel(e: WheelEvent): void {
+const onWheel = Mouse.getWheelDebouncer(WheelDirection.Horizontal, e => {
   if (Menu.isOpen) Menu.close()
-  // Selection.resetSelection()
 
   if (Settings.reactive.hScrollThroughPanels) {
-    let threshold = e.deltaMode === 0 ? 8 : 1
-    if (e.deltaX >= threshold) return Sidebar.switchPanel(1, true)
-    if (e.deltaX <= -threshold) return Sidebar.switchPanel(-1, true)
+    if (e.deltaX !== 0) Mouse.blockWheel(WheelDirection.Vertical)
+    if (e.deltaX > 0) return Sidebar.switchPanel(1, true)
+    if (e.deltaX < 0) return Sidebar.switchPanel(-1, true)
   }
-}
+})
 
 let leaveTimeout: number | undefined
 function onMouseEnter(): void {

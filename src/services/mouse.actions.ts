@@ -6,7 +6,7 @@ import { Menu } from 'src/services/menu'
 import { Sidebar } from 'src/services/sidebar'
 import { Tabs } from 'src/services/tabs.fg'
 import { DnD } from 'src/services/drag-and-drop'
-import { ItemBoundsType } from 'src/types'
+import { ItemBoundsType, WheelDirection } from 'src/types'
 
 type TargetType =
   | 'sidebar'
@@ -118,16 +118,6 @@ export function onMouseMove(e: MouseEvent): void {
   }
 }
 
-let wheelBlockTimeout: number | undefined
-export function blockWheel(): void {
-  Mouse.isWheelBlocked = true
-  if (wheelBlockTimeout) clearTimeout(wheelBlockTimeout)
-  wheelBlockTimeout = setTimeout(() => {
-    Mouse.isWheelBlocked = false
-    wheelBlockTimeout = undefined
-  }, 500)
-}
-
 let longClickTimeout: number | undefined
 export function startLongClick(
   e: MouseEvent,
@@ -223,4 +213,71 @@ export function stopResizing(): void {
   Mouse.resizing = null
   resizingStart = -1
   resizingDelta = -1
+}
+
+/**
+ * Returns the MouseWheel event listener. Callback will be called
+ * when threshold of target direction will be exceeded.
+ */
+export function getWheelDebouncer(
+  direction: WheelDirection,
+  cb: (e: WheelEvent) => void
+): (e: WheelEvent) => void {
+  if (!Settings.reactive.wheelThreshold) return cb
+
+  let threshold = 0
+  if (direction === WheelDirection.Vertical) threshold = Settings.reactive.wheelThresholdY
+  else threshold = Settings.reactive.wheelThresholdX
+
+  let stopTimeout: number | undefined
+  let first = true
+  let delta = 0
+  let deltaBuf = 0
+
+  return (e: WheelEvent) => {
+    clearTimeout(stopTimeout)
+    stopTimeout = setTimeout(() => {
+      deltaBuf = 0
+      first = true
+      stopTimeout = undefined
+    }, 500)
+
+    if (wheelYIsBlocked && direction === WheelDirection.Vertical) return
+    if (wheelXIsBlocked && direction === WheelDirection.Horizontal) return
+
+    if (e.deltaMode !== 0) return cb(e)
+
+    delta = direction === WheelDirection.Vertical ? e.deltaY : e.deltaX
+    if (!first && delta) deltaBuf += delta
+    else first = false
+
+    if (deltaBuf > threshold || deltaBuf < -threshold) {
+      deltaBuf = 0
+      cb(e)
+    }
+  }
+}
+
+let wheelXIsBlocked = false
+let blockWheelXTimeout: number | undefined
+let wheelYIsBlocked = false
+let blockWheelYTimeout: number | undefined
+/**
+ * Block the wheel events for wheel debouncer (Mouse.getWheelDebouncer)
+ */
+export function blockWheel(direction?: WheelDirection): void {
+  if (direction === undefined || direction === WheelDirection.Vertical) {
+    wheelYIsBlocked = true
+    clearTimeout(blockWheelYTimeout)
+    blockWheelYTimeout = setTimeout(() => {
+      wheelYIsBlocked = false
+    }, 500)
+  }
+  if (direction === undefined || direction === WheelDirection.Horizontal) {
+    wheelXIsBlocked = true
+    clearTimeout(blockWheelXTimeout)
+    blockWheelXTimeout = setTimeout(() => {
+      wheelXIsBlocked = false
+    }, 500)
+  }
 }

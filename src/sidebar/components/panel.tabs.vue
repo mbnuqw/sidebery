@@ -31,6 +31,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { translate } from 'src/dict'
 import { DropType, MenuType, ScrollBoxComponent, Tab, TabsPanel, ReactiveTab } from 'src/types'
+import { WheelDirection } from 'src/types'
 import { NOID } from 'src/defaults'
 import { Settings } from 'src/services/settings'
 import { Selection } from 'src/services/selection'
@@ -174,7 +175,7 @@ function onDoubleClick(e: MouseEvent): void {
   if (da === 'undo') Tabs.undoRmTab()
 }
 
-function onWheel(e: WheelEvent): void {
+const onWheel = Mouse.getWheelDebouncer(WheelDirection.Vertical, (e: WheelEvent) => {
   if (Settings.reactive.scrollThroughTabs !== 'none') {
     if (scrollBoxEl && Settings.reactive.scrollThroughTabsExceptOverflow) {
       if (scrollBoxEl.scrollHeight > scrollBoxEl.offsetHeight) return
@@ -183,14 +184,9 @@ function onWheel(e: WheelEvent): void {
     let globaly = (Settings.reactive.scrollThroughTabs === 'global') !== e.shiftKey
     const cyclic = Settings.reactive.scrollThroughTabsCyclic !== e.ctrlKey
 
-    if (e.deltaY > 0) {
-      if (Mouse.isWheelBlocked) return
-      Tabs.switchTab(globaly, cyclic, 1, false)
-    }
-    if (e.deltaY < 0) {
-      if (Mouse.isWheelBlocked) return
-      Tabs.switchTab(globaly, cyclic, -1, false)
-    }
+    if (e.deltaY !== 0) Mouse.blockWheel(WheelDirection.Horizontal)
+    if (e.deltaY > 0) Tabs.switchTab(globaly, cyclic, 1, false)
+    if (e.deltaY < 0) Tabs.switchTab(globaly, cyclic, -1, false)
   }
-}
+})
 </script>

@@ -13,7 +13,7 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { DropType, TabsPanel } from 'src/types'
+import { DropType, TabsPanel, WheelDirection } from 'src/types'
 import { Settings } from 'src/services/settings'
 import { Tabs } from 'src/services/tabs.fg'
 import { Mouse } from 'src/services/mouse'
@@ -28,7 +28,7 @@ const pinnedTabs = computed(() => {
   else return Tabs.reactive.pinned
 })
 
-function onWheel(e: WheelEvent): void {
+const onWheel = Mouse.getWheelDebouncer(WheelDirection.Vertical, (e: WheelEvent) => {
   if (
     Settings.reactive.pinnedTabsPosition !== 'panel' &&
     Settings.reactive.scrollThroughTabs !== 'none'
@@ -36,16 +36,10 @@ function onWheel(e: WheelEvent): void {
     const globaly = (Settings.reactive.scrollThroughTabs === 'global') !== e.shiftKey
     const cyclic = Settings.reactive.scrollThroughTabsCyclic !== e.ctrlKey
 
-    if (e.deltaY > 0) {
-      if (Mouse.isWheelBlocked) return
-      Tabs.switchTab(globaly, cyclic, 1, true)
-    }
-    if (e.deltaY < 0) {
-      if (Mouse.isWheelBlocked) return
-      Tabs.switchTab(globaly, cyclic, -1, true)
-    }
+    if (e.deltaY > 0) Tabs.switchTab(globaly, cyclic, 1, true)
+    if (e.deltaY < 0) Tabs.switchTab(globaly, cyclic, -1, true)
   }
-}
+})
 
 function onDrop(): void {
   DnD.reactive.dstType = DropType.Tabs
