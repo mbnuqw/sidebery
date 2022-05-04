@@ -1658,9 +1658,9 @@ export const setupPageTranslations: Translations = {
     zh_CN: '明亮',
   },
   'settings.color_scheme_sys': {
-    en: 'dark/light',
-    ru: 'система',
-    zh_CN: '暗黑/明亮',
+    en: 'auto: dark/light',
+    ru: 'авто: темная/светлая',
+    zh_CN: '自动: 暗黑/明亮',
   },
   'settings.color_scheme_ff': {
     en: 'firefox',
