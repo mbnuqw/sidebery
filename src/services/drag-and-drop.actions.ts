@@ -283,8 +283,6 @@ export function onDragEnter(e: DragEvent): void {
   const type = (e.target as HTMLElement).getAttribute('data-dnd-type')
   const id = (e.target as HTMLElement).getAttribute('data-dnd-id')
 
-  // console.log('[DND] onDragEnter (type, id)', type, id)
-
   DnD.reactive.pointerHover = false
 
   resetPanelSwitchTimeout()

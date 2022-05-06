@@ -97,7 +97,6 @@ export function onTabsSearchPrev(panel?: Panel): void {
 
 export function onTabsSearchEnter(panel?: Panel): void {
   if (!Utils.isTabsPanel(panel)) return
-  console.log('[DEBUG] Search.onTabsSearchEnter')
 
   // Try to find in another panel
   if (Search.reactive.value && !panel.filteredTabs?.length) return findInAnotherPanel()

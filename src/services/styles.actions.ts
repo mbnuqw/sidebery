@@ -45,7 +45,6 @@ export async function initColorScheme(theme?: browser.theme.Theme): Promise<void
   if (Settings.reactive.colorScheme === 'ff') {
     Logs.info('Styles: initColorScheme')
     if (!theme) theme = await browser.theme.getCurrent()
-    // console.log('[DEBUG] theme', Utils.cloneObject(theme))
 
     const colorSchemeVariant = parseTheme(theme)
     if (colorSchemeVariant === ColorSchemeVariant.Dark) Styles.reactive.colorScheme = 'dark'
@@ -130,7 +129,6 @@ function parseTheme(theme: browser.theme.Theme): ColorSchemeVariant {
   parsed.frame = Utils.toRGBA(theme.colors?.frame ?? theme.colors?.frame_inactive)
   parsed.frameText = Utils.toRGBA(theme.colors?.tab_background_text)
   parsed.frameVariant = getColorSchemeVariant(parsed.frame, parsed.frameText)
-  // console.log('[DEBUG] frame', parsed.frame, parsed.frameText)
 
   const toolbarBG = theme.colors?.toolbar ?? theme.colors?.frame
   const toolbarFG =
@@ -141,7 +139,6 @@ function parseTheme(theme: browser.theme.Theme): ColorSchemeVariant {
     theme.colors?.tab_background_text
   parsed.toolbar = Utils.toRGBA(toolbarBG)
   parsed.toolbarText = Utils.toRGBA(toolbarFG)
-  // console.log('[DEBUG] toolbar', parsed.toolbar, parsed.toolbarText)
 
   const sidebar = Utils.toRGBA(theme.colors?.sidebar)
   const sidebarText = Utils.toRGBA(theme.colors?.sidebar_text)

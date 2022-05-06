@@ -10,7 +10,6 @@ import { Favicons } from './favicons'
  * Set relGroupId and relPinId props in related pinned and group tabs
  */
 export function linkGroupWithPinnedTab(groupTab: Tab, tabs: Tab[]): void {
-  // console.log('[DEBUG] tabs.linkGroupWithPinnedTab()')
   const info = new URL(groupTab.url)
   const pin = info.searchParams.get('pin')
   if (!pin) return
@@ -32,7 +31,6 @@ export function linkGroupWithPinnedTab(groupTab: Tab, tabs: Tab[]): void {
  * ...
  */
 export async function replaceRelGroupWithPinnedTab(groupTab: Tab, pinnedTab: Tab): Promise<void> {
-  // console.log('[DEBUG] tabs.replaceRelGroupWithPinnedTab()')
   await browser.tabs.move(pinnedTab.id, { index: groupTab.index - 1 })
   Utils.sleep(120)
 

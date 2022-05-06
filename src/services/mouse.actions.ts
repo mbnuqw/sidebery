@@ -34,14 +34,12 @@ let targetType: TargetType | null = null
 let targetId: ID | undefined
 
 export function setTarget(type: TargetType, id?: ID): void {
-  // console.log('[FG] mouse.setTarget', targetType, id)
   targetType = type
   targetId = id
   Mouse.longClickApplied = false
 }
 
 export function resetTarget(): void {
-  // console.log('[FG] mouse.resetTarget')
   targetType = null
   targetId = undefined
   if (Mouse.resizing) stopResizing()
@@ -178,13 +176,11 @@ export function resetClickLock(delay = 0): void {
 
 export function startMultiSelection(e: MouseEvent, id: ID): void {
   if (Settings.reactive.ctxMenuNative) return
-  // console.log('[DEBUG] mouse.startMultiSelection()')
   multiSelectionStartId = id
   multiSelectionStartY = e.clientY
 }
 
 export function stopMultiSelection(): void {
-  // console.log('[DEBUG] mouse.stopMultiSelection()')
   multiSelectionStartId = null
   Mouse.multiSelectionMode = false
   multiSelectionStartY = 0

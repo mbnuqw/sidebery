@@ -165,7 +165,6 @@ function parseNav(config: SidebarConfig): void {
 }
 
 export function recalcTabsPanels(): void {
-  // console.log('[DEBUG] Sidebar.recalcTabsPanels')
   const pinnedTabs: ReactiveTab[] = []
   const pinnedTabsByPanel: Record<ID, ReactiveTab[]> = {}
   const pinnedInPanel = Settings.reactive.pinnedTabsPosition === 'panel'
@@ -887,7 +886,6 @@ export function saveActivePanel(): void {
 
 let updatePanelBoundsTimeout: number | undefined
 export function updatePanelBoundsDebounced(delay = 256): void {
-  // console.log('[DEBUG] panels.updatePanelBoundsDebounced()')
   clearTimeout(updatePanelBoundsTimeout)
   updatePanelBoundsTimeout = setTimeout(() => updateBounds(), delay)
 }
@@ -922,7 +920,6 @@ export function switchToPanel(id: ID, withoutTabActivation?: boolean): void {
  * Try to find not hidden neighbour panel
  */
 export function switchToNeighbourPanel(): void {
-  // console.log('[DEBUG] panels.switchToNeighbourPanel()')
   let target: Panel | undefined
   let activePanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
   if (!activePanel) activePanel = Sidebar.reactive.panels[0]
@@ -1042,7 +1039,6 @@ export function switchPanel(dir: 1 | -1, ignoreHidden?: boolean): void {
  * Find panel with active tab and switch to it.
  */
 export function goToActiveTabPanel(): void {
-  // console.log('[DEBUG] panels.goToActiveTabPanel()')
   let activeTab = Tabs.byId[Tabs.activeId]
   if (!activeTab) activeTab = Tabs.list.find(t => t.active)
   if (!activeTab) return

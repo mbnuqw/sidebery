@@ -406,7 +406,6 @@ export function normalizeTab(tab: Tab, defaultPanelId: ID): void {
  * Save tabs data
  */
 export function cacheTabsData(delay = 300): void {
-  // console.log('[DEBUG] Tabs.cacheTabsData()', delay)
   if (cacheTabsDataTimeout) clearTimeout(cacheTabsDataTimeout)
   cacheTabsDataTimeout = setTimeout(() => {
     if (Tabs.tabsNormalizing) return
@@ -430,7 +429,6 @@ let cacheTabsDataTimeout: number | undefined
  * Save tab data to its session storage
  */
 export function saveTabData(tabId: ID): void {
-  // console.log('[DEBUG] tabs.saveTabData()', tabId)
   const tab = Tabs.byId[tabId]
   if (!tab) return
 
@@ -447,7 +445,6 @@ let normTabsTimeout: number | undefined
  * Load tabs and normalize order.
  */
 export function normalizeTabs(delay = 500): void {
-  // console.log('[DEBUG] tabs.normalizeTabs()')
   if (!Tabs.tabsNormalizing) Tabs.tabsNormalizing = true
   clearTimeout(normTabsTimeout)
   normTabsTimeout = setTimeout(async () => {
@@ -1534,9 +1531,6 @@ export async function move(
   src: SrcPlaceInfo,
   dst: DstPlaceInfo
 ): Promise<void> {
-  // console.log('[DEBUG] move', tabsInfo, src, dst)
-  // console.log('[DEBUG] tabs before moving:', Utils.cloneArray(Tabs.list))
-
   // Ask about target window
   if (dst.windowChooseConf) {
     dst.windowId = await Windows.showWindowsPopup(dst.windowChooseConf)
@@ -1599,7 +1593,6 @@ export async function move(
   // If target index is greater that first tab index - decrease it by 1
   const initialTargetIndex = dst.index
   dst.index = dst.index <= tabs[0].index ? dst.index : dst.index - 1
-  // console.log('[DEBUG] target index after normalization', dst.index)
 
   const pinTab = !src.pinned && dst.pinned
   const unpinTab = src.pinned && !dst.pinned
@@ -1638,10 +1631,8 @@ export async function move(
     }
     let targetIndex = initialTargetIndex
     if (tabs[0].index < initialTargetIndex) targetIndex = initialTargetIndex - tabs.length
-    // console.log('[DEBUG] splice tabs list', targetIndex, ...tabs)
     Tabs.list.splice(targetIndex, 0, ...tabs)
     updateTabsIndexes()
-    // console.log('[DEBUG] moving (tabIds, index):', Tabs.movingTabs, dst.index)
     moving = browser.tabs.move([...Tabs.movingTabs], {
       windowId: Windows.id,
       index: dst.index,
@@ -2019,7 +2010,6 @@ export function expTabsBranch(tabId: ID): void {
  * Toggle tabs branch visability (fold/expand)
  */
 export function toggleBranch(tabId?: ID): void {
-  // console.log(`[DEBUG] tabs.toggleBranch(tabId: ${tabId})`)
   if (!Settings.reactive.tabsTree) return
   if (tabId === undefined) return
 
@@ -2646,7 +2636,6 @@ export function handleReopening(tabId: ID, newCtx: string): number | undefined {
  * Update indexes of tabs
  */
 export function updateTabsIndexes(fromIndex = 0, toIndex = -1): void {
-  // console.log(`[DEBUG] tabs.updateTabsIndexes(fromIndex: ${fromIndex}, toIndex: ${toIndex})`)
   const tabs = Tabs.list
   if (toIndex === -1) toIndex = tabs.length
   for (let t, i = fromIndex; i < toIndex; i++) {
