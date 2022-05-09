@@ -40,6 +40,9 @@
   transform: translateZ(0)
   transition: transform var(--d-fast), opacity var(--d-fast), padding var(--d-fast)
 
+  padding-left: calc(var(--tabs-indent) * 16)
+  &[data-lvl="0"]
+    padding-left: 0
   &[data-lvl="1"]
     padding-left: var(--tabs-indent)
   &[data-lvl="2"]
@@ -64,6 +67,12 @@
     padding-left: calc(var(--tabs-indent) * 11)
   &[data-lvl="12"]
     padding-left: calc(var(--tabs-indent) * 12)
+  &[data-lvl="13"]
+    padding-left: calc(var(--tabs-indent) * 13)
+  &[data-lvl="14"]
+    padding-left: calc(var(--tabs-indent) * 14)
+  &[data-lvl="15"]
+    padding-left: calc(var(--tabs-indent) * 15)
   
   &[data-loading="true"]
     cursor: progress
@@ -137,7 +146,7 @@
 .Tab[data-pin="true"] .body
   justify-content: center
 
-#root[data-tabs-tree-lvl-marks="true"] .Tab[data-pin="false"] .body:after
+#root[data-tabs-tree-lvl-marks="true"] .Tab[data-pin="false"]:not([data-lvl="0"]) .body:after
   display: block
   box-shadow: calc(var(--tabs-indent) * -1) 0 0 0 var(--frame-fg),
               calc(var(--tabs-indent) * -2) 0 0 0 var(--frame-fg),
@@ -150,7 +159,11 @@
               calc(var(--tabs-indent) * -9) 0 0 0 var(--frame-fg),
               calc(var(--tabs-indent) * -10) 0 0 0 var(--frame-fg),
               calc(var(--tabs-indent) * -11) 0 0 0 var(--frame-fg),
-              calc(var(--tabs-indent) * -12) 0 0 0 var(--frame-fg)
+              calc(var(--tabs-indent) * -12) 0 0 0 var(--frame-fg),
+              calc(var(--tabs-indent) * -13) 0 0 0 var(--frame-fg),
+              calc(var(--tabs-indent) * -14) 0 0 0 var(--frame-fg),
+              calc(var(--tabs-indent) * -15) 0 0 0 var(--frame-fg),
+              calc(var(--tabs-indent) * -16) 0 0 0 var(--frame-fg)
 
 #root[data-drag="true"] .Tab
   animation: drag-hover-fix .1s

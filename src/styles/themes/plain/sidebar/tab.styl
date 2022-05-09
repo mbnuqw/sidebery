@@ -29,6 +29,9 @@
   overflow: hidden
   transition: transform var(--d-fast), opacity var(--d-fast), padding var(--d-fast)
 
+  padding-left: calc(var(--tabs-indent) * 16)
+  &[data-lvl="0"]
+    padding-left: 0
   &[data-lvl="1"]
     padding-left: var(--tabs-indent)
   &[data-lvl="2"]
@@ -53,6 +56,12 @@
     padding-left: calc(var(--tabs-indent) * 11)
   &[data-lvl="12"]
     padding-left: calc(var(--tabs-indent) * 12)
+  &[data-lvl="13"]
+    padding-left: calc(var(--tabs-indent) * 13)
+  &[data-lvl="14"]
+    padding-left: calc(var(--tabs-indent) * 14)
+  &[data-lvl="15"]
+    padding-left: calc(var(--tabs-indent) * 15)
 
   &[data-discarded="true"] > .body > .fav
   &[data-discarded="true"] > .body > .t-box
@@ -121,7 +130,7 @@
 #root[data-pinned-tabs-position="right"] .Tab[data-pin="true"]
   width: calc(var(--tabs-pinned-width) - 1px)
 
-#root[data-tabs-tree-lvl-marks="true"] .Tab[data-pin="false"] .body:after
+#root[data-tabs-tree-lvl-marks="true"] .Tab[data-pin="false"]:not([data-lvl="0"]) .body:after
   display: block
   box-shadow: calc(var(--tabs-indent) / -2) 0 0 0 var(--toolbar-fg),
               calc(var(--tabs-indent) * -1.5) 0 0 0 var(--toolbar-fg),
@@ -134,7 +143,11 @@
               calc(var(--tabs-indent) * -8.5) 0 0 0 var(--toolbar-fg),
               calc(var(--tabs-indent) * -9.5) 0 0 0 var(--toolbar-fg),
               calc(var(--tabs-indent) * -10.5) 0 0 0 var(--toolbar-fg),
-              calc(var(--tabs-indent) * -11.5) 0 0 0 var(--toolbar-fg)
+              calc(var(--tabs-indent) * -11.5) 0 0 0 var(--toolbar-fg),
+              calc(var(--tabs-indent) * -12.5) 0 0 0 var(--toolbar-fg),
+              calc(var(--tabs-indent) * -13.5) 0 0 0 var(--toolbar-fg),
+              calc(var(--tabs-indent) * -14.5) 0 0 0 var(--toolbar-fg),
+              calc(var(--tabs-indent) * -15.5) 0 0 0 var(--toolbar-fg)
 
 // ---
 // -- Drag layer
