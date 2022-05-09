@@ -41,8 +41,11 @@ export async function showWindowsPopup(config: WindowChoosingDetails = {}): Prom
     if (!Windows.reactive.choosing) Windows.reactive.choosing = []
   }, 120)
 
-  let wins: Window[]
-  if (config.otherWindows) wins = Windows.otherWindows
+  let wins = (await browser.windows.getAll({
+    windowTypes: ['normal'],
+    populate: false,
+  })) as Window[]
+  if (config.otherWindows) wins = wins.filter(w => w.id !== Windows.id)
   else wins = (await browser.windows.getAll()) as Window[]
   if (config.filter) wins = wins.filter(config.filter)
 
@@ -56,7 +59,7 @@ export async function showWindowsPopup(config: WindowChoosingDetails = {}): Prom
       }
       return {
         id: w.id ?? NOID,
-        title: tab?.title ?? w.title,
+        title: w.title ?? tab?.title,
         screen,
         sel: false,
         choose: () => {
