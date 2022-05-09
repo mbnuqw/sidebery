@@ -567,6 +567,19 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, childfree?: bool
 
   // On removing the last tab
   if (!Tabs.removingTabs.length) {
+    // Reset parent tab state
+    if (Settings.reactive.tabsTree && tab.parentId !== NOID) {
+      const parentTab = Tabs.byId[tab.parentId]
+      if (parentTab) {
+        const nextTab = Tabs.list[parentTab.index + 1]
+        if (nextTab?.parentId !== tab.parentId) {
+          parentTab.isParent = false
+          const rParentTab = Tabs.reactive.byId[tab.parentId]
+          if (rParentTab) rParentTab.isParent = false
+        }
+      }
+    }
+
     // Save new tabs state
     Tabs.cacheTabsData()
 
