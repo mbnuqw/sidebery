@@ -16,7 +16,7 @@
   padding: 1px 0 2px
 
 #root[data-pinned-tabs-position="panel"][data-pinned-tabs-list="true"] .PinnedTabsBar
-  padding: 1px 0 7px
+  padding: 1px 0 12px
 
 // Left/Right
 #root[data-pinned-tabs-position="left"] .PinnedTabsBar
@@ -42,6 +42,23 @@
   flex-wrap: wrap
   flex-direction: row
   padding: 1px 0 2px
+
+// ---
+// -- Separator
+// -
+.PinnedTabsBar:after
+  content: ''
+  position: absolute
+  display: none
+  bottom: 5px
+  left: 12px
+  width: calc(100% - 24px)
+  height: 1px
+  background-color: var(--frame-fg)
+  opacity: .16
+
+#root[data-pinned-tabs-position="panel"][data-pinned-tabs-list="true"] .PinnedTabsBar:after
+  display: block
 
 // ---
 // -- Tab wrapper
