@@ -196,6 +196,7 @@ const TABS_PANEL_MENU_OPTS: Record<string, string> = {
   closeTabs: 'menu.tabs_panel.close',
   openPanelConfig: 'menu.common.conf',
   removePanel: 'menu.tabs_panel.remove_panel',
+  bookmarkTabsPanel: 'menu.tabs_panel.bookmark',
   restoreFromBookmarks: 'menu.tabs_panel.restore_from_bookmarks',
   convertToBookmarksPanel: 'menu.tabs_panel.convert_to_bookmarks_panel',
 }
