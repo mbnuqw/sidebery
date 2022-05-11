@@ -22,9 +22,10 @@
 .TabsPanel .new-tab-btns
   position: sticky
   bottom: 0px
-  left: -1px
+  left: 0
   display: flex
   width: calc(100% - 1px)
+  padding: 0
   flex-wrap: wrap
   z-index: 10
   grid-gap: 1px
@@ -34,6 +35,8 @@
   &[data-new-tab-bar-position="bottom"]
     position: relative
     bottom: auto
+    width: 100%
+    padding: 2px 1px
   &:before
     content: ''
     position: absolute
@@ -56,6 +59,11 @@
   width: 100%
   height: 100%
   border-radius: 3px
+.TabsPanel .new-tab-btns[data-new-tab-bar-position="bottom"] .new-tab-bg
+  top: 2px
+  left: 1px
+  width: calc(100% - 2px)
+  height: calc(100% - 4px)
 .TabsPanel .new-tab-btns[data-sel="true"] .new-tab-bg
   background-color: var(--selected-bg)
   box-shadow: inset 0 0 0 1px var(--selected-border)
