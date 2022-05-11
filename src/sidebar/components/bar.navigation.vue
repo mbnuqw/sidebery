@@ -363,7 +363,6 @@ function onNavMouseUp(e: MouseEvent, item: NavItem, inHiddenBar?: boolean) {
     if (inHiddenBar) {
       Sidebar.reactive.hiddenPanelsBar = false
       Sidebar.switchToPanel(item.id)
-      if (Utils.isTabsPanel(panel) && panel.ready && !panel.noEmpty) Tabs.createTabInPanel(panel)
       return
     }
 
