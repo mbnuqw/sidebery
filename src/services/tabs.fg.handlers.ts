@@ -596,7 +596,8 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, childfree?: bool
     if (
       Settings.reactive.hideEmptyPanels &&
       Sidebar.reactive.activePanelId === panel.id &&
-      !panel.tabs.length
+      !panel.tabs.length &&
+      !panel.pinnedTabs.length
     ) {
       const activeTab = Tabs.byId[Tabs.activeId]
       if (activeTab && !activeTab.pinned) Sidebar.activatePanel(activeTab.panelId)
