@@ -3,6 +3,7 @@
   ref="rootEl"
   :data-native-scrollbar="Settings.reactive.nativeScrollbars"
   :data-native-scrollbars-thin="Settings.reactive.nativeScrollbarsThin"
+  :data-native-scrollbars-left="Settings.reactive.nativeScrollbarsLeft"
   :data-theme="Settings.reactive.theme"
   :data-color-scheme="Styles.reactive.colorScheme"
   :data-animations="animations"

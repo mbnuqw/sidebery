@@ -4,6 +4,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   // General
   nativeScrollbars: false,
   nativeScrollbarsThin: true,
+  nativeScrollbarsLeft: false,
   selWinScreenshots: false,
   updateSidebarTitle: true,
   markWindow: false,

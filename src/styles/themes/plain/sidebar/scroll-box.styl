@@ -3,10 +3,11 @@
 #root[data-color-scheme="dark"]
   --scroll-progress-height: 1px
   --scroll-progress-bg: #37adef
-
+  --scroll-color: #ffffff46
 #root[data-color-scheme="light"]
   --scroll-progress-height: 2px
   --scroll-progress-bg: #178dff
+  --scroll-color: #00000046
 
 .ScrollBox
   position: relative
@@ -26,10 +27,15 @@
   overflow-x: hidden
   overflow-y: auto
   scrollbar-width: none
+  scrollbar-color: var(--scroll-color) #0000
 #root[data-native-scrollbar="true"] .ScrollBox > .scroll-container
   scrollbar-width: auto
 #root[data-native-scrollbar="true"][data-native-scrollbars-thin="true"] .ScrollBox > .scroll-container
   scrollbar-width: thin
+#root[data-native-scrollbar="true"][data-native-scrollbars-left="true"]  .ScrollBox > .scroll-container
+  direction: rtl
+  > .scrollable
+    direction: ltr
 
 // ---
 // -- Scroll shadows

@@ -7,6 +7,10 @@ section(ref="el")
       label="settings.native_scrollbars_thin"
       :inactive="!Settings.reactive.nativeScrollbars"
       v-model:value="Settings.reactive.nativeScrollbarsThin")
+    ToggleField(
+      label="settings.native_scrollbars_left"
+      :inactive="!Settings.reactive.nativeScrollbars"
+      v-model:value="Settings.reactive.nativeScrollbarsLeft")
   ToggleField(
     label="settings.sel_win_screenshots"
     :value="Settings.reactive.selWinScreenshots"

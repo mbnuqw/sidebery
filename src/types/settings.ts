@@ -5,6 +5,7 @@ export interface SettingsState {
   version?: string // DEPR
   nativeScrollbars: boolean
   nativeScrollbarsThin: boolean
+  nativeScrollbarsLeft: boolean
   selWinScreenshots: boolean
   updateSidebarTitle: boolean
   markWindow: boolean

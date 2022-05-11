@@ -430,6 +430,10 @@ export const setupPageTranslations: Translations = {
     ru: 'Использовать узкие скроллбары',
     zh_CN: '使用细滚动条',
   },
+  'settings.native_scrollbars_left': {
+    en: 'Show scroll-bar at the left side',
+    ru: 'Показать полосу прокрутки слева',
+  },
   'settings.sel_win_screenshots': {
     en: 'Show screenshots in the window selection menu',
     ru: 'Показывать скриншоты в меню выбора окна',
