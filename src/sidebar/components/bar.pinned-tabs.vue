@@ -2,11 +2,11 @@
 .PinnedTabsBar(
   tabindex="-1"
   :data-empty="pinnedTabs.length === 0"
-  :data-dnd-end="dropIndex === pinnedTabs.length"
+  :data-dnd-end="dropToEnd"
   data-dnd-type="pinned-bar"
   @wheel="onWheel"
   @drop="onDrop")
-  .tab-wrapper(v-for="(tab, i) in pinnedTabs" :key="tab.id" :data-targeted="i === dropIndex")
+  .tab-wrapper(v-for="tab in pinnedTabs" :key="tab.id" :data-targeted="dropId === tab.id")
     Tab(:tab="tab")
   .to-the-end(v-if="pinnedTabs.length")
 </template>
@@ -19,14 +19,19 @@ import { Tabs } from 'src/services/tabs.fg'
 import { Mouse } from 'src/services/mouse'
 import { DnD } from 'src/services/drag-and-drop'
 import Tab from './tab.vue'
+import { NOID } from 'src/defaults'
 
 const props = defineProps<{ panel?: TabsPanel }>()
-
-const dropIndex = computed(() => (DnD.reactive.dstPin ? DnD.reactive.dstIndex : -1))
 const pinnedTabs = computed(() => {
   if (props.panel) return props.panel.pinnedTabs
   else return Tabs.reactive.pinned
 })
+const dropId = computed(() => {
+  const tab = Tabs.list[DnD.reactive.dstIndex]
+  if (!tab || !tab.pinned || (props.panel && tab.panelId !== props.panel.id)) return NOID
+  else return tab.id
+})
+const dropToEnd = computed(() => DnD.reactive.dstPin && dropId.value === NOID)
 
 const onWheel = Mouse.getWheelDebouncer(WheelDirection.Vertical, (e: WheelEvent) => {
   if (

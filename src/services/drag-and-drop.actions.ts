@@ -384,7 +384,9 @@ export function onDragEnter(e: DragEvent): void {
     const panel = Sidebar.reactive.panelsById[DnD.reactive.dstPanelId]
     DnD.reactive.dstPin = true
     if (Utils.isTabsPanel(panel) && panel.pinnedTabs.length) {
-      DnD.reactive.dstIndex = panel.pinnedTabs.length
+      const rLastTab = panel.pinnedTabs[panel.pinnedTabs.length - 1]
+      const lastTab = Tabs.byId[rLastTab.id]
+      if (lastTab) DnD.reactive.dstIndex = lastTab.index + 1
     } else {
       DnD.reactive.dstIndex = Tabs.reactive.pinned.length
     }
