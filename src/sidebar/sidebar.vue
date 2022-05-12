@@ -208,7 +208,7 @@ function onMouseLeave(): void {
 
   const activePanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
   if (!Utils.isTabsPanel(activePanel) && activePanel?.tempMode && !Search.reactive.rawValue) {
-    Sidebar.switchPanelBack(250)
+    Sidebar.switchPanelBack(300)
   }
 
   if (Bookmarks.reactive.popup) return
