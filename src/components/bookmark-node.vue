@@ -23,7 +23,7 @@
         svg(v-else)
           use(xlink:href="#icon_folder")
     .title(v-if="node.title || node.url") {{node.title || node.url}}
-    .len(v-if="children?.length !== undefined && Settings.reactive.showBookmarkLen") {{children.length}}
+    .len(v-if="Settings.reactive.showBookmarkLen && node.len") {{node.len}}
   .children(v-if="(expanded) && children?.length" :title="node.title")
     BookmarkNode(v-for="node in children" :key="node.id" :node="node" :filter="props.filter" :panelId="panelId")
 </template>

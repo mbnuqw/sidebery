@@ -54,6 +54,8 @@ export const Bookmarks = {
     expanded: {},
   } as BookmarksState,
 
+  overallCount: 0,
+
   ...BookmarksHandlers,
   ...BookmarksActions,
 }

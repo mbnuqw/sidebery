@@ -32,7 +32,10 @@ function onBookmarkCreatedFg(id: ID, bookmark: Bookmark): void {
   bookmark.sel = false
   bookmark.isOpen = false
   if (bookmark.type === 'separator') bookmark.url = undefined
-  if (bookmark.type === 'folder' && !bookmark.children) bookmark.children = []
+  if (bookmark.type === 'folder') {
+    bookmark.len = 0
+    if (!bookmark.children) bookmark.children = []
+  }
 
   if (Settings.reactive.highlightOpenBookmarks && bookmark.url) {
     bookmark.isOpen = !!Tabs.list.find(t => t.url === bookmark.url)
@@ -45,7 +48,6 @@ function onBookmarkCreatedFg(id: ID, bookmark: Bookmark): void {
     }
   }
 
-  if (!bookmark.parentId) return
   const parent = Bookmarks.reactive.byId[bookmark.parentId]
   if (parent && parent.children && bookmark.index !== undefined) {
     parent.children.splice(bookmark.index, 0, bookmark)
@@ -62,6 +64,10 @@ function onBookmarkCreatedFg(id: ID, bookmark: Bookmark): void {
       Bookmarks.reactive.byUrl[bookmark.url] = [bookmark]
     }
   }
+
+  // Update length of parent folders
+  const addedLen = bookmark.len || 1
+  Bookmarks.updateTreeLen(parent, addedLen)
 
   Sidebar.recalcBookmarksPanels()
 }
@@ -114,6 +120,14 @@ function onBookmarkMovedFg(id: ID, info: browser.bookmarks.MoveInfo): void {
     }
   }
 
+  // Update length of parent folders
+  const node = Bookmarks.reactive.byId[id]
+  if (node && oldParent && newParent && newParent.id !== oldParent.id) {
+    const movedLen = node?.len || 1
+    Bookmarks.updateTreeLen(oldParent, -movedLen)
+    Bookmarks.updateTreeLen(newParent, movedLen)
+  }
+
   Bookmarks.saveBookmarksTree()
   Sidebar.recalcBookmarksPanels()
 
@@ -126,6 +140,10 @@ function onBookmarkRemovedFg(id: ID, info: browser.bookmarks.RemoveInfo): void {
   const parent = Bookmarks.reactive.byId[info.parentId]
   const node = Bookmarks.reactive.byId[id]
   if (!node) return
+
+  // Update length of parent folders
+  const removedLen = node.len || 1
+  Bookmarks.updateTreeLen(parent, -removedLen)
 
   // Remove from tree
   if (parent?.children) {
@@ -152,4 +170,13 @@ function onBookmarkRemovedFg(id: ID, info: browser.bookmarks.RemoveInfo): void {
 
   Sidebar.recalcBookmarksPanels()
   if (Settings.reactive.highlightOpenBookmarks) Bookmarks.markOpenedBookmarksDebounced()
+}
+
+export function updateTreeLen(parent: Bookmark, delta: number): void {
+  let p = parent
+  while (p) {
+    if (p.len) p.len += delta
+    p = Bookmarks.reactive.byId[p.parentId]
+  }
+  Bookmarks.overallCount += delta
 }

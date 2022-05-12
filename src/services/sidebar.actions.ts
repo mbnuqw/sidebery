@@ -245,13 +245,14 @@ export function recalcBookmarksPanels(): void {
   for (const panel of Sidebar.reactive.panels) {
     if (!Utils.isBookmarksPanel(panel)) continue
 
+    const rootFolder = Bookmarks.reactive.byId[panel.rootId]
     let rootContent: Bookmark[]
     if (!panel.rootId || panel.rootId === BKM_ROOT_ID) rootContent = Bookmarks.reactive.tree
     else rootContent = Bookmarks.reactive.byId[panel.rootId]?.children || []
     if (!rootContent) continue
 
     panel.bookmarks = rootContent
-    panel.len = Bookmarks.countBookmarks(rootContent)
+    panel.len = rootFolder?.len ?? Bookmarks.overallCount
   }
 }
 

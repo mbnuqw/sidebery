@@ -39,22 +39,26 @@ async function loadInFg(): Promise<void> {
   Bookmarks.reactive.byId = {}
   Bookmarks.reactive.byUrl = {}
   const list: Bookmark[] = []
-  const walker = (nodes: Bookmark[]) => {
+  const walker = (nodes: Bookmark[], count: number): number => {
     for (const n of nodes) {
       Bookmarks.reactive.byId[n.id] = n
       n.sel = false
       n.isOpen = false
       if (n.type === 'separator') n.url = undefined
       else if (n.url) {
+        count++
         list.push(n)
         if (Bookmarks.reactive.byUrl[n.url]) Bookmarks.reactive.byUrl[n.url].push(n)
         else Bookmarks.reactive.byUrl[n.url] = [n]
       }
-      if (n.children) walker(n.children)
+      if (n.children) {
+        n.len = walker(n.children, 0)
+        count += n.len
+      }
     }
+    return count
   }
-  walker(bookmarks[0].children)
-
+  Bookmarks.overallCount = walker(bookmarks[0].children, 0)
   Bookmarks.reactive.tree = bookmarks[0].children
 
   Sidebar.recalcBookmarksPanels()
