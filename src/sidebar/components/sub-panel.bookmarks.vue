@@ -1,6 +1,6 @@
 <template lang="pug">
 .BookmarksSubPanel(
-  :data-active="state.active && Permissions.reactive.bookmarks && !!bookmarks"
+  :data-active="state.active && Permissions.reactive.bookmarks && !!rootFolder?.children"
   @wheel.stop=""
   @mousedown.stop=""
   @mouseup.stop="onMouseUp"
@@ -10,10 +10,15 @@
     .bar(:data-loading="state.loadingBar" @click="onBarClick")
       svg.icon: use(xlink:href="#icon_bookmarks_badge")
       .grip
+      .len(v-if="rootFolder?.len") {{rootFolder.len}}
     .content
-      ScrollBox(v-if="bookmarks && !state.loading && Permissions.reactive.bookmarks")
+      ScrollBox(v-if="rootFolder?.children && !state.loading && Permissions.reactive.bookmarks")
         .bookmarks-tree
-          BookmarkNode.root-node(v-for="node in bookmarks" :key="node.id" :node="node" :panelId="tabsPanel.id")
+          BookmarkNode.root-node(
+            v-for="node in rootFolder?.children"
+            :key="node.id"
+            :node="node"
+            :panelId="tabsPanel.id")
       .loading-screen(v-else-if="state.loading")
         LoadingDots
 </template>
@@ -46,9 +51,12 @@ const state = reactive({
 
 const CLOSE_ON_LEAVE_TIMEOUT = 300
 
-const bookmarks = computed<Bookmark[] | undefined>(() => {
-  return Bookmarks.reactive.byId[props.tabsPanel.bookmarksFolderId]?.children
+const rootFolder = computed<Bookmark | undefined>(() => {
+  return Bookmarks.reactive.byId[props.tabsPanel.bookmarksFolderId]
 })
+// const bookmarks = computed<Bookmark[] | undefined>(() => {
+//   return Bookmarks.reactive.byId[props.tabsPanel.bookmarksFolderId]?.children
+// })
 
 function closeSubPanel(): void {
   state.active = false
@@ -83,7 +91,7 @@ function onBarClick(): void {
     return
   }
 
-  if (!bookmarks.value) {
+  if (!rootFolder.value) {
     if (!Bookmarks.reactive.tree.length) {
       bookmarksLoading = true
       loadBookmarks().then(() => {
