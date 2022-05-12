@@ -747,7 +747,7 @@ export async function onDrop(e: DragEvent): Promise<void> {
   const fromNav = srcType === DragType.NavItem
   const toNav = dstType === DropType.NavItem
 
-  if (Sidebar.reactive.hiddenPanelsBar) Sidebar.reactive.hiddenPanelsBar = false
+  if (Sidebar.reactive.hiddenPanelsBar) Sidebar.closeHiddenPanelsBar()
   if ((toTabs && !DnD.reactive.dstPin) || toBookmarks) {
     DnD.reactive.dstPanelId = Sidebar.reactive.activePanelId
     applyLvlOffset(DnD.reactive.pointerLvl)

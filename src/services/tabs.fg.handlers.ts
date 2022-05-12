@@ -53,7 +53,7 @@ function onTabCreated(tab: Tab): void {
   if (Tabs.ignoreTabsEvents) return
   if (Tabs.tabsNormalizing) return Tabs.normalizeTabs()
 
-  if (Sidebar.reactive.hiddenPanelsBar) Sidebar.reactive.hiddenPanelsBar = false
+  if (Sidebar.reactive.hiddenPanelsBar) Sidebar.closeHiddenPanelsBar()
 
   if (Settings.reactive.highlightOpenBookmarks) Bookmarks.markOpenedBookmarksDebounced()
 
@@ -584,11 +584,12 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, childfree?: bool
     Tabs.cacheTabsData()
 
     // Update succession
+    let tabSuccessor: Tab | undefined
     if (Settings.reactive.activateAfterClosing !== 'none') {
       const activeTab = Tabs.byId[Tabs.activeId]
       if (activeTab && activeTab.active) {
-        const target = Tabs.findSuccessorTab(activeTab)
-        if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
+        tabSuccessor = Tabs.findSuccessorTab(activeTab)
+        if (tabSuccessor) browser.tabs.moveInSuccession([activeTab.id], tabSuccessor.id)
       }
     }
 
@@ -601,6 +602,7 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, childfree?: bool
     ) {
       const activeTab = Tabs.byId[Tabs.activeId]
       if (activeTab && !activeTab.pinned) Sidebar.activatePanel(activeTab.panelId)
+      else if (tabSuccessor) Sidebar.activatePanel(tabSuccessor.panelId)
       else Sidebar.switchToNeighbourPanel()
     }
   }

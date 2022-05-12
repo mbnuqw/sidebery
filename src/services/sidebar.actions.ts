@@ -894,13 +894,18 @@ export function updatePanelBoundsDebounced(delay = 256): void {
 /**
  * Switch current active panel by index
  */
-export function switchToPanel(id: ID, withoutTabActivation?: boolean): void {
+export function switchToPanel(
+  id: ID,
+  withoutTabActivation?: boolean,
+  withoutTabCreation?: boolean
+): void {
   Menu.close()
   if (!DnD.reactive.isStarted) Selection.resetSelection()
   Sidebar.activatePanel(id)
 
   const panel = Sidebar.reactive.panelsById[id]
   if (
+    !withoutTabCreation &&
     Utils.isTabsPanel(panel) &&
     (panel.noEmpty || Settings.reactive.hideInact || Settings.reactive.hideEmptyPanels) &&
     !panel.len
@@ -931,7 +936,9 @@ export function switchToNeighbourPanel(): void {
 
   if (!target) {
     for (let i = activePanel.index - 1; i > 0; i--) {
-      if (Sidebar.reactive.panels[i] && !Sidebar.reactive.panels[i].inactive) {
+      const panel = Sidebar.reactive.panels[i]
+      if (panel) {
+        if (Settings.reactive.hideEmptyPanels && Utils.isTabsPanel(panel) && !panel.len) continue
         target = Sidebar.reactive.panels[i]
         break
       }
@@ -940,7 +947,9 @@ export function switchToNeighbourPanel(): void {
 
   if (!target) {
     for (let i = activePanel.index + 1; i < Sidebar.reactive.panels.length; i++) {
-      if (Sidebar.reactive.panels[i] && !Sidebar.reactive.panels[i].inactive) {
+      const panel = Sidebar.reactive.panels[i]
+      if (panel) {
+        if (Settings.reactive.hideEmptyPanels && Utils.isTabsPanel(panel) && !panel.len) continue
         target = Sidebar.reactive.panels[i]
         break
       }
@@ -951,7 +960,11 @@ export function switchToNeighbourPanel(): void {
 }
 
 let switchPanelPause: number | undefined
-export function switchPanel(dir: 1 | -1, ignoreHidden?: boolean): void {
+export function switchPanel(
+  dir: 1 | -1,
+  ignoreHidden?: boolean,
+  withoutTabCreation?: boolean
+): void {
   // Debounce switching
   if (switchPanelPause) return
   const delay = Settings.reactive.navSwitchPanelsDelay ?? 128
@@ -1037,7 +1050,20 @@ export function switchPanel(dir: 1 | -1, ignoreHidden?: boolean): void {
 
   if (!panel) return
 
-  switchToPanel(panel.id)
+  switchToPanel(panel.id, false, withoutTabCreation)
+}
+
+export function closeHiddenPanelsBar(): void {
+  Sidebar.reactive.hiddenPanelsBar = false
+
+  const panel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+  if (
+    Utils.isTabsPanel(panel) &&
+    (panel.noEmpty || Settings.reactive.hideInact || Settings.reactive.hideEmptyPanels) &&
+    !panel.len
+  ) {
+    Tabs.createTabInPanel(panel)
+  }
 }
 
 /**

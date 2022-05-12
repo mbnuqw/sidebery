@@ -134,8 +134,8 @@ function onCmd(name: string): void {
   if (!kb) kb = Keybindings.reactive.list.find(k => k.name === name)
   if (!kb || !kb.active) return
 
-  if (name === 'next_panel') Sidebar.switchPanel(1)
-  else if (name === 'prev_panel') Sidebar.switchPanel(-1)
+  if (name === 'next_panel') Sidebar.switchPanel(1, false, true)
+  else if (name === 'prev_panel') Sidebar.switchPanel(-1, false, true)
   else if (name === 'new_tab_on_panel') onKeyNewTabInPanel()
   else if (name === 'new_tab_in_group') onKeyNewTabAfter()
   else if (name === 'new_tab_as_first_child') onKeyNewTabAsFirstChild()
@@ -209,6 +209,12 @@ function onKeyActivate(): void {
 
   if (Menu.isOpen) {
     Menu.activateOption()
+    return
+  }
+
+  // Close hidden panels bar
+  if (Sidebar.reactive.hiddenPanelsBar) {
+    Sidebar.closeHiddenPanelsBar()
     return
   }
 

@@ -34,7 +34,7 @@
   Transition(name="hidden-panels"): .hidden-bar-layer(
     v-if="Sidebar.reactive.hiddenPanelsBar && hidden.length"
     data-dnd-type="hidden-layer"
-    @mousedown="Sidebar.reactive.hiddenPanelsBar = false")
+    @mousedown="Sidebar.closeHiddenPanelsBar()")
     .hidden-bar
       NavItemComponent(
         v-for="(item, i) in hidden"
@@ -227,8 +227,8 @@ function getBtnInlineIndex(index: number): number {
 
 const onNavWheel = Mouse.getWheelDebouncer(WheelDirection.Vertical, (e: WheelEvent) => {
   if (Settings.reactive.navSwitchPanelsWheel) {
-    if (e.deltaY > 0) return Sidebar.switchPanel(1)
-    if (e.deltaY < 0) return Sidebar.switchPanel(-1)
+    if (e.deltaY > 0) return Sidebar.switchPanel(1, true)
+    if (e.deltaY < 0) return Sidebar.switchPanel(-1, true)
   }
 })
 
@@ -347,7 +347,8 @@ function onNavMouseUp(e: MouseEvent, item: NavItem, inHiddenBar?: boolean) {
   // Left
   if (e.button === 0) {
     if (isHiddenPanels) {
-      Sidebar.reactive.hiddenPanelsBar = !Sidebar.reactive.hiddenPanelsBar
+      if (Sidebar.reactive.hiddenPanelsBar) Sidebar.closeHiddenPanelsBar()
+      else Sidebar.reactive.hiddenPanelsBar = true
       return
     }
     if (isAddTP) return addTabsPanel()
@@ -361,7 +362,7 @@ function onNavMouseUp(e: MouseEvent, item: NavItem, inHiddenBar?: boolean) {
     if (isCreateSnapshot) return Snapshots.createSnapshot()
     if (isRemuteAudioTabs) return Tabs.remuteAudibleTabs()
     if (inHiddenBar) {
-      Sidebar.reactive.hiddenPanelsBar = false
+      Sidebar.closeHiddenPanelsBar()
       Sidebar.switchToPanel(item.id)
       return
     }
