@@ -37,7 +37,7 @@
           autocapitalize="off"
           spellcheck="false"
           @input.passive="onInput"
-          @keydown.tab.prevent
+          @keydown="onKeyDown"
           @change="applyCssDebounced()")
         .placeholder(:data-hidden="!!state.customCSS") {{translate('styles.css_placeholder')}}
         .placeholder-note(:data-hidden="!!state.customCSS") {{translate('styles.css_selectors_instruction')}}
@@ -57,7 +57,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, nextTick } from 'vue'
 import { translate } from 'src/dict'
 import { CustomCssTarget } from 'src/types'
 import { Styles } from 'src/services/styles'
@@ -115,6 +115,7 @@ const state = reactive({
 void (async function init(): Promise<void> {
   state.customCSS = await Styles.getCustomCSS(state.cssTarget)
   updateVars()
+  saveToHistory(state.customCSS)
 })()
 
 onMounted(async () => {
@@ -256,6 +257,7 @@ function toggleCSSVar(cssVar: CssVar): void {
   }
 
   applyCssDebounced(0)
+  saveToHistory(state.customCSS, 0)
 }
 
 function setCSSVar(cssVar: CssVar): void {
@@ -268,6 +270,7 @@ function setCSSVar(cssVar: CssVar): void {
   else state.customCSS = css + '\n' + state.customCSS
 
   applyCssDebounced(0)
+  saveToHistory(state.customCSS, 0)
 }
 let setCSSVarTimeout: number | undefined
 function setCSSVarDebounced(cssVar: CssVar): void {
@@ -294,6 +297,8 @@ async function selectCssTarget(target: CustomCssTarget): Promise<void> {
   await loadVars()
   updateVars()
   recalcGroups(state.vars)
+  resetHistory()
+  saveToHistory(state.customCSS)
 }
 
 /**
@@ -301,7 +306,142 @@ async function selectCssTarget(target: CustomCssTarget): Promise<void> {
  */
 function onInput(e: Event): void {
   applyCssDebounced(1000)
+  saveToHistory(state.customCSS, 1000)
   updateVarsDebounced()
+}
+
+function onKeyDown(e: KeyboardEvent): void {
+  // Insert tab
+  if (e.key === 'Tab') tab(e)
+
+  // Comment / Uncomment
+  if (e.key === '/' && e.ctrlKey) comment(e)
+
+  // Undo / Redo
+  if (e.code === 'KeyZ' && e.ctrlKey) undoRedo(e)
+}
+
+const TAB_STR = '	'
+function tab(e: KeyboardEvent): void {
+  e.preventDefault()
+  if (!cssEditorEl.value) return
+
+  const start = cssEditorEl.value.selectionStart
+  const end = cssEditorEl.value.selectionEnd
+  const rawSrcValue = cssEditorEl.value.value
+
+  const preStr = rawSrcValue.slice(0, start)
+  const postStr = rawSrcValue.slice(end)
+
+  state.customCSS = preStr + TAB_STR + postStr
+
+  nextTick(() => {
+    if (cssEditorEl.value) {
+      cssEditorEl.value.selectionStart = start + TAB_STR.length
+      cssEditorEl.value.selectionEnd = cssEditorEl.value.selectionStart
+    }
+  })
+
+  applyCssDebounced()
+  saveToHistory(state.customCSS, 300)
+}
+
+const COMMENT_START = '/* '
+const COMMENT_END = ' */'
+function comment(e: KeyboardEvent): void {
+  e.preventDefault()
+  if (!cssEditorEl.value) return
+
+  const start = cssEditorEl.value.selectionStart
+  const end = cssEditorEl.value.selectionEnd
+  const rawSrcValue = cssEditorEl.value.value
+
+  let finalSelectionStart = start
+  let lineStart = start
+  let lineEnd = end - 1
+
+  if (start === end) {
+    lineStart = findPrevLineBreak(rawSrcValue, start)
+    lineEnd = findNextLineBreak(rawSrcValue, start)
+  }
+
+  const preCommentStr = rawSrcValue.slice(0, lineStart)
+  const commentStr = rawSrcValue.slice(lineStart, lineEnd + 1)
+  const postCommentStr = rawSrcValue.slice(lineEnd + 1)
+
+  // Uncomment
+  if (commentStr.startsWith(COMMENT_START) && commentStr.endsWith(COMMENT_END)) {
+    const uncommentedStr = commentStr.slice(
+      COMMENT_START.length,
+      commentStr.length - COMMENT_END.length
+    )
+    state.customCSS = preCommentStr + uncommentedStr + postCommentStr
+    if (start - 3 < lineStart) {
+      finalSelectionStart = start + (lineStart - start)
+    } else if (start > lineEnd - 2) {
+      finalSelectionStart = start + (lineEnd - start - 5)
+    } else finalSelectionStart = start - 3
+  }
+
+  // Comment
+  else {
+    state.customCSS = preCommentStr + '/* ' + commentStr + ' */' + postCommentStr
+    finalSelectionStart = start + 3
+  }
+
+  nextTick(() => {
+    if (cssEditorEl.value) {
+      cssEditorEl.value.selectionStart = finalSelectionStart
+      cssEditorEl.value.selectionEnd = cssEditorEl.value.selectionStart
+    }
+  })
+
+  applyCssDebounced()
+  saveToHistory(state.customCSS, 0)
+}
+
+function findPrevLineBreak(text: string, index: number): number {
+  if (index <= 0) return 0
+
+  for (let i = index; i--; ) {
+    const char = text[i]
+    if (char === '\n' || char === '\r') return i + 1
+  }
+
+  return 0
+}
+
+function findNextLineBreak(text: string, index: number): number {
+  if (index >= text.length) return text.length - 1
+
+  for (let i = index; i < text.length; i++) {
+    const char = text[i]
+    if (char === '\n' || char === '\r') return i - 1
+  }
+
+  return text.length - 1
+}
+
+function undoRedo(e: KeyboardEvent): void {
+  e.preventDefault()
+  if (!cssEditorEl.value) return
+
+  let newValue: HistoryEntry | undefined
+  if (!e.shiftKey) newValue = historyUndo()
+  else newValue = historyRedo()
+
+  if (newValue) {
+    const start = cssEditorEl.value.selectionStart
+    state.customCSS = newValue.text
+    nextTick(() => {
+      if (cssEditorEl.value) {
+        cssEditorEl.value.selectionStart = newValue?.cursor ?? start
+        cssEditorEl.value.selectionEnd = newValue?.cursor ?? start
+      }
+    })
+  }
+
+  applyCssDebounced()
 }
 
 let applyTimeout: number | undefined
@@ -321,5 +461,60 @@ function copyColorSampleDebounced(): void {
   copyColorSampleTimeout = setTimeout(() => {
     if (Permissions.reactive.clipboardWrite) navigator.clipboard.writeText(state.colorSampleValue)
   })
+}
+
+interface HistoryEntry {
+  text: string
+  cursor?: number
+}
+
+const HISTORY_LIMIT = 16
+const HISTORY_WRITE_DELAY = 1000
+let saveToHistoryTimeout: number | undefined
+let history: HistoryEntry[] = []
+let historyPosition = 0
+
+function saveToHistory(text: string, delay = HISTORY_WRITE_DELAY): void {
+  clearTimeout(saveToHistoryTimeout)
+  saveToHistoryTimeout = setTimeout(() => {
+    saveToHistoryTimeout = undefined
+
+    if (history[0]?.text === text) return
+
+    history.unshift({ text, cursor: cssEditorEl.value?.selectionStart })
+    if (history.length > HISTORY_LIMIT) history.pop()
+
+    historyPosition = 0
+  }, delay)
+}
+
+function resetHistory(): void {
+  history = []
+  historyPosition = 0
+}
+
+function historyUndo(): HistoryEntry | undefined {
+  if (!history.length) return
+
+  if (saveToHistoryTimeout !== undefined) {
+    clearTimeout(saveToHistoryTimeout)
+    saveToHistoryTimeout = undefined
+    history.unshift({ text: state.customCSS, cursor: cssEditorEl.value?.selectionStart })
+  }
+
+  const value = history[++historyPosition]
+  if (historyPosition >= history.length) historyPosition = history.length - 1
+
+  return value
+}
+
+function historyRedo(): HistoryEntry | undefined {
+  clearTimeout(saveToHistoryTimeout)
+  saveToHistoryTimeout = undefined
+
+  const value = history[--historyPosition]
+  if (historyPosition < 0) historyPosition = 0
+
+  return value
 }
 </script>
