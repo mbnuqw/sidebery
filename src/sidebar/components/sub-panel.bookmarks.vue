@@ -4,9 +4,11 @@
   @wheel.stop=""
   @mousedown.stop=""
   @mouseup.stop="onMouseUp"
-  @dblclick.stop="")
+  @dblclick.stop=""
+  @mouseleave="onMouseLeave"
+  @mouseenter="onMouseEnter")
   .overlay(@click="closeSubPanel")
-  .sub-panel(@mouseleave="onMouseLeave" @mouseenter="onMouseEnter")
+  .sub-panel
     .bar(:data-loading="state.loadingBar" @click="onBarClick")
       svg.icon: use(xlink:href="#icon_bookmarks_badge")
       .grip
@@ -54,9 +56,6 @@ const CLOSE_ON_LEAVE_TIMEOUT = 300
 const rootFolder = computed<Bookmark | undefined>(() => {
   return Bookmarks.reactive.byId[props.tabsPanel.bookmarksFolderId]
 })
-// const bookmarks = computed<Bookmark[] | undefined>(() => {
-//   return Bookmarks.reactive.byId[props.tabsPanel.bookmarksFolderId]?.children
-// })
 
 function closeSubPanel(): void {
   state.active = false
