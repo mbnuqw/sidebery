@@ -231,6 +231,11 @@ function applyLvlOffset(lvl: number): void {
   }
 }
 
+function isNativeTabs(event: DragEvent): boolean {
+  if (!event.dataTransfer) return false
+  return event.dataTransfer.types.includes('text/x-moz-text-internal')
+}
+
 function isContainerChanged(): boolean {
   // Check private container
   if (DnD.srcIncognito !== Windows.incognito) return true
@@ -734,6 +739,31 @@ export function onDragMove(e: DragEvent): void {
  * Drop event handler
  */
 export async function onDrop(e: DragEvent): Promise<void> {
+  if (isNativeTabs(e)) {
+    const result = await Utils.parseDragEvent(e)
+    if (result?.matchedNativeTabs?.length) {
+      const tab = result.matchedNativeTabs.find(t => t.windowId === Windows.focusedWindowId)
+
+      if (tab) {
+        DnD.srcWinId = tab.windowId
+        DnD.srcIncognito = tab.incognito
+        DnD.srcIndex = tab.index
+        DnD.srcPanelId = NOID
+        DnD.srcPin = tab.pinned
+        DnD.srcType = DragType.Tabs
+        DnD.items = [
+          {
+            id: tab.id,
+            container: tab.cookieStoreId,
+            pinned: tab.pinned,
+            title: tab.title,
+            url: tab.url,
+          },
+        ]
+      }
+    }
+  }
+
   const srcType = DnD.srcType
   const dstType = DnD.reactive.dstType
   const fromTabs = srcType === DragType.Tabs

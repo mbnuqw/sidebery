@@ -225,6 +225,7 @@ declare namespace browser {
       active?: boolean
       windowId?: ID
       currentWindow?: boolean
+      url?: string
     }
 
     interface CreateProperties {

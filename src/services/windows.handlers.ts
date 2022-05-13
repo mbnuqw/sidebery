@@ -85,6 +85,7 @@ function onWindowFocusedBg(windowId: ID): void {
 }
 
 function onWindowFocusedFg(id: ID): void {
+  Windows.focusedWindowId = id
   Windows.focused = id === Windows.id
   if (id !== -1) Windows.lastFocused = id === Windows.id
   if (Windows.focused) {

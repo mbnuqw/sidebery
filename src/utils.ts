@@ -1,4 +1,4 @@
-import { GroupConfig, AnyFunc, NavItem, NavBtn, NavSpace, Panel, PanelConfig } from './types'
+import { GroupConfig, AnyFunc, NavItem, NavBtn, NavSpace, Panel, PanelConfig, Tab } from './types'
 import { TabsPanel, BookmarksPanel, PanelType, NavItemClass, HistoryPanel } from './types'
 import { SubListTitleInfo } from './types'
 import { DOMAIN_RE, URL_PAGE_RE, URL_URL } from './defaults'
@@ -384,6 +384,7 @@ interface DragEventParseResult {
   url?: string
   text?: string
   file?: File | null
+  matchedNativeTabs?: Tab[]
 }
 async function parseDragEvent(event: DragEvent): Promise<DragEventParseResult | undefined> {
   return new Promise<DragEventParseResult | undefined>(async res => {
@@ -396,6 +397,9 @@ async function parseDragEvent(event: DragEvent): Promise<DragEventParseResult | 
     else if (types.includes('text/x-moz-url')) urlType = 'text/x-moz-url'
     else if (types.includes('text/x-moz-text-internal')) urlType = 'text/x-moz-text-internal'
 
+    let isNativeTab = false
+    if (types.includes('text/x-moz-text-internal')) isNativeTab = true
+
     let textType
     if (types.includes('text/x-moz-url-desc')) textType = 'text/x-moz-url-desc'
     else if (types.includes('text/plain')) textType = 'text/plain'
@@ -407,6 +411,11 @@ async function parseDragEvent(event: DragEvent): Promise<DragEventParseResult | 
           const urlAndTitle = value.split('\n')
           result.url = urlAndTitle[0]
           result.text = urlAndTitle[1]
+        } else if (isNativeTab) {
+          result.matchedNativeTabs = (await browser.tabs.query({
+            active: true,
+            url: value,
+          })) as Tab[]
         } else {
           result.url = value
         }

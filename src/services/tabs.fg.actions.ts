@@ -18,6 +18,7 @@ import { Permissions } from 'src/services/permissions'
 import { Notifications } from 'src/services/notifications'
 import { SetupPage } from 'src/services/setup-page'
 import { Favicons } from './favicons'
+import { DnD } from './drag-and-drop'
 
 const URL_WITHOUT_PROTOCOL_RE = /^(.+\.)\/?(.+\/)?\w+/
 
