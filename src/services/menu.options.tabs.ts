@@ -318,6 +318,16 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     return option
   },
 
+  closeBranch: () => {
+    const option: MenuOption = {
+      label: translate('menu.tab.close_branch'),
+      icon: 'icon_rm_branch',
+      onClick: () => Tabs.removeBranches(Selection.get()),
+    }
+    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    return option
+  },
+
   closeDescendants: () => {
     const option: MenuOption = {
       label: translate('menu.tab.close_descendants'),

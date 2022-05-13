@@ -569,6 +569,10 @@ export const commonTranslations: Translations = {
     ru: 'Закрыть',
     zh_CN: '关闭',
   },
+  'menu.tab.close_branch': {
+    en: 'Close branch',
+    ru: 'Закрыть ветку',
+  },
   'menu.tab.close_descendants': {
     en: 'Close descendants',
     ru: 'Закрыть потомки',

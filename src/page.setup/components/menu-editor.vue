@@ -181,6 +181,7 @@ const TABS_MENU_OPTS: Record<string, string> = {
   clearCookies: 'menu.tab.clear_cookies',
   closeDescendants: 'menu.tab.close_descendants',
   close: 'menu.tab.close',
+  closeBranch: 'menu.tab.close_branch',
   closeTabsAbove: 'menu.tab.close_above',
   closeTabsBelow: 'menu.tab.close_below',
   closeOtherTabs: 'menu.tab.close_other',
