@@ -22,21 +22,17 @@
   @mousedown.stop="onMouseDown"
   @mouseup.stop="onMouseUp"
   @dblclick.prevent.stop="onDoubleClick"): .body
-  //- I can try to completely remove next line (with .complete-fx)
-  //- and use .dnd-layer:before or some linear-gradient animation on .body
-  Transition(name="tab-complete")
-    .complete-fx(v-if="tab.status === TabStatus.Loading && Settings.reactive.animations")
+  .flash-fx(v-if="tab.flash")
   .dnd-layer(draggable="true" data-dnd-type="tab" :data-dnd-id="tab.id" @dragstart="onDragStart" @dragenter="")
-  Transition(name="tab-part")
-    .audio(
-      v-if="tab.mediaAudible || tab.mediaMuted || tab.mediaPaused"
-      @mousedown.stop="onAudioMouseDown($event, tab)")
-      svg.-loud: use(xlink:href="#icon_loud_badge")
-      svg.-mute: use(xlink:href="#icon_mute_badge")
-      svg.-pause: use(xlink:href="#icon_pause_12")
+  .audio(
+    v-if="tab.mediaAudible || tab.mediaMuted || tab.mediaPaused"
+    @mousedown.stop="onAudioMouseDown($event, tab)")
+    svg.-loud: use(xlink:href="#icon_loud_badge")
+    svg.-mute: use(xlink:href="#icon_mute_badge")
+    svg.-pause: use(xlink:href="#icon_pause_12")
   .fav(@dragstart.stop.prevent)
-    Transition(name="tab-part"): svg.fav-icon(v-if="!tab.favIconUrl"): use(:xlink:href="favPlaceholder")
-    Transition(name="tab-part"): img.fav-icon(v-if="tab.favIconUrl" :src="tab.favIconUrl" @error="onError")
+    svg.fav-icon(v-if="!tab.favIconUrl"): use(:xlink:href="favPlaceholder")
+    img.fav-icon(v-if="tab.favIconUrl" :src="tab.favIconUrl" @error="onError")
     .exp(
       v-if="tab.isParent"
       @dblclick.prevent.stop
@@ -44,7 +40,7 @@
       @mouseup.left.stop)
       svg: use(xlink:href="#icon_expand")
     .badge
-    Transition(name="tab-part"): .progress-spinner(v-if="loading === true")
+    .progress-spinner(v-if="loading === true")
     .child-count(v-if="tab.folded && tab.branchLen") {{tab.branchLen}}
   .close(
     v-if="Settings.reactive.showTabRmBtn && !isPinned"
@@ -179,10 +175,7 @@ function onMouseDown(e: MouseEvent): void {
 }
 
 function longClickFeedback(): void {
-  props.tab.status = TabStatus.Loading
-  nextTick(() => {
-    props.tab.status = TabStatus.Complete
-  })
+  Tabs.triggerFlashAnimation(props.tab)
 }
 
 function onMouseUp(e: MouseEvent): void {

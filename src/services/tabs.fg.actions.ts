@@ -44,6 +44,7 @@ export function toReactive(tab: Tab): ReactiveTab {
     warn: tab.warn,
     updated: tab.updated,
     unread: tab.unread,
+    flash: false,
   }
 }
 
@@ -3314,4 +3315,14 @@ export async function reopenTabsInNewContainer(tabIds: ID[]): Promise<void> {
 
   const items = Tabs.getTabsInfo(tabIds)
   await Tabs.reopen(items, { panelId: firstTab.panelId, containerId: container.id })
+}
+
+let flashAnimationTimeout: number | undefined
+export function triggerFlashAnimation(rTab: ReactiveTab): void {
+  if (flashAnimationTimeout) return
+  rTab.flash = true
+  flashAnimationTimeout = setTimeout(() => {
+    flashAnimationTimeout = undefined
+    rTab.flash = false
+  }, 1000)
 }

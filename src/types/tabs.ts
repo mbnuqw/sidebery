@@ -53,6 +53,7 @@ export interface ReactiveTab {
   warn: boolean
   updated: boolean
   unread: boolean
+  flash: boolean
 }
 
 export interface InlineTabData {

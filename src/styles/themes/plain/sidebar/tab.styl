@@ -176,6 +176,7 @@
   left: 20px
   width: 16px
   height: 100%
+  animation: appearing-animation var(--d-norm)
 .Tab[data-pin="true"] .audio
   top: 0
   right: 2px
@@ -243,6 +244,7 @@
   height: 16px
   fill: var(--toolbar-fg)
   transition: opacity var(--d-fast)
+  animation: appearing-animation var(--d-norm)
 
 .Tab[data-parent="true"] .fav:hover .fav-icon
 .Tab[data-parent="true"][data-folded="true"] .fav .fav-icon
@@ -367,9 +369,9 @@
   opacity: 0
 
 // ---
-// -- Complete animation
+// -- Flash animation
 // -
-.Tab .complete-fx
+.Tab .flash-fx
   position: absolute
   top: 0
   left: 0
@@ -378,6 +380,7 @@
   background-image: linear-gradient(90deg, #00000000, var(--tabs-loading-fg))
   opacity: 0
   transform: translateX(-100%)
+  animation: flash-animation .4s
 
 // ---
 // -- Title box
@@ -497,13 +500,16 @@
 #root .tab-part-enter-from
   opacity: 0
 
-.tab-complete-leave-to
-  animation: complete-animation .4s
-
 // ---
 // -- Keyframes
 // -
-@keyframes complete-animation
+@keyframes appearing-animation
+  0%
+    opacity: 0
+  100%
+    opacity: 1
+
+@keyframes flash-animation
   0%
     opacity: .8
     transform: translateX(-100%)

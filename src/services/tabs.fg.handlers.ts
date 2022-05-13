@@ -263,6 +263,7 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
   // Status change
   if (change.status !== undefined) {
     if (change.status === 'complete' && tab.url[0] !== 'a') {
+      if (Settings.reactive.animations) Tabs.triggerFlashAnimation(rLocalTab)
       reloadTabFaviconDebounced(localTab, rLocalTab)
     }
     if (change.url && localTab.mediaPaused) {
