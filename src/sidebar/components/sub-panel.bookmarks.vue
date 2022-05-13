@@ -109,8 +109,9 @@ function onBarClick(): void {
 
   if (!state.active) {
     if (Selection.isSet()) Selection.resetSelection()
-    if (Menu.isOpen) Menu.close()
   }
+
+  if (Menu.isOpen) Menu.close()
 }
 
 async function loadBookmarks(): Promise<void> {
