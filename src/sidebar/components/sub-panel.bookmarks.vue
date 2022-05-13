@@ -142,5 +142,6 @@ function onMouseLeave(): void {
 
 function onMouseEnter(): void {
   clearTimeout(onMouseLeaveTimeout)
+  if (Settings.reactive.openSubPanelOnMouseHover && !state.active) onBarClick()
 }
 </script>

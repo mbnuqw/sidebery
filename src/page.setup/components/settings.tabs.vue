@@ -65,6 +65,10 @@ section(ref="el")
       v-model:value="Settings.reactive.newTabBarPosition"
       :inactive="!Settings.reactive.showNewTabBtns"
       :opts="Settings.getOpts('newTabBarPosition')")
+  ToggleField(
+    label="settings.open_sub_panel_on_mouse_hover"
+    v-model:value="Settings.reactive.openSubPanelOnMouseHover")
+    
 </template>
 
 <script lang="ts" setup>

@@ -1053,6 +1053,10 @@ export const setupPageTranslations: Translations = {
     ru: 'снизу',
     zh_CN: '底部',
   },
+  'settings.open_sub_panel_on_mouse_hover': {
+    en: 'Open bookmarks sub-panel on mouse hover',
+    ru: 'Открывать подпанель закладок при наведении мыши',
+  },
   'settings.discard_inactive_panel_tabs_delay': {
     en: 'Unload tabs of inactive panel after delay',
     ru: 'Выгружать вкладки неактивных панелей c задержкой',

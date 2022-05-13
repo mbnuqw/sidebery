@@ -68,6 +68,7 @@ export interface SettingsState {
   showNewTabBtns: boolean
   newTabBarPosition: typeof SETTINGS_OPTIONS.newTabBarPosition[number]
   tabsPanelSwitchActMove: boolean
+  openSubPanelOnMouseHover: boolean
 
   // New tab position
   moveNewTabPin: typeof SETTINGS_OPTIONS.moveNewTabPin[number]
