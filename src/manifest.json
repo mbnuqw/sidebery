@@ -32,7 +32,8 @@
     "sessions",
     "menus",
     "menus.overrideContext",
-    "search"
+    "search",
+    "theme"
   ],
   
   "optional_permissions": [
