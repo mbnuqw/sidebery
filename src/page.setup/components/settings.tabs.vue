@@ -54,7 +54,8 @@ section(ref="el")
       :inactive="!(Settings.reactive.tabsReloadLimit > 0)")
   ToggleField(
     label="settings.tabs_panel_switch_act_move"
-    v-model:value="Settings.reactive.tabsPanelSwitchActMove")
+    :value="Settings.reactive.tabsPanelSwitchActMove"
+    @update:value="toggleTabsPanelSwitchActMove")
   ToggleField(
     label="settings.show_new_tab_btns"
     v-model:value="Settings.reactive.showNewTabBtns")
@@ -98,6 +99,18 @@ function toggleHideInact(): void {
 
   if (Settings.reactive.hideInact && !Settings.reactive.activateLastTabOnPanelSwitching) {
     Settings.reactive.activateLastTabOnPanelSwitching = true
+  }
+
+  if (Settings.reactive.hideInact && !Settings.reactive.tabsPanelSwitchActMove) {
+    Settings.reactive.tabsPanelSwitchActMove = true
+  }
+}
+
+function toggleTabsPanelSwitchActMove(): void {
+  Settings.reactive.tabsPanelSwitchActMove = !Settings.reactive.tabsPanelSwitchActMove
+
+  if (!Settings.reactive.tabsPanelSwitchActMove && Settings.reactive.hideInact) {
+    Settings.reactive.hideInact = false
   }
 }
 

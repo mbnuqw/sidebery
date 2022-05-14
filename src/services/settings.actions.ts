@@ -28,6 +28,11 @@ export async function loadSettings(): Promise<void> {
   Utils.normalizeObject(stored.settings, DEFAULT_SETTINGS)
   Utils.updateObject(Settings.reactive, stored.settings)
 
+  if (Settings.reactive.hideInact) {
+    Settings.reactive.activateLastTabOnPanelSwitching = true
+    Settings.reactive.tabsPanelSwitchActMove = true
+  }
+
   Logs.info('Settings: Loaded')
 }
 
