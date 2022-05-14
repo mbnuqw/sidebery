@@ -14,7 +14,7 @@ export const Windows = {
   reactive: { choosing: null, choosingTitle: '' } as WindowsState,
   id: NOID,
   incognito: false,
-  focusedWindowId: NOID,
+  lastFocusedId: NOID,
   focused: false,
   lastFocused: false,
   otherWindows: [] as Window[],

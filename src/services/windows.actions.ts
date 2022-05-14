@@ -23,7 +23,7 @@ export async function loadWindowInfo(): Promise<void> {
   Windows.incognito = currentWindow.incognito
   Windows.id = currentWindow.id ?? NOID
   Windows.focused = currentWindow.focused
-  if (Windows.focused && currentWindow.id) Windows.focusedWindowId = currentWindow.id
+  if (Windows.focused && currentWindow.id) Windows.lastFocusedId = currentWindow.id
   Windows.lastFocused = currentWindow.focused
   browser.windows.getAll().then(windows => {
     Windows.otherWindows = windows.filter(w => {

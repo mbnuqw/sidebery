@@ -740,26 +740,25 @@ export function onDragMove(e: DragEvent): void {
  */
 export async function onDrop(e: DragEvent): Promise<void> {
   if (isNativeTabs(e)) {
-    const result = await Utils.parseDragEvent(e)
+    const result = await Utils.parseDragEvent(e, Windows.lastFocusedId)
     if (result?.matchedNativeTabs?.length) {
-      const tab = result.matchedNativeTabs.find(t => t.windowId === Windows.focusedWindowId)
-
-      if (tab) {
-        DnD.srcWinId = tab.windowId
-        DnD.srcIncognito = tab.incognito
-        DnD.srcIndex = tab.index
+      if (result.matchedNativeTabs?.length) {
+        const firstTab = result.matchedNativeTabs[0]
+        DnD.srcWinId = firstTab.windowId
+        DnD.srcIncognito = firstTab.incognito
+        DnD.srcIndex = firstTab.index
         DnD.srcPanelId = NOID
-        DnD.srcPin = tab.pinned
+        DnD.srcPin = firstTab.pinned
         DnD.srcType = DragType.Tabs
-        DnD.items = [
-          {
+        DnD.items = result.matchedNativeTabs.map(tab => {
+          return {
             id: tab.id,
             container: tab.cookieStoreId,
             pinned: tab.pinned,
             title: tab.title,
             url: tab.url,
-          },
-        ]
+          }
+        })
       }
     }
   }

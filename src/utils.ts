@@ -386,7 +386,10 @@ interface DragEventParseResult {
   file?: File | null
   matchedNativeTabs?: Tab[]
 }
-async function parseDragEvent(event: DragEvent): Promise<DragEventParseResult | undefined> {
+async function parseDragEvent(
+  event: DragEvent,
+  lastFocusedId?: ID
+): Promise<DragEventParseResult | undefined> {
   return new Promise<DragEventParseResult | undefined>(async res => {
     if (!event.dataTransfer) return res(undefined)
     const result: DragEventParseResult = {}
@@ -411,10 +414,10 @@ async function parseDragEvent(event: DragEvent): Promise<DragEventParseResult | 
           const urlAndTitle = value.split('\n')
           result.url = urlAndTitle[0]
           result.text = urlAndTitle[1]
-        } else if (isNativeTab) {
+        } else if (isNativeTab && lastFocusedId !== undefined) {
           result.matchedNativeTabs = (await browser.tabs.query({
-            active: true,
-            url: value,
+            highlighted: true,
+            windowId: lastFocusedId,
           })) as Tab[]
         } else {
           result.url = value
