@@ -97,6 +97,7 @@ export interface SettingsState {
   discardFoldedDelayUnit: typeof SETTINGS_OPTIONS.discardFoldedDelayUnit[number]
   tabsTreeBookmarks: boolean
   treeRmOutdent: typeof SETTINGS_OPTIONS.treeRmOutdent[number]
+  colorizeTabsBranches: boolean
 
   // Bookmarks
   bookmarksPanel?: boolean // DEPR

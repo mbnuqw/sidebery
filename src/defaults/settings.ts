@@ -97,6 +97,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   discardFoldedDelayUnit: 'sec',
   tabsTreeBookmarks: true,
   treeRmOutdent: 'branch',
+  colorizeTabsBranches: false,
 
   // Bookmarks
   warnOnMultiBookmarkDelete: 'collapsed',

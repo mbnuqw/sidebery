@@ -175,6 +175,30 @@
     pointer-events: auto
 
 // ---
+// -- Branch color
+// -
+.Tab .branch-color
+  position: absolute
+  display: none
+  top: 1px
+  left: 2px
+  width: calc(100% - 4px)
+  height: calc(100% - 2px)
+  border-radius: 4px
+  background-color: var(--branch-color)
+  opacity: .16
+.Tab[data-parent="true"] .branch-color
+.Tab:not([data-lvl="0"]) .branch-color
+  display: block
+#root[data-color-scheme="light"] .Tab .branch-color
+  opacity: .3
+.Tab[data-active="true"] .branch-color
+  opacity: .3
+#root[data-color-scheme="light"] .Tab[data-active="true"] .branch-color
+  box-shadow: inset 0 0 0 1px #0003
+  opacity: .7
+
+// ---
 // -- Drag layer
 // -
 .Tab .body .dnd-layer

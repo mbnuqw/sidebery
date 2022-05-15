@@ -1429,6 +1429,10 @@ export const setupPageTranslations: Translations = {
     ru: 'первой дочерней вкладки',
     zh_CN: '第一个子标签',
   },
+  'settings.colorize_branches': {
+    en: 'Colorize branches',
+    ru: 'Раскрашивать ветки',
+  },
 
   // - Bookmarks
   'settings.bookmarks_title': {

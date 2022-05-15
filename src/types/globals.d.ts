@@ -22,3 +22,9 @@ interface Window {
 
   translations: Record<string, Record<string, PlurFn | string>> | undefined
 }
+
+declare module 'csstype' {
+  interface Properties {
+    '--branch-color'?: string
+  }
+}

@@ -18,7 +18,6 @@ import { Permissions } from 'src/services/permissions'
 import { Notifications } from 'src/services/notifications'
 import { SetupPage } from 'src/services/setup-page'
 import { Favicons } from './favicons'
-import { DnD } from './drag-and-drop'
 
 const URL_WITHOUT_PROTOCOL_RE = /^(.+\.)\/?(.+\/)?\w+/
 
@@ -46,6 +45,7 @@ export function toReactive(tab: Tab): ReactiveTab {
     updated: tab.updated,
     unread: tab.unread,
     flash: false,
+    branchColor: null,
   }
 }
 
@@ -92,6 +92,8 @@ export async function load(): Promise<void> {
   for (const panel of Sidebar.reactive.panels) {
     if (Utils.isTabsPanel(panel)) panel.ready = true
   }
+
+  if (Settings.reactive.colorizeTabsBranches) Tabs.colorizeBranches()
 
   Logs.info('Tabs: Loaded')
 }
@@ -1679,6 +1681,12 @@ export async function move(
     }
 
     updateTabsTree()
+
+    if (Settings.reactive.colorizeTabsBranches) {
+      for (const tab of tabs) {
+        Tabs.setBranchColor(tab.id)
+      }
+    }
   }
 
   tabs.forEach(t => saveTabData(t.id))
@@ -3326,4 +3334,53 @@ export function triggerFlashAnimation(rTab: ReactiveTab): void {
     flashAnimationTimeout = undefined
     rTab.flash = false
   }, 1000)
+}
+
+export function colorizeBranches(): void {
+  for (const tab of Tabs.list) {
+    if (tab.isParent && tab.lvl === 0) colorizeBranch(tab.id)
+  }
+}
+
+export function colorizeBranch(id: ID): void {
+  const rootTab = Tabs.byId[id]
+  if (!rootTab || rootTab.lvl > 0) return
+
+  const color = Utils.colorFromString(rootTab.url, 60)
+  const rRootTab = Tabs.reactive.byId[rootTab.id]
+  if (!rRootTab) return
+  rRootTab.branchColor = color
+
+  for (let i = rootTab.index + 1; i < Tabs.list.length; i++) {
+    const tab = Tabs.list[i]
+    if (tab.lvl === 0) break
+
+    const rTab = Tabs.reactive.byId[tab.id]
+    if (rTab) rTab.branchColor = color
+  }
+}
+
+export function setBranchColor(id: ID): void {
+  const tab = Tabs.byId[id]
+  if (!tab) return
+  if (tab.parentId === NOID) {
+    if (tab.isParent) Tabs.colorizeBranch(tab.id)
+    return
+  }
+
+  let parent = Tabs.byId[tab.parentId]
+  while (parent && parent.lvl > 0) {
+    parent = Tabs.byId[parent.parentId]
+  }
+  if (!parent) return
+
+  const rParent = Tabs.reactive.byId[parent.id]
+  if (!rParent) return
+
+  if (rParent.branchColor) {
+    const rTab = Tabs.reactive.byId[id]
+    if (rTab) rTab.branchColor = rParent.branchColor
+  } else {
+    Tabs.colorizeBranch(parent.id)
+  }
 }

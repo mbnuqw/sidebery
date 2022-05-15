@@ -69,6 +69,10 @@ section(ref="el")
     v-model:value="Settings.reactive.treeRmOutdent"
     :inactive="!Settings.reactive.tabsTree"
     :opts="Settings.getOpts('treeRmOutdent')")
+  ToggleField(
+    label="settings.colorize_branches"
+    :inactive="!Settings.reactive.tabsTree"
+    v-model:value="Settings.reactive.colorizeTabsBranches")
 </template>
 
 <script lang="ts" setup>

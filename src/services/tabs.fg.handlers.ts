@@ -203,6 +203,8 @@ function onTabCreated(tab: Tab): void {
         })
     }
 
+    if (Settings.reactive.colorizeTabsBranches && tab.lvl > 0) Tabs.setBranchColor(tab.id)
+
     Logs.info(
       `Tab created: n${tab.index} #${tab.id} panelId:${tab.panelId} lvl:${tab.lvl} parentId:${tab.parentId}`
     )
@@ -273,6 +275,7 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
   }
 
   // Url
+  let branchColorizationNeeded = false
   if (change.url !== undefined && change.url !== localTab.url) {
     Tabs.cacheTabsData()
     if (Settings.reactive.highlightOpenBookmarks) Bookmarks.markOpenedBookmarksDebounced()
@@ -301,6 +304,8 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
       localTab.mediaPaused = false
       rLocalTab.mediaPaused = false
     }
+    branchColorizationNeeded =
+      Settings.reactive.colorizeTabsBranches && localTab.isParent && localTab.lvl === 0
   }
 
   // Handle favicon change
@@ -404,6 +409,9 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
       }
     }
   }
+
+  // Colorize branch
+  if (branchColorizationNeeded) Tabs.colorizeBranch(localTab.id)
 }
 
 const reloadTabFaviconTimeout: Record<ID, number> = {}
@@ -721,8 +729,14 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
 
   Sidebar.recalcTabsPanels()
 
-  // Calc tree levels
-  if (Settings.reactive.tabsTree && !Tabs.movingTabs.length) Tabs.updateTabsTree()
+  // Calc tree levels and colorize branch
+  if (Settings.reactive.tabsTree) {
+    if (!Tabs.movingTabs.length) Tabs.updateTabsTree()
+
+    if (Settings.reactive.tabsTree && Settings.reactive.colorizeTabsBranches && tab.lvl > 0) {
+      Tabs.setBranchColor(tab.id)
+    }
+  }
 
   if (movedTab.panelId !== Sidebar.reactive.activePanelId && movedTab.active) {
     Sidebar.activatePanel(movedTab.panelId)

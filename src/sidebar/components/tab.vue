@@ -21,35 +21,39 @@
   @contextmenu.stop="onCtxMenu"
   @mousedown.stop="onMouseDown"
   @mouseup.stop="onMouseUp"
-  @dblclick.prevent.stop="onDoubleClick"): .body
-  .flash-fx(v-if="tab.flash")
-  .dnd-layer(draggable="true" data-dnd-type="tab" :data-dnd-id="tab.id" @dragstart="onDragStart" @dragenter="")
-  .audio(
-    v-if="tab.mediaAudible || tab.mediaMuted || tab.mediaPaused"
-    @mousedown.stop="onAudioMouseDown($event, tab)")
-    svg.-loud: use(xlink:href="#icon_loud_badge")
-    svg.-mute: use(xlink:href="#icon_mute_badge")
-    svg.-pause: use(xlink:href="#icon_pause_12")
-  .fav(@dragstart.stop.prevent)
-    svg.fav-icon(v-if="!tab.favIconUrl"): use(:xlink:href="favPlaceholder")
-    img.fav-icon(v-if="tab.favIconUrl" :src="tab.favIconUrl" @error="onError")
-    .exp(
-      v-if="tab.isParent"
-      @dblclick.prevent.stop
-      @mousedown.stop="onExpandMouseDown"
-      @mouseup.left.stop)
-      svg: use(xlink:href="#icon_expand")
-    .badge
-    .progress-spinner(v-if="loading === true")
-    .child-count(v-if="tab.folded && tab.branchLen") {{tab.branchLen}}
-  .close(
-    v-if="Settings.reactive.showTabRmBtn && !isPinned"
-    @mousedown.stop="onMouseDownClose"
-    @mouseup.stop
-    @contextmenu.stop.prevent)
-    svg: use(xlink:href="#icon_remove")
-  .ctx(v-if="color")
-  .t-box(v-if="withTitle"): .title {{tab.title}}
+  @dblclick.prevent.stop="onDoubleClick")
+  .body
+    .branch-color(
+      v-if="Settings.reactive.colorizeTabsBranches && tab.branchColor"
+      :style="{ '--branch-color': tab.branchColor }")
+    .flash-fx(v-if="tab.flash")
+    .dnd-layer(draggable="true" data-dnd-type="tab" :data-dnd-id="tab.id" @dragstart="onDragStart" @dragenter="")
+    .audio(
+      v-if="tab.mediaAudible || tab.mediaMuted || tab.mediaPaused"
+      @mousedown.stop="onAudioMouseDown($event, tab)")
+      svg.-loud: use(xlink:href="#icon_loud_badge")
+      svg.-mute: use(xlink:href="#icon_mute_badge")
+      svg.-pause: use(xlink:href="#icon_pause_12")
+    .fav(@dragstart.stop.prevent)
+      svg.fav-icon(v-if="!tab.favIconUrl"): use(:xlink:href="favPlaceholder")
+      img.fav-icon(v-if="tab.favIconUrl" :src="tab.favIconUrl" @error="onError")
+      .exp(
+        v-if="tab.isParent"
+        @dblclick.prevent.stop
+        @mousedown.stop="onExpandMouseDown"
+        @mouseup.left.stop)
+        svg: use(xlink:href="#icon_expand")
+      .badge
+      .progress-spinner(v-if="loading === true")
+      .child-count(v-if="tab.folded && tab.branchLen") {{tab.branchLen}}
+    .close(
+      v-if="Settings.reactive.showTabRmBtn && !isPinned"
+      @mousedown.stop="onMouseDownClose"
+      @mouseup.stop
+      @contextmenu.stop.prevent)
+      svg: use(xlink:href="#icon_remove")
+    .ctx(v-if="color")
+    .t-box(v-if="withTitle"): .title {{tab.title}}
 </template>
 
 <script lang="ts" setup>
