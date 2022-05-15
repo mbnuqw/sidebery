@@ -114,4 +114,5 @@ export const NAV_BTNS_IDS: ID[] = [
   'search',
   'create_snapshot',
   'remute_audio_tabs',
+  'collapse',
 ]

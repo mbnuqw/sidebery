@@ -169,8 +169,12 @@ function onDoubleClick(e: MouseEvent): void {
   const da = Settings.reactive.tabsPanelDoubleClickAction
   if (da === 'tab') return Tabs.createTabInPanel(props.panel)
   if (da === 'collapse') {
-    const panelTabs = props.panel.tabs?.map(rt => Tabs.byId[rt.id] as Tab) ?? []
-    if (panelTabs.length) return Tabs.foldAllInactiveBranches(panelTabs)
+    const tabs: Tab[] = []
+    for (const rTab of props.panel.tabs) {
+      const tab = Tabs.byId[rTab.id]
+      if (tab && tab.lvl === 0) tabs.push(tab)
+    }
+    if (tabs.length) return Tabs.foldAllInactiveBranches(tabs)
   }
   if (da === 'undo') Tabs.undoRmTab()
 }

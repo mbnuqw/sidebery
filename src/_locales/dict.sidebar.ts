@@ -203,6 +203,10 @@ export const sidebarTranslations: Translations = {
     ru: 'Приглушить/Включить вкладки со звуком',
     zh_CN: '静音/取消静音有声标签页',
   },
+  'nav.btn_collapse': {
+    en: 'Collapse all',
+    ru: 'Свернуть все',
+  },
 
   // ---
   // -- Notifications

@@ -54,7 +54,7 @@ import { ref, computed, onMounted } from 'vue'
 import Utils from 'src/utils'
 import { translate } from 'src/dict'
 import { BTN_ICONS } from 'src/defaults'
-import { NavItemClass, ButtonTypes, DragType, DropType } from 'src/types'
+import { NavItemClass, ButtonTypes, DragType, DropType, Tab } from 'src/types'
 import { MenuType, DragInfo, DragItem, PanelType } from 'src/types'
 import { ButtonType, SpaceType, NavBtn, NavItem, WheelDirection } from 'src/types'
 import { Settings } from 'src/services/settings'
@@ -168,6 +168,7 @@ const staticButtons = computed((): NavBtn[] => {
       id === 'settings' ||
       id === 'search' ||
       id === 'add_tp' ||
+      id === 'collapse' ||
       id === 'create_snapshot' ||
       id === 'remute_audio_tabs'
     ) {
@@ -327,6 +328,8 @@ function onNavMouseDown(e: MouseEvent, item: NavItem) {
     if (item.type === ButtonType.create_snapshot) SetupPage.open('snapshots')
 
     if (item.type === ButtonType.remute_audio_tabs) Tabs.switchToFirstAudibleTab()
+
+    if (item.type === ButtonType.collapse) collapseAll()
   }
 }
 
@@ -361,6 +364,7 @@ function onNavMouseUp(e: MouseEvent, item: NavItem, inHiddenBar?: boolean) {
     if (isSearch) return Search.toggleBar()
     if (isCreateSnapshot) return Snapshots.createSnapshot()
     if (isRemuteAudioTabs) return Tabs.remuteAudibleTabs()
+    if (item.type === ButtonType.collapse) collapseAll()
     if (inHiddenBar) {
       Sidebar.closeHiddenPanelsBar()
       Sidebar.switchToPanel(item.id)
@@ -479,5 +483,25 @@ function addTabsPanel(): void {
   Sidebar.startFastEditingOfPanel(panel.id, true)
   Sidebar.saveSidebar()
   Sidebar.activatePanel(panel.id)
+}
+
+function collapseAll(): void {
+  const activePanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+  if (!activePanel) return
+
+  // Tabs
+  if (Utils.isTabsPanel(activePanel)) {
+    const tabs: Tab[] = []
+    for (const rTab of activePanel.tabs) {
+      const tab = Tabs.byId[rTab.id]
+      if (tab && tab.lvl === 0) tabs.push(tab)
+    }
+    Tabs.foldAllInactiveBranches(tabs)
+  }
+
+  // Bookmarks
+  else if (Utils.isBookmarksPanel(activePanel)) {
+    Bookmarks.collapseAllBookmarks(activePanel.id)
+  }
 }
 </script>

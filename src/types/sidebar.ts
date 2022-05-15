@@ -42,6 +42,7 @@ export const enum ButtonType {
   hidden = 104,
   create_snapshot = 105,
   remute_audio_tabs = 106,
+  collapse = 107,
 }
 
 export const enum SpaceType {
@@ -60,6 +61,7 @@ export const NavItemTypeNames = {
   [ButtonType.hidden]: 'hidden',
   [ButtonType.create_snapshot]: 'create_snapshot',
   [ButtonType.remute_audio_tabs]: 'remute_audio_tabs',
+  [ButtonType.collapse]: 'collapse',
   [SpaceType.dynamic]: 'dynamic',
   [SpaceType.static]: 'static',
 }
@@ -80,6 +82,7 @@ export const ButtonTypes: Record<string, ButtonType> = {
   search: ButtonType.search,
   add_tp: ButtonType.add_tp,
   hidden: ButtonType.hidden,
+  collapse: ButtonType.collapse,
   create_snapshot: ButtonType.create_snapshot,
   remute_audio_tabs: ButtonType.remute_audio_tabs,
 }

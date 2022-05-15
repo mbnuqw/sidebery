@@ -718,6 +718,10 @@ export const setupPageTranslations: Translations = {
     ru: 'Приглушить/Включить вкладки со звуком',
     zh_CN: '静音/取消静音有声标签页',
   },
+  'settings.nav_bar_btn_collapse': {
+    en: 'Collapse all',
+    ru: 'Свернуть все',
+  },
   'settings.nav_rm_tabs_panel_confirm_pre': {
     en: 'Delete "',
     ru: 'Удалить панель "',

@@ -546,6 +546,7 @@ export function recalcPanels(): void {
     if (id === 'add_tp') continue
     if (id === 'create_snapshot') continue
     if (id === 'remute_audio_tabs') continue
+    if (id === 'collapse') continue
 
     const panel = Sidebar.reactive.panelsById[id]
     if (!panel) {

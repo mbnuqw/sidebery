@@ -511,7 +511,11 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
       label: translate('menu.tabs_panel.collapse_inact_branches'),
       icon: 'icon_collapse_all',
       onClick: () => {
-        const tabs = panelTabs.map(rt => Tabs.byId[rt.id] as Tab)
+        const tabs: Tab[] = []
+        for (const rTab of panelTabs) {
+          const tab = Tabs.byId[rTab.id]
+          if (tab && tab.lvl === 0) tabs.push(tab)
+        }
         Tabs.foldAllInactiveBranches(tabs)
       },
     }

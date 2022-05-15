@@ -155,7 +155,7 @@ const availableBtns = computed<(Panel | Btn)[]>(() => {
   const ids = [
     'tabs_panel', 'bookmarks_panel', 'sp', 'sd',
     'history', 'search', 'add_tp', 'create_snapshot',
-    'remute_audio_tabs', 'settings',
+    'collapse', 'remute_audio_tabs', 'settings',
   ]
 
   for (const id of ids) {

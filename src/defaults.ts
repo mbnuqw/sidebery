@@ -39,6 +39,7 @@ export const BTN_ICONS: Record<string, string> = {
   sd: 'icon_ellipsis',
   add_tp: 'icon_add_tabs_panel',
   search: 'icon_search',
+  collapse: 'icon_collapse_all',
   create_snapshot: 'icon_snapshot',
   remute_audio_tabs: 'icon_mute',
 }
