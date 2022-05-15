@@ -44,6 +44,7 @@ export interface SettingsState {
   dndExp: typeof SETTINGS_OPTIONS.dndExp[number]
   dndExpDelay: number
   dndExpMod: typeof SETTINGS_OPTIONS.dndExpMod[number]
+  dndOutside: typeof SETTINGS_OPTIONS.dndOutside[number]
 
   // Search
   searchBarMode: typeof SETTINGS_OPTIONS.searchBarMode[number]

@@ -420,6 +420,7 @@ function onNavDragStart(e: DragEvent, item: NavItem) {
   if (isTabsPanel || isBookmarksPanel) Sidebar.updateBounds()
   Selection.selectNavItem(item.id)
 
+  const contentList = []
   const dragItems: DragItem[] = []
   const dragInfo: DragInfo = {
     type: dndType,
@@ -437,6 +438,9 @@ function onNavDragStart(e: DragEvent, item: NavItem) {
     for (const rTab of panel.tabs) {
       const tab = Tabs.byId[rTab.id]
       if (!tab) continue
+      contentList.push(tab.title)
+      contentList.push(tab.url)
+      contentList.push('')
       dragItems.push({
         id: tab.id,
         url: tab.url,
@@ -454,6 +458,9 @@ function onNavDragStart(e: DragEvent, item: NavItem) {
   // Set native drag info
   if (e.dataTransfer) {
     e.dataTransfer.setData('application/x-sidebery-dnd', JSON.stringify(dragInfo))
+    if (Settings.reactive.dndOutside === 'data' ? !e.altKey : e.altKey) {
+      e.dataTransfer.setData('text/plain', contentList.join('\r\n'))
+    }
     const dragImgEl = document.getElementById('drag_image')
     if (dragImgEl) e.dataTransfer.setDragImage(dragImgEl, -3, -3)
     e.dataTransfer.effectAllowed = 'move'

@@ -828,6 +828,22 @@ export const setupPageTranslations: Translations = {
     ru: 'выкл',
     zh_CN: '无',
   },
+  'settings.dnd_outside': {
+    en: 'Action on drag-and-drop to the outside of sidebar',
+    ru: 'Действие при перетаскивании за пределы боковой панели',
+  },
+  'settings.dnd_outside_win': {
+    en: 'Open in new window',
+    ru: 'Открыть в новом окне',
+  },
+  'settings.dnd_outside_data': {
+    en: 'Pass source data to the target',
+    ru: 'Передать данные получателю',
+  },
+  'settings.settings.dnd_outside_note': {
+    en: 'Press the "Alt" key before dragging to invert this option',
+    ru: 'Нажмите клавишу «Alt» перед перетаскиванием, чтобы инвертировать эту опцию',
+  },
   'settings.dnd_exp': {
     en: 'Expand/Fold the branch on hovering over the',
     ru: 'Развернуть/свернуть ветвь при наведении на',

@@ -1,6 +1,6 @@
 import Utils from 'src/utils'
 import { translate } from 'src/dict'
-import { BKM_OTHER_ID, CONTAINER_ID, NOID, PRE_SCROLL } from 'src/defaults'
+import { BKM_OTHER_ID, CONTAINER_ID, NEWID, NOID, PRE_SCROLL } from 'src/defaults'
 import { DragInfo, DragType, DropType, InstanceType, ItemBounds, ItemBoundsType } from 'src/types'
 import { DstPlaceInfo, SrcPlaceInfo } from 'src/types'
 import { DnD, DndPointerMode } from 'src/services/drag-and-drop'
@@ -23,6 +23,7 @@ export function start(info: DragInfo, dstType?: DropType): void {
 
   Logs.info('DnD.start')
 
+  DnD.droppedInside = false
   DnD.srcType = info.type
   DnD.isExternal = info.windowId !== Windows.id
   DnD.items = info.items || []
@@ -739,6 +740,8 @@ export function onDragMove(e: DragEvent): void {
  * Drop event handler
  */
 export async function onDrop(e: DragEvent): Promise<void> {
+  DnD.droppedInside = true
+
   if (isNativeTabs(e)) {
     const result = await Utils.parseDragEvent(e, Windows.lastFocusedId)
     if (result?.matchedNativeTabs?.length) {
@@ -883,8 +886,53 @@ export function resetOther(): void {
   }, 150)
 }
 
-export function onDragEnd(): void {
-  Logs.info('DnD.onDragEnd', DnD.reactive.isStarted)
+export async function onDragEnd(e: DragEvent): Promise<void> {
+  Logs.info('DnD.onDragEnd')
+
   DnD.resetOther()
   if (DnD.reactive.isStarted) DnD.reset()
+
+  // Create new window with src items
+  if (!DnD.droppedInside && e.dataTransfer?.types.length === 1) {
+    const dndInfoStr = e.dataTransfer?.getData('application/x-sidebery-dnd')
+    if (!dndInfoStr) return
+    let info: DragInfo
+    try {
+      info = JSON.parse(dndInfoStr) as DragInfo
+    } catch (err) {
+      return
+    }
+
+    const fromTabs = info.type === DragType.Tabs
+    const fromTabsPanel = info.type === DragType.TabsPanel
+    const fromBookmarks = info.type === DragType.Bookmarks
+    const fromBookmarksPanel = info.type === DragType.BookmarksPanel
+
+    if (fromTabs && info.items?.length) {
+      const dst = { windowId: NEWID, incognito: Windows.incognito, panelId: info.panelId }
+      Tabs.move(info.items, {}, dst)
+    }
+
+    if (fromTabsPanel && info.items?.length) {
+      const dst = { windowId: NEWID, incognito: Windows.incognito, panelId: info.panelId }
+      Tabs.move(info.items, {}, dst)
+    }
+
+    if (fromBookmarks && info.items?.length) {
+      Bookmarks.openInNewWindow(info.items.map(i => i.id))
+    }
+
+    if (fromBookmarksPanel && info.items?.length) {
+      const panelId = info.items[0]?.id ?? NOID
+      const panel = Sidebar.reactive.panelsById[panelId]
+      if (!Utils.isBookmarksPanel(panel)) return
+
+      if (!Bookmarks.reactive.tree.length) await Bookmarks.load()
+
+      const rootFolder = Bookmarks.reactive.byId[panel.rootId]
+      if (!rootFolder || !rootFolder.children?.length) return
+
+      Bookmarks.openInNewWindow(rootFolder.children.map(n => n.id))
+    }
+  }
 }

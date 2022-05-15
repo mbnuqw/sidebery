@@ -32,6 +32,12 @@ section(ref="el")
       v-model:value="Settings.reactive.dndExpMod"
       :inactive="Settings.reactive.dndExp === 'none'"
       :opts="Settings.getOpts('dndExpMod')")
+  SelectField(
+    label="settings.dnd_outside"
+    optLabel="settings.dnd_outside_"
+    v-model:value="Settings.reactive.dndOutside"
+    :opts="Settings.getOpts('dndOutside')"
+    :note="translate('settings.settings.dnd_outside_note')")
 </template>
 
 <script lang="ts" setup>

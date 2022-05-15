@@ -44,6 +44,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   dndExp: 'pointer',
   dndExpDelay: 750,
   dndExpMod: 'none',
+  dndOutside: 'data',
 
   // Search
   searchBarMode: 'dynamic',
@@ -209,6 +210,7 @@ export const SETTINGS_OPTIONS = {
   dndTabActMod: ['alt', 'shift', 'ctrl', 'none'],
   dndExp: ['pointer', 'hover', 'none'],
   dndExpMod: ['alt', 'shift', 'ctrl', 'none'],
+  dndOutside: ['win', 'data'],
   animationSpeed: ['fast', 'norm', 'slow'],
   treeRmOutdent: ['branch', 'first_child'],
   searchBarMode: ['static', 'dynamic', 'none'],

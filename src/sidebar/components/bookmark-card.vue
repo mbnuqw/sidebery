@@ -182,8 +182,10 @@ function onDragStart(e: DragEvent): void {
   // Set native drag info
   if (e.dataTransfer) {
     e.dataTransfer.setData('application/x-sidebery-dnd', JSON.stringify(dragInfo))
-    e.dataTransfer.setData('text/uri-list', url)
-    e.dataTransfer.setData('text/plain', url)
+    if (Settings.reactive.dndOutside === 'data' ? !e.altKey : e.altKey) {
+      e.dataTransfer.setData('text/uri-list', url)
+      e.dataTransfer.setData('text/plain', url)
+    }
     const dragImgEl = document.getElementById('drag_image')
     if (dragImgEl) e.dataTransfer.setDragImage(dragImgEl, -3, -3)
     e.dataTransfer.effectAllowed = 'copyMove'

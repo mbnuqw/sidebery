@@ -1555,7 +1555,7 @@ export async function move(
       id: t.id,
       url: t.url,
       parentId: t.parentId,
-      panelId: t.panelId,
+      panelId: t.panelId ?? dst.panelId,
     }))
     Msg.call(InstanceType.bg, 'createWindowWithTabs', info, {
       incognito: dst.incognito,

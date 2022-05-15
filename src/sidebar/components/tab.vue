@@ -304,12 +304,14 @@ function onDragStart(e: DragEvent): void {
   // Set native drag info
   if (e.dataTransfer) {
     const dragImgEl = document.getElementById('drag_image')
-    const uris = uriList.join('\r\n')
     e.dataTransfer.setData('application/x-sidebery-dnd', JSON.stringify(dragInfo))
-    e.dataTransfer.setData('text/x-moz-url', urlTitleList.join('\r\n'))
-    e.dataTransfer.setData('text/uri-list', uris)
-    e.dataTransfer.setData('text/plain', uris)
-    e.dataTransfer.setData('text/html', links.join('\r\n'))
+    if (Settings.reactive.dndOutside === 'data' ? !e.altKey : e.altKey) {
+      const uris = uriList.join('\r\n')
+      e.dataTransfer.setData('text/x-moz-url', urlTitleList.join('\r\n'))
+      e.dataTransfer.setData('text/uri-list', uris)
+      e.dataTransfer.setData('text/plain', uris)
+      e.dataTransfer.setData('text/html', links.join('\r\n'))
+    }
     if (dragImgEl) e.dataTransfer.setDragImage(dragImgEl, -3, -3)
     e.dataTransfer.effectAllowed = 'copyMove'
   }

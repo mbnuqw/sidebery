@@ -48,6 +48,7 @@ export const DnD = {
     dragTooltipInfo: '',
   } as DragAndDropState,
 
+  droppedInside: false,
   items: [] as DragItem[],
   isExternal: false,
   goOutside: false,
