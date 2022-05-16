@@ -418,7 +418,7 @@ export function cacheTabsData(delay = 300): void {
       const info: TabCache = { id: tab.id, url: tab.url }
       if (tab.pinned) info.pin = true
       if (tab.parentId > -1) info.parentId = tab.parentId
-      if (tab.panelId !== CONTAINER_ID) info.panelId = tab.panelId
+      if (tab.panelId !== NOID) info.panelId = tab.panelId
       if (tab.folded) info.folded = tab.folded
       if (tab.cookieStoreId !== CONTAINER_ID) info.ctx = tab.cookieStoreId
       data.push(info)
