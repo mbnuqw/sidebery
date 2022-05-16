@@ -1544,7 +1544,17 @@ export async function move(
   // Move tabs from another window to this window
   if (src.windowId !== undefined && src.windowId !== Windows.id) {
     const tabIds = tabsInfo.map(t => t.id)
-    const externalTabs = await Msg.reqSidebar(src.windowId, 'getTabs', tabIds)
+    let externalTabs = await Msg.reqSidebar(src.windowId, 'getTabs', tabIds)
+    if (!externalTabs) {
+      const winNativeTabs = await browser.tabs.query({ windowId: src.windowId })
+      externalTabs = []
+      for (const tabInfo of tabsInfo) {
+        const tab = winNativeTabs.find(t => t.id === tabInfo.id) as Tab
+        if (!tab) continue
+        Tabs.normalizeTab(tab, tabInfo.panelId ?? dst.panelId ?? NOID)
+        externalTabs.push(tab)
+      }
+    }
     if (externalTabs) moveToThisWin(externalTabs, dst)
     return
   }
