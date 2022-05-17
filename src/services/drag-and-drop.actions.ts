@@ -886,6 +886,8 @@ export function resetOther(): void {
   }, 150)
 }
 
+let droppedRecentlyTimeout: number | undefined
+
 export async function onDragEnd(e: DragEvent): Promise<void> {
   Logs.info('DnD.onDragEnd')
 
@@ -935,4 +937,14 @@ export async function onDragEnd(e: DragEvent): Promise<void> {
       Bookmarks.openInNewWindow(rootFolder.children.map(n => n.id))
     }
   }
+
+  // Set "droppedRecently" flag for 100ms.
+  // This is needed for detecting mouseLeave
+  // event right after dragEnd
+  // (at least on Linux)
+  DnD.droppedRecently = true
+  clearTimeout(droppedRecentlyTimeout)
+  droppedRecentlyTimeout = setTimeout(() => {
+    DnD.droppedRecently = false
+  }, 100)
 }

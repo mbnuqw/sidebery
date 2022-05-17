@@ -204,6 +204,8 @@ function onMouseEnter(): void {
 }
 
 function onMouseLeave(): void {
+  if (DnD.droppedRecently) return
+
   Mouse.stopResizing()
 
   const activePanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
