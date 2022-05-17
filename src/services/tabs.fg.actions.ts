@@ -3356,8 +3356,8 @@ export function colorizeBranches(): void {
   }
 }
 
-export function colorizeBranch(id: ID): void {
-  const rootTab = Tabs.byId[id]
+export function colorizeBranch(rootId: ID): void {
+  const rootTab = Tabs.byId[rootId]
   if (!rootTab || rootTab.lvl > 0) return
 
   const color = Utils.colorFromString(rootTab.url, 60)
@@ -3374,11 +3374,15 @@ export function colorizeBranch(id: ID): void {
   }
 }
 
-export function setBranchColor(id: ID): void {
-  const tab = Tabs.byId[id]
+export function setBranchColor(tabId: ID): void {
+  const tab = Tabs.byId[tabId]
   if (!tab) return
   if (tab.parentId === NOID) {
     if (tab.isParent) Tabs.colorizeBranch(tab.id)
+    else {
+      const rTab = Tabs.reactive.byId[tab.id]
+      if (rTab?.branchColor) rTab.branchColor = null
+    }
     return
   }
 
@@ -3392,7 +3396,7 @@ export function setBranchColor(id: ID): void {
   if (!rParent) return
 
   if (rParent.branchColor) {
-    const rTab = Tabs.reactive.byId[id]
+    const rTab = Tabs.reactive.byId[tabId]
     if (rTab) rTab.branchColor = rParent.branchColor
   } else {
     Tabs.colorizeBranch(parent.id)
