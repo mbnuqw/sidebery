@@ -228,6 +228,11 @@ function onTabCreated(tab: Tab): void {
       pinnedTab: initialOpener,
     })
   }
+
+  // Hide native tab if needed
+  if (Settings.reactive.hideInact && panel.id !== Sidebar.reactive.activePanelId) {
+    browser.tabs.hide(tab.id)
+  }
 }
 
 /**
