@@ -59,6 +59,7 @@ function onMouseDown(e: MouseEvent, info: Notification, index: number): void {
 
 function onHideMouseDown(e: MouseEvent, index: number): void {
   Notifications.reactive.list.splice(index, 1)
+  Notifications.setHiddenRecently()
 }
 
 function onCtrlMouseDown(e: MouseEvent, index: number, cb?: () => void): void {
@@ -66,6 +67,7 @@ function onCtrlMouseDown(e: MouseEvent, index: number, cb?: () => void): void {
   if (cb) {
     cb()
     Notifications.reactive.list.splice(index, 1)
+    Notifications.setHiddenRecently()
   }
 }
 

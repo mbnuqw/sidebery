@@ -7,6 +7,7 @@ export interface NotificationsState {
 
 export const Notifications = {
   reactive: { list: [] } as NotificationsState,
+  hiddenRecently: false,
 
   err,
   notify,
@@ -15,6 +16,7 @@ export const Notifications = {
   progress,
   finishProgress,
   updateProgress,
+  setHiddenRecently,
 }
 
 function err(title: string, details?: string): Notification {
@@ -69,4 +71,13 @@ function finishProgress(notification: Notification, delay = 120): void {
     const index = Notifications.reactive.list.indexOf(notification)
     if (index !== -1) Notifications.reactive.list.splice(index, 1)
   }, delay)
+}
+
+let hiddenRecentlyTimeout: number | undefined
+function setHiddenRecently(): void {
+  Notifications.hiddenRecently = true
+  clearTimeout(hiddenRecentlyTimeout)
+  hiddenRecentlyTimeout = setTimeout(() => {
+    Notifications.hiddenRecently = false
+  }, 1000)
 }
