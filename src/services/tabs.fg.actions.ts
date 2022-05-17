@@ -87,7 +87,10 @@ export async function load(): Promise<void> {
   Logs.info('Tabs.load: Save tabs and cache')
   Tabs.updateNativeTabsVisibility()
   Tabs.cacheTabsData()
-  Tabs.list.forEach(t => saveTabData(t.id))
+  Tabs.list.forEach(t => {
+    Tabs.updateUrlCounter(t.url, 1)
+    saveTabData(t.id)
+  })
 
   for (const panel of Sidebar.reactive.panels) {
     if (Utils.isTabsPanel(panel)) panel.ready = true
@@ -105,6 +108,7 @@ export function unload(): void {
   Tabs.reactive.pinned = []
   Tabs.list = []
   Tabs.byId = {}
+  Tabs.urlsInUse = {}
 
   Tabs.tabsNormalizing = false
   Tabs.removedTabs = []
@@ -3392,5 +3396,22 @@ export function setBranchColor(id: ID): void {
     if (rTab) rTab.branchColor = rParent.branchColor
   } else {
     Tabs.colorizeBranch(parent.id)
+  }
+}
+
+export function updateUrlCounter(url: string, delta: number): number {
+  let count = Tabs.urlsInUse[url]
+  if (count === undefined) {
+    if (delta > 0) return (Tabs.urlsInUse[url] = delta)
+    else return 0
+  }
+
+  count += delta
+  if (count <= 0) {
+    delete Tabs.urlsInUse[url]
+    return 0
+  } else {
+    Tabs.urlsInUse[url] = count
+    return count
   }
 }

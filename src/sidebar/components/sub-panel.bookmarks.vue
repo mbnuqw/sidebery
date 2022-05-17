@@ -98,7 +98,6 @@ function onBarClick(): void {
         if (!Bookmarks.reactive.byId[props.tabsPanel.bookmarksFolderId]) {
           onWrongRootFolder()
         }
-        Bookmarks.markOpenedBookmarksIfNeeded()
       })
     } else if (!Bookmarks.reactive.byId[props.tabsPanel.bookmarksFolderId]) {
       return onWrongRootFolder()
@@ -106,8 +105,6 @@ function onBarClick(): void {
     state.active = true
   } else {
     state.active = !state.active
-
-    if (state.active) Bookmarks.markOpenedBookmarksIfNeeded()
   }
 
   if (!state.active) {

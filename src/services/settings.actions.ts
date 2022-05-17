@@ -150,8 +150,8 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
   }
 
   if (highlightOpenBookmarks && Bookmarks.reactive.byId) {
-    if (Settings.reactive.highlightOpenBookmarks) Bookmarks.markOpenedBookmarksDebounced()
-    else Bookmarks.resetOpenedBookmarksMarks(Bookmarks.reactive.tree)
+    if (Settings.reactive.highlightOpenBookmarks) Bookmarks.markOpenBookmarksForAllTabs()
+    else Bookmarks.unmarkAllOpenBookmarks()
   }
 
   if (theme) Styles.initTheme()

@@ -15,6 +15,7 @@ export const Tabs = {
   list: [] as Tab[],
   byId: {} as Partial<Record<ID, Tab>>,
 
+  urlsInUse: {} as Record<string, number>,
   shadowMode: false,
 
   tabsNormalizing: false,

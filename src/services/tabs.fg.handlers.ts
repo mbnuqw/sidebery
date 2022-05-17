@@ -55,7 +55,7 @@ function onTabCreated(tab: Tab): void {
 
   if (Sidebar.reactive.hiddenPanelsBar) Sidebar.closeHiddenPanelsBar()
 
-  if (Settings.reactive.highlightOpenBookmarks) Bookmarks.markOpenedBookmarksDebounced()
+  if (Settings.reactive.highlightOpenBookmarks) Bookmarks.markOpenBookmarksDebounced(tab.url)
 
   Menu.close()
   Selection.resetSelection()
@@ -146,6 +146,7 @@ function onTabCreated(tab: Tab): void {
   Tabs.list.splice(index, 0, tab)
   Tabs.reactive.byId[tab.id] = Tabs.toReactive(tab)
   Sidebar.recalcTabsPanels()
+  Tabs.updateUrlCounter(tab.url, 1)
 
   // Update tree
   if (Settings.reactive.tabsTree && !tab.pinned) {
@@ -278,7 +279,6 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
   let branchColorizationNeeded = false
   if (change.url !== undefined && change.url !== localTab.url) {
     Tabs.cacheTabsData()
-    if (Settings.reactive.highlightOpenBookmarks) Bookmarks.markOpenedBookmarksDebounced()
     if (!change.url.startsWith(localTab.url.slice(0, 16))) {
       localTab.favIconUrl = ''
       rLocalTab.favIconUrl = ''
@@ -306,6 +306,16 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
     }
     branchColorizationNeeded =
       Settings.reactive.colorizeTabsBranches && localTab.isParent && localTab.lvl === 0
+
+    // Update url counter
+    const oldUrlCount = Tabs.updateUrlCounter(localTab.url, -1)
+    Tabs.updateUrlCounter(change.url, 1)
+
+    // Mark/Unmark open bookmarks
+    if (Settings.reactive.highlightOpenBookmarks) {
+      if (!oldUrlCount) Bookmarks.unmarkOpenBookmarksDebounced(localTab.url)
+      Bookmarks.markOpenBookmarksDebounced(change.url)
+    }
   }
 
   // Handle favicon change
@@ -557,6 +567,9 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, childfree?: bool
   delete Tabs.reactive.byId[tabId]
   Sidebar.recalcTabsPanels()
 
+  // Update url counter
+  const urlCount = Tabs.updateUrlCounter(tab.url, -1)
+
   // Get panel of removed tab
   const panel = Sidebar.reactive.panelsById[tab.panelId]
   if (!Utils.isTabsPanel(panel)) {
@@ -617,7 +630,9 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, childfree?: bool
   }
 
   // Update bookmarks marks
-  if (Settings.reactive.highlightOpenBookmarks) Bookmarks.markOpenedBookmarksDebounced()
+  if (Settings.reactive.highlightOpenBookmarks && !urlCount) {
+    Bookmarks.unmarkOpenBookmarksDebounced(tab.url)
+  }
 
   // Reload related group for pinned tab
   const pinGroupTab = Tabs.byId[tab.relGroupId]

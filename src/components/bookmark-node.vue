@@ -197,21 +197,26 @@ async function onMouseUp(e: MouseEvent): Promise<void> {
     // Bookmark
     if (props.node.type === 'bookmark' && props.node.url) {
       // Auto convert bookmarks panel to source tabs panel
-      const panel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
-      if (Utils.isBookmarksPanel(panel) && panel.autoConvert) {
+      const actPanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+      if (Utils.isBookmarksPanel(actPanel) && actPanel.autoConvert) {
         try {
-          await convertCurrentPanelToTabsPanel(panel)
+          await convertCurrentPanelToTabsPanel(actPanel)
           return
         } catch (err) {
           Logs.info('BookmarkNode.onMouseUp: cannot convertCurrentPanelToTabsPanel', err)
         }
       }
 
-      const fromSubPanel = Utils.isTabsPanel(panel)
-
       // Activate tab if bookmark is opened
-      if (Settings.reactive.activateOpenBookmarkTab && props.node.isOpen && !fromSubPanel) {
-        const tab = Tabs.list.find(t => t.url === props.node.url)
+      let newTabNeededInActPanel = false
+      if (Settings.reactive.activateOpenBookmarkTab && props.node.isOpen) {
+        let tab
+        if (Utils.isTabsPanel(actPanel)) {
+          tab = Tabs.list.find(t => t.url === props.node.url && t.panelId === actPanel.id)
+          newTabNeededInActPanel = !tab
+        } else if (Utils.isBookmarksPanel(actPanel)) {
+          tab = Tabs.list.find(t => t.url === props.node.url)
+        }
         if (tab) {
           browser.tabs.update(tab.id, { active: true })
           return
@@ -220,7 +225,7 @@ async function onMouseUp(e: MouseEvent): Promise<void> {
 
       // Open tab
       const panelId = Bookmarks.getTargetTabsPanelId()
-      const inTheSameTab = !fromSubPanel && !Settings.reactive.openBookmarkNewTab
+      const inTheSameTab = !newTabNeededInActPanel && !Settings.reactive.openBookmarkNewTab
       Bookmarks.open([props.node.id], { panelId }, inTheSameTab, true)
     }
 

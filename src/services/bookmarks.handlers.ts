@@ -38,14 +38,8 @@ function onBookmarkCreatedFg(id: ID, bookmark: Bookmark): void {
   }
 
   if (Settings.reactive.highlightOpenBookmarks && bookmark.url) {
-    bookmark.isOpen = !!Tabs.list.find(t => t.url === bookmark.url)
-    if (bookmark.isOpen) {
-      let parent = Bookmarks.reactive.byId[bookmark.parentId]
-      while (parent && !parent.isOpen) {
-        parent.isOpen = true
-        parent = Bookmarks.reactive.byId[parent.parentId]
-      }
-    }
+    bookmark.isOpen = !!Tabs.urlsInUse[bookmark.url]
+    if (bookmark.isOpen) Bookmarks.markParents(bookmark)
   }
 
   const parent = Bookmarks.reactive.byId[bookmark.parentId]
@@ -57,11 +51,12 @@ function onBookmarkCreatedFg(id: ID, bookmark: Bookmark): void {
   }
 
   Bookmarks.reactive.byId[id] = bookmark
+  const rBookmark = Bookmarks.reactive.byId[id]
   if (bookmark.url) {
-    if (Bookmarks.reactive.byUrl[bookmark.url]) {
-      Bookmarks.reactive.byUrl[bookmark.url].push(bookmark)
+    if (Bookmarks.byUrl[bookmark.url]) {
+      Bookmarks.byUrl[bookmark.url].push(rBookmark)
     } else {
-      Bookmarks.reactive.byUrl[bookmark.url] = [bookmark]
+      Bookmarks.byUrl[bookmark.url] = [rBookmark]
     }
   }
 
@@ -75,26 +70,29 @@ function onBookmarkCreatedFg(id: ID, bookmark: Bookmark): void {
 function onBookmarkChangedFg(id: ID, info: browser.bookmarks.UpdateChanges): void {
   if (!Bookmarks.reactive.tree.length) return
 
-  const oldUrl = Bookmarks.reactive.byId[id]?.url
-  if (oldUrl && oldUrl !== info.url && Bookmarks.reactive.byUrl[oldUrl]) {
-    const iob = Bookmarks.reactive.byUrl[oldUrl].findIndex(b => b.id === id)
-    if (iob > -1) Bookmarks.reactive.byUrl[oldUrl].splice(iob, 1)
+  const bookmark = Bookmarks.reactive.byId[id]
+  if (!bookmark) return
+
+  const oldUrl = bookmark.url
+  if (oldUrl && oldUrl !== info.url && Bookmarks.byUrl[oldUrl]) {
+    const iob = Bookmarks.byUrl[oldUrl].findIndex(b => b.id === id)
+    if (iob > -1) Bookmarks.byUrl[oldUrl].splice(iob, 1)
   }
 
-  const bookmark = Bookmarks.reactive.byId[id]
-  if (bookmark) {
-    if (info.title !== undefined && bookmark.title !== info.title) {
-      bookmark.title = info.title
-    }
-    if (info.url !== undefined && bookmark.url !== info.url) {
-      bookmark.url = info.url
-      if (Bookmarks.reactive.byUrl[info.url]) {
-        Bookmarks.reactive.byUrl[info.url].push(bookmark)
-      } else {
-        Bookmarks.reactive.byUrl[info.url] = [bookmark]
-      }
+  if (info.title !== undefined && bookmark.title !== info.title) {
+    bookmark.title = info.title
+  }
 
-      if (Settings.reactive.highlightOpenBookmarks) Bookmarks.markOpenedBookmarksDebounced()
+  if (info.url !== undefined && oldUrl !== info.url) {
+    bookmark.url = info.url
+    if (Bookmarks.byUrl[info.url]) {
+      Bookmarks.byUrl[info.url].push(bookmark)
+    } else {
+      Bookmarks.byUrl[info.url] = [bookmark]
+    }
+
+    if (Settings.reactive.highlightOpenBookmarks) {
+      Bookmarks.reMarkOpenBookmark(bookmark)
     }
   }
 }
@@ -126,12 +124,30 @@ function onBookmarkMovedFg(id: ID, info: browser.bookmarks.MoveInfo): void {
     const movedLen = node?.len || 1
     Bookmarks.updateTreeLen(oldParent, -movedLen)
     Bookmarks.updateTreeLen(newParent, movedLen)
+
+    if (node.isOpen) {
+      // Unmark old parent
+      let parent = oldParent
+      while (parent) {
+        Bookmarks.markedFolders[parent.id] = (Bookmarks.markedFolders[parent.id] ?? 1) - 1
+        if (!Bookmarks.markedFolders[parent.id] && parent.isOpen) parent.isOpen = false
+        else break
+        parent = Bookmarks.reactive.byId[parent.parentId]
+      }
+
+      // Mark new parent
+      parent = newParent
+      while (parent) {
+        Bookmarks.markedFolders[parent.id] = (Bookmarks.markedFolders[parent.id] ?? 0) + 1
+        if (!parent.isOpen) parent.isOpen = true
+        else break
+        parent = Bookmarks.reactive.byId[parent.parentId]
+      }
+    }
   }
 
   Bookmarks.saveBookmarksTree()
   Sidebar.recalcBookmarksPanels()
-
-  if (Settings.reactive.highlightOpenBookmarks) Bookmarks.markOpenedBookmarksDebounced()
 }
 
 function onBookmarkRemovedFg(id: ID, info: browser.bookmarks.RemoveInfo): void {
@@ -158,18 +174,27 @@ function onBookmarkRemovedFg(id: ID, info: browser.bookmarks.RemoveInfo): void {
     for (const child of Bookmarks.listBookmarks(node.children)) {
       delete Bookmarks.reactive.byId[child.id]
     }
+
+    // Unmark old parent
+    let p = parent
+    while (p) {
+      Bookmarks.markedFolders[p.id] = (Bookmarks.markedFolders[p.id] ?? 1) - 1
+      if (!Bookmarks.markedFolders[p.id] && p.isOpen) p.isOpen = false
+      else break
+      p = Bookmarks.reactive.byId[p.parentId]
+    }
+    delete Bookmarks.markedFolders[node.id]
   }
   delete Bookmarks.reactive.byId[id]
 
   // Remove from byUrl object
   const url = node?.url
-  if (url && Bookmarks.reactive.byUrl[url]) {
-    const ib = Bookmarks.reactive.byUrl[url].findIndex(b => b.id === id)
-    if (ib > -1) Bookmarks.reactive.byUrl[url].splice(ib, 1)
+  if (url && Bookmarks.byUrl[url]) {
+    const ib = Bookmarks.byUrl[url].findIndex(b => b.id === id)
+    if (ib > -1) Bookmarks.byUrl[url].splice(ib, 1)
   }
 
   Sidebar.recalcBookmarksPanels()
-  if (Settings.reactive.highlightOpenBookmarks) Bookmarks.markOpenedBookmarksDebounced()
 }
 
 export function updateTreeLen(parent: Bookmark, delta: number): void {

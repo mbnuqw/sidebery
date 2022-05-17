@@ -37,7 +37,7 @@ async function loadInFg(): Promise<void> {
 
   // Normalize objects before vue
   Bookmarks.reactive.byId = {}
-  Bookmarks.reactive.byUrl = {}
+  Bookmarks.byUrl = {}
   const list: Bookmark[] = []
   const walker = (nodes: Bookmark[], count: number): number => {
     for (const n of nodes) {
@@ -48,8 +48,9 @@ async function loadInFg(): Promise<void> {
       else if (n.url) {
         count++
         list.push(n)
-        if (Bookmarks.reactive.byUrl[n.url]) Bookmarks.reactive.byUrl[n.url].push(n)
-        else Bookmarks.reactive.byUrl[n.url] = [n]
+        const rBookmark = Bookmarks.reactive.byId[n.id]
+        if (Bookmarks.byUrl[n.url]) Bookmarks.byUrl[n.url].push(rBookmark)
+        else Bookmarks.byUrl[n.url] = [rBookmark]
       }
       if (n.children) {
         n.len = walker(n.children, 0)
@@ -65,7 +66,7 @@ async function loadInFg(): Promise<void> {
 
   Bookmarks.setupBookmarksListeners()
 
-  if (Settings.reactive.highlightOpenBookmarks) markOpenedBookmarksDebounced()
+  if (Settings.reactive.highlightOpenBookmarks) Bookmarks.markOpenBookmarksForAllTabs()
 
   if (!Windows.incognito) await restoreTree()
 
@@ -111,7 +112,7 @@ export function unload(): void {
 
   Bookmarks.reactive.tree = []
   Bookmarks.reactive.byId = {}
-  Bookmarks.reactive.byUrl = {}
+  Bookmarks.byUrl = {}
 
   for (const panel of Sidebar.reactive.panels) {
     if (Utils.isBookmarksPanel(panel)) {
@@ -733,56 +734,107 @@ export async function sortBookmarks(
   if (progressNotification) Notifications.finishProgress(progressNotification)
 }
 
-export function resetOpenedBookmarksMarks(nodes: Bookmark[]): void {
+const unmarkOpenBookmarksTimeout: Record<string, number> = {}
+
+export function unmarkOpenBookmarksDebounced(url: string, delay = 500): void {
+  clearTimeout(unmarkOpenBookmarksTimeout[url])
+  unmarkOpenBookmarksTimeout[url] = setTimeout(() => {
+    delete unmarkOpenBookmarksTimeout[url]
+    unmarkOpenBookmarks(url)
+  }, delay)
+}
+
+export function unmarkOpenBookmarks(url: string): void {
+  clearTimeout(unmarkOpenBookmarksTimeout[url])
+  unmarkOpenBookmarksTimeout[url] = setTimeout(() => {
+    delete unmarkOpenBookmarksTimeout[url]
+
+    const bookmarks = Bookmarks.byUrl[url]
+    if (!bookmarks) return
+
+    for (const b of bookmarks) {
+      b.isOpen = false
+      Bookmarks.unmarkParents(b)
+    }
+  }, 500)
+}
+
+export function reMarkOpenBookmark(bookmark: Bookmark): void {
+  if (!bookmark.url) return
+
+  const tabIsOpen = !!Tabs.urlsInUse[bookmark.url]
+  const bookmarkIsMarked = bookmark.isOpen ?? false
+  if (tabIsOpen === bookmarkIsMarked) return
+
+  // Unmark
+  if (bookmarkIsMarked) {
+    bookmark.isOpen = false
+    Bookmarks.unmarkParents(bookmark)
+  }
+
+  // Mark
+  else {
+    bookmark.isOpen = true
+    Bookmarks.markParents(bookmark)
+  }
+}
+
+const markOpenBookmarksTimeout: Record<string, number> = {}
+
+export function markOpenBookmarksDebounced(url: string, delay = 500): void {
+  clearTimeout(markOpenBookmarksTimeout[url])
+  markOpenBookmarksTimeout[url] = setTimeout(() => {
+    delete markOpenBookmarksTimeout[url]
+    markOpenBookmarks(url)
+  }, delay)
+}
+
+export function markOpenBookmarks(url: string): void {
+  const bookmarks = Bookmarks.byUrl[url]
+  if (!bookmarks) return
+
+  for (const b of bookmarks) {
+    b.isOpen = true
+    Bookmarks.markParents(b)
+  }
+}
+
+export function unmarkAllOpenBookmarks(nodes?: Bookmark[]): void {
+  if (!nodes) {
+    nodes = Bookmarks.reactive.tree
+    Bookmarks.markedFolders = {}
+  }
+
   for (const node of nodes) {
-    if (node.children?.length && node.isOpen) resetOpenedBookmarksMarks(node.children)
+    if (node.children?.length && node.isOpen) unmarkAllOpenBookmarks(node.children)
     node.isOpen = false
   }
 }
-function markOpenedBookmarks(): void {
-  // Reset
-  resetOpenedBookmarksMarks(Bookmarks.reactive.tree)
 
-  // Set
-  for (const tab of Tabs.list) {
-    const bookmarks = Bookmarks.reactive.byUrl[tab.url]
-    if (!bookmarks) continue
-
-    for (const b of bookmarks) {
-      b.isOpen = true
-
-      let parent = Bookmarks.reactive.byId[b.parentId]
-      while (parent && !parent.isOpen) {
-        parent.isOpen = true
-        parent = Bookmarks.reactive.byId[parent.parentId]
-      }
-    }
+export function markOpenBookmarksForAllTabs(): void {
+  for (const url of Object.keys(Tabs.urlsInUse)) {
+    markOpenBookmarks(url)
   }
-
-  markingOpenedBookmarksNeeded = false
 }
-let markOpenedBookmarksTimeout: number | undefined
-let markingOpenedBookmarksNeeded = false
-export function markOpenedBookmarksDebounced(delay = 256): void {
-  if (!Bookmarks.reactive.tree.length) {
-    markingOpenedBookmarksNeeded = true
-    return
-  }
 
-  const actPanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
-  if (!Utils.isBookmarksPanel(actPanel)) {
-    markingOpenedBookmarksNeeded = true
-    return
+export function markParents(node: Bookmark): void {
+  let parent = Bookmarks.reactive.byId[node.parentId]
+  while (parent) {
+    Bookmarks.markedFolders[parent.id] = (Bookmarks.markedFolders[parent.id] ?? 0) + 1
+    if (!parent.isOpen) parent.isOpen = true
+    else break
+    parent = Bookmarks.reactive.byId[parent.parentId]
   }
-
-  clearTimeout(markOpenedBookmarksTimeout)
-  markOpenedBookmarksTimeout = setTimeout(() => markOpenedBookmarks(), delay)
 }
-export function markOpenedBookmarksIfNeeded(delay = 256): void {
-  if (!markingOpenedBookmarksNeeded) return
 
-  clearTimeout(markOpenedBookmarksTimeout)
-  markOpenedBookmarksTimeout = setTimeout(() => markOpenedBookmarks(), delay)
+export function unmarkParents(node: Bookmark): void {
+  let parent = Bookmarks.reactive.byId[node.parentId]
+  while (parent) {
+    Bookmarks.markedFolders[parent.id] = (Bookmarks.markedFolders[parent.id] ?? 1) - 1
+    if (!Bookmarks.markedFolders[parent.id] && parent.isOpen) parent.isOpen = false
+    else break
+    parent = Bookmarks.reactive.byId[parent.parentId]
+  }
 }
 
 export async function createFromDragEvent(e: DragEvent, dst: DstPlaceInfo): Promise<void> {

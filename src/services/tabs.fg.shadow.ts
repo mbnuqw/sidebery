@@ -14,6 +14,7 @@ export async function loadInShadowMode(): Promise<void> {
   Tabs.list = tabs
   for (const tab of tabs) {
     Tabs.byId[tab.id] = tab
+    Tabs.updateUrlCounter(tab.url, 1)
   }
 
   // Call deferred event handlers
@@ -30,6 +31,7 @@ export function unloadShadowed(): void {
   Tabs.resetShadowListeners()
 
   Tabs.byId = {}
+  Tabs.urlsInUse = {}
   Tabs.list = []
   Tabs.shadowMode = false
 }
@@ -68,7 +70,10 @@ function onShadowTabCreated(tab: browser.tabs.Tab): void {
   for (let i = tab.index; i < len; i++) {
     Tabs.list[i].index = i
   }
-  if (Settings.reactive.highlightOpenBookmarks) Bookmarks.markOpenedBookmarksDebounced()
+
+  Tabs.updateUrlCounter(tab.url, 1)
+
+  if (Settings.reactive.highlightOpenBookmarks) Bookmarks.markOpenBookmarksDebounced(tab.url)
 }
 
 function onShadowTabUpdated(
@@ -83,8 +88,19 @@ function onShadowTabUpdated(
   }
   const targetTab = Tabs.byId[tabId]
   if (!targetTab) return
+
+  if (change.url) {
+    const oldUrlCount = Tabs.updateUrlCounter(targetTab.url, -1)
+    Tabs.updateUrlCounter(change.url, 1)
+
+    // Mark/Unmark open bookmarks
+    if (Settings.reactive.highlightOpenBookmarks) {
+      if (!oldUrlCount) Bookmarks.unmarkOpenBookmarksDebounced(targetTab.url)
+      Bookmarks.markOpenBookmarksDebounced(change.url)
+    }
+  }
+
   Object.assign(targetTab, change)
-  if (change.url && Settings.reactive.highlightOpenBookmarks) Bookmarks.markOpenedBookmarksDebounced()
 }
 
 function onShadowTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo): void {
@@ -107,7 +123,12 @@ function onShadowTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo): void {
   }
 
   delete Tabs.byId[tabId]
-  if (Settings.reactive.highlightOpenBookmarks) Bookmarks.markOpenedBookmarksDebounced()
+
+  const urlCount = Tabs.updateUrlCounter(targetTab.url, -1)
+
+  if (Settings.reactive.highlightOpenBookmarks && !urlCount) {
+    Bookmarks.unmarkOpenBookmarksDebounced(targetTab.url)
+  }
 }
 
 function onShadowTabMoved(id: ID, info: browser.tabs.MoveInfo): void {

@@ -5,7 +5,6 @@ import * as BookmarksHandlers from 'src/services/bookmarks.handlers'
 export interface BookmarksState {
   tree: Bookmark[]
   byId: Record<ID, Bookmark>
-  byUrl: Record<string, Bookmark[]>
   popup: BookmarksPopupState | null
   expanded: Record<ID, Record<ID, boolean>>
 }
@@ -49,11 +48,12 @@ export const Bookmarks = {
   reactive: {
     tree: [],
     byId: {},
-    byUrl: {},
     popup: null,
     expanded: {},
   } as BookmarksState,
 
+  byUrl: {} as Record<string, Bookmark[]>,
+  markedFolders: {} as Record<ID, number>,
   overallCount: 0,
 
   ...BookmarksHandlers,
