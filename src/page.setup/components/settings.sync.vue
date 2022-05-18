@@ -20,6 +20,10 @@ section(ref="el")
     label="settings.sync_save_styles"
     v-model:value="Settings.reactive.syncSaveStyles"
     @update:value="saveSyncStyles()")
+  ToggleField(
+    label="settings.sync_save_kb"
+    v-model:value="Settings.reactive.syncSaveKeybindings"
+    @update:value="saveSyncKb()")
   .sync-data(v-if="state.syncedSettings")
     .sync-title {{translate('settings.sync_settings_title')}}
     .sync-list
@@ -50,6 +54,16 @@ section(ref="el")
         .sync-info {{item.size}} / 8kb
         .btn.sync-btn(@click.stop="applySyncData(item)") {{translate('settings.sync_apply_btn')}}
         .btn.sync-btn.-warn(@click.stop="deleteSyncData(item.id)") {{translate('settings.sync_delete_btn')}}
+  .sync-data(v-if="state.syncedKeybindings")
+    .sync-title {{translate('settings.sync_kb_title')}}
+    .sync-list
+      .sync-item(v-for="item in state.syncedKeybindings" :title="item.tooltip")
+        .sync-name {{item.name || item.profileId}}
+        .sync-info {{item.timeYYYYMMDD}}
+        .sync-info {{item.timeHHMM}}
+        .sync-info {{item.size}} / 8kb
+        .btn.sync-btn(@click.stop="applySyncData(item)") {{translate('settings.sync_apply_btn')}}
+        .btn.sync-btn.-warn(@click.stop="deleteSyncData(item.id)") {{translate('settings.sync_delete_btn')}}
   .note-field
     .label {{translate('settings.sync_notes_title')}}
     .note {{translate('settings.sync_notes')}}
@@ -72,6 +86,7 @@ import TextField from '../../components/text-field.vue'
 import ToggleField from '../../components/toggle-field.vue'
 import { DEFAULT_SETTINGS } from 'src/defaults'
 import { Logs } from 'src/services/logs'
+import { Keybindings } from 'src/services/keybindings'
 
 interface SyncInfo extends StoredSyncValue {
   id?: string
@@ -89,6 +104,7 @@ const state = reactive({
   syncedSettings: null as SyncInfo[] | null,
   syncedCtxMenu: null as SyncInfo[] | null,
   syncedStyles: null as SyncInfo[] | null,
+  syncedKeybindings: null as SyncInfo[] | null,
 })
 
 onMounted(() => {
@@ -141,6 +157,8 @@ async function loadSyncedData(): Promise<void> {
   else state.syncedCtxMenu = null
   if (data.styles) state.syncedStyles = data.styles
   else state.syncedStyles = null
+  if (data.kb) state.syncedKeybindings = data.kb
+  else state.syncedKeybindings = null
 
   if (toRemove.length) {
     browser.storage.sync.remove(toRemove)
@@ -221,7 +239,6 @@ async function applySyncData(info: StoredSyncValue): Promise<void> {
     data.settings.syncSaveSettings = Settings.reactive.syncSaveSettings
     data.settings.syncSaveCtxMenu = Settings.reactive.syncSaveCtxMenu
     data.settings.syncSaveStyles = Settings.reactive.syncSaveStyles
-    data.settings.syncAutoApply = Settings.reactive.syncAutoApply
   }
 
   await Store.set(Utils.cloneObject(data))
@@ -257,6 +274,11 @@ async function saveSyncStyles(): Promise<void> {
   if (groupCSS) Styles.groupCSS = groupCSS
 
   Styles.saveStylesToSync()
+}
+
+function saveSyncKb(): void {
+  if (!Settings.reactive.syncSaveKeybindings) Store.sync('kb', {})
+  else Keybindings.saveKeybindingsToSync()
 }
 
 let onSyncNameUpdatedTimeout: number | undefined

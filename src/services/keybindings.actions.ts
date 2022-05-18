@@ -21,45 +21,27 @@ const VALID_SHORTCUT =
  * Load keybindings
  */
 export async function loadKeybindings(): Promise<void> {
-  const [commands, storage] = await Promise.all([
-    browser.commands.getAll(),
-    browser.storage.local.get({ disabledKeybindings: {} as Record<string, string> }),
-  ])
-
+  const commands = await browser.commands.getAll()
   Keybindings.byName = {}
 
   for (const k of commands as Command[]) {
     if (!k.name) continue
-    k.active = !storage.disabledKeybindings[k.name]
     k.error = ''
     k.focus = false
-    if (typeof storage.disabledKeybindings[k.name] === 'string') {
-      k.shortcut = storage.disabledKeybindings[k.name]
-    }
     Keybindings.byName[k.name] = k
   }
 
   Keybindings.reactive.list = commands
 }
 
-/**
- * Save keybindings
- */
-export async function saveKeybindings(): Promise<void> {
-  const { disabledKeybindings } = await browser.storage.local.get({
-    disabledKeybindings: {} as Record<string, string>,
+export async function saveKeybindingsToSync(): Promise<void> {
+  const keybindings: { [name: string]: string } = {}
+
+  Keybindings.reactive.list.map(cmd => {
+    if (cmd.name && cmd.shortcut) keybindings[cmd.name] = cmd.shortcut
   })
-  const disabled: { [name: string]: string } = {}
-  for (const k of Keybindings.reactive.list) {
-    if (!k.name) continue
-    if (!k.active) {
-      disabled[k.name] = k.shortcut ?? ''
-      browser.commands.update({ name: k.name, shortcut: '' })
-    } else if (typeof disabledKeybindings[k.name] === 'string') {
-      browser.commands.update({ name: k.name, shortcut: disabledKeybindings[k.name] })
-    }
-  }
-  await Store.set({ disabledKeybindings: disabled })
+
+  await Store.sync('kb', { keybindings })
 }
 
 /**
@@ -71,23 +53,11 @@ export async function resetKeybindings(): Promise<void> {
   })
 
   await Promise.all(waitGroup)
-  loadKeybindings()
-}
+  await loadKeybindings()
 
-/**
- * Toggle all keybindings
- */
-export function toggleKeybindings(value?: boolean): void {
-  if (value === undefined) {
-    const first = Keybindings.reactive.list[0]
-    value = !first?.active
+  if (Settings.reactive.syncSaveKeybindings) {
+    Keybindings.saveKeybindingsToSync()
   }
-
-  for (const k of Keybindings.reactive.list) {
-    k.active = value
-  }
-
-  saveKeybindings()
 }
 
 /**
@@ -113,6 +83,10 @@ export async function update(index: number, details: CommandUpdateDetails): Prom
   if (details.shortcut !== undefined) {
     await browser.commands.update({ name: k.name, shortcut: details.shortcut })
   }
+
+  if (Settings.reactive.syncSaveKeybindings) {
+    Keybindings.saveKeybindingsToSync()
+  }
 }
 
 /**
@@ -132,7 +106,7 @@ function onCmd(name: string): void {
 
   let kb: Command | undefined = Keybindings.byName[name]
   if (!kb) kb = Keybindings.reactive.list.find(k => k.name === name)
-  if (!kb || !kb.active) return
+  if (!kb) return
 
   if (name === 'next_panel') Sidebar.switchPanel(1, false, true)
   else if (name === 'prev_panel') Sidebar.switchPanel(-1, false, true)
@@ -783,7 +757,6 @@ function onKeyNewTabAsLastChild(): void {
  */
 export function setupListeners(): void {
   browser.commands.onCommand.addListener(onCmd)
-  Store.onKeyChange('disabledKeybindings', loadKeybindings)
 }
 
 /**

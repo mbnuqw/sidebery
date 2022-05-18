@@ -4,8 +4,7 @@ section(ref="el")
   .keybinding(
     v-for="(keybinding, i) in Keybindings.reactive.list" :key="keybinding.name"
     :is-focused="keybinding.focus"
-    :data-error="!!keybinding.error"
-    :data-disabled="!keybinding.active")
+    :data-error="!!keybinding.error")
     .label(@click="changeKeybinding(keybinding, i)") {{keybinding.description}}
     .value(v-if="keybinding.focus") {{inputLabel}}
     .value(v-else-if="keybinding.error") {{translate('settings.kb_err_' + keybinding.error)}}
@@ -17,10 +16,11 @@ section(ref="el")
       @blur="onKBBlur(keybinding, i)"
       @keydown.prevent.stop="onKBKey($event, keybinding, i)"
       @keyup.prevent.stop="onKBKeyUp($event, keybinding, i)")
-    ToggleInput(v-model:value="keybinding.active" @update:value="Keybindings.saveKeybindings()")
+    .icon-btn(
+      :data-enabled="!!keybinding.shortcut"
+      @click="removeKeybinding(i, keybinding.shortcut)"): svg: use(xlink:href="#icon_remove")
   .ctrls
     .btn(@click="Keybindings.resetKeybindings") {{translate('settings.reset_kb')}}
-    .btn(@click="Keybindings.toggleKeybindings()") {{getToggleTitle()}}
 </template>
 
 <script lang="ts" setup>
@@ -30,7 +30,6 @@ import { Command } from 'src/types'
 import { Keybindings } from 'src/services/keybindings'
 import { Info } from 'src/services/info'
 import { SetupPage } from 'src/services/setup-page'
-import ToggleInput from '../../components/toggle-input.vue'
 
 const SPEC_KEYS = /^(Comma|Period|Home|End|PageUp|PageDown|Space|Insert|Delete|F\d\d?)$/
 const ERR_SHOW_TIMEOUT = 2000
@@ -53,7 +52,6 @@ function setInput(ref: Element | Component | null): void {
 }
 
 function changeKeybinding(k: Command, i: number): void {
-  if (!k.active) return
   state.newShortcut = ''
   errMsg = ''
 
@@ -88,13 +86,7 @@ function onKBBlur(k: Command, i: number): void {
   }
 }
 
-function getToggleTitle(): string {
-  const first = Keybindings.reactive.list[0]
-  const value = !first?.active
-  return value ? translate('settings.enable_kb') : translate('settings.disable_kb')
-}
-
-function onKBKey(e: KeyboardEvent, k: Command, i: number): void {
+function onKBKey(e: KeyboardEvent, cmd: Command, i: number): void {
   if (e.key === 'Escape') return keybindingInputs.value[i].blur()
   if (e.key === 'Delete' && !e.ctrlKey && !e.altKey && !e.shiftKey) {
     Keybindings.update(i, { shortcut: '', focus: false })
@@ -129,5 +121,10 @@ function onKBKey(e: KeyboardEvent, k: Command, i: number): void {
 
 function onKBKeyUp(e: Event, k: Command, i: number): void {
   keybindingInputs.value[i].blur()
+}
+
+function removeKeybinding(i: number, shortcut?: string): void {
+  if (!shortcut) return
+  Keybindings.update(i, { shortcut: '', focus: false })
 }
 </script>

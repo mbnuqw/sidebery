@@ -161,7 +161,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   syncSaveSettings: false,
   syncSaveCtxMenu: false,
   syncSaveStyles: false,
-  syncAutoApply: false,
+  syncSaveKeybindings: false,
 }
 
 // prettier-ignore

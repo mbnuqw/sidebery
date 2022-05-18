@@ -30,7 +30,7 @@ export interface Stored {
   snapshots_v4?: Snapshot_v4[] // DEPR
   lastSnapTime?: number
 
-  disabledKeybindings?: { [name: string]: string }
+  keybindings?: { [name: string]: string }
 
   contextMenu?: MenuConfs
   tabsMenu?: ContextMenuConfig_v4 // DEPR

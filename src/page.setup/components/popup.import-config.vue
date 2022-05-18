@@ -121,7 +121,7 @@ const faviconsInactive = computed((): boolean => {
 })
 const keybindingsInactive = computed((): boolean => {
   const data = props.importedData
-  return !data.keybindings || !data.disabledKeybindings
+  return !data.keybindings
 })
 const importInactive = computed((): boolean => {
   return (
@@ -496,13 +496,11 @@ async function importFavicons(backup: BackupData, toStore: Stored): Promise<void
 }
 
 function importKeybindings(backup: BackupData, toStore: Stored): void {
-  if (!backup.keybindings || !backup.disabledKeybindings) throw 'No keybindings data'
+  if (!backup.keybindings) throw 'No keybindings data'
 
   for (const name of Object.keys(backup.keybindings)) {
     const shortcut = backup.keybindings[name]
     browser.commands.update({ name, shortcut })
   }
-
-  toStore.disabledKeybindings = backup.disabledKeybindings
 }
 </script>

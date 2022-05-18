@@ -7,6 +7,7 @@
   justify-content: space-between
   align-items: flex-start
   padding: 0 16px
+  margin: 3px 0 0
   cursor: pointer
   &:before
     content: ''
@@ -21,7 +22,7 @@
   &:not(:first-of-type):after
     content: ''
     position: absolute
-    top: 0
+    top: -2px
     left: 4px
     width: calc(100% - 8px)
     height: 1px
@@ -31,13 +32,13 @@
     opacity: .06
   &:active:before
     opacity: .03
-  &[is-focused="true"]:not([data-disabled="true"])
+  &[is-focused="true"]
     opacity: 1
     > .value:before
       opacity: 1
     &:before
       opacity: .2
-  &[data-error="true"]:not([data-disabled="true"])
+  &[data-error="true"]
     opacity: 1
     > .value
       color: var(--status-err)
@@ -45,8 +46,6 @@
         box-shadow: inset 0 0 0 1px var(--status-err)
     > .label
       color: var(--status-err)
-  &[data-disabled="true"]
-    opacity: .3
 
 .keybinding > .label
   position: relative
@@ -78,6 +77,10 @@
     box-shadow: inset 0 0 0 1px var(--toolbar-fg)
     opacity: .3
 
+.keybinding .ToggleInput
+  margin-top: auto
+  margin-bottom: auto
+
 .keybinding > input
   position: absolute
   width: 0
@@ -90,3 +93,35 @@
 .keybinding > .ToggleInput
   padding: 4px 0 4px 16px
   flex-wrap: nowrap
+
+.keybinding .icon-btn
+  position: relative
+  width: 28px
+  height: 28px
+  margin: auto -12px auto 4px
+  cursor: pointer
+  &:before
+    content: ''
+    position: absolute
+    top: 1px
+    left: 0
+    width: 100%
+    height: calc(100% - 2px)
+    border-radius: 4px
+    background-color: var(--color, var(--toolbar-fg))
+    opacity: 0
+  &:hover:before
+    opacity: .1
+  &:active
+    opacity: .9
+  > svg
+    position: relative
+    top: 4px
+    left: 4px
+    width: 20px
+    height: 20px
+    fill: var(--toolbar-fg)
+    opacity: .7
+  &[data-enabled="false"]
+    opacity: .3
+    cursor: default

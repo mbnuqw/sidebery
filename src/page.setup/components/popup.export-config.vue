@@ -99,9 +99,6 @@ async function genExportData(): Promise<void> {
     storageKeys.push('favHashes')
     storageKeys.push('favDomains')
   }
-  if (state.keybindings) {
-    storageKeys.push('disabledKeybindings')
-  }
 
   let data
   try {

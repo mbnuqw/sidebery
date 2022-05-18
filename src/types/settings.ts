@@ -163,5 +163,5 @@ export interface SettingsState {
   syncSaveSettings: boolean
   syncSaveCtxMenu: boolean
   syncSaveStyles: boolean
-  syncAutoApply: boolean
+  syncSaveKeybindings: boolean
 }

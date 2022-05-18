@@ -87,7 +87,6 @@ export interface BackupData {
   favHashes?: number[]
   favDomains?: Record<string, FavDomain>
   keybindings?: Record<string, string>
-  disabledKeybindings?: Record<string, string>
   // DEPRECATED //
   containers_v4?: Record<string, Container>
   panels_v4?: OldPanelConfig[]
@@ -98,14 +97,12 @@ export interface BackupData {
 }
 
 export interface Command extends browser.commands.Command {
-  active?: boolean
   focus?: boolean
   error?: string
 }
 
 export interface CommandUpdateDetails {
   shortcut?: string
-  active?: boolean
   focus?: boolean
   error?: string
 }

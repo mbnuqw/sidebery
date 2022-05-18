@@ -2271,6 +2271,11 @@ export const setupPageTranslations: Translations = {
     ru: 'Сохранять стили в синхронизируемое хранилище',
     zh_CN: '保存样式至同步存储',
   },
+  'settings.sync_save_kb': {
+    en: 'Save keybindings to sync storage',
+    ru: 'Сохранять сочетания клавиш в синхронизируемое хранилище',
+    zh_CN: '保存按键绑定至同步存储',
+  },
   'settings.sync_auto_apply': {
     en: 'Automatically apply changes',
     ru: 'Автоматически применять изменения',
@@ -2290,6 +2295,11 @@ export const setupPageTranslations: Translations = {
     en: 'Styles',
     ru: 'Стили',
     zh_CN: '样式',
+  },
+  'settings.sync_kb_title': {
+    en: 'Keybindings',
+    ru: 'Сочетания клавиш',
+    zh_CN: '按键绑定',
   },
   'settings.sync_apply_btn': {
     en: 'Apply',
