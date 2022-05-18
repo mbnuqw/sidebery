@@ -22,13 +22,13 @@ const VALID_SHORTCUT =
  */
 export async function loadKeybindings(): Promise<void> {
   const commands = await browser.commands.getAll()
-  Keybindings.byName = {}
+  Keybindings.reactive.byName = {}
 
   for (const k of commands as Command[]) {
     if (!k.name) continue
     k.error = ''
     k.focus = false
-    Keybindings.byName[k.name] = k
+    Keybindings.reactive.byName[k.name] = k
   }
 
   Keybindings.reactive.list = commands
@@ -74,18 +74,15 @@ export function checkShortcut(shortcut: string): 'valid' | 'duplicate' | 'invali
 /**
  * Update keybinding
  */
-export async function update(index: number, details: CommandUpdateDetails): Promise<void> {
-  const k = Keybindings.reactive.list[index]
-  if (!k?.name) return
+export async function update(cmd: Command, details: CommandUpdateDetails): Promise<void> {
+  Object.assign(cmd, details)
 
-  Keybindings.reactive.list.splice(index, 1, { ...k, ...details })
+  if (details.shortcut !== undefined && cmd.name) {
+    await browser.commands.update({ name: cmd.name, shortcut: details.shortcut })
 
-  if (details.shortcut !== undefined) {
-    await browser.commands.update({ name: k.name, shortcut: details.shortcut })
-  }
-
-  if (Settings.reactive.syncSaveKeybindings) {
-    Keybindings.saveKeybindingsToSync()
+    if (Settings.reactive.syncSaveKeybindings) {
+      Keybindings.saveKeybindingsToSync()
+    }
   }
 }
 
@@ -104,7 +101,7 @@ export function resetErrors(): void {
 function onCmd(name: string): void {
   if (!Windows.focused) return
 
-  let kb: Command | undefined = Keybindings.byName[name]
+  let kb: Command | undefined = Keybindings.reactive.byName[name]
   if (!kb) kb = Keybindings.reactive.list.find(k => k.name === name)
   if (!kb) return
 

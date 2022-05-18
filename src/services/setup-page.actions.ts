@@ -124,6 +124,14 @@ export async function updateActiveView(): Promise<void> {
     return
   }
 
+  if (hash.startsWith('keybindings')) {
+    document.title = 'Sidebery / Keybindings'
+    SetupPage.reactive.activeView = 'keybindings'
+    SetupPage.reactive.activeSection = 'keybindings'
+    SetupPage.reactive.permissions = false
+    return
+  }
+
   setTimeout(
     () => {
       if (els[hash]) els[hash].scrollIntoView(scrollSectionConf)

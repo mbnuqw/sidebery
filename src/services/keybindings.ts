@@ -3,11 +3,11 @@ import * as KeybindingsActions from 'src/services/keybindings.actions'
 
 export interface KBState {
   list: Command[]
+  byName: Record<string, Command>
 }
 
 export const Keybindings = {
-  reactive: { list: [] } as KBState,
-  byName: {} as Record<string, Command>,
+  reactive: { list: [], byName: {} } as KBState,
 
   ...KeybindingsActions,
 }

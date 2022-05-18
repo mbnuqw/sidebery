@@ -396,6 +396,11 @@ export const setupPageTranslations: Translations = {
     ru: 'Снепшоты',
     zh_CN: '快照查看器',
   },
+  'settings.nav_keybindings': {
+    en: 'Keybindings',
+    ru: 'Клавиши',
+    zh_CN: '按键绑定',
+  },
 
   // - Details controls
   'settings.ctrl_update': {
@@ -2113,6 +2118,34 @@ export const setupPageTranslations: Translations = {
     en: 'Invalid shortcut',
     ru: 'Недопустимое сочетание клавиш',
     zh_CN: '无效的快捷键',
+  },
+  'settings.kb_general': {
+    en: 'General',
+    ru: 'Общие',
+  },
+  'settings.kb_switching_panel': {
+    en: 'Switching between panels',
+    ru: 'Переключение панелей',
+  },
+  'settings.kb_create_remove_tabs': {
+    en: 'Creating / Removing tabs',
+    ru: 'Создание / Закрытие вкладок',
+  },
+  'settings.kb_selections': {
+    en: 'Selected (or active) elements',
+    ru: 'Выделенные (или активные) элементы',
+  },
+  'settings.kb_branches': {
+    en: 'Branches',
+    ru: 'Ветви',
+  },
+  'settings.kb_active_tabs_history': {
+    en: 'Tabs activation history',
+    ru: 'История активации вкладок',
+  },
+  'settings.kb_move_tabs': {
+    en: 'Moving tabs',
+    ru: 'Перемещение вкладок',
   },
   'settings.reset_kb': {
     en: 'Reset Keybindings',

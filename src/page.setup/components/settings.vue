@@ -15,7 +15,6 @@
   HistorySection
   AppearanceSection
   MouseSection
-  KeybindingsSection
   SnapshotsSection
   SyncSection
   HelpSection
@@ -52,7 +51,6 @@ import BookmarksSection from './settings.bookmarks.vue'
 import HistorySection from './settings.history.vue'
 import AppearanceSection from './settings.appearance.vue'
 import MouseSection from './settings.mouse.vue'
-import KeybindingsSection from './settings.keybindings.vue'
 import SnapshotsSection from './settings.snapshots.vue'
 import SyncSection from './settings.sync.vue'
 import HelpSection from './settings.help.vue'

@@ -116,7 +116,7 @@
     "zh_CN": "活动标签历史：返回"
   },
   "KbActNextActTab": {
-    "en": "Active tabs history: Next",
+    "en": "Active tabs history: Forward",
     "ru": "История активных вкладок: Вперед",
     "zh_CN": "活动标签历史记录：下一步"
   },
@@ -126,7 +126,7 @@
     "zh_CN": "面板的活动标签历史记录：返回"
   },
   "KbActPanelNextActTab": {
-    "en": "Active tabs history of panel: Next",
+    "en": "Active tabs history of panel: Forward",
     "ru": "История активных вкладок панели: Вперед",
     "zh_CN": "面板的活动标签历史记录：下一步"
   },
