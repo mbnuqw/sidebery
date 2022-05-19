@@ -25,7 +25,6 @@ import { Command } from 'src/types'
 import { Keybindings } from 'src/services/keybindings'
 import { Info } from 'src/services/info'
 
-const SPEC_KEYS = /^(Comma|Period|Home|End|PageUp|PageDown|Space|Insert|Delete|F\d\d?)$/
 const ERR_SHOW_TIMEOUT = 2000
 
 const inputEl = ref<HTMLInputElement | null>(null)
@@ -94,10 +93,28 @@ function onKBKey(e: KeyboardEvent, cmd: Command): void {
   if (e.altKey) keys.push('Alt')
   if (e.shiftKey && keys.length <= 1) keys.push('Shift')
 
-  if (e.code.indexOf('Digit') === 0) keys.push(e.code[e.code.length - 1])
-  else if (e.code.indexOf('Key') === 0) keys.push(e.code[e.code.length - 1])
-  else if (e.code.indexOf('Arrow') === 0) keys.push(e.code.slice(5))
-  else if (SPEC_KEYS.test(e.code)) keys.push(e.code)
+  const LetterRe = /^[0-9A-Za-z]$/
+  const FRe = /^F\d\d?$/
+  if (LetterRe.test(e.key)) keys.push(e.key.toUpperCase())
+  else if (e.key.startsWith('Arrow')) keys.push(e.key.slice(5))
+  else if (FRe.test(e.key)) keys.push(e.key)
+  else if (e.key === ',' || e.key === '<') keys.push('Comma')
+  else if (e.key === '.' || e.key === '>') keys.push('Period')
+  else if (e.key === ' ') keys.push('Space')
+  else if (
+    e.key === 'Home' ||
+    e.key === 'End' ||
+    e.key === 'PageUp' ||
+    e.key === 'PageDown' ||
+    e.key === 'Insert' ||
+    e.key === 'Delete' ||
+    e.key === 'Up' ||
+    e.key === 'Down' ||
+    e.key === 'Left' ||
+    e.key === 'Right'
+  ) {
+    keys.push(e.key)
+  }
 
   const shortcut = keys.join('+')
   state.newShortcut = shortcut
