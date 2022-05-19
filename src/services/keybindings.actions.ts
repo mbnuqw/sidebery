@@ -147,6 +147,31 @@ function onCmd(name: string): void {
   } else if (name.startsWith('move_tabs_to_panel_')) onKeyMoveTabsToPanel(parseInt(name[19]))
   else if (name === 'search') {
     Search.start()
+  } else if (name === 'switch_to_parent_tab') {
+    Tabs.activateParent(Selection.get()[0])
+  } else if (name === 'switch_to_last_tab') {
+    onKeySwitchToTab()
+  } else if (name.startsWith('switch_to_tab_')) {
+    const index = parseInt(name.slice(-1))
+    if (!isNaN(index)) onKeySwitchToTab(index)
+  }
+}
+
+function onKeySwitchToTab(targetIndex?: number): void {
+  const activePanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+  if (!Utils.isTabsPanel(activePanel)) return
+
+  const tabsList = [...activePanel.pinnedTabs, ...activePanel.tabs]
+
+  let targetTab
+  if (targetIndex === undefined) targetTab = tabsList[tabsList.length - 1]
+  else targetTab = tabsList[targetIndex]
+
+  if (targetTab.id !== Tabs.activeId) browser.tabs.update(targetTab.id, { active: true })
+  else if (Settings.reactive.tabsSecondClickActPrev) {
+    const history = Tabs.getActiveTabsHistory()
+    const prevTabId = history.actTabs[history.actTabs.length - 1]
+    if (prevTabId !== undefined) browser.tabs.update(prevTabId, { active: true })
   }
 }
 

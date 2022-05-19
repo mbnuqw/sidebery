@@ -73,6 +73,21 @@ const layout = [
   'switch_to_panel_8',
   'switch_to_panel_9',
 
+  // Switching tabs
+  'switching_tab',
+  'switch_to_parent_tab',
+  'switch_to_tab_0',
+  'switch_to_tab_1',
+  'switch_to_tab_2',
+  'switch_to_tab_3',
+  'switch_to_tab_4',
+  'switch_to_tab_5',
+  'switch_to_tab_6',
+  'switch_to_tab_7',
+  'switch_to_tab_8',
+  'switch_to_tab_9',
+  'switch_to_last_tab',
+
   // Move tabs
   'move_tabs',
   'move_tab_to_active',

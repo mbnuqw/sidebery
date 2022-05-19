@@ -247,6 +247,42 @@
     },
     "search": {
       "description": "__MSG_KbSearch__"
+    },
+    "switch_to_parent_tab": {
+      "description": "__MSG_KbSwitchToParentTab__"
+    },
+    "switch_to_tab_0": {
+      "description": "__MSG_KbSwitchToTab0__"
+    },
+    "switch_to_tab_1": {
+      "description": "__MSG_KbSwitchToTab1__"
+    },
+    "switch_to_tab_2": {
+      "description": "__MSG_KbSwitchToTab2__"
+    },
+    "switch_to_tab_3": {
+      "description": "__MSG_KbSwitchToTab3__"
+    },
+    "switch_to_tab_4": {
+      "description": "__MSG_KbSwitchToTab4__"
+    },
+    "switch_to_tab_5": {
+      "description": "__MSG_KbSwitchToTab5__"
+    },
+    "switch_to_tab_6": {
+      "description": "__MSG_KbSwitchToTab6__"
+    },
+    "switch_to_tab_7": {
+      "description": "__MSG_KbSwitchToTab7__"
+    },
+    "switch_to_tab_8": {
+      "description": "__MSG_KbSwitchToTab8__"
+    },
+    "switch_to_tab_9": {
+      "description": "__MSG_KbSwitchToTab9__"
+    },
+    "switch_to_last_tab": {
+      "description": "__MSG_KbSwitchToLastTab__"
     }
   },
 

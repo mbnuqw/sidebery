@@ -2127,6 +2127,10 @@ export const setupPageTranslations: Translations = {
     en: 'Switching between panels',
     ru: 'Переключение панелей',
   },
+  'settings.kb_switching_tab': {
+    en: 'Switching between tabs',
+    ru: 'Переключение вкладок',
+  },
   'settings.kb_create_remove_tabs': {
     en: 'Creating / Removing tabs',
     ru: 'Создание / Закрытие вкладок',
