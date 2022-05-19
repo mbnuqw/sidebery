@@ -261,24 +261,14 @@ export const setupPageTranslations: Translations = {
     ru: 'Навигация',
     zh_CN: '导航栏',
   },
-  'settings.nav_settings_panels': {
-    en: 'Panels',
-    ru: 'Панель управления',
-    zh_CN: '面板',
-  },
-  'settings.nav_settings_controlbar': {
-    en: 'Control bar',
-    ru: 'Групповая страница',
-    zh_CN: '控制栏',
-  },
   'settings.nav_settings_group': {
     en: 'Group page',
-    ru: 'Контейнеры',
+    ru: 'Групповая страница',
     zh_CN: '分组页面',
   },
   'settings.nav_settings_containers': {
     en: 'Containers',
-    ru: 'Панели',
+    ru: 'Контейнеры',
     zh_CN: '容器',
   },
   'settings.nav_settings_dnd': {
