@@ -172,7 +172,7 @@ function onTabCreated(tab: Tab): void {
         if (insideBranch && Utils.isTabsPanel(panel)) {
           tab.parentId = tab.openerTabId
           const start = panel.startTabIndex
-          Tabs.updateTabsTree(start, tab.index + 1)
+          Tabs.updateTabsTree(start, panel.nextTabIndex)
           if (Settings.reactive.autoFoldTabs && !parent.folded) {
             Tabs.expTabsBranch(tab.parentId)
           }
