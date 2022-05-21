@@ -205,10 +205,6 @@ function onTabCreated(tab: Tab): void {
     }
 
     if (Settings.reactive.colorizeTabsBranches && tab.lvl > 0) Tabs.setBranchColor(tab.id)
-
-    Logs.info(
-      `Tab created: n${tab.index} #${tab.id} panelId:${tab.panelId} lvl:${tab.lvl} parentId:${tab.parentId}`
-    )
   }
 
   // Update succession
@@ -233,6 +229,10 @@ function onTabCreated(tab: Tab): void {
   if (Settings.reactive.hideInact && panel.id !== Sidebar.reactive.activePanelId) {
     browser.tabs.hide(tab.id)
   }
+
+  Logs.info(
+    `Tab created: n${tab.index} #${tab.id} panelId:${tab.panelId} lvl:${tab.lvl} parentId:${tab.parentId}`
+  )
 }
 
 /**
