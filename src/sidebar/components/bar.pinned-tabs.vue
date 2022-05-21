@@ -6,7 +6,7 @@
   data-dnd-type="pinned-bar"
   @wheel="onWheel"
   @drop="onDrop")
-  .tab-wrapper(v-for="tab in pinnedTabs" :key="tab.id" :data-targeted="dropId === tab.id")
+  .tab-wrapper(v-for="tab in pinnedTabs" :key="tab.id" :data-targeted="DnD.reactive.dstPin && dropId === tab.id")
     Tab(:tab="tab")
   .to-the-end(v-if="pinnedTabs.length")
 </template>

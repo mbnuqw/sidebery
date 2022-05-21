@@ -80,6 +80,13 @@
     display: block
 #root[data-pinned-tabs-position="panel"][data-pinned-tabs-list="true"] .PinnedTabsBar .tab-wrapper
   width: 100%
+  // Close the top gap
+  &:after
+    content: ''
+    position: absolute
+    width: 100%
+    height: 2px
+    top: -2px
 
 #root[data-pinned-tabs-position="left"] .PinnedTabsBar .tab-wrapper:before
 #root[data-pinned-tabs-position="right"] .PinnedTabsBar .tab-wrapper:before
