@@ -11,7 +11,9 @@
     position: relative
     width: 100%
     height: 100%
-    padding-bottom: 64px
+  // Extra space at the bottom
+  > div > div:last-of-type
+    margin-bottom: 64px
 
 .TabsPanel .scrollable
   padding: 1px 0 0
@@ -27,7 +29,7 @@
   grid-gap: 2px
   background-color: var(--frame-bg)
   z-index: 1
-  transition: transform var(--d-fast), opacity var(--d-fast)
+  transition: transform var(--d-fast), opacity var(--d-fast), z-index var(--d-fast) var(--d-fast)
   &[data-new-tab-bar-position="bottom"]
     position: relative
     bottom: auto
@@ -42,6 +44,7 @@
     box-shadow: 0 -10px 12px -10px #00000000, 0 -1px 0 0 #00000000
 
 .ScrollBox .bottom-shadow[data-show="true"] + .scroll-container .new-tab-btns
+  transition: transform var(--d-fast), opacity var(--d-fast)
   z-index: 1000
   &:before
     box-shadow: 0 -10px 12px -10px #00000064, 0 -1px 0 0 #00000008
