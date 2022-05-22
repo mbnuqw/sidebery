@@ -231,6 +231,7 @@ async function reopen(btn?: NewTabBtn): Promise<void> {
       const info: ItemInfo = Utils.cloneObject(tab)
       if (btn?.url) info.url = btn.url
       else if (!btn?.containerId) info.url = 'about:newtab'
+      if (info.url === 'about:blank') info.url = 'about:newtab'
       toReopen.push(info)
     }
   }
