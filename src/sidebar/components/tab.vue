@@ -131,6 +131,7 @@ function onMouseDownClose(e: MouseEvent): void {
     } else if (Settings.reactive.tabCloseMiddleClick === 'discard') {
       Tabs.discardTabs([props.tab.id])
     }
+    e.preventDefault()
   }
   if (e.button === 2) {
     Tabs.removeBranches([props.tab.id])
