@@ -832,7 +832,7 @@ export const setupPageTranslations: Translations = {
     ru: 'Открыть в новом окне',
   },
   'settings.dnd_outside_data': {
-    en: 'Pass source data to the target',
+    en: 'Pass dragged data to the target',
     ru: 'Передать данные получателю',
   },
   'settings.settings.dnd_outside_note': {
