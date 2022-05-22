@@ -109,24 +109,32 @@ const isPinned = computed<boolean>(() => {
 })
 
 let closeLock = false
+let tempLockCloseBtnTimeout: number | undefined
+function tempLockCloseBtn(): void {
+  closeLock = true
+  clearTimeout(tempLockCloseBtnTimeout)
+  tempLockCloseBtnTimeout = setTimeout(() => {
+    closeLock = false
+  }, 1000)
+}
 function onMouseDownClose(e: MouseEvent): void {
   if (closeLock) return
   Mouse.setTarget('tab.close', props.tab.id)
   if (e.button === 0) {
     Tabs.removeTabs([props.tab.id])
-    closeLock = true
+    tempLockCloseBtn()
   }
   if (e.button === 1) {
     if (Settings.reactive.tabCloseMiddleClick === 'close') {
       Tabs.removeTabs([props.tab.id])
-      closeLock = true
+      tempLockCloseBtn()
     } else if (Settings.reactive.tabCloseMiddleClick === 'discard') {
       Tabs.discardTabs([props.tab.id])
     }
   }
   if (e.button === 2) {
     Tabs.removeBranches([props.tab.id])
-    closeLock = true
+    tempLockCloseBtn()
   }
 }
 
