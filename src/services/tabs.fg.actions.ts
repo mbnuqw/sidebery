@@ -680,7 +680,10 @@ export async function removeTabs(tabIds: ID[], silent?: boolean): Promise<void> 
     const pre = translate('confirm.tabs_close_pre', count)
     const post = translate('confirm.tabs_close_post', count)
     const ok = await Sidebar.confirm(pre + String(count) + post)
-    if (!ok) return
+    if (!ok) {
+      Tabs.updateTabsTree(panel.startTabIndex, panel.nextTabIndex)
+      return
+    }
   }
 
   // Set tabs to be removed

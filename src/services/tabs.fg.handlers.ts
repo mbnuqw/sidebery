@@ -477,6 +477,8 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, childfree?: bool
   if (Tabs.ignoreTabsEvents) return
   if (Tabs.tabsNormalizing) return Tabs.normalizeTabs()
 
+  const removedExternally = !Tabs.removingTabs || !Tabs.removingTabs.length
+
   if (!Tabs.removingTabs) Tabs.removingTabs = []
   else Tabs.removingTabs.splice(Tabs.removingTabs.indexOf(tabId), 1)
 
@@ -525,6 +527,9 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, childfree?: bool
         Settings.reactive.rmChildTabs === 'all'
       ) {
         if (!Tabs.removingTabs.includes(t.id)) toRemove.push(t.id)
+      } else if (t.invisible && tab.folded) {
+        t.invisible = false
+        if (rt) rt.invisible = false
       }
 
       // Down levels
@@ -594,15 +599,23 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, childfree?: bool
 
   // On removing the last tab
   if (!Tabs.removingTabs.length) {
-    // Reset parent tab state
+    // Update parent tab state
     if (Settings.reactive.tabsTree && tab.parentId !== NOID) {
       const parentTab = Tabs.byId[tab.parentId]
-      if (parentTab) {
+      const rParentTab = Tabs.reactive.byId[tab.parentId]
+      if (parentTab && rParentTab) {
+        // Update branch length
+        if (removedExternally) rParentTab.branchLen--
+
+        // Parent tab is not parent anymore
         const nextTab = Tabs.list[parentTab.index + 1]
-        if (nextTab?.parentId !== tab.parentId) {
+        if (!nextTab || nextTab?.parentId !== tab.parentId) {
           parentTab.isParent = false
-          const rParentTab = Tabs.reactive.byId[tab.parentId]
-          if (rParentTab) rParentTab.isParent = false
+          parentTab.folded = false
+          if (rParentTab) {
+            rParentTab.isParent = false
+            rParentTab.folded = false
+          }
         }
       }
     }
