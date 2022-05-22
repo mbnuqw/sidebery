@@ -44,7 +44,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   dndExp: 'pointer',
   dndExpDelay: 750,
   dndExpMod: 'none',
-  dndOutside: 'data',
+  dndOutside: 'win',
 
   // Search
   searchBarMode: 'dynamic',
