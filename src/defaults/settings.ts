@@ -120,7 +120,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   // Appearance
   fontSize: 'm',
   animations: true,
-  animationSpeed: 'fast',
+  animationSpeed: 'norm',
   theme: 'proton',
   colorScheme: 'ff',
   sidebarCSS: false,
