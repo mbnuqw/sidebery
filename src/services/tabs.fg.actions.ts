@@ -3232,7 +3232,7 @@ export function getTabsInfo(ids: ID[], setPanelId?: boolean): ItemInfo[] {
   return items
 }
 
-const scrollConf: ScrollToOptions = { behavior: 'smooth', top: 0 }
+const scrollConf: ScrollToOptions = { behavior: 'auto', top: 0 }
 export function scrollToTab(id: ID): void {
   const panel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
   if (!Utils.isTabsPanel(panel) || !panel.scrollEl) return
