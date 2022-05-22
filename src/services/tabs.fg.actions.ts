@@ -2053,33 +2053,21 @@ export function toggleBranch(tabId?: ID): void {
  * Collaplse all inactive branches.
  */
 export function foldAllInactiveBranches(tabs: Tab[] = []): void {
-  const toFold = []
-  let activeTab
-  let actParentId
+  const activeTab = Tabs.byId[Tabs.activeId]
+  if (!activeTab) return
 
-  for (const tab of tabs) {
-    if (tab.active && (tab.lvl > 0 || tab.isParent)) {
-      activeTab = tab
-      actParentId = tab.parentId
-      continue
-    }
-
-    if (tab.isParent && !tab.folded) {
-      if (activeTab) {
-        if (tab.lvl > activeTab.lvl) continue
-        else activeTab = null
-      }
-      toFold.push(tab)
-    }
+  const activeBranch: ID[] = [activeTab.id]
+  let parent = Tabs.byId[activeTab.parentId]
+  while (parent) {
+    activeBranch.push(parent.id)
+    parent = Tabs.byId[parent.parentId]
   }
 
-  for (let tab, i = toFold.length; i--; ) {
-    tab = toFold[i]
-    if (tab.id === actParentId) {
-      actParentId = tab.parentId
-      continue
+  for (let tab, i = tabs.length; i--; ) {
+    tab = tabs[i]
+    if (tab.isParent && !tab.folded && !activeBranch.includes(tab.id)) {
+      foldTabsBranch(tab.id)
     }
-    foldTabsBranch(tab.id)
   }
 }
 
