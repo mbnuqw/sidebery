@@ -223,6 +223,15 @@ async function onMouseUp(e: MouseEvent): Promise<void> {
         }
       }
 
+      // Check if new tab needed
+      if (Utils.isTabsPanel(actPanel) && !newTabNeededInActPanel) {
+        const actTab = Tabs.byId[Tabs.activeId]
+        if (actTab) {
+          const inPanel = Settings.reactive.pinnedTabsPosition === 'panel'
+          newTabNeededInActPanel = actTab.panelId !== actPanel.id || (actTab.pinned && !inPanel)
+        }
+      }
+
       // Open tab
       const panelId = Bookmarks.getTargetTabsPanelId()
       const inTheSameTab = !newTabNeededInActPanel && !Settings.reactive.openBookmarkNewTab
