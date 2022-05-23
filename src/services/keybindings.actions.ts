@@ -1,5 +1,5 @@
 import Utils from 'src/utils'
-import { BKM_OTHER_ID } from 'src/defaults'
+import { BKM_OTHER_ID, NOID } from 'src/defaults'
 import { Command, CommandUpdateDetails, ItemBounds, Tab, Bookmark, MenuType } from 'src/types'
 import { ActiveTabsHistory, InstanceType, ItemInfo, TabsPanel, SelectionType } from 'src/types'
 import { ItemBoundsType } from 'src/types'
@@ -587,6 +587,8 @@ function onKeyTabsIndent(): void {
   })
 
   const align: [Tab, Tab][] = []
+  const toExpand: ID[] = []
+  const toColorize: ID[] = []
 
   for (const id of selected) {
     const tab = Tabs.byId[id]
@@ -608,14 +610,20 @@ function onKeyTabsIndent(): void {
       continue
     }
 
+    if (parentTab.folded) toExpand.push(parentTab.id)
+    if (parentTab.lvl === 0) toColorize.push(parentTab.id)
+
     tab.parentId = parentTab.id
   }
 
   align.forEach(([a, b]) => (a.parentId = b.parentId))
+  toExpand.forEach(id => Tabs.expTabsBranch(id))
 
   Tabs.updateTabsTree()
   Tabs.cacheTabsData()
   selected.forEach(id => Tabs.saveTabData(id))
+
+  toColorize.forEach(id => Tabs.colorizeBranch(id))
 }
 
 function onKeyTabsOutdent(): void {
@@ -631,6 +639,8 @@ function onKeyTabsOutdent(): void {
     if (!at || !bt) return 0
     return at.index - bt.index
   })
+
+  const toColorize: ID[] = []
 
   for (const id of selected) {
     const tab = Tabs.byId[id]
@@ -650,11 +660,15 @@ function onKeyTabsOutdent(): void {
     if (selected.includes(parentTab.id)) continue
 
     tab.parentId = parentTab.parentId
+
+    if (tab.parentId === NOID) toColorize.push(tab.id)
   }
 
   Tabs.updateTabsTree()
   Tabs.cacheTabsData()
   selected.forEach(id => Tabs.saveTabData(id))
+
+  toColorize.forEach(id => Tabs.colorizeBranch(id))
 }
 
 function onKeyMoveTabsToAct(): void {
