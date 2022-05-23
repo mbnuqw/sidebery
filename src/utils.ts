@@ -182,7 +182,7 @@ function colorFromString(str: string, minLightness = 50): string {
   let c = 0
   let s = 0
   let l = 0
-  for (let i = 2; i < str.length; i += 3) {
+  for (let i = 2; i < str.length; i += 2) {
     c += str.charCodeAt(i - 2) + str.charCodeAt(i - 1) + str.charCodeAt(i)
     s += str.charCodeAt(i - 1)
     l += str.charCodeAt(i)
@@ -191,7 +191,7 @@ function colorFromString(str: string, minLightness = 50): string {
   if (minLightness < 20) minLightness = 20
   else if (minLightness > 80) minLightness = 80
 
-  return `hsl(${(c % 25) * 15}deg, ${(s % 6) * 10 + 30}%, ${(l % 3) * 10 + minLightness}%)`
+  return `hsl(${(c % 37) * 10}deg, ${(s % 5) * 10 + 40}%, ${(l % 3) * 10 + minLightness}%)`
 }
 
 const RGBA_RE = /rgba?\((\d+%?)[,\s]\s*(\d+%?)[,\s]\s*(\d+%?)(,|\s\/\s)?\s*([\d.]+%?)?\)/
