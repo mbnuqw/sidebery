@@ -82,6 +82,10 @@ export const menuOptions: Record<string, () => MenuOption | MenuOption[] | undef
       label: translate('menu.new_tab_bar.no_container'),
       icon: 'icon_plus',
       onClick: () => Tabs.createTabInPanel(panel, { cookieStoreId: CONTAINER_ID }),
+      onAltClick: () => {
+        const dst = { containerId: CONTAINER_ID, panelId: panel.id }
+        Tabs.reopen(Tabs.getTabsInfo([Tabs.activeId]), dst)
+      },
     }
   },
 
@@ -89,7 +93,7 @@ export const menuOptions: Record<string, () => MenuOption | MenuOption[] | undef
     const panel = Sidebar.reactive.panelsById[Selection.getFirst()]
     if (!panel) return
 
-    const opts = []
+    const opts: MenuOption[] = []
     const ignoreRules = Menu.ctxMenuIgnoreContainersRules
 
     for (const c of Object.values(Containers.reactive.byId)) {
@@ -99,6 +103,10 @@ export const menuOptions: Record<string, () => MenuOption | MenuOption[] | undef
         icon: c.icon,
         color: c.color,
         onClick: () => Tabs.createTabInPanel(panel, { cookieStoreId: c.id }),
+        onAltClick: () => {
+          const dst = { containerId: c.id, panelId: panel.id }
+          Tabs.reopen(Tabs.getTabsInfo([Tabs.activeId]), dst)
+        },
       })
     }
 
