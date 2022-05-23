@@ -311,8 +311,10 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
       localTab.mediaPaused = false
       rLocalTab.mediaPaused = false
     }
-    branchColorizationNeeded =
-      Settings.reactive.colorizeTabsBranches && localTab.isParent && localTab.lvl === 0
+    if (Settings.reactive.colorizeTabsBranches) {
+      branchColorizationNeeded = localTab.isParent && localTab.lvl === 0
+      if (localTab.lvl === 0) rLocalTab.branchColor = null
+    }
 
     // Update url counter
     const oldUrlCount = Tabs.updateUrlCounter(localTab.url, -1)
@@ -768,7 +770,7 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
   if (Settings.reactive.tabsTree) {
     if (!Tabs.movingTabs.length) Tabs.updateTabsTree()
 
-    if (Settings.reactive.tabsTree && Settings.reactive.colorizeTabsBranches && tab.lvl > 0) {
+    if (Settings.reactive.colorizeTabsBranches && tab.lvl > 0) {
       Tabs.setBranchColor(tab.id)
     }
   }
