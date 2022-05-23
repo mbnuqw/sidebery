@@ -21,6 +21,7 @@ section(ref="el")
     label="settings.activate_after_closing"
     optLabel="settings.activate_after_closing_"
     v-model:value="Settings.reactive.activateAfterClosing"
+    :folded="true"
     :opts="Settings.getOpts('activateAfterClosing')")
   .sub-fields
     ToggleField(

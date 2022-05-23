@@ -964,7 +964,7 @@ export const setupPageTranslations: Translations = {
     zh_CN: '上一活动标签页',
   },
   'settings.activate_after_closing_none': {
-    en: 'none',
+    en: 'off',
     ru: 'выкл',
     zh_CN: '无',
   },
