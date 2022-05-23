@@ -16,6 +16,7 @@
   :data-nav-layout="navBarLayout"
   :data-search="!!Search.reactive.value"
   :data-sticky-bookmarks="Settings.reactive.pinOpenedBookmarksFolder"
+  :data-colorized-branches="Settings.reactive.colorizeTabsBranches"
   @dragend="DnD.onDragEnd"
   @dragenter="DnD.onDragEnter"
   @dragleave="DnD.onDragLeave"

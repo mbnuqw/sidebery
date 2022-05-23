@@ -130,6 +130,8 @@
     width: 100%
     height: 100%
     border-radius: var(--tabs-border-radius)
+#root[data-colorized-branches="true"] .Tab .body:after
+  left: calc(var(--tabs-indent) - 5px)
 
 .Tab:hover .body:before
   background-color: var(--hover-bg)
