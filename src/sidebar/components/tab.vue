@@ -205,7 +205,13 @@ function onMouseUp(e: MouseEvent): void {
   } else if (e.button === 2) {
     if (e.ctrlKey || e.shiftKey) return
 
+    const inMultiSelectionMode = Mouse.multiSelectionMode
     Mouse.stopMultiSelection()
+
+    if (inMultiSelectionMode && !Settings.reactive.autoMenuMultiSel && Selection.getLength() > 1) {
+      return
+    }
+
     if (Menu.isBlocked()) return
     if (!Selection.isSet() && !Settings.reactive.ctxMenuNative) select()
     if (!Settings.reactive.ctxMenuNative) Menu.open(MenuType.Tabs, e.clientX, e.clientY)

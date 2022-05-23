@@ -24,6 +24,9 @@ section(ref="el")
       label="settings.scroll_through_tabs_cyclic"
       v-model:value="Settings.reactive.scrollThroughTabsCyclic"
       :inactive="Settings.reactive.scrollThroughTabs === 'none'")
+  ToggleField(
+    label="settings.auto_menu_multi_sel"
+    v-model:value="Settings.reactive.autoMenuMultiSel")
   NumField.-inline(
     label="settings.long_click_delay"
     unitLabel="settings.long_click_delay_"

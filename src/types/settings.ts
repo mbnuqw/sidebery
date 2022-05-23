@@ -144,6 +144,7 @@ export interface SettingsState {
   scrollThroughTabsSkipDiscarded: boolean
   scrollThroughTabsExceptOverflow: boolean
   scrollThroughTabsCyclic: boolean
+  autoMenuMultiSel: boolean
   longClickDelay: number
   wheelThreshold: boolean
   wheelThresholdX: number

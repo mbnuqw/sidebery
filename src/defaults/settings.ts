@@ -142,6 +142,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   scrollThroughTabsSkipDiscarded: false,
   scrollThroughTabsExceptOverflow: true,
   scrollThroughTabsCyclic: false,
+  autoMenuMultiSel: true,
   longClickDelay: 500,
   wheelThreshold: false,
   wheelThresholdX: 10,

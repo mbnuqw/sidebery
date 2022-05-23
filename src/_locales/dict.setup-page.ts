@@ -1907,6 +1907,10 @@ export const setupPageTranslations: Translations = {
     ru: 'Зациклить',
     zh_CN: '循环',
   },
+  'settings.auto_menu_multi_sel': {
+    en: 'Automatically open context menu on right-button multi-selection (only for non-native context menu)',
+    ru: 'Автоматически открывать контекстное меню при множественном выборе правой кнопкой (только для несистемного контекстного меню)',
+  },
   'settings.long_click_delay': {
     en: 'Long click delay (ms)',
     ru: 'Задержка длительного нажатия (мс)',

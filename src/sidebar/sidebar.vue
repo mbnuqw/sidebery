@@ -242,12 +242,17 @@ function onMouseUp(e: MouseEvent): void {
     Selection.resetSelection()
   }
 
+  const inMultiSelectionMode = Mouse.multiSelectionMode
   if (Mouse.multiSelectionMode) Mouse.stopMultiSelection()
+
   if (e.button === 2) {
     let type: MenuType | undefined
     if (Selection.isBookmarks()) type = MenuType.Bookmarks
     if (Selection.isTabs()) type = MenuType.Tabs
     if (type === undefined) return
+    if (inMultiSelectionMode && !Settings.reactive.autoMenuMultiSel && Selection.getLength() > 1) {
+      return
+    }
     Menu.open(type, e.clientX, e.clientY)
   }
 }
