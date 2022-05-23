@@ -1320,10 +1320,10 @@ export async function openAsTabsPanel(node: Bookmark): Promise<void> {
   if (ids) await Bookmarks.open(ids, { panelId: tabsPanel.id })
 }
 
-export function copyUrls(ids: ID[]): void {
+export async function copyUrls(ids: ID[]): Promise<void> {
   if (!Permissions.reactive.clipboardWrite) {
-    SetupPage.open('clipboard-write')
-    return
+    const result = await Permissions.request('clipboardWrite')
+    if (!result) return
   }
 
   let urls = ''
@@ -1336,10 +1336,10 @@ export function copyUrls(ids: ID[]): void {
   if (resultString) navigator.clipboard.writeText(resultString)
 }
 
-export function copyTitles(ids: ID[]): void {
+export async function copyTitles(ids: ID[]): Promise<void> {
   if (!Permissions.reactive.clipboardWrite) {
-    SetupPage.open('clipboard-write')
-    return
+    const result = await Permissions.request('clipboardWrite')
+    if (!result) return
   }
 
   let titles = ''

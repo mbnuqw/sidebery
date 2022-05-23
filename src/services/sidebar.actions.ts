@@ -1334,7 +1334,10 @@ export async function bookmarkTabsPanel(
   const panel = Sidebar.reactive.panelsById[panelId]
   if (!Utils.isTabsPanel(panel)) return
 
-  if (!Permissions.reactive.bookmarks) return SetupPage.open('bookmarks')
+  if (!Permissions.reactive.bookmarks) {
+    const result = await Permissions.request('bookmarks')
+    if (!result) return
+  }
   if (!Bookmarks.reactive.tree.length) await Bookmarks.load()
 
   const oldFolderId = panel.bookmarksFolderId

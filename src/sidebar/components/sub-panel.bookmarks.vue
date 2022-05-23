@@ -83,11 +83,11 @@ function onWrongRootFolder(): void {
 }
 
 let bookmarksLoading = false
-function onBarClick(): void {
+async function onBarClick(): Promise<void> {
   if (bookmarksLoading) return
   if (!Permissions.reactive.bookmarks) {
-    SetupPage.open('bookmarks')
-    return
+    const result = await Permissions.request('bookmarks')
+    if (!result) return
   }
 
   if (!rootFolder.value) {
@@ -146,7 +146,8 @@ function onMouseEnter(): void {
   if (
     Settings.reactive.openSubPanelOnMouseHover &&
     !state.active &&
-    !Notifications.hiddenRecently
+    !Notifications.hiddenRecently &&
+    Permissions.reactive.bookmarks
   ) {
     onBarClick()
   }

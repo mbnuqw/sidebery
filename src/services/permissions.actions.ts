@@ -8,6 +8,7 @@ import { Info } from 'src/services/info'
 import { Sidebar } from 'src/services/sidebar'
 import { History } from 'src/services/history'
 import { Bookmarks } from 'src/services/bookmarks'
+import { SetupPage } from './setup-page'
 
 /**
  * Retrieve current permissions
@@ -31,6 +32,32 @@ export async function loadPermissions(): Promise<void> {
   if (!Permissions.reactive.tabHide) onRemovedTabHide()
   if (!Permissions.reactive.history) onRemovedHistory()
   if (!Permissions.reactive.bookmarks) onRemovedBookmarks()
+}
+
+export type RequestablePermission =
+  | '<all_urls>'
+  | 'tabHide'
+  | 'clipboardWrite'
+  | 'history'
+  | 'bookmarks'
+
+export async function request(permission: RequestablePermission): Promise<boolean> {
+  try {
+    if (permission === '<all_urls>') {
+      return await browser.permissions.request({
+        origins: ['<all_urls>'],
+        permissions: ['webRequest', 'webRequestBlocking', 'proxy'],
+      })
+    }
+    return await browser.permissions.request({ origins: [], permissions: [permission] })
+  } catch {
+    if (permission === '<all_urls>') SetupPage.open('all-urls')
+    else if (permission === 'tabHide') SetupPage.open('tab-hide')
+    else if (permission === 'history') SetupPage.open('history')
+    else if (permission === 'bookmarks') SetupPage.open('bookmarks')
+    else if (permission === 'clipboardWrite') SetupPage.open('clipboard-write')
+    return false
+  }
 }
 
 function onAdded(info: browser.permissions.Permissions): void {

@@ -1167,10 +1167,10 @@ export function switchToFirstAudibleTab(): void {
   if (tab) browser.tabs.update(tab.id, { active: true })
 }
 
-export function pauseTabMedia(id?: ID): void {
+export async function pauseTabMedia(id?: ID): Promise<void> {
   if (!Permissions.reactive.webData) {
-    SetupPage.open('all-urls')
-    return
+    const result = await Permissions.request('<all_urls>')
+    if (!result) return
   }
 
   let tab: Tab | undefined
@@ -1202,10 +1202,10 @@ export function pauseTabMedia(id?: ID): void {
 
   recheckPausedTabs()
 }
-export function playTabMedia(id?: ID): void {
+export async function playTabMedia(id?: ID): Promise<void> {
   if (!Permissions.reactive.webData) {
-    SetupPage.open('all-urls')
-    return
+    const result = await Permissions.request('<all_urls>')
+    if (!result) return
   }
 
   let tab: Tab | undefined
@@ -1237,10 +1237,10 @@ export function resetPausedMediaState(panelId: ID): void {
     }
   }
 }
-export function pauseTabsMediaOfPanel(id: ID): void {
+export async function pauseTabsMediaOfPanel(id: ID): Promise<void> {
   if (!Permissions.reactive.webData) {
-    SetupPage.open('all-urls')
-    return
+    const result = await Permissions.request('<all_urls>')
+    if (!result) return
   }
 
   const panel = Sidebar.reactive.panelsById[id]
@@ -1295,10 +1295,10 @@ export function pauseTabsMediaOfPanel(id: ID): void {
 
   recheckPausedTabs()
 }
-export function playTabsMediaOfPanel(id: ID): void {
+export async function playTabsMediaOfPanel(id: ID): Promise<void> {
   if (!Permissions.reactive.webData) {
-    SetupPage.open('all-urls')
-    return
+    const result = await Permissions.request('<all_urls>')
+    if (!result) return
   }
 
   const panel = Sidebar.reactive.panelsById[id]
@@ -1390,7 +1390,10 @@ export function dedupTabs(tabIds: ID[]): void {
  * Create bookmarks from tabs
  */
 export async function bookmarkTabs(tabIds: ID[]): Promise<void> {
-  if (!Permissions.reactive.bookmarks) return SetupPage.open('bookmarks')
+  if (!Permissions.reactive.bookmarks) {
+    const result = await Permissions.request('bookmarks')
+    if (!result) return
+  }
 
   let parentId: ID | undefined = BKM_OTHER_ID
 
@@ -1471,7 +1474,10 @@ export async function bookmarkTabs(tabIds: ID[]): Promise<void> {
  * Clear all cookies of tab urls
  */
 export async function clearTabsCookies(tabIds: ID[]): Promise<void> {
-  if (!Permissions.reactive.webData) return SetupPage.open('all-urls')
+  if (!Permissions.reactive.webData) {
+    const result = await Permissions.request('<all_urls>')
+    if (!result) return
+  }
 
   for (const tabId of tabIds) {
     const tab = Tabs.byId[tabId]
@@ -3265,10 +3271,10 @@ export function getBranch(tab: Tab): Tab[] {
   return result
 }
 
-export function copyUrls(ids: ID[]): void {
+export async function copyUrls(ids: ID[]): Promise<void> {
   if (!Permissions.reactive.clipboardWrite) {
-    SetupPage.open('clipboard-write')
-    return
+    const result = await Permissions.request('clipboardWrite')
+    if (!result) return
   }
 
   let urls = ''
@@ -3281,10 +3287,10 @@ export function copyUrls(ids: ID[]): void {
   if (resultString) navigator.clipboard.writeText(resultString)
 }
 
-export function copyTitles(ids: ID[]): void {
+export async function copyTitles(ids: ID[]): Promise<void> {
   if (!Permissions.reactive.clipboardWrite) {
-    SetupPage.open('clipboard-write')
-    return
+    const result = await Permissions.request('clipboardWrite')
+    if (!result) return
   }
 
   let titles = ''
