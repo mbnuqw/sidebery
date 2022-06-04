@@ -191,7 +191,7 @@ function colorFromString(str: string, minLightness = 50): string {
   if (minLightness < 20) minLightness = 20
   else if (minLightness > 80) minLightness = 80
 
-  return `hsl(${(c % 37) * 10}deg, ${(s % 5) * 10 + 40}%, ${(l % 3) * 10 + minLightness}%)`
+  return `hsl(${(c % 37) * 10}deg, ${(s % 6) * 5 + 50}%, ${(l % 3) * 10 + minLightness}%)`
 }
 
 const RGBA_RE = /rgba?\((\d+%?)[,\s]\s*(\d+%?)[,\s]\s*(\d+%?)(,|\s\/\s)?\s*([\d.]+%?)?\)/
