@@ -28,11 +28,6 @@
 @import './sub-list-title'
 @import './sub-panel.bookmarks'
 
-#root[data-color-scheme="dark"]
-  --bg-overlay: #00000032
-#root[data-color-scheme="light"]
-  --bg-overlay: #00000018
-
 html
   position: relative
   height: 100%
@@ -92,7 +87,7 @@ body
   left: 0
   width: 100%
   height: 100%
-  background-color: var(--bg-overlay)
+  background-color: var(--toolbar-bg-overlay)
 
 .top-horizontal-box
   position: relative
