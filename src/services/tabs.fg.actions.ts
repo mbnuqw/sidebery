@@ -3423,7 +3423,14 @@ export function colorizeBranch(rootId: ID): void {
   const rootTab = Tabs.byId[rootId]
   if (!rootTab || rootTab.lvl > 0) return
 
-  const color = Utils.colorFromString(rootTab.url, 60)
+  let srcStr
+  if (Settings.reactive.colorizeTabsBranchesSrc === 'url') {
+    srcStr = rootTab.url
+  } else {
+    srcStr = Utils.getDomainOf(rootTab.url)
+  }
+
+  const color = Utils.colorFromString(srcStr, 60)
   const rRootTab = Tabs.reactive.byId[rootTab.id]
   if (!rRootTab) return
   rRootTab.branchColor = color

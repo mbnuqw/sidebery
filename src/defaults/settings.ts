@@ -99,6 +99,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   tabsTreeBookmarks: true,
   treeRmOutdent: 'branch',
   colorizeTabsBranches: false,
+  colorizeTabsBranchesSrc: 'url',
 
   // Bookmarks
   warnOnMultiBookmarkDelete: 'collapsed',
@@ -214,6 +215,7 @@ export const SETTINGS_OPTIONS = {
   dndOutside: ['win', 'data'],
   animationSpeed: ['fast', 'norm', 'slow'],
   treeRmOutdent: ['branch', 'first_child'],
+  colorizeTabsBranchesSrc: ['url', 'domain'],
   searchBarMode: ['static', 'dynamic', 'none'],
   newTabBarPosition: ['after_tabs', 'bottom'],
   logLvl: [3, 2, 1, 0],

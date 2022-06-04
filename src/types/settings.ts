@@ -99,6 +99,7 @@ export interface SettingsState {
   tabsTreeBookmarks: boolean
   treeRmOutdent: typeof SETTINGS_OPTIONS.treeRmOutdent[number]
   colorizeTabsBranches: boolean
+  colorizeTabsBranchesSrc: typeof SETTINGS_OPTIONS.colorizeTabsBranchesSrc[number]
 
   // Bookmarks
   bookmarksPanel?: boolean // DEPR

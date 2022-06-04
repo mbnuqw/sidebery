@@ -73,6 +73,13 @@ section(ref="el")
     label="settings.colorize_branches"
     :inactive="!Settings.reactive.tabsTree"
     v-model:value="Settings.reactive.colorizeTabsBranches")
+  .sub-fields
+    SelectField(
+      label="settings.colorize_branches_src"
+      optLabel="settings.colorize_branches_src_"
+      v-model:value="Settings.reactive.colorizeTabsBranchesSrc"
+      :inactive="!Settings.reactive.tabsTree || !Settings.reactive.colorizeTabsBranches"
+      :opts="Settings.getOpts('colorizeTabsBranchesSrc')")
 </template>
 
 <script lang="ts" setup>

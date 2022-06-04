@@ -1448,6 +1448,17 @@ export const setupPageTranslations: Translations = {
     en: 'Colorize branches',
     ru: 'Раскрашивать ветки',
   },
+  'settings.colorize_branches_src': {
+    en: 'Generate color from',
+    ru: 'Источник для генерации цвета',
+  },
+  'settings.colorize_branches_src_url': {
+    en: 'URL',
+  },
+  'settings.colorize_branches_src_domain': {
+    en: 'domain',
+    ru: 'доменное имя',
+  },
 
   // - Bookmarks
   'settings.bookmarks_title': {
