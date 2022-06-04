@@ -55,6 +55,7 @@ export interface ReactiveTab {
   unread: boolean
   flash: boolean
   branchColor: string | null
+  color: string | null
 }
 
 export interface InlineTabData {

@@ -299,6 +299,7 @@ function onTabCreated(tab: Tab): void {
         })
     }
 
+    if (Settings.reactive.colorizeTabs) Tabs.colorizeTabDebounced(tab.id)
     if (Settings.reactive.colorizeTabsBranches && tab.lvl > 0) Tabs.setBranchColor(tab.id)
   }
 
@@ -406,6 +407,7 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
       localTab.mediaPaused = false
       rLocalTab.mediaPaused = false
     }
+    if (Settings.reactive.colorizeTabs) Tabs.colorizeTabDebounced(tabId)
     if (Settings.reactive.colorizeTabsBranches) {
       branchColorizationNeeded = localTab.isParent && localTab.lvl === 0
       if (localTab.lvl === 0) rLocalTab.branchColor = null

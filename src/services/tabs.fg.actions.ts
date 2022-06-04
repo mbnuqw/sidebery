@@ -46,6 +46,7 @@ export function toReactive(tab: Tab): ReactiveTab {
     unread: tab.unread,
     flash: false,
     branchColor: null,
+    color: null,
   }
 }
 
@@ -99,6 +100,7 @@ export async function load(): Promise<void> {
     if (Utils.isTabsPanel(panel)) panel.ready = true
   }
 
+  if (Settings.reactive.colorizeTabs) Tabs.colorizeTabs()
   if (Settings.reactive.colorizeTabsBranches) Tabs.colorizeBranches()
 
   Logs.info('Tabs: Loaded')
@@ -3413,6 +3415,55 @@ export function triggerFlashAnimation(rTab: ReactiveTab): void {
   }, 1000)
 }
 
+export function colorizeTabs(): void {
+  for (const tab of Tabs.list) {
+    colorizeTab(tab.id)
+  }
+}
+
+const colorizeTabTimeouts: Record<ID, number> = {}
+export function colorizeTabDebounced(tabId: ID, delayMS = 500): void {
+  clearTimeout(colorizeTabTimeouts[tabId])
+  colorizeTabTimeouts[tabId] = setTimeout(() => {
+    delete colorizeTabTimeouts[tabId]
+    colorizeTab(tabId)
+  }, delayMS)
+}
+
+const CONTAINER_COLORS: Record<string, string> = {
+  blue: '#37adff',
+  turquoise: '#00c79a',
+  green: '#51cd00',
+  yellow: '#ffcb00',
+  orange: '#ff9f00',
+  red: '#ff613d',
+  pink: '#ff4bda',
+  purple: '#af51f5',
+}
+
+export function colorizeTab(tabId: ID): void {
+  const tab = Tabs.byId[tabId]
+  if (!tab) return
+
+  const rTab = Tabs.reactive.byId[tab.id]
+  if (!rTab) return
+
+  let srcStr, color
+  if (Settings.reactive.colorizeTabsSrc === 'domain') {
+    srcStr = Utils.getDomainOf(tab.url)
+    color = Utils.colorFromString(srcStr, 60)
+  } else {
+    const container = Containers.reactive.byId[tab.cookieStoreId]
+    if (container) {
+      color = CONTAINER_COLORS[container.color]
+    } else {
+      return
+    }
+  }
+
+  rTab.color = color
+}
+
 export function colorizeBranches(): void {
   for (const tab of Tabs.list) {
     if (tab.isParent && tab.lvl === 0) colorizeBranch(tab.id)
@@ -3423,6 +3474,9 @@ export function colorizeBranch(rootId: ID): void {
   const rootTab = Tabs.byId[rootId]
   if (!rootTab || rootTab.lvl > 0) return
 
+  const rRootTab = Tabs.reactive.byId[rootTab.id]
+  if (!rRootTab) return
+
   let srcStr
   if (Settings.reactive.colorizeTabsBranchesSrc === 'url') {
     srcStr = rootTab.url
@@ -3431,8 +3485,6 @@ export function colorizeBranch(rootId: ID): void {
   }
 
   const color = Utils.colorFromString(srcStr, 60)
-  const rRootTab = Tabs.reactive.byId[rootTab.id]
-  if (!rRootTab) return
   rRootTab.branchColor = color
 
   for (let i = rootTab.index + 1; i < Tabs.list.length; i++) {

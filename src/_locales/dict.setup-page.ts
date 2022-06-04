@@ -1100,6 +1100,22 @@ export const setupPageTranslations: Translations = {
     ru: 'Обратная активация при нажатии на активную вкладку ',
     zh_CN: '单击活动标签页时向后激活',
   },
+  'settings.colorize_tabs': {
+    en: 'Colorize tabs',
+    ru: 'Раскрашивать вкладки',
+  },
+  'settings.colorize_tabs_src': {
+    en: 'Generate color from',
+    ru: 'Источник для генерации цвета',
+  },
+  'settings.colorize_tabs_src_domain': {
+    en: 'domain',
+    ru: 'доменное имя',
+  },
+  'settings.colorize_tabs_src_container': {
+    en: 'container',
+    ru: 'контейнер',
+  },
 
   // - New tab position
   'settings.new_tab_position': {

@@ -112,7 +112,11 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
   const fontSize = prev.fontSize !== next.fontSize
   const updateSidebarTitleChanged = prev.updateSidebarTitle !== next.updateSidebarTitle
   const pinnedTabsPositionChanged = prev.pinnedTabsPosition !== next.pinnedTabsPosition
+  const colorizeTabsChanged = prev.colorizeTabs !== next.colorizeTabs
+  const colorizeTabsSrcChanged = prev.colorizeTabsSrc !== next.colorizeTabsSrc
   const colorizeTabsBranchesChanged = prev.colorizeTabsBranches !== next.colorizeTabsBranches
+  const colorizeTabsBranchesSrcChanged =
+    prev.colorizeTabsBranchesSrc !== next.colorizeTabsBranchesSrc
 
   // Update settings of this instance
   Utils.updateObject(Settings.reactive, settings)
@@ -166,7 +170,16 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
 
   if (Sidebar.reMountSidebar) Sidebar.reMountSidebar()
 
-  if (colorizeTabsBranchesChanged && Settings.reactive.colorizeTabsBranches) Tabs.colorizeBranches()
+  if (
+    (colorizeTabsBranchesChanged || colorizeTabsBranchesSrcChanged) &&
+    Settings.reactive.colorizeTabsBranches
+  ) {
+    Tabs.colorizeBranches()
+  }
+
+  if ((colorizeTabsChanged || colorizeTabsSrcChanged) && Settings.reactive.colorizeTabs) {
+    Tabs.colorizeTabs()
+  }
 }
 
 export function resetSettings(): void {

@@ -70,6 +70,8 @@ export interface SettingsState {
   newTabBarPosition: typeof SETTINGS_OPTIONS.newTabBarPosition[number]
   tabsPanelSwitchActMove: boolean
   openSubPanelOnMouseHover: boolean
+  colorizeTabs: boolean
+  colorizeTabsSrc: typeof SETTINGS_OPTIONS.colorizeTabsSrc[number]
 
   // New tab position
   moveNewTabPin: typeof SETTINGS_OPTIONS.moveNewTabPin[number]

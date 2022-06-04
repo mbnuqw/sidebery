@@ -70,7 +70,16 @@ section(ref="el")
   ToggleField(
     label="settings.open_sub_panel_on_mouse_hover"
     v-model:value="Settings.reactive.openSubPanelOnMouseHover")
-    
+  ToggleField(
+    label="settings.colorize_tabs"
+    v-model:value="Settings.reactive.colorizeTabs")
+  .sub-fields
+    SelectField(
+      label="settings.colorize_tabs_src"
+      optLabel="settings.colorize_tabs_src_"
+      v-model:value="Settings.reactive.colorizeTabsSrc"
+      :inactive="!Settings.reactive.colorizeTabs"
+      :opts="Settings.getOpts('colorizeTabsSrc')")
 </template>
 
 <script lang="ts" setup>

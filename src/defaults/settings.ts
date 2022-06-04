@@ -70,6 +70,8 @@ export const DEFAULT_SETTINGS: SettingsState = {
   newTabBarPosition: 'after_tabs',
   tabsPanelSwitchActMove: false,
   openSubPanelOnMouseHover: false,
+  colorizeTabs: false,
+  colorizeTabsSrc: 'domain',
 
   // New tab position
   moveNewTabPin: 'start',
@@ -215,6 +217,7 @@ export const SETTINGS_OPTIONS = {
   dndOutside: ['win', 'data'],
   animationSpeed: ['fast', 'norm', 'slow'],
   treeRmOutdent: ['branch', 'first_child'],
+  colorizeTabsSrc: ['domain', 'container'],
   colorizeTabsBranchesSrc: ['url', 'domain'],
   searchBarMode: ['static', 'dynamic', 'none'],
   newTabBarPosition: ['after_tabs', 'bottom'],
