@@ -90,6 +90,9 @@ export async function load(): Promise<void> {
   Tabs.list.forEach(t => {
     Tabs.updateUrlCounter(t.url, 1)
     saveTabData(t.id)
+
+    // Recalc branch length for folded (invisible) parent tabs
+    if (t.folded && t.invisible) Tabs.recalcBranchLen(t.id)
   })
 
   for (const panel of Sidebar.reactive.panels) {
@@ -1967,20 +1970,7 @@ export function updateNativeTabsVisibility(): void {
 export function recalcBranchLen(id: ID): void {
   if (!Settings.reactive.tabsChildCount) return
 
-  let tab = Tabs.byId[id]
-  if (!tab) return
-  if (!tab.folded && !tab.invisible) return
-
-  // Find folded parent tab
-  if (tab.invisible && tab.lvl > 0) {
-    let parent: Tab | undefined
-    while ((parent = Tabs.byId[tab.parentId])) {
-      if (parent.folded && !parent.invisible) {
-        tab = parent
-        break
-      }
-    }
-  }
+  const tab = Tabs.byId[id]
   if (!tab) return
 
   const rTab = Tabs.reactive.byId[tab.id]
@@ -2412,7 +2402,7 @@ export function updateTabsTree(startIndex = 0, endIndex = -1): void {
       tab.openerTabId = tab.parentId
     }
 
-    // Calc folded branch length
+    // Calc folded visible branch length
     if (foldedBranchLvl > -1) {
       if (tab.lvl <= foldedBranchLvl && foldedBranchRoot) {
         foldedBranchRoot.branchLen = foldedBranchLenCount
