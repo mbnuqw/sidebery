@@ -130,7 +130,6 @@ function onNewTabMouseDown(e: MouseEvent, btn?: NewTabBtn): void {
   else if (e.button === 1) {
     e.preventDefault()
     Mouse.blockWheel()
-    Selection.resetSelection()
     reopen(btn)
   }
 
@@ -217,20 +216,22 @@ async function reopen(btn?: NewTabBtn): Promise<void> {
     if (activeTab) targetTabs.push(activeTab)
   }
 
+  if (Selection.isSet()) Selection.resetSelection()
+
   if (!targetTabs.length) return
   if (targetTabs.some(t => t.panelId !== props.panel.id)) return
 
+  const targetContainerId = btn?.containerId ?? CONTAINER_ID
   const toReopen: ItemInfo[] = []
   for (const tab of targetTabs) {
     // Updating url of exited tab
-    if (tab.cookieStoreId === (btn?.containerId ?? CONTAINER_ID) && btn?.url) {
+    if (tab.cookieStoreId === targetContainerId && btn?.url) {
       await browser.tabs.update(tab.id, { url: btn.url })
     }
     // Reopening tab
-    else {
+    else if (tab.cookieStoreId !== targetContainerId) {
       const info: ItemInfo = Utils.cloneObject(tab)
       if (btn?.url) info.url = btn.url
-      else if (!btn?.containerId) info.url = 'about:newtab'
       if (info.url === 'about:blank') info.url = 'about:newtab'
       toReopen.push(info)
     }
@@ -238,7 +239,7 @@ async function reopen(btn?: NewTabBtn): Promise<void> {
 
   if (toReopen.length > 0) {
     const dst: DstPlaceInfo = {
-      containerId: btn?.containerId ?? CONTAINER_ID,
+      containerId: targetContainerId,
       panelId: props.panel.id,
     }
     try {
