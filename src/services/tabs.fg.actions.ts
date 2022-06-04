@@ -449,7 +449,7 @@ export function saveTabData(tabId: ID): void {
 }
 
 let normTabsTimeout: number | undefined
-/**
+/** TODO: rename to reinitTabs
  * Load tabs and normalize order.
  */
 export function normalizeTabs(delay = 500): void {
@@ -531,6 +531,80 @@ export function normalizeTabs(delay = 500): void {
     Tabs.list.forEach(t => saveTabData(t.id))
     cacheTabsData()
   }, delay)
+}
+
+const sortNativeTabsDelayMS = 500
+let sortNativeTabsTimeout: number | undefined
+let sortingNativeTabs = false
+export function sortNativeTabs(): void {
+  sortingNativeTabs = false
+
+  clearTimeout(sortNativeTabsTimeout)
+  sortNativeTabsTimeout = setTimeout(async () => {
+    sortingNativeTabs = true
+
+    const nativeTabs = (await browser.tabs.query({ currentWindow: true })) as Tab[]
+    if (!sortingNativeTabs) return sortNativeTabs()
+    const nativeTabsById: Record<ID, Tab> = {}
+
+    for (const nativeTab of nativeTabs) {
+      nativeTabsById[nativeTab.id] = nativeTab
+
+      const tab = Tabs.byId[nativeTab.id]
+      if (!tab) {
+        Logs.warn(`Tabs.sortNativeTabs: Cannot find sidebery tab: ${nativeTab.id}`)
+        return Tabs.normalizeTabs()
+      }
+    }
+
+    type Move = { index: number; ids: ID[]; step: number }
+    const moves: Move[] = []
+    let prevMove: Move | undefined
+    let prevMoveStep = 0
+    for (const tab of Tabs.list) {
+      const nativeTab = nativeTabsById[tab.id]
+      if (!nativeTab) {
+        Logs.warn('Tabs.sortNativeTabs: Cannot find native tab')
+        return Tabs.normalizeTabs()
+      }
+
+      if (!nativeTabs[tab.index] || nativeTabs[tab.index].id !== tab.id) {
+        const step = nativeTab.index - tab.index
+
+        nativeTabs.splice(nativeTab.index, 1)
+        nativeTabs.splice(tab.index, 0, nativeTab)
+
+        if (prevMoveStep === step && prevMove) {
+          prevMove.ids.push(tab.id)
+        } else {
+          prevMove = { index: tab.index, ids: [tab.id], step: step }
+          moves.push(prevMove)
+        }
+
+        prevMoveStep = step
+      } else {
+        prevMove = undefined
+        prevMoveStep = 0
+      }
+    }
+
+    for (const move of moves) {
+      // Invert moving tabs
+      if (move.step < move.ids.length) {
+        const k = move.index + move.ids.length
+        const ids = Tabs.list.slice(k, k + move.step).map(t => t.id)
+        const targetIndex = move.index + move.ids.length + 1
+        Tabs.movingTabs.push(...ids)
+        await browser.tabs.move(ids, { index: targetIndex, windowId: Windows.id })
+      } else {
+        Tabs.movingTabs.push(...move.ids)
+        await browser.tabs.move(move.ids, { index: move.index, windowId: Windows.id })
+      }
+      Tabs.movingTabs = []
+    }
+
+    sortingNativeTabs = false
+  }, sortNativeTabsDelayMS)
 }
 
 export function removeBranches(ids: ID[]): void {
@@ -732,10 +806,13 @@ export async function removeTabs(tabIds: ID[], silent?: boolean): Promise<void> 
     })
   }
 
+  // Reverse removing order (needed for reopening)
+  toRemove.reverse()
+
   browser.tabs.remove(toRemove)
   checkRemovedTabs()
 
-  Logs.info('Tabs: Removing tabs finished')
+  Logs.info('Tabs: Removing tabs finished', toRemove)
 }
 
 let isRmFinishedInterval: number | undefined
@@ -2455,7 +2532,6 @@ export function getPanelForNewTab(tab: Tab): TabsPanel | undefined {
 
 /**
  * Find and return index for new tab.
- * Side effect: tab.openerTabId
  */
 export function getIndexForNewTab(panel: TabsPanel, tab: Tab): number {
   const parent = Tabs.byId[tab.openerTabId ?? NOID]

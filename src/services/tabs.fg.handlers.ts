@@ -10,7 +10,7 @@ import { Settings } from 'src/services/settings'
 import { Sidebar } from 'src/services/sidebar'
 import { Favicons } from 'src/services/favicons'
 import { DnD } from 'src/services/drag-and-drop'
-import { Tabs } from './tabs.fg'
+import { RemovedTabInfo, Tabs } from './tabs.fg'
 
 const EXT_HOST = browser.runtime.getURL('').slice(16)
 const URL_HOST_PATH_RE = /^([a-z0-9-]{1,63}\.)+\w+(:\d+)?\/[A-Za-z0-9-._~:/?#[\]%@!$&'()*+,;=]*$/
@@ -44,6 +44,27 @@ export function resetTabsListeners(): void {
   browser.tabs.onActivated.removeListener(onTabActivated)
 }
 
+let waitForOtherReopenedTabsTimeout: number | undefined
+let waitForOtherReopenedTabsBuffer: Tab[] | null = null
+let waitForOtherReopenedTabsBufferRelease = false
+function waitForOtherReopenedTabs(tab: Tab): void {
+  if (!waitForOtherReopenedTabsBuffer) waitForOtherReopenedTabsBuffer = []
+  waitForOtherReopenedTabsBuffer.push(tab)
+
+  clearTimeout(waitForOtherReopenedTabsTimeout)
+  waitForOtherReopenedTabsTimeout = setTimeout(() => {
+    if (!waitForOtherReopenedTabsBuffer) return
+    waitForOtherReopenedTabsBufferRelease = true
+    waitForOtherReopenedTabsBuffer.sort((a, b) => a.index - b.index)
+    waitForOtherReopenedTabsBuffer.forEach(onTabCreated)
+    waitForOtherReopenedTabsBuffer = null
+    waitForOtherReopenedTabsBufferRelease = false
+
+    Tabs.deferredEventHandling.forEach(cb => cb())
+    Tabs.deferredEventHandling = []
+  }, 80)
+}
+
 function onTabCreated(tab: Tab): void {
   if (tab.windowId !== Windows.id) return
   if (Tabs.list.length === 0) {
@@ -60,7 +81,7 @@ function onTabCreated(tab: Tab): void {
   Menu.close()
   Selection.resetSelection()
 
-  let panel, index, prevPos, prevPosPanel, createGroup, autoGroupTab
+  let panel, index, reopenedTabInfo, reopenedTabPanel, createGroup, autoGroupTab
   let initialOpenerSpec = ''
   const initialOpener = Tabs.byId[tab.openerTabId ?? -1]
 
@@ -83,10 +104,19 @@ function onTabCreated(tab: Tab): void {
     }
   }
 
-  // Get previous position
-  if (Tabs.removedTabs) {
-    prevPos = Tabs.removedTabs.pop()
-    if (prevPos) prevPosPanel = Sidebar.reactive.panelsById[prevPos.panelId]
+  // Check if tab is reopened
+  if (Tabs.removedTabs.length && !tab.discarded) {
+    const prevPosIndex = Tabs.removedTabs.findIndex(t => t.title === tab.title)
+    reopenedTabInfo = Tabs.removedTabs[prevPosIndex]
+    if (reopenedTabInfo) {
+      if (!waitForOtherReopenedTabsBufferRelease) {
+        waitForOtherReopenedTabs(tab)
+        return
+      }
+
+      Tabs.removedTabs.splice(prevPosIndex, 1)
+      reopenedTabPanel = Sidebar.reactive.panelsById[reopenedTabInfo.panelId]
+    }
   }
 
   // Predefined position
@@ -100,16 +130,62 @@ function onTabCreated(tab: Tab): void {
   }
 
   // Restore previous position of reopened tab
-  else if (prevPos && prevPosPanel && prevPos.index === tab.index && prevPos.title === tab.title) {
-    panel = prevPosPanel
-    index = tab.index
+  else if (reopenedTabInfo && Utils.isTabsPanel(reopenedTabPanel)) {
+    // Temporarily place new reopened tabs to the end of panel
+    panel = reopenedTabPanel
+    index = reopenedTabPanel.nextTabIndex
 
     for (const rmTab of Tabs.removedTabs) {
-      if (rmTab.parentId === prevPos.id) rmTab.parentId = tab.id
+      if (rmTab.parentId === reopenedTabInfo.id) rmTab.parentId = tab.id
     }
 
-    const parentTab = Tabs.byId[prevPos.parentId]
-    if (parentTab && parentTab.index < tab.index) tab.openerTabId = prevPos.parentId
+    const parentTab = Tabs.byId[reopenedTabInfo.parentId]
+    const nextTab = Tabs.list[tab.index]
+
+    // Parent tab exists
+    if (parentTab) {
+      // Find the end index of branch
+      let branchEndIndex = parentTab.index
+      for (let i = parentTab.index + 1; i < Tabs.list.length; i++) {
+        const tabInBranch = Tabs.list[i]
+        if (tabInBranch.lvl <= parentTab.lvl) break
+        branchEndIndex = i
+      }
+      branchEndIndex++
+
+      // Old index is ok in branch
+      if (
+        parentTab.index < tab.index &&
+        tab.index <= branchEndIndex &&
+        (!nextTab || (nextTab.panelId === panel.id && nextTab.lvl <= parentTab.lvl + 1))
+      ) {
+        index = tab.index
+      }
+
+      // Move to the end of branch
+      else {
+        index = branchEndIndex
+      }
+
+      tab.openerTabId = reopenedTabInfo.parentId
+    }
+
+    // Parent tab doesn't exist
+    else {
+      // Old index is ok
+      if (
+        (!nextTab || (nextTab.panelId === panel.id && nextTab.lvl === 0)) &&
+        tab.index >= panel.startTabIndex &&
+        tab.index <= panel.nextTabIndex
+      ) {
+        index = tab.index
+      }
+
+      // or move as configured for new tabs
+      else {
+        index = Tabs.getIndexForNewTab(panel, tab)
+      }
+    }
   }
 
   // Find appropriate position using the current settings
@@ -126,6 +202,7 @@ function onTabCreated(tab: Tab): void {
   // If new tab has wrong possition - move it
   if (panel && !tab.pinned && tab.index !== index) {
     tab.dstPanelId = panel.id
+    Tabs.movingTabs.push(tab.id)
     browser.tabs.move(tab.id, { index })
   }
 
@@ -149,17 +226,23 @@ function onTabCreated(tab: Tab): void {
   Tabs.updateUrlCounter(tab.url, 1)
 
   // Update tree
-  if (Settings.reactive.tabsTree && !tab.pinned) {
+  if (Settings.reactive.tabsTree && !tab.pinned && Utils.isTabsPanel(panel)) {
+    let treeHasChanged = false
+
     const rTab = Tabs.reactive.byId[tab.id]
+    // Get parent id from the next tab and update tree props
     if (tab.openerTabId === undefined) {
-      // Set tab tree level
       const nextTab = Tabs.list[tab.index + 1]
       if (nextTab && tab.panelId === nextTab.panelId) {
         tab.parentId = nextTab.parentId
         tab.lvl = nextTab.lvl
         if (rTab) rTab.lvl = nextTab.lvl
       }
-    } else {
+    }
+
+    // Find the parent tab, check if the new tab is correctly positioned
+    // and update tree props
+    else {
       const parent = Tabs.byId[tab.openerTabId]
       if (parent && parent.panelId === tab.panelId) {
         let insideBranch = false
@@ -169,19 +252,31 @@ function onTabCreated(tab: Tab): void {
           if (insideBranch) break
           if (t.lvl <= parent.lvl) break
         }
-        if (insideBranch && Utils.isTabsPanel(panel)) {
+        if (insideBranch) {
           tab.parentId = tab.openerTabId
-          const start = panel.startTabIndex
-          Tabs.updateTabsTree(start, panel.nextTabIndex)
-          if (Settings.reactive.autoFoldTabs && !parent.folded) {
-            Tabs.expTabsBranch(tab.parentId)
-          }
+          treeHasChanged = true
         } else {
           tab.parentId = -1
           browser.tabs.update(tab.id, { openerTabId: tab.id })
         }
       }
     }
+
+    // Try to restore tree if tab was reopened and it had children
+    if (reopenedTabInfo && Utils.isTabsPanel(panel) && reopenedTabInfo.children) {
+      for (let t, i = tab.index + 1; i < Tabs.list.length; i++) {
+        t = Tabs.list[i]
+        if (t.lvl < tab.lvl || t.panelId !== panel.id) break
+        if (reopenedTabInfo.children.includes(t.id)) {
+          t.parentId = tab.id
+          treeHasChanged = true
+        } else {
+          break
+        }
+      }
+    }
+
+    if (treeHasChanged) Tabs.updateTabsTree(panel.startTabIndex, panel.nextTabIndex)
 
     Tabs.saveTabData(tab.id)
     Tabs.cacheTabsData()
@@ -240,14 +335,14 @@ function onTabCreated(tab: Tab): void {
  */
 function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.tabs.Tab): void {
   if (tab.windowId !== Windows.id) return
-  if (Tabs.list.length === 0) {
+  if (Tabs.list.length === 0 || waitForOtherReopenedTabsBuffer) {
     Tabs.deferredEventHandling.push(() => onTabUpdated(tabId, change, tab))
     return
   }
 
   const localTab = Tabs.byId[tabId]
   const rLocalTab = Tabs.reactive.byId[tabId]
-  if (!localTab || !rLocalTab) return Logs.err('Tabs.onTabUpdated: Cannot find local tab')
+  if (!localTab || !rLocalTab) return Logs.err(`Tabs.onTabUpdated: Cannot find local tab: ${tabId}`)
 
   // Discarded
   if (change.discarded !== undefined && change.discarded) {
@@ -468,20 +563,30 @@ function reloadTabFaviconDebounced(localTab: Tab, rLocalTab: ReactiveTab, delay 
   }, delay)
 }
 
+let recentlyRemovedChildParentMap: Record<ID, ID> | null = null
+let rememberChildTabsTimeout: number | undefined
+function rememberChildTabs(childId: ID, parentId: ID): void {
+  if (!recentlyRemovedChildParentMap) recentlyRemovedChildParentMap = {}
+  recentlyRemovedChildParentMap[childId] = parentId
+
+  clearTimeout(rememberChildTabsTimeout)
+  rememberChildTabsTimeout = setTimeout(() => {
+    recentlyRemovedChildParentMap = null
+  }, 100)
+}
+
 /**
  * Tabs.onRemoved
  */
-function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, childfree?: boolean): void {
+function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, ignoreChildren?: boolean): void {
   if (info.windowId !== Windows.id) return
-  if (Tabs.list.length === 0) {
-    Tabs.deferredEventHandling.push(() => onTabRemoved(tabId, info, childfree))
+  if (Tabs.list.length === 0 || waitForOtherReopenedTabsBuffer) {
+    Tabs.deferredEventHandling.push(() => onTabRemoved(tabId, info, ignoreChildren))
     return
   }
   if (info.isWindowClosing) return
   if (Tabs.ignoreTabsEvents) return
   if (Tabs.tabsNormalizing) return Tabs.normalizeTabs()
-
-  const removedExternally = !Tabs.removingTabs || !Tabs.removingTabs.length
 
   if (!Tabs.removingTabs) Tabs.removingTabs = []
   else Tabs.removingTabs.splice(Tabs.removingTabs.indexOf(tabId), 1)
@@ -498,25 +603,28 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, childfree?: bool
     Logs.warn(`Tabs.onTabRemoved: Cannot find tab: ${tabId}`)
     return Tabs.normalizeTabs()
   }
-  let creatingNewTab
+
+  const removedExternally = !Tabs.removingTabs || !Tabs.removingTabs.length
+  const hasChildren = Settings.reactive.tabsTree && tab.isParent && !ignoreChildren
+  let removedTabInfo: RemovedTabInfo | undefined
 
   // Update temp list of removed tabs for restoring reopened tabs state
   if (tab.url !== NEWTAB_URL && tab.url !== 'about:blank') {
-    if (!Tabs.removedTabs) Tabs.removedTabs = []
-    Tabs.removedTabs.push({
+    removedTabInfo = {
       id: tab.id,
       index: tab.index,
       title: tab.title,
-      parentId: tab.parentId,
+      parentId: recentlyRemovedChildParentMap?.[tab.id] ?? tab.parentId,
       panelId: tab.panelId,
-    } as Tab)
+    }
+    Tabs.removedTabs.unshift(removedTabInfo)
     if (Tabs.removedTabs.length > 50) {
-      Tabs.removedTabs = Tabs.removedTabs.slice(25)
+      Tabs.removedTabs = Tabs.removedTabs.slice(5)
     }
   }
 
   // Handle child tabs
-  if (Settings.reactive.tabsTree && tab.isParent && !childfree) {
+  if (hasChildren) {
     const toRemove = []
     const outdentOnlyFirstChild = Settings.reactive.treeRmOutdent === 'first_child'
     let firstChild
@@ -524,6 +632,12 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, childfree?: bool
       t = Tabs.list[i]
       if (t.lvl <= tab.lvl) break
       const rt = Tabs.reactive.byId[t.id]
+
+      if (t.parentId === tab.id) {
+        rememberChildTabs(t.id, tab.id)
+        if (removedTabInfo?.children) removedTabInfo.children.push(t.id)
+        else if (removedTabInfo) removedTabInfo.children = [t.id]
+      }
 
       // Remove folded tabs
       if (
@@ -592,7 +706,7 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, childfree?: bool
   }
 
   // No-empty
-  if (!tab.pinned && panel.noEmpty && !panel.len && !creatingNewTab) {
+  if (!tab.pinned && panel.noEmpty && !panel.len) {
     Tabs.createTabInPanel(panel, { active: false })
   }
 
@@ -688,7 +802,7 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
 
   const tab = Tabs.byId[id]
   if (!tab) {
-    const msg = `Tab cannot be moved: #${id} ${info.fromIndex} > ${info.toIndex} (not found)`
+    const msg = `Tab cannot be moved: #${id} ${info.fromIndex} > ${info.toIndex} (not found by id)`
     Logs.err(msg)
     return Tabs.normalizeTabs()
   }
@@ -728,7 +842,7 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
   if (movedTab && movedTab.id === id) {
     Tabs.list.splice(info.fromIndex, 1)
   } else {
-    Logs.err(`Tab cannot be moved: #${id} ${info.fromIndex} > ${info.toIndex} (not found)`)
+    Logs.err(`Tab cannot be moved: #${id} ${info.fromIndex} > ${info.toIndex} (not found by index)`)
     return Tabs.normalizeTabs()
   }
 
@@ -844,15 +958,21 @@ async function onTabAttached(id: ID, info: browser.tabs.AttachInfo): Promise<voi
   if (tab.active) browser.tabs.update(tab.id, { active: true })
 }
 
+let bufTabActivatedEventIndex = -1
+
 /**
  * Tabs.onActivated
  */
 function onTabActivated(info: browser.tabs.ActiveInfo): void {
   if (info.windowId !== Windows.id) return
-  if (Tabs.list.length === 0) {
-    Tabs.deferredEventHandling.push(() => onTabActivated(info))
+  if (Tabs.list.length === 0 || waitForOtherReopenedTabsBuffer) {
+    if (bufTabActivatedEventIndex !== -1) {
+      Tabs.deferredEventHandling.splice(bufTabActivatedEventIndex, 1)
+    }
+    bufTabActivatedEventIndex = Tabs.deferredEventHandling.push(() => onTabActivated(info)) - 1
     return
   }
+  bufTabActivatedEventIndex = -1
   if (Tabs.ignoreTabsEvents) return
   if (Tabs.tabsNormalizing) return Tabs.normalizeTabs()
 
@@ -863,13 +983,13 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
   const tab = Tabs.byId[info.tabId]
   const rTab = Tabs.reactive.byId[info.tabId]
   if (!tab || !rTab) {
-    Logs.err('Tabs.onTabActivated: Cannot get target tab')
+    Logs.err('Tabs.onTabActivated: Cannot get target tab', info.tabId)
     return Tabs.normalizeTabs()
   }
 
   // Update previous active tab and store his id
-  const prevActive = Tabs.byId[info.previousTabId]
-  const rPrevActive = Tabs.reactive.byId[info.previousTabId]
+  const prevActive = Tabs.byId[Tabs.activeId]
+  const rPrevActive = Tabs.reactive.byId[Tabs.activeId]
   if (prevActive && rPrevActive) {
     prevActive.active = false
     rPrevActive.active = false

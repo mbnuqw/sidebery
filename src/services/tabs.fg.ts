@@ -10,6 +10,15 @@ export interface TabsReactiveState {
   pinned: ReactiveTab[]
 }
 
+export interface RemovedTabInfo {
+  id: ID
+  index: number
+  title: string
+  parentId: ID
+  panelId: ID
+  children?: ID[]
+}
+
 export const Tabs = {
   reactive: { byId: {}, pinned: [] } as TabsReactiveState,
   list: [] as Tab[],
@@ -19,7 +28,7 @@ export const Tabs = {
   shadowMode: false,
 
   tabsNormalizing: false,
-  removedTabs: [] as Tab[],
+  removedTabs: [] as RemovedTabInfo[],
   newTabsPosition: {} as Record<number, NewTabPosition>,
   movingTabs: [] as ID[],
   attachingTabs: [] as Tab[],
