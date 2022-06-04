@@ -162,11 +162,15 @@
   border-radius: var(--tabs-border-radius)
   background-color: var(--branch-color)
   opacity: .16
+.Tab[data-discarded="true"] .branch-color
+  opacity: .1
 .Tab[data-parent="true"] .branch-color
 .Tab:not([data-lvl="0"]) .branch-color
   display: block
 #root[data-color-scheme="light"] .Tab .branch-color
   opacity: .3
+#root[data-color-scheme="light"] .Tab[data-discarded="true"] .branch-color
+  opacity: .2
 .Tab[data-active="true"] .branch-color
   box-shadow: inset 0 0 0 1px #fff5
   opacity: .3
