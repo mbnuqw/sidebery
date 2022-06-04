@@ -155,12 +155,16 @@ function recalcGroups(vars: CssVar[]): void {
       let key = v.key
       key = key.replace(group.id, '')
       key = key.replace(DASH_RE, ' ')
+      key = key.replace('bg', 'background')
+      key = key.replace('fg', 'foreground')
       v.label = key.replace(FIRST_LETTER_RE, c => c.toUpperCase())
       group.vars.push(v)
     } else {
       let key = v.key
       key = key.slice(2)
       key = key.replace(DASH_RE, ' ')
+      key = key.replace('bg', 'background')
+      key = key.replace('fg', 'foreground')
       v.label = key.replace(FIRST_LETTER_RE, c => c.toUpperCase())
       commonGroup.vars.push(v)
     }
