@@ -1,6 +1,6 @@
 <template lang="pug">
 .BookmarksSubPanel(
-  :data-active="state.active && Permissions.reactive.bookmarks && !!rootFolder?.children"
+  :data-active="state.active && Permissions.reactive.bookmarks"
   @wheel.stop=""
   @mousedown.stop=""
   @mouseup.stop="onMouseUp"
@@ -65,6 +65,8 @@ function closeSubPanel(): void {
 }
 
 function onWrongRootFolder(): void {
+  state.active = false
+
   const title = translate('notif.bookmarks_sub_panel.no_root.title')
   const details = translate('notif.bookmarks_sub_panel.no_root.details')
   Notifications.notify({
@@ -91,6 +93,7 @@ async function onBarClick(): Promise<void> {
   }
 
   if (!rootFolder.value) {
+    state.active = true
     if (!Bookmarks.reactive.tree.length) {
       bookmarksLoading = true
       loadBookmarks().then(() => {
@@ -102,7 +105,6 @@ async function onBarClick(): Promise<void> {
     } else if (!Bookmarks.reactive.byId[props.tabsPanel.bookmarksFolderId]) {
       return onWrongRootFolder()
     }
-    state.active = true
   } else {
     state.active = !state.active
   }
