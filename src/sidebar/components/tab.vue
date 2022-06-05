@@ -23,10 +23,10 @@
   @mouseup.stop="onMouseUp"
   @dblclick.prevent.stop="onDoubleClick")
   .body
-    .branch-color(
+    .color-layer(
       v-if="Settings.reactive.colorizeTabsBranches && tab.branchColor && (tab.isParent || tab.lvl > 0)"
       :style="{ '--tab-color': tab.branchColor }")
-    .branch-color(
+    .color-layer(
       v-else-if="Settings.reactive.colorizeTabs && tab.color"
       :style="{ '--tab-color': tab.color }")
     .flash-fx(v-if="tab.flash")

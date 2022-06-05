@@ -152,29 +152,25 @@
 // ---
 // -- Branch color
 // -
-.Tab .branch-color
+.Tab .color-layer
   position: absolute
-  display: none
   top: 0
   left: 0
   width: 100%
   height: 100%
   border-radius: var(--tabs-border-radius)
-  background-color: var(--branch-color)
+  background-color: var(--tab-color)
   opacity: .16
-.Tab[data-discarded="true"] .branch-color
+.Tab[data-discarded="true"] .color-layer
   opacity: .1
-.Tab[data-parent="true"] .branch-color
-.Tab:not([data-lvl="0"]) .branch-color
-  display: block
-#root[data-color-scheme="light"] .Tab .branch-color
+#root[data-color-scheme="light"] .Tab .color-layer
   opacity: .3
-#root[data-color-scheme="light"] .Tab[data-discarded="true"] .branch-color
+#root[data-color-scheme="light"] .Tab[data-discarded="true"] .color-layer
   opacity: .2
-.Tab[data-active="true"] .branch-color
+.Tab[data-active="true"] .color-layer
   box-shadow: inset 0 0 0 1px #fff5
   opacity: .3
-#root[data-color-scheme="light"] .Tab[data-active="true"] .branch-color
+#root[data-color-scheme="light"] .Tab[data-active="true"] .color-layer
   box-shadow: inset 0 0 0 1px #0003
   opacity: .6
 
