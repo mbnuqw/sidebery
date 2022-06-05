@@ -2,9 +2,11 @@
 
 #root
   --bookmarks-sub-panel-bar-height: 24px
-  --bookmarks-sub-panel-height: 51vh
+  --bookmarks-sub-panel-height: 60vh
 
 .BookmarksSubPanel
+  --nav-height: calc(var(--bookmarks-sub-panel-bar-height) + 4px)
+
   position: relative
   width: 100%
   height: var(--bookmarks-sub-panel-bar-height)
@@ -149,11 +151,83 @@
 .BookmarksSubPanel .bar .icon-btn:active:before
   opacity: .1
 
+.BookmarksSubPanel .nav
+  position: relative
+  display: flex
+  justify-content: center
+  align-items: center
+  width: 100%
+  height: var(--nav-height)
+  background-color: var(--toolbar-bg)
+  box-shadow: 0 0 0 var(--ff-border-width, 0) var(--ff-border, var(--border, #00000016))
+
+.BookmarksSubPanel .nav .up-btn
+.BookmarksSubPanel .nav .down-btn
+  position: relative
+  width: var(--nav-height)
+  height: var(--nav-height)
+  flex-shrink: 0
+  cursor: pointer
+  &:before
+    content: ''
+    position: absolute
+    top: 2px
+    left: 2px
+    width: calc(100% - 4px)
+    height: calc(100% - 4px)
+    background-color: var(--toolbar-fg)
+    border-radius: 4px
+    opacity: 0
+  > svg
+    position: absolute
+    top: calc(var(--nav-height) / 2 - 8px)
+    left: calc(var(--nav-height) / 2 - 8px)
+    width: 16px
+    height: 16px
+    fill: var(--toolbar-fg)
+    opacity: .7
+    transform: rotateZ(-90deg)
+  &:hover
+    &:before
+      opacity: .2
+    > svg
+      opacity: 1
+  &:active
+    &:before
+      opacity: .1
+    > svg
+      opacity: .7
+  &[data-inactive="true"]
+    opacity: .3
+    cursor: default
+    > svg
+      opacity: .7
+    &:before
+      opacity: 0
+.BookmarksSubPanel .nav .up-btn > svg
+  transform: rotateZ(90deg)
+
+.BookmarksSubPanel .nav .title-block
+  position: relative
+  width: calc(100% - 4px)
+  padding: 0 2px
+  overflow: hidden
+
+.BookmarksSubPanel .nav .title
+  position: relative
+  font-size: rem(15)
+  font-weight: 700
+  text-align: center
+  color: var(--toolbar-fg)
+  overflow: hidden
+  text-overflow: ellipsis
+  white-space: nowrap
+
 .BookmarksSubPanel .content
   position: absolute
-  top: var(--bookmarks-sub-panel-bar-height)
+  top: var(--nav-height)
   margin-top: var(--ff-border-width, 0)
-  height: calc(100% - var(--bookmarks-sub-panel-bar-height))
+  height: calc(100% - var(--nav-height))
   width: 100%
 
 .BookmarksSubPanel .bookmarks-tree

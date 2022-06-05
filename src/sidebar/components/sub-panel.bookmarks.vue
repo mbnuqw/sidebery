@@ -9,10 +9,17 @@
   @mouseenter="onMouseEnter")
   .overlay(@click="closeSubPanel")
   .sub-panel
-    .bar(:data-loading="state.loadingBar" @click="onBarClick")
+    .bar(v-if="!state.active" :data-loading="state.loadingBar" @click="onBarClick")
       svg.icon: use(xlink:href="#icon_bookmarks_badge")
       .grip
       .len(v-if="rootFolder?.len") {{rootFolder.len}}
+    .nav(v-else-if="rootFolder")
+      .up-btn(:data-inactive="rootFolder.id === BKM_ROOT_ID" @click="goUp")
+        svg: use(xlink:href="#icon_expand")
+      .title-block
+        .title(v-if="rootFolder.title" :title="rootFolder.title") {{rootFolder.title}}
+      .down-btn(:data-inactive="state.navOffset <= 0" @click="goDown")
+        svg: use(xlink:href="#icon_expand")
     .content
       ScrollBox(v-if="rootFolder?.children && !state.loading && Permissions.reactive.bookmarks")
         .bookmarks-tree
@@ -39,7 +46,7 @@ import { Selection } from 'src/services/selection'
 import { Settings } from 'src/services/settings'
 import { translate } from 'src/dict'
 import { Notifications } from 'src/services/notifications'
-import { Err, NOID } from 'src/defaults'
+import { BKM_ROOT_ID, Err, NOID } from 'src/defaults'
 import { Sidebar } from 'src/services/sidebar'
 import { Logs } from 'src/services/logs'
 
@@ -49,16 +56,44 @@ const state = reactive({
   loading: false,
   loadingBar: false,
   permitted: Permissions.reactive.bookmarks,
+  navOffset: 0,
 })
+
+function goUp(): void {
+  if (rootFolder.value?.id === BKM_ROOT_ID) return
+  state.navOffset++
+}
+
+function goDown(): void {
+  state.navOffset--
+  if (state.navOffset < 0) state.navOffset = 0
+}
 
 const CLOSE_ON_LEAVE_TIMEOUT = 300
 
+const bookmarksRoot = computed<Bookmark | undefined>(() => {
+  return {
+    id: BKM_ROOT_ID,
+    type: 'folder',
+    children: Bookmarks.reactive.tree,
+    index: 0,
+    parentId: NOID,
+    title: translate('panel.bookmarks.title'),
+  }
+})
+
 const rootFolder = computed<Bookmark | undefined>(() => {
-  return Bookmarks.reactive.byId[props.tabsPanel.bookmarksFolderId]
+  let folder = Bookmarks.reactive.byId[props.tabsPanel.bookmarksFolderId]
+  for (let i = state.navOffset; i-- && folder; ) {
+    if (folder.parentId === BKM_ROOT_ID) return bookmarksRoot.value
+    folder = Bookmarks.reactive.byId[folder.parentId]
+  }
+  return folder
 })
 
 function closeSubPanel(): void {
   state.active = false
+  state.navOffset = 0
   if (Selection.isSet()) Selection.resetSelection()
   if (Menu.isOpen) Menu.close()
   clearTimeout(onMouseLeaveTimeout)
