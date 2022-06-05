@@ -105,9 +105,6 @@ export const DEFAULT_SETTINGS: SettingsState = {
 
   // Bookmarks
   warnOnMultiBookmarkDelete: 'collapsed',
-  openBookmarkNewTab: false,
-  midClickBookmark: 'open_new_tab',
-  actMidClickTab: false,
   autoCloseBookmarks: false,
   autoRemoveOther: false,
   highlightOpenBookmarks: false,
@@ -159,6 +156,12 @@ export const DEFAULT_SETTINGS: SettingsState = {
   tabsPanelDoubleClickAction: 'tab',
   tabsPanelRightClickAction: 'menu',
   tabsPanelMiddleClickAction: 'tab',
+  bookmarksLeftClickAction: 'open_in_act',
+  bookmarksLeftClickActivate: false,
+  bookmarksLeftClickPos: 'default',
+  bookmarksMidClickAction: 'open_in_new',
+  bookmarksMidClickActivate: false,
+  bookmarksMidClickPos: 'default',
 
   // Sync
   syncName: '',
@@ -189,6 +192,9 @@ export const SETTINGS_OPTIONS = {
   tabsPanelDoubleClickAction: ['collapse', 'tab', 'undo', 'none'],
   tabsPanelRightClickAction: ['next', 'expand', 'parent', 'menu', 'none'],
   tabsPanelMiddleClickAction: ['rm_act_tab', 'tab', 'undo', 'none'],
+  bookmarksLeftClickAction: ['open_in_act', 'open_in_new'],
+  bookmarksNewTabPos: ['default', 'after'],
+  bookmarksMidClickAction: ['open_in_new', 'edit', 'delete'],
   activateAfterClosing: ['prev_act', 'next', 'prev', 'none'],
   pinnedTabsPosition: ['panel', 'top', 'left', 'right'],
   tabsTreeLimit: [1, 2, 3, 4, 5, 'none'],
@@ -203,7 +209,6 @@ export const SETTINGS_OPTIONS = {
     'before', 'sibling', 'first_child', 'last_child', 'start', 'end', 'default', 'none'
   ],
   moveNewTab: ['start', 'end', 'before', 'after', 'first_child', 'last_child', 'none'],
-  midClickBookmark: ['open_new_tab', 'edit', 'delete'],
   warnOnMultiTabClose: ['any', 'collapsed', 'none'],
   warnOnMultiBookmarkDelete: ['any', 'collapsed', 'none'],
   navBarLayout: ['horizontal', 'vertical', 'hidden'],

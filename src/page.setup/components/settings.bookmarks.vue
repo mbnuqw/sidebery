@@ -13,20 +13,6 @@ section(ref="el")
     label="settings.bookmarks_rm_undo_note"
     v-model:value="Settings.reactive.bookmarksRmUndoNote")
   ToggleField(
-    label="settings.open_bookmark_new_tab"
-    v-model:value="Settings.reactive.openBookmarkNewTab")
-  SelectField(
-    label="settings.mid_click_bookmark"
-    optLabel="settings.mid_click_bookmark_"
-    v-model:value="Settings.reactive.midClickBookmark"
-    :opts="Settings.getOpts('midClickBookmark')"
-    :folded="true")
-  .sub-fields
-    ToggleField(
-      label="settings.act_mid_click_tab"
-      v-model:value="Settings.reactive.actMidClickTab"
-      :inactive="Settings.reactive.midClickBookmark !== 'open_new_tab'")
-  ToggleField(
     label="settings.auto_close_bookmarks"
     v-model:value="Settings.reactive.autoCloseBookmarks")
   ToggleField(

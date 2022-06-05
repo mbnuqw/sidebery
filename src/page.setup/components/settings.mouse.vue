@@ -129,6 +129,44 @@ section(ref="el")
     v-model:value="Settings.reactive.tabsPanelMiddleClickAction"
     :opts="Settings.getOpts('tabsPanelMiddleClickAction')"
     :folded="true")
+  
+  .sub-title {{translate('settings.mouse.bookmarks_title')}}
+  SelectField(
+    label="settings.mouse.bookmarks.left_click_action"
+    optLabel="settings.mouse.bookmarks.left_click_action_"
+    v-model:value="Settings.reactive.bookmarksLeftClickAction"
+    :opts="Settings.getOpts('bookmarksLeftClickAction')"
+    :folded="false")
+  .sub-fields
+    ToggleField(
+      label="settings.mouse.bookmarks.new_tab_activate"
+      v-model:value="Settings.reactive.bookmarksLeftClickActivate"
+      :inactive="Settings.reactive.bookmarksLeftClickAction !== 'open_in_new'")
+    SelectField(
+      label="settings.mouse.bookmarks.new_tab_pos"
+      optLabel="settings.mouse.bookmarks.new_tab_pos_"
+      v-model:value="Settings.reactive.bookmarksLeftClickPos"
+      :inactive="Settings.reactive.bookmarksLeftClickAction !== 'open_in_new'"
+      :opts="Settings.getOpts('bookmarksNewTabPos')"
+      :folded="false")
+  SelectField(
+    label="settings.mouse.bookmarks.mid_click_action"
+    optLabel="settings.mouse.bookmarks.mid_click_action_"
+    v-model:value="Settings.reactive.bookmarksMidClickAction"
+    :opts="Settings.getOpts('bookmarksMidClickAction')"
+    :folded="true")
+  .sub-fields
+    ToggleField(
+      label="settings.mouse.bookmarks.new_tab_activate"
+      v-model:value="Settings.reactive.bookmarksMidClickActivate"
+      :inactive="Settings.reactive.bookmarksMidClickAction !== 'open_in_new'")
+    SelectField(
+      label="settings.mouse.bookmarks.new_tab_pos"
+      optLabel="settings.mouse.bookmarks.new_tab_pos_"
+      v-model:value="Settings.reactive.bookmarksMidClickPos"
+      :inactive="Settings.reactive.bookmarksMidClickAction !== 'open_in_new'"
+      :opts="Settings.getOpts('bookmarksNewTabPos')"
+      :folded="false")
 </template>
 
 <script lang="ts" setup>

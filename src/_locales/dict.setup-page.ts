@@ -1522,36 +1522,6 @@ export const setupPageTranslations: Translations = {
     ru: 'нет',
     zh_CN: '无',
   },
-  'settings.open_bookmark_new_tab': {
-    en: 'Open bookmark in new tab',
-    ru: 'Открывать закладку в новой вкладке',
-    zh_CN: '在新标签页中打开书签',
-  },
-  'settings.mid_click_bookmark': {
-    en: 'Middle click on the bookmark',
-    ru: 'При нажатии средней кнопки мыши',
-    zh_CN: '中键单击书签',
-  },
-  'settings.mid_click_bookmark_open_new_tab': {
-    en: 'open in new tab',
-    ru: 'открывать в новой вкладке',
-    zh_CN: '在新标签页中打开',
-  },
-  'settings.mid_click_bookmark_edit': {
-    en: 'edit',
-    ru: 'редактировать',
-    zh_CN: '编辑',
-  },
-  'settings.mid_click_bookmark_delete': {
-    en: 'delete',
-    ru: 'удалять',
-    zh_CN: '删除',
-  },
-  'settings.act_mid_click_tab': {
-    en: 'Activate tab',
-    ru: 'Активировать вкладку',
-    zh_CN: '激活标签页',
-  },
   'settings.auto_close_bookmarks': {
     en: 'Auto-close folders',
     ru: 'Автоматически сворачивать папки',
@@ -2117,6 +2087,54 @@ export const setupPageTranslations: Translations = {
     en: 'none',
     ru: 'выкл',
     zh_CN: '无',
+  },
+  'settings.mouse.bookmarks_title': {
+    en: 'Bookmarks actions',
+    ru: 'Действия над закладками',
+  },
+  'settings.mouse.bookmarks.left_click_action': {
+    en: 'Left-click on the bookmark',
+    ru: 'Левый клик по закладке',
+  },
+  'settings.mouse.bookmarks.left_click_action_open_in_act': {
+    en: 'open in active tab',
+    ru: 'открыть в активной вкладке',
+  },
+  'settings.mouse.bookmarks.left_click_action_open_in_new': {
+    en: 'open in new tab',
+    ru: 'открыть в новой вкладке',
+  },
+  'settings.mouse.bookmarks.new_tab_activate': {
+    en: 'Activate the new tab',
+    ru: 'Активировать новую вкладку',
+  },
+  'settings.mouse.bookmarks.new_tab_pos': {
+    en: 'Position of the new tab',
+    ru: 'Положение новой вкладки',
+  },
+  'settings.mouse.bookmarks.new_tab_pos_default': {
+    en: 'default',
+    ru: 'по умолчанию',
+  },
+  'settings.mouse.bookmarks.new_tab_pos_after': {
+    en: 'after active tab',
+    ru: 'после активной вкладки',
+  },
+  'settings.mouse.bookmarks.mid_click_action': {
+    en: 'Middle-click on the bookmark',
+    ru: 'Средний клик по закладке',
+  },
+  'settings.mouse.bookmarks.mid_click_action_open_in_new': {
+    en: 'open in new tab',
+    ru: 'открыть в новой вкладке',
+  },
+  'settings.mouse.bookmarks.mid_click_action_edit': {
+    en: 'edit',
+    ru: 'редактировать',
+  },
+  'settings.mouse.bookmarks.mid_click_action_delete': {
+    en: 'delete',
+    ru: 'удалить',
   },
 
   // - Keybindings

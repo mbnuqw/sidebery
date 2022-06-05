@@ -23,7 +23,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import Utils from 'src/utils'
-import { Bookmark, DragInfo, DragType, DropType } from 'src/types'
+import { Bookmark, DragInfo, DragType, DropType, DstPlaceInfo } from 'src/types'
 import { MenuType } from 'src/types'
 import { Settings } from 'src/services/settings'
 import { Windows } from 'src/services/windows'
@@ -92,10 +92,10 @@ async function onMouseDown(e: MouseEvent): Promise<void> {
     e.preventDefault()
     if (Selection.isBookmarks()) return Selection.resetSelection()
 
-    const action = Settings.reactive.midClickBookmark
-    if (action === 'open_new_tab') {
-      let panelId = Bookmarks.getTargetTabsPanelId()
-      await Bookmarks.open([props.node.id], { panelId }, false, Settings.reactive.actMidClickTab)
+    const action = Settings.reactive.bookmarksMidClickAction
+    if (action === 'open_in_new') {
+      const { dst, useActiveTab, activateFirstTab } = Bookmarks.getOpeningConf(e)
+      await Bookmarks.open([props.node.id], dst, useActiveTab, activateFirstTab)
     } else if (action === 'edit') Bookmarks.editBookmarkNode(props.node)
     else if (action === 'delete') Bookmarks.removeBookmarks([props.node.id])
   }
@@ -127,8 +127,8 @@ function onMouseUp(e: MouseEvent): void {
     }
 
     if (props.node.type === 'bookmark' && props.node.url) {
-      const panelId = Bookmarks.getTargetTabsPanelId()
-      Bookmarks.open([props.node.id], { panelId }, !Settings.reactive.openBookmarkNewTab, true)
+      const { dst, useActiveTab, activateFirstTab } = Bookmarks.getOpeningConf(e)
+      Bookmarks.open([props.node.id], dst, useActiveTab, activateFirstTab)
     }
   } else if (e.button === 2) {
     if (e.ctrlKey || e.shiftKey) return

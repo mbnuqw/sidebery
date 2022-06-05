@@ -34,8 +34,8 @@ export default { name: 'BookmarkNode' }
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { Bookmark, BookmarksPanel, DragInfo, DragItem, MenuType, TabsPanelConfig } from 'src/types'
-import { DragType, DropType } from 'src/types'
+import { Bookmark, BookmarksPanel, DragInfo, DragItem, DstPlaceInfo, MenuType } from 'src/types'
+import { DragType, DropType, TabsPanelConfig } from 'src/types'
 import { Settings } from 'src/services/settings'
 import { Windows } from 'src/services/windows'
 import { Selection } from 'src/services/selection'
@@ -123,12 +123,21 @@ async function onMouseDown(e: MouseEvent): Promise<void> {
     e.preventDefault()
     if (Selection.isBookmarks()) return Selection.resetSelection()
 
-    const action = Settings.reactive.midClickBookmark
-    if (action === 'open_new_tab') {
+    // Bookmark
+    if (props.node.type === 'bookmark' && props.node.url) {
+      const action = Settings.reactive.bookmarksMidClickAction
+      if (action === 'open_in_new') {
+        const { dst, useActiveTab, activateFirstTab } = Bookmarks.getOpeningConf(e)
+        await Bookmarks.open([props.node.id], dst, useActiveTab, activateFirstTab)
+      } else if (action === 'edit') Bookmarks.editBookmarkNode(props.node)
+      else if (action === 'delete') Bookmarks.removeBookmarks([props.node.id])
+    }
+
+    // Folder
+    else if (props.node.type === 'folder') {
       const panelId = Bookmarks.getTargetTabsPanelId()
-      await Bookmarks.open([props.node.id], { panelId }, false, Settings.reactive.actMidClickTab)
-    } else if (action === 'edit') Bookmarks.editBookmarkNode(props.node)
-    else if (action === 'delete') Bookmarks.removeBookmarks([props.node.id])
+      await Bookmarks.open([props.node.id], { panelId }, false, true)
+    }
   }
 
   // Right
@@ -232,10 +241,10 @@ async function onMouseUp(e: MouseEvent): Promise<void> {
         }
       }
 
-      // Open tab
-      const panelId = Bookmarks.getTargetTabsPanelId()
-      const inTheSameTab = !newTabNeededInActPanel && !Settings.reactive.openBookmarkNewTab
-      Bookmarks.open([props.node.id], { panelId }, inTheSameTab, true)
+      // Open bookmark
+      let { dst, useActiveTab, activateFirstTab } = Bookmarks.getOpeningConf(e)
+      useActiveTab = !newTabNeededInActPanel && useActiveTab
+      Bookmarks.open([props.node.id], dst, useActiveTab, activateFirstTab)
     }
 
     // Folder

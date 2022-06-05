@@ -106,9 +106,6 @@ export interface SettingsState {
   // Bookmarks
   bookmarksPanel?: boolean // DEPR
   warnOnMultiBookmarkDelete: typeof SETTINGS_OPTIONS.warnOnMultiBookmarkDelete[number]
-  openBookmarkNewTab: boolean
-  midClickBookmark: typeof SETTINGS_OPTIONS.midClickBookmark[number]
-  actMidClickTab: boolean
   autoCloseBookmarks: boolean
   autoRemoveOther: boolean
   highlightOpenBookmarks: boolean
@@ -161,6 +158,12 @@ export interface SettingsState {
   tabsPanelDoubleClickAction: typeof SETTINGS_OPTIONS.tabsPanelDoubleClickAction[number]
   tabsPanelRightClickAction: typeof SETTINGS_OPTIONS.tabsPanelRightClickAction[number]
   tabsPanelMiddleClickAction: typeof SETTINGS_OPTIONS.tabsPanelMiddleClickAction[number]
+  bookmarksLeftClickAction: typeof SETTINGS_OPTIONS.bookmarksLeftClickAction[number]
+  bookmarksLeftClickActivate: boolean
+  bookmarksLeftClickPos: typeof SETTINGS_OPTIONS.bookmarksNewTabPos[number]
+  bookmarksMidClickAction: typeof SETTINGS_OPTIONS.bookmarksMidClickAction[number]
+  bookmarksMidClickActivate: boolean
+  bookmarksMidClickPos: typeof SETTINGS_OPTIONS.bookmarksNewTabPos[number]
 
   // Sync
   syncName: string

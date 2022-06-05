@@ -329,11 +329,52 @@ export async function convertIntoTabsPanel(folderId: ID): Promise<void> {
   await Tabs.open(toOpen, { panelId: panel.id })
 }
 
+export interface OpeningBookmarksConfig {
+  dst: DstPlaceInfo
+  useActiveTab: boolean
+  activateFirstTab: boolean
+}
+
+export function getOpeningConf(e: MouseEvent): OpeningBookmarksConfig {
+  const conf: OpeningBookmarksConfig = { dst: {}, useActiveTab: false, activateFirstTab: false }
+
+  // Left click
+  if (e.button === 0) {
+    const panelId = Bookmarks.getTargetTabsPanelId()
+    conf.useActiveTab = Settings.reactive.bookmarksLeftClickAction === 'open_in_act'
+    conf.activateFirstTab = Settings.reactive.bookmarksLeftClickActivate
+    conf.dst.panelId = panelId
+    if (!conf.useActiveTab && Settings.reactive.bookmarksLeftClickPos === 'after') {
+      const activeTab = Tabs.byId[Tabs.activeId]
+      if (activeTab && !activeTab.pinned && activeTab.panelId === panelId) {
+        conf.dst.index = activeTab.index + 1
+        conf.dst.parentId = activeTab.parentId
+      }
+    }
+  }
+
+  // Middle click
+  else if (e.button === 1) {
+    const panelId = Bookmarks.getTargetTabsPanelId()
+    conf.activateFirstTab = Settings.reactive.bookmarksMidClickActivate
+    conf.dst.panelId = panelId
+    if (Settings.reactive.bookmarksMidClickPos === 'after') {
+      const activeTab = Tabs.byId[Tabs.activeId]
+      if (activeTab && !activeTab.pinned && activeTab.panelId === panelId) {
+        conf.dst.index = activeTab.index + 1
+        conf.dst.parentId = activeTab.parentId
+      }
+    }
+  }
+
+  return conf
+}
+
 export async function open(
   ids: ID[],
   dst: DstPlaceInfo,
-  sameTab?: boolean,
-  withFocus?: boolean
+  useActiveTab?: boolean,
+  activateFirstTab?: boolean
 ): Promise<void> {
   const firstBookmark = Bookmarks.reactive.byId[ids[0]]
   if (ids.length === 1 && firstBookmark?.type === 'separator') return
@@ -393,7 +434,7 @@ export async function open(
     }
   }
   if (ids.length === 1 && firstBookmark?.type === 'bookmark') {
-    if (sameTab) {
+    if (useActiveTab) {
       browser.tabs.update({ url: Utils.normalizeUrl(firstBookmark.url, firstBookmark.title) })
       return
     }
@@ -402,7 +443,7 @@ export async function open(
 
   if (!toOpen.length) return
 
-  if (withFocus) toOpen[0].active = true
+  if (activateFirstTab) toOpen[0].active = true
 
   try {
     await Tabs.open(toOpen, dst)
