@@ -3222,11 +3222,11 @@ export async function open(
       isDefaultContainer &&
       conf.url &&
       !conf.url.startsWith('about') &&
-      !dst.pinned
+      !dst.pinned &&
+      !conf.active
     ) {
       conf.discarded = true
       conf.title = item.title
-      conf.active = false
     }
 
     let parentId = NOID
