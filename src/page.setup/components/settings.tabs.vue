@@ -7,7 +7,6 @@ section(ref="el")
     v-model:value="Settings.reactive.warnOnMultiTabClose"
     :opts="Settings.getOpts('warnOnMultiTabClose')")
   ToggleField(label="settings.tabs_rm_undo_note" v-model:value="Settings.reactive.tabsRmUndoNote")
-  ToggleField(label="settings.activate_on_mouseup" v-model:value="Settings.reactive.activateOnMouseUp")
   ToggleField(
     label="settings.activate_last_tab_on_panel_switching"
     :value="Settings.reactive.activateLastTabOnPanelSwitching"

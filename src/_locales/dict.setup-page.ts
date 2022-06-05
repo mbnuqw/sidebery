@@ -918,11 +918,6 @@ export const setupPageTranslations: Translations = {
     ru: 'нет',
     zh_CN: '无',
   },
-  'settings.activate_on_mouseup': {
-    en: 'Activate tab on mouse button release',
-    ru: 'Активировать вкладку при отпускании кнопки мыши',
-    zh_CN: '释放鼠标按钮时激活标签页',
-  },
   'settings.activate_last_tab_on_panel_switching': {
     en: 'Activate last active tab on panel switching',
     ru: 'Активировать последнюю активную вкладку при переключении панелей',
@@ -1941,6 +1936,11 @@ export const setupPageTranslations: Translations = {
     en: 'Double click on tab',
     ru: 'Двойной клик по вкладке',
     zh_CN: '双击标签页',
+  },
+  'settings.activate_on_mouseup': {
+    en: 'Activate tab on mouse button release',
+    ru: 'Активировать вкладку при отпускании кнопки мыши',
+    zh_CN: '释放鼠标按钮时激活标签页',
   },
   'settings.tab_long_left_click': {
     en: 'Long left click on tab',

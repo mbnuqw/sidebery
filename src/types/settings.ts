@@ -51,7 +51,6 @@ export interface SettingsState {
 
   // Tabs
   warnOnMultiTabClose: typeof SETTINGS_OPTIONS.warnOnMultiTabClose[number]
-  activateOnMouseUp: boolean
   activateLastTabOnPanelSwitching: boolean
   showTabRmBtn: boolean
   hideInact: boolean
@@ -151,6 +150,7 @@ export interface SettingsState {
   wheelThresholdY: number
   tabDoubleClick: typeof SETTINGS_OPTIONS.tabDoubleClick[number]
   tabsSecondClickActPrev: boolean
+  activateOnMouseUp: boolean
   tabLongLeftClick: typeof SETTINGS_OPTIONS.tabLongLeftClick[number]
   tabLongRightClick: typeof SETTINGS_OPTIONS.tabLongRightClick[number]
   tabCloseMiddleClick: typeof SETTINGS_OPTIONS.tabCloseMiddleClick[number]

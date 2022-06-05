@@ -51,7 +51,6 @@ export const DEFAULT_SETTINGS: SettingsState = {
 
   // Tabs
   warnOnMultiTabClose: 'collapsed',
-  activateOnMouseUp: true,
   activateLastTabOnPanelSwitching: true,
   showTabRmBtn: true,
   hideInact: false,
@@ -149,6 +148,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   wheelThresholdY: 60,
   tabDoubleClick: 'none',
   tabsSecondClickActPrev: true,
+  activateOnMouseUp: true,
   tabLongLeftClick: 'none',
   tabLongRightClick: 'none',
   tabCloseMiddleClick: 'close',
