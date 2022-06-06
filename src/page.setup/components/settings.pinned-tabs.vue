@@ -5,7 +5,8 @@ section(ref="el")
     v-model:value="Settings.reactive.pinnedTabsPosition"
     label="settings.pinned_tabs_position"
     optLabel="settings.pinned_tabs_position_"
-    :opts="Settings.getOpts('pinnedTabsPosition')")
+    :opts="Settings.getOpts('pinnedTabsPosition')"
+    :folded="true")
   ToggleField(
     label="settings.pinned_tabs_list"
     :inactive="Settings.reactive.pinnedTabsPosition !== 'panel'"

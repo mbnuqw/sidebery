@@ -1240,28 +1240,23 @@ export const setupPageTranslations: Translations = {
     zh_CN: '固定标签页位置',
   },
   'settings.pinned_tabs_position_top': {
-    en: 'top',
-    ru: 'вверху',
+    en: 'globally - top',
+    ru: 'глобально - вверху',
     zh_CN: '顶侧',
   },
   'settings.pinned_tabs_position_left': {
-    en: 'left',
-    ru: 'слева',
+    en: 'globally - left',
+    ru: 'глобально - слева',
     zh_CN: '左侧',
   },
   'settings.pinned_tabs_position_right': {
-    en: 'right',
-    ru: 'справа',
+    en: 'globally - right',
+    ru: 'глобально - справа',
     zh_CN: '右侧',
   },
-  'settings.pinned_tabs_position_bottom': {
-    en: 'bottom',
-    ru: 'внизу',
-    zh_CN: '底侧',
-  },
   'settings.pinned_tabs_position_panel': {
-    en: 'panel',
-    ru: 'панель',
+    en: 'in panel - top',
+    ru: 'на панели - сверху',
     zh_CN: '面板',
   },
   'settings.pinned_tabs_list': {
