@@ -114,6 +114,14 @@ function resetDragPointer(): void {
   DnD.reactive.pointerExpanding = false
   DnD.reactive.pointerLvl = 0
   DnD.reactive.pointerHover = false
+
+  xLock = false
+  yLock = false
+  pointerPos = 0
+  dropLvlOffset = 0
+  prevDropLvlOffset = 0
+  dropPos = 0
+  inPointerArea = false
 }
 
 let _expandTimeout: number | undefined
