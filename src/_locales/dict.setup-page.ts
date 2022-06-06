@@ -1003,11 +1003,6 @@ export const setupPageTranslations: Translations = {
     ru: 'Игнорировать выгруженные вкладки',
     zh_CN: '忽略丢弃的标签页',
   },
-  'settings.shift_selection_from_active': {
-    en: 'Start shift+click selection from the active tab',
-    ru: 'Начинать выделение по shift+клику с активной вкладки',
-    zh_CN: '活动标签页中启用 shift + 点击 进行选择',
-  },
   'settings.ask_new_bookmark_place': {
     en: 'Ask where to store bookmarks',
     ru: 'Спрашивать куда сохранить закладки',
@@ -1941,6 +1936,11 @@ export const setupPageTranslations: Translations = {
     en: 'Activate tab on mouse button release',
     ru: 'Активировать вкладку при отпускании кнопки мыши',
     zh_CN: '释放鼠标按钮时激活标签页',
+  },
+  'settings.shift_selection_from_active': {
+    en: 'Start shift+click selection from the active tab',
+    ru: 'Начинать выделение по shift+клику с активной вкладки',
+    zh_CN: '活动标签页中启用 shift + 点击 进行选择',
   },
   'settings.tab_long_left_click': {
     en: 'Long left click on tab',

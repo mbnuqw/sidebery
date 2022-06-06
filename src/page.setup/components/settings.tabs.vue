@@ -36,9 +36,6 @@ section(ref="el")
       v-model:value="Settings.reactive.activateAfterClosingNoDiscarded"
       :inactive="Settings.reactive.activateAfterClosing === 'none'")
   ToggleField(
-    label="settings.shift_selection_from_active"
-    v-model:value="Settings.reactive.shiftSelAct")
-  ToggleField(
     label="settings.ask_new_bookmark_place"
     v-model:value="Settings.reactive.askNewBookmarkPlace")
   ToggleField(label="settings.native_highlight" v-model:value="Settings.reactive.nativeHighlight")

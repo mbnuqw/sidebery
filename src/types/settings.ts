@@ -58,7 +58,6 @@ export interface SettingsState {
   activateAfterClosingGlobal: boolean
   activateAfterClosingNoFolded: boolean
   activateAfterClosingNoDiscarded: boolean
-  shiftSelAct: boolean
   askNewBookmarkPlace: boolean
   tabsRmUndoNote: boolean
   nativeHighlight: boolean
@@ -150,6 +149,7 @@ export interface SettingsState {
   wheelThresholdY: number
   tabDoubleClick: typeof SETTINGS_OPTIONS.tabDoubleClick[number]
   tabsSecondClickActPrev: boolean
+  shiftSelAct: boolean
   activateOnMouseUp: boolean
   tabLongLeftClick: typeof SETTINGS_OPTIONS.tabLongLeftClick[number]
   tabLongRightClick: typeof SETTINGS_OPTIONS.tabLongRightClick[number]

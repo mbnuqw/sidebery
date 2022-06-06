@@ -85,7 +85,12 @@ section(ref="el")
     label="settings.tabs_second_click_act_prev"
     v-model:value="Settings.reactive.tabsSecondClickActPrev"
     @update:value="onTabsSecondClickActPrevUpdate")
-  ToggleField(label="settings.activate_on_mouseup" v-model:value="Settings.reactive.activateOnMouseUp")
+  ToggleField(
+    label="settings.activate_on_mouseup"
+    v-model:value="Settings.reactive.activateOnMouseUp")
+  ToggleField(
+    label="settings.shift_selection_from_active"
+    v-model:value="Settings.reactive.shiftSelAct")
   SelectField(
     label="settings.tab_long_left_click"
     optLabel="settings.tab_action_"
