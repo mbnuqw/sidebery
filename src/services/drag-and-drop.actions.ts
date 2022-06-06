@@ -23,7 +23,7 @@ export function start(info: DragInfo, dstType?: DropType): void {
 
   Logs.info('DnD.start')
 
-  DnD.droppedInside = false
+  DnD.dropEventConsumed = false
   DnD.srcType = info.type
   DnD.isExternal = info.windowId !== Windows.id
   DnD.items = info.items || []
@@ -736,11 +736,29 @@ export function onDragMove(e: DragEvent): void {
   }
 }
 
+let dropEventWasConsumedTimeout: number | undefined
+
+/**
+ * Temporary set DnD.dropEventConsumed to true.
+ * It's needed to correctly handle dragEnd event.
+ */
+function dropEventWasConsumed(): void {
+  DnD.dropEventConsumed = true
+  clearTimeout(dropEventWasConsumedTimeout)
+  dropEventWasConsumedTimeout = setTimeout(() => {
+    DnD.dropEventConsumed = false
+  }, 1500)
+}
+
+export function isDropEventConsumed(): boolean | void {
+  if (DnD.dropEventConsumed) return DnD.dropEventConsumed
+}
+
 /**
  * Drop event handler
  */
 export async function onDrop(e: DragEvent): Promise<void> {
-  DnD.droppedInside = true
+  dropEventWasConsumed()
 
   if (isNativeTabs(e)) {
     const result = await Utils.parseDragEvent(e, Windows.lastFocusedId)
@@ -895,8 +913,14 @@ export async function onDragEnd(e: DragEvent): Promise<void> {
   if (DnD.reactive.isStarted) DnD.reset()
 
   // Create new window with src items
-  if (!DnD.droppedInside && e.dataTransfer?.types.length === 1) {
+  if (!DnD.dropEventConsumed && e.dataTransfer?.types.length === 1) {
     const dndInfoStr = e.dataTransfer?.getData('application/x-sidebery-dnd')
+
+    // Check if the drop event was consumed by another sidebar
+    const consumed = await Msg.req(InstanceType.sidebar, 'isDropEventConsumed')
+    if (consumed) return
+
+    // Parse transferred data
     if (!dndInfoStr) return
     let info: DragInfo
     try {

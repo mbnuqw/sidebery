@@ -59,8 +59,8 @@ export type SidebarActions = {
   getTabs: (tabIds: ID[]) => Tab[] | undefined
   getTabsTreeData: () => TabsTreeData
   getActivePanelInfo: () => Panel
-  startDrag: (info: DragInfo, dstType?: DropType) => void
   stopDrag: () => void
+  isDropEventConsumed: () => boolean | void
   getGroupInfo: (groupTabId: ID) => GroupInfo | null
   handleReopening: (tabId: ID, newCtx: string) => number | undefined
 

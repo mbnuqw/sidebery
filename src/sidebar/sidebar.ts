@@ -50,7 +50,6 @@ async function main(): Promise<void> {
     openTabs: Tabs.open,
     handleReopening: Tabs.handleReopening,
     getActivePanelInfo: Sidebar.getActivePanelInfo,
-    startDrag: DnD.start,
     stopDrag: DnD.reset,
     getGroupInfo: Tabs.getGroupInfo,
     loadFavicons: Favicons.loadFavicons,
@@ -64,6 +63,7 @@ async function main(): Promise<void> {
     onOutsideSearchExit: Search.onOutsideSearchExit,
     notifyAboutNewSnapshot: Snapshots.notifyAboutNewSnapshot,
     notify: Notifications.notify,
+    isDropEventConsumed: DnD.isDropEventConsumed,
   })
   Msg.setupListeners()
 
