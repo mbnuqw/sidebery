@@ -60,7 +60,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, nextTick } from 'vue'
+import { computed } from 'vue'
 import { DragInfo, DragItem, DragType, DropType, MenuType, ReactiveTab } from 'src/types'
 import { TabStatus } from 'src/types'
 import { Settings } from 'src/services/settings'
@@ -203,8 +203,20 @@ function onMouseUp(e: MouseEvent): void {
 
   if (e.button === 0) {
     const withoutMods = !e.ctrlKey && !e.shiftKey
-    if (withoutMods && sameTarget) Selection.resetSelection()
-    if (Settings.reactive.activateOnMouseUp && withoutMods && sameTarget) activate()
+    if (sameTarget) {
+      if (withoutMods) Selection.resetSelection()
+      if (Settings.reactive.activateOnMouseUp && withoutMods) activate()
+      if (
+        Settings.reactive.tabsSecondClickActPrev &&
+        props.tab.id === Tabs.activeId &&
+        !activating
+      ) {
+        const history = Tabs.getActiveTabsHistory()
+        const prevTabId = history.actTabs[history.actTabs.length - 1]
+        if (prevTabId !== undefined) browser.tabs.update(prevTabId, { active: true })
+      }
+    }
+    activating = false
   } else if (e.button === 2) {
     if (e.ctrlKey || e.shiftKey) return
 
@@ -366,6 +378,7 @@ function select(): void {
   }
 }
 
+let activating = false
 function activate(): void {
   if (Mouse.longClickApplied) return
 
@@ -374,11 +387,9 @@ function activate(): void {
     Selection.resetSelection()
   }
 
-  if (props.tab.id !== Tabs.activeId) browser.tabs.update(props.tab.id, { active: true })
-  else if (Settings.reactive.tabsSecondClickActPrev) {
-    const history = Tabs.getActiveTabsHistory()
-    const prevTabId = history.actTabs[history.actTabs.length - 1]
-    if (prevTabId !== undefined) browser.tabs.update(prevTabId, { active: true })
+  if (props.tab.id !== Tabs.activeId) {
+    activating = true
+    browser.tabs.update(props.tab.id, { active: true })
   }
 }
 
