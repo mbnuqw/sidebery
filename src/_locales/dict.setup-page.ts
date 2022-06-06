@@ -196,6 +196,10 @@ export const setupPageTranslations: Translations = {
     ru: 'Корневая папка',
     zh_CN: '根文件夹',
   },
+  'panel.root_id_wrong': {
+    en: 'Cannot find such folder, please choose the new one',
+    ru: 'Не удается найти такую папку, выберите новую',
+  },
   'panel.root_id.choose': {
     en: 'Choose folder',
     ru: 'Выбрать папку',

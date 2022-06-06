@@ -265,7 +265,7 @@ const rootPath = computed<string>(() => {
   if (props.conf.rootId === BKM_ROOT_ID) return '/'
 
   let parent = Bookmarks.reactive.byId[props.conf.rootId]
-  if (!parent) return '/'
+  if (!parent) return translate('panel.root_id_wrong')
 
   const path: string[] = []
   while (parent) {

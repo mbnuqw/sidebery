@@ -247,12 +247,17 @@ export function recalcBookmarksPanels(): void {
 
     const rootFolder = Bookmarks.reactive.byId[panel.rootId]
     let rootContent: Bookmark[]
-    if (!panel.rootId || panel.rootId === BKM_ROOT_ID) rootContent = Bookmarks.reactive.tree
-    else rootContent = Bookmarks.reactive.byId[panel.rootId]?.children || []
-    if (!rootContent) continue
+    let count = 0
+    if (!panel.rootId || panel.rootId === BKM_ROOT_ID) {
+      rootContent = Bookmarks.reactive.tree
+      count = Bookmarks.overallCount
+    } else {
+      rootContent = Bookmarks.reactive.byId[panel.rootId]?.children || []
+      count = rootFolder?.len ?? 0
+    }
 
     panel.bookmarks = rootContent
-    panel.len = rootFolder?.len ?? Bookmarks.overallCount
+    panel.len = count
   }
 }
 
