@@ -80,6 +80,7 @@ export const Sidebar = {
   scrollPositions: {} as Record<ID, number>,
   convertingPanelLock: false,
 
+  height: 0,
   scrollAreaRightX: 0,
   scrollAreaLeftX: 0,
   panelsTop: 0,
