@@ -100,6 +100,7 @@ import ContainerConfigPopup from './components/popup.container-config.vue'
 import DialogPopup from './components/popup.dialog.vue'
 import UpgradeScreen from '../components/upgrade-screen.vue'
 import Utils from 'src/utils'
+import { SwitchingTabScope } from 'src/services/tabs.fg.actions'
 
 const rootEl = ref<HTMLElement | null>(null)
 const panelBoxEl = ref<HTMLElement | null>(null)
@@ -187,10 +188,14 @@ function onDocumentKeyup(e: KeyboardEvent): void {
 const onWheel = Mouse.getWheelDebouncer(WheelDirection.Horizontal, e => {
   if (Menu.isOpen) Menu.close()
 
-  if (Settings.reactive.hScrollThroughPanels) {
-    if (e.deltaX !== 0) Mouse.blockWheel(WheelDirection.Vertical)
+  if (e.deltaX !== 0) Mouse.blockWheel(WheelDirection.Vertical)
+
+  if (Settings.reactive.hScrollAction === 'switch_panels') {
     if (e.deltaX > 0) return Sidebar.switchPanel(1, true)
     if (e.deltaX < 0) return Sidebar.switchPanel(-1, true)
+  } else if (Settings.reactive.hScrollAction === 'switch_act_tabs') {
+    if (e.deltaX > 0) return Tabs.switchToRecenlyActiveTab(SwitchingTabScope.global, 1)
+    if (e.deltaX < 0) return Tabs.switchToRecenlyActiveTab(SwitchingTabScope.global, -1)
   }
 })
 

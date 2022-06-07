@@ -1,7 +1,12 @@
 <template lang="pug">
 section(ref="el")
   h2 {{translate('settings.mouse_title')}}
-  ToggleField(label="settings.h_scroll_through_panels" v-model:value="Settings.reactive.hScrollThroughPanels")
+  SelectField(
+    label="settings.h_scroll_action"
+    optLabel="settings.h_scroll_action_"
+    v-model:value="Settings.reactive.hScrollAction"
+    :opts="Settings.getOpts('hScrollAction')"
+    :folded="true")
   SelectField(
     label="settings.scroll_through_tabs"
     optLabel="settings.scroll_through_tabs_"

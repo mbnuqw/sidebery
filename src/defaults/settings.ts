@@ -133,7 +133,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   snapLimitUnit: 'snap',
 
   // Mouse
-  hScrollThroughPanels: true,
+  hScrollAction: 'none',
   navSwitchPanelsDelay: 128,
   scrollThroughTabs: 'none',
   scrollThroughVisibleTabs: false,
@@ -180,6 +180,7 @@ export const SETTINGS_OPTIONS = {
   navBookmarksPanelMidClickAction: ['convert', 'none'],
 
   groupLayout: ['grid', 'list'],
+  hScrollAction: ['switch_panels', 'switch_act_tabs', 'none'],
   scrollThroughTabs: ['panel', 'global', 'none'],
   discardFoldedDelayUnit: ['sec', 'min'],
   tabDoubleClick: ['reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'exp', 'new_after',

@@ -1848,10 +1848,21 @@ export const setupPageTranslations: Translations = {
     ru: 'Мышь',
     zh_CN: '鼠标',
   },
-  'settings.h_scroll_through_panels': {
-    en: 'Use horizontal scroll to switch panels',
-    ru: 'Переключать панели с помощью горизонтальной прокрутки',
-    zh_CN: '使用水平滚动切换面板',
+  'settings.h_scroll_action': {
+    en: 'Use horizontal scroll to',
+    ru: 'Использовать горизонтальную прокрутку для',
+  },
+  'settings.h_scroll_action_switch_panels': {
+    en: 'switch panels',
+    ru: 'переключения панелей',
+  },
+  'settings.h_scroll_action_switch_act_tabs': {
+    en: 'switch recently active tabs',
+    ru: 'переключения вкладок в порядке активации',
+  },
+  'settings.h_scroll_action_none': {
+    en: 'nothing',
+    ru: 'ничего',
   },
   'settings.scroll_through_tabs': {
     en: 'Switch tabs with scroll wheel',

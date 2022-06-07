@@ -136,7 +136,8 @@ export interface SettingsState {
   snapLimitUnit: typeof SETTINGS_OPTIONS.snapLimitUnit[number]
 
   // Mouse
-  hScrollThroughPanels: boolean
+  hScrollThroughPanels?: boolean // DEPR
+  hScrollAction: typeof SETTINGS_OPTIONS.hScrollAction[number]
   scrollThroughTabs: typeof SETTINGS_OPTIONS.scrollThroughTabs[number]
   scrollThroughVisibleTabs: boolean
   scrollThroughTabsSkipDiscarded: boolean

@@ -120,6 +120,11 @@ async function upgrade(): Promise<void> {
     if (newStorage.settings.tabDoubleClick !== 'none') {
       newStorage.settings.tabsSecondClickActPrev = false
     }
+    if (stored.settings.hScrollThroughPanels === true) {
+      newStorage.settings.hScrollAction = 'switch_panels'
+    } else if (stored.settings.hScrollThroughPanels === false) {
+      newStorage.settings.hScrollAction = 'none'
+    }
     upgrading.settings = 'done'
   } else {
     upgrading.settings = 'no'
