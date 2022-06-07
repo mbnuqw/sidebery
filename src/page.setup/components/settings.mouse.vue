@@ -24,6 +24,13 @@ section(ref="el")
       label="settings.scroll_through_tabs_cyclic"
       v-model:value="Settings.reactive.scrollThroughTabsCyclic"
       :inactive="Settings.reactive.scrollThroughTabs === 'none'")
+    NumField.-inline(
+      label="settings.scroll_through_tabs_scroll_area"
+      v-model:value="Settings.reactive.scrollThroughTabsScrollArea"
+      :inactive="Settings.reactive.scrollThroughTabs === 'none'"
+      :or="0"
+      :allowNegative="true"
+      :note="translate('settings.scroll_through_tabs_scroll_area_note')")
   ToggleField(
     label="settings.auto_menu_multi_sel"
     v-model:value="Settings.reactive.autoMenuMultiSel")

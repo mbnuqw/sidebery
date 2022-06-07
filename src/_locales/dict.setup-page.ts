@@ -1893,6 +1893,14 @@ export const setupPageTranslations: Translations = {
     ru: 'Зациклить',
     zh_CN: '循环',
   },
+  'settings.scroll_through_tabs_scroll_area': {
+    en: 'Leave a scroll area (px)',
+    ru: 'Оставить зону для скролла (px)',
+  },
+  'settings.scroll_through_tabs_scroll_area_note': {
+    en: 'positive - at the right, negative - at the left side of the panel',
+    ru: 'положительное значение - справа, отрицательное - слева на панели',
+  },
   'settings.auto_menu_multi_sel': {
     en: 'Automatically open context menu on right-button multi-selection (only for non-native context menu)',
     ru: 'Автоматически открывать контекстное меню при множественном выборе правой кнопкой (только для несистемного контекстного меню)',
