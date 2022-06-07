@@ -1898,12 +1898,16 @@ export const setupPageTranslations: Translations = {
     ru: 'Оставить зону для скролла (px)',
   },
   'settings.scroll_through_tabs_scroll_area_note': {
-    en: 'positive - at the right, negative - at the left side of the panel',
-    ru: 'положительное значение - справа, отрицательное - слева на панели',
+    en: 'Positive - at the right, negative - at the left side of the panel',
+    ru: 'Положительное значение - справа, отрицательное - слева на панели',
   },
   'settings.auto_menu_multi_sel': {
-    en: 'Automatically open context menu on right-button multi-selection (only for non-native context menu)',
-    ru: 'Автоматически открывать контекстное меню при множественном выборе правой кнопкой (только для несистемного контекстного меню)',
+    en: 'Automatically open context menu on right-button multi-selection',
+    ru: 'Автоматически открывать контекстное меню при множественном выборе правой кнопкой',
+  },
+  'settings.auto_menu_multi_sel_note': {
+    en: 'Only for non-native context menu',
+    ru: 'Только для несистемного контекстного меню',
   },
   'settings.long_click_delay': {
     en: 'Long click delay (ms)',

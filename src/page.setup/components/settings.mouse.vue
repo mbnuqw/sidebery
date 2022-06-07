@@ -33,7 +33,8 @@ section(ref="el")
       :note="translate('settings.scroll_through_tabs_scroll_area_note')")
   ToggleField(
     label="settings.auto_menu_multi_sel"
-    v-model:value="Settings.reactive.autoMenuMultiSel")
+    v-model:value="Settings.reactive.autoMenuMultiSel"
+    :note="translate('settings.auto_menu_multi_sel_note')")
   NumField.-inline(
     label="settings.long_click_delay"
     unitLabel="settings.long_click_delay_"
