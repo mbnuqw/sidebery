@@ -77,6 +77,7 @@ function onInput(e: Event): void {
   let value = (e.target as HTMLInputElement).value
   if (props.filter) {
     value = props.filter(e)
+    if (value === undefined) return
     ;(e.target as HTMLInputElement).value = value
   }
   recalcTextHeight()

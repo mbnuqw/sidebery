@@ -1,19 +1,21 @@
 <template lang="pug">
 .NumField(:data-active="!!props.value" :data-inactive="props.inactive")
-  .label {{translate(props.label)}}
-  .input-group
-    TextInput.text-input(
-      :value="props.value"
-      :line="true"
-      :filter="valueFilter"
-      @update:value="emit('update:value', $event)")
-    SelectInput.unit-input(
-      v-if="props.unitOpts && props.unitLabel"
-      :value="validUnit"
-      :opts="props.unitOpts"
-      :label="props.unitLabel"
-      :plurNum="props.value"
-      @update:value="select")
+  .body
+    .label {{translate(props.label)}}
+    .input-group
+      TextInput.text-input(
+        :value="props.value"
+        :line="true"
+        :filter="valueFilter"
+        @update:value="emit('update:value', $event)")
+      SelectInput.unit-input(
+        v-if="props.unitOpts && props.unitLabel"
+        :value="validUnit"
+        :opts="props.unitOpts"
+        :label="props.unitLabel"
+        :plurNum="props.value"
+        @update:value="select")
+  .note(v-if="props.note") {{props.note}}
 </template>
 
 <script lang="ts" setup>
@@ -31,6 +33,8 @@ interface NumFieldProps {
   unit?: string
   unitOpts?: readonly InputOption[]
   unitLabel?: string
+  allowNegative?: boolean
+  note?: string
 }
 
 const emit = defineEmits(['update:value', 'update:unit'])
@@ -40,9 +44,15 @@ const validUnit = computed((): string => {
   return !props.value ? 'none' : props.unit ?? 'none'
 })
 
-function valueFilter(e: Event): number {
-  const val = parseInt((e.target as HTMLInputElement).value)
-  if (isNaN(val) || val < 0) return 0
+function valueFilter(e: Event): number | void {
+  const target = e.target as HTMLInputElement
+  let raw = target.value
+  if (props.allowNegative && (raw === '-0' || raw === '0-')) {
+    target.value = '-'
+    return
+  }
+  const val = parseInt(raw)
+  if (isNaN(val) || (!props.allowNegative && val < 0)) return 0
   return val
 }
 function select(unit: string): void {

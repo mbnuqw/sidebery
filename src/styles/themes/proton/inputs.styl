@@ -87,6 +87,7 @@
 
 .ToggleField .body
 .SelectField .body
+.NumField .body
 .CountField .body
 .TextField .body
   position: relative
@@ -119,12 +120,13 @@
 // -
 .ToggleField .note
 .SelectField .note
+.NumField .note
 .TextField .note
   position: relative
   font-size: rem(13)
   width: 100%
-  margin-top: -6px
-  padding: 0 0 12px 16px
+  margin-top: -5px
+  padding: 0 0 12px 0px
   white-space: pre-wrap
   color: var(--toolbar-fg)
   -moz-user-select: text
@@ -387,24 +389,22 @@
 // -
 .NumField
   display: block
-  padding: 8px 16px 2px
+  padding: 0 16px
   &.-inline
     display: flex
-    padding: 0 16px
   .label
     position: relative
-    display: flex
     font-size: rem(16)
-    justify-content: space-between
-    align-items: center
+    line-height: 26px
+    padding: 8px 0
+    align-self: flex-start
     color: var(--toolbar-fg)
     transition: color var(--d-fast)
-    -moz-user-select: none
   .input-group
     position: relative
     display: flex
     align-items: center
-    padding: 8px 0
+    padding: 9px 0
     -moz-user-select: none
   .text-input
     position: relative
