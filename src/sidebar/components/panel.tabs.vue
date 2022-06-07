@@ -182,6 +182,7 @@ function onDoubleClick(e: MouseEvent): void {
 const onWheel = Mouse.getWheelDebouncer(WheelDirection.Vertical, (e: WheelEvent) => {
   if (Sidebar.scrollAreaRightX && e.clientX > Sidebar.scrollAreaRightX) return
   if (Sidebar.scrollAreaLeftX && e.clientX < Sidebar.scrollAreaLeftX) return
+  if (Selection.isSet()) return
   if (Settings.reactive.scrollThroughTabs !== 'none') {
     if (scrollBoxEl && Settings.reactive.scrollThroughTabsExceptOverflow) {
       if (scrollBoxEl.scrollHeight > scrollBoxEl.offsetHeight) return
