@@ -1,7 +1,7 @@
 import Utils from 'src/utils'
 import { BKM_OTHER_ID, NOID } from 'src/defaults'
 import { Command, CommandUpdateDetails, ItemBounds, Tab, Bookmark, MenuType } from 'src/types'
-import { ActiveTabsHistory, InstanceType, ItemInfo, TabsPanel, SelectionType } from 'src/types'
+import { InstanceType, ItemInfo, TabsPanel, SelectionType } from 'src/types'
 import { ItemBoundsType } from 'src/types'
 import { Keybindings } from 'src/services/keybindings'
 import { Settings } from 'src/services/settings'
@@ -13,6 +13,7 @@ import { Sidebar } from 'src/services/sidebar'
 import { Tabs } from 'src/services/tabs.fg'
 import { Search } from 'src/services/search'
 import { Store } from 'src/services/storage'
+import { SwitchingTabScope } from './tabs.fg.actions'
 
 const VALID_SHORTCUT =
   /^((Ctrl|Alt|Command|MacCtrl)\+)((Shift|Alt)\+)?([A-Z0-9]|Comma|Period|Home|End|PageUp|PageDown|Space|Insert|Delete|Up|Down|Left|Right|F\d\d?)$|^((Ctrl|Alt|Command|MacCtrl)\+)?((Shift|Alt)\+)?(F\d\d?)$/
@@ -126,11 +127,15 @@ function onCmd(name: string): void {
   else if (name === 'fold_branch') onKeyFoldBranch()
   else if (name === 'expand_branch') onKeyExpandBranch()
   else if (name === 'fold_inact_branches') onKeyFoldInactiveBranches()
-  else if (name === 'activate_prev_active_tab') onKeyActivatePrevActTab('global', -1)
-  else if (name === 'activate_next_active_tab') onKeyActivatePrevActTab('global', 1)
-  else if (name === 'activate_panel_prev_active_tab') onKeyActivatePrevActTab('panel', -1)
-  else if (name === 'activate_panel_next_active_tab') onKeyActivatePrevActTab('panel', 1)
-  else if (name === 'tabs_indent') onKeyTabsIndent()
+  else if (name === 'activate_prev_active_tab') {
+    Tabs.switchToRecenlyActiveTab(SwitchingTabScope.global, -1)
+  } else if (name === 'activate_next_active_tab') {
+    Tabs.switchToRecenlyActiveTab(SwitchingTabScope.global, 1)
+  } else if (name === 'activate_panel_prev_active_tab') {
+    Tabs.switchToRecenlyActiveTab(SwitchingTabScope.panel, -1)
+  } else if (name === 'activate_panel_next_active_tab') {
+    Tabs.switchToRecenlyActiveTab(SwitchingTabScope.panel, 1)
+  } else if (name === 'tabs_indent') onKeyTabsIndent()
   else if (name === 'tabs_outdent') onKeyTabsOutdent()
   else if (name === 'move_tab_to_active') onKeyMoveTabsToAct()
   else if (name === 'move_tabs_up') onKeyMoveTabs(-1)
@@ -531,45 +536,6 @@ function onKeyFoldInactiveBranches(): void {
   if (!Utils.isTabsPanel(activePanel)) return
 
   Tabs.foldAllInactiveBranches(activePanel.tabs.map(rt => Tabs.byId[rt.id] as Tab) ?? [])
-}
-
-function onKeyActivatePrevActTab(scope: 'global' | 'panel' = 'global', dir: number): void {
-  let history: ActiveTabsHistory | undefined
-  if (scope === 'global') history = Tabs.getActiveTabsHistory()
-  if (scope === 'panel') {
-    const panel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
-    if (!Utils.isTabsPanel(panel)) return
-    history = Tabs.getActiveTabsHistory(panel.id)
-  }
-
-  if (!history?.actTabs?.length) return
-
-  const offset = history.actTabOffset
-  if (offset === undefined || offset < 0 || offset > history.actTabs.length) {
-    history.actTabOffset = history.actTabs.length
-  }
-
-  let targetTabId, targetIdIndex, tabId
-  for (let i = history.actTabOffset + dir; i >= 0 && i < history.actTabs.length; i += dir) {
-    tabId = history.actTabs[i]
-    if (Tabs.byId[tabId] && tabId !== Tabs.activeId) {
-      targetIdIndex = i
-      targetTabId = tabId
-      break
-    }
-  }
-
-  if (targetTabId !== undefined) {
-    if (dir < 0 && targetIdIndex === history.actTabs.length - 1) {
-      const actTab = Tabs.byId[Tabs.activeId]
-      if (scope === 'global' || (scope === 'panel' && actTab && actTab.panelId === history.id)) {
-        history.actTabs.push(Tabs.activeId)
-      }
-    }
-    if (targetIdIndex) history.actTabOffset = targetIdIndex
-    Tabs.skipActiveTabsHistoryCollecting()
-    if (tabId !== undefined) browser.tabs.update(tabId, { active: true })
-  }
 }
 
 function onKeyTabsIndent(): void {

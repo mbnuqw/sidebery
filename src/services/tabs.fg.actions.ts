@@ -3541,3 +3541,58 @@ export function updateUrlCounter(url: string, delta: number): number {
     return count
   }
 }
+
+export const enum SwitchingTabScope {
+  global = 1,
+  panel = 2,
+}
+
+let switchTabActHistoryPause: number | undefined
+export function switchToRecenlyActiveTab(scope = SwitchingTabScope.global, dir: number): void {
+  if (switchTabActHistoryPause) return
+  switchTabActHistoryPause = setTimeout(() => {
+    clearTimeout(switchTabActHistoryPause)
+    switchTabActHistoryPause = undefined
+  }, 120)
+
+  let history: ActiveTabsHistory | undefined
+  if (scope === SwitchingTabScope.global) history = Tabs.getActiveTabsHistory()
+  if (scope === SwitchingTabScope.panel) {
+    const panel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+    if (!Utils.isTabsPanel(panel)) return
+    history = Tabs.getActiveTabsHistory(panel.id)
+  }
+
+  if (!history?.actTabs?.length) return
+
+  // Reset offset
+  const offset = history.actTabOffset
+  if (offset === undefined || offset < 0 || offset > history.actTabs.length) {
+    history.actTabOffset = history.actTabs.length
+  }
+
+  let targetTabId, targetIdIndex, tabId
+  for (let i = history.actTabOffset + dir; i >= 0 && i < history.actTabs.length; i += dir) {
+    tabId = history.actTabs[i]
+    if (Tabs.byId[tabId] && tabId !== Tabs.activeId) {
+      targetIdIndex = i
+      targetTabId = tabId
+      break
+    }
+  }
+
+  if (targetTabId !== undefined) {
+    if (dir < 0 && targetIdIndex === history.actTabs.length - 1) {
+      const actTab = Tabs.byId[Tabs.activeId]
+      if (
+        scope === SwitchingTabScope.global ||
+        (scope === SwitchingTabScope.panel && actTab && actTab.panelId === history.id)
+      ) {
+        history.actTabs.push(Tabs.activeId)
+      }
+    }
+    if (targetIdIndex !== undefined) history.actTabOffset = targetIdIndex
+    Tabs.skipActiveTabsHistoryCollecting()
+    if (tabId !== undefined) browser.tabs.update(tabId, { active: true })
+  }
+}
