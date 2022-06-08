@@ -158,7 +158,10 @@ async function restoreTabsState(): Promise<void> {
   const isWindowTabsLocked = waitGroup[2] ?? false
 
   // Check if tabs are locked right now
-  if (isWindowTabsLocked) throw Err.TabsLocked
+  if (isWindowTabsLocked) {
+    if (isWindowTabsLocked === true) throw Err.TabsLocked
+    storage.tabsDataCache = [isWindowTabsLocked]
+  }
 
   const storedTabsCache = storage.tabsDataCache ? storage.tabsDataCache : []
   let tabsCache: Record<ID, TabCache> | undefined

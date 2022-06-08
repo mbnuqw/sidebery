@@ -101,8 +101,8 @@ export function closeWindowsPopup(): void {
   Windows.reactive.choosingTitle = ''
 }
 
-const lockedWindowsTabs: Record<ID, boolean> = {}
-export function isWindowTabsLocked(id: ID): boolean {
+const lockedWindowsTabs: Record<ID, boolean | TabCache[]> = {}
+export function isWindowTabsLocked(id: ID): boolean | TabCache[] {
   return lockedWindowsTabs[id] ?? false
 }
 
@@ -241,11 +241,15 @@ export async function createWithTabs(
   }
 
   if (hasGroups) browser.sessions.setWindowValue(window.id, 'groups', groups)
-  Tabs.cacheTabsData(window.id, cache)
+  Tabs.cacheTabsData(window.id, cache, 0)
 
   await browser.tabs.remove(firstTabId)
 
-  delete lockedWindowsTabs[window.id]
+  lockedWindowsTabs[window.id] = cache
+
+  setTimeout(() => {
+    if (window.id !== undefined) delete lockedWindowsTabs[window.id]
+  }, 5000)
 
   return true
 }

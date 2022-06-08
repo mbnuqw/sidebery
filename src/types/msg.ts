@@ -41,7 +41,7 @@ export type BgActions = {
     tabsInfo: ItemInfo[],
     conf?: browser.windows.CreateData
   ) => Promise<boolean>
-  isWindowTabsLocked: (id: ID) => boolean
+  isWindowTabsLocked: (id: ID) => boolean | TabCache[]
   getUrlPageInitData: () => Promise<UrlPageInitData>
   getGroupPageInitData: (winId: ID, tabId: ID) => Promise<GroupPageInitData>
   tabsApiProxy: (method: string, ...args: any[]) => Promise<any>
