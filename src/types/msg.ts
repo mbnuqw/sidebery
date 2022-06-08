@@ -60,7 +60,7 @@ export type SidebarActions = {
   getTabsTreeData: () => TabsTreeData
   getActivePanelInfo: () => Panel
   stopDrag: () => void
-  isDropEventConsumed: () => boolean | void
+  isDropEventConsumed: () => boolean
   getGroupInfo: (groupTabId: ID) => GroupInfo | null
   handleReopening: (tabId: ID, newCtx: string) => number | undefined
 

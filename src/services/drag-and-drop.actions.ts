@@ -758,8 +758,9 @@ function dropEventWasConsumed(): void {
   }, 1500)
 }
 
-export function isDropEventConsumed(): boolean | void {
-  if (DnD.dropEventConsumed) return DnD.dropEventConsumed
+export function isDropEventConsumed(): boolean {
+  Logs.info('DnD.isDropEventConsumed', DnD.dropEventConsumed)
+  return DnD.dropEventConsumed
 }
 
 /**
@@ -925,8 +926,18 @@ export async function onDragEnd(e: DragEvent): Promise<void> {
     const dndInfoStr = e.dataTransfer?.getData('application/x-sidebery-dnd')
 
     // Check if the drop event was consumed by another sidebar
-    const consumed = await Msg.req(InstanceType.sidebar, 'isDropEventConsumed')
-    if (consumed) return
+    const requestingDropStatus: Promise<boolean>[] = []
+    for (const win of Windows.otherWindows) {
+      if (win.id) requestingDropStatus.push(Msg.reqSidebar(win.id, 'isDropEventConsumed'))
+    }
+    let consumed
+    try {
+      consumed = await Promise.all(requestingDropStatus)
+    } catch (err) {
+      Logs.err('DnD.onDragEnd: Cannot get drop status from other windows', err)
+      return
+    }
+    if (consumed?.includes(true)) return
 
     // Parse transferred data
     if (!dndInfoStr) return
