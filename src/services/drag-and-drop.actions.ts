@@ -23,6 +23,23 @@ export function start(info: DragInfo, dstType?: DropType): void {
 
   Logs.info('DnD.start')
 
+  if (
+    (info.type === DragType.Tabs || info.type === DragType.TabsPanel) &&
+    info.windowId === Windows.id &&
+    info.items &&
+    info.items.length > 1
+  ) {
+    const activeItem = info.items.find(i => i.id === Tabs.activeId)
+    if (activeItem) {
+      const activeTab = Tabs.byId[Tabs.activeId]
+      if (activeTab) {
+        const toExclude = info.items.map(i => i.id)
+        const target = Tabs.findSuccessorTab(activeTab, toExclude)
+        if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
+      }
+    }
+  }
+
   DnD.dropEventConsumed = false
   DnD.srcType = info.type
   DnD.isExternal = info.windowId !== Windows.id
@@ -921,7 +938,7 @@ export async function onDragEnd(e: DragEvent): Promise<void> {
   DnD.resetOther()
   if (DnD.reactive.isStarted) DnD.reset()
 
-  // Create new window with src items
+  // Dropped outside sidebar
   if (!DnD.dropEventConsumed && e.dataTransfer?.types.length === 1) {
     const dndInfoStr = e.dataTransfer?.getData('application/x-sidebery-dnd')
 
@@ -990,4 +1007,11 @@ export async function onDragEnd(e: DragEvent): Promise<void> {
   droppedRecentlyTimeout = setTimeout(() => {
     DnD.droppedRecently = false
   }, 100)
+
+  // Update succession of active tab
+  const activeTab = Tabs.byId[Tabs.activeId]
+  if (activeTab) {
+    const target = Tabs.findSuccessorTab(activeTab)
+    if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
+  }
 }
