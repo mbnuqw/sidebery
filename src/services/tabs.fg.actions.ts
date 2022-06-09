@@ -1814,7 +1814,7 @@ export async function move(
  *  Move tabs to window if provided,
  * otherwise show window-choosing menu.
  */
-export async function moveTabsToWin(
+async function moveTabsToWin(
   tabIds: ID[],
   windowIdOrConfig?: ID | WindowChoosingDetails
 ): Promise<void> {
