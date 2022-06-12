@@ -18,10 +18,22 @@ export async function loadWindows(): Promise<void> {
 }
 
 export async function loadWindowInfo(): Promise<void> {
-  const currentWindow = await browser.windows.getCurrent({ populate: false })
+  const winData = await Promise.all([
+    browser.windows.getCurrent({ populate: false }),
+    browser.sessions.getWindowValue(browser.windows.WINDOW_ID_CURRENT, 'uniqWinId'),
+  ])
+  const currentWindow = winData[0]
+  let uniqWinId = winData[1] as string | undefined
+
+  // Generate unique window id
+  if (!uniqWinId) {
+    uniqWinId = Utils.uid()
+    await browser.sessions.setWindowValue(browser.windows.WINDOW_ID_CURRENT, 'uniqWinId', uniqWinId)
+  }
 
   Windows.incognito = currentWindow.incognito
   Windows.id = currentWindow.id ?? NOID
+  Windows.uniqWinId = uniqWinId
   Windows.focused = currentWindow.focused
   if (Windows.focused && currentWindow.id) Windows.lastFocusedId = currentWindow.id
   Windows.lastFocused = currentWindow.focused

@@ -67,10 +67,11 @@ export interface TabCache {
   id: ID
   url: string
   pin?: boolean
-  parentId?: ID
+  parentId?: ID /* only if tab has parent tab */
   panelId?: ID
   folded?: boolean
-  ctx?: string
+  ctx?: string /* only for containered tab */
+  uniqWinId?: ID /* only for the first tab of window */
 
   index?: number
   isMissedGroup?: boolean

@@ -352,6 +352,11 @@ function findCachedData(
   let maxEqualityCounter = 1
   let result: Record<ID, TabCache> | undefined
 
+  if (Windows.uniqWinId && Windows.uniqWinId !== NOID) {
+    const winTabsCache = data.find(winTabs => winTabs[0]?.uniqWinId === Windows.uniqWinId)
+    if (winTabsCache) data = [winTabsCache]
+  }
+
   for (const winTabs of data) {
     let equalityCounter = 0
 
@@ -435,6 +440,9 @@ export function cacheTabsData(delay = 300): void {
       if (tab.cookieStoreId !== CONTAINER_ID) info.ctx = tab.cookieStoreId
       data.push(info)
     }
+
+    // Set unique window id
+    if (Windows.uniqWinId && data[0]) data[0].uniqWinId = Windows.uniqWinId
 
     Msg.call(InstanceType.bg, 'cacheTabsData', Windows.id, data)
   }, delay)

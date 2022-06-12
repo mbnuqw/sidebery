@@ -13,6 +13,7 @@ export const Windows = {
 
   reactive: { choosing: null, choosingTitle: '' } as WindowsState,
   id: NOID,
+  uniqWinId: NOID,
   incognito: false,
   lastFocusedId: NOID,
   focused: false,
