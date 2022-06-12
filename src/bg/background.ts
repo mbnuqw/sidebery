@@ -1,4 +1,4 @@
-import { InstanceType, Stored, UpgradingState } from 'src/types'
+import { InstanceType, SavedGroup, Stored, TabSessionData, UpgradingState } from 'src/types'
 import { Msg } from 'src/services/msg'
 import { Logs } from 'src/services/logs'
 import { Settings } from 'src/services/settings'
@@ -107,8 +107,7 @@ async function upgrade(): Promise<void> {
 
   // Moving data
   if (stored.containers_v4) newStorage.containers = stored.containers_v4
-  if (stored.tabsData_v4) newStorage.tabsDataCache = stored.tabsData_v4
-  if (stored.prevTabsData_v4) newStorage.prevTabsDataCache = stored.prevTabsData_v4
+  upgradeTabsDataCache(stored, newStorage)
   upgrading.init = 'done'
 
   // Upgrading settings
@@ -197,6 +196,8 @@ async function upgrade(): Promise<void> {
 
   await waitForApprovingUpgrade()
 
+  await recreateGroupTabs()
+
   const toRemove: (keyof Partial<Stored>)[] = [
     'favAutoCleanTime',
     'favUrls',
@@ -212,6 +213,7 @@ async function upgrade(): Promise<void> {
     'cssVars',
     'expandedBookmarks',
   ]
+
   try {
     await browser.storage.local.remove<Stored>(toRemove)
   } catch (err) {
@@ -222,11 +224,13 @@ async function upgrade(): Promise<void> {
       Logs.err('Upgrade: Cannot clear storage', err)
     }
   }
+
   try {
     await browser.storage.local.set<Stored>(newStorage)
   } catch (err) {
     Logs.err('Upgrade: Cannot set new values', err)
   }
+
   browser.runtime.reload()
 }
 
@@ -255,4 +259,132 @@ async function waitForApprovingUpgrade(): Promise<void> {
 
 function continueUpgrade(): void {
   if (_continueUpgrade) _continueUpgrade()
+}
+
+async function recreateGroupTabs(): Promise<void> {
+  const windows = await browser.windows.getAll({ windowTypes: ['normal'], populate: true })
+  const groupUrlBase = browser.runtime.getURL('page.group/group.html')
+  const tabsCreating: Promise<browser.tabs.Tab>[] = []
+
+  for (const win of windows) {
+    if (win.id === undefined) continue
+    if (!win.tabs) continue
+
+    const querying = win.tabs.map(t => browser.sessions.getTabValue<TabSessionData>(t.id, 'data'))
+    const tabsData = (await Promise.all(querying)) ?? []
+    const groupsData = await browser.sessions.getWindowValue<Record<ID, SavedGroup>>(
+      win.id,
+      'groups'
+    )
+    if (!groupsData) continue
+
+    let indexOffset = 0
+    const tabsMap: Record<ID, TabSessionData | SavedGroup> = {}
+
+    for (let i = 0; i < win.tabs.length; i++) {
+      const tab = win.tabs[i]
+      const tabData = tabsData[i]
+      if (!tab || !tabData) {
+        Logs.err('Upgrade: Recreating groups: No tab data')
+        break
+      }
+
+      tabsMap[tabData.id] = tabData
+
+      // No parent tab
+      if (tabData.parentId === undefined || tabData.parentId === -1) continue
+      // Parent tab ok
+      if (tabsMap[tabData.parentId]) continue
+      // Missing group page
+      if (groupsData[tabData.parentId] && !tabsMap[tabData.parentId]) {
+        let groupTabData = groupsData[tabData.parentId]
+
+        // Set target index at which group tab should be created
+        const index = i + indexOffset
+        tabsCreating.push(createUpgradedGroupTab(groupTabData, index, groupUrlBase))
+        indexOffset++
+
+        tabsMap[groupTabData.id] = groupTabData
+
+        // Check if the parent of new group page is existed
+        let exitedParentTab = tabsMap[groupTabData.parentId]
+        groupTabData = groupsData[groupTabData.parentId]
+
+        while (groupTabData) {
+          if (!exitedParentTab) {
+            tabsCreating.push(createUpgradedGroupTab(groupTabData, index, groupUrlBase))
+            indexOffset++
+
+            tabsMap[groupTabData.id] = groupTabData
+          }
+          exitedParentTab = tabsMap[groupTabData.parentId]
+          groupTabData = groupsData[groupTabData.parentId]
+        }
+      }
+    }
+  }
+
+  await Promise.all(tabsCreating)
+
+  // Wait
+  await Utils.sleep(1000)
+}
+
+function createUpgradedGroupTab(
+  groupTabData: SavedGroup,
+  index: number,
+  groupUrlBase: string
+): Promise<browser.tabs.Tab> {
+  return browser.tabs
+    .create({
+      active: false,
+      index,
+      url: upgradeGroupPageUrl(groupUrlBase, groupTabData.url),
+      cookieStoreId: groupTabData.ctx,
+    })
+    .then(tab => {
+      browser.sessions.setTabValue(tab.id, 'data', {
+        id: groupTabData.id,
+        panelId: groupTabData.panelId,
+        parentId: groupTabData.parentId,
+        folded: groupTabData.folded,
+      })
+      return tab
+    })
+}
+
+function upgradeGroupPageUrl(groupUrlBase: string, oldUrl: string): string {
+  const pageConfIndex = oldUrl.indexOf('group/group.html#')
+  const pageConf = oldUrl.slice(pageConfIndex + 17)
+  const groupUrl = groupUrlBase + '#' + pageConf
+  return groupUrl
+}
+
+function upgradeTabsDataCache(oldStorage: Stored, newStorage: Stored): void {
+  if (oldStorage.tabsData_v4) newStorage.tabsDataCache = oldStorage.tabsData_v4
+  if (oldStorage.prevTabsData_v4) newStorage.prevTabsDataCache = oldStorage.prevTabsData_v4
+
+  const sideberyUrlBase = browser.runtime.getURL('')
+
+  // Update internal urls
+  if (newStorage.tabsDataCache) {
+    for (const winTabs of newStorage.tabsDataCache) {
+      for (const tab of winTabs) {
+        if (tab.url.startsWith(sideberyUrlBase)) {
+          tab.url = tab.url.replace('/group/group.html', '/page.group/group.html')
+          tab.url = tab.url.replace('/url/url.html', '/page.url/url.html')
+        }
+      }
+    }
+  }
+  if (newStorage.prevTabsDataCache) {
+    for (const winTabs of newStorage.prevTabsDataCache) {
+      for (const tab of winTabs) {
+        if (tab.url.startsWith(sideberyUrlBase)) {
+          tab.url = tab.url.replace('/group/group.html', '/page.group/group.html')
+          tab.url = tab.url.replace('/url/url.html', '/page.url/url.html')
+        }
+      }
+    }
+  }
 }

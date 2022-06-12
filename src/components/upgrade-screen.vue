@@ -9,22 +9,22 @@
       .list
         .item(:data-status="Sidebar.reactive.upgrading?.init ?? 'pending'")
           .label {{translate('upgrade.initializing')}}
-          .status {{getStatusLable(Sidebar.reactive.upgrading?.init ?? 'pending')}}
+          .status {{getStatusLabel(Sidebar.reactive.upgrading?.init ?? 'pending')}}
         .item(:data-status="Sidebar.reactive.upgrading?.settings ?? 'pending'")
           .label {{translate('upgrade.settings')}}
-          .status {{getStatusLable(Sidebar.reactive.upgrading?.settings ?? 'pending')}}
+          .status {{getStatusLabel(Sidebar.reactive.upgrading?.settings ?? 'pending')}}
         .item(:data-status="Sidebar.reactive.upgrading?.sidebar ?? 'pending'")
           .label {{translate('upgrade.panels_nav')}}
-          .status {{getStatusLable(Sidebar.reactive.upgrading?.sidebar ?? 'pending')}}
+          .status {{getStatusLabel(Sidebar.reactive.upgrading?.sidebar ?? 'pending')}}
         .item(:data-status="Sidebar.reactive.upgrading?.snapshots ?? 'pending'")
           .label {{translate('upgrade.snapshots')}}
-          .status {{getStatusLable(Sidebar.reactive.upgrading?.snapshots ?? 'pending')}}
+          .status {{getStatusLabel(Sidebar.reactive.upgrading?.snapshots ?? 'pending')}}
         .item(:data-status="Sidebar.reactive.upgrading?.favicons ?? 'pending'")
           .label {{translate('upgrade.fav_cache')}}
-          .status {{getStatusLable(Sidebar.reactive.upgrading?.favicons ?? 'pending')}}
+          .status {{getStatusLabel(Sidebar.reactive.upgrading?.favicons ?? 'pending')}}
         .item(:data-status="Sidebar.reactive.upgrading?.styles ?? 'pending'")
           .label {{translate('upgrade.styles')}}
-          .status {{getStatusLable(Sidebar.reactive.upgrading?.styles ?? 'pending')}}
+          .status {{getStatusLabel(Sidebar.reactive.upgrading?.styles ?? 'pending')}}
     .controls
       .btn(
         :class="{ '-inactive': !allDone }"
@@ -56,7 +56,7 @@ const allDone = computed<boolean>(() => {
   return false
 })
 
-function getStatusLable(status: 'done' | 'in-progress' | 'pending' | 'err' | 'no'): string {
+function getStatusLabel(status: 'done' | 'in-progress' | 'pending' | 'err' | 'no'): string {
   if (status === 'done') return translate('upgrade.status.done')
   if (status === 'in-progress') return translate('upgrade.status.in_progress')
   if (status === 'err') return translate('upgrade.status.err')
@@ -66,6 +66,7 @@ function getStatusLable(status: 'done' | 'in-progress' | 'pending' | 'err' | 'no
 
 function onContinueClick(): void {
   if (!allDone.value) return
+  if (continued.value) return
   continued.value = true
   Msg.call(InstanceType.bg, 'continueUpgrade')
 }
@@ -84,7 +85,7 @@ async function genBackup(): Promise<void> {
   } catch (err) {
     return Logs.err('genBackup: Cannot get stored data for backup', err)
   }
-  const backup: BackupData = { ver: '4.9.5', ...stored }
+  const backup: BackupData = { ver: '4.10.1', ...stored }
   const backupJSON = JSON.stringify(backup)
   const file = new Blob([backupJSON], { type: 'application/json' })
   const now = Date.now()
