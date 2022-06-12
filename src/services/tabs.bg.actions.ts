@@ -264,10 +264,17 @@ function onTabAttached(id: ID, info: browser.tabs.AttachInfo): void {
   }
 
   if (!Windows.byId[info.newWindowId]) return
-  if (!detachedTabs[id]) return
+
+  const tab = detachedTabs[id]
+  if (!tab) return
+
   const tabWindow = Windows.byId[info.newWindowId]
   if (!tabWindow || !tabWindow.tabs) return
-  tabWindow.tabs.splice(info.newPosition, 0, detachedTabs[id])
+
+  tab.windowId = info.newWindowId
+  tab.index = info.newPosition
+
+  tabWindow.tabs.splice(info.newPosition, 0, tab)
 }
 
 /**
