@@ -27,10 +27,10 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "5.19.0",
     "@typescript-eslint/parser": "5.19.0",
-    "@vue/compiler-sfc": "3.2.33",
+    "@vue/compiler-sfc": "3.2.37",
     "@vue/eslint-config-typescript": "10.0.0",
     "csso": "5.0.3",
-    "esbuild": "0.14.36",
+    "esbuild": "0.14.43",
     "eslint": "8.13.0",
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-prettier": "4.0.0",
@@ -38,13 +38,13 @@
     "jest": "27.5.1",
     "prettier": "2.6.2",
     "pug": "3.0.2",
-    "stylus": "0.57.0",
+    "stylus": "0.58.1",
     "terser": "5.12.1",
-    "typescript": "4.6.3",
+    "typescript": "4.7.3",
     "web-ext": "6.8.0"
   },
   "dependencies": {
-    "vue": "3.2.33"
+    "vue": "3.2.37 "
   },
   "prettier": {
     "arrowParens": "avoid",
