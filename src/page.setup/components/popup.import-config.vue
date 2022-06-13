@@ -198,13 +198,9 @@ async function importData(): Promise<void> {
   }
 
   if (state.settings) {
-    try {
-      importSettings(backup, toStore)
-      importSidebar(backup, toStore, containersIds)
-      importContextMenu(backup, toStore)
-    } catch (err) {
-      return Logs.err('Backup import: Cannot import settings:', err)
-    }
+    importSettings(backup, toStore)
+    importSidebar(backup, toStore, containersIds)
+    importContextMenu(backup, toStore)
     atLeastOne = true
   }
 
@@ -333,7 +329,7 @@ async function importContainers(backup: BackupData, toStore: Stored): Promise<Ol
 }
 
 function importSettings(backup: BackupData, toStore: Stored): void {
-  if (!backup.settings) throw 'No settings data'
+  if (!backup.settings) return
   toStore.settings = Utils.recreateNormalizedObject(backup.settings, DEFAULT_SETTINGS)
 }
 
@@ -341,7 +337,7 @@ function importSidebar(backup: BackupData, toStore: Stored, containersIds: OldNe
   if (backup.panels_v4 && !backup.sidebar) {
     backup.sidebar = Sidebar.convertOldPanelsConfigToNew(backup.panels_v4)
   }
-  if (!backup.sidebar) throw 'No nav/panels config'
+  if (!backup.sidebar) return
 
   const nav = backup.sidebar?.nav ?? []
   const panels = backup.sidebar?.panels ?? {}
@@ -368,7 +364,7 @@ function importContextMenu(backup: BackupData, toStore: Stored): void {
     backup.contextMenu.bookmarks = Menu.upgradeMenuConf(backup.bookmarksMenu)
   }
 
-  if (!backup.contextMenu) throw 'No context menu data'
+  if (!backup.contextMenu) return
 
   toStore.contextMenu = backup.contextMenu
 }
