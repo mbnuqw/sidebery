@@ -786,6 +786,7 @@ export function isDropEventConsumed(): boolean {
 export async function onDrop(e: DragEvent): Promise<void> {
   dropEventWasConsumed()
 
+  // Handle native firefox tabs
   if (isNativeTabs(e)) {
     const result = await Utils.parseDragEvent(e, Windows.lastFocusedId)
     if (result?.matchedNativeTabs?.length) {

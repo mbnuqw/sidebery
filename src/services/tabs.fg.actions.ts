@@ -3,7 +3,7 @@ import { CONTAINER_ID, GROUP_URL, NOID, NEWID, Err, ASKID, MOVEID, PRE_SCROLL } 
 import { BKM_OTHER_ID } from 'src/defaults'
 import { translate } from 'src/dict'
 import { Stored, Tab, Panel, TabCache, ActiveTabsHistory, ReactiveTab, TabStatus } from 'src/types'
-import { Notification, TabSessionData, TabsTreeData } from 'src/types'
+import { Notification, TabSessionData, TabsTreeData, DragInfo } from 'src/types'
 import { WindowChoosingDetails, SrcPlaceInfo, DstPlaceInfo, ItemInfo } from 'src/types'
 import { InstanceType, TabsPanel, PanelType } from 'src/types'
 import { Tabs } from 'src/services/tabs.fg'
@@ -3009,6 +3009,29 @@ export async function undoRmTab(): Promise<void> {
 }
 
 export async function createFromDragEvent(e: DragEvent, dst: DstPlaceInfo): Promise<void> {
+  // Handle sidebery dnd info from another firefox profile
+  const dndInfo = e.dataTransfer?.getData('application/x-sidebery-dnd')
+  if (dndInfo) {
+    let info: DragInfo
+    try {
+      info = JSON.parse(dndInfo) as DragInfo
+    } catch (err) {
+      return
+    }
+    if (info.items) {
+      const groupUrlStartRe = /^moz-extension:\/\/.{36}\/(page.)?group\/group\.html(.+)$/
+      // Update sidebery internal urls
+      for (const item of info.items) {
+        if (item.url && groupUrlStartRe.test(item.url)) {
+          item.url = item.url.replace(groupUrlStartRe, (_, _1, $2: string) => GROUP_URL + $2)
+        }
+      }
+
+      Tabs.open(info.items, dst)
+    }
+    return
+  }
+
   const result = await Utils.parseDragEvent(e)
   const panel = Sidebar.reactive.panelsById[dst.panelId ?? NOID]
   if (!Utils.isTabsPanel(panel)) return

@@ -1,9 +1,9 @@
 import Utils from 'src/utils'
 import { translate } from 'src/dict'
-import { Bookmark, Panel, Notification, DialogConfig } from 'src/types'
+import { Bookmark, Panel, Notification, DialogConfig, DragInfo } from 'src/types'
 import { Stored, BookmarksSortType, DstPlaceInfo, ItemInfo, TabsPanel } from 'src/types'
 import { CONTAINER_ID, NOID, BKM_OTHER_ID, BKM_ROOT_ID, PRE_SCROLL, GROUP_RE } from 'src/defaults'
-import { FOLDER_NAME_DATA_RE, BOOKMARKED_PANEL_CONF_RE } from 'src/defaults'
+import { FOLDER_NAME_DATA_RE, BOOKMARKED_PANEL_CONF_RE, GROUP_URL } from 'src/defaults'
 import { Bookmarks, BookmarksPopupConfig, BookmarksPopupResult } from 'src/services/bookmarks'
 import { BookmarksPopupState } from 'src/services/bookmarks'
 import { Logs } from 'src/services/logs'
@@ -21,7 +21,6 @@ import { Favicons } from './favicons'
 import { TabsPanelConfig } from 'src/types/sidebar'
 import { TABS_PANEL_CONFIG } from 'src/defaults/panels'
 import { Permissions } from './permissions'
-import { SetupPage } from './setup-page'
 import { Containers } from './containers'
 import { DnD } from './drag-and-drop'
 import { Search } from './search'
@@ -880,6 +879,29 @@ export function unmarkParents(node: Bookmark): void {
 
 export async function createFromDragEvent(e: DragEvent, dst: DstPlaceInfo): Promise<void> {
   if (!dst.parentId || !Bookmarks.reactive.byId[dst.parentId]) return
+
+  // Handle sidebery dnd info from another firefox profile
+  const dndInfo = e.dataTransfer?.getData('application/x-sidebery-dnd')
+  if (dndInfo) {
+    let info: DragInfo
+    try {
+      info = JSON.parse(dndInfo) as DragInfo
+    } catch (err) {
+      return
+    }
+    if (info.items) {
+      const groupUrlStartRe = /^moz-extension:\/\/.{36}\/(page.)?group\/group\.html(.+)$/
+      // Update sidebery internal urls
+      for (const item of info.items) {
+        if (item.url && groupUrlStartRe.test(item.url)) {
+          item.url = item.url.replace(groupUrlStartRe, (_, _1, $2: string) => GROUP_URL + $2)
+        }
+      }
+
+      Bookmarks.createFrom(info.items, dst)
+    }
+    return
+  }
 
   const result = await Utils.parseDragEvent(e)
   if (!result?.url) return
