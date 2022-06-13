@@ -74,7 +74,7 @@ function onTabCreated(tab: Tab): void {
   if (Tabs.ignoreTabsEvents) return
   if (Tabs.tabsNormalizing) return Tabs.normalizeTabs()
 
-  if (Sidebar.reactive.hiddenPanelsBar) Sidebar.closeHiddenPanelsBar()
+  if (Sidebar.reactive.hiddenPanelsBar) Sidebar.closeHiddenPanelsBar(true)
 
   if (Settings.reactive.highlightOpenBookmarks) Bookmarks.markOpenBookmarksDebounced(tab.url)
 

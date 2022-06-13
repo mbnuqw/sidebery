@@ -1094,11 +1094,12 @@ export function switchPanel(
   switchToPanel(panel.id, false, withoutTabCreation)
 }
 
-export function closeHiddenPanelsBar(): void {
+export function closeHiddenPanelsBar(withoutTabCreation?: boolean): void {
   Sidebar.reactive.hiddenPanelsBar = false
 
   const panel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
   if (
+    !withoutTabCreation &&
     Utils.isTabsPanel(panel) &&
     (panel.noEmpty || Settings.reactive.hideInact || Settings.reactive.hideEmptyPanels) &&
     !panel.len
