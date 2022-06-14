@@ -46,23 +46,46 @@ export function resetTabsListeners(): void {
 
 let waitForOtherReopenedTabsTimeout: number | undefined
 let waitForOtherReopenedTabsBuffer: Tab[] | null = null
+let waitForOtherReopenedTabsCheckLen = 0
 let waitForOtherReopenedTabsBufferRelease = false
 function waitForOtherReopenedTabs(tab: Tab): void {
+  Logs.info('Tabs.waitForOtherReopenedTabs: Bufferizing')
   if (!waitForOtherReopenedTabsBuffer) waitForOtherReopenedTabsBuffer = []
   waitForOtherReopenedTabsBuffer.push(tab)
+  waitForOtherReopenedTabsCheckLen++
 
+  // Get session data of probably reopened tab
+  // to check if it was actually reopened
+  browser.sessions.getTabValue(tab.id, 'data').then(data => {
+    tab.reopened = !!data
+    if (!waitForOtherReopenedTabsBuffer) return
+    waitForOtherReopenedTabsCheckLen--
+    if (waitForOtherReopenedTabsCheckLen <= 0) {
+      clearTimeout(waitForOtherReopenedTabsTimeout)
+      releaseReopenedTabsBuffer()
+    }
+  })
+
+  // Set the time limit for this waiting, because when re-opening lots of tabs
+  // the browser.sessions.getTabValue getting too slow.
   clearTimeout(waitForOtherReopenedTabsTimeout)
   waitForOtherReopenedTabsTimeout = setTimeout(() => {
-    if (!waitForOtherReopenedTabsBuffer) return
-    waitForOtherReopenedTabsBufferRelease = true
-    waitForOtherReopenedTabsBuffer.sort((a, b) => a.index - b.index)
-    waitForOtherReopenedTabsBuffer.forEach(onTabCreated)
-    waitForOtherReopenedTabsBuffer = null
-    waitForOtherReopenedTabsBufferRelease = false
-
-    Tabs.deferredEventHandling.forEach(cb => cb())
-    Tabs.deferredEventHandling = []
+    Logs.info('Tabs.waitForOtherReopenedTabs: Time out: len:', waitForOtherReopenedTabsCheckLen)
+    releaseReopenedTabsBuffer()
   }, 80)
+}
+function releaseReopenedTabsBuffer(): void {
+  Logs.info('Tabs.releaseReopenedTabsBuffer', waitForOtherReopenedTabsBuffer?.length)
+  if (!waitForOtherReopenedTabsBuffer) return
+  waitForOtherReopenedTabsBufferRelease = true
+  waitForOtherReopenedTabsBuffer.sort((a, b) => a.index - b.index)
+  waitForOtherReopenedTabsBuffer.forEach(tab => onTabCreated(tab))
+  waitForOtherReopenedTabsBuffer = null
+  waitForOtherReopenedTabsBufferRelease = false
+  waitForOtherReopenedTabsCheckLen = 0
+
+  Tabs.deferredEventHandling.forEach(cb => cb())
+  Tabs.deferredEventHandling = []
 }
 
 function onTabCreated(tab: Tab): void {
@@ -105,7 +128,7 @@ function onTabCreated(tab: Tab): void {
   }
 
   // Check if tab is reopened
-  if (Tabs.removedTabs.length && !tab.discarded) {
+  if (Tabs.removedTabs.length && !tab.discarded && tab.reopened !== false) {
     const prevPosIndex = Tabs.removedTabs.findIndex(t => t.title === tab.title)
     reopenedTabInfo = Tabs.removedTabs[prevPosIndex]
     if (reopenedTabInfo) {
@@ -611,7 +634,11 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, ignoreChildren?:
   let removedTabInfo: RemovedTabInfo | undefined
 
   // Update temp list of removed tabs for restoring reopened tabs state
-  if (tab.url !== NEWTAB_URL && tab.url !== 'about:blank') {
+  if (
+    tab.url !== NEWTAB_URL && // Ignore new tabs
+    tab.url !== 'about:blank' && // Ignore new tabs
+    (tab.isParent || !tab.url.startsWith('m')) // and non-parent addon pages
+  ) {
     removedTabInfo = {
       id: tab.id,
       index: tab.index,
