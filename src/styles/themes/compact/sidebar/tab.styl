@@ -522,33 +522,30 @@
 // -
 .Tab .ctx
   position: absolute
-  z-index: 200
-  box-shadow: inset -1px 0 0 0 #00000032
+  z-index: 15
   background-color: var(--color)
 
 .Tab[data-pin="false"] .ctx
-  top: 5px
+  top: 3px
   right: 0
   width: 2px
-  height: calc(100% - 10px)
+  height: calc(100% - 6px)
 
-.Tab[data-pin="true"] .ctx
-  box-shadow: 0 0 1px 0 #00000032
 #root[data-pinned-tabs-position="panel"] .Tab[data-pin="true"] .ctx
 #root[data-pinned-tabs-position="top"] .Tab[data-pin="true"] .ctx
-  bottom: 2px
-  left: calc(50% - 5px)
-  width: 10px
+  bottom: 1px
+  left: 3px
+  width: calc(100% - 6px)
   height: 2px
-  transition: width var(--d-fast)
 #root[data-pinned-tabs-position="panel"] .Tab[data-pin="true"][data-loading="true"] .ctx
 #root[data-pinned-tabs-position="top"] .Tab[data-pin="true"][data-loading="true"] .ctx
-  width: 5px
+  width: calc(50% - 6px)
+  transition: width var(--d-fast)
 #root[data-pinned-tabs-position="left"] .Tab[data-pin="true"] .ctx
 #root[data-pinned-tabs-position="right"] .Tab[data-pin="true"] .ctx
-  top: calc(50% - 8px)
+  top: 3px
   width: 2px
-  height: 16px
+  height: calc(100% - 6px)
 #root[data-pinned-tabs-position="left"] .Tab[data-pin="true"] .ctx
   left: 0
 #root[data-pinned-tabs-position="right"] .Tab[data-pin="true"] .ctx
@@ -566,7 +563,7 @@
   cursor: pointer
   z-index: 20
   opacity: 0
-  border-radius: var(--tabs-border-radius)
+  border-radius: calc(var(--tabs-border-radius) - 1px)
   &:hover
     background-color: var(--hover-bg)
   > svg
