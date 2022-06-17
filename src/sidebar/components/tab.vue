@@ -15,7 +15,8 @@
   :data-parent="tab.isParent"
   :data-folded="tab.folded && !Search.reactive.value"
   :data-invisible="tab.invisible && !Search.reactive.value"
-  :data-color="color"
+  :data-color="containerColor"
+  :data-colorized="!!tabColor"
   :data-unread="tab.unread"
   :title="tooltip"
   @contextmenu.stop="onCtxMenu"
@@ -24,11 +25,7 @@
   @dblclick.prevent.stop="onDoubleClick")
   .body
     .color-layer(
-      v-if="Settings.reactive.colorizeTabsBranches && tab.branchColor && (tab.isParent || tab.lvl > 0)"
-      :style="{ '--tab-color': tab.branchColor }")
-    .color-layer(
-      v-else-if="Settings.reactive.colorizeTabs && tab.color"
-      :style="{ '--tab-color': tab.color }")
+      v-if="tabColor" :style="{ '--tab-color': tabColor }")
     .flash-fx(v-if="tab.flash")
     .dnd-layer(draggable="true" data-dnd-type="tab" :data-dnd-id="tab.id" @dragstart="onDragStart" @dragenter="")
     .audio(
@@ -55,7 +52,7 @@
       @mouseup.stop
       @contextmenu.stop.prevent)
       svg: use(xlink:href="#icon_remove")
-    .ctx(v-if="color")
+    .ctx(v-if="containerColor")
     .t-box(v-if="withTitle"): .title {{tab.title}}
 </template>
 
@@ -83,10 +80,23 @@ const loading = computed((): boolean | 'ok' | 'err' => {
   if (props.tab.status === TabStatus.Err) return 'err'
   return false
 })
-const color = computed((): boolean | string => {
+const containerColor = computed((): boolean | string => {
   const container = Containers.reactive.byId[props.tab.cookieStoreId]
   if (container) return container.color
   return false
+})
+const tabColor = computed<string>(() => {
+  if (
+    Settings.reactive.colorizeTabsBranches &&
+    props.tab.branchColor &&
+    (props.tab.isParent || props.tab.lvl > 0)
+  ) {
+    return props.tab.branchColor
+  } else if (Settings.reactive.colorizeTabs && props.tab.color) {
+    return props.tab.color
+  } else {
+    return ''
+  }
 })
 const tooltip = computed((): string => {
   try {

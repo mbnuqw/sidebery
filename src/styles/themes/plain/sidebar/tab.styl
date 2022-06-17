@@ -150,7 +150,7 @@
               calc(var(--tabs-indent) * -15.5) 0 0 0 var(--toolbar-fg)
 
 // ---
-// -- Branch color
+// -- Color layer
 // -
 .Tab .color-layer
   position: absolute
@@ -160,16 +160,16 @@
   height: 100%
   border-radius: var(--tabs-border-radius)
   background-color: var(--tab-color)
-  opacity: .16
+  opacity: .2
 .Tab[data-discarded="true"] .color-layer
   opacity: .1
-#root[data-color-scheme="light"] .Tab .color-layer
-  opacity: .3
-#root[data-color-scheme="light"] .Tab[data-discarded="true"] .color-layer
-  opacity: .2
 .Tab[data-active="true"] .color-layer
   box-shadow: inset 0 0 0 1px #fff5
   opacity: .3
+#root[data-color-scheme="light"] .Tab .color-layer
+  opacity: .32
+#root[data-color-scheme="light"] .Tab[data-discarded="true"] .color-layer
+  opacity: .24
 #root[data-color-scheme="light"] .Tab[data-active="true"] .color-layer
   box-shadow: inset 0 0 0 1px #0003
   opacity: .6
