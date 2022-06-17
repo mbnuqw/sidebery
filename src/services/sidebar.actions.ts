@@ -148,17 +148,19 @@ export function recalcSidebarSize(): void {
   Sidebar.reactive.width = document.body.offsetWidth
   Sidebar.height = document.body.offsetHeight
 
-  if (panelsBoxEl) {
-    const panelsBoxBounds = panelsBoxEl.getBoundingClientRect()
-    const area = Settings.reactive.scrollThroughTabsScrollArea
-    if (area > 0) {
-      Sidebar.scrollAreaRightX = panelsBoxBounds.right - area
-      Sidebar.scrollAreaLeftX = 0
-    } else if (area < 0) {
-      Sidebar.scrollAreaRightX = 0
-      Sidebar.scrollAreaLeftX = panelsBoxBounds.left - area
+  setTimeout(() => {
+    if (panelsBoxEl) {
+      const panelsBoxBounds = panelsBoxEl.getBoundingClientRect()
+      const area = Settings.reactive.scrollThroughTabsScrollArea
+      if (area > 0) {
+        Sidebar.scrollAreaRightX = panelsBoxBounds.right - area
+        Sidebar.scrollAreaLeftX = 0
+      } else if (area < 0) {
+        Sidebar.scrollAreaRightX = 0
+        Sidebar.scrollAreaLeftX = panelsBoxBounds.left - area
+      }
     }
-  }
+  }, 120)
 }
 
 export function updateFontSize(): void {
