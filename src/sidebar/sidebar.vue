@@ -157,7 +157,7 @@ function onDocumentKeyup(e: KeyboardEvent): void {
   // Close popups
   if (e.code === 'Escape') {
     // Selection (without menu)
-    if (!Menu.isOpen && Selection.isSet) Selection.resetSelection()
+    if (!Menu.isOpen && Selection.isSet()) Selection.resetSelection()
 
     // Context menu
     if (Menu.isOpen) Menu.close()
