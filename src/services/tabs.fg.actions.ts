@@ -1,6 +1,6 @@
 import Utils from 'src/utils'
 import { CONTAINER_ID, GROUP_URL, NOID, NEWID, Err, ASKID, MOVEID, PRE_SCROLL } from 'src/defaults'
-import { BKM_OTHER_ID } from 'src/defaults'
+import { BKM_OTHER_ID, ADDON_HOST } from 'src/defaults'
 import { translate } from 'src/dict'
 import { Stored, Tab, Panel, TabCache, ActiveTabsHistory, ReactiveTab, TabStatus } from 'src/types'
 import { Notification, TabSessionData, TabsTreeData, DragInfo } from 'src/types'
@@ -414,11 +414,13 @@ export function normalizeTab(tab: Tab, defaultPanelId: ID): void {
   if (tab.loading === undefined) tab.loading = false
   if (tab.status === undefined) tab.status = 'complete'
   if (tab.warn === undefined) tab.warn = false
-  if (tab.favIconUrl === 'chrome://global/skin/icons/warning.svg') {
-    tab.warn = true
+  if (tab.internal === undefined) tab.internal = tab.url.startsWith(ADDON_HOST)
+  if (tab.internal) tab.favIconUrl = ''
+  else {
+    if (tab.favIconUrl === 'chrome://global/skin/icons/warning.svg') tab.warn = true
+    if (tab.favIconUrl === undefined) tab.favIconUrl = ''
+    else if (tab.favIconUrl.startsWith('chrome:')) tab.favIconUrl = ''
   }
-  if (tab.favIconUrl === undefined) tab.favIconUrl = ''
-  else if (tab.favIconUrl.startsWith('chrome:')) tab.favIconUrl = ''
   if (tab.unread === undefined) tab.unread = false
   if (tab.mediaPaused === undefined) tab.mediaPaused = false
 }

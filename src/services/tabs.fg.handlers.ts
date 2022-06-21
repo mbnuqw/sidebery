@@ -1,6 +1,6 @@
 import Utils from 'src/utils'
 import { ReactiveTab, Tab, TabStatus } from 'src/types'
-import { NOID, GROUP_URL, CONTAINER_ID } from 'src/defaults'
+import { NOID, GROUP_URL, CONTAINER_ID, ADDON_HOST } from 'src/defaults'
 import { Logs } from 'src/services/logs'
 import { Windows } from 'src/services/windows'
 import { Bookmarks } from 'src/services/bookmarks'
@@ -237,9 +237,10 @@ function onTabCreated(tab: Tab): void {
   // Set custom props
   if (Settings.reactive.tabsUnreadMark && tab.unread === undefined && !tab.active) tab.unread = true
   if (panel) Tabs.normalizeTab(tab, panel.id)
+  tab.internal = tab.url.startsWith(ADDON_HOST)
   tab.index = index
   tab.parentId = tab.openerTabId ?? -1
-  if (!tab.favIconUrl) tab.favIconUrl = Favicons.getFavicon(tab.url)
+  if (!tab.favIconUrl && !tab.internal) tab.favIconUrl = Favicons.getFavicon(tab.url)
 
   // Put new tab in state
   Tabs.byId[tab.id] = tab
@@ -404,6 +405,7 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
   // Url
   let branchColorizationNeeded = false
   if (change.url !== undefined && change.url !== localTab.url) {
+    localTab.internal = localTab.url.startsWith(ADDON_HOST)
     Tabs.cacheTabsData()
     if (!change.url.startsWith(localTab.url.slice(0, 16))) {
       localTab.favIconUrl = ''
@@ -496,7 +498,9 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
   Object.assign(localTab, change)
   if (change.audible !== undefined) rLocalTab.mediaAudible = change.audible
   if (change.discarded !== undefined) rLocalTab.discarded = change.discarded
-  if (change.favIconUrl !== undefined) rLocalTab.favIconUrl = change.favIconUrl
+  if (change.favIconUrl !== undefined && !localTab.internal) {
+    rLocalTab.favIconUrl = change.favIconUrl
+  }
   if (change.mutedInfo?.muted !== undefined) rLocalTab.mediaMuted = change.mutedInfo.muted
   if (change.pinned !== undefined) rLocalTab.pinned = change.pinned
   if (change.status !== undefined) rLocalTab.status = Tabs.getStatus(localTab)
@@ -558,6 +562,9 @@ function reloadTabFaviconDebounced(localTab: Tab, rLocalTab: ReactiveTab, delay 
   clearTimeout(reloadTabFaviconTimeout[localTab.id])
   reloadTabFaviconTimeout[localTab.id] = setTimeout(() => {
     delete reloadTabFaviconTimeout[localTab.id]
+
+    if (localTab.internal) return
+
     browser.tabs
       .get(localTab.id)
       .then(tabInfo => {

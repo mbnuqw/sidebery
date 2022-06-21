@@ -1,18 +1,16 @@
 import { Stored, Tab, Window, TabCache, TabsTreeData, GroupInfo, AnyFunc } from 'src/types'
 import Utils from 'src/utils'
-import { GROUP_RE, NOID } from 'src/defaults'
+import { ADDON_HOST, NOID } from 'src/defaults'
 import { Tabs } from 'src/services/tabs.bg'
 import { Windows } from 'src/services/windows'
 import { Containers } from 'src/services/containers'
 import { Store } from 'src/services/storage'
 import { WebReq } from 'src/services/web-req'
-import { Sidebar } from 'src/services/sidebar'
 import { Favicons } from 'src/services/favicons'
 import { Msg } from './msg'
 import { Settings } from './settings'
 import { Logs } from './logs'
 
-const FAVICON_CACHE_DELAY = 2000
 const detachedTabs: Record<ID, Tab> = {}
 
 /**
@@ -138,7 +136,11 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo): void {
   if (!targetTab) return
 
   if (change.status !== undefined) {
-    if (change.status === 'complete' && targetTab.url[0] !== 'a') {
+    if (
+      change.status === 'complete' &&
+      targetTab.url[0] !== 'a' &&
+      !targetTab.url.startsWith(ADDON_HOST)
+    ) {
       reloadTabFaviconDebounced(targetTab)
     }
   }
@@ -148,7 +150,12 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo): void {
     if (Utils.isUrlUrl(change.url)) injectUrlPageScript(tabId)
   }
 
-  if (change.favIconUrl && change.favIconUrl.startsWith('data:')) {
+  if (
+    change.favIconUrl &&
+    change.favIconUrl.startsWith('data:') &&
+    reloadTabFaviconTimeout[targetTab.id] === undefined &&
+    !targetTab.url.startsWith(ADDON_HOST)
+  ) {
     Favicons.saveFavicon(targetTab.url, change.favIconUrl)
   }
 

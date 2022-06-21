@@ -62,6 +62,7 @@ export async function loadFavicons(): Promise<void> {
 
   if (Info.isSidebar) {
     for (const tab of Tabs.list) {
+      if (tab?.internal) continue
       if (tab?.favIconUrl) continue
       const domain = Utils.getDomainOf(tab.url)
       if (Favicons.reactive.list[Favicons.reactive.domains[domain]]) {

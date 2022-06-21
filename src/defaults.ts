@@ -4,6 +4,7 @@ export * from './defaults/panels'
 export * from './defaults/settings'
 
 export const PRE_SCROLL = 64
+export const ADDON_HOST = browser.runtime.getURL('')
 export const SIDEBAR_URL = browser.runtime.getURL('/sidebar/sidebar.html')
 export const GROUP_URL = browser.runtime.getURL('/page.group/group.html')
 export const URL_URL = browser.runtime.getURL('/page.url/url.html')

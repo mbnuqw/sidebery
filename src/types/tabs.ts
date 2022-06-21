@@ -22,6 +22,7 @@ export interface Tab extends browser.tabs.Tab {
   reloadingChecks: number
   mediaPaused: boolean
   reopened?: boolean
+  internal?: boolean
 }
 
 export const enum TabStatus {
