@@ -1,1 +1,1 @@
-<svg id="icon_create_folder" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M3 3 2 4v7a1 1 0 0 0 1 1h5v-1h3V8h3V5a1 1 0 0 0-1-1H7L6 3H3Z"/><path d="M12 9h1v3h3v1h-3v3h-1v-3H9v-1h3V9Z"/></svg>
+<svg id="icon_create_folder" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M3.5 2C2.67 2 2 2.67 2 3.5V11a1 1 0 0 0 1 1h5v-1h3V8h3V5a1 1 0 0 0-1-1H9.41a1 1 0 0 1-.7-.3L7.29 2.3a1 1 0 0 0-.7-.3H3.5Z"/><path d="M12 9h1v3h3v1h-3v3h-1v-3H9v-1h3V9Z"/></svg>
