@@ -405,7 +405,7 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
   // Url
   let branchColorizationNeeded = false
   if (change.url !== undefined && change.url !== localTab.url) {
-    localTab.internal = localTab.url.startsWith(ADDON_HOST)
+    localTab.internal = change.url.startsWith(ADDON_HOST)
     Tabs.cacheTabsData()
     if (!change.url.startsWith(localTab.url.slice(0, 16))) {
       localTab.favIconUrl = ''
