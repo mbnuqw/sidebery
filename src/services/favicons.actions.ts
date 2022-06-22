@@ -5,7 +5,7 @@ import { Msg } from 'src/services/msg'
 import { Store } from 'src/services/storage'
 import { Tabs } from 'src/services/tabs.fg'
 import { Info } from 'src/services/info'
-import { FILE_RE, GROUP_RE, IMG_RE, MUS_RE, SETTINGS_RE, URL_PAGE_RE, VID_RE } from 'src/defaults'
+import { FILE_RE, GROUP_URL, IMG_RE, MUS_RE, SETUP_URL, URL_URL, VID_RE } from 'src/defaults'
 import { Logs } from './logs'
 
 const SAVE_DELAY = 2000
@@ -271,9 +271,9 @@ export function getIcon(url: string): string {
 
 export function getFavPlaceholder(url: string): string {
   if (url.startsWith('m')) {
-    if (GROUP_RE.test(url)) return '#icon_group'
-    if (URL_PAGE_RE.test(url)) return '#icon_link_favicon'
-    if (SETTINGS_RE.test(url)) return '#icon_settings'
+    if (url.startsWith(GROUP_URL)) return '#icon_group'
+    if (url.startsWith(URL_URL)) return '#icon_link_favicon'
+    if (url.startsWith(SETUP_URL)) return '#icon_settings'
   }
 
   if (IMG_RE.test(url)) return '#icon_img'
