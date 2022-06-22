@@ -64,6 +64,7 @@
     padding-left: calc(var(--tabs-indent) * 15)
 
   &[data-discarded="true"] > .body > .fav
+    opacity: .32
   &[data-discarded="true"] > .body > .t-box
   &[data-discarded="true"] > .body > .ctx
     opacity: .56
@@ -161,15 +162,11 @@
   border-radius: var(--tabs-border-radius)
   background-color: var(--tab-color)
   opacity: .2
-.Tab[data-discarded="true"] .color-layer
-  opacity: .1
 .Tab[data-active="true"] .color-layer
   box-shadow: inset 0 0 0 1px #fff5
   opacity: .3
 #root[data-color-scheme="light"] .Tab .color-layer
   opacity: .32
-#root[data-color-scheme="light"] .Tab[data-discarded="true"] .color-layer
-  opacity: .24
 #root[data-color-scheme="light"] .Tab[data-active="true"] .color-layer
   box-shadow: inset 0 0 0 1px #0003
   opacity: .6
@@ -307,7 +304,6 @@
   opacity: 0
   z-index: -1
   cursor: pointer
-  transform: scale(0.5, 0.5)
   transition: opacity var(--d-fast), transform var(--d-fast)
   > svg
     position: absolute
@@ -320,12 +316,11 @@
 .Tab[data-parent="true"] .fav:hover .exp
   z-index: 1
   opacity: 1
-  transform: scale(1, 1)
 
 .Tab[data-parent="true"][data-folded="true"] .fav .exp
   z-index: 1
   opacity: 1
-  transform: scale(1, 1) rotateZ(-90deg)
+  transform: rotateZ(-90deg)
 
 // ---
 // -- Progress spinner

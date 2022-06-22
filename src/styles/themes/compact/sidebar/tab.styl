@@ -82,6 +82,7 @@
     z-index: 10
   
   &[data-discarded="true"] > .body > .fav
+    opacity: .32
   &[data-discarded="true"] > .body > .t-box
   &[data-discarded="true"] > .body > .ctx
     opacity: .56
@@ -143,19 +144,16 @@
 
 .Tab:hover .body:before
   background-color: var(--hover-bg)
-  opacity: 1
 
 .Tab:active .body:before
 .Tab[data-active="true"]:active .body:before
   background-color: var(--clicked-bg)
-  opacity: 1
 
 .Tab[data-active="true"] .body
   background-color: var(--tabs-activated-bg)
   box-shadow: var(--tabs-activated-shadow)
 .Tab[data-active="true"] .body:before
-  background-color: #00000000
-  opacity: 1
+  opacity: 0
 
 .Tab[data-selected="true"] .body:before
 .Tab[data-selected="true"]:hover .body:before
@@ -207,14 +205,10 @@
   border-radius: var(--tabs-border-radius)
   background-color: var(--tab-color)
   opacity: .2
-.Tab[data-discarded="true"] .color-layer
-  opacity: .1
 .Tab[data-active="true"] .color-layer
   opacity: .3
 #root[data-color-scheme="light"] .Tab .color-layer
   opacity: .32
-#root[data-color-scheme="light"] .Tab[data-discarded="true"] .color-layer
-  opacity: .24
 #root[data-color-scheme="light"] .Tab[data-active="true"] .color-layer
   opacity: .5
 
@@ -282,7 +276,6 @@
   flex-shrink: 0
   opacity: 1
   z-index: 10
-  transition: opacity var(--d-fast), transform var(--d-fast)
 
   // Unread tab mark
   &:after
@@ -302,13 +295,6 @@
   margin: 0 3px 0 5px
   z-index: 20
 
-.Tab:hover .fav
-  opacity: .7
-
-.Tab:active .fav
-  transition: none
-  opacity: .5
-
 .Tab[data-unread="true"] .fav:after
   display: block
 
@@ -319,6 +305,7 @@
   width: 16px
   height: 16px
   fill: var(--frame-fg)
+  transition: opacity var(--d-fast)
 
 .Tab .fav svg
   opacity: .7
@@ -367,7 +354,6 @@
   opacity: 0
   z-index: -1
   cursor: pointer
-  transform: scale(0.5, 0.5)
   transition: opacity var(--d-fast), transform var(--d-fast)
   > svg
     position: absolute
@@ -382,12 +368,11 @@
 .Tab[data-parent="true"] .fav:hover .exp
   z-index: 1
   opacity: 1
-  transform: scale(1, 1)
 
 .Tab[data-parent="true"][data-folded="true"] .fav .exp
   z-index: 1
   opacity: 1
-  transform: scale(1, 1) rotateZ(-90deg)
+  transform: rotateZ(-90deg)
 
 // ---
 // -- Progress spinner
@@ -522,9 +507,6 @@
 
 .Tab[data-active="true"] .title
   color: var(--tabs-activated-fg)
-
-.Tab:hover .title
-  opacity: .7
 
 // ---
 // -- Container highlight
