@@ -182,10 +182,12 @@ function colorFromString(str: string, minLightness = 50): string {
   let c = 0
   let s = 0
   let l = 0
-  for (let i = 2; i < str.length; i += 2) {
-    c += str.charCodeAt(i - 2) + str.charCodeAt(i - 1) + str.charCodeAt(i)
-    s += str.charCodeAt(i - 1)
-    l += str.charCodeAt(i)
+  for (let pcc, cc, i = 1; i < str.length; i += 2) {
+    cc = str.charCodeAt(i)
+    pcc = str.charCodeAt(i - 1)
+    c += pcc + cc
+    s += pcc
+    l += cc
   }
 
   if (minLightness < 20) minLightness = 20
