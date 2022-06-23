@@ -498,8 +498,9 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
   Object.assign(localTab, change)
   if (change.audible !== undefined) rLocalTab.mediaAudible = change.audible
   if (change.discarded !== undefined) rLocalTab.discarded = change.discarded
-  if (change.favIconUrl !== undefined && !localTab.internal) {
-    rLocalTab.favIconUrl = change.favIconUrl
+  if (change.favIconUrl !== undefined) {
+    if (localTab.internal) rLocalTab.favIconUrl = undefined
+    else rLocalTab.favIconUrl = change.favIconUrl
   }
   if (change.mutedInfo?.muted !== undefined) rLocalTab.mediaMuted = change.mutedInfo.muted
   if (change.pinned !== undefined) rLocalTab.pinned = change.pinned
