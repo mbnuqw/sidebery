@@ -508,6 +508,7 @@ export function cloneObject<T>(obj: T & AnyObject): T {
 function normalizeUrl(url?: string, title?: string): string | undefined {
   if (!url) return url
   if (url === 'about:newtab') return undefined
+  if (url === 'about:blank') return undefined
   if (
     url.startsWith('chrome:') ||
     url.startsWith('javascript:') ||
