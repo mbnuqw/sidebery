@@ -81,9 +81,9 @@
     "zh_CN": "向下选择区间"
   },
   "KbActivate": {
-    "en": "Activate selection",
-    "ru": "Активировать выделенное",
-    "zh_CN": "激活选择"
+    "en": "Activate selection or fold/unfold an active tab branch or a selected bookmarks folder",
+    "ru": "Активировать выделенное или свернуть/развернуть ветку активной вкладки или выбранную папку закладок",
+    "zh_CN": "激活选择或折叠/展开活动选项卡分支或选定的书签文件夹"
   },
   "KbMenu": {
     "en": "Open menu",
