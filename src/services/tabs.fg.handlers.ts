@@ -638,7 +638,14 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, ignoreChildren?:
   }
 
   const removedExternally = !Tabs.removingTabs || !Tabs.removingTabs.length
-  const hasChildren = Settings.reactive.tabsTree && tab.isParent && !ignoreChildren
+  const nextTab = Tabs.list[tab.index + 1]
+  const hasChildren =
+    Settings.reactive.tabsTree &&
+    tab.isParent &&
+    !ignoreChildren &&
+    nextTab &&
+    nextTab.parentId === tab.id &&
+    nextTab.panelId === tab.panelId
   let removedTabInfo: RemovedTabInfo | undefined
 
   // Update temp list of removed tabs for restoring reopened tabs state
@@ -664,7 +671,7 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, ignoreChildren?:
   if (hasChildren) {
     const toRemove = []
     const outdentOnlyFirstChild = Settings.reactive.treeRmOutdent === 'first_child'
-    let firstChild
+    const firstChild = nextTab
     for (let i = tab.index + 1, t; i < Tabs.list.length; i++) {
       t = Tabs.list[i]
       if (t.lvl <= tab.lvl) break
@@ -687,34 +694,42 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, ignoreChildren?:
         if (rt) rt.invisible = false
       }
 
-      // Down levels
+      // Decrease indent level of tabs in branch
       // First child
-      if (t.parentId === tab.id) {
-        if (outdentOnlyFirstChild) {
-          if (!firstChild) {
+      if (firstChild.id === t.id) {
+        t.parentId = tab.parentId
+        t.lvl = tab.lvl
+        if (rt) rt.lvl = tab.lvl
+      }
+      // Other tabs in branch
+      else {
+        // Direct descendant
+        if (t.parentId === tab.id) {
+          // Set the first child tab as new parent tab (preserve indent)
+          if (outdentOnlyFirstChild) {
+            t.parentId = firstChild.id
+            if (!firstChild.isParent) {
+              firstChild.isParent = true
+              const rFirstTab = Tabs.reactive.byId[firstChild.id]
+              if (rFirstTab) rFirstTab.isParent = true
+            }
+          }
+          // Outdent
+          else {
             t.parentId = tab.parentId
             t.lvl = tab.lvl
             if (rt) rt.lvl = tab.lvl
-          } else {
-            t.parentId = firstChild.id
-            t.lvl = firstChild.lvl
-            if (rt) rt.lvl = firstChild.lvl
           }
-        } else {
-          t.parentId = tab.parentId
-          t.lvl = tab.lvl
-          if (rt) rt.lvl = tab.lvl
+        }
+        // Other descendants
+        else {
+          const parentTab = Tabs.byId[t.parentId]
+          if (parentTab) {
+            t.lvl = parentTab.lvl + 1
+            if (rt) rt.lvl = t.lvl
+          }
         }
       }
-
-      // Other tabs in branch
-      else {
-        const newLvl = (Tabs.byId[t.parentId]?.lvl ?? 0) + 1
-        t.lvl = newLvl
-        if (rt) rt.lvl = newLvl
-      }
-
-      if (!firstChild && t.lvl > tab.lvl) firstChild = t
     }
 
     // Remove child tabs
