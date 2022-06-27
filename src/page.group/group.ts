@@ -111,10 +111,10 @@ async function main() {
   // Set title of group page
   const titleEl = document.getElementById('title') as HTMLInputElement
   const hashData = hash.split(':id:')
-  const title = hashData[0]
+  const title = hashData[0].trim()
   groupId = hashData[1]
   titleEl.value = title
-  document.title = title
+  document.title = title || '‎'
 
   // Listen chagnes of title
   titleEl.addEventListener('input', onTitleChange as (e: Event) => void)
@@ -181,8 +181,7 @@ function onTitleChange(e: DOMEvent<Event, HTMLInputElement>): void {
   clearTimeout(onTitleChangeTimeout)
   onTitleChangeTimeout = setTimeout(() => {
     const normTitle = e.target.value.trim()
-    if (!normTitle) return
-    document.title = normTitle
+    document.title = normTitle || '‎'
     window.location.hash = `#${encodeURI(normTitle)}:id:${groupId}`
   }, 500)
 }
