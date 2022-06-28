@@ -132,6 +132,19 @@ export const sidebarTranslations: Translations = {
     ru: 'Больше опций...',
     zh_CN: '更多选项...',
   },
+  // - Group config popup
+  'popup.group_config.popup_title': {
+    en: 'Group',
+    ru: 'Группа',
+  },
+  'popup.group_config.title': {
+    en: 'Title',
+    ru: 'Название',
+  },
+  'popup.group_config.title_placeholder': {
+    en: 'Group title',
+    ru: 'Название группы',
+  },
 
   // ---
   // -- Drag and Drop tooltips

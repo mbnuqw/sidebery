@@ -106,6 +106,10 @@ function focus(): void {
   if (textEl.value) textEl.value.focus({ preventScroll: true })
 }
 
+function selectAll(): void {
+  if (textEl.value) textEl.value.select()
+}
+
 function error(): void {
   state.wrongValueAnimation = true
 }
@@ -114,5 +118,6 @@ defineExpose({
   focus,
   error,
   recalcTextHeight,
+  selectAll,
 })
 </script>

@@ -37,6 +37,7 @@
   Transition(name="popup" type="transition"): BookmarksPopup(v-if="Bookmarks.reactive.popup")
   Transition(name="popup" type="transition"): PanelConfigPopup(v-if="Sidebar.reactive.fastPanelConfig")
   Transition(name="popup" type="transition"): ContainerConfigPopup(v-if="Sidebar.reactive.fastContainerConfig")
+  Transition(name="popup" type="transition"): GroupConfigPopup(v-if="Sidebar.reactive.groupConfigPopup")
   Transition(name="popup" type="transition"): DialogPopup(v-if="Sidebar.reactive.dialog" :dialog="Sidebar.reactive.dialog")
   CtxMenuPopup
   DragAndDropTooltip
@@ -72,7 +73,7 @@
 import { ref, computed, onMounted, Component } from 'vue'
 import { PanelType, Panel, MenuType, WheelDirection } from 'src/types'
 import { Settings } from 'src/services/settings'
-import { Sidebar } from 'src/services/sidebar'
+import { GroupConfigResult, Sidebar } from 'src/services/sidebar'
 import { Styles } from 'src/services/styles'
 import { Selection } from 'src/services/selection'
 import { Menu } from 'src/services/menu'
@@ -97,6 +98,7 @@ import SearchBar from './components/bar.search.vue'
 import BookmarksPopup from 'src/components/popup.bookmarks.vue'
 import PanelConfigPopup from './components/popup.panel-config.vue'
 import ContainerConfigPopup from './components/popup.container-config.vue'
+import GroupConfigPopup from './components/popup.group-config.vue'
 import DialogPopup from './components/popup.dialog.vue'
 import UpgradeScreen from '../components/upgrade-screen.vue'
 import Utils from 'src/utils'
@@ -176,6 +178,12 @@ function onDocumentKeyup(e: KeyboardEvent): void {
 
     // Conatiner config popup
     if (Sidebar.reactive.fastContainerConfig) Sidebar.stopFastEditingOfContainer(false)
+
+    // Group config popup
+    if (Sidebar.reactive.groupConfigPopup) {
+      Sidebar.reactive.groupConfigPopup.done(GroupConfigResult.Cancel)
+      Sidebar.reactive.groupConfigPopup = null
+    }
 
     // Dialog popup
     if (Sidebar.reactive.dialog) Sidebar.reactive.dialog.result(null)

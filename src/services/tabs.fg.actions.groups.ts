@@ -5,6 +5,7 @@ import { Windows } from 'src/services/windows'
 import { Settings } from 'src/services/settings'
 import { Tabs } from './tabs.fg'
 import { Favicons } from './favicons'
+import { GroupConfigResult, Sidebar } from './sidebar'
 
 /**
  * Set relGroupId and relPinId props in related pinned and group tabs
@@ -58,14 +59,11 @@ export async function groupTabs(tabIds: ID[], conf: GroupConfig = {}): Promise<v
   if (tabs[0].lvl >= Settings.reactive.tabsTreeLimit) return
 
   // Find title for group tab
-  let groupTitle
-  if (conf.title) {
-    groupTitle = conf.title
-  } else {
+  if (!conf.title) {
     const titles = tabs.map(t => t.title)
     const commonPart = Utils.commonSubStr(titles)
     const isOk = commonPart ? commonPart[0] === commonPart[0].toUpperCase() : false
-    groupTitle = commonPart
+    let groupTitle = commonPart
       .replace(/^(\s|\.|_|-|—|–|\(|\)|\/|=|;|:)+/g, ' ')
       .replace(/(\s|\.|_|-|—|–|\(|\)|\/|=|;|:)+$/g, ' ')
       .trim()
@@ -78,7 +76,12 @@ export async function groupTabs(tabIds: ID[], conf: GroupConfig = {}): Promise<v
     }
 
     if (!isOk || groupTitle.length < 4) groupTitle = tabs[0].title
+
+    conf.title = groupTitle
   }
+
+  const result = await Tabs.openGroupConfigPopup(conf)
+  if (result === GroupConfigResult.Cancel) return
 
   // Find index and create group tab
   Tabs.setNewTabPosition(tabs[0].index, tabs[0].parentId, tabs[0].panelId)
@@ -86,7 +89,7 @@ export async function groupTabs(tabIds: ID[], conf: GroupConfig = {}): Promise<v
     active: !!conf.active,
     cookieStoreId: tabs[0].cookieStoreId,
     index: tabs[0].index,
-    url: Utils.createGroupUrl(groupTitle, conf),
+    url: Utils.createGroupUrl(conf.title, conf),
     windowId: Windows.id,
   })
 
@@ -115,6 +118,15 @@ export async function groupTabs(tabIds: ID[], conf: GroupConfig = {}): Promise<v
 
   tabs.forEach(t => Tabs.saveTabData(t.id))
   Tabs.cacheTabsData()
+}
+
+export async function openGroupConfigPopup(config: GroupConfig): Promise<GroupConfigResult> {
+  return new Promise<GroupConfigResult>(ok => {
+    Sidebar.reactive.groupConfigPopup = {
+      config,
+      done: result => ok(result),
+    }
+  })
 }
 
 /**

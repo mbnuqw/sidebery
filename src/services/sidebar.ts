@@ -1,4 +1,4 @@
-import { Panel, ConfirmDialog, UpgradingState, Dialog } from 'src/types'
+import { Panel, ConfirmDialog, UpgradingState, Dialog, GroupConfig } from 'src/types'
 import { NOID } from 'src/defaults'
 import * as SidebarActions from 'src/services/sidebar.actions'
 
@@ -16,6 +16,7 @@ export interface SidebarReactiveState {
 
   fastPanelConfig: FastPanelConfig | null
   fastContainerConfig: FastContainerConfig | null
+  groupConfigPopup: GroupConfigPopup | null
   confirm: ConfirmDialog | null
   hiddenPanelsBar: boolean
   dialog: Dialog | null
@@ -47,6 +48,16 @@ export interface FastContainerConfig {
   done: (result: boolean) => void
 }
 
+export const enum GroupConfigResult {
+  Ok = 1,
+  Cancel = 2,
+}
+
+export interface GroupConfigPopup {
+  config: GroupConfig
+  done: (result: GroupConfigResult) => void
+}
+
 export const Sidebar = {
   reactive: {
     nav: [],
@@ -63,6 +74,7 @@ export const Sidebar = {
 
     fastPanelConfig: null,
     fastContainerConfig: null,
+    groupConfigPopup: null,
     confirm: null,
     hiddenPanelsBar: false,
     dialog: null,

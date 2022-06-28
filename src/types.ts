@@ -123,6 +123,7 @@ export interface TextInputComponent {
   recalcTextHeight: () => void
   focus: () => void
   error: () => void
+  selectAll: () => void
 }
 
 export interface BookmarksPanelComponent {
