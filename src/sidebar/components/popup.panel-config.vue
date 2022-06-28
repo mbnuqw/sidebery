@@ -1,12 +1,12 @@
 <template lang="pug">
 .PanelConfigPopup.popup-container(@click="onCancel")
-  .popup(v-if="Sidebar.reactive.fastPanelConfig" @click.stop)
+  .popup(v-if="Sidebar.reactive.panelConfigPopup" @click.stop)
     h2 {{popupTitle}}
     .field
       .field-label {{translate('panel.fast_conf.name')}}
       TextInput.input(
         ref="titleInput"
-        v-model:value="Sidebar.reactive.fastPanelConfig.name"
+        v-model:value="Sidebar.reactive.panelConfigPopup.name"
         :or="'Panel name'"
         :tabindex="'-1'"
         :line="true"
@@ -15,17 +15,17 @@
     .field
       .field-label {{translate('panel.fast_conf.icon')}}
       SelectInput.input(
-        v-model:value="Sidebar.reactive.fastPanelConfig.iconSVG"
+        v-model:value="Sidebar.reactive.panelConfigPopup.iconSVG"
         :opts="iconsOpts"
-        :color="Sidebar.reactive.fastPanelConfig.color"
+        :color="Sidebar.reactive.panelConfigPopup.color"
       )
 
     .field
       .field-label {{translate('panel.fast_conf.color')}}
       SelectInput.input(
-        v-model:value="Sidebar.reactive.fastPanelConfig.color"
+        v-model:value="Sidebar.reactive.panelConfigPopup.color"
         :opts="COLOR_OPTS"
-        :icon="Sidebar.reactive.fastPanelConfig.iconSVG"
+        :icon="Sidebar.reactive.panelConfigPopup.iconSVG"
       )
 
     .ctrls
@@ -59,18 +59,18 @@ onMounted(() => {
 })
 
 const popupTitle = computed<string>(() => {
-  if (!Sidebar.reactive.fastPanelConfig) return ''
+  if (!Sidebar.reactive.panelConfigPopup) return ''
 
-  const panel = Sidebar.reactive.panelsById[Sidebar.reactive.fastPanelConfig.id]
+  const panel = Sidebar.reactive.panelsById[Sidebar.reactive.panelConfigPopup.id]
   if (Utils.isTabsPanel(panel)) return translate('panel.fast_conf.title_tabs')
   if (Utils.isBookmarksPanel(panel)) return translate('panel.fast_conf.title_bookmarks')
   return ''
 })
 
 const iconsOpts = computed<InputOption[]>(() => {
-  if (!Sidebar.reactive.fastPanelConfig) return []
+  if (!Sidebar.reactive.panelConfigPopup) return []
 
-  const panel = Sidebar.reactive.panelsById[Sidebar.reactive.fastPanelConfig.id]
+  const panel = Sidebar.reactive.panelsById[Sidebar.reactive.panelConfigPopup.id]
   if (Utils.isTabsPanel(panel)) return TABS_PANEL_ICON_OPTS
   if (Utils.isBookmarksPanel(panel)) return BOOKMARKS_PANEL_ICON_OPTS
   return []
@@ -84,26 +84,26 @@ function onTitleKD(e: KeyboardEvent): void {
 }
 
 function openFullConfig(): void {
-  if (!Sidebar.reactive.fastPanelConfig) return
+  if (!Sidebar.reactive.panelConfigPopup) return
 
-  SetupPage.open(`settings_nav.${Sidebar.reactive.fastPanelConfig.id}`)
-  Sidebar.reactive.fastPanelConfig.done(true)
-  Sidebar.reactive.fastPanelConfig = null
+  SetupPage.open(`settings_nav.${Sidebar.reactive.panelConfigPopup.id}`)
+  Sidebar.reactive.panelConfigPopup.done(true)
+  Sidebar.reactive.panelConfigPopup = null
 }
 
 function onSave(): void {
-  if (!Sidebar.reactive.fastPanelConfig) return
+  if (!Sidebar.reactive.panelConfigPopup) return
 
-  const panel = Sidebar.reactive.panelsById[Sidebar.reactive.fastPanelConfig.id]
+  const panel = Sidebar.reactive.panelsById[Sidebar.reactive.panelConfigPopup.id]
   if (!panel) {
-    Sidebar.reactive.fastPanelConfig.done(false)
-    Sidebar.reactive.fastPanelConfig = null
+    Sidebar.reactive.panelConfigPopup.done(false)
+    Sidebar.reactive.panelConfigPopup = null
     return
   }
 
-  panel.name = Sidebar.reactive.fastPanelConfig.name
-  panel.iconSVG = Sidebar.reactive.fastPanelConfig.iconSVG
-  panel.color = Sidebar.reactive.fastPanelConfig.color
+  panel.name = Sidebar.reactive.panelConfigPopup.name
+  panel.iconSVG = Sidebar.reactive.panelConfigPopup.iconSVG
+  panel.color = Sidebar.reactive.panelConfigPopup.color
 
   Sidebar.saveSidebar()
 
@@ -111,18 +111,18 @@ function onSave(): void {
     Sidebar.updateSidebarTitle()
   }
 
-  Sidebar.reactive.fastPanelConfig.done(true)
-  Sidebar.reactive.fastPanelConfig = null
+  Sidebar.reactive.panelConfigPopup.done(true)
+  Sidebar.reactive.panelConfigPopup = null
 }
 
 function onCancel(): void {
-  if (!Sidebar.reactive.fastPanelConfig) return
+  if (!Sidebar.reactive.panelConfigPopup) return
 
-  if (Sidebar.reactive.fastPanelConfig.removeOnCancel) {
-    Sidebar.removePanel(Sidebar.reactive.fastPanelConfig.id)
+  if (Sidebar.reactive.panelConfigPopup.removeOnCancel) {
+    Sidebar.removePanel(Sidebar.reactive.panelConfigPopup.id)
   }
 
-  Sidebar.reactive.fastPanelConfig.done(false)
-  Sidebar.reactive.fastPanelConfig = null
+  Sidebar.reactive.panelConfigPopup.done(false)
+  Sidebar.reactive.panelConfigPopup = null
 }
 </script>

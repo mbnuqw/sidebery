@@ -14,8 +14,8 @@ export interface SidebarReactiveState {
   horNavWidth: number
   navBtnWidth: number
 
-  fastPanelConfig: FastPanelConfig | null
-  fastContainerConfig: FastContainerConfig | null
+  panelConfigPopup: PanelConfigPopup | null
+  containerConfigPopup: ContainerConfigPopup | null
   groupConfigPopup: GroupConfigPopup | null
   confirm: ConfirmDialog | null
   hiddenPanelsBar: boolean
@@ -30,7 +30,7 @@ interface UrlRule {
   value: string | RegExp
 }
 
-export interface FastPanelConfig {
+export interface PanelConfigPopup {
   id: ID
   name: string
   iconSVG: string
@@ -39,7 +39,7 @@ export interface FastPanelConfig {
   done: (result: boolean) => void
 }
 
-export interface FastContainerConfig {
+export interface ContainerConfigPopup {
   id: ID
   name: string
   icon: string
@@ -72,8 +72,8 @@ export const Sidebar = {
     horNavWidth: 0,
     navBtnWidth: 0,
 
-    fastPanelConfig: null,
-    fastContainerConfig: null,
+    panelConfigPopup: null,
+    containerConfigPopup: null,
     groupConfigPopup: null,
     confirm: null,
     hiddenPanelsBar: false,

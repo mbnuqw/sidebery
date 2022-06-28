@@ -1891,7 +1891,7 @@ export function startFastEditingOfPanel(panelId: ID, removeOnCancel: boolean): P
 
     const fallbackIcon = Utils.isTabsPanel(panel) ? 'icon_tabs' : 'icon_bookmarks'
 
-    Sidebar.reactive.fastPanelConfig = {
+    Sidebar.reactive.panelConfigPopup = {
       id: panel.id,
       name: panel.name,
       color: panel.color,
@@ -1903,8 +1903,8 @@ export function startFastEditingOfPanel(panelId: ID, removeOnCancel: boolean): P
 }
 
 export function stopFastEditingOfPanel(result: boolean): void {
-  if (Sidebar.reactive.fastPanelConfig?.done) Sidebar.reactive.fastPanelConfig.done(result)
-  Sidebar.reactive.fastPanelConfig = null
+  if (Sidebar.reactive.panelConfigPopup?.done) Sidebar.reactive.panelConfigPopup.done(result)
+  Sidebar.reactive.panelConfigPopup = null
 }
 
 export function startFastEditingOfContainer(
@@ -1915,7 +1915,7 @@ export function startFastEditingOfContainer(
     const container = Containers.reactive.byId[containerId]
     if (!container) return res(false)
 
-    Sidebar.reactive.fastContainerConfig = {
+    Sidebar.reactive.containerConfigPopup = {
       id: container.id,
       name: container.name,
       color: container.color,
@@ -1927,8 +1927,8 @@ export function startFastEditingOfContainer(
 }
 
 export function stopFastEditingOfContainer(result: boolean): void {
-  if (Sidebar.reactive.fastContainerConfig?.done) Sidebar.reactive.fastContainerConfig.done(result)
-  Sidebar.reactive.fastContainerConfig = null
+  if (Sidebar.reactive.containerConfigPopup?.done) Sidebar.reactive.containerConfigPopup.done(result)
+  Sidebar.reactive.containerConfigPopup = null
 }
 
 const scrollConf: ScrollToOptions = { behavior: 'smooth', top: 0 }

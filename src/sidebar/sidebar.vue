@@ -35,8 +35,8 @@
   Transition(name="popup" type="transition"): ConfirmPopup(v-if="Sidebar.reactive.confirm")
   Transition(name="popup" type="transition"): WindowsPopup(v-if="Windows.reactive.choosing")
   Transition(name="popup" type="transition"): BookmarksPopup(v-if="Bookmarks.reactive.popup")
-  Transition(name="popup" type="transition"): PanelConfigPopup(v-if="Sidebar.reactive.fastPanelConfig")
-  Transition(name="popup" type="transition"): ContainerConfigPopup(v-if="Sidebar.reactive.fastContainerConfig")
+  Transition(name="popup" type="transition"): PanelConfigPopup(v-if="Sidebar.reactive.panelConfigPopup")
+  Transition(name="popup" type="transition"): ContainerConfigPopup(v-if="Sidebar.reactive.containerConfigPopup")
   Transition(name="popup" type="transition"): GroupConfigPopup(v-if="Sidebar.reactive.groupConfigPopup")
   Transition(name="popup" type="transition"): DialogPopup(v-if="Sidebar.reactive.dialog" :dialog="Sidebar.reactive.dialog")
   CtxMenuPopup
@@ -174,10 +174,10 @@ function onDocumentKeyup(e: KeyboardEvent): void {
     if (Bookmarks.reactive.popup?.close) Bookmarks.reactive.popup.close()
 
     // Panel config popup
-    if (Sidebar.reactive.fastPanelConfig) Sidebar.stopFastEditingOfPanel(false)
+    if (Sidebar.reactive.panelConfigPopup) Sidebar.stopFastEditingOfPanel(false)
 
     // Conatiner config popup
-    if (Sidebar.reactive.fastContainerConfig) Sidebar.stopFastEditingOfContainer(false)
+    if (Sidebar.reactive.containerConfigPopup) Sidebar.stopFastEditingOfContainer(false)
 
     // Group config popup
     if (Sidebar.reactive.groupConfigPopup) {

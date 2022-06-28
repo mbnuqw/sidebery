@@ -1,12 +1,12 @@
 <template lang="pug">
 .ContainerConfigPopup.popup-container(@click="onCancel")
-  .popup(v-if="Sidebar.reactive.fastContainerConfig" @click.stop)
+  .popup(v-if="Sidebar.reactive.containerConfigPopup" @click.stop)
     h2 {{translate('panel.fast_conf.title')}}
     .field
       .field-label {{translate('panel.fast_conf.name')}}
       TextInput.input(
         ref="titleInput"
-        v-model:value="Sidebar.reactive.fastContainerConfig.name"
+        v-model:value="Sidebar.reactive.containerConfigPopup.name"
         :or="'Panel name'"
         :tabindex="'-1'"
         :line="true"
@@ -15,17 +15,17 @@
     .field
       .field-label {{translate('panel.fast_conf.icon')}}
       SelectInput.input(
-        v-model:value="Sidebar.reactive.fastContainerConfig.icon"
+        v-model:value="Sidebar.reactive.containerConfigPopup.icon"
         :opts="CONTAINER_ICON_OPTS"
-        :color="Sidebar.reactive.fastContainerConfig.color"
+        :color="Sidebar.reactive.containerConfigPopup.color"
       )
 
     .field
       .field-label {{translate('panel.fast_conf.color')}}
       SelectInput.input(
-        v-model:value="Sidebar.reactive.fastContainerConfig.color"
+        v-model:value="Sidebar.reactive.containerConfigPopup.color"
         :opts="COLOR_OPTS"
-        :icon="Sidebar.reactive.fastContainerConfig.icon"
+        :icon="Sidebar.reactive.containerConfigPopup.icon"
       )
 
     .ctrls
@@ -61,45 +61,45 @@ function onTitleKD(e: KeyboardEvent): void {
 }
 
 function openFullConfig(): void {
-  if (!Sidebar.reactive.fastContainerConfig) return
+  if (!Sidebar.reactive.containerConfigPopup) return
 
-  SetupPage.open(`settings_containers.${Sidebar.reactive.fastContainerConfig.id}`)
-  Sidebar.reactive.fastContainerConfig.done(false)
-  Sidebar.reactive.fastContainerConfig = null
+  SetupPage.open(`settings_containers.${Sidebar.reactive.containerConfigPopup.id}`)
+  Sidebar.reactive.containerConfigPopup.done(false)
+  Sidebar.reactive.containerConfigPopup = null
 }
 
 async function onSave(): Promise<void> {
-  if (!Sidebar.reactive.fastContainerConfig) return
+  if (!Sidebar.reactive.containerConfigPopup) return
 
-  const container = Containers.reactive.byId[Sidebar.reactive.fastContainerConfig.id]
+  const container = Containers.reactive.byId[Sidebar.reactive.containerConfigPopup.id]
   if (!container) {
-    Sidebar.reactive.fastContainerConfig.done(false)
-    Sidebar.reactive.fastContainerConfig = null
+    Sidebar.reactive.containerConfigPopup.done(false)
+    Sidebar.reactive.containerConfigPopup = null
     return
   }
 
-  container.name = Sidebar.reactive.fastContainerConfig.name
-  container.icon = Sidebar.reactive.fastContainerConfig.icon
-  container.color = Sidebar.reactive.fastContainerConfig.color
+  container.name = Sidebar.reactive.containerConfigPopup.name
+  container.icon = Sidebar.reactive.containerConfigPopup.icon
+  container.color = Sidebar.reactive.containerConfigPopup.color
 
   await browser.contextualIdentities.update(container.id, {
-    name: Sidebar.reactive.fastContainerConfig.name,
-    icon: Sidebar.reactive.fastContainerConfig.icon,
-    color: Sidebar.reactive.fastContainerConfig.color,
+    name: Sidebar.reactive.containerConfigPopup.name,
+    icon: Sidebar.reactive.containerConfigPopup.icon,
+    color: Sidebar.reactive.containerConfigPopup.color,
   })
 
-  Sidebar.reactive.fastContainerConfig.done(true)
-  Sidebar.reactive.fastContainerConfig = null
+  Sidebar.reactive.containerConfigPopup.done(true)
+  Sidebar.reactive.containerConfigPopup = null
 }
 
 async function onCancel(): Promise<void> {
-  if (!Sidebar.reactive.fastContainerConfig) return
+  if (!Sidebar.reactive.containerConfigPopup) return
 
-  if (Sidebar.reactive.fastContainerConfig.removeOnCancel) {
-    await browser.contextualIdentities.remove(Sidebar.reactive.fastContainerConfig.id as string)
+  if (Sidebar.reactive.containerConfigPopup.removeOnCancel) {
+    await browser.contextualIdentities.remove(Sidebar.reactive.containerConfigPopup.id as string)
   }
 
-  Sidebar.reactive.fastContainerConfig.done(false)
-  Sidebar.reactive.fastContainerConfig = null
+  Sidebar.reactive.containerConfigPopup.done(false)
+  Sidebar.reactive.containerConfigPopup = null
 }
 </script>
