@@ -73,6 +73,14 @@
     width: var(--tabs-pinned-width)
     height: var(--tabs-pinned-height)
 
+  &[data-selected="true"]
+  &[data-selected="true"]:hover
+  &[data-selected="true"]:active
+    z-index: 15
+
+  &[data-active="true"]
+    z-index: 20
+
 // ---
 // -- Reset lvl in search mode
 // -

@@ -80,7 +80,7 @@
   &[data-selected="true"]
   &[data-selected="true"]:hover
   &[data-selected="true"]:active
-    z-index: 10
+    z-index: 15
   
   &[data-discarded="true"] > .body > .fav
     opacity: .32
@@ -91,6 +91,9 @@
   &[data-pin="true"]
     width: var(--tabs-pinned-width)
     height: var(--tabs-pinned-height)
+
+  &[data-active="true"]
+    z-index: 20
 
 // ---
 // -- Set outline for active colored tabs
