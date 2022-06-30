@@ -3632,3 +3632,15 @@ export function switchToRecenlyActiveTab(scope = SwitchingTabScope.global, dir: 
     if (tabId !== undefined) browser.tabs.update(tabId, { active: true })
   }
 }
+
+export function pringDbgInfo(reset = false): void {
+  for (const tab of Tabs.list) {
+    const rTab = Tabs.reactive.byId[tab.id]
+    if (!rTab) continue
+    if (reset) {
+      rTab.title = tab.title
+    } else {
+      rTab.title = `${tab.id} i${tab.index} p${tab.parentId} l${tab.lvl} ${tab.title}`
+    }
+  }
+}

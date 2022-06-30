@@ -391,6 +391,10 @@ function onNavMouseUp(e: MouseEvent, item: NavItem, inHiddenBar?: boolean) {
     if (Settings.reactive.ctxMenuNative) return
     if (Selection.isSet()) return Selection.resetSelection()
 
+    if (isSettings) {
+      Tabs.pringDbgInfo(!e.altKey)
+    }
+
     const panel = Sidebar.reactive.panelsById[item.id]
     if (!panel) return
 
