@@ -551,10 +551,9 @@ export function normalizeTabs(delay = 500): void {
   }, delay)
 }
 
-const sortNativeTabsDelayMS = 500
 let sortNativeTabsTimeout: number | undefined
 let sortingNativeTabs = false
-export function sortNativeTabs(): void {
+export function sortNativeTabs(delayMS = 500): void {
   sortingNativeTabs = false
 
   clearTimeout(sortNativeTabsTimeout)
@@ -611,7 +610,7 @@ export function sortNativeTabs(): void {
       if (move.step < move.ids.length) {
         const k = move.index + move.ids.length
         const ids = Tabs.list.slice(k, k + move.step).map(t => t.id)
-        const targetIndex = move.index + move.ids.length + 1
+        const targetIndex = move.index + move.ids.length
         Tabs.movingTabs.push(...ids)
         await browser.tabs.move(ids, { index: targetIndex, windowId: Windows.id })
       } else {
@@ -622,7 +621,7 @@ export function sortNativeTabs(): void {
     }
 
     sortingNativeTabs = false
-  }, sortNativeTabsDelayMS)
+  }, delayMS)
 }
 
 export function removeBranches(ids: ID[]): void {
