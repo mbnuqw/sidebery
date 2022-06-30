@@ -665,32 +665,44 @@ function onKeyMoveTabsToAct(): void {
   Tabs.move(items, src, { index: activeTab.index + 1, parentId: activeTab.id })
 }
 
+let tabsMoving = false
 function onKeyMoveTabs(dir: 1 | -1): void {
+  if (tabsMoving) return
+
   let selected
   if (Selection.isTabs()) {
     selected = Selection.get()
     Selection.preserveSelection()
+    Selection.allowSelectionReset(300)
   } else {
     selected = [Tabs.activeId]
   }
 
   const toMove = []
+  const toMoveById: Record<ID, Tab> = {}
   for (const id of selected) {
     const tab = Tabs.byId[id]
     if (!tab) continue
 
     toMove.push(tab)
+    toMoveById[tab.id] = tab
 
     if (tab.isParent) {
       for (let t, i = tab.index + 1; i < Tabs.list.length; i++) {
         t = Tabs.list[i]
         if (t.lvl <= tab.lvl) break
-        if (!selected.includes(t.id)) toMove.push(t)
+        if (!selected.includes(t.id)) {
+          toMove.push(t)
+          toMoveById[t.id] = t
+        }
       }
     }
   }
 
   toMove.sort((a, b) => a.index - b.index)
+
+  let minIndex = toMove[0].index
+  let maxIndex = toMove[toMove.length - 1].index
 
   const edgeTab = dir < 0 ? toMove[0] : toMove[toMove.length - 1]
   if (!edgeTab) return
@@ -701,25 +713,65 @@ function onKeyMoveTabs(dir: 1 | -1): void {
   if (dir > 0 && edgeTab.index === Tabs.list.length - 1) return
   if (dir > 0 && panel?.endTabIndex === edgeTab.index) return
 
-  for (let tab, i = dir < 0 ? 0 : toMove.length - 1; i >= 0 && i < toMove.length; i -= dir) {
-    tab = toMove[i]
-
-    Tabs.list.splice(tab.index, 1)
-    tab.index += dir
-    Tabs.list.splice(tab.index, 0, tab)
-
-    browser.tabs.move(tab.id, { index: tab.index })
+  let rootParentId = NOID
+  let step: number = dir
+  if (dir < 0) {
+    let prevTab: Tab | undefined = Tabs.list[edgeTab.index - 1]
+    if (prevTab && prevTab.panelId === edgeTab.panelId) {
+      if (prevTab.invisible) {
+        prevTab = Tabs.byId[prevTab.parentId]
+        while (prevTab && prevTab.invisible) {
+          prevTab = Tabs.byId[prevTab.parentId]
+        }
+        if (prevTab) step = prevTab.index - edgeTab.index
+      }
+      if (prevTab) rootParentId = prevTab.parentId
+      minIndex += step
+    }
+  } else {
+    const nextTab = Tabs.list[edgeTab.index + 1]
+    if (nextTab && nextTab.panelId === edgeTab.panelId) {
+      if (nextTab.isParent && nextTab.folded) {
+        for (let tab, i = nextTab.index + 1; i < Tabs.list.length; i++) {
+          tab = Tabs.list[i]
+          if (!tab.invisible) break
+          step++
+        }
+      }
+      if (nextTab.isParent && !nextTab.folded) {
+        rootParentId = nextTab.id
+      } else {
+        rootParentId = nextTab.parentId
+      }
+      maxIndex += step
+    }
   }
 
-  for (let i = 0; i < Tabs.list.length; i++) {
+  const targetIndex = edgeTab.index + step
+
+  for (let tab, i = toMove.length - 1; i >= 0; i--) {
+    tab = toMove[i]
+    Tabs.list.splice(tab.index, 1)
+    Tabs.movingTabs.push(tab.id)
+    if (!toMoveById[tab.parentId]) tab.parentId = rootParentId
+  }
+  if (dir > 0) Tabs.list.splice(targetIndex - toMove.length + 1, 0, ...toMove)
+  else Tabs.list.splice(targetIndex, 0, ...toMove)
+
+  tabsMoving = true
+  const toMoveIds = toMove.map(t => t.id)
+  browser.tabs.move(toMoveIds, { index: targetIndex }).then(() => {
+    tabsMoving = false
+  })
+
+  for (let i = minIndex; i <= maxIndex; i++) {
     Tabs.list[i].index = i
   }
 
+  Sidebar.recalcTabsPanels()
   Tabs.updateTabsTree()
   Tabs.cacheTabsData()
   toMove.forEach(t => Tabs.saveTabData(t.id))
-
-  Selection.allowSelectionReset(256)
 }
 
 function onKeyNewTabAsFirstChild(): void {
