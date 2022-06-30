@@ -1,8 +1,8 @@
 @import '../../../mixins'
 
 #root
-  --tabs-pinned-height: 31px
-  --tabs-pinned-width: 31px
+  --tabs-pinned-height: 30px
+  --tabs-pinned-width: 30px
   --tabs-height: 27px
   --tabs-indent: 10px
   --tabs-font: rem(16) sans-serif
@@ -98,7 +98,7 @@
   align-items: center
   transition: opacity var(--d-fast), transform var(--d-fast)
   background-color: var(--toolbar-bg)
-  box-shadow: inset 1px 1px 0 0 var(--border-flare), 0 0 3px 0 #00000016
+  box-shadow: 0 0 3px 0 #00000016
   border-radius: var(--element-roundness)
   &:before
     content: ''
@@ -125,8 +125,10 @@
   opacity: .1
 .Tab[data-active="true"] .body:before
   opacity: .3
-.Tab:active .body:before
+.Tab[data-active="true"]:active .body:before
   opacity: .4
+.Tab:active .body:before
+  opacity: .3
 .Tab[data-selected="true"] .body:before
   opacity: .5
 
@@ -167,7 +169,7 @@
   left: 0
   width: 100%
   height: 100%
-  border-radius: var(--tabs-border-radius)
+  border-radius: var(--element-roundness)
   background-color: var(--tab-color)
   opacity: .2
 .Tab[data-active="true"] .color-layer

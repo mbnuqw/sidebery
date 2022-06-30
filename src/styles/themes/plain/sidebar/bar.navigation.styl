@@ -1,8 +1,8 @@
 @import '../../../mixins'
 
 #root
-  --nav-btn-width: 30px
-  --nav-btn-height: 30px
+  --nav-btn-width: 28px
+  --nav-btn-height: 28px
 #root[data-color-scheme="dark"]
   --nav-btn-update-badge-bg: #00e9fb
   --nav-progress-bg: #ffffff16
@@ -19,8 +19,7 @@
   min-height: var(--nav-btn-height)
   flex-shrink: 0
   background-color: var(--toolbar-bg)
-  box-shadow: inset 1px 1px 0 0 var(--border-flare), 0 0 3px 0 #00000016
-  border-radius: var(--element-roundness)
+  box-shadow: 0 0 3px 0 #00000016
   &.-top
     width: 100%
     z-index: 3000

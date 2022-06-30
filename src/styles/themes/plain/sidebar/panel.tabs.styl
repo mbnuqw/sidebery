@@ -2,7 +2,7 @@
 
 .TabsPanel .container
   position: relative
-  width: 100%
+  width: calc(100% - 1px)
   height: 100%
   min-height: 100%
   transition: transform var(--d-fast), opacity var(--d-fast)
@@ -63,7 +63,7 @@
   flex-grow: 1
   transition: opacity var(--d-fast)
   background-color: var(--toolbar-bg)
-  box-shadow: inset 1px 1px 0 0 var(--border-flare), 0 0 3px 0 #00000016
+  box-shadow: 0 0 3px 0 #00000016
   border-radius: var(--element-roundness)
   &:before
     content: ''
