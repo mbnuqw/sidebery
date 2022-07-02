@@ -517,9 +517,8 @@ function saveTabsData(delay = 300) {
     let pinnedLen = 0
     for (let tab of this.state.tabs) {
       if (tab.pinned) pinnedLen++
-      let info = { id: tab.id, url: tab.url }
+      let info = { id: tab.id, url: tab.url, panelId: tab.panelId }
       if (tab.parentId > -1) info.parentId = tab.parentId
-      if (tab.panelId !== DEFAULT_CTX_ID) info.panelId = tab.panelId
       if (tab.folded) info.folded = tab.folded
       if (tab.cookieStoreId !== DEFAULT_CTX_ID) info.ctx = tab.cookieStoreId
       data.push(info)
