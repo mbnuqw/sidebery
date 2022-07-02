@@ -18,6 +18,9 @@ async function loadWindowInfo() {
 /**
  * Connect to background script
  */
+const msgsWaitingForConfirm = {}
+let msgCounter = 1
+let reconnectTryCount = 0
 function connectToBG() {
   const connectInfo = JSON.stringify({
     instanceType: this.state.instanceType,
@@ -25,7 +28,30 @@ function connectToBG() {
   })
   this.bgConnectTryCount = 0
   this.state.bg = browser.runtime.connect({ name: connectInfo })
+  this.state.bg.onMessage.addListener(msg => {
+    clearTimeout(msgsWaitingForConfirm[msg])
+    delete msgsWaitingForConfirm[msg]
+  })
   this.state.bg.onDisconnect.addListener(this.handlers.onBgDisconnect)
+}
+
+function msgToBg(action, args) {
+  const id = msgCounter++
+
+  if (!this.state.bg || this.state.bg.error) {
+    browser.runtime.sendMessage({ instanceType: 'bg', action, args })
+    return
+  }
+
+  this.state.bg.postMessage({ id, action, args })
+
+  msgsWaitingForConfirm[id] = setTimeout(() => {
+    browser.runtime.sendMessage({ instanceType: 'bg', action, args })
+    delete msgsWaitingForConfirm[id]
+
+    this.state.bg = null
+    if (reconnectTryCount++ < 3) this.actions.connectToBG()
+  }, 1000)
 }
 
 /**
@@ -374,6 +400,7 @@ function finishProgress(notification, delay = 120) {
 export default {
   loadWindowInfo,
   connectToBG,
+  msgToBg,
   chooseWin,
   loadPermissions,
   getAllWindows,

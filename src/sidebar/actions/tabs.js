@@ -538,18 +538,7 @@ function saveTabsData(delay = 300) {
       return
     }
 
-    if (this.state.bg && !this.state.bg.error) {
-      this.state.bg.postMessage({
-        action: 'saveTabsData',
-        args: [this.state.windowId, data],
-      })
-    } else {
-      browser.runtime.sendMessage({
-        instanceType: 'bg',
-        action: 'saveTabsData',
-        args: [this.state.windowId, data],
-      })
-    }
+    this.actions.msgToBg('saveTabsData', [this.state.windowId, data])
   }, delay)
 }
 

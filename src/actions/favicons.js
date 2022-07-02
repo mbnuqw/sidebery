@@ -35,15 +35,7 @@ function setFavicon(url, icon) {
   if (index > -1) Vue.set(this.state.favUrls, url, index)
 
   if (this.state.private || alreadyCached) return
-  if (this.state.bg && !this.state.bg.error) {
-    this.state.bg.postMessage({ action: 'saveFavicon', args: [url, icon] })
-  } else {
-    browser.runtime.sendMessage({
-      action: 'saveFavicon',
-      instanceType: 'bg',
-      args: [url, icon],
-    })
-  }
+  this.actions.msgToBg('saveFavicon', [url, icon])
 }
 
 export default {

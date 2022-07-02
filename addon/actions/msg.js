@@ -30,6 +30,8 @@ function initGlobalMessaging() {
  */
 function initMessaging() {
   browser.runtime.onConnect.addListener(port => {
+    const sidebarListener = msg => onSidebarMsg(msg, port)
+
     // Setup message handling
     let info = JSON.parse(port.name)
     if (info.instanceType === 'sidebar') {
@@ -39,9 +41,8 @@ function initMessaging() {
       if (this.settings.markWindow) {
         browser.windows.update(win.id, { titlePreface: this.settings.markWindowPreface })
       }
-
       connectedSidebars[info.windowId] = port
-      port.onMessage.addListener(onSidebarMsg)
+      port.onMessage.addListener(sidebarListener)
 
       if (firstSidebarInitHandlers) {
         for (let handler of firstSidebarInitHandlers) {
@@ -61,7 +62,7 @@ function initMessaging() {
 
         if (this.settings.markWindow) browser.windows.update(info.windowId, { titlePreface: '' })
 
-        targetPort.onMessage.removeListener(onSidebarMsg)
+        targetPort.onMessage.removeListener(sidebarListener)
         delete connectedSidebars[info.windowId]
       }
     })
@@ -71,8 +72,9 @@ function initMessaging() {
 /**
  * Handle message from sidebar
  */
-function onSidebarMsg(msg) {
+function onSidebarMsg(msg, port) {
   if (!Actions.initialized) return
+  if (port) port.postMessage(msg.id)
   if (msg.action !== undefined && Actions[msg.action]) {
     if (msg.arg) Actions[msg.action](msg.arg)
     else if (msg.args) Actions[msg.action](...msg.args)
