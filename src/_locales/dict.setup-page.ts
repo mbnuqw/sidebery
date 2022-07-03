@@ -997,6 +997,21 @@ export const setupPageTranslations: Translations = {
     ru: 'Глобально',
     zh_CN: '全局',
   },
+  'settings.tabs_url_in_tooltip_full': {
+    en: 'full',
+    ru: 'settings.tabs_url_in_tooltip_full',
+    zh_CN: 'settings.tabs_url_in_tooltip_full',
+  },
+  'settings.tabs_url_in_tooltip_stripped': {
+    en: 'stripped',
+    ru: 'settings.tabs_url_in_tooltip_stripped',
+    zh_CN: 'settings.tabs_url_in_tooltip_stripped',
+  },
+  'settings.tabs_url_in_tooltip_none': {
+    en: 'none',
+    ru: 'выкл',
+    zh_CN: '无',
+  },
   'settings.activate_after_closing_no_folded': {
     en: 'Ignore folded tabs',
     ru: 'Игнорировать свернутые вкладки',
@@ -1041,6 +1056,11 @@ export const setupPageTranslations: Translations = {
     en: 'Switch panel after moving active tab to another panel',
     ru: 'Переключать панель после перемещения активной вкладки на другую панель',
     zh_CN: '将活动标签页移动到另一个面板后切换面板',
+  },
+  'settings.tabs_url_in_tooltip': {
+    en: 'Show URL in tooltip',
+    ru: 'settings.tabs_url_in_tooltip',
+    zh_CN: 'settings.tabs_url_in_tooltip',
   },
   'settings.show_new_tab_btns': {
     en: 'Show new tab buttons',
