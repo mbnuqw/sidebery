@@ -99,14 +99,20 @@ const tabColor = computed<string>(() => {
   }
 })
 const tooltip = computed((): string => {
+  let decodedUrl
   try {
-    let str = `${props.tab.title}`
-    if (Settings.reactive.tabsUrlInTooltip == 'full') str += `\n${decodeURI(props.tab.url)}`
-    else if (Settings.reactive.tabsUrlInTooltip == 'stripped') str += `\n${decodeURI(props.tab.url).split("?")[0]}`
-    return str
+    decodedUrl = decodeURI(props.tab.url)
   } catch (err) {
-    return `${props.tab.title}\n${props.tab.url}`
+    decodedUrl = props.tab.url
   }
+
+  let str = `${props.tab.title}`
+  if (Settings.reactive.tabsUrlInTooltip === 'full') {
+    str += `\n${decodedUrl}`
+  } else if (Settings.reactive.tabsUrlInTooltip === 'stripped') {
+    str += `\n${decodedUrl.split('?')[0]}`
+  }
+  return str
 })
 const favPlaceholder = computed((): string => {
   if (props.tab.warn) return '#icon_warn'
