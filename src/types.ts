@@ -10,7 +10,7 @@ import { ItemBounds } from './types/sidebar'
 
 export * from './types/containers'
 export * from './types/menu'
-export * from './types/msg'
+export * from './types/ipc'
 export * from './types/sidebar'
 export * from './types/settings'
 export * from './types/snapshots'

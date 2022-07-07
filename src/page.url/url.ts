@@ -3,7 +3,7 @@ import { Info } from 'src/services/info'
 import { Styles } from 'src/services/styles'
 import { Settings } from 'src/services/settings'
 import { Logs } from 'src/services/logs'
-import { Msg } from 'src/services/msg'
+import { IPC } from 'src/services/ipc'
 
 void (async () => {
   if (window.sideberyUrlPageInjected) return Logs.info('Already initialized')
@@ -60,10 +60,7 @@ void (async () => {
     }
   }
 
-  const result = await Promise.all([
-    Msg.req(InstanceType.bg, 'getUrlPageInitData'),
-    Settings.loadSettings(),
-  ])
+  const result = await Promise.all([IPC.bg('getUrlPageInitData'), Settings.loadSettings()])
   const initData = result[0]
 
   // Set theme/color-scheme

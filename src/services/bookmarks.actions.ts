@@ -15,8 +15,7 @@ import { Tabs } from 'src/services/tabs.fg'
 import { Store } from 'src/services/storage'
 import { Notifications } from 'src/services/notifications'
 import { Info } from 'src/services/info'
-import { Msg } from 'src/services/msg'
-import { InstanceType } from 'src/types/msg'
+import { IPC } from 'src/services/ipc'
 import { Favicons } from './favicons'
 import { TabsPanelConfig } from 'src/types/sidebar'
 import { TABS_PANEL_CONFIG } from 'src/defaults/panels'
@@ -231,7 +230,7 @@ export function openInNewWindow(ids: ID[], incognito?: boolean): void {
     itemsInfo.push(info)
   }
 
-  Msg.call(InstanceType.bg, 'createWindowWithTabs', itemsInfo, { incognito })
+  IPC.bg('createWindowWithTabs', itemsInfo, { incognito })
   return
 }
 

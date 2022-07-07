@@ -11,8 +11,7 @@ import { Store } from 'src/services/storage'
 import { SetupPage } from 'src/services/setup-page'
 import { Notifications } from 'src/services/notifications'
 import { Sidebar } from 'src/services/sidebar'
-import { InstanceType } from 'src/types/msg'
-import { Msg } from './msg'
+import { IPC } from './ipc'
 import { RemovingSnapshotResult, SnapStoreMode } from 'src/types/snapshots'
 import { Containers } from './containers'
 import { DEFAULT_CONTAINER_ID } from 'src/defaults/containers'
@@ -30,7 +29,7 @@ let currentSnapshot: Snapshot | undefined
  * Create base snapshot
  */
 export async function createSnapshot(auto = false): Promise<Snapshot | undefined> {
-  if (!Info.isBg) return await Msg.req(InstanceType.bg, 'createSnapshot')
+  if (!Info.isBg) return await IPC.bg('createSnapshot')
 
   // Get snapshot src data and current snapshots list
   let waiting
@@ -127,7 +126,7 @@ export async function createSnapshot(auto = false): Promise<Snapshot | undefined
   await Store.set({ snapshots: stored.snapshots, lastSnapTime: currentSnapshot.time })
 
   if (Settings.reactive.snapNotify) {
-    Msg.call(InstanceType.sidebar, 'notifyAboutNewSnapshot')
+    IPC.sidebars('notifyAboutNewSnapshot')
   }
 
   return currentSnapshot

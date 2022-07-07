@@ -7,7 +7,7 @@ import { Containers } from 'src/services/containers'
 import { Store } from 'src/services/storage'
 import { WebReq } from 'src/services/web-req'
 import { Favicons } from 'src/services/favicons'
-import { Msg } from './msg'
+import { IPC } from './ipc'
 import { Settings } from './settings'
 import { Logs } from './logs'
 
@@ -74,7 +74,7 @@ function onTabCreated(tab: browser.tabs.Tab): void {
   }
 
   // If sidebar is closed and tabs of inactive panels hidden move new tab (if needed)
-  if (tabWindow && !tabWindow.sidebarPort && Settings.reactive.hideInact) {
+  if (!IPC.sidebarConnections[tab.windowId] && Settings.reactive.hideInact) {
     const prevTab = tabWindow.tabs[tab.index - 1]
     if (prevTab && prevTab.hidden) {
       for (let i = prevTab.index - 1; i >= 0; i--) {
@@ -323,6 +323,8 @@ let cacheTabsDataTimeout: number | undefined
 export function cacheTabsData(windowId: ID, tabs: TabCache[], delay = 300): void {
   if (!tabs) return
 
+  Logs.info('Tabs.cacheTabsData: windowId:', windowId)
+
   Tabs.cacheByWin[windowId] = tabs
 
   clearTimeout(cacheTabsDataTimeout)
@@ -331,6 +333,8 @@ export function cacheTabsData(windowId: ID, tabs: TabCache[], delay = 300): void
     for (const tabs of Object.values(Tabs.cacheByWin)) {
       if (tabs.length) tabsData.push(tabs)
     }
+
+    Logs.info('Tabs.cacheTabsData: win count:', tabsData.length)
 
     Store.set({ tabsDataCache: tabsData })
   }, delay)
@@ -344,7 +348,7 @@ export async function updateBgTabsTreeData(): Promise<void> {
   const windowsList: Window[] = []
   for (const window of Object.values(Windows.byId)) {
     if (window.id === undefined) continue
-    receiving.push(Msg.reqSidebar(window.id, 'getTabsTreeData'))
+    receiving.push(IPC.sidebar(window.id, 'getTabsTreeData'))
     windowsList.push(window)
   }
 
@@ -428,7 +432,7 @@ export async function getGroupPageInitData(winId: ID, tabId: ID): Promise<GroupP
     Logs.err('Tabs: Cannot get theme for group page', err)
   }
   try {
-    data.groupInfo = await Msg.reqSidebar(winId, 'getGroupInfo', tabId)
+    data.groupInfo = await IPC.sidebar(winId, 'getGroupInfo', tabId)
   } catch (err) {
     Logs.err('Tabs: Cannot get tabs info for group page', err)
   }
@@ -436,12 +440,15 @@ export async function getGroupPageInitData(winId: ID, tabId: ID): Promise<GroupP
 }
 
 export function tabsApiProxy<T extends Array<any>>(method: string, ...args: T): any {
+  Logs.info('Tabs.tabsApiProxy:', method)
   if (method === 'create') return (browser.tabs.create as AnyFunc)(...args)
   if (method === 'update') return (browser.tabs.update as AnyFunc)(...args)
   if (method === 'remove') return (browser.tabs.remove as AnyFunc)(...args)
   if (method === 'discard') return (browser.tabs.discard as AnyFunc)(...args)
   if (method === 'reload') return (browser.tabs.reload as AnyFunc)(...args)
-  if (method === 'captureTab') return (browser.tabs.captureTab as AnyFunc)(...args)
+  if (method === 'captureTab' && browser.tabs.captureTab) {
+    return (browser.tabs.captureTab as AnyFunc)(...args)
+  }
 }
 
 export function setupTabsListeners(): void {

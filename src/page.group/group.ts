@@ -1,12 +1,13 @@
 import Utils from 'src/utils'
 import { GroupPin, GroupedTabInfo, InstanceType } from 'src/types'
-import { Msg } from 'src/services/msg'
+import { IPC } from 'src/services/ipc'
 import { Settings } from 'src/services/settings'
 import { Favicons } from 'src/services/favicons'
 import { Styles } from 'src/services/styles'
 import { Info } from 'src/services/info'
 import { Logs } from 'src/services/logs'
 import { Windows } from 'src/services/windows'
+import { NOID } from 'src/defaults'
 
 interface MsgUpdated {
   name: 'update'
@@ -80,8 +81,10 @@ async function main() {
   Windows.id = window.groupWinId
   groupTabId = window.groupTabId
 
+  IPC.connectTo(InstanceType.bg, NOID)
+
   const result = await Promise.all([
-    Msg.req(InstanceType.bg, 'getGroupPageInitData', groupWinId, groupTabId ?? -1),
+    IPC.bg('getGroupPageInitData', groupWinId, groupTabId ?? -1),
     Settings.loadSettings(),
     waitDOM(),
   ])
@@ -156,7 +159,7 @@ async function main() {
   document.body.addEventListener('mousedown', e => {
     if (e.button === 2 && groupParentId) {
       e.preventDefault()
-      Msg.req(InstanceType.bg, 'tabsApiProxy', 'update', groupParentId, { active: true })
+      IPC.bg('tabsApiProxy', 'update', groupParentId, { active: true })
     }
   })
 
@@ -284,7 +287,7 @@ function onTabRemoved(msg: MsgTabRemoved) {
   groupLen--
 
   if (groupLen === 0 && window.location.search.includes('pin=')) {
-    Msg.req(InstanceType.bg, 'tabsApiProxy', 'remove', groupTabId)
+    IPC.bg('tabsApiProxy', 'remove', groupTabId)
   }
 }
 
@@ -302,7 +305,7 @@ function createNewTabButton() {
   newTabEl.addEventListener('mousedown', (event: MouseEvent) => {
     event.stopPropagation()
     event.preventDefault()
-    Msg.req(InstanceType.bg, 'tabsApiProxy', 'create', {
+    IPC.bg('tabsApiProxy', 'create', {
       windowId: groupWinId,
       index: groupTabIndex + groupLen + 1,
       openerTabId: groupTabId,
@@ -365,21 +368,21 @@ function createTabEl(info: GroupedTabInfo, clickHandler: (e: MouseEvent) => void
 
   const discardBtnEl = createTabButton('#icon_discard', 'discard-btn', event => {
     event.stopPropagation()
-    Msg.req(InstanceType.bg, 'tabsApiProxy', 'discard', info.id)
+    IPC.bg('tabsApiProxy', 'discard', info.id)
   })
   ctrlsEl.appendChild(discardBtnEl)
 
   const reloadBtnEl = createTabButton('#icon_reload', 'reload-btn', event => {
     event.stopPropagation()
     if (event.button === 0 || event.button === 1) {
-      Msg.req(InstanceType.bg, 'tabsApiProxy', 'reload', info.id)
+      IPC.bg('tabsApiProxy', 'reload', info.id)
     }
   })
   ctrlsEl.appendChild(reloadBtnEl)
 
   const closeBtnEl = createTabButton('#icon_close', 'close-btn', event => {
     event.stopPropagation()
-    Msg.req(InstanceType.bg, 'tabsApiProxy', 'remove', info.id)
+    IPC.bg('tabsApiProxy', 'remove', info.id)
   })
   ctrlsEl.appendChild(closeBtnEl)
 
@@ -467,7 +470,7 @@ async function takeScreenshot(tab: GroupedTabInfo | GroupPin, quality = 90) {
   }
 
   try {
-    const screen = (await Msg.req(InstanceType.bg, 'tabsApiProxy', 'captureTab', tab.id, {
+    const screen = (await IPC.bg('tabsApiProxy', 'captureTab', tab.id, {
       format: 'jpeg',
       quality,
     })) as string
@@ -508,7 +511,7 @@ async function onTabClick(event: MouseEvent, tab?: { id: ID }) {
     action: 'expTabsBranch',
     arg: groupTabId,
   })
-  Msg.req(InstanceType.bg, 'tabsApiProxy', 'update', tab.id, { active: true })
+  IPC.bg('tabsApiProxy', 'update', tab.id, { active: true })
 }
 
 /**

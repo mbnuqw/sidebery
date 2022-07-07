@@ -37,9 +37,9 @@ import { computed, ref, onMounted } from 'vue'
 import { translate } from 'src/dict'
 import { Sidebar } from 'src/services/sidebar'
 import LoadingDots from 'src/components/loading-dots.vue'
-import { BackupData, InstanceType, Stored } from 'src/types'
+import { BackupData, Stored } from 'src/types'
 import Utils from 'src/utils'
-import { Msg } from 'src/services/msg'
+import { IPC } from 'src/services/ipc'
 import { Logs } from 'src/services/logs'
 
 onMounted(() => {
@@ -68,7 +68,7 @@ function onContinueClick(): void {
   if (!allDone.value) return
   if (continued.value) return
   continued.value = true
-  Msg.call(InstanceType.bg, 'continueUpgrade')
+  IPC.bg('continueUpgrade')
 }
 
 async function genBackup(): Promise<void> {

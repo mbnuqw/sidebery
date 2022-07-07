@@ -42,6 +42,7 @@ export function setInstanceType(t: InstanceType): void {
   else if (t === InstanceType.bg) Info.isBg = true
   else if (t === InstanceType.url) Info.isUrl = true
   else if (t === InstanceType.proxy) Info.isProxy = true
+  else if (t === InstanceType.search) Info.isSearch = true
 }
 
 export function getInstanceName(): string {
@@ -51,6 +52,7 @@ export function getInstanceName(): string {
   else if (Info.isGroup) return 'group'
   else if (Info.isProxy) return 'proxy'
   else if (Info.isUrl) return 'url'
+  else if (Info.isSearch) return 'search'
   return 'unknown'
 }
 

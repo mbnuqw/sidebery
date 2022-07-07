@@ -1,7 +1,7 @@
 import Utils from 'src/utils'
 import { createApp, reactive } from 'vue'
 import { InstanceType } from 'src/types'
-import { Msg } from 'src/services/msg'
+import { IPC } from 'src/services/ipc'
 import { Logs } from 'src/services/logs'
 import { Settings } from 'src/services/settings'
 import { Sidebar } from 'src/services/sidebar'
@@ -22,6 +22,7 @@ import { Search } from 'src/services/search'
 import { Info } from 'src/services/info'
 import SidebarRoot from './sidebar.vue'
 import { Snapshots } from 'src/services/snapshots'
+import { NOID } from 'src/defaults'
 
 async function main(): Promise<void> {
   Info.setInstanceType(InstanceType.sidebar)
@@ -41,7 +42,7 @@ async function main(): Promise<void> {
   Styles.reactive = reactive(Styles.reactive)
 
   Logs.info('Initialization start')
-  Msg.registerActions({
+  IPC.registerActions({
     reloadTab: Tabs.reloadTab,
     queryTab: Tabs.queryTab,
     getTabs: Tabs.getTabs,
@@ -65,7 +66,8 @@ async function main(): Promise<void> {
     notify: Notifications.notify,
     isDropEventConsumed: DnD.isDropEventConsumed,
   })
-  Msg.setupListeners()
+  IPC.setupGlobalMessageListener()
+  IPC.setupConnectionListener()
 
   await Promise.all([
     Windows.loadWindowInfo(),
@@ -108,7 +110,7 @@ async function main(): Promise<void> {
   const initBookmarks = !Settings.reactive.loadBookmarksOnDemand || Utils.isBookmarksPanel(actPanel)
   const initHistory = !Settings.reactive.loadHistoryOnDemand || Utils.isHistoryPanel(actPanel)
 
-  Msg.connectToBg(InstanceType.sidebar, Windows.id)
+  IPC.connectTo(InstanceType.bg, NOID)
 
   if (Sidebar.hasTabs) await Tabs.load()
   else await Tabs.loadInShadowMode()

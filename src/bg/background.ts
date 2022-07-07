@@ -1,5 +1,5 @@
 import { InstanceType, SavedGroup, Stored, TabSessionData, UpgradingState } from 'src/types'
-import { Msg } from 'src/services/msg'
+import { IPC } from 'src/services/ipc'
 import { Logs } from 'src/services/logs'
 import { Settings } from 'src/services/settings'
 import { Windows } from 'src/services/windows'
@@ -24,7 +24,7 @@ void (async function main() {
   Logs.info('Initialization start')
 
   // Register globaly available actions
-  Msg.registerActions({
+  IPC.registerActions({
     cacheTabsData: Tabs.cacheTabsData,
     createSnapshot: Snapshots.createSnapshot,
     removeSnapshot: Snapshots.removeSnapshot,
@@ -42,8 +42,8 @@ void (async function main() {
 
   // Init first-need stuff
   initToolbarButton()
-  Msg.setupListeners()
-  Msg.setupConnections()
+  IPC.setupGlobalMessageListener()
+  IPC.setupConnectionListener()
   await Promise.all([
     Windows.loadWindows(),
     Containers.load(),

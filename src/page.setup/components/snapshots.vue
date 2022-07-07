@@ -84,10 +84,10 @@
 import { reactive, computed, onUnmounted } from 'vue'
 import Utils from 'src/utils'
 import { Stored, Snapshot, SnapshotState, SnapWindowState, RemovingSnapshotResult } from 'src/types'
-import { SnapPanelState, SnapTabState, ItemInfo, InstanceType } from 'src/types'
+import { SnapPanelState, SnapTabState, ItemInfo } from 'src/types'
 import { CONTAINER_ID, NOID } from 'src/defaults'
 import { translate } from 'src/dict'
-import { Msg } from 'src/services/msg'
+import { IPC } from 'src/services/ipc'
 import { Windows } from 'src/services/windows'
 import { Store } from 'src/services/storage'
 import { Snapshots } from 'src/services/snapshots'
@@ -396,7 +396,7 @@ function resetSelection(snapshot?: SnapshotState | null): void {
 }
 
 async function openTab(tab: SnapTabState): Promise<void> {
-  const activePanel = await Msg.reqSidebar(Windows.id, 'getActivePanelInfo')
+  const activePanel = await IPC.sidebar(Windows.id, 'getActivePanelInfo')
 
   if (Utils.isTabsPanel(activePanel)) {
     const item: ItemInfo = {
@@ -405,7 +405,7 @@ async function openTab(tab: SnapTabState): Promise<void> {
       title: tab.title,
       container: tab.containerId ?? CONTAINER_ID,
     }
-    await Msg.reqSidebar(Windows.id, 'openTabs', [item], { panelId: activePanel.id })
+    await IPC.sidebar(Windows.id, 'openTabs', [item], { panelId: activePanel.id })
   } else {
     const conf: browser.tabs.CreateProperties = {
       url: Utils.normalizeUrl(tab.url, tab.title),
@@ -449,9 +449,9 @@ async function openSelectedTabs(): Promise<void> {
     }
   }
 
-  const activePanel = await Msg.reqSidebar(Windows.id, 'getActivePanelInfo')
+  const activePanel = await IPC.sidebar(Windows.id, 'getActivePanelInfo')
   if (Utils.isTabsPanel(activePanel)) {
-    await Msg.reqSidebar(Windows.id, 'openTabs', items, { panelId: activePanel.id })
+    await IPC.sidebar(Windows.id, 'openTabs', items, { panelId: activePanel.id })
   } else {
     for (const item of items) {
       const conf: browser.tabs.CreateProperties = {
@@ -473,14 +473,14 @@ async function openSelectedTabs(): Promise<void> {
 }
 
 async function createSnapshot(): Promise<void> {
-  await Msg.req(InstanceType.bg, 'createSnapshot')
+  await IPC.bg('createSnapshot')
 }
 
 async function openAllWindows(snapshot: SnapshotState | null): Promise<void> {
   if (!snapshot) return
 
   try {
-    await Msg.req(InstanceType.bg, 'openSnapshotWindows', Utils.cloneObject(snapshot))
+    await IPC.bg('openSnapshotWindows', Utils.cloneObject(snapshot))
   } catch (err) {
     Logs.err('Snapshots: Cannot openAllWindows', err)
   }
@@ -490,7 +490,7 @@ async function openWindow(snapshot: SnapshotState | null, winIndex: number): Pro
   if (!snapshot) return
 
   try {
-    await Msg.req(InstanceType.bg, 'openSnapshotWindows', Utils.cloneObject(snapshot), winIndex)
+    await IPC.bg('openSnapshotWindows', Utils.cloneObject(snapshot), winIndex)
   } catch (err) {
     Logs.err('Snapshots: Cannot openWindow', err)
   }
@@ -499,7 +499,7 @@ async function openWindow(snapshot: SnapshotState | null, winIndex: number): Pro
 async function removeSnapshot(snapshot: SnapshotState): Promise<void> {
   if (!window.confirm('Are you sure?')) return
 
-  const result = await Msg.req(InstanceType.bg, 'removeSnapshot', snapshot.id)
+  const result = await IPC.bg('removeSnapshot', snapshot.id)
 
   if (result === RemovingSnapshotResult.Ok) {
     const index = state.snapshots.findIndex(s => s.id === snapshot.id)

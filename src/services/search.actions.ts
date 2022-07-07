@@ -6,8 +6,8 @@ import { Sidebar } from 'src/services/sidebar'
 import * as SearchTabs from 'src/services/search.tabs'
 import * as SearchBookmarks from 'src/services/search.bookmarks'
 import * as SearchHistory from 'src/services/search.history'
-import { InstanceType, MenuType, Panel } from 'src/types'
-import { Msg } from './msg'
+import { MenuType, Panel } from 'src/types'
+import { IPC } from './ipc'
 import { Menu } from './menu'
 import { Windows } from './windows'
 import { History } from './history'
@@ -176,7 +176,7 @@ export function showBar(): void {
 }
 
 export function hideBar(): void {
-  Msg.call(InstanceType.search, 'closePopup')
+  IPC.searchPopup(Windows.id, 'closePopup')
   if (Settings.reactive.searchBarMode !== 'static') Search.reactive.barIsShowed = false
   if (Menu.isOpen) return Menu.close()
 }

@@ -28,8 +28,8 @@ section(ref="el")
 import { ref, reactive, onMounted } from 'vue'
 import { translate } from 'src/dict'
 import { SETTINGS_OPTIONS } from 'src/defaults'
-import { InstanceType, Stored } from 'src/types'
-import { Msg } from 'src/services/msg'
+import { Stored } from 'src/types'
+import { IPC } from 'src/services/ipc'
 import { Settings } from 'src/services/settings'
 import { SetupPage } from 'src/services/setup-page'
 import NumField from '../../components/num-field.vue'
@@ -49,7 +49,7 @@ onMounted(() => {
 })
 
 async function createSnapshot(): Promise<void> {
-  await Msg.req(InstanceType.bg, 'createSnapshot')
+  await IPC.bg('createSnapshot')
   calcInfo()
 }
 

@@ -36,7 +36,7 @@ section(ref="el")
   .ctrls
     .fetch-progress(v-if="state.fetchingBookmarksFavs")
       .progress-bar
-        .progress-lvl(:style="{transform: `translateX(${state.fetchingBookmarksFavsPercent}%)`}")
+        .progress-lvl(:style="progressBarStyle")
       .progress-info
         .progress-host {{state.fetchingBookmarksFavsHost}}
       .progress-info
@@ -47,14 +47,14 @@ section(ref="el")
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, CSSProperties, computed } from 'vue'
 import { Bookmark, Stored, InstanceType } from 'src/types'
 import Utils from 'src/utils'
 import { translate } from 'src/dict'
 import { Settings } from 'src/services/settings'
 import { Permissions } from 'src/services/permissions'
 import { SetupPage } from 'src/services/setup-page'
-import { Msg } from 'src/services/msg'
+import { IPC } from 'src/services/ipc'
 import ToggleField from '../../components/toggle-field.vue'
 import SelectField from '../../components/select-field.vue'
 
@@ -70,6 +70,10 @@ const state = reactive({
 })
 
 onMounted(() => SetupPage.registerEl('settings_bookmarks', el.value))
+
+const progressBarStyle = computed<CSSProperties>(() => {
+  return { transform: `translateX(${state.fetchingBookmarksFavsPercent}%)` }
+})
 
 /**
  * Returns array of urls of all bookmarks
@@ -160,7 +164,7 @@ async function fetchBookmarksFavicons(): Promise<void> {
     state.fetchingBookmarksFavsPercent += perc
     state.fetchingBookmarksFavsDone++
 
-    Msg.call(InstanceType.bg, 'saveFavicon', hosts[host], icon)
+    IPC.bg('saveFavicon', hosts[host], icon)
   }
 
   stopFetchingBookmarksFavicons()

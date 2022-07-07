@@ -21,6 +21,7 @@ export const Info = {
   isProxy: false,
   isUrl: false,
   isBg: false,
+  isSearch: false,
 
   majorVersion: undefined as number | undefined,
   prevMajorVersion: undefined as number | undefined,

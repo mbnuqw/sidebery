@@ -12,6 +12,7 @@ import { Menu } from 'src/services/menu'
 import { Tabs } from 'src/services/tabs.fg'
 import { Snapshots } from 'src/services/snapshots'
 import { Logs } from './logs'
+import { IPC } from './ipc'
 
 type Opts = typeof SETTINGS_OPTIONS
 export async function loadSettings(): Promise<void> {
@@ -72,7 +73,7 @@ export function updateSettingsBg(settings?: SettingsState | null): void {
       if (win.type !== 'normal' || win.id === undefined) continue
       if (!next.markWindow) {
         browser.windows.update(win.id, { titlePreface: '' })
-      } else if (win.sidebarPort) {
+      } else if (IPC.sidebarConnections[win.id]) {
         browser.windows.update(win.id, { titlePreface: Settings.reactive.markWindowPreface })
       }
     }
@@ -80,7 +81,7 @@ export function updateSettingsBg(settings?: SettingsState | null): void {
     const value = next.markWindowPreface
     for (const win of Object.values(Windows.byId)) {
       if (win.type !== 'normal' || win.id === undefined) continue
-      if (Settings.reactive.markWindow && win.sidebarPort) {
+      if (Settings.reactive.markWindow && IPC.sidebarConnections[win.id]) {
         browser.windows.update(win.id, { titlePreface: value })
       }
     }

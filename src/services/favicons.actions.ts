@@ -1,7 +1,7 @@
 import Utils from 'src/utils'
-import { Stored, FavDomain, InstanceType } from 'src/types'
+import { Stored, FavDomain } from 'src/types'
 import { Favicons } from 'src/services/favicons'
-import { Msg } from 'src/services/msg'
+import { IPC } from 'src/services/ipc'
 import { Store } from 'src/services/storage'
 import { Tabs } from 'src/services/tabs.fg'
 import { Info } from 'src/services/info'
@@ -145,7 +145,7 @@ export function saveFavicon(url: string, icon: string): void {
     if (!iconExists) toSave.favicons = Favicons.reactive.list
     Store.set(toSave)
 
-    Msg.call(InstanceType.sidebar, 'setFavicon', domain, url, hash, icon)
+    IPC.sidebars('setFavicon', domain, url, hash, icon)
   }, SAVE_DELAY)
 }
 

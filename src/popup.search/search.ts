@@ -1,17 +1,16 @@
 import { InstanceType } from 'src/types'
-import { Msg } from 'src/services/msg'
+import { IPC } from 'src/services/ipc'
 import { Info } from 'src/services/info'
 import { Settings } from 'src/services/settings'
 import { Styles } from 'src/services/styles'
+import { Windows } from 'src/services/windows'
 
 const el = document.getElementById('textInput') as HTMLInputElement
 
 el?.focus()
 
 el?.addEventListener('blur', () => {
-  // This will lead to the "Promise resolved after context unloaded" error,
-  // but I need to notify sidebar about "blur" event... ¯\_(ツ)_/¯
-  Msg.call(InstanceType.sidebar, 'onOutsideSearchExit')
+  if (Windows.id !== undefined) IPC.sidebar(Windows.id, 'onOutsideSearchExit')
 })
 
 let ctxMenuKeyPressed: number | undefined
@@ -19,31 +18,31 @@ el?.addEventListener('keydown', (e: KeyboardEvent) => {
   // Select all
   if (e.code === 'KeyA' && e.ctrlKey) {
     e.preventDefault()
-    Msg.call(InstanceType.sidebar, 'onOutsideSearchSelectAll')
+    if (Windows.id !== undefined) IPC.sidebar(Windows.id, 'onOutsideSearchSelectAll')
   }
 
   // Down
   else if (e.key === 'ArrowDown') {
     e.preventDefault()
-    Msg.call(InstanceType.sidebar, 'onOutsideSearchNext')
+    if (Windows.id !== undefined) IPC.sidebar(Windows.id, 'onOutsideSearchNext')
   }
 
   // Up
   else if (e.key === 'ArrowUp') {
     e.preventDefault()
-    Msg.call(InstanceType.sidebar, 'onOutsideSearchPrev')
+    if (Windows.id !== undefined) IPC.sidebar(Windows.id, 'onOutsideSearchPrev')
   }
 
   // Enter
   else if (e.key === 'Enter' && !e.altKey) {
     e.preventDefault()
-    Msg.call(InstanceType.sidebar, 'onOutsideSearchEnter')
+    if (Windows.id !== undefined) IPC.sidebar(Windows.id, 'onOutsideSearchEnter')
   }
 
   // Menu
   else if (e.key === 'ContextMenu') {
     e.preventDefault()
-    Msg.call(InstanceType.sidebar, 'onOutsideSearchMenu')
+    if (Windows.id !== undefined) IPC.sidebar(Windows.id, 'onOutsideSearchMenu')
     clearTimeout(ctxMenuKeyPressed)
     ctxMenuKeyPressed = setTimeout(() => (ctxMenuKeyPressed = undefined), 500)
   }
@@ -54,7 +53,7 @@ el?.addEventListener('contextmenu', (e: Event) => {
 })
 
 el?.addEventListener('input', (e: Event) => {
-  Msg.call(InstanceType.sidebar, 'onOutsideSearchInput', el.value)
+  if (Windows.id !== undefined) IPC.sidebar(Windows.id, 'onOutsideSearchInput', el.value)
 })
 
 function closePopup(): void {
@@ -63,9 +62,16 @@ function closePopup(): void {
 
 void (async () => {
   Info.setInstanceType(InstanceType.search)
-  Msg.setupListeners()
-  Msg.registerActions({ closePopup })
-  await Settings.loadSettings()
+  IPC.setupGlobalMessageListener()
+  IPC.registerActions({ closePopup })
+  const [win] = await Promise.all([
+    browser.windows.getCurrent({ populate: false }),
+    Settings.loadSettings(),
+  ])
+  if (win.id !== undefined) {
+    Windows.id = win.id
+    IPC.connectTo(InstanceType.sidebar, Windows.id)
+  }
   Styles.initTheme()
   await Styles.initColorScheme()
   document.body.setAttribute('data-color-scheme', Styles.reactive.colorScheme || 'dark')

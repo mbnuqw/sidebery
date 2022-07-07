@@ -6,7 +6,7 @@ import { Windows } from 'src/services/windows'
 import { Logs } from 'src/services/logs'
 import { Tabs } from 'src/services/tabs.bg'
 import { Settings } from 'src/services/settings'
-import { Msg } from './msg'
+import { IPC } from './ipc'
 
 export async function loadWindows(): Promise<void> {
   const windows = await browser.windows.getAll({ windowTypes: ['normal'], populate: false })
@@ -151,7 +151,7 @@ export async function createWithTabs(
           details: String(err),
           lvl: 'err',
         }
-        Msg.callSidebar(Windows.lastFocusedWinId, 'notify', notification, 10000)
+        IPC.sidebar(Windows.lastFocusedWinId, 'notify', notification, 10000)
       }
     }
     Logs.err('Windows: Cannot create window with tabs', err)

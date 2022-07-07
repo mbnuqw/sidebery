@@ -2,7 +2,7 @@ import Utils from 'src/utils'
 import { translate } from 'src/dict'
 import { PanelConfig, Panel, Stored, ItemBounds, Tab, Bookmark, DstPlaceInfo } from 'src/types'
 import { Notification, OldPanelConfig, SidebarConfig, BookmarksPanelConfig } from 'src/types'
-import { PanelType, TabsPanel, BookmarksPanel, ScrollBoxComponent, InstanceType } from 'src/types'
+import { PanelType, TabsPanel, BookmarksPanel, ScrollBoxComponent } from 'src/types'
 import { TabsPanelConfig, ItemBoundsType, ReactiveTab, DialogConfig } from 'src/types'
 import { BOOKMARKS_PANEL_STATE, TABS_PANEL_STATE, NOID, CONTAINER_ID, Err } from 'src/defaults'
 import { BOOKMARKS_PANEL, TABS_PANEL_CONFIG, DEFAULT_CONTAINER_ID } from 'src/defaults'
@@ -26,7 +26,7 @@ import { Info } from './info'
 import { Permissions } from './permissions'
 import { ItemInfo } from 'src/types/tabs'
 import { Notifications } from './notifications'
-import { Msg } from './msg'
+import { IPC } from './ipc'
 
 interface PanelElements {
   scrollBox: HTMLElement
@@ -1927,7 +1927,9 @@ export function startFastEditingOfContainer(
 }
 
 export function stopFastEditingOfContainer(result: boolean): void {
-  if (Sidebar.reactive.containerConfigPopup?.done) Sidebar.reactive.containerConfigPopup.done(result)
+  if (Sidebar.reactive.containerConfigPopup?.done) {
+    Sidebar.reactive.containerConfigPopup.done(result)
+  }
   Sidebar.reactive.containerConfigPopup = null
 }
 
@@ -1962,7 +1964,7 @@ export async function upgrade(): Promise<void> {
 
     let upgradeState
     try {
-      upgradeState = await Msg.req(InstanceType.bg, 'checkUpgrade')
+      upgradeState = await IPC.bg('checkUpgrade')
     } catch {
       break
     }

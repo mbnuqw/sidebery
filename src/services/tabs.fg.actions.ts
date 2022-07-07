@@ -5,9 +5,9 @@ import { translate } from 'src/dict'
 import { Stored, Tab, Panel, TabCache, ActiveTabsHistory, ReactiveTab, TabStatus } from 'src/types'
 import { Notification, TabSessionData, TabsTreeData, DragInfo } from 'src/types'
 import { WindowChoosingDetails, SrcPlaceInfo, DstPlaceInfo, ItemInfo } from 'src/types'
-import { InstanceType, TabsPanel, PanelType } from 'src/types'
+import { TabsPanel, PanelType } from 'src/types'
 import { Tabs } from 'src/services/tabs.fg'
-import { Msg } from 'src/services/msg'
+import { IPC } from 'src/services/ipc'
 import { Logs } from 'src/services/logs'
 import { Settings } from 'src/services/settings'
 import { Sidebar } from 'src/services/sidebar'
@@ -16,7 +16,6 @@ import { Containers } from 'src/services/containers'
 import { Bookmarks } from 'src/services/bookmarks'
 import { Permissions } from 'src/services/permissions'
 import { Notifications } from 'src/services/notifications'
-import { SetupPage } from 'src/services/setup-page'
 import { Favicons } from './favicons'
 
 const URL_WITHOUT_PROTOCOL_RE = /^(.+\.)\/?(.+\/)?\w+/
@@ -147,7 +146,7 @@ async function restoreTabsState(): Promise<void> {
   Logs.info('Tabs.restoreTabsState')
 
   const windowId = browser.windows.WINDOW_ID_CURRENT
-  const isWindowTabsLockedRequest = Msg.req(InstanceType.bg, 'isWindowTabsLocked', Windows.id)
+  const isWindowTabsLockedRequest = IPC.bg('isWindowTabsLocked', Windows.id)
   const waitGroup = await Promise.all([
     browser.tabs.query({ windowId }),
     browser.storage.local.get<Stored>('tabsDataCache'),
@@ -432,6 +431,9 @@ export function cacheTabsData(delay = 300): void {
   if (cacheTabsDataTimeout) clearTimeout(cacheTabsDataTimeout)
   cacheTabsDataTimeout = setTimeout(() => {
     if (Tabs.tabsNormalizing) return
+
+    Logs.info('Tabs.cacheTabsData')
+
     const data = []
     for (const tab of Tabs.list) {
       const info: TabCache = { id: tab.id, url: tab.url }
@@ -446,7 +448,7 @@ export function cacheTabsData(delay = 300): void {
     // Set unique window id
     if (Windows.uniqWinId && data[0]) data[0].uniqWinId = Windows.uniqWinId
 
-    Msg.call(InstanceType.bg, 'cacheTabsData', Windows.id, data)
+    IPC.bg('cacheTabsData', Windows.id, data)
   }, delay)
 }
 let cacheTabsDataTimeout: number | undefined
@@ -1651,7 +1653,7 @@ export async function move(
   // Move tabs from another window to this window
   if (src.windowId !== undefined && src.windowId !== Windows.id) {
     const tabIds = tabsInfo.map(t => t.id)
-    let externalTabs = await Msg.reqSidebar(src.windowId, 'getTabs', tabIds)
+    let externalTabs = await IPC.sidebar(src.windowId, 'getTabs', tabIds)
     if (!externalTabs) {
       const winNativeTabs = await browser.tabs.query({ windowId: src.windowId })
       externalTabs = []
@@ -1674,10 +1676,7 @@ export async function move(
       parentId: t.parentId,
       panelId: t.panelId ?? dst.panelId,
     }))
-    Msg.call(InstanceType.bg, 'createWindowWithTabs', info, {
-      incognito: dst.incognito,
-      tabId: MOVEID,
-    })
+    IPC.bg('createWindowWithTabs', info, { incognito: dst.incognito, tabId: MOVEID })
     return
   }
 
@@ -1863,7 +1862,7 @@ async function moveTabsToWin(
     }
   }
 
-  const ans = await Msg.reqSidebar(windowId, 'moveTabsToThisWin', tabs)
+  const ans = await IPC.sidebar(windowId, 'moveTabsToThisWin', tabs)
   if (!ans) {
     await browser.tabs.move(
       tabs.map(t => t.id),
@@ -3158,9 +3157,7 @@ export async function open(
 
   // Open tabs in new window
   if (dst.windowId === NEWID) {
-    return await Msg.req(InstanceType.bg, 'createWindowWithTabs', items, {
-      incognito: dst.incognito,
-    })
+    return await IPC.bg('createWindowWithTabs', items, { incognito: dst.incognito })
   }
 
   // Open tabs in another window
@@ -3173,7 +3170,7 @@ export async function open(
       delete dst.windowChooseConf
     }
 
-    const ans = await Msg.reqSidebar(dst.windowId, 'openTabs', items, dst)
+    const ans = await IPC.sidebar(dst.windowId, 'openTabs', items, dst)
     if (!ans) {
       for (const item of items) {
         await browser.tabs.create({ url: item.url, windowId: dst.windowId })

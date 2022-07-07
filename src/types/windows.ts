@@ -2,7 +2,6 @@ import { Tab } from './tabs'
 
 export interface Window extends browser.windows.Window {
   tabs?: Tab[]
-  sidebarPort?: browser.runtime.Port
 }
 
 export interface WindowChooseOption {

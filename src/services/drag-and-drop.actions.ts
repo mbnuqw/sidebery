@@ -1,7 +1,7 @@
 import Utils from 'src/utils'
 import { translate } from 'src/dict'
 import { BKM_OTHER_ID, CONTAINER_ID, NEWID, NOID, PRE_SCROLL } from 'src/defaults'
-import { DragInfo, DragType, DropType, InstanceType, ItemBounds, ItemBoundsType } from 'src/types'
+import { DragInfo, DragType, DropType, ItemBounds, ItemBoundsType } from 'src/types'
 import { DstPlaceInfo, SrcPlaceInfo } from 'src/types'
 import { DnD, DndPointerMode } from 'src/services/drag-and-drop'
 import { Settings } from 'src/services/settings'
@@ -12,7 +12,7 @@ import { Containers } from 'src/services/containers'
 import { Bookmarks } from 'src/services/bookmarks'
 import { Tabs } from 'src/services/tabs.fg'
 import { Logs } from './logs'
-import { Msg } from './msg'
+import { IPC } from './ipc'
 
 /**
  * Start dragging something
@@ -927,7 +927,7 @@ let resetOtherTimeout: number | undefined
 export function resetOther(): void {
   clearTimeout(resetOtherTimeout)
   resetOtherTimeout = setTimeout(() => {
-    Msg.call(InstanceType.sidebar, 'stopDrag')
+    IPC.sidebars('stopDrag')
   }, 150)
 }
 
@@ -946,7 +946,7 @@ export async function onDragEnd(e: DragEvent): Promise<void> {
     // Check if the drop event was consumed by another sidebar
     const requestingDropStatus: Promise<boolean>[] = []
     for (const win of Windows.otherWindows) {
-      if (win.id) requestingDropStatus.push(Msg.reqSidebar(win.id, 'isDropEventConsumed'))
+      if (win.id) requestingDropStatus.push(IPC.sidebar(win.id, 'isDropEventConsumed'))
     }
     let consumed
     try {

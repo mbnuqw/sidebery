@@ -1,7 +1,7 @@
 import { Tab, TabCache, GroupInfo, TabsTreeData } from './tabs'
 import { Panel } from './sidebar'
 import { NormalizedSnapshot, RemovingSnapshotResult, Snapshot } from './snapshots'
-import { DragInfo, DropType, ItemInfo, DstPlaceInfo, Notification } from '../types'
+import { ItemInfo, DstPlaceInfo, Notification } from '../types'
 import { IPCheckResult, UpgradingState } from '../types'
 import { GroupPageInitData, UrlPageInitData } from 'src/services/tabs.bg.actions'
 
@@ -16,18 +16,15 @@ export const enum InstanceType {
   proxy = 6,
 }
 
-export interface ConnectInfo {
-  instanceType: InstanceType
-  windowId: ID
-}
-
 export interface Message<T extends InstanceType, A extends ActionsKeys<T>> {
-  windowId?: ID
-  instanceType?: InstanceType
+  id?: number
+  dstWinId?: ID
+  dstType?: InstanceType
   action?: A
   name?: string
   arg?: FirstParameter<ActionsType<T>[A]>
   args?: Parameters<ActionsType<T>[A]>
+  result?: ReturnType<ActionsType<T>[A]>
 }
 
 export type BgActions = {
