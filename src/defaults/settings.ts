@@ -67,6 +67,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   showNewTabBtns: true,
   newTabBarPosition: 'after_tabs',
   tabsPanelSwitchActMove: false,
+  tabsUrlInTooltip: 'full',
   openSubPanelOnMouseHover: false,
   colorizeTabs: false,
   colorizeTabsSrc: 'domain',
@@ -178,7 +179,7 @@ export const SETTINGS_OPTIONS = {
   navActBookmarksPanelLeftClickAction: ['scroll', 'none'],
   navTabsPanelMidClickAction: ['rm_act_tab', 'rm_all', 'discard', 'bookmark', 'convert', 'none'],
   navBookmarksPanelMidClickAction: ['convert', 'none'],
-
+  tabsUrlInTooltip: ['full', 'stripped', 'none'],
   groupLayout: ['grid', 'list'],
   hScrollAction: ['switch_panels', 'switch_act_tabs', 'none'],
   scrollThroughTabs: ['panel', 'global', 'none'],

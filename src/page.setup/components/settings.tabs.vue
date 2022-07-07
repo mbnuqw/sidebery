@@ -53,6 +53,11 @@ section(ref="el")
     label="settings.tabs_panel_switch_act_move"
     :value="Settings.reactive.tabsPanelSwitchActMove"
     @update:value="toggleTabsPanelSwitchActMove")
+  SelectField(
+    label="settings.tabs_url_in_tooltip"
+    optLabel="settings.tabs_url_in_tooltip_"
+    v-model:value="Settings.reactive.tabsUrlInTooltip"
+    :opts="Settings.getOpts('tabsUrlInTooltip')")
   ToggleField(
     label="settings.show_new_tab_btns"
     v-model:value="Settings.reactive.showNewTabBtns")

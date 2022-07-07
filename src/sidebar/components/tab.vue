@@ -100,7 +100,10 @@ const tabColor = computed<string>(() => {
 })
 const tooltip = computed((): string => {
   try {
-    return `${props.tab.title}\n${decodeURI(props.tab.url)}`
+    let str = `${props.tab.title}`
+    if (Settings.reactive.tabsUrlInTooltip == 'full') str += `\n${decodeURI(props.tab.url)}`
+    else if (Settings.reactive.tabsUrlInTooltip == 'stripped') str += `\n${decodeURI(props.tab.url).split("?")[0]}`
+    return str
   } catch (err) {
     return `${props.tab.title}\n${props.tab.url}`
   }
