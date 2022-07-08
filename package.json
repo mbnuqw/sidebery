@@ -1,6 +1,6 @@
 {
   "name": "sidebery",
-  "version": "5.0.0b23",
+  "version": "5.0.0b24",
   "description": "Manage your tabs and bookmarks in sidebar",
   "main": "index.js",
   "scripts": {
@@ -44,7 +44,7 @@
     "web-ext": "7.1.0"
   },
   "dependencies": {
-    "vue": "3.2.37 "
+    "vue": "3.2.37"
   },
   "prettier": {
     "arrowParens": "avoid",
