@@ -35,15 +35,12 @@ export function initTheme(): void {
     Sidebar.recalcElementSizesDebounced()
   }
   nextThemeLinkEl.href = `/themes/${Settings.reactive.theme}/${Info.getInstanceName()}.css`
-
-  Logs.info(`Theme initialized: ${Settings.reactive.theme}`)
 }
 
 const PREF_DARK_MEDIA = '(prefers-color-scheme: dark), (prefers-color-scheme: no-preference)'
 let darkMedia: MediaQueryList | undefined
 export async function initColorScheme(theme?: browser.theme.Theme): Promise<void> {
   if (Settings.reactive.colorScheme === 'ff') {
-    Logs.info('Styles: initColorScheme')
     if (!theme) theme = await browser.theme.getCurrent()
 
     const colorSchemeVariant = parseTheme(theme)

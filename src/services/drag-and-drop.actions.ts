@@ -776,7 +776,6 @@ function dropEventWasConsumed(): void {
 }
 
 export function isDropEventConsumed(): boolean {
-  Logs.info('DnD.isDropEventConsumed', DnD.dropEventConsumed)
   return DnD.dropEventConsumed
 }
 

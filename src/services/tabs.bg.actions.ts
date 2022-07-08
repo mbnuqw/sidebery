@@ -323,8 +323,6 @@ let cacheTabsDataTimeout: number | undefined
 export function cacheTabsData(windowId: ID, tabs: TabCache[], delay = 300): void {
   if (!tabs) return
 
-  Logs.info('Tabs.cacheTabsData: windowId:', windowId)
-
   Tabs.cacheByWin[windowId] = tabs
 
   clearTimeout(cacheTabsDataTimeout)
@@ -333,8 +331,6 @@ export function cacheTabsData(windowId: ID, tabs: TabCache[], delay = 300): void
     for (const tabs of Object.values(Tabs.cacheByWin)) {
       if (tabs.length) tabsData.push(tabs)
     }
-
-    Logs.info('Tabs.cacheTabsData: win count:', tabsData.length)
 
     Store.set({ tabsDataCache: tabsData })
   }, delay)
@@ -440,7 +436,6 @@ export async function getGroupPageInitData(winId: ID, tabId: ID): Promise<GroupP
 }
 
 export function tabsApiProxy<T extends Array<any>>(method: string, ...args: T): any {
-  Logs.info('Tabs.tabsApiProxy:', method)
   if (method === 'create') return (browser.tabs.create as AnyFunc)(...args)
   if (method === 'update') return (browser.tabs.update as AnyFunc)(...args)
   if (method === 'remove') return (browser.tabs.remove as AnyFunc)(...args)

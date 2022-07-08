@@ -37,8 +37,6 @@ function onWindowCreatedBg(window: Window): void {
   const existedTabs = Windows.byId[window.id]?.tabs
   if (existedTabs) window.tabs = existedTabs
   Windows.byId[window.id] = window
-
-  Logs.info(`Window created: ${window.id}`)
 }
 
 function onWindowCreatedFg(window: Window): void {
@@ -53,8 +51,6 @@ function onWindowRemovedBg(windowId: ID): void {
 
   delete Windows.byId[windowId]
   delete Tabs.cacheByWin[windowId]
-
-  Logs.info(`Window removed: ${windowId}`)
 }
 
 function onWindowRemovedFg(windowId: ID): void {
