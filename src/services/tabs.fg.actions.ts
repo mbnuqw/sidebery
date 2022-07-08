@@ -906,10 +906,9 @@ let checkRemovedTabsTimeout: number | undefined
  * Helper function for checking if some of tabs
  * wasn't removed (e.g. tabs with onbeforeunload)
  */
-function checkRemovedTabs(delay = 640): void {
+export function checkRemovedTabs(delay = 750): void {
   clearTimeout(checkRemovedTabsTimeout)
   checkRemovedTabsTimeout = setTimeout(() => {
-    Logs.info('Tabs: Check removed tabs')
     if (!Tabs.removingTabs || !Tabs.removingTabs.length) return
     for (const tabId of Tabs.removingTabs) {
       browser.tabs
@@ -917,10 +916,18 @@ function checkRemovedTabs(delay = 640): void {
         .then(() => {
           const tab = Tabs.byId[tabId]
           if (tab) {
-            const rParent = Tabs.reactive.byId[tab.parentId]
+            const parent = Tabs.byId[tab.parentId]
+            const rTab = Tabs.reactive.byId[tab.id]
 
-            tab.lvl = rParent ? rParent.lvl + 1 : 0
+            tab.lvl = parent ? parent.lvl + 1 : 0
             tab.invisible = false
+            if (rTab) {
+              rTab.lvl = tab.lvl
+              rTab.invisible = false
+            }
+
+            const rmIndex = Tabs.removingTabs.indexOf(tab.id)
+            if (rmIndex !== -1) Tabs.removingTabs.splice(rmIndex, 1)
           }
         })
         .catch(() => {

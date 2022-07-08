@@ -621,8 +621,12 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, ignoreChildren?:
   if (Tabs.ignoreTabsEvents) return
   if (Tabs.tabsNormalizing) return Tabs.normalizeTabs()
 
-  if (!Tabs.removingTabs) Tabs.removingTabs = []
-  else Tabs.removingTabs.splice(Tabs.removingTabs.indexOf(tabId), 1)
+  if (Tabs.removingTabs.length > 0) {
+    Tabs.checkRemovedTabs()
+
+    const rmIndex = Tabs.removingTabs.indexOf(tabId)
+    if (rmIndex !== -1) Tabs.removingTabs.splice(rmIndex, 1)
+  }
 
   if (!Tabs.removingTabs.length) {
     Menu.close()
