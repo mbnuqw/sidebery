@@ -417,6 +417,7 @@ function onTabRemoved(tabId, info, childfree) {
   }
 
   // Handle child tabs
+  const childTabs = []
   if (this.state.tabsTree && tab.isParent && !childfree) {
     const toRemove = []
     let outdentOnlyFirstChild = this.state.treeRmOutdent === 'first_child'
@@ -424,6 +425,7 @@ function onTabRemoved(tabId, info, childfree) {
     for (let i = tab.index + 1, t; i < this.state.tabs.length; i++) {
       t = this.state.tabs[i]
       if (t.lvl <= tab.lvl) break
+      childTabs.push(t)
 
       // Remove folded tabs
       if ((this.state.rmChildTabs === 'folded' && tab.folded) || this.state.rmChildTabs === 'all') {
@@ -494,6 +496,7 @@ function onTabRemoved(tabId, info, childfree) {
     // Save new tabs state
     this.actions.saveTabsData()
     this.actions.saveGroups()
+    childTabs.forEach(t => this.actions.saveTabData(t))
 
     // Update succession
     if (this.state.activateAfterClosing !== 'none') {
