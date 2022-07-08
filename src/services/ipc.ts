@@ -4,6 +4,7 @@ import { NOID } from 'src/defaults'
 import { Logs } from 'src/services/logs'
 import { Info } from 'src/services/info'
 import { Windows } from 'src/services/windows'
+import { Settings } from './settings'
 
 interface PortNameData {
   srcType: InstanceType
@@ -254,6 +255,16 @@ function onConnect(port: browser.runtime.Port) {
     if (portNameData.srcWinId === undefined) {
       return Logs.err('IPC.onConnect: Sidebar: No srcWinId')
     }
+
+    // TODO: move this to external connect-listener
+    if (Info.isBg) {
+      if (Settings.reactive.markWindow && portNameData.srcWinId !== undefined) {
+        browser.windows.update(portNameData.srcWinId, {
+          titlePreface: Settings.reactive.markWindowPreface,
+        })
+      }
+    }
+
     IPC.sidebarConnections[portNameData.srcWinId] = connection
   }
 
@@ -282,6 +293,7 @@ function onConnect(port: browser.runtime.Port) {
     if (portNameData.srcType === InstanceType.sidebar) {
       delete IPC.sidebarConnections[portNameData.srcWinId]
 
+      // TODO: move this to external disconnect-listener
       if (Info.isBg && Windows.byId[portNameData.srcWinId]) {
         browser.windows.update(portNameData.srcWinId, { titlePreface: '' })
       }
