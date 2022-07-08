@@ -52,7 +52,6 @@ void (async function main() {
   ])
 
   if (Info.isMajorUpgrade()) {
-    Logs.info('Upgrade needed')
     await upgrade()
     return
   }
@@ -84,8 +83,6 @@ function initToolbarButton(): void {
     if (info && info.button === 1) browser.runtime.openOptionsPage()
     else browser.sidebarAction.open()
   })
-
-  Logs.info('Toolbar button initialized')
 }
 
 let upgrading: UpgradingState | undefined
@@ -263,6 +260,7 @@ function continueUpgrade(): void {
 
 async function recreateGroupTabs(): Promise<void> {
   const windows = await browser.windows.getAll({ windowTypes: ['normal'], populate: true })
+  const sideberyUrlBase = browser.runtime.getURL('')
   const groupUrlBase = browser.runtime.getURL('page.group/group.html')
   const tabsCreating: Promise<browser.tabs.Tab>[] = []
 
@@ -284,9 +282,18 @@ async function recreateGroupTabs(): Promise<void> {
     for (let i = 0; i < win.tabs.length; i++) {
       const tab = win.tabs[i]
       const tabData = tabsData[i]
-      if (!tab || !tabData) {
-        Logs.err('Upgrade: Recreating groups: No tab data')
-        break
+      if (!tab || !tabData) continue
+
+      // Update legacy urls
+      if (tab.url.startsWith(sideberyUrlBase)) {
+        if (tab.url.includes('/group/group.html', 52)) {
+          tab.url = tab.url.replace('/group/group.html', '/page.group/group.html')
+          browser.tabs.update(tab.id, { url: tab.url })
+        }
+        if (tab.url.includes('/url/url.html', 52)) {
+          tab.url = tab.url.replace('/url/url.html', '/page.url/url.html')
+          browser.tabs.update(tab.id, { url: tab.url })
+        }
       }
 
       tabsMap[tabData.id] = tabData
@@ -301,23 +308,23 @@ async function recreateGroupTabs(): Promise<void> {
 
         // Set target index at which group tab should be created
         const index = i + indexOffset
-        tabsCreating.push(createUpgradedGroupTab(groupTabData, index, groupUrlBase))
+        tabsCreating.push(createUpgradedGroupTab(groupTabData, index, groupUrlBase, win.id))
         indexOffset++
 
         tabsMap[groupTabData.id] = groupTabData
 
         // Check if the parent of new group page is existed
-        let exitedParentTab = tabsMap[groupTabData.parentId]
+        let existedParentTab = tabsMap[groupTabData.parentId]
         groupTabData = groupsData[groupTabData.parentId]
 
         while (groupTabData) {
-          if (!exitedParentTab) {
-            tabsCreating.push(createUpgradedGroupTab(groupTabData, index, groupUrlBase))
+          if (!existedParentTab) {
+            tabsCreating.push(createUpgradedGroupTab(groupTabData, index, groupUrlBase, win.id))
             indexOffset++
 
             tabsMap[groupTabData.id] = groupTabData
           }
-          exitedParentTab = tabsMap[groupTabData.parentId]
+          existedParentTab = tabsMap[groupTabData.parentId]
           groupTabData = groupsData[groupTabData.parentId]
         }
       }
@@ -330,27 +337,33 @@ async function recreateGroupTabs(): Promise<void> {
   await Utils.sleep(1000)
 }
 
-function createUpgradedGroupTab(
+async function createUpgradedGroupTab(
   groupTabData: SavedGroup,
   index: number,
-  groupUrlBase: string
+  groupUrlBase: string,
+  windowId: ID
 ): Promise<browser.tabs.Tab> {
-  return browser.tabs
-    .create({
-      active: false,
-      index,
-      url: upgradeGroupPageUrl(groupUrlBase, groupTabData.url),
-      cookieStoreId: groupTabData.ctx,
+  const tab = await browser.tabs.create({
+    active: false,
+    index,
+    url: upgradeGroupPageUrl(groupUrlBase, groupTabData.url),
+    cookieStoreId: groupTabData.ctx,
+    windowId,
+  })
+
+  try {
+    await browser.sessions.setTabValue(tab.id, 'data', {
+      id: groupTabData.id,
+      panelId: groupTabData.panelId,
+      parentId: groupTabData.parentId,
+      folded: groupTabData.folded,
     })
-    .then(tab => {
-      browser.sessions.setTabValue(tab.id, 'data', {
-        id: groupTabData.id,
-        panelId: groupTabData.panelId,
-        parentId: groupTabData.parentId,
-        folded: groupTabData.folded,
-      })
-      return tab
-    })
+  } catch {
+    // :(
+    // anyway, we still have tabsDataCache...
+  }
+
+  return tab
 }
 
 function upgradeGroupPageUrl(groupUrlBase: string, oldUrl: string): string {
