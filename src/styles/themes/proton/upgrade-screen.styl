@@ -1,19 +1,23 @@
 wide-screen-width = 360px
 
 @media (prefers-color-scheme: dark), (prefers-color-scheme: no-preference)
-  #root
+  #root.root
     --bg: #303132
     --fg: #fff
     --done-fg: #64df64
     --active-fg: #4993E6
     --err-fg: #df6464
+    --btn-fg: #fff !important
+    --frame-fg: #afafaf !important
 @media (prefers-color-scheme: light)
-  #root
+  #root.root
     --bg: #efefef
     --fg: #000
     --done-fg: #098623
     --active-fg: #146fd9
     --err-fg: #d72f2f
+    --btn-fg: #000 !important
+    --frame-fg: #323232 !important
 
 .UpgradeScreen
   position: absolute
