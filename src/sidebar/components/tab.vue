@@ -228,6 +228,7 @@ function onMouseUp(e: MouseEvent): void {
       if (
         Settings.reactive.tabsSecondClickActPrev &&
         props.tab.id === Tabs.activeId &&
+        withoutMods &&
         !activating
       ) {
         const history = Tabs.getActiveTabsHistory()
