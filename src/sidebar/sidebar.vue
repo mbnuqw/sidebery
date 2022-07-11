@@ -31,7 +31,6 @@
   @focusin="onFocusIn"
   @focusout="onFocusOut")
 
-  SearchBar(v-show="Settings.reactive.searchBarMode !== 'none'")
   Transition(name="popup" type="transition"): ConfirmPopup(v-if="Sidebar.reactive.confirm")
   Transition(name="popup" type="transition"): WindowsPopup(v-if="Windows.reactive.choosing")
   Transition(name="popup" type="transition"): BookmarksPopup(v-if="Bookmarks.reactive.popup")
@@ -45,6 +44,8 @@
 
   .top-horizontal-box(v-if="navBarHorizontal")
     NavigationBar.-top
+
+  SearchBar(v-show="Settings.reactive.searchBarMode !== 'none'")
 
   .main-box
     .left-vertical-box(v-if="pinnedTabsBarLeft || navBarLeft")
