@@ -25,23 +25,23 @@
   "author": "mbnuqw",
   "license": "MIT",
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "5.29.0",
-    "@typescript-eslint/parser": "5.29.0",
+    "@typescript-eslint/eslint-plugin": "5.30.6",
+    "@typescript-eslint/parser": "5.30.6",
     "@vue/compiler-sfc": "3.2.37",
     "@vue/eslint-config-typescript": "11.0.0",
     "csso": "5.0.3",
-    "esbuild": "0.14.47",
-    "eslint": "8.18.0",
+    "esbuild": "0.14.49",
+    "eslint": "8.19.0",
     "eslint-config-prettier": "8.5.0",
-    "eslint-plugin-prettier": "4.0.0",
-    "eslint-plugin-vue": "9.1.1",
-    "jest": "28.1.1",
+    "eslint-plugin-prettier": "4.2.1",
+    "eslint-plugin-vue": "9.2.0",
+    "jest": "28.1.2",
     "prettier": "2.7.1",
     "pug": "3.0.2",
     "stylus": "0.58.1",
     "terser": "5.14.1",
     "typescript": "4.7.4",
-    "web-ext": "7.1.0"
+    "web-ext": "7.1.1"
   },
   "dependencies": {
     "vue": "3.2.37"
