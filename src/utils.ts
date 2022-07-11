@@ -179,13 +179,13 @@ function getDomainOf(url: string): string {
  * Generate HSL color from string
  */
 function colorFromString(str: string, minLightness = 50): string {
-  let c = 0
+  let h = 0
   let s = 0
   let l = 0
   for (let pcc, cc, i = 1; i < str.length; i += 2) {
     cc = str.charCodeAt(i)
     pcc = str.charCodeAt(i - 1)
-    c += pcc + cc
+    h += pcc + cc
     s += pcc
     l += cc
   }
@@ -193,7 +193,7 @@ function colorFromString(str: string, minLightness = 50): string {
   if (minLightness < 20) minLightness = 20
   else if (minLightness > 80) minLightness = 80
 
-  return `hsl(${(c % 37) * 10}deg, ${(s % 6) * 5 + 60}%, ${(l % 3) * 10 + minLightness}%)`
+  return `hsl(${(h % 181) * 2}deg, ${(s % 6) * 5 + 60}%, ${(l % 3) * 10 + minLightness}%)`
 }
 
 const RGBA_RE = /rgba?\((\d+%?)[,\s]\s*(\d+%?)[,\s]\s*(\d+%?)(,|\s\/\s)?\s*([\d.]+%?)?\)/
