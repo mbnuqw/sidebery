@@ -347,7 +347,7 @@ function onTabCreated(tab: Tab): void {
 
   // Hide native tab if needed
   if (Settings.reactive.hideInact && panel.id !== Sidebar.reactive.activePanelId) {
-    browser.tabs.hide(tab.id)
+    browser.tabs.hide?.(tab.id)
   }
 
   Logs.info(

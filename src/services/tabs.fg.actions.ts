@@ -1956,6 +1956,8 @@ export function updateNativeTabsVisibility(): void {
   const hideFolded = Settings.reactive.hideFoldedTabs
   const hideInact = Settings.reactive.hideInact
 
+  if (!browser.tabs.hide) return
+
   const actTab = Tabs.byId[Tabs.activeId]
   if (!actTab) return
 
@@ -2051,7 +2053,7 @@ export function foldTabsBranch(tabId: ID): void {
   }
 
   if (Settings.reactive.hideFoldedTabs && toHide.length) {
-    browser.tabs.hide(toHide)
+    browser.tabs.hide?.(toHide)
   }
 
   saveTabData(tabId)
@@ -2119,7 +2121,7 @@ export function expTabsBranch(tabId: ID): void {
   }
 
   if (Settings.reactive.hideFoldedTabs && toShow.length) {
-    browser.tabs.show(toShow)
+    browser.tabs.show?.(toShow)
   }
 
   saveTabData(tabId)
