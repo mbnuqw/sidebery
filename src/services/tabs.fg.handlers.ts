@@ -432,7 +432,9 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
       localTab.mediaPaused = false
       rLocalTab.mediaPaused = false
     }
-    if (Settings.reactive.colorizeTabs) Tabs.colorizeTabDebounced(tabId)
+    if (Settings.reactive.colorizeTabs) {
+      Tabs.colorizeTabDebounced(tabId, !rLocalTab?.color ? 0 : 500)
+    }
     if (Settings.reactive.colorizeTabsBranches) {
       branchColorizationNeeded = localTab.isParent && localTab.lvl === 0
       if (localTab.lvl === 0) rLocalTab.branchColor = null
