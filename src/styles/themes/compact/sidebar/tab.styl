@@ -1,7 +1,7 @@
 @import '../../../mixins'
 
 #root
-  --tabs-pinned-height: 27px
+  --tabs-pinned-height: 29px
   --tabs-pinned-width: 29px
   --tabs-height: 27px
   --tabs-indent: 8px
@@ -207,10 +207,14 @@
   opacity: .2
 .Tab[data-active="true"] .color-layer
   opacity: .3
+.Tab[data-active="false"] .color-layer
+  box-shadow: 0 0 1px 0 #0007
 #root[data-color-scheme="light"] .Tab .color-layer
-  opacity: .32
+  opacity: .36
 #root[data-color-scheme="light"] .Tab[data-active="true"] .color-layer
   opacity: .5
+#root[data-color-scheme="light"] .Tab[data-active="false"] .color-layer
+  box-shadow: inset 0 0 0 1px #0003
 
 // ---
 // -- Drag layer
