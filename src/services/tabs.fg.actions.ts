@@ -1293,8 +1293,8 @@ export async function pauseTabMedia(id?: ID): Promise<void> {
       runAt: 'document_start',
       allFrames: true,
     })
-    .then(result => {
-      if (result[0] === false) {
+    .then(results => {
+      if (results.every(result => result === false)) {
         if (tab) tab.mediaPaused = false
         if (rTab) rTab.mediaPaused = false
       }
@@ -1364,8 +1364,8 @@ export async function pauseTabsMediaOfPanel(id: ID): Promise<void> {
         tab.mediaPaused = true
         browser.tabs
           .executeScript(tab.id, injectionConfig)
-          .then(result => {
-            if (result[0] === false) {
+          .then(results => {
+            if (results.every(result => result === false)) {
               if (rTab) rTab.mediaPaused = false
               tab.mediaPaused = false
             }
@@ -1384,8 +1384,8 @@ export async function pauseTabsMediaOfPanel(id: ID): Promise<void> {
       tab.mediaPaused = true
       browser.tabs
         .executeScript(tab.id, injectionConfig)
-        .then(result => {
-          if (result[0] === false) {
+        .then(results => {
+          if (results.every(result => result === false)) {
             rTab.mediaPaused = false
             tab.mediaPaused = false
           }
