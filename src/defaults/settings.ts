@@ -207,7 +207,7 @@ export const SETTINGS_OPTIONS = {
   colorScheme: ['dark', 'light', 'sys', 'ff'],
   snapIntervalUnit: ['min', 'hr', 'day'],
   snapLimitUnit: ['snap', 'kb', 'day'],
-  moveNewTabPin: ['start', 'end', 'none'],
+  moveNewTabPin: ['start', 'end'],
   moveNewTabParent: [
     'before', 'sibling', 'first_child', 'last_child', 'start', 'end', 'default', 'none'
   ],

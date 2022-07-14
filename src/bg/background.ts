@@ -121,6 +121,9 @@ async function upgrade(): Promise<void> {
     } else if (stored.settings.hScrollThroughPanels === false) {
       newStorage.settings.hScrollAction = 'none'
     }
+    if ((stored.settings.moveNewTabPin as string) === 'none') {
+      newStorage.settings.moveNewTabPin = 'start'
+    }
     upgrading.settings = 'done'
   } else {
     upgrading.settings = 'no'

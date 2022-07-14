@@ -1152,9 +1152,9 @@ export const setupPageTranslations: Translations = {
     zh_CN: '面板末尾位置',
   },
   'settings.move_new_tab_pin_none': {
-    en: 'none',
-    ru: 'выкл',
-    zh_CN: '无',
+    en: 'use general rule',
+    ru: 'использовать общее правило',
+    // zh_CN: '无',
   },
   'settings.move_new_tab_parent': {
     en: 'Place new tab opened from another tab',
@@ -1192,14 +1192,12 @@ export const setupPageTranslations: Translations = {
     zh_CN: '面板末尾位置',
   },
   'settings.move_new_tab_parent_default': {
-    en: 'default',
-    ru: 'по умолчанию',
-    zh_CN: '默认',
+    en: 'do not move it',
+    ru: 'не перемещать',
   },
   'settings.move_new_tab_parent_none': {
-    en: 'none',
-    ru: 'выкл',
-    zh_CN: '无',
+    en: 'use general rule',
+    ru: 'использовать общее правило',
   },
   'settings.move_new_tab_parent_act_panel': {
     en: 'Only if panel of parent tab is active',
@@ -1207,9 +1205,9 @@ export const setupPageTranslations: Translations = {
     zh_CN: '仅当父标签页的面板处于活动状态时',
   },
   'settings.move_new_tab': {
-    en: 'Place new tab (for the other cases)',
-    ru: 'Для остальных случаев',
-    zh_CN: '新标签的位置（对于其他情况）',
+    en: 'Place new tab (general rule)',
+    ru: 'Общее правило',
+    // zh_CN: '新标签的位置（对于其他情况）',
   },
   'settings.move_new_tab_start': {
     en: 'panel start',
