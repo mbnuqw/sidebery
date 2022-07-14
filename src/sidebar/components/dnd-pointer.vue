@@ -1,6 +1,7 @@
 <template lang="pug">
 .pointer(
   ref="pointerEl"
+  :style="{ '--pointer-left': `${DnD.reactive.pointerLeft}px` }"
   :data-pointer="DndPointerModeNames[DnD.reactive.pointerMode]"
   :data-hover="DnD.reactive.pointerHover"
   :data-lvl="DnD.reactive.pointerLvl")

@@ -324,6 +324,9 @@ export function updateBounds(): void {
   const panel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
   if (!panel || !panelsBoxEl || !panel.scrollEl || !panel.ready) return
 
+  const panelContentEl = panel.scrollComponent?.getScrollableBox()
+  DnD.updatePointerLeftPosition(panelContentEl?.offsetLeft ?? 0)
+
   const pb = panel.scrollEl.getBoundingClientRect()
   const bb = panelsBoxEl.getBoundingClientRect()
 

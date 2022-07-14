@@ -504,6 +504,10 @@ export function initPointer(el: HTMLElement | null): void {
   pointerEl = el
 }
 
+export function updatePointerLeftPosition(left: number): void {
+  DnD.reactive.pointerLeft = left
+}
+
 export function onPointerExpanded(): void {
   DnD.reactive.pointerExpanding = false
 }
