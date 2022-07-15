@@ -46,7 +46,7 @@ export async function replaceRelGroupWithPinnedTab(groupTab: Tab, pinnedTab: Tab
  */
 export async function groupTabs(tabIds: ID[], conf: GroupConfig): Promise<void> {
   const noConfig = !conf
-  conf = {}
+  if (!conf) conf = {}
 
   // Get tabs
   const tabs = []
