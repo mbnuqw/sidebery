@@ -566,7 +566,11 @@ function reloadTabFaviconDebounced(localTab: Tab, rLocalTab: ReactiveTab, delay 
   reloadTabFaviconTimeout[localTab.id] = setTimeout(() => {
     delete reloadTabFaviconTimeout[localTab.id]
 
-    if (localTab.internal) return
+    if (localTab.internal) {
+      localTab.favIconUrl = undefined
+      rLocalTab.favIconUrl = undefined
+      return
+    }
 
     browser.tabs
       .get(localTab.id)
