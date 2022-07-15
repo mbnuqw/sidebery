@@ -1,7 +1,9 @@
-import { StorageChanges, Stored, StoredSync } from 'src/types'
+import { StorageChanges, Stored, StoredSync, InstanceType } from 'src/types'
 import { Info } from './info'
+import { IPC } from './ipc'
 import { Logs } from './logs'
 import { Settings } from './settings'
+import { Windows } from './windows'
 
 type ChangeHandler = <K extends keyof Stored>(newVal: Stored[K], oldVal: Stored[K]) => void
 type ChangeHandlerG<K extends StorageKey> = (
@@ -18,18 +20,42 @@ export const Store = {
   sync,
   onKeyChange,
   offKeyChange,
+  ipcKeyChanged,
+  registerRemote,
+  unregisterRemote,
+}
+
+function ipcKeyChanged<K extends StorageKey>(key: K, newValue: StorageValue<K>, oldValue: StorageValue<K>): void {
+  if (blockedKeys[key]) {
+    unblockKey(key)
+    return
+  }
+  const handler = changeHandlers[key]
+  if (handler) {
+    handler(newValue, oldValue)
+  } else {
+    Logs.warn(`Store: Received store key change event for ${key} without a handler`)
+  }
 }
 
 function onStorageChange(changes: StorageChanges, type: browser.storage.AreaName): void {
   if (type !== 'local') return
 
-  for (const key of Object.keys(changes) as [keyof Stored]) {
+  for (const [key, change] of Object.entries(changes) as <K extends keyof StorageChanges>[[K, StorageChanges[K]]]) {
+    const remotes = remoteHandlers[key]
+    if (remotes && change) {
+      for (const remoteKey of remotes) {
+        const {type, winId} = JSON.parse(remoteKey) as { type: InstanceType, winId: ID }
+        if (type == InstanceType.sidebar) {
+          IPC.sidebar(winId, "storeKeyChanged", key, change.newValue, change.oldValue)
+        }
+      }
+    }
     if (blockedKeys[key]) {
       unblockKey(key)
       continue
     }
 
-    const change = changes[key]
     const handler = changeHandlers[key]
     if (handler && change) handler(change.newValue, change.oldValue)
   }
@@ -47,6 +73,7 @@ const blockedKeys: { [key in keyof Stored]?: number } = {}
 function blockChangeHandling(key: keyof Stored): void {
   if (blockedKeys[key]) clearTimeout(blockedKeys[key])
   blockedKeys[key] = setTimeout(() => {
+    Logs.warn(`Store: Did not receive blocked change for ${key} before timing out`)
     blockedKeys[key] = undefined
   }, 1200)
 }
@@ -77,11 +104,34 @@ async function set(newValues: Stored, delay?: number): Promise<void> {
 
 const changeHandlers: { [key in keyof Stored]?: ChangeHandler } = {}
 function onKeyChange<K extends keyof Stored, H extends ChangeHandlerG<K>>(key: K, cb: H): void {
-  if (changeHandlers[key]) throw Logs.err(`Storeage: onKeyChange: "${key}" handler existed`)
+  if (changeHandlers[key]) throw Logs.err(`Storage: onKeyChange: "${key}" handler existed`)
   changeHandlers[key] = cb as ChangeHandler
+  // FIXME: Should test !Info.isBg, but currently only sidebars are wired together for IPC to work
+  if (Info.isSidebar) {
+    IPC.bg("registerStoreKeyChange", key, Info.instanceType, Windows.id)
+  }
 }
 function offKeyChange<K extends keyof Stored>(key: K, cb: ChangeHandlerG<K>): void {
   if (changeHandlers[key] === cb) delete changeHandlers[key]
+  if (Info.isSidebar) {
+    IPC.bg("unregisterStoreKeyChange", key, Info.instanceType, Windows.id)
+  }
+}
+
+const remoteHandlers: { [key in keyof Stored]?: Set<string>} = {}
+function registerRemote(key: StorageKey, type: InstanceType, winId: ID): void {
+  let remoteKey = JSON.stringify({type, winId})
+  let handlers = remoteHandlers[key] ?? new Set()
+  if (handlers.has(remoteKey)) Logs.warn(`Storage: registerRemote: "${key}" handler already exists for ${remoteKey}`)
+  handlers.add(remoteKey)
+  remoteHandlers[key] = handlers
+}
+function unregisterRemote(key: StorageKey, type: InstanceType, winId: ID): void {
+  let remoteKey = JSON.stringify({type, winId})
+  let handlers = remoteHandlers[key]
+  if (!handlers) return
+  handlers.delete(remoteKey)
+  remoteHandlers[key] = handlers
 }
 
 export async function sync(name: string, value: Stored): Promise<void> {
