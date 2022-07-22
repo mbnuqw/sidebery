@@ -78,11 +78,14 @@ async function main(): Promise<void> {
     Info.loadVersionInfo(),
   ])
 
-  const app = createApp(SidebarRoot)
+  let app = createApp(SidebarRoot)
   app.mount('#root_container')
 
+  // Remount sidebar if some non-reactive data (settings) is changed.
   Sidebar.reMountSidebar = () => {
-    createApp(SidebarRoot).mount('#root_container')
+    app.unmount()
+    app = createApp(SidebarRoot)
+    app.mount('#root_container')
     Styles.initColorScheme()
   }
 
