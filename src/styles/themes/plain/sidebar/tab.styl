@@ -406,10 +406,22 @@
   left: 0
   width: 100%
   height: 100%
-  background-image: linear-gradient(90deg, #00000000, var(--tabs-loading-fg))
+  border-radius: var(--element-roundness)
+  overflow: hidden
   opacity: 0
-  transform: translateX(-100%)
-  animation: flash-animation .4s
+  animation: flash-box-animation .4s
+  &:before
+    content: ''
+    position: absolute
+    width: 100%
+    height: 100%
+    top: 0
+    left: 0
+    background-image: linear-gradient(90deg, #00000000, var(--tabs-loading-fg))
+    transform: translateX(-100%)
+    animation: flash-progress-animation .4s
+.Tab[data-active="true"] .flash-fx:before
+  background-image: linear-gradient(90deg, #00000000, var(--tabs-loading-fg))
 
 // ---
 // -- Title box
@@ -535,10 +547,14 @@
   100%
     opacity: 1
 
-@keyframes flash-animation
+@keyframes flash-box-animation
   0%
     opacity: .8
-    transform: translateX(-100%)
   100%
     opacity: 0
+
+@keyframes flash-progress-animation
+  0%
+    transform: translateX(-100%)
+  100%
     transform: translateX(5px)
