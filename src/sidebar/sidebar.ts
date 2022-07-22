@@ -65,6 +65,7 @@ async function main(): Promise<void> {
     notifyAboutNewSnapshot: Snapshots.notifyAboutNewSnapshot,
     notify: Notifications.notify,
     isDropEventConsumed: DnD.isDropEventConsumed,
+    storeKeyChanged: Store.ipcKeyChanged,
   })
   IPC.setupGlobalMessageListener()
   IPC.setupConnectionListener()
@@ -97,7 +98,6 @@ async function main(): Promise<void> {
   Permissions.setupListeners()
   Windows.setupWindowsListeners()
   Containers.setupContainersListeners()
-  Store.setupStorageListeners()
   Sidebar.setupListeners()
 
   if (Settings.reactive.theme !== 'proton') Styles.initTheme()

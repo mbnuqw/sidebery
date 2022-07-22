@@ -38,6 +38,8 @@ void (async function main() {
     tabsApiProxy: Tabs.tabsApiProxy,
     checkUpgrade: checkUpgrade,
     continueUpgrade: continueUpgrade,
+    registerStoreKeyChange: Store.registerRemote,
+    unregisterStoreKeyChange: Store.unregisterRemote,
   })
 
   // Init first-need stuff

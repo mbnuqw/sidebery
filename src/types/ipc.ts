@@ -4,6 +4,7 @@ import { NormalizedSnapshot, RemovingSnapshotResult, Snapshot } from './snapshot
 import { ItemInfo, DstPlaceInfo, Notification } from '../types'
 import { IPCheckResult, UpgradingState } from '../types'
 import { GroupPageInitData, UrlPageInitData } from 'src/services/tabs.bg.actions'
+import { Stored } from './storage'
 
 export const enum InstanceType {
   unknown = -1,
@@ -44,6 +45,8 @@ export type BgActions = {
   tabsApiProxy: (method: string, ...args: any[]) => Promise<any>
   checkUpgrade: () => UpgradingState | null
   continueUpgrade: () => void
+  registerStoreKeyChange: (key: keyof Stored, destType: InstanceType, winId: ID) => void
+  unregisterStoreKeyChange: (key: keyof Stored, destType: InstanceType, winId: ID) => void
 }
 
 export type SettingsActions = {
@@ -77,6 +80,8 @@ export type SidebarActions = {
 
   notify: (config: Notification, timeout?: number) => void
   notifyAboutNewSnapshot: () => void
+
+  storeKeyChanged: <K extends keyof Stored>(key: K, newValue: Stored[K], oldValue: Stored[K]) => void
 }
 
 export type SearchPopupActions = {
