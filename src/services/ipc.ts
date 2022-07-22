@@ -5,6 +5,7 @@ import { Logs } from 'src/services/logs'
 import { Info } from 'src/services/info'
 import { Windows } from 'src/services/windows'
 import { Settings } from './settings'
+import { Store } from './storage'
 
 interface PortNameData {
   srcType: InstanceType
@@ -294,8 +295,14 @@ function onConnect(port: browser.runtime.Port) {
       delete IPC.sidebarConnections[portNameData.srcWinId]
 
       // TODO: move this to external disconnect-listener
-      if (Info.isBg && Windows.byId[portNameData.srcWinId]) {
-        browser.windows.update(portNameData.srcWinId, { titlePreface: '' })
+      if (Info.isBg) {
+        // Update title preface
+        if (Windows.byId[portNameData.srcWinId]) {
+          browser.windows.update(portNameData.srcWinId, { titlePreface: '' })
+        }
+
+        // Unregister remote storage listener
+        Store.unregisterAllRemote(InstanceType.sidebar, portNameData.srcWinId)
       }
     }
 

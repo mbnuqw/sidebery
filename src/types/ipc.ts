@@ -81,7 +81,11 @@ export type SidebarActions = {
   notify: (config: Notification, timeout?: number) => void
   notifyAboutNewSnapshot: () => void
 
-  storeKeyChanged: <K extends keyof Stored>(key: K, newValue: Stored[K], oldValue: Stored[K]) => void
+  storeKeyChanged: <K extends keyof Stored>(
+    key: K,
+    newValue: Stored[K],
+    oldValue: Stored[K]
+  ) => void
 }
 
 export type SearchPopupActions = {

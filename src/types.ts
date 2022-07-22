@@ -341,3 +341,5 @@ export const enum WheelDirection {
   Horizontal = 1,
   Vertical = 2,
 }
+
+export type Entries<T> = (Iterator<T> & { [K in keyof T]: [K, T[K]] }[keyof T])[]
