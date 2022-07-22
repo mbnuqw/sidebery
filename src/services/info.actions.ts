@@ -82,3 +82,8 @@ export function isMajorUpgrade(): boolean {
 
   return Info.prevMajorVersion !== Info.majorVersion
 }
+
+export async function loadCurrentTabInfo(): Promise<void> {
+  const tab = await browser.tabs.getCurrent()
+  Info.currentTabId = tab.id
+}

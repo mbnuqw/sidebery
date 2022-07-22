@@ -1,5 +1,6 @@
 import { InstanceType } from 'src/types'
 import * as InfoActions from 'src/services/info.actions'
+import { NOID } from 'src/defaults'
 
 interface InfoState {
   os: string
@@ -26,6 +27,8 @@ export const Info = {
   majorVersion: undefined as number | undefined,
   prevMajorVersion: undefined as number | undefined,
   prevVersion: undefined as string | undefined,
+
+  currentTabId: NOID,
 
   ...InfoActions,
 }

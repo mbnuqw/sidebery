@@ -15,6 +15,7 @@ import { Info } from 'src/services/info'
 import { SetupPage } from 'src/services/setup-page'
 import { Styles } from 'src/services/styles'
 import { Logs } from 'src/services/logs'
+import { IPC } from 'src/services/ipc'
 
 async function main(): Promise<void> {
   Info.setInstanceType(InstanceType.setup)
@@ -42,6 +43,7 @@ async function main(): Promise<void> {
     Containers.load(),
     Keybindings.loadKeybindings(),
     Info.loadVersionInfo(),
+    Info.loadCurrentTabInfo(),
   ])
 
   app.mount('#root_container')
@@ -68,5 +70,6 @@ async function main(): Promise<void> {
   SetupPage.initialized()
   Favicons.loadFavicons()
   Store.setupStorageListeners()
+  IPC.connectTo(InstanceType.bg)
 }
 main()

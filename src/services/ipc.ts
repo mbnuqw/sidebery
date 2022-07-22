@@ -12,6 +12,7 @@ interface PortNameData {
   dstType: InstanceType
   srcWinId: ID
   dstWinId?: ID
+  srcTabId?: ID
 }
 
 export interface ConnectionInfo {
@@ -35,6 +36,7 @@ export const IPC = {
   bgConnection: undefined as ConnectionInfo | undefined,
   searchPopupConnection: undefined as ConnectionInfo | undefined,
   sidebarConnections: {} as Record<ID, ConnectionInfo>,
+  setupPageConnections: {} as Record<ID, ConnectionInfo>,
   tabConnections: {} as Record<ID, ConnectionInfo>,
 
   registerActions,
@@ -59,7 +61,7 @@ function registerActions(a: Actions): void {
  * Connects current instance to another instance.
  */
 let connectingTimeout: number | undefined
-function connectTo(dstType: InstanceType, dstWinId: ID) {
+function connectTo(dstType: InstanceType, dstWinId = NOID) {
   const srcType = Info.instanceType
   const srcWinId = Windows.id
 
@@ -72,6 +74,7 @@ function connectTo(dstType: InstanceType, dstWinId: ID) {
   // Create port name
   const portNameData: PortNameData = { srcType, dstType, srcWinId }
   if (dstWinId !== NOID) portNameData.dstWinId = dstWinId
+  if (Info.currentTabId !== NOID) portNameData.srcTabId = Info.currentTabId
   const portNameJson = JSON.stringify(portNameData)
 
   // Create connection
@@ -243,12 +246,6 @@ function onConnect(port: browser.runtime.Port) {
   if (portNameData.dstType !== Info.instanceType) return
   if (portNameData.dstWinId !== undefined && portNameData.dstWinId !== Windows.id) return
 
-  // Listen for messages
-  const postListener = <T extends InstanceType, A extends keyof Actions>(msg: Message<T, A>) => {
-    onPostMsg(msg, port)
-  }
-  port.onMessage.addListener(postListener)
-
   const connection: ConnectionInfo = { ...portNameData, port, reconnectCount: 0 }
 
   // On sidebar connection
@@ -273,6 +270,21 @@ function onConnect(port: browser.runtime.Port) {
   else if (portNameData.srcType === InstanceType.search) {
     IPC.searchPopupConnection = connection
   }
+
+  // On setup page connection
+  else if (portNameData.srcType === InstanceType.setup) {
+    if (portNameData.srcTabId !== undefined && portNameData.srcTabId !== NOID) {
+      IPC.setupPageConnections[portNameData.srcTabId] = connection
+    } else {
+      return Logs.warn('IPC.onConnect: Setup: No srcTabId')
+    }
+  }
+
+  // Listen for messages
+  const postListener = <T extends InstanceType, A extends keyof Actions>(msg: Message<T, A>) => {
+    onPostMsg(msg, port)
+  }
+  port.onMessage.addListener(postListener)
 
   // Handle disconnect
   const disconnectListener = (port: browser.runtime.Port) => {
@@ -309,6 +321,11 @@ function onConnect(port: browser.runtime.Port) {
     // On search popup disconnection
     else if (portNameData.srcType === InstanceType.search) {
       IPC.searchPopupConnection = undefined
+    }
+
+    // On setup page disconnection
+    else if (portNameData.srcType === InstanceType.setup && portNameData.srcTabId !== undefined) {
+      delete IPC.setupPageConnections[portNameData.srcTabId]
     }
   }
   port.onDisconnect.addListener(disconnectListener)
