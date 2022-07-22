@@ -5,14 +5,6 @@ const ts = require('typescript')
 const IS_DEV = process.argv.includes('--dev')
 const ADDON_PATH = (IS_DEV && process.env.SIDEBERY_DEV_DIR) || path.resolve('./addon')
 const VUE_DIST = IS_DEV ? 'vue.runtime.esm-browser.js' : 'vue.runtime.esm-browser.prod.js'
-const TERSER_CONFIG = {
-  compress: {
-    ecma: 2020,
-  },
-  ecma: 2020,
-  module: true,
-  sourceMap: false,
-}
 const FMT_HOST = {
   getCanonicalFileName: path => path,
   getCurrentDirectory: ts.sys.getCurrentDirectory,
@@ -117,7 +109,6 @@ module.exports = {
   IS_DEV,
   ADDON_PATH,
   VUE_DIST,
-  TERSER_CONFIG,
   FMT_HOST,
 
   getTime,
