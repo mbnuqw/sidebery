@@ -36,7 +36,7 @@
       svg.-muted: use(xlink:href="#icon_mute_badge")
   .name {{item.name}}
   .progress-spinner
-  .len(v-if="Settings.reactive.navBtnCount && (item.filteredLen ?? item.len)") {{item.filteredLen ?? item.len}}
+  .len(v-if="Settings.state.navBtnCount && (item.filteredLen ?? item.len)") {{item.filteredLen ?? item.len}}
 //- Button
 .nav-item(
   v-else-if="Utils.isNavBtn(item)"
@@ -115,7 +115,7 @@ const audioState = computed<AudioState>(() => {
   let hasPaused = false
   let hasMuted = false
 
-  if (Settings.reactive.pinnedTabsPosition === 'panel') {
+  if (Settings.state.pinnedTabsPosition === 'panel') {
     for (const t of panel.pinnedTabs) {
       if (t.mediaAudible && !t.mediaMuted && !t.mediaPaused) return AudioState.Audible
       if (t.mediaPaused) hasPaused = true
@@ -204,7 +204,7 @@ function activateAudibleTab(): void {
   if (!Utils.isTabsPanel(props.item)) return
 
   let audibleTab: ReactiveTab | undefined
-  if (Settings.reactive.pinnedTabsPosition === 'panel') {
+  if (Settings.state.pinnedTabsPosition === 'panel') {
     audibleTab = props.item.pinnedTabs.find(t => t.mediaAudible)
   }
   if (!audibleTab) audibleTab = props.item.tabs.find(t => t.mediaAudible)

@@ -51,7 +51,7 @@ export async function createSnapshot(auto = false): Promise<Snapshot | undefined
   // Get tabs info per window per panel
   const tabs: SnapTab[][][] = []
   for (const window of Object.values(Windows.byId)) {
-    if (Settings.reactive.snapExcludePrivate && window.incognito) continue
+    if (Settings.state.snapExcludePrivate && window.incognito) continue
     if (window.id === undefined || !window.tabs) continue
 
     const winTabs: SnapTab[][] = []
@@ -125,7 +125,7 @@ export async function createSnapshot(auto = false): Promise<Snapshot | undefined
 
   await Store.set({ snapshots: stored.snapshots, lastSnapTime: currentSnapshot.time })
 
-  if (Settings.reactive.snapNotify) {
+  if (Settings.state.snapNotify) {
     IPC.sidebars('notifyAboutNewSnapshot')
   }
 
@@ -295,7 +295,7 @@ export function getNormalizedSnapshot(
 }
 
 export function notifyAboutNewSnapshot(): void {
-  if (Settings.reactive.snapExcludePrivate && Windows.incognito) return
+  if (Settings.state.snapExcludePrivate && Windows.incognito) return
   const config: Notification = {
     icon: '#icon_snapshot',
     title: translate('notif.snapshot_created'),
@@ -332,12 +332,12 @@ function scheduleNextSnapshot(nextTimeout: number): void {
 }
 
 function getSnapInterval(): number {
-  let interval = Settings.reactive.snapInterval
-  const unit = Settings.reactive.snapIntervalUnit
+  let interval = Settings.state.snapInterval
+  const unit = Settings.state.snapIntervalUnit
   if (!interval || typeof interval !== 'number') return 0
-  if (unit === 'min') interval = Settings.reactive.snapInterval * 60000
-  if (unit === 'hr') interval = Settings.reactive.snapInterval * 3600000
-  if (unit === 'day') interval = Settings.reactive.snapInterval * 86400000
+  if (unit === 'min') interval = Settings.state.snapInterval * 60000
+  if (unit === 'hr') interval = Settings.state.snapInterval * 3600000
+  if (unit === 'day') interval = Settings.state.snapInterval * 86400000
   return interval
 }
 
@@ -529,8 +529,8 @@ async function openWindow(snapshot: NormalizedSnapshot, winIndex: number): Promi
 function limitSnapshots(snapshots: Snapshot[]): Snapshot[] | undefined {
   if (snapshots.length <= MIN_LIMITING_COUNT) return
 
-  const limit = Settings.reactive.snapLimit
-  const unit = Settings.reactive.snapLimitUnit
+  const limit = Settings.state.snapLimit
+  const unit = Settings.state.snapLimitUnit
 
   if (!limit) return snapshots
 

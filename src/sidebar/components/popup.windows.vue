@@ -37,8 +37,8 @@ function onScreenLoad(index: number): void {
 }
 
 function normalizeWinTitle(title: string): string {
-  if (Settings.reactive.markWindow && Settings.reactive.markWindowPreface) {
-    return title.replace(Settings.reactive.markWindowPreface, '')
+  if (Settings.state.markWindow && Settings.state.markWindowPreface) {
+    return title.replace(Settings.state.markWindowPreface, '')
   }
 
   return title

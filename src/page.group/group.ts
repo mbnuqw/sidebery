@@ -90,8 +90,8 @@ async function main() {
   ])
   const initData = result[0]
 
-  document.body.setAttribute('data-layout', Settings.reactive.groupLayout || 'grid')
-  document.body.setAttribute('data-animations', Settings.reactive.animations ? 'fast' : 'none')
+  document.body.setAttribute('data-layout', Settings.state.groupLayout || 'grid')
+  document.body.setAttribute('data-animations', Settings.state.animations ? 'fast' : 'none')
   Styles.initTheme()
   Styles.initColorScheme(initData.ffTheme)
     .then(() => {
@@ -459,13 +459,13 @@ async function takeScreenshot(tab: GroupedTabInfo | GroupPin, quality = 90) {
     else if (tab.bgEl && tab.favIconUrl) {
       tab.bgEl.style.backgroundImage = `url(${tab.favIconUrl})`
       tab.bgEl.style.filter = 'blur(8px)'
-      if (Settings.reactive.groupLayout === 'list') tab.bgEl.style.left = '-4px'
+      if (Settings.state.groupLayout === 'list') tab.bgEl.style.left = '-4px'
     }
     return
   } else {
     if (tab.bgEl) {
       tab.bgEl.style.filter = 'none'
-      if (Settings.reactive.groupLayout === 'list') tab.bgEl.style.left = '0'
+      if (Settings.state.groupLayout === 'list') tab.bgEl.style.left = '0'
     }
   }
 

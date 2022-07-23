@@ -192,7 +192,7 @@ async function getRootStyles(
     const shadowedRootEl = document.createElement('div')
     shadowedRootEl.setAttribute('id', 'root')
     shadowedRootEl.setAttribute('data-color-scheme', colorScheme)
-    shadowedRootEl.setAttribute('data-animations', Settings.reactive.animationSpeed || 'fast')
+    shadowedRootEl.setAttribute('data-animations', Settings.state.animationSpeed || 'fast')
     shadow.appendChild(shadowedRootEl)
 
     const shadowLinkEl = document.createElement('link')
@@ -207,7 +207,7 @@ async function getRootStyles(
 async function loadVars(): Promise<void> {
   const compStyle = await getRootStyles(
     state.cssTarget,
-    Settings.reactive.theme,
+    Settings.state.theme,
     Styles.reactive.colorScheme
   )
   if (!compStyle) return

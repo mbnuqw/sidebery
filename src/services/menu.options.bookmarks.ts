@@ -22,7 +22,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
       onClick: () => Bookmarks.openInNewWindow(Selection.get()),
     }
     if (allSeparators) option.inactive = true
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 
@@ -36,7 +36,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
       onClick: () => Bookmarks.openInNewWindow(Selection.get(), true),
     }
     if (allSeparators) option.inactive = true
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 
@@ -51,7 +51,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
       onAltClick: () => Bookmarks.convertIntoTabsPanel(Selection.getFirst()),
     }
     if (allSeparators) option.inactive = true
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 
@@ -61,7 +61,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
     const allSeparators = Selection.get().every(id => {
       return Bookmarks.reactive.byId[id]?.type === 'separator'
     })
-    if (allSeparators && !Settings.reactive.ctxMenuRenderInact) return
+    if (allSeparators && !Settings.state.ctxMenuRenderInact) return
     const opts: MenuOption[] = []
 
     for (const p of Sidebar.reactive.panels) {
@@ -85,7 +85,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
     const allSeparators = Selection.get().every(id => {
       return Bookmarks.reactive.byId[id]?.type === 'separator'
     })
-    if (allSeparators && !Settings.reactive.ctxMenuRenderInact) return
+    if (allSeparators && !Settings.state.ctxMenuRenderInact) return
     const opts: MenuOption[] = []
 
     if (node.type === 'folder' || Selection.getLength() > 1) {
@@ -122,7 +122,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
       icon: 'icon_create_bookmark',
       onClick: () => Bookmarks.createBookmarkNode('bookmark', node),
     }
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 
@@ -134,7 +134,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
       icon: 'icon_create_folder',
       onClick: () => Bookmarks.createBookmarkNode('folder', node),
     }
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 
@@ -146,7 +146,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
       icon: 'icon_create_separator',
       onClick: () => Bookmarks.createBookmarkNode('separator', node),
     }
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 
@@ -161,7 +161,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
     }
     if (Selection.getLength() === 1 && node.type !== 'folder') option.inactive = true
     if (Search.reactive.value) option.inactive = true
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 
@@ -176,7 +176,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
     }
     if (Selection.getLength() === 1 && node.type !== 'folder') option.inactive = true
     if (Search.reactive.value) option.inactive = true
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 
@@ -192,7 +192,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
       option.inactive = true
     }
     if (Search.reactive.value) option.inactive = true
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 
@@ -208,7 +208,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
       option.inactive = true
     }
     if (Search.reactive.value) option.inactive = true
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 
@@ -224,7 +224,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
       option.inactive = true
     }
     if (Search.reactive.value) option.inactive = true
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 
@@ -240,7 +240,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
       option.inactive = true
     }
     if (Search.reactive.value) option.inactive = true
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 
@@ -256,7 +256,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
       option.inactive = true
     }
     if (Search.reactive.value) option.inactive = true
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 
@@ -271,7 +271,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
     if (Selection.getLength() > 1) option.inactive = true
     if (node.type === 'separator') option.inactive = true
     if (node.parentId === 'root________') option.inactive = true
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 
@@ -284,7 +284,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
       onClick: () => Bookmarks.removeBookmarks(Selection.get()),
     }
     if (node.parentId === 'root________') option.inactive = true
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 
@@ -299,7 +299,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
     }
 
     if (node.type !== 'folder') option.inactive = true
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 
@@ -315,7 +315,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
 
     if (node.type !== 'folder') option.inactive = true
     // if (node.parentId === 'root________') option.inactive = true
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 
@@ -330,7 +330,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
     }
 
     if (selected.length === 1 && firstNode?.type === 'separator') option.inactive = true
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 
@@ -345,7 +345,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
     }
 
     if (selected.length === 1 && firstNode?.type === 'separator') option.inactive = true
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 
@@ -360,7 +360,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
     if (ids.some(id => Bookmarks.reactive.byId[id]?.parentId === BKM_ROOT_ID)) {
       option.inactive = true
     }
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 
@@ -378,7 +378,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
       onClick: () => Bookmarks.collapseAllBookmarks(panel.id),
     }
     if (isBookmarksPanel(panel) && panel.viewMode !== 'tree') option.inactive = true
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 
@@ -398,7 +398,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
       onClick: () => Sidebar.setViewMode(panel, isTree ? 'history' : 'tree'),
     }
 
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 
@@ -414,7 +414,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
     }
 
     if (panel.rootId === BKM_ROOT_ID) option.inactive = true
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 }

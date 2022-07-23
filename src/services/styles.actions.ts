@@ -15,7 +15,7 @@ export function initTheme(): void {
   const themeLinkEl = document.getElementById('theme_link') as HTMLLinkElement
 
   // Remove theme css
-  if (Settings.reactive.theme === 'none') {
+  if (Settings.state.theme === 'none') {
     themeLinkEl?.setAttribute('disabled', 'disabled')
     return
   }
@@ -34,13 +34,13 @@ export function initTheme(): void {
 
     Sidebar.recalcElementSizesDebounced()
   }
-  nextThemeLinkEl.href = `/themes/${Settings.reactive.theme}/${Info.getInstanceName()}.css`
+  nextThemeLinkEl.href = `/themes/${Settings.state.theme}/${Info.getInstanceName()}.css`
 }
 
 const PREF_DARK_MEDIA = '(prefers-color-scheme: dark), (prefers-color-scheme: no-preference)'
 let darkMedia: MediaQueryList | undefined
 export async function initColorScheme(theme?: browser.theme.Theme): Promise<void> {
-  if (Settings.reactive.colorScheme === 'ff') {
+  if (Settings.state.colorScheme === 'ff') {
     if (!theme) theme = await browser.theme.getCurrent()
 
     const colorSchemeVariant = parseTheme(theme)
@@ -61,7 +61,7 @@ export async function initColorScheme(theme?: browser.theme.Theme): Promise<void
     }
   }
 
-  if (Settings.reactive.colorScheme === 'sys') {
+  if (Settings.state.colorScheme === 'sys') {
     if (!darkMedia) darkMedia = window.matchMedia(PREF_DARK_MEDIA)
     if (!darkMedia.onchange) darkMedia.onchange = onDarkMediaQueryChange
     if (darkMedia.matches) Styles.reactive.colorScheme = 'dark'
@@ -71,12 +71,12 @@ export async function initColorScheme(theme?: browser.theme.Theme): Promise<void
     if (darkMedia?.onchange) darkMedia.onchange = null
   }
 
-  if (Settings.reactive.colorScheme === 'dark') {
+  if (Settings.state.colorScheme === 'dark') {
     Styles.reactive.colorScheme = 'dark'
     return
   }
 
-  if (Settings.reactive.colorScheme === 'light') {
+  if (Settings.state.colorScheme === 'light') {
     Styles.reactive.colorScheme = 'light'
     return
   }
@@ -393,20 +393,20 @@ export function setCustomCSS(target: CustomCssTarget, css: string): void {
   let settingsChanged = false
   if (fieldName === 'sidebarCSS') {
     if (Styles.sidebarCSS === css) return
-    if (Settings.reactive.sidebarCSS !== !!css) settingsChanged = true
+    if (Settings.state.sidebarCSS !== !!css) settingsChanged = true
     Styles.sidebarCSS = css
-    Settings.reactive.sidebarCSS = !!css
+    Settings.state.sidebarCSS = !!css
   } else if (fieldName === 'groupCSS') {
     if (Styles.groupCSS === css) return
-    if (Settings.reactive.groupCSS !== !!css) settingsChanged = true
+    if (Settings.state.groupCSS !== !!css) settingsChanged = true
     Styles.groupCSS = css
-    Settings.reactive.groupCSS = !!css
+    Settings.state.groupCSS = !!css
   }
 
   if (settingsChanged) Settings.saveSettings()
   Store.set({ [fieldName]: css })
 
-  if (Settings.reactive.syncSaveStyles) saveStylesToSync()
+  if (Settings.state.syncSaveStyles) saveStylesToSync()
 }
 
 export function upgradeCustomStyles(stored: Stored, newStorage: Stored): void {
@@ -448,8 +448,8 @@ export async function loadCustomCSS(): Promise<void> {
 export async function saveStylesToSync(): Promise<void> {
   const value: Stored = {}
 
-  if (Settings.reactive.sidebarCSS && Styles.sidebarCSS) value.sidebarCSS = Styles.sidebarCSS
-  if (Settings.reactive.groupCSS && Styles.groupCSS) value.groupCSS = Styles.groupCSS
+  if (Settings.state.sidebarCSS && Styles.sidebarCSS) value.sidebarCSS = Styles.sidebarCSS
+  if (Settings.state.groupCSS && Styles.groupCSS) value.groupCSS = Styles.groupCSS
 
   await Store.sync('styles', value)
 }

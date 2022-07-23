@@ -59,7 +59,7 @@ export async function groupTabs(tabIds: ID[], conf: GroupConfig): Promise<void> 
   }
 
   if (!tabs.length) return
-  if (tabs[0].lvl >= Settings.reactive.tabsTreeLimit) return
+  if (tabs[0].lvl >= Settings.state.tabsTreeLimit) return
 
   // Find title for group tab
   if (!conf.title) {
@@ -197,7 +197,7 @@ export function getGroupInfo(groupTabId: ID): GroupInfo | null {
 
 export function getGroupTab(tab?: Tab): Tab | undefined {
   if (!tab) return
-  if (!Settings.reactive.tabsTree && !tab.lvl) return
+  if (!Settings.state.tabsTree && !tab.lvl) return
 
   let i = tab.lvl || 0
   while (i--) {

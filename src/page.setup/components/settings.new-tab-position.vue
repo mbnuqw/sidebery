@@ -4,27 +4,27 @@ section(ref="el")
   SelectField(
     label="settings.move_new_tab_pin"
     optLabel="settings.move_new_tab_pin_"
-    v-model:value="Settings.reactive.moveNewTabPin"
+    v-model:value="Settings.state.moveNewTabPin"
     :opts="Settings.getOpts('moveNewTabPin')")
   ToggleField(
     label="settings.pinned_auto_group"
-    :inactive="!Settings.reactive.tabsTree"
-    v-model:value="Settings.reactive.pinnedAutoGroup")
+    :inactive="!Settings.state.tabsTree"
+    v-model:value="Settings.state.pinnedAutoGroup")
   SelectField(
     label="settings.move_new_tab_parent"
     optLabel="settings.move_new_tab_parent_"
-    v-model:value="Settings.reactive.moveNewTabParent"
+    v-model:value="Settings.state.moveNewTabParent"
     :opts="Settings.getOpts('moveNewTabParent')"
     :folded="true")
   .sub-fields
     ToggleField(
       label="settings.move_new_tab_parent_act_panel"
-      :inactive="Settings.reactive.moveNewTabParent === 'none'"
-      v-model:value="Settings.reactive.moveNewTabParentActPanel")
+      :inactive="Settings.state.moveNewTabParent === 'none'"
+      v-model:value="Settings.state.moveNewTabParentActPanel")
   SelectField(
     label="settings.move_new_tab"
     optLabel="settings.move_new_tab_"
-    v-model:value="Settings.reactive.moveNewTab"
+    v-model:value="Settings.state.moveNewTab"
     :opts="Settings.getOpts('moveNewTab')"
     :folded="true")
 </template>

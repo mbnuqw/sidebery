@@ -12,11 +12,11 @@
       TransitionGroup(name="tab" tag="div" type="transition")
         TabComponent(v-for="tab in visibleTabs" :key="tab.id" :tab="tab")
         NewTabBar(
-          v-if="Settings.reactive.showNewTabBtns && Settings.reactive.newTabBarPosition === 'after_tabs'"
+          v-if="Settings.state.showNewTabBtns && Settings.state.newTabBarPosition === 'after_tabs'"
           :panel="panel")
 
   NewTabBar(
-    v-if="Settings.reactive.showNewTabBtns && Settings.reactive.newTabBarPosition === 'bottom'"
+    v-if="Settings.state.showNewTabBtns && Settings.state.newTabBarPosition === 'bottom'"
     :panel="panel")
 
   BookmarksSubPanel(v-if="panel.bookmarksFolderId !== NOID" :tabsPanel="panel")
@@ -77,10 +77,10 @@ function onMouseDown(e: MouseEvent): void {
   if (Selection.isSet()) return
 
   if (e.button === 0) {
-    const la = Settings.reactive.tabsPanelLeftClickAction
+    const la = Settings.state.tabsPanelLeftClickAction
     if (la === 'prev') return Sidebar.switchPanel(-1)
     if (la === 'expand') {
-      if (!Settings.reactive.tabsTree) return
+      if (!Settings.state.tabsTree) return
       let targetTab = Tabs.list.find(t => t.active)
       if (!targetTab) return
       if (!targetTab.isParent) targetTab = Tabs.byId[targetTab.parentId]
@@ -88,7 +88,7 @@ function onMouseDown(e: MouseEvent): void {
       return Tabs.toggleBranch(targetTab.id)
     }
     if (la === 'parent') {
-      if (!Settings.reactive.tabsTree) return
+      if (!Settings.state.tabsTree) return
       const activeTab = Tabs.list.find(t => t.active)
       if (!activeTab || !Tabs.reactive.byId[activeTab.parentId]) return
       browser.tabs.update(activeTab.parentId, { active: true })
@@ -97,7 +97,7 @@ function onMouseDown(e: MouseEvent): void {
 
   if (e.button === 1) {
     e.preventDefault()
-    const ma = Settings.reactive.tabsPanelMiddleClickAction
+    const ma = Settings.state.tabsPanelMiddleClickAction
     if (ma === 'tab') Tabs.createTabInPanel(props.panel)
     if (ma === 'undo') Tabs.undoRmTab()
     if (ma === 'rm_act_tab') {
@@ -110,10 +110,10 @@ function onMouseDown(e: MouseEvent): void {
 
   if (e.button === 2) {
     Menu.blockCtxMenu()
-    const ra = Settings.reactive.tabsPanelRightClickAction
+    const ra = Settings.state.tabsPanelRightClickAction
     if (ra === 'next') return Sidebar.switchPanel(1)
     if (ra === 'expand') {
-      if (!Settings.reactive.tabsTree) return
+      if (!Settings.state.tabsTree) return
       let targetTab = Tabs.list.find(t => t.active)
       if (!targetTab) return
       if (!targetTab.isParent) targetTab = Tabs.byId[targetTab.parentId]
@@ -121,7 +121,7 @@ function onMouseDown(e: MouseEvent): void {
       return Tabs.toggleBranch(targetTab.id)
     }
     if (ra === 'parent') {
-      if (!Settings.reactive.tabsTree) return
+      if (!Settings.state.tabsTree) return
       const activeTab = Tabs.list.find(t => t.active)
       if (!activeTab || !Tabs.reactive.byId[activeTab.parentId]) return
       browser.tabs.update(activeTab.parentId, { active: true })
@@ -132,11 +132,11 @@ function onMouseDown(e: MouseEvent): void {
 function onRightMouseUp(e: MouseEvent): void {
   Mouse.resetTarget()
   if (Mouse.isLocked()) return Mouse.resetClickLock()
-  if (Settings.reactive.tabsPanelRightClickAction !== 'menu') return
+  if (Settings.state.tabsPanelRightClickAction !== 'menu') return
   if (Selection.isSet()) return
   e.stopPropagation()
 
-  if (Settings.reactive.ctxMenuNative) return
+  if (Settings.state.ctxMenuNative) return
 
   Selection.selectNavItem(props.panel.id)
   Menu.open(MenuType.TabsPanel, e.clientX, e.clientY)
@@ -145,7 +145,7 @@ function onRightMouseUp(e: MouseEvent): void {
 function onNavCtxMenu(e: MouseEvent): void {
   if (
     Mouse.isLocked() ||
-    !Settings.reactive.ctxMenuNative ||
+    !Settings.state.ctxMenuNative ||
     e.ctrlKey ||
     e.shiftKey ||
     Selection.isSet()
@@ -164,9 +164,9 @@ function onNavCtxMenu(e: MouseEvent): void {
 }
 
 function onDoubleClick(e: MouseEvent): void {
-  if (Settings.reactive.tabsPanelLeftClickAction !== 'none') return
+  if (Settings.state.tabsPanelLeftClickAction !== 'none') return
   if (!(e.target as HTMLElement).className) return
-  const da = Settings.reactive.tabsPanelDoubleClickAction
+  const da = Settings.state.tabsPanelDoubleClickAction
   if (da === 'tab') return Tabs.createTabInPanel(props.panel)
   if (da === 'collapse') {
     const tabs: Tab[] = []
@@ -183,13 +183,13 @@ const onWheel = Mouse.getWheelDebouncer(WheelDirection.Vertical, (e: WheelEvent)
   if (Sidebar.scrollAreaRightX && e.clientX > Sidebar.scrollAreaRightX) return
   if (Sidebar.scrollAreaLeftX && e.clientX < Sidebar.scrollAreaLeftX) return
   if (Selection.isSet()) return
-  if (Settings.reactive.scrollThroughTabs !== 'none') {
-    if (scrollBoxEl && Settings.reactive.scrollThroughTabsExceptOverflow) {
+  if (Settings.state.scrollThroughTabs !== 'none') {
+    if (scrollBoxEl && Settings.state.scrollThroughTabsExceptOverflow) {
       if (scrollBoxEl.scrollHeight > scrollBoxEl.offsetHeight) return
     }
     e.preventDefault()
-    let globaly = (Settings.reactive.scrollThroughTabs === 'global') !== e.shiftKey
-    const cyclic = Settings.reactive.scrollThroughTabsCyclic !== e.ctrlKey
+    let globaly = (Settings.state.scrollThroughTabs === 'global') !== e.shiftKey
+    const cyclic = Settings.state.scrollThroughTabsCyclic !== e.ctrlKey
 
     if (e.deltaY !== 0) Mouse.blockWheel(WheelDirection.Horizontal)
     if (e.deltaY > 0) Tabs.switchTab(globaly, cyclic, 1, false)

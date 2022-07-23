@@ -137,7 +137,7 @@
   TextField(
     v-if="Utils.isTabsPanel(conf)"
     label="panel.new_tab_custom_btns"
-    :inactive="!Settings.reactive.showNewTabBtns"
+    :inactive="!Settings.state.showNewTabBtns"
     :or="translate('panel.new_tab_custom_btns_placeholder')"
     :note="translate('panel.new_tab_custom_btns_note')"
     :value="newTabBtnsText"
@@ -384,8 +384,8 @@ function drawTextIcon(): void {
 
   let [txt, color, font] = props.conf.iconIMGSrc.split('::')
   if (!color) {
-    if (Settings.reactive.colorScheme === 'light') color = '#000000'
-    if (Settings.reactive.colorScheme === 'dark') color = '#ffffff'
+    if (Settings.state.colorScheme === 'light') color = '#000000'
+    if (Settings.state.colorScheme === 'dark') color = '#ffffff'
   }
   if (!font) {
     font = '32px sans-serif'

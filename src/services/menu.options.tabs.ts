@@ -49,7 +49,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
         Tabs.move(Selection.getTabs(), {}, { windowChooseConf })
       }
     }
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 
@@ -87,7 +87,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
       onClick: () => Tabs.moveToNewPanel(Selection.get()),
     }
 
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 
@@ -153,7 +153,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
         })
       }
     }
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 
@@ -205,7 +205,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
       onClick: () => Tabs.reopenTabsInNewContainer(Selection.get()),
     }
 
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 
@@ -263,7 +263,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     }
     const firstTab = Tabs.byId[Selection.getFirst()]
     if (Selection.getLength() === 1 && firstTab?.discarded) option.inactive = true
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 
@@ -274,8 +274,8 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
       onClick: () => Tabs.groupTabs(Selection.get()),
     }
     const firstTab = Tabs.byId[Selection.getFirst()]
-    if (!Settings.reactive.tabsTree || firstTab?.pinned) option.inactive = true
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.tabsTree || firstTab?.pinned) option.inactive = true
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 
@@ -291,8 +291,8 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     if (Selection.get().every(t => firstTab.lvl === Tabs.byId[t]?.lvl)) {
       option.inactive = true
     }
-    if (!Settings.reactive.tabsTree || firstTab.pinned) option.inactive = true
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.tabsTree || firstTab.pinned) option.inactive = true
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 
@@ -310,11 +310,11 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
       icon: 'icon_close',
       onClick: () => Tabs.removeTabs(Selection.get()),
     }
-    const minCount = Settings.reactive.ctxMenuRenderInact ? 1 : 2
+    const minCount = Settings.state.ctxMenuRenderInact ? 1 : 2
     const firstTab = Tabs.byId[Selection.getFirst()]
     if (!firstTab) return
     if (Selection.getLength() < minCount && !firstTab.pinned) option.inactive = true
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 
@@ -324,7 +324,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
       icon: 'icon_rm_branch',
       onClick: () => Tabs.removeBranches(Selection.get()),
     }
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 
@@ -341,7 +341,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
       return nextTab && nextTab.parentId === tab.id
     })
     if (!hasDescendants) option.inactive = true
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 
@@ -358,7 +358,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     const prevTab = Tabs.list[tab.index - 1]
     if (!tab || tab.pinned) option.inactive = true
     if (!prevTab || prevTab.panelId !== tab.panelId || prevTab.pinned) option.inactive = true
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 
@@ -375,7 +375,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     const nextTab = Tabs.list[tab.index + 1]
     if (!tab || tab.pinned) option.inactive = true
     if (!nextTab || nextTab.panelId !== tab.panelId) option.inactive = true
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 
@@ -393,7 +393,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
       const panel = Sidebar.reactive.panelsById[tab.panelId]
       if (!panel || panel.len === 1) option.inactive = true
     }
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 
@@ -432,7 +432,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
       onClick: () => Tabs.muteTabs(tabIds),
     }
     if (!tabIds.length) option.inactive = true
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 
@@ -448,7 +448,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
       onClick: () => Tabs.dedupTabs(tabIds),
     }
     if (!tabIds.length) option.inactive = true
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 
@@ -464,7 +464,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
       onClick: () => Tabs.reloadTabs(tabIds),
     }
     if (!tabIds.length) option.inactive = true
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 
@@ -481,7 +481,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
       onClick: () => Tabs.discardTabs(tabIds),
     }
     if (!tabIds.length) option.inactive = true
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 
@@ -497,14 +497,14 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
       onClick: () => Tabs.removeTabs(tabIds),
     }
     if (!tabIds.length) option.inactive = true
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 
   collapseInactiveBranches: () => {
     const panel = Sidebar.reactive.panelsById[Selection.getFirst()]
     if (!Utils.isTabsPanel(panel)) return
-    if (!Settings.reactive.tabsTree) return
+    if (!Settings.state.tabsTree) return
 
     const panelTabs = panel.tabs ?? []
     const option: MenuOption = {
@@ -520,7 +520,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
       },
     }
     if (panelTabs.length < 3) option.inactive = true
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 
@@ -562,7 +562,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
       },
     }
 
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 

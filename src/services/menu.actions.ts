@@ -85,7 +85,7 @@ export function saveCtxMenu(delay?: number): void {
   }
   Store.set(storage, delay)
 
-  if (Settings.reactive.syncSaveCtxMenu) saveCtxMenuToSync()
+  if (Settings.state.syncSaveCtxMenu) saveCtxMenuToSync()
 }
 
 export async function saveCtxMenuToSync(): Promise<void> {
@@ -187,7 +187,7 @@ export function open(type: MenuType, x?: number, y?: number, customForced?: bool
 
   Menu.isOpen = true
 
-  if (Settings.reactive.ctxMenuNative && !customForced) {
+  if (Settings.state.ctxMenuNative && !customForced) {
     for (const block of blocks) {
       for (const opt of block.opts) {
         if (opt.sub && opt.sub.length && opt.label) {
@@ -262,7 +262,7 @@ function createMenuBlocks(config: MenuConf, customForced?: boolean): MenuBlock[]
     }
   }
 
-  if (!Settings.reactive.ctxMenuNative || customForced) {
+  if (!Settings.state.ctxMenuNative || customForced) {
     blocks = blocks.reduce<MenuBlock[]>((blocks, block) => {
       if (block.opts.length === 0) return blocks
       if (block.opts.length === 1 && block.opts[0].type === 'separator') return blocks
@@ -314,7 +314,7 @@ function createNativeOption(
   }
 
   let icon
-  if (Settings.reactive.ctxMenuRenderIcons) {
+  if (Settings.state.ctxMenuRenderIcons) {
     if (option.img) {
       icon = option.img
     } else if (option.icon) {
@@ -397,9 +397,9 @@ export function onClose(cb: () => void): void {
 
 export function parseContainersRules(): void {
   Menu.ctxMenuIgnoreContainersRules = {}
-  if (!Settings.reactive.ctxMenuIgnoreContainers) return
+  if (!Settings.state.ctxMenuIgnoreContainers) return
 
-  const rules = getContainersRules(Settings.reactive.ctxMenuIgnoreContainers)
+  const rules = getContainersRules(Settings.state.ctxMenuIgnoreContainers)
   if (!rules) return
 
   for (const container of Object.values(Containers.reactive.byId)) {

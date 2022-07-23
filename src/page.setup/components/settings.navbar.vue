@@ -10,24 +10,24 @@ section(
   SelectField(
     label="settings.nav_bar_layout"
     optLabel="settings.nav_bar_layout_"
-    v-model:value="Settings.reactive.navBarLayout"
+    v-model:value="Settings.state.navBarLayout"
     :opts="Settings.getOpts('navBarLayout')")
   .sub-fields
     ToggleField(
       label="settings.nav_bar_inline"
-      v-model:value="Settings.reactive.navBarInline"
-      :inactive="Settings.reactive.navBarLayout !== 'horizontal'")
+      v-model:value="Settings.state.navBarInline"
+      :inactive="Settings.state.navBarLayout !== 'horizontal'")
     SelectField(
       label="settings.nav_bar_side"
       optLabel="settings.nav_bar_side_"
-      v-model:value="Settings.reactive.navBarSide"
+      v-model:value="Settings.state.navBarSide"
       :opts="Settings.getOpts('navBarSide')"
-      :inactive="Settings.reactive.navBarLayout !== 'vertical'")
-  ToggleField(label="settings.nav_btn_count" v-model:value="Settings.reactive.navBtnCount")
-  ToggleField(label="settings.hide_empty_panels" v-model:value="Settings.reactive.hideEmptyPanels")
+      :inactive="Settings.state.navBarLayout !== 'vertical'")
+  ToggleField(label="settings.nav_btn_count" v-model:value="Settings.state.navBtnCount")
+  ToggleField(label="settings.hide_empty_panels" v-model:value="Settings.state.hideEmptyPanels")
   NumField.-inline(
     label="settings.nav_switch_panels_delay"
-    v-model:value="Settings.reactive.navSwitchPanelsDelay"
+    v-model:value="Settings.state.navSwitchPanelsDelay"
     :or="128")
 
   InfoField(label="settings.nav_bar_enabled" :inactive="!availableBtns.length").-sub-title
@@ -140,8 +140,8 @@ const enabledBtns = computed<(Panel | Btn)[]>(() => {
     } else {
       const normId = normalizeItemId(id)
       const isSpace = normId === 'sp' || normId === 'sd'
-      const isHorizontal = Settings.reactive.navBarLayout === 'horizontal'
-      const isInline = Settings.reactive.navBarInline
+      const isHorizontal = Settings.state.navBarLayout === 'horizontal'
+      const isInline = Settings.state.navBarInline
       const inactive = isHorizontal && isInline && isSpace
       const name = translate(`settings.nav_bar_btn_${normId}`)
       return { id, inactive, iconSVG: BTN_ICONS[normId], name }

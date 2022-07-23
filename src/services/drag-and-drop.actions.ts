@@ -146,7 +146,7 @@ function expandTimeout(cb: () => void, delay?: number): void {
   clearTimeout(_expandTimeout)
   if (delay === 0) return cb()
   if (delay && delay < 0) return
-  _expandTimeout = setTimeout(() => cb(), delay ?? Settings.reactive.dndExpDelay)
+  _expandTimeout = setTimeout(() => cb(), delay ?? Settings.state.dndExpDelay)
 }
 function resetExpandTimeout(): void {
   clearTimeout(_expandTimeout)
@@ -223,16 +223,16 @@ function getSrcInfo(): SrcPlaceInfo {
 }
 
 function assertExpandMod(e: DragEvent): boolean {
-  if (Settings.reactive.dndExpMod === 'alt' && e.altKey) return true
-  else if (Settings.reactive.dndExpMod === 'shift' && e.shiftKey) return true
-  else if (Settings.reactive.dndExpMod === 'ctrl' && e.ctrlKey) return true
+  if (Settings.state.dndExpMod === 'alt' && e.altKey) return true
+  else if (Settings.state.dndExpMod === 'shift' && e.shiftKey) return true
+  else if (Settings.state.dndExpMod === 'ctrl' && e.ctrlKey) return true
   else return false
 }
 
 function assertTabActivateMod(e: DragEvent): boolean {
-  if (Settings.reactive.dndTabActMod === 'alt' && e.altKey) return true
-  else if (Settings.reactive.dndTabActMod === 'shift' && e.shiftKey) return true
-  else if (Settings.reactive.dndTabActMod === 'ctrl' && e.ctrlKey) return true
+  if (Settings.state.dndTabActMod === 'alt' && e.altKey) return true
+  else if (Settings.state.dndTabActMod === 'shift' && e.shiftKey) return true
+  else if (Settings.state.dndTabActMod === 'ctrl' && e.ctrlKey) return true
   else return false
 }
 
@@ -278,7 +278,7 @@ function isContainerChanged(): boolean {
   if (!isDstContainerExists) return false
 
   // Preserve container for globally pinned tabs
-  if (DnD.reactive.dstPin && Settings.reactive.pinnedTabsPosition !== 'panel') return false
+  if (DnD.reactive.dstPin && Settings.state.pinnedTabsPosition !== 'panel') return false
 
   // Check tabs
   for (const item of DnD.items) {
@@ -432,8 +432,8 @@ export function onDragEnter(e: DragEvent): void {
     if (tab.pinned) DnD.reactive.dstIndex = tab.index
     else DnD.reactive.dstPanelId = tab.panelId
 
-    if (Settings.reactive.dndTabAct && tab.pinned) {
-      const delay = assertTabActivateMod(e) ? 0 : Settings.reactive.dndTabActDelay
+    if (Settings.state.dndTabAct && tab.pinned) {
+      const delay = assertTabActivateMod(e) ? 0 : Settings.state.dndTabActDelay
       tabActivateTimeout(() => browser.tabs.update(tab.id, { active: true }), delay)
     }
   }
@@ -465,8 +465,8 @@ function onPointerEnter(e: DragEvent): void {
   const isBookmarks = Utils.isBookmarksPanel(panel)
 
   if (isTabs) {
-    if (Settings.reactive.dndExp === 'pointer') {
-      const delay = assertExpandMod(e) ? 0 : Settings.reactive.dndExpDelay
+    if (Settings.state.dndExp === 'pointer') {
+      const delay = assertExpandMod(e) ? 0 : Settings.state.dndExpDelay
       const tab = Tabs.byId[DnD.reactive.dstParentId]
       if (!tab || !tab.isParent) return
       if (delay !== 0) DnD.reactive.pointerHover = true
@@ -481,8 +481,8 @@ function onPointerEnter(e: DragEvent): void {
   }
 
   if (isBookmarks) {
-    if (Settings.reactive.dndExp === 'pointer') {
-      const delay = assertExpandMod(e) ? 0 : Settings.reactive.dndExpDelay
+    if (Settings.state.dndExp === 'pointer') {
+      const delay = assertExpandMod(e) ? 0 : Settings.state.dndExpDelay
       const bookmark = Bookmarks.reactive.byId[DnD.reactive.dstParentId]
       const isParent = !!bookmark?.children?.length
       if (!bookmark || !isParent) return
@@ -717,7 +717,7 @@ export function onDragMove(e: DragEvent): void {
         DnD.reactive.dstParentId = slot.id
 
         // Entering in the pointer aria
-        if (x < 32 && Settings.reactive.dndExp === 'pointer') {
+        if (x < 32 && Settings.state.dndExp === 'pointer') {
           onPointerEnter(e)
           break
         }
@@ -725,12 +725,12 @@ export function onDragMove(e: DragEvent): void {
         // Pointer inside tab - activate / expand
         if (DnD.reactive.dstType === DropType.Tabs) {
           const targetId = slot.id
-          if (Settings.reactive.dndTabAct) {
-            const delay = assertTabActivateMod(e) ? 0 : Settings.reactive.dndTabActDelay
+          if (Settings.state.dndTabAct) {
+            const delay = assertTabActivateMod(e) ? 0 : Settings.state.dndTabActDelay
             tabActivateTimeout(() => browser.tabs.update(targetId, { active: true }), delay)
           }
-          if (Settings.reactive.dndExp === 'hover') {
-            const delay = assertExpandMod(e) ? 0 : Settings.reactive.dndExpDelay
+          if (Settings.state.dndExp === 'hover') {
+            const delay = assertExpandMod(e) ? 0 : Settings.state.dndExpDelay
             expandTimeout(() => {
               Tabs.toggleBranch(targetId)
               Sidebar.updatePanelBoundsDebounced(128)
@@ -743,8 +743,8 @@ export function onDragMove(e: DragEvent): void {
           const targetId = slot.id
           const bookmark = Bookmarks.reactive.byId[targetId]
           const isParent = !!bookmark.children?.length
-          if (isParent && Settings.reactive.dndExp === 'hover') {
-            const delay = assertExpandMod(e) ? 0 : Settings.reactive.dndExpDelay
+          if (isParent && Settings.state.dndExp === 'hover') {
+            const delay = assertExpandMod(e) ? 0 : Settings.state.dndExpDelay
             expandTimeout(() => {
               Bookmarks.toggleBranch(targetId, Sidebar.reactive.activePanelId)
               Sidebar.updatePanelBoundsDebounced(128)

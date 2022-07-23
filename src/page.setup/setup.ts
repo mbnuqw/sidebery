@@ -20,7 +20,7 @@ import { IPC } from 'src/services/ipc'
 async function main(): Promise<void> {
   Info.setInstanceType(InstanceType.setup)
 
-  Settings.reactive = reactive(Settings.reactive)
+  Settings.state = reactive(Settings.state)
   Containers.reactive = reactive(Containers.reactive)
   Windows.reactive = reactive(Windows.reactive)
   Favicons.reactive = reactive(Favicons.reactive)

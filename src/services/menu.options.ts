@@ -37,7 +37,7 @@ export const menuOptions: Record<string, () => MenuOption | MenuOption[] | undef
         else SetupPage.open(`settings_nav.${panel.id}`)
       },
     }
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 
@@ -52,7 +52,7 @@ export const menuOptions: Record<string, () => MenuOption | MenuOption[] | undef
     }
 
     if (!panel.ready) option.inactive = true
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 
@@ -66,7 +66,7 @@ export const menuOptions: Record<string, () => MenuOption | MenuOption[] | undef
       onClick: () => Sidebar.removePanel(panel.id),
     }
 
-    if (!Settings.reactive.ctxMenuRenderInact && option.inactive) return
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },
 

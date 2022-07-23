@@ -74,7 +74,7 @@ export function updateContainers(newContainers?: Record<ID, Container> | null): 
 
   if (Info.isBg) WebReq.updateReqHandlersDebounced()
 
-  if (Info.isSidebar && Settings.reactive.ctxMenuIgnoreContainers) {
+  if (Info.isSidebar && Settings.state.ctxMenuIgnoreContainers) {
     Menu.parseContainersRules()
   }
 }

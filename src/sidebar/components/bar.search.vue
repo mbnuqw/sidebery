@@ -1,7 +1,7 @@
 <template lang="pug">
 .SearchBar(
   id="search_bar"
-  :data-showed="Settings.reactive.searchBarMode === 'static' || Search.reactive.barIsShowed"
+  :data-showed="Settings.state.searchBarMode === 'static' || Search.reactive.barIsShowed"
   :data-active="Search.reactive.barIsActive"
   :data-focused="Search.reactive.barIsFocused"
   :data-filled="!!Search.reactive.rawValue")
@@ -22,7 +22,7 @@
     @change="onChange"
     @keydown="onKD")
   .clear-btn(
-    v-if="Settings.reactive.searchBarMode === 'dynamic' || Search.reactive.rawValue"
+    v-if="Settings.state.searchBarMode === 'dynamic' || Search.reactive.rawValue"
     @mousedown.stop="onClearBtnMouseDown"
     @mouseup.stop="onClearBtnMouseUp")
     svg: use(xlink:href="#icon_remove")

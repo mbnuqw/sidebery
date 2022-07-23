@@ -4,7 +4,7 @@ section(ref="el")
   SelectField(
     label="settings.log_lvl"
     optLabel="settings.log_lvl_"
-    v-model:value="Settings.reactive.logLvl"
+    v-model:value="Settings.state.logLvl"
     :opts="Settings.getOpts('logLvl')")
   .ctrls
     a.btn(@click="SetupPage.reactive.exportDialog = true") {{translate('settings.help_exp_data')}}

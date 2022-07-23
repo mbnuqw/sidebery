@@ -2,15 +2,15 @@
 section(ref="el")
   h2 {{translate('settings.pinned_tabs_title')}}
   SelectField(
-    v-model:value="Settings.reactive.pinnedTabsPosition"
+    v-model:value="Settings.state.pinnedTabsPosition"
     label="settings.pinned_tabs_position"
     optLabel="settings.pinned_tabs_position_"
     :opts="Settings.getOpts('pinnedTabsPosition')"
     :folded="true")
   ToggleField(
     label="settings.pinned_tabs_list"
-    :inactive="Settings.reactive.pinnedTabsPosition !== 'panel'"
-    v-model:value="Settings.reactive.pinnedTabsList")
+    :inactive="Settings.state.pinnedTabsPosition !== 'panel'"
+    v-model:value="Settings.state.pinnedTabsList")
 </template>
 
 <script lang="ts" setup>

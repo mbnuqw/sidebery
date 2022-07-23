@@ -23,7 +23,7 @@
         svg(v-else)
           use(xlink:href="#icon_folder")
     .title(v-if="node.title || node.url") {{node.title || node.url}}
-    .len(v-if="Settings.reactive.showBookmarkLen && node.len") {{node.len}}
+    .len(v-if="Settings.state.showBookmarkLen && node.len") {{node.len}}
   .children(v-if="(expanded) && children?.length" :title="node.title")
     BookmarkNode(v-for="node in children" :key="node.id" :node="node" :filter="props.filter" :panelId="panelId")
 </template>
@@ -125,7 +125,7 @@ async function onMouseDown(e: MouseEvent): Promise<void> {
 
     // Bookmark
     if (props.node.type === 'bookmark' && props.node.url) {
-      const action = Settings.reactive.bookmarksMidClickAction
+      const action = Settings.state.bookmarksMidClickAction
       if (action === 'open_in_new') {
         const { dst, useActiveTab, activateFirstTab } = Bookmarks.getOpeningConf(e)
         await Bookmarks.open([props.node.id], dst, useActiveTab, activateFirstTab)
@@ -142,7 +142,7 @@ async function onMouseDown(e: MouseEvent): Promise<void> {
 
   // Right
   else if (e.button === 2) {
-    if (!Settings.reactive.ctxMenuNative && !props.node.sel && !Bookmarks.reactive.popup) {
+    if (!Settings.state.ctxMenuNative && !props.node.sel && !Bookmarks.reactive.popup) {
       Selection.resetSelection()
       Mouse.startMultiSelection(e, props.node.id)
     }
@@ -191,7 +191,7 @@ async function onMouseUp(e: MouseEvent): Promise<void> {
     }
 
     // Scroll to sticked opened folder
-    if (Settings.reactive.pinOpenedBookmarksFolder && isFolder && expanded.value) {
+    if (Settings.state.pinOpenedBookmarksFolder && isFolder && expanded.value) {
       const bookmarkEl = document.getElementById('bookmark' + (props.node.id as string))
       const bookmarkBounds = bookmarkEl?.getBoundingClientRect()
       const bookmarkBodyEl = bookmarkEl?.children[0]
@@ -218,7 +218,7 @@ async function onMouseUp(e: MouseEvent): Promise<void> {
 
       // Activate tab if bookmark is opened
       let newTabNeededInActPanel = false
-      if (Settings.reactive.activateOpenBookmarkTab && props.node.isOpen) {
+      if (Settings.state.activateOpenBookmarkTab && props.node.isOpen) {
         let tab
         if (Utils.isTabsPanel(actPanel)) {
           tab = Tabs.list.find(t => t.url === props.node.url && t.panelId === actPanel.id)
@@ -236,7 +236,7 @@ async function onMouseUp(e: MouseEvent): Promise<void> {
       if (Utils.isTabsPanel(actPanel) && !newTabNeededInActPanel) {
         const actTab = Tabs.byId[Tabs.activeId]
         if (actTab) {
-          const inPanel = Settings.reactive.pinnedTabsPosition === 'panel'
+          const inPanel = Settings.state.pinnedTabsPosition === 'panel'
           newTabNeededInActPanel = actTab.panelId !== actPanel.id || (actTab.pinned && !inPanel)
         }
       }
@@ -263,7 +263,7 @@ async function onMouseUp(e: MouseEvent): Promise<void> {
     if (Bookmarks.reactive.popup) return
 
     Mouse.stopMultiSelection()
-    if (!Settings.reactive.ctxMenuNative) {
+    if (!Settings.state.ctxMenuNative) {
       if (!Selection.isSet()) Selection.selectBookmark(props.node.id)
       Menu.open(MenuType.Bookmarks, e.clientX, e.clientY)
     }
@@ -319,7 +319,7 @@ async function convertCurrentPanelToTabsPanel(panel: BookmarksPanel): Promise<vo
  * Handle context menu
  */
 function onCtxMenu(e: MouseEvent): void {
-  if (!Settings.reactive.ctxMenuNative || e.ctrlKey || e.shiftKey || Bookmarks.reactive.popup) {
+  if (!Settings.state.ctxMenuNative || e.ctrlKey || e.shiftKey || Bookmarks.reactive.popup) {
     e.stopPropagation()
     e.preventDefault()
     return
@@ -382,7 +382,7 @@ function onDragStart(e: DragEvent): void {
     const url = props.node.url ?? ''
     const dragImgEl = document.getElementById('drag_image')
     e.dataTransfer.setData('application/x-sidebery-dnd', JSON.stringify(dragInfo))
-    if (Settings.reactive.dndOutside === 'data' ? !e.altKey : e.altKey) {
+    if (Settings.state.dndOutside === 'data' ? !e.altKey : e.altKey) {
       e.dataTransfer.setData('text/uri-list', url)
       e.dataTransfer.setData('text/plain', url)
     }

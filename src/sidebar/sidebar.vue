@@ -1,22 +1,22 @@
 <template lang="pug">
 #root.root.Sidebar(
   ref="rootEl"
-  :data-native-scrollbar="Settings.reactive.nativeScrollbars"
-  :data-native-scrollbars-thin="Settings.reactive.nativeScrollbarsThin"
-  :data-native-scrollbars-left="Settings.reactive.nativeScrollbarsLeft"
-  :data-theme="Settings.reactive.theme"
+  :data-native-scrollbar="Settings.state.nativeScrollbars"
+  :data-native-scrollbars-thin="Settings.state.nativeScrollbarsThin"
+  :data-native-scrollbars-left="Settings.state.nativeScrollbarsLeft"
+  :data-theme="Settings.state.theme"
   :data-color-scheme="Styles.reactive.colorScheme"
   :data-animations="animations"
   :data-pinned-tabs-position="pinnedTabsPosition"
-  :data-pinned-tabs-list="Settings.reactive.pinnedTabsList"
-  :data-tabs-tree-lvl-marks="Settings.reactive.tabsLvlDots"
-  :data-tabs-close-btn="Settings.reactive.showTabRmBtn"
+  :data-pinned-tabs-list="Settings.state.pinnedTabsList"
+  :data-tabs-tree-lvl-marks="Settings.state.tabsLvlDots"
+  :data-tabs-close-btn="Settings.state.showTabRmBtn"
   :data-drag="DnD.reactive.isStarted"
-  :data-nav-inline="Settings.reactive.navBarInline"
+  :data-nav-inline="Settings.state.navBarInline"
   :data-nav-layout="navBarLayout"
   :data-search="!!Search.reactive.value"
-  :data-sticky-bookmarks="Settings.reactive.pinOpenedBookmarksFolder"
-  :data-colorized-branches="Settings.reactive.colorizeTabsBranches"
+  :data-sticky-bookmarks="Settings.state.pinOpenedBookmarksFolder"
+  :data-colorized-branches="Settings.state.colorizeTabsBranches"
   @dragend="DnD.onDragEnd"
   @dragenter="DnD.onDragEnter"
   @dragleave="DnD.onDragLeave"
@@ -45,7 +45,7 @@
   .top-horizontal-box(v-if="navBarHorizontal")
     NavigationBar.-top
 
-  SearchBar(v-show="Settings.reactive.searchBarMode !== 'none'")
+  SearchBar(v-show="Settings.state.searchBarMode !== 'none'")
 
   .main-box
     .left-vertical-box(v-if="pinnedTabsBarLeft || navBarLeft")
@@ -110,25 +110,25 @@ const panelBoxEl = ref<HTMLElement | null>(null)
 
 const pinnedTabsPosition = computed(() => {
   if (!Tabs.reactive.pinned.length) return 'none'
-  return Settings.reactive.pinnedTabsPosition
+  return Settings.state.pinnedTabsPosition
 })
 const animations = computed(() => {
-  if (!Settings.reactive.animations) return 'none'
-  else return Settings.reactive.animationSpeed || 'fast'
+  if (!Settings.state.animations) return 'none'
+  else return Settings.state.animationSpeed || 'fast'
 })
-const pinnedTabsBarTop = computed(() => Settings.reactive.pinnedTabsPosition === 'top')
-const pinnedTabsBarLeft = computed(() => Settings.reactive.pinnedTabsPosition === 'left')
-const pinnedTabsBarRight = computed(() => Settings.reactive.pinnedTabsPosition === 'right')
+const pinnedTabsBarTop = computed(() => Settings.state.pinnedTabsPosition === 'top')
+const pinnedTabsBarLeft = computed(() => Settings.state.pinnedTabsPosition === 'left')
+const pinnedTabsBarRight = computed(() => Settings.state.pinnedTabsPosition === 'right')
 const navBarLayout = computed(() => {
-  if (Settings.reactive.navBarLayout === 'vertical') return Settings.reactive.navBarSide
-  return Settings.reactive.navBarLayout
+  if (Settings.state.navBarLayout === 'vertical') return Settings.state.navBarSide
+  return Settings.state.navBarLayout
 })
-const navBarHorizontal = computed(() => Settings.reactive.navBarLayout === 'horizontal')
+const navBarHorizontal = computed(() => Settings.state.navBarLayout === 'horizontal')
 const navBarLeft = computed(
-  () => Settings.reactive.navBarLayout === 'vertical' && Settings.reactive.navBarSide === 'left'
+  () => Settings.state.navBarLayout === 'vertical' && Settings.state.navBarSide === 'left'
 )
 const navBarRight = computed(
-  () => Settings.reactive.navBarLayout === 'vertical' && Settings.reactive.navBarSide === 'right'
+  () => Settings.state.navBarLayout === 'vertical' && Settings.state.navBarSide === 'right'
 )
 
 onMounted(() => {
@@ -199,10 +199,10 @@ const onWheel = Mouse.getWheelDebouncer(WheelDirection.Horizontal, e => {
 
   if (e.deltaX !== 0) Mouse.blockWheel(WheelDirection.Vertical)
 
-  if (Settings.reactive.hScrollAction === 'switch_panels') {
+  if (Settings.state.hScrollAction === 'switch_panels') {
     if (e.deltaX > 0) return Sidebar.switchPanel(1, true)
     if (e.deltaX < 0) return Sidebar.switchPanel(-1, true)
-  } else if (Settings.reactive.hScrollAction === 'switch_act_tabs') {
+  } else if (Settings.state.hScrollAction === 'switch_act_tabs') {
     if (e.deltaX > 0) return Tabs.switchToRecenlyActiveTab(SwitchingTabScope.global, 1)
     if (e.deltaX < 0) return Tabs.switchToRecenlyActiveTab(SwitchingTabScope.global, -1)
   }
@@ -230,7 +230,7 @@ function onMouseLeave(): void {
 
   if (Bookmarks.reactive.popup) return
 
-  if (!Menu.isOpen || !Settings.reactive.ctxMenuNative) {
+  if (!Menu.isOpen || !Settings.state.ctxMenuNative) {
     leaveTimeout = setTimeout(() => {
       Menu.close()
       Selection.resetSelection()
@@ -264,7 +264,7 @@ function onMouseUp(e: MouseEvent): void {
     if (Selection.isBookmarks()) type = MenuType.Bookmarks
     if (Selection.isTabs()) type = MenuType.Tabs
     if (type === undefined) return
-    if (inMultiSelectionMode && !Settings.reactive.autoMenuMultiSel && Selection.getLength() > 1) {
+    if (inMultiSelectionMode && !Settings.state.autoMenuMultiSel && Selection.getLength() > 1) {
       return
     }
     Menu.open(type, e.clientX, e.clientY)

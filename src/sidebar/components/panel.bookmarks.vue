@@ -252,7 +252,7 @@ function onRightMouseUp(e: MouseEvent): void {
 
   e.stopPropagation()
 
-  if (Settings.reactive.ctxMenuNative) return
+  if (Settings.state.ctxMenuNative) return
 
   Selection.selectNavItem(props.panel.id)
   Menu.open(MenuType.BookmarksPanel, e.clientX, e.clientY)
@@ -262,7 +262,7 @@ function onRightMouseUp(e: MouseEvent): void {
  * Handle context menu event
  */
 function onNavCtxMenu(e: MouseEvent): void {
-  if (!Settings.reactive.ctxMenuNative || e.ctrlKey || e.shiftKey) {
+  if (!Settings.state.ctxMenuNative || e.ctrlKey || e.shiftKey) {
     e.stopPropagation()
     e.preventDefault()
     return

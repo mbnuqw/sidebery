@@ -92,7 +92,7 @@ export function selectTab(tabId: ID): void {
   firstItem = tabId
   selType = SelectionType.Tabs
 
-  if (Settings.reactive.nativeHighlight) updateHighlightedTabs(120)
+  if (Settings.state.nativeHighlight) updateHighlightedTabs(120)
 }
 
 export function selectTabs(tabIds: ID[]): void {
@@ -109,7 +109,7 @@ export function selectTabs(tabIds: ID[]): void {
   firstItem = tabIds[0]
   selType = SelectionType.Tabs
 
-  if (Settings.reactive.nativeHighlight) updateHighlightedTabs(120)
+  if (Settings.state.nativeHighlight) updateHighlightedTabs(120)
 }
 
 export function selectTabsRange(aTab: Tab, bTab?: Tab): void {
@@ -142,7 +142,7 @@ export function selectTabsRange(aTab: Tab, bTab?: Tab): void {
   selType = SelectionType.Tabs
   if (firstItem === null) firstItem = aTab.id
 
-  if (Settings.reactive.nativeHighlight) updateHighlightedTabs(120)
+  if (Settings.state.nativeHighlight) updateHighlightedTabs(120)
 }
 
 export function selectTabsBranch(parentTab: Tab): void {
@@ -155,7 +155,7 @@ export function selectTabsBranch(parentTab: Tab): void {
   const rParentTab = Tabs.reactive.byId[parentTab.id]
   if (rParentTab) rParentTab.sel = true
 
-  if (Settings.reactive.tabsTree) {
+  if (Settings.state.tabsTree) {
     for (let tab, i = parentTab.index + 1; i < Tabs.list.length; i++) {
       tab = Tabs.list[i]
       if (tab.lvl <= parentTab.lvl) break
@@ -169,7 +169,7 @@ export function selectTabsBranch(parentTab: Tab): void {
 
   selType = SelectionType.Tabs
 
-  if (Settings.reactive.nativeHighlight) updateHighlightedTabs(120)
+  if (Settings.state.nativeHighlight) updateHighlightedTabs(120)
 }
 
 export function selectBookmark(bookmarkId: ID): void {
@@ -286,7 +286,7 @@ export function deselectTab(tabId: ID): void {
 
   if (!Selection.selected.length) selType = SelectionType.Nothing
   if (firstItem === tabId) firstItem = null
-  if (Settings.reactive.nativeHighlight) updateHighlightedTabs(120)
+  if (Settings.state.nativeHighlight) updateHighlightedTabs(120)
 }
 
 export function deselectBookmark(bookmarkId: ID): void {
@@ -345,7 +345,7 @@ export function resetSelection(): void {
       if (target) target.sel = false
     }
 
-    if (Settings.reactive.nativeHighlight) updateHighlightedTabs(120)
+    if (Settings.state.nativeHighlight) updateHighlightedTabs(120)
   }
 
   if (selType === SelectionType.Bookmarks) {

@@ -73,7 +73,7 @@ function onShadowTabCreated(tab: browser.tabs.Tab): void {
 
   Tabs.updateUrlCounter(tab.url, 1)
 
-  if (Settings.reactive.highlightOpenBookmarks) Bookmarks.markOpenBookmarksDebounced(tab.url)
+  if (Settings.state.highlightOpenBookmarks) Bookmarks.markOpenBookmarksDebounced(tab.url)
 }
 
 function onShadowTabUpdated(
@@ -94,7 +94,7 @@ function onShadowTabUpdated(
     Tabs.updateUrlCounter(change.url, 1)
 
     // Mark/Unmark open bookmarks
-    if (Settings.reactive.highlightOpenBookmarks) {
+    if (Settings.state.highlightOpenBookmarks) {
       if (!oldUrlCount) Bookmarks.unmarkOpenBookmarksDebounced(targetTab.url)
       Bookmarks.markOpenBookmarksDebounced(change.url)
     }
@@ -126,7 +126,7 @@ function onShadowTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo): void {
 
   const urlCount = Tabs.updateUrlCounter(targetTab.url, -1)
 
-  if (Settings.reactive.highlightOpenBookmarks && !urlCount) {
+  if (Settings.state.highlightOpenBookmarks && !urlCount) {
     Bookmarks.unmarkOpenBookmarksDebounced(targetTab.url)
   }
 }

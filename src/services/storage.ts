@@ -157,7 +157,7 @@ export async function sync(name: string, value: Stored): Promise<void> {
     const time = Date.now()
     const ver = Info.reactive.addonVer
     await browser.storage.sync.set<StoredSync>({
-      [syncPropName]: { value, time, name: Settings.reactive.syncName, ver },
+      [syncPropName]: { value, time, name: Settings.state.syncName, ver },
     })
   } else {
     await browser.storage.sync.remove(syncPropName)

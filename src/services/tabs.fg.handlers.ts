@@ -99,7 +99,7 @@ function onTabCreated(tab: Tab): void {
 
   if (Sidebar.reactive.hiddenPanelsBar) Sidebar.closeHiddenPanelsBar(true)
 
-  if (Settings.reactive.highlightOpenBookmarks) Bookmarks.markOpenBookmarksDebounced(tab.url)
+  if (Settings.state.highlightOpenBookmarks) Bookmarks.markOpenBookmarksDebounced(tab.url)
 
   Menu.close()
   Selection.resetSelection()
@@ -110,10 +110,10 @@ function onTabCreated(tab: Tab): void {
 
   // Check if opener tab is pinned
   if (
-    Settings.reactive.pinnedAutoGroup &&
+    Settings.state.pinnedAutoGroup &&
     initialOpener &&
     initialOpener.pinned &&
-    Settings.reactive.tabsTree
+    Settings.state.tabsTree
   ) {
     initialOpenerSpec = encodeURIComponent(initialOpener.cookieStoreId + '::' + initialOpener.url)
     autoGroupTab = Tabs.list.find(t => {
@@ -217,7 +217,7 @@ function onTabCreated(tab: Tab): void {
     if (!panel) return Logs.err('Cannot handle new tab: Cannot find target panel')
     index = Tabs.getIndexForNewTab(panel, tab)
     if (!autoGroupTab) {
-      if (!Settings.reactive.groupOnOpen) tab.openerTabId = undefined
+      if (!Settings.state.groupOnOpen) tab.openerTabId = undefined
       else tab.openerTabId = Tabs.getParentForNewTab(panel, tab.openerTabId)
     }
   }
@@ -235,7 +235,7 @@ function onTabCreated(tab: Tab): void {
   }
 
   // Set custom props
-  if (Settings.reactive.tabsUnreadMark && tab.unread === undefined && !tab.active) tab.unread = true
+  if (Settings.state.tabsUnreadMark && tab.unread === undefined && !tab.active) tab.unread = true
   if (panel) Tabs.normalizeTab(tab, panel.id)
   tab.internal = tab.url.startsWith(ADDON_HOST)
   tab.index = index
@@ -250,7 +250,7 @@ function onTabCreated(tab: Tab): void {
   Tabs.updateUrlCounter(tab.url, 1)
 
   // Update tree
-  if (Settings.reactive.tabsTree && !tab.pinned && Utils.isTabsPanel(panel)) {
+  if (Settings.state.tabsTree && !tab.pinned && Utils.isTabsPanel(panel)) {
     let treeHasChanged = false
 
     const rTab = Tabs.reactive.byId[tab.id]
@@ -323,12 +323,12 @@ function onTabCreated(tab: Tab): void {
         })
     }
 
-    if (Settings.reactive.colorizeTabs) Tabs.colorizeTabDebounced(tab.id)
-    if (Settings.reactive.colorizeTabsBranches && tab.lvl > 0) Tabs.setBranchColor(tab.id)
+    if (Settings.state.colorizeTabs) Tabs.colorizeTabDebounced(tab.id)
+    if (Settings.state.colorizeTabsBranches && tab.lvl > 0) Tabs.setBranchColor(tab.id)
   }
 
   // Update succession
-  if (Settings.reactive.activateAfterClosing !== 'none') {
+  if (Settings.state.activateAfterClosing !== 'none') {
     const activeTab = Tabs.byId[Tabs.activeId]
     if (activeTab && activeTab.active) {
       const target = Tabs.findSuccessorTab(activeTab)
@@ -346,7 +346,7 @@ function onTabCreated(tab: Tab): void {
   }
 
   // Hide native tab if needed
-  if (Settings.reactive.hideInact && panel.id !== Sidebar.reactive.activePanelId) {
+  if (Settings.state.hideInact && panel.id !== Sidebar.reactive.activePanelId) {
     browser.tabs.hide?.(tab.id)
   }
 
@@ -391,7 +391,7 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
   // Status change
   if (change.status !== undefined) {
     if (change.status === 'complete' && tab.url[0] !== 'a') {
-      if (Settings.reactive.animations && change.status !== localTab.status) {
+      if (Settings.state.animations && change.status !== localTab.status) {
         Tabs.triggerFlashAnimation(rLocalTab)
       }
       reloadTabFaviconDebounced(localTab, rLocalTab)
@@ -432,10 +432,10 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
       localTab.mediaPaused = false
       rLocalTab.mediaPaused = false
     }
-    if (Settings.reactive.colorizeTabs) {
+    if (Settings.state.colorizeTabs) {
       Tabs.colorizeTabDebounced(tabId, !rLocalTab?.color ? 0 : 500)
     }
-    if (Settings.reactive.colorizeTabsBranches) {
+    if (Settings.state.colorizeTabsBranches) {
       branchColorizationNeeded = localTab.isParent && localTab.lvl === 0
       if (localTab.lvl === 0) rLocalTab.branchColor = null
     }
@@ -445,7 +445,7 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
     Tabs.updateUrlCounter(change.url, 1)
 
     // Mark/Unmark open bookmarks
-    if (Settings.reactive.highlightOpenBookmarks) {
+    if (Settings.state.highlightOpenBookmarks) {
       if (!oldUrlCount) Bookmarks.unmarkOpenBookmarksDebounced(localTab.url)
       Bookmarks.markOpenBookmarksDebounced(change.url)
     }
@@ -477,7 +477,7 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
           rLocalTab.updated = true
           if (
             Utils.isTabsPanel(panel) &&
-            (!tab.pinned || Settings.reactive.pinnedTabsPosition === 'panel') &&
+            (!tab.pinned || Settings.state.pinnedTabsPosition === 'panel') &&
             panel.updatedTabs &&
             !panel.updatedTabs.includes(tabId)
           ) {
@@ -550,7 +550,7 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
     if (Utils.isTabsPanel(panel) && !panel.len) {
       if (panel.noEmpty) {
         Tabs.createTabInPanel(panel)
-      } else if (Settings.reactive.pinnedTabsPosition !== 'panel') {
+      } else if (Settings.state.pinnedTabsPosition !== 'panel') {
         Sidebar.switchToNeighbourPanel()
       }
     }
@@ -650,7 +650,7 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, ignoreChildren?:
   const removedExternally = !Tabs.removingTabs || !Tabs.removingTabs.length
   const nextTab = Tabs.list[tab.index + 1]
   const hasChildren =
-    Settings.reactive.tabsTree &&
+    Settings.state.tabsTree &&
     tab.isParent &&
     !ignoreChildren &&
     nextTab &&
@@ -680,7 +680,7 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, ignoreChildren?:
   // Handle child tabs
   if (hasChildren) {
     const toRemove = []
-    const outdentOnlyFirstChild = Settings.reactive.treeRmOutdent === 'first_child'
+    const outdentOnlyFirstChild = Settings.state.treeRmOutdent === 'first_child'
     const firstChild = nextTab
     for (let i = tab.index + 1, t; i < Tabs.list.length; i++) {
       t = Tabs.list[i]
@@ -695,8 +695,8 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, ignoreChildren?:
 
       // Remove folded tabs
       if (
-        (Settings.reactive.rmChildTabs === 'folded' && tab.folded) ||
-        Settings.reactive.rmChildTabs === 'all'
+        (Settings.state.rmChildTabs === 'folded' && tab.folded) ||
+        Settings.state.rmChildTabs === 'all'
       ) {
         if (!Tabs.removingTabs.includes(t.id)) toRemove.push(t.id)
       } else if (t.invisible && tab.folded) {
@@ -743,7 +743,7 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, ignoreChildren?:
     }
 
     // Remove child tabs
-    if (Settings.reactive.rmChildTabs !== 'none' && toRemove.length) {
+    if (Settings.state.rmChildTabs !== 'none' && toRemove.length) {
       Tabs.removeTabs(toRemove)
     }
   }
@@ -780,7 +780,7 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, ignoreChildren?:
   // On removing the last tab
   if (!Tabs.removingTabs.length) {
     // Update parent tab state
-    if (Settings.reactive.tabsTree && tab.parentId !== NOID) {
+    if (Settings.state.tabsTree && tab.parentId !== NOID) {
       const parentTab = Tabs.byId[tab.parentId]
       const rParentTab = Tabs.reactive.byId[tab.parentId]
       if (parentTab && rParentTab) {
@@ -805,7 +805,7 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, ignoreChildren?:
 
     // Update succession
     let tabSuccessor: Tab | undefined
-    if (Settings.reactive.activateAfterClosing !== 'none') {
+    if (Settings.state.activateAfterClosing !== 'none') {
       const activeTab = Tabs.byId[Tabs.activeId]
       if (activeTab && activeTab.active) {
         tabSuccessor = Tabs.findSuccessorTab(activeTab)
@@ -815,7 +815,7 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, ignoreChildren?:
 
     // Switch to another panel if current is hidden
     if (
-      Settings.reactive.hideEmptyPanels &&
+      Settings.state.hideEmptyPanels &&
       Sidebar.reactive.activePanelId === panel.id &&
       !panel.tabs.length &&
       !panel.pinnedTabs.length
@@ -828,7 +828,7 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, ignoreChildren?:
   }
 
   // Update bookmarks marks
-  if (Settings.reactive.highlightOpenBookmarks && !urlCount) {
+  if (Settings.state.highlightOpenBookmarks && !urlCount) {
     Bookmarks.unmarkOpenBookmarksDebounced(tab.url)
   }
 
@@ -888,7 +888,7 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
     if (!Tabs.movingTabs.length) Tabs.cacheTabsData()
     tab.dstPanelId = -1
     Sidebar.recalcTabsPanels()
-    if (Settings.reactive.activateAfterClosing !== 'none' && tab.active) {
+    if (Settings.state.activateAfterClosing !== 'none' && tab.active) {
       const target = Tabs.findSuccessorTab(tab)
       if (target) browser.tabs.moveInSuccession([tab.id], target.id)
     }
@@ -943,10 +943,10 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
   Sidebar.recalcTabsPanels()
 
   // Calc tree levels and colorize branch
-  if (Settings.reactive.tabsTree) {
+  if (Settings.state.tabsTree) {
     if (!Tabs.movingTabs.length) Tabs.updateTabsTree()
 
-    if (Settings.reactive.colorizeTabsBranches && tab.lvl > 0) {
+    if (Settings.state.colorizeTabsBranches && tab.lvl > 0) {
       Tabs.setBranchColor(tab.id)
     }
   }
@@ -959,7 +959,7 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
   Tabs.saveTabData(movedTab.id)
 
   // Update succession
-  if (!Tabs.movingTabs.length && Settings.reactive.activateAfterClosing !== 'none') {
+  if (!Tabs.movingTabs.length && Settings.state.activateAfterClosing !== 'none') {
     const activeTab = Tabs.byId[Tabs.activeId]
     if (activeTab && activeTab.active) {
       const target = Tabs.findSuccessorTab(activeTab)
@@ -1062,7 +1062,7 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
   rTab.active = true
   tab.updated = false
   rTab.updated = false
-  if (Settings.reactive.tabsUnreadMark) {
+  if (Settings.state.tabsUnreadMark) {
     tab.unread = false
     rTab.unread = false
   }
@@ -1077,21 +1077,21 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
   // Switch to activated tab's panel
   const activePanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
   if (
-    (!tab.pinned || Settings.reactive.pinnedTabsPosition === 'panel') &&
+    (!tab.pinned || Settings.state.pinnedTabsPosition === 'panel') &&
     !activePanel?.lockedPanel
   ) {
     Sidebar.activatePanel(panel.id)
   }
-  if ((!prevActive || prevActive.panelId !== tab.panelId) && Settings.reactive.hideInact) {
+  if ((!prevActive || prevActive.panelId !== tab.panelId) && Settings.state.hideInact) {
     Tabs.updateNativeTabsVisibility()
   }
 
   // Propagate access time to parent tabs for autoFolding feature
   if (
-    Settings.reactive.tabsTree &&
+    Settings.state.tabsTree &&
     tab.parentId > -1 &&
-    Settings.reactive.autoFoldTabs &&
-    Settings.reactive.autoFoldTabsExcept > 0
+    Settings.state.autoFoldTabs &&
+    Settings.state.autoFoldTabsExcept > 0
   ) {
     let parent = Tabs.byId[tab.parentId]
     if (parent) {
@@ -1103,7 +1103,7 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
   }
 
   // Auto expand tabs group
-  if (Settings.reactive.autoExpandTabs && tab.isParent && tab.folded && !DnD.reactive.isStarted) {
+  if (Settings.state.autoExpandTabs && tab.isParent && tab.folded && !DnD.reactive.isStarted) {
     let prevActiveChild
     for (let i = tab.index + 1; i < Tabs.list.length; i++) {
       if (Tabs.list[i].lvl <= tab.lvl) break
@@ -1121,14 +1121,14 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
   if (!tab.pinned) Tabs.scrollToTab(tab.id)
 
   // Update succession
-  if (Settings.reactive.activateAfterClosing !== 'none') {
+  if (Settings.state.activateAfterClosing !== 'none') {
     const target = Tabs.findSuccessorTab(tab)
     if (target && tab.successorTabId !== target.id) {
       browser.tabs.moveInSuccession([tab.id], target.id)
     }
   }
 
-  if (Settings.reactive.tabsTree && Utils.isGroupUrl(tab.url)) {
+  if (Settings.state.tabsTree && Utils.isGroupUrl(tab.url)) {
     Tabs.updateGroupTab(tab)
   } else {
     Tabs.resetUpdateGroupTabTimeout()

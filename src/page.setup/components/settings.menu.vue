@@ -1,9 +1,9 @@
 <template lang="pug">
 section(ref="el")
   h2 {{translate('settings.ctx_menu_title')}}
-  ToggleField(label="settings.ctx_menu_native" v-model:value="Settings.reactive.ctxMenuNative")
-  ToggleField(label="settings.ctx_menu_render_inact" v-model:value="Settings.reactive.ctxMenuRenderInact")
-  ToggleField(label="settings.ctx_menu_render_icons" v-model:value="Settings.reactive.ctxMenuRenderIcons")
+  ToggleField(label="settings.ctx_menu_native" v-model:value="Settings.state.ctxMenuNative")
+  ToggleField(label="settings.ctx_menu_render_inact" v-model:value="Settings.state.ctxMenuRenderInact")
+  ToggleField(label="settings.ctx_menu_render_icons" v-model:value="Settings.state.ctxMenuRenderIcons")
   TextField(
     label="settings.ctx_menu_ignore_ctr"
     :or="translate('settings.ctx_menu_ignore_ctr_or')"
@@ -11,7 +11,7 @@ section(ref="el")
     :line="true"
     :valid="ignoreContainersRuleValid"
     input-width="50"
-    v-model:value="Settings.reactive.ctxMenuIgnoreContainers"
+    v-model:value="Settings.state.ctxMenuIgnoreContainers"
     @update:value="validateIgnoreContainersRule")
   .ctrls
     .btn(@click="SetupPage.switchView('menu_editor')") {{translate('settings.ctx_menu_editor')}}

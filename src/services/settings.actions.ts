@@ -27,18 +27,18 @@ export async function loadSettings(): Promise<void> {
   }
 
   Utils.normalizeObject(stored.settings, DEFAULT_SETTINGS)
-  Utils.updateObject(Settings.reactive, stored.settings)
+  Utils.updateObject(Settings.state, stored.settings)
 
-  if (Settings.reactive.hideInact) {
-    Settings.reactive.activateLastTabOnPanelSwitching = true
-    Settings.reactive.tabsPanelSwitchActMove = true
+  if (Settings.state.hideInact) {
+    Settings.state.activateLastTabOnPanelSwitching = true
+    Settings.state.tabsPanelSwitchActMove = true
   }
 
   Logs.info('Settings: Loaded')
 }
 
 export async function saveSettings(): Promise<void> {
-  const clone = Utils.cloneObject(Settings.reactive)
+  const clone = Utils.cloneObject(Settings.state)
   const settings = Utils.recreateNormalizedObject(clone, DEFAULT_SETTINGS)
   await Store.set({ settings })
 
@@ -46,7 +46,7 @@ export async function saveSettings(): Promise<void> {
 }
 
 async function saveSettingsToSync(settings?: SettingsState): Promise<void> {
-  if (!settings) settings = Utils.recreateNormalizedObject(Settings.reactive, DEFAULT_SETTINGS)
+  if (!settings) settings = Utils.recreateNormalizedObject(Settings.state, DEFAULT_SETTINGS)
   await Store.sync('settings', { settings })
 }
 
@@ -58,7 +58,7 @@ export function setupSettingsChangeListener(): void {
 export function updateSettingsBg(settings?: SettingsState | null): void {
   if (!settings) return
 
-  const prev = Settings.reactive
+  const prev = Settings.state
   const next = settings
 
   const markWindowChanged = prev.markWindow !== next.markWindow
@@ -66,7 +66,7 @@ export function updateSettingsBg(settings?: SettingsState | null): void {
   const snapIntervalChanged = prev.snapInterval !== next.snapInterval
   const snapIntervalUnitChanged = prev.snapIntervalUnit !== next.snapIntervalUnit
 
-  Utils.updateObject(Settings.reactive, settings)
+  Utils.updateObject(Settings.state, settings)
 
   if (markWindowChanged) {
     for (const win of Object.values(Windows.byId)) {
@@ -74,14 +74,14 @@ export function updateSettingsBg(settings?: SettingsState | null): void {
       if (!next.markWindow) {
         browser.windows.update(win.id, { titlePreface: '' })
       } else if (IPC.sidebarConnections[win.id]) {
-        browser.windows.update(win.id, { titlePreface: Settings.reactive.markWindowPreface })
+        browser.windows.update(win.id, { titlePreface: Settings.state.markWindowPreface })
       }
     }
   } else if (markWindowPrefaceChanged) {
     const value = next.markWindowPreface
     for (const win of Object.values(Windows.byId)) {
       if (win.type !== 'normal' || win.id === undefined) continue
-      if (Settings.reactive.markWindow && IPC.sidebarConnections[win.id]) {
+      if (Settings.state.markWindow && IPC.sidebarConnections[win.id]) {
         browser.windows.update(win.id, { titlePreface: value })
       }
     }
@@ -95,7 +95,7 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
 
   Logs.info('Settings: Update settings')
 
-  const prev = Settings.reactive
+  const prev = Settings.state
   const next = settings
 
   // Check what values was updated
@@ -120,11 +120,11 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
     prev.colorizeTabsBranchesSrc !== next.colorizeTabsBranchesSrc
 
   // Update settings of this instance
-  Utils.updateObject(Settings.reactive, settings)
+  Utils.updateObject(Settings.state, settings)
 
   if (Info.isSidebar && updateSuccessions && Sidebar.hasTabs) {
     const activeTab = Tabs.list.find(t => t.active)
-    if (Settings.reactive.activateAfterClosing !== 'none' && activeTab) {
+    if (Settings.state.activateAfterClosing !== 'none' && activeTab) {
       const target = Tabs.findSuccessorTab(activeTab)
       if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
     }
@@ -155,7 +155,7 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
   }
 
   if (highlightOpenBookmarks && Bookmarks.reactive.byId) {
-    if (Settings.reactive.highlightOpenBookmarks) Bookmarks.markOpenBookmarksForAllTabs()
+    if (Settings.state.highlightOpenBookmarks) Bookmarks.markOpenBookmarksForAllTabs()
     else Bookmarks.unmarkAllOpenBookmarks()
   }
 
@@ -173,18 +173,18 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
 
   if (
     (colorizeTabsBranchesChanged || colorizeTabsBranchesSrcChanged) &&
-    Settings.reactive.colorizeTabsBranches
+    Settings.state.colorizeTabsBranches
   ) {
     Tabs.colorizeBranches()
   }
 
-  if ((colorizeTabsChanged || colorizeTabsSrcChanged) && Settings.reactive.colorizeTabs) {
+  if ((colorizeTabsChanged || colorizeTabsSrcChanged) && Settings.state.colorizeTabs) {
     Tabs.colorizeTabs()
   }
 }
 
 export function resetSettings(): void {
-  Utils.updateObject(Settings.reactive, DEFAULT_SETTINGS)
+  Utils.updateObject(Settings.state, DEFAULT_SETTINGS)
 }
 
 /**

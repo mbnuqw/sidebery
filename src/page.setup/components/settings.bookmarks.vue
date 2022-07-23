@@ -3,35 +3,35 @@ section(ref="el")
   h2 {{translate('settings.bookmarks_title')}}
   ToggleField(
     label="settings.load_bookmarks_on_demand"
-    v-model:value="Settings.reactive.loadBookmarksOnDemand")
+    v-model:value="Settings.state.loadBookmarksOnDemand")
   SelectField(
     label="settings.warn_on_multi_bookmark_delete"
     optLabel="settings.warn_on_multi_bookmark_delete_"
-    v-model:value="Settings.reactive.warnOnMultiBookmarkDelete"
+    v-model:value="Settings.state.warnOnMultiBookmarkDelete"
     :opts="Settings.getOpts('warnOnMultiBookmarkDelete')")
   ToggleField(
     label="settings.bookmarks_rm_undo_note"
-    v-model:value="Settings.reactive.bookmarksRmUndoNote")
+    v-model:value="Settings.state.bookmarksRmUndoNote")
   ToggleField(
     label="settings.auto_close_bookmarks"
-    v-model:value="Settings.reactive.autoCloseBookmarks")
+    v-model:value="Settings.state.autoCloseBookmarks")
   ToggleField(
     label="settings.auto_rm_other"
-    v-model:value="Settings.reactive.autoRemoveOther")
+    v-model:value="Settings.state.autoRemoveOther")
   ToggleField(
     label="settings.show_bookmark_len"
-    v-model:value="Settings.reactive.showBookmarkLen")
+    v-model:value="Settings.state.showBookmarkLen")
   ToggleField(
     label="settings.highlight_open_bookmarks"
-    v-model:value="Settings.reactive.highlightOpenBookmarks")
+    v-model:value="Settings.state.highlightOpenBookmarks")
   .sub-fields
     ToggleField(
       label="settings.activate_open_bookmark_tab"
-      v-model:value="Settings.reactive.activateOpenBookmarkTab"
-      :inactive="!Settings.reactive.highlightOpenBookmarks")
+      v-model:value="Settings.state.activateOpenBookmarkTab"
+      :inactive="!Settings.state.highlightOpenBookmarks")
   ToggleField(
     label="settings.pin_opened_bookmarks_folder"
-    v-model:value="Settings.reactive.pinOpenedBookmarksFolder")
+    v-model:value="Settings.state.pinOpenedBookmarksFolder")
 
   .ctrls
     .fetch-progress(v-if="state.fetchingBookmarksFavs")

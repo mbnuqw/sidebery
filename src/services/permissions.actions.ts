@@ -177,12 +177,12 @@ function onRemovedTabHide(): void {
 
 function onRemovedTabHideBg(): void {
   let saveNeeded = false
-  if (Settings.reactive.hideInact) {
-    Settings.reactive.hideInact = false
+  if (Settings.state.hideInact) {
+    Settings.state.hideInact = false
     saveNeeded = true
   }
-  if (Settings.reactive.hideFoldedTabs) {
-    Settings.reactive.hideFoldedTabs = false
+  if (Settings.state.hideFoldedTabs) {
+    Settings.state.hideFoldedTabs = false
     saveNeeded = true
   }
 
@@ -194,8 +194,8 @@ function onRemovedTabHideBg(): void {
 
 function onRemovedTabHideFg(): void {
   if (Info.isSetup) {
-    Settings.reactive.hideInact = false
-    Settings.reactive.hideFoldedTabs = false
+    Settings.state.hideInact = false
+    Settings.state.hideFoldedTabs = false
   }
 }
 

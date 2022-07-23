@@ -54,7 +54,7 @@ function onSidebarResize(): void {
 
       if (panelsBoxEl) {
         const panelsBoxBounds = panelsBoxEl.getBoundingClientRect()
-        const area = Settings.reactive.scrollThroughTabsScrollArea
+        const area = Settings.state.scrollThroughTabsScrollArea
         if (area > 0) {
           Sidebar.scrollAreaRightX = panelsBoxBounds.right - area
           Sidebar.scrollAreaLeftX = 0
@@ -150,7 +150,7 @@ export function recalcSidebarSize(): void {
   setTimeout(() => {
     if (panelsBoxEl) {
       const panelsBoxBounds = panelsBoxEl.getBoundingClientRect()
-      const area = Settings.reactive.scrollThroughTabsScrollArea
+      const area = Settings.state.scrollThroughTabsScrollArea
       if (area > 0) {
         Sidebar.scrollAreaRightX = panelsBoxBounds.right - area
         Sidebar.scrollAreaLeftX = 0
@@ -164,13 +164,13 @@ export function recalcSidebarSize(): void {
 
 export function updateFontSize(): void {
   const htmlEl = document.documentElement
-  if (Settings.reactive.fontSize === 'xxs') htmlEl.style.fontSize = '13px'
-  else if (Settings.reactive.fontSize === 'xs') htmlEl.style.fontSize = '13.5px'
-  else if (Settings.reactive.fontSize === 's') htmlEl.style.fontSize = '14px'
-  else if (Settings.reactive.fontSize === 'm') htmlEl.style.fontSize = '14.5px'
-  else if (Settings.reactive.fontSize === 'l') htmlEl.style.fontSize = '15px'
-  else if (Settings.reactive.fontSize === 'xl') htmlEl.style.fontSize = '15.5px'
-  else if (Settings.reactive.fontSize === 'xxl') htmlEl.style.fontSize = '16px'
+  if (Settings.state.fontSize === 'xxs') htmlEl.style.fontSize = '13px'
+  else if (Settings.state.fontSize === 'xs') htmlEl.style.fontSize = '13.5px'
+  else if (Settings.state.fontSize === 's') htmlEl.style.fontSize = '14px'
+  else if (Settings.state.fontSize === 'm') htmlEl.style.fontSize = '14.5px'
+  else if (Settings.state.fontSize === 'l') htmlEl.style.fontSize = '15px'
+  else if (Settings.state.fontSize === 'xl') htmlEl.style.fontSize = '15.5px'
+  else if (Settings.state.fontSize === 'xxl') htmlEl.style.fontSize = '16px'
   else htmlEl.style.fontSize = '14.5px'
 }
 
@@ -204,7 +204,7 @@ function parseNav(config: SidebarConfig): void {
 export function recalcTabsPanels(): void {
   const pinnedTabs: ReactiveTab[] = []
   const pinnedTabsByPanel: Record<ID, ReactiveTab[]> = {}
-  const pinnedInPanel = Settings.reactive.pinnedTabsPosition === 'panel'
+  const pinnedInPanel = Settings.state.pinnedTabsPosition === 'panel'
   let tabIndex = 0
   let tabPanelIndex = 0
   let same = true
@@ -376,7 +376,7 @@ function calcTabsBounds(panel: TabsPanel): ItemBounds[] {
       type: ItemBoundsType.Tab,
       id: tab.id,
       index: tab.index,
-      in: !!Settings.reactive.tabsTree,
+      in: !!Settings.state.tabsTree,
       lvl: tab.lvl,
       folded: tab.folded,
       parent: tab.parentId,
@@ -559,9 +559,9 @@ export function convertOldPanelsConfigToNew(panels_v4: OldPanelConfig[]): Sideba
     }
   }
 
-  if (!Settings.reactive.hideAddBtn) sidebar.nav.push('add_tp')
+  if (!Settings.state.hideAddBtn) sidebar.nav.push('add_tp')
   sidebar.nav.push('sp-0')
-  if (!Settings.reactive.hideSettingsBtn) sidebar.nav.push('settings')
+  if (!Settings.state.hideSettingsBtn) sidebar.nav.push('settings')
 
   return sidebar
 }
@@ -809,7 +809,7 @@ async function updateSidebar(newConfig?: SidebarConfig): Promise<void> {
   }
 
   recalcPanels()
-  if (Settings.reactive.updateSidebarTitle) updateSidebarTitle()
+  if (Settings.state.updateSidebarTitle) updateSidebarTitle()
 
   if (!prevHasTabsPanels && Sidebar.hasTabs) Tabs.load()
   else if (prevHasTabsPanels && !Sidebar.hasTabs) Tabs.unload()
@@ -919,7 +919,7 @@ export function activatePanel(panelId: ID, loadPanels = true): void {
 
   if (DnD.reactive.isStarted) DnD.reactive.dstPanelId = panelId
 
-  if (Settings.reactive.updateSidebarTitle) Sidebar.updateSidebarTitle(0)
+  if (Settings.state.updateSidebarTitle) Sidebar.updateSidebarTitle(0)
 }
 
 /**
@@ -952,7 +952,7 @@ export function switchToPanel(
   if (
     !withoutTabCreation &&
     Utils.isTabsPanel(panel) &&
-    (panel.noEmpty || Settings.reactive.hideInact || Settings.reactive.hideEmptyPanels) &&
+    (panel.noEmpty || Settings.state.hideInact || Settings.state.hideEmptyPanels) &&
     !panel.len
   ) {
     Tabs.createTabInPanel(panel)
@@ -960,7 +960,7 @@ export function switchToPanel(
 
   if (
     Utils.isTabsPanel(panel) &&
-    Settings.reactive.activateLastTabOnPanelSwitching &&
+    Settings.state.activateLastTabOnPanelSwitching &&
     !withoutTabActivation &&
     !Search.reactive.value
   ) {
@@ -983,7 +983,7 @@ export function switchToNeighbourPanel(): void {
     for (let i = activePanel.index - 1; i > 0; i--) {
       const panel = Sidebar.reactive.panels[i]
       if (panel) {
-        if (Settings.reactive.hideEmptyPanels && Utils.isTabsPanel(panel) && !panel.len) continue
+        if (Settings.state.hideEmptyPanels && Utils.isTabsPanel(panel) && !panel.len) continue
         target = Sidebar.reactive.panels[i]
         break
       }
@@ -994,7 +994,7 @@ export function switchToNeighbourPanel(): void {
     for (let i = activePanel.index + 1; i < Sidebar.reactive.panels.length; i++) {
       const panel = Sidebar.reactive.panels[i]
       if (panel) {
-        if (Settings.reactive.hideEmptyPanels && Utils.isTabsPanel(panel) && !panel.len) continue
+        if (Settings.state.hideEmptyPanels && Utils.isTabsPanel(panel) && !panel.len) continue
         target = Sidebar.reactive.panels[i]
         break
       }
@@ -1012,7 +1012,7 @@ export function switchPanel(
 ): void {
   // Debounce switching
   if (switchPanelPause) return
-  const delay = Settings.reactive.navSwitchPanelsDelay ?? 128
+  const delay = Settings.state.navSwitchPanelsDelay ?? 128
   if (delay > 0) {
     switchPanelPause = setTimeout(() => {
       clearTimeout(switchPanelPause)
@@ -1039,7 +1039,7 @@ export function switchPanel(
   let lastVisibleTabsPanel = -1
   let lastHiddenTabsPanel = -1
   let firstHiddenTabsPanel = -1
-  if (Settings.reactive.hideEmptyPanels) {
+  if (Settings.state.hideEmptyPanels) {
     for (let i = Sidebar.reactive.panels.length; i--; ) {
       const panel = Sidebar.reactive.panels[i]
       if (!panel) return
@@ -1066,7 +1066,7 @@ export function switchPanel(
     if (panel.skipOnSwitching) continue
 
     const isEmpty = Utils.isTabsPanel(panel) && !panel.len
-    const isHidden = Settings.reactive.hideEmptyPanels && isEmpty
+    const isHidden = Settings.state.hideEmptyPanels && isEmpty
     if (ignoreHidden && isHidden) continue
 
     if (hasHiddenPanels && lastVisibleTabsPanel !== -1) {
@@ -1105,7 +1105,7 @@ export function closeHiddenPanelsBar(withoutTabCreation?: boolean): void {
   if (
     !withoutTabCreation &&
     Utils.isTabsPanel(panel) &&
-    (panel.noEmpty || Settings.reactive.hideInact || Settings.reactive.hideEmptyPanels) &&
+    (panel.noEmpty || Settings.state.hideInact || Settings.state.hideEmptyPanels) &&
     !panel.len
   ) {
     Tabs.createTabInPanel(panel)
@@ -1701,7 +1701,7 @@ let updateSidebarTitleTimeout: number | undefined
 export function updateSidebarTitle(delay = 456): void {
   clearTimeout(updateSidebarTitleTimeout)
   updateSidebarTitleTimeout = setTimeout(() => {
-    if (Settings.reactive.updateSidebarTitle) {
+    if (Settings.state.updateSidebarTitle) {
       const panel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
       if (!panel) return
 

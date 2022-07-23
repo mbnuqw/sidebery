@@ -256,9 +256,9 @@ function onConnect(port: browser.runtime.Port) {
 
     // TODO: move this to external connect-listener
     if (Info.isBg) {
-      if (Settings.reactive.markWindow && portNameData.srcWinId !== undefined) {
+      if (Settings.state.markWindow && portNameData.srcWinId !== undefined) {
         browser.windows.update(portNameData.srcWinId, {
-          titlePreface: Settings.reactive.markWindowPreface,
+          titlePreface: Settings.state.markWindowPreface,
         })
       }
     }

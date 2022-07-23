@@ -2,7 +2,7 @@
 #root.root(
   :data-color-scheme="Styles.reactive.colorScheme"
   :data-animations="animations"
-  :data-sticky-bookmarks="Settings.reactive.pinOpenedBookmarksFolder")
+  :data-sticky-bookmarks="Settings.state.pinOpenedBookmarksFolder")
   .nav
     div(
       v-for="opt in SetupPage.reactive.nav"
@@ -39,7 +39,7 @@ import BookmarksPopup from 'src/components/popup.bookmarks.vue'
 import UpgradeScreen from 'src/components/upgrade-screen.vue'
 import Details from './components/settings.details.vue'
 
-const animations = computed(() => (Settings.reactive.animations ? 'fast' : 'none'))
+const animations = computed(() => (Settings.state.animations ? 'fast' : 'none'))
 const view = computed(() => {
   if (SetupPage.reactive.activeView === 'settings') return SettingsView
   if (SetupPage.reactive.activeView === 'menu_editor') return MenuEditorView

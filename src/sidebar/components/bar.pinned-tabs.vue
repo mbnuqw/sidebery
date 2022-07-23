@@ -35,11 +35,11 @@ const dropToEnd = computed(() => DnD.reactive.dstPin && dropId.value === NOID)
 
 const onWheel = Mouse.getWheelDebouncer(WheelDirection.Vertical, (e: WheelEvent) => {
   if (
-    Settings.reactive.pinnedTabsPosition !== 'panel' &&
-    Settings.reactive.scrollThroughTabs !== 'none'
+    Settings.state.pinnedTabsPosition !== 'panel' &&
+    Settings.state.scrollThroughTabs !== 'none'
   ) {
-    const globaly = (Settings.reactive.scrollThroughTabs === 'global') !== e.shiftKey
-    const cyclic = Settings.reactive.scrollThroughTabsCyclic !== e.ctrlKey
+    const globaly = (Settings.state.scrollThroughTabs === 'global') !== e.shiftKey
+    const cyclic = Settings.state.scrollThroughTabsCyclic !== e.ctrlKey
 
     if (e.deltaY > 0) Tabs.switchTab(globaly, cyclic, 1, true)
     if (e.deltaY < 0) Tabs.switchTab(globaly, cyclic, -1, true)

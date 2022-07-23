@@ -103,15 +103,15 @@ async function main(): Promise<void> {
   Containers.setupContainersListeners()
   Sidebar.setupListeners()
 
-  if (Settings.reactive.theme !== 'proton') Styles.initTheme()
-  if (Settings.reactive.sidebarCSS) Styles.loadCustomSidebarCSS()
+  if (Settings.state.theme !== 'proton') Styles.initTheme()
+  if (Settings.state.sidebarCSS) Styles.loadCustomSidebarCSS()
   Styles.initColorScheme()
 
   await Sidebar.loadPanels()
 
   const actPanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
-  const initBookmarks = !Settings.reactive.loadBookmarksOnDemand || Utils.isBookmarksPanel(actPanel)
-  const initHistory = !Settings.reactive.loadHistoryOnDemand || Utils.isHistoryPanel(actPanel)
+  const initBookmarks = !Settings.state.loadBookmarksOnDemand || Utils.isBookmarksPanel(actPanel)
+  const initHistory = !Settings.state.loadHistoryOnDemand || Utils.isHistoryPanel(actPanel)
 
   IPC.connectTo(InstanceType.bg, NOID)
 
@@ -132,6 +132,6 @@ async function main(): Promise<void> {
 
   Search.init()
 
-  if (Settings.reactive.updateSidebarTitle) Sidebar.updateSidebarTitle(0)
+  if (Settings.state.updateSidebarTitle) Sidebar.updateSidebarTitle(0)
 }
 main()

@@ -37,7 +37,7 @@ function onBookmarkCreatedFg(id: ID, bookmark: Bookmark): void {
     if (!bookmark.children) bookmark.children = []
   }
 
-  if (Settings.reactive.highlightOpenBookmarks && bookmark.url) {
+  if (Settings.state.highlightOpenBookmarks && bookmark.url) {
     bookmark.isOpen = !!Tabs.urlsInUse[bookmark.url]
     if (bookmark.isOpen) Bookmarks.markParents(bookmark)
   }
@@ -91,7 +91,7 @@ function onBookmarkChangedFg(id: ID, info: browser.bookmarks.UpdateChanges): voi
       Bookmarks.byUrl[info.url] = [bookmark]
     }
 
-    if (Settings.reactive.highlightOpenBookmarks) {
+    if (Settings.state.highlightOpenBookmarks) {
       Bookmarks.reMarkOpenBookmark(bookmark)
     }
   }

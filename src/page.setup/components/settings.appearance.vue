@@ -4,25 +4,25 @@ section(ref="el")
   SelectField(
     label="settings.font_size"
     optLabel="settings.font_size_"
-    v-model:value="Settings.reactive.fontSize"
+    v-model:value="Settings.state.fontSize"
     :opts="Settings.getOpts('fontSize')")
-  ToggleField(label="settings.animations" v-model:value="Settings.reactive.animations")
+  ToggleField(label="settings.animations" v-model:value="Settings.state.animations")
   .sub-fields
     SelectField(
       label="settings.animation_speed"
       optLabel="settings.animation_speed_"
-      v-model:value="Settings.reactive.animationSpeed"
-      :inactive="!Settings.reactive.animations"
+      v-model:value="Settings.state.animationSpeed"
+      :inactive="!Settings.state.animations"
       :opts="Settings.getOpts('animationSpeed')")
   SelectField(
     label="settings.theme"
     optLabel="settings.theme_"
-    v-model:value="Settings.reactive.theme"
+    v-model:value="Settings.state.theme"
     :opts="Settings.getOpts('theme')")
   SelectField(
     label="settings.switch_color_scheme"
     optLabel="settings.color_scheme_"
-    v-model:value="Settings.reactive.colorScheme"
+    v-model:value="Settings.state.colorScheme"
     :opts="Settings.getOpts('colorScheme')"
     @update:value="Styles.initColorScheme()")
   .note-field

@@ -92,7 +92,7 @@ async function onMouseDown(e: MouseEvent): Promise<void> {
     e.preventDefault()
     if (Selection.isBookmarks()) return Selection.resetSelection()
 
-    const action = Settings.reactive.bookmarksMidClickAction
+    const action = Settings.state.bookmarksMidClickAction
     if (action === 'open_in_new') {
       const { dst, useActiveTab, activateFirstTab } = Bookmarks.getOpeningConf(e)
       await Bookmarks.open([props.node.id], dst, useActiveTab, activateFirstTab)
@@ -102,7 +102,7 @@ async function onMouseDown(e: MouseEvent): Promise<void> {
 
   // Right
   else if (e.button === 2) {
-    if (!Settings.reactive.ctxMenuNative && !props.node.sel) {
+    if (!Settings.state.ctxMenuNative && !props.node.sel) {
       Selection.resetSelection()
       Mouse.startMultiSelection(e, props.node.id)
     }
@@ -118,7 +118,7 @@ function onMouseUp(e: MouseEvent): void {
       return Selection.resetSelection()
     }
 
-    if (Settings.reactive.activateOpenBookmarkTab && props.node.isOpen) {
+    if (Settings.state.activateOpenBookmarkTab && props.node.isOpen) {
       const tab = Tabs.list.find(t => t.url === props.node.url)
       if (tab) {
         browser.tabs.update(tab.id, { active: true })
@@ -134,7 +134,7 @@ function onMouseUp(e: MouseEvent): void {
     if (e.ctrlKey || e.shiftKey) return
 
     Mouse.stopMultiSelection()
-    if (!Settings.reactive.ctxMenuNative) {
+    if (!Settings.state.ctxMenuNative) {
       if (!Selection.isSet()) Selection.selectBookmark(props.node.id)
       Menu.open(MenuType.Bookmarks, e.clientX, e.clientY)
     }
@@ -142,7 +142,7 @@ function onMouseUp(e: MouseEvent): void {
 }
 
 function onCtxMenu(e: MouseEvent): void {
-  if (!Settings.reactive.ctxMenuNative || e.ctrlKey || e.shiftKey) {
+  if (!Settings.state.ctxMenuNative || e.ctrlKey || e.shiftKey) {
     e.stopPropagation()
     e.preventDefault()
     return
@@ -182,7 +182,7 @@ function onDragStart(e: DragEvent): void {
   // Set native drag info
   if (e.dataTransfer) {
     e.dataTransfer.setData('application/x-sidebery-dnd', JSON.stringify(dragInfo))
-    if (Settings.reactive.dndOutside === 'data' ? !e.altKey : e.altKey) {
+    if (Settings.state.dndOutside === 'data' ? !e.altKey : e.altKey) {
       e.dataTransfer.setData('text/uri-list', url)
       e.dataTransfer.setData('text/plain', url)
     }

@@ -4,7 +4,7 @@ section(ref="el")
   SelectField(
     label="settings.search_bar_mode"
     optLabel="settings.search_bar_mode_"
-    v-model:value="Settings.reactive.searchBarMode"
+    v-model:value="Settings.state.searchBarMode"
     :opts="Settings.getOpts('searchBarMode')")
 </template>
 

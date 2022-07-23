@@ -47,7 +47,7 @@
       .progress-spinner(v-if="loading === true")
       .child-count(v-if="tab.folded && tab.branchLen") {{tab.branchLen}}
     .close(
-      v-if="Settings.reactive.showTabRmBtn && !isPinned"
+      v-if="Settings.state.showTabRmBtn && !isPinned"
       @mousedown.stop="onMouseDownClose"
       @mouseup.stop
       @contextmenu.stop.prevent)
@@ -87,12 +87,12 @@ const containerColor = computed((): boolean | string => {
 })
 const tabColor = computed<string>(() => {
   if (
-    Settings.reactive.colorizeTabsBranches &&
+    Settings.state.colorizeTabsBranches &&
     props.tab.branchColor &&
     (props.tab.isParent || props.tab.lvl > 0)
   ) {
     return props.tab.branchColor
-  } else if (Settings.reactive.colorizeTabs && props.tab.color) {
+  } else if (Settings.state.colorizeTabs && props.tab.color) {
     return props.tab.color
   } else {
     return ''
@@ -107,9 +107,9 @@ const tooltip = computed((): string => {
   }
 
   let str = `${props.tab.title}`
-  if (Settings.reactive.tabsUrlInTooltip === 'full') {
+  if (Settings.state.tabsUrlInTooltip === 'full') {
     str += `\n${decodedUrl}`
-  } else if (Settings.reactive.tabsUrlInTooltip === 'stripped') {
+  } else if (Settings.state.tabsUrlInTooltip === 'stripped') {
     str += `\n${decodedUrl.split('?')[0]}`
   }
   return str
@@ -120,11 +120,11 @@ const favPlaceholder = computed((): string => {
 })
 const withTitle = computed((): boolean => {
   if (!props.tab.pinned) return true
-  return Settings.reactive.pinnedTabsPosition === 'panel' && Settings.reactive.pinnedTabsList
+  return Settings.state.pinnedTabsPosition === 'panel' && Settings.state.pinnedTabsList
 })
 const isPinned = computed<boolean>(() => {
   if (!props.tab.pinned) return false
-  if (Settings.reactive.pinnedTabsList && Settings.reactive.pinnedTabsPosition === 'panel') {
+  if (Settings.state.pinnedTabsList && Settings.state.pinnedTabsPosition === 'panel') {
     return false
   }
   return true
@@ -147,10 +147,10 @@ function onMouseDownClose(e: MouseEvent): void {
     tempLockCloseBtn()
   }
   if (e.button === 1) {
-    if (Settings.reactive.tabCloseMiddleClick === 'close') {
+    if (Settings.state.tabCloseMiddleClick === 'close') {
       Tabs.removeTabs([props.tab.id])
       tempLockCloseBtn()
-    } else if (Settings.reactive.tabCloseMiddleClick === 'discard') {
+    } else if (Settings.state.tabCloseMiddleClick === 'discard') {
       Tabs.discardTabs([props.tab.id])
     }
     e.preventDefault()
@@ -174,7 +174,7 @@ function onMouseDown(e: MouseEvent): void {
     }
 
     if (e.shiftKey) {
-      if (Settings.reactive.shiftSelAct && !Selection.isSet()) {
+      if (Settings.state.shiftSelAct && !Selection.isSet()) {
         Selection.selectTab(Tabs.activeId)
       }
       const tab = Tabs.byId[props.tab.id]
@@ -186,7 +186,7 @@ function onMouseDown(e: MouseEvent): void {
 
     if (Selection.isSet() && !props.tab.sel) Selection.resetSelection()
 
-    if (!Selection.isSet() && !Settings.reactive.activateOnMouseUp) activate()
+    if (!Selection.isSet() && !Settings.state.activateOnMouseUp) activate()
 
     Mouse.startLongClick(e, 'tab', props.tab.id, longClickFeedback)
   }
@@ -201,7 +201,7 @@ function onMouseDown(e: MouseEvent): void {
 
   // Right
   else if (e.button === 2) {
-    if (!Settings.reactive.ctxMenuNative && !props.tab.sel) {
+    if (!Settings.state.ctxMenuNative && !props.tab.sel) {
       Selection.resetSelection()
       Mouse.startMultiSelection(e, props.tab.id)
     }
@@ -224,9 +224,9 @@ function onMouseUp(e: MouseEvent): void {
     const withoutMods = !e.ctrlKey && !e.shiftKey
     if (sameTarget) {
       if (withoutMods) Selection.resetSelection()
-      if (Settings.reactive.activateOnMouseUp && withoutMods) activate()
+      if (Settings.state.activateOnMouseUp && withoutMods) activate()
       if (
-        Settings.reactive.tabsSecondClickActPrev &&
+        Settings.state.tabsSecondClickActPrev &&
         props.tab.id === Tabs.activeId &&
         withoutMods &&
         !activating
@@ -243,20 +243,20 @@ function onMouseUp(e: MouseEvent): void {
     const inMultiSelectionMode = Mouse.multiSelectionMode
     Mouse.stopMultiSelection()
 
-    if (inMultiSelectionMode && !Settings.reactive.autoMenuMultiSel && Selection.getLength() > 1) {
+    if (inMultiSelectionMode && !Settings.state.autoMenuMultiSel && Selection.getLength() > 1) {
       return
     }
 
     if (Menu.isBlocked()) return
-    if (!Selection.isSet() && !Settings.reactive.ctxMenuNative) select()
-    if (!Settings.reactive.ctxMenuNative) Menu.open(MenuType.Tabs, e.clientX, e.clientY)
+    if (!Selection.isSet() && !Settings.state.ctxMenuNative) select()
+    if (!Settings.state.ctxMenuNative) Menu.open(MenuType.Tabs, e.clientX, e.clientY)
   }
 }
 
 function onCtxMenu(e: MouseEvent): void {
   if (
     Mouse.isLocked() ||
-    !Settings.reactive.ctxMenuNative ||
+    !Settings.state.ctxMenuNative ||
     e.ctrlKey ||
     e.shiftKey ||
     Mouse.longClickApplied
@@ -287,7 +287,7 @@ function onCtxMenu(e: MouseEvent): void {
 }
 
 function onDoubleClick(): void {
-  const dc = Settings.reactive.tabDoubleClick
+  const dc = Settings.state.tabDoubleClick
   if (dc === 'reload') Tabs.reloadTabs([props.tab.id])
   if (dc === 'duplicate') Tabs.duplicateTabs([props.tab.id])
   if (dc === 'pin') Tabs.repinTabs([props.tab.id])
@@ -321,7 +321,7 @@ function onDragStart(e: DragEvent): void {
   const links = []
   const urlTitleList = []
   for (const tab of Tabs.list) {
-    const inBranch = Settings.reactive.tabsTree && !pinned && toDrag.includes(tab.parentId)
+    const inBranch = Settings.state.tabsTree && !pinned && toDrag.includes(tab.parentId)
     if (inBranch || Selection.includes(tab.id)) {
       uriList.push(tab.url)
       links.push(`<a href="${tab.url}>${tab.title}</a>`)
@@ -355,7 +355,7 @@ function onDragStart(e: DragEvent): void {
   if (e.dataTransfer) {
     const dragImgEl = document.getElementById('drag_image')
     e.dataTransfer.setData('application/x-sidebery-dnd', JSON.stringify(dragInfo))
-    if (Settings.reactive.dndOutside === 'data' ? !e.altKey : e.altKey) {
+    if (Settings.state.dndOutside === 'data' ? !e.altKey : e.altKey) {
       const uris = uriList.join('\r\n')
       e.dataTransfer.setData('text/x-moz-url', urlTitleList.join('\r\n'))
       e.dataTransfer.setData('text/uri-list', uris)

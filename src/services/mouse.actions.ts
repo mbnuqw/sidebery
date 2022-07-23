@@ -131,9 +131,9 @@ export function startLongClick(
     let action
     if (type === 'tab') {
       if (e.button === 0) {
-        action = Settings.reactive.tabLongLeftClick
+        action = Settings.state.tabLongLeftClick
       } else if (e.button === 2) {
-        action = Settings.reactive.tabLongRightClick
+        action = Settings.state.tabLongRightClick
         stopMultiSelection()
         Selection.resetSelection()
       }
@@ -155,7 +155,7 @@ export function startLongClick(
     longClickTimeout = undefined
 
     if (cb && clickLock) cb()
-  }, Settings.reactive.longClickDelay)
+  }, Settings.state.longClickDelay)
 }
 
 export function stopLongClick(): void {
@@ -175,7 +175,7 @@ export function resetClickLock(delay = 0): void {
 }
 
 export function startMultiSelection(e: MouseEvent, id: ID): void {
-  if (Settings.reactive.ctxMenuNative) return
+  if (Settings.state.ctxMenuNative) return
   multiSelectionStartId = id
   multiSelectionStartY = e.clientY
 }
@@ -219,11 +219,11 @@ export function getWheelDebouncer(
   direction: WheelDirection,
   cb: (e: WheelEvent) => void
 ): (e: WheelEvent) => void {
-  if (!Settings.reactive.wheelThreshold) return cb
+  if (!Settings.state.wheelThreshold) return cb
 
   let threshold = 0
-  if (direction === WheelDirection.Vertical) threshold = Settings.reactive.wheelThresholdY
-  else threshold = Settings.reactive.wheelThresholdX
+  if (direction === WheelDirection.Vertical) threshold = Settings.state.wheelThresholdY
+  else threshold = Settings.state.wheelThresholdX
 
   let stopTimeout: number | undefined
   let first = true

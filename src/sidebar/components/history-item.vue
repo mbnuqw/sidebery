@@ -50,7 +50,7 @@ function onMouseDown(e: MouseEvent): void {
 
   // Right
   else if (e.button === 2) {
-    if (!Settings.reactive.ctxMenuNative && !props.item.sel) Selection.resetSelection()
+    if (!Settings.state.ctxMenuNative && !props.item.sel) Selection.resetSelection()
   }
 }
 
@@ -73,10 +73,10 @@ function onMouseUp(e: MouseEvent): void {
     if (e.ctrlKey || e.shiftKey) return
 
     if (Menu.isBlocked()) return
-    if (!Selection.isSet() && !Settings.reactive.ctxMenuNative) {
+    if (!Selection.isSet() && !Settings.state.ctxMenuNative) {
       Selection.selectHistory(props.item.id)
     }
-    if (!Settings.reactive.ctxMenuNative) Menu.open(MenuType.History, e.clientX, e.clientY)
+    if (!Settings.state.ctxMenuNative) Menu.open(MenuType.History, e.clientX, e.clientY)
   }
 }
 
@@ -91,7 +91,7 @@ function onFavMouseDown(): void {
 }
 
 function onCtxMenu(e: MouseEvent): void {
-  if (Mouse.isLocked() || !Settings.reactive.ctxMenuNative || e.ctrlKey || e.shiftKey) {
+  if (Mouse.isLocked() || !Settings.state.ctxMenuNative || e.ctrlKey || e.shiftKey) {
     Mouse.resetClickLock()
     e.stopPropagation()
     e.preventDefault()

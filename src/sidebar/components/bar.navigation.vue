@@ -85,24 +85,24 @@ let droppedOnPanel = false
 const el = ref<HTMLElement | null>(null)
 
 const isInline = computed((): boolean => {
-  return Settings.reactive.navBarLayout === 'horizontal' && Settings.reactive.navBarInline
+  return Settings.state.navBarLayout === 'horizontal' && Settings.state.navBarInline
 })
 const layout = computed(() => {
-  if (Settings.reactive.navBarLayout === 'horizontal') {
-    return Settings.reactive.navBarInline ? 'inline' : 'wrap'
+  if (Settings.state.navBarLayout === 'horizontal') {
+    return Settings.state.navBarInline ? 'inline' : 'wrap'
   }
-  if (Settings.reactive.navBarLayout === 'vertical') {
-    return Settings.reactive.navBarSide
+  if (Settings.state.navBarLayout === 'vertical') {
+    return Settings.state.navBarSide
   }
   return 'none'
 })
 const hidden = computed((): NavItem[] => {
-  if (!Settings.reactive.hideEmptyPanels && !isInline.value) return []
+  if (!Settings.state.hideEmptyPanels && !isInline.value) return []
   const result: NavItem[] = []
 
   for (const id of Sidebar.reactive.nav) {
     const panel = Sidebar.reactive.panelsById[id]
-    if (Settings.reactive.hideEmptyPanels && Utils.isTabsPanel(panel) && !panel.len) {
+    if (Settings.state.hideEmptyPanels && Utils.isTabsPanel(panel) && !panel.len) {
       result.push(panel)
     }
   }
@@ -120,7 +120,7 @@ const visible = computed((): NavItem[] => {
     if (panel) {
       if (Utils.isTabsPanel(panel)) {
         if (firstTabsPanelIndex === -1) firstTabsPanelIndex = result.length
-        if (Settings.reactive.hideEmptyPanels && panel.len === 0) continue
+        if (Settings.state.hideEmptyPanels && panel.len === 0) continue
         lastTabsPanelIndex = result.length
       }
       result.push(panel)
@@ -129,7 +129,7 @@ const visible = computed((): NavItem[] => {
       const isDelimiter = (id as string).startsWith('sd-')
       const isSearch = id === 'search'
 
-      if (isSearch && Settings.reactive.searchBarMode !== 'dynamic') continue
+      if (isSearch && Settings.state.searchBarMode !== 'dynamic') continue
 
       if (isSpace) {
         result.push({ id, class: NavItemClass.space, type: SpaceType.dynamic })
@@ -200,7 +200,7 @@ const overflowed = computed((): boolean => {
 })
 
 onMounted(() => {
-  if (el.value && Settings.reactive.navBarLayout === 'horizontal') {
+  if (el.value && Settings.state.navBarLayout === 'horizontal') {
     Sidebar.registerHorizontalNavBarEl(el.value)
     Sidebar.reactive.horNavWidth = el.value.offsetWidth
   }
@@ -227,7 +227,7 @@ function getBtnInlineIndex(index: number): number {
 }
 
 const onNavWheel = Mouse.getWheelDebouncer(WheelDirection.Vertical, (e: WheelEvent) => {
-  if (Settings.reactive.navSwitchPanelsWheel) {
+  if (Settings.state.navSwitchPanelsWheel) {
     if (e.deltaY > 0) return Sidebar.switchPanel(1, true)
     if (e.deltaY < 0) return Sidebar.switchPanel(-1, true)
   }
@@ -242,7 +242,7 @@ function onDrop(e: DragEvent): void {
  * Handle context menu event
  */
 function onNavCtxMenu(e: MouseEvent, item: NavItem) {
-  if (!Settings.reactive.ctxMenuNative || e.ctrlKey || e.shiftKey) {
+  if (!Settings.state.ctxMenuNative || e.ctrlKey || e.shiftKey) {
     e.stopPropagation()
     e.preventDefault()
     return
@@ -281,9 +281,9 @@ function onNavMouseDown(e: MouseEvent, item: NavItem) {
       if (!Utils.isTabsPanel(panel)) return
 
       // Remove tabs
-      if (Settings.reactive.navTabsPanelMidClickAction === 'rm_all') {
+      if (Settings.state.navTabsPanelMidClickAction === 'rm_all') {
         let toRemove = panel.tabs.map(t => t.id)
-        if (Settings.reactive.pinnedTabsPosition === 'panel') {
+        if (Settings.state.pinnedTabsPosition === 'panel') {
           panel.pinnedTabs.forEach(t => toRemove.push(t.id))
         }
 
@@ -291,7 +291,7 @@ function onNavMouseDown(e: MouseEvent, item: NavItem) {
       }
 
       // Remove active tab
-      if (Settings.reactive.navTabsPanelMidClickAction === 'rm_act_tab') {
+      if (Settings.state.navTabsPanelMidClickAction === 'rm_act_tab') {
         let actTab = Tabs.byId[Tabs.activeId]
         if (actTab && actTab.panelId === item.id && !actTab.pinned) {
           Tabs.removeTabs([Tabs.activeId])
@@ -299,18 +299,18 @@ function onNavMouseDown(e: MouseEvent, item: NavItem) {
       }
 
       // Discard(unload) tabs
-      if (Settings.reactive.navTabsPanelMidClickAction === 'discard') {
+      if (Settings.state.navTabsPanelMidClickAction === 'discard') {
         const ids = panel.tabs.map(t => t.id)
         if (ids.length) Tabs.discardTabs(ids)
       }
 
       // Save panel to bookmarks
-      if (Settings.reactive.navTabsPanelMidClickAction === 'bookmark') {
+      if (Settings.state.navTabsPanelMidClickAction === 'bookmark') {
         Sidebar.bookmarkTabsPanel(panel.id, true)
       }
 
       // Convert tabs panel to bookmarks panel
-      if (Settings.reactive.navTabsPanelMidClickAction === 'convert') {
+      if (Settings.state.navTabsPanelMidClickAction === 'convert') {
         Sidebar.convertToBookmarksPanel(panel)
       }
     }
@@ -320,7 +320,7 @@ function onNavMouseDown(e: MouseEvent, item: NavItem) {
       if (!Utils.isBookmarksPanel(panel)) return
 
       // Convert bookmarks panel to tabs panel
-      if (Settings.reactive.navBookmarksPanelMidClickAction === 'convert') {
+      if (Settings.state.navBookmarksPanelMidClickAction === 'convert') {
         Sidebar.convertToTabsPanel(panel)
       }
     }
@@ -373,12 +373,12 @@ function onNavMouseUp(e: MouseEvent, item: NavItem, inHiddenBar?: boolean) {
 
     if (Sidebar.reactive.activePanelId !== item.id) return Sidebar.switchToPanel(item.id)
     if (isBookmarks) {
-      if (Settings.reactive.navActBookmarksPanelLeftClickAction === 'scroll') {
+      if (Settings.state.navActBookmarksPanelLeftClickAction === 'scroll') {
         return Bookmarks.scrollBookmarksToEdge()
       }
     }
     if (isTabs && panel) {
-      if (Settings.reactive.navActTabsPanelLeftClickAction === 'new_tab') {
+      if (Settings.state.navActTabsPanelLeftClickAction === 'new_tab') {
         return Tabs.createTabInPanel(panel)
       }
     }
@@ -388,7 +388,7 @@ function onNavMouseUp(e: MouseEvent, item: NavItem, inHiddenBar?: boolean) {
   else if (e.button === 2) {
     e.stopPropagation()
 
-    if (Settings.reactive.ctxMenuNative) return
+    if (Settings.state.ctxMenuNative) return
     if (Selection.isSet()) return Selection.resetSelection()
 
     if (isSettings) {
@@ -462,7 +462,7 @@ function onNavDragStart(e: DragEvent, item: NavItem) {
   // Set native drag info
   if (e.dataTransfer) {
     e.dataTransfer.setData('application/x-sidebery-dnd', JSON.stringify(dragInfo))
-    if (Settings.reactive.dndOutside === 'data' ? !e.altKey : e.altKey) {
+    if (Settings.state.dndOutside === 'data' ? !e.altKey : e.altKey) {
       e.dataTransfer.setData('text/plain', contentList.join('\r\n'))
     }
     const dragImgEl = document.getElementById('drag_image')

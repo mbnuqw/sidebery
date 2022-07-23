@@ -161,7 +161,7 @@ function onMouseUp(e: MouseEvent): void {
   if (Selection.isSet()) Selection.resetSelection()
   if (Menu.isOpen) Menu.close()
 
-  if (e.button === 2 && !Settings.reactive.ctxMenuNative) {
+  if (e.button === 2 && !Settings.state.ctxMenuNative) {
     Selection.selectNavItem(props.tabsPanel.id)
     Menu.open(MenuType.TabsPanel, e.clientX, e.clientY)
   }
@@ -181,7 +181,7 @@ function onMouseLeave(): void {
 function onMouseEnter(): void {
   clearTimeout(onMouseLeaveTimeout)
   if (
-    Settings.reactive.openSubPanelOnMouseHover &&
+    Settings.state.openSubPanelOnMouseHover &&
     !state.active &&
     !Notifications.hiddenRecently &&
     Permissions.reactive.bookmarks

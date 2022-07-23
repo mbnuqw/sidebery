@@ -15,7 +15,7 @@ import { History } from './history'
 export const INPUT_TIMEOUT = 300
 
 export function init(): void {
-  if (Settings.reactive.searchBarMode === 'static') Search.reactive.barIsShowed = true
+  if (Settings.state.searchBarMode === 'static') Search.reactive.barIsShowed = true
 }
 
 let inputTimeout: number | undefined
@@ -145,7 +145,7 @@ export function reset(panel?: Panel): void {
 }
 
 export function stop(): void {
-  if (Settings.reactive.searchBarMode === 'dynamic') Search.hideBar()
+  if (Settings.state.searchBarMode === 'dynamic') Search.hideBar()
   Search.reactive.rawValue = ''
   Search.search('')
 }
@@ -170,19 +170,19 @@ export function toggleBar(): void {
 }
 
 export function showBar(): void {
-  if (Settings.reactive.searchBarMode === 'none') return
+  if (Settings.state.searchBarMode === 'none') return
   Search.reactive.barIsShowed = true
   focus()
 }
 
 export function hideBar(): void {
   IPC.searchPopup(Windows.id, 'closePopup')
-  if (Settings.reactive.searchBarMode !== 'static') Search.reactive.barIsShowed = false
+  if (Settings.state.searchBarMode !== 'static') Search.reactive.barIsShowed = false
   if (Menu.isOpen) return Menu.close()
 }
 
 export function start(): void {
-  if (Settings.reactive.searchBarMode === 'none') return
+  if (Settings.state.searchBarMode === 'none') return
 
   const hasFocus = document.hasFocus()
   if (!hasFocus) {

@@ -64,7 +64,7 @@ async function loadInFg(): Promise<void> {
 
   Bookmarks.setupBookmarksListeners()
 
-  if (Settings.reactive.highlightOpenBookmarks) Bookmarks.markOpenBookmarksForAllTabs()
+  if (Settings.state.highlightOpenBookmarks) Bookmarks.markOpenBookmarksForAllTabs()
 
   if (!Windows.incognito) await restoreTree()
 
@@ -157,7 +157,7 @@ export function expandBookmark(nodeId: ID, panelId: ID): void {
   if (!node) return
 
   const isEmpty = !node.children?.length
-  if (Settings.reactive.autoCloseBookmarks && !isEmpty && !Selection.isBookmarks()) {
+  if (Settings.state.autoCloseBookmarks && !isEmpty && !Selection.isBookmarks()) {
     Bookmarks.reactive.expanded[panelId] = {}
   }
 
@@ -223,7 +223,7 @@ export function openInNewWindow(ids: ID[], incognito?: boolean): void {
     if (itemsInfo.find(i => i.id === bookmark.parentId)) info.parentId = bookmark.parentId
 
     if (bookmark.type === 'bookmark') info.url = bookmark.url
-    if (bookmark.type === 'folder' && Settings.reactive.tabsTree) {
+    if (bookmark.type === 'folder' && Settings.state.tabsTree) {
       info.url = Utils.createGroupUrl(bookmark.title)
     }
 
@@ -339,10 +339,10 @@ export function getOpeningConf(e: MouseEvent): OpeningBookmarksConfig {
   // Left click
   if (e.button === 0) {
     const panelId = Bookmarks.getTargetTabsPanelId()
-    conf.useActiveTab = Settings.reactive.bookmarksLeftClickAction === 'open_in_act'
-    conf.activateFirstTab = Settings.reactive.bookmarksLeftClickActivate
+    conf.useActiveTab = Settings.state.bookmarksLeftClickAction === 'open_in_act'
+    conf.activateFirstTab = Settings.state.bookmarksLeftClickActivate
     conf.dst.panelId = panelId
-    if (!conf.useActiveTab && Settings.reactive.bookmarksLeftClickPos === 'after') {
+    if (!conf.useActiveTab && Settings.state.bookmarksLeftClickPos === 'after') {
       const activeTab = Tabs.byId[Tabs.activeId]
       if (activeTab && !activeTab.pinned && activeTab.panelId === panelId) {
         conf.dst.index = activeTab.index + 1
@@ -354,9 +354,9 @@ export function getOpeningConf(e: MouseEvent): OpeningBookmarksConfig {
   // Middle click
   else if (e.button === 1) {
     const panelId = Bookmarks.getTargetTabsPanelId()
-    conf.activateFirstTab = Settings.reactive.bookmarksMidClickActivate
+    conf.activateFirstTab = Settings.state.bookmarksMidClickActivate
     conf.dst.panelId = panelId
-    if (Settings.reactive.bookmarksMidClickPos === 'after') {
+    if (Settings.state.bookmarksMidClickPos === 'after') {
       const activeTab = Tabs.byId[Tabs.activeId]
       if (activeTab && !activeTab.pinned && activeTab.panelId === panelId) {
         conf.dst.index = activeTab.index + 1
@@ -592,8 +592,8 @@ export async function removeBookmarks(ids: ID[]): Promise<void> {
   }
 
   const warn =
-    Settings.reactive.warnOnMultiBookmarkDelete === 'any' ||
-    (Settings.reactive.warnOnMultiBookmarkDelete === 'collapsed' && hasCollapsed)
+    Settings.state.warnOnMultiBookmarkDelete === 'any' ||
+    (Settings.state.warnOnMultiBookmarkDelete === 'collapsed' && hasCollapsed)
   if (warn && count > 1) {
     const ok = await Sidebar.confirm(translate('confirm.bookmarks_delete'))
     if (!ok) return
@@ -603,7 +603,7 @@ export async function removeBookmarks(ids: ID[]): Promise<void> {
     await browser.bookmarks.removeTree(id)
   }
 
-  if (count > 0 && Settings.reactive.bookmarksRmUndoNote && !warn) {
+  if (count > 0 && Settings.state.bookmarksRmUndoNote && !warn) {
     Notifications.notify({
       icon: '#icon_trash',
       title: String(count) + translate('notif.bookmarks_rm_post', count),
@@ -983,7 +983,7 @@ export async function createFrom(
     dstIndex = parent?.children?.length ?? 0
   }
 
-  if (Settings.reactive.tabsTreeBookmarks) {
+  if (Settings.state.tabsTreeBookmarks) {
     const idsMap: Partial<Record<ID, ID>> = {}
 
     for (const item of items) {
@@ -1051,7 +1051,7 @@ export async function saveToFolder(
   let n = 0
 
   // Tree
-  if (Settings.reactive.tabsTreeBookmarks) {
+  if (Settings.state.tabsTreeBookmarks) {
     const idsMap: Partial<Record<ID, ID>> = { [NOID]: panelFolderId }
     const indexes: Record<ID, number> = { [panelFolderId]: 0 }
 

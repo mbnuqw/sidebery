@@ -4,7 +4,7 @@ section(ref="el")
   SelectField(
     label="settings.group_layout"
     optLabel="settings.group_layout_"
-    v-model:value="Settings.reactive.groupLayout"
+    v-model:value="Settings.state.groupLayout"
     :opts="Settings.getOpts('groupLayout')")
 </template>
 

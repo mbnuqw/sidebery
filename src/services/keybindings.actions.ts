@@ -56,7 +56,7 @@ export async function resetKeybindings(): Promise<void> {
   await Promise.all(waitGroup)
   await loadKeybindings()
 
-  if (Settings.reactive.syncSaveKeybindings) {
+  if (Settings.state.syncSaveKeybindings) {
     Keybindings.saveKeybindingsToSync()
   }
 }
@@ -81,7 +81,7 @@ export async function update(cmd: Command, details: CommandUpdateDetails): Promi
   if (details.shortcut !== undefined && cmd.name) {
     await browser.commands.update({ name: cmd.name, shortcut: details.shortcut })
 
-    if (Settings.reactive.syncSaveKeybindings) {
+    if (Settings.state.syncSaveKeybindings) {
       Keybindings.saveKeybindingsToSync()
     }
   }
@@ -173,7 +173,7 @@ function onKeySwitchToTab(targetIndex?: number): void {
   else targetTab = tabsList[targetIndex]
 
   if (targetTab.id !== Tabs.activeId) browser.tabs.update(targetTab.id, { active: true })
-  else if (Settings.reactive.tabsSecondClickActPrev) {
+  else if (Settings.state.tabsSecondClickActPrev) {
     const history = Tabs.getActiveTabsHistory()
     const prevTabId = history.actTabs[history.actTabs.length - 1]
     if (prevTabId !== undefined) browser.tabs.update(prevTabId, { active: true })
@@ -267,7 +267,7 @@ function onKeyActivate(): void {
     }
 
     if (target.type === 'bookmark') {
-      if (Settings.reactive.activateOpenBookmarkTab && target.isOpen) {
+      if (Settings.state.activateOpenBookmarkTab && target.isOpen) {
         const tab = Tabs.list.find(t => t.url === target.url)
         if (tab) {
           browser.tabs.update(tab.id, { active: true })
@@ -275,11 +275,11 @@ function onKeyActivate(): void {
         }
       }
 
-      if (target.parentId === BKM_OTHER_ID && Settings.reactive.autoRemoveOther) {
+      if (target.parentId === BKM_OTHER_ID && Settings.state.autoRemoveOther) {
         browser.bookmarks.remove(target.id)
       }
 
-      if (Settings.reactive.bookmarksLeftClickAction === 'open_in_new') {
+      if (Settings.state.bookmarksLeftClickAction === 'open_in_new') {
         const panel = Sidebar.reactive.panels.find(p => Utils.isTabsPanel(p)) as TabsPanel
         const index = panel?.nextTabIndex
         browser.tabs.create({ index, url: target.url, active: true })

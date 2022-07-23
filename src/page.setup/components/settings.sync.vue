@@ -6,23 +6,23 @@ section(ref="el")
   TextField(
     label="settings.sync_name"
     :or="translate('settings.sync_name_or')"
-    v-model:value="Settings.reactive.syncName"
+    v-model:value="Settings.state.syncName"
     @update:value="onSyncNameUpdated")
   ToggleField(
     label="settings.sync_save_settings"
-    v-model:value="Settings.reactive.syncSaveSettings"
+    v-model:value="Settings.state.syncSaveSettings"
     @update:value="saveSyncSettings()")
   ToggleField(
     label="settings.sync_save_ctx_menu"
-    v-model:value="Settings.reactive.syncSaveCtxMenu"
+    v-model:value="Settings.state.syncSaveCtxMenu"
     @update:value="saveSyncCtxMenu()")
   ToggleField(
     label="settings.sync_save_styles"
-    v-model:value="Settings.reactive.syncSaveStyles"
+    v-model:value="Settings.state.syncSaveStyles"
     @update:value="saveSyncStyles()")
   ToggleField(
     label="settings.sync_save_kb"
-    v-model:value="Settings.reactive.syncSaveKeybindings"
+    v-model:value="Settings.state.syncSaveKeybindings"
     @update:value="saveSyncKb()")
   .sync-data(v-if="state.syncedSettings")
     .sync-title {{translate('settings.sync_settings_title')}}
@@ -235,10 +235,10 @@ async function applySyncData(info: StoredSyncValue): Promise<void> {
 
   // Keep sync settings
   if (data.settings) {
-    data.settings.syncName = Settings.reactive.syncName
-    data.settings.syncSaveSettings = Settings.reactive.syncSaveSettings
-    data.settings.syncSaveCtxMenu = Settings.reactive.syncSaveCtxMenu
-    data.settings.syncSaveStyles = Settings.reactive.syncSaveStyles
+    data.settings.syncName = Settings.state.syncName
+    data.settings.syncSaveSettings = Settings.state.syncSaveSettings
+    data.settings.syncSaveCtxMenu = Settings.state.syncSaveCtxMenu
+    data.settings.syncSaveStyles = Settings.state.syncSaveStyles
   }
 
   await Store.set(Utils.cloneObject(data))
@@ -254,16 +254,16 @@ async function deleteSyncData(key?: string): Promise<void> {
 }
 
 function saveSyncSettings(): void {
-  if (!Settings.reactive.syncSaveSettings) Store.sync('settings', {})
+  if (!Settings.state.syncSaveSettings) Store.sync('settings', {})
 }
 
 function saveSyncCtxMenu(): void {
-  if (Settings.reactive.syncSaveCtxMenu) Menu.saveCtxMenuToSync()
+  if (Settings.state.syncSaveCtxMenu) Menu.saveCtxMenuToSync()
   else Store.sync('ctxMenu', {})
 }
 
 async function saveSyncStyles(): Promise<void> {
-  if (!Settings.reactive.syncSaveStyles) return Store.sync('styles', {})
+  if (!Settings.state.syncSaveStyles) return Store.sync('styles', {})
 
   let [sidebarCSS, groupCSS] = await Promise.all([
     Styles.getCustomCSS('sidebar'),
@@ -277,7 +277,7 @@ async function saveSyncStyles(): Promise<void> {
 }
 
 function saveSyncKb(): void {
-  if (!Settings.reactive.syncSaveKeybindings) Store.sync('kb', {})
+  if (!Settings.state.syncSaveKeybindings) Store.sync('kb', {})
   else Keybindings.saveKeybindingsToSync()
 }
 
@@ -285,8 +285,8 @@ let onSyncNameUpdatedTimeout: number | undefined
 function onSyncNameUpdated(): void {
   clearTimeout(onSyncNameUpdatedTimeout)
   onSyncNameUpdatedTimeout = setTimeout(() => {
-    if (Settings.reactive.syncSaveCtxMenu) saveSyncCtxMenu()
-    if (Settings.reactive.syncSaveStyles) saveSyncStyles()
+    if (Settings.state.syncSaveCtxMenu) saveSyncCtxMenu()
+    if (Settings.state.syncSaveStyles) saveSyncStyles()
   }, 500)
 }
 </script>

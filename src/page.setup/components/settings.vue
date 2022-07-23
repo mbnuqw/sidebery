@@ -67,7 +67,7 @@ onActivated(() => {
 
 // Auto save settings after change
 let saveTimeout: number | undefined
-watch(Settings.reactive, () => {
+watch(Settings.state, () => {
   saveTimeout = Utils.wait(saveTimeout, 500, () => Settings.saveSettings())
 })
 

@@ -1,6 +1,6 @@
 <template lang="pug">
 .new-tab-btns(
-  :data-new-tab-bar-position="Settings.reactive.newTabBarPosition"
+  :data-new-tab-bar-position="Settings.state.newTabBarPosition"
   :data-sel="panel.selNewTab")
   .new-tab-bg
   .new-tab-btn(
@@ -135,7 +135,7 @@ function onNewTabMouseDown(e: MouseEvent, btn?: NewTabBtn): void {
 
   // Right
   else if (e.button === 2) {
-    if (!Settings.reactive.ctxMenuNative && !props.panel.selNewTab) Selection.resetSelection()
+    if (!Settings.state.ctxMenuNative && !props.panel.selNewTab) Selection.resetSelection()
   }
 }
 
@@ -159,10 +159,10 @@ function onNewTabMouseUp(e: MouseEvent): void {
     if (e.ctrlKey || e.shiftKey || Windows.incognito) return
 
     if (Menu.isBlocked()) return
-    if (!Selection.isSet() && !Settings.reactive.ctxMenuNative) {
+    if (!Selection.isSet() && !Settings.state.ctxMenuNative) {
       Selection.selectNewTabBtn(props.panel.id)
     }
-    if (!Settings.reactive.ctxMenuNative) Menu.open(MenuType.NewTab, e.clientX, e.clientY)
+    if (!Settings.state.ctxMenuNative) Menu.open(MenuType.NewTab, e.clientX, e.clientY)
   }
 }
 
@@ -179,7 +179,7 @@ function onNewTabCtxMenu(e: MouseEvent): void {
 
   e.stopPropagation()
 
-  if (Mouse.isLocked() || !Settings.reactive.ctxMenuNative || e.ctrlKey || e.shiftKey) {
+  if (Mouse.isLocked() || !Settings.state.ctxMenuNative || e.ctrlKey || e.shiftKey) {
     Mouse.resetClickLock()
     e.stopPropagation()
     e.preventDefault()

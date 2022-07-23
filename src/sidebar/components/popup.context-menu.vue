@@ -21,7 +21,7 @@
                   :title="opt.tooltip ?? opt.label"
                   @mousedown="onMouseDown($event, opt)"
                   @mouseup="onMouseUp($event, opt)")
-                  .icon-box(v-if="Settings.reactive.ctxMenuRenderIcons")
+                  .icon-box(v-if="Settings.state.ctxMenuRenderIcons")
                     svg.badge(v-if="opt.badge" :data-img="!!opt.img"): use(:xlink:href="'#' + opt.badge")
                     img.icon(v-if="opt.img" :src="opt.img")
                     svg.icon(v-else-if="opt.icon"): use(:xlink:href="'#' + opt.icon")
@@ -51,7 +51,7 @@
             :title="opt.tooltip ?? opt.label"
             @mousedown="onMouseDown($event, opt)"
             @mouseup="onMouseUp($event, opt)")
-            .icon-box(v-if="Settings.reactive.ctxMenuRenderIcons")
+            .icon-box(v-if="Settings.state.ctxMenuRenderIcons")
               svg.badge(v-if="opt.badge" :data-img="!!opt.img"): use(:xlink:href="'#' + opt.badge")
               img.icon(v-if="opt.img" :src="opt.img")
               svg.icon(v-else-if="opt.icon"): use(:xlink:href="'#' + opt.icon")
@@ -79,7 +79,7 @@
                   :title="opt.tooltip ?? opt.label"
                   @mousedown="onMouseDown($event, opt)"
                   @mouseup="onMouseUp($event, opt)")
-                  .icon-box(v-if="Settings.reactive.ctxMenuRenderIcons")
+                  .icon-box(v-if="Settings.state.ctxMenuRenderIcons")
                     svg.badge(v-if="opt.badge" :data-img="!!opt.img"): use(:xlink:href="'#' + opt.badge")
                     img.icon(v-if="opt.img" :src="opt.img")
                     svg.icon(v-else-if="opt.icon"): use(:xlink:href="'#' + opt.icon")
@@ -110,7 +110,7 @@
             :title="opt.tooltip ?? opt.label"
             @mousedown="onMouseDown($event, opt)"
             @mouseup="onMouseUp($event, opt)")
-            .icon-box(v-if="Settings.reactive.ctxMenuRenderIcons")
+            .icon-box(v-if="Settings.state.ctxMenuRenderIcons")
               svg.badge(v-if="opt.badge" :data-img="!!opt.img"): use(:xlink:href="'#' + opt.badge")
               img.icon(v-if="opt.img" :src="opt.img")
               svg.icon(v-else-if="opt.icon"): use(:xlink:href="'#' + opt.icon")

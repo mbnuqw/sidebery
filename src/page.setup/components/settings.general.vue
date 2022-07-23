@@ -1,28 +1,28 @@
 <template lang="pug">
 section(ref="el")
   h2 {{translate('settings.general_title')}}
-  ToggleField(label="settings.native_scrollbars" v-model:value="Settings.reactive.nativeScrollbars")
+  ToggleField(label="settings.native_scrollbars" v-model:value="Settings.state.nativeScrollbars")
   .sub-fields
     ToggleField(
       label="settings.native_scrollbars_thin"
-      :inactive="!Settings.reactive.nativeScrollbars"
-      v-model:value="Settings.reactive.nativeScrollbarsThin")
+      :inactive="!Settings.state.nativeScrollbars"
+      v-model:value="Settings.state.nativeScrollbarsThin")
     ToggleField(
       label="settings.native_scrollbars_left"
-      :inactive="!Settings.reactive.nativeScrollbars"
-      v-model:value="Settings.reactive.nativeScrollbarsLeft")
+      :inactive="!Settings.state.nativeScrollbars"
+      v-model:value="Settings.state.nativeScrollbarsLeft")
   ToggleField(
     label="settings.sel_win_screenshots"
-    :value="Settings.reactive.selWinScreenshots"
+    :value="Settings.state.selWinScreenshots"
     @update:value="toggleSelWinScreenshots")
-  ToggleField(label="settings.update_sidebar_title" v-model:value="Settings.reactive.updateSidebarTitle")
-  ToggleField(label="settings.mark_window" v-model:value="Settings.reactive.markWindow")
+  ToggleField(label="settings.update_sidebar_title" v-model:value="Settings.state.updateSidebarTitle")
+  ToggleField(label="settings.mark_window" v-model:value="Settings.state.markWindow")
   .sub-fields
     TextField.-inline(
       label="settings.mark_window_preface"
       or="---"
-      v-model:value="Settings.reactive.markWindowPreface"
-      :inactive="!Settings.reactive.markWindow")
+      v-model:value="Settings.state.markWindowPreface"
+      :inactive="!Settings.state.markWindow")
   .ctrls
     .btn(@click="showStorageView") {{translate('settings.storage_btn')}} {{state.storageOveral}}
     .btn(@click="showPermissionsPopup") {{translate('settings.permissions_btn')}}
@@ -65,10 +65,10 @@ async function calcStorageInfo(): Promise<void> {
 }
 
 function toggleSelWinScreenshots(): void {
-  if (!Settings.reactive.selWinScreenshots && !Permissions.reactive.webData) {
+  if (!Settings.state.selWinScreenshots && !Permissions.reactive.webData) {
     location.hash = 'all-urls'
   } else {
-    Settings.reactive.selWinScreenshots = !Settings.reactive.selWinScreenshots
+    Settings.state.selWinScreenshots = !Settings.state.selWinScreenshots
   }
 }
 

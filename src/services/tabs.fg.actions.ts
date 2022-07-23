@@ -99,8 +99,8 @@ export async function load(): Promise<void> {
     if (Utils.isTabsPanel(panel)) panel.ready = true
   }
 
-  if (Settings.reactive.colorizeTabs) Tabs.colorizeTabs()
-  if (Settings.reactive.colorizeTabsBranches) Tabs.colorizeBranches()
+  if (Settings.state.colorizeTabs) Tabs.colorizeTabs()
+  if (Settings.state.colorizeTabsBranches) Tabs.colorizeBranches()
 
   Logs.info('Tabs: Loaded')
 }
@@ -194,7 +194,7 @@ async function restoreTabsState(): Promise<void> {
 
   Tabs.list = tabs
   Sidebar.recalcTabsPanels()
-  if (Settings.reactive.tabsTree) updateTabsTree()
+  if (Settings.state.tabsTree) updateTabsTree()
 
   const activeTab = tabs.find(t => t.active)
   if (activeTab) {
@@ -213,7 +213,7 @@ async function restoreTabsState(): Promise<void> {
     Tabs.activeId = activeTab.id
 
     // Update succession
-    if (Settings.reactive.activateAfterClosing !== 'none' && activeTab) {
+    if (Settings.state.activateAfterClosing !== 'none' && activeTab) {
       const target = findSuccessorTab(activeTab)
       if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
     }
@@ -753,8 +753,8 @@ export async function removeTabs(tabIds: ID[], silent?: boolean): Promise<void> 
     if (tab.invisible) hasInvisibleTab = true
 
     if (
-      (Settings.reactive.rmChildTabs === 'folded' && tab.folded) ||
-      Settings.reactive.rmChildTabs === 'all'
+      (Settings.state.rmChildTabs === 'folded' && tab.folded) ||
+      Settings.state.rmChildTabs === 'all'
     ) {
       for (let t, i = tab.index + 1; i < Tabs.list.length; i++) {
         t = Tabs.list[i]
@@ -767,8 +767,8 @@ export async function removeTabs(tabIds: ID[], silent?: boolean): Promise<void> 
 
   const count = Object.keys(tabsMap).length
   const warn =
-    Settings.reactive.warnOnMultiTabClose === 'any' ||
-    (hasInvisibleTab && Settings.reactive.warnOnMultiTabClose === 'collapsed')
+    Settings.state.warnOnMultiTabClose === 'any' ||
+    (hasInvisibleTab && Settings.state.warnOnMultiTabClose === 'collapsed')
   if (!silent && warn && count > 1) {
     const pre = translate('confirm.tabs_close_pre', count)
     const post = translate('confirm.tabs_close_post', count)
@@ -810,7 +810,7 @@ export async function removeTabs(tabIds: ID[], silent?: boolean): Promise<void> 
     }
   }
 
-  if (!silent && tabs.length > 1 && Settings.reactive.tabsRmUndoNote && !warn) {
+  if (!silent && tabs.length > 1 && Settings.state.tabsRmUndoNote && !warn) {
     const favicons: string[] = []
     for (const tab of tabs) {
       if (tab.favIconUrl) favicons.push(tab.favIconUrl)
@@ -948,9 +948,9 @@ export function switchTab(globaly: boolean, cycle: boolean, step: number, pinned
     switchTabPause = undefined
   }, 50)
 
-  const pinnedAndPanel = Settings.reactive.pinnedTabsPosition === 'panel' || (globaly && cycle)
-  const visibleOnly = Settings.reactive.scrollThroughVisibleTabs
-  const skipDiscarded = Settings.reactive.scrollThroughTabsSkipDiscarded
+  const pinnedAndPanel = Settings.state.pinnedTabsPosition === 'panel' || (globaly && cycle)
+  const visibleOnly = Settings.state.scrollThroughVisibleTabs
+  const skipDiscarded = Settings.state.scrollThroughTabsSkipDiscarded
 
   let activeTab = Tabs.byId[Tabs.activeId]
   if (!activeTab) activeTab = Tabs.list.find(t => t.active)
@@ -1014,7 +1014,7 @@ const RELOADING_QUEUE = [] as Tab[]
 const CHECK_INTERVAL = 300
 const MAX_CHECK_COUNT = 35
 export function reloadTabs(tabIds: ID[] = []): void {
-  if (!Settings.reactive.tabsReloadLimit || typeof Settings.reactive.tabsReloadLimit !== 'number') {
+  if (!Settings.state.tabsReloadLimit || typeof Settings.state.tabsReloadLimit !== 'number') {
     for (const id of tabIds) {
       const tab = Tabs.byId[id]
       if (tab) reloadTab(tab)
@@ -1053,14 +1053,14 @@ export function reloadTabs(tabIds: ID[] = []): void {
   }
 
   if (RELOADING_QUEUE.length > 0) {
-    const hm = tabs.splice(0, Settings.reactive.tabsReloadLimit)
+    const hm = tabs.splice(0, Settings.state.tabsReloadLimit)
     hm.forEach(tab => reloadTab(tab))
     RELOADING_QUEUE.push(...tabs)
     return
   }
 
   let progressNotification: Notification
-  if (Settings.reactive.tabsReloadLimitNotif && tabs.length > Settings.reactive.tabsReloadLimit) {
+  if (Settings.state.tabsReloadLimitNotif && tabs.length > Settings.state.tabsReloadLimit) {
     progressNotification = Notifications.progress({
       icon: '#icon_reload',
       title: translate('notif.tabs_reloading'),
@@ -1069,7 +1069,7 @@ export function reloadTabs(tabIds: ID[] = []): void {
     })
   }
 
-  const reloadingTabs = tabs.splice(0, Settings.reactive.tabsReloadLimit)
+  const reloadingTabs = tabs.splice(0, Settings.state.tabsReloadLimit)
   reloadingTabs.forEach(tab => reloadTab(tab))
 
   RELOADING_QUEUE.push(...tabs)
@@ -1084,7 +1084,7 @@ export function reloadTabs(tabIds: ID[] = []): void {
         return tab && tab.reloadingChecks++ <= MAX_CHECK_COUNT && tab.status === 'loading'
       })
 
-      for (let i = Settings.reactive.tabsReloadLimit - loading.length; i-- > 0; ) {
+      for (let i = Settings.state.tabsReloadLimit - loading.length; i-- > 0; ) {
         const nextTab = RELOADING_QUEUE.shift()
         if (!nextTab) break
         reloadingTabs.push(nextTab)
@@ -1235,7 +1235,7 @@ export function muteAudibleTabsOfPanel(id: ID): void {
   const panel = Sidebar.reactive.panelsById[id]
   if (!Utils.isTabsPanel(panel)) return
 
-  if (Settings.reactive.pinnedTabsPosition === 'panel') {
+  if (Settings.state.pinnedTabsPosition === 'panel') {
     for (const tab of Tabs.list) {
       if (!tab.pinned) break
       if (tab.audible && tab.panelId === panel.id) browser.tabs.update(tab.id, { muted: true })
@@ -1251,7 +1251,7 @@ export function unmuteAudibleTabsOfPanel(id: ID): void {
   const panel = Sidebar.reactive.panelsById[id]
   if (!Utils.isTabsPanel(panel)) return
 
-  if (Settings.reactive.pinnedTabsPosition === 'panel') {
+  if (Settings.state.pinnedTabsPosition === 'panel') {
     for (const tab of Tabs.list) {
       if (!tab.pinned) break
       if (tab.mutedInfo?.muted && tab.panelId === panel.id) {
@@ -1355,7 +1355,7 @@ export async function pauseTabsMediaOfPanel(id: ID): Promise<void> {
     allFrames: true,
   }
 
-  if (Settings.reactive.pinnedTabsPosition === 'panel') {
+  if (Settings.state.pinnedTabsPosition === 'panel') {
     for (const tab of Tabs.list) {
       if (!tab.pinned) break
       if (tab.audible && tab.panelId === panel.id) {
@@ -1413,7 +1413,7 @@ export async function playTabsMediaOfPanel(id: ID): Promise<void> {
     allFrames: true,
   }
 
-  if (Settings.reactive.pinnedTabsPosition === 'panel') {
+  if (Settings.state.pinnedTabsPosition === 'panel') {
     for (const tab of Tabs.list) {
       if (!tab.pinned) break
       if (tab.mediaPaused && tab.panelId === panel.id) {
@@ -1506,7 +1506,7 @@ export async function bookmarkTabs(tabIds: ID[]): Promise<void> {
     if (tab) tabs.push(tab)
   }
 
-  if (tabs.length === 1 && Settings.reactive.askNewBookmarkPlace) {
+  if (tabs.length === 1 && Settings.state.askNewBookmarkPlace) {
     const tab = tabs[0]
     const result = await Bookmarks.openBookmarksPopup({
       title: translate('popup.bookmarks.save_in_bookmarks'),
@@ -1545,7 +1545,7 @@ export async function bookmarkTabs(tabIds: ID[]): Promise<void> {
       })
     }
   } else {
-    if (Settings.reactive.askNewBookmarkPlace) {
+    if (Settings.state.askNewBookmarkPlace) {
       const result = await Bookmarks.openBookmarksPopup({
         title: translate('popup.bookmarks.save_in_bookmarks'),
         location: parentId,
@@ -1563,7 +1563,7 @@ export async function bookmarkTabs(tabIds: ID[]): Promise<void> {
   }
 
   // Show notification for silent bookmarks creation
-  if (!Settings.reactive.askNewBookmarkPlace) {
+  if (!Settings.state.askNewBookmarkPlace) {
     const parentName = Bookmarks.reactive.byId[parentId]?.title
     Notifications.notify({
       icon: '#icon_bookmarks',
@@ -1770,7 +1770,7 @@ export async function move(
     for (const tab of tabs) {
       tab.panelId = dst.panelId
     }
-    if (isActive && !dst.pinned && Settings.reactive.tabsPanelSwitchActMove) {
+    if (isActive && !dst.pinned && Settings.state.tabsPanelSwitchActMove) {
       Sidebar.activatePanel(dst.panelId)
     }
   }
@@ -1782,7 +1782,7 @@ export async function move(
   const parent = Tabs.byId[dst.parentId]
 
   // Update tabs tree
-  if (Settings.reactive.tabsTree) {
+  if (Settings.state.tabsTree) {
     // Set first tab parentId and other parameters
     tabs[0].parentId = dst.parentId
 
@@ -1805,7 +1805,7 @@ export async function move(
 
     updateTabsTree()
 
-    if (Settings.reactive.colorizeTabsBranches) {
+    if (Settings.state.colorizeTabsBranches) {
       for (const tab of tabs) {
         Tabs.setBranchColor(tab.id)
       }
@@ -1818,8 +1818,8 @@ export async function move(
   if (moving) await moving
 
   if (
-    Settings.reactive.hideFoldedTabs ||
-    (Settings.reactive.hideInact && dst.panelId !== src.panelId)
+    Settings.state.hideFoldedTabs ||
+    (Settings.state.hideInact && dst.panelId !== src.panelId)
   ) {
     Tabs.updateNativeTabsVisibility()
   }
@@ -1953,8 +1953,8 @@ export async function moveToNewPanel(tabIds: ID[]): Promise<void> {
  * Update tabs visibility
  */
 export function updateNativeTabsVisibility(): void {
-  const hideFolded = Settings.reactive.hideFoldedTabs
-  const hideInact = Settings.reactive.hideInact
+  const hideFolded = Settings.state.hideFoldedTabs
+  const hideInact = Settings.state.hideInact
 
   if (!browser.tabs.hide) return
 
@@ -1990,7 +1990,7 @@ export function updateNativeTabsVisibility(): void {
  * Recalc length of branch
  */
 export function recalcBranchLen(id: ID): void {
-  if (!Settings.reactive.tabsChildCount) return
+  if (!Settings.state.tabsChildCount) return
 
   const tab = Tabs.byId[id]
   if (!tab) return
@@ -2036,13 +2036,13 @@ export function foldTabsBranch(tabId: ID): void {
     if (target) browser.tabs.moveInSuccession([tab.id], target.id)
   }
 
-  if (Settings.reactive.discardFolded) {
-    if (Settings.reactive.discardFoldedDelay === 0) {
+  if (Settings.state.discardFolded) {
+    if (Settings.state.discardFoldedDelay === 0) {
       toHide.map(id => browser.tabs.discard(id))
     } else {
-      let delayMS = Settings.reactive.discardFoldedDelay
-      if (Settings.reactive.discardFoldedDelayUnit === 'sec') delayMS *= 1000
-      if (Settings.reactive.discardFoldedDelayUnit === 'min') delayMS *= 60000
+      let delayMS = Settings.state.discardFoldedDelay
+      if (Settings.state.discardFoldedDelayUnit === 'sec') delayMS *= 1000
+      if (Settings.state.discardFoldedDelayUnit === 'min') delayMS *= 60000
       setTimeout(() => {
         const stillValid = toHide.every(id => {
           return Tabs.reactive.byId[id] && Tabs.reactive.byId[id]?.invisible
@@ -2052,7 +2052,7 @@ export function foldTabsBranch(tabId: ID): void {
     }
   }
 
-  if (Settings.reactive.hideFoldedTabs && toHide.length) {
+  if (Settings.state.hideFoldedTabs && toHide.length) {
     browser.tabs.hide?.(toHide)
   }
 
@@ -2065,7 +2065,7 @@ export function foldTabsBranch(tabId: ID): void {
  * Show children of tab
  */
 export function expTabsBranch(tabId: ID): void {
-  const autoFoldTabs = Settings.reactive.autoFoldTabs
+  const autoFoldTabs = Settings.state.autoFoldTabs
   const toShow: ID[] = []
   const preserve: ID[] = []
   let autoFold: Tab[] = []
@@ -2097,7 +2097,7 @@ export function expTabsBranch(tabId: ID): void {
   }
 
   // Auto fold
-  if (Settings.reactive.autoFoldTabs) {
+  if (Settings.state.autoFoldTabs) {
     autoFold.sort((a, b) => {
       let aMax = a.lastAccessed
       let bMax = b.lastAccessed
@@ -2106,8 +2106,8 @@ export function expTabsBranch(tabId: ID): void {
       return aMax - bMax
     })
 
-    if (Settings.reactive.autoFoldTabsExcept > 0) {
-      autoFold = autoFold.slice(0, -Settings.reactive.autoFoldTabsExcept)
+    if (Settings.state.autoFoldTabsExcept > 0) {
+      autoFold = autoFold.slice(0, -Settings.state.autoFoldTabsExcept)
     }
     for (const t of autoFold) {
       foldTabsBranch(t.id)
@@ -2120,7 +2120,7 @@ export function expTabsBranch(tabId: ID): void {
     if (target) browser.tabs.moveInSuccession([tab.id], target.id)
   }
 
-  if (Settings.reactive.hideFoldedTabs && toShow.length) {
+  if (Settings.state.hideFoldedTabs && toShow.length) {
     browser.tabs.show?.(toShow)
   }
 
@@ -2132,7 +2132,7 @@ export function expTabsBranch(tabId: ID): void {
  * Toggle tabs branch visability (fold/expand)
  */
 export function toggleBranch(tabId?: ID): void {
-  if (!Settings.reactive.tabsTree) return
+  if (!Settings.state.tabsTree) return
   if (tabId === undefined) return
 
   let tab = Tabs.byId[tabId]
@@ -2167,7 +2167,7 @@ export function foldAllInactiveBranches(tabs: Tab[] = []): void {
 }
 
 export function activateParent(tabId?: ID): void {
-  if (!Settings.reactive.tabsTree) return
+  if (!Settings.state.tabsTree) return
   if (tabId === undefined) tabId = Tabs.activeId
   const tab = Tabs.byId[tabId]
   if (tab && Tabs.byId[tab.parentId]) browser.tabs.update(tab.parentId, { active: true })
@@ -2301,12 +2301,12 @@ export function updateTabsTreeDebounced(startIndex = 0, endIndex = -1, delay = 1
  */
 export function updateTabsTree(startIndex = 0, endIndex = -1): void {
   Logs.info(`Tabs.updateTabsTree: ${startIndex} - ${endIndex}`)
-  if (!Settings.reactive.tabsTree) return
+  if (!Settings.state.tabsTree) return
   if (!Tabs.list || !Tabs.list.length) return
   if (startIndex < 0) startIndex = 0
   if (endIndex === -1) endIndex = Tabs.list.length
   const maxLvl =
-    typeof Settings.reactive.tabsTreeLimit === 'number' ? Settings.reactive.tabsTreeLimit : 123
+    typeof Settings.state.tabsTreeLimit === 'number' ? Settings.state.tabsTreeLimit : 123
 
   // Reset parent-flags of the last tab
   if (Tabs.list[endIndex - 1]) {
@@ -2509,7 +2509,7 @@ export function getPanelForNewTab(tab: Tab): TabsPanel | undefined {
 
   // Find panel for tab opened from pinned tab
   if (parentTab && parentTab.pinned) {
-    if (Settings.reactive.moveNewTabPin === 'start' || Settings.reactive.moveNewTabPin === 'end') {
+    if (Settings.state.moveNewTabPin === 'start' || Settings.state.moveNewTabPin === 'end') {
       return activePanel || findTabsPanelNearToTabIndex(tab.index)
     }
   }
@@ -2517,20 +2517,20 @@ export function getPanelForNewTab(tab: Tab): TabsPanel | undefined {
   // Find panel for tab opened from another tab
   if (parentTab && !parentTab.pinned) {
     const panelOfParent = Sidebar.reactive.panelsById[parentTab.panelId] as TabsPanel
-    if (!Settings.reactive.moveNewTabParentActPanel || panelOfParent === activePanel) {
+    if (!Settings.state.moveNewTabParentActPanel || panelOfParent === activePanel) {
       return panelOfParent
     }
   }
 
   // Find panel in other cases
-  if (Settings.reactive.moveNewTab === 'start' || Settings.reactive.moveNewTab === 'end') {
+  if (Settings.state.moveNewTab === 'start' || Settings.state.moveNewTab === 'end') {
     return activePanel || findTabsPanelNearToTabIndex(tab.index)
   }
   if (
-    Settings.reactive.moveNewTab === 'before' ||
-    Settings.reactive.moveNewTab === 'after' ||
-    Settings.reactive.moveNewTab === 'first_child' ||
-    Settings.reactive.moveNewTab === 'last_child'
+    Settings.state.moveNewTab === 'before' ||
+    Settings.state.moveNewTab === 'after' ||
+    Settings.state.moveNewTab === 'first_child' ||
+    Settings.state.moveNewTab === 'last_child'
   ) {
     const activeTab = Tabs.byId[Tabs.activeId]
     const panelOfActiveTab = Sidebar.reactive.panelsById[activeTab?.panelId ?? NOID] as TabsPanel
@@ -2553,20 +2553,20 @@ export function getIndexForNewTab(panel: TabsPanel, tab: Tab): number {
 
   // Place new tab opened from pinned tab
   if (parent && parent.pinned) {
-    if (Settings.reactive.moveNewTabPin === 'start') return startIndex
-    if (Settings.reactive.moveNewTabPin === 'end') return nextIndex
+    if (Settings.state.moveNewTabPin === 'start') return startIndex
+    if (Settings.state.moveNewTabPin === 'end') return nextIndex
   }
 
   // Place new tab opened from another tab
   if (parent && !parent.pinned && parent.panelId === panel.id) {
-    if (Settings.reactive.moveNewTabParent === 'before' && !tab.autoGroupped) return parent.index
-    if (Settings.reactive.moveNewTabParent === 'first_child') return parent.index + 1
+    if (Settings.state.moveNewTabParent === 'before' && !tab.autoGroupped) return parent.index
+    if (Settings.state.moveNewTabParent === 'first_child') return parent.index + 1
     if (
-      Settings.reactive.moveNewTabParent === 'sibling' ||
-      Settings.reactive.moveNewTabParent === 'last_child' ||
+      Settings.state.moveNewTabParent === 'sibling' ||
+      Settings.state.moveNewTabParent === 'last_child' ||
       tab.autoGroupped
     ) {
-      if (Settings.reactive.tabsTree) {
+      if (Settings.state.tabsTree) {
         // Use levels to find the end of branch
         let t
         let index = parent.index + 1
@@ -2587,20 +2587,20 @@ export function getIndexForNewTab(panel: TabsPanel, tab: Tab): number {
         return index
       }
     }
-    if (Settings.reactive.moveNewTabParent === 'start' && !tab.autoGroupped) return startIndex
-    if (Settings.reactive.moveNewTabParent === 'end' && !tab.autoGroupped) return nextIndex
-    if (Settings.reactive.moveNewTabParent === 'default' && !tab.autoGroupped) return tab.index
+    if (Settings.state.moveNewTabParent === 'start' && !tab.autoGroupped) return startIndex
+    if (Settings.state.moveNewTabParent === 'end' && !tab.autoGroupped) return nextIndex
+    if (Settings.state.moveNewTabParent === 'default' && !tab.autoGroupped) return tab.index
   }
 
   // Place new tab (for the other cases)
-  if (Settings.reactive.moveNewTab === 'start') return startIndex
-  if (Settings.reactive.moveNewTab === 'end') return nextIndex
-  if (Settings.reactive.moveNewTab === 'before') {
+  if (Settings.state.moveNewTab === 'start') return startIndex
+  if (Settings.state.moveNewTab === 'end') return nextIndex
+  if (Settings.state.moveNewTab === 'before') {
     if (!activeTab || activeTab.panelId !== panel.id) return nextIndex
     else if (activeTab.pinned) return startIndex
     else return activeTab.index
   }
-  if (Settings.reactive.moveNewTab === 'after') {
+  if (Settings.state.moveNewTab === 'after') {
     if (!activeTab || activeTab.panelId !== panel.id) {
       return nextIndex
     } else if (activeTab.pinned) {
@@ -2614,7 +2614,7 @@ export function getIndexForNewTab(panel: TabsPanel, tab: Tab): number {
       return index
     }
   }
-  if (Settings.reactive.moveNewTab === 'first_child') {
+  if (Settings.state.moveNewTab === 'first_child') {
     if (!activeTab || activeTab.panelId !== panel.id) {
       return nextIndex
     } else if (activeTab.pinned) {
@@ -2623,7 +2623,7 @@ export function getIndexForNewTab(panel: TabsPanel, tab: Tab): number {
       return activeTab.index + 1
     }
   }
-  if (Settings.reactive.moveNewTab === 'last_child') {
+  if (Settings.state.moveNewTab === 'last_child') {
     if (!activeTab || activeTab.panelId !== panel.id) {
       return nextIndex
     } else if (activeTab.pinned) {
@@ -2660,24 +2660,24 @@ export function getParentForNewTab(panel: Panel, openerTabId?: ID): ID | undefin
 
   // Place new tab opened from another tab
   if (parent && !parent.pinned && parent.panelId === panel.id) {
-    if (Settings.reactive.moveNewTabParent === 'before') return parent.parentId
-    if (Settings.reactive.moveNewTabParent === 'sibling') return parent.parentId
-    if (Settings.reactive.moveNewTabParent === 'first_child') return openerTabId
-    if (Settings.reactive.moveNewTabParent === 'last_child') return openerTabId
-    if (Settings.reactive.moveNewTabParent === 'start') return
-    if (Settings.reactive.moveNewTabParent === 'end') return
-    if (Settings.reactive.moveNewTabParent === 'default') return openerTabId
-    if (Settings.reactive.moveNewTabParent === 'none') return openerTabId
+    if (Settings.state.moveNewTabParent === 'before') return parent.parentId
+    if (Settings.state.moveNewTabParent === 'sibling') return parent.parentId
+    if (Settings.state.moveNewTabParent === 'first_child') return openerTabId
+    if (Settings.state.moveNewTabParent === 'last_child') return openerTabId
+    if (Settings.state.moveNewTabParent === 'start') return
+    if (Settings.state.moveNewTabParent === 'end') return
+    if (Settings.state.moveNewTabParent === 'default') return openerTabId
+    if (Settings.state.moveNewTabParent === 'none') return openerTabId
   }
 
   // Place new tab (for the other cases)
-  if (Settings.reactive.moveNewTab === 'start') return
-  if (Settings.reactive.moveNewTab === 'end') return
+  if (Settings.state.moveNewTab === 'start') return
+  if (Settings.state.moveNewTab === 'end') return
   if (activeTab && activeTab.panelId === panel.id && !activeTab.pinned) {
-    if (Settings.reactive.moveNewTab === 'before') return activeTab.parentId
-    else if (Settings.reactive.moveNewTab === 'after') return activeTab.parentId
-    else if (Settings.reactive.moveNewTab === 'first_child') return activeTab.id
-    else if (Settings.reactive.moveNewTab === 'last_child') return activeTab.id
+    if (Settings.state.moveNewTab === 'before') return activeTab.parentId
+    else if (Settings.state.moveNewTab === 'after') return activeTab.parentId
+    else if (Settings.state.moveNewTab === 'first_child') return activeTab.id
+    else if (Settings.state.moveNewTab === 'last_child') return activeTab.id
   }
 
   return openerTabId
@@ -2777,17 +2777,17 @@ const enum SuccessorSearchMode {
  */
 export function findSuccessorTab(tab: Tab, exclude?: ID[]): Tab | undefined {
   let target
-  const rmFolded = Settings.reactive.rmChildTabs === 'folded'
-  const rmChild = Settings.reactive.rmChildTabs === 'all'
-  const skipFolded = Settings.reactive.activateAfterClosingNoFolded
-  const skipDiscarded = Settings.reactive.activateAfterClosingNoDiscarded
-  const dirNext = Settings.reactive.activateAfterClosing === 'next'
-  const dirPrev = Settings.reactive.activateAfterClosing === 'prev'
+  const rmFolded = Settings.state.rmChildTabs === 'folded'
+  const rmChild = Settings.state.rmChildTabs === 'all'
+  const skipFolded = Settings.state.activateAfterClosingNoFolded
+  const skipDiscarded = Settings.state.activateAfterClosingNoDiscarded
+  const dirNext = Settings.state.activateAfterClosing === 'next'
+  const dirPrev = Settings.state.activateAfterClosing === 'prev'
 
   if (Tabs.removingTabs && !exclude) exclude = Tabs.removingTabs
 
   if (tab.pinned && (dirNext || dirPrev)) {
-    const pinInPanels = Settings.reactive.pinnedTabsPosition === 'panel'
+    const pinInPanels = Settings.state.pinnedTabsPosition === 'panel'
     const dirDir = dirNext ? 1 : -1
     const opDir = dirDir * -1
     if (Tabs.byId[tab.relGroupId]) target = Tabs.byId[tab.relGroupId]
@@ -2921,9 +2921,9 @@ export function findSuccessorTab(tab: Tab, exclude?: ID[]): Tab | undefined {
   }
 
   // Previously active tab
-  if (Settings.reactive.activateAfterClosing === 'prev_act') {
+  if (Settings.state.activateAfterClosing === 'prev_act') {
     let history: ActiveTabsHistory
-    if (Settings.reactive.activateAfterClosingGlobal) history = Tabs.activeTabsGlobal
+    if (Settings.state.activateAfterClosingGlobal) history = Tabs.activeTabsGlobal
     else history = Tabs.activeTabsPerPanel[tab.panelId] || Tabs.activeTabsGlobal
 
     if (!history || !history.actTabs) return
@@ -2985,7 +2985,7 @@ export function writeActiveTabsHistory(prevTab: Tab, activeTab: Tab): void {
   g.actTabs.push(prevTab.id)
 
   // Panel
-  if (!prevTab.pinned || Settings.reactive.pinnedTabsPosition === 'panel') {
+  if (!prevTab.pinned || Settings.state.pinnedTabsPosition === 'panel') {
     if (p.actTabOffset >= 0 && p.actTabOffset < p.actTabs.length && samePanel) {
       p.actTabs = p.actTabs.slice(0, p.actTabOffset)
       p.actTabOffset = -1
@@ -3127,7 +3127,7 @@ export async function reopen(tabsInfo: ItemInfo[], dst: DstPlaceInfo): Promise<v
   const ids = tabsInfo.map(ti => ti.id)
   if (dst.windowId !== undefined && dst.windowId !== Windows.id && ids.includes(Tabs.activeId)) {
     const activeTab = Tabs.byId[Tabs.activeId]
-    if (Settings.reactive.activateAfterClosing !== 'none' && activeTab) {
+    if (Settings.state.activateAfterClosing !== 'none' && activeTab) {
       const target = findSuccessorTab(activeTab, ids)
       if (target && target.id !== activeTab.successorTabId) {
         browser.tabs.moveInSuccession([activeTab.id], target.id)
@@ -3239,11 +3239,11 @@ export async function open(
     }
 
     if (!item.url && !item.title) continue
-    if (!Settings.reactive.tabsTree && groupCreationNeeded) continue
+    if (!Settings.state.tabsTree && groupCreationNeeded) continue
     if (!Sidebar.hasTabs && groupCreationNeeded) continue
     if (dst.pinned && groupCreationNeeded) continue
     // Temporarily ignore groups with tree limit, I fix this later, ...yep
-    if (Settings.reactive.tabsTreeLimit > 0 && groupCreationNeeded) continue
+    if (Settings.state.tabsTreeLimit > 0 && groupCreationNeeded) continue
 
     const conf: browser.tabs.CreateProperties = {
       index: index,
@@ -3490,7 +3490,7 @@ export function colorizeTab(tabId: ID): void {
   if (!rTab) return
 
   let srcStr, color
-  if (Settings.reactive.colorizeTabsSrc === 'domain') {
+  if (Settings.state.colorizeTabsSrc === 'domain') {
     srcStr = Utils.getDomainOf(tab.url)
     color = Utils.colorFromString(srcStr, 60)
   } else {
@@ -3519,7 +3519,7 @@ export function colorizeBranch(rootId: ID): void {
   if (!rRootTab) return
 
   let srcStr
-  if (Settings.reactive.colorizeTabsBranchesSrc === 'url') {
+  if (Settings.state.colorizeTabsBranchesSrc === 'url') {
     srcStr = rootTab.url
   } else {
     srcStr = Utils.getDomainOf(rootTab.url)
