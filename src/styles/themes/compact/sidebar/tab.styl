@@ -281,26 +281,9 @@
   opacity: 1
   z-index: 10
 
-  // Unread tab mark
-  &:after
-    content: ''
-    position: absolute
-    display: none
-    left: -2px
-    bottom: -2px
-    width: 0
-    height: 0
-    border-top: 2px solid transparent
-    border-right: 2px solid transparent
-    border-left: 2px solid var(--frame-fg)
-    border-bottom: 2px solid var(--frame-fg)
-
 .Tab[data-pin="false"] .fav
   margin: 0 3px 0 5px
   z-index: 20
-
-.Tab[data-unread="true"] .fav:after
-  display: block
 
 .Tab .fav-icon
   position: absolute
@@ -576,6 +559,28 @@
 
 .Tab:hover .close
   opacity: 1
+
+// ---
+// -- Unread mark
+// -
+.Tab .unread-mark
+  position: absolute
+  left: 0
+  bottom: 0
+  width: 5px
+  height: 5px
+  border-bottom-left-radius: calc(var(--tabs-border-radius) - 1px)
+  overflow: hidden
+  &:before
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    width: 13px
+    height: 10px
+    transform: rotateZ(45deg)
+    transform-origin: 0 0
+    background-color: var(--frame-fg)
 
 // ---
 // -- Vue transitions

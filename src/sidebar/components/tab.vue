@@ -54,6 +54,7 @@
       svg: use(xlink:href="#icon_remove")
     .ctx(v-if="containerColor")
     .t-box(v-if="withTitle"): .title {{tab.title}}
+    .unread-mark(v-if="tab.unread")
 </template>
 
 <script lang="ts" setup>
