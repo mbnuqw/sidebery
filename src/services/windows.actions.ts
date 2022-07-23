@@ -42,8 +42,6 @@ export async function loadWindowInfo(): Promise<void> {
       return w.id !== Windows.id && w.type === 'normal'
     }) as Window[]
   })
-
-  Logs.info('Windows info loaded')
 }
 
 export async function showWindowsPopup(config: WindowChoosingDetails = {}): Promise<ID> {

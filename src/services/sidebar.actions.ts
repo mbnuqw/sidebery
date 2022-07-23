@@ -521,7 +521,6 @@ export async function loadPanels(): Promise<void> {
   }
 
   Sidebar.ready = true
-  Logs.info('Panels loaded')
 }
 
 export function convertOldPanelsConfigToNew(panels_v4: OldPanelConfig[]): SidebarConfig {
@@ -681,14 +680,12 @@ function createPanelConfigFromPanel(srcPanel: Panel): PanelConfig {
 
 function updateSidebarInBg(newConfig?: SidebarConfig | null): void {
   if (!newConfig) return
-  Logs.info('Sidebar.updateSidebarInBg')
   parseNav(newConfig)
 
   // TODO: Load/Unload services like History?
 }
 
 function updateSidebarInSetup(newConfig?: SidebarConfig | null): void {
-  Logs.info('Sidebar.updateSidebarInSetup')
   if (!newConfig?.nav?.length) newConfig = createDefaultSidebar()
 
   const sidebar = newConfig
@@ -720,8 +717,6 @@ function updateSidebarInSetup(newConfig?: SidebarConfig | null): void {
 async function updateSidebar(newConfig?: SidebarConfig): Promise<void> {
   if (!newConfig) return
   if (!Sidebar.ready) return
-
-  Logs.info('Sidebar.updateSidebar', Utils.cloneObject(newConfig))
 
   const panelConfigs = Object.values(newConfig.panels)
   const newPanelsMap: Record<ID, Panel> = {}

@@ -317,8 +317,6 @@ export async function scheduleSnapshots(): Promise<void> {
   if (nextInterval < MIN_SNAP_INTERVAL) nextInterval = MIN_SNAP_INTERVAL
 
   scheduleNextSnapshot(nextInterval)
-
-  Logs.info('Auto snapshots scheduled')
 }
 
 let scheduleTimeout: number | undefined
@@ -351,8 +349,6 @@ async function getLastSnapTimeElapsed(): Promise<number> {
 }
 
 async function adaptContainers(snapshot: NormalizedSnapshot): Promise<void> {
-  Logs.info('Snapshots.adaptContainers')
-
   const currentContainers = Object.values(Containers.reactive.byId)
   const oldNewIds: Record<string, string> = {}
 
@@ -397,8 +393,6 @@ async function adaptContainers(snapshot: NormalizedSnapshot): Promise<void> {
 }
 
 async function adaptTabsPanels(snapshot: NormalizedSnapshot): Promise<void> {
-  Logs.info('Snapshots.adaptTabsPanels')
-
   const stored = await browser.storage.local.get<Stored>('sidebar')
   if (!stored.sidebar) return
 
@@ -463,8 +457,6 @@ async function adaptTabsPanels(snapshot: NormalizedSnapshot): Promise<void> {
  * Open windows (all or by index) of snapshot
  */
 export async function openWindows(snapshot: NormalizedSnapshot, winIndex?: number): Promise<void> {
-  Logs.info('Snapshots.openWindows')
-
   // Adapt containers
   await adaptContainers(snapshot)
 
@@ -485,7 +477,6 @@ export async function openWindows(snapshot: NormalizedSnapshot, winIndex?: numbe
  * Open window of snapshot
  */
 async function openWindow(snapshot: NormalizedSnapshot, winIndex: number): Promise<void> {
-  Logs.info('Snapshots.openWindow')
   const winTabs = snapshot.tabs[winIndex]
 
   // Create tabs info

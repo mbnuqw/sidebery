@@ -21,7 +21,6 @@ import { translate } from 'src/dict'
 
 void (async function main() {
   Info.setInstanceType(InstanceType.bg)
-  Logs.info('Initialization start')
 
   // Register globaly available actions
   IPC.registerActions({

@@ -6,7 +6,7 @@ import { Logs } from 'src/services/logs'
 import { IPC } from 'src/services/ipc'
 
 void (async () => {
-  if (window.sideberyUrlPageInjected) return Logs.info('Already initialized')
+  if (window.sideberyUrlPageInjected) return
   window.sideberyUrlPageInjected = true
 
   Info.setInstanceType(InstanceType.url)

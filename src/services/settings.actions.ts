@@ -33,8 +33,6 @@ export async function loadSettings(): Promise<void> {
     Settings.state.activateLastTabOnPanelSwitching = true
     Settings.state.tabsPanelSwitchActMove = true
   }
-
-  Logs.info('Settings: Loaded')
 }
 
 export async function saveSettings(): Promise<void> {
@@ -92,8 +90,6 @@ export function updateSettingsBg(settings?: SettingsState | null): void {
 
 export function updateSettingsFg(settings?: SettingsState | null): void {
   if (!settings) return
-
-  Logs.info('Settings: Update settings')
 
   const prev = Settings.state
   const next = settings

@@ -49,7 +49,6 @@ let waitForOtherReopenedTabsBuffer: Tab[] | null = null
 let waitForOtherReopenedTabsCheckLen = 0
 let waitForOtherReopenedTabsBufferRelease = false
 function waitForOtherReopenedTabs(tab: Tab): void {
-  Logs.info('Tabs.waitForOtherReopenedTabs: Bufferizing')
   if (!waitForOtherReopenedTabsBuffer) waitForOtherReopenedTabsBuffer = []
   waitForOtherReopenedTabsBuffer.push(tab)
   waitForOtherReopenedTabsCheckLen++
@@ -70,12 +69,10 @@ function waitForOtherReopenedTabs(tab: Tab): void {
   // the browser.sessions.getTabValue getting too slow.
   clearTimeout(waitForOtherReopenedTabsTimeout)
   waitForOtherReopenedTabsTimeout = setTimeout(() => {
-    Logs.info('Tabs.waitForOtherReopenedTabs: Time out: len:', waitForOtherReopenedTabsCheckLen)
     releaseReopenedTabsBuffer()
   }, 80)
 }
 function releaseReopenedTabsBuffer(): void {
-  Logs.info('Tabs.releaseReopenedTabsBuffer', waitForOtherReopenedTabsBuffer?.length)
   if (!waitForOtherReopenedTabsBuffer) return
   waitForOtherReopenedTabsBufferRelease = true
   waitForOtherReopenedTabsBuffer.sort((a, b) => a.index - b.index)
@@ -349,10 +346,6 @@ function onTabCreated(tab: Tab): void {
   if (Settings.state.hideInact && panel.id !== Sidebar.reactive.activePanelId) {
     browser.tabs.hide?.(tab.id)
   }
-
-  Logs.info(
-    `Tab created: n${tab.index} #${tab.id} panelId:${tab.panelId} lvl:${tab.lvl} parentId:${tab.parentId}`
-  )
 }
 
 /**
@@ -846,8 +839,6 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, ignoreChildren?:
       /** itsokay **/
     })
   }
-
-  Logs.info(`Tab removed: n${tab.index} #${tab.id} p-${tab.panelId}`)
 }
 
 /**
@@ -877,8 +868,6 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
     Selection.resetSelection()
   }
 
-  Logs.info(`Tab moving: #${id} ${info.fromIndex} > ${info.toIndex}`)
-
   // Check if target tab already placed
   let toIndex = info.toIndex
   if (info.toIndex > info.fromIndex) toIndex = toIndex - mvLen
@@ -892,7 +881,6 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
       const target = Tabs.findSuccessorTab(tab)
       if (target) browser.tabs.moveInSuccession([tab.id], target.id)
     }
-    Logs.info(`Tab moved: #${id} ${info.fromIndex} > ${info.toIndex} (predefined)`)
     return
   }
 
@@ -966,10 +954,6 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
       if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
     }
   }
-
-  Logs.info(
-    `Tab moved: #${id} ${info.fromIndex} > ${info.toIndex} panelId:${movedTab.panelId} lvl:${movedTab.lvl} parentId:${movedTab.parentId}`
-  )
 }
 
 /**
@@ -1076,10 +1060,7 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
 
   // Switch to activated tab's panel
   const activePanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
-  if (
-    (!tab.pinned || Settings.state.pinnedTabsPosition === 'panel') &&
-    !activePanel?.lockedPanel
-  ) {
+  if ((!tab.pinned || Settings.state.pinnedTabsPosition === 'panel') && !activePanel?.lockedPanel) {
     Sidebar.activatePanel(panel.id)
   }
   if ((!prevActive || prevActive.panelId !== tab.panelId) && Settings.state.hideInact) {

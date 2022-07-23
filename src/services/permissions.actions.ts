@@ -150,7 +150,6 @@ function onRemovedAllUrlsBg(): void {
   }
 
   if (saveNeeded) {
-    Logs.info('"AllUrls" permission removed. Updating containers config...')
     Store.set({ containers: Utils.cloneObject(Containers.reactive.byId) })
   }
 }
@@ -187,7 +186,6 @@ function onRemovedTabHideBg(): void {
   }
 
   if (saveNeeded) {
-    Logs.info('No "TabHide" permission, updating settings...')
     Settings.saveSettings()
   }
 }

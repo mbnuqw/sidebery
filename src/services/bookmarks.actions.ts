@@ -76,8 +76,6 @@ async function loadInFg(): Promise<void> {
   if (DnD.reactive.isStarted && Utils.isBookmarksPanel(activePanel)) {
     Sidebar.updateBounds()
   }
-
-  Logs.info('Bookmarks: Loaded')
 }
 
 export async function restoreTree(): Promise<void> {
@@ -1372,7 +1370,7 @@ export async function openAsTabsPanel(node: Bookmark): Promise<void> {
 
   if (!panelConfig) {
     const result = await Sidebar.startFastEditingOfPanel(tabsPanel.id, true)
-    if (!result) return Logs.info('Bookmarks: Panel creation canceled')
+    if (!result) return
   }
 
   if (isFirstTabsPanel) await Tabs.load()

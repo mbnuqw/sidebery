@@ -49,7 +49,6 @@ async function main(): Promise<void> {
   app.mount('#root_container')
 
   if (Info.isMajorUpgrade()) {
-    Logs.info('Upgrade needed')
     Sidebar.upgrade()
     return
   }

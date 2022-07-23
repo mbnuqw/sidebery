@@ -60,8 +60,6 @@ export async function load(): Promise<void> {
       Menu.parseContainersRules()
     }
   }
-
-  Logs.info('Containers: Loaded')
 }
 
 export async function saveContainers(delay?: number): Promise<void> {

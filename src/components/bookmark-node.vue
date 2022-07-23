@@ -212,7 +212,7 @@ async function onMouseUp(e: MouseEvent): Promise<void> {
           await convertCurrentPanelToTabsPanel(actPanel)
           return
         } catch (err) {
-          Logs.info('BookmarkNode.onMouseUp: cannot convertCurrentPanelToTabsPanel', err)
+          Logs.err('BookmarkNode.onMouseUp: cannot convertCurrentPanelToTabsPanel', err)
         }
       }
 

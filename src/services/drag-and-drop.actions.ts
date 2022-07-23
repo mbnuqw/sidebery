@@ -21,8 +21,6 @@ export function start(info: DragInfo, dstType?: DropType): void {
   if (info.windowId === undefined) info.windowId = Windows.id
   if (info.panelId === undefined) info.panelId = Sidebar.reactive.activePanelId
 
-  Logs.info('DnD.start')
-
   if (
     (info.type === DragType.Tabs || info.type === DragType.TabsPanel) &&
     info.windowId === Windows.id &&
@@ -101,8 +99,6 @@ function updateTooltip(info: DragInfo): void {
 }
 
 export function reset(): void {
-  Logs.info('DnD.reset')
-
   DnD.srcType = DragType.Nothing
   DnD.isExternal = false
   DnD.items = []
@@ -285,28 +281,6 @@ function isContainerChanged(): boolean {
     if (item.container !== destContainer) return true
   }
   return false
-}
-
-function dbgState(msg = 'Drag and Drop state'): void {
-  // b/c console.table is meh...
-  const h = ['-', 'TYPE', 'WIN', 'PANEL', 'PIN', 'INDEX', 'PARENT']
-  const s = ['SRC:', DnD.srcType, DnD.srcWinId, DnD.srcPanelId, DnD.srcPin].map(String)
-  const d = [
-    'DST:',
-    DnD.reactive.dstType,
-    Windows.id,
-    DnD.reactive.dstPanelId,
-    DnD.reactive.dstPin,
-    DnD.reactive.dstIndex,
-    DnD.reactive.dstParentId,
-  ].map(String)
-  h.map((t, i) => Math.max(t.length, s[i]?.length || 0, d[i]?.length || 0)).forEach((l, i) => {
-    if (h[i]) h[i] = h[i].padEnd(l)
-    if (s[i]) s[i] = s[i].padEnd(l)
-    if (d[i]) d[i] = d[i].padEnd(l)
-  })
-
-  console.log(`${msg}\n${h.join('  ')}\n${s.join('  ')}\n${d.join('  ')}`)
 }
 
 export function onDragEnter(e: DragEvent): void {
@@ -833,8 +807,6 @@ export async function onDrop(e: DragEvent): Promise<void> {
     applyLvlOffset(DnD.reactive.pointerLvl)
   }
 
-  dbgState('Sidebar.onDrop()')
-
   // To new tabs panel
   let tabsPanelsSaveNeeded = false
   if (DnD.reactive.dstPanelId === 'add' && (fromTabs || fromBookmarks)) {
@@ -937,8 +909,6 @@ export function resetOther(): void {
 let droppedRecentlyTimeout: number | undefined
 
 export async function onDragEnd(e: DragEvent): Promise<void> {
-  Logs.info('DnD.onDragEnd')
-
   DnD.resetOther()
   if (DnD.reactive.isStarted) DnD.reset()
 

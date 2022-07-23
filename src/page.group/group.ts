@@ -62,7 +62,7 @@ function waitDOM(): Promise<void> {
 }
 
 async function main() {
-  if (window.sideberyGroupPageInjected) return Logs.info('Already initialized')
+  if (window.sideberyGroupPageInjected) return
   window.sideberyGroupPageInjected = true
 
   Info.setInstanceType(InstanceType.group)

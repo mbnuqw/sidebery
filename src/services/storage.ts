@@ -91,7 +91,6 @@ let writingTimeout: number | undefined
 let storageBuf: Stored = {}
 async function _set(newValues: Stored): Promise<void> {
   for (const key of Object.keys(newValues) as [keyof Stored]) {
-    Logs.info(`Store: storing: ${key}`)
     blockChangeHandling(key)
   }
   return browser.storage.local.set<Stored>(newValues)
@@ -148,7 +147,6 @@ function unregisterAllRemote(type: InstanceType, winId: ID): void {
 }
 
 export async function sync(name: string, value: Stored): Promise<void> {
-  Logs.info('Store: Sync:', name, value)
   const keys = Object.keys(value)
   const profileId = await Info.getProfileId()
   const syncPropName = profileId + '::' + name

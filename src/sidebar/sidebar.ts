@@ -41,7 +41,6 @@ async function main(): Promise<void> {
   Search.reactive = reactive(Search.reactive)
   Styles.reactive = reactive(Styles.reactive)
 
-  Logs.info('Initialization start')
   IPC.registerActions({
     reloadTab: Tabs.reloadTab,
     queryTab: Tabs.queryTab,
@@ -90,7 +89,6 @@ async function main(): Promise<void> {
   }
 
   if (Info.isMajorUpgrade()) {
-    Logs.info('Upgrade needed')
     await Sidebar.upgrade()
     return
   }

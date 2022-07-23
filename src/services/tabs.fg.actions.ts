@@ -56,11 +56,8 @@ export function getStatus(tab: Tab): TabStatus {
 }
 
 export async function load(): Promise<void> {
-  Logs.info('Tabs.load')
-
   if (Tabs.shadowMode) Tabs.unloadShadowed()
 
-  Logs.info('Tabs.load: Setup listeners')
   Tabs.setupTabsListeners()
 
   await Utils.retry({
@@ -80,11 +77,9 @@ export async function load(): Promise<void> {
   Tabs.updateActiveGroupPage()
 
   // Scroll to active tab
-  Logs.info('Tabs.load: Scroll to active tab')
   const activeTab = Tabs.reactive.byId[Tabs.activeId]
   if (activeTab && !activeTab.pinned) Tabs.scrollToTab(activeTab.id)
 
-  Logs.info('Tabs.load: Save tabs and cache')
   Tabs.updateNativeTabsVisibility()
   Tabs.cacheTabsData()
   Tabs.list.forEach(t => {
@@ -101,8 +96,6 @@ export async function load(): Promise<void> {
 
   if (Settings.state.colorizeTabs) Tabs.colorizeTabs()
   if (Settings.state.colorizeTabsBranches) Tabs.colorizeBranches()
-
-  Logs.info('Tabs: Loaded')
 }
 
 export function unload(): void {
@@ -143,8 +136,6 @@ export function unload(): void {
 async function restoreTabsState(): Promise<void> {
   if (!Sidebar.hasTabs) return
 
-  Logs.info('Tabs.restoreTabsState')
-
   const windowId = browser.windows.WINDOW_ID_CURRENT
   const isWindowTabsLockedRequest = IPC.bg('isWindowTabsLocked', Windows.id)
   const waitGroup = await Promise.all([
@@ -174,7 +165,6 @@ async function restoreTabsState(): Promise<void> {
 
   // Check prev cache
   if (!tabsCache) {
-    Logs.info('Tabs.restoreTabsState: No cache - try to get prev cache')
     const { prevTabsDataCache } = await browser.storage.local.get<Stored>('prevTabsDataCache')
     if (prevTabsDataCache) tabsCache = findCachedData(tabs, prevTabsDataCache)
   }
@@ -228,8 +218,6 @@ async function restoreTabsState(): Promise<void> {
 }
 
 function restoreTabsFromCache(tabs: Tab[], cache: Record<ID, TabCache>, lastPanel: Panel): void {
-  Logs.info('Tabs.restoreTabsFromCache')
-
   let logWrongPanels: Record<string, null> | undefined
   const firstPanelId = lastPanel.id
   const idsMap: Record<ID, ID> = {}
@@ -288,8 +276,6 @@ function restoreTabsFromSessionData(
   tabsData: TabSessionData[],
   lastPanel: Panel
 ): void {
-  Logs.info('Tabs.restoreTabsFromSessionData')
-
   let logWrongPanels: Record<string, null> | undefined
   const firstPanelId = lastPanel.id
   const idsMap: Record<ID, ID> = {}
@@ -431,8 +417,6 @@ export function cacheTabsData(delay = 300): void {
   if (cacheTabsDataTimeout) clearTimeout(cacheTabsDataTimeout)
   cacheTabsDataTimeout = setTimeout(() => {
     if (Tabs.tabsNormalizing) return
-
-    Logs.info('Tabs.cacheTabsData')
 
     const data = []
     for (const tab of Tabs.list) {
@@ -830,8 +814,6 @@ export async function removeTabs(tabIds: ID[], silent?: boolean): Promise<void> 
 
   browser.tabs.remove(toRemove)
   checkRemovedTabs()
-
-  Logs.info('Tabs: Removing tabs finished', toRemove)
 }
 
 let isRmFinishedInterval: number | undefined
@@ -1817,10 +1799,7 @@ export async function move(
 
   if (moving) await moving
 
-  if (
-    Settings.state.hideFoldedTabs ||
-    (Settings.state.hideInact && dst.panelId !== src.panelId)
-  ) {
+  if (Settings.state.hideFoldedTabs || (Settings.state.hideInact && dst.panelId !== src.panelId)) {
     Tabs.updateNativeTabsVisibility()
   }
 }
@@ -1939,7 +1918,7 @@ export async function moveToNewPanel(tabIds: ID[]): Promise<void> {
   Sidebar.saveSidebar(300)
 
   const result = await Sidebar.startFastEditingOfPanel(dstPanel.id, true)
-  if (!result) return Logs.info('Tabs: Panel creation canceled')
+  if (!result) return
 
   if (isFirstTabsPanel) await Tabs.load()
 
@@ -2300,7 +2279,6 @@ export function updateTabsTreeDebounced(startIndex = 0, endIndex = -1, delay = 1
  * Calculates tree props
  */
 export function updateTabsTree(startIndex = 0, endIndex = -1): void {
-  Logs.info(`Tabs.updateTabsTree: ${startIndex} - ${endIndex}`)
   if (!Settings.state.tabsTree) return
   if (!Tabs.list || !Tabs.list.length) return
   if (startIndex < 0) startIndex = 0
@@ -3191,9 +3169,6 @@ export async function open(
 
   // Open tabs in current window
   // ---
-
-  Logs.info('Tabs: Open tabs in current window')
-
   // Get dst panel
   let dstPanel: Panel | undefined = Sidebar.reactive.panelsById[dst.panelId ?? NOID]
   if (dst.panelId === undefined || !dstPanel || dstPanel.type !== PanelType.tabs) {
@@ -3423,7 +3398,7 @@ export async function createTabInNewContainer(): Promise<void> {
 
   // Open config popup
   const result = await Sidebar.startFastEditingOfContainer(container.id, true)
-  if (!result) return Logs.info('Tabs: Container creation canceled')
+  if (!result) return
 
   const dst: DstPlaceInfo = { panelId: panel.id, containerId: container.id }
   await Tabs.open([{ id: -1, url: 'about:newtab' }], dst)
@@ -3440,7 +3415,7 @@ export async function reopenTabsInNewContainer(tabIds: ID[]): Promise<void> {
 
   // Open config popup
   const result = await Sidebar.startFastEditingOfContainer(container.id, true)
-  if (!result) return Logs.info('Tabs: Container creation canceled')
+  if (!result) return
 
   const items = Tabs.getTabsInfo(tabIds)
   await Tabs.reopen(items, { panelId: firstTab.panelId, containerId: container.id })

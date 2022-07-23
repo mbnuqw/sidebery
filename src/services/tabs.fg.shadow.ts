@@ -6,7 +6,6 @@ import { Settings } from 'src/services/settings'
 import { Windows } from 'src/services/windows'
 
 export async function loadInShadowMode(): Promise<void> {
-  Logs.info('Tabs.loadInShadowMode')
   setupShadowListeners()
   Tabs.shadowMode = true
   const tabs = (await browser.tabs.query({ windowId: browser.windows.WINDOW_ID_CURRENT })) as Tab[]
@@ -23,8 +22,6 @@ export async function loadInShadowMode(): Promise<void> {
   }
   Tabs.deferredEventHandling.forEach(cb => cb())
   Tabs.deferredEventHandling = []
-
-  Logs.info('Tabs: Loaded in shadow mode')
 }
 
 export function unloadShadowed(): void {
