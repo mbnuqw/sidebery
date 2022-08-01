@@ -5,7 +5,8 @@ section(ref="el")
     label="settings.group_layout"
     optLabel="settings.group_layout_"
     v-model:value="Settings.state.groupLayout"
-    :opts="Settings.getOpts('groupLayout')")
+    :opts="Settings.getOpts('groupLayout')"
+    @update:value="Settings.saveDebounced(150)")
 </template>
 
 <script lang="ts" setup>

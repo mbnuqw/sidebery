@@ -3,22 +3,32 @@ section(ref="el")
   h2
     span {{translate('settings.snapshots_title')}}
     .title-note   ({{state.snapshotsLen}}: ~{{state.snapshotsSize}})
-  ToggleField(label="settings.snap_notify" v-model:value="Settings.state.snapNotify")
-  ToggleField(label="settings.snap_exclude_private" v-model:value="Settings.state.snapExcludePrivate")
+  ToggleField(
+    label="settings.snap_notify"
+    v-model:value="Settings.state.snapNotify"
+    @update:value="Settings.saveDebounced(150)")
+  ToggleField(
+    label="settings.snap_exclude_private"
+    v-model:value="Settings.state.snapExcludePrivate"
+    @update:value="Settings.saveDebounced(150)")
   NumField(
     label="settings.snap_interval"
     unitLabel="settings.snap_interval_"
     v-model:value="Settings.state.snapInterval"
     v-model:unit="Settings.state.snapIntervalUnit"
     :or="'none'"
-    :unitOpts="SETTINGS_OPTIONS.snapIntervalUnit")
+    :unitOpts="SETTINGS_OPTIONS.snapIntervalUnit"
+    @update:value="Settings.saveDebounced(500)"
+    @update:unit="Settings.saveDebounced(150)")
   NumField(
     label="settings.snap_limit"
     unitLabel="settings.snap_limit_"
     v-model:value="Settings.state.snapLimit"
     v-model:unit="Settings.state.snapLimitUnit"
     :or="'none'"
-    :unitOpts="SETTINGS_OPTIONS.snapLimitUnit")
+    :unitOpts="SETTINGS_OPTIONS.snapLimitUnit"
+    @update:value="Settings.saveDebounced(500)"
+    @update:unit="Settings.saveDebounced(150)")
   .ctrls
     .btn(@click="SetupPage.switchView('snapshots')") {{translate('settings.snapshots_view_label')}}
     .btn(@click="createSnapshot") {{translate('settings.make_snapshot')}}

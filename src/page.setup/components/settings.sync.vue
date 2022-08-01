@@ -255,11 +255,13 @@ async function deleteSyncData(key?: string): Promise<void> {
 
 function saveSyncSettings(): void {
   if (!Settings.state.syncSaveSettings) Store.sync('settings', {})
+  Settings.saveDebounced(150)
 }
 
 function saveSyncCtxMenu(): void {
   if (Settings.state.syncSaveCtxMenu) Menu.saveCtxMenuToSync()
   else Store.sync('ctxMenu', {})
+  Settings.saveDebounced(150)
 }
 
 async function saveSyncStyles(): Promise<void> {
@@ -274,11 +276,15 @@ async function saveSyncStyles(): Promise<void> {
   if (groupCSS) Styles.groupCSS = groupCSS
 
   Styles.saveStylesToSync()
+
+  Settings.saveDebounced(150)
 }
 
 function saveSyncKb(): void {
   if (!Settings.state.syncSaveKeybindings) Store.sync('kb', {})
   else Keybindings.saveKeybindingsToSync()
+
+  Settings.saveDebounced(150)
 }
 
 let onSyncNameUpdatedTimeout: number | undefined
@@ -288,5 +294,6 @@ function onSyncNameUpdated(): void {
     if (Settings.state.syncSaveCtxMenu) saveSyncCtxMenu()
     if (Settings.state.syncSaveStyles) saveSyncStyles()
   }, 500)
+  Settings.saveDebounced(500)
 }
 </script>

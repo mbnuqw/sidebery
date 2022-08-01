@@ -1,28 +1,40 @@
 <template lang="pug">
 section(ref="el")
   h2 {{translate('settings.general_title')}}
-  ToggleField(label="settings.native_scrollbars" v-model:value="Settings.state.nativeScrollbars")
+  ToggleField(
+    label="settings.native_scrollbars"
+    v-model:value="Settings.state.nativeScrollbars"
+    @update:value="Settings.saveDebounced(150)")
   .sub-fields
     ToggleField(
       label="settings.native_scrollbars_thin"
       :inactive="!Settings.state.nativeScrollbars"
-      v-model:value="Settings.state.nativeScrollbarsThin")
+      v-model:value="Settings.state.nativeScrollbarsThin"
+      @update:value="Settings.saveDebounced(150)")
     ToggleField(
       label="settings.native_scrollbars_left"
       :inactive="!Settings.state.nativeScrollbars"
-      v-model:value="Settings.state.nativeScrollbarsLeft")
+      v-model:value="Settings.state.nativeScrollbarsLeft"
+      @update:value="Settings.saveDebounced(150)")
   ToggleField(
     label="settings.sel_win_screenshots"
     :value="Settings.state.selWinScreenshots"
     @update:value="toggleSelWinScreenshots")
-  ToggleField(label="settings.update_sidebar_title" v-model:value="Settings.state.updateSidebarTitle")
-  ToggleField(label="settings.mark_window" v-model:value="Settings.state.markWindow")
+  ToggleField(
+    label="settings.update_sidebar_title"
+    v-model:value="Settings.state.updateSidebarTitle"
+    @update:value="Settings.saveDebounced(150)")
+  ToggleField(
+    label="settings.mark_window"
+    v-model:value="Settings.state.markWindow"
+    @update:value="Settings.saveDebounced(150)")
   .sub-fields
     TextField.-inline(
       label="settings.mark_window_preface"
       or="---"
       v-model:value="Settings.state.markWindowPreface"
-      :inactive="!Settings.state.markWindow")
+      :inactive="!Settings.state.markWindow"
+      @update:value="Settings.saveDebounced(500)")
   .ctrls
     .btn(@click="showStorageView") {{translate('settings.storage_btn')}} {{state.storageOveral}}
     .btn(@click="showPermissionsPopup") {{translate('settings.permissions_btn')}}
@@ -70,6 +82,7 @@ function toggleSelWinScreenshots(): void {
   } else {
     Settings.state.selWinScreenshots = !Settings.state.selWinScreenshots
   }
+  Settings.saveDebounced(150)
 }
 
 function showPermissionsPopup(): void {

@@ -3,7 +3,8 @@ section(ref="el")
   h2 {{translate('settings.history_title')}}
   ToggleField(
     label="settings.load_history_on_demand"
-    v-model:value="Settings.state.loadHistoryOnDemand")
+    v-model:value="Settings.state.loadHistoryOnDemand"
+    @update:value="Settings.saveDebounced(150)")
 </template>
 
 <script lang="ts" setup>

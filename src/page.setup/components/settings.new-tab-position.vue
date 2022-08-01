@@ -5,28 +5,33 @@ section(ref="el")
     label="settings.move_new_tab_pin"
     optLabel="settings.move_new_tab_pin_"
     v-model:value="Settings.state.moveNewTabPin"
-    :opts="Settings.getOpts('moveNewTabPin')")
+    :opts="Settings.getOpts('moveNewTabPin')"
+    @update:value="Settings.saveDebounced(150)")
   ToggleField(
     label="settings.pinned_auto_group"
     :inactive="!Settings.state.tabsTree"
-    v-model:value="Settings.state.pinnedAutoGroup")
+    v-model:value="Settings.state.pinnedAutoGroup"
+    @update:value="Settings.saveDebounced(150)")
   SelectField(
     label="settings.move_new_tab_parent"
     optLabel="settings.move_new_tab_parent_"
     v-model:value="Settings.state.moveNewTabParent"
     :opts="Settings.getOpts('moveNewTabParent')"
-    :folded="true")
+    :folded="true"
+    @update:value="Settings.saveDebounced(150)")
   .sub-fields
     ToggleField(
       label="settings.move_new_tab_parent_act_panel"
       :inactive="Settings.state.moveNewTabParent === 'none'"
-      v-model:value="Settings.state.moveNewTabParentActPanel")
+      v-model:value="Settings.state.moveNewTabParentActPanel"
+      @update:value="Settings.saveDebounced(150)")
   SelectField(
     label="settings.move_new_tab"
     optLabel="settings.move_new_tab_"
     v-model:value="Settings.state.moveNewTab"
     :opts="Settings.getOpts('moveNewTab')"
-    :folded="true")
+    :folded="true"
+    @update:value="Settings.saveDebounced(150)")
 </template>
 
 <script lang="ts" setup>

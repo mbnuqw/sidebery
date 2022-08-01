@@ -5,7 +5,8 @@ section(ref="el")
     label="settings.search_bar_mode"
     optLabel="settings.search_bar_mode_"
     v-model:value="Settings.state.searchBarMode"
-    :opts="Settings.getOpts('searchBarMode')")
+    :opts="Settings.getOpts('searchBarMode')"
+    @update:value="Settings.saveDebounced(150)")
 </template>
 
 <script lang="ts" setup>

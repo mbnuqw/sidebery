@@ -1,9 +1,18 @@
 <template lang="pug">
 section(ref="el")
   h2 {{translate('settings.ctx_menu_title')}}
-  ToggleField(label="settings.ctx_menu_native" v-model:value="Settings.state.ctxMenuNative")
-  ToggleField(label="settings.ctx_menu_render_inact" v-model:value="Settings.state.ctxMenuRenderInact")
-  ToggleField(label="settings.ctx_menu_render_icons" v-model:value="Settings.state.ctxMenuRenderIcons")
+  ToggleField(
+    label="settings.ctx_menu_native"
+    v-model:value="Settings.state.ctxMenuNative"
+    @update:value="Settings.saveDebounced(150)")
+  ToggleField(
+    label="settings.ctx_menu_render_inact"
+    v-model:value="Settings.state.ctxMenuRenderInact"
+    @update:value="Settings.saveDebounced(150)")
+  ToggleField(
+    label="settings.ctx_menu_render_icons"
+    v-model:value="Settings.state.ctxMenuRenderIcons"
+    @update:value="Settings.saveDebounced(150)")
   TextField(
     label="settings.ctx_menu_ignore_ctr"
     :or="translate('settings.ctx_menu_ignore_ctr_or')"
@@ -12,7 +21,7 @@ section(ref="el")
     :valid="ignoreContainersRuleValid"
     input-width="50"
     v-model:value="Settings.state.ctxMenuIgnoreContainers"
-    @update:value="validateIgnoreContainersRule")
+    @update:value="onCtxMenuIgnoreContainersUpdate")
   .ctrls
     .btn(@click="SetupPage.switchView('menu_editor')") {{translate('settings.ctx_menu_editor')}}
 </template>
@@ -38,6 +47,10 @@ const validateIgnoreContainersRule = Utils.debounce((value: string): void => {
     else ignoreContainersRuleValid.value = 'valid'
   }
 }, 321)
+function onCtxMenuIgnoreContainersUpdate(value: string): void {
+  validateIgnoreContainersRule(value)
+  Settings.saveDebounced(500)
+}
 
 onMounted(() => SetupPage.registerEl('settings_menu', el.value))
 </script>

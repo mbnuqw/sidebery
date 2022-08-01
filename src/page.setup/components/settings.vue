@@ -31,9 +31,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch, onActivated } from 'vue'
-import Utils from 'src/utils'
-import { Settings } from 'src/services/settings'
+import { ref, onActivated } from 'vue'
 import { SetupPage } from 'src/services/setup-page'
 import { Info } from 'src/services/info'
 import GeneralSection from './settings.general.vue'
@@ -63,12 +61,6 @@ const rootEl = ref<HTMLElement | null>(null)
 let scrollY = 0
 onActivated(() => {
   if (scrollY && rootEl.value) rootEl.value.scrollTop = scrollY
-})
-
-// Auto save settings after change
-let saveTimeout: number | undefined
-watch(Settings.state, () => {
-  saveTimeout = Utils.wait(saveTimeout, 500, () => Settings.saveSettings())
 })
 
 function onScroll(e: Event): void {

@@ -11,24 +11,34 @@ section(
     label="settings.nav_bar_layout"
     optLabel="settings.nav_bar_layout_"
     v-model:value="Settings.state.navBarLayout"
-    :opts="Settings.getOpts('navBarLayout')")
+    :opts="Settings.getOpts('navBarLayout')"
+    @update:value="Settings.saveDebounced(150)")
   .sub-fields
     ToggleField(
       label="settings.nav_bar_inline"
       v-model:value="Settings.state.navBarInline"
-      :inactive="Settings.state.navBarLayout !== 'horizontal'")
+      :inactive="Settings.state.navBarLayout !== 'horizontal'"
+      @update:value="Settings.saveDebounced(150)")
     SelectField(
       label="settings.nav_bar_side"
       optLabel="settings.nav_bar_side_"
       v-model:value="Settings.state.navBarSide"
       :opts="Settings.getOpts('navBarSide')"
-      :inactive="Settings.state.navBarLayout !== 'vertical'")
-  ToggleField(label="settings.nav_btn_count" v-model:value="Settings.state.navBtnCount")
-  ToggleField(label="settings.hide_empty_panels" v-model:value="Settings.state.hideEmptyPanels")
+      :inactive="Settings.state.navBarLayout !== 'vertical'"
+      @update:value="Settings.saveDebounced(150)")
+  ToggleField(
+    label="settings.nav_btn_count"
+    v-model:value="Settings.state.navBtnCount"
+    @update:value="Settings.saveDebounced(150)")
+  ToggleField(
+    label="settings.hide_empty_panels"
+    v-model:value="Settings.state.hideEmptyPanels"
+    @update:value="Settings.saveDebounced(150)")
   NumField.-inline(
     label="settings.nav_switch_panels_delay"
     v-model:value="Settings.state.navSwitchPanelsDelay"
-    :or="128")
+    :or="128"
+    @update:value="Settings.saveDebounced(500)")
 
   InfoField(label="settings.nav_bar_enabled" :inactive="!availableBtns.length").-sub-title
   .sub-fields

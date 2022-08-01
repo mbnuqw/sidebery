@@ -6,11 +6,13 @@ section(ref="el")
     label="settings.pinned_tabs_position"
     optLabel="settings.pinned_tabs_position_"
     :opts="Settings.getOpts('pinnedTabsPosition')"
-    :folded="true")
+    :folded="true"
+    @update:value="Settings.saveDebounced(150)")
   ToggleField(
     label="settings.pinned_tabs_list"
     :inactive="Settings.state.pinnedTabsPosition !== 'panel'"
-    v-model:value="Settings.state.pinnedTabsList")
+    v-model:value="Settings.state.pinnedTabsList"
+    @update:value="Settings.saveDebounced(150)")
 </template>
 
 <script lang="ts" setup>
