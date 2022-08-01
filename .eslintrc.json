@@ -82,6 +82,7 @@
         "@typescript-eslint/unbound-method": "off",
         "@typescript-eslint/no-non-null-assertion": "error",
         "@typescript-eslint/no-unsafe-assignment": "off",
+        "@typescript-eslint/restrict-template-expressions": "off",
         "vue/multi-word-component-names": "off",
         "vue/custom-event-name-casing": "off",
         "vue/no-mutating-props": "off",
