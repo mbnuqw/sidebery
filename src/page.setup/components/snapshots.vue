@@ -164,8 +164,6 @@ void (async function init(): Promise<void> {
   Store.onKeyChange('snapshots', onSnapshotsChange)
 })()
 
-onUnmounted(() => Store.offKeyChange('snapshots', onSnapshotsChange))
-
 function onSnapshotsChange(newSnapshots?: Snapshot[]): void {
   if (!newSnapshots) newSnapshots = []
   const snapshots = []
