@@ -43,6 +43,14 @@ export async function saveSettings(): Promise<void> {
   if (settings.syncSaveSettings) saveSettingsToSync()
 }
 
+let saveSettingsTimeout: number | undefined
+export function saveDebounced(delay = 500): void {
+  clearTimeout(saveSettingsTimeout)
+  saveSettingsTimeout = setTimeout(() => {
+    Settings.saveSettings()
+  }, delay)
+}
+
 async function saveSettingsToSync(settings?: SettingsState): Promise<void> {
   if (!settings) settings = Utils.recreateNormalizedObject(Settings.state, DEFAULT_SETTINGS)
   await Store.sync('settings', { settings })
