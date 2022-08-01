@@ -1,7 +1,7 @@
 import Utils from 'src/utils'
 import { Stored, Container } from 'src/types'
 import { Containers } from 'src/services/containers'
-import { DEFAULT_CONTAINER, NOID } from 'src/defaults'
+import { DEFAULT_CONTAINER } from 'src/defaults'
 import { Store } from 'src/services/storage'
 import { WebReq } from 'src/services/web-req'
 import { Logs } from 'src/services/logs'
@@ -23,6 +23,7 @@ export async function load(): Promise<void> {
       if (!container) {
         container = Utils.cloneObject(DEFAULT_CONTAINER)
         containers[ffContainer.cookieStoreId] = container
+        if (!saveNeeded) saveNeeded = true
       }
 
       container.cookieStoreId = ffContainer.cookieStoreId
@@ -30,7 +31,6 @@ export async function load(): Promise<void> {
       container.name = ffContainer.name
       container.icon = ffContainer.icon
       container.color = ffContainer.color
-      if (!saveNeeded) saveNeeded = true
     }
 
     for (const id of Object.keys(containers)) {
