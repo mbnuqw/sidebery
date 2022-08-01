@@ -16,7 +16,7 @@ import { Menu } from 'src/services/menu'
 import { Styles } from 'src/services/styles'
 import { WebReq } from 'src/services/web-req'
 import Utils from 'src/utils'
-import { DEFAULT_SETTINGS } from 'src/defaults'
+import { DEFAULT_SETTINGS, NOID } from 'src/defaults'
 import { translate } from 'src/dict'
 
 void (async function main() {
@@ -37,8 +37,7 @@ void (async function main() {
     tabsApiProxy: Tabs.tabsApiProxy,
     checkUpgrade: checkUpgrade,
     continueUpgrade: continueUpgrade,
-    registerStoreKeyChange: Store.registerRemote,
-    unregisterStoreKeyChange: Store.unregisterRemote,
+    saveInLocalStorage: Store.setFromRemoteFg,
   })
 
   // Init first-need stuff
@@ -68,13 +67,23 @@ void (async function main() {
   await Tabs.loadTabs()
   await Tabs.backupTabsDataCache()
 
-  Store.setupStorageListeners()
-
   Permissions.loadPermissions()
   Permissions.setupListeners()
   Favicons.loadFavicons()
   Menu.setupListeners()
   Snapshots.scheduleSnapshots()
+
+  // Update title preface on sidebar connection/disconnection
+  IPC.onConnected(InstanceType.sidebar, winId => {
+    if (Settings.state.markWindow && winId !== NOID) {
+      browser.windows.update(winId, { titlePreface: Settings.state.markWindowPreface })
+    }
+  })
+  IPC.onDisconnected(InstanceType.sidebar, winId => {
+    if (Windows.byId[winId]) {
+      browser.windows.update(winId, { titlePreface: '' })
+    }
+  })
 })()
 
 function initToolbarButton(): void {

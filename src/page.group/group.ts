@@ -80,8 +80,10 @@ async function main() {
   groupWinId = window.groupWinId
   Windows.id = window.groupWinId
   groupTabId = window.groupTabId
+  Info.currentTabId = window.groupTabId
 
-  IPC.connectTo(InstanceType.bg, NOID)
+  IPC.setupConnectionListener()
+  IPC.connectTo(InstanceType.bg)
 
   const result = await Promise.all([
     IPC.bg('getGroupPageInitData', groupWinId, groupTabId ?? -1),

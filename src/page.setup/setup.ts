@@ -32,6 +32,11 @@ async function main(): Promise<void> {
   Info.reactive = reactive(Info.reactive)
   Styles.reactive = reactive(Styles.reactive)
 
+  IPC.registerActions({
+    storageChanged: Store.storageChangeListener,
+    connectTo: IPC.connectTo,
+  })
+
   SetupPage.updateActiveView()
   SetupPage.setupListeners()
 
@@ -68,7 +73,7 @@ async function main(): Promise<void> {
   Menu.setupListeners()
   SetupPage.initialized()
   Favicons.loadFavicons()
-  Store.setupStorageListeners()
   IPC.connectTo(InstanceType.bg)
+  IPC.setupGlobalMessageListener()
 }
 main()

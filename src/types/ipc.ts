@@ -20,12 +20,20 @@ export const enum InstanceType {
 export interface Message<T extends InstanceType, A extends ActionsKeys<T>> {
   id?: number
   dstWinId?: ID
+  dstTabId?: ID
   dstType?: InstanceType
   action?: A
   name?: string
   arg?: FirstParameter<ActionsType<T>[A]>
   args?: Parameters<ActionsType<T>[A]>
   result?: ReturnType<ActionsType<T>[A]>
+  error?: any
+}
+
+export interface IPCNodeInfo {
+  type: InstanceType
+  winId: ID
+  tabId: ID
 }
 
 export type BgActions = {
@@ -45,12 +53,12 @@ export type BgActions = {
   tabsApiProxy: (method: string, ...args: any[]) => Promise<any>
   checkUpgrade: () => UpgradingState | null
   continueUpgrade: () => void
-  registerStoreKeyChange: (key: keyof Stored, destType: InstanceType, winId: ID) => void
-  unregisterStoreKeyChange: (key: keyof Stored, destType: InstanceType, winId: ID) => void
+  saveInLocalStorage: (newValues: Stored, srcInfo: IPCNodeInfo) => void
 }
 
 export type SettingsActions = {
-  goToPerm: (permId: string) => void
+  storageChanged: (newValues: Stored) => void
+  connectTo: (dstType: InstanceType, dstWinId?: ID, dstTabId?: ID) => void
 }
 
 export type SidebarActions = {
@@ -81,11 +89,8 @@ export type SidebarActions = {
   notify: (config: Notification, timeout?: number) => void
   notifyAboutNewSnapshot: () => void
 
-  storeKeyChanged: <K extends keyof Stored>(
-    key: K,
-    newValue: Stored[K],
-    oldValue: Stored[K]
-  ) => void
+  storageChanged: (newValues: Stored) => void
+  connectTo: (dstType: InstanceType, dstWinId?: ID, dstTabId?: ID) => void
 }
 
 export type SearchPopupActions = {

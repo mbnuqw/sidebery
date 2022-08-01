@@ -64,7 +64,8 @@ async function main(): Promise<void> {
     notifyAboutNewSnapshot: Snapshots.notifyAboutNewSnapshot,
     notify: Notifications.notify,
     isDropEventConsumed: DnD.isDropEventConsumed,
-    storeKeyChanged: Store.ipcKeyChanged,
+    storageChanged: Store.storageChangeListener,
+    connectTo: IPC.connectTo,
   })
   IPC.setupGlobalMessageListener()
   IPC.setupConnectionListener()
@@ -111,7 +112,7 @@ async function main(): Promise<void> {
   const initBookmarks = !Settings.state.loadBookmarksOnDemand || Utils.isBookmarksPanel(actPanel)
   const initHistory = !Settings.state.loadHistoryOnDemand || Utils.isHistoryPanel(actPanel)
 
-  IPC.connectTo(InstanceType.bg, NOID)
+  IPC.connectTo(InstanceType.bg)
 
   if (Sidebar.hasTabs) await Tabs.load()
   else await Tabs.loadInShadowMode()

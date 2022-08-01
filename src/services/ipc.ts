@@ -4,50 +4,67 @@ import { NOID } from 'src/defaults'
 import { Logs } from 'src/services/logs'
 import { Info } from 'src/services/info'
 import { Windows } from 'src/services/windows'
-import { Settings } from './settings'
-import { Store } from './storage'
 
 interface PortNameData {
   srcType: InstanceType
   dstType: InstanceType
-  srcWinId: ID
+  srcWinId?: ID
   dstWinId?: ID
   srcTabId?: ID
+  dstTabId?: ID
 }
 
 export interface ConnectionInfo {
-  srcType: InstanceType
-  dstType: InstanceType
-  srcWinId: ID
-  dstWinId?: ID
+  type: InstanceType
+  /**
+   * - NOID (-1) for background
+   * - Window id for sidebar and popup
+   * - Tab id for content scripts
+   */
+  id: ID
   reconnectCount: number
-  port?: browser.runtime.Port
+  /**
+   * Port from browser.runtime.connect()
+   */
+  localPort?: browser.runtime.Port
+  /**
+   * Port from browser.runtime.onConnect event
+   */
+  remotePort?: browser.runtime.Port
 }
 
 interface MsgWaitingForAnswer {
   timeout: number
-  cb: (v?: any) => void
+  ok?: (v?: any) => void
+  err?: (err?: any) => void
   portName: string
 }
+
+const MSG_CONFIRMATION_MAX_DELAY = 1000
+const CONNECT_CONFIRMATION_MAX_DELAY = 1000
 
 let actions: Actions | undefined
 
 export const IPC = {
   bgConnection: undefined as ConnectionInfo | undefined,
-  searchPopupConnection: undefined as ConnectionInfo | undefined,
+  searchPopupConnections: {} as Record<ID, ConnectionInfo>,
   sidebarConnections: {} as Record<ID, ConnectionInfo>,
   setupPageConnections: {} as Record<ID, ConnectionInfo>,
-  tabConnections: {} as Record<ID, ConnectionInfo>,
+  groupPageConnections: {} as Record<ID, ConnectionInfo>,
 
   registerActions,
   connectTo,
 
   sidebar,
   sidebars,
+  setupPage,
   searchPopup,
   bg,
   send,
   broadcast,
+
+  onConnected,
+  onDisconnected,
 
   setupConnectionListener,
   setupGlobalMessageListener,
@@ -61,67 +78,126 @@ function registerActions(a: Actions): void {
  * Connects current instance to another instance.
  */
 let connectingTimeout: number | undefined
-function connectTo(dstType: InstanceType, dstWinId = NOID) {
+function connectTo(
+  dstType: InstanceType,
+  dstWinId = NOID,
+  dstTabId = NOID
+): browser.runtime.Port | undefined {
   const srcType = Info.instanceType
   const srcWinId = Windows.id
+  const srcTabId = Info.currentTabId
+  const toBg = dstType === InstanceType.bg
+  const toSidebar = dstType === InstanceType.sidebar
+  const toSetup = dstType === InstanceType.setup
+  const toSearch = dstType === InstanceType.search
+  const toGroup = dstType === InstanceType.group
 
-  // Destination window id is required for non-background targets
-  if (dstType !== InstanceType.bg && dstWinId === NOID) {
-    Logs.err('IPC.connectTo: No dstWinId')
+  // Check destination id
+  let id
+  if (toBg) id = NOID
+  else if ((toSidebar || toSearch) && dstWinId !== NOID) id = dstWinId
+  else if ((toSetup || toGroup) && dstTabId !== NOID) id = dstTabId
+  else {
+    Logs.err('IPC.connectTo: No destination id')
     return
   }
 
   // Create port name
-  const portNameData: PortNameData = { srcType, dstType, srcWinId }
+  const portNameData: PortNameData = { srcType, dstType }
+  if (srcWinId !== NOID) portNameData.srcWinId = srcWinId
+  if (srcTabId !== NOID) portNameData.srcTabId = srcTabId
   if (dstWinId !== NOID) portNameData.dstWinId = dstWinId
-  if (Info.currentTabId !== NOID) portNameData.srcTabId = Info.currentTabId
+  if (dstTabId !== NOID) portNameData.dstTabId = dstTabId
   const portNameJson = JSON.stringify(portNameData)
 
-  // Create connection
-  const connection: ConnectionInfo = { ...portNameData, reconnectCount: 0 }
-  connection.port = browser.runtime.connect({ name: portNameJson })
-
-  if (dstType === InstanceType.bg) {
-    IPC.bgConnection = connection
-  } else if (dstType === InstanceType.sidebar) {
-    IPC.sidebarConnections[dstWinId] = connection
+  // Find/Create connection
+  let connection: ConnectionInfo,
+    connectionIsNew = false
+  if (toBg && IPC.bgConnection) {
+    connection = IPC.bgConnection
+  } else if (toSidebar && IPC.sidebarConnections[dstWinId]) {
+    connection = IPC.sidebarConnections[dstWinId]
+  } else if (toSetup && IPC.setupPageConnections[dstTabId]) {
+    connection = IPC.setupPageConnections[dstTabId]
+  } else if (toSearch && IPC.searchPopupConnections[dstWinId]) {
+    connection = IPC.searchPopupConnections[dstWinId]
+  } else if (toGroup && IPC.groupPageConnections[dstTabId]) {
+    connection = IPC.groupPageConnections[dstTabId]
+  } else {
+    connectionIsNew = true
+    connection = { type: dstType, id, reconnectCount: 0 }
+    if (toBg) IPC.bgConnection = connection
+    else if (toSidebar) IPC.sidebarConnections[dstWinId] = connection
+    else if (toSetup) IPC.setupPageConnections[dstTabId] = connection
+    else if (toSearch) IPC.searchPopupConnections[dstWinId] = connection
+    else if (toGroup) IPC.groupPageConnections[dstTabId] = connection
   }
+  if (connection.localPort) connection.localPort.disconnect()
+  connection.localPort = browser.runtime.connect({ name: portNameJson })
 
   // Handle messages
   const postListener = <T extends InstanceType, A extends keyof Actions>(msg: Message<T, A>) => {
-    onPostMsg(msg, connection.port)
+    onPostMsg(msg, connection.localPort)
   }
-  connection.port.onMessage.addListener(postListener)
+  connection.localPort.onMessage.addListener(postListener)
 
   // Handle disconnect
   const disconnectListener = (port: browser.runtime.Port) => {
     port.onMessage.removeListener(postListener)
     port.onDisconnect.removeListener(disconnectListener)
 
-    // On sidebar disconnection
-    if (portNameData.dstType === InstanceType.sidebar) {
-      delete IPC.sidebarConnections[dstWinId]
+    // Remove port
+    connection.localPort = undefined
+
+    // Remove connection
+    let connectionIsRemoved = false
+    if (!connection.remotePort) {
+      connectionIsRemoved = true
+      if (toBg) IPC.bgConnection = undefined
+      else if (toSidebar) delete IPC.sidebarConnections[dstWinId]
+      else if (toSetup) delete IPC.setupPageConnections[dstTabId]
+      else if (toSearch) delete IPC.searchPopupConnections[dstWinId]
+      else if (toGroup) delete IPC.groupPageConnections[dstTabId]
     }
 
-    // On background disconnect
-    else if (portNameData.dstType === InstanceType.bg) {
-      IPC.bgConnection = undefined
+    // Run disconnection handlers
+    if (connectionIsRemoved) {
+      const handlers = disconnectionHandlers.get(dstType)
+      if (handlers) handlers.forEach(cb => cb(connection.id))
     }
 
-    // Reconnect
-    if (connection.reconnectCount++ < 3) {
+    // Reconnect to background
+    if (toBg && connection.reconnectCount++ < 3) {
       clearTimeout(connectingTimeout)
       connectingTimeout = setTimeout(() => connectTo(dstType, dstWinId), 120)
     }
   }
-  connection.port.onDisconnect.addListener(disconnectListener)
+  connection.localPort.onDisconnect.addListener(disconnectListener)
 
   // Stop reconnection
   clearTimeout(connectingTimeout)
   connectingTimeout = setTimeout(() => {
-    if (connection.port && !connection.port.error) connection.reconnectCount = 0
+    if (connection.localPort && !connection.localPort.error) connection.reconnectCount = 0
     else Logs.err('IPC.connectTo: Cannot reconnect')
   }, 120)
+
+  // Wait confirmation
+  const timeout = setTimeout(() => {
+    Logs.warn('IPC.connectTo: No confirmation:', Info.getInstanceName(dstType))
+    msgsWaitingForAnswer.delete(-1)
+  }, CONNECT_CONFIRMATION_MAX_DELAY)
+  msgsWaitingForAnswer.set(-1, {
+    timeout,
+    portName: '',
+    ok: () => {
+      if (connectionIsNew) {
+        const handlers = connectionHandlers.get(dstType)
+        if (handlers) handlers.forEach(cb => cb(connection.id))
+      }
+    },
+  })
+
+  return connection.localPort
 }
 
 /**
@@ -137,21 +213,28 @@ function sidebar<T extends InstanceType.sidebar, A extends ActionsKeys<T>>(
 }
 
 /**
- * Sends message to sidebars.
+ * Sends message to all connected sidebars.
  */
 function sidebars<T extends InstanceType.sidebar, A extends ActionsKeys<T>>(
   action: A,
   ...args: Parameters<ActionsType<T>[A]>
 ): Promise<ReturnType<ActionsType<T>[A]>[]> | undefined {
-  if (Info.isBg) {
-    const tasks = Object.values(Windows.byId).map(win => {
-      return send({ dstType: InstanceType.sidebar, dstWinId: win.id, action, args })
-    })
-    return Promise.all(tasks)
-  } else {
-    const msg: Message<T, A> = { dstType: InstanceType.sidebar, action, args }
-    browser.runtime.sendMessage(msg)
-  }
+  const tasks = Object.values(IPC.sidebarConnections).map(con => {
+    return send({ dstType: InstanceType.sidebar, dstWinId: con.id, action, args })
+  })
+  return Promise.all(tasks)
+}
+
+/**
+ * Sends message to setup page.
+ */
+function setupPage<T extends InstanceType.setup, A extends ActionsKeys<T>>(
+  dstTabId: ID,
+  action: A,
+  ...args: Parameters<ActionsType<T>[A]>
+): Promise<ReturnType<ActionsType<T>[A]>> {
+  const msg: Message<T, A> = { dstType: InstanceType.setup, dstTabId, action, args }
+  return send(msg)
 }
 
 /**
@@ -179,48 +262,92 @@ function bg<T extends InstanceType.bg, A extends ActionsKeys<T>>(
 
 const msgsWaitingForAnswer: Map<number, MsgWaitingForAnswer> = new Map()
 let msgCounter = 1
-let reconnectTryCount = 0
 /**
  * Send message between foreground and background using port.postMessage
- * or runtime.sendMessage as fallback
  */
-function send<T extends InstanceType, A extends ActionsKeys<T>>(
-  msg: Message<T, A>
+async function send<T extends InstanceType, A extends ActionsKeys<T>>(
+  msg: Message<T, A>,
+  noRetry = false
 ): Promise<ReturnType<ActionsType<T>[A]>> {
+  if (msg.dstType === undefined) return Promise.reject('IPC.send: No dstType')
+
   // Get port
-  let port: browser.runtime.Port | undefined
+  let connection, port: browser.runtime.Port | undefined
   if (msg.dstType === InstanceType.bg) {
-    port = IPC.bgConnection?.port
-  } else if (msg.dstType === InstanceType.sidebar && msg.dstWinId) {
-    port = IPC.sidebarConnections[msg.dstWinId]?.port
-  } else if (msg.dstType === InstanceType.search) {
-    port = IPC.searchPopupConnection?.port
+    connection = IPC.bgConnection
+  } else if (msg.dstType === InstanceType.sidebar && msg.dstWinId !== undefined) {
+    connection = IPC.sidebarConnections[msg.dstWinId]
+  } else if (msg.dstType === InstanceType.setup && msg.dstTabId !== undefined) {
+    connection = IPC.setupPageConnections[msg.dstTabId]
+  } else if (msg.dstType === InstanceType.search && msg.dstWinId !== undefined) {
+    connection = IPC.searchPopupConnections[msg.dstWinId]
+  } else if (msg.dstType === InstanceType.group && msg.dstTabId !== undefined) {
+    connection = IPC.groupPageConnections[msg.dstTabId]
   }
+  port = connection?.localPort ?? connection?.remotePort
 
-  // No port, use fallback method
-  if (!port || port.error) return browser.runtime.sendMessage(msg)
+  return new Promise((ok, err) => {
+    if (msg.dstType === undefined) return
 
-  return new Promise(ok => {
-    if (!port) return
+    // No port, try to connect
+    if (!port || port.error) {
+      if (port?.error) Logs.err('IPC.send: Target port has an error:', port?.error)
+      port = undefined
 
+      if (!noRetry) {
+        Logs.warn('IPC.send: Cannot find appropriate port, trying to reconnect...')
+        port = IPC.connectTo(msg.dstType, msg.dstWinId, msg.dstTabId)
+      }
+
+      if (!port || port.error) {
+        if (port?.error) Logs.err('IPC.send: Target port has error:', port?.error)
+        return err(`IPC.send: Cannot get target port for "${Info.getInstanceName(msg.dstType)}"`)
+      }
+    }
+
+    // Set message id
     const msgId = msgCounter++
     msg.id = msgId
-    port.postMessage(msg)
+
+    // Send the message
+    try {
+      port.postMessage(msg)
+    } catch (e) {
+      Logs.warn('IPC.send: Got error on postMessage, trying to reconnect...', e)
+      port = IPC.connectTo(msg.dstType, msg.dstWinId, msg.dstTabId)
+      if (!port || port.error) {
+        if (port?.error) Logs.err('IPC.send: Target port has error:', port?.error)
+        return err(`IPC.send: Cannot get target port for "${Info.getInstanceName(msg.dstType)}"`)
+      }
+
+      try {
+        port?.postMessage(msg)
+      } catch (e) {
+        const dstTypeName = Info.getInstanceName(msg.dstType)
+        Logs.err(`IPC.send: Cannot post message to "${dstTypeName}":`, e)
+        return err(`IPC.send: Cannot post message to "${dstTypeName}": ${String(e)}`)
+      }
+    }
 
     // Wait confirmation
-    const timeout = setTimeout(() => {
-      // No confirmation, use fallback method
-      ok(browser.runtime.sendMessage(msg))
-      msgsWaitingForAnswer.delete(msgId)
+    const timeout = setTimeout(async () => {
+      Logs.warn('IPC.send: No confirmation:', Info.getInstanceName(msg.dstType), msg.action)
 
+      msgsWaitingForAnswer.delete(msgId)
       if (port) port.error = { message: 'No confirmation' }
 
-      // Try to reconnect
-      if (reconnectTryCount++ < 3 && (!port || port?.error) && msg.dstType !== undefined) {
-        connectTo(msg.dstType, msg.dstWinId ?? NOID)
+      // Try to send message again with reconnection
+      if (!noRetry) {
+        try {
+          ok(await IPC.send(msg, true))
+        } catch (e) {
+          err(e)
+        }
+      } else {
+        err('IPC.send: No confirmation')
       }
-    }, 1000)
-    msgsWaitingForAnswer.set(msgId, { timeout, cb: ok, portName: port.name })
+    }, MSG_CONFIRMATION_MAX_DELAY)
+    msgsWaitingForAnswer.set(msgId, { timeout, ok, err, portName: port.name })
   })
 }
 
@@ -241,43 +368,65 @@ function onConnect(port: browser.runtime.Port) {
   try {
     portNameData = JSON.parse(port.name) as PortNameData
   } catch {
-    return Logs.err('IPC.onConnect: Cannot part PortName')
+    return Logs.err('IPC.onConnect: Cannot parse PortName')
   }
   if (portNameData.dstType !== Info.instanceType) return
   if (portNameData.dstWinId !== undefined && portNameData.dstWinId !== Windows.id) return
 
-  const connection: ConnectionInfo = { ...portNameData, port, reconnectCount: 0 }
+  const srcType = portNameData.srcType
+  const srcWinId = portNameData.srcWinId ?? NOID
+  const srcTabId = portNameData.srcTabId ?? NOID
 
-  // On sidebar connection
-  if (portNameData.srcType === InstanceType.sidebar) {
-    if (portNameData.srcWinId === undefined) {
-      return Logs.err('IPC.onConnect: Sidebar: No srcWinId')
-    }
+  // Check connection data
+  const fromBg = srcType === InstanceType.bg
+  const fromSidebar = srcType === InstanceType.sidebar
+  const fromSetup = srcType === InstanceType.setup
+  const fromSearch = srcType === InstanceType.search
+  const fromGroup = srcType === InstanceType.group
+  if (fromSidebar && srcWinId === NOID) return Logs.err('IPC.onConnect: Sidebar: No srcWinId')
+  if (fromSetup && srcTabId === NOID) return Logs.err('IPC.onConnect: Setup page: No srcTabId')
+  if (fromSearch && srcWinId === NOID) return Logs.err('IPC.onConnect: Search popup: No srcWinId')
+  if (fromGroup && srcTabId === NOID) return Logs.err('IPC.onConnect: Group page: No srcTabId')
 
-    // TODO: move this to external connect-listener
-    if (Info.isBg) {
-      if (Settings.state.markWindow && portNameData.srcWinId !== undefined) {
-        browser.windows.update(portNameData.srcWinId, {
-          titlePreface: Settings.state.markWindowPreface,
-        })
-      }
-    }
-
-    IPC.sidebarConnections[portNameData.srcWinId] = connection
+  // Check source id
+  let id
+  if (fromBg) id = NOID
+  else if ((fromSidebar || fromSearch) && srcWinId !== NOID) id = srcWinId
+  else if ((fromSetup || fromGroup) && srcTabId !== NOID) id = srcTabId
+  else {
+    Logs.err('IPC.onConnect: No source id')
+    return
   }
 
-  // On search popup connection
-  else if (portNameData.srcType === InstanceType.search) {
-    IPC.searchPopupConnection = connection
+  // Find/Create connection
+  let connection: ConnectionInfo
+  let connectionIsNew = false
+  if (fromBg && IPC.bgConnection) {
+    connection = IPC.bgConnection
+  } else if (fromSidebar && IPC.sidebarConnections[srcWinId]) {
+    connection = IPC.sidebarConnections[srcWinId]
+  } else if (fromSetup && IPC.setupPageConnections[srcTabId]) {
+    connection = IPC.setupPageConnections[srcTabId]
+  } else if (fromSearch && IPC.searchPopupConnections[srcWinId]) {
+    connection = IPC.searchPopupConnections[srcWinId]
+  } else if (fromGroup && IPC.groupPageConnections[srcTabId]) {
+    connection = IPC.groupPageConnections[srcTabId]
+  } else {
+    connectionIsNew = true
+    connection = { type: srcType, id, reconnectCount: 0 }
+    if (fromBg) IPC.bgConnection = connection
+    else if (fromSidebar) IPC.sidebarConnections[srcWinId] = connection
+    else if (fromSetup) IPC.setupPageConnections[srcTabId] = connection
+    else if (fromSearch) IPC.searchPopupConnections[srcWinId] = connection
+    else if (fromGroup) IPC.groupPageConnections[srcTabId] = connection
   }
+  if (connection.remotePort) connection.remotePort.disconnect()
+  connection.remotePort = port
 
-  // On setup page connection
-  else if (portNameData.srcType === InstanceType.setup) {
-    if (portNameData.srcTabId !== undefined && portNameData.srcTabId !== NOID) {
-      IPC.setupPageConnections[portNameData.srcTabId] = connection
-    } else {
-      return Logs.warn('IPC.onConnect: Setup: No srcTabId')
-    }
+  // Run connection handlers
+  if (connectionIsNew) {
+    const handlers = connectionHandlers.get(srcType)
+    if (handlers) handlers.forEach(cb => cb(connection.id))
   }
 
   // Listen for messages
@@ -297,38 +446,49 @@ function onConnect(port: browser.runtime.Port) {
     for (const [msgId, waiting] of msgsWaitingForAnswer.entries()) {
       if (waiting.portName === port.name) {
         clearTimeout(waiting.timeout)
-        if (waiting.cb) waiting.cb()
+        if (waiting.err) waiting.err('IPC: Target disconnected')
         msgsWaitingForAnswer.delete(msgId)
       }
     }
 
-    // On sidebar disconnection
-    if (portNameData.srcType === InstanceType.sidebar) {
-      delete IPC.sidebarConnections[portNameData.srcWinId]
+    // Remove port
+    connection.remotePort = undefined
 
-      // TODO: move this to external disconnect-listener
-      if (Info.isBg) {
-        // Update title preface
-        if (Windows.byId[portNameData.srcWinId]) {
-          browser.windows.update(portNameData.srcWinId, { titlePreface: '' })
-        }
-
-        // Unregister remote storage listener
-        Store.unregisterAllRemote(InstanceType.sidebar, portNameData.srcWinId)
-      }
+    // Remove connection
+    let connectionIsRemoved = false
+    if (!connection.localPort) {
+      connectionIsRemoved = true
+      if (fromBg) IPC.bgConnection = undefined
+      else if (fromSidebar) delete IPC.sidebarConnections[srcWinId]
+      else if (fromSetup) delete IPC.setupPageConnections[srcTabId]
+      else if (fromSearch) delete IPC.searchPopupConnections[srcWinId]
+      else if (fromGroup) delete IPC.groupPageConnections[srcTabId]
     }
 
-    // On search popup disconnection
-    else if (portNameData.srcType === InstanceType.search) {
-      IPC.searchPopupConnection = undefined
-    }
-
-    // On setup page disconnection
-    else if (portNameData.srcType === InstanceType.setup && portNameData.srcTabId !== undefined) {
-      delete IPC.setupPageConnections[portNameData.srcTabId]
+    // Run disconnection handlers
+    if (connectionIsRemoved) {
+      const handlers = disconnectionHandlers.get(srcType)
+      if (handlers) handlers.forEach(cb => cb(connection.id))
     }
   }
   port.onDisconnect.addListener(disconnectListener)
+
+  // Send connection confirmation message
+  port.postMessage(-1)
+}
+
+const connectionHandlers: Map<InstanceType, ((id: ID) => void)[]> = new Map()
+function onConnected(type: InstanceType, cb: (winOrTabId: ID) => void) {
+  const handlers = connectionHandlers.get(type) ?? []
+  handlers.push(cb)
+  connectionHandlers.set(type, handlers)
+}
+
+const disconnectionHandlers: Map<InstanceType, ((id: ID) => void)[]> = new Map()
+function onDisconnected(type: InstanceType, cb: (winOrTabId: ID) => void) {
+  const handlers = disconnectionHandlers.get(type) ?? []
+  handlers.push(cb)
+  disconnectionHandlers.set(type, handlers)
 }
 
 /**
@@ -354,6 +514,17 @@ async function onPostMsg<T extends InstanceType, A extends keyof Actions>(
   msg: Message<T, A> | number,
   port?: browser.runtime.Port
 ): Promise<void> {
+  // Handle confirmation of connection
+  if (msg === -1) {
+    const waiting = msgsWaitingForAnswer.get(-1)
+    if (waiting) {
+      clearTimeout(waiting.timeout)
+      if (waiting.ok) waiting.ok()
+      msgsWaitingForAnswer.delete(-1)
+    }
+    return
+  }
+
   // Handle simple confirmation of a received message
   if (typeof msg === 'number') {
     const waiting = msgsWaitingForAnswer.get(msg)
@@ -366,17 +537,19 @@ async function onPostMsg<T extends InstanceType, A extends keyof Actions>(
     const waiting = msgsWaitingForAnswer.get(msg.id)
     if (waiting) {
       clearTimeout(waiting.timeout)
-      if (waiting.cb) waiting.cb(msg.result)
+      if (msg.error && waiting.err) waiting.err(msg.error)
+      else if (waiting.ok) waiting.ok(msg.result)
       msgsWaitingForAnswer.delete(msg.id)
     }
     return
   }
 
   // Run an action
-  let result
+  let result, error
   try {
     result = runActionFor(msg)
   } catch (err) {
+    error = String(err)
     Logs.err(`IPC.onPostMsg: Error on running "${String(msg.action)}" action:`, err)
   }
 
@@ -385,10 +558,16 @@ async function onPostMsg<T extends InstanceType, A extends keyof Actions>(
     if (result instanceof Promise) {
       // Send confirmation message
       port.postMessage(msg.id)
-      // ...then wait for result and send it too
-      port.postMessage({ id: msg.id, result: await result })
+      // ...then wait for the final result and send it too
+      let finalResult, error
+      try {
+        finalResult = await result
+      } catch (err) {
+        error = String(err)
+      }
+      port.postMessage({ id: msg.id, result: finalResult, error })
     } else {
-      port.postMessage({ id: msg.id, result })
+      port.postMessage({ id: msg.id, result, error })
     }
   }
 }

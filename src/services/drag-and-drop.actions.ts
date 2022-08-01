@@ -2,7 +2,7 @@ import Utils from 'src/utils'
 import { translate } from 'src/dict'
 import { BKM_OTHER_ID, CONTAINER_ID, NEWID, NOID, PRE_SCROLL } from 'src/defaults'
 import { DragInfo, DragType, DropType, ItemBounds, ItemBoundsType } from 'src/types'
-import { DstPlaceInfo, SrcPlaceInfo } from 'src/types'
+import { DstPlaceInfo, SrcPlaceInfo, InstanceType } from 'src/types'
 import { DnD, DndPointerMode } from 'src/services/drag-and-drop'
 import { Settings } from 'src/services/settings'
 import { Sidebar } from 'src/services/sidebar'
@@ -902,7 +902,7 @@ let resetOtherTimeout: number | undefined
 export function resetOther(): void {
   clearTimeout(resetOtherTimeout)
   resetOtherTimeout = setTimeout(() => {
-    IPC.sidebars('stopDrag')
+    IPC.broadcast({ dstType: InstanceType.sidebar, action: 'stopDrag' })
   }, 150)
 }
 

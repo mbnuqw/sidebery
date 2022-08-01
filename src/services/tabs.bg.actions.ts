@@ -340,17 +340,24 @@ export function cacheTabsData(windowId: ID, tabs: TabCache[], delay = 300): void
  * Update trees state from sidebars
  */
 export async function updateBgTabsTreeData(): Promise<void> {
-  const receiving: Promise<TabsTreeData>[] = []
+  const receivingSidebarTrees: Promise<TabsTreeData>[] = []
   const windowsList: Window[] = []
+
   for (const window of Object.values(Windows.byId)) {
     if (window.id === undefined) continue
-    receiving.push(IPC.sidebar(window.id, 'getTabsTreeData'))
     windowsList.push(window)
+
+    const sidebarConnection = IPC.sidebarConnections[window.id]
+    if (sidebarConnection) {
+      receivingSidebarTrees.push(IPC.sidebar(window.id, 'getTabsTreeData'))
+    } else {
+      receivingSidebarTrees.push(Promise.resolve({}))
+    }
   }
 
   let trees: TabsTreeData[]
   try {
-    trees = await Promise.all(receiving)
+    trees = await Promise.all(receivingSidebarTrees)
   } catch (err) {
     trees = []
   }

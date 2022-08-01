@@ -45,14 +45,15 @@ export function setInstanceType(t: InstanceType): void {
   else if (t === InstanceType.search) Info.isSearch = true
 }
 
-export function getInstanceName(): string {
-  if (Info.isSidebar) return 'sidebar'
-  else if (Info.isBg) return 'bg'
-  else if (Info.isSetup) return 'setup'
-  else if (Info.isGroup) return 'group'
-  else if (Info.isProxy) return 'proxy'
-  else if (Info.isUrl) return 'url'
-  else if (Info.isSearch) return 'search'
+export function getInstanceName(instance?: InstanceType): string {
+  if (instance === undefined) instance = Info.instanceType
+  if (instance === InstanceType.sidebar) return 'sidebar'
+  else if (instance === InstanceType.bg) return 'bg'
+  else if (instance === InstanceType.setup) return 'setup'
+  else if (instance === InstanceType.group) return 'group'
+  else if (instance === InstanceType.proxy) return 'proxy'
+  else if (instance === InstanceType.url) return 'url'
+  else if (instance === InstanceType.search) return 'search'
   return 'unknown'
 }
 
