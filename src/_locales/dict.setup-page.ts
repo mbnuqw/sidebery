@@ -1148,7 +1148,7 @@ export const setupPageTranslations: Translations = {
   },
   'settings.move_new_tab_pin_end': {
     en: 'panel end',
-    ru: 'конец пенели',
+    ru: 'конец панели',
     zh_CN: '面板末尾位置',
   },
   'settings.move_new_tab_pin_none': {
@@ -1188,7 +1188,7 @@ export const setupPageTranslations: Translations = {
   },
   'settings.move_new_tab_parent_end': {
     en: 'panel end',
-    ru: 'конец пенели',
+    ru: 'конец панели',
     zh_CN: '面板末尾位置',
   },
   'settings.move_new_tab_parent_default': {
@@ -1216,7 +1216,7 @@ export const setupPageTranslations: Translations = {
   },
   'settings.move_new_tab_end': {
     en: 'panel end',
-    ru: 'конец пенели',
+    ru: 'конец панели',
     zh_CN: '面板末尾位置',
   },
   'settings.move_new_tab_before': {
