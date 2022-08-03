@@ -1,7 +1,6 @@
 /* eslint no-console: off */
 import { Windows } from 'src/services/windows'
 import { Info } from './info'
-import { Settings } from './settings'
 
 export const Logs = {
   info,
@@ -10,8 +9,6 @@ export const Logs = {
 }
 
 function info<T extends Array<any>>(msg: string, ...args: T): void {
-  if (Settings.state.logLvl < 3) return
-
   if (Info.isBg) console.log(`[bg] ${msg}`, ...args)
   else if (Info.isSidebar) console.log(`[sidebar:${Windows.id}] ${msg}`, ...args)
   else if (Info.isSetup) console.log(`[setup:${Windows.id}] ${msg}`, ...args)
@@ -22,8 +19,6 @@ function info<T extends Array<any>>(msg: string, ...args: T): void {
 }
 
 function warn<T extends Array<any>>(msg: string, ...args: T): void {
-  if (Settings.state.logLvl < 2) return
-
   if (Info.isBg) console.warn(`[bg] ${msg}`, ...args)
   else if (Info.isSidebar) console.warn(`[sidebar:${Windows.id}] ${msg}`, ...args)
   else if (Info.isSetup) console.warn(`[setup:${Windows.id}] ${msg}`, ...args)
@@ -34,8 +29,6 @@ function warn<T extends Array<any>>(msg: string, ...args: T): void {
 }
 
 function err(msg: string, err?: unknown): void {
-  if (Settings.state.logLvl < 1) return
-
   if (Info.isBg) msg = `[bg] ${msg}\n`
   else if (Info.isSidebar) msg = `[sidebar:${Windows.id}] ${msg}\n`
   else if (Info.isSetup) msg = `[setup:${Windows.id}] ${msg}\n`

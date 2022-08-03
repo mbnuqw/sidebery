@@ -9,7 +9,6 @@ export const DEFAULT_SETTINGS: SettingsState = {
   updateSidebarTitle: true,
   markWindow: false,
   markWindowPreface: '[Sidebery] ',
-  logLvl: 3,
 
   // Context menu
   ctxMenuNative: false,
@@ -231,5 +230,4 @@ export const SETTINGS_OPTIONS = {
   colorizeTabsBranchesSrc: ['url', 'domain'],
   searchBarMode: ['static', 'dynamic', 'none'],
   newTabBarPosition: ['after_tabs', 'bottom'],
-  logLvl: [3, 2, 1, 0],
 } as const

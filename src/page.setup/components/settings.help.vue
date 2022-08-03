@@ -1,12 +1,6 @@
 <template lang="pug">
 section(ref="el")
   h2 {{translate('settings.help_title')}}
-  SelectField(
-    label="settings.log_lvl"
-    optLabel="settings.log_lvl_"
-    v-model:value="Settings.state.logLvl"
-    :opts="Settings.getOpts('logLvl')"
-    @update:value="Settings.saveDebounced(150)")
   .ctrls
     a.btn(@click="SetupPage.reactive.exportDialog = true") {{translate('settings.help_exp_data')}}
     .btn(type="file")

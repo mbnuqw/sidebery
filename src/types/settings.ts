@@ -10,7 +10,6 @@ export interface SettingsState {
   updateSidebarTitle: boolean
   markWindow: boolean
   markWindowPreface: string
-  logLvl: typeof SETTINGS_OPTIONS.logLvl[number]
 
   // Context menu
   ctxMenuNative: boolean
