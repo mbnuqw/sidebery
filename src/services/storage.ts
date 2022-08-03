@@ -65,7 +65,7 @@ async function _set(newValues: Stored, srcInfo?: IPCNodeInfo): Promise<void> {
     // Send changes to all connected sidebars
     if (changesForSidebar) {
       for (const con of Object.values(IPC.sidebarConnections)) {
-        if (srcInfo && srcInfo.type === con.type && srcInfo.winId === con.id) return
+        if (srcInfo && srcInfo.type === con.type && srcInfo.winId === con.id) continue
         IPC.sidebar(con.id, 'storageChanged', changesForSidebar)
       }
     }
@@ -73,7 +73,7 @@ async function _set(newValues: Stored, srcInfo?: IPCNodeInfo): Promise<void> {
     // Send changes to all connected setup pages
     if (changesForSetup) {
       for (const con of Object.values(IPC.setupPageConnections)) {
-        if (srcInfo && srcInfo.type === con.type && srcInfo.tabId === con.id) return
+        if (srcInfo && srcInfo.type === con.type && srcInfo.tabId === con.id) continue
         IPC.setupPage(con.id, 'storageChanged', changesForSetup)
       }
     }
