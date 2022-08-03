@@ -17,11 +17,10 @@
         use(xlink:href="#icon_ff")
       img(v-else :src="favicon")
     .fav(v-else-if="node.type === 'folder'" @mousedown="onFolderFavMouseDown")
-      Transition(name="bookmark-expand")
-        svg(v-if="expanded")
-          use(xlink:href="#icon_folder_open")
-        svg(v-else)
-          use(xlink:href="#icon_folder")
+      svg(v-if="expanded")
+        use(xlink:href="#icon_folder_open")
+      svg(v-else)
+        use(xlink:href="#icon_folder")
     .title(v-if="node.title || node.url") {{node.title || node.url}}
     .len(v-if="Settings.state.showBookmarkLen && node.len") {{node.len}}
   .children(v-if="(expanded) && children?.length" :title="node.title")
@@ -34,7 +33,7 @@ export default { name: 'BookmarkNode' }
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { Bookmark, BookmarksPanel, DragInfo, DragItem, DstPlaceInfo, MenuType } from 'src/types'
+import { Bookmark, BookmarksPanel, DragInfo, DragItem, MenuType } from 'src/types'
 import { DragType, DropType, TabsPanelConfig } from 'src/types'
 import { Settings } from 'src/services/settings'
 import { Windows } from 'src/services/windows'

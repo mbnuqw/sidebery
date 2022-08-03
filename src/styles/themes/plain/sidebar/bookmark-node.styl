@@ -134,7 +134,6 @@
   width: 16px
   height: 16px
   fill: var(--toolbar-fg)
-  transition: opacity var(--d-norm), fill var(--d-norm)
 .BookmarkNode .fav > svg
   opacity: .7
 
@@ -197,24 +196,3 @@
 
 .BookmarkNode[data-selected="true"] .children:before
   opacity: .3
-
-// ---
-// -- Vue transitions
-// -
-.expand-enter-active
-  transition: opacity var(--d-norm), transform var(--d-fast)
-.expand-enter-from
-  opacity: 0
-  transform: translateX(-12px)
-.expand-enter-to
-.expand-leave-from
-  opacity: 1
-  transform: translateX(0)
-
-.bookmark-expand-enter-from
-.bookmark-expand-leave-to
-  opacity: 0
-.bookmark-expand-enter-to
-.bookmark-expand-leave-from
-  opacity: 1
-
