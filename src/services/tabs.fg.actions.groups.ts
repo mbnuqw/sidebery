@@ -6,6 +6,8 @@ import { Settings } from 'src/services/settings'
 import { Tabs } from './tabs.fg'
 import { Favicons } from './favicons'
 import { GroupConfigResult, Sidebar } from './sidebar'
+import { IPC } from './ipc'
+import { Logs } from './logs'
 
 /**
  * Set relGroupId and relPinId props in related pinned and group tabs
@@ -252,9 +254,7 @@ export function updateGroupTab(groupTab: Tab): void {
       msg.parentId = parentTab.id
     }
 
-    browser.tabs.sendMessage(groupTab.id, msg).catch(() => {
-      /** itsokay **/
-    })
+    IPC.groupPage(groupTab.id, msg)
   }, 256)
 }
 
@@ -285,8 +285,6 @@ export function updateGroupChild(groupId: ID, childId: ID, delay = 250): void {
       discarded: childTab.discarded,
       favIconUrl: childTab.favIconUrl || Favicons.getFavicon(childTab.url),
     }
-    browser.tabs.sendMessage(groupTab.id, updateData).catch(() => {
-      /** itsokay **/
-    })
+    IPC.groupPage(groupTab.id, updateData)
   }, delay)
 }

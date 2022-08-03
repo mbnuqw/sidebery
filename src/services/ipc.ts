@@ -58,6 +58,7 @@ export const IPC = {
   sidebar,
   sidebars,
   setupPage,
+  groupPage,
   searchPopup,
   bg,
   send,
@@ -235,6 +236,15 @@ function setupPage<T extends InstanceType.setup, A extends ActionsKeys<T>>(
 ): Promise<ReturnType<ActionsType<T>[A]>> {
   const msg: Message<T, A> = { dstType: InstanceType.setup, dstTabId, action, args }
   return send(msg)
+}
+
+/**
+ * Sends message to group page
+ */
+function groupPage(dstTabId: ID, msg: any): void {
+  browser.tabs.sendMessage(dstTabId, msg).catch(() => {
+    /** Ignore possible errors **/
+  })
 }
 
 /**

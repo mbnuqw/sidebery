@@ -11,6 +11,7 @@ import { Sidebar } from 'src/services/sidebar'
 import { Favicons } from 'src/services/favicons'
 import { DnD } from 'src/services/drag-and-drop'
 import { RemovedTabInfo, Tabs } from './tabs.fg'
+import { IPC } from './ipc'
 
 const EXT_HOST = browser.runtime.getURL('').slice(16)
 const URL_HOST_PATH_RE = /^([a-z0-9-]{1,63}\.)+\w+(:\d+)?\/[A-Za-z0-9-._~:/?#[\]%@!$&'()*+,;=]*$/
@@ -842,9 +843,7 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, ignoreChildren?:
 
   const groupTab = Tabs.getGroupTab(tab)
   if (groupTab && !groupTab.discarded) {
-    browser.tabs.sendMessage(groupTab.id, { name: 'remove', id: tab.id }).catch(() => {
-      /** itsokay **/
-    })
+    IPC.groupPage(groupTab.id, { name: 'remove', id: tab.id })
   }
 }
 
