@@ -429,16 +429,16 @@ export interface GroupPageInitData {
 }
 export async function getGroupPageInitData(winId: ID, tabId: ID): Promise<GroupPageInitData> {
   const data: GroupPageInitData = {}
-  try {
-    data.ffTheme = await browser.theme.getCurrent()
-  } catch (err) {
-    Logs.err('Tabs: Cannot get theme for group page', err)
-  }
-  try {
-    data.groupInfo = await IPC.sidebar(winId, 'getGroupInfo', tabId)
-  } catch (err) {
-    Logs.err('Tabs: Cannot get tabs info for group page', err)
-  }
+  const result = await Promise.all([
+    browser.theme.getCurrent().catch(err => {
+      Logs.err('Tabs: Cannot get theme for group page', err)
+    }),
+    IPC.sidebar(winId, 'getGroupInfo', tabId).catch(err => {
+      Logs.err('Tabs: Cannot get tabs info for group page', err)
+    }),
+  ])
+  if (result[0]) data.ffTheme = result[0]
+  if (result[1]) data.groupInfo = result[1]
   return data
 }
 
