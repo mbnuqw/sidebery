@@ -1,6 +1,5 @@
 import Utils from 'src/utils'
 import { Permissions } from 'src/services/permissions'
-import { Logs } from 'src/services/logs'
 import { Settings } from 'src/services/settings'
 import { Containers } from 'src/services/containers'
 import { Store } from 'src/services/storage'

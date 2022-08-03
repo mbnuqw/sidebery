@@ -11,7 +11,6 @@ import { Bookmarks } from 'src/services/bookmarks'
 import { Menu } from 'src/services/menu'
 import { Tabs } from 'src/services/tabs.fg'
 import { Snapshots } from 'src/services/snapshots'
-import { Logs } from './logs'
 import { IPC } from './ipc'
 
 type Opts = typeof SETTINGS_OPTIONS

@@ -1,6 +1,5 @@
 import { CustomCssTarget, CustomCssFieldName, Stored } from 'src/types'
 import { Styles } from 'src/services/styles'
-import { Logs } from 'src/services/logs'
 import { Settings } from 'src/services/settings'
 import { Store } from 'src/services/storage'
 import { Info } from 'src/services/info'

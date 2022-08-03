@@ -7,7 +7,6 @@ import { Styles } from 'src/services/styles'
 import { Info } from 'src/services/info'
 import { Logs } from 'src/services/logs'
 import { Windows } from 'src/services/windows'
-import { NOID } from 'src/defaults'
 
 interface MsgUpdated {
   name: 'update'

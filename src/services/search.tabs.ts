@@ -1,10 +1,9 @@
 import Utils from 'src/utils'
-import { Panel, ReactiveTab, Tab, TabsPanel } from 'src/types'
+import { Panel, ReactiveTab, TabsPanel } from 'src/types'
 import { Tabs } from 'src/services/tabs.fg'
 import { Selection } from 'src/services/selection'
 import { Search } from 'src/services/search'
 import { Sidebar } from 'src/services/sidebar'
-import { Settings } from './settings'
 
 let prevActivePanelId: ID | undefined
 export function onTabsSearch(activePanel: Panel): void {
