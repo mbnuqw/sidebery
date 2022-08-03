@@ -62,6 +62,7 @@ export interface SettingsState {
   tabsRmUndoNote: boolean
   nativeHighlight: boolean
   tabsUnreadMark: boolean
+  tabsUpdateMark: typeof SETTINGS_OPTIONS.tabsUpdateMark[number]
   tabsReloadLimit: number
   tabsReloadLimitNotif: boolean
   showNewTabBtns: boolean

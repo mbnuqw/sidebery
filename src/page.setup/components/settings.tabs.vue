@@ -58,6 +58,13 @@ section(ref="el")
     label="settings.tabs_unread_mark"
     v-model:value="Settings.state.tabsUnreadMark"
     @update:value="Settings.saveDebounced(150)")
+  SelectField(
+    label="settings.tabs_update_mark"
+    optLabel="settings.tabs_update_mark_"
+    v-model:value="Settings.state.tabsUpdateMark"
+    :opts="Settings.getOpts('tabsUpdateMark')"
+    :folded="true"
+    @update:value="Settings.saveDebounced(150)")
   CountField.-inline(
     label="settings.tabs_reload_limit"
     v-model:value="Settings.state.tabsReloadLimit"

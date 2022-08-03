@@ -459,22 +459,29 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
   if (change.title !== undefined) {
     if (change.title.startsWith(EXT_HOST)) change.title = localTab.title
 
-    const inact = Date.now() - tab.lastAccessed
-    if (!tab.active && inact > 5000) {
-      // If prev url starts with 'http' and current url same as prev
-      if (localTab.url.startsWith('http') && localTab.url === tab.url) {
-        // and if title doesn't look like url
-        if (!URL_HOST_PATH_RE.test(localTab.title) && !URL_HOST_PATH_RE.test(tab.title)) {
-          const panel = Sidebar.reactive.panelsById[localTab.panelId]
-          localTab.updated = true
-          rLocalTab.updated = true
-          if (
-            Utils.isTabsPanel(panel) &&
-            (!tab.pinned || Settings.state.pinnedTabsPosition === 'panel') &&
-            panel.updatedTabs &&
-            !panel.updatedTabs.includes(tabId)
-          ) {
-            panel.updatedTabs.push(tabId)
+    // Mark tab with updated title
+    if (
+      Settings.state.tabsUpdateMark === 'all' ||
+      (Settings.state.tabsUpdateMark === 'pin' && localTab.pinned) ||
+      (Settings.state.tabsUpdateMark === 'norm' && !localTab.pinned)
+    ) {
+      const inact = Date.now() - tab.lastAccessed
+      if (!tab.active && inact > 5000) {
+        // If prev url starts with 'http' and current url same as prev
+        if (localTab.url.startsWith('http') && localTab.url === tab.url) {
+          // and if title doesn't look like url
+          if (!URL_HOST_PATH_RE.test(localTab.title) && !URL_HOST_PATH_RE.test(tab.title)) {
+            const panel = Sidebar.reactive.panelsById[localTab.panelId]
+            localTab.updated = true
+            rLocalTab.updated = true
+            if (
+              Utils.isTabsPanel(panel) &&
+              (!tab.pinned || Settings.state.pinnedTabsPosition === 'panel') &&
+              panel.updatedTabs &&
+              !panel.updatedTabs.includes(tabId)
+            ) {
+              panel.updatedTabs.push(tabId)
+            }
           }
         }
       }
@@ -1044,8 +1051,10 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
 
   tab.active = true
   rTab.active = true
-  tab.updated = false
-  rTab.updated = false
+  if (Settings.state.tabsUpdateMark !== 'none') {
+    tab.updated = false
+    rTab.updated = false
+  }
   if (Settings.state.tabsUnreadMark) {
     tab.unread = false
     rTab.unread = false
@@ -1056,7 +1065,9 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
   const panel = Sidebar.reactive.panelsById[tab.panelId]
   if (!Utils.isTabsPanel(panel)) return
 
-  if (panel.updatedTabs) Utils.rmFromArray(panel.updatedTabs, tab.id)
+  if (panel.updatedTabs.length) {
+    Utils.rmFromArray(panel.updatedTabs, tab.id)
+  }
 
   // Switch to activated tab's panel
   const activePanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]

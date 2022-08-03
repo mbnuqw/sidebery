@@ -1046,6 +1046,26 @@ export const setupPageTranslations: Translations = {
     ru: 'Показывать метку на непрочитанных вкладках',
     zh_CN: '在未读标签页上显示标记',
   },
+  'settings.tabs_update_mark': {
+    en: 'Show mark on tabs with updated title',
+    ru: 'Показывать метку на вкладках с обновленным заголовком',
+  },
+  'settings.tabs_update_mark_all': {
+    en: 'on',
+    ru: 'вкл',
+  },
+  'settings.tabs_update_mark_pin': {
+    en: 'only for pinned',
+    ru: 'только для закрепленных',
+  },
+  'settings.tabs_update_mark_norm': {
+    en: 'only for not pinned',
+    ru: 'только для не закрепленных',
+  },
+  'settings.tabs_update_mark_none': {
+    en: 'off',
+    ru: 'выкл',
+  },
   'settings.tabs_reload_limit': {
     en: 'Limit the count of simultaneously reloading tabs',
     ru: 'Ограничить количество одновременно перезагружаемых вкладок',

@@ -122,6 +122,7 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
   const colorizeTabsBranchesChanged = prev.colorizeTabsBranches !== next.colorizeTabsBranches
   const colorizeTabsBranchesSrcChanged =
     prev.colorizeTabsBranchesSrc !== next.colorizeTabsBranchesSrc
+  const tabsUpdateMarkChanged = prev.tabsUpdateMark !== next.tabsUpdateMark
 
   // Update settings of this instance
   Utils.updateObject(Settings.state, settings)
@@ -184,6 +185,17 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
 
   if ((colorizeTabsChanged || colorizeTabsSrcChanged) && Settings.state.colorizeTabs) {
     Tabs.colorizeTabs()
+  }
+
+  if (tabsUpdateMarkChanged && next.tabsUpdateMark === 'none') {
+    for (const tab of Tabs.list) {
+      const rTab = Tabs.reactive.byId[tab.id]
+      tab.updated = false
+      if (rTab) rTab.updated = false
+    }
+    for (const panel of Sidebar.reactive.panels) {
+      if (Utils.isTabsPanel(panel)) panel.updatedTabs = []
+    }
   }
 }
 
