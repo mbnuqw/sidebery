@@ -453,13 +453,15 @@ export function saveTabData(tabId: ID): void {
 }
 
 let normTabsTimeout: number | undefined
-/** TODO: rename to reinitTabs
- * Load tabs and normalize order.
+/**
+ * Load tabs and normalize order. (on unrecoverable situations)
  */
-export function normalizeTabs(delay = 500): void {
+export function reinitTabs(delay = 500): void {
   if (!Tabs.tabsNormalizing) Tabs.tabsNormalizing = true
   clearTimeout(normTabsTimeout)
   normTabsTimeout = setTimeout(async () => {
+    Logs.warn('Tabs.reinitTabs')
+
     const panelsList = []
     for (const panel of Sidebar.reactive.panels) {
       if (Utils.isTabsPanel(panel)) panelsList.push({ id: panel.id, index: -1 })
@@ -519,7 +521,7 @@ export function normalizeTabs(delay = 500): void {
       Tabs.normTabsMoving = true
       const moving = moves.map(m => browser.tabs.move(m[0], { index: m[1] }))
       await Promise.all(moving)
-      normalizeTabs(0)
+      reinitTabs(0)
       return
     }
 
@@ -531,6 +533,9 @@ export function normalizeTabs(delay = 500): void {
 
     Tabs.tabsNormalizing = false
     Tabs.normTabsMoving = false
+
+    if (Settings.state.colorizeTabs) Tabs.colorizeTabs()
+    if (Settings.state.colorizeTabsBranches) Tabs.colorizeBranches()
 
     Tabs.list.forEach(t => saveTabData(t.id))
     cacheTabsData()
@@ -556,7 +561,7 @@ export function sortNativeTabs(delayMS = 500): void {
       const tab = Tabs.byId[nativeTab.id]
       if (!tab) {
         Logs.warn(`Tabs.sortNativeTabs: Cannot find sidebery tab: ${nativeTab.id}`)
-        return Tabs.normalizeTabs()
+        return Tabs.reinitTabs()
       }
     }
 
@@ -568,7 +573,7 @@ export function sortNativeTabs(delayMS = 500): void {
       const nativeTab = nativeTabsById[tab.id]
       if (!nativeTab) {
         Logs.warn('Tabs.sortNativeTabs: Cannot find native tab')
-        return Tabs.normalizeTabs()
+        return Tabs.reinitTabs()
       }
 
       if (!nativeTabs[tab.index] || nativeTabs[tab.index].id !== tab.id) {

@@ -93,7 +93,7 @@ function onTabCreated(tab: Tab): void {
     return
   }
   if (Tabs.ignoreTabsEvents) return
-  if (Tabs.tabsNormalizing) return Tabs.normalizeTabs()
+  if (Tabs.tabsNormalizing) return Tabs.reinitTabs()
 
   if (Sidebar.reactive.hiddenPanelsBar) Sidebar.closeHiddenPanelsBar(true)
 
@@ -626,7 +626,7 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, ignoreChildren?:
   }
   if (info.isWindowClosing) return
   if (Tabs.ignoreTabsEvents) return
-  if (Tabs.tabsNormalizing) return Tabs.normalizeTabs()
+  if (Tabs.tabsNormalizing) return Tabs.reinitTabs()
 
   if (Tabs.removingTabs.length > 0) {
     Tabs.checkRemovedTabs()
@@ -645,7 +645,7 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, ignoreChildren?:
   const rTab = Tabs.reactive.byId[tabId]
   if (!tab || !rTab) {
     Logs.warn(`Tabs.onTabRemoved: Cannot find tab: ${tabId}`)
-    return Tabs.normalizeTabs()
+    return Tabs.reinitTabs()
   }
 
   const removedExternally = !Tabs.removingTabs || !Tabs.removingTabs.length
@@ -857,13 +857,13 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
     return
   }
   if (Tabs.ignoreTabsEvents) return
-  if (Tabs.tabsNormalizing) return Tabs.normalizeTabs()
+  if (Tabs.tabsNormalizing) return Tabs.reinitTabs()
 
   const tab = Tabs.byId[id]
   if (!tab) {
     const msg = `Tab cannot be moved: #${id} ${info.fromIndex} > ${info.toIndex} (not found by id)`
     Logs.err(msg)
-    return Tabs.normalizeTabs()
+    return Tabs.reinitTabs()
   }
 
   Tabs.movingTabs.splice(Tabs.movingTabs.indexOf(id), 1)
@@ -899,7 +899,7 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
     Tabs.list.splice(info.fromIndex, 1)
   } else {
     Logs.err(`Tab cannot be moved: #${id} ${info.fromIndex} > ${info.toIndex} (not found by index)`)
-    return Tabs.normalizeTabs()
+    return Tabs.reinitTabs()
   }
 
   movedTab.moveTime = Date.now()
@@ -972,7 +972,7 @@ function onTabDetached(id: ID, info: browser.tabs.DetachInfo): void {
     return
   }
   if (Tabs.ignoreTabsEvents) return
-  if (Tabs.tabsNormalizing) return Tabs.normalizeTabs()
+  if (Tabs.tabsNormalizing) return Tabs.reinitTabs()
   const tab = Tabs.byId[id]
   const rTab = Tabs.reactive.byId[id]
   if (tab && rTab) {
@@ -992,7 +992,7 @@ async function onTabAttached(id: ID, info: browser.tabs.AttachInfo): Promise<voi
     return
   }
   if (Tabs.ignoreTabsEvents) return
-  if (Tabs.tabsNormalizing) return Tabs.normalizeTabs()
+  if (Tabs.tabsNormalizing) return Tabs.reinitTabs()
 
   const ai = Tabs.attachingTabs.findIndex(t => t.id === id)
 
@@ -1026,7 +1026,7 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
   }
   bufTabActivatedEventIndex = -1
   if (Tabs.ignoreTabsEvents) return
-  if (Tabs.tabsNormalizing) return Tabs.normalizeTabs()
+  if (Tabs.tabsNormalizing) return Tabs.reinitTabs()
 
   // Reset selection
   if (!DnD.reactive.isStarted) Selection.resetSelection()
@@ -1036,7 +1036,7 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
   const rTab = Tabs.reactive.byId[info.tabId]
   if (!tab || !rTab) {
     Logs.err('Tabs.onTabActivated: Cannot get target tab', info.tabId)
-    return Tabs.normalizeTabs()
+    return Tabs.reinitTabs()
   }
 
   // Update previous active tab and store his id
