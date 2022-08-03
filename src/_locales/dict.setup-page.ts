@@ -2547,13 +2547,13 @@ export const setupPageTranslations: Translations = {
     zh_CN: '将被删除；如果您需要此功能，请提交issue。',
   },
   'settings.help_exp_data': {
-    en: 'Export',
-    ru: 'Экспорт',
+    en: 'Export addon data',
+    ru: 'Экспорт данных расширения',
     zh_CN: '导出',
   },
   'settings.help_imp_data': {
-    en: 'Import',
-    ru: 'Импорт',
+    en: 'Import addon data',
+    ru: 'Импорт данных расширения',
     zh_CN: '导入',
   },
   'settings.help_imp_perm': {
