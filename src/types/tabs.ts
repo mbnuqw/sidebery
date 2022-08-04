@@ -23,6 +23,7 @@ export interface Tab extends browser.tabs.Tab {
   mediaPaused: boolean
   reopened?: boolean
   internal?: boolean
+  isGroup: boolean
 }
 
 export const enum TabStatus {
@@ -58,6 +59,7 @@ export interface ReactiveTab {
   flash: boolean
   branchColor: string | null
   color: string | null
+  isGroup: boolean
 }
 
 export interface InlineTabData {

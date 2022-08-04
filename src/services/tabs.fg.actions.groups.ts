@@ -152,7 +152,7 @@ export function getGroupInfo(groupTabId: ID): GroupInfo | null {
   }
 
   const parentTab = Tabs.reactive.byId[groupTab.parentId]
-  if (parentTab && Utils.isGroupUrl(parentTab.url)) {
+  if (parentTab && parentTab.isGroup) {
     out.parentId = parentTab.id
   }
 
@@ -181,7 +181,7 @@ export function getGroupInfo(groupTabId: ID): GroupInfo | null {
 
     if (subGroupLvl && tab.lvl > subGroupLvl) continue
     else subGroupLvl = null
-    if (Utils.isGroupUrl(tab.url)) subGroupLvl = tab.lvl
+    if (tab.isGroup) subGroupLvl = tab.lvl
 
     out.tabs.push({
       id: tab.id,
@@ -205,7 +205,7 @@ export function getGroupTab(tab?: Tab): Tab | undefined {
   while (i--) {
     tab = Tabs.byId[tab.parentId]
     if (!tab) return
-    if (tab && Utils.isGroupUrl(tab.url)) return tab
+    if (tab && tab.isGroup) return tab
   }
 }
 
@@ -228,7 +228,7 @@ export function updateGroupTab(groupTab: Tab): void {
 
       if (subGroupLvl && tab.lvl > subGroupLvl) continue
       else subGroupLvl = null
-      if (Utils.isGroupUrl(tab.url)) subGroupLvl = tab.lvl
+      if (tab.isGroup) subGroupLvl = tab.lvl
 
       tabs.push({
         id: tab.id,
@@ -250,7 +250,7 @@ export function updateGroupTab(groupTab: Tab): void {
     }
 
     const parentTab = Tabs.reactive.byId[groupTab.parentId]
-    if (parentTab && Utils.isGroupUrl(parentTab.url)) {
+    if (parentTab && parentTab.isGroup) {
       msg.parentId = parentTab.id
     }
 
@@ -262,7 +262,7 @@ export function updateActiveGroupPage(): void {
   let activeTab = Tabs.byId[Tabs.activeId]
   if (!activeTab) activeTab = Tabs.list.find(t => t.active)
   if (!activeTab) return
-  if (Utils.isGroupUrl(activeTab.url)) {
+  if (activeTab.isGroup) {
     updateGroupTab(activeTab)
   }
 }

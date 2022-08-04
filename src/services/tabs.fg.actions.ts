@@ -46,6 +46,7 @@ export function toReactive(tab: Tab): ReactiveTab {
     flash: false,
     branchColor: null,
     color: null,
+    isGroup: tab.isGroup,
   }
 }
 
@@ -408,6 +409,7 @@ export function normalizeTab(tab: Tab, defaultPanelId: ID): void {
   }
   if (tab.unread === undefined) tab.unread = false
   if (tab.mediaPaused === undefined) tab.mediaPaused = false
+  if (tab.isGroup === undefined) tab.isGroup = tab.internal && tab.url.startsWith('gr', 58)
 }
 
 /**

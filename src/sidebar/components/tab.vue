@@ -12,6 +12,7 @@
   :data-discarded="tab.discarded"
   :data-updated="tab.updated"
   :data-lvl="tab.lvl"
+  :data-group="tab.isGroup"
   :data-parent="tab.isParent"
   :data-folded="tab.folded && !Search.reactive.value"
   :data-invisible="tab.invisible && !Search.reactive.value"

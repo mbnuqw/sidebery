@@ -236,6 +236,7 @@ function onTabCreated(tab: Tab): void {
   if (Settings.state.tabsUnreadMark && tab.unread === undefined && !tab.active) tab.unread = true
   if (panel) Tabs.normalizeTab(tab, panel.id)
   tab.internal = tab.url.startsWith(ADDON_HOST)
+  if (tab.internal) tab.isGroup = tab.url.startsWith('gr', 58)
   tab.index = index
   tab.parentId = tab.openerTabId ?? -1
   if (!tab.favIconUrl && !tab.internal) tab.favIconUrl = Favicons.getFavicon(tab.url)
@@ -399,7 +400,12 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
   // Url
   let branchColorizationNeeded = false
   if (change.url !== undefined && change.url !== localTab.url) {
-    localTab.internal = change.url.startsWith(ADDON_HOST)
+    const isInternal = change.url.startsWith(ADDON_HOST)
+    if (isInternal !== localTab.internal) {
+      localTab.isGroup = isInternal && change.url.startsWith('gr', 58)
+      rLocalTab.isGroup = localTab.isGroup
+    }
+    localTab.internal = isInternal
     Tabs.cacheTabsData()
     if (!change.url.startsWith(localTab.url.slice(0, 16))) {
       localTab.favIconUrl = ''
@@ -1119,7 +1125,7 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
     }
   }
 
-  if (Settings.state.tabsTree && Utils.isGroupUrl(tab.url)) {
+  if (Settings.state.tabsTree && tab.isGroup) {
     Tabs.updateGroupTab(tab)
   } else {
     Tabs.resetUpdateGroupTabTimeout()
