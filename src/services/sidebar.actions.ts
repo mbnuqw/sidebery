@@ -1326,7 +1326,7 @@ export function createBookmarksPanel(conf?: Partial<BookmarksPanelConfig>): Book
 
   Sidebar.reactive.panelsById[panel.id] = panel
 
-  return panel
+  return Sidebar.reactive.panelsById[panel.id] as BookmarksPanel
 }
 
 export function createHistoryPanel(): Panel {
