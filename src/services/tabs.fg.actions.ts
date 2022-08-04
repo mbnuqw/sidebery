@@ -3478,7 +3478,7 @@ export function colorizeTab(tabId: ID): void {
     if (container) {
       color = CONTAINER_COLORS[container.color]
     } else {
-      return
+      color = null
     }
   }
 
