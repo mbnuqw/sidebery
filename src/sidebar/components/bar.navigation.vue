@@ -475,9 +475,14 @@ function onNavItemDrop(item: NavItem): void {
   droppedOnPanel = true
 }
 
-function addTabsPanel(): void {
+async function addTabsPanel(): Promise<void> {
   const panel = Sidebar.createTabsPanel()
   if (!Sidebar.hasTabs) panel.ready = false
+
+  const result = await Sidebar.startFastEditingOfPanel(panel.id, false)
+  if (!result) {
+    delete Sidebar.reactive.panelsById[panel.id]
+  }
 
   let index = Sidebar.reactive.nav.length
   while (index--) {
@@ -491,7 +496,6 @@ function addTabsPanel(): void {
   Sidebar.reactive.nav.splice(index, 0, panel.id)
   Sidebar.recalcPanels()
   Sidebar.recalcTabsPanels()
-  Sidebar.startFastEditingOfPanel(panel.id, true)
   Sidebar.saveSidebar()
   Sidebar.activatePanel(panel.id)
 }
