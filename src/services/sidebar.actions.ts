@@ -1256,13 +1256,18 @@ export async function removePanel(panelId: ID): Promise<void> {
 
   // Switch to another panel
   if (panel.id === Sidebar.reactive.activePanelId) {
-    const nearestId = Utils.findNear(
-      Sidebar.reactive.nav,
-      index,
-      id => !!Sidebar.reactive.panelsById[id]
-    )
-    if (nearestId !== undefined) {
-      Sidebar.activatePanel(nearestId)
+    let nextActivePanelId
+    if (Sidebar.reactive.lastActivePanelId !== panel.id) {
+      nextActivePanelId = Sidebar.reactive.lastActivePanelId
+    } else {
+      nextActivePanelId = Utils.findNear(
+        Sidebar.reactive.nav,
+        index,
+        id => !!Sidebar.reactive.panelsById[id]
+      )
+    }
+    if (nextActivePanelId !== undefined) {
+      Sidebar.activatePanel(nextActivePanelId)
       saveActivePanel()
     }
   }
