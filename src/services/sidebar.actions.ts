@@ -55,7 +55,7 @@ function onSidebarResize(): void {
       if (panelsBoxEl) {
         const panelsBoxBounds = panelsBoxEl.getBoundingClientRect()
         const area = Settings.state.scrollThroughTabsScrollArea
-        if (area > 0) {
+        if (area >= 0) {
           Sidebar.scrollAreaRightX = panelsBoxBounds.right - area
           Sidebar.scrollAreaLeftX = 0
         } else if (area < 0) {
@@ -151,7 +151,7 @@ export function recalcSidebarSize(): void {
     if (panelsBoxEl) {
       const panelsBoxBounds = panelsBoxEl.getBoundingClientRect()
       const area = Settings.state.scrollThroughTabsScrollArea
-      if (area > 0) {
+      if (area >= 0) {
         Sidebar.scrollAreaRightX = panelsBoxBounds.right - area
         Sidebar.scrollAreaLeftX = 0
       } else if (area < 0) {
