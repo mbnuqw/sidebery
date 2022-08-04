@@ -1942,8 +1942,8 @@ export const setupPageTranslations: Translations = {
     zh_CN: '循环',
   },
   'settings.scroll_through_tabs_scroll_area': {
-    en: 'Leave a scroll area (px)',
-    ru: 'Оставить зону для скролла (px)',
+    en: 'Scroll area width (px)',
+    ru: 'Ширина зоны для скролла (px)',
   },
   'settings.scroll_through_tabs_scroll_area_note': {
     en: 'Positive - at the right, negative - at the left side of the panel',
