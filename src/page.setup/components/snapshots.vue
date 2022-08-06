@@ -191,12 +191,11 @@ function parseSnapshot(snapshots: Snapshot[], index: number): SnapshotState | un
   const winCount = snapshot.tabs.length
   let tabsCount = 0
 
-  const panelsById: Record<ID, SnapPanelState> = {}
-
   // Per windows
   for (const win of snapshot.tabs) {
     if (!win.length) continue
 
+    const panelsById: Record<ID, SnapPanelState> = {}
     const winState: SnapWindowState = { id: tabsCount, panels: [], tabsLen: 0 }
     windows.push(winState)
 
