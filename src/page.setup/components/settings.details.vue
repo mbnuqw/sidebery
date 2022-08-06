@@ -2,7 +2,7 @@
 .DetailsBox(v-if="SetupPage.reactive.detailsText" @wheel="onDetailsWheel")
   .box
     .title(v-if="SetupPage.reactive.detailsTitle") {{SetupPage.reactive.detailsTitle}}
-    .btn(v-if="SetupPage.reactive.detailsEdit" @click="saveDetails") SAVE
+    .btn(v-if="SetupPage.reactive.detailsEdit" @click="saveDetails") {{translate('settings.ctrl_save')}}
     .btn(v-if="!SetupPage.reactive.detailsEdit" @click="copyDetails") {{translate('settings.ctrl_copy')}}
     .btn.-warn(@click="closeDetails") {{translate('settings.ctrl_close')}}
   textarea.editor(
@@ -41,12 +41,10 @@ function copyDetails(): void {
 
 function saveDetails(): void {
   if (SetupPage.reactive.detailsEdit) {
-    if (window.confirm('Are you sure?')) {
-      try {
-        SetupPage.reactive.detailsEdit(SetupPage.reactive.detailsText)
-      } catch (err) {
-        window.alert(err)
-      }
+    try {
+      SetupPage.reactive.detailsEdit(SetupPage.reactive.detailsText)
+    } catch (err) {
+      window.alert(err)
     }
   }
   closeDetails()

@@ -8,7 +8,7 @@
         .snapshot(
           v-for="snapshot in state.snapshots"
           :key="snapshot.id"
-          :id="snapshot.id"
+          :id="String(snapshot.id)"
           :data-active="state.activeSnapshot?.id === snapshot.id"
           @click="activateSnapshot(snapshot)")
           .info
@@ -42,7 +42,7 @@
                     v-for="tab in panel.tabs"
                     :key="tab.id"
                     :title="tab.title"
-                    :id="tab.id"
+                    :id="String(tab.id)"
                     :data-sel="tab.sel"
                     :data-lvl="tab.lvl"
                     :data-pinned="tab.pinned"
@@ -59,7 +59,7 @@
                     .checkbox(v-if="state.selectionMode" :data-sel="tab.sel")
                     .icon
                       img(
-                        v-if="Favicons.reactive.list[Favicons.reactive.domains[tab.domain]]"
+                        v-if="tab.domain && Favicons.reactive.list[Favicons.reactive.domains[tab.domain]]"
                         :src="Favicons.reactive.list[Favicons.reactive.domains[tab.domain]]")
                       svg(v-else): use(:xlink:href="tab.iconSVG")
                       svg.pin(v-if="tab.pinned"): use(xlink:href="#icon_pin")
@@ -495,8 +495,6 @@ async function openWindow(snapshot: SnapshotState | null, winIndex: number): Pro
 }
 
 async function removeSnapshot(snapshot: SnapshotState): Promise<void> {
-  if (!window.confirm('Are you sure?')) return
-
   const result = await IPC.bg('removeSnapshot', snapshot.id)
 
   if (result === RemovingSnapshotResult.Ok) {

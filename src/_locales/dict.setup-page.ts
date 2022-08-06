@@ -397,6 +397,10 @@ export const setupPageTranslations: Translations = {
   },
 
   // - Details controls
+  'settings.ctrl_save': {
+    en: 'SAVE',
+    ru: 'СОХРАНИТЬ',
+  },
   'settings.ctrl_update': {
     en: 'UPDATE',
     ru: 'ОБНОВИТЬ',
