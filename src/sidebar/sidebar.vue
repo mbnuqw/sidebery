@@ -152,6 +152,7 @@ function onFocusIn(e: FocusEvent): void {
 
 function onFocusOut(e: FocusEvent): void {
   if ((e as MozFocusEvent).explicitOriginalTarget === e.target && !DnD.reactive.isStarted) {
+    if (Menu.isOpen) Menu.close()
     Selection.resetSelection()
   }
 }
@@ -230,10 +231,9 @@ function onMouseLeave(): void {
 
   if (Bookmarks.reactive.popup) return
 
-  if (!Menu.isOpen || !Settings.state.ctxMenuNative) {
+  if (Mouse.multiSelectionMode) {
     leaveTimeout = setTimeout(() => {
-      Menu.close()
-      Selection.resetSelection()
+      Mouse.stopMultiSelection()
     }, 250)
   }
 }
