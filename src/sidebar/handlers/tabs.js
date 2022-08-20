@@ -592,11 +592,7 @@ function onTabMoved(id, info) {
     srcPanel = this.state.panelsMap[movedTab.panelId]
     destPanel = this.state.panelsMap[movedTab.destPanelId]
     movedTab.destPanelId = undefined
-    if (
-      !destPanel ||
-      destPanel.startIndex > info.toIndex ||
-      destPanel.endIndex + 1 < info.toIndex
-    ) {
+    if (!destPanel) {
       destPanel = this.state.panelsMap[toTab.panelId]
     }
 

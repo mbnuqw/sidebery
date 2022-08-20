@@ -2822,6 +2822,7 @@ async function checkUrlRules(url, tab) {
   } else {
     tab.panelId = panel.id
     this.actions.updatePanelsTabs()
+    this.actions.saveTabData(tab)
   }
   urlRuleHistory[panelId] = url
 

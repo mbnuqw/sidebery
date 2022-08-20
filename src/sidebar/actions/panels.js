@@ -90,6 +90,7 @@ async function updatePanels(newPanels) {
   this.actions.savePanelIndex()
 
   // Update url rules
+  this.state.urlRules = []
   for (let panel of panels) {
     if (panel.urlRulesActive && panel.urlRules) this.actions.parsePanelUrlRules(panel)
   }
