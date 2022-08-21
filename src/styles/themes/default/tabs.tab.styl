@@ -18,6 +18,8 @@
   &[data-active]:active
     background-color: var(--tabs-bg-active)
 
+  &[data-lvl="0"]
+    padding-left: 0
   &[data-lvl="1"]
     padding-left: var(--tabs-indent)
   &[data-lvl="2"]
@@ -38,6 +40,18 @@
     padding-left: calc(var(--tabs-indent) * 9)
   &[data-lvl="10"]
     padding-left: calc(var(--tabs-indent) * 10)
+  &[data-lvl="11"]
+    padding-left: calc(var(--tabs-indent) * 11)
+  &[data-lvl="12"]
+    padding-left: calc(var(--tabs-indent) * 12)
+  &[data-lvl="13"]
+    padding-left: calc(var(--tabs-indent) * 13)
+  &[data-lvl="14"]
+    padding-left: calc(var(--tabs-indent) * 14)
+  &[data-lvl="15"]
+    padding-left: calc(var(--tabs-indent) * 15)
+  
+  padding-left: calc(var(--tabs-indent) * 16)
 
   &[data-active]
     background-color: var(--tabs-activated-bg)
@@ -87,7 +101,13 @@
               calc(var(--tabs-indent) * -6.5) 0 0 0 var(--tabs-lvl-indicator-bg),
               calc(var(--tabs-indent) * -7.5) 0 0 0 var(--tabs-lvl-indicator-bg),
               calc(var(--tabs-indent) * -8.5) 0 0 0 var(--tabs-lvl-indicator-bg),
-              calc(var(--tabs-indent) * -9.5) 0 0 0 var(--tabs-lvl-indicator-bg)
+              calc(var(--tabs-indent) * -9.5) 0 0 0 var(--tabs-lvl-indicator-bg),
+              calc(var(--tabs-indent) * -10.5) 0 0 0 var(--tabs-lvl-indicator-bg),
+              calc(var(--tabs-indent) * -11.5) 0 0 0 var(--tabs-lvl-indicator-bg),
+              calc(var(--tabs-indent) * -12.5) 0 0 0 var(--tabs-lvl-indicator-bg),
+              calc(var(--tabs-indent) * -13.5) 0 0 0 var(--tabs-lvl-indicator-bg),
+              calc(var(--tabs-indent) * -14.5) 0 0 0 var(--tabs-lvl-indicator-bg),
+              calc(var(--tabs-indent) * -15.5) 0 0 0 var(--tabs-lvl-indicator-bg)
 
 // ---
 // -- Drag layer

@@ -3,7 +3,6 @@
 .Tab
   box(relative, flex)
   pos(r: 0)
-  width: 100%
   height: var(--tabs-height)
   align-items: center
   z-index: 10
@@ -41,6 +40,9 @@
   &[data-active]:active:before
     background-color: var(--tabs-bg-active)
 
+  &[data-lvl="0"]
+    margin-left: 0
+    width: 100%
   &[data-lvl="1"]
     margin-left: var(--tabs-indent)
     width: calc(100% - var(--tabs-indent))
@@ -71,6 +73,24 @@
   &[data-lvl="10"]
     margin-left: calc(var(--tabs-indent) * 10)
     width: calc(100% - var(--tabs-indent) * 10)
+  &[data-lvl="11"]
+    margin-left: calc(var(--tabs-indent) * 11)
+    width: calc(100% - var(--tabs-indent) * 11)
+  &[data-lvl="12"]
+    margin-left: calc(var(--tabs-indent) * 12)
+    width: calc(100% - var(--tabs-indent) * 12)
+  &[data-lvl="13"]
+    margin-left: calc(var(--tabs-indent) * 13)
+    width: calc(100% - var(--tabs-indent) * 13)
+  &[data-lvl="14"]
+    margin-left: calc(var(--tabs-indent) * 14)
+    width: calc(100% - var(--tabs-indent) * 14)
+  &[data-lvl="15"]
+    margin-left: calc(var(--tabs-indent) * 15)
+    width: calc(100% - var(--tabs-indent) * 15)
+  
+  margin-left: calc(var(--tabs-indent) * 16)
+  width: calc(100% - var(--tabs-indent) * 16)
 
   &[data-active]
     &:before
@@ -129,7 +149,13 @@
               calc(var(--tabs-indent) * -6.5) 0 0 0 var(--tabs-lvl-indicator-bg),
               calc(var(--tabs-indent) * -7.5) 0 0 0 var(--tabs-lvl-indicator-bg),
               calc(var(--tabs-indent) * -8.5) 0 0 0 var(--tabs-lvl-indicator-bg),
-              calc(var(--tabs-indent) * -9.5) 0 0 0 var(--tabs-lvl-indicator-bg)
+              calc(var(--tabs-indent) * -9.5) 0 0 0 var(--tabs-lvl-indicator-bg),
+              calc(var(--tabs-indent) * -10.5) 0 0 0 var(--tabs-lvl-indicator-bg),
+              calc(var(--tabs-indent) * -11.5) 0 0 0 var(--tabs-lvl-indicator-bg),
+              calc(var(--tabs-indent) * -12.5) 0 0 0 var(--tabs-lvl-indicator-bg),
+              calc(var(--tabs-indent) * -13.5) 0 0 0 var(--tabs-lvl-indicator-bg),
+              calc(var(--tabs-indent) * -14.5) 0 0 0 var(--tabs-lvl-indicator-bg),
+              calc(var(--tabs-indent) * -15.5) 0 0 0 var(--tabs-lvl-indicator-bg)
 
 // ---
 // -- Drag layer
