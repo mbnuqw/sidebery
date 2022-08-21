@@ -86,28 +86,28 @@
     content: ''
     box(absolute, none)
     size(3px, 3px)
-    pos(calc(50% - 1px), 2px)
+    pos(calc(50% - 1px), -3px)
     border-radius: 50%
+    background-color: var(--tabs-lvl-indicator-bg)
     opacity: .8
 
 #root[data-tabs-tree-lvl-marks] .Tab .lvl-wrapper:before
   box(block)
-  box-shadow: calc(var(--tabs-indent) / -2) 0 0 0 var(--tabs-lvl-indicator-bg),
-              calc(var(--tabs-indent) * -1.5) 0 0 0 var(--tabs-lvl-indicator-bg),
-              calc(var(--tabs-indent) * -2.5) 0 0 0 var(--tabs-lvl-indicator-bg),
-              calc(var(--tabs-indent) * -3.5) 0 0 0 var(--tabs-lvl-indicator-bg),
-              calc(var(--tabs-indent) * -4.5) 0 0 0 var(--tabs-lvl-indicator-bg),
-              calc(var(--tabs-indent) * -5.5) 0 0 0 var(--tabs-lvl-indicator-bg),
-              calc(var(--tabs-indent) * -6.5) 0 0 0 var(--tabs-lvl-indicator-bg),
-              calc(var(--tabs-indent) * -7.5) 0 0 0 var(--tabs-lvl-indicator-bg),
-              calc(var(--tabs-indent) * -8.5) 0 0 0 var(--tabs-lvl-indicator-bg),
-              calc(var(--tabs-indent) * -9.5) 0 0 0 var(--tabs-lvl-indicator-bg),
-              calc(var(--tabs-indent) * -10.5) 0 0 0 var(--tabs-lvl-indicator-bg),
-              calc(var(--tabs-indent) * -11.5) 0 0 0 var(--tabs-lvl-indicator-bg),
-              calc(var(--tabs-indent) * -12.5) 0 0 0 var(--tabs-lvl-indicator-bg),
-              calc(var(--tabs-indent) * -13.5) 0 0 0 var(--tabs-lvl-indicator-bg),
-              calc(var(--tabs-indent) * -14.5) 0 0 0 var(--tabs-lvl-indicator-bg),
-              calc(var(--tabs-indent) * -15.5) 0 0 0 var(--tabs-lvl-indicator-bg)
+  box-shadow: calc(var(--tabs-indent) * -1) 0 0 0 var(--tabs-lvl-indicator-bg),
+              calc(var(--tabs-indent) * -2) 0 0 0 var(--tabs-lvl-indicator-bg),
+              calc(var(--tabs-indent) * -3) 0 0 0 var(--tabs-lvl-indicator-bg),
+              calc(var(--tabs-indent) * -4) 0 0 0 var(--tabs-lvl-indicator-bg),
+              calc(var(--tabs-indent) * -5) 0 0 0 var(--tabs-lvl-indicator-bg),
+              calc(var(--tabs-indent) * -6) 0 0 0 var(--tabs-lvl-indicator-bg),
+              calc(var(--tabs-indent) * -7) 0 0 0 var(--tabs-lvl-indicator-bg),
+              calc(var(--tabs-indent) * -8) 0 0 0 var(--tabs-lvl-indicator-bg),
+              calc(var(--tabs-indent) * -9) 0 0 0 var(--tabs-lvl-indicator-bg),
+              calc(var(--tabs-indent) * -10) 0 0 0 var(--tabs-lvl-indicator-bg),
+              calc(var(--tabs-indent) * -11) 0 0 0 var(--tabs-lvl-indicator-bg),
+              calc(var(--tabs-indent) * -12) 0 0 0 var(--tabs-lvl-indicator-bg),
+              calc(var(--tabs-indent) * -13) 0 0 0 var(--tabs-lvl-indicator-bg),
+              calc(var(--tabs-indent) * -14) 0 0 0 var(--tabs-lvl-indicator-bg),
+              calc(var(--tabs-indent) * -15) 0 0 0 var(--tabs-lvl-indicator-bg)
 
 // ---
 // -- Drag layer
