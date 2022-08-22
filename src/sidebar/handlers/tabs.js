@@ -345,11 +345,13 @@ function onTabUpdated(tabId, change, tab) {
       panel.tabs.splice(index, 1)
     }
 
-    if (localTab.prevPanelId && localTab.moveTime) {
-      if (localTab.moveTime + 1000 > Date.now()) {
-        localTab.panelId = localTab.prevPanelId
-        panel = this.state.panelsMap[localTab.panelId]
-        this.actions.saveTabData(localTab)
+    if (localTab.prevPanelId && localTab.moveTime && localTab.moveTime + 1000 > Date.now()) {
+      localTab.panelId = localTab.prevPanelId
+      panel = this.state.panelsMap[localTab.panelId]
+      this.actions.saveTabData(localTab)
+
+      if (localTab.active && panel && panel.index !== this.state.panelIndex) {
+        this.actions.setPanel(panel.index)
       }
     }
 
@@ -629,7 +631,7 @@ function onTabMoved(id, info) {
     this.actions.updateTabsTree(a, b)
   }
 
-  if (this.state.panelsMap[movedTab.panelId].index !== this.state.panelIndex) {
+  if (this.state.panelsMap[movedTab.panelId].index !== this.state.panelIndex && movedTab.active) {
     this.actions.setPanel(this.state.panelsMap[movedTab.panelId].index)
   }
 
