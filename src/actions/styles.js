@@ -23,7 +23,7 @@ function initTheme() {
   }
 
   themeLinkEl.href = `../themes/${this.state.theme}/${this.state.instanceType}.css`
-  setTimeout(() => EventBus.$emit('dynVarChange'), 120)
+  EventBus.$emit('dynVarChange', 120)
 }
 
 /**

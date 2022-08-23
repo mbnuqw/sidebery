@@ -130,7 +130,13 @@ export default {
 
   // --- Created Hook ---
   async created() {
-    EventBus.$on('dynVarChange', this.recalcDynVars)
+    let dynVarChangeTimeout
+    EventBus.$on('dynVarChange', (delay = 120) => {
+      clearTimeout(dynVarChangeTimeout)
+      dynVarChangeTimeout = setTimeout(() => {
+        this.recalcDynVars()
+      }, delay)
+    })
     EventBus.$on('dragStart', info => (State.dragNodes = info))
     EventBus.$on('outerDragStart', info => (State.dragNodes = info))
   },

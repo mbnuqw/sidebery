@@ -15,7 +15,7 @@ async function loadCSSVars() {
     }
   }
 
-  EventBus.$emit('dynVarChange')
+  EventBus.$emit('dynVarChange', 120)
 }
 
 /**
@@ -33,7 +33,7 @@ function applyCSSVars(styles) {
     }
   }
 
-  setTimeout(() => EventBus.$emit('dynVarChange'), 256)
+  EventBus.$emit('dynVarChange', 256)
 }
 
 export default {
