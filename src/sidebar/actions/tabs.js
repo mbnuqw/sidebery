@@ -1885,8 +1885,6 @@ async function dropToTabs(event, dropIndex, dropParent, nodes, pin, isInside) {
 async function moveDroppedNodes(dropIndex, dropParent, nodes, pin, currentPanel) {
   let parent = this.state.tabsMap[dropParent]
   let parentId = parent ? parent.id : -1
-  let toHide = []
-  let toShow = []
   let sameWindow = nodes[0].windowId === this.state.windowId
 
   // Move to different window
@@ -2019,13 +2017,6 @@ async function moveDroppedNodes(dropIndex, dropParent, nodes, pin, currentPanel)
       if (tabs[i].lvl <= minLvl) {
         tab.parentId = parentId
       }
-
-      // Update invisibility of tabs
-      if (parent && parent.folded) {
-        if (this.state.hideFoldedTabs && !tab.hidden) toHide.push(tab.id)
-      } else if (tab.parentId === parentId) {
-        if (this.state.hideFoldedTabs && tab.hidden) toShow.push(tab.id)
-      }
     }
 
     // If there are no moving, just update tabs tree
@@ -2035,8 +2026,7 @@ async function moveDroppedNodes(dropIndex, dropParent, nodes, pin, currentPanel)
   }
 
   // Hide/Show tabs
-  if (toHide.length) browser.tabs.hide(toHide)
-  if (toShow.length) browser.tabs.show(toShow)
+  this.actions.updateTabsVisability()
 }
 
 /**
