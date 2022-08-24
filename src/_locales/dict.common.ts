@@ -114,7 +114,7 @@ export const commonTranslations: Translations = {
   'panel.bookmarks.req_perm': {
     en: 'Bookmarks panel requires "Bookmarks" permission.',
     ru: 'Панель закладок требует разрешения "Закладки".',
-    de: 'Lesezeichen Paneel erfordert "Lesezeichen" Berechtigung',
+    de: 'Lesezeichen Panel erfordert "Lesezeichen" Berechtigung',
     zh_CN: '书签面板需要“书签”权限.',
   },
 
@@ -136,7 +136,7 @@ export const commonTranslations: Translations = {
   'panel.history.req_perm': {
     en: 'History panel requires "History" permission.',
     ru: 'Панель истории требует разрешения "История".',
-    de: 'Chronik Paneel erfordert "Chronik" Berechtigung',
+    de: 'Chronik Panel erfordert "Chronik" Berechtigung',
     zh_CN: '历史面板需要“历史”权限。',
   },
 
@@ -298,13 +298,13 @@ export const commonTranslations: Translations = {
   'menu.bookmark.open_in_new_panel': {
     en: 'Open in new tabs panel',
     ru: 'Открыть в новой панели вкладок',
-    de: 'In neuem Tab-Paneel öffnen',
+    de: 'In neuem Tab-Panel öffnen',
     zh_CN: '新标签面板中打开链接',
   },
   'menu.bookmark.open_in_panel_': {
     en: 'Open in panel...',
     ru: 'Открыть в панели...',
-    de: 'Öffne in Paneel...',
+    de: 'Öffne in Panel...',
     zh_CN: '在面板中打开...',
   },
   'menu.bookmark.open_in_ctr_': {
@@ -364,19 +364,19 @@ export const commonTranslations: Translations = {
   'menu.bookmark.sort_by_name': {
     en: 'Sort by name',
     ru: 'Сортировать по названию',
-    de: 'Nach Namen sortieren',
+    de: 'Nach Name sortieren',
     zh_CN: '按名称排序',
   },
   'menu.bookmark.sort_by_name_asc': {
     en: 'Sort by name (A-z)',
     ru: 'Сортировать по названию (А-я)',
-    de: 'Nach Namen sortieren (A-z)',
+    de: 'Nach Name sortieren (A-z)',
     zh_CN: '按名称排序 (A-z)',
   },
   'menu.bookmark.sort_by_name_des': {
     en: 'Sort by name (z-A)',
     ru: 'Сортировать по названию (я-А)',
-    de: 'Nach Namen sortieren (z-A)',
+    de: 'Nach Name sortieren (z-A)',
     zh_CN: '按名称排序 (z-A)',
   },
   'menu.bookmark.sort_by_link': {
@@ -418,13 +418,13 @@ export const commonTranslations: Translations = {
   'menu.bookmark.open_as_bookmarks_panel': {
     en: 'Open as bookmarks panel',
     ru: 'Открыть как панель закладок',
-    de: 'In Lesezeichen-Paneel öffnen',
+    de: 'In Lesezeichen-Panel öffnen',
     zh_CN: '作为书签面板打开',
   },
   'menu.bookmark.open_as_tabs_panel': {
     en: 'Open as tabs panel',
     ru: 'Открыть как панель вкладок',
-    de: 'In Tab-Paneel öffnen',
+    de: 'In Tab-Panel öffnen',
     zh_CN: '作为标签页面板打开',
   },
   'menu.bookmark.move_to': {
@@ -461,13 +461,13 @@ export const commonTranslations: Translations = {
   'menu.bookmark.convert_to_tabs_panel': {
     en: 'Convert to tabs panel',
     ru: 'Конвертировать в панель вкладок',
-    de: 'In Tab-Paneel konvertieren',
+    de: 'In Tab-Panel konvertieren',
     zh_CN: '转换为标签页面板',
   },
   'menu.bookmark.remove_panel': {
     en: 'Remove panel',
     ru: 'Удалить панель',
-    de: 'Paneel entfernen',
+    de: 'Panel entfernen',
     zh_CN: '移除面板',
   },
   // - Tab
@@ -510,7 +510,7 @@ export const commonTranslations: Translations = {
   'menu.tab.move_to_panel_label': {
     en: 'Move to panel...',
     ru: 'Переместить в панель...',
-    de: 'Verschiebe in Paneel...',
+    de: 'Verschiebe in Panel...',
     zh_CN: '移动到面板...',
   },
   'menu.tab.move_to_panel_': {
@@ -522,7 +522,7 @@ export const commonTranslations: Translations = {
   'menu.tab.move_to_new_panel': {
     en: 'Move to new panel',
     ru: 'Переместить в новую панель',
-    de: 'Verschiebe in neues Paneel',
+    de: 'Verschiebe in neues Panel',
     zh_CN: '移动到新面板',
   },
   'menu.tab.reopen_in_new_window': {
@@ -744,7 +744,7 @@ export const commonTranslations: Translations = {
   'menu.tabs_panel.remove_panel': {
     en: 'Remove panel',
     ru: 'Удалить панель',
-    de: 'Paneel entfernen',
+    de: 'Panel entfernen',
     zh_CN: '移除面板',
   },
   'menu.tabs_panel.bookmark': {
@@ -762,7 +762,7 @@ export const commonTranslations: Translations = {
   'menu.tabs_panel.convert_to_bookmarks_panel': {
     en: 'Convert to bookmarks panel',
     ru: 'Конвертировать в панель закладок',
-    de: 'In Lesezeichen-Paneel konvertieren',
+    de: 'In Lesezeichen-Panel konvertieren',
     zh_CN: '转换为书签面板',
   },
   // - History
@@ -788,25 +788,25 @@ export const commonTranslations: Translations = {
   'menu.common.pin_panel': {
     en: 'Pin panel',
     ru: 'Закрепить панель',
-    de: 'Paneel anheften',
+    de: 'Panel anheften',
     zh_CN: '固定标签页',
   },
   'menu.common.unpin_panel': {
     en: 'Unpin panel',
     ru: 'Открепить панель',
-    de: 'Paneel lösen',
+    de: 'Panel lösen',
     zh_CN: '取消固定标签页',
   },
   'menu.common.conf': {
     en: 'Configure panel',
     ru: 'Настройки панели',
-    de: 'Paneel konfigurieren',
+    de: 'Panel konfigurieren',
     zh_CN: '配置面板',
   },
   'menu.common.conf_tooltip': {
     en: 'Configure panel\nAlt: Basic panel config',
     ru: 'Настройки панели\nAlt: Базовые настройки панели',
-    de: 'Paneel konfigurieren\nAlt: Paneel Grundkonfiguration',
+    de: 'Panel konfigurieren\nAlt: Panel Grundkonfiguration',
     zh_CN: '配置面板\nAlt: 基本面板配置',
   },
   'menu.panels.unload': {
@@ -861,7 +861,7 @@ export const commonTranslations: Translations = {
   'menu.editor.tabs_panel_title': {
     en: 'Tabs panel',
     ru: 'Панель вкладок',
-    de: 'Tab-Paneel',
+    de: 'Tab-Panel',
     zh_CN: '标签页面板',
   },
   'menu.editor.bookmarks_title': {
@@ -873,7 +873,7 @@ export const commonTranslations: Translations = {
   'menu.editor.bookmarks_panel_title': {
     en: 'Bookmarks panel',
     ru: 'Панель закладок',
-    de: 'Lesezeichen-Paneel',
+    de: 'Lesezeichen-Panel',
     zh_CN: '书签面板',
   },
   'menu.editor.inline_group_title': {
@@ -901,7 +901,7 @@ export const commonTranslations: Translations = {
   'settings.opt_true': {
     en: 'on',
     ru: 'вкл',
-    de: 'An',
+    de: 'Ein',
     zh_CN: '打开',
   },
   'settings.opt_false': {
@@ -1148,7 +1148,7 @@ export const commonTranslations: Translations = {
   'upgrade.panels_nav': {
     en: 'Panels and navigation',
     ru: 'Панели и навигация',
-    de: 'Paneele und Navigation',
+    de: 'Panels und Navigation',
     zh_CN: '面板和导航',
   },
   'upgrade.ctx_menu': {
