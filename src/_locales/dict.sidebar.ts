@@ -62,13 +62,13 @@ export const sidebarTranslations: Translations = {
   'popup.tabs_panel_removing.title': {
     en: 'Removing panel',
     ru: 'Удаление панели',
-    de: 'Entferne Paneel',
+    de: 'Entferne Panel',
     zh_CN: '移除面板',
   },
   'popup.tabs_panel_removing.attach': {
     en: 'Attach tabs to neighbour panel',
     ru: 'Присоединить вкладки к соседней панели',
-    de: 'Tabs an benachbartes Paneel anheften',
+    de: 'Tabs an benachbartes Panel anheften',
     zh_CN: '将标签连接到相邻面板上',
   },
   'popup.tabs_panel_removing.leave': {
@@ -80,7 +80,7 @@ export const sidebarTranslations: Translations = {
   'popup.tabs_panel_removing.save': {
     en: 'Save panel to bookmarks and close tabs',
     ru: 'Сохранить панель в закладки и закрыть вкладки',
-    de: 'Paneel in Lesezeichen speichern und Tabs schließen',
+    de: 'Panel in Lesezeichen speichern und Tabs schließen',
     zh_CN: '将面板保存到书签并关闭标签页',
   },
   'popup.tabs_panel_removing.close': {
@@ -92,7 +92,7 @@ export const sidebarTranslations: Translations = {
   'popup.tabs_panel_removing.other_win_note': {
     en: 'Note: Tabs of this panel in other windows will be moved to the neighbour panel or left',
     ru: 'Вкладки этой панели в других окнах будут перемещены на соседнюю панель или оставлены',
-    de: 'Tabs dieses Paneels in anderen Fenstern werden zum benachbarten Paneel oder nach links verschoben',
+    de: 'Tabs dieses Panels in anderen Fenstern werden zum benachbarten Panel oder nach links verschoben',
     zh_CN: '注意：此面板在其他窗口中的标签页将移动到相邻面板或左侧',
   },
   // - What to do with old unused bookmarks on saving tabs panel
@@ -122,13 +122,13 @@ export const sidebarTranslations: Translations = {
   'panel.fast_conf.title_tabs': {
     en: 'Tabs panel',
     ru: 'Панель вкладок',
-    de: 'Tab-Paneel',
+    de: 'Tab-Panel',
     zh_CN: '标签页面板',
   },
   'panel.fast_conf.title_bookmarks': {
     en: 'Bookmarks panel',
     ru: 'Панель закладок',
-    de: 'Lesezeichen-Paneel',
+    de: 'Lesezeichen-Panel',
     zh_CN: '书签面板',
   },
   'panel.fast_conf.name': {
@@ -178,13 +178,13 @@ export const sidebarTranslations: Translations = {
   'dnd.tooltip.bookmarks_panel': {
     en: 'Bookmarks panel',
     ru: 'Панель закладок',
-    de: 'Lesezeichen-Paneel',
+    de: 'Lesezeichen-Panel',
     zh_CN: '书签面板',
   },
   'dnd.tooltip.tabs_panel': {
     en: 'panel',
     ru: 'панель',
-    de: 'Paneel',
+    de: 'Panel',
     zh_CN: '面板',
   },
   'dnd.tooltip.tabs': {
@@ -220,7 +220,7 @@ export const sidebarTranslations: Translations = {
   'nav.show_hidden_tooltip': {
     en: 'Show hidden panels',
     ru: 'Показать скрытые панели',
-    de: 'Versteckte Paneele anzeigen',
+    de: 'Versteckte Panels anzeigen',
     zh_CN: '显示隐藏的面板',
   },
   'nav.btn_settings': {
@@ -232,7 +232,7 @@ export const sidebarTranslations: Translations = {
   'nav.btn_add_tp': {
     en: 'Create tabs panel',
     ru: 'Создать панель вкладок',
-    de: 'Tabs-Paneel erstellen',
+    de: 'Tab-Panel erstellen',
     zh_CN: '创建标签页面板',
   },
   'nav.btn_search': {
@@ -345,7 +345,7 @@ export const sidebarTranslations: Translations = {
   'notif.tabs_panel_saved_bookmarks': {
     en: 'Panel saved',
     ru: 'панель сохранена в',
-    de: 'Paneel gespeichert',
+    de: 'Panel gespeichert',
     zh_CN: '面板已保存',
   },
   'notif.tabs_panel_updated_bookmarks': {
@@ -363,7 +363,7 @@ export const sidebarTranslations: Translations = {
   'notif.tabs_panel_to_bookmarks_err': {
     en: 'Cannot save tabs panel to bookmarks',
     ru: 'Невозможно сохранить панель вкладок в закладки',
-    de: 'Kann Tab-Paneel nicht in Lesezeichen speichern',
+    de: 'Kann Tab-Panel nicht in Lesezeichen speichern',
     zh_CN: '无法将标签页面板保存到书签',
   },
   'notif.tabs_panel_to_bookmarks_err.folder': {
@@ -386,7 +386,7 @@ export const sidebarTranslations: Translations = {
   'notif.restore_from_bookmarks_err': {
     en: 'Cannot restore panel from bookmarks',
     ru: 'Невозможно восстановить панель из закладок',
-    de: 'Kann Paneel aus Lesezeichen nicht wiederherstellen',
+    de: 'Kann Panel aus Lesezeichen nicht wiederherstellen',
     zh_CN: '无法从书签恢复面板',
   },
   'notif.restore_from_bookmarks_err.root': {
@@ -398,7 +398,7 @@ export const sidebarTranslations: Translations = {
   'notif.restore_from_bookmarks_ok': {
     en: 'Tabs panel was restored',
     ru: 'Панель вкладок восстановлена',
-    de: 'Tab-Paneel wiederhergestellt',
+    de: 'Tab-Panel wiederhergestellt',
     zh_CN: '标签页面板已恢复',
   },
   'notif.done': {
@@ -421,7 +421,7 @@ export const sidebarTranslations: Translations = {
   'notif.bookmarks_sub_panel.no_root.details': {
     en: 'Try to re-save tabs panel',
     ru: 'Попробуйте пересохранить панель вкладок',
-    de: 'Versuche Tab-Paneel neu zu speichern',
+    de: 'Versuche Tab-Panel neu zu speichern',
   },
   'notif.bookmarks_sub_panel.no_root.save': {
     en: 'Save',
