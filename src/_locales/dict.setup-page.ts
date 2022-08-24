@@ -128,25 +128,25 @@ export const setupPageTranslations: Translations = {
   'panel.lock_panel_label': {
     en: 'Prevent auto-switching from this panel',
     ru: 'Запретить автоматическое переключение с этой панели',
-    de: 'Automatisches Wechseln aus diesem Paneel verhindern',
+    de: 'Automatisches Wechseln aus diesem Panel verhindern',
     zh_CN: '防止从此面板自动切换',
   },
   'panel.temp_mode_label': {
     en: 'Switch back to previously active tabs panel after mouse leave',
     ru: 'Переключаться на последнюю активную панель вкладок, если курсор мыши убран',
-    de: 'Beim Loslassen der Maus zurück zum zuvor aktiven Tab Paneel wechseln',
+    de: 'Beim Loslassen der Maus zurück zum zuvor aktiven Tab Panel wechseln',
     zh_CN: '鼠标离开后切换回之前活动的标签页面板',
   },
   'panel.skip_on_switching': {
     en: 'Skip this panel when switching panels',
     ru: 'Пропускать эту панель при переключении панелей',
-    de: 'Beim Wechseln der Paneele dieses Paneel überspringen',
+    de: 'Beim Wechseln der Panels dieses Panel überspringen',
     zh_CN: '切换面板时跳过此面板',
   },
   'panel.no_empty_label': {
     en: 'Create new tab after the last one is closed',
     ru: 'Создавать новую вкладку после закрытия последней',
-    de: 'Erstelle neuen Tab, nachdem der letzte geschlossen wird',
+    de: 'Erstelle neuen Tab, nachdem der letzte geschlossen wurde',
     zh_CN: '关闭最后一个标签页后创建新标签页',
   },
   'panel.new_tab_ctx': {
@@ -158,13 +158,13 @@ export const setupPageTranslations: Translations = {
   'panel.drop_tab_ctx': {
     en: 'Reopen tab that was dropped to this panel in container:',
     ru: 'Переоткрыть вкладку, переброшенную в эту панель, в контейнере:',
-    de: 'Tabs, welche in dieses Paneel verschoben werden in Umgebung neu öffnen',
+    de: 'Tabs, welche in dieses Panel verschoben werden in Umgebung neu öffnen',
     zh_CN: '在容器中重新打开拖放到此面板的标签页:',
   },
   'panel.move_tab_ctx': {
     en: 'Move tab to this panel if it is opened in container:',
     ru: 'Перемещать вкладки выбранного контейнера в эту панель',
-    de: 'Verschiebe Tabs in dieses Paneel, wenn sie in Umgebung geöffnet werden',
+    de: 'Verschiebe Tabs in dieses Panel, wenn sie in Umgebung geöffnet werden',
     zh_CN: '如果它在容器中打开，则将标签页移动到此面板:',
   },
   'panel.move_tab_ctx_nochild': {
@@ -188,13 +188,13 @@ export const setupPageTranslations: Translations = {
   'panel.url_rules': {
     en: 'Move tabs with matched URLs to this panel',
     ru: 'Перемещать вкладки с совпадающими адресами в эту панель',
-    de: 'Verschiebe Tabs mit passender URL in dieses Paneel',
+    de: 'Verschiebe Tabs mit passender URL in dieses Panel',
     zh_CN: '将匹配URL列表的标签页移动到此面板',
   },
   'panel.auto_convert': {
     en: 'Convert to source tabs panel on opening bookmark',
     ru: 'При открытии закладки преобразовать в исходную панель вкладок',
-    de: 'Beim Öffnen von Lesezeichen zum ursprünglichen Tab-Paneel wechseln',
+    de: 'Beim Öffnen von Lesezeichen zum ursprünglichen Tab-Panel wechseln',
     zh_CN: '打开书签时切换到源标签页面板',
   },
   'panel.custom_icon_note': {
@@ -321,7 +321,7 @@ export const setupPageTranslations: Translations = {
   'settings.nav_settings_containers': {
     en: 'Containers',
     ru: 'Контейнеры',
-	de: 'Umgebung',
+	de: 'Umgebungen',
     zh_CN: '容器',
   },
   'settings.nav_settings_dnd': {
@@ -357,7 +357,7 @@ export const setupPageTranslations: Translations = {
   'settings.nav_settings_tabs_tree': {
     en: 'Tabs tree',
     ru: 'Дерево вкладок',
-	de: 'Tab-Zweige',
+	de: 'Tab-Baum',
     zh_CN: '树状标签页',
   },
   'settings.nav_settings_bookmarks': {
@@ -375,7 +375,7 @@ export const setupPageTranslations: Translations = {
   'settings.nav_settings_appearance': {
     en: 'Appearance',
     ru: 'Вид',
-	de: 'Aussehen',
+	de: 'Erscheinungsbild',
     zh_CN: '外观',
   },
   'settings.nav_settings_snapshots': {
@@ -435,7 +435,7 @@ export const setupPageTranslations: Translations = {
   'settings.nav_menu_editor_tabs_panel': {
     en: 'Tabs panel',
     ru: 'Панель вкладок',
-	de: 'Tab-Paneel',
+	de: 'Tab-Panel',
     zh_CN: '标签页面板',
   },
   'settings.nav_menu_editor_bookmarks': {
@@ -447,7 +447,7 @@ export const setupPageTranslations: Translations = {
   'settings.nav_menu_editor_bookmarks_panel': {
     en: 'Bookmarks panel',
     ru: 'Панель закладок',
-	de: 'Lesezeichen-Paneel',
+	de: 'Lesezeichen-Panel',
     zh_CN: '书签面板',
   },
   'settings.nav_styles_editor': {
@@ -527,7 +527,7 @@ export const setupPageTranslations: Translations = {
   'settings.update_sidebar_title': {
     en: "Use active panel's name as sidebar title",
     ru: 'Использовать имя активной панели в качестве заголовка боковой панели',
-	de: 'Name des aktiven Paneels als Seitenleistenname verwenden',
+	de: 'Name des aktiven Panels als Seitenleistenname verwenden',
     zh_CN: '使用活动面板的名称作为侧边栏标题',
   },
   'settings.mark_window': {
@@ -669,19 +669,19 @@ export const setupPageTranslations: Translations = {
   'settings.hide_empty_panels': {
     en: 'Hide empty tabs panels',
     ru: 'Скрывать пустые панели вкладок',
-	de: 'Verstecke leere Tab-Paneele',
+	de: 'Verstecke leere Tab-Panels',
     zh_CN: '隐藏空标签页面板',
   },
   'settings.nav_switch_panels_delay': {
     en: 'Min delay between panels switching (ms)',
     ru: 'Минимальная задержка между переключениями панелей (мс)',
-	de: 'Mindestverzögerung beim Wechsel zwischen Paneelen (ms)',
+	de: 'Mindestverzögerung beim Wechsel zwischen Panels (ms)',
     zh_CN: '面板切换的最小延迟（毫秒）',
   },
   'settings.nav_act_tabs_panel_left_click': {
     en: 'Left click on active tabs panel',
     ru: 'Клик левой кнопкой мыши по активной панели вкладок',
-	de: 'Linksklick auf aktives Tab-Paneel',
+	de: 'Linksklick auf aktives Tab-Panel',
     zh_CN: '左键单击活动的标签页面板',
   },
   'settings.nav_act_tabs_panel_left_click_new_tab': {
@@ -699,7 +699,7 @@ export const setupPageTranslations: Translations = {
   'settings.nav_act_bookmarks_panel_left_click': {
     en: 'Left click on active bookmarks panel',
     ru: 'Клик левой кнопкой мыши по активной панели закладок',
-	de: 'Linksklick auf aktives Lesezeichen-Paneel',
+	de: 'Linksklick auf aktives Lesezeichen-Panel',
     zh_CN: '左键单击活动的书签面板',
   },
   'settings.nav_act_bookmarks_panel_left_click_scroll': {
@@ -717,7 +717,7 @@ export const setupPageTranslations: Translations = {
   'settings.nav_tabs_panel_mid_click': {
     en: 'Middle click on tabs panel',
     ru: 'Клик средней кнопкой мыши по панели вкладок',
-	de: 'Mittlere Maustaste auf Tab-Paneel',
+	de: 'Mittlere Maustaste auf Tab-Panel',
     zh_CN: '中键单击标签页面板',
   },
   'settings.nav_tabs_panel_mid_click_rm_act_tab': {
@@ -741,13 +741,13 @@ export const setupPageTranslations: Translations = {
   'settings.nav_tabs_panel_mid_click_bookmark': {
     en: 'save panel to bookmarks',
     ru: 'сохранить панель в закладки',
-	de: 'Speichere Paneel in Lesezeichen',
+	de: 'Speichere Panel in Lesezeichen',
     zh_CN: '将面板保存到书签',
   },
   'settings.nav_tabs_panel_mid_click_convert': {
     en: 'convert to bookmarks',
     ru: 'конвертировать в панель закладок',
-	de: 'Konvertiere zu Lesezeichen',
+	de: 'Konvertiere in Lesezeichen',
     zh_CN: '转换为书签',
   },
   'settings.nav_tabs_panel_mid_click_none': {
@@ -759,13 +759,13 @@ export const setupPageTranslations: Translations = {
   'settings.nav_bookmarks_panel_mid_click': {
     en: 'Middle click on bookmarks panel',
     ru: 'Клик средней кнопкой мыши по панели закладок',
-	de: 'Mittlere Maustaste auf Lesezeichen-Paneel',
+	de: 'Mittlere Maustaste auf Lesezeichen-Panel',
     zh_CN: '在书签面板上单击鼠标中键',
   },
   'settings.nav_bookmarks_panel_mid_click_convert': {
     en: 'convert to tabs',
     ru: 'конвертировать во вкладки',
-	de: 'Konvertiere zu Tabs',
+	de: 'Konvertiere in Tabs',
     zh_CN: '转换为标签',
   },
   'settings.nav_bookmarks_panel_mid_click_none': {
@@ -777,7 +777,7 @@ export const setupPageTranslations: Translations = {
   'settings.nav_switch_panels_wheel': {
     en: 'Switch panels with mouse wheel over navigation bar',
     ru: 'Переключать панели с помощью колеса мыши над панелью навигации',
-	de: 'Wechsle Paneele mittels Mausrad über Navigationsleiste',
+	de: 'Wechsle Panels mittels Mausrad über Navigationsleiste',
     zh_CN: '在导航栏上使用鼠标滚轮切换面板',
   },
   'settings.nav_bar_enabled': {
@@ -801,13 +801,13 @@ export const setupPageTranslations: Translations = {
   'settings.nav_bar_btn_tabs_panel': {
     en: 'Tabs panel',
     ru: 'Панель вкладок',
-	de: 'Tab-Paneel',
+	de: 'Tab-Panel',
     zh_CN: '标签页面板',
   },
   'settings.nav_bar_btn_bookmarks_panel': {
     en: 'Bookmarks panel',
     ru: 'Панель закладок',
-	de: 'Lesezeichen-Paneel',
+	de: 'Lesezeichen-Panel',
     zh_CN: '书签面板',
   },
   'settings.nav_bar_btn_sp': {
@@ -825,7 +825,7 @@ export const setupPageTranslations: Translations = {
   'settings.nav_bar_btn_history': {
     en: 'History panel',
     ru: 'История',
-	de: 'Chronik-Paneel',
+	de: 'Chronik-Panel',
     zh_CN: '历史面板',
   },
   'settings.nav_bar_btn_settings': {
@@ -837,7 +837,7 @@ export const setupPageTranslations: Translations = {
   'settings.nav_bar_btn_add_tp': {
     en: 'Create tabs panel',
     ru: 'Создать панель вкладок',
-	de: 'Tab-Paneel erstellen',
+	de: 'Tab-Panel erstellen',
     zh_CN: '创建标签页面板',
   },
   'settings.nav_bar_btn_search': {
@@ -872,7 +872,7 @@ export const setupPageTranslations: Translations = {
   'settings.nav_rm_tabs_panel_confirm_post': {
     en: '" panel?\nAll tabs of this panel will be assigned to nearest tabs panel.',
     ru: '"?\n Все вкладки этой панели будут присоединены к соседней панели.',
-	de: '" Paneel?\nAlle Tabs dieses Paneels werden dem nächsten Tab-Paneel zugeordnet.',
+	de: '" Panel?\nAlle Tabs dieses Panels werden dem nächsten Tab-Panel zugeordnet.',
     zh_CN: '" 面板吗?\n此面板的所有标签页都将分配给最近的标签页面板。',
   },
   'settings.nav_rm_bookmarks_panel_confirm_pre': {
@@ -884,7 +884,7 @@ export const setupPageTranslations: Translations = {
   'settings.nav_rm_bookmarks_panel_confirm_post': {
     en: '" panel?',
     ru: '"?',
-	de: '" Paneel?',
+	de: '" Panel?',
     zh_CN: '" 面板吗?',
   },
 
@@ -950,7 +950,7 @@ export const setupPageTranslations: Translations = {
   'settings.dnd_tab_act': {
     en: 'Activate tab on hover',
     ru: 'Активировать вкладку при наведении',
-	de: 'Tab bei Hover aktivieren',
+	de: 'Tabs beim darüber Hovern aktivieren',
     zh_CN: '悬停时激活标签页',
   },
   'settings.dnd_tab_act_delay': {
@@ -986,7 +986,7 @@ export const setupPageTranslations: Translations = {
   'settings.dnd_mod_none': {
     en: 'none',
     ru: 'выкл',
-	de: 'Keine',
+	de: 'Kein',
     zh_CN: '无',
   },
   'settings.dnd_outside': {
@@ -1012,7 +1012,7 @@ export const setupPageTranslations: Translations = {
   'settings.dnd_exp': {
     en: 'Expand/Fold the branch on hovering over the',
     ru: 'Развернуть/свернуть ветвь при наведении на',
-	de: 'Zweig aus-/einklappen beim bewegen über',
+	de: 'Zweig ein-/ausklappen beim Bewegen über',
     zh_CN: '展开/折叠分支当悬停在',
   },
   'settings.dnd_exp_pointer': {
@@ -1106,13 +1106,13 @@ export const setupPageTranslations: Translations = {
   'settings.activate_last_tab_on_panel_switching': {
     en: 'Activate last active tab on panel switching',
     ru: 'Активировать последнюю активную вкладку при переключении панелей',
-	de: 'Aktiviere das zuletzt aktive Tab beim Wechseln des Paneels',
+	de: 'Aktiviere das zuletzt aktive Tab beim Wechseln des Panels',
     zh_CN: '在面板切换时激活上一个活动标签页',
   },
   'settings.skip_empty_panels': {
     en: 'Skip empty panels on switching',
     ru: 'Пропускать пустые контейнеры при переключении',
-	de: 'Überspringe leere Paneele beim Wechseln',
+	de: 'Überspringe leere Panels beim Wechseln',
     zh_CN: '切换时跳过空面板',
   },
   'settings.show_tab_rm_btn': {
@@ -1124,7 +1124,7 @@ export const setupPageTranslations: Translations = {
   'settings.hide_inactive_panel_tabs': {
     en: 'Hide native tabs of inactive panels',
     ru: 'Скрывать горизонтальные вкладки неактивных панелей',
-	de: 'Verstecke native Tabs inaktiver Paneele',
+	de: 'Verstecke native Tabs inaktiver Panels',
     zh_CN: '隐藏非活动面板的本机标签页',
   },
   'settings.activate_after_closing': {
@@ -1148,7 +1148,7 @@ export const setupPageTranslations: Translations = {
   'settings.activate_after_closing_prev_act': {
     en: 'previously active tab',
     ru: 'последнюю активную',
-	de: 'vorherigen aktiven Tab',
+	de: 'zuletzt aktiven Tab',
     zh_CN: '上一活动标签页',
   },
   'settings.activate_after_closing_none': {
@@ -1202,17 +1202,17 @@ export const setupPageTranslations: Translations = {
   'settings.tabs_url_in_tooltip_full': {
     en: 'full',
     ru: 'полный',
-	de: 'vollständig',
+	de: 'Vollständig',
   },
   'settings.tabs_url_in_tooltip_stripped': {
     en: 'stripped',
     ru: 'сокращенный',
-	de: 'gekürzt',
+	de: 'Gekürzt',
   },
   'settings.tabs_url_in_tooltip_none': {
     en: 'none',
     ru: 'выкл',
-	de: 'keine',
+	de: 'Keine',
     zh_CN: '无',
   },
 
@@ -1237,7 +1237,7 @@ export const setupPageTranslations: Translations = {
   'settings.tabs_rm_undo_note': {
     en: 'Show undo notification on closing multiple tabs',
     ru: 'Показывать уведомление о закрытии нескольких вкладок',
-	de: 'Zeige "rückgängig machen" nach Schließen mehrerer Tabs',
+	de: 'Zeige "Rückgängig"-Meldung nach Schließen mehrerer Tabs',
     zh_CN: '在关闭多个标签页时显示撤消通知',
   },
   'settings.native_highlight': {
@@ -1260,7 +1260,7 @@ export const setupPageTranslations: Translations = {
   'settings.tabs_update_mark_all': {
     en: 'on',
     ru: 'вкл',
-	de: 'An',
+	de: 'Ein',
   },
   'settings.tabs_update_mark_pin': {
     en: 'only for pinned',
@@ -1292,13 +1292,13 @@ export const setupPageTranslations: Translations = {
   'settings.tabs_panel_switch_act_move': {
     en: 'Switch panel after moving active tab to another panel',
     ru: 'Переключать панель после перемещения активной вкладки на другую панель',
-	de: 'Wechsle Paneel nach bewegen aktiver Tabs in anderes Paneel',
+	de: 'Wechsle Panel nach bewegen aktiver Tabs in anderes Panel',
     zh_CN: '将活动标签页移动到另一个面板后切换面板',
   },
   'settings.show_new_tab_btns': {
     en: 'Show new tab buttons',
     ru: 'Показывать кнопки создания новых вкладок',
-	de: 'Zeige "Neuer Tab" Schaltflächen',
+	de: 'Zeige "Neuer Tab"-Schaltflächen',
     zh_CN: '显示新标签页按钮',
   },
   'settings.new_tab_bar_position': {
@@ -1322,12 +1322,12 @@ export const setupPageTranslations: Translations = {
   'settings.open_sub_panel_on_mouse_hover': {
     en: 'Open bookmarks sub-panel on mouse hover',
     ru: 'Открывать подпанель закладок при наведении мыши',
-	de: 'Öffne Lesezeichen Unter-Paneel bei Maus-Hover',
+	de: 'Öffne Lesezeichen Unter-Panel bei Maus-Hover',
   },
   'settings.discard_inactive_panel_tabs_delay': {
     en: 'Unload tabs of inactive panel after delay',
     ru: 'Выгружать вкладки неактивных панелей c задержкой',
-	de: 'Entlade Tabs inaktiver Paneele nach Verzögerung',
+	de: 'Entlade Tabs inaktiver Panels nach Verzögerung',
     zh_CN: '超过延迟时间后卸载非活动面板的标签页',
   },
   'settings.discard_inactive_panel_tabs_delay_sec': {
@@ -1387,19 +1387,19 @@ export const setupPageTranslations: Translations = {
   'settings.move_new_tab_pin': {
     en: 'Place new tab opened from pinned tab',
     ru: 'Открытые из закрепленных вкладок',
-	de: 'Platziere Tab, das von angeheftetem Tab geöffnet wurde',
+	de: 'Platziere Tab, das von angeheftetem Tab geöffnet wird',
     zh_CN: '从固定标签页打开的新标签页的位置',
   },
   'settings.move_new_tab_pin_start': {
     en: 'panel start',
     ru: 'начало панели',
-	de: 'Anfang des Paneels',
+	de: 'Anfang des Panels',
     zh_CN: '面板起始位置',
   },
   'settings.move_new_tab_pin_end': {
     en: 'panel end',
     ru: 'конец панели',
-	de: 'Ende des Paneels',
+	de: 'Ende des Panels',
     zh_CN: '面板末尾位置',
   },
   'settings.move_new_tab_pin_none': {
@@ -1411,59 +1411,59 @@ export const setupPageTranslations: Translations = {
   'settings.move_new_tab_parent': {
     en: 'Place new tab opened from another tab',
     ru: 'Открытые из другой вкладки',
-	de: 'Platziere Tab, das von anderem Tab geöffnete wurde',
+	de: 'Platziere Tab, das von anderem Tab geöffnete wird',
     zh_CN: '从其它标签页打开的新标签页的位置',
   },
   'settings.move_new_tab_parent_before': {
     en: 'before parent',
     ru: 'перед родительской',
-	de: 'vor übergeordnetem',
+	de: 'Vor Ursprungstab',
     zh_CN: '父标签之前',
   },
   'settings.move_new_tab_parent_sibling': {
     en: 'after parent',
     ru: 'после родительской',
-	de: 'nach übergeordnetem',
+	de: 'Nach Ursprungstab',
     zh_CN: '父标签之后',
   },
   'settings.move_new_tab_parent_first_child': {
     en: 'first child',
     ru: 'первая дочерняя',
-	de: 'als erstes Unterelement',
+	de: 'Als erstes Unterelement',
     zh_CN: '第一个子标签',
   },
   'settings.move_new_tab_parent_last_child': {
     en: 'last child',
     ru: 'последняя дочерняя',
-	de: 'als letztes Unterelement',
+	de: 'Als letztes Unterelement',
     zh_CN: '最后一个子标签',
   },
   'settings.move_new_tab_parent_start': {
     en: 'panel start',
     ru: 'начало панели',
-	de: 'Anfang des Paneels',
+	de: 'Anfang des Panels',
     zh_CN: '面板起始位置',
   },
   'settings.move_new_tab_parent_end': {
     en: 'panel end',
     ru: 'конец панели',
-	de: 'Ende des Paneels',
+	de: 'Ende des Panels',
     zh_CN: '面板末尾位置',
   },
   'settings.move_new_tab_parent_default': {
     en: 'do not move it',
     ru: 'не перемещать',
-	de: 'nicht bewegen',
+	de: 'Nicht bewegen',
   },
   'settings.move_new_tab_parent_none': {
     en: 'use general rule',
     ru: 'использовать общее правило',
-	de: 'allgemeine Regel verwenden',
+	de: 'Allgemeine Regel verwenden',
   },
   'settings.move_new_tab_parent_act_panel': {
     en: 'Only if panel of parent tab is active',
     ru: 'Только если панель родительской вкладки активна',
-	de: 'Nur, wenn Paneel des übergeordneten Tabs aktiv ist',
+	de: 'Nur, wenn Panel des übergeordneten Tabs aktiv ist',
     zh_CN: '仅当父标签页的面板处于活动状态时',
   },
   'settings.move_new_tab': {
@@ -1475,43 +1475,43 @@ export const setupPageTranslations: Translations = {
   'settings.move_new_tab_start': {
     en: 'panel start',
     ru: 'начало панели',
-	de: 'Anfang des Paneels',
+	de: 'Anfang des Panels',
     zh_CN: '面板起始位置',
   },
   'settings.move_new_tab_end': {
     en: 'panel end',
     ru: 'конец панели',
-	de: 'Ende des Paneels',
+	de: 'Ende des Panels',
     zh_CN: '面板末尾位置',
   },
   'settings.move_new_tab_before': {
     en: 'before active tab',
     ru: 'перед активной вкладкой',
-	de: 'vor aktivem Tab',
+	de: 'Vor aktivem Tab',
     zh_CN: '活动标签页之前',
   },
   'settings.move_new_tab_after': {
     en: 'after active tab',
     ru: 'после активной вкладкой',
-	de: 'nach aktivem Tab',
+	de: 'Nach aktivem Tab',
     zh_CN: '活动标签页之后',
   },
   'settings.move_new_tab_first_child': {
     en: 'first child of active tab',
     ru: 'первая дочерняя вкладка активной',
-	de: 'erstes Unterelement des aktiven Tabs',
+	de: 'Erstes Unterelement des aktiven Tabs',
     zh_CN: '活动标签页的第一个子标签',
   },
   'settings.move_new_tab_last_child': {
     en: 'last child of active tab',
     ru: 'последняя дочерняя вкладка активной',
-	de: 'letztes Unterelement des aktiven Tabs',
+	de: 'Letztes Unterelement des aktiven Tabs',
     zh_CN: '活动标签页的最后一个子标签',
   },
   'settings.move_new_tab_none': {
     en: 'none',
     ru: 'выкл',
-	de: 'nichts',
+	de: 'Nichts',
     zh_CN: '无',
   },
 
@@ -1549,7 +1549,7 @@ export const setupPageTranslations: Translations = {
   'settings.pinned_tabs_position_panel': {
     en: 'in panel - top',
     ru: 'на панели - сверху',
-	de: 'im Paneel - Oben',
+	de: 'Im Panel - Oben',
     zh_CN: '面板',
   },
   'settings.pinned_tabs_list': {
@@ -1623,7 +1623,7 @@ export const setupPageTranslations: Translations = {
   'settings.tabs_tree_limit_none': {
     en: 'none',
     ru: 'выкл',
-	de: 'keines',
+	de: 'Keines',
     zh_CN: '无',
   },
   'settings.hide_folded_tabs': {
@@ -1677,7 +1677,7 @@ export const setupPageTranslations: Translations = {
   'settings.auto_fold_tabs_except_none': {
     en: 'none',
     ru: 'выкл',
-	de: 'keines',
+	de: 'Keiner',
     zh_CN: '无',
   },
   'settings.auto_exp_tabs': {
@@ -1719,7 +1719,7 @@ export const setupPageTranslations: Translations = {
   'settings.tabs_lvl_dots': {
     en: 'Show marks to indicate tabs sub-tree levels',
     ru: 'Показывать отметки уровней вложенности',
-	de: 'Markierungen für Abstufung der Unterebenen der Tabs',
+	de: 'Zeige Markierungen für Abstufung der Unterebenen der Tabs',
     zh_CN: '显示标记以表示标签页子树的级别',
   },
   'settings.discard_folded': {
@@ -1807,7 +1807,7 @@ export const setupPageTranslations: Translations = {
   'settings.bookmarks_panel': {
     en: 'Bookmarks panel',
     ru: 'Панель закладок',
-	de: 'Lesezeichen-Paneel',
+	de: 'Lesezeichen-Panel',
     zh_CN: '书签面板',
   },
   'settings.bookmarks_layout': {
@@ -1861,7 +1861,7 @@ export const setupPageTranslations: Translations = {
   'settings.auto_rm_other': {
     en: 'Delete open bookmarks from "Other Bookmarks" folder',
     ru: 'Удалять открытые закладки из папки "Другие закладки"',
-	de: 'Entferne geöffnete Lesezeichen aus "Andere Lesezeichen"-Ordner',
+	de: 'Entferne geöffnete Lesezeichen aus "Weitere Lesezeichen"-Ordner',
     zh_CN: '从“其他书签”文件夹中删除打开的书签',
   },
   'settings.show_bookmark_len': {
@@ -1885,7 +1885,7 @@ export const setupPageTranslations: Translations = {
   'settings.bookmarks_rm_undo_note': {
     en: 'Show undo notification after deleting bookmarks',
     ru: 'Показывать уведомление об удалении нескольких закладок',
-	de: 'Zeige "rückgängig machen" nachdem Lesezeichen gelöscht wurden',
+	de: 'Zeige "Rückgängig"-Meldung nachdem Lesezeichen gelöscht wurden',
     zh_CN: '删除书签后显示撤消通知',
   },
   'settings.fetch_bookmarks_favs': {
@@ -2105,7 +2105,7 @@ export const setupPageTranslations: Translations = {
   'settings.appearance_notes_title': {
     en: 'Notes:',
     ru: 'Примечания:',
-	de: 'Notizen',
+	de: 'Hinweis:',
     zh_CN: '说明:',
   },
   'settings.appearance_notes': {
@@ -2126,7 +2126,7 @@ export const setupPageTranslations: Translations = {
   'settings.snap_notify': {
     en: 'Show notification after snapshot creation',
     ru: 'Показать уведомление после создания снепшота',
-	de: 'Zeige Benachrichtigung nach Erstellung von Schnappschuss',
+	de: 'Zeige Benachrichtigung nach Erstellen von Schnappschuss',
     zh_CN: '创建快照后显示通知',
   },
   'settings.snap_exclude_private': {
@@ -2258,11 +2258,11 @@ export const setupPageTranslations: Translations = {
   'settings.h_scroll_action_switch_panels': {
     en: 'switch panels',
     ru: 'переключения панелей',
-	de: 'Paneel wechseln',
+	de: 'Panel wechseln',
   },
   'settings.h_scroll_action_switch_act_tabs': {
     en: 'switch recently active tabs',
-	de: 'zuletzt aktiven Tab wechseln',
+	de: 'Zuletzt aktive Tabs wechseln',
     ru: 'переключения вкладок в порядке активации',
   },
   'settings.h_scroll_action_none': {
@@ -2274,12 +2274,12 @@ export const setupPageTranslations: Translations = {
     en: 'Switch tabs with scroll wheel',
     ru: 'Переключать вкладки с помощью колеса прокрутки',
     zh_CN: '使用滚轮切换标签页',
-	de: 'Wechsle Tabs mittels Scrollrad',
+	de: 'Wechsle Tabs mit dem Scrollrad',
   },
   'settings.scroll_through_tabs_panel': {
     en: 'panel',
     ru: 'на панели',
-	de: 'Paneel',
+	de: 'Im Panel',
     zh_CN: '面板',
   },
   'settings.scroll_through_tabs_global': {
@@ -2291,7 +2291,7 @@ export const setupPageTranslations: Translations = {
   'settings.scroll_through_tabs_none': {
     en: 'none',
     ru: 'выкл',
-	de: 'Keine',
+	de: 'Nie',
     zh_CN: '无',
   },
   'settings.scroll_through_visible_tabs': {
@@ -2308,7 +2308,7 @@ export const setupPageTranslations: Translations = {
   },
   'settings.scroll_through_tabs_except_overflow': {
     en: 'Except if panel is overflowing',
-	de: 'Außer, wenn Paneel überläuft',
+	de: 'Außer, wenn Panel überläuft',
     ru: 'За исключением случаев, когда панель переполнена',
     zh_CN: '溢出面板除外',
   },
@@ -2326,7 +2326,7 @@ export const setupPageTranslations: Translations = {
   'settings.scroll_through_tabs_scroll_area_note': {
     en: 'Positive - at the right, negative - at the left side of the panel',
     ru: 'Положительное значение - справа, отрицательное - слева на панели',
-	de: 'Positiv - rechte Seite, Negativ - linke Seite des Paneels',
+	de: 'Positiv - rechte Seite, Negativ - linke Seite des Panels',
   },
   'settings.auto_menu_multi_sel': {
     en: 'Automatically open context menu on right-button multi-selection',
@@ -2347,7 +2347,7 @@ export const setupPageTranslations: Translations = {
   'settings.wheel_threshold': {
     en: 'Set threshold for switching between panels and tabs with mouse wheel',
     ru: 'Установить порог для переключения между панелями и вкладками с помощью колесика мыши',
-	de: 'Grenzwert für Mausrad-Wechsel zwischen Paneelen und Tabs',
+	de: 'Grenzwert für Mausrad-Wechsel zwischen Panels und Tabs',
   },
   'settings.wheel_threshold_y': {
     en: 'Vertical scrolling (px)',
@@ -2389,7 +2389,7 @@ export const setupPageTranslations: Translations = {
     en: 'Start shift+click selection from the active tab',
     ru: 'Начинать выделение по shift+клику с активной вкладки',
     zh_CN: '活动标签页中启用 shift + 点击 进行选择',
-	de: 'Starte Umschalt+Klick Auswahl von aktivem Tab',
+	de: 'Starte Umschalt+Klick Auswahl beim aktiven Tab',
   },
   'settings.tab_long_left_click': {
     en: 'Long left click on tab',
@@ -2407,7 +2407,7 @@ export const setupPageTranslations: Translations = {
     en: 'Middle click on close tab button',
     ru: 'Нажатие средней кнопкой мыши по кнопке закрытия вкладки',
     zh_CN: '中键单击关闭标签页按钮',
-	de: 'Klicken mit mittlerer Maustaste auf Tab schließen',
+	de: 'Klicken mit mittlerer Maustaste auf "Schließen"-Knopf',
   },
   'settings.tab_action_reload': {
     en: 'reload',
@@ -2480,31 +2480,31 @@ export const setupPageTranslations: Translations = {
     en: 'Tabs panel actions',
     ru: 'Действия над панелью c вкладками',
     zh_CN: '标签页面板操作',
-	de: 'Aktionen mit Tab-Paneelen',
+	de: 'Aktionen mit Tab-Panels',
   },
   'settings.tabs_panel_left_click_action': {
     en: 'Left click on tabs panel',
     ru: 'Левый клик по панели с вкладками',
     zh_CN: '左击标签页面板',
-	de: 'Linksklick auf Tab-Paneel',
+	de: 'Linksklick auf Tab-Panel',
   },
   'settings.tabs_panel_double_click_action': {
     en: 'Double click on tabs panel',
     ru: 'Двойной клик по панели с вкладками',
     zh_CN: '双击标签页面板',
-	de: 'Doppelklick auf Tab-Paneel',
+	de: 'Doppelklick auf Tab-Panel',
   },
   'settings.tabs_panel_right_click_action': {
     en: 'Right click on tabs panel',
     ru: 'Правый клик по панели с вкладками',
-	de: 'Rechtsklick auf Tab-Paneel',
+	de: 'Rechtsklick auf Tab-Panel',
     zh_CN: '右击标签页面板',
   },
   'settings.tabs_panel_middle_click_action': {
     en: 'Middle click on tabs panel',
     ru: 'Средний клик по панели с вкладками',
     zh_CN: '中键单击标签页面板',
-	de: 'Mittlere Maustaste auf Tab-Paneel',
+	de: 'Mittlere Maustaste auf Tab-Panel',
   },
   'settings.tabs_panel_action_tab': {
     en: 'create tab',
@@ -2515,26 +2515,26 @@ export const setupPageTranslations: Translations = {
   'settings.tabs_panel_action_prev': {
     en: 'previous panel',
     ru: 'пред. панель',
-	de: 'Vorheriges Paneel',
+	de: 'Vorheriges Panel',
     zh_CN: '前一个面板',
   },
   'settings.tabs_panel_action_next': {
     en: 'next panel',
     ru: 'след. панель',
-	de: 'Nächstes Paneel',
+	de: 'Nächstes Panel',
     zh_CN: '后一个面板',
   },
   'settings.tabs_panel_action_expand': {
     en: 'expand/fold',
     ru: 'развернуть/свернуть',
     zh_CN: '展开/折叠',
-	de: 'Aus-/einklappen',
+	de: 'Ein-/Ausklappen',
   },
   'settings.tabs_panel_action_parent': {
     en: 'activate parent tab',
     ru: 'перейти к родительской вкладке',
     zh_CN: '激活父标签页',
-	de: 'Übergeordneten Tab aktivieren',
+	de: 'Obersten Tab aktivieren',
   },
   'settings.tabs_panel_action_menu': {
     en: 'show menu',
@@ -2552,7 +2552,7 @@ export const setupPageTranslations: Translations = {
     en: 'undo tab close',
     ru: 'восстановить закрытую вкладку',
     zh_CN: '撤消关闭标签页',
-	de: 'Tab schließen rückgängig machen',
+	de: '"Tab schließen" rückgängig machen',
   },
   'settings.tabs_panel_action_rm_act_tab': {
     en: 'close active tab',
@@ -2578,7 +2578,7 @@ export const setupPageTranslations: Translations = {
   },
   'settings.mouse.bookmarks.left_click_action_open_in_act': {
     en: 'open in active tab',
-	de: 'Öffne in aktivem Tab',
+	de: 'Öffne im aktiven Tab',
     ru: 'открыть в активной вкладке',
   },
   'settings.mouse.bookmarks.left_click_action_open_in_new': {
@@ -2589,7 +2589,7 @@ export const setupPageTranslations: Translations = {
   'settings.mouse.bookmarks.new_tab_activate': {
     en: 'Activate the new tab',
     ru: 'Активировать новую вкладку',
-	de: 'Aktiviere den neuen Tab',
+	de: 'Neuen Tab aktivieren',
   },
   'settings.mouse.bookmarks.new_tab_pos': {
     en: 'Position of the new tab',
@@ -2619,12 +2619,12 @@ export const setupPageTranslations: Translations = {
   'settings.mouse.bookmarks.mid_click_action_edit': {
     en: 'edit',
     ru: 'редактировать',
-	de: 'ändern',
+	de: 'Ändern',
   },
   'settings.mouse.bookmarks.mid_click_action_delete': {
     en: 'delete',
     ru: 'удалить',
-	de: 'löschen',
+	de: 'Löschen',
   },
 
   // - Keybindings
@@ -2660,7 +2660,7 @@ export const setupPageTranslations: Translations = {
   'settings.kb_switching_panel': {
     en: 'Switching between panels',
     ru: 'Переключение панелей',
-	de: 'Zwischen Paneelen wechseln',
+	de: 'Zwischen Panels wechseln',
   },
   'settings.kb_switching_tab': {
     en: 'Switching between tabs',
@@ -2733,7 +2733,7 @@ export const setupPageTranslations: Translations = {
   'settings.all_urls_info': {
     en: 'Required for:\n- Cleaning cookies\n- Proxy and URL rules of containers\n- Screenshots for the group page and windows selection panel\n- Changing the User-Agent per container',
     ru: 'Необходимо для:\n- Удаления cookies\n- Прокси и url-правил контейнеров\n- Скриншотов на групповой странице и на панели выбора окна',
-	de: 'Benötigt für:\n- Cookies löschen\n- Proxy und URL Regeln für Umgebungen\n- Screenshots für die Gruppenseite und Fensterauswahl-Paneel\n- User-Agent per Umgebung ändern',
+	de: 'Benötigt für:\n- Cookies löschen\n- Proxy und URL Regeln für Umgebungen\n- Screenshots für die Gruppenseite und Fensterauswahl-Panel\n- User-Agent per Umgebung ändern',
     zh_CN:
       '需要：\n- 清除Cookies\n- 容器的代理和 URL 规则\n- 分组页面和窗口选择面板的屏幕快照\n- 更改每个容器的用户代理',
   },
@@ -2747,7 +2747,7 @@ export const setupPageTranslations: Translations = {
     en: 'Required for:\n- Bookmarks panels',
     ru: 'Required for:\n- Панели закладок',
     zh_CN: '需要:\n-书签面板',
-	de: 'Benötigt für:\n- Lesezeichen-Paneele',
+	de: 'Benötigt für:\n- Lesezeichen-Panels',
   },
   'settings.tab_hide_label': {
     en: 'Hiding tabs:',
@@ -2759,7 +2759,7 @@ export const setupPageTranslations: Translations = {
     en: 'Required for:\n- Hiding tabs in inactive panels\n- Hiding folded tabs',
     ru: 'Необходимо для:\n- Скрывания вкладок неактивных панелей\n- Скрывания свернутых вкладок',
     zh_CN: '需要：\n-隐藏非活动面板中的标签页\n-隐藏折叠的标签页',
-	de: 'Benötigt für:\n- Verstecken von Tabs in inaktiven Paneelen\n- Eingeklappte Tabs verstecken',
+	de: 'Benötigt für:\n- Verstecken von Tabs in inaktiven Panels\n- Eingeklappte Tabs verstecken',
   },
   'settings.clipboard_write_label': {
     en: 'Writing to clipboard:',
@@ -2782,7 +2782,7 @@ export const setupPageTranslations: Translations = {
   'settings.history_info': {
     en: 'Required for:\n- History panel',
     ru: 'Необходимо для:\n- Панель истории',
-	de: 'Benötigt für:\n- Chronik-Paneel',
+	de: 'Benötigt für:\n- Chronik-Panel',
     zh_CN: '需要:\n-历史面板',
   },
 
@@ -2948,7 +2948,7 @@ export const setupPageTranslations: Translations = {
   'settings.sync_notes_title': {
     en: 'Notes:',
     ru: 'Примечания:',
-	de: 'Notizen',
+	de: 'Hinweis:',
     zh_CN: '说明:',
   },
   'settings.sync_notes': {
@@ -2958,9 +2958,9 @@ export const setupPageTranslations: Translations = {
     ru: `Sidebery использует синхронизацию Firefox, поэтому:
 - Чтобы синхронизация работала, вам нужно зайти в Firefox аккаунт
 - Чтобы быть уверенным в том, что данные загрузились на сервер синхронизации Firefox, необходимо нажать на кнопку "Синхронизировать" в настройках или в вашем профиле в главном меню`,
-	de: `Sidebery nutzt Firefox Synchronisation, deshalb:
+	de: `Sidebery nutzt die Synchronisation von Firefox, deshalb:
 - müssen Sie sich in Ihrem Firefox Konto einloggen, damit es funktioniert
-- um sicher zu gehen, dass die Daten auf die Firefox Sync Server hochgeladen werden müssen Sie in den Firefox Einstellungen oder in Ihrem Profil im Hauptmenü (Drei-Striche-Menü) auf "Jetzt synchronisieren" drücken `,
+- um sicher zu gehen, dass die Daten auf die Firefox Sync Server hochgeladen werden, müssen Sie in den Firefox Einstellungen oder in Ihrem Profil im Hauptmenü (Drei-Striche-Menü) auf "Jetzt synchronisieren" drücken `,
   },
 
   // - Help
@@ -3049,15 +3049,15 @@ export const setupPageTranslations: Translations = {
     zh_CN: '将被删除；如果您需要此功能，请提交issue。',
   },
   'settings.help_exp_data': {
-    en: 'Export addon data',
+    en: 'Export Add-on data',
     ru: 'Экспорт данных расширения',
-	de: 'Addon-Datem exportieren',
+	de: 'Add-on-Daten exportieren',
     zh_CN: '导出',
   },
   'settings.help_imp_data': {
-    en: 'Import addon data',
+    en: 'Import Add-on data',
     ru: 'Импорт данных расширения',
-	de: 'Addon-Daten importieren',
+	de: 'Add-on-Daten importieren',
     zh_CN: '导入',
   },
   'settings.help_imp_perm': {
@@ -3126,10 +3126,10 @@ export const setupPageTranslations: Translations = {
 	de: 'Falsches Format der importierten Daten',
     zh_CN: '导入数据格式错误',
   },
-  'settings.reload_addon': {
+  'settings.reload_Add-on': {
     en: 'Reload add-on',
     ru: 'Перезагрузить расширение',
-	de: 'Addon neu laden',
+	de: 'Add-on neu laden',
     zh_CN: '重新加载插件',
   },
 
@@ -3191,7 +3191,7 @@ export const setupPageTranslations: Translations = {
       if (NUM_234_RE.test(n.toString())) return 'окна'
       return 'окон'
     },
-	de: Fenster,
+	de: 'Fenster',
     zh_CN: '窗口',
   },
   'snapshot.snap_ctr': {
@@ -3223,7 +3223,7 @@ export const setupPageTranslations: Translations = {
   'snapshot.sel.open_in_panel': {
     en: 'Open in current panel',
     ru: 'Открыть в текущей панели',
-	de: 'Im aktuellen Paneel öffnen',
+	de: 'Im aktuellen Panel öffnen',
     zh_CN: '在当前面板中打开',
   },
   'snapshot.sel.reset_sel': {
@@ -3276,7 +3276,7 @@ export const setupPageTranslations: Translations = {
 	- Klicke auf rechteckiges Symbol (mit drei Teilstücken) oben rechts auf der Debugger Seite
 	- Wähle "/sidebar/index.html" für Seitenleisten Frame
 	- Wähle "/page.group/group.html" für Gruppenseiten Frame
-  - "Inspector" Tab durchschauen`,
+  - "Inspector" Tab durchsehen`,
   },
   'styles.vars_group.other': {
     en: 'Other',
