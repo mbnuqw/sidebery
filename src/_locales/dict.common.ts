@@ -4,7 +4,7 @@ export const NUM_234_RE = /^([234]|(\d*?)[^1][234])$/
 export const commonTranslations: Translations = {
   // ---
   // -- Bookmarks editor
-  // -
+  // - 
   'bookmarks_editor.name_bookmark_placeholder': {
     en: 'Bookmark name...',
     ru: 'Название закладки...',
