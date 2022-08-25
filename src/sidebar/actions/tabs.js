@@ -23,9 +23,9 @@ async function loadTabsFromGlobalStorage() {
     return await this.actions.loadTabsFromInlineData(tabs, dataTabIndex)
   }
 
-  let activePanel = this.state.panels[this.state.panelIndex] || this.state.panels[1]
-  let tabsData = storage.tabsData_v4 ? storage.tabsData_v4 : []
   let lastPanel = this.state.panels.find(p => p.tabs)
+  let activePanel = this.state.panels[this.state.panelIndex] || lastPanel
+  let tabsData = storage.tabsData_v4 ? storage.tabsData_v4 : []
   let idsMap = {}
   let activeTab
 
@@ -191,8 +191,8 @@ async function loadTabsFromSessionStorage() {
   // Get previuos state of tabs
   let tabsData = await Promise.all(tabs.map(t => browser.sessions.getTabValue(t.id, 'data')))
 
-  let activePanel = this.state.panels[this.state.panelIndex] || this.state.panels[1]
   let lastPanel = this.state.panels.find(p => p.tabs)
+  let activePanel = this.state.panels[this.state.panelIndex] || lastPanel
   let offset = 0
   let activeTab
   let idsMap = {}
@@ -404,7 +404,7 @@ async function loadTabsFromInlineData(tabs, dataTabIndex) {
 
   let tabsInfoStr = dataTab.url.slice(20)
   let tabsInfo = JSON.parse(decodeURIComponent(tabsInfoStr))
-  let activePanel = this.state.panels[this.state.panelIndex] || this.state.panels[1]
+  let activePanel = this.state.panels[this.state.panelIndex] || this.state.panels.find(p => p.tabs)
 
   // Wait for all tabs
   if (tabsInfo.length !== tabs.length - 1) {

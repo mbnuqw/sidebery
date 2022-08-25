@@ -1,9 +1,9 @@
 import EventBus from '../../event-bus'
 import CommonActions from '../../actions/panels'
 import { translate } from '../../../addon/locales/dict.js'
-import { BOOKMARKS_PANEL_STATE } from '../../../addon/defaults'
-import { DEFAULT_TABS_PANEL_STATE } from '../../../addon/defaults'
-import { TABS_PANEL_STATE } from '../../../addon/defaults'
+import { BOOKMARKS_PANEL_STATE, BOOKMARKS_PANEL } from '../../../addon/defaults'
+import { DEFAULT_TABS_PANEL_STATE, DEFAULT_TABS_PANEL } from '../../../addon/defaults'
+import { TABS_PANEL_STATE, TABS_PANEL } from '../../../addon/defaults'
 
 let recalcPanelScrollTimeout, updatePanelBoundsTimeout
 
@@ -86,6 +86,7 @@ async function updatePanels(newPanels) {
   this.state.panels = panels
   this.state.panelsMap = panelsMap
   this.state.panelIndex = newActPanelIndex
+  this.state.lastPanelIndex = newActPanelIndex
   this.actions.updatePanelsTabs()
   this.actions.savePanelIndex()
 
@@ -388,10 +389,19 @@ async function removePanel(panelId) {
   let ok = await this.actions.confirm(preMsg + panel.name + postMsg)
   if (!ok) return
 
-  let index = this.state.panels.findIndex(p => p.id === panelId)
-  if (index > -1) this.state.panels.splice(index, 1)
-  delete this.state.panelsMap[panelId]
-  this.actions.savePanels()
+  let output = []
+  let panelDefs
+  for (let panel of this.state.panels) {
+    if (panel.id === panelId) continue
+
+    if (panel.type === 'bookmarks') panelDefs = BOOKMARKS_PANEL
+    else if (panel.type === 'default') panelDefs = DEFAULT_TABS_PANEL
+    else if (panel.type === 'tabs') panelDefs = TABS_PANEL
+
+    output.push(Utils.normalizeObject(panel, panelDefs))
+  }
+
+  browser.storage.local.set({ panels_v4: output })
 }
 
 export default {

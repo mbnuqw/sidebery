@@ -25,8 +25,8 @@ async function loadPanels() {
   }
   if (defaultPanelIndex === -1) {
     let defaultPanelClone = Utils.cloneObject(DEFAULT_PANEL_STATE)
-    panels.splice(bookmarksPanelIndex + 1, 0, defaultPanelClone)
-    defaultPanelIndex = 1
+    defaultPanelIndex = bookmarksPanelIndex + 1
+    panels.splice(defaultPanelIndex, 0, defaultPanelClone)
   }
 
   // Normalize
