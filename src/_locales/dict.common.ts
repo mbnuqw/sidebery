@@ -130,7 +130,7 @@ export const commonTranslations: Translations = {
   'panel.history.load_more': {
     en: 'Scroll to load more',
     ru: 'Прокрутитe вниз, чтобы загрузить больше',
-    de: 'Scrolle, um mehr zu laden',
+    de: 'Scrollen, um mehr zu laden',
     zh_CN: '滚动加载更多',
   },
   'panel.history.req_perm': {
@@ -153,7 +153,7 @@ export const commonTranslations: Translations = {
   'popup.bookmarks.location_label': {
     en: 'Location',
     ru: 'Расположение',
-    de: 'Adresse',
+    de: 'Ort',
     zh_CN: '地址',
   },
   'popup.bookmarks.location_new_folder_placeholder': {
@@ -207,7 +207,7 @@ export const commonTranslations: Translations = {
   'popup.bookmarks.move_to': {
     en: 'Move to',
     ru: 'Переместить в',
-    de: 'Verschiebe zu',
+    de: 'Verschieben nach',
     zh_CN: '移动到',
   },
   'popup.bookmarks.move': {
@@ -280,49 +280,55 @@ export const commonTranslations: Translations = {
   'menu.bookmark.open_in_sub_menu_name': {
     en: 'Open in',
     ru: 'Открыть в',
-    de: 'Öffne in',
+    de: 'Öffnen in',
     zh_CN: '打开',
   },
   'menu.bookmark.open_in_new_window': {
     en: 'Open in new normal window',
     ru: 'Открыть в новом стандартном окне',
-    de: 'In neuem normalem Fenster öffnen',
+    //de: 'In neuem normalem Fenster öffnen',
+    de:'Neuem normalem Fenster', //shortened to be consistent with actual English menu description
     zh_CN: '新建窗口打开链接',
   },
   'menu.bookmark.open_in_new_priv_window': {
     en: 'Open in new private window',
     ru: 'Открыть в новом приватном окне',
-    de: 'In neuem privatem Fenster öffnen',
+    //de: 'In neuem privatem Fenster öffnen',
+    de:'Neuem privatem Fenster', //shortened to be consistent with actual English menu description
     zh_CN: '新建隐私窗口打开链接',
   },
   'menu.bookmark.open_in_new_panel': {
     en: 'Open in new tabs panel',
     ru: 'Открыть в новой панели вкладок',
-    de: 'In neuem Tab-Panel öffnen',
+    //de: 'In neuem Tab-Panel öffnen',
+    de:'Neuem Tab-Panel', //shortened to be consistent with actual English menu description
     zh_CN: '新标签面板中打开链接',
   },
   'menu.bookmark.open_in_panel_': {
     en: 'Open in panel...',
     ru: 'Открыть в панели...',
-    de: 'Öffne in Panel...',
+    //de: 'Öffne in Panel...',
+    de:'Panel...', //shortened to be consistent with actual English menu description
     zh_CN: '在面板中打开...',
   },
   'menu.bookmark.open_in_ctr_': {
     en: 'Open in container...',
     ru: 'Открыть в контейнере...',
-    de: 'Öffne in Umgebung...',
+    //de: 'Öffne in Umgebung...',
+    de:'Umgebung...', //shortened to be consistent with actual English menu description
     zh_CN: '在容器中打开...',
   },
   'menu.bookmark.open_in_default_ctr': {
     en: 'Open in default container',
     ru: 'Открыть в стандартном контейнере',
-    de: 'In Standardumgebung öffnen',
+    //de: 'In Standardumgebung öffnen',
+    de:'Standardumgebung', //shortened to be consistent with actual English menu description
     zh_CN: '在默认容器中打开',
   },
   'menu.bookmark.open_in_': {
     en: 'Open in ',
     ru: 'Открыть в ',
-    de: 'Öffne in ',
+    de: 'Öffnen in ',
     zh_CN: '打开 ',
   },
   'menu.bookmark.create_bookmark': {
@@ -364,73 +370,82 @@ export const commonTranslations: Translations = {
   'menu.bookmark.sort_by_name': {
     en: 'Sort by name',
     ru: 'Сортировать по названию',
-    de: 'Nach Name sortieren',
+    //de: 'Nach Name sortieren',
+    de:'Nach Name', //shortened to be consistent with actual English menu description
     zh_CN: '按名称排序',
   },
   'menu.bookmark.sort_by_name_asc': {
     en: 'Sort by name (A-z)',
     ru: 'Сортировать по названию (А-я)',
-    de: 'Nach Name sortieren (A-z)',
+    //de: 'Nach Name sortieren (A-z)',
+    de:'Nach Name (A-z)', //shortened to be consistent with actual English menu description
     zh_CN: '按名称排序 (A-z)',
   },
   'menu.bookmark.sort_by_name_des': {
     en: 'Sort by name (z-A)',
     ru: 'Сортировать по названию (я-А)',
-    de: 'Nach Name sortieren (z-A)',
+    //de: 'Nach Name sortieren (z-A)',
+    de:'Nach Name (z-A)', //shortened to be consistent with actual English menu description
     zh_CN: '按名称排序 (z-A)',
   },
   'menu.bookmark.sort_by_link': {
     en: 'Sort by URL',
     ru: 'Сортировать по адресу',
-    de: 'Nach URL sortieren',
+    //de: 'Nach URL sortieren',
+    de:'Nach URL', //shortened to be consistent with actual English menu description
     zh_CN: '按网址排序',
   },
   'menu.bookmark.sort_by_link_asc': {
     en: 'Sort by URL (A-z)',
     ru: 'Сортировать по адресу (А-я)',
-    de: 'Nach URL sortieren (A-z)',
+    //de: 'Nach URL sortieren (A-z)',
+    de:'Nach URL (A-z)', //shortened to be consistent with actual English menu description
     zh_CN: '按网址排序 (A-z)',
   },
   'menu.bookmark.sort_by_link_des': {
     en: 'Sort by URL (z-A)',
     ru: 'Сортировать по адресу (я-А)',
-    de: 'Nach URL sortieren (z-A)',
+    //de: 'Nach URL sortieren (z-A)',
+    de:'Nach URL (z-A)', //shortened to be consistent with actual English menu description
     zh_CN: '按网址排序 (z-A)',
   },
   'menu.bookmark.sort_by_time': {
     en: 'Sort by creation time',
     ru: 'Сортировать по времени создания',
-    de: 'Nach Erstelldatum sortieren',
+    //de: 'Nach Erstelldatum sortieren',
+    de:'Nach Erstelldatum', //shortened to be consistent with actual English menu description
     zh_CN: '按添加时间排序',
   },
   'menu.bookmark.sort_by_time_asc': {
     en: 'Sort by time (Old-New)',
     ru: 'Сортировать по времени (Старые-Новые)',
-    de: 'Nach Zeit sortieren (Alt-Neu)',
+    //de: 'Nach Zeit sortieren (Alt-Neu)',
+    de:'Nach Zeit (Alt-Neu)', //shortened to be consistent with actual English menu description
     zh_CN: '按添加时间排序 (旧-新)',
   },
   'menu.bookmark.sort_by_time_des': {
     en: 'Sort by time (New-Old)',
     ru: 'Сортировать по времени (Новые-Старые)',
-    de: 'Nach Zeit sortieren (Neu-Alt)',
+    //de: 'Nach Zeit sortieren (Neu-Alt)',
+    de:'Nach Zeit (Neu-Alt)', //shortened to be consistent with actual English menu description
     zh_CN: '按添加时间排序 (新-旧)',
   },
   'menu.bookmark.open_as_bookmarks_panel': {
     en: 'Open as bookmarks panel',
     ru: 'Открыть как панель закладок',
-    de: 'In Lesezeichen-Panel öffnen',
+    de: 'Als Lesezeichen-Panel öffnen',
     zh_CN: '作为书签面板打开',
   },
   'menu.bookmark.open_as_tabs_panel': {
     en: 'Open as tabs panel',
     ru: 'Открыть как панель вкладок',
-    de: 'In Tab-Panel öffnen',
+    de: 'Als Tab-Panel öffnen',
     zh_CN: '作为标签页面板打开',
   },
   'menu.bookmark.move_to': {
     en: 'Move to...',
     ru: 'Переместить в...',
-    de: 'Verschiebe nach...',
+    de: 'Verschieben nach...',
     zh_CN: '移动到...',
   },
   // - Bookmarks panel
@@ -480,55 +495,62 @@ export const commonTranslations: Translations = {
   'menu.tab.move_to_sub_menu_name': {
     en: 'Move to',
     ru: 'Переместить в',
-    de: 'Verschiebe nach',
+    de: 'Verschieben in',
     zh_CN: '移动到',
   },
   'menu.tab.move_to_new_window': {
     en: 'Move to new window',
     ru: 'Переместить в новое окно',
-    de: 'In neues Fenster verschieben',
+    //de: 'In neues Fenster verschieben',
+    de:'Neues Fenster', //shortened to be consistent with actual English menu description
     zh_CN: '移动到新窗口',
   },
   'menu.tab.move_to_new_priv_window': {
     en: 'Move to private window',
     ru: 'Переместить в приватное окно',
-    de: 'In privates Fenster verschieben',
+    //de: 'In privates Fenster verschieben',
+    de:'Privates Fenster', //shortened to be consistent with actual English menu description
     zh_CN: '移动到隐私窗口',
   },
   'menu.tab.move_to_another_window': {
     en: 'Move to another window',
     ru: 'Переместить в другое окно',
-    de: 'In anderes Fenster verschieben',
+    //de: 'In anderes Fenster verschieben',
+    de:'Anderes Fenster', //shortened to be consistent with actual English menu description
     zh_CN: '移动到另一个窗口',
   },
   'menu.tab.move_to_window_': {
     en: 'Move to window...',
     ru: 'Переместить в окно...',
-    de: 'Verschiebe in Fenster...',
+    //de: 'Verschiebe in Fenster...',
+    de:'Fenster...', //shortened to be consistent with actual English menu description
     zh_CN: '移动到窗口...',
   },
   'menu.tab.move_to_panel_label': {
     en: 'Move to panel...',
     ru: 'Переместить в панель...',
-    de: 'Verschiebe in Panel...',
+    //de: 'Verschiebe in Panel...',
+    de:'Panel...', //shortened to be consistent with actual English menu description
     zh_CN: '移动到面板...',
   },
   'menu.tab.move_to_panel_': {
     en: 'Move to ',
     ru: 'Переместить в ',
-    de: 'Verschiebe in ',
+    de: 'Verschieben in ',
     zh_CN: '移动到 ',
   },
   'menu.tab.move_to_new_panel': {
     en: 'Move to new panel',
     ru: 'Переместить в новую панель',
-    de: 'Verschiebe in neues Panel',
+    //de: 'Verschiebe in neues Panel',
+    de:'Neues Panel', //shortened to be consistent with actual English menu description
     zh_CN: '移动到新面板',
   },
   'menu.tab.reopen_in_new_window': {
     en: 'Reopen in new window of another type',
     ru: 'Переоткрыть в новом окне другого типа',
-    de: 'In neuem Fenster anderen Typs wieder öffnen',
+    //de: 'In neuem Fenster anderen Typs wieder öffnen',
+    de:'Neuem Fenster', //shortened to be consistent with actual English menu description
     zh_CN: '在其他类型的新建窗口中重新打开',
   },
   'menu.tab.reopen_in_new_norm_window': {
@@ -576,25 +598,25 @@ export const commonTranslations: Translations = {
   'menu.tab.reopen_in_sub_menu_name': {
     en: 'Reopen in',
     ru: 'Переоткрыть в',
-    de: 'Wieder öffnen in',
+    de: 'Neu öffnen in',
     zh_CN: '重新打开',
   },
   'menu.tab.reopen_in_ctr_': {
     en: 'Reopen in container...',
     ru: 'Переоткрыть в контейнере...',
-    de: 'Wieder öffnen in Umgebung...',
+    de: 'Neu öffnen in Umgebung...',
     zh_CN: '在容器中重新打开...',
   },
   'menu.tab.reopen_in_': {
     en: 'Reopen in ',
     ru: 'Переоткрыть в ',
-    de: 'Wieder öffnen in ',
+    de: 'Neu öffnen in ',
     zh_CN: '重新打开 ',
   },
   'menu.tab.reopen_in_window_': {
     en: 'Reopen in window...',
     ru: 'Переоткрыть в окне...',
-    de: 'Wieder öffnen in Fenster...',
+    de: 'Neu öffnen in Fenster...',
     zh_CN: '在窗口中重新打开...',
   },
   'menu.tab.group': {
