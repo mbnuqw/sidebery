@@ -584,7 +584,8 @@ export const commonTranslations: Translations = {
   'menu.tab.reopen_in_window': {
     en: 'Reopen in window of another type',
     ru: 'Переоткрыть в стандартном контейнере',
-    de: 'In Fenster eines anderen Typs neu öffnen',
+    //de: 'In Fenster eines anderen Typs neu öffnen',
+    de: 'Fenster eines anderen Typs', //shortened for consistency with other shortened descriptions
     zh_CN: '在其他类型的窗口中重新打开',
   },
   'menu.tab.reopen_in_default_panel': {
