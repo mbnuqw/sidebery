@@ -220,7 +220,7 @@ function onMouseEnter(): void {
 }
 
 function onMouseLeave(): void {
-  if (DnD.droppedRecently) return
+  if (DnD.dragEndedRecently) return
 
   Mouse.stopResizing()
 

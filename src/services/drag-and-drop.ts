@@ -64,7 +64,7 @@ export const DnD = {
   srcPanelId: NOID,
   srcIndex: -1,
 
-  droppedRecently: false,
+  dragEndedRecently: false,
 
   ...DndActions,
 }

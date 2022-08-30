@@ -14,12 +14,16 @@ import { Tabs } from 'src/services/tabs.fg'
 import { Logs } from './logs'
 import { IPC } from './ipc'
 
+let lastDragStartTime = 0
+
 /**
  * Start dragging something
  */
 export function start(info: DragInfo, dstType?: DropType): void {
   if (info.windowId === undefined) info.windowId = Windows.id
   if (info.panelId === undefined) info.panelId = Sidebar.reactive.activePanelId
+
+  lastDragStartTime = Date.now()
 
   if (
     (info.type === DragType.Tabs || info.type === DragType.TabsPanel) &&
@@ -906,14 +910,20 @@ export function resetOther(): void {
   }, 150)
 }
 
-let droppedRecentlyTimeout: number | undefined
+let dragEndedRecentlyTimeout: number | undefined
 
 export async function onDragEnd(e: DragEvent): Promise<void> {
+  resetDragPointer()
   DnD.resetOther()
   if (DnD.reactive.isStarted) DnD.reset()
+  Selection.resetSelection()
 
   // Dropped outside sidebar
-  if (!DnD.dropEventConsumed && e.dataTransfer?.types.length === 1) {
+  if (
+    !DnD.dropEventConsumed &&
+    e.dataTransfer?.types.length === 1 &&
+    Date.now() - lastDragStartTime > 150
+  ) {
     const dndInfoStr = e.dataTransfer?.getData('application/x-sidebery-dnd')
 
     // Check if the drop event was consumed by another sidebar
@@ -972,14 +982,14 @@ export async function onDragEnd(e: DragEvent): Promise<void> {
     }
   }
 
-  // Set "droppedRecently" flag for 100ms.
+  // Set "dragEndedRecently" flag for 100ms.
   // This is needed for detecting mouseLeave
   // event right after dragEnd
   // (at least on Linux)
-  DnD.droppedRecently = true
-  clearTimeout(droppedRecentlyTimeout)
-  droppedRecentlyTimeout = setTimeout(() => {
-    DnD.droppedRecently = false
+  DnD.dragEndedRecently = true
+  clearTimeout(dragEndedRecentlyTimeout)
+  dragEndedRecentlyTimeout = setTimeout(() => {
+    DnD.dragEndedRecently = false
   }, 100)
 
   // Update succession of active tab

@@ -28,7 +28,7 @@
     .color-layer(
       v-if="tabColor" :style="{ '--tab-color': tabColor }")
     .flash-fx(v-if="tab.flash")
-    .dnd-layer(draggable="true" data-dnd-type="tab" :data-dnd-id="tab.id" @dragstart="onDragStart" @dragenter="")
+    .dnd-layer(draggable="true" data-dnd-type="tab" :data-dnd-id="tab.id" @dragstart="onDragStart")
     .audio(
       v-if="tab.mediaAudible || tab.mediaMuted || tab.mediaPaused"
       @mousedown.stop="onAudioMouseDown($event, tab)")
