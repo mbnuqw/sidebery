@@ -3049,13 +3049,13 @@ export const setupPageTranslations: Translations = {
     zh_CN: '将被删除；如果您需要此功能，请提交issue。',
   },
   'settings.help_exp_data': {
-    en: 'Export Add-on data',
+    en: 'Export addon data',
     ru: 'Экспорт данных расширения',
     de: 'Add-on-Daten exportieren',
     zh_CN: '导出',
   },
   'settings.help_imp_data': {
-    en: 'Import Add-on data',
+    en: 'Import addon data',
     ru: 'Импорт данных расширения',
     de: 'Add-on-Daten importieren',
     zh_CN: '导入',
@@ -3126,7 +3126,7 @@ export const setupPageTranslations: Translations = {
     de: 'Falsches Format der importierten Daten',
     zh_CN: '导入数据格式错误',
   },
-  'settings.reload_Add-on': {
+  'settings.reload_addon': {
     en: 'Reload add-on',
     ru: 'Перезагрузить расширение',
     de: 'Add-on neu laden',
