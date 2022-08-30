@@ -74,7 +74,7 @@ export const setupPageTranslations: Translations = {
   'container.proxy_direct': {
     en: 'none',
     ru: 'выкл',
-    de: 'Kein',
+    de: 'Keiner',
     zh_CN: '无',
   },
   'container.rules_include': {
