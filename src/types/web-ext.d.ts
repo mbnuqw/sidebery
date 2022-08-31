@@ -53,7 +53,7 @@ declare namespace browser {
     type Port = {
       name: string
       disconnect: () => void
-      error: Error
+      error?: Error
       onDisconnect: EventTarget<DisconnectListener>
       onMessage: EventTarget<PortMessageListener>
       postMessage: <T>(msg: T) => void
