@@ -54,6 +54,7 @@ export type BgActions = {
   checkUpgrade: () => UpgradingState | null
   continueUpgrade: () => void
   saveInLocalStorage: (newValues: Stored, srcInfo: IPCNodeInfo) => void
+  getSidebarTabs: (windowId: ID, tabIds?: ID[]) => Promise<Tab[] | undefined>
 }
 
 export type SettingsActions = {
@@ -64,7 +65,7 @@ export type SettingsActions = {
 export type SidebarActions = {
   reloadTab: (tab: Tab) => void
   queryTab: (props: Partial<Tab>) => Tab | null
-  getTabs: (tabIds: ID[]) => Tab[] | undefined
+  getTabs: (tabIds?: ID[]) => Tab[] | undefined
   getTabsTreeData: () => TabsTreeData
   getActivePanelInfo: () => Panel
   stopDrag: () => void

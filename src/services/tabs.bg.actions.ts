@@ -453,6 +453,19 @@ export function tabsApiProxy<T extends Array<any>>(method: string, ...args: T): 
   }
 }
 
+export async function getSidebarTabs(windowId: ID, tabIds?: ID[]): Promise<Tab[] | undefined> {
+  const connection = IPC.sidebarConnections[windowId]
+  if (!connection) return
+  if (
+    (!connection.localPort || connection.localPort.error) &&
+    (!connection.remotePort || connection.remotePort.error)
+  ) {
+    return
+  }
+
+  return IPC.sidebar(windowId, 'getTabs', tabIds)
+}
+
 export function setupTabsListeners(): void {
   browser.tabs.onCreated.addListener(onTabCreated)
   browser.tabs.onRemoved.addListener(onTabRemoved)

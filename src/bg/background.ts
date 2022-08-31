@@ -38,6 +38,7 @@ void (async function main() {
     checkUpgrade: checkUpgrade,
     continueUpgrade: continueUpgrade,
     saveInLocalStorage: Store.setFromRemoteFg,
+    getSidebarTabs: Tabs.getSidebarTabs,
   })
 
   // Init first-need stuff

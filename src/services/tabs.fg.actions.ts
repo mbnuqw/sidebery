@@ -1649,7 +1649,12 @@ export async function move(
   // Move tabs from another window to this window
   if (src.windowId !== undefined && src.windowId !== Windows.id) {
     const tabIds = tabsInfo.map(t => t.id)
-    let externalTabs = await IPC.sidebar(src.windowId, 'getTabs', tabIds)
+    let externalTabs
+    try {
+      externalTabs = await IPC.bg('getSidebarTabs', src.windowId, tabIds)
+    } catch {
+      Logs.warn('Tabs.move: Move tabs from another window: Cannot get tabs from sidebar')
+    }
     if (!externalTabs) {
       const winNativeTabs = await browser.tabs.query({ windowId: src.windowId })
       externalTabs = []
@@ -2443,8 +2448,8 @@ export function queryTab(props: Partial<Tab>): Tab | null {
   else return null
 }
 
-export function getTabs(tabIds: ID[]): Tab[] | undefined {
-  const tabs = Tabs.list.filter(t => tabIds.includes(t.id))
+export function getTabs(tabIds?: ID[]): Tab[] | undefined {
+  const tabs = tabIds ? Tabs.list.filter(t => tabIds.includes(t.id)) : Tabs.list
   if (tabs.length) return Utils.cloneArray(tabs)
 }
 
