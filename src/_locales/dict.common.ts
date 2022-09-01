@@ -4,7 +4,7 @@ export const NUM_234_RE = /^([234]|(\d*?)[^1][234])$/
 export const commonTranslations: Translations = {
   // ---
   // -- Bookmarks editor
-  // - 
+  // -
   'bookmarks_editor.name_bookmark_placeholder': {
     en: 'Bookmark name...',
     ru: 'Название закладки...',
@@ -287,42 +287,42 @@ export const commonTranslations: Translations = {
     en: 'Open in new normal window',
     ru: 'Открыть в новом стандартном окне',
     //de: 'In neuem normalem Fenster öffnen',
-    de:'Neuem normalem Fenster', //shortened for consistency with displayed English menu
+    de: 'Neuem normalem Fenster', //shortened for consistency with displayed English menu
     zh_CN: '新建窗口打开链接',
   },
   'menu.bookmark.open_in_new_priv_window': {
     en: 'Open in new private window',
     ru: 'Открыть в новом приватном окне',
     //de: 'In neuem privatem Fenster öffnen',
-    de:'Neuem privatem Fenster', //shortened for consistency with displayed English menu
+    de: 'Neuem privatem Fenster', //shortened for consistency with displayed English menu
     zh_CN: '新建隐私窗口打开链接',
   },
   'menu.bookmark.open_in_new_panel': {
     en: 'Open in new tabs panel',
     ru: 'Открыть в новой панели вкладок',
     //de: 'In neuem Tab-Panel öffnen',
-    de:'Neuem Tab-Panel', //shortened for consistency with displayed English menu
+    de: 'Neuem Tab-Panel', //shortened for consistency with displayed English menu
     zh_CN: '新标签面板中打开链接',
   },
   'menu.bookmark.open_in_panel_': {
     en: 'Open in panel...',
     ru: 'Открыть в панели...',
     //de: 'Öffne in Panel...',
-    de:'Panel...', //shortened for consistency with displayed English menu
+    de: 'Panel...', //shortened for consistency with displayed English menu
     zh_CN: '在面板中打开...',
   },
   'menu.bookmark.open_in_ctr_': {
     en: 'Open in container...',
     ru: 'Открыть в контейнере...',
     //de: 'Öffne in Umgebung...',
-    de:'Umgebung...', //shortened for consistency with displayed English menu
+    de: 'Umgebung...', //shortened for consistency with displayed English menu
     zh_CN: '在容器中打开...',
   },
   'menu.bookmark.open_in_default_ctr': {
     en: 'Open in default container',
     ru: 'Открыть в стандартном контейнере',
     //de: 'In Standardumgebung öffnen',
-    de:'Standardumgebung', //shortened for consistency with displayed English menu
+    de: 'Standardumgebung', //shortened for consistency with displayed English menu
     zh_CN: '在默认容器中打开',
   },
   'menu.bookmark.open_in_': {
@@ -371,63 +371,63 @@ export const commonTranslations: Translations = {
     en: 'Sort by name',
     ru: 'Сортировать по названию',
     //de: 'Nach Name sortieren',
-    de:'Nach Name', //shortened for consistency with displayed English menu
+    de: 'Nach Name', //shortened for consistency with displayed English menu
     zh_CN: '按名称排序',
   },
   'menu.bookmark.sort_by_name_asc': {
     en: 'Sort by name (A-z)',
     ru: 'Сортировать по названию (А-я)',
     //de: 'Nach Name sortieren (A-z)',
-    de:'Nach Name (A-z)', //shortened for consistency with displayed English menu
+    de: 'Nach Name (A-z)', //shortened for consistency with displayed English menu
     zh_CN: '按名称排序 (A-z)',
   },
   'menu.bookmark.sort_by_name_des': {
     en: 'Sort by name (z-A)',
     ru: 'Сортировать по названию (я-А)',
     //de: 'Nach Name sortieren (z-A)',
-    de:'Nach Name (z-A)', //shortened for consistency with displayed English menu
+    de: 'Nach Name (z-A)', //shortened for consistency with displayed English menu
     zh_CN: '按名称排序 (z-A)',
   },
   'menu.bookmark.sort_by_link': {
     en: 'Sort by URL',
     ru: 'Сортировать по адресу',
     //de: 'Nach URL sortieren',
-    de:'Nach URL', //shortened for consistency with displayed English menu
+    de: 'Nach URL', //shortened for consistency with displayed English menu
     zh_CN: '按网址排序',
   },
   'menu.bookmark.sort_by_link_asc': {
     en: 'Sort by URL (A-z)',
     ru: 'Сортировать по адресу (А-я)',
     //de: 'Nach URL sortieren (A-z)',
-    de:'Nach URL (A-z)', //shortened for consistency with displayed English menu
+    de: 'Nach URL (A-z)', //shortened for consistency with displayed English menu
     zh_CN: '按网址排序 (A-z)',
   },
   'menu.bookmark.sort_by_link_des': {
     en: 'Sort by URL (z-A)',
     ru: 'Сортировать по адресу (я-А)',
     //de: 'Nach URL sortieren (z-A)',
-    de:'Nach URL (z-A)', //shortened for consistency with displayed English menu
+    de: 'Nach URL (z-A)', //shortened for consistency with displayed English menu
     zh_CN: '按网址排序 (z-A)',
   },
   'menu.bookmark.sort_by_time': {
     en: 'Sort by creation time',
     ru: 'Сортировать по времени создания',
     //de: 'Nach Erstelldatum sortieren',
-    de:'Nach Erstelldatum', //shortened for consistency with displayed English menu
+    de: 'Nach Erstelldatum', //shortened for consistency with displayed English menu
     zh_CN: '按添加时间排序',
   },
   'menu.bookmark.sort_by_time_asc': {
     en: 'Sort by time (Old-New)',
     ru: 'Сортировать по времени (Старые-Новые)',
     //de: 'Nach Zeit sortieren (Alt-Neu)',
-    de:'Nach Zeit (Alt-Neu)', //shortened for consistency with displayed English menu
+    de: 'Nach Zeit (Alt-Neu)', //shortened for consistency with displayed English menu
     zh_CN: '按添加时间排序 (旧-新)',
   },
   'menu.bookmark.sort_by_time_des': {
     en: 'Sort by time (New-Old)',
     ru: 'Сортировать по времени (Новые-Старые)',
     //de: 'Nach Zeit sortieren (Neu-Alt)',
-    de:'Nach Zeit (Neu-Alt)', //shortened for consistency with displayed English menu
+    de: 'Nach Zeit (Neu-Alt)', //shortened for consistency with displayed English menu
     zh_CN: '按添加时间排序 (新-旧)',
   },
   'menu.bookmark.open_as_bookmarks_panel': {
@@ -502,35 +502,35 @@ export const commonTranslations: Translations = {
     en: 'Move to new window',
     ru: 'Переместить в новое окно',
     //de: 'In neues Fenster verschieben',
-    de:'Neues Fenster', //shortened for consistency with displayed English menu
+    de: 'Neues Fenster', //shortened for consistency with displayed English menu
     zh_CN: '移动到新窗口',
   },
   'menu.tab.move_to_new_priv_window': {
     en: 'Move to private window',
     ru: 'Переместить в приватное окно',
     //de: 'In privates Fenster verschieben',
-    de:'Privates Fenster', //shortened for consistency with displayed English menu
+    de: 'Privates Fenster', //shortened for consistency with displayed English menu
     zh_CN: '移动到隐私窗口',
   },
   'menu.tab.move_to_another_window': {
     en: 'Move to another window',
     ru: 'Переместить в другое окно',
     //de: 'In anderes Fenster verschieben',
-    de:'Anderes Fenster', //shortened for consistency with displayed English menu
+    de: 'Anderes Fenster', //shortened for consistency with displayed English menu
     zh_CN: '移动到另一个窗口',
   },
   'menu.tab.move_to_window_': {
     en: 'Move to window...',
     ru: 'Переместить в окно...',
     //de: 'Verschiebe in Fenster...',
-    de:'Fenster...', //shortened for consistency with displayed English menu
+    de: 'Fenster...', //shortened for consistency with displayed English menu
     zh_CN: '移动到窗口...',
   },
   'menu.tab.move_to_panel_label': {
     en: 'Move to panel...',
     ru: 'Переместить в панель...',
     //de: 'Verschiebe in Panel...',
-    de:'Panel...', //shortened for consistency with displayed English menu
+    de: 'Panel...', //shortened for consistency with displayed English menu
     zh_CN: '移动到面板...',
   },
   'menu.tab.move_to_panel_': {
@@ -543,14 +543,14 @@ export const commonTranslations: Translations = {
     en: 'Move to new panel',
     ru: 'Переместить в новую панель',
     //de: 'Verschiebe in neues Panel',
-    de:'Neues Panel', //shortened for consistency with displayed English menu
+    de: 'Neues Panel', //shortened for consistency with displayed English menu
     zh_CN: '移动到新面板',
   },
   'menu.tab.reopen_in_new_window': {
     en: 'Reopen in new window of another type',
     ru: 'Переоткрыть в новом окне другого типа',
     //de: 'In neuem Fenster eines anderen Typs neu öffnen',
-    de: 'Neuem Fenster eines anderen Typs', //shortened for consistency with displayed English description 
+    de: 'Neuem Fenster eines anderen Typs', //shortened for consistency with displayed English description
     zh_CN: '在其他类型的新建窗口中重新打开',
   },
   'menu.tab.reopen_in_new_norm_window': {
@@ -1213,4 +1213,3 @@ export const commonTranslations: Translations = {
 
 if (!window.translations) window.translations = commonTranslations
 else Object.assign(window.translations, commonTranslations)
- 

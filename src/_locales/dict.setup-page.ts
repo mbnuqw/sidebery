@@ -290,7 +290,7 @@ export const setupPageTranslations: Translations = {
   // -
   'settings.nav_settings': {
     en: 'Settings',
-    ru: 'Настройки', 
+    ru: 'Настройки',
     de: 'Einstellungen',
     zh_CN: '设置',
   },
@@ -558,7 +558,7 @@ export const setupPageTranslations: Translations = {
   'settings.ctx_menu_title': {
     en: 'Context menu',
     ru: 'Контекстное меню',
-	de: 'Kontextmenü',
+    de: 'Kontextmenü',
     zh_CN: '上下文菜单',
   },
   'settings.ctx_menu_native': {
