@@ -30,6 +30,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import { translate } from 'src/dict'
+import { Menu } from 'src/services/menu'
 
 interface MenuEditorOptionProps {
   type: string
@@ -51,12 +52,7 @@ const emit = defineEmits<{
 
 const shrinkedTitle = computed<string>(() => {
   if (props.groupTitle && props.title?.startsWith(props.groupTitle)) {
-    const preLen = props.groupTitle.length
-    if (props.title[preLen] === ' ' && props.title.length > preLen + 2) {
-      return props.title[preLen + 1].toUpperCase() + props.title.slice(preLen + 2)
-    } else {
-      return props.title.slice(props.groupTitle.length).trim()
-    }
+    return Menu.shrinkLabel(props.groupTitle, props.title) ?? ''
   }
 
   return props.title

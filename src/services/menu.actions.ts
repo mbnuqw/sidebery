@@ -243,12 +243,7 @@ function createMenuBlocks(config: MenuConf, customForced?: boolean): MenuBlock[]
         for (const opt of opts) {
           // Shrink labels
           if (opt.label?.startsWith(optConf.name)) {
-            const preLen = optConf.name.length
-            if (opt.label[preLen] === ' ' && opt.label.length > preLen + 2) {
-              opt.label = opt.label[preLen + 1].toUpperCase() + opt.label.slice(preLen + 2)
-            } else {
-              opt.label = opt.label.slice(optConf.name.length).trim()
-            }
+            opt.label = shrinkLabel(optConf.name, opt.label)
           }
 
           // All inactive?
@@ -276,6 +271,28 @@ function createMenuBlocks(config: MenuConf, customForced?: boolean): MenuBlock[]
   }
 
   return blocks
+}
+
+export function shrinkLabel(parentLabel: string, label?: string): string | undefined {
+  if (!label || label.length - parentLabel.length < 2) return
+
+  const preLen = parentLabel.length
+  let cutIndex = preLen
+  let capitalizeNeeded = false
+
+  if (label[cutIndex] === ':') cutIndex++
+  if (label[cutIndex] === ' ') {
+    cutIndex++
+    capitalizeNeeded = true
+  }
+
+  if (capitalizeNeeded) {
+    label = label[cutIndex].toUpperCase() + label.slice(cutIndex + 1)
+  } else {
+    label = label.slice(cutIndex).trim()
+  }
+
+  return label
 }
 
 const base64SvgIconsCache: Record<string, Record<string, string>> = {}
@@ -335,14 +352,8 @@ function createNativeOption(
   if (option.inactive) optProps.enabled = false
 
   optProps.title = option.label
-  if (
-    parentName &&
-    optProps.title &&
-    optProps.title.startsWith(parentName) &&
-    optProps.title.length > parentName.length
-  ) {
-    optProps.title = optProps.title.slice(parentName.length).trim()
-    optProps.title = optProps.title[0].toUpperCase() + optProps.title.slice(1)
+  if (parentName && optProps.title && optProps.title.startsWith(parentName)) {
+    optProps.title = shrinkLabel(parentName, optProps.title)
   }
 
   if (icon) optProps.icons = { '16': icon }
