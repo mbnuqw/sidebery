@@ -492,8 +492,8 @@ async function setBookmarksRootId(): Promise<void> {
   if (!Utils.isBookmarksPanel(props.conf)) return
 
   if (!Permissions.reactive.bookmarks) {
-    browser.permissions.request({ origins: [], permissions: ['bookmarks'] })
-    return
+    const result = await browser.permissions.request({ origins: [], permissions: ['bookmarks'] })
+    if (!result) return
   }
 
   const result = await Bookmarks.openBookmarksPopup({
