@@ -176,6 +176,7 @@ function reloadTabFaviconDebounced(targetTab: Tab, delay = 500): void {
   clearTimeout(reloadTabFaviconTimeout[targetTab.id])
   reloadTabFaviconTimeout[targetTab.id] = setTimeout(() => {
     delete reloadTabFaviconTimeout[targetTab.id]
+    if (!Tabs.byId[targetTab.id]) return
     browser.tabs.get(targetTab.id).then(tabInfo => {
       if (tabInfo.favIconUrl && !tabInfo.favIconUrl.startsWith('chrome:')) {
         targetTab.favIconUrl = tabInfo.favIconUrl
