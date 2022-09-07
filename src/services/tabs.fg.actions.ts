@@ -1636,7 +1636,7 @@ export function sortTabIds(tabIds: ID[]): void {
 }
 
 export async function move(
-  tabsInfo: ItemInfo[],
+  tabsInfo: DeepReadonly<ItemInfo[]>,
   src: SrcPlaceInfo,
   dst: DstPlaceInfo
 ): Promise<void> {
@@ -1788,6 +1788,7 @@ export async function move(
       if (activeDroppedTab) browser.tabs.update(dst.parentId, { active: true })
     }
 
+    // TODO: update openerTabId
     for (let i = 0; i < tabs.length; i++) {
       const tab = tabs[i]
 

@@ -50,7 +50,7 @@ export async function groupTabs(tabIds: ID[], conf?: GroupConfig): Promise<void>
   const noConfig = !conf
   if (!conf) conf = {}
 
-  // Get tabs
+  // Get sorted list of tabs
   const tabs = []
   for (const t of Tabs.list) {
     if (tabIds.includes(t.id)) tabs.push(t)
@@ -108,6 +108,21 @@ export async function groupTabs(tabIds: ID[], conf?: GroupConfig): Promise<void>
       const localTab = Tabs.byId[groupTab.id]
       if (localTab && conf?.pinnedTab) localTab.relPinId = conf.pinnedTab.id
     }, 500)
+  }
+
+  // Move tabs if needed
+  let properIndex = tabs[0].index
+  const tabsToMove: Tab[] = []
+  let indexToMoveTo = -1
+  for (const tab of tabs) {
+    if (tab.index !== properIndex) {
+      if (indexToMoveTo === -1) indexToMoveTo = properIndex
+      tabsToMove.push(tab)
+    }
+    properIndex++
+  }
+  if (indexToMoveTo !== -1 && tabsToMove.length) {
+    await Tabs.move(tabsToMove, {}, { index: indexToMoveTo, parentId: groupTab.id })
   }
 
   // Update parent of selected tabs
