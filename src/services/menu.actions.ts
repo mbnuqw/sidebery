@@ -16,6 +16,7 @@ import { HISTORY_MENU, NEW_TAB_MENU } from 'src/defaults/menu'
 import { OTHER_PANELS_MENU } from 'src/defaults/menu'
 import { Snapshots } from './snapshots'
 import { translate } from 'src/dict'
+import { Search } from 'src/services/search'
 
 export type OpenCallback = (blocks: MenuBlock[], x?: number, y?: number) => void
 
@@ -360,6 +361,7 @@ function createNativeOption(
   optProps.onclick = () => {
     if (option.onClick) option.onClick()
     Selection.resetSelection()
+    Search.stop()
   }
 
   browser.menus.create(optProps)

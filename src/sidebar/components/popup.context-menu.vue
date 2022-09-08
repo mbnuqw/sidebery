@@ -127,6 +127,7 @@ import { Settings } from 'src/services/settings'
 import { Selection } from 'src/services/selection'
 import { Menu } from 'src/services/menu'
 import { Mouse } from 'src/services/mouse'
+import { Search } from 'src/services/search'
 import ScrollBox from 'src/components/scroll-box.vue'
 
 let lastPhase: 'tick' | 'tack' = 'tack'
@@ -248,6 +249,7 @@ function activateOption(opt?: MenuOption, altMode?: boolean): void {
   }
   Menu.close()
   Selection.resetSelection()
+  Search.stop()
 }
 
 function closeSubMenu(): void {
