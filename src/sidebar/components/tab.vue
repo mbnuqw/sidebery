@@ -196,9 +196,14 @@ function onMouseDown(e: MouseEvent): void {
   // Middle
   else if (e.button === 1) {
     e.preventDefault()
-    Tabs.removeTabs([props.tab.id])
     Mouse.blockWheel()
-    Selection.resetSelection()
+    if (Settings.state.multipleMiddleClose) {
+      Selection.resetSelection()
+      Mouse.startMultiSelection(e, props.tab.id)
+    } else {
+      Tabs.removeTabs([props.tab.id])
+      Selection.resetSelection()
+    }
   }
 
   // Right
@@ -239,6 +244,19 @@ function onMouseUp(e: MouseEvent): void {
       }
     }
     activating = false
+  } else if (e.button === 1) {
+    if (!Settings.state.multipleMiddleClose) return;
+
+    const inMultiSelectionMode = Mouse.multiSelectionMode
+    Mouse.stopMultiSelection()
+
+    if (inMultiSelectionMode && !Settings.state.autoMenuMultiSel && Selection.getLength() > 1) {
+      return
+    }
+
+    if (!Selection.isSet()) select()
+    Tabs.removeTabs(Selection.get())
+
   } else if (e.button === 2) {
     if (e.ctrlKey || e.shiftKey) return
 

@@ -2338,6 +2338,16 @@ export const setupPageTranslations: Translations = {
     ru: 'Только для несистемного контекстного меню',
     de: 'Nur bei nicht-nativem Kontextmenü',
   },
+  'settings.multiple_middle_close': {
+    en: 'Use multi-selection when closing tabs using middle-click',
+    ru: 'Использовать множественный выбор при закрытии влкадок средней кнопкой мыши',
+    de: 'Verwenden Sie die Mehrfachauswahl, wenn Sie Tabs mit einem Mittelklick schließen',
+  },
+  'settings.multiple_middle_close_note': {
+    en: 'Selected tabs will be closed on releasing the button',
+    ru: 'Выбранные вкладки будут закрыты при отпускании кнопки',
+    de: 'Ausgewählte Registerkarten werden beim Loslassen der Schaltfläche geschlossen',
+  },
   'settings.long_click_delay': {
     en: 'Long click delay (ms)',
     ru: 'Задержка длительного нажатия (мс)',
@@ -3256,7 +3266,7 @@ export const setupPageTranslations: Translations = {
   },
   'styles.css_placeholder': {
     en: 'Write custom CSS here...',
-    ru: 'Write custom CSS here...',
+    ru: 'Вводите правила CSS здесь...',
     de: 'Eigenes CSS hier schreiben...',
     zh_CN: '在此处编写自定义 CSS...',
   },
