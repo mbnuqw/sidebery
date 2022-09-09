@@ -121,6 +121,11 @@ function onNewTabMouseDown(e: MouseEvent, btn?: NewTabBtn): void {
       return
     }
 
+    if (e.altKey) {
+      reopen(btn)
+      return
+    }
+
     if (Selection.isSet() && !props.panel.selNewTab) Selection.resetSelection()
 
     Tabs.createTabInPanel(props.panel, { url: btn?.url, cookieStoreId: btn?.containerId })
@@ -130,7 +135,16 @@ function onNewTabMouseDown(e: MouseEvent, btn?: NewTabBtn): void {
   else if (e.button === 1) {
     e.preventDefault()
     Mouse.blockWheel()
-    reopen(btn)
+
+    if (e.ctrlKey) {
+      reopen(btn)
+      return
+    }
+
+    const actTab = Tabs.byId[Tabs.activeId]
+    if (actTab && !actTab.pinned && actTab.panelId === props.panel.id) {
+      Tabs.createChildTab(actTab.id, btn?.url, btn?.containerId)
+    }
   }
 
   // Right
