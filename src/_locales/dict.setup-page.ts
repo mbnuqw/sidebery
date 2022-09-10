@@ -2340,7 +2340,7 @@ export const setupPageTranslations: Translations = {
   },
   'settings.multiple_middle_close': {
     en: 'Use multi-selection when closing tabs using middle-click',
-    ru: 'Использовать множественный выбор при закрытии влкадок средней кнопкой мыши',
+    ru: 'Использовать множественный выбор при закрытии вкладок средней кнопкой мыши',
     de: 'Verwenden Sie die Mehrfachauswahl, wenn Sie Tabs mit einem Mittelklick schließen',
   },
   'settings.multiple_middle_close_note': {
