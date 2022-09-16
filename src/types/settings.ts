@@ -146,6 +146,7 @@ export interface SettingsState {
   scrollThroughTabsCyclic: boolean
   scrollThroughTabsScrollArea: number
   autoMenuMultiSel: boolean
+  multipleMiddleClose: boolean
   longClickDelay: number
   wheelThreshold: boolean
   wheelThresholdX: number

@@ -48,6 +48,11 @@ section(ref="el")
     v-model:value="Settings.state.autoMenuMultiSel"
     :note="translate('settings.auto_menu_multi_sel_note')"
     @update:value="Settings.saveDebounced(150)")
+  ToggleField(
+    label="settings.multiple_middle_close"
+    v-model:value="Settings.state.multipleMiddleClose"
+    :note="translate('settings.multiple_middle_close_note')"
+    @update:value="Settings.saveDebounced(150)")
   NumField.-inline(
     label="settings.long_click_delay"
     unitLabel="settings.long_click_delay_"
@@ -174,7 +179,7 @@ section(ref="el")
     :opts="Settings.getOpts('tabsPanelMiddleClickAction')"
     :folded="true"
     @update:value="Settings.saveDebounced(150)")
-  
+
   .sub-title {{translate('settings.mouse.bookmarks_title')}}
   SelectField(
     label="settings.mouse.bookmarks.left_click_action"
