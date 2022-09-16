@@ -245,7 +245,7 @@ function onMouseUp(e: MouseEvent): void {
     }
     activating = false
   } else if (e.button === 1) {
-    if (!Settings.state.multipleMiddleClose) return;
+    if (!Settings.state.multipleMiddleClose) return
 
     const inMultiSelectionMode = Mouse.multiSelectionMode
     Mouse.stopMultiSelection()
@@ -256,7 +256,6 @@ function onMouseUp(e: MouseEvent): void {
 
     if (!Selection.isSet()) select()
     Tabs.removeTabs(Selection.get())
-
   } else if (e.button === 2) {
     if (e.ctrlKey || e.shiftKey) return
 
