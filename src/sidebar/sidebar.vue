@@ -257,9 +257,17 @@ function onMouseUp(e: MouseEvent): void {
   }
 
   const inMultiSelectionMode = Mouse.multiSelectionMode
-  if (Mouse.multiSelectionMode) Mouse.stopMultiSelection()
+  if (inMultiSelectionMode) Mouse.stopMultiSelection()
 
-  if (e.button === 2) {
+  if (e.button === 1) {
+    if (!Settings.state.multipleMiddleClose) return
+
+    if (inMultiSelectionMode && !Settings.state.autoMenuMultiSel && Selection.getLength() > 1) {
+      return
+    }
+
+    Tabs.removeTabs(Selection.get())
+  } else if (e.button === 2) {
     let type: MenuType | undefined
     if (Selection.isBookmarks()) type = MenuType.Bookmarks
     if (Selection.isTabs()) type = MenuType.Tabs
