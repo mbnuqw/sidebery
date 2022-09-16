@@ -175,7 +175,7 @@ export function resetClickLock(delay = 0): void {
 }
 
 export function startMultiSelection(e: MouseEvent, id: ID): void {
-  if (Settings.state.ctxMenuNative) return
+  if (Settings.state.ctxMenuNative && e.button === 2) return
   multiSelectionStartId = id
   multiSelectionStartY = e.clientY
 }
