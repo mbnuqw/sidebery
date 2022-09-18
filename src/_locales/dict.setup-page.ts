@@ -2576,6 +2576,32 @@ export const setupPageTranslations: Translations = {
     de: 'Nichts',
     zh_CN: '无',
   },
+
+  'settings.mouse.new_tab_button_title': {
+    en: 'New Tab button actions',
+    de: 'Aktionen für neue Tab-Schaltflächen',
+    ru: 'Взаимодействия с кнопкой "Новая вкладка"',
+    zh_CN: '新选项卡按钮操作',
+  },
+  'settings.mouse.new_tab_middle_click_action': {
+    en: 'Middle click on New Tab button',
+    de: 'Mittlere Maustaste auf Schaltfläche "Neuer Tab"',
+    ru: 'Средний клик по кнопке "Новая вкладка"',
+    zh_CN: '中键单击新标签按钮',
+  },
+  'settings.mouse.new_tab_action_new_child': {
+    en: 'open new child tab',
+    de: 'Öffnen Sie eine neue Unterregisterkarte',
+    ru: 'открыть новую дочернюю вкладку',
+    zh_CN: '打开新的子标签',
+  },
+  'settings.mouse.new_tab_action_reopen': {
+    en: 'apply container or URL',
+    de: 'Container oder URL anwenden',
+    ru: 'применить контейнер или URL',
+    zh_CN: '应用容器或 URL',
+  },
+
   'settings.mouse.bookmarks_title': {
     en: 'Bookmarks actions',
     ru: 'Действия над закладками',

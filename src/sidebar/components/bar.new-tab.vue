@@ -5,7 +5,7 @@
   .new-tab-bg
   .new-tab-btn(
     @mousedown="onNewTabMouseDown($event)"
-    @mouseup="onNewTabMouseUp"
+    @mouseup="onNewTabMouseUp($event)"
     @contextmenu="onNewTabCtxMenu")
     svg: use(xlink:href="#icon_plus")
   .new-tab-btn.-custom(
@@ -14,7 +14,7 @@
     :data-br="!btn.title"
     :data-color="btn.containerId && Containers.reactive.byId[btn.containerId]?.color"
     @mousedown="onNewTabMouseDown($event, btn)"
-    @mouseup="onNewTabMouseUp"
+    @mouseup="onNewTabMouseUp($event, btn)"
     @contextmenu="onNewTabCtxMenu")
     svg.-icon(v-if="!btn.domain && btn.containerId")
       use(:xlink:href="btn.icon")
@@ -117,7 +117,14 @@ function onNewTabMouseDown(e: MouseEvent, btn?: NewTabBtn): void {
       const actTab = Tabs.byId[Tabs.activeId]
       if (actTab && !actTab.pinned && actTab.panelId === props.panel.id) {
         Tabs.createChildTab(actTab.id, btn?.url, btn?.containerId)
+      } else {
+        Tabs.createTabInPanel(props.panel, { url: btn?.url, cookieStoreId: btn?.containerId })
       }
+      return
+    }
+
+    if (e.altKey) {
+      applyBtnRules(btn)
       return
     }
 
@@ -130,7 +137,6 @@ function onNewTabMouseDown(e: MouseEvent, btn?: NewTabBtn): void {
   else if (e.button === 1) {
     e.preventDefault()
     Mouse.blockWheel()
-    reopen(btn)
   }
 
   // Right
@@ -139,7 +145,7 @@ function onNewTabMouseDown(e: MouseEvent, btn?: NewTabBtn): void {
   }
 }
 
-function onNewTabMouseUp(e: MouseEvent): void {
+function onNewTabMouseUp(e: MouseEvent, btn?: NewTabBtn): void {
   // Show menu for selected tabs
   if (Selection.isSet() && Mouse.isTarget('tab')) return
 
@@ -155,7 +161,22 @@ function onNewTabMouseUp(e: MouseEvent): void {
     return
   }
 
-  if (e.button === 2) {
+  // Middle
+  if (e.button === 1) {
+    if (Settings.state.newTabMiddleClickAction === 'new_child') {
+      const actTab = Tabs.byId[Tabs.activeId]
+      if (actTab && !actTab.pinned && actTab.panelId === props.panel.id) {
+        Tabs.createChildTab(actTab.id, btn?.url, btn?.containerId)
+      } else {
+        Tabs.createTabInPanel(props.panel, { url: btn?.url, cookieStoreId: btn?.containerId })
+      }
+    } else if (Settings.state.newTabMiddleClickAction === 'reopen') {
+      applyBtnRules(btn)
+    }
+  }
+
+  // Right
+  else if (e.button === 2) {
     if (e.ctrlKey || e.shiftKey || Windows.incognito) return
 
     if (Menu.isBlocked()) return
@@ -204,7 +225,7 @@ function onNewTabCtxMenu(e: MouseEvent): void {
   Menu.open(MenuType.NewTab)
 }
 
-async function reopen(btn?: NewTabBtn): Promise<void> {
+async function applyBtnRules(btn?: NewTabBtn): Promise<void> {
   let targetTabs: Tab[] = []
   if (Selection.isTabs()) {
     const ids = Selection.get()

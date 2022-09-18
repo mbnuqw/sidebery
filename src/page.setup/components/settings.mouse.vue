@@ -180,6 +180,15 @@ section(ref="el")
     :folded="true"
     @update:value="Settings.saveDebounced(150)")
 
+  .sub-title {{translate('settings.mouse.new_tab_button_title')}}
+  SelectField(
+    label="settings.mouse.new_tab_middle_click_action"
+    optLabel="settings.mouse.new_tab_action_"
+    v-model:value="Settings.state.newTabMiddleClickAction"
+    :opts="Settings.getOpts('newTabAction')"
+    :folded="true"
+    @update:value="Settings.saveDebounced(150)")
+
   .sub-title {{translate('settings.mouse.bookmarks_title')}}
   SelectField(
     label="settings.mouse.bookmarks.left_click_action"

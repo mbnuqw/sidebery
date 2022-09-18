@@ -162,6 +162,7 @@ export interface SettingsState {
   tabsPanelDoubleClickAction: typeof SETTINGS_OPTIONS.tabsPanelDoubleClickAction[number]
   tabsPanelRightClickAction: typeof SETTINGS_OPTIONS.tabsPanelRightClickAction[number]
   tabsPanelMiddleClickAction: typeof SETTINGS_OPTIONS.tabsPanelMiddleClickAction[number]
+  newTabMiddleClickAction: typeof SETTINGS_OPTIONS.newTabAction[number]
   bookmarksLeftClickAction: typeof SETTINGS_OPTIONS.bookmarksLeftClickAction[number]
   bookmarksLeftClickActivate: boolean
   bookmarksLeftClickPos: typeof SETTINGS_OPTIONS.bookmarksNewTabPos[number]

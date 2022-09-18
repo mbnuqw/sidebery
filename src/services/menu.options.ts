@@ -83,8 +83,17 @@ export const menuOptions: Record<string, () => MenuOption | MenuOption[] | undef
       icon: 'icon_plus',
       onClick: () => Tabs.createTabInPanel(panel, { cookieStoreId: CONTAINER_ID }),
       onAltClick: () => {
-        const dst = { containerId: CONTAINER_ID, panelId: panel.id }
-        Tabs.reopen(Tabs.getTabsInfo([Tabs.activeId]), dst)
+        if (Settings.state.newTabMiddleClickAction === 'new_child') {
+          const actTab = Tabs.byId[Tabs.activeId]
+          if (actTab && !actTab.pinned && actTab.panelId === panel.id) {
+            Tabs.createChildTab(actTab.id)
+          } else {
+            Tabs.createTabInPanel(panel)
+          }
+        } else if (Settings.state.newTabMiddleClickAction === 'reopen') {
+          const dst = { containerId: CONTAINER_ID, panelId: panel.id }
+          Tabs.reopen(Tabs.getTabsInfo([Tabs.activeId]), dst)
+        }
       },
     }
   },
@@ -104,8 +113,17 @@ export const menuOptions: Record<string, () => MenuOption | MenuOption[] | undef
         color: c.color,
         onClick: () => Tabs.createTabInPanel(panel, { cookieStoreId: c.id }),
         onAltClick: () => {
-          const dst = { containerId: c.id, panelId: panel.id }
-          Tabs.reopen(Tabs.getTabsInfo([Tabs.activeId]), dst)
+          if (Settings.state.newTabMiddleClickAction === 'new_child') {
+            const actTab = Tabs.byId[Tabs.activeId]
+            if (actTab && !actTab.pinned && actTab.panelId === panel.id) {
+              Tabs.createChildTab(actTab.id, undefined, c.id)
+            } else {
+              Tabs.createTabInPanel(panel, { cookieStoreId: c.id })
+            }
+          } else if (Settings.state.newTabMiddleClickAction === 'reopen') {
+            const dst = { containerId: c.id, panelId: panel.id }
+            Tabs.reopen(Tabs.getTabsInfo([Tabs.activeId]), dst)
+          }
         },
       })
     }
