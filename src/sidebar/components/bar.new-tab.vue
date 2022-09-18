@@ -4,10 +4,14 @@
   :data-sel="panel.selNewTab")
   .new-tab-bg
   .new-tab-btn(
-    @mousedown="onNewTabMouseDown($event)"
-    @mouseup="onNewTabMouseUp($event)"
+    :data-color="defaultBtn.containerId && Containers.reactive.byId[defaultBtn.containerId]?.color"
+    @mousedown="onNewTabMouseDown($event, defaultBtn)"
+    @mouseup="onNewTabMouseUp($event, defaultBtn)"
     @contextmenu="onNewTabCtxMenu")
-    svg: use(xlink:href="#icon_plus")
+    svg(:class="{ '-icon': !!defaultBtn.containerId }")
+      use(:xlink:href="defaultBtn.icon")
+    svg.-badge(v-if="defaultBtn.containerId")
+      use(xlink:href="#icon_plus_badge")
   .new-tab-btn.-custom(
     v-for="btn of btns"
     :title="btn.title"
@@ -51,6 +55,20 @@ interface NewTabBtn {
 
 const props = defineProps({
   panel: { type: Object as PropType<TabsPanel>, required: true },
+})
+
+const defaultBtn = computed<NewTabBtn>(() => {
+  const btn: NewTabBtn = { id: 'default' }
+
+  const contianer = Containers.reactive.byId[props.panel.newTabCtx]
+  if (contianer) {
+    btn.containerId = contianer.id
+    btn.icon = '#' + contianer.icon
+  } else {
+    btn.icon = '#icon_plus'
+  }
+
+  return btn
 })
 
 const btns = computed<NewTabBtn[]>(() => {
