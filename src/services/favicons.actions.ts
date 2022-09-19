@@ -145,7 +145,7 @@ export function saveFavicon(url: string, icon: string): void {
     if (!iconExists) toSave.favicons = Favicons.reactive.list
     Store.set(toSave)
 
-    IPC.sidebars('setFavicon', domain, url, hash, icon)
+    IPC.sendToSidebars('setFavicon', domain, url, hash, icon)
   }, SAVE_DELAY)
 }
 

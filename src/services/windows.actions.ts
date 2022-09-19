@@ -149,7 +149,7 @@ export async function createWithTabs(
           details: String(err),
           lvl: 'err',
         }
-        IPC.sidebar(Windows.lastFocusedWinId, 'notify', notification, 10000)
+        IPC.sendToSidebar(Windows.lastFocusedWinId, 'notify', notification, 10000)
       }
     }
     Logs.err('Windows: Cannot create window with tabs', err)

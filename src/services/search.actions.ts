@@ -176,7 +176,7 @@ export function showBar(): void {
 }
 
 export function hideBar(): void {
-  IPC.searchPopup(Windows.id, 'closePopup')
+  IPC.sendToSearchPopup(Windows.id, 'closePopup')
   if (Settings.state.searchBarMode !== 'static') Search.reactive.barIsShowed = false
   if (Menu.isOpen) return Menu.close()
 }

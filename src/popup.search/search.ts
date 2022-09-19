@@ -10,7 +10,7 @@ const el = document.getElementById('textInput') as HTMLInputElement
 el?.focus()
 
 el?.addEventListener('blur', () => {
-  if (Windows.id !== undefined) IPC.sidebar(Windows.id, 'onOutsideSearchExit')
+  if (Windows.id !== undefined) IPC.sendToSidebar(Windows.id, 'onOutsideSearchExit')
 })
 
 let ctxMenuKeyPressed: number | undefined
@@ -18,31 +18,31 @@ el?.addEventListener('keydown', (e: KeyboardEvent) => {
   // Select all
   if (e.code === 'KeyA' && e.ctrlKey) {
     e.preventDefault()
-    if (Windows.id !== undefined) IPC.sidebar(Windows.id, 'onOutsideSearchSelectAll')
+    if (Windows.id !== undefined) IPC.sendToSidebar(Windows.id, 'onOutsideSearchSelectAll')
   }
 
   // Down
   else if (e.key === 'ArrowDown') {
     e.preventDefault()
-    if (Windows.id !== undefined) IPC.sidebar(Windows.id, 'onOutsideSearchNext')
+    if (Windows.id !== undefined) IPC.sendToSidebar(Windows.id, 'onOutsideSearchNext')
   }
 
   // Up
   else if (e.key === 'ArrowUp') {
     e.preventDefault()
-    if (Windows.id !== undefined) IPC.sidebar(Windows.id, 'onOutsideSearchPrev')
+    if (Windows.id !== undefined) IPC.sendToSidebar(Windows.id, 'onOutsideSearchPrev')
   }
 
   // Enter
   else if (e.key === 'Enter' && !e.altKey) {
     e.preventDefault()
-    if (Windows.id !== undefined) IPC.sidebar(Windows.id, 'onOutsideSearchEnter')
+    if (Windows.id !== undefined) IPC.sendToSidebar(Windows.id, 'onOutsideSearchEnter')
   }
 
   // Menu
   else if (e.key === 'ContextMenu') {
     e.preventDefault()
-    if (Windows.id !== undefined) IPC.sidebar(Windows.id, 'onOutsideSearchMenu')
+    if (Windows.id !== undefined) IPC.sendToSidebar(Windows.id, 'onOutsideSearchMenu')
     clearTimeout(ctxMenuKeyPressed)
     ctxMenuKeyPressed = setTimeout(() => (ctxMenuKeyPressed = undefined), 500)
   }
@@ -53,7 +53,7 @@ el?.addEventListener('contextmenu', (e: Event) => {
 })
 
 el?.addEventListener('input', (e: Event) => {
-  if (Windows.id !== undefined) IPC.sidebar(Windows.id, 'onOutsideSearchInput', el.value)
+  if (Windows.id !== undefined) IPC.sendToSidebar(Windows.id, 'onOutsideSearchInput', el.value)
 })
 
 function closePopup(): void {

@@ -126,7 +126,7 @@ export async function createSnapshot(auto = false): Promise<Snapshot | undefined
   await Store.set({ snapshots: stored.snapshots, lastSnapTime: currentSnapshot.time })
 
   if (Settings.state.snapNotify) {
-    IPC.sidebars('notifyAboutNewSnapshot')
+    IPC.sendToSidebars('notifyAboutNewSnapshot')
   }
 
   return currentSnapshot

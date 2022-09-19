@@ -56,12 +56,15 @@ export const IPC = {
   connectTo,
 
   sidebar,
+  sendToSidebar,
   sidebars,
+  sendToSidebars,
   setupPage,
   groupPage,
-  searchPopup,
+  sendToSearchPopup,
   bg,
   send,
+  request,
   broadcast,
 
   onConnected,
@@ -210,7 +213,14 @@ function sidebar<T extends InstanceType.sidebar, A extends ActionsKeys<T>>(
   ...args: Parameters<ActionsType<T>[A]>
 ): Promise<ReturnType<ActionsType<T>[A]>> {
   const msg: Message<T, A> = { dstType: InstanceType.sidebar, dstWinId, action, args }
-  return send(msg)
+  return request(msg, AutoConnectMode.WithRetry)
+}
+function sendToSidebar<T extends InstanceType.sidebar, A extends ActionsKeys<T>>(
+  dstWinId: ID,
+  action: A,
+  ...args: Parameters<ActionsType<T>[A]>
+): void {
+  send({ dstType: InstanceType.sidebar, dstWinId, action, args })
 }
 
 /**
@@ -221,9 +231,18 @@ function sidebars<T extends InstanceType.sidebar, A extends ActionsKeys<T>>(
   ...args: Parameters<ActionsType<T>[A]>
 ): Promise<ReturnType<ActionsType<T>[A]>[]> | undefined {
   const tasks = Object.values(IPC.sidebarConnections).map(con => {
-    return send({ dstType: InstanceType.sidebar, dstWinId: con.id, action, args })
+    const msg = { dstType: InstanceType.sidebar, dstWinId: con.id, action, args }
+    return request(msg, AutoConnectMode.WithRetry)
   })
   return Promise.all(tasks)
+}
+function sendToSidebars<T extends InstanceType.sidebar, A extends ActionsKeys<T>>(
+  action: A,
+  ...args: Parameters<ActionsType<T>[A]>
+): void {
+  Object.values(IPC.sidebarConnections).forEach(con => {
+    send({ dstType: InstanceType.sidebar, dstWinId: con.id, action, args })
+  })
 }
 
 /**
@@ -235,7 +254,7 @@ function setupPage<T extends InstanceType.setup, A extends ActionsKeys<T>>(
   ...args: Parameters<ActionsType<T>[A]>
 ): Promise<ReturnType<ActionsType<T>[A]>> {
   const msg: Message<T, A> = { dstType: InstanceType.setup, dstTabId, action, args }
-  return send(msg)
+  return request(msg, AutoConnectMode.WithRetry)
 }
 
 /**
@@ -250,13 +269,12 @@ function groupPage(dstTabId: ID, msg: any): void {
 /**
  * Sends message to search popup.
  */
-function searchPopup<T extends InstanceType.search, A extends ActionsKeys<T>>(
+function sendToSearchPopup<T extends InstanceType.search, A extends ActionsKeys<T>>(
   dstWinId: ID,
   action: A,
   ...args: Parameters<ActionsType<T>[A]>
-): Promise<ReturnType<ActionsType<T>[A]>> {
-  const msg: Message<T, A> = { dstType: InstanceType.search, dstWinId, action, args }
-  return send(msg)
+): void {
+  send({ dstType: InstanceType.search, dstWinId, action, args })
 }
 
 /**
@@ -267,19 +285,51 @@ function bg<T extends InstanceType.bg, A extends ActionsKeys<T>>(
   ...args: Parameters<ActionsType<T>[A]>
 ): Promise<ReturnType<ActionsType<T>[A]>> {
   const msg: Message<T, A> = { dstType: InstanceType.bg, action, args }
-  return send(msg)
+  return request(msg, AutoConnectMode.WithRetry)
 }
 
+function send<T extends InstanceType, A extends ActionsKeys<T>>(msg: Message<T, A>): void {
+  if (msg.dstType === undefined) return
+
+  // Get port
+  let connection
+  if (msg.dstType === InstanceType.bg) {
+    connection = IPC.bgConnection
+  } else if (msg.dstType === InstanceType.sidebar && msg.dstWinId !== undefined) {
+    connection = IPC.sidebarConnections[msg.dstWinId]
+  } else if (msg.dstType === InstanceType.setup && msg.dstTabId !== undefined) {
+    connection = IPC.setupPageConnections[msg.dstTabId]
+  } else if (msg.dstType === InstanceType.search && msg.dstWinId !== undefined) {
+    connection = IPC.searchPopupConnections[msg.dstWinId]
+  } else if (msg.dstType === InstanceType.group && msg.dstTabId !== undefined) {
+    connection = IPC.groupPageConnections[msg.dstTabId]
+  }
+  const port = connection?.localPort ?? connection?.remotePort
+
+  if (!port || port.error) return
+
+  try {
+    port.postMessage(msg)
+  } catch (e) {
+    Logs.warn('IPC.send: Got error on postMessage', e)
+  }
+}
+
+const enum AutoConnectMode {
+  Off = 0,
+  On = 1,
+  WithRetry = 2,
+}
 const msgsWaitingForAnswer: Map<number, MsgWaitingForAnswer> = new Map()
 let msgCounter = 1
 /**
- * Send message between foreground and background using port.postMessage
+ * Send message using port.postMessage and wait for answer
  */
-async function send<T extends InstanceType, A extends ActionsKeys<T>>(
+async function request<T extends InstanceType, A extends ActionsKeys<T>>(
   msg: Message<T, A>,
-  noRetry = false
+  autoConnectMode: AutoConnectMode
 ): Promise<ReturnType<ActionsType<T>[A]>> {
-  if (msg.dstType === undefined) return Promise.reject('IPC.send: No dstType')
+  if (msg.dstType === undefined) return Promise.reject('IPC.request: No dstType')
 
   // Get port
   let connection, port: browser.runtime.Port | undefined
@@ -297,21 +347,23 @@ async function send<T extends InstanceType, A extends ActionsKeys<T>>(
   port = connection?.localPort ?? connection?.remotePort
 
   return new Promise((ok, err) => {
-    if (msg.dstType === undefined) return
+    if (msg.dstType === undefined) return err('IPC.request: No dstType')
 
     // No port, try to connect
     if (!port || port.error) {
-      if (port?.error) Logs.err('IPC.send: Target port has an error:', port?.error)
+      if (autoConnectMode === AutoConnectMode.Off) return err('IPC.request: No port')
+
+      if (port?.error) Logs.err('IPC.request: Target port has an error:', port?.error)
       port = undefined
 
-      if (!noRetry) {
-        Logs.warn('IPC.send: Cannot find appropriate port, trying to reconnect...')
+      if (autoConnectMode === AutoConnectMode.WithRetry) {
+        Logs.warn('IPC.request: Cannot find appropriate port, trying to reconnect...')
         port = IPC.connectTo(msg.dstType, msg.dstWinId, msg.dstTabId)
       }
 
       if (!port || port.error) {
-        if (port?.error) Logs.err('IPC.send: Target port has error:', port?.error)
-        return err(`IPC.send: Cannot get target port for "${Info.getInstanceName(msg.dstType)}"`)
+        if (port?.error) Logs.err('IPC.request: Target port has error:', port?.error)
+        return err(`IPC.request: Cannot get target port for "${Info.getInstanceName(msg.dstType)}"`)
       }
     }
 
@@ -323,38 +375,38 @@ async function send<T extends InstanceType, A extends ActionsKeys<T>>(
     try {
       port.postMessage(msg)
     } catch (e) {
-      Logs.warn('IPC.send: Got error on postMessage, trying to reconnect...', e)
+      Logs.warn('IPC.request: Got error on postMessage, trying to reconnect...', e)
       port = IPC.connectTo(msg.dstType, msg.dstWinId, msg.dstTabId)
       if (!port || port.error) {
-        if (port?.error) Logs.err('IPC.send: Target port has error:', port?.error)
-        return err(`IPC.send: Cannot get target port for "${Info.getInstanceName(msg.dstType)}"`)
+        if (port?.error) Logs.err('IPC.request: Target port has error:', port?.error)
+        return err(`IPC.request: Cannot get target port for "${Info.getInstanceName(msg.dstType)}"`)
       }
 
       try {
         port?.postMessage(msg)
       } catch (e) {
         const dstTypeName = Info.getInstanceName(msg.dstType)
-        Logs.err(`IPC.send: Cannot post message to "${dstTypeName}":`, e)
-        return err(`IPC.send: Cannot post message to "${dstTypeName}": ${String(e)}`)
+        Logs.err(`IPC.request: Cannot post message to "${dstTypeName}":`, e)
+        return err(`IPC.request: Cannot post message to "${dstTypeName}": ${String(e)}`)
       }
     }
 
     // Wait confirmation
     const timeout = setTimeout(async () => {
-      Logs.warn('IPC.send: No confirmation:', Info.getInstanceName(msg.dstType), msg.action)
+      Logs.warn('IPC.request: No confirmation:', Info.getInstanceName(msg.dstType), msg.action)
 
       msgsWaitingForAnswer.delete(msgId)
       if (port) port.error = { message: 'No confirmation' }
 
       // Try to send message again with reconnection
-      if (!noRetry) {
+      if (autoConnectMode === AutoConnectMode.WithRetry) {
         try {
-          ok(await IPC.send(msg, true))
+          ok(await IPC.request(msg, AutoConnectMode.Off))
         } catch (e) {
           err(e)
         }
       } else {
-        err('IPC.send: No confirmation')
+        err('IPC.request: No confirmation')
       }
     }, MSG_CONFIRMATION_MAX_DELAY)
     msgsWaitingForAnswer.set(msgId, { timeout, ok, err, portName: port.name })
