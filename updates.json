@@ -65,6 +65,10 @@
         {
           "version": "5.0.0b25",
           "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.0.0b25/sidebery-5.0.0b25.xpi"
+        },
+        {
+          "version": "5.0.0b26",
+          "update_link": "https://github.com/mbnuqw/sidebery/releases/download/v5.0.0b26/sidebery-5.0.0b26.xpi"
         }
       ]
     }
