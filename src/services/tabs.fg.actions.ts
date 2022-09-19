@@ -108,7 +108,7 @@ export function unload(): void {
   Tabs.byId = {}
   Tabs.urlsInUse = {}
 
-  Tabs.tabsNormalizing = false
+  Tabs.tabsReinitializing = false
   Tabs.removedTabs = []
   Tabs.newTabsPosition = {}
   Tabs.movingTabs = []
@@ -418,7 +418,7 @@ export function normalizeTab(tab: Tab, defaultPanelId: ID): void {
 export function cacheTabsData(delay = 300): void {
   if (cacheTabsDataTimeout) clearTimeout(cacheTabsDataTimeout)
   cacheTabsDataTimeout = setTimeout(() => {
-    if (Tabs.tabsNormalizing) return
+    if (Tabs.tabsReinitializing) return
 
     const data = []
     for (const tab of Tabs.list) {
@@ -459,7 +459,7 @@ let normTabsTimeout: number | undefined
  * Load tabs and normalize order. (on unrecoverable situations)
  */
 export function reinitTabs(delay = 500): void {
-  if (!Tabs.tabsNormalizing) Tabs.tabsNormalizing = true
+  if (!Tabs.tabsReinitializing) Tabs.tabsReinitializing = true
   clearTimeout(normTabsTimeout)
   normTabsTimeout = setTimeout(async () => {
     Logs.warn('Tabs.reinitTabs')
@@ -533,7 +533,7 @@ export function reinitTabs(delay = 500): void {
     Sidebar.recalcTabsPanels()
     updateTabsTree()
 
-    Tabs.tabsNormalizing = false
+    Tabs.tabsReinitializing = false
     Tabs.normTabsMoving = false
 
     if (Settings.state.colorizeTabs) Tabs.colorizeTabs()

@@ -27,7 +27,7 @@ export const Tabs = {
   urlsInUse: {} as Record<string, number>,
   shadowMode: false,
 
-  tabsNormalizing: false,
+  tabsReinitializing: false,
   removedTabs: [] as RemovedTabInfo[],
   newTabsPosition: {} as Record<number, NewTabPosition>,
   movingTabs: [] as ID[],

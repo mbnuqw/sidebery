@@ -93,7 +93,7 @@ function onTabCreated(tab: Tab): void {
     return
   }
   if (Tabs.ignoreTabsEvents) return
-  if (Tabs.tabsNormalizing) return Tabs.reinitTabs()
+  if (Tabs.tabsReinitializing) return Tabs.reinitTabs()
 
   if (Sidebar.reactive.hiddenPanelsBar) Sidebar.closeHiddenPanelsBar(true)
 
@@ -632,7 +632,7 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, ignoreChildren?:
   }
   if (info.isWindowClosing) return
   if (Tabs.ignoreTabsEvents) return
-  if (Tabs.tabsNormalizing) return Tabs.reinitTabs()
+  if (Tabs.tabsReinitializing) return Tabs.reinitTabs()
 
   if (Tabs.removingTabs.length > 0) {
     Tabs.checkRemovedTabs()
@@ -863,7 +863,7 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
     return
   }
   if (Tabs.ignoreTabsEvents) return
-  if (Tabs.tabsNormalizing) return Tabs.reinitTabs()
+  if (Tabs.tabsReinitializing) return Tabs.reinitTabs()
 
   const tab = Tabs.byId[id]
   if (!tab) {
@@ -978,7 +978,7 @@ function onTabDetached(id: ID, info: browser.tabs.DetachInfo): void {
     return
   }
   if (Tabs.ignoreTabsEvents) return
-  if (Tabs.tabsNormalizing) return Tabs.reinitTabs()
+  if (Tabs.tabsReinitializing) return Tabs.reinitTabs()
   const tab = Tabs.byId[id]
   const rTab = Tabs.reactive.byId[id]
   if (tab && rTab) {
@@ -998,7 +998,7 @@ async function onTabAttached(id: ID, info: browser.tabs.AttachInfo): Promise<voi
     return
   }
   if (Tabs.ignoreTabsEvents) return
-  if (Tabs.tabsNormalizing) return Tabs.reinitTabs()
+  if (Tabs.tabsReinitializing) return Tabs.reinitTabs()
 
   const ai = Tabs.attachingTabs.findIndex(t => t.id === id)
 
@@ -1032,7 +1032,7 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
   }
   bufTabActivatedEventIndex = -1
   if (Tabs.ignoreTabsEvents) return
-  if (Tabs.tabsNormalizing) return Tabs.reinitTabs()
+  if (Tabs.tabsReinitializing) return Tabs.reinitTabs()
 
   // Reset selection
   if (!DnD.reactive.isStarted) Selection.resetSelection()
