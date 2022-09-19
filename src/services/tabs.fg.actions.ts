@@ -332,7 +332,7 @@ function restoreTabsFromSessionData(
  * Find suitable tabs data for current window
  */
 function findCachedData(
-  tabs: readonly Tab[],
+  tabs: DeepReadonly<Tab[]>,
   data: TabCache[][]
 ): Record<ID, TabCache> | undefined {
   let maxEqualityCounter = 1
