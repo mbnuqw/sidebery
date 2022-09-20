@@ -1953,7 +1953,9 @@ export function updateNativeTabsVisibility(): void {
   const actTab = Tabs.byId[Tabs.activeId]
   if (!actTab) return
 
-  const actPanel = Sidebar.reactive.panelsById[actTab.panelId]
+  let actPanel
+  if (actTab.pinned) actPanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+  else actPanel = Sidebar.reactive.panelsById[actTab.panelId]
   if (!Utils.isTabsPanel(actPanel)) return
 
   const toShow = []
