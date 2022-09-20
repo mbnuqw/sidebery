@@ -1,15 +1,14 @@
-import { translate } from '../dict'
 import { MenuConf } from 'src/types'
 
 export const TABS_MENU: MenuConf = [
   { opts: ['undoRmTab', 'mute', 'reload', 'bookmark'] },
   'separator-1',
   {
-    name: translate('menu.tab.move_to_sub_menu_name'),
+    name: '%menu.tab.move_to_sub_menu_name',
     opts: ['moveToNewWin', 'moveToWin', 'separator-5', 'moveToPanel', 'moveToNewPanel'],
   },
   {
-    name: translate('menu.tab.reopen_in_sub_menu_name'),
+    name: '%menu.tab.reopen_in_sub_menu_name',
     opts: ['reopenInNewWin', 'reopenInWin', 'reopenInCtr', 'reopenInNewCtr'],
   },
   'separator-2',
@@ -43,7 +42,7 @@ export const TABS_PANEL_MENU: MenuConf = [
 
 export const BOOKMARKS_MENU: MenuConf = [
   {
-    name: translate('menu.bookmark.open_in_sub_menu_name'),
+    name: '%menu.bookmark.open_in_sub_menu_name',
     opts: [
       'openInNewWin',
       'openInNewPrivWin',
@@ -55,7 +54,7 @@ export const BOOKMARKS_MENU: MenuConf = [
     ],
   },
   {
-    name: translate('menu.bookmark.sort_sub_menu_name'),
+    name: '%menu.bookmark.sort_sub_menu_name',
     opts: [
       'sortByNameAscending',
       'sortByNameDescending',

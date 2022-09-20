@@ -240,17 +240,18 @@ function createMenuBlocks(config: MenuConf, customForced?: boolean): MenuBlock[]
           block = { type: 'list', opts: [] }
           blocks.push(block)
         }
+        const name = optConf.name?.startsWith('%') ? translate(optConf.name.slice(1)) : optConf.name
         let allInactive = true
         for (const opt of opts) {
           // Shrink labels
-          if (opt.label?.startsWith(optConf.name)) {
-            opt.label = shrinkLabel(optConf.name, opt.label)
+          if (opt.label?.startsWith(name)) {
+            opt.label = shrinkLabel(name, opt.label)
           }
 
           // All inactive?
           if (allInactive && !opt.inactive && opt.type !== 'separator') allInactive = false
         }
-        block.opts.push({ label: optConf.name, sub: opts, inactive: allInactive })
+        block.opts.push({ label: name, sub: opts, inactive: allInactive })
       } else {
         blocks.push({ type: 'inline', opts })
         block = undefined

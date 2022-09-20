@@ -311,7 +311,8 @@ function parseMenuConf(conf: MenuConf): MenuEditorGroup[] {
       }
       group.options.push(item)
     } else {
-      out.push({ type: 'sub', name: item.name, i, options: item.opts })
+      const name = item.name?.startsWith('%') ? translate(item.name.slice(1)) : item.name
+      out.push({ type: 'sub', name, i, options: item.opts })
       group = null
     }
   }
