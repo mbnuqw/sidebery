@@ -2588,13 +2588,16 @@ export function getIndexForNewTab(panel: TabsPanel, tab: Tab): number {
   if (Settings.state.moveNewTab === 'end') return nextIndex
   if (Settings.state.moveNewTab === 'before') {
     if (!activeTab || activeTab.panelId !== panel.id) return nextIndex
-    else if (activeTab.pinned) return startIndex
-    else return activeTab.index
+    else if (activeTab.pinned) {
+      if (Settings.state.moveNewTabActivePin === 'end') return nextIndex
+      return startIndex
+    } else return activeTab.index
   }
   if (Settings.state.moveNewTab === 'after') {
     if (!activeTab || activeTab.panelId !== panel.id) {
       return nextIndex
     } else if (activeTab.pinned) {
+      if (Settings.state.moveNewTabActivePin === 'end') return nextIndex
       return startIndex
     } else {
       let index = activeTab.index + 1
@@ -2609,6 +2612,7 @@ export function getIndexForNewTab(panel: TabsPanel, tab: Tab): number {
     if (!activeTab || activeTab.panelId !== panel.id) {
       return nextIndex
     } else if (activeTab.pinned) {
+      if (Settings.state.moveNewTabActivePin === 'end') return nextIndex
       return startIndex
     } else {
       return activeTab.index + 1
@@ -2618,6 +2622,7 @@ export function getIndexForNewTab(panel: TabsPanel, tab: Tab): number {
     if (!activeTab || activeTab.panelId !== panel.id) {
       return nextIndex
     } else if (activeTab.pinned) {
+      if (Settings.state.moveNewTabActivePin === 'end') return nextIndex
       return startIndex
     } else {
       let index = activeTab.index + 1

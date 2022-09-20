@@ -32,10 +32,18 @@ section(ref="el")
     :opts="Settings.getOpts('moveNewTab')"
     :folded="true"
     @update:value="Settings.saveDebounced(150)")
+  .sub-fields
+    SelectField(
+      :inactive="!relativeToActiveTab"
+      label="settings.move_new_tab_active_pin"
+      optLabel="settings.move_new_tab_pin_"
+      v-model:value="Settings.state.moveNewTabActivePin"
+      :opts="Settings.getOpts('moveNewTabActivePin')"
+      @update:value="Settings.saveDebounced(150)")
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { translate } from 'src/dict'
 import { Settings } from 'src/services/settings'
 import { SetupPage } from 'src/services/setup-page'
@@ -43,6 +51,15 @@ import ToggleField from '../../components/toggle-field.vue'
 import SelectField from '../../components/select-field.vue'
 
 const el = ref<HTMLElement | null>(null)
+
+const relativeToActiveTab = computed<boolean>(() => {
+  return (
+    Settings.state.moveNewTab === 'after' ||
+    Settings.state.moveNewTab === 'before' ||
+    Settings.state.moveNewTab === 'first_child' ||
+    Settings.state.moveNewTab === 'last_child'
+  )
+})
 
 onMounted(() => SetupPage.registerEl('settings_new_tab_position', el.value))
 </script>

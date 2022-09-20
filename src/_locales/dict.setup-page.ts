@@ -1514,6 +1514,12 @@ export const setupPageTranslations: Translations = {
     de: 'Nichts',
     zh_CN: '无',
   },
+  'settings.move_new_tab_active_pin': {
+    en: 'If active tab is pinned',
+    de: 'Wenn die aktive Tab angeheftet ist',
+    ru: 'Если активная вкладка закреплена',
+    zh_CN: '如果活动选项卡已固定',
+  },
 
   // - Pinned tabs
   'settings.pinned_tabs_title': {

@@ -77,6 +77,7 @@ export interface SettingsState {
   moveNewTabParent: typeof SETTINGS_OPTIONS.moveNewTabParent[number]
   moveNewTabParentActPanel: boolean
   moveNewTab: typeof SETTINGS_OPTIONS.moveNewTab[number]
+  moveNewTabActivePin: typeof SETTINGS_OPTIONS.moveNewTabActivePin[number]
 
   // Pinned tabs
   pinnedTabsPosition: typeof SETTINGS_OPTIONS.pinnedTabsPosition[number]

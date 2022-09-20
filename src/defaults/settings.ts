@@ -77,6 +77,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   moveNewTabParent: 'last_child',
   moveNewTabParentActPanel: false,
   moveNewTab: 'end',
+  moveNewTabActivePin: 'start',
 
   // Pinned tabs
   pinnedTabsPosition: 'panel',
@@ -216,6 +217,7 @@ export const SETTINGS_OPTIONS = {
     'before', 'sibling', 'first_child', 'last_child', 'start', 'end', 'default', 'none'
   ],
   moveNewTab: ['start', 'end', 'before', 'after', 'first_child', 'last_child', 'none'],
+  moveNewTabActivePin: ['start', 'end'],
   warnOnMultiTabClose: ['any', 'collapsed', 'none'],
   warnOnMultiBookmarkDelete: ['any', 'collapsed', 'none'],
   navBarLayout: ['horizontal', 'vertical', 'hidden'],
