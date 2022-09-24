@@ -85,7 +85,7 @@ async function genBackup(): Promise<void> {
   } catch (err) {
     return Logs.err('genBackup: Cannot get stored data for backup', err)
   }
-  const backup: BackupData = { ver: '4.10.1', ...stored }
+  const backup: BackupData = { ver: browser.runtime.getManifest().version, ...stored }
   const backupJSON = JSON.stringify(backup)
   const file = new Blob([backupJSON], { type: 'application/json' })
   const now = Date.now()
