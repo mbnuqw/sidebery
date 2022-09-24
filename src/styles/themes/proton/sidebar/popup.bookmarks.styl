@@ -142,6 +142,7 @@
   min-height: 64px
   overflow: hidden
   box-shadow: 0 1px 0 0 var(--border), 0 -1px 0 0 var(--border)
+  user-select: none
 
 .BookmarksPopup .tree .fav:hover
   transition: none
@@ -149,6 +150,9 @@
 .BookmarksPopup .tree .fav:active
   transition: none
   opacity: .32
+
+.BookmarksPopup .tree .dnd-layer
+  display: none
 
 .BookmarksPopup .tree .ctrls
   flex-shrink: 0

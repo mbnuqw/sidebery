@@ -123,6 +123,7 @@
   min-height: 64px
   overflow: hidden
   background-color: var(--toolbar-bg-overlay)
+  user-select: none
 
 .BookmarksPopup .scrollable
   margin-top: 1px
@@ -133,6 +134,9 @@
 .BookmarksPopup .tree .fav:active
   transition: none
   opacity: .32
+
+.BookmarksPopup .tree .dnd-layer
+  display: none
 
 .BookmarksPopup .tree + .ctrls
   margin: 0
