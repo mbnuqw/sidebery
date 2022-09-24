@@ -3638,7 +3638,7 @@ export const enum SwitchingTabScope {
 }
 
 let switchTabActHistoryPause: number | undefined
-export function switchToRecenlyActiveTab(scope = SwitchingTabScope.global, dir: number): void {
+export function switchToRecentlyActiveTab(scope = SwitchingTabScope.global, dir: number): void {
   if (switchTabActHistoryPause) return
   switchTabActHistoryPause = setTimeout(() => {
     clearTimeout(switchTabActHistoryPause)

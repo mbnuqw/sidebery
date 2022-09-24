@@ -204,8 +204,8 @@ const onWheel = Mouse.getWheelDebouncer(WheelDirection.Horizontal, e => {
     if (e.deltaX > 0) return Sidebar.switchPanel(1, true)
     if (e.deltaX < 0) return Sidebar.switchPanel(-1, true)
   } else if (Settings.state.hScrollAction === 'switch_act_tabs') {
-    if (e.deltaX > 0) return Tabs.switchToRecenlyActiveTab(SwitchingTabScope.global, 1)
-    if (e.deltaX < 0) return Tabs.switchToRecenlyActiveTab(SwitchingTabScope.global, -1)
+    if (e.deltaX > 0) return Tabs.switchToRecentlyActiveTab(SwitchingTabScope.global, 1)
+    if (e.deltaX < 0) return Tabs.switchToRecentlyActiveTab(SwitchingTabScope.global, -1)
   }
 })
 

@@ -128,13 +128,13 @@ function onCmd(name: string): void {
   else if (name === 'expand_branch') onKeyExpandBranch()
   else if (name === 'fold_inact_branches') onKeyFoldInactiveBranches()
   else if (name === 'activate_prev_active_tab') {
-    Tabs.switchToRecenlyActiveTab(SwitchingTabScope.global, -1)
+    Tabs.switchToRecentlyActiveTab(SwitchingTabScope.global, -1)
   } else if (name === 'activate_next_active_tab') {
-    Tabs.switchToRecenlyActiveTab(SwitchingTabScope.global, 1)
+    Tabs.switchToRecentlyActiveTab(SwitchingTabScope.global, 1)
   } else if (name === 'activate_panel_prev_active_tab') {
-    Tabs.switchToRecenlyActiveTab(SwitchingTabScope.panel, -1)
+    Tabs.switchToRecentlyActiveTab(SwitchingTabScope.panel, -1)
   } else if (name === 'activate_panel_next_active_tab') {
-    Tabs.switchToRecenlyActiveTab(SwitchingTabScope.panel, 1)
+    Tabs.switchToRecentlyActiveTab(SwitchingTabScope.panel, 1)
   } else if (name === 'tabs_indent') onKeyTabsIndent()
   else if (name === 'tabs_outdent') onKeyTabsOutdent()
   else if (name === 'move_tab_to_active') onKeyMoveTabsToAct()
