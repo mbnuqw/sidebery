@@ -73,7 +73,7 @@ section(ref="el")
       @update:value="Settings.saveDebounced(500)")
 
   .sub-title {{translate('settings.nav_actions_sub_title')}}
-  SelectField(
+  SelectField.-no-separator(
     label="settings.nav_act_tabs_panel_left_click"
     optLabel="settings.nav_act_tabs_panel_left_click_"
     v-model:value="Settings.state.navActTabsPanelLeftClickAction"
@@ -181,7 +181,7 @@ section(ref="el")
     @update:value="Settings.saveDebounced(150)")
 
   .sub-title {{translate('settings.mouse.new_tab_button_title')}}
-  SelectField(
+  SelectField.-no-separator(
     label="settings.mouse.new_tab_middle_click_action"
     optLabel="settings.mouse.new_tab_action_"
     v-model:value="Settings.state.newTabMiddleClickAction"
@@ -190,7 +190,7 @@ section(ref="el")
     @update:value="Settings.saveDebounced(150)")
 
   .sub-title {{translate('settings.mouse.bookmarks_title')}}
-  SelectField(
+  SelectField.-no-separator(
     label="settings.mouse.bookmarks.left_click_action"
     optLabel="settings.mouse.bookmarks.left_click_action_"
     v-model:value="Settings.state.bookmarksLeftClickAction"
