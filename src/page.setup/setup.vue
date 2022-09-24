@@ -81,6 +81,10 @@ function onDocumentKeyup(e: KeyboardEvent): void {
 }
 
 function navigateTo(urlHash: string): void {
-  location.hash = urlHash
+  if (location.hash.endsWith(urlHash)) {
+    SetupPage.updateActiveView()
+  } else {
+    location.hash = urlHash
+  }
 }
 </script>
