@@ -31,7 +31,8 @@
     .dnd-layer(draggable="true" data-dnd-type="tab" :data-dnd-id="tab.id" @dragstart="onDragStart")
     .audio(
       v-if="tab.mediaAudible || tab.mediaMuted || tab.mediaPaused"
-      @mousedown.stop="onAudioMouseDown($event, tab)")
+      @mousedown.stop="onAudioMouseDown($event, tab)"
+      @mouseup.stop="")
       svg.-loud: use(xlink:href="#icon_loud_badge")
       svg.-mute: use(xlink:href="#icon_mute_badge")
       svg.-pause: use(xlink:href="#icon_pause_12")
