@@ -1329,13 +1329,13 @@ export function resetPausedMediaState(panelId: ID): void {
     }
   }
 }
-export async function pauseTabsMediaOfPanel(id: ID): Promise<void> {
+export async function pauseTabsMediaOfPanel(panelId: ID): Promise<void> {
   if (!Permissions.reactive.webData) {
     const result = await Permissions.request('<all_urls>')
     if (!result) return
   }
 
-  const panel = Sidebar.reactive.panelsById[id]
+  const panel = Sidebar.reactive.panelsById[panelId]
   if (!Utils.isTabsPanel(panel)) return
 
   const injectionConfig: browser.tabs.ExecuteOpts = {
@@ -1387,13 +1387,13 @@ export async function pauseTabsMediaOfPanel(id: ID): Promise<void> {
 
   recheckPausedTabs()
 }
-export async function playTabsMediaOfPanel(id: ID): Promise<void> {
+export async function playTabsMediaOfPanel(panelId: ID): Promise<void> {
   if (!Permissions.reactive.webData) {
     const result = await Permissions.request('<all_urls>')
     if (!result) return
   }
 
-  const panel = Sidebar.reactive.panelsById[id]
+  const panel = Sidebar.reactive.panelsById[panelId]
   if (!Utils.isTabsPanel(panel)) return
 
   const injectionConfig: browser.tabs.ExecuteOpts = {
@@ -1435,6 +1435,60 @@ function recheckPausedTabs(delay = 3500): void {
       }
     }
   }, delay)
+}
+export async function pauseAllAudibleTabsMedia(): Promise<void> {
+  if (!Permissions.reactive.webData) {
+    const result = await Permissions.request('<all_urls>')
+    if (!result) return
+  }
+
+  const injectionConfig: browser.tabs.ExecuteOpts = {
+    file: '../injections/pauseMedia.js',
+    runAt: 'document_start',
+    allFrames: true,
+  }
+
+  for (const tab of Tabs.list) {
+    const rTab = Tabs.reactive.byId[tab.id]
+    if (rTab && tab.audible) {
+      rTab.mediaPaused = true
+      tab.mediaPaused = true
+      browser.tabs
+        .executeScript(tab.id, injectionConfig)
+        .then(results => {
+          if (results.every(result => result === false)) {
+            rTab.mediaPaused = false
+            tab.mediaPaused = false
+          }
+        })
+        .catch(err => {
+          Logs.err('Tabs.pauseTabsMediaOfPanel: Cannot executeScript', err)
+        })
+    }
+  }
+
+  recheckPausedTabs()
+}
+export async function playAllPausedTabsMedia(): Promise<void> {
+  if (!Permissions.reactive.webData) {
+    const result = await Permissions.request('<all_urls>')
+    if (!result) return
+  }
+
+  const injectionConfig: browser.tabs.ExecuteOpts = {
+    file: '../injections/playMedia.js',
+    runAt: 'document_start',
+    allFrames: true,
+  }
+
+  for (const tab of Tabs.list) {
+    const rTab = Tabs.reactive.byId[tab.id]
+    if (rTab && tab.mediaPaused) {
+      rTab.mediaPaused = false
+      tab.mediaPaused = false
+      browser.tabs.executeScript(tab.id, injectionConfig)
+    }
+  }
 }
 
 /**

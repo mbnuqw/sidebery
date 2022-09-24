@@ -327,7 +327,17 @@ function onNavMouseDown(e: MouseEvent, item: NavItem) {
 
     if (item.type === ButtonType.create_snapshot) SetupPage.open('snapshots')
 
-    if (item.type === ButtonType.remute_audio_tabs) Tabs.switchToFirstAudibleTab()
+    if (item.type === ButtonType.remute_audio_tabs) {
+      const pausedTabs: Tab[] = []
+      const audibleTabs: Tab[] = []
+      for (const tab of Tabs.list) {
+        if (tab.mediaPaused) pausedTabs.push(tab)
+        else if (tab.audible) audibleTabs.push(tab)
+      }
+
+      if (audibleTabs.length) Tabs.pauseAllAudibleTabsMedia()
+      else if (pausedTabs.length === 1) Tabs.playAllPausedTabsMedia()
+    }
 
     if (item.type === ButtonType.collapse) collapseAll()
   }
@@ -390,6 +400,7 @@ function onNavMouseUp(e: MouseEvent, item: NavItem, inHiddenBar?: boolean) {
 
     if (Settings.state.ctxMenuNative) return
     if (Selection.isSet()) return Selection.resetSelection()
+    if (isRemuteAudioTabs) return Tabs.switchToFirstAudibleTab()
 
     if (isSettings) {
       Tabs.pringDbgInfo(!e.altKey)
