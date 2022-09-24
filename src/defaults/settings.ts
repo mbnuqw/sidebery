@@ -57,7 +57,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   activateAfterClosingGlobal: false,
   activateAfterClosingNoFolded: true,
   activateAfterClosingNoDiscarded: true,
-  askNewBookmarkPlace: false,
+  askNewBookmarkPlace: true,
   tabsRmUndoNote: true,
   nativeHighlight: false,
   tabsUnreadMark: false,
