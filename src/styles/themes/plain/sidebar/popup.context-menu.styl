@@ -254,8 +254,18 @@
     width: 100%
     height: 100%
     background-color: var(--ctx-menu-bg)
-  .scrollable
-    padding: 0
+
+.CtxMenu .scroll-box
+  position: relative
+  width: 100%
+  height: 100%
+  overflow-y: auto
+  scrollbar-width: none
+  scrollbar-color: var(--scroll-color) #0000
+#root[data-native-scrollbar="true"] .CtxMenu .scroll-box
+  scrollbar-width: auto
+#root[data-native-scrollbar="true"][data-native-scrollbars-thin="true"] .CtxMenu .scroll-box
+  scrollbar-width: thin
 
 // ---
 // -- Transitions

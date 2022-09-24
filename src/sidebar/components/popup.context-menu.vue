@@ -4,9 +4,9 @@
     .box(ref="tickEl" :style="state.tickPosStyle")
       ScrollBox
         Transition(name="sub-menu" type="transition")
-          .sub-menu-box(v-if="state.sub" @click="closeSubMenu")
-            .sub-menu(@click.stop)
-              ScrollBox
+          .sub-menu-box(v-if="state.sub")
+            .sub-menu
+              .scroll-box
                 .opt(@click="closeSubMenu")
                   .icon-box
                     svg.icon.-rotate90: use(xlink:href="#icon_expand")
@@ -62,9 +62,9 @@
     .box(ref="tackEl" :style="state.tackPosStyle")
       ScrollBox
         Transition(name="sub-menu" type="transition")
-          .sub-menu-box(v-if="state.sub" @click="closeSubMenu")
-            .sub-menu(@click.stop)
-              ScrollBox
+          .sub-menu-box(v-if="state.sub")
+            .sub-menu
+              .scroll-box
                 .opt(@click="closeSubMenu")
                   .icon-box
                     svg.icon.-rotate90: use(xlink:href="#icon_expand")
