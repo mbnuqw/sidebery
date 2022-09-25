@@ -1492,7 +1492,7 @@ export const setupPageTranslations: Translations = {
   },
   'settings.move_new_tab_after': {
     en: 'after active tab',
-    ru: 'после активной вкладкой',
+    ru: 'после активной вкладки',
     de: 'Nach aktivem Tab',
     zh_CN: '活动标签页之后',
   },
