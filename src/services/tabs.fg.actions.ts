@@ -1497,19 +1497,61 @@ export async function playAllPausedTabsMedia(): Promise<void> {
 export async function duplicateTabs(tabIds: ID[]): Promise<void> {
   const active = tabIds.length === 1
 
+  // Sort tab ids
+  tabIds.sort((aId, bId) => {
+    const aTab = Tabs.byId[aId]
+    const bTab = Tabs.byId[bId]
+    if (!aTab || !bTab) return 0
+    return aTab.index - bTab.index
+  })
+
+  const processed: ID[] = []
+
   for (const tabId of tabIds) {
     const tab = Tabs.byId[tabId]
     if (!tab) continue
 
+    if (processed.includes(tab.id)) continue
+    else processed.push(tab.id)
+
+    const descendantsToDuplicate: [ID, ID][] = []
     let index = tab.index + 1
     for (let t; index < Tabs.list.length; index++) {
       t = Tabs.list[index]
       if (t.lvl <= tab.lvl) break
+
+      if (tabIds.includes(t.id)) {
+        const dupAncestorId = Tabs.findAncestor(t.id, id => tabIds.includes(id))
+        if (dupAncestorId !== undefined) {
+          descendantsToDuplicate.push([t.id, dupAncestorId])
+          processed.push(t.id)
+        }
+      }
     }
 
+    const oldNewIds: Record<ID, ID> = {}
     setNewTabPosition(index, tab.parentId, tab.panelId)
+    const dupTab = await browser.tabs.duplicate(tabId, { active, index })
+    oldNewIds[tabId] = dupTab.id
 
-    await browser.tabs.duplicate(tabId, { active, index })
+    for (const [descendantTabId, descendantParentId] of descendantsToDuplicate) {
+      index++
+      const dupDescendantParentId = oldNewIds[descendantParentId]
+      setNewTabPosition(index, dupDescendantParentId, tab.panelId)
+      const dupDescendantTab = await browser.tabs.duplicate(descendantTabId, { active, index })
+      oldNewIds[descendantTabId] = dupDescendantTab.id
+    }
+  }
+}
+
+export function findAncestor(tabId: ID, cb: (ancestorId: ID) => boolean): ID | void {
+  const tab = Tabs.byId[tabId]
+  if (!tab) throw 'Tabs.getAncestors: No target tab'
+
+  let parent = Tabs.byId[tab.parentId]
+  while (parent) {
+    if (cb(parent.id)) return parent.id
+    parent = Tabs.byId[parent.parentId]
   }
 }
 
