@@ -47,10 +47,10 @@ let actions: Actions | undefined
 
 export const IPC = {
   bgConnection: undefined as ConnectionInfo | undefined,
-  searchPopupConnections: {} as Record<ID, ConnectionInfo>,
-  sidebarConnections: {} as Record<ID, ConnectionInfo>,
-  setupPageConnections: {} as Record<ID, ConnectionInfo>,
-  groupPageConnections: {} as Record<ID, ConnectionInfo>,
+  searchPopupConnections: new Map<ID, ConnectionInfo>(),
+  sidebarConnections: new Map<ID, ConnectionInfo>(),
+  setupPageConnections: new Map<ID, ConnectionInfo>(),
+  groupPageConnections: new Map<ID, ConnectionInfo>(),
 
   registerActions,
   connectTo,
@@ -76,6 +76,24 @@ export const IPC = {
 
 function registerActions(a: Actions): void {
   actions = a
+}
+
+function getConnection(type: InstanceType, id: ID): ConnectionInfo | void {
+  if (type === InstanceType.bg && IPC.bgConnection) return IPC.bgConnection
+  else if (type === InstanceType.sidebar) return IPC.sidebarConnections.get(id)
+  else if (type === InstanceType.setup) return IPC.setupPageConnections.get(id)
+  else if (type === InstanceType.search) return IPC.searchPopupConnections.get(id)
+  else if (type === InstanceType.group) return IPC.groupPageConnections.get(id)
+}
+
+function createConnection(type: InstanceType, id: ID): ConnectionInfo {
+  const connection = { type, id, reconnectCount: 0 }
+  if (type === InstanceType.bg) IPC.bgConnection = connection
+  else if (type === InstanceType.sidebar) IPC.sidebarConnections.set(id, connection)
+  else if (type === InstanceType.setup) IPC.setupPageConnections.set(id, connection)
+  else if (type === InstanceType.search) IPC.searchPopupConnections.set(id, connection)
+  else if (type === InstanceType.group) IPC.groupPageConnections.set(id, connection)
+  return connection
 }
 
 /**
@@ -115,27 +133,16 @@ function connectTo(
   const portNameJson = JSON.stringify(portNameData)
 
   // Find/Create connection
-  let connection: ConnectionInfo,
-    connectionIsNew = false
-  if (toBg && IPC.bgConnection) {
-    connection = IPC.bgConnection
-  } else if (toSidebar && IPC.sidebarConnections[dstWinId]) {
-    connection = IPC.sidebarConnections[dstWinId]
-  } else if (toSetup && IPC.setupPageConnections[dstTabId]) {
-    connection = IPC.setupPageConnections[dstTabId]
-  } else if (toSearch && IPC.searchPopupConnections[dstWinId]) {
-    connection = IPC.searchPopupConnections[dstWinId]
-  } else if (toGroup && IPC.groupPageConnections[dstTabId]) {
-    connection = IPC.groupPageConnections[dstTabId]
+  let connection: ConnectionInfo
+  let connectionIsNew = false
+  const existedConnection = getConnection(dstType, id)
+  if (existedConnection) {
+    connection = existedConnection
   } else {
     connectionIsNew = true
-    connection = { type: dstType, id, reconnectCount: 0 }
-    if (toBg) IPC.bgConnection = connection
-    else if (toSidebar) IPC.sidebarConnections[dstWinId] = connection
-    else if (toSetup) IPC.setupPageConnections[dstTabId] = connection
-    else if (toSearch) IPC.searchPopupConnections[dstWinId] = connection
-    else if (toGroup) IPC.groupPageConnections[dstTabId] = connection
+    connection = createConnection(dstType, id)
   }
+
   if (connection.localPort) connection.localPort.disconnect()
   connection.localPort = browser.runtime.connect({ name: portNameJson })
 
@@ -158,10 +165,10 @@ function connectTo(
     if (!connection.remotePort) {
       connectionIsRemoved = true
       if (toBg) IPC.bgConnection = undefined
-      else if (toSidebar) delete IPC.sidebarConnections[dstWinId]
-      else if (toSetup) delete IPC.setupPageConnections[dstTabId]
-      else if (toSearch) delete IPC.searchPopupConnections[dstWinId]
-      else if (toGroup) delete IPC.groupPageConnections[dstTabId]
+      else if (toSidebar) IPC.sidebarConnections.delete(dstWinId)
+      else if (toSetup) IPC.setupPageConnections.delete(dstTabId)
+      else if (toSearch) IPC.searchPopupConnections.delete(dstWinId)
+      else if (toGroup) IPC.groupPageConnections.delete(dstTabId)
     }
 
     // Run disconnection handlers
@@ -230,8 +237,8 @@ function sidebars<T extends InstanceType.sidebar, A extends ActionsKeys<T>>(
   action: A,
   ...args: Parameters<ActionsType<T>[A]>
 ): Promise<ReturnType<ActionsType<T>[A]>[]> | undefined {
-  const tasks = Object.values(IPC.sidebarConnections).map(con => {
-    const msg = { dstType: InstanceType.sidebar, dstWinId: con.id, action, args }
+  const tasks = Array.from(IPC.sidebarConnections.keys()).map(id => {
+    const msg = { dstType: InstanceType.sidebar, dstWinId: id, action, args }
     return request(msg, AutoConnectMode.WithRetry)
   })
   return Promise.all(tasks)
@@ -240,7 +247,7 @@ function sendToSidebars<T extends InstanceType.sidebar, A extends ActionsKeys<T>
   action: A,
   ...args: Parameters<ActionsType<T>[A]>
 ): void {
-  Object.values(IPC.sidebarConnections).forEach(con => {
+  IPC.sidebarConnections.forEach(con => {
     send({ dstType: InstanceType.sidebar, dstWinId: con.id, action, args })
   })
 }
@@ -291,19 +298,14 @@ function bg<T extends InstanceType.bg, A extends ActionsKeys<T>>(
 function send<T extends InstanceType, A extends ActionsKeys<T>>(msg: Message<T, A>): void {
   if (msg.dstType === undefined) return
 
+  let id = NOID
+  if (msg.dstType === InstanceType.sidebar && msg.dstWinId !== undefined) id = msg.dstWinId
+  else if (msg.dstType === InstanceType.setup && msg.dstTabId !== undefined) id = msg.dstTabId
+  else if (msg.dstType === InstanceType.search && msg.dstWinId !== undefined) id = msg.dstWinId
+  else if (msg.dstType === InstanceType.group && msg.dstTabId !== undefined) id = msg.dstTabId
+
   // Get port
-  let connection
-  if (msg.dstType === InstanceType.bg) {
-    connection = IPC.bgConnection
-  } else if (msg.dstType === InstanceType.sidebar && msg.dstWinId !== undefined) {
-    connection = IPC.sidebarConnections[msg.dstWinId]
-  } else if (msg.dstType === InstanceType.setup && msg.dstTabId !== undefined) {
-    connection = IPC.setupPageConnections[msg.dstTabId]
-  } else if (msg.dstType === InstanceType.search && msg.dstWinId !== undefined) {
-    connection = IPC.searchPopupConnections[msg.dstWinId]
-  } else if (msg.dstType === InstanceType.group && msg.dstTabId !== undefined) {
-    connection = IPC.groupPageConnections[msg.dstTabId]
-  }
+  const connection = getConnection(msg.dstType, id)
   const port = connection?.localPort ?? connection?.remotePort
 
   if (!port || port.error) return
@@ -331,20 +333,15 @@ async function request<T extends InstanceType, A extends ActionsKeys<T>>(
 ): Promise<ReturnType<ActionsType<T>[A]>> {
   if (msg.dstType === undefined) return Promise.reject('IPC.request: No dstType')
 
+  let id = NOID
+  if (msg.dstType === InstanceType.sidebar && msg.dstWinId !== undefined) id = msg.dstWinId
+  else if (msg.dstType === InstanceType.setup && msg.dstTabId !== undefined) id = msg.dstTabId
+  else if (msg.dstType === InstanceType.search && msg.dstWinId !== undefined) id = msg.dstWinId
+  else if (msg.dstType === InstanceType.group && msg.dstTabId !== undefined) id = msg.dstTabId
+
   // Get port
-  let connection, port: browser.runtime.Port | undefined
-  if (msg.dstType === InstanceType.bg) {
-    connection = IPC.bgConnection
-  } else if (msg.dstType === InstanceType.sidebar && msg.dstWinId !== undefined) {
-    connection = IPC.sidebarConnections[msg.dstWinId]
-  } else if (msg.dstType === InstanceType.setup && msg.dstTabId !== undefined) {
-    connection = IPC.setupPageConnections[msg.dstTabId]
-  } else if (msg.dstType === InstanceType.search && msg.dstWinId !== undefined) {
-    connection = IPC.searchPopupConnections[msg.dstWinId]
-  } else if (msg.dstType === InstanceType.group && msg.dstTabId !== undefined) {
-    connection = IPC.groupPageConnections[msg.dstTabId]
-  }
-  port = connection?.localPort ?? connection?.remotePort
+  const connection = getConnection(msg.dstType, id)
+  let port = connection?.localPort ?? connection?.remotePort
 
   return new Promise((ok, err) => {
     if (msg.dstType === undefined) return err('IPC.request: No dstType')
@@ -463,25 +460,14 @@ function onConnect(port: browser.runtime.Port) {
   // Find/Create connection
   let connection: ConnectionInfo
   let connectionIsNew = false
-  if (fromBg && IPC.bgConnection) {
-    connection = IPC.bgConnection
-  } else if (fromSidebar && IPC.sidebarConnections[srcWinId]) {
-    connection = IPC.sidebarConnections[srcWinId]
-  } else if (fromSetup && IPC.setupPageConnections[srcTabId]) {
-    connection = IPC.setupPageConnections[srcTabId]
-  } else if (fromSearch && IPC.searchPopupConnections[srcWinId]) {
-    connection = IPC.searchPopupConnections[srcWinId]
-  } else if (fromGroup && IPC.groupPageConnections[srcTabId]) {
-    connection = IPC.groupPageConnections[srcTabId]
+  const existedConnection = getConnection(srcType, id)
+  if (existedConnection) {
+    connection = existedConnection
   } else {
     connectionIsNew = true
-    connection = { type: srcType, id, reconnectCount: 0 }
-    if (fromBg) IPC.bgConnection = connection
-    else if (fromSidebar) IPC.sidebarConnections[srcWinId] = connection
-    else if (fromSetup) IPC.setupPageConnections[srcTabId] = connection
-    else if (fromSearch) IPC.searchPopupConnections[srcWinId] = connection
-    else if (fromGroup) IPC.groupPageConnections[srcTabId] = connection
+    connection = createConnection(srcType, id)
   }
+
   if (connection.remotePort) connection.remotePort.disconnect()
   connection.remotePort = port
 
@@ -521,10 +507,10 @@ function onConnect(port: browser.runtime.Port) {
     if (!connection.localPort) {
       connectionIsRemoved = true
       if (fromBg) IPC.bgConnection = undefined
-      else if (fromSidebar) delete IPC.sidebarConnections[srcWinId]
-      else if (fromSetup) delete IPC.setupPageConnections[srcTabId]
-      else if (fromSearch) delete IPC.searchPopupConnections[srcWinId]
-      else if (fromGroup) delete IPC.groupPageConnections[srcTabId]
+      else if (fromSidebar) IPC.sidebarConnections.delete(srcWinId)
+      else if (fromSetup) IPC.setupPageConnections.delete(srcTabId)
+      else if (fromSearch) IPC.searchPopupConnections.delete(srcWinId)
+      else if (fromGroup) IPC.groupPageConnections.delete(srcTabId)
     }
 
     // Run disconnection handlers
@@ -541,6 +527,12 @@ function onConnect(port: browser.runtime.Port) {
 
 const connectionHandlers: Map<InstanceType, ((id: ID) => void)[]> = new Map()
 function onConnected(type: InstanceType, cb: (winOrTabId: ID) => void) {
+  if (type === InstanceType.bg) cb(NOID)
+  if (type === InstanceType.sidebar) IPC.sidebarConnections.forEach(con => cb(con.id))
+  if (type === InstanceType.setup) IPC.setupPageConnections.forEach(con => cb(con.id))
+  if (type === InstanceType.search) IPC.searchPopupConnections.forEach(con => cb(con.id))
+  if (type === InstanceType.group) IPC.groupPageConnections.forEach(con => cb(con.id))
+
   const handlers = connectionHandlers.get(type) ?? []
   handlers.push(cb)
   connectionHandlers.set(type, handlers)

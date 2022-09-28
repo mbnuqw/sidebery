@@ -74,7 +74,7 @@ function onTabCreated(tab: browser.tabs.Tab): void {
   }
 
   // If sidebar is closed and tabs of inactive panels hidden move new tab (if needed)
-  if (!IPC.sidebarConnections[tab.windowId] && Settings.state.hideInact) {
+  if (!IPC.sidebarConnections.has(tab.windowId) && Settings.state.hideInact) {
     const prevTab = tabWindow.tabs[tab.index - 1]
     if (prevTab && prevTab.hidden) {
       for (let i = prevTab.index - 1; i >= 0; i--) {
@@ -348,7 +348,7 @@ export async function updateBgTabsTreeData(): Promise<void> {
     if (window.id === undefined) continue
     windowsList.push(window)
 
-    const sidebarConnection = IPC.sidebarConnections[window.id]
+    const sidebarConnection = IPC.sidebarConnections.get(window.id)
     if (sidebarConnection) {
       receivingSidebarTrees.push(IPC.sidebar(window.id, 'getTabsTreeData'))
     } else {
@@ -455,7 +455,7 @@ export function tabsApiProxy<T extends Array<any>>(method: string, ...args: T): 
 }
 
 export async function getSidebarTabs(windowId: ID, tabIds?: ID[]): Promise<Tab[] | undefined> {
-  const connection = IPC.sidebarConnections[windowId]
+  const connection = IPC.sidebarConnections.get(windowId)
   if (!connection) return
   if (
     (!connection.localPort || connection.localPort.error) &&

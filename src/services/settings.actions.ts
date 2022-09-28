@@ -78,7 +78,7 @@ export function updateSettingsBg(settings?: SettingsState | null): void {
       if (win.type !== 'normal' || win.id === undefined) continue
       if (!next.markWindow) {
         browser.windows.update(win.id, { titlePreface: '' })
-      } else if (IPC.sidebarConnections[win.id]) {
+      } else if (IPC.sidebarConnections.has(win.id)) {
         browser.windows.update(win.id, { titlePreface: Settings.state.markWindowPreface })
       }
     }
@@ -86,7 +86,7 @@ export function updateSettingsBg(settings?: SettingsState | null): void {
     const value = next.markWindowPreface
     for (const win of Object.values(Windows.byId)) {
       if (win.type !== 'normal' || win.id === undefined) continue
-      if (Settings.state.markWindow && IPC.sidebarConnections[win.id]) {
+      if (Settings.state.markWindow && IPC.sidebarConnections.has(win.id)) {
         browser.windows.update(win.id, { titlePreface: value })
       }
     }
