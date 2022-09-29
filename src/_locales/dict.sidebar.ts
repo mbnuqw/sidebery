@@ -56,6 +56,34 @@ export const sidebarTranslations: Translations = {
   },
 
   // ---
+  // -- New tab bar
+  // -
+  'newTabBar.new_tab': {
+    en: 'Open a new tab',
+    ru: 'Открыть новую вкладку',
+  },
+  'newTabBar.in_default_container': {
+    en: ' in default container',
+    ru: ' в стандартном контейнере',
+  },
+  'newTabBar.in_container_prefix': {
+    en: ' in "',
+    ru: ' в контейнере "',
+  },
+  'newTabBar.in_container_postfix': {
+    en: '" container',
+    ru: '"',
+  },
+  'newTabBar.mid_child': {
+    en: 'Middle click: Open a child tab',
+    ru: 'Средняя кнопка мыши: Открыть новую дочернюю вкладку',
+  },
+  'newTabBar.mid_reopen': {
+    en: 'Middle click: Reopen active tab',
+    ru: 'Средняя кнопка мыши: Переоткрыть активную вкладку',
+  },
+
+  // ---
   // -- Popups
   // -
   // - Tabs panel removing

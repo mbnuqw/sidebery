@@ -4,6 +4,7 @@
   :data-sel="panel.selNewTab")
   .new-tab-bg
   .new-tab-btn(
+    :title="defaultBtn.tooltip"
     :data-color="defaultBtn.containerId && Containers.reactive.byId[defaultBtn.containerId]?.color"
     @mousedown="onNewTabMouseDown($event, defaultBtn)"
     @mouseup="onNewTabMouseUp($event, defaultBtn)"
@@ -14,7 +15,7 @@
       use(xlink:href="#icon_plus_badge")
   .new-tab-btn.-custom(
     v-for="btn of btns"
-    :title="btn.title"
+    :title="btn.tooltip"
     :data-br="!btn.title"
     :data-color="btn.containerId && Containers.reactive.byId[btn.containerId]?.color"
     @mousedown="onNewTabMouseDown($event, btn)"
@@ -42,15 +43,18 @@ import { CONTAINER_ID, DOMAIN_RE } from 'src/defaults'
 import Utils from 'src/utils'
 import { Logs } from 'src/services/logs'
 import { Windows } from 'src/services/windows'
+import { translate } from 'src/dict'
 
 interface NewTabBtn {
   id: string
   title?: string
   icon?: string
   containerId?: string
+  containrtName?: string
   url?: string
   domain?: string
   children?: NewTabBtn[]
+  tooltip?: string
 }
 
 const props = defineProps({
@@ -63,10 +67,13 @@ const defaultBtn = computed<NewTabBtn>(() => {
   const contianer = Containers.reactive.byId[props.panel.newTabCtx]
   if (contianer) {
     btn.containerId = contianer.id
+    btn.containrtName = contianer.name
     btn.icon = '#' + contianer.icon
   } else {
     btn.icon = '#icon_plus'
   }
+
+  btn.tooltip = createTooltip(btn)
 
   return btn
 })
@@ -107,6 +114,7 @@ const btns = computed<NewTabBtn[]>(() => {
         container = Object.values(Containers.reactive.byId).find(c => c.name === part)
         if (container && !Windows.incognito) {
           btn.containerId = container.id
+          btn.containrtName = container.name
           if (!btn.title) btn.title = container.name
           continue
         }
@@ -117,11 +125,41 @@ const btns = computed<NewTabBtn[]>(() => {
     if (!btn.icon && btn.url) btn.icon = Favicons.getFavPlaceholder(btn.url)
     if (!btn.icon && container) btn.icon = '#' + container.icon
 
+    btn.tooltip = createTooltip(btn)
+
     if (btn.title) btns.push(btn)
   }
 
   return btns
 })
+
+function createTooltip(btn: NewTabBtn): string {
+  let tooltip = translate('newTabBar.new_tab')
+  if (btn.containrtName) {
+    tooltip +=
+      translate('newTabBar.in_container_prefix') +
+      btn.containrtName +
+      translate('newTabBar.in_container_postfix')
+  }
+  if (btn.url) tooltip += ': ' + btn.url
+
+  if (Settings.state.newTabMiddleClickAction === 'new_child') {
+    tooltip += '\n' + translate('newTabBar.mid_child')
+  } else {
+    tooltip += '\n' + translate('newTabBar.mid_reopen')
+    if (btn.containrtName) {
+      tooltip +=
+        translate('newTabBar.in_container_prefix') +
+        btn.containrtName +
+        translate('newTabBar.in_container_postfix')
+    } else if (!btn.url) {
+      tooltip += translate('newTabBar.in_default_container')
+    }
+    if (btn.url) tooltip += ': ' + btn.url
+  }
+
+  return tooltip
+}
 
 function onNewTabMouseDown(e: MouseEvent, btn?: NewTabBtn): void {
   e.stopPropagation()
