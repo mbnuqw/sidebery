@@ -407,7 +407,12 @@ function drawTextIcon(): void {
   Sidebar.saveSidebar()
 }
 
-function loadCustomIcon(): void {
+async function loadCustomIcon(): Promise<void> {
+  if (!Permissions.reactive.webData) {
+    const result = await Permissions.request('<all_urls>')
+    if (!result) return
+  }
+
   if (!props.conf.iconIMGSrc) return
   state.customIconUrl = props.conf.iconIMGSrc.trim()
 }
