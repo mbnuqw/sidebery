@@ -138,9 +138,13 @@ function toggleActivateLastTabOnPanelSwitching(): void {
   Settings.saveDebounced(150)
 }
 
-function toggleHideInact(): void {
-  if (!Settings.state.hideInact && !Permissions.reactive.tabHide) location.hash = 'tab-hide'
-  else Settings.state.hideInact = !Settings.state.hideInact
+async function toggleHideInact(): Promise<void> {
+  if (!Settings.state.hideInact && !Permissions.reactive.tabHide) {
+    const result = await Permissions.request('tabHide')
+    if (!result) return
+  }
+
+  Settings.state.hideInact = !Settings.state.hideInact
 
   if (Settings.state.hideInact && !Settings.state.activateLastTabOnPanelSwitching) {
     Settings.state.activateLastTabOnPanelSwitching = true

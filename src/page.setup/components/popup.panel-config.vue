@@ -472,11 +472,10 @@ function togglePanelMoveTabCtxNoChild(value: boolean): void {
 
 async function toggleUrlRules(): Promise<void> {
   if (!Utils.isTabsPanel(props.conf)) return
-  if (!props.conf.urlRulesActive) {
-    if (!Permissions.reactive.webData) {
-      window.location.hash = 'all-urls'
-      return
-    }
+
+  if (!props.conf.urlRulesActive && !Permissions.reactive.webData) {
+    const result = await Permissions.request('<all_urls>')
+    if (!result) return
   }
 
   props.conf.urlRulesActive = !props.conf.urlRulesActive

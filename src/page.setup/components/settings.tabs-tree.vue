@@ -115,9 +115,13 @@ const el = ref<HTMLElement | null>(null)
 
 onMounted(() => SetupPage.registerEl('settings_tabs_tree', el.value))
 
-function toggleHideFoldedTabs(): void {
-  if (!Settings.state.hideFoldedTabs && !Permissions.reactive.tabHide) location.hash = 'tab-hide'
-  else Settings.state.hideFoldedTabs = !Settings.state.hideFoldedTabs
+async function toggleHideFoldedTabs(): Promise<void> {
+  if (!Settings.state.hideInact && !Permissions.reactive.tabHide) {
+    const result = await Permissions.request('tabHide')
+    if (!result) return
+  }
+
+  Settings.state.hideFoldedTabs = !Settings.state.hideFoldedTabs
 
   Settings.saveDebounced(150)
 }

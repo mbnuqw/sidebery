@@ -238,7 +238,7 @@ async function init(): Promise<void> {
   if (userAgentInput.value) userAgentInput.value.recalcTextHeight()
 }
 
-function checkWebDataPerm(): boolean {
+async function checkWebDataPerm(): Promise<boolean> {
   if (!Permissions.reactive.webData) {
     if (props.conf.proxified) {
       props.conf.proxified = false
@@ -248,14 +248,13 @@ function checkWebDataPerm(): boolean {
     props.conf.excludeHostsActive = false
     props.conf.userAgentActive = false
     Containers.saveContainers()
-    window.location.hash = 'all-urls'
-    return false
+    return Permissions.request('<all_urls>')
   }
   return true
 }
 
 async function toggleIncludeHosts(): Promise<void> {
-  if (!props.conf.includeHostsActive && !checkWebDataPerm()) return
+  if (!props.conf.includeHostsActive && !(await checkWebDataPerm())) return
 
   props.conf.includeHostsActive = !props.conf.includeHostsActive
   Containers.saveContainers()
@@ -270,7 +269,7 @@ function onIncludeHostsInput(value: string): void {
 }
 
 async function toggleExcludeHosts(): Promise<void> {
-  if (!props.conf.excludeHostsActive && !checkWebDataPerm()) return
+  if (!props.conf.excludeHostsActive && !(await checkWebDataPerm())) return
 
   props.conf.excludeHostsActive = !props.conf.excludeHostsActive
   Containers.saveContainers()
@@ -284,8 +283,8 @@ function onExcludeHostsInput(value: string): void {
   Containers.saveContainers(500)
 }
 
-function switchProxy(type: browser.proxy.ProxyType): void {
-  if (type !== 'direct' && !checkWebDataPerm()) return
+async function switchProxy(type: browser.proxy.ProxyType): Promise<void> {
+  if (type !== 'direct' && !(await checkWebDataPerm())) return
 
   props.conf.proxy = {
     type,
@@ -352,7 +351,7 @@ function onFieldKeydown(
 }
 
 async function toggleUserAgent(): Promise<void> {
-  if (!props.conf.userAgentActive && !checkWebDataPerm()) return
+  if (!props.conf.userAgentActive && !(await checkWebDataPerm())) return
 
   props.conf.userAgentActive = !props.conf.userAgentActive
   Containers.saveContainers()
