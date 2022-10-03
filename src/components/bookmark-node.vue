@@ -126,7 +126,7 @@ async function onMouseDown(e: MouseEvent): Promise<void> {
     if (props.node.type === 'bookmark' && props.node.url) {
       const action = Settings.state.bookmarksMidClickAction
       if (action === 'open_in_new') {
-        const { dst, useActiveTab, activateFirstTab } = Bookmarks.getOpeningConf(e)
+        const { dst, useActiveTab, activateFirstTab } = Bookmarks.getMouseOpeningConf(e.button)
         await Bookmarks.open([props.node.id], dst, useActiveTab, activateFirstTab)
       } else if (action === 'edit') Bookmarks.editBookmarkNode(props.node)
       else if (action === 'delete') Bookmarks.removeBookmarks([props.node.id])
@@ -241,7 +241,7 @@ async function onMouseUp(e: MouseEvent): Promise<void> {
       }
 
       // Open bookmark
-      let { dst, useActiveTab, activateFirstTab } = Bookmarks.getOpeningConf(e)
+      let { dst, useActiveTab, activateFirstTab } = Bookmarks.getMouseOpeningConf(e.button)
       useActiveTab = !newTabNeededInActPanel && useActiveTab
       Bookmarks.open([props.node.id], dst, useActiveTab, activateFirstTab)
     }

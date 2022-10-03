@@ -258,8 +258,6 @@ function onKeyActivate(): void {
     const target = Bookmarks.reactive.byId[targetId]
     if (!target) return
 
-    const activePanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
-
     if (target.type === 'folder') {
       const isExpanded = Bookmarks.reactive.expanded[Sidebar.reactive.activePanelId]?.[target.id]
       if (isExpanded) Bookmarks.foldBookmark(target.id, Sidebar.reactive.activePanelId)
@@ -275,18 +273,8 @@ function onKeyActivate(): void {
         }
       }
 
-      if (target.parentId === BKM_OTHER_ID && Settings.state.autoRemoveOther) {
-        browser.bookmarks.remove(target.id)
-      }
-
-      if (Settings.state.bookmarksLeftClickAction === 'open_in_new') {
-        const panel = Sidebar.reactive.panels.find(p => Utils.isTabsPanel(p)) as TabsPanel
-        const index = panel?.nextTabIndex
-        browser.tabs.create({ index, url: target.url, active: true })
-      } else {
-        browser.tabs.update({ url: target.url })
-        if (!activePanel.lockedPanel) Sidebar.goToActiveTabPanel()
-      }
+      const { dst, useActiveTab, activateFirstTab } = Bookmarks.getMouseOpeningConf(0)
+      Bookmarks.open([targetId], dst, useActiveTab, activateFirstTab)
     }
   }
 }

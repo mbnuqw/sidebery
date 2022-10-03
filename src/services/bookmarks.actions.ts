@@ -331,11 +331,11 @@ export interface OpeningBookmarksConfig {
   activateFirstTab: boolean
 }
 
-export function getOpeningConf(e: MouseEvent): OpeningBookmarksConfig {
+export function getMouseOpeningConf(button: number): OpeningBookmarksConfig {
   const conf: OpeningBookmarksConfig = { dst: {}, useActiveTab: false, activateFirstTab: false }
 
   // Left click
-  if (e.button === 0) {
+  if (button === 0) {
     const panelId = Bookmarks.getTargetTabsPanelId()
     conf.useActiveTab = Settings.state.bookmarksLeftClickAction === 'open_in_act'
     conf.activateFirstTab = Settings.state.bookmarksLeftClickActivate
@@ -350,7 +350,7 @@ export function getOpeningConf(e: MouseEvent): OpeningBookmarksConfig {
   }
 
   // Middle click
-  else if (e.button === 1) {
+  else if (button === 1) {
     const panelId = Bookmarks.getTargetTabsPanelId()
     conf.activateFirstTab = Settings.state.bookmarksMidClickActivate
     conf.dst.panelId = panelId
@@ -399,17 +399,18 @@ export async function open(
   }
 
   const toOpen: ItemInfo[] = []
+  const toRemove: ID[] = []
   const walker = (nodes: Bookmark[]) => {
     for (const node of nodes) {
       if (node.type === 'separator') continue
 
-      const inItself = ids.includes(node.id)
-      const inRel = ids.includes(node.parentId)
+      const isDirectTarget = ids.includes(node.id)
+      const isIndirectTarget = ids.includes(node.parentId)
 
-      if (inItself || inRel) {
+      if (isDirectTarget || isIndirectTarget) {
         const info: ItemInfo = { id: node.id, title: node.title }
         if (node.url) info.url = node.url
-        if (inRel) info.parentId = node.parentId
+        if (isIndirectTarget) info.parentId = node.parentId
         if (!info.url && info.title && info.title.length > 20) {
           Bookmarks.removeDataFromTitle(info)
         }
@@ -421,7 +422,15 @@ export async function open(
           continue
         }
 
-        if (inRel && node.type === 'folder') ids.push(node.id)
+        if (isIndirectTarget && node.type === 'folder') ids.push(node.id)
+
+        if (
+          Settings.state.autoRemoveOther &&
+          node.parentId === BKM_OTHER_ID &&
+          node.type === 'bookmark'
+        ) {
+          toRemove.push(info.id)
+        }
 
         toOpen.push(info)
       }
@@ -429,13 +438,22 @@ export async function open(
       if (node.children) walker(node.children)
     }
   }
+
   if (ids.length === 1 && firstBookmark?.type === 'bookmark') {
     if (useActiveTab) {
       browser.tabs.update({ url: Utils.normalizeUrl(firstBookmark.url, firstBookmark.title) })
+      if (Settings.state.autoRemoveOther) Bookmarks.removeBookmarks([firstBookmark.id])
       return
     }
+
+    if (Settings.state.autoRemoveOther && firstBookmark.parentId === BKM_OTHER_ID) {
+      toRemove.push(firstBookmark.id)
+    }
+
     toOpen.push({ id: firstBookmark.id, url: firstBookmark.url, title: firstBookmark.title })
-  } else walker(Bookmarks.reactive.tree)
+  } else {
+    walker(Bookmarks.reactive.tree)
+  }
 
   if (!toOpen.length) return
 
@@ -445,6 +463,10 @@ export async function open(
     await Tabs.open(toOpen, dst)
   } catch (err) {
     Logs.err('Bookmarks: Cannot open bookmark[s]', err)
+  }
+
+  if (toRemove.length) {
+    Bookmarks.removeBookmarks(toRemove)
   }
 }
 
