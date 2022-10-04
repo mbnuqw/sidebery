@@ -108,28 +108,20 @@ import { SwitchingTabScope } from 'src/services/tabs.fg.actions'
 const rootEl = ref<HTMLElement | null>(null)
 const panelBoxEl = ref<HTMLElement | null>(null)
 
+const animations = !Settings.state.animations ? 'none' : Settings.state.animationSpeed || 'fast'
+const pinnedTabsBarTop = Settings.state.pinnedTabsPosition === 'top'
+const pinnedTabsBarLeft = Settings.state.pinnedTabsPosition === 'left'
+const pinnedTabsBarRight = Settings.state.pinnedTabsPosition === 'right'
+const navBarHorizontal = Settings.state.navBarLayout === 'horizontal'
+const navBarVertical = Settings.state.navBarLayout === 'vertical'
+const navBarLayout = navBarVertical ? Settings.state.navBarSide : Settings.state.navBarLayout
+const navBarLeft = navBarVertical && Settings.state.navBarSide === 'left'
+const navBarRight = navBarVertical && Settings.state.navBarSide === 'right'
+
 const pinnedTabsPosition = computed(() => {
   if (!Tabs.reactive.pinned.length) return 'none'
   return Settings.state.pinnedTabsPosition
 })
-const animations = computed(() => {
-  if (!Settings.state.animations) return 'none'
-  else return Settings.state.animationSpeed || 'fast'
-})
-const pinnedTabsBarTop = computed(() => Settings.state.pinnedTabsPosition === 'top')
-const pinnedTabsBarLeft = computed(() => Settings.state.pinnedTabsPosition === 'left')
-const pinnedTabsBarRight = computed(() => Settings.state.pinnedTabsPosition === 'right')
-const navBarLayout = computed(() => {
-  if (Settings.state.navBarLayout === 'vertical') return Settings.state.navBarSide
-  return Settings.state.navBarLayout
-})
-const navBarHorizontal = computed(() => Settings.state.navBarLayout === 'horizontal')
-const navBarLeft = computed(
-  () => Settings.state.navBarLayout === 'vertical' && Settings.state.navBarSide === 'left'
-)
-const navBarRight = computed(
-  () => Settings.state.navBarLayout === 'vertical' && Settings.state.navBarSide === 'right'
-)
 
 onMounted(() => {
   if (panelBoxEl.value) Sidebar.setPanelsBoxEl(panelBoxEl.value)
