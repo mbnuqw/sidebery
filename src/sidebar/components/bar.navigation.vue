@@ -523,6 +523,9 @@ async function addTabsPanel(): Promise<void> {
   Sidebar.recalcTabsPanels()
   Sidebar.saveSidebar()
   Sidebar.activatePanel(panel.id)
+  if (Settings.state.hideEmptyPanels && !Sidebar.reactive.hiddenPanelsBar) {
+    Sidebar.reactive.hiddenPanelsBar = true
+  }
 }
 
 function collapseAll(): void {
