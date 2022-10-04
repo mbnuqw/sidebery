@@ -33,7 +33,7 @@ export async function loadTabs(): Promise<void> {
     }
 
     if (Utils.isGroupUrl(tab.url)) injectGroupPageScript(tab.windowId, tab.id)
-    if (Utils.isUrlUrl(tab.url)) injectUrlPageScript(tab.id)
+    if (Utils.isUrlUrl(tab.url)) injectUrlPageScript(tab.windowId, tab.id)
   }
 
   Tabs.ready = true
@@ -147,7 +147,7 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo): void {
 
   if (change.url) {
     if (Utils.isGroupUrl(change.url)) injectGroupPageScript(targetTab.windowId, tabId)
-    if (Utils.isUrlUrl(change.url)) injectUrlPageScript(tabId)
+    if (Utils.isUrlUrl(change.url)) injectUrlPageScript(targetTab.windowId, tabId)
   }
 
   if (
@@ -387,10 +387,19 @@ export async function updateBgTabsTreeData(): Promise<void> {
   }
 }
 
-export async function injectUrlPageScript(tabId: ID): Promise<void> {
+export async function injectUrlPageScript(winId: ID, tabId: ID): Promise<void> {
   try {
-    await browser.tabs.executeScript(tabId, {
-      file: '/page.url/url.js',
+    const [_, initData] = await Promise.all([
+      browser.tabs.executeScript(tabId, {
+        file: '/page.url/url.js',
+        runAt: 'document_start',
+        matchAboutBlank: true,
+      }),
+      getUrlPageInitData(winId, tabId),
+    ])
+    const initDataJson = JSON.stringify(initData)
+    browser.tabs.executeScript(tabId, {
+      code: `window.sideberyInitData=${initDataJson};window.onSideberyInitDataReady?.()`,
       runAt: 'document_start',
       matchAboutBlank: true,
     })
@@ -401,16 +410,18 @@ export async function injectUrlPageScript(tabId: ID): Promise<void> {
 
 export interface UrlPageInitData {
   ffTheme?: browser.theme.Theme
+  winId?: ID
+  tabId?: ID
 }
-export async function getUrlPageInitData(): Promise<UrlPageInitData> {
+export async function getUrlPageInitData(winId: ID, tabId: ID): Promise<UrlPageInitData> {
   const theme = await browser.theme.getCurrent()
-  return { ffTheme: theme }
+  return { ffTheme: theme, winId, tabId }
 }
 
 export async function injectGroupPageScript(winId: ID, tabId: ID): Promise<void> {
   try {
     browser.tabs.executeScript(tabId, {
-      code: `window.groupWinId = ${winId}; window.groupTabId = ${tabId}`,
+      code: `window.groupWinId = ${winId}; window.groupTabId = ${tabId};`,
       runAt: 'document_start',
       matchAboutBlank: true,
     })

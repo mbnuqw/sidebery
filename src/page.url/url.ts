@@ -3,13 +3,32 @@ import { Info } from 'src/services/info'
 import { Styles } from 'src/services/styles'
 import { Settings } from 'src/services/settings'
 import { Logs } from 'src/services/logs'
-import { IPC } from 'src/services/ipc'
+import { UrlPageInitData } from 'src/services/tabs.bg.actions'
+
+function waitDOM(): Promise<void> {
+  return new Promise(res => {
+    if (document.readyState !== 'loading') res()
+    else document.addEventListener('DOMContentLoaded', () => res())
+  })
+}
+function waitInitData(): Promise<void> {
+  return new Promise((ok, err) => {
+    if (window.sideberyInitData) return ok()
+    window.onSideberyInitDataReady = ok
+    setTimeout(() => err('UrlPage: No initial data (sideberyInitData)'), 2000)
+  })
+}
 
 void (async () => {
   if (window.sideberyUrlPageInjected) return
   window.sideberyUrlPageInjected = true
 
   Info.setInstanceType(InstanceType.url)
+
+  await Promise.all([waitDOM(), waitInitData(), Settings.loadSettings()])
+  const initData = window.sideberyInitData as UrlPageInitData
+
+  Logs.init(InstanceType.url, initData.winId, initData.tabId)
 
   const titleEl = document.getElementById('title')
   const targetTitleLabelEl = document.getElementById('target_title_label')
@@ -19,14 +38,14 @@ void (async () => {
   const copyBtnEl = document.getElementById('copy_btn')
   const apiLimitNoteEl = document.getElementById('api_limit_note')
   const apiLimitNoteMoreEl = document.getElementById('api_limit_note_more')
-  if (!titleEl) return Logs.err('Cannot get element of page')
-  if (!targetTitleLabelEl) return Logs.err('Cannot get title label element')
-  if (!targetTitleEl) return Logs.err('Cannot get title element')
-  if (!targetLinkLabelEl) return Logs.err('Cannot get link label element')
-  if (!targetLinkEl) return Logs.err('Cannot get link element')
-  if (!copyBtnEl) return Logs.err('Cannot get copy button element')
-  if (!apiLimitNoteEl) return Logs.err('Cannot get element of page')
-  if (!apiLimitNoteMoreEl) return Logs.err('Cannot get element of page')
+  if (!titleEl) return Logs.err('Cannot get element: titleEl')
+  if (!targetTitleLabelEl) return Logs.err('Cannot get element: targetTitleLabelEl')
+  if (!targetTitleEl) return Logs.err('Cannot get element: targetTitleEl')
+  if (!targetLinkLabelEl) return Logs.err('Cannot get element: targetLinkLabelEl')
+  if (!targetLinkEl) return Logs.err('Cannot get element: targetLinkEl')
+  if (!copyBtnEl) return Logs.err('Cannot get element: copyBtnEl')
+  if (!apiLimitNoteEl) return Logs.err('Cannot get element: apiLimitNoteEl')
+  if (!apiLimitNoteMoreEl) return Logs.err('Cannot get element: apiLimitNoteMoreEl')
 
   // Translate
   const titleElLable = browser.i18n.getMessage('unavailable_url')
@@ -59,9 +78,6 @@ void (async () => {
       targetTitleEl.remove()
     }
   }
-
-  const result = await Promise.all([IPC.bg('getUrlPageInitData'), Settings.loadSettings()])
-  const initData = result[0]
 
   // Set theme/color-scheme
   Styles.initTheme()
