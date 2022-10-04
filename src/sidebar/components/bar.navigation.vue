@@ -1,6 +1,7 @@
 <template lang="pug">
 .NavigationBar(
   ref="el"
+  tabindex="-1"
   :data-overflowed="overflowed"
   :data-hidden-panels-bar="Sidebar.reactive.hiddenPanelsBar"
   :data-layout="layout"
