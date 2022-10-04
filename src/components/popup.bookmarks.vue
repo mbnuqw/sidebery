@@ -251,8 +251,16 @@ async function createNewFolder(): Promise<void> {
   let parent = Bookmarks.reactive.byId[location]
   if (!parent || parent.type !== 'folder') return
 
+  const newFolderPosition = Bookmarks.reactive.popup.newFolderPosition
+  let newFolderIndex
+  if (newFolderPosition && newFolderPosition[0] === parent.id) {
+    newFolderIndex = newFolderPosition[1]
+  } else {
+    newFolderIndex = parent.children?.length ?? 0
+  }
+
   const folder = (await browser.bookmarks.create({
-    index: parent.children?.length ?? 0,
+    index: newFolderIndex,
     parentId: parent.id,
     title: state.newFolderTitle.trim(),
     type: 'folder',

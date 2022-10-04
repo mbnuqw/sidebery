@@ -944,6 +944,7 @@ export async function move(ids: ID[], dst: DstPlaceInfo): Promise<void> {
       location: firstNode.parentId,
       locationField: true,
       locationTree: false,
+      newFolderPosition: [firstNode.parentId, firstNode.index],
       recentLocations: true,
       controls: [{ label: translate('popup.bookmarks.move') }],
     })
