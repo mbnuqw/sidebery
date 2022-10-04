@@ -85,20 +85,16 @@ let droppedOnPanel = false
 
 const el = ref<HTMLElement | null>(null)
 
-const isInline = computed((): boolean => {
-  return Settings.state.navBarLayout === 'horizontal' && Settings.state.navBarInline
-})
-const layout = computed(() => {
-  if (Settings.state.navBarLayout === 'horizontal') {
-    return Settings.state.navBarInline ? 'inline' : 'wrap'
-  }
-  if (Settings.state.navBarLayout === 'vertical') {
-    return Settings.state.navBarSide
-  }
-  return 'none'
-})
+const isInline = Settings.state.navBarLayout === 'horizontal' && Settings.state.navBarInline
+let layout = 'none'
+if (Settings.state.navBarLayout === 'horizontal') {
+  layout = Settings.state.navBarInline ? 'inline' : 'wrap'
+} else if (Settings.state.navBarLayout === 'vertical') {
+  layout = Settings.state.navBarSide
+}
+
 const hidden = computed((): NavItem[] => {
-  if (!Settings.state.hideEmptyPanels && !isInline.value) return []
+  if (!Settings.state.hideEmptyPanels && !isInline) return []
   const result: NavItem[] = []
 
   for (const id of Sidebar.reactive.nav) {
@@ -135,7 +131,7 @@ const visible = computed((): NavItem[] => {
         lastTabsPanelIndex = result.length
       }
       result.push(panel)
-    } else if (!isInline.value) {
+    } else if (!isInline) {
       const isSpace = (id as string).startsWith('sp-')
       const isDelimiter = (id as string).startsWith('sd-')
       const isSearch = id === 'search'
@@ -157,7 +153,7 @@ const visible = computed((): NavItem[] => {
     }
   }
 
-  if (!isInline.value && hidden.value.length) {
+  if (!isInline && hidden.value.length) {
     if (lastTabsPanelIndex === -1) lastTabsPanelIndex = firstTabsPanelIndex - 1
     if (lastTabsPanelIndex === -1) result.push(HIDDEN_BTN)
     else result.splice(lastTabsPanelIndex + 1, 0, HIDDEN_BTN)
@@ -167,7 +163,7 @@ const visible = computed((): NavItem[] => {
 })
 
 const staticButtons = computed((): NavBtn[] => {
-  if (!isInline.value) return []
+  if (!isInline) return []
   const result: NavBtn[] = []
 
   if (hidden.value.length) {
