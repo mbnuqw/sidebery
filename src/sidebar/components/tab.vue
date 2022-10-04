@@ -267,6 +267,7 @@ function onMouseUp(e: MouseEvent): void {
       return
     }
 
+    if (closeLock) return
     if (Menu.isBlocked()) return
     if (!Selection.isSet() && !Settings.state.ctxMenuNative) select()
     if (!Settings.state.ctxMenuNative) Menu.open(MenuType.Tabs, e.clientX, e.clientY)
