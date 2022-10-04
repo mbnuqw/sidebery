@@ -32,7 +32,6 @@ void (async function main() {
     saveFavicon: Favicons.saveFavicon,
     createWindowWithTabs: Windows.createWithTabs,
     isWindowTabsLocked: Windows.isWindowTabsLocked,
-    getUrlPageInitData: Tabs.getUrlPageInitData,
     getGroupPageInitData: Tabs.getGroupPageInitData,
     tabsApiProxy: Tabs.tabsApiProxy,
     checkUpgrade: checkUpgrade,
