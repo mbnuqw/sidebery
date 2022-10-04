@@ -33,7 +33,7 @@
       @contextmenu="onNavCtxMenu($event, item)")
 
   Transition(name="hidden-panels"): .hidden-bar-layer(
-    v-if="Sidebar.reactive.hiddenPanelsBar && hidden.length"
+    v-if="Sidebar.reactive.hiddenPanelsBar"
     data-dnd-type="hidden-layer"
     @mousedown="Sidebar.closeHiddenPanelsBar()")
     .hidden-bar
@@ -51,7 +51,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import Utils from 'src/utils'
 import { translate } from 'src/dict'
 import { BTN_ICONS } from 'src/defaults'
@@ -110,6 +110,16 @@ const hidden = computed((): NavItem[] => {
 
   return result
 })
+
+// Close hidden panels bar if it's empty
+watch(
+  () => hidden.value.length,
+  newHiddenLen => {
+    if (!newHiddenLen && Sidebar.reactive.hiddenPanelsBar) {
+      Sidebar.reactive.hiddenPanelsBar = false
+    }
+  }
+)
 
 const visible = computed((): NavItem[] => {
   const result: NavItem[] = []
