@@ -378,11 +378,14 @@ function onNavMouseUp(e: MouseEvent, item: NavItem, inHiddenBar?: boolean) {
     if (item.type === ButtonType.collapse) collapseAll()
     if (inHiddenBar) {
       Sidebar.closeHiddenPanelsBar()
-      Sidebar.switchToPanel(item.id)
+      if (Sidebar.reactive.activePanelId !== item.id) Sidebar.switchToPanel(item.id)
       return
     }
 
-    if (Sidebar.reactive.activePanelId !== item.id) return Sidebar.switchToPanel(item.id)
+    if (Sidebar.reactive.activePanelId !== item.id) {
+      if (Sidebar.reactive.hiddenPanelsBar) Sidebar.reactive.hiddenPanelsBar = false
+      return Sidebar.switchToPanel(item.id)
+    }
     if (isBookmarks) {
       if (Settings.state.navActBookmarksPanelLeftClickAction === 'scroll') {
         return Bookmarks.scrollBookmarksToEdge()
