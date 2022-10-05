@@ -46,14 +46,20 @@ export async function initColorScheme(theme?: browser.theme.Theme): Promise<void
     if (colorSchemeVariant === ColorSchemeVariant.Dark) Styles.reactive.colorScheme = 'dark'
     if (colorSchemeVariant === ColorSchemeVariant.Light) Styles.reactive.colorScheme = 'light'
 
-    if (theme.colors) applyFirefoxThemeColors(theme)
-    else resetFirefoxThemeColors()
+    if (!Info.isBg) {
+      if (theme.colors) applyFirefoxThemeColors(theme)
+      else resetFirefoxThemeColors()
+    }
+
+    Styles.theme = theme
 
     if (browser.theme && !browser.theme.onUpdated.hasListener(onFirefoxThemeChange)) {
       browser.theme.onUpdated.addListener(onFirefoxThemeChange)
     }
   } else {
-    resetFirefoxThemeColors()
+    if (!Info.isBg) resetFirefoxThemeColors()
+
+    Styles.theme = {}
 
     if (browser.theme?.onUpdated.hasListener(onFirefoxThemeChange)) {
       browser.theme.onUpdated.removeListener(onFirefoxThemeChange)
@@ -92,14 +98,20 @@ async function onFirefoxThemeChange(upd: browser.theme.Update): Promise<void> {
     const colorSchemeVariant = parseTheme(theme)
     if (colorSchemeVariant === ColorSchemeVariant.Dark) Styles.reactive.colorScheme = 'dark'
     if (colorSchemeVariant === ColorSchemeVariant.Light) Styles.reactive.colorScheme = 'light'
-    if (theme.colors) applyFirefoxThemeColors(theme)
-    else resetFirefoxThemeColors()
+    Styles.theme = theme
+    if (!Info.isBg) {
+      if (theme.colors) applyFirefoxThemeColors(theme)
+      else resetFirefoxThemeColors()
+    }
   } else {
     const colorSchemeVariant = parseTheme(upd.theme)
     if (colorSchemeVariant === ColorSchemeVariant.Dark) Styles.reactive.colorScheme = 'dark'
     if (colorSchemeVariant === ColorSchemeVariant.Light) Styles.reactive.colorScheme = 'light'
-    if (upd.theme.colors) applyFirefoxThemeColors(upd.theme)
-    else resetFirefoxThemeColors()
+    Styles.theme = upd.theme
+    if (!Info.isBg) {
+      if (upd.theme.colors) applyFirefoxThemeColors(upd.theme)
+      else resetFirefoxThemeColors()
+    }
   }
 }
 

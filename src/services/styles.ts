@@ -8,6 +8,7 @@ export const Styles = {
   reactive: { colorScheme: 'dark' } as StylesState,
   sidebarCSS: '',
   groupCSS: '',
+  theme: undefined as browser.theme.Theme | undefined,
 
   ...StylesActions,
 }
