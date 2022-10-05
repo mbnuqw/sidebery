@@ -70,6 +70,7 @@ export function updateSettingsBg(settings?: SettingsState | null): void {
   const markWindowPrefaceChanged = prev.markWindowPreface !== next.markWindowPreface
   const snapIntervalChanged = prev.snapInterval !== next.snapInterval
   const snapIntervalUnitChanged = prev.snapIntervalUnit !== next.snapIntervalUnit
+  const colorSchemeChanged = prev.colorScheme !== next.colorScheme
 
   Utils.updateObject(Settings.state, settings)
 
@@ -93,6 +94,8 @@ export function updateSettingsBg(settings?: SettingsState | null): void {
   }
 
   if (snapIntervalChanged || snapIntervalUnitChanged) Snapshots.scheduleSnapshots()
+
+  if (colorSchemeChanged) Styles.initColorScheme()
 }
 
 export function updateSettingsFg(settings?: SettingsState | null): void {

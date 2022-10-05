@@ -1,6 +1,6 @@
 import { Stored, Tab, Window, TabCache, TabsTreeData, GroupInfo, AnyFunc } from 'src/types'
 import Utils from 'src/utils'
-import { ADDON_HOST, NOID } from 'src/defaults'
+import { ADDON_HOST, NOID, SETTINGS_OPTIONS } from 'src/defaults'
 import { Tabs } from 'src/services/tabs.bg'
 import { Windows } from 'src/services/windows'
 import { Containers } from 'src/services/containers'
@@ -10,6 +10,7 @@ import { Favicons } from 'src/services/favicons'
 import { IPC } from './ipc'
 import { Settings } from './settings'
 import { Logs } from './logs'
+import { Styles } from './styles'
 
 const detachedTabs: Record<ID, Tab> = {}
 
@@ -409,13 +410,24 @@ export async function injectUrlPageScript(winId: ID, tabId: ID): Promise<void> {
 }
 
 export interface UrlPageInitData {
+  theme?: typeof SETTINGS_OPTIONS.theme[number]
   ffTheme?: browser.theme.Theme
+  colorScheme?: 'dark' | 'light'
   winId?: ID
   tabId?: ID
 }
 export async function getUrlPageInitData(winId: ID, tabId: ID): Promise<UrlPageInitData> {
-  const theme = await browser.theme.getCurrent()
-  return { ffTheme: theme, winId, tabId }
+  if (!Styles.theme) {
+    await Styles.initColorScheme()
+  }
+
+  return {
+    theme: Settings.state.theme,
+    ffTheme: Styles.theme,
+    colorScheme: Styles.reactive.colorScheme,
+    winId,
+    tabId,
+  }
 }
 
 export async function injectGroupPageScript(winId: ID, tabId: ID): Promise<void> {
