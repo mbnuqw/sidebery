@@ -207,19 +207,19 @@ function moveBtn(index: number, dir: number): void {
   Sidebar.saveSidebar()
 }
 
-function createNavElement(id?: ID): ID | undefined {
+async function createNavElement(id?: ID): Promise<ID | undefined> {
   if (!id) return
   if (id === 'tabs_panel') id = Sidebar.createTabsPanel().id
   else if (id === 'bookmarks_panel') {
     if (!Permissions.reactive.bookmarks) {
-      location.hash = 'bookmarks'
-      return
+      const result = await Permissions.request('bookmarks')
+      if (!result) return
     }
     id = Sidebar.createBookmarksPanel().id
   } else if (id === 'history') {
     if (!Permissions.reactive.history) {
-      location.hash = 'history'
-      return
+      const result = await Permissions.request('history')
+      if (!result) return
     }
     Sidebar.createHistoryPanel().id
   } else if (id === 'sp') id = 'sp-' + Utils.uid()
@@ -228,8 +228,8 @@ function createNavElement(id?: ID): ID | undefined {
   return id
 }
 
-function enableElement(id?: ID): void {
-  id = createNavElement(id)
+async function enableElement(id?: ID): Promise<void> {
+  id = await createNavElement(id)
   if (!id) return
 
   Sidebar.reactive.nav.push(id)
@@ -271,6 +271,22 @@ const dndDstIndex = ref<number | null>(null)
 function onDragStart(e: DragEvent, group: string | null, index: number | null, id: ID): void {
   if (!e.dataTransfer) return
 
+  if (id === 'bookmarks_panel') {
+    if (!Permissions.reactive.bookmarks) {
+      e.preventDefault()
+      e.stopPropagation()
+      location.hash = 'bookmarks'
+      return
+    }
+  } else if (id === 'history') {
+    if (!Permissions.reactive.history) {
+      e.preventDefault()
+      e.stopPropagation()
+      location.hash = 'history'
+      return
+    }
+  }
+
   const currentTarget = e.currentTarget as HTMLElement
 
   dndItemId.value = id
@@ -307,13 +323,13 @@ function onDragEnter(e: DragEvent): void {
   else dndDstIndex.value = null
 }
 
-function onDrop(e: DragEvent): void {
+async function onDrop(e: DragEvent): Promise<void> {
   const target = e.target as HTMLElement
 
   if (!target.getAttribute) return
   if (!dndItemId.value) return
 
-  const id = createNavElement(dndItemId.value)
+  const id = await createNavElement(dndItemId.value)
   if (!id) return resetDnd()
 
   let dstIndex = parseInt(target.getAttribute('data-dnd-index') ?? '')
