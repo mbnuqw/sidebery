@@ -51,7 +51,7 @@ section(
         .card-dnd-layer(data-dnd-group="enabled" data-dnd-index="-1")
         .card-name {{translate('settings.nav_bar.no_elements')}}
     TransitionGroup(name="card" tag="div")
-      .card(
+      .card.-enabled(
         v-for="(btn, i) in enabledBtns"
         :key="btn.id"
         :data-id="btn.id"
@@ -325,34 +325,40 @@ function onDragEnter(e: DragEvent): void {
 
 async function onDrop(e: DragEvent): Promise<void> {
   const target = e.target as HTMLElement
+  const dstIndexRaw = target.getAttribute?.('data-dnd-index')
 
-  if (!target.getAttribute) return
   if (!dndItemId.value) return
 
-  const id = await createNavElement(dndItemId.value)
-  if (!id) return resetDnd()
+  const srcIndex = dndSrcIndex.value
+  const isEnabled = srcIndex !== null && Sidebar.reactive.nav[srcIndex]
+  const isAdding = dstIndexRaw && !isEnabled
+  const isRemoving = !dstIndexRaw && isEnabled
+  const isMoving = dstIndexRaw && isEnabled
+
+  let newElementId
+  if (isAdding) {
+    newElementId = await createNavElement(dndItemId.value)
+    if (!newElementId) return resetDnd()
+  }
 
   let dstIndex = parseInt(target.getAttribute('data-dnd-index') ?? '')
   if (isNaN(dstIndex)) dstIndex = 0
 
-  if (
-    Sidebar.reactive.nav &&
-    dndSrcIndex.value !== null &&
-    Sidebar.reactive.nav[dndSrcIndex.value]
-  ) {
-    if (!Sidebar.reactive.nav) {
-      const panel = Sidebar.reactive.panelsById[Sidebar.reactive.nav[dndSrcIndex.value]]
-      if (panel) {
-        const msg = getRmConfirmMsg(panel)
-        if (msg && !window.confirm(msg)) return resetDnd()
-      }
+  if (isEnabled) {
+    const panel = Sidebar.reactive.panelsById[dndItemId.value]
+    if (panel && isRemoving) {
+      const msg = getRmConfirmMsg(panel)
+      if (msg && !window.confirm(msg)) return resetDnd()
     }
 
-    Sidebar.reactive.nav.splice(dndSrcIndex.value, 1)
-    if (Sidebar.reactive.nav === Sidebar.reactive.nav && dndSrcIndex.value < dstIndex) dstIndex--
+    Sidebar.reactive.nav.splice(srcIndex, 1)
+    if (srcIndex < dstIndex) dstIndex--
   }
 
-  if (Sidebar.reactive.nav) Sidebar.reactive.nav.splice(dstIndex, 0, id)
+  if (isAdding || isMoving) {
+    if (newElementId) Sidebar.reactive.nav.splice(dstIndex, 0, newElementId)
+    else Sidebar.reactive.nav.splice(dstIndex, 0, dndItemId.value)
+  }
 
   resetDnd()
   Sidebar.recalcPanels()
