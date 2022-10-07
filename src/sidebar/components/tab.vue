@@ -55,7 +55,7 @@
       @contextmenu.stop.prevent)
       svg: use(xlink:href="#icon_remove")
     .ctx(v-if="containerColor")
-    .t-box(v-if="withTitle"): .title {{tab.title}}
+    .t-box(v-if="!isPinned"): .title {{tab.title}}
     .unread-mark(v-if="tab.unread")
 </template>
 
@@ -120,10 +120,6 @@ const tooltip = computed((): string => {
 const favPlaceholder = computed((): string => {
   if (props.tab.warn) return '#icon_warn'
   return Favicons.getFavPlaceholder(props.tab.url)
-})
-const withTitle = computed((): boolean => {
-  if (!props.tab.pinned) return true
-  return Settings.state.pinnedTabsPosition === 'panel' && Settings.state.pinnedTabsList
 })
 const isPinned = computed<boolean>(() => {
   if (!props.tab.pinned) return false
