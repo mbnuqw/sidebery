@@ -1,12 +1,12 @@
-import Utils from 'src/utils'
-import { GroupPin, GroupedTabInfo, InstanceType } from 'src/types'
-import { IPC } from 'src/services/ipc'
-import { Settings } from 'src/services/settings'
 import { Favicons } from 'src/services/favicons'
-import { Styles } from 'src/services/styles'
 import { Info } from 'src/services/info'
+import { IPC } from 'src/services/ipc'
 import { Logs } from 'src/services/logs'
+import { Settings } from 'src/services/settings'
+import { Styles } from 'src/services/styles'
 import { Windows } from 'src/services/windows'
+import { GroupedTabInfo, GroupPin, InstanceType } from 'src/types'
+import Utils from 'src/utils'
 
 interface MsgUpdated {
   name: 'update'
@@ -120,7 +120,7 @@ async function main() {
   titleEl.value = title
   document.title = title || '‎'
 
-  // Listen chagnes of title
+  // Listen for title changes
   titleEl.addEventListener('input', onTitleChange as (e: Event) => void)
 
   if (!initData.groupInfo) {
@@ -371,6 +371,7 @@ function createTabEl(info: GroupedTabInfo, clickHandler: (e: MouseEvent) => void
     event.stopPropagation()
     IPC.bg('tabsApiProxy', 'discard', info.id)
   })
+  discardBtnEl.title = 'Discard tab'
   ctrlsEl.appendChild(discardBtnEl)
 
   const reloadBtnEl = createTabButton('#icon_reload', 'reload-btn', event => {
@@ -379,12 +380,14 @@ function createTabEl(info: GroupedTabInfo, clickHandler: (e: MouseEvent) => void
       IPC.bg('tabsApiProxy', 'reload', info.id)
     }
   })
+  reloadBtnEl.title = 'Reload tab'
   ctrlsEl.appendChild(reloadBtnEl)
 
   const closeBtnEl = createTabButton('#icon_close', 'close-btn', event => {
     event.stopPropagation()
     IPC.bg('tabsApiProxy', 'remove', info.id)
   })
+  closeBtnEl.title = 'Close tab'
   ctrlsEl.appendChild(closeBtnEl)
 
   info.el.addEventListener('mousedown', e => e.stopPropagation())
