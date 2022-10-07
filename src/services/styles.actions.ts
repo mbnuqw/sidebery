@@ -150,6 +150,7 @@ function parseTheme(theme: browser.theme.Theme): ColorSchemeVariant {
 
   const sidebar = Utils.toRGBA(theme.colors?.sidebar)
   const sidebarText = Utils.toRGBA(theme.colors?.sidebar_text)
+  const sidebarBorder = Utils.toRGBA(theme.colors?.sidebar_border)
 
   const popup = Utils.toRGBA(theme.colors?.popup)
   const popupText = Utils.toRGBA(theme.colors?.popup_text)
@@ -235,7 +236,7 @@ function parseTheme(theme: browser.theme.Theme): ColorSchemeVariant {
 
   // Detect sidebar border
   if (theme.colors && theme.colors.sidebar && theme.colors.sidebar_border) {
-    if (theme.colors.sidebar === theme.colors.sidebar_border) {
+    if (theme.colors.sidebar === theme.colors.sidebar_border || sidebarBorder?.[3] === 0) {
       theme.colors.sidebar_border_width = '1px'
     }
   }
