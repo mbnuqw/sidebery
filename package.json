@@ -27,6 +27,7 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "5.38.0",
     "@typescript-eslint/parser": "5.38.0",
+    "@volar/vue-language-plugin-pug": "1.0.7",
     "@vue/compiler-sfc": "3.2.39",
     "@vue/eslint-config-typescript": "11.0.2",
     "csso": "5.0.5",

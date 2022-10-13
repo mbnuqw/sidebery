@@ -18,5 +18,10 @@
     "skipDefaultLibCheck": true
   },
   "include": ["src/**/*.ts", "src/**/*.vue"],
-  "exclude": ["**/__test__/*"]
+  "exclude": ["**/__test__/*"],
+  "vueCompilerOptions": {
+    "plugins": [
+      "@volar/vue-language-plugin-pug"
+    ]
+  }
 }
