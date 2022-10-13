@@ -3,7 +3,8 @@ import { Styles } from 'src/services/styles'
 import { Settings } from 'src/services/settings'
 import { Store } from 'src/services/storage'
 import { Info } from 'src/services/info'
-import Utils from 'src/utils'
+import { getInstanceName } from 'src/services/info.actions'
+import * as Utils from 'src/utils'
 import { FF_THEME_COLORS } from 'src/defaults'
 import { Sidebar } from './sidebar'
 
@@ -33,7 +34,7 @@ export function initTheme(): void {
 
     Sidebar.recalcElementSizesDebounced()
   }
-  nextThemeLinkEl.href = `/themes/${Settings.state.theme}/${Info.getInstanceName()}.css`
+  nextThemeLinkEl.href = `/themes/${Settings.state.theme}/${getInstanceName(Info.instanceType)}.css`
 }
 
 const PREF_DARK_MEDIA = '(prefers-color-scheme: dark), (prefers-color-scheme: no-preference)'

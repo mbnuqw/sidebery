@@ -1,12 +1,12 @@
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 import { Stored, FavDomain } from 'src/types'
 import { Favicons } from 'src/services/favicons'
-import { IPC } from 'src/services/ipc'
+import * as IPC from 'src/services/ipc'
 import { Store } from 'src/services/storage'
 import { Tabs } from 'src/services/tabs.fg'
 import { Info } from 'src/services/info'
 import { FILE_RE, GROUP_URL, IMG_RE, MUS_RE, SETUP_URL, URL_URL, VID_RE } from 'src/defaults'
-import { Logs } from './logs'
+import * as Logs from './logs'
 
 const SAVE_DELAY = 2000
 const THRESHOLD_BYTES_DIFF = 150 * window.devicePixelRatio

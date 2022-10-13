@@ -1,4 +1,4 @@
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 import { MenuOption } from 'src/types'
 import { translate } from 'src/dict'
 import { Settings } from 'src/services/settings'

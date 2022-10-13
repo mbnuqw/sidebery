@@ -1,12 +1,12 @@
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 import { Window, TabCache, SavedGroup, Tab, Notification } from 'src/types'
 import { WindowChooseOption, WindowChoosingDetails, ItemInfo } from 'src/types'
 import { NOID, MOVEID, DEFAULT_CONTAINER_ID, PRIVATE_CONTAINER_ID } from 'src/defaults'
 import { Windows } from 'src/services/windows'
-import { Logs } from 'src/services/logs'
+import * as Logs from 'src/services/logs'
 import { Tabs } from 'src/services/tabs.bg'
 import { Settings } from 'src/services/settings'
-import { IPC } from './ipc'
+import * as IPC from './ipc'
 
 export async function loadWindows(): Promise<void> {
   const windows = await browser.windows.getAll({ windowTypes: ['normal'], populate: false })

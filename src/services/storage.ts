@@ -1,7 +1,7 @@
 import { Stored, StoredSync, Entries, IPCNodeInfo } from 'src/types'
 import { Info } from './info'
-import { IPC } from './ipc'
-import { Logs } from './logs'
+import * as IPC from './ipc'
+import * as Logs from './logs'
 import { Settings } from './settings'
 import { Windows } from './windows'
 
@@ -64,7 +64,7 @@ async function _set(newValues: Stored, srcInfo?: IPCNodeInfo): Promise<void> {
 
     // Send changes to all connected sidebars
     if (changesForSidebar) {
-      for (const [id, con] of IPC.sidebarConnections) {
+      for (const [id, con] of IPC.state.sidebarConnections) {
         if (srcInfo && srcInfo.type === con.type && srcInfo.winId === con.id) continue
         IPC.sidebar(con.id, 'storageChanged', changesForSidebar)
       }
@@ -72,7 +72,7 @@ async function _set(newValues: Stored, srcInfo?: IPCNodeInfo): Promise<void> {
 
     // Send changes to all connected setup pages
     if (changesForSetup) {
-      for (const [id, con] of IPC.setupPageConnections) {
+      for (const [id, con] of IPC.state.setupPageConnections) {
         if (srcInfo && srcInfo.type === con.type && srcInfo.tabId === con.id) continue
         IPC.setupPage(con.id, 'storageChanged', changesForSetup)
       }

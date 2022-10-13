@@ -75,7 +75,7 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 import { NavItem, PanelType, DropType, ReactiveTab } from 'src/types'
 import { NavItemTypeNames, DragType, Panel } from 'src/types'
 import { Sidebar } from 'src/services/sidebar'

@@ -65,7 +65,7 @@ export interface FuncCtx {
 /**
  * Run function ASAP
  */
-function asap(cb: AnyFunc, delay: number): FuncCtx {
+export function asap(cb: AnyFunc, delay: number): FuncCtx {
   const ctx: FuncCtx = {
     busy: false,
     func: (a: any) => {
@@ -88,7 +88,7 @@ function asap(cb: AnyFunc, delay: number): FuncCtx {
   return ctx
 }
 
-function debounce<T extends (...a: any[]) => void>(cb: T, delay: number): T {
+export function debounce<T extends (...a: any[]) => void>(cb: T, delay: number): T {
   const ctx = { timeout: -1 as number | null, cb: cb.bind(self) as T }
   return ((...a: Parameters<T>) => {
     if (ctx.timeout) clearTimeout(ctx.timeout)
@@ -99,7 +99,7 @@ function debounce<T extends (...a: any[]) => void>(cb: T, delay: number): T {
   }) as T
 }
 
-function wait(timeout: number | undefined, delay: number, cb: () => void): number {
+export function wait(timeout: number | undefined, delay: number, cb: () => void): number {
   clearTimeout(timeout)
   return setTimeout(() => cb(), delay)
 }
@@ -116,7 +116,7 @@ export async function sleep(ms = 1000): Promise<void> {
 /**
  * Bytes to readable string
  */
-function bytesToStr(bytes: number): string {
+export function bytesToStr(bytes: number): string {
   if (bytes < 1000) return `${bytes} b`
 
   const kb = bytes / 1024
@@ -138,12 +138,12 @@ function bytesToStr(bytes: number): string {
 /**
  * Get byte len of string
  */
-function strSize(str: string): string {
+export function strSize(str: string): string {
   const bytes = new Blob([str]).size
   return bytesToStr(bytes)
 }
 
-function uDate(ms: number, delimiter = '.', dayStartTime?: number): string {
+export function uDate(ms: number, delimiter = '.', dayStartTime?: number): string {
   if (dayStartTime) {
     if (ms > dayStartTime) return translate('time.today')
     if (ms > dayStartTime - 86400000) return translate('time.yesterday')
@@ -158,7 +158,7 @@ function uDate(ms: number, delimiter = '.', dayStartTime?: number): string {
 /**
  * Get time string from unix seconds
  */
-function uTime(ms: number, delimiter = ':', sec = true): string {
+export function uTime(ms: number, delimiter = ':', sec = true): string {
   const dt = new Date(ms)
   let time = `${dt.getHours()}`.padStart(2, '0')
   time += delimiter + `${dt.getMinutes()}`.padStart(2, '0')
@@ -170,7 +170,7 @@ function uTime(ms: number, delimiter = ':', sec = true): string {
 /**
  * Get domain of the url
  */
-function getDomainOf(url: string): string {
+export function getDomainOf(url: string): string {
   if (!url) return url
   return DOMAIN_RE.exec(url)?.[2] ?? url
 }
@@ -178,7 +178,7 @@ function getDomainOf(url: string): string {
 /**
  * Generate HSL color from string
  */
-function colorFromString(str: string, minLightness = 50): string {
+export function colorFromString(str: string, minLightness = 50): string {
   let h = 0
   let s = 0
   let l = 0
@@ -292,7 +292,7 @@ export function toRGBA(color?: string | null): [number, number, number, number] 
   if (color === 'transparent') return [0, 0, 0, 0]
 }
 
-function hueToChan(p: number, q: number, t: number): number {
+export function hueToChan(p: number, q: number, t: number): number {
   if (t < 0) t += 1
   if (t > 1) t -= 1
   if (t < 1 / 6) return p + (q - p) * 6 * t
@@ -301,7 +301,7 @@ function hueToChan(p: number, q: number, t: number): number {
   return p
 }
 
-function HSLtoRGB(hue: number, sat: number, lit: number): [number, number, number] {
+export function HSLtoRGB(hue: number, sat: number, lit: number): [number, number, number] {
   let r, g, b
 
   hue = hue / 360
@@ -331,7 +331,7 @@ export function toCSSVarName(key: string): string {
 /**
  * Parse numerical css value
  */
-function parseCSSNum(cssValue: string, or = 0): [number, string] {
+export function parseCSSNum(cssValue: string, or = 0): [number, string] {
   const parseResult = CSS_NUM_RE.exec(cssValue.trim())
   if (!parseResult) return [0, '']
   let num: number | string = parseResult[1]
@@ -350,7 +350,7 @@ function parseCSSNum(cssValue: string, or = 0): [number, string] {
 /**
  * Find common substring
  */
-function commonSubStr(strings: string[]): string {
+export function commonSubStr(strings: string[]): string {
   if (!strings || !strings.length) return ''
   if (strings.length === 1) return strings[0]
   const first = strings[0]
@@ -388,7 +388,7 @@ interface DragEventParseResult {
   file?: File | null
   matchedNativeTabs?: Tab[]
 }
-async function parseDragEvent(
+export async function parseDragEvent(
   event: DragEvent,
   lastFocusedId?: ID
 ): Promise<DragEventParseResult | undefined> {
@@ -436,30 +436,30 @@ async function parseDragEvent(
 /**
  * Check if string is group url
  */
-function isGroupUrl(url: string): boolean {
+export function isGroupUrl(url: string): boolean {
   return url.startsWith('m') && url.includes('/group.html')
 }
 
-function isUrlUrl(url: string): boolean {
+export function isUrlUrl(url: string): boolean {
   return url.startsWith('m') && url.includes('/url.html')
 }
 
 /**
  * Get group id
  */
-function getGroupId(url: string): string {
+export function getGroupId(url: string): string {
   const idIndex = url.lastIndexOf('#') + 1
   return url.slice(idIndex)
 }
 
-function getGroupRawParams(url: string): string {
+export function getGroupRawParams(url: string): string {
   const startIndex = url.indexOf('?')
   if (startIndex === -1) return ''
   const endIndex = url.lastIndexOf('#')
   return url.substring(startIndex, endIndex)
 }
 
-function createGroupUrl(name?: string, conf?: GroupConfig): string {
+export function createGroupUrl(name?: string, conf?: GroupConfig): string {
   let urlBase = browser.runtime.getURL('page.group/group.html')
   if (!name) name = uid()
   if (conf && conf.pin !== undefined) urlBase += '?pin=' + conf.pin
@@ -505,7 +505,7 @@ export function cloneObject<T>(obj: T & AnyObject): T {
 /**
  * Prepare url to be opened by sidebery
  */
-function normalizeUrl(url?: string, title?: string): string | undefined {
+export function normalizeUrl(url?: string, title?: string): string | undefined {
   if (!url) return url
   if (url === 'about:newtab') return undefined
   if (url === 'about:blank') return undefined
@@ -527,7 +527,7 @@ function normalizeUrl(url?: string, title?: string): string | undefined {
 /**
  * Convert url from Sidebery-safe to its original form
  */
-function denormalizeUrl(url?: string): string | undefined {
+export function denormalizeUrl(url?: string): string | undefined {
   if (!url) return url
   // Workaround for containered tabs
   if (url.startsWith('about:blank#url')) return url.slice(15)
@@ -546,7 +546,7 @@ function denormalizeUrl(url?: string): string | undefined {
   else return url
 }
 
-function recreateNormalizedObject<T>(obj: T & AnyObject, defaults: T & AnyObject): T {
+export function recreateNormalizedObject<T>(obj: T & AnyObject, defaults: T & AnyObject): T {
   const result = cloneObject(defaults) as AnyObject
   for (const key of Object.keys(defaults)) {
     if (obj[key] !== undefined) result[key] = obj[key] as unknown
@@ -568,7 +568,7 @@ export function updateObject<T>(target: T & AnyObject, newValues: T & AnyObject)
   }
 }
 
-function findUrls(str: string): string[] {
+export function findUrls(str: string): string[] {
   const urls = []
   const words = str.split(/\s|,/)
   for (const word of words) {
@@ -577,7 +577,7 @@ function findUrls(str: string): string[] {
   return urls
 }
 
-async function loadBinAsBase64(url: string): Promise<string | ArrayBuffer | null> {
+export async function loadBinAsBase64(url: string): Promise<string | ArrayBuffer | null> {
   return new Promise(async res => {
     const deadline = setTimeout(() => res(null), 2000)
 
@@ -608,7 +608,7 @@ async function loadBinAsBase64(url: string): Promise<string | ArrayBuffer | null
  * > height: number - canvas heihgt
  * < Element - canvas
  **/
-function createCanvas(width: number, height: number): HTMLCanvasElement {
+export function createCanvas(width: number, height: number): HTMLCanvasElement {
   // Canvas box
   const canvasBoxEl = document.createElement('div')
   canvasBoxEl.style.position = 'absolute'
@@ -629,7 +629,7 @@ function createCanvas(width: number, height: number): HTMLCanvasElement {
   return canvasEl
 }
 
-async function createImage(src: string, w: number, h: number): Promise<HTMLImageElement> {
+export async function createImage(src: string, w: number, h: number): Promise<HTMLImageElement> {
   return new Promise((res, rej) => {
     const img = new Image(w, h)
     img.onload = () => res(img)
@@ -638,7 +638,7 @@ async function createImage(src: string, w: number, h: number): Promise<HTMLImage
   })
 }
 
-async function setImageSrc(img: HTMLImageElement, src: string): Promise<void> {
+export async function setImageSrc(img: HTMLImageElement, src: string): Promise<void> {
   return new Promise((res, rej) => {
     img.onload = () => res()
     img.onerror = e => rej(e)
@@ -646,7 +646,7 @@ async function setImageSrc(img: HTMLImageElement, src: string): Promise<void> {
   })
 }
 
-function strHash(str: string): number {
+export function strHash(str: string): number {
   let hash = 0
   const len = str.length
   for (let chc, i = 0; i < len; i++) {
@@ -678,7 +678,7 @@ function adapt(delta: number, numPoints: number, firstTime: boolean) {
  * Converts a Punycode string of ASCII-only symbols to a string of Unicode
  * symbols.
  */
-function decodePunycode(input: string): string {
+export function decodePunycode(input: string): string {
   const output = []
   const inputLength = input.length
   const base = PunycodeConf.base
@@ -755,7 +755,7 @@ function decodePunycode(input: string): string {
 }
 
 // Stolen from https://github.com/bestiejs/punycode.js/ (MIT License)
-function decodeUrlPunycode(url: string): string {
+export function decodeUrlPunycode(url: string): string {
   if (!url.startsWith('xn--')) return url
 
   const labels = url.split('.')
@@ -763,7 +763,7 @@ function decodeUrlPunycode(url: string): string {
   return result
 }
 
-function getDayStartMS(): number {
+export function getDayStartMS(): number {
   const now = new Date()
   now.setMilliseconds(0)
   now.setSeconds(0)
@@ -772,7 +772,7 @@ function getDayStartMS(): number {
   return now.getTime()
 }
 
-function getTimeHHMM(t: number): string {
+export function getTimeHHMM(t: number): string {
   const dt = new Date(t)
   return `${String(dt.getHours()).padStart(2, '0')}:${String(dt.getMinutes()).padStart(2, '0')}`
 }
@@ -780,13 +780,13 @@ function getTimeHHMM(t: number): string {
 /**
  * Remove first found value from array
  */
-function rmFromArray<T>(arr: T[], val: T): number {
+export function rmFromArray<T>(arr: T[], val: T): number {
   const index = arr.indexOf(val)
   if (index > -1) arr.splice(index, 1)
   return index
 }
 
-function isRegExp(value: unknown): value is RegExp {
+export function isRegExp(value: unknown): value is RegExp {
   return !!(value as RegExp).test
 }
 
@@ -797,7 +797,7 @@ interface RetryConfig {
   increment?: number
 }
 
-async function retry(conf: RetryConfig): Promise<void> {
+export async function retry(conf: RetryConfig): Promise<void> {
   return new Promise(async res => {
     const increment = conf.increment ?? 0
     let count = conf.count
@@ -820,7 +820,7 @@ async function retry(conf: RetryConfig): Promise<void> {
 /**
  * Search back then forth
  */
-function findNear<T>(list: T[], index: number, cb: (v: T) => boolean): T | undefined {
+export function findNear<T>(list: T[], index: number, cb: (v: T) => boolean): T | undefined {
   const len = list.length
   let result: T | undefined
   let i = index
@@ -848,7 +848,7 @@ function findNear<T>(list: T[], index: number, cb: (v: T) => boolean): T | undef
   return result
 }
 
-function normalizeColor(color?: string): browser.ColorName {
+export function normalizeColor(color?: string): browser.ColorName {
   if (color === 'blue') return 'blue'
   if (color === 'turquoise') return 'turquoise'
   if (color === 'green') return 'green'
@@ -860,7 +860,7 @@ function normalizeColor(color?: string): browser.ColorName {
   return 'toolbar'
 }
 
-function getShortTimestamp(ms: number, currentDate: Date): string {
+export function getShortTimestamp(ms: number, currentDate: Date): string {
   const dt = new Date(ms)
 
   const y = dt.getFullYear()
@@ -909,57 +909,3 @@ export function isSubListTitle(something: any): something is SubListTitleInfo {
   if ((something as Record<string, any>).isSubListTitle) return true
   return false
 }
-
-const Utils = {
-  uid,
-  asap,
-  debounce,
-  wait,
-  sleep,
-  strSize,
-  bytesToStr,
-  uDate,
-  uTime,
-  getDomainOf,
-  colorFromString,
-  toRGBA,
-  toCSSVarName,
-  parseCSSNum,
-  commonSubStr,
-  parseDragEvent,
-  isGroupUrl,
-  isUrlUrl,
-  getGroupId,
-  getGroupRawParams,
-  createGroupUrl,
-  cloneArray,
-  cloneObject,
-  normalizeUrl,
-  denormalizeUrl,
-  recreateNormalizedObject,
-  normalizeObject,
-  updateObject,
-  findUrls,
-  loadBinAsBase64,
-  createCanvas,
-  createImage,
-  setImageSrc,
-  strHash,
-  decodeUrlPunycode,
-  getDayStartMS,
-  getTimeHHMM,
-  rmFromArray,
-  isRegExp,
-  retry,
-  findNear,
-  normalizeColor,
-  getShortTimestamp,
-  isNavBtn,
-  isNavSpace,
-  isNavPanel,
-  isTabsPanel,
-  isBookmarksPanel,
-  isHistoryPanel,
-  isSubListTitle,
-}
-export default Utils

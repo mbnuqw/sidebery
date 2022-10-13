@@ -1,4 +1,4 @@
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 import { Tab, IPCheckResult, InstanceType } from 'src/types'
 import { WebReq } from 'src/services/web-req'
 import { Containers } from 'src/services/containers'

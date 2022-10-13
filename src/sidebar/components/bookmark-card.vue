@@ -22,7 +22,7 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 import { Bookmark, DragInfo, DragType, DropType, DstPlaceInfo } from 'src/types'
 import { MenuType } from 'src/types'
 import { Settings } from 'src/services/settings'

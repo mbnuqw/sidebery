@@ -1,4 +1,4 @@
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 import { ASKID, CONTAINER_ID, Err, NEWID } from 'src/defaults'
 import { MenuOption, Window, Tab } from 'src/types'
 import { translate } from 'src/dict'
@@ -10,7 +10,7 @@ import { Sidebar } from 'src/services/sidebar'
 import { Menu } from 'src/services/menu'
 import { Containers } from 'src/services/containers'
 import { ItemInfo } from 'src/types/tabs'
-import { Logs } from './logs'
+import * as Logs from './logs'
 
 export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | undefined> = {
   undoRmTab: () => ({

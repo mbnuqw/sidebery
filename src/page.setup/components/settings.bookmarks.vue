@@ -58,12 +58,12 @@ section(ref="el")
 <script lang="ts" setup>
 import { ref, reactive, onMounted, CSSProperties, computed } from 'vue'
 import { Bookmark, Stored, InstanceType } from 'src/types'
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
 import { Settings } from 'src/services/settings'
 import { Permissions } from 'src/services/permissions'
 import { SetupPage } from 'src/services/setup-page'
-import { IPC } from 'src/services/ipc'
+import * as IPC from 'src/services/ipc'
 import ToggleField from '../../components/toggle-field.vue'
 import SelectField from '../../components/select-field.vue'
 

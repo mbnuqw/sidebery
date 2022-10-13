@@ -112,7 +112,7 @@ section(
 
 <script lang="ts" setup>
 import { computed, ref, onMounted } from 'vue'
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
 import { BookmarksPanel, Panel } from 'src/types'
 import { BTN_ICONS } from 'src/defaults'

@@ -14,11 +14,13 @@ import { Permissions } from 'src/services/permissions'
 import { Info } from 'src/services/info'
 import { SetupPage } from 'src/services/setup-page'
 import { Styles } from 'src/services/styles'
-import { Logs } from 'src/services/logs'
-import { IPC } from 'src/services/ipc'
+import * as IPC from 'src/services/ipc'
+import * as Logs from 'src/services/logs'
 
 async function main(): Promise<void> {
   Info.setInstanceType(InstanceType.setup)
+  IPC.setType(InstanceType.setup)
+  Logs.setType(InstanceType.setup)
 
   Settings.state = reactive(Settings.state)
   Containers.reactive = reactive(Containers.reactive)
@@ -50,6 +52,11 @@ async function main(): Promise<void> {
     Info.loadVersionInfo(),
     Info.loadCurrentTabInfo(),
   ])
+
+  IPC.setWinId(Windows.id)
+  IPC.setTabId(Info.currentTabId)
+  Logs.setWinId(Windows.id)
+  Logs.setTabId(Info.currentTabId)
 
   app.mount('#root_container')
 

@@ -46,9 +46,9 @@ import { Tabs } from 'src/services/tabs.fg'
 import { Mouse } from 'src/services/mouse'
 import { DnD } from 'src/services/drag-and-drop'
 import { Search } from 'src/services/search'
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 import { BOOKMARKED_PANEL_CONF_RE } from 'src/defaults'
-import { Logs } from 'src/services/logs'
+import * as Logs from 'src/services/logs'
 
 const props = defineProps<{
   node: Bookmark

@@ -1,6 +1,6 @@
 import { Window } from 'src/types'
 import { Windows } from 'src/services/windows'
-import { Logs } from 'src/services/logs'
+import * as Logs from 'src/services/logs'
 import { Sidebar } from 'src/services/sidebar'
 import { Tabs } from 'src/services/tabs.bg'
 import { Info } from 'src/services/info'

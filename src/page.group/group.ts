@@ -1,43 +1,12 @@
-import Utils from 'src/utils'
+import { sleep } from 'src/utils'
 import { GroupPin, GroupedTabInfo, InstanceType } from 'src/types'
-import { IPC } from 'src/services/ipc'
-import { Settings } from 'src/services/settings'
-import { Favicons } from 'src/services/favicons'
-import { Styles } from 'src/services/styles'
-import { Info } from 'src/services/info'
-import { Logs } from 'src/services/logs'
-import { Windows } from 'src/services/windows'
-
-interface MsgUpdated {
-  name: 'update'
-  windowId: ID
-  instanceType: InstanceType
-  id: ID
-  index: number
-  len: number
-  parentId: ID
-  tabs: GroupedTabInfo[]
-}
-
-type MsgTabCreated = {
-  name: 'create'
-  windowId: ID
-  instanceType: InstanceType
-} & GroupedTabInfo
-
-type MsgTabUpdated = {
-  name: 'updateTab'
-  windowId: ID
-  instanceType: InstanceType
-} & GroupedTabInfo
-
-type MsgTabRemoved = {
-  name: 'remove'
-  windowId: ID
-  instanceType: InstanceType
-} & GroupedTabInfo
-
-type Msg = MsgUpdated | MsgTabCreated | MsgTabUpdated | MsgTabRemoved
+import { GroupPageInitData } from 'src/services/tabs.bg.actions'
+import { getFavPlaceholder } from 'src/services/favicons.actions'
+import { SETTINGS_OPTIONS } from 'src/defaults'
+import { applyFirefoxThemeColors, initTheme, loadCustomGroupCSS } from './group.styles'
+import * as IPC from 'src/services/ipc'
+import * as Logs from 'src/services/logs'
+import { Msg, MsgTabRemoved, MsgTabUpdated, MsgUpdated } from './group.ipc'
 
 const PIN_SCREENSHOT_QUALITY = 90
 const SCREENSHOT_QUALITY = 25
@@ -48,6 +17,7 @@ let groupId: string
 let groupWinId: ID
 let groupTabId: ID
 let groupTabIndex: number
+let groupLayout: typeof SETTINGS_OPTIONS.groupLayout[number]
 let pinTab: GroupPin | undefined
 let tabs: GroupedTabInfo[]
 let groupLen: number, groupParentId: ID | undefined
@@ -59,56 +29,58 @@ function waitDOM(): Promise<void> {
     else document.addEventListener('DOMContentLoaded', () => res())
   })
 }
+function waitInitData(): Promise<void> {
+  return new Promise((ok, err) => {
+    if (window.sideberyInitData) return ok()
+    window.onSideberyInitDataReady = ok
+    setTimeout(() => err('GroupPage: No initial data (sideberyInitData)'), 2000)
+  })
+}
 
 async function main() {
   if (window.sideberyGroupPageInjected) return
   window.sideberyGroupPageInjected = true
 
-  Info.setInstanceType(InstanceType.group)
+  IPC.setType(InstanceType.group)
+  Logs.setType(InstanceType.group)
 
-  if (window.groupWinId === undefined || window.groupTabId === undefined) {
-    await Utils.sleep(123)
-  }
-  if (window.groupWinId === undefined || window.groupTabId === undefined) {
-    Logs.err('Group: No initial data (groupWinId or groupTabId)')
+  try {
+    await Promise.all([waitDOM(), waitInitData()])
+  } catch (e) {
+    Logs.err('Group page: Initialization error:', e)
     return
   }
+  const initData = window.sideberyInitData as GroupPageInitData
 
-  tabs = []
-  screenshots = {}
-  groupWinId = window.groupWinId
-  Windows.id = window.groupWinId
-  groupTabId = window.groupTabId
-  Info.currentTabId = window.groupTabId
+  groupWinId = initData.winId ?? -1
+  groupTabId = initData.tabId ?? -1
 
-  IPC.setupConnectionListener()
-  IPC.connectTo(InstanceType.bg)
+  IPC.setWinId(groupWinId)
+  IPC.setTabId(groupTabId)
+  Logs.setWinId(groupWinId)
+  Logs.setTabId(groupTabId)
 
-  const result = await Promise.all([
-    IPC.bg('getGroupPageInitData', groupWinId, groupTabId ?? -1),
-    Settings.loadSettings(),
-    waitDOM(),
-  ])
-  const initData = result[0]
+  if (initData.theme) initTheme(initData.theme)
+  else Logs.warn('Cannot init sidebery theme')
+  if (initData.ffTheme) applyFirefoxThemeColors(initData.ffTheme)
+  else Logs.warn('Cannot apply firefox theme colors')
+  if (initData.colorScheme) document.body.setAttribute('data-color-scheme', initData.colorScheme)
+  else {
+    Logs.warn('Cannot set color scheme')
+    document.body.setAttribute('data-color-scheme', 'dark')
+  }
+  loadCustomGroupCSS()
 
-  document.body.setAttribute('data-layout', Settings.state.groupLayout || 'grid')
-  document.body.setAttribute('data-animations', Settings.state.animations ? 'fast' : 'none')
-  Styles.initTheme()
-  Styles.initColorScheme(initData.ffTheme)
-    .then(() => {
-      document.body.setAttribute('data-color-scheme', Styles.reactive.colorScheme || 'dark')
-    })
-    .catch(() => {
-      document.body.setAttribute('data-color-scheme', 'dark')
-    })
-  Styles.loadCustomGroupCSS()
+  groupLayout = initData.groupLayout ?? 'grid'
+  document.body.setAttribute('data-layout', groupLayout)
+  document.body.setAttribute('data-animations', initData.animations ? 'fast' : 'none')
 
   // Load current window and get url-hash
   let hash
   try {
     hash = decodeURIComponent(window.location.hash.slice(1))
-  } catch (err) {
-    Logs.err('Group: Cannot decode URI component', err)
+  } catch (e) {
+    Logs.err('Group: Cannot decode URI component', e)
     return
   }
 
@@ -120,9 +92,6 @@ async function main() {
   titleEl.value = title
   document.title = title || '‎'
 
-  // Listen chagnes of title
-  titleEl.addEventListener('input', onTitleChange as (e: Event) => void)
-
   if (!initData.groupInfo) {
     const warnEl = document.getElementById('disconnected_warn')
     if (warnEl) warnEl.innerText = browser.i18n.getMessage('group_disconnected_warn')
@@ -130,12 +99,17 @@ async function main() {
     return
   }
 
+  IPC.connectTo(InstanceType.bg, groupWinId, groupTabId)
+
+  screenshots = {}
   tabs = initData.groupInfo.tabs || []
-  groupTabId = initData.groupInfo.id || -1
   groupTabIndex = initData.groupInfo.index || 0
   groupLen = initData.groupInfo.len || 0
   groupParentId = initData.groupInfo.parentId
   pinTab = initData.groupInfo.pin
+
+  // Listen chagnes of title
+  titleEl.addEventListener('input', onTitleChange as (e: Event) => void)
 
   if (pinTab) {
     document.body.setAttribute('data-pin', 'true')
@@ -195,7 +169,6 @@ function onTitleChange(e: DOMEvent<Event, HTMLInputElement>): void {
  */
 function onGroupUpdated(msg: MsgUpdated) {
   let i
-  groupTabId = msg.id
   groupTabIndex = msg.index
   groupLen = msg.len
   groupParentId = msg.parentId
@@ -238,7 +211,7 @@ async function onTabCreated(tab: GroupedTabInfo) {
   }
 
   groupLen++
-  await Utils.sleep(256)
+  await sleep(256)
   takeScreenshot(tab, SCREENSHOT_QUALITY)
 }
 
@@ -267,7 +240,7 @@ function onTabUpdated(msg: MsgTabUpdated) {
   tab.url = msg.url
 
   if (tab.favPlaceholderSvgEl) {
-    setSvgId(tab.favPlaceholderSvgEl, Favicons.getFavPlaceholder(msg.url))
+    setSvgId(tab.favPlaceholderSvgEl, getFavPlaceholder(msg.url))
   }
 
   tab.el.setAttribute('data-discarded', String(msg.discarded))
@@ -341,7 +314,7 @@ function createTabEl(info: GroupedTabInfo, clickHandler: (e: MouseEvent) => void
 
   info.favPlaceholderEl = document.createElement('div')
   info.favPlaceholderEl.classList.add('fav-placeholder')
-  const iconId = Favicons.getFavPlaceholder(info.url)
+  const iconId = getFavPlaceholder(info.url)
   info.favPlaceholderSvgEl = createSvgIcon(iconId)
   info.favPlaceholderEl.appendChild(info.favPlaceholderSvgEl)
   info.el.appendChild(info.favPlaceholderEl)
@@ -460,13 +433,13 @@ async function takeScreenshot(tab: GroupedTabInfo | GroupPin, quality = 90) {
     else if (tab.bgEl && tab.favIconUrl) {
       tab.bgEl.style.backgroundImage = `url(${tab.favIconUrl})`
       tab.bgEl.style.filter = 'blur(8px)'
-      if (Settings.state.groupLayout === 'list') tab.bgEl.style.left = '-4px'
+      if (groupLayout === 'list') tab.bgEl.style.left = '-4px'
     }
     return
   } else {
     if (tab.bgEl) {
       tab.bgEl.style.filter = 'none'
-      if (Settings.state.groupLayout === 'list') tab.bgEl.style.left = '0'
+      if (groupLayout === 'list') tab.bgEl.style.left = '0'
     }
   }
 
@@ -489,6 +462,7 @@ async function takeScreenshot(tab: GroupedTabInfo | GroupPin, quality = 90) {
 async function updateScreenshots() {
   const newScreenshots: Record<string, string> = {}
   if (pinTab) {
+    takeScreenshot(pinTab, PIN_SCREENSHOT_QUALITY)
     await takeScreenshot(pinTab, PIN_SCREENSHOT_QUALITY)
     newScreenshots[pinTab.url] = screenshots[pinTab.url]
   }
@@ -531,7 +505,7 @@ function updateTab(oldTab: GroupedTabInfo, newTab: GroupedTabInfo) {
     oldTab.urlEl.setAttribute('href', newTab.url)
     oldTab.el.title = newTab.url
     if (oldTab.favPlaceholderSvgEl) {
-      setSvgId(oldTab.favPlaceholderSvgEl, Favicons.getFavPlaceholder(newTab.url))
+      setSvgId(oldTab.favPlaceholderSvgEl, getFavPlaceholder(newTab.url))
     }
   }
   if (oldTab.lvl !== newTab.lvl) oldTab.el.setAttribute('data-lvl', String(newTab.lvl))
@@ -548,4 +522,4 @@ function updateTab(oldTab: GroupedTabInfo, newTab: GroupedTabInfo) {
   if (titleChanged || urlChanged) takeScreenshot(oldTab, SCREENSHOT_QUALITY)
 }
 
-main()
+void main()

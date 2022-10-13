@@ -29,11 +29,11 @@
 <script lang="ts" setup>
 import { ref, reactive, onMounted } from 'vue'
 import { translate } from 'src/dict'
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 import { Stored } from 'src/types'
 import { Store } from 'src/services/storage'
 import { SetupPage } from 'src/services/setup-page'
-import { Logs } from 'src/services/logs'
+import * as Logs from 'src/services/logs'
 import FooterSection from './footer-section.vue'
 
 const el = ref<HTMLElement | null>(null)

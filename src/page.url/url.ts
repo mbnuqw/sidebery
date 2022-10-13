@@ -1,19 +1,8 @@
 /* eslint no-console: off */
 import { UrlPageInitData } from 'src/services/tabs.bg.actions'
 import { toCSSVarName } from 'src/utils'
-
-let winId: ID = -1
-let tabId: ID = -1
-
-function err(msg: string, err?: unknown): void {
-  msg = `[url:${winId}:${tabId}] ${msg}\n`
-  if (err !== undefined) console.error(msg, err)
-  else console.error(msg)
-}
-
-function warn<T extends Array<any>>(msg: string, ...args: T): void {
-  console.warn(`[url:${winId}:${tabId}] ${msg}`, ...args)
-}
+import * as Logs from 'src/services/logs'
+import { InstanceType } from 'src/types'
 
 function waitDOM(): Promise<void> {
   return new Promise(res => {
@@ -66,19 +55,21 @@ void (async () => {
   if (window.sideberyUrlPageInjected) return
   window.sideberyUrlPageInjected = true
 
+  Logs.setType(InstanceType.url)
+
   await Promise.all([waitDOM(), waitInitData()])
   const initData = window.sideberyInitData as UrlPageInitData
 
-  winId = initData.winId ?? -1
-  tabId = initData.tabId ?? -1
+  if (initData.winId !== undefined) Logs.setWinId(initData.winId)
+  if (initData.tabId !== undefined) Logs.setTabId(initData.tabId)
 
   if (initData.theme) initTheme(initData.theme)
-  else warn('Cannot init sidebery theme')
+  else Logs.warn('Cannot init sidebery theme')
   if (initData.ffTheme) applyFirefoxThemeColors(initData.ffTheme)
-  else warn('Cannot apply firefox theme colors')
+  else Logs.warn('Cannot apply firefox theme colors')
   if (initData.colorScheme) document.body.setAttribute('data-color-scheme', initData.colorScheme)
   else {
-    warn('Cannot set color scheme')
+    Logs.warn('Cannot set color scheme')
     document.body.setAttribute('data-color-scheme', 'dark')
   }
 
@@ -90,14 +81,14 @@ void (async () => {
   const copyBtnEl = document.getElementById('copy_btn')
   const apiLimitNoteEl = document.getElementById('api_limit_note')
   const apiLimitNoteMoreEl = document.getElementById('api_limit_note_more')
-  if (!titleEl) return err('Cannot get element: titleEl')
-  if (!targetTitleLabelEl) return err('Cannot get element: targetTitleLabelEl')
-  if (!targetTitleEl) return err('Cannot get element: targetTitleEl')
-  if (!targetLinkLabelEl) return err('Cannot get element: targetLinkLabelEl')
-  if (!targetLinkEl) return err('Cannot get element: targetLinkEl')
-  if (!copyBtnEl) return err('Cannot get element: copyBtnEl')
-  if (!apiLimitNoteEl) return err('Cannot get element: apiLimitNoteEl')
-  if (!apiLimitNoteMoreEl) return err('Cannot get element: apiLimitNoteMoreEl')
+  if (!titleEl) return Logs.err('Cannot get element: titleEl')
+  if (!targetTitleLabelEl) return Logs.err('Cannot get element: targetTitleLabelEl')
+  if (!targetTitleEl) return Logs.err('Cannot get element: targetTitleEl')
+  if (!targetLinkLabelEl) return Logs.err('Cannot get element: targetLinkLabelEl')
+  if (!targetLinkEl) return Logs.err('Cannot get element: targetLinkEl')
+  if (!copyBtnEl) return Logs.err('Cannot get element: copyBtnEl')
+  if (!apiLimitNoteEl) return Logs.err('Cannot get element: apiLimitNoteEl')
+  if (!apiLimitNoteMoreEl) return Logs.err('Cannot get element: apiLimitNoteMoreEl')
 
   // Translate
   const titleElLable = browser.i18n.getMessage('unavailable_url')
@@ -130,7 +121,7 @@ void (async () => {
       targetTitleEl.remove()
     }
   }
-  if (!url) return err('Cannot get url value')
+  if (!url) return Logs.err('Cannot get url value')
 
   // Setup link
   targetLinkEl.innerText = url

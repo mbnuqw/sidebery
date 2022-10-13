@@ -1,4 +1,4 @@
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 import { Panel, ReactiveTab, TabsPanel } from 'src/types'
 import { Tabs } from 'src/services/tabs.fg'
 import { Selection } from 'src/services/selection'

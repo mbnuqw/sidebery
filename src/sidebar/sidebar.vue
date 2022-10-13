@@ -102,7 +102,7 @@ import ContainerConfigPopup from './components/popup.container-config.vue'
 import GroupConfigPopup from './components/popup.group-config.vue'
 import DialogPopup from './components/popup.dialog.vue'
 import UpgradeScreen from '../components/upgrade-screen.vue'
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 import { SwitchingTabScope } from 'src/services/tabs.fg.actions'
 
 const rootEl = ref<HTMLElement | null>(null)

@@ -28,7 +28,7 @@ section(ref="el")
 
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
 import { Settings } from 'src/services/settings'
 import { Menu } from 'src/services/menu'

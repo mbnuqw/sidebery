@@ -1,6 +1,6 @@
 import { InstanceType, SavedGroup, Stored, TabSessionData, UpgradingState } from 'src/types'
-import { IPC } from 'src/services/ipc'
-import { Logs } from 'src/services/logs'
+import * as IPC from 'src/services/ipc'
+import * as Logs from 'src/services/logs'
 import { Settings } from 'src/services/settings'
 import { Windows } from 'src/services/windows'
 import { Favicons } from 'src/services/favicons'
@@ -15,12 +15,14 @@ import { Info } from 'src/services/info'
 import { Menu } from 'src/services/menu'
 import { Styles } from 'src/services/styles'
 import { WebReq } from 'src/services/web-req'
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 import { DEFAULT_SETTINGS, NOID } from 'src/defaults'
 import { translate } from 'src/dict'
 
 void (async function main() {
   Info.setInstanceType(InstanceType.bg)
+  IPC.setType(InstanceType.bg)
+  Logs.setType(InstanceType.bg)
 
   // Register globaly available actions
   IPC.registerActions({

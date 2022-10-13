@@ -1,4 +1,4 @@
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 import { DbgInfo, Stored, Bookmark } from 'src/types'
 import { SetupPage } from 'src/services/setup-page'
 import { Windows } from 'src/services/windows'

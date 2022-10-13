@@ -34,7 +34,7 @@ section(ref="el")
 import { ref, onMounted } from 'vue'
 import { translate, LANG } from 'src/dict'
 import { BackupData } from 'src/types'
-import { Logs } from 'src/services/logs'
+import * as Logs from 'src/services/logs'
 import { Settings } from 'src/services/settings'
 import { SetupPage } from 'src/services/setup-page'
 import SelectField from '../../components/select-field.vue'

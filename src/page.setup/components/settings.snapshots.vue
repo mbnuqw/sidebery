@@ -39,12 +39,12 @@ import { ref, reactive, onMounted } from 'vue'
 import { translate } from 'src/dict'
 import { SETTINGS_OPTIONS } from 'src/defaults'
 import { Stored } from 'src/types'
-import { IPC } from 'src/services/ipc'
+import * as IPC from 'src/services/ipc'
 import { Settings } from 'src/services/settings'
 import { SetupPage } from 'src/services/setup-page'
 import NumField from '../../components/num-field.vue'
 import ToggleField from '../../components/toggle-field.vue'
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 
 const el = ref<HTMLElement | null>(null)
 const state = reactive({

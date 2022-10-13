@@ -1,4 +1,4 @@
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 import { Containers } from 'src/services/containers'
 import { DEFAULT_CONTAINER } from 'src/defaults'
 import { Store } from 'src/services/storage'

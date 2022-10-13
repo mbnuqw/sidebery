@@ -140,7 +140,7 @@
 
 <script lang="ts" setup>
 import { ref, reactive, computed, onMounted } from 'vue'
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
 import { TABS_MENU, BOOKMARKS_MENU } from 'src/defaults'
 import { TABS_PANEL_MENU, BOOKMARKS_PANEL_MENU } from 'src/defaults'

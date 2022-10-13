@@ -113,7 +113,7 @@
 
 <script lang="ts" setup>
 import { ref, computed, onMounted, nextTick, PropType } from 'vue'
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
 import { CONTAINER_ICON_OPTS, COLOR_OPTS, PROXY_OPTS } from 'src/defaults'
 import { Container, TextInputComponent } from 'src/types'

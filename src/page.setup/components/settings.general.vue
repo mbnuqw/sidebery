@@ -48,7 +48,7 @@ import { SetupPage } from 'src/services/setup-page'
 import ToggleField from '../../components/toggle-field.vue'
 import TextField from '../../components/text-field.vue'
 import { Stored } from 'src/types'
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 import { Permissions } from 'src/services/permissions'
 
 const el = ref<HTMLElement | null>(null)

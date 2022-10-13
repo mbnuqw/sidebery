@@ -82,18 +82,18 @@
 
 <script lang="ts" setup>
 import { reactive, computed, onUnmounted } from 'vue'
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 import { Stored, Snapshot, SnapshotState, SnapWindowState, RemovingSnapshotResult } from 'src/types'
 import { SnapPanelState, SnapTabState, ItemInfo } from 'src/types'
 import { CONTAINER_ID, NOID } from 'src/defaults'
 import { translate } from 'src/dict'
-import { IPC } from 'src/services/ipc'
+import * as IPC from 'src/services/ipc'
 import { Windows } from 'src/services/windows'
 import { Store } from 'src/services/storage'
 import { Snapshots } from 'src/services/snapshots'
 import { Favicons } from 'src/services/favicons'
 import { PanelConfig, PanelType } from 'src/types/sidebar'
-import { Logs } from 'src/services/logs'
+import * as Logs from 'src/services/logs'
 
 const VOID_PANEL_CONF: PanelConfig = {
   type: PanelType.tabs,

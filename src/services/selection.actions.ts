@@ -1,4 +1,4 @@
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 import { Tab, Bookmark, SelectionType } from 'src/types'
 import { Selection } from 'src/services/selection'
 import { Settings } from 'src/services/settings'

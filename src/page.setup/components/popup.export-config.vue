@@ -17,11 +17,11 @@
 <script lang="ts" setup>
 import { ref, reactive, computed, onMounted } from 'vue'
 import { BackupData, Stored } from 'src/types'
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
 import { Styles } from 'src/services/styles'
 import ToggleField from '../../components/toggle-field.vue'
-import { Logs } from 'src/services/logs'
+import * as Logs from 'src/services/logs'
 
 const rootEl = ref<HTMLElement | null>(null)
 const exportDataLink = ref<HTMLAnchorElement | null>(null)

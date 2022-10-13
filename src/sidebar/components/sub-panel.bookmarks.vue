@@ -48,7 +48,7 @@ import { translate } from 'src/dict'
 import { Notifications } from 'src/services/notifications'
 import { BKM_ROOT_ID, Err, NOID } from 'src/defaults'
 import { Sidebar } from 'src/services/sidebar'
-import { Logs } from 'src/services/logs'
+import * as Logs from 'src/services/logs'
 
 const props = defineProps<{ tabsPanel: TabsPanel }>()
 const state = reactive({

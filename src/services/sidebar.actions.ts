@@ -1,4 +1,4 @@
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
 import { PanelConfig, Panel, Stored, ItemBounds, Tab, Bookmark, DstPlaceInfo } from 'src/types'
 import { Notification, OldPanelConfig, SidebarConfig, BookmarksPanelConfig } from 'src/types'
@@ -9,7 +9,7 @@ import { BOOKMARKS_PANEL, TABS_PANEL_CONFIG, DEFAULT_CONTAINER_ID } from 'src/de
 import { BKM_ROOT_ID, BKM_OTHER_ID, BOOKMARKED_PANEL_CONF_RE } from 'src/defaults'
 import { HISTORY_PANEL, HISTORY_PANEL_STATE, FOLDER_NAME_DATA_RE } from 'src/defaults'
 import { BKM_MENU_ID, BKM_MOBILE_ID, BKM_TLBR_ID } from 'src/defaults'
-import { Logs } from 'src/services/logs'
+import * as Logs from 'src/services/logs'
 import { Settings } from 'src/services/settings'
 import { Sidebar } from 'src/services/sidebar'
 import { Windows } from 'src/services/windows'
@@ -26,7 +26,7 @@ import { Info } from './info'
 import { Permissions } from './permissions'
 import { ItemInfo } from 'src/types/tabs'
 import { Notifications } from './notifications'
-import { IPC } from './ipc'
+import * as IPC from './ipc'
 
 interface PanelElements {
   scrollBox: HTMLElement

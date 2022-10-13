@@ -1,5 +1,5 @@
 import { InstanceType } from 'src/types'
-import { IPC } from 'src/services/ipc'
+import * as IPC from 'src/services/ipc'
 import { Info } from 'src/services/info'
 import { Settings } from 'src/services/settings'
 import { Styles } from 'src/services/styles'
@@ -62,6 +62,7 @@ function closePopup(): void {
 
 void (async () => {
   Info.setInstanceType(InstanceType.search)
+  IPC.setType(InstanceType.search)
   IPC.setupGlobalMessageListener()
   IPC.registerActions({ closePopup })
   const [win] = await Promise.all([
@@ -69,6 +70,7 @@ void (async () => {
     Settings.loadSettings(),
   ])
   if (win.id !== undefined) {
+    IPC.setWinId(win.id)
     Windows.id = win.id
     IPC.connectTo(InstanceType.sidebar, Windows.id)
   }

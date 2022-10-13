@@ -39,7 +39,7 @@
 
 <script lang="ts" setup>
 import { ref, reactive, computed, onMounted, PropType } from 'vue'
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 import { BackupData, Stored, Snapshot } from 'src/types'
 import { translate } from 'src/dict'
 import { DEFAULT_CONTAINER, DEFAULT_SETTINGS } from 'src/defaults'
@@ -47,7 +47,7 @@ import { Sidebar } from 'src/services/sidebar'
 import { Info } from 'src/services/info'
 import { Store } from 'src/services/storage'
 import { Permissions } from 'src/services/permissions'
-import { Logs } from 'src/services/logs'
+import * as Logs from 'src/services/logs'
 import { Menu } from 'src/services/menu'
 import { Styles } from 'src/services/styles'
 import { Snapshots } from 'src/services/snapshots'

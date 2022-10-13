@@ -1,4 +1,4 @@
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 import { Tab, GroupConfig, GroupInfo, GroupedTabInfo } from 'src/types'
 import { GroupUpdateInfo } from 'src/types'
 import { Windows } from 'src/services/windows'
@@ -6,8 +6,7 @@ import { Settings } from 'src/services/settings'
 import { Tabs } from './tabs.fg'
 import { Favicons } from './favicons'
 import { GroupConfigResult, Sidebar } from './sidebar'
-import { IPC } from './ipc'
-import { Logs } from './logs'
+import * as IPC from './ipc'
 
 /**
  * Set relGroupId and relPinId props in related pinned and group tabs

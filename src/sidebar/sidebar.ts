@@ -1,8 +1,8 @@
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 import { createApp, reactive } from 'vue'
 import { InstanceType } from 'src/types'
-import { IPC } from 'src/services/ipc'
-import { Logs } from 'src/services/logs'
+import * as IPC from 'src/services/ipc'
+import * as Logs from 'src/services/logs'
 import { Settings } from 'src/services/settings'
 import { Sidebar } from 'src/services/sidebar'
 import { Windows } from 'src/services/windows'
@@ -22,10 +22,11 @@ import { Search } from 'src/services/search'
 import { Info } from 'src/services/info'
 import SidebarRoot from './sidebar.vue'
 import { Snapshots } from 'src/services/snapshots'
-import { NOID } from 'src/defaults'
 
 async function main(): Promise<void> {
   Info.setInstanceType(InstanceType.sidebar)
+  IPC.setType(InstanceType.sidebar)
+  Logs.setType(InstanceType.sidebar)
 
   // Reactivate data for vue
   Containers.reactive = reactive(Containers.reactive)
@@ -77,6 +78,9 @@ async function main(): Promise<void> {
     Permissions.loadPermissions(),
     Info.loadVersionInfo(),
   ])
+
+  IPC.setWinId(Windows.id)
+  Logs.setWinId(Windows.id)
 
   let app = createApp(SidebarRoot)
   app.mount('#root_container')

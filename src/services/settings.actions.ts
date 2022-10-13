@@ -1,6 +1,6 @@
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 import { DEFAULT_SETTINGS, SETTINGS_OPTIONS } from 'src/defaults'
-import { SettingsState, Stored } from 'src/types'
+import { SettingsState, Stored, InstanceType } from 'src/types'
 import { Settings } from 'src/services/settings'
 import { Store } from './storage'
 import { Info } from './info'
@@ -11,7 +11,7 @@ import { Bookmarks } from 'src/services/bookmarks'
 import { Menu } from 'src/services/menu'
 import { Tabs } from 'src/services/tabs.fg'
 import { Snapshots } from 'src/services/snapshots'
-import { IPC } from './ipc'
+import * as IPC from './ipc'
 
 type Opts = typeof SETTINGS_OPTIONS
 export async function loadSettings(): Promise<void> {
@@ -79,7 +79,7 @@ export function updateSettingsBg(settings?: SettingsState | null): void {
       if (win.type !== 'normal' || win.id === undefined) continue
       if (!next.markWindow) {
         browser.windows.update(win.id, { titlePreface: '' })
-      } else if (IPC.sidebarConnections.has(win.id)) {
+      } else if (IPC.isConnected(InstanceType.sidebar, win.id)) {
         browser.windows.update(win.id, { titlePreface: Settings.state.markWindowPreface })
       }
     }
@@ -87,7 +87,7 @@ export function updateSettingsBg(settings?: SettingsState | null): void {
     const value = next.markWindowPreface
     for (const win of Object.values(Windows.byId)) {
       if (win.type !== 'normal' || win.id === undefined) continue
-      if (Settings.state.markWindow && IPC.sidebarConnections.has(win.id)) {
+      if (Settings.state.markWindow && IPC.isConnected(InstanceType.sidebar, win.id)) {
         browser.windows.update(win.id, { titlePreface: value })
       }
     }

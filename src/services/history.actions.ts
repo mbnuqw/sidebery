@@ -1,4 +1,4 @@
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 import { DstPlaceInfo, HistoryItem, ItemInfo, Panel } from 'src/types'
 import { History } from 'src/services/history'
 import { Favicons } from 'src/services/favicons'

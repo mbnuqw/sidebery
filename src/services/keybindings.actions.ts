@@ -1,4 +1,4 @@
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 import { BKM_OTHER_ID, NOID } from 'src/defaults'
 import { Command, CommandUpdateDetails, ItemBounds, Tab, Bookmark, MenuType } from 'src/types'
 import { InstanceType, ItemInfo, TabsPanel, SelectionType } from 'src/types'

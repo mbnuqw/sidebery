@@ -1,4 +1,4 @@
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 import { Panel, Bookmark, BookmarksPanel } from 'src/types'
 import { Bookmarks } from 'src/services/bookmarks'
 import { Search } from 'src/services/search'

@@ -82,7 +82,7 @@ import BookmarkNode from 'src/components/bookmark-node.vue'
 import ScrollBox from 'src/components/scroll-box.vue'
 import LoadingDots from './loading-dots.vue'
 import TextInput from './text-input.vue'
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 import { Store } from 'src/services/storage'
 
 const nameInput = ref<TextInputComponent | null>(null)

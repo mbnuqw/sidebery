@@ -1,41 +1,34 @@
 /* eslint no-console: off */
-import { Windows } from 'src/services/windows'
-import { Info } from './info'
+import { NOID } from 'src/defaults'
+import { InstanceType } from 'src/types'
+import { getInstanceName } from './info.actions'
 
-export const Logs = {
-  info,
-  warn,
-  err,
+let _type = 'unknown'
+let _winId = ''
+let _tabId = ''
+
+export function setType(type: InstanceType): void {
+  _type = getInstanceName(type)
 }
 
-function info<T extends Array<any>>(msg: string, ...args: T): void {
-  if (Info.isBg) console.log(`[bg] ${msg}`, ...args)
-  else if (Info.isSidebar) console.log(`[sidebar:${Windows.id}] ${msg}`, ...args)
-  else if (Info.isSetup) console.log(`[setup:${Windows.id}] ${msg}`, ...args)
-  else if (Info.isGroup) console.log(`[group:${Windows.id}] ${msg}`, ...args)
-  else if (Info.isUrl) console.log(`[url:${Windows.id}] ${msg}`, ...args)
-  else if (Info.isSearch) console.log(`[search:${Windows.id}] ${msg}`, ...args)
-  else console.log(`[unknown] ${msg}`, ...args)
+export function setWinId(id: ID): void {
+  if (id !== NOID) _winId = `:${id}`
 }
 
-function warn<T extends Array<any>>(msg: string, ...args: T): void {
-  if (Info.isBg) console.warn(`[bg] ${msg}`, ...args)
-  else if (Info.isSidebar) console.warn(`[sidebar:${Windows.id}] ${msg}`, ...args)
-  else if (Info.isSetup) console.warn(`[setup:${Windows.id}] ${msg}`, ...args)
-  else if (Info.isGroup) console.warn(`[group:${Windows.id}] ${msg}`, ...args)
-  else if (Info.isUrl) console.warn(`[url:${Windows.id}] ${msg}`, ...args)
-  else if (Info.isSearch) console.warn(`[search:${Windows.id}] ${msg}`, ...args)
-  else console.warn(`[unknown] ${msg}`, ...args)
+export function setTabId(id: ID): void {
+  if (id !== NOID) _tabId = `:${id}`
 }
 
-function err(msg: string, err?: unknown): void {
-  if (Info.isBg) msg = `[bg] ${msg}\n`
-  else if (Info.isSidebar) msg = `[sidebar:${Windows.id}] ${msg}\n`
-  else if (Info.isSetup) msg = `[setup:${Windows.id}] ${msg}\n`
-  else if (Info.isGroup) msg = `[group:${Windows.id}] ${msg}\n`
-  else if (Info.isUrl) msg = `[url:${Windows.id}] ${msg}\n`
-  else if (Info.isSearch) msg = `[search:${Windows.id}] ${msg}\n`
-  else msg = `[unknown] ${msg}\n`
+export function info<T extends Array<any>>(msg: string, ...args: T): void {
+  console.log(`[${_type}${_winId}${_tabId}] ${msg}`, ...args)
+}
+
+export function warn<T extends Array<any>>(msg: string, ...args: T): void {
+  console.warn(`[${_type}${_winId}${_tabId}] ${msg}`, ...args)
+}
+
+export function err(msg: string, err?: unknown): void {
+  msg = `[${_type}${_winId}${_tabId}] ${msg}\n`
 
   if (err !== undefined) console.error(msg, err)
   else console.error(msg)

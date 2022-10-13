@@ -31,7 +31,7 @@
 
 <script lang="ts" setup>
 import { ref, computed, reactive, onMounted, onUpdated } from 'vue'
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
 import { ScrollBoxComponent, HistoryItem } from 'src/types'
 import { Favicons } from 'src/services/favicons'
@@ -44,7 +44,7 @@ import LoadingDots from 'src/components/loading-dots.vue'
 import PanelPlaceholder from './panel-placeholder.vue'
 import HistoryItemVue from './history-item.vue'
 import SubListTitle from './sub-list-title.vue'
-import { Logs } from 'src/services/logs'
+import * as Logs from 'src/services/logs'
 
 interface HistoryGroup {
   title: string

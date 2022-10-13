@@ -147,7 +147,7 @@
 
 <script lang="ts" setup>
 import { ref, reactive, computed, onMounted, nextTick } from 'vue'
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
 import { BKM_MENU_ID, FOLDER_NAME_DATA_RE } from 'src/defaults'
 import { DEFAULT_CONTAINER_ID, COLOR_OPTS, PANEL_ICON_OPTS } from 'src/defaults'

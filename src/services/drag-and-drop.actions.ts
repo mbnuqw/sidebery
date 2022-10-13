@@ -1,4 +1,4 @@
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
 import { BKM_OTHER_ID, CONTAINER_ID, NEWID, NOID, PRE_SCROLL } from 'src/defaults'
 import { DragInfo, DragType, DropType, ItemBounds, ItemBoundsType } from 'src/types'
@@ -11,8 +11,8 @@ import { Selection } from 'src/services/selection'
 import { Containers } from 'src/services/containers'
 import { Bookmarks } from 'src/services/bookmarks'
 import { Tabs } from 'src/services/tabs.fg'
-import { Logs } from './logs'
-import { IPC } from './ipc'
+import * as Logs from './logs'
+import * as IPC from './ipc'
 
 let lastDragStartTime = 0
 

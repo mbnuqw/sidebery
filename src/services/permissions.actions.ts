@@ -1,4 +1,4 @@
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 import { Permissions } from 'src/services/permissions'
 import { Settings } from 'src/services/settings'
 import { Containers } from 'src/services/containers'

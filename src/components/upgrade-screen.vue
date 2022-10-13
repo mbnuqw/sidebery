@@ -38,9 +38,9 @@ import { translate } from 'src/dict'
 import { Sidebar } from 'src/services/sidebar'
 import LoadingDots from 'src/components/loading-dots.vue'
 import { BackupData, Stored } from 'src/types'
-import Utils from 'src/utils'
-import { IPC } from 'src/services/ipc'
-import { Logs } from 'src/services/logs'
+import * as Utils from 'src/utils'
+import * as IPC from 'src/services/ipc'
+import * as Logs from 'src/services/logs'
 
 onMounted(() => {
   genBackup()

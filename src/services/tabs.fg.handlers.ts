@@ -1,7 +1,7 @@
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 import { ReactiveTab, Tab, TabStatus } from 'src/types'
 import { NOID, GROUP_URL, CONTAINER_ID, ADDON_HOST } from 'src/defaults'
-import { Logs } from 'src/services/logs'
+import * as Logs from 'src/services/logs'
 import { Windows } from 'src/services/windows'
 import { Bookmarks } from 'src/services/bookmarks'
 import { Menu } from 'src/services/menu'
@@ -11,7 +11,7 @@ import { Sidebar } from 'src/services/sidebar'
 import { Favicons } from 'src/services/favicons'
 import { DnD } from 'src/services/drag-and-drop'
 import { RemovedTabInfo, Tabs } from './tabs.fg'
-import { IPC } from './ipc'
+import * as IPC from './ipc'
 
 const EXT_HOST = browser.runtime.getURL('').slice(16)
 const URL_HOST_PATH_RE = /^([a-z0-9-]{1,63}\.)+\w+(:\d+)?\/[A-Za-z0-9-._~:/?#[\]%@!$&'()*+,;=]*$/

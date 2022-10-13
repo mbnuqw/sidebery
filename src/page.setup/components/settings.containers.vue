@@ -24,14 +24,14 @@ section(ref="el")
 
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
 import { Container } from 'src/types'
 import { Containers } from 'src/services/containers'
 import { Sidebar } from 'src/services/sidebar'
 import { SetupPage } from 'src/services/setup-page'
 import ContainerConfig from './popup.container-config.vue'
-import { Logs } from 'src/services/logs'
+import * as Logs from 'src/services/logs'
 import { DEFAULT_CONTAINER } from 'src/defaults'
 
 const el = ref<HTMLElement | null>(null)

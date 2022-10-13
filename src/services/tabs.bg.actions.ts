@@ -1,5 +1,6 @@
 import { Stored, Tab, Window, TabCache, TabsTreeData, GroupInfo, AnyFunc } from 'src/types'
-import Utils from 'src/utils'
+import { InstanceType } from 'src/types'
+import * as Utils from 'src/utils'
 import { ADDON_HOST, NOID, SETTINGS_OPTIONS } from 'src/defaults'
 import { Tabs } from 'src/services/tabs.bg'
 import { Windows } from 'src/services/windows'
@@ -7,9 +8,9 @@ import { Containers } from 'src/services/containers'
 import { Store } from 'src/services/storage'
 import { WebReq } from 'src/services/web-req'
 import { Favicons } from 'src/services/favicons'
-import { IPC } from './ipc'
+import * as IPC from './ipc'
 import { Settings } from './settings'
-import { Logs } from './logs'
+import * as Logs from './logs'
 import { Styles } from './styles'
 
 const detachedTabs: Record<ID, Tab> = {}
@@ -32,9 +33,6 @@ export async function loadTabs(): Promise<void> {
       tab.proxified = true
       showProxyBadge(tab.id)
     }
-
-    if (Utils.isGroupUrl(tab.url)) injectGroupPageScript(tab.windowId, tab.id)
-    if (Utils.isUrlUrl(tab.url)) injectUrlPageScript(tab.windowId, tab.id)
   }
 
   Tabs.ready = true
@@ -45,6 +43,8 @@ export async function loadTabs(): Promise<void> {
   }
   Tabs.deferredEventHandling.forEach(cb => cb())
   Tabs.deferredEventHandling = []
+
+  initInternalPageScripts(tabs as Tab[])
 }
 
 /**
@@ -75,7 +75,7 @@ function onTabCreated(tab: browser.tabs.Tab): void {
   }
 
   // If sidebar is closed and tabs of inactive panels hidden move new tab (if needed)
-  if (!IPC.sidebarConnections.has(tab.windowId) && Settings.state.hideInact) {
+  if (!IPC.isConnected(InstanceType.sidebar, tab.windowId) && Settings.state.hideInact) {
     const prevTab = tabWindow.tabs[tab.index - 1]
     if (prevTab && prevTab.hidden) {
       for (let i = prevTab.index - 1; i >= 0; i--) {
@@ -349,7 +349,7 @@ export async function updateBgTabsTreeData(): Promise<void> {
     if (window.id === undefined) continue
     windowsList.push(window)
 
-    const sidebarConnection = IPC.sidebarConnections.get(window.id)
+    const sidebarConnection = IPC.getConnection(InstanceType.sidebar, window.id)
     if (sidebarConnection) {
       receivingSidebarTrees.push(IPC.sidebar(window.id, 'getTabsTreeData'))
     } else {
@@ -388,16 +388,27 @@ export async function updateBgTabsTreeData(): Promise<void> {
   }
 }
 
+async function initInternalPageScripts(tabs: Tab[]) {
+  if (!Styles.theme) {
+    await Styles.initColorScheme()
+  }
+
+  for (const tab of tabs as Tab[]) {
+    if (!Windows.byId[tab.windowId]) continue
+
+    if (Utils.isGroupUrl(tab.url)) injectGroupPageScript(tab.windowId, tab.id)
+    if (Utils.isUrlUrl(tab.url)) injectUrlPageScript(tab.windowId, tab.id)
+  }
+}
+
 export async function injectUrlPageScript(winId: ID, tabId: ID): Promise<void> {
   try {
-    const [_, initData] = await Promise.all([
-      browser.tabs.executeScript(tabId, {
-        file: '/page.url/url.js',
-        runAt: 'document_start',
-        matchAboutBlank: true,
-      }),
-      getUrlPageInitData(winId, tabId),
-    ])
+    await browser.tabs.executeScript(tabId, {
+      file: '/page.url/url.js',
+      runAt: 'document_start',
+      matchAboutBlank: true,
+    })
+    const initData = getUrlPageInitData(winId, tabId)
     const initDataJson = JSON.stringify(initData)
     browser.tabs.executeScript(tabId, {
       code: `window.sideberyInitData=${initDataJson};window.onSideberyInitDataReady?.()`,
@@ -416,11 +427,7 @@ export interface UrlPageInitData {
   winId?: ID
   tabId?: ID
 }
-export async function getUrlPageInitData(winId: ID, tabId: ID): Promise<UrlPageInitData> {
-  if (!Styles.theme) {
-    await Styles.initColorScheme()
-  }
-
+export function getUrlPageInitData(winId: ID, tabId: ID): UrlPageInitData {
   return {
     theme: Settings.state.theme,
     ffTheme: Styles.theme,
@@ -433,12 +440,14 @@ export async function getUrlPageInitData(winId: ID, tabId: ID): Promise<UrlPageI
 export async function injectGroupPageScript(winId: ID, tabId: ID): Promise<void> {
   try {
     browser.tabs.executeScript(tabId, {
-      code: `window.groupWinId = ${winId}; window.groupTabId = ${tabId};`,
+      file: '/page.group/group.js',
       runAt: 'document_start',
       matchAboutBlank: true,
     })
-    await browser.tabs.executeScript(tabId, {
-      file: '/page.group/group.js',
+    const initData = await getGroupPageInitData(winId, tabId)
+    const initDataJson = JSON.stringify(initData)
+    browser.tabs.executeScript(tabId, {
+      code: `window.sideberyInitData=${initDataJson};window.onSideberyInitDataReady?.()`,
       runAt: 'document_start',
       matchAboutBlank: true,
     })
@@ -448,22 +457,31 @@ export async function injectGroupPageScript(winId: ID, tabId: ID): Promise<void>
 }
 
 export interface GroupPageInitData {
+  theme?: typeof SETTINGS_OPTIONS.theme[number]
   ffTheme?: browser.theme.Theme
+  colorScheme?: 'dark' | 'light'
+  groupLayout?: typeof SETTINGS_OPTIONS.groupLayout[number]
+  animations?: boolean
   groupInfo?: GroupInfo | null
+  winId?: ID
+  tabId?: ID
 }
 export async function getGroupPageInitData(winId: ID, tabId: ID): Promise<GroupPageInitData> {
-  const data: GroupPageInitData = {}
-  const result = await Promise.all([
-    browser.theme.getCurrent().catch(err => {
-      Logs.err('Tabs: Cannot get theme for group page', err)
-    }),
-    IPC.sidebar(winId, 'getGroupInfo', tabId).catch(err => {
-      Logs.err('Tabs: Cannot get tabs info for group page', err)
-    }),
-  ])
-  if (result[0]) data.ffTheme = result[0]
-  if (result[1]) data.groupInfo = result[1]
-  return data
+  const groupInfo = await IPC.sidebar(winId, 'getGroupInfo', tabId).catch(err => {
+    Logs.err('Tabs: Cannot get tabs info for group page', err)
+    return null
+  })
+
+  return {
+    theme: Settings.state.theme,
+    ffTheme: Styles.theme,
+    colorScheme: Styles.reactive.colorScheme,
+    groupLayout: Settings.state.groupLayout,
+    animations: Settings.state.animations,
+    groupInfo,
+    winId,
+    tabId,
+  }
 }
 
 export function tabsApiProxy<T extends Array<any>>(method: string, ...args: T): any {
@@ -478,7 +496,7 @@ export function tabsApiProxy<T extends Array<any>>(method: string, ...args: T): 
 }
 
 export async function getSidebarTabs(windowId: ID, tabIds?: ID[]): Promise<Tab[] | undefined> {
-  const connection = IPC.sidebarConnections.get(windowId)
+  const connection = IPC.getConnection(InstanceType.sidebar, windowId)
   if (!connection) return
   if (
     (!connection.localPort || connection.localPort.error) &&

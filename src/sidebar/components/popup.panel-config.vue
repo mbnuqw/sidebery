@@ -36,7 +36,7 @@
 
 <script lang="ts" setup>
 import { ref, computed, onMounted } from 'vue'
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
 import { Sidebar } from 'src/services/sidebar'
 import { PANEL_ICON_OPTS, COLOR_OPTS } from 'src/defaults'

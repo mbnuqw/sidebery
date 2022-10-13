@@ -73,7 +73,7 @@ section(ref="el")
 
 <script lang="ts" setup>
 import { ref, reactive, onMounted } from 'vue'
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
 import { StoredSync, StoredSyncValue } from 'src/types'
 import { Settings } from 'src/services/settings'
@@ -85,7 +85,7 @@ import { SetupPage } from 'src/services/setup-page'
 import TextField from '../../components/text-field.vue'
 import ToggleField from '../../components/toggle-field.vue'
 import { DEFAULT_SETTINGS } from 'src/defaults'
-import { Logs } from 'src/services/logs'
+import * as Logs from 'src/services/logs'
 import { Keybindings } from 'src/services/keybindings'
 
 interface SyncInfo extends StoredSyncValue {

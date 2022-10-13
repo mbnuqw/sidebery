@@ -1,4 +1,4 @@
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 import { Stored, InstanceType } from 'src/types'
 import { Info } from 'src/services/info'
 import { Store } from './storage'
@@ -46,7 +46,6 @@ export function setInstanceType(t: InstanceType): void {
 }
 
 export function getInstanceName(instance?: InstanceType): string {
-  if (instance === undefined) instance = Info.instanceType
   if (instance === InstanceType.sidebar) return 'sidebar'
   else if (instance === InstanceType.bg) return 'bg'
   else if (instance === InstanceType.setup) return 'setup'

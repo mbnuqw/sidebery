@@ -16,7 +16,7 @@
 
 <script lang="ts" setup>
 import { HistoryItem, MenuType } from 'src/types'
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 import { Mouse } from 'src/services/mouse'
 import { Menu } from 'src/services/menu'
 import { Selection } from 'src/services/selection'

@@ -11,10 +11,10 @@
 <script lang="ts" setup>
 import { reactive, ref, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { ScrollBoxComponent } from 'src/types'
-import Utils, { FuncCtx } from 'src/utils'
-import { Logs } from 'src/services/logs'
+import * as Utils from 'src/utils'
+import * as Logs from 'src/services/logs'
 
-let recalcScrollOnResize: FuncCtx | null = null
+let recalcScrollOnResize: Utils.FuncCtx | null = null
 let resizeObserver: ResizeObserver | null = null
 
 const emit = defineEmits(['bottom'])

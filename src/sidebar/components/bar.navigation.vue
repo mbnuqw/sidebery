@@ -52,7 +52,7 @@
 
 <script lang="ts" setup>
 import { ref, computed, onMounted, watch } from 'vue'
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
 import { BTN_ICONS } from 'src/defaults'
 import { NavItemClass, ButtonTypes, DragType, DropType, Tab } from 'src/types'

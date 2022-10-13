@@ -1,4 +1,4 @@
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 import { Notification } from 'src/types'
 
 export interface NotificationsState {

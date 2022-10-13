@@ -1,5 +1,5 @@
 import { Tab } from 'src/types'
-import { Logs } from 'src/services/logs'
+import * as Logs from 'src/services/logs'
 import { Tabs } from 'src/services/tabs.fg'
 import { Bookmarks } from 'src/services/bookmarks'
 import { Settings } from 'src/services/settings'

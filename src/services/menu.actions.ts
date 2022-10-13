@@ -1,4 +1,4 @@
-import Utils from 'src/utils'
+import * as Utils from 'src/utils'
 import { RGB_COLORS } from 'src/defaults'
 import { menuOptions } from './menu.options'
 import { Menu } from 'src/services/menu'
