@@ -26,7 +26,7 @@
   width: 100%
   height: var(--tabs-height)
   z-index: 10
-  overflow: hidden
+  // overflow: hidden
   transition: transform var(--d-fast), opacity var(--d-fast), padding var(--d-fast)
 
   padding-left: calc(var(--tabs-indent) * 16)
@@ -115,11 +115,11 @@
     content: ''
     position: absolute
     display: none
-    top: calc(50% - 2px)
-    left: -1px
-    width: 2px
-    height: 4px
-    opacity: .2
+    top: -1px
+    left: calc(var(--tabs-indent) / 2 - 1px)
+    width: 1px
+    height: calc(100% + 1px)
+    opacity: .16
 
 .Tab:hover .body:before
   opacity: .1
@@ -143,22 +143,22 @@
 
 #root[data-tabs-tree-lvl-marks="true"] .Tab[data-pin="false"]:not([data-lvl="0"]) .body:after
   display: block
-  box-shadow: calc(var(--tabs-indent) / -2) 0 0 0 var(--toolbar-fg),
-              calc(var(--tabs-indent) * -1.5) 0 0 0 var(--toolbar-fg),
-              calc(var(--tabs-indent) * -2.5) 0 0 0 var(--toolbar-fg),
-              calc(var(--tabs-indent) * -3.5) 0 0 0 var(--toolbar-fg),
-              calc(var(--tabs-indent) * -4.5) 0 0 0 var(--toolbar-fg),
-              calc(var(--tabs-indent) * -5.5) 0 0 0 var(--toolbar-fg),
-              calc(var(--tabs-indent) * -6.5) 0 0 0 var(--toolbar-fg),
-              calc(var(--tabs-indent) * -7.5) 0 0 0 var(--toolbar-fg),
-              calc(var(--tabs-indent) * -8.5) 0 0 0 var(--toolbar-fg),
-              calc(var(--tabs-indent) * -9.5) 0 0 0 var(--toolbar-fg),
-              calc(var(--tabs-indent) * -10.5) 0 0 0 var(--toolbar-fg),
-              calc(var(--tabs-indent) * -11.5) 0 0 0 var(--toolbar-fg),
-              calc(var(--tabs-indent) * -12.5) 0 0 0 var(--toolbar-fg),
-              calc(var(--tabs-indent) * -13.5) 0 0 0 var(--toolbar-fg),
-              calc(var(--tabs-indent) * -14.5) 0 0 0 var(--toolbar-fg),
-              calc(var(--tabs-indent) * -15.5) 0 0 0 var(--toolbar-fg)
+  box-shadow: calc(var(--tabs-indent) / -1) 0 0 0 var(--toolbar-fg),
+              calc(var(--tabs-indent) * -2) 0 0 0 var(--toolbar-fg),
+              calc(var(--tabs-indent) * -3) 0 0 0 var(--toolbar-fg),
+              calc(var(--tabs-indent) * -4) 0 0 0 var(--toolbar-fg),
+              calc(var(--tabs-indent) * -5) 0 0 0 var(--toolbar-fg),
+              calc(var(--tabs-indent) * -6) 0 0 0 var(--toolbar-fg),
+              calc(var(--tabs-indent) * -7) 0 0 0 var(--toolbar-fg),
+              calc(var(--tabs-indent) * -8) 0 0 0 var(--toolbar-fg),
+              calc(var(--tabs-indent) * -9) 0 0 0 var(--toolbar-fg),
+              calc(var(--tabs-indent) * -10) 0 0 0 var(--toolbar-fg),
+              calc(var(--tabs-indent) * -11) 0 0 0 var(--toolbar-fg),
+              calc(var(--tabs-indent) * -12) 0 0 0 var(--toolbar-fg),
+              calc(var(--tabs-indent) * -13) 0 0 0 var(--toolbar-fg),
+              calc(var(--tabs-indent) * -14) 0 0 0 var(--toolbar-fg),
+              calc(var(--tabs-indent) * -15) 0 0 0 var(--toolbar-fg),
+              calc(var(--tabs-indent) * -16) 0 0 0 var(--toolbar-fg)
 
 // ---
 // -- Color layer
