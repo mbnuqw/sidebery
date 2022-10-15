@@ -94,7 +94,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   autoExpandTabs: false,
   rmChildTabs: 'none',
   tabsChildCount: true,
-  tabsLvlDots: false,
+  tabsLvlDots: true,
   discardFolded: false,
   discardFoldedDelay: 0,
   discardFoldedDelayUnit: 'sec',
