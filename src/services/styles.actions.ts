@@ -363,12 +363,10 @@ function applyCustomCSS(css?: string | null): void {
   if (css === null || css === undefined) return
 
   // Find or create new style element
-  let customStyleEl = document.getElementById('custom_css') as HTMLLinkElement
+  let customStyleEl = document.getElementById('custom_css') as HTMLStyleElement
   if (!customStyleEl) {
-    customStyleEl = document.createElement('style') as HTMLLinkElement
+    customStyleEl = document.createElement('style')
     customStyleEl.id = 'custom_css'
-    customStyleEl.type = 'text/css'
-    customStyleEl.rel = 'stylesheet'
     document.head.appendChild(customStyleEl)
   } else {
     // Remove old styles
@@ -379,6 +377,11 @@ function applyCustomCSS(css?: string | null): void {
 
   // Apply css
   if (css) customStyleEl.appendChild(document.createTextNode(css))
+}
+
+export function removeCustomCSS(): void {
+  const customStyleEl = document.getElementById('custom_css') as HTMLStyleElement
+  if (customStyleEl) customStyleEl.remove()
 }
 
 /**

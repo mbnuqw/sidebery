@@ -166,7 +166,13 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
     else Bookmarks.unmarkAllOpenBookmarks()
   }
 
-  if (theme) Styles.initTheme()
+  if (theme) {
+    Styles.initTheme()
+    if (Info.isSidebar) {
+      Styles.removeCustomCSS()
+      Styles.loadCustomSidebarCSS()
+    }
+  }
   if (ctxMenuCtrIgnore) Menu.parseContainersRules()
   if (fontSize) Sidebar.updateFontSize()
 
