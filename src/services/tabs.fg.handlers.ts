@@ -349,6 +349,16 @@ function onTabCreated(tab: Tab): void {
     const activeTab = Tabs.byId[Tabs.activeId]
     if (activeTab && activeTab.panelId !== panel.id) browser.tabs.hide?.(tab.id)
   }
+
+  // Scroll to new inactive tab
+  if (
+    !tab.pinned &&
+    !tab.active &&
+    !tab.invisible &&
+    tab.panelId === Sidebar.reactive.activePanelId
+  ) {
+    Tabs.scrollToTabDebounced(120, tab.id)
+  }
 }
 
 /**
