@@ -88,15 +88,17 @@ export function asap(cb: AnyFunc, delay: number): FuncCtx {
   return ctx
 }
 
-export function debounce<T extends (...a: any[]) => void>(cb: T, delay: number): T {
+export function debounce<T extends (...a: any[]) => void>(
+  cb: T
+): (delay: number, ...a: Parameters<T>) => void {
   const ctx = { timeout: -1 as number | null, cb: cb.bind(self) as T }
-  return ((...a: Parameters<T>) => {
+  return (delay: number, ...a: Parameters<T>) => {
     if (ctx.timeout) clearTimeout(ctx.timeout)
     ctx.timeout = setTimeout(() => {
       ctx.timeout = null
       ctx.cb(...a)
     }, delay)
-  }) as T
+  }
 }
 
 export function wait(timeout: number | undefined, delay: number, cb: () => void): number {

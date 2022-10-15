@@ -46,9 +46,9 @@ const validateIgnoreContainersRule = Utils.debounce((value: string): void => {
     if (!rules) ignoreContainersRuleValid.value = 'invalid'
     else ignoreContainersRuleValid.value = 'valid'
   }
-}, 321)
+})
 function onCtxMenuIgnoreContainersUpdate(value: string): void {
-  validateIgnoreContainersRule(value)
+  validateIgnoreContainersRule(321, value)
   Settings.saveDebounced(500)
 }
 
