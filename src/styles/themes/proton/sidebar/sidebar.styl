@@ -251,11 +251,11 @@ body
 #root[data-drag="true"] .pointer
   opacity: 1
   z-index: 100
-for i in 1..12
+for i in 1..16
   .TabsPanel[data-pos="center"] ~ .pointer[data-pointer="between"][data-lvl=\"{i}\"]:before
   .TabsPanel[data-pos="center"] ~ .pointer[data-pointer="between"][data-lvl=\"{i}\"]:after
     transform: "translateX(calc(var(--tabs-indent) * %s + 1px))" % i
-for i in 1..12
+for i in 1..16
   .BookmarksPanel[data-pos="center"] ~ .pointer[data-pointer="between"][data-lvl=\"{i}\"]:before
   .BookmarksPanel[data-pos="center"] ~ .pointer[data-pointer="between"][data-lvl=\"{i}\"]:after
     transform: "translateX(calc(var(--bookmarks-indent) * %s + 1px))" % i
