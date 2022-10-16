@@ -77,6 +77,9 @@ void (async function main() {
 
   // Update title preface on sidebar connection/disconnection
   IPC.onConnected(InstanceType.sidebar, winId => {
+    const tabs = Windows.byId[winId]?.tabs
+    if (tabs) Tabs.initInternalPageScripts(tabs)
+
     if (Settings.state.markWindow && winId !== NOID) {
       browser.windows.update(winId, { titlePreface: Settings.state.markWindowPreface })
     }

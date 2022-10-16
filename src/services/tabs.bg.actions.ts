@@ -43,8 +43,6 @@ export async function loadTabs(): Promise<void> {
   }
   Tabs.deferredEventHandling.forEach(cb => cb())
   Tabs.deferredEventHandling = []
-
-  initInternalPageScripts(tabs as Tab[])
 }
 
 /**
@@ -388,7 +386,7 @@ export async function updateBgTabsTreeData(): Promise<void> {
   }
 }
 
-async function initInternalPageScripts(tabs: Tab[]) {
+export async function initInternalPageScripts(tabs: Tab[]) {
   if (!Styles.theme) {
     await Styles.initColorScheme()
   }
@@ -403,18 +401,27 @@ async function initInternalPageScripts(tabs: Tab[]) {
 
 export async function injectUrlPageScript(winId: ID, tabId: ID): Promise<void> {
   try {
-    await browser.tabs.executeScript(tabId, {
-      file: '/page.url/url.js',
-      runAt: 'document_start',
-      matchAboutBlank: true,
-    })
+    await browser.tabs
+      .executeScript(tabId, {
+        file: '/page.url/url.js',
+        runAt: 'document_start',
+        matchAboutBlank: true,
+      })
+      .catch(err => {
+        Logs.warn('Tabs.injectUrlPageScript: Cannot inject script, tabId:', tabId, err)
+      })
     const initData = getUrlPageInitData(winId, tabId)
     const initDataJson = JSON.stringify(initData)
-    browser.tabs.executeScript(tabId, {
-      code: `window.sideberyInitData=${initDataJson};window.onSideberyInitDataReady?.()`,
-      runAt: 'document_start',
-      matchAboutBlank: true,
-    })
+    browser.tabs
+      .executeScript(tabId, {
+        code: `window.sideberyInitData=${initDataJson};window.onSideberyInitDataReady?.()`,
+        runAt: 'document_start',
+        matchAboutBlank: true,
+      })
+      .catch(err => {
+        Logs.warn('Tabs.injectUrlPageScript: Cannot inject init data, tabId:', tabId, err)
+        browser.tabs.reload(tabId)
+      })
   } catch (err) {
     Logs.err('Injected url-page script', err)
   }
@@ -439,18 +446,27 @@ export function getUrlPageInitData(winId: ID, tabId: ID): UrlPageInitData {
 
 export async function injectGroupPageScript(winId: ID, tabId: ID): Promise<void> {
   try {
-    browser.tabs.executeScript(tabId, {
-      file: '/page.group/group.js',
-      runAt: 'document_start',
-      matchAboutBlank: true,
-    })
+    browser.tabs
+      .executeScript(tabId, {
+        file: '/page.group/group.js',
+        runAt: 'document_start',
+        matchAboutBlank: true,
+      })
+      .catch(err => {
+        Logs.warn('Tabs.injectGroupPageScript: Cannot inject script, tabId:', tabId, err)
+      })
     const initData = await getGroupPageInitData(winId, tabId)
     const initDataJson = JSON.stringify(initData)
-    browser.tabs.executeScript(tabId, {
-      code: `window.sideberyInitData=${initDataJson};window.onSideberyInitDataReady?.()`,
-      runAt: 'document_start',
-      matchAboutBlank: true,
-    })
+    browser.tabs
+      .executeScript(tabId, {
+        code: `window.sideberyInitData=${initDataJson};window.onSideberyInitDataReady?.()`,
+        runAt: 'document_start',
+        matchAboutBlank: true,
+      })
+      .catch(err => {
+        Logs.warn('Tabs.injectGroupPageScript: Cannot inject init data, tabId:', tabId, err)
+        browser.tabs.reload(tabId)
+      })
   } catch (err) {
     Logs.err('Injected group-page script', err)
   }
