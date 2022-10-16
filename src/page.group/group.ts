@@ -273,7 +273,7 @@ function createNewTabButton() {
 
   newTabEl = document.createElement('div')
   newTabEl.classList.add('new-tab')
-  newTabEl.setAttribute('title', 'Create new tab')
+  newTabEl.title = browser.i18n.getMessage('group_new_tab_tooltip')
   tabsBoxEl.appendChild(newTabEl)
 
   newTabEl.addEventListener('mousedown', (event: MouseEvent) => {
@@ -344,6 +344,7 @@ function createTabEl(info: GroupedTabInfo, clickHandler: (e: MouseEvent) => void
     event.stopPropagation()
     IPC.bg('tabsApiProxy', 'discard', info.id)
   })
+  discardBtnEl.title = browser.i18n.getMessage('group_tab_discard_tooltip')
   ctrlsEl.appendChild(discardBtnEl)
 
   const reloadBtnEl = createTabButton('#icon_reload', 'reload-btn', event => {
@@ -352,12 +353,14 @@ function createTabEl(info: GroupedTabInfo, clickHandler: (e: MouseEvent) => void
       IPC.bg('tabsApiProxy', 'reload', info.id)
     }
   })
+  reloadBtnEl.title = browser.i18n.getMessage('group_tab_reload_tooltip')
   ctrlsEl.appendChild(reloadBtnEl)
 
   const closeBtnEl = createTabButton('#icon_close', 'close-btn', event => {
     event.stopPropagation()
     IPC.bg('tabsApiProxy', 'remove', info.id)
   })
+  closeBtnEl.title = browser.i18n.getMessage('group_tab_close_tooltip')
   ctrlsEl.appendChild(closeBtnEl)
 
   info.el.addEventListener('mousedown', e => e.stopPropagation())

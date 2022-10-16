@@ -446,6 +446,27 @@
     "ru": "Невозможно подключиться к боковой панели...",
     "de": "Keine Verbindung zur Seitenleiste möglich...",
     "zh_CN": "无法连接到侧边栏..."
+  },
+  "group_tab_discard_tooltip": {
+    "en": "Unload",
+    "de": "Entladen",
+    "ru": "Выгрузить",
+    "zh_CN": "卸载页面"
+  },
+  "group_tab_reload_tooltip": {
+    "en": "Reload",
+    "de": "Neu laden",
+    "ru": "Перезагрузить",
+    "zh_CN": "重新加载"
+  },
+  "group_tab_close_tooltip": {
+    "en": "Close",
+    "de": "Schließen",
+    "ru": "Закрыть",
+    "zh_CN": "关闭"
+  },
+  "group_new_tab_tooltip": {
+    "en": "Open a new tab",
+    "ru": "Открыть новую вкладку"
   }
 }
- 
