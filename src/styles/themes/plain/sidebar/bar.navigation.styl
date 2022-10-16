@@ -180,7 +180,7 @@
   // Button horizontal position
   for i in 0..24
     &[data-index=\"{i}\"]
-      transform: "translateX(calc(var(--nav-btn-width) * %s))" % i
+      transform: "translateX(calc(var(--nav-btn-width) * %s + %spx))" % (i i)
 
 .NavigationBar.-vert .nav-item[data-type="hidden"] > svg
   transform: rotateZ(-90deg)
