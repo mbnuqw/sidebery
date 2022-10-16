@@ -286,13 +286,13 @@ export const commonTranslations: Translations = {
   'menu.bookmark.open_in_new_window': {
     en: 'Open in new normal window',
     ru: 'Открыть в новом стандартном окне',
-    de: 'Öffnen in neuem normalem Fenster', 
+    de: 'Öffnen in neuem normalem Fenster',
     zh_CN: '新建窗口打开链接',
   },
   'menu.bookmark.open_in_new_priv_window': {
     en: 'Open in new private window',
     ru: 'Открыть в новом приватном окне',
-    de: 'Öffnen in neuem privatem Fenster', 
+    de: 'Öffnen in neuem privatem Fenster',
     zh_CN: '新建隐私窗口打开链接',
   },
   'menu.bookmark.open_in_new_panel': {
@@ -310,13 +310,13 @@ export const commonTranslations: Translations = {
   'menu.bookmark.open_in_ctr_': {
     en: 'Open in container...',
     ru: 'Открыть в контейнере...',
-    de: 'Öffnen in Umgebung...', 
+    de: 'Öffnen in Umgebung...',
     zh_CN: '在容器中打开...',
   },
   'menu.bookmark.open_in_default_ctr': {
     en: 'Open in default container',
     ru: 'Открыть в стандартном контейнере',
-    de: 'Öffnen in Standardumgebung', 
+    de: 'Öffnen in Standardumgebung',
     zh_CN: '在默认容器中打开',
   },
   'menu.bookmark.open_in_': {
@@ -364,55 +364,55 @@ export const commonTranslations: Translations = {
   'menu.bookmark.sort_by_name': {
     en: 'Sort by name',
     ru: 'Сортировать по названию',
-    de: 'Sortieren nach Name', 
+    de: 'Sortieren nach Name',
     zh_CN: '按名称排序',
   },
   'menu.bookmark.sort_by_name_asc': {
     en: 'Sort by name (A-z)',
     ru: 'Сортировать по названию (А-я)',
-    de: 'Sortieren nach Name (A-z)', 
+    de: 'Sortieren nach Name (A-z)',
     zh_CN: '按名称排序 (A-z)',
   },
   'menu.bookmark.sort_by_name_des': {
     en: 'Sort by name (z-A)',
     ru: 'Сортировать по названию (я-А)',
-    de: 'Sortieren nach Name (z-A)', 
+    de: 'Sortieren nach Name (z-A)',
     zh_CN: '按名称排序 (z-A)',
   },
   'menu.bookmark.sort_by_link': {
     en: 'Sort by URL',
     ru: 'Сортировать по адресу',
-    de: 'Sortieren nach URL', 
+    de: 'Sortieren nach URL',
     zh_CN: '按网址排序',
   },
   'menu.bookmark.sort_by_link_asc': {
     en: 'Sort by URL (A-z)',
     ru: 'Сортировать по адресу (А-я)',
-    de: 'Sortieren nach URL (A-z)', 
+    de: 'Sortieren nach URL (A-z)',
     zh_CN: '按网址排序 (A-z)',
   },
   'menu.bookmark.sort_by_link_des': {
     en: 'Sort by URL (z-A)',
     ru: 'Сортировать по адресу (я-А)',
-    de: 'Sortieren nach URL (z-A)', 
+    de: 'Sortieren nach URL (z-A)',
     zh_CN: '按网址排序 (z-A)',
   },
   'menu.bookmark.sort_by_time': {
     en: 'Sort by creation time',
     ru: 'Сортировать по времени создания',
-    de: 'Sortieren nach Erstelldatum', 
+    de: 'Sortieren nach Erstelldatum',
     zh_CN: '按添加时间排序',
   },
   'menu.bookmark.sort_by_time_asc': {
     en: 'Sort by time (Old-New)',
     ru: 'Сортировать по времени (Старые-Новые)',
-    de: 'Sortieren nach Zeit (Alt-Neu)', 
+    de: 'Sortieren nach Zeit (Alt-Neu)',
     zh_CN: '按添加时间排序 (旧-新)',
   },
   'menu.bookmark.sort_by_time_des': {
     en: 'Sort by time (New-Old)',
     ru: 'Сортировать по времени (Новые-Старые)',
-    de: 'Sortieren nach Zeit (Neu-Alt)', 
+    de: 'Sortieren nach Zeit (Neu-Alt)',
     zh_CN: '按添加时间排序 (新-旧)',
   },
   'menu.bookmark.open_as_bookmarks_panel': {
@@ -492,7 +492,7 @@ export const commonTranslations: Translations = {
   'menu.tab.move_to_new_priv_window': {
     en: 'Move to private window',
     ru: 'Переместить в приватное окно',
-    de: 'Verschieben in privates Fenster', 
+    de: 'Verschieben in privates Fenster',
     zh_CN: '移动到隐私窗口',
   },
   'menu.tab.move_to_another_window': {
@@ -504,7 +504,7 @@ export const commonTranslations: Translations = {
   'menu.tab.move_to_window_': {
     en: 'Move to window...',
     ru: 'Переместить в окно...',
-    de: 'Verschieben in Fenster...', 
+    de: 'Verschieben in Fenster...',
     zh_CN: '移动到窗口...',
   },
   'menu.tab.move_to_panel_label': {
@@ -528,37 +528,37 @@ export const commonTranslations: Translations = {
   'menu.tab.reopen_in_new_window': {
     en: 'Reopen in new window of another type',
     ru: 'Переоткрыть в новом окне другого типа',
-    de: 'Neu öffnen in neuem Fenster eines anderen Typs',  
+    de: 'Neu öffnen in neuem Fenster eines anderen Typs',
     zh_CN: '在其他类型的新建窗口中重新打开',
   },
   'menu.tab.reopen_in_new_norm_window': {
     en: 'Reopen in new normal window',
     ru: 'Переоткрыть в новом стандартном окне',
-    de: 'Neu öffnen in neuem normalem Fenster', 
+    de: 'Neu öffnen in neuem normalem Fenster',
     zh_CN: '在新建窗口中重新打开',
   },
   'menu.tab.reopen_in_new_priv_window': {
     en: 'Reopen in new private window',
     ru: 'Переоткрыть в новом приватном окне',
-    de: 'Neu öffnen in neuem privatem Fenster', 
+    de: 'Neu öffnen in neuem privatem Fenster',
     zh_CN: '在新建隐私窗口中重新打开',
   },
   'menu.tab.reopen_in_norm_window': {
     en: 'Reopen in normal window',
     ru: 'Переоткрыть в стандартном окне',
-    de: 'Neu öffnen in normalem Fenster', 
+    de: 'Neu öffnen in normalem Fenster',
     zh_CN: '在普通窗口中重新打开',
   },
   'menu.tab.reopen_in_priv_window': {
     en: 'Reopen in private window',
     ru: 'Переоткрыть в приватном окне',
-    de: 'Neu öffnen in privatem Fenster', 
+    de: 'Neu öffnen in privatem Fenster',
     zh_CN: '在隐私窗口重新打开',
   },
   'menu.tab.reopen_in_window': {
     en: 'Reopen in window of another type',
     ru: 'Переоткрыть в стандартном контейнере',
-    de: 'Neu öffnen in Fenster eines anderen Typs', 
+    de: 'Neu öffnen in Fenster eines anderen Typs',
     zh_CN: '在其他类型的窗口中重新打开',
   },
   'menu.tab.reopen_in_default_panel': {
@@ -570,7 +570,7 @@ export const commonTranslations: Translations = {
   'menu.tab.reopen_in_new_container': {
     en: 'Reopen in new container',
     ru: 'Переоткрыть в окне другого типа',
-    de: 'Neu öffnen in neuer Umgebung', 
+    de: 'Neu öffnen in neuer Umgebung',
     zh_CN: '在新建容器中重新打开',
   },
   'menu.tab.reopen_in_sub_menu_name': {
@@ -1185,4 +1185,3 @@ export const commonTranslations: Translations = {
 
 if (!window.translations) window.translations = commonTranslations
 else Object.assign(window.translations, commonTranslations)
- 
