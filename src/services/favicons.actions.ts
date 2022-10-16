@@ -88,6 +88,8 @@ function limitFavicons(): number {
 
 const saveFaviconTimeouts: Record<string, number | undefined> = {}
 export function saveFavicon(url: string, icon: string): void {
+  Logs.info('Favicons.saveFavicon', url)
+
   if (!url || !icon) return
   if (icon.length > 234567) return
   if (url.startsWith('about')) return
@@ -103,24 +105,24 @@ export function saveFavicon(url: string, icon: string): void {
     const hash = Utils.strHash(icon)
 
     let index = hashes.indexOf(hash)
-    const iconExists = index > -1
+    const sameIcon = index > -1
 
-    // Check if everything are the same - no need to update
-    if (iconExists && domainInfo && domainInfo.src.length <= url.length) return
+    // Prefer an icon of page with shorter URL
+    if (domainInfo && domainInfo.src.length < url.length) return
 
     // Icon not cached but domainInfo exists - favicon was changed
-    if (!iconExists && domainInfo) index = domainInfo.index
+    if (!sameIcon && domainInfo) index = domainInfo.index
 
     // Check limit and find target index
     if (index === -1) {
       // Replace random existed favicon
-      if (!iconExists && Favicons.reactive.list.length >= MAX_COUNT_LIMIT) index = limitFavicons()
+      if (!sameIcon && Favicons.reactive.list.length >= MAX_COUNT_LIMIT) index = limitFavicons()
       // Append favicon
       else index = Favicons.reactive.list.length
     }
 
     // Resize and set icon
-    if (!iconExists) {
+    if (!sameIcon) {
       try {
         icon = await resizeFavicon(icon)
       } catch {
@@ -142,7 +144,7 @@ export function saveFavicon(url: string, icon: string): void {
     hashes[index] = hash
 
     const toSave: Stored = { favDomains: domainsInfo, favHashes: hashes }
-    if (!iconExists) toSave.favicons = Favicons.reactive.list
+    if (!sameIcon) toSave.favicons = Favicons.reactive.list
     Store.set(toSave)
 
     IPC.sendToSidebars('setFavicon', domain, url, hash, icon)
