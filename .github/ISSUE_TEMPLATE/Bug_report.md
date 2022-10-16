@@ -4,6 +4,9 @@ about: Something is not working
 ---
 
 ## Steps to reproduce
+- Open Firefox in [new profile](https://support.mozilla.org/en-US/kb/profile-manager-create-remove-switch-firefox-profiles)
+- Install Sidebery
+- ...
 
 
 ## Expected behavior
@@ -14,8 +17,7 @@ about: Something is not working
 
 ## Debug info
 
-### Addon data
-<details><code>
+<details><summary><b>Addon data</b></summary><code>
 <!-- To get addon data: 
      - Go to the Sidebery settings page - section "Help"
      - Click on the "Debug info" button
@@ -23,8 +25,7 @@ about: Something is not working
      Note: all URLs, titles and other personal info are skipped. -->
 </code></details>
 
-### Logs
-<details><code>
+<details><summary><b>Logs</b></summary><code>
 <!-- To get logs: 
      - Open DevTools 
        (open this url in new tab: about:devtools-toolbox?id=%7B3c078156-979c-498b-8990-85f7987dd929%7D&type=extension)
