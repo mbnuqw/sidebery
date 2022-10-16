@@ -199,7 +199,6 @@ export async function createWithTabs(
   }
 
   // Go through src/new tabs
-  let hasGroups = false
   const cache: TabCache[] = []
   const groups: Record<ID, SavedGroup> = {}
   for (let i = 0; i < createdTabs.length; i++) {
@@ -232,7 +231,6 @@ export async function createWithTabs(
 
     // Prepare groups info for saving
     if (Utils.isGroupUrl(tab.url)) {
-      hasGroups = true
       const prevTab = createdTabs[tab.index - 1]
       const nextTab = createdTabs[tab.index + 1]
       const groupInfo: SavedGroup = {
@@ -250,7 +248,6 @@ export async function createWithTabs(
     }
   }
 
-  if (hasGroups) browser.sessions.setWindowValue(window.id, 'groups', groups)
   Tabs.cacheTabsData(window.id, cache, 0)
 
   await browser.tabs.remove(firstTabId)

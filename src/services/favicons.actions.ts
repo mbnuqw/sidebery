@@ -88,8 +88,6 @@ function limitFavicons(): number {
 
 const saveFaviconTimeouts: Record<string, number | undefined> = {}
 export function saveFavicon(url: string, icon: string): void {
-  Logs.info('Favicons.saveFavicon', url)
-
   if (!url || !icon) return
   if (icon.length > 234567) return
   if (url.startsWith('about')) return
