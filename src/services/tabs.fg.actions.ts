@@ -3429,13 +3429,11 @@ export function getTabsInfo(ids: ID[], setPanelId?: boolean): ItemInfo[] {
 const scrollConf: ScrollToOptions = { behavior: 'auto', top: 0 }
 export function scrollToTab(id: ID): void {
   const panel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
-  if (!Utils.isTabsPanel(panel) || !panel.scrollEl) {
-    return Logs.err('Tabs.scrollToTab: Cannot find scroll-box element')
-  }
+  if (!Utils.isTabsPanel(panel) || !panel.scrollEl) return
 
   const elId = 'tab' + id.toString()
   const el = document.getElementById(elId)
-  if (!el) return Logs.err('Tabs.scrollToTab: Cannot find tab element')
+  if (!el) return Logs.warn('Tabs.scrollToTab: Cannot find tab element')
 
   const pH = panel.scrollEl.offsetHeight
   const pS = panel.scrollEl.scrollTop
