@@ -7,6 +7,7 @@ import { Tabs } from './tabs.fg'
 import { Favicons } from './favicons'
 import { GroupConfigResult, Sidebar } from './sidebar'
 import * as IPC from './ipc'
+import * as Logs from './logs'
 
 /**
  * Set relGroupId and relPinId props in related pinned and group tabs
@@ -154,9 +155,14 @@ export async function openGroupConfigPopup(config: GroupConfig): Promise<GroupCo
 /**
  * Get grouped tabs (for group page)
  */
-export function getGroupInfo(groupTabId: ID): GroupInfo | null {
+export async function getGroupInfo(groupTabId: ID): Promise<GroupInfo | null> {
+  if (!Tabs.ready) await Tabs.waitForTabsReady()
+
   const groupTab = Tabs.byId[groupTabId]
-  if (!groupTab) return null
+  if (!groupTab) {
+    Logs.warn('Tabs.getGroupInfo: No group tab:', groupTabId)
+    return null
+  }
 
   const out: GroupInfo = {
     id: groupTab.id,

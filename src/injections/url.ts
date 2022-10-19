@@ -52,9 +52,6 @@ function applyFirefoxThemeColors(theme: browser.theme.Theme): void {
 }
 
 void (async () => {
-  if (window.sideberyUrlPageInjected) return
-  window.sideberyUrlPageInjected = true
-
   Logs.setType(InstanceType.url)
 
   await Promise.all([waitDOM(), waitInitData()])

@@ -279,7 +279,7 @@ function continueUpgrade(): void {
 async function recreateGroupTabs(): Promise<void> {
   const windows = await browser.windows.getAll({ windowTypes: ['normal'], populate: true })
   const sideberyUrlBase = browser.runtime.getURL('')
-  const groupUrlBase = browser.runtime.getURL('page.group/group.html')
+  const groupUrlBase = browser.runtime.getURL('sidebery/group.html')
   const tabsCreating: Promise<browser.tabs.Tab>[] = []
 
   for (const win of windows) {
@@ -305,11 +305,11 @@ async function recreateGroupTabs(): Promise<void> {
       // Update legacy urls
       if (tab.url.startsWith(sideberyUrlBase)) {
         if (tab.url.includes('/group/group.html', 52)) {
-          tab.url = tab.url.replace('/group/group.html', '/page.group/group.html')
+          tab.url = tab.url.replace('/group/group.html', '/sidebery/group.html')
           browser.tabs.update(tab.id, { url: tab.url })
         }
         if (tab.url.includes('/url/url.html', 52)) {
-          tab.url = tab.url.replace('/url/url.html', '/page.url/url.html')
+          tab.url = tab.url.replace('/url/url.html', '/sidebery/url.html')
           browser.tabs.update(tab.id, { url: tab.url })
         }
       }
@@ -402,8 +402,8 @@ function upgradeTabsDataCache(oldStorage: Stored, newStorage: Stored): void {
     for (const winTabs of newStorage.tabsDataCache) {
       for (const tab of winTabs) {
         if (tab.url.startsWith(sideberyUrlBase)) {
-          tab.url = tab.url.replace('/group/group.html', '/page.group/group.html')
-          tab.url = tab.url.replace('/url/url.html', '/page.url/url.html')
+          tab.url = tab.url.replace('/group/group.html', '/sidebery/group.html')
+          tab.url = tab.url.replace('/url/url.html', '/sidebery/url.html')
         }
       }
     }
@@ -412,8 +412,8 @@ function upgradeTabsDataCache(oldStorage: Stored, newStorage: Stored): void {
     for (const winTabs of newStorage.prevTabsDataCache) {
       for (const tab of winTabs) {
         if (tab.url.startsWith(sideberyUrlBase)) {
-          tab.url = tab.url.replace('/group/group.html', '/page.group/group.html')
-          tab.url = tab.url.replace('/url/url.html', '/page.url/url.html')
+          tab.url = tab.url.replace('/group/group.html', '/sidebery/group.html')
+          tab.url = tab.url.replace('/url/url.html', '/sidebery/url.html')
         }
       }
     }

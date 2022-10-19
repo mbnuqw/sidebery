@@ -20,6 +20,7 @@ export interface RemovedTabInfo {
 }
 
 export const Tabs = {
+  ready: false,
   reactive: { byId: {}, pinned: [] } as TabsReactiveState,
   list: [] as Tab[],
   byId: {} as Partial<Record<ID, Tab>>,

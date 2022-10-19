@@ -12,8 +12,8 @@ const OUTPUT_DIR = ADDON_PATH
 const NORM_SRC_DIR = path.normalize(SRC_DIR)
 const TS_CONFIG = getTSConfig()
 const BUNDLES = {
-  'src/page.group/group.ts': true,
-  'src/page.url/url.ts': true,
+  'src/injections/group.ts': true,
+  'src/injections/url.ts': true,
 }
 const IMPORT_RE = /(^|\n|\r\n|;)(im|ex)port\s?(.*?)"(\.\.?|src|vue)(\/.+?)?"/g
 
@@ -276,7 +276,7 @@ async function main() {
     await compileAndWatch(files)
     logOk('Scripts: Watching')
   } else {
-    // ESM allowed code
+    // Splitting allowed code
     await esbuild.build({
       entryPoints: [
         'src/bg/background.ts',
@@ -284,8 +284,6 @@ async function main() {
         'src/page.setup/setup.ts',
         'src/popup.proxy/proxy.ts',
         'src/popup.search/search.ts',
-        'src/injections/playMedia.ts',
-        'src/injections/pauseMedia.ts',
         'src/_locales/dict.common.ts',
         'src/_locales/dict.sidebar.ts',
         'src/_locales/dict.setup-page.ts',
@@ -303,7 +301,12 @@ async function main() {
     })
     // Bundled scripts for injecting
     await esbuild.build({
-      entryPoints: ['src/page.group/group.ts', 'src/page.url/url.ts'],
+      entryPoints: [
+        'src/injections/playMedia.ts',
+        'src/injections/pauseMedia.ts',
+        'src/injections/group.ts',
+        'src/injections/url.ts',
+      ],
       tsconfig: 'tsconfig.json',
       charset: 'utf8',
       splitting: false,
@@ -311,7 +314,7 @@ async function main() {
       treeShaking: true,
       bundle: true,
       format: 'esm',
-      outdir: ADDON_PATH,
+      outdir: path.join(ADDON_PATH, 'injections'),
       define: ESBUILD_DEFINE,
     })
     logOk('Scripts: Done')

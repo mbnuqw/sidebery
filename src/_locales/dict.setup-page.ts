@@ -3308,16 +3308,16 @@ export const setupPageTranslations: Translations = {
   - Open new tab with that URL
   - Select frame to inspect
     - Click on the rectangular icon (with three sections) in top-right area of the debugger page
-    - Select "/sidebar/index.html" for sidebar frame
-    - Select "/page.group/group.html" for group page frame
+    - Select "/sidebar/sidebar.html" for sidebar frame
+    - Select "/sidebery/group.html" for group page frame
   - Browse "Inspector" tab`,
     de: `HINWEIS: für derzeit verfügbare CSS-Selectors den Debugger verwenden:
   - Klicke auf "Kopiere Devtools URL" in der Leiste unten
   - Öffne neuen Tab mit dieser URL 
   - Wähle Frame zum inspizieren aus
 	- Klicke auf rechteckiges Symbol (mit drei Teilstücken) oben rechts auf der Debugger Seite
-	- Wähle "/sidebar/index.html" für Seitenleisten Frame
-	- Wähle "/page.group/group.html" für Gruppenseiten Frame
+	- Wähle "/sidebar/sidebar.html" für Seitenleisten Frame
+	- Wähle "/sidebery/group.html" für Gruppenseiten Frame
   - "Inspector" Tab durchsehen`,
   },
   'styles.vars_group.other': {

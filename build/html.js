@@ -20,6 +20,7 @@ const SVG_RE = /<inject>svg:\/\/(.+?)(#(.+))?<\/inject>/g
 const SVG_ID_RE = /<svg([^<]*?)id="([^<]*?)"/
 const SVG_TAG_RE = /<svg /
 const NORM_SRC_DIR = path.normalize(SRC_DIR)
+const STATIC_PAGES = ['group.html', 'url.html']
 
 /**
  * Build
@@ -66,7 +67,9 @@ async function buildAndWatch() {
  * Process HTML file - inline svgs
  */
 async function processFile(info) {
-  const outputDir = path.join(OUTPUT_DIR, info.dir.replace(NORM_SRC_DIR, ''))
+  let outputDir
+  if (STATIC_PAGES.includes(info.file)) outputDir = path.join(OUTPUT_DIR, 'sidebery')
+  else outputDir = path.join(OUTPUT_DIR, info.dir.replace(NORM_SRC_DIR, ''))
   const srcData = await fs.promises.readFile(path.join(info.dir, info.file), 'utf-8')
   const svgs = {}
 

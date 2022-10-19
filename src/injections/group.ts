@@ -13,7 +13,6 @@ const SCREENSHOT_QUALITY = 25
 
 let tabsBoxEl: HTMLElement | null
 let newTabEl: HTMLDivElement
-let groupId: string
 let groupWinId: ID
 let groupTabId: ID
 let groupTabIndex: number
@@ -38,9 +37,6 @@ function waitInitData(): Promise<void> {
 }
 
 async function main() {
-  if (window.sideberyGroupPageInjected) return
-  window.sideberyGroupPageInjected = true
-
   IPC.setType(InstanceType.group)
   Logs.setType(InstanceType.group)
 
@@ -88,11 +84,11 @@ async function main() {
   const titleEl = document.getElementById('title') as HTMLInputElement
   const hashData = hash.split(':id:')
   const title = hashData[0].trim()
-  groupId = hashData[1]
   titleEl.value = title
   document.title = title || '‎'
 
   if (!initData.groupInfo) {
+    Logs.warn('No group info')
     const warnEl = document.getElementById('disconnected_warn')
     if (warnEl) warnEl.innerText = browser.i18n.getMessage('group_disconnected_warn')
     document.body.setAttribute('data-disconnected', 'true')
@@ -160,7 +156,7 @@ function onTitleChange(e: DOMEvent<Event, HTMLInputElement>): void {
   onTitleChangeTimeout = setTimeout(() => {
     const normTitle = e.target.value.trim()
     document.title = normTitle || '‎'
-    window.location.hash = `#${encodeURI(normTitle)}:id:${groupId}`
+    window.location.hash = `#${encodeURI(normTitle)}`
   }, 500)
 }
 

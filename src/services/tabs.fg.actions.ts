@@ -56,6 +56,15 @@ export function getStatus(tab: Tab): TabStatus {
   return TabStatus.Complete
 }
 
+let waitingForTabs: (() => void)[] = []
+export async function waitForTabsReady(): Promise<void> {
+  if (Tabs.ready) return
+
+  return new Promise(ok => {
+    waitingForTabs.push(ok)
+  })
+}
+
 export async function load(): Promise<void> {
   if (Tabs.shadowMode) Tabs.unloadShadowed()
 
@@ -97,9 +106,14 @@ export async function load(): Promise<void> {
 
   if (Settings.state.colorizeTabs) Tabs.colorizeTabs()
   if (Settings.state.colorizeTabsBranches) Tabs.colorizeBranches()
+
+  Tabs.ready = true
+  waitingForTabs.forEach(cb => cb())
+  waitingForTabs = []
 }
 
 export function unload(): void {
+  Tabs.ready = false
   Tabs.resetTabsListeners()
 
   Tabs.reactive.byId = {}
@@ -409,7 +423,7 @@ export function normalizeTab(tab: Tab, defaultPanelId: ID): void {
   }
   if (tab.unread === undefined) tab.unread = false
   if (tab.mediaPaused === undefined) tab.mediaPaused = false
-  if (tab.isGroup === undefined) tab.isGroup = tab.internal && tab.url.startsWith('gr', 58)
+  if (tab.isGroup === undefined) tab.isGroup = tab.internal && Utils.isGroupUrl(tab.url)
 }
 
 /**

@@ -69,7 +69,7 @@ export type SidebarActions = {
   getActivePanelInfo: () => Panel
   stopDrag: () => void
   isDropEventConsumed: () => boolean
-  getGroupInfo: (groupTabId: ID) => GroupInfo | null
+  getGroupInfo: (groupTabId: ID) => Promise<GroupInfo | null>
   handleReopening: (tabId: ID, newCtx: string) => number | undefined
 
   loadFavicons: () => void

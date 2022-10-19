@@ -439,33 +439,18 @@ export async function parseDragEvent(
  * Check if string is group url
  */
 export function isGroupUrl(url: string): boolean {
-  return url.startsWith('m') && url.includes('/group.html')
+  return url.startsWith('m') && url.includes('/sidebery/group.html', 52)
 }
 
 export function isUrlUrl(url: string): boolean {
-  return url.startsWith('m') && url.includes('/url.html')
-}
-
-/**
- * Get group id
- */
-export function getGroupId(url: string): string {
-  const idIndex = url.lastIndexOf('#') + 1
-  return url.slice(idIndex)
-}
-
-export function getGroupRawParams(url: string): string {
-  const startIndex = url.indexOf('?')
-  if (startIndex === -1) return ''
-  const endIndex = url.lastIndexOf('#')
-  return url.substring(startIndex, endIndex)
+  return url.startsWith('m') && url.includes('/sidebery/url.html', 52)
 }
 
 export function createGroupUrl(name?: string, conf?: GroupConfig): string {
-  let urlBase = browser.runtime.getURL('page.group/group.html')
+  let urlBase = browser.runtime.getURL('sidebery/group.html')
   if (!name) name = uid()
   if (conf && conf.pin !== undefined) urlBase += '?pin=' + conf.pin
-  return urlBase + `#${encodeURIComponent(name)}:id:${uid()}`
+  return urlBase + `#${encodeURIComponent(name)}`
 }
 
 /**

@@ -470,7 +470,6 @@ function onConnect(port: browser.runtime.Port) {
     connection = createConnection(srcType, id)
   }
 
-  if (connection.remotePort) connection.remotePort.disconnect()
   connection.remotePort = port
 
   // Run connection handlers

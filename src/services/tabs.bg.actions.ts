@@ -1,7 +1,7 @@
 import { Stored, Tab, Window, TabCache, TabsTreeData, GroupInfo, AnyFunc } from 'src/types'
 import { InstanceType } from 'src/types'
 import * as Utils from 'src/utils'
-import { ADDON_HOST, NOID, SETTINGS_OPTIONS } from 'src/defaults'
+import { ADDON_HOST, GROUP_URL, NOID, SETTINGS_OPTIONS, URL_URL } from 'src/defaults'
 import { Tabs } from 'src/services/tabs.bg'
 import { Windows } from 'src/services/windows'
 import { Containers } from 'src/services/containers'
@@ -145,7 +145,14 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo): void {
   }
 
   if (change.url) {
-    if (Utils.isGroupUrl(change.url)) injectGroupPageScript(targetTab.windowId, tabId)
+    const isInternal = change.url.startsWith(ADDON_HOST)
+    if (isInternal) {
+      const sameUrl = targetTab.url === change.url
+      const isPrevGroup = Utils.isGroupUrl(targetTab.url)
+      const isGroup = Utils.isGroupUrl(change.url)
+      if (isGroup && (!isPrevGroup || sameUrl)) injectGroupPageScript(targetTab.windowId, tabId)
+    }
+
     if (Utils.isUrlUrl(change.url)) injectUrlPageScript(targetTab.windowId, tabId)
   }
 
@@ -391,11 +398,36 @@ export async function initInternalPageScripts(tabs: Tab[]) {
     await Styles.initColorScheme()
   }
 
-  for (const tab of tabs as Tab[]) {
+  for (const tab of tabs) {
     if (!Windows.byId[tab.windowId]) continue
 
-    if (Utils.isGroupUrl(tab.url)) injectGroupPageScript(tab.windowId, tab.id)
-    if (Utils.isUrlUrl(tab.url)) injectUrlPageScript(tab.windowId, tab.id)
+    const isInternal = tab.url.startsWith(ADDON_HOST)
+    const isGroup = Utils.isGroupUrl(tab.url)
+    const isUrl = Utils.isUrlUrl(tab.url)
+
+    // --- v5.0.0b27 fix
+    const isOldGroup = tab.url.startsWith('m') && tab.url.includes('page.group/group.html', 52)
+    const isOldUrl = tab.url.startsWith('m') && tab.url.includes('page.url/url.html', 52)
+    // --- v5.0.0b27 fix
+
+    // Wrong addon ID - update url
+    if ((!isInternal && isGroup) || isOldGroup) {
+      const [_, groupUrlInfo] = tab.url.split('/group.html')
+      if (!groupUrlInfo) continue
+      const groupUrl = GROUP_URL + groupUrlInfo
+      browser.tabs.update(tab.id, { url: groupUrl })
+      continue
+    }
+    if ((!isInternal && isUrl) || isOldUrl) {
+      const [_, urlUrlInfo] = tab.url.split('/url.html')
+      if (!urlUrlInfo) continue
+      const urlUrl = URL_URL + urlUrlInfo
+      browser.tabs.update(tab.id, { url: urlUrl })
+      continue
+    }
+
+    if (isGroup) injectGroupPageScript(tab.windowId, tab.id)
+    if (isUrl) injectUrlPageScript(tab.windowId, tab.id)
   }
 }
 
@@ -403,7 +435,7 @@ export async function injectUrlPageScript(winId: ID, tabId: ID): Promise<void> {
   try {
     await browser.tabs
       .executeScript(tabId, {
-        file: '/page.url/url.js',
+        file: '/injections/url.js',
         runAt: 'document_start',
         matchAboutBlank: true,
       })
@@ -418,8 +450,8 @@ export async function injectUrlPageScript(winId: ID, tabId: ID): Promise<void> {
         runAt: 'document_start',
         matchAboutBlank: true,
       })
-      .catch(err => {
-        Logs.warn('Tabs.injectUrlPageScript: Cannot inject init data, tabId:', tabId, err)
+      .catch(() => {
+        Logs.warn('Tabs.injectUrlPageScript: Cannot inject init data, reloading tab...')
         browser.tabs.reload(tabId)
       })
   } catch (err) {
@@ -448,7 +480,7 @@ export async function injectGroupPageScript(winId: ID, tabId: ID): Promise<void>
   try {
     browser.tabs
       .executeScript(tabId, {
-        file: '/page.group/group.js',
+        file: '/injections/group.js',
         runAt: 'document_start',
         matchAboutBlank: true,
       })
@@ -463,8 +495,8 @@ export async function injectGroupPageScript(winId: ID, tabId: ID): Promise<void>
         runAt: 'document_start',
         matchAboutBlank: true,
       })
-      .catch(err => {
-        Logs.warn('Tabs.injectGroupPageScript: Cannot inject init data, tabId:', tabId, err)
+      .catch(() => {
+        Logs.warn('Tabs.injectGroupPageScript: Cannot inject init data, reloading tab')
         browser.tabs.reload(tabId)
       })
   } catch (err) {
