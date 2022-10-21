@@ -13,12 +13,14 @@
   --tabs-update-badge-bg: #00e9fb
   --tabs-progress-fg: #00e9fb
   --tabs-progress-bg: #ffffff16
+  --tabs-lvl-opacity: .16
 #root[data-color-scheme="light"]
   --tabs-fg: #323232
   --tabs-loading-fg: #146fd9
   --tabs-update-badge-bg: #01acda
   --tabs-progress-fg: #01acda
   --tabs-progress-bg: #00000016
+  --tabs-lvl-opacity: .3
 
 .Tab
   position: relative
@@ -118,7 +120,7 @@
     left: calc(var(--tabs-indent) / 2 - 1px)
     width: 1px
     height: calc(100% + 1px)
-    opacity: .16
+    opacity: var(--tabs-lvl-opacity)
 
 .Tab:hover .body:before
   opacity: .1
