@@ -202,7 +202,11 @@ export function updateActiveSection(scrollTop: number): void {
  * Get debug details
  */
 export async function getDbgDetails(): Promise<DbgInfo> {
-  const dbg: DbgInfo = { settings: Utils.cloneObject(Settings.state) }
+  const dbg: DbgInfo = {
+    addonVersion: browser.runtime.getManifest().version,
+    firefoxVersion: (await browser.runtime.getBrowserInfo()).version,
+    settings: Utils.cloneObject(Settings.state),
+  }
 
   try {
     const [allUrls, tabHide, clipboardWrite, webRequest, wrBlocking] = await Promise.all([

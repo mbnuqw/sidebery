@@ -223,6 +223,8 @@ export interface Reminder {
 }
 
 export interface DbgInfo {
+  addonVersion?: string
+  firefoxVersion?: string
   settings?: SettingsState
   permissions?: DbgPermissions | string
   storage?: DbgStorage | string
