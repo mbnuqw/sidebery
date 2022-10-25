@@ -37,15 +37,20 @@ export function initTheme(): void {
   nextThemeLinkEl.href = `/themes/${Settings.state.theme}/${getInstanceName(Info.instanceType)}.css`
 }
 
-const PREF_DARK_MEDIA = '(prefers-color-scheme: dark), (prefers-color-scheme: no-preference)'
+const PREF_DARK_MEDIA = '(prefers-color-scheme: dark)'
 let darkMedia: MediaQueryList | undefined
 export async function initColorScheme(theme?: browser.theme.Theme): Promise<void> {
   if (Settings.state.colorScheme === 'ff') {
     if (!theme) theme = await browser.theme.getCurrent()
 
-    const colorSchemeVariant = parseTheme(theme)
-    if (colorSchemeVariant === ColorSchemeVariant.Dark) Styles.reactive.colorScheme = 'dark'
-    if (colorSchemeVariant === ColorSchemeVariant.Light) Styles.reactive.colorScheme = 'light'
+    if (theme.colors) {
+      const colorSchemeVariant = parseTheme(theme)
+      resetAutoColorSchemeListener()
+      if (colorSchemeVariant === ColorSchemeVariant.Dark) Styles.reactive.colorScheme = 'dark'
+      if (colorSchemeVariant === ColorSchemeVariant.Light) Styles.reactive.colorScheme = 'light'
+    } else {
+      useAutoColorScheme(AutoColorSchemeSource.MozDialog)
+    }
 
     if (!Info.isBg) {
       if (theme.colors) applyFirefoxThemeColors(theme)
@@ -68,13 +73,10 @@ export async function initColorScheme(theme?: browser.theme.Theme): Promise<void
   }
 
   if (Settings.state.colorScheme === 'sys') {
-    if (!darkMedia) darkMedia = window.matchMedia(PREF_DARK_MEDIA)
-    if (!darkMedia.onchange) darkMedia.onchange = onDarkMediaQueryChange
-    if (darkMedia.matches) Styles.reactive.colorScheme = 'dark'
-    else Styles.reactive.colorScheme = 'light'
+    useAutoColorScheme(AutoColorSchemeSource.PrefersColorScheme)
     return
   } else {
-    if (darkMedia?.onchange) darkMedia.onchange = null
+    resetAutoColorSchemeListener()
   }
 
   if (Settings.state.colorScheme === 'dark') {
@@ -88,15 +90,46 @@ export async function initColorScheme(theme?: browser.theme.Theme): Promise<void
   }
 }
 
-function onDarkMediaQueryChange(): void {
-  if (darkMedia?.matches) Styles.reactive.colorScheme = 'dark'
-  else Styles.reactive.colorScheme = 'light'
+const enum AutoColorSchemeSource {
+  PrefersColorScheme = 1,
+  MozDialog = 2,
+}
+
+function useAutoColorScheme(src: AutoColorSchemeSource): void {
+  if (!darkMedia) darkMedia = window.matchMedia(PREF_DARK_MEDIA)
+  if (!darkMedia.onchange) darkMedia.onchange = () => onDarkMediaQueryChange(src)
+
+  if (src === AutoColorSchemeSource.PrefersColorScheme) {
+    if (darkMedia.matches) Styles.reactive.colorScheme = 'dark'
+    else Styles.reactive.colorScheme = 'light'
+  } else if (src === AutoColorSchemeSource.MozDialog) {
+    const mozColorScheme = getMozDialogColorScheme()
+    if (mozColorScheme === ColorSchemeVariant.Dark) Styles.reactive.colorScheme = 'dark'
+    if (mozColorScheme === ColorSchemeVariant.Light) Styles.reactive.colorScheme = 'light'
+  }
+}
+
+function resetAutoColorSchemeListener(): void {
+  if (darkMedia?.onchange) darkMedia.onchange = null
+}
+
+function onDarkMediaQueryChange(src: AutoColorSchemeSource): void {
+  if (src === AutoColorSchemeSource.PrefersColorScheme) {
+    if (darkMedia?.matches) Styles.reactive.colorScheme = 'dark'
+    else Styles.reactive.colorScheme = 'light'
+  } else if (src === AutoColorSchemeSource.MozDialog) {
+    const mozColorScheme = getMozDialogColorScheme()
+    if (mozColorScheme === ColorSchemeVariant.Dark) Styles.reactive.colorScheme = 'dark'
+    if (mozColorScheme === ColorSchemeVariant.Light) Styles.reactive.colorScheme = 'light'
+  }
 }
 
 async function onFirefoxThemeChange(upd: browser.theme.Update): Promise<void> {
   if (!upd.theme || !upd.theme.colors) {
     const theme = await browser.theme.getCurrent()
-    const colorSchemeVariant = parseTheme(theme)
+    let colorSchemeVariant
+    if (theme.colors) colorSchemeVariant = parseTheme(theme)
+    else colorSchemeVariant = getMozDialogColorScheme() ?? ColorSchemeVariant.Light
     if (colorSchemeVariant === ColorSchemeVariant.Dark) Styles.reactive.colorScheme = 'dark'
     if (colorSchemeVariant === ColorSchemeVariant.Light) Styles.reactive.colorScheme = 'light'
     Styles.theme = theme
@@ -105,7 +138,9 @@ async function onFirefoxThemeChange(upd: browser.theme.Update): Promise<void> {
       else resetFirefoxThemeColors()
     }
   } else {
-    const colorSchemeVariant = parseTheme(upd.theme)
+    let colorSchemeVariant
+    if (upd.theme.colors) colorSchemeVariant = parseTheme(upd.theme)
+    else colorSchemeVariant = getMozDialogColorScheme() ?? ColorSchemeVariant.Light
     if (colorSchemeVariant === ColorSchemeVariant.Dark) Styles.reactive.colorScheme = 'dark'
     if (colorSchemeVariant === ColorSchemeVariant.Light) Styles.reactive.colorScheme = 'light'
     Styles.theme = upd.theme
@@ -266,6 +301,17 @@ function parseTheme(theme: browser.theme.Theme): ColorSchemeVariant {
   if (!darkMedia) darkMedia = window.matchMedia(PREF_DARK_MEDIA)
   if (darkMedia.matches) return ColorSchemeVariant.Dark
   else return ColorSchemeVariant.Light
+}
+
+function getMozDialogColorScheme(): ColorSchemeVariant | undefined {
+  const probeEl = document.getElementById('moz_dialog_color_scheme_probe')
+  if (!probeEl) return
+
+  const styles = window.getComputedStyle(probeEl)
+  const bg = Utils.toRGBA(styles.backgroundColor)
+  const fg = Utils.toRGBA(styles.color)
+
+  return getColorSchemeVariant(bg, fg)
 }
 
 type RGBAColor = [number, number, number, number]
