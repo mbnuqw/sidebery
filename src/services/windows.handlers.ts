@@ -51,6 +51,12 @@ function onWindowRemovedBg(windowId: ID): void {
 
   delete Windows.byId[windowId]
   delete Tabs.cacheByWin[windowId]
+
+  if (window.tabs) {
+    for (const tab of window.tabs) {
+      delete Tabs.byId[tab.id]
+    }
+  }
 }
 
 function onWindowRemovedFg(windowId: ID): void {
