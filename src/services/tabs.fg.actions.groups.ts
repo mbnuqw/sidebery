@@ -22,7 +22,9 @@ export function linkGroupWithPinnedTab(groupTab: Tab, tabs: Tab[]): void {
   if (!pinnedTab) {
     info.searchParams.delete('pin')
     groupTab.url = info.href
-    browser.tabs.update(groupTab.id, { url: info.href })
+    browser.tabs.update(groupTab.id, { url: info.href }).catch(err => {
+      Logs.err('Tabs.linkGroupWithPinnedTab: Cannot update url:', err)
+    })
     return
   }
 

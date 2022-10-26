@@ -807,7 +807,7 @@ declare namespace browser {
 
     function setTitle(details: SetTitleDetails): void
     function show(tabId: ID): Promise<void>
-    function hide(tabId: ID): void
+    function hide(tabId: ID): Promise<void>
   }
 
   /**

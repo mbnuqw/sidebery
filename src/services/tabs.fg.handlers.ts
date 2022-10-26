@@ -56,15 +56,20 @@ function waitForOtherReopenedTabs(tab: Tab): void {
 
   // Get session data of probably reopened tab
   // to check if it was actually reopened
-  browser.sessions.getTabValue(tab.id, 'data').then(data => {
-    tab.reopened = !!data
-    if (!waitForOtherReopenedTabsBuffer) return
-    waitForOtherReopenedTabsCheckLen--
-    if (waitForOtherReopenedTabsCheckLen <= 0) {
-      clearTimeout(waitForOtherReopenedTabsTimeout)
-      releaseReopenedTabsBuffer()
-    }
-  })
+  browser.sessions
+    .getTabValue(tab.id, 'data')
+    .then(data => {
+      tab.reopened = !!data
+      if (!waitForOtherReopenedTabsBuffer) return
+      waitForOtherReopenedTabsCheckLen--
+      if (waitForOtherReopenedTabsCheckLen <= 0) {
+        clearTimeout(waitForOtherReopenedTabsTimeout)
+        releaseReopenedTabsBuffer()
+      }
+    })
+    .catch(err => {
+      Logs.err('Tabs.waitForOtherReopenedTabs: Cannot get tab data from session:', err)
+    })
 
   // Set the time limit for this waiting, because when re-opening lots of tabs
   // the browser.sessions.getTabValue getting too slow.
@@ -224,7 +229,9 @@ function onTabCreated(tab: Tab): void {
   if (panel && !tab.pinned && tab.index !== index) {
     tab.dstPanelId = panel.id
     Tabs.movingTabs.push(tab.id)
-    browser.tabs.move(tab.id, { index })
+    browser.tabs.move(tab.id, { index }).catch(err => {
+      Logs.err('Tabs.onTabCreated: Cannot move the tab to the correct position:', err)
+    })
   }
 
   // Update tabs indexses after inserted one.
@@ -280,7 +287,9 @@ function onTabCreated(tab: Tab): void {
           treeHasChanged = true
         } else {
           tab.parentId = -1
-          browser.tabs.update(tab.id, { openerTabId: tab.id })
+          browser.tabs.update(tab.id, { openerTabId: tab.id }).catch(err => {
+            Logs.err('Tabs.onTabCreated: Cannot set openerTabId:', err)
+          })
         }
       }
     }
@@ -331,7 +340,11 @@ function onTabCreated(tab: Tab): void {
     const activeTab = Tabs.byId[Tabs.activeId]
     if (activeTab && activeTab.active) {
       const target = Tabs.findSuccessorTab(activeTab)
-      if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
+      if (target) {
+        browser.tabs.moveInSuccession([activeTab.id], target.id).catch(err => {
+          Logs.err('Tabs.onTabCreated: Cannot update succession:', err)
+        })
+      }
     }
   }
 
@@ -347,7 +360,11 @@ function onTabCreated(tab: Tab): void {
   // Hide native tab if needed
   if (Settings.state.hideInact && !tab.active) {
     const activeTab = Tabs.byId[Tabs.activeId]
-    if (activeTab && activeTab.panelId !== panel.id) browser.tabs.hide?.(tab.id)
+    if (activeTab && activeTab.panelId !== panel.id) {
+      browser.tabs.hide?.(tab.id).catch(err => {
+        Logs.err('Tabs.onTabCreated: Cannot hide tab:', err)
+      })
+    }
   }
 
   // Scroll to new inactive tab
@@ -436,7 +453,9 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
         const oldUrl = encodeURIComponent(localTab.url)
         const newUrl = encodeURIComponent(change.url)
         const groupUrl = groupTab.url.replace(oldUrl, newUrl)
-        browser.tabs.update(groupTab.id, { url: groupUrl })
+        browser.tabs.update(groupTab.id, { url: groupUrl }).catch(err => {
+          Logs.err('Tabs.onTabUpdated: Cannot reload related group page:', err)
+        })
       }
     }
     if (localTab.mediaPaused) {
@@ -541,8 +560,13 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
         Sidebar.recalcTabsPanels()
 
         const relGroupTab = Tabs.byId[localTab.relGroupId]
-        if (relGroupTab) Tabs.replaceRelGroupWithPinnedTab(relGroupTab, localTab)
-        else browser.tabs.move(tabId, { index: startIndex - 1 })
+        if (relGroupTab) {
+          Tabs.replaceRelGroupWithPinnedTab(relGroupTab, localTab)
+        } else {
+          browser.tabs.move(tabId, { index: startIndex - 1 }).catch(err => {
+            Logs.err('Tabs.onTabUpdated: Cannot move unpinned tab:', err)
+          })
+        }
       }
       if (tab.active) Sidebar.activatePanel(panel.id)
     }
@@ -827,7 +851,11 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, ignoreChildren?:
       const activeTab = Tabs.byId[Tabs.activeId]
       if (activeTab && activeTab.active) {
         tabSuccessor = Tabs.findSuccessorTab(activeTab)
-        if (tabSuccessor) browser.tabs.moveInSuccession([activeTab.id], tabSuccessor.id)
+        if (tabSuccessor) {
+          browser.tabs.moveInSuccession([activeTab.id], tabSuccessor.id).catch(err => {
+            Logs.err('Tabs.onTabRemoved: Cannot update succession:', err)
+          })
+        }
       }
     }
 
@@ -855,7 +883,9 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, ignoreChildren?:
   if (tab.pinned && pinGroupTab) {
     const groupUrl = new URL(pinGroupTab.url)
     groupUrl.searchParams.delete('pin')
-    browser.tabs.update(tab.relGroupId, { url: groupUrl.href })
+    browser.tabs.update(tab.relGroupId, { url: groupUrl.href }).catch(err => {
+      Logs.err('Tabs.onTabRemoved: Cannot reload related group page:', err)
+    })
   }
 
   const groupTab = Tabs.getGroupTab(tab)
@@ -902,7 +932,11 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
     Sidebar.recalcTabsPanels()
     if (Settings.state.activateAfterClosing !== 'none' && tab.active) {
       const target = Tabs.findSuccessorTab(tab)
-      if (target) browser.tabs.moveInSuccession([tab.id], target.id)
+      if (target) {
+        browser.tabs.moveInSuccession([tab.id], target.id).catch(err => {
+          Logs.err('Tabs.onTabMoved: Cannot update succession:', err)
+        })
+      }
     }
     return
   }
@@ -974,7 +1008,11 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
     const activeTab = Tabs.byId[Tabs.activeId]
     if (activeTab && activeTab.active) {
       const target = Tabs.findSuccessorTab(activeTab)
-      if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
+      if (target) {
+        browser.tabs.moveInSuccession([activeTab.id], target.id).catch(err => {
+          Logs.err('Tabs.onTabMoved: Cannot update succesion:', err)
+        })
+      }
     }
   }
 }
@@ -1024,7 +1062,11 @@ async function onTabAttached(id: ID, info: browser.tabs.AttachInfo): Promise<voi
 
   onTabCreated(tab)
 
-  if (tab.active) browser.tabs.update(tab.id, { active: true })
+  if (tab.active) {
+    browser.tabs.update(tab.id, { active: true }).catch(err => {
+      Logs.err('Tabs.onTabDetached: Cannot activate tab', err)
+    })
+  }
 }
 
 let bufTabActivatedEventIndex = -1
@@ -1132,7 +1174,9 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
   if (Settings.state.activateAfterClosing !== 'none') {
     const target = Tabs.findSuccessorTab(tab)
     if (target && tab.successorTabId !== target.id) {
-      browser.tabs.moveInSuccession([tab.id], target.id)
+      browser.tabs.moveInSuccession([tab.id], target.id).catch(err => {
+        Logs.err('Tabs.onTabActivated: Cannot update succession:', err)
+      })
     }
   }
 

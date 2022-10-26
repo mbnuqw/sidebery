@@ -192,7 +192,12 @@ async function restoreTabsState(): Promise<void> {
   // From session data
   else {
     const querying = tabs.map(t => browser.sessions.getTabValue<TabSessionData>(t.id, 'data'))
-    tabsSessionData = (await Promise.all(querying)) ?? []
+    try {
+      tabsSessionData = (await Promise.all(querying)) ?? []
+    } catch (err) {
+      Logs.err('Tabs.restoreTabsState: Cannot get tabs data from session:', err)
+      tabsSessionData = []
+    }
 
     restoreTabsFromSessionData(tabs, tabsSessionData, lastPanel)
   }
@@ -220,7 +225,11 @@ async function restoreTabsState(): Promise<void> {
     // Update succession
     if (Settings.state.activateAfterClosing !== 'none' && activeTab) {
       const target = findSuccessorTab(activeTab)
-      if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
+      if (target) {
+        browser.tabs.moveInSuccession([activeTab.id], target.id).catch(err => {
+          Logs.err('Tabs.restoreTabsState: Cannot update succession:', err)
+        })
+      }
     }
   }
 
@@ -460,12 +469,16 @@ export function saveTabData(tabId: ID): void {
   const tab = Tabs.byId[tabId]
   if (!tab) return
 
-  browser.sessions.setTabValue(tabId, 'data', {
-    id: tabId,
-    panelId: tab.panelId,
-    parentId: tab.parentId,
-    folded: tab.folded,
-  })
+  browser.sessions
+    .setTabValue(tabId, 'data', {
+      id: tabId,
+      panelId: tab.panelId,
+      parentId: tab.parentId,
+      folded: tab.folded,
+    })
+    .catch(err => {
+      Logs.err('Tabs.saveTabData: Cannot set value in session:', err)
+    })
 }
 
 let normTabsTimeout: number | undefined
@@ -811,7 +824,9 @@ export async function removeTabs(tabIds: ID[], silent?: boolean): Promise<void> 
   if (activeTab) {
     const target = findSuccessorTab(activeTab, toRemove)
     if (target && activeTab.successorTabId !== target.id) {
-      browser.tabs.moveInSuccession([activeTab.id], target.id)
+      browser.tabs.moveInSuccession([activeTab.id], target.id).catch(err => {
+        Logs.err('Tabs.removeTabs: Cannot update succession:', err)
+      })
     }
   }
 
@@ -833,7 +848,9 @@ export async function removeTabs(tabIds: ID[], silent?: boolean): Promise<void> 
   // Reverse removing order (needed for reopening)
   toRemove.reverse()
 
-  browser.tabs.remove(toRemove)
+  browser.tabs.remove(toRemove).catch(err => {
+    Logs.err('Tabs.removeTabs: Cannot remove tabs:', err)
+  })
   checkRemovedTabs()
 }
 
@@ -841,7 +858,7 @@ let isRmFinishedInterval: number | undefined
 /**
  * Checks if there is no more removing tabs with polling Tabs.removingTabs.length
  * @param checkDelay - (default: 100ms) Polling interval in ms.
- * @param stopThreshold - (default: 3) Max count of the same length of removingTabs
+ * @param stopThreshold - (default: 3) Max count of the checks with the same length of removingTabs
  *                                     after which this function will return false.
  */
 export function isRemovingFinished(checkDelay = 100, stopThreshold = 3): Promise<boolean> {
@@ -982,7 +999,11 @@ export function switchTab(globaly: boolean, cycle: boolean, step: number, pinned
         break
       }
     }
-    if (targetTabId !== NOID) browser.tabs.update(targetTabId, { active: true })
+    if (targetTabId !== NOID) {
+      browser.tabs.update(targetTabId, { active: true }).catch(err => {
+        Logs.err('Tabs.switchTab: Cannot activate tab (1):', err)
+      })
+    }
     return
   }
 
@@ -1009,7 +1030,9 @@ export function switchTab(globaly: boolean, cycle: boolean, step: number, pinned
   }
 
   if (targetTabId !== NOID && targetTabId !== activeTab.id) {
-    browser.tabs.update(targetTabId, { active: true })
+    browser.tabs.update(targetTabId, { active: true }).catch(err => {
+      Logs.err('Tabs.switchTab: Cannot activate tab (2):', err)
+    })
   }
 }
 
@@ -1119,11 +1142,15 @@ function stopReloading(): void {
 export function reloadTab(tab: Tab): void {
   if (!tab) return
   if (tab.url === 'about:blank' && URL_WITHOUT_PROTOCOL_RE.test(tab.title)) {
-    browser.tabs.update(tab.id, { url: 'https://' + tab.title })
+    browser.tabs.update(tab.id, { url: 'https://' + tab.title }).catch(err => {
+      Logs.err('Tabs.reloadTab: Cannot set url:', err)
+    })
     return
   }
   if (tab.url.startsWith('about:') && tab.status === 'loading') return
-  browser.tabs.reload(tab.id)
+  browser.tabs.reload(tab.id).catch(err => {
+    Logs.err('Tabs.reloadTab: Cannot reload:', err)
+  })
 }
 
 /**
@@ -1140,12 +1167,16 @@ export async function discardTabs(tabIds: ID[] = []): Promise<void> {
       if (tabIds.includes(Tabs.activeId)) {
         await browser.tabs.update(target.id, { active: true })
       } else if (activeTab.successorTabId !== target.id) {
-        browser.tabs.moveInSuccession([activeTab.id], target.id)
+        browser.tabs.moveInSuccession([activeTab.id], target.id).catch(err => {
+          Logs.err('Tabs.discardTabs: Cannot update succession:', err)
+        })
       }
     }
   }
 
-  browser.tabs.discard(tabIds)
+  browser.tabs.discard(tabIds).catch(err => {
+    Logs.err('Tabs.discardTabs: Cannot discard:', err)
+  })
 }
 
 /**
@@ -1173,7 +1204,11 @@ export function activateLastActiveTabOf(panelId: ID): void {
   }
   if (!tab || tab.panelId !== p.id) tab = panelTabs[0]
   if (tab && tab.discarded) tab = panelTabs.find(t => !t.discarded)
-  if (tab) browser.tabs.update(tab.id, { active: true })
+  if (tab) {
+    browser.tabs.update(tab.id, { active: true }).catch(err => {
+      Logs.err('Tabs.activateLastActiveTabOf: Cannot activate tab:', err)
+    })
+  }
 }
 
 /**
@@ -1188,11 +1223,17 @@ export function pinTabs(tabIds: ID[]): void {
       if (child.lvl <= tab.lvl) break
       if (child.parentId === tab.id) child.parentId = tab.parentId
     }
-    browser.tabs.update(tabId, { pinned: true })
+    browser.tabs.update(tabId, { pinned: true }).catch(err => {
+      Logs.err('Tabs.pinTabs: Cannot pin tab:', err)
+    })
   }
 }
 export function unpinTabs(tabIds: ID[]): void {
-  for (const tabId of tabIds) browser.tabs.update(tabId, { pinned: false })
+  for (const tabId of tabIds) {
+    browser.tabs.update(tabId, { pinned: false }).catch(err => {
+      Logs.err('Tabs.unpinTabs: Cannot unpin tab:', err)
+    })
+  }
 }
 export function repinTabs(tabIds: ID[]): void {
   for (const tabId of tabIds) {
@@ -1203,7 +1244,9 @@ export function repinTabs(tabIds: ID[]): void {
       if (child.lvl <= tab.lvl) break
       if (child.parentId === tab.id) child.parentId = tab.parentId
     }
-    browser.tabs.update(tabId, { pinned: !tab.pinned })
+    browser.tabs.update(tabId, { pinned: !tab.pinned }).catch(err => {
+      Logs.err('Tabs.repinTabs: Cannot repin tab:', err)
+    })
   }
 }
 
@@ -1211,16 +1254,26 @@ export function repinTabs(tabIds: ID[]): void {
  * (un)Mute tabs
  */
 export function muteTabs(tabIds: ID[]): void {
-  for (const tabId of tabIds) browser.tabs.update(tabId, { muted: true })
+  for (const tabId of tabIds) {
+    browser.tabs.update(tabId, { muted: true }).catch(err => {
+      Logs.err('Tabs.muteTabs: Cannot mute tab:', err)
+    })
+  }
 }
 export function unmuteTabs(tabIds: ID[]): void {
-  for (const tabId of tabIds) browser.tabs.update(tabId, { muted: false })
+  for (const tabId of tabIds) {
+    browser.tabs.update(tabId, { muted: false }).catch(err => {
+      Logs.err('Tabs.unmuteTabs: Cannot unmute tab:', err)
+    })
+  }
 }
 export function remuteTabs(tabIds: ID[]): void {
   for (const tabId of tabIds) {
     const tab = Tabs.byId[tabId]
     if (!tab) continue
-    browser.tabs.update(tabId, { muted: !tab.mutedInfo?.muted })
+    browser.tabs.update(tabId, { muted: !tab.mutedInfo?.muted }).catch(err => {
+      Logs.err('Tabs.remuteTabs: Cannot remute tab:', err)
+    })
   }
 }
 export function remuteAudibleTabs(): void {
@@ -1258,7 +1311,9 @@ export function unmuteAudibleTabsOfPanel(id: ID): void {
     for (const tab of Tabs.list) {
       if (!tab.pinned) break
       if (tab.mutedInfo?.muted && tab.panelId === panel.id) {
-        browser.tabs.update(tab.id, { muted: false })
+        browser.tabs.update(tab.id, { muted: false }).catch(err => {
+          Logs.err('Tabs.unmuteAudibleTabsOfPanel: Cannot unmute tab:', err)
+        })
       }
     }
   }
@@ -1325,11 +1380,15 @@ export async function playTabMedia(id?: ID): Promise<void> {
   tab.mediaPaused = false
   rTab.mediaPaused = false
 
-  browser.tabs.executeScript(tab.id, {
-    file: '../injections/playMedia.js',
-    runAt: 'document_start',
-    allFrames: true,
-  })
+  browser.tabs
+    .executeScript(tab.id, {
+      file: '../injections/playMedia.js',
+      runAt: 'document_start',
+      allFrames: true,
+    })
+    .catch(err => {
+      Logs.err('Tabs.playTabMedia: Cannot exec script:', err)
+    })
 }
 export function resetPausedMediaState(panelId: ID): void {
   const panel = Sidebar.reactive.panelsById[panelId]
@@ -1423,7 +1482,9 @@ export async function playTabsMediaOfPanel(panelId: ID): Promise<void> {
         const rTab = Tabs.reactive.byId[tab.id]
         if (rTab) rTab.mediaPaused = false
         tab.mediaPaused = false
-        browser.tabs.executeScript(tab.id, injectionConfig)
+        browser.tabs.executeScript(tab.id, injectionConfig).catch(err => {
+          Logs.err('Tabs.playTabsMediaOfPanel: Cannot exec script (pinned):', err)
+        })
       }
     }
   }
@@ -1433,7 +1494,9 @@ export async function playTabsMediaOfPanel(panelId: ID): Promise<void> {
     if (tab?.mediaPaused) {
       rTab.mediaPaused = false
       tab.mediaPaused = false
-      browser.tabs.executeScript(tab.id, injectionConfig)
+      browser.tabs.executeScript(tab.id, injectionConfig).catch(err => {
+        Logs.err('Tabs.playTabsMediaOfPanel: Cannot exec script:', err)
+      })
     }
   }
 }
@@ -1500,7 +1563,9 @@ export async function playAllPausedTabsMedia(): Promise<void> {
     if (rTab && tab.mediaPaused) {
       rTab.mediaPaused = false
       tab.mediaPaused = false
-      browser.tabs.executeScript(tab.id, injectionConfig)
+      browser.tabs.executeScript(tab.id, injectionConfig).catch(err => {
+        Logs.err('Tabs.playAllPausedTabsMedia: Cannot exec script:', err)
+      })
     }
   }
 }
@@ -1895,7 +1960,11 @@ export async function move(
 
     if (parent && parent.folded) {
       const activeDroppedTab = tabs.find(t => t.active)
-      if (activeDroppedTab) browser.tabs.update(dst.parentId, { active: true })
+      if (activeDroppedTab) {
+        browser.tabs.update(dst.parentId, { active: true }).catch(err => {
+          Logs.err('Tabs.move: Cannot activate tab:', err)
+        })
+      }
     }
 
     // TODO: update openerTabId
@@ -2015,7 +2084,9 @@ export async function moveToThisWin(tabs: Tab[], dst?: DstPlaceInfo): Promise<bo
       tab.parentId = parent ? parent.id : -1
     }
     setNewTabPosition(index, tab.parentId, dst.panelId ?? NOID)
-    browser.tabs.move(tab.id, { windowId: Windows.id, index })
+    browser.tabs.move(tab.id, { windowId: Windows.id, index }).catch(err => {
+      Logs.err('Tabs.moveToThisWin: Cannot move tab:', err)
+    })
   }
 
   return true
@@ -2157,7 +2228,9 @@ export function foldTabsBranch(tabId: ID): void {
   }
 
   if (Settings.state.hideFoldedTabs && toHide.length) {
-    browser.tabs.hide?.(toHide)
+    browser.tabs.hide?.(toHide).catch(err => {
+      Logs.err('Tabs.foldTabsBranch: Cannot hide tabs:', err)
+    })
   }
 
   saveTabData(tabId)
@@ -2225,7 +2298,9 @@ export function expTabsBranch(tabId: ID): void {
   }
 
   if (Settings.state.hideFoldedTabs && toShow.length) {
-    browser.tabs.show?.(toShow)
+    browser.tabs.show?.(toShow).catch(err => {
+      Logs.err('Tabs.expTabsBranch: Cannot show tabs:', err)
+    })
   }
 
   saveTabData(tabId)
@@ -2333,11 +2408,15 @@ export function createTabAfter(tabId: ID): void {
 
   setNewTabPosition(index, parentId, targetTab.panelId)
 
-  browser.tabs.create({
-    index,
-    cookieStoreId: targetTab.cookieStoreId,
-    windowId: Windows.id,
-  })
+  browser.tabs
+    .create({
+      index,
+      cookieStoreId: targetTab.cookieStoreId,
+      windowId: Windows.id,
+    })
+    .catch(err => {
+      Logs.err('Tabs.createTabAfter: Cannot create tab:', err)
+    })
 }
 
 /**
@@ -2360,7 +2439,9 @@ export function createChildTab(tabId: ID, url?: string, containerId?: string): v
   if (url) config.url = url
   if (containerId) config.cookieStoreId = containerId
 
-  browser.tabs.create(config)
+  browser.tabs.create(config).catch(err => {
+    Logs.err('Tabs.createChildTab: Cannot create tab:', err)
+  })
 }
 
 /**
@@ -2389,7 +2470,9 @@ export function createTabInPanel(
   if (index !== undefined) setNewTabPosition(index, parentId ?? NOID, panel.id)
   if (panel.newTabCtx !== 'none' && !conf?.cookieStoreId) config.cookieStoreId = panel.newTabCtx
 
-  browser.tabs.create(config)
+  browser.tabs.create(config).catch(err => {
+    Logs.err('Tabs.createTabInPanel: Cannot create tab:', err)
+  })
 }
 
 let updateTabsTreeTimeout: number | undefined
@@ -2519,11 +2602,15 @@ export function updateTabsTree(startIndex = 0, endIndex = -1): void {
 
     // Update openerTabId
     if (tab.parentId === -1 && tab.openerTabId !== undefined) {
-      browser.tabs.update(tab.id, { openerTabId: tab.id })
+      browser.tabs.update(tab.id, { openerTabId: tab.id }).catch(err => {
+        Logs.err('Tabs.updateTabsTree: Cannot reset openerTabId:', err)
+      })
       tab.openerTabId = undefined
     }
     if (tab.parentId !== -1 && tab.openerTabId !== tab.parentId) {
-      browser.tabs.update(tab.id, { openerTabId: tab.parentId })
+      browser.tabs.update(tab.id, { openerTabId: tab.parentId }).catch(err => {
+        Logs.err('Tabs.updateTabsTree: Cannot set openerTabId:', err)
+      })
       tab.openerTabId = tab.parentId
     }
 
@@ -2813,7 +2900,9 @@ export async function applyUrlRules(url: string, tab: Tab): Promise<void> {
   if (index > tab.index) index--
   if (index !== tab.index) {
     tab.dstPanelId = panelId
-    browser.tabs.move(tab.id, { windowId: Windows.id, index })
+    browser.tabs.move(tab.id, { windowId: Windows.id, index }).catch(err => {
+      Logs.err('Tabs.applyUrlRules: Cannot move tab:', err)
+    })
   } else {
     tab.panelId = panel.id
     Sidebar.recalcTabsPanels()
@@ -3165,17 +3254,23 @@ export async function createFromDragEvent(e: DragEvent, dst: DstPlaceInfo): Prom
 
   if (result?.url) {
     if (inside && dst.parentId > -1 && e.shiftKey) {
-      browser.tabs.update(dst.parentId, { url: result.url })
+      browser.tabs.update(dst.parentId, { url: result.url }).catch(err => {
+        Logs.err('Tabs.createFromDragEvent: Cannot update tab url:', err)
+      })
     } else {
       setNewTabPosition(dst.index ?? 0, dst.parentId, panel.id)
-      browser.tabs.create({
-        active: true,
-        url: result.url,
-        index: dst.index,
-        cookieStoreId: container?.id,
-        windowId: Windows.id,
-        pinned: dst.pinned,
-      })
+      browser.tabs
+        .create({
+          active: true,
+          url: result.url,
+          index: dst.index,
+          cookieStoreId: container?.id,
+          windowId: Windows.id,
+          pinned: dst.pinned,
+        })
+        .catch(err => {
+          Logs.err('Tabs.createFromDragEvent: Cannot create tab:', err)
+        })
     }
     return
   }
@@ -3238,7 +3333,9 @@ export async function reopen(tabsInfo: ItemInfo[], dst: DstPlaceInfo): Promise<v
     if (Settings.state.activateAfterClosing !== 'none' && activeTab) {
       const target = findSuccessorTab(activeTab, ids)
       if (target && target.id !== activeTab.successorTabId) {
-        browser.tabs.moveInSuccession([activeTab.id], target.id)
+        browser.tabs.moveInSuccession([activeTab.id], target.id).catch(err => {
+          Logs.err('Tabs.reopen: Cannot update succession:', err)
+        })
       }
     }
   }
@@ -3740,7 +3837,11 @@ export function switchToRecentlyActiveTab(scope = SwitchingTabScope.global, dir:
     }
     if (targetIdIndex !== undefined) history.actTabOffset = targetIdIndex
     Tabs.skipActiveTabsHistoryCollecting()
-    if (tabId !== undefined) browser.tabs.update(tabId, { active: true })
+    if (tabId !== undefined) {
+      browser.tabs.update(tabId, { active: true }).catch(err => {
+        Logs.err('Tabs.switchToRecentlyActiveTab: Cannot activate tab:', err)
+      })
+    }
   }
 }
 

@@ -1,5 +1,5 @@
 import * as Utils from 'src/utils'
-import { Window, TabCache, SavedGroup, Tab, Notification } from 'src/types'
+import { Window, TabCache, Tab, Notification } from 'src/types'
 import { WindowChooseOption, WindowChoosingDetails, ItemInfo } from 'src/types'
 import { NOID, MOVEID, DEFAULT_CONTAINER_ID, PRIVATE_CONTAINER_ID } from 'src/defaults'
 import { Windows } from 'src/services/windows'
@@ -120,7 +120,6 @@ export async function createWithTabs(
   tabsInfo: ItemInfo[],
   conf?: browser.windows.CreateData
 ): Promise<boolean> {
-  // Normalize config of new window
   if (!conf) conf = {}
 
   const moveTabs = conf.tabId === MOVEID
@@ -192,15 +191,19 @@ export async function createWithTabs(
   }
 
   // Normalize processed tabs
-  const processed = await Promise.all(processingTabs)
-  for (const tabOrTabs of processed) {
-    if (Array.isArray(tabOrTabs)) createdTabs.push(...tabOrTabs)
-    else createdTabs.push(tabOrTabs)
+  try {
+    const processed = await Promise.all(processingTabs)
+    for (const tabOrTabs of processed) {
+      if (Array.isArray(tabOrTabs)) createdTabs.push(...tabOrTabs)
+      else createdTabs.push(tabOrTabs)
+    }
+  } catch (err) {
+    Logs.err('Windows.createWithTabs: Cannot process tabs:', err)
+    return false
   }
 
   // Go through src/new tabs
   const cache: TabCache[] = []
-  const groups: Record<ID, SavedGroup> = {}
   for (let i = 0; i < createdTabs.length; i++) {
     const tab = createdTabs[i] as Tab
     const srcInfo = tabsInfo[i]
@@ -208,7 +211,9 @@ export async function createWithTabs(
 
     // Update new tabs relations
     if (srcInfo.parentId !== undefined && idsMap[srcInfo.parentId] !== undefined) {
-      browser.tabs.update(tab.id, { openerTabId: idsMap[srcInfo.parentId] })
+      browser.tabs.update(tab.id, { openerTabId: idsMap[srcInfo.parentId] }).catch(err => {
+        Logs.err('Windows.createWithTabs: Cannot set openerTabId:', err)
+      })
       tab.parentId = idsMap[srcInfo.parentId]
     }
 
@@ -220,37 +225,27 @@ export async function createWithTabs(
     cache.push(cachedData)
 
     // Save tabs data
-    browser.sessions.setTabValue(tab.id, 'data', {
-      id: tab.id,
-      panelId: srcInfo.panelId,
-      parentId: tab.parentId ?? NOID,
-      folded: false,
-    })
+    browser.sessions
+      .setTabValue(tab.id, 'data', {
+        id: tab.id,
+        panelId: srcInfo.panelId,
+        parentId: tab.parentId ?? NOID,
+        folded: false,
+      })
+      .catch(err => {
+        Logs.err('Windows.createWithTabs: Cannot set session data:', err)
+      })
 
     idsMap[srcInfo.id] = tab.id
-
-    // Prepare groups info for saving
-    if (Utils.isGroupUrl(tab.url)) {
-      const prevTab = createdTabs[tab.index - 1]
-      const nextTab = createdTabs[tab.index + 1]
-      const groupInfo: SavedGroup = {
-        id: tab.id,
-        index: tab.index,
-        ctx: tab.cookieStoreId,
-        panelId: srcInfo.panelId ?? NOID,
-        parentId: tab.parentId,
-        folded: false,
-        url: tab.url,
-      }
-      if (prevTab) groupInfo.prevTab = prevTab.id
-      if (nextTab) groupInfo.nextTab = nextTab.id
-      groups[tab.id] = groupInfo
-    }
   }
 
   Tabs.cacheTabsData(window.id, cache, 0)
 
-  await browser.tabs.remove(firstTabId)
+  try {
+    await browser.tabs.remove(firstTabId)
+  } catch (err) {
+    Logs.err('Windows.createWithTabs: Cannot remove initial tab:', err)
+  }
 
   lockedWindowsTabs[window.id] = cache
 

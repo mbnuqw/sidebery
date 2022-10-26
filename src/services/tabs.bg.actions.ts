@@ -79,7 +79,9 @@ function onTabCreated(tab: browser.tabs.Tab): void {
       for (let i = prevTab.index - 1; i >= 0; i--) {
         const prevTabN = tabWindow.tabs[i]
         if (!prevTabN.hidden) {
-          browser.tabs.move(tab.id, { index: i + 1, windowId: tabWindow.id })
+          browser.tabs.move(tab.id, { index: i + 1, windowId: tabWindow.id }).catch(err => {
+            Logs.err('Tabs.onTabCreated: Cannot move tab (backward):', err)
+          })
           break
         }
       }
@@ -89,7 +91,9 @@ function onTabCreated(tab: browser.tabs.Tab): void {
         for (let i = nextTab.index + 1; i < tabWindow.tabs.length; i++) {
           const nextTabN = tabWindow.tabs[i]
           if (!nextTabN.hidden) {
-            browser.tabs.move(tab.id, { index: i, windowId: tabWindow.id })
+            browser.tabs.move(tab.id, { index: i, windowId: tabWindow.id }).catch(err => {
+              Logs.err('Tabs.onTabCreated: Cannot move tab (forward):', err)
+            })
             break
           }
         }
@@ -183,14 +187,19 @@ function reloadTabFaviconDebounced(targetTab: Tab, delay = 500): void {
   reloadTabFaviconTimeout[targetTab.id] = setTimeout(() => {
     delete reloadTabFaviconTimeout[targetTab.id]
     if (!Tabs.byId[targetTab.id]) return
-    browser.tabs.get(targetTab.id).then(tabInfo => {
-      if (tabInfo.favIconUrl && !tabInfo.favIconUrl.startsWith('chrome:')) {
-        targetTab.favIconUrl = tabInfo.favIconUrl
-      } else {
-        targetTab.favIconUrl = ''
-      }
-      Favicons.saveFavicon(targetTab.url, targetTab.favIconUrl)
-    })
+    browser.tabs
+      .get(targetTab.id)
+      .then(tabInfo => {
+        if (tabInfo.favIconUrl && !tabInfo.favIconUrl.startsWith('chrome:')) {
+          targetTab.favIconUrl = tabInfo.favIconUrl
+        } else {
+          targetTab.favIconUrl = ''
+        }
+        Favicons.saveFavicon(targetTab.url, targetTab.favIconUrl)
+      })
+      .catch(err => {
+        Logs.err('Tabs.reloadTabFaviconDebounced: Cannot get tab:', err)
+      })
   }, delay)
 }
 
@@ -212,7 +221,9 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
   // Workaround for #196, https://bugzilla.mozilla.org/show_bug.cgi?id=1581872
   // Should be removed, all matched tabs should be reopened with original url
   if (tab && tab.url.startsWith('about:blank#url')) {
-    browser.tabs.update(tab.id, { url: tab.url.substring(15) })
+    browser.tabs.update(tab.id, { url: tab.url.substring(15) }).catch(err => {
+      Logs.err('Tabs.onTabActivated: Cannot reload tab in correct container:', err)
+    })
   }
 }
 
@@ -229,7 +240,9 @@ export function showProxyBadge(tabId: ID): void {
   const titlePost = browser.i18n.getMessage('proxy_popup_title_postfix')
   const title = titlePre + container.name + titlePost
   browser.pageAction.setTitle({ title, tabId })
-  browser.pageAction.show(tabId)
+  browser.pageAction.show(tabId).catch(err => {
+    Logs.err('Tabs.showProxyBadge: Cannot show proxy badge:', err)
+  })
 }
 let showProxyBadgeTimeout: number | undefined
 function showProxyBadgeDebounced(tabId: ID, delay = 500): void {
@@ -243,7 +256,9 @@ function showProxyBadgeDebounced(tabId: ID, delay = 500): void {
  * Hide proxy badge (pageActive) for given tab
  */
 export function hideProxyBadge(tabId: ID): void {
-  browser.pageAction.hide(tabId)
+  browser.pageAction.hide(tabId).catch(err => {
+    Logs.err('Tabs.hideProxyBadge: Cannot hide proxy badge:', err)
+  })
   browser.pageAction.setTitle({ title: 'Sidebery proxy off', tabId })
 }
 
@@ -415,14 +430,18 @@ export async function initInternalPageScripts(tabs: Tab[]) {
       const [_, groupUrlInfo] = tab.url.split('/group.html')
       if (!groupUrlInfo) continue
       const groupUrl = GROUP_URL + groupUrlInfo
-      browser.tabs.update(tab.id, { url: groupUrl })
+      browser.tabs.update(tab.id, { url: groupUrl }).catch(err => {
+        Logs.err('Tabs.initInternalPageScripts: Cannot update group url:', err)
+      })
       continue
     }
     if ((!isInternal && isUrl) || isOldUrl) {
       const [_, urlUrlInfo] = tab.url.split('/url.html')
       if (!urlUrlInfo) continue
       const urlUrl = URL_URL + urlUrlInfo
-      browser.tabs.update(tab.id, { url: urlUrl })
+      browser.tabs.update(tab.id, { url: urlUrl }).catch(err => {
+        Logs.err('Tabs.initInternalPageScripts: Cannot update url url:', err)
+      })
       continue
     }
 
@@ -452,7 +471,9 @@ export async function injectUrlPageScript(winId: ID, tabId: ID): Promise<void> {
       })
       .catch(() => {
         Logs.warn('Tabs.injectUrlPageScript: Cannot inject init data, reloading tab...')
-        browser.tabs.reload(tabId)
+        browser.tabs.reload(tabId).catch(err => {
+          Logs.err('Tabs.injectUrlPageScript: Cannot reload tab', err)
+        })
       })
   } catch (err) {
     Logs.err('Injected url-page script', err)
@@ -497,7 +518,9 @@ export async function injectGroupPageScript(winId: ID, tabId: ID): Promise<void>
       })
       .catch(() => {
         Logs.warn('Tabs.injectGroupPageScript: Cannot inject init data, reloading tab')
-        browser.tabs.reload(tabId)
+        browser.tabs.reload(tabId).catch(err => {
+          Logs.err('Tabs.injectGroupPageScript: Cannot reload tab:', err)
+        })
       })
   } catch (err) {
     Logs.err('Injected group-page script', err)
