@@ -23,6 +23,8 @@ interface Window {
   groupWinId?: ID
 
   translations: Record<string, Record<string, PlurFn | string>> | undefined
+
+  getSideberyState?: () => any
 }
 
 type DeepReadonly<T> = {

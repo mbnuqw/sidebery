@@ -136,5 +136,14 @@ async function main(): Promise<void> {
   Search.init()
 
   if (Settings.state.updateSidebarTitle) Sidebar.updateSidebarTitle(0)
+
+  window.getSideberyState = () => {
+    // prettier-ignore
+    return {
+      IPC, Info, Settings, Containers, Sidebar, Windows, Favicons,
+      Bookmarks, Tabs, DnD, Permissions, Notifications, History,
+      Search, Styles, Menu, Snapshots,
+    }
+  }
 }
 main()

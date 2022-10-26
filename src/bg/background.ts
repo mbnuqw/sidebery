@@ -89,6 +89,14 @@ void (async function main() {
       browser.windows.update(winId, { titlePreface: '' })
     }
   })
+
+  window.getSideberyState = () => {
+    // prettier-ignore
+    return {
+      IPC, Info, Settings, Windows, Tabs, Containers,
+      Sidebar, Favicons, Snapshots, Menu, Permissions,
+    }
+  }
 })()
 
 function initToolbarButton(): void {
