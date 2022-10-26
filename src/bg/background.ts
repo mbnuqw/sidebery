@@ -21,8 +21,8 @@ import { translate } from 'src/dict'
 
 void (async function main() {
   Info.setInstanceType(InstanceType.bg)
-  IPC.setType(InstanceType.bg)
-  Logs.setType(InstanceType.bg)
+  IPC.setInstanceType(InstanceType.bg)
+  Logs.setInstanceType(InstanceType.bg)
 
   // Register globaly available actions
   IPC.registerActions({

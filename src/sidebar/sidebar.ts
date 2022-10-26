@@ -25,8 +25,8 @@ import { Snapshots } from 'src/services/snapshots'
 
 async function main(): Promise<void> {
   Info.setInstanceType(InstanceType.sidebar)
-  IPC.setType(InstanceType.sidebar)
-  Logs.setType(InstanceType.sidebar)
+  IPC.setInstanceType(InstanceType.sidebar)
+  Logs.setInstanceType(InstanceType.sidebar)
 
   // Reactivate data for vue
   Containers.reactive = reactive(Containers.reactive)

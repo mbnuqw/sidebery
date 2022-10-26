@@ -52,7 +52,7 @@ function applyFirefoxThemeColors(theme: browser.theme.Theme): void {
 }
 
 void (async () => {
-  Logs.setType(InstanceType.url)
+  Logs.setInstanceType(InstanceType.url)
 
   await Promise.all([waitDOM(), waitInitData()])
   const initData = window.sideberyInitData as UrlPageInitData

@@ -7,7 +7,7 @@ let _type = 'unknown'
 let _winId = ''
 let _tabId = ''
 
-export function setType(type: InstanceType): void {
+export function setInstanceType(type: InstanceType): void {
   _type = getInstanceName(type)
 }
 

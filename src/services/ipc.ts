@@ -55,7 +55,7 @@ export const state = {
   groupPageConnections: new Map<ID, ConnectionInfo>(),
 }
 
-export function setType(type: InstanceType): void {
+export function setInstanceType(type: InstanceType): void {
   _localType = type
 }
 

@@ -62,7 +62,7 @@ function closePopup(): void {
 
 void (async () => {
   Info.setInstanceType(InstanceType.search)
-  IPC.setType(InstanceType.search)
+  IPC.setInstanceType(InstanceType.search)
   IPC.setupGlobalMessageListener()
   IPC.registerActions({ closePopup })
   const [win] = await Promise.all([

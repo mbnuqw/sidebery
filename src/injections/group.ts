@@ -37,8 +37,8 @@ function waitInitData(): Promise<void> {
 }
 
 async function main() {
-  IPC.setType(InstanceType.group)
-  Logs.setType(InstanceType.group)
+  IPC.setInstanceType(InstanceType.group)
+  Logs.setInstanceType(InstanceType.group)
 
   try {
     await Promise.all([waitDOM(), waitInitData()])

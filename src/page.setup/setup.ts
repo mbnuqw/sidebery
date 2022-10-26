@@ -19,8 +19,8 @@ import * as Logs from 'src/services/logs'
 
 async function main(): Promise<void> {
   Info.setInstanceType(InstanceType.setup)
-  IPC.setType(InstanceType.setup)
-  Logs.setType(InstanceType.setup)
+  IPC.setInstanceType(InstanceType.setup)
+  Logs.setInstanceType(InstanceType.setup)
 
   Settings.state = reactive(Settings.state)
   Containers.reactive = reactive(Containers.reactive)
