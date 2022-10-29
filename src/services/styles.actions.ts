@@ -8,6 +8,26 @@ import * as Utils from 'src/utils'
 import { FF_THEME_COLORS } from 'src/defaults'
 import { Sidebar } from './sidebar'
 
+type RGBAColor = [number, number, number, number]
+interface ParsedThemeColors {
+  frame?: RGBAColor
+  frameText?: RGBAColor
+  frameVariant?: ColorSchemeVariant
+  toolbar?: RGBAColor
+  toolbarText?: RGBAColor
+  toolbarVariant?: ColorSchemeVariant
+  toolbarTopSeparator?: RGBAColor
+}
+
+export const enum ColorSchemeVariant {
+  Dark = 1,
+  Light = 2,
+}
+
+const PREF_DARK_MEDIA = '(prefers-color-scheme: dark)'
+
+let darkMedia: MediaQueryList | undefined
+
 /**
  * Load predefined theme and apply it
  */
@@ -37,20 +57,20 @@ export function initTheme(): void {
   nextThemeLinkEl.href = `/themes/${Settings.state.theme}/${getInstanceName(Info.instanceType)}.css`
 }
 
-const PREF_DARK_MEDIA = '(prefers-color-scheme: dark)'
-let darkMedia: MediaQueryList | undefined
-export async function initColorScheme(theme?: browser.theme.Theme): Promise<void> {
+export async function initColorScheme(): Promise<void> {
+  await updateColorScheme()
+
+  setupAutoColorSchemeListener(() => updateColorScheme())
+  browser.theme.onUpdated.addListener(upd => updateColorScheme(upd?.theme))
+}
+
+export async function updateColorScheme(theme?: browser.theme.Theme): Promise<void> {
   if (Settings.state.colorScheme === 'ff') {
     if (!theme) theme = await browser.theme.getCurrent()
 
-    if (theme.colors) {
-      const colorSchemeVariant = parseTheme(theme)
-      resetAutoColorSchemeListener()
-      if (colorSchemeVariant === ColorSchemeVariant.Dark) Styles.reactive.colorScheme = 'dark'
-      if (colorSchemeVariant === ColorSchemeVariant.Light) Styles.reactive.colorScheme = 'light'
-    } else {
-      useAutoColorScheme(AutoColorSchemeSource.MozDialog)
-    }
+    const colorSchemeVariant = parseTheme(theme)
+    if (colorSchemeVariant === ColorSchemeVariant.Dark) Styles.reactive.colorScheme = 'dark'
+    if (colorSchemeVariant === ColorSchemeVariant.Light) Styles.reactive.colorScheme = 'light'
 
     if (!Info.isBg) {
       if (theme.colors) applyFirefoxThemeColors(theme)
@@ -58,102 +78,31 @@ export async function initColorScheme(theme?: browser.theme.Theme): Promise<void
     }
 
     Styles.theme = theme
-
-    if (browser.theme && !browser.theme.onUpdated.hasListener(onFirefoxThemeChange)) {
-      browser.theme.onUpdated.addListener(onFirefoxThemeChange)
-    }
   } else {
     if (!Info.isBg) resetFirefoxThemeColors()
 
     Styles.theme = {}
-
-    if (browser.theme?.onUpdated.hasListener(onFirefoxThemeChange)) {
-      browser.theme.onUpdated.removeListener(onFirefoxThemeChange)
-    }
   }
 
   if (Settings.state.colorScheme === 'sys') {
-    useAutoColorScheme(AutoColorSchemeSource.PrefersColorScheme)
-    return
-  } else {
-    resetAutoColorSchemeListener()
-  }
-
-  if (Settings.state.colorScheme === 'dark') {
+    useAutoColorScheme()
+  } else if (Settings.state.colorScheme === 'dark') {
     Styles.reactive.colorScheme = 'dark'
-    return
-  }
-
-  if (Settings.state.colorScheme === 'light') {
+  } else if (Settings.state.colorScheme === 'light') {
     Styles.reactive.colorScheme = 'light'
-    return
   }
 }
 
-const enum AutoColorSchemeSource {
-  PrefersColorScheme = 1,
-  MozDialog = 2,
-}
-
-function useAutoColorScheme(src: AutoColorSchemeSource): void {
+function useAutoColorScheme(): void {
   if (!darkMedia) darkMedia = window.matchMedia(PREF_DARK_MEDIA)
-  if (!darkMedia.onchange) darkMedia.onchange = () => onDarkMediaQueryChange(src)
 
-  if (src === AutoColorSchemeSource.PrefersColorScheme) {
-    if (darkMedia.matches) Styles.reactive.colorScheme = 'dark'
-    else Styles.reactive.colorScheme = 'light'
-  } else if (src === AutoColorSchemeSource.MozDialog) {
-    const mozColorScheme = getMozDialogColorScheme()
-    if (mozColorScheme === ColorSchemeVariant.Dark) Styles.reactive.colorScheme = 'dark'
-    if (mozColorScheme === ColorSchemeVariant.Light) Styles.reactive.colorScheme = 'light'
-  }
+  if (darkMedia.matches) Styles.reactive.colorScheme = 'dark'
+  else Styles.reactive.colorScheme = 'light'
 }
 
-function resetAutoColorSchemeListener(): void {
-  if (darkMedia?.onchange) darkMedia.onchange = null
-}
-
-function onDarkMediaQueryChange(src: AutoColorSchemeSource): void {
-  if (src === AutoColorSchemeSource.PrefersColorScheme) {
-    if (darkMedia?.matches) Styles.reactive.colorScheme = 'dark'
-    else Styles.reactive.colorScheme = 'light'
-  } else if (src === AutoColorSchemeSource.MozDialog) {
-    const mozColorScheme = getMozDialogColorScheme()
-    if (mozColorScheme === ColorSchemeVariant.Dark) Styles.reactive.colorScheme = 'dark'
-    if (mozColorScheme === ColorSchemeVariant.Light) Styles.reactive.colorScheme = 'light'
-  }
-}
-
-async function onFirefoxThemeChange(upd: browser.theme.Update): Promise<void> {
-  if (!upd.theme || !upd.theme.colors) {
-    const theme = await browser.theme.getCurrent()
-    let colorSchemeVariant
-    if (theme.colors) colorSchemeVariant = parseTheme(theme)
-    else colorSchemeVariant = getMozDialogColorScheme() ?? ColorSchemeVariant.Light
-    if (colorSchemeVariant === ColorSchemeVariant.Dark) Styles.reactive.colorScheme = 'dark'
-    if (colorSchemeVariant === ColorSchemeVariant.Light) Styles.reactive.colorScheme = 'light'
-    Styles.theme = theme
-    if (!Info.isBg) {
-      if (theme.colors) applyFirefoxThemeColors(theme)
-      else resetFirefoxThemeColors()
-    }
-  } else {
-    let colorSchemeVariant
-    if (upd.theme.colors) colorSchemeVariant = parseTheme(upd.theme)
-    else colorSchemeVariant = getMozDialogColorScheme() ?? ColorSchemeVariant.Light
-    if (colorSchemeVariant === ColorSchemeVariant.Dark) Styles.reactive.colorScheme = 'dark'
-    if (colorSchemeVariant === ColorSchemeVariant.Light) Styles.reactive.colorScheme = 'light'
-    Styles.theme = upd.theme
-    if (!Info.isBg) {
-      if (upd.theme.colors) applyFirefoxThemeColors(upd.theme)
-      else resetFirefoxThemeColors()
-    }
-  }
-}
-
-export const enum ColorSchemeVariant {
-  Dark = 1,
-  Light = 2,
+function setupAutoColorSchemeListener(cb: () => void): void {
+  if (!darkMedia) darkMedia = window.matchMedia(PREF_DARK_MEDIA)
+  if (!darkMedia.onchange) darkMedia.onchange = () => cb()
 }
 
 function getColorSchemeVariant(bg?: RGBAColor, fg?: RGBAColor): ColorSchemeVariant | undefined {
@@ -167,8 +116,42 @@ function getColorSchemeVariant(bg?: RGBAColor, fg?: RGBAColor): ColorSchemeVaria
   return variant
 }
 
+function shiftColor(
+  rgba: [number, number, number, number],
+  shift: number
+): [number, number, number, number] {
+  return [rgba[0] + shift, rgba[1] + shift, rgba[2] + shift, rgba[3]]
+}
+
+function toColorString(rgba?: [number, number, number, number]): string {
+  if (!rgba) return '#000'
+  if (rgba[3] === undefined) return `rgba(${rgba[0]}, ${rgba[1]}, ${rgba[2]})`
+  return `rgba(${rgba[0]}, ${rgba[1]}, ${rgba[2]}, ${rgba[3]})`
+}
+
 function parseTheme(theme: browser.theme.Theme): ColorSchemeVariant {
   const parsed: ParsedThemeColors = {}
+  let variant
+
+  // Try to use -moz-dialog colors
+  if (!theme.colors) {
+    const probeEl = document.getElementById('moz_dialog_color_scheme_probe')
+    if (probeEl) {
+      const styles = window.getComputedStyle(probeEl)
+      const bg = Utils.toRGBA(styles.backgroundColor)
+      const fg = Utils.toRGBA(styles.color)
+      if (bg && fg) {
+        variant = getColorSchemeVariant(bg, fg)
+
+        theme.colors = {
+          frame: toColorString(bg),
+          toolbar: toColorString(shiftColor(bg, 15)),
+          popup: toColorString(shiftColor(bg, 5)),
+          tab_background_text: styles.color,
+        }
+      }
+    }
+  }
 
   parsed.frame = Utils.toRGBA(theme.colors?.frame ?? theme.colors?.frame_inactive)
   parsed.frameText = Utils.toRGBA(theme.colors?.tab_background_text)
@@ -284,7 +267,7 @@ function parseTheme(theme: browser.theme.Theme): ColorSchemeVariant {
     }
   }
 
-  let variant = getColorSchemeVariant(parsed.toolbar, parsed.toolbarText)
+  variant = getColorSchemeVariant(parsed.toolbar, parsed.toolbarText)
   parsed.toolbarVariant = variant
   if (!variant) variant = getColorSchemeVariant(sidebar, sidebarText)
   if (!variant) variant = getColorSchemeVariant(popup, popupText)
@@ -301,28 +284,6 @@ function parseTheme(theme: browser.theme.Theme): ColorSchemeVariant {
   if (!darkMedia) darkMedia = window.matchMedia(PREF_DARK_MEDIA)
   if (darkMedia.matches) return ColorSchemeVariant.Dark
   else return ColorSchemeVariant.Light
-}
-
-function getMozDialogColorScheme(): ColorSchemeVariant | undefined {
-  const probeEl = document.getElementById('moz_dialog_color_scheme_probe')
-  if (!probeEl) return
-
-  const styles = window.getComputedStyle(probeEl)
-  const bg = Utils.toRGBA(styles.backgroundColor)
-  const fg = Utils.toRGBA(styles.color)
-
-  return getColorSchemeVariant(bg, fg)
-}
-
-type RGBAColor = [number, number, number, number]
-interface ParsedThemeColors {
-  frame?: RGBAColor
-  frameText?: RGBAColor
-  frameVariant?: ColorSchemeVariant
-  toolbar?: RGBAColor
-  toolbarText?: RGBAColor
-  toolbarVariant?: ColorSchemeVariant
-  toolbarTopSeparator?: RGBAColor
 }
 
 function calcBorder(themeColors: browser.theme.ThemeColors, parsed: ParsedThemeColors): void {
@@ -486,14 +447,13 @@ export function upgradeCustomStyles(stored: Stored, newStorage: Stored): void {
   newStorage.groupCSS = groupCSS
 }
 
-const UNDERSCORE_RE = /_/g
 export function convertVarsToCSS(vars: Record<string, string | null>): string {
   const cssVars: string[] = []
   for (const key of Object.keys(vars)) {
     const value = vars[key]
     if (!value) continue
 
-    const varName = '--' + key.replace(UNDERSCORE_RE, '-')
+    const varName = '--' + key.replace(Utils.UNDERSCORE_RE, '-')
     cssVars.push(`#root.root {${varName}: ${value};}`)
   }
 

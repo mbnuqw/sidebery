@@ -95,7 +95,7 @@ export function updateSettingsBg(settings?: SettingsState | null): void {
 
   if (snapIntervalChanged || snapIntervalUnitChanged) Snapshots.scheduleSnapshots()
 
-  if (colorSchemeChanged) Styles.initColorScheme()
+  if (colorSchemeChanged) Styles.updateColorScheme()
 }
 
 export function updateSettingsFg(settings?: SettingsState | null): void {
@@ -176,7 +176,7 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
   if (ctxMenuCtrIgnore) Menu.parseContainersRules()
   if (fontSize) Sidebar.updateFontSize()
 
-  if (colorScheme) Styles.initColorScheme()
+  if (colorScheme) Styles.updateColorScheme()
 
   if (Info.isSidebar && updateSidebarTitleChanged) Sidebar.updateSidebarTitle(0)
 

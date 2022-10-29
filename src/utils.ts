@@ -12,7 +12,7 @@ const ALPH = [
   'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
   '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '_',
 ]
-const UNDERSCORE_RE = /_/g
+export const UNDERSCORE_RE = /_/g
 const CSS_NUM_RE = /([\d.]+)(\w*)/
 const URL_RE = /^https?:\/\/.+/
 const PunycodeConf = {
