@@ -49,7 +49,7 @@
   padding: 0
   margin: 0
   overflow: hidden
-  border-radius: var(--ctx-menu-border-radius)
+  border-radius: calc(var(--ctx-menu-border-radius) + 1px)
   background-color: var(--frame-bg)
   box-shadow: var(--ctx-menu-shadow)
   &:before
@@ -97,8 +97,8 @@
   &[data-width="wrap"]
     width: 20%
     flex-grow: 0
-  &:hover:before
-  &[data-selected="true"]:before
+  &:not([data-inactive="true"]):hover:before
+  &[data-selected="true"]:not([data-inactive="true"]):before
     background-color: var(--ctx-menu-fg)
     box-shadow: inset 0 0 0 1px var(--active-border)
     img
@@ -155,8 +155,8 @@
     height: 100%
     border-radius: var(--ctx-menu-border-radius)
     opacity: .16
-  &:hover:before
-  &[data-selected="true"]:before
+  &:not([data-inactive="true"]):hover:before
+  &[data-selected="true"]:not([data-inactive="true"]):before
     background-color: var(--ctx-menu-fg)
     box-shadow: inset 0 0 0 1px var(--active-border)
   &:active
@@ -209,6 +209,8 @@
 // Separator
 .CtxMenu .opt[data-separator="true"]
   padding: 1px 0
+  width: calc(100% + 2px)
+  left: -1px
 .CtxMenu .opt[data-separator="true"]:after
   content: ''
   position: relative
