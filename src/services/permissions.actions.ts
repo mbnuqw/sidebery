@@ -124,32 +124,41 @@ function onRemovedAllUrls(): void {
 }
 
 function onRemovedAllUrlsBg(): void {
-  let saveNeeded = false
+  let containersSaveNeeded = false
+  let settingsSaveNeeded = false
   for (const c of Object.values(Containers.reactive.byId)) {
     if (c.proxified) {
       c.proxified = false
-      saveNeeded = true
+      containersSaveNeeded = true
     }
     if (c.proxy && c.proxy.type !== 'direct') {
       c.proxy.type = 'direct'
-      saveNeeded = true
+      containersSaveNeeded = true
     }
     if (c.includeHostsActive) {
       c.includeHostsActive = false
-      saveNeeded = true
+      containersSaveNeeded = true
     }
     if (c.excludeHostsActive) {
       c.excludeHostsActive = false
-      saveNeeded = true
+      containersSaveNeeded = true
     }
     if (c.userAgentActive) {
       c.userAgentActive = false
-      saveNeeded = true
+      containersSaveNeeded = true
     }
   }
 
-  if (saveNeeded) {
+  if (Settings.state.selWinScreenshots) {
+    Settings.state.selWinScreenshots = false
+    settingsSaveNeeded = true
+  }
+
+  if (containersSaveNeeded) {
     Store.set({ containers: Utils.cloneObject(Containers.reactive.byId) })
+  }
+  if (settingsSaveNeeded) {
+    Settings.saveSettings()
   }
 }
 
@@ -161,6 +170,10 @@ function onRemovedAllUrlsFg(): void {
       if (c.includeHostsActive) c.includeHostsActive = false
       if (c.excludeHostsActive) c.excludeHostsActive = false
       if (c.userAgentActive) c.userAgentActive = false
+    }
+
+    if (Settings.state.selWinScreenshots) {
+      Settings.state.selWinScreenshots = false
     }
   }
 }

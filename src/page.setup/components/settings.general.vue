@@ -76,12 +76,13 @@ async function calcStorageInfo(): Promise<void> {
   state.storageOveral = Utils.strSize(JSON.stringify(stored))
 }
 
-function toggleSelWinScreenshots(): void {
-  if (!Settings.state.selWinScreenshots && !Permissions.reactive.webData) {
-    location.hash = 'all-urls'
-  } else {
-    Settings.state.selWinScreenshots = !Settings.state.selWinScreenshots
+async function toggleSelWinScreenshots(): Promise<void> {
+  if (!Settings.state.hideInact && !Permissions.reactive.tabHide) {
+    const result = await Permissions.request('<all_urls>')
+    if (!result) return
   }
+
+  Settings.state.selWinScreenshots = !Settings.state.selWinScreenshots
   Settings.saveDebounced(150)
 }
 
