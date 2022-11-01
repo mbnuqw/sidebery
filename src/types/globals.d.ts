@@ -25,6 +25,7 @@ interface Window {
   translations: Record<string, Record<string, PlurFn | string>> | undefined
 
   getSideberyState?: () => any
+  sideberyLogsDnD?: boolean
 }
 
 type DeepReadonly<T> = {

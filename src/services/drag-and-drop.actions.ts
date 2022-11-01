@@ -20,6 +20,8 @@ let lastDragStartTime = 0
  * Start dragging something
  */
 export function start(info: DragInfo, dstType?: DropType): void {
+  if (window.sideberyLogsDnD) Logs.info('DnD.start')
+
   if (info.windowId === undefined) info.windowId = Windows.id
   if (info.panelId === undefined) info.panelId = Sidebar.reactive.activePanelId
 
@@ -103,6 +105,8 @@ function updateTooltip(info: DragInfo): void {
 }
 
 export function reset(): void {
+  if (window.sideberyLogsDnD) Logs.info('DnD.reset')
+
   DnD.srcType = DragType.Nothing
   DnD.isExternal = false
   DnD.items = []
@@ -127,6 +131,8 @@ export function reset(): void {
 }
 
 function resetDragPointer(): void {
+  if (window.sideberyLogsDnD) Logs.info('DnD.resetDragPointer')
+
   DnD.reactive.pointerMode = DndPointerMode.None
   DnD.reactive.pointerExpanding = false
   DnD.reactive.pointerLvl = 0
@@ -292,6 +298,8 @@ export function onDragEnter(e: DragEvent): void {
   const type = (e.target as HTMLElement).getAttribute('data-dnd-type')
   const id = (e.target as HTMLElement).getAttribute('data-dnd-id')
 
+  if (window.sideberyLogsDnD) Logs.info('DnD.onDragEnter', type, id)
+
   DnD.reactive.pointerHover = false
 
   resetPanelSwitchTimeout()
@@ -300,12 +308,16 @@ export function onDragEnter(e: DragEvent): void {
 
   // Handle drag and drop from outside
   if (!DnD.reactive.isStarted && !e?.relatedTarget) {
+    if (window.sideberyLogsDnD) Logs.info('DnD.onDragEnter: From outside')
+
     const dndInfo = e.dataTransfer?.getData('application/x-sidebery-dnd')
 
     Sidebar.updateBounds()
 
     // From other sidebery sidebar
     if (dndInfo) {
+      if (window.sideberyLogsDnD) Logs.info('DnD.onDragEnter: From outside: Sidebery sidebar')
+
       let info: DragInfo
       try {
         info = JSON.parse(dndInfo) as DragInfo
@@ -326,6 +338,8 @@ export function onDragEnter(e: DragEvent): void {
 
     // Native
     else {
+      if (window.sideberyLogsDnD) Logs.info('DnD.onDragEnter: From outside: Native')
+
       DnD.start({
         x: Sidebar.reactive.width >> 1,
         y: e.clientX,
@@ -428,6 +442,8 @@ export function onDragEnter(e: DragEvent): void {
 }
 
 export function onDragLeave(e: DragEvent): void {
+  if (window.sideberyLogsDnD) Logs.info('DnD.onDragLeave: !!e?.relatedTarget:', !!e?.relatedTarget)
+
   if (e?.relatedTarget) return
   if (Sidebar.reactive.hiddenPanelsBar) Sidebar.reactive.hiddenPanelsBar = false
   Selection.resetSelection()
@@ -436,6 +452,8 @@ export function onDragLeave(e: DragEvent): void {
 }
 
 function onPointerEnter(e: DragEvent): void {
+  if (window.sideberyLogsDnD) Logs.info('DnD.onPointerEnter')
+
   resetTabActivateTimeout()
 
   const panel = Sidebar.reactive.panelsById[DnD.reactive.dstPanelId]
@@ -750,6 +768,8 @@ let dropEventWasConsumedTimeout: number | undefined
  * It's needed to correctly handle dragEnd event.
  */
 function dropEventWasConsumed(): void {
+  if (window.sideberyLogsDnD) Logs.info('DnD.dropEventWasConsumed')
+
   DnD.dropEventConsumed = true
   clearTimeout(dropEventWasConsumedTimeout)
   dropEventWasConsumedTimeout = setTimeout(() => {
@@ -758,6 +778,8 @@ function dropEventWasConsumed(): void {
 }
 
 export function isDropEventConsumed(): boolean {
+  if (window.sideberyLogsDnD) Logs.info('DnD.isDropEventConsumed')
+
   return DnD.dropEventConsumed
 }
 
@@ -765,10 +787,14 @@ export function isDropEventConsumed(): boolean {
  * Drop event handler
  */
 export async function onDrop(e: DragEvent): Promise<void> {
+  if (window.sideberyLogsDnD) Logs.info('DnD.onDrop')
+
   dropEventWasConsumed()
 
   // Handle native firefox tabs
   if (isNativeTabs(e)) {
+    if (window.sideberyLogsDnD) Logs.info('DnD.onDrop: Handle native firefox tabs')
+
     const result = await Utils.parseDragEvent(e, Windows.lastFocusedId)
     if (result?.matchedNativeTabs?.length) {
       if (result.matchedNativeTabs?.length) {
@@ -906,6 +932,8 @@ let resetOtherTimeout: number | undefined
 export function resetOther(): void {
   clearTimeout(resetOtherTimeout)
   resetOtherTimeout = setTimeout(() => {
+    if (window.sideberyLogsDnD) Logs.info('DnD.resetOther')
+
     IPC.broadcast({ dstType: InstanceType.sidebar, action: 'stopDrag' })
   }, 150)
 }
@@ -913,6 +941,8 @@ export function resetOther(): void {
 let dragEndedRecentlyTimeout: number | undefined
 
 export async function onDragEnd(e: DragEvent): Promise<void> {
+  if (window.sideberyLogsDnD) Logs.info('DnD.onDragEnd')
+
   resetDragPointer()
   DnD.resetOther()
   if (DnD.reactive.isStarted) DnD.reset()
@@ -924,6 +954,8 @@ export async function onDragEnd(e: DragEvent): Promise<void> {
     e.dataTransfer?.types.length === 1 &&
     Date.now() - lastDragStartTime > 150
   ) {
+    if (window.sideberyLogsDnD) Logs.info('DnD.onDragEnd: Dropped outside sidebar')
+
     const dndInfoStr = e.dataTransfer?.getData('application/x-sidebery-dnd')
 
     // Check if the drop event was consumed by another sidebar
