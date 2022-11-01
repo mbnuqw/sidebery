@@ -91,7 +91,4 @@ function onWindowFocusedFg(id: ID): void {
     Windows.lastFocusedId = id
     Windows.lastFocused = id === Windows.id
   }
-  if (Windows.focused) {
-    Sidebar.saveActivePanel()
-  }
 }

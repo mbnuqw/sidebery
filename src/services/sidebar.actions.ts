@@ -917,13 +917,16 @@ export function activatePanel(panelId: ID, loadPanels = true): void {
   if (Settings.state.updateSidebarTitle) Sidebar.updateSidebarTitle(0)
 }
 
+let prevSavedActPanelId = NOID
 /**
- * Save panel index
+ * Save active panel id in current window
  */
 export function saveActivePanel(): void {
-  if (!Windows.focused || Windows.incognito) return
+  if (Windows.incognito || prevSavedActPanelId === Sidebar.reactive.activePanelId) return
+  prevSavedActPanelId = Sidebar.reactive.activePanelId
   browser.sessions.setWindowValue(Windows.id, 'activePanelId', Sidebar.reactive.activePanelId)
 }
+export const saveActivePanelDebounced = Utils.debounce(saveActivePanel)
 
 let updatePanelBoundsTimeout: number | undefined
 export function updatePanelBoundsDebounced(delay = 256): void {
@@ -963,7 +966,7 @@ export function switchToPanel(
   }
 
   if (DnD.reactive.isStarted) updatePanelBoundsDebounced()
-  else saveActivePanel()
+  else saveActivePanelDebounced(1000)
 }
 
 /**
