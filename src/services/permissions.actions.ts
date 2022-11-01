@@ -40,21 +40,26 @@ export type RequestablePermission =
   | 'history'
   | 'bookmarks'
 
-export async function request(permission: RequestablePermission): Promise<boolean> {
+export async function request(...perms: RequestablePermission[]): Promise<boolean> {
   try {
-    if (permission === '<all_urls>') {
-      return await browser.permissions.request({
-        origins: ['<all_urls>'],
-        permissions: ['webRequest', 'webRequestBlocking', 'proxy'],
-      })
+    const origins: string[] = []
+    const permissions: string[] = []
+
+    if (perms.includes('<all_urls>')) {
+      origins.push('<all_urls>')
+      permissions.push('webRequest', 'webRequestBlocking', 'proxy')
+      Utils.rmFromArray(perms, '<all_urls>')
     }
-    return await browser.permissions.request({ origins: [], permissions: [permission] })
+
+    permissions.push(...perms)
+    console.log('[DEBUG] >>>', { origins, permissions })
+    return await browser.permissions.request({ origins, permissions })
   } catch {
-    if (permission === '<all_urls>') SetupPage.open('all-urls')
-    else if (permission === 'tabHide') SetupPage.open('tab-hide')
-    else if (permission === 'history') SetupPage.open('history')
-    else if (permission === 'bookmarks') SetupPage.open('bookmarks')
-    else if (permission === 'clipboardWrite') SetupPage.open('clipboard-write')
+    if (perms.includes('<all_urls>')) SetupPage.open('all-urls')
+    else if (perms.includes('tabHide')) SetupPage.open('tab-hide')
+    else if (perms.includes('history')) SetupPage.open('history')
+    else if (perms.includes('bookmarks')) SetupPage.open('bookmarks')
+    else if (perms.includes('clipboardWrite')) SetupPage.open('clipboard-write')
     return false
   }
 }

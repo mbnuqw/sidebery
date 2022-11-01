@@ -131,13 +131,9 @@ function sortUrlByHosts(urls: string[], exclude: string[]): Record<string, strin
  * Fetch favicons for bookmarks
  */
 async function fetchBookmarksFavicons(): Promise<void> {
-  if (!Permissions.reactive.webData) {
-    location.hash = 'all-urls'
-    return
-  }
-  if (!Permissions.reactive.bookmarks) {
-    location.hash = 'bookmarks'
-    return
+  if (!Permissions.reactive.webData || !Permissions.reactive.bookmarks) {
+    const result = await Permissions.request('<all_urls>', 'bookmarks')
+    if (!result) return
   }
 
   state.fetchingBookmarksFavs = true
