@@ -254,8 +254,11 @@ function parseTheme(theme: browser.theme.Theme): ColorSchemeVariant {
   }
 
   // Detect sidebar border
-  if (theme.colors && theme.colors.sidebar && theme.colors.sidebar_border) {
-    if (theme.colors.sidebar === theme.colors.sidebar_border || sidebarBorder?.[3] === 0) {
+  if (theme.colors?.sidebar && theme.colors.sidebar_border && sidebarBorder && sidebar) {
+    const borderIsTransparent = sidebarBorder?.[3] === 0
+    const borderIsBrigther = sidebarBorder[0] > sidebar[0]
+    const borderIsIndistinguishable = isSimilar(8, sidebarBorder[0], sidebar[0])
+    if (borderIsTransparent || borderIsBrigther || borderIsIndistinguishable) {
       theme.colors.sidebar_border_width = '1px'
     }
   }
@@ -286,15 +289,21 @@ function parseTheme(theme: browser.theme.Theme): ColorSchemeVariant {
   else return ColorSchemeVariant.Light
 }
 
+function isSimilar(thr: number, a?: number, b?: number): boolean {
+  if (thr === 0) return a === b
+  if (a === undefined || b === undefined) return false
+  else return Math.abs(a - b) <= thr
+}
+
 function calcBorder(themeColors: browser.theme.ThemeColors, parsed: ParsedThemeColors): void {
-  const monoLight = parsed.frameVariant === parsed.toolbarVariant
+  const monoColorScheme = parsed.frameVariant === parsed.toolbarVariant
   const border = parsed.toolbarTopSeparator
   const frame = parsed.frame
   const bar = parsed.toolbar
 
   // No border
   if (
-    !monoLight ||
+    !monoColorScheme ||
     !frame ||
     !bar ||
     border?.[3] === 0 ||
@@ -307,7 +316,7 @@ function calcBorder(themeColors: browser.theme.ThemeColors, parsed: ParsedThemeC
   }
 
   // Native border
-  if (monoLight && themeColors.toolbar_top_separator && border?.[3] === 1) {
+  if (monoColorScheme && themeColors.toolbar_top_separator && border?.[3] === 1) {
     themeColors.border = themeColors.toolbar_top_separator
     themeColors.border_width = '1px'
     return
