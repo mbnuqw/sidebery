@@ -2024,12 +2024,6 @@ export const setupPageTranslations: Translations = {
     de: 'Schlicht',
     zh_CN: 'plain',
   },
-  'settings.theme_none': {
-    en: 'none',
-    ru: 'нет',
-    de: 'Keins',
-    zh_CN: '无',
-  },
   'settings.switch_color_scheme': {
     en: 'Color scheme',
     ru: 'Цветовая схема',

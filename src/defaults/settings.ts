@@ -208,7 +208,7 @@ export const SETTINGS_OPTIONS = {
   tabsTreeLimit: [1, 2, 3, 4, 5, 'none'],
   rmChildTabs: ['all', 'folded', 'none'],
   fontSize: ['xxs', 'xs', 's', 'm', 'l', 'xl', 'xxl'],
-  theme: ['proton', 'compact', 'plain', 'none'],
+  theme: ['proton', 'compact', 'plain'],
   colorScheme: ['dark', 'light', 'sys', 'ff'],
   snapIntervalUnit: ['min', 'hr', 'day'],
   snapLimitUnit: ['snap', 'kb', 'day'],

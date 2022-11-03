@@ -34,12 +34,6 @@ let darkMedia: MediaQueryList | undefined
 export function initTheme(): void {
   const themeLinkEl = document.getElementById('theme_link') as HTMLLinkElement
 
-  // Remove theme css
-  if (Settings.state.theme === 'none') {
-    themeLinkEl?.setAttribute('disabled', 'disabled')
-    return
-  }
-
   // Create next theme link
   const nextThemeLinkEl = document.createElement('link')
   nextThemeLinkEl.type = 'text/css'
