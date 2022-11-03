@@ -8,9 +8,11 @@
 #root[data-color-scheme="dark"]
   --ctx-menu-fg: var(--ff-popup-text, #ffffff)
   --ctx-menu-shadow: 0 0 0 1px #00000032, 0 0 0 1px var(--toolbar-bg), 0 1px 16px 0 #00000048
+  --ctx-menu-overlay-bg: var(--element-overlay-bg)
 #root[data-color-scheme="light"]
   --ctx-menu-fg: var(--ff-popup-text, #000000)
   --ctx-menu-shadow: 0 0 0 1px #00000036, 0 0 0 1px var(--toolbar-bg), 0 1px 16px 0 #00000032
+  --ctx-menu-overlay-bg: #00000048
 
 .CtxMenu
   position: absolute
@@ -44,7 +46,7 @@
   padding: 0
   margin: 0
   overflow: hidden
-  border-radius: calc(var(--element-roundness) + 1px)
+  border-radius: calc(var(--element-roundness) + 2px)
   background-color: var(--toolbar-bg)
   box-shadow: var(--ctx-menu-shadow)
   &:before
@@ -87,7 +89,7 @@
     left: 0
     width: 100%
     height: 100%
-    background-color: var(--element-overlay-bg)
+    background-color: var(--ctx-menu-overlay-bg)
     opacity: 0
   &[data-width="3"]
     width: 33.3%
@@ -164,7 +166,7 @@
     left: 0
     width: 100%
     height: 100%
-    background-color: var(--element-overlay-bg)
+    background-color: var(--ctx-menu-overlay-bg)
     opacity: 0
   .icon-box
     position: relative

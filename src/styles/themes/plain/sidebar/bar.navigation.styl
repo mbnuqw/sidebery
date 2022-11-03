@@ -18,7 +18,7 @@
   display: flex
   min-height: var(--nav-btn-height)
   flex-shrink: 0
-  background-color: var(--toolbar-bg)
+  background-color: var(--element-bg)
   box-shadow: 0 0 3px 0 #00000016
   &.-top
     width: 100%
@@ -64,6 +64,7 @@
   flex-shrink: 0
   overflow: hidden
   z-index: 10
+  border-radius: var(--element-roundness)
   transition: opacity var(--d-fast), transform var(--d-fast), z-index var(--d-fast)
 
   &:before
@@ -109,15 +110,6 @@
   &[data-drop-mode="in"][data-type="add"] svg
     fill: var(--nav-btn-update-badge-bg)
 
-  &:not([data-class="space"]):hover:before
-    opacity: .1
-  &:not([data-class="space"]):active:before
-    opacity: .5
-  &[data-active="true"]:before
-    opacity: .3
-  &[data-sel="true"]:before
-    opacity: .5
-
   &[data-loading="true"]
     cursor: progress
 
@@ -132,6 +124,27 @@
 
   &[data-unloaded="true"] > *
     opacity: .3
+
+#root[data-color-scheme="dark"] .NavigationBar .nav-item
+  &:not([data-class="space"]):hover:before
+    opacity: .1
+  &:not([data-class="space"]):active:before
+    opacity: .5
+  &[data-active="true"]:before
+    opacity: .3
+  &[data-sel="true"]:before
+    opacity: .5
+#root[data-color-scheme="light"] .NavigationBar .nav-item
+  &:not([data-class="space"]):hover:before
+    opacity: .5
+  &:not([data-class="space"]):active:before
+    opacity: .7
+  &[data-active="true"]
+    background-color: var(--toolbar-bg)
+  &[data-active="true"]:before
+    opacity: .5
+  &[data-sel="true"]:before
+    opacity: .7
 
 .NavigationBar.-top .nav-item[data-class="space"][data-type="dynamic"]
 .NavigationBar.-bottom .nav-item[data-class="space"][data-type="dynamic"]

@@ -62,8 +62,7 @@
   min-width: 30px
   flex-grow: 1
   transition: opacity var(--d-fast)
-  background-color: var(--toolbar-bg)
-  box-shadow: 0 0 3px 0 #00000016
+  background-color: var(--element-bg)
   border-radius: var(--element-roundness)
   &:before
     content: ''
@@ -107,12 +106,29 @@
     opacity: 0
     > svg
       display: none
-.TabsPanel .new-tab-btn:hover:before
-  opacity: .1
-.TabsPanel .new-tab-btn:active:before
-.TabsPanel .new-tab-btn[data-active="true"]:active:before
-  opacity: .5
-.TabsPanel .new-tab-btn[data-active="true"]:before
-  opacity: .3
-.TabsPanel .new-tab-btns[data-sel="true"] .new-tab-btn:before
-  opacity: .5
+
+#root[data-color-scheme="dark"]
+  .TabsPanel .new-tab-btn:hover:before
+    opacity: .1
+  .TabsPanel .new-tab-btn:active:before
+  .TabsPanel .new-tab-btn[data-active="true"]:active:before
+    opacity: .5
+  .TabsPanel .new-tab-btn[data-active="true"]:before
+    opacity: .3
+  .TabsPanel .new-tab-btns[data-sel="true"] .new-tab-btn:before
+    opacity: .5
+#root[data-color-scheme="light"]
+  .TabsPanel .new-tab-btn:hover:before
+    opacity: .3
+  .TabsPanel .new-tab-btn:active:before
+  .TabsPanel .new-tab-btn[data-active="true"]:active:before
+    opacity: .7
+  .TabsPanel .new-tab-btn[data-active="true"]:before
+    opacity: .5
+  .TabsPanel .new-tab-btns[data-sel="true"] .new-tab-btn:before
+    opacity: .7
+
+#root[data-color-scheme="dark"] .TabsPanel .new-tab-btn
+  box-shadow: 0 0 3px 0 #00000016
+#root[data-color-scheme="light"] .TabsPanel .new-tab-btn
+  box-shadow: 0 0 3px 0 #00000012

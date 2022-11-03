@@ -25,7 +25,7 @@
   cursor: default
   transform: translateZ(0)
   transition: opacity var(--d-fast)
-  background-color: var(--toolbar-bg)
+  background-color: var(--element-bg)
   box-shadow: 0 0 3px 0 #00000016,
               0 1px 0 0 var(--toolbar-bg-overlay),
               0 1px 0 0 var(--toolbar-bg)
@@ -70,6 +70,8 @@
   background-color: var(--toolbar-fg)
   z-index: 30
 
+.BookmarkNode[data-expanded="true"] > .body
+  background-color: var(--toolbar-bg)
 .BookmarkNode[data-expanded="true"] > .body:before
   opacity: .08
 .BookmarkNode > .body:hover:before
