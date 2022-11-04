@@ -42,11 +42,9 @@ async function main(): Promise<void> {
   SetupPage.updateActiveView()
   SetupPage.setupListeners()
 
-  const app = createApp(Root)
-
   await Promise.all([
     Windows.loadWindowInfo(),
-    Settings.loadSettings(),
+    Settings.loadSettings().then(() => Styles.initColorScheme()),
     Containers.load(),
     Keybindings.loadKeybindings(),
     Info.loadVersionInfo(),
@@ -58,6 +56,7 @@ async function main(): Promise<void> {
   Logs.setWinId(Windows.id)
   Logs.setTabId(Info.currentTabId)
 
+  const app = createApp(Root)
   app.mount('#root_container')
 
   if (Info.isMajorUpgrade()) {
@@ -69,7 +68,6 @@ async function main(): Promise<void> {
 
   await Sidebar.loadPanels()
   Sidebar.setupListeners()
-  Styles.initColorScheme()
   Styles.loadCustomCSS()
   Info.loadPlatformInfo()
   Info.loadBrowserInfo()
