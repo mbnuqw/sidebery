@@ -176,8 +176,6 @@ async function getRootStyles(
   theme: typeof SETTINGS_OPTIONS.theme[number],
   colorScheme: 'dark' | 'light'
 ): Promise<CSSStyleDeclaration | undefined> {
-  if (theme === 'none') return
-
   let shadowContainerEl = document.getElementById('shadows_container')
   if (shadowContainerEl) shadowContainerEl.remove()
 
@@ -193,6 +191,7 @@ async function getRootStyles(
     shadowedRootEl.setAttribute('id', 'root')
     shadowedRootEl.setAttribute('data-color-scheme', colorScheme)
     shadowedRootEl.setAttribute('data-animations', Settings.state.animationSpeed || 'fast')
+    shadowedRootEl.setAttribute('data-density', Settings.state.density || 'default')
     shadow.appendChild(shadowedRootEl)
 
     const shadowLinkEl = document.createElement('link')

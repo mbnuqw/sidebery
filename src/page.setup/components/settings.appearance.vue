@@ -26,6 +26,13 @@ section(ref="el")
     :opts="Settings.getOpts('theme')"
     @update:value="Settings.saveDebounced(150)")
   SelectField(
+    label="settings.density"
+    optLabel="settings.density_"
+    v-model:value="Settings.state.density"
+    :inactive="Settings.state.theme !== 'proton'"
+    :opts="Settings.getOpts('density')"
+    @update:value="Settings.saveDebounced(150)")
+  SelectField(
     label="settings.switch_color_scheme"
     optLabel="settings.color_scheme_"
     v-model:value="Settings.state.colorScheme"

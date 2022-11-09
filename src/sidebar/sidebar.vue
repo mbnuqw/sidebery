@@ -5,6 +5,7 @@
   :data-native-scrollbars-thin="Settings.state.nativeScrollbarsThin"
   :data-native-scrollbars-left="Settings.state.nativeScrollbarsLeft"
   :data-theme="Settings.state.theme"
+  :data-density="Settings.state.density"
   :data-color-scheme="Styles.reactive.colorScheme"
   :data-animations="animations"
   :data-pinned-tabs-position="pinnedTabsPosition"

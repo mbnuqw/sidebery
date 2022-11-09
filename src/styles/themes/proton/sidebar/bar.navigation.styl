@@ -1,11 +1,21 @@
 @import '../../../utils'
 
 #root
+  --nav-bar-padding: 2px
+  --bar-bar-inner-gap: 2px
+  --nav-delimiter-size: 16px
   --nav-btn-width: 28px
   --nav-btn-height: 28px
   --nav-btn-fg: var(--toolbar-fg)
   --nav-btn-accent: var(--status-notice)
-  --nav-btn-roundness: 4px
+  --nav-btn-border-radius: 4px
+#root[data-density="compact"]
+  --nav-bar-padding: 0px
+  --bar-bar-inner-gap: 1px
+  --nav-delimiter-size: 12px
+  --nav-btn-width: 28px
+  --nav-btn-height: 28px
+  --nav-btn-border-radius: 3px
 #root[data-color-scheme="dark"]
   --nav-btn-active-shadow: inset 0 0 0 1px #ffffff08, 0 0 2px 0 #00000032
 #root[data-color-scheme="light"]
@@ -19,7 +29,7 @@
   position: relative
   display: flex
   flex-shrink: 0
-  padding: 2px
+  padding: var(--nav-bar-padding)
   background-color: var(--toolbar-bg)
   box-shadow: 0 0 0 var(--ff-border-width, 1px) var(--ff-border, var(--border))
   &.-top
@@ -43,7 +53,7 @@
   flex-wrap: wrap
   flex-grow: 1
   flex-direction: row
-  grid-gap: 2px
+  grid-gap: var(--bar-bar-inner-gap)
   overflow: hidden
 .NavigationBar.-vert  .main-items
   flex-direction: column
@@ -63,7 +73,7 @@
   flex-shrink: 0
   overflow: hidden
   z-index: 10
-  border-radius: var(--nav-btn-roundness)
+  border-radius: var(--nav-btn-border-radius)
   transition: opacity var(--d-fast), transform var(--d-fast), z-index var(--d-fast)
 
   // for dragenter zone and drop pointer
@@ -82,7 +92,7 @@
   &[data-drop-mode="after"]:before
     box-shadow: inset -1px 0 0 0 var(--nav-btn-accent)
   &[data-drop-mode="in"]:before
-    border-radius: var(--nav-btn-roundness)
+    border-radius: var(--nav-btn-border-radius)
     box-shadow: inset 0 0 0 1px var(--nav-btn-accent)
   &[data-drop-mode="in"][data-type="hidden"]:before
     background-color: #00000012
@@ -126,7 +136,7 @@
   width: auto
 .NavigationBar.-top .nav-item[data-class="space"][data-type="static"]
 .NavigationBar.-bottom .nav-item[data-class="space"][data-type="static"]
-  width: 16px
+  width: var(--nav-delimiter-size)
   &:after
     width: 1px
     height: 16px
@@ -135,7 +145,7 @@
 .NavigationBar.-vert .nav-item[data-class="space"][data-type="dynamic"]
   height: auto
 .NavigationBar.-vert .nav-item[data-class="space"][data-type="static"]
-  height: 16px
+  height: var(--nav-delimiter-size)
   &:after
     width: 16px
     height: 1px
@@ -343,6 +353,9 @@
                0 0 3px var(--toolbar-bg)
   border-radius: 4px
   transform: translateZ(0)
+#root[data-density="compact"]
+  .NavigationBar .nav-item .len
+    top: 0
 
 .NavigationBar .nav-item[data-empty="true"] .len
   opacity: .5
@@ -384,8 +397,8 @@
   position: absolute
   display: flex
   flex-flow: wrap
-  grid-gap: 2px
-  padding: 2px
+  grid-gap: var(--nav-bar-padding)
+  padding: var(--nav-bar-padding)
   background-color: var(--toolbar-bg)
   box-shadow: 0 0 12px 0 #00000056,
               0 0 0 1px var(--border)

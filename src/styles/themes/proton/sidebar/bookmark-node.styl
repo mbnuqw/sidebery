@@ -2,9 +2,30 @@
 
 #root
   --bookmarks-indent: 12px
-  --bookmarks-bookmark-height: 26px
+  --bookmarks-bookmark-height: 28px
   --bookmarks-folder-height: 28px
   --bookmarks-separator-height: 17px
+  --bookmarks-border-radius: 4px
+  --bookmarks-padding: 0
+  --bookmarks-margin-top: 1px
+  --bookmarks-margin-bottom: 1px
+  --bookmarks-margin-horizontal: 2px
+  --bookmarks-inner-gap: 5px
+  --bookmarks-open-mark-top: 3px
+  --bookmarks-open-mark-left: -3px
+#root[data-density="compact"]
+  --bookmarks-indent: 10px
+  --bookmarks-bookmark-height: 25px
+  --bookmarks-folder-height: 25px
+  --bookmarks-separator-height: 15px
+  --bookmarks-border-radius: 3px
+  --bookmarks-padding: 0
+  --bookmarks-margin-top: 1px
+  --bookmarks-margin-bottom: 0px
+  --bookmarks-margin-horizontal: 1px
+  --bookmarks-inner-gap: 4px
+  --bookmarks-open-mark-top: 3px
+  --bookmarks-open-mark-left: -2px
 #root[data-color-scheme="dark"]
   --bookmarks-node-activated-bg: #ffffff08
   --bookmarks-node-activated-fg: var(--frame-fg)
@@ -20,7 +41,7 @@
   padding: 0 0 0 var(--bookmarks-indent)
   margin: 0
   &.root-node
-    padding: 0 0 0 6px
+    padding: 0 0 0 calc(var(--bookmarks-inner-gap) + var(--bookmarks-margin-horizontal))
 
 // ---
 // -- Body
@@ -29,17 +50,18 @@
   display: flex
   align-items: center
   cursor: default
+  padding: var(--bookmarks-padding)
   transform: translateZ(0)
   transition: opacity var(--d-fast)
   background-color: var(--frame-bg)
   &:before
     content: ''
     position: absolute
-    top: 1px
-    left: -4px
-    width: calc(100% + 2px)
-    height: calc(100% - 2px)
-    border-radius: 4px
+    top: var(--bookmarks-margin-top)
+    left: calc(0px - var(--bookmarks-inner-gap))
+    width: calc(100% + var(--bookmarks-inner-gap) - var(--bookmarks-margin-horizontal))
+    height: calc(100% - var(--bookmarks-margin-top) - var(--bookmarks-margin-bottom))
+    border-radius: var(--bookmarks-border-radius)
 
 .BookmarkNode[data-type="bookmark"] > .body
   height: var(--bookmarks-bookmark-height)
@@ -77,8 +99,8 @@
 .BookmarkNode[data-open="true"] > .body:after
   content: ''
   position: absolute
-  top: 3px
-  left: -2px
+  top: var(--bookmarks-open-mark-top)
+  left: var(--bookmarks-open-mark-left)
   width: 3px
   height: 3px
   border-radius: 50%

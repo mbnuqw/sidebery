@@ -6,6 +6,17 @@
   --ctx-menu-font: rem(15) sans-serif
   --ctx-menu-bg: var(--ff-popup, var(--frame-bg))
   --ctx-menu-fg: var(--ff-popup-text, var(--frame-fg))
+  --ctx-menu-border-radius: 6px
+  --ctx-menu-opt-border-radius: 4px
+  --ctx-menu-padding: 2px
+  --ctx-menu-opt-padding: 4px
+  --ctx-menu-icon-opt-height: 30px
+#root[data-density="compact"]
+  --ctx-menu-border-radius: 4px
+  --ctx-menu-opt-border-radius: 3px
+  --ctx-menu-padding: 1px
+  --ctx-menu-opt-padding: 3px
+  --ctx-menu-icon-opt-height: 28px
 #root[data-color-scheme="dark"]
   --ctx-menu-shadow: 0 0 0 1px var(--ff-popup-border, #ffffff16), 0 1px 16px 0 #00000048
   --ctx-menu-separator: var(--ff-panel-separator, #ffffff16)
@@ -50,7 +61,7 @@
   padding: 0
   margin: 0
   overflow: hidden
-  border-radius: 6px
+  border-radius: var(--ctx-menu-border-radius)
   background-color: var(--frame-bg)
   box-shadow: var(--ctx-menu-shadow)
   &:before
@@ -68,19 +79,19 @@
   max-width: var(--ctx-menu-max-width)
   overflow: hidden
   flex-wrap: wrap
-  padding: 2px
+  padding: var(--ctx-menu-padding)
   &:not(:last-of-type)
-    padding-bottom: 3px
+    padding-bottom: calc(var(--ctx-menu-padding) + 1px)
     box-shadow: inset 0 -1px 0 0 var(--ctx-menu-separator)
 
 .CtxMenu .icon-opt
   position: relative
   width: auto
-  height: 30px
+  height: var(--ctx-menu-icon-opt-height)
   min-width: 30px
   flex-grow: 1
   flex-shrink: 0
-  border-radius: 4px
+  border-radius: var(--ctx-menu-opt-border-radius)
   &:before
     content: ''
     position: absolute
@@ -88,7 +99,7 @@
     left: 0
     width: 100%
     height: 100%
-    border-radius: 4px
+    border-radius: var(--ctx-menu-opt-border-radius)
     opacity: .16
   &[data-width="3"]
     width: 33.3%
@@ -135,9 +146,9 @@
 .CtxMenu .list-group
   position: relative
   max-width: var(--ctx-menu-max-width)
-  padding: 2px
+  padding: var(--ctx-menu-padding)
   &:not(:last-of-type)
-    padding: 2px 2px 3px
+    padding-bottom: calc(var(--ctx-menu-padding) + 1px)
     box-shadow: inset 0 -1px 0 0 var(--ctx-menu-separator)
 
 .CtxMenu .opt
@@ -146,7 +157,7 @@
   font: var(--ctx-menu-font)
   align-items: center
   justify-content: flex-start
-  padding: 4px 0 4px 6px
+  padding: var(--ctx-menu-opt-padding) 0 var(--ctx-menu-opt-padding) 6px
   white-space: pre
   &:before
     content: ''
@@ -155,7 +166,7 @@
     left: 0
     width: 100%
     height: 100%
-    border-radius: 4px
+    border-radius: var(--ctx-menu-opt-border-radius)
     opacity: .16
   &:not([data-inactive="true"]):hover:before
   &[data-selected="true"]:not([data-inactive="true"]):before
@@ -210,7 +221,7 @@
 
 // Separator
 .CtxMenu .opt[data-separator="true"]
-  padding: 2px 0
+  padding: calc(var(--ctx-menu-opt-padding) - 2px) 0
   width: calc(100% + 4px)
   left: -2px
 .CtxMenu .opt[data-separator="true"]:after
@@ -239,7 +250,7 @@
   width: 100%
   height: 100%
   overflow: hidden
-  border-radius: 5px
+  border-radius: var(--ctx-menu-border-radius)
   background-color: var(--frame-bg)
   box-shadow: var(--ctx-menu-shadow)
   &:before
@@ -255,7 +266,7 @@
   position: relative
   width: 100%
   height: 100%
-  padding: 2px
+  padding: var(--ctx-menu-padding)
   overflow-y: auto
   scrollbar-width: none
   scrollbar-color: var(--scroll-color) #0000

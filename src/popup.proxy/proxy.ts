@@ -84,31 +84,6 @@ void (async function () {
 })()
 
 /**
- * Load predefined theme and apply it
- */
-function initTheme(theme: string): void {
-  let themeLinkEl = document.getElementById('theme_link') as HTMLLinkElement
-
-  // Remove theme css
-  if (theme === 'none') {
-    if (themeLinkEl) themeLinkEl.setAttribute('disabled', 'disabled')
-    return
-  } else {
-    if (themeLinkEl) themeLinkEl.removeAttribute('disabled')
-  }
-
-  if (!themeLinkEl) {
-    themeLinkEl = document.createElement('link')
-    themeLinkEl.id = 'theme_link'
-    themeLinkEl.type = 'text/css'
-    themeLinkEl.rel = 'stylesheet'
-    document.head.appendChild(themeLinkEl)
-  }
-
-  themeLinkEl.href = `../themes/${theme}/proxy.css`
-}
-
-/**
  * Init title
  */
 async function initTitle() {

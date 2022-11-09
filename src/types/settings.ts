@@ -124,6 +124,7 @@ export interface SettingsState {
   animations: boolean
   animationSpeed: typeof SETTINGS_OPTIONS.animationSpeed[number]
   theme: typeof SETTINGS_OPTIONS.theme[number]
+  density: typeof SETTINGS_OPTIONS.density[number]
   colorScheme: typeof SETTINGS_OPTIONS.colorScheme[number]
   style?: string // DEPR
   sidebarCSS: boolean

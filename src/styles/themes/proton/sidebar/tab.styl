@@ -7,6 +7,25 @@
   --tabs-indent: 10px
   --tabs-font: rem(16) sans-serif
   --tabs-count-font: rem(10) sans-serif
+  --tabs-border-radius: 4px
+  --tabs-inner-gap: 4px
+  --tabs-margin-horizontal: 2px
+  --tabs-margin-top: 1px
+  --tabs-margin-bottom: 1px
+  --tabs-close-btn-margin: 2px
+  --tabs-audio-btn-width: 22px
+#root[data-density="compact"]
+  --tabs-pinned-height: 29px
+  --tabs-pinned-width: 29px
+  --tabs-height: 27px
+  --tabs-indent: 8px
+  --tabs-border-radius: 3px
+  --tabs-inner-gap: 3px
+  --tabs-margin-horizontal: 1px
+  --tabs-margin-top: 0px
+  --tabs-margin-bottom: 1px
+  --tabs-close-btn-margin: 1px
+  --tabs-audio-btn-width: 20px
 #root[data-color-scheme="dark"]
   --tabs-activated-bg: var(--ff-tab-selected, var(--ff-toolbar, #ffffff24))
   --tabs-activated-fg:
@@ -27,17 +46,15 @@
     var(--ff-toolbar-text,
     var(--ff-tab-background-text,
     #000000))))
-  --tabs-activated-shadow: 0 1px 4px -1px #00000032,
+  --tabs-activated-shadow: 0 1px 4px -1px #00000036,
                            inset 0 0 0 1px var(--ff-tab-line, #00000032)
   --tabs-progress-bg: #00000016
   --tabs-lvl-opacity: .3
 
 .Tab
   position: relative
-  display: flex
   width: 100%
   height: var(--tabs-height)
-  align-items: center
   z-index: 10
   transform: translateZ(0)
   transition: transform var(--d-fast), opacity var(--d-fast), padding var(--d-fast)
@@ -91,7 +108,7 @@
     opacity: .56
 
   &[data-pin="true"]
-    width: var(--tabs-pinned-width)
+    width: calc(var(--tabs-pinned-width) + var(--tabs-margin-horizontal))
     height: var(--tabs-pinned-height)
 
   &[data-active="true"]
@@ -119,8 +136,10 @@
 .Tab .body
   position: relative
   display: flex
-  width: 100%
-  height: 100%
+  top: var(--tabs-margin-top)
+  left: var(--tabs-margin-horizontal)
+  width: calc(100% - var(--tabs-margin-horizontal) * 2)
+  height: calc(100% - var(--tabs-margin-top) - var(--tabs-margin-bottom))
   align-items: center
   transition: opacity var(--d-fast), transform var(--d-fast)
   &:after
@@ -128,19 +147,19 @@
     position: absolute
     display: none
     top: -10%
-    left: calc(var(--tabs-indent) / 2 + 2px - var(--tabs-indent))
+    left: calc(var(--tabs-indent) / -2)
     width: 1px
-    height: 100%
+    height: var(--tabs-height)
     opacity: var(--tabs-lvl-opacity)
     background-color: var(--frame-fg)
   &:before
     content: ''
     position: absolute
-    top: 1px
-    left: 2px
-    width: calc(100% - 4px)
-    height: calc(100% - 2px)
-    border-radius: 4px
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    border-radius: var(--tabs-border-radius)
 
 .Tab:hover .body:before
   background-color: var(--hover-bg)
@@ -198,11 +217,11 @@
 // -
 .Tab .color-layer
   position: absolute
-  top: 1px
-  left: 2px
-  width: calc(100% - 4px)
-  height: calc(100% - 2px)
-  border-radius: 4px
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  border-radius: var(--tabs-border-radius)
   background-color: var(--tab-color)
   opacity: .2
 .Tab[data-active="true"] .color-layer
@@ -231,7 +250,7 @@
   > svg
     position: absolute
     top: calc(50% - 6px)
-    left: 5px
+    left: calc(50% - 6px)
     width: 12px
     height: 12px
     fill: var(--frame-fg)
@@ -243,8 +262,8 @@
 
 .Tab[data-pin="false"] .audio
   top: 0
-  left: 24px
-  width: 16px
+  left: calc(18px + var(--tabs-inner-gap))
+  width: calc(var(--tabs-audio-btn-width) + 2px)
   height: 100%
   animation: appearing-animation var(--d-norm)
 .Tab[data-pin="true"] .audio
@@ -282,7 +301,7 @@
   z-index: 10
 
 .Tab[data-pin="false"] .fav
-  margin: 0 5px 0 8px
+  margin: 0 var(--tabs-inner-gap) 0 calc(var(--tabs-inner-gap) + 2px)
   z-index: 20
 
 .Tab .fav-icon
@@ -435,13 +454,13 @@
 // -
 .Tab .flash-fx
   position: absolute
-  top: 1px
-  left: 2px
-  width: calc(100% - 4px)
-  height: calc(100% - 2px)
-  border-radius: 4px
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  border-radius: var(--tabs-border-radius)
   overflow: hidden
-  opacity: 0
+  opacity: 1
   animation: flash-box-animation .4s
   &:before
     content: ''
@@ -460,6 +479,9 @@
 // -- Title box
 // -
 .Tab .t-box
+  --audio-btn-offset: calc(var(--tabs-audio-btn-width) - var(--tabs-inner-gap))
+  --close-btn-offset: calc(var(--tabs-height) - var(--tabs-close-btn-margin) * 2)
+
   position: relative
   width: 100%
   margin: 0 2px 0 0
@@ -468,18 +490,33 @@
   mask: linear-gradient(-90deg, transparent, #000000 12px, #000000)
 
 #root[data-tabs-close-btn="true"] .Tab:hover .t-box
-  mask: linear-gradient(-90deg, transparent, transparent 24px, #000000 48px, #000000)
+  mask: linear-gradient(
+    -90deg,
+    transparent,
+    transparent var(--close-btn-offset),
+    #000000 calc(var(--close-btn-offset) + 12px),
+    #000000)
 
 #root[data-tabs-close-btn="true"] .Tab[data-audible="true"]:hover .t-box
 #root[data-tabs-close-btn="true"] .Tab[data-muted="true"]:hover .t-box
 #root[data-tabs-close-btn="true"] .Tab[data-paused="true"]:hover .t-box
-  mask: linear-gradient(-90deg, transparent, transparent 42px, #000000 64px, #000000)
+  mask: linear-gradient(
+    -90deg,
+    transparent,
+    transparent calc(var(--audio-btn-offset) + var(--close-btn-offset)),
+    #000000 calc(var(--audio-btn-offset) + var(--close-btn-offset) + 12px),
+    #000000)
 
 .Tab[data-audible="true"] .t-box
 .Tab[data-muted="true"] .t-box
 .Tab[data-paused="true"] .t-box
-  transform: translateX(16px)
-  mask: linear-gradient(-90deg, transparent, transparent 16px, #000000 28px, #000000)
+  transform: translateX(var(--audio-btn-offset))
+  mask: linear-gradient(
+    -90deg,
+    transparent,
+    transparent var(--audio-btn-offset),
+    #000000 calc(var(--audio-btn-offset) + 12px),
+    #000000)
 
 // ---
 // -- Title
@@ -536,14 +573,14 @@
 // -
 .Tab .close
   position: absolute
-  top: calc(50% - var(--tabs-height) / 2 + 3px)
-  right: 4px
-  width: calc(var(--tabs-height) - 6px)
-  height: calc(var(--tabs-height) - 6px)
+  top: var(--tabs-close-btn-margin)
+  right: var(--tabs-close-btn-margin)
+  height: calc(100% - var(--tabs-close-btn-margin) * 2)
+  aspect-ratio: 1 / 1
   cursor: pointer
   z-index: 20
   opacity: 0
-  border-radius: 4px
+  border-radius: calc(var(--tabs-border-radius) - 1px)
   &:hover
     background-color: var(--hover-bg)
   > svg
@@ -567,8 +604,8 @@
 // -
 .Tab .unread-mark
   position: absolute
-  left: 2px
-  bottom: 1px
+  left: 0
+  bottom: 0
   width: 6px
   height: 6px
   border-bottom-left-radius: 2px

@@ -3,6 +3,11 @@
 #root
   --notification-bg: var(--ff-popup, var(--frame-bg))
   --notification-fg: var(--ff-popup-text, var(--frame-fg))
+  --notification-border-radius: 4px
+  --notification-margin: 4px
+#root[data-density="compact"]
+  --notification-border-radius: 3px
+  --notification-margin: 2px
 
 .Notifications
   position: absolute
@@ -20,10 +25,10 @@
   display: flex
   flex-direction: column
   flex-shrink: 0
-  margin: 4px
+  margin: var(--notification-margin)
   padding: 2px 0 0
   background-color: var(--notification-bg)
-  border-radius: 4px
+  border-radius: var(--notification-border-radius)
   overflow: hidden
   z-index: 100
   box-shadow: 0 0 0 1px #00000024,

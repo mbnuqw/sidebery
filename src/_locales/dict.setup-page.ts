@@ -2012,17 +2012,23 @@ export const setupPageTranslations: Translations = {
     de: 'Proton',
     zh_CN: 'proton',
   },
-  'settings.theme_compact': {
-    en: 'compact',
-    ru: 'compact',
-    de: 'Kompakt',
-    zh_CN: 'compact',
-  },
   'settings.theme_plain': {
     en: 'plain',
     ru: 'plain',
     de: 'Schlicht',
     zh_CN: 'plain',
+  },
+  'settings.density': {
+    en: 'Density',
+    ru: 'Размер элементов',
+  },
+  'settings.density_compact': {
+    en: 'compact',
+    ru: 'компактный',
+  },
+  'settings.density_default': {
+    en: 'default',
+    ru: 'стандартный',
   },
   'settings.switch_color_scheme': {
     en: 'Color scheme',
