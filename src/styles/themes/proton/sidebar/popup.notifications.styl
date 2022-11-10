@@ -281,7 +281,7 @@
   transition: transform var(--d-fast), opacity var(--d-fast), z-index var(--d-fast)
 #root .notification-leave-active
   position: absolute
-  width: calc(100% - 8px)
+  width: calc(100% - var(--notification-margin) * 2)
 #root .notification-move
   transition: transform var(--d-fast), opacity var(--d-fast), z-index var(--d-fast)
 #root .notification-enter-from
