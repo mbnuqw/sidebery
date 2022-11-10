@@ -115,8 +115,6 @@
     opacity: .5
   .TabsPanel .new-tab-btn[data-active="true"]:before
     opacity: .3
-  .TabsPanel .new-tab-btns[data-sel="true"] .new-tab-btn:before
-    opacity: .5
 #root[data-color-scheme="light"]
   .TabsPanel .new-tab-btn:hover:before
     opacity: .3
@@ -125,8 +123,11 @@
     opacity: .7
   .TabsPanel .new-tab-btn[data-active="true"]:before
     opacity: .5
-  .TabsPanel .new-tab-btns[data-sel="true"] .new-tab-btn:before
-    opacity: .7
+
+#root.root .TabsPanel .new-tab-btns[data-sel="true"] .new-tab-btn
+  box-shadow: inset 0 0 0 2px var(--selection-color)
+#root.root .TabsPanel .new-tab-btns[data-sel="true"] .new-tab-btn:before
+  opacity: 0
 
 #root[data-color-scheme="dark"] .TabsPanel .new-tab-btn
   box-shadow: 0 0 3px 0 #00000016

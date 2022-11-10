@@ -78,8 +78,9 @@
   opacity: .1
 .BookmarkNode > .body:active:before
   opacity: .5
-.BookmarkNode[data-selected="true"] > .body:before
-  opacity: .5
+
+.BookmarkNode[data-selected="true"] > .body
+  box-shadow: inset 0 0 0 2px var(--selection-color)
 
 #root[data-sticky-bookmarks="true"]:not([data-drag="true"]) .BookmarksPanel
   .BookmarkNode[data-expanded="true"] > .body
