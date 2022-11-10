@@ -1168,7 +1168,7 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
     Tabs.expTabsBranch(tab.parentId)
   }
 
-  if (!tab.pinned) Tabs.scrollToTab(tab.id)
+  if (!tab.pinned) Tabs.scrollToTabDebounced(3, tab.id)
 
   // Update succession
   if (Settings.state.activateAfterClosing !== 'none') {
