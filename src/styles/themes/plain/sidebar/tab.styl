@@ -16,6 +16,10 @@
   --tabs-lvl-opacity: .16
   --tabs-overlay-bg: var(--element-overlay-bg)
   --tabs-overlay-border: var(--element-overlay-border)
+  --tabs-color-layer-box-shadow: none
+  --tabs-color-layer-opacity: .2
+  --tabs-color-layer-active-box-shadow: inset 0 0 0 1px #fff5
+  --tabs-color-layer-active-opacity: .3
 #root[data-color-scheme="light"]
   --tabs-fg: #323232
   --tabs-loading-fg: #146fd9
@@ -25,6 +29,10 @@
   --tabs-lvl-opacity: .3
   --tabs-overlay-bg: #ffffff64
   --tabs-overlay-border: #ffffff32
+  --tabs-color-layer-box-shadow: inset 0 0 0 1px #fff2
+  --tabs-color-layer-opacity: .32
+  --tabs-color-layer-active-box-shadow: inset 0 0 0 1px var(--toolbar-bg)
+  --tabs-color-layer-active-opacity: .1
 
 .Tab
   position: relative
@@ -196,19 +204,11 @@
   height: 100%
   border-radius: var(--element-roundness)
   background-color: var(--tab-color)
-#root[data-color-scheme="dark"]
-  .Tab .color-layer
-    opacity: .2
-  .Tab[data-active="true"] .color-layer
-    box-shadow: inset 0 0 0 1px #fff5
-    opacity: .3
-#root[data-color-scheme="light"]
-  .Tab .color-layer
-    box-shadow: inset 0 0 0 1px #fff2
-    opacity: .32
-  .Tab[data-active="true"] .color-layer
-    box-shadow: inset 0 0 0 1px var(--toolbar-bg)
-    opacity: .1
+  box-shadow: var(--tabs-color-layer-box-shadow)
+  opacity: var(--tabs-color-layer-opacity)
+.Tab[data-active="true"] .color-layer
+  box-shadow: var(--tabs-color-layer-active-box-shadow)
+  opacity: var(--tabs-color-layer-active-opacity)
 
 // ---
 // -- Drag layer
