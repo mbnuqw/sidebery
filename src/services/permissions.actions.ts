@@ -52,7 +52,6 @@ export async function request(...perms: RequestablePermission[]): Promise<boolea
     }
 
     permissions.push(...perms)
-    console.log('[DEBUG] >>>', { origins, permissions })
     return await browser.permissions.request({ origins, permissions })
   } catch {
     if (perms.includes('<all_urls>')) SetupPage.open('all-urls')
