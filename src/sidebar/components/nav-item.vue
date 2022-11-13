@@ -34,7 +34,7 @@
       svg.-audible: use(xlink:href="#icon_loud_badge")
       svg.-paused: use(xlink:href="#icon_pause_12")
       svg.-muted: use(xlink:href="#icon_mute_badge")
-  .name {{item.name}}
+  .name-box: .name {{item.name}}
   .progress-spinner
   .len(v-if="Settings.state.navBtnCount && (item.filteredLen ?? item.len)") {{item.filteredLen ?? item.len}}
 //- Button
@@ -42,6 +42,7 @@
   v-else-if="Utils.isNavBtn(item)"
   draggable="true"
   data-class="btn"
+  :id="item.id as string"
   :data-index="inlineIndex"
   :data-type="NavItemTypeNames[item.type] ?? item.type"
   :data-sel="item.id === Sidebar.reactive.selectedNavId"
@@ -55,7 +56,7 @@
   .dnd-layer(:data-dnd-type="dndType" :data-dnd-id="item.id")
   img.icon(v-if="!!item.iconIMG" :src="item.iconIMG")
   svg.icon(v-else-if="item.iconSVG"): use(:xlink:href="'#' + item.iconSVG")
-  .name {{item.name}}
+  .name-box: .name {{item.name}}
 //- Space
 .nav-item(
   v-else-if="Utils.isNavSpace(item)"

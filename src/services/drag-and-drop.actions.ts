@@ -352,13 +352,17 @@ export function onDragEnter(e: DragEvent): void {
     DnD.reactive.dstPin = false
     DnD.reactive.dstParentId = NOID
 
-    // Open/Close hidden panels bar
+    // Open hidden panels bar
     if (id === 'hidden-bar') {
       DnD.reactive.dstType = DropType.Nowhere
+      DnD.reactive.dstPanelId = NOID
       if (!Sidebar.reactive.hiddenPanelsBar) {
-        panelSwitchTimeout(() => (Sidebar.reactive.hiddenPanelsBar = true), 250)
+        panelSwitchTimeout(() => Sidebar.openHiddenPanelsBar(), 250)
       }
-    } else {
+    }
+
+    // Select nav element
+    else {
       if (Sidebar.reactive.hiddenPanelsBar) Sidebar.reactive.hiddenPanelsBar = false
 
       const panel = Sidebar.reactive.panelsById[id]
@@ -382,14 +386,18 @@ export function onDragEnter(e: DragEvent): void {
     }
   }
 
+  // Select hidden panel
   if (type === 'hidden-panel' && id) {
     DnD.reactive.dstType = DropType.TabsPanel
     DnD.reactive.dstPanelId = id
     DnD.reactive.dstIndex = Sidebar.reactive.nav.indexOf(id)
   }
 
+  // Close hidden panels bar
   if (type === 'hidden-layer') {
-    if (Sidebar.reactive.hiddenPanelsBar) Sidebar.reactive.hiddenPanelsBar = false
+    if (DnD.reactive.dstPanelId !== NOID && Sidebar.reactive.hiddenPanelsBar) {
+      Sidebar.closeHiddenPanelsBar(true)
+    }
   }
 
   if (type === 'pinned-bar') {
@@ -432,6 +440,7 @@ export function onDragEnter(e: DragEvent): void {
 
 export function onDragLeave(e: DragEvent): void {
   if (e?.relatedTarget) return
+
   if (Sidebar.reactive.hiddenPanelsBar) Sidebar.reactive.hiddenPanelsBar = false
   Selection.resetSelection()
   resetDragPointer()

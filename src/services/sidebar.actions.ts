@@ -1070,7 +1070,7 @@ export function switchPanel(
     if (hasHiddenPanels && lastVisibleTabsPanel !== -1) {
       // Open hidden panels bar
       if (!Sidebar.reactive.hiddenPanelsBar && i === lastVisibleTabsPanel + 1) {
-        Sidebar.reactive.hiddenPanelsBar = true
+        Sidebar.openHiddenPanelsBar()
         i = dir > 0 ? -1 : Sidebar.reactive.panels.length
         continue
       }
@@ -1094,6 +1094,46 @@ export function switchPanel(
   if (!panel) return
 
   switchToPanel(panel.id, false, withoutTabCreation)
+}
+
+export function openHiddenPanelsBar(): void {
+  const hiddenPanelsBtnEl = document.getElementById('hidden-bar')
+  const navBarEl = document.getElementById('nav_bar')
+  if (!hiddenPanelsBtnEl || !navBarEl) {
+    Sidebar.reactive.hiddenPanelsBarOffset = 3
+    Sidebar.reactive.hiddenPanelsBarOffsetSide = 'start'
+    Sidebar.reactive.hiddenPanelsBar = true
+    return
+  }
+
+  const navRect = navBarEl.getBoundingClientRect()
+  const hiddenRect = hiddenPanelsBtnEl.getBoundingClientRect()
+
+  // Horizontal
+  if (Settings.state.navBarLayout === 'horizontal') {
+    const relLeft = hiddenRect.left - navRect.left
+    if (relLeft < navRect.width / 2) {
+      Sidebar.reactive.hiddenPanelsBarOffset = relLeft
+      Sidebar.reactive.hiddenPanelsBarOffsetSide = 'start'
+    } else {
+      Sidebar.reactive.hiddenPanelsBarOffset = hiddenRect.right
+      Sidebar.reactive.hiddenPanelsBarOffsetSide = 'end'
+    }
+  }
+
+  // Vertical
+  else if (Settings.state.navBarLayout === 'vertical') {
+    const relTop = hiddenRect.top - navRect.top
+    if (relTop < navRect.height / 2) {
+      Sidebar.reactive.hiddenPanelsBarOffset = relTop
+      Sidebar.reactive.hiddenPanelsBarOffsetSide = 'start'
+    } else {
+      Sidebar.reactive.hiddenPanelsBarOffset = navRect.height - (hiddenRect.bottom - navRect.top)
+      Sidebar.reactive.hiddenPanelsBarOffsetSide = 'end'
+    }
+  }
+
+  Sidebar.reactive.hiddenPanelsBar = true
 }
 
 export function closeHiddenPanelsBar(withoutTabCreation?: boolean): void {

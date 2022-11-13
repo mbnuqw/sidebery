@@ -1,5 +1,6 @@
 <template lang="pug">
 .NavigationBar(
+  id="nav_bar"
   ref="el"
   tabindex="-1"
   :data-overflowed="overflowed"
@@ -35,19 +36,21 @@
   Transition(name="hidden-panels"): .hidden-bar-layer(
     v-if="Sidebar.reactive.hiddenPanelsBar"
     data-dnd-type="hidden-layer"
+    :style="{ '--offset': `${Sidebar.reactive.hiddenPanelsBarOffset}px` }"
     @mousedown="Sidebar.closeHiddenPanelsBar()")
-    .hidden-bar
-      NavItemComponent(
-        v-for="(item, i) in hidden"
-        :key="item.id"
-        :item="item"
-        :inlineIndex="getBtnInlineIndex(i)"
-        :dndType="'hidden-panel'"
-        @dragstart="onNavDragStart($event, item)"
-        @drop="onNavItemDrop(item)"
-        @mousedown="onNavMouseDown($event, item)"
-        @mouseup="onNavMouseUp($event, item, true)"
-        @contextmenu="onNavCtxMenu($event, item)")
+    .hidden-bar(:data-offset-side="Sidebar.reactive.hiddenPanelsBarOffsetSide")
+      .hidden-bar-content
+        NavItemComponent(
+          v-for="(item, i) in hidden"
+          :key="item.id"
+          :item="item"
+          :inlineIndex="getBtnInlineIndex(i)"
+          :dndType="'hidden-panel'"
+          @dragstart="onNavDragStart($event, item)"
+          @drop="onNavItemDrop(item)"
+          @mousedown="onNavMouseDown($event, item)"
+          @mouseup="onNavMouseUp($event, item, true)"
+          @contextmenu="onNavCtxMenu($event, item)")
 </template>
 
 <script lang="ts" setup>
@@ -368,7 +371,7 @@ function onNavMouseUp(e: MouseEvent, item: NavItem, inHiddenBar?: boolean) {
   if (e.button === 0) {
     if (isHiddenPanels) {
       if (Sidebar.reactive.hiddenPanelsBar) Sidebar.closeHiddenPanelsBar()
-      else Sidebar.reactive.hiddenPanelsBar = true
+      else Sidebar.openHiddenPanelsBar()
       return
     }
     if (isAddTP) return addTabsPanel()
@@ -520,7 +523,7 @@ async function addTabsPanel(): Promise<void> {
   Sidebar.saveSidebar()
   Sidebar.activatePanel(panel.id)
   if (Settings.state.hideEmptyPanels && !Sidebar.reactive.hiddenPanelsBar) {
-    Sidebar.reactive.hiddenPanelsBar = true
+    Sidebar.openHiddenPanelsBar()
   }
 }
 

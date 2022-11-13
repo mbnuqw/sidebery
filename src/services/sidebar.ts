@@ -19,6 +19,8 @@ export interface SidebarReactiveState {
   groupConfigPopup: GroupConfigPopup | null
   confirm: ConfirmDialog | null
   hiddenPanelsBar: boolean
+  hiddenPanelsBarOffset: number
+  hiddenPanelsBarOffsetSide: 'start' | 'end'
   dialog: Dialog | null
 
   selectedHeader: ID
@@ -77,6 +79,8 @@ export const Sidebar = {
     groupConfigPopup: null,
     confirm: null,
     hiddenPanelsBar: false,
+    hiddenPanelsBarOffset: 0,
+    hiddenPanelsBarOffsetSide: 'start',
     dialog: null,
 
     selectedHeader: NOID,
