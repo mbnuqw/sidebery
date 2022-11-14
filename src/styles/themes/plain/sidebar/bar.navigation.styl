@@ -262,6 +262,10 @@
 // ---
 // -- Panel name
 // -
+#root[data-color-scheme="dark"] .NavigationBar .nav-item
+  --nav-item-name-color: var(--color, var(--nav-btn-fg))
+#root[data-color-scheme="light"] .NavigationBar .nav-item
+  --nav-item-name-color: var(--nav-btn-fg)
 .NavigationBar .nav-item .name-box
   display: none
 .NavigationBar .hidden-bar .nav-item .name-box
@@ -272,7 +276,7 @@
   overflow: hidden
 .NavigationBar .nav-item .name
   position: relative
-  color: var(--color, var(--nav-btn-fg))
+  color: var(--nav-item-name-color)
   white-space: nowrap
   overflow: hidden
   text-overflow: ellipsis
