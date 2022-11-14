@@ -70,6 +70,8 @@ function onInput(val: string): void {
 function onKeyDown(e: KeyboardEvent): void {
   if (e.key === 'Escape' && props.active) toggle()
   if (e.key === 'Enter') toggle()
+  if (e.key === 'ArrowUp') upValue(e)
+  if (e.key === 'ArrowDown') downValue(e)
 }
 
 function onChange(): void {
@@ -78,5 +80,45 @@ function onChange(): void {
 
 function toggle(): void {
   emit('toggle')
+}
+
+function upValue(e: KeyboardEvent): void {
+  const parsedNum = parseFloat(props.value)
+  if (isNaN(parsedNum)) return
+
+  e.preventDefault()
+  e.stopPropagation()
+
+  let newNum = parsedNum
+  if (e.shiftKey && e.ctrlKey) {
+    newNum = Math.ceil((newNum + 0.01) * 100) / 100
+  } else if (e.shiftKey) {
+    newNum = Math.ceil((newNum + 0.1) * 10) / 10
+  } else {
+    newNum = Math.ceil(newNum + 1)
+  }
+
+  const newVal = props.value.replace(parsedNum.toString(), newNum.toString())
+  emit('update:value', newVal)
+}
+
+function downValue(e: KeyboardEvent): void {
+  const parsedNum = parseFloat(props.value)
+  if (isNaN(parsedNum)) return
+
+  e.preventDefault()
+  e.stopPropagation()
+
+  let newNum = parsedNum
+  if (e.shiftKey && e.ctrlKey) {
+    newNum = Math.floor((newNum - 0.01) * 100) / 100
+  } else if (e.shiftKey) {
+    newNum = Math.floor((newNum - 0.1) * 10) / 10
+  } else {
+    newNum = Math.floor(newNum - 1)
+  }
+
+  const newVal = props.value.replace(parsedNum.toString(), newNum.toString())
+  emit('update:value', newVal)
 }
 </script>
