@@ -264,10 +264,22 @@ function parseTheme(theme: browser.theme.Theme): ColorSchemeVariant {
     }
   }
 
-  variant = getColorSchemeVariant(parsed.toolbar, parsed.toolbarText)
-  parsed.toolbarVariant = variant
-  if (!variant) variant = getColorSchemeVariant(sidebar, sidebarText)
-  if (!variant) variant = getColorSchemeVariant(popup, popupText)
+  parsed.toolbarVariant = getColorSchemeVariant(parsed.toolbar, parsed.toolbarText)
+  if (!variant) {
+    // Proton theme
+    if (Settings.state.theme === 'proton') {
+      variant = parsed.toolbarVariant
+      if (!variant) variant = getColorSchemeVariant(sidebar, sidebarText)
+    }
+
+    // Plain theme
+    else if (Settings.state.theme === 'plain') {
+      variant = getColorSchemeVariant(sidebar, sidebarText)
+      if (!variant) variant = parsed.toolbarVariant
+    }
+
+    if (!variant) variant = getColorSchemeVariant(popup, popupText)
+  }
   if (variant) {
     parsed.toolbarTopSeparator = Utils.toRGBA(theme.colors?.toolbar_top_separator)
     if (theme.colors) calcBorder(theme.colors, parsed)
