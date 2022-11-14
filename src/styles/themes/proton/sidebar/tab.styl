@@ -244,6 +244,13 @@
 // ---
 // -- Audio
 // -
+#root .Tab
+  --tabs-pinned-audio-btn-width: 16px
+  --tabs-pinned-audio-btn-height: 16px
+#root[data-density="compact"] .Tab
+  --tabs-pinned-audio-btn-width: 14px
+  --tabs-pinned-audio-btn-height: 14px
+
 .Tab .audio
   position: absolute
   z-index: 1
@@ -257,7 +264,7 @@
     transition: opacity var(--d-fast)
     opacity: 0
 
-.Tab[data-active="true"] .audio > svg
+.Tab[data-pin="false"][data-active="true"] .audio > svg
   fill: var(--tabs-activated-fg)
 
 .Tab[data-pin="false"] .audio
@@ -268,11 +275,12 @@
   animation: appearing-animation var(--d-norm)
 .Tab[data-pin="true"] .audio
   top: 0
-  right: 4px
-  width: 16px
-  height: 16px
-  > svg
-    filter: drop-shadow(0px 0px 1px #0005) drop-shadow(0px 0px 2px #0005)
+  right: 0
+  width: var(--tabs-pinned-audio-btn-width)
+  height: var(--tabs-pinned-audio-btn-height)
+  border-radius: calc(var(--tabs-border-radius) - 1px)
+  background-color: var(--frame-bg)
+  box-shadow: inset 0 0 0 1px #0003
 
 .Tab[data-audible="true"] .audio
 .Tab[data-muted="true"] .audio
