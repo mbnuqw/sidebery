@@ -1,18 +1,18 @@
 @import '../../../utils'
 
 #root .PinnedTabsBar
-  --pinned-tabs-bar-padding-panel: 1px 0 2px
+  --pinned-tabs-bar-padding-panel: 1px var(--tabs-margin-horizontal) 1px
   --pinned-tabs-bar-margin-panel: 0
   --pinned-tabs-bar-padding-panel-list: 1px 0 12px
   --pinned-tabs-bar-padding-left-right: 1px 0 1px
   --pinned-tabs-bar-padding-left-right-nav: 1px 0 2px
-  --pinned-tabs-bar-padding-top: 1px 0 2px
+  --pinned-tabs-bar-padding-top: 1px var(--tabs-margin-horizontal) 1px
 #root[data-density="compact"] .PinnedTabsBar
-  --pinned-tabs-bar-padding-panel: 1px 0 0
+  --pinned-tabs-bar-padding-panel: 1px var(--tabs-margin-horizontal) 0
   --pinned-tabs-bar-margin-panel: 0 0 -1px
   --pinned-tabs-bar-padding-panel-list: 1px 0 10px 0
   --pinned-tabs-bar-padding-left-right: 1px 0 1px
-  --pinned-tabs-bar-padding-top: 1px 0 0
+  --pinned-tabs-bar-padding-top: 1px var(--tabs-margin-horizontal) 0
 
 .PinnedTabsBar
   position: relative
@@ -27,9 +27,11 @@
   height: auto
   flex-wrap: wrap
   flex-direction: row
+  grid-gap: var(--tabs-margin-horizontal)
   padding: var(--pinned-tabs-bar-padding-panel)
 
 #root[data-pinned-tabs-position="panel"][data-pinned-tabs-list="true"] .PinnedTabsBar
+  grid-gap: 0
   padding: var(--pinned-tabs-bar-padding-panel-list)
 
 // Left/Right
@@ -41,6 +43,7 @@
   flex-shrink: 0
   flex-grow: 0
   flex-direction: column
+  grid-gap: var(--tabs-margin-horizontal)
   padding: var(--pinned-tabs-bar-padding-left-right)
 
 // Left/Right stacked with navbar
@@ -55,6 +58,7 @@
   height: auto
   flex-wrap: wrap
   flex-direction: row
+  grid-gap: var(--tabs-margin-horizontal)
   padding: var(--pinned-tabs-bar-padding-top)
 
 // ---
@@ -79,7 +83,7 @@
 // -
 .PinnedTabsBar .tab-wrapper
   position: relative
-  margin: 0 -1px 0 0
+  // margin: 0 -1px 0 0
   &:before
     content: ''
     position: absolute

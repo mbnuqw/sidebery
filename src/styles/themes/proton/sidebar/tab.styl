@@ -2,7 +2,8 @@
 
 #root
   --tabs-pinned-height: 32px
-  --tabs-pinned-width: 34px
+  --tabs-pinned-width: 32px
+  --tabs-margin: 2px
   --tabs-height: 30px
   --tabs-indent: 10px
   --tabs-font: rem(16) sans-serif
@@ -16,7 +17,8 @@
   --tabs-audio-btn-width: 22px
 #root[data-density="compact"]
   --tabs-pinned-height: 29px
-  --tabs-pinned-width: 29px
+  --tabs-pinned-width: 30px
+  --tabs-margin: 1px
   --tabs-height: 27px
   --tabs-indent: 8px
   --tabs-border-radius: 3px
@@ -108,7 +110,7 @@
     opacity: .56
 
   &[data-pin="true"]
-    width: calc(var(--tabs-pinned-width) + var(--tabs-margin-horizontal))
+    width: var(--tabs-pinned-width)
     height: var(--tabs-pinned-height)
 
   &[data-active="true"]
@@ -180,6 +182,8 @@
 
 .Tab[data-pin="true"] .body
   justify-content: center
+  width: 100%
+  left: 0
 
 #root[data-tabs-tree-lvl-marks="true"] .Tab[data-pin="false"]:not([data-lvl="0"]) .body:after
   display: block

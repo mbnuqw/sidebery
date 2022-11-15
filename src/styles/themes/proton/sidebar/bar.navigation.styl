@@ -46,6 +46,14 @@
     &[data-layout="right"]
       flex-grow: 1
 
+.PinnedTabsBar[data-empty="false"] + .NavigationBar[data-layout="left"]
+  border-top-right-radius: calc(var(--nav-btn-border-radius) + var(--nav-bar-padding))
+.PinnedTabsBar[data-empty="false"] + .NavigationBar[data-layout="right"]
+  border-top-left-radius: calc(var(--nav-btn-border-radius) + var(--nav-bar-padding))
+#root[data-density="compact"][data-color-scheme="light"] .PinnedTabsBar[data-empty="false"] + .NavigationBar
+  --nav-bar-padding: 1px
+
+
 // ---
 // -- Container of panels buttons
 // -
