@@ -84,6 +84,7 @@ interface CssVarsGroup {
   label: string
   vars: CssVar[]
   notIn?: CustomCssTarget
+  match?: RegExp
 }
 
 const FIRST_LETTER_RE = /^\w/
@@ -98,20 +99,24 @@ const state = reactive({
   cssTarget: 'sidebar' as CustomCssTarget,
   colorSampleValue: '#000000',
   groups: [
-    { id: '--general-', label: 'General', vars: [] },
-    { id: '--frame-', label: 'Frame', vars: [] },
-    { id: '--toolbar-', label: 'Toolbar', vars: [] },
-    { id: '--popup-', label: 'Popup', vars: [] },
-    { id: '--status-', label: 'Accent colors', vars: [] },
+    { id: '--general-', label: 'General', vars: [], match: /^--(general|frame|toolbar)/ },
+    { id: '--frame-', label: 'Frame colors', vars: [] },
+    { id: '--toolbar-', label: 'Toolbar colors', vars: [] },
     { id: '--nav-', label: translate('styles.vars_group.nav'), vars: [] },
     { id: '--tabs-', label: translate('styles.vars_group.tabs'), vars: [] },
     { id: '--bookmarks-', label: translate('styles.vars_group.bookmarks'), vars: [] },
+    { id: '--history-', label: 'History', vars: [] },
+    { id: '--popup-', label: 'Popup', vars: [] },
     { id: '--ctx-menu-', label: translate('styles.vars_group.menu'), vars: [] },
+    { id: '--slt-', label: 'Sub-list title', vars: [] },
+    { id: '--search-', label: 'Search bar', vars: [] },
+    { id: '--ntb-', label: 'New-tab bar', vars: [] },
+    { id: '--notification-', label: 'Notification', vars: [] },
     { id: '--btn-', label: translate('styles.vars_group.buttons'), vars: [] },
     { id: '--scroll-', label: translate('styles.vars_group.scroll'), vars: [] },
     { id: '--pinned-dock-', label: translate('styles.vars_group.pinned_dock'), vars: [] },
     { id: '--d-', label: translate('styles.vars_group.animation'), vars: [] },
-    { id: 'common', label: translate('styles.vars_group.other'), vars: [] },
+    { id: 'other', label: translate('styles.vars_group.other'), vars: [] },
   ] as CssVarsGroup[],
 })
 
@@ -153,13 +158,18 @@ function recalcGroups(vars: CssVar[]): void {
 
   for (const v of vars) {
     if (v.key.startsWith('--ff')) continue
-    const group = state.groups.find(g => v.key.startsWith(g.id))
+    const group = state.groups.find(g => {
+      if (g.match) return g.match.test(v.key)
+      return v.key.startsWith(g.id)
+    })
     if (group) {
       let key = v.key
       key = key.replace(group.id, '')
+      key = key.replace('--', '')
       key = key.replace(DASH_RE, ' ')
       key = key.replace('bg', 'background')
       key = key.replace('fg', 'foreground')
+      key = key.replace('btn', 'button')
       v.label = key.replace(FIRST_LETTER_RE, c => c.toUpperCase())
       group.vars.push(v)
     } else {
@@ -168,6 +178,7 @@ function recalcGroups(vars: CssVar[]): void {
       key = key.replace(DASH_RE, ' ')
       key = key.replace('bg', 'background')
       key = key.replace('fg', 'foreground')
+      key = key.replace('btn', 'button')
       v.label = key.replace(FIRST_LETTER_RE, c => c.toUpperCase())
       commonGroup.vars.push(v)
     }

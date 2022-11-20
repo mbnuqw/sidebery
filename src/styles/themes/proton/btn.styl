@@ -1,7 +1,7 @@
 @import '../../utils'
 
 #root
-  --btn-roundness: 4px
+  --btn-border-radius: var(--general-border-radius)
 #root[data-color-scheme="dark"]
   --btn-fg:
     var(--ff-icons,
@@ -41,7 +41,7 @@
     width: 100%
     height: 100%
     background-color: var(--btn-fg)
-    border-radius: var(--btn-roundness)
+    border-radius: var(--btn-border-radius)
     opacity: .1
   &.-warn:after
     background-color: #ff2200
