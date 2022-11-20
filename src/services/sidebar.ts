@@ -101,9 +101,11 @@ export const Sidebar = {
   scrollAreaLeftX: 0,
   panelsTop: 0,
   tabHeight: 0,
+  tabMargin: 0,
   bookmarkHeight: 0,
   folderHeight: 0,
   separatorHeight: 0,
+  bookmarkMargin: 0,
 
   reMountSidebar: null as null | (() => void),
 

@@ -1,44 +1,50 @@
 @import '../../../utils'
 
 #root .BookmarkCard
-  --bc-padding: 3px 0 4px
-  --bc-inner-indent: 8px
-  --bg-margin-top: 1px
-  --bg-margin-bottom: 1px
+  --bc-margin: var(--general-margin)
+  --bc-border-radius: var(--general-border-radius)
+  --bc-padding: 2px 0 4px
+  --bc-inner-gap: 6px
+  --bc-open-mark-top: 3px
+  --bc-open-mark-left: 3px
 #root[data-density="compact"] .BookmarkCard
-  --bc-padding: 2px 0 3px
-  --bc-inner-indent: 6px
-  --bg-margin-top: 1px
-  --bg-margin-bottom: 0px
+  --bc-padding: 1px 0 3px
+  --bc-inner-gap: 5px
+  --bc-open-mark-top: 2px
+  --bc-open-mark-left: 2px
 
 .BookmarkCard
   position: relative
-  margin: 0
+  padding: var(--bc-margin) var(--bc-margin) 0
+
+.BookmarkCard .body
+  position: relative
   padding: var(--bc-padding)
-  &:before
-    content: ''
-    position: absolute
-    top: var(--bg-margin-top)
-    left: var(--bookmarks-margin-horizontal)
-    width: calc(100% - var(--bookmarks-margin-horizontal) * 2)
-    height: calc(100% - var(--bg-margin-top) - var(--bg-margin-bottom))
-    border-radius: var(--bookmarks-border-radius)
-  &:hover:before
-    background-color: var(--hover-bg)
-  &:active:before
-    background-color: var(--clicked-bg)
-  &[data-selected="true"]:before
-    background-color: var(--selected-bg)
-    box-shadow: inset 0 0 0 1px var(--selected-border)
-  &[data-open="true"]:after
-    content: ''
-    position: absolute
-    top: 4px
-    left: 5px
-    width: 3px
-    height: 3px
-    border-radius: 50%
-    background-color: var(--frame-fg)
+  
+.BookmarkCard .body:before
+  content: ''
+  position: absolute
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  border-radius: var(--bc-border-radius)
+.BookmarkCard:hover .body:before
+  background-color: var(--hover-bg)
+.BookmarkCard:active .body:before
+  background-color: var(--clicked-bg)
+.BookmarkCard[data-selected="true"] .body:before
+  background-color: var(--selected-bg)
+  box-shadow: inset 0 0 0 1px var(--selected-border)
+.BookmarkCard[data-open="true"] .body:after
+  content: ''
+  position: absolute
+  top: var(--bc-open-mark-top)
+  left: var(--bc-open-mark-left)
+  width: 3px
+  height: 3px
+  border-radius: 50%
+  background-color: var(--frame-fg)
 
 // ---
 // -- Line
@@ -62,7 +68,7 @@
   width: 16px
   height: 16px
   flex-shrink: 0
-  margin: 3px 0 0 var(--bc-inner-indent)
+  margin: 3px 0 0 var(--bc-inner-gap)
 
 .BookmarkCard .fav > svg
 .BookmarkCard .fav > img
@@ -95,7 +101,7 @@
 .BookmarkCard .info
   position: relative
   width: 100%
-  margin: 2px 0 0 var(--bc-inner-indent)
+  margin: 2px 0 0 var(--bc-inner-gap)
   font-size: rem(12)
   color: var(--frame-fg)
   white-space: nowrap

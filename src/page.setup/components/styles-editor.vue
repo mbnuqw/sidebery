@@ -96,6 +96,7 @@ const state = reactive({
   cssTarget: 'sidebar' as CustomCssTarget,
   colorSampleValue: '#000000',
   groups: [
+    { id: '--general-', label: 'General', vars: [] },
     { id: '--frame-', label: 'Frame', vars: [] },
     { id: '--toolbar-', label: 'Toolbar', vars: [] },
     { id: '--popup-', label: 'Popup', vars: [] },

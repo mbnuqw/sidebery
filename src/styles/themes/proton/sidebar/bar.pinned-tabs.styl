@@ -1,19 +1,5 @@
 @import '../../../utils'
 
-#root .PinnedTabsBar
-  --pinned-tabs-bar-padding-panel: 1px var(--tabs-margin-horizontal) 1px
-  --pinned-tabs-bar-margin-panel: 0
-  --pinned-tabs-bar-padding-panel-list: 1px 0 12px
-  --pinned-tabs-bar-padding-left-right: 1px 0 1px
-  --pinned-tabs-bar-padding-left-right-nav: 1px 0 2px
-  --pinned-tabs-bar-padding-top: 1px var(--tabs-margin-horizontal) 1px
-#root[data-density="compact"] .PinnedTabsBar
-  --pinned-tabs-bar-padding-panel: 1px var(--tabs-margin-horizontal) 0
-  --pinned-tabs-bar-margin-panel: 0 0 -1px
-  --pinned-tabs-bar-padding-panel-list: 1px 0 10px 0
-  --pinned-tabs-bar-padding-left-right: 1px 0 1px
-  --pinned-tabs-bar-padding-top: 1px var(--tabs-margin-horizontal) 0
-
 .PinnedTabsBar
   position: relative
   display: flex
@@ -27,12 +13,12 @@
   height: auto
   flex-wrap: wrap
   flex-direction: row
-  grid-gap: var(--tabs-margin-horizontal)
-  padding: var(--pinned-tabs-bar-padding-panel)
+  grid-gap: var(--tabs-margin)
+  padding: var(--tabs-margin) var(--tabs-margin) 0
 
 #root[data-pinned-tabs-position="panel"][data-pinned-tabs-list="true"] .PinnedTabsBar
   grid-gap: 0
-  padding: var(--pinned-tabs-bar-padding-panel-list)
+  padding: 0 0 calc(var(--tabs-margin) * 3 + 4px)
 
 // Left/Right
 #root[data-pinned-tabs-position="left"] .PinnedTabsBar
@@ -43,14 +29,14 @@
   flex-shrink: 0
   flex-grow: 0
   flex-direction: column
-  grid-gap: var(--tabs-margin-horizontal)
-  padding: var(--pinned-tabs-bar-padding-left-right)
+  grid-gap: var(--tabs-margin)
+  padding: var(--tabs-margin) 0
 
 // Left/Right stacked with navbar
 #root[data-pinned-tabs-position="left"][data-nav-layout="left"] .PinnedTabsBar
 #root[data-pinned-tabs-position="right"][data-nav-layout="right"] .PinnedTabsBar
   height: auto
-  padding: var(--pinned-tabs-bar-padding-left-right-nav)
+  padding: var(--tabs-margin) 0
 
 // Top
 #root[data-pinned-tabs-position="top"] .PinnedTabsBar
@@ -58,8 +44,8 @@
   height: auto
   flex-wrap: wrap
   flex-direction: row
-  grid-gap: var(--tabs-margin-horizontal)
-  padding: var(--pinned-tabs-bar-padding-top)
+  grid-gap: var(--tabs-margin)
+  padding: var(--tabs-margin)
 
 // ---
 // -- Separator
@@ -68,7 +54,7 @@
   content: ''
   position: absolute
   display: none
-  bottom: 5px
+  bottom: calc(var(--tabs-margin) + 2px)
   left: 12px
   width: calc(100% - 24px)
   height: 1px

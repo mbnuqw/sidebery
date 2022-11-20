@@ -1,16 +1,10 @@
 @import '../../../utils'
 
 #root
-  --slt-margin-horizontal: 2px
-  --slt-margin-top: 1px
-  --slt-margin-bottom: 1px
-  --slt-border-radius: 4px
+  --slt-margin: var(--general-margin)
+  --slt-border-radius: var(--general-border-radius)
   --slt-padding: 6px 0
 #root[data-density="compact"]
-  --slt-margin-horizontal: 1px
-  --slt-margin-top: 1px
-  --slt-margin-bottom: 0px
-  --slt-border-radius: 3px
   --slt-padding: 5px 0
 
 .SubListTitle
@@ -24,15 +18,17 @@
   display: flex
   justify-content: center
   align-items: center
-  width: 100%
+  margin: 0 var(--slt-margin)
+  padding: var(--slt-margin) 0 0
+  width: calc(100% - var(--slt-margin) * 2)
   &:before
   &:after
     content: ''
     position: absolute
-    top: var(--slt-margin-top)
-    left: var(--slt-margin-horizontal)
-    width: calc(100% - var(--slt-margin-horizontal) * 2)
-    height: calc(100% - var(--slt-margin-top) - var(--slt-margin-bottom))
+    top: var(--slt-margin)
+    left: 0
+    width: 100%
+    height: calc(100% - var(--slt-margin))
     border-radius: var(--slt-border-radius)
     opacity: .08
   &:before

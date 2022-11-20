@@ -6,7 +6,7 @@
   @mousedown="onMouseDown"
   @mouseup="onMouseUp"
   @contextmenu.stop="onCtxMenu")
-  .line
+  .body
     .fav(:title="'Search this domain'" @mousedown.stop="onFavMouseDown")
       svg(v-if="!item.favicon"): use(xlink:href="#icon_ff")
       img(v-else :src="item.favicon")

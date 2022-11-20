@@ -5,27 +5,19 @@
   --bookmarks-bookmark-height: 28px
   --bookmarks-folder-height: 28px
   --bookmarks-separator-height: 17px
-  --bookmarks-border-radius: 4px
-  --bookmarks-padding: 0
-  --bookmarks-margin-top: 1px
-  --bookmarks-margin-bottom: 1px
-  --bookmarks-margin-horizontal: 2px
-  --bookmarks-inner-gap: 5px
+  --bookmarks-margin: var(--general-margin)
+  --bookmarks-border-radius: var(--general-border-radius)
+  --bookmarks-inner-gap: 6px
   --bookmarks-open-mark-top: 3px
-  --bookmarks-open-mark-left: -3px
+  --bookmarks-open-mark-left: 3px
 #root[data-density="compact"]
   --bookmarks-indent: 10px
-  --bookmarks-bookmark-height: 25px
-  --bookmarks-folder-height: 25px
+  --bookmarks-bookmark-height: 26px
+  --bookmarks-folder-height: 26px
   --bookmarks-separator-height: 15px
-  --bookmarks-border-radius: 3px
-  --bookmarks-padding: 0
-  --bookmarks-margin-top: 1px
-  --bookmarks-margin-bottom: 0px
-  --bookmarks-margin-horizontal: 1px
-  --bookmarks-inner-gap: 4px
-  --bookmarks-open-mark-top: 3px
-  --bookmarks-open-mark-left: -2px
+  --bookmarks-inner-gap: 5px
+  --bookmarks-open-mark-top: 2px
+  --bookmarks-open-mark-left: 2px
 #root[data-color-scheme="dark"]
   --bookmarks-node-activated-bg: #ffffff08
   --bookmarks-node-activated-fg: var(--frame-fg)
@@ -38,10 +30,8 @@
 
 .BookmarkNode
   position: relative
-  padding: 0 0 0 var(--bookmarks-indent)
-  margin: 0
   &.root-node
-    padding: 0 0 0 calc(var(--bookmarks-inner-gap) + var(--bookmarks-margin-horizontal))
+    margin: 0 var(--bookmarks-margin)
 
 // ---
 // -- Body
@@ -50,26 +40,27 @@
   display: flex
   align-items: center
   cursor: default
-  padding: var(--bookmarks-padding)
+  padding: var(--bookmarks-margin) 0 0 var(--bookmarks-inner-gap)
   transform: translateZ(0)
   transition: opacity var(--d-fast)
   background-color: var(--frame-bg)
+  box-shadow: 0 1px 0 0 var(--frame-bg)
   &:before
     content: ''
     position: absolute
-    top: var(--bookmarks-margin-top)
-    left: calc(0px - var(--bookmarks-inner-gap))
-    width: calc(100% + var(--bookmarks-inner-gap) - var(--bookmarks-margin-horizontal))
-    height: calc(100% - var(--bookmarks-margin-top) - var(--bookmarks-margin-bottom))
+    top: var(--bookmarks-margin)
+    left: 0
+    width: 100%
+    height: calc(100% - var(--bookmarks-margin))
     border-radius: var(--bookmarks-border-radius)
 
 .BookmarkNode[data-type="bookmark"] > .body
-  height: var(--bookmarks-bookmark-height)
+  height: calc(var(--bookmarks-bookmark-height) + var(--bookmarks-margin))
   cursor: pointer
 .BookmarkNode[data-type="folder"] > .body
-  height: var(--bookmarks-folder-height)
+  height: calc(var(--bookmarks-folder-height) + var(--bookmarks-margin))
 .BookmarkNode[data-type="separator"] > .body
-  height: var(--bookmarks-separator-height)
+  height: calc(var(--bookmarks-separator-height) + var(--bookmarks-margin))
   &:after
     content: ''
     position: absolute
@@ -99,7 +90,7 @@
 .BookmarkNode[data-open="true"] > .body:after
   content: ''
   position: absolute
-  top: var(--bookmarks-open-mark-top)
+  top: calc(var(--bookmarks-margin) + var(--bookmarks-open-mark-top))
   left: var(--bookmarks-open-mark-left)
   width: 3px
   height: 3px
@@ -121,22 +112,22 @@
   // Sticky lvl: 2
   .BookmarkNode.root-node[data-expanded="true"] > .children > .BookmarkNode[data-expanded="true"] > .body
     z-index: 2
-    top: var(--bookmarks-folder-height)
+    top: calc(var(--bookmarks-folder-height) + var(--bookmarks-margin))
 
   // Sticky lvl: 3
   .BookmarkNode.root-node[data-expanded="true"] > .children > .BookmarkNode[data-expanded="true"] > .children > .BookmarkNode[data-expanded="true"] > .body
     z-index: 3
-    top: calc(var(--bookmarks-folder-height) * 2)
+    top: calc((var(--bookmarks-folder-height) + var(--bookmarks-margin)) * 2)
 
   // Sticky lvl: 4
   .BookmarkNode.root-node[data-expanded="true"] > .children > .BookmarkNode[data-expanded="true"] > .children > .BookmarkNode[data-expanded="true"] > .children > .BookmarkNode[data-expanded="true"] > .body
     z-index: 4
-    top: calc(var(--bookmarks-folder-height) * 3)
+    top: calc((var(--bookmarks-folder-height) + var(--bookmarks-margin)) * 3)
 
   // Sticky lvl: 5
   .BookmarkNode.root-node[data-expanded="true"] > .children > .BookmarkNode[data-expanded="true"] > .children > .BookmarkNode[data-expanded="true"] > .children > .BookmarkNode[data-expanded="true"] > .children > .BookmarkNode[data-expanded="true"] > .body
     z-index: 5
-    top: calc(var(--bookmarks-folder-height) * 4)
+    top: calc((var(--bookmarks-folder-height) + var(--bookmarks-margin)) * 4)
 
 // ---
 // -- Drag layer
@@ -218,6 +209,7 @@
 // -
 .BookmarkNode .children
   position: relative
+  padding: 0 0 0 var(--bookmarks-indent)
   transform: translateZ(0)
 
 // ---
@@ -227,7 +219,7 @@
   content: ''
   position: absolute
   top: 0
-  left: 2px
+  left: calc(var(--bookmarks-indent) / 2)
   width: 1px
   height: calc(100% - 11px)
   background-color: var(--frame-fg)

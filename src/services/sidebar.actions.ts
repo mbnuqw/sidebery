@@ -128,6 +128,9 @@ export function recalcElementSizes(): void {
   const thRaw = compStyle.getPropertyValue('--tabs-height')
   Sidebar.tabHeight = Utils.parseCSSNum(thRaw.trim())[0]
 
+  const tmRaw = compStyle.getPropertyValue('--tabs-margin')
+  Sidebar.tabMargin = Utils.parseCSSNum(tmRaw.trim())[0]
+
   const bhRaw = compStyle.getPropertyValue('--bookmarks-bookmark-height')
   Sidebar.bookmarkHeight = Utils.parseCSSNum(bhRaw.trim())[0]
 
@@ -136,6 +139,9 @@ export function recalcElementSizes(): void {
 
   const shRaw = compStyle.getPropertyValue('--bookmarks-separator-height')
   Sidebar.separatorHeight = Utils.parseCSSNum(shRaw.trim())[0]
+
+  const bmRaw = compStyle.getPropertyValue('--bookmarks-margin')
+  Sidebar.bookmarkMargin = Utils.parseCSSNum(bmRaw.trim())[0]
 }
 let recalcElementSizesTimeout: number | undefined
 export function recalcElementSizesDebounced(delay = 500): void {
@@ -355,9 +361,13 @@ export function updateBounds(): void {
 function calcTabsBounds(panel: TabsPanel): ItemBounds[] {
   const result: ItemBounds[] = []
   const th = Sidebar.tabHeight
+  const tm = Sidebar.tabMargin
   if (th === 0) return result
   const half = th >> 1
-  const e = (half >> 1) + 2
+  const marginA = Math.ceil(tm / 2)
+  const marginB = Math.floor(tm / 2)
+  const insideA = (half >> 1) + marginB + 2
+  const insideB = (half >> 1) + marginB - 2
 
   let overallHeight = 0
   let tabs = Tabs.list
@@ -372,6 +382,8 @@ function calcTabsBounds(panel: TabsPanel): ItemBounds[] {
     if (tab.invisible || tab.pinned) continue
     if (tab.panelId !== panel.id) continue
 
+    overallHeight += marginA
+
     result.push({
       type: ItemBoundsType.Tab,
       id: tab.id,
@@ -381,13 +393,13 @@ function calcTabsBounds(panel: TabsPanel): ItemBounds[] {
       folded: tab.folded,
       parent: tab.parentId,
       start: overallHeight,
-      top: overallHeight + e,
-      center: overallHeight + half,
-      bottom: overallHeight + half + e,
-      end: overallHeight + th,
+      top: overallHeight + insideA,
+      center: overallHeight + marginB + half,
+      bottom: overallHeight + half + insideB,
+      end: overallHeight + marginB + th + marginA,
     })
 
-    overallHeight += th
+    overallHeight += th + marginB
   }
   return result
 }
@@ -400,6 +412,10 @@ function calcBookmarksTreeBounds(panel: BookmarksPanel): ItemBounds[] {
   if (!Utils.isBookmarksPanel(panel)) return []
 
   const expandedBookmarks = Bookmarks.reactive.expanded[panel.id]
+
+  const margin = Sidebar.bookmarkMargin
+  const marginA = Math.ceil(margin / 2)
+  const marginB = Math.floor(margin / 2)
 
   const fh = Sidebar.folderHeight
   const fc = fh >> 1
@@ -436,6 +452,8 @@ function calcBookmarksTreeBounds(panel: BookmarksPanel): ItemBounds[] {
         e = se
       }
 
+      overallHeight += marginA
+
       result.push({
         type: ItemBoundsType.Bookmarks,
         id: n.id,
@@ -445,13 +463,13 @@ function calcBookmarksTreeBounds(panel: BookmarksPanel): ItemBounds[] {
         folded: !expandedBookmarks[n.id],
         parent: n.parentId,
         start: overallHeight,
-        top: overallHeight + e,
-        center: overallHeight + c,
-        bottom: overallHeight + c + e,
-        end: overallHeight + h,
+        top: overallHeight + marginB + e,
+        center: overallHeight + marginB + c,
+        bottom: overallHeight + marginB + c + e,
+        end: overallHeight + marginB + h,
       })
 
-      overallHeight += h
+      overallHeight += h + marginB
 
       if (n.children && expandedBookmarks[n.id]) {
         lvl++

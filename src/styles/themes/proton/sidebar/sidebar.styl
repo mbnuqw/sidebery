@@ -255,11 +255,11 @@ body
 for i in 1..16
   .TabsPanel[data-pos="center"] ~ .pointer[data-pointer="between"][data-lvl=\"{i}\"]:before
   .TabsPanel[data-pos="center"] ~ .pointer[data-pointer="between"][data-lvl=\"{i}\"]:after
-    transform: "translateX(calc(var(--tabs-indent) * %s + 1px))" % i
+    transform: "translateX(calc(var(--tabs-indent) * %s + var(--tabs-margin)))" % i
 for i in 1..16
   .BookmarksPanel[data-pos="center"] ~ .pointer[data-pointer="between"][data-lvl=\"{i}\"]:before
   .BookmarksPanel[data-pos="center"] ~ .pointer[data-pointer="between"][data-lvl=\"{i}\"]:after
-    transform: "translateX(calc(var(--bookmarks-indent) * %s + 1px))" % i
+    transform: "translateX(calc(var(--bookmarks-indent) * %s + var(--bookmarks-margin)))" % i
 .pointer .arrow
   position: absolute
   top: 0

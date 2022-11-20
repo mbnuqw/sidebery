@@ -1,12 +1,10 @@
 @import '../../../utils'
 
 #root
-  --ntb-padding: 2px
-  --ntb-border-radius: 4px
+  --ntb-padding: var(--general-margin)
+  --ntb-border-radius: var(--general-border-radius)
   --ntb-btn-height: 30px
 #root[data-density="compact"]
-  --ntb-padding: 1px
-  --ntb-border-radius: 3px
   --ntb-btn-height: 26px
 
 .TabsPanel .container
@@ -25,7 +23,7 @@
     margin-bottom: 64px
 
 .TabsPanel .scrollable
-  padding: 1px 0 0
+  padding: 0
 
 .TabsPanel .new-tab-btns
   position: sticky
