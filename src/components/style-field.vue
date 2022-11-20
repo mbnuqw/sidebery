@@ -1,5 +1,5 @@
 <template lang="pug">
-.StyleField(:data-active="!!props.value")
+.StyleField(:class="{ '-no-separator': noSeparator }" :data-active="!!props.value")
   .label
     .desc {{translate(props.label) || props.name}}
     .var(v-if="props.name") {{props.name}}
@@ -34,6 +34,7 @@ interface StyleFieldProps {
   label: string
   name?: string
   isColor: boolean
+  noSeparator?: boolean
 }
 
 const emit = defineEmits(['update:value', 'change', 'toggle'])

@@ -6,11 +6,13 @@
         v-for="group of state.groups"
         :key="group.id"
         :data-hidden="!group.vars?.length")
-        h2 {{group.label}}
+        .section-header
+          h2 {{group.label}}
         StyleField(
-          v-for="cssVar of group.vars"
+          v-for="(cssVar, i) of group.vars"
           :key="cssVar.key"
           v-model:value="cssVar.value"
+          :noSeparator="i === 0"
           :active="cssVar.active"
           :label="cssVar.label"
           :name="cssVar.name"

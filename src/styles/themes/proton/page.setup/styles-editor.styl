@@ -91,20 +91,33 @@
 .StylesEditor section
   position: relative
   display: grid
-  width: 100%
+  width: calc(100% - 16px)
   max-width: 540px
-  margin: 0 auto
+  margin: 0 8px
   padding: 2px 0 32px
   &[data-hidden="true"]
     display: none
 
-.StylesEditor  section > h2
+.StylesEditor .section-header
+  position: sticky
+  top: 0
+  display: flex
+  margin: 22px 0 8px
+  user-select: none
+  z-index: 1000
+  background-color: var(--frame-bg)
+#root[data-color-scheme="light"] .StylesEditor .section-header
+  box-shadow: 0 8px 8px -10px #00000036
+#root[data-color-scheme="dark"] .StylesEditor .section-header
+  box-shadow: 0 10px 8px -10px var(--frame-bg)
+
+.StylesEditor .section-header h2
   position: relative
   width: calc(100% - 32px)
   font-size: rem(28)
   font-weight: 400
   color: var(--toolbar-fg)
-  margin: 28px 16px 24px
+  margin: 16px 16px
 
 .StylesEditor .label
   font-size: rem(16)
