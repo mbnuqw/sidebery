@@ -15,7 +15,6 @@
   height: 100%
   align-items: stretch
   overflow: hidden
-  box-shadow: inset 0 -1px 0 0 var(--border)
 
 .StylesEditor .wrapper
   position: relative
@@ -27,14 +26,11 @@
 .StylesEditor nav
   position: relative
   display: flex
-  justify-content: center
+  justify-content: flex-start
   align-items: center
-  padding: 8px 0
+  padding: 8px
   grid-gap: 2px
-  background-color: var(--setup-bg)
-  background-image: var(--bg-img)
-  background-size: var(--bg-size)
-  box-shadow: inset 0 -1px 0 0 var(--border)
+  box-shadow: inset 0 -1px 0 0 var(--border-color)
 
 .StylesEditor .nav-item
   position: relative
@@ -69,12 +65,11 @@
   display: flex
   flex-direction: column
   width: 50%
+  max-width: 556px
   height: 100%
   overflow-y: auto
   scrollbar-color: var(--scrollbar-color) #0000
-  background-attachment: local
-  background-image: var(--bg-img)
-  background-size: var(--bg-size)
+  box-shadow: inset -1px 0 0 0 var(--border-color)
 
 .StylesEditor > .title
   position: relative
@@ -102,7 +97,7 @@
   position: sticky
   top: 0
   display: flex
-  margin: 22px 0 8px
+  margin: 26px 0 12px
   user-select: none
   z-index: 1000
   background-color: var(--frame-bg)
@@ -117,7 +112,7 @@
   font-size: rem(28)
   font-weight: 400
   color: var(--toolbar-fg)
-  margin: 16px 16px
+  margin: 12px 16px
 
 .StylesEditor .label
   font-size: rem(16)
@@ -170,22 +165,18 @@
 .StylesEditor .css
   position: relative
   display: flex
+  flex-grow: 1
   width: 50%
   flex-flow: column
   overflow-y: auto
   overflow-x: hidden
   scrollbar-color: var(--scrollbar-color) #0000
-  background-attachment: local
-  background-color: var(--setup-bg)
-  background-image: var(--bg-img)
-  background-size: var(--bg-size)
 
 .StylesEditor .editor-box
   position: relative
   display: flex
   flex-flow: column
   flex: 1 0 auto
-  box-shadow: inset 0 0 8px 0 #00000032, inset 1px 0 0 0 #00000016
   background-color: #00000012
 
 .StylesEditor .editor
@@ -242,11 +233,7 @@
   align-items: center
   grid-gap: 8px
   padding: 0 8px
-  box-shadow: inset 0 1px 0 var(--border-flare)
-  background-color: var(--setup-bg)
-  background-attachment: local
-  background-image: var(--bg-img)
-  background-size: var(--bg-size)
+  box-shadow: inset 0 1px 0 0 var(--border-color)
 
 .StylesEditor .bottom-bar .btn
   padding: 3px 8px

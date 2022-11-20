@@ -1,5 +1,12 @@
 <template lang="pug">
 .StylesEditor
+  nav
+    .nav-item(
+      :data-active="state.cssTarget === 'sidebar'"
+      @click="selectCssTarget('sidebar')") {{translate('styles.css_sidebar')}}
+    .nav-item(
+      :data-active="state.cssTarget === 'group'"
+      @click="selectCssTarget('group')") {{translate('styles.css_group')}}
   .columns
     .vars
       section(
@@ -23,13 +30,6 @@
           @toggle="toggleCSSVar(cssVar)")
 
     .css(ref="customCssEl"): .wrapper
-      nav
-        .nav-item(
-          :data-active="state.cssTarget === 'sidebar'"
-          @click="selectCssTarget('sidebar')") {{translate('styles.css_sidebar')}}
-        .nav-item(
-          :data-active="state.cssTarget === 'group'"
-          @click="selectCssTarget('group')") {{translate('styles.css_group')}}
       .editor-box
         textarea.editor(
           ref="cssEditorEl"
@@ -54,8 +54,6 @@
         @input="onColorSampelInput")
       .value {{state.colorSampleValue}}
       .example
-  
-  .shit
 </template>
 
 <script lang="ts" setup>
