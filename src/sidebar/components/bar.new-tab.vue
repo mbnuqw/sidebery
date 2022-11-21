@@ -8,7 +8,9 @@
     :data-color="defaultBtn.containerId && Containers.reactive.byId[defaultBtn.containerId]?.color"
     @mousedown="onNewTabMouseDown($event, defaultBtn)"
     @mouseup="onNewTabMouseUp($event, defaultBtn)"
+    @dragstart="onDragStart($event, defaultBtn)"
     @contextmenu="onNewTabCtxMenu")
+    .dnd-layer(draggable="true")
     svg(:class="{ '-icon': !!defaultBtn.containerId }")
       use(:xlink:href="defaultBtn.icon")
     svg.-badge(v-if="defaultBtn.containerId")
@@ -20,7 +22,9 @@
     :data-color="btn.containerId && Containers.reactive.byId[btn.containerId]?.color"
     @mousedown="onNewTabMouseDown($event, btn)"
     @mouseup="onNewTabMouseUp($event, btn)"
+    @dragstart="onDragStart($event, btn)"
     @contextmenu="onNewTabCtxMenu")
+    .dnd-layer(draggable="true")
     svg.-icon(v-if="!btn.domain && btn.containerId")
       use(:xlink:href="btn.icon")
     svg.-icon(v-else-if="btn.icon && btn.icon[0] === '#'")
@@ -31,7 +35,8 @@
 
 <script lang="ts" setup>
 import { computed, PropType } from 'vue'
-import { Container, DstPlaceInfo, ItemInfo, MenuType, Tab, TabsPanel } from 'src/types'
+import { Container, DstPlaceInfo, ItemInfo, MenuType, Tab, TabsPanel, DragItem } from 'src/types'
+import { DragType, DragInfo, DropType } from 'src/types'
 import { Settings } from 'src/services/settings'
 import { Selection } from 'src/services/selection'
 import { Menu } from 'src/services/menu'
@@ -39,11 +44,13 @@ import { Tabs } from 'src/services/tabs.fg'
 import { Mouse } from 'src/services/mouse'
 import { Containers } from 'src/services/containers'
 import { Favicons } from 'src/services/favicons'
-import { CONTAINER_ID, DOMAIN_RE } from 'src/defaults'
+import { CONTAINER_ID, DOMAIN_RE, NEWID, NOID } from 'src/defaults'
 import * as Utils from 'src/utils'
 import * as Logs from 'src/services/logs'
 import { Windows } from 'src/services/windows'
 import { translate } from 'src/dict'
+import { DnD } from 'src/services/drag-and-drop'
+import { Sidebar } from 'src/services/sidebar'
 
 interface NewTabBtn {
   id: string
@@ -166,31 +173,8 @@ function onNewTabMouseDown(e: MouseEvent, btn?: NewTabBtn): void {
   Mouse.setTarget('tab.new', 'tab.new')
   Menu.close()
 
-  // Left
-  if (e.button === 0) {
-    if (e.ctrlKey) {
-      Mouse.blockWheel()
-      const actTab = Tabs.byId[Tabs.activeId]
-      if (actTab && !actTab.pinned && actTab.panelId === props.panel.id) {
-        Tabs.createChildTab(actTab.id, btn?.url, btn?.containerId)
-      } else {
-        Tabs.createTabInPanel(props.panel, { url: btn?.url, cookieStoreId: btn?.containerId })
-      }
-      return
-    }
-
-    if (e.altKey) {
-      applyBtnRules(btn)
-      return
-    }
-
-    if (Selection.isSet() && !props.panel.selNewTab) Selection.resetSelection()
-
-    Tabs.createTabInPanel(props.panel, { url: btn?.url, cookieStoreId: btn?.containerId })
-  }
-
   // Middle
-  else if (e.button === 1) {
+  if (e.button === 1) {
     e.preventDefault()
     Mouse.blockWheel()
   }
@@ -217,8 +201,31 @@ function onNewTabMouseUp(e: MouseEvent, btn?: NewTabBtn): void {
     return
   }
 
+  // Left
+  if (e.button === 0) {
+    if (e.ctrlKey) {
+      Mouse.blockWheel()
+      const actTab = Tabs.byId[Tabs.activeId]
+      if (actTab && !actTab.pinned && actTab.panelId === props.panel.id) {
+        Tabs.createChildTab(actTab.id, btn?.url, btn?.containerId)
+      } else {
+        Tabs.createTabInPanel(props.panel, { url: btn?.url, cookieStoreId: btn?.containerId })
+      }
+      return
+    }
+
+    if (e.altKey) {
+      applyBtnRules(btn)
+      return
+    }
+
+    if (Selection.isSet() && !props.panel.selNewTab) Selection.resetSelection()
+
+    Tabs.createTabInPanel(props.panel, { url: btn?.url, cookieStoreId: btn?.containerId })
+  }
+
   // Middle
-  if (e.button === 1) {
+  else if (e.button === 1) {
     if (Settings.state.newTabMiddleClickAction === 'new_child') {
       const actTab = Tabs.byId[Tabs.activeId]
       if (actTab && !actTab.pinned && actTab.panelId === props.panel.id) {
@@ -324,6 +331,32 @@ async function applyBtnRules(btn?: NewTabBtn): Promise<void> {
     } catch (err) {
       Logs.err('NewTabBar: Cannot reopen tabs', err)
     }
+  }
+}
+
+function onDragStart(e: DragEvent, btn: NewTabBtn): void {
+  Menu.close()
+  Selection.resetSelection()
+  Sidebar.updateBounds()
+
+  const dragInfo: DragInfo = {
+    type: DragType.NewTab,
+    items: [{ id: NEWID, container: btn.containerId, title: 'New tab', url: btn.url }],
+    windowId: Windows.id,
+    incognito: Windows.incognito,
+    pinnedTabs: false,
+    x: e.clientX,
+    y: e.clientY,
+  }
+
+  DnD.start(dragInfo, DropType.Tabs)
+
+  // Set native drag info
+  if (e.dataTransfer) {
+    e.dataTransfer.setData('application/x-sidebery-dnd', JSON.stringify(dragInfo))
+    const dragImgEl = document.getElementById('drag_image')
+    if (dragImgEl) e.dataTransfer.setDragImage(dragImgEl, -3, -3)
+    e.dataTransfer.effectAllowed = 'move'
   }
 }
 </script>

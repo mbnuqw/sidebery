@@ -2,7 +2,7 @@ import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
 import { BKM_OTHER_ID, CONTAINER_ID, NEWID, NOID, PRE_SCROLL } from 'src/defaults'
 import { DragInfo, DragType, DropType, ItemBounds, ItemBoundsType } from 'src/types'
-import { DstPlaceInfo, SrcPlaceInfo, InstanceType } from 'src/types'
+import { DstPlaceInfo, SrcPlaceInfo, InstanceType, ItemInfo } from 'src/types'
 import { DnD, DndPointerMode } from 'src/services/drag-and-drop'
 import { Settings } from 'src/services/settings'
 import { Sidebar } from 'src/services/sidebar'
@@ -95,6 +95,9 @@ function updateTooltip(info: DragInfo): void {
     }
   } else if (info.type === DragType.NavItem) {
     DnD.reactive.dragTooltipTitle = translate('dnd.tooltip.nav_item')
+    DnD.reactive.dragTooltipInfo = ''
+  } else if (info.type === DragType.NewTab) {
+    DnD.reactive.dragTooltipTitle = translate('dnd.tooltip.new_tab')
     DnD.reactive.dragTooltipInfo = ''
   } else {
     DnD.reactive.dragTooltipTitle = '---'
@@ -816,11 +819,21 @@ export async function onDrop(e: DragEvent): Promise<void> {
   const toBookmarksPanel = dstType === DropType.BookmarksPanel
   const fromNav = srcType === DragType.NavItem
   const toNav = dstType === DropType.NavItem
+  const fromNewTabBar = srcType === DragType.NewTab
 
   if (Sidebar.reactive.hiddenPanelsBar) Sidebar.closeHiddenPanelsBar()
   if ((toTabs && !DnD.reactive.dstPin) || toBookmarks) {
     DnD.reactive.dstPanelId = Sidebar.reactive.activePanelId
     applyLvlOffset(DnD.reactive.pointerLvl)
+  }
+
+  // From new tab bar to tabs
+  if (fromNewTabBar && toTabs) {
+    const dstInfo = getDestInfo()
+    const item = DnD.items[0]
+    dstInfo.containerId = item.container ?? CONTAINER_ID
+    const newTabConf: ItemInfo = { id: NOID, url: item.url ?? 'about:newtab', active: true }
+    await Tabs.open([newTabConf], dstInfo)
   }
 
   // To new tabs panel
@@ -851,11 +864,11 @@ export async function onDrop(e: DragEvent): Promise<void> {
   // Tabs to tabs
   if ((fromTabs && toTabs) || (fromTabs && toTabsPanel) || (fromTabsPanel && toTabs)) {
     const srcInfo = getSrcInfo()
-    const destInfo = getDestInfo()
+    const dstInfo = getDestInfo()
     const reopenNeeded = isContainerChanged()
 
-    if (reopenNeeded) await Tabs.reopen(DnD.items, destInfo)
-    else await Tabs.move(DnD.items, srcInfo, destInfo)
+    if (reopenNeeded) await Tabs.reopen(DnD.items, dstInfo)
+    else await Tabs.move(DnD.items, srcInfo, dstInfo)
   }
 
   // Tabs to bookmarks

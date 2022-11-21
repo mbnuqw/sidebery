@@ -241,6 +241,10 @@ export const sidebarTranslations: Translations = {
     de: 'Navigationselement',
     zh_CN: '导航元素',
   },
+  'dnd.tooltip.new_tab': {
+    en: 'New tab',
+    ru: 'Новая вкладка',
+  },
 
   // ---
   // -- Navigation bar

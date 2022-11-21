@@ -139,6 +139,7 @@ export interface IPCheckResult {
 export const enum DragType {
   Nothing = 0,
   Tabs = 1,
+  NewTab = 11,
   Bookmarks = 2,
   NavItem = 3,
   TabsPanel = 31,
