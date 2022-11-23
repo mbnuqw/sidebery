@@ -138,6 +138,7 @@
   height: 100%
   align-items: center
   transition: opacity var(--d-fast), transform var(--d-fast)
+  border-radius: var(--tabs-border-radius)
   &:after
     content: ''
     position: absolute
@@ -161,19 +162,22 @@
 .Tab:hover .body:before
   background-color: var(--hover-bg)
 
-.Tab:active .body:before
-.Tab[data-active="true"]:active .body:before
-  background-color: var(--clicked-bg)
-
-.Tab[data-active="true"] .body:before
+.Tab[data-active="true"] .body
   background-color: var(--tabs-activated-bg)
   box-shadow: var(--tabs-activated-shadow)
+.Tab[data-active="true"]:hover .body:before
+  background-color: initial
+
+.Tab:active .body:before
+  background-color: var(--clicked-bg)
 
 .Tab[data-selected="true"] .body:before
 .Tab[data-selected="true"]:hover .body:before
 .Tab[data-selected="true"]:active .body:before
   background-color: var(--selected-bg)
   box-shadow: inset 0 0 0 1px var(--selected-border)
+.Tab[data-selected="true"][data-active="true"] .body:before
+  box-shadow: inset 0 0 0 2px var(--selected-border)
 
 .Tab[data-pin="true"] .body
   justify-content: center
