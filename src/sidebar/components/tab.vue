@@ -20,15 +20,17 @@
   :data-colorized="!!tabColor"
   :data-unread="tab.unread"
   :title="tooltip"
+  draggable="true"
+  @dragstart="onDragStart"
   @contextmenu.stop="onCtxMenu"
   @mousedown.stop="onMouseDown"
   @mouseup.stop="onMouseUp"
   @dblclick.prevent.stop="onDoubleClick")
+  .dnd-layer(data-dnd-type="tab" :data-dnd-id="tab.id")
   .body
     .color-layer(
       v-if="tabColor" :style="{ '--tab-color': tabColor }")
     .flash-fx(v-if="tab.flash")
-    .dnd-layer(draggable="true" data-dnd-type="tab" :data-dnd-id="tab.id" @dragstart="onDragStart")
     .audio(
       v-if="tab.mediaAudible || tab.mediaMuted || tab.mediaPaused"
       @mousedown.stop=""
@@ -38,12 +40,12 @@
       svg.-pause: use(xlink:href="#icon_pause_12")
     .fav(@dragstart.stop.prevent)
       svg.fav-icon(v-if="!tab.favIconUrl"): use(:xlink:href="favPlaceholder")
-      img.fav-icon(v-if="tab.favIconUrl" :src="tab.favIconUrl" @error="onError")
+      img.fav-icon(v-if="tab.favIconUrl" :src="tab.favIconUrl" @error="onError" draggable="false")
       .exp(
         v-if="tab.isParent"
         @dblclick.prevent.stop
         @mousedown.stop="onExpandMouseDown"
-        @mouseup.left.stop)
+        @mouseup="onExpandMouseUp")
         svg: use(xlink:href="#icon_expand")
       .badge
       .progress-spinner(v-if="loading === true")
@@ -430,18 +432,27 @@ function activate(): void {
   }
 }
 
-function onExpandMouseDown(e: MouseEvent): void {
+function onExpandMouseDown(): void {
   Mouse.setTarget('tab.expand', props.tab.id)
+}
+
+function onExpandMouseUp(e: MouseEvent): void {
+  const sameTarget = Mouse.isTarget('tab.expand', props.tab.id)
+  Mouse.resetTarget()
 
   // Fold/Expand branch
   if (e.button === 0) {
-    Menu.close()
-    Selection.resetSelection()
-    Tabs.toggleBranch(props.tab.id)
+    e.stopPropagation()
+
+    if (sameTarget) {
+      Menu.close()
+      Selection.resetSelection()
+      Tabs.toggleBranch(props.tab.id)
+    }
   }
 
   // Select whole branch and show menu
-  if (e.button === 2 && !e.ctrlKey && !e.shiftKey) {
+  if (e.button === 2 && !e.ctrlKey && !e.shiftKey && sameTarget) {
     const tab = Tabs.byId[props.tab.id]
     if (tab) Selection.selectTabsBranch(tab)
   }

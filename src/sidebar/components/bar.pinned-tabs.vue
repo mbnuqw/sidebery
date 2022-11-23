@@ -4,6 +4,7 @@
   :data-empty="pinnedTabs.length === 0"
   :data-dnd-end="dropToEnd"
   data-dnd-type="pinned-bar"
+  :data-dnd-id="panel?.id ?? NOID"
   @wheel="onWheel"
   @drop="onDrop")
   .tab-wrapper(v-for="tab in pinnedTabs" :key="tab.id" :data-targeted="DnD.reactive.dstPin && dropId === tab.id")

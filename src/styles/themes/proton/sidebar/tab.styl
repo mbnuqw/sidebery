@@ -156,6 +156,7 @@
     width: 100%
     height: 100%
     border-radius: var(--tabs-border-radius)
+    z-index: 1
 
 .Tab:hover .body:before
   background-color: var(--hover-bg)
@@ -232,12 +233,6 @@
   opacity: .5
 #root[data-color-scheme="light"] .Tab[data-active="false"] .color-layer
   box-shadow: inset 0 0 0 1px #0003
-
-// ---
-// -- Drag layer
-// -
-.Tab .body .dnd-layer
-  z-index: 15
 
 // ---
 // -- Audio
@@ -493,6 +488,7 @@
   margin: 0 2px 0 0
   transition: opacity var(--d-fast), transform var(--d-fast)
   overflow: hidden
+  z-index: 1
   mask: linear-gradient(-90deg, transparent, #000000 12px, #000000)
 
 #root[data-tabs-close-btn="true"] .Tab:hover .t-box

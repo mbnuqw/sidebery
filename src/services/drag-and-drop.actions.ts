@@ -404,14 +404,21 @@ export function onDragEnter(e: DragEvent): void {
   }
 
   if (type === 'pinned-bar') {
-    const panel = Sidebar.reactive.panelsById[DnD.reactive.dstPanelId]
+    const isPinnedTabsGlobal = Settings.state.pinnedTabsPosition !== 'panel'
     DnD.reactive.dstPin = true
-    if (Utils.isTabsPanel(panel) && panel.pinnedTabs.length) {
-      const rLastTab = panel.pinnedTabs[panel.pinnedTabs.length - 1]
-      const lastTab = Tabs.byId[rLastTab.id]
-      if (lastTab) DnD.reactive.dstIndex = lastTab.index + 1
+    DnD.reactive.dstPanelId = id ?? NOID
+    if (isPinnedTabsGlobal) {
+      const pinnedTabsLen = Tabs.reactive.pinned.length
+      const lastPinnedTab = Tabs.list[pinnedTabsLen - 1]
+      DnD.reactive.dstIndex = pinnedTabsLen
+      DnD.reactive.dstPanelId = lastPinnedTab?.panelId ?? NOID
     } else {
-      DnD.reactive.dstIndex = Tabs.reactive.pinned.length
+      const panel = Sidebar.reactive.panelsById[DnD.reactive.dstPanelId]
+      if (Utils.isTabsPanel(panel) && panel.pinnedTabs.length) {
+        const rLastTab = panel.pinnedTabs[panel.pinnedTabs.length - 1]
+        const lastTab = Tabs.byId[rLastTab.id]
+        if (lastTab) DnD.reactive.dstIndex = lastTab.index + 1
+      }
     }
   }
 
