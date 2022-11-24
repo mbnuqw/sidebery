@@ -9,7 +9,7 @@
   cursor: text
   opacity: 1
   height: 28px
-  margin: 0 1px 1px
+  margin: 0 0 1px
   z-index: 10
   transition: height var(--d-fast), opacity var(--d-fast), z-index var(--d-fast)
   background-color: var(--element-bg)
@@ -20,8 +20,6 @@
     height: 0
     z-index: -1
     margin-bottom: 0
-.SearchBar[data-active="true"]
-  background-color: var(--toolbar-bg)
 
 .SearchBar .search-icon
   position: relative
@@ -45,6 +43,7 @@
   position: relative
   flex-grow: 1
   height: 100%
+  width: 100%
   margin: 0
   padding: 0
   border: none

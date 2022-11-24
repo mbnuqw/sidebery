@@ -7,9 +7,27 @@
 #root[data-color-scheme="dark"]
   --nav-btn-update-badge-bg: #00e9fb
   --nav-progress-bg: #ffffff16
+  --nav-hidden-bar-overlay-bg: #0003
+  --nav-btn-overlay-hover-bg: #ffffff08
+  --nav-btn-overlay-hover-border: #ffffff08
+  --nav-btn-overlay-clicked-bg: #ffffff03
+  --nav-btn-overlay-clicked-border: #ffffff05
+  --nav-btn-overlay-active-bg: #ffffff16
+  --nav-btn-overlay-active-shadow: inset 0 0 0 1px #ffffff12
+  --nav-btn-overlay-selected-bg: #fff2
+  --nav-btn-overlay-selected-border: var(--selection-color)
 #root[data-color-scheme="light"]
   --nav-btn-update-badge-bg: #01acda
   --nav-progress-bg: #00000016
+  --nav-hidden-bar-overlay-bg: #0002
+  --nav-btn-overlay-hover-bg: #0001
+  --nav-btn-overlay-hover-border: #0001
+  --nav-btn-overlay-clicked-bg: #0002
+  --nav-btn-overlay-clicked-border: #0002
+  --nav-btn-overlay-active-bg: #0002
+  --nav-btn-overlay-active-shadow: inset 0 1px 0 0 #0001, inset 0 -1px 0 0 #0001
+  --nav-btn-overlay-selected-bg: #ffffff
+  --nav-btn-overlay-selected-border: var(--selection-color)
 
 // ---
 // -- Navigation
@@ -19,7 +37,7 @@
   display: flex
   min-height: var(--nav-btn-height)
   flex-shrink: 0
-  background-color: var(--element-bg)
+  background-color: var(--toolbar-bg)
   box-shadow: 0 0 3px 0 #00000016
   &.-top
     width: 100%
@@ -75,9 +93,6 @@
     left: 0
     width: 100%
     height: 100%
-    box-shadow: inset 0 0 0 1px var(--element-overlay-border)
-    background-color: var(--element-overlay-bg)
-    opacity: 0
     border-radius: var(--element-roundness)
 
   // for dragenter zone and drop pointer
@@ -129,25 +144,18 @@
 .NavigationBar .hidden-bar .nav-item
   width: auto
 
-#root[data-color-scheme="dark"] .NavigationBar .nav-item
-  &:not([data-class="space"]):hover:before
-    opacity: .1
-  &:not([data-class="space"]):active:before
-    opacity: .5
-  &[data-active="true"]:before
-    opacity: .3
-#root[data-color-scheme="light"] .NavigationBar .nav-item
-  &:not([data-class="space"]):hover:before
-    opacity: .5
-  &:not([data-class="space"]):active:before
-    opacity: .7
-  &[data-active="true"]
-    background-color: var(--toolbar-bg)
-  &[data-active="true"]:before
-    opacity: .5
-
-#root.root .NavigationBar .nav-item[data-sel="true"]
-  box-shadow: inset 0 0 0 2px var(--selection-color)
+.NavigationBar .nav-item:not([data-class="space"]):hover:before
+  background-color: var(--nav-btn-overlay-hover-bg)
+  box-shadow: inset 0 0 0 1px var(--nav-btn-overlay-hover-border) 
+.NavigationBar .nav-item:not([data-class="space"]):active:before
+  background-color: var(--nav-btn-overlay-clicked-bg)
+  box-shadow: inset 0 0 0 1px var(--nav-btn-overlay-clicked-border)
+.NavigationBar .nav-item:not([data-class="space"])[data-active="true"]:before
+  background: var(--nav-btn-overlay-active-bg)
+  box-shadow: var(--nav-btn-overlay-active-shadow)
+.NavigationBar .nav-item:not([data-class="space"])[data-sel="true"]:before
+  background-color: var(--nav-btn-overlay-selected-bg)
+  box-shadow: inset 0 0 0 2px var(--nav-btn-overlay-selected-border)
 
 .NavigationBar.-top .nav-item[data-class="space"][data-type="dynamic"]
 .NavigationBar.-bottom .nav-item[data-class="space"][data-type="dynamic"]
@@ -177,7 +185,8 @@
     width: 0
 
 .NavigationBar[data-hidden-panels-bar="true"] .nav-item[data-type="hidden"]:before
-  opacity: .4
+  background: var(--nav-btn-overlay-active-bg)
+  box-shadow: var(--nav-btn-overlay-active-shadow)
 
 // Drag and drop pointer for vertical list
 .NavigationBar.-vert .nav-item[data-drop-mode="before"]:before
@@ -412,7 +421,7 @@
     left: -50vw
     width: 200vw
     height: 200vh
-    background-color: #0003
+    background-color: var(--nav-hidden-bar-overlay-bg)
 
 .NavigationBar.-top .hidden-bar-layer
   width: 100%
@@ -439,17 +448,9 @@
   background-color: var(--toolbar-bg)
   box-shadow: 0 0 12px 0 #00000032,
               0 0 0 1px var(--border)
-  &:before
-    content: ''
-    position: absolute
-    width: 100%
-    height: 100%
-    background-color: var(--toolbar-bg-overlay)
 
 .NavigationBar.-top .hidden-bar
   max-width: calc(100vw - var(--nav-btn-width) - var(--nav-hidden-bar-margin) * 2 - 6px)
-  &:before
-    box-shadow: inset 0 3px 3px -3px #00000024
 .NavigationBar.-vert .hidden-bar
   max-width: calc(100% - var(--nav-hidden-bar-margin) * 2)
   flex-direction: column
