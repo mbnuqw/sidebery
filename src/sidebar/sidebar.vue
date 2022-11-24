@@ -46,7 +46,7 @@
   .top-horizontal-box(v-if="navBarHorizontal")
     NavigationBar.-top
 
-  SearchBar(v-show="Settings.state.searchBarMode !== 'none'")
+  SearchBar(v-if="navBarHorizontal" v-show="Settings.state.searchBarMode !== 'none'")
 
   .main-box
     .left-vertical-box(v-if="pinnedTabsBarLeft || navBarLeft")
@@ -54,6 +54,7 @@
       NavigationBar.-vert(v-if="navBarLeft")
 
     .central-box
+      SearchBar(v-if="!navBarHorizontal" v-show="Settings.state.searchBarMode !== 'none'")
       PinnedTabsBar(v-if="pinnedTabsBarTop")
       .panel-box(ref="panelBoxEl" @wheel.passive="onWheel")
         component.panel(
