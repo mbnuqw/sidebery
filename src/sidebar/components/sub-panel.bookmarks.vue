@@ -9,7 +9,7 @@
   @mouseenter="onMouseEnter")
   .overlay(@click="closeSubPanel")
   .sub-panel
-    .bar(v-if="!state.active" :data-loading="state.loadingBar" @click="onBarClick")
+    .bar(v-if="!state.active || state.loading" :data-loading="state.loading" @click="onBarClick")
       svg.icon: use(xlink:href="#icon_bookmarks_badge")
       .grip
       .len(v-if="rootFolder?.len") {{rootFolder.len}}
@@ -40,7 +40,6 @@ import ScrollBox from 'src/components/scroll-box.vue'
 import BookmarkNode from 'src/components/bookmark-node.vue'
 import LoadingDots from 'src/components/loading-dots.vue'
 import { Permissions } from 'src/services/permissions'
-import { SetupPage } from 'src/services/setup-page'
 import { Menu } from 'src/services/menu'
 import { Selection } from 'src/services/selection'
 import { Settings } from 'src/services/settings'
@@ -54,7 +53,6 @@ const props = defineProps<{ tabsPanel: TabsPanel }>()
 const state = reactive({
   active: false,
   loading: false,
-  loadingBar: false,
   permitted: Permissions.reactive.bookmarks,
   navOffset: 0,
 })

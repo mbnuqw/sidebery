@@ -54,8 +54,7 @@
   top: 0
   height: var(--bookmarks-sub-panel-bar-height)
   padding: 0 6px 0 2px
-  background-color: var(--element-bg)
-  box-shadow: 0 0 0 var(--ff-border-width, 1px) var(--ff-border, var(--border, #00000016))
+  background-color: var(--toolbar-bg)
   &:before
     content: ''
     position: absolute
@@ -63,16 +62,12 @@
     top: 0
     left: 0
     width: 100%
-    height: 100%
+    height: calc(100% + 4px)
     background-color: var(--toolbar-bg)
     z-index: -1
 .BookmarksSubPanel .bar[data-loading="true"]:before
   display: block
   z-index: 1
-
-.BookmarksSubPanel .bar[data-loading="true"] .LoadingDots
-  z-index: 1
-  cursor: progress
 
 .BookmarksSubPanel .bar .icon
   position: relative
