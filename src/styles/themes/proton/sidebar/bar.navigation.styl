@@ -6,7 +6,7 @@
   --nav-btn-margin: var(--general-margin)
   --nav-delimiter-size: 16px
   --nav-btn-fg: var(--toolbar-fg)
-  --nav-btn-accent: var(--status-notice)
+  --nav-btn-accent: var(--selected-border)
   --nav-btn-border-radius: var(--general-border-radius)
   --nav-hidden-bar-margin: 3px
 #root[data-density="compact"]
@@ -75,7 +75,6 @@
   justify-content: center
   align-items: center
   flex-shrink: 0
-  overflow: hidden
   z-index: 10
   border-radius: var(--nav-btn-border-radius)
   transition: opacity var(--d-fast), transform var(--d-fast), z-index var(--d-fast)
@@ -92,8 +91,12 @@
 
   // for drop target
   &[data-drop-mode="before"]:before
+    box-shadow: -1px 0 0 0 var(--nav-btn-accent)
+  &[data-drop-mode="before"]:first-of-type:before
     box-shadow: inset 1px 0 0 0 var(--nav-btn-accent)
   &[data-drop-mode="after"]:before
+    box-shadow: 1px 0 0 0 var(--nav-btn-accent)
+  &[data-drop-mode="after"]:last-of-type:before
     box-shadow: inset -1px 0 0 0 var(--nav-btn-accent)
   &[data-drop-mode="in"]:before
     border-radius: var(--nav-btn-border-radius)
@@ -172,9 +175,13 @@
 // Drag and drop pointer for vertical list
 .NavigationBar.-vert .nav-item[data-drop-mode="before"]:before
 .NavigationBar .hidden-bar .nav-item[data-drop-mode="before"]:before
+  box-shadow: 0 -1px 0 0 var(--nav-btn-accent)
+.NavigationBar.-vert .nav-item[data-drop-mode="before"]:first-of-type:before
   box-shadow: inset 0 1px 0 0 var(--nav-btn-accent)
 .NavigationBar.-vert .nav-item[data-drop-mode="after"]:before
 .NavigationBar .hidden-bar .nav-item[data-drop-mode="after"]:before
+  box-shadow: 0 1px 0 0 var(--nav-btn-accent)
+.NavigationBar.-vert .nav-item[data-drop-mode="after"]:last-of-type:before
   box-shadow: inset 0 -1px 0 0 var(--nav-btn-accent)
 
 .NavigationBar[data-layout="inline"] .main-items .nav-item
@@ -260,7 +267,7 @@
 .NavigationBar .hidden-bar .nav-item .name-box
   position: relative
   display: block
-  margin: 0 calc((var(--nav-btn-width) - 16px) / 2) 0 -1px
+  margin: 0 calc(var(--nav-btn-width) / 2 - 4px) 0 -1px
   flex-grow: 1
   overflow: hidden
 .NavigationBar .nav-item .name
