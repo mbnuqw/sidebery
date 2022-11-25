@@ -54,8 +54,8 @@
       NavigationBar.-vert(v-if="navBarLeft")
 
     .central-box
-      SearchBar(v-if="!navBarHorizontal" v-show="Settings.state.searchBarMode !== 'none'")
       PinnedTabsBar(v-if="pinnedTabsBarTop")
+      SearchBar(v-if="!navBarHorizontal" v-show="Settings.state.searchBarMode !== 'none'")
       .panel-box(ref="panelBoxEl" @wheel.passive="onWheel")
         component.panel(
           v-for="(panel, i) in Sidebar.reactive.panels"

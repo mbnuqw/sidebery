@@ -2,12 +2,11 @@
 
 #root
   --search-border: var(--ff-border, var(--border, #00000016))
-  --search-height: 32px
-  --search-border-radius: 4px
+  --search-height: 30px
+  --search-border-radius: var(--general-border-radius)
   --search-font-size: rem(17)
 #root[data-density="compact"]
-  --search-height: 30px
-  --search-border-radius: 3px
+  --search-height: 28px
   --search-font-size: rem(16)
 
 .SearchBar
@@ -18,27 +17,28 @@
   flex-shrink: 0
   cursor: text
   opacity: 1
+  overflow: hidden
   z-index: 200
-  height: var(--search-height)
-  margin-bottom: var(--ff-border-width, 1px)
-  background-color: var(--toolbar-bg)
+  height: calc(var(--search-height) + var(--general-margin) * 2)
+  background-color: var(--frame-bg)
   transition: height var(--d-fast), opacity var(--d-fast), z-index var(--d-fast)
-  box-shadow: 0 0 0 var(--ff-border-width, 1px) var(--ff-border, var(--border))
   &:before
     content: ''
     position: absolute
-    top: 2px
-    left: 2px
-    width: calc(100% - 4px)
-    height: calc(100% - 4px)
+    top: var(--general-margin)
+    left: var(--general-margin)
+    width: calc(100% - var(--general-margin) * 2)
+    height: calc(100% - var(--general-margin) * 2)
     border-radius: var(--search-border-radius)
-    background-color: var(--frame-bg)
+    background-color: var(--toolbar-bg)
     box-shadow: inset 0 0 0 var(--ff-border-width, 1px) var(--search-border)
   &[data-showed="false"]
     opacity: 0
     height: 0
     z-index: 0
     margin-bottom: 0
+  &[data-focused="true"]:before
+    box-shadow: inset 0 0 0 1px var(--selected-border)
 
 .SearchBar .search-icon
   position: relative
@@ -52,8 +52,8 @@
     position: relative
     width: 16px
     height: 16px
-    fill: var(--frame-fg)
-    opacity: .7
+    fill: var(--toolbar-fg)
+    opacity: .6
     transition: opacity var(--d-fast)
     margin: 0 0 0 1px
 .SearchBar[data-active="true"] .search-icon > svg
@@ -71,7 +71,7 @@
   overflow: hidden
   font-size: var(--search-font-size)
   background-color: #00000000
-  color: var(--frame-fg)
+  color: var(--toolbar-fg)
 
 .SearchBar .placeholder
   position: absolute
@@ -79,7 +79,7 @@
   width: 100%
   padding: 0
   font-size: var(--search-font-size)
-  color: var(--frame-fg)
+  color: var(--toolbar-fg)
   opacity: .7
   transition: opacity var(--d-fast), transform var(--d-fast)
 .SearchBar:hover .placeholder
@@ -105,7 +105,7 @@
     position: relative
     width: 18px
     height: 18px
-    fill: var(--frame-fg)
+    fill: var(--toolbar-fg)
     opacity: .7
   &:before
     content: ''
@@ -115,7 +115,7 @@
     width: 18px
     height: 18px
     border-radius: var(--search-border-radius)
-    background-color: var(--frame-fg)
+    background-color: var(--toolbar-fg)
     opacity: 0
   &:hover:before
     opacity: .2

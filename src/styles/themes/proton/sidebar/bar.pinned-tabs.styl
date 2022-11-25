@@ -36,7 +36,10 @@
 #root[data-pinned-tabs-position="left"][data-nav-layout="left"] .PinnedTabsBar
 #root[data-pinned-tabs-position="right"][data-nav-layout="right"] .PinnedTabsBar
   height: auto
-  padding: var(--tabs-margin) 0
+  padding: var(--tabs-margin) 0 0
+#root[data-pinned-tabs-position="left"][data-nav-layout="left"][data-drag="true"] .PinnedTabsBar
+#root[data-pinned-tabs-position="right"][data-nav-layout="right"][data-drag="true"] .PinnedTabsBar
+  padding: var(--tabs-margin) 0 calc(var(--tabs-margin) + 16px)
 
 // Top
 #root[data-pinned-tabs-position="top"] .PinnedTabsBar

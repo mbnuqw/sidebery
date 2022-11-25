@@ -1,7 +1,5 @@
 <template lang="pug">
 .HistoryPanel.panel
-  .info-bar
-    .title {{state.scrollTitle}}
   ScrollBox(ref="scrollBox" @bottom="onScrollBottom")
     .history-groups(ref="groupsListEl")
       .group(
@@ -30,7 +28,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, reactive, onMounted, onUpdated } from 'vue'
+import { ref, computed, reactive, onUpdated } from 'vue'
 import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
 import { ScrollBoxComponent, HistoryItem } from 'src/types'
@@ -66,7 +64,6 @@ const state = reactive({
   expandedHistoryGroups: [true],
   historyLoading: false,
   allLoaded: false,
-  scrollTitle: getCurrentTime(),
 })
 
 const panel = Sidebar.reactive.panelsById.history
@@ -121,32 +118,6 @@ const historyList = computed((): HistoryGroup[] => {
   }
 
   return groups
-})
-
-let scrollEl: HTMLElement | undefined
-onMounted(() => {
-  if (scrollBox.value) scrollEl = scrollBox.value.getScrollBox() ?? undefined
-
-  // prettier-ignore
-  scrollEl?.addEventListener('scroll', (e: Event) => {
-    const scrollTop = (e.target as HTMLElement).scrollTop
-    if (scrollTop === 0) {
-      state.scrollTitle = getCurrentTime()
-      return
-    }
-
-    let historyGroup: HistoryGroup | undefined
-    for (let i = historyList.value.length; i--;) {
-      if (groupsPositions[i] < scrollTop) {
-        historyGroup = historyList.value[i]
-        break
-      }
-    }
-
-    if (historyGroup && historyGroup.title !== state.scrollTitle) {
-      state.scrollTitle = historyGroup.title
-    }
-  }, { passive: true })
 })
 
 function getItemTime(time?: number): string {

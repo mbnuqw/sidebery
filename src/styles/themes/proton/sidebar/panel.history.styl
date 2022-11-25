@@ -22,21 +22,9 @@
   z-index: 100
   transition: transform var(--d-fast), opacity var(--d-fast), z-index var(--d-fast)
 
-.HistoryPanel .info-bar
-  position: relative
-  display: flex
-  width: 100%
-  height: var(--history-info-bar-height)
-  justify-content: center
-  align-items: center
-  box-shadow: 0 0 0 1px var(--ff-border)
-  background-color: var(--toolbar-bg)
-  margin: 0 0 var(--ff-border-width, 0)
-  .title
-    position: relative
-    color: var(--toolbar-fg)
-    font-size: rem(14)
-    font-weight: 700
+.HistoryPanel .SubListTitle
+  position: sticky
+  top: 0px
 
 .HistoryPanel .history-groups
   position: relative

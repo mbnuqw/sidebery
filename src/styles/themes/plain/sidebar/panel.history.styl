@@ -28,21 +28,9 @@
   transition: transform var(--d-fast), opacity var(--d-fast), z-index var(--d-fast)
   box-shadow: 0 0 8px 0 var(--border), 0 -1px 0 0 var(--border)
 
-.HistoryPanel .info-bar
-  position: relative
-  display: flex
-  width: 100%
-  height: var(--history-info-bar-height)
-  justify-content: center
-  align-items: center
-  background-color: var(--element-bg)
-  box-shadow: 0 0 3px 0 #00000016
-  border-radius: var(--element-roundness)
-  .title
-    position: relative
-    color: var(--toolbar-fg)
-    font-size: rem(14)
-    font-weight: 700
+.HistoryPanel .SubListTitle
+  position: sticky
+  top: 0px
 
 .HistoryPanel .history-groups
   position: relative

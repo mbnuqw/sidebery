@@ -312,12 +312,13 @@ function calcBorder(themeColors: browser.theme.ThemeColors, parsed: ParsedThemeC
     !monoColorScheme ||
     !frame ||
     !bar ||
+    !border ||
     border?.[3] === 0 ||
     (border?.[0] === frame?.[0] && border?.[1] === frame?.[1] && border?.[2] === frame?.[2]) ||
     (border?.[0] === bar?.[0] && border?.[1] === bar?.[1] && border?.[2] === bar?.[2])
   ) {
     themeColors.border = undefined
-    themeColors.border_width = '0'
+    themeColors.border_width = '0px'
     return
   }
 
