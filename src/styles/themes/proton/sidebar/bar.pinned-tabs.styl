@@ -69,35 +69,43 @@
 // -
 .PinnedTabsBar .tab-wrapper
   position: relative
-  // margin: 0 -1px 0 0
   &:before
+    content: ''
+    position: absolute
+    top: calc(var(--tabs-margin) * -1)
+    left: calc(var(--tabs-margin) * -1)
+    width: calc(100% + var(--tabs-margin))
+    height: calc(100% + var(--tabs-margin))
+  &:after
     content: ''
     position: absolute
     display: none
     top: 0
-    left: 0
-    width: 1px
+    left: -2px
+    width: 2px
     height: 100%
-    z-index: 20
-    background-color: var(--frame-fg)
+    z-index: 2000
+    background-color: var(--selected-border)
     pointer-events: none
-  &[data-targeted="true"]:before
+    border-radius: 4px
+    box-shadow: 0 0 0 1px var(--frame-bg)
+  &[data-targeted="true"]:after
     display: block
+
 #root[data-pinned-tabs-position="panel"][data-pinned-tabs-list="true"] .PinnedTabsBar .tab-wrapper
   width: 100%
-  // Close the top gap
-  &:after
-    content: ''
-    position: absolute
-    width: 100%
-    height: 2px
-    top: -2px
-
-#root[data-pinned-tabs-position="left"] .PinnedTabsBar .tab-wrapper:before
-#root[data-pinned-tabs-position="right"] .PinnedTabsBar .tab-wrapper:before
-#root[data-pinned-tabs-position="panel"][data-pinned-tabs-list="true"] .PinnedTabsBar .tab-wrapper:before
+#root[data-pinned-tabs-position="panel"][data-pinned-tabs-list="true"] .PinnedTabsBar .tab-wrapper:after
+  top: 0
+  left: 0
   width: 100%
-  height: 1px
+  height: 2px
+
+#root[data-pinned-tabs-position="left"] .PinnedTabsBar .tab-wrapper:after
+#root[data-pinned-tabs-position="right"] .PinnedTabsBar .tab-wrapper:after
+  top: -2px
+  left: 0
+  width: 100%
+  height: 2px
 
 // ---
 // -- The last drop position
@@ -105,33 +113,36 @@
 .PinnedTabsBar .to-the-end
   position: relative
   opacity: 0
-  transition: opacity var(--d-fast)
   &:before
     content: ''
     position: absolute
     top: 0
     left: 0
-    background-color: var(--frame-fg)
+    background-color: var(--selected-border)
+    box-shadow: 0 0 0 1px var(--frame-bg)
+    z-index: 2000
 
 #root[data-pinned-tabs-position="panel"] .PinnedTabsBar .to-the-end
 #root[data-pinned-tabs-position="top"] .PinnedTabsBar .to-the-end
   &:before
-    width: 1px
+    left: -2px
+    width: 2px
     height: var(--tabs-pinned-height)
 
 #root[data-pinned-tabs-position="panel"][data-pinned-tabs-list="true"] .PinnedTabsBar .to-the-end
   width: 100%
   &:before
-    top: -1px
+    top: 0
     width: 100%
-    height: 1px
+    height: 2px
 
 #root[data-pinned-tabs-position="left"] .PinnedTabsBar .to-the-end
 #root[data-pinned-tabs-position="right"] .PinnedTabsBar .to-the-end
   width: 100%
   &:before
+    top: -2px
     width: var(--tabs-pinned-width)
-    height: 1px
+    height: var(--tabs-margin)
 
 #root[data-drag="true"] .PinnedTabsBar[data-dnd-end="true"] .to-the-end
   opacity: 1

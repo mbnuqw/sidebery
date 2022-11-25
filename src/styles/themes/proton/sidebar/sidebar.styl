@@ -225,14 +225,15 @@ body
     left: 0
     width: 100vw
     height: 2px
-    background-color: var(--frame-fg)
+    background-color: var(--selected-border)
+    box-shadow: 3px 0 0 1px var(--frame-bg)
     opacity: 0
   &:before
     top: 8px
     left: 0
     width: 0
     height: 0
-    border-left: 4px solid var(--frame-fg)
+    border-left: 4px solid var(--selected-border)
     border-right: 4px solid #00000000
     border-top: 4px solid #00000000
     border-bottom: 4px solid #00000000
@@ -251,7 +252,7 @@ body
     filter: contrast(200%)
 #root[data-drag="true"] .pointer
   opacity: 1
-  z-index: 100
+  z-index: 1000
 for i in 1..16
   .TabsPanel[data-pos="center"] ~ .pointer[data-pointer="between"][data-lvl=\"{i}\"]:before
   .TabsPanel[data-pos="center"] ~ .pointer[data-pointer="between"][data-lvl=\"{i}\"]:after
@@ -277,11 +278,11 @@ for i in 1..16
     height: 16px
     transform: rotateZ(45deg)
   &:before
-    box-shadow: inset 0 0 0 2px var(--frame-fg)
+    box-shadow: inset 0 0 0 2px var(--selected-border)
     transition: background-color var(--d-fast)
   &:after
     opacity: 1
-    box-shadow: inset -1px 1px 0 0 var(--frame-fg)
+    box-shadow: inset -1px 1px 0 0 var(--selected-border)
   &[data-expanding="true"]
     animation: pointer-expand-arrow .3s
   &[data-expanding="true"]:after
