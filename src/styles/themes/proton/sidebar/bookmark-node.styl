@@ -37,6 +37,8 @@
 // -- Body
 // -
 .BookmarkNode > .body
+  position: relative
+  top: 0
   display: flex
   align-items: center
   cursor: default
@@ -70,6 +72,9 @@
     height: 1px
     background-color: var(--frame-fg)
     opacity: .3
+
+.BookmarkNode[data-expanded="true"] > .body
+  z-index: 1
 
 .BookmarkNode[data-expanded="true"] > .body:before
   background-color: var(--bookmarks-node-activated-bg)
