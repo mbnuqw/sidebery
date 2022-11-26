@@ -2357,12 +2357,7 @@ export function activateParent(tabId?: ID): void {
  */
 export function flattenTabs(tabIds: ID[]): void {
   // Sort ids
-  tabIds.sort((a, b) => {
-    const aTab = Tabs.byId[a]
-    const bTab = Tabs.byId[b]
-    if (!aTab || !bTab) return 0
-    return aTab.index - bTab.index
-  })
+  sortTabIds(tabIds)
 
   // Flatten branch if selected only one non-parent tab
   if (tabIds.length === 1) {
