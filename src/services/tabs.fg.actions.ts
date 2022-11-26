@@ -2040,7 +2040,7 @@ async function moveTabsToWin(
     }
   }
 
-  const ans = await IPC.sidebar(windowId, 'moveTabsToThisWin', tabs)
+  const ans = await IPC.sidebar(windowId, 'moveTabsToThisWin', tabs).catch(() => false)
   if (!ans) {
     await browser.tabs.move(
       tabs.map(t => t.id),
