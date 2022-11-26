@@ -2066,7 +2066,7 @@ export async function moveToThisWin(tabs: Tab[], dst?: DstPlaceInfo): Promise<bo
   for (let i = 0; i < tabs.length; i++) {
     const tab = tabs[i]
     const rTab = Tabs.reactive.byId[tab.id]
-    const parent = Tabs.reactive.byId[dst.parentId ?? tab.parentId ?? NOID]
+    const parent = Tabs.byId[dst.parentId ?? tab.parentId ?? NOID]
     const index = (dst.index ?? 0) + i
     if (!!tab.pinned !== !!dst.pinned) {
       await browser.tabs.update(tab.id, { pinned: !!dst.pinned })
