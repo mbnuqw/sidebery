@@ -285,12 +285,17 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
       icon: 'icon_flatten',
       onClick: () => Tabs.flattenTabs(Selection.get()),
     }
-    if (Selection.getLength() <= 1) option.inactive = true
+    const selLen = Selection.getLength()
+    if (selLen <= 0) option.inactive = true
+
     const firstTab = Tabs.byId[Selection.getFirst()]
     if (!firstTab) return
+
     if (Selection.get().every(t => firstTab.lvl === Tabs.byId[t]?.lvl)) {
       option.inactive = true
     }
+    if (selLen === 1 && firstTab.isParent) option.inactive = false
+    if (selLen === 1 && firstTab.lvl > 0) option.inactive = false
     if (!Settings.state.tabsTree || firstTab.pinned) option.inactive = true
     if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option

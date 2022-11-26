@@ -2356,13 +2356,25 @@ export function activateParent(tabId?: ID): void {
  * Flatten tabs tree
  */
 export function flattenTabs(tabIds: ID[]): void {
+  // Flatten branch if selected only one non-parent tab
+  if (tabIds.length === 1) {
+    const tab = Tabs.byId[tabIds[0]]
+    if (tab && !tab.isParent && tab.lvl > 0) {
+      const parentTab = Tabs.byId[tab.parentId]
+      if (parentTab) tabIds.unshift(parentTab.id)
+    }
+  }
+
   // Gather children
   let minLvlTab = { lvl: 999 } as Tab
-  const toFlat = [...tabIds]
+  const toFlat: ID[] = []
   const ttf: Tab[] = []
   for (const id of tabIds) {
     const tab = Tabs.byId[id]
-    if (tab) ttf.push(tab)
+    if (tab) {
+      ttf.push(tab)
+      toFlat.push(id)
+    }
   }
   for (const tab of Tabs.list) {
     if (tab.hidden) continue
