@@ -2025,11 +2025,6 @@ async function moveTabsToWin(
     const tab = Tabs.byId[id]
     const rTab = Tabs.reactive.byId[id]
     if (!tab || !rTab) continue
-    if (tab.parentId > -1 && !tabIds.includes(tab.parentId)) {
-      rTab.lvl = 0
-      tab.lvl = 0
-      tab.parentId = -1
-    }
     tabs.push(Utils.cloneObject(tab))
     if (tab.folded) {
       for (let i = tab.index + 1; i < Tabs.list.length; i++) {
