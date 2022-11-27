@@ -33,8 +33,10 @@ export function onOutsideSearchInput(value: string): void {
 
 export function onOutsideSearchExit(): void {
   if (!Search.reactive.barIsShowed) return
-  const hasFocus = document.hasFocus()
-  if (!hasFocus) Search.close()
+
+  const sidebarFocused = document.hasFocus()
+  if (!sidebarFocused) Search.close()
+  else if (inputEl && inputEl !== document.activeElement) Search.reactive.barIsActive = false
 }
 
 export function next(): void {
