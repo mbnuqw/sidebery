@@ -714,8 +714,8 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, ignoreChildren?:
       panelId: tab.panelId,
     }
     Tabs.removedTabs.unshift(removedTabInfo)
-    if (Tabs.removedTabs.length > 50) {
-      Tabs.removedTabs = Tabs.removedTabs.slice(5)
+    if (Tabs.removedTabs.length > 64) {
+      Tabs.removedTabs = Tabs.removedTabs.slice(0, 50)
     }
   }
 
