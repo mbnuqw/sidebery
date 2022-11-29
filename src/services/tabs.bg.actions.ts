@@ -33,6 +33,28 @@ export async function loadTabs(): Promise<void> {
       tab.proxified = true
       showProxyBadge(tab.id)
     }
+
+    // Detect if pinned tabs is actually discarded and manually call discard()
+    // for browser.sessionstore.restore_pinned_tabs_on_demand = true
+    // see https://bugzilla.mozilla.org/show_bug.cgi?id=1703072
+    if (tab.pinned && !tab.discarded && tab.url[0] === 'h' && tab.status === 'complete') {
+      browser.tabs
+        .executeScript(tab.id, {
+          code: '(document.body?.childNodes?.length ?? 1)+(document.head?.childNodes?.length ?? 1)',
+          runAt: 'document_start',
+          matchAboutBlank: true,
+        })
+        .then(ans => {
+          if (ans?.[0] === 0) {
+            browser.tabs.discard(tab.id).catch(() => {
+              Logs.warn('Tabs.loadTabs: Cannot discard pinned tab for 1703072')
+            })
+          }
+        })
+        .catch(() => {
+          // Ignore this
+        })
+    }
   }
 
   Tabs.ready = true
