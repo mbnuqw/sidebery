@@ -507,6 +507,12 @@ export const setupPageTranslations: Translations = {
     de: 'Native Scrollleiste verwenden',
     zh_CN: '使用原生滚动条',
   },
+  'settings.hide_group_tabs': {
+    en: 'Hide group tabs of collapsed tabs',
+    ru: '',
+    de: '',
+    zh_CN: '',
+  },
   'settings.native_scrollbars_thin': {
     en: 'Use thin scroll-bars',
     ru: 'Использовать узкие скроллбары',
