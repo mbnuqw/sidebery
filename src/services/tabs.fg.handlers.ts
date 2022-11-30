@@ -1105,6 +1105,16 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
     prevActive.active = false
     rPrevActive.active = false
     Tabs.writeActiveTabsHistory(prevActive, tab)
+
+    // Hide previously active tab if needed
+    const hideFolded = Settings.state.hideFoldedTabs
+    const hideFoldedParent = hideFolded && Settings.state.hideFoldedParent === 'any'
+    const hideFoldedGroup = hideFolded && Settings.state.hideFoldedParent === 'group'
+    if (prevActive?.folded && (hideFoldedParent || (hideFoldedGroup && prevActive.isGroup))) {
+      browser.tabs.hide?.(prevActive.id).catch(err => {
+        Logs.err('Tabs.onTabActivated: Cannot hide prev active tab', err)
+      })
+    }
   }
 
   tab.active = true

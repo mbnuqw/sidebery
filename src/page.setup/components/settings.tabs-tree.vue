@@ -23,10 +23,12 @@ section(ref="el")
     :value="Settings.state.hideFoldedTabs"
     @update:value="toggleHideFoldedTabs")
   .sub-fields
-    ToggleField(
-      label="settings.hide_group_tabs"
-      v-model:value="Settings.state.hideGroupTabs"
+    SelectField(
+      label="settings.hide_folded_parent"
+      optLabel="settings.hide_folded_parent_"
+      v-model:value="Settings.state.hideFoldedParent"
       :inactive="!Settings.state.hideFoldedTabs"
+      :opts="Settings.getOpts('hideFoldedParent')"
       @update:value="Settings.saveDebounced(150)")
   ToggleField(
     label="settings.auto_fold_tabs"

@@ -507,12 +507,6 @@ export const setupPageTranslations: Translations = {
     de: 'Native Scrollleiste verwenden',
     zh_CN: '使用原生滚动条',
   },
-  'settings.hide_group_tabs': {
-    en: 'Hide group tabs of collapsed tabs',
-    ru: '',
-    de: '',
-    zh_CN: '',
-  },
   'settings.native_scrollbars_thin': {
     en: 'Use thin scroll-bars',
     ru: 'Использовать узкие скроллбары',
@@ -1643,6 +1637,22 @@ export const setupPageTranslations: Translations = {
     ru: 'Скрывать свернутые вкладки',
     de: 'Verstecke eingeklappte Tabs',
     zh_CN: '隐藏已折叠标签页',
+  },
+  'settings.hide_folded_parent': {
+    en: 'Hide parent tab',
+    ru: 'Скрывать родительскую вкладку',
+  },
+  'settings.hide_folded_parent_any': {
+    en: 'any tab',
+    ru: 'любую вкладку',
+  },
+  'settings.hide_folded_parent_group': {
+    en: 'group tab',
+    ru: 'группу вкладку',
+  },
+  'settings.hide_folded_parent_none': {
+    en: 'off',
+    ru: 'выкл',
   },
   'settings.auto_fold_tabs': {
     en: 'Auto fold tabs',

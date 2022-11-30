@@ -2122,8 +2122,9 @@ export async function moveToNewPanel(tabIds: ID[]): Promise<void> {
  */
 export function updateNativeTabsVisibility(): void {
   const hideFolded = Settings.state.hideFoldedTabs
+  const hideFoldedParent = hideFolded && Settings.state.hideFoldedParent === 'any'
+  const hideFoldedGroup = hideFolded && Settings.state.hideFoldedParent === 'group'
   const hideInact = Settings.state.hideInact
-  const hideGroup = hideFolded && Settings.state.hideGroupTabs
 
   if (!browser.tabs.hide) return
 
@@ -2145,7 +2146,7 @@ export function updateNativeTabsVisibility(): void {
       continue
     }
 
-    if (hideGroup && tab.folded && !tab.active) {
+    if (tab.folded && !tab.active && (hideFoldedParent || (hideFoldedGroup && tab.isGroup))) {
       if (!tab.hidden) toHide.push(tab.id)
       continue
     }
@@ -2187,30 +2188,35 @@ export function recalcBranchLen(id: ID): void {
 /**
  * Hide children of tab
  */
-export function foldTabsBranch(tabId: ID): void {
+export function foldTabsBranch(rootTabId: ID): void {
   const toHide: ID[] = []
-  const tab = Tabs.byId[tabId]
-  const rTab = Tabs.reactive.byId[tabId]
-  if (!tab || !rTab) return
-  tab.folded = true
-  rTab.folded = true
-  for (let i = tab.index + 1; i < Tabs.list.length; i++) {
+  const rootTab = Tabs.byId[rootTabId]
+  const rRootTab = Tabs.reactive.byId[rootTabId]
+  if (!rootTab || !rRootTab) return
+
+  const hideFolded = Settings.state.hideFoldedTabs
+  const hideFoldedParent = hideFolded && Settings.state.hideFoldedParent === 'any'
+  const hideFoldedGroup = hideFolded && Settings.state.hideFoldedParent === 'group'
+
+  rootTab.folded = true
+  rRootTab.folded = true
+
+  for (let i = rootTab.index + 1; i < Tabs.list.length; i++) {
     const t = Tabs.list[i]
-    if (t.lvl <= tab.lvl) break
-    if (t.active) browser.tabs.update(tabId, { active: true })
+    if (t.lvl <= rootTab.lvl) break
+    if (t.active) browser.tabs.update(rootTabId, { active: true })
     if (!t.invisible) {
+      const rTab = Tabs.reactive.byId[t.id]
+      if (rTab) rTab.invisible = true
       t.invisible = true
       toHide.push(t.id)
     }
-    // always hide the reactive tab
-    const rTab = Tabs.reactive.byId[t.id]
-    if (rTab) rTab.invisible = true
   }
 
   // Update succession
-  if (tab.active) {
-    const target = findSuccessorTab(tab)
-    if (target) browser.tabs.moveInSuccession([tab.id], target.id)
+  if (rootTab.active) {
+    const target = findSuccessorTab(rootTab)
+    if (target) browser.tabs.moveInSuccession([rootTab.id], target.id)
   }
 
   if (Settings.state.discardFolded) {
@@ -2229,60 +2235,69 @@ export function foldTabsBranch(tabId: ID): void {
     }
   }
 
-  if (Settings.state.hideFoldedTabs && toHide.length) {
+  if (hideFolded && toHide.length) {
     browser.tabs.hide?.(toHide).catch(err => {
       Logs.err('Tabs.foldTabsBranch: Cannot hide tabs:', err)
     })
-
   }
 
-  // only hide group tab if it isn't active
-  if(!tab.active && Settings.state.hideFoldedTabs && Settings.state.hideGroupTabs) {
-    browser.tabs.hide?.(tabId).catch(err => {
-      Logs.err('Tabs.foldTabsBranch: Cannot hide group tab:', err);
-    });
+  // Hide parent tab if it isn't active
+  if (!rootTab.active && (hideFoldedParent || (hideFoldedGroup && rootTab.isGroup))) {
+    browser.tabs.hide?.(rootTabId).catch(err => {
+      Logs.err('Tabs.foldTabsBranch: Cannot hide parent tab:', err)
+    })
   }
 
-  saveTabData(tabId)
+  saveTabData(rootTabId)
   cacheTabsData()
-  recalcBranchLen(tabId)
+  recalcBranchLen(rootTabId)
 }
 
 /**
  * Show children of tab
  */
-export function expTabsBranch(tabId: ID): void {
+export function expTabsBranch(rootTabId: ID): void {
   const autoFoldTabs = Settings.state.autoFoldTabs
+  const hideFolded = Settings.state.hideFoldedTabs
+  const hideFoldedParent = hideFolded && Settings.state.hideFoldedParent === 'any'
+  const hideFoldedGroup = hideFolded && Settings.state.hideFoldedParent === 'group'
   const toShow: ID[] = []
   const preserve: ID[] = []
   let autoFold: Tab[] = []
 
-  const tab = Tabs.byId[tabId]
-  if (!tab) return
+  const rootTab = Tabs.byId[rootTabId]
+  if (!rootTab) return
 
-  tab.lastAccessed = Date.now()
-  if (tab.invisible) expTabsBranch(tab.parentId)
+  rootTab.lastAccessed = Date.now()
+  if (rootTab.invisible) expTabsBranch(rootTab.parentId)
   for (const tab of Tabs.list) {
     if (tab.pinned || tab.panelId !== tab.panelId) continue
-    if (autoFoldTabs && tab.id !== tabId && tab.isParent && !tab.folded && tab.lvl === tab.lvl) {
+    if (
+      autoFoldTabs &&
+      tab.id !== rootTabId &&
+      tab.isParent &&
+      !tab.folded &&
+      tab.lvl === rootTab.lvl
+    ) {
       autoFold.push(tab)
     }
-    if (tab.id === tabId) {
+    if (tab.id === rootTabId) {
       const rTab = Tabs.reactive.byId[tab.id]
       tab.folded = false
       if (rTab) rTab.folded = false
     }
-    if (tab.id !== tabId && tab.folded) preserve.push(tab.id)
-    if (tab.parentId === tabId || toShow.includes(tab.parentId)) {
-      if (tab.invisible && (tab.parentId === tabId || !preserve.includes(tab.parentId))) {
+    if (tab.id !== rootTabId && tab.folded) preserve.push(tab.id)
+    if (tab.parentId === rootTabId || toShow.includes(tab.parentId)) {
+      if (tab.invisible && (tab.parentId === rootTabId || !preserve.includes(tab.parentId))) {
         const rTab = Tabs.reactive.byId[tab.id]
         if (rTab) rTab.invisible = false
+        tab.invisible = false
 
-        // show subgroup tabs only if they're not folded
-        if (!tab.folded || !Settings.state.hideFoldedTabs || !Settings.state.hideGroupTabs || tab.active) {
-          toShow.push(tab.id)
-          tab.invisible = false
-        }
+        // Don't show sub-parent tabs if they're folded
+        const leaveHidden =
+          tab.folded && !tab.active && (hideFoldedParent || (hideFoldedGroup && tab.isGroup))
+
+        if (!leaveHidden) toShow.push(tab.id)
       }
     }
   }
@@ -2306,25 +2321,26 @@ export function expTabsBranch(tabId: ID): void {
   }
 
   // Update succession
-  if (tab.active) {
-    const target = findSuccessorTab(tab)
-    if (target) browser.tabs.moveInSuccession([tab.id], target.id)
+  if (rootTab.active) {
+    const target = findSuccessorTab(rootTab)
+    if (target) browser.tabs.moveInSuccession([rootTab.id], target.id)
   }
 
-  // Show the group tab when expanding the group
-  if (Settings.state.hideFoldedTabs && Settings.state.hideGroupTabs) {
-    browser.tabs.show?.(tabId).catch(err => {
-      Logs.err('Tabs.expTabsBranch: Cannot show group tab:', err)
+  // Show the parent tab when expanding the group
+  if (hideFolded && (hideFoldedParent || (hideFoldedGroup && rootTab.isGroup))) {
+    rootTab.invisible = false
+    browser.tabs.show?.(rootTabId).catch(err => {
+      Logs.err('Tabs.expTabsBranch: Cannot show parent tab:', err)
     })
   }
 
-  if (Settings.state.hideFoldedTabs && toShow.length) {
+  if (hideFolded && toShow.length) {
     browser.tabs.show?.(toShow).catch(err => {
       Logs.err('Tabs.expTabsBranch: Cannot show tabs:', err)
     })
   }
 
-  saveTabData(tabId)
+  saveTabData(rootTabId)
   cacheTabsData()
 }
 

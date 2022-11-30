@@ -121,7 +121,8 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
     prev.activateAfterClosingNoDiscarded !== next.activateAfterClosingNoDiscarded
   const resetTree = prev.tabsTree !== next.tabsTree && prev.tabsTree
   const updateTree = prev.tabsTreeLimit !== next.tabsTreeLimit
-  const updateInvisTabs = prev.hideFoldedTabs !== next.hideFoldedTabs
+  const hideFoldedTabs = prev.hideFoldedTabs !== next.hideFoldedTabs
+  const hideFoldedParent = prev.hideFoldedParent !== next.hideFoldedParent
   const theme = prev.theme !== next.theme
   const highlightOpenBookmarks = prev.highlightOpenBookmarks !== next.highlightOpenBookmarks
   const colorScheme = prev.colorScheme !== next.colorScheme
@@ -167,7 +168,7 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
     Tabs.updateTabsTree()
   }
 
-  if ((hideInactTabs || updateInvisTabs) && Sidebar.hasTabs) {
+  if ((hideInactTabs || hideFoldedTabs || hideFoldedParent) && Sidebar.hasTabs) {
     Tabs.updateNativeTabsVisibility()
   }
 

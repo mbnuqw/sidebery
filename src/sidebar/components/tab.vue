@@ -427,14 +427,8 @@ function activate(): void {
   }
 
   if (props.tab.id !== Tabs.activeId) {
-    const tab = Tabs.byId[Tabs.activeId]
     activating = true
     browser.tabs.update(props.tab.id, { active: true })
-    if(tab && tab.folded && Settings.state.hideFoldedTabs && Settings.state.hideGroupTabs) {
-      browser.tabs.hide?.(tab.id).catch(err => {
-        Logs.err('Deslecting tab, cannot hide group tab:', err)
-      })
-    }
   }
 }
 

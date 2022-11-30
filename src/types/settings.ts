@@ -89,6 +89,7 @@ export interface SettingsState {
   groupOnOpen: boolean
   tabsTreeLimit: typeof SETTINGS_OPTIONS.tabsTreeLimit[number]
   hideFoldedTabs: boolean
+  hideFoldedParent: typeof SETTINGS_OPTIONS.hideFoldedParent[number]
   autoFoldTabs: boolean
   autoFoldTabsExcept: typeof SETTINGS_OPTIONS.autoFoldTabsExcept[number]
   autoExpandTabs: boolean
