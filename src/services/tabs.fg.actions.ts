@@ -2123,6 +2123,7 @@ export async function moveToNewPanel(tabIds: ID[]): Promise<void> {
 export function updateNativeTabsVisibility(): void {
   const hideFolded = Settings.state.hideFoldedTabs
   const hideInact = Settings.state.hideInact
+  const hideGroup = hideFolded && Settings.state.hideGroupTabs
 
   if (!browser.tabs.hide) return
 
@@ -2140,6 +2141,11 @@ export function updateNativeTabsVisibility(): void {
     if (tab.pinned) continue
 
     if (hideFolded && tab.invisible) {
+      if (!tab.hidden) toHide.push(tab.id)
+      continue
+    }
+
+    if (hideGroup && tab.folded && !tab.active) {
       if (!tab.hidden) toHide.push(tab.id)
       continue
     }
@@ -2193,11 +2199,12 @@ export function foldTabsBranch(tabId: ID): void {
     if (t.lvl <= tab.lvl) break
     if (t.active) browser.tabs.update(tabId, { active: true })
     if (!t.invisible) {
-      const rTab = Tabs.reactive.byId[t.id]
-      if (rTab) rTab.invisible = true
       t.invisible = true
       toHide.push(t.id)
     }
+    // always hide the reactive tab
+    const rTab = Tabs.reactive.byId[t.id]
+    if (rTab) rTab.invisible = true
   }
 
   // Update succession
@@ -2226,6 +2233,14 @@ export function foldTabsBranch(tabId: ID): void {
     browser.tabs.hide?.(toHide).catch(err => {
       Logs.err('Tabs.foldTabsBranch: Cannot hide tabs:', err)
     })
+
+  }
+
+  // only hide group tab if it isn't active
+  if(!tab.active && Settings.state.hideFoldedTabs && Settings.state.hideGroupTabs) {
+    browser.tabs.hide?.(tabId).catch(err => {
+      Logs.err('Tabs.foldTabsBranch: Cannot hide group tab:', err);
+    });
   }
 
   saveTabData(tabId)
@@ -2261,9 +2276,13 @@ export function expTabsBranch(tabId: ID): void {
     if (tab.parentId === tabId || toShow.includes(tab.parentId)) {
       if (tab.invisible && (tab.parentId === tabId || !preserve.includes(tab.parentId))) {
         const rTab = Tabs.reactive.byId[tab.id]
-        toShow.push(tab.id)
         if (rTab) rTab.invisible = false
-        tab.invisible = false
+
+        // show subgroup tabs only if they're not folded
+        if (!tab.folded || !Settings.state.hideFoldedTabs || !Settings.state.hideGroupTabs || tab.active) {
+          toShow.push(tab.id)
+          tab.invisible = false
+        }
       }
     }
   }
@@ -2290,6 +2309,13 @@ export function expTabsBranch(tabId: ID): void {
   if (tab.active) {
     const target = findSuccessorTab(tab)
     if (target) browser.tabs.moveInSuccession([tab.id], target.id)
+  }
+
+  // Show the group tab when expanding the group
+  if (Settings.state.hideFoldedTabs && Settings.state.hideGroupTabs) {
+    browser.tabs.show?.(tabId).catch(err => {
+      Logs.err('Tabs.expTabsBranch: Cannot show group tab:', err)
+    })
   }
 
   if (Settings.state.hideFoldedTabs && toShow.length) {

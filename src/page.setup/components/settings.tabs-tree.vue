@@ -22,6 +22,12 @@ section(ref="el")
     :inactive="!Settings.state.tabsTree"
     :value="Settings.state.hideFoldedTabs"
     @update:value="toggleHideFoldedTabs")
+  .sub-fields
+    ToggleField(
+      label="settings.hide_group_tabs"
+      v-model:value="Settings.state.hideGroupTabs"
+      :inactive="!Settings.state.hideFoldedTabs"
+      @update:value="Settings.saveDebounced(150)")
   ToggleField(
     label="settings.auto_fold_tabs"
     :inactive="!Settings.state.tabsTree"
