@@ -211,8 +211,6 @@
 .SelectInput[data-folded="true"] .opt[data-active="true"]:after
   border-top-right-radius: 0
   border-bottom-right-radius: 0
-.SelectInput[data-folded="true"] .opt[data-active="true"][data-none="true"]:before
-  opacity: 0
 
 .SelectInput .opt.-exp
   display: flex
@@ -280,7 +278,13 @@
 .SelectInput .opt[data-active="true"]:before
 .SelectInput .opt[data-active="true"]:after
   opacity: .2
-  background-color: var(--toolbar-fg-active)
+  background-color: var(--color, var(--toolbar-fg-active))
+.SelectInput .opt[data-active="true"][data-none="true"]
+  color: var(--toolbar-fg)
+.SelectInput .opt[data-active="true"][data-none="true"]:before
+  background-color: var(--toolbar-fg)
+.SelectInput .opt[data-active="true"][data-none="true"]:after
+  background-color: #ff2200
 
 .ToggleInput[data-active="true"] .opt.-true
 .ToggleInput[data-active="false"] .opt.-false

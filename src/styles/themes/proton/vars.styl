@@ -56,28 +56,37 @@
 // ---
 // -- Local color
 // -
-#root[data-color-scheme="dark"] [data-color="toolbar"]
-  --color: #f2f2f2
-#root[data-color-scheme="light"] [data-color="toolbar"]
-  --color: #121212
+#root[data-color-scheme="dark"]
+  [data-color="toolbar"]
+    --color: #f2f2f2
+  [data-color="inactive"]
+    --color: #aaa
+  [data-color="yellow"]
+    --color: #ffcb00
+  [data-color="purple"]
+    --color: #c071fc
+#root[data-color-scheme="light"]
+  [data-color="toolbar"]
+    --color: #121212
+  [data-color="inactive"]
+    --color: #646464
+  [data-color="yellow"]
+    --color: #f7c500
+  [data-color="purple"]
+    --color: #af51f5
+
 [data-color="blue"]
   --color: #37adff
 [data-color="turquoise"]
   --color: #00c79a
 [data-color="green"]
   --color: #51cd00
-[data-color="yellow"]
-  --color: #ffcb00
 [data-color="orange"]
   --color: #ff9f00
 [data-color="red"]
   --color: #ff613d
 [data-color="pink"]
   --color: #ff4bda
-[data-color="purple"]
-  --color: #af51f5
-[data-color="inactive"]
-  --color: #787878
 
 // ---
 // -- Animation speed

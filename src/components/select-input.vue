@@ -26,7 +26,7 @@
     .opt(
       v-for="opt in props.opts"
       :title="getTooltip(opt)"
-      :data-none="opt === props.noneOpt"
+      :data-none="((opt as InputObjOpt).value ?? opt) === props.noneOpt"
       :data-color="getOptColor(opt) ?? false"
       :data-active="isActive(opt)"
       @mousedown.stop="select(opt)")
