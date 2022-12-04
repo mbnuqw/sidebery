@@ -58,6 +58,13 @@
             .label {{opt.label}}
             .icon-box(v-if="opt.sub")
               svg.icon.-rotate-90: use(xlink:href="#icon_expand")
+            .flag-btn(
+              v-if="opt.flag?.icon"
+              :data-active="!!opt.flag.active"
+              @mousedown.stop=""
+              @mouseup.stop="opt.flag?.onClick?.(opt)")
+              svg.flag-icon(v-if="opt.flag.icon.startsWith('#')"): use(:xlink:href="opt.flag.icon")
+              img.flag-icon(v-else :src="opt.flag.icon")
   Transition(name="menu" type="transition"): .container(v-show="state.tackActive")
     .box(ref="tackEl" :style="state.tackPosStyle")
       ScrollBox
@@ -117,6 +124,13 @@
             .label {{opt.label}}
             .icon-box(v-if="opt.sub")
               svg.icon.-rotate-90: use(xlink:href="#icon_expand")
+            .flag-btn(
+              v-if="opt.flag?.icon"
+              :data-active="!!opt.flag.active"
+              @mousedown.stop=""
+              @mouseup.stop="opt.flag?.onClick?.(opt)")
+              svg.flag-icon(v-if="opt.flag.icon.startsWith('#')"): use(:xlink:href="opt.flag.icon")
+              img.flag-icon(v-else :src="opt.flag.icon")
 </template>
 
 <script lang="ts" setup>

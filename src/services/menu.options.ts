@@ -100,7 +100,7 @@ export const menuOptions: Record<string, () => MenuOption | MenuOption[] | undef
 
   newTabContainers: () => {
     const panel = Sidebar.reactive.panelsById[Selection.getFirst()]
-    if (!panel) return
+    if (!Utils.isTabsPanel(panel)) return
 
     const opts: MenuOption[] = []
     const ignoreRules = Menu.ctxMenuIgnoreContainersRules
@@ -111,6 +111,21 @@ export const menuOptions: Record<string, () => MenuOption | MenuOption[] | undef
         label: c.name,
         icon: c.icon,
         color: c.color,
+        flag: {
+          active: panel.newTabBtns.includes(c.name),
+          icon: '#icon_pin',
+          onClick: opt => {
+            const index = panel.newTabBtns.indexOf(c.name)
+            if (index !== -1) {
+              panel.newTabBtns.splice(index, 1)
+              if (opt.flag?.active) opt.flag.active = false
+            } else {
+              panel.newTabBtns.push(c.name)
+              if (opt.flag) opt.flag.active = true
+            }
+            Sidebar.saveSidebar(500)
+          },
+        },
         onClick: () => Tabs.createTabInPanel(panel, { cookieStoreId: c.id }),
         onAltClick: () => {
           if (Settings.state.newTabMiddleClickAction === 'new_child') {

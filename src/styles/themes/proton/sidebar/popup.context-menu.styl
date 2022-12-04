@@ -10,9 +10,13 @@
   --ctx-menu-opt-border-radius: var(--general-border-radius)
   --ctx-menu-padding: var(--general-margin)
   --ctx-menu-opt-padding: 4px
+  --ctx-menu-text-opt-inner-gap: 4px
+  --ctx-menu-text-opt-height: 26px
   --ctx-menu-icon-opt-height: 30px
 #root[data-density="compact"]
   --ctx-menu-opt-padding: 3px
+  --ctx-menu-text-opt-inner-gap: 3px
+  --ctx-menu-text-opt-height: 24px
   --ctx-menu-icon-opt-height: 28px
 #root[data-color-scheme="dark"]
   --ctx-menu-shadow: 0 0 0 1px var(--ff-popup-border, #ffffff16), 0 1px 16px 0 #00000048
@@ -51,7 +55,7 @@
   position: absolute
   display: flex
   flex-direction: column
-  max-width: calc(100% - 28px)
+  max-width: calc(100% - 24px)
   min-width: var(--ctx-menu-min-width)
   max-height: 100vh
   z-index: 30
@@ -151,10 +155,12 @@
 .CtxMenu .opt
   position: relative
   display: flex
+  height: var(--ctx-menu-text-opt-height)
   font: var(--ctx-menu-font)
   align-items: center
   justify-content: flex-start
-  padding: var(--ctx-menu-opt-padding) 0 var(--ctx-menu-opt-padding) 6px
+  grid-gap: 0 var(--ctx-menu-text-opt-inner-gap)
+  padding: 0 var(--ctx-menu-text-opt-inner-gap) 0 var(--ctx-menu-text-opt-inner-gap)
   white-space: pre
   &:before
     content: ''
@@ -180,7 +186,7 @@
     width: 16px
     height: 16px
     flex-shrink: 0
-    margin: auto 4px auto -3px
+    // margin: auto 4px auto -3px
     transform: translateZ(0)
   .icon
     position: absolute
@@ -216,9 +222,44 @@
       font-weight: 700
       padding: 2px 0
 
+// Flag button
+.CtxMenu .flag-btn
+  position: relative
+  display: none
+  height: 100%
+  width: 16px
+  flex-shrink: 0
+  cursor: pointer
+  &:before
+    content: ''
+    position: absolute
+    top: 0
+    left: calc(var(--ctx-menu-text-opt-inner-gap) * -1)
+    height: 100%
+    width: calc(16px + var(--ctx-menu-text-opt-inner-gap) * 2)
+.CtxMenu svg.flag-icon
+.CtxMenu img.flag-icon
+  position: absolute
+  width: 16px
+  height: 16px
+  top: calc(50% - 8px)
+  left: calc(50% - 8px)
+  fill: var(--ctx-menu-fg)
+  opacity: .7
+.CtxMenu .flag-btn[data-active="true"]
+.CtxMenu .opt:hover .flag-btn[data-active="false"]
+  display: block
+.CtxMenu .flag-btn[data-active="false"] .flag-icon
+  opacity: .3
+.CtxMenu .flag-btn[data-active="false"]:hover .flag-icon
+  opacity: .5
+.CtxMenu .flag-btn[data-active="false"]:active .flag-icon
+  opacity: .3
+
 // Separator
 .CtxMenu .opt[data-separator="true"]
   padding: calc(var(--ctx-menu-opt-padding) - 2px) 0
+  height: auto
   width: calc(100% + 4px)
   left: -2px
 .CtxMenu .opt[data-separator="true"]:after

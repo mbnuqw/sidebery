@@ -20,6 +20,11 @@ export const enum MenuType {
   Panel = 9,
 }
 export type MenuOptionType = 'option' | 'separator'
+export interface MenuOptionFlag {
+  active?: boolean
+  icon?: string
+  onClick?: (opt: MenuOption) => void
+}
 export interface MenuOption {
   type?: MenuOptionType
   label?: string
@@ -30,6 +35,7 @@ export interface MenuOption {
   color?: browser.ColorName
   inactive?: boolean
   sub?: MenuOption[]
+  flag?: MenuOptionFlag
   onClick?: () => void
   onAltClick?: () => void
 }
