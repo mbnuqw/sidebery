@@ -922,7 +922,7 @@ export function activatePanel(panelId: ID, loadPanels = true): void {
   if (prevPanel) Sidebar.reactive.lastActivePanelId = Sidebar.reactive.activePanelId
   Sidebar.reactive.activePanelId = panelId
 
-  if (Search.reactive.value && prevPanel && prevPanel.type !== panel.type) {
+  if (Search.reactive.value && prevPanel) {
     if (loading) loading.then(() => Search.search())
     else Search.search()
   }
