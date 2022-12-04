@@ -3,13 +3,14 @@
   ref="rootEl"
   :data-inline="props.inline"
   :data-inactive="props.inactive"
-  :data-opened="opened"
+  :data-drop-down="dropDownOpen"
   @mousedown="switchOption"
   @contextmenu.stop.prevent
   @blur="onBlur")
   .body
     .label {{translate(props.label)}}
     SelectInput(
+      ref="inputComponent"
       :label="props.optLabel"
       :value="props.value"
       :opts="props.opts"
@@ -17,7 +18,6 @@
       :color="props.color"
       :icon="props.icon"
       :folded="folded"
-      :opened="opened"
       @update:value="select")
   .note(v-if="props.note") {{props.note}}
 </template>
@@ -25,6 +25,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { translate } from 'src/dict'
+import { SelectInputComponent } from 'src/types'
 import SelectInput from './select-input.vue'
 
 type InputObjOpt = {
@@ -51,13 +52,15 @@ interface SelectFieldProps {
 
 const emit = defineEmits(['update:value'])
 const props = defineProps<SelectFieldProps>()
-const opened = ref(false)
+const dropDownOpen = ref(false)
+const inputComponent = ref<SelectInputComponent | null>(null)
 const rootEl = ref<HTMLElement | null>(null)
 
 function switchOption(e: DOMEvent<MouseEvent>): void {
   if (props.inactive || !props.opts || Array.isArray(props.value)) return
   if (props.folded) {
-    opened.value = !opened.value
+    dropDownOpen.value = true
+    if (inputComponent.value) inputComponent.value.open()
     if (rootEl.value) {
       rootEl.value.tabIndex = 0
       rootEl.value.focus()
@@ -82,12 +85,14 @@ function switchOption(e: DOMEvent<MouseEvent>): void {
 
 function select(option: string): void {
   emit('update:value', option)
-  opened.value = false
+  dropDownOpen.value = false
+  if (inputComponent.value) inputComponent.value.close()
   if (rootEl.value) rootEl.value.tabIndex = -1
 }
 
 function onBlur(): void {
-  opened.value = false
+  dropDownOpen.value = false
+  if (inputComponent.value) inputComponent.value.close()
   if (rootEl.value) rootEl.value.tabIndex = -1
 }
 </script>

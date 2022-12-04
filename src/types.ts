@@ -114,6 +114,11 @@ export interface ScrollBoxComponent {
   getScrollableBox(): HTMLElement | null
 }
 
+export interface SelectInputComponent {
+  open: () => void
+  close: () => void
+}
+
 export interface ContextMenuComponent {
   selectOption(dir: number): void
   activateOption(): void

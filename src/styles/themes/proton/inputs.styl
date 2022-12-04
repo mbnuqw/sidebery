@@ -29,6 +29,8 @@
   flex-shrink: 0
   cursor: pointer
   -moz-user-select: none
+  outline: none
+  border-radius: 4px
   &:not(:first-of-type)
     margin-top: 3px
 
@@ -81,10 +83,10 @@
   &:before
     content: none
 
-.SelectField[data-opened="true"]
+.SelectField[data-drop-down="true"]
   z-index: 10
-  outline: none
-.SelectField[data-opened="true"]:before
+  box-shadow: inset 0 0 0 2px var(--status-active)
+.SelectField[data-drop-down="true"]:before
   opacity: .03
 
 .ToggleField .body
@@ -109,7 +111,7 @@
 .InfoField .label
   position: relative
   font-size: rem(16)
-  line-height: 26px
+  line-height: 30px
   padding: 8px 0
   align-self: flex-start
   color: var(--toolbar-fg)
@@ -157,15 +159,20 @@
 // -
 .ToggleInput .opt
 .SelectInput .opt
+.select-input-drop-down .opt
   position: relative
+  display: flex
+  align-items: center
   font-size: rem(14)
   font-weight: 600
-  color: var(--toolbar-fg)
+  color: var(--color, var(--toolbar-fg))
   transition: color var(--d-fast)
   flex-shrink: 0
-  line-height: 26px
+  line-height: 30px
+  overflow: hidden
   opacity: .7
   white-space: nowrap
+  cursor: pointer
   &:before
     content: ''
     position: absolute
@@ -181,31 +188,32 @@
     display: block
     padding: 0 8px
     margin: 0
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
   > svg
     position: relative
+    flex-shrink: 0
     display: block
     width: 16px
     height: 16px
-    padding: 7px 8px
+    padding: 7px
     fill: var(--color, var(--toolbar-fg))
     transition: opacity var(--d-fast)
+  > svg + p
+    padding: 0 12px 0 0
   &:hover
     opacity: 1
   &:hover:before
     opacity: .1
-
-.SelectInput[data-opened="true"]
-  z-index: 10
-.SelectInput[data-opened="true"] .list
-  display: flex
 
 .SelectInput[data-folded="true"]
   flex-wrap: nowrap
 
 .SelectInput[data-folded="true"] .opt
   flex-shrink: 1
-  padding: 3px 0
-  line-height: 20px
+.select-input-drop-down .opt
+  flex-shrink: 0
 
 .SelectInput[data-folded="true"] .opt[data-active="true"]:before
 .SelectInput[data-folded="true"] .opt[data-active="true"]:after
@@ -215,6 +223,7 @@
 .SelectInput .opt.-exp
   display: flex
   align-items: center
+  flex-shrink: 0
   > svg
     padding: 2px 5px
   &:before
@@ -224,30 +233,35 @@
     border-top-left-radius: 0
     border-bottom-left-radius: 0
 
-.SelectInput .list
+.select-input-drop-down-layer
   position: absolute
-  display: none
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  background-color: #0001
+  z-index: 1000
+
+.select-input-drop-down
+  position: absolute
+  display: flex
   flex-direction: column
   grid-gap: 2px 0
   padding: 2px 3px
-  top: calc(100% - 7px)
-  right: -1px
-  min-width: max-content
-  max-width: 300px
+  top: var(--top, 0px)
+  left: var(--left, 0px)
+  max-width: 250px
   min-height: 24px
-  z-index: 1
+  max-height: 350px
+  overflow-y: auto
   background-color: var(--frame-bg)
   border-radius: 6px
   box-shadow: inset 0 0 0 1px #ffffff32,
               0 1px 3px 0 #00000032
 
-#root[data-color-scheme="light"] .SelectInput .list
+#root[data-color-scheme="light"] .select-input-drop-down
   box-shadow: inset 0 0 0 1px #00000036,
               0 1px 3px 0 #00000032
-
-.SelectInput .list .opt
-  line-height: normal
-  padding: 4px 0
 
 .SelectInput .opt[data-none="true"]:after
 .ToggleInput .opt.-false:after
@@ -273,7 +287,7 @@
   opacity: 0
 
 .SelectInput .opt[data-active="true"]
-  color: var(--toolbar-fg-active)
+  color: var(--color, var(--toolbar-fg-active))
   opacity: 1
 .SelectInput .opt[data-active="true"]:before
 .SelectInput .opt[data-active="true"]:after

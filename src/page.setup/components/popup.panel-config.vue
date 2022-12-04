@@ -75,6 +75,7 @@
     label="panel.new_tab_ctx"
     :value="newTabCtx"
     :opts="containersOpts"
+    :folded="true"
     @update:value="togglePanelNewTabCtx")
 
   SelectField(
@@ -82,6 +83,7 @@
     label="panel.drop_tab_ctx"
     :value="dropTabCtx"
     :opts="availableForAutoMoveContainersOpts"
+    :folded="true"
     @update:value="togglePanelDropTabCtx")
 
   SelectField(
@@ -90,6 +92,7 @@
     optLabel="panel.move_tab_ctx_"
     :value="moveTabCtx"
     :opts="availableForAutoMoveContainersOpts"
+    :folded="true"
     @update:value="togglePanelMoveTabCtx")
   .sub-fields(v-if="Utils.isTabsPanel(conf)")
     ToggleField(
@@ -164,12 +167,14 @@ import TextInput from '../../components/text-input.vue'
 import ToggleField from '../../components/toggle-field.vue'
 import SelectField from '../../components/select-field.vue'
 import { Favicons } from 'src/services/favicons'
+import { SetupPage } from 'src/services/setup-page'
 
 interface ContainerOption {
   value: string
   icon?: string
   color?: string
   tooltip?: string
+  title?: string
 }
 
 const URL_RE = /^https?:\/\/.+/
@@ -201,13 +206,14 @@ const containersOpts = computed<ContainerOption[]>(() => {
   const result: ContainerOption[] = []
 
   for (let c of Object.values(Containers.reactive.byId)) {
-    result.push({ value: c.id, color: c.color, icon: c.icon, tooltip: c.name })
+    result.push({ value: c.id, color: c.color, icon: c.icon, title: c.name, tooltip: c.name })
   }
 
   result.push({
     value: 'none',
     color: 'inactive',
     icon: 'icon_none',
+    title: noneContainerTooltip,
     tooltip: noneContainerTooltip,
   })
 
@@ -226,18 +232,22 @@ const availableForAutoMoveContainersOpts = computed<ContainerOption[]>(() => {
       value: DEFAULT_CONTAINER_ID,
       color: 'toolbar',
       icon: 'icon_ff',
+      title: defaultContainerTooltip,
       tooltip: defaultContainerTooltip,
     })
   }
 
   for (let c of Object.values(Containers.reactive.byId)) {
-    if (!used[c.id]) result.push({ value: c.id, color: c.color, icon: c.icon, tooltip: c.name })
+    if (!used[c.id]) {
+      result.push({ value: c.id, color: c.color, icon: c.icon, title: c.name, tooltip: c.name })
+    }
   }
 
   result.push({
     value: 'none',
     color: 'inactive',
     icon: 'icon_none',
+    title: noneContainerTooltip,
     tooltip: noneContainerTooltip,
   })
 
