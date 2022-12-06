@@ -2,13 +2,13 @@ import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
 import { PanelConfig, Panel, Stored, ItemBounds, Tab, Bookmark, DstPlaceInfo } from 'src/types'
 import { Notification, OldPanelConfig, SidebarConfig, BookmarksPanelConfig } from 'src/types'
-import { PanelType, TabsPanel, BookmarksPanel, ScrollBoxComponent } from 'src/types'
+import { PanelType, TabsPanel, BookmarksPanel, ScrollBoxComponent, Container } from 'src/types'
 import { TabsPanelConfig, ItemBoundsType, ReactiveTab, DialogConfig } from 'src/types'
 import { BOOKMARKS_PANEL_STATE, TABS_PANEL_STATE, NOID, CONTAINER_ID, Err } from 'src/defaults'
 import { BOOKMARKS_PANEL, TABS_PANEL_CONFIG, DEFAULT_CONTAINER_ID } from 'src/defaults'
 import { BKM_ROOT_ID, BKM_OTHER_ID, BOOKMARKED_PANEL_CONF_RE } from 'src/defaults'
 import { HISTORY_PANEL, HISTORY_PANEL_STATE, FOLDER_NAME_DATA_RE } from 'src/defaults'
-import { BKM_MENU_ID, BKM_MOBILE_ID, BKM_TLBR_ID } from 'src/defaults'
+import { BKM_MENU_ID, BKM_MOBILE_ID, BKM_TLBR_ID, DEFAULT_CONTAINER } from 'src/defaults'
 import * as Logs from 'src/services/logs'
 import { Settings } from 'src/services/settings'
 import { Sidebar } from 'src/services/sidebar'
@@ -1971,28 +1971,29 @@ export function stopFastEditingOfPanel(result: boolean): void {
   Sidebar.reactive.panelConfigPopup = null
 }
 
-export function startFastEditingOfContainer(
-  containerId: ID,
-  removeOnCancel: boolean
-): Promise<boolean> {
+export function openContainerPopup(containerId: ID): Promise<ID | null> {
   return new Promise(res => {
-    const container = Containers.reactive.byId[containerId]
-    if (!container) return res(false)
+    let container = Containers.reactive.byId[containerId]
+    if (!container) {
+      container = Utils.cloneObject(DEFAULT_CONTAINER)
+      container.name = ''
+      container.icon = 'fingerprint'
+      container.color = 'toolbar'
+    }
 
     Sidebar.reactive.containerConfigPopup = {
-      id: container.id,
+      id: container ? container.id : NOID,
       name: container.name,
       color: container.color,
       icon: container.icon,
-      removeOnCancel,
       done: res,
     }
   })
 }
 
-export function stopFastEditingOfContainer(result: boolean): void {
+export function closeContainerPopup(): void {
   if (Sidebar.reactive.containerConfigPopup?.done) {
-    Sidebar.reactive.containerConfigPopup.done(result)
+    Sidebar.reactive.containerConfigPopup.done(null)
   }
   Sidebar.reactive.containerConfigPopup = null
 }

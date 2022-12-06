@@ -3671,14 +3671,12 @@ export async function createTabInNewContainer(): Promise<void> {
   const panel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
   if (!Utils.isTabsPanel(panel)) throw 'Current panel is not TabsPanel'
 
-  // Create container
-  const len = Object.keys(Containers.reactive.byId).length
-  const name = translate('container.new_container_name') + ' ' + len.toString()
-  const container = await Containers.create(name, 'toolbar', 'fingerprint')
-
   // Open config popup
-  const result = await Sidebar.startFastEditingOfContainer(container.id, true)
-  if (!result) return
+  const result = await Sidebar.openContainerPopup(NOID)
+  if (result === null) return
+
+  const container = Containers.reactive.byId[result]
+  if (!container) return
 
   const dst: DstPlaceInfo = { panelId: panel.id, containerId: container.id }
   await Tabs.open([{ id: -1, url: 'about:newtab' }], dst)
@@ -3688,14 +3686,12 @@ export async function reopenTabsInNewContainer(tabIds: ID[]): Promise<void> {
   const firstTab = Tabs.byId[tabIds[0]]
   if (!firstTab) return
 
-  // Create container
-  const len = Object.keys(Containers.reactive.byId).length
-  const name = translate('container.new_container_name') + ' ' + len.toString()
-  const container = await Containers.create(name, 'toolbar', 'fingerprint')
-
   // Open config popup
-  const result = await Sidebar.startFastEditingOfContainer(container.id, true)
+  const result = await Sidebar.openContainerPopup(NOID)
   if (!result) return
+
+  const container = Containers.reactive.byId[result]
+  if (!container) return
 
   const items = Tabs.getTabsInfo(tabIds)
   await Tabs.reopen(items, { panelId: firstTab.panelId, containerId: container.id })

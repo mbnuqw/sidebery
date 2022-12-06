@@ -3,7 +3,7 @@
   .popup(v-if="Sidebar.reactive.panelConfigPopup" @click.stop)
     h2 {{popupTitle}}
     .field
-      .field-label {{translate('panel.fast_conf.name')}}
+      .field-label {{translate('popup.common.name_label')}}
       TextInput.input(
         ref="titleInput"
         v-model:value="Sidebar.reactive.panelConfigPopup.name"
@@ -13,7 +13,7 @@
         @keydown="onTitleKD")
 
     .field
-      .field-label {{translate('panel.fast_conf.icon')}}
+      .field-label {{translate('popup.common.icon_label')}}
       SelectInput.input(
         v-model:value="Sidebar.reactive.panelConfigPopup.iconSVG"
         :opts="iconsOpts"
@@ -21,7 +21,7 @@
       )
 
     .field
-      .field-label {{translate('panel.fast_conf.color')}}
+      .field-label {{translate('popup.common.color_label')}}
       SelectInput.input(
         v-model:value="Sidebar.reactive.panelConfigPopup.color"
         :opts="COLOR_OPTS"
@@ -29,7 +29,7 @@
       )
 
     .ctrls
-      .btn.-wide(@click="openFullConfig") {{translate('panel.fast_conf.btn_more')}}
+      .btn.-wide(@click="openFullConfig") {{translate('popup.common.btn_more')}}
       .btn(@click="onSave") {{translate('btn.save')}}
       .btn.-warn(@click="onCancel") {{translate('btn.cancel')}}
 </template>
@@ -62,8 +62,8 @@ const popupTitle = computed<string>(() => {
   if (!Sidebar.reactive.panelConfigPopup) return ''
 
   const panel = Sidebar.reactive.panelsById[Sidebar.reactive.panelConfigPopup.id]
-  if (Utils.isTabsPanel(panel)) return translate('panel.fast_conf.title_tabs')
-  if (Utils.isBookmarksPanel(panel)) return translate('panel.fast_conf.title_bookmarks')
+  if (Utils.isTabsPanel(panel)) return translate('popup.tabs_panel.title')
+  if (Utils.isBookmarksPanel(panel)) return translate('popup.bookmarks_panel.title')
   return ''
 })
 

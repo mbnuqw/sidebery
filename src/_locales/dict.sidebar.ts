@@ -139,45 +139,49 @@ export const sidebarTranslations: Translations = {
     ru: 'Оставить',
     de: 'Behalten',
   },
-  // - Container fast-config popup
-  'panel.fast_conf.title': {
+  // - Container config popup
+  'popup.container.title': {
     en: 'Container',
     ru: 'Контейнер',
     de: 'Umgebung',
     zh_CN: '容器',
   },
-  // - Panel fast-config popup
-  'panel.fast_conf.title_tabs': {
+  'popup.container.name_placeholder': {
+    en: 'Container name',
+    ru: 'Название контейнера',
+  },
+  // - Panel config popup
+  'popup.tabs_panel.title': {
     en: 'Tabs panel',
     ru: 'Панель вкладок',
     de: 'Tab-Panel',
     zh_CN: '标签页面板',
   },
-  'panel.fast_conf.title_bookmarks': {
+  'popup.bookmarks_panel.title': {
     en: 'Bookmarks panel',
     ru: 'Панель закладок',
     de: 'Lesezeichen-Panel',
     zh_CN: '书签面板',
   },
-  'panel.fast_conf.name': {
+  'popup.common.name_label': {
     en: 'Name',
     ru: 'Имя',
     de: 'Name',
     zh_CN: '名称',
   },
-  'panel.fast_conf.icon': {
+  'popup.common.icon_label': {
     en: 'Icon',
     ru: 'Иконка',
     de: 'Symbol',
     zh_CN: '图标',
   },
-  'panel.fast_conf.color': {
+  'popup.common.color_label': {
     en: 'Color',
     ru: 'Цвет',
     de: 'Farbe',
     zh_CN: '颜色',
   },
-  'panel.fast_conf.btn_more': {
+  'popup.common.btn_more': {
     en: 'More options...',
     ru: 'Больше опций...',
     de: 'Weitere Optionen...',

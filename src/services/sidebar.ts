@@ -47,8 +47,7 @@ export interface ContainerConfigPopup {
   name: string
   icon: string
   color: browser.ColorName
-  removeOnCancel: boolean
-  done: (result: boolean) => void
+  done: (result: ID | null) => void
 }
 
 export const enum GroupConfigResult {

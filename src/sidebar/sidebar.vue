@@ -176,7 +176,7 @@ function onDocumentKeyup(e: KeyboardEvent): void {
     if (Sidebar.reactive.panelConfigPopup) Sidebar.stopFastEditingOfPanel(false)
 
     // Conatiner config popup
-    if (Sidebar.reactive.containerConfigPopup) Sidebar.stopFastEditingOfContainer(false)
+    if (Sidebar.reactive.containerConfigPopup) Sidebar.closeContainerPopup()
 
     // Group config popup
     if (Sidebar.reactive.groupConfigPopup) {
