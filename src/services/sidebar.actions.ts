@@ -2051,3 +2051,15 @@ export async function upgrade(): Promise<void> {
     if (upgradeState.done || upgradeState.error) break
   }
 }
+
+export function openNewTabShortcutsPopup(panelId: ID): void {
+  const panel = Sidebar.reactive.panelsById[panelId]
+  if (!Utils.isTabsPanel(panel)) return
+
+  Sidebar.reactive.newTabShortcutsPopup = { panel }
+}
+
+export function closeNewTabShortcutsPopup(): void {
+  if (!Sidebar.reactive.newTabShortcutsPopup) return
+  Sidebar.reactive.newTabShortcutsPopup = null
+}

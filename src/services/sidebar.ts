@@ -1,4 +1,4 @@
-import { Panel, ConfirmDialog, UpgradingState, Dialog, GroupConfig } from 'src/types'
+import { Panel, TabsPanel, ConfirmDialog, UpgradingState, Dialog, GroupConfig } from 'src/types'
 import { NOID } from 'src/defaults'
 import * as SidebarActions from 'src/services/sidebar.actions'
 
@@ -17,6 +17,7 @@ export interface SidebarReactiveState {
   panelConfigPopup: PanelConfigPopup | null
   containerConfigPopup: ContainerConfigPopup | null
   groupConfigPopup: GroupConfigPopup | null
+  newTabShortcutsPopup: NewTabShortcutsPopup | null
   confirm: ConfirmDialog | null
   hiddenPanelsBar: boolean
   hiddenPanelsBarOffset: number
@@ -60,6 +61,10 @@ export interface GroupConfigPopup {
   done: (result: GroupConfigResult) => void
 }
 
+export interface NewTabShortcutsPopup {
+  panel: TabsPanel
+}
+
 export const Sidebar = {
   reactive: {
     nav: [],
@@ -77,6 +82,7 @@ export const Sidebar = {
     panelConfigPopup: null,
     containerConfigPopup: null,
     groupConfigPopup: null,
+    newTabShortcutsPopup: null,
     confirm: null,
     hiddenPanelsBar: false,
     hiddenPanelsBarOffset: 0,

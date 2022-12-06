@@ -39,6 +39,7 @@
   Transition(name="popup" type="transition"): ContainerConfigPopup(v-if="Sidebar.reactive.containerConfigPopup")
   Transition(name="popup" type="transition"): GroupConfigPopup(v-if="Sidebar.reactive.groupConfigPopup")
   Transition(name="popup" type="transition"): DialogPopup(v-if="Sidebar.reactive.dialog" :dialog="Sidebar.reactive.dialog")
+  Transition(name="popup" type="transition"): NewTabShortcutsPopup(v-if="Sidebar.reactive.newTabShortcutsPopup")
   CtxMenuPopup
   DragAndDropTooltip
   NotificationsPopup
@@ -103,6 +104,7 @@ import PanelConfigPopup from './components/popup.panel-config.vue'
 import ContainerConfigPopup from './components/popup.container-config.vue'
 import GroupConfigPopup from './components/popup.group-config.vue'
 import DialogPopup from './components/popup.dialog.vue'
+import NewTabShortcutsPopup from '../components/popup.new-tab-shortcuts.vue'
 import UpgradeScreen from '../components/upgrade-screen.vue'
 import * as Utils from 'src/utils'
 import { SwitchingTabScope } from 'src/services/tabs.fg.actions'

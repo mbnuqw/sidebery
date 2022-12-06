@@ -75,7 +75,7 @@ const props = withDefaults(defineProps<SelectInputProps>(), { noneOpt: 'none' })
 const dropDownStyle = reactive({
   '--left': '0px',
   '--top': '0px',
-})
+} as Record<string, string>)
 
 const activeOpt = computed<InputOption>(() => {
   if (!props.folded) return props.noneOpt
@@ -145,6 +145,10 @@ async function open() {
 
   isOpen.value = true
 
+  const elStyles = window.getComputedStyle(rootEl.value, null)
+  let bottomPadding = parseInt(elStyles.getPropertyValue('padding-bottom'))
+  if (isNaN(bottomPadding)) bottomPadding = 0
+
   await nextTick()
   if (!dropDownEl.value) return
 
@@ -152,12 +156,19 @@ async function open() {
   const dropDownRect = dropDownEl.value.getBoundingClientRect()
 
   const viewportHeight = window.innerHeight
+  const viewportWidth = window.innerWidth
   const inputBottom = Math.round(inputRect.bottom)
   const inputRight = Math.round(inputRect.right)
 
-  let dropDownTop = inputBottom - BOTTOM_PADDING_PX
-  if (viewportHeight <= dropDownTop + dropDownRect.height + BOTTOM_PADDING_PX) {
-    dropDownTop = viewportHeight - dropDownRect.height - BOTTOM_PADDING_PX
+  let dropDownTop = inputBottom - bottomPadding + 1
+  if (viewportHeight <= dropDownTop + dropDownRect.height + bottomPadding) {
+    dropDownTop = viewportHeight - dropDownRect.height - bottomPadding
+  }
+
+  if (viewportWidth < dropDownRect.width + (viewportWidth - inputRight)) {
+    const inputWidth = Math.round(inputRect.width)
+    dropDownStyle['--max-width'] = `${inputWidth}px`
+    dropDownRect.width = inputWidth
   }
 
   dropDownStyle['--top'] = `${dropDownTop}px`

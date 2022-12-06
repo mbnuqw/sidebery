@@ -157,6 +157,14 @@ export const menuOptions: Record<string, () => MenuOption | MenuOption[] | undef
     }
   },
 
+  manageShortcuts: () => {
+    return {
+      label: translate('menu.new_tab_bar.manage_shortcuts'),
+      icon: 'icon_pin',
+      onClick: () => Sidebar.openNewTabShortcutsPopup(Selection.getFirst()),
+    }
+  },
+
   manageContainers: () => {
     return {
       label: translate('menu.new_tab_bar.manage_containers'),

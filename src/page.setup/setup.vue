@@ -16,6 +16,7 @@
       component(:is="view")
   
   Transition(name="popup"): BookmarksPopup(v-if="Bookmarks.reactive.popup")
+  Transition(name="popup"): NewTabShortcutsPopup(v-if="Sidebar.reactive.newTabShortcutsPopup")
   Details
 
   UpgradeScreen(v-if="Sidebar.reactive.upgrading")

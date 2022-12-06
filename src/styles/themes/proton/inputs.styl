@@ -78,6 +78,11 @@
     &:after
       display: none
 
+.Sidebar .SelectField
+  padding: 3px 4px 4px
+.Sidebar .TextField
+  padding: 3px 4px 5px
+
 .InfoField
   cursor: default
   &:before
@@ -101,6 +106,10 @@
   align-items: flex-start
   flex-wrap: nowrap
 
+.Sidebar .SelectField .body
+.Sidebar .TextField .body
+  flex-wrap: wrap
+
 // ---
 // -- Label
 // -
@@ -118,6 +127,15 @@
   transition: color var(--d-fast)
 .-sub-title .label
   font-size: rem(20)
+
+.Sidebar .SelectField .label
+.Sidebar .TextField .label
+  width: 100%
+  line-height: normal
+  padding: 0 0 4px
+  font-size: rem(14)
+  font-weight: 700
+  opacity: .7
 
 // ---
 // -- Note
@@ -142,6 +160,7 @@
 .ToggleInput
 .SelectInput
   position: relative
+  box-sizing: content-box
   display: flex
   max-width: calc(55% - 16px)
   justify-content: flex-end
@@ -154,6 +173,12 @@
 .ToggleInput
   flex-wrap: nowrap
 
+.Sidebar .SelectInput
+.Sidebar .TextInput
+  max-width: none
+  width: 100%
+  padding: 0
+
 // ---
 // -- Options
 // -
@@ -161,6 +186,7 @@
 .SelectInput .opt
 .select-input-drop-down .opt
   position: relative
+  box-sizing: content-box
   display: flex
   align-items: center
   font-size: rem(14)
@@ -185,6 +211,7 @@
     opacity: 0
   > p
     position: relative
+    box-sizing: content-box
     display: block
     padding: 0 8px
     margin: 0
@@ -193,6 +220,7 @@
     white-space: nowrap
   > svg
     position: relative
+    box-sizing: content-box
     flex-shrink: 0
     display: block
     width: 16px
@@ -206,6 +234,12 @@
     opacity: 1
   &:hover:before
     opacity: .1
+
+.Sidebar
+  .ToggleInput .opt
+  .SelectInput .opt
+  .select-input-drop-down .opt
+    font-size: rem(15)
 
 .SelectInput[data-folded="true"]
   flex-wrap: nowrap
@@ -235,22 +269,24 @@
 
 .select-input-drop-down-layer
   position: absolute
+  box-sizing: content-box
   top: 0
   left: 0
   width: 100%
   height: 100%
   background-color: #0001
-  z-index: 1000
+  z-index: 99999
 
 .select-input-drop-down
   position: absolute
+  box-sizing: border-box
   display: flex
   flex-direction: column
   grid-gap: 2px 0
   padding: 2px 3px
   top: var(--top, 0px)
   left: var(--left, 0px)
-  max-width: 250px
+  max-width: var(--max-width, 250px)
   min-height: 24px
   max-height: 350px
   overflow-y: auto
@@ -289,6 +325,8 @@
 .SelectInput .opt[data-active="true"]
   color: var(--color, var(--toolbar-fg-active))
   opacity: 1
+.Sidebar .SelectInput[data-folded="true"] .opt[data-active="true"]
+  width: 100%
 .SelectInput .opt[data-active="true"]:before
 .SelectInput .opt[data-active="true"]:after
   opacity: .2
@@ -356,6 +394,9 @@
       animation: err-blink-animation 1s
   &[data-width="50"]
     width: 50%
+
+.Sidebar .TextField .TextInput
+  margin: 0
 
 // ---
 // -- Input

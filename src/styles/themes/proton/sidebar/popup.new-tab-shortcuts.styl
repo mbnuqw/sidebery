@@ -1,0 +1,110 @@
+@import '../../../utils'
+
+.NewTabShortcutsPopup .space
+  height: 16px
+  &:first-child
+    display: none
+
+// ---
+// -- Shortcuts list
+// -
+.NewTabShortcutsPopup .shortcuts
+  position: relative
+
+.NewTabShortcutsPopup .shortcut
+  position: relative
+  margin-top: 3px
+  &:before
+    content: ''
+    position: absolute
+    width: 100%
+    height: 100%
+    border-radius: var(--general-border-radius)
+    background-color: var(--toolbar-fg)
+    opacity: 0
+  &:hover:before
+    opacity: .1
+
+.NewTabShortcutsPopup .shortcut .url-box
+  position: relative
+  display: flex
+  align-items: center
+  &[data-with-container="true"]
+    margin-top: -4px
+
+.NewTabShortcutsPopup .shortcut .icon-box
+  position: relative
+  width: 28px
+  height: 28px
+  flex-shrink: 0
+  > .icon
+    position: absolute
+    top: 6px
+    left: 6px
+    width: 16px
+    height: 16px
+  > svg
+    fill: var(--color, var(--popup-fg))
+
+.NewTabShortcutsPopup .shortcut .url
+  position: relative
+  color: var(--popup-fg)
+  font-size: rem(14)
+  white-space: nowrap
+  text-overflow: ellipsis
+  overflow: hidden
+  margin-right: 2px
+
+.NewTabShortcutsPopup .shortcut .container-box
+  position: relative
+  display: flex
+  align-items: center
+  transform: translateZ(0)
+
+.NewTabShortcutsPopup .shortcut .container
+  position: relative
+  color: var(--color, var(--popup-fg))
+  font-size: rem(16)
+  white-space: nowrap
+  text-overflow: ellipsis
+  overflow: hidden
+  margin-right: 2px
+
+.NewTabShortcutsPopup .shortcut .controls-box
+  position: relative
+  display: none
+  justify-content: flex-end
+  align-items: center
+  height: 28px
+  padding: 0 2px
+  margin-left: auto
+.NewTabShortcutsPopup .shortcut:hover .controls-box
+  display: flex
+
+.NewTabShortcutsPopup .shortcut .btn-up
+.NewTabShortcutsPopup .shortcut .btn-down
+.NewTabShortcutsPopup .shortcut .btn-rm
+  position: relative
+  width: 24px
+  height: 24px
+  &:before
+    content: ''
+    position: absolute
+    width: 100%
+    height: 100%
+    border-radius: var(--general-border-radius)
+    background-color: var(--toolbar-fg)
+    opacity: 0
+  &:hover:before
+    opacity: .1
+  &:active:before
+    opacity: .2
+  > svg
+    position: relative
+    top: 4px
+    left: 4px
+    width: 16px
+    height: 16px
+    fill: white
+.NewTabShortcutsPopup .shortcut .btn-up > svg
+  transform: rotateZ(180deg)

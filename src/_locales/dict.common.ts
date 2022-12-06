@@ -241,6 +241,31 @@ export const commonTranslations: Translations = {
     zh_CN: '转换',
   },
 
+  'popup.new_tab_shortcuts.title': {
+    en: 'Shortcuts',
+    ru: 'Ярлыки',
+  },
+  'popup.new_tab_shortcuts.create_title': {
+    en: 'Create shortcut',
+    ru: 'Создать ярлык',
+  },
+  'popup.new_tab_shortcuts.new_shortcut_container_label': {
+    en: 'Container',
+    ru: 'Контейнер',
+  },
+  'popup.new_tab_shortcuts.new_shortcut_url_label': {
+    en: 'URL',
+    ru: 'URL-адрес',
+  },
+  'popup.new_tab_shortcuts.new_shortcut_url_placeholder': {
+    en: 'Default new tab',
+    ru: 'Новая вкладка по умолчанию',
+  },
+  'popup.new_tab_shortcuts.add_shortcut_btn': {
+    en: 'Add shortcut',
+    ru: 'Добавить ярлык',
+  },
+
   // ---
   // -- Context menu
   // -
@@ -269,6 +294,10 @@ export const commonTranslations: Translations = {
     ru: 'В новом контейнере',
     de: 'In neuer Umgebung',
     zh_CN: '在新容器中',
+  },
+  'menu.new_tab_bar.manage_shortcuts': {
+    en: 'Manage Shortcuts',
+    ru: 'Управление ярлыками',
   },
   'menu.new_tab_bar.manage_containers': {
     en: 'Manage Containers',
