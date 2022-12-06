@@ -145,7 +145,9 @@ export function strSize(str: string): string {
   return bytesToStr(bytes)
 }
 
-export function uDate(ms: number, delimiter = '.', dayStartTime?: number): string {
+export function uDate(ms: number, delimiter?: string, dayStartTime?: number): string {
+  if (!delimiter) delimiter = '.'
+
   if (dayStartTime) {
     if (ms > dayStartTime) return translate('time.today')
     if (ms > dayStartTime - 86400000) return translate('time.yesterday')
