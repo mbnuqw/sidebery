@@ -26,14 +26,14 @@ export const menuOptions: Record<string, () => MenuOption | MenuOption[] | undef
     const panel = Sidebar.reactive.panelsById[Selection.getFirst()]
     if (!panel) return
 
-    const fastConf = Utils.isTabsPanel(panel) || Utils.isBookmarksPanel(panel)
+    const inSidebar = Utils.isTabsPanel(panel) || Utils.isBookmarksPanel(panel)
     const option: MenuOption = {
       label: translate('menu.common.conf'),
       tooltip: translate('menu.common.conf_tooltip'),
       icon: 'icon_panel_config',
       onClick: () => SetupPage.open(`settings_nav.${panel.id}`),
       onAltClick: () => {
-        if (fastConf) Sidebar.startFastEditingOfPanel(panel.id, false)
+        if (inSidebar) Sidebar.openPanelPopup({ id: panel.id })
         else SetupPage.open(`settings_nav.${panel.id}`)
       },
     }

@@ -2,7 +2,7 @@ import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
 import { PanelConfig, Panel, Stored, ItemBounds, Tab, Bookmark, DstPlaceInfo } from 'src/types'
 import { Notification, OldPanelConfig, SidebarConfig, BookmarksPanelConfig } from 'src/types'
-import { PanelType, TabsPanel, BookmarksPanel, ScrollBoxComponent, Container } from 'src/types'
+import { PanelType, TabsPanel, BookmarksPanel, ScrollBoxComponent } from 'src/types'
 import { TabsPanelConfig, ItemBoundsType, ReactiveTab, DialogConfig } from 'src/types'
 import { BOOKMARKS_PANEL_STATE, TABS_PANEL_STATE, NOID, CONTAINER_ID, Err } from 'src/defaults'
 import { BOOKMARKS_PANEL, TABS_PANEL_CONFIG, DEFAULT_CONTAINER_ID } from 'src/defaults'
@@ -1205,7 +1205,7 @@ export async function askHowRemoveTabsPanel(panelId: ID): Promise<string | null>
         label: translate('popup.tabs_panel_removing.close'),
       },
       {
-        value: 'close',
+        value: 'cancel',
         label: translate('btn.cancel'),
         warn: true,
       },
@@ -1351,49 +1351,61 @@ export async function removePanel(panelId: ID): Promise<void> {
   saveSidebar(120)
 }
 
+/**
+ * Creates tabs-panel object.
+ */
 export function createTabsPanel(conf?: Partial<TabsPanelConfig>): TabsPanel {
   const panel = Utils.cloneObject(TABS_PANEL_STATE)
 
-  if (conf) {
-    for (const key of Object.keys(conf) as (keyof TabsPanelConfig)[]) {
-      if (conf[key] !== undefined) {
-        ;(panel[key] as any) = conf[key] as unknown
-      }
-    }
-  }
-
-  if (!panel.id) panel.id = Utils.uid()
+  if (conf) Utils.updateObject(panel, conf, conf)
+  panel.id = Utils.uid()
   if (!panel.name) panel.name = translate('panel.tabs.title')
 
-  Sidebar.reactive.panelsById[panel.id] = panel
-
-  return Sidebar.reactive.panelsById[panel.id] as TabsPanel
+  return panel
 }
 
+export function getIndexForNewTabsPanel(): number {
+  const activePanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+  let index = -1
+  if (Utils.isTabsPanel(activePanel)) index = activePanel.index
+  else {
+    index = Utils.findLastIndex(Sidebar.reactive.nav, id => {
+      return Utils.isTabsPanel(Sidebar.reactive.panelsById[id])
+    })
+    if (index === -1) index = activePanel.index
+  }
+  index++
+  return index
+}
+
+/**
+ * Creates bookmarks-panel object.
+ */
 export function createBookmarksPanel(conf?: Partial<BookmarksPanelConfig>): BookmarksPanel {
   const panel = Utils.cloneObject(BOOKMARKS_PANEL_STATE)
 
-  if (conf) {
-    for (const key of Object.keys(conf) as (keyof BookmarksPanelConfig)[]) {
-      if (conf[key] !== undefined) {
-        ;(panel[key] as any) = conf[key] as unknown
-      }
-    }
-  }
-
+  if (conf) Utils.updateObject(panel, conf, conf)
   if (!panel.id) panel.id = Utils.uid()
   if (!panel.name) panel.name = translate('panel.bookmarks.title')
   if (!panel.rootId) panel.rootId = BKM_ROOT_ID
 
-  Sidebar.reactive.panelsById[panel.id] = panel
-
-  return Sidebar.reactive.panelsById[panel.id] as BookmarksPanel
+  return panel
 }
 
+/**
+ * Creates history-panel object.
+ */
 export function createHistoryPanel(): Panel {
-  const panel = Utils.cloneObject(HISTORY_PANEL_STATE)
+  return Utils.cloneObject(HISTORY_PANEL_STATE)
+}
+
+/**
+ * Adds panel to the sidebar, returns reactive panel object.
+ */
+export function addPanel<T extends Panel>(index: number, panel: T): T {
   Sidebar.reactive.panelsById[panel.id] = panel
-  return panel
+  Sidebar.reactive.nav.splice(index, 0, panel.id)
+  return Sidebar.reactive.panelsById[panel.id] as T
 }
 
 export function unloadPanelType(type: PanelType): void {
@@ -1635,7 +1647,7 @@ export async function restoreFromBookmarks(panel: TabsPanel, silent?: boolean): 
     panelConf.id = panel.id
     panelConf.name = panelName ?? panelFolder.title
     panelConf.bookmarksFolderId = panelFolder.id
-    Utils.updateObject(panel, panelConf)
+    Utils.updateObject(panel, panelConf, panelConf)
   } else {
     panel.name = panelFolder.title
     panel.bookmarksFolderId = panelFolder.id
@@ -1847,19 +1859,16 @@ export async function convertToBookmarksPanel(panel: TabsPanel): Promise<void> {
   }
 
   // Create bookmarks panel
-  const bookmarksPanel = Sidebar.createBookmarksPanel({
+  let bookmarksPanel = Sidebar.createBookmarksPanel({
     name: panel.name,
     rootId: panel.bookmarksFolderId,
+    color: panel.color,
+    iconSVG: panel.iconSVG === 'icon_tabs' ? 'icon_bookmarks' : panel.iconSVG,
+    iconIMG: panel.iconIMG,
+    iconIMGSrc: panel.iconIMGSrc,
+    autoConvert: true,
   })
-  Sidebar.reactive.nav[index] = bookmarksPanel.id
-  if (panel.iconSVG) {
-    if (panel.iconSVG === 'icon_tabs') bookmarksPanel.iconSVG = 'icon_bookmarks'
-    else bookmarksPanel.iconSVG = panel.iconSVG
-  }
-  if (panel.color) bookmarksPanel.color = panel.color
-  if (panel.iconIMG) bookmarksPanel.iconIMG = panel.iconIMG
-  if (panel.iconIMGSrc) bookmarksPanel.iconIMGSrc = panel.iconIMGSrc
-  bookmarksPanel.autoConvert = true
+  bookmarksPanel = Sidebar.addPanel(index, bookmarksPanel)
 
   // Temporarily lock panel to prevent switching from it
   if (isActive && !bookmarksPanel.lockedPanel) {
@@ -1882,19 +1891,24 @@ export async function convertToBookmarksPanel(panel: TabsPanel): Promise<void> {
   Sidebar.convertingPanelLock = false
 }
 
-export async function convertToTabsPanel(panel: BookmarksPanel): Promise<void> {
-  if (Sidebar.convertingPanelLock) return
+export async function convertToTabsPanel(
+  bookmarksPanel: BookmarksPanel,
+  openTabs?: boolean
+): Promise<ID> {
+  if (Sidebar.convertingPanelLock) return NOID
   Sidebar.convertingPanelLock = true
 
-  const index = Sidebar.reactive.nav.indexOf(panel.id)
+  const index = Sidebar.reactive.nav.indexOf(bookmarksPanel.id)
   if (index === -1) {
     Sidebar.convertingPanelLock = false
-    return
+    return NOID
   }
 
+  let notifIcon = bookmarksPanel.iconIMG
+  if (!notifIcon) notifIcon = bookmarksPanel.iconSVG && '#' + bookmarksPanel.iconSVG
   const notif = Notifications.progress({
-    icon: panel.iconIMG || (panel.iconSVG ? '#' + panel.iconSVG : undefined),
-    iconColor: panel.color,
+    icon: notifIcon,
+    iconColor: bookmarksPanel.color,
     title: translate('notif.converting'),
     progress: { percent: -1 },
   })
@@ -1903,18 +1917,27 @@ export async function convertToTabsPanel(panel: BookmarksPanel): Promise<void> {
   if (!Bookmarks.reactive.tree.length) await Bookmarks.load()
 
   // Check if root folder exists
-  const rootFolder = Bookmarks.reactive.byId[panel.rootId]
+  const rootFolder = Bookmarks.reactive.byId[bookmarksPanel.rootId]
   if (!rootFolder) {
     Notifications.finishProgress(notif)
     Sidebar.convertingPanelLock = false
-    return Logs.warn('Sidebar.convertToTabsPanel: No root folder')
+    Logs.warn('Sidebar.convertToTabsPanel: No root folder')
+    return NOID
   }
 
   // Create tabs panel
   const isFirstTabsPanel = !Sidebar.hasTabs
-  const tabsPanel = Sidebar.createTabsPanel({ name: panel.name })
+  const tabsPanel = Sidebar.createTabsPanel({
+    name: bookmarksPanel.name,
+    bookmarksFolderId: bookmarksPanel.rootId,
+    color: bookmarksPanel.color,
+    iconSVG: bookmarksPanel.iconSVG === 'icon_bookmarks' ? 'icon_tabs' : bookmarksPanel.iconSVG,
+    iconIMG: bookmarksPanel.iconIMG,
+    iconIMGSrc: bookmarksPanel.iconIMGSrc,
+  })
+  Sidebar.reactive.panelsById[tabsPanel.id] = tabsPanel
   Sidebar.reactive.nav[index] = tabsPanel.id
-  delete Sidebar.reactive.panelsById[panel.id]
+  delete Sidebar.reactive.panelsById[bookmarksPanel.id]
   Sidebar.recalcPanels()
   Sidebar.recalcTabsPanels()
   Sidebar.activatePanel(tabsPanel.id, false)
@@ -1922,52 +1945,55 @@ export async function convertToTabsPanel(panel: BookmarksPanel): Promise<void> {
   if (isFirstTabsPanel) await Tabs.load()
 
   // Open tabs
-  tabsPanel.bookmarksFolderId = panel.rootId
-  try {
-    await Sidebar.restoreFromBookmarks(tabsPanel, true)
-  } catch (err) {
-    Notifications.finishProgress(notif)
-    Sidebar.convertingPanelLock = false
-    if (err !== Err.Canceled) Logs.err('Sidebar.convertToTabsPanel: Cannot restore tabs', err)
-    return
+  if (openTabs) {
+    try {
+      await Sidebar.restoreFromBookmarks(tabsPanel, true)
+    } catch (err) {
+      Notifications.finishProgress(notif)
+      Sidebar.convertingPanelLock = false
+      if (err !== Err.Canceled) Logs.err('Sidebar.convertToTabsPanel: Cannot restore tabs', err)
+      return NOID
+    }
   }
-
-  // Set src panel's props
-  if (panel.iconSVG) {
-    if (panel.iconSVG === 'icon_bookmarks') tabsPanel.iconSVG = 'icon_tabs'
-    else tabsPanel.iconSVG = panel.iconSVG
-  }
-  if (panel.color) tabsPanel.color = panel.color
-  if (panel.iconIMG) tabsPanel.iconIMG = panel.iconIMG
-  if (panel.iconIMGSrc) tabsPanel.iconIMGSrc = panel.iconIMGSrc
 
   Sidebar.saveSidebar(300)
 
   Notifications.finishProgress(notif, 2000)
   notif.title = translate('notif.done')
   Sidebar.convertingPanelLock = false
+
+  return tabsPanel.id
 }
 
-export function startFastEditingOfPanel(panelId: ID, removeOnCancel: boolean): Promise<boolean> {
-  return new Promise(res => {
-    const panel = Sidebar.reactive.panelsById[panelId]
-    if (!panel) return res(false)
+export function openPanelPopup(conf: Partial<PanelConfig>, index?: number): Promise<ID | null> {
+  if (conf.type === undefined) conf.type = PanelType.tabs
 
-    const fallbackIcon = Utils.isTabsPanel(panel) ? 'icon_tabs' : 'icon_bookmarks'
+  return new Promise(res => {
+    const panel = Sidebar.reactive.panelsById[conf.id as ID]
+    let panelConfig
+    if (panel) {
+      panelConfig = Utils.recreateNormalizedObject(panel as TabsPanelConfig, TABS_PANEL_CONFIG)
+    } else {
+      if (conf.type === PanelType.tabs) {
+        panelConfig = Utils.cloneObject(TABS_PANEL_CONFIG)
+      } else if (conf.type === PanelType.bookmarks) {
+        panelConfig = Utils.cloneObject(BOOKMARKS_PANEL)
+      } else {
+        return res(null)
+      }
+      Utils.updateObject(panelConfig, conf, conf)
+    }
 
     Sidebar.reactive.panelConfigPopup = {
-      id: panel.id,
-      name: panel.name,
-      color: panel.color,
-      iconSVG: panel.iconSVG ?? fallbackIcon,
-      removeOnCancel,
+      config: panelConfig,
+      index,
       done: res,
     }
   })
 }
 
-export function stopFastEditingOfPanel(result: boolean): void {
-  if (Sidebar.reactive.panelConfigPopup?.done) Sidebar.reactive.panelConfigPopup.done(result)
+export function closePanelPopup(): void {
+  if (Sidebar.reactive.panelConfigPopup?.done) Sidebar.reactive.panelConfigPopup.done(null)
   Sidebar.reactive.panelConfigPopup = null
 }
 

@@ -126,7 +126,7 @@ export interface PanelBounds {
 export interface NavItemConfig {
   id: ID
   name: string
-  iconSVG?: string
+  iconSVG: string
   iconIMG?: string
   iconIMGSrc?: string
 }

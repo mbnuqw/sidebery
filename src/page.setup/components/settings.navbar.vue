@@ -209,19 +209,26 @@ function moveBtn(index: number, dir: number): void {
 
 async function createNavElement(id?: ID): Promise<ID | undefined> {
   if (!id) return
-  if (id === 'tabs_panel') id = Sidebar.createTabsPanel().id
-  else if (id === 'bookmarks_panel') {
+  if (id === 'tabs_panel') {
+    const panel = Sidebar.createTabsPanel()
+    Sidebar.reactive.panelsById[panel.id] = panel
+    return panel.id
+  } else if (id === 'bookmarks_panel') {
     if (!Permissions.reactive.bookmarks) {
       const result = await Permissions.request('bookmarks')
       if (!result) return
     }
-    id = Sidebar.createBookmarksPanel().id
+    const panel = Sidebar.createBookmarksPanel()
+    Sidebar.reactive.panelsById[panel.id] = panel
+    return panel.id
   } else if (id === 'history') {
     if (!Permissions.reactive.history) {
       const result = await Permissions.request('history')
       if (!result) return
     }
-    Sidebar.createHistoryPanel().id
+    const panel = Sidebar.createHistoryPanel()
+    Sidebar.reactive.panelsById[panel.id] = panel
+    return panel.id
   } else if (id === 'sp') id = 'sp-' + Utils.uid()
   else if (id === 'sd') id = 'sd-' + Utils.uid()
 

@@ -36,7 +36,7 @@ export async function loadSettings(): Promise<void> {
   // --- v5.0.0b28 fix
 
   Utils.normalizeObject(stored.settings, DEFAULT_SETTINGS)
-  Utils.updateObject(Settings.state, stored.settings)
+  Utils.updateObject(Settings.state, stored.settings, Settings.state)
 
   if (Settings.state.hideInact) {
     Settings.state.activateLastTabOnPanelSwitching = true
@@ -82,7 +82,7 @@ export function updateSettingsBg(settings?: SettingsState | null): void {
   const snapIntervalUnitChanged = prev.snapIntervalUnit !== next.snapIntervalUnit
   const colorSchemeChanged = prev.colorScheme !== next.colorScheme
 
-  Utils.updateObject(Settings.state, settings)
+  Utils.updateObject(Settings.state, settings, Settings.state)
 
   if (markWindowChanged) {
     for (const win of Object.values(Windows.byId)) {
@@ -138,7 +138,7 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
   const tabsUpdateMarkChanged = prev.tabsUpdateMark !== next.tabsUpdateMark
 
   // Update settings of this instance
-  Utils.updateObject(Settings.state, settings)
+  Utils.updateObject(Settings.state, settings, Settings.state)
 
   if (Info.isSidebar && updateSuccessions && Sidebar.hasTabs) {
     const activeTab = Tabs.list.find(t => t.active)
@@ -219,7 +219,7 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
 }
 
 export function resetSettings(): void {
-  Utils.updateObject(Settings.state, DEFAULT_SETTINGS)
+  Utils.updateObject(Settings.state, DEFAULT_SETTINGS, DEFAULT_SETTINGS)
 }
 
 /**

@@ -173,7 +173,7 @@ function onDocumentKeyup(e: KeyboardEvent): void {
     if (Bookmarks.reactive.popup?.close) Bookmarks.reactive.popup.close()
 
     // Panel config popup
-    if (Sidebar.reactive.panelConfigPopup) Sidebar.stopFastEditingOfPanel(false)
+    if (Sidebar.reactive.panelConfigPopup) Sidebar.closePanelPopup()
 
     // Conatiner config popup
     if (Sidebar.reactive.containerConfigPopup) Sidebar.closeContainerPopup()

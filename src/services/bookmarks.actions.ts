@@ -17,8 +17,7 @@ import { Notifications } from 'src/services/notifications'
 import { Info } from 'src/services/info'
 import * as IPC from 'src/services/ipc'
 import { Favicons } from './favicons'
-import { TabsPanelConfig } from 'src/types/sidebar'
-import { TABS_PANEL_CONFIG } from 'src/defaults/panels'
+import { PanelType, TabsPanelConfig } from 'src/types/sidebar'
 import { Permissions } from './permissions'
 import { Containers } from './containers'
 import { DnD } from './drag-and-drop'
@@ -239,19 +238,9 @@ export async function openInNewPanel(ids: ID[]): Promise<void> {
 
   // Create panel
   const panel = Sidebar.createTabsPanel()
-  const activePanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
-  panel.ready = true
-  let index = Sidebar.reactive.nav.length
-  while (index-- >= 0) {
-    const panel = Sidebar.reactive.panelsById[Sidebar.reactive.nav[index]]
-    if (Utils.isTabsPanel(panel)) {
-      index++
-      break
-    }
-  }
-  if (index < 0) index = 1 + activePanel?.index ?? -2
-  if (index < 0) index = 0
-  Sidebar.reactive.nav.splice(index, 0, panel.id)
+  const index = Sidebar.getIndexForNewTabsPanel()
+  const rPanel = Sidebar.addPanel(index, panel)
+  rPanel.ready = true
   Sidebar.recalcPanels()
   Sidebar.recalcTabsPanels()
   Sidebar.saveSidebar(300)
@@ -274,10 +263,10 @@ export async function convertIntoTabsPanel(folderId: ID): Promise<void> {
     for (const node of nodes) {
       if (node.type === 'separator') continue
       if (ids.includes(node.parentId)) {
-        toOpen.push(node)
+        toOpen.push({ id: node.id, url: node.url, title: node.title, parentId: node.parentId })
         ids.push(node.id)
       } else if (ids.includes(node.id)) {
-        toOpen.push(node)
+        toOpen.push({ id: node.id, url: node.url, title: node.title, parentId: node.parentId })
       }
       if (node.children) walker(node.children)
     }
@@ -286,7 +275,7 @@ export async function convertIntoTabsPanel(folderId: ID): Promise<void> {
   if (!toOpen.length) return
 
   // Get new panel config
-  let panelConfig: TabsPanelConfig | undefined
+  let panelConfig: Partial<TabsPanelConfig> | undefined
   let name: string | undefined = folder.title
   const panelConfExec = BOOKMARKED_PANEL_CONF_RE.exec(folder.title)
   if (panelConfExec) {
@@ -298,25 +287,13 @@ export async function convertIntoTabsPanel(folderId: ID): Promise<void> {
       Logs.warn('Bookmarks.convertIntoTabsPanel: Cannot parse panel config, using defaults...', err)
     }
   }
-  if (!panelConfig) panelConfig = Utils.cloneObject(TABS_PANEL_CONFIG)
+  if (!panelConfig) panelConfig = { name, bookmarksFolderId: folderId }
 
   // Create panel
-  const panel = Sidebar.createTabsPanel({ name: panelConfig.name || name })
+  const panel = Sidebar.createTabsPanel(panelConfig)
+  const index = Sidebar.getIndexForNewTabsPanel()
   panel.ready = true
-  panel.color = panelConfig.color
-  panel.iconSVG = panelConfig.iconSVG
-  panel.iconIMG = panelConfig.iconIMG
-  panel.iconIMGSrc = panelConfig.iconIMGSrc
-  // ...
-  let index = Sidebar.reactive.nav.length
-  while (index-- >= 0) {
-    const panel = Sidebar.reactive.panelsById[Sidebar.reactive.nav[index]]
-    if (Utils.isTabsPanel(panel)) {
-      index++
-      break
-    }
-  }
-  Sidebar.reactive.nav.splice(index, 0, panel.id)
+  Sidebar.addPanel(index, panel)
   Sidebar.recalcPanels()
   Sidebar.recalcTabsPanels()
   Sidebar.saveSidebar(300)
@@ -1328,7 +1305,7 @@ export function* listBookmarks(nodes?: Bookmark[]): IterableIterator<Bookmark> {
   }
 }
 
-export function openAsBookmarksPanel(node: Bookmark): void {
+export function openAsBookmarksPanel(node: Bookmark) {
   if (node.type !== 'folder') return
 
   const index = Sidebar.reactive.nav.indexOf(Sidebar.reactive.activePanelId)
@@ -1340,23 +1317,16 @@ export function openAsBookmarksPanel(node: Bookmark): void {
   if (titleExec) panelName = titleExec[1]
   else panelName = node.title
 
-  // Create bookmarks panel
-  const bookmarksPanel = Sidebar.createBookmarksPanel({ name: panelName, rootId: node.id })
-  Sidebar.reactive.nav.splice(index + 1, 0, bookmarksPanel.id)
-
-  Sidebar.recalcPanels()
-  Sidebar.recalcBookmarksPanels()
-  Sidebar.activatePanel(bookmarksPanel.id)
-  Sidebar.saveSidebar(500)
-
-  Sidebar.startFastEditingOfPanel(bookmarksPanel.id, true)
+  // Start bookmarks panel creation
+  Sidebar.openPanelPopup({
+    type: PanelType.bookmarks,
+    name: panelName,
+    rootId: node.id,
+  })
 }
 
 export async function openAsTabsPanel(node: Bookmark): Promise<void> {
   if (node.type !== 'folder') return
-
-  const index = Sidebar.reactive.nav.indexOf(Sidebar.reactive.activePanelId)
-  if (index === -1) return
 
   // Get name and config for new panel
   let panelName: string | undefined
@@ -1372,31 +1342,38 @@ export async function openAsTabsPanel(node: Bookmark): Promise<void> {
   }
   if (titleExec) panelName = titleExec[1]
   else panelName = node.title
+
   if (panelConfig) panelConfig.name = panelName
 
-  // Create tabs panel
-  const isFirstTabsPanel = !Sidebar.hasTabs
-  const tabsPanel = Sidebar.createTabsPanel({ name: panelName })
-  Sidebar.reactive.nav.splice(index + 1, 0, tabsPanel.id)
+  const noTabsPanels = !Sidebar.hasTabs
+  const index = Sidebar.getIndexForNewTabsPanel()
+  let tabsPanel
+
+  // Create from config parsed from bookmarks
   if (panelConfig) {
-    panelConfig.id = tabsPanel.id
     panelConfig.name = panelName
     panelConfig.bookmarksFolderId = node.id
-    Utils.updateObject(tabsPanel, panelConfig)
-  } else {
-    tabsPanel.bookmarksFolderId = node.id
-  }
-  Sidebar.recalcPanels()
-  Sidebar.recalcTabsPanels()
-  Sidebar.activatePanel(tabsPanel.id)
-  Sidebar.saveSidebar(300)
-
-  if (!panelConfig) {
-    const result = await Sidebar.startFastEditingOfPanel(tabsPanel.id, true)
-    if (!result) return
+    tabsPanel = Sidebar.createTabsPanel(panelConfig)
+    Sidebar.addPanel(index, tabsPanel)
+    Sidebar.recalcPanels()
+    Sidebar.recalcTabsPanels()
+    Sidebar.activatePanel(tabsPanel.id)
+    Sidebar.saveSidebar(300)
   }
 
-  if (isFirstTabsPanel) await Tabs.load()
+  // Or use folder name and open panel popup
+  else {
+    const result = await Sidebar.openPanelPopup(
+      { type: PanelType.tabs, name: panelName, bookmarksFolderId: node.id },
+      index + 1
+    )
+    if (!result) return Logs.warn('Bookmarks.openAsTabsPanel: No result')
+
+    tabsPanel = Sidebar.reactive.panelsById[result]
+    if (!Utils.isTabsPanel(tabsPanel)) return Logs.warn('Bookmarks.openAsTabsPanel: No tabsPanel')
+  }
+
+  if (noTabsPanels) await Tabs.load()
 
   // Open tabs
   const ids = node.children?.map(n => n.id) ?? []

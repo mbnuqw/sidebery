@@ -375,7 +375,11 @@ export function onDragEnter(e: DragEvent): void {
       else if (isBookmarksPanel) DnD.reactive.dstType = DropType.BookmarksPanel
       else DnD.reactive.dstType = DropType.NavItem
 
-      DnD.reactive.dstPanelId = panel?.id ?? NOID
+      if (panel) {
+        DnD.reactive.dstPanelId = panel.id ?? NOID
+      } else {
+        if (id === 'add_tp') DnD.reactive.dstPanelId = id
+      }
       DnD.reactive.dstIndex = Sidebar.reactive.nav.indexOf(id)
 
       const srcIsNav =
@@ -845,8 +849,12 @@ export async function onDrop(e: DragEvent): Promise<void> {
 
   // To new tabs panel
   let tabsPanelsSaveNeeded = false
-  if (DnD.reactive.dstPanelId === 'add' && (fromTabs || fromBookmarks)) {
+  if (DnD.reactive.dstPanelId === 'add_tp' && (fromTabs || fromBookmarks)) {
     const panel = Sidebar.createTabsPanel()
+    const index = Sidebar.getIndexForNewTabsPanel()
+    Sidebar.addPanel(index, panel)
+    Sidebar.recalcPanels()
+    Sidebar.recalcTabsPanels()
     DnD.reactive.dstPanelId = panel.id
     DnD.reactive.dstIndex = -1
     toTabsPanel = true

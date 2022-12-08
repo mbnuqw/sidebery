@@ -166,7 +166,7 @@ function dropPointerMode(id: ID): string {
       }
       return 'before'
     } else {
-      if (DnD.reactive.dstType !== DropType.NavItem) return 'in'
+      if (DnD.reactive.dstType !== DropType.NavItem || id === 'add_tp') return 'in'
     }
   }
   return 'none'

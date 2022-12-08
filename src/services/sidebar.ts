@@ -1,4 +1,5 @@
 import { Panel, TabsPanel, ConfirmDialog, UpgradingState, Dialog, GroupConfig } from 'src/types'
+import { PanelConfig } from 'src/types'
 import { NOID } from 'src/defaults'
 import * as SidebarActions from 'src/services/sidebar.actions'
 
@@ -34,12 +35,9 @@ interface UrlRule {
 }
 
 export interface PanelConfigPopup {
-  id: ID
-  name: string
-  iconSVG: string
-  color: browser.ColorName
-  removeOnCancel: boolean
-  done: (result: boolean) => void
+  config: PanelConfig
+  index?: number
+  done: (result: ID | null) => void
 }
 
 export interface ContainerConfigPopup {

@@ -57,7 +57,7 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
-import { BTN_ICONS } from 'src/defaults'
+import { BTN_ICONS, NOID } from 'src/defaults'
 import { NavItemClass, ButtonTypes, DragType, DropType, Tab } from 'src/types'
 import { MenuType, DragInfo, DragItem, PanelType } from 'src/types'
 import { ButtonType, SpaceType, NavBtn, NavItem, WheelDirection } from 'src/types'
@@ -500,14 +500,7 @@ function onNavItemDrop(item: NavItem): void {
 }
 
 async function addTabsPanel(): Promise<void> {
-  const panel = Sidebar.createTabsPanel()
-  if (!Sidebar.hasTabs) panel.ready = false
-
-  const result = await Sidebar.startFastEditingOfPanel(panel.id, false)
-  if (!result) {
-    delete Sidebar.reactive.panelsById[panel.id]
-  }
-
+  // Find target index
   let index = Sidebar.reactive.nav.length
   while (index--) {
     const id = Sidebar.reactive.nav[index]
@@ -517,14 +510,16 @@ async function addTabsPanel(): Promise<void> {
   if (index !== -1) index++
   if (index === -1) index = Sidebar.reactive.nav.indexOf('add_tp')
   if (index === -1) index = 0
-  Sidebar.reactive.nav.splice(index, 0, panel.id)
-  Sidebar.recalcPanels()
-  Sidebar.recalcTabsPanels()
-  Sidebar.saveSidebar()
+
+  // Start panel creation
+  const result = await Sidebar.openPanelPopup({ type: PanelType.tabs }, index)
+  if (!result) return
+
+  const panel = Sidebar.reactive.panelsById[result]
+  if (!panel) return
+
   Sidebar.activatePanel(panel.id)
-  if (Settings.state.hideEmptyPanels && !Sidebar.reactive.hiddenPanelsBar) {
-    Sidebar.openHiddenPanelsBar()
-  }
+  Tabs.createTabInPanel(panel)
 }
 
 function collapseAll(): void {

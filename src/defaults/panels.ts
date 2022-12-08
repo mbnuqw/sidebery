@@ -7,7 +7,7 @@ import { NavItemClass } from 'src/types/sidebar'
 export const BOOKMARKS_PANEL: BookmarksPanelConfig = {
   type: PanelType.bookmarks,
   id: '',
-  name: translate('panel.bookmarks.title'),
+  name: '',
   iconSVG: 'icon_bookmarks',
   iconIMGSrc: '',
   iconIMG: '',

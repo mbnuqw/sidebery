@@ -472,23 +472,21 @@ export function cloneArray<T>(arr: T[]): T[] {
   return out
 }
 
-export type AnyObject = { [key: string]: any } // eslint-disable-line
-
 /**
  * Clone Object
  */
-export function cloneObject<T>(obj: T & AnyObject): T {
-  const out: AnyObject = {}
-  for (const prop of Object.keys(obj)) {
+export function cloneObject<T extends object>(obj: T): T {
+  const out = {} as T
+  for (const prop of Object.keys(obj) as (keyof T)[]) {
     if (Array.isArray(obj[prop])) {
-      out[prop] = cloneArray(obj[prop] as any[])
+      out[prop] = cloneArray(obj[prop] as unknown[]) as T[keyof T]
     } else if (typeof obj[prop] === 'object' && obj[prop] !== null) {
-      out[prop] = cloneObject<unknown>(obj[prop] as AnyObject)
+      out[prop] = cloneObject(obj[prop] as object) as T[keyof T]
     } else {
-      out[prop] = obj[prop] as unknown
+      out[prop] = obj[prop] as T[keyof T]
     }
   }
-  return out as unknown as T
+  return out
 }
 
 /**
@@ -535,25 +533,26 @@ export function denormalizeUrl(url?: string): string | undefined {
   else return url
 }
 
-export function recreateNormalizedObject<T>(obj: T & AnyObject, defaults: T & AnyObject): T {
-  const result = cloneObject(defaults) as AnyObject
-  for (const key of Object.keys(defaults)) {
-    if (obj[key] !== undefined) result[key] = obj[key] as unknown
+export function recreateNormalizedObject<T extends object>(obj: T, defaults: T): T {
+  const result = cloneObject(defaults)
+  for (const key of Object.keys(defaults) as (keyof T)[]) {
+    if (obj[key] !== undefined) result[key] = obj[key]
   }
   return result as T
 }
 
-export function normalizeObject<T>(obj: T & AnyObject, defaults: T & AnyObject): void {
+export function normalizeObject<T extends object>(obj: T, defaults: T): void {
   const clonedDefaults = cloneObject(defaults)
   for (const key of Object.keys(clonedDefaults) as (keyof T)[]) {
     if (obj[key] === undefined) obj[key] = clonedDefaults[key]
   }
 }
 
-export function updateObject<T>(target: T & AnyObject, newValues: T & AnyObject): void {
-  for (const key of Object.keys(target) as (keyof T)[]) {
-    if (newValues[key] === undefined) continue
-    target[key] = newValues[key]
+export function updateObject<T extends object>(obj: T, src: T, keysSrc: T | (keyof T)[]): void {
+  const keys = Array.isArray(keysSrc) ? keysSrc : (Object.keys(keysSrc) as (keyof T)[])
+  for (const key of keys) {
+    if (src[key] === undefined) continue
+    obj[key] = src[key]
   }
 }
 

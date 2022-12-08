@@ -314,7 +314,6 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
     }
 
     if (node.type !== 'folder') option.inactive = true
-    // if (node.parentId === 'root________') option.inactive = true
     if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
   },

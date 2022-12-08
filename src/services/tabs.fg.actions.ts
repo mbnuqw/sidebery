@@ -1879,8 +1879,13 @@ export async function move(
   }
   const isActive = tabs.some(t => t.active)
 
-  if (dst.index === undefined) dst.index = 0
   if (dst.parentId === undefined) dst.parentId = NOID
+  if (dst.index === undefined) dst.index = 0
+  if (dst.index === -1) {
+    const panel = Sidebar.reactive.panelsById[dst.panelId ?? NOID]
+    if (!Utils.isTabsPanel(panel)) return Logs.warn('Tabs.move: No panel')
+    dst.index = panel.nextTabIndex
+  }
 
   // Check if tabs was dropped to same place
   const inside = dst.index > tabs[0].index && dst.index <= tabs[tabs.length - 1].index
@@ -2101,18 +2106,16 @@ export async function moveToNewPanel(tabIds: ID[]): Promise<void> {
   if (index === -1) return Logs.warn('Tabs.moveToNewPanel: Cannot find target index')
 
   // Create new panel
-  const isFirstTabsPanel = !Sidebar.hasTabs
-  const dstPanel = Sidebar.createTabsPanel()
-  Sidebar.reactive.nav.splice(index + 1, 0, dstPanel.id)
-  Sidebar.recalcPanels()
-  Sidebar.recalcTabsPanels()
-  Sidebar.activatePanel(dstPanel.id)
-  Sidebar.saveSidebar(300)
-
-  const result = await Sidebar.startFastEditingOfPanel(dstPanel.id, true)
+  const noTabsPanels = !Sidebar.hasTabs
+  const result = await Sidebar.openPanelPopup({ type: PanelType.tabs }, index + 1)
   if (!result) return
 
-  if (isFirstTabsPanel) await Tabs.load()
+  const dstPanel = Sidebar.reactive.panelsById[result]
+  if (!Utils.isTabsPanel(dstPanel)) return
+
+  Sidebar.activatePanel(dstPanel.id)
+
+  if (noTabsPanels) await Tabs.load()
 
   // Move
   const items = Tabs.getTabsInfo(tabIds)

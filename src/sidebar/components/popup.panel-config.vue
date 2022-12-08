@@ -6,7 +6,7 @@
       .field-label {{translate('popup.common.name_label')}}
       TextInput.input(
         ref="titleInput"
-        v-model:value="Sidebar.reactive.panelConfigPopup.name"
+        v-model:value="Sidebar.reactive.panelConfigPopup.config.name"
         :or="'Panel name'"
         :tabindex="'-1'"
         :line="true"
@@ -15,22 +15,23 @@
     .field
       .field-label {{translate('popup.common.icon_label')}}
       SelectInput.input(
-        v-model:value="Sidebar.reactive.panelConfigPopup.iconSVG"
+        v-model:value="Sidebar.reactive.panelConfigPopup.config.iconSVG"
         :opts="iconsOpts"
-        :color="Sidebar.reactive.panelConfigPopup.color"
+        :color="Sidebar.reactive.panelConfigPopup.config.color"
       )
 
     .field
       .field-label {{translate('popup.common.color_label')}}
       SelectInput.input(
-        v-model:value="Sidebar.reactive.panelConfigPopup.color"
+        v-model:value="Sidebar.reactive.panelConfigPopup.config.color"
         :opts="COLOR_OPTS"
-        :icon="Sidebar.reactive.panelConfigPopup.iconSVG"
+        :icon="Sidebar.reactive.panelConfigPopup.config.iconSVG"
       )
 
     .ctrls
-      .btn.-wide(@click="openFullConfig") {{translate('popup.common.btn_more')}}
-      .btn(@click="onSave") {{translate('btn.save')}}
+      .btn.-wide(v-if="panelExists" @click="openFullConfig") {{translate('popup.common.btn_more')}}
+      .btn(v-if="panelExists" :class="{ '-inactive': !valid }" @click="onSave") {{translate('btn.save')}}
+      .btn(v-else :class="{ '-inactive': !valid }" @click="onSave") {{translate('btn.create')}}
       .btn.-warn(@click="onCancel") {{translate('btn.cancel')}}
 </template>
 
@@ -58,21 +59,33 @@ onMounted(() => {
   titleInput.value?.focus()
 })
 
+const valid = computed<boolean>(() => {
+  if (!Sidebar.reactive.panelConfigPopup) return false
+  return !!Sidebar.reactive.panelConfigPopup.config.name
+})
+
+const panelExists = computed<boolean>(() => {
+  if (!Sidebar.reactive.panelConfigPopup) return false
+
+  const panel = Sidebar.reactive.panelsById[Sidebar.reactive.panelConfigPopup.config.id]
+  return !!panel
+})
+
 const popupTitle = computed<string>(() => {
   if (!Sidebar.reactive.panelConfigPopup) return ''
+  const popup = Sidebar.reactive.panelConfigPopup
 
-  const panel = Sidebar.reactive.panelsById[Sidebar.reactive.panelConfigPopup.id]
-  if (Utils.isTabsPanel(panel)) return translate('popup.tabs_panel.title')
-  if (Utils.isBookmarksPanel(panel)) return translate('popup.bookmarks_panel.title')
+  if (Utils.isTabsPanel(popup.config)) return translate('popup.tabs_panel.title')
+  if (Utils.isBookmarksPanel(popup.config)) return translate('popup.bookmarks_panel.title')
   return ''
 })
 
 const iconsOpts = computed<InputOption[]>(() => {
   if (!Sidebar.reactive.panelConfigPopup) return []
+  const popup = Sidebar.reactive.panelConfigPopup
 
-  const panel = Sidebar.reactive.panelsById[Sidebar.reactive.panelConfigPopup.id]
-  if (Utils.isTabsPanel(panel)) return TABS_PANEL_ICON_OPTS
-  if (Utils.isBookmarksPanel(panel)) return BOOKMARKS_PANEL_ICON_OPTS
+  if (Utils.isTabsPanel(popup.config)) return TABS_PANEL_ICON_OPTS
+  if (Utils.isBookmarksPanel(popup.config)) return BOOKMARKS_PANEL_ICON_OPTS
   return []
 })
 
@@ -84,45 +97,65 @@ function onTitleKD(e: KeyboardEvent): void {
 }
 
 function openFullConfig(): void {
-  if (!Sidebar.reactive.panelConfigPopup) return
+  if (!Sidebar.reactive.panelConfigPopup || !panelExists.value) return
 
-  SetupPage.open(`settings_nav.${Sidebar.reactive.panelConfigPopup.id}`)
-  Sidebar.reactive.panelConfigPopup.done(true)
+  SetupPage.open(`settings_nav.${Sidebar.reactive.panelConfigPopup.config.id}`)
+  Sidebar.reactive.panelConfigPopup.done(null)
   Sidebar.reactive.panelConfigPopup = null
 }
 
 function onSave(): void {
   if (!Sidebar.reactive.panelConfigPopup) return
+  const popup = Sidebar.reactive.panelConfigPopup
 
-  const panel = Sidebar.reactive.panelsById[Sidebar.reactive.panelConfigPopup.id]
-  if (!panel) {
-    Sidebar.reactive.panelConfigPopup.done(false)
-    Sidebar.reactive.panelConfigPopup = null
-    return
+  if (!valid.value) return
+
+  let panel = Sidebar.reactive.panelsById[popup.config.id]
+
+  // Update existed panel
+  if (panel) {
+    Utils.updateObject(panel, popup.config, ['name', 'iconSVG', 'color'])
+    Sidebar.saveSidebar()
   }
 
-  panel.name = Sidebar.reactive.panelConfigPopup.name
-  panel.iconSVG = Sidebar.reactive.panelConfigPopup.iconSVG
-  panel.color = Sidebar.reactive.panelConfigPopup.color
+  // Create panel
+  else {
+    if (Utils.isTabsPanel(popup.config)) {
+      panel = Sidebar.createTabsPanel(popup.config)
+    } else if (Utils.isBookmarksPanel(popup.config)) {
+      panel = Sidebar.createBookmarksPanel(popup.config)
+    } else {
+      return
+    }
 
-  Sidebar.saveSidebar()
+    if (panel.index === -1) {
+      panel.index = Utils.findLastIndex(Sidebar.reactive.nav, id => {
+        return Utils.isTabsPanel(Sidebar.reactive.panelsById[id])
+      })
+      if (panel.index === -1) panel.index = Sidebar.reactive.nav.length
+    }
+
+    if (!panel.id) panel.id = Utils.uid()
+    Sidebar.reactive.panelsById[panel.id] = panel
+    Sidebar.reactive.nav.splice(panel.index, 0, panel.id)
+    Sidebar.recalcPanels()
+    if (Utils.isTabsPanel(popup.config)) Sidebar.recalcTabsPanels()
+    else if (Utils.isBookmarksPanel(popup.config)) Sidebar.recalcBookmarksPanels()
+    Sidebar.saveSidebar(300)
+  }
 
   if (Settings.state.updateSidebarTitle && Sidebar.reactive.activePanelId === panel.id) {
     Sidebar.updateSidebarTitle()
   }
 
-  Sidebar.reactive.panelConfigPopup.done(true)
+  Sidebar.reactive.panelConfigPopup.done(panel.id)
   Sidebar.reactive.panelConfigPopup = null
 }
 
 function onCancel(): void {
   if (!Sidebar.reactive.panelConfigPopup) return
 
-  if (Sidebar.reactive.panelConfigPopup.removeOnCancel) {
-    Sidebar.removePanel(Sidebar.reactive.panelConfigPopup.id)
-  }
-
-  Sidebar.reactive.panelConfigPopup.done(false)
+  Sidebar.reactive.panelConfigPopup.done(null)
   Sidebar.reactive.panelConfigPopup = null
 }
 </script>
