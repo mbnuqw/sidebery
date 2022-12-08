@@ -898,3 +898,18 @@ export function isSubListTitle(something: any): something is SubListTitleInfo {
   if ((something as Record<string, any>).isSubListTitle) return true
   return false
 }
+
+// Temp, (v104, esr115 (2023-09-26))
+export function findLast<T>(arr: T[], pred: (val: T, i: number) => unknown): T | undefined {
+  for (let i = arr.length, v; i--; ) {
+    v = arr[i]
+    if (pred(v, i)) return v
+  }
+}
+export function findLastIndex<T>(arr: T[], pred: (val: T, i: number) => unknown): number {
+  for (let i = arr.length, v; i--; ) {
+    v = arr[i]
+    if (pred(v, i)) return i
+  }
+  return -1
+}
