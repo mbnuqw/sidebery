@@ -484,6 +484,7 @@ export function saveTabData(tabId: ID): void {
 let normTabsTimeout: number | undefined
 /**
  * Load tabs and normalize order. (on unrecoverable situations)
+ * TODO: Completely rewrite this piece of shit, with unit tests
  */
 export function reinitTabs(delay = 500): void {
   if (!Tabs.tabsReinitializing) Tabs.tabsReinitializing = true
@@ -522,6 +523,8 @@ export function reinitTabs(delay = 500): void {
             if (pi > panelIndex) {
               panelIndex = pi
               panelsList[panelIndex].index = index
+            } else if (pi === -1) {
+              tab.panelId = panelId ?? NOID
             } else {
               moves.push([tab.id, panelsList[pi].index])
               for (let i = pi; i < panelsList.length; i++) {
