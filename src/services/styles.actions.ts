@@ -337,8 +337,8 @@ function calcBorder(themeColors: browser.theme.ThemeColors, parsed: ParsedThemeC
   themeColors.border_width = '1px'
 }
 
-export function applyFirefoxThemeColors(theme: browser.theme.Theme): void {
-  const rootEl = document.getElementById('root')
+export function applyFirefoxThemeColors(theme: browser.theme.Theme, rootEl?: HTMLElement): void {
+  if (!rootEl) rootEl = document.getElementById('root') ?? undefined
   if (!rootEl || !theme.colors) return
 
   for (const colorName of FF_THEME_COLORS) {

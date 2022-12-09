@@ -204,6 +204,7 @@ async function getRootStyles(
     shadowedRootEl.setAttribute('data-color-scheme', colorScheme)
     shadowedRootEl.setAttribute('data-animations', Settings.state.animationSpeed || 'fast')
     shadowedRootEl.setAttribute('data-density', Settings.state.density || 'default')
+    if (Styles.theme) Styles.applyFirefoxThemeColors(Styles.theme, shadowedRootEl)
     shadow.appendChild(shadowedRootEl)
 
     const shadowLinkEl = document.createElement('link')
