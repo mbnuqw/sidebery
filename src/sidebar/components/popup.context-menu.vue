@@ -278,8 +278,8 @@ function getX(menuWidth: number, x: number): number {
 
 function getY(menuH: number, y: number, isAbovePointer: boolean): number {
   const boxH = document.body.offsetHeight
-  if (menuH >= boxH) return 1
-  if (isAbovePointer && menuH > y) return boxH - 1
+  if (menuH >= boxH) return 0
+  if (isAbovePointer && menuH > y) return boxH - 16
   return y
 }
 
