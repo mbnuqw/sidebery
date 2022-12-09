@@ -242,8 +242,8 @@ export const commonTranslations: Translations = {
   },
 
   'popup.new_tab_shortcuts.title': {
-    en: 'Shortcuts',
-    ru: 'Ярлыки',
+    en: 'New Tab Shortcuts',
+    ru: 'Ярлыки новой вкладки',
   },
   'popup.new_tab_shortcuts.create_title': {
     en: 'Create shortcut',

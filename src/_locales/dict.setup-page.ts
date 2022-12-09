@@ -265,24 +265,15 @@ export const setupPageTranslations: Translations = {
     de: 'Chronik',
     zh_CN: '历史',
   },
-  'panel.new_tab_custom_btns': {
-    en: 'Additional "New tab" buttons',
+  'panel.new_tab_shortcuts': {
+    en: 'Additional "New tab" shortcuts',
     ru: 'Дополнительные кнопки для создания новой вкладки',
     de: 'Zusätzliche "Neuer Tab" Schaltflächen',
     zh_CN: '额外的“新建标签”按钮',
   },
-  'panel.new_tab_custom_btns_placeholder': {
-    en: 'Container name and/or URL',
-    ru: 'Имя контейнера и/или URL',
-    de: 'Umgebungsname und/oder URL',
-    zh_CN: '容器名称 和/或 URL',
-  },
-  'panel.new_tab_custom_btns_note': {
-    en: 'Note: List of button configs. Example:\n  Personal  (open new tab in "Personal" container)\n  https://example.com  (open provided URL)\n  Personal, https://example.com  (open provided URL in "Personal" container)',
-    ru: 'Список настроек для кнопок новой вкладки. Пример:\n  Персональный  (Открыть вкладку в контейнере "Персональный")\n  https://example.com  (Открыть вкладку с данным URL)\n  Персональный, https://example.com  (Открыть вкладку с данным URL в контейнере "Персональный")',
-    de: 'Hinweis: Liste der Schaltflächenkonfigurationen. Beispiel:\n Persönlich (öffne neuen Tab in "Persönlich"-Umgebung)\n https://example.com (öffne bereitgestellte URL)\n Persönlich, https://example.com (öffne bereitgestellte URL in "Persönlich"-Umgebung)',
-    zh_CN:
-      '注意：按钮配置列表。示例：\n 个人（在“个人”容器中打开新标签页）\n  https://example.com  (打开提供的URL)\n  个人, https://example.com  (在“个人”容器中打开提供的 URL)',
+  'panel.new_tab_shortcuts_manage_btn': {
+    en: 'Manage shortcuts',
+    ru: 'Управление ярлыками',
   },
 
   // ---

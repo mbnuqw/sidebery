@@ -1,5 +1,5 @@
 <template lang="pug">
-#root.root(
+#root.root.Setup(
   :data-color-scheme="Styles.reactive.colorScheme"
   :data-animations="animations"
   :data-sticky-bookmarks="Settings.state.pinOpenedBookmarksFolder")
@@ -37,6 +37,7 @@ import SnapshotsView from './components/snapshots.vue'
 import StorageView from './components/storage.vue'
 import KeybindingsView from './components/keybindings.vue'
 import BookmarksPopup from 'src/components/popup.bookmarks.vue'
+import NewTabShortcutsPopup from 'src/components/popup.new-tab-shortcuts.vue'
 import UpgradeScreen from 'src/components/upgrade-screen.vue'
 import Details from './components/settings.details.vue'
 

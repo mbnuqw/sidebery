@@ -137,15 +137,9 @@
       .btn(@click="setBookmarksRootId") {{translate('panel.root_id.choose')}}
       .btn(@click="resetBookmarksRootId") {{translate('panel.root_id.reset')}}
 
-  TextField(
-    v-if="Utils.isTabsPanel(conf)"
-    label="panel.new_tab_custom_btns"
-    :inactive="!Settings.state.showNewTabBtns"
-    :or="translate('panel.new_tab_custom_btns_placeholder')"
-    :note="translate('panel.new_tab_custom_btns_note')"
-    :value="newTabBtnsText"
-    :line="false"
-    @update:value="onNewTabBtnsUpdate")
+  .InfoField(v-if="Utils.isTabsPanel(conf)")
+    .label {{translate('panel.new_tab_shortcuts')}}
+    .btn(@click="openShortcutsPopup") {{translate('panel.new_tab_shortcuts_manage_btn')}}
 </template>
 
 <script lang="ts" setup>
@@ -530,18 +524,6 @@ function resetBookmarksRootId(): void {
   Sidebar.saveSidebar(500)
 }
 
-function onNewTabBtnsUpdate(value: string): void {
-  if (!Utils.isTabsPanel(props.conf)) return
-
-  const rawBtns = value.split('\n')
-  const btns: string[] = []
-  rawBtns.forEach(btn => btns.push(btn.trim()))
-  if (btns.length === 1 && !btns[0]) btns.pop()
-
-  props.conf.newTabBtns = btns
-  Sidebar.saveSidebar(500)
-}
-
 function selectBookmarksViewMode(value: string): void {
   if (!Utils.isBookmarksPanel(props.conf)) return
 
@@ -553,5 +535,9 @@ function toggleAutoConvert(): void {
   if (!Utils.isBookmarksPanel(props.conf)) return
   props.conf.autoConvert = !props.conf.autoConvert
   Sidebar.saveSidebar()
+}
+
+function openShortcutsPopup(): void {
+  Sidebar.openNewTabShortcutsPopup(props.conf.id)
 }
 </script>
