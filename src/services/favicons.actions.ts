@@ -20,6 +20,9 @@ let favPrescaleCanvasCtx: CanvasRenderingContext2D | null = null
 let favRescaleImg: HTMLImageElement | undefined
 let hashes: number[] = []
 let domainsInfo: Record<string, FavDomain> = {}
+let iconFillCanvas: HTMLCanvasElement | undefined
+let iconFillCanvasCtx: CanvasRenderingContext2D | null = null
+let iconFillImg: HTMLImageElement | undefined
 
 /**
  * Load favicons
@@ -228,6 +231,51 @@ export async function resizeFavicon(fav: string): Promise<string> {
 
   if (newFav.length + THRESHOLD_BYTES_DIFF >= fav.length) return fav
   else return newFav
+}
+
+export async function fillIcon(icon: string, color: string): Promise<string> {
+  const ds = SIZE * 2
+
+  if (!iconFillCanvas || !iconFillCanvasCtx) {
+    iconFillCanvas = Utils.createCanvas(ds, ds)
+    iconFillCanvasCtx = iconFillCanvas.getContext('2d')
+    if (iconFillCanvasCtx) iconFillCanvasCtx.save()
+    else return icon
+  }
+
+  if (!iconFillImg) iconFillImg = new Image()
+
+  iconFillCanvasCtx.clearRect(0, 0, ds, ds)
+
+  try {
+    await Utils.setImageSrc(iconFillImg, icon)
+  } catch {
+    return icon
+  }
+
+  try {
+    let sw = iconFillImg.naturalWidth
+    let sh = iconFillImg.naturalHeight
+    if (sw === 0 || sh === 0) {
+      const svgWithSize = Utils.setSvgImageSize(icon, ds, ds)
+      if (!svgWithSize) return icon
+      await Utils.setImageSrc(iconFillImg, svgWithSize)
+      sw = iconFillImg.naturalWidth
+      sh = iconFillImg.naturalHeight
+    }
+    iconFillCanvasCtx.fillStyle = color
+    iconFillCanvasCtx.fillRect(0, 0, ds, ds)
+    iconFillCanvasCtx.globalCompositeOperation = 'destination-in'
+    iconFillCanvasCtx.drawImage(iconFillImg, 0, 0, sw, sh, 0, 0, ds, ds)
+    iconFillCanvasCtx.globalCompositeOperation = 'source-over'
+  } catch (err) {
+    return icon
+  }
+
+  const filledIcon = iconFillCanvas.toDataURL('image/png')
+  iconFillCanvasCtx.restore()
+
+  return filledIcon
 }
 
 export function set(domain: string, url: string, hash: number, icon: string): void {

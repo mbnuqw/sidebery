@@ -634,6 +634,29 @@ export async function setImageSrc(img: HTMLImageElement, src: string): Promise<v
   })
 }
 
+export function setSvgImageSize(base64img: string, w: number, h: number): string | undefined {
+  if (!base64img.startsWith('data:image/svg+xml;base64,')) return
+
+  let base64 = base64img.slice(26)
+
+  let svg
+  try {
+    svg = decodeURIComponent(atob(base64))
+  } catch {
+    return
+  }
+
+  svg = svg.replace('<svg ', `<svg width="${w}" height="${h}" `)
+
+  try {
+    base64 = btoa(svg)
+  } catch {
+    return
+  }
+
+  return 'data:image/svg+xml;base64,' + base64
+}
+
 export function strHash(str: string): number {
   let hash = 0
   const len = str.length

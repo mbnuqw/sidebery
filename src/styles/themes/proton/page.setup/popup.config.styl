@@ -44,20 +44,91 @@
 .ConfigPopup .TextField.custom-icon .body
   align-items: center
 
+.ConfigPopup  .TextField.custom-icon .-sub
+  margin-left: 24px
+  .TextInput
+    margin-left: 0
+
+.ConfigPopup .TextField.custom-icon .label
+  margin-right: auto
+
 .ConfigPopup .TextField.custom-icon .TextInput
   margin: 8px 0 8px 32px
   flex-grow: 1
+
+.ConfigPopup .TextField.custom-icon .img-box
+  position: relative
+  display: flex
+  justify-content: center
+  align-items: center
+  flex-shrink: 0
+  width: 28px
+  height: 28px
+  margin: 0 0 0 16px
+  &:before
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    border-top-left-radius: 4px
+    border-bottom-left-radius: 4px
+    background-color: var(--toolbar-fg)
+    opacity: .1
 
 .ConfigPopup .TextField.custom-icon img
   position: relative
   width: 16px
   height: 16px
-  margin: 0 0 0 16px
+
+.ConfigPopup .TextField.custom-icon .img-rm
+  position: relative
+  display: flex
+  justify-content: center
+  align-items: center
+  width: 28px
+  height: 28px
+  margin-left: 1px
+  &:before
+  &:after
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    border-top-right-radius: 4px
+    border-bottom-right-radius: 4px
+    background-color: var(--toolbar-fg)
+    opacity: .16
+  &:after
+    background-color: #ff2200
+  > svg
+    position: relative
+    width: 18px
+    height: 18px
+    fill: var(--toolbar-fg)
+  &:hover:before
+  &:hover:after
+    opacity: .2
+  &:active:before
+  &:active:after
+    opacity: .1
 
 .ConfigPopup .TextField.custom-icon .btn
+  display: flex
+  align-items: center
   font-size: rem(14)
-  padding: 2px 8px
+  padding: 0 8px
   margin-left: 8px
+  height: 28px
+  cursor: default
+  &[data-active="true"]
+    color: var(--toolbar-fg-active)
+  &[data-active="true"]:before
+    opacity: .2
+    background-color: var(--toolbar-fg-active)
 
 .ConfigPopup .TextField.custom-icon .note
   margin-top: 0

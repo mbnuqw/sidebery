@@ -144,6 +144,7 @@ export async function updateActiveView(): Promise<void> {
       }
 
       if (arg && hash === 'settings_nav') {
+        if (SetupPage.reactive.selectedPanel) SetupPage.reactive.selectedPanel = null
         setTimeout(() => {
           const panel = Sidebar.reactive.panels.find(p => p.id === arg)
           if (panel) SetupPage.reactive.selectedPanel = panel

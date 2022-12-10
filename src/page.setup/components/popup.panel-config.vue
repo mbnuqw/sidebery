@@ -10,7 +10,7 @@
     @update:value="onNameInput")
 
   SelectField(
-    v-if="Utils.isTabsPanel(conf) && !conf.iconIMGSrc"
+    v-if="Utils.isTabsPanel(conf)"
     label="panel.icon_label"
     optLabel="settings.panel_icon_"
     :value="iconSVG"
@@ -18,7 +18,7 @@
     :color="color"
     @update:value="setIcon")
   SelectField(
-    v-if="Utils.isBookmarksPanel(conf) && !conf.iconIMGSrc"
+    v-if="Utils.isBookmarksPanel(conf)"
     label="panel.icon_label"
     optLabel="settings.panel_icon_"
     :value="iconSVG"
@@ -27,7 +27,7 @@
     @update:value="setIcon")
 
   SelectField(
-    v-if="!conf.iconIMGSrc && !isTabsOrBookmarks"
+    v-if="!isTabsOrBookmarks"
     label="panel.color_label"
     :value="color"
     :opts="COLOR_OPTS"
@@ -37,16 +37,37 @@
   .TextField.custom-icon(v-if="Utils.isTabsPanel(conf) || Utils.isBookmarksPanel(conf)")
     .body
       .label {{translate('panel.custom_icon')}}
+      .btn(:data-active="state.customIconType === 'text'" @click="setCustomIconType('text')").
+        {{translate('panel.custom_icon_text_btn')}}
+      .btn(:data-active="state.customIconType === 'url'" @click="setCustomIconType('url')").
+        {{translate('panel.custom_icon_url_btn')}}
+      .btn(:data-active="state.customIconType === 'file'" @click="setCustomIconType('file')")
+        .btn-label {{translate('panel.custom_icon_file_btn')}}
+        input(type="file" accept="image/*" @input="openCustomIconFile")
+      .img-box(v-if="state.customIconUrl")
+        img(:src="state.customIconUrl" @load="onCustomIconLoad" @error="onCustomIconError")
+      .img-rm(v-if="state.customIconUrl" @click="onCustomIconRm")
+        svg: use(xlink:href="#icon_remove")
+    .body.-sub(v-if="state.customIconType === 'text'")
       TextInput(
-        :value="conf.iconIMGSrc"
+        :value="state.customIconTextValue"
         :line="true"
-        :or="translate('panel.custom_icon_placeholder')"
-        @update:value="onCustomIconInput")
-      img(v-if="state.customIconUrl" :src="state.customIconUrl" @load="onCustomIconLoad")
-      .btn(
-        v-if="state.customIconType === 'url' && !state.customIconUrl"
-        @click="loadCustomIcon") {{translate('panel.custom_icon_load')}}
-    .note {{translate('panel.custom_icon_note')}}
+        :or="translate('panel.custom_icon_text_placeholder')"
+        @update:value="onCustomIconTextInput")
+    .note.-sub(v-if="state.customIconType === 'text'") {{translate('panel.custom_icon_note')}}
+    .body.-sub(v-if="state.customIconType === 'url'")
+      TextInput(
+        v-model:value="state.customIconUrlValue"
+        :line="true"
+        :or="translate('panel.custom_icon_url_placeholder')")
+      .btn(@click="loadCustomIcon") {{translate('panel.custom_icon_load')}}
+
+  .sub-fields(v-if="Utils.isTabsPanel(conf) || Utils.isBookmarksPanel(conf)")
+    ToggleField(
+      label="panel.custom_icon_colorize"
+      :inactive="!state.customIconOriginal"
+      :value="state.customIconColorize"
+      @update:value="toggleCustomIconColorize")
 
   ToggleField(
     label="panel.lock_panel_label"
@@ -145,8 +166,9 @@
 <script lang="ts" setup>
 import { ref, reactive, computed, onMounted, nextTick } from 'vue'
 import * as Utils from 'src/utils'
+import * as Logs from 'src/services/logs'
 import { translate } from 'src/dict'
-import { BKM_MENU_ID, FOLDER_NAME_DATA_RE } from 'src/defaults'
+import { BKM_MENU_ID, FOLDER_NAME_DATA_RE, RGB_COLORS } from 'src/defaults'
 import { DEFAULT_CONTAINER_ID, COLOR_OPTS, PANEL_ICON_OPTS } from 'src/defaults'
 import { BKM_ROOT_ID } from 'src/defaults'
 import { TextInputComponent, PanelConfig, BookmarksPanelConfig } from 'src/types'
@@ -162,6 +184,7 @@ import ToggleField from '../../components/toggle-field.vue'
 import SelectField from '../../components/select-field.vue'
 import { Favicons } from 'src/services/favicons'
 import { SetupPage } from 'src/services/setup-page'
+import { Styles } from 'src/services/styles'
 
 interface ContainerOption {
   value: string
@@ -183,6 +206,10 @@ const noneContainerTooltip = translate('panel.ctr_tooltip_none')
 const state = reactive({
   customIconUrl: '',
   customIconType: '',
+  customIconTextValue: '',
+  customIconUrlValue: '',
+  customIconOriginal: '',
+  customIconColorize: false,
 })
 
 let updCustomIconTimeout: number
@@ -296,6 +323,20 @@ onMounted(() => {
   if (!Bookmarks.reactive.tree.length) Bookmarks.load()
 })
 
+async function init(): Promise<void> {
+  await nextTick()
+  setCustomIconType()
+  if (props.conf.iconIMG) {
+    state.customIconUrl = props.conf.iconIMG
+    if (props.conf.iconIMGSrc) {
+      if (state.customIconType === 'text') state.customIconTextValue = props.conf.iconIMGSrc
+      else if (state.customIconType === 'url') state.customIconUrlValue = props.conf.iconIMGSrc
+    }
+  }
+  if (nameInput.value) nameInput.value.recalcTextHeight()
+  if (urlRulesInput.value) urlRulesInput.value.recalcTextHeight()
+}
+
 function isNotTabsPanel(conf: PanelConfig): conf is BookmarksPanelConfig | HistoryPanelConfig {
   return !!conf && !Utils.isTabsPanel(conf)
 }
@@ -320,42 +361,59 @@ function setIcon(value: string): void {
 
 function setColor(value: browser.ColorName): void {
   props.conf.color = value
+  if (props.conf.iconIMG) recolorCustomIcon()
   Sidebar.saveSidebar()
 }
 
-function onCustomIconInput(value: string): void {
-  props.conf.iconIMGSrc = value
-  updCustomIconTimeout = Utils.wait(updCustomIconTimeout, 500, () => updateCustomIcon())
+// ---
+// -- Custom icon
+// -
+function setCustomIconType(type?: string): void {
+  if (type === undefined) {
+    if (props.conf.iconIMG) {
+      const normSrc = props.conf.iconIMGSrc?.trim()
+      if (!normSrc) state.customIconType = 'file'
+      else if (URL_RE.test(normSrc)) state.customIconType = 'url'
+      else state.customIconType = 'text'
+    } else {
+      state.customIconType = ''
+    }
+  } else {
+    if (state.customIconType === type) state.customIconType = ''
+    else state.customIconType = type
+  }
 }
 
-function updateCustomIcon(): void {
-  let normValue = props.conf.iconIMGSrc?.trim()
+function onCustomIconTextInput(value: string): void {
+  state.customIconTextValue = value
+  updCustomIconTimeout = Utils.wait(updCustomIconTimeout, 500, () => {
+    const normValue = state.customIconTextValue?.trim()
+    if (!normValue) {
+      state.customIconUrl = ''
+      props.conf.iconIMG = ''
+      props.conf.iconIMGSrc = ''
+      Sidebar.saveSidebar()
+      return
+    }
 
-  if (!normValue) {
-    state.customIconType = ''
-    state.customIconUrl = ''
-    props.conf.iconIMG = ''
-    Sidebar.saveSidebar()
-    return
+    props.conf.iconIMGSrc = normValue
+
+    drawTextIcon()
+  })
+}
+
+async function loadCustomIcon(): Promise<void> {
+  if (!Permissions.reactive.webData) {
+    const result = await Permissions.request('<all_urls>')
+    if (!result) return
   }
 
-  if (normValue.startsWith('data:image')) {
-    state.customIconType = 'base64'
-    state.customIconUrl = normValue
-    props.conf.iconIMG = normValue
-    Sidebar.saveSidebar()
-    return
-  }
+  // TODO: Validation
 
-  if (URL_RE.test(normValue)) {
-    state.customIconType = 'url'
-    state.customIconUrl = ''
-    return
-  }
+  const normValue = state.customIconUrlValue?.trim()
+  props.conf.iconIMGSrc = normValue
 
-  state.customIconType = 'char'
-  state.customIconUrl = ''
-  return drawTextIcon()
+  if (normValue) state.customIconUrl = normValue
 }
 
 async function onCustomIconLoad(e: Event): Promise<void> {
@@ -373,26 +431,31 @@ async function onCustomIconLoad(e: Event): Promise<void> {
   let base64 = canvas.toDataURL('image/png')
 
   try {
-    props.conf.iconIMG = await Favicons.resizeFavicon(base64)
+    props.conf.iconIMG = await prepareCustomIcon(base64)
   } catch {
     return
   }
+  state.customIconUrl = props.conf.iconIMG
   Sidebar.saveSidebar()
 }
 
-function drawTextIcon(): void {
+function onCustomIconError(): void {
+  state.customIconUrl = props.conf.iconIMG ?? ''
+  // TODO: Some visual representation of this error
+}
+
+async function drawTextIcon() {
   if (!props.conf.iconIMGSrc) return
   let canvas = document.createElement('canvas')
   let ctx = canvas.getContext('2d')
   if (!ctx) return
 
   let [txt, color, font] = props.conf.iconIMGSrc.split('::')
+  let x = 16
+  let y = 16
   if (!color) {
-    if (Settings.state.colorScheme === 'light') color = '#000000'
-    if (Settings.state.colorScheme === 'dark') color = '#ffffff'
-  }
-  if (!font) {
-    font = '32px sans-serif'
+    if (Styles.reactive.colorScheme === 'light') color = '#000000'
+    if (Styles.reactive.colorScheme === 'dark') color = '#ffffff'
   }
 
   canvas.width = 32
@@ -401,31 +464,127 @@ function drawTextIcon(): void {
   ctx.fillStyle = color
   ctx.textBaseline = 'middle'
   ctx.textAlign = 'center'
+
+  // // Find the max font size to fit canvas
+  // let fontSize = 30
+  // const maxFontSize = 50
+  // let offset: number | null = 0
+  // while (fontSize <= maxFontSize) {
+  //   fontSize++
+  //   font = `${fontSize}px sans-serif`
+  //   const offsetProbe = isTextFit(ctx, txt, font, 30, 30)
+  //   if (offsetProbe !== null) offset = offsetProbe
+  //   else break
+  // }
+
+  // Default font
+  if (!font) font = '32px sans-serif'
+
+  // Vertically center the icon
+  let offset = 0
+  const offsetProbe = isTextFit(ctx, txt, font, 30, 30)
+  if (offsetProbe !== null) offset = offsetProbe
+  y += offset
+
   ctx.font = font
-  ctx.fillText(txt, 16, 16, 32)
+
+  ctx.fillText(txt, x, y, 32)
 
   let base64 = canvas.toDataURL('image/png')
 
-  state.customIconUrl = base64
-  props.conf.iconIMG = base64
+  props.conf.iconIMG = await prepareCustomIcon(base64)
+  state.customIconUrl = props.conf.iconIMG
   Sidebar.saveSidebar()
 }
 
-async function loadCustomIcon(): Promise<void> {
-  if (!Permissions.reactive.webData) {
-    const result = await Permissions.request('<all_urls>')
-    if (!result) return
+function isTextFit(
+  ctx: CanvasRenderingContext2D,
+  txt: string,
+  font: string,
+  maxW: number,
+  maxH: number
+): number | null {
+  ctx.font = font
+  let metrics
+  try {
+    metrics = ctx.measureText(txt)
+  } catch {
+    return null
   }
+  const w = metrics.width
+  const h = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent
 
-  if (!props.conf.iconIMGSrc) return
-  state.customIconUrl = props.conf.iconIMGSrc.trim()
+  if (h <= maxH && w <= maxW) {
+    return (metrics.actualBoundingBoxAscent - metrics.actualBoundingBoxDescent) / 2
+  } else {
+    return null
+  }
 }
 
-async function init(): Promise<void> {
-  await nextTick()
-  if (props.conf.iconIMG) state.customIconUrl = props.conf.iconIMG
-  if (nameInput.value) nameInput.value.recalcTextHeight()
-  if (urlRulesInput.value) urlRulesInput.value.recalcTextHeight()
+async function prepareCustomIcon(icon: string): Promise<string> {
+  state.customIconOriginal = icon
+  if (state.customIconColorize) {
+    let color = RGB_COLORS[props.conf.color]
+    if (props.conf.color === 'toolbar') {
+      if (Styles.reactive.colorScheme === 'light') color = '#000000'
+      if (Styles.reactive.colorScheme === 'dark') color = '#ffffff'
+    }
+    icon = await Favicons.fillIcon(icon, color)
+  }
+  return await Favicons.resizeFavicon(icon)
+}
+
+function openCustomIconFile(importEvent: Event) {
+  const target = importEvent.target as HTMLInputElement
+  let file = target.files?.[0]
+  if (!file) return onCustomIconRm()
+
+  let reader = new FileReader()
+  reader.onload = async fileEvent => {
+    if (!fileEvent.target?.result) {
+      onCustomIconRm()
+      return Logs.err('Cannot import data: No file content')
+    }
+
+    let icon
+    try {
+      icon = await prepareCustomIcon(fileEvent.target.result as string)
+    } catch {
+      onCustomIconRm()
+      return
+    }
+    props.conf.iconIMG = icon
+    props.conf.iconIMGSrc = ''
+    state.customIconTextValue = ''
+    state.customIconUrlValue = ''
+    state.customIconUrl = props.conf.iconIMG
+    Sidebar.saveSidebar()
+  }
+  reader.readAsDataURL(file)
+}
+
+function onCustomIconRm() {
+  setCustomIconType('')
+  state.customIconTextValue = ''
+  state.customIconUrlValue = ''
+  state.customIconOriginal = ''
+  state.customIconUrl = ''
+  props.conf.iconIMG = ''
+  props.conf.iconIMGSrc = ''
+  Sidebar.saveSidebar()
+}
+
+function toggleCustomIconColorize() {
+  state.customIconColorize = !state.customIconColorize
+  recolorCustomIcon()
+}
+
+async function recolorCustomIcon() {
+  if (state.customIconOriginal) {
+    props.conf.iconIMG = await prepareCustomIcon(state.customIconOriginal)
+    state.customIconUrl = props.conf.iconIMG
+    Sidebar.saveSidebar()
+  }
 }
 
 function togglePanelLock(): void {

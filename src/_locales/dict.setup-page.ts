@@ -197,17 +197,34 @@ export const setupPageTranslations: Translations = {
     de: 'Beim Öffnen von Lesezeichen zum ursprünglichen Tab-Panel wechseln',
     zh_CN: '打开书签时切换到源标签页面板',
   },
-  'panel.custom_icon_note': {
-    en: 'Base64, URL or text. Text values syntax: "text::color::CSS-font-value"',
-    ru: 'Base64, url или символы. Синтакс для символов: "символы::CSS-цвет::CSS-шрифт"',
-    de: 'Base64, URL oder Text. Textwerte-Syntax: "Text::Farbe::CSS-Schriftart-Wert"',
-    zh_CN: 'Base64、URL 或文本。文本值语法：“text::color::CSS-font-value”',
-  },
   'panel.custom_icon': {
     en: 'Custom icon',
     ru: 'Пользовательская иконка',
     de: 'Benutzerdefiniertes Symbol',
     zh_CN: '自定义图标',
+  },
+  'panel.custom_icon_text_btn': {
+    en: 'Text',
+    de: 'Text',
+    ru: 'Текст',
+    zh_CN: '文本',
+  },
+  'panel.custom_icon_url_btn': {
+    en: 'URL',
+  },
+  'panel.custom_icon_file_btn': {
+    en: 'File',
+    ru: 'Файл',
+  },
+  'panel.custom_icon_note': {
+    en: 'Text value syntax: "text::color::CSS-font-value"',
+    ru: 'Синтаксис текстового значения: "символы::CSS-цвет::CSS-шрифт"',
+    de: 'Textwerte-Syntax: "Text::Farbe::CSS-Schriftart-Wert"',
+    zh_CN: '文本值语法：“text::color::CSS-font-value”',
+  },
+  'panel.custom_icon_colorize': {
+    en: 'Colorize custom icon with selected color',
+    ru: 'Раскрасить пользовательский значок выбранным цветом',
   },
   'panel.custom_icon_load': {
     en: 'Load',
@@ -215,11 +232,15 @@ export const setupPageTranslations: Translations = {
     de: 'Laden',
     zh_CN: '加载',
   },
-  'panel.custom_icon_placeholder': {
+  'panel.custom_icon_text_placeholder': {
     en: 'e.g. A::#000000ff::700 32px Roboto',
     ru: 'A::#000000ff::700 32px Roboto',
     de: 'z.B. A::#000000ff::700 32px Roboto',
     zh_CN: '例如 A::#000000ff::700 32px Roboto',
+  },
+  'panel.custom_icon_url_placeholder': {
+    en: 'Custom icon URL...',
+    ru: 'Ссылка на иконку...',
   },
   'panel.url_label': {
     en: 'URL',
