@@ -7,7 +7,6 @@ import { Favicons } from 'src/services/favicons'
 import { Containers } from 'src/services/containers'
 import { Keybindings } from 'src/services/keybindings'
 import { Bookmarks } from 'src/services/bookmarks'
-import { Menu } from 'src/services/menu'
 import { Sidebar } from 'src/services/sidebar'
 import { Store } from 'src/services/storage'
 import { Permissions } from 'src/services/permissions'
@@ -74,11 +73,10 @@ async function main(): Promise<void> {
   Info.loadVersionInfo()
   Permissions.loadPermissions()
   Permissions.setupListeners()
-  Menu.loadCtxMenu()
-  Menu.setupListeners()
-  SetupPage.initialized()
   Favicons.loadFavicons()
   IPC.connectTo(InstanceType.bg)
   IPC.setupGlobalMessageListener()
+
+  SetupPage.initialized()
 }
 main()

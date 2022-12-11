@@ -8,7 +8,7 @@ import { Tabs } from 'src/services/tabs.fg'
 import { Settings } from 'src/services/settings'
 
 let isReady = false
-let readyStateResolve: (() => void) | undefined
+let readyStateResolve: (() => void)[] = []
 let navLockTimeout: number | undefined
 const els: Record<string, HTMLElement> = {}
 
@@ -80,8 +80,6 @@ export async function updateActiveView(): Promise<void> {
     SetupPage.reactive.navLock = false
   }, 1250)
 
-  await waitForInit()
-
   if (hash === 'all-urls') return goToPerm('all_urls')
   if (hash === 'tab-hide') return goToPerm('tab_hide')
   if (hash === 'clipboard-write') return goToPerm('clipboard_write')
@@ -132,6 +130,8 @@ export async function updateActiveView(): Promise<void> {
     return
   }
 
+  await waitForInit()
+
   setTimeout(
     () => {
       if (els[hash]) els[hash].scrollIntoView(scrollSectionConf)
@@ -158,16 +158,17 @@ export async function updateActiveView(): Promise<void> {
   SetupPage.reactive.activeView = 'settings'
 }
 
-async function waitForInit(): Promise<void> {
+export async function waitForInit(): Promise<void> {
   return new Promise(res => {
     if (isReady) res()
-    else readyStateResolve = res
+    else readyStateResolve.push(res)
   })
 }
 
 export function initialized(): void {
-  if (readyStateResolve) readyStateResolve()
+  if (readyStateResolve) readyStateResolve.forEach(cb => cb())
   isReady = true
+  readyStateResolve = []
 }
 
 export function switchView(name: string): void {

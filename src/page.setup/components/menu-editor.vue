@@ -243,10 +243,10 @@ const menuEditorBookmarksEl = ref<HTMLElement | null>(null)
 const menuEditorBookmarksPanelEl = ref<HTMLElement | null>(null)
 const state = reactive({
   selected: '',
-  tabsConf: Utils.cloneArray(Menu.tabsConf),
-  bookmarksConf: Utils.cloneArray(Menu.bookmarksConf),
-  tabsPanelConf: Utils.cloneArray(Menu.tabsPanelConf),
-  bookmarksPanelConf: Utils.cloneArray(Menu.bookmarksPanelConf),
+  tabsConf: [] as MenuConf,
+  bookmarksConf: [] as MenuConf,
+  tabsPanelConf: [] as MenuConf,
+  bookmarksPanelConf: [] as MenuConf,
 })
 
 const tabsMenu = computed<MenuEditorGroup[]>(() => parseMenuConf(state.tabsConf))
@@ -287,16 +287,23 @@ const disabledBookmarksPanelMenu = computed<string[]>(() => {
   return all.filter(option => !active.includes(option))
 })
 
-onMounted(() => {
-  SetupPage.registerEl('menu_editor_tabs', menuEditorTabsEl.value)
-  SetupPage.registerEl('menu_editor_tabs_panel', menuEditorTabsPanelEl.value)
-  SetupPage.registerEl('menu_editor_bookmarks', menuEditorBookmarksEl.value)
-  SetupPage.registerEl('menu_editor_bookmarks_panel', menuEditorBookmarksPanelEl.value)
+void (async () => {
+  // TODO: Show loading animation
+
+  await Menu.loadCtxMenu()
+  Menu.setupListeners()
 
   state.tabsConf = Menu.tabsConf
   state.bookmarksConf = Menu.bookmarksConf
   state.tabsPanelConf = Menu.tabsPanelConf
   state.bookmarksPanelConf = Menu.bookmarksPanelConf
+})()
+
+onMounted(() => {
+  SetupPage.registerEl('menu_editor_tabs', menuEditorTabsEl.value)
+  SetupPage.registerEl('menu_editor_tabs_panel', menuEditorTabsPanelEl.value)
+  SetupPage.registerEl('menu_editor_bookmarks', menuEditorBookmarksEl.value)
+  SetupPage.registerEl('menu_editor_bookmarks_panel', menuEditorBookmarksPanelEl.value)
 })
 
 function parseMenuConf(conf: MenuConf): MenuEditorGroup[] {
