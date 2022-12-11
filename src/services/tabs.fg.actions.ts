@@ -2170,16 +2170,11 @@ export function updateNativeTabsVisibility(): void {
 }
 
 /**
- * Recalc length of branch
+ * Returns length of tabs branch
  */
-export function recalcBranchLen(id: ID): void {
-  if (!Settings.state.tabsChildCount) return
-
+export function getBranchLen(id: ID): number | undefined {
   const tab = Tabs.byId[id]
   if (!tab) return
-
-  const rTab = Tabs.reactive.byId[tab.id]
-  if (!rTab) return
 
   let count = 0
   const tabsLen = Tabs.list.length
@@ -2188,7 +2183,22 @@ export function recalcBranchLen(id: ID): void {
     count++
   }
 
-  rTab.branchLen = count
+  return count
+}
+
+/**
+ * Recalc length of branch
+ */
+export function recalcBranchLen(id: ID): void {
+  if (!Settings.state.tabsChildCount) return
+
+  const branchLen = Tabs.getBranchLen(id)
+  if (branchLen === undefined) return
+
+  const rTab = Tabs.reactive.byId[id]
+  if (!rTab) return
+
+  rTab.branchLen = branchLen
 }
 
 /**

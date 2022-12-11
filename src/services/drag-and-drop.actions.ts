@@ -201,8 +201,12 @@ function getDestInfo(): DstPlaceInfo {
     ) {
       if (DnD.reactive.dstType === DropType.Tabs) info.inside = true
       const parent = Tabs.byId[DnD.reactive.dstParentId]
-      if (parent) info.index = parent.index + 1
-      else info.index = dstPanel.nextTabIndex ?? Tabs.list.length
+      if (parent) {
+        const branchLen = Tabs.getBranchLen(parent.id) ?? 0
+        info.index = parent.index + branchLen + 1
+      } else {
+        info.index = dstPanel.nextTabIndex ?? Tabs.list.length
+      }
     }
     // To the last position in bookmarks children list
     else if (
