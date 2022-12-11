@@ -42,6 +42,7 @@ export const Tabs = {
   removingTabs: [] as ID[],
   ignoreTabsEvents: false,
   activeId: NOID,
+  blockedScrollPosition: false,
 
   ...TabsActions,
   ...TabsHandlers,

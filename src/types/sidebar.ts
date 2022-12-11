@@ -219,6 +219,7 @@ export interface TabsPanel extends PanelCommonState, TabsPanelConfig {
   endTabIndex: number
   nextTabIndex: number
   filteredTabs?: ReactiveTab[]
+  recentlyRemovedTabs: number
 }
 
 export interface BookmarksPanel extends PanelCommonState, BookmarksPanelConfig {

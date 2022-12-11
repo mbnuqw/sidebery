@@ -4,6 +4,7 @@
   @contextmenu.stop="onNavCtxMenu"
   @mousedown="onMouseDown"
   @mouseup.right="onRightMouseUp"
+  @mouseleave="onMouseLeave"
   @dblclick="onDoubleClick"
   @drop="onDrop")
   PinnedTabsBar(v-if="panel.pinnedTabs.length" :panel="panel")
@@ -14,6 +15,8 @@
         NewTabBar(
           v-if="Settings.state.showNewTabBtns && Settings.state.newTabBarPosition === 'after_tabs'"
           :panel="panel")
+        .tab-space-filler(v-for="i in panel.recentlyRemovedTabs" :key="i")
+        .bottom-space(:key="9999999")
 
   NewTabBar(
     v-if="Settings.state.showNewTabBtns && Settings.state.newTabBarPosition === 'bottom'"
@@ -180,6 +183,7 @@ function onDoubleClick(e: MouseEvent): void {
 }
 
 const onWheel = Mouse.getWheelDebouncer(WheelDirection.Vertical, (e: WheelEvent) => {
+  if (Tabs.blockedScrollPosition) Tabs.unblockScrollPosition(props.panel)
   if (Sidebar.scrollAreaRightX && e.clientX > Sidebar.scrollAreaRightX) return
   if (Sidebar.scrollAreaLeftX && e.clientX < Sidebar.scrollAreaLeftX) return
   if (Selection.isSet()) return
@@ -196,4 +200,8 @@ const onWheel = Mouse.getWheelDebouncer(WheelDirection.Vertical, (e: WheelEvent)
     if (e.deltaY < 0) Tabs.switchTab(globaly, cyclic, -1, false)
   }
 })
+
+function onMouseLeave() {
+  if (Tabs.blockedScrollPosition) Tabs.unblockScrollPosition(props.panel)
+}
 </script>

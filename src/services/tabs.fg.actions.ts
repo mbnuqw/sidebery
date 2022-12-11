@@ -17,6 +17,7 @@ import { Bookmarks } from 'src/services/bookmarks'
 import { Permissions } from 'src/services/permissions'
 import { Notifications } from 'src/services/notifications'
 import { Favicons } from './favicons'
+import { Selection } from './selection'
 
 const URL_WITHOUT_PROTOCOL_RE = /^(.+\.)\/?(.+\/)?\w+/
 
@@ -803,9 +804,12 @@ export async function removeTabs(tabIds: ID[], silent?: boolean): Promise<void> 
   // Set tabs to be removed
   const parents: Record<ID, ID> = {}
   const tabs = Object.values(tabsMap).sort((a, b) => a.index - b.index)
+  const lastTabToo = panel.tabs[panel.tabs.length - 1]?.id === tabs[tabs.length - 1]?.id
+  let visibleLen = 0
   const toRemove = tabs.map(t => {
     const rTab = Tabs.reactive.byId[t.id]
     parents[t.id] = t.parentId
+    if (!t.invisible) visibleLen++
     t.invisible = true
     if (rTab) rTab.invisible = true
     return t.id
@@ -846,6 +850,10 @@ export async function removeTabs(tabIds: ID[], silent?: boolean): Promise<void> 
       favicons: favicons.length ? favicons : undefined,
       callback: async () => undoRemove(tabsInfo, parents),
     })
+  }
+
+  if (!Selection.isSet()) {
+    Tabs.blockScrollPosition(panel, lastTabToo ? visibleLen - 1 : visibleLen)
   }
 
   // Reverse removing order (needed for reopening)
@@ -3610,6 +3618,16 @@ export function scrollToTab(id: ID): void {
   const panel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
   if (!Utils.isTabsPanel(panel) || !panel.scrollEl) return
 
+  const isLastTab = panel.tabs[panel.tabs.length - 1]?.id === id
+  if (isLastTab) {
+    const scrolableEl = panel.scrollComponent?.getScrollableBox()
+    if (!scrolableEl) return
+    const pH = panel.scrollEl.offsetHeight
+    scrollConf.top = scrolableEl.offsetHeight - pH
+    panel.scrollEl.scroll(scrollConf)
+    return
+  }
+
   const elId = 'tab' + id.toString()
   const el = document.getElementById(elId)
   if (!el) return Logs.warn('Tabs.scrollToTab: Cannot find tab element')
@@ -3919,4 +3937,14 @@ export function pringDbgInfo(reset = false): void {
       rTab.title = `${tab.id} i${tab.index} p${tab.parentId} l${tab.lvl} ${tab.title}`
     }
   }
+}
+
+export function blockScrollPosition(panel: TabsPanel, count: number): void {
+  panel.recentlyRemovedTabs += count
+  Tabs.blockedScrollPosition = true
+}
+
+export function unblockScrollPosition(panel: TabsPanel): void {
+  panel.recentlyRemovedTabs = 0
+  Tabs.blockedScrollPosition = false
 }
