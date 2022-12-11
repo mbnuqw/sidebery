@@ -146,8 +146,6 @@ export function selectTabsRange(aTab: Tab, bTab?: Tab): void {
 }
 
 export function selectTabsBranch(parentTab: Tab): void {
-  resetSelection()
-
   parentTab.sel = true
   Selection.selected.push(parentTab.id)
   firstItem = parentTab.id
@@ -287,6 +285,19 @@ export function deselectTab(tabId: ID): void {
   if (!Selection.selected.length) selType = SelectionType.Nothing
   if (firstItem === tabId) firstItem = null
   if (Settings.state.nativeHighlight) updateHighlightedTabs(120)
+}
+
+export function deselectTabsBranch(parentTab: Tab): void {
+  Selection.deselectTab(parentTab.id)
+
+  if (Settings.state.tabsTree) {
+    for (let tab, i = parentTab.index + 1; i < Tabs.list.length; i++) {
+      tab = Tabs.list[i]
+      if (tab.lvl <= parentTab.lvl) break
+
+      Selection.deselectTab(tab.id)
+    }
+  }
 }
 
 export function deselectBookmark(bookmarkId: ID): void {

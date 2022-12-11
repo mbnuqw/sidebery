@@ -453,6 +453,7 @@ function onExpandMouseUp(e: MouseEvent): void {
 
   // Select whole branch and show menu
   if (e.button === 2 && !e.ctrlKey && !e.shiftKey && sameTarget) {
+    Selection.resetSelection()
     const tab = Tabs.byId[props.tab.id]
     if (tab) Selection.selectTabsBranch(tab)
   }

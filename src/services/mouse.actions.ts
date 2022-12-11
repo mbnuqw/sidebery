@@ -73,7 +73,9 @@ export function onMouseMove(e: MouseEvent): void {
     Menu.close()
     Selection.resetSelection()
     Mouse.multiSelectionMode = true
-    Selection.select(multiSelectionStartId)
+    const tab = Tabs.byId[multiSelectionStartId]
+    if (tab && !tab.pinned && tab.isParent && tab.folded) Selection.selectTabsBranch(tab)
+    else Selection.select(multiSelectionStartId)
     Sidebar.updateBounds()
     stopLongClick()
 
@@ -102,13 +104,21 @@ export function onMouseMove(e: MouseEvent): void {
       // Inside
       if (slot.end >= topY && slot.start + 1 <= bottomY) {
         if (!Selection.includes(slot.id)) {
-          if (slot.type === ItemBoundsType.Tab) Selection.selectTab(slot.id)
+          if (slot.type === ItemBoundsType.Tab) {
+            const tab = Tabs.byId[slot.id]
+            if (tab && !tab.pinned && tab.isParent && tab.folded) Selection.selectTabsBranch(tab)
+            else Selection.selectTab(slot.id)
+          }
           if (slot.type === ItemBoundsType.Bookmarks) Selection.selectBookmark(slot.id)
         }
       } else {
         // Outside
         if (Selection.includes(slot.id)) {
-          if (slot.type === ItemBoundsType.Tab) Selection.deselectTab(slot.id)
+          if (slot.type === ItemBoundsType.Tab) {
+            const tab = Tabs.byId[slot.id]
+            if (tab && !tab.pinned && tab.isParent && tab.folded) Selection.deselectTabsBranch(tab)
+            else Selection.deselectTab(slot.id)
+          }
           if (slot.type === ItemBoundsType.Bookmarks) Selection.deselectBookmark(slot.id)
         }
       }
