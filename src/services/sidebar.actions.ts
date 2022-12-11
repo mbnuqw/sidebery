@@ -933,6 +933,8 @@ export function activatePanel(panelId: ID, loadPanels = true): void {
   if (DnD.reactive.isStarted) DnD.reactive.dstPanelId = panelId
 
   if (Settings.state.updateSidebarTitle) Sidebar.updateSidebarTitle(0)
+
+  if (!DnD.reactive.isStarted && !Search.reactive.rawValue) saveActivePanelDebounced(1000)
 }
 
 let prevSavedActPanelId = NOID
@@ -984,7 +986,6 @@ export function switchToPanel(
   }
 
   if (DnD.reactive.isStarted) updatePanelBoundsDebounced()
-  else saveActivePanelDebounced(1000)
 }
 
 /**
