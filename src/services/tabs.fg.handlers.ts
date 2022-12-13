@@ -91,7 +91,7 @@ function releaseReopenedTabsBuffer(): void {
   Tabs.deferredEventHandling = []
 }
 
-function onTabCreated(tab: Tab): void {
+function onTabCreated(tab: Tab, attached?: boolean): void {
   if (tab.windowId !== Windows.id) return
   if (Tabs.list.length === 0) {
     Tabs.deferredEventHandling.push(() => onTabCreated(tab))
@@ -131,10 +131,11 @@ function onTabCreated(tab: Tab): void {
   }
 
   // Check if tab is reopened
-  if (Tabs.removedTabs.length && !tab.discarded && tab.reopened !== false) {
+  if (Tabs.removedTabs.length && !tab.discarded && tab.reopened !== false && !attached) {
     const prevPosIndex = Tabs.removedTabs.findIndex(t => t.title === tab.title)
     reopenedTabInfo = Tabs.removedTabs[prevPosIndex]
     if (reopenedTabInfo) {
+      // And here attouched tabs...
       if (!waitForOtherReopenedTabsBufferRelease) {
         waitForOtherReopenedTabs(tab)
         return
@@ -313,22 +314,24 @@ function onTabCreated(tab: Tab): void {
     Tabs.saveTabData(tab.id)
     Tabs.cacheTabsData()
 
-    const groupTab = Tabs.getGroupTab(tab)
-    if (groupTab && !groupTab.discarded) {
-      browser.tabs
-        .sendMessage(groupTab.id, {
-          name: 'create',
-          id: tab.id,
-          index: tab.index,
-          lvl: tab.lvl - groupTab.lvl - 1,
-          title: tab.title,
-          url: tab.url,
-          discarded: tab.discarded,
-          favIconUrl: tab.favIconUrl,
-        })
-        .catch(() => {
-          /** itsokay **/
-        })
+    if (!attached) {
+      const groupTab = Tabs.getGroupTab(tab)
+      if (groupTab && !groupTab.discarded) {
+        browser.tabs
+          .sendMessage(groupTab.id, {
+            name: 'create',
+            id: tab.id,
+            index: tab.index,
+            lvl: tab.lvl - groupTab.lvl - 1,
+            title: tab.title,
+            url: tab.url,
+            discarded: tab.discarded,
+            favIconUrl: tab.favIconUrl,
+          })
+          .catch(() => {
+            /** itsokay **/
+          })
+      }
     }
 
     if (Settings.state.colorizeTabs) Tabs.colorizeTabDebounced(tab.id, 120)
@@ -376,6 +379,12 @@ function onTabCreated(tab: Tab): void {
   ) {
     Tabs.scrollToTabDebounced(120, tab.id)
   }
+
+  // Re-run activation event (if the tab was attached externally)
+  if (tab.active && deferredActivationHandling.id === tab.id && deferredActivationHandling.cb) {
+    deferredActivationHandling.cb()
+    deferredActivationHandling.cb = null
+  }
 }
 
 /**
@@ -390,7 +399,9 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
 
   const localTab = Tabs.byId[tabId]
   const rLocalTab = Tabs.reactive.byId[tabId]
-  if (!localTab || !rLocalTab) return Logs.err(`Tabs.onTabUpdated: Cannot find local tab: ${tabId}`)
+  if (!localTab || !rLocalTab) {
+    return Logs.warn(`Tabs.onTabUpdated: Cannot find local tab: ${tabId}`)
+  }
 
   // Discarded
   if (change.discarded !== undefined && change.discarded) {
@@ -659,10 +670,10 @@ function rememberChildTabs(childId: ID, parentId: ID): void {
 /**
  * Tabs.onRemoved
  */
-function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, ignoreChildren?: boolean): void {
+function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boolean): void {
   if (info.windowId !== Windows.id) return
   if (Tabs.list.length === 0 || waitForOtherReopenedTabsBuffer) {
-    Tabs.deferredEventHandling.push(() => onTabRemoved(tabId, info, ignoreChildren))
+    Tabs.deferredEventHandling.push(() => onTabRemoved(tabId, info, detached))
     return
   }
   if (info.isWindowClosing) return
@@ -694,7 +705,6 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, ignoreChildren?:
   const hasChildren =
     Settings.state.tabsTree &&
     tab.isParent &&
-    !ignoreChildren &&
     nextTab &&
     nextTab.parentId === tab.id &&
     nextTab.panelId === tab.panelId
@@ -702,6 +712,7 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, ignoreChildren?:
 
   // Update temp list of removed tabs for restoring reopened tabs state
   if (
+    !detached &&
     tab.url !== NEWTAB_URL && // Ignore new tabs
     tab.url !== 'about:blank' && // Ignore new tabs
     (tab.isParent || !tab.url.startsWith('m')) // and non-parent addon pages
@@ -727,9 +738,13 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, ignoreChildren?:
     for (let i = tab.index + 1, t; i < Tabs.list.length; i++) {
       t = Tabs.list[i]
       if (t.lvl <= tab.lvl) break
+
+      // Tab will be detached, so skip handling it
+      if (detached && Tabs.detachingTabIds.indexOf(t.id) !== -1) continue
+
       const rt = Tabs.reactive.byId[t.id]
 
-      if (t.parentId === tab.id) {
+      if (t.parentId === tab.id && !detached) {
         rememberChildTabs(t.id, tab.id)
         if (removedTabInfo?.children) removedTabInfo.children.push(t.id)
         else if (removedTabInfo) removedTabInfo.children = [t.id]
@@ -737,11 +752,11 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, ignoreChildren?:
 
       // Remove folded tabs
       if (
-        (Settings.state.rmChildTabs === 'folded' && tab.folded) ||
-        Settings.state.rmChildTabs === 'all'
+        (Settings.state.rmChildTabs === 'folded' && tab.folded && !detached) ||
+        (Settings.state.rmChildTabs === 'all' && !detached)
       ) {
         if (!Tabs.removingTabs.includes(t.id)) toRemove.push(t.id)
-      } else if (t.invisible && tab.folded) {
+      } else if (t.invisible) {
         t.invisible = false
         if (rt) rt.invisible = false
       }
@@ -1034,12 +1049,21 @@ function onTabDetached(id: ID, info: browser.tabs.DetachInfo): void {
     tab.folded = false
     rTab.folded = false
   }
+
+  const di = Tabs.detachingTabIds.indexOf(id)
+  if (di !== -1) Tabs.detachingTabIds.splice(di, 1)
+
   onTabRemoved(id, { windowId: Windows.id, isWindowClosing: false }, true)
+
+  if (Tabs.detachingTabIds.length === 0 && Settings.state.hideFoldedTabs) {
+    Tabs.updateNativeTabsVisibility()
+  }
 }
 
 /**
  * Tabs.onAttached
  */
+const deferredActivationHandling = { id: NOID, cb: null as (() => void) | null }
 async function onTabAttached(id: ID, info: browser.tabs.AttachInfo): Promise<void> {
   if (info.newWindowId !== Windows.id) return
   if (Tabs.list.length === 0) {
@@ -1053,20 +1077,29 @@ async function onTabAttached(id: ID, info: browser.tabs.AttachInfo): Promise<voi
 
   let tab
   if (ai > -1) tab = Tabs.attachingTabs.splice(ai, 1)[0]
-  else tab = (await browser.tabs.get(id)) as Tab
+  else {
+    deferredActivationHandling.id = id
+    tab = (await browser.tabs.get(id)) as Tab
+  }
 
   tab.windowId = Windows.id
   tab.index = info.newPosition
   tab.panelId = NOID
   tab.sel = false
 
-  onTabCreated(tab)
+  onTabCreated(tab, true)
 
   if (tab.active) {
     browser.tabs.update(tab.id, { active: true }).catch(err => {
-      Logs.err('Tabs.onTabDetached: Cannot activate tab', err)
+      Logs.err('Tabs.onTabAttached: Cannot activate tab', err)
     })
   }
+
+  if (Tabs.attachingTabs.length === 0 && Settings.state.hideFoldedTabs) {
+    Tabs.updateNativeTabsVisibility()
+  }
+
+  deferredActivationHandling.id = NOID
 }
 
 let bufTabActivatedEventIndex = -1
@@ -1094,6 +1127,12 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
   const tab = Tabs.byId[info.tabId]
   const rTab = Tabs.reactive.byId[info.tabId]
   if (!tab || !rTab) {
+    // Defer handling of this event
+    if (deferredActivationHandling.id === info.tabId) {
+      deferredActivationHandling.cb = () => onTabActivated(info)
+      return
+    }
+
     Logs.err('Tabs.onTabActivated: Cannot get target tab', info.tabId)
     return Tabs.reinitTabs()
   }

@@ -33,6 +33,7 @@ export const Tabs = {
   newTabsPosition: {} as Record<number, NewTabPosition>,
   movingTabs: [] as ID[],
   attachingTabs: [] as Tab[],
+  detachingTabIds: [] as ID[],
   normTabsMoving: false,
 
   activeTabsGlobal: { id: 'global', actTabOffset: -1, actTabs: [] } as ActiveTabsHistory,

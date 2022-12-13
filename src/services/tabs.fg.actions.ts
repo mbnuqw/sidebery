@@ -2042,13 +2042,9 @@ async function moveTabsToWin(
     const rTab = Tabs.reactive.byId[id]
     if (!tab || !rTab) continue
     tabs.push(Utils.cloneObject(tab))
-    if (tab.folded) {
-      for (let i = tab.index + 1; i < Tabs.list.length; i++) {
-        const childTab = Tabs.list[i]
-        if (childTab.lvl <= tab.lvl) break
-        tabs.push(Utils.cloneObject(childTab))
-      }
-    }
+    Tabs.detachingTabIds.push(tab.id)
+
+    // TODO: Option to automatically include all/folded descendant tabs?
   }
 
   const ans = await IPC.sidebar(windowId, 'moveTabsToThisWin', tabs).catch(() => false)
@@ -2089,10 +2085,18 @@ export async function moveToThisWin(tabs: Tab[], dst?: DstPlaceInfo): Promise<bo
       tab.pinned = !!dst.pinned
       if (rTab) rTab.pinned = tab.pinned
     }
+    // Reset "hidden" flag b/c moving hidden tabs between windows makes them not hidden
+    tab.hidden = false
+    // Check parent tab
     if (tab.parentId === -1 || (tab.parentId !== -1 && !tabIds.includes(tab.parentId))) {
       tab.lvl = parent ? parent.lvl + 1 : 0
       if (rTab) rTab.lvl = tab.lvl
       tab.parentId = parent ? parent.id : -1
+    }
+    // Check child tabs
+    if (tab.isParent && !tabs.find(t => t.parentId === tab.id)) {
+      tab.isParent = false
+      tab.folded = false
     }
     setNewTabPosition(index, tab.parentId, dst.panelId ?? NOID)
     browser.tabs.move(tab.id, { windowId: Windows.id, index }).catch(err => {
@@ -2143,12 +2147,10 @@ export function updateNativeTabsVisibility(): void {
   if (!browser.tabs.hide) return
 
   const actTab = Tabs.byId[Tabs.activeId]
-  if (!actTab) return
 
   let actPanel
-  if (actTab.pinned) actPanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
-  else actPanel = Sidebar.reactive.panelsById[actTab.panelId]
-  if (!Utils.isTabsPanel(actPanel)) return
+  if (actTab?.pinned) actPanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+  else if (actTab) actPanel = Sidebar.reactive.panelsById[actTab.panelId]
 
   const toShow = []
   const toHide = []
@@ -2165,7 +2167,7 @@ export function updateNativeTabsVisibility(): void {
       continue
     }
 
-    if (hideInact && tab.panelId !== actPanel.id) {
+    if (Utils.isTabsPanel(actPanel) && hideInact && tab.panelId !== actPanel.id) {
       if (!tab.hidden) toHide.push(tab.id)
       continue
     }
