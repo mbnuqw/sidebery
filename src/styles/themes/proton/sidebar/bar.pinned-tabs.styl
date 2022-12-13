@@ -1,5 +1,10 @@
 @import '../../../utils'
 
+#root[data-color-scheme="dark"] .PinnedTabsBar
+  --sep-opacity: .16
+#root[data-color-scheme="light"] .PinnedTabsBar
+  --sep-opacity: .3
+
 .PinnedTabsBar
   position: relative
   display: flex
@@ -15,11 +20,10 @@
   flex-wrap: wrap
   flex-direction: row
   grid-gap: var(--tabs-margin)
-  padding: var(--tabs-margin) var(--tabs-margin) 0
+  padding: var(--tabs-margin) var(--tabs-margin) calc(var(--tabs-margin) + 1px)
 
 #root[data-pinned-tabs-position="panel"][data-pinned-tabs-list="true"] .PinnedTabsBar
   grid-gap: 0
-  padding: 0 0 calc(var(--tabs-margin) * 3 + 4px)
 
 // Left/Right
 #root[data-pinned-tabs-position="left"] .PinnedTabsBar
@@ -49,7 +53,7 @@
   flex-wrap: wrap
   flex-direction: row
   grid-gap: var(--tabs-margin)
-  padding: var(--tabs-margin) var(--tabs-margin) 0
+  padding: var(--tabs-margin) var(--tabs-margin) calc(var(--tabs-margin) + 1px)
 
 // ---
 // -- Separator
@@ -58,14 +62,15 @@
   content: ''
   position: absolute
   display: none
-  bottom: calc(var(--tabs-margin) + 2px)
-  left: 12px
-  width: calc(100% - 24px)
+  bottom: 0
+  left: var(--tabs-margin)
+  width: calc(100% - var(--tabs-margin) * 2)
   height: 1px
-  background-color: var(--frame-fg)
-  opacity: .16
+  opacity: var(--sep-opacity)
+  background-image: linear-gradient(90deg, transparent, var(--frame-fg) 40%, var(--frame-fg) 60%, transparent)
 
-#root[data-pinned-tabs-position="panel"][data-pinned-tabs-list="true"] .PinnedTabsBar:after
+#root[data-pinned-tabs-position="panel"] .PinnedTabsBar:after
+#root[data-pinned-tabs-position="top"] .PinnedTabsBar:after
   display: block
 
 // ---
