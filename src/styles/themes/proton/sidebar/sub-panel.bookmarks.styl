@@ -1,7 +1,7 @@
 @import '../../../utils'
 
 #root
-  --bookmarks-sub-panel-bar-height: 24px
+  --bookmarks-sub-panel-bar-height: 26px
   --bookmarks-sub-panel-height: 60vh
 
 .BookmarksSubPanel
@@ -44,25 +44,20 @@
   top: 0
   height: var(--bookmarks-sub-panel-bar-height)
   padding: 0 6px 0 2px
-  background-color: var(--toolbar-bg)
-  box-shadow: 0 0 0 var(--ff-border-width, 0) var(--ff-border, var(--border, #00000016))
-  &:before
+  background-color: var(--frame-bg)
+  &:after
     content: ''
     position: absolute
     display: none
     top: 0
     left: 0
     width: 100%
-    height: 100%
+    height: calc(100% + 5px)
     background-color: var(--toolbar-bg)
     z-index: -1
-.BookmarksSubPanel .bar[data-loading="true"]:before
+.BookmarksSubPanel .bar[data-loading="true"]:after
   display: block
   z-index: 1
-
-.BookmarksSubPanel .bar[data-loading="true"] .LoadingDots
-  z-index: 1
-  cursor: progress
 
 .BookmarksSubPanel .bar .icon
   position: relative
