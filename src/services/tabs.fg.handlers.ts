@@ -276,6 +276,14 @@ function onTabCreated(tab: Tab, attached?: boolean): void {
     else {
       const parent = Tabs.byId[tab.openerTabId]
       if (parent && parent.panelId === tab.panelId) {
+        // If parent tab is folded
+        if (parent.folded && !attached) {
+          // Trigger flash animation
+          const rParent = Tabs.reactive.byId[parent.id]
+          if (rParent) Tabs.triggerFlashAnimation(rParent)
+          // TODO: or unfold branch (add an option)
+        }
+
         let insideBranch = false
         for (let t, i = parent.index + 1; i < Tabs.list.length; i++) {
           t = Tabs.list[i]
