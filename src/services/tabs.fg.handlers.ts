@@ -385,6 +385,10 @@ function onTabCreated(tab: Tab, attached?: boolean): void {
     deferredActivationHandling.cb()
     deferredActivationHandling.cb = null
   }
+
+  if (Utils.isTabsPanel(panel)) {
+    Tabs.decrementScrollRetainer(panel)
+  }
 }
 
 /**

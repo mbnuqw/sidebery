@@ -15,6 +15,8 @@
 .TabsPanel .tab-space-filler
   position: relative
   height: calc(var(--tabs-height) + 1px)
+  z-index: 10
+  background-color: var(--frame-bg)
 
 // Extra space at the bottom
 .TabsPanel .bottom-space
@@ -22,7 +24,7 @@
   background-color: var(--frame-bg)
   z-index: 10
   height: 64px
-  transition: z-index var(--d-fast) var(--d-fast)
+  transition: transform var(--d-fast), z-index var(--d-fast) var(--d-fast)
 
 .TabsPanel .new-tab-btns
   position: sticky

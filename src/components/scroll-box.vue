@@ -18,7 +18,10 @@ let recalcScrollOnResize: Utils.FuncCtx | null = null
 let resizeObserver: ResizeObserver | null = null
 
 const emit = defineEmits(['bottom'])
-const props = defineProps({ lock: Boolean })
+const props = defineProps<{
+  lock?: boolean
+  preScroll?: number
+}>()
 
 const el = ref<HTMLElement | null>(null)
 const progressEl = ref<HTMLElement | null>(null)
@@ -33,9 +36,12 @@ const state = reactive({
 
 let boxHeight = 0
 let contentHeight = 0
+let preScroll = 0
 
 onMounted(() => {
   nextTick(() => recalcScroll())
+
+  if (props.preScroll) preScroll = props.preScroll
 
   if (!scrollBoxEl.value || !scrollContentEl.value) {
     throw Logs.err('ScrollBox: No DOM elements registered')
@@ -67,10 +73,10 @@ function recalcScroll(progressBar?: boolean): void {
   if (!state.topOverflow && contentY > 3) state.topOverflow = true
   if (state.topOverflow && contentY < 4) state.topOverflow = false
 
-  if (!state.bottomOverflow && contentHeight - contentY > boxHeight) {
+  if (!state.bottomOverflow && contentHeight - contentY - preScroll > boxHeight) {
     state.bottomOverflow = true
   }
-  if (state.bottomOverflow && contentHeight - contentY <= boxHeight) {
+  if (state.bottomOverflow && contentHeight - contentY - preScroll <= boxHeight) {
     state.bottomOverflow = false
     emit('bottom')
   }

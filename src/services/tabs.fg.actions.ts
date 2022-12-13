@@ -853,7 +853,7 @@ export async function removeTabs(tabIds: ID[], silent?: boolean): Promise<void> 
   }
 
   if (!Selection.isSet()) {
-    Tabs.blockScrollPosition(panel, lastTabToo ? visibleLen - 1 : visibleLen)
+    Tabs.incrementScrollRetainer(panel, lastTabToo ? visibleLen - 1 : visibleLen)
   }
 
   // Reverse removing order (needed for reopening)
@@ -3941,12 +3941,21 @@ export function pringDbgInfo(reset = false): void {
   }
 }
 
-export function blockScrollPosition(panel: TabsPanel, count: number): void {
-  panel.recentlyRemovedTabs += count
+export function incrementScrollRetainer(panel: TabsPanel, count: number): void {
+  panel.scrollRetainer += count
   Tabs.blockedScrollPosition = true
 }
 
-export function unblockScrollPosition(panel: TabsPanel): void {
-  panel.recentlyRemovedTabs = 0
+export function decrementScrollRetainer(panel: TabsPanel): void {
+  if (panel.scrollRetainer <= 0) {
+    Tabs.blockedScrollPosition = false
+    return
+  }
+  panel.scrollRetainer--
+  Tabs.blockedScrollPosition = true
+}
+
+export function resetScrollRetainer(panel: TabsPanel): void {
+  panel.scrollRetainer = 0
   Tabs.blockedScrollPosition = false
 }

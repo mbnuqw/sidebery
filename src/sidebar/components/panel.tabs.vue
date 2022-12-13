@@ -8,14 +8,14 @@
   @dblclick="onDoubleClick"
   @drop="onDrop")
   PinnedTabsBar(v-if="panel.pinnedTabs.length" :panel="panel")
-  ScrollBox(ref="scrollBox")
+  ScrollBox(ref="scrollBox" :pre-scroll="PRE_SCROLL")
     .container
       TransitionGroup(name="tab" tag="div" type="transition")
         TabComponent(v-for="tab in visibleTabs" :key="tab.id" :tab="tab")
         NewTabBar(
           v-if="Settings.state.showNewTabBtns && Settings.state.newTabBarPosition === 'after_tabs'"
           :panel="panel")
-        .tab-space-filler(v-for="i in panel.recentlyRemovedTabs" :key="i")
+        .tab-space-filler(v-for="i in panel.scrollRetainer" :key="i")
         .bottom-space(:key="9999999")
 
   NewTabBar(
@@ -35,7 +35,7 @@ import { ref, computed, onMounted } from 'vue'
 import { translate } from 'src/dict'
 import { DropType, MenuType, ScrollBoxComponent, Tab, TabsPanel, ReactiveTab } from 'src/types'
 import { WheelDirection } from 'src/types'
-import { NOID } from 'src/defaults'
+import { NOID, PRE_SCROLL } from 'src/defaults'
 import { Settings } from 'src/services/settings'
 import { Selection } from 'src/services/selection'
 import { Menu } from 'src/services/menu'
@@ -183,7 +183,7 @@ function onDoubleClick(e: MouseEvent): void {
 }
 
 const onWheel = Mouse.getWheelDebouncer(WheelDirection.Vertical, (e: WheelEvent) => {
-  if (Tabs.blockedScrollPosition) Tabs.unblockScrollPosition(props.panel)
+  if (Tabs.blockedScrollPosition) Tabs.resetScrollRetainer(props.panel)
   if (Sidebar.scrollAreaRightX && e.clientX > Sidebar.scrollAreaRightX) return
   if (Sidebar.scrollAreaLeftX && e.clientX < Sidebar.scrollAreaLeftX) return
   if (Selection.isSet()) return
@@ -202,6 +202,6 @@ const onWheel = Mouse.getWheelDebouncer(WheelDirection.Vertical, (e: WheelEvent)
 })
 
 function onMouseLeave() {
-  if (Tabs.blockedScrollPosition) Tabs.unblockScrollPosition(props.panel)
+  if (Tabs.blockedScrollPosition) Tabs.resetScrollRetainer(props.panel)
 }
 </script>
