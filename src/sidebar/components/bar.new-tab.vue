@@ -35,7 +35,7 @@
 
 <script lang="ts" setup>
 import { computed, PropType } from 'vue'
-import { Container, DstPlaceInfo, ItemInfo, MenuType, Tab, TabsPanel, DragItem } from 'src/types'
+import { Container, DstPlaceInfo, ItemInfo, MenuType, Tab, TabsPanel } from 'src/types'
 import { DragType, DragInfo, DropType } from 'src/types'
 import { Settings } from 'src/services/settings'
 import { Selection } from 'src/services/selection'
@@ -44,7 +44,7 @@ import { Tabs } from 'src/services/tabs.fg'
 import { Mouse } from 'src/services/mouse'
 import { Containers } from 'src/services/containers'
 import { Favicons } from 'src/services/favicons'
-import { CONTAINER_ID, DOMAIN_RE, NEWID, NOID } from 'src/defaults'
+import { CONTAINER_ID, DOMAIN_RE, NEWID } from 'src/defaults'
 import * as Utils from 'src/utils'
 import * as Logs from 'src/services/logs'
 import { Windows } from 'src/services/windows'
