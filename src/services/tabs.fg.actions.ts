@@ -95,7 +95,6 @@ export async function load(): Promise<void> {
   Tabs.cacheTabsData()
   Tabs.list.forEach(t => {
     Tabs.updateUrlCounter(t.url, 1)
-    saveTabData(t.id)
 
     // Recalc branch length for folded (invisible) parent tabs
     if (t.folded && t.invisible) Tabs.recalcBranchLen(t.id)
