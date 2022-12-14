@@ -319,9 +319,6 @@ function onTabCreated(tab: Tab, attached?: boolean): void {
 
     if (treeHasChanged) Tabs.updateTabsTree(panel.startTabIndex, panel.nextTabIndex)
 
-    Tabs.saveTabData(tab.id)
-    Tabs.cacheTabsData()
-
     if (!attached) {
       const groupTab = Tabs.getGroupTab(tab)
       if (groupTab && !groupTab.discarded) {
@@ -345,6 +342,9 @@ function onTabCreated(tab: Tab, attached?: boolean): void {
     if (Settings.state.colorizeTabs) Tabs.colorizeTabDebounced(tab.id, 120)
     if (Settings.state.colorizeTabsBranches && tab.lvl > 0) Tabs.setBranchColor(tab.id)
   }
+
+  Tabs.saveTabData(tab.id)
+  Tabs.cacheTabsData()
 
   // Update succession
   if (Settings.state.activateAfterClosing !== 'none') {
