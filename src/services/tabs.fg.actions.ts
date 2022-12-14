@@ -170,7 +170,7 @@ async function restoreTabsState(): Promise<void> {
 
   const storedTabsCache = storage.tabsDataCache ? storage.tabsDataCache : []
   let tabsCache: Record<ID, TabCache> | undefined
-  let tabsSessionData: TabSessionData[] | undefined
+  let tabsSessionData: (TabSessionData | undefined)[] | undefined
 
   const lastPanel = Sidebar.reactive.panels.find(p => Utils.isTabsPanel(p))
   if (!lastPanel) return Logs.err('Cannot load tabs: No tabs panels')
@@ -191,7 +191,9 @@ async function restoreTabsState(): Promise<void> {
 
   // From session data
   else {
-    const querying = tabs.map(t => browser.sessions.getTabValue<TabSessionData>(t.id, 'data'))
+    const querying = tabs.map(t =>
+      browser.sessions.getTabValue<TabSessionData | undefined>(t.id, 'data').catch(() => undefined)
+    )
     try {
       tabsSessionData = (await Promise.all(querying)) ?? []
     } catch (err) {
@@ -297,7 +299,7 @@ function restoreTabsFromCache(tabs: Tab[], cache: Record<ID, TabCache>, lastPane
 
 function restoreTabsFromSessionData(
   tabs: Tab[],
-  tabsData: TabSessionData[],
+  tabsData: (TabSessionData | undefined)[],
   lastPanel: Panel
 ): void {
   let logWrongPanels: Record<string, null> | undefined
@@ -314,8 +316,10 @@ function restoreTabsFromSessionData(
     normalizeTab(tab, tab.pinned ? firstPanelId : NOID)
 
     if (data) {
+      if (data.parentId === undefined) data.parentId = NOID
+
       // Restore props
-      tab.panelId = data.panelId || lastPanel.id
+      tab.panelId = data.panelId ?? lastPanel.id
       if (idsMap[data.parentId] >= 0) tab.parentId = idsMap[data.parentId]
       tab.folded = !!data.folded
       idsMap[data.id] = tab.id
