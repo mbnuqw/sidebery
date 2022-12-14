@@ -3058,6 +3058,7 @@ export function findSuccessorTab(tab: Tab, exclude?: ID[]): Tab | undefined {
   const skipDiscarded = Settings.state.activateAfterClosingNoDiscarded
   const dirNext = Settings.state.activateAfterClosing === 'next'
   const dirPrev = Settings.state.activateAfterClosing === 'prev'
+  const historyFallback = Settings.state.activateAfterClosingFallbackToHistory
 
   if (Tabs.removingTabs && !exclude) exclude = Tabs.removingTabs
 
@@ -3112,6 +3113,7 @@ export function findSuccessorTab(tab: Tab, exclude?: ID[]): Tab | undefined {
   } else {
     mode = SuccessorSearchMode.InPanelTick
   }
+  let forcedInGlobalHistory = false
   let inBranch = true
   let upI = tab.index - 1
   let downI = tab.index + 1
@@ -3150,7 +3152,14 @@ export function findSuccessorTab(tab: Tab, exclude?: ID[]): Tab | undefined {
               break mainLoop
             }
           }
-          mode = SuccessorSearchMode.GlobalTick
+          if (historyFallback) {
+            // Continue search in history
+            forcedInGlobalHistory = true
+            break
+          } else {
+            // Continue search in global mode
+            mode = SuccessorSearchMode.GlobalTick
+          }
         }
         dir *= -1
         continue
@@ -3196,10 +3205,13 @@ export function findSuccessorTab(tab: Tab, exclude?: ID[]): Tab | undefined {
   }
 
   // Previously active tab
-  if (Settings.state.activateAfterClosing === 'prev_act') {
+  if (Settings.state.activateAfterClosing === 'prev_act' || forcedInGlobalHistory) {
     let history: ActiveTabsHistory
-    if (Settings.state.activateAfterClosingGlobal) history = Tabs.activeTabsGlobal
-    else history = Tabs.activeTabsPerPanel[tab.panelId] || Tabs.activeTabsGlobal
+    if (Settings.state.activateAfterClosingGlobal || forcedInGlobalHistory) {
+      history = Tabs.activeTabsGlobal
+    } else {
+      history = Tabs.activeTabsPerPanel[tab.panelId] || Tabs.activeTabsGlobal
+    }
 
     if (!history || !history.actTabs) return
 
@@ -3218,7 +3230,7 @@ export function findSuccessorTab(tab: Tab, exclude?: ID[]): Tab | undefined {
       }
 
       // Skip invisible tab
-      if (skipFolded && prev && prev.invisible) continue
+      if ((skipFolded || forcedInGlobalHistory) && prev && prev.invisible) continue
 
       if (targetId !== tab.id && prev) {
         target = prev

@@ -54,6 +54,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   showTabRmBtn: true,
   hideInact: false,
   activateAfterClosing: 'next',
+  activateAfterClosingFallbackToHistory: true,
   activateAfterClosingGlobal: false,
   activateAfterClosingNoFolded: true,
   activateAfterClosingNoDiscarded: true,

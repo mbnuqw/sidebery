@@ -54,6 +54,7 @@ export interface SettingsState {
   showTabRmBtn: boolean
   hideInact: boolean
   activateAfterClosing: typeof SETTINGS_OPTIONS.activateAfterClosing[number]
+  activateAfterClosingFallbackToHistory: boolean
   activateAfterClosingGlobal: boolean
   activateAfterClosingNoFolded: boolean
   activateAfterClosingNoDiscarded: boolean
