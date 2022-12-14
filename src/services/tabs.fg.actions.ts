@@ -3052,6 +3052,7 @@ const enum SuccessorSearchMode {
  */
 export function findSuccessorTab(tab: Tab, exclude?: ID[]): Tab | undefined {
   let target
+  const tree = Settings.state.tabsTree
   const rmFolded = Settings.state.rmChildTabs === 'folded'
   const rmChild = Settings.state.rmChildTabs === 'all'
   const skipFolded = Settings.state.activateAfterClosingNoFolded
@@ -3108,12 +3109,14 @@ export function findSuccessorTab(tab: Tab, exclude?: ID[]): Tab | undefined {
 
   let dir: 1 | -1 = dirNext ? 1 : -1
   let mode = SuccessorSearchMode.InBranchTick
-  if (dirNext) {
-    if (tab.parentId === -1) mode = SuccessorSearchMode.InPanelTick
-    else mode = SuccessorSearchMode.InBranchTick
-  } else {
+  // Downgrade search mode in case of
+  // -    Plain tabs structure
+  // - or Backward direction
+  // - or Tab without parent
+  if (!tree || !dirNext || tab.parentId === -1) {
     mode = SuccessorSearchMode.InPanelTick
   }
+
   let forcedInGlobalHistory = false
   let inBranch = true
   let upI = tab.index - 1

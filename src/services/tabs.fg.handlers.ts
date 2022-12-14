@@ -246,7 +246,7 @@ function onTabCreated(tab: Tab, attached?: boolean): void {
   tab.internal = tab.url.startsWith(ADDON_HOST)
   if (tab.internal) tab.isGroup = Utils.isGroupUrl(tab.url)
   tab.index = index
-  tab.parentId = tab.openerTabId ?? -1
+  tab.parentId = Settings.state.tabsTree ? tab.openerTabId ?? NOID : NOID
   if (!tab.favIconUrl && !tab.internal) tab.favIconUrl = Favicons.getFavicon(tab.url)
 
   // Put new tab in state
