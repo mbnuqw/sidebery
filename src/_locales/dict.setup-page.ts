@@ -1205,6 +1205,10 @@ export const setupPageTranslations: Translations = {
     de: 'Global',
     zh_CN: '全局',
   },
+  'settings.activate_after_closing_stay_in_panel': {
+    en: 'Stay in panel to the last tab',
+    ru: 'Оставаться на панели до последней вкладки',
+  },
 
   'settings.tabs_url_in_tooltip': {
     en: 'Show URL in tooltip',

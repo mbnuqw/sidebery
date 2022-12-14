@@ -3059,6 +3059,7 @@ export function findSuccessorTab(tab: Tab, exclude?: ID[]): Tab | undefined {
   const dirNext = Settings.state.activateAfterClosing === 'next'
   const dirPrev = Settings.state.activateAfterClosing === 'prev'
   const historyFallback = Settings.state.activateAfterClosingFallbackToHistory
+  const stayInPanel = Settings.state.activateAfterClosingStayInPanel
 
   if (Tabs.removingTabs && !exclude) exclude = Tabs.removingTabs
 
@@ -3119,6 +3120,7 @@ export function findSuccessorTab(tab: Tab, exclude?: ID[]): Tab | undefined {
   let downI = tab.index + 1
   let foundTab: Tab | undefined
   let discardedFallback: Tab | undefined
+  let foldedFallback: Tab | undefined
   mainLoop: while (upI >= 0 || downI < Tabs.list.length) {
     if (dir === 1) foundTab = Tabs.list[downI]
     else if (dir === -1) foundTab = Tabs.list[upI]
@@ -3151,6 +3153,9 @@ export function findSuccessorTab(tab: Tab, exclude?: ID[]): Tab | undefined {
               target = Tabs.byId[pTab.id]
               break mainLoop
             }
+          }
+          if (stayInPanel && (discardedFallback || foldedFallback)) {
+            return discardedFallback || foldedFallback
           }
           if (historyFallback) {
             // Continue search in history
@@ -3192,7 +3197,10 @@ export function findSuccessorTab(tab: Tab, exclude?: ID[]): Tab | undefined {
     if (rmChild && foundTab.lvl > tab.lvl) continue
 
     // Prev tab is invisible
-    if (dir === -1 && foundTab.invisible) continue
+    if (dir === -1 && foundTab.invisible) {
+      if (!foldedFallback) foldedFallback = foundTab
+      continue
+    }
 
     // Skip discarded tab
     if (skipDiscarded && foundTab.discarded) {

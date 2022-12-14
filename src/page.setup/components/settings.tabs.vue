@@ -32,6 +32,10 @@ section(ref="el")
     @update:value="Settings.saveDebounced(150)")
   .sub-fields
     ToggleField(
+      label="settings.activate_after_closing_stay_in_panel"
+      v-model:value="Settings.state.activateAfterClosingStayInPanel"
+      @update:value="Settings.saveDebounced(150)")
+    ToggleField(
       label="settings.activate_after_closing_global"
       v-model:value="Settings.state.activateAfterClosingGlobal"
       :inactive="Settings.state.activateAfterClosing !== 'prev_act'"

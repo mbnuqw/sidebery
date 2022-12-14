@@ -55,6 +55,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   hideInact: false,
   activateAfterClosing: 'next',
   activateAfterClosingFallbackToHistory: true,
+  activateAfterClosingStayInPanel: false,
   activateAfterClosingGlobal: false,
   activateAfterClosingNoFolded: true,
   activateAfterClosingNoDiscarded: true,

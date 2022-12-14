@@ -55,6 +55,7 @@ export interface SettingsState {
   hideInact: boolean
   activateAfterClosing: typeof SETTINGS_OPTIONS.activateAfterClosing[number]
   activateAfterClosingFallbackToHistory: boolean
+  activateAfterClosingStayInPanel: boolean
   activateAfterClosingGlobal: boolean
   activateAfterClosingNoFolded: boolean
   activateAfterClosingNoDiscarded: boolean
