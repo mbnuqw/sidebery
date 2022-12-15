@@ -8,9 +8,9 @@
   DndSection
   SearchSection
   TabsSection
-  NewTabPositionSection
-  PinnedTabsSection
-  TabsTreeSection
+  //- NewTabPositionSection
+  //- PinnedTabsSection
+  //- TabsTreeSection
   BookmarksSection
   HistorySection
   AppearanceSection

@@ -1367,30 +1367,10 @@ export const setupPageTranslations: Translations = {
     zh_CN: '分',
   },
   'settings.tabs_second_click_act_prev': {
-    en: 'Backward activation when clicking on the active tab',
+    en: 'Backward activation when clicking on the active tab (Tab flip)',
     ru: 'Обратная активация при нажатии на активную вкладку ',
     de: 'Beim Klicken auf aktiven Tab Aktivierung umkehren',
     zh_CN: '单击活动标签页时向后激活',
-  },
-  'settings.colorize_tabs': {
-    en: 'Colorize tabs',
-    ru: 'Раскрашивать вкладки',
-    de: 'Tabs einfärben',
-  },
-  'settings.colorize_tabs_src': {
-    en: 'Generate color from',
-    ru: 'Источник для генерации цвета',
-    de: 'Generiere Farbe aus',
-  },
-  'settings.colorize_tabs_src_domain': {
-    en: 'domain',
-    ru: 'доменное имя',
-    de: 'Domäne',
-  },
-  'settings.colorize_tabs_src_container': {
-    en: 'container',
-    ru: 'контейнер',
-    de: 'Umgebung',
   },
 
   // - New tab position
@@ -1815,6 +1795,32 @@ export const setupPageTranslations: Translations = {
     ru: 'первой дочерней вкладки',
     de: 'Erstes Unterelement',
     zh_CN: '第一个子标签',
+  },
+
+  // - Tabs colorization
+  'settings.tabs_colorization_title': {
+    en: 'Tabs colorization',
+    ru: 'Раскрашивание вкладок',
+  },
+  'settings.colorize_tabs': {
+    en: 'Colorize tabs',
+    ru: 'Раскрашивать вкладки',
+    de: 'Tabs einfärben',
+  },
+  'settings.colorize_tabs_src': {
+    en: 'Generate color from',
+    ru: 'Источник для генерации цвета',
+    de: 'Generiere Farbe aus',
+  },
+  'settings.colorize_tabs_src_domain': {
+    en: 'domain',
+    ru: 'доменное имя',
+    de: 'Domäne',
+  },
+  'settings.colorize_tabs_src_container': {
+    en: 'container',
+    ru: 'контейнер',
+    de: 'Umgebung',
   },
   'settings.colorize_branches': {
     en: 'Colorize branches',
@@ -2345,7 +2351,7 @@ export const setupPageTranslations: Translations = {
     zh_CN: '跳过已丢弃的标签',
   },
   'settings.scroll_through_tabs_except_overflow': {
-    en: 'Except if panel is overflowing',
+    en: 'Unless panel is overflowing',
     de: 'Außer, wenn Panel überläuft',
     ru: 'За исключением случаев, когда панель переполнена',
     zh_CN: '溢出面板除外',
