@@ -44,7 +44,7 @@ import { PANEL_ICON_OPTS, COLOR_OPTS } from 'src/defaults'
 import TextInput from 'src/components/text-input.vue'
 import SelectInput from 'src/components/select-input.vue'
 import { SetupPage } from 'src/services/setup-page'
-import { InputOption, TextInputComponent } from 'src/types'
+import { InputOption, TextInputComponent, TabsPanelConfig, BookmarksPanelConfig } from 'src/types'
 import { Settings } from 'src/services/settings'
 
 const TABS_PANEL_ICON_OPTS = [{ value: 'icon_tabs', icon: 'icon_tabs' }, ...PANEL_ICON_OPTS]
@@ -120,18 +120,26 @@ function onSave(): void {
 
   // Create panel
   else {
-    if (Utils.isTabsPanel(popup.config)) {
-      panel = Sidebar.createTabsPanel(popup.config)
-    } else if (Utils.isBookmarksPanel(popup.config)) {
-      panel = Sidebar.createBookmarksPanel(popup.config)
+    const isTabsPanel = Utils.isTabsPanel(popup.config)
+    const isBookmarksPanel = Utils.isBookmarksPanel(popup.config)
+    if (isTabsPanel) {
+      panel = Sidebar.createTabsPanel(popup.config as TabsPanelConfig)
+    } else if (isBookmarksPanel) {
+      panel = Sidebar.createBookmarksPanel(popup.config as BookmarksPanelConfig)
     } else {
       return
     }
 
     if (panel.index === -1) {
-      panel.index = Utils.findLastIndex(Sidebar.reactive.nav, id => {
-        return Utils.isTabsPanel(Sidebar.reactive.panelsById[id])
-      })
+      if (isTabsPanel) {
+        panel.index = Utils.findLastIndex(Sidebar.reactive.nav, id => {
+          return Utils.isTabsPanel(Sidebar.reactive.panelsById[id])
+        })
+      } else if (isBookmarksPanel) {
+        panel.index = Utils.findLastIndex(Sidebar.reactive.nav, id => {
+          return Utils.isBookmarksPanel(Sidebar.reactive.panelsById[id])
+        })
+      }
       if (panel.index === -1) panel.index = Sidebar.reactive.nav.length
       else panel.index++
     }
@@ -140,8 +148,8 @@ function onSave(): void {
     Sidebar.reactive.panelsById[panel.id] = panel
     Sidebar.reactive.nav.splice(panel.index, 0, panel.id)
     Sidebar.recalcPanels()
-    if (Utils.isTabsPanel(popup.config)) Sidebar.recalcTabsPanels()
-    else if (Utils.isBookmarksPanel(popup.config)) Sidebar.recalcBookmarksPanels()
+    if (isTabsPanel) Sidebar.recalcTabsPanels()
+    else if (isBookmarksPanel) Sidebar.recalcBookmarksPanels()
     Sidebar.saveSidebar(300)
   }
 
