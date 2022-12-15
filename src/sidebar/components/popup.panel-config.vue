@@ -133,6 +133,7 @@ function onSave(): void {
         return Utils.isTabsPanel(Sidebar.reactive.panelsById[id])
       })
       if (panel.index === -1) panel.index = Sidebar.reactive.nav.length
+      else panel.index++
     }
 
     if (!panel.id) panel.id = Utils.uid()
