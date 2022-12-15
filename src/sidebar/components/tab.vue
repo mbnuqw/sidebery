@@ -53,7 +53,7 @@
     .close(
       v-if="Settings.state.showTabRmBtn && !isPinned"
       @mousedown.stop="onMouseDownClose"
-      @mouseup.stop
+      @mouseup.stop="onMouseUpClose"
       @contextmenu.stop.prevent)
       svg: use(xlink:href="#icon_remove")
     .ctx(v-if="containerColor")
@@ -76,6 +76,7 @@ import { Mouse } from 'src/services/mouse'
 import { DnD } from 'src/services/drag-and-drop'
 import { Search } from 'src/services/search'
 import { Favicons } from 'src/services/favicons'
+import * as Logs from 'src/services/logs'
 
 const props = defineProps<{ tab: ReactiveTab }>()
 
@@ -145,12 +146,10 @@ function onMouseDownClose(e: MouseEvent): void {
   Mouse.setTarget('tab.close', props.tab.id)
   if (e.button === 0) {
     Tabs.removeTabs([props.tab.id])
-    tempLockCloseBtn()
   }
   if (e.button === 1) {
     if (Settings.state.tabCloseMiddleClick === 'close') {
       Tabs.removeTabs([props.tab.id])
-      tempLockCloseBtn()
     } else if (Settings.state.tabCloseMiddleClick === 'discard') {
       Tabs.discardTabs([props.tab.id])
     }
@@ -158,8 +157,14 @@ function onMouseDownClose(e: MouseEvent): void {
   }
   if (e.button === 2) {
     Tabs.removeBranches([props.tab.id])
-    tempLockCloseBtn()
   }
+  tempLockCloseBtn()
+}
+function onMouseUpClose(e: MouseEvent): void {
+  Mouse.resetTarget()
+  Mouse.stopLongClick()
+  Mouse.stopMultiSelection()
+  Selection.resetSelection()
 }
 
 function onMouseDown(e: MouseEvent): void {
@@ -221,6 +226,7 @@ function longClickFeedback(): void {
 
 function onMouseUp(e: MouseEvent): void {
   const sameTarget = Mouse.isTarget('tab', props.tab.id)
+  const sameTargetType = Mouse.isTarget('tab')
   Mouse.resetTarget()
   Mouse.stopLongClick()
   if (Mouse.isLocked()) return Mouse.resetClickLock(120)
@@ -244,17 +250,12 @@ function onMouseUp(e: MouseEvent): void {
     }
     activating = false
   } else if (e.button === 1) {
-    if (!Settings.state.multipleMiddleClose) return
-
-    const inMultiSelectionMode = Mouse.multiSelectionMode
     Mouse.stopMultiSelection()
 
-    if (inMultiSelectionMode && !Settings.state.autoMenuMultiSel && Selection.getLength() > 1) {
-      return
+    if (Settings.state.multipleMiddleClose && sameTargetType) {
+      if (!Selection.isSet()) select()
+      Tabs.removeTabs(Selection.get())
     }
-
-    if (!Selection.isSet()) select()
-    Tabs.removeTabs(Selection.get())
   } else if (e.button === 2) {
     if (e.ctrlKey || e.shiftKey) return
 
