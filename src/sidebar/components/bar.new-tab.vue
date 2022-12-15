@@ -1,5 +1,6 @@
 <template lang="pug">
 .new-tab-btns(
+  tabindex="-1"
   :data-new-tab-bar-position="Settings.state.newTabBarPosition"
   :data-sel="panel.selNewTab")
   .new-tab-bg
