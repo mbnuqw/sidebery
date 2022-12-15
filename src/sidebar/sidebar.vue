@@ -187,6 +187,11 @@ function onDocumentKeyup(e: KeyboardEvent): void {
     // Dialog popup
     if (Sidebar.reactive.dialog) Sidebar.reactive.dialog.result(null)
 
+    // Hidden panels popup
+    if (Sidebar.reactive.hiddenPanelsPopup) {
+      Sidebar.closeHiddenPanelsPopup()
+    }
+
     // Search bar
     if (Search.reactive.barIsShowed) Search.stop()
   }
@@ -251,6 +256,9 @@ function onMouseUp(e: MouseEvent): void {
   if (e.button === 0 && !e.ctrlKey && !e.shiftKey) {
     Menu.close()
     Selection.resetSelection()
+    if (Sidebar.reactive.hiddenPanelsPopup) {
+      Sidebar.closeHiddenPanelsPopup()
+    }
   }
 
   const inMultiSelectionMode = Mouse.multiSelectionMode
