@@ -100,7 +100,7 @@ function onTabCreated(tab: Tab, attached?: boolean): void {
   if (Tabs.ignoreTabsEvents) return
   if (Tabs.tabsReinitializing) return Tabs.reinitTabs()
 
-  if (Sidebar.reactive.hiddenPanelsBar) Sidebar.closeHiddenPanelsBar(true)
+  if (Sidebar.reactive.hiddenPanelsPopup) Sidebar.closeHiddenPanelsPopup(true)
 
   if (Settings.state.highlightOpenBookmarks) Bookmarks.markOpenBookmarksDebounced(tab.url)
 

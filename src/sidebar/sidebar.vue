@@ -150,7 +150,7 @@ function onFocusOut(e: FocusEvent): void {
   if ((e as MozFocusEvent).explicitOriginalTarget === e.target && !DnD.reactive.isStarted) {
     if (Menu.isOpen) Menu.close()
     Selection.resetSelection()
-    if (Sidebar.reactive.hiddenPanelsBar) Sidebar.closeHiddenPanelsBar(true)
+    if (Sidebar.reactive.hiddenPanelsPopup) Sidebar.closeHiddenPanelsPopup(true)
   }
 }
 

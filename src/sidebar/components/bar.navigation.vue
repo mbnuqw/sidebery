@@ -4,7 +4,7 @@
   ref="el"
   tabindex="-1"
   :data-overflowed="overflowed"
-  :data-hidden-panels-bar="Sidebar.reactive.hiddenPanelsBar"
+  :data-hidden-panels-bar="Sidebar.reactive.hiddenPanelsPopup"
   :data-layout="layout"
   @drop="onDrop")
   .main-items(@wheel.stop.prevent="onNavWheel")
@@ -33,13 +33,13 @@
       @mouseup="onNavMouseUp($event, item)"
       @contextmenu="onNavCtxMenu($event, item)")
 
-  Transition(name="hidden-panels"): .hidden-bar-layer(
-    v-if="Sidebar.reactive.hiddenPanelsBar"
+  Transition(name="hidden-panels"): .hidden-panels-popup-layer(
+    v-if="Sidebar.reactive.hiddenPanelsPopup"
     data-dnd-type="hidden-layer"
-    :style="{ '--offset': `${Sidebar.reactive.hiddenPanelsBarOffset}px` }"
-    @mousedown="Sidebar.closeHiddenPanelsBar()")
-    .hidden-bar(:data-offset-side="Sidebar.reactive.hiddenPanelsBarOffsetSide")
-      .hidden-bar-content
+    :style="{ '--offset': `${Sidebar.reactive.hiddenPanelsPopupOffset}px` }"
+    @mousedown="Sidebar.closeHiddenPanelsPopup()")
+    .hidden-panels-popup(:data-offset-side="Sidebar.reactive.hiddenPanelsPopupOffsetSide")
+      .hidden-panels-popup-content
         NavItemComponent(
           v-for="(item, i) in hidden"
           :key="item.id"
@@ -75,8 +75,8 @@ import { Search } from 'src/services/search'
 import { Snapshots } from 'src/services/snapshots'
 import NavItemComponent from './nav-item.vue'
 
-const HIDDEN_BTN: NavBtn = {
-  id: 'hidden-bar',
+const HIDDEN_PANELS_BTN: NavBtn = {
+  id: 'hidden_panels_btn',
   class: NavItemClass.btn,
   type: ButtonType.hidden,
   iconSVG: 'icon_expand',
@@ -114,8 +114,8 @@ const hidden = computed((): NavItem[] => {
 watch(
   () => hidden.value.length,
   newHiddenLen => {
-    if (!newHiddenLen && Sidebar.reactive.hiddenPanelsBar) {
-      Sidebar.reactive.hiddenPanelsBar = false
+    if (!newHiddenLen && Sidebar.reactive.hiddenPanelsPopup) {
+      Sidebar.reactive.hiddenPanelsPopup = false
     }
   }
 )
@@ -158,8 +158,8 @@ const visible = computed((): NavItem[] => {
 
   if (!isInline && hidden.value.length) {
     if (lastTabsPanelIndex === -1) lastTabsPanelIndex = firstTabsPanelIndex - 1
-    if (lastTabsPanelIndex === -1) result.push(HIDDEN_BTN)
-    else result.splice(lastTabsPanelIndex + 1, 0, HIDDEN_BTN)
+    if (lastTabsPanelIndex === -1) result.push(HIDDEN_PANELS_BTN)
+    else result.splice(lastTabsPanelIndex + 1, 0, HIDDEN_PANELS_BTN)
   }
 
   return result
@@ -170,7 +170,7 @@ const staticButtons = computed((): NavBtn[] => {
   const result: NavBtn[] = []
 
   if (hidden.value.length) {
-    result.push(HIDDEN_BTN)
+    result.push(HIDDEN_PANELS_BTN)
   }
 
   for (const id of Sidebar.reactive.nav) {
@@ -370,8 +370,8 @@ function onNavMouseUp(e: MouseEvent, item: NavItem, inHiddenBar?: boolean) {
   // Left
   if (e.button === 0) {
     if (isHiddenPanels) {
-      if (Sidebar.reactive.hiddenPanelsBar) Sidebar.closeHiddenPanelsBar()
-      else Sidebar.openHiddenPanelsBar()
+      if (Sidebar.reactive.hiddenPanelsPopup) Sidebar.closeHiddenPanelsPopup()
+      else Sidebar.openHiddenPanelsPopup()
       return
     }
     if (isAddTP) return addTabsPanel()
@@ -386,13 +386,13 @@ function onNavMouseUp(e: MouseEvent, item: NavItem, inHiddenBar?: boolean) {
     if (isRemuteAudioTabs) return Tabs.remuteAudibleTabs()
     if (item.type === ButtonType.collapse) collapseAll()
     if (inHiddenBar) {
-      Sidebar.closeHiddenPanelsBar()
+      Sidebar.closeHiddenPanelsPopup()
       if (Sidebar.reactive.activePanelId !== item.id) Sidebar.switchToPanel(item.id)
       return
     }
 
     if (Sidebar.reactive.activePanelId !== item.id) {
-      if (Sidebar.reactive.hiddenPanelsBar) Sidebar.reactive.hiddenPanelsBar = false
+      if (Sidebar.reactive.hiddenPanelsPopup) Sidebar.reactive.hiddenPanelsPopup = false
       return Sidebar.switchToPanel(item.id)
     }
     if (isBookmarks) {

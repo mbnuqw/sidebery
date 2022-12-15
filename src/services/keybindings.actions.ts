@@ -214,8 +214,8 @@ function onKeyActivate(): void {
   }
 
   // Close hidden panels bar
-  if (Sidebar.reactive.hiddenPanelsBar) {
-    Sidebar.closeHiddenPanelsBar()
+  if (Sidebar.reactive.hiddenPanelsPopup) {
+    Sidebar.closeHiddenPanelsPopup()
     return
   }
 

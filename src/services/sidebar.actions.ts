@@ -1088,23 +1088,23 @@ export function switchPanel(
 
     if (hasHiddenPanels && lastVisibleTabsPanel !== -1) {
       // Open hidden panels bar
-      if (!Sidebar.reactive.hiddenPanelsBar && i === lastVisibleTabsPanel + 1) {
-        Sidebar.openHiddenPanelsBar()
+      if (!Sidebar.reactive.hiddenPanelsPopup && i === lastVisibleTabsPanel + 1) {
+        Sidebar.openHiddenPanelsPopup()
         i = dir > 0 ? -1 : Sidebar.reactive.panels.length
         continue
       }
 
       // Close hidden panels bar
       if (
-        Sidebar.reactive.hiddenPanelsBar &&
+        Sidebar.reactive.hiddenPanelsPopup &&
         ((dir > 0 && i > lastHiddenTabsPanel) || (dir < 0 && i < firstHiddenTabsPanel))
       ) {
-        Sidebar.reactive.hiddenPanelsBar = false
+        Sidebar.reactive.hiddenPanelsPopup = false
         i = lastVisibleTabsPanel + 1
         continue
       }
 
-      if (Sidebar.reactive.hiddenPanelsBar !== isHidden) continue
+      if (Sidebar.reactive.hiddenPanelsPopup !== isHidden) continue
     }
 
     break
@@ -1115,13 +1115,13 @@ export function switchPanel(
   switchToPanel(panel.id, false, withoutTabCreation)
 }
 
-export function openHiddenPanelsBar(): void {
-  const hiddenPanelsBtnEl = document.getElementById('hidden-bar')
+export function openHiddenPanelsPopup(): void {
+  const hiddenPanelsBtnEl = document.getElementById('hidden_panels_btn')
   const navBarEl = document.getElementById('nav_bar')
   if (!hiddenPanelsBtnEl || !navBarEl) {
-    Sidebar.reactive.hiddenPanelsBarOffset = 3
-    Sidebar.reactive.hiddenPanelsBarOffsetSide = 'start'
-    Sidebar.reactive.hiddenPanelsBar = true
+    Sidebar.reactive.hiddenPanelsPopupOffset = 3
+    Sidebar.reactive.hiddenPanelsPopupOffsetSide = 'start'
+    Sidebar.reactive.hiddenPanelsPopup = true
     return
   }
 
@@ -1132,11 +1132,11 @@ export function openHiddenPanelsBar(): void {
   if (Settings.state.navBarLayout === 'horizontal') {
     const relLeft = hiddenRect.left - navRect.left
     if (relLeft < navRect.width / 2) {
-      Sidebar.reactive.hiddenPanelsBarOffset = relLeft
-      Sidebar.reactive.hiddenPanelsBarOffsetSide = 'start'
+      Sidebar.reactive.hiddenPanelsPopupOffset = relLeft
+      Sidebar.reactive.hiddenPanelsPopupOffsetSide = 'start'
     } else {
-      Sidebar.reactive.hiddenPanelsBarOffset = hiddenRect.right
-      Sidebar.reactive.hiddenPanelsBarOffsetSide = 'end'
+      Sidebar.reactive.hiddenPanelsPopupOffset = hiddenRect.right
+      Sidebar.reactive.hiddenPanelsPopupOffsetSide = 'end'
     }
   }
 
@@ -1144,19 +1144,19 @@ export function openHiddenPanelsBar(): void {
   else if (Settings.state.navBarLayout === 'vertical') {
     const relTop = hiddenRect.top - navRect.top
     if (relTop < navRect.height / 2) {
-      Sidebar.reactive.hiddenPanelsBarOffset = relTop
-      Sidebar.reactive.hiddenPanelsBarOffsetSide = 'start'
+      Sidebar.reactive.hiddenPanelsPopupOffset = relTop
+      Sidebar.reactive.hiddenPanelsPopupOffsetSide = 'start'
     } else {
-      Sidebar.reactive.hiddenPanelsBarOffset = navRect.height - (hiddenRect.bottom - navRect.top)
-      Sidebar.reactive.hiddenPanelsBarOffsetSide = 'end'
+      Sidebar.reactive.hiddenPanelsPopupOffset = navRect.height - (hiddenRect.bottom - navRect.top)
+      Sidebar.reactive.hiddenPanelsPopupOffsetSide = 'end'
     }
   }
 
-  Sidebar.reactive.hiddenPanelsBar = true
+  Sidebar.reactive.hiddenPanelsPopup = true
 }
 
-export function closeHiddenPanelsBar(withoutTabCreation?: boolean): void {
-  Sidebar.reactive.hiddenPanelsBar = false
+export function closeHiddenPanelsPopup(withoutTabCreation?: boolean): void {
+  Sidebar.reactive.hiddenPanelsPopup = false
 
   const panel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
   if (

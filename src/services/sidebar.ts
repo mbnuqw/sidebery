@@ -20,9 +20,9 @@ export interface SidebarReactiveState {
   groupConfigPopup: GroupConfigPopup | null
   newTabShortcutsPopup: NewTabShortcutsPopup | null
   confirm: ConfirmDialog | null
-  hiddenPanelsBar: boolean
-  hiddenPanelsBarOffset: number
-  hiddenPanelsBarOffsetSide: 'start' | 'end'
+  hiddenPanelsPopup: boolean
+  hiddenPanelsPopupOffset: number
+  hiddenPanelsPopupOffsetSide: 'start' | 'end'
   dialog: Dialog | null
 
   selectedHeader: ID
@@ -81,9 +81,9 @@ export const Sidebar = {
     groupConfigPopup: null,
     newTabShortcutsPopup: null,
     confirm: null,
-    hiddenPanelsBar: false,
-    hiddenPanelsBarOffset: 0,
-    hiddenPanelsBarOffsetSide: 'start',
+    hiddenPanelsPopup: false,
+    hiddenPanelsPopupOffset: 0,
+    hiddenPanelsPopupOffsetSide: 'start',
     dialog: null,
 
     selectedHeader: NOID,

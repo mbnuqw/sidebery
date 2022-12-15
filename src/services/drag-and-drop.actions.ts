@@ -360,17 +360,17 @@ export function onDragEnter(e: DragEvent): void {
     DnD.reactive.dstParentId = NOID
 
     // Open hidden panels bar
-    if (id === 'hidden-bar') {
+    if (id === 'hidden_panels_btn') {
       DnD.reactive.dstType = DropType.Nowhere
       DnD.reactive.dstPanelId = NOID
-      if (!Sidebar.reactive.hiddenPanelsBar) {
-        panelSwitchTimeout(() => Sidebar.openHiddenPanelsBar(), 250)
+      if (!Sidebar.reactive.hiddenPanelsPopup) {
+        panelSwitchTimeout(() => Sidebar.openHiddenPanelsPopup(), 250)
       }
     }
 
     // Select nav element
     else {
-      if (Sidebar.reactive.hiddenPanelsBar) Sidebar.reactive.hiddenPanelsBar = false
+      if (Sidebar.reactive.hiddenPanelsPopup) Sidebar.reactive.hiddenPanelsPopup = false
 
       const panel = Sidebar.reactive.panelsById[id]
       const isTabsPanel = Utils.isTabsPanel(panel)
@@ -406,8 +406,8 @@ export function onDragEnter(e: DragEvent): void {
 
   // Close hidden panels bar
   if (type === 'hidden-layer') {
-    if (DnD.reactive.dstPanelId !== NOID && Sidebar.reactive.hiddenPanelsBar) {
-      Sidebar.closeHiddenPanelsBar(true)
+    if (DnD.reactive.dstPanelId !== NOID && Sidebar.reactive.hiddenPanelsPopup) {
+      Sidebar.closeHiddenPanelsPopup(true)
     }
   }
 
@@ -431,7 +431,7 @@ export function onDragEnter(e: DragEvent): void {
   }
 
   if (type === 'tab' && id) {
-    if (Sidebar.reactive.hiddenPanelsBar) Sidebar.reactive.hiddenPanelsBar = false
+    if (Sidebar.reactive.hiddenPanelsPopup) Sidebar.reactive.hiddenPanelsPopup = false
     const tab = Tabs.byId[id]
     if (!tab) return
     DnD.reactive.dstType = DropType.Tabs
@@ -446,7 +446,7 @@ export function onDragEnter(e: DragEvent): void {
   }
 
   if (type === 'bookmark' && id) {
-    if (Sidebar.reactive.hiddenPanelsBar) Sidebar.reactive.hiddenPanelsBar = false
+    if (Sidebar.reactive.hiddenPanelsPopup) Sidebar.reactive.hiddenPanelsPopup = false
     const bookmark = Bookmarks.reactive.byId[id]
     if (!bookmark) return
     const panelId = Bookmarks.findBookmarkPanelOf(bookmark)
@@ -459,7 +459,7 @@ export function onDragEnter(e: DragEvent): void {
 export function onDragLeave(e: DragEvent): void {
   if (e?.relatedTarget) return
 
-  if (Sidebar.reactive.hiddenPanelsBar) Sidebar.reactive.hiddenPanelsBar = false
+  if (Sidebar.reactive.hiddenPanelsPopup) Sidebar.reactive.hiddenPanelsPopup = false
   Selection.resetSelection()
   resetDragPointer()
   reset()
@@ -532,7 +532,7 @@ const path: ItemBounds[] = []
 export function onDragMove(e: DragEvent): void {
   if (!DnD.reactive.isStarted) return
   if (!pointerEl) return
-  if (Sidebar.reactive.hiddenPanelsBar) return
+  if (Sidebar.reactive.hiddenPanelsPopup) return
 
   const panel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
   if (!panel || !panel.scrollEl) return
@@ -836,7 +836,7 @@ export async function onDrop(e: DragEvent): Promise<void> {
   const toNav = dstType === DropType.NavItem
   const fromNewTabBar = srcType === DragType.NewTab
 
-  if (Sidebar.reactive.hiddenPanelsBar) Sidebar.closeHiddenPanelsBar()
+  if (Sidebar.reactive.hiddenPanelsPopup) Sidebar.closeHiddenPanelsPopup()
   if ((toTabs && !DnD.reactive.dstPin) || toBookmarks) {
     DnD.reactive.dstPanelId = Sidebar.reactive.activePanelId
     applyLvlOffset(DnD.reactive.pointerLvl)

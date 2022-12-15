@@ -8,12 +8,12 @@
   --nav-btn-fg: var(--toolbar-fg)
   --nav-btn-accent: var(--selected-border)
   --nav-btn-border-radius: var(--general-border-radius)
-  --nav-hidden-bar-margin: 3px
+  --nav-hidden-panels-popup-margin: 3px
 #root[data-density="compact"]
   --nav-delimiter-size: 12px
   --nav-btn-width: 28px
   --nav-btn-height: 28px
-  --nav-hidden-bar-margin: 2px
+  --nav-hidden-panels-popup-margin: 2px
 #root[data-color-scheme="dark"]
   --nav-btn-active-shadow: inset 0 0 0 1px #ffffff08, 0 0 2px 0 #00000032
 #root[data-color-scheme="light"]
@@ -138,7 +138,7 @@
   &[data-unloaded="true"] > *
     opacity: .3
 
-.NavigationBar .hidden-bar .nav-item
+.NavigationBar .hidden-panels-popup .nav-item
   width: auto
 
 .NavigationBar.-top .nav-item[data-class="space"][data-type="dynamic"]
@@ -174,12 +174,12 @@
 
 // Drag and drop pointer for vertical list
 .NavigationBar.-vert .nav-item[data-drop-mode="before"]:before
-.NavigationBar .hidden-bar .nav-item[data-drop-mode="before"]:before
+.NavigationBar .hidden-panels-popup .nav-item[data-drop-mode="before"]:before
   box-shadow: 0 -1px 0 0 var(--nav-btn-accent)
 .NavigationBar.-vert .nav-item[data-drop-mode="before"]:first-of-type:before
   box-shadow: inset 0 1px 0 0 var(--nav-btn-accent)
 .NavigationBar.-vert .nav-item[data-drop-mode="after"]:before
-.NavigationBar .hidden-bar .nav-item[data-drop-mode="after"]:before
+.NavigationBar .hidden-panels-popup .nav-item[data-drop-mode="after"]:before
   box-shadow: 0 1px 0 0 var(--nav-btn-accent)
 .NavigationBar.-vert .nav-item[data-drop-mode="after"]:last-of-type:before
   box-shadow: inset 0 -1px 0 0 var(--nav-btn-accent)
@@ -264,7 +264,7 @@
 // -
 .NavigationBar .nav-item .name-box
   display: none
-.NavigationBar .hidden-bar .nav-item .name-box
+.NavigationBar .hidden-panels-popup .nav-item .name-box
   position: relative
   display: block
   margin: 0 calc(var(--nav-btn-width) / 2 - 4px) 0 -1px
@@ -404,7 +404,7 @@
 // ---
 // -- Hidden panels bar
 // -
-.NavigationBar .hidden-bar-layer
+.NavigationBar .hidden-panels-popup-layer
   position: absolute
   &:before
     content: ''
@@ -415,21 +415,21 @@
     height: 200vh
     background-color: #0003
 
-.NavigationBar.-top .hidden-bar-layer
+.NavigationBar.-top .hidden-panels-popup-layer
   width: 100%
   height: 0
   top: 100%
   left: 0
-.NavigationBar.-vert .hidden-bar-layer
+.NavigationBar.-vert .hidden-panels-popup-layer
   width: calc(100vw - 100%)
   height: 100%
   bottom: 0
-.NavigationBar.-vert[data-layout="left"] .hidden-bar-layer
+.NavigationBar.-vert[data-layout="left"] .hidden-panels-popup-layer
   left: 100%
-.NavigationBar.-vert[data-layout="right"] .hidden-bar-layer
+.NavigationBar.-vert[data-layout="right"] .hidden-panels-popup-layer
   right: 100%
 
-.NavigationBar .hidden-bar
+.NavigationBar .hidden-panels-popup
   position: absolute
   display: flex
   flex-direction: column
@@ -441,37 +441,37 @@
   box-shadow: 0 0 12px 0 #00000056,
               0 0 0 1px var(--border)
 
-.NavigationBar.-top .hidden-bar
-  max-width: calc(100vw - var(--nav-btn-width) - var(--nav-hidden-bar-margin) * 2 - 6px)
+.NavigationBar.-top .hidden-panels-popup
+  max-width: calc(100vw - var(--nav-btn-width) - var(--nav-hidden-panels-popup-margin) * 2 - 6px)
   &:before
     box-shadow: inset 0 3px 3px -3px #00000024
-.NavigationBar.-vert .hidden-bar
-  max-width: calc(100% - var(--nav-hidden-bar-margin) * 2)
+.NavigationBar.-vert .hidden-panels-popup
+  max-width: calc(100% - var(--nav-hidden-panels-popup-margin) * 2)
   flex-direction: column
 
-.NavigationBar.-vert[data-layout="right"] .hidden-bar
+.NavigationBar.-vert[data-layout="right"] .hidden-panels-popup
   box-shadow: 0 0 12px 0 #00000056,
               0 0 0 1px var(--border)
 
 // Vertical offset
-.NavigationBar.-vert[data-layout="left"] .hidden-bar
-  left: var(--nav-hidden-bar-margin)
-.NavigationBar.-vert[data-layout="right"] .hidden-bar
-  right: var(--nav-hidden-bar-margin)
-.NavigationBar.-vert .hidden-bar[data-offset-side="start"]
+.NavigationBar.-vert[data-layout="left"] .hidden-panels-popup
+  left: var(--nav-hidden-panels-popup-margin)
+.NavigationBar.-vert[data-layout="right"] .hidden-panels-popup
+  right: var(--nav-hidden-panels-popup-margin)
+.NavigationBar.-vert .hidden-panels-popup[data-offset-side="start"]
   top: var(--offset)
-.NavigationBar.-vert .hidden-bar[data-offset-side="end"]
+.NavigationBar.-vert .hidden-panels-popup[data-offset-side="end"]
   bottom: var(--offset)
 
 // Horizontal offset
-.NavigationBar.-top .hidden-bar
+.NavigationBar.-top .hidden-panels-popup
   top: 3px
-.NavigationBar.-top .hidden-bar[data-offset-side="start"]
+.NavigationBar.-top .hidden-panels-popup[data-offset-side="start"]
   left: 3px
-.NavigationBar.-top .hidden-bar[data-offset-side="end"]
+.NavigationBar.-top .hidden-panels-popup[data-offset-side="end"]
   right: 3px
 
-.NavigationBar .hidden-bar-content
+.NavigationBar .hidden-panels-popup-content
   position: relative
   display: flex
   flex-direction: column
@@ -484,21 +484,21 @@
   .hidden-panels-enter-active
   .hidden-panels-leave-active
     transition: z-index var(--d-fast), opacity var(--d-fast)
-    .hidden-bar
+    .hidden-panels-popup
       transition: opacity var(--d-fast), transform var(--d-fast)
   .hidden-panels-enter-from
   .hidden-panels-leave-to
     opacity: 0
     z-index: 0
-    .hidden-bar
+    .hidden-panels-popup
       transform: translateY(-4px)
 
-.NavigationBar.-vert[data-layout="left"] .hidden-panels-enter-from .hidden-bar
-.NavigationBar.-vert[data-layout="left"] .hidden-panels-leave-to .hidden-bar
+.NavigationBar.-vert[data-layout="left"] .hidden-panels-enter-from .hidden-panels-popup
+.NavigationBar.-vert[data-layout="left"] .hidden-panels-leave-to .hidden-panels-popup
   transform: translateX(-4px)
 
-.NavigationBar.-vert[data-layout="right"] .hidden-panels-enter-from .hidden-bar
-.NavigationBar.-vert[data-layout="right"] .hidden-panels-leave-to .hidden-bar
+.NavigationBar.-vert[data-layout="right"] .hidden-panels-enter-from .hidden-panels-popup
+.NavigationBar.-vert[data-layout="right"] .hidden-panels-leave-to .hidden-panels-popup
   transform: translateX(4px)
 
 // ---
