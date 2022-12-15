@@ -294,6 +294,7 @@ import { SetupPage } from 'src/services/setup-page'
 import CountField from '../../components/count-field.vue'
 import ToggleField from '../../components/toggle-field.vue'
 import SelectField from '../../components/select-field.vue'
+import NumField from '../../components/num-field.vue'
 
 const el = ref<HTMLElement | null>(null)
 
