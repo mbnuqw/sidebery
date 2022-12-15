@@ -2345,7 +2345,7 @@ export const setupPageTranslations: Translations = {
     zh_CN: '跳过已折叠的标签',
   },
   'settings.scroll_through_tabs_skip_discarded': {
-    en: 'Skip discarded tabs',
+    en: 'Skip unloaded tabs',
     ru: 'Пропускать выгруженые',
     de: 'Überspringe entladene Tabs',
     zh_CN: '跳过已丢弃的标签',
