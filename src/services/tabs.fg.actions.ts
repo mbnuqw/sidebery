@@ -1003,15 +1003,16 @@ export function switchTab(globaly: boolean, cycle: boolean, step: number, pinned
     (!pinned && !globaly && activeTab.panelId !== activePanel.id) ||
     (!pinned && !pinnedAndPanel && activeTab.pinned)
   ) {
-    if (step > 0) targetTabId = panelTabs[0]?.id ?? NOID
-    if (step < 0) {
-      for (let i = panelTabs.length, t; i--; ) {
-        t = panelTabs[i]
-        if (visibleOnly && t.invisible) continue
-        if (skipDiscarded && t.discarded) continue
-        targetTabId = t.id
-        break
-      }
+    let i = step > 0 ? 0 : panelTabs.length - 1
+    let rt: ReactiveTab | undefined = panelTabs[i]
+    while (rt) {
+      rt = panelTabs[i]
+      i += step
+      if (!rt) break
+      if (visibleOnly && rt.invisible) continue
+      if (skipDiscarded && rt.discarded) continue
+      targetTabId = rt.id
+      break
     }
     if (targetTabId !== NOID) {
       browser.tabs.update(targetTabId, { active: true }).catch(err => {
