@@ -408,7 +408,9 @@ function updateHighlightedTabs(delay = 250): void {
 
     for (const tabId of Selection.selected) {
       const tab = Tabs.byId[tabId]
-      if (tab) conf.tabs.push(tab.index)
+      if (!tab) continue
+      if (tab.hidden) continue
+      conf.tabs.push(tab.index)
     }
 
     browser.tabs.highlight(conf).catch(() => {
