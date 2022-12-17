@@ -771,7 +771,7 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
         if (!Tabs.removingTabs.includes(t.id)) toRemove.push(t.id)
       }
       // Or just make them visible
-      else if (t.invisible) {
+      else if (t.invisible && !Tabs.removingTabs.includes(t.id)) {
         t.invisible = false
         if (rt) rt.invisible = false
         if (t.hidden) toShow.push(t.id)
