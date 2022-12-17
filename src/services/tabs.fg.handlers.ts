@@ -712,6 +712,7 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
     return Tabs.reinitTabs()
   }
 
+  const toShow: ID[] = []
   const removedExternally = !Tabs.removingTabs || !Tabs.removingTabs.length
   const nextTab = Tabs.list[tab.index + 1]
   const hasChildren =
@@ -768,9 +769,12 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
         (Settings.state.rmChildTabs === 'all' && !detached)
       ) {
         if (!Tabs.removingTabs.includes(t.id)) toRemove.push(t.id)
-      } else if (t.invisible) {
+      }
+      // Or just make them visible
+      else if (t.invisible) {
         t.invisible = false
         if (rt) rt.invisible = false
+        if (t.hidden) toShow.push(t.id)
       }
 
       // Decrease indent level of tabs in branch
@@ -814,6 +818,13 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
     // Remove child tabs
     if (Settings.state.rmChildTabs !== 'none' && toRemove.length) {
       Tabs.removeTabs(toRemove)
+    }
+
+    // Show hidden native tabs
+    if (toShow.length) {
+      browser.tabs.show?.(toShow).catch(() => {
+        Logs.warn('Tabs.onTabRemoved: Cannot show native tabs')
+      })
     }
   }
 
