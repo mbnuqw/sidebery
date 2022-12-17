@@ -29,6 +29,7 @@
     "contextualIdentities",
     "cookies",
     "storage",
+    "unlimitedStorage",
     "sessions",
     "menus",
     "menus.overrideContext",
