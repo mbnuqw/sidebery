@@ -15,7 +15,7 @@
         NewTabBar(
           v-if="Settings.state.showNewTabBtns && Settings.state.newTabBarPosition === 'after_tabs'"
           :panel="panel")
-        .tab-space-filler(v-for="i in panel.scrollRetainer" :key="i")
+        .tab-space-filler(v-for="i in panel.scrollRetainer" :key="i + 'tsf'")
         .bottom-space(:key="9999999")
 
   NewTabBar(
