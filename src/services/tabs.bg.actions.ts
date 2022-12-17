@@ -442,13 +442,8 @@ export async function initInternalPageScripts(tabs: Tab[]) {
     const isGroup = Utils.isGroupUrl(tab.url)
     const isUrl = Utils.isUrlUrl(tab.url)
 
-    // --- v5.0.0b27 fix
-    const isOldGroup = tab.url.startsWith('m') && tab.url.includes('page.group/group.html', 52)
-    const isOldUrl = tab.url.startsWith('m') && tab.url.includes('page.url/url.html', 52)
-    // --- v5.0.0b27 fix
-
     // Wrong addon ID - update url
-    if ((!isInternal && isGroup) || isOldGroup) {
+    if (!isInternal && isGroup) {
       const [_, groupUrlInfo] = tab.url.split('/group.html')
       if (!groupUrlInfo) continue
       const groupUrl = GROUP_URL + groupUrlInfo
@@ -457,7 +452,7 @@ export async function initInternalPageScripts(tabs: Tab[]) {
       })
       continue
     }
-    if ((!isInternal && isUrl) || isOldUrl) {
+    if (!isInternal && isUrl) {
       const [_, urlUrlInfo] = tab.url.split('/url.html')
       if (!urlUrlInfo) continue
       const urlUrl = URL_URL + urlUrlInfo
