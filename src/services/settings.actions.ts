@@ -136,9 +136,17 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
   const colorizeTabsBranchesSrcChanged =
     prev.colorizeTabsBranchesSrc !== next.colorizeTabsBranchesSrc
   const tabsUpdateMarkChanged = prev.tabsUpdateMark !== next.tabsUpdateMark
+  const navTabsPanelMidClickAction =
+    prev.navTabsPanelMidClickAction !== next.navTabsPanelMidClickAction
+  const navBookmarksPanelMidClickAction =
+    prev.navBookmarksPanelMidClickAction !== next.navBookmarksPanelMidClickAction
 
   // Update settings of this instance
   Utils.updateObject(Settings.state, settings, Settings.state)
+
+  if (navTabsPanelMidClickAction || navBookmarksPanelMidClickAction) {
+    Sidebar.updatePanelsTooltips()
+  }
 
   if (Info.isSidebar && updateSuccessions && Sidebar.hasTabs) {
     const activeTab = Tabs.list.find(t => t.active)

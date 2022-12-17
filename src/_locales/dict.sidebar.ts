@@ -294,6 +294,30 @@ export const sidebarTranslations: Translations = {
     ru: 'Свернуть все',
     de: 'Alle einklappen',
   },
+  'nav.tabs_panel_tooltip_mid_rm_all': {
+    en: 'Middle click: Close tabs',
+    ru: 'Средняя кнопка мыши: Закрыть влкадки',
+  },
+  'nav.tabs_panel_tooltip_mid_rm_act_tab': {
+    en: 'Middle click: Close active tab',
+    ru: 'Средняя кнопка мыши: Закрыть активную вкладку',
+  },
+  'nav.tabs_panel_tooltip_mid_discard': {
+    en: 'Middle click: Unload tabs',
+    ru: 'Средняя кнопка мыши: Выгрузить вкладки',
+  },
+  'nav.tabs_panel_tooltip_mid_bookmark': {
+    en: 'Middle click: Save to bookmarks',
+    ru: 'Средняя кнопка мыши: Сохранить в закладки',
+  },
+  'nav.tabs_panel_tooltip_mid_convert': {
+    en: 'Middle click: Convert to bookmarks panel',
+    ru: 'Средняя кнопка мыши: Конвертировать в панель закладок',
+  },
+  'nav.bookmarks_panel_tooltip_mid_convert': {
+    en: 'Middle click: Convert to tabs panel',
+    ru: 'Средняя кнопка мыши: Конвертировать в панель вкладок',
+  },
 
   // ---
   // -- Notifications

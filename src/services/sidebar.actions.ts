@@ -488,6 +488,34 @@ function calcBookmarksHistoryBounds(panel: BookmarksPanel): ItemBounds[] {
   return panel.component?.getBounds() ?? []
 }
 
+function getPanelTooltip(panel: Panel): string {
+  if (Utils.isTabsPanel(panel)) {
+    if (Settings.state.navTabsPanelMidClickAction === 'rm_all') {
+      return panel.name + '\n' + translate('nav.tabs_panel_tooltip_mid_rm_all')
+    } else if (Settings.state.navTabsPanelMidClickAction === 'rm_act_tab') {
+      return panel.name + '\n' + translate('nav.tabs_panel_tooltip_mid_rm_act_tab')
+    } else if (Settings.state.navTabsPanelMidClickAction === 'discard') {
+      return panel.name + '\n' + translate('nav.tabs_panel_tooltip_mid_discard')
+    } else if (Settings.state.navTabsPanelMidClickAction === 'bookmark') {
+      return panel.name + '\n' + translate('nav.tabs_panel_tooltip_mid_bookmark')
+    } else if (Settings.state.navTabsPanelMidClickAction === 'convert') {
+      return panel.name + '\n' + translate('nav.tabs_panel_tooltip_mid_convert')
+    }
+  }
+  if (Utils.isBookmarksPanel(panel)) {
+    if (Settings.state.navBookmarksPanelMidClickAction === 'convert') {
+      return panel.name + '\n' + translate('nav.bookmarks_panel_tooltip_mid_convert')
+    }
+  }
+  return panel.name
+}
+
+export function updatePanelsTooltips(): void {
+  for (const panel of Sidebar.reactive.panels) {
+    panel.tooltip = getPanelTooltip(panel)
+  }
+}
+
 /**
  * Normalize panels and put them to state
  */
@@ -505,7 +533,7 @@ export async function loadPanels(): Promise<void> {
   const panelConfigs = sidebar?.panels ? Object.values(sidebar?.panels) : []
   if (sidebar?.nav) Sidebar.reactive.nav = sidebar.nav
 
-  // Normalize tabs panels
+  // Normalize panels
   for (const panelConfig of panelConfigs) {
     const panel = createPanelFromConfig(panelConfig)
     if (!panel) continue
@@ -518,6 +546,8 @@ export async function loadPanels(): Promise<void> {
       if (panel.newTabCtx !== DEFAULT_CONTAINER_ID && !newTabContainer) panel.newTabCtx = 'none'
       if (panel.moveTabCtx !== DEFAULT_CONTAINER_ID && !moveTabContainer) panel.moveTabCtx = 'none'
     }
+
+    panel.tooltip = getPanelTooltip(panel)
 
     Sidebar.reactive.panelsById[panel.id] = panel
   }
@@ -783,6 +813,9 @@ async function updateSidebar(newConfig?: SidebarConfig): Promise<void> {
     // Save first panel and first tabs panel
     if (!tabsPanelId && panel.type === PanelType.tabs) tabsPanelId = panel.id
     if (!existedPanelId) existedPanelId = panel.id
+
+    // Update tooltips
+    panel.tooltip = getPanelTooltip(panel)
   }
 
   // Loop over the old panels

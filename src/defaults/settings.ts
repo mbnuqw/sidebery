@@ -26,7 +26,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   hideEmptyPanels: true,
   navActTabsPanelLeftClickAction: 'none',
   navActBookmarksPanelLeftClickAction: 'none',
-  navTabsPanelMidClickAction: 'none',
+  navTabsPanelMidClickAction: 'discard',
   navBookmarksPanelMidClickAction: 'none',
   navSwitchPanelsWheel: true,
 

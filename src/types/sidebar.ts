@@ -206,6 +206,7 @@ export interface PanelCommonState extends PanelCommonConfig, NavItemState {
   scrollComponent: ScrollBoxComponent | null
   bounds: ItemBounds[]
   ready: boolean
+  tooltip?: string
 }
 
 export interface TabsPanel extends PanelCommonState, TabsPanelConfig {
