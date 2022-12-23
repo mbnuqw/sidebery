@@ -1,7 +1,6 @@
 @import '../../../utils'
 
 #root
-  --search-border: var(--ff-border, var(--border, #00000016))
   --search-height: 30px
   --search-border-radius: var(--general-border-radius)
   --search-font-size: rem(17)
@@ -20,19 +19,18 @@
   overflow: hidden
   z-index: 200
   height: calc(var(--search-height) + var(--general-margin))
-  padding: var(--general-margin) 0 0
+  padding: 0 0 var(--general-margin)
   background-color: var(--frame-bg)
   transition: height var(--d-fast), opacity var(--d-fast), z-index var(--d-fast)
   &:before
     content: ''
     position: absolute
-    top: var(--general-margin)
+    top: 0
     left: var(--general-margin)
     width: calc(100% - var(--general-margin) * 2)
     height: calc(100% - var(--general-margin))
     border-radius: var(--search-border-radius)
     background-color: var(--toolbar-bg)
-    box-shadow: inset 0 0 0 var(--ff-border-width, 1px) var(--search-border)
   &[data-showed="false"]
     opacity: 0
     height: 0
@@ -40,7 +38,7 @@
     z-index: 0
     margin-bottom: 0
   &[data-focused="true"]:before
-    box-shadow: inset 0 0 0 1px var(--selected-border)
+    box-shadow: inset 0 0 0 1px var(--accent)
 
 .SearchBar .search-icon
   position: relative

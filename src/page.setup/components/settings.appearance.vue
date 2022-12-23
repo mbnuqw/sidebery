@@ -29,7 +29,6 @@ section(ref="el")
     label="settings.density"
     optLabel="settings.density_"
     v-model:value="Settings.state.density"
-    :inactive="Settings.state.theme !== 'proton'"
     :opts="Settings.getOpts('density')"
     @update:value="Settings.saveDebounced(150)")
   SelectField(

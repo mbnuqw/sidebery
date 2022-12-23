@@ -1,55 +1,31 @@
-import { CustomCssTarget, CustomCssFieldName, Stored } from 'src/types'
-import { Styles } from 'src/services/styles'
+import { CustomCssTarget, CustomCssFieldName, Stored, RGBA, RGB } from 'src/types'
+import { ColorSchemeVariant, ParsedTheme, SrcVars, Styles } from 'src/services/styles'
 import { Settings } from 'src/services/settings'
 import { Store } from 'src/services/storage'
 import { Info } from 'src/services/info'
-import { getInstanceName } from 'src/services/info.actions'
 import * as Utils from 'src/utils'
-import { FF_THEME_COLORS } from 'src/defaults'
 import { Sidebar } from './sidebar'
 
-type RGBAColor = [number, number, number, number]
-interface ParsedThemeColors {
-  frame?: RGBAColor
-  frameText?: RGBAColor
-  frameVariant?: ColorSchemeVariant
-  toolbar?: RGBAColor
-  toolbarText?: RGBAColor
-  toolbarVariant?: ColorSchemeVariant
-  toolbarTopSeparator?: RGBAColor
-}
-
-export const enum ColorSchemeVariant {
-  Dark = 1,
-  Light = 2,
-}
+const SRC_VARS: (keyof SrcVars)[] = [
+  'frame_bg',
+  'frame_fg',
+  'toolbar_bg',
+  'toolbar_fg',
+  'toolbar_border',
+  'act_el_bg',
+  'act_el_fg',
+  'act_el_border',
+  'popup_bg',
+  'popup_fg',
+  'popup_border',
+  'accent',
+  'top_padding',
+  'darker_border_width',
+]
 
 const PREF_DARK_MEDIA = '(prefers-color-scheme: dark)'
 
 let darkMedia: MediaQueryList | undefined
-
-/**
- * Load predefined theme and apply it
- */
-export function initTheme(): void {
-  const themeLinkEl = document.getElementById('theme_link') as HTMLLinkElement
-
-  // Create next theme link
-  const nextThemeLinkEl = document.createElement('link')
-  nextThemeLinkEl.type = 'text/css'
-  nextThemeLinkEl.rel = 'stylesheet'
-  document.head.appendChild(nextThemeLinkEl)
-
-  // Wait until new theme loaded
-  nextThemeLinkEl.onload = () => {
-    // Remove prev theme link
-    if (themeLinkEl) themeLinkEl.remove()
-    nextThemeLinkEl.id = 'theme_link'
-
-    Sidebar.recalcElementSizesDebounced()
-  }
-  nextThemeLinkEl.href = `/themes/${Settings.state.theme}/${getInstanceName(Info.instanceType)}.css`
-}
 
 export async function initColorScheme(): Promise<void> {
   await updateColorScheme()
@@ -58,40 +34,64 @@ export async function initColorScheme(): Promise<void> {
   browser.theme.onUpdated.addListener(upd => updateColorScheme(upd?.theme))
 }
 
+export function getColorSchemeName(colorScheme?: ColorSchemeVariant): 'dark' | 'light' {
+  if (colorScheme === ColorSchemeVariant.Dark) return 'dark'
+  else return 'light'
+}
+
 export async function updateColorScheme(theme?: browser.theme.Theme): Promise<void> {
   if (Settings.state.colorScheme === 'ff') {
     if (!theme) theme = await browser.theme.getCurrent()
 
-    const colorSchemeVariant = parseTheme(theme)
-    if (colorSchemeVariant === ColorSchemeVariant.Dark) Styles.reactive.colorScheme = 'dark'
-    if (colorSchemeVariant === ColorSchemeVariant.Light) Styles.reactive.colorScheme = 'light'
+    const result = parseFirefoxTheme(theme)
+    Styles.reactive.frameColorScheme = getColorSchemeName(result.frameVariant)
+    Styles.reactive.toolbarColorScheme = getColorSchemeName(result.toolbarVariant)
+    Styles.reactive.actElColorScheme = getColorSchemeName(result.actElVariant)
+    Styles.reactive.popupColorScheme = getColorSchemeName(result.popupVariant)
 
     if (!Info.isBg) {
-      if (theme.colors) applyFirefoxThemeColors(theme)
-      else resetFirefoxThemeColors()
+      if (!result.error) applyThemeSrcVars(result)
+      else resetThemeSrcVars()
     }
 
     Styles.theme = theme
+    Styles.parsedTheme = result
   } else {
-    if (!Info.isBg) resetFirefoxThemeColors()
+    if (!Info.isBg) resetThemeSrcVars()
 
     Styles.theme = {}
+    Styles.parsedTheme = undefined
   }
 
   if (Settings.state.colorScheme === 'sys') {
     useAutoColorScheme()
   } else if (Settings.state.colorScheme === 'dark') {
-    Styles.reactive.colorScheme = 'dark'
+    Styles.reactive.frameColorScheme = 'dark'
+    Styles.reactive.toolbarColorScheme = 'dark'
+    Styles.reactive.actElColorScheme = 'dark'
+    Styles.reactive.popupColorScheme = 'dark'
   } else if (Settings.state.colorScheme === 'light') {
-    Styles.reactive.colorScheme = 'light'
+    Styles.reactive.frameColorScheme = 'light'
+    Styles.reactive.toolbarColorScheme = 'light'
+    Styles.reactive.actElColorScheme = 'light'
+    Styles.reactive.popupColorScheme = 'light'
   }
 }
 
 function useAutoColorScheme(): void {
   if (!darkMedia) darkMedia = window.matchMedia(PREF_DARK_MEDIA)
 
-  if (darkMedia.matches) Styles.reactive.colorScheme = 'dark'
-  else Styles.reactive.colorScheme = 'light'
+  if (darkMedia.matches) {
+    Styles.reactive.frameColorScheme = 'dark'
+    Styles.reactive.toolbarColorScheme = 'dark'
+    Styles.reactive.actElColorScheme = 'dark'
+    Styles.reactive.popupColorScheme = 'dark'
+  } else {
+    Styles.reactive.frameColorScheme = 'light'
+    Styles.reactive.toolbarColorScheme = 'light'
+    Styles.reactive.actElColorScheme = 'light'
+    Styles.reactive.popupColorScheme = 'light'
+  }
 }
 
 function setupAutoColorSchemeListener(cb: () => void): void {
@@ -99,7 +99,7 @@ function setupAutoColorSchemeListener(cb: () => void): void {
   if (!darkMedia.onchange) darkMedia.onchange = () => cb()
 }
 
-function getColorSchemeVariant(bg?: RGBAColor, fg?: RGBAColor): ColorSchemeVariant | undefined {
+function getColorSchemeVariant(bg?: RGBA, fg?: RGBA): ColorSchemeVariant | undefined {
   let variant: ColorSchemeVariant | undefined
   if (bg && fg && bg[3] > 0.1) {
     const bgn = (bg[0] + bg[1] + bg[2]) / 3
@@ -110,222 +110,347 @@ function getColorSchemeVariant(bg?: RGBAColor, fg?: RGBAColor): ColorSchemeVaria
   return variant
 }
 
-function shiftColor(
-  rgba: [number, number, number, number],
-  shift: number
-): [number, number, number, number] {
-  return [rgba[0] + shift, rgba[1] + shift, rgba[2] + shift, rgba[3]]
+function shiftColor(rgba: RGBA, shift: number): RGBA {
+  let r = rgba[0]
+  let g = rgba[1]
+  let b = rgba[2]
+  const a = rgba[3]
+  if (shift < 2 && shift > 0) {
+    if ((r *= shift) > 255) r = 255
+    if ((g *= shift) > 255) g = 255
+    if ((b *= shift) > 255) b = 255
+  } else {
+    if ((r += shift) > 255) r = 255
+    if ((g += shift) > 255) g = 255
+    if ((b += shift) > 255) b = 255
+    if (r < 0) r = 0
+    if (g < 0) g = 0
+    if (b < 0) b = 0
+  }
+  return [r, g, b, a]
 }
 
-function toColorString(rgba?: [number, number, number, number]): string {
+function mergeColors(a?: RGBA, b?: RGBA, alpha?: number): RGBA | undefined {
+  if (!a || !b) return
+  if (alpha === undefined) alpha = b[3]
+  if (alpha === 1) return b
+  const cr = Math.round(a[0] * (1 - alpha) + b[0] * alpha)
+  const cg = Math.round(a[1] * (1 - alpha) + b[1] * alpha)
+  const cb = Math.round(a[2] * (1 - alpha) + b[2] * alpha)
+  return [cr, cg, cb, 1]
+}
+
+function isTransparent(color?: RGBA): boolean {
+  if (!color) return false
+  return color[3] !== 1
+}
+
+function toColorString(rgba?: RGBA | RGB | string | null, noAlpha?: boolean): string {
   if (!rgba) return '#000'
-  if (rgba[3] === undefined) return `rgba(${rgba[0]}, ${rgba[1]}, ${rgba[2]})`
+  if (!Array.isArray(rgba)) return rgba
+  if (rgba[3] === undefined || rgba[3] === 1 || noAlpha) {
+    return `rgb(${rgba[0]}, ${rgba[1]}, ${rgba[2]})`
+  }
   return `rgba(${rgba[0]}, ${rgba[1]}, ${rgba[2]}, ${rgba[3]})`
 }
 
-function parseTheme(theme: browser.theme.Theme): ColorSchemeVariant {
-  const parsed: ParsedThemeColors = {}
-  let variant
+function parseFirefoxTheme(theme: browser.theme.Theme): ParsedTheme {
+  const parsed: ParsedTheme = { error: false, vars: {} }
 
   // Try to use -moz-dialog colors
-  if (!theme.colors) {
+  moz_dialog_fallback: if (!theme.colors) {
     const probeEl = document.getElementById('moz_dialog_color_scheme_probe')
-    if (probeEl) {
-      const styles = window.getComputedStyle(probeEl)
-      const bg = Utils.toRGBA(styles.backgroundColor)
-      const fg = Utils.toRGBA(styles.color)
-      if (bg && fg) {
-        variant = getColorSchemeVariant(bg, fg)
+    if (!probeEl) break moz_dialog_fallback
 
-        theme.colors = {
-          frame: toColorString(bg),
-          toolbar: toColorString(shiftColor(bg, 15)),
-          popup: toColorString(shiftColor(bg, 5)),
-          tab_background_text: styles.color,
-        }
-      }
+    const styles = window.getComputedStyle(probeEl)
+    const bg = Utils.toRGBA(styles.backgroundColor)
+    const fg = Utils.toRGBA(styles.color)
+    if (!bg || !fg) break moz_dialog_fallback
+
+    theme.colors = {
+      frame: toColorString(bg),
+      toolbar: toColorString(shiftColor(bg, 15)),
+      popup: toColorString(shiftColor(bg, 5)),
+      tab_background_text: styles.color,
     }
   }
+  parsed.error = !theme.colors
 
-  parsed.frame = Utils.toRGBA(theme.colors?.frame ?? theme.colors?.frame_inactive)
-  parsed.frameText = Utils.toRGBA(theme.colors?.tab_background_text)
-  parsed.frameVariant = getColorSchemeVariant(parsed.frame, parsed.frameText)
+  // ---
+  // -- Getting vars
+  // -
+  // Frame vars
+  const frame_bg = theme.colors?.frame ?? theme.colors?.frame_inactive
+  const frame_fg =
+    theme.colors?.tab_background_text ?? theme.colors?.toolbar_text ?? theme.colors?.bookmark_text
 
-  const toolbarBG = theme.colors?.toolbar ?? theme.colors?.frame
-  const toolbarFG =
+  // Toolbar vars
+  const toolbar_bg = theme.colors?.toolbar ?? frame_bg
+  const toolbar_fg =
     theme.colors?.icons ??
-    theme.colors?.bookmark_text ??
     theme.colors?.toolbar_text ??
+    theme.colors?.bookmark_text ??
     theme.colors?.icons_attention ??
     theme.colors?.tab_background_text
-  parsed.toolbar = Utils.toRGBA(toolbarBG)
-  parsed.toolbarText = Utils.toRGBA(toolbarFG)
 
-  const sidebar = Utils.toRGBA(theme.colors?.sidebar)
-  const sidebarText = Utils.toRGBA(theme.colors?.sidebar_text)
-  const sidebarBorder = Utils.toRGBA(theme.colors?.sidebar_border)
+  // Active element vars
+  const act_el_bg = theme.colors?.tab_selected ?? toolbar_bg
+  const act_el_fg =
+    theme.colors?.tab_text ??
+    theme.colors?.toolbar_text ??
+    theme.colors?.bookmark_text ??
+    theme.colors?.tab_background_text
 
-  const popup = Utils.toRGBA(theme.colors?.popup)
-  const popupText = Utils.toRGBA(theme.colors?.popup_text)
+  // Popup vars
+  const popup_bg = theme.colors?.popup ?? frame_bg
+  const popup_fg = theme.colors?.popup_text ?? frame_fg
+  const popup_border = theme.colors?.popup_border
 
-  // Handle frame_image
-  if (theme.colors && theme.images?.theme_frame && parsed.toolbar?.[3] === 1) {
-    const ffg = parsed.frameText
-    const tfg = parsed.toolbarText
+  // Accent
+  const accentFg = theme.colors?.tab_line ?? theme.colors?.bookmark_text
+
+  // ---
+  // -- Parsing/generating/normalizing vars
+  // -
+  // Proton theme colors
+  per_theme_stuff: if (Settings.state.theme === 'proton') {
+    // Frame
+    parsed.vars.frame_bg = toColorString(frame_bg)
+    parsed.frameBg = Utils.toRGBA(parsed.vars.frame_bg)
+    if (isTransparent(parsed.frameBg)) {
+      parsed.frameBg = mergeColors([0, 0, 0, 0], parsed.frameBg)
+      parsed.vars.frame_bg = toColorString(parsed.frameBg)
+    }
+    parsed.vars.frame_fg = toColorString(frame_fg)
+    parsed.frameFg = Utils.toRGBA(parsed.vars.frame_fg)
+    parsed.frameVariant = getColorSchemeVariant(parsed.frameBg, parsed.frameFg)
+
+    // Toolbar
+    parsed.vars.toolbar_bg = toColorString(toolbar_bg)
+    parsed.vars.toolbar_fg = toColorString(toolbar_fg)
+    parsed.toolbarBg = Utils.toRGBA(parsed.vars.toolbar_bg)
+    if (isTransparent(parsed.toolbarBg)) {
+      parsed.toolbarBg = mergeColors(parsed.frameBg, parsed.toolbarBg)
+      parsed.vars.toolbar_bg = toColorString(parsed.toolbarBg)
+    }
+    parsed.toolbarFg = Utils.toRGBA(parsed.vars.toolbar_fg)
+    parsed.toolbarVariant = getColorSchemeVariant(parsed.toolbarBg, parsed.toolbarFg)
+
+    // Active element
+    parsed.vars.act_el_bg = toColorString(act_el_bg)
+    parsed.vars.act_el_fg = toColorString(act_el_fg)
+    parsed.actElBg = Utils.toRGBA(parsed.vars.act_el_bg)
+    parsed.actElFg = Utils.toRGBA(parsed.vars.act_el_fg)
+    parsed.actElVariant = getColorSchemeVariant(parsed.actElBg, parsed.actElFg)
+  }
+
+  // Plain theme colors
+  else if (Settings.state.theme === 'plain') {
+    // Get base colors (from sidebar / toolbar)
+    parsed.vars.toolbar_bg = toColorString(theme.colors?.sidebar ?? toolbar_bg)
+    parsed.vars.toolbar_fg = toColorString(theme.colors?.sidebar_text ?? toolbar_fg)
+    parsed.toolbarBg = Utils.toRGBA(parsed.vars.toolbar_bg)
+    if (isTransparent(parsed.toolbarBg)) {
+      const frameBg = Utils.toRGBA(frame_bg)
+      if (!isTransparent(frameBg)) {
+        parsed.toolbarBg = mergeColors(frameBg, parsed.toolbarBg)
+      } else {
+        parsed.toolbarBg = mergeColors([0, 0, 0, 0], parsed.toolbarBg)
+      }
+      parsed.vars.toolbar_bg = toColorString(parsed.toolbarBg)
+    }
+    parsed.toolbarFg = Utils.toRGBA(parsed.vars.toolbar_fg)
+    parsed.toolbarVariant = getColorSchemeVariant(parsed.toolbarBg, parsed.toolbarFg)
+    parsed.frameVariant = parsed.toolbarVariant
+    parsed.actElVariant = parsed.toolbarVariant
+    parsed.popupVariant = parsed.toolbarVariant
+    if (!parsed.toolbarBg) break per_theme_stuff
+
+    // Frame
+    parsed.frameBg = shiftColor(parsed.toolbarBg, 0.85)
+    if (parsed.frameBg) parsed.vars.frame_bg = toColorString(parsed.frameBg)
+    parsed.vars.frame_fg = parsed.vars.toolbar_fg
+
+    // Active element
+    if (parsed.toolbarVariant === ColorSchemeVariant.Dark) {
+      parsed.actElBg = mergeColors(parsed.toolbarBg, parsed.toolbarFg, 0.1)
+    } else {
+      parsed.actElBg = shiftColor(parsed.toolbarBg, 1.1)
+    }
+    if (parsed.actElBg) parsed.vars.act_el_bg = toColorString(parsed.actElBg)
+    parsed.vars.act_el_fg = parsed.vars.toolbar_fg
+  }
+
+  // Popup colors
+  parsed.vars.popup_bg = toColorString(popup_bg)
+  parsed.vars.popup_fg = toColorString(popup_fg)
+  parsed.vars.popup_border = toColorString(popup_border)
+  parsed.popupBg = Utils.toRGBA(popup_bg)
+  parsed.popupFg = Utils.toRGBA(popup_fg)
+  parsed.popupVariant = getColorSchemeVariant(parsed.popupBg, parsed.popupFg)
+  fixing_popup_border: if (!popup_border || popup_bg === popup_border) {
+    const border = Utils.toRGBA(popup_bg)
+    if (!border) break fixing_popup_border
+
+    if (parsed.popupVariant === ColorSchemeVariant.Dark) {
+      parsed.popupBorder = shiftColor(border, 9)
+    } else {
+      parsed.popupBorder = shiftColor(border, -38)
+    }
+    parsed.vars.popup_border = toColorString(parsed.popupBorder)
+  }
+
+  // Accent color
+  accent_parsing: if (accentFg) {
+    const accent = Utils.toRGBA(accentFg)
+    if (!accent) break accent_parsing
+    if (accent[3] === 0) break accent_parsing
+
+    const frame = parsed.frameBg
+    const toolbar = parsed.toolbarBg
+    const actEl = parsed.actElBg
+    if (!frame || !toolbar || !actEl) break accent_parsing
+
+    const accentAvrg = (accent[0] + accent[1] + accent[2]) / 3
+    const frameAvrg = (frame[0] + frame[1] + frame[2]) / 3
+    const toolbarAvrg = (toolbar[0] + toolbar[1] + toolbar[2]) / 3
+    const actElAvrg = (actEl[0] + actEl[1] + actEl[2]) / 3
+
+    const accentIsBrighter = accentAvrg > frameAvrg
+
+    const csVariant = parsed.actElVariant ?? parsed.frameVariant ?? parsed.toolbarVariant
+    const isDark = csVariant === ColorSchemeVariant.Dark
+    if (accentIsBrighter !== accentAvrg > toolbarAvrg) break accent_parsing
+    if (accentIsBrighter !== accentAvrg > actElAvrg) break accent_parsing
+    if (isDark && accentAvrg < 50) break accent_parsing
+    if (!isDark && Math.abs(accentAvrg - actElAvrg) < 8) break accent_parsing
+
+    // Check if accent color is not the same as frame/toolbar background
+    const likeFrameBg = isSimilarColor(8, accent, parsed.frameBg)
+    if (likeFrameBg) break accent_parsing
+
+    const likeToolbarBg = isSimilarColor(8, accent, parsed.toolbarBg)
+    if (likeToolbarBg) break accent_parsing
+
+    parsed.actElBorder = accent
+    parsed.vars.act_el_border = toColorString(accentFg)
+
+    parsed.accent = accent
+    parsed.vars.accent = toColorString(accentFg)
+  }
+
+  // Handle frame_image - set frame background
+  if (theme.colors && theme.images?.theme_frame && parsed.toolbarBg?.[3] === 1) {
+    const ffg = parsed.frameFg
+    const tfg = parsed.toolbarFg
     if (ffg && tfg) {
       const tn = (tfg[0] + tfg[1] + tfg[2]) / 3
       const fn = (ffg[0] + ffg[1] + ffg[2]) / 3
       if (Math.abs(tn - fn) < 16) {
-        parsed.frame = parsed.toolbar
-        theme.colors.frame = toolbarBG
+        parsed.frameBg = parsed.toolbarBg
+        parsed.vars.frame_bg = parsed.vars.toolbar_bg
       }
     }
   }
 
-  // Normalize frame
-  if (theme.colors && parsed.frame?.[3] !== 1) {
-    const fb = parsed.frame
-    if (fb) {
-      const fa = fb[3]
-      fb[0] = Math.trunc(fb[0] * fa)
-      fb[1] = Math.trunc(fb[1] * fa)
-      fb[2] = Math.trunc(fb[2] * fa)
-      fb[3] = 1
-      theme.colors.frame = `rgb(${fb[0]},${fb[1]},${fb[2]})`
-    } else if (sidebar && sidebarText) {
-      theme.colors.tab_background_text = `rgb(${sidebarText[0]},${sidebarText[1]},${sidebarText[2]})`
-      theme.colors.frame = `rgb(${sidebar[0]},${sidebar[1]},${sidebar[2]})`
-      parsed.frame = sidebar
-      parsed.frameText = sidebarText
-    } else {
-      theme.colors = undefined
-    }
+  // Check frame contrast
+  let frameContrastOk = true
+  if (parsed.frameBg && parsed.frameFg) {
+    const frameBgAvrg = (parsed.frameBg[0] + parsed.frameBg[1] + parsed.frameBg[2]) / 3
+    const frameFgAvrg = (parsed.frameFg[0] + parsed.frameFg[1] + parsed.frameFg[2]) / 3
+    frameContrastOk = Math.abs(frameFgAvrg - frameBgAvrg) > 80
   }
 
-  // Normalize toolbar
-  if (theme.colors && parsed.toolbar?.[3] !== 1) {
-    const tb = parsed.toolbar
-    const fb = parsed.frame
-    if (tb && fb) {
-      const ta = tb[3]
-      const fa = 1 - ta
-      tb[0] = Math.trunc(tb[0] * ta + fb[0] * fa)
-      tb[1] = Math.trunc(tb[1] * ta + fb[1] * fa)
-      tb[2] = Math.trunc(tb[2] * ta + fb[2] * fa)
-      tb[3] = 1
-      theme.colors.toolbar = `rgb(${tb[0]},${tb[1]},${tb[2]})`
-    } else if (theme.colors.frame) {
-      theme.colors.toolbar = theme.colors.frame
-    } else if (sidebar && sidebarText) {
-      theme.colors.toolbar_text = `rgb(${sidebarText[0]},${sidebarText[1]},${sidebarText[2]})`
-      theme.colors.toolbar = `rgb(${sidebar[0]},${sidebar[1]},${sidebar[2]})`
-    } else {
-      theme.colors = undefined
-    }
+  // Check toolbar contrast
+  let toolbarContrastOk = true
+  if (parsed.toolbarBg && parsed.toolbarFg) {
+    const toolbarBgAvrg = (parsed.toolbarBg[0] + parsed.toolbarBg[1] + parsed.toolbarBg[2]) / 3
+    const toolbarFgAvrg = (parsed.toolbarFg[0] + parsed.toolbarFg[1] + parsed.toolbarFg[2]) / 3
+    toolbarContrastOk = Math.abs(toolbarFgAvrg - toolbarBgAvrg) > 80
   }
 
-  // Reset if contrast in frame is too low
-  if (theme.colors && parsed.frame && parsed.frameText) {
-    const bgn = (parsed.frame[0] + parsed.frame[1] + parsed.frame[2]) / 3
-    const fgn = (parsed.frameText[0] + parsed.frameText[1] + parsed.frameText[2]) / 3
-    if (Math.abs(bgn - fgn) < 16) {
-      if (sidebar && sidebarText) {
-        theme.colors.tab_background_text = `rgb(${sidebarText[0]},${sidebarText[1]},${sidebarText[2]})`
-        theme.colors.frame = `rgb(${sidebar[0]},${sidebar[1]},${sidebar[2]})`
-      } else {
-        theme.colors = undefined
-      }
-    }
+  if (!frameContrastOk && toolbarContrastOk) {
+    parsed.frameBg = parsed.toolbarBg
+    parsed.vars.frame_bg = parsed.vars.toolbar_bg
+    parsed.frameFg = parsed.toolbarFg
+    parsed.vars.frame_fg = parsed.vars.toolbar_fg
+    parsed.frameVariant = getColorSchemeVariant(parsed.frameBg, parsed.frameFg)
   }
 
-  // Reset if contrast in toolbar is too low
-  if (theme.colors && parsed.toolbar && parsed.toolbarText) {
-    const bgn = (parsed.toolbar[0] + parsed.toolbar[1] + parsed.toolbar[2]) / 3
-    const fgn = (parsed.toolbarText[0] + parsed.toolbarText[1] + parsed.toolbarText[2]) / 3
-    if (Math.abs(bgn - fgn) < 16) {
-      theme.colors = undefined
-    }
+  if (frameContrastOk && !toolbarContrastOk) {
+    parsed.toolbarBg = parsed.frameBg
+    parsed.vars.toolbar_bg = parsed.vars.frame_bg
+    parsed.toolbarFg = parsed.frameFg
+    parsed.vars.toolbar_fg = parsed.vars.frame_fg
+    parsed.toolbarVariant = getColorSchemeVariant(parsed.frameBg, parsed.frameFg)
   }
 
-  // Detect sidebar border
-  if (theme.colors?.sidebar && theme.colors.sidebar_border && sidebarBorder && sidebar) {
-    const borderIsTransparent = sidebarBorder?.[3] === 0
-    const borderIsBrigther = sidebarBorder[0] > sidebar[0]
-    const borderIsIndistinguishable = isSimilar(8, sidebarBorder[0], sidebar[0])
-    if (borderIsTransparent || borderIsBrigther || borderIsIndistinguishable) {
-      theme.colors.sidebar_border_width = '1px'
-    }
+  // Detect sidebar top border
+  detecting_top_border: if (theme.colors?.sidebar && theme.colors.sidebar_border) {
+    const border = Utils.toRGBA(theme.colors.sidebar_border)
+    const frame = parsed.frameBg
+    const toolbar = parsed.toolbarBg
+    if (!border || !frame || !toolbar) break detecting_top_border
+    if (border[3] === 0) break detecting_top_border
+    if (theme.colors.sidebar_border === theme.colors.sidebar) break detecting_top_border
+
+    const borderAvrg = (border[0] + border[1] + border[2]) / 3
+    const toolbarAvrg = (toolbar[0] + toolbar[1] + toolbar[2]) / 3
+    const borderIsDarkEnough = toolbarAvrg - borderAvrg > 8
+    if (borderIsDarkEnough) parsed.vars.darker_border_width = '1px'
   }
 
-  // Normalize sidebar background color
-  if (theme.colors && sidebar) {
-    if (sidebar[3] && sidebar[3] < 1) {
-      theme.colors.sidebar = `rgb(${sidebar[0]},${sidebar[1]},${sidebar[2]})`
-    }
+  // Calc border between toolbar and frame
+  if (theme.colors?.toolbar_top_separator) {
+    calcToolbarBorder(theme.colors, parsed)
   }
-
-  parsed.toolbarVariant = getColorSchemeVariant(parsed.toolbar, parsed.toolbarText)
-  if (!variant) {
-    // Proton theme
-    if (Settings.state.theme === 'proton') {
-      variant = parsed.toolbarVariant
-      if (!variant) variant = getColorSchemeVariant(sidebar, sidebarText)
-    }
-
-    // Plain theme
-    else if (Settings.state.theme === 'plain') {
-      variant = getColorSchemeVariant(sidebar, sidebarText)
-      if (!variant) variant = parsed.toolbarVariant
-    }
-
-    if (!variant) variant = getColorSchemeVariant(popup, popupText)
-  }
-  if (variant) {
-    parsed.toolbarTopSeparator = Utils.toRGBA(theme.colors?.toolbar_top_separator)
-    if (theme.colors) calcBorder(theme.colors, parsed)
-
-    return variant
-  }
-
-  theme.colors = undefined
 
   // Fallback to system color scheme
-  if (!darkMedia) darkMedia = window.matchMedia(PREF_DARK_MEDIA)
-  if (darkMedia.matches) return ColorSchemeVariant.Dark
-  else return ColorSchemeVariant.Light
-}
-
-function isSimilar(thr: number, a?: number, b?: number): boolean {
-  if (thr === 0) return a === b
-  if (a === undefined || b === undefined) return false
-  else return Math.abs(a - b) <= thr
-}
-
-function calcBorder(themeColors: browser.theme.ThemeColors, parsed: ParsedThemeColors): void {
-  const monoColorScheme = parsed.frameVariant === parsed.toolbarVariant
-  const border = parsed.toolbarTopSeparator
-  const frame = parsed.frame
-  const bar = parsed.toolbar
-
-  // No border
-  if (
-    !monoColorScheme ||
-    !frame ||
-    !bar ||
-    !border ||
-    border?.[3] === 0 ||
-    (border?.[0] === frame?.[0] && border?.[1] === frame?.[1] && border?.[2] === frame?.[2]) ||
-    (border?.[0] === bar?.[0] && border?.[1] === bar?.[1] && border?.[2] === bar?.[2])
-  ) {
-    themeColors.border = undefined
-    themeColors.border_width = '0px'
-    return
+  if (parsed.error || !theme.colors) {
+    if (!darkMedia) darkMedia = window.matchMedia(PREF_DARK_MEDIA)
+    if (darkMedia.matches) parsed.frameVariant = ColorSchemeVariant.Dark
+    else parsed.frameVariant = ColorSchemeVariant.Light
+    parsed.toolbarVariant = parsed.frameVariant
+    parsed.actElVariant = parsed.frameVariant
   }
 
-  // Native border
-  if (monoColorScheme && themeColors.toolbar_top_separator && border?.[3] === 1) {
-    themeColors.border = themeColors.toolbar_top_separator
-    themeColors.border_width = '1px'
+  return parsed
+}
+
+function isSimilarColor(thr: number, a?: RGBA, b?: RGBA): boolean {
+  if (a === undefined || b === undefined) return false
+  if (thr === 0) return a[0] === b[0] && a[1] === b[1] && a[2] === b[2]
+  else {
+    const dr = Math.abs(a[0] - b[0])
+    const dg = Math.abs(a[1] - b[1])
+    const db = Math.abs(a[2] - b[2])
+    return dr <= thr && dg <= thr && db <= thr
+  }
+}
+
+function calcToolbarBorder(themeColors: browser.theme.ThemeColors, parsed: ParsedTheme): void {
+  const monoColorScheme = parsed.frameVariant === parsed.toolbarVariant
+  const borderRaw = themeColors.toolbar_top_separator
+  const border = Utils.toRGBA(borderRaw)
+  const frame = parsed.frameBg
+  const bar = parsed.toolbarBg
+
+  if (!borderRaw || !border) return
+  if (borderRaw === themeColors.toolbar) return
+  if (borderRaw === themeColors.frame) return
+  if (border[3] === 0) return
+  if (!monoColorScheme) return
+  if (!frame || !bar) return
+
+  const borderAvrg = (border[0] + border[1] + border[2]) / 3
+  const frameAvrg = (frame[0] + frame[1] + frame[2]) / 3
+  const barAvrg = (bar[0] + bar[1] + bar[2]) / 3
+  if (borderAvrg >= frameAvrg) return
+  if (borderAvrg >= barAvrg) return
+
+  // Native border is ok
+  if (monoColorScheme && borderRaw && border?.[3] === 1) {
+    parsed.vars.toolbar_border = toColorString(borderRaw)
     return
   }
 
@@ -333,37 +458,36 @@ function calcBorder(themeColors: browser.theme.ThemeColors, parsed: ParsedThemeC
   const frameAv = (frame[0] + frame[1] + frame[2]) / 3
   const barAv = (bar[0] + bar[1] + bar[2]) / 3
   const base = frameAv < barAv ? frame : bar
-  themeColors.border = `rgb(${base[0] - 8}, ${base[1] - 8}, ${base[2] - 8})`
-  themeColors.border_width = '1px'
+  parsed.vars.toolbar_border = `rgb(${base[0] - 8}, ${base[1] - 8}, ${base[2] - 8})`
 }
 
-export function applyFirefoxThemeColors(theme: browser.theme.Theme, rootEl?: HTMLElement): void {
+export function applyThemeSrcVars(parsed: ParsedTheme, rootEl?: HTMLElement): void {
   if (!rootEl) rootEl = document.getElementById('root') ?? undefined
-  if (!rootEl || !theme.colors) return
+  if (!rootEl) return
 
-  for (const colorName of FF_THEME_COLORS) {
-    if (theme.colors[colorName]) continue
+  for (const colorName of SRC_VARS) {
+    if (parsed.vars[colorName]) continue
 
-    rootEl.style.removeProperty(Utils.toCSSVarName('ff_' + colorName))
+    rootEl.style.removeProperty(Utils.toCSSVarName('s_' + colorName))
   }
 
-  for (const prop of Object.keys(theme.colors) as (keyof browser.theme.ThemeColors)[]) {
-    const value = theme.colors[prop]
+  for (const prop of Object.keys(parsed.vars) as (keyof SrcVars)[]) {
+    const value = parsed.vars[prop]
 
     if (value) {
-      rootEl.style.setProperty(Utils.toCSSVarName('ff_' + prop), value)
+      rootEl.style.setProperty(Utils.toCSSVarName('s_' + prop), value)
     } else {
-      rootEl.style.removeProperty(Utils.toCSSVarName('ff_' + prop))
+      rootEl.style.removeProperty(Utils.toCSSVarName('s_' + prop))
     }
   }
 }
 
-export function resetFirefoxThemeColors(): void {
+export function resetThemeSrcVars(): void {
   const rootEl = document.getElementById('root')
   if (!rootEl) return
 
-  for (const colorName of FF_THEME_COLORS) {
-    rootEl.style.removeProperty(Utils.toCSSVarName('ff_' + colorName))
+  for (const colorName of SRC_VARS) {
+    rootEl.style.removeProperty(Utils.toCSSVarName('s_' + colorName))
   }
 }
 

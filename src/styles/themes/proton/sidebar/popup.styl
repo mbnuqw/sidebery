@@ -1,12 +1,13 @@
 @import '../../../utils'
 
 #root
-  --popup-bg: var(--ff-popup, var(--frame-bg))
-  --popup-fg: var(--ff-popup-text, var(--frame-fg))
-#root[data-color-scheme="dark"]
-  --popup-shadow: 0 0 0 1px var(--ff-popup-border, #ffffff16), 0 1px 16px 0 #00000048
-#root[data-color-scheme="light"]
-  --popup-shadow: 0 0 0 1px var(--ff-popup-border, #00000016), 0 1px 16px 0 #00000032
+  --popup-bg: var(--s-popup-bg, var(--frame-bg))
+  --popup-fg: var(--s-popup-fg, var(--frame-fg))
+  --btn-fg: var(--popup-fg)
+#root[data-popup-color-scheme="dark"]
+  --popup-shadow: 0 0 0 1px var(--s-popup-border, #ffffff16), 0 1px 16px 0 #00000048
+#root[data-popup-color-scheme="light"]
+  --popup-shadow: 0 0 0 1px var(--s-popup-border, #00000016), 0 1px 16px 0 #00000032
 
 .popup-container
   position: absolute
@@ -59,8 +60,6 @@
   flex-wrap: wrap
 
 .popup .ctrls > .btn
-  --btn-fg: var(--popup-fg)
-
   min-width: max-content
   font-size: rem(15)
   padding: 5px 12px

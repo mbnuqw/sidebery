@@ -1,6 +1,6 @@
 import { GroupConfig, AnyFunc, NavItem, NavBtn, NavSpace, Panel, PanelConfig, Tab } from './types'
 import { TabsPanel, BookmarksPanel, PanelType, NavItemClass, HistoryPanel } from './types'
-import { SubListTitleInfo } from './types'
+import { SubListTitleInfo, RGBA, RGB } from './types'
 import { DOMAIN_RE, URL_PAGE_RE, URL_URL } from './defaults'
 import { translate } from './dict'
 
@@ -204,8 +204,13 @@ const RGBA_RE = /rgba?\((\d+%?)[,\s]\s*(\d+%?)[,\s]\s*(\d+%?)(,|\s\/\s)?\s*([\d.
 const HEXA_RE =
   /^#([0-f])([0-f])([0-f])([0-f])?$|^#([0-f][0-f])([0-f][0-f])([0-f][0-f])([0-f][0-f])?$/
 const HSLA_RE = /hsla?\((\d+%?)[,\s]\s*(\d+%?)[,\s]\s*(\d+%?)[,\s]?\s*([\d.]+%?)?\)/
-export function toRGBA(color?: string | null): [number, number, number, number] | undefined {
+export function toRGBA(color?: string | RGB | RGBA | null): RGBA | undefined {
   if (!color) return
+
+  if (Array.isArray(color)) {
+    if (color[3] === undefined) color[3] = 1
+    return color as RGBA
+  }
 
   const rgba = RGBA_RE.exec(color)
   if (rgba) {

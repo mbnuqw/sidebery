@@ -1,8 +1,8 @@
 @import '../../../utils'
 
 #root
-  --tabs-pinned-height: 32px
-  --tabs-pinned-width: 32px
+  --tabs-pinned-height: 30px
+  --tabs-pinned-width: 30px
   --tabs-height: 28px
   --tabs-margin: var(--general-margin)
   --tabs-indent: 10px
@@ -13,44 +13,34 @@
   --tabs-close-btn-margin: 2px
   --tabs-audio-btn-width: 22px
 #root[data-density="compact"]
-  --tabs-pinned-height: 30px
-  --tabs-pinned-width: 30px
+  --tabs-pinned-height: 28px
+  --tabs-pinned-width: 28px
   --tabs-height: 26px
   --tabs-indent: 8px
   --tabs-inner-gap: 3px
   --tabs-close-btn-margin: 1px
   --tabs-audio-btn-width: 20px
-#root[data-color-scheme="dark"]
-  --tabs-activated-bg: var(--ff-tab-selected, var(--ff-toolbar, #ffffff24))
-  --tabs-activated-fg:
-    var(--ff-tab-text,
-    var(--ff-bookmark-text,
-    var(--ff-toolbar-text,
-    var(--ff-tab-background-text,
-    #ffffff))))
-  --tabs-activated-shadow: 0 1px 4px -1px #00000048,
-                           inset 0 0 0 1px var(--ff-tab-line, #ffffff08)
+#root[data-frame-color-scheme="dark"]
   --tabs-progress-bg: #ffffff16
   --tabs-lvl-opacity: .16
-#root[data-color-scheme="light"]
-  --tabs-activated-bg: var(--ff-tab-selected, var(--ff-toolbar, #ffffff64))
-  --tabs-activated-fg:
-    var(--ff-tab-text,
-    var(--ff-bookmark-text,
-    var(--ff-toolbar-text,
-    var(--ff-tab-background-text,
-    #000000))))
-  --tabs-activated-shadow: 0 1px 4px -1px #00000042,
-                           inset 0 0 0 1px var(--ff-tab-line, #00000032)
+#root[data-frame-color-scheme="light"]
   --tabs-progress-bg: #00000016
   --tabs-lvl-opacity: .3
+#root[data-act-el-color-scheme="dark"]
+  --tabs-activated-bg: var(--active-el-bg)
+  --tabs-activated-fg: var(--active-el-fg)
+  --tabs-activated-shadow: var(--active-el-shadow)
+#root[data-act-el-color-scheme="light"]
+  --tabs-activated-bg: var(--active-el-bg)
+  --tabs-activated-fg: var(--active-el-fg)
+  --tabs-activated-shadow: var(--active-el-shadow)
 
 .Tab
   position: relative
   width: calc(100% - var(--tabs-margin) * 2)
   height: calc(var(--tabs-height) + var(--tabs-margin))
   margin: 0 var(--tabs-margin)
-  padding-top: var(--tabs-margin)
+  padding-bottom: var(--tabs-margin)
   z-index: 10
   transform: translateZ(0)
   transition: transform var(--d-fast), opacity var(--d-fast), padding var(--d-fast)
@@ -115,10 +105,10 @@
 // ---
 // -- Set outline for active colored tabs
 // -
-#root[data-color-scheme="dark"] .Tab[data-colorized="true"]
+#root[data-frame-color-scheme="dark"] .Tab[data-colorized="true"]
   --tabs-activated-shadow: inset 0 0 0 1px #fff7,
                            0 1px 3px -1px #00000036
-#root[data-color-scheme="light"] .Tab[data-colorized="true"]
+#root[data-frame-color-scheme="light"] .Tab[data-colorized="true"]
   --tabs-activated-shadow: inset 0 0 0 1px #0009,
                            0 1px 3px -1px #00000032
 
@@ -139,6 +129,8 @@
   align-items: center
   transition: opacity var(--d-fast), transform var(--d-fast)
   border-radius: var(--tabs-border-radius)
+  background-color: var(--frame-el-bg)
+  box-shadow: var(--frame-el-shadow)
   &:after
     content: ''
     position: absolute
@@ -160,7 +152,7 @@
     z-index: 1
 
 .Tab:hover .body:before
-  background-color: var(--hover-bg)
+  background-color: var(--frame-el-overlay-hover-bg)
 
 .Tab[data-active="true"] .body
   background-color: var(--tabs-activated-bg)
@@ -169,15 +161,15 @@
   background-color: initial
 
 .Tab:active .body:before
-  background-color: var(--clicked-bg)
+  background-color: var(--frame-el-overlay-clicked-bg)
 
 .Tab[data-selected="true"] .body:before
 .Tab[data-selected="true"]:hover .body:before
 .Tab[data-selected="true"]:active .body:before
-  background-color: var(--selected-bg)
-  box-shadow: inset 0 0 0 1px var(--selected-border)
+  background-color: var(--frame-el-overlay-selected-bg)
+  box-shadow: inset 0 0 0 1px var(--frame-el-overlay-selected-border)
 .Tab[data-selected="true"][data-active="true"] .body:before
-  box-shadow: inset 0 0 0 2px var(--selected-border)
+  box-shadow: inset 0 0 0 2px var(--frame-el-overlay-selected-border)
 
 .Tab[data-pin="true"] .body
   justify-content: center
@@ -587,7 +579,9 @@
   opacity: 0
   border-radius: calc(var(--tabs-border-radius) - 1px)
   &:hover
-    background-color: var(--hover-bg)
+    background-color: var(--frame-el-overlay-hover-bg)
+  &:active
+    background-color: var(--frame-el-overlay-clicked-bg)
   > svg
     position: absolute
     top: calc(50% - 9px)
@@ -598,8 +592,13 @@
     opacity: .7
     transition: fill var(--d-fast)
 
-.Tab[data-active="true"] .close > svg
-  fill: var(--tabs-activated-fg)
+.Tab[data-active="true"] .close
+  > svg
+    fill: var(--tabs-activated-fg)
+  &:hover
+    background-color: var(--active-el-overlay-hover-bg)
+  &:active
+    background-color: var(--active-el-overlay-clicked-bg)
 
 .Tab:hover .close
   opacity: 1

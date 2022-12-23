@@ -1,8 +1,8 @@
 @import '../../../utils'
 
-#root[data-color-scheme="dark"] .PinnedTabsBar
+#root[data-frame-color-scheme="dark"] .PinnedTabsBar
   --sep-opacity: .16
-#root[data-color-scheme="light"] .PinnedTabsBar
+#root[data-frame-color-scheme="light"] .PinnedTabsBar
   --sep-opacity: .3
 
 .PinnedTabsBar
@@ -20,9 +20,10 @@
   flex-wrap: wrap
   flex-direction: row
   grid-gap: var(--tabs-margin)
-  padding: var(--tabs-margin) var(--tabs-margin) calc(var(--tabs-margin) + 1px)
+  padding: 0 var(--tabs-margin) var(--tabs-margin)
 
 #root[data-pinned-tabs-position="panel"][data-pinned-tabs-list="true"] .PinnedTabsBar
+  padding: 0 0 calc(var(--tabs-margin) + 9px)
   grid-gap: 0
 
 // Left/Right
@@ -35,16 +36,18 @@
   flex-grow: 0
   flex-direction: column
   grid-gap: var(--tabs-margin)
-  padding: var(--tabs-margin) 0
 
+#root[data-pinned-tabs-position="left"]:not([data-nav-layout="horizontal"]) .PinnedTabsBar
+#root[data-pinned-tabs-position="right"]:not([data-nav-layout="horizontal"]) .PinnedTabsBar
+  padding: calc(var(--general-margin) - var(--s-darker-border-width, 0px)) 0 0
+  
 // Left/Right stacked with navbar
 #root[data-pinned-tabs-position="left"][data-nav-layout="left"] .PinnedTabsBar
 #root[data-pinned-tabs-position="right"][data-nav-layout="right"] .PinnedTabsBar
   height: auto
-  padding: var(--tabs-margin) 0 0
 #root[data-pinned-tabs-position="left"][data-nav-layout="left"][data-drag="true"] .PinnedTabsBar
 #root[data-pinned-tabs-position="right"][data-nav-layout="right"][data-drag="true"] .PinnedTabsBar
-  padding: var(--tabs-margin) 0 calc(var(--tabs-margin) + 16px)
+  padding: calc(var(--general-margin) - var(--s-darker-border-width, 0px)) 0 calc(var(--tabs-margin) + 16px)
 
 // Top
 #root[data-pinned-tabs-position="top"] .PinnedTabsBar
@@ -53,7 +56,7 @@
   flex-wrap: wrap
   flex-direction: row
   grid-gap: var(--tabs-margin)
-  padding: var(--tabs-margin) var(--tabs-margin) calc(var(--tabs-margin) + 1px)
+  padding: 0 var(--tabs-margin) var(--tabs-margin)
 
 // ---
 // -- Separator
@@ -62,15 +65,14 @@
   content: ''
   position: absolute
   display: none
-  bottom: 0
+  bottom: calc(var(--tabs-margin) + 4px)
   left: var(--tabs-margin)
   width: calc(100% - var(--tabs-margin) * 2)
   height: 1px
   opacity: var(--sep-opacity)
-  background-image: linear-gradient(90deg, transparent, var(--frame-fg) 40%, var(--frame-fg) 60%, transparent)
+  background-image: linear-gradient(90deg, transparent, var(--frame-fg) 10%, var(--frame-fg) 90%, transparent)
 
-#root[data-pinned-tabs-position="panel"] .PinnedTabsBar:after
-#root[data-pinned-tabs-position="top"] .PinnedTabsBar:after
+#root[data-pinned-tabs-position="panel"][data-pinned-tabs-list="true"] .PinnedTabsBar:after
   display: block
 
 // ---
@@ -94,7 +96,7 @@
     width: 2px
     height: 100%
     z-index: 2000
-    background-color: var(--selected-border)
+    background-color: var(--s-accent, var(--frame-el-overlay-selected-border))
     pointer-events: none
     border-radius: 4px
     box-shadow: 0 0 0 1px var(--frame-bg)
@@ -127,7 +129,7 @@
     position: absolute
     top: 0
     left: 0
-    background-color: var(--selected-border)
+    background-color: var(--s-accent, var(--frame-el-overlay-selected-border))
     box-shadow: 0 0 0 1px var(--frame-bg)
     z-index: 2000
 

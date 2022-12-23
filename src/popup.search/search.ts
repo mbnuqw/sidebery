@@ -74,7 +74,5 @@ void (async () => {
     Windows.id = win.id
     IPC.connectTo(InstanceType.sidebar, Windows.id)
   }
-  Styles.initTheme()
-  await Styles.initColorScheme()
-  document.body.setAttribute('data-color-scheme', Styles.reactive.colorScheme || 'dark')
+  Styles.initColorScheme()
 })()

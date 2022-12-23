@@ -4,8 +4,8 @@
   --ctx-menu-min-width: 160px
   --ctx-menu-max-width: 200px
   --ctx-menu-font: rem(15) sans-serif
-  --ctx-menu-bg: var(--ff-popup, var(--frame-bg))
-  --ctx-menu-fg: var(--ff-popup-text, var(--frame-fg))
+  --ctx-menu-bg: var(--popup-bg)
+  --ctx-menu-fg: var(--popup-fg)
   --ctx-menu-border-radius: calc(var(--general-border-radius) + var(--general-margin))
   --ctx-menu-opt-border-radius: var(--general-border-radius)
   --ctx-menu-padding: var(--general-margin)
@@ -18,13 +18,13 @@
   --ctx-menu-text-opt-inner-gap: 3px
   --ctx-menu-text-opt-height: 24px
   --ctx-menu-icon-opt-height: 28px
-#root[data-color-scheme="dark"]
-  --ctx-menu-shadow: 0 0 0 1px var(--ff-popup-border, #ffffff16), 0 1px 16px 0 #00000048
-  --ctx-menu-separator: var(--ff-panel-separator, #ffffff16)
+#root[data-popup-color-scheme="dark"]
+  --ctx-menu-shadow: 0 0 0 1px var(--s-popup-border, #ffffff16), 0 1px 16px 0 #00000048
+  --ctx-menu-separator: var(--s-popup-border, #ffffff16)
   --ctx-menu-hover: var(--ctx-menu-fg)
-#root[data-color-scheme="light"]
-  --ctx-menu-shadow: 0 0 0 1px var(--ff-popup-border, #00000016), 0 1px 16px 0 #00000032
-  --ctx-menu-separator: var(--ff-panel-separator, #00000016)
+#root[data-popup-color-scheme="light"]
+  --ctx-menu-shadow: 0 0 0 1px var(--s-popup-border, #00000016), 0 1px 16px 0 #00000032
+  --ctx-menu-separator: var(--s-popup-border, #00000016)
   --ctx-menu-hover: var(--ctx-menu-fg)
 
 .CtxMenu

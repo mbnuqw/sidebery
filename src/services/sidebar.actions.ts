@@ -364,12 +364,12 @@ function calcTabsBounds(panel: TabsPanel): ItemBounds[] {
   const tm = Sidebar.tabMargin
   if (th === 0) return result
   const half = th >> 1
-  const marginA = Math.ceil(tm / 2)
-  const marginB = Math.floor(tm / 2)
+  const marginA = Math.floor(tm / 2)
+  const marginB = Math.ceil(tm / 2)
   const insideA = (half >> 1) + marginB + 2
   const insideB = (half >> 1) + marginB - 2
 
-  let overallHeight = 0
+  let overallHeight = -marginA
   let tabs = Tabs.list
   if (panel?.filteredTabs) {
     tabs = []
@@ -382,8 +382,6 @@ function calcTabsBounds(panel: TabsPanel): ItemBounds[] {
     if (tab.invisible || tab.pinned) continue
     if (tab.panelId !== panel.id) continue
 
-    overallHeight += marginA
-
     result.push({
       type: ItemBoundsType.Tab,
       id: tab.id,
@@ -394,12 +392,12 @@ function calcTabsBounds(panel: TabsPanel): ItemBounds[] {
       parent: tab.parentId,
       start: overallHeight,
       top: overallHeight + insideA,
-      center: overallHeight + marginB + half,
-      bottom: overallHeight + half + insideB,
-      end: overallHeight + marginB + th + marginA,
+      center: overallHeight + marginA + half,
+      bottom: overallHeight + marginA + half + insideB,
+      end: overallHeight + th + tm,
     })
 
-    overallHeight += th + marginB
+    overallHeight += th + tm
   }
   return result
 }
@@ -414,62 +412,58 @@ function calcBookmarksTreeBounds(panel: BookmarksPanel): ItemBounds[] {
   const expandedBookmarks = Bookmarks.reactive.expanded[panel.id]
 
   const margin = Sidebar.bookmarkMargin
-  const marginA = Math.ceil(margin / 2)
-  const marginB = Math.floor(margin / 2)
+  const marginA = Math.floor(margin / 2)
 
-  const fh = Sidebar.folderHeight
-  const fc = fh >> 1
-  const fe = fc >> 1
+  const folderHeight = Sidebar.folderHeight
+  const folderHalf = folderHeight >> 1
+  const folderQuarter = folderHalf >> 1
 
-  const bh = Sidebar.bookmarkHeight
-  const bc = bh >> 1
-  const be = bc >> 1
+  const bookmarkHeight = Sidebar.bookmarkHeight
+  const bookmarkHalf = bookmarkHeight >> 1
+  const bookmarkQuarter = bookmarkHalf >> 1
 
-  const sh = Sidebar.separatorHeight
-  const sc = sh >> 1
-  const se = sc >> 1
+  const sepHeight = Sidebar.separatorHeight
+  const sepHalf = sepHeight >> 1
+  const sepQuarter = sepHalf >> 1
 
-  let overallHeight = 0
+  let overallHeight = -marginA
   let lvl = 0
-  let h: number, c: number, e: number
+  let height: number, half: number, quarter: number
   const walker = (nodes: Bookmark[]) => {
     for (let i = 0; i < nodes.length; i++) {
       const n = nodes[i]
+      const isFolder = n.type === 'folder'
 
-      if (n.type === 'folder') {
-        h = fh
-        c = fc
-        e = fe
+      if (isFolder) {
+        height = folderHeight
+        half = folderHalf
+        quarter = folderQuarter
+      } else if (n.type === 'bookmark') {
+        height = bookmarkHeight
+        half = bookmarkHalf
+        quarter = bookmarkQuarter
+      } else {
+        height = sepHeight
+        half = sepHalf
+        quarter = sepQuarter
       }
-      if (n.type === 'bookmark') {
-        h = bh
-        c = bc
-        e = be
-      }
-      if (n.type === 'separator') {
-        h = sh
-        c = sc
-        e = se
-      }
-
-      overallHeight += marginA
 
       result.push({
         type: ItemBoundsType.Bookmarks,
         id: n.id,
         index: n.index,
         lvl,
-        in: n.type === 'folder',
+        in: isFolder,
         folded: !expandedBookmarks[n.id],
         parent: n.parentId,
         start: overallHeight,
-        top: overallHeight + marginB + e,
-        center: overallHeight + marginB + c,
-        bottom: overallHeight + marginB + c + e,
-        end: overallHeight + marginB + h,
+        top: overallHeight + marginA + quarter,
+        center: overallHeight + marginA + half,
+        bottom: overallHeight + marginA + half + quarter,
+        end: overallHeight + height + margin,
       })
 
-      overallHeight += h + marginB
+      overallHeight += height + margin
 
       if (n.children && expandedBookmarks[n.id]) {
         lvl++

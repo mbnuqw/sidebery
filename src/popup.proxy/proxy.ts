@@ -19,9 +19,9 @@ void (async function () {
   await Settings.loadSettings()
 
   // Set theme/style
-  Styles.initTheme()
   Styles.initColorScheme().then(() => {
-    document.body.setAttribute('data-color-scheme', Styles.reactive.colorScheme)
+    document.body.setAttribute('data-frame-color-scheme', Styles.reactive.frameColorScheme)
+    document.body.setAttribute('data-popup-color-scheme', Styles.reactive.popupColorScheme)
     document.body.setAttribute('data-ready', 'true')
   })
 

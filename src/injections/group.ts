@@ -3,10 +3,11 @@ import { GroupPin, GroupedTabInfo, InstanceType } from 'src/types'
 import { GroupPageInitData } from 'src/services/tabs.bg.actions'
 import { getFavPlaceholder } from 'src/services/favicons.actions'
 import { SETTINGS_OPTIONS } from 'src/defaults'
-import { applyFirefoxThemeColors, initTheme, loadCustomGroupCSS } from './group.styles'
+import { applyThemeSrcVars, loadCustomGroupCSS } from './group.styles'
 import * as IPC from 'src/services/ipc'
 import * as Logs from 'src/services/logs'
 import { Msg, MsgTabRemoved, MsgTabUpdated, MsgUpdated } from './group.ipc'
+import { getColorSchemeName } from 'src/services/styles.actions'
 
 const PIN_SCREENSHOT_QUALITY = 90
 const SCREENSHOT_QUALITY = 25
@@ -56,15 +57,16 @@ async function main() {
   Logs.setWinId(groupWinId)
   Logs.setTabId(groupTabId)
 
-  if (initData.theme) initTheme(initData.theme)
+  if (initData.theme) document.body.setAttribute('data-theme', initData.theme)
   else Logs.warn('Cannot init sidebery theme')
-  if (initData.ffTheme) applyFirefoxThemeColors(initData.ffTheme)
+  if (initData.frameColorScheme) {
+    document.body.setAttribute('data-frame-color-scheme', initData.frameColorScheme)
+  } else Logs.warn('Cannot set frame color scheme')
+  if (initData.toolbarColorScheme) {
+    document.body.setAttribute('data-toolbar-color-scheme', initData.toolbarColorScheme)
+  } else Logs.warn('Cannot set toolbar color scheme')
+  if (initData.parsedTheme) applyThemeSrcVars(initData.parsedTheme)
   else Logs.warn('Cannot apply firefox theme colors')
-  if (initData.colorScheme) document.body.setAttribute('data-color-scheme', initData.colorScheme)
-  else {
-    Logs.warn('Cannot set color scheme')
-    document.body.setAttribute('data-color-scheme', 'dark')
-  }
   loadCustomGroupCSS()
 
   groupLayout = initData.groupLayout ?? 'grid'

@@ -155,7 +155,7 @@ function recalcGroups(vars: CssVar[]): void {
   }
 
   for (const v of vars) {
-    if (v.key.startsWith('--ff')) continue
+    if (v.key.startsWith('--s-')) continue
     const group = state.groups.find(g => {
       if (g.match) return g.match.test(v.key)
       return v.key.startsWith(g.id)
@@ -184,9 +184,7 @@ function recalcGroups(vars: CssVar[]): void {
 }
 
 async function getRootStyles(
-  target: 'sidebar' | 'group',
-  theme: typeof SETTINGS_OPTIONS.theme[number],
-  colorScheme: 'dark' | 'light'
+  target: 'sidebar' | 'group'
 ): Promise<CSSStyleDeclaration | undefined> {
   let shadowContainerEl = document.getElementById('shadows_container')
   if (shadowContainerEl) shadowContainerEl.remove()
@@ -201,27 +199,26 @@ async function getRootStyles(
     const shadow = shadowContainerEl.attachShadow({ mode: 'open' })
     const shadowedRootEl = document.createElement('div')
     shadowedRootEl.setAttribute('id', 'root')
-    shadowedRootEl.setAttribute('data-color-scheme', colorScheme)
     shadowedRootEl.setAttribute('data-animations', Settings.state.animationSpeed || 'fast')
     shadowedRootEl.setAttribute('data-density', Settings.state.density || 'default')
-    if (Styles.theme) Styles.applyFirefoxThemeColors(Styles.theme, shadowedRootEl)
+    shadowedRootEl.setAttribute('data-frame-color-scheme', Styles.reactive.frameColorScheme)
+    shadowedRootEl.setAttribute('data-toolbar-color-scheme', Styles.reactive.toolbarColorScheme)
+    shadowedRootEl.setAttribute('data-act-el-color-scheme', Styles.reactive.actElColorScheme)
+    shadowedRootEl.setAttribute('data-popup-color-scheme', Styles.reactive.popupColorScheme)
+    if (Styles.parsedTheme) Styles.applyThemeSrcVars(Styles.parsedTheme, shadowedRootEl)
     shadow.appendChild(shadowedRootEl)
 
     const shadowLinkEl = document.createElement('link')
     shadowLinkEl.onload = () => res(getComputedStyle(shadowedRootEl))
     shadowLinkEl.onerror = () => res(undefined)
     shadowLinkEl.setAttribute('rel', 'stylesheet')
-    shadowLinkEl.setAttribute('href', `../themes/${theme}/${target}.css`)
+    shadowLinkEl.setAttribute('href', `../themes/proton/${target}.css`)
     shadow.appendChild(shadowLinkEl)
   })
 }
 
 async function loadVars(): Promise<void> {
-  const compStyle = await getRootStyles(
-    state.cssTarget,
-    Settings.state.theme,
-    Styles.reactive.colorScheme
-  )
+  const compStyle = await getRootStyles(state.cssTarget)
   if (!compStyle) return
 
   const props: CssVar[] = []
@@ -229,7 +226,7 @@ async function loadVars(): Promise<void> {
     if (!prop.startsWith('--')) continue
     if (prop === '--color') continue
     if (prop.startsWith('--settings-')) continue
-    if (prop.startsWith('--ff-')) continue
+    if (prop.startsWith('--s-')) continue
     const value = compStyle.getPropertyValue(prop).trim()
     const isColor = isValueColor(value)
     let name = prop

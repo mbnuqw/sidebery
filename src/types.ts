@@ -351,3 +351,6 @@ export const enum WheelDirection {
 }
 
 export type Entries<T> = (Iterator<T> & { [K in keyof T]: [K, T[K]] }[keyof T])[]
+
+export type RGBA = [number, number, number, number]
+export type RGB = [number, number, number]

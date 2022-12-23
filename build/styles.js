@@ -14,12 +14,6 @@ const THEMES = {
     './src/styles/themes/proton/page.setup/setup.styl',
     './src/styles/themes/proton/popup.proxy/proxy.styl',
   ],
-  plain: [
-    './src/styles/themes/plain/sidebar/sidebar.styl',
-    './src/styles/themes/plain/page.url/url.styl',
-    './src/styles/themes/plain/page.group/group.styl',
-    './src/styles/themes/plain/popup.proxy/proxy.styl',
-  ],
 }
 
 /**

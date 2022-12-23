@@ -1,10 +1,10 @@
 @import '../../../utils'
 
-#root[data-color-scheme="dark"]
+#root[data-frame-color-scheme="dark"]
   --scroll-progress-height: 1px
   --scroll-progress-bg: #37adef
   --scroll-color: #ffffff36
-#root[data-color-scheme="light"]
+#root[data-frame-color-scheme="light"]
   --scroll-progress-height: 2px
   --scroll-progress-bg: #178dff
   --scroll-color: #00000036
@@ -66,7 +66,6 @@
 // -
 .ScrollBox > .progress
   position: absolute
-  top: 0
   left: -100%
   width: 100%
   height: var(--scroll-progress-height)
@@ -89,4 +88,4 @@
   position: relative
   width: 100%
   min-height: 100%
-  background-color: var(--frame-bg)
+  // background-color: var(--frame-bg)

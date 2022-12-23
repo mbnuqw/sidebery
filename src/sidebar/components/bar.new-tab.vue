@@ -3,7 +3,7 @@
   tabindex="-1"
   :data-new-tab-bar-position="Settings.state.newTabBarPosition"
   :data-sel="panel.selNewTab")
-  .new-tab-bg
+  //- .new-tab-bg
   .new-tab-btn(
     :title="defaultBtn.tooltip"
     :data-color="defaultBtn.containerId && Containers.reactive.byId[defaultBtn.containerId]?.color"

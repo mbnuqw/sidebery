@@ -454,8 +454,8 @@ async function drawTextIcon() {
   let x = 16
   let y = 16
   if (!color) {
-    if (Styles.reactive.colorScheme === 'light') color = '#000000'
-    if (Styles.reactive.colorScheme === 'dark') color = '#ffffff'
+    if (Styles.reactive.toolbarColorScheme === 'light') color = '#000000'
+    if (Styles.reactive.toolbarColorScheme === 'dark') color = '#ffffff'
   }
 
   canvas.width = 32
@@ -526,8 +526,8 @@ async function prepareCustomIcon(icon: string): Promise<string> {
   if (state.customIconColorize) {
     let color = RGB_COLORS[props.conf.color]
     if (props.conf.color === 'toolbar') {
-      if (Styles.reactive.colorScheme === 'light') color = '#000000'
-      if (Styles.reactive.colorScheme === 'dark') color = '#ffffff'
+      if (Styles.reactive.toolbarColorScheme === 'light') color = '#000000'
+      if (Styles.reactive.toolbarColorScheme === 'dark') color = '#ffffff'
     }
     icon = await Favicons.fillIcon(icon, color)
   }

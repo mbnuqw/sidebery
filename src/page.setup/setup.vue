@@ -1,6 +1,6 @@
 <template lang="pug">
 #root.root.Setup(
-  :data-color-scheme="Styles.reactive.colorScheme"
+  :data-toolbar-color-scheme="Styles.reactive.toolbarColorScheme"
   :data-animations="animations"
   :data-sticky-bookmarks="Settings.state.pinOpenedBookmarksFolder")
   .nav

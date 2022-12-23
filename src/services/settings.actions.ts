@@ -186,7 +186,7 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
   }
 
   if (theme) {
-    Styles.initTheme()
+    Styles.updateColorScheme()
     if (Info.isSidebar) {
       Styles.removeCustomCSS()
       Styles.loadCustomSidebarCSS()

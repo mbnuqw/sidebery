@@ -1234,58 +1234,63 @@ declare namespace browser {
       additional_backgrounds_tiling?: string[]
     }
 
+    type RGB = [number, number, number]
+
     /**
      * https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/theme#colors
      */
     interface ThemeColors {
       /** @DEPRECATED use frame */ accentcolor?: string
-      bookmark_text?: string | null
+      bookmark_text?: string | RGB | null
+      button_background_active?: string | RGB | null
+      button_background_hover?: string | RGB | null
+      icons?: string | RGB | null
+      icons_attention?: string | RGB | null
+      frame?: string | RGB | null
+      frame_inactive?: string | RGB | null
+      ntp_background?: string | RGB | null
+      ntp_text?: string | RGB | null
+      /** @UNDUCUMENTED */ panel_item_active?: string | RGB | null
+      /** @UNDUCUMENTED */ panel_item_hover?: string | RGB | null
+      /** @UNDUCUMENTED */ panel_separator?: string | RGB | null
+      popup?: string | RGB | null
+      popup_border?: string | RGB | null
+      popup_highlight?: string | RGB | null
+      popup_highlight_text?: string | RGB | null
+      popup_text?: string | RGB | null
+      sidebar?: string | RGB | null
+      sidebar_border?: string | RGB | null
+      sidebar_highlight?: string | RGB | null
+      sidebar_highlight_text?: string | RGB | null
+      sidebar_text?: string | RGB | null
+      /** @DEPRECATED */ tab_background_separator?: string | RGB | null
+      tab_background_text?: string | RGB | null
+      tab_line?: string | RGB | null
+      tab_loading?: string | RGB | null
+      tab_selected?: string | RGB | null
+      tab_text?: string | RGB | null
+      /** @DEPRECATED use tab_background_text */ textcolor?: string | RGB | null
+      toolbar?: string | RGB | null
+      toolbar_bottom_separator?: string | RGB | null
+      toolbar_field?: string | RGB | null
+      toolbar_field_border?: string | RGB | null
+      toolbar_field_border_focus?: string | RGB | null
+      toolbar_field_focus?: string | RGB | null
+      toolbar_field_highlight?: string | RGB | null
+      toolbar_field_highlight_text?: string | RGB | null
+      /** @DEPRECATED */ toolbar_field_separator?: string | RGB | null
+      toolbar_field_text?: string | RGB | null
+      toolbar_field_text_focus?: string | RGB | null
+      toolbar_text?: string | RGB | null
+      toolbar_top_separator?: string | RGB | null
+      toolbar_vertical_separator?: string | RGB | null
       /** @CUSTOM */ border?: string | null
       /** @CUSTOM */ border_width?: string | null
-      button_background_active?: string | null
-      button_background_hover?: string | null
-      icons?: string | null
-      icons_attention?: string | null
-      frame?: string | null
-      frame_inactive?: string | null
-      ntp_background?: string | null
-      ntp_text?: string | null
-      /** @UNDUCUMENTED */ panel_item_active?: string | null
-      /** @UNDUCUMENTED */ panel_item_hover?: string | null
-      /** @UNDUCUMENTED */ panel_separator?: string | null
-      popup?: string | null
-      popup_border?: string | null
-      popup_highlight?: string | null
-      popup_highlight_text?: string | null
-      popup_text?: string | null
-      sidebar?: string | null
-      sidebar_border?: string | null
-      sidebar_highlight?: string | null
-      sidebar_highlight_text?: string | null
-      sidebar_text?: string | null
-      /** @CUSTOM */ sidebar_border_width?: string | null
-      /** @DEPRECATED */ tab_background_separator?: string | null
-      tab_background_text?: string | null
-      tab_line?: string | null
-      tab_loading?: string | null
-      tab_selected?: string | null
-      tab_text?: string | null
-      /** @DEPRECATED use tab_background_text */ textcolor?: string | null
-      toolbar?: string | null
-      /** @CUSTOM */ toolbar_transparent?: string | null
-      toolbar_bottom_separator?: string | null
-      toolbar_field?: string | null
-      toolbar_field_border?: string | null
-      toolbar_field_border_focus?: string | null
-      toolbar_field_focus?: string | null
-      toolbar_field_highlight?: string | null
-      toolbar_field_highlight_text?: string | null
-      /** @DEPRECATED */ toolbar_field_separator?: string | null
-      toolbar_field_text?: string | null
-      toolbar_field_text_focus?: string | null
-      toolbar_text?: string | null
-      toolbar_top_separator?: string | null
-      toolbar_vertical_separator?: string | null
+      /** @CUSTOM */ sidebar_base?: string | null
+      /** @CUSTOM */ sidebar_darker_border_width?: string | null
+      /** @CUSTOM */ sidebar_top_padding?: string | null
+      /** @CUSTOM */ sidebar_active_bg?: string | null
+      /** @CUSTOM */ sidebar_active_border?: string | null
     }
     // Undocumented colors
     // address_bar_box

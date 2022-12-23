@@ -3,11 +3,8 @@
 @import '../btn'
 
 #root
-  --proxy-bg: var(--ff-popup, var(--frame-bg))
-#root[data-color-scheme="dark"]
-  --proxy-fg: var(--ff-popup-text, var(--ff-tab-background-text, #aaa))
-#root[data-color-scheme="light"]
-  --proxy-fg: var(--ff-popup-text, var(--ff-tab-background-text, #323232))
+  --proxy-bg: var(--s-popup-bg, var(--frame-bg))
+  --proxy-fg: var(--s-popup-fg, var(--frame-fg))
 
 html
   position: relative

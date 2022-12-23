@@ -64,7 +64,7 @@
   width: 10px
   height: 10px
   flex-shrink: 0
-  fill: var(--toolbar-fg)
+  fill: var(--frame-fg)
   margin: 4px
   opacity: .5
   transition: opacity var(--d-fast)
@@ -83,7 +83,7 @@
     position: absolute
     width: 100%
     height: 1px
-    background-color: var(--toolbar-fg)
+    background-color: var(--frame-fg)
     opacity: .2
     transition: opacity var(--d-fast)
   &:before
@@ -103,7 +103,7 @@
   position: relative
   margin: 0 1px 0 4px
   font-size: rem(12)
-  color: var(--toolbar-fg)
+  color: var(--frame-fg)
   opacity: .7
 
 .BookmarksSubPanel .toggle-area
@@ -154,7 +154,6 @@
   width: 100%
   height: var(--nav-height)
   background-color: var(--toolbar-bg)
-  box-shadow: 0 0 0 var(--ff-border-width, 0) var(--ff-border, var(--border, #00000016))
 
 .BookmarksSubPanel .nav .up-btn
 .BookmarksSubPanel .nav .down-btn
@@ -221,9 +220,10 @@
 .BookmarksSubPanel .content
   position: absolute
   top: var(--nav-height)
-  margin-top: var(--ff-border-width, 0)
+  padding-top: var(--general-margin)
   height: calc(100% - var(--nav-height))
   width: 100%
+  background-color: var(--frame-bg)
 
 .BookmarksSubPanel .bookmarks-tree
   position: relative

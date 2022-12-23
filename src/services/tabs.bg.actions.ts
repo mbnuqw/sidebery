@@ -11,7 +11,7 @@ import { Favicons } from 'src/services/favicons'
 import * as IPC from './ipc'
 import { Settings } from './settings'
 import * as Logs from './logs'
-import { Styles } from './styles'
+import { ParsedTheme, Styles } from './styles'
 
 const detachedTabs: Record<ID, Tab> = {}
 
@@ -499,16 +499,18 @@ export async function injectUrlPageScript(winId: ID, tabId: ID): Promise<void> {
 
 export interface UrlPageInitData {
   theme?: typeof SETTINGS_OPTIONS.theme[number]
-  ffTheme?: browser.theme.Theme
-  colorScheme?: 'dark' | 'light'
+  parsedTheme?: ParsedTheme
+  frameColorScheme?: 'dark' | 'light'
+  toolbarColorScheme?: 'dark' | 'light'
   winId?: ID
   tabId?: ID
 }
 export function getUrlPageInitData(winId: ID, tabId: ID): UrlPageInitData {
   return {
     theme: Settings.state.theme,
-    ffTheme: Styles.theme,
-    colorScheme: Styles.reactive.colorScheme,
+    parsedTheme: Styles.parsedTheme,
+    frameColorScheme: Styles.reactive.frameColorScheme,
+    toolbarColorScheme: Styles.reactive.toolbarColorScheme,
     winId,
     tabId,
   }
@@ -546,8 +548,9 @@ export async function injectGroupPageScript(winId: ID, tabId: ID): Promise<void>
 
 export interface GroupPageInitData {
   theme?: typeof SETTINGS_OPTIONS.theme[number]
-  ffTheme?: browser.theme.Theme
-  colorScheme?: 'dark' | 'light'
+  parsedTheme?: ParsedTheme
+  frameColorScheme?: 'dark' | 'light'
+  toolbarColorScheme?: 'dark' | 'light'
   groupLayout?: typeof SETTINGS_OPTIONS.groupLayout[number]
   animations?: boolean
   groupInfo?: GroupInfo | null
@@ -560,10 +563,13 @@ export async function getGroupPageInitData(winId: ID, tabId: ID): Promise<GroupP
     return null
   })
 
+  console.log('[DEBUG] getGroupPageInitData, Styles.parsedTheme:', Styles.parsedTheme)
+
   return {
     theme: Settings.state.theme,
-    ffTheme: Styles.theme,
-    colorScheme: Styles.reactive.colorScheme,
+    parsedTheme: Styles.parsedTheme,
+    frameColorScheme: Styles.reactive.frameColorScheme,
+    toolbarColorScheme: Styles.reactive.toolbarColorScheme,
     groupLayout: Settings.state.groupLayout,
     animations: Settings.state.animations,
     groupInfo,

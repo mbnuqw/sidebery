@@ -79,11 +79,13 @@ body
   overflow: hidden
   background-color: var(--frame-bg)
   flex-direction: column
+  // padding-top: var(--s-top-padding, 0px)
 
 .top-horizontal-box
   position: relative
   display: flex
   flex-direction: column
+  margin-bottom: var(--general-margin)
 
 .main-box
   position: relative
@@ -91,7 +93,6 @@ body
   width: 100%
   height: 100%
   flex-direction: row
-  grid-gap: var(--ff-border-width, 1px)
 
 .central-box
   position: relative
@@ -101,6 +102,10 @@ body
   height: 100%
   flex-grow: 1
   flex-shrink: 1
+// If .main-box is the first element, set margin top
+.Notifications + .main-box .central-box
+  height: calc(100% + var(--s-darker-border-width, 0px) - var(--general-margin))
+  margin-top: calc(var(--general-margin) - var(--s-darker-border-width, 0px))
 
 .main-box .left-vertical-box
   position: relative
@@ -110,7 +115,6 @@ body
   align-items: center
   flex-shrink: 0
   z-index: 300
-  grid-gap: var(--ff-border-width, 1px)
 
 .main-box .right-vertical-box
   position: relative
@@ -118,7 +122,6 @@ body
   flex-direction: column
   flex-shrink: 0
   z-index: 300
-  grid-gap: var(--ff-border-width, 1px)
 
 // ---
 // -- Panels
@@ -224,7 +227,7 @@ body
     left: 0
     width: 100vw
     height: 2px
-    background-color: var(--selected-border)
+    background-color: var(--s-accent, var(--frame-el-overlay-selected-border))
     box-shadow: 3px 0 0 1px var(--frame-bg)
     opacity: 0
   &:before
@@ -232,7 +235,7 @@ body
     left: 0
     width: 0
     height: 0
-    border-left: 4px solid var(--selected-border)
+    border-left: 4px solid var(--s-accent, var(--frame-el-overlay-selected-border))
     border-right: 4px solid #00000000
     border-top: 4px solid #00000000
     border-bottom: 4px solid #00000000
@@ -277,11 +280,11 @@ for i in 1..16
     height: 16px
     transform: rotateZ(45deg)
   &:before
-    box-shadow: inset 0 0 0 2px var(--selected-border)
+    box-shadow: inset 0 0 0 2px var(--s-accent, var(--frame-el-overlay-selected-border))
     transition: background-color var(--d-fast)
   &:after
     opacity: 1
-    box-shadow: inset -1px 1px 0 0 var(--selected-border)
+    box-shadow: inset -1px 1px 0 0 var(--s-accent, var(--frame-el-overlay-selected-border))
   &[data-expanding="true"]
     animation: pointer-expand-arrow .3s
   &[data-expanding="true"]:after

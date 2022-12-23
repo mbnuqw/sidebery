@@ -106,7 +106,6 @@ async function main(): Promise<void> {
   Containers.setupContainersListeners()
   Sidebar.setupListeners()
 
-  if (Settings.state.theme !== 'proton') Styles.initTheme()
   if (Settings.state.sidebarCSS) Styles.loadCustomSidebarCSS()
   Styles.initColorScheme()
 

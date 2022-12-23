@@ -11,52 +11,92 @@
 // ---
 // -- Base colors
 // -
-#root[data-color-scheme="dark"]
-  --frame-bg: var(--ff-frame, var(--ff-toolbar, #282828))
-  --frame-fg: var(--ff-tab-background-text, #ccc)
-  --toolbar-bg: var(--ff-toolbar, #323232)
-  --toolbar-fg:
-    var(--ff-icons,
-    var(--ff-toolbar-text,
-    var(--ff-bookmark-text,
-    var(--ff-icons-attention, #eee))))
-  --hover-bg: #ffffff16
-  --clicked-bg: #ffffff24
-  --active-bg: #ffffff24
-  --active-border: #ffffff00
-  --selected-bg: #ffffff24
-  --selected-border: #47cfff
+#root[data-frame-color-scheme="dark"]
+  --frame-bg: var(--s-frame-bg, #282828)
+  --frame-fg: var(--s-frame-fg, #ccc)
+  --frame-el-overlay-hover-bg: #ffffff16
+  --frame-el-overlay-clicked-bg: #ffffff24
+  --frame-el-overlay-selected-bg: #ffffff24
+  --frame-el-overlay-selected-border: var(--s-accent, #47cfff)
+#root[data-frame-color-scheme="light"]
+  --frame-bg: var(--s-frame-bg, #f0f0f0)
+  --frame-fg: var(--s-frame-fg, #222)
+  --frame-el-overlay-hover-bg: #00000012
+  --frame-el-overlay-clicked-bg: #0000001c
+  --frame-el-overlay-selected-bg: #00000012
+  --frame-el-overlay-selected-border: var(--s-accent, #146fd9)
+
+#root[data-toolbar-color-scheme="dark"]
+  --toolbar-bg: var(--s-toolbar-bg, #323232)
+  --toolbar-fg: var(--s-toolbar-fg, #eee)
+  --toolbar-el-overlay-hover-bg: #ffffff16
+  --toolbar-el-overlay-clicked-bg: #ffffff24
+  --toolbar-el-overlay-active-bg: #ffffff24
+  --toolbar-el-overlay-active-border: #ffffff00
+  --toolbar-el-overlay-selected-bg: #ffffff24
+  --toolbar-el-overlay-selected-border: var(--s-accent, #47cfff)
   --status-ok: #64df64
   --status-err: #df6464
-  --status-active: #4993E6
+  --status-active: #47cfff
   --status-notice: #00e9fb
-  --border: var(--ff-toolbar-bottom-separator, var(--ff-toolbar-top-separator, #212121))
-
-#root[data-color-scheme="light"]
-  --frame-bg: var(--ff-frame, var(--ff-toolbar, #f0f0f0))
-  --frame-fg: var(--ff-tab-background-text, #222)
-  --toolbar-bg: var(--ff-toolbar, #fafafa)
-  --toolbar-fg:
-    var(--ff-icons,
-    var(--ff-toolbar-text,
-    var(--ff-bookmark-text,
-    var(--ff-icons-attention, #111))))
-  --hover-bg: #00000012
-  --clicked-bg: #0000001c
-  --active-bg: #00000018
-  --active-border: #00000008
-  --selected-bg: #00000012
-  --selected-border: #146fd9
+  --accent: var(--s-accent, var(--status-active))
+  --border: var(--s-toolbar-border, #21212164)
+#root[data-toolbar-color-scheme="light"]
+  --toolbar-bg: var(--s-toolbar-bg, #fafafa)
+  --toolbar-fg: var(--s-toolbar-fg, #111)
+  --toolbar-el-overlay-hover-bg: #00000012
+  --toolbar-el-overlay-clicked-bg: #0000001c
+  --toolbar-el-overlay-active-bg: #fff2
+  --toolbar-el-overlay-active-border: #00000008
+  --toolbar-el-overlay-selected-bg: #00000012
+  --toolbar-el-overlay-selected-border: var(--s-accent, #146fd9)
   --status-ok: #098623
   --status-err: #d72f2f
   --status-active: #146fd9
   --status-notice: #01acda
-  --border: var(--ff-toolbar-bottom-separator, var(--ff-toolbar-top-separator, #dbdbdb))
+  --accent: var(--s-accent, var(--status-active))
+  --border: var(--s-toolbar-border, #dbdbdb64)
+
+#root[data-act-el-color-scheme="dark"]
+  --active-el-bg: var(--s-act-el-bg, #ffffff24)
+  --active-el-fg: var(--s-act-el-fg, #fff)
+  --active-el-shadow: 0 1px 4px -1px #00000048, inset 0 0 0 1px var(--s-act-el-border, #ffffff08)
+  --active-el-overlay-hover-bg: #ffffff16
+  --active-el-overlay-clicked-bg: #ffffff24
+#root[data-act-el-color-scheme="light"]
+  --active-el-bg: var(--s-act-el-bg, #ffffff64)
+  --active-el-fg: var(--s-act-el-fg, #000)
+  --active-el-shadow: 0 1px 4px -1px #00000042, inset 0 0 0 1px var(--s-act-el-border, #fff2)
+  --active-el-overlay-hover-bg: #00000012
+  --active-el-overlay-clicked-bg: #0000001c
+
+#root[data-popup-color-scheme="dark"]
+  --popup-bg: var(--s-popup-bg, var(--frame-bg), #363636)
+  --popup-fg: var(--s-popup-fg, var(--frame-fg), #fafafa)
+#root[data-popup-color-scheme="light"]
+  --popup-bg: var(--s-popup-bg, var(--frame-bg), #fff)
+  --popup-fg: var(--s-popup-fg, var(--frame-fg), #111)
+
+// ---
+// -- Plain theme
+// -
+#root[data-theme="plain"][data-density="default"]
+  --general-border-radius: 2px
+#root[data-theme="plain"][data-frame-color-scheme="dark"]
+  --frame-el-bg: var(--toolbar-bg)
+  --frame-el-fg: var(--toolbar-fg)
+  --frame-el-shadow: 0 1px 1px 0 #0002
+  --active-el-shadow: 0 1px 4px -1px #00000048, inset 0 0 0 1px var(--s-act-el-border, #fff1)
+#root[data-theme="plain"][data-frame-color-scheme="light"]
+  --frame-el-bg: var(--toolbar-bg)
+  --frame-el-fg: var(--toolbar-fg)
+  --frame-el-shadow: 0 1px 1px 0 #0002
+  --active-el-shadow: 0 1px 4px -1px #00000042, inset 0 0 0 1px var(--s-act-el-border, #146fd9)
 
 // ---
 // -- Local color
 // -
-#root[data-color-scheme="dark"]
+#root[data-toolbar-color-scheme="dark"]
   [data-color="toolbar"]
     --color: #f2f2f2
   [data-color="inactive"]
@@ -65,7 +105,7 @@
     --color: #ffcb00
   [data-color="purple"]
     --color: #c071fc
-#root[data-color-scheme="light"]
+#root[data-toolbar-color-scheme="light"]
   [data-color="toolbar"]
     --color: #121212
   [data-color="inactive"]

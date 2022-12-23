@@ -3,6 +3,8 @@ import { UrlPageInitData } from 'src/services/tabs.bg.actions'
 import { toCSSVarName } from 'src/utils'
 import * as Logs from 'src/services/logs'
 import { InstanceType } from 'src/types'
+import { ParsedTheme, SrcVars } from 'src/services/styles'
+import { getColorSchemeName } from 'src/services/styles.actions'
 
 function waitDOM(): Promise<void> {
   return new Promise(res => {
@@ -18,35 +20,17 @@ function waitInitData(): Promise<void> {
   })
 }
 
-function initTheme(theme: string): void {
-  const themeLinkEl = document.getElementById('theme_link') as HTMLLinkElement
+export function applyThemeSrcVars(parsed: ParsedTheme, rootEl?: HTMLElement): void {
+  if (!rootEl) rootEl = document.getElementById('root') ?? undefined
+  if (!rootEl) return
 
-  // Create next theme link
-  const nextThemeLinkEl = document.createElement('link')
-  nextThemeLinkEl.type = 'text/css'
-  nextThemeLinkEl.rel = 'stylesheet'
-  document.head.appendChild(nextThemeLinkEl)
-
-  // Wait until new theme loaded
-  nextThemeLinkEl.onload = () => {
-    // Remove prev theme link
-    if (themeLinkEl) themeLinkEl.remove()
-    nextThemeLinkEl.id = 'theme_link'
-  }
-  nextThemeLinkEl.href = `/themes/${theme}/url.css`
-}
-
-function applyFirefoxThemeColors(theme: browser.theme.Theme): void {
-  const rootEl = document.getElementById('root')
-  if (!rootEl || !theme.colors) return
-
-  for (const prop of Object.keys(theme.colors) as (keyof browser.theme.ThemeColors)[]) {
-    const value = theme.colors[prop]
+  for (const prop of Object.keys(parsed.vars) as (keyof SrcVars)[]) {
+    const value = parsed.vars[prop]
 
     if (value) {
-      rootEl.style.setProperty(toCSSVarName('ff_' + prop), value)
+      rootEl.style.setProperty(toCSSVarName('s_' + prop), value)
     } else {
-      rootEl.style.removeProperty(toCSSVarName('ff_' + prop))
+      rootEl.style.removeProperty(toCSSVarName('s_' + prop))
     }
   }
 }
@@ -60,15 +44,16 @@ void (async () => {
   if (initData.winId !== undefined) Logs.setWinId(initData.winId)
   if (initData.tabId !== undefined) Logs.setTabId(initData.tabId)
 
-  if (initData.theme) initTheme(initData.theme)
+  if (initData.theme) document.body.setAttribute('data-theme', initData.theme)
   else Logs.warn('Cannot init sidebery theme')
-  if (initData.ffTheme) applyFirefoxThemeColors(initData.ffTheme)
+  if (initData.frameColorScheme) {
+    document.body.setAttribute('data-frame-color-scheme', initData.frameColorScheme)
+  } else Logs.warn('Cannot set frame color scheme')
+  if (initData.toolbarColorScheme) {
+    document.body.setAttribute('data-toolbar-color-scheme', initData.toolbarColorScheme)
+  } else Logs.warn('Cannot set toolbar color scheme')
+  if (initData.parsedTheme) applyThemeSrcVars(initData.parsedTheme)
   else Logs.warn('Cannot apply firefox theme colors')
-  if (initData.colorScheme) document.body.setAttribute('data-color-scheme', initData.colorScheme)
-  else {
-    Logs.warn('Cannot set color scheme')
-    document.body.setAttribute('data-color-scheme', 'dark')
-  }
 
   const titleEl = document.getElementById('title')
   const targetTitleLabelEl = document.getElementById('target_title_label')
