@@ -18,8 +18,6 @@
   padding: 0 16px
   flex-shrink: 0
   background-color: var(--setup-bg)
-  background-image: var(--bg-img)
-  background-size: var(--bg-size)
   box-shadow: inset 0 -1px 0 0 var(--border)
   z-index: 1
 
@@ -40,17 +38,7 @@
   grid-gap: 12px
   padding: 0 16px
   background-color: var(--setup-bg)
-  background-image: var(--bg-img)
-  background-size: var(--bg-size)
-  &:before
-    content: ''
-    position: absolute
-    left: 2px
-    bottom: 0
-    width: calc(100% - 4px)
-    height: 1px
-    background-color: var(--toolbar-fg)
-    opacity: .1
+  box-shadow: 0 1px 0 0 var(--border-color)
   &[data-empty="true"]
     height: 100%
     &:after
@@ -85,7 +73,7 @@
   flex: 1 0 auto
   z-index: 1
   overflow: hidden
-  box-shadow: 0 0 0 1px #00000016, 0 0 8px 0 #00000032, inset 0 1px 0 0 var(--border-flare)
+  box-shadow: 0 0 0 1px var(--border-color)
 
 .Snapshots .snapshot-list-section .controls
   position: relative
@@ -93,15 +81,13 @@
 
 .Snapshots .snapshot-list
   position: relative
-  width: 100%
+  width: calc(100% - 16px)
   height: 100%
+  padding: 0 8px
   flex: 1 0 auto
   overflow-y: auto
   overflow-x: hidden
   scrollbar-color: var(--scrollbar-color) #0000
-  background-attachment: local
-  background-image: var(--bg-img)
-  background-size: var(--bg-size)
   &[data-empty="true"]:after
     content: '...'
     position: absolute
@@ -234,10 +220,6 @@
   align-items: center
   overflow-y: auto
   scrollbar-color: var(--scrollbar-color) #0000
-  background-attachment: local
-  background-image: var(--bg-img)
-  background-size: var(--bg-size)
-  box-shadow: inset 0 1px 0 0 var(--border-flare)
 
 // --- Window ---
 .Snapshots .windows
@@ -525,11 +507,7 @@ for i in 1..12
   width: 100%
   height: 36px
   background-color: var(--toolbar-bg)
-  background-image: var(--bg-img)
-  background-size: var(--bg-size)
-  box-shadow: 0 -1px 0 0 var(--border),
-              inset 0 1px 0 0 var(--border-flare),
-              0 0 8px 0 #00000032
+  box-shadow: 0 -1px 0 0 var(--border-color)
   opacity: 0
   transform: translateY(100%)
   transition: opacity var(--d-fast), transform var(--d-fast)
