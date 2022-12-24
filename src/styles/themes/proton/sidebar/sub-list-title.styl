@@ -20,32 +20,27 @@
   display: flex
   justify-content: center
   align-items: center
-  margin: 0 var(--slt-margin)
-  padding: 0 0 var(--slt-margin)
+  margin: 0 var(--slt-margin) var(--slt-margin)
   width: calc(100% - var(--slt-margin) * 2)
+  border-radius: var(--slt-border-radius)
+  background-color: var(--frame-el-bg)
+  box-shadow: var(--frame-el-shadow)
   &:before
-  &:after
     content: ''
     position: absolute
     top: 0
     left: 0
     width: 100%
-    height: calc(100% - var(--slt-margin))
+    height: 100%
     border-radius: var(--slt-border-radius)
-    opacity: .08
-  &:before
-    background-color: var(--frame-fg)
-  &:after
-    opacity: 0
-    box-shadow: inset 0 0 0 1px var(--frame-fg)
+    opacity: 1
 .SubListTitle:hover .body:before
-  opacity: .12
+  background-color: var(--frame-el-overlay-hover-bg)
 .SubListTitle:active .body:before
-  opacity: .16
-  box-shadow: inset 0 0 0 1px var(--active-border)
-.SubListTitle[data-sel="true"] .body:before
-.SubListTitle[data-sel="true"] .body:after
-  opacity: .2
+  background-color: var(--frame-el-overlay-clicked-bg)
+.SubListTitle[data-folded="false"] .body
+  background-color: var(--active-el-bg)
+  box-shadow: var(--active-el-shadow)
 
 .SubListTitle .title
   position: relative
@@ -59,6 +54,8 @@
   white-space: nowrap
   overflow: hidden
   text-overflow: ellipsis
+.SubListTitle[data-folded="false"] .title
+  color: var(--active-el-fg)
 
 .SubListTitle .len
   position: relative
@@ -71,6 +68,9 @@
   opacity: .7
 .SubListTitle:hover .len
   opacity: .5
+.SubListTitle[data-folded="false"] .len
+  color: var(--active-el-fg)
+  opacity: 1
 
 .SubListTitle .expand
   position: relative
@@ -83,3 +83,5 @@
   opacity: .7
 .SubListTitle[data-folded="true"] .expand
   transform: rotateZ(-90deg)
+.SubListTitle[data-folded="false"] .expand
+  fill: var(--active-el-fg)
