@@ -1,10 +1,5 @@
 @import '../../../utils'
 
-#root
-  --bookmarks-panel-padding: 1px 0 0
-#root[data-density="compact"]
-  --bookmarks-panel-padding: 0
-
 .BookmarksPanel
   position: absolute
   display: flex
@@ -14,9 +9,6 @@
   z-index: 100
   transition: transform var(--d-fast), opacity var(--d-fast), z-index var(--d-fast)
   overflow: hidden
-
-// .BookmarksPanel .scrollable
-//   padding: var(--bookmarks-panel-padding)
 
 .BookmarksPanel .bookmarks-tree
 .BookmarksPanel .bookmarks-history

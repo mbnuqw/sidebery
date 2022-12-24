@@ -214,7 +214,7 @@ export const SETTINGS_OPTIONS = {
   rmChildTabs: ['all', 'folded', 'none'],
   fontSize: ['xxs', 'xs', 's', 'm', 'l', 'xl', 'xxl'],
   theme: ['proton', 'plain'],
-  density: ['compact', 'default'],
+  density: ['compact', 'default', 'loose'],
   colorScheme: ['dark', 'light', 'sys', 'ff'],
   snapIntervalUnit: ['min', 'hr', 'day'],
   snapLimitUnit: ['snap', 'kb', 'day'],

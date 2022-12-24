@@ -2068,6 +2068,10 @@ export const setupPageTranslations: Translations = {
     en: 'default',
     ru: 'стандартный',
   },
+  'settings.density_loose': {
+    en: 'loose',
+    ru: 'свободный',
+  },
   'settings.switch_color_scheme': {
     en: 'Color scheme',
     ru: 'Цветовая схема',
