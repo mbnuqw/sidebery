@@ -2304,12 +2304,6 @@ export function foldTabsBranch(rootTabId: ID): void {
     }
   }
 
-  // Update succession
-  if (rootTab.active) {
-    const target = findSuccessorTab(rootTab)
-    if (target) browser.tabs.moveInSuccession([rootTab.id], target.id)
-  }
-
   if (Settings.state.discardFolded) {
     if (Settings.state.discardFoldedDelay === 0) {
       toHide.map(id => browser.tabs.discard(id))
@@ -2337,6 +2331,12 @@ export function foldTabsBranch(rootTabId: ID): void {
     browser.tabs.hide?.(rootTabId).catch(err => {
       Logs.err('Tabs.foldTabsBranch: Cannot hide parent tab:', err)
     })
+  }
+
+  // Update succession
+  if (rootTab.active) {
+    const target = findSuccessorTab(rootTab)
+    if (target) browser.tabs.moveInSuccession([rootTab.id], target.id)
   }
 
   saveTabData(rootTabId)
@@ -2411,12 +2411,6 @@ export function expTabsBranch(rootTabId: ID): void {
     }
   }
 
-  // Update succession
-  if (rootTab.active) {
-    const target = findSuccessorTab(rootTab)
-    if (target) browser.tabs.moveInSuccession([rootTab.id], target.id)
-  }
-
   // Show the parent tab when expanding the group
   if (hideFolded && (hideFoldedParent || (hideFoldedGroup && rootTab.isGroup))) {
     rootTab.invisible = false
@@ -2429,6 +2423,12 @@ export function expTabsBranch(rootTabId: ID): void {
     browser.tabs.show?.(toShow).catch(err => {
       Logs.err('Tabs.expTabsBranch: Cannot show tabs:', err)
     })
+  }
+
+  // Update succession
+  if (rootTab.active) {
+    const target = findSuccessorTab(rootTab)
+    if (target) browser.tabs.moveInSuccession([rootTab.id], target.id)
   }
 
   saveTabData(rootTabId)

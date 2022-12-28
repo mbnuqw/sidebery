@@ -76,7 +76,6 @@ import { Mouse } from 'src/services/mouse'
 import { DnD } from 'src/services/drag-and-drop'
 import { Search } from 'src/services/search'
 import { Favicons } from 'src/services/favicons'
-import * as Logs from 'src/services/logs'
 
 const props = defineProps<{ tab: ReactiveTab }>()
 
