@@ -772,6 +772,7 @@ export function rememberRemoved(tabs: Tab[]) {
       const index = Tabs.reactive.recentlyRemoved.findIndex(t => t.id === tab.parentId)
       if (index !== -1) {
         parent = Tabs.reactive.recentlyRemoved[index]
+        if (!parent.isParent) parent.isParent = true
         parentIndex = index
       } else {
         parent = undefined
@@ -791,7 +792,7 @@ export function rememberRemoved(tabs: Tab[]) {
       url: tab.url,
       title: tab.title,
       parentId: parent?.id ?? NOID,
-      isParent: tab.isParent,
+      isParent: false,
       lvl: parent ? tab.lvl - minLvl : 0,
       containerId: tab.cookieStoreId,
       containerColor: Containers.reactive.byId[tab.cookieStoreId]?.color,
