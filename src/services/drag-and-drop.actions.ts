@@ -799,6 +799,8 @@ export function isDropEventConsumed(): boolean {
 export async function onDrop(e: DragEvent): Promise<void> {
   dropEventWasConsumed()
 
+  if (e.ctrlKey) DnD.dropMode = 'copy'
+
   // Handle native firefox tabs
   if (isNativeTabs(e)) {
     const result = await Utils.parseDragEvent(e, Windows.lastFocusedId)
@@ -918,8 +920,11 @@ export async function onDrop(e: DragEvent): Promise<void> {
   if (fromBookmarks && toBookmarks) {
     const dstPanel = Sidebar.reactive.panelsById[DnD.reactive.dstPanelId]
     if (Utils.isBookmarksPanel(dstPanel) && dstPanel.viewMode === 'tree') {
-      const ids = DnD.items.map(i => i.id)
-      Bookmarks.move(ids, getDestInfo())
+      if (DnD.dropMode === 'copy') Bookmarks.createFrom(DnD.items, getDestInfo())
+      else {
+        const ids = DnD.items.map(i => i.id)
+        Bookmarks.move(ids, getDestInfo())
+      }
     }
   }
 
