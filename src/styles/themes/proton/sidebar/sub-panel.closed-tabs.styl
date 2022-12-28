@@ -1,0 +1,238 @@
+@import '../../../utils'
+
+.ClosedTabsSubPanel
+  position: relative
+  display: flex
+  flex-direction: column
+  width: 100%
+  height: 100%
+  padding-top: var(--general-margin)
+  overflow: hidden
+  min-height: 100px
+
+.ClosedTabsSubPanel .closed-tabs-container
+  position: relative
+
+.ClosedTabsSubPanel .nothing-placeholder
+  position: relative
+  display: flex
+  justify-content: center
+  align-items: center
+  width: 100%
+  height: 100%
+  flex-grow: 1
+  .msg
+    position: relative
+    padding: 0 8px
+    font-size: rem(14)
+    font-weight: 700
+    color: var(--frame-fg)
+    opacity: .3
+
+.ClosedTabsSubPanel .closed-tab
+  position: relative
+  width: calc(100% - var(--tabs-margin) * 2)
+  height: calc(var(--tabs-height) + var(--tabs-margin))
+  margin: 0 var(--tabs-margin)
+  padding-bottom: var(--tabs-margin)
+  z-index: 10
+  transform: translateZ(0)
+  transition: transform var(--d-fast), opacity var(--d-fast), padding var(--d-fast)
+
+  padding-left: calc(var(--tabs-indent) * 16)
+  &[data-lvl="0"]
+    padding-left: 0
+  &[data-lvl="1"]
+    padding-left: var(--tabs-indent)
+  &[data-lvl="2"]
+    padding-left: calc(var(--tabs-indent) * 2)
+  &[data-lvl="3"]
+    padding-left: calc(var(--tabs-indent) * 3)
+  &[data-lvl="4"]
+    padding-left: calc(var(--tabs-indent) * 4)
+  &[data-lvl="5"]
+    padding-left: calc(var(--tabs-indent) * 5)
+  &[data-lvl="6"]
+    padding-left: calc(var(--tabs-indent) * 6)
+  &[data-lvl="7"]
+    padding-left: calc(var(--tabs-indent) * 7)
+  &[data-lvl="8"]
+    padding-left: calc(var(--tabs-indent) * 8)
+  &[data-lvl="9"]
+    padding-left: calc(var(--tabs-indent) * 9)
+  &[data-lvl="10"]
+    padding-left: calc(var(--tabs-indent) * 10)
+  &[data-lvl="11"]
+    padding-left: calc(var(--tabs-indent) * 11)
+  &[data-lvl="12"]
+    padding-left: calc(var(--tabs-indent) * 12)
+  &[data-lvl="13"]
+    padding-left: calc(var(--tabs-indent) * 13)
+  &[data-lvl="14"]
+    padding-left: calc(var(--tabs-indent) * 14)
+  &[data-lvl="15"]
+    padding-left: calc(var(--tabs-indent) * 15)
+  
+.ClosedTabsSubPanel .closed-tab .body
+  position: relative
+  display: flex
+  width: 100%
+  height: 100%
+  align-items: center
+  transition: opacity var(--d-fast), transform var(--d-fast)
+  border-radius: var(--tabs-border-radius)
+  background-color: var(--frame-el-bg)
+  box-shadow: var(--frame-el-shadow)
+  &:after
+    content: ''
+    position: absolute
+    display: none
+    top: calc(-20% - var(--tabs-margin))
+    left: calc(var(--tabs-indent) / -2)
+    width: 1px
+    height: calc(var(--tabs-height) + var(--tabs-margin))
+    opacity: var(--tabs-lvl-opacity)
+    background-color: var(--frame-fg)
+  &:before
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    border-radius: var(--tabs-border-radius)
+    z-index: 1
+
+.ClosedTabsSubPanel .closed-tab:hover .body:before
+  background-color: var(--frame-el-overlay-hover-bg)
+
+.ClosedTabsSubPanel .closed-tab:active .body:before
+  background-color: var(--frame-el-overlay-clicked-bg)
+
+#root[data-tabs-tree-lvl-marks="true"] .ClosedTabsSubPanel .closed-tab:not([data-lvl="0"]) .body:after
+  display: block
+  box-shadow: calc(var(--tabs-indent) * -1) 0 0 0 var(--frame-fg),
+              calc(var(--tabs-indent) * -2) 0 0 0 var(--frame-fg),
+              calc(var(--tabs-indent) * -3) 0 0 0 var(--frame-fg),
+              calc(var(--tabs-indent) * -4) 0 0 0 var(--frame-fg),
+              calc(var(--tabs-indent) * -5) 0 0 0 var(--frame-fg),
+              calc(var(--tabs-indent) * -6) 0 0 0 var(--frame-fg),
+              calc(var(--tabs-indent) * -7) 0 0 0 var(--frame-fg),
+              calc(var(--tabs-indent) * -8) 0 0 0 var(--frame-fg),
+              calc(var(--tabs-indent) * -9) 0 0 0 var(--frame-fg),
+              calc(var(--tabs-indent) * -10) 0 0 0 var(--frame-fg),
+              calc(var(--tabs-indent) * -11) 0 0 0 var(--frame-fg),
+              calc(var(--tabs-indent) * -12) 0 0 0 var(--frame-fg),
+              calc(var(--tabs-indent) * -13) 0 0 0 var(--frame-fg),
+              calc(var(--tabs-indent) * -14) 0 0 0 var(--frame-fg),
+              calc(var(--tabs-indent) * -15) 0 0 0 var(--frame-fg),
+              calc(var(--tabs-indent) * -16) 0 0 0 var(--frame-fg)
+.ClosedTabsSubPanel .closed-tab[data-parent="true"] + .closed-tab .body:after
+  background-color: transparent
+  background-image: linear-gradient(0deg, var(--frame-fg) 0, var(--frame-fg) 80%, transparent 80%, transparent)
+
+.ClosedTabsSubPanel .closed-tab .flash-fx
+  position: absolute
+  display: none
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  border-radius: var(--tabs-border-radius)
+  overflow: hidden
+  opacity: 1
+  animation: flash-box-animation .4s
+  &:before
+    content: ''
+    position: absolute
+    width: 100%
+    height: 100%
+    top: 0
+    left: 0
+    background-image: linear-gradient(90deg, #00000000, var(--frame-fg))
+    transform: translateX(-100%)
+    animation: flash-progress-animation .4s
+.ClosedTabsSubPanel .closed-tab[data-flash="true"] .flash-fx
+  display: block
+
+@keyframes flash-box-animation
+  0%
+    opacity: .8
+  100%
+    opacity: 0
+
+@keyframes flash-progress-animation
+  0%
+    transform: translateX(-100%)
+  100%
+    transform: translateX(5px)
+
+.ClosedTabsSubPanel .closed-tab .fav
+  position: relative
+  width: 16px
+  height: 16px
+  flex-shrink: 0
+  opacity: 1
+  margin: 0 var(--tabs-inner-gap) 0 calc(var(--tabs-inner-gap) + 2px)
+  z-index: 20
+  > svg
+    opacity: .7
+
+.ClosedTabsSubPanel .closed-tab .fav-icon
+  position: absolute
+  top: 0
+  left: 0
+  width: 16px
+  height: 16px
+  fill: var(--frame-fg)
+  transition: opacity var(--d-fast)
+
+.ClosedTabsSubPanel .closed-tab .t-box
+  position: relative
+  width: 100%
+  margin: 0 2px 0 0
+  transition: opacity var(--d-fast), transform var(--d-fast)
+  overflow: hidden
+  z-index: 1
+  mask: linear-gradient(-90deg, transparent, #000000 12px, #000000)
+
+.ClosedTabsSubPanel .closed-tab .title
+  position: relative
+  font: var(--tabs-font)
+  color: var(--frame-fg)
+  padding: 0 1px
+  white-space: nowrap
+  overflow: hidden
+
+.ClosedTabsSubPanel .closed-tab .branch-btn
+  position: relative
+  display: none
+  justify-content: center
+  align-items: center
+  margin: 0 1px 0 0
+  width: calc(var(--tabs-height) - 2px)
+  height: calc(var(--tabs-height) - 2px)
+  flex-shrink: 0
+  z-index: 2
+  border-radius: calc(var(--general-border-radius) - 1px)
+  &:hover
+    background-color: var(--frame-el-overlay-hover-bg)
+  &:active
+    background-color: var(--frame-el-overlay-clicked-bg)
+  > svg
+    position: relative
+    width: 16px
+    height: 16px
+    fill: var(--frame-fg)
+    opacity: .7
+.ClosedTabsSubPanel .closed-tab[data-parent="true"] .branch-btn
+  display: flex
+
+.ClosedTabsSubPanel .closed-tab .container-mark
+  position: absolute
+  top: var(--tabs-border-radius)
+  right: 0
+  width: 2px
+  height: calc(100% - var(--tabs-border-radius) * 2)
+  z-index: 15
+  background-color: var(--color)

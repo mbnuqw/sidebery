@@ -1,0 +1,55 @@
+@import '../../../utils'
+
+#root
+  --bookmarks-sub-panel-height: 66vh
+
+.SubPanel
+  --nav-height: 30px
+
+  position: relative
+  width: 100%
+  height: 0
+  flex-shrink: 0
+  z-index: 9999
+
+.SubPanel .overlay
+  position: absolute
+  width: 100%
+  height: 0
+  top: -100vh
+  background-color: var(--frame-bg)
+  opacity: 0
+  transition: opacity var(--d-fast)
+.SubPanel[data-active="true"] .overlay
+  height: 100vh
+  opacity: .7
+
+.SubPanel .sub-panel
+  position: absolute
+  display: flex
+  flex-direction: column
+  top: 0
+  max-height: var(--bookmarks-sub-panel-height)
+  width: 100%
+  background-color: var(--frame-bg)
+  transition: transform var(--d-fast)
+  overflow: hidden
+.SubPanel[data-active="true"] .sub-panel
+  transform: translateY(-100%)
+  box-shadow: 0 0 8px 0 #00000032
+
+.SubPanel .header
+  position: relative
+  display: flex
+  justify-content: center
+  align-items: center
+  background-color: var(--toolbar-bg)
+  width: 100%
+  height: 30px
+  flex-shrink: 0
+
+.SubPanel .header > .title
+  position: relative
+  font-size: rem(14)
+  font-weight: 700
+  color: var(--toolbar-fg)

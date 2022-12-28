@@ -563,8 +563,6 @@ export async function getGroupPageInitData(winId: ID, tabId: ID): Promise<GroupP
     return null
   })
 
-  console.log('[DEBUG] getGroupPageInitData, Styles.parsedTheme:', Styles.parsedTheme)
-
   return {
     theme: Settings.state.theme,
     parsedTheme: Styles.parsedTheme,

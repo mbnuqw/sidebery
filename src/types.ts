@@ -1,6 +1,6 @@
 import { Container } from './types/containers'
 import { SettingsState } from './types/settings'
-import { SidebarConfig, OldPanelConfig } from './types/sidebar'
+import { SidebarConfig, OldPanelConfig, TabsPanel } from './types/sidebar'
 import { ContextMenuConfig_v4, MenuConfs } from './types/menu'
 import { CssVars } from './types/styles'
 import { Snapshot, Snapshot_v4 } from './types/snapshots'
@@ -114,6 +114,17 @@ export interface ScrollBoxComponent {
   getScrollableBox(): HTMLElement | null
 }
 
+export interface SubPanelComponent {
+  open: (type: SubPanelType, panel: TabsPanel) => void
+  close: () => void
+}
+
+export const enum SubPanelType {
+  Null = 0,
+  RecentlyClosedTabs = 1,
+  Bookmarks = 2,
+}
+
 export interface SelectInputComponent {
   open: () => void
   close: () => void
@@ -179,6 +190,7 @@ export interface DragInfo {
   panelId?: ID
   pinnedTabs?: boolean
   index?: number
+  copy?: boolean
 }
 
 export interface SrcPlaceInfo {

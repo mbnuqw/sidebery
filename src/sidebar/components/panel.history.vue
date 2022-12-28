@@ -1,6 +1,6 @@
 <template lang="pug">
 .HistoryPanel.panel
-  ScrollBox(ref="scrollBox" @bottom="onScrollBottom")
+  ScrollBox(@bottom="onScrollBottom")
     .history-groups(ref="groupsListEl")
       .group(
         v-for="(group, i) of historyList"
@@ -59,7 +59,6 @@ onUpdated(() => {
     groupsPositions[i] = el.offsetTop
   }
 })
-const scrollBox = ref<ScrollBoxComponent | null>(null)
 const state = reactive({
   expandedHistoryGroups: [true],
   historyLoading: false,

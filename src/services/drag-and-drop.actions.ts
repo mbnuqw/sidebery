@@ -53,6 +53,7 @@ export function start(info: DragInfo, dstType?: DropType): void {
   DnD.srcWinId = info.windowId
   DnD.srcPanelId = info.panelId
   DnD.srcIndex = info.index ?? -1
+  DnD.dropMode = info.copy ? 'copy' : 'auto'
   DnD.reactive.dstPanelId = info.panelId
 
   if (dstType) DnD.reactive.dstType = dstType
@@ -116,6 +117,7 @@ export function reset(): void {
   DnD.srcWinId = NOID
   DnD.srcPanelId = NOID
   DnD.srcIndex = -1
+  DnD.dropMode = 'auto'
 
   DnD.reactive.dstIndex = -1
   DnD.reactive.dstPanelId = ''
@@ -886,7 +888,8 @@ export async function onDrop(e: DragEvent): Promise<void> {
     const dstInfo = getDestInfo()
     const reopenNeeded = isContainerChanged()
 
-    if (reopenNeeded) await Tabs.reopen(DnD.items, dstInfo)
+    if (DnD.dropMode === 'copy') await Tabs.open(DnD.items, dstInfo)
+    else if (reopenNeeded) await Tabs.reopen(DnD.items, dstInfo)
     else await Tabs.move(DnD.items, srcInfo, dstInfo)
   }
 

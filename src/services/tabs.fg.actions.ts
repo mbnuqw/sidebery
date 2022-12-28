@@ -6,7 +6,7 @@ import { Stored, Tab, Panel, TabCache, ActiveTabsHistory, ReactiveTab, TabStatus
 import { Notification, TabSessionData, TabsTreeData, DragInfo } from 'src/types'
 import { WindowChoosingDetails, SrcPlaceInfo, DstPlaceInfo, ItemInfo } from 'src/types'
 import { TabsPanel, PanelType } from 'src/types'
-import { Tabs } from 'src/services/tabs.fg'
+import { RecentlyRemovedTabInfo, Tabs } from 'src/services/tabs.fg'
 import * as IPC from 'src/services/ipc'
 import * as Logs from 'src/services/logs'
 import { Settings } from 'src/services/settings'
@@ -118,6 +118,7 @@ export function unload(): void {
 
   Tabs.reactive.byId = {}
   Tabs.reactive.pinned = []
+  Tabs.reactive.recentlyRemoved = []
   Tabs.list = []
   Tabs.byId = {}
   Tabs.urlsInUse = {}
@@ -754,6 +755,63 @@ export function removeOtherTabs(tabIds: ID[]): void {
   removeTabs(toRm)
 }
 
+const RECENTLY_REMOVED_LIMIT_MS = 5 * 60 * 1000
+export function rememberRemoved(tabs: Tab[]) {
+  let minLvl = 0
+  let parent
+  let parentIndex = 0
+
+  const timestamp = Date.now()
+
+  for (const tab of tabs) {
+    if (tab.parentId === NOID || tab.parentId !== parent?.id) parent = undefined
+
+    // If tab has parent
+    if (tab.parentId !== NOID && tab.parentId !== parent?.id) {
+      // Try to find it in recently removed
+      const index = Tabs.reactive.recentlyRemoved.findIndex(t => t.id === tab.parentId)
+      if (index !== -1) {
+        parent = Tabs.reactive.recentlyRemoved[index]
+        parentIndex = index
+      } else {
+        parent = undefined
+      }
+    }
+
+    // Set lowest level of the branch to shift result level if parent is not found
+    if (tab.parentId !== NOID && !parent) minLvl = tab.lvl
+    else if (tab.parentId === NOID) minLvl = 0
+
+    // Update insertion index
+    if (!parent) parentIndex = 0
+    else parentIndex++
+
+    const removedTabInfo: RecentlyRemovedTabInfo = {
+      id: tab.id,
+      url: tab.url,
+      title: tab.title,
+      parentId: parent?.id ?? NOID,
+      isParent: tab.isParent,
+      lvl: parent ? tab.lvl - minLvl : 0,
+      containerId: tab.cookieStoreId,
+      containerColor: Containers.reactive.byId[tab.cookieStoreId]?.color,
+      favIconUrl: tab.favIconUrl,
+      favPlaceholder: Favicons.getFavPlaceholder(tab.url),
+      time: timestamp,
+    }
+
+    Tabs.reactive.recentlyRemoved.splice(parentIndex, 0, removedTabInfo)
+  }
+
+  // Limit recentlyRemoved list
+  const limitIndex = Tabs.reactive.recentlyRemoved.findIndex(t => {
+    return timestamp - t.time > RECENTLY_REMOVED_LIMIT_MS
+  })
+  if (limitIndex !== -1) {
+    Tabs.reactive.recentlyRemoved = Tabs.reactive.recentlyRemoved.slice(0, limitIndex)
+  }
+}
+
 /**
  * Remove tabs
  */
@@ -824,6 +882,9 @@ export async function removeTabs(tabIds: ID[], silent?: boolean): Promise<void> 
     Tabs.removingTabs = [...toRemove]
   }
 
+  // Remember removed tabs
+  Tabs.rememberRemoved(tabs)
+
   // No-empty panels
   if (tabs.length === panel.len && panel.noEmpty) {
     Tabs.createTabInPanel(panel)
@@ -855,7 +916,7 @@ export async function removeTabs(tabIds: ID[], silent?: boolean): Promise<void> 
     })
   }
 
-  if (!Selection.isSet()) {
+  if (!Selection.isSet() && visibleLen > 0) {
     Tabs.incrementScrollRetainer(panel, lastTabToo ? visibleLen - 1 : visibleLen)
   }
 

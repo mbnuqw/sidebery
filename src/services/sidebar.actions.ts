@@ -2,7 +2,7 @@ import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
 import { PanelConfig, Panel, Stored, ItemBounds, Tab, Bookmark, DstPlaceInfo } from 'src/types'
 import { Notification, OldPanelConfig, SidebarConfig, BookmarksPanelConfig } from 'src/types'
-import { PanelType, TabsPanel, BookmarksPanel, ScrollBoxComponent } from 'src/types'
+import { PanelType, TabsPanel, BookmarksPanel, ScrollBoxComponent, SubPanelType } from 'src/types'
 import { TabsPanelConfig, ItemBoundsType, ReactiveTab, DialogConfig } from 'src/types'
 import { BOOKMARKS_PANEL_STATE, TABS_PANEL_STATE, NOID, CONTAINER_ID, Err } from 'src/defaults'
 import { BOOKMARKS_PANEL, TABS_PANEL_CONFIG, DEFAULT_CONTAINER_ID } from 'src/defaults'
@@ -2117,4 +2117,16 @@ export function openNewTabShortcutsPopup(panelId: ID): void {
 export function closeNewTabShortcutsPopup(): void {
   if (!Sidebar.reactive.newTabShortcutsPopup) return
   Sidebar.reactive.newTabShortcutsPopup = null
+}
+
+export function openSubPanel(type: SubPanelType, panel: TabsPanel) {
+  if (!Sidebar.subPanelComponent) return Logs.warn('Tabs.openSubPanel: No subPanelComponent')
+
+  Sidebar.subPanelComponent.open(type, panel)
+}
+
+export function closeSubPanel() {
+  if (!Sidebar.subPanelComponent) return Logs.warn('Tabs.openSubPanel: No subPanelComponent')
+
+  Sidebar.subPanelComponent.close()
 }

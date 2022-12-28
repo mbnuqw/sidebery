@@ -68,6 +68,7 @@
           :data-pos="getPanelPos(i, panel.id)"
           :panel="panel")
         DragAndDropPointer
+      SubPanel(ref="subPanel")
 
     .right-vertical-box(v-if="pinnedTabsBarRight || navBarRight")
       PinnedTabsBar(v-if="pinnedTabsBarRight")
@@ -78,7 +79,7 @@
 
 <script lang="ts" setup>
 import { ref, computed, onMounted, Component } from 'vue'
-import { PanelType, Panel, MenuType, WheelDirection } from 'src/types'
+import { PanelType, Panel, MenuType, WheelDirection, SubPanelComponent } from 'src/types'
 import { Settings } from 'src/services/settings'
 import { GroupConfigResult, Sidebar } from 'src/services/sidebar'
 import { Styles } from 'src/services/styles'
@@ -90,6 +91,7 @@ import { DnD } from 'src/services/drag-and-drop'
 import { Bookmarks } from 'src/services/bookmarks'
 import { Windows } from 'src/services/windows'
 import { Search } from 'src/services/search'
+import { SwitchingTabScope } from 'src/services/tabs.fg.actions'
 import ConfirmPopup from './components/popup.confirm.vue'
 import CtxMenuPopup from './components/popup.context-menu.vue'
 import DragAndDropTooltip from './components/dnd-tooltip.vue'
@@ -109,11 +111,12 @@ import GroupConfigPopup from './components/popup.group-config.vue'
 import DialogPopup from './components/popup.dialog.vue'
 import NewTabShortcutsPopup from '../components/popup.new-tab-shortcuts.vue'
 import UpgradeScreen from '../components/upgrade-screen.vue'
+import SubPanel from './components/sub-panel.vue'
 import * as Utils from 'src/utils'
-import { SwitchingTabScope } from 'src/services/tabs.fg.actions'
 
 const rootEl = ref<HTMLElement | null>(null)
 const panelBoxEl = ref<HTMLElement | null>(null)
+const subPanel = ref<SubPanelComponent | null>(null)
 
 const animations = !Settings.state.animations ? 'none' : Settings.state.animationSpeed || 'fast'
 const pinnedTabsBarTop = Settings.state.pinnedTabsPosition === 'top'
@@ -137,6 +140,8 @@ onMounted(() => {
   Sidebar.recalcSidebarSize()
 
   document.addEventListener('keyup', onDocumentKeyup)
+
+  Sidebar.subPanelComponent = subPanel.value
 })
 
 function getPanelComponent(panel: Panel): Component | undefined {

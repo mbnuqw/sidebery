@@ -692,6 +692,7 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
   if (Tabs.ignoreTabsEvents) return
   if (Tabs.tabsReinitializing) return Tabs.reinitTabs()
 
+  const removedExternally = !Tabs.removingTabs || !Tabs.removingTabs.length
   if (Tabs.removingTabs.length > 0) {
     Tabs.checkRemovedTabs()
 
@@ -713,7 +714,6 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
   }
 
   const toShow: ID[] = []
-  const removedExternally = !Tabs.removingTabs || !Tabs.removingTabs.length
   const nextTab = Tabs.list[tab.index + 1]
   const hasChildren =
     Settings.state.tabsTree &&
@@ -743,6 +743,11 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
     }
   }
 
+  // Remember removed tab
+  if (removedExternally && !detached) {
+    Tabs.rememberRemoved([tab])
+  }
+
   // Handle child tabs
   if (hasChildren) {
     const toRemove = []
@@ -768,7 +773,10 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
         (Settings.state.rmChildTabs === 'folded' && tab.folded && !detached) ||
         (Settings.state.rmChildTabs === 'all' && !detached)
       ) {
-        if (!Tabs.removingTabs.includes(t.id)) toRemove.push(t.id)
+        if (!Tabs.removingTabs.includes(t.id)) {
+          toRemove.push(t.id)
+          continue
+        }
       }
       // Or just make them visible
       else if (t.invisible && !Tabs.removingTabs.includes(t.id)) {

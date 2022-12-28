@@ -51,6 +51,7 @@ export const DnD = {
   } as DragAndDropState,
 
   dropEventConsumed: false,
+  dropMode: 'auto' as 'auto' | 'copy',
   items: [] as DragItem[],
   isExternal: false,
   goOutside: false,

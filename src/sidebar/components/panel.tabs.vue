@@ -8,7 +8,7 @@
   @dblclick="onDoubleClick"
   @drop="onDrop")
   PinnedTabsBar(v-if="panel.pinnedTabs.length" :panel="panel")
-  ScrollBox(ref="scrollBox" :pre-scroll="PRE_SCROLL")
+  ScrollBox(ref="scrollBox" :preScroll="PRE_SCROLL")
     .container
       TransitionGroup(name="tab" tag="div" type="transition")
         TabComponent(v-for="tab in visibleTabs" :key="tab.id" :tab="tab")
@@ -16,13 +16,22 @@
           v-if="Settings.state.showNewTabBtns && Settings.state.newTabBarPosition === 'after_tabs'"
           :panel="panel")
         .tab-space-filler(v-for="i in panel.scrollRetainer" :key="i + 'tsf'")
-        .bottom-space(:key="9999999")
+        .bottom-space(:key="-9999999")
 
   NewTabBar(
     v-if="Settings.state.showNewTabBtns && Settings.state.newTabBarPosition === 'bottom'"
     :panel="panel")
 
-  BookmarksSubPanel(v-if="panel.bookmarksFolderId !== NOID" :tabsPanel="panel")
+  .bottom-bar
+    .tools
+      .tool-btn(
+        :data-disabled="!Tabs.reactive.recentlyRemoved.length"
+        @click="Sidebar.openSubPanel(SubPanelType.RecentlyClosedTabs, panel)")
+        svg: use(xlink:href="#icon_trash")
+      .tool-btn(
+        v-if="panel.bookmarksFolderId !== NOID"
+        @click="Sidebar.openSubPanel(SubPanelType.Bookmarks, panel)")
+        svg: use(xlink:href="#icon_bookmarks")
 
   PanelPlaceholder(
     :isLoading="!props.panel.ready"
@@ -34,7 +43,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { translate } from 'src/dict'
 import { DropType, MenuType, ScrollBoxComponent, Tab, TabsPanel, ReactiveTab } from 'src/types'
-import { WheelDirection } from 'src/types'
+import { WheelDirection, SubPanelType } from 'src/types'
 import { NOID, PRE_SCROLL } from 'src/defaults'
 import { Settings } from 'src/services/settings'
 import { Selection } from 'src/services/selection'
@@ -48,7 +57,6 @@ import ScrollBox from 'src/components/scroll-box.vue'
 import TabComponent from './tab.vue'
 import PanelPlaceholder from './panel-placeholder.vue'
 import NewTabBar from './bar.new-tab.vue'
-import BookmarksSubPanel from './sub-panel.bookmarks.vue'
 
 const props = defineProps<{ panel: TabsPanel }>()
 const scrollBox = ref<ScrollBoxComponent | null>(null)

@@ -205,6 +205,22 @@ export const sidebarTranslations: Translations = {
   },
 
   // ---
+  // -- Sub-panels
+  // -
+  'sub_panel.bookmarks_panel.title': {
+    en: 'Bookmarks',
+    ru: 'Закладки',
+  },
+  'sub_panel.rct_panel.title': {
+    en: 'Recently closed tabs',
+    ru: 'Недавно закрытые вкладки',
+  },
+  'sub_panel.history_panel.title': {
+    en: 'History',
+    ru: 'История',
+  },
+
+  // ---
   // -- Drag and Drop tooltips
   // -
   'dnd.tooltip.bookmarks_panel': {

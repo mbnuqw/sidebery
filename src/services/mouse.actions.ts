@@ -22,6 +22,8 @@ type TargetType =
   | 'history'
   | 'download'
   | 'menu.option'
+  | 'closedTab'
+  | 'closedTab.branch'
 type ResizingCallback = (start: number, delta: number) => void
 type LongClickTargetType = 'tab' | 'bookmark' | 'panel'
 

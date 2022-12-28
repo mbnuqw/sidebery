@@ -8,6 +8,7 @@ import * as TabsShadow from 'src/services/tabs.fg.shadow'
 export interface TabsReactiveState {
   byId: Partial<Record<ID, ReactiveTab>>
   pinned: ReactiveTab[]
+  recentlyRemoved: RecentlyRemovedTabInfo[]
 }
 
 export interface RemovedTabInfo {
@@ -19,9 +20,23 @@ export interface RemovedTabInfo {
   children?: ID[]
 }
 
+export interface RecentlyRemovedTabInfo {
+  id: ID
+  url: string
+  title: string
+  parentId: ID
+  isParent: boolean
+  lvl: number
+  time: number
+  containerId: string
+  containerColor?: string
+  favIconUrl?: string
+  favPlaceholder?: string
+}
+
 export const Tabs = {
   ready: false,
-  reactive: { byId: {}, pinned: [] } as TabsReactiveState,
+  reactive: { byId: {}, pinned: [], recentlyRemoved: [] } as TabsReactiveState,
   list: [] as Tab[],
   byId: {} as Partial<Record<ID, Tab>>,
 
