@@ -3061,6 +3061,8 @@ export function handleReopening(tabId: ID, newCtx: string): number | undefined {
   const targetTab = Tabs.byId[tabId]
   if (!targetTab) return
 
+  targetTab.reopening = { id: NOID }
+
   let parent: ID = -1
   const panel = Sidebar.reactive.panels.find(
     p => Utils.isTabsPanel(p) && p.moveTabCtx === newCtx
@@ -3758,6 +3760,20 @@ export function getBranch(tab: Tab): Tab[] {
   }
 
   return result
+}
+
+export function forEachDescendant(rootTab: Tab, cb: (t: Tab) => void) {
+  // Check tab index
+  const target = Tabs.list[rootTab.index]
+  if (!target || target.id !== rootTab.id) return Logs.warn('Tabs.forEachDescendant: Wrong index')
+
+  const rootLvl = rootTab.lvl
+  let index = rootTab.index + 1
+  let child: Tab | undefined = Tabs.list[index++]
+  while (child && child.lvl > rootLvl) {
+    cb(child)
+    child = Tabs.list[index++]
+  }
 }
 
 export async function copyUrls(ids: ID[]): Promise<void> {

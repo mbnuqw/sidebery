@@ -154,6 +154,12 @@ function onTabCreated(tab: Tab, attached?: boolean): void {
     index = tab.index
     tab.openerTabId = position.parent
     delete Tabs.newTabsPosition[tab.index]
+
+    // Handle tab reopening
+    const oldTab = Tabs.list[tab.index]
+    if (oldTab?.reopening) {
+      oldTab.reopening.id = tab.id
+    }
   }
 
   // Restore previous position of reopened tab
@@ -749,10 +755,28 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
   }
 
   // Handle child tabs
-  if (hasChildren) {
+  handling_descendants: if (hasChildren) {
     const toRemove = []
     const outdentOnlyFirstChild = Settings.state.treeRmOutdent === 'first_child'
     const firstChild = nextTab
+
+    // Handle reopening tab in different container
+    if (tab.reopening && tab.reopening.id !== NOID) {
+      const newTab = Tabs.byId[tab.reopening.id]
+      const rNewTab = Tabs.reactive.byId[tab.reopening.id]
+      // New tab is already created
+      if (newTab && rNewTab) {
+        newTab.folded = tab.folded
+        rNewTab.folded = tab.folded
+        newTab.isParent = tab.isParent
+        rNewTab.isParent = tab.isParent
+        Tabs.forEachDescendant(tab, t => {
+          if (t.parentId === tab.id) t.parentId = newTab.id
+        })
+        break handling_descendants
+      }
+    }
+
     for (let i = tab.index + 1, t; i < Tabs.list.length; i++) {
       t = Tabs.list[i]
       if (t.lvl <= tab.lvl) break
@@ -770,8 +794,8 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
 
       // Remove folded tabs
       if (
-        (Settings.state.rmChildTabs === 'folded' && tab.folded && !detached) ||
-        (Settings.state.rmChildTabs === 'all' && !detached)
+        (Settings.state.rmChildTabs === 'folded' && tab.folded && !detached && !tab.reopening) ||
+        (Settings.state.rmChildTabs === 'all' && !detached && !tab.reopening)
       ) {
         if (!Tabs.removingTabs.includes(t.id)) {
           toRemove.push(t.id)

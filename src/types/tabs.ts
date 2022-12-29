@@ -24,6 +24,7 @@ export interface Tab extends browser.tabs.Tab {
   reopened?: boolean
   internal?: boolean
   isGroup: boolean
+  reopening?: { id: ID }
 }
 
 export const enum TabStatus {
