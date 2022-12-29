@@ -764,6 +764,8 @@ export function rememberRemoved(tabs: Tab[]) {
   const timestamp = Date.now()
 
   for (const tab of tabs) {
+    if (tab.reopening) continue
+
     if (tab.parentId === NOID || tab.parentId !== parent?.id) parent = undefined
 
     // If tab has parent
