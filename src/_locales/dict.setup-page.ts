@@ -2069,7 +2069,7 @@ export const setupPageTranslations: Translations = {
     ru: 'стандартный',
   },
   'settings.density_loose': {
-    en: 'loose',
+    en: 'relaxed',
     ru: 'свободный',
   },
   'settings.switch_color_scheme': {
