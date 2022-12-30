@@ -236,6 +236,8 @@ function parseFirefoxTheme(theme: browser.theme.Theme): ParsedTheme {
     parsed.toolbarFg = Utils.toRGBA(parsed.vars.toolbar_fg)
     parsed.toolbarVariant = getColorSchemeVariant(parsed.toolbarBg, parsed.toolbarFg)
 
+    normalizeContrastOfFrameAndToolbar(parsed)
+
     // Active element
     parsed.vars.act_el_bg = toColorString(act_el_bg)
     parsed.vars.act_el_fg = toColorString(act_el_fg)
@@ -267,9 +269,16 @@ function parseFirefoxTheme(theme: browser.theme.Theme): ParsedTheme {
     if (!parsed.toolbarBg) break per_theme_stuff
 
     // Frame
-    parsed.frameBg = shiftColor(parsed.toolbarBg, 0.85)
+    const toolbarBgAvrg = (parsed.toolbarBg[0] + parsed.toolbarBg[1] + parsed.toolbarBg[2]) / 3
+    if (toolbarBgAvrg < 36) {
+      parsed.frameBg = shiftColor(parsed.toolbarBg, 0.1 + (toolbarBgAvrg * 0.024) ** 2)
+    } else {
+      parsed.frameBg = shiftColor(parsed.toolbarBg, 0.85)
+    }
     if (parsed.frameBg) parsed.vars.frame_bg = toColorString(parsed.frameBg)
     parsed.vars.frame_fg = parsed.vars.toolbar_fg
+
+    normalizeContrastOfFrameAndToolbar(parsed)
 
     // Active element
     if (parsed.toolbarVariant === ColorSchemeVariant.Dark) {
@@ -287,8 +296,13 @@ function parseFirefoxTheme(theme: browser.theme.Theme): ParsedTheme {
   parsed.vars.popup_border = toColorString(popup_border)
   parsed.popupBg = Utils.toRGBA(popup_bg)
   parsed.popupFg = Utils.toRGBA(popup_fg)
+  parsed.popupBorder = Utils.toRGBA(popup_border)
   parsed.popupVariant = getColorSchemeVariant(parsed.popupBg, parsed.popupFg)
-  fixing_popup_border: if (!popup_border || popup_bg === popup_border) {
+  fixing_popup_border: if (
+    !popup_border ||
+    popup_bg === popup_border ||
+    parsed.popupBorder?.[3] === 0
+  ) {
     const border = Utils.toRGBA(popup_bg)
     if (!border) break fixing_popup_border
 
@@ -339,6 +353,25 @@ function parseFirefoxTheme(theme: browser.theme.Theme): ParsedTheme {
     parsed.vars.accent = toColorString(accentFg)
   }
 
+  // Check colors of active element for proton theme
+  if (
+    Settings.state.theme === 'proton' &&
+    !parsed.vars.accent &&
+    parsed.actElBg &&
+    parsed.frameBg
+  ) {
+    const actElBgAvrg = (parsed.actElBg[0] + parsed.actElBg[1] + parsed.actElBg[2]) / 3
+    const frameBgAvrg = (parsed.frameBg[0] + parsed.frameBg[1] + parsed.frameBg[2]) / 3
+    if (Math.abs(actElBgAvrg - frameBgAvrg) < 8) {
+      if (parsed.toolbarVariant === ColorSchemeVariant.Dark) {
+        parsed.actElBg = mergeColors(parsed.frameBg, parsed.toolbarFg, 0.1)
+      } else {
+        parsed.actElBg = shiftColor(parsed.frameBg, 1.1)
+      }
+      if (parsed.actElBg) parsed.vars.act_el_bg = toColorString(parsed.actElBg)
+    }
+  }
+
   // Handle frame_image - set frame background
   if (theme.colors && theme.images?.theme_frame && parsed.toolbarBg?.[3] === 1) {
     const ffg = parsed.frameFg
@@ -351,38 +384,6 @@ function parseFirefoxTheme(theme: browser.theme.Theme): ParsedTheme {
         parsed.vars.frame_bg = parsed.vars.toolbar_bg
       }
     }
-  }
-
-  // Check frame contrast
-  let frameContrastOk = true
-  if (parsed.frameBg && parsed.frameFg) {
-    const frameBgAvrg = (parsed.frameBg[0] + parsed.frameBg[1] + parsed.frameBg[2]) / 3
-    const frameFgAvrg = (parsed.frameFg[0] + parsed.frameFg[1] + parsed.frameFg[2]) / 3
-    frameContrastOk = Math.abs(frameFgAvrg - frameBgAvrg) > 80
-  }
-
-  // Check toolbar contrast
-  let toolbarContrastOk = true
-  if (parsed.toolbarBg && parsed.toolbarFg) {
-    const toolbarBgAvrg = (parsed.toolbarBg[0] + parsed.toolbarBg[1] + parsed.toolbarBg[2]) / 3
-    const toolbarFgAvrg = (parsed.toolbarFg[0] + parsed.toolbarFg[1] + parsed.toolbarFg[2]) / 3
-    toolbarContrastOk = Math.abs(toolbarFgAvrg - toolbarBgAvrg) > 80
-  }
-
-  if (!frameContrastOk && toolbarContrastOk) {
-    parsed.frameBg = parsed.toolbarBg
-    parsed.vars.frame_bg = parsed.vars.toolbar_bg
-    parsed.frameFg = parsed.toolbarFg
-    parsed.vars.frame_fg = parsed.vars.toolbar_fg
-    parsed.frameVariant = getColorSchemeVariant(parsed.frameBg, parsed.frameFg)
-  }
-
-  if (frameContrastOk && !toolbarContrastOk) {
-    parsed.toolbarBg = parsed.frameBg
-    parsed.vars.toolbar_bg = parsed.vars.frame_bg
-    parsed.toolbarFg = parsed.frameFg
-    parsed.vars.toolbar_fg = parsed.vars.frame_fg
-    parsed.toolbarVariant = getColorSchemeVariant(parsed.frameBg, parsed.frameFg)
   }
 
   // Detect sidebar top border
@@ -415,6 +416,41 @@ function parseFirefoxTheme(theme: browser.theme.Theme): ParsedTheme {
   }
 
   return parsed
+}
+
+const CONTRAST_THRESHOLD = 70
+function normalizeContrastOfFrameAndToolbar(parsed: ParsedTheme) {
+  // Check frame contrast
+  let frameContrastOk = true
+  if (parsed.frameBg && parsed.frameFg) {
+    const frameBgAvrg = (parsed.frameBg[0] + parsed.frameBg[1] + parsed.frameBg[2]) / 3
+    const frameFgAvrg = (parsed.frameFg[0] + parsed.frameFg[1] + parsed.frameFg[2]) / 3
+    frameContrastOk = Math.abs(frameFgAvrg - frameBgAvrg) > CONTRAST_THRESHOLD
+  }
+
+  // Check toolbar contrast
+  let toolbarContrastOk = true
+  if (parsed.toolbarBg && parsed.toolbarFg) {
+    const toolbarBgAvrg = (parsed.toolbarBg[0] + parsed.toolbarBg[1] + parsed.toolbarBg[2]) / 3
+    const toolbarFgAvrg = (parsed.toolbarFg[0] + parsed.toolbarFg[1] + parsed.toolbarFg[2]) / 3
+    toolbarContrastOk = Math.abs(toolbarFgAvrg - toolbarBgAvrg) > CONTRAST_THRESHOLD
+  }
+
+  if (!frameContrastOk && toolbarContrastOk) {
+    parsed.frameBg = parsed.toolbarBg
+    parsed.vars.frame_bg = parsed.vars.toolbar_bg
+    parsed.frameFg = parsed.toolbarFg
+    parsed.vars.frame_fg = parsed.vars.toolbar_fg
+    parsed.frameVariant = getColorSchemeVariant(parsed.frameBg, parsed.frameFg)
+  }
+
+  if (frameContrastOk && !toolbarContrastOk) {
+    parsed.toolbarBg = parsed.frameBg
+    parsed.vars.toolbar_bg = parsed.vars.frame_bg
+    parsed.toolbarFg = parsed.frameFg
+    parsed.vars.toolbar_fg = parsed.vars.frame_fg
+    parsed.toolbarVariant = getColorSchemeVariant(parsed.frameBg, parsed.frameFg)
+  }
 }
 
 function isSimilarColor(thr: number, a?: RGBA, b?: RGBA): boolean {
