@@ -62,7 +62,9 @@ function onBookmarkCreatedFg(id: ID, bookmark: Bookmark): void {
 
   // Update length of parent folders
   const addedLen = bookmark.len || 1
-  Bookmarks.updateTreeLen(parent, addedLen)
+  if (bookmark.type === 'bookmark') {
+    Bookmarks.updateTreeLen(parent, addedLen)
+  }
 
   Sidebar.recalcBookmarksPanels()
 }
@@ -200,7 +202,7 @@ function onBookmarkRemovedFg(id: ID, info: browser.bookmarks.RemoveInfo): void {
 export function updateTreeLen(parent: Bookmark, delta: number): void {
   let p = parent
   while (p) {
-    if (p.len) p.len += delta
+    if (p.len !== undefined) p.len += delta
     p = Bookmarks.reactive.byId[p.parentId]
   }
   Bookmarks.overallCount += delta
