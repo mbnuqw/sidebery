@@ -141,8 +141,11 @@
   flex-direction: column
   min-height: 64px
   overflow: hidden
-  box-shadow: 0 1px 0 0 var(--border), 0 -1px 0 0 var(--border)
+  // box-shadow: 0 1px 0 0 var(--border), 0 -1px 0 0 var(--border)
   user-select: none
+  background-color: var(--frame-bg)
+  .scrollable
+    padding-top: var(--bookmarks-margin)
 
 .BookmarksPopup .tree .fav:hover
   transition: none
