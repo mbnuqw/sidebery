@@ -8,6 +8,7 @@
   --nav-btn-fg: var(--toolbar-fg)
   --nav-btn-accent: var(--accent)
   --nav-btn-border-radius: 2px
+  --nav-btn-len-margin: 0px
   --nav-hidden-btn-border-radius: var(--general-border-radius)
   --nav-hidden-panels-popup-margin: 3px
 #root[data-density="compact"]
@@ -15,9 +16,11 @@
   --nav-btn-width: 28px
   --nav-btn-height: 28px
   --nav-hidden-panels-popup-margin: 2px
+  --nav-btn-len-margin: 0px
 #root[data-density="loose"]
   --nav-btn-width: 32px
   --nav-btn-height: 32px
+  --nav-btn-len-margin: 1px
 #root[data-toolbar-color-scheme="dark"]
   --nav-btn-active-shadow: inset 0 0 0 1px #ffffff08, 0 0 2px 0 #00000036
 #root[data-toolbar-color-scheme="light"]
@@ -38,7 +41,7 @@
     z-index: 3000
   &.-vert
     width: 100%
-    padding: calc(var(--nav-btn-margin) - var(--s-darker-border-width, 0px)) 0
+    padding: calc(var(--nav-btn-margin) - var(--s-darker-border-width, 0px)) 0 0
     flex-direction: column
     align-items: center
     &[data-layout="left"]
@@ -47,10 +50,15 @@
       flex-grow: 1
 
 .PinnedTabsBar[data-empty="false"] + .NavigationBar[data-layout="left"]
-  border-top-right-radius: calc(var(--nav-btn-border-radius) + var(--nav-btn-margin))
+  border-top-right-radius: var(--general-border-radius)
+  padding: 0
+  .main-items .nav-item:first-of-type
+    border-top-right-radius: var(--general-border-radius)
 .PinnedTabsBar[data-empty="false"] + .NavigationBar[data-layout="right"]
-  border-top-left-radius: calc(var(--nav-btn-border-radius) + var(--nav-btn-margin))
-
+  border-top-left-radius: var(--general-border-radius)
+  padding: 0
+  .main-items .nav-item:first-of-type
+    border-top-left-radius: var(--general-border-radius)
 
 // ---
 // -- Container of panels buttons
@@ -62,7 +70,6 @@
   flex-grow: 1
   flex-direction: row
   grid-gap: var(--nav-btn-margin)
-  // overflow: hidden
 .NavigationBar.-vert  .main-items
   flex-direction: column
 .NavigationBar.-vert[data-layout="inline"] .main-items
@@ -380,8 +387,8 @@
 // -
 .NavigationBar .nav-item .len
   position: absolute
-  top: 0
-  right: 0
+  top: var(--nav-btn-len-margin)
+  right: var(--nav-btn-len-margin)
   font-size: rem(10)
   font-weight: 500
   padding: 0 2px 0 2px
