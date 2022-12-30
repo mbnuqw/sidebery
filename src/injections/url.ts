@@ -4,7 +4,6 @@ import { toCSSVarName } from 'src/utils'
 import * as Logs from 'src/services/logs'
 import { InstanceType } from 'src/types'
 import { ParsedTheme, SrcVars } from 'src/services/styles'
-import { getColorSchemeName } from 'src/services/styles.actions'
 
 function waitDOM(): Promise<void> {
   return new Promise(res => {
@@ -20,7 +19,7 @@ function waitInitData(): Promise<void> {
   })
 }
 
-export function applyThemeSrcVars(parsed: ParsedTheme, rootEl?: HTMLElement): void {
+function applyThemeSrcVars(parsed: ParsedTheme, rootEl?: HTMLElement): void {
   if (!rootEl) rootEl = document.getElementById('root') ?? undefined
   if (!rootEl) return
 
