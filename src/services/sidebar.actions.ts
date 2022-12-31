@@ -249,13 +249,15 @@ export function recalcTabsPanels(): void {
 
     const panelTabs: ReactiveTab[] = []
     for (; (tab = Tabs.list[tabIndex]); tabIndex++) {
-      const rTab = Tabs.reactive.byId[tab.id]
       if (tab.panelId === NOID) tab.panelId = panel.id
       if (tab.panelId === panel.id) {
         if (same && panel.tabs[tabPanelIndex]?.id !== tab.id) same = false
         if (startIndex === -1) startIndex = tab.index
       } else break
+
+      const rTab = Tabs.reactive.byId[tab.id]
       if (rTab) panelTabs.push(rTab)
+
       tabPanelIndex++
     }
 
