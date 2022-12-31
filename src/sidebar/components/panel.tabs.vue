@@ -9,14 +9,27 @@
   @drop="onDrop")
   PinnedTabsBar(v-if="panel.pinnedTabs.length" :panel="panel")
   ScrollBox(ref="scrollBox" :preScroll="PRE_SCROLL")
-    .container
-      TransitionGroup(name="tab" tag="div" type="transition")
-        TabComponent(v-for="tab in visibleTabs" :key="tab.id" :tab="tab")
+    .container(v-if="Settings.state.animations")
+      TransitionGroup(name="tab" tag="div" type="transition" class="transition-box")
+        TabComponent(
+          v-for="tab in visibleTabs"
+          :key="tab.id"
+          :tab="tab")
         NewTabBar(
           v-if="Settings.state.showNewTabBtns && Settings.state.newTabBarPosition === 'after_tabs'"
           :panel="panel")
-        .tab-space-filler(v-for="i in panel.scrollRetainer" :key="i + 'tsf'")
+        .tab-space-filler(v-for="i in panel.scrollRetainer" :key="'tsf' + i")
         .bottom-space(:key="-9999999")
+    .container(v-else)
+      TabComponent(
+        v-for="tab in visibleTabs"
+        :key="tab.id"
+        :tab="tab")
+      NewTabBar(
+        v-if="Settings.state.showNewTabBtns && Settings.state.newTabBarPosition === 'after_tabs'"
+        :panel="panel")
+      .tab-space-filler(v-for="i in panel.scrollRetainer" :key="'tsf' + i")
+      .bottom-space(:key="-9999999")
 
   NewTabBar(
     v-if="Settings.state.showNewTabBtns && Settings.state.newTabBarPosition === 'bottom'"

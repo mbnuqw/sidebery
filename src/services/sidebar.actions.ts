@@ -260,7 +260,6 @@ export function recalcTabsPanels(): void {
     }
 
     if (!same || panel.tabs.length !== tabPanelIndex) {
-      // panel.tabs = Tabs.list.slice(startIndex, startIndex + tabPanelIndex)
       panel.tabs = panelTabs
     }
 
