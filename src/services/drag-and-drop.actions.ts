@@ -470,6 +470,8 @@ export function onDragLeave(e: DragEvent): void {
 function onPointerEnter(e: DragEvent): void {
   resetTabActivateTimeout()
 
+  if (DnD.reactive.pointerMode !== DndPointerMode.Inside) return
+
   const panel = Sidebar.reactive.panelsById[DnD.reactive.dstPanelId]
   const isTabs = Utils.isTabsPanel(panel)
   const isBookmarks = Utils.isBookmarksPanel(panel)
