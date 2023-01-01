@@ -16,7 +16,7 @@ el?.addEventListener('blur', () => {
 let ctxMenuKeyPressed: number | undefined
 el?.addEventListener('keydown', (e: KeyboardEvent) => {
   // Select all
-  if (e.code === 'KeyA' && e.ctrlKey) {
+  if (e.code === 'KeyA' && e.ctrlKey && e.shiftKey) {
     e.preventDefault()
     if (Windows.id !== undefined) IPC.sendToSidebar(Windows.id, 'onOutsideSearchSelectAll')
   }

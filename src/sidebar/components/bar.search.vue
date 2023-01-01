@@ -59,7 +59,7 @@ function onKD(e: KeyboardEvent): void {
   if (!Search.reactive.rawValue) return
 
   // Select all
-  if (e.code === 'KeyA' && e.ctrlKey) {
+  if (e.code === 'KeyA' && e.ctrlKey && e.shiftKey) {
     e.preventDefault()
     Search.selectAll()
   }
