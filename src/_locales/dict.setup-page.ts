@@ -1903,8 +1903,8 @@ export const setupPageTranslations: Translations = {
     zh_CN: '自动关闭文件夹',
   },
   'settings.auto_rm_other': {
-    en: 'Delete open bookmarks from "Other Bookmarks" folder',
-    ru: 'Удалять открытые закладки из папки "Другие закладки"',
+    en: 'Auto-delete on opening bookmarks from the "Other Bookmarks" folder',
+    ru: 'Удалять открываемые закладки из папки "Другие закладки"',
     de: 'Entferne geöffnete Lesezeichen aus "Weitere Lesezeichen"-Ordner',
     zh_CN: '从“其他书签”文件夹中删除打开的书签',
   },
