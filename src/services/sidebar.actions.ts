@@ -214,7 +214,7 @@ export function recalcTabsPanels(): void {
   let tabIndex = 0
   let tabPanelIndex = 0
   let same = true
-  let tab: Tab
+  let tab: Tab | undefined
   let startIndex = -1
 
   const firstTabsPanel = Sidebar.reactive.panels.find(p => Utils.isTabsPanel(p))
@@ -234,8 +234,9 @@ export function recalcTabsPanels(): void {
           continue
         }
       }
-      if (!pinnedTabsByPanel[panel.id]) pinnedTabsByPanel[panel.id] = []
-      if (Utils.isTabsPanel(panel)) pinnedTabsByPanel[panel.id].push(rTab)
+      let pinnedTabsOfPanel = pinnedTabsByPanel[panel.id]
+      if (!pinnedTabsOfPanel) pinnedTabsOfPanel = pinnedTabsByPanel[panel.id] = []
+      if (Utils.isTabsPanel(panel)) pinnedTabsOfPanel.push(rTab)
     }
 
     pinnedTabs.push(rTab)
@@ -244,7 +245,8 @@ export function recalcTabsPanels(): void {
   for (const panel of Sidebar.reactive.panels) {
     if (!Utils.isTabsPanel(panel)) continue
 
-    if (pinnedTabsByPanel[panel.id]) panel.pinnedTabs = pinnedTabsByPanel[panel.id]
+    const pinnedTabsOfPanel = pinnedTabsByPanel[panel.id]
+    if (pinnedTabsOfPanel) panel.pinnedTabs = pinnedTabsOfPanel
     else panel.pinnedTabs = []
 
     const panelTabs: ReactiveTab[] = []
@@ -410,7 +412,7 @@ function calcBookmarksTreeBounds(panel: BookmarksPanel): ItemBounds[] {
   const result: ItemBounds[] = []
   if (!Utils.isBookmarksPanel(panel)) return []
 
-  const expandedBookmarks = Bookmarks.reactive.expanded[panel.id]
+  const expandedBookmarks = Bookmarks.reactive.expanded[panel.id] ?? {}
 
   const margin = Sidebar.bookmarkMargin
   const marginA = Math.floor(margin / 2)
@@ -432,7 +434,7 @@ function calcBookmarksTreeBounds(panel: BookmarksPanel): ItemBounds[] {
   let height: number, half: number, quarter: number
   const walker = (nodes: Bookmark[]) => {
     for (let i = 0; i < nodes.length; i++) {
-      const n = nodes[i]
+      const n = nodes[i] as Bookmark
       const isFolder = n.type === 'folder'
 
       if (isFolder) {
@@ -815,7 +817,10 @@ async function updateSidebar(newConfig?: SidebarConfig): Promise<void> {
 
   // Loop over the old panels
   for (let index = 0; index < oldNavItems.length; index++) {
-    const panel = Sidebar.reactive.panelsById[oldNavItems[index]]
+    const panelId = oldNavItems[index]
+    if (!panelId) continue
+
+    const panel = Sidebar.reactive.panelsById[panelId]
     if (!panel) continue
 
     // Handle removed panels
@@ -890,7 +895,8 @@ async function updateSidebar(newConfig?: SidebarConfig): Promise<void> {
           const minIndex = Math.min(tab.index, move[1])
           const maxIndex = Math.max(tab.index, move[1]) + 1
           for (let i = minIndex; i < maxIndex; i++) {
-            Tabs.list[i].index = i
+            const t = Tabs.list[i]
+            if (t) t.index = i
           }
         }
       }
@@ -1401,7 +1407,7 @@ export function getIndexForNewTabsPanel(): number {
     index = Utils.findLastIndex(Sidebar.reactive.nav, id => {
       return Utils.isTabsPanel(Sidebar.reactive.panelsById[id])
     })
-    if (index === -1) index = activePanel.index
+    if (index === -1 && activePanel) index = activePanel.index
   }
   index++
   return index

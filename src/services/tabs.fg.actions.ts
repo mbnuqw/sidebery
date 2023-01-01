@@ -272,7 +272,8 @@ function restoreTabsFromCache(tabs: Tab[], cache: Record<ID, TabCache>, lastPane
 
       // Restore props
       tab.panelId = data.panelId ?? lastPanel.id
-      if (idsMap[data.parentId] >= 0) tab.parentId = idsMap[data.parentId]
+      const actualParentId = idsMap[data.parentId]
+      if (actualParentId !== undefined) tab.parentId = actualParentId
       tab.folded = !!data.folded
       idsMap[data.id] = tab.id
 
@@ -321,6 +322,11 @@ function restoreTabsFromSessionData(
   Tabs.reactive.byId = {}
   for (let data, tab, i = 0; i < tabs.length; i++) {
     tab = tabs[i]
+    if (!tab) {
+      Logs.err('Tabs.restoreTabsFromSessionData: No tab')
+      break
+    }
+
     data = tabsData[i]
 
     normalizeTab(tab, tab.pinned ? firstPanelId : NOID)
@@ -330,7 +336,8 @@ function restoreTabsFromSessionData(
 
       // Restore props
       tab.panelId = data.panelId ?? lastPanel.id
-      if (idsMap[data.parentId] >= 0) tab.parentId = idsMap[data.parentId]
+      const actualParentId = idsMap[data.parentId]
+      if (actualParentId !== undefined) tab.parentId = actualParentId
       tab.folded = !!data.folded
       idsMap[data.id] = tab.id
 
@@ -391,6 +398,7 @@ function findCachedData(
       tab = tabs[tabIndex]
       if (!tab) break
       tabData = winTabs[dataIndex]
+      if (!tabData) break
 
       // Match
       const blindspot = tab.status === 'loading' && tab.url === 'about:blank'
@@ -403,9 +411,10 @@ function findCachedData(
       else {
         // Try to find corresponding local tab
         for (let j = tabIndex + 1; j < tabIndex + 5; j++) {
-          if (tabs[j] && tabs[j].url === tabData.url) {
+          const tabj = tabs[j]
+          if (tabj && tabj.url === tabData.url) {
             tabIndex = j
-            existedTabs[tabs[j].id] = tabData
+            existedTabs[tabj.id] = tabData
             equalityCounter++
             continue perTab
           }
@@ -529,24 +538,34 @@ export function reinitTabs(delay = 500): void {
         tab.active = nativeTab.active
 
         if (!tab.pinned) {
-          if (panelsList[panelIndex].id !== tab.panelId) {
+          const panelInfo = panelsList[panelIndex]
+          if (!panelInfo) {
+            Logs.err('Tabs.reinitTabs: No panelInfo 1')
+            break
+          }
+          if (panelInfo.id !== tab.panelId) {
             const pi = panelsList.findIndex(p => {
               if (p.index === -1) p.index = index - 1
               return p.id === tab.panelId
             })
             if (pi > panelIndex) {
               panelIndex = pi
-              panelsList[panelIndex].index = index
+              const panelInfo = panelsList[panelIndex]
+              if (panelInfo) panelInfo.index = index
             } else if (pi === -1) {
               tab.panelId = panelId ?? NOID
             } else {
-              moves.push([tab.id, panelsList[pi].index])
+              const panelInfo = panelsList[pi]
+              if (!panelInfo) return
+              moves.push([tab.id, panelInfo.index])
               for (let i = pi; i < panelsList.length; i++) {
-                panelsList[i].index++
+                const panelInfo = panelsList[i]
+                if (!panelInfo) break
+                panelInfo.index++
               }
             }
           } else {
-            panelsList[panelIndex].index = index
+            panelInfo.index = index
           }
         }
 
@@ -616,17 +635,18 @@ export function sortNativeTabs(delayMS = 500): void {
     let prevMove: Move | undefined
     let prevMoveStep = 0
     for (const tab of Tabs.list) {
-      const nativeTab = nativeTabsById[tab.id]
-      if (!nativeTab) {
+      const nativeTabById = nativeTabsById[tab.id]
+      if (!nativeTabById) {
         Logs.warn('Tabs.sortNativeTabs: Cannot find native tab')
         return Tabs.reinitTabs()
       }
 
-      if (!nativeTabs[tab.index] || nativeTabs[tab.index].id !== tab.id) {
-        const step = nativeTab.index - tab.index
+      const nativeTabByIndex = nativeTabs[tab.index]
+      if (!nativeTabByIndex || nativeTabByIndex.id !== tab.id) {
+        const step = nativeTabById.index - tab.index
 
-        nativeTabs.splice(nativeTab.index, 1)
-        nativeTabs.splice(tab.index, 0, nativeTab)
+        nativeTabs.splice(nativeTabById.index, 1)
+        nativeTabs.splice(tab.index, 0, nativeTabById)
 
         if (prevMoveStep === step && prevMove) {
           prevMove.ids.push(tab.id)
@@ -680,7 +700,7 @@ export function removeTabsDescendants(tabIds: ID[]): void {
     if (!tab || tabIds.includes(tab.parentId)) continue
     for (let i = tab.index + 1, t; i < Tabs.list.length; i++) {
       t = Tabs.list[i]
-      if (t.lvl <= tab.lvl) break
+      if (!t || t.lvl <= tab.lvl) break
       if (!toRm.includes(t.id)) toRm.push(t.id)
     }
   }
@@ -750,7 +770,10 @@ export function removeTabsBelow(tabIds: ID[]): void {
 export function removeOtherTabs(tabIds: ID[]): void {
   if (!tabIds || !tabIds.length) return
 
-  const firstTab = Tabs.byId[tabIds[0]]
+  const firstTabId = tabIds[0]
+  if (firstTabId === undefined) return
+
+  const firstTab = Tabs.byId[firstTabId]
   if (!firstTab || firstTab.pinned) return
 
   const panel = Sidebar.reactive.panelsById[firstTab.panelId]
@@ -782,7 +805,7 @@ export function rememberRemoved(tabs: Tab[]) {
       // Try to find it in recently removed
       const index = Tabs.reactive.recentlyRemoved.findIndex(t => t.id === tab.parentId)
       if (index !== -1) {
-        parent = Tabs.reactive.recentlyRemoved[index]
+        parent = Tabs.reactive.recentlyRemoved[index] as RecentlyRemovedTabInfo
         if (!parent.isParent) parent.isParent = true
         parentIndex = index
       } else {
@@ -830,7 +853,10 @@ export function rememberRemoved(tabs: Tab[]) {
 export async function removeTabs(tabIds: ID[], silent?: boolean): Promise<void> {
   if (!tabIds || !tabIds.length) return
 
-  const firstTab = Tabs.byId[tabIds[0]]
+  const firstTabId = tabIds[0]
+  if (firstTabId === undefined) return
+
+  const firstTab = Tabs.byId[firstTabId]
   if (!firstTab) return
 
   const panelId = firstTab.panelId
@@ -853,7 +879,7 @@ export async function removeTabs(tabIds: ID[], silent?: boolean): Promise<void> 
     ) {
       for (let t, i = tab.index + 1; i < Tabs.list.length; i++) {
         t = Tabs.list[i]
-        if (t.lvl <= tab.lvl) break
+        if (!t || t.lvl <= tab.lvl) break
         if (t.invisible) hasInvisibleTab = true
         tabsMap[t.id] = t
       }

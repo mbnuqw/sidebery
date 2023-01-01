@@ -21,9 +21,9 @@ const detachedTabs: Record<ID, Tab> = {}
 export async function loadTabs(): Promise<void> {
   const tabs = await browser.tabs.query({})
   for (const tab of tabs as Tab[]) {
-    if (!Windows.byId[tab.windowId]) continue
-
     const tabWindow = Windows.byId[tab.windowId]
+    if (!tabWindow) continue
+
     if (tabWindow.tabs) tabWindow.tabs.push(tab)
     else tabWindow.tabs = [tab]
 
