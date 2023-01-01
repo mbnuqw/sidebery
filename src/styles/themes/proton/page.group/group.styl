@@ -22,7 +22,7 @@ body
   align-items: center
   padding: 0 8px
   margin: 0
-  background-color: var(--frame-bg)
+  background-color: var(--toolbar-bg)
   color-scheme: light dark
 
 :focus
@@ -56,7 +56,7 @@ body input
   font-size: 2.5rem
   font-weight: 700
   text-align: center
-  color: var(--frame-fg)
+  color: var(--toolbar-fg)
   margin: 20px 0 24px
 body[data-pin="true"] .title
   display: none
@@ -103,7 +103,7 @@ body[data-disconnected="true"] .disconnected-warn
     width: 100%
     height: 100%
     z-index: 1
-    background-color: var(--frame-fg)
+    background-color: var(--toolbar-fg)
     opacity: 0
   &:hover
     box-shadow: 0 0 0 1px #00000032, 0 2px 5px 0 #00000046
@@ -140,9 +140,9 @@ body[data-pin="true"] .pinned-tab
   white-space: nowrap
   overflow: hidden
   text-overflow: ellipsis
-  color: var(--frame-fg)
+  color: var(--toolbar-fg)
   text-shadow: 0 1px 8px #00000032
-#root[data-frame-color-scheme="light"] .pinned-tab-title
+#root[data-toolbar-color-scheme="light"] .pinned-tab-title
   text-shadow: none
 
 .pinned-tab-url
@@ -154,12 +154,12 @@ body[data-pin="true"] .pinned-tab
   padding: 0 0 24px
   margin: 0 12px
   overflow: hidden
-  color: var(--frame-fg)
+  color: var(--toolbar-fg)
   white-space: nowrap
   text-overflow: ellipsis
   text-shadow: 0 1px 8px #00000032
   opacity: .7
-#root[data-frame-color-scheme="light"] .pinned-tab-url
+#root[data-toolbar-color-scheme="light"] .pinned-tab-url
   text-shadow: none
 
 .tabs
@@ -193,7 +193,7 @@ body[data-layout="list"] .tabs
     left: calc(50% - 8px)
     width: 16px
     height: 2px
-    background-color: var(--frame-fg)
+    background-color: var(--toolbar-fg)
   &:after
     content: ''
     position: absolute
@@ -201,13 +201,13 @@ body[data-layout="list"] .tabs
     left: calc(50% - 1px)
     width: 2px
     height: 16px
-    background-color: var(--frame-fg)
+    background-color: var(--toolbar-fg)
   &:hover
     box-shadow: 0 0 0 1px #00000032, 0 2px 5px 0 #00000046
     background-color: #78787818
     &:before
     &:after
-      background-color: var(--frame-fg)
+      background-color: var(--toolbar-fg)
   &:active
     opacity: .8
 body[data-layout="grid"] .new-tab
@@ -234,7 +234,7 @@ body[data-layout="list"] .new-tab
     width: 100%
     height: 100%
     z-index: 1
-    background-color: var(--frame-fg)
+    background-color: var(--toolbar-fg)
     opacity: 0
   &:hover
     box-shadow: 0 0 0 1px #00000032, 0 2px 5px 0 #00000046
@@ -328,7 +328,7 @@ body[data-layout="grid"] .fav
     left: 0
     width: 100%
     height: 100%
-    fill: var(--frame-fg)
+    fill: var(--toolbar-fg)
     opacity: .7
 body[data-layout="grid"] .fav-placeholder
   top: auto
@@ -351,9 +351,9 @@ body[data-layout="list"] .info
   flex: 1 1
   margin: 0 8px 0 10px
   overflow: hidden
-#root[data-frame-color-scheme="dark"] .tab[data-discarded="true"] .info
+#root[data-toolbar-color-scheme="dark"] .tab[data-discarded="true"] .info
   opacity: .5
-#root[data-frame-color-scheme="light"] .tab[data-discarded="true"] .info
+#root[data-toolbar-color-scheme="light"] .tab[data-discarded="true"] .info
   opacity: .6
 
 .tab-title
@@ -361,9 +361,9 @@ body[data-layout="list"] .info
   font-weight: 400
   padding: 0
   overflow: hidden
-  color: var(--frame-fg)
+  color: var(--toolbar-fg)
   text-shadow: 0 1px 8px #00000024
-#root[data-frame-color-scheme="light"] .tab-title
+#root[data-toolbar-color-scheme="light"] .tab-title
   text-shadow: none
 body[data-layout="grid"] .tab-title
   max-height: 48px
@@ -382,12 +382,12 @@ body[data-layout="list"] .tab-title
   display: block
   font-weight: 400
   overflow: hidden
-  color: var(--frame-fg)
+  color: var(--toolbar-fg)
   white-space: nowrap
   text-overflow: ellipsis
   text-shadow: 0 1px 8px #00000024
   opacity: .7
-#root[data-frame-color-scheme="light"] .tab-url
+#root[data-toolbar-color-scheme="light"] .tab-url
   text-shadow: none
 body[data-layout="grid"] .tab-url
   height: 24px
@@ -422,7 +422,7 @@ body[data-layout="list"] .tab .ctrls
     left: calc(50% - 15px)
     width: 30px
     height: 30px
-    background-color: var(--frame-fg)
+    background-color: var(--toolbar-fg)
     border-radius: 5px
     opacity: 0
 body[data-layout="grid"] .ctrls .tab-btn
@@ -438,7 +438,7 @@ body[data-layout="list"] .ctrls .tab-btn
   left: calc(50% - 8px)
   width: 16px
   height: 16px
-  fill: var(--frame-fg)
+  fill: var(--toolbar-fg)
   opacity: .7
 .ctrls .tab-btn:hover svg
   opacity: 1
@@ -446,7 +446,7 @@ body[data-layout="list"] .ctrls .tab-btn
   opacity: .16
 .tab[data-discarded="true"] .ctrls .tab-btn.discard-btn svg
   opacity: .3
-#root[data-frame-color-scheme="dark"] .tab[data-discarded="true"] .ctrls .tab-btn.discard-btn svg
+#root[data-toolbar-color-scheme="dark"] .tab[data-discarded="true"] .ctrls .tab-btn.discard-btn svg
   opacity: .2
 .tab[data-discarded="true"] .ctrls .tab-btn.discard-btn:before
   opacity: 0
@@ -462,7 +462,7 @@ footer
   padding: 50px 0
   justify-content: center
   align-items: center
-  color: var(--frame-fg)
+  color: var(--toolbar-fg)
 
   .logo
     position: relative
