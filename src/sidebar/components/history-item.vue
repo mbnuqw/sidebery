@@ -7,7 +7,7 @@
   @mouseup="onMouseUp"
   @contextmenu.stop="onCtxMenu")
   .body
-    .fav(:title="'Search this domain'" @mousedown.stop="onFavMouseDown")
+    .fav(:title="translate('panel.history.fav_tooltip')" @mousedown.stop="onFavMouseDown")
       svg(v-if="!item.favicon"): use(xlink:href="#icon_ff")
       img(v-else :src="item.favicon")
     .title {{item.title}}
@@ -17,6 +17,7 @@
 <script lang="ts" setup>
 import { HistoryItem, MenuType } from 'src/types'
 import * as Utils from 'src/utils'
+import { translate } from 'src/dict'
 import { Mouse } from 'src/services/mouse'
 import { Menu } from 'src/services/menu'
 import { Selection } from 'src/services/selection'

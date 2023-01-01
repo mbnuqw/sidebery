@@ -56,6 +56,14 @@ export const sidebarTranslations: Translations = {
   },
 
   // ---
+  // -- History panel
+  // -
+  'panel.history.fav_tooltip': {
+    en: 'Show history of this site',
+    ru: 'Показать историю этого сайта',
+  },
+
+  // ---
   // -- New tab bar
   // -
   'newTabBar.new_tab': {
