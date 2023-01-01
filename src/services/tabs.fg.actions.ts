@@ -211,15 +211,24 @@ async function restoreTabsState(): Promise<void> {
 
   const activeTab = tabs.find(t => t.active)
   if (activeTab) {
-    // Switch to panel with active tab
-    const actTabPanel = Sidebar.reactive.panelsById[activeTab.panelId]
-    const actTabPanelIsNotActive = actTabPanel?.id !== Sidebar.reactive.activePanelId
+    const actTabIsGloballyPinned = activeTab.pinned && Settings.state.pinnedTabsPosition !== 'panel'
+    const currentActivePanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
 
-    Sidebar.lastTabsPanelId = actTabPanel.id
+    if (Utils.isTabsPanel(currentActivePanel)) {
+      let targetPanel
+      // Switch to panel with active tab
+      if (!actTabIsGloballyPinned) {
+        targetPanel = Sidebar.reactive.panelsById[activeTab.panelId]
+      }
+      // or switch to panel of the first not pinned tab
+      else {
+        const panelId = tabs.find(t => !t.pinned)?.panelId
+        if (panelId) targetPanel = Sidebar.reactive.panelsById[panelId]
+      }
 
-    if (!activeTab.pinned && actTabPanel && actTabPanelIsNotActive) {
-      const actPanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
-      if (Utils.isTabsPanel(actPanel)) Sidebar.activatePanel(actTabPanel.id, false)
+      if (targetPanel && targetPanel.id !== Sidebar.reactive.activePanelId) {
+        Sidebar.activatePanel(targetPanel.id, false)
+      }
     }
 
     // Set active tab id
