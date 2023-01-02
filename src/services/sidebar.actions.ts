@@ -207,13 +207,13 @@ function parseNav(config: SidebarConfig): void {
   }
 }
 
-export function recalcTabsPanels(): void {
+export function recalcTabsPanels(reset?: boolean): void {
   const pinnedTabs: ReactiveTab[] = []
   const pinnedTabsByPanel: Record<ID, ReactiveTab[]> = {}
   const pinnedInPanel = Settings.state.pinnedTabsPosition === 'panel'
   let tabIndex = 0
   let tabPanelIndex = 0
-  let same = true
+  let same = !reset
   let tab: Tab | undefined
   let startIndex = -1
 
@@ -281,7 +281,7 @@ export function recalcTabsPanels(): void {
 
     startIndex = -1
     tabPanelIndex = 0
-    same = true
+    same = !reset
   }
 
   Tabs.reactive.pinned = pinnedTabs

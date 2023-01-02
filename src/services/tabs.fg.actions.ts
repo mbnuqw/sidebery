@@ -536,6 +536,7 @@ export function reinitTabs(delay = 500): void {
         tab.index = index++
         tab.status = 'complete'
         tab.active = nativeTab.active
+        if (nativeTab.active) Tabs.activeId = nativeTab.id
 
         if (!tab.pinned) {
           const panelInfo = panelsList[panelIndex]
@@ -576,6 +577,7 @@ export function reinitTabs(delay = 500): void {
       } else {
         normalizeTab(nativeTab, panelId ?? NOID)
         normTabs.push(nativeTab)
+        if (nativeTab.active) Tabs.activeId = nativeTab.id
         normTabsMap[nativeTab.id] = nativeTab
         normReactiveTabsMap[nativeTab.id] = Tabs.toReactive(nativeTab)
         index++
@@ -593,7 +595,7 @@ export function reinitTabs(delay = 500): void {
     Tabs.list = normTabs
     Tabs.byId = normTabsMap
     Tabs.reactive.byId = normReactiveTabsMap
-    Sidebar.recalcTabsPanels()
+    Sidebar.recalcTabsPanels(true)
     updateTabsTree()
 
     Tabs.tabsReinitializing = false
