@@ -2625,14 +2625,17 @@ export function createChildTab(tabId: ID, url?: string, containerId?: string): v
   })
 }
 
+let _creatingTabInPanel = false
+const _createTabInPanelQueue: (() => Promise<void>)[] = []
 /**
  * Create new tab in panel
  */
-export function createTabInPanel(
-  panel: Panel,
-  conf?: Partial<browser.tabs.CreateProperties>
-): void {
+export async function createTabInPanel(panel: Panel, conf?: browser.tabs.CreateProperties) {
   if (!Utils.isTabsPanel(panel)) return
+  if (_creatingTabInPanel) {
+    _createTabInPanelQueue.push(() => createTabInPanel(panel, conf))
+    return
+  }
 
   const tabShell = {} as Tab
   let index = getIndexForNewTab(panel, tabShell)
@@ -2651,9 +2654,16 @@ export function createTabInPanel(
   if (index !== undefined) setNewTabPosition(index, parentId ?? NOID, panel.id)
   if (panel.newTabCtx !== 'none' && !conf?.cookieStoreId) config.cookieStoreId = panel.newTabCtx
 
-  browser.tabs.create(config).catch(err => {
+  _creatingTabInPanel = true
+  await browser.tabs.create(config).catch(err => {
     Logs.err('Tabs.createTabInPanel: Cannot create tab:', err)
   })
+  _creatingTabInPanel = false
+
+  if (_createTabInPanelQueue.length) {
+    const cb = _createTabInPanelQueue.shift()
+    if (cb) cb()
+  }
 }
 
 let updateTabsTreeTimeout: number | undefined
