@@ -932,9 +932,10 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
     // Switch to another panel if current is hidden
     if (
       Settings.state.hideEmptyPanels &&
-      Sidebar.reactive.activePanelId === panel.id &&
       !panel.tabs.length &&
-      !panel.pinnedTabs.length
+      Tabs.activeId !== tabId && // <- b/c panel will be switched in onTabActivated
+      !panel.pinnedTabs.length &&
+      Sidebar.reactive.activePanelId === panel.id
     ) {
       const activeTab = Tabs.byId[Tabs.activeId]
       if (activeTab && !activeTab.pinned) Sidebar.activatePanel(activeTab.panelId)
