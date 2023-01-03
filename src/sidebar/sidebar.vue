@@ -258,7 +258,6 @@ function onMouseDown(e: MouseEvent): void {
 }
 
 function onMouseUp(e: MouseEvent): void {
-  Mouse.resetTarget()
   Mouse.resetClickLock(120)
 
   if (e.button === 0 && !e.ctrlKey && !e.shiftKey) {

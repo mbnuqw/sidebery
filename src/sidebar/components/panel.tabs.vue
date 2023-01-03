@@ -187,9 +187,9 @@ function onNavCtxMenu(e: MouseEvent): void {
   Menu.open(MenuType.TabsPanel)
 }
 
-function onDoubleClick(e: MouseEvent): void {
+function onDoubleClick(e: MouseEvent) {
+  if (!Mouse.isTarget('panel', props.panel.id)) return
   if (Settings.state.tabsPanelLeftClickAction !== 'none') return
-  if (!(e.target as HTMLElement).className) return
   const da = Settings.state.tabsPanelDoubleClickAction
   if (da === 'tab') return Tabs.createTabInPanel(props.panel)
   if (da === 'collapse') {
