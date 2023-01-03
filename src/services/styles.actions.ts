@@ -300,8 +300,8 @@ function parseFirefoxTheme(theme: browser.theme.Theme): ParsedTheme {
   parsed.popupVariant = getColorSchemeVariant(parsed.popupBg, parsed.popupFg)
   fixing_popup_border: if (
     !popup_border ||
-    popup_bg === popup_border ||
-    parsed.popupBorder?.[3] === 0
+    parsed.popupBorder?.[3] === 0 ||
+    isSimilarColor(8, parsed.popupBg, parsed.popupBorder)
   ) {
     const border = Utils.toRGBA(popup_bg)
     if (!border) break fixing_popup_border
