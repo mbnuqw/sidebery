@@ -110,8 +110,6 @@ const VOID_PANEL_CONF: PanelConfig = {
   dropTabCtx: 'none',
   moveTabCtx: 'none',
   moveTabCtxNoChild: true,
-  urlRulesActive: false,
-  urlRules: '',
   bookmarksFolderId: -1,
   newTabBtns: [],
 }

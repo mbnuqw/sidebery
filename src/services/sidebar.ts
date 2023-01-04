@@ -29,11 +29,6 @@ export interface SidebarReactiveState {
   upgrading: UpgradingState | null
 }
 
-interface UrlRule {
-  panelId: ID
-  value: string | RegExp
-}
-
 export interface PanelConfigPopup {
   config: PanelConfig
   index?: number
@@ -94,7 +89,6 @@ export const Sidebar = {
   hasTabs: false,
   hasBookmarks: false,
   hasHistory: false,
-  urlRules: [] as UrlRule[],
   lastTabsPanelId: NOID,
   scrollPositions: {} as Record<ID, number>,
   convertingPanelLock: false,

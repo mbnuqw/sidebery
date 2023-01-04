@@ -122,20 +122,6 @@
       :value="conf.moveTabCtxNoChild"
       @update:value="togglePanelMoveTabCtxNoChild")
 
-  //- ToggleField(
-  //-   v-if="Utils.isTabsPanel(conf)"
-  //-   label="panel.url_rules"
-  //-   :value="conf.urlRulesActive"
-  //-   @update:value="toggleUrlRules")
-  //- .sub-fields.-nosep(v-if="Utils.isTabsPanel(conf) && conf.urlRulesActive")
-  //-   .field
-  //-     TextInput.text(
-  //-       ref="urlRulesInput"
-  //-       or="---"
-  //-       :value="conf.urlRules"
-  //-       :valid="urlRulesValid"
-  //-       @update:value="onUrlRulesInput")
-
   SelectField(
     v-if="Utils.isBookmarksPanel(conf)"
     label="panel.bookmarks_view_mode"
@@ -216,7 +202,6 @@ let updCustomIconTimeout: number
 
 const rootEl = ref<HTMLElement | null>(null)
 const nameInput = ref<TextInputComponent | null>(null)
-const urlRulesInput = ref<TextInputComponent | null>(null)
 
 const props = defineProps<{ conf: PanelConfig; index?: number }>()
 
@@ -285,11 +270,6 @@ const dropTabCtx = computed<string>(() => {
 const moveTabCtx = computed<string>(() => {
   return (Utils.isTabsPanel(props.conf) && props.conf.moveTabCtx) || ''
 })
-const urlRulesValid = computed<'valid' | ''>(() => {
-  return Utils.isTabsPanel(props.conf) && props.conf.urlRules && props.conf.urlRules.length > 1
-    ? 'valid'
-    : ''
-})
 const rootPath = computed<string>(() => {
   if (!Utils.isBookmarksPanel(props.conf)) return ''
   if (!props.conf.rootId) return '/'
@@ -312,10 +292,6 @@ const rootDirIsFF = computed<boolean>(() => {
   if (!Utils.isBookmarksPanel(props.conf)) return false
   return (props.conf.rootId as string).endsWith('___')
 })
-const newTabBtnsText = computed<string>(() => {
-  if (!Utils.isTabsPanel(props.conf)) return ''
-  return props.conf.newTabBtns.join('\n')
-})
 
 onMounted(() => {
   init()
@@ -334,7 +310,6 @@ async function init(): Promise<void> {
     }
   }
   if (nameInput.value) nameInput.value.recalcTextHeight()
-  if (urlRulesInput.value) urlRulesInput.value.recalcTextHeight()
 }
 
 function isNotTabsPanel(conf: PanelConfig): conf is BookmarksPanelConfig | HistoryPanelConfig {
@@ -631,28 +606,6 @@ function togglePanelMoveTabCtxNoChild(value: boolean): void {
   if (!Utils.isTabsPanel(props.conf)) return
   props.conf.moveTabCtxNoChild = value
   Sidebar.saveSidebar()
-}
-
-async function toggleUrlRules(): Promise<void> {
-  if (!Utils.isTabsPanel(props.conf)) return
-
-  if (!props.conf.urlRulesActive && !Permissions.reactive.webData) {
-    const result = await Permissions.request('<all_urls>')
-    if (!result) return
-  }
-
-  props.conf.urlRulesActive = !props.conf.urlRulesActive
-  Sidebar.saveSidebar()
-
-  await nextTick()
-
-  if (urlRulesInput.value) urlRulesInput.value.focus()
-}
-
-function onUrlRulesInput(value: string): void {
-  if (!Utils.isTabsPanel(props.conf)) return
-  props.conf.urlRules = value
-  Sidebar.saveSidebar(500)
 }
 
 async function setBookmarksRootId(): Promise<void> {

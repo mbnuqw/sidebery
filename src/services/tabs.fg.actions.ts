@@ -3073,41 +3073,6 @@ export function getParentForNewTab(panel: Panel, openerTabId?: ID): ID | undefin
   return openerTabId
 }
 
-/** TODO: Remove
- * Check url rules of tabs panel and move/create tab if needed
- */
-export async function applyUrlRules(url: string, tab: Tab): Promise<void> {
-  const panelId = Sidebar.findTabsPanelForUrl(url, tab.panelId)
-  if (panelId === undefined) return
-
-  const panel = Sidebar.reactive.panelsById[panelId]
-  if (!Utils.isTabsPanel(panel)) return
-
-  let index = Tabs.getIndexForNewTab(panel, tab)
-  if (index === undefined) index = panel.nextTabIndex ?? Tabs.list.length
-
-  if (panel.newTabCtx !== 'none' && tab.cookieStoreId !== panel.newTabCtx) {
-    await browser.tabs.remove(tab.id)
-    Tabs.createTabInPanel(panel, { url: tab.url })
-    return
-  }
-
-  if (index > tab.index) index--
-  if (index !== tab.index) {
-    tab.dstPanelId = panelId
-    browser.tabs.move(tab.id, { windowId: Windows.id, index }).catch(err => {
-      Logs.err('Tabs.applyUrlRules: Cannot move tab:', err)
-    })
-  } else {
-    tab.panelId = panel.id
-    Sidebar.recalcTabsPanels()
-    Tabs.cacheTabsData()
-    Tabs.saveTabData(tab.id)
-  }
-
-  if (tab.active) Sidebar.switchToPanel(panel.id, true)
-}
-
 export function handleReopening(tabId: ID, newCtx: string): number | undefined {
   const targetTab = Tabs.byId[tabId]
   if (!targetTab) return

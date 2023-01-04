@@ -170,8 +170,6 @@ export interface TabsPanelConfig extends PanelCommonConfig {
   dropTabCtx: string
   moveTabCtx: string
   moveTabCtxNoChild: boolean
-  urlRulesActive: boolean
-  urlRules: string
   bookmarksFolderId: ID
   newTabBtns: string[]
 }

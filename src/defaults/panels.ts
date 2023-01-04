@@ -51,8 +51,6 @@ export const TABS_PANEL_CONFIG: TabsPanelConfig = {
   dropTabCtx: 'none',
   moveTabCtx: 'none',
   moveTabCtxNoChild: true,
-  urlRulesActive: false,
-  urlRules: '',
   bookmarksFolderId: -1,
   newTabBtns: [],
 }

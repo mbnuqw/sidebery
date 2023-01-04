@@ -250,9 +250,6 @@ export async function getDbgDetails(): Promise<DbgInfo> {
         panel.name = `len: ${panel.name.length}`
         if (panel.iconIMGSrc) panel.iconIMGSrc = `len: ${panel.iconIMGSrc.length}`
         if (panel.iconIMG) panel.iconIMG = `len: ${panel.iconIMG.length}`
-        if (Utils.isTabsPanel(panel) && panel.urlRules) {
-          panel.urlRules = `len: ${panel.urlRules.length}`
-        }
       }
       dbg.sidebar = stored.sidebar
     }
