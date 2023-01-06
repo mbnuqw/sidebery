@@ -2,8 +2,11 @@ import { Tab, ActiveTabsHistory, NewTabPosition, ReactiveTab } from 'src/types'
 import { NOID } from 'src/defaults'
 import * as TabsActions from 'src/services/tabs.fg.actions'
 import * as TabsHandlers from 'src/services/tabs.fg.handlers'
-import * as TabsGroups from 'src/services/tabs.fg.actions.groups'
+import * as TabsGroups from 'src/services/tabs.fg.groups'
 import * as TabsShadow from 'src/services/tabs.fg.shadow'
+import * as TabsScroll from 'src/services/tabs.fg.scroll'
+import * as TabsEditTitle from 'src/services/tabs.fg.edit-title'
+import * as TabsColors from 'src/services/tabs.fg.colors'
 
 export interface TabsReactiveState {
   byId: Partial<Record<ID, ReactiveTab>>
@@ -50,6 +53,7 @@ export const Tabs = {
   attachingTabs: [] as Tab[],
   detachingTabIds: [] as ID[],
   normTabsMoving: false,
+  editableTabId: NOID,
 
   activeTabsGlobal: { id: 'global', actTabOffset: -1, actTabs: [] } as ActiveTabsHistory,
   activeTabsPerPanel: {} as Record<string, ActiveTabsHistory>,
@@ -64,4 +68,7 @@ export const Tabs = {
   ...TabsHandlers,
   ...TabsGroups,
   ...TabsShadow,
+  ...TabsScroll,
+  ...TabsEditTitle,
+  ...TabsColors,
 }

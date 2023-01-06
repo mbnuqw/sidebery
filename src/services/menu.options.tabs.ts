@@ -1,5 +1,5 @@
 import * as Utils from 'src/utils'
-import { ASKID, CONTAINER_ID, Err, NEWID } from 'src/defaults'
+import { ASKID, COLOR_OPTS, CONTAINER_ID, Err, NEWID } from 'src/defaults'
 import { MenuOption, Window, Tab } from 'src/types'
 import { translate } from 'src/dict'
 import { Tabs } from 'src/services/tabs.fg'
@@ -419,6 +419,33 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
       icon: 'icon_title',
       badge: 'icon_copy_badge',
       onClick: () => Tabs.copyTitles(selected),
+    }
+  },
+
+  colorizeTab: () => {
+    const opts: MenuOption[] = []
+    const selected = Selection.get()
+    let usedColor
+    if (selected.length === 1) usedColor = Tabs.byId[selected[0]]?.customColor ?? 'toolbar'
+    for (const color of COLOR_OPTS) {
+      if (usedColor && usedColor === color.color) continue
+      const title = translate('colors.' + color.color)
+      opts.push({
+        label: title,
+        color: color.color as browser.ColorName,
+        icon: color.value === 'toolbar' ? 'icon_none' : 'circle',
+        onClick: () => Tabs.setCustomColor(selected, color.value),
+      })
+    }
+
+    if (opts.length) return opts
+  },
+
+  editTabTitle: () => {
+    return {
+      label: translate('menu.tab.edit_title'),
+      icon: 'icon_edit',
+      onClick: () => Tabs.editTabTitle(Selection.get()),
     }
   },
 

@@ -512,6 +512,46 @@ export const sidebarTranslations: Translations = {
     ru: 'Сохранить',
     de: 'Speichern',
   },
+
+  // ---
+  // -- Colors
+  // -
+  'colors.toolbar': {
+    en: 'Default',
+    ru: 'Стандартный',
+  },
+  'colors.blue': {
+    en: 'Blue',
+    ru: 'Синий',
+  },
+  'colors.turquoise': {
+    en: 'Turquoise',
+    ru: 'Бирюзовый',
+  },
+  'colors.green': {
+    en: 'Green',
+    ru: 'Зеленый',
+  },
+  'colors.yellow': {
+    en: 'Yellow',
+    ru: 'Желтый',
+  },
+  'colors.orange': {
+    en: 'Orange',
+    ru: 'Оранжевый',
+  },
+  'colors.red': {
+    en: 'Red',
+    ru: 'Красный',
+  },
+  'colors.pink': {
+    en: 'Pink',
+    ru: 'Розовый',
+  },
+  'colors.purple': {
+    en: 'Purple',
+    ru: 'Фиолетовый',
+  },
 }
 
 if (!window.translations) window.translations = sidebarTranslations

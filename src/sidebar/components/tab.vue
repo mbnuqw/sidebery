@@ -19,6 +19,7 @@
   :data-color="containerColor"
   :data-colorized="!!tabColor"
   :data-unread="tab.unread"
+  :data-edit="tab.customTitleEdit"
   :title="tooltip"
   draggable="true"
   @dragstart="onDragStart"
@@ -57,7 +58,10 @@
       @contextmenu.stop.prevent)
       svg: use(xlink:href="#icon_remove")
     .ctx(v-if="containerColor")
-    .t-box(v-if="!isPinned"): .title {{tab.title}}
+    .t-box(v-if="!isPinned")
+      .title(
+        spellcheck="false"
+        :contenteditable="tab.customTitleEdit") {{tab.customTitle ?? tab.title}}
     .unread-mark(v-if="tab.unread")
 </template>
 
@@ -76,6 +80,7 @@ import { Mouse } from 'src/services/mouse'
 import { DnD } from 'src/services/drag-and-drop'
 import { Search } from 'src/services/search'
 import { Favicons } from 'src/services/favicons'
+import { RGB_COLORS } from 'src/defaults'
 
 const props = defineProps<{ tab: ReactiveTab }>()
 
@@ -91,6 +96,7 @@ const containerColor = computed((): boolean | string => {
   return false
 })
 const tabColor = computed<string>(() => {
+  if (props.tab.customColor) return RGB_COLORS[props.tab.customColor as browser.ColorName]
   if (
     Settings.state.colorizeTabsBranches &&
     props.tab.branchColor &&
@@ -143,18 +149,20 @@ function tempLockCloseBtn(): void {
 function onMouseDownClose(e: MouseEvent): void {
   if (closeLock) return
   Mouse.setTarget('tab.close', props.tab.id)
-  if (e.button === 0) {
+  if (Tabs.editableTabId === props.tab.id) {
+    const titleEl = document.querySelector(`#tab${props.tab.id}` + ' .title') as HTMLElement | null
+    const tab = Tabs.byId[props.tab.id]
+    if (tab && titleEl) titleEl.innerText = tab.title
+  } else if (e.button === 0) {
     Tabs.removeTabs([props.tab.id])
-  }
-  if (e.button === 1) {
+  } else if (e.button === 1) {
     if (Settings.state.tabCloseMiddleClick === 'close') {
       Tabs.removeTabs([props.tab.id])
     } else if (Settings.state.tabCloseMiddleClick === 'discard') {
       Tabs.discardTabs([props.tab.id])
     }
     e.preventDefault()
-  }
-  if (e.button === 2) {
+  } else if (e.button === 2) {
     Tabs.removeBranches([props.tab.id])
   }
   tempLockCloseBtn()

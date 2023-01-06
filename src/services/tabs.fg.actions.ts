@@ -1,5 +1,5 @@
 import * as Utils from 'src/utils'
-import { CONTAINER_ID, GROUP_URL, NOID, NEWID, Err, ASKID, MOVEID, PRE_SCROLL } from 'src/defaults'
+import { CONTAINER_ID, GROUP_URL, NOID, NEWID, Err, ASKID, MOVEID } from 'src/defaults'
 import { BKM_OTHER_ID, ADDON_HOST } from 'src/defaults'
 import { translate } from 'src/dict'
 import { Stored, Tab, Panel, TabCache, ActiveTabsHistory, ReactiveTab, TabStatus } from 'src/types'
@@ -37,6 +37,9 @@ export function toReactive(tab: Tab): ReactiveTab {
     isParent: tab.isParent,
     folded: tab.folded,
     title: tab.title,
+    customTitle: tab.customTitle ?? null,
+    customTitleEdit: false,
+    customColor: tab.customColor ?? null,
     url: tab.url,
     lvl: tab.lvl,
     branchLen: 0,
@@ -277,6 +280,8 @@ function restoreTabsFromCache(tabs: Tab[], cache: Record<ID, TabCache>, lastPane
       const actualParentId = idsMap[data.parentId]
       if (actualParentId !== undefined) tab.parentId = actualParentId
       tab.folded = !!data.folded
+      if (data.customTitle) tab.customTitle = data.customTitle
+      if (data.customColor) tab.customColor = data.customColor
       idsMap[data.id] = tab.id
 
       if (tab.url.startsWith(GROUP_URL)) Tabs.linkGroupWithPinnedTab(tab, tabs)
@@ -341,6 +346,8 @@ function restoreTabsFromSessionData(
       const actualParentId = idsMap[data.parentId]
       if (actualParentId !== undefined) tab.parentId = actualParentId
       tab.folded = !!data.folded
+      if (data.customTitle) tab.customTitle = data.customTitle
+      if (data.customColor) tab.customColor = data.customColor
       idsMap[data.id] = tab.id
 
       if (tab.url.startsWith(GROUP_URL)) Tabs.linkGroupWithPinnedTab(tab, tabs)
@@ -476,6 +483,8 @@ export function cacheTabsData(delay = 300): void {
       if (tab.panelId !== NOID) info.panelId = tab.panelId
       if (tab.folded) info.folded = tab.folded
       if (tab.cookieStoreId !== CONTAINER_ID) info.ctx = tab.cookieStoreId
+      if (tab.customTitle) info.customTitle = tab.customTitle
+      if (tab.customColor) info.customColor = tab.customColor
       data.push(info)
     }
 
@@ -494,16 +503,19 @@ export function saveTabData(tabId: ID): void {
   const tab = Tabs.byId[tabId]
   if (!tab) return
 
-  browser.sessions
-    .setTabValue(tabId, 'data', {
-      id: tabId,
-      panelId: tab.panelId,
-      parentId: tab.parentId,
-      folded: tab.folded,
-    })
-    .catch(err => {
-      Logs.err('Tabs.saveTabData: Cannot set value in session:', err)
-    })
+  const data: TabSessionData = {
+    id: tabId,
+    panelId: tab.panelId,
+    parentId: tab.parentId,
+    folded: tab.folded,
+  }
+
+  if (tab.customTitle) data.customTitle = tab.customTitle
+  if (tab.customColor) data.customColor = tab.customColor
+
+  browser.sessions.setTabValue(tabId, 'data', data).catch(err => {
+    Logs.err('Tabs.saveTabData: Cannot set value in session:', err)
+  })
 }
 
 let normTabsTimeout: number | undefined
@@ -3722,46 +3734,9 @@ export function getTabsInfo(ids: ID[], setPanelId?: boolean): ItemInfo[] {
   return items
 }
 
-const scrollConf: ScrollToOptions = { behavior: 'auto', top: 0 }
-export function scrollToTab(id: ID): void {
-  const panel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
-  if (!Utils.isTabsPanel(panel) || !panel.scrollEl) return
-
-  const isLastTab = panel.tabs[panel.tabs.length - 1]?.id === id
-  if (isLastTab) {
-    const scrolableEl = panel.scrollComponent?.getScrollableBox()
-    if (!scrolableEl) return
-    const pH = panel.scrollEl.offsetHeight
-    scrollConf.top = scrolableEl.offsetHeight - pH
-    panel.scrollEl.scroll(scrollConf)
-    return
-  }
-
-  const elId = 'tab' + id.toString()
-  const el = document.getElementById(elId)
-  if (!el) return Logs.warn('Tabs.scrollToTab: Cannot find tab element')
-
-  const pH = panel.scrollEl.offsetHeight
-  const pS = panel.scrollEl.scrollTop
-  const tH = el.offsetHeight
-  const tY = el.offsetTop
-
-  if (tY < pS + PRE_SCROLL) {
-    if (pS > 0) {
-      let y = tY - PRE_SCROLL
-      if (y < 0) y = 0
-      scrollConf.top = y
-      panel.scrollEl.scroll(scrollConf)
-    }
-  } else if (tY + tH > pS + pH - PRE_SCROLL) {
-    scrollConf.top = tY + tH - pH + PRE_SCROLL
-    panel.scrollEl.scroll(scrollConf)
-  }
-}
-export const scrollToTabDebounced = Utils.debounce(scrollToTab)
-
-export function getBranch(tab: Tab): Tab[] {
-  const result: Tab[] = [tab]
+export function getBranch(tab: Tab, withRoot = true): Tab[] {
+  const result: Tab[] = []
+  if (withRoot) result.push(tab)
 
   // Check tab index
   const target = Tabs.list[tab.index]
@@ -3864,116 +3839,6 @@ export function triggerFlashAnimation(rTab: ReactiveTab): void {
   }, 1000)
 }
 
-export function colorizeTabs(): void {
-  for (const tab of Tabs.list) {
-    colorizeTab(tab.id)
-  }
-}
-
-const colorizeTabTimeouts: Record<ID, number> = {}
-export function colorizeTabDebounced(tabId: ID, delayMS = 500): void {
-  clearTimeout(colorizeTabTimeouts[tabId])
-  colorizeTabTimeouts[tabId] = setTimeout(() => {
-    delete colorizeTabTimeouts[tabId]
-    colorizeTab(tabId)
-  }, delayMS)
-}
-
-const CONTAINER_COLORS: Record<string, string> = {
-  blue: '#37adff',
-  turquoise: '#00c79a',
-  green: '#51cd00',
-  yellow: '#ffcb00',
-  orange: '#ff9f00',
-  red: '#ff613d',
-  pink: '#ff4bda',
-  purple: '#af51f5',
-}
-
-export function colorizeTab(tabId: ID): void {
-  const tab = Tabs.byId[tabId]
-  if (!tab) return
-
-  const rTab = Tabs.reactive.byId[tab.id]
-  if (!rTab) return
-
-  let srcStr, color
-  if (Settings.state.colorizeTabsSrc === 'domain') {
-    srcStr = Utils.getDomainOf(tab.url)
-    color = Utils.colorFromString(srcStr, 60)
-  } else {
-    const container = Containers.reactive.byId[tab.cookieStoreId]
-    if (container) {
-      color = CONTAINER_COLORS[container.color]
-    } else {
-      color = null
-    }
-  }
-
-  rTab.color = color
-}
-
-export function colorizeBranches(): void {
-  for (const tab of Tabs.list) {
-    if (tab.isParent && tab.lvl === 0) colorizeBranch(tab.id)
-  }
-}
-
-export function colorizeBranch(rootId: ID): void {
-  const rootTab = Tabs.byId[rootId]
-  if (!rootTab || rootTab.lvl > 0) return
-
-  const rRootTab = Tabs.reactive.byId[rootTab.id]
-  if (!rRootTab) return
-
-  let srcStr
-  if (Settings.state.colorizeTabsBranchesSrc === 'url') {
-    srcStr = rootTab.url
-  } else {
-    srcStr = Utils.getDomainOf(rootTab.url)
-  }
-
-  const color = Utils.colorFromString(srcStr, 60)
-  rRootTab.branchColor = color
-
-  for (let i = rootTab.index + 1; i < Tabs.list.length; i++) {
-    const tab = Tabs.list[i]
-    if (tab.lvl === 0) break
-
-    const rTab = Tabs.reactive.byId[tab.id]
-    if (rTab) rTab.branchColor = color
-  }
-}
-
-export function setBranchColor(tabId: ID): void {
-  const tab = Tabs.byId[tabId]
-  if (!tab) return
-  if (tab.parentId === NOID) {
-    if (tab.isParent) Tabs.colorizeBranch(tab.id)
-    else {
-      const rTab = Tabs.reactive.byId[tab.id]
-      if (rTab?.branchColor) rTab.branchColor = null
-    }
-    return
-  }
-
-  let parent = Tabs.byId[tab.parentId]
-  while (parent && parent.lvl > 0) {
-    parent = Tabs.byId[parent.parentId]
-  }
-  if (!parent) return
-
-  const rParent = Tabs.reactive.byId[parent.id]
-  if (!rParent) return
-
-  if (rParent.branchColor) {
-    const rTab = Tabs.reactive.byId[tabId]
-    if (rTab) rTab.branchColor = rParent.branchColor
-  } else {
-    Tabs.colorizeBranch(parent.id)
-  }
-}
-
 export function updateUrlCounter(url: string, delta: number): number {
   let count = Tabs.urlsInUse[url]
   if (count === undefined) {
@@ -4060,23 +3925,4 @@ export function pringDbgInfo(reset = false): void {
       rTab.title = `${tab.id} i${tab.index} p${tab.parentId} l${tab.lvl} ${tab.title}`
     }
   }
-}
-
-export function incrementScrollRetainer(panel: TabsPanel, count: number): void {
-  panel.scrollRetainer += count
-  Tabs.blockedScrollPosition = true
-}
-
-export function decrementScrollRetainer(panel: TabsPanel): void {
-  if (panel.scrollRetainer <= 0) {
-    Tabs.blockedScrollPosition = false
-    return
-  }
-  panel.scrollRetainer--
-  Tabs.blockedScrollPosition = true
-}
-
-export function resetScrollRetainer(panel: TabsPanel): void {
-  panel.scrollRetainer = 0
-  Tabs.blockedScrollPosition = false
 }

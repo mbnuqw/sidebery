@@ -1,6 +1,6 @@
 import * as Utils from 'src/utils'
 import { Tab, GroupConfig, GroupInfo, GroupedTabInfo } from 'src/types'
-import { GroupUpdateInfo } from 'src/types'
+import { MsgUpdated } from 'src/injections/group.ipc'
 import { Windows } from 'src/services/windows'
 import { Settings } from 'src/services/settings'
 import { Tabs } from './tabs.fg'
@@ -209,7 +209,7 @@ export async function getGroupInfo(groupTabId: ID): Promise<GroupInfo | null> {
       id: tab.id,
       index: tab.index,
       lvl: tab.lvl - groupTab.lvl - 1,
-      title: tab.title,
+      title: tab.customTitle ?? tab.title,
       url: tab.url,
       discarded: !!tab.discarded,
       favIconUrl: tab.favIconUrl ?? '',
@@ -256,19 +256,19 @@ export function updateGroupTab(groupTab: Tab): void {
         id: tab.id,
         index: tab.index,
         lvl: tab.lvl - groupTab.lvl - 1,
-        title: tab.title,
+        title: tab.customTitle ?? tab.title,
         url: tab.url,
         discarded: !!tab.discarded,
         favIconUrl: tab.favIconUrl ?? '',
       })
     }
 
-    const msg: GroupUpdateInfo = {
+    const msg: MsgUpdated = {
       name: 'update',
-      id: groupTab.id,
       index: groupTab.index,
-      len,
+      parentId: groupTab.parentId,
       tabs,
+      len,
     }
 
     const parentTab = Tabs.reactive.byId[groupTab.parentId]
@@ -309,4 +309,61 @@ export function updateGroupChild(groupId: ID, childId: ID, delay = 250): void {
     }
     IPC.groupPage(groupTab.id, updateData)
   }, delay)
+}
+
+export function getGroupConfig(groupTabId: ID): GroupConfig | undefined {
+  const groupTab = Tabs.byId[groupTabId]
+  if (!groupTab) return
+
+  let urlInfo
+  try {
+    urlInfo = new URL(groupTab.url)
+  } catch {
+    return
+  }
+  if (!urlInfo.hash) return
+
+  const config: GroupConfig = { active: groupTab.active }
+
+  const title = decodeURIComponent(urlInfo.hash.slice(1))
+  config.title = title.split(':id:')[0] // Remove legacy "id"
+
+  const pin = urlInfo.searchParams.get('pin')
+  if (pin) {
+    const [ctx, url] = pin.split('::')
+    let pinnedTab
+    for (const tab of Tabs.list) {
+      if (!tab.pinned) break
+      if (url === tab.url && ctx === tab.cookieStoreId) {
+        pinnedTab = tab
+        break
+      }
+    }
+    if (pinnedTab) {
+      config.pin = pin
+      config.pinnedTab = pinnedTab
+    }
+  }
+
+  return config
+}
+
+export function setGroupName(groupTabId: ID, newName: string) {
+  const groupTab = Tabs.byId[groupTabId]
+  if (!groupTab) return
+
+  const config = getGroupConfig(groupTabId)
+  if (!config) return
+
+  const newUrl = Utils.createGroupUrl(newName, config)
+  browser.tabs
+    .update(groupTabId, { url: newUrl })
+    .then(() => {
+      if (!groupTab.discarded) {
+        return IPC.groupPage(groupTabId, { name: 'update', title: newName })
+      }
+    })
+    .catch(() => {
+      Logs.warn('setGroupName: Cannot update url')
+    })
 }

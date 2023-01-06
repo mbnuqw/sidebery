@@ -733,6 +733,22 @@ export const commonTranslations: Translations = {
     de: 'Andere Tabs schließen',
     zh_CN: '关闭其他标签页',
   },
+  'menu.tab.edit': {
+    en: 'Configure...',
+    ru: 'Настроить...',
+  },
+  'menu.tab.edit_title': {
+    en: 'Edit title',
+    ru: 'Редактировать заголовок',
+  },
+  'menu.tab.colorize_': {
+    en: 'Set color',
+    ru: 'Задать цвет',
+  },
+  'menu.tab.colorize_colors': {
+    en: 'Color...',
+    ru: 'Цвет...',
+  },
   // - Tabs panel
   'menu.tabs_panel.mute_all_audible': {
     en: 'Mute all audible tabs',

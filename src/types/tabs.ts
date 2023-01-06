@@ -25,6 +25,8 @@ export interface Tab extends browser.tabs.Tab {
   internal?: boolean
   isGroup: boolean
   reopening?: { id: ID }
+  customTitle?: string
+  customColor?: string
 }
 
 export const enum TabStatus {
@@ -50,6 +52,8 @@ export interface ReactiveTab {
   isParent: boolean
   folded: boolean
   title: string
+  customTitle: string | null
+  customTitleEdit: boolean
   url: string
   lvl: number
   branchLen: number
@@ -60,6 +64,7 @@ export interface ReactiveTab {
   flash: boolean
   branchColor: string | null
   color: string | null
+  customColor: string | null
   isGroup: boolean
 }
 
@@ -77,6 +82,8 @@ export interface TabCache {
   folded?: boolean
   ctx?: string /* only for containered tab */
   uniqWinId?: ID /* only for the first tab of window */
+  customTitle?: string
+  customColor?: string
 
   index?: number
   isMissedGroup?: boolean
@@ -87,6 +94,8 @@ export interface TabSessionData {
   panelId: ID
   parentId: ID
   folded: boolean
+  customTitle?: string
+  customColor?: string
 }
 
 export interface ActiveTabsHistory {
@@ -116,15 +125,6 @@ export interface GroupedTabInfo {
   favPlaceholderSvgEl?: SVGElement
   titleEl?: HTMLElement
   urlEl?: HTMLElement
-}
-
-export interface GroupUpdateInfo {
-  name: 'update'
-  id: ID
-  index: number
-  len: number
-  tabs: GroupedTabInfo[]
-  parentId?: ID
 }
 
 export interface GroupPin {

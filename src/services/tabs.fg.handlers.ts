@@ -328,25 +328,30 @@ function onTabCreated(tab: Tab, attached?: boolean): void {
     if (!attached) {
       const groupTab = Tabs.getGroupTab(tab)
       if (groupTab && !groupTab.discarded) {
-        browser.tabs
-          .sendMessage(groupTab.id, {
-            name: 'create',
-            id: tab.id,
-            index: tab.index,
-            lvl: tab.lvl - groupTab.lvl - 1,
-            title: tab.title,
-            url: tab.url,
-            discarded: tab.discarded,
-            favIconUrl: tab.favIconUrl,
-          })
-          .catch(() => {
-            /** itsokay **/
-          })
+        IPC.groupPage(groupTab.id, {
+          name: 'create',
+          id: tab.id,
+          index: tab.index,
+          lvl: tab.lvl - groupTab.lvl - 1,
+          title: tab.title,
+          url: tab.url,
+          discarded: tab.discarded,
+          favIconUrl: tab.favIconUrl,
+        })
       }
     }
 
     if (Settings.state.colorizeTabs) Tabs.colorizeTabDebounced(tab.id, 120)
     if (Settings.state.colorizeTabsBranches && tab.lvl > 0) Tabs.setBranchColor(tab.id)
+
+    // Inherit custom color from parent
+    if (tab.openerTabId !== undefined) {
+      const parent = Tabs.byId[tab.openerTabId]
+      if (parent?.customColor) {
+        tab.customColor = parent.customColor
+        if (rTab) rTab.customColor = parent.customColor
+      }
+    }
   }
 
   Tabs.saveTabData(tab.id)

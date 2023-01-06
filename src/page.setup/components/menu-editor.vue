@@ -176,6 +176,8 @@ const TABS_MENU_OPTS: Record<string, string> = {
   discard: 'menu.tab.discard',
   copyTabsUrls: 'menu.copy_urls',
   copyTabsTitles: 'menu.copy_titles',
+  editTabTitle: 'menu.tab.edit_title',
+  colorizeTab: 'menu.tab.colorize_colors',
   group: 'menu.tab.group',
   flatten: 'menu.tab.flatten',
   clearCookies: 'menu.tab.clear_cookies',

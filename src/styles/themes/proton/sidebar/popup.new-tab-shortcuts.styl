@@ -1,5 +1,12 @@
 @import '../../../utils'
 
+// Set toolbar colors for fields
+#root .NewTabShortcutsPopup
+  --toolbar-bg: var(--popup-bg)
+  --toolbar-fg: var(--popup-fg)
+  [data-color="toolbar"]
+    --color: var(--popup-fg)
+
 .NewTabShortcutsPopup .space
   height: 16px
   &:first-child
