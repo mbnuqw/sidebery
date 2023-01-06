@@ -22,6 +22,7 @@
 import { ref } from 'vue'
 import { translate } from 'src/dict'
 import TextInput from './text-input.vue'
+import { TextInputComponent } from 'src/types'
 
 interface TextFieldProps {
   value: string | number
@@ -41,13 +42,28 @@ interface TextFieldProps {
 const emit = defineEmits(['update:value', 'keydown'])
 const props = withDefaults(defineProps<TextFieldProps>(), { padding: 0, tabindex: '0' })
 
-const inputEl = ref<HTMLInputElement | null>(null)
+const inputEl = ref<TextInputComponent | null>(null)
 
 function focus(): void {
   inputEl.value?.focus()
 }
 
-defineExpose({
+function error() {
+  inputEl.value?.error()
+}
+
+function recalcTextHeight() {
+  inputEl.value?.recalcTextHeight()
+}
+
+function selectAll() {
+  inputEl.value?.selectAll()
+}
+
+defineExpose<TextInputComponent>({
   focus,
+  error,
+  recalcTextHeight,
+  selectAll,
 })
 </script>
