@@ -64,8 +64,6 @@ interface SelectInputProps {
   folded?: boolean
 }
 
-const BOTTOM_PADDING_PX = 8
-
 const rootEl = ref<HTMLElement | null>(null)
 const dropDownEl = ref<HTMLElement | null>(null)
 const disabledDropDownTeleport = ref(true)
