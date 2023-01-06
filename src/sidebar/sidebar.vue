@@ -200,6 +200,11 @@ function onDocumentKeyup(e: KeyboardEvent): void {
       Sidebar.closeHiddenPanelsPopup()
     }
 
+    // New tab shortcuts popup
+    if (Sidebar.reactive.newTabShortcutsPopup) {
+      Sidebar.closeNewTabShortcutsPopup()
+    }
+
     // Search bar
     if (Search.reactive.barIsShowed) Search.stop()
   }
