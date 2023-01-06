@@ -1,5 +1,5 @@
 import { sleep } from 'src/utils'
-import { GroupPin, GroupedTabInfo, InstanceType } from 'src/types'
+import { GroupPin, GroupedTabInfo, InstanceType, GroupConfig } from 'src/types'
 import { GroupPageInitData } from 'src/services/tabs.bg.actions'
 import { getFavPlaceholder } from 'src/services/favicons.actions'
 import { SETTINGS_OPTIONS } from 'src/defaults'
@@ -7,7 +7,6 @@ import { applyThemeSrcVars, loadCustomGroupCSS } from './group.styles'
 import * as IPC from 'src/services/ipc'
 import * as Logs from 'src/services/logs'
 import { Msg, MsgTabRemoved, MsgTabUpdated, MsgUpdated } from './group.ipc'
-import { getColorSchemeName } from 'src/services/styles.actions'
 
 const PIN_SCREENSHOT_QUALITY = 90
 const SCREENSHOT_QUALITY = 25
@@ -73,19 +72,11 @@ async function main() {
   document.body.setAttribute('data-layout', groupLayout)
   document.body.setAttribute('data-animations', initData.animations ? 'fast' : 'none')
 
-  // Load current window and get url-hash
-  let hash
-  try {
-    hash = decodeURIComponent(window.location.hash.slice(1))
-  } catch (e) {
-    Logs.err('Group: Cannot decode URI component', e)
-    return
-  }
+  const config = parseUrl()
 
   // Set title of group page
+  const title = config?.title ?? ''
   const titleEl = document.getElementById('title') as HTMLInputElement
-  const hashData = hash.split(':id:')
-  const title = hashData[0].trim()
   titleEl.value = title
   document.title = title || '‎'
 
@@ -140,9 +131,6 @@ async function main() {
 
   // Set listeners
   browser.runtime.onMessage.addListener((msg: Msg) => {
-    if (msg.windowId !== undefined && msg.windowId !== groupWinId) return
-    if (msg.instanceType !== undefined && msg.instanceType !== InstanceType.group) return
-
     if (msg.name === 'update') onGroupUpdated(msg)
     if (msg.name === 'create') onTabCreated(msg)
     if (msg.name === 'updateTab') onTabUpdated(msg)
@@ -152,13 +140,28 @@ async function main() {
   updateScreenshots()
 }
 
+function parseUrl(): GroupConfig | undefined {
+  let hash
+  try {
+    hash = decodeURIComponent(window.location.hash.slice(1))
+  } catch (e) {
+    Logs.err('parseUrl: Cannot decode URI component', e)
+    return
+  }
+
+  const hashData = hash.split(':id:')
+  const title = hashData[0].trim()
+
+  return { title }
+}
+
 let onTitleChangeTimeout: number | undefined
 function onTitleChange(e: DOMEvent<Event, HTMLInputElement>): void {
   clearTimeout(onTitleChangeTimeout)
   onTitleChangeTimeout = setTimeout(() => {
     const normTitle = e.target.value.trim()
     document.title = normTitle || '‎'
-    window.location.hash = `#${encodeURI(normTitle)}`
+    window.location.hash = `#${encodeURIComponent(normTitle)}`
   }, 500)
 }
 
@@ -167,28 +170,34 @@ function onTitleChange(e: DOMEvent<Event, HTMLInputElement>): void {
  */
 function onGroupUpdated(msg: MsgUpdated) {
   let i
-  groupTabIndex = msg.index
-  groupLen = msg.len
-  groupParentId = msg.parentId
-
-  for (i = 0; i < msg.tabs.length; i++) {
-    const newTab = msg.tabs[i]
-    const oldTab = tabs[i]
-    if (!oldTab) {
-      createTabEl(newTab, (event: MouseEvent) => onTabClick(event, newTab))
-      if (newTab.el) {
-        newTabEl.before(newTab.el)
-        tabs[i] = newTab
-      }
-    } else {
-      updateTab(oldTab, newTab)
-    }
+  if (msg.index !== undefined) groupTabIndex = msg.index
+  if (msg.len !== undefined) groupLen = msg.len
+  if (msg.parentId !== undefined) groupParentId = msg.parentId
+  if (msg.title !== undefined) {
+    const normTitle = msg.title.trim()
+    document.title = normTitle || '‎'
+    window.location.hash = `#${encodeURIComponent(normTitle)}`
   }
+  if (msg.tabs !== undefined) {
+    for (i = 0; i < msg.tabs.length; i++) {
+      const newTab = msg.tabs[i]
+      const oldTab = tabs[i]
+      if (!oldTab) {
+        createTabEl(newTab, (event: MouseEvent) => onTabClick(event, newTab))
+        if (newTab.el) {
+          newTabEl.before(newTab.el)
+          tabs[i] = newTab
+        }
+      } else {
+        updateTab(oldTab, newTab)
+      }
+    }
 
-  for (; i < tabs.length; i++) {
-    const tab = tabs[i]
-    tab.el?.remove()
-    tabs.splice(i, 1)
+    for (; i < tabs.length; i++) {
+      const tab = tabs[i]
+      tab.el?.remove()
+      tabs.splice(i, 1)
+    }
   }
 }
 
