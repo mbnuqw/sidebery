@@ -40,8 +40,8 @@
       svg.-mute: use(xlink:href="#icon_mute_badge")
       svg.-pause: use(xlink:href="#icon_pause_12")
     .fav(@dragstart.stop.prevent)
-      svg.fav-icon(v-if="!tab.favIconUrl"): use(:xlink:href="favPlaceholder")
       img.fav-icon(v-if="tab.favIconUrl" :src="tab.favIconUrl" @error="onError" draggable="false")
+      svg.fav-icon(v-else): use(:xlink:href="favPlaceholder")
       .exp(
         v-if="tab.isParent"
         @dblclick.prevent.stop
@@ -152,7 +152,7 @@ function onMouseDownClose(e: MouseEvent): void {
   if (Tabs.editableTabId === props.tab.id) {
     const titleEl = document.querySelector(`#tab${props.tab.id}` + ' .title') as HTMLElement | null
     const tab = Tabs.byId[props.tab.id]
-    if (tab && titleEl) titleEl.innerText = tab.title
+    if (tab && titleEl) titleEl.textContent = tab.title
   } else if (e.button === 0) {
     Tabs.removeTabs([props.tab.id])
   } else if (e.button === 1) {

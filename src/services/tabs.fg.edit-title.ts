@@ -45,14 +45,14 @@ function onTitleKeyDown(e: KeyboardEvent) {
     titleEl.blur()
   } else if (e.key === 'Escape') {
     const tab = Tabs.byId[Tabs.editableTabId]
-    if (tab) titleEl.innerText = tab.title
+    if (tab) titleEl.textContent = tab.title
     titleEl.blur()
     e.preventDefault()
   }
 }
 
 function saveCustomTitle(tab: Tab, rTab: ReactiveTab, titleEl: HTMLElement) {
-  let value = titleEl.innerText
+  let value = titleEl.textContent
   if (value === tab.title) value = ''
   if (value) value = value.trim()
 
@@ -66,7 +66,7 @@ function saveCustomTitle(tab: Tab, rTab: ReactiveTab, titleEl: HTMLElement) {
     } else {
       tab.customTitle = undefined
       rTab.customTitle = null
-      titleEl.innerText = rTab.title
+      titleEl.textContent = rTab.title
     }
   }
 
