@@ -71,8 +71,6 @@ export interface SettingsState {
   tabsPanelSwitchActMove: boolean
   tabsUrlInTooltip: typeof SETTINGS_OPTIONS.tabsUrlInTooltip[number]
   openSubPanelOnMouseHover: boolean
-  colorizeTabs: boolean
-  colorizeTabsSrc: typeof SETTINGS_OPTIONS.colorizeTabsSrc[number]
 
   // New tab position
   moveNewTabPin: typeof SETTINGS_OPTIONS.moveNewTabPin[number]
@@ -103,8 +101,13 @@ export interface SettingsState {
   discardFoldedDelayUnit: typeof SETTINGS_OPTIONS.discardFoldedDelayUnit[number]
   tabsTreeBookmarks: boolean
   treeRmOutdent: typeof SETTINGS_OPTIONS.treeRmOutdent[number]
+
+  // Tabs colorization
+  colorizeTabs: boolean
+  colorizeTabsSrc: typeof SETTINGS_OPTIONS.colorizeTabsSrc[number]
   colorizeTabsBranches: boolean
   colorizeTabsBranchesSrc: typeof SETTINGS_OPTIONS.colorizeTabsBranchesSrc[number]
+  inheritCustomColor: boolean
 
   // Bookmarks
   bookmarksPanel?: boolean // DEPR

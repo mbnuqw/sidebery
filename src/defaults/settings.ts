@@ -71,8 +71,6 @@ export const DEFAULT_SETTINGS: SettingsState = {
   tabsPanelSwitchActMove: false,
   tabsUrlInTooltip: 'full',
   openSubPanelOnMouseHover: false,
-  colorizeTabs: false,
-  colorizeTabsSrc: 'domain',
 
   // New tab position
   moveNewTabPin: 'start',
@@ -103,8 +101,13 @@ export const DEFAULT_SETTINGS: SettingsState = {
   discardFoldedDelayUnit: 'sec',
   tabsTreeBookmarks: true,
   treeRmOutdent: 'branch',
+
+  // Tabs colorization
+  colorizeTabs: false,
+  colorizeTabsSrc: 'domain',
   colorizeTabsBranches: false,
   colorizeTabsBranchesSrc: 'url',
+  inheritCustomColor: true,
 
   // Bookmarks
   warnOnMultiBookmarkDelete: 'collapsed',

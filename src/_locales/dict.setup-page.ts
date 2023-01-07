@@ -1840,6 +1840,10 @@ export const setupPageTranslations: Translations = {
     ru: 'доменное имя',
     de: 'Domäne',
   },
+  'settings.tabs.inherit_custom_color': {
+    en: 'Inherit custom (manually set) color in the child tabs',
+    ru: 'Наследовать пользовательский (установленный вручную) цвет в дочерних вкладках',
+  },
 
   // - Bookmarks
   'settings.bookmarks_title': {

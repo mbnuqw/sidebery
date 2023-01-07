@@ -282,6 +282,11 @@ section(ref="el")
       :inactive="!Settings.state.tabsTree || !Settings.state.colorizeTabsBranches"
       :opts="Settings.getOpts('colorizeTabsBranchesSrc')"
       @update:value="Settings.saveDebounced(150)")
+  ToggleField(
+    label="settings.tabs.inherit_custom_color"
+    :inactive="!Settings.state.tabsTree"
+    v-model:value="Settings.state.inheritCustomColor"
+    @update:value="Settings.saveDebounced(150)")
 </template>
 
 <script lang="ts" setup>
