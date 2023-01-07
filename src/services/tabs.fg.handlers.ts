@@ -505,6 +505,8 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
       if (!oldUrlCount) Bookmarks.unmarkOpenBookmarksDebounced(localTab.url)
       Bookmarks.markOpenBookmarksDebounced(change.url)
     }
+
+    Tabs.updateTooltipDebounced(tabId, 1000)
   }
 
   // Handle favicon change
@@ -549,6 +551,8 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
         }
       }
     }
+
+    Tabs.updateTooltipDebounced(tabId, 1000)
   }
 
   // Handle audible change

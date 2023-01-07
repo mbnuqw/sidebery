@@ -140,9 +140,14 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
     prev.navTabsPanelMidClickAction !== next.navTabsPanelMidClickAction
   const navBookmarksPanelMidClickAction =
     prev.navBookmarksPanelMidClickAction !== next.navBookmarksPanelMidClickAction
+  const tabsUrlInTooltip = prev.tabsUrlInTooltip !== next.tabsUrlInTooltip
 
   // Update settings of this instance
   Utils.updateObject(Settings.state, settings, Settings.state)
+
+  if (tabsUrlInTooltip) {
+    Tabs.list.forEach(t => Tabs.updateTooltip(t.id))
+  }
 
   if (navTabsPanelMidClickAction || navBookmarksPanelMidClickAction) {
     Sidebar.updatePanelsTooltips()

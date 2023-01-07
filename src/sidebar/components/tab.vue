@@ -20,7 +20,7 @@
   :data-colorized="!!tabColor"
   :data-unread="tab.unread"
   :data-edit="tab.customTitleEdit"
-  :title="tooltip"
+  :title="tab.tooltip"
   draggable="true"
   @dragstart="onDragStart"
   @contextmenu.stop="onCtxMenu"
@@ -108,22 +108,6 @@ const tabColor = computed<string>(() => {
   } else {
     return ''
   }
-})
-const tooltip = computed((): string => {
-  let decodedUrl
-  try {
-    decodedUrl = decodeURI(props.tab.url)
-  } catch (err) {
-    decodedUrl = props.tab.url
-  }
-
-  let str = `${props.tab.title}`
-  if (Settings.state.tabsUrlInTooltip === 'full') {
-    str += `\n${decodedUrl}`
-  } else if (Settings.state.tabsUrlInTooltip === 'stripped') {
-    str += `\n${decodedUrl.split('?')[0]}`
-  }
-  return str
 })
 const favPlaceholder = computed((): string => {
   if (props.tab.warn) return '#icon_warn'

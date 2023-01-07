@@ -52,6 +52,7 @@ export interface ReactiveTab {
   isParent: boolean
   folded: boolean
   title: string
+  tooltip: string
   customTitle: string | null
   customTitleEdit: boolean
   url: string
@@ -62,8 +63,8 @@ export interface ReactiveTab {
   updated: boolean
   unread: boolean
   flash: boolean
-  branchColor: string | null
   color: string | null
+  branchColor: string | null
   customColor: string | null
   isGroup: boolean
 }

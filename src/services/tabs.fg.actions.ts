@@ -37,6 +37,7 @@ export function toReactive(tab: Tab): ReactiveTab {
     isParent: tab.isParent,
     folded: tab.folded,
     title: tab.title,
+    tooltip: getTooltip(tab),
     customTitle: tab.customTitle ?? null,
     customTitleEdit: false,
     customColor: tab.customColor ?? null,
@@ -3931,4 +3932,36 @@ export function pringDbgInfo(reset = false): void {
       rTab.title = `${tab.id} i${tab.index} p${tab.parentId} l${tab.lvl} ${tab.title}`
     }
   }
+}
+
+const updateTooltipBuf: Map<ID, number> = new Map()
+export function updateTooltipDebounced(tabId: ID, delay: number) {
+  clearTimeout(updateTooltipBuf.get(tabId))
+  updateTooltipBuf.set(tabId, setTimeout(updateTooltip, delay, tabId))
+}
+export function updateTooltip(tabId: ID) {
+  updateTooltipBuf.delete(tabId)
+
+  const tab = Tabs.byId[tabId]
+  const rTab = Tabs.reactive.byId[tabId]
+  if (!tab || !rTab) return
+
+  rTab.tooltip = getTooltip(tab)
+}
+function getTooltip(tab: Tab): string {
+  let decodedUrl
+  try {
+    decodedUrl = decodeURI(tab.url)
+  } catch (err) {
+    decodedUrl = tab.url
+  }
+
+  let str = `${tab.title}`
+  if (Settings.state.tabsUrlInTooltip === 'full') {
+    str += `\n${decodedUrl}`
+  } else if (Settings.state.tabsUrlInTooltip === 'stripped') {
+    str += `\n${decodedUrl.split('?')[0]}`
+  }
+
+  return str
 }
