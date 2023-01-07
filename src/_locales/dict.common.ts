@@ -253,6 +253,10 @@ export const commonTranslations: Translations = {
     en: 'Container',
     ru: 'Контейнер',
   },
+  'popup.new_tab_shortcuts.new_shortcut_default_container': {
+    en: 'Default container',
+    ru: 'Стандартный контейнер',
+  },
   'popup.new_tab_shortcuts.new_shortcut_url_label': {
     en: 'URL',
     ru: 'URL-адрес',

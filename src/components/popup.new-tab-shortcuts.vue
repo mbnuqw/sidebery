@@ -137,20 +137,21 @@ const availableContainersOpts = computed<ContainerOption[]>(() => {
   if (!Sidebar.reactive.newTabShortcutsPopup) return []
 
   const panel = Sidebar.reactive.newTabShortcutsPopup.panel
-  const result: ContainerOption[] = []
+  const defaultTitle = translate('popup.new_tab_shortcuts.new_shortcut_default_container')
+  const result: ContainerOption[] = [
+    {
+      value: 'none',
+      color: 'inactive',
+      icon: 'icon_none',
+      title: defaultTitle,
+      tooltip: defaultTitle,
+    },
+  ]
 
   for (let c of Object.values(Containers.reactive.byId)) {
     if (panel.newTabCtx === c.id) continue
     result.push({ value: c.id, color: c.color, icon: c.icon, title: c.name, tooltip: c.name })
   }
-
-  result.push({
-    value: 'none',
-    color: 'inactive',
-    icon: 'icon_none',
-    title: 'Default container',
-    tooltip: 'Default container',
-  })
 
   return result
 })
