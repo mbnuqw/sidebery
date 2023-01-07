@@ -1804,7 +1804,7 @@ export async function bookmarkTabs(tabIds: ID[]): Promise<void> {
     const tab = tabs[0]
     const result = await Bookmarks.openBookmarksPopup({
       title: translate('popup.bookmarks.save_in_bookmarks'),
-      name: tab.title,
+      name: tab.customTitle ?? tab.title,
       nameField: true,
       url: tab.url,
       urlField: true,
@@ -1853,7 +1853,13 @@ export async function bookmarkTabs(tabIds: ID[]): Promise<void> {
     }
 
     tabs.sort((a, b) => a.index - b.index)
-    await Bookmarks.createFrom(tabs, { parentId })
+    const items: ItemInfo[] = tabs.map(t => ({
+      id: t.id,
+      parentId: t.parentId,
+      url: t.url,
+      title: t.customTitle ?? t.title,
+    }))
+    await Bookmarks.createFrom(items, { parentId })
   }
 
   // Show notification for silent bookmarks creation

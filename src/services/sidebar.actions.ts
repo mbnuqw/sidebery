@@ -1551,7 +1551,12 @@ export async function bookmarkTabsPanel(
   for (const rTab of panel.tabs) {
     const tab = Tabs.byId[rTab.id]
     if (!tab) continue
-    const info: ItemInfo = { id: tab.id, title: tab.title, url: tab.url, parentId: tab.parentId }
+    const info: ItemInfo = {
+      id: tab.id,
+      title: tab.customTitle ?? tab.title,
+      url: tab.url,
+      parentId: tab.parentId,
+    }
     if (Containers.reactive.byId[tab.cookieStoreId]) info.container = tab.cookieStoreId
     items.push(info)
   }
