@@ -43,7 +43,7 @@ export interface ReactiveTab {
   mediaAudible: boolean
   mediaMuted: boolean
   mediaPaused: boolean
-  cookieStoreId: string
+  containerColor: string | null
   discarded: boolean
   favIconUrl?: string
   invisible: boolean

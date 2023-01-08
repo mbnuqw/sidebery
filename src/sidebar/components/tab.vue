@@ -16,7 +16,7 @@
   :data-parent="tab.isParent"
   :data-folded="tab.folded && !Search.reactive.value"
   :data-invisible="tab.invisible && !Search.reactive.value"
-  :data-color="containerColor"
+  :data-color="tab.containerColor"
   :data-colorized="!!tabColor"
   :data-unread="tab.unread"
   :data-edit="tab.customTitleEdit"
@@ -57,7 +57,7 @@
       @mouseup.stop="onMouseUpClose"
       @contextmenu.stop.prevent)
       svg: use(xlink:href="#icon_remove")
-    .ctx(v-if="containerColor")
+    .ctx(v-if="tab.containerColor")
     .t-box(v-if="!isPinned")
       .title(
         spellcheck="false"
@@ -72,7 +72,6 @@ import { TabStatus } from 'src/types'
 import { Settings } from 'src/services/settings'
 import { Windows } from 'src/services/windows'
 import { Selection } from 'src/services/selection'
-import { Containers } from 'src/services/containers'
 import { Menu } from 'src/services/menu'
 import { Sidebar } from 'src/services/sidebar'
 import { Tabs } from 'src/services/tabs.fg'
@@ -88,11 +87,6 @@ const loading = computed((): boolean | 'ok' | 'err' => {
   if (props.tab.status === TabStatus.Loading) return true
   if (props.tab.status === TabStatus.Ok) return 'ok'
   if (props.tab.status === TabStatus.Err) return 'err'
-  return false
-})
-const containerColor = computed((): boolean | string => {
-  const container = Containers.reactive.byId[props.tab.cookieStoreId]
-  if (container) return container.color
   return false
 })
 const tabColor = computed<string>(() => {

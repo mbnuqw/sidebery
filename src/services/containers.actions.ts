@@ -8,6 +8,7 @@ import * as Logs from 'src/services/logs'
 import { Menu } from 'src/services/menu'
 import { Info } from 'src/services/info'
 import { Settings } from './settings'
+import { Tabs } from './tabs.fg'
 
 export async function load(): Promise<void> {
   if (Info.isBg) {
@@ -74,6 +75,17 @@ export function updateContainers(newContainers?: Record<ID, Container> | null): 
 
   if (Info.isSidebar && Settings.state.ctxMenuIgnoreContainers) {
     Menu.parseContainersRules()
+  }
+
+  // Update colors in reactive tabs
+  if (Info.isSidebar) {
+    for (const tab of Tabs.list) {
+      const container = newContainers[tab.cookieStoreId]
+      if (container) {
+        const rTab = Tabs.reactive.byId[tab.id]
+        if (rTab) rTab.containerColor = container.color
+      }
+    }
   }
 }
 

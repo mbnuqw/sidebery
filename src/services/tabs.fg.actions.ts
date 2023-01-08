@@ -28,7 +28,7 @@ export function toReactive(tab: Tab): ReactiveTab {
     mediaAudible: tab.audible ?? false,
     mediaMuted: tab.mutedInfo?.muted ?? false,
     mediaPaused: tab.mediaPaused,
-    cookieStoreId: tab.cookieStoreId,
+    containerColor: Containers.reactive.byId[tab.cookieStoreId]?.color ?? null,
     discarded: tab.discarded ?? false,
     favIconUrl: tab.favIconUrl,
     invisible: tab.invisible,

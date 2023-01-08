@@ -1,5 +1,5 @@
 import * as Utils from 'src/utils'
-import { createApp, reactive } from 'vue'
+import { createApp, reactive, shallowReactive } from 'vue'
 import { InstanceType } from 'src/types'
 import * as IPC from 'src/services/ipc'
 import * as Logs from 'src/services/logs'
@@ -29,7 +29,7 @@ async function main(): Promise<void> {
   Logs.setInstanceType(InstanceType.sidebar)
 
   // Reactivate data for vue
-  Containers.reactive = reactive(Containers.reactive)
+  Containers.reactive = shallowReactive(Containers.reactive)
   Sidebar.reactive = reactive(Sidebar.reactive)
   Windows.reactive = reactive(Windows.reactive)
   Favicons.reactive = reactive(Favicons.reactive)
