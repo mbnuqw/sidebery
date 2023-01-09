@@ -21,6 +21,17 @@ export const RGB_COLORS: Record<browser.ColorName, string> = {
   purple: '#af51f5',
   toolbar: '#686868',
 }
+export const COLOR_NAMES: browser.ColorName[] = [
+  'blue',
+  'turquoise',
+  'green',
+  'yellow',
+  'orange',
+  'red',
+  'pink',
+  'purple',
+  'toolbar',
+]
 export const IMG_RE = /(\.png|\.jpe?g|\.gif|\.webp|\.svg)([?#].*)?$/i
 export const VID_RE = /(\.mp4|\.webm)([?#].*)?$/i
 export const MUS_RE = /(\.mp3|\.flac)([?#].*)?$/i

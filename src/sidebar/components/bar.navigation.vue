@@ -57,7 +57,7 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
-import { BTN_ICONS, NOID } from 'src/defaults'
+import { BTN_ICONS, COLOR_NAMES } from 'src/defaults'
 import { NavItemClass, ButtonTypes, DragType, DropType, Tab } from 'src/types'
 import { MenuType, DragInfo, DragItem, PanelType } from 'src/types'
 import { ButtonType, SpaceType, NavBtn, NavItem, WheelDirection } from 'src/types'
@@ -350,6 +350,8 @@ function onNavMouseDown(e: MouseEvent, item: NavItem) {
     }
 
     if (item.type === ButtonType.collapse) collapseAll()
+
+    if (item.type === ButtonType.add_tp) addTabsPanel(true)
   }
 }
 
@@ -499,27 +501,43 @@ function onNavItemDrop(item: NavItem): void {
   droppedOnPanel = true
 }
 
-async function addTabsPanel(): Promise<void> {
+async function addTabsPanel(silent?: boolean): Promise<void> {
   // Find target index
-  let index = Sidebar.reactive.nav.length
-  while (index--) {
-    const id = Sidebar.reactive.nav[index]
+  let index = Utils.findLastIndex(Sidebar.reactive.nav, id => {
     const panel = Sidebar.reactive.panelsById[id]
-    if (Utils.isTabsPanel(panel)) break
-  }
+    return Utils.isTabsPanel(panel)
+  })
   if (index !== -1) index++
   if (index === -1) index = Sidebar.reactive.nav.indexOf('add_tp')
   if (index === -1) index = 0
 
   // Start panel creation
-  const result = await Sidebar.openPanelPopup({ type: PanelType.tabs }, index)
-  if (!result) return
+  let panel
+  if (!silent) {
+    const result = await Sidebar.openPanelPopup({ type: PanelType.tabs }, index)
+    if (!result) return
 
-  const panel = Sidebar.reactive.panelsById[result]
+    panel = Sidebar.reactive.panelsById[result]
+  } else {
+    panel = Sidebar.createTabsPanel()
+    panel.index = index
+    panel.color = getRandomColorName()
+    Sidebar.reactive.panelsById[panel.id] = panel
+    Sidebar.reactive.nav.splice(panel.index, 0, panel.id)
+    Sidebar.recalcPanels()
+    Sidebar.recalcTabsPanels()
+    Sidebar.saveSidebar(300)
+  }
+
   if (!panel) return
 
   Sidebar.activatePanel(panel.id)
   Tabs.createTabInPanel(panel)
+}
+
+function getRandomColorName(): browser.ColorName {
+  const index = Math.round(Math.random() * (COLOR_NAMES.length - 1))
+  return COLOR_NAMES[index]
 }
 
 function collapseAll(): void {
