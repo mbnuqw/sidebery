@@ -3092,15 +3092,17 @@ export function getParentForNewTab(panel: Panel, openerTabId?: ID): ID | undefin
   return openerTabId
 }
 
-export function handleReopening(tabId: ID, newCtx: string): number | undefined {
+export function handleReopening(tabId: ID, dstContainerId?: string): number | undefined {
   const targetTab = Tabs.byId[tabId]
   if (!targetTab) return
+
+  if (!dstContainerId) dstContainerId = CONTAINER_ID
 
   targetTab.reopening = { id: NOID }
 
   let parent: ID = -1
   const panel = Sidebar.reactive.panels.find(
-    p => Utils.isTabsPanel(p) && p.moveTabCtx === newCtx
+    p => Utils.isTabsPanel(p) && p.moveTabCtx === dstContainerId
   ) as TabsPanel
   let panelId
   let index

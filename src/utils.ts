@@ -1,6 +1,6 @@
 import { GroupConfig, AnyFunc, NavItem, NavBtn, NavSpace, Panel, PanelConfig, Tab } from './types'
 import { TabsPanel, BookmarksPanel, PanelType, NavItemClass, HistoryPanel } from './types'
-import { SubListTitleInfo, RGBA, RGB } from './types'
+import { SubListTitleInfo, RGBA, RGB, AnyAsyncFunc } from './types'
 import { DOMAIN_RE, URL_PAGE_RE, URL_URL } from './defaults'
 import { translate } from './dict'
 
@@ -939,4 +939,51 @@ export function findLastIndex<T>(arr: T[], pred: (val: T, i: number) => unknown)
     if (pred(v, i)) return i
   }
   return -1
+}
+
+interface QueueItem {
+  ok: (result: any) => void
+  err: (error: any) => void
+  fn: AnyAsyncFunc
+  args?: any[]
+}
+let _waitingQueue = false
+const _asyncQueue: QueueItem[] = []
+
+export async function inQueue<T extends AnyAsyncFunc>(
+  fn: T,
+  ...args: Parameters<T>
+): Promise<Awaited<ReturnType<T>>> {
+  if (_waitingQueue) {
+    return new Promise<Awaited<ReturnType<T>>>((ok, err) => {
+      _asyncQueue.push({ ok, err, fn, args })
+    })
+  }
+
+  _waitingQueue = true
+
+  const result = args ? await fn(...args) : await fn()
+
+  if (_asyncQueue.length) _processQueue()
+  else _waitingQueue = false
+
+  /* eslint @typescript-eslint/no-unsafe-return: off */
+  return result
+}
+
+async function _processQueue() {
+  let nextTask = _asyncQueue.shift()
+  while (nextTask) {
+    try {
+      /* eslint @typescript-eslint/no-unsafe-argument: off */
+      if (nextTask.args) nextTask.ok(await nextTask.fn(...nextTask.args))
+      else nextTask.ok(await nextTask.fn())
+    } catch (err) {
+      nextTask.err(err)
+    }
+
+    nextTask = _asyncQueue.shift()
+  }
+
+  _waitingQueue = false
 }

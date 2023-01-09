@@ -1,8 +1,9 @@
 import * as Utils from 'src/utils'
-import { Tab, IPCheckResult, InstanceType } from 'src/types'
+import { Tab, IPCheckResult } from 'src/types'
 import { WebReq } from 'src/services/web-req'
 import { Containers } from 'src/services/containers'
 import { Tabs } from 'src/services/tabs.bg'
+import * as IPC from 'src/services/ipc'
 
 type optBlockingResponse = browser.webRequest.BlockingResponse | void
 
@@ -20,10 +21,6 @@ const incHistory: Record<ID, string | null> = {}
 let ipCheckCtx: ID | undefined
 let userAgents: Record<ID, string> = {}
 
-/**
- * Create new tab in appropriate container
- * and then close the original tab.
- */
 async function recreateTab(
   tab: Tab,
   info: browser.proxy.RequestDetails,
@@ -31,13 +28,8 @@ async function recreateTab(
 ): Promise<void> {
   let index: number | undefined
   try {
-    index = await browser.runtime.sendMessage({
-      instanceType: InstanceType.sidebar,
-      windowId: tab.windowId,
-      action: 'handleReopening',
-      args: [tab.id, cookieStoreId],
-    })
-  } catch (err) {
+    index = await IPC.sidebar(tab.windowId, 'handleReopening', tab.id, cookieStoreId)
+  } catch {
     /* itsokay */
   }
 
@@ -254,7 +246,7 @@ function proxyReqHandler(info: browser.proxy.RequestDetails): browser.proxy.Prox
         }
 
         incHistory[rule.ctx] = info.url
-        return recreateTab(tab, info, rule.ctx)
+        return Utils.inQueue(recreateTab, tab, info, rule.ctx)
       }
     }
 
@@ -267,7 +259,7 @@ function proxyReqHandler(info: browser.proxy.RequestDetails): browser.proxy.Prox
 
         if (ok) {
           incHistory['firefox-default'] = info.url
-          return recreateTab(tab, info)
+          return Utils.inQueue(recreateTab, tab, info)
         }
       }
     }

@@ -70,7 +70,7 @@ export type SidebarActions = {
   stopDrag: () => void
   isDropEventConsumed: () => boolean
   getGroupInfo: (groupTabId: ID) => Promise<GroupInfo | null>
-  handleReopening: (tabId: ID, newCtx: string) => number | undefined
+  handleReopening: (tabId: ID, dstContainerId?: string) => number | undefined
 
   loadFavicons: () => void
   setFavicon: (domain: string, url: string, hash: number, icon: string) => void

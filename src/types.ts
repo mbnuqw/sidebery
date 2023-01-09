@@ -65,6 +65,7 @@ export interface Notification {
 }
 
 export type AnyFunc = (...args: any[]) => any
+export type AnyAsyncFunc = (...args: any[]) => Promise<any>
 
 export type InputObjOpt = {
   value: string | number
