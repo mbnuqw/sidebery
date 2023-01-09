@@ -172,7 +172,14 @@ async function fetchBookmarksFavicons(): Promise<void> {
     IPC.bg('saveFavicon', hosts[host], icon)
   }
 
-  stopFetchingBookmarksFavicons()
+  state.fetchingBookmarksFavsAll = 0
+  state.fetchingBookmarksFavsDone = 0
+  state.fetchingBookmarksFavsErrors = 0
+  state.fetchingBookmarksFavsPercent = 0
+
+  setTimeout(() => {
+    IPC.broadcast({ dstType: InstanceType.sidebar, action: 'loadFavicons' })
+  }, 1500)
 }
 
 /**
@@ -180,13 +187,5 @@ async function fetchBookmarksFavicons(): Promise<void> {
  */
 function stopFetchingBookmarksFavicons(): void {
   state.fetchingBookmarksFavs = false
-  state.fetchingBookmarksFavsAll = 0
-  state.fetchingBookmarksFavsDone = 0
-  state.fetchingBookmarksFavsErrors = 0
-  state.fetchingBookmarksFavsPercent = 0
-
-  setTimeout(() => {
-    browser.runtime.sendMessage({ instanceType: InstanceType.sidebar, action: 'loadFavicons' })
-  }, 1500)
 }
 </script>

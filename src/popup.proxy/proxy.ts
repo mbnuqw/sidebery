@@ -2,6 +2,7 @@ import { Stored, IPCheckResult, InstanceType } from 'src/types'
 import { Info } from 'src/services/info'
 import { Settings } from 'src/services/settings'
 import { Styles } from 'src/services/styles'
+import * as IPC from 'src/services/ipc'
 
 void (async function () {
   Info.setInstanceType(InstanceType.proxy)
@@ -38,8 +39,8 @@ void (async function () {
       active: true,
     })
 
-    const info: IPCheckResult | null = await browser.runtime.sendMessage({
-      instanceType: InstanceType.bg,
+    const info: IPCheckResult | null = await IPC.broadcast({
+      dstType: InstanceType.bg,
       action: 'checkIpInfo',
       arg: activeTab.cookieStoreId,
     })

@@ -488,14 +488,9 @@ async function updateScreenshots() {
 /**
  * Handle tab click
  */
-async function onTabClick(event: MouseEvent, tab?: { id: ID }) {
+function onTabClick(event: MouseEvent, tab?: { id: ID }) {
   if (!tab) return
   event.stopPropagation()
-  await browser.runtime.sendMessage({
-    instanceType: InstanceType.sidebar,
-    action: 'expTabsBranch',
-    arg: groupTabId,
-  })
   IPC.bg('tabsApiProxy', 'update', tab.id, { active: true })
 }
 
