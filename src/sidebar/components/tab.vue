@@ -61,7 +61,7 @@
     .t-box(v-if="!isPinned")
       .title(
         spellcheck="false"
-        :contenteditable="tab.customTitleEdit") {{tab.id}} {{tab.customTitle ?? tab.title}}
+        :contenteditable="tab.customTitleEdit") {{tab.customTitle ?? tab.title}}
     .unread-mark(v-if="tab.unread")
 </template>
 
