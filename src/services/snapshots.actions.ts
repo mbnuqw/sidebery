@@ -54,6 +54,7 @@ export async function createSnapshot(auto = false): Promise<Snapshot | undefined
   for (const window of Object.values(Windows.byId)) {
     if (Settings.state.snapExcludePrivate && window.incognito) continue
     if (window.id === undefined || !window.tabs) continue
+    if (window.type !== 'normal') continue
 
     const winTabs: SnapTab[][] = []
     const snapTabsById: Record<ID, SnapTab> = {}
