@@ -83,7 +83,7 @@ async function main() {
   if (!initData.groupInfo) {
     Logs.warn('No group info')
     const warnEl = document.getElementById('disconnected_warn')
-    if (warnEl) warnEl.innerText = browser.i18n.getMessage('group_disconnected_warn')
+    if (warnEl) warnEl.textContent = browser.i18n.getMessage('group_disconnected_warn')
     document.body.setAttribute('data-disconnected', 'true')
     return
   }
@@ -237,12 +237,12 @@ function onTabUpdated(msg: MsgTabUpdated) {
     takeScreenshot(tab, SCREENSHOT_QUALITY)
   }
 
-  if (tab.titleEl) tab.titleEl.innerText = msg.title
+  if (tab.titleEl) tab.titleEl.textContent = msg.title
   tab.title = msg.title
 
   if (tab.urlEl) {
-    if (msg.url.startsWith('moz-ext')) tab.urlEl.innerText = ''
-    else tab.urlEl.innerText = msg.url
+    if (msg.url.startsWith('moz-ext')) tab.urlEl.textContent = ''
+    else tab.urlEl.textContent = msg.url
   }
   tab.url = msg.url
 
@@ -332,15 +332,15 @@ function createTabEl(info: GroupedTabInfo, clickHandler: (e: MouseEvent) => void
 
   info.titleEl = document.createElement('h3')
   info.titleEl.classList.add('tab-title')
-  info.titleEl.innerText = info.title
+  info.titleEl.textContent = info.title
   infoEl.appendChild(info.titleEl)
 
   info.urlEl = document.createElement('a')
   info.urlEl.classList.add('tab-url')
   info.urlEl.setAttribute('href', info.url)
   info.urlEl.addEventListener('click', e => e.preventDefault())
-  if (info.url.startsWith('moz-ext')) info.urlEl.innerText = ''
-  else info.urlEl.innerText = info.url
+  if (info.url.startsWith('moz-ext')) info.urlEl.textContent = ''
+  else info.urlEl.textContent = info.url
   infoEl.appendChild(info.urlEl)
 
   const ctrlsEl = document.createElement('div')
@@ -385,10 +385,10 @@ function createPinnedTab(info: GroupPin, clickHandler: (e: MouseEvent) => void) 
   info.bgEl = document.getElementById('pinned_tab_bg')
 
   info.titleEl = document.getElementById('pinned_tab_title')
-  if (info.titleEl) info.titleEl.innerText = info.title
+  if (info.titleEl) info.titleEl.textContent = info.title
 
   info.urlEl = document.getElementById('pinned_tab_url')
-  if (info.urlEl) info.urlEl.innerText = info.url
+  if (info.urlEl) info.urlEl.textContent = info.url
 
   info.el.addEventListener('mousedown', e => e.stopPropagation())
   info.el.addEventListener('click', clickHandler)
@@ -503,10 +503,10 @@ function updateTab(oldTab: GroupedTabInfo, newTab: GroupedTabInfo) {
 
   if (!oldTab.el) return
 
-  if (titleChanged && oldTab.titleEl) oldTab.titleEl.innerText = newTab.title
+  if (titleChanged && oldTab.titleEl) oldTab.titleEl.textContent = newTab.title
   if (urlChanged && oldTab.urlEl) {
-    if (newTab.url.startsWith('moz-ext')) oldTab.urlEl.innerText = ''
-    else oldTab.urlEl.innerText = newTab.url
+    if (newTab.url.startsWith('moz-ext')) oldTab.urlEl.textContent = ''
+    else oldTab.urlEl.textContent = newTab.url
     oldTab.urlEl.setAttribute('href', newTab.url)
     oldTab.el.title = newTab.url
     if (oldTab.favPlaceholderSvgEl) {
