@@ -537,7 +537,7 @@ async function addTabsPanel(silent?: boolean): Promise<void> {
 
 function getRandomColorName(): browser.ColorName {
   const index = Math.round(Math.random() * (COLOR_NAMES.length - 1))
-  return COLOR_NAMES[index]
+  return COLOR_NAMES[index] ?? 'toolbar'
 }
 
 function collapseAll(): void {

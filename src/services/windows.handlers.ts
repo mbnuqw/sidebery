@@ -69,7 +69,7 @@ function onWindowFocusedBg(windowId: ID): void {
   if (windowId === -1) {
     for (const id of Object.keys(Windows.byId)) {
       const window = Windows.byId[id]
-      if (window.focused) {
+      if (window?.focused) {
         window.focused = false
       }
     }

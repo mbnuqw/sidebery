@@ -34,7 +34,7 @@ export async function createSnapshot(auto = false): Promise<Snapshot | undefined
   // Get snapshot src data and current snapshots list
   let waiting
   try {
-    waiting = await Promise.all([
+    waiting = await Promise.allSettled([
       browser.storage.local.get<Stored>(['sidebar', 'containers', 'snapshots']),
       Tabs.updateBgTabsTreeData(),
     ])
@@ -42,7 +42,8 @@ export async function createSnapshot(auto = false): Promise<Snapshot | undefined
     Logs.err('createSnapshot: Cannot get source data', err)
     return
   }
-  const stored = waiting[0]
+  const storedResult = waiting[0]
+  const stored = storedResult?.status === 'fulfilled' ? storedResult.value : undefined
   if (!stored) return
   if (!stored.containers) stored.containers = {}
   if (!stored.sidebar) stored.sidebar = Sidebar.createDefaultSidebar()
@@ -112,7 +113,7 @@ export async function createSnapshot(auto = false): Promise<Snapshot | undefined
   minimizeSnapshot(stored.snapshots, currentSnapshot)
 
   const prevSnapshot = stored.snapshots[stored.snapshots.length - 1]
-  if (auto && isSnapshotRedundant(prevSnapshot, currentSnapshot)) return
+  if (auto && prevSnapshot && isSnapshotRedundant(prevSnapshot, currentSnapshot)) return
 
   stored.snapshots.push(currentSnapshot)
 
@@ -141,11 +142,13 @@ function isSnapshotRedundant(prevSnapshot: Snapshot, snapshot: Snapshot): boolea
   for (let wi = 0; wi < snapshot.tabs.length; wi++) {
     const win = snapshot.tabs[wi]
     const prevWin = prevSnapshot.tabs[wi]
+    if (!win) return false
     if (prevWin?.length !== win?.length) return false
 
     for (let pi = 0; pi < win.length; pi++) {
       const panel = win[pi]
       const prevPanel = prevWin[pi]
+      if (!panel) return false
       if (prevPanel?.length !== panel?.length) return false
 
       for (const tab of panel) {
@@ -194,14 +197,17 @@ export function minimizeSnapshot(snapshots: Snapshot[], snapshot: Snapshot): voi
   // per win (current)
   per_win: for (let wi = 0; wi < snapshot.tabs.length; wi++) {
     const win = snapshot.tabs[wi]
+    if (!win) break per_win // stop tabs minimizing
 
     // per group (current)
     per_panel: for (let gi = 0; gi < win.length; gi++) {
       const tabs = win[gi]
+      if (!tabs) break per_win // stop tabs minimizing
 
       // per tab (current)
       per_tab: for (let ti = 0; ti < tabs.length; ti++) {
         const tab = tabs[ti]
+        if (!tab) break per_win // stop tabs minimizing
         if (tab === SnapStoreMode.Unchanged) continue
 
         // per snapshot (previous)
@@ -270,9 +276,11 @@ export function getNormalizedSnapshot(
   // Tabs
   for (let wi = 0; wi < snapshot.tabs.length; wi++) {
     const win = snapshot.tabs[wi]
+    if (!win) continue
 
     for (let pi = 0; pi < win.length; pi++) {
       const panel = win[pi]
+      if (!panel) continue
 
       for (let ti = 0; ti < panel.length; ti++) {
         const tab = panel[ti]
@@ -400,6 +408,7 @@ async function adaptTabsPanels(snapshot: NormalizedSnapshot): Promise<void> {
   let lastStoredTabsPanelIndex = stored.sidebar.nav.length
   while (lastStoredTabsPanelIndex-- > 0) {
     const storedId = stored.sidebar.nav[lastStoredTabsPanelIndex]
+    if (storedId === undefined) break
     const storedPanel = stored.sidebar.panels[storedId]
     if (storedPanel && storedPanel.type === PanelType.tabs) break
   }
@@ -408,6 +417,7 @@ async function adaptTabsPanels(snapshot: NormalizedSnapshot): Promise<void> {
   let changed = false
   for (let i = 0; i < snapshot.sidebar.nav.length; i++) {
     const snapId = snapshot.sidebar.nav[i]
+    if (snapId === undefined) continue
     const snapPanel = snapshot.sidebar.panels[snapId]
     if (!snapPanel || snapPanel.type !== PanelType.tabs) continue
 
@@ -423,7 +433,7 @@ async function adaptTabsPanels(snapshot: NormalizedSnapshot): Promise<void> {
   // Update snapshot tabs ordering
   for (let i = 0; i < snapshot.tabs.length; i++) {
     const win = snapshot.tabs[i]
-    if (win.length <= 1) continue
+    if (!win || win.length <= 1) continue
 
     const newOrder: SnapTab[][] = []
 
@@ -478,6 +488,7 @@ export async function openWindows(snapshot: NormalizedSnapshot, winIndex?: numbe
  */
 async function openWindow(snapshot: NormalizedSnapshot, winIndex: number): Promise<void> {
   const winTabs = snapshot.tabs[winIndex]
+  if (!winTabs) return Logs.warn('Snapshots.openWindow: No winTabs')
 
   // Create tabs info
   const items: ItemInfo[] = []
@@ -512,7 +523,8 @@ async function openWindow(snapshot: NormalizedSnapshot, winIndex: number): Promi
     }
   }
 
-  items[0].active = true
+  const firstItem = items[0]
+  if (firstItem) firstItem.active = true
 
   await Windows.createWithTabs(items, { incognito: false })
 }
@@ -534,6 +546,7 @@ function limitSnapshots(snapshots: Snapshot[]): Snapshot[] | undefined {
   let sizeAccum = 0
   while (index--) {
     const snapshot = snapshots[index]
+    if (!snapshot) continue
 
     sizeAccum += new Blob([JSON.stringify(snapshot)]).size
 

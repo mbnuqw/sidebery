@@ -13,8 +13,6 @@ import { Settings } from './settings'
 import * as Logs from './logs'
 import { ParsedTheme, Styles } from './styles'
 
-const detachedTabs: Record<ID, Tab> = {}
-
 /**
  * Load tabs
  */
@@ -67,6 +65,17 @@ export async function loadTabs(): Promise<void> {
   Tabs.deferredEventHandling = []
 }
 
+export async function reinitTabs(msg: string) {
+  Logs.warn('Tabs.reinitTabs:', msg)
+  Tabs.ready = false
+  Tabs.byId = {}
+  Tabs.cacheByWin = {}
+  for (const win of Object.values(Windows.byId)) {
+    win.tabs = []
+  }
+  await loadTabs()
+}
+
 /**
  * Handle new tab
  */
@@ -78,20 +87,30 @@ function onTabCreated(tab: browser.tabs.Tab): void {
 
   Tabs.byId[tab.id] = tab as Tab
 
-  if (!Windows.byId[tab.windowId]) {
-    const win: Window = { id: tab.windowId, alwaysOnTop: false, focused: false, incognito: false }
+  const tabWindow = Windows.byId[tab.windowId]
+  if (!tabWindow) {
+    const win: Window = {
+      id: tab.windowId,
+      alwaysOnTop: false,
+      focused: false,
+      incognito: tab.incognito,
+    }
     win.tabs = [tab as Tab]
     Windows.byId[tab.windowId] = win
     return
   }
 
-  const tabWindow = Windows.byId[tab.windowId]
   if (tabWindow.tabs) tabWindow.tabs.splice(tab.index, 0, tab as Tab)
   else tabWindow.tabs = [tab as Tab]
 
   const len = tabWindow.tabs.length
-  for (let i = tab.index; i < len; i++) {
-    tabWindow.tabs[i].index = i
+  for (let i = tab.index, t; i < len; i++) {
+    t = tabWindow.tabs[i]
+    if (t) t.index = i
+    else {
+      reinitTabs('onTabCreated: Empty space in list')
+      return
+    }
   }
 
   // If sidebar is closed and tabs of inactive panels hidden move new tab (if needed)
@@ -100,7 +119,7 @@ function onTabCreated(tab: browser.tabs.Tab): void {
     if (prevTab && prevTab.hidden) {
       for (let i = prevTab.index - 1; i >= 0; i--) {
         const prevTabN = tabWindow.tabs[i]
-        if (!prevTabN.hidden) {
+        if (prevTabN && !prevTabN.hidden) {
           browser.tabs.move(tab.id, { index: i + 1, windowId: tabWindow.id }).catch(err => {
             Logs.err('Tabs.onTabCreated: Cannot move tab (backward):', err)
           })
@@ -112,7 +131,7 @@ function onTabCreated(tab: browser.tabs.Tab): void {
       if (nextTab && nextTab.hidden) {
         for (let i = nextTab.index + 1; i < tabWindow.tabs.length; i++) {
           const nextTabN = tabWindow.tabs[i]
-          if (!nextTabN.hidden) {
+          if (nextTabN && !nextTabN.hidden) {
             browser.tabs.move(tab.id, { index: i, windowId: tabWindow.id }).catch(err => {
               Logs.err('Tabs.onTabCreated: Cannot move tab (forward):', err)
             })
@@ -133,18 +152,25 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo): void {
     return
   }
 
-  if (!Windows.byId[info.windowId] || info.isWindowClosing) return
   const tabWindow = Windows.byId[info.windowId]
-  if (!tabWindow || !tabWindow.tabs) return
-  const index = tabWindow.tabs.findIndex(t => t.id === tabId)
-  if (index === -1) return
+  const tabs = tabWindow?.tabs
+  const tab = Tabs.byId[tabId]
+  if (!tab || !tabs || info.isWindowClosing) return
 
-  tabWindow.tabs.splice(index, 1)
+  const index = tabs.findIndex(t => t.id === tabId)
+  if (index === -1 || tab.index !== index) return
+
+  tabs.splice(index, 1)
   delete Tabs.byId[tabId]
 
-  const len = tabWindow.tabs.length
-  for (let i = index; i < len; i++) {
-    tabWindow.tabs[i].index = i
+  const len = tabs.length
+  for (let i = index, t; i < len; i++) {
+    t = tabs[i]
+    if (t) t.index = i
+    else {
+      reinitTabs('onTabRemoved: Empty space in list')
+      return
+    }
   }
 }
 
@@ -293,15 +319,32 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
     return
   }
 
-  if (!Windows.byId[info.windowId]) return
   const tabWindow = Windows.byId[info.windowId]
+  if (!tabWindow || !tabWindow.tabs) return
 
-  if (!tabWindow.tabs) return
-  const movedTab = tabWindow.tabs.splice(info.fromIndex, 1)[0]
-  tabWindow.tabs.splice(info.toIndex, 0, movedTab)
+  const tab = Tabs.byId[id]
+  if (!tab) {
+    reinitTabs('onTabMoved: No tab')
+    return
+  }
 
-  for (let i = tabWindow.tabs.length; i--; ) {
-    tabWindow.tabs[i].index = i
+  const tabAtDstIndex = tabWindow.tabs[info.toIndex]
+  const tabAtSrcIndex = tabWindow.tabs[info.fromIndex]
+
+  // Check if tab is already placed correctly
+  if (tabAtDstIndex?.id === id && tabAtDstIndex.index === info.toIndex) return
+
+  if (!tabAtSrcIndex || tabAtSrcIndex.id !== id) {
+    reinitTabs('onTabMoved: Wrong tab at src index')
+    return
+  }
+
+  tabWindow.tabs.splice(info.fromIndex, 1)
+  tabWindow.tabs.splice(info.toIndex, 0, tabAtSrcIndex)
+
+  for (let i = tabWindow.tabs.length, t; i--; ) {
+    t = tabWindow.tabs[i]
+    if (t) t.index = i
   }
 }
 
@@ -314,18 +357,27 @@ function onTabAttached(id: ID, info: browser.tabs.AttachInfo): void {
     return
   }
 
-  if (!Windows.byId[info.newWindowId]) return
-
-  const tab = detachedTabs[id]
-  if (!tab) return
-
   const tabWindow = Windows.byId[info.newWindowId]
-  if (!tabWindow || !tabWindow.tabs) return
+  const tabs = tabWindow?.tabs
+  const tab = Tabs.byId[id]
+  if (!tabs || !tab) {
+    reinitTabs('onTabAttached: No tab[s]')
+    return
+  }
 
   tab.windowId = info.newWindowId
   tab.index = info.newPosition
 
-  tabWindow.tabs.splice(info.newPosition, 0, tab)
+  tabs.splice(info.newPosition, 0, tab)
+
+  for (let i = info.newPosition, t; i < tabs.length; i++) {
+    t = tabs[i]
+    if (t) t.index = i
+    else {
+      reinitTabs('onTabAttached: Empty space in list')
+      return
+    }
+  }
 }
 
 /**
@@ -337,10 +389,24 @@ function onTabDetached(id: ID, info: browser.tabs.DetachInfo): void {
     return
   }
 
-  if (!Windows.byId[info.oldWindowId]) return
   const tabWindow = Windows.byId[info.oldWindowId]
-  if (!tabWindow || !tabWindow.tabs) return
-  detachedTabs[id] = tabWindow.tabs.splice(info.oldPosition, 1)[0]
+  const tabs = tabWindow?.tabs
+  const tab = Tabs.byId[id]
+  if (!tabs || !tab) {
+    reinitTabs('onTabDetached: No tab[s]')
+    return
+  }
+
+  tabs.splice(info.oldPosition, 1)[0]
+
+  for (let i = info.oldPosition, t; i < tabs.length; i++) {
+    t = tabs[i]
+    if (t) t.index = i
+    else {
+      reinitTabs('onTabDetached: Empty space in list')
+      return
+    }
+  }
 }
 
 /**
@@ -406,7 +472,7 @@ export async function updateBgTabsTreeData(): Promise<void> {
     trees = []
   }
 
-  for (let info: TabsTreeData, window: Window, i = 0; i < windowsList.length; i++) {
+  for (let info, window, i = 0; i < windowsList.length; i++) {
     info = trees[i]
     window = windowsList[i]
     if (!window?.tabs) continue
@@ -423,9 +489,8 @@ export async function updateBgTabsTreeData(): Promise<void> {
 
       tab.panelId = tabInfo[0]
       tab.parentId = tabInfo[1] ?? NOID
-      if (tab.parentId && Tabs.byId[tab.parentId]) {
-        tab.lvl = Tabs.byId[tab.parentId].lvl + 1
-      }
+      const parent = Tabs.byId[tab.parentId]
+      if (parent) tab.lvl = parent.lvl + 1
     }
   }
 }
