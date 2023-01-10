@@ -2,7 +2,7 @@ import { sleep } from 'src/utils'
 import { GroupPin, GroupedTabInfo, InstanceType, GroupConfig } from 'src/types'
 import { GroupPageInitData } from 'src/services/tabs.bg.actions'
 import { getFavPlaceholder } from 'src/services/favicons.actions'
-import { SETTINGS_OPTIONS } from 'src/defaults'
+import { NOID, SETTINGS_OPTIONS } from 'src/defaults'
 import { applyThemeSrcVars, loadCustomGroupCSS } from './group.styles'
 import * as IPC from 'src/services/ipc'
 import * as Logs from 'src/services/logs'
@@ -121,7 +121,7 @@ async function main() {
   createNewTabButton()
 
   document.body.addEventListener('mousedown', e => {
-    if (e.button === 2 && groupParentId) {
+    if (e.button === 2 && groupParentId !== undefined && groupParentId !== NOID) {
       e.preventDefault()
       IPC.bg('tabsApiProxy', 'update', groupParentId, { active: true })
     }
