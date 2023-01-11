@@ -22,7 +22,7 @@
   --frame-el-overlay-selected-bg: #ffffff24
   --frame-el-overlay-selected-border: var(--s-accent, #47cfff)
 #root[data-frame-color-scheme="light"]
-  --frame-bg: var(--s-frame-bg, #f0f0f0)
+  --frame-bg: var(--s-frame-bg, #eaeaea)
   --frame-fg: var(--s-frame-fg, #222)
   --frame-el-overlay-hover-bg: #00000012
   --frame-el-overlay-clicked-bg: #0000001c
@@ -67,18 +67,20 @@
   --active-el-overlay-hover-bg: #ffffff16
   --active-el-overlay-clicked-bg: #ffffff24
 #root[data-act-el-color-scheme="light"]
-  --active-el-bg: var(--s-act-el-bg, #ffffff64)
+  --active-el-bg: var(--s-act-el-bg, #ffffff)
   --active-el-fg: var(--s-act-el-fg, #000)
-  --active-el-shadow: 0 1px 4px -1px #00000042, inset 0 0 0 1px var(--s-act-el-border, #fff2)
+  --active-el-shadow: 0 1px 4px -1px #00000046, inset 0 0 0 1px var(--s-act-el-border, #fff2)
   --active-el-overlay-hover-bg: #00000012
   --active-el-overlay-clicked-bg: #0000001c
 
 #root[data-popup-color-scheme="dark"]
-  --popup-bg: var(--s-popup-bg, var(--frame-bg), #363636)
-  --popup-fg: var(--s-popup-fg, var(--frame-fg), #fafafa)
+  --popup-bg: var(--s-popup-bg, var(--frame-bg, #363636))
+  --popup-fg: var(--s-popup-fg, var(--frame-fg, #fafafa))
+  --popup-shadow: 0 0 0 1px var(--s-popup-border, #ffffff16), 0 1px 16px 0 #00000048
 #root[data-popup-color-scheme="light"]
-  --popup-bg: var(--s-popup-bg, var(--frame-bg), #fff)
-  --popup-fg: var(--s-popup-fg, var(--frame-fg), #111)
+  --popup-bg: var(--s-popup-bg, var(--frame-bg, #fff))
+  --popup-fg: var(--s-popup-fg, var(--frame-fg, #111))
+  --popup-shadow: 0 0 0 1px var(--s-popup-border, #00000016), 0 1px 16px 0 #00000032
 
 // ---
 // -- Plain theme
@@ -103,7 +105,7 @@
 // -
 #root[data-toolbar-color-scheme="dark"]
   [data-color="toolbar"]
-    --color: #f2f2f2
+    --color: var(--toolbar-fg)
   [data-color="inactive"]
     --color: #aaa
   [data-color="yellow"]
@@ -112,7 +114,7 @@
     --color: #c071fc
 #root[data-toolbar-color-scheme="light"]
   [data-color="toolbar"]
-    --color: #121212
+    --color: var(--toolbar-fg)
   [data-color="inactive"]
     --color: #646464
   [data-color="yellow"]

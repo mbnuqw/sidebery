@@ -44,18 +44,22 @@ export async function updateColorScheme(theme?: browser.theme.Theme): Promise<vo
     if (!theme) theme = await browser.theme.getCurrent()
 
     const result = parseFirefoxTheme(theme)
-    Styles.reactive.frameColorScheme = getColorSchemeName(result.frameVariant)
-    Styles.reactive.toolbarColorScheme = getColorSchemeName(result.toolbarVariant)
-    Styles.reactive.actElColorScheme = getColorSchemeName(result.actElVariant)
-    Styles.reactive.popupColorScheme = getColorSchemeName(result.popupVariant)
 
     if (!Info.isBg) {
       if (!result.error) applyThemeSrcVars(result)
       else resetThemeSrcVars()
     }
 
-    Styles.theme = theme
-    Styles.parsedTheme = result
+    if (!result.error) {
+      Styles.reactive.frameColorScheme = getColorSchemeName(result.frameVariant)
+      Styles.reactive.toolbarColorScheme = getColorSchemeName(result.toolbarVariant)
+      Styles.reactive.actElColorScheme = getColorSchemeName(result.actElVariant)
+      Styles.reactive.popupColorScheme = getColorSchemeName(result.popupVariant)
+      Styles.theme = theme
+      Styles.parsedTheme = result
+    } else {
+      useAutoColorScheme()
+    }
   } else {
     if (!Info.isBg) resetThemeSrcVars()
 
@@ -236,7 +240,8 @@ function parseFirefoxTheme(theme: browser.theme.Theme): ParsedTheme {
     parsed.toolbarFg = Utils.toRGBA(parsed.vars.toolbar_fg)
     parsed.toolbarVariant = getColorSchemeVariant(parsed.toolbarBg, parsed.toolbarFg)
 
-    normalizeContrastOfFrameAndToolbar(parsed)
+    normalizeContrast(parsed)
+    if (parsed.error) return parsed
 
     // Active element
     parsed.vars.act_el_bg = toColorString(act_el_bg)
@@ -276,9 +281,11 @@ function parseFirefoxTheme(theme: browser.theme.Theme): ParsedTheme {
       parsed.frameBg = shiftColor(parsed.toolbarBg, 0.85)
     }
     if (parsed.frameBg) parsed.vars.frame_bg = toColorString(parsed.frameBg)
+    parsed.frameFg = parsed.toolbarFg
     parsed.vars.frame_fg = parsed.vars.toolbar_fg
 
-    normalizeContrastOfFrameAndToolbar(parsed)
+    normalizeContrast(parsed)
+    if (parsed.error) return parsed
 
     // Active element
     if (parsed.toolbarVariant === ColorSchemeVariant.Dark) {
@@ -372,20 +379,6 @@ function parseFirefoxTheme(theme: browser.theme.Theme): ParsedTheme {
     }
   }
 
-  // Handle frame_image - set frame background
-  if (theme.colors && theme.images?.theme_frame && parsed.toolbarBg?.[3] === 1) {
-    const ffg = parsed.frameFg
-    const tfg = parsed.toolbarFg
-    if (ffg && tfg) {
-      const tn = (tfg[0] + tfg[1] + tfg[2]) / 3
-      const fn = (ffg[0] + ffg[1] + ffg[2]) / 3
-      if (Math.abs(tn - fn) < 16) {
-        parsed.frameBg = parsed.toolbarBg
-        parsed.vars.frame_bg = parsed.vars.toolbar_bg
-      }
-    }
-  }
-
   // Detect sidebar top border
   detecting_top_border: if (theme.colors?.sidebar && theme.colors.sidebar_border) {
     const border = Utils.toRGBA(theme.colors.sidebar_border)
@@ -419,7 +412,7 @@ function parseFirefoxTheme(theme: browser.theme.Theme): ParsedTheme {
 }
 
 const CONTRAST_THRESHOLD = 70
-function normalizeContrastOfFrameAndToolbar(parsed: ParsedTheme) {
+function normalizeContrast(parsed: ParsedTheme) {
   // Check frame contrast
   let frameContrastOk = true
   if (parsed.frameBg && parsed.frameFg) {
@@ -450,6 +443,11 @@ function normalizeContrastOfFrameAndToolbar(parsed: ParsedTheme) {
     parsed.toolbarFg = parsed.frameFg
     parsed.vars.toolbar_fg = parsed.vars.frame_fg
     parsed.toolbarVariant = getColorSchemeVariant(parsed.frameBg, parsed.frameFg)
+  }
+
+  if (!frameContrastOk && !toolbarContrastOk) {
+    parsed.error = true
+    return
   }
 }
 
