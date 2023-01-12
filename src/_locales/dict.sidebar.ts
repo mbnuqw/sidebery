@@ -126,8 +126,8 @@ export const sidebarTranslations: Translations = {
     zh_CN: '关闭标签页',
   },
   'popup.tabs_panel_removing.other_win_note': {
-    en: 'Note: Tabs of this panel in other windows will be moved to the neighbour panel or left',
-    ru: 'Вкладки этой панели в других окнах будут перемещены на соседнюю панель или оставлены',
+    en: 'Note: Tabs of this panel in other windows will be moved to the neighbour panel',
+    ru: 'Вкладки этой панели в других окнах будут перемещены на соседнюю панель',
     de: 'Tabs dieses Panels in anderen Fenstern werden zum benachbarten Panel oder nach links verschoben',
     zh_CN: '注意：此面板在其他窗口中的标签页将移动到相邻面板或左侧',
   },
