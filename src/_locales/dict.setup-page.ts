@@ -2318,7 +2318,7 @@ export const setupPageTranslations: Translations = {
     ru: 'переключения вкладок в порядке активации',
   },
   'settings.h_scroll_action_none': {
-    en: 'nothing',
+    en: 'do nothing',
     de: 'Nichts',
     ru: 'ничего',
   },
@@ -2329,13 +2329,13 @@ export const setupPageTranslations: Translations = {
     de: 'Wechsle Tabs mit dem Scrollrad',
   },
   'settings.scroll_through_tabs_panel': {
-    en: 'panel',
+    en: 'in panel',
     ru: 'на панели',
     de: 'Im Panel',
     zh_CN: '面板',
   },
   'settings.scroll_through_tabs_global': {
-    en: 'global',
+    en: 'globally',
     ru: 'глобально',
     de: 'Global',
     zh_CN: '全局',
