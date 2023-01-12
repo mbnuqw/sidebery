@@ -108,7 +108,7 @@ section(ref="el")
     @update:value="Settings.saveDebounced(150)")
   
   .sub-title {{translate('settings.new_tab_position')}}
-  SelectField(
+  SelectField.-no-separator(
     label="settings.move_new_tab_pin"
     optLabel="settings.move_new_tab_pin_"
     v-model:value="Settings.state.moveNewTabPin"
@@ -149,7 +149,7 @@ section(ref="el")
       @update:value="Settings.saveDebounced(150)")
 
   .sub-title {{translate('settings.pinned_tabs_title')}}
-  SelectField(
+  SelectField.-no-separator(
     v-model:value="Settings.state.pinnedTabsPosition"
     label="settings.pinned_tabs_position"
     optLabel="settings.pinned_tabs_position_"
@@ -163,7 +163,7 @@ section(ref="el")
     @update:value="Settings.saveDebounced(150)")
 
   .sub-title {{translate('settings.tabs_tree_title')}}
-  ToggleField(
+  ToggleField.-no-separator(
     label="settings.tabs_tree_layout"
     v-model:value="Settings.state.tabsTree"
     @update:value="Settings.saveDebounced(150)")
@@ -257,7 +257,7 @@ section(ref="el")
     @update:value="Settings.saveDebounced(150)")
 
   .sub-title {{translate('settings.tabs_colorization_title')}}
-  ToggleField(
+  ToggleField.-no-separator(
     label="settings.colorize_tabs"
     v-model:value="Settings.state.colorizeTabs"
     @update:value="Settings.saveDebounced(150)")

@@ -20,7 +20,8 @@
   margin: 0 auto
 
 .Settings section > h2
-  position: relative
+  position: sticky
+  top: 0
   display: flex
   width: 100%
   font-size: rem(28)
@@ -29,7 +30,22 @@
   align-items: flex-end
   color: var(--toolbar-fg)
   text-align: center
-  margin: 28px 16px 24px 0
+  margin: 20px 16px 20px 0
+  padding: 8px 0 4px
+  z-index: 10
+  &:before
+    content: ''
+    position: absolute
+    top: 0
+    left: -8px
+    width: calc(100% + 16px)
+    height: 50px
+    background-color: var(--frame-bg)
+    z-index: -1
+#root[data-toolbar-color-scheme="light"] .Settings section > h2:before
+  box-shadow: 0 8px 8px -10px #00000036
+#root[data-toolbar-color-scheme="dark"] .Settings section > h2:before
+  box-shadow: 0 10px 8px -10px var(--frame-bg)
 
 .Settings .title-note
   position: relative
