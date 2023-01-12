@@ -987,3 +987,8 @@ async function _processQueue() {
 
   _waitingQueue = false
 }
+
+export function getRandomFrom<T>(arr: T[]): T {
+  const index = Math.round(Math.random() * (arr.length - 1))
+  return arr[index]
+}

@@ -1,6 +1,6 @@
 import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
-import { BKM_OTHER_ID, CONTAINER_ID, NEWID, NOID, PRE_SCROLL } from 'src/defaults'
+import { BKM_OTHER_ID, COLOR_NAMES, CONTAINER_ID, NEWID, NOID, PRE_SCROLL } from 'src/defaults'
 import { DragInfo, DragType, DropType, ItemBounds, ItemBoundsType } from 'src/types'
 import { DstPlaceInfo, SrcPlaceInfo, InstanceType, ItemInfo } from 'src/types'
 import { DnD, DndPointerMode } from 'src/services/drag-and-drop'
@@ -862,6 +862,7 @@ export async function onDrop(e: DragEvent): Promise<void> {
   if (DnD.reactive.dstPanelId === 'add_tp' && (fromTabs || fromBookmarks)) {
     const panel = Sidebar.createTabsPanel()
     const index = Sidebar.getIndexForNewTabsPanel()
+    panel.color = Utils.getRandomFrom(COLOR_NAMES)
     Sidebar.addPanel(index, panel)
     Sidebar.recalcPanels()
     Sidebar.recalcTabsPanels()

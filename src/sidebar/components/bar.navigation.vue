@@ -520,10 +520,8 @@ async function addTabsPanel(silent?: boolean): Promise<void> {
     panel = Sidebar.reactive.panelsById[result]
   } else {
     panel = Sidebar.createTabsPanel()
-    panel.index = index
-    panel.color = getRandomColorName()
-    Sidebar.reactive.panelsById[panel.id] = panel
-    Sidebar.reactive.nav.splice(panel.index, 0, panel.id)
+    panel.color = Utils.getRandomFrom(COLOR_NAMES)
+    Sidebar.addPanel(index, panel)
     Sidebar.recalcPanels()
     Sidebar.recalcTabsPanels()
     Sidebar.saveSidebar(300)
@@ -533,11 +531,6 @@ async function addTabsPanel(silent?: boolean): Promise<void> {
 
   Sidebar.activatePanel(panel.id)
   Tabs.createTabInPanel(panel)
-}
-
-function getRandomColorName(): browser.ColorName {
-  const index = Math.round(Math.random() * (COLOR_NAMES.length - 1))
-  return COLOR_NAMES[index] ?? 'toolbar'
 }
 
 function collapseAll(): void {
