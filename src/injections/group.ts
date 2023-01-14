@@ -16,7 +16,7 @@ let newTabEl: HTMLDivElement
 let groupWinId: ID
 let groupTabId: ID
 let groupTabIndex: number
-let groupLayout: typeof SETTINGS_OPTIONS.groupLayout[number]
+let groupLayout: (typeof SETTINGS_OPTIONS.groupLayout)[number]
 let pinTab: GroupPin | undefined
 let tabs: GroupedTabInfo[]
 let groupLen: number, groupParentId: ID | undefined
@@ -103,7 +103,7 @@ async function main() {
   if (pinTab) {
     document.body.setAttribute('data-pin', 'true')
     document.title = pinTab.title
-    createPinnedTab(pinTab, (event: MouseEvent) => onTabClick(event, pinTab))
+    updatePinnedTab(pinTab, (event: MouseEvent) => onTabClick(event, pinTab))
   }
 
   tabsBoxEl = document.getElementById('tabs')
@@ -197,6 +197,14 @@ function onGroupUpdated(msg: MsgUpdated) {
       const tab = tabs[i]
       tab.el?.remove()
       tabs.splice(i, 1)
+    }
+  }
+  if (msg.pin) {
+    pinTab = msg.pin
+    if (pinTab) {
+      document.body.setAttribute('data-pin', 'true')
+      document.title = pinTab.title
+      updatePinnedTab(pinTab, (event: MouseEvent) => onTabClick(event, pinTab))
     }
   }
 }
@@ -374,10 +382,11 @@ function createTabEl(info: GroupedTabInfo, clickHandler: (e: MouseEvent) => void
   info.el.addEventListener('click', clickHandler)
 }
 
+let pinnedTabEventsListeners = false
 /**
  * Create pinned tab element on the page
  */
-function createPinnedTab(info: GroupPin, clickHandler: (e: MouseEvent) => void) {
+function updatePinnedTab(info: GroupPin, clickHandler: (e: MouseEvent) => void) {
   info.el = document.getElementById('pinned_tab')
   if (!info.el) return
   info.el.title = info.url
@@ -390,8 +399,11 @@ function createPinnedTab(info: GroupPin, clickHandler: (e: MouseEvent) => void) 
   info.urlEl = document.getElementById('pinned_tab_url')
   if (info.urlEl) info.urlEl.textContent = info.url
 
-  info.el.addEventListener('mousedown', e => e.stopPropagation())
-  info.el.addEventListener('click', clickHandler)
+  if (!pinnedTabEventsListeners) {
+    info.el.addEventListener('mousedown', e => e.stopPropagation())
+    info.el.addEventListener('click', clickHandler)
+    pinnedTabEventsListeners = true
+  }
 }
 
 function createTabButton(svgId: string, className: string, clickHandler: (e: MouseEvent) => void) {

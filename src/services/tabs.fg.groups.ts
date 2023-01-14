@@ -1,5 +1,5 @@
 import * as Utils from 'src/utils'
-import { Tab, GroupConfig, GroupInfo, GroupedTabInfo } from 'src/types'
+import { Tab, GroupConfig, GroupInfo, GroupedTabInfo, GroupPin } from 'src/types'
 import { MsgUpdated } from 'src/injections/group.ipc'
 import { Windows } from 'src/services/windows'
 import { Settings } from 'src/services/settings'
@@ -154,6 +154,25 @@ export async function openGroupConfigPopup(config: GroupConfig): Promise<GroupCo
   })
 }
 
+function getPinInfo(groupUrl: string): GroupPin | undefined {
+  if (!groupUrl.includes('pin=')) return
+
+  const urlInfo = new URL(groupUrl)
+  const pinValue = urlInfo.searchParams.get('pin')
+  if (!pinValue) return
+
+  const [ctr, url] = pinValue.split('::')
+  const pinnedTab = Tabs.list.find(t => t.pinned && t.cookieStoreId === ctr && t.url === url)
+  if (pinnedTab) {
+    return {
+      id: pinnedTab.id,
+      title: pinnedTab.title,
+      url: pinnedTab.url,
+      favIconUrl: pinnedTab.favIconUrl ?? '',
+    }
+  }
+}
+
 /**
  * Get grouped tabs (for group page)
  */
@@ -178,22 +197,8 @@ export async function getGroupInfo(groupTabId: ID): Promise<GroupInfo | null> {
     out.parentId = parentTab.id
   }
 
-  if (groupTab.url.includes('pin=')) {
-    const urlInfo = new URL(groupTab.url)
-    const pin = urlInfo.searchParams.get('pin')
-    if (pin) {
-      const [ctr, url] = pin.split('::')
-      const pinnedTab = Tabs.list.find(t => t.pinned && t.cookieStoreId === ctr && t.url === url)
-      if (pinnedTab) {
-        out.pin = {
-          id: pinnedTab.id,
-          title: pinnedTab.title,
-          url: pinnedTab.url,
-          favIconUrl: pinnedTab.favIconUrl ?? '',
-        }
-      }
-    }
-  }
+  const pinInfo = getPinInfo(groupTab.url)
+  if (pinInfo) out.pin = pinInfo
 
   let subGroupLvl = null
   for (let i = groupTab.index + 1; i < Tabs.list.length; i++) {

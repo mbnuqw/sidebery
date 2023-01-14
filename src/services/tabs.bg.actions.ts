@@ -1,7 +1,8 @@
 import { Stored, Tab, Window, TabCache, TabsTreeData, GroupInfo, AnyFunc } from 'src/types'
 import { InstanceType } from 'src/types'
 import * as Utils from 'src/utils'
-import { ADDON_HOST, GROUP_URL, NOID, SETTINGS_OPTIONS, URL_URL } from 'src/defaults'
+import { ADDON_HOST, GROUP_INITIAL_TITLE, GROUP_URL, NOID, SETTINGS_OPTIONS } from 'src/defaults'
+import { URL_URL } from 'src/defaults'
 import { Tabs } from 'src/services/tabs.bg'
 import { Windows } from 'src/services/windows'
 import { Containers } from 'src/services/containers'
@@ -31,6 +32,8 @@ export async function loadTabs(): Promise<void> {
       tab.proxified = true
       showProxyBadge(tab.id)
     }
+
+    tab.internal = tab.url.startsWith(ADDON_HOST)
 
     // Detect if pinned tabs is actually discarded and manually call discard()
     // for browser.sessionstore.restore_pinned_tabs_on_demand = true
@@ -183,48 +186,44 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo): void {
     return
   }
 
-  const targetTab = Tabs.byId[tabId]
-  if (!targetTab) return
-
-  if (change.status !== undefined) {
-    if (
-      change.status === 'complete' &&
-      targetTab.url[0] !== 'a' &&
-      !targetTab.url.startsWith(ADDON_HOST)
-    ) {
-      reloadTabFaviconDebounced(targetTab)
-    }
-  }
+  const tab = Tabs.byId[tabId]
+  if (!tab) return
 
   if (change.url) {
     const isInternal = change.url.startsWith(ADDON_HOST)
+    tab.internal = isInternal
     if (isInternal) {
-      const sameUrl = targetTab.url === change.url
-      const isPrevGroup = Utils.isGroupUrl(targetTab.url)
-      const isGroup = Utils.isGroupUrl(change.url)
-      if (isGroup && (!isPrevGroup || sameUrl)) injectGroupPageScript(targetTab.windowId, tabId)
+      if (Utils.isUrlUrl(change.url)) injectUrlPageScript(tab.windowId, tabId)
     }
+  }
 
-    if (Utils.isUrlUrl(change.url)) injectUrlPageScript(targetTab.windowId, tabId)
+  if (change.status !== undefined) {
+    if (change.status === 'complete' && tab.url[0] !== 'a' && !tab.internal) {
+      reloadTabFaviconDebounced(tab)
+    }
+  }
+
+  // Inject group page script if internal page has initial title
+  if (change.title && tab.internal && !tab.discarded && change.title === GROUP_INITIAL_TITLE) {
+    injectGroupPageScript(tab.windowId, tabId)
   }
 
   if (
-    change.favIconUrl &&
-    change.favIconUrl.startsWith('data:') &&
-    reloadTabFaviconTimeout[targetTab.id] === undefined &&
-    !targetTab.url.startsWith(ADDON_HOST)
+    change.favIconUrl?.startsWith('data:') &&
+    reloadTabFaviconTimeout[tab.id] === undefined &&
+    !tab.internal
   ) {
-    Favicons.saveFavicon(targetTab.url, change.favIconUrl)
+    Favicons.saveFavicon(tab.url, change.favIconUrl)
   }
 
-  Object.assign(targetTab, change)
+  Object.assign(tab, change)
 
-  if (WebReq.containersProxies[targetTab.cookieStoreId]) {
-    targetTab.proxified = true
+  if (WebReq.containersProxies[tab.cookieStoreId]) {
+    tab.proxified = true
     showProxyBadgeDebounced(tabId)
   }
-  if (!WebReq.containersProxies[targetTab.cookieStoreId] && targetTab.proxified) {
-    targetTab.proxified = false
+  if (!WebReq.containersProxies[tab.cookieStoreId] && tab.proxified) {
+    tab.proxified = false
     hideProxyBadge(tabId)
   }
 }
@@ -503,12 +502,12 @@ export async function initInternalPageScripts(tabs: Tab[]) {
   for (const tab of tabs) {
     if (!Windows.byId[tab.windowId]) continue
 
-    const isInternal = tab.url.startsWith(ADDON_HOST)
+    if (tab.internal === undefined) tab.internal = tab.url.startsWith(ADDON_HOST)
     const isGroup = Utils.isGroupUrl(tab.url)
     const isUrl = Utils.isUrlUrl(tab.url)
 
     // Wrong addon ID - update url
-    if (!isInternal && isGroup) {
+    if (!tab.internal && isGroup) {
       const [_, groupUrlInfo] = tab.url.split('/group.html')
       if (!groupUrlInfo) continue
       const groupUrl = GROUP_URL + groupUrlInfo
@@ -517,7 +516,7 @@ export async function initInternalPageScripts(tabs: Tab[]) {
       })
       continue
     }
-    if (!isInternal && isUrl) {
+    if (!tab.internal && isUrl) {
       const [_, urlUrlInfo] = tab.url.split('/url.html')
       if (!urlUrlInfo) continue
       const urlUrl = URL_URL + urlUrlInfo
@@ -563,7 +562,7 @@ export async function injectUrlPageScript(winId: ID, tabId: ID): Promise<void> {
 }
 
 export interface UrlPageInitData {
-  theme?: typeof SETTINGS_OPTIONS.theme[number]
+  theme?: (typeof SETTINGS_OPTIONS.theme)[number]
   parsedTheme?: ParsedTheme
   frameColorScheme?: 'dark' | 'light'
   toolbarColorScheme?: 'dark' | 'light'
@@ -612,11 +611,11 @@ export async function injectGroupPageScript(winId: ID, tabId: ID): Promise<void>
 }
 
 export interface GroupPageInitData {
-  theme?: typeof SETTINGS_OPTIONS.theme[number]
+  theme?: (typeof SETTINGS_OPTIONS.theme)[number]
   parsedTheme?: ParsedTheme
   frameColorScheme?: 'dark' | 'light'
   toolbarColorScheme?: 'dark' | 'light'
-  groupLayout?: typeof SETTINGS_OPTIONS.groupLayout[number]
+  groupLayout?: (typeof SETTINGS_OPTIONS.groupLayout)[number]
   animations?: boolean
   groupInfo?: GroupInfo | null
   winId?: ID

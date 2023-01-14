@@ -1,4 +1,4 @@
-import { GroupedTabInfo } from 'src/types'
+import { GroupedTabInfo, GroupPin } from 'src/types'
 
 export interface MsgUpdated {
   name: 'update'
@@ -7,6 +7,7 @@ export interface MsgUpdated {
   parentId?: ID
   title?: string
   tabs?: GroupedTabInfo[]
+  pin?: GroupPin
 }
 
 export type MsgTabCreated = {
