@@ -104,8 +104,6 @@
 // -- Local color
 // -
 #root[data-toolbar-color-scheme="dark"]
-  [data-color="toolbar"]
-    --color: var(--toolbar-fg)
   [data-color="inactive"]
     --color: #aaa
   [data-color="yellow"]
@@ -113,8 +111,6 @@
   [data-color="purple"]
     --color: #c071fc
 #root[data-toolbar-color-scheme="light"]
-  [data-color="toolbar"]
-    --color: var(--toolbar-fg)
   [data-color="inactive"]
     --color: #646464
   [data-color="yellow"]
@@ -122,6 +118,8 @@
   [data-color="purple"]
     --color: #af51f5
 
+[data-color="toolbar"]
+  --color: var(--toolbar-fg)
 [data-color="blue"]
   --color: #37adff
 [data-color="turquoise"]
