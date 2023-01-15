@@ -272,6 +272,12 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
       Logs.err('Tabs.onTabActivated: Cannot reload tab in correct container:', err)
     })
   }
+
+  // Update tab's url
+  if (tab.reloadOnActivation) {
+    tab.reloadOnActivation = undefined
+    browser.tabs.reload(tab.id)
+  }
 }
 
 /**
@@ -526,8 +532,8 @@ export async function initInternalPageScripts(tabs: Tab[]) {
       continue
     }
 
-    if (isGroup) injectGroupPageScript(tab.windowId, tab.id)
-    if (isUrl) injectUrlPageScript(tab.windowId, tab.id)
+    if (isGroup && !tab.discarded) injectGroupPageScript(tab.windowId, tab.id)
+    if (isUrl && !tab.discarded) injectUrlPageScript(tab.windowId, tab.id)
   }
 }
 
@@ -552,9 +558,14 @@ export async function injectUrlPageScript(winId: ID, tabId: ID): Promise<void> {
       })
       .catch(() => {
         Logs.warn('Tabs.injectUrlPageScript: Cannot inject init data, reloading tab...')
-        browser.tabs.reload(tabId).catch(err => {
-          Logs.err('Tabs.injectUrlPageScript: Cannot reload tab', err)
-        })
+        const tab = Tabs.byId[tabId]
+        if (tab.active) {
+          browser.tabs.reload(tabId).catch(err => {
+            Logs.err('Tabs.injectUrlPageScript: Cannot reload tab', err)
+          })
+        } else if (!tab.discarded) {
+          tab.reloadOnActivation = true
+        }
       })
   } catch (err) {
     Logs.err('Injected url-page script', err)
@@ -601,9 +612,14 @@ export async function injectGroupPageScript(winId: ID, tabId: ID): Promise<void>
       })
       .catch(() => {
         Logs.warn('Tabs.injectGroupPageScript: Cannot inject init data, reloading tab')
-        browser.tabs.reload(tabId).catch(err => {
-          Logs.err('Tabs.injectGroupPageScript: Cannot reload tab:', err)
-        })
+        const tab = Tabs.byId[tabId]
+        if (tab.active) {
+          browser.tabs.reload(tabId).catch(err => {
+            Logs.err('Tabs.injectGroupPageScript: Cannot reload tab:', err)
+          })
+        } else if (!tab.discarded) {
+          tab.reloadOnActivation = true
+        }
       })
   } catch (err) {
     Logs.err('Injected group-page script', err)
@@ -668,7 +684,7 @@ export function setupTabsListeners(): void {
   browser.tabs.onCreated.addListener(onTabCreated)
   browser.tabs.onRemoved.addListener(onTabRemoved)
   browser.tabs.onUpdated.addListener(onTabUpdated, {
-    properties: ['pinned', 'title', 'status', 'favIconUrl', 'url', 'hidden'],
+    properties: ['pinned', 'title', 'status', 'favIconUrl', 'url', 'hidden', 'discarded'],
   })
   browser.tabs.onActivated.addListener(onTabActivated)
   browser.tabs.onMoved.addListener(onTabMoved)

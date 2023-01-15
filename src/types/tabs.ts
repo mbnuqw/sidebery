@@ -27,6 +27,7 @@ export interface Tab extends browser.tabs.Tab {
   reopening?: { id: ID }
   customTitle?: string
   customColor?: string
+  reloadOnActivation?: boolean
 }
 
 export const enum TabStatus {
