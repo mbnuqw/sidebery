@@ -176,6 +176,8 @@ function onGroupUpdated(msg: MsgUpdated) {
   if (msg.title !== undefined) {
     const normTitle = msg.title.trim()
     document.title = normTitle || '‎'
+    const titleEl = document.getElementById('title') as HTMLInputElement | null
+    if (titleEl) titleEl.value = normTitle
     window.location.hash = `#${encodeURIComponent(normTitle)}`
   }
   if (msg.tabs !== undefined) {
