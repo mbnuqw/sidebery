@@ -2531,6 +2531,10 @@ export const setupPageTranslations: Translations = {
     de: 'Entladen',
     zh_CN: '卸载',
   },
+  'settings.tab_action_edit_title': {
+    en: 'edit title',
+    ru: 'резактировать заголовок',
+  },
   'settings.tab_action_none': {
     en: 'none',
     ru: 'выкл',

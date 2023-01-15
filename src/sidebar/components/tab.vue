@@ -302,6 +302,7 @@ function onDoubleClick(): void {
   if (dc === 'new_after') Tabs.createTabAfter(props.tab.id)
   if (dc === 'new_child' && !props.tab.pinned) Tabs.createChildTab(props.tab.id)
   if (dc === 'close') Tabs.removeTabs([props.tab.id])
+  if (dc === 'edit_title') Tabs.editTabTitle([props.tab.id])
 }
 
 function onDragStart(e: DragEvent): void {

@@ -160,6 +160,7 @@ export function startLongClick(
       if (action === 'clear_cookies') Tabs.clearTabsCookies([tab.id])
       if (action === 'new_after') Tabs.createTabAfter(tab.id)
       if (action === 'new_child' && !tab.pinned) Tabs.createChildTab(tab.id)
+      if (action === 'edit_title' && !tab.pinned) Tabs.editTabTitle([tab.id])
 
       if (action !== 'none') clickLock = true
     }
