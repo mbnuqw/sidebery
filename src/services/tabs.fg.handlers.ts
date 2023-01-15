@@ -1285,10 +1285,4 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
       })
     }
   }
-
-  if (Settings.state.tabsTree && tab.isGroup) {
-    Tabs.updateGroupTab(tab)
-  } else {
-    Tabs.resetUpdateGroupTabTimeout()
-  }
 }
