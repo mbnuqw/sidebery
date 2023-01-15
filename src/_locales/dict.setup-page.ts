@@ -2533,7 +2533,7 @@ export const setupPageTranslations: Translations = {
   },
   'settings.tab_action_edit_title': {
     en: 'edit title',
-    ru: 'резактировать заголовок',
+    ru: 'редактировать заголовок',
   },
   'settings.tab_action_none': {
     en: 'none',
