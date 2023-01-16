@@ -1373,10 +1373,10 @@ export const setupPageTranslations: Translations = {
     zh_CN: '单击活动标签页时向后激活',
   },
   'settings.tabs_second_click_act_prev_panel_only': {
+    ru: 'Только в активной панели',
     en: 'Only in the active panel',
     zh_CN: '仅在活动面板中',
   },
-
 
   // - New tab position
   'settings.new_tab_position': {
