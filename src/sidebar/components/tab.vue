@@ -228,7 +228,9 @@ function onMouseUp(e: MouseEvent): void {
         withoutMods &&
         !activating
       ) {
-        const history = Tabs.getActiveTabsHistory()
+        const history = Settings.state.tabsSecondClickActPrevPanelOnly
+          ? Tabs.getActiveTabsHistory(Sidebar.reactive.activePanelId)
+          : Tabs.getActiveTabsHistory()
         const prevTabId = history.actTabs[history.actTabs.length - 1]
         if (prevTabId !== undefined) browser.tabs.update(prevTabId, { active: true })
       }

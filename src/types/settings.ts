@@ -161,6 +161,7 @@ export interface SettingsState {
   wheelThresholdY: number
   tabDoubleClick: (typeof SETTINGS_OPTIONS.tabDoubleClick)[number]
   tabsSecondClickActPrev: boolean
+  tabsSecondClickActPrevPanelOnly: boolean
   shiftSelAct: boolean
   activateOnMouseUp: boolean
   tabLongLeftClick: (typeof SETTINGS_OPTIONS.tabLongLeftClick)[number]

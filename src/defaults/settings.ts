@@ -158,6 +158,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   wheelThresholdY: 60,
   tabDoubleClick: 'none',
   tabsSecondClickActPrev: true,
+  tabsSecondClickActPrevPanelOnly: false,
   shiftSelAct: true,
   activateOnMouseUp: false,
   tabLongLeftClick: 'none',

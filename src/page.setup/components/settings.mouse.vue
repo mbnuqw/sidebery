@@ -115,6 +115,12 @@ section(ref="el")
     label="settings.tabs_second_click_act_prev"
     v-model:value="Settings.state.tabsSecondClickActPrev"
     @update:value="onTabsSecondClickActPrevUpdate")
+  .sub-fields
+    ToggleField(
+      label="settings.tabs_second_click_act_prev_panel_only"
+      v-model:value="Settings.state.tabsSecondClickActPrevPanelOnly"
+      :inactive="!Settings.state.tabsSecondClickActPrev"
+      @update:value="Settings.saveDebounced(150)")
   ToggleField(
     label="settings.activate_on_mouseup"
     v-model:value="Settings.state.activateOnMouseUp"

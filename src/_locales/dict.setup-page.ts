@@ -1372,6 +1372,11 @@ export const setupPageTranslations: Translations = {
     de: 'Beim Klicken auf aktiven Tab Aktivierung umkehren',
     zh_CN: '单击活动标签页时向后激活',
   },
+  'settings.tabs_second_click_act_prev_panel_only': {
+    en: 'Only in the active panel',
+    zh_CN: '仅在活动面板中',
+  },
+
 
   // - New tab position
   'settings.new_tab_position': {
