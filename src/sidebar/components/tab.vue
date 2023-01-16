@@ -80,6 +80,7 @@ import { DnD } from 'src/services/drag-and-drop'
 import { Search } from 'src/services/search'
 import { Favicons } from 'src/services/favicons'
 import { RGB_COLORS } from 'src/defaults'
+import * as Utils from 'src/utils'
 
 const props = defineProps<{ tab: ReactiveTab }>()
 
@@ -231,7 +232,7 @@ function onMouseUp(e: MouseEvent): void {
         const history = Settings.state.tabsSecondClickActPrevPanelOnly
           ? Tabs.getActiveTabsHistory(Sidebar.reactive.activePanelId)
           : Tabs.getActiveTabsHistory()
-        const prevTabId = history.actTabs[history.actTabs.length - 1]
+        const prevTabId = Utils.findLast(history.actTabs, id => id !== Tabs.activeId)
         if (prevTabId !== undefined) browser.tabs.update(prevTabId, { active: true })
       }
     }
