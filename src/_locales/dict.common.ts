@@ -590,19 +590,19 @@ export const commonTranslations: Translations = {
   },
   'menu.tab.reopen_in_window': {
     en: 'Reopen in window of another type',
-    ru: 'Переоткрыть в стандартном контейнере',
+    ru: 'Переоткрыть в окне другого типа',
     de: 'Neu öffnen in Fenster eines anderen Typs',
     zh_CN: '在其他类型的窗口中重新打开',
   },
-  'menu.tab.reopen_in_default_panel': {
+  'menu.tab.reopen_in_default_container': {
     en: 'Reopen in default container',
-    ru: 'Переоткрыть в новом контейнере',
+    ru: 'Переоткрыть в стандартном контейнере',
     de: 'In Standardumgebung neu öffnen',
     zh_CN: '在默认容器中重新打开',
   },
   'menu.tab.reopen_in_new_container': {
     en: 'Reopen in new container',
-    ru: 'Переоткрыть в окне другого типа',
+    ru: 'Переоткрыть в новом контейнере',
     de: 'Neu öffnen in neuer Umgebung',
     zh_CN: '在新建容器中重新打开',
   },
@@ -629,6 +629,18 @@ export const commonTranslations: Translations = {
     ru: 'Переоткрыть в окне...',
     de: 'Neu öffnen in Fenster...',
     zh_CN: '在窗口中重新打开...',
+  },
+  'menu.tab.open_in_default_container': {
+    en: 'Open in default container',
+    ru: 'Открыть в новом контейнере',
+  },
+  'menu.tab.open_in_': {
+    en: 'Open in ',
+    ru: 'Открыть в ',
+  },
+  'menu.tab.open_in_ctr_': {
+    en: 'Open in container...',
+    ru: 'Открыть в контейнере...',
   },
   'menu.tab.group': {
     en: 'Group',

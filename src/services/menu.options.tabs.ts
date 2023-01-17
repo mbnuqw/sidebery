@@ -167,7 +167,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
 
     if (firstTab.cookieStoreId !== CONTAINER_ID) {
       opts.push({
-        label: translate('menu.tab.reopen_in_default_panel'),
+        label: translate('menu.tab.reopen_in_default_container'),
         icon: 'icon_ff',
         badge: 'icon_reopen',
         onClick: () => {
@@ -219,6 +219,37 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
 
     if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
+  },
+
+  openTabsInCtr: () => {
+    if (Windows.incognito) return
+
+    const opts = []
+    const firstTab = Tabs.byId[Selection.getFirst()]
+    const ignoreRules = Menu.ctxMenuIgnoreContainersRules
+
+    if (!firstTab) return
+
+    if (firstTab.cookieStoreId !== CONTAINER_ID) {
+      opts.push({
+        label: translate('menu.tab.open_in_default_container'),
+        icon: 'icon_ff',
+        onClick: () => Tabs.openInContainer(Selection.get(), CONTAINER_ID),
+      })
+    }
+
+    for (const c of Object.values(Containers.reactive.byId)) {
+      if (firstTab.cookieStoreId === c.id) continue
+      if (ignoreRules?.[c.id]) continue
+      opts.push({
+        label: translate('menu.tab.open_in_') + c.name,
+        icon: c.icon,
+        color: c.color,
+        onClick: () => Tabs.openInContainer(Selection.get(), c.id),
+      })
+    }
+
+    return opts
   },
 
   pin: () => {
