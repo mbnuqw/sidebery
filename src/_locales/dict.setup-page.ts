@@ -529,6 +529,7 @@ export const setupPageTranslations: Translations = {
     en: 'Show scroll-bar at the left side',
     ru: 'Показать полосу прокрутки слева',
     de: 'Scrollleiste auf der linken Seite anzeigen',
+    zh_CN: '在左边显示滚动条',
   },
   'settings.sel_win_screenshots': {
     en: 'Show screenshots in the window selection menu',
@@ -1005,21 +1006,25 @@ export const setupPageTranslations: Translations = {
     en: 'Action on drag-and-drop to the outside of sidebar',
     ru: 'Действие при перетаскивании за пределы боковой панели',
     de: 'Aktion beim Drag-and-Drop aus der Seitenleiste hinaus',
+    zh_CN: '拖放到侧边栏外部执行操作',
   },
   'settings.dnd_outside_win': {
     en: 'Open in new window',
     de: 'In neuem Fenster öffnen',
     ru: 'Открыть в новом окне',
+    zh_CN: '打开一个新的窗口',
   },
   'settings.dnd_outside_data': {
     en: 'Pass dragged data to the target',
     ru: 'Передать данные получателю',
     de: 'Daten auf Ziel übertragen',
+    zh_CN: '将被拖动的数据传递给目标对象',
   },
   'settings.settings.dnd_outside_note': {
     en: 'Press the "Alt" key before dragging to invert this option',
     ru: 'Нажмите клавишу «Alt» перед перетаскиванием, чтобы инвертировать эту опцию',
     de: 'Drücke "Alt"-Taste vor dem Ziehen, um diese Option zu invertieren',
+    zh_CN: '再拖动之前按下 Alt，则执行相反的操作。',
   },
   'settings.dnd_exp': {
     en: 'Expand/Fold the branch on hovering over the',
@@ -1378,6 +1383,7 @@ export const setupPageTranslations: Translations = {
     zh_CN: '仅在活动面板中',
   },
 
+
   // - New tab position
   'settings.new_tab_position': {
     en: 'Position of new tab',
@@ -1471,7 +1477,7 @@ export const setupPageTranslations: Translations = {
     en: 'Place new tab (general rule)',
     ru: 'Общее правило',
     de: 'Neuen Tab platzieren (allgemeine Regel)',
-    // zh_CN: '新标签的位置（对于其他情况）',
+    zh_CN: '新标签的位置（通用规则）',
   },
   'settings.move_new_tab_start': {
     en: 'panel start',
@@ -1642,18 +1648,22 @@ export const setupPageTranslations: Translations = {
   'settings.hide_folded_parent': {
     en: 'Hide parent tab',
     ru: 'Скрывать родительскую вкладку',
+    zh_CN: '隐藏父标签页',
   },
   'settings.hide_folded_parent_any': {
     en: 'any tab',
     ru: 'любую вкладку',
+    zh_CN: '任何标签页',
   },
   'settings.hide_folded_parent_group': {
     en: 'group tab',
     ru: 'группу вкладку',
+    zh_CN: '分组标签页',
   },
   'settings.hide_folded_parent_none': {
     en: 'off',
     ru: 'выкл',
+    zh_CN: '关闭',
   },
   'settings.auto_fold_tabs': {
     en: 'Auto fold tabs',
@@ -1806,26 +1816,31 @@ export const setupPageTranslations: Translations = {
   'settings.tabs_colorization_title': {
     en: 'Tabs colorization',
     ru: 'Раскрашивание вкладок',
+    zh_CN: '标签着色',
   },
   'settings.colorize_tabs': {
     en: 'Colorize tabs',
     ru: 'Раскрашивать вкладки',
     de: 'Tabs einfärben',
+    zh_CN: '着色标签页',
   },
   'settings.colorize_tabs_src': {
     en: 'Generate color from',
     ru: 'Источник для генерации цвета',
     de: 'Generiere Farbe aus',
+    zh_CN: '生成颜色来自',
   },
   'settings.colorize_tabs_src_domain': {
     en: 'domain',
     ru: 'доменное имя',
     de: 'Domäne',
+    zh_CN: '域名',
   },
   'settings.colorize_tabs_src_container': {
     en: 'container',
     ru: 'контейнер',
     de: 'Umgebung',
+    zh_CN: '容器',
   },
   'settings.colorize_branches': {
     en: 'Colorize branches',
@@ -2311,21 +2326,25 @@ export const setupPageTranslations: Translations = {
     en: 'Use horizontal scroll to',
     ru: 'Использовать горизонтальную прокрутку для',
     de: 'Nutze horizontales Scrollen für',
+    zh_CN: '使用滚轮水平滚动',
   },
   'settings.h_scroll_action_switch_panels': {
     en: 'switch panels',
     ru: 'переключения панелей',
     de: 'Panel wechseln',
+    zh_CN: '切换面板',
   },
   'settings.h_scroll_action_switch_act_tabs': {
     en: 'switch recently active tabs',
     de: 'Zuletzt aktive Tabs wechseln',
     ru: 'переключения вкладок в порядке активации',
+    zh_CN: '切换到最近活动的标签页',
   },
   'settings.h_scroll_action_none': {
     en: 'do nothing',
     de: 'Nichts',
     ru: 'ничего',
+    zh_CN: '无动作',
   },
   'settings.scroll_through_tabs': {
     en: 'Switch tabs with scroll wheel',
@@ -2667,61 +2686,73 @@ export const setupPageTranslations: Translations = {
     en: 'Bookmarks actions',
     ru: 'Действия над закладками',
     de: 'Aktionen mit Lesezeichen',
+    zh_CN: '书签动作',
   },
   'settings.mouse.bookmarks.left_click_action': {
     en: 'Left-click on the bookmark',
     ru: 'Левый клик по закладке',
     de: 'Linksklick auf Lesezeichen',
+    zh_CN: '左击书签',
   },
   'settings.mouse.bookmarks.left_click_action_open_in_act': {
     en: 'open in active tab',
     de: 'Öffne im aktiven Tab',
     ru: 'открыть в активной вкладке',
+    zh_CN: '在活动标签页打开',
   },
   'settings.mouse.bookmarks.left_click_action_open_in_new': {
     en: 'open in new tab',
     de: 'Öffne in neuem Tab',
     ru: 'открыть в новой вкладке',
+    zh_CN: '在新标签页打开',
   },
   'settings.mouse.bookmarks.new_tab_activate': {
     en: 'Activate the new tab',
     ru: 'Активировать новую вкладку',
     de: 'Neuen Tab aktivieren',
+    zh_CN: '激活新标签页',
   },
   'settings.mouse.bookmarks.new_tab_pos': {
     en: 'Position of the new tab',
     ru: 'Положение новой вкладки',
     de: 'Position des neuen Tabs',
+    zh_CN: '新标签页位置',
   },
   'settings.mouse.bookmarks.new_tab_pos_default': {
     en: 'default',
     ru: 'по умолчанию',
     de: 'Standard',
+    zh_CN: '默认',
   },
   'settings.mouse.bookmarks.new_tab_pos_after': {
     en: 'after active tab',
     de: 'Nach aktivem Tab',
     ru: 'после активной вкладки',
+    zh_CN: '活动标签页之后',
   },
   'settings.mouse.bookmarks.mid_click_action': {
     en: 'Middle-click on the bookmark',
     ru: 'Средний клик по закладке',
     de: 'Mittelklick auf Lesezeichen',
+    zh_CN: '中键点击书签',
   },
   'settings.mouse.bookmarks.mid_click_action_open_in_new': {
     en: 'open in new tab',
     de: 'Öffne in neuem Tab',
     ru: 'открыть в новой вкладке',
+    zh_CN: '在新标签页打开',
   },
   'settings.mouse.bookmarks.mid_click_action_edit': {
     en: 'edit',
     ru: 'редактировать',
     de: 'Ändern',
+    zh_CN: '编辑',
   },
   'settings.mouse.bookmarks.mid_click_action_delete': {
     en: 'delete',
     ru: 'удалить',
     de: 'Löschen',
+    zh_CN: '删除',
   },
 
   // - Keybindings
@@ -2753,26 +2784,31 @@ export const setupPageTranslations: Translations = {
     en: 'General',
     de: 'Allgemein',
     ru: 'Общие',
+    zh_CN: '通用',
   },
   'settings.kb_switching_panel': {
     en: 'Switching between panels',
     ru: 'Переключение панелей',
     de: 'Zwischen Panels wechseln',
+    zh_CN: '切换面板',
   },
   'settings.kb_switching_tab': {
     en: 'Switching between tabs',
     ru: 'Переключение вкладок',
     de: 'Zwischen Tabs wechseln',
+    zh_CN: '切换标签',
   },
   'settings.kb_create_remove_tabs': {
     en: 'Creating / Removing tabs',
     ru: 'Создание / Закрытие вкладок',
     de: 'Erstelle / Entferne Tabs',
+    zh_CN: '创建 / 删除标签',
   },
   'settings.kb_selections': {
     en: 'Selected (or active) elements',
     ru: 'Выделенные (или активные) элементы',
     de: 'Ausgewählte (oder aktive) Elemente',
+    zh_CN: '选择(或激活)元素',
   },
   'settings.kb_branches': {
     en: 'Branches',
@@ -2788,6 +2824,7 @@ export const setupPageTranslations: Translations = {
     en: 'Moving tabs',
     ru: 'Перемещение вкладок',
     de: 'Tabs verschieben',
+    zh_CN: '移动标签',
   },
   'settings.reset_kb': {
     en: 'Reset Keybindings',
@@ -3374,6 +3411,14 @@ export const setupPageTranslations: Translations = {
 	- Wähle "/sidebar/sidebar.html" für Seitenleisten Frame
 	- Wähle "/sidebery/group.html" für Gruppenseiten Frame
   - "Inspector" Tab durchsehen`,
+    zh_CN: `注意事项：要获取当前可用的 CSS 选择器，请使用调试器：
+  - 点击底部的 "复制开发工具 URL" 按钮
+  - 用一个新标签打开这个 URL
+  - 选择要检查的框架
+    - 点击调试页面右上方的矩形图标（由三个小矩形组成）
+    - 选择 "/sidebar/sidebar.html" 侧边栏框架
+    - 选择 "/sidebery/group.html" 分组页面框架
+  - 浏览 "检查" 标签`,
   },
   'styles.vars_group.other': {
     en: 'Other',
