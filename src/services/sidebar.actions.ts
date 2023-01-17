@@ -960,6 +960,17 @@ export function updatePanelBoundsDebounced(delay = 256): void {
   updatePanelBoundsTimeout = setTimeout(() => updateBounds(), delay)
 }
 
+export function getPanelForContainer(containerId: string, tab?: Tab): TabsPanel | undefined {
+  const parentTab = tab?.openerTabId ? Tabs.byId[tab.openerTabId] : undefined
+
+  // Find panel with matched moveTabCtx rule
+  const panel = Sidebar.reactive.panels.find(
+    p => Utils.isTabsPanel(p) && p.moveTabCtx === containerId
+  )
+  const isChildTab = parentTab && !parentTab.pinned
+  if (Utils.isTabsPanel(panel) && (!panel.moveTabCtxNoChild || !isChildTab)) return panel
+}
+
 /**
  * Switch current active panel by index
  */

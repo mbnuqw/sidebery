@@ -172,7 +172,13 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
         badge: 'icon_reopen',
         onClick: () => {
           const items = Tabs.getTabsInfo(Selection.get())
-          Tabs.reopen(items, { panelId: firstTab.panelId, containerId: CONTAINER_ID })
+          const panel = Sidebar.getPanelForContainer(CONTAINER_ID, firstTab)
+          if (panel && panel.id !== firstTab.panelId && !firstTab.pinned) {
+            const dst = { panelId: panel.id, containerId: CONTAINER_ID, index: panel.nextTabIndex }
+            Tabs.reopen(items, dst)
+          } else {
+            Tabs.reopen(items, { panelId: firstTab.panelId, containerId: CONTAINER_ID })
+          }
         },
       })
     }
@@ -187,7 +193,13 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
         color: c.color,
         onClick: () => {
           const items = Tabs.getTabsInfo(Selection.get())
-          Tabs.reopen(items, { panelId: firstTab.panelId, containerId: c.id })
+          const panel = Sidebar.getPanelForContainer(c.id, firstTab)
+          if (panel && panel.id !== firstTab.panelId && !firstTab.pinned) {
+            const dst = { panelId: panel.id, containerId: c.id, index: panel.nextTabIndex }
+            Tabs.reopen(items, dst)
+          } else {
+            Tabs.reopen(items, { panelId: firstTab.panelId, containerId: c.id })
+          }
         },
       })
     }
