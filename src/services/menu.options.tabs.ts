@@ -170,16 +170,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
         label: translate('menu.tab.reopen_in_default_container'),
         icon: 'icon_ff',
         badge: 'icon_reopen',
-        onClick: () => {
-          const items = Tabs.getTabsInfo(Selection.get())
-          const panel = Sidebar.getPanelForContainer(CONTAINER_ID, firstTab)
-          if (panel && panel.id !== firstTab.panelId && !firstTab.pinned) {
-            const dst = { panelId: panel.id, containerId: CONTAINER_ID, index: panel.nextTabIndex }
-            Tabs.reopen(items, dst)
-          } else {
-            Tabs.reopen(items, { panelId: firstTab.panelId, containerId: CONTAINER_ID })
-          }
-        },
+        onClick: () => Tabs.reopenInContainer(Selection.get(), CONTAINER_ID),
       })
     }
 
@@ -191,16 +182,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
         icon: c.icon,
         badge: 'icon_reopen',
         color: c.color,
-        onClick: () => {
-          const items = Tabs.getTabsInfo(Selection.get())
-          const panel = Sidebar.getPanelForContainer(c.id, firstTab)
-          if (panel && panel.id !== firstTab.panelId && !firstTab.pinned) {
-            const dst = { panelId: panel.id, containerId: c.id, index: panel.nextTabIndex }
-            Tabs.reopen(items, dst)
-          } else {
-            Tabs.reopen(items, { panelId: firstTab.panelId, containerId: c.id })
-          }
-        },
+        onClick: () => Tabs.reopenInContainer(Selection.get(), c.id),
       })
     }
 

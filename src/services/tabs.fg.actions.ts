@@ -3698,6 +3698,21 @@ export async function open(
   return true
 }
 
+export async function reopenInContainer(ids: ID[], containerId: string) {
+  sortTabIds(ids)
+  const firstTab = Tabs.byId[ids[0]]
+  if (!firstTab) return
+
+  const items = Tabs.getTabsInfo(ids)
+  const panel = Sidebar.getPanelForContainer(containerId, firstTab)
+  if (panel && panel.id !== firstTab.panelId && !firstTab.pinned) {
+    const dst = { panelId: panel.id, containerId: containerId, index: panel.nextTabIndex }
+    await Tabs.reopen(items, dst)
+  } else {
+    await Tabs.reopen(items, { panelId: firstTab.panelId, containerId })
+  }
+}
+
 export async function openInContainer(ids: ID[], containerId: string) {
   sortTabIds(ids)
   const firstTab = Tabs.byId[ids[0]]
