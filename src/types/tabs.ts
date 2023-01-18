@@ -182,6 +182,8 @@ export interface ItemInfo {
   parentId?: ID
   panelId?: ID
   container?: string
+  customTitle?: string
+  customColor?: string
 }
 
 export type TabTreeData = [panelId: ID, parentId: ID]

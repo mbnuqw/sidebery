@@ -3693,6 +3693,20 @@ export async function open(
 
     const tab = await browser.tabs.create(conf)
     idsMap[item.id] = tab.id
+
+    if (item.customTitle) {
+      const newTab = Tabs.byId[tab.id]
+      const newRTab = Tabs.reactive.byId[tab.id]
+      if (newTab) newTab.customTitle = item.customTitle
+      if (newRTab) newRTab.customTitle = item.customTitle
+    }
+
+    if (item.customColor) {
+      const newTab = Tabs.byId[tab.id]
+      const newRTab = Tabs.reactive.byId[tab.id]
+      if (newTab) newTab.customColor = item.customColor
+      if (newRTab) newRTab.customColor = item.customColor
+    }
   }
 
   return true
@@ -3746,6 +3760,8 @@ export function getTabsInfo(ids: ID[], setPanelId?: boolean): ItemInfo[] {
         pinned: tab.pinned,
         container: tab.cookieStoreId,
       }
+      if (tab.customTitle) info.customTitle = tab.customTitle
+      if (tab.customColor) info.customColor = tab.customColor
       if (setPanelId) info.panelId = tab.panelId
       items.push(info)
 
