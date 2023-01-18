@@ -59,9 +59,17 @@
       svg: use(xlink:href="#icon_remove")
     .ctx(v-if="tab.containerColor")
     .t-box(v-if="!isPinned")
-      .title(
+      input.custom-title-input(
+        v-if="tab.customTitleEdit"
+        v-model="tab.customTitle"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
         spellcheck="false"
-        :contenteditable="tab.customTitleEdit") {{tab.customTitle ?? tab.title}}
+        tabindex="-1"
+        @blur="onCustomTitleBlur"
+        @keydown="onCustomTitlteKD")
+      .title(v-else) {{tab.customTitle ?? tab.title}}
     .unread-mark(v-if="tab.unread")
 </template>
 
@@ -79,7 +87,7 @@ import { Mouse } from 'src/services/mouse'
 import { DnD } from 'src/services/drag-and-drop'
 import { Search } from 'src/services/search'
 import { Favicons } from 'src/services/favicons'
-import { RGB_COLORS } from 'src/defaults'
+import { NOID, RGB_COLORS } from 'src/defaults'
 import * as Utils from 'src/utils'
 
 const props = defineProps<{ tab: ReactiveTab }>()
@@ -129,9 +137,7 @@ function onMouseDownClose(e: MouseEvent): void {
   if (closeLock) return
   Mouse.setTarget('tab.close', props.tab.id)
   if (Tabs.editableTabId === props.tab.id) {
-    const titleEl = document.querySelector(`#tab${props.tab.id}` + ' .title') as HTMLElement | null
-    const tab = Tabs.byId[props.tab.id]
-    if (tab && titleEl) titleEl.textContent = tab.title
+    props.tab.customTitle = props.tab.title
   } else if (e.button === 0) {
     Tabs.removeTabs([props.tab.id])
   } else if (e.button === 1) {
@@ -455,4 +461,25 @@ function onError(): void {
   const tab = Tabs.byId[props.tab.id]
   if (tab) tab.favIconUrl = undefined
 }
+
+function onCustomTitleBlur() {
+  Tabs.editableTabId = NOID
+  props.tab.customTitleEdit = false
+  Tabs.saveCustomTitle(props.tab.id)
+}
+
+function onCustomTitlteKD(e: KeyboardEvent) {
+  const titleEl = e.target as HTMLElement
+
+  if (e.key === 'Enter') {
+    e.preventDefault()
+    titleEl.blur()
+  } else if (e.key === 'Escape') {
+    const tab = Tabs.byId[Tabs.editableTabId]
+    if (tab) titleEl.textContent = tab.title
+    titleEl.blur()
+    e.preventDefault()
+  }
+}
+
 </script>

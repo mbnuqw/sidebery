@@ -186,6 +186,8 @@
 .Tab[data-edit="true"] .body:before
   background-color: var(--frame-el-overlay-selected-bg)
   box-shadow: inset 0 0 0 1px var(--frame-el-overlay-selected-border)
+.Tab[data-edit="true"][data-active="true"] .body:before
+  box-shadow: inset 0 0 0 2px var(--frame-el-overlay-selected-border)
 
 .Tab[data-pin="true"] .body
   justify-content: center
@@ -532,6 +534,25 @@
     transparent var(--audio-btn-offset),
     #000000 calc(var(--audio-btn-offset) + 12px),
     #000000)
+
+.Tab[data-edit="true"] .t-box
+  margin: 0 8px 0 0
+  mask: none
+
+// ---
+// -- Custom title input
+// -
+.Tab .custom-title-input
+  position: relative
+  display: block
+  width: 100%
+  padding: 0 1px
+  margin: 0
+  font: var(--tabs-font)
+  color: var(--frame-fg)
+  background-color: transparent
+  appearance: none
+  border: none
 
 // ---
 // -- Title

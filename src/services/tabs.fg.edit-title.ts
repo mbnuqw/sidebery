@@ -1,9 +1,7 @@
-import { NOID } from 'src/defaults'
-import { ReactiveTab, Tab } from 'src/types'
 import { Tabs } from './tabs.fg'
 import * as Utils from 'src/utils'
 
-export function editTabTitle(tabIds: ID[]): void {
+export async function editTabTitle(tabIds: ID[]) {
   Tabs.sortTabIds(tabIds)
 
   const firstTabId = tabIds[0]
@@ -11,50 +9,30 @@ export function editTabTitle(tabIds: ID[]): void {
   const rTab = Tabs.reactive.byId[firstTabId]
   if (!tab || !rTab) return
 
-  const titleEl = document.querySelector(`#tab${tab.id}` + ' .title') as HTMLElement | null
-  if (!titleEl) return
-
   Tabs.editableTabId = tab.id
   rTab.customTitleEdit = true
+  rTab.customTitle = tab.customTitle ?? tab.title
 
-  titleEl.addEventListener(
-    'blur',
-    () => {
-      titleEl.removeEventListener('keydown', onTitleKeyDown)
-      Tabs.editableTabId = NOID
-      rTab.customTitleEdit = false
-      titleEl.scrollLeft = 0
-      window.getSelection()?.empty()
-      saveCustomTitle(tab, rTab, titleEl)
-    },
-    { once: true }
-  )
-  titleEl.addEventListener('keydown', onTitleKeyDown)
+  await Utils.sleep(1)
 
-  setTimeout(() => {
-    titleEl.focus()
-    window.getSelection()?.selectAllChildren(titleEl)
-  })
+  const selector = `#tab${tab.id}` + ' .custom-title-input'
+  const inputEl = document.querySelector(selector) as HTMLInputElement | null
+  if (!inputEl) return
+
+  await Utils.sleep(1)
+
+  inputEl.focus()
+  inputEl.select()
 }
 
-function onTitleKeyDown(e: KeyboardEvent) {
-  const titleEl = e.target as HTMLElement
+export function saveCustomTitle(tabId: ID) {
+  const tab = Tabs.byId[tabId]
+  const rTab = Tabs.reactive.byId[tabId]
+  if (!tab || !rTab) return
 
-  if (e.key === 'Enter') {
-    e.preventDefault()
-    titleEl.blur()
-  } else if (e.key === 'Escape') {
-    const tab = Tabs.byId[Tabs.editableTabId]
-    if (tab) titleEl.textContent = tab.title
-    titleEl.blur()
-    e.preventDefault()
-  }
-}
-
-function saveCustomTitle(tab: Tab, rTab: ReactiveTab, titleEl: HTMLElement) {
-  let value = titleEl.textContent
-  if (value === tab.title) value = ''
+  let value = rTab.customTitle
   if (value) value = value.trim()
+  if (value === tab.title) value = ''
 
   const isGroup = Utils.isGroupUrl(tab.url)
   if (isGroup && value) {
@@ -66,7 +44,6 @@ function saveCustomTitle(tab: Tab, rTab: ReactiveTab, titleEl: HTMLElement) {
     } else {
       tab.customTitle = undefined
       rTab.customTitle = null
-      titleEl.textContent = rTab.title
     }
   }
 
