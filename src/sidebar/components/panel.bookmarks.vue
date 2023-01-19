@@ -1,5 +1,9 @@
 <template lang="pug">
-.BookmarksPanel(@contextmenu.stop="onNavCtxMenu" @mouseup.right="onRightMouseUp" @drop="onDrop")
+.BookmarksPanel(
+  :data-view-mode="props.panel.viewMode"
+  @contextmenu.stop="onNavCtxMenu"
+  @mouseup.right="onRightMouseUp"
+  @drop="onDrop")
   ScrollBox(ref="scrollBox")
     .bookmarks-tree(v-if="!state.unrendered && props.panel.viewMode === 'tree'")
       BookmarkNode.root-node(v-for="node in tree" :key="node.id" :node="node" :panelId="panel.id")

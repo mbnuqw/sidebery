@@ -10,10 +10,17 @@
   transition: transform var(--d-fast), opacity var(--d-fast), z-index var(--d-fast)
   overflow: hidden
 
+#root[data-sticky-bookmarks="true"]:not([data-drag="true"]) .BookmarksPanel[data-view-mode="tree"] .ScrollBox .top-shadow
+  display: none
+
 .BookmarksPanel .bookmarks-tree
 .BookmarksPanel .bookmarks-history
   position: relative
   padding-bottom: 64px
+
+.BookmarksPanel .SubListTitle[data-folded="false"]
+  position: sticky
+  top: 0px
 
 .BookmarksPanel .group
   position: relative
