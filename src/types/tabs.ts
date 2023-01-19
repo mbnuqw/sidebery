@@ -186,5 +186,11 @@ export interface ItemInfo {
   customColor?: string
 }
 
-export type TabTreeData = [panelId: ID, parentId: ID]
-export type TabsTreeData = Record<ID, [panelId: ID, parentId: ID]>
+export interface TabTreeData {
+  id: ID
+  pid?: ID
+  tid?: ID
+  ct?: string
+  cc?: string
+}
+export type TabsTreeData = TabTreeData[]

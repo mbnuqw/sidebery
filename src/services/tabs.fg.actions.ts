@@ -1,11 +1,11 @@
 import * as Utils from 'src/utils'
-import { CONTAINER_ID, GROUP_URL, NOID, NEWID, Err, ASKID, MOVEID } from 'src/defaults'
+import { CONTAINER_ID, GROUP_URL, NOID, NEWID, Err, ASKID, MOVEID, SAMEID } from 'src/defaults'
 import { BKM_OTHER_ID, ADDON_HOST } from 'src/defaults'
 import { translate } from 'src/dict'
 import { Stored, Tab, Panel, TabCache, ActiveTabsHistory, ReactiveTab, TabStatus } from 'src/types'
 import { Notification, TabSessionData, TabsTreeData, DragInfo } from 'src/types'
 import { WindowChoosingDetails, SrcPlaceInfo, DstPlaceInfo, ItemInfo } from 'src/types'
-import { TabsPanel, PanelType } from 'src/types'
+import { TabsPanel, PanelType, TabTreeData } from 'src/types'
 import { RecentlyRemovedTabInfo, Tabs } from 'src/services/tabs.fg'
 import * as IPC from 'src/services/ipc'
 import * as Logs from 'src/services/logs'
@@ -2868,9 +2868,22 @@ export function getTabs(tabIds?: ID[]): Tab[] | undefined {
 }
 
 export function getTabsTreeData(): TabsTreeData {
-  const tree: TabsTreeData = {}
+  const tree: TabsTreeData = []
+  let prevPanelId = NOID
   for (const tab of Tabs.list) {
-    tree[tab.id] = [tab.panelId, tab.parentId]
+    const data: TabTreeData = { id: tab.id }
+
+    if (tab.panelId !== NOID) {
+      if (tab.panelId === prevPanelId) data.pid = SAMEID
+      else data.pid = tab.panelId
+    }
+    if (tab.parentId !== NOID) data.tid = tab.parentId
+    if (tab.customTitle) data.ct = tab.customTitle
+    if (tab.customColor) data.cc = tab.customColor
+
+    prevPanelId = tab.panelId
+
+    tree.push(data)
   }
   return tree
 }

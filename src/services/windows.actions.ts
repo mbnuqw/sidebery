@@ -1,5 +1,5 @@
 import * as Utils from 'src/utils'
-import { Window, TabCache, Tab, Notification } from 'src/types'
+import { Window, TabCache, Tab, Notification, TabSessionData } from 'src/types'
 import { WindowChooseOption, WindowChoosingDetails, ItemInfo } from 'src/types'
 import { NOID, MOVEID, DEFAULT_CONTAINER_ID, PRIVATE_CONTAINER_ID } from 'src/defaults'
 import { Windows } from 'src/services/windows'
@@ -222,19 +222,22 @@ export async function createWithTabs(
     if (tab.parentId > -1) cachedData.parentId = tab.parentId
     if (srcInfo.panelId) cachedData.panelId = srcInfo.panelId
     if (tab.cookieStoreId !== defaultContainerId) cachedData.ctx = tab.cookieStoreId
+    if (srcInfo.customTitle) cachedData.customTitle = srcInfo.customTitle
+    if (srcInfo.customColor) cachedData.customColor = srcInfo.customColor
     cache.push(cachedData)
 
     // Save tabs data
-    browser.sessions
-      .setTabValue(tab.id, 'data', {
-        id: tab.id,
-        panelId: srcInfo.panelId,
-        parentId: tab.parentId ?? NOID,
-        folded: false,
-      })
-      .catch(err => {
-        Logs.err('Windows.createWithTabs: Cannot set session data:', err)
-      })
+    const sessionData: TabSessionData = {
+      id: tab.id,
+      panelId: srcInfo.panelId ?? NOID,
+      parentId: tab.parentId ?? NOID,
+      folded: false,
+    }
+    if (srcInfo.customTitle) sessionData.customTitle = srcInfo.customTitle
+    if (srcInfo.customColor) sessionData.customColor = srcInfo.customColor
+    browser.sessions.setTabValue(tab.id, 'data', sessionData).catch(err => {
+      Logs.err('Windows.createWithTabs: Cannot set session data:', err)
+    })
 
     idsMap[srcInfo.id] = tab.id
   }

@@ -1,8 +1,8 @@
 import { Stored, Tab, Window, TabCache, TabsTreeData, GroupInfo, AnyFunc } from 'src/types'
-import { InstanceType } from 'src/types'
+import { InstanceType, TabTreeData } from 'src/types'
 import * as Utils from 'src/utils'
-import { ADDON_HOST, GROUP_INITIAL_TITLE, GROUP_URL, NOID, SETTINGS_OPTIONS } from 'src/defaults'
-import { URL_URL } from 'src/defaults'
+import { ADDON_HOST, GROUP_INITIAL_TITLE, GROUP_URL, NOID, SAMEID } from 'src/defaults'
+import { URL_URL, SETTINGS_OPTIONS } from 'src/defaults'
 import { Tabs } from 'src/services/tabs.bg'
 import { Windows } from 'src/services/windows'
 import { Containers } from 'src/services/containers'
@@ -466,7 +466,7 @@ export async function updateBgTabsTreeData(): Promise<void> {
     if (sidebarConnection) {
       receivingSidebarTrees.push(IPC.sidebar(window.id, 'getTabsTreeData'))
     } else {
-      receivingSidebarTrees.push(Promise.resolve({}))
+      receivingSidebarTrees.push(Promise.resolve([]))
     }
   }
 
@@ -477,23 +477,35 @@ export async function updateBgTabsTreeData(): Promise<void> {
     trees = []
   }
 
-  for (let info, window, i = 0; i < windowsList.length; i++) {
-    info = trees[i]
+  for (let tree, window, i = 0; i < windowsList.length; i++) {
+    tree = trees[i]
     window = windowsList[i]
     if (!window?.tabs) continue
+
+    const treeDataById: Record<ID, TabTreeData> = {}
+    let prevPanelId = NOID
+    for (const data of tree) {
+      if (data.pid === SAMEID) data.pid = prevPanelId
+      prevPanelId = data.pid ?? NOID
+      treeDataById[data.id] = data
+    }
 
     for (const tab of window.tabs) {
       tab.lvl = 0
       tab.parentId = NOID
       tab.panelId = NOID
+      tab.customTitle = undefined
+      tab.customColor = undefined
 
-      if (!info) continue
+      if (!tree) continue
 
-      const tabInfo = info[tab.id]
+      const tabInfo = treeDataById[tab.id]
       if (!tabInfo) continue
 
-      tab.panelId = tabInfo[0]
-      tab.parentId = tabInfo[1] ?? NOID
+      if (tabInfo.pid !== undefined) tab.panelId = tabInfo.pid
+      if (tabInfo.tid !== undefined) tab.parentId = tabInfo.tid
+      if (tabInfo.ct) tab.customTitle = tabInfo.ct
+      if (tabInfo.cc) tab.customColor = tabInfo.cc
       const parent = Tabs.byId[tab.parentId]
       if (parent) tab.lvl = parent.lvl + 1
     }

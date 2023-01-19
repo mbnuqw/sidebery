@@ -48,6 +48,8 @@ export interface SnapTab {
   lvl?: number
   pinned?: boolean
   containerId?: string
+  customTitle?: string
+  customColor?: string
 }
 export interface SnapTabState extends SnapTab {
   id?: ID

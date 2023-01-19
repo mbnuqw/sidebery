@@ -67,6 +67,8 @@ export async function createSnapshot(auto = false): Promise<Snapshot | undefined
       if (parent && parent.panelId === tab.panelId) snapTab.lvl = (parent.lvl ?? 0) + 1
       if (tab.pinned) snapTab.pinned = true
       if (tab.cookieStoreId !== CONTAINER_ID) snapTab.containerId = tab.cookieStoreId
+      if (tab.customTitle) snapTab.customTitle = tab.customTitle
+      if (tab.customColor) snapTab.customColor = tab.customColor
 
       snapTab.url = Utils.denormalizeUrl(snapTab.url) ?? snapTab.url
       snapTabsById[tab.id] = snapTab
@@ -233,7 +235,9 @@ export function minimizeSnapshot(snapshots: Snapshot[], snapshot: Snapshot): voi
             tab.pinned === tabN.pinned &&
             tab.containerId === tabN.containerId &&
             tab.panelId === tabN.panelId &&
-            tab.lvl === tabN.lvl
+            tab.lvl === tabN.lvl &&
+            tab.customTitle === tabN.customTitle &&
+            tab.customColor === tabN.customColor
           ) {
             tabs[ti] = SnapStoreMode.Unchanged
           }
@@ -505,6 +509,8 @@ async function openWindow(snapshot: NormalizedSnapshot, winIndex: number): Promi
         panelId: tab.panelId ?? NOID,
         container: tab.containerId ?? DEFAULT_CONTAINER_ID,
       }
+      if (tab.customTitle) tabInfo.customTitle = tab.customTitle
+      if (tab.customColor) tabInfo.customColor = tab.customColor
       tabsInfoByLvl[tab.lvl ?? 0] = tabInfo
 
       if (tab.pinned) tabInfo.pinned = true

@@ -63,6 +63,7 @@ export const LINUX_HOME_RE = /^\/home\/(.+?)\//
 export const PATH_SEP_RE = /\/|\\/
 
 export const NOID: ID = -1
+export const SAMEID: ID = -5
 export const NEWID: ID = -10
 export const ASKID: ID = -11
 export const MOVEID: ID = -12
