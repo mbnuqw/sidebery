@@ -419,7 +419,9 @@ export async function open(
   if (ids.length === 1 && firstBookmark?.type === 'bookmark') {
     if (useActiveTab) {
       browser.tabs.update({ url: Utils.normalizeUrl(firstBookmark.url, firstBookmark.title) })
-      if (Settings.state.autoRemoveOther) Bookmarks.removeBookmarks([firstBookmark.id])
+      if (Settings.state.autoRemoveOther && firstBookmark.parentId === BKM_OTHER_ID) {
+        Bookmarks.removeBookmarks([firstBookmark.id])
+      }
       return
     }
 
