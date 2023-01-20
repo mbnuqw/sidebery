@@ -506,7 +506,8 @@
   z-index: 1
   mask: linear-gradient(-90deg, transparent, #000000 12px, #000000)
 
-#root[data-tabs-close-btn="true"] .Tab:hover .t-box
+#root[data-tabs-close-btn="always"] .Tab .t-box
+#root[data-tabs-close-btn="hover"] .Tab:hover .t-box
   mask: linear-gradient(
     -90deg,
     transparent,
@@ -514,9 +515,12 @@
     #000000 calc(var(--close-btn-offset) + 12px),
     #000000)
 
-#root[data-tabs-close-btn="true"] .Tab[data-audible="true"]:hover .t-box
-#root[data-tabs-close-btn="true"] .Tab[data-muted="true"]:hover .t-box
-#root[data-tabs-close-btn="true"] .Tab[data-paused="true"]:hover .t-box
+#root[data-tabs-close-btn="always"] .Tab[data-audible="true"] .t-box
+#root[data-tabs-close-btn="always"] .Tab[data-muted="true"] .t-box
+#root[data-tabs-close-btn="always"] .Tab[data-paused="true"] .t-box
+#root[data-tabs-close-btn="hover"] .Tab[data-audible="true"]:hover .t-box
+#root[data-tabs-close-btn="hover"] .Tab[data-muted="true"]:hover .t-box
+#root[data-tabs-close-btn="hover"] .Tab[data-paused="true"]:hover .t-box
   mask: linear-gradient(
     -90deg,
     transparent,
@@ -638,7 +642,8 @@
   &:active
     background-color: var(--active-el-overlay-clicked-bg)
 
-.Tab:hover .close
+#root[data-tabs-close-btn="always"] .Tab .close
+#root[data-tabs-close-btn="hover"] .Tab:hover .close
   opacity: 1
 
 // ---

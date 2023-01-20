@@ -52,7 +52,7 @@
       .progress-spinner(v-if="loading === true")
       .child-count(v-if="tab.folded && tab.branchLen") {{tab.branchLen}}
     .close(
-      v-if="Settings.state.showTabRmBtn && !isPinned"
+      v-if="!isPinned && Settings.state.tabRmBtn !== 'none'"
       @mousedown.stop="onMouseDownClose"
       @mouseup.stop="onMouseUpClose"
       @contextmenu.stop.prevent)

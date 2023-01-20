@@ -1136,11 +1136,21 @@ export const setupPageTranslations: Translations = {
     de: 'Überspringe leere Panels beim Wechseln',
     zh_CN: '切换时跳过空面板',
   },
-  'settings.show_tab_rm_btn': {
-    en: 'Show close button on mouse hover',
-    ru: 'Показывать кнопку закрытия вкладки при наведении курсора',
-    de: 'Zeige "Schließen"-Knopf bei Maus-Hover',
-    zh_CN: '在鼠标悬停时显示关闭按钮',
+  'settings.tab_rm_btn': {
+    en: 'Show close button',
+    ru: 'Показывать кнопку закрытия вкладки',
+  },
+  'settings.tab_rm_btn_always': {
+    en: 'always',
+    ru: 'всегда',
+  },
+  'settings.tab_rm_btn_hover': {
+    en: 'on mouse hover',
+    ru: 'при наведении курсора',
+  },
+  'settings.tab_rm_btn_none': {
+    en: 'no',
+    ru: 'нет',
   },
   'settings.hide_inactive_panel_tabs': {
     en: 'Hide native tabs of inactive panels',

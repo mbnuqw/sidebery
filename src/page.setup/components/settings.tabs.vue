@@ -20,9 +20,12 @@ section(ref="el")
       label="settings.activate_last_tab_on_panel_switching_loaded_only"
       v-model:value="Settings.state.activateLastTabOnPanelSwitchingLoadedOnly"
       @update:value="Settings.saveDebounced(150)")
-  ToggleField(
-    label="settings.show_tab_rm_btn"
-    v-model:value="Settings.state.showTabRmBtn"
+  SelectField(
+    label="settings.tab_rm_btn"
+    optLabel="settings.tab_rm_btn_"
+    v-model:value="Settings.state.tabRmBtn"
+    :folded="true"
+    :opts="Settings.getOpts('tabRmBtn')"
     @update:value="Settings.saveDebounced(150)")
   ToggleField(
     label="settings.hide_inactive_panel_tabs"
