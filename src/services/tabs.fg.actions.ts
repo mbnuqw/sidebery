@@ -1348,6 +1348,7 @@ export function activateLastActiveTabOf(panelId: ID): void {
  * (un)Pin tabs
  */
 export function pinTabs(tabIds: ID[]): void {
+  Tabs.sortTabIds(tabIds)
   for (const tabId of tabIds) {
     const tab = Tabs.byId[tabId]
     if (!tab) continue
@@ -1362,6 +1363,7 @@ export function pinTabs(tabIds: ID[]): void {
   }
 }
 export function unpinTabs(tabIds: ID[]): void {
+  Tabs.sortTabIds(tabIds, true)
   for (const tabId of tabIds) {
     browser.tabs.update(tabId, { pinned: false }).catch(err => {
       Logs.err('Tabs.unpinTabs: Cannot unpin tab:', err)
@@ -1940,12 +1942,13 @@ export async function clearTabsCookies(tabIds: ID[]): Promise<void> {
   }
 }
 
-export function sortTabIds(tabIds: ID[]): void {
+export function sortTabIds(tabIds: ID[], reverse?: boolean): void {
   tabIds.sort((a, b) => {
     const aTab = Tabs.byId[a]
     const bTab = Tabs.byId[b]
     if (!aTab || !bTab) return 0
-    return aTab.index - bTab.index
+    if (reverse) return bTab.index - aTab.index
+    else return aTab.index - bTab.index
   })
 }
 
