@@ -339,7 +339,7 @@ function onKeySelect(dir: number): void {
     selIndex = activePanel.bounds.findIndex(s => s.id === selId)
   } else if (actPanelIsTabs) {
     selIndex = activePanel.bounds.findIndex(s => Tabs.byId[s.id]?.active)
-    if (selIndex !== -1) selIndex -= dir
+    if (Settings.state.selectActiveTabFirst && selIndex !== -1) selIndex -= dir
   }
   if (selIndex === -1 && dir < 0) selIndex = activePanel.bounds.length
 

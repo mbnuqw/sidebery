@@ -72,6 +72,7 @@ export interface SettingsState {
   tabsPanelSwitchActMove: boolean
   tabsUrlInTooltip: (typeof SETTINGS_OPTIONS.tabsUrlInTooltip)[number]
   openSubPanelOnMouseHover: boolean
+  selectActiveTabFirst: boolean
 
   // New tab position
   moveNewTabPin: (typeof SETTINGS_OPTIONS.moveNewTabPin)[number]

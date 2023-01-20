@@ -114,6 +114,11 @@ section(ref="el")
   //-   label="settings.open_sub_panel_on_mouse_hover"
   //-   v-model:value="Settings.state.openSubPanelOnMouseHover"
   //-   @update:value="Settings.saveDebounced(150)")
+  ToggleField(
+    label="settings.select_active_tab_first"
+    v-model:value="Settings.state.selectActiveTabFirst"
+    @update:value="Settings.saveDebounced(150)")
+  
   
   .sub-title {{translate('settings.new_tab_position')}}
   SelectField.-no-separator(

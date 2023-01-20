@@ -72,6 +72,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   tabsPanelSwitchActMove: false,
   tabsUrlInTooltip: 'full',
   openSubPanelOnMouseHover: false,
+  selectActiveTabFirst: true,
 
   // New tab position
   moveNewTabPin: 'start',

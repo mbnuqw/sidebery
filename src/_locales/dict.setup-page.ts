@@ -1354,6 +1354,10 @@ export const setupPageTranslations: Translations = {
     de: 'Unten',
     zh_CN: '底部',
   },
+  'settings.select_active_tab_first': {
+    en: 'Select active tab first (keyboard navigation)',
+    ru: 'Сначала выбирать активную вкладку при навигации с помощью клавиатуры',
+  },
   'settings.open_sub_panel_on_mouse_hover': {
     en: 'Open bookmarks sub-panel on mouse hover',
     ru: 'Открывать подпанель закладок при наведении мыши',
