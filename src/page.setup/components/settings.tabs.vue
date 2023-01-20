@@ -110,10 +110,10 @@ section(ref="el")
       :inactive="!Settings.state.showNewTabBtns"
       :opts="Settings.getOpts('newTabBarPosition')"
       @update:value="Settings.saveDebounced(150)")
-  ToggleField(
-    label="settings.open_sub_panel_on_mouse_hover"
-    v-model:value="Settings.state.openSubPanelOnMouseHover"
-    @update:value="Settings.saveDebounced(150)")
+  //- ToggleField(
+  //-   label="settings.open_sub_panel_on_mouse_hover"
+  //-   v-model:value="Settings.state.openSubPanelOnMouseHover"
+  //-   @update:value="Settings.saveDebounced(150)")
   
   .sub-title {{translate('settings.new_tab_position')}}
   SelectField.-no-separator(
