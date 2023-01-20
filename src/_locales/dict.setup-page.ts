@@ -1126,6 +1126,10 @@ export const setupPageTranslations: Translations = {
     de: 'Aktiviere das zuletzt aktive Tab beim Wechseln des Panels',
     zh_CN: '在面板切换时激活上一个活动标签页',
   },
+  'settings.activate_last_tab_on_panel_switching_loaded_only': {
+    en: 'Except unloaded tabs',
+    ru: 'За исключением выгруженных вкладок',
+  },
   'settings.skip_empty_panels': {
     en: 'Skip empty panels on switching',
     ru: 'Пропускать пустые контейнеры при переключении',
@@ -1382,7 +1386,6 @@ export const setupPageTranslations: Translations = {
     en: 'Only in the active panel',
     zh_CN: '仅在活动面板中',
   },
-
 
   // - New tab position
   'settings.new_tab_position': {

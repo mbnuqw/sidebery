@@ -1334,7 +1334,9 @@ export function activateLastActiveTabOf(panelId: ID): void {
     tab = Tabs.byId[tabId]
   }
   if (!tab || tab.panelId !== p.id) tab = panelTabs[0]
-  if (tab && tab.discarded) tab = panelTabs.find(t => !t.discarded)
+  if (tab && tab.discarded && Settings.state.activateLastTabOnPanelSwitchingLoadedOnly) {
+    tab = panelTabs.find(t => !t.discarded)
+  }
   if (tab) {
     browser.tabs.update(tab.id, { active: true }).catch(err => {
       Logs.err('Tabs.activateLastActiveTabOf: Cannot activate tab:', err)

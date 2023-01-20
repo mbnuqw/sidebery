@@ -51,6 +51,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   // Tabs
   warnOnMultiTabClose: 'collapsed',
   activateLastTabOnPanelSwitching: true,
+  activateLastTabOnPanelSwitchingLoadedOnly: true,
   showTabRmBtn: true,
   hideInact: false,
   activateAfterClosing: 'next',
