@@ -293,6 +293,7 @@
       "32": "./assets/logo-native.svg"
     },
     "default_title": "__MSG_ActionTitle__",
+    "default_area": "navbar",
     "theme_icons": [
       {
         "light": "./assets/logo-native-light.svg",
