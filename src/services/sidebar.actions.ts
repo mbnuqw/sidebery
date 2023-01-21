@@ -77,24 +77,17 @@ function onSidebarResize(): void {
   }, 120)
 }
 
-function onBroActionClick(tab: browser.tabs.Tab, info: browser.browserAction.OnClickData): void {
-  if (tab.windowId !== Windows.id) return
-  if (!info || info.button === 0) browser.sidebarAction.close()
-}
-
 export function setupListeners(): void {
   if (Info.isBg) Store.onKeyChange('sidebar', updateSidebarInBg)
   if (Info.isSetup) Store.onKeyChange('sidebar', updateSidebarInSetup)
   if (Info.isSidebar) {
     Store.onKeyChange('sidebar', updateSidebar)
     window.addEventListener('resize', onSidebarResize)
-    browser.browserAction.onClicked.addListener(onBroActionClick)
   }
 }
 
 export function resetListeners(): void {
   window.removeEventListener('resize', onSidebarResize)
-  browser.browserAction.onClicked.removeListener(onBroActionClick)
 }
 
 export function confirm(msg: string): Promise<boolean> {

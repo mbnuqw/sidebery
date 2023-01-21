@@ -104,7 +104,7 @@ function initToolbarButton(): void {
 
   browser.browserAction.onClicked.addListener((_, info): void => {
     if (info && info.button === 1) browser.runtime.openOptionsPage()
-    else browser.sidebarAction.open()
+    else browser.sidebarAction.toggle()
   })
 }
 

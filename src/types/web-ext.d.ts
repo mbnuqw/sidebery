@@ -515,6 +515,7 @@ declare namespace browser {
     function open(): void
     function close(): void
     function setTitle(details: SetTitleDetails): void
+    function toggle(): void
   }
 
   /**
