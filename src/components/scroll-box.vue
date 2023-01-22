@@ -39,8 +39,6 @@ let contentHeight = 0
 let preScroll = 0
 
 onMounted(() => {
-  nextTick(() => recalcScroll())
-
   if (props.preScroll) preScroll = props.preScroll
 
   if (!scrollBoxEl.value || !scrollContentEl.value) {
