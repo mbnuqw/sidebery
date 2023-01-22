@@ -288,10 +288,7 @@
   },
 
   "browser_action": {
-    "default_icon": {
-      "16": "./assets/logo-native.svg",
-      "32": "./assets/logo-native.svg"
-    },
+    "default_icon": "./assets/logo-native.svg",
     "default_title": "__MSG_ActionTitle__",
     "default_area": "navbar",
     "theme_icons": [
