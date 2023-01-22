@@ -511,11 +511,15 @@ declare namespace browser {
       tabId?: ID
       windowId?: ID
     }
+    interface IsOpenDetails {
+      windowId?: ID
+    }
 
     function open(): void
     function close(): void
     function setTitle(details: SetTitleDetails): void
     function toggle(): void
+    function isOpen(details: IsOpenDetails): Promise<boolean>
   }
 
   /**

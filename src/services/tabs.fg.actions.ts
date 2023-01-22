@@ -2177,8 +2177,17 @@ async function moveTabsToWin(
     // TODO: Option to automatically include all/folded descendant tabs?
   }
 
-  const ans = await IPC.sidebar(windowId, 'moveTabsToThisWin', tabs).catch(() => false)
-  if (!ans) {
+  let sidebarIsOpen
+  if (windowId !== Windows.id) {
+    sidebarIsOpen = await browser.sidebarAction.isOpen({ windowId }).catch(() => false)
+  }
+
+  let moved
+  if (sidebarIsOpen) {
+    moved = await IPC.sidebar(windowId, 'moveTabsToThisWin', tabs).catch(() => false)
+  }
+
+  if (!moved) {
     await browser.tabs.move(
       tabs.map(t => t.id),
       { windowId, index: -1 }
