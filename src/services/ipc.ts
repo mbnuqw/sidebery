@@ -39,8 +39,8 @@ interface MsgWaitingForAnswer {
   portName: string
 }
 
-const MSG_CONFIRMATION_MAX_DELAY = 1000
-const CONNECT_CONFIRMATION_MAX_DELAY = 1000
+const MSG_CONFIRMATION_MAX_DELAY = 5000
+const CONNECT_CONFIRMATION_MAX_DELAY = 5000
 
 let actions: Actions | undefined
 let _localType = InstanceType.unknown
