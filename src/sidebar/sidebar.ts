@@ -28,20 +28,6 @@ async function main(): Promise<void> {
   IPC.setInstanceType(InstanceType.sidebar)
   Logs.setInstanceType(InstanceType.sidebar)
 
-  // Reactivate data for vue
-  Containers.reactive = shallowReactive(Containers.reactive)
-  Sidebar.reactive = reactive(Sidebar.reactive)
-  Windows.reactive = reactive(Windows.reactive)
-  Favicons.reactive = reactive(Favicons.reactive)
-  Bookmarks.reactive = reactive(Bookmarks.reactive)
-  Tabs.reactive = reactive(Tabs.reactive)
-  DnD.reactive = reactive(DnD.reactive)
-  Permissions.reactive = reactive(Permissions.reactive)
-  Notifications.reactive = reactive(Notifications.reactive)
-  History.reactive = reactive(History.reactive)
-  Search.reactive = reactive(Search.reactive)
-  Styles.reactive = reactive(Styles.reactive)
-
   IPC.registerActions({
     reloadTab: Tabs.reloadTab,
     queryTab: Tabs.queryTab,
@@ -68,8 +54,6 @@ async function main(): Promise<void> {
     storageChanged: Store.storageChangeListener,
     connectTo: IPC.connectTo,
   })
-  IPC.setupGlobalMessageListener()
-  IPC.setupConnectionListener()
 
   await Promise.all([
     Windows.loadWindowInfo(),
@@ -81,6 +65,23 @@ async function main(): Promise<void> {
 
   IPC.setWinId(Windows.id)
   Logs.setWinId(Windows.id)
+
+  IPC.setupGlobalMessageListener()
+  IPC.setupConnectionListener()
+
+  // Reactivate data for vue
+  Containers.reactive = shallowReactive(Containers.reactive)
+  Sidebar.reactive = reactive(Sidebar.reactive)
+  Windows.reactive = reactive(Windows.reactive)
+  Favicons.reactive = reactive(Favicons.reactive)
+  Bookmarks.reactive = reactive(Bookmarks.reactive)
+  Tabs.reactive = reactive(Tabs.reactive)
+  DnD.reactive = reactive(DnD.reactive)
+  Permissions.reactive = reactive(Permissions.reactive)
+  Notifications.reactive = reactive(Notifications.reactive)
+  History.reactive = reactive(History.reactive)
+  Search.reactive = reactive(Search.reactive)
+  Styles.reactive = reactive(Styles.reactive)
 
   let app = createApp(SidebarRoot)
   app.mount('#root_container')
