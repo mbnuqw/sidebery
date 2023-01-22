@@ -156,16 +156,14 @@ export function unload(): void {
 async function restoreTabsState(): Promise<void> {
   if (!Sidebar.hasTabs) return
 
-  const windowId = browser.windows.WINDOW_ID_CURRENT
-  const isWindowTabsLockedRequest = IPC.bg('isWindowTabsLocked', Windows.id)
-  const waitGroup = await Promise.all([
-    browser.tabs.query({ windowId }),
+  const results = await Promise.allSettled([
+    browser.tabs.query({ windowId: browser.windows.WINDOW_ID_CURRENT }),
     browser.storage.local.get<Stored>('tabsDataCache'),
-    isWindowTabsLockedRequest,
+    IPC.bg('isWindowTabsLocked', Windows.id),
   ])
-  const tabs = waitGroup[0] as Tab[]
-  const storage = waitGroup[1]
-  const isWindowTabsLocked = waitGroup[2] ?? false
+  const tabs = Utils.settledOr(results[0], []) as Tab[]
+  const storage = Utils.settledOr(results[1], {})
+  const isWindowTabsLocked = Utils.settledOr(results[2], false)
 
   // Check if tabs are locked right now
   if (isWindowTabsLocked) {
@@ -173,7 +171,6 @@ async function restoreTabsState(): Promise<void> {
     storage.tabsDataCache = [isWindowTabsLocked]
   }
 
-  const storedTabsCache = storage.tabsDataCache ? storage.tabsDataCache : []
   let tabsCache: Record<ID, TabCache> | undefined
   let tabsSessionData: (TabSessionData | undefined)[] | undefined
 
@@ -181,12 +178,14 @@ async function restoreTabsState(): Promise<void> {
   if (!lastPanel) return Logs.err('Cannot load tabs: No tabs panels')
 
   // Find most appropriate cache data
-  tabsCache = findCachedData(tabs, storedTabsCache)
+  if (storage.tabsDataCache) tabsCache = findCachedData(tabs, storage.tabsDataCache)
 
   // Check prev cache
   if (!tabsCache) {
-    const { prevTabsDataCache } = await browser.storage.local.get<Stored>('prevTabsDataCache')
-    if (prevTabsDataCache) tabsCache = findCachedData(tabs, prevTabsDataCache)
+    const storage2 = await browser.storage.local.get<Stored>('prevTabsDataCache').catch(() => {
+      return {} as Stored
+    })
+    if (storage2.prevTabsDataCache) tabsCache = findCachedData(tabs, storage2.prevTabsDataCache)
   }
 
   // Restore tabs data from cache
