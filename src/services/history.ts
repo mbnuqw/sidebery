@@ -8,6 +8,7 @@ export interface HistoryState {
 
 export const History = {
   reactive: { list: [] } as HistoryState,
+  ready: false,
   allLoaded: false,
 
   ...HistoryActions,

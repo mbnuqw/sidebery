@@ -236,7 +236,7 @@ function onRemovedHistory(): void {
 }
 
 function onRemovedHistoryFg(): void {
-  if (Info.isSidebar) {
+  if (Info.isSidebar && History.ready) {
     History.unload()
   }
 }

@@ -6,7 +6,6 @@ import { Sidebar } from 'src/services/sidebar'
 import { Tabs } from './tabs.fg'
 import { Windows } from './windows'
 import { Permissions } from './permissions'
-import { SetupPage } from './setup-page'
 import { Containers } from './containers'
 
 const UNLIMITED = 1234567
@@ -17,6 +16,7 @@ let lastItemTime = 0
 
 export async function load(): Promise<void> {
   if (!browser.history) return
+  History.ready = false
 
   const endTime = Date.now()
   const startTime = endTime - LOAD_RANGE
@@ -36,9 +36,11 @@ export async function load(): Promise<void> {
   History.setupListeners()
 
   if (Sidebar.reactive.panelsById.history) Sidebar.reactive.panelsById.history.ready = true
+  History.ready = true
 }
 
 export function unload(): void {
+  History.ready = false
   History.reactive.list = []
   if (Sidebar.reactive.panelsById.history) Sidebar.reactive.panelsById.history.ready = false
   History.resetListeners()
