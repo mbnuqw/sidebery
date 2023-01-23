@@ -414,26 +414,6 @@ function onTabDetached(id: ID, info: browser.tabs.DetachInfo): void {
   }
 }
 
-/**
- * Backup tabs data
- */
-export async function backupTabsDataCache(): Promise<void> {
-  let tabsData
-  try {
-    const storage = await browser.storage.local.get<Stored>('tabsDataCache')
-    if (!storage.tabsDataCache) {
-      const depr = await browser.storage.local.get<Stored>('tabsData_v4')
-      if (depr.tabsData_v4) storage.tabsDataCache = depr.tabsData_v4
-    }
-    tabsData = storage.tabsDataCache
-  } catch (err) {
-    // Logs.push('[ERROR:BG] backupTabsDataCache: ', err.toString())
-    return
-  }
-
-  await Store.set({ prevTabsDataCache: tabsData }, 500)
-}
-
 let cacheTabsDataTimeout: number | undefined
 export function cacheTabsData(windowId: ID, tabs: TabCache[], delay = 300): void {
   if (!tabs) return

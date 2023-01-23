@@ -180,14 +180,6 @@ async function restoreTabsState(): Promise<void> {
   // Find most appropriate cache data
   if (storage.tabsDataCache) tabsCache = findCachedData(tabs, storage.tabsDataCache)
 
-  // Check prev cache
-  if (!tabsCache) {
-    const storage2 = await browser.storage.local.get<Stored>('prevTabsDataCache').catch(() => {
-      return {} as Stored
-    })
-    if (storage2.prevTabsDataCache) tabsCache = findCachedData(tabs, storage2.prevTabsDataCache)
-  }
-
   // Restore tabs data from cache
   if (tabsCache) {
     restoreTabsFromCache(tabs, tabsCache, lastPanel)

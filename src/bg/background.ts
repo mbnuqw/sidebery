@@ -67,7 +67,6 @@ void (async function main() {
   Sidebar.setupListeners()
   Tabs.setupTabsListeners()
   await Tabs.loadTabs()
-  await Tabs.backupTabsDataCache()
 
   Permissions.loadPermissions()
   Permissions.setupListeners()
@@ -401,23 +400,12 @@ function upgradeGroupPageUrl(groupUrlBase: string, oldUrl: string): string {
 
 function upgradeTabsDataCache(oldStorage: Stored, newStorage: Stored): void {
   if (oldStorage.tabsData_v4) newStorage.tabsDataCache = oldStorage.tabsData_v4
-  if (oldStorage.prevTabsData_v4) newStorage.prevTabsDataCache = oldStorage.prevTabsData_v4
 
   const sideberyUrlBase = browser.runtime.getURL('')
 
   // Update internal urls
   if (newStorage.tabsDataCache) {
     for (const winTabs of newStorage.tabsDataCache) {
-      for (const tab of winTabs) {
-        if (tab.url.startsWith(sideberyUrlBase)) {
-          tab.url = tab.url.replace('/group/group.html', '/sidebery/group.html')
-          tab.url = tab.url.replace('/url/url.html', '/sidebery/url.html')
-        }
-      }
-    }
-  }
-  if (newStorage.prevTabsDataCache) {
-    for (const winTabs of newStorage.prevTabsDataCache) {
       for (const tab of winTabs) {
         if (tab.url.startsWith(sideberyUrlBase)) {
           tab.url = tab.url.replace('/group/group.html', '/sidebery/group.html')

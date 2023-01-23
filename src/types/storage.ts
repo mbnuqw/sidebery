@@ -14,7 +14,6 @@ export interface Stored {
 
   tabsData_v4?: TabCache[][] // DEPR
   tabsDataCache?: TabCache[][]
-  prevTabsDataCache?: TabCache[][]
   prevTabsData_v4?: TabCache[][] // DEPR
 
   favicons?: string[]
