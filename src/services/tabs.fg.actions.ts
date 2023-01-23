@@ -96,7 +96,7 @@ export async function load(): Promise<void> {
   if (activeTab && !activeTab.pinned) Tabs.scrollToTab(activeTab.id)
 
   Tabs.updateNativeTabsVisibility()
-  Tabs.cacheTabsData()
+  Tabs.cacheTabsData(1000)
   Tabs.list.forEach(t => {
     Tabs.updateUrlCounter(t.url, 1)
 
