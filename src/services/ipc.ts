@@ -528,7 +528,7 @@ function onConnect(port: browser.runtime.Port) {
 
 const connectionHandlers: Map<InstanceType, ((id: ID) => void)[]> = new Map()
 export function onConnected(type: InstanceType, cb: (winOrTabId: ID) => void) {
-  if (type === InstanceType.bg) cb(NOID)
+  if (type === InstanceType.bg && state.bgConnection) cb(NOID)
   if (type === InstanceType.sidebar) state.sidebarConnections.forEach(con => cb(con.id))
   if (type === InstanceType.setup) state.setupPageConnections.forEach(con => cb(con.id))
   if (type === InstanceType.search) state.searchPopupConnections.forEach(con => cb(con.id))
