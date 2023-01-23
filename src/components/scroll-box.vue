@@ -1,6 +1,6 @@
 <template lang="pug">
 .ScrollBox(ref="el" @wheel="onWheel")
-  .progress(ref="progressEl" :data-scrolling="state.scrolling")
+  //- .progress(ref="progressEl" :data-scrolling="state.scrolling")
   .top-shadow(:data-show="state.topOverflow")
   .bottom-shadow(:data-show="state.bottomOverflow")
   .scroll-container(ref="scrollBoxEl" tabindex="-1" @scroll.passive="recalcScroll(true)")
@@ -24,7 +24,7 @@ const props = defineProps<{
 }>()
 
 const el = ref<HTMLElement | null>(null)
-const progressEl = ref<HTMLElement | null>(null)
+// const progressEl = ref<HTMLElement | null>(null)
 const scrollBoxEl = ref<HTMLElement | null>(null)
 const scrollContentEl = ref<HTMLElement | null>(null)
 
@@ -80,12 +80,12 @@ function recalcScroll(progressBar?: boolean): void {
   }
   if (contentHeight <= boxHeight) return
 
-  let scrollGripY = (contentY / (contentHeight - boxHeight)) * 100
-  if (progressEl.value) {
-    if (contentY === 0) scrollGripY = 0
-    if (scrollGripY > 100) scrollGripY = 100
-    progressEl.value.style.transform = `translateX(${scrollGripY}%)`
-  }
+  // let scrollGripY = (contentY / (contentHeight - boxHeight)) * 100
+  // if (progressEl.value) {
+  //   if (contentY === 0) scrollGripY = 0
+  //   if (scrollGripY > 100) scrollGripY = 100
+  //   progressEl.value.style.transform = `translateX(${scrollGripY}%)`
+  // }
 
   if (progressBar && !hideProgress) {
     if (!scrollingStartEndTimeout) state.scrolling = true

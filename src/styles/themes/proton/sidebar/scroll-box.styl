@@ -64,22 +64,22 @@
 // ---
 // -- Progress bar
 // -
-.ScrollBox > .progress
-  position: absolute
-  left: -100%
-  width: 100%
-  height: var(--scroll-progress-height)
-  background-color: var(--scroll-progress-bg)
-  z-index: 1000
-  opacity: 0
-  transform: translateZ(0)
-  transition: opacity .3s
-  &[data-scrolling="true"]
-    opacity: .7
+// .ScrollBox > .progress
+//   position: absolute
+//   left: -100%
+//   width: 100%
+//   height: var(--scroll-progress-height)
+//   background-color: var(--scroll-progress-bg)
+//   z-index: 1000
+//   opacity: 0
+//   transform: translateZ(0)
+//   transition: opacity .3s
+//   &[data-scrolling="true"]
+//     opacity: .7
 
-#root[data-native-scrollbar="true"]
-  .ScrollBox > .progress
-    display: none
+// #root[data-native-scrollbar="true"]
+//   .ScrollBox > .progress
+//     display: none
 
 // ---
 // -- Scrollable element
