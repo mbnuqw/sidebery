@@ -25,16 +25,6 @@ export async function loadSettings(): Promise<void> {
     stored.settings = {} as SettingsState
   }
 
-  // --- v5.0.0b28 fix
-  if ((stored?.settings.theme as string) === 'compact') {
-    stored.settings.theme = 'proton'
-    stored.settings.density = 'compact'
-  }
-  if ((stored?.settings.theme as string) === 'none') {
-    stored.settings.theme = 'proton'
-  }
-  // --- v5.0.0b28 fix
-
   Utils.normalizeObject(stored.settings, DEFAULT_SETTINGS)
   Utils.updateObject(Settings.state, stored.settings, Settings.state)
 
