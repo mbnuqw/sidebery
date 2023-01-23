@@ -43,7 +43,6 @@ void (async function main() {
   })
 
   // Init first-need stuff
-  initToolbarButton()
   IPC.setupGlobalMessageListener()
   IPC.setupConnectionListener()
   await Promise.all([
@@ -96,6 +95,8 @@ void (async function main() {
       Sidebar, Favicons, Snapshots, Menu, Permissions,
     }
   }
+
+  initToolbarButton()
 })()
 
 function initToolbarButton(): void {

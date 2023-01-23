@@ -48,8 +48,8 @@ function onSidebarResize(): void {
   clearTimeout(resizeTimeout)
   resizeTimeout = setTimeout(() => {
     // Changed width
-    if (Sidebar.reactive.width !== document.body.offsetWidth) {
-      Sidebar.reactive.width = document.body.offsetWidth
+    if (Sidebar.width !== document.body.offsetWidth) {
+      Sidebar.width = document.body.offsetWidth
       if (horizontalNavBarEl) Sidebar.reactive.horNavWidth = horizontalNavBarEl.offsetWidth
 
       if (panelsBoxEl) {
@@ -143,10 +143,10 @@ export function recalcElementSizesDebounced(delay = 500): void {
 }
 
 export function recalcSidebarSize(): void {
-  Sidebar.reactive.width = document.body.offsetWidth
-  Sidebar.height = document.body.offsetHeight
-
   setTimeout(() => {
+    Sidebar.width = document.body.offsetWidth
+    Sidebar.height = document.body.offsetHeight
+
     if (panelsBoxEl) {
       const panelsBoxBounds = panelsBoxEl.getBoundingClientRect()
       const area = Settings.state.scrollThroughTabsScrollArea
@@ -158,7 +158,7 @@ export function recalcSidebarSize(): void {
         Sidebar.scrollAreaLeftX = panelsBoxBounds.left - area
       }
     }
-  }, 120)
+  }, 500)
 }
 
 export function updateFontSize(): void {

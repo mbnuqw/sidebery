@@ -271,7 +271,7 @@ function closeSubMenu(): void {
 }
 
 function getX(menuWidth: number, x: number): number {
-  const maxX = Sidebar.reactive.width - menuWidth - 2
+  const maxX = Sidebar.width - menuWidth - 2
   if (x > maxX) return maxX
   else return x
 }

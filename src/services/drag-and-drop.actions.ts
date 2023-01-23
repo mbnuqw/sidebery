@@ -330,7 +330,7 @@ export function onDragEnter(e: DragEvent): void {
     // Native
     else {
       DnD.start({
-        x: Sidebar.reactive.width >> 1,
+        x: Sidebar.width >> 1,
         y: e.clientX,
         type: DragType.Native,
         panelId: NOID,

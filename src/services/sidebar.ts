@@ -11,7 +11,6 @@ export interface SidebarReactiveState {
   lastActivePanelId: ID
   selectedNavId: ID
 
-  width: number
   horNavWidth: number
   navBtnWidth: number
 
@@ -66,8 +65,6 @@ export const Sidebar = {
     lastActivePanelId: NOID,
     selectedNavId: NOID,
 
-    width: 0,
-    height: 0,
     horNavWidth: 0,
     navBtnWidth: 0,
 
@@ -94,6 +91,7 @@ export const Sidebar = {
   convertingPanelLock: false,
   subPanelComponent: null as SubPanelComponent | null,
 
+  width: 0,
   height: 0,
   scrollAreaRightX: 0,
   scrollAreaLeftX: 0,
