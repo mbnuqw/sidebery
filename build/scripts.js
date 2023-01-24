@@ -290,7 +290,8 @@ async function main() {
       tsconfig: 'tsconfig.json',
       charset: 'utf8',
       splitting: true,
-      minify: false, // temprorary for beta
+      minifyWhitespace: true,
+      minifySyntax: true,
       treeShaking: true,
       bundle: true,
       format: 'esm',
@@ -309,7 +310,8 @@ async function main() {
       tsconfig: 'tsconfig.json',
       charset: 'utf8',
       splitting: false,
-      minify: false, // temprorary for beta
+      minifyWhitespace: true,
+      minifySyntax: true,
       treeShaking: true,
       bundle: true,
       format: 'esm',
