@@ -172,7 +172,6 @@ async function compileTSFile(file) {
       treeShaking: true,
       bundle: true,
       format: 'esm',
-      incremental: true,
       outfile: file.outPath,
     })
     return
