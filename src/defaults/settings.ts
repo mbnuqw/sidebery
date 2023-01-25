@@ -65,6 +65,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   nativeHighlight: false,
   tabsUnreadMark: false,
   tabsUpdateMark: 'all',
+  tabsUpdateMarkFirst: true,
   tabsReloadLimit: 5,
   tabsReloadLimitNotif: true,
   showNewTabBtns: true,

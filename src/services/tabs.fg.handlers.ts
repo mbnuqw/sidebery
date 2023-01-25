@@ -532,10 +532,13 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
     ) {
       const inact = Date.now() - tab.lastAccessed
       if (!tab.active && inact > 5000) {
-        // If prev url starts with 'http' and current url same as prev
-        if (localTab.url.startsWith('http') && localTab.url === tab.url) {
-          // and if title doesn't look like url
-          if (!URL_HOST_PATH_RE.test(localTab.title) && !URL_HOST_PATH_RE.test(tab.title)) {
+        // If current url is the same as previous
+        if (localTab.url === tab.url) {
+          // Check if this title update is the first for current URL
+          const ok = Settings.state.tabsUpdateMarkFirst
+            ? !URL_HOST_PATH_RE.test(tab.title)
+            : !URL_HOST_PATH_RE.test(localTab.title) && !URL_HOST_PATH_RE.test(tab.title)
+          if (ok) {
             const panel = Sidebar.reactive.panelsById[localTab.panelId]
             localTab.updated = true
             rLocalTab.updated = true

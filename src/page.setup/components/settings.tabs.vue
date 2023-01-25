@@ -77,6 +77,11 @@ section(ref="el")
     :opts="Settings.getOpts('tabsUpdateMark')"
     :folded="true"
     @update:value="Settings.saveDebounced(150)")
+  .sub-fields
+    ToggleField(
+      label="settings.tabs_update_mark_first"
+      v-model:value="Settings.state.tabsUpdateMarkFirst"
+      @update:value="Settings.saveDebounced(150)")
   CountField.-inline(
     label="settings.tabs_reload_limit"
     v-model:value="Settings.state.tabsReloadLimit"

@@ -1312,6 +1312,10 @@ export const setupPageTranslations: Translations = {
     ru: 'выкл',
     de: 'Aus',
   },
+  'settings.tabs_update_mark_first': {
+    en: 'Including the first title change with new URL',
+    ru: 'Включая первое изменение заголовка с новым URL',
+  },
   'settings.tabs_reload_limit': {
     en: 'Limit the count of simultaneously reloading tabs',
     ru: 'Ограничить количество одновременно перезагружаемых вкладок',
