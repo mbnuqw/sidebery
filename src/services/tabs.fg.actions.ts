@@ -795,7 +795,7 @@ export function removeOtherTabs(tabIds: ID[]): void {
   removeTabs(toRm)
 }
 
-const RECENTLY_REMOVED_LIMIT_MS = 5 * 60 * 1000
+const RECENTLY_REMOVED_LIMIT_MS = 30 * 60 * 1000
 export function rememberRemoved(tabs: Tab[]) {
   let minLvl = 0
   let parent
