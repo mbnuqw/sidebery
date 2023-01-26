@@ -13,21 +13,36 @@ import { SetupPage } from './setup-page'
  * Retrieve current permissions
  */
 export async function loadPermissions(): Promise<void> {
-  const webReqPerms = ['webRequest', 'webRequestBlocking', 'proxy']
   const perms = await Promise.all([
-    browser.permissions.contains({ origins: ['<all_urls>'], permissions: webReqPerms }),
+    browser.permissions.contains({ origins: ['<all_urls>'] }),
+    browser.permissions.contains({ permissions: ['webRequest'] }),
+    browser.permissions.contains({ permissions: ['webRequestBlocking'] }),
+    browser.permissions.contains({ permissions: ['proxy'] }),
     browser.permissions.contains({ permissions: ['tabHide'] }),
     browser.permissions.contains({ permissions: ['clipboardWrite'] }),
     browser.permissions.contains({ permissions: ['history'] }),
     browser.permissions.contains({ permissions: ['bookmarks'] }),
   ])
-  Permissions.reactive.webData = perms[0]
-  Permissions.reactive.tabHide = perms[1]
-  Permissions.reactive.clipboardWrite = perms[2]
-  Permissions.reactive.history = perms[3]
-  Permissions.reactive.bookmarks = perms[4]
+  Permissions.allUrls = perms[0]
+  Permissions.webRequest = perms[1]
+  Permissions.webRequestBlocking = perms[2]
+  Permissions.proxy = perms[3]
+  Permissions.tabHide = perms[4]
+  Permissions.clipboardWrite = perms[5]
+  Permissions.history = perms[6]
+  Permissions.bookmarks = perms[7]
 
-  if (!Permissions.reactive.webData) onRemovedAllUrls()
+  Permissions.reactive.webData =
+    Permissions.allUrls &&
+    Permissions.webRequest &&
+    Permissions.webRequestBlocking &&
+    Permissions.proxy
+  Permissions.reactive.tabHide = Permissions.tabHide
+  Permissions.reactive.clipboardWrite = Permissions.clipboardWrite
+  Permissions.reactive.history = Permissions.history
+  Permissions.reactive.bookmarks = Permissions.bookmarks
+
+  if (!Permissions.reactive.webData) onRemovedWebData()
   if (!Permissions.reactive.tabHide) onRemovedTabHide()
   if (!Permissions.reactive.history) onRemovedHistory()
   if (!Permissions.reactive.bookmarks) onRemovedBookmarks()
@@ -63,47 +78,80 @@ export async function request(...perms: RequestablePermission[]): Promise<boolea
   }
 }
 
-function onAdded(info: browser.permissions.Permissions): void {
-  const allUrls = info.origins?.includes('<all_urls>')
-  const webReqPerms = ['webRequest', 'webRequestBlocking', 'proxy']
-  const webReq = webReqPerms.every(s => info.permissions?.includes(s))
-  if (allUrls && webReq) Permissions.reactive.webData = true
-  if (info.permissions?.includes('tabHide')) Permissions.reactive.tabHide = true
-  if (info.permissions?.includes('clipboardWrite')) Permissions.reactive.clipboardWrite = true
+function onAdded(info: browser.permissions.Permissions) {
+  if (info.origins?.includes('<all_urls>')) Permissions.allUrls = true
+  if (info.permissions?.includes('webRequest')) Permissions.webRequest = true
+  if (info.permissions?.includes('webRequestBlocking')) Permissions.webRequestBlocking = true
+  if (info.permissions?.includes('proxy')) Permissions.proxy = true
+  Permissions.reactive.webData =
+    Permissions.allUrls &&
+    Permissions.webRequest &&
+    Permissions.webRequestBlocking &&
+    Permissions.proxy
+
+  if (info.permissions?.includes('tabHide')) {
+    Permissions.tabHide = true
+    Permissions.reactive.tabHide = true
+  }
+  if (info.permissions?.includes('clipboardWrite')) {
+    Permissions.clipboardWrite = true
+    Permissions.reactive.clipboardWrite = true
+  }
   if (info.permissions?.includes('history')) {
+    Permissions.history = true
     Permissions.reactive.history = true
     onAddedHistory()
   }
   if (info.permissions?.includes('bookmarks')) {
+    Permissions.bookmarks = true
     Permissions.reactive.bookmarks = true
     onAddedBookmarks()
   }
 }
 
 function onRemoved(info: browser.permissions.Permissions): void {
-  const allUrls = info.origins?.includes('<all_urls>')
-  const webReqPerms = ['webRequest', 'webRequestBlocking', 'proxy']
-  const webReq = webReqPerms.some(s => info.permissions?.includes(s))
-  if (allUrls || webReq) {
+  let webDataRemoved
+  if (info.origins?.includes('<all_urls>')) {
+    Permissions.allUrls = false
+    webDataRemoved = true
+  }
+  if (info.permissions?.includes('webRequest')) {
+    Permissions.webRequest = false
+    webDataRemoved = true
+  }
+  if (info.permissions?.includes('webRequestBlocking')) {
+    Permissions.webRequestBlocking = false
+    webDataRemoved = true
+  }
+  if (info.permissions?.includes('proxy')) {
+    Permissions.proxy = false
+    webDataRemoved = true
+  }
+
+  if (webDataRemoved) {
     Permissions.reactive.webData = false
-    onRemovedAllUrls()
+    onRemovedWebData()
   }
 
   if (info.permissions?.includes('tabHide')) {
+    Permissions.tabHide = false
     Permissions.reactive.tabHide = false
     onRemovedTabHide()
   }
 
   if (info.permissions?.includes('clipboardWrite')) {
+    Permissions.clipboardWrite = false
     Permissions.reactive.clipboardWrite = false
   }
 
   if (info.permissions?.includes('history')) {
+    Permissions.history = false
     Permissions.reactive.history = false
     onRemovedHistory()
   }
 
   if (info.permissions?.includes('bookmarks')) {
+    Permissions.bookmarks = false
     Permissions.reactive.bookmarks = false
     onRemovedBookmarks()
   }
@@ -122,12 +170,12 @@ export function resetListeners(): void {
 /////////////
 // WebData
 
-function onRemovedAllUrls(): void {
-  if (Info.isBg) onRemovedAllUrlsBg()
-  else onRemovedAllUrlsFg()
+function onRemovedWebData(): void {
+  if (Info.isBg) onRemovedWebDataBg()
+  else onRemovedWebDataFg()
 }
 
-function onRemovedAllUrlsBg(): void {
+function onRemovedWebDataBg(): void {
   let containersSaveNeeded = false
   let settingsSaveNeeded = false
   for (const c of Object.values(Containers.reactive.byId)) {
@@ -166,7 +214,7 @@ function onRemovedAllUrlsBg(): void {
   }
 }
 
-function onRemovedAllUrlsFg(): void {
+function onRemovedWebDataFg(): void {
   if (Info.isSetup) {
     for (const c of Object.values(Containers.reactive.byId)) {
       if (c.proxified) c.proxified = false

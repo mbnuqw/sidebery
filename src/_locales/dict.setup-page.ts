@@ -78,9 +78,9 @@ export const setupPageTranslations: Translations = {
     zh_CN: '无',
   },
   'container.rules_include': {
-    en: 'Include URLs. Requires "Blocking web request" and "Proxy" permissions to work currently',
+    en: 'Include URLs',
     ru: 'Включать вкладки',
-    de: 'URLs einschließen. Benötigt aktuell noch "Blocking web requests" und "Proxy" Berechtigung.',
+    de: 'URLs einschließen',
     zh_CN: 'URL列表',
   },
   'container.rules_include_tooltip': {

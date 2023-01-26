@@ -17,5 +17,15 @@ export const Permissions = {
     history: false,
   } as PermissionsState,
 
+  allUrls: false,
+  webRequest: false,
+  webRequestBlocking: false,
+  proxy: false,
+
+  bookmarks: false,
+  tabHide: false,
+  clipboardWrite: false,
+  history: false,
+
   ...PermissionsActions,
 }
