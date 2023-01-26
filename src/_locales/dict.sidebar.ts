@@ -512,6 +512,18 @@ export const sidebarTranslations: Translations = {
     ru: 'Сохранить',
     de: 'Speichern',
   },
+  'notif.proxy_auth_err': {
+    en: 'Proxy authentication error',
+    ru: 'Ошибка аутентификации прокси',
+  },
+  'notif.proxy_auth_err_details': {
+    en: 'Check the proxy settings to make sure that they are correct.',
+    ru: 'Проверьте настройки прокси, чтобы убедиться, что они верны.',
+  },
+  'notif.proxy_auth_err_ctrl': {
+    en: 'Open settings',
+    ru: 'Открыть настройки',
+  },
 
   // ---
   // -- Colors

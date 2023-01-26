@@ -49,6 +49,7 @@ async function main(): Promise<void> {
     onOutsideSearchMenu: Search.menu,
     onOutsideSearchExit: Search.onOutsideSearchExit,
     notifyAboutNewSnapshot: Snapshots.notifyAboutNewSnapshot,
+    notifyAboutWrongProxyAuthData: Notifications.notifyAboutWrongProxyAuthData,
     notify: Notifications.notify,
     isDropEventConsumed: DnD.isDropEventConsumed,
     storageChanged: Store.storageChangeListener,

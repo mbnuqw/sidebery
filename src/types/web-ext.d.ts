@@ -744,10 +744,64 @@ declare namespace browser {
       url: string
     }
 
+    interface AuthReqDetails {
+      challenger: { host: string; port: string }
+      cookieStoreId: string
+      frameId: number
+      parentFrameId: number
+      incognito: boolean
+      isProxy: boolean
+      method: string
+      proxyInfo: {
+        type: proxy.ProxyType
+        host: string
+        port: string
+        username: string
+        proxyDNS: boolean
+        failoverTimeout: number
+      }
+      realm?: string
+      requestId: string
+      responseHeaders?: HttpHeader[]
+      scheme: string
+      statusCode: number
+      statusLine: string
+      tabId: number
+      thirdParty: boolean
+      timeStamp: number
+      type: ResourceType
+      url: string
+    }
+
+    interface ErrReqDetails {
+      cookieStoreId: string
+      documentUrl: string
+      error: string
+      frameId: number
+      fromCache: boolean
+      incognito: boolean
+      ip: string
+      method: string
+      originUrl: string
+      parentFrameId: number
+      proxyInfo: proxy.ProxyInfo
+      requestId: string
+      tabId: number
+      thirdParty: boolean
+      timeStamp: number
+      type: ResourceType
+      url: string
+    }
+
     type Listener = (details: ReqDetails) => BlockingResponse | void
+    type AuthListener = (details: AuthReqDetails) => BlockingResponse | void
+    type ErrorListener = (details: ErrReqDetails) => void
 
     const onBeforeSendHeaders: EventTarget<Listener, ExtraInfoSpec[]>
     const onHeadersReceived: EventTarget<Listener, ExtraInfoSpec[]>
+    const onAuthRequired: EventTarget<AuthListener, ExtraInfoSpec[]>
+    const onCompleted: EventTarget<Listener, ExtraInfoSpec[]>
+    const onErrorOccurred: EventTarget<ErrorListener, ExtraInfoSpec[]>
   }
 
   /**

@@ -1,5 +1,7 @@
 import * as Utils from 'src/utils'
 import { Notification } from 'src/types'
+import { translate } from 'src/dict'
+import { SetupPage } from './setup-page'
 
 export interface NotificationsState {
   list: Notification[]
@@ -17,6 +19,8 @@ export const Notifications = {
   finishProgress,
   updateProgress,
   setHiddenRecently,
+
+  notifyAboutWrongProxyAuthData,
 }
 
 function err(title: string, details?: string): Notification {
@@ -80,4 +84,18 @@ function setHiddenRecently(): void {
   hiddenRecentlyTimeout = setTimeout(() => {
     Notifications.hiddenRecently = false
   }, 1000)
+}
+
+// ---
+
+function notifyAboutWrongProxyAuthData(containerId: string): void {
+  const config: Notification = {
+    lvl: 'err',
+    title: translate('notif.proxy_auth_err'),
+    details: translate('notif.proxy_auth_err_details'),
+    ctrl: translate('notif.proxy_auth_err_ctrl'),
+    callback: () => SetupPage.open(`settings_containers.${containerId}`),
+  }
+
+  Notifications.notify(config)
 }

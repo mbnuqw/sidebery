@@ -88,6 +88,7 @@ export type SidebarActions = {
 
   notify: (config: Notification, timeout?: number) => void
   notifyAboutNewSnapshot: () => void
+  notifyAboutWrongProxyAuthData: (containerId: string) => void
 
   storageChanged: (newValues: Stored) => void
   connectTo: (dstType: InstanceType, dstWinId?: ID, dstTabId?: ID) => void

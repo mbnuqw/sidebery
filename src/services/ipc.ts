@@ -3,6 +3,7 @@ import { ActionsType } from 'src/types'
 import { NOID } from 'src/defaults'
 import * as Logs from 'src/services/logs'
 import { getInstanceName } from './info.actions'
+import { Windows } from './windows'
 
 export interface PortNameData {
   srcType: InstanceType
@@ -252,6 +253,26 @@ export function sendToSidebars<T extends InstanceType.sidebar, A extends Actions
   state.sidebarConnections.forEach(con => {
     send({ dstType: InstanceType.sidebar, dstWinId: con.id, action, args })
   })
+}
+export function sendToLastFocusedSidebar<T extends InstanceType.sidebar, A extends ActionsKeys<T>>(
+  action: A,
+  ...args: Parameters<ActionsType<T>[A]>
+): void {
+  if (state.sidebarConnections.size === 1) {
+    const [connection] = state.sidebarConnections.values()
+    if (connection) sidebar(connection.id, action, ...args)
+    return
+  }
+
+  if (Windows.lastFocusedWinId === undefined) {
+    sendToSidebars(action, ...args)
+    return
+  }
+
+  const win = Windows.byId[Windows.lastFocusedWinId]
+  if (win) {
+    sidebar(Windows.lastFocusedWinId, action, ...args)
+  }
 }
 
 /**

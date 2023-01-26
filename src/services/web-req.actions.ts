@@ -4,6 +4,7 @@ import { WebReq } from 'src/services/web-req'
 import { Containers } from 'src/services/containers'
 import { Tabs } from 'src/services/tabs.bg'
 import * as IPC from 'src/services/ipc'
+import * as Logs from 'src/services/logs'
 
 type optBlockingResponse = browser.webRequest.BlockingResponse | void
 
@@ -17,6 +18,8 @@ const BG_URL = browser.runtime.getURL('bg/background.html')
 let handledReqId: string | undefined
 let includeHostsRules: IncludeRule[] = []
 let excludeHostsRules: Record<ID, (RegExp | string)[]> = {}
+let proxyAuthCredentials: Record<string, browser.webRequest.AuthCredentials> = {}
+const pendingAuthRequests: Set<string> = new Set()
 const incHistory: Record<ID, string | null> = {}
 let ipCheckCtx: ID | undefined
 let userAgents: Record<ID, string> = {}
@@ -116,11 +119,21 @@ export function updateReqHandlers(): void {
   WebReq.containersProxies = {}
   includeHostsRules = []
   excludeHostsRules = {}
+  proxyAuthCredentials = {}
+  pendingAuthRequests.clear()
   userAgents = {}
 
   for (const ctr of Object.values(Containers.reactive.byId)) {
     // Proxy
-    if (ctr.proxified && ctr.proxy) WebReq.containersProxies[ctr.id] = { ...ctr.proxy }
+    if (ctr.proxified && ctr.proxy) {
+      WebReq.containersProxies[ctr.id] = { ...ctr.proxy }
+      if (ctr.proxy.type.startsWith('http') && ctr.proxy.username && ctr.proxy.password) {
+        proxyAuthCredentials[ctr.id] = {
+          username: ctr.proxy.username,
+          password: ctr.proxy.password,
+        }
+      }
+    }
 
     // Include rules
     if (ctr.includeHostsActive) {
@@ -167,6 +180,7 @@ export function updateReqHandlers(): void {
   const hasExcRules = Object.keys(excludeHostsRules).length > 0
   const hasProxy = Object.keys(WebReq.containersProxies).length > 0
   const hasCustomUserAgents = Object.keys(userAgents).length > 0
+  const hasAuthProxy = hasProxy && Object.values(proxyAuthCredentials).length > 0
 
   // Update proxy badges
   if (hasProxy) {
@@ -191,6 +205,9 @@ export function updateReqHandlers(): void {
 
   if (hasIncRules || hasExcRules || hasProxy) turnOnReqHandler()
   else turnOffReqHandler()
+
+  if (hasAuthProxy) turnOnAuthHandler()
+  else turnOffAuthHandler()
 
   if (hasCustomUserAgents) turnOnBeforeSendHeadersHandler()
   else turnOffBeforeSendHeadersHandler()
@@ -271,6 +288,49 @@ function proxyReqHandler(info: browser.proxy.RequestDetails): browser.proxy.Prox
   }
 }
 
+function proxyAuthReqHandler(
+  info: browser.webRequest.AuthReqDetails
+): browser.webRequest.BlockingResponse | void {
+  if (!info.isProxy) return
+
+  const authCredentials = proxyAuthCredentials[info.cookieStoreId]
+  if (!authCredentials) return
+
+  if (pendingAuthRequests.has(info.requestId)) {
+    return { cancel: true }
+  } else {
+    pendingAuthRequests.add(info.requestId)
+  }
+
+  return { authCredentials }
+}
+
+function proxyAuthCompletedHandler(info: browser.webRequest.ReqDetails) {
+  if (pendingAuthRequests.has(info.requestId)) {
+    cancelDebouncedProxyAuthErrorHandler(info.cookieStoreId)
+    pendingAuthRequests.delete(info.requestId)
+  }
+}
+
+function proxyAuthWithErrorHandler(info: browser.webRequest.ErrReqDetails) {
+  if (!pendingAuthRequests.has(info.requestId)) return
+  proxyAuthErrorHandlerDebounced(info.cookieStoreId, info.error, 640)
+}
+
+const proxyAuthErrorHandlerTimeouts: Map<string, number> = new Map()
+function proxyAuthErrorHandlerDebounced(containerId: string, error: string, delay: number) {
+  let timeout = proxyAuthErrorHandlerTimeouts.get(containerId)
+  clearTimeout(timeout)
+  timeout = setTimeout(() => {
+    Logs.warn(`WebReq.proxyAuthWithErrorHandler: ${error}`)
+    IPC.sendToLastFocusedSidebar('notifyAboutWrongProxyAuthData', containerId)
+  }, delay)
+  proxyAuthErrorHandlerTimeouts.set(containerId, timeout)
+}
+function cancelDebouncedProxyAuthErrorHandler(containerId: string) {
+  clearTimeout(proxyAuthErrorHandlerTimeouts.get(containerId))
+}
+
 function turnOnReqHandler(): void {
   if (!browser.proxy) return
   if (!browser.proxy.onRequest.hasListener(proxyReqHandler)) {
@@ -282,6 +342,33 @@ function turnOffReqHandler(): void {
   if (!browser.proxy) return
   if (browser.proxy.onRequest.hasListener(proxyReqHandler)) {
     browser.proxy.onRequest.removeListener(proxyReqHandler)
+  }
+}
+
+function turnOnAuthHandler(): void {
+  if (!browser.proxy || !browser.webRequest) return
+  const filter = { urls: ['<all_urls>'] }
+  if (!browser.webRequest.onAuthRequired.hasListener(proxyAuthReqHandler)) {
+    browser.webRequest.onAuthRequired.addListener(proxyAuthReqHandler, filter, ['blocking'])
+  }
+  if (!browser.webRequest.onCompleted.hasListener(proxyAuthCompletedHandler)) {
+    browser.webRequest.onCompleted.addListener(proxyAuthCompletedHandler, filter)
+  }
+  if (!browser.webRequest.onErrorOccurred.hasListener(proxyAuthWithErrorHandler)) {
+    browser.webRequest.onErrorOccurred.addListener(proxyAuthWithErrorHandler, filter)
+  }
+}
+
+function turnOffAuthHandler(): void {
+  if (!browser.proxy || !browser.webRequest) return
+  if (browser.webRequest.onAuthRequired.hasListener(proxyAuthReqHandler)) {
+    browser.webRequest.onAuthRequired.removeListener(proxyAuthReqHandler)
+  }
+  if (browser.webRequest.onCompleted.hasListener(proxyAuthCompletedHandler)) {
+    browser.webRequest.onCompleted.removeListener(proxyAuthCompletedHandler)
+  }
+  if (browser.webRequest.onErrorOccurred.hasListener(proxyAuthWithErrorHandler)) {
+    browser.webRequest.onErrorOccurred.removeListener(proxyAuthWithErrorHandler)
   }
 }
 
