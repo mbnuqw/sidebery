@@ -3,6 +3,8 @@ import { Info } from 'src/services/info'
 import { Settings } from 'src/services/settings'
 import { Styles } from 'src/services/styles'
 import * as IPC from 'src/services/ipc'
+import { SetupPage } from 'src/services/setup-page'
+import { SETUP_URL } from 'src/defaults'
 
 void (async function () {
   Info.setInstanceType(InstanceType.proxy)
@@ -61,7 +63,8 @@ void (async function () {
 
   // Configure
   confBtnEl.addEventListener('click', async () => {
-    let url = browser.runtime.getURL('settings/settings.html')
+    let url = SETUP_URL
+
     const tabs = await browser.tabs.query({ currentWindow: true })
     const activeTab = tabs.find(t => t.active)
     const existedTab = tabs.find(t => t.url.startsWith(url))
