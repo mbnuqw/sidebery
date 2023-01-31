@@ -14,7 +14,6 @@ Firefox extension for managing tabs and bookmarks in sidebar.
 
 > Note: Before installing the beta version make sure to save backup of the addon data (Sidebery settings / Help / Export).
 
----
 
 ## About
 
@@ -29,7 +28,6 @@ Sidebery is a highly configurable sidebar with panels of different types. Some o
 - Snapshots (saved windows/panels/tabs)
 - ...and more
 
----
 
 ## Build
 
@@ -47,8 +45,30 @@ Install dependencies: `npm install`
 Build and watch for changes: `npm run dev`  
 Run browser with addon: `npm run dev.run -- <firefox-executable>`  
 
----
 
 ## Licence
 
 MIT
+
+
+## Donate
+
+You can donate to this project. Any donations will motivate me to spend more time on Sidebery and will be greatly appreciated.
+
+<details><summary><b> Bitcoin (BTC): </b></summary>
+
+```
+bc1q2drx3x5pfl0c68urwztvjrwgksg9u3l7mn4g4m
+```
+![btc-bc1q2drx3x5pfl0c68urwztvjrwgksg9u3l7mn4g4m](https://user-images.githubusercontent.com/6276694/215584021-b1eee3ab-ca62-4a81-acb4-cd69c27c734a.png)
+
+</details>
+
+<details><summary><b> Ethereum (ETH): </b></summary>
+
+```
+0x11667D20AB328194AEEc68F9385CCcf713607929
+```
+![eth-0x11667D20AB328194AEEc68F9385CCcf713607929](https://user-images.githubusercontent.com/6276694/215587549-39505f92-0f80-43ec-bec1-42bf8cd570c4.png)
+
+</details>
