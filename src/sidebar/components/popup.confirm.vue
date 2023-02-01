@@ -5,7 +5,7 @@
     .msg {{Sidebar.reactive.confirm?.msg}}
     .ctrls
       .btn(@click="Sidebar.finishConfirmation(true)") {{translate('btn.yes')}}
-      .btn.-warn(@click="Sidebar.finishConfirmation(false)") {{translate('btn.no')}}
+      .btn(@click="Sidebar.finishConfirmation(false)") {{translate('btn.no')}}
 </template>
 
 <script lang="ts" setup>
