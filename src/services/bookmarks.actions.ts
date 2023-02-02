@@ -1377,9 +1377,17 @@ export async function openAsTabsPanel(node: Bookmark): Promise<void> {
 
   if (noTabsPanels) await Tabs.load()
 
-  // Open tabs
+  // Get top-lvl ids for opening
   const ids = node.children?.map(n => n.id) ?? []
-  if (ids) await Bookmarks.open(ids, { panelId: tabsPanel.id })
+
+  // Preserve tree structure if title of target folder and first child are the same
+  if (node.children?.length) {
+    const includeParent = node.title === node.children[0]?.title
+    if (includeParent) ids.unshift(node.id)
+  }
+
+  // Open tabs
+  if (ids.length) await Bookmarks.open(ids, { panelId: tabsPanel.id })
 }
 
 export async function copyUrls(ids: ID[]): Promise<void> {
