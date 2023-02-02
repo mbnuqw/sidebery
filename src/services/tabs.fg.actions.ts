@@ -3486,7 +3486,7 @@ export async function createFromDragEvent(e: DragEvent, dst: DstPlaceInfo): Prom
       browser.tabs
         .create({
           active: true,
-          url: result.url,
+          url: Utils.normalizeUrl(result.url),
           index: dst.index,
           cookieStoreId: container?.id,
           windowId: Windows.id,
