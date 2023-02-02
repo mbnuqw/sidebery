@@ -53,7 +53,7 @@ MIT
 
 ## Donate
 
-You can donate to this project. Any donations will motivate me to spend more time on Sidebery and will be greatly appreciated.
+You can donate to this project, which will motivate me to spend more time on Sidebery.
 
 <details><summary><b> Bitcoin (BTC): </b></summary>
 
