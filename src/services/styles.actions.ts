@@ -216,8 +216,9 @@ function parseFirefoxTheme(theme: browser.theme.Theme): ParsedTheme {
   // ---
   // -- Parsing/generating/normalizing vars
   // -
+  const isProton = Settings.state.theme === 'proton'
   // Proton theme colors
-  per_theme_stuff: if (Settings.state.theme === 'proton') {
+  per_theme_stuff: if (isProton) {
     // Frame
     parsed.vars.frame_bg = toColorString(frame_bg)
     parsed.frameBg = Utils.toRGBA(parsed.vars.frame_bg)
@@ -276,9 +277,11 @@ function parseFirefoxTheme(theme: browser.theme.Theme): ParsedTheme {
     // Frame
     const toolbarBgAvrg = (parsed.toolbarBg[0] + parsed.toolbarBg[1] + parsed.toolbarBg[2]) / 3
     if (toolbarBgAvrg < 36) {
-      parsed.frameBg = shiftColor(parsed.toolbarBg, 0.1 + (toolbarBgAvrg * 0.024) ** 2)
+      parsed.frameBg = shiftColor(parsed.toolbarBg, 0.1 + (toolbarBgAvrg * 0.023) ** 2)
+    } else if (toolbarBgAvrg < 200) {
+      parsed.frameBg = shiftColor(parsed.toolbarBg, 0.8)
     } else {
-      parsed.frameBg = shiftColor(parsed.toolbarBg, 0.85)
+      parsed.frameBg = shiftColor(parsed.toolbarBg, 0.9)
     }
     if (parsed.frameBg) parsed.vars.frame_bg = toColorString(parsed.frameBg)
     parsed.frameFg = parsed.toolbarFg
@@ -361,12 +364,7 @@ function parseFirefoxTheme(theme: browser.theme.Theme): ParsedTheme {
   }
 
   // Check colors of active element for proton theme
-  if (
-    Settings.state.theme === 'proton' &&
-    !parsed.vars.accent &&
-    parsed.actElBg &&
-    parsed.frameBg
-  ) {
+  if (isProton && !parsed.vars.accent && parsed.actElBg && parsed.frameBg) {
     const actElBgAvrg = (parsed.actElBg[0] + parsed.actElBg[1] + parsed.actElBg[2]) / 3
     const frameBgAvrg = (parsed.frameBg[0] + parsed.frameBg[1] + parsed.frameBg[2]) / 3
     if (Math.abs(actElBgAvrg - frameBgAvrg) < 8) {
@@ -429,7 +427,7 @@ function normalizeContrast(parsed: ParsedTheme) {
     toolbarContrastOk = Math.abs(toolbarFgAvrg - toolbarBgAvrg) > CONTRAST_THRESHOLD
   }
 
-  if (!frameContrastOk && toolbarContrastOk) {
+  if (!frameContrastOk && toolbarContrastOk && Settings.state.theme === 'proton') {
     parsed.frameBg = parsed.toolbarBg
     parsed.vars.frame_bg = parsed.vars.toolbar_bg
     parsed.frameFg = parsed.toolbarFg
