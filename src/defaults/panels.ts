@@ -70,7 +70,6 @@ export const TABS_PANEL_STATE: TabsPanel = {
   ready: true,
 
   updatedTabs: [],
-  actTabs: [],
   startTabIndex: -1,
   endTabIndex: -1,
   nextTabIndex: -1,

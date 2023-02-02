@@ -55,7 +55,6 @@ export const DEFAULT_SETTINGS: SettingsState = {
   tabRmBtn: 'hover',
   hideInact: false,
   activateAfterClosing: 'next',
-  activateAfterClosingFallbackToHistory: true,
   activateAfterClosingStayInPanel: false,
   activateAfterClosingGlobal: false,
   activateAfterClosingNoFolded: true,

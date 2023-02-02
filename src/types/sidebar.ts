@@ -213,7 +213,6 @@ export interface TabsPanel extends PanelCommonState, TabsPanelConfig {
   pinnedTabs: ReactiveTab[]
   updatedTabs: ID[]
   selNewTab: boolean
-  actTabs: ID[]
   startTabIndex: number
   endTabIndex: number
   nextTabIndex: number

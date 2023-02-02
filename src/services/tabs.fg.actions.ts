@@ -3182,7 +3182,6 @@ export function findSuccessorTab(tab: Tab, exclude?: ID[]): Tab | undefined {
   const skipDiscarded = Settings.state.activateAfterClosingNoDiscarded
   const dirNext = Settings.state.activateAfterClosing === 'next'
   const dirPrev = Settings.state.activateAfterClosing === 'prev'
-  const historyFallback = Settings.state.activateAfterClosingFallbackToHistory
   const stayInPanel = Settings.state.activateAfterClosingStayInPanel
 
   if (Tabs.removingTabs && !exclude) exclude = Tabs.removingTabs
@@ -3240,7 +3239,6 @@ export function findSuccessorTab(tab: Tab, exclude?: ID[]): Tab | undefined {
     mode = SuccessorSearchMode.InPanelTick
   }
 
-  let forcedInGlobalHistory = false
   let inBranch = true
   let upI = tab.index - 1
   let downI = tab.index + 1
@@ -3283,14 +3281,20 @@ export function findSuccessorTab(tab: Tab, exclude?: ID[]): Tab | undefined {
           if (stayInPanel && (discardedFallback || foldedFallback)) {
             return discardedFallback || foldedFallback
           }
-          if (historyFallback) {
-            // Continue search in history
-            forcedInGlobalHistory = true
-            break
-          } else {
-            // Continue search in global mode
-            mode = SuccessorSearchMode.GlobalTick
+
+          // Check the last active tab of the previous active tabs panel
+          const prevTabsPanelHistory = Tabs.getActiveTabsHistory(Sidebar.lastTabsPanelId)
+          if (prevTabsPanelHistory?.actTabs.length) {
+            const panelId = Sidebar.lastTabsPanelId
+            const actTabs = prevTabsPanelHistory.actTabs
+            const prevActTab = Tabs.byId[actTabs[actTabs.length - 1]]
+            if (prevActTab && prevActTab.panelId === panelId && !prevActTab.discarded) {
+              return prevActTab
+            }
           }
+
+          // Continue search in global mode
+          mode = SuccessorSearchMode.GlobalTick
         }
         dir *= -1
         continue
@@ -3339,9 +3343,9 @@ export function findSuccessorTab(tab: Tab, exclude?: ID[]): Tab | undefined {
   }
 
   // Previously active tab
-  if (Settings.state.activateAfterClosing === 'prev_act' || forcedInGlobalHistory) {
+  if (Settings.state.activateAfterClosing === 'prev_act') {
     let history: ActiveTabsHistory
-    if (Settings.state.activateAfterClosingGlobal || forcedInGlobalHistory) {
+    if (Settings.state.activateAfterClosingGlobal) {
       history = Tabs.activeTabsGlobal
     } else {
       history = Tabs.activeTabsPerPanel[tab.panelId] || Tabs.activeTabsGlobal
@@ -3364,7 +3368,7 @@ export function findSuccessorTab(tab: Tab, exclude?: ID[]): Tab | undefined {
       }
 
       // Skip invisible tab
-      if ((skipFolded || forcedInGlobalHistory) && prev && prev.invisible) continue
+      if (skipFolded && prev && prev.invisible) continue
 
       if (targetId !== tab.id && prev) {
         target = prev
