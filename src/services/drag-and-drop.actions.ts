@@ -972,8 +972,11 @@ let dragEndedRecentlyTimeout: number | undefined
 export async function onDragEnd(e: DragEvent): Promise<void> {
   resetDragPointer()
   DnD.resetOther()
+  let mode = DnD.dropMode
   if (DnD.reactive.isStarted) DnD.reset()
   Selection.resetSelection()
+
+  if (e.ctrlKey) mode = 'copy'
 
   // Dropped outside sidebar
   if (
@@ -1013,12 +1016,14 @@ export async function onDragEnd(e: DragEvent): Promise<void> {
 
     if (fromTabs && info.items?.length) {
       const dst = { windowId: NEWID, incognito: Windows.incognito, panelId: info.panelId }
-      Tabs.move(info.items, {}, dst)
+      if (mode === 'copy') Tabs.open(info.items, dst)
+      else Tabs.move(info.items, {}, dst)
     }
 
     if (fromTabsPanel && info.items?.length) {
       const dst = { windowId: NEWID, incognito: Windows.incognito, panelId: info.panelId }
-      Tabs.move(info.items, {}, dst)
+      if (mode === 'copy') Tabs.open(info.items, dst)
+      else Tabs.move(info.items, {}, dst)
     }
 
     if (fromBookmarks && info.items?.length) {
