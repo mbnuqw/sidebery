@@ -329,8 +329,10 @@ export function onDragEnter(e: DragEvent): void {
 
     // Native
     else {
+      const panel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+      const leftOffset = panel?.leftOffset ?? 0
       DnD.start({
-        x: Sidebar.width >> 1,
+        x: (Sidebar.width >> 1) + leftOffset,
         y: e.clientX,
         type: DragType.Native,
         panelId: NOID,
