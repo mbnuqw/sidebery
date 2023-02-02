@@ -124,7 +124,7 @@ section(ref="el")
   ToggleField(
     label="settings.activate_on_mouseup"
     v-model:value="Settings.state.activateOnMouseUp"
-    @update:value="Settings.saveDebounced(150)")
+    @update:value="onActivateOnMouseUpUpdate")
   ToggleField(
     label="settings.shift_selection_from_active"
     v-model:value="Settings.state.shiftSelAct"
@@ -135,7 +135,7 @@ section(ref="el")
     v-model:value="Settings.state.tabLongLeftClick"
     :opts="Settings.getOpts('tabLongLeftClick')"
     :folded="true"
-    @update:value="Settings.saveDebounced(150)")
+    @update:value="onTabLongLeftClickUpdate")
   SelectField(
     label="settings.tab_long_right_click"
     optLabel="settings.tab_action_"
@@ -260,6 +260,20 @@ function onTabsSecondClickActPrevUpdate(value: boolean): void {
 
 function onTabDoubleClickUpdate(value: string): void {
   if (value !== 'none') Settings.state.tabsSecondClickActPrev = false
+  Settings.saveDebounced(150)
+}
+
+function onActivateOnMouseUpUpdate(value: boolean): void {
+  if (!value && Settings.state.tabLongLeftClick === 'edit_title') {
+    Settings.state.tabLongLeftClick = 'none'
+  }
+  Settings.saveDebounced(150)
+}
+
+function onTabLongLeftClickUpdate(value: string): void {
+  if (value === 'edit_title' && !Settings.state.activateOnMouseUp) {
+    Settings.state.activateOnMouseUp = true
+  }
   Settings.saveDebounced(150)
 }
 </script>
