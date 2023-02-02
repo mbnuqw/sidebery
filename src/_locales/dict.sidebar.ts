@@ -219,6 +219,10 @@ export const sidebarTranslations: Translations = {
     en: 'Bookmarks',
     ru: 'Закладки',
   },
+  'sub_panel.bookmarks_panel.root_title': {
+    en: 'All Bookmarks',
+    ru: 'Все закладки',
+  },
   'sub_panel.rct_panel.title': {
     en: 'Recently closed tabs',
     ru: 'Недавно закрытые вкладки',

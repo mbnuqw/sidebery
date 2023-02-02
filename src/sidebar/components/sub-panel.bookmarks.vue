@@ -65,7 +65,7 @@ const bookmarksRoot = computed<Bookmark | undefined>(() => {
     children: Bookmarks.reactive.tree,
     index: 0,
     parentId: NOID,
-    title: translate('panel.bookmarks.title'),
+    title: translate('sub_panel.bookmarks_panel.root_title'),
   }
 })
 
