@@ -7,7 +7,11 @@
   @dblclick.stop=""
   @mouseleave="onMouseLeave"
   @mouseenter="onMouseEnter")
-  .overlay(@click="closeSubPanel")
+  .overlay(
+    data-dnd-type="tab"
+    @dragenter="onDragEnter"
+    @click="closeSubPanel"
+    @drop="onDrop")
   .sub-panel
     .header
       .title {{titles[state.type]}}
@@ -16,12 +20,13 @@
 </template>
 
 <script lang="ts" setup>
-import { MenuType, TabsPanel, SubPanelComponent, SubPanelType } from 'src/types'
+import { MenuType, TabsPanel, SubPanelComponent, SubPanelType, DropType } from 'src/types'
 import { reactive, computed } from 'vue'
 import { translate } from 'src/dict'
 import { Menu } from 'src/services/menu'
 import { Selection } from 'src/services/selection'
 import { Settings } from 'src/services/settings'
+import { DnD } from 'src/services/drag-and-drop'
 import ClosedTabsSubPanel from './sub-panel.closed-tabs.vue'
 import BookmarksSubPanel from './sub-panel.bookmarks.vue'
 
@@ -72,6 +77,14 @@ function open(type: SubPanelType, panel: TabsPanel) {
   if (Menu.isOpen) Menu.close()
 }
 
+function onDrop(): void {
+  DnD.reactive.dstType = DropType.Tabs
+}
+
+function onDragEnter(): void {
+  closeSubPanel()
+}
+
 function onMouseUp(e: MouseEvent): void {
   if (Selection.isSet()) Selection.resetSelection()
   if (Menu.isOpen) Menu.close()
@@ -85,6 +98,7 @@ function onMouseUp(e: MouseEvent): void {
 let onMouseLeaveTimeout: number | undefined
 function onMouseLeave(): void {
   if (Menu.isOpen) return
+  if (DnD.items.length) return
 
   clearTimeout(onMouseLeaveTimeout)
   onMouseLeaveTimeout = setTimeout(() => {
