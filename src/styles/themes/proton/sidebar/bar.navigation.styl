@@ -45,6 +45,7 @@
     padding: calc(var(--nav-btn-margin) - var(--s-darker-border-width, 0px)) 0 0
     flex-direction: column
     align-items: center
+    max-height: 100%
     &[data-layout="left"]
       flex-grow: 1
     &[data-layout="right"]
@@ -73,8 +74,8 @@
   grid-gap: var(--nav-btn-margin)
 .NavigationBar.-vert  .main-items
   flex-direction: column
-.NavigationBar.-vert[data-layout="inline"] .main-items
   flex-wrap: nowrap
+  max-height: 100%
 
 // ---
 // -- Navigational button
