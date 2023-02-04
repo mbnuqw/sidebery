@@ -284,10 +284,15 @@ function onTabCreated(tab: Tab, attached?: boolean): void {
       if (parent && parent.panelId === tab.panelId) {
         // If parent tab is folded
         if (parent.folded && !attached) {
-          // Trigger flash animation
-          const rParent = Tabs.reactive.byId[parent.id]
-          if (rParent) Tabs.triggerFlashAnimation(rParent)
-          // TODO: or unfold branch (add an option)
+          // Expand branch
+          if (Settings.state.autoExpandTabsOnNew) {
+            Tabs.expTabsBranch(parent.id)
+          }
+          // or trigger the flash animation
+          else {
+            const rParent = Tabs.reactive.byId[parent.id]
+            if (rParent) Tabs.triggerFlashAnimation(rParent)
+          }
         }
 
         let insideBranch = false

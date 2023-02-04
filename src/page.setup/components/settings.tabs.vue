@@ -228,6 +228,11 @@ section(ref="el")
     :inactive="!Settings.state.tabsTree"
     v-model:value="Settings.state.autoExpandTabs"
     @update:value="Settings.saveDebounced(150)")
+  ToggleField(
+    label="settings.auto_exp_tabs_on_new"
+    :inactive="!Settings.state.tabsTree"
+    v-model:value="Settings.state.autoExpandTabsOnNew"
+    @update:value="Settings.saveDebounced(150)")
   SelectField(
     label="settings.rm_child_tabs"
     optLabel="settings.rm_child_tabs_"

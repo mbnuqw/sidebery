@@ -95,6 +95,7 @@ export interface SettingsState {
   autoFoldTabs: boolean
   autoFoldTabsExcept: (typeof SETTINGS_OPTIONS.autoFoldTabsExcept)[number]
   autoExpandTabs: boolean
+  autoExpandTabsOnNew: boolean
   rmChildTabs: (typeof SETTINGS_OPTIONS.rmChildTabs)[number]
   tabsChildCount: boolean
   tabsLvlDots: boolean

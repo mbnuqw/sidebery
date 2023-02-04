@@ -1740,6 +1740,10 @@ export const setupPageTranslations: Translations = {
     de: 'Tabs bei Aktivierung automatisch ausklappen',
     zh_CN: '激活时自动展开标签页',
   },
+  'settings.auto_exp_tabs_on_new': {
+    en: 'Auto expand branch on creating a new child tab',
+    ru: 'Автоматически разворачивать ветку при создании новой дочерней вкладки',
+  },
   'settings.rm_child_tabs': {
     en: 'Close child tabs along with parent',
     ru: 'Закрывать дочерние вкладки вместе с родительской',
