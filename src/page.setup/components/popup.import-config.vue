@@ -345,9 +345,21 @@ function importSidebar(backup: BackupData, toStore: Stored, containersIds: OldNe
   for (const id of nav) {
     const panel = panels[id]
     if (Utils.isTabsPanel(panel)) {
-      // Set recreated contianers ids or 'none' (if containers is not imported)
+      // Update recreated contianers ids or 'none' (if containers is not imported)
       panel.newTabCtx = containersIds[panel.newTabCtx] ?? 'none'
-      panel.moveTabCtx = containersIds[panel.moveTabCtx] ?? 'none'
+
+      // Update container ids in moveRules
+      panel.moveRules = panel.moveRules.map(rule => {
+        if (rule.containerId) {
+          const newId = containersIds[rule.containerId]
+          if (newId) rule.containerId = newId
+          else {
+            delete rule.containerId
+            rule.active = false
+          }
+        }
+        return rule
+      })
     }
   }
 

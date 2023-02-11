@@ -478,6 +478,8 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
       localTab.favIconUrl = ''
       rLocalTab.favIconUrl = ''
     }
+
+    // Update URL of the linked group page (for pinned tab)
     if (localTab.pinned && localTab.relGroupId !== undefined) {
       const groupTab = Tabs.byId[localTab.relGroupId]
       if (groupTab) {
@@ -489,16 +491,27 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
         })
       }
     }
+
+    // Reset pause state
     if (localTab.mediaPaused) {
       localTab.mediaPaused = false
       rLocalTab.mediaPaused = false
     }
+
+    // Re-color tab
     if (Settings.state.colorizeTabs) {
       Tabs.colorizeTabDebounced(tabId, 120)
     }
+
+    // Check if branch re-colorization is needed
     if (Settings.state.colorizeTabsBranches) {
       branchColorizationNeeded = localTab.isParent && localTab.lvl === 0
       if (localTab.lvl === 0) rLocalTab.branchColor = null
+    }
+
+    // Check if tab should be moved to another panel
+    if (Tabs.moveRules.length && !localTab.pinned && change.url !== 'about:blank') {
+      Tabs.moveByRule(tabId, 120)
     }
 
     // Update url counter

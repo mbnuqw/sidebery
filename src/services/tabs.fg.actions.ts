@@ -1,11 +1,12 @@
 import * as Utils from 'src/utils'
 import { CONTAINER_ID, GROUP_URL, NOID, NEWID, Err, ASKID, MOVEID, SAMEID } from 'src/defaults'
-import { BKM_OTHER_ID, ADDON_HOST } from 'src/defaults'
+import { BKM_OTHER_ID, ADDON_HOST, DEFAULT_CONTAINER_ID } from 'src/defaults'
 import { translate } from 'src/dict'
 import { Stored, Tab, Panel, TabCache, ActiveTabsHistory, ReactiveTab, TabStatus } from 'src/types'
 import { Notification, TabSessionData, TabsTreeData, DragInfo } from 'src/types'
 import { WindowChoosingDetails, SrcPlaceInfo, DstPlaceInfo, ItemInfo } from 'src/types'
-import { TabsPanel, PanelType, TabTreeData } from 'src/types'
+import { TabsPanel, PanelType, TabTreeData, TabToPanelMoveRule } from 'src/types'
+import { TabToPanelMoveRuleConfig } from 'src/types'
 import { RecentlyRemovedTabInfo, Tabs } from 'src/services/tabs.fg'
 import * as IPC from 'src/services/ipc'
 import * as Logs from 'src/services/logs'
@@ -2665,6 +2666,14 @@ export async function createTabInPanel(panel: Panel, conf?: browser.tabs.CreateP
     return
   }
 
+  if (Tabs.moveRules.length && conf?.cookieStoreId) {
+    const rule = Tabs.findMoveRuleBy(conf.cookieStoreId)
+    if (rule) {
+      const panelByRule = Sidebar.reactive.panelsById[rule.panelId]
+      if (Utils.isTabsPanel(panelByRule)) panel = panelByRule
+    }
+  }
+
   const tabShell = {} as Tab
   let index = getIndexForNewTab(panel, tabShell)
   const parentId = getParentForNewTab(panel)
@@ -2922,12 +2931,15 @@ export function getPanelForNewTab(tab: Tab): TabsPanel | undefined {
   }
   if (!Utils.isTabsPanel(activePanel)) activePanel = undefined
 
-  // Find panel with matched moveTabCtx rule
-  const panel = Sidebar.reactive.panels.find(
-    p => Utils.isTabsPanel(p) && p.moveTabCtx === tab.cookieStoreId
-  )
-  const isChildTab = parentTab && !parentTab.pinned
-  if (Utils.isTabsPanel(panel) && (!panel.moveTabCtxNoChild || !isChildTab)) return panel
+  // Find panel by move rule
+  if (Tabs.moveRules.length) {
+    const hasParent = Settings.state.tabsTree && parentTab && !parentTab.pinned
+    const rule = Tabs.findMoveRuleBy(tab.cookieStoreId, hasParent ? 1 : 0)
+    if (rule) {
+      const panel = Sidebar.reactive.panelsById[rule.panelId]
+      if (Utils.isTabsPanel(panel)) return panel
+    }
+  }
 
   // Find panel for tab opened from pinned tab
   if (parentTab && parentTab.pinned) {
@@ -2967,11 +2979,13 @@ export function getPanelForNewTab(tab: Tab): TabsPanel | undefined {
 /**
  * Find and return index for new tab.
  */
-export function getIndexForNewTab(panel: TabsPanel, tab: Tab): number {
-  const parent = Tabs.byId[tab.openerTabId ?? NOID]
+export function getIndexForNewTab(panel: TabsPanel, tab?: Tab): number {
+  const parent = Tabs.byId[tab?.openerTabId ?? NOID]
   const startIndex = panel.startTabIndex > -1 ? panel.startTabIndex : 0
   const nextIndex = panel.nextTabIndex > -1 ? panel.nextTabIndex : Tabs.list.length
   const activeTab = Tabs.byId[Tabs.activeId]
+  const autoGroupped = tab ? tab.autoGroupped : false
+  const fallbackIndex = tab ? tab.index : nextIndex
 
   // Place new tab opened from pinned tab
   if (parent && parent.pinned) {
@@ -2981,12 +2995,12 @@ export function getIndexForNewTab(panel: TabsPanel, tab: Tab): number {
 
   // Place new tab opened from another tab
   if (parent && !parent.pinned && parent.panelId === panel.id) {
-    if (Settings.state.moveNewTabParent === 'before' && !tab.autoGroupped) return parent.index
+    if (Settings.state.moveNewTabParent === 'before' && !autoGroupped) return parent.index
     if (Settings.state.moveNewTabParent === 'first_child') return parent.index + 1
     if (
       Settings.state.moveNewTabParent === 'sibling' ||
       Settings.state.moveNewTabParent === 'last_child' ||
-      tab.autoGroupped
+      autoGroupped
     ) {
       if (Settings.state.tabsTree) {
         // Use levels to find the end of branch
@@ -3009,9 +3023,9 @@ export function getIndexForNewTab(panel: TabsPanel, tab: Tab): number {
         return index
       }
     }
-    if (Settings.state.moveNewTabParent === 'start' && !tab.autoGroupped) return startIndex
-    if (Settings.state.moveNewTabParent === 'end' && !tab.autoGroupped) return nextIndex
-    if (Settings.state.moveNewTabParent === 'default' && !tab.autoGroupped) return tab.index
+    if (Settings.state.moveNewTabParent === 'start' && !autoGroupped) return startIndex
+    if (Settings.state.moveNewTabParent === 'end' && !autoGroupped) return nextIndex
+    if (Settings.state.moveNewTabParent === 'default' && !autoGroupped) return fallbackIndex
   }
 
   // Place new tab (for the other cases)
@@ -3065,12 +3079,7 @@ export function getIndexForNewTab(panel: TabsPanel, tab: Tab): number {
     }
   }
 
-  // Check tab is out of range of panel with moveTabCtx rule
-  if (panel.moveTabCtx === tab.cookieStoreId) {
-    if (startIndex > tab.index || nextIndex < tab.index) return nextIndex
-  }
-
-  return tab.index
+  return fallbackIndex
 }
 
 /**
@@ -3118,23 +3127,30 @@ export function handleReopening(tabId: ID, dstContainerId?: string): number | un
 
   targetTab.reopening = { id: NOID }
 
-  let parent: ID = -1
-  const panel = Sidebar.reactive.panels.find(
-    p => Utils.isTabsPanel(p) && p.moveTabCtx === dstContainerId
-  ) as TabsPanel
+  let parentId: ID = -1
+  let panel: TabsPanel | undefined
   let panelId
   let index
+
+  if (Tabs.moveRules.length) {
+    const rule = Tabs.findMoveRuleBy(dstContainerId, targetTab.lvl)
+    if (rule) {
+      panel = Sidebar.reactive.panelsById[rule.panelId] as TabsPanel | undefined
+    }
+  }
+
   if (panel) {
     index = getIndexForNewTab(panel, {} as Tab)
     if (index === undefined) index = panel.nextTabIndex
     panelId = panel.id
   } else {
-    parent = targetTab.parentId
+    parentId = targetTab.parentId
     panelId = targetTab.panelId
   }
+
   if (index === undefined) index = targetTab.index
 
-  setNewTabPosition(index, parent, panelId)
+  setNewTabPosition(index, parentId, panelId)
 
   return index
 }
@@ -3740,8 +3756,9 @@ export async function reopenInContainer(ids: ID[], containerId: string) {
   if (!firstTab) return
 
   const items = Tabs.getTabsInfo(ids)
-  const panel = Sidebar.getPanelForContainer(containerId, firstTab)
-  if (panel && panel.id !== firstTab.panelId && !firstTab.pinned) {
+  const rule = Tabs.findMoveRuleBy(containerId, firstTab.lvl)
+  const panel = Sidebar.reactive.panelsById[rule?.panelId ?? NOID]
+  if (Utils.isTabsPanel(panel) && panel.id !== firstTab.panelId && !firstTab.pinned) {
     const dst = { panelId: panel.id, containerId: containerId, index: panel.nextTabIndex }
     await Tabs.reopen(items, dst)
   } else {
@@ -3756,8 +3773,9 @@ export async function openInContainer(ids: ID[], containerId: string) {
   if (!firstTab || !lastTab) return
 
   const items = Tabs.getTabsInfo(ids)
-  const panel = Sidebar.getPanelForContainer(containerId, firstTab)
-  if (panel && panel.id !== firstTab.panelId && !firstTab.pinned) {
+  const rule = Tabs.findMoveRuleBy(containerId, firstTab.lvl)
+  const panel = Sidebar.reactive.panelsById[rule?.panelId ?? NOID]
+  if (Utils.isTabsPanel(panel) && panel.id !== firstTab.panelId && !firstTab.pinned) {
     const dst = { panelId: panel.id, containerId: containerId, index: panel.nextTabIndex }
     await Tabs.open(items, dst)
   } else {
@@ -4036,4 +4054,120 @@ function getTooltip(tab: Tab): string {
   }
 
   return str
+}
+
+export function recalcMoveRules() {
+  const rules: TabToPanelMoveRule[] = []
+
+  for (const panel of Sidebar.reactive.panels) {
+    if (!Utils.isTabsPanel(panel)) continue
+
+    if (panel.moveRules.length) {
+      for (const ruleConf of panel.moveRules) {
+        if (!ruleConf.active) continue
+
+        const rule = createMoveToPanelRule(ruleConf, panel.id)
+        if (!rule) continue
+
+        rules.push(rule)
+      }
+    }
+  }
+
+  rules.sort((a, b) => {
+    let aN = a.containerId ? 1 : 0
+    aN += a.urlRE || a.urlStr ? 1 : 0
+    let bN = b.containerId ? 1 : 0
+    bN += b.urlRE || b.urlStr ? 1 : 0
+    return bN - aN
+  })
+
+  Tabs.moveRules = rules
+}
+
+function createMoveToPanelRule(
+  config: TabToPanelMoveRuleConfig,
+  panelId: ID
+): TabToPanelMoveRule | undefined {
+  const rule: TabToPanelMoveRule = { panelId }
+
+  // Match by container
+  if (
+    config.containerId &&
+    (config.containerId === DEFAULT_CONTAINER_ID || Containers.reactive.byId[config.containerId])
+  ) {
+    rule.containerId = config.containerId
+  }
+
+  // Match by URL
+  if (config.url) {
+    if (config.url.startsWith('/') && config.url.endsWith('/')) {
+      try {
+        rule.urlRE = new RegExp(config.url.slice(1, -1))
+      } catch {
+        rule.urlStr = config.url
+      }
+    } else {
+      rule.urlStr = config.url
+    }
+  }
+
+  if (!rule.containerId && !rule.urlRE && !rule.urlStr) return
+
+  if (config.topLvlOnly) rule.topLvlOnly = config.topLvlOnly
+
+  return rule
+}
+
+const moveByRuleTimeouts: Map<ID, number> = new Map()
+export function moveByRule(tabId: ID, delay: number) {
+  let timeout = moveByRuleTimeouts.get(tabId)
+  clearTimeout(timeout)
+  timeout = setTimeout(() => {
+    const tab = Tabs.byId[tabId]
+    if (!tab) return
+    if (!Tabs.moveRules.length) return
+
+    const rule = Tabs.findMoveRule(tab)
+    if (rule) {
+      const panelId = rule.panelId
+      const panel = Sidebar.reactive.panelsById[panelId]
+      if (!Utils.isTabsPanel(panel)) return
+      const moveToPanelStart = Settings.state.moveNewTabParent === 'start'
+      const index = moveToPanelStart ? panel.startTabIndex : panel.nextTabIndex
+      const src: SrcPlaceInfo = { windowId: Windows.id, pinned: tab.pinned }
+      const dst: DstPlaceInfo = { panelId, index }
+      Utils.inQueue(Tabs.move, [tab], src, dst)
+
+      if (tab.active) Sidebar.switchToPanel(panelId, true, true)
+    }
+  }, delay)
+  moveByRuleTimeouts.set(tabId, timeout)
+}
+
+export function findMoveRuleBy(containerId: string, lvl?: number): TabToPanelMoveRule | undefined {
+  for (const rule of Tabs.moveRules) {
+    if (rule.urlRE || rule.urlStr) continue
+    if (rule.containerId && rule.containerId !== containerId) continue
+    if (rule.topLvlOnly && lvl !== undefined && lvl > 0) continue
+    return rule
+  }
+}
+
+export function findMoveRule(tab: Tab): TabToPanelMoveRule | undefined {
+  for (const rule of Tabs.moveRules) {
+    if (rule.panelId === tab.panelId) continue
+
+    if (rule.topLvlOnly && tab.lvl > 0) continue
+
+    if (rule.containerId && rule.containerId !== tab.cookieStoreId) continue
+
+    if (rule.urlStr) {
+      if (!tab.url.includes(rule.urlStr)) continue
+    } else if (rule.urlRE) {
+      if (!rule.urlRE.test(tab.url)) continue
+    }
+
+    return rule
+  }
 }

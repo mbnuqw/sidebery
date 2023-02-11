@@ -81,9 +81,16 @@ async function removeContainer(container: Container): Promise<void> {
         panel.newTabCtx = 'none'
         navSaveNeeded = true
       }
-      if (panel.moveTabCtx === container.id) {
-        panel.moveTabCtx = 'none'
-        navSaveNeeded = true
+
+      if (panel.moveRules.length) {
+        panel.moveRules = panel.moveRules.filter(rule => {
+          if (rule.containerId && rule.containerId === container.id) {
+            navSaveNeeded = true
+            delete rule.containerId
+            if (!rule.url) return false
+          }
+          return true
+        })
       }
     }
 

@@ -270,6 +270,43 @@ export const commonTranslations: Translations = {
     ru: 'Добавить ярлык',
   },
 
+  'popup.tab_move_rules.title': {
+    en: 'Moving rules',
+    ru: 'Правила перемещения',
+  },
+  'popup.tab_move_rules.editor_title.new': {
+    en: 'Create a move rule',
+    ru: 'Создать правило',
+  },
+  'popup.tab_move_rules.editor_title.edit': {
+    en: 'Edit a move rule',
+    ru: 'Редактировать правило',
+  },
+  'popup.tab_move_rules.rule_container_label': {
+    en: 'If tab is in container',
+    ru: 'Если вкладка в контейнере',
+  },
+  'popup.tab_move_rules.rule_url_label': {
+    en: 'If tab has URL ("substring" or "/RegExp/")',
+    ru: 'Если вкладка с URL-адресом ("подстрока" или "/RegExp/")',
+  },
+  'popup.tab_move_rules.rule_top_lvl_label': {
+    en: 'If tab at the top level of tree',
+    ru: 'Если вкладка на верхнем уровне дерева',
+  },
+  'popup.tab_move_rules.add_rule_btn': {
+    en: 'Add rule',
+    ru: 'Добавить правило',
+  },
+  'popup.tab_move_rules.edit_rule_btn.save': {
+    en: 'Save',
+    ru: 'Сохранить',
+  },
+  'popup.tab_move_rules.edit_rule_btn.cancel': {
+    en: 'Cancel',
+    ru: 'Отмена',
+  },
+
   // ---
   // -- Context menu
   // -

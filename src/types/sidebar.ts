@@ -168,8 +168,7 @@ export interface TabsPanelConfig extends PanelCommonConfig {
   noEmpty: boolean
   newTabCtx: string
   dropTabCtx: string
-  moveTabCtx: string
-  moveTabCtxNoChild: boolean
+  moveRules: TabToPanelMoveRuleConfig[]
   bookmarksFolderId: ID
   newTabBtns: string[]
 }
@@ -237,3 +236,19 @@ export interface ViewModeBtn {
 }
 
 export type Panel = BookmarksPanel | TabsPanel | HistoryPanel
+
+export interface TabToPanelMoveRuleConfig {
+  id: ID
+  active: boolean
+  url?: string
+  containerId?: string
+  topLvlOnly?: boolean
+}
+
+export interface TabToPanelMoveRule {
+  panelId: ID
+  urlRE?: RegExp
+  urlStr?: string
+  containerId?: string
+  topLvlOnly?: boolean
+}

@@ -173,6 +173,10 @@ export const setupPageTranslations: Translations = {
     de: 'Mit Ausnahme von Unter-Tabs',
     zh_CN: '排除子标签页',
   },
+  'panel.move_rules_active': {
+    en: 'Move tabs to this panel',
+    ru: 'Перемещать вкладки в эту панель',
+  },
   'panel.ctr_tooltip_none': {
     en: 'Not set',
     ru: 'Не задан',
@@ -285,6 +289,14 @@ export const setupPageTranslations: Translations = {
     ru: 'хронологический список',
     de: 'Chronik',
     zh_CN: '历史',
+  },
+  'panel.tab_move_rules': {
+    en: 'Move tabs to this panel',
+    ru: 'Перемещать вкладки на эту панель',
+  },
+  'panel.tab_move_rules_manage_btn': {
+    en: 'Manage rules',
+    ru: 'Управление правилами',
   },
   'panel.new_tab_shortcuts': {
     en: 'Additional "New tab" shortcuts',

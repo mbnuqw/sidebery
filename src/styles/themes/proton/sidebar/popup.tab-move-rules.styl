@@ -1,0 +1,154 @@
+@import '../../../utils'
+
+// Set toolbar colors for fields
+#root .TabMoveRulesPopup
+  --toolbar-bg: var(--popup-bg)
+  --toolbar-fg: var(--popup-fg)
+  [data-color="toolbar"]
+    --color: var(--popup-fg)
+
+.TabMoveRulesPopup *
+  box-sizing: border-box
+
+// .Setup .TabMoveRulesPopup .popup
+//   padding: 0 4px 4px
+
+.TabMoveRulesPopup .space
+  height: 16px
+  &:first-child
+    display: none
+
+// ---
+// -- Shortcuts list
+// -
+.TabMoveRulesPopup .rules
+  position: relative
+  overflow-y: auto
+  padding: 0 4px
+
+.TabMoveRulesPopup .rule
+  position: relative
+  margin-top: 3px
+  cursor: default
+  &:before
+    content: ''
+    position: absolute
+    width: 100%
+    height: 100%
+    border-radius: var(--general-border-radius)
+    background-color: var(--toolbar-fg)
+    opacity: 0
+  &:hover:before
+    opacity: .1
+  &:not(:first-of-type):after
+    content: ''
+    position: absolute
+    top: -2px
+    left: 4px
+    width: calc(100% - 8px)
+    height: 1px
+    background-color: var(--toolbar-fg)
+    opacity: .1
+  &[data-active="false"]
+    opacity: .5
+
+.TabMoveRulesPopup .rule[data-edit="true"]:before
+  background-color: transparent
+  box-shadow: inset 0 0 0 2px var(--status-active)
+  opacity: 1
+
+.TabMoveRulesPopup .rule .url-box
+  position: relative
+  display: flex
+  align-items: center
+  &[data-with-container="true"]
+    margin-top: -6px
+
+.TabMoveRulesPopup .rule .icon-box
+  position: relative
+  width: 28px
+  height: 28px
+  flex-shrink: 0
+  > .icon
+    position: absolute
+    top: 6px
+    left: 6px
+    width: 16px
+    height: 16px
+  > svg
+    fill: var(--color, var(--popup-fg))
+
+.TabMoveRulesPopup .rule .url
+  position: relative
+  color: var(--popup-fg)
+  font-size: rem(16)
+  white-space: nowrap
+  text-overflow: ellipsis
+  overflow: hidden
+  margin-right: 2px
+  margin-left: 6px
+  line-height: 28px
+  opacity: .7
+
+.TabMoveRulesPopup .rule .container-box
+  position: relative
+  display: flex
+  align-items: center
+  transform: translateZ(0)
+
+.TabMoveRulesPopup .rule .container
+  position: relative
+  color: var(--color, var(--popup-fg))
+  font-size: rem(16)
+  white-space: nowrap
+  text-overflow: ellipsis
+  overflow: hidden
+  margin-right: 2px
+
+.TabMoveRulesPopup .rule .controls-box
+  position: relative
+  display: none
+  justify-content: flex-end
+  align-items: center
+  height: 28px
+  padding: 0 2px
+  margin-left: auto
+.TabMoveRulesPopup .rule:hover .controls-box
+  display: flex
+
+.TabMoveRulesPopup .rule .btn-up
+.TabMoveRulesPopup .rule .btn-down
+.TabMoveRulesPopup .rule .btn-rm
+  position: relative
+  width: 24px
+  height: 24px
+  &:before
+    content: ''
+    position: absolute
+    width: 100%
+    height: 100%
+    border-radius: var(--general-border-radius)
+    background-color: var(--toolbar-fg)
+    opacity: 0
+  &:hover:before
+    opacity: .1
+  &:active:before
+    opacity: .2
+  > svg
+    position: relative
+    top: 4px
+    left: 4px
+    width: 16px
+    height: 16px
+    fill: white
+.TabMoveRulesPopup .rule .btn-up > svg
+  transform: rotateZ(180deg)
+
+.TabMoveRulesPopup .SelectField
+.TabMoveRulesPopup .ToggleField
+.TabMoveRulesPopup .TextField
+  margin: 3px 4px 0
+
+.TabMoveRulesPopup .ctrls
+  padding: 0 6px
+  margin: 4px 0 6px

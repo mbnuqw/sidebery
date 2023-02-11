@@ -4,6 +4,7 @@ import { PanelConfig, Panel, Stored, ItemBounds, Tab, Bookmark, DstPlaceInfo } f
 import { Notification, OldPanelConfig, SidebarConfig, BookmarksPanelConfig } from 'src/types'
 import { PanelType, TabsPanel, BookmarksPanel, ScrollBoxComponent, SubPanelType } from 'src/types'
 import { TabsPanelConfig, ItemBoundsType, ReactiveTab, DialogConfig } from 'src/types'
+import { TabToPanelMoveRuleConfig } from 'src/types'
 import { BOOKMARKS_PANEL_STATE, TABS_PANEL_STATE, NOID, CONTAINER_ID, Err } from 'src/defaults'
 import { BOOKMARKS_PANEL, TABS_PANEL_CONFIG, DEFAULT_CONTAINER_ID } from 'src/defaults'
 import { BKM_ROOT_ID, BKM_OTHER_ID, BOOKMARKED_PANEL_CONF_RE } from 'src/defaults'
@@ -530,10 +531,7 @@ export async function loadPanels(): Promise<void> {
 
     if (Utils.isTabsPanel(panel)) {
       const newTabContainer = panel.newTabCtx ? Containers.reactive.byId[panel.newTabCtx] : null
-      const moveTabContainer = panel.moveTabCtx ? Containers.reactive.byId[panel.moveTabCtx] : null
-
       if (panel.newTabCtx !== DEFAULT_CONTAINER_ID && !newTabContainer) panel.newTabCtx = 'none'
-      if (panel.moveTabCtx !== DEFAULT_CONTAINER_ID && !moveTabContainer) panel.moveTabCtx = 'none'
     }
 
     panel.tooltip = getPanelTooltip(panel)
@@ -542,6 +540,7 @@ export async function loadPanels(): Promise<void> {
   }
 
   recalcPanels()
+  Tabs.recalcMoveRules()
 
   // Activate last active panel
   if (!Windows.incognito) {
@@ -585,8 +584,19 @@ export function convertOldPanelsConfigToNew(panels_v4: OldPanelConfig[]): Sideba
       panel.noEmpty = oldPanelConf.noEmpty
       panel.newTabCtx = oldPanelConf.newTabCtx
       panel.dropTabCtx = oldPanelConf.dropTabCtx
-      panel.moveTabCtx = oldPanelConf.moveTabCtx
-      panel.moveTabCtxNoChild = oldPanelConf.moveTabCtxNoChild
+
+      if (oldPanelConf.moveTabCtx && oldPanelConf.moveTabCtx !== 'none') {
+        panel.moveRules.push({
+          id: Utils.uid(),
+          active: true,
+          containerId: oldPanelConf.moveTabCtx,
+          topLvlOnly: !!oldPanelConf.moveTabCtxNoChild,
+        })
+      }
+
+      if (oldPanelConf.urlRules) {
+        panel.moveRules.push(...convertOldUrlRulesToMoveRules(oldPanelConf))
+      }
 
       sidebar.panels[panel.id] = panel
       sidebar.nav.push(panel.id)
@@ -598,6 +608,24 @@ export function convertOldPanelsConfigToNew(panels_v4: OldPanelConfig[]): Sideba
   if (!Settings.state.hideSettingsBtn) sidebar.nav.push('settings')
 
   return sidebar
+}
+
+function convertOldUrlRulesToMoveRules(panel: OldPanelConfig): TabToPanelMoveRuleConfig[] {
+  const output: TabToPanelMoveRuleConfig[] = []
+  const isActive = !!panel.urlRulesActive
+
+  for (const rawRule of panel.urlRules.split('\n')) {
+    const rule = rawRule.trim()
+    if (!rule) continue
+
+    output.push({
+      id: Utils.uid(),
+      active: isActive,
+      url: rule,
+    })
+  }
+
+  return output
 }
 
 export function createDefaultSidebar(): SidebarConfig {
@@ -715,10 +743,7 @@ function updateSidebarInSetup(newConfig?: SidebarConfig | null): void {
 
     if (Utils.isTabsPanel(panel)) {
       const newTabContainer = panel.newTabCtx ? Containers.reactive.byId[panel.newTabCtx] : null
-      const moveTabContainer = panel.moveTabCtx ? Containers.reactive.byId[panel.moveTabCtx] : null
-
       if (panel.newTabCtx !== DEFAULT_CONTAINER_ID && !newTabContainer) panel.newTabCtx = 'none'
-      if (panel.moveTabCtx !== DEFAULT_CONTAINER_ID && !moveTabContainer) panel.moveTabCtx = 'none'
     }
 
     newPanelsMap[panel.id] = panel
@@ -726,6 +751,7 @@ function updateSidebarInSetup(newConfig?: SidebarConfig | null): void {
 
   Sidebar.reactive.panelsById = newPanelsMap
   recalcPanels()
+  Tabs.recalcMoveRules()
 }
 
 async function updateSidebar(newConfig?: SidebarConfig): Promise<void> {
@@ -766,10 +792,7 @@ async function updateSidebar(newConfig?: SidebarConfig): Promise<void> {
 
     if (Utils.isTabsPanel(panel)) {
       const newTabContainer = panel.newTabCtx ? Containers.reactive.byId[panel.newTabCtx] : null
-      const moveTabContainer = panel.moveTabCtx ? Containers.reactive.byId[panel.moveTabCtx] : null
-
       if (panel.newTabCtx !== DEFAULT_CONTAINER_ID && !newTabContainer) panel.newTabCtx = 'none'
-      if (panel.moveTabCtx !== DEFAULT_CONTAINER_ID && !moveTabContainer) panel.moveTabCtx = 'none'
     }
 
     // Save first panel and first tabs panel
@@ -820,6 +843,7 @@ async function updateSidebar(newConfig?: SidebarConfig): Promise<void> {
   }
 
   recalcPanels()
+  Tabs.recalcMoveRules()
   if (Settings.state.updateSidebarTitle) updateSidebarTitle()
 
   if (!prevHasTabsPanels && Sidebar.hasTabs) Tabs.load()
@@ -951,17 +975,6 @@ let updatePanelBoundsTimeout: number | undefined
 export function updatePanelBoundsDebounced(delay = 256): void {
   clearTimeout(updatePanelBoundsTimeout)
   updatePanelBoundsTimeout = setTimeout(() => updateBounds(), delay)
-}
-
-export function getPanelForContainer(containerId: string, tab?: Tab): TabsPanel | undefined {
-  const parentTab = tab?.openerTabId ? Tabs.byId[tab.openerTabId] : undefined
-
-  // Find panel with matched moveTabCtx rule
-  const panel = Sidebar.reactive.panels.find(
-    p => Utils.isTabsPanel(p) && p.moveTabCtx === containerId
-  )
-  const isChildTab = parentTab && !parentTab.pinned
-  if (Utils.isTabsPanel(panel) && (!panel.moveTabCtxNoChild || !isChildTab)) return panel
 }
 
 /**
@@ -2083,6 +2096,18 @@ export function openNewTabShortcutsPopup(panelId: ID): void {
 export function closeNewTabShortcutsPopup(): void {
   if (!Sidebar.reactive.newTabShortcutsPopup) return
   Sidebar.reactive.newTabShortcutsPopup = null
+}
+
+export function openTabMoveRulesPopup(panelId: ID): void {
+  const panel = Sidebar.reactive.panelsById[panelId]
+  if (!Utils.isTabsPanel(panel)) return
+
+  Sidebar.reactive.tabMoveRulesPopup = { panel }
+}
+
+export function closeTabMoveRulesPopup(): void {
+  if (!Sidebar.reactive.tabMoveRulesPopup) return
+  Sidebar.reactive.tabMoveRulesPopup = null
 }
 
 export function openSubPanel(type: SubPanelType, panel: TabsPanel) {

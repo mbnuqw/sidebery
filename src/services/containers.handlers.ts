@@ -41,12 +41,27 @@ function onContainerRemovedBg(info: browser.contextualIdentities.ChangeInfo): vo
 
 async function onContainerRemovedFg(info: browser.contextualIdentities.ChangeInfo): Promise<void> {
   const id = info.contextualIdentity.cookieStoreId
+  let moveRulesRecalcNeeded = false
 
   for (const panel of Sidebar.reactive.panels) {
     if (!Utils.isTabsPanel(panel)) continue
     if (panel.newTabCtx === id) panel.newTabCtx = 'none'
-    if (panel.moveTabCtx === id) panel.moveTabCtx = 'none'
+    if (panel.moveRules.length) {
+      panel.moveRules = panel.moveRules.filter(rule => {
+        if (rule.containerId === id) {
+          moveRulesRecalcNeeded = true
+          if (!rule.url) return false
+          else {
+            delete rule.containerId
+            rule.active = false
+          }
+        }
+        return true
+      })
+    }
   }
+
+  if (moveRulesRecalcNeeded) Tabs.recalcMoveRules()
 
   // Close tabs
   const orphanTabs = Tabs.list.filter(t => t.cookieStoreId === id)

@@ -17,6 +17,7 @@
   
   Transition(name="popup"): BookmarksPopup(v-if="Bookmarks.reactive.popup")
   Transition(name="popup"): NewTabShortcutsPopup(v-if="Sidebar.reactive.newTabShortcutsPopup")
+  Transition(name="popup"): TabMoveRulesPopup(v-if="Sidebar.reactive.tabMoveRulesPopup")
   Details
 
   UpgradeScreen(v-if="Sidebar.reactive.upgrading")
@@ -38,6 +39,7 @@ import StorageView from './components/storage.vue'
 import KeybindingsView from './components/keybindings.vue'
 import BookmarksPopup from 'src/components/popup.bookmarks.vue'
 import NewTabShortcutsPopup from 'src/components/popup.new-tab-shortcuts.vue'
+import TabMoveRulesPopup from 'src/components/popup.tab-move-rules.vue'
 import UpgradeScreen from 'src/components/upgrade-screen.vue'
 import Details from './components/settings.details.vue'
 

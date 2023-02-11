@@ -108,21 +108,6 @@
     @update:value="togglePanelDropTabCtx")
 
   SelectField(
-    v-if="Utils.isTabsPanel(conf)"
-    label="panel.move_tab_ctx"
-    optLabel="panel.move_tab_ctx_"
-    :value="moveTabCtx"
-    :opts="availableForAutoMoveContainersOpts"
-    :folded="true"
-    @update:value="togglePanelMoveTabCtx")
-  .sub-fields(v-if="Utils.isTabsPanel(conf)")
-    ToggleField(
-      label="panel.move_tab_ctx_nochild"
-      :inactive="moveTabCtx === 'none'"
-      :value="conf.moveTabCtxNoChild"
-      @update:value="togglePanelMoveTabCtxNoChild")
-
-  SelectField(
     v-if="Utils.isBookmarksPanel(conf)"
     label="panel.bookmarks_view_mode"
     optLabel="panel.bookmarks_view_mode_"
@@ -145,8 +130,12 @@
       .btn(@click="resetBookmarksRootId") {{translate('panel.root_id.reset')}}
 
   .InfoField(v-if="Utils.isTabsPanel(conf)")
+    .label {{translate('panel.tab_move_rules')}}
+    .btn(@click="openRulesPopup") {{getManageRulesBtnLabel(conf)}}
+
+  .InfoField(v-if="Utils.isTabsPanel(conf)")
     .label {{translate('panel.new_tab_shortcuts')}}
-    .btn(@click="openShortcutsPopup") {{translate('panel.new_tab_shortcuts_manage_btn')}}
+    .btn(@click="openShortcutsPopup") {{getManageShortcutsBtnLabel(conf)}}
 </template>
 
 <script lang="ts" setup>
@@ -157,7 +146,7 @@ import { translate } from 'src/dict'
 import { BKM_MENU_ID, FOLDER_NAME_DATA_RE, RGB_COLORS } from 'src/defaults'
 import { DEFAULT_CONTAINER_ID, COLOR_OPTS, PANEL_ICON_OPTS } from 'src/defaults'
 import { BKM_ROOT_ID } from 'src/defaults'
-import { TextInputComponent, PanelConfig, BookmarksPanelConfig } from 'src/types'
+import { TextInputComponent, PanelConfig, BookmarksPanelConfig, TabsPanelConfig } from 'src/types'
 import { HistoryPanelConfig } from 'src/types'
 import { Settings } from 'src/services/settings'
 import { Containers } from 'src/services/containers'
@@ -171,6 +160,7 @@ import SelectField from '../../components/select-field.vue'
 import { Favicons } from 'src/services/favicons'
 import { SetupPage } from 'src/services/setup-page'
 import { Styles } from 'src/services/styles'
+import { Tabs } from 'src/services/tabs.fg'
 
 interface ContainerOption {
   value: string
@@ -230,7 +220,10 @@ const availableForAutoMoveContainersOpts = computed<ContainerOption[]>(() => {
   const used: Record<string, boolean> = {}
 
   for (const p of Sidebar.reactive.panels) {
-    if (Utils.isTabsPanel(p) && p.id !== props.conf.id) used[p.moveTabCtx] = true
+    if (!Utils.isTabsPanel(p) || p.id === props.conf.id) continue
+    for (const ruleConf of p.moveRules) {
+      if (ruleConf.containerId && !ruleConf.url) used[ruleConf.containerId] = true
+    }
   }
 
   if (!used[DEFAULT_CONTAINER_ID]) {
@@ -266,9 +259,6 @@ const newTabCtx = computed<string>(() => {
 })
 const dropTabCtx = computed<string>(() => {
   return (Utils.isTabsPanel(props.conf) && props.conf.dropTabCtx) || ''
-})
-const moveTabCtx = computed<string>(() => {
-  return (Utils.isTabsPanel(props.conf) && props.conf.moveTabCtx) || ''
 })
 const rootPath = computed<string>(() => {
   if (!Utils.isBookmarksPanel(props.conf)) return ''
@@ -596,18 +586,6 @@ function togglePanelDropTabCtx(value: string): void {
   Sidebar.saveSidebar()
 }
 
-function togglePanelMoveTabCtx(value: string): void {
-  if (!Utils.isTabsPanel(props.conf)) return
-  props.conf.moveTabCtx = value
-  Sidebar.saveSidebar()
-}
-
-function togglePanelMoveTabCtxNoChild(value: boolean): void {
-  if (!Utils.isTabsPanel(props.conf)) return
-  props.conf.moveTabCtxNoChild = value
-  Sidebar.saveSidebar()
-}
-
 async function setBookmarksRootId(): Promise<void> {
   if (!Utils.isBookmarksPanel(props.conf)) return
 
@@ -649,7 +627,23 @@ function toggleAutoConvert(): void {
   Sidebar.saveSidebar()
 }
 
+function openRulesPopup() {
+  Sidebar.openTabMoveRulesPopup(props.conf.id)
+}
+
 function openShortcutsPopup(): void {
   Sidebar.openNewTabShortcutsPopup(props.conf.id)
+}
+
+function getManageRulesBtnLabel(panel: TabsPanelConfig): string {
+  const label = translate('panel.tab_move_rules_manage_btn')
+  if (panel.moveRules.length) return label + ` (${panel.moveRules.length})`
+  else return label
+}
+
+function getManageShortcutsBtnLabel(panel: TabsPanelConfig): string {
+  const label = translate('panel.new_tab_shortcuts_manage_btn')
+  if (panel.newTabBtns.length) return label + ` (${panel.newTabBtns.length})`
+  else return label
 }
 </script>

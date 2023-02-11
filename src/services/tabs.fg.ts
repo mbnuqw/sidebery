@@ -1,4 +1,5 @@
 import { Tab, ActiveTabsHistory, NewTabPosition, ReactiveTab } from 'src/types'
+import { TabToPanelMoveRule } from 'src/types'
 import { NOID } from 'src/defaults'
 import * as TabsActions from 'src/services/tabs.fg.actions'
 import * as TabsHandlers from 'src/services/tabs.fg.handlers'
@@ -54,6 +55,8 @@ export const Tabs = {
   detachingTabIds: [] as ID[],
   normTabsMoving: false,
   editableTabId: NOID,
+
+  moveRules: [] as TabToPanelMoveRule[],
 
   activeTabsGlobal: { id: 'global', actTabOffset: -1, actTabs: [] } as ActiveTabsHistory,
   activeTabsPerPanel: {} as Record<string, ActiveTabsHistory>,

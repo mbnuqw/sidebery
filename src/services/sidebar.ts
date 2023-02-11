@@ -18,6 +18,7 @@ export interface SidebarReactiveState {
   containerConfigPopup: ContainerConfigPopup | null
   groupConfigPopup: GroupConfigPopup | null
   newTabShortcutsPopup: NewTabShortcutsPopup | null
+  tabMoveRulesPopup: TabMoveRulesPopup | null
   confirm: ConfirmDialog | null
   hiddenPanelsPopup: boolean
   hiddenPanelsPopupOffset: number
@@ -56,6 +57,10 @@ export interface NewTabShortcutsPopup {
   panel: TabsPanel
 }
 
+export interface TabMoveRulesPopup {
+  panel: TabsPanel
+}
+
 export const Sidebar = {
   reactive: {
     nav: [],
@@ -72,6 +77,7 @@ export const Sidebar = {
     containerConfigPopup: null,
     groupConfigPopup: null,
     newTabShortcutsPopup: null,
+    tabMoveRulesPopup: null,
     confirm: null,
     hiddenPanelsPopup: false,
     hiddenPanelsPopupOffset: 0,

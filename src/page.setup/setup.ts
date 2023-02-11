@@ -15,6 +15,7 @@ import { SetupPage } from 'src/services/setup-page'
 import { Styles } from 'src/services/styles'
 import * as IPC from 'src/services/ipc'
 import * as Logs from 'src/services/logs'
+import { Tabs } from 'src/services/tabs.fg'
 
 async function main(): Promise<void> {
   Info.setInstanceType(InstanceType.setup)

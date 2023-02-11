@@ -49,8 +49,7 @@ export const TABS_PANEL_CONFIG: TabsPanelConfig = {
   noEmpty: false,
   newTabCtx: 'none',
   dropTabCtx: 'none',
-  moveTabCtx: 'none',
-  moveTabCtxNoChild: true,
+  moveRules: [],
   bookmarksFolderId: -1,
   newTabBtns: [],
 }

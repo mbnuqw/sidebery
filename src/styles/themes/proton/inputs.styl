@@ -54,6 +54,10 @@
     height: 1px
     background-color: var(--toolbar-fg)
     opacity: .08
+  
+  &.-compact:after
+    left: 5px
+    width: calc(100% - 10px)
 
   &.-no-separator:after
     display: none
@@ -63,9 +67,6 @@
 
   &:active:before
     opacity: .03
-
-  // &[data-inactive="true"]
-  //   cursor: default
 
   &[data-inactive="true"] .body
     opacity: .3
@@ -79,11 +80,14 @@
       display: none
 
 .Sidebar .ToggleField
+.ToggleField.-compact
   padding: 4px
   min-height: 30px
 .Sidebar .SelectField
+.SelectField.-compact
   padding: 3px 4px 4px
 .Sidebar .TextField
+.TextField.-compact
   padding: 3px 4px 5px
 
 .InfoField:before
@@ -110,6 +114,8 @@
 
 .Sidebar .SelectField .body
 .Sidebar .TextField .body
+.SelectField.-compact .body
+.TextField.-compact .body
   flex-wrap: wrap
 
 // ---
@@ -133,6 +139,9 @@
 .Sidebar .ToggleField .label
 .Sidebar .SelectField .label
 .Sidebar .TextField .label
+.ToggleField.-compact .label
+.SelectField.-compact .label
+.TextField.-compact .label
   width: 100%
   line-height: normal
   padding: 0 0 4px
@@ -140,6 +149,7 @@
   font-weight: 700
   opacity: .7
 .Sidebar .ToggleField .label
+.ToggleField.-compact .label
   padding: 0
   line-height: 18px
 
@@ -180,6 +190,7 @@
   flex-wrap: nowrap
 
 .Sidebar .ToggleInput
+.ToggleField.-compact .ToggleInput
   width: 18px
   height: 18px
   max-width: none
@@ -194,9 +205,12 @@
     border-radius: 5px
     opacity: .3
 .Sidebar .SelectInput
+.SelectField.-compact .SelectInput
   justify-content: flex-start
 .Sidebar .SelectInput
 .Sidebar .TextInput
+.SelectField.-compact .SelectInput
+.TextField.-compact .TextInput
   max-width: none
   width: 100%
   padding: 0
@@ -258,6 +272,8 @@
     opacity: .1
 
 .Sidebar
+.SelectField.-compact
+.ToggleField.-compact
   .SelectInput .opt
   .select-input-drop-down .opt
     font-size: rem(15)
@@ -380,6 +396,7 @@
   color: var(--color, var(--toolbar-fg-active))
   opacity: 1
 .Sidebar .SelectInput[data-folded="true"] .opt[data-active="true"]
+.SelectField.-compact .SelectInput[data-folded="true"] .opt[data-active="true"]
   width: 100%
 .SelectInput .opt[data-active="true"]:before
 .SelectInput .opt[data-active="true"]:after
@@ -450,6 +467,7 @@
     width: 50%
 
 .Sidebar .TextField .TextInput
+.TextField.-compact .TextInput
   margin: 0
   > textarea
     box-sizing: content-box

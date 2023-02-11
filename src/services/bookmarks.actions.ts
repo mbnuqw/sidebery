@@ -354,17 +354,30 @@ export async function open(
 
   const dstContainerId = dst.containerId ?? CONTAINER_ID
   let dstPanel: Panel | undefined
-  let dstTabsPanel: TabsPanel | undefined
-  let dstCtxTabsPanel: TabsPanel | undefined
   if (dst.panelId !== undefined) dstPanel = Sidebar.reactive.panelsById[dst.panelId]
-  for (const p of Sidebar.reactive.panels) {
-    if (Utils.isTabsPanel(p)) {
-      if (!dstTabsPanel) dstTabsPanel = p
-      if (!dstCtxTabsPanel && p.moveTabCtx === dstContainerId) dstCtxTabsPanel = p
+  if (!Utils.isTabsPanel(dstPanel)) {
+    let dstCtxTabsPanel: TabsPanel | undefined
+    for (const rule of Tabs.moveRules) {
+      if (rule.containerId && !rule.urlRE && !rule.urlStr && rule.containerId === dstContainerId) {
+        const panel = Sidebar.reactive.panelsById[rule.panelId]
+        if (Utils.isTabsPanel(panel)) {
+          dstCtxTabsPanel = panel
+          break
+        }
+      }
     }
+    dstPanel = dstCtxTabsPanel
   }
-  if (!Utils.isTabsPanel(dstPanel)) dstPanel = dstCtxTabsPanel
-  if (!dstPanel) dstPanel = dstTabsPanel
+  if (!dstPanel) {
+    let dstTabsPanel: TabsPanel | undefined
+    for (const p of Sidebar.reactive.panels) {
+      if (Utils.isTabsPanel(p)) {
+        dstTabsPanel = p
+        break
+      }
+    }
+    dstPanel = dstTabsPanel
+  }
   if (Utils.isTabsPanel(dstPanel)) {
     if (dstPanel.newTabCtx && dstPanel.newTabCtx !== 'none' && !dst.containerId) {
       dst.containerId = dstPanel.newTabCtx
