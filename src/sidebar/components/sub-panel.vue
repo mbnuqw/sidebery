@@ -52,6 +52,7 @@ const isBookmarks = computed<boolean>(() => {
 
 let closeTimeout: number | undefined
 function closeSubPanel(): void {
+  if (!state.active) return
   state.active = false
   if (Selection.isSet()) Selection.resetSelection()
   if (Menu.isOpen) Menu.close()
