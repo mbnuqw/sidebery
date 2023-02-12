@@ -21,7 +21,7 @@
   :data-unread="tab.unread"
   :data-edit="tab.customTitleEdit"
   :title="tab.tooltip"
-  draggable="true"
+  :draggable="!tab.customTitleEdit"
   @dragstart="onDragStart"
   @contextmenu.stop="onCtxMenu"
   @mousedown.stop="onMouseDown"
@@ -162,6 +162,7 @@ function onMouseUpClose(e: MouseEvent): void {
 function onMouseDown(e: MouseEvent): void {
   Mouse.setTarget('tab', props.tab.id)
   Menu.close()
+  if (props.tab.customTitleEdit) return
 
   // Left
   if (e.button === 0) {
@@ -223,6 +224,7 @@ function onMouseUp(e: MouseEvent): void {
   Mouse.stopLongClick()
   if (Mouse.isLocked()) return Mouse.resetClickLock(120)
   if (Mouse.longClickApplied) return
+  if (props.tab.customTitleEdit) return
 
   if (e.button === 0) {
     const withoutMods = !e.ctrlKey && !e.shiftKey
