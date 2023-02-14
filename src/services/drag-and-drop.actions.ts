@@ -512,10 +512,17 @@ function onPointerEnter(e: DragEvent): void {
   }
 }
 
-let pointerEl: HTMLElement | null = null
-export function initPointer(el: HTMLElement | null): void {
+const pointers: Map<ID, HTMLElement> = new Map()
+export function initPointer(el: HTMLElement | null, panelId: ID): void {
   if (!el) return Logs.err('Drag and Drop: No pointer element')
-  pointerEl = el
+  pointers.set(panelId, el)
+}
+
+let pointerEl: HTMLElement | null = null
+export function setActivePointer(panelId: ID) {
+  const el = pointers.get(panelId)
+  if (el) pointerEl = el
+  else pointerEl = null
 }
 
 export function updatePointerLeftPosition(left: number): void {
@@ -622,7 +629,7 @@ export function onDragMove(e: DragEvent): void {
 
   // Empty
   if (boundsLen === 0) {
-    dropPos = scroll - 12 + (panel.topOffset - Sidebar.panelsTop)
+    dropPos = -12
     if (!xLock && !yLock && pointerPos !== dropPos) {
       pointerPos = dropPos
       pointerEl.style.transform = `translateY(${pointerPos}px)`
@@ -638,7 +645,7 @@ export function onDragMove(e: DragEvent): void {
   // End
   if (y > bounds[boundsLen - 1].bottom) {
     const slot = bounds[boundsLen - 1]
-    dropPos = slot.end - 12 - scroll + (panel.topOffset - Sidebar.panelsTop)
+    dropPos = slot.end - 12
     if (lvlChanged || (!xLock && !yLock && pointerPos !== dropPos)) {
       resetTabActivateTimeout()
       pointerPos = dropPos
@@ -662,7 +669,8 @@ export function onDragMove(e: DragEvent): void {
 
     // Between
     if (slot.in ? y < slot.top : y < slot.center) {
-      dropPos = slot.start - 12 - scroll + (panel.topOffset - Sidebar.panelsTop)
+      if (i === 0) dropPos = -12
+      else dropPos = slot.start - 12
       if (lvlChanged || (!xLock && !yLock && pointerPos !== dropPos)) {
         resetTabActivateTimeout()
         pointerPos = dropPos
@@ -719,7 +727,7 @@ export function onDragMove(e: DragEvent): void {
 
     // Inside
     if (slot.in && y < slot.bottom) {
-      dropPos = slot.center - 12 - scroll + (panel.topOffset - Sidebar.panelsTop)
+      dropPos = slot.center - 12
       if (!xLock && !yLock && (pointerPos !== dropPos || eventKeyChanged)) {
         pointerPos = dropPos
         pointerEl.style.transform = `translateY(${pointerPos}px)`

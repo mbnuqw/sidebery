@@ -215,19 +215,20 @@ body
   position: absolute
   top: 0
   left: var(--pointer-left)
-  width: 32px
+  width: 100%
   height: 24px
   z-index: -1
   opacity: 0
   transform: translateY(-100%)
   pointer-events: none
+  mask: linear-gradient(-90deg, transparent, #000000 50%, #000000)
   &:after, &:before
     content: ''
     position: absolute
   &:after
     top: 11px
     left: 0
-    width: 100vw
+    width: 100%
     height: 2px
     background-color: var(--s-accent, var(--frame-el-overlay-selected-border))
     box-shadow: 3px 0 0 1px var(--frame-bg)
@@ -258,12 +259,12 @@ body
   opacity: 1
   z-index: 1000
 for i in 1..16
-  .TabsPanel[data-pos="center"] ~ .pointer[data-pointer="between"][data-lvl=\"{i}\"]:before
-  .TabsPanel[data-pos="center"] ~ .pointer[data-pointer="between"][data-lvl=\"{i}\"]:after
+  .TabsPanel[data-pos="center"] .pointer[data-pointer="between"][data-lvl=\"{i}\"]:before
+  .TabsPanel[data-pos="center"] .pointer[data-pointer="between"][data-lvl=\"{i}\"]:after
     transform: "translateX(calc(var(--tabs-indent) * %s + var(--tabs-margin)))" % i
 for i in 1..16
-  .BookmarksPanel[data-pos="center"] ~ .pointer[data-pointer="between"][data-lvl=\"{i}\"]:before
-  .BookmarksPanel[data-pos="center"] ~ .pointer[data-pointer="between"][data-lvl=\"{i}\"]:after
+  .BookmarksPanel[data-pos="center"] .pointer[data-pointer="between"][data-lvl=\"{i}\"]:before
+  .BookmarksPanel[data-pos="center"] .pointer[data-pointer="between"][data-lvl=\"{i}\"]:after
     transform: "translateX(calc(var(--bookmarks-indent) * %s + var(--bookmarks-margin)))" % i
 .pointer .arrow
   position: absolute

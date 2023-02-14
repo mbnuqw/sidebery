@@ -9,6 +9,7 @@
   @drop="onDrop")
   PinnedTabsBar(v-if="panel.pinnedTabs.length" :panel="panel")
   ScrollBox(ref="scrollBox" :preScroll="PRE_SCROLL")
+    DragAndDropPointer(:panelId="panel.id")
     .container(v-if="Settings.state.animations")
       TransitionGroup(name="tab" tag="div" type="transition" class="transition-box")
         TabComponent(
@@ -70,6 +71,7 @@ import ScrollBox from 'src/components/scroll-box.vue'
 import TabComponent from './tab.vue'
 import PanelPlaceholder from './panel-placeholder.vue'
 import NewTabBar from './bar.new-tab.vue'
+import DragAndDropPointer from './dnd-pointer.vue'
 
 const props = defineProps<{ panel: TabsPanel }>()
 const scrollBox = ref<ScrollBoxComponent | null>(null)

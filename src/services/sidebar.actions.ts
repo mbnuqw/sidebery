@@ -328,6 +328,7 @@ export function updateBounds(): void {
   if (!panel || !panelsBoxEl || !panel.scrollEl || !panel.ready) return
 
   const panelContentEl = panel.scrollComponent?.getScrollableBox()
+  DnD.setActivePointer(panel.id)
   DnD.updatePointerLeftPosition(panelContentEl?.offsetLeft ?? 0)
 
   const pb = panel.scrollEl.getBoundingClientRect()

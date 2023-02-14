@@ -14,7 +14,9 @@
 import { onMounted, ref } from 'vue'
 import { DndPointerModeNames, DnD } from 'src/services/drag-and-drop'
 
+const props = defineProps<{ panelId: ID }>()
+
 const pointerEl = ref<HTMLElement | null>(null)
 
-onMounted(() => DnD.initPointer(pointerEl.value))
+onMounted(() => DnD.initPointer(pointerEl.value, props.panelId))
 </script>

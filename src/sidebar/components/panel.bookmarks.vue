@@ -6,6 +6,7 @@
   @drop="onDrop")
   ScrollBox(ref="scrollBox")
     .bookmarks-tree(v-if="!state.unrendered && props.panel.viewMode === 'tree'")
+      DragAndDropPointer(:panelId="panel.id")
       BookmarkNode.root-node(v-for="node in tree" :key="node.id" :node="node" :panelId="panel.id")
 
     .bookmarks-history(v-if="!state.unrendered && props.panel.viewMode === 'history'")
@@ -50,6 +51,7 @@ import BookmarkNode from 'src/components/bookmark-node.vue'
 import BookmarkCard from './bookmark-card.vue'
 import PanelPlaceholder from './panel-placeholder.vue'
 import SubListTitle from './sub-list-title.vue'
+import DragAndDropPointer from './dnd-pointer.vue'
 
 interface BookmarksGroup {
   id: ID

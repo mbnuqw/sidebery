@@ -67,7 +67,6 @@
           :is="getPanelComponent(panel)"
           :data-pos="getPanelPos(i, panel.id)"
           :panel="panel")
-        DragAndDropPointer
       SubPanel(ref="subPanel")
 
     .right-vertical-box(v-if="pinnedTabsBarRight || navBarRight")
@@ -95,7 +94,6 @@ import { SwitchingTabScope } from 'src/services/tabs.fg.actions'
 import ConfirmPopup from './components/popup.confirm.vue'
 import CtxMenuPopup from './components/popup.context-menu.vue'
 import DragAndDropTooltip from './components/dnd-tooltip.vue'
-import DragAndDropPointer from './components/dnd-pointer.vue'
 import PinnedTabsBar from './components/bar.pinned-tabs.vue'
 import NotificationsPopup from './components/popup.notifications.vue'
 import NavigationBar from './components/bar.navigation.vue'
