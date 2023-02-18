@@ -1,5 +1,5 @@
 import { SettingsState, Container, Snapshot, ContextMenuConfig_v4, CssVars } from 'src/types'
-import { TabCache, FavDomain } from 'src/types'
+import { TabCache, FavDomain, Container_v4 } from 'src/types'
 import { OldPanelConfig, SidebarConfig, MenuConfs } from 'src/types'
 import { Snapshot_v4 } from './snapshots'
 
@@ -9,7 +9,7 @@ export interface Stored {
   ver?: string
   settings?: SettingsState
   containers?: Record<ID, Container>
-  containers_v4?: Record<ID, Container> // DEPR
+  containers_v4?: Record<ID, Container_v4> // DEPR
   profileID?: string
 
   tabsData_v4?: TabCache[][] // DEPR

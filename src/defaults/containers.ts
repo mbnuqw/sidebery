@@ -9,10 +9,8 @@ export const DEFAULT_CONTAINER: Container = {
   colorCode: '#37adff',
   proxified: false,
   proxy: null,
-  includeHostsActive: false,
-  includeHosts: '',
-  excludeHostsActive: false,
-  excludeHosts: '',
+  reopenRulesActive: false,
+  reopenRules: [],
   userAgentActive: false,
   userAgent: '',
 }

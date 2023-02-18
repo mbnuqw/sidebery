@@ -187,12 +187,8 @@ function onRemovedWebDataBg(): void {
       c.proxy.type = 'direct'
       containersSaveNeeded = true
     }
-    if (c.includeHostsActive) {
-      c.includeHostsActive = false
-      containersSaveNeeded = true
-    }
-    if (c.excludeHostsActive) {
-      c.excludeHostsActive = false
+    if (c.reopenRulesActive) {
+      c.reopenRulesActive = false
       containersSaveNeeded = true
     }
     if (c.userAgentActive) {
@@ -219,8 +215,7 @@ function onRemovedWebDataFg(): void {
     for (const c of Object.values(Containers.reactive.byId)) {
       if (c.proxified) c.proxified = false
       if (c.proxy) c.proxy.type = 'direct'
-      if (c.includeHostsActive) c.includeHostsActive = false
-      if (c.excludeHostsActive) c.excludeHostsActive = false
+      if (c.reopenRulesActive) c.reopenRulesActive = false
       if (c.userAgentActive) c.userAgentActive = false
     }
 

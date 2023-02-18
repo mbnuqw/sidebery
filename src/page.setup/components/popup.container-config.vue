@@ -21,33 +21,9 @@
     :icon="icon"
     @update:value="updateColor")
 
-  ToggleField(
-    label="container.rules_include"
-    :title="translate('container.rules_include_tooltip')"
-    :value="props.conf.includeHostsActive"
-    @update:value="toggleIncludeHosts")
-  .sub-fields.-nosep(v-if="props.conf.includeHostsActive")
-    .field
-      TextInput.text(
-        ref="includeHostsInput"
-        or="---"
-        :value="props.conf.includeHosts"
-        :valid="includeHostsValid"
-        @update:value="onIncludeHostsInput")
-
-  ToggleField(
-    label="container.rules_exclude"
-    :title="translate('container.rules_exclude_tooltip')"
-    :value="props.conf.excludeHostsActive"
-    @update:value="toggleExcludeHosts")
-  .sub-fields.-nosep(v-if="props.conf.excludeHostsActive")
-    .field
-      TextInput.text(
-        ref="excludeHostsInput"
-        or="---"
-        :value="props.conf.excludeHosts"
-        :valid="excludeHostsValid"
-        @update:value="onExcludeHostsInput")
+  .InfoField
+    .label {{translate('container.reopen_rules_label')}}
+    .btn(@click="openRulesPopup") {{getManageRulesBtnLabel(conf)}}
 
   SelectField(
     label="container.proxy_label"
@@ -119,12 +95,12 @@ import { CONTAINER_ICON_OPTS, COLOR_OPTS, PROXY_OPTS } from 'src/defaults'
 import { Container, TextInputComponent } from 'src/types'
 import { Containers } from 'src/services/containers'
 import { Permissions } from 'src/services/permissions'
+import { Sidebar } from 'src/services/sidebar'
 import TextField from '../../components/text-field.vue'
 import TextInput from '../../components/text-input.vue'
 import ToggleField from '../../components/toggle-field.vue'
 import SelectField from '../../components/select-field.vue'
 
-const HOSTS_RULE_RE = /^.+$/m
 const PROXY_HOST_RE = /^.{3,65536}$/
 const PROXY_PORT_RE = /^\d{2,5}$/
 
@@ -147,16 +123,6 @@ const icon = computed((): string => props.conf.icon || 'fingerprint')
 const color = computed((): string => props.conf.color || 'blue')
 const proxied = computed((): string => props.conf.proxy?.type ?? 'direct')
 const isSomeSocks = computed((): boolean => proxied.value === 'socks' || proxied.value === 'socks4')
-const includeHostsValid = computed((): '' | 'valid' | 'invalid' => {
-  if (!props.conf.includeHosts) return ''
-  if (HOSTS_RULE_RE.test(props.conf.includeHosts)) return 'valid'
-  else return 'invalid'
-})
-const excludeHostsValid = computed((): '' | 'valid' | 'invalid' => {
-  if (!props.conf.excludeHosts) return ''
-  if (HOSTS_RULE_RE.test(props.conf.excludeHosts)) return 'valid'
-  else return 'invalid'
-})
 const proxyHost = computed((): string => {
   if (!props.conf.id || !props.conf.proxy?.host) return ''
   return props.conf.proxy.host
@@ -253,36 +219,6 @@ async function checkWebDataPerm(): Promise<boolean> {
   return true
 }
 
-async function toggleIncludeHosts(): Promise<void> {
-  if (!props.conf.includeHostsActive && !(await checkWebDataPerm())) return
-
-  props.conf.includeHostsActive = !props.conf.includeHostsActive
-  Containers.saveContainers()
-  await nextTick()
-
-  includeHostsInput.value?.focus()
-}
-
-function onIncludeHostsInput(value: string): void {
-  props.conf.includeHosts = value
-  Containers.saveContainers(500)
-}
-
-async function toggleExcludeHosts(): Promise<void> {
-  if (!props.conf.excludeHostsActive && !(await checkWebDataPerm())) return
-
-  props.conf.excludeHostsActive = !props.conf.excludeHostsActive
-  Containers.saveContainers()
-  await nextTick()
-
-  excludeHostsInput.value?.focus()
-}
-
-function onExcludeHostsInput(value: string): void {
-  props.conf.excludeHosts = value
-  Containers.saveContainers(500)
-}
-
 async function switchProxy(type: browser.proxy.ProxyType): Promise<void> {
   if (type !== 'direct' && !(await checkWebDataPerm())) return
 
@@ -363,5 +299,15 @@ async function toggleUserAgent(): Promise<void> {
 function onUserAgentInput(value: string): void {
   props.conf.userAgent = value
   Containers.saveContainers(500)
+}
+
+function openRulesPopup() {
+  Sidebar.openTabReopenRulesPopup(props.conf.id)
+}
+
+function getManageRulesBtnLabel(container: Container): string {
+  const label = translate('container.manage_reopen_rules_label')
+  if (container.reopenRules.length) return label + ` (${container.reopenRules.length})`
+  else return label
 }
 </script>

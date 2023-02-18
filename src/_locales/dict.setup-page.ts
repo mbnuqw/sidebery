@@ -23,6 +23,14 @@ export const setupPageTranslations: Translations = {
     de: 'Farbe',
     zh_CN: '颜色',
   },
+  'container.reopen_rules_label': {
+    en: 'Include / Exclude tab by URL',
+    ru: 'Включить / исключить вкладку по URL',
+  },
+  'container.manage_reopen_rules_label': {
+    en: 'Manage rules',
+    ru: 'Управление правилами',
+  },
   'container.proxy_label': {
     en: 'Proxy',
     ru: 'Прокси',

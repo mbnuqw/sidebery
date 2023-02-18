@@ -370,15 +370,15 @@ async function adaptContainers(snapshot: NormalizedSnapshot): Promise<void> {
       return c.name === container.name && c.icon === container.icon && c.color === container.color
     })
 
+    Containers.updateReopeningRules(container)
+
     // Create new container
     if (!currentContainer) {
       const newContainer = await Containers.create(container.name, container.color, container.icon)
       newContainer.proxified = container.proxified
       newContainer.proxy = container.proxy
-      newContainer.includeHostsActive = container.includeHostsActive
-      newContainer.includeHosts = container.includeHosts
-      newContainer.excludeHostsActive = container.excludeHostsActive
-      newContainer.excludeHosts = container.excludeHosts
+      newContainer.reopenRulesActive = container.reopenRulesActive
+      newContainer.reopenRules = Utils.cloneArray(container.reopenRules)
       newContainer.userAgentActive = container.userAgentActive
       newContainer.userAgent = container.userAgent
       oldNewIds[container.id] = newContainer.id

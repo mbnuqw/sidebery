@@ -1,5 +1,5 @@
 import * as Utils from 'src/utils'
-import { Tab, IPCheckResult } from 'src/types'
+import { Tab, IPCheckResult, TabReopenRuleType } from 'src/types'
 import { WebReq } from 'src/services/web-req'
 import { Containers } from 'src/services/containers'
 import { Tabs } from 'src/services/tabs.bg'
@@ -135,38 +135,32 @@ export function updateReqHandlers(): void {
       }
     }
 
-    // Include rules
-    if (ctr.includeHostsActive) {
-      for (const rawRule of ctr.includeHosts.split('\n')) {
-        let rule: RegExp | string = rawRule.trim()
-        if (!rule) continue
+    // Reopen rules
+    if (ctr.reopenRulesActive) {
+      const ctrExclude = excludeHostsRules[ctr.id]
 
-        if (rule[0] === '/' && rule[rule.length - 1] === '/') {
+      for (const rule of ctr.reopenRules) {
+        if (!rule.active) continue
+
+        const urlMatchStr = rule.url.trim()
+        if (!urlMatchStr) continue
+
+        let urlMatchRe
+        if (urlMatchStr.startsWith('/') && urlMatchStr.endsWith('/')) {
           try {
-            rule = new RegExp(rule.slice(1, rule.length - 1))
-          } catch (err) {
-            // nothing
+            urlMatchRe = new RegExp(urlMatchStr.slice(1, -1))
+          } catch {
+            Logs.warn(`WebReq.updateReqHandlers: Cannot parse RegExp: ${urlMatchStr}`)
           }
         }
 
-        includeHostsRules.push({ ctx: ctr.id, value: rule })
+        if (rule.type === TabReopenRuleType.Include) {
+          includeHostsRules.push({ ctx: ctr.id, value: urlMatchRe ?? urlMatchStr })
+        } else {
+          if (ctrExclude) ctrExclude.push(urlMatchRe ?? urlMatchStr)
+          else excludeHostsRules[ctr.id] = [urlMatchRe ?? urlMatchStr]
+        }
       }
-    }
-
-    // Exclude rules
-    if (ctr.excludeHostsActive) {
-      excludeHostsRules[ctr.id] = ctr.excludeHosts
-        .split('\n')
-        .map(r => {
-          let rule: RegExp | string = r.trim()
-
-          if (rule[0] === '/' && rule[rule.length - 1] === '/') {
-            rule = new RegExp(rule.slice(1, rule.length - 1))
-          }
-
-          return rule
-        })
-        .filter(r => r)
     }
 
     // User agents

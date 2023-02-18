@@ -271,8 +271,8 @@ export const commonTranslations: Translations = {
   },
 
   'popup.tab_move_rules.title': {
-    en: 'Moving rules',
-    ru: 'Правила перемещения',
+    en: 'Tab moving rules',
+    ru: 'Правила перемещения вкладок',
   },
   'popup.tab_move_rules.editor_title.new': {
     en: 'Create a move rule',
@@ -288,7 +288,7 @@ export const commonTranslations: Translations = {
   },
   'popup.tab_move_rules.rule_url_label': {
     en: 'If tab has URL ("substring" or "/RegExp/")',
-    ru: 'Если вкладка с URL-адресом ("подстрока" или "/RegExp/")',
+    ru: 'Если вкладка имеет URL-адрес ("подстрока" или "/RegExp/")',
   },
   'popup.tab_move_rules.rule_top_lvl_label': {
     en: 'If tab at the top level of tree',
@@ -303,6 +303,59 @@ export const commonTranslations: Translations = {
     ru: 'Сохранить',
   },
   'popup.tab_move_rules.edit_rule_btn.cancel': {
+    en: 'Cancel',
+    ru: 'Отмена',
+  },
+
+  'popup.tab_reopen_rules.title': {
+    en: 'Tab reopening rules',
+    ru: 'Правила',
+  },
+  'popup.tab_reopen_rules.enable_label': {
+    en: 'Enable listed rules',
+    ru: 'Включить перечисленные правила',
+  },
+  'popup.tab_reopen_rules.editor_title.new': {
+    en: 'Create new rule',
+    ru: 'Создать правило',
+  },
+  'popup.tab_reopen_rules.editor_title.edit': {
+    en: 'Edit rule',
+    ru: 'Редактировать правило',
+  },
+  'popup.tab_reopen_rules.rule_type_label': {
+    en: 'Type of the rule',
+    ru: 'Тип правила',
+  },
+  'popup.tab_reopen_rules.rule_type_include': {
+    en: 'Include rule',
+    ru: 'Правило включения',
+  },
+  'popup.tab_reopen_rules.rule_type_exclude': {
+    en: 'Exclude rule',
+    ru: 'Правило исключения',
+  },
+  'popup.tab_reopen_rules.rule_url_label': {
+    en: 'If tab has URL ("substring" or "/RegExp/")',
+    ru: 'Если вкладка имеет URL-адрес ("подстрока" или "/RegExp/")',
+  },
+  'popup.tab_reopen_rules.rule_suffix_include': {
+    en: n => `...reopen it in "${n}" container`,
+    ru: n => `...открыть ee в контейнере "${n}"`,
+  },
+  'popup.tab_reopen_rules.rule_suffix_exclude': {
+    en: n => `...and it is in "${n}" container, reopen it in default container.`,
+    ru: n => `...и она находится в контейнере "${n}", открыть ее в контейнере по умолчанию.`,
+  },
+  'popup.tab_reopen_rules.add_rule_btn': {
+    en: 'Add rule',
+    ru: 'Добавить правило',
+  },
+  'popup.tab_reopen_rules.edit_rule_btn.save': {
+    en: 'Save',
+    ru: 'Сохранить',
+  },
+  'popup.tab_reopen_rules.edit_rule_btn.cancel': {
     en: 'Cancel',
     ru: 'Отмена',
   },

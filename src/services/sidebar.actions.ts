@@ -2111,6 +2111,18 @@ export function closeTabMoveRulesPopup(): void {
   Sidebar.reactive.tabMoveRulesPopup = null
 }
 
+export function openTabReopenRulesPopup(containerId: string): void {
+  const container = Containers.reactive.byId[containerId]
+  if (!container) return
+
+  Sidebar.reactive.tabReopenRulesPopup = { container }
+}
+
+export function closeTabReopenRulesPopup(): void {
+  if (!Sidebar.reactive.tabReopenRulesPopup) return
+  Sidebar.reactive.tabReopenRulesPopup = null
+}
+
 export function openSubPanel(type: SubPanelType, panel: TabsPanel) {
   if (!Sidebar.subPanelComponent) return Logs.warn('Tabs.openSubPanel: No subPanelComponent')
 

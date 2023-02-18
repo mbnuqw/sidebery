@@ -1,0 +1,211 @@
+@import '../../../utils'
+
+// Set toolbar colors for fields
+#root .TabReopenRulesPopup
+  --toolbar-bg: var(--popup-bg)
+  --toolbar-fg: var(--popup-fg)
+  [data-color="toolbar"]
+    --color: var(--popup-fg)
+
+.TabReopenRulesPopup *
+  box-sizing: border-box
+
+.TabReopenRulesPopup .space
+  height: 16px
+  &:first-child
+    display: none
+
+// ---
+// -- Shortcuts list
+// -
+.TabReopenRulesPopup .rules
+  position: relative
+  overflow-y: auto
+  padding: 0 4px
+  &[data-active="false"]
+    opacity: .3
+
+.TabReopenRulesPopup .rule
+  position: relative
+  margin-top: 3px
+  cursor: default
+  &:before
+    content: ''
+    position: absolute
+    width: 100%
+    height: 100%
+    border-radius: var(--general-border-radius)
+    background-color: var(--toolbar-fg)
+    opacity: 0
+  &:hover:before
+    opacity: .1
+  &:not(:first-of-type):after
+    content: ''
+    position: absolute
+    top: -2px
+    left: 4px
+    width: calc(100% - 8px)
+    height: 1px
+    background-color: var(--toolbar-fg)
+    opacity: .1
+  &[data-active="false"]
+    opacity: .5
+
+.TabReopenRulesPopup .rule[data-edit="true"]:before
+  background-color: transparent
+  box-shadow: inset 0 0 0 2px var(--status-active)
+  opacity: 1
+
+.TabReopenRulesPopup .rule .url-box
+  position: relative
+  display: flex
+  align-items: center
+  transform: translateZ(0)
+
+.TabReopenRulesPopup .rule .icon-box
+  position: relative
+  width: 28px
+  height: 28px
+  flex-shrink: 0
+  > .icon
+    position: absolute
+    top: 6px
+    left: 6px
+    width: 16px
+    height: 16px
+  > svg
+    fill: var(--color, var(--popup-fg))
+
+.TabReopenRulesPopup .rule .url
+  position: relative
+  color: var(--popup-fg)
+  font-size: rem(15)
+  white-space: nowrap
+  text-overflow: ellipsis
+  overflow: hidden
+  margin-right: 2px
+  line-height: 28px
+
+.TabReopenRulesPopup .rule .container-box
+  position: relative
+  display: flex
+  align-items: center
+  transform: translateZ(0)
+
+.TabReopenRulesPopup .type-selector
+  position: relative
+  display: flex
+  justify-content: center
+  align-items: center
+  grid-gap: 6px
+  padding: 3px 8px 8px
+
+.TabReopenRulesPopup .type-opt
+  position: relative
+  display: flex
+  align-items: center
+  cursor: default
+  width: 50%
+  &:before
+    content: ''
+    position: absolute
+    width: 100%
+    height: 100%
+    border-radius: 4px
+    background-color: var(--toolbar-fg)
+    opacity: .1
+  &:hover:before
+    opacity: .2
+  &[data-active="true"]:after
+    content: ''
+    position: absolute
+    width: 100%
+    height: 100%
+    border-radius: 4px
+    box-shadow: inset 0 0 0 2px var(--status-active)
+  &[data-active="true"]:before
+    opacity: .2
+
+.TabReopenRulesPopup .type-opt svg.icon
+  position: relative
+  width: 16px
+  height: 16px
+  margin: 8px
+  fill: var(--color, var(--popup-fg))
+  flex-shrink: 0
+
+.TabReopenRulesPopup .type-opt .label
+  position: relative
+  margin-right: 8px
+  white-space: nowrap
+  overflow: hidden
+  text-overflow: ellipsis
+  color: var(--toolbar-fg)
+  opacity: .7
+.TabReopenRulesPopup .type-opt[data-active="true"] .label
+  opacity: 1
+
+.TabReopenRulesPopup .note
+  position: relative
+  margin: 3px 4px 3px 8px
+  font-size: rem(14)
+  font-weight: 700
+  opacity: .7
+  color: var(--toolbar-fg)
+
+// .TabReopenRulesPopup .rule .container
+//   position: relative
+//   color: var(--color, var(--popup-fg))
+//   font-size: rem(15)
+//   white-space: nowrap
+//   text-overflow: ellipsis
+//   overflow: hidden
+//   margin-right: 2px
+
+.TabReopenRulesPopup .rule .controls-box
+  position: relative
+  display: none
+  justify-content: flex-end
+  align-items: center
+  height: 28px
+  padding: 0 2px
+  margin-left: auto
+.TabReopenRulesPopup .rule:hover .controls-box
+  display: flex
+
+.TabReopenRulesPopup .rule .btn-up
+.TabReopenRulesPopup .rule .btn-down
+.TabReopenRulesPopup .rule .btn-rm
+  position: relative
+  width: 24px
+  height: 24px
+  &:before
+    content: ''
+    position: absolute
+    width: 100%
+    height: 100%
+    border-radius: var(--general-border-radius)
+    background-color: var(--toolbar-fg)
+    opacity: 0
+  &:hover:before
+    opacity: .1
+  &:active:before
+    opacity: .2
+  > svg
+    position: relative
+    top: 4px
+    left: 4px
+    width: 16px
+    height: 16px
+    fill: white
+.TabReopenRulesPopup .rule .btn-up > svg
+  transform: rotateZ(180deg)
+
+.TabReopenRulesPopup .SelectField
+.TabReopenRulesPopup .ToggleField
+.TabReopenRulesPopup .TextField
+  margin: 3px 4px 0
+
+.TabReopenRulesPopup .ctrls
+  padding: 0 6px
+  margin: 4px 0 6px

@@ -126,7 +126,9 @@ async function upgrade(): Promise<void> {
   }
 
   // Moving data
-  if (stored.containers_v4) newStorage.containers = stored.containers_v4
+  if (stored.containers_v4) {
+    newStorage.containers = Containers.upgradeV4Containers(stored.containers_v4)
+  }
   upgradeTabsDataCache(stored, newStorage)
   upgrading.init = 'done'
 

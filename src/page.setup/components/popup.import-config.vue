@@ -53,6 +53,7 @@ import { Styles } from 'src/services/styles'
 import { Snapshots } from 'src/services/snapshots'
 import ToggleField from 'src/components/toggle-field.vue'
 import { NormalizedSnapshot } from 'src/types/snapshots'
+import { Containers } from 'src/services/containers'
 
 const props = defineProps({
   importedData: {
@@ -254,8 +255,9 @@ function checkPermissions(): void {
   if (state.containers && containers) {
     for (let ctr of Object.values(containers)) {
       if (ctr.proxified) webData = true
-      if (ctr.includeHostsActive) webData = true
-      if (ctr.excludeHostsActive) webData = true
+      if (ctr.includeHostsActive) webData = true // DEPR
+      if (ctr.excludeHostsActive) webData = true // DEPR
+      if (ctr.reopenRulesActive) webData = true
       if (ctr.userAgentActive) webData = true
     }
   }
@@ -303,6 +305,8 @@ async function importContainers(backup: BackupData, toStore: Stored): Promise<Ol
   const oldNewContainersMap: OldNewIds = {}
 
   for (let ctr of Object.values(Utils.cloneObject(backup.containers))) {
+    Containers.updateReopeningRules(ctr)
+
     let ffCtr = ffContainers.find(c => {
       return c.name === ctr.name && c.icon === ctr.icon && c.color === ctr.color
     })

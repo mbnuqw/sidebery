@@ -252,3 +252,21 @@ export interface TabToPanelMoveRule {
   containerId?: string
   topLvlOnly?: boolean
 }
+
+export const enum TabReopenRuleType {
+  Include = 1,
+  Exclude = 2,
+}
+
+export interface TabReopenRuleConfig {
+  id: ID
+  type: TabReopenRuleType
+  active: boolean
+  url: string
+}
+
+export interface TabReopenRule {
+  containerId: string
+  urlRE?: RegExp
+  urlStr?: string
+}

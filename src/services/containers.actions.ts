@@ -1,5 +1,5 @@
 import * as Utils from 'src/utils'
-import { Stored, Container } from 'src/types'
+import { Stored, Container, TabReopenRuleType, Container_v4, TabReopenRuleConfig } from 'src/types'
 import { Containers } from 'src/services/containers'
 import { DEFAULT_CONTAINER } from 'src/defaults'
 import { Store } from 'src/services/storage'
@@ -48,6 +48,12 @@ export async function load(): Promise<void> {
       }
 
       Utils.normalizeObject(container, DEFAULT_CONTAINER)
+
+      // TEMP update for b31
+      if (updateReopeningRules(container) && !saveNeeded) {
+        saveNeeded = true
+      }
+      // TEMP --------------
     }
 
     Containers.reactive.byId = containers
@@ -61,6 +67,121 @@ export async function load(): Promise<void> {
       Menu.parseContainersRules()
     }
   }
+}
+
+export function updateReopeningRules(container: Container): boolean {
+  if (!container.reopenRules) container.reopenRules = []
+  if (container.reopenRulesActive === undefined) container.reopenRulesActive = false
+
+  let saveNeeded = false
+  const initiallyEmpty = container.reopenRules.length === 0
+
+  if (container.includeHosts) {
+    const active = !!container.includeHostsActive
+    for (const rawRule of container.includeHosts.split('\n')) {
+      const ruleStr = rawRule.trim()
+      if (!ruleStr) continue
+
+      container.reopenRules.push({
+        id: Utils.uid(),
+        active,
+        type: TabReopenRuleType.Include,
+        url: ruleStr,
+      })
+
+      if (!saveNeeded) saveNeeded = true
+    }
+  }
+  if (container.includeHosts !== undefined) delete container.includeHosts
+  if (container.includeHostsActive !== undefined) delete container.includeHostsActive
+
+  if (container.excludeHosts) {
+    const active = !!container.excludeHostsActive
+    for (const rawRule of container.excludeHosts.split('\n')) {
+      const ruleStr = rawRule.trim()
+      if (!ruleStr) continue
+
+      container.reopenRules.push({
+        id: Utils.uid(),
+        active,
+        type: TabReopenRuleType.Exclude,
+        url: ruleStr,
+      })
+
+      if (!saveNeeded) saveNeeded = true
+    }
+  }
+  if (container.excludeHosts !== undefined) delete container.excludeHosts
+  if (container.excludeHostsActive !== undefined) delete container.excludeHostsActive
+
+  if (initiallyEmpty && container.reopenRules.length > 0) {
+    container.reopenRulesActive = true
+  }
+
+  return saveNeeded
+}
+
+function upgradeReopeningRules(oldCtr: Container_v4, newCtr: Container) {
+  if (oldCtr.includeHosts) {
+    const active = !!oldCtr.includeHostsActive
+    for (const rawRule of oldCtr.includeHosts.split('\n')) {
+      const ruleStr = rawRule.trim()
+      if (!ruleStr) continue
+
+      newCtr.reopenRules.push({
+        id: Utils.uid(),
+        active,
+        type: TabReopenRuleType.Include,
+        url: ruleStr,
+      })
+
+      if (!newCtr.reopenRulesActive) newCtr.reopenRulesActive = true
+    }
+  }
+
+  if (oldCtr.excludeHosts) {
+    const active = !!oldCtr.excludeHostsActive
+    for (const rawRule of oldCtr.excludeHosts.split('\n')) {
+      const ruleStr = rawRule.trim()
+      if (!ruleStr) continue
+
+      newCtr.reopenRules.push({
+        id: Utils.uid(),
+        active,
+        type: TabReopenRuleType.Exclude,
+        url: ruleStr,
+      })
+
+      if (!newCtr.reopenRulesActive) newCtr.reopenRulesActive = true
+    }
+  }
+}
+
+export function upgradeV4Containers(
+  oldContainers: Record<ID, Container_v4>
+): Record<ID, Container> {
+  const output: Record<ID, Container> = {}
+
+  for (const id of Object.keys(oldContainers)) {
+    const oldContainer = oldContainers[id]
+    const newContainer = Utils.cloneObject(DEFAULT_CONTAINER)
+
+    newContainer.cookieStoreId = oldContainer.cookieStoreId
+    if (oldContainer.name) newContainer.name = oldContainer.name
+    if (oldContainer.icon) newContainer.icon = oldContainer.icon
+    if (oldContainer.color) newContainer.color = oldContainer.color
+    if (oldContainer.colorCode) newContainer.colorCode = oldContainer.colorCode
+    newContainer.id = oldContainer.cookieStoreId
+    if (oldContainer.proxified) newContainer.proxified = oldContainer.proxified
+    if (oldContainer.proxy) newContainer.proxy = Utils.cloneObject(oldContainer.proxy)
+    upgradeReopeningRules(oldContainer, newContainer)
+    if (oldContainer.userAgentActive) newContainer.userAgentActive = oldContainer.userAgentActive
+    if (oldContainer.userAgent) newContainer.userAgent = oldContainer.userAgent
+
+    output[id] = newContainer
+  }
+
+  return output
 }
 
 export async function saveContainers(delay?: number): Promise<void> {
@@ -149,25 +270,29 @@ export function findUnique(
 
 export function getContainerFor(url: string): string | undefined {
   for (const ctr of Object.values(Containers.reactive.byId)) {
-    // Include rules
-    if (ctr.includeHostsActive) {
+    if (ctr.reopenRulesActive) {
       let matchedContiner = false
 
-      for (const rawRule of ctr.includeHosts.split('\n')) {
-        let rule: RegExp | string = rawRule.trim()
-        if (!rule) continue
+      for (const rule of ctr.reopenRules) {
+        if (!rule.active) continue
 
-        if (rule.startsWith('/') && rule.endsWith('/')) {
+        const urlMatchStr = rule.url.trim()
+        if (!urlMatchStr) continue
+
+        let urlMatchRe
+        if (urlMatchStr.startsWith('/') && urlMatchStr.endsWith('/')) {
           try {
-            rule = new RegExp(rule.slice(1, rule.length - 1))
+            urlMatchRe = new RegExp(urlMatchStr.slice(1, -1))
+            if (urlMatchRe.test(url)) {
+              matchedContiner = true
+              break
+            }
           } catch {
-            // ---
+            Logs.warn(`Containers.getContainerFor: Cannot parse RegExp: ${urlMatchStr}`)
           }
-
-          if ((Utils.isRegExp(rule) && rule.test(url)) || url.indexOf(rule as string) !== -1) {
-            matchedContiner = true
-            break
-          }
+        } else if (url.includes(urlMatchStr)) {
+          matchedContiner = true
+          break
         }
       }
 
