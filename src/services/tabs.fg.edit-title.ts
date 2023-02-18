@@ -37,6 +37,7 @@ export function saveCustomTitle(tabId: ID) {
   const isGroup = Utils.isGroupUrl(tab.url)
   if (isGroup && value) {
     Tabs.setGroupName(tab.id, value)
+    return
   } else {
     if (value) {
       tab.customTitle = value

@@ -326,7 +326,7 @@ export function getGroupConfig(groupTabId: ID): GroupConfig | undefined {
   } catch {
     return
   }
-  if (!urlInfo.hash) return
+  if (!urlInfo.hash) urlInfo.hash = ''
 
   const config: GroupConfig = { active: groupTab.active }
 
@@ -360,13 +360,12 @@ export function setGroupName(groupTabId: ID, newName: string) {
   const config = getGroupConfig(groupTabId)
   if (!config) return
 
+  const isDiscarded = groupTab.discarded
   const newUrl = Utils.createGroupUrl(newName, config)
   browser.tabs
     .update(groupTabId, { url: newUrl })
     .then(() => {
-      if (!groupTab.discarded) {
-        return IPC.groupPage(groupTabId, { name: 'update', title: newName })
-      }
+      if (!isDiscarded) return IPC.groupPage(groupTabId, { name: 'update', title: newName })
     })
     .catch(() => {
       Logs.warn('setGroupName: Cannot update url')

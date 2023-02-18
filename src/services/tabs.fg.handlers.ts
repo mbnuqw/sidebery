@@ -1,6 +1,6 @@
 import * as Utils from 'src/utils'
 import { ReactiveTab, Tab, TabStatus } from 'src/types'
-import { NOID, GROUP_URL, CONTAINER_ID, ADDON_HOST } from 'src/defaults'
+import { NOID, GROUP_URL, CONTAINER_ID, ADDON_HOST, GROUP_INITIAL_TITLE } from 'src/defaults'
 import * as Logs from 'src/services/logs'
 import { Windows } from 'src/services/windows'
 import { Bookmarks } from 'src/services/bookmarks'
@@ -548,8 +548,7 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
       (Settings.state.tabsUpdateMark === 'pin' && localTab.pinned) ||
       (Settings.state.tabsUpdateMark === 'norm' && !localTab.pinned)
     ) {
-      const inact = Date.now() - tab.lastAccessed
-      if (!tab.active && inact > 5000) {
+      if (!tab.active && !localTab.internal && Date.now() - tab.lastAccessed > 5000) {
         // If current url is the same as previous
         if (localTab.url === tab.url) {
           // Check if this title update is the first for current URL
@@ -570,6 +569,14 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
             }
           }
         }
+      }
+    }
+
+    // Reset custom title
+    if (localTab.isGroup && localTab.active && change.title !== GROUP_INITIAL_TITLE) {
+      if (rLocalTab.customTitle) {
+        localTab.customTitle = undefined
+        rLocalTab.customTitle = null
       }
     }
 
