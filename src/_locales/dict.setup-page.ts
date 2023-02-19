@@ -2032,8 +2032,8 @@ export const setupPageTranslations: Translations = {
     zh_CN: '按需加载书签',
   },
   'settings.pin_opened_bookmarks_folder': {
-    en: 'Pin opened folder when scrolling',
-    ru: 'Закреплять открытую папку при прокрутке',
+    en: 'Always show open folders when scrolling',
+    ru: 'Всегда показывать открытые папки при прокрутке',
     de: 'Geöffneten Ordner beim Scrollen anheften',
     zh_CN: '滚动时固定已打开的文件夹',
   },
