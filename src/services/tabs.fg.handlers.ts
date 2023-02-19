@@ -441,6 +441,11 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
     }
     const groupTab = Tabs.getGroupTab(localTab)
     if (groupTab && !groupTab.discarded) Tabs.updateGroupChild(groupTab.id, tab.id)
+
+    if (!localTab.favIconUrl) {
+      localTab.favIconUrl = Favicons.getFavicon(localTab.url)
+      rLocalTab.favIconUrl = localTab.favIconUrl
+    }
   }
 
   // Status change
