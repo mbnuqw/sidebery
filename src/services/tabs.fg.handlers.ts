@@ -363,17 +363,7 @@ function onTabCreated(tab: Tab, attached?: boolean): void {
   Tabs.cacheTabsData()
 
   // Update succession
-  if (Settings.state.activateAfterClosing !== 'none') {
-    const activeTab = Tabs.byId[Tabs.activeId]
-    if (activeTab && activeTab.active) {
-      const target = Tabs.findSuccessorTab(activeTab)
-      if (target) {
-        browser.tabs.moveInSuccession([activeTab.id], target.id).catch(err => {
-          Logs.err('Tabs.onTabCreated: Cannot update succession:', err)
-        })
-      }
-    }
-  }
+  Tabs.updateSuccessionDebounced(100)
 
   if (createGroup && !tab.pinned && initialOpener) {
     Tabs.groupTabs([tab.id], {
@@ -433,6 +423,9 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
 
   // Discarded
   if (change.discarded !== undefined && change.discarded) {
+    // Update successor tab for active tab
+    Tabs.updateSuccessionDebounced(15)
+
     if (localTab.status === 'loading') {
       localTab.status = 'complete'
       rLocalTab.status = TabStatus.Complete
@@ -945,18 +938,7 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
     Tabs.cacheTabsData()
 
     // Update succession
-    let tabSuccessor: Tab | undefined
-    if (Settings.state.activateAfterClosing !== 'none') {
-      const activeTab = Tabs.byId[Tabs.activeId]
-      if (activeTab && activeTab.active) {
-        tabSuccessor = Tabs.findSuccessorTab(activeTab)
-        if (tabSuccessor) {
-          browser.tabs.moveInSuccession([activeTab.id], tabSuccessor.id).catch(err => {
-            Logs.err('Tabs.onTabRemoved: Cannot update succession:', err)
-          })
-        }
-      }
-    }
+    const tabSuccessor = Tabs.updateSuccessionDebounced(0)
 
     // Switch to another panel if current is hidden
     if (
@@ -1030,14 +1012,7 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
     if (!Tabs.movingTabs.length) Tabs.cacheTabsData()
     tab.dstPanelId = -1
     Sidebar.recalcTabsPanels()
-    if (Settings.state.activateAfterClosing !== 'none' && tab.active) {
-      const target = Tabs.findSuccessorTab(tab)
-      if (target) {
-        browser.tabs.moveInSuccession([tab.id], target.id).catch(err => {
-          Logs.err('Tabs.onTabMoved: Cannot update succession:', err)
-        })
-      }
-    }
+    if (tab.active) Tabs.updateSuccessionDebounced(0)
     return
   }
 
@@ -1104,17 +1079,7 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
   Tabs.saveTabData(movedTab.id)
 
   // Update succession
-  if (!Tabs.movingTabs.length && Settings.state.activateAfterClosing !== 'none') {
-    const activeTab = Tabs.byId[Tabs.activeId]
-    if (activeTab && activeTab.active) {
-      const target = Tabs.findSuccessorTab(activeTab)
-      if (target) {
-        browser.tabs.moveInSuccession([activeTab.id], target.id).catch(err => {
-          Logs.err('Tabs.onTabMoved: Cannot update succesion:', err)
-        })
-      }
-    }
-  }
+  if (!Tabs.movingTabs.length) Tabs.updateSuccessionDebounced(0)
 }
 
 /**
@@ -1305,12 +1270,5 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
   if (!tab.pinned) Tabs.scrollToTabDebounced(3, tab.id)
 
   // Update succession
-  if (Settings.state.activateAfterClosing !== 'none') {
-    const target = Tabs.findSuccessorTab(tab)
-    if (target && tab.successorTabId !== target.id) {
-      browser.tabs.moveInSuccession([tab.id], target.id).catch(err => {
-        Logs.err('Tabs.onTabActivated: Cannot update succession:', err)
-      })
-    }
-  }
+  Tabs.updateSuccessionDebounced(10)
 }

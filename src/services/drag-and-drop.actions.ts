@@ -33,12 +33,8 @@ export function start(info: DragInfo, dstType?: DropType): void {
   ) {
     const activeItem = info.items.find(i => i.id === Tabs.activeId)
     if (activeItem) {
-      const activeTab = Tabs.byId[Tabs.activeId]
-      if (activeTab) {
-        const toExclude = info.items.map(i => i.id)
-        const target = Tabs.findSuccessorTab(activeTab, toExclude)
-        if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
-      }
+      const dndIds = info.items.map(i => i.id)
+      Tabs.updateSuccessionDebounced(0, dndIds)
     }
   }
 
@@ -1063,9 +1059,5 @@ export async function onDragEnd(e: DragEvent): Promise<void> {
   }, 100)
 
   // Update succession of active tab
-  const activeTab = Tabs.byId[Tabs.activeId]
-  if (activeTab) {
-    const target = Tabs.findSuccessorTab(activeTab)
-    if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
-  }
+  Tabs.updateSuccessionDebounced(0)
 }

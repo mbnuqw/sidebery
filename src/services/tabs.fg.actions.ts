@@ -233,14 +233,7 @@ async function restoreTabsState(): Promise<void> {
     Tabs.activeId = activeTab.id
 
     // Update succession
-    if (Settings.state.activateAfterClosing !== 'none' && activeTab) {
-      const target = findSuccessorTab(activeTab)
-      if (target) {
-        browser.tabs.moveInSuccession([activeTab.id], target.id).catch(err => {
-          Logs.err('Tabs.restoreTabsState: Cannot update succession:', err)
-        })
-      }
-    }
+    Tabs.updateSuccessionDebounced(0)
   }
 
   // Call deferred event handlers
@@ -937,16 +930,9 @@ export async function removeTabs(tabIds: ID[], silent?: boolean): Promise<void> 
     Tabs.createTabInPanel(panel)
   }
 
-  // Update successorTabId if there are active tab
+  // Update successorTabId if there is an active tab
   const activeTab = tabs.find(t => t.active)
-  if (activeTab) {
-    const target = findSuccessorTab(activeTab, toRemove)
-    if (target && activeTab.successorTabId !== target.id) {
-      browser.tabs.moveInSuccession([activeTab.id], target.id).catch(err => {
-        Logs.err('Tabs.removeTabs: Cannot update succession:', err)
-      })
-    }
-  }
+  if (activeTab) Tabs.updateSuccessionDebounced(0, toRemove)
 
   if (!silent && tabs.length > 1 && Settings.state.tabsRmUndoNote && !warn) {
     const favicons: string[] = []
@@ -2401,10 +2387,7 @@ export function foldTabsBranch(rootTabId: ID): void {
   }
 
   // Update succession
-  if (rootTab.active) {
-    const target = findSuccessorTab(rootTab)
-    if (target) browser.tabs.moveInSuccession([rootTab.id], target.id)
-  }
+  if (rootTab.active) Tabs.updateSuccessionDebounced(0)
 
   saveTabData(rootTabId)
   cacheTabsData()
@@ -2493,10 +2476,7 @@ export function expTabsBranch(rootTabId: ID): void {
   }
 
   // Update succession
-  if (rootTab.active) {
-    const target = findSuccessorTab(rootTab)
-    if (target) browser.tabs.moveInSuccession([rootTab.id], target.id)
-  }
+  if (rootTab.active) Tabs.updateSuccessionDebounced(0)
 
   saveTabData(rootTabId)
   cacheTabsData()
@@ -3573,15 +3553,7 @@ export async function reopen(tabsInfo: ItemInfo[], dst: DstPlaceInfo): Promise<v
   // Update succession on reopening in another window
   const ids = tabsInfo.map(ti => ti.id)
   if (dst.windowId !== undefined && dst.windowId !== Windows.id && ids.includes(Tabs.activeId)) {
-    const activeTab = Tabs.byId[Tabs.activeId]
-    if (Settings.state.activateAfterClosing !== 'none' && activeTab) {
-      const target = findSuccessorTab(activeTab, ids)
-      if (target && target.id !== activeTab.successorTabId) {
-        browser.tabs.moveInSuccession([activeTab.id], target.id).catch(err => {
-          Logs.err('Tabs.reopen: Cannot update succession:', err)
-        })
-      }
-    }
+    Tabs.updateSuccessionDebounced(0, ids)
   }
 
   // Remove source tabs
@@ -4169,5 +4141,29 @@ export function findMoveRule(tab: Tab): TabToPanelMoveRule | undefined {
     }
 
     return rule
+  }
+}
+
+let updateSuccesionTimeout: number | undefined
+export function updateSuccessionDebounced(delay: number, exclude?: ID[]) {
+  if (Settings.state.activateAfterClosing === 'none') return
+
+  clearTimeout(updateSuccesionTimeout)
+
+  if (!delay) return updateSuccession(exclude)
+
+  updateSuccesionTimeout = setTimeout(() => updateSuccession(exclude), delay)
+}
+
+function updateSuccession(exclude?: ID[]) {
+  const activeTab = Tabs.byId[Tabs.activeId]
+  if (activeTab) {
+    const target = Tabs.findSuccessorTab(activeTab, exclude)
+    if (target) {
+      browser.tabs.moveInSuccession([activeTab.id], target.id).catch(err => {
+        Logs.err('Tabs.updateSuccession: Cannot update succession:', err)
+      })
+      return target
+    }
   }
 }

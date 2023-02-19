@@ -144,11 +144,7 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
   }
 
   if (Info.isSidebar && updateSuccessions && Sidebar.hasTabs) {
-    const activeTab = Tabs.list.find(t => t.active)
-    if (Settings.state.activateAfterClosing !== 'none' && activeTab) {
-      const target = Tabs.findSuccessorTab(activeTab)
-      if (target) browser.tabs.moveInSuccession([activeTab.id], target.id)
-    }
+    Tabs.updateSuccessionDebounced(0)
   }
 
   if (resetTree && Sidebar.hasTabs) {
