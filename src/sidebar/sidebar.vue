@@ -43,6 +43,7 @@
   Transition(name="popup" type="transition"): GroupConfigPopup(v-if="Sidebar.reactive.groupConfigPopup")
   Transition(name="popup" type="transition"): DialogPopup(v-if="Sidebar.reactive.dialog" :dialog="Sidebar.reactive.dialog")
   Transition(name="popup" type="transition"): NewTabShortcutsPopup(v-if="Sidebar.reactive.newTabShortcutsPopup")
+  Transition(name="popup" type="transition"): UrlRulesPopup(v-if="Sidebar.reactive.urlRulesPopup")
   CtxMenuPopup
   DragAndDropTooltip
   NotificationsPopup
@@ -108,6 +109,7 @@ import ContainerConfigPopup from './components/popup.container-config.vue'
 import GroupConfigPopup from './components/popup.group-config.vue'
 import DialogPopup from './components/popup.dialog.vue'
 import NewTabShortcutsPopup from '../components/popup.new-tab-shortcuts.vue'
+import UrlRulesPopup from '../components/popup.url-rules.vue'
 import UpgradeScreen from '../components/upgrade-screen.vue'
 import SubPanel from './components/sub-panel.vue'
 import * as Utils from 'src/utils'

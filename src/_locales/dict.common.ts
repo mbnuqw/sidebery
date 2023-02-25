@@ -360,6 +360,31 @@ export const commonTranslations: Translations = {
     ru: 'Отмена',
   },
 
+  'popup.url_rules.title': {
+    en: 'Site Config',
+    ru: 'Настройка сайта',
+  },
+  'popup.url_rules.match_label': {
+    en: 'Select tabs by URL',
+    ru: 'Выбирать вкладки по URL',
+  },
+  'popup.url_rules.custom_match_placeholder': {
+    en: '"substring" or "/RegExp/"',
+    ru: '"подстрока" или "/RegExp/"',
+  },
+  'popup.url_rules.reopen_label': {
+    en: 'Reopen these tabs in:',
+    ru: 'Открывать эти вкладки в:',
+  },
+  'popup.url_rules.move_label': {
+    en: 'Move these tabs to:',
+    ru: 'Переместить эти вкладки в:',
+  },
+  'popup.url_rules.move_top_lvl_label': {
+    en: 'If tab at the top level of tree',
+    ru: 'Если вкладка на верхнем уровне дерева',
+  },
+
   // ---
   // -- Context menu
   // -
@@ -743,6 +768,10 @@ export const commonTranslations: Translations = {
     ru: 'Сбросить вложенность',
     de: 'Plätten',
     zh_CN: '扁平化',
+  },
+  'menu.tab.url_conf': {
+    en: 'Configure this URL',
+    ru: 'Настроить этот URL',
   },
   'menu.tab.pin': {
     en: 'Pin',

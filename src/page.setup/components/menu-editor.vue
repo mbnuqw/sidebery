@@ -181,6 +181,7 @@ const TABS_MENU_OPTS: Record<string, string> = {
   colorizeTab: 'menu.tab.colorize_colors',
   group: 'menu.tab.group',
   flatten: 'menu.tab.flatten',
+  urlConf: 'menu.tab.url_conf',
   clearCookies: 'menu.tab.clear_cookies',
   closeDescendants: 'menu.tab.close_descendants',
   close: 'menu.tab.close',

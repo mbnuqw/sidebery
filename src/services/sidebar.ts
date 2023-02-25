@@ -18,6 +18,7 @@ export interface SidebarReactiveState {
   containerConfigPopup: ContainerConfigPopup | null
   groupConfigPopup: GroupConfigPopup | null
   newTabShortcutsPopup: NewTabShortcutsPopup | null
+  urlRulesPopup: UrlRulesPopup | null
   tabMoveRulesPopup: TabMoveRulesPopup | null
   tabReopenRulesPopup: TabReopenRulesPopup | null
   confirm: ConfirmDialog | null
@@ -66,6 +67,11 @@ export interface TabReopenRulesPopup {
   container: Container
 }
 
+export interface UrlRulesPopup {
+  tabId: ID
+  url: string
+}
+
 export const Sidebar = {
   reactive: {
     nav: [],
@@ -84,6 +90,7 @@ export const Sidebar = {
     newTabShortcutsPopup: null,
     tabMoveRulesPopup: null,
     tabReopenRulesPopup: null,
+    urlRulesPopup: null,
     confirm: null,
     hiddenPanelsPopup: false,
     hiddenPanelsPopupOffset: 0,

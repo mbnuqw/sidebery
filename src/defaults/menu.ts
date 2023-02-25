@@ -26,6 +26,7 @@ export const TABS_MENU: MenuConf = [
   'group',
   'flatten',
   'separator-4',
+  'urlConf',
   'clearCookies',
   'close',
 ]

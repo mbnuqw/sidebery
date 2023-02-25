@@ -203,6 +203,20 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     return option
   },
 
+  urlConf: () => {
+    const selected = Selection.get()
+    const firstTab = Tabs.byId[selected[0]]
+    if (!firstTab) return
+
+    const option: MenuOption = {
+      label: translate('menu.tab.url_conf'),
+      icon: 'icon_url_conf',
+      onClick: () => Sidebar.openUrlRulesPopup(firstTab),
+    }
+
+    return option
+  },
+
   openTabsInCtr: () => {
     if (Windows.incognito) return
 

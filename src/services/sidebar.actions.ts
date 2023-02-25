@@ -2099,6 +2099,15 @@ export function closeNewTabShortcutsPopup(): void {
   Sidebar.reactive.newTabShortcutsPopup = null
 }
 
+export function openUrlRulesPopup(tab: Tab): void {
+  Sidebar.reactive.urlRulesPopup = { url: tab.url, tabId: tab.id }
+}
+
+export function closeUrlRulesPopup(): void {
+  if (!Sidebar.reactive.urlRulesPopup) return
+  Sidebar.reactive.urlRulesPopup = null
+}
+
 export function openTabMoveRulesPopup(panelId: ID): void {
   const panel = Sidebar.reactive.panelsById[panelId]
   if (!Utils.isTabsPanel(panel)) return
