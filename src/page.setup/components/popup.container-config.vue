@@ -119,7 +119,7 @@ const proxyPasswordInput = ref<TextInputComponent | null>(null)
 const userAgentInput = ref<TextInputComponent | null>(null)
 
 const name = computed((): string => props.conf.name || '')
-const icon = computed((): string => props.conf.icon || 'fingerprint')
+const icon = computed((): string => (props.conf.icon ? '#' + props.conf.icon : '#fingerprint'))
 const color = computed((): string => props.conf.color || 'blue')
 const proxied = computed((): string => props.conf.proxy?.type ?? 'direct')
 const isSomeSocks = computed((): boolean => proxied.value === 'socks' || proxied.value === 'socks4')

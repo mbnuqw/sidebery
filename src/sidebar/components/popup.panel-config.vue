@@ -47,9 +47,9 @@ import { SetupPage } from 'src/services/setup-page'
 import { InputOption, TextInputComponent, TabsPanelConfig, BookmarksPanelConfig } from 'src/types'
 import { Settings } from 'src/services/settings'
 
-const TABS_PANEL_ICON_OPTS = [{ value: 'icon_tabs', icon: 'icon_tabs' }, ...PANEL_ICON_OPTS]
+const TABS_PANEL_ICON_OPTS = [{ value: 'icon_tabs', icon: '#icon_tabs' }, ...PANEL_ICON_OPTS]
 const BOOKMARKS_PANEL_ICON_OPTS = [
-  { value: 'icon_bookmarks', icon: 'icon_bookmarks' },
+  { value: 'icon_bookmarks', icon: '#icon_bookmarks' },
   ...PANEL_ICON_OPTS,
 ]
 

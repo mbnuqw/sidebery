@@ -177,21 +177,22 @@ const availableContainersOpts = computed<ContainerOption[]>(() => {
     {
       value: 'none',
       color: 'inactive',
-      icon: 'icon_none',
+      icon: '#icon_none',
       title: 'Not set',
       tooltip: 'Not set',
     },
     {
       value: DEFAULT_CONTAINER_ID,
       color: 'toolbar',
-      icon: 'icon_ff',
+      icon: '#icon_ff',
       title: defaultTitle,
       tooltip: defaultTitle,
     },
   ]
 
   for (let c of Object.values(Containers.reactive.byId)) {
-    result.push({ value: c.id, color: c.color, icon: c.icon, title: c.name, tooltip: c.name })
+    const icon = '#' + c.icon
+    result.push({ value: c.id, color: c.color, icon, title: c.name, tooltip: c.name })
   }
 
   return result

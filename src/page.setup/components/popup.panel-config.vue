@@ -171,9 +171,9 @@ interface ContainerOption {
 }
 
 const URL_RE = /^https?:\/\/.+/
-const TABS_PANEL_ICON_OPTS = [{ value: 'icon_tabs', icon: 'icon_tabs' }, ...PANEL_ICON_OPTS]
+const TABS_PANEL_ICON_OPTS = [{ value: 'icon_tabs', icon: '#icon_tabs' }, ...PANEL_ICON_OPTS]
 const BOOKMARKS_PANEL_ICON_OPTS = [
-  { value: 'icon_bookmarks', icon: 'icon_bookmarks' },
+  { value: 'icon_bookmarks', icon: '#icon_bookmarks' },
   ...PANEL_ICON_OPTS,
 ]
 const defaultContainerTooltip = translate('panel.ctr_tooltip_default')
@@ -202,13 +202,13 @@ const containersOpts = computed<ContainerOption[]>(() => {
   const result: ContainerOption[] = []
 
   for (let c of Object.values(Containers.reactive.byId)) {
-    result.push({ value: c.id, color: c.color, icon: c.icon, title: c.name, tooltip: c.name })
+    result.push({ value: c.id, color: c.color, icon: '#' + c.icon, title: c.name, tooltip: c.name })
   }
 
   result.push({
     value: 'none',
     color: 'inactive',
-    icon: 'icon_none',
+    icon: '#icon_none',
     title: noneContainerTooltip,
     tooltip: noneContainerTooltip,
   })
@@ -230,7 +230,7 @@ const availableForAutoMoveContainersOpts = computed<ContainerOption[]>(() => {
     result.push({
       value: DEFAULT_CONTAINER_ID,
       color: 'toolbar',
-      icon: 'icon_ff',
+      icon: '#icon_ff',
       title: defaultContainerTooltip,
       tooltip: defaultContainerTooltip,
     })
@@ -238,21 +238,22 @@ const availableForAutoMoveContainersOpts = computed<ContainerOption[]>(() => {
 
   for (let c of Object.values(Containers.reactive.byId)) {
     if (!used[c.id]) {
-      result.push({ value: c.id, color: c.color, icon: c.icon, title: c.name, tooltip: c.name })
+      const icon = '#' + c.icon
+      result.push({ value: c.id, color: c.color, icon, title: c.name, tooltip: c.name })
     }
   }
 
   result.push({
     value: 'none',
     color: 'inactive',
-    icon: 'icon_none',
+    icon: '#icon_none',
     title: noneContainerTooltip,
     tooltip: noneContainerTooltip,
   })
 
   return result
 })
-const iconSVG = computed<string>(() => props.conf.iconSVG || '')
+const iconSVG = computed<string>(() => (props.conf.iconSVG ? '#' + props.conf.iconSVG : ''))
 const color = computed<string>(() => props.conf.color || '')
 const newTabCtx = computed<string>(() => {
   return (Utils.isTabsPanel(props.conf) && props.conf.newTabCtx) || ''
