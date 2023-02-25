@@ -506,11 +506,18 @@ for i in 1..12
   bottom: 0
   width: 100%
   height: 36px
-  background-color: var(--toolbar-bg)
+  background-color: var(--frame-bg)
   box-shadow: 0 -1px 0 0 var(--border-color)
   opacity: 0
   transform: translateY(100%)
   transition: opacity var(--d-fast), transform var(--d-fast)
+  &:before
+    content: ''
+    position: absolute
+    width: 100%
+    height: 100%
+    background-color: var(--toolbar-fg)
+    opacity: .1
   &[data-active="true"]
     opacity: 1
     transform: translateY(0)
