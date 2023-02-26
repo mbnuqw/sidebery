@@ -6,9 +6,9 @@ import { PanelType, TabsPanel, BookmarksPanel, ScrollBoxComponent, SubPanelType 
 import { TabsPanelConfig, ItemBoundsType, ReactiveTab, DialogConfig } from 'src/types'
 import { TabToPanelMoveRuleConfig } from 'src/types'
 import { BOOKMARKS_PANEL_STATE, TABS_PANEL_STATE, NOID, CONTAINER_ID, Err } from 'src/defaults'
-import { BOOKMARKS_PANEL, TABS_PANEL_CONFIG, DEFAULT_CONTAINER_ID } from 'src/defaults'
+import { BOOKMARKS_PANEL_CONFIG, TABS_PANEL_CONFIG, DEFAULT_CONTAINER_ID } from 'src/defaults'
 import { BKM_ROOT_ID, BKM_OTHER_ID, BOOKMARKED_PANEL_CONF_RE } from 'src/defaults'
-import { HISTORY_PANEL, HISTORY_PANEL_STATE, FOLDER_NAME_DATA_RE } from 'src/defaults'
+import { HISTORY_PANEL_CONFIG, HISTORY_PANEL_STATE, FOLDER_NAME_DATA_RE } from 'src/defaults'
 import { BKM_MENU_ID, BKM_MOBILE_ID, BKM_TLBR_ID, DEFAULT_CONTAINER } from 'src/defaults'
 import * as Logs from 'src/services/logs'
 import { Settings } from 'src/services/settings'
@@ -565,7 +565,7 @@ export function convertOldPanelsConfigToNew(panels_v4: OldPanelConfig[]): Sideba
 
   for (const oldPanelConf of panels_v4) {
     if (oldPanelConf.type === 'bookmarks') {
-      const panel = Utils.cloneObject(BOOKMARKS_PANEL)
+      const panel = Utils.cloneObject(BOOKMARKS_PANEL_CONFIG)
       panel.id = 'bookmarks'
       panel.lockedPanel = oldPanelConf.lockedPanel
       panel.skipOnSwitching = oldPanelConf.skipOnSwitching
@@ -714,11 +714,13 @@ export function createPanelFromConfig(srcPanel: PanelConfig): Panel | null {
 
 function createPanelConfigFromPanel(srcPanel: Panel): PanelConfig {
   srcPanel = Utils.cloneObject(srcPanel)
-  if (Utils.isTabsPanel(srcPanel))
+  if (Utils.isTabsPanel(srcPanel)) {
     return Utils.recreateNormalizedObject(srcPanel, TABS_PANEL_CONFIG)
-  if (Utils.isBookmarksPanel(srcPanel))
-    return Utils.recreateNormalizedObject(srcPanel, BOOKMARKS_PANEL)
-  if (Utils.isHistoryPanel(srcPanel)) return Utils.recreateNormalizedObject(srcPanel, HISTORY_PANEL)
+  } else if (Utils.isBookmarksPanel(srcPanel)) {
+    return Utils.recreateNormalizedObject(srcPanel, BOOKMARKS_PANEL_CONFIG)
+  } else if (Utils.isHistoryPanel(srcPanel)) {
+    return Utils.recreateNormalizedObject(srcPanel, HISTORY_PANEL_CONFIG)
+  }
   throw Logs.err('Sidebar: createPanelConfigFromPanel: Unknown panel type')
 }
 
@@ -1208,10 +1210,17 @@ export function goToActiveTabPanel(): void {
 /**
  * Returns active panel info
  */
-export function getActivePanelInfo(): Panel {
+export function getActivePanelConfig(): PanelConfig | undefined {
   const panel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
-  if (!panel) throw Logs.err('Sidebar: getActivePanelInfo: Active panel not found')
-  return Utils.cloneObject(panel)
+  if (!panel) throw Logs.err('Sidebar: getActivePanelConfig: Active panel not found')
+
+  let defaults
+  if (Utils.isTabsPanel(panel)) defaults = TABS_PANEL_CONFIG
+  else if (Utils.isBookmarksPanel(panel)) defaults = BOOKMARKS_PANEL_CONFIG
+  else if (Utils.isHistoryPanel(panel)) defaults = HISTORY_PANEL_CONFIG
+  if (!defaults) return
+
+  return Utils.cloneObject(Utils.recreateNormalizedObject(panel, defaults))
 }
 
 export async function askHowRemoveTabsPanel(panelId: ID): Promise<string | null> {
@@ -1985,7 +1994,7 @@ export function openPanelPopup(conf: Partial<PanelConfig>, index?: number): Prom
       if (conf.type === PanelType.tabs) {
         panelConfig = Utils.cloneObject(TABS_PANEL_CONFIG)
       } else if (conf.type === PanelType.bookmarks) {
-        panelConfig = Utils.cloneObject(BOOKMARKS_PANEL)
+        panelConfig = Utils.cloneObject(BOOKMARKS_PANEL_CONFIG)
       } else {
         return res(null)
       }

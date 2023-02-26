@@ -4,7 +4,7 @@ import { TabsPanelConfig, TabsPanel } from 'src/types'
 import { HistoryPanelConfig, HistoryPanel } from 'src/types'
 import { NavItemClass } from 'src/types/sidebar'
 
-export const BOOKMARKS_PANEL: BookmarksPanelConfig = {
+export const BOOKMARKS_PANEL_CONFIG: BookmarksPanelConfig = {
   type: PanelType.bookmarks,
   id: '',
   name: '',
@@ -20,7 +20,7 @@ export const BOOKMARKS_PANEL: BookmarksPanelConfig = {
   autoConvert: false,
 }
 export const BOOKMARKS_PANEL_STATE: BookmarksPanel = {
-  ...BOOKMARKS_PANEL,
+  ...BOOKMARKS_PANEL_CONFIG,
   class: NavItemClass.panel,
   bookmarks: [],
   len: 0,
@@ -78,7 +78,7 @@ export const TABS_PANEL_STATE: TabsPanel = {
   scrollRetainer: 0,
 }
 
-export const HISTORY_PANEL: HistoryPanelConfig = {
+export const HISTORY_PANEL_CONFIG: HistoryPanelConfig = {
   type: PanelType.history,
   id: 'history',
   name: translate('panel.history.title'),
@@ -90,7 +90,7 @@ export const HISTORY_PANEL: HistoryPanelConfig = {
   viewMode: 'history',
 }
 export const HISTORY_PANEL_STATE: HistoryPanel = {
-  ...HISTORY_PANEL,
+  ...HISTORY_PANEL_CONFIG,
   class: NavItemClass.panel,
   len: 0,
   index: -1,

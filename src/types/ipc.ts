@@ -1,7 +1,7 @@
 import { Tab, TabCache, GroupInfo, TabsTreeData } from './tabs'
 import { Panel } from './sidebar'
 import { NormalizedSnapshot, RemovingSnapshotResult, Snapshot } from './snapshots'
-import { ItemInfo, DstPlaceInfo, Notification } from '../types'
+import { ItemInfo, DstPlaceInfo, Notification, PanelConfig } from '../types'
 import { IPCheckResult, UpgradingState } from '../types'
 import { GroupPageInitData, UrlPageInitData } from 'src/services/tabs.bg.actions'
 import { Stored } from './storage'
@@ -67,7 +67,7 @@ export type SidebarActions = {
   queryTab: (props: Partial<Tab>) => Tab | null
   getTabs: (tabIds?: ID[]) => Tab[] | undefined
   getTabsTreeData: () => TabsTreeData
-  getActivePanelInfo: () => Panel
+  getActivePanelConfig: () => PanelConfig | undefined
   stopDrag: () => void
   isDropEventConsumed: () => boolean
   getGroupInfo: (groupTabId: ID) => Promise<GroupInfo | null>

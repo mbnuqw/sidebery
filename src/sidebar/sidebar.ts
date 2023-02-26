@@ -36,7 +36,7 @@ async function main(): Promise<void> {
     moveTabsToThisWin: Tabs.moveToThisWin,
     openTabs: Tabs.open,
     handleReopening: Tabs.handleReopening,
-    getActivePanelInfo: Sidebar.getActivePanelInfo,
+    getActivePanelConfig: Sidebar.getActivePanelConfig,
     stopDrag: DnD.reset,
     getGroupInfo: Tabs.getGroupInfo,
     loadFavicons: Favicons.loadFavicons,

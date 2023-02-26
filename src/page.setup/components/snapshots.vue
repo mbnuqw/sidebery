@@ -404,7 +404,7 @@ function resetSelection(snapshot?: SnapshotState | null): void {
 }
 
 async function openTab(tab: SnapTabState): Promise<void> {
-  const activePanel = await IPC.sidebar(Windows.id, 'getActivePanelInfo')
+  const activePanel = await IPC.sidebar(Windows.id, 'getActivePanelConfig')
 
   if (Utils.isTabsPanel(activePanel)) {
     const item: ItemInfo = {
@@ -457,7 +457,7 @@ async function openSelectedTabs(): Promise<void> {
     }
   }
 
-  const activePanel = await IPC.sidebar(Windows.id, 'getActivePanelInfo')
+  const activePanel = await IPC.sidebar(Windows.id, 'getActivePanelConfig')
   if (Utils.isTabsPanel(activePanel)) {
     await IPC.sidebar(Windows.id, 'openTabs', items, { panelId: activePanel.id })
   } else {
