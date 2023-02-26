@@ -1,4 +1,4 @@
-import { Container } from './types/containers'
+import { Container, Container_v4 } from './types/containers'
 import { SettingsState } from './types/settings'
 import { SidebarConfig, OldPanelConfig, TabsPanel } from './types/sidebar'
 import { ContextMenuConfig_v4, MenuConfs } from './types/menu'
@@ -89,7 +89,7 @@ export interface BackupData {
   favDomains?: Record<string, FavDomain>
   keybindings?: Record<string, string>
   // DEPRECATED //
-  containers_v4?: Record<string, Container>
+  containers_v4?: Record<string, Container_v4>
   panels_v4?: OldPanelConfig[]
   tabsMenu?: ContextMenuConfig_v4
   bookmarksMenu?: ContextMenuConfig_v4
