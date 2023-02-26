@@ -3334,8 +3334,8 @@ export const setupPageTranslations: Translations = {
     zh_CN: '应用',
   },
   'snapshot.btn_remove': {
-    en: 'Remove',
-    ru: 'Удалить',
+    en: 'Remove snapshot',
+    ru: 'Удалить снепшот',
     de: 'Entfernen',
     zh_CN: '删除',
   },
@@ -3344,6 +3344,30 @@ export const setupPageTranslations: Translations = {
     ru: 'Создать снепшот',
     de: 'Schnappschuss erstellen',
     zh_CN: '创建快照',
+  },
+  'snapshot.btn_import_snapshot': {
+    en: 'Import snapshot',
+    ru: 'Импортировать снепшот',
+  },
+  'snapshot.btn_export_snapshot': {
+    en: 'Export snapshot',
+    ru: 'Экспортировать снепшот',
+  },
+  'snapshot.btn_export_snapshot_json': {
+    en: 'Save as JSON',
+    ru: 'Сохранить как JSON',
+  },
+  'snapshot.btn_export_snapshot_md': {
+    en: 'Save as Markdown',
+    ru: 'Сохранить как Markdown',
+  },
+  'snapshot.btn_export_snapshot_md_note': {
+    en: 'No reverse import support',
+    ru: 'Без поддержки обратного импорта',
+  },
+  'snapshot.btn_copy_snapshot_md': {
+    en: 'Copy as Markdown',
+    ru: 'Копировать как Markdown',
   },
   'snapshot.btn_open_all_win': {
     en: 'Open all windows',

@@ -136,6 +136,19 @@ export async function createSnapshot(auto = false): Promise<Snapshot | undefined
   return currentSnapshot
 }
 
+export async function addSnapshot(snapshot: NormalizedSnapshot) {
+  if (!Info.isBg) return await IPC.bg('addSnapshot', snapshot)
+
+  const stored = await browser.storage.local.get<Stored>('snapshots').catch(() => undefined)
+  const snapshots = stored?.snapshots ?? []
+  const timestamp = Date.now()
+
+  snapshot.time = timestamp
+  snapshots.push(snapshot)
+
+  return await Store.set({ snapshots, lastSnapTime: timestamp })
+}
+
 function isSnapshotRedundant(prevSnapshot: Snapshot, snapshot: Snapshot): boolean {
   if (snapshot.containers !== SnapStoreMode.Unchanged) return false
   if (snapshot.sidebar !== SnapStoreMode.Unchanged) return false
@@ -721,4 +734,38 @@ export function updateV4GroupUrls(snapshot: NormalizedSnapshot): void {
       }
     }
   }
+}
+
+export function convertToMarkdown(snapshot: NormalizedSnapshot): string {
+  const dateStr = Utils.uDate(snapshot.time, '.')
+  const timeStr = Utils.uTime(snapshot.time, '.')
+  const dateTimeStr = `${dateStr} - ${timeStr}`
+  const md = [`# ${dateTimeStr}`, '']
+
+  let panelConfig
+
+  for (let i = 0; i < snapshot.tabs.length; i++) {
+    const win = snapshot.tabs[i]
+    const winTitle = `## ${translate('snapshot.window_title')} ${i + 1}`
+    md.push(winTitle)
+
+    for (const panel of win) {
+      for (const tab of panel) {
+        if (!tab.pinned && (!panelConfig || panelConfig.id !== tab.panelId)) {
+          panelConfig = snapshot.sidebar?.panels?.[tab.panelId]
+          if (panelConfig) {
+            const panelTitle = `### ${panelConfig.name}`
+            md.push(panelTitle)
+          }
+        }
+
+        const tabLink = `[${tab.title}](${tab.url}")`
+        const pinned = tab.pinned ? '📌' : ''
+        const indent = '  '.repeat(tab.lvl ?? 0)
+        md.push(`${indent}- ${pinned}${tabLink}`)
+      }
+    }
+  }
+
+  return md.join('\n')
 }

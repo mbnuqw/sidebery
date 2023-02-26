@@ -39,6 +39,7 @@ export interface IPCNodeInfo {
 export type BgActions = {
   cacheTabsData: (windowId: ID, tabs: TabCache[], delay?: number) => void
   createSnapshot: () => Promise<Snapshot | undefined>
+  addSnapshot: (snapshot: NormalizedSnapshot) => Promise<void>
   removeSnapshot: (id: ID) => Promise<RemovingSnapshotResult>
   openSnapshotWindows: (snapshot: NormalizedSnapshot, winIndex?: number) => Promise<void>
   saveFavicon: (url: string, icon: string) => void

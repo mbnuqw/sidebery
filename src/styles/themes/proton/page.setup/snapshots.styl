@@ -35,6 +35,7 @@
   flex-flow: wrap
   justify-content: center
   align-items: center
+  flex-wrap: nowrap
   grid-gap: 12px
   padding: 0 16px
   background-color: var(--setup-bg)
@@ -56,6 +57,72 @@
   font-size: rem(24)
   color: var(--toolbar-fg)
   flex: 1 1
+  white-space: nowrap
+
+.snapshot-export-opt
+  position: relative
+  box-sizing: content-box
+  display: flex
+  flex-direction: column
+  justify-content: center
+  font-size: rem(14)
+  font-weight: 600
+  color: var(--toolbar-fg)
+  transition: color var(--d-fast)
+  flex-shrink: 0
+  line-height: 30px
+  overflow: hidden
+  opacity: .7
+  white-space: nowrap
+  cursor: default
+  user-select: none
+  &:before
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    border-radius: 4px
+    background-color: var(--toolbar-fg)
+    opacity: 0
+  > .label
+    position: relative
+    box-sizing: content-box
+    display: block
+    padding: 0 8px
+    margin: 0
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
+  > .note
+    position: relative
+    margin-top: -4px
+    padding: 0 8px 8px
+    font-size: rem(12)
+    line-height: normal
+    font-weight: 400
+    opacity: 0.7
+  > svg
+  > img
+    position: relative
+    box-sizing: content-box
+    flex-shrink: 0
+    display: block
+    width: 16px
+    height: 16px
+    padding: 7px
+    fill: var(--toolbar-fg)
+    transition: opacity var(--d-fast)
+  > svg + p
+  > img + p
+    padding: 0 12px 0 0
+  &:hover
+    opacity: 1
+  &:hover:before
+    opacity: .1
+  &:active
+    opacity: .7
 
 .Snapshots .wrapper
   position: relative
@@ -78,6 +145,8 @@
 .Snapshots .snapshot-list-section .controls
   position: relative
   padding: 12px 16px
+  > * + *
+    margin-top: 8px
 
 .Snapshots .snapshot-list
   position: relative

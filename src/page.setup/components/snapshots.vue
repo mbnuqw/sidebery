@@ -5,6 +5,9 @@
       .snapshot-list(:data-empty="!state.snapshots.length")
         .controls
           .btn(@click="createSnapshot()") {{translate('snapshot.btn_create_snapshot')}}
+          .btn
+            .label {{translate('snapshot.btn_import_snapshot')}}
+            input(type="file" accept="application/json" @input="importSnapshot")
         .snapshot(
           v-for="snapshot in state.snapshots"
           :key="snapshot.id"
@@ -14,12 +17,22 @@
           .info
             .date-time {{snapshot.dateStr}} - {{snapshot.timeStr}}
             .content-info {{getSnapInfo(snapshot)}}
-          .rm-btn(title="Remove snapshot" @click="removeSnapshot(snapshot)")
+          .rm-btn(:title="translate('snapshot.btn_remove')" @click="removeSnapshot(snapshot)")
             svg: use(xlink:href="#icon_trash")
 
     .active-snapshot-section(:data-sel-mode="state.selectionMode")
       .header(v-if="state.activeSnapshot" @wheel="onHeaderWheel" :data-empty="!state.activeSnapshot")
         .title {{state.activeSnapshot?.dateStr ?? '?'}} - {{state.activeSnapshot?.timeStr ?? '?'}}
+        DropDownButton(
+          :label="translate('snapshot.btn_export_snapshot')"
+          @open="onExportSnapshotDropDownOpen")
+          a#json_snap_export_link.snapshot-export-opt
+            .label {{translate('snapshot.btn_export_snapshot_json')}}
+          a#md_snap_export_link.snapshot-export-opt
+            .label {{translate('snapshot.btn_export_snapshot_md')}}
+            .note {{translate('snapshot.btn_export_snapshot_md_note')}}
+          .snapshot-export-opt(@click="copyAsMarkdown"): .label {{translate('snapshot.btn_copy_snapshot_md')}}
+
         .btn(@click="openAllWindows(state.activeSnapshot)").
           {{translate('snapshot.btn_open_all_win')}}
       .content(v-if="state.activeSnapshot")
@@ -81,10 +94,10 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, computed, onUnmounted } from 'vue'
+import { reactive, computed, nextTick } from 'vue'
 import * as Utils from 'src/utils'
 import { Stored, Snapshot, SnapshotState, SnapWindowState, RemovingSnapshotResult } from 'src/types'
-import { SnapPanelState, SnapTabState, ItemInfo } from 'src/types'
+import { SnapPanelState, SnapTabState, ItemInfo, NormalizedSnapshot } from 'src/types'
 import { CONTAINER_ID, NOID } from 'src/defaults'
 import { translate } from 'src/dict'
 import * as IPC from 'src/services/ipc'
@@ -93,6 +106,7 @@ import { Store } from 'src/services/storage'
 import { Snapshots } from 'src/services/snapshots'
 import { Favicons } from 'src/services/favicons'
 import { PanelConfig, PanelType } from 'src/types/sidebar'
+import DropDownButton from 'src/components/drop-down-button.vue'
 import * as Logs from 'src/services/logs'
 
 const VOID_PANEL_CONF: PanelConfig = {
@@ -531,5 +545,78 @@ function getSnapInfo(s: SnapshotState): string {
     `${s.tabsCount} ${translate('snapshot.snap_tab', s.tabsCount)} / ` +
     `~ ${s.sizeStr}`
   )
+}
+
+async function onExportSnapshotDropDownOpen() {
+  await nextTick()
+
+  if (!state.activeSnapshot) return
+  const { id, time, containers, sidebar, tabs } = state.activeSnapshot
+  const normSnapshot = { id, time, containers, sidebar, tabs }
+  const jsonStr = JSON.stringify(normSnapshot)
+  const jsonFile = new Blob([jsonStr], { type: 'application/json' })
+  const mdStr = Snapshots.convertToMarkdown(normSnapshot)
+  const mdFile = new Blob([mdStr], { type: 'text/markdown' })
+
+  let dateStr = Utils.uDate(time, '.')
+  let timeStr = Utils.uTime(time, '.')
+
+  type Link = HTMLAnchorElement | null
+  const mdSnapExportLink = document.getElementById('md_snap_export_link') as Link
+  const jsonSnapExportLink = document.getElementById('json_snap_export_link') as Link
+
+  if (mdSnapExportLink) {
+    mdSnapExportLink.href = URL.createObjectURL(mdFile)
+    mdSnapExportLink.download = `sidebery-snapshot-${dateStr}-${timeStr}.md`
+    mdSnapExportLink.title = `sidebery-snapshot-${dateStr}-${timeStr}.md`
+  }
+  if (jsonSnapExportLink) {
+    jsonSnapExportLink.href = URL.createObjectURL(jsonFile)
+    jsonSnapExportLink.download = `sidebery-snapshot-${dateStr}-${timeStr}.json`
+    jsonSnapExportLink.title = `sidebery-snapshot-${dateStr}-${timeStr}.json`
+  }
+}
+
+function copyAsMarkdown() {
+  if (!state.activeSnapshot) return
+
+  const { id, time, containers, sidebar, tabs } = state.activeSnapshot
+  const markdown = Snapshots.convertToMarkdown({ id, time, containers, sidebar, tabs })
+  navigator.clipboard.writeText(markdown)
+}
+
+function importSnapshot(importEvent: Event) {
+  const target = importEvent.target as HTMLInputElement
+  let file = target.files?.[0]
+  if (!file) return
+  let reader = new FileReader()
+  reader.onload = fileEvent => {
+    if (!fileEvent.target) return Logs.err('Cannot import snapshot: No file content')
+    let jsonStr = fileEvent.target.result
+    if (!jsonStr || typeof jsonStr !== 'string') {
+      return Logs.err('Cannot import snapshot: Wrong file content')
+    }
+
+    let snapshot: NormalizedSnapshot | undefined
+    try {
+      snapshot = JSON.parse(jsonStr)
+    } catch (err) {
+      return Logs.err('Cannot import snapshot', err)
+    }
+
+    if (!snapshot) return Logs.err('Cannot import snapshot: No snapshot')
+
+    const noId = !snapshot.id
+    const noTime = !snapshot.time
+    const noContainers = !snapshot.containers
+    const noSidebar = !snapshot.sidebar
+    const noTabs = !snapshot.tabs
+    if (noId || noTime || noContainers || noSidebar || noTabs) {
+      return Logs.err('Cannot import snapshot: Incomplete snapshot')
+    }
+
+    Snapshots.addSnapshot(snapshot)
+  }
+  reader.readAsText(file)
 }
 </script>

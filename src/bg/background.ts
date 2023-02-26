@@ -28,6 +28,7 @@ void (async function main() {
   IPC.registerActions({
     cacheTabsData: Tabs.cacheTabsData,
     createSnapshot: Snapshots.createSnapshot,
+    addSnapshot: Snapshots.addSnapshot,
     removeSnapshot: Snapshots.removeSnapshot,
     openSnapshotWindows: Snapshots.openWindows,
     checkIpInfo: WebReq.checkIpInfo,
