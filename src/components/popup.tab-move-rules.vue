@@ -18,13 +18,18 @@
             .btn-down(@click.stop="shortcutDown(rule)"): svg: use(xlink:href="#icon_expand")
             .btn-rm(@click.stop="removeRule(rule)"): svg: use(xlink:href="#icon_remove")
         .url-box(v-if="rule.url" :data-with-container="!!rule.containerId")
-          .url {{rule.url}}
+          .url {{rule.name || rule.url}}
           .controls-box(v-if="!rule.containerId && !editing")
             .btn-up(@click.stop="shortcutUp(rule)"): svg: use(xlink:href="#icon_expand")
             .btn-down(@click.stop="shortcutDown(rule)"): svg: use(xlink:href="#icon_expand")
             .btn-rm(@click.stop="removeRule(rule)"): svg: use(xlink:href="#icon_remove")
     .space
     h2 {{editing ? translate('popup.tab_move_rules.editor_title.edit') : translate('popup.tab_move_rules.editor_title.new')}}
+    TextField.-no-separator.-compact(
+      label="popup.tab_move_rules.rule_name_label"
+      v-model:value="newRuleName"
+      :or="'...'"
+      :line="true")
     SelectField.-no-separator.-compact(
       label="popup.tab_move_rules.rule_container_label"
       noneOpt="-"
@@ -66,6 +71,7 @@ import ToggleField from './toggle-field.vue'
 interface MoveRulePreview {
   id: ID
   active: boolean
+  name?: string
   url?: string
   urlIcon?: string
   containerId?: string
@@ -91,6 +97,7 @@ interface ContainerConf {
 }
 
 const rules = ref<MoveRulePreview[]>([])
+const newRuleName = ref('')
 const newRuleContainerId = ref('none')
 const newRuleURL = ref('')
 const newRuleTopLvl = ref(true)
@@ -143,6 +150,7 @@ function createRulePreview(ruleConfig: TabToPanelMoveRuleConfig): MoveRulePrevie
   }
 
   rule.topLvlOnly = !!ruleConfig.topLvlOnly
+  if (ruleConfig.name) rule.name = ruleConfig.name
 
   return rule
 }
@@ -203,6 +211,8 @@ function onAdd(): void {
   if (!addBtnActive.value) return
   if (!newRuleURL.value && newRuleContainerId.value === 'none') return
 
+  const name = newRuleName.value.trim()
+
   // Remove duplicate
   const panel = Sidebar.reactive.tabMoveRulesPopup.panel
   const newCtrId = newRuleContainerId.value !== 'none' ? newRuleContainerId.value : undefined
@@ -225,6 +235,7 @@ function onAdd(): void {
   }
   if (newRuleContainerId.value !== 'none') ruleConfig.containerId = newRuleContainerId.value
   if (newRuleURL.value) ruleConfig.url = newRuleURL.value
+  if (name) ruleConfig.name = name
 
   panel.moveRules.push(ruleConfig)
 
@@ -232,6 +243,7 @@ function onAdd(): void {
   rules.value.push(createRulePreview(ruleConfig))
 
   // Reset inputs
+  newRuleName.value = ''
   newRuleURL.value = ''
   newRuleContainerId.value = 'none'
 
@@ -306,18 +318,24 @@ function editRule(rule: MoveRulePreview) {
 
   if (rule.url) newRuleURL.value = rule.url
   else newRuleURL.value = ''
+
   if (rule.containerId && getContainerConf(rule.containerId)) {
     newRuleContainerId.value = rule.containerId
   } else {
     newRuleContainerId.value = 'none'
   }
+
   newRuleTopLvl.value = !!rule.topLvlOnly
+
+  if (rule.name) newRuleName.value = rule.name
+  else newRuleName.value = ''
 }
 
 function onEditCancel() {
   editing.value = null
 
   // Reset inputs
+  newRuleName.value = ''
   newRuleURL.value = ''
   newRuleContainerId.value = 'none'
   newRuleTopLvl.value = true
@@ -331,6 +349,8 @@ function onSave() {
 
   const rule = rules.value.find(r => r.id === editing.value)
   if (!rule) return
+
+  const name = newRuleName.value.trim()
 
   // Remove duplicate
   const newCtrId = newRuleContainerId.value !== 'none' ? newRuleContainerId.value : undefined
@@ -356,11 +376,14 @@ function onSave() {
     if (newRuleURL.value) ruleConfig.url = newRuleURL.value
     else delete ruleConfig.url
     ruleConfig.topLvlOnly = newRuleTopLvl.value
+    if (name) ruleConfig.name = name
+    else delete ruleConfig.name
   }
   Sidebar.saveSidebar(1000)
 
   // Update rule in local list
   rule.active = true
+  rule.name = name || undefined
   const container = getContainerConf(newRuleContainerId.value)
   if (container) {
     rule.containerId = container.id
@@ -373,6 +396,7 @@ function onSave() {
   rule.topLvlOnly = newRuleTopLvl.value
 
   // Reset inputs
+  newRuleName.value = ''
   newRuleURL.value = ''
   newRuleContainerId.value = 'none'
   newRuleTopLvl.value = true

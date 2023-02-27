@@ -282,6 +282,10 @@ export const commonTranslations: Translations = {
     en: 'Edit a move rule',
     ru: 'Редактировать правило',
   },
+  'popup.tab_move_rules.rule_name_label': {
+    en: 'Name (optional)',
+    ru: 'Название (опционально)',
+  },
   'popup.tab_move_rules.rule_container_label': {
     en: 'If tab is in container',
     ru: 'Если вкладка в контейнере',
@@ -322,6 +326,10 @@ export const commonTranslations: Translations = {
   'popup.tab_reopen_rules.editor_title.edit': {
     en: 'Edit rule',
     ru: 'Редактировать правило',
+  },
+  'popup.tab_reopen_rules.rule_name_label': {
+    en: 'Name (optional)',
+    ru: 'Название (опционально)',
   },
   'popup.tab_reopen_rules.rule_type_label': {
     en: 'Type of the rule',

@@ -280,6 +280,7 @@ function onSave(): void {
   const tab = Tabs.byId[Sidebar.reactive.urlRulesPopup.tabId]
   const match = matchString.value.trim()
   const matchIsOk = validateMatchString(match)
+  const matchOption = matchOptions.value?.find(opt => opt.id !== 'custom' && opt.active)
   const rContainer = Containers.reactive.byId[reopenInContainerId.value]
   const mPanel = Sidebar.reactive.panelsById[moveToPanelId.value]
   const mPanelTopLvlOnly = moveToPanelTopLvlOnly.value
@@ -319,6 +320,7 @@ function onSave(): void {
     }
     if (!rContainer.reopenRules.length) rContainer.reopenRulesActive = true
     rContainer.reopenRules.push(ruleConfig)
+    if (matchOption?.name) ruleConfig.name = matchOption.name
     saveContainers = true
 
     if (tab && tab.cookieStoreId !== rContainer.id) reopenTab = true
@@ -329,6 +331,7 @@ function onSave(): void {
     const ruleConfig: TabToPanelMoveRuleConfig = { id: Utils.uid(), active: true }
     ruleConfig.url = match
     ruleConfig.topLvlOnly = mPanelTopLvlOnly
+    if (matchOption?.name) ruleConfig.name = matchOption.name
     mPanel.moveRules.push(ruleConfig)
     savePanels = true
 

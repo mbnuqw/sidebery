@@ -14,7 +14,7 @@
         .url-box
           .icon-box
             svg.icon: use(:xlink:href="rule.type === 'include' ? '#icon_ctr_include' : '#icon_ctr_exclude'")
-          .url {{rule.url}}
+          .url {{rule.name || rule.url}}
           .controls-box(v-if="!editing")
             .btn-up(@click.stop="shortcutUp(rule)"): svg: use(xlink:href="#icon_expand")
             .btn-down(@click.stop="shortcutDown(rule)"): svg: use(xlink:href="#icon_expand")
@@ -23,9 +23,14 @@
       v-if="rules.length"
       label="popup.tab_reopen_rules.enable_label"
       :value="Sidebar.reactive.tabReopenRulesPopup.container.reopenRulesActive"
-      @update:value="toggleEnableRules")
+      @update:value="toggleRules")
     .space
     h2 {{editing ? translate('popup.tab_reopen_rules.editor_title.edit') : translate('popup.tab_reopen_rules.editor_title.new')}}
+    TextField.-no-separator.-compact(
+      label="popup.tab_reopen_rules.rule_name_label"
+      v-model:value="newRuleName"
+      :or="'...'"
+      :line="true")
     .type-selector
       .type-opt(
         data-color="green"
@@ -75,11 +80,13 @@ interface ReopenRulePreview {
   id: ID
   type: 'include' | 'exclude'
   active: boolean
+  name?: string
   url: string
   urlIcon?: string
 }
 
 const rules = ref<ReopenRulePreview[]>([])
+const newRuleName = ref('')
 const newRuleType = ref<'include' | 'exclude'>('include')
 const newRuleURL = ref('')
 const editing = ref<ID | null>(null)
@@ -118,6 +125,8 @@ function createRulePreview(ruleConfig: TabReopenRuleConfig): ReopenRulePreview {
     rule.urlIcon = '#icon_ff'
   }
 
+  if (ruleConfig.name) rule.name = ruleConfig.name
+
   return rule
 }
 
@@ -127,6 +136,7 @@ async function onAdd() {
   if (!newRuleURL.value) return
 
   const container = Sidebar.reactive.tabReopenRulesPopup.container
+  const name = newRuleName.value.trim()
 
   if (!Permissions.reactive.webData && !container.reopenRulesActive) {
     const result = await Permissions.request('<all_urls>')
@@ -141,12 +151,14 @@ async function onAdd() {
     url: newRuleURL.value,
   }
   if (!container.reopenRules.length) container.reopenRulesActive = true
+  if (name) ruleConfig.name = name
   container.reopenRules.push(ruleConfig)
 
   // Add new rule in local rules list
   rules.value.push(createRulePreview(ruleConfig))
 
   // Reset inputs
+  newRuleName.value = ''
   newRuleType.value = 'include'
   newRuleURL.value = ''
 
@@ -222,13 +234,18 @@ function editRule(rule: ReopenRulePreview) {
 
   if (rule.url) newRuleURL.value = rule.url
   else newRuleURL.value = ''
+
   newRuleType.value = rule.type
+
+  if (rule.name) newRuleName.value = rule.name
+  else newRuleName.value = ''
 }
 
 function onEditCancel() {
   editing.value = null
 
   // Reset inputs
+  newRuleName.value = ''
   newRuleURL.value = ''
   newRuleType.value = 'include'
 }
@@ -243,6 +260,8 @@ function onSave() {
   const rule = rules.value.find(r => r.id === editing.value)
   if (!rule) return
 
+  const name = newRuleName.value.trim()
+
   // Update rule in container config
   const ruleConfig = container.reopenRules.find(r => r.id === rule.id)
   if (ruleConfig) {
@@ -250,21 +269,25 @@ function onSave() {
     ruleConfig.url = newRuleURL.value
     const isIncludeRule = newRuleType.value === 'include'
     ruleConfig.type = isIncludeRule ? TabReopenRuleType.Include : TabReopenRuleType.Exclude
+    if (name) ruleConfig.name = name
+    else delete ruleConfig.name
     Containers.saveContainers(1000)
   }
 
   // Update rule in local list
+  rule.name = name || undefined
   rule.url = newRuleURL.value
   rule.type = newRuleType.value
   rule.active = true
 
   // Reset inputs
+  newRuleName.value = ''
   newRuleURL.value = ''
   newRuleType.value = 'include'
   editing.value = null
 }
 
-async function toggleEnableRules() {
+async function toggleRules() {
   const container = Sidebar.reactive.tabReopenRulesPopup?.container
   if (!container) return
 

@@ -240,6 +240,7 @@ export type Panel = BookmarksPanel | TabsPanel | HistoryPanel
 export interface TabToPanelMoveRuleConfig {
   id: ID
   active: boolean
+  name?: string
   url?: string
   containerId?: string
   topLvlOnly?: boolean
@@ -263,6 +264,7 @@ export interface TabReopenRuleConfig {
   type: TabReopenRuleType
   active: boolean
   url: string
+  name?: string
 }
 
 export interface TabReopenRule {
