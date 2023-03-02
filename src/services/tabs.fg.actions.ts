@@ -19,6 +19,7 @@ import { Permissions } from 'src/services/permissions'
 import { Notifications } from 'src/services/notifications'
 import { Favicons } from './favicons'
 import { Selection } from './selection'
+import { DnD } from './drag-and-drop'
 
 const URL_WITHOUT_PROTOCOL_RE = /^(.+\.)\/?(.+\/)?\w+/
 
@@ -3477,40 +3478,57 @@ export async function createFromDragEvent(e: DragEvent, dst: DstPlaceInfo): Prom
   if (result?.file) result.url = URL.createObjectURL(result.file)
 
   if (result?.url) {
-    if (inside && dst.parentId > -1 && e.shiftKey) {
+    // With Shift: Open URL in target tab
+    if (dst.inside && dst.parentId > -1 && e.shiftKey) {
       browser.tabs.update(dst.parentId, { url: result.url }).catch(err => {
         Logs.err('Tabs.createFromDragEvent: Cannot update tab url:', err)
       })
     } else {
+      const conf: browser.tabs.CreateProperties = {
+        active: true,
+        url: Utils.normalizeUrl(result.url),
+        index: dst.index,
+        cookieStoreId: container?.id,
+        windowId: Windows.id,
+        pinned: dst.pinned,
+      }
+
+      // With Ctrl: Open inactive (background) tab
+      if (e.ctrlKey) conf.active = false
+
+      // With Alt: Open discarded (unloaded) tab
+      if (e.altKey) {
+        conf.active = false
+        conf.discarded = true
+        conf.title = result.text || result.url
+      }
+
       setNewTabPosition(dst.index ?? 0, dst.parentId, panel.id)
-      browser.tabs
-        .create({
-          active: true,
-          url: Utils.normalizeUrl(result.url),
-          index: dst.index,
-          cookieStoreId: container?.id,
-          windowId: Windows.id,
-          pinned: dst.pinned,
-        })
-        .catch(err => {
-          Logs.err('Tabs.createFromDragEvent: Cannot create tab:', err)
-        })
+      browser.tabs.create(conf).catch(err => {
+        Logs.err('Tabs.createFromDragEvent: Cannot create tab:', err)
+      })
     }
     return
   }
 
   if (result?.text) {
     let tabId: ID
-    if (inside && dst.parentId > -1 && e.shiftKey) tabId = dst.parentId
+    // With Shift: Search in target tab
+    if (dst.inside && dst.parentId > -1 && e.shiftKey) tabId = dst.parentId
     else {
-      setNewTabPosition(dst.index ?? 0, dst.parentId, panel.id)
-      const tab = await browser.tabs.create({
+      const conf: browser.tabs.CreateProperties = {
         active: true,
         index: dst.index,
         cookieStoreId: container?.id,
         windowId: Windows.id,
         pinned: dst.pinned,
-      })
+      }
+
+      // With Ctrl: Search in inactive (background) tab
+      if (e.ctrlKey) conf.active = false
+
+      setNewTabPosition(dst.index ?? 0, dst.parentId, panel.id)
+      const tab = await browser.tabs.create(conf)
       tabId = tab.id
     }
     browser.search.search({ query: result.text, tabId })

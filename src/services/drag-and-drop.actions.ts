@@ -192,12 +192,13 @@ function getDestInfo(): DstPlaceInfo {
     else info.containerId = CONTAINER_ID
   }
   if (info.index === -1) {
+    info.inside = true
+
     // To the last position in branch/panel
     if (
       Utils.isTabsPanel(dstPanel) &&
       (DnD.reactive.dstType === DropType.Tabs || DnD.reactive.dstType === DropType.TabsPanel)
     ) {
-      if (DnD.reactive.dstType === DropType.Tabs) info.inside = true
       const parent = Tabs.byId[DnD.reactive.dstParentId]
       if (parent) {
         const branchLen = Tabs.getBranchLen(parent.id) ?? 0
@@ -211,7 +212,6 @@ function getDestInfo(): DstPlaceInfo {
       DnD.reactive.dstType === DropType.Bookmarks ||
       DnD.reactive.dstType === DropType.BookmarksPanel
     ) {
-      if (DnD.reactive.dstType === DropType.Bookmarks) info.inside = true
       const parent = Bookmarks.reactive.byId[DnD.reactive.dstParentId]
       info.index = parent?.children?.length || 0
     }
