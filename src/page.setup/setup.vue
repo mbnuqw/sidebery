@@ -69,6 +69,24 @@ function onDocumentKeyup(e: KeyboardEvent): void {
       return
     }
 
+    // Tab reopening rules popup
+    if (Sidebar.reactive.tabReopenRulesPopup) {
+      Sidebar.closeTabReopenRulesPopup()
+      return
+    }
+
+    // Tab moving rules popup
+    if (Sidebar.reactive.tabMoveRulesPopup) {
+      Sidebar.closeTabMoveRulesPopup()
+      return
+    }
+
+    // New tab shortcuts popup
+    if (Sidebar.reactive.newTabShortcutsPopup) {
+      Sidebar.closeNewTabShortcutsPopup()
+      return
+    }
+
     // Panel/Container config
     if (SetupPage.reactive.selectedPanel) SetupPage.reactive.selectedPanel = null
     if (SetupPage.reactive.selectedContainer) SetupPage.reactive.selectedContainer = null
