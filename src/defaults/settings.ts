@@ -2,7 +2,7 @@ import { SettingsState } from '../types/settings'
 
 export const DEFAULT_SETTINGS: SettingsState = {
   // General
-  nativeScrollbars: false,
+  nativeScrollbars: true,
   nativeScrollbarsThin: true,
   nativeScrollbarsLeft: false,
   selWinScreenshots: false,
