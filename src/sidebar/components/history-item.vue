@@ -24,6 +24,7 @@ import { Selection } from 'src/services/selection'
 import { Settings } from 'src/services/settings'
 import { Search } from 'src/services/search'
 import { History } from 'src/services/history'
+import { Bookmarks } from 'src/services/bookmarks'
 
 const props = defineProps<{ item: HistoryItem }>()
 
@@ -61,13 +62,14 @@ function onMouseUp(e: MouseEvent): void {
   Mouse.stopLongClick()
   if (!sameTarget) return
 
-  if (e.button === 0) {
-    if (Search.reactive.rawValue) {
+  if (e.button === 0 || e.button === 1) {
+    let { dst, activateFirstTab: activateNewTab } = Bookmarks.getMouseOpeningConf(e.button)
+    // Reset search input, if navigating away from the history panel
+    if (Search.reactive.rawValue && activateNewTab) {
       Search.stop()
       Selection.resetSelection()
     }
-
-    History.openTab(props.item)
+    History.openTab(props.item, activateNewTab)
   }
 
   if (e.button === 2) {
