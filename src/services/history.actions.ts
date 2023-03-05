@@ -206,7 +206,7 @@ export function scrollToHistoryItem(id: string): void {
   if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
 }
 
-export async function openTab(item: HistoryItem): Promise<void> {
+export async function openTab(item: HistoryItem, activate?: boolean): Promise<void> {
   let panel: Panel | undefined = Sidebar.reactive.panelsById[Sidebar.lastTabsPanelId]
   if (!Utils.isTabsPanel(panel)) {
     const activeTab = Tabs.byId[Tabs.activeId]
@@ -214,7 +214,7 @@ export async function openTab(item: HistoryItem): Promise<void> {
     else panel = Sidebar.reactive.panels.find(p => Utils.isTabsPanel(p))
   }
 
-  const tabInfo: ItemInfo = { id: 0, url: item.url, title: item.title, active: true }
+  const tabInfo: ItemInfo = { id: 0, url: item.url, title: item.title, active: activate }
   const dstInfo: DstPlaceInfo = { windowId: Windows.id, discarded: false }
   if (Utils.isTabsPanel(panel)) {
     dstInfo.panelId = panel.id
