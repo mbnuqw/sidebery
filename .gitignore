@@ -7,3 +7,4 @@ wiki
 addon
 build/*
 !build/*.js
+!build/*.mjs
