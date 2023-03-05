@@ -58,6 +58,10 @@
   grid-gap: var(--tabs-margin)
   padding: 0 var(--tabs-margin) var(--tabs-margin)
 
+#root[data-pinned-tabs-position="top"][data-pinned-tabs-list="true"] .PinnedTabsBar
+  padding: 0 0 calc(var(--tabs-margin) + 9px)
+  grid-gap: 0
+
 // ---
 // -- Separator
 // -
@@ -73,6 +77,9 @@
   background-image: linear-gradient(90deg, transparent, var(--frame-fg) 10%, var(--frame-fg) 90%, transparent)
 
 #root[data-pinned-tabs-position="panel"][data-pinned-tabs-list="true"] .PinnedTabsBar:after
+  display: block
+
+#root[data-pinned-tabs-position="top"][data-pinned-tabs-list="true"] .PinnedTabsBar:after
   display: block
 
 // ---
@@ -104,8 +111,11 @@
     display: block
 
 #root[data-pinned-tabs-position="panel"][data-pinned-tabs-list="true"] .PinnedTabsBar .tab-wrapper
+#root[data-pinned-tabs-position="top"][data-pinned-tabs-list="true"] .PinnedTabsBar .tab-wrapper
   width: 100%
+
 #root[data-pinned-tabs-position="panel"][data-pinned-tabs-list="true"] .PinnedTabsBar .tab-wrapper:after
+#root[data-pinned-tabs-position="top"][data-pinned-tabs-list="true"] .PinnedTabsBar .tab-wrapper:after
   top: 0
   left: 0
   width: 100%
@@ -141,6 +151,7 @@
     height: var(--tabs-pinned-height)
 
 #root[data-pinned-tabs-position="panel"][data-pinned-tabs-list="true"] .PinnedTabsBar .to-the-end
+#root[data-pinned-tabs-position="top"][data-pinned-tabs-list="true"] .PinnedTabsBar .to-the-end
   width: 100%
   &:before
     top: 0

@@ -176,7 +176,7 @@ section(ref="el")
     @update:value="Settings.saveDebounced(150)")
   ToggleField(
     label="settings.pinned_tabs_list"
-    :inactive="Settings.state.pinnedTabsPosition !== 'panel'"
+    :inactive="Settings.state.pinnedTabsPosition !== 'panel' && Settings.state.pinnedTabsPosition!== 'top'"
     v-model:value="Settings.state.pinnedTabsList"
     @update:value="Settings.saveDebounced(150)")
 

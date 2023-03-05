@@ -118,7 +118,10 @@ const favPlaceholder = computed((): string => {
 })
 const isPinned = computed<boolean>(() => {
   if (!props.tab.pinned) return false
-  if (Settings.state.pinnedTabsList && Settings.state.pinnedTabsPosition === 'panel') {
+  if (
+    Settings.state.pinnedTabsList &&
+    (Settings.state.pinnedTabsPosition === 'panel' || Settings.state.pinnedTabsPosition === 'top')
+  ) {
     return false
   }
   return true
