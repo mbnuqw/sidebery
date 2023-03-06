@@ -52,7 +52,7 @@ const emit = defineEmits<{
 
 const shrinkedTitle = computed<string>(() => {
   if (props.groupTitle && props.title?.startsWith(props.groupTitle)) {
-    return Menu.shrinkLabel(props.groupTitle, props.title) ?? ''
+    return Menu.shrinkLabel(props.groupTitle, props.title) ?? props.title
   }
 
   return props.title

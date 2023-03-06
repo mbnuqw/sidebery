@@ -194,7 +194,7 @@ export function open(type: MenuType, x?: number, y?: number, customForced?: bool
         if (opt.sub && opt.sub.length && opt.label) {
           const parentId = createNativeSubMenuOption(opt.label, nodeType)
           for (const subOpt of opt.sub) {
-            createNativeOption(nodeType, subOpt, parentId, opt.label)
+            createNativeOption(nodeType, subOpt, parentId)
           }
         } else {
           createNativeOption(nodeType, opt)
@@ -245,7 +245,7 @@ function createMenuBlocks(config: MenuConf, customForced?: boolean): MenuBlock[]
         for (const opt of opts) {
           // Shrink labels
           if (opt.label?.startsWith(name)) {
-            opt.label = shrinkLabel(name, opt.label)
+            opt.label = shrinkLabel(name, opt.label) ?? opt.label
           }
 
           // All inactive?
@@ -323,8 +323,7 @@ function getBase64SVGIcon(icon: string, rgbColor: string): string | undefined {
 function createNativeOption(
   ctx: browser.menus.ContextType,
   option: MenuOption,
-  parentId?: string,
-  parentName?: string
+  parentId?: string
 ): void {
   if (!ctx) ctx = 'all'
   if (option.type === 'separator') {
@@ -348,17 +347,13 @@ function createNativeOption(
     type: 'normal',
     contexts: [ctx],
     viewTypes: ['sidebar'],
+    title: option.label,
   }
+
   if (parentId) optProps.parentId = parentId
-
   if (option.inactive) optProps.enabled = false
-
-  optProps.title = option.label
-  if (parentName && optProps.title && optProps.title.startsWith(parentName)) {
-    optProps.title = shrinkLabel(parentName, optProps.title)
-  }
-
   if (icon) optProps.icons = { '16': icon }
+
   optProps.onclick = () => {
     if (option.onClick) option.onClick()
     Selection.resetSelection()
