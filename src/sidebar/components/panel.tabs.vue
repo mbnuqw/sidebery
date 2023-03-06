@@ -78,8 +78,8 @@ const scrollBox = ref<ScrollBoxComponent | null>(null)
 let scrollBoxEl: HTMLElement | null = null
 
 const visibleTabs = computed<ReactiveTab[]>(() => {
-  const tabs = props.panel.filteredTabs ? props.panel.filteredTabs : props.panel.tabs
-  return tabs.filter(t => !t.invisible)
+  if (props.panel.filteredTabs) return props.panel.filteredTabs
+  return props.panel.tabs.filter(t => !t.invisible)
 })
 const isNothingFound = computed<boolean>(() => {
   return !!props.panel.filteredTabs && !props.panel.filteredTabs.length

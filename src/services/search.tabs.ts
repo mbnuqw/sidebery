@@ -9,17 +9,18 @@ let prevActivePanelId: ID | undefined
 export function onTabsSearch(activePanel: Panel): void {
   if (!Utils.isTabsPanel(activePanel)) return
 
+  const value = Search.reactive.value
   const samePanel = prevActivePanelId === activePanel.id
   prevActivePanelId = activePanel.id
 
   if (activePanel.tabs.length) {
     // Filter tabs
-    if (Search.reactive.value) {
-      const value = Search.reactive.value
+    if (value) {
       const prevValue = Search.prevValue
+      const moreSpecific = value.length > prevValue.length
 
       let tabs: ReactiveTab[] | undefined
-      if (value.length > prevValue.length && value.startsWith(prevValue) && samePanel) {
+      if (prevValue && moreSpecific && value.startsWith(prevValue) && samePanel) {
         tabs = activePanel.filteredTabs
       }
       if (!tabs) tabs = activePanel.tabs
@@ -40,7 +41,7 @@ export function onTabsSearch(activePanel: Panel): void {
     }
 
     // Search start
-    if (Search.reactive.value) {
+    if (value) {
       const firstTab = activePanel.filteredTabs?.[0]
       if (firstTab) {
         Selection.resetSelection()
@@ -50,11 +51,12 @@ export function onTabsSearch(activePanel: Panel): void {
     }
 
     // Search end
-    if (Search.prevValue && !Search.reactive.value) {
+    if (Search.prevValue && !value) {
       Selection.resetSelection()
     }
   } else {
-    findInAnotherPanel()
+    if (value) findInAnotherPanel()
+    else Search.reset(activePanel)
   }
 }
 

@@ -8,6 +8,7 @@ import * as SearchBookmarks from 'src/services/search.bookmarks'
 import * as SearchHistory from 'src/services/search.history'
 import { MenuType, Panel } from 'src/types'
 import * as IPC from './ipc'
+import * as Logs from './logs'
 import { Menu } from './menu'
 import { Windows } from './windows'
 import { History } from './history'
@@ -104,6 +105,12 @@ export function menu(): void {
 
   if (Utils.isTabsPanel(actPanel)) Menu.open(MenuType.Tabs, 16, y, true)
   if (Utils.isBookmarksPanel(actPanel)) Menu.open(MenuType.Bookmarks, 16, y, true)
+}
+
+let searchTimeout: number | undefined
+export function searchDebounced(delay: number, value?: string) {
+  clearTimeout(searchTimeout)
+  searchTimeout = setTimeout(() => search(value), delay)
 }
 
 let query = ''

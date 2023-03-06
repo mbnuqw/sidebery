@@ -12,6 +12,7 @@ import { Favicons } from 'src/services/favicons'
 import { DnD } from 'src/services/drag-and-drop'
 import { RemovedTabInfo, Tabs } from './tabs.fg'
 import * as IPC from './ipc'
+import { Search } from './search'
 
 const EXT_HOST = browser.runtime.getURL('').slice(16)
 const URL_HOST_PATH_RE = /^([a-z0-9-]{1,63}\.)+\w+(:\d+)?\/[A-Za-z0-9-._~:/?#[\]%@!$&'()*+,;=]*$/
@@ -523,6 +524,9 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
     }
 
     Tabs.updateTooltipDebounced(tabId, 1000)
+
+    // Update filtered results
+    if (Search.reactive.rawValue) Search.searchDebounced(500)
   }
 
   // Handle favicon change
@@ -579,6 +583,9 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
     }
 
     Tabs.updateTooltipDebounced(tabId, 1000)
+
+    // Update filtered results
+    if (Search.reactive.rawValue) Search.searchDebounced(500)
   }
 
   // Handle audible change
@@ -958,6 +965,9 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
       else if (tabSuccessor) Sidebar.activatePanel(tabSuccessor.panelId)
       else Sidebar.switchToNeighbourPanel()
     }
+
+    // Update filtered results
+    if (Search.reactive.rawValue) Search.search()
   }
 
   // Update bookmarks marks
