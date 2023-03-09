@@ -10,7 +10,7 @@
           :panelId="panel.id")
     .loading-screen(v-else-if="state.loading")
       LoadingDots
-  .nav(v-if="state.active && !state.loading && rootFolder")
+  .nav(v-if="state.active && !state.loading && rootFolder && panel.bookmarksFolderId !== NOID")
     .up-btn(:data-inactive="rootFolder.id === BKM_ROOT_ID" @click="goUp")
       svg: use(xlink:href="#icon_expand")
     .title-block
@@ -70,7 +70,7 @@ const bookmarksRoot = computed<Bookmark | undefined>(() => {
 })
 
 const rootFolder = computed<Bookmark | undefined>(() => {
-  let folder = Bookmarks.reactive.byId[props.panel.bookmarksFolderId]
+  let folder = Bookmarks.reactive.byId[props.panel.bookmarksFolderId] ?? bookmarksRoot.value
   for (let i = state.navOffset; i-- && folder; ) {
     if (folder.parentId === BKM_ROOT_ID) return bookmarksRoot.value
     folder = Bookmarks.reactive.byId[folder.parentId]
@@ -111,19 +111,12 @@ async function open(): Promise<void> {
     if (!result) return
   }
 
-  if (!rootFolder.value) {
+  if (!Bookmarks.reactive.tree.length) {
     state.active = true
-    if (!Bookmarks.reactive.tree.length) {
-      bookmarksLoading = true
-      loadBookmarks().then(() => {
-        bookmarksLoading = false
-        if (!Bookmarks.reactive.byId[props.panel.bookmarksFolderId]) {
-          onWrongRootFolder()
-        }
-      })
-    } else if (!Bookmarks.reactive.byId[props.panel.bookmarksFolderId]) {
-      return onWrongRootFolder()
-    }
+    bookmarksLoading = true
+    loadBookmarks().then(() => {
+      bookmarksLoading = false
+    })
   } else {
     state.active = !state.active
   }

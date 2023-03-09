@@ -711,6 +711,22 @@ export const setupPageTranslations: Translations = {
     de: 'Mindestverzögerung beim Wechsel zwischen Panels (ms)',
     zh_CN: '面板切换的最小延迟（毫秒）',
   },
+  'settings.bottom_bar': {
+    en: 'Bottom bar of tabs panel',
+    ru: 'Нижняя полоса панели вкладок',
+  },
+  'settings.sub_panel.recently_closed_tabs': {
+    en: 'Recently closed tabs sub panel',
+    ru: 'Подпанель недавно закрытых вкладок',
+  },
+  'settings.sub_panel.bookmarks': {
+    en: 'Bookmarks sub panel',
+    ru: 'Подпанель закладок',
+  },
+  'settings.sub_panel.history': {
+    en: 'History sub panel',
+    ru: 'Подпанель истории',
+  },
   'settings.nav_act_tabs_panel_left_click': {
     en: 'Left click on active tabs panel',
     ru: 'Клик левой кнопкой мыши по активной панели вкладок',

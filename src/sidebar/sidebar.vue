@@ -68,6 +68,26 @@
           :is="getPanelComponent(panel)"
           :data-pos="getPanelPos(i, panel.id)"
           :panel="panel")
+
+      Transition(name="bottom-bar")
+        .BottomBar(v-if="bottomBar && Utils.isTabsPanel(activePanel)")
+          .tools
+            .tool-btn(
+              v-if="Settings.state.subPanelRecentlyClosedBar"
+              :data-disabled="!Tabs.reactive.recentlyRemoved.length"
+              @click="Sidebar.openSubPanel(SubPanelType.RecentlyClosedTabs, activePanel)")
+              svg: use(xlink:href="#icon_trash")
+            .tool-btn(
+              v-if="Settings.state.subPanelBookmarks"
+              :data-disabled="!Utils.isTabsPanel(activePanel)"
+              @click="Sidebar.openSubPanel(SubPanelType.Bookmarks, activePanel)")
+              svg: use(xlink:href="#icon_bookmarks")
+            .tool-btn(
+              v-if="Settings.state.subPanelHistory"
+              :data-disabled="!Utils.isTabsPanel(activePanel)"
+              @click="Sidebar.openSubPanel(SubPanelType.History, activePanel)")
+              svg: use(xlink:href="#icon_clock")
+
       SubPanel(ref="subPanel")
 
     .right-vertical-box(v-if="pinnedTabsBarRight || navBarRight")
@@ -80,6 +100,7 @@
 <script lang="ts" setup>
 import { ref, computed, onMounted, Component } from 'vue'
 import { PanelType, Panel, MenuType, WheelDirection, SubPanelComponent } from 'src/types'
+import { SubPanelType } from 'src/types'
 import { Settings } from 'src/services/settings'
 import { GroupConfigResult, Sidebar } from 'src/services/sidebar'
 import { Styles } from 'src/services/styles'
@@ -127,10 +148,18 @@ const navBarVertical = Settings.state.navBarLayout === 'vertical'
 const navBarLayout = navBarVertical ? Settings.state.navBarSide : Settings.state.navBarLayout
 const navBarLeft = navBarVertical && Settings.state.navBarSide === 'left'
 const navBarRight = navBarVertical && Settings.state.navBarSide === 'right'
+const bottomBar =
+  Settings.state.subPanelRecentlyClosedBar ||
+  Settings.state.subPanelBookmarks ||
+  Settings.state.subPanelHistory
 
 const pinnedTabsPosition = computed(() => {
   if (!Tabs.reactive.pinned.length) return 'none'
   return Settings.state.pinnedTabsPosition
+})
+
+const activePanel = computed<Panel | undefined>(() => {
+  return Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
 })
 
 onMounted(() => {
@@ -225,6 +254,7 @@ const onWheel = Mouse.getWheelDebouncer(WheelDirection.Horizontal, e => {
 })
 
 let leaveTimeout: number | undefined
+let subPanelTimeout: number | undefined
 function onMouseEnter(): void {
   Sidebar.switchPanelBackResetTimeout()
 
@@ -232,6 +262,8 @@ function onMouseEnter(): void {
     clearTimeout(leaveTimeout)
     leaveTimeout = undefined
   }
+
+  clearTimeout(subPanelTimeout)
 }
 
 function onMouseLeave(): void {
@@ -250,6 +282,13 @@ function onMouseLeave(): void {
     leaveTimeout = setTimeout(() => {
       Mouse.stopMultiSelection()
     }, 250)
+  }
+
+  if (Sidebar.subPanelOpen) {
+    clearTimeout(subPanelTimeout)
+    subPanelTimeout = setTimeout(() => {
+      Sidebar.subPanelComponent?.close()
+    }, 300)
   }
 }
 

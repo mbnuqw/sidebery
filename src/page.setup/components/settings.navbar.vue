@@ -39,6 +39,21 @@ section(
     v-model:value="Settings.state.navSwitchPanelsDelay"
     :or="128"
     @update:value="Settings.saveDebounced(500)")
+  
+  InfoField(label="settings.bottom_bar")
+  .sub-fields
+    ToggleField(
+      label="settings.sub_panel.recently_closed_tabs"
+      v-model:value="Settings.state.subPanelRecentlyClosedBar"
+      @update:value="Settings.saveDebounced(150)")
+    ToggleField(
+      label="settings.sub_panel.bookmarks"
+      v-model:value="Settings.state.subPanelBookmarks"
+      @update:value="Settings.saveDebounced(150)")
+    ToggleField(
+      label="settings.sub_panel.history"
+      v-model:value="Settings.state.subPanelHistory"
+      @update:value="Settings.saveDebounced(150)")
 
   InfoField(label="settings.nav_bar_enabled" :inactive="!availableBtns.length").-sub-title
   .sub-fields

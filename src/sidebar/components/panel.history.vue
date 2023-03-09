@@ -19,7 +19,7 @@
       LoadingDots(v-if="state.historyLoading")
 
   PanelPlaceholder(
-    :isLoading="!panel?.ready"
+    :isLoading="!History.ready"
     :isNotPerm="!Permissions.reactive.history"
     :permMsg="translate('panel.history.req_perm')"
     perm="history"
@@ -31,10 +31,9 @@
 import { ref, computed, reactive, onUpdated } from 'vue'
 import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
-import { ScrollBoxComponent, HistoryItem } from 'src/types'
+import { HistoryItem } from 'src/types'
 import { Favicons } from 'src/services/favicons'
 import { History } from 'src/services/history'
-import { Sidebar } from 'src/services/sidebar'
 import { Search } from 'src/services/search'
 import { Permissions } from 'src/services/permissions'
 import ScrollBox from 'src/components/scroll-box.vue'
@@ -65,8 +64,6 @@ const state = reactive({
   allLoaded: false,
 })
 
-const panel = Sidebar.reactive.panelsById.history
-
 const isFiltering = computed<boolean>(() => !!Search.reactive.value)
 
 const historyList = computed((): HistoryGroup[] => {
@@ -78,7 +75,8 @@ const historyList = computed((): HistoryGroup[] => {
   const list = History.reactive.filtered ?? History.reactive.list
 
   for (const item of list) {
-    const gTitle = getGroupTitle(item.lastVisitTime, dayStart)
+    const itemPreview: HistoryItem = Utils.cloneObject(item)
+    const gTitle = getGroupTitle(itemPreview.lastVisitTime, dayStart)
 
     if (lastGroupTitle !== gTitle || !group) {
       lastGroupTitle = gTitle
@@ -86,34 +84,34 @@ const historyList = computed((): HistoryGroup[] => {
       groups.push(group)
     }
 
-    if (item.url) {
+    if (itemPreview.url) {
       try {
-        item.info = decodeURI(item.url)
+        itemPreview.info = decodeURI(itemPreview.url)
       } catch (err) {
-        Logs.warn('History panel: Cannot decodeURI:', item.url)
-        item.info = item.url
+        Logs.warn('History panel: Cannot decodeURI:', itemPreview.url)
+        itemPreview.info = itemPreview.url
       }
-      const domain = Utils.getDomainOf(item.url)
-      item.favicon = Favicons.reactive.list[Favicons.reactive.domains[domain]]
+      const domain = Utils.getDomainOf(itemPreview.url)
+      itemPreview.favicon = Favicons.reactive.list[Favicons.reactive.domains[domain]]
 
-      if (!item.title) {
+      if (!itemPreview.title) {
         const prevItem = group.items[group.items.length - 1]
         if (prevItem) {
-          prevItem.info += `\n  ${item.info}`
-          prevItem.tooltip += `\n  ${item.info}`
+          prevItem.info += `\n  ${itemPreview.info}`
+          prevItem.tooltip += `\n  ${itemPreview.info}`
         }
         continue
       }
     }
 
-    item.timeStr = getItemTime(item.lastVisitTime)
+    itemPreview.timeStr = getItemTime(itemPreview.lastVisitTime)
 
-    item.tooltip = ''
-    if (item.title) item.tooltip += item.title
-    if (item.tooltip) item.tooltip += '\n'
-    if (item.info) item.tooltip += item.info
+    itemPreview.tooltip = ''
+    if (itemPreview.title) itemPreview.tooltip += itemPreview.title
+    if (itemPreview.tooltip) itemPreview.tooltip += '\n'
+    if (itemPreview.info) itemPreview.tooltip += itemPreview.info
 
-    group.items.push(item)
+    group.items.push(itemPreview)
   }
 
   return groups
@@ -127,19 +125,9 @@ function getItemTime(time?: number): string {
   return `${h.padStart(2, '0')}:${m.padStart(2, '0')}`
 }
 
-function getCurrentTime(): string {
-  const dt = new Date()
-  const h = dt.getHours().toString().padStart(2, '0')
-  const m = dt.getMinutes().toString().padStart(2, '0')
-  return `${h}:${m}`
-}
-
 function getGroupTitle(time?: number, dayStartTime?: number): string {
   if (time === undefined) return '???'
-  const dt = new Date(time)
-
   if (!dayStartTime) dayStartTime = Utils.getDayStartMS()
-
   return Utils.uDate(time, '.', dayStartTime)
 }
 
@@ -157,7 +145,7 @@ function toggleHistoryGroup(e: MouseEvent, index: number): void {
 async function onScrollBottom(): Promise<void> {
   if (state.historyLoading || History.allLoaded) return
   if (isFiltering.value) return
-  if (!panel.ready || Sidebar.reactive.activePanelId !== panel.id) return
+  if (!History.ready) return
 
   state.historyLoading = true
   await Utils.sleep(250)

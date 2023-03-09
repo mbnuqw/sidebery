@@ -109,6 +109,7 @@ export const Sidebar = {
   scrollPositions: {} as Record<ID, number>,
   convertingPanelLock: false,
   subPanelComponent: null as SubPanelComponent | null,
+  subPanelOpen: false,
 
   width: 0,
   height: 0,

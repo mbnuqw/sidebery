@@ -124,6 +124,7 @@ export const enum SubPanelType {
   Null = 0,
   RecentlyClosedTabs = 1,
   Bookmarks = 2,
+  History = 3,
 }
 
 export interface SelectInputComponent {

@@ -181,6 +181,75 @@ body
   opacity: 0
 
 // ---
+// -- Bottom bar
+// -
+.BottomBar
+  position: absolute
+  display: flex
+  width: 100%
+  bottom: 0
+  flex-shrink: 0
+  z-index: 10
+
+.Sidebar .tools
+  position: relative
+  display: flex
+  width: 100%
+  z-index: 1000
+  grid-gap: var(--general-margin)
+  padding: 0 var(--general-margin) var(--general-margin)
+  justify-content: flex-end
+.BottomBar[data-with-ntb="true"] .tools
+  padding-left: 0
+  width: auto
+
+.Sidebar .tool-btn
+  position: relative
+  display: flex
+  justify-content: center
+  align-items: center
+  width: 100%
+  min-width: var(--tabs-height)
+  height: var(--tabs-height)
+  border-radius: var(--general-border-radius)
+  background-color: var(--frame-el-bg)
+  box-shadow: var(--frame-el-shadow)
+  > svg
+    position: relative
+    width: 16px
+    height: 16px
+    fill: var(--frame-fg)
+    opacity: .7
+  &:before
+    content: ''
+    position: absolute
+    width: 100%
+    height: 100%
+    border-radius: var(--general-border-radius)
+  &:hover
+    > svg
+      opacity: 1
+    &:before
+      background-color: var(--frame-el-overlay-hover-bg)
+  &:active:before
+    background-color: var(--frame-el-overlay-clicked-bg)
+  &[data-disabled="true"]
+    pointer-events: none
+    box-shadow: none
+    > svg
+      opacity: .3
+.BottomBar[data-with-ntb="true"] .tool-btn
+  width: var(--tabs-height)
+
+.bottom-bar-enter-active
+.bottom-bar-leave-active
+  transition: opacity var(--d-fast), transform var(--d-fast)
+.bottom-bar-leave-active
+.bottom-bar-enter-from
+  opacity: 0
+  transform: translateY(100%)
+
+// ---
 // -- Drag image
 // -
 .drag-image

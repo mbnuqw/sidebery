@@ -4,9 +4,7 @@
   @wheel.stop=""
   @mousedown.stop=""
   @mouseup.stop="onMouseUp"
-  @dblclick.stop=""
-  @mouseleave="onMouseLeave"
-  @mouseenter="onMouseEnter")
+  @dblclick.stop="")
   .overlay(
     data-dnd-type="tab"
     @dragenter="onDragEnter"
@@ -17,6 +15,7 @@
       .title {{titles[state.type]}}
     ClosedTabsSubPanel(v-if="state.panel && isRecentlyClosedTabs" :panel="state.panel")
     BookmarksSubPanel(v-else-if="state.panel && isBookmarks" :panel="state.panel")
+    HistoryPanel(v-else-if="isHistory")
 </template>
 
 <script lang="ts" setup>
@@ -27,8 +26,10 @@ import { Menu } from 'src/services/menu'
 import { Selection } from 'src/services/selection'
 import { Settings } from 'src/services/settings'
 import { DnD } from 'src/services/drag-and-drop'
+import { History } from 'src/services/history'
 import ClosedTabsSubPanel from './sub-panel.closed-tabs.vue'
 import BookmarksSubPanel from './sub-panel.bookmarks.vue'
+import HistoryPanel from './panel.history.vue'
 
 const state = reactive({
   type: SubPanelType.Null,
@@ -39,16 +40,12 @@ const titles: Record<SubPanelType, string> = {
   [SubPanelType.Null]: '',
   [SubPanelType.RecentlyClosedTabs]: translate('sub_panel.rct_panel.title'),
   [SubPanelType.Bookmarks]: translate('sub_panel.bookmarks_panel.title'),
+  [SubPanelType.History]: translate('sub_panel.history_panel.title'),
 }
 
-const CLOSE_ON_LEAVE_TIMEOUT = 300
-
-const isRecentlyClosedTabs = computed<boolean>(() => {
-  return state.type === SubPanelType.RecentlyClosedTabs
-})
-const isBookmarks = computed<boolean>(() => {
-  return state.type === SubPanelType.Bookmarks
-})
+const isRecentlyClosedTabs = computed<boolean>(() => state.type === SubPanelType.RecentlyClosedTabs)
+const isBookmarks = computed<boolean>(() => state.type === SubPanelType.Bookmarks)
+const isHistory = computed<boolean>(() => state.type === SubPanelType.History)
 
 let closeTimeout: number | undefined
 function closeSubPanel(): void {
@@ -56,7 +53,6 @@ function closeSubPanel(): void {
   state.active = false
   if (Selection.isSet()) Selection.resetSelection()
   if (Menu.isOpen) Menu.close()
-  clearTimeout(onMouseLeaveTimeout)
 
   clearTimeout(closeTimeout)
   closeTimeout = setTimeout(() => {
@@ -74,6 +70,8 @@ function open(type: SubPanelType, panel: TabsPanel) {
   if (!state.active) {
     if (Selection.isSet()) Selection.resetSelection()
   }
+
+  if (type === SubPanelType.History && !History.ready) History.load()
 
   if (Menu.isOpen) Menu.close()
 }
@@ -94,21 +92,6 @@ function onMouseUp(e: MouseEvent): void {
     Selection.selectNavItem(state.panel.id)
     Menu.open(MenuType.TabsPanel, e.clientX, e.clientY)
   }
-}
-
-let onMouseLeaveTimeout: number | undefined
-function onMouseLeave(): void {
-  if (Menu.isOpen) return
-  if (DnD.items.length) return
-
-  clearTimeout(onMouseLeaveTimeout)
-  onMouseLeaveTimeout = setTimeout(() => {
-    closeSubPanel()
-  }, CLOSE_ON_LEAVE_TIMEOUT)
-}
-
-function onMouseEnter(): void {
-  clearTimeout(onMouseLeaveTimeout)
 }
 
 const publicInterface: SubPanelComponent = {

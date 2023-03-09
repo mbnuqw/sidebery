@@ -32,6 +32,9 @@ export interface SettingsState {
   navActBookmarksPanelLeftClickAction: (typeof SETTINGS_OPTIONS.navActBookmarksPanelLeftClickAction)[number]
   navTabsPanelMidClickAction: (typeof SETTINGS_OPTIONS.navTabsPanelMidClickAction)[number]
   navBookmarksPanelMidClickAction: (typeof SETTINGS_OPTIONS.navBookmarksPanelMidClickAction)[number]
+  subPanelRecentlyClosedBar: boolean
+  subPanelBookmarks: boolean
+  subPanelHistory: boolean
 
   // Group page
   groupLayout: (typeof SETTINGS_OPTIONS.groupLayout)[number]

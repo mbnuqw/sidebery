@@ -36,16 +36,7 @@
     v-if="Settings.state.showNewTabBtns && Settings.state.newTabBarPosition === 'bottom'"
     :panel="panel")
 
-  .bottom-bar
-    .tools
-      .tool-btn(
-        :data-disabled="!Tabs.reactive.recentlyRemoved.length"
-        @click="Sidebar.openSubPanel(SubPanelType.RecentlyClosedTabs, panel)")
-        svg: use(xlink:href="#icon_trash")
-      .tool-btn(
-        v-if="panel.bookmarksFolderId !== NOID"
-        @click="Sidebar.openSubPanel(SubPanelType.Bookmarks, panel)")
-        svg: use(xlink:href="#icon_bookmarks")
+  .bottom-bar-space(v-if="Settings.state.subPanelRecentlyClosedBar || Settings.state.subPanelBookmarks")
 
   PanelPlaceholder(
     :isLoading="!props.panel.ready"
@@ -66,6 +57,7 @@ import { Sidebar } from 'src/services/sidebar'
 import { Tabs } from 'src/services/tabs.fg'
 import { Mouse } from 'src/services/mouse'
 import { DnD } from 'src/services/drag-and-drop'
+import * as Utils from 'src/utils'
 import PinnedTabsBar from './bar.pinned-tabs.vue'
 import ScrollBox from 'src/components/scroll-box.vue'
 import TabComponent from './tab.vue'

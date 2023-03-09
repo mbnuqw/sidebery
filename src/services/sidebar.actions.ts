@@ -961,6 +961,8 @@ export function activatePanel(panelId: ID, loadPanels = true): void {
   if (Settings.state.updateSidebarTitle) Sidebar.updateSidebarTitle(0)
 
   if (!DnD.reactive.isStarted && !Search.reactive.rawValue) saveActivePanelDebounced(1000)
+
+  if (Sidebar.subPanelOpen) Sidebar.closeSubPanel()
 }
 
 let prevSavedActPanelId = NOID
@@ -2141,14 +2143,18 @@ export function closeTabReopenRulesPopup(): void {
   Sidebar.reactive.tabReopenRulesPopup = null
 }
 
-export function openSubPanel(type: SubPanelType, panel: TabsPanel) {
+export function openSubPanel(type: SubPanelType, panel?: Panel) {
   if (!Sidebar.subPanelComponent) return Logs.warn('Tabs.openSubPanel: No subPanelComponent')
+  if (!panel) panel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+  if (!Utils.isTabsPanel(panel)) return Logs.warn('Tabs.openSubPanel: No panel')
 
   Sidebar.subPanelComponent.open(type, panel)
+  Sidebar.subPanelOpen = true
 }
 
 export function closeSubPanel() {
   if (!Sidebar.subPanelComponent) return Logs.warn('Tabs.openSubPanel: No subPanelComponent')
 
   Sidebar.subPanelComponent.close()
+  Sidebar.subPanelOpen = false
 }

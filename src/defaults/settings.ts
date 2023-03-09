@@ -29,6 +29,9 @@ export const DEFAULT_SETTINGS: SettingsState = {
   navTabsPanelMidClickAction: 'discard',
   navBookmarksPanelMidClickAction: 'none',
   navSwitchPanelsWheel: true,
+  subPanelRecentlyClosedBar: true,
+  subPanelBookmarks: true,
+  subPanelHistory: false,
 
   // Group page
   groupLayout: 'grid',
