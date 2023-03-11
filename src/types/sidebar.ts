@@ -217,6 +217,7 @@ export interface TabsPanel extends PanelCommonState, TabsPanelConfig {
   nextTabIndex: number
   filteredTabs?: ReactiveTab[]
   scrollRetainer: number
+  allDiscarded: boolean
 }
 
 export interface BookmarksPanel extends PanelCommonState, BookmarksPanelConfig {

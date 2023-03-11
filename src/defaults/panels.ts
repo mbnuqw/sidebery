@@ -76,6 +76,7 @@ export const TABS_PANEL_STATE: TabsPanel = {
   pinnedTabs: [],
   selNewTab: false,
   scrollRetainer: 0,
+  allDiscarded: false,
 }
 
 export const HISTORY_PANEL_CONFIG: HistoryPanelConfig = {

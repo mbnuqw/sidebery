@@ -205,6 +205,7 @@ export function recalcTabsPanels(reset?: boolean): void {
   const pinnedTabs: ReactiveTab[] = []
   const pinnedTabsByPanel: Record<ID, ReactiveTab[]> = {}
   const pinnedInPanel = Settings.state.pinnedTabsPosition === 'panel'
+  const discarded: Record<ID, boolean> = {}
   let tabIndex = 0
   let tabPanelIndex = 0
   let same = !reset
@@ -231,6 +232,9 @@ export function recalcTabsPanels(reset?: boolean): void {
       let pinnedTabsOfPanel = pinnedTabsByPanel[panel.id]
       if (!pinnedTabsOfPanel) pinnedTabsOfPanel = pinnedTabsByPanel[panel.id] = []
       if (Utils.isTabsPanel(panel)) pinnedTabsOfPanel.push(rTab)
+
+      if (discarded[panel.id] === undefined) discarded[panel.id] = true
+      if (!tab.discarded && discarded[panel.id]) discarded[panel.id] = false
     }
 
     pinnedTabs.push(rTab)
@@ -239,16 +243,20 @@ export function recalcTabsPanels(reset?: boolean): void {
   for (const panel of Sidebar.reactive.panels) {
     if (!Utils.isTabsPanel(panel)) continue
 
-    const pinnedTabsOfPanel = pinnedTabsByPanel[panel.id]
+    const panelId = panel.id
+    if (discarded[panelId] === undefined) discarded[panelId] = true
+
+    const pinnedTabsOfPanel = pinnedTabsByPanel[panelId]
     if (pinnedTabsOfPanel) panel.pinnedTabs = pinnedTabsOfPanel
     else panel.pinnedTabs = []
 
     const panelTabs: ReactiveTab[] = []
     for (; (tab = Tabs.list[tabIndex]); tabIndex++) {
-      if (tab.panelId === NOID) tab.panelId = panel.id
-      if (tab.panelId === panel.id) {
+      if (tab.panelId === NOID) tab.panelId = panelId
+      if (tab.panelId === panelId) {
         if (same && panel.tabs[tabPanelIndex]?.id !== tab.id) same = false
         if (startIndex === -1) startIndex = tab.index
+        if (!tab.discarded && discarded[panelId]) discarded[panelId] = false
       } else break
 
       const rTab = Tabs.reactive.byId[tab.id]
@@ -257,14 +265,16 @@ export function recalcTabsPanels(reset?: boolean): void {
       tabPanelIndex++
     }
 
-    if (!same || panel.tabs.length !== tabPanelIndex) {
+    let tabsCount = panel.tabs.length
+    if (!same || tabsCount !== tabPanelIndex) {
+      tabsCount = panelTabs.length
       panel.tabs = panelTabs
     }
 
-    if (panel.tabs.length) {
-      panel.len = panel.tabs.length + panel.pinnedTabs.length
+    if (tabsCount) {
+      panel.len = tabsCount + panel.pinnedTabs.length
       panel.startTabIndex = startIndex
-      panel.endTabIndex = startIndex + panel.tabs.length - 1
+      panel.endTabIndex = startIndex + tabsCount - 1
       panel.nextTabIndex = panel.endTabIndex + 1
     } else {
       panel.len = panel.pinnedTabs.length
@@ -273,12 +283,55 @@ export function recalcTabsPanels(reset?: boolean): void {
       panel.nextTabIndex = tabIndex
     }
 
+    if (pinnedTabsOfPanel?.length || tabsCount) {
+      panel.allDiscarded = !!discarded[panelId]
+    } else {
+      panel.allDiscarded = false
+    }
+
     startIndex = -1
     tabPanelIndex = 0
     same = !reset
   }
 
   Tabs.reactive.pinned = pinnedTabs
+}
+
+let checkDiscardedTabsInPanelTimeout: number | undefined
+export function checkDiscardedTabsInPanelDebounced(panelId: ID, delay: number) {
+  clearTimeout(checkDiscardedTabsInPanelTimeout)
+  checkDiscardedTabsInPanelTimeout = setTimeout(() => {
+    checkDiscardedTabsInPanel(panelId)
+  }, delay)
+}
+
+export function checkDiscardedTabsInPanel(panelId: ID) {
+  const panel = Sidebar.reactive.panelsById[panelId]
+  if (!Utils.isTabsPanel(panel)) return
+
+  const pinnedTabsLen = panel.pinnedTabs.length
+  const tabsLen = panel.tabs.length
+
+  if (tabsLen === 0 && pinnedTabsLen === 0) {
+    panel.allDiscarded = false
+    return
+  }
+
+  let discarded = true
+  if (pinnedTabsLen && Settings.state.pinnedTabsPosition === 'panel') {
+    if (panel.pinnedTabs.some(t => !t.discarded)) discarded = false
+  }
+
+  if (discarded) {
+    const startIndex = panel.startTabIndex
+    const endIndex = panel.endTabIndex
+    for (let i = startIndex; i <= endIndex; i++) {
+      const tab = Tabs.list[i]
+      if (!tab.discarded && discarded) discarded = false
+    }
+  }
+
+  panel.allDiscarded = discarded
 }
 
 export function recalcBookmarksPanels(): void {
@@ -1028,7 +1081,10 @@ export function switchToNeighbourPanel(): void {
     for (let i = activePanel.index - 1; i > 0; i--) {
       const panel = Sidebar.reactive.panels[i]
       if (panel) {
-        if (Settings.state.hideEmptyPanels && Utils.isTabsPanel(panel) && !panel.len) continue
+        if (Utils.isTabsPanel(panel)) {
+          if (Settings.state.hideEmptyPanels && !panel.len) continue
+          if (Settings.state.hideDiscardedTabPanels && panel.allDiscarded) continue
+        }
         target = Sidebar.reactive.panels[i]
         break
       }
@@ -1039,7 +1095,10 @@ export function switchToNeighbourPanel(): void {
     for (let i = activePanel.index + 1; i < Sidebar.reactive.panels.length; i++) {
       const panel = Sidebar.reactive.panels[i]
       if (panel) {
-        if (Settings.state.hideEmptyPanels && Utils.isTabsPanel(panel) && !panel.len) continue
+        if (Utils.isTabsPanel(panel)) {
+          if (Settings.state.hideEmptyPanels && !panel.len) continue
+          if (Settings.state.hideDiscardedTabPanels && panel.allDiscarded) continue
+        }
         target = Sidebar.reactive.panels[i]
         break
       }
@@ -1084,19 +1143,29 @@ export function switchPanel(
   let lastVisibleTabsPanel = -1
   let lastHiddenTabsPanel = -1
   let firstHiddenTabsPanel = -1
-  if (Settings.state.hideEmptyPanels) {
+  if (Settings.state.hideEmptyPanels || Settings.state.hideDiscardedTabPanels) {
     for (let i = Sidebar.reactive.panels.length; i--; ) {
       const panel = Sidebar.reactive.panels[i]
       if (!panel) return
-      if (lastVisibleTabsPanel === -1 && Utils.isTabsPanel(panel) && panel.len) {
+      const isTabsPanel = Utils.isTabsPanel(panel)
+      const isHidden =
+        (isTabsPanel && Settings.state.hideEmptyPanels && !panel.len) ||
+        (isTabsPanel && Settings.state.hideDiscardedTabPanels && panel.allDiscarded)
+      if (lastVisibleTabsPanel === -1 && !isHidden) {
         lastVisibleTabsPanel = i
       }
-      if (lastHiddenTabsPanel === -1 && Utils.isTabsPanel(panel) && !panel.len) {
+      if (lastHiddenTabsPanel === -1 && isHidden) {
         lastHiddenTabsPanel = i
       }
       if (lastVisibleTabsPanel !== -1 && lastHiddenTabsPanel !== -1) break
     }
-    firstHiddenTabsPanel = Sidebar.reactive.panels.findIndex(p => Utils.isTabsPanel(p) && !p.len)
+    firstHiddenTabsPanel = Sidebar.reactive.panels.findIndex(p => {
+      const isTabsPanel = Utils.isTabsPanel(p)
+      const isHidden =
+        (isTabsPanel && Settings.state.hideEmptyPanels && !p.len) ||
+        (isTabsPanel && Settings.state.hideDiscardedTabPanels && p.allDiscarded)
+      return isHidden
+    })
     if (lastVisibleTabsPanel === -1 && firstHiddenTabsPanel !== -1) {
       lastVisibleTabsPanel = firstHiddenTabsPanel
     }
@@ -1110,8 +1179,12 @@ export function switchPanel(
     if (!panel) return
     if (panel.skipOnSwitching) continue
 
-    const isEmpty = Utils.isTabsPanel(panel) && !panel.len
-    const isHidden = Settings.state.hideEmptyPanels && isEmpty
+    const isTabsPanel = Utils.isTabsPanel(panel)
+    const isEmpty = isTabsPanel && !panel.len
+    const isDiscarded = isTabsPanel && (panel as TabsPanel).allDiscarded
+    const isHidden =
+      (Settings.state.hideEmptyPanels && isEmpty) ||
+      (Settings.state.hideDiscardedTabPanels && isDiscarded)
     if (ignoreHidden && isHidden) continue
 
     if (hasHiddenPanels && lastVisibleTabsPanel !== -1) {

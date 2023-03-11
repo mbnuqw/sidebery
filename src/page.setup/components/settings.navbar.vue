@@ -34,6 +34,10 @@ section(
     label="settings.hide_empty_panels"
     v-model:value="Settings.state.hideEmptyPanels"
     @update:value="Settings.saveDebounced(150)")
+  ToggleField(
+      label="settings.hide_discarded_tab_panels"
+      v-model:value="Settings.state.hideDiscardedTabPanels"
+      @update:value="Settings.saveDebounced(150)")
   NumField.-inline(
     label="settings.nav_switch_panels_delay"
     v-model:value="Settings.state.navSwitchPanelsDelay"

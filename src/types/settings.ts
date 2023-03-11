@@ -26,6 +26,7 @@ export interface SettingsState {
   navBtnCount: boolean
   skipEmptyPanels: boolean
   hideEmptyPanels: boolean
+  hideDiscardedTabPanels: boolean
   navSwitchPanelsWheel: boolean
   navSwitchPanelsDelay: number
   navActTabsPanelLeftClickAction: (typeof SETTINGS_OPTIONS.navActTabsPanelLeftClickAction)[number]

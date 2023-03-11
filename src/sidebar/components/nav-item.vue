@@ -12,7 +12,7 @@
   :data-type="NavItemTypeNames[item.type] ?? item.type"
   :data-sel="item.id === Sidebar.reactive.selectedNavId"
   :data-unloaded="item.ready === false"
-  :data-empty="isEmpty(item)"
+  :data-empty="Utils.isTabsPanel(item) && item.allDiscarded"
   :data-audible="audioState === AudioState.Audible"
   :data-paused="audioState === AudioState.Paused"
   :data-muted="audioState === AudioState.Muted"
@@ -137,13 +137,6 @@ const audioState = computed<AudioState>(() => {
 
   return AudioState.Silent
 })
-
-function isEmpty(panel: Panel): boolean {
-  if (Utils.isTabsPanel(panel) && panel.ready && panel.tabs.length) {
-    return panel.tabs.every(t => t.discarded)
-  }
-  return false
-}
 
 function dropPointerMode(id: ID): string {
   if (id === DnD.items[0]?.id) return 'none'

@@ -705,6 +705,10 @@ export const setupPageTranslations: Translations = {
     de: 'Verstecke leere Tab-Panels',
     zh_CN: '隐藏空标签页面板',
   },
+  'settings.hide_discarded_tab_panels': {
+    en: 'Hide tab panel with all tabs unloaded',
+    ru: 'Скрывать панель вкладок, если все ее вкладки выгружены',
+  },
   'settings.nav_switch_panels_delay': {
     en: 'Min delay between panels switching (ms)',
     ru: 'Минимальная задержка между переключениями панелей (мс)',

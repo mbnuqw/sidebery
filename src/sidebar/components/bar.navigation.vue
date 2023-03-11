@@ -97,13 +97,19 @@ if (Settings.state.navBarLayout === 'horizontal') {
 }
 
 const hidden = computed((): NavItem[] => {
-  if (!Settings.state.hideEmptyPanels && !isInline) return []
+  if (!Settings.state.hideEmptyPanels && !Settings.state.hideDiscardedTabPanels && !isInline) {
+    return []
+  }
   const result: NavItem[] = []
 
   for (const id of Sidebar.reactive.nav) {
     const panel = Sidebar.reactive.panelsById[id]
-    if (Settings.state.hideEmptyPanels && Utils.isTabsPanel(panel) && !panel.len) {
-      result.push(panel)
+    if (Utils.isTabsPanel(panel)) {
+      if (Settings.state.hideEmptyPanels && !panel.len) {
+        result.push(panel)
+      } else if (Settings.state.hideDiscardedTabPanels && panel.allDiscarded) {
+        result.push(panel)
+      }
     }
   }
 
@@ -131,6 +137,7 @@ const visible = computed((): NavItem[] => {
       if (Utils.isTabsPanel(panel)) {
         if (firstTabsPanelIndex === -1) firstTabsPanelIndex = result.length
         if (Settings.state.hideEmptyPanels && panel.len === 0) continue
+        else if (Settings.state.hideDiscardedTabPanels && panel.allDiscarded) continue
         lastTabsPanelIndex = result.length
       }
       result.push(panel)

@@ -423,30 +423,34 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
   }
 
   // Discarded
-  if (change.discarded !== undefined && change.discarded) {
-    // Update successor tab for active tab
-    Tabs.updateSuccessionDebounced(15)
+  if (change.discarded !== undefined) {
+    if (change.discarded) {
+      // Update successor tab for active tab
+      Tabs.updateSuccessionDebounced(15)
 
-    if (localTab.status === 'loading') {
-      localTab.status = 'complete'
-      rLocalTab.status = TabStatus.Complete
-    }
-    if (localTab.loading) localTab.loading = false
-    if (localTab.audible) {
-      localTab.audible = false
-      rLocalTab.mediaAudible = false
-    }
-    if (localTab.mediaPaused) {
-      localTab.mediaPaused = false
-      rLocalTab.mediaPaused = false
-    }
-    const groupTab = Tabs.getGroupTab(localTab)
-    if (groupTab && !groupTab.discarded) Tabs.updateGroupChild(groupTab.id, tab.id)
+      if (localTab.status === 'loading') {
+        localTab.status = 'complete'
+        rLocalTab.status = TabStatus.Complete
+      }
+      if (localTab.loading) localTab.loading = false
+      if (localTab.audible) {
+        localTab.audible = false
+        rLocalTab.mediaAudible = false
+      }
+      if (localTab.mediaPaused) {
+        localTab.mediaPaused = false
+        rLocalTab.mediaPaused = false
+      }
+      const groupTab = Tabs.getGroupTab(localTab)
+      if (groupTab && !groupTab.discarded) Tabs.updateGroupChild(groupTab.id, tab.id)
 
-    if (!localTab.favIconUrl) {
-      localTab.favIconUrl = Favicons.getFavicon(localTab.url)
-      rLocalTab.favIconUrl = localTab.favIconUrl
+      if (!localTab.favIconUrl) {
+        localTab.favIconUrl = Favicons.getFavicon(localTab.url)
+        rLocalTab.favIconUrl = localTab.favIconUrl
+      }
     }
+
+    Sidebar.checkDiscardedTabsInPanelDebounced(localTab.panelId, 120)
   }
 
   // Status change
