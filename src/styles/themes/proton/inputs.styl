@@ -355,22 +355,27 @@
   display: flex
   flex-direction: column
   grid-gap: 2px 0
-  padding: 2px 3px
   top: var(--top, 0px)
   left: var(--left, 0px)
   max-width: var(--max-width, 250px)
   min-height: 24px
   max-height: 350px
-  overflow-y: auto
+  overflow: clip
   background-color: var(--frame-bg)
   border-radius: 6px
   box-shadow: inset 0 0 0 1px #ffffff32,
               0 1px 3px 0 #00000032
-#root[data-native-scrollbars-thin="true"] .select-input-drop-down
-  scrollbar-width: thin
 #root[data-toolbar-color-scheme="light"] .select-input-drop-down
   box-shadow: inset 0 0 0 1px #00000036,
               0 1px 3px 0 #00000032
+
+.select-input-drop-down-content
+  position: relative
+  padding: 2px 3px
+  overflow-y: auto
+  scrollbar-color: var(--frame-scrollbar-color) #0000
+#root[data-native-scrollbars-thin="true"] .select-input-drop-down-content
+  scrollbar-width: thin
 
 .SelectInput .opt[data-none="true"]:after
 .ToggleInput .opt.-false:after
