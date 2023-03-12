@@ -327,6 +327,7 @@ export function checkDiscardedTabsInPanel(panelId: ID) {
     const endIndex = panel.endTabIndex
     for (let i = startIndex; i <= endIndex; i++) {
       const tab = Tabs.list[i]
+      if (!tab) break
       if (!tab.discarded && discarded) discarded = false
     }
   }
