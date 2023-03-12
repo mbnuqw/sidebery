@@ -287,7 +287,7 @@ export const commonTranslations: Translations = {
     ru: 'Название (опционально)',
   },
   'popup.tab_move_rules.rule_container_label': {
-    en: 'If tab is in container',
+    en: 'If tab is in a container',
     ru: 'Если вкладка в контейнере',
   },
   'popup.tab_move_rules.rule_url_label': {
