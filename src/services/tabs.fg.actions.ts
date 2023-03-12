@@ -3186,32 +3186,90 @@ export function findSuccessorTab(tab: Tab, exclude?: ID[]): Tab | undefined {
   if (Tabs.removingTabs && !exclude) exclude = Tabs.removingTabs
 
   if (tab.pinned && (dirNext || dirPrev)) {
+    let discardedFallback: Tab | undefined
     const pinInPanels = Settings.state.pinnedTabsPosition === 'panel'
     const dirDir = dirNext ? 1 : -1
     const opDir = dirDir * -1
     if (Tabs.byId[tab.relGroupId]) target = Tabs.byId[tab.relGroupId]
+    // Search in pinned tabs after active
     if (!target) {
       for (let foundTab, i = tab.index + dirDir; (foundTab = Tabs.list[i]); i += dirDir) {
         if (!foundTab?.pinned) break
+
+        // Skip discarded tab
+        if (skipDiscarded && foundTab.discarded) {
+          if (!discardedFallback) discardedFallback = foundTab
+          continue
+        }
+
         if (pinInPanels && foundTab.panelId === tab.panelId) target = foundTab
         else if (!pinInPanels) target = foundTab
       }
     }
+    // Search in pinned tabs before active
     if (!target) {
       for (let foundTab, i = tab.index + opDir; (foundTab = Tabs.list[i]); i += opDir) {
         if (!foundTab?.pinned) break
+
+        // Skip discarded tab
+        if (skipDiscarded && foundTab.discarded) {
+          if (!discardedFallback) discardedFallback = foundTab
+          continue
+        }
+
         if (pinInPanels && foundTab.panelId === tab.panelId) target = foundTab
         else if (!pinInPanels) target = foundTab
       }
     }
+    // Search in current panel
     if (!target) {
-      const panel = Sidebar.reactive.panelsById[tab.panelId]
-      if (pinInPanels && Utils.isTabsPanel(panel)) {
-        target = Tabs.byId[panel.tabs[0]?.id]
+      let panel
+      if (pinInPanels) panel = Sidebar.reactive.panelsById[tab.panelId]
+      else panel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+      if (Utils.isTabsPanel(panel)) {
+        let foundTab: Tab | undefined
+        for (const tab of panel.tabs) {
+          foundTab = Tabs.byId[tab.id]
+          if (!foundTab) break
+
+          // Skip discarded tab
+          if (skipDiscarded && foundTab.discarded) {
+            if (!discardedFallback) discardedFallback = foundTab
+            continue
+          }
+
+          target = foundTab
+          break
+        }
+      }
+    }
+    // Check the last active tab of the previous active tabs panel
+    if (!target) {
+      const prevTabsPanelHistory = Tabs.getActiveTabsHistory(Sidebar.lastTabsPanelId)
+      if (prevTabsPanelHistory?.actTabs.length) {
+        const panelId = Sidebar.lastTabsPanelId
+        const actTabs = prevTabsPanelHistory.actTabs
+        const prevActTab = Tabs.byId[actTabs[actTabs.length - 1]]
+        if (prevActTab && prevActTab.panelId === panelId && !prevActTab.discarded) {
+          return prevActTab
+        }
+      }
+    }
+    // Search in global scope
+    if (!target) {
+      for (const tab of Tabs.list) {
+        // Skip discarded tab
+        if (skipDiscarded && tab.discarded) {
+          if (!discardedFallback) discardedFallback = tab
+          continue
+        }
+
+        target = tab
+        break
       }
     }
 
-    return target
+    return target ?? discardedFallback
   }
 
   // If group tab linked with pinned tab switch to that pinned tab
