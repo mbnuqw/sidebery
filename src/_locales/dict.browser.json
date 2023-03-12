@@ -12,10 +12,10 @@
     "zh_CN": "用于管理标签、容器（上下文身份）和侧边栏的书签的插件。支持横向、树形标签布局，每个容器的“include”/“exclude”设置，每个容器的代理配置等等。"
   },
   "ActionTitle": {
-    "en": "Toggle Sidebery sidebar",
-    "ru": "Открыть Sidebery",
-    "de": "Sidebery Seitenleiste umschalten",
-    "zh_CN": "切换Sidebery侧边栏"
+    "en": "Toggle Sidebery sidebar\nMiddle click: Open settings",
+    "ru": "Открыть Sidebery\nСредний щелчок: открыть настройки",
+    "de": "Sidebery Seitenleiste umschalten\nMittelklick: Einstellungen öffnen",
+    "zh_CN": "切换Sidebery侧边栏\n中键点击：打开设置"
   },
 
   "KbOpenSidebarPanel": {
