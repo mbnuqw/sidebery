@@ -39,7 +39,7 @@
     :style="{ '--offset': `${Sidebar.reactive.hiddenPanelsPopupOffset}px` }"
     @mousedown="Sidebar.closeHiddenPanelsPopup()")
     .hidden-panels-popup(:data-offset-side="Sidebar.reactive.hiddenPanelsPopupOffsetSide")
-      .hidden-panels-popup-content
+      .hidden-panels-popup-content(@mousedown.stop @mouseup.stop)
         NavItemComponent(
           v-for="(item, i) in hidden"
           :key="item.id"
