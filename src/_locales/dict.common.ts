@@ -778,8 +778,8 @@ export const commonTranslations: Translations = {
     zh_CN: '扁平化',
   },
   'menu.tab.url_conf': {
-    en: 'Configure this URL',
-    ru: 'Настроить этот URL',
+    en: 'Configure site...',
+    ru: 'Настроить сайт...',
   },
   'menu.tab.pin': {
     en: 'Pin',
