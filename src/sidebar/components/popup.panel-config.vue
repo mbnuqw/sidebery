@@ -25,7 +25,7 @@
       SelectInput.input(
         v-model:value="Sidebar.reactive.panelConfigPopup.config.color"
         :opts="COLOR_OPTS"
-        :icon="Sidebar.reactive.panelConfigPopup.config.iconSVG"
+        :icon="'#' + Sidebar.reactive.panelConfigPopup.config.iconSVG"
       )
 
     .ctrls
