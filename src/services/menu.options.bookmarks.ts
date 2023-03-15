@@ -41,6 +41,9 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
   },
 
   openInNewPanel: () => {
+    const node = Bookmarks.reactive.byId[Selection.getFirst()]
+    if (!node) return
+
     const allSeparators = Selection.get().every(id => {
       return Bookmarks.reactive.byId[id]?.type === 'separator'
     })
@@ -48,7 +51,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
       label: translate('menu.bookmark.open_in_new_panel'),
       icon: 'icon_add_tabs_panel',
       onClick: () => Bookmarks.openInNewPanel(Selection.get()),
-      onAltClick: () => Bookmarks.convertIntoTabsPanel(Selection.getFirst()),
+      onAltClick: () => Bookmarks.openAsTabsPanel(node, false),
     }
     if (allSeparators) option.inactive = true
     if (!Settings.state.ctxMenuRenderInact && option.inactive) return
@@ -310,7 +313,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
     const option: MenuOption = {
       label: translate('menu.bookmark.open_as_tabs_panel'),
       icon: 'icon_tabs',
-      onClick: () => Bookmarks.openAsTabsPanel(node),
+      onClick: () => Bookmarks.openAsTabsPanel(node, true),
     }
 
     if (node.type !== 'folder') option.inactive = true

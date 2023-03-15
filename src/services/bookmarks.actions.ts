@@ -3,7 +3,7 @@ import { translate } from 'src/dict'
 import { Bookmark, Panel, Notification, DialogConfig, DragInfo } from 'src/types'
 import { Stored, BookmarksSortType, DstPlaceInfo, ItemInfo, TabsPanel } from 'src/types'
 import { CONTAINER_ID, NOID, BKM_OTHER_ID, BKM_ROOT_ID, PRE_SCROLL, GROUP_RE } from 'src/defaults'
-import { FOLDER_NAME_DATA_RE, BOOKMARKED_PANEL_CONF_RE, GROUP_URL } from 'src/defaults'
+import { FOLDER_NAME_DATA_RE, GROUP_URL } from 'src/defaults'
 import { Bookmarks, BookmarksPopupConfig, BookmarksPopupResult } from 'src/services/bookmarks'
 import { BookmarksPopupState } from 'src/services/bookmarks'
 import * as Logs from 'src/services/logs'
@@ -17,7 +17,7 @@ import { Notifications } from 'src/services/notifications'
 import { Info } from 'src/services/info'
 import * as IPC from 'src/services/ipc'
 import { Favicons } from './favicons'
-import { PanelType, TabsPanelConfig } from 'src/types/sidebar'
+import { PanelType } from 'src/types/sidebar'
 import { Permissions } from './permissions'
 import { Containers } from './containers'
 import { DnD } from './drag-and-drop'
@@ -249,57 +249,6 @@ export async function openInNewPanel(ids: ID[]): Promise<void> {
 
   // Open tabs in new panel
   return Bookmarks.open(ids, { panelId: panel.id })
-}
-
-export async function convertIntoTabsPanel(folderId: ID): Promise<void> {
-  const folder = Bookmarks.reactive.byId[folderId]
-  if (!folder || folder.type !== 'folder') return
-
-  const toOpen: ItemInfo[] = []
-  const ids: ID[] = [folderId]
-
-  // Get ordered list of nodes
-  const walker = (nodes: Bookmark[]) => {
-    for (const node of nodes) {
-      if (node.type === 'separator') continue
-      if (ids.includes(node.parentId)) {
-        toOpen.push({ id: node.id, url: node.url, title: node.title, parentId: node.parentId })
-        ids.push(node.id)
-      } else if (ids.includes(node.id)) {
-        toOpen.push({ id: node.id, url: node.url, title: node.title, parentId: node.parentId })
-      }
-      if (node.children) walker(node.children)
-    }
-  }
-  if (folder.children) walker(folder.children)
-  if (!toOpen.length) return
-
-  // Get new panel config
-  let panelConfig: Partial<TabsPanelConfig> | undefined
-  let name: string | undefined = folder.title
-  const panelConfExec = BOOKMARKED_PANEL_CONF_RE.exec(folder.title)
-  if (panelConfExec) {
-    name = panelConfExec[1]
-    const json = panelConfExec[2]
-    try {
-      panelConfig = JSON.parse(json) as TabsPanelConfig
-    } catch (err) {
-      Logs.warn('Bookmarks.convertIntoTabsPanel: Cannot parse panel config, using defaults...', err)
-    }
-  }
-  if (!panelConfig) panelConfig = { name, bookmarksFolderId: folderId }
-
-  // Create panel
-  const panel = Sidebar.createTabsPanel(panelConfig)
-  const index = Sidebar.getIndexForNewTabsPanel()
-  panel.ready = true
-  Sidebar.addPanel(index, panel)
-  Sidebar.recalcPanels()
-  Sidebar.recalcTabsPanels()
-  Sidebar.saveSidebar(300)
-
-  // Open tabs in new panel
-  await Tabs.open(toOpen, { panelId: panel.id })
 }
 
 export interface OpeningBookmarksConfig {
@@ -1054,10 +1003,10 @@ export async function saveToFolder(
   removeOld: boolean,
   progress?: Notification
 ): Promise<Bookmark[] | void> {
-  if (!dst.parentId) return Logs.warn('Bookmarks: Cannot save bookmarks: No parentId')
+  if (!dst.parentId) return Logs.warn('Bookmarks.saveToFolder: No dst parentId')
 
   const dstFolder = Bookmarks.reactive.byId[dst.parentId]
-  if (!dstFolder) return Logs.warn('Bookmarks: Cannot save bookmarks: No parent folder')
+  if (!dstFolder) return Logs.warn('Bookmarks.saveToFolder: No dst parent folder')
 
   const panelFolderId = dstFolder.id
   const bookmarksList = Array.from(listBookmarks(dstFolder.children))
@@ -1072,8 +1021,8 @@ export async function saveToFolder(
       const item = items[i]
       const nextItem = items[i + 1]
       const parentFolderId = idsMap[item.parentId ?? NOID]
-      if (parentFolderId === undefined || !item.url) {
-        Logs.warn('Bookmarks: No parentFolderId or url: Continuing')
+      if (parentFolderId === undefined) {
+        Logs.warn('Bookmarks.saveToFolder: No parentFolderId: Skipping')
         continue
       }
 
@@ -1086,7 +1035,7 @@ export async function saveToFolder(
       indexes[parentFolderId] += 1
 
       // Folder
-      if (nextItem?.parentId === item.id) {
+      if (nextItem?.parentId === item.id || !item.url) {
         const folderIndex = bookmarksList.findIndex(n => {
           return n.type === 'folder' && n.title === item.title
         })
@@ -1111,7 +1060,7 @@ export async function saveToFolder(
         if (progress) Notifications.updateProgress(progress, n++, items.length)
 
         // Bookmark of the parent item
-        if (!GROUP_RE.test(item.url)) {
+        if (item.url && !GROUP_RE.test(item.url)) {
           attachContainerInfoToTitle(item)
           const bookmarkIndex = bookmarksList.findIndex(n => {
             return n.type === 'bookmark' && n.title === item.title && n.url === item.url
@@ -1340,63 +1289,43 @@ export function openAsBookmarksPanel(node: Bookmark) {
   })
 }
 
-export async function openAsTabsPanel(node: Bookmark): Promise<void> {
-  if (node.type !== 'folder') return
-
-  // Get name and config for new panel
-  let panelName: string | undefined
-  let panelConfig: TabsPanelConfig | undefined
-  const titleExec = BOOKMARKED_PANEL_CONF_RE.exec(node.title)
-  if (titleExec) {
-    const json = titleExec[2]
-    try {
-      panelConfig = JSON.parse(json) as TabsPanelConfig
-    } catch (err) {
-      Logs.err('Restoring panel from bookmarks: Cannot parse panel config, skipping...', err)
-    }
-  }
-  if (titleExec) panelName = titleExec[1]
-  else panelName = node.title
-
-  if (panelConfig) panelConfig.name = panelName
+export async function openAsTabsPanel(folder: Bookmark, showConfigPopup: boolean): Promise<void> {
+  if (folder.type !== 'folder') return
 
   const noTabsPanels = !Sidebar.hasTabs
   const index = Sidebar.getIndexForNewTabsPanel()
-  let tabsPanel
+  let tabsPanel: Panel | undefined
 
-  // Create from config parsed from bookmarks
-  if (panelConfig) {
-    panelConfig.name = panelName
-    panelConfig.bookmarksFolderId = node.id
-    tabsPanel = Sidebar.createTabsPanel(panelConfig)
-    Sidebar.addPanel(index, tabsPanel)
-    Sidebar.recalcPanels()
-    Sidebar.recalcTabsPanels()
-    Sidebar.activatePanel(tabsPanel.id)
-    Sidebar.saveSidebar(300)
-  }
-
-  // Or use folder name and open panel popup
-  else {
+  if (showConfigPopup) {
+    // Use folder name as default panel name and open panel popup
     const result = await Sidebar.openPanelPopup(
-      { type: PanelType.tabs, name: panelName, bookmarksFolderId: node.id },
-      index + 1
+      { type: PanelType.tabs, name: folder.title, bookmarksFolderId: folder.id },
+      index
     )
     if (!result) return Logs.warn('Bookmarks.openAsTabsPanel: No result')
 
     tabsPanel = Sidebar.reactive.panelsById[result]
-    if (!Utils.isTabsPanel(tabsPanel)) return Logs.warn('Bookmarks.openAsTabsPanel: No tabsPanel')
+  } else {
+    // Create panel
+    tabsPanel = Sidebar.createTabsPanel()
+    tabsPanel.ready = true
+    Sidebar.addPanel(index, tabsPanel)
+    Sidebar.recalcPanels()
+    Sidebar.recalcTabsPanels()
+    Sidebar.saveSidebar(300)
   }
+
+  if (!Utils.isTabsPanel(tabsPanel)) return Logs.warn('Bookmarks.openAsTabsPanel: No tabsPanel')
 
   if (noTabsPanels) await Tabs.load()
 
   // Get top-lvl ids for opening
-  const ids = node.children?.map(n => n.id) ?? []
+  const ids = folder.children?.map(n => n.id) ?? []
 
   // Preserve tree structure if title of target folder and first child are the same
-  if (node.children?.length) {
-    const includeParent = node.title === node.children[0]?.title
-    if (includeParent) ids.unshift(node.id)
+  if (folder.children?.length) {
+    const includeParent = folder.title === folder.children[0]?.title
+    if (includeParent) ids.unshift(folder.id)
   }
 
   // Open tabs

@@ -7,7 +7,7 @@ import { TabsPanelConfig, ItemBoundsType, ReactiveTab, DialogConfig } from 'src/
 import { TabToPanelMoveRuleConfig } from 'src/types'
 import { BOOKMARKS_PANEL_STATE, TABS_PANEL_STATE, NOID, CONTAINER_ID, Err } from 'src/defaults'
 import { BOOKMARKS_PANEL_CONFIG, TABS_PANEL_CONFIG, DEFAULT_CONTAINER_ID } from 'src/defaults'
-import { BKM_ROOT_ID, BKM_OTHER_ID, BOOKMARKED_PANEL_CONF_RE } from 'src/defaults'
+import { BKM_ROOT_ID, BKM_OTHER_ID } from 'src/defaults'
 import { HISTORY_PANEL_CONFIG, HISTORY_PANEL_STATE, FOLDER_NAME_DATA_RE } from 'src/defaults'
 import { BKM_MENU_ID, BKM_MOBILE_ID, BKM_TLBR_ID, DEFAULT_CONTAINER } from 'src/defaults'
 import * as Logs from 'src/services/logs'
@@ -1604,14 +1604,6 @@ export async function bookmarkTabsPanel(
     })
   }
 
-  // Config data
-  const config = createPanelConfigFromPanel(panel)
-  if (config.iconIMGSrc && config.iconIMGSrc.length > 1000) config.iconIMGSrc = undefined
-  if (config.iconIMG && config.iconIMG.length > 1000) config.iconIMG = undefined
-  const confJSON = JSON.stringify(config)
-  const dataPrefix = 'data:application/x-sidebery-panel;charset=UTF-8,'
-  const folderNameWithConfig = `${folderName} [${dataPrefix}${confJSON}]`
-
   // Create/Update panel folder
   let panelFolder: Bookmark | undefined
 
@@ -1619,7 +1611,7 @@ export async function bookmarkTabsPanel(
   if (oldFolder) {
     panelFolder = oldFolder
     try {
-      await browser.bookmarks.update(panelFolder.id, { title: folderNameWithConfig })
+      await browser.bookmarks.update(panelFolder.id, { title: folderName })
     } catch (err) {
       if (!silent) {
         Logs.err('Sidebar.bookmarkTabsPanel: Cannot update panel folder')
@@ -1633,7 +1625,7 @@ export async function bookmarkTabsPanel(
 
   // Or create new folder
   else {
-    const parentConf = { title: folderNameWithConfig, index, parentId: parent.id }
+    const parentConf = { title: folderName, index, parentId: parent.id }
     try {
       panelFolder = (await browser.bookmarks.create(parentConf)) as Bookmark
     } catch (err) {
@@ -1722,30 +1714,6 @@ export async function restoreFromBookmarks(panel: TabsPanel, silent?: boolean): 
   if (!panelFolder.children?.length) {
     throw Logs.warn('Restoring panel from bookmarks: Root folder is empty')
   }
-
-  // Restoring panel's config
-  let panelName: string | undefined
-  let panelConf: TabsPanelConfig | undefined
-  const panelConfExec = BOOKMARKED_PANEL_CONF_RE.exec(panelFolder.title)
-  if (panelConfExec) {
-    panelName = panelConfExec[1]
-    const json = panelConfExec[2]
-    try {
-      panelConf = JSON.parse(json) as TabsPanelConfig
-    } catch (err) {
-      Logs.err('Restoring panel from bookmarks: Cannot parse panel config, skipping...', err)
-    }
-  }
-  if (panelConf) {
-    panelConf.id = panel.id
-    panelConf.name = panelName ?? panelFolder.title
-    panelConf.bookmarksFolderId = panelFolder.id
-    Utils.updateObject(panel, panelConf, panelConf)
-  } else {
-    panel.name = panelFolder.title
-    panel.bookmarksFolderId = panelFolder.id
-  }
-  Sidebar.saveSidebar()
 
   const panelTabs = Utils.cloneArray(panel.tabs)
   const idsMap: Record<ID, ID> = {}

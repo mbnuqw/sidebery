@@ -233,14 +233,14 @@ export function getCUID(container: Container): string {
 /**
  * Parse Container Unique ID
  */
-export function parseCUID(cuid: string): browser.contextualIdentities.CreateDetails {
+export function parseCUID(cuid: string): browser.contextualIdentities.CreateDetails | undefined {
   let result: string[] | undefined
   try {
     result = JSON.parse(`[${cuid}]`) as string[]
   } catch (err) {
-    throw Logs.err('Containers: Cannot parse CUID')
+    return
   }
-  if (!result || result.length !== 3) throw Logs.err('Containers: Cannot parse CUID')
+  if (!result || result.length !== 3) return
 
   return {
     name: result[0],

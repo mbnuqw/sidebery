@@ -130,7 +130,9 @@ function onSave(): void {
       return
     }
 
-    if (panel.index === -1) {
+    if (popup.index !== undefined && popup.index >= 0) {
+      panel.index = popup.index
+    } else if (panel.index === -1) {
       if (isTabsPanel) {
         panel.index = Utils.findLastIndex(Sidebar.reactive.nav, id => {
           return Utils.isTabsPanel(Sidebar.reactive.panelsById[id])
