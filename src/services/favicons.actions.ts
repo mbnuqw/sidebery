@@ -78,9 +78,24 @@ export async function loadFavicons(): Promise<void> {
 }
 
 function limitFavicons(): number {
-  const len = Favicons.reactive.list.length
-  const randomIndex = Math.trunc(Math.random() * len)
+  let len = Favicons.reactive.list.length
 
+  // Remove the last favicon
+  if (len > MAX_COUNT_LIMIT) {
+    const rmIndex = len - 1
+    Favicons.reactive.list.splice(rmIndex, 1)
+    hashes.splice(rmIndex, 1)
+    for (const domain of Object.keys(domainsInfo)) {
+      const domainInfo = domainsInfo[domain]
+      if (domainInfo.index === rmIndex) {
+        delete domainsInfo[domain]
+      }
+    }
+    len--
+  }
+
+  // Get index to replace
+  const randomIndex = Math.trunc(Math.random() * len)
   for (const domain of Object.keys(domainsInfo)) {
     const domainInfo = domainsInfo[domain]
     if (domainInfo.index === randomIndex) delete domainsInfo[domain]
