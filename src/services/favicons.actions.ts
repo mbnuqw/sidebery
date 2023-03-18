@@ -229,8 +229,15 @@ export async function resizeFavicon(fav: string): Promise<string> {
   await Utils.setImageSrc(favRescaleImg, fav)
 
   try {
-    const sw = favRescaleImg.naturalWidth
-    const sh = favRescaleImg.naturalHeight
+    let sw = favRescaleImg.naturalWidth
+    let sh = favRescaleImg.naturalHeight
+    if (sw === 0 || sh === 0) {
+      const svgWithSize = Utils.setSvgImageSize(fav, ds, ds)
+      if (!svgWithSize) return fav
+      await Utils.setImageSrc(favRescaleImg, svgWithSize)
+      sw = favRescaleImg.naturalWidth
+      sh = favRescaleImg.naturalHeight
+    }
     if (sw === 0 || sh === 0) return fav
     if (sw > ds && favPrescaleCanvas) {
       favPrescaleCanvasCtx.drawImage(favRescaleImg, 0, 0, sw, sh, 0, 0, ds, ds)
