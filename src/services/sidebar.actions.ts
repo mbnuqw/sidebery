@@ -1512,9 +1512,25 @@ export function createHistoryPanel(): Panel {
 /**
  * Adds panel to the sidebar, returns reactive panel object.
  */
-export function addPanel<T extends Panel>(index: number, panel: T): T {
-  Sidebar.reactive.panelsById[panel.id] = panel
-  Sidebar.reactive.nav.splice(index, 0, panel.id)
+export function addPanel<T extends Panel>(index: number, panel: T, replace?: boolean): T {
+  if (replace) {
+    const replaceableId = Sidebar.reactive.nav[index]
+    if (replaceableId !== undefined) {
+      if (Sidebar.reactive.activePanelId === replaceableId) {
+        Sidebar.reactive.activePanelId = panel.id
+        Sidebar.reactive.lastActivePanelId = panel.id
+      }
+
+      delete Sidebar.reactive.panelsById[replaceableId]
+    }
+
+    Sidebar.reactive.panelsById[panel.id] = panel
+    Sidebar.reactive.nav[index] = panel.id
+  } else {
+    Sidebar.reactive.panelsById[panel.id] = panel
+    Sidebar.reactive.nav.splice(index, 0, panel.id)
+  }
+
   return Sidebar.reactive.panelsById[panel.id] as T
 }
 
@@ -1904,6 +1920,11 @@ export async function convertToBookmarksPanel(panel: TabsPanel): Promise<void> {
     }
   }
 
+  // Lock switching panels
+  if (isActive) {
+    Sidebar.switchingLock = true
+  }
+
   // Close tabs
   const tabsIds = panel.tabs.map(t => t.id)
   if (Tabs.list.length === tabsIds.length) await browser.tabs.create({})
@@ -1920,7 +1941,7 @@ export async function convertToBookmarksPanel(panel: TabsPanel): Promise<void> {
   }
 
   // Create bookmarks panel
-  let bookmarksPanel = Sidebar.createBookmarksPanel({
+  const bookmarksPanelConfig: Partial<BookmarksPanelConfig> = {
     name: panel.name,
     rootId: panel.bookmarksFolderId,
     color: panel.color,
@@ -1928,24 +1949,35 @@ export async function convertToBookmarksPanel(panel: TabsPanel): Promise<void> {
     iconIMG: panel.iconIMG,
     iconIMGSrc: panel.iconIMGSrc,
     autoConvert: true,
-  })
-  bookmarksPanel = Sidebar.addPanel(index, bookmarksPanel)
-
-  // Temporarily lock panel to prevent switching from it
-  if (isActive && !bookmarksPanel.lockedPanel) {
-    bookmarksPanel.lockedPanel = true
-    setTimeout(() => {
-      bookmarksPanel.lockedPanel = false
-      Sidebar.saveSidebar(300)
-    }, 200)
+    srcPanelConfig: {
+      id: panel.id,
+      noEmpty: panel.noEmpty,
+      newTabCtx: panel.newTabCtx,
+      dropTabCtx: panel.dropTabCtx,
+      moveRules: panel.moveRules,
+      newTabBtns: panel.newTabBtns,
+    },
   }
+  if (panel.srcPanelConfig) {
+    bookmarksPanelConfig.viewMode = panel.srcPanelConfig.viewMode
+    bookmarksPanelConfig.tempMode = panel.srcPanelConfig.tempMode
+    bookmarksPanelConfig.autoConvert = panel.srcPanelConfig.autoConvert
+  }
+  let bookmarksPanel = Sidebar.createBookmarksPanel(bookmarksPanelConfig)
+  if (panel.srcPanelConfig) bookmarksPanel.id = panel.srcPanelConfig.id
+  bookmarksPanel = Sidebar.addPanel(index, bookmarksPanel, true)
 
-  // Remove tabs panel
   Sidebar.recalcPanels()
   Sidebar.recalcBookmarksPanels()
-  if (isActive) Sidebar.activatePanel(bookmarksPanel.id)
-  delete Sidebar.reactive.panelsById[panel.id]
   Sidebar.saveSidebar(500)
+
+  setTimeout(() => {
+    // Unlock switching panels
+    Sidebar.switchingLock = false
+
+    // Mark bookmarks panel as ready
+    if (Bookmarks.reactive.tree.length) bookmarksPanel.ready = true
+  }, 200)
 
   Notifications.finishProgress(notif, 2000)
   notif.title = translate('notif.done')
@@ -1988,17 +2020,31 @@ export async function convertToTabsPanel(
 
   // Create tabs panel
   const isFirstTabsPanel = !Sidebar.hasTabs
-  const tabsPanel = Sidebar.createTabsPanel({
+  const tabsPanelConfig: Partial<TabsPanelConfig> = {
     name: bookmarksPanel.name,
     bookmarksFolderId: bookmarksPanel.rootId,
     color: bookmarksPanel.color,
     iconSVG: bookmarksPanel.iconSVG === 'icon_bookmarks' ? 'icon_tabs' : bookmarksPanel.iconSVG,
     iconIMG: bookmarksPanel.iconIMG,
     iconIMGSrc: bookmarksPanel.iconIMGSrc,
-  })
-  Sidebar.reactive.panelsById[tabsPanel.id] = tabsPanel
-  Sidebar.reactive.nav[index] = tabsPanel.id
-  delete Sidebar.reactive.panelsById[bookmarksPanel.id]
+
+    srcPanelConfig: {
+      id: bookmarksPanel.id,
+      autoConvert: bookmarksPanel.autoConvert,
+      tempMode: bookmarksPanel.tempMode,
+      viewMode: bookmarksPanel.viewMode,
+    },
+  }
+  if (bookmarksPanel.srcPanelConfig) {
+    tabsPanelConfig.noEmpty = bookmarksPanel.srcPanelConfig.noEmpty
+    tabsPanelConfig.newTabCtx = bookmarksPanel.srcPanelConfig.newTabCtx
+    tabsPanelConfig.dropTabCtx = bookmarksPanel.srcPanelConfig.dropTabCtx
+    tabsPanelConfig.moveRules = Utils.cloneArray(bookmarksPanel.srcPanelConfig.moveRules)
+    tabsPanelConfig.newTabBtns = Utils.cloneArray(bookmarksPanel.srcPanelConfig.newTabBtns)
+  }
+  let tabsPanel = Sidebar.createTabsPanel(tabsPanelConfig)
+  if (bookmarksPanel.srcPanelConfig) tabsPanel.id = bookmarksPanel.srcPanelConfig.id
+  tabsPanel = Sidebar.addPanel(index, tabsPanel, true)
   Sidebar.recalcPanels()
   Sidebar.recalcTabsPanels()
   Sidebar.activatePanel(tabsPanel.id, false)

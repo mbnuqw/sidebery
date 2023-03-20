@@ -122,6 +122,7 @@ export const Sidebar = {
   folderHeight: 0,
   separatorHeight: 0,
   bookmarkMargin: 0,
+  switchingLock: false,
 
   reMountSidebar: null as null | (() => void),
 

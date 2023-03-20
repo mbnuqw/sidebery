@@ -163,6 +163,13 @@ export interface PanelCommonConfig extends NavItemConfig {
   lockedPanel: boolean
 }
 
+export interface SrcBookmarksPanelConfig {
+  id: ID
+  viewMode: string
+  tempMode: boolean
+  autoConvert: boolean
+}
+
 export interface TabsPanelConfig extends PanelCommonConfig {
   type: PanelType.tabs
   noEmpty: boolean
@@ -170,6 +177,16 @@ export interface TabsPanelConfig extends PanelCommonConfig {
   dropTabCtx: string
   moveRules: TabToPanelMoveRuleConfig[]
   bookmarksFolderId: ID
+  newTabBtns: string[]
+  srcPanelConfig: SrcBookmarksPanelConfig | null
+}
+
+export interface SrcTabsPanelConfig {
+  id: ID
+  noEmpty: boolean
+  newTabCtx: string
+  dropTabCtx: string
+  moveRules: TabToPanelMoveRuleConfig[]
   newTabBtns: string[]
 }
 
@@ -179,6 +196,7 @@ export interface BookmarksPanelConfig extends PanelCommonConfig {
   viewMode: string
   tempMode: boolean
   autoConvert: boolean
+  srcPanelConfig: SrcTabsPanelConfig | null
 }
 
 export interface HistoryPanelConfig extends PanelCommonConfig {

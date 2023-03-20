@@ -412,7 +412,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
       label: translate('menu.bookmark.convert_to_tabs_panel'),
       icon: 'icon_tabs',
       badge: 'icon_reopen',
-      onClick: () => Sidebar.convertToTabsPanel(panel),
+      onClick: () => Sidebar.convertToTabsPanel(panel, true),
     }
 
     if (panel.rootId === BKM_ROOT_ID) option.inactive = true

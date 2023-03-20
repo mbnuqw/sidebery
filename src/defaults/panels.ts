@@ -18,6 +18,7 @@ export const BOOKMARKS_PANEL_CONFIG: BookmarksPanelConfig = {
   rootId: 'root________',
   viewMode: 'tree',
   autoConvert: false,
+  srcPanelConfig: null,
 }
 export const BOOKMARKS_PANEL_STATE: BookmarksPanel = {
   ...BOOKMARKS_PANEL_CONFIG,
@@ -52,6 +53,7 @@ export const TABS_PANEL_CONFIG: TabsPanelConfig = {
   moveRules: [],
   bookmarksFolderId: -1,
   newTabBtns: [],
+  srcPanelConfig: null,
 }
 export const TABS_PANEL_STATE: TabsPanel = {
   ...TABS_PANEL_CONFIG,

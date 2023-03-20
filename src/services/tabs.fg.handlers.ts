@@ -962,7 +962,8 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
       !panel.tabs.length &&
       Tabs.activeId !== tabId && // <- b/c panel will be switched in onTabActivated
       !panel.pinnedTabs.length &&
-      Sidebar.reactive.activePanelId === panel.id
+      Sidebar.reactive.activePanelId === panel.id &&
+      !Sidebar.switchingLock
     ) {
       const activeTab = Tabs.byId[Tabs.activeId]
       if (activeTab && !activeTab.pinned) Sidebar.activatePanel(activeTab.panelId)
@@ -1247,7 +1248,11 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
 
   // Switch to activated tab's panel
   const activePanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
-  if ((!tab.pinned || Settings.state.pinnedTabsPosition === 'panel') && !activePanel?.lockedPanel) {
+  if (
+    (!tab.pinned || Settings.state.pinnedTabsPosition === 'panel') &&
+    !activePanel?.lockedPanel &&
+    !Sidebar.switchingLock
+  ) {
     Sidebar.activatePanel(panel.id)
   }
   if ((!prevActive || prevActive.panelId !== tab.panelId) && Settings.state.hideInact) {

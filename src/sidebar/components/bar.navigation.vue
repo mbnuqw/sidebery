@@ -338,7 +338,7 @@ function onNavMouseDown(e: MouseEvent, item: NavItem) {
 
       // Convert bookmarks panel to tabs panel
       if (Settings.state.navBookmarksPanelMidClickAction === 'convert') {
-        Sidebar.convertToTabsPanel(panel)
+        Sidebar.convertToTabsPanel(panel, true)
       }
     }
 
