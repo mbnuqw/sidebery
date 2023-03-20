@@ -1257,9 +1257,9 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
   // Propagate access time to parent tabs for autoFolding feature
   if (
     Settings.state.tabsTree &&
-    tab.parentId > -1 &&
+    tab.parentId !== -1 &&
     Settings.state.autoFoldTabs &&
-    Settings.state.autoFoldTabsExcept > 0
+    Settings.state.autoFoldTabsExcept !== 'none'
   ) {
     let parent = Tabs.byId[tab.parentId]
     if (parent) {
