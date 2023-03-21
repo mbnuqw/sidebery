@@ -3,7 +3,7 @@ import { translate } from 'src/dict'
 import { Bookmark, Panel, Notification, DialogConfig, DragInfo } from 'src/types'
 import { Stored, BookmarksSortType, DstPlaceInfo, ItemInfo, TabsPanel } from 'src/types'
 import { CONTAINER_ID, NOID, BKM_OTHER_ID, BKM_ROOT_ID, PRE_SCROLL, GROUP_RE } from 'src/defaults'
-import { FOLDER_NAME_DATA_RE, GROUP_URL } from 'src/defaults'
+import { FOLDER_NAME_DATA_RE, GROUP_URL, PIN_MARK } from 'src/defaults'
 import { Bookmarks, BookmarksPopupConfig, BookmarksPopupResult } from 'src/services/bookmarks'
 import { BookmarksPopupState } from 'src/services/bookmarks'
 import * as Logs from 'src/services/logs'
@@ -351,7 +351,7 @@ export async function open(
         if (node.url) info.url = node.url
         if (isIndirectTarget) info.parentId = node.parentId
         if (!info.url && info.title && info.title.length > 20) {
-          Bookmarks.removeDataFromTitle(info)
+          Bookmarks.extractTabInfoFromTitle(info, true)
         }
 
         // Set url for parent node
@@ -911,20 +911,32 @@ export async function move(ids: ID[], dst: DstPlaceInfo): Promise<void> {
   }
 }
 
-export function attachContainerInfoToTitle(item: ItemInfo): void {
+export function attachTabInfoToTitle(item: ItemInfo) {
+  if (item.pinned) item.title += ' ' + PIN_MARK
   if (item.container && item.container !== CONTAINER_ID) {
     const container = Containers.reactive.byId[item.container]
     if (container) item.title += ` [${Containers.getCUID(container)}]`
   }
 }
 
-export function removeDataFromTitle(item: ItemInfo): string | undefined {
+export function extractTabInfoFromTitle(item: ItemInfo, updateTitleOnly?: boolean) {
   if (!item.title) return
+
+  const pinIndex = item.title.indexOf(' ' + PIN_MARK)
+  if (pinIndex !== -1) {
+    item.title = item.title.slice(0, pinIndex) + item.title.slice(pinIndex + 1 + PIN_MARK.length)
+    if (!updateTitleOnly) item.pinned = true
+  }
 
   const nameExec = FOLDER_NAME_DATA_RE.exec(item.title)
   if (nameExec) {
-    item.title = nameExec[1]
-    return nameExec[2]
+    if (nameExec[2]) {
+      const container = Containers.findUnique(Containers.parseCUID(nameExec[2]))
+      if (container) {
+        item.title = nameExec[1]
+        if (!updateTitleOnly) item.container = container.id
+      }
+    }
   }
 }
 
@@ -964,7 +976,7 @@ export async function createFrom(
 
         // Create bookmark of parent item
         if (item.url && !GROUP_RE.test(item.url)) {
-          attachContainerInfoToTitle(item)
+          attachTabInfoToTitle(item)
           const url = Utils.denormalizeUrl(item.url)
           await browser.bookmarks.create({ title: item.title, url, parentId: folder.id })
         }
@@ -972,7 +984,7 @@ export async function createFrom(
         continue
       }
 
-      attachContainerInfoToTitle(item)
+      attachTabInfoToTitle(item)
       const url = Utils.denormalizeUrl(item.url)
       await browser.bookmarks.create({ title: item.title, url, parentId, index })
 
@@ -980,7 +992,7 @@ export async function createFrom(
     }
   } else {
     for (const t of items) {
-      attachContainerInfoToTitle(t)
+      attachTabInfoToTitle(t)
       await browser.bookmarks.create({
         url: Utils.denormalizeUrl(t.url),
         title: t.title,
@@ -1034,6 +1046,25 @@ export async function saveToFolder(
       }
       indexes[parentFolderId] += 1
 
+      // Separator
+      if (!item.url && !item.title) {
+        const sepIndex = bookmarksList.findIndex(n => n.type === 'separator')
+        const separator = bookmarksList[sepIndex]
+        // Separator exists
+        if (separator) {
+          bookmarksList.splice(sepIndex, 1)
+          if (separator.index !== index || parentFolderId !== separator.parentId) {
+            await browser.bookmarks.move(separator.id, { index, parentId: parentFolderId })
+          }
+        }
+        // Create separator
+        else {
+          const createConf = { type: 'separator' as const, index, parentId: parentFolderId }
+          await browser.bookmarks.create(createConf)
+        }
+        continue
+      }
+
       // Folder
       if (nextItem?.parentId === item.id || !item.url) {
         const folderIndex = bookmarksList.findIndex(n => {
@@ -1061,7 +1092,7 @@ export async function saveToFolder(
 
         // Bookmark of the parent item
         if (item.url && !GROUP_RE.test(item.url)) {
-          attachContainerInfoToTitle(item)
+          attachTabInfoToTitle(item)
           const bookmarkIndex = bookmarksList.findIndex(n => {
             return n.type === 'bookmark' && n.title === item.title && n.url === item.url
           })
@@ -1085,7 +1116,7 @@ export async function saveToFolder(
       }
 
       // Bookmark
-      attachContainerInfoToTitle(item)
+      attachTabInfoToTitle(item)
       const bookmarkIndex = bookmarksList.findIndex(n => {
         return n.type === 'bookmark' && n.title === item.title && n.url === item.url
       })
@@ -1115,7 +1146,7 @@ export async function saveToFolder(
     for (const item of items) {
       if (item.url && GROUP_RE.test(item.url)) continue
 
-      attachContainerInfoToTitle(item)
+      attachTabInfoToTitle(item)
       const bookmarkIndex = bookmarksList.findIndex(n => {
         return n.type === 'bookmark' && n.title === item.title && n.url === item.url
       })

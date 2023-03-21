@@ -35,7 +35,7 @@ export const COLOR_NAMES: browser.ColorName[] = [
 export const IMG_RE = /(\.png|\.jpe?g|\.gif|\.webp|\.svg)([?#].*)?$/i
 export const VID_RE = /(\.mp4|\.webm)([?#].*)?$/i
 export const MUS_RE = /(\.mp3|\.flac)([?#].*)?$/i
-export const FILE_RE = /(^file:.*|\.pdf)([?#].*)?$/i
+export const FILE_RE = /(^file:.*|\.pdf)([?#].*)?$/
 export const GROUP_RE = /\/page\.group\/group\.html/
 export const URL_PAGE_RE = /\/page\.url\/url\.html/
 export const SETTINGS_RE = /\/page\.setup\/setup\.html/
@@ -134,6 +134,8 @@ export const BKM_OTHER_ID = 'unfiled_____'
 export const BKM_MENU_ID = 'menu________'
 export const BKM_MOBILE_ID = 'mobile______'
 export const BKM_TLBR_ID = 'toolbar_____'
+
+export const PIN_MARK = '📌'
 
 export const MIN_SEARCH_QUERY_LEN = 2
 

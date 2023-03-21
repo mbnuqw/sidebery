@@ -125,6 +125,7 @@ const VOID_PANEL_CONF: PanelConfig = {
   moveRules: [],
   bookmarksFolderId: -1,
   newTabBtns: [],
+  srcPanelConfig: null,
 }
 const SCROLL_CONF = { behavior: 'smooth', block: 'nearest' } as const
 

@@ -1659,6 +1659,23 @@ export async function bookmarkTabsPanel(
   const items: ItemInfo[] = []
   const dst: DstPlaceInfo = { parentId: panelFolderId }
 
+  if (Settings.state.pinnedTabsPosition === 'panel' && panel.pinnedTabs.length) {
+    for (const rTab of panel.pinnedTabs) {
+      const tab = Tabs.byId[rTab.id]
+      if (!tab) continue
+      const info: ItemInfo = {
+        id: tab.id,
+        pinned: true,
+        title: tab.customTitle ?? tab.title,
+        url: tab.url,
+        parentId: tab.parentId,
+      }
+      if (Containers.reactive.byId[tab.cookieStoreId]) info.container = tab.cookieStoreId
+      items.push(info)
+    }
+    items.push({ id: 'separator' })
+  }
+
   for (const rTab of panel.tabs) {
     const tab = Tabs.byId[rTab.id]
     if (!tab) continue
@@ -1731,23 +1748,22 @@ export async function restoreFromBookmarks(panel: TabsPanel, silent?: boolean): 
     throw Logs.warn('Restoring panel from bookmarks: Root folder is empty')
   }
 
+  const pinnedTabsInPanel = Settings.state.pinnedTabsPosition === 'panel'
+  const pinnedTabs = pinnedTabsInPanel ? Utils.cloneArray(panel.pinnedTabs) : []
   const panelTabs = Utils.cloneArray(panel.tabs)
   const idsMap: Record<ID, ID> = {}
   const reusedTabs: Record<ID, Tab> = {}
   const usedAsParent: Record<ID, true> = {}
   let index = panel.startTabIndex
+  let indexPinned = 0
   for (const node of Bookmarks.listBookmarks(panelFolder.children)) {
     if (usedAsParent[node.id]) continue
     if (node.type === 'separator') continue
 
     const info: ItemInfo = { id: node.id, title: node.title, parentId: node.parentId }
-    const data = Bookmarks.removeDataFromTitle(info)
+    Bookmarks.extractTabInfoFromTitle(info)
+    const isPinned = info.pinned
     let rawUrl = node.url
-
-    if (data) {
-      const container = Containers.findUnique(Containers.parseCUID(data))
-      if (container) info.container = container.id
-    }
 
     // Get target lvl
     let lvl = 0
@@ -1782,11 +1798,31 @@ export async function restoreFromBookmarks(panel: TabsPanel, silent?: boolean): 
     }
 
     // Find existed tab
-    const existedTabIndex = panelTabs.findIndex(t => {
-      return (t.url === rawUrl || t.url === info.url) && t.title === info.title && !reusedTabs[t.id]
+    const existedReactiveTab = (isPinned ? pinnedTabs : panelTabs).find(t => {
+      const sameURL = t.url === rawUrl || t.url === info.url
+      return sameURL && t.title === info.title && !reusedTabs[t.id]
     })
-    const existedReactiveTab = panel.tabs[existedTabIndex]
-    const existedTab = Tabs.byId[existedReactiveTab?.id]
+    const existedTab = existedReactiveTab ? Tabs.byId[existedReactiveTab.id] : undefined
+
+    // Create pinned tab if needed
+    if (isPinned) {
+      if (existedTab) continue
+
+      const conf: browser.tabs.CreateProperties = {
+        index: indexPinned,
+        url: info.url,
+        pinned: true,
+        windowId: Windows.id,
+        active: false,
+        cookieStoreId: info.container,
+      }
+      Tabs.setNewTabPosition(indexPinned, NOID, panel.id)
+      const newTab = await browser.tabs.create(conf)
+      idsMap[info.id] = newTab.id
+      indexPinned++
+
+      continue
+    }
 
     // Move existed tab
     if (existedTab) {
@@ -1926,7 +1962,11 @@ export async function convertToBookmarksPanel(panel: TabsPanel): Promise<void> {
   }
 
   // Close tabs
-  const tabsIds = panel.tabs.map(t => t.id)
+  const tabsIds = []
+  if (Settings.state.pinnedTabsPosition === 'panel' && panel.pinnedTabs.length) {
+    tabsIds.push(...panel.pinnedTabs.map(t => t.id))
+  }
+  tabsIds.push(...panel.tabs.map(t => t.id))
   if (Tabs.list.length === tabsIds.length) await browser.tabs.create({})
   if (tabsIds.length) await Tabs.removeTabs(tabsIds, true)
 

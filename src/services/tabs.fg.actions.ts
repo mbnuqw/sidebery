@@ -1815,7 +1815,7 @@ export async function bookmarkTabs(tabIds: ID[]): Promise<void> {
       if (parentId === NOID) parentId = BKM_OTHER_ID
 
       const info = { id: tab.id, title: result.name, container: tab.cookieStoreId }
-      Bookmarks.attachContainerInfoToTitle(info)
+      Bookmarks.attachTabInfoToTitle(info)
 
       await browser.bookmarks.create({
         parentId,
