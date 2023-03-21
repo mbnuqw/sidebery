@@ -1820,6 +1820,7 @@ export async function restoreFromBookmarks(panel: TabsPanel, silent?: boolean): 
       const newTab = await browser.tabs.create(conf)
       idsMap[info.id] = newTab.id
       indexPinned++
+      index++
 
       continue
     }
