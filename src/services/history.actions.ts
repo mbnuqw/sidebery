@@ -211,7 +211,10 @@ export function scrollToHistoryItem(id: string): void {
 }
 
 export async function openTab(item: HistoryItem, activate?: boolean): Promise<void> {
-  let panel: Panel | undefined = Sidebar.reactive.panelsById[Sidebar.lastTabsPanelId]
+  let panel: Panel | undefined = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+  if (!Utils.isTabsPanel(panel)) {
+    panel = Sidebar.reactive.panelsById[Sidebar.lastTabsPanelId]
+  }
   if (!Utils.isTabsPanel(panel)) {
     const activeTab = Tabs.byId[Tabs.activeId]
     if (activeTab) panel = Sidebar.reactive.panelsById[activeTab.panelId]
