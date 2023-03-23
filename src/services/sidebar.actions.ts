@@ -2278,12 +2278,12 @@ export function openSubPanel(type: SubPanelType, panel?: Panel) {
   if (!Utils.isTabsPanel(panel)) return Logs.warn('Tabs.openSubPanel: No panel')
 
   Sidebar.subPanelComponent.open(type, panel)
-  Sidebar.subPanelOpen = true
+  Sidebar.subPanelOpen = type
 }
 
 export function closeSubPanel() {
   if (!Sidebar.subPanelComponent) return Logs.warn('Tabs.openSubPanel: No subPanelComponent')
 
   Sidebar.subPanelComponent.close()
-  Sidebar.subPanelOpen = false
+  Sidebar.subPanelOpen = SubPanelType.Null
 }

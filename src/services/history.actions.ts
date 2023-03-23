@@ -1,5 +1,5 @@
 import * as Utils from 'src/utils'
-import { DstPlaceInfo, HistoryItem, ItemInfo, Panel } from 'src/types'
+import { DstPlaceInfo, HistoryItem, ItemInfo, Panel, SubPanelType } from 'src/types'
 import { History } from 'src/services/history'
 import { Favicons } from 'src/services/favicons'
 import { Sidebar } from 'src/services/sidebar'
@@ -56,9 +56,11 @@ export function unloadAfter(delay: number): void {
   clearTimeout(unloadAfterTimeout)
   unloadAfterTimeout = setTimeout(() => {
     const historyPanel = Sidebar.reactive.panelsById.history
-    if (Sidebar.reactive.activePanelId !== historyPanel.id && historyPanel.ready) {
-      History.unload()
-    }
+    if (historyPanel && Sidebar.reactive.activePanelId === historyPanel.id) return
+    if (historyPanel && !historyPanel.ready) return
+    if (Sidebar.subPanelOpen === SubPanelType.History) return
+
+    History.unload()
   }, delay)
 }
 

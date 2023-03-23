@@ -1,5 +1,5 @@
 import { Panel, TabsPanel, ConfirmDialog, UpgradingState, Dialog, GroupConfig } from 'src/types'
-import { PanelConfig, SubPanelComponent, Container } from 'src/types'
+import { PanelConfig, SubPanelComponent, Container, SubPanelType } from 'src/types'
 import { NOID } from 'src/defaults'
 import * as SidebarActions from 'src/services/sidebar.actions'
 
@@ -109,7 +109,7 @@ export const Sidebar = {
   scrollPositions: {} as Record<ID, number>,
   convertingPanelLock: false,
   subPanelComponent: null as SubPanelComponent | null,
-  subPanelOpen: false,
+  subPanelOpen: SubPanelType.Null,
 
   width: 0,
   height: 0,
