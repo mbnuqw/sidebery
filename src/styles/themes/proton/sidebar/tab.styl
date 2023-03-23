@@ -502,10 +502,9 @@
   position: relative
   width: 100%
   margin: 0 2px 0 0
-  transition: opacity var(--d-fast), transform var(--d-fast)
   overflow: hidden
   z-index: 1
-  mask: linear-gradient(-90deg, transparent, #000000 12px, #000000)
+  mask: linear-gradient(-90deg, transparent, #000000 8px, #000000)
 
 #root[data-tabs-close-btn="always"] .Tab .t-box
 #root[data-tabs-close-btn="hover"] .Tab:hover .t-box
@@ -516,32 +515,8 @@
     #000000 calc(var(--close-btn-offset) + 12px),
     #000000)
 
-#root[data-tabs-close-btn="always"] .Tab[data-audible="true"] .t-box
-#root[data-tabs-close-btn="always"] .Tab[data-muted="true"] .t-box
-#root[data-tabs-close-btn="always"] .Tab[data-paused="true"] .t-box
-#root[data-tabs-close-btn="hover"] .Tab[data-audible="true"]:hover .t-box
-#root[data-tabs-close-btn="hover"] .Tab[data-muted="true"]:hover .t-box
-#root[data-tabs-close-btn="hover"] .Tab[data-paused="true"]:hover .t-box
-  mask: linear-gradient(
-    -90deg,
-    transparent,
-    transparent calc(var(--audio-btn-offset) + var(--close-btn-offset)),
-    #000000 calc(var(--audio-btn-offset) + var(--close-btn-offset) + 12px),
-    #000000)
-
-.Tab[data-audible="true"] .t-box
-.Tab[data-muted="true"] .t-box
-.Tab[data-paused="true"] .t-box
-  transform: translateX(var(--audio-btn-offset))
-  mask: linear-gradient(
-    -90deg,
-    transparent,
-    transparent var(--audio-btn-offset),
-    #000000 calc(var(--audio-btn-offset) + 12px),
-    #000000)
-
 .Tab[data-edit="true"] .t-box
-  margin: 0 8px 0 0
+  margin: 0 6px 0 0
   mask: none
 
 // ---
@@ -559,6 +534,12 @@
   appearance: none
   border: none
 
+.Tab[data-audible="true"] .t-box .custom-title-input
+.Tab[data-muted="true"] .t-box .custom-title-input
+.Tab[data-paused="true"] .t-box .custom-title-input
+  width: calc(100% - var(--audio-btn-offset))
+  margin: 0 0 0 var(--audio-btn-offset)
+
 // ---
 // -- Title
 // -
@@ -569,6 +550,12 @@
   padding: 0 1px
   white-space: nowrap
   overflow: hidden
+  transition: transform var(--d-fast)
+
+.Tab[data-audible="true"] .t-box .title
+.Tab[data-muted="true"] .t-box .title
+.Tab[data-paused="true"] .t-box .title
+  transform: translateX(var(--audio-btn-offset))
 
 .Tab[data-active="true"] .title
   color: var(--tabs-activated-fg)
