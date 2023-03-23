@@ -230,6 +230,11 @@ section(ref="el")
       v-model:value="Settings.state.bookmarksMidClickActivate"
       :inactive="Settings.state.bookmarksMidClickAction !== 'open_in_new'"
       @update:value="Settings.saveDebounced(150)")
+    ToggleField(
+      label="settings.mouse.bookmarks.new_tab_rm"
+      v-model:value="Settings.state.bookmarksMidClickRemove"
+      :inactive="Settings.state.bookmarksMidClickAction !== 'open_in_new'"
+      @update:value="Settings.saveDebounced(150)")
     SelectField(
       label="settings.mouse.bookmarks.new_tab_pos"
       optLabel="settings.mouse.bookmarks.new_tab_pos_"

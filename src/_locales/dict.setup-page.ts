@@ -2777,6 +2777,10 @@ export const setupPageTranslations: Translations = {
     de: 'Neuen Tab aktivieren',
     zh_CN: '激活新标签页',
   },
+  'settings.mouse.bookmarks.new_tab_rm': {
+    en: 'Remove clicked bookmark',
+    ru: 'Удалить исходную закладку',
+  },
   'settings.mouse.bookmarks.new_tab_pos': {
     en: 'Position of the new tab',
     ru: 'Положение новой вкладки',

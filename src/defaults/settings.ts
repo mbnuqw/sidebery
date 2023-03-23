@@ -181,6 +181,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   bookmarksLeftClickPos: 'default',
   bookmarksMidClickAction: 'open_in_new',
   bookmarksMidClickActivate: false,
+  bookmarksMidClickRemove: false,
   bookmarksMidClickPos: 'default',
 
   // Sync

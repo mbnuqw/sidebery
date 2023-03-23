@@ -184,6 +184,7 @@ export interface SettingsState {
   bookmarksLeftClickPos: (typeof SETTINGS_OPTIONS.bookmarksNewTabPos)[number]
   bookmarksMidClickAction: (typeof SETTINGS_OPTIONS.bookmarksMidClickAction)[number]
   bookmarksMidClickActivate: boolean
+  bookmarksMidClickRemove: boolean
   bookmarksMidClickPos: (typeof SETTINGS_OPTIONS.bookmarksNewTabPos)[number]
 
   // Sync

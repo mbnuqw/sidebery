@@ -255,10 +255,16 @@ export interface OpeningBookmarksConfig {
   dst: DstPlaceInfo
   useActiveTab: boolean
   activateFirstTab: boolean
+  removeBookmark: boolean
 }
 
 export function getMouseOpeningConf(button: number): OpeningBookmarksConfig {
-  const conf: OpeningBookmarksConfig = { dst: {}, useActiveTab: false, activateFirstTab: false }
+  const conf: OpeningBookmarksConfig = {
+    dst: {},
+    useActiveTab: false,
+    activateFirstTab: false,
+    removeBookmark: false,
+  }
 
   // Left click
   if (button === 0) {
@@ -279,6 +285,7 @@ export function getMouseOpeningConf(button: number): OpeningBookmarksConfig {
   else if (button === 1) {
     const panelId = Bookmarks.getTargetTabsPanelId()
     conf.activateFirstTab = Settings.state.bookmarksMidClickActivate
+    conf.removeBookmark = Settings.state.bookmarksMidClickRemove
     conf.dst.panelId = panelId
     if (Settings.state.bookmarksMidClickPos === 'after') {
       const activeTab = Tabs.byId[Tabs.activeId]
@@ -515,7 +522,7 @@ export function openBookmarksPopup(
 /**
  * Remove bookmarks
  */
-export async function removeBookmarks(ids: ID[]): Promise<void> {
+export async function removeBookmarks(ids: ID[], silent = false): Promise<void> {
   let count = 0
   let hasCollapsed = false
   const expandedBookmarks = Bookmarks.reactive.expanded[Sidebar.reactive.activePanelId]
@@ -564,7 +571,7 @@ export async function removeBookmarks(ids: ID[]): Promise<void> {
     await browser.bookmarks.removeTree(id)
   }
 
-  if (count > 0 && Settings.state.bookmarksRmUndoNote && !warn) {
+  if (count > 0 && Settings.state.bookmarksRmUndoNote && !warn && !silent) {
     Notifications.notify({
       icon: '#icon_trash',
       title: String(count) + translate('notif.bookmarks_rm_post', count),
