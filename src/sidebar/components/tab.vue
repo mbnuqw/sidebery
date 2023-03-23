@@ -32,13 +32,7 @@
     .color-layer(
       v-if="tabColor" :style="{ '--tab-color': tabColor }")
     .flash-fx(v-if="tab.flash")
-    .audio(
-      v-if="tab.mediaAudible || tab.mediaMuted || tab.mediaPaused"
-      @mousedown.stop=""
-      @mouseup.stop="onAudioMouseDown($event, tab)")
-      svg.-loud: use(xlink:href="#icon_loud_badge")
-      svg.-mute: use(xlink:href="#icon_mute_badge")
-      svg.-pause: use(xlink:href="#icon_pause_12")
+    .unread-mark(v-if="tab.unread")
     .fav(@dragstart.stop.prevent)
       img.fav-icon(v-if="tab.favIconUrl" :src="tab.favIconUrl" @error="onError" draggable="false")
       svg.fav-icon(v-else): use(:xlink:href="favPlaceholder")
@@ -51,13 +45,13 @@
       .badge
       .progress-spinner(v-if="loading === true")
       .child-count(v-if="tab.folded && tab.branchLen") {{tab.branchLen}}
-    .close(
-      v-if="!isPinned && Settings.state.tabRmBtn !== 'none'"
-      @mousedown.stop="onMouseDownClose"
-      @mouseup.stop="onMouseUpClose"
-      @contextmenu.stop.prevent)
-      svg: use(xlink:href="#icon_remove")
-    .ctx(v-if="tab.containerColor")
+    .audio(
+      v-if="tab.mediaAudible || tab.mediaMuted || tab.mediaPaused"
+      @mousedown.stop=""
+      @mouseup.stop="onAudioMouseDown($event, tab)")
+      svg.-loud: use(xlink:href="#icon_loud_badge")
+      svg.-mute: use(xlink:href="#icon_mute_badge")
+      svg.-pause: use(xlink:href="#icon_pause_12")
     .t-box(v-if="!isPinned")
       input.custom-title-input(
         v-if="tab.customTitleEdit"
@@ -70,7 +64,13 @@
         @blur="onCustomTitleBlur"
         @keydown="onCustomTitlteKD")
       .title(v-else) {{tab.customTitle ?? tab.title}}
-    .unread-mark(v-if="tab.unread")
+    .close(
+      v-if="!isPinned && Settings.state.tabRmBtn !== 'none'"
+      @mousedown.stop="onMouseDownClose"
+      @mouseup.stop="onMouseUpClose"
+      @contextmenu.stop.prevent)
+      svg: use(xlink:href="#icon_remove")
+    .ctx(v-if="tab.containerColor")
 </template>
 
 <script lang="ts" setup>
