@@ -4,9 +4,16 @@
   --search-height: 30px
   --search-border-radius: var(--general-border-radius)
   --search-font-size: rem(16)
+  --search-shadow: 0 1px 2px 0 var(--border)
+  --search-icon-width: 28px
+#root[data-density="loose"]
+  --search-icon-width: 30px
 #root[data-density="compact"]
   --search-height: 28px
   --search-font-size: rem(15)
+  --search-icon-width: 26px
+#root[data-theme="plain"]
+  --search-shadow: var(--frame-el-shadow)
 
 .SearchBar
   position: relative
@@ -31,7 +38,7 @@
     height: calc(100% - var(--general-margin))
     border-radius: var(--search-border-radius)
     background-color: var(--toolbar-bg)
-    box-shadow: var(--frame-el-shadow)
+    box-shadow: var(--search-shadow)
   &[data-showed="false"]
     opacity: 0
     height: 0
@@ -47,7 +54,7 @@
   justify-content: center
   align-items: center
   flex-shrink: 0
-  width: 30px
+  width: var(--search-icon-width)
   height: 100%
   > svg
     position: relative
@@ -56,7 +63,7 @@
     fill: var(--toolbar-fg)
     opacity: .6
     transition: opacity var(--d-fast)
-    margin: 0 0 0 1px
+    margin: 0 0 0 var(--general-margin)
 .SearchBar[data-active="true"] .search-icon > svg
   opacity: 1
 
@@ -76,7 +83,7 @@
 
 .SearchBar .placeholder
   position: absolute
-  left: 30px
+  left: var(--search-icon-width)
   width: 100%
   padding: 0
   font-size: var(--search-font-size)
