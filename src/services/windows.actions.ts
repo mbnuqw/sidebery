@@ -219,7 +219,7 @@ export async function createWithTabs(
 
     // Create cache data
     const cachedData: TabCache = { id: tab.id, url: srcInfo.url ?? 'about:newtab' }
-    if (tab.parentId > -1) cachedData.parentId = tab.parentId
+    if (+tab.parentId > -1) cachedData.parentId = tab.parentId
     if (srcInfo.panelId) cachedData.panelId = srcInfo.panelId
     if (tab.cookieStoreId !== defaultContainerId) cachedData.ctx = tab.cookieStoreId
     if (srcInfo.customTitle) cachedData.customTitle = srcInfo.customTitle

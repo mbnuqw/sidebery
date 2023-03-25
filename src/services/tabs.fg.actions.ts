@@ -468,7 +468,7 @@ export function cacheTabsData(delay = 300): void {
     for (const tab of Tabs.list) {
       const info: TabCache = { id: tab.id, url: tab.url }
       if (tab.pinned) info.pin = true
-      if (tab.parentId > -1) info.parentId = tab.parentId
+      if (+tab.parentId > -1) info.parentId = tab.parentId
       if (tab.panelId !== NOID) info.panelId = tab.panelId
       if (tab.folded) info.folded = tab.folded
       if (tab.cookieStoreId !== CONTAINER_ID) info.ctx = tab.cookieStoreId
@@ -2456,7 +2456,7 @@ export function expTabsBranch(rootTabId: ID): void {
       return aMax - bMax
     })
 
-    if (Settings.state.autoFoldTabsExcept > 0) {
+    if (Settings.state.autoFoldTabsExcept !== 'none') {
       autoFold = autoFold.slice(0, -Settings.state.autoFoldTabsExcept)
     }
     for (const t of autoFold) {
@@ -2494,7 +2494,7 @@ export function toggleBranch(tabId?: ID): void {
 
   let tab = Tabs.byId[tabId]
   if (!tab) tab = Tabs.byId[Tabs.activeId]
-  if (tab && !tab.isParent && tab.parentId > -1) tab = Tabs.byId[tab.parentId]
+  if (tab && !tab.isParent && +tab.parentId > -1) tab = Tabs.byId[tab.parentId]
   if (!tab) return
 
   if (tab.folded) expTabsBranch(tabId)
@@ -3155,7 +3155,7 @@ export function updateTabsIndexes(fromIndex = 0, toIndex = -1): void {
  */
 export function setNewTabPosition(index: number, parentId: ID, panelId: ID): void {
   Tabs.newTabsPosition[index] = {
-    parent: parentId < 0 ? undefined : parentId,
+    parent: parentId === NOID ? undefined : parentId,
     panel: panelId,
   }
 }
@@ -3539,7 +3539,7 @@ export async function createFromDragEvent(e: DragEvent, dst: DstPlaceInfo): Prom
 
   if (result?.url) {
     // With Shift: Open URL in target tab
-    if (dst.inside && dst.parentId > -1 && e.shiftKey) {
+    if (dst.inside && +dst.parentId > -1 && e.shiftKey) {
       browser.tabs.update(dst.parentId, { url: result.url }).catch(err => {
         Logs.err('Tabs.createFromDragEvent: Cannot update tab url:', err)
       })
@@ -3574,7 +3574,7 @@ export async function createFromDragEvent(e: DragEvent, dst: DstPlaceInfo): Prom
   if (result?.text) {
     let tabId: ID
     // With Shift: Search in target tab
-    if (dst.inside && dst.parentId > -1 && e.shiftKey) tabId = dst.parentId
+    if (dst.inside && +dst.parentId > -1 && e.shiftKey) tabId = dst.parentId
     else {
       const conf: browser.tabs.CreateProperties = {
         active: true,
@@ -3673,7 +3673,7 @@ export async function open(
     if (dst.windowId === ASKID) {
       if (dst.windowChooseConf === undefined) dst.windowId = await Windows.showWindowsPopup()
       else dst.windowId = await Windows.showWindowsPopup(dst.windowChooseConf)
-      if (dst.windowId === undefined || dst.windowId < 0) return true
+      if (dst.windowId === undefined || dst.windowId === NOID) return true
 
       delete dst.windowChooseConf
     }
@@ -3738,8 +3738,8 @@ export async function open(
     if (!Settings.state.tabsTree && groupCreationNeeded) continue
     if (!Sidebar.hasTabs && groupCreationNeeded) continue
     if (dst.pinned && groupCreationNeeded) continue
-    // Temporarily ignore groups with tree limit, I fix this later, ...yep
-    if (Settings.state.tabsTreeLimit > 0 && groupCreationNeeded) continue
+    // Temporarily ignore groups with tree limit
+    if (Settings.state.tabsTreeLimit !== 'none' && groupCreationNeeded) continue
 
     const conf: browser.tabs.CreateProperties = {
       index: index,
@@ -3768,7 +3768,7 @@ export async function open(
 
     let parentId = NOID
     if (!dst.pinned) {
-      if (item.parentId !== undefined && idsMap[item.parentId] >= 0) {
+      if (item.parentId !== undefined && +idsMap[item.parentId] >= 0) {
         parentId = idsMap[item.parentId] ?? NOID
       } else if (parent) {
         parentId = parent.id
