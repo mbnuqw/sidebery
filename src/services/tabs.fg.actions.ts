@@ -3537,6 +3537,11 @@ export async function createFromDragEvent(e: DragEvent, dst: DstPlaceInfo): Prom
 
   if (result?.file) result.url = URL.createObjectURL(result.file)
 
+  if (result?.text && !result?.url) {
+    const trimmedText = result.text.trim()
+    if (/^https?:\/\/[^\s]{4,}$/.test(trimmedText)) result.url = trimmedText
+  }
+
   if (result?.url) {
     // With Shift: Open URL in target tab
     if (dst.inside && +dst.parentId > -1 && e.shiftKey) {
