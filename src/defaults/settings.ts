@@ -49,6 +49,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   dndExpMod: 'none',
   dndOutside: 'win',
   dndActTabFromLink: true,
+  dndActSearchTab: true,
 
   // Search
   searchBarMode: 'dynamic',

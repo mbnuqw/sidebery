@@ -1100,6 +1100,10 @@ export const setupPageTranslations: Translations = {
     en: 'Activate tab created from a dragged link',
     ru: 'Активировать вкладку, созданную из перетаскиваемой ссылки',
   },
+  'settings.dnd_act_search_tab': {
+    en: 'Activate tab created to search for dragged text',
+    ru: 'Активировать вкладку, созданную для поиска перетаскиваемого текста',
+  },
 
   // - Search
   'settings.search_title': {

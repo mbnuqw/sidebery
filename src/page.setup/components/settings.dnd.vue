@@ -51,6 +51,10 @@ section(ref="el")
     label="settings.dnd_act_tab_from_link"
     v-model:value="Settings.state.dndActTabFromLink"
     @update:value="Settings.saveDebounced(150)")
+  ToggleField(
+    label="settings.dnd_act_search_tab"
+    v-model:value="Settings.state.dndActSearchTab"
+    @update:value="Settings.saveDebounced(150)")
 </template>
 
 <script lang="ts" setup>

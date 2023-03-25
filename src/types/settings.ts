@@ -49,6 +49,7 @@ export interface SettingsState {
   dndExpMod: (typeof SETTINGS_OPTIONS.dndExpMod)[number]
   dndOutside: (typeof SETTINGS_OPTIONS.dndOutside)[number]
   dndActTabFromLink: boolean
+  dndActSearchTab: boolean
 
   // Search
   searchBarMode: (typeof SETTINGS_OPTIONS.searchBarMode)[number]

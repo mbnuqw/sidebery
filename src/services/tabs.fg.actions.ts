@@ -3577,7 +3577,7 @@ export async function createFromDragEvent(e: DragEvent, dst: DstPlaceInfo): Prom
     if (dst.inside && +dst.parentId > -1 && e.shiftKey) tabId = dst.parentId
     else {
       const conf: browser.tabs.CreateProperties = {
-        active: true,
+        active: Settings.state.dndActSearchTab,
         index: dst.index,
         cookieStoreId: container?.id,
         windowId: Windows.id,
