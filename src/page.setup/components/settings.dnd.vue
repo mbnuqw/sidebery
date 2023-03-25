@@ -47,6 +47,10 @@ section(ref="el")
     :opts="Settings.getOpts('dndOutside')"
     :note="translate('settings.settings.dnd_outside_note')"
     @update:value="Settings.saveDebounced(150)")
+  ToggleField(
+    label="settings.dnd_act_tab_from_link"
+    v-model:value="Settings.state.dndActTabFromLink"
+    @update:value="Settings.saveDebounced(150)")
 </template>
 
 <script lang="ts" setup>

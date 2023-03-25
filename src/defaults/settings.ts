@@ -48,6 +48,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   dndExpDelay: 750,
   dndExpMod: 'none',
   dndOutside: 'win',
+  dndActTabFromLink: true,
 
   // Search
   searchBarMode: 'dynamic',

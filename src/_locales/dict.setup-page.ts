@@ -1096,6 +1096,10 @@ export const setupPageTranslations: Translations = {
     de: 'Mit Verzögerung (ms)',
     zh_CN: '延迟 (毫秒)',
   },
+  'settings.dnd_act_tab_from_link': {
+    en: 'Activate tab created from a dragged link',
+    ru: 'Активировать вкладку, созданную из перетаскиваемой ссылки',
+  },
 
   // - Search
   'settings.search_title': {

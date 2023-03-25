@@ -3545,7 +3545,7 @@ export async function createFromDragEvent(e: DragEvent, dst: DstPlaceInfo): Prom
       })
     } else {
       const conf: browser.tabs.CreateProperties = {
-        active: true,
+        active: Settings.state.dndActTabFromLink,
         url: Utils.normalizeUrl(result.url),
         index: dst.index,
         cookieStoreId: container?.id,
