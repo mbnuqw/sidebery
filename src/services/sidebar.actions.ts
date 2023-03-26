@@ -562,9 +562,6 @@ export function updatePanelsTooltips(): void {
   }
 }
 
-/**
- * Normalize panels and put them to state
- */
 export async function loadPanels(): Promise<void> {
   const gettingActiveId = browser.sessions.getWindowValue<ID>(Windows.id, 'activePanelId')
   const gettingStorage = browser.storage.local.get<Stored>('sidebar')
@@ -579,7 +576,7 @@ export async function loadPanels(): Promise<void> {
   const panelConfigs = sidebar?.panels ? Object.values(sidebar?.panels) : []
   if (sidebar?.nav) Sidebar.reactive.nav = sidebar.nav
 
-  // Normalize panels
+  // Create panels from config
   for (const panelConfig of panelConfigs) {
     const panel = createPanelFromConfig(panelConfig)
     if (!panel) continue
