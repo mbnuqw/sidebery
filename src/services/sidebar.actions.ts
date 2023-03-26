@@ -621,6 +621,7 @@ export function convertOldPanelsConfigToNew(panels_v4: OldPanelConfig[]): Sideba
     if (oldPanelConf.type === 'bookmarks') {
       const panel = Utils.cloneObject(BOOKMARKS_PANEL_CONFIG)
       panel.id = 'bookmarks'
+      panel.name = translate('panel.bookmarks.title')
       panel.lockedPanel = oldPanelConf.lockedPanel
       panel.skipOnSwitching = oldPanelConf.skipOnSwitching
 
