@@ -166,12 +166,12 @@ export function upgradeV4Containers(
     const oldContainer = oldContainers[id]
     const newContainer = Utils.cloneObject(DEFAULT_CONTAINER)
 
-    newContainer.cookieStoreId = oldContainer.cookieStoreId
+    newContainer.cookieStoreId = oldContainer.cookieStoreId ?? oldContainer.id ?? id
     if (oldContainer.name) newContainer.name = oldContainer.name
     if (oldContainer.icon) newContainer.icon = oldContainer.icon
     if (oldContainer.color) newContainer.color = oldContainer.color
     if (oldContainer.colorCode) newContainer.colorCode = oldContainer.colorCode
-    newContainer.id = oldContainer.cookieStoreId
+    newContainer.id = oldContainer.id ?? oldContainer.cookieStoreId ?? id
     if (oldContainer.proxified) newContainer.proxified = oldContainer.proxified
     if (oldContainer.proxy) newContainer.proxy = Utils.cloneObject(oldContainer.proxy)
     upgradeReopeningRules(oldContainer, newContainer)
