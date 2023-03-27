@@ -237,12 +237,10 @@ function parseUrlRuleRE(url: string): RegExp | undefined {
 
 function parseURL(url: string): URLInfo {
   const sParts = url.split('://')
-  const dParts = sParts[sParts.length - 1]?.split('.')
-  const pParts = dParts[dParts.length - 1]?.split('/')
+  const pParts = sParts[sParts.length - 1]?.split('/')
+  const host = pParts.shift()
+  const hostParts = host?.split('.') ?? []
   const scheme = sParts[0]
-  const topLvlDomain = pParts.shift()
-  const hostParts = dParts.slice(0, -1)
-  if (topLvlDomain) hostParts.push(topLvlDomain)
 
   return {
     scheme,
