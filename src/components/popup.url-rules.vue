@@ -203,6 +203,7 @@ type FindReopenRuleResult = { rule: TabReopenRuleConfig; container: Container }
 function findReopenRule(url: string): FindReopenRuleResult | undefined {
   for (const container of Object.values(Containers.reactive.byId)) {
     for (const rule of container.reopenRules) {
+      if (!container.reopenRulesActive) continue
       if (rule.type === TabReopenRuleType.Exclude) continue
       const re = parseUrlRuleRE(rule.url)
       if (re && re.test(url)) return { rule, container }
@@ -317,6 +318,10 @@ function onSave(): void {
       url: match,
     }
     if (!rContainer.reopenRules.length) rContainer.reopenRulesActive = true
+    else if (!rContainer.reopenRulesActive) {
+      rContainer.reopenRules.forEach(rule => (rule.active = false))
+      rContainer.reopenRulesActive = true
+    }
     rContainer.reopenRules.push(ruleConfig)
     if (matchOption?.name) ruleConfig.name = matchOption.name
     saveContainers = true
