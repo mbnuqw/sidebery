@@ -25,7 +25,7 @@
       SelectInput.input(
         v-model:value="Sidebar.reactive.containerConfigPopup.color"
         :opts="COLOR_OPTS"
-        :icon="Sidebar.reactive.containerConfigPopup.icon"
+        :icon="'#' + Sidebar.reactive.containerConfigPopup.icon"
       )
 
     .ctrls

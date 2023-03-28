@@ -31,7 +31,7 @@
     label="panel.color_label"
     :value="color"
     :opts="COLOR_OPTS"
-    :icon="iconSVG"
+    :icon="'#' + iconSVG"
     @update:value="setColor")
 
   .TextField.custom-icon(v-if="Utils.isTabsPanel(conf) || Utils.isBookmarksPanel(conf)")
@@ -253,7 +253,7 @@ const availableForAutoMoveContainersOpts = computed<ContainerOption[]>(() => {
 
   return result
 })
-const iconSVG = computed<string>(() => (props.conf.iconSVG ? '#' + props.conf.iconSVG : ''))
+const iconSVG = computed<string>(() => props.conf.iconSVG ?? '')
 const color = computed<string>(() => props.conf.color || '')
 const newTabCtx = computed<string>(() => {
   return (Utils.isTabsPanel(props.conf) && props.conf.newTabCtx) || ''
