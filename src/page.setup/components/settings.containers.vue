@@ -8,6 +8,14 @@ section(ref="el")
     .card-body(@click="SetupPage.reactive.selectedContainer = container")
       .card-icon: svg: use(:xlink:href="'#' + container.icon")
       .card-name {{container.name}}
+    .card-badges
+      .card-badge(
+        v-if="container.reopenRules?.length"
+        :title="translate('container.manage_reopen_rules_label')"
+        :data-inactive="!container.reopenRulesActive"
+        @click="Sidebar.openTabReopenRulesPopup(container.id)")
+        svg: use(xlink:href="#icon_reload")
+        .len {{container.reopenRules.length}}
     .card-ctrls
       .card-ctrl.-rm(
         @click="removeContainer(container)")

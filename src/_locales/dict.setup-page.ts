@@ -306,6 +306,10 @@ export const setupPageTranslations: Translations = {
     en: 'Manage rules',
     ru: 'Управление правилами',
   },
+  'panel.tab_move_rules_manage_badge': {
+    en: 'Manage moving rules',
+    ru: 'Управление правилами перемещения',
+  },
   'panel.new_tab_shortcuts': {
     en: 'Additional "New tab" shortcuts',
     ru: 'Дополнительные кнопки для создания новой вкладки',

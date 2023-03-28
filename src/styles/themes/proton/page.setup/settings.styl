@@ -292,6 +292,55 @@
 .Settings .card[data-inactive="true"] .card-name
   color: var(--toolbar-fg)
 
+.Settings .card-badges
+  position: relative
+  display: flex
+  margin: 0 8px
+  align-items: center
+  grid-gap: 3px
+
+.Settings .card-badge
+  position: relative
+  display: flex
+  justify-content: center
+  align-items: center
+  padding: 4px
+  &:before
+    content: ''
+    position: absolute
+    width: 100%
+    height: 100%
+    background-color: var(--toolbar-fg)
+    border-radius: 4px
+    opacity: .05
+  &:hover:before
+    opacity: .12
+  &:active:before
+    opacity: .05
+    pointer-events: none
+  &[data-inactive="true"]
+    opacity: .3
+
+.Settings .card-badge > svg
+  position: relative
+  width: 12px
+  height: 12px
+  fill: var(--toolbar-fg)
+  opacity: .7
+  &.-rotate270
+    transform: rotateZ(270deg)
+.Settings .card-badge:hover > svg
+  opacity: 1
+
+.Settings .card-badge .len
+  position: relative
+  font-size: rem(13)
+  color: var(--toolbar-fg)
+  opacity: .7
+  margin: 0 2px 0 3px
+.Settings .card-badge:hover .len
+  opacity: 1
+
 .Settings .card-ctrls
   position: relative
   display: flex

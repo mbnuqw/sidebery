@@ -908,9 +908,9 @@ export function isNavPanel(item?: NavItem): item is Panel {
   if (!item) return false
   return (item as Panel).class === NavItemClass.panel
 }
-export function isTabsPanel(panel?: PanelConfig): panel is TabsPanel {
+export function isTabsPanel(panel?: object): panel is TabsPanel {
   if (!panel) return false
-  return panel.type === PanelType.tabs
+  return (panel as PanelConfig).type === PanelType.tabs
 }
 export function isBookmarksPanel(panel?: PanelConfig): panel is BookmarksPanel {
   if (!panel) return false

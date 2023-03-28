@@ -97,6 +97,19 @@ section(
               use(:xlink:href="'#' + btn.iconSVG")
             img(v-else :src="btn.iconIMG")
           .card-name {{btn.name}}
+        .card-badges(v-if="Utils.isTabsPanel(btn)")
+          .card-badge(
+            v-if="btn.moveRules?.length"
+            :title="translate('panel.tab_move_rules_manage_badge')"
+            @click="Sidebar.openTabMoveRulesPopup(btn.id)")
+            svg.-rotate270: use(xlink:href="#icon_download_in_progress")
+            .len {{btn.moveRules.length}}
+          .card-badge(
+            v-if="btn.newTabBtns?.length"
+            :title="translate('panel.new_tab_shortcuts_manage_btn')"
+            @click="Sidebar.openNewTabShortcutsPopup(btn.id)")
+            svg: use(xlink:href="#icon_plus")
+            .len {{btn.newTabBtns.length}}
         .card-ctrls
           .card-ctrl.-down(@click="moveBtn(i, 1)")
             svg: use(xlink:href="#icon_expand")
