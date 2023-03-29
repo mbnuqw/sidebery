@@ -2237,13 +2237,13 @@ export function closeNewTabShortcutsPopup(): void {
   Sidebar.reactive.newTabShortcutsPopup = null
 }
 
-export function openUrlRulesPopup(tab: Tab): void {
-  Sidebar.reactive.urlRulesPopup = { url: tab.url, tabId: tab.id }
+export function openSiteConfigPopup(tab: Tab): void {
+  Sidebar.reactive.siteConfigPopup = { url: tab.url, tabId: tab.id }
 }
 
-export function closeUrlRulesPopup(): void {
-  if (!Sidebar.reactive.urlRulesPopup) return
-  Sidebar.reactive.urlRulesPopup = null
+export function closeSiteConfigPopup(): void {
+  if (!Sidebar.reactive.siteConfigPopup) return
+  Sidebar.reactive.siteConfigPopup = null
 }
 
 export function openTabMoveRulesPopup(panelId: ID): void {

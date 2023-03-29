@@ -211,7 +211,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     const option: MenuOption = {
       label: translate('menu.tab.url_conf'),
       icon: 'icon_url_conf',
-      onClick: () => Sidebar.openUrlRulesPopup(firstTab),
+      onClick: () => Sidebar.openSiteConfigPopup(firstTab),
     }
 
     return option

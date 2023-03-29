@@ -381,12 +381,12 @@ export const commonTranslations: Translations = {
     ru: '"подстрока" или "/RegExp/"',
   },
   'popup.url_rules.reopen_label': {
-    en: 'Reopen these tabs in:',
-    ru: 'Открывать эти вкладки в:',
+    en: 'Reopen these tabs in container:',
+    ru: 'Открывать эти вкладки в контейнере:',
   },
   'popup.url_rules.move_label': {
-    en: 'Move these tabs to:',
-    ru: 'Переместить эти вкладки в:',
+    en: 'Move these tabs to panel:',
+    ru: 'Перемещать эти вкладки в панель:',
   },
   'popup.url_rules.move_top_lvl_label': {
     en: 'If tab at the top level of tree',

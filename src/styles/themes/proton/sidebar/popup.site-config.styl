@@ -1,34 +1,34 @@
 @import '../../../utils'
 
 // Set toolbar colors for fields
-#root .UrlRulesPopup
+#root .SiteConfigPopup
   --toolbar-bg: var(--popup-bg)
   --toolbar-fg: var(--popup-fg)
   [data-color="toolbar"]
     --color: var(--popup-fg)
 
-.UrlRulesPopup .space
+.SiteConfigPopup .space
   height: 8px
   &:first-child
     display: none
 
 // Temp margins fix
-.Setup .UrlRulesPopup .SelectField
-.Setup .UrlRulesPopup .TextField
+.Setup .SiteConfigPopup .SelectField
+.Setup .SiteConfigPopup .TextField
   padding: 0 8px
   margin-left: 4px
   margin-right: 4px
 
-.UrlRulesPopup .match-options
+.SiteConfigPopup .match-options
   position: relative
   display: flex
   flex-wrap: wrap
   grid-gap: 2px
   padding: 2px 4px
 
-.UrlRulesPopup .match-option
+.SiteConfigPopup .match-option
   position: relative
-  padding: 4px 8px
+  padding: 5px 8px
   max-width: 100%
   border-radius: 4px
   &:before
@@ -55,7 +55,7 @@
   .label
     position: relative
     color: var(--popup-fg)
-    font-size: rem(12)
+    font-size: rem(14)
     z-index: 1
     opacity: .7
     white-space: nowrap
@@ -64,7 +64,7 @@
   &[data-active="true"] .label
     opacity: 1
 
-.UrlRulesPopup .note
+.SiteConfigPopup .note
   position: relative
   margin: 3px 4px 3px 4px
   font-size: rem(14)
@@ -72,11 +72,14 @@
   opacity: .7
   color: var(--popup-fg)
 
-.UrlRulesPopup .TextInput
+.SiteConfigPopup .TextInput
   margin: 4px
-  width: auto
+  width: 100%
 
-.UrlRulesPopup .sub-field
+.SiteConfigPopup .matchString .label
+  font-weight: 400
+
+.SiteConfigPopup .sub-field
   .ToggleField
     padding-left: 8px
 

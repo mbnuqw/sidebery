@@ -1,6 +1,6 @@
 <template lang="pug">
-.UrlRulesPopup.popup-container(@mousedown.stop.self="onCancel" @mouseup.stop)
-  .popup(v-if="Sidebar.reactive.urlRulesPopup")
+.SiteConfigPopup.popup-container(@mousedown.stop.self="onCancel" @mouseup.stop)
+  .popup(v-if="Sidebar.reactive.siteConfigPopup")
     h2 {{translate('popup.url_rules.title')}}
     .space
     .note {{translate('popup.url_rules.match_label')}}
@@ -8,13 +8,15 @@
       .match-option(
         v-for="opt in matchOptions"
         :key="opt.id"
+        :title="opt.name"
         :data-active="opt.active"
         @click="switchMatchOption(opt)")
         .label {{opt.name}}
-    TextInput.-no-separator(
+    TextField.matchString.-no-separator(
       v-if="matchTextField"
       v-model:value="matchString"
-      :or="translate('popup.url_rules.custom_match_placeholder')"
+      label="popup.url_rules.custom_match_placeholder"
+      or="---"
       :line="true")
     .space
     SelectField.-no-separator(
@@ -50,7 +52,7 @@ import { Container, TabReopenRuleConfig, TabReopenRuleType, TabsPanel } from 'sr
 import { TabToPanelMoveRuleConfig } from 'src/types'
 import { Sidebar } from 'src/services/sidebar'
 import { Containers } from 'src/services/containers'
-import TextInput from './text-input.vue'
+import TextField from './text-field.vue'
 import ToggleField from './toggle-field.vue'
 import SelectField from './select-field.vue'
 import * as Utils from 'src/utils'
@@ -87,7 +89,7 @@ const moveToPanelTopLvlOnly = ref(true)
 const existedRules = ref(false)
 
 const saveBtnActive = computed<boolean>(() => {
-  if (!Sidebar.reactive.urlRulesPopup) return false
+  if (!Sidebar.reactive.siteConfigPopup) return false
   if (!matchString.value.trim()) return false
   const reopen = reopenInContainerId.value !== 'none'
   const move = moveToPanelId.value !== 'none'
@@ -95,7 +97,7 @@ const saveBtnActive = computed<boolean>(() => {
 })
 
 const availableContainerOpts = computed<Option[]>(() => {
-  if (!Sidebar.reactive.urlRulesPopup) return []
+  if (!Sidebar.reactive.siteConfigPopup) return []
 
   const result: Option[] = [
     { value: 'none', color: 'inactive', icon: '#icon_none', title: 'Not set' },
@@ -109,7 +111,7 @@ const availableContainerOpts = computed<Option[]>(() => {
 })
 
 const availablePanelOpts = computed<Option[]>(() => {
-  if (!Sidebar.reactive.urlRulesPopup) return []
+  if (!Sidebar.reactive.siteConfigPopup) return []
 
   const result: Option[] = [
     { value: 'none', color: 'inactive', icon: '#icon_none', title: 'Not set' },
@@ -127,9 +129,9 @@ const availablePanelOpts = computed<Option[]>(() => {
 })
 
 function init() {
-  if (!Sidebar.reactive.urlRulesPopup) return
+  if (!Sidebar.reactive.siteConfigPopup) return
 
-  const url = Sidebar.reactive.urlRulesPopup.url
+  const url = Sidebar.reactive.siteConfigPopup.url
   const urlInfo = parseURL(url)
   const isHTTP = urlInfo.scheme.startsWith('http')
 
@@ -253,7 +255,7 @@ function parseURL(url: string): URLInfo {
 function switchMatchOption(opt: MatchOption) {
   matchOptions.value?.forEach(o => (o.active = o.id === opt.id))
   matchTextField.value = opt.id === 'custom'
-  matchString.value = opt.value
+  if (opt.value) matchString.value = opt.value
   findExistedRules()
 }
 
@@ -274,9 +276,9 @@ function validateMatchString(value: string): boolean {
 }
 
 function onSave(): void {
-  if (!Sidebar.reactive.urlRulesPopup) return
+  if (!Sidebar.reactive.siteConfigPopup) return
 
-  const tab = Tabs.byId[Sidebar.reactive.urlRulesPopup.tabId]
+  const tab = Tabs.byId[Sidebar.reactive.siteConfigPopup.tabId]
   const match = matchString.value.trim()
   const matchIsOk = validateMatchString(match)
   const matchOption = matchOptions.value?.find(opt => opt.id !== 'custom' && opt.active)
@@ -356,13 +358,13 @@ function onSave(): void {
     Tabs.move(items, src, { panelId: mPanel.id, index: mPanel.nextTabIndex })
   }
 
-  Sidebar.closeUrlRulesPopup()
+  Sidebar.closeSiteConfigPopup()
 }
 
 function onCancel(): void {
-  if (!Sidebar.reactive.urlRulesPopup) return
+  if (!Sidebar.reactive.siteConfigPopup) return
 
-  Sidebar.closeUrlRulesPopup()
+  Sidebar.closeSiteConfigPopup()
 }
 
 init()
