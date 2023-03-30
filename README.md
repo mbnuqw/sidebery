@@ -12,8 +12,7 @@ Firefox extension for managing tabs and bookmarks in sidebar.
  [Release page](https://github.com/mbnuqw/sidebery/releases/tag/v5.0.0b31) |
  [Install](https://github.com/mbnuqw/sidebery/releases/download/v5.0.0b31/sidebery-5.0.0b31.xpi)
 
-> Note: Before installing the beta version make sure to save backup of the addon data (Sidebery settings / Help / Export).
-
+> Note: Before installing the beta version make sure to save backup of the Add-on data (Sidebery settings / Help / Export).
 
 ## About
 
@@ -28,14 +27,24 @@ Sidebery is a highly configurable sidebar with panels of different types. Some o
 - Snapshots (saved windows/panels/tabs)
 - ...and more
 
-
 ## Build
 
 > Prerequisites: latest LTS Node.js version
 
-Install dependencies: `npm install`  
-Build all parts of addon: `npm run build`  
-Create addon archive in ./dist: `npm run build.ext`
+1. Install dependencies: `npm install`
+2. Build all parts of Add-on: `npm run build`
+3. Create Add-on archive in `./dist`: `npm run build.ext`
+
+After creating the Add-on archive, you can then use the version in Firefox as follows:
+
+1. Open Firefox
+2. Go to `about:debbuging`
+3. Go to "This Firefox"
+4. At "Temporary Extensions" click on "Load Temporary Add-on..."
+5. Select the `.zip` file in the `dist` directory.
+6. Close the settings tab
+7. Your Firefox now always runs with the development version
+8. For updating: Repeat all steps.
 
 ## Development
 
@@ -43,13 +52,11 @@ Create addon archive in ./dist: `npm run build.ext`
 
 Install dependencies: `npm install`  
 Build and watch for changes: `npm run dev`  
-Run browser with addon: `npm run dev.run -- <firefox-executable>`  
+Run browser with Add-on: `npm run dev.run -- <firefox-executable>`
 
+## License
 
-## Licence
-
-MIT
-
+[MIT](./LICENSE)
 
 ## Donate
 
