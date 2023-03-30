@@ -275,6 +275,21 @@ function validateMatchString(value: string): boolean {
   return true
 }
 
+function checkUrl(url: string, matchString: string): boolean {
+  matchString = matchString.trim()
+
+  if (matchString.startsWith('/') && matchString.endsWith('/')) {
+    try {
+      const re = new RegExp(matchString.slice(1, -1))
+      return re.test(url)
+    } catch {
+      return false
+    }
+  } else {
+    return url.includes(matchString)
+  }
+}
+
 function onSave(): void {
   if (!Sidebar.reactive.siteConfigPopup) return
 
@@ -349,13 +364,15 @@ function onSave(): void {
     Sidebar.saveSidebar(120)
   }
 
-  if (tab && rContainer && reopenTab) {
-    Tabs.reopenInContainer([tab.id], rContainer.id)
-  }
-  if (tab && Utils.isTabsPanel(mPanel) && moveTab) {
-    const items = Tabs.getTabsInfo([tab.id])
-    const src = { windowId: Windows.id, panelId: tab.panelId, pinned: tab.pinned }
-    Tabs.move(items, src, { panelId: mPanel.id, index: mPanel.nextTabIndex })
+  if (tab && checkUrl(tab.url, match)) {
+    if (rContainer && reopenTab) {
+      Tabs.reopenInContainer([tab.id], rContainer.id)
+    }
+    if (Utils.isTabsPanel(mPanel) && moveTab) {
+      const items = Tabs.getTabsInfo([tab.id])
+      const src = { windowId: Windows.id, panelId: tab.panelId, pinned: tab.pinned }
+      Tabs.move(items, src, { panelId: mPanel.id, index: mPanel.nextTabIndex })
+    }
   }
 
   Sidebar.closeSiteConfigPopup()
