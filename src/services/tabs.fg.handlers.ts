@@ -1,6 +1,6 @@
 import * as Utils from 'src/utils'
-import { ReactiveTab, Tab, TabStatus } from 'src/types'
-import { NOID, GROUP_URL, CONTAINER_ID, ADDON_HOST, GROUP_INITIAL_TITLE } from 'src/defaults'
+import { ReactiveTab, Tab, TabStatus, TabsPanel } from 'src/types'
+import { NOID, GROUP_URL, ADDON_HOST, GROUP_INITIAL_TITLE } from 'src/defaults'
 import * as Logs from 'src/services/logs'
 import { Windows } from 'src/services/windows'
 import { Bookmarks } from 'src/services/bookmarks'
@@ -150,8 +150,16 @@ function onTabCreated(tab: Tab, attached?: boolean): void {
   // Predefined position
   if (Tabs.newTabsPosition && Tabs.newTabsPosition[tab.index]) {
     const position = Tabs.newTabsPosition[tab.index]
-    panel = Sidebar.reactive.panelsById[position.panel ?? -1]
-    if (!panel) panel = Sidebar.reactive.panelsById[CONTAINER_ID]
+    Tabs.setNewTabPosition
+    panel = Sidebar.reactive.panelsById[position.panel]
+    if (!Utils.isTabsPanel(panel)) {
+      const prevTab = Tabs.list[tab.index - 1]
+      if (prevTab && !prevTab.pinned && prevTab.panelId !== NOID) {
+        panel = Sidebar.reactive.panelsById[prevTab.panelId] as TabsPanel
+      } else {
+        panel = Sidebar.reactive.panels.find(p => Utils.isTabsPanel(p)) as TabsPanel
+      }
+    }
     index = tab.index
     tab.openerTabId = position.parent
     delete Tabs.newTabsPosition[tab.index]
@@ -264,7 +272,7 @@ function onTabCreated(tab: Tab, attached?: boolean): void {
   Tabs.updateUrlCounter(tab.url, 1)
 
   // Update tree
-  if (Settings.state.tabsTree && !tab.pinned && Utils.isTabsPanel(panel)) {
+  if (Settings.state.tabsTree && !tab.pinned && panel) {
     let treeHasChanged = false
 
     const rTab = Tabs.reactive.byId[tab.id]
@@ -316,7 +324,7 @@ function onTabCreated(tab: Tab, attached?: boolean): void {
     }
 
     // Try to restore tree if tab was reopened and it had children
-    if (reopenedTabInfo && Utils.isTabsPanel(panel) && reopenedTabInfo.children) {
+    if (reopenedTabInfo && reopenedTabInfo.children) {
       for (let t, i = tab.index + 1; i < Tabs.list.length; i++) {
         t = Tabs.list[i]
         if (t.lvl < tab.lvl || t.panelId !== panel.id) break
@@ -401,9 +409,7 @@ function onTabCreated(tab: Tab, attached?: boolean): void {
     deferredActivationHandling.cb = null
   }
 
-  if (Utils.isTabsPanel(panel)) {
-    Tabs.decrementScrollRetainer(panel)
-  }
+  if (panel) Tabs.decrementScrollRetainer(panel)
 }
 
 /**

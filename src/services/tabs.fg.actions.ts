@@ -3155,7 +3155,7 @@ export function updateTabsIndexes(fromIndex = 0, toIndex = -1): void {
  */
 export function setNewTabPosition(index: number, parentId: ID, panelId: ID): void {
   Tabs.newTabsPosition[index] = {
-    parent: parentId === NOID ? undefined : parentId,
+    parent: parentId,
     panel: panelId,
   }
 }

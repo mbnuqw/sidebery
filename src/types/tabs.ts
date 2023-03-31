@@ -107,8 +107,8 @@ export interface ActiveTabsHistory {
 }
 
 export interface NewTabPosition {
-  parent?: ID
-  panel?: ID
+  parent: ID
+  panel: ID
 }
 
 export interface GroupedTabInfo {
