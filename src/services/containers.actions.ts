@@ -58,7 +58,6 @@ export async function load(): Promise<void> {
 
     Containers.reactive.byId = containers
 
-    WebReq.updateReqHandlers()
     if (saveNeeded) Containers.saveContainers()
   } else {
     const storage = await browser.storage.local.get<Stored>('containers')

@@ -65,6 +65,9 @@ void (async function main() {
 
   await Sidebar.loadNav()
   Sidebar.setupListeners()
+
+  WebReq.updateReqHandlers()
+
   Tabs.setupTabsListeners()
   await Tabs.loadTabs()
 
