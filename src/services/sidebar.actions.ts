@@ -1237,28 +1237,31 @@ export function openHiddenPanelsPopup(): void {
   }
 
   const navRect = navBarEl.getBoundingClientRect()
-  const hiddenRect = hiddenPanelsBtnEl.getBoundingClientRect()
+  const btnRect = hiddenPanelsBtnEl.getBoundingClientRect()
 
   // Horizontal
   if (Settings.state.navBarLayout === 'horizontal') {
-    const relLeft = hiddenRect.left - navRect.left
+    let relLeft = btnRect.left - navRect.left
     if (relLeft < navRect.width / 2) {
+      if (relLeft === 0) relLeft = 1
       Sidebar.reactive.hiddenPanelsPopupOffset = relLeft
       Sidebar.reactive.hiddenPanelsPopupOffsetSide = 'start'
     } else {
-      Sidebar.reactive.hiddenPanelsPopupOffset = hiddenRect.right
+      let right = Sidebar.width - (relLeft + btnRect.width)
+      if (right === 0) right = 1
+      Sidebar.reactive.hiddenPanelsPopupOffset = right
       Sidebar.reactive.hiddenPanelsPopupOffsetSide = 'end'
     }
   }
 
   // Vertical
   else if (Settings.state.navBarLayout === 'vertical') {
-    const relTop = hiddenRect.top - navRect.top
+    const relTop = btnRect.top - navRect.top
     if (relTop < navRect.height / 2) {
       Sidebar.reactive.hiddenPanelsPopupOffset = relTop
       Sidebar.reactive.hiddenPanelsPopupOffsetSide = 'start'
     } else {
-      Sidebar.reactive.hiddenPanelsPopupOffset = navRect.height - (hiddenRect.bottom - navRect.top)
+      Sidebar.reactive.hiddenPanelsPopupOffset = navRect.height - (btnRect.bottom - navRect.top)
       Sidebar.reactive.hiddenPanelsPopupOffsetSide = 'end'
     }
   }

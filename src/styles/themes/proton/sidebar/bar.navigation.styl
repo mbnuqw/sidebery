@@ -484,9 +484,11 @@
 .NavigationBar.-top .hidden-panels-popup
   top: 3px
 .NavigationBar.-top .hidden-panels-popup[data-offset-side="start"]
-  left: 3px
+  left: var(--offset)
+  max-width: calc(100vw - var(--nav-hidden-panels-popup-margin) * 2 - var(--offset))
 .NavigationBar.-top .hidden-panels-popup[data-offset-side="end"]
-  right: 3px
+  right: var(--offset)
+  max-width: calc(100vw - var(--nav-hidden-panels-popup-margin) * 2 - var(--offset))
 
 .NavigationBar .hidden-panels-popup-content
   position: relative
