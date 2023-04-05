@@ -98,6 +98,13 @@
     :opts="containersOpts"
     :folded="true"
     @update:value="togglePanelNewTabCtx")
+  .sub-fields
+    ToggleField(
+      v-if="Utils.isTabsPanel(conf)"
+      label="panel.new_tab_ctx_reopen"
+      :inactive="conf.newTabCtx === 'none'"
+      :value="Settings.state.newTabCtxReopen"
+      @update:value="toggleNewTabCtxReopen")
 
   SelectField(
     v-if="Utils.isTabsPanel(conf)"
@@ -579,6 +586,16 @@ function togglePanelNewTabCtx(value: string): void {
   if (!Utils.isTabsPanel(props.conf)) return
   props.conf.newTabCtx = value
   Sidebar.saveSidebar()
+}
+
+async function toggleNewTabCtxReopen() {
+  if (!Permissions.reactive.webData && !Settings.state.newTabCtxReopen) {
+    const result = await Permissions.request('<all_urls>')
+    if (!result) return
+  }
+
+  Settings.state.newTabCtxReopen = !Settings.state.newTabCtxReopen
+  Settings.saveDebounced(150)
 }
 
 function togglePanelDropTabCtx(value: string): void {

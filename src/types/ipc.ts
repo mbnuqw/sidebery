@@ -1,9 +1,8 @@
 import { Tab, TabCache, GroupInfo, TabsTreeData } from './tabs'
-import { Panel } from './sidebar'
 import { NormalizedSnapshot, RemovingSnapshotResult, Snapshot } from './snapshots'
 import { ItemInfo, DstPlaceInfo, Notification, PanelConfig } from '../types'
 import { IPCheckResult, UpgradingState } from '../types'
-import { GroupPageInitData, UrlPageInitData } from 'src/services/tabs.bg.actions'
+import { GroupPageInitData } from 'src/services/tabs.bg.actions'
 import { Stored } from './storage'
 
 export const enum InstanceType {

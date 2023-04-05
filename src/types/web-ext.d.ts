@@ -797,6 +797,7 @@ declare namespace browser {
     type AuthListener = (details: AuthReqDetails) => BlockingResponse | void
     type ErrorListener = (details: ErrReqDetails) => void
 
+    const onBeforeRequest: EventTarget<Listener, ExtraInfoSpec[]>
     const onBeforeSendHeaders: EventTarget<Listener, ExtraInfoSpec[]>
     const onHeadersReceived: EventTarget<Listener, ExtraInfoSpec[]>
     const onAuthRequired: EventTarget<AuthListener, ExtraInfoSpec[]>

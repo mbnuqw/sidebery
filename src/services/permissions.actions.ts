@@ -202,6 +202,11 @@ function onRemovedWebDataBg(): void {
     settingsSaveNeeded = true
   }
 
+  if (Settings.state.newTabCtxReopen) {
+    Settings.state.newTabCtxReopen = false
+    settingsSaveNeeded = true
+  }
+
   if (containersSaveNeeded) {
     Store.set({ containers: Utils.cloneObject(Containers.reactive.byId) })
   }
@@ -221,6 +226,10 @@ function onRemovedWebDataFg(): void {
 
     if (Settings.state.selWinScreenshots) {
       Settings.state.selWinScreenshots = false
+    }
+
+    if (Settings.state.newTabCtxReopen) {
+      Settings.state.newTabCtxReopen = false
     }
   }
 }

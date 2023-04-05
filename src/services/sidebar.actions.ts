@@ -28,6 +28,7 @@ import { Permissions } from './permissions'
 import { ItemInfo } from 'src/types/tabs'
 import { Notifications } from './notifications'
 import * as IPC from './ipc'
+import { turnOffBeforeRequestHandler, turnOnBeforeRequestHandler } from './web-req.fg'
 
 interface PanelElements {
   scrollBox: HTMLElement
@@ -193,11 +194,11 @@ function parseNav(config: SidebarConfig): void {
 
   for (const id of config.nav) {
     const panel = config.panels[id]
-    if (panel) {
-      if (!Sidebar.hasTabs && panel.type === PanelType.tabs) Sidebar.hasTabs = true
-      if (!Sidebar.hasBookmarks && panel.type === PanelType.bookmarks) Sidebar.hasBookmarks = true
-      if (!Sidebar.hasHistory && panel.type === PanelType.history) Sidebar.hasHistory = true
-    }
+    if (!panel) continue
+
+    if (!Sidebar.hasTabs && panel.type === PanelType.tabs) Sidebar.hasTabs = true
+    if (!Sidebar.hasBookmarks && panel.type === PanelType.bookmarks) Sidebar.hasBookmarks = true
+    if (!Sidebar.hasHistory && panel.type === PanelType.history) Sidebar.hasHistory = true
   }
 }
 
@@ -825,6 +826,7 @@ async function updateSidebar(newConfig?: SidebarConfig): Promise<void> {
   let tabsSaveNeeded = false
   let tabsPanelId: ID | undefined
   let existedPanelId: ID | undefined
+  let webReqHandlerNeeded = false
 
   // Loop over the new panels
   for (const panelConfig of panelConfigs) {
@@ -848,6 +850,11 @@ async function updateSidebar(newConfig?: SidebarConfig): Promise<void> {
     if (Utils.isTabsPanel(panel)) {
       const newTabContainer = panel.newTabCtx ? Containers.reactive.byId[panel.newTabCtx] : null
       if (panel.newTabCtx !== DEFAULT_CONTAINER_ID && !newTabContainer) panel.newTabCtx = 'none'
+
+      if (!webReqHandlerNeeded && Settings.state.newTabCtxReopen && panel.newTabCtx !== 'none') {
+        const container = Containers.reactive.byId[panel.newTabCtx]
+        if (container) webReqHandlerNeeded = true
+      }
     }
 
     // Save first panel and first tabs panel
@@ -979,6 +986,10 @@ async function updateSidebar(newConfig?: SidebarConfig): Promise<void> {
 
     Sidebar.saveActivePanel()
   }
+
+  // On or off web request handler
+  if (webReqHandlerNeeded) turnOnBeforeRequestHandler()
+  else turnOffBeforeRequestHandler()
 }
 
 export function activatePanel(panelId: ID, loadPanels = true): void {

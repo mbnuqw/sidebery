@@ -12,6 +12,7 @@ import { Menu } from 'src/services/menu'
 import { Tabs } from 'src/services/tabs.fg'
 import { Snapshots } from 'src/services/snapshots'
 import * as IPC from './ipc'
+import { updateWebReqHandlers } from './web-req.fg'
 
 type Opts = typeof SETTINGS_OPTIONS
 export async function loadSettings(): Promise<void> {
@@ -131,9 +132,12 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
   const navBookmarksPanelMidClickAction =
     prev.navBookmarksPanelMidClickAction !== next.navBookmarksPanelMidClickAction
   const tabsUrlInTooltip = prev.tabsUrlInTooltip !== next.tabsUrlInTooltip
+  const newTabCtxReopen = prev.newTabCtxReopen !== next.newTabCtxReopen
 
   // Update settings of this instance
   Utils.updateObject(Settings.state, settings, Settings.state)
+
+  if (newTabCtxReopen) updateWebReqHandlers()
 
   if (tabsUrlInTooltip) {
     Tabs.list.forEach(t => Tabs.updateTooltip(t.id))

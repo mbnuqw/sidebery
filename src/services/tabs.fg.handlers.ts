@@ -1,6 +1,7 @@
 import * as Utils from 'src/utils'
 import { ReactiveTab, Tab, TabStatus, TabsPanel } from 'src/types'
 import { NOID, GROUP_URL, ADDON_HOST, GROUP_INITIAL_TITLE } from 'src/defaults'
+import { DEFAULT_CONTAINER_ID } from 'src/defaults'
 import * as Logs from 'src/services/logs'
 import { Windows } from 'src/services/windows'
 import { Bookmarks } from 'src/services/bookmarks'
@@ -13,6 +14,7 @@ import { DnD } from 'src/services/drag-and-drop'
 import { RemovedTabInfo, Tabs } from './tabs.fg'
 import * as IPC from './ipc'
 import { Search } from './search'
+import { Containers } from './containers'
 
 const EXT_HOST = browser.runtime.getURL('').slice(16)
 const URL_HOST_PATH_RE = /^([a-z0-9-]{1,63}\.)+\w+(:\d+)?\/[A-Za-z0-9-._~:/?#[\]%@!$&'()*+,;=]*$/
@@ -150,7 +152,6 @@ function onTabCreated(tab: Tab, attached?: boolean): void {
   // Predefined position
   if (Tabs.newTabsPosition && Tabs.newTabsPosition[tab.index]) {
     const position = Tabs.newTabsPosition[tab.index]
-    Tabs.setNewTabPosition
     panel = Sidebar.reactive.panelsById[position.panel]
     if (!Utils.isTabsPanel(panel)) {
       const prevTab = Tabs.list[tab.index - 1]
@@ -263,6 +264,17 @@ function onTabCreated(tab: Tab, attached?: boolean): void {
   tab.index = index
   tab.parentId = Settings.state.tabsTree ? tab.openerTabId ?? NOID : NOID
   if (!tab.favIconUrl && !tab.internal) tab.favIconUrl = Favicons.getFavicon(tab.url)
+
+  // Check if tab should be reopened in different container
+  if (
+    !attached &&
+    tab.cookieStoreId === DEFAULT_CONTAINER_ID &&
+    panel &&
+    panel.newTabCtx !== 'none'
+  ) {
+    const container = Containers.reactive.byId[panel.newTabCtx]
+    if (container) tab.reopenInContainer = container.id
+  }
 
   // Put new tab in state
   Tabs.byId[tab.id] = tab

@@ -163,6 +163,10 @@ export const setupPageTranslations: Translations = {
     de: 'Umgebung des neuen Tabs',
     zh_CN: '新标签页的容器',
   },
+  'panel.new_tab_ctx_reopen': {
+    en: 'Detect externally opened tab and reopen it in the target container on the first web request (global setting)',
+    ru: 'Обнаруживать открытую извне вкладку и переотрывать ее в целевом контейнере при первом веб запросе (глобальная настройка)',
+  },
   'panel.drop_tab_ctx': {
     en: 'Reopen tab that was dropped to this panel in container:',
     ru: 'Переоткрыть вкладку, переброшенную в эту панель, в контейнере:',

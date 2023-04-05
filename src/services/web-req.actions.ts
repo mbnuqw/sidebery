@@ -19,7 +19,7 @@ let handledReqId: string | undefined
 let includeHostsRules: IncludeRule[] = []
 let excludeHostsRules: Record<ID, (RegExp | string)[]> = {}
 let proxyAuthCredentials: Record<string, browser.webRequest.AuthCredentials> = {}
-const pendingAuthRequests: Set<string> = new Set()
+const pendingProxyAuthRequests: Set<string> = new Set()
 const incHistory: Record<ID, string | null> = {}
 let ipCheckCtx: ID | undefined
 let userAgents: Record<ID, string> = {}
@@ -120,9 +120,10 @@ export function updateReqHandlers(): void {
   includeHostsRules = []
   excludeHostsRules = {}
   proxyAuthCredentials = {}
-  pendingAuthRequests.clear()
+  pendingProxyAuthRequests.clear()
   userAgents = {}
 
+  // Check containers config
   for (const ctr of Object.values(Containers.reactive.byId)) {
     // Proxy
     if (ctr.proxified && ctr.proxy) {
@@ -290,24 +291,24 @@ function proxyAuthReqHandler(
   const authCredentials = proxyAuthCredentials[info.cookieStoreId]
   if (!authCredentials) return
 
-  if (pendingAuthRequests.has(info.requestId)) {
+  if (pendingProxyAuthRequests.has(info.requestId)) {
     return { cancel: true }
   } else {
-    pendingAuthRequests.add(info.requestId)
+    pendingProxyAuthRequests.add(info.requestId)
   }
 
   return { authCredentials }
 }
 
 function proxyAuthCompletedHandler(info: browser.webRequest.ReqDetails) {
-  if (pendingAuthRequests.has(info.requestId)) {
+  if (pendingProxyAuthRequests.has(info.requestId)) {
     cancelDebouncedProxyAuthErrorHandler(info.cookieStoreId)
-    pendingAuthRequests.delete(info.requestId)
+    pendingProxyAuthRequests.delete(info.requestId)
   }
 }
 
 function proxyAuthWithErrorHandler(info: browser.webRequest.ErrReqDetails) {
-  if (!pendingAuthRequests.has(info.requestId)) return
+  if (!pendingProxyAuthRequests.has(info.requestId)) return
   proxyAuthErrorHandlerDebounced(info.cookieStoreId, info.error, 640)
 }
 

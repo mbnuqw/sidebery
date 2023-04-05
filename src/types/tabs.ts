@@ -25,6 +25,7 @@ export interface Tab extends browser.tabs.Tab {
   internal?: boolean
   isGroup: boolean
   reopening?: { id: ID }
+  reopenInContainer?: string
   customTitle?: string
   customColor?: string
   reloadOnActivation?: boolean

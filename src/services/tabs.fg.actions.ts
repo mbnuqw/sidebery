@@ -2007,7 +2007,7 @@ export async function move(
     dst.index = panel.nextTabIndex
   }
 
-  // Check if tabs was dropped to same place
+  // Check if tabs was moved to the same place
   const inside = dst.index > tabs[0].index && dst.index <= tabs[tabs.length - 1].index
   const inFirst = tabs[0].id === dst.parentId
   const inLast = tabs[tabs.length - 1].id === dst.parentId

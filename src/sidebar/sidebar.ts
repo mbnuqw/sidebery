@@ -22,6 +22,7 @@ import { Search } from 'src/services/search'
 import { Info } from 'src/services/info'
 import SidebarRoot from './sidebar.vue'
 import { Snapshots } from 'src/services/snapshots'
+import { updateWebReqHandlers } from 'src/services/web-req.fg'
 
 async function main(): Promise<void> {
   Info.setInstanceType(InstanceType.sidebar)
@@ -123,6 +124,8 @@ async function main(): Promise<void> {
   else await Tabs.loadInShadowMode()
   if (Sidebar.hasBookmarks && initBookmarks) Bookmarks.load()
   if (Sidebar.hasHistory && initHistory) History.load()
+
+  updateWebReqHandlers()
 
   Menu.loadCtxMenu()
   Menu.setupListeners()
