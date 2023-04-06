@@ -1773,8 +1773,6 @@ export async function restoreFromBookmarks(panel: TabsPanel, silent?: boolean): 
     if (node.type === 'separator') continue
 
     const info: ItemInfo = { id: node.id, title: node.title, parentId: node.parentId }
-    Bookmarks.extractTabInfoFromTitle(info)
-    const isPinned = info.pinned
     let rawUrl = node.url
 
     // Get target lvl
@@ -1792,6 +1790,7 @@ export async function restoreFromBookmarks(panel: TabsPanel, silent?: boolean): 
       if (Bookmarks.isFolderWithURL(node)) {
         rawUrl = firstChild.url
         info.url = Utils.normalizeUrl(firstChild.url, node.title)
+        info.title = firstChild.title
         usedAsParent[firstChild.id] = true
       }
 
@@ -1807,6 +1806,9 @@ export async function restoreFromBookmarks(panel: TabsPanel, silent?: boolean): 
     else {
       info.url = Utils.normalizeUrl(node.url, node.title)
     }
+
+    Bookmarks.extractTabInfoFromTitle(info)
+    const isPinned = info.pinned
 
     // Find existed tab
     const existedReactiveTab = (isPinned ? pinnedTabs : panelTabs).find(t => {
