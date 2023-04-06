@@ -175,6 +175,8 @@ function init() {
 let foundReopenRule: FindReopenRuleResult | undefined
 let foundMoveRule: FindMoveToPanelRuleResult | undefined
 function findExistedRules() {
+  const prevFoundReopenRule = foundReopenRule
+  const prevFoundMoveRule = foundMoveRule
   const activeOption = matchOptions.value?.find(opt => opt.active)
   let hostName = activeOption?.name
 
@@ -191,11 +193,11 @@ function findExistedRules() {
   }
 
   if (foundReopenRule) reopenInContainerId.value = foundReopenRule.container.id
-  else reopenInContainerId.value = 'none'
+  else if (prevFoundReopenRule) reopenInContainerId.value = 'none'
   if (foundMoveRule) {
     moveToPanelId.value = foundMoveRule.panel.id
     moveToPanelTopLvlOnly.value = !!foundMoveRule.rule.topLvlOnly
-  } else {
+  } else if (prevFoundMoveRule) {
     moveToPanelId.value = 'none'
     moveToPanelTopLvlOnly.value = true
   }
