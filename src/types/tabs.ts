@@ -110,6 +110,7 @@ export interface ActiveTabsHistory {
 export interface NewTabPosition {
   parent: ID
   panel: ID
+  unread?: boolean
 }
 
 export interface GroupedTabInfo {

@@ -3153,10 +3153,16 @@ export function updateTabsIndexes(fromIndex = 0, toIndex = -1): void {
 /**
  * Set expected position (parent/panel) of new tab by its index
  */
-export function setNewTabPosition(index: number, parentId: ID, panelId: ID): void {
+export function setNewTabPosition(
+  index: number,
+  parentId: ID,
+  panelId: ID,
+  unread?: boolean
+): void {
   Tabs.newTabsPosition[index] = {
     parent: parentId,
     panel: panelId,
+    unread: unread,
   }
 }
 

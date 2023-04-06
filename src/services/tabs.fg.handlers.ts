@@ -163,6 +163,7 @@ function onTabCreated(tab: Tab, attached?: boolean): void {
     }
     index = tab.index
     tab.openerTabId = position.parent
+    if (position.unread !== undefined) tab.unread = position.unread
     delete Tabs.newTabsPosition[tab.index]
 
     // Handle tab reopening

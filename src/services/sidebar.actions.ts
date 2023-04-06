@@ -1787,12 +1787,11 @@ export async function restoreFromBookmarks(panel: TabsPanel, silent?: boolean): 
 
     // Set url for parent
     if (!node.url && node.children) {
-      const firstChild = node.children[0]
-
       // Use first child for parent tab
-      if (firstChild && firstChild.url && firstChild.title === node.title) {
+      const firstChild = node.children[0]
+      if (Bookmarks.isFolderWithURL(node)) {
         rawUrl = firstChild.url
-        info.url = Utils.normalizeUrl(firstChild.url, firstChild.title)
+        info.url = Utils.normalizeUrl(firstChild.url, node.title)
         usedAsParent[firstChild.id] = true
       }
 
@@ -1828,7 +1827,11 @@ export async function restoreFromBookmarks(panel: TabsPanel, silent?: boolean): 
         active: false,
         cookieStoreId: info.container,
       }
-      Tabs.setNewTabPosition(indexPinned, NOID, panel.id)
+      Tabs.setNewTabPosition(indexPinned, NOID, panel.id, false)
+      if (info.url) {
+        const containerId = Containers.getContainerFor(info.url)
+        if (containerId) conf.cookieStoreId = containerId
+      }
       const newTab = await browser.tabs.create(conf)
       idsMap[info.id] = newTab.id
       indexPinned++
@@ -1877,13 +1880,17 @@ export async function restoreFromBookmarks(panel: TabsPanel, silent?: boolean): 
         active: false,
         cookieStoreId: info.container,
       }
+      if (info.url) {
+        const containerId = Containers.getContainerFor(info.url)
+        if (containerId) conf.cookieStoreId = containerId
+      }
       const isDefaultContainer = !conf.cookieStoreId || conf.cookieStoreId === CONTAINER_ID
       const parentId = idsMap[info.parentId ?? NOID] ?? NOID
       if (conf.url && !conf.url.startsWith('about') && isDefaultContainer) {
         conf.discarded = true
         conf.title = info.title
       }
-      Tabs.setNewTabPosition(index, parentId, panel.id)
+      Tabs.setNewTabPosition(index, parentId, panel.id, false)
       const newTab = await browser.tabs.create(conf)
       idsMap[info.id] = newTab.id
     }

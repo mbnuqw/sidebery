@@ -363,7 +363,7 @@ export async function open(
 
         // Set url for parent node
         const prev = toOpen[toOpen.length - 1]
-        if (prev && prev.id === info.parentId && prev.title === info.title && info.url) {
+        if (prev && prev.id === info.parentId && bookmarkIsParentTab(node, prev.title)) {
           prev.url = info.url
           continue
         }
@@ -1408,4 +1408,28 @@ export function getTargetTabsPanelId(): ID {
     panelId = Sidebar.lastTabsPanelId
   }
   return panelId
+}
+
+export function isFolderWithURL(folder: Bookmark): boolean {
+  if (!folder.children) return false
+
+  const firstChild = folder.children[0]
+  if (!firstChild?.url) return false
+
+  const title = folder.title
+  const childTitle = firstChild.title
+
+  if (childTitle === title) return true
+
+  return childTitle.startsWith(title) && childTitle[title.length + 1] === '['
+}
+
+function bookmarkIsParentTab(node: Bookmark, parentTitle?: string): boolean {
+  if (!node.url || !parentTitle) return false
+
+  const childTitle = node.title
+
+  if (childTitle === parentTitle) return true
+
+  return childTitle.startsWith(parentTitle) && childTitle[parentTitle.length + 1] === '['
 }
