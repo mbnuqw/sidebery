@@ -3823,7 +3823,7 @@ export async function reopenInContainer(ids: ID[], containerId: string) {
     const dst = { panelId: panel.id, containerId: containerId, index: panel.nextTabIndex }
     await Tabs.reopen(items, dst)
   } else {
-    await Tabs.reopen(items, { panelId: firstTab.panelId, containerId })
+    await Tabs.reopen(items, { panelId: firstTab.panelId, containerId, pinned: firstTab.pinned })
   }
 }
 
