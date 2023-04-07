@@ -938,16 +938,17 @@ export async function removeTabs(tabIds: ID[], silent?: boolean): Promise<void> 
   if (activeTab) Tabs.updateSuccessionDebounced(0, toRemove)
 
   if (!silent && tabs.length > 1 && Settings.state.tabsRmUndoNote && !warn) {
-    const favicons: string[] = []
-    for (const tab of tabs) {
-      if (tab.favIconUrl) favicons.push(tab.favIconUrl)
-      else favicons.push(Favicons.getFavPlaceholder(tab.url))
-    }
+    let detailsParts = tabs.slice(0, 2).map(t => {
+      return '- ' + (t.title.length > 36 ? t.title.slice(0, 36) + '...' : t.title)
+    })
+    if (tabs.length > 2) detailsParts = detailsParts.concat('- ...')
+    const details = detailsParts.join('\n')
+
     Notifications.notify({
       icon: '#icon_trash',
       title: String(tabs.length) + translate('notif.tabs_rm_post', tabs.length),
+      details,
       ctrl: translate('notif.undo_ctrl'),
-      favicons: favicons.length ? favicons : undefined,
       callback: async () => undoRemove(tabsInfo, parents),
     })
   }
