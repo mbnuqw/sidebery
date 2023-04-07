@@ -262,6 +262,9 @@
     fill: var(--notification-fg)
     flex-shrink: 0
     opacity: .7
+  > svg.-close
+    width: 11px
+    height: 11px
   &:hover:before
     opacity: .08
   &:hover .label
@@ -276,10 +279,39 @@
     flex-grow: 0
     width: 30px
 
+.Notifications .indicators
+  position: relative
+  height: 7px
+  width: 100%
+  padding: 0 calc(var(--notification-border-radius) + var(--notification-margin))
+  display: flex
+  justify-content: flex-end
+  align-items: flex-start
+  flex-shrink: 0
+  grid-gap: var(--notification-margin)
+  z-index: 100
+
+.Notifications .indicators .indicator
+  position: relative
+  height: 5px
+  width: 5px
+  border-radius: var(--notification-border-radius)
+  background-color: var(--notification-bg)
+  overflow: clip
+  &:before
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    opacity: .3
+    background-color: var(--notification-fg)
+
 #root .notification-enter-active
 #root .notification-leave-active
   transition: transform var(--d-fast), opacity var(--d-fast), z-index var(--d-fast)
-#root .notification-leave-active
+#root .notification.notification-leave-active
   position: absolute
   width: calc(100% - var(--notification-margin) * 2)
 #root .notification-move

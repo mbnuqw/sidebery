@@ -14,7 +14,9 @@ export const Notifications = {
   err,
   notify,
   resetTimer,
+  resetTimers,
   restartTimer,
+  restartTimers,
   progress,
   finishProgress,
   updateProgress,
@@ -32,14 +34,19 @@ function notify(config: Notification, timeout = 5555): Notification {
   config.id = id
   if (!config.lvl) config.lvl = 'info'
   config.timeout = timeout
-  restartTimer(config)
+  if (timersEnabled) restartTimer(config)
   const len = Notifications.reactive.list.push(config)
   return Notifications.reactive.list[len - 1]
 }
 
+let timersEnabled = true
 function resetTimer(nn: Notification): void {
   if (nn.timer) clearTimeout(nn.timer)
   nn.timer = undefined
+}
+function resetTimers(): void {
+  timersEnabled = false
+  Notifications.reactive.list.forEach(resetTimer)
 }
 
 function restartTimer(nn: Notification): void {
@@ -50,6 +57,10 @@ function restartTimer(nn: Notification): void {
       if (index !== -1) Notifications.reactive.list.splice(index, 1)
     }, nn.timeout)
   }
+}
+function restartTimers(): void {
+  timersEnabled = true
+  Notifications.reactive.list.forEach(restartTimer)
 }
 
 function progress(config: Notification): Notification {
