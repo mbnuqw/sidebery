@@ -1735,6 +1735,11 @@ export function setViewMode(panel: BookmarksPanel, mode: string): void {
 }
 
 export async function restoreFromBookmarks(panel: TabsPanel, silent?: boolean): Promise<void> {
+  if (!Permissions.bookmarks) {
+    const result = await Permissions.request('bookmarks')
+    if (!result) return
+  }
+
   if (!Bookmarks.reactive.tree.length) await Bookmarks.load()
 
   let panelFolder = Bookmarks.reactive.byId[panel.bookmarksFolderId]
@@ -1921,6 +1926,11 @@ export function updateSidebarTitle(delay = 456): void {
 }
 
 export async function convertToBookmarksPanel(panel: TabsPanel): Promise<void> {
+  if (!Permissions.bookmarks) {
+    const result = await Permissions.request('bookmarks')
+    if (!result) return
+  }
+
   if (Sidebar.convertingPanelLock) return
   Sidebar.convertingPanelLock = true
 
