@@ -388,14 +388,21 @@ function onDragStart(e: DragEvent): void {
 }
 
 function onAudioMouseDown(e: MouseEvent, rTab: ReactiveTab): void {
+  // Left button
   if (e.button === 0) {
     if (!rTab.mediaPaused) Tabs.remuteTabs([rTab.id])
     else Tabs.playTabMedia(rTab.id)
   }
 
-  if (e.button === 1) {
+  // Middle button
+  else if (e.button === 1) {
     if (!rTab.mediaPaused) Tabs.pauseTabMedia(rTab.id)
-    else {
+    else Tabs.playTabMedia(rTab.id)
+  }
+
+  // Right button
+  else if (e.button === 2) {
+    if (rTab.mediaPaused) {
       const tab = Tabs.byId[props.tab.id]
       if (tab) {
         tab.mediaPaused = false
