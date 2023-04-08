@@ -17,6 +17,11 @@
       .title(v-if="rootFolder.title" :title="rootFolder.title") {{rootFolder.title}}
     .down-btn(:data-inactive="state.navOffset <= 0" @click="goDown")
       svg: use(xlink:href="#icon_expand")
+
+  PanelPlaceholder(
+    :isNotPerm="!Permissions.reactive.bookmarks"
+    :permMsg="translate('panel.bookmarks.req_perm')"
+    perm="bookmarks")
 </template>
 
 <script lang="ts" setup>
@@ -30,9 +35,8 @@ import { Permissions } from 'src/services/permissions'
 import { Menu } from 'src/services/menu'
 import { Selection } from 'src/services/selection'
 import { translate } from 'src/dict'
-import { Notifications } from 'src/services/notifications'
-import { BKM_ROOT_ID, Err, NOID } from 'src/defaults'
-import { Sidebar } from 'src/services/sidebar'
+import { BKM_ROOT_ID, NOID } from 'src/defaults'
+import PanelPlaceholder from './panel-placeholder.vue'
 import * as Logs from 'src/services/logs'
 import * as Utils from 'src/utils'
 
@@ -78,38 +82,9 @@ const rootFolder = computed<Bookmark | undefined>(() => {
   return folder
 })
 
-function onWrongRootFolder(): void {
-  state.active = false
-  Sidebar.closeSubPanel()
-
-  const title = translate('notif.bookmarks_sub_panel.no_root.title')
-  const details = translate('notif.bookmarks_sub_panel.no_root.details')
-  Notifications.notify({
-    title,
-    details,
-    lvl: 'err',
-    ctrl: translate('notif.bookmarks_sub_panel.no_root.save'),
-    callback: () => {
-      Sidebar.bookmarkTabsPanel(props.panel.id, true).catch(err => {
-        if (err !== Err.Canceled) Logs.err('BookmarksSubPanel.onWrongRootFolder', err)
-      })
-    },
-  })
-
-  const panel = Sidebar.reactive.panelsById[props.panel.id]
-  if (Utils.isTabsPanel(panel)) {
-    panel.bookmarksFolderId = NOID
-    Sidebar.saveSidebar()
-  }
-}
-
 let bookmarksLoading = false
-async function open(): Promise<void> {
+function open() {
   if (bookmarksLoading) return
-  if (!Permissions.reactive.bookmarks) {
-    const result = await Permissions.request('bookmarks')
-    if (!result) return
-  }
 
   if (!Bookmarks.reactive.tree.length) {
     state.active = true
