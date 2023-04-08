@@ -6,8 +6,8 @@
   --ctx-menu-font: rem(14) sans-serif
   --ctx-menu-bg: var(--popup-bg)
   --ctx-menu-fg: var(--popup-fg)
-  --ctx-menu-border-radius: calc(var(--general-border-radius) + var(--general-margin))
-  --ctx-menu-opt-border-radius: var(--general-border-radius)
+  --ctx-menu-border-radius: calc(var(--general-border-radius) + 1px)
+  --ctx-menu-opt-border-radius: calc(var(--general-border-radius) - var(--general-margin) + 1px)
   --ctx-menu-padding: var(--general-margin)
   --ctx-menu-opt-padding: 4px
   --ctx-menu-text-opt-inner-gap: 4px
@@ -16,7 +16,7 @@
 #root[data-density="compact"]
   --ctx-menu-font: rem(13) sans-serif
   --ctx-menu-opt-padding: 3px
-  --ctx-menu-text-opt-inner-gap: 3px
+  --ctx-menu-text-opt-inner-gap: 4px
   --ctx-menu-text-opt-height: 24px
   --ctx-menu-icon-opt-height: 28px
 #root[data-popup-color-scheme="dark"]
