@@ -1213,7 +1213,7 @@ async function askWhatToDoWithOldUnusedBookmarks(folderName: string): Promise<st
     title: translate('popup.wtdwOldBookmarks.title', folderName),
     note: translate('popup.wtdwOldBookmarks.note'),
     checkbox: {
-      label: "Remember and don't ask again",
+      label: translate('popup.wtdwOldBookmarks.checkbox_label'),
       value: remember,
       update: value => (remember = value),
     },

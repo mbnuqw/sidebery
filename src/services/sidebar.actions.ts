@@ -1371,6 +1371,7 @@ export function ask(conf: DialogConfig): Promise<string | null> {
       note: conf.note,
       checkbox: conf.checkbox,
       buttons: conf.buttons,
+      buttonsCentered: conf.buttonsCentered,
       result: (answer: string | null) => {
         ok(answer)
         Sidebar.reactive.dialog = null

@@ -142,6 +142,10 @@ export const sidebarTranslations: Translations = {
     ru: 'Удалить старые закладки в этой папке?',
     de: 'Alte Lesezeichen in diesem Ordner löschen?',
   },
+  'popup.wtdwOldBookmarks.checkbox_label': {
+    en: "Remember and don't ask again",
+    ru: 'Запомнить и больше не спрашивать',
+  },
   'popup.wtdwOldBookmarks.delete': {
     en: 'Delete',
     ru: 'Удалить',
