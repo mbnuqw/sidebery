@@ -133,9 +133,9 @@ export const sidebarTranslations: Translations = {
   },
   // - What to do with old unused bookmarks on saving tabs panel
   'popup.wtdwOldBookmarks.title': {
-    en: 'Delete unused bookmarks?',
-    ru: 'Удалить неиспользуемые закладки',
-    de: 'Ungenutzte Lesezeichen löschen?',
+    en: 'Delete old bookmarks?',
+    ru: 'Удалить старые закладки?',
+    de: 'Alte Lesezeichen löschen?',
   },
   'popup.wtdwOldBookmarks.delete': {
     en: 'Delete',
