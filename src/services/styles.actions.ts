@@ -158,6 +158,21 @@ function toColorString(rgba?: RGBA | RGB | string | null, noAlpha?: boolean): st
   return `rgba(${rgba[0]}, ${rgba[1]}, ${rgba[2]}, ${rgba[3]})`
 }
 
+export function getSystemColorScheme(): 'dark' | 'light' {
+  const probeEl = document.getElementById('moz_dialog_color_scheme_probe')
+  if (!probeEl) return 'dark'
+
+  const styles = window.getComputedStyle(probeEl)
+  const bg = Utils.toRGBA(styles.backgroundColor)
+  const fg = Utils.toRGBA(styles.color)
+  if (!bg || !fg) return 'dark'
+
+  const colorScheme = getColorSchemeVariant(bg, fg)
+  if (!colorScheme) return 'dark'
+
+  return colorScheme === ColorSchemeVariant.Dark ? 'dark' : 'light'
+}
+
 function parseFirefoxTheme(theme: browser.theme.Theme): ParsedTheme {
   const parsed: ParsedTheme = { error: false, vars: {} }
 

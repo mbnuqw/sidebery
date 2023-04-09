@@ -62,13 +62,15 @@ export const enum ColorSchemeVariant {
   Light = 2,
 }
 
+const defaultColorScheme = StylesActions.getSystemColorScheme()
+
 export const Styles = {
   reactive: {
-    colorScheme: 'dark',
-    frameColorScheme: 'dark',
-    toolbarColorScheme: 'dark',
-    actElColorScheme: 'dark',
-    popupColorScheme: 'dark',
+    colorScheme: defaultColorScheme,
+    frameColorScheme: defaultColorScheme,
+    toolbarColorScheme: defaultColorScheme,
+    actElColorScheme: defaultColorScheme,
+    popupColorScheme: defaultColorScheme,
   } as StylesState,
   sidebarCSS: '',
   groupCSS: '',
