@@ -2073,6 +2073,22 @@ export const setupPageTranslations: Translations = {
     de: 'Geöffneten Ordner beim Scrollen anheften',
     zh_CN: '滚动时固定已打开的文件夹',
   },
+  'settings.old_bookmarks_after_save': {
+    en: 'What to do with old bookmarks after saving tabs panel',
+    ru: 'Что делать со старыми закладками после сохранения панели вкладок',
+  },
+  'settings.old_bookmarks_after_save_ask': {
+    en: 'ask',
+    ru: 'спросить',
+  },
+  'settings.old_bookmarks_after_save_del': {
+    en: 'delete',
+    ru: 'удалить',
+  },
+  'settings.old_bookmarks_after_save_keep': {
+    en: 'keep',
+    ru: 'оставить',
+  },
 
   // - History
   'settings.history_title': {

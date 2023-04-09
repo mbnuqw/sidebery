@@ -133,16 +133,21 @@ export const sidebarTranslations: Translations = {
   },
   // - What to do with old unused bookmarks on saving tabs panel
   'popup.wtdwOldBookmarks.title': {
-    en: 'Delete old bookmarks?',
-    ru: 'Удалить старые закладки?',
-    de: 'Alte Lesezeichen löschen?',
+    en: folderName => `Tabs have been saved in "${folderName}" folder`,
+    ru: folderName => `Вкладки были сохранены в папке "${folderName}"`,
+    de: folderName => `Tabs wurden im Ordner "${folderName}" gespeichert`,
+  },
+  'popup.wtdwOldBookmarks.note': {
+    en: 'Delete old bookmarks in that folder?',
+    ru: 'Удалить старые закладки в этой папке?',
+    de: 'Alte Lesezeichen in diesem Ordner löschen?',
   },
   'popup.wtdwOldBookmarks.delete': {
     en: 'Delete',
     ru: 'Удалить',
     de: 'Löschen',
   },
-  'popup.wtdwOldBookmarks.leave': {
+  'popup.wtdwOldBookmarks.keep': {
     en: 'Keep',
     ru: 'Оставить',
     de: 'Behalten',

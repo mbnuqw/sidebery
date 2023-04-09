@@ -1315,12 +1315,12 @@ export async function askHowRemoveTabsPanel(panelId: ID): Promise<string | null>
   const panel = Sidebar.reactive.panelsById[panelId]
   if (!Utils.isTabsPanel(panel)) return null
 
-  let text
-  if (Windows.otherWindows.length) text = translate('popup.tabs_panel_removing.other_win_note')
+  let note
+  if (Windows.otherWindows.length) note = translate('popup.tabs_panel_removing.other_win_note')
 
   const conf: DialogConfig = {
     title: translate('popup.tabs_panel_removing.title'),
-    text,
+    note,
     buttons: [
       {
         value: 'close',
@@ -1368,7 +1368,8 @@ export function ask(conf: DialogConfig): Promise<string | null> {
   return new Promise<string | null>(ok => {
     Sidebar.reactive.dialog = {
       title: conf.title,
-      text: conf.text,
+      note: conf.note,
+      checkbox: conf.checkbox,
       buttons: conf.buttons,
       result: (answer: string | null) => {
         ok(answer)

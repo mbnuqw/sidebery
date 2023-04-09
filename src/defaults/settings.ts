@@ -129,6 +129,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   bookmarksRmUndoNote: true,
   loadBookmarksOnDemand: true,
   pinOpenedBookmarksFolder: true,
+  oldBookmarksAfterSave: 'ask',
 
   // History
   loadHistoryOnDemand: true,
@@ -257,4 +258,5 @@ export const SETTINGS_OPTIONS = {
   colorizeTabsBranchesSrc: ['url', 'domain'],
   searchBarMode: ['static', 'dynamic', 'none'],
   newTabBarPosition: ['after_tabs', 'bottom'],
+  oldBookmarksAfterSave: ['ask', 'del', 'keep'],
 } as const

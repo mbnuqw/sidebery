@@ -1178,12 +1178,13 @@ export async function saveToFolder(
     }
   }
 
-  if (bookmarksList.length > 0) {
-    const answer = await askWhatToDoWithOldUnusedBookmarks()
+  if (bookmarksList.length > 0 && !removeOld && Settings.state.oldBookmarksAfterSave === 'ask') {
+    const answer = await askWhatToDoWithOldUnusedBookmarks(dstFolder.title)
     if (answer === 'delete') removeOld = true
   }
+  if (Settings.state.oldBookmarksAfterSave === 'del') removeOld = true
 
-  // Remove remained bookmarks
+  // Cleaning up
   for (const node of bookmarksList) {
     // Remove empty folders
     if (node.type === 'folder' && node.children && !node.children.length) {
@@ -1199,22 +1200,45 @@ export async function saveToFolder(
   }
 }
 
-async function askWhatToDoWithOldUnusedBookmarks(): Promise<string | null> {
+async function askWhatToDoWithOldUnusedBookmarks(folderName: string): Promise<string | null> {
+  let remember = false
+
+  // Shrink folder name
+  if (folderName.length > 16) {
+    const index = folderName.indexOf(' [')
+    if (index > 0) folderName = folderName.slice(0, index)
+  }
+
   const conf: DialogConfig = {
-    title: translate('popup.wtdwOldBookmarks.title'),
+    title: translate('popup.wtdwOldBookmarks.title', folderName),
+    note: translate('popup.wtdwOldBookmarks.note'),
+    checkbox: {
+      label: "Remember and don't ask again",
+      value: remember,
+      update: value => (remember = value),
+    },
     buttons: [
       {
         value: 'delete',
         label: translate('popup.wtdwOldBookmarks.delete'),
       },
       {
-        value: 'leave',
-        label: translate('popup.wtdwOldBookmarks.leave'),
+        value: 'keep',
+        label: translate('popup.wtdwOldBookmarks.keep'),
       },
     ],
+    buttonsCentered: true,
   }
 
-  return Sidebar.ask(conf)
+  const result = await Sidebar.ask(conf)
+
+  if (remember) {
+    if (result === 'delete') Settings.state.oldBookmarksAfterSave = 'del'
+    if (result === 'keep') Settings.state.oldBookmarksAfterSave = 'keep'
+    Settings.saveDebounced(150)
+  }
+
+  return result
 }
 
 export function scrollBookmarksToEdge(panel?: Panel): void {

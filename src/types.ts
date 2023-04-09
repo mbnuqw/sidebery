@@ -298,8 +298,10 @@ export interface SubListTitleInfo {
 
 export interface Dialog {
   title: string
-  text?: string
+  note?: string
+  checkbox?: DialogCheckbox
   buttons: DialogBtn[]
+  buttonsCentered?: boolean
   result: (answer: string | null) => void
 }
 
@@ -309,10 +311,18 @@ export interface DialogBtn {
   warn?: boolean
 }
 
+export interface DialogCheckbox {
+  label: string
+  value: boolean
+  update: (value: boolean) => void
+}
+
 export interface DialogConfig {
   title: string
-  text?: string
+  note?: string
+  checkbox?: DialogCheckbox
   buttons: DialogBtn[]
+  buttonsCentered?: boolean
 }
 
 export interface TabsPanelRemoving {

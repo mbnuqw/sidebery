@@ -41,6 +41,13 @@ section(ref="el")
     label="settings.pin_opened_bookmarks_folder"
     v-model:value="Settings.state.pinOpenedBookmarksFolder"
     @update:value="Settings.saveDebounced(150)")
+  SelectField(
+    label="settings.old_bookmarks_after_save"
+    optLabel="settings.old_bookmarks_after_save_"
+    v-model:value="Settings.state.oldBookmarksAfterSave"
+    :opts="Settings.getOpts('oldBookmarksAfterSave')"
+    :folded="true"
+    @update:value="Settings.saveDebounced(150)")
 
   .ctrls
     .fetch-progress(v-if="state.fetchingBookmarksFavs")

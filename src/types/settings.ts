@@ -130,6 +130,7 @@ export interface SettingsState {
   bookmarksRmUndoNote: boolean
   loadBookmarksOnDemand: boolean
   pinOpenedBookmarksFolder: boolean
+  oldBookmarksAfterSave: (typeof SETTINGS_OPTIONS.oldBookmarksAfterSave)[number]
 
   // History
   loadHistoryOnDemand: boolean
