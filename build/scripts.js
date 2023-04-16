@@ -15,7 +15,7 @@ const BUNDLES = {
   'src/injections/group.ts': true,
   'src/injections/url.ts': true,
 }
-const IMPORT_RE = /(^|\n|\r\n|;)(im|ex)port\s?(.*?)"(\.\.?|src|vue)(\/.+?)?"/g
+const IMPORT_RE = /(^|\n|\r\n|;)(im|ex)port\s?((?:\n|.)*?)"(\.\.?|src|vue)(\/.+?)?"/g
 
 const ESBUILD_DEFINE = forChromium ? { browser: 'chrome' } : undefined
 
