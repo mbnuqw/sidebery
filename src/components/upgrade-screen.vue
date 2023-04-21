@@ -4,27 +4,27 @@
     h2.title {{translate('upgrade.title')}}
     .loading-box
       LoadingDots
-    .error(v-if="Sidebar.reactive.upgrading?.error") {{Sidebar.reactive.upgrading.error}}
+    .error(v-if="reactiveUpgrading.status?.error") {{reactiveUpgrading.status.error}}
     .progress(v-else)
       .list
-        .item(:data-status="Sidebar.reactive.upgrading?.init ?? 'pending'")
+        .item(:data-status="reactiveUpgrading.status?.init ?? 'pending'")
           .label {{translate('upgrade.initializing')}}
-          .status {{getStatusLabel(Sidebar.reactive.upgrading?.init ?? 'pending')}}
-        .item(:data-status="Sidebar.reactive.upgrading?.settings ?? 'pending'")
+          .status {{getStatusLabel(reactiveUpgrading.status?.init ?? 'pending')}}
+        .item(:data-status="reactiveUpgrading.status?.settings ?? 'pending'")
           .label {{translate('upgrade.settings')}}
-          .status {{getStatusLabel(Sidebar.reactive.upgrading?.settings ?? 'pending')}}
-        .item(:data-status="Sidebar.reactive.upgrading?.sidebar ?? 'pending'")
+          .status {{getStatusLabel(reactiveUpgrading.status?.settings ?? 'pending')}}
+        .item(:data-status="reactiveUpgrading.status?.sidebar ?? 'pending'")
           .label {{translate('upgrade.panels_nav')}}
-          .status {{getStatusLabel(Sidebar.reactive.upgrading?.sidebar ?? 'pending')}}
-        .item(:data-status="Sidebar.reactive.upgrading?.snapshots ?? 'pending'")
+          .status {{getStatusLabel(reactiveUpgrading.status?.sidebar ?? 'pending')}}
+        .item(:data-status="reactiveUpgrading.status?.snapshots ?? 'pending'")
           .label {{translate('upgrade.snapshots')}}
-          .status {{getStatusLabel(Sidebar.reactive.upgrading?.snapshots ?? 'pending')}}
-        .item(:data-status="Sidebar.reactive.upgrading?.favicons ?? 'pending'")
+          .status {{getStatusLabel(reactiveUpgrading.status?.snapshots ?? 'pending')}}
+        .item(:data-status="reactiveUpgrading.status?.favicons ?? 'pending'")
           .label {{translate('upgrade.fav_cache')}}
-          .status {{getStatusLabel(Sidebar.reactive.upgrading?.favicons ?? 'pending')}}
-        .item(:data-status="Sidebar.reactive.upgrading?.styles ?? 'pending'")
+          .status {{getStatusLabel(reactiveUpgrading.status?.favicons ?? 'pending')}}
+        .item(:data-status="reactiveUpgrading.status?.styles ?? 'pending'")
           .label {{translate('upgrade.styles')}}
-          .status {{getStatusLabel(Sidebar.reactive.upgrading?.styles ?? 'pending')}}
+          .status {{getStatusLabel(reactiveUpgrading.status?.styles ?? 'pending')}}
     .controls
       .btn(
         :class="{ '-inactive': !allDone }"
@@ -35,12 +35,12 @@
 <script lang="ts" setup>
 import { computed, ref, onMounted } from 'vue'
 import { translate } from 'src/dict'
-import { Sidebar } from 'src/services/sidebar'
-import LoadingDots from 'src/components/loading-dots.vue'
 import { BackupData, Stored } from 'src/types'
 import * as Utils from 'src/utils'
 import * as IPC from 'src/services/ipc'
 import * as Logs from 'src/services/logs'
+import { reactiveUpgrading } from 'src/services/upgrading'
+import LoadingDots from 'src/components/loading-dots.vue'
 
 onMounted(() => {
   genBackup()
@@ -50,9 +50,9 @@ const backupDataLink = ref<HTMLAnchorElement | null>(null)
 const continued = ref(false)
 
 const allDone = computed<boolean>(() => {
-  if (!Sidebar.reactive.upgrading) return false
-  if (Sidebar.reactive.upgrading.error) return true
-  if (Sidebar.reactive.upgrading.done) return true
+  if (!reactiveUpgrading.status) return false
+  if (reactiveUpgrading.status.error) return true
+  if (reactiveUpgrading.status.done) return true
   return false
 })
 

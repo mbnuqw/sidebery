@@ -43,6 +43,7 @@ export const Tabs = {
   reactive: { byId: {}, pinned: [], recentlyRemoved: [] } as TabsReactiveState,
   list: [] as Tab[],
   byId: {} as Partial<Record<ID, Tab>>,
+  pinned: [] as Tab[],
 
   urlsInUse: {} as Record<string, number>,
   shadowMode: false,

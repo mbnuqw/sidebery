@@ -10,6 +10,7 @@ import { TabToPanelMoveRuleConfig } from 'src/types'
 import { RecentlyRemovedTabInfo, Tabs } from 'src/services/tabs.fg'
 import * as IPC from 'src/services/ipc'
 import * as Logs from 'src/services/logs'
+import * as Popups from 'src/services/popups'
 import { Settings } from 'src/services/settings'
 import { Sidebar } from 'src/services/sidebar'
 import { Windows } from 'src/services/windows'
@@ -19,7 +20,6 @@ import { Permissions } from 'src/services/permissions'
 import { Notifications } from 'src/services/notifications'
 import { Favicons } from './favicons'
 import { Selection } from './selection'
-import { DnD } from './drag-and-drop'
 
 const URL_WITHOUT_PROTOCOL_RE = /^(.+\.)\/?(.+\/)?\w+/
 
@@ -106,7 +106,7 @@ export async function load(): Promise<void> {
     if (t.folded && t.invisible) Tabs.recalcBranchLen(t.id)
   })
 
-  for (const panel of Sidebar.reactive.panels) {
+  for (const panel of Sidebar.panels) {
     if (Utils.isTabsPanel(panel)) panel.ready = true
   }
 
@@ -144,11 +144,15 @@ export function unload(): void {
   Tabs.ignoreTabsEvents = false
   Tabs.activeId = -1
 
-  for (const panel of Sidebar.reactive.panels) {
+  for (const panel of Sidebar.panels) {
     if (Utils.isTabsPanel(panel)) {
       panel.tabs = []
-      panel.len = 0
+      panel.pinnedTabs = []
+      panel.reactive.tabs = []
+      panel.reactive.pinnedTabs = []
+      panel.reactive.len = 0
       panel.ready = false
+      panel.reactive.ready = false
     }
   }
 
@@ -176,7 +180,7 @@ async function restoreTabsState(): Promise<void> {
   let tabsCache: Record<ID, TabCache> | undefined
   let tabsSessionData: (TabSessionData | undefined)[] | undefined
 
-  const lastPanel = Sidebar.reactive.panels.find(p => Utils.isTabsPanel(p))
+  const lastPanel = Sidebar.panels.find(p => Utils.isTabsPanel(p))
   if (!lastPanel) return Logs.err('Cannot load tabs: No tabs panels')
 
   // Find most appropriate cache data
@@ -209,22 +213,22 @@ async function restoreTabsState(): Promise<void> {
   const activeTab = tabs.find(t => t.active)
   if (activeTab) {
     const actTabIsGloballyPinned = activeTab.pinned && Settings.state.pinnedTabsPosition !== 'panel'
-    const currentActivePanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+    const currentActivePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
 
     if (Utils.isTabsPanel(currentActivePanel)) {
       const currentActivePanelHidden =
-        (Settings.state.hideEmptyPanels && !currentActivePanel.len) ||
+        (Settings.state.hideEmptyPanels && !currentActivePanel.reactive.len) ||
         (Settings.state.hideDiscardedTabPanels && currentActivePanel.allDiscarded)
 
       let targetPanel
       // Switch to panel with active tab
       if (!actTabIsGloballyPinned) {
-        targetPanel = Sidebar.reactive.panelsById[activeTab.panelId]
+        targetPanel = Sidebar.panelsById[activeTab.panelId]
       }
       // or switch to panel of the first not pinned tab if active panel is hidden or not set
       else if (currentActivePanelHidden || Sidebar.reactive.activePanelId === NOID) {
         const panelId = tabs.find(t => !t.pinned)?.panelId
-        if (panelId) targetPanel = Sidebar.reactive.panelsById[panelId]
+        if (panelId) targetPanel = Sidebar.panelsById[panelId]
       }
 
       if (targetPanel && targetPanel.id !== Sidebar.reactive.activePanelId) {
@@ -277,7 +281,7 @@ function restoreTabsFromCache(tabs: Tab[], cache: Record<ID, TabCache>, lastPane
     }
 
     // Normalize panelId
-    const panel = Sidebar.reactive.panelsById[tab.panelId]
+    const panel = Sidebar.panelsById[tab.panelId]
     if (!panel) {
       if (!logWrongPanels) logWrongPanels = {}
       logWrongPanels[tab.panelId] = null
@@ -343,7 +347,7 @@ function restoreTabsFromSessionData(
     }
 
     // Normalize panelId
-    const panel = Sidebar.reactive.panelsById[tab.panelId]
+    const panel = Sidebar.panelsById[tab.panelId]
     if (!panel) {
       if (!logWrongPanels) logWrongPanels = {}
       logWrongPanels[tab.panelId] = null
@@ -519,7 +523,7 @@ export function reinitTabs(delay = 500): void {
     Logs.warn('Tabs.reinitTabs')
 
     const panelsList = []
-    for (const panel of Sidebar.reactive.panels) {
+    for (const panel of Sidebar.panels) {
       if (Utils.isTabsPanel(panel)) panelsList.push({ id: panel.id, index: -1 })
     }
 
@@ -781,7 +785,7 @@ export function removeOtherTabs(tabIds: ID[]): void {
   const firstTab = Tabs.byId[firstTabId]
   if (!firstTab || firstTab.pinned) return
 
-  const panel = Sidebar.reactive.panelsById[firstTab.panelId]
+  const panel = Sidebar.panelsById[firstTab.panelId]
   if (!Utils.isTabsPanel(panel)) return
   const panelTabs = panel.tabs
   const toRm = []
@@ -865,10 +869,16 @@ export async function removeTabs(tabIds: ID[], silent?: boolean): Promise<void> 
   if (!firstTab) return
 
   const panelId = firstTab.panelId
-  const panel = Sidebar.reactive.panelsById[panelId]
+  const panel = Sidebar.panelsById[panelId]
   if (!Utils.isTabsPanel(panel)) return
 
+  sortTabIds(tabIds)
+
+  const rmChildTabsFolded = Settings.state.rmChildTabs === 'folded'
+  const rmChildTabsFoldedAll = Settings.state.rmChildTabs === 'all'
   const tabsMap: Record<ID, Tab> = {}
+  const tabs: Tab[] = []
+  const toRemove: ID[] = []
   let hasInvisibleTab = false
   for (const id of tabIds) {
     const tab = Tabs.byId[id]
@@ -876,29 +886,32 @@ export async function removeTabs(tabIds: ID[], silent?: boolean): Promise<void> 
     if (tab.panelId !== panelId) continue
 
     tabsMap[id] = tab
+    tabs.push(tab)
+    toRemove.push(id)
     if (tab.invisible) hasInvisibleTab = true
 
-    if (
-      (Settings.state.rmChildTabs === 'folded' && tab.folded) ||
-      Settings.state.rmChildTabs === 'all'
-    ) {
+    if ((rmChildTabsFolded && tab.folded) || rmChildTabsFoldedAll) {
       for (let t, i = tab.index + 1; i < Tabs.list.length; i++) {
         t = Tabs.list[i]
         if (!t || t.lvl <= tab.lvl) break
         if (t.invisible) hasInvisibleTab = true
-        tabsMap[t.id] = t
+        if (!tabsMap[t.id]) {
+          tabsMap[t.id] = t
+          tabs.push(t)
+          toRemove.push(t.id)
+        }
       }
     }
   }
 
-  const count = Object.keys(tabsMap).length
+  const count = tabs.length
   const warn =
     Settings.state.warnOnMultiTabClose === 'any' ||
     (hasInvisibleTab && Settings.state.warnOnMultiTabClose === 'collapsed')
   if (!silent && warn && count > 1) {
     const pre = translate('confirm.tabs_close_pre', count)
     const post = translate('confirm.tabs_close_post', count)
-    const ok = await Sidebar.confirm(pre + String(count) + post)
+    const ok = await Popups.confirm(pre + String(count) + post)
     if (!ok) {
       Tabs.updateTabsTree(panel.startTabIndex, panel.nextTabIndex)
       return
@@ -907,15 +920,17 @@ export async function removeTabs(tabIds: ID[], silent?: boolean): Promise<void> 
 
   // Set tabs to be removed
   const parents: Record<ID, ID> = {}
-  const tabs = Object.values(tabsMap).sort((a, b) => a.index - b.index)
-  const lastTabToo = panel.tabs[panel.tabs.length - 1]?.id === tabs[tabs.length - 1]?.id
+  const lastTabToo = panel.tabs[panel.tabs.length - 1]?.id === tabs[count - 1]?.id
   let visibleLen = 0
-  const toRemove = tabs.map(t => {
+  let activeTab: Tab | undefined
+
+  tabs.forEach(t => {
     const rTab = Tabs.reactive.byId[t.id]
     parents[t.id] = t.parentId
     if (!t.invisible) visibleLen++
     t.invisible = true
     if (rTab) rTab.invisible = true
+    if (t.active) activeTab = t
     return t.id
   })
   const tabsInfo = Tabs.getTabsInfo(toRemove, true)
@@ -929,24 +944,23 @@ export async function removeTabs(tabIds: ID[], silent?: boolean): Promise<void> 
   Tabs.rememberRemoved(tabs)
 
   // No-empty panels
-  if (tabs.length === panel.len && panel.noEmpty) {
+  if (count === panel.reactive.len && panel.noEmpty) {
     Tabs.createTabInPanel(panel)
   }
 
   // Update successorTabId if there is an active tab
-  const activeTab = tabs.find(t => t.active)
   if (activeTab) Tabs.updateSuccessionDebounced(0, toRemove)
 
-  if (!silent && tabs.length > 1 && Settings.state.tabsRmUndoNote && !warn) {
+  if (!silent && count > 1 && Settings.state.tabsRmUndoNote && !warn) {
     let detailsParts = tabs.slice(0, 2).map(t => {
       return '- ' + (t.title.length > 36 ? t.title.slice(0, 36) + '...' : t.title)
     })
-    if (tabs.length > 2) detailsParts = detailsParts.concat('- ...')
+    if (count > 2) detailsParts = detailsParts.concat('- ...')
     const details = detailsParts.join('\n')
 
     Notifications.notify({
       icon: '#icon_trash',
-      title: String(tabs.length) + translate('notif.tabs_rm_post', tabs.length),
+      title: String(count) + translate('notif.tabs_rm_post', count),
       details,
       ctrl: translate('notif.undo_ctrl'),
       callback: async () => undoRemove(tabsInfo, parents),
@@ -1000,7 +1014,7 @@ export async function undoRemove(tabs: ItemInfo[], parents: Record<ID, ID>): Pro
   const firstTab = tabs[0]
   if (!firstTab) return
 
-  const panel = Sidebar.reactive.panelsById[firstTab.panelId ?? NOID]
+  const panel = Sidebar.panelsById[firstTab.panelId ?? NOID]
   if (!Utils.isTabsPanel(panel)) return
 
   const nextTabIndex = panel.nextTabIndex
@@ -1088,7 +1102,7 @@ export function switchTab(globaly: boolean, cycle: boolean, step: number, pinned
   if (!activeTab) activeTab = Tabs.list.find(t => t.active)
   if (!activeTab) return
 
-  const activePanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+  const activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
   if (!Utils.isTabsPanel(activePanel)) return
 
   let targetTabId = NOID
@@ -1102,14 +1116,14 @@ export function switchTab(globaly: boolean, cycle: boolean, step: number, pinned
     (!pinned && !pinnedAndPanel && activeTab.pinned)
   ) {
     let i = step > 0 ? 0 : panelTabs.length - 1
-    let rt: ReactiveTab | undefined = panelTabs[i]
-    while (rt) {
-      rt = panelTabs[i]
+    let pTab: Tab | undefined = panelTabs[i]
+    while (pTab) {
+      pTab = panelTabs[i]
       i += step
-      if (!rt) break
-      if (visibleOnly && rt.invisible) continue
-      if (skipDiscarded && rt.discarded) continue
-      targetTabId = rt.id
+      if (!pTab) break
+      if (visibleOnly && pTab.invisible) continue
+      if (skipDiscarded && pTab.discarded) continue
+      targetTabId = pTab.id
       break
     }
     if (targetTabId !== NOID) {
@@ -1296,7 +1310,7 @@ export async function discardTabs(tabIds: ID[] = []): Promise<void> {
  * Try to activate last active tab on the panel
  */
 export function activateLastActiveTabOf(panelId: ID): void {
-  const panel = Sidebar.reactive.panelsById[panelId]
+  const panel = Sidebar.panelsById[panelId]
   if (!Utils.isTabsPanel(panel)) return
 
   const panelTabs = panel.tabs ?? []
@@ -1405,7 +1419,7 @@ export function remuteAudibleTabs(): void {
   else if (mutedIds.length) Tabs.unmuteTabs(mutedIds)
 }
 export function muteAudibleTabsOfPanel(id: ID): void {
-  const panel = Sidebar.reactive.panelsById[id]
+  const panel = Sidebar.panelsById[id]
   if (!Utils.isTabsPanel(panel)) return
 
   if (Settings.state.pinnedTabsPosition === 'panel') {
@@ -1421,7 +1435,7 @@ export function muteAudibleTabsOfPanel(id: ID): void {
   }
 }
 export function unmuteAudibleTabsOfPanel(id: ID): void {
-  const panel = Sidebar.reactive.panelsById[id]
+  const panel = Sidebar.panelsById[id]
   if (!Utils.isTabsPanel(panel)) return
 
   if (Settings.state.pinnedTabsPosition === 'panel') {
@@ -1508,7 +1522,7 @@ export async function playTabMedia(id?: ID): Promise<void> {
     })
 }
 export function resetPausedMediaState(panelId: ID): void {
-  const panel = Sidebar.reactive.panelsById[panelId]
+  const panel = Sidebar.panelsById[panelId]
   if (!Utils.isTabsPanel(panel)) return
 
   for (const rTab of panel.tabs) {
@@ -1525,7 +1539,7 @@ export async function pauseTabsMediaOfPanel(panelId: ID): Promise<void> {
     if (!result) return
   }
 
-  const panel = Sidebar.reactive.panelsById[panelId]
+  const panel = Sidebar.panelsById[panelId]
   if (!Utils.isTabsPanel(panel)) return
 
   const injectionConfig: browser.tabs.ExecuteOpts = {
@@ -1583,7 +1597,7 @@ export async function playTabsMediaOfPanel(panelId: ID): Promise<void> {
     if (!result) return
   }
 
-  const panel = Sidebar.reactive.panelsById[panelId]
+  const panel = Sidebar.panelsById[panelId]
   if (!Utils.isTabsPanel(panel)) return
 
   const injectionConfig: browser.tabs.ExecuteOpts = {
@@ -2003,7 +2017,7 @@ export async function move(
   if (dst.parentId === undefined) dst.parentId = NOID
   if (dst.index === undefined) dst.index = 0
   if (dst.index === -1) {
-    const panel = Sidebar.reactive.panelsById[dst.panelId ?? NOID]
+    const panel = Sidebar.panelsById[dst.panelId ?? NOID]
     if (!Utils.isTabsPanel(panel)) return Logs.warn('Tabs.move: No panel')
     dst.index = panel.nextTabIndex
   }
@@ -2188,7 +2202,7 @@ export async function moveToThisWin(tabs: Tab[], dst?: DstPlaceInfo): Promise<bo
   // Find appropriate destination
   if (!dst) {
     const isPinned = tabs[0].pinned
-    const panel = Sidebar.reactive.panelsById[tabs[0].panelId]
+    const panel = Sidebar.panelsById[tabs[0].panelId]
     let nextIndex
     if (Utils.isTabsPanel(panel) && panel.nextTabIndex > -1) nextIndex = panel.nextTabIndex
     else nextIndex = Tabs.list.length
@@ -2233,7 +2247,7 @@ export async function moveToNewPanel(tabIds: ID[]): Promise<void> {
   const probeTab = Tabs.byId[tabIds[0]]
   if (!probeTab) return Logs.warn('Tabs.moveToNewPanel: No first tab')
 
-  const srcPanel = Sidebar.reactive.panelsById[probeTab?.panelId ?? NOID]
+  const srcPanel = Sidebar.panelsById[probeTab?.panelId ?? NOID]
   if (!Utils.isTabsPanel(srcPanel)) return Logs.warn('Tabs.moveToNewPanel: No src panel')
 
   const index = Sidebar.reactive.nav.indexOf(srcPanel.id)
@@ -2241,10 +2255,10 @@ export async function moveToNewPanel(tabIds: ID[]): Promise<void> {
 
   // Create new panel
   const noTabsPanels = !Sidebar.hasTabs
-  const result = await Sidebar.openPanelPopup({ type: PanelType.tabs }, index + 1)
+  const result = await Popups.openPanelPopup({ type: PanelType.tabs }, index + 1)
   if (!result) return
 
-  const dstPanel = Sidebar.reactive.panelsById[result]
+  const dstPanel = Sidebar.panelsById[result]
   if (!Utils.isTabsPanel(dstPanel)) return
 
   Sidebar.activatePanel(dstPanel.id)
@@ -2271,8 +2285,8 @@ export function updateNativeTabsVisibility(): void {
   const actTab = Tabs.byId[Tabs.activeId]
 
   let actPanel
-  if (actTab?.pinned) actPanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
-  else if (actTab) actPanel = Sidebar.reactive.panelsById[actTab.panelId]
+  if (actTab?.pinned) actPanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  else if (actTab) actPanel = Sidebar.panelsById[actTab.panelId]
 
   const toShow = []
   const toHide = []
@@ -2653,7 +2667,7 @@ export async function createTabInPanel(panel: Panel, conf?: browser.tabs.CreateP
   if (Tabs.moveRules.length && conf?.cookieStoreId) {
     const rule = Tabs.findMoveRuleBy(conf.cookieStoreId)
     if (rule) {
-      const panelByRule = Sidebar.reactive.panelsById[rule.panelId]
+      const panelByRule = Sidebar.panelsById[rule.panelId]
       if (Utils.isTabsPanel(panelByRule)) panel = panelByRule
     }
   }
@@ -2895,13 +2909,13 @@ function findTabsPanelNearToTabIndex(tabIndex: number): TabsPanel | undefined {
   const nextTab = Tabs.list[tabIndex + 1]
 
   if (prevTab && !prevTab.pinned) {
-    nearestPanel = Sidebar.reactive.panelsById[prevTab.panelId] as TabsPanel
+    nearestPanel = Sidebar.panelsById[prevTab.panelId] as TabsPanel
   }
   if (!nearestPanel && nextTab) {
-    nearestPanel = Sidebar.reactive.panelsById[nextTab.panelId] as TabsPanel
+    nearestPanel = Sidebar.panelsById[nextTab.panelId] as TabsPanel
   }
   if (!nearestPanel) {
-    nearestPanel = Sidebar.reactive.panels.find(p => Utils.isTabsPanel(p)) as TabsPanel
+    nearestPanel = Sidebar.panels.find(p => Utils.isTabsPanel(p)) as TabsPanel
   }
 
   return nearestPanel
@@ -2909,9 +2923,9 @@ function findTabsPanelNearToTabIndex(tabIndex: number): TabsPanel | undefined {
 
 export function getPanelForNewTab(tab: Tab): TabsPanel | undefined {
   const parentTab = Tabs.byId[tab.openerTabId ?? NOID]
-  let activePanel: Panel | undefined = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+  let activePanel: Panel | undefined = Sidebar.panelsById[Sidebar.reactive.activePanelId]
   if (!Utils.isTabsPanel(activePanel)) {
-    activePanel = Sidebar.reactive.panelsById[Sidebar.lastTabsPanelId]
+    activePanel = Sidebar.panelsById[Sidebar.lastTabsPanelId]
   }
   if (!Utils.isTabsPanel(activePanel)) activePanel = undefined
 
@@ -2920,7 +2934,7 @@ export function getPanelForNewTab(tab: Tab): TabsPanel | undefined {
     const hasParent = Settings.state.tabsTree && parentTab && !parentTab.pinned
     const rule = Tabs.findMoveRuleBy(tab.cookieStoreId, hasParent ? 1 : 0)
     if (rule) {
-      const panel = Sidebar.reactive.panelsById[rule.panelId]
+      const panel = Sidebar.panelsById[rule.panelId]
       if (Utils.isTabsPanel(panel)) return panel
     }
   }
@@ -2934,7 +2948,7 @@ export function getPanelForNewTab(tab: Tab): TabsPanel | undefined {
 
   // Find panel for tab opened from another tab
   if (parentTab && !parentTab.pinned) {
-    const panelOfParent = Sidebar.reactive.panelsById[parentTab.panelId] as TabsPanel
+    const panelOfParent = Sidebar.panelsById[parentTab.panelId] as TabsPanel
     if (!Settings.state.moveNewTabParentActPanel || panelOfParent === activePanel) {
       return panelOfParent
     }
@@ -2951,7 +2965,7 @@ export function getPanelForNewTab(tab: Tab): TabsPanel | undefined {
     Settings.state.moveNewTab === 'last_child'
   ) {
     const activeTab = Tabs.byId[Tabs.activeId]
-    const panelOfActiveTab = Sidebar.reactive.panelsById[activeTab?.panelId ?? NOID] as TabsPanel
+    const panelOfActiveTab = Sidebar.panelsById[activeTab?.panelId ?? NOID] as TabsPanel
 
     if (activeTab && !activeTab.pinned && panelOfActiveTab) return panelOfActiveTab
     else return activePanel || findTabsPanelNearToTabIndex(tab.index)
@@ -3119,7 +3133,7 @@ export function handleReopening(tabId: ID, dstContainerId?: string): number | un
   if (Tabs.moveRules.length) {
     const rule = Tabs.findMoveRuleBy(dstContainerId, targetTab.lvl)
     if (rule) {
-      panel = Sidebar.reactive.panelsById[rule.panelId] as TabsPanel | undefined
+      panel = Sidebar.panelsById[rule.panelId] as TabsPanel | undefined
     }
   }
 
@@ -3231,8 +3245,8 @@ export function findSuccessorTab(tab: Tab, exclude?: ID[]): Tab | undefined {
     // Search in current panel
     if (!target) {
       let panel
-      if (pinInPanels) panel = Sidebar.reactive.panelsById[tab.panelId]
-      else panel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+      if (pinInPanels) panel = Sidebar.panelsById[tab.panelId]
+      else panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
       if (Utils.isTabsPanel(panel)) {
         let foundTab: Tab | undefined
         for (const tab of panel.tabs) {
@@ -3290,7 +3304,7 @@ export function findSuccessorTab(tab: Tab, exclude?: ID[]): Tab | undefined {
     }
   }
 
-  const panel = Sidebar.reactive.panelsById[tab.panelId]
+  const panel = Sidebar.panelsById[tab.panelId]
   if (!Utils.isTabsPanel(panel)) return
 
   let dir: 1 | -1 = dirNext ? 1 : -1
@@ -3531,7 +3545,7 @@ export async function createFromDragEvent(e: DragEvent, dst: DstPlaceInfo): Prom
   }
 
   const result = await Utils.parseDragEvent(e)
-  const panel = Sidebar.reactive.panelsById[dst.panelId ?? NOID]
+  const panel = Sidebar.panelsById[dst.panelId ?? NOID]
   if (!Utils.isTabsPanel(panel)) return
 
   const container = Containers.reactive.byId[panel.newTabCtx]
@@ -3703,9 +3717,9 @@ export async function open(
   // Open tabs in current window
   // ---
   // Get dst panel
-  let dstPanel: Panel | undefined = Sidebar.reactive.panelsById[dst.panelId ?? NOID]
+  let dstPanel: Panel | undefined = Sidebar.panelsById[dst.panelId ?? NOID]
   if (dst.panelId === undefined || !dstPanel || dstPanel.type !== PanelType.tabs) {
-    dstPanel = Sidebar.reactive.panels.find(p => p.type === PanelType.tabs)
+    dstPanel = Sidebar.panels.find(p => p.type === PanelType.tabs)
   }
 
   // Get fallback index - panel's end
@@ -3819,7 +3833,7 @@ export async function reopenInContainer(ids: ID[], containerId: string) {
 
   const items = Tabs.getTabsInfo(ids)
   const rule = Tabs.findMoveRuleBy(containerId, firstTab.lvl)
-  const panel = Sidebar.reactive.panelsById[rule?.panelId ?? NOID]
+  const panel = Sidebar.panelsById[rule?.panelId ?? NOID]
   if (Utils.isTabsPanel(panel) && panel.id !== firstTab.panelId && !firstTab.pinned) {
     const dst = { panelId: panel.id, containerId: containerId, index: panel.nextTabIndex }
     await Tabs.reopen(items, dst)
@@ -3836,7 +3850,7 @@ export async function openInContainer(ids: ID[], containerId: string) {
 
   const items = Tabs.getTabsInfo(ids)
   const rule = Tabs.findMoveRuleBy(containerId, firstTab.lvl)
-  const panel = Sidebar.reactive.panelsById[rule?.panelId ?? NOID]
+  const panel = Sidebar.panelsById[rule?.panelId ?? NOID]
   if (Utils.isTabsPanel(panel) && panel.id !== firstTab.panelId && !firstTab.pinned) {
     const dst = { panelId: panel.id, containerId: containerId, index: panel.nextTabIndex }
     await Tabs.open(items, dst)
@@ -3959,11 +3973,11 @@ export async function copyTitles(ids: ID[]): Promise<void> {
 }
 
 export async function createTabInNewContainer(): Promise<void> {
-  const panel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+  const panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
   if (!Utils.isTabsPanel(panel)) throw 'Current panel is not TabsPanel'
 
   // Open config popup
-  const result = await Sidebar.openContainerPopup(NOID)
+  const result = await Popups.openContainerPopup(NOID)
   if (result === null) return
 
   const container = Containers.reactive.byId[result]
@@ -3978,7 +3992,7 @@ export async function reopenTabsInNewContainer(tabIds: ID[]): Promise<void> {
   if (!firstTab) return
 
   // Open config popup
-  const result = await Sidebar.openContainerPopup(NOID)
+  const result = await Popups.openContainerPopup(NOID)
   if (!result) return
 
   const container = Containers.reactive.byId[result]
@@ -4031,7 +4045,7 @@ export function switchToRecentlyActiveTab(scope = SwitchingTabScope.global, dir:
   let history: ActiveTabsHistory | undefined
   if (scope === SwitchingTabScope.global) history = Tabs.getActiveTabsHistory()
   if (scope === SwitchingTabScope.panel) {
-    const panel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+    const panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
     if (!Utils.isTabsPanel(panel)) return
     history = Tabs.getActiveTabsHistory(panel.id)
   }
@@ -4121,7 +4135,7 @@ function getTooltip(tab: Tab): string {
 export function recalcMoveRules() {
   const rules: TabToPanelMoveRule[] = []
 
-  for (const panel of Sidebar.reactive.panels) {
+  for (const panel of Sidebar.panels) {
     if (!Utils.isTabsPanel(panel)) continue
 
     if (panel.moveRules.length) {
@@ -4193,7 +4207,7 @@ export function moveByRule(tabId: ID, delay: number) {
     const rule = Tabs.findMoveRule(tab)
     if (rule) {
       const panelId = rule.panelId
-      const panel = Sidebar.reactive.panelsById[panelId]
+      const panel = Sidebar.panelsById[panelId]
       if (!Utils.isTabsPanel(panel)) return
       const moveToPanelStart = Settings.state.moveNewTabParent === 'start'
       const index = moveToPanelStart ? panel.startTabIndex : panel.nextTabIndex

@@ -6,6 +6,7 @@ import { Containers } from 'src/services/containers'
 import { Sidebar } from 'src/services/sidebar'
 import { Tabs } from 'src/services/tabs.fg'
 import { Settings } from 'src/services/settings'
+import { SidebarConfigRState } from './sidebar-config'
 
 let isReady = false
 let readyStateResolve: (() => void)[] = []
@@ -19,12 +20,12 @@ export async function open(section?: string): Promise<void> {
   let url = browser.runtime.getURL('page.setup/setup.html')
   const existedTab = Tabs.list.find(t => t.url.startsWith(url))
   const activeTab = Tabs.byId[Tabs.activeId]
-  let activePanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+  let activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
   if (!Utils.isTabsPanel(activePanel)) {
-    activePanel = Sidebar.reactive.panelsById[Sidebar.lastTabsPanelId]
+    activePanel = Sidebar.panelsById[Sidebar.lastTabsPanelId]
   }
   if (!Utils.isTabsPanel(activePanel) && activeTab && !activeTab.pinned) {
-    activePanel = Sidebar.reactive.panelsById[activeTab.panelId]
+    activePanel = Sidebar.panelsById[activeTab.panelId]
   }
 
   if (section) url += '#' + section
@@ -68,6 +69,7 @@ export function closePermissionsPopup(): void {
  */
 export async function updateActiveView(): Promise<void> {
   let hash = location.hash ? location.hash.slice(1) : location.hash
+  hash.indexOf('.') // Without this, `hash.split('.') doesn't work`
   const hashArg = hash.split('.')
   hash = hashArg[0]
   const arg = hashArg[1]
@@ -144,10 +146,10 @@ export async function updateActiveView(): Promise<void> {
       }
 
       if (arg && hash === 'settings_nav') {
-        if (SetupPage.reactive.selectedPanel) SetupPage.reactive.selectedPanel = null
+        if (SetupPage.reactive.selectedPanelConfig) SetupPage.reactive.selectedPanelConfig = null
         setTimeout(() => {
-          const panel = Sidebar.reactive.panels.find(p => p.id === arg)
-          if (panel) SetupPage.reactive.selectedPanel = panel
+          const panelConf = SidebarConfigRState.panels[arg]
+          if (panelConf) SetupPage.reactive.selectedPanelConfig = panelConf
         }, 120)
       }
     },

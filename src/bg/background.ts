@@ -18,6 +18,7 @@ import { WebReq } from 'src/services/web-req'
 import * as Utils from 'src/utils'
 import { DEFAULT_SETTINGS, NOID } from 'src/defaults'
 import { translate } from 'src/dict'
+import { getSidebarConfigFromV4 } from 'src/services/sidebar-config'
 
 void (async function main() {
   Info.setInstanceType(InstanceType.bg)
@@ -166,7 +167,7 @@ async function upgrade(): Promise<void> {
   }
   if (stored.panels_v4?.length) {
     try {
-      newStorage.sidebar = Sidebar.convertOldPanelsConfigToNew(stored.panels_v4)
+      newStorage.sidebar = getSidebarConfigFromV4(stored.panels_v4)
       upgrading.sidebar = 'done'
     } catch (err) {
       Logs.err('Upgrading: Cannot upgrade panels', err)

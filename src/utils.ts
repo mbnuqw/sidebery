@@ -912,9 +912,9 @@ export function isTabsPanel(panel?: object): panel is TabsPanel {
   if (!panel) return false
   return (panel as PanelConfig).type === PanelType.tabs
 }
-export function isBookmarksPanel(panel?: PanelConfig): panel is BookmarksPanel {
+export function isBookmarksPanel(panel?: object): panel is BookmarksPanel {
   if (!panel) return false
-  return panel.type === PanelType.bookmarks
+  return (panel as PanelConfig).type === PanelType.bookmarks
 }
 export function isHistoryPanel(panel?: PanelConfig): panel is HistoryPanel {
   if (!panel) return false

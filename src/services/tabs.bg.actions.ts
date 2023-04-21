@@ -1,4 +1,4 @@
-import { Stored, Tab, Window, TabCache, TabsTreeData, GroupInfo, AnyFunc } from 'src/types'
+import { Tab, Window, TabCache, TabsTreeData, GroupInfo, AnyFunc } from 'src/types'
 import { InstanceType, TabTreeData } from 'src/types'
 import * as Utils from 'src/utils'
 import { ADDON_HOST, GROUP_INITIAL_TITLE, GROUP_URL, NOID, SAMEID } from 'src/defaults'
@@ -117,7 +117,7 @@ function onTabCreated(tab: browser.tabs.Tab): void {
   }
 
   // If sidebar is closed and tabs of inactive panels hidden move new tab (if needed)
-  if (!IPC.isConnected(InstanceType.sidebar, tab.windowId) && Settings.state.hideInact) {
+  if (Settings.state.hideInact && !IPC.isConnected(InstanceType.sidebar, tab.windowId)) {
     const prevTab = tabWindow.tabs[tab.index - 1]
     if (prevTab && prevTab.hidden) {
       for (let i = prevTab.index - 1; i >= 0; i--) {

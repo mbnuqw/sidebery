@@ -1,6 +1,6 @@
 <template lang="pug">
 .TabMoveRulesPopup.popup-container(@mousedown.stop.self="onCancel" @mouseup.stop)
-  .popup(v-if="Sidebar.reactive.tabMoveRulesPopup")
+  .popup(v-if="Popups.reactive.tabMoveRulesPopup")
     h2(v-if="rules.length") {{translate('popup.tab_move_rules.title')}}
     .rules(v-if="rules.length")
       .rule(
@@ -64,9 +64,12 @@ import { DEFAULT_CONTAINER_ID } from 'src/defaults'
 import { Sidebar } from 'src/services/sidebar'
 import { Containers } from 'src/services/containers'
 import * as Utils from 'src/utils'
+import * as Popups from 'src/services/popups'
 import TextField from './text-field.vue'
 import SelectField from './select-field.vue'
 import ToggleField from './toggle-field.vue'
+import { Info } from 'src/services/info'
+import { SidebarConfigRState, saveSidebarConfig } from 'src/services/sidebar-config'
 
 interface MoveRulePreview {
   id: ID
@@ -114,10 +117,10 @@ onMounted(() => {
 })
 
 function initPopupState() {
-  if (!Sidebar.reactive.tabMoveRulesPopup) return []
+  if (!Popups.reactive.tabMoveRulesPopup) return []
 
   const output: MoveRulePreview[] = []
-  const ruleConfigs = Sidebar.reactive.tabMoveRulesPopup.panel.moveRules
+  const ruleConfigs = Popups.reactive.tabMoveRulesPopup.rules
 
   for (const conf of ruleConfigs) {
     output.push(createRulePreview(conf))
@@ -178,7 +181,7 @@ function getContainerConf(containerId: string): ContainerConf | undefined {
 }
 
 const availableContainersOpts = computed<ContainerOption[]>(() => {
-  if (!Sidebar.reactive.tabMoveRulesPopup) return []
+  if (!Popups.reactive.tabMoveRulesPopup) return []
 
   const defaultTitle = translate('popup.new_tab_shortcuts.new_shortcut_default_container')
   const result: ContainerOption[] = [
@@ -207,17 +210,20 @@ const availableContainersOpts = computed<ContainerOption[]>(() => {
 })
 
 function onAdd(): void {
-  if (!Sidebar.reactive.tabMoveRulesPopup) return
+  if (!Popups.reactive.tabMoveRulesPopup) return
   if (!addBtnActive.value) return
   if (!newRuleURL.value && newRuleContainerId.value === 'none') return
 
   const name = newRuleName.value.trim()
+  const panelId = Popups.reactive.tabMoveRulesPopup.panelId
+  const panel = Info.isSidebar ? Sidebar.panelsById[panelId] : SidebarConfigRState.panels[panelId]
+  const panels = Info.isSidebar ? Sidebar.panels : Object.values(SidebarConfigRState.panels)
+  if (!Utils.isTabsPanel(panel)) return
 
   // Remove duplicate
-  const panel = Sidebar.reactive.tabMoveRulesPopup.panel
   const newCtrId = newRuleContainerId.value !== 'none' ? newRuleContainerId.value : undefined
   const newURL = newRuleURL.value ? newRuleURL.value : undefined
-  Sidebar.reactive.panels.find(p => {
+  panels.find(p => {
     if (!Utils.isTabsPanel(p)) return false
     const sameRuleIndex = p.moveRules.findIndex(r => {
       return newCtrId === r.containerId && newURL === r.url
@@ -247,18 +253,21 @@ function onAdd(): void {
   newRuleURL.value = ''
   newRuleContainerId.value = 'none'
 
-  Sidebar.saveSidebar(1000)
+  if (Info.isSidebar) Sidebar.saveSidebar(1000)
+  else saveSidebarConfig(1000)
 }
 
 function onCancel(): void {
-  if (!Sidebar.reactive.tabMoveRulesPopup) return
+  if (!Popups.reactive.tabMoveRulesPopup) return
 
-  Sidebar.closeTabMoveRulesPopup()
+  Popups.closeTabMoveRulesPopup()
 }
 
 function shortcutUp(rule: MoveRulePreview): void {
-  if (!Sidebar.reactive.tabMoveRulesPopup) return
-  const panel = Sidebar.reactive.tabMoveRulesPopup.panel
+  if (!Popups.reactive.tabMoveRulesPopup) return
+  const panelId = Popups.reactive.tabMoveRulesPopup.panelId
+  const panel = Info.isSidebar ? Sidebar.panelsById[panelId] : SidebarConfigRState.panels[panelId]
+  if (!Utils.isTabsPanel(panel)) return
 
   const index = panel.moveRules.findIndex(r => r.id === rule.id)
   if (index !== -1 && index > 0) {
@@ -272,12 +281,15 @@ function shortcutUp(rule: MoveRulePreview): void {
     rules.value.splice(localIndex - 1, 0, rule)
   }
 
-  Sidebar.saveSidebar(1000)
+  if (Info.isSidebar) Sidebar.saveSidebar(1000)
+  else saveSidebarConfig(1000)
 }
 
 function shortcutDown(rule: MoveRulePreview): void {
-  if (!Sidebar.reactive.tabMoveRulesPopup) return
-  const panel = Sidebar.reactive.tabMoveRulesPopup.panel
+  if (!Popups.reactive.tabMoveRulesPopup) return
+  const panelId = Popups.reactive.tabMoveRulesPopup.panelId
+  const panel = Info.isSidebar ? Sidebar.panelsById[panelId] : SidebarConfigRState.panels[panelId]
+  if (!Utils.isTabsPanel(panel)) return
 
   const index = panel.moveRules.findIndex(r => r.id === rule.id)
   if (index !== -1 && index < panel.moveRules.length - 1) {
@@ -291,12 +303,15 @@ function shortcutDown(rule: MoveRulePreview): void {
     rules.value.splice(localIndex + 1, 0, rule)
   }
 
-  Sidebar.saveSidebar(1000)
+  if (Info.isSidebar) Sidebar.saveSidebar(1000)
+  else saveSidebarConfig(1000)
 }
 
 function removeRule(rule: MoveRulePreview): void {
-  if (!Sidebar.reactive.tabMoveRulesPopup) return
-  const panel = Sidebar.reactive.tabMoveRulesPopup.panel
+  if (!Popups.reactive.tabMoveRulesPopup) return
+  const panelId = Popups.reactive.tabMoveRulesPopup.panelId
+  const panel = Info.isSidebar ? Sidebar.panelsById[panelId] : SidebarConfigRState.panels[panelId]
+  if (!Utils.isTabsPanel(panel)) return
 
   // Remove rule from panel's config
   const index = panel.moveRules.findIndex(r => r.id === rule.id)
@@ -306,7 +321,8 @@ function removeRule(rule: MoveRulePreview): void {
   const localIndex = rules.value.findIndex(r => r.id === rule.id)
   if (localIndex !== -1) rules.value.splice(localIndex, 1)
 
-  Sidebar.saveSidebar(1000)
+  if (Info.isSidebar) Sidebar.saveSidebar(1000)
+  else saveSidebarConfig(1000)
 }
 
 function editRule(rule: MoveRulePreview) {
@@ -344,8 +360,11 @@ function onEditCancel() {
 function onSave() {
   if (!editing.value) return
 
-  if (!Sidebar.reactive.tabMoveRulesPopup) return
-  const panel = Sidebar.reactive.tabMoveRulesPopup.panel
+  if (!Popups.reactive.tabMoveRulesPopup) return
+  const panelId = Popups.reactive.tabMoveRulesPopup.panelId
+  const panel = Info.isSidebar ? Sidebar.panelsById[panelId] : SidebarConfigRState.panels[panelId]
+  const panels = Info.isSidebar ? Sidebar.panels : Object.values(SidebarConfigRState.panels)
+  if (!Utils.isTabsPanel(panel)) return
 
   const rule = rules.value.find(r => r.id === editing.value)
   if (!rule) return
@@ -355,7 +374,7 @@ function onSave() {
   // Remove duplicate
   const newCtrId = newRuleContainerId.value !== 'none' ? newRuleContainerId.value : undefined
   const newURL = newRuleURL.value ? newRuleURL.value : undefined
-  Sidebar.reactive.panels.find(p => {
+  panels.find(p => {
     if (!Utils.isTabsPanel(p)) return false
     const sameRuleIndex = p.moveRules.findIndex(r => {
       if (rule.id === r.id) return false
@@ -379,7 +398,9 @@ function onSave() {
     if (name) ruleConfig.name = name
     else delete ruleConfig.name
   }
-  Sidebar.saveSidebar(1000)
+
+  if (Info.isSidebar) Sidebar.saveSidebar(1000)
+  else saveSidebarConfig(1000)
 
   // Update rule in local list
   rule.active = true

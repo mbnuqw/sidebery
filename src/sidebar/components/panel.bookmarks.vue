@@ -1,15 +1,15 @@
 <template lang="pug">
 .BookmarksPanel(
-  :data-view-mode="props.panel.viewMode"
+  :data-view-mode="panel.viewMode"
   @contextmenu.stop="onNavCtxMenu"
   @mouseup.right="onRightMouseUp"
   @drop="onDrop")
   ScrollBox(ref="scrollBox")
-    .bookmarks-tree(v-if="!state.unrendered && props.panel.viewMode === 'tree'")
+    .bookmarks-tree(v-if="!state.unrendered && panel.reactive.viewMode === 'tree'")
       DragAndDropPointer(:panelId="panel.id")
       BookmarkNode.root-node(v-for="node in tree" :key="node.id" :node="node" :panelId="panel.id")
 
-    .bookmarks-history(v-if="!state.unrendered && props.panel.viewMode === 'history'")
+    .bookmarks-history(v-if="!state.unrendered && panel.reactive.viewMode === 'history'")
       .group(
         v-for="(group, i) in history"
         :key="group.id"
@@ -25,7 +25,7 @@
           BookmarkCard(v-for="bookmark in group.list" :key="bookmark.id" :node="bookmark")
 
   PanelPlaceholder(
-    :isLoading="(state.unrendered || !props.panel.ready)"
+    :isLoading="(state.unrendered || !panel.reactive.ready)"
     :isNotPerm="!Permissions.reactive.bookmarks"
     :permMsg="translate('panel.bookmarks.req_perm')"
     perm="bookmarks"
@@ -77,7 +77,9 @@ const state = reactive({
 
 const isActive = computed<boolean>(() => props.panel.id === Sidebar.reactive.activePanelId)
 const isFiltering = computed<boolean>(() => !!Search.reactive.value)
-const tree = computed(() => props.panel.filteredBookmarks ?? props.panel.bookmarks ?? [])
+const tree = computed(
+  () => props.panel.reactive.filteredBookmarks ?? props.panel.reactive.bookmarks ?? []
+)
 
 function bookmarksWalker(nodes: Bookmark[], list: Bookmark[]): void {
   for (const node of nodes) {
@@ -92,9 +94,9 @@ const history = computed((): BookmarksGroup[] => {
   let dt: Date
   let i = 0
 
-  const bookmarksList: Bookmark[] = props.panel.filteredBookmarks ?? []
-  if (!props.panel.filteredBookmarks) {
-    bookmarksWalker(props.panel.bookmarks, bookmarksList)
+  const bookmarksList: Bookmark[] = props.panel.reactive.filteredBookmarks ?? []
+  if (!props.panel.reactive.filteredBookmarks) {
+    bookmarksWalker(props.panel.reactive.bookmarks, bookmarksList)
     bookmarksList.sort((a, b) => (b.dateAdded ?? 0) - (a.dateAdded ?? 0))
   }
 

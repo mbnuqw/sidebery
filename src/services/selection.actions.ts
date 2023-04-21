@@ -58,7 +58,7 @@ export function select(id: ID, type?: SelectionType): void {
   if (!type) {
     if (Tabs.byId[id]) type = SelectionType.Tabs
     else if (Bookmarks.reactive.byId[id]) type = SelectionType.Bookmarks
-    else if (Sidebar.reactive.panelsById[id]) type = SelectionType.NavItem
+    else if (Sidebar.panelsById[id]) type = SelectionType.NavItem
     if (!type) return
   }
 
@@ -208,7 +208,7 @@ export function selectBookmarksRange(aBookmark: Bookmark, bBookmark?: Bookmark):
   }
 
   let inside = false
-  const activePanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+  const activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
   if (activePanel) {
     for (const bound of activePanel.bounds) {
       const bkm = Bookmarks.reactive.byId[bound.id]
@@ -245,10 +245,11 @@ export function selectHistory(id: ID): void {
 }
 
 export function selectNewTabBtn(panelId: ID): void {
-  const target = Sidebar.reactive.panelsById[panelId]
+  const target = Sidebar.panelsById[panelId]
   if (!Utils.isTabsPanel(target)) return
 
   target.selNewTab = true
+  target.reactive.selNewTab = true
   Selection.selected.push(panelId)
   firstItem = panelId
   selType = SelectionType.NewTabBar
@@ -325,8 +326,8 @@ export function deselectNewTabBtn(panelId: ID): void {
   const index = Selection.selected.indexOf(panelId)
   if (index >= 0) Selection.selected.splice(index, 1)
 
-  const target = Sidebar.reactive.panelsById[panelId]
-  if (Utils.isTabsPanel(target)) target.selNewTab = false
+  const target = Sidebar.panelsById[panelId]
+  if (Utils.isTabsPanel(target)) target.reactive.selNewTab = target.selNewTab = false
   if (!Selection.selected.length) selType = SelectionType.Nothing
   if (firstItem === panelId) firstItem = null
 }
@@ -376,8 +377,8 @@ export function resetSelection(): void {
 
   if (selType === SelectionType.NewTabBar) {
     for (const id of Selection.selected) {
-      const target = Sidebar.reactive.panelsById[id]
-      if (Utils.isTabsPanel(target)) target.selNewTab = false
+      const target = Sidebar.panelsById[id]
+      if (Utils.isTabsPanel(target)) target.reactive.selNewTab = target.selNewTab = false
     }
   }
 

@@ -16,12 +16,12 @@
       component(:is="view")
   
   Transition(name="popup"): BookmarksPopup(v-if="Bookmarks.reactive.popup")
-  Transition(name="popup"): NewTabShortcutsPopup(v-if="Sidebar.reactive.newTabShortcutsPopup")
-  Transition(name="popup"): TabMoveRulesPopup(v-if="Sidebar.reactive.tabMoveRulesPopup")
-  Transition(name="popup"): TabReopenRulesPopup(v-if="Sidebar.reactive.tabReopenRulesPopup")
+  Transition(name="popup"): NewTabShortcutsPopup(v-if="Popups.reactive.newTabShortcutsPopup")
+  Transition(name="popup"): TabMoveRulesPopup(v-if="Popups.reactive.tabMoveRulesPopup")
+  Transition(name="popup"): TabReopenRulesPopup(v-if="Popups.reactive.tabReopenRulesPopup")
   Details
 
-  UpgradeScreen(v-if="Sidebar.reactive.upgrading")
+  UpgradeScreen(v-if="reactiveUpgrading.status")
 </template>
 
 <script lang="ts" setup>
@@ -31,7 +31,6 @@ import { Settings } from 'src/services/settings'
 import { SetupPage } from 'src/services/setup-page'
 import { Bookmarks } from 'src/services/bookmarks'
 import { Styles } from 'src/services/styles'
-import { Sidebar } from 'src/services/sidebar'
 import SettingsView from './components/settings.vue'
 import MenuEditorView from './components/menu-editor.vue'
 import StylesEditorView from './components/styles-editor.vue'
@@ -44,6 +43,8 @@ import TabMoveRulesPopup from 'src/components/popup.tab-move-rules.vue'
 import TabReopenRulesPopup from 'src/components/popup.tab-reopen-rules.vue'
 import UpgradeScreen from 'src/components/upgrade-screen.vue'
 import Details from './components/settings.details.vue'
+import * as Popups from 'src/services/popups'
+import { reactiveUpgrading } from 'src/services/upgrading'
 
 const animations = computed(() => (Settings.state.animations ? 'fast' : 'none'))
 const view = computed(() => {
@@ -70,25 +71,25 @@ function onDocumentKeyup(e: KeyboardEvent): void {
     }
 
     // Tab reopening rules popup
-    if (Sidebar.reactive.tabReopenRulesPopup) {
-      Sidebar.closeTabReopenRulesPopup()
+    if (Popups.reactive.tabReopenRulesPopup) {
+      Popups.closeTabReopenRulesPopup()
       return
     }
 
     // Tab moving rules popup
-    if (Sidebar.reactive.tabMoveRulesPopup) {
-      Sidebar.closeTabMoveRulesPopup()
+    if (Popups.reactive.tabMoveRulesPopup) {
+      Popups.closeTabMoveRulesPopup()
       return
     }
 
     // New tab shortcuts popup
-    if (Sidebar.reactive.newTabShortcutsPopup) {
-      Sidebar.closeNewTabShortcutsPopup()
+    if (Popups.reactive.newTabShortcutsPopup) {
+      Popups.closeNewTabShortcutsPopup()
       return
     }
 
     // Panel/Container config
-    if (SetupPage.reactive.selectedPanel) SetupPage.reactive.selectedPanel = null
+    if (SetupPage.reactive.selectedPanelConfig) SetupPage.reactive.selectedPanelConfig = null
     if (SetupPage.reactive.selectedContainer) SetupPage.reactive.selectedContainer = null
 
     // Details

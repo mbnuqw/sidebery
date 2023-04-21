@@ -7,7 +7,7 @@
   @mouseleave="onMouseLeave"
   @dblclick="onDoubleClick"
   @drop="onDrop")
-  PinnedTabsBar(v-if="panel.pinnedTabs.length" :panel="panel")
+  PinnedTabsBar(v-if="panel.reactive.pinnedTabs.length" :panel="panel")
   ScrollBox(ref="scrollBox" :preScroll="PRE_SCROLL")
     DragAndDropPointer(:panelId="panel.id")
     .container(v-if="Settings.state.animations")
@@ -19,7 +19,7 @@
         NewTabBar(
           v-if="Settings.state.showNewTabBtns && Settings.state.newTabBarPosition === 'after_tabs'"
           :panel="panel")
-        .tab-space-filler(v-for="i in panel.scrollRetainer" :key="'tsf' + i")
+        .tab-space-filler(v-for="i in panel.reactive.scrollRetainer" :key="'tsf' + i")
         .bottom-space(:key="-9999999")
     .container(v-else)
       TabComponent(
@@ -29,7 +29,7 @@
       NewTabBar(
         v-if="Settings.state.showNewTabBtns && Settings.state.newTabBarPosition === 'after_tabs'"
         :panel="panel")
-      .tab-space-filler(v-for="i in panel.scrollRetainer" :key="'tsf' + i")
+      .tab-space-filler(v-for="i in panel.reactive.scrollRetainer" :key="'tsf' + i")
       .bottom-space(:key="-9999999")
 
   NewTabBar(
@@ -39,7 +39,7 @@
   .bottom-bar-space(v-if="Settings.state.subPanelRecentlyClosedBar || Settings.state.subPanelBookmarks")
 
   PanelPlaceholder(
-    :isLoading="!props.panel.ready"
+    :isLoading="!panel.reactive.ready"
     :isMsg="isNothingFound"
     :msg="translate('panel.nothing_found')")
 </template>
@@ -48,8 +48,8 @@
 import { ref, computed, onMounted } from 'vue'
 import { translate } from 'src/dict'
 import { DropType, MenuType, ScrollBoxComponent, Tab, TabsPanel, ReactiveTab } from 'src/types'
-import { WheelDirection, SubPanelType } from 'src/types'
-import { NOID, PRE_SCROLL } from 'src/defaults'
+import { WheelDirection } from 'src/types'
+import { PRE_SCROLL } from 'src/defaults'
 import { Settings } from 'src/services/settings'
 import { Selection } from 'src/services/selection'
 import { Menu } from 'src/services/menu'
@@ -57,7 +57,6 @@ import { Sidebar } from 'src/services/sidebar'
 import { Tabs } from 'src/services/tabs.fg'
 import { Mouse } from 'src/services/mouse'
 import { DnD } from 'src/services/drag-and-drop'
-import * as Utils from 'src/utils'
 import PinnedTabsBar from './bar.pinned-tabs.vue'
 import ScrollBox from 'src/components/scroll-box.vue'
 import TabComponent from './tab.vue'
@@ -70,8 +69,8 @@ const scrollBox = ref<ScrollBoxComponent | null>(null)
 let scrollBoxEl: HTMLElement | null = null
 
 const visibleTabs = computed<ReactiveTab[]>(() => {
-  if (props.panel.filteredTabs) return props.panel.filteredTabs
-  return props.panel.tabs.filter(t => !t.invisible)
+  if (props.panel.reactive.filteredTabs) return props.panel.reactive.filteredTabs
+  return props.panel.reactive.tabs.filter(t => !t.invisible)
 })
 const isNothingFound = computed<boolean>(() => {
   return !!props.panel.filteredTabs && !props.panel.filteredTabs.length

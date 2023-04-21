@@ -44,7 +44,7 @@ export function next(): void {
   if (!Search.reactive.barIsShowed) return
   if (Menu.isOpen) return Menu.selectOption(1)
 
-  const actPanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+  const actPanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
   if (!actPanel) return
 
   if (Utils.isTabsPanel(actPanel)) SearchTabs.onTabsSearchNext(actPanel)
@@ -56,7 +56,7 @@ export function prev(): void {
   if (!Search.reactive.barIsShowed) return
   if (Menu.isOpen) return Menu.selectOption(-1)
 
-  const actPanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+  const actPanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
   if (!actPanel) return
 
   if (Utils.isTabsPanel(actPanel)) SearchTabs.onTabsSearchPrev(actPanel)
@@ -73,7 +73,7 @@ export function enter(): void {
     return
   }
 
-  const actPanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+  const actPanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
   if (!actPanel) return
 
   if (Utils.isTabsPanel(actPanel)) SearchTabs.onTabsSearchEnter(actPanel)
@@ -85,7 +85,7 @@ export function selectAll(): void {
   if (!Search.reactive.barIsShowed) return
   if (Menu.isOpen) return
 
-  const actPanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+  const actPanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
   if (!actPanel) return
 
   if (Utils.isTabsPanel(actPanel)) SearchTabs.onTabsSearchSelectAll(actPanel)
@@ -96,7 +96,7 @@ export function menu(): void {
   if (!Search.reactive.barIsShowed) return
   if (Menu.isOpen) return Menu.close()
 
-  const actPanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+  const actPanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
   if (!actPanel) return
 
   const el = document.getElementById('search_bar')
@@ -124,7 +124,7 @@ export function search(value?: string): void {
     query = value.toLowerCase()
   }
 
-  const actPanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+  const actPanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
   if (!actPanel) return
 
   if (Utils.isTabsPanel(actPanel)) SearchTabs.onTabsSearch(actPanel)
@@ -133,7 +133,7 @@ export function search(value?: string): void {
 
   if (value === '') {
     for (const id of Sidebar.reactive.nav) {
-      const panel = Sidebar.reactive.panelsById[id]
+      const panel = Sidebar.panelsById[id]
       if (panel && panel.id === actPanel.id) continue
       reset(panel)
     }
@@ -143,12 +143,13 @@ export function search(value?: string): void {
 export function reset(panel?: Panel): void {
   if (Utils.isTabsPanel(panel)) {
     panel.filteredTabs = undefined
-    panel.filteredLen = undefined
+    panel.reactive.filteredTabs = undefined
+    panel.reactive.filteredLen = undefined
   } else if (Utils.isBookmarksPanel(panel)) {
-    panel.filteredBookmarks = undefined
-    panel.filteredLen = undefined
+    panel.reactive.filteredBookmarks = undefined
+    panel.reactive.filteredLen = undefined
   } else if (Utils.isHistoryPanel(panel)) {
-    panel.filteredLen = undefined
+    panel.reactive.filteredLen = undefined
     History.reactive.filtered = undefined
   }
 }

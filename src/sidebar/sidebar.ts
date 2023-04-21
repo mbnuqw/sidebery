@@ -3,6 +3,7 @@ import { createApp, reactive, shallowReactive } from 'vue'
 import { InstanceType } from 'src/types'
 import * as IPC from 'src/services/ipc'
 import * as Logs from 'src/services/logs'
+import * as Popups from 'src/services/popups'
 import { Settings } from 'src/services/settings'
 import { Sidebar } from 'src/services/sidebar'
 import { Windows } from 'src/services/windows'
@@ -23,6 +24,7 @@ import { Info } from 'src/services/info'
 import SidebarRoot from './sidebar.vue'
 import { Snapshots } from 'src/services/snapshots'
 import { updateWebReqHandlers } from 'src/services/web-req.fg'
+import { showUpgradingScreen } from 'src/services/upgrading'
 
 async function main(): Promise<void> {
   Info.setInstanceType(InstanceType.sidebar)
@@ -73,7 +75,8 @@ async function main(): Promise<void> {
 
   // Reactivate data for vue
   Containers.reactive = shallowReactive(Containers.reactive)
-  Sidebar.reactive = reactive(Sidebar.reactive)
+  Sidebar.initSidebar(reactive)
+  Popups.initPopups(reactive)
   Windows.reactive = reactive(Windows.reactive)
   Favicons.reactive = reactive(Favicons.reactive)
   Bookmarks.reactive = reactive(Bookmarks.reactive)
@@ -97,7 +100,7 @@ async function main(): Promise<void> {
   }
 
   if (Info.isMajorUpgrade()) {
-    await Sidebar.upgrade()
+    await showUpgradingScreen()
     return
   }
 
@@ -114,7 +117,7 @@ async function main(): Promise<void> {
 
   await Sidebar.loadPanels()
 
-  const actPanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+  const actPanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
   const initBookmarks = !Settings.state.loadBookmarksOnDemand || Utils.isBookmarksPanel(actPanel)
   const initHistory = !Settings.state.loadHistoryOnDemand || Utils.isHistoryPanel(actPanel)
 

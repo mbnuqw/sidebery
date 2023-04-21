@@ -1,6 +1,6 @@
 <template lang="pug">
 .SiteConfigPopup.popup-container(@mousedown.stop.self="onCancel" @mouseup.stop)
-  .popup(v-if="Sidebar.reactive.siteConfigPopup")
+  .popup(v-if="Popups.reactive.siteConfigPopup")
     h2 {{translate('popup.url_rules.title')}}
     .space
     .note {{translate('popup.url_rules.match_label')}}
@@ -56,6 +56,7 @@ import TextField from './text-field.vue'
 import ToggleField from './toggle-field.vue'
 import SelectField from './select-field.vue'
 import * as Utils from 'src/utils'
+import * as Popups from 'src/services/popups'
 import { Tabs } from 'src/services/tabs.fg'
 import { Windows } from 'src/services/windows'
 
@@ -89,7 +90,7 @@ const moveToPanelTopLvlOnly = ref(true)
 const existedRules = ref(false)
 
 const saveBtnActive = computed<boolean>(() => {
-  if (!Sidebar.reactive.siteConfigPopup) return false
+  if (!Popups.reactive.siteConfigPopup) return false
   if (!matchString.value.trim()) return false
   const reopen = reopenInContainerId.value !== 'none'
   const move = moveToPanelId.value !== 'none'
@@ -97,7 +98,7 @@ const saveBtnActive = computed<boolean>(() => {
 })
 
 const availableContainerOpts = computed<Option[]>(() => {
-  if (!Sidebar.reactive.siteConfigPopup) return []
+  if (!Popups.reactive.siteConfigPopup) return []
 
   const result: Option[] = [
     { value: 'none', color: 'inactive', icon: '#icon_none', title: 'Not set' },
@@ -111,13 +112,13 @@ const availableContainerOpts = computed<Option[]>(() => {
 })
 
 const availablePanelOpts = computed<Option[]>(() => {
-  if (!Sidebar.reactive.siteConfigPopup) return []
+  if (!Popups.reactive.siteConfigPopup) return []
 
   const result: Option[] = [
     { value: 'none', color: 'inactive', icon: '#icon_none', title: 'Not set' },
   ]
 
-  for (let p of Sidebar.reactive.panels) {
+  for (let p of Sidebar.panels) {
     if (!Utils.isTabsPanel(p)) continue
     const opt: Option = { value: p.id as string, color: p.color, title: p.name }
     if (p.iconIMG) opt.icon = p.iconIMG
@@ -129,9 +130,9 @@ const availablePanelOpts = computed<Option[]>(() => {
 })
 
 function init() {
-  if (!Sidebar.reactive.siteConfigPopup) return
+  if (!Popups.reactive.siteConfigPopup) return
 
-  const url = Sidebar.reactive.siteConfigPopup.url
+  const url = Popups.reactive.siteConfigPopup.url
   const urlInfo = parseURL(url)
   const isHTTP = urlInfo.scheme.startsWith('http')
 
@@ -218,7 +219,7 @@ function findReopenRule(url: string): FindReopenRuleResult | undefined {
 
 type FindMoveToPanelRuleResult = { rule: TabToPanelMoveRuleConfig; panel: TabsPanel }
 function findMoveToPanelRule(url: string): FindMoveToPanelRuleResult | undefined {
-  for (const panel of Sidebar.reactive.panels) {
+  for (const panel of Sidebar.panels) {
     if (!Utils.isTabsPanel(panel)) continue
     for (const rule of panel.moveRules) {
       if (rule.containerId !== undefined) continue
@@ -293,14 +294,14 @@ function checkUrl(url: string, matchString: string): boolean {
 }
 
 function onSave(): void {
-  if (!Sidebar.reactive.siteConfigPopup) return
+  if (!Popups.reactive.siteConfigPopup) return
 
-  const tab = Tabs.byId[Sidebar.reactive.siteConfigPopup.tabId]
+  const tab = Tabs.byId[Popups.reactive.siteConfigPopup.tabId]
   const match = matchString.value.trim()
   const matchIsOk = validateMatchString(match)
   const matchOption = matchOptions.value?.find(opt => opt.id !== 'custom' && opt.active)
   const rContainer = Containers.reactive.byId[reopenInContainerId.value]
-  const mPanel = Sidebar.reactive.panelsById[moveToPanelId.value]
+  const mPanel = Sidebar.panelsById[moveToPanelId.value]
   const mPanelTopLvlOnly = moveToPanelTopLvlOnly.value
   let saveContainers = false
   let savePanels = false
@@ -377,13 +378,13 @@ function onSave(): void {
     }
   }
 
-  Sidebar.closeSiteConfigPopup()
+  Popups.closeSiteConfigPopup()
 }
 
 function onCancel(): void {
-  if (!Sidebar.reactive.siteConfigPopup) return
+  if (!Popups.reactive.siteConfigPopup) return
 
-  Sidebar.closeSiteConfigPopup()
+  Popups.closeSiteConfigPopup()
 }
 
 init()

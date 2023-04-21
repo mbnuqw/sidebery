@@ -24,7 +24,7 @@ import { NOID } from 'src/defaults'
 
 const props = defineProps<{ panel?: TabsPanel }>()
 const pinnedTabs = computed(() => {
-  if (props.panel) return props.panel.pinnedTabs
+  if (props.panel) return props.panel.reactive.pinnedTabs
   else return Tabs.reactive.pinned
 })
 const dropId = computed(() => {

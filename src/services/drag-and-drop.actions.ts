@@ -82,7 +82,7 @@ function updateTooltip(info: DragInfo): void {
     DnD.reactive.dragTooltipTitle = translate('dnd.tooltip.bookmarks_panel')
     DnD.reactive.dragTooltipInfo = ''
   } else if (info.type === DragType.TabsPanel) {
-    const panel = Sidebar.reactive.panelsById[info.panelId ?? NOID]
+    const panel = Sidebar.panelsById[info.panelId ?? NOID]
     if (panel?.name) {
       DnD.reactive.dragTooltipTitle = `"${panel.name}" ${translate('dnd.tooltip.tabs_panel')}`
       DnD.reactive.dragTooltipInfo = ''
@@ -183,7 +183,7 @@ function getDestInfo(): DstPlaceInfo {
   }
   if (DnD.reactive.dstPin) info.pinned = DnD.reactive.dstPin
 
-  const dstPanel = Sidebar.reactive.panelsById[DnD.reactive.dstPanelId]
+  const dstPanel = Sidebar.panelsById[DnD.reactive.dstPanelId]
   if (!dstPanel) return info
 
   if (Utils.isTabsPanel(dstPanel)) {
@@ -243,7 +243,7 @@ function assertTabActivateMod(e: DragEvent): boolean {
 
 function applyLvlOffset(lvl: number): void {
   if (lvl < 0) lvl = 0
-  const panel = Sidebar.reactive.panelsById[DnD.reactive.dstPanelId]
+  const panel = Sidebar.panelsById[DnD.reactive.dstPanelId]
   if (!panel) return
   let parentBounds = panel.bounds?.find(b => b.id === DnD.reactive.dstParentId)
   let prevParentBounds: ItemBounds | undefined
@@ -273,7 +273,7 @@ function isContainerChanged(): boolean {
   if (Windows.incognito) return false
 
   // Check if dst panel have dropTabCtx rule
-  const dstPanel = Sidebar.reactive.panelsById[DnD.reactive.dstPanelId]
+  const dstPanel = Sidebar.panelsById[DnD.reactive.dstPanelId]
   let destContainer
   if (Utils.isTabsPanel(dstPanel)) destContainer = dstPanel.dropTabCtx
   if (!destContainer) return false
@@ -325,7 +325,7 @@ export function onDragEnter(e: DragEvent): void {
 
     // Native
     else {
-      const panel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+      const panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
       const leftOffset = panel?.leftOffset ?? 0
       DnD.start({
         x: (Sidebar.width >> 1) + leftOffset,
@@ -372,7 +372,7 @@ export function onDragEnter(e: DragEvent): void {
     else {
       if (Sidebar.reactive.hiddenPanelsPopup) Sidebar.reactive.hiddenPanelsPopup = false
 
-      const panel = Sidebar.reactive.panelsById[id]
+      const panel = Sidebar.panelsById[id]
       const isTabsPanel = Utils.isTabsPanel(panel)
       const isBookmarksPanel = Utils.isBookmarksPanel(panel)
       if (isTabsPanel) DnD.reactive.dstType = DropType.TabsPanel
@@ -421,10 +421,9 @@ export function onDragEnter(e: DragEvent): void {
       DnD.reactive.dstIndex = pinnedTabsLen
       DnD.reactive.dstPanelId = lastPinnedTab?.panelId ?? NOID
     } else {
-      const panel = Sidebar.reactive.panelsById[DnD.reactive.dstPanelId]
+      const panel = Sidebar.panelsById[DnD.reactive.dstPanelId]
       if (Utils.isTabsPanel(panel) && panel.pinnedTabs.length) {
-        const rLastTab = panel.pinnedTabs[panel.pinnedTabs.length - 1]
-        const lastTab = Tabs.byId[rLastTab.id]
+        const lastTab = panel.pinnedTabs[panel.pinnedTabs.length - 1]
         if (lastTab) DnD.reactive.dstIndex = lastTab.index + 1
       }
     }
@@ -470,7 +469,7 @@ function onPointerEnter(e: DragEvent): void {
 
   if (DnD.reactive.pointerMode !== DndPointerMode.Inside) return
 
-  const panel = Sidebar.reactive.panelsById[DnD.reactive.dstPanelId]
+  const panel = Sidebar.panelsById[DnD.reactive.dstPanelId]
   const isTabs = Utils.isTabsPanel(panel)
   const isBookmarks = Utils.isBookmarksPanel(panel)
 
@@ -543,7 +542,7 @@ export function onDragMove(e: DragEvent): void {
   if (!pointerEl) return
   if (Sidebar.reactive.hiddenPanelsPopup) return
 
-  const panel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+  const panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
   if (!panel || !panel.scrollEl) return
 
   const altKeyChanged = prevEventKeys.alt !== e.altKey
@@ -631,7 +630,7 @@ export function onDragMove(e: DragEvent): void {
       pointerEl.style.transform = `translateY(${pointerPos}px)`
       DnD.reactive.pointerMode = DndPointerMode.Between
       DnD.reactive.pointerLvl = 0
-      const activePanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+      const activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
       DnD.reactive.dstIndex = Utils.isTabsPanel(activePanel) ? activePanel.startTabIndex : -1
       DnD.reactive.dstParentId = -1
     }
@@ -886,7 +885,7 @@ export async function onDrop(e: DragEvent): Promise<void> {
   // Reset index and set folder when dropping to bookmarks panel
   if (toBookmarksPanel && !fromTabsPanel && !fromBookmarksPanel && !fromNav) {
     DnD.reactive.dstIndex = -1
-    const panel = Sidebar.reactive.panelsById[DnD.reactive.dstPanelId]
+    const panel = Sidebar.panelsById[DnD.reactive.dstPanelId]
     if (Utils.isBookmarksPanel(panel)) {
       const existedFolder = Bookmarks.reactive.byId[panel.rootId]
       DnD.reactive.dstParentId = existedFolder ? panel.rootId : BKM_OTHER_ID
@@ -927,7 +926,7 @@ export async function onDrop(e: DragEvent): Promise<void> {
 
   // Bookmarks to bookmarks
   if (fromBookmarks && toBookmarks) {
-    const dstPanel = Sidebar.reactive.panelsById[DnD.reactive.dstPanelId]
+    const dstPanel = Sidebar.panelsById[DnD.reactive.dstPanelId]
     if (Utils.isBookmarksPanel(dstPanel) && dstPanel.viewMode === 'tree') {
       if (DnD.dropMode === 'copy') Bookmarks.createFrom(DnD.items, getDestInfo())
       else {
@@ -1036,7 +1035,7 @@ export async function onDragEnd(e: DragEvent): Promise<void> {
 
     if (fromBookmarksPanel && info.items?.length) {
       const panelId = info.items[0]?.id ?? NOID
-      const panel = Sidebar.reactive.panelsById[panelId]
+      const panel = Sidebar.panelsById[panelId]
       if (!Utils.isBookmarksPanel(panel)) return
 
       if (!Bookmarks.reactive.tree.length) await Bookmarks.load()

@@ -7,6 +7,7 @@ import { FOLDER_NAME_DATA_RE, GROUP_URL, PIN_MARK } from 'src/defaults'
 import { Bookmarks, BookmarksPopupConfig, BookmarksPopupResult } from 'src/services/bookmarks'
 import { BookmarksPopupState } from 'src/services/bookmarks'
 import * as Logs from 'src/services/logs'
+import * as Popups from 'src/services/popups'
 import { Settings } from 'src/services/settings'
 import { Sidebar } from 'src/services/sidebar'
 import { Windows } from 'src/services/windows'
@@ -67,11 +68,11 @@ async function loadInFg(): Promise<void> {
 
   if (!Windows.incognito) await restoreTree()
 
-  for (const panel of Sidebar.reactive.panels) {
-    if (Utils.isBookmarksPanel(panel)) panel.ready = true
+  for (const panel of Sidebar.panels) {
+    if (Utils.isBookmarksPanel(panel)) panel.reactive.ready = panel.ready = true
   }
 
-  const activePanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+  const activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
   if (DnD.reactive.isStarted && Utils.isBookmarksPanel(activePanel)) {
     Sidebar.updateBounds()
   }
@@ -83,7 +84,7 @@ export async function restoreTree(): Promise<void> {
 
   if (expandedBookmarkFolders) {
     for (const panelId of Object.keys(expandedBookmarkFolders)) {
-      if (!Sidebar.reactive.panelsById[panelId]) delete expandedBookmarkFolders[panelId]
+      if (!Sidebar.panelsById[panelId]) delete expandedBookmarkFolders[panelId]
     }
   }
 
@@ -109,10 +110,11 @@ export function unload(): void {
   Bookmarks.reactive.byId = {}
   Bookmarks.byUrl = {}
 
-  for (const panel of Sidebar.reactive.panels) {
+  for (const panel of Sidebar.panels) {
     if (Utils.isBookmarksPanel(panel)) {
       panel.ready = false
-      panel.len = 0
+      panel.reactive.ready = false
+      panel.reactive.len = 0
     }
   }
 }
@@ -239,8 +241,9 @@ export async function openInNewPanel(ids: ID[]): Promise<void> {
   // Create panel
   const panel = Sidebar.createTabsPanel()
   const index = Sidebar.getIndexForNewTabsPanel()
-  const rPanel = Sidebar.addPanel(index, panel)
-  rPanel.ready = true
+  Sidebar.addPanel(index, panel)
+  panel.ready = true
+  panel.reactive.ready = true
   Sidebar.recalcPanels()
   Sidebar.recalcTabsPanels()
   Sidebar.saveSidebar(300)
@@ -310,12 +313,12 @@ export async function open(
 
   const dstContainerId = dst.containerId ?? CONTAINER_ID
   let dstPanel: Panel | undefined
-  if (dst.panelId !== undefined) dstPanel = Sidebar.reactive.panelsById[dst.panelId]
+  if (dst.panelId !== undefined) dstPanel = Sidebar.panelsById[dst.panelId]
   if (!Utils.isTabsPanel(dstPanel)) {
     let dstCtxTabsPanel: TabsPanel | undefined
     for (const rule of Tabs.moveRules) {
       if (rule.containerId && !rule.urlRE && !rule.urlStr && rule.containerId === dstContainerId) {
-        const panel = Sidebar.reactive.panelsById[rule.panelId]
+        const panel = Sidebar.panelsById[rule.panelId]
         if (Utils.isTabsPanel(panel)) {
           dstCtxTabsPanel = panel
           break
@@ -326,7 +329,7 @@ export async function open(
   }
   if (!dstPanel) {
     let dstTabsPanel: TabsPanel | undefined
-    for (const p of Sidebar.reactive.panels) {
+    for (const p of Sidebar.panels) {
       if (Utils.isTabsPanel(p)) {
         dstTabsPanel = p
         break
@@ -563,7 +566,7 @@ export async function removeBookmarks(ids: ID[], silent = false): Promise<void> 
     Settings.state.warnOnMultiBookmarkDelete === 'any' ||
     (Settings.state.warnOnMultiBookmarkDelete === 'collapsed' && hasCollapsed)
   if (warn && count > 1) {
-    const ok = await Sidebar.confirm(translate('confirm.bookmarks_delete'))
+    const ok = await Popups.confirm(translate('confirm.bookmarks_delete'))
     if (!ok) return
   }
 
@@ -1230,7 +1233,7 @@ async function askWhatToDoWithOldUnusedBookmarks(folderName: string): Promise<st
     buttonsCentered: true,
   }
 
-  const result = await Sidebar.ask(conf)
+  const result = await Popups.ask(conf)
 
   if (remember) {
     if (result === 'delete') Settings.state.oldBookmarksAfterSave = 'del'
@@ -1242,7 +1245,7 @@ async function askWhatToDoWithOldUnusedBookmarks(folderName: string): Promise<st
 }
 
 export function scrollBookmarksToEdge(panel?: Panel): void {
-  if (!panel) panel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+  if (!panel) panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
   if (!Utils.isBookmarksPanel(panel)) return
   if (!panel.scrollComponent || !panel.scrollEl) return
 
@@ -1271,7 +1274,7 @@ export function getPath(bookmark: Bookmark): ID[] {
 export function findBookmarkPanelOf(bookmark: Bookmark): ID | void {
   const path = Bookmarks.getPath(bookmark)
 
-  for (const panel of Sidebar.reactive.panels) {
+  for (const panel of Sidebar.panels) {
     if (!Utils.isBookmarksPanel(panel)) continue
     if (panel.rootId === NOID || panel.rootId === BKM_ROOT_ID) return panel.id
     if (path.includes(panel.rootId)) return panel.id
@@ -1286,7 +1289,7 @@ export function scrollToBookmarkDebounced(id: ID, forced?: boolean, delay = 120)
 
 const scrollConf: ScrollToOptions = { behavior: 'smooth', top: 0 }
 export function scrollToBookmark(id: ID, forced?: boolean): void {
-  const panel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+  const panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
   if (!Utils.isBookmarksPanel(panel) || !panel.scrollEl) return
 
   const elId = 'bookmark' + id.toString()
@@ -1344,7 +1347,7 @@ export function openAsBookmarksPanel(node: Bookmark) {
   else panelName = node.title
 
   // Start bookmarks panel creation
-  Sidebar.openPanelPopup({
+  Popups.openPanelPopup({
     type: PanelType.bookmarks,
     name: panelName,
     rootId: node.id,
@@ -1360,17 +1363,18 @@ export async function openAsTabsPanel(folder: Bookmark, showConfigPopup: boolean
 
   if (showConfigPopup) {
     // Use folder name as default panel name and open panel popup
-    const result = await Sidebar.openPanelPopup(
+    const result = await Popups.openPanelPopup(
       { type: PanelType.tabs, name: folder.title, bookmarksFolderId: folder.id },
       index
     )
     if (!result) return Logs.warn('Bookmarks.openAsTabsPanel: No result')
 
-    tabsPanel = Sidebar.reactive.panelsById[result]
+    tabsPanel = Sidebar.panelsById[result]
   } else {
     // Create panel
     tabsPanel = Sidebar.createTabsPanel()
     tabsPanel.ready = true
+    tabsPanel.reactive.ready = true
     Sidebar.addPanel(index, tabsPanel)
     Sidebar.recalcPanels()
     Sidebar.recalcTabsPanels()
@@ -1428,7 +1432,7 @@ export async function copyTitles(ids: ID[]): Promise<void> {
 
 export function getTargetTabsPanelId(): ID {
   let panelId = Sidebar.reactive.activePanelId
-  if (!Utils.isTabsPanel(Sidebar.reactive.panelsById[panelId])) {
+  if (!Utils.isTabsPanel(Sidebar.panelsById[panelId])) {
     panelId = Sidebar.lastTabsPanelId
   }
   return panelId

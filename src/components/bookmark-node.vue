@@ -205,7 +205,7 @@ async function onMouseUp(e: MouseEvent): Promise<void> {
     // Bookmark
     if (props.node.type === 'bookmark' && props.node.url) {
       // Auto convert bookmarks panel to source tabs panel
-      const actPanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+      const actPanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
       if (Utils.isBookmarksPanel(actPanel) && actPanel.autoConvert) {
         try {
           // Convert panel

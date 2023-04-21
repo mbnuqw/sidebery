@@ -73,6 +73,7 @@ import { SetupPage } from 'src/services/setup-page'
 import { DnD } from 'src/services/drag-and-drop'
 import { Search } from 'src/services/search'
 import { Snapshots } from 'src/services/snapshots'
+import * as Popups from 'src/services/popups'
 import NavItemComponent from './nav-item.vue'
 
 const HIDDEN_PANELS_BTN: NavBtn = {
@@ -103,11 +104,11 @@ const hidden = computed((): NavItem[] => {
   const result: NavItem[] = []
 
   for (const id of Sidebar.reactive.nav) {
-    const panel = Sidebar.reactive.panelsById[id]
+    const panel = Sidebar.panelsById[id]
     if (Utils.isTabsPanel(panel)) {
-      if (Settings.state.hideEmptyPanels && !panel.len) {
+      if (Settings.state.hideEmptyPanels && !panel.reactive.len) {
         result.push(panel)
-      } else if (Settings.state.hideDiscardedTabPanels && panel.allDiscarded) {
+      } else if (Settings.state.hideDiscardedTabPanels && panel.reactive.allDiscarded) {
         result.push(panel)
       }
     }
@@ -132,12 +133,12 @@ const visible = computed((): NavItem[] => {
   let lastTabsPanelIndex = -1
 
   for (const id of Sidebar.reactive.nav) {
-    const panel = Sidebar.reactive.panelsById[id]
+    const panel = Sidebar.panelsById[id]
     if (panel) {
       if (Utils.isTabsPanel(panel)) {
         if (firstTabsPanelIndex === -1) firstTabsPanelIndex = result.length
-        if (Settings.state.hideEmptyPanels && panel.len === 0) continue
-        else if (Settings.state.hideDiscardedTabPanels && panel.allDiscarded) continue
+        if (Settings.state.hideEmptyPanels && panel.reactive.len === 0) continue
+        else if (Settings.state.hideDiscardedTabPanels && panel.reactive.allDiscarded) continue
         lastTabsPanelIndex = result.length
       }
       result.push(panel)
@@ -265,7 +266,7 @@ function onNavCtxMenu(e: MouseEvent, item: NavItem) {
     return
   }
 
-  let panel = Sidebar.reactive.panelsById[item.id]
+  let panel = Sidebar.panelsById[item.id]
   if (!panel) {
     e.preventDefault()
     return
@@ -294,7 +295,7 @@ function onNavMouseDown(e: MouseEvent, item: NavItem) {
   // Middle click action
   if (e.button === 1) {
     if (item.type === PanelType.tabs) {
-      const panel = Sidebar.reactive.panelsById[item.id]
+      const panel = Sidebar.panelsById[item.id]
       if (!Utils.isTabsPanel(panel)) return
 
       // Remove tabs
@@ -333,7 +334,7 @@ function onNavMouseDown(e: MouseEvent, item: NavItem) {
     }
 
     if (item.type === PanelType.bookmarks) {
-      const panel = Sidebar.reactive.panelsById[item.id]
+      const panel = Sidebar.panelsById[item.id]
       if (!Utils.isBookmarksPanel(panel)) return
 
       // Convert bookmarks panel to tabs panel
@@ -374,7 +375,7 @@ function onNavMouseUp(e: MouseEvent, item: NavItem, inHiddenBar?: boolean) {
   const isCreateSnapshot = item.type === ButtonType.create_snapshot
   const isRemuteAudioTabs = item.type === ButtonType.remute_audio_tabs
   const isAddTP = item.type === ButtonType.add_tp
-  const panel = Sidebar.reactive.panelsById[item.id]
+  const panel = Sidebar.panelsById[item.id]
 
   // Left
   if (e.button === 0) {
@@ -428,7 +429,7 @@ function onNavMouseUp(e: MouseEvent, item: NavItem, inHiddenBar?: boolean) {
       Tabs.pringDbgInfo(!e.altKey)
     }
 
-    const panel = Sidebar.reactive.panelsById[item.id]
+    const panel = Sidebar.panelsById[item.id]
     if (!panel) return
 
     let type: MenuType
@@ -445,7 +446,7 @@ function onNavDragStart(e: DragEvent, item: NavItem) {
   Menu.close()
   Selection.resetSelection()
 
-  const panel = Sidebar.reactive.panelsById[item.id]
+  const panel = Sidebar.panelsById[item.id]
   const isTabsPanel = Utils.isTabsPanel(panel)
   const isBookmarksPanel = Utils.isBookmarksPanel(panel)
 
@@ -511,7 +512,7 @@ function onNavItemDrop(item: NavItem): void {
 async function addTabsPanel(silent?: boolean): Promise<void> {
   // Find target index
   let index = Utils.findLastIndex(Sidebar.reactive.nav, id => {
-    const panel = Sidebar.reactive.panelsById[id]
+    const panel = Sidebar.panelsById[id]
     return Utils.isTabsPanel(panel)
   })
   if (index !== -1) index++
@@ -521,10 +522,10 @@ async function addTabsPanel(silent?: boolean): Promise<void> {
   // Start panel creation
   let panel
   if (!silent) {
-    const result = await Sidebar.openPanelPopup({ type: PanelType.tabs }, index)
+    const result = await Popups.openPanelPopup({ type: PanelType.tabs }, index)
     if (!result) return
 
-    panel = Sidebar.reactive.panelsById[result]
+    panel = Sidebar.panelsById[result]
   } else {
     panel = Sidebar.createTabsPanel()
     panel.color = Utils.getRandomFrom(COLOR_NAMES)
@@ -541,7 +542,7 @@ async function addTabsPanel(silent?: boolean): Promise<void> {
 }
 
 function collapseAll(): void {
-  const activePanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+  const activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
   if (!activePanel) return
 
   // Tabs

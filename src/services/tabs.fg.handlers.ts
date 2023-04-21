@@ -145,20 +145,20 @@ function onTabCreated(tab: Tab, attached?: boolean): void {
       }
 
       Tabs.removedTabs.splice(prevPosIndex, 1)
-      reopenedTabPanel = Sidebar.reactive.panelsById[reopenedTabInfo.panelId]
+      reopenedTabPanel = Sidebar.panelsById[reopenedTabInfo.panelId]
     }
   }
 
   // Predefined position
   if (Tabs.newTabsPosition && Tabs.newTabsPosition[tab.index]) {
     const position = Tabs.newTabsPosition[tab.index]
-    panel = Sidebar.reactive.panelsById[position.panel]
+    panel = Sidebar.panelsById[position.panel]
     if (!Utils.isTabsPanel(panel)) {
       const prevTab = Tabs.list[tab.index - 1]
       if (prevTab && !prevTab.pinned && prevTab.panelId !== NOID) {
-        panel = Sidebar.reactive.panelsById[prevTab.panelId] as TabsPanel
+        panel = Sidebar.panelsById[prevTab.panelId] as TabsPanel
       } else {
-        panel = Sidebar.reactive.panels.find(p => Utils.isTabsPanel(p)) as TabsPanel
+        panel = Sidebar.panels.find(p => Utils.isTabsPanel(p)) as TabsPanel
       }
     }
     index = tab.index
@@ -264,7 +264,9 @@ function onTabCreated(tab: Tab, attached?: boolean): void {
   if (tab.internal) tab.isGroup = Utils.isGroupUrl(tab.url)
   tab.index = index
   tab.parentId = Settings.state.tabsTree ? tab.openerTabId ?? NOID : NOID
-  if (!tab.favIconUrl && !tab.internal) tab.favIconUrl = Favicons.getFavicon(tab.url)
+  if (!tab.favIconUrl && !tab.internal && !tab.url.startsWith('a')) {
+    tab.favIconUrl = Favicons.getFavicon(tab.url)
+  }
 
   // Check if tab should be reopened in different container
   if (
@@ -581,7 +583,7 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
             ? !URL_HOST_PATH_RE.test(tab.title)
             : !URL_HOST_PATH_RE.test(localTab.title) && !URL_HOST_PATH_RE.test(tab.title)
           if (ok) {
-            const panel = Sidebar.reactive.panelsById[localTab.panelId]
+            const panel = Sidebar.panelsById[localTab.panelId]
             localTab.updated = true
             rLocalTab.updated = true
             if (
@@ -591,6 +593,7 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
               !panel.updatedTabs.includes(tabId)
             ) {
               panel.updatedTabs.push(tabId)
+              panel.reactive.updated = panel.updatedTabs.length > 0
             }
           }
         }
@@ -635,7 +638,7 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
 
   // Handle unpinned tab
   if (change.pinned !== undefined && !change.pinned) {
-    const panel = Sidebar.reactive.panelsById[localTab.panelId]
+    const panel = Sidebar.panelsById[localTab.panelId]
     if (Utils.isTabsPanel(panel)) {
       if (!localTab.unpinning && panel.startTabIndex !== undefined) {
         const startIndex = panel.startTabIndex
@@ -660,11 +663,11 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
 
   // Handle pinned tab
   if (change.pinned !== undefined && change.pinned) {
-    let panel = Sidebar.reactive.panelsById[localTab.panelId]
+    let panel = Sidebar.panelsById[localTab.panelId]
 
     if (localTab.prevPanelId && localTab.moveTime && localTab.moveTime + 1000 > Date.now()) {
       localTab.panelId = localTab.prevPanelId
-      panel = Sidebar.reactive.panelsById[localTab.panelId]
+      panel = Sidebar.panelsById[localTab.panelId]
       Tabs.saveTabData(localTab.id)
 
       if (localTab.active && localTab.panelId !== Sidebar.reactive.activePanelId) {
@@ -675,7 +678,7 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
     Sidebar.recalcTabsPanels()
     Tabs.updateTabsTree()
 
-    if (Utils.isTabsPanel(panel) && !panel.len) {
+    if (Utils.isTabsPanel(panel) && !panel.reactive.len) {
       if (panel.noEmpty) {
         Tabs.createTabInPanel(panel)
       } else if (Settings.state.pinnedTabsPosition !== 'panel') {
@@ -930,20 +933,21 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
   const urlCount = Tabs.updateUrlCounter(tab.url, -1)
 
   // Get panel of removed tab
-  const panel = Sidebar.reactive.panelsById[tab.panelId]
+  const panel = Sidebar.panelsById[tab.panelId]
   if (!Utils.isTabsPanel(panel)) {
     Logs.err('Tabs.onTabRemoved: Wrong panel')
     return
   }
 
   // No-empty
-  if (!tab.pinned && panel.noEmpty && !panel.len) {
+  if (!tab.pinned && panel.noEmpty && !panel.reactive.len) {
     Tabs.createTabInPanel(panel, { active: false })
   }
 
   // Remove updated flag
   if (panel.updatedTabs.length) {
     Utils.rmFromArray(panel.updatedTabs, tabId)
+    panel.reactive.updated = panel.updatedTabs.length > 0
   }
 
   // On removing the last tab
@@ -1079,19 +1083,19 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
 
   // Update tab's panel id
   if (!movedTab.pinned) {
-    const srcPanel = Sidebar.reactive.panelsById[movedTab.panelId]
-    let dstPanel = Sidebar.reactive.panelsById[movedTab.dstPanelId]
+    const srcPanel = Sidebar.panelsById[movedTab.panelId]
+    let dstPanel = Sidebar.panelsById[movedTab.dstPanelId]
     movedTab.dstPanelId = NOID
 
     if (!dstPanel) {
-      dstPanel = Sidebar.reactive.panelsById[toTab.panelId]
+      dstPanel = Sidebar.panelsById[toTab.panelId]
     } else if (
       Utils.isTabsPanel(dstPanel) &&
       dstPanel.startTabIndex > -1 &&
       dstPanel.endTabIndex > -1 &&
       (dstPanel.startTabIndex > info.toIndex || dstPanel.endTabIndex + 1 < info.toIndex)
     ) {
-      dstPanel = Sidebar.reactive.panelsById[toTab.panelId]
+      dstPanel = Sidebar.panelsById[toTab.panelId]
     }
 
     if (Utils.isTabsPanel(srcPanel) && Utils.isTabsPanel(dstPanel)) {
@@ -1258,15 +1262,16 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
   tab.lastAccessed = Date.now()
   Tabs.activeId = info.tabId
 
-  const panel = Sidebar.reactive.panelsById[tab.panelId]
+  const panel = Sidebar.panelsById[tab.panelId]
   if (!Utils.isTabsPanel(panel)) return
 
   if (panel.updatedTabs.length) {
     Utils.rmFromArray(panel.updatedTabs, tab.id)
+    panel.reactive.updated = panel.updatedTabs.length > 0
   }
 
   // Switch to activated tab's panel
-  const activePanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+  const activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
   if (
     (!tab.pinned || Settings.state.pinnedTabsPosition === 'panel') &&
     !activePanel?.lockedPanel &&

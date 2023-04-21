@@ -149,25 +149,23 @@
 import { ref, reactive, computed, onMounted, nextTick } from 'vue'
 import * as Utils from 'src/utils'
 import * as Logs from 'src/services/logs'
+import * as Popups from 'src/services/popups'
 import { translate } from 'src/dict'
-import { BKM_MENU_ID, FOLDER_NAME_DATA_RE, RGB_COLORS } from 'src/defaults'
+import { BKM_MENU_ID, FOLDER_NAME_DATA_RE } from 'src/defaults'
 import { DEFAULT_CONTAINER_ID, COLOR_OPTS, PANEL_ICON_OPTS } from 'src/defaults'
-import { BKM_ROOT_ID } from 'src/defaults'
+import { BKM_ROOT_ID, RGB_COLORS } from 'src/defaults'
 import { TextInputComponent, PanelConfig, BookmarksPanelConfig, TabsPanelConfig } from 'src/types'
 import { HistoryPanelConfig } from 'src/types'
 import { Settings } from 'src/services/settings'
 import { Containers } from 'src/services/containers'
-import { Sidebar } from 'src/services/sidebar'
 import { Permissions } from 'src/services/permissions'
 import { Bookmarks } from 'src/services/bookmarks'
-import TextField from '../../components/text-field.vue'
+import { Favicons } from 'src/services/favicons'
+import { Styles } from 'src/services/styles'
+import { SidebarConfigRState, saveSidebarConfig } from 'src/services/sidebar-config'
 import TextInput from '../../components/text-input.vue'
 import ToggleField from '../../components/toggle-field.vue'
 import SelectField from '../../components/select-field.vue'
-import { Favicons } from 'src/services/favicons'
-import { SetupPage } from 'src/services/setup-page'
-import { Styles } from 'src/services/styles'
-import { Tabs } from 'src/services/tabs.fg'
 
 interface ContainerOption {
   value: string
@@ -200,7 +198,7 @@ let updCustomIconTimeout: number
 const rootEl = ref<HTMLElement | null>(null)
 const nameInput = ref<TextInputComponent | null>(null)
 
-const props = defineProps<{ conf: PanelConfig; index?: number }>()
+const props = defineProps<{ conf: PanelConfig }>()
 
 const isBookmarks = computed<boolean>(() => Utils.isBookmarksPanel(props.conf))
 const isTabs = computed<boolean>(() => Utils.isTabsPanel(props.conf))
@@ -226,7 +224,8 @@ const availableForAutoMoveContainersOpts = computed<ContainerOption[]>(() => {
   const result: ContainerOption[] = []
   const used: Record<string, boolean> = {}
 
-  for (const p of Sidebar.reactive.panels) {
+  for (const id of SidebarConfigRState.nav) {
+    const p = SidebarConfigRState.panels[id]
     if (!Utils.isTabsPanel(p) || p.id === props.conf.id) continue
     for (const ruleConf of p.moveRules) {
       if (ruleConf.containerId && !ruleConf.url) used[ruleConf.containerId] = true
@@ -324,18 +323,18 @@ function onWheel(e: WheelEvent): void {
 
 function onNameInput(value: string): void {
   props.conf.name = value
-  if (value) Sidebar.saveSidebar(500)
+  if (value) saveSidebarConfig(500)
 }
 
 function setIcon(value: string): void {
   props.conf.iconSVG = value
-  Sidebar.saveSidebar()
+  saveSidebarConfig()
 }
 
 function setColor(value: browser.ColorName): void {
   props.conf.color = value
   if (props.conf.iconIMG) recolorCustomIcon()
-  Sidebar.saveSidebar()
+  saveSidebarConfig()
 }
 
 // ---
@@ -365,7 +364,7 @@ function onCustomIconTextInput(value: string): void {
       state.customIconUrl = ''
       props.conf.iconIMG = ''
       props.conf.iconIMGSrc = ''
-      Sidebar.saveSidebar()
+      saveSidebarConfig()
       return
     }
 
@@ -409,7 +408,7 @@ async function onCustomIconLoad(e: Event): Promise<void> {
     return
   }
   state.customIconUrl = props.conf.iconIMG
-  Sidebar.saveSidebar()
+  saveSidebarConfig()
 }
 
 function onCustomIconError(): void {
@@ -467,7 +466,7 @@ async function drawTextIcon() {
 
   props.conf.iconIMG = await prepareCustomIcon(base64)
   state.customIconUrl = props.conf.iconIMG
-  Sidebar.saveSidebar()
+  saveSidebarConfig()
 }
 
 function isTextFit(
@@ -531,7 +530,7 @@ function openCustomIconFile(importEvent: Event) {
     state.customIconTextValue = ''
     state.customIconUrlValue = ''
     state.customIconUrl = props.conf.iconIMG
-    Sidebar.saveSidebar()
+    saveSidebarConfig()
   }
   reader.readAsDataURL(file)
 }
@@ -544,7 +543,7 @@ function onCustomIconRm() {
   state.customIconUrl = ''
   props.conf.iconIMG = ''
   props.conf.iconIMGSrc = ''
-  Sidebar.saveSidebar()
+  saveSidebarConfig()
 }
 
 function toggleCustomIconColorize() {
@@ -556,36 +555,36 @@ async function recolorCustomIcon() {
   if (state.customIconOriginal) {
     props.conf.iconIMG = await prepareCustomIcon(state.customIconOriginal)
     state.customIconUrl = props.conf.iconIMG
-    Sidebar.saveSidebar()
+    saveSidebarConfig()
   }
 }
 
 function togglePanelLock(): void {
   props.conf.lockedPanel = !props.conf.lockedPanel
-  Sidebar.saveSidebar()
+  saveSidebarConfig()
 }
 
 function toggleTempMode(): void {
   if (!isNotTabsPanel(props.conf)) return
   props.conf.tempMode = !props.conf.tempMode
-  Sidebar.saveSidebar()
+  saveSidebarConfig()
 }
 
 function toggleSkipOnSwitching(): void {
   props.conf.skipOnSwitching = !props.conf.skipOnSwitching
-  Sidebar.saveSidebar()
+  saveSidebarConfig()
 }
 
 function togglePanelNoEmpty(): void {
   if (!Utils.isTabsPanel(props.conf)) return
   props.conf.noEmpty = !props.conf.noEmpty
-  Sidebar.saveSidebar()
+  saveSidebarConfig()
 }
 
 function togglePanelNewTabCtx(value: string): void {
   if (!Utils.isTabsPanel(props.conf)) return
   props.conf.newTabCtx = value
-  Sidebar.saveSidebar()
+  saveSidebarConfig()
 }
 
 async function toggleNewTabCtxReopen() {
@@ -601,7 +600,7 @@ async function toggleNewTabCtxReopen() {
 function togglePanelDropTabCtx(value: string): void {
   if (!Utils.isTabsPanel(props.conf)) return
   props.conf.dropTabCtx = value
-  Sidebar.saveSidebar()
+  saveSidebarConfig()
 }
 
 async function setBookmarksRootId(): Promise<void> {
@@ -622,35 +621,34 @@ async function setBookmarksRootId(): Promise<void> {
 
   if (result && result.location) {
     props.conf.rootId = result.location
-    Sidebar.saveSidebar(500)
+    saveSidebarConfig(500)
   }
 }
 
 function resetBookmarksRootId(): void {
   if (!Utils.isBookmarksPanel(props.conf)) return
   props.conf.rootId = BKM_ROOT_ID
-  Sidebar.saveSidebar(500)
+  saveSidebarConfig(500)
 }
 
 function selectBookmarksViewMode(value: string): void {
   if (!Utils.isBookmarksPanel(props.conf)) return
-
   props.conf.viewMode = value
-  Sidebar.saveSidebar()
+  saveSidebarConfig()
 }
 
 function toggleAutoConvert(): void {
   if (!Utils.isBookmarksPanel(props.conf)) return
   props.conf.autoConvert = !props.conf.autoConvert
-  Sidebar.saveSidebar()
+  saveSidebarConfig()
 }
 
 function openRulesPopup() {
-  Sidebar.openTabMoveRulesPopup(props.conf.id)
+  Popups.openTabMoveRulesPopup(props.conf)
 }
 
 function openShortcutsPopup(): void {
-  Sidebar.openNewTabShortcutsPopup(props.conf.id)
+  Popups.openNewTabShortcutsPopup(props.conf)
 }
 
 function getManageRulesBtnLabel(panel: TabsPanelConfig): string {

@@ -4,9 +4,9 @@ import { Search } from 'src/services/search'
 import { Selection } from 'src/services/selection'
 
 export async function onHistorySearch(): Promise<void> {
-  const panel = Sidebar.reactive.panelsById.history
+  const panel = Sidebar.panelsById.history
   if (!panel) return
-  else panel.ready = false
+  else panel.reactive.ready = panel.ready = false
 
   if (Search.reactive.value) {
     try {
@@ -23,11 +23,11 @@ export async function onHistorySearch(): Promise<void> {
     History.reactive.filtered = undefined
   }
 
-  panel.ready = true
+  panel.reactive.ready = panel.ready = true
 }
 
 export function onHistorySearchNext(): void {
-  const panel = Sidebar.reactive.panelsById.history
+  const panel = Sidebar.panelsById.history
   if (!panel || !panel.ready || !History.reactive.filtered) return
 
   const selId = Selection.getFirst()
@@ -45,7 +45,7 @@ export function onHistorySearchNext(): void {
 }
 
 export function onHistorySearchPrev(): void {
-  const panel = Sidebar.reactive.panelsById.history
+  const panel = Sidebar.panelsById.history
   if (!panel || !panel.ready || !History.reactive.filtered) return
 
   const selId = Selection.getFirst()
@@ -65,7 +65,7 @@ export function onHistorySearchPrev(): void {
 }
 
 export function onHistorySearchEnter(): void {
-  const panel = Sidebar.reactive.panelsById.history
+  const panel = Sidebar.panelsById.history
   if (!panel || !panel.ready || !History.reactive.filtered) return
 
   const selId = Selection.getFirst()

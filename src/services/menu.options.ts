@@ -12,6 +12,7 @@ import { tabsMenuOptions } from './menu.options.tabs'
 import { bookmarksMenuOptions } from './menu.options.bookmarks'
 import { historyMenuOptions } from './menu.options.history'
 import { CONTAINER_ID } from 'src/defaults'
+import * as Popups from 'src/services/popups'
 
 export const menuOptions: Record<string, () => MenuOption | MenuOption[] | undefined> = {
   ...tabsMenuOptions,
@@ -23,7 +24,7 @@ export const menuOptions: Record<string, () => MenuOption | MenuOption[] | undef
   // -
 
   openPanelConfig: () => {
-    const panel = Sidebar.reactive.panelsById[Selection.getFirst()]
+    const panel = Sidebar.panelsById[Selection.getFirst()]
     if (!panel) return
 
     const inSidebar = Utils.isTabsPanel(panel) || Utils.isBookmarksPanel(panel)
@@ -33,7 +34,7 @@ export const menuOptions: Record<string, () => MenuOption | MenuOption[] | undef
       icon: 'icon_panel_config',
       onClick: () => SetupPage.open(`settings_nav.${panel.id}`),
       onAltClick: () => {
-        if (inSidebar) Sidebar.openPanelPopup({ id: panel.id })
+        if (inSidebar) Popups.openPanelPopup({ id: panel.id })
         else SetupPage.open(`settings_nav.${panel.id}`)
       },
     }
@@ -42,7 +43,7 @@ export const menuOptions: Record<string, () => MenuOption | MenuOption[] | undef
   },
 
   unloadPanelType: () => {
-    const panel = Sidebar.reactive.panelsById[Selection.getFirst()]
+    const panel = Sidebar.panelsById[Selection.getFirst()]
     if (!panel) return
 
     const option: MenuOption = {
@@ -57,7 +58,7 @@ export const menuOptions: Record<string, () => MenuOption | MenuOption[] | undef
   },
 
   removePanel: () => {
-    const panel = Sidebar.reactive.panelsById[Selection.getFirst()]
+    const panel = Sidebar.panelsById[Selection.getFirst()]
     if (!panel) return
 
     const option: MenuOption = {
@@ -75,7 +76,7 @@ export const menuOptions: Record<string, () => MenuOption | MenuOption[] | undef
   // -
 
   newTabNoContainer: () => {
-    const panel = Sidebar.reactive.panelsById[Selection.getFirst()]
+    const panel = Sidebar.panelsById[Selection.getFirst()]
     if (!panel) return
 
     return {
@@ -99,7 +100,7 @@ export const menuOptions: Record<string, () => MenuOption | MenuOption[] | undef
   },
 
   newTabContainers: () => {
-    const panel = Sidebar.reactive.panelsById[Selection.getFirst()]
+    const panel = Sidebar.panelsById[Selection.getFirst()]
     if (!Utils.isTabsPanel(panel)) return
 
     const opts: MenuOption[] = []
@@ -147,7 +148,7 @@ export const menuOptions: Record<string, () => MenuOption | MenuOption[] | undef
   },
 
   newTabNewContainer: () => {
-    const panel = Sidebar.reactive.panelsById[Selection.getFirst()]
+    const panel = Sidebar.panelsById[Selection.getFirst()]
     if (!panel) return
 
     return {
@@ -158,10 +159,12 @@ export const menuOptions: Record<string, () => MenuOption | MenuOption[] | undef
   },
 
   manageShortcuts: () => {
+    const panel = Sidebar.panelsById[Selection.getFirst()]
+
     return {
       label: translate('menu.new_tab_bar.manage_shortcuts'),
       icon: 'icon_pin',
-      onClick: () => Sidebar.openNewTabShortcutsPopup(Selection.getFirst()),
+      onClick: () => Popups.openNewTabShortcutsPopup(panel),
     }
   },
 

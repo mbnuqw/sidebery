@@ -69,7 +69,7 @@ export function onMouseMove(e: MouseEvent): void {
   if (multiSelectionStartId === null) return
 
   if (!Mouse.multiSelectionMode && Math.abs(e.clientY - multiSelectionStartY) > 5) {
-    const activePanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+    const activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
     if (!activePanel) return
 
     Menu.close()
@@ -88,7 +88,7 @@ export function onMouseMove(e: MouseEvent): void {
   }
 
   if (Mouse.multiSelectionMode) {
-    const activePanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+    const activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
     if (!activePanel || !activePanel.scrollEl) return
 
     const scroll = activePanel.scrollEl?.scrollTop || 0

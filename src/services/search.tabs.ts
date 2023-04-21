@@ -1,5 +1,5 @@
 import * as Utils from 'src/utils'
-import { Panel, ReactiveTab, TabsPanel } from 'src/types'
+import { Panel, ReactiveTab, Tab, TabsPanel } from 'src/types'
 import { Tabs } from 'src/services/tabs.fg'
 import { Selection } from 'src/services/selection'
 import { Search } from 'src/services/search'
@@ -19,25 +19,36 @@ export function onTabsSearch(activePanel: Panel): void {
       const prevValue = Search.prevValue
       const moreSpecific = value.length > prevValue.length
 
-      let tabs: ReactiveTab[] | undefined
+      let tabs: Tab[] | undefined
       if (prevValue && moreSpecific && value.startsWith(prevValue) && samePanel) {
         tabs = activePanel.filteredTabs
       }
       if (!tabs) tabs = activePanel.tabs
 
-      const filtered: ReactiveTab[] = []
-      const filteredInvisible: ReactiveTab[] = []
+      const filtered: Tab[] = []
+      const rFiltered: ReactiveTab[] = []
+      const filteredInvisible: Tab[] = []
+      const rFilteredInvisible: ReactiveTab[] = []
       for (const tab of tabs) {
         if (Search.check(tab.title) || Search.check(tab.url)) {
-          if (!tab.invisible) filtered.push(tab)
-          else filteredInvisible.push(tab)
+          const rTab = Tabs.reactive.byId[tab.id]
+          if (!rTab) continue
+          if (!tab.invisible) {
+            filtered.push(tab)
+            rFiltered.push(rTab)
+          } else {
+            filteredInvisible.push(tab)
+            rFilteredInvisible.push(rTab)
+          }
         }
       }
       activePanel.filteredTabs = filtered.concat(filteredInvisible)
-      activePanel.filteredLen = activePanel.filteredTabs.length
+      activePanel.reactive.filteredTabs = rFiltered.concat(rFilteredInvisible)
+      activePanel.reactive.filteredLen = activePanel.filteredTabs.length
     } else {
       activePanel.filteredTabs = undefined
-      activePanel.filteredLen = undefined
+      activePanel.reactive.filteredTabs = undefined
+      activePanel.reactive.filteredLen = undefined
     }
 
     // Search start
@@ -61,7 +72,7 @@ export function onTabsSearch(activePanel: Panel): void {
 }
 
 export function onTabsSearchNext(panel?: Panel): void {
-  if (!panel) panel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+  if (!panel) panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
   if (!Utils.isTabsPanel(panel) || !panel.filteredTabs) return
 
   const selId = Selection.getFirst()
@@ -79,7 +90,7 @@ export function onTabsSearchNext(panel?: Panel): void {
 }
 
 export function onTabsSearchPrev(panel?: Panel): void {
-  if (!panel) panel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+  if (!panel) panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
   if (!Utils.isTabsPanel(panel) || !panel.filteredTabs) return
 
   const selId = Selection.getFirst()
@@ -129,14 +140,15 @@ function findInAnotherPanel(): void {
   })
   if (!firstMatch) return
 
-  const panel = Sidebar.reactive.panelsById[firstMatch.panelId]
+  const panel = Sidebar.panelsById[firstMatch.panelId]
   if (!Utils.isTabsPanel(panel)) return
 
   // panel.filteredTabs = panel.tabs.filter(t => Search.check(t.title) || Search.check(t.url))
   // panel.filteredLen = panel.filteredTabs.length
 
   panel.filteredTabs = undefined
-  panel.filteredLen = undefined
+  panel.reactive.filteredTabs = undefined
+  panel.reactive.filteredLen = undefined
 
   Sidebar.activatePanel(firstMatch.panelId)
 }

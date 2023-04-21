@@ -2,8 +2,7 @@
 .new-tab-btns(
   tabindex="-1"
   :data-new-tab-bar-position="Settings.state.newTabBarPosition"
-  :data-sel="panel.selNewTab")
-  //- .new-tab-bg
+  :data-sel="panel.reactive.selNewTab")
   .new-tab-btn(
     :title="defaultBtn.tooltip"
     :data-color="defaultBtn.containerId && Containers.reactive.byId[defaultBtn.containerId]?.color"
@@ -35,7 +34,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, PropType } from 'vue'
+import { computed, PropType, onMounted, onBeforeUnmount, triggerRef } from 'vue'
 import { Container, DstPlaceInfo, ItemInfo, MenuType, Tab, TabsPanel } from 'src/types'
 import { DragType, DragInfo, DropType } from 'src/types'
 import { Settings } from 'src/services/settings'
@@ -72,7 +71,7 @@ const props = defineProps({
 const defaultBtn = computed<NewTabBtn>(() => {
   const btn: NewTabBtn = { id: 'default' }
 
-  const contianer = Containers.reactive.byId[props.panel.newTabCtx]
+  const contianer = Containers.reactive.byId[props.panel.reactive.newTabCtx]
   if (contianer) {
     btn.containerId = contianer.id
     btn.containrtName = contianer.name
@@ -89,7 +88,7 @@ const defaultBtn = computed<NewTabBtn>(() => {
 const btns = computed<NewTabBtn[]>(() => {
   const btns: NewTabBtn[] = []
   const ids: Record<string, string> = {}
-  const rawBtns = props.panel.newTabBtns
+  const rawBtns = props.panel.reactive.newTabBtns
   let container: Container | undefined
 
   for (const conf of rawBtns) {

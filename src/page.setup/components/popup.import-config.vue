@@ -40,10 +40,9 @@
 <script lang="ts" setup>
 import { ref, reactive, computed, onMounted, PropType } from 'vue'
 import * as Utils from 'src/utils'
-import { BackupData, Stored, Snapshot } from 'src/types'
+import { BackupData, Stored, Snapshot, Container, Container_v4 } from 'src/types'
 import { translate } from 'src/dict'
 import { DEFAULT_CONTAINER, DEFAULT_SETTINGS } from 'src/defaults'
-import { Sidebar } from 'src/services/sidebar'
 import { Info } from 'src/services/info'
 import { Store } from 'src/services/storage'
 import { Permissions } from 'src/services/permissions'
@@ -54,6 +53,7 @@ import { Snapshots } from 'src/services/snapshots'
 import ToggleField from 'src/components/toggle-field.vue'
 import { NormalizedSnapshot } from 'src/types/snapshots'
 import { Containers } from 'src/services/containers'
+import { getSidebarConfigFromV4 } from 'src/services/sidebar-config'
 
 const props = defineProps({
   importedData: {
@@ -253,12 +253,14 @@ function checkPermissions(): void {
 
   const containers = backup.containers ?? backup.containers_v4
   if (state.containers && containers) {
-    for (let ctr of Object.values(containers)) {
+    for (let ctr of Object.values(containers) as (Container | Container_v4)[]) {
       if (ctr.proxified) webData = true
       if (ctr.includeHostsActive) webData = true // DEPR
       if (ctr.excludeHostsActive) webData = true // DEPR
-      if (ctr.reopenRulesActive) webData = true
+      if ((ctr as Container).reopenRulesActive) webData = true
       if (ctr.userAgentActive) webData = true
+
+      if (webData) break
     }
   }
 
@@ -295,7 +297,7 @@ function requestPermissions(): void {
 
 type OldNewIds = Record<string, string>
 async function importContainers(backup: BackupData, toStore: Stored): Promise<OldNewIds> {
-  if (backup.containers_v4) backup.containers = backup.containers_v4
+  if (backup.containers_v4) backup.containers = Containers.upgradeV4Containers(backup.containers_v4)
   if (!backup.containers) throw 'No containers data'
 
   let ffContainers = await browser.contextualIdentities.query({})
@@ -339,7 +341,7 @@ function importSettings(backup: BackupData, toStore: Stored): void {
 
 function importSidebar(backup: BackupData, toStore: Stored, containersIds: OldNewIds = {}): void {
   if (backup.panels_v4 && !backup.sidebar) {
-    backup.sidebar = Sidebar.convertOldPanelsConfigToNew(backup.panels_v4)
+    backup.sidebar = getSidebarConfigFromV4(backup.panels_v4)
   }
   if (!backup.sidebar) return
 

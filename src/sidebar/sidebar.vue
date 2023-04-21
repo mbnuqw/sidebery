@@ -11,7 +11,7 @@
   :data-act-el-color-scheme="Styles.reactive.actElColorScheme"
   :data-popup-color-scheme="Styles.reactive.popupColorScheme"
   :data-animations="animations"
-  :data-pinned-tabs-position="pinnedTabsPosition"
+  :data-pinned-tabs-position="Settings.state.pinnedTabsPosition"
   :data-pinned-tabs-list="Settings.state.pinnedTabsList"
   :data-tabs-tree-lvl-marks="Settings.state.tabsLvlDots"
   :data-tabs-close-btn="Settings.state.tabRmBtn"
@@ -35,15 +35,15 @@
   @focusin="onFocusIn"
   @focusout="onFocusOut")
 
-  Transition(name="popup" type="transition"): ConfirmPopup(v-if="Sidebar.reactive.confirm")
+  Transition(name="popup" type="transition"): ConfirmPopup(v-if="Popups.reactive.confirm")
   Transition(name="popup" type="transition"): WindowsPopup(v-if="Windows.reactive.choosing")
   Transition(name="popup" type="transition"): BookmarksPopup(v-if="Bookmarks.reactive.popup")
-  Transition(name="popup" type="transition"): PanelConfigPopup(v-if="Sidebar.reactive.panelConfigPopup")
-  Transition(name="popup" type="transition"): ContainerConfigPopup(v-if="Sidebar.reactive.containerConfigPopup")
-  Transition(name="popup" type="transition"): GroupConfigPopup(v-if="Sidebar.reactive.groupConfigPopup")
-  Transition(name="popup" type="transition"): DialogPopup(v-if="Sidebar.reactive.dialog" :dialog="Sidebar.reactive.dialog")
-  Transition(name="popup" type="transition"): NewTabShortcutsPopup(v-if="Sidebar.reactive.newTabShortcutsPopup")
-  Transition(name="popup" type="transition"): SiteConfigPopup(v-if="Sidebar.reactive.siteConfigPopup")
+  Transition(name="popup" type="transition"): PanelConfigPopup(v-if="Popups.reactive.panelConfigPopup")
+  Transition(name="popup" type="transition"): ContainerConfigPopup(v-if="Popups.reactive.containerConfigPopup")
+  Transition(name="popup" type="transition"): GroupConfigPopup(v-if="Popups.reactive.groupConfigPopup")
+  Transition(name="popup" type="transition"): DialogPopup(v-if="Popups.reactive.dialog" :dialog="Popups.reactive.dialog")
+  Transition(name="popup" type="transition"): NewTabShortcutsPopup(v-if="Popups.reactive.newTabShortcutsPopup")
+  Transition(name="popup" type="transition"): SiteConfigPopup(v-if="Popups.reactive.siteConfigPopup")
   CtxMenuPopup
   DragAndDropTooltip
   NotificationsPopup
@@ -63,7 +63,7 @@
       SearchBar(v-if="!navBarHorizontal" v-show="Settings.state.searchBarMode !== 'none'")
       .panel-box(ref="panelBoxEl" @wheel.passive="onWheel")
         component.panel(
-          v-for="(panel, i) in Sidebar.reactive.panels"
+          v-for="(panel, i) in panels"
           :key="panel.id"
           :is="getPanelComponent(panel)"
           :data-pos="getPanelPos(i, panel.id)"
@@ -94,7 +94,7 @@
       PinnedTabsBar(v-if="pinnedTabsBarRight")
       NavigationBar.-vert(v-if="navBarRight")
   
-  UpgradeScreen(v-if="Sidebar.reactive.upgrading?.active")
+  UpgradeScreen(v-if="reactiveUpgrading.status?.active")
 </template>
 
 <script lang="ts" setup>
@@ -113,6 +113,7 @@ import { Bookmarks } from 'src/services/bookmarks'
 import { Windows } from 'src/services/windows'
 import { Search } from 'src/services/search'
 import { SwitchingTabScope } from 'src/services/tabs.fg.actions'
+import { reactiveUpgrading } from 'src/services/upgrading'
 import ConfirmPopup from './components/popup.confirm.vue'
 import CtxMenuPopup from './components/popup.context-menu.vue'
 import DragAndDropTooltip from './components/dnd-tooltip.vue'
@@ -134,6 +135,7 @@ import SiteConfigPopup from '../components/popup.site-config.vue'
 import UpgradeScreen from '../components/upgrade-screen.vue'
 import SubPanel from './components/sub-panel.vue'
 import * as Utils from 'src/utils'
+import * as Popups from 'src/services/popups'
 
 const rootEl = ref<HTMLElement | null>(null)
 const panelBoxEl = ref<HTMLElement | null>(null)
@@ -153,13 +155,17 @@ const bottomBar =
   Settings.state.subPanelBookmarks ||
   Settings.state.subPanelHistory
 
-const pinnedTabsPosition = computed(() => {
-  if (!Tabs.reactive.pinned.length) return 'none'
-  return Settings.state.pinnedTabsPosition
+const activePanel = computed<Panel | undefined>(() => {
+  return Sidebar.panelsById[Sidebar.reactive.activePanelId]
 })
 
-const activePanel = computed<Panel | undefined>(() => {
-  return Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+const panels = computed<Panel[]>(() => {
+  const output = []
+  for (const id of Sidebar.reactive.nav) {
+    const panel = Sidebar.panelsById[id]
+    if (panel) output.push(panel)
+  }
+  return output
 })
 
 onMounted(() => {
@@ -201,7 +207,7 @@ function onDocumentKeyup(e: KeyboardEvent): void {
     if (Menu.isOpen) Menu.close()
 
     // Confirm popup
-    if (Sidebar.reactive.confirm) Sidebar.reactive.confirm = null
+    if (Popups.reactive.confirm) Popups.reactive.confirm = null
 
     // Windows popup
     if (Windows.reactive.choosing) Windows.closeWindowsPopup()
@@ -210,19 +216,19 @@ function onDocumentKeyup(e: KeyboardEvent): void {
     if (Bookmarks.reactive.popup?.close) Bookmarks.reactive.popup.close()
 
     // Panel config popup
-    if (Sidebar.reactive.panelConfigPopup) Sidebar.closePanelPopup()
+    if (Popups.reactive.panelConfigPopup) Popups.closePanelPopup()
 
     // Conatiner config popup
-    if (Sidebar.reactive.containerConfigPopup) Sidebar.closeContainerPopup()
+    if (Popups.reactive.containerConfigPopup) Popups.closeContainerPopup()
 
     // Group config popup
-    if (Sidebar.reactive.groupConfigPopup) {
-      Sidebar.reactive.groupConfigPopup.done(GroupConfigResult.Cancel)
-      Sidebar.reactive.groupConfigPopup = null
+    if (Popups.reactive.groupConfigPopup) {
+      Popups.reactive.groupConfigPopup.done(GroupConfigResult.Cancel)
+      Popups.reactive.groupConfigPopup = null
     }
 
     // Dialog popup
-    if (Sidebar.reactive.dialog) Sidebar.reactive.dialog.result(null)
+    if (Popups.reactive.dialog) Popups.reactive.dialog.result(null)
 
     // Hidden panels popup
     if (Sidebar.reactive.hiddenPanelsPopup) {
@@ -230,8 +236,8 @@ function onDocumentKeyup(e: KeyboardEvent): void {
     }
 
     // New tab shortcuts popup
-    if (Sidebar.reactive.newTabShortcutsPopup) {
-      Sidebar.closeNewTabShortcutsPopup()
+    if (Popups.reactive.newTabShortcutsPopup) {
+      Popups.closeNewTabShortcutsPopup()
     }
 
     // Search bar
@@ -271,7 +277,7 @@ function onMouseLeave(): void {
 
   Mouse.stopResizing()
 
-  const activePanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+  const activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
   if (!Utils.isTabsPanel(activePanel) && activePanel?.tempMode && !Search.reactive.rawValue) {
     Sidebar.switchPanelBack(300)
   }
@@ -340,7 +346,7 @@ function getPanelPos(i: number, panelId: ID): PanelPosition {
   if (panelId === Sidebar.reactive.activePanelId) return 'center'
   if (i === -1) return 'right'
 
-  const activePanel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+  const activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
   if (activePanel && i > activePanel.index) return 'right'
   else return 'left'
 }

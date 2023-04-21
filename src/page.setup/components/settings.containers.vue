@@ -13,7 +13,7 @@ section(ref="el")
         v-if="container.reopenRules?.length"
         :title="translate('container.manage_reopen_rules_label')"
         :data-inactive="!container.reopenRulesActive"
-        @click="Sidebar.openTabReopenRulesPopup(container.id)")
+        @click="Popups.openTabReopenRulesPopup(container.id)")
         svg: use(xlink:href="#icon_reload")
         .len {{container.reopenRules.length}}
     .card-ctrls
@@ -36,11 +36,12 @@ import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
 import { Container } from 'src/types'
 import { Containers } from 'src/services/containers'
-import { Sidebar } from 'src/services/sidebar'
 import { SetupPage } from 'src/services/setup-page'
 import ContainerConfig from './popup.container-config.vue'
 import * as Logs from 'src/services/logs'
+import * as Popups from 'src/services/popups'
 import { DEFAULT_CONTAINER } from 'src/defaults'
+import { SidebarConfigRState, saveSidebarConfig } from 'src/services/sidebar-config'
 
 const el = ref<HTMLElement | null>(null)
 
@@ -83,15 +84,15 @@ async function removeContainer(container: Container): Promise<void> {
 
     delete Containers.reactive.byId[container.id]
 
-    for (let panel of Sidebar.reactive.panels) {
-      if (!Utils.isTabsPanel(panel)) continue
-      if (panel.newTabCtx === container.id) {
-        panel.newTabCtx = 'none'
+    for (let panelConf of Object.values(SidebarConfigRState.panels)) {
+      if (!Utils.isTabsPanel(panelConf)) continue
+      if (panelConf.newTabCtx === container.id) {
+        panelConf.newTabCtx = 'none'
         navSaveNeeded = true
       }
 
-      if (panel.moveRules.length) {
-        panel.moveRules = panel.moveRules.filter(rule => {
+      if (panelConf.moveRules.length) {
+        panelConf.moveRules = panelConf.moveRules.filter(rule => {
           if (rule.containerId && rule.containerId === container.id) {
             navSaveNeeded = true
             delete rule.containerId
@@ -102,7 +103,7 @@ async function removeContainer(container: Container): Promise<void> {
       }
     }
 
-    if (navSaveNeeded) Sidebar.saveSidebar()
+    if (navSaveNeeded) saveSidebarConfig()
   }
 }
 </script>

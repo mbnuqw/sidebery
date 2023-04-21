@@ -22,12 +22,9 @@ export const BOOKMARKS_PANEL_CONFIG: BookmarksPanelConfig = {
 }
 export const BOOKMARKS_PANEL_STATE: BookmarksPanel = {
   ...BOOKMARKS_PANEL_CONFIG,
+
   class: NavItemClass.panel,
-  bookmarks: [],
-  len: 0,
   index: -1,
-  sel: false,
-  loading: false,
   topOffset: 0,
   leftOffset: 0,
   rightOffset: 0,
@@ -35,6 +32,23 @@ export const BOOKMARKS_PANEL_STATE: BookmarksPanel = {
   scrollComponent: null,
   bounds: [],
   ready: false,
+
+  reactive: {
+    name: '',
+    color: 'toolbar',
+    iconSVG: 'icon_bookmarks',
+    iconIMG: '',
+    tooltip: '',
+    sel: false,
+    len: 0,
+    filteredLen: undefined,
+    loading: false,
+    ready: false,
+
+    bookmarks: [],
+    filteredBookmarks: undefined,
+    viewMode: 'tree',
+  },
 }
 
 export const TABS_PANEL_CONFIG: TabsPanelConfig = {
@@ -57,11 +71,20 @@ export const TABS_PANEL_CONFIG: TabsPanelConfig = {
 }
 export const TABS_PANEL_STATE: TabsPanel = {
   ...TABS_PANEL_CONFIG,
+
+  tabs: [],
+  pinnedTabs: [],
+  filteredTabs: undefined,
+  updatedTabs: [],
+  selNewTab: false,
+  startTabIndex: -1,
+  endTabIndex: -1,
+  nextTabIndex: -1,
+  scrollRetainer: 0,
+  allDiscarded: false,
+
   class: NavItemClass.panel,
-  len: 0,
   index: -1,
-  sel: false,
-  loading: false,
   topOffset: 0,
   leftOffset: 0,
   rightOffset: 0,
@@ -70,15 +93,28 @@ export const TABS_PANEL_STATE: TabsPanel = {
   bounds: [],
   ready: true,
 
-  updatedTabs: [],
-  startTabIndex: -1,
-  endTabIndex: -1,
-  nextTabIndex: -1,
-  tabs: [],
-  pinnedTabs: [],
-  selNewTab: false,
-  scrollRetainer: 0,
-  allDiscarded: false,
+  reactive: {
+    name: '',
+    color: 'toolbar',
+    iconSVG: 'icon_tabs',
+    iconIMG: undefined,
+    tooltip: '',
+    sel: false,
+    len: 0,
+    filteredLen: undefined,
+    loading: false,
+    ready: true,
+
+    tabs: [],
+    pinnedTabs: [],
+    filteredTabs: undefined,
+    updated: false,
+    selNewTab: false,
+    scrollRetainer: 0,
+    allDiscarded: false,
+    newTabCtx: 'none',
+    newTabBtns: [],
+  },
 }
 
 export const HISTORY_PANEL_CONFIG: HistoryPanelConfig = {
@@ -94,11 +130,9 @@ export const HISTORY_PANEL_CONFIG: HistoryPanelConfig = {
 }
 export const HISTORY_PANEL_STATE: HistoryPanel = {
   ...HISTORY_PANEL_CONFIG,
+
   class: NavItemClass.panel,
-  len: 0,
   index: -1,
-  sel: false,
-  loading: false,
   topOffset: 0,
   leftOffset: 0,
   rightOffset: 0,
@@ -106,6 +140,19 @@ export const HISTORY_PANEL_STATE: HistoryPanel = {
   scrollComponent: null,
   bounds: [],
   ready: false,
+
+  reactive: {
+    name: '',
+    color: 'toolbar',
+    iconSVG: 'icon_tabs',
+    iconIMG: undefined,
+    tooltip: '',
+    sel: false,
+    len: 0,
+    filteredLen: undefined,
+    loading: false,
+    ready: false,
+  },
 }
 
 export const NAV_BTNS_IDS: ID[] = [

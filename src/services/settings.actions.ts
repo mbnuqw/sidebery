@@ -215,8 +215,11 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
       tab.updated = false
       if (rTab) rTab.updated = false
     }
-    for (const panel of Sidebar.reactive.panels) {
-      if (Utils.isTabsPanel(panel)) panel.updatedTabs = []
+    for (const panel of Sidebar.panels) {
+      if (Utils.isTabsPanel(panel)) {
+        panel.updatedTabs = []
+        panel.reactive.updated = false
+      }
     }
   }
 }

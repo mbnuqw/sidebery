@@ -1,8 +1,8 @@
 <template lang="pug">
 .TabReopenRulesPopup.popup-container(@mousedown.stop.self="onCancel" @mouseup.stop)
-  .popup(v-if="Sidebar.reactive.tabReopenRulesPopup")
+  .popup(v-if="Popups.reactive.tabReopenRulesPopup")
     h2(v-if="rules.length") {{translate('popup.tab_reopen_rules.title')}}
-    .rules(v-if="rules.length" :data-active="Sidebar.reactive.tabReopenRulesPopup.container.reopenRulesActive")
+    .rules(v-if="rules.length" :data-active="Popups.reactive.tabReopenRulesPopup.container.reopenRulesActive")
       .rule(
         v-for="rule of rules"
         :key="rule.id"
@@ -22,7 +22,7 @@
     ToggleField.-compact(
       v-if="rules.length"
       label="popup.tab_reopen_rules.enable_label"
-      :value="Sidebar.reactive.tabReopenRulesPopup.container.reopenRulesActive"
+      :value="Popups.reactive.tabReopenRulesPopup.container.reopenRulesActive"
       @update:value="toggleRules")
     .space
     h2 {{editing ? translate('popup.tab_reopen_rules.editor_title.edit') : translate('popup.tab_reopen_rules.editor_title.new')}}
@@ -51,9 +51,9 @@
       :line="true")
 
     .note(v-if="newRuleType === 'include'").
-      {{translate('popup.tab_reopen_rules.rule_suffix_include', Sidebar.reactive.tabReopenRulesPopup.container.name)}}
+      {{translate('popup.tab_reopen_rules.rule_suffix_include', Popups.reactive.tabReopenRulesPopup.container.name)}}
     .note(v-else).
-      {{translate('popup.tab_reopen_rules.rule_suffix_exclude', Sidebar.reactive.tabReopenRulesPopup.container.name)}}
+      {{translate('popup.tab_reopen_rules.rule_suffix_exclude', Popups.reactive.tabReopenRulesPopup.container.name)}}
 
     .ctrls(v-if="editing")
       .btn(:class="{ '-inactive': !addBtnActive }" @click="onSave").
@@ -69,9 +69,9 @@
 import { ref, computed, onMounted } from 'vue'
 import { translate } from 'src/dict'
 import { TabReopenRuleConfig, TabReopenRuleType } from 'src/types'
-import { Sidebar } from 'src/services/sidebar'
 import { Containers } from 'src/services/containers'
 import * as Utils from 'src/utils'
+import * as Popups from 'src/services/popups'
 import TextField from './text-field.vue'
 import ToggleField from './toggle-field.vue'
 import { Permissions } from 'src/services/permissions'
@@ -100,10 +100,10 @@ onMounted(() => {
 })
 
 function initPopupState() {
-  if (!Sidebar.reactive.tabReopenRulesPopup) return []
+  if (!Popups.reactive.tabReopenRulesPopup) return []
 
   const output: ReopenRulePreview[] = []
-  const ruleConfigs = Sidebar.reactive.tabReopenRulesPopup.container.reopenRules
+  const ruleConfigs = Popups.reactive.tabReopenRulesPopup.container.reopenRules
 
   for (const conf of ruleConfigs) {
     output.push(createRulePreview(conf))
@@ -131,11 +131,11 @@ function createRulePreview(ruleConfig: TabReopenRuleConfig): ReopenRulePreview {
 }
 
 async function onAdd() {
-  if (!Sidebar.reactive.tabReopenRulesPopup) return
+  if (!Popups.reactive.tabReopenRulesPopup) return
   if (!addBtnActive.value) return
   if (!newRuleURL.value) return
 
-  const container = Sidebar.reactive.tabReopenRulesPopup.container
+  const container = Popups.reactive.tabReopenRulesPopup.container
   const name = newRuleName.value.trim()
 
   if (!Permissions.reactive.webData && !container.reopenRulesActive) {
@@ -166,14 +166,14 @@ async function onAdd() {
 }
 
 function onCancel(): void {
-  if (!Sidebar.reactive.tabReopenRulesPopup) return
+  if (!Popups.reactive.tabReopenRulesPopup) return
 
-  Sidebar.closeTabReopenRulesPopup()
+  Popups.closeTabReopenRulesPopup()
 }
 
 function shortcutUp(rule: ReopenRulePreview): void {
-  if (!Sidebar.reactive.tabReopenRulesPopup) return
-  const container = Sidebar.reactive.tabReopenRulesPopup.container
+  if (!Popups.reactive.tabReopenRulesPopup) return
+  const container = Popups.reactive.tabReopenRulesPopup.container
 
   const index = container.reopenRules.findIndex(r => r.id === rule.id)
   if (index !== -1 && index > 0) {
@@ -191,8 +191,8 @@ function shortcutUp(rule: ReopenRulePreview): void {
 }
 
 function shortcutDown(rule: ReopenRulePreview): void {
-  if (!Sidebar.reactive.tabReopenRulesPopup) return
-  const container = Sidebar.reactive.tabReopenRulesPopup.container
+  if (!Popups.reactive.tabReopenRulesPopup) return
+  const container = Popups.reactive.tabReopenRulesPopup.container
 
   const index = container.reopenRules.findIndex(r => r.id === rule.id)
   if (index !== -1 && index < container.reopenRules.length - 1) {
@@ -210,8 +210,8 @@ function shortcutDown(rule: ReopenRulePreview): void {
 }
 
 function removeRule(rule: ReopenRulePreview): void {
-  if (!Sidebar.reactive.tabReopenRulesPopup) return
-  const container = Sidebar.reactive.tabReopenRulesPopup.container
+  if (!Popups.reactive.tabReopenRulesPopup) return
+  const container = Popups.reactive.tabReopenRulesPopup.container
 
   // Remove rule from container config
   const index = container.reopenRules.findIndex(r => r.id === rule.id)
@@ -254,8 +254,8 @@ function onSave() {
   if (!editing.value) return
   if (!newRuleURL.value) return
 
-  if (!Sidebar.reactive.tabReopenRulesPopup) return
-  const container = Sidebar.reactive.tabReopenRulesPopup.container
+  if (!Popups.reactive.tabReopenRulesPopup) return
+  const container = Popups.reactive.tabReopenRulesPopup.container
 
   const rule = rules.value.find(r => r.id === editing.value)
   if (!rule) return
@@ -288,7 +288,7 @@ function onSave() {
 }
 
 async function toggleRules() {
-  const container = Sidebar.reactive.tabReopenRulesPopup?.container
+  const container = Popups.reactive.tabReopenRulesPopup?.container
   if (!container) return
 
   if (!Permissions.reactive.webData && !container.reopenRulesActive) {

@@ -67,7 +67,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
     if (allSeparators && !Settings.state.ctxMenuRenderInact) return
     const opts: MenuOption[] = []
 
-    for (const p of Sidebar.reactive.panels) {
+    for (const p of Sidebar.panels) {
       if (!isTabsPanel(p)) continue
       opts.push({
         label: translate('menu.bookmark.open_in_') + p.name,
@@ -371,7 +371,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
   // -
 
   collapseAllFolders: () => {
-    const panel = Sidebar.reactive.panelsById[Selection.getFirst()]
+    const panel = Sidebar.panelsById[Selection.getFirst()]
     if (!panel || !Bookmarks.reactive.tree.length) return
 
     const option: MenuOption = {
@@ -385,7 +385,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
   },
 
   switchViewMode: () => {
-    const panel = Sidebar.reactive.panelsById[Selection.getFirst()]
+    const panel = Sidebar.panelsById[Selection.getFirst()]
     if (!isBookmarksPanel(panel) || !Bookmarks.reactive.tree.length) return
 
     const isTree = panel.viewMode === 'tree'
@@ -405,7 +405,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
   },
 
   convertToTabsPanel: () => {
-    const panel = Sidebar.reactive.panelsById[Selection.getFirst()]
+    const panel = Sidebar.panelsById[Selection.getFirst()]
     if (!isBookmarksPanel(panel) || !Bookmarks.reactive.tree.length) return
 
     const option: MenuOption = {

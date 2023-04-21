@@ -7,7 +7,7 @@ import { PRE_SCROLL } from 'src/defaults'
 
 const scrollConf: ScrollToOptions = { behavior: 'auto', top: 0 }
 export function scrollToTab(id: ID): void {
-  const panel = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+  const panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
   if (!Utils.isTabsPanel(panel) || !panel.scrollEl) return
 
   const isLastTab = panel.tabs[panel.tabs.length - 1]?.id === id
@@ -45,6 +45,7 @@ export const scrollToTabDebounced = Utils.debounce(scrollToTab)
 
 export function incrementScrollRetainer(panel: TabsPanel, count: number): void {
   panel.scrollRetainer += count
+  panel.reactive.scrollRetainer = panel.scrollRetainer
   Tabs.blockedScrollPosition = true
 }
 
@@ -54,10 +55,12 @@ export function decrementScrollRetainer(panel: TabsPanel): void {
     return
   }
   panel.scrollRetainer--
+  panel.reactive.scrollRetainer = panel.scrollRetainer
   Tabs.blockedScrollPosition = true
 }
 
 export function resetScrollRetainer(panel: TabsPanel): void {
   panel.scrollRetainer = 0
+  panel.reactive.scrollRetainer = panel.scrollRetainer
   Tabs.blockedScrollPosition = false
 }

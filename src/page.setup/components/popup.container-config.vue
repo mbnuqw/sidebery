@@ -90,12 +90,12 @@
 <script lang="ts" setup>
 import { ref, computed, onMounted, nextTick, PropType } from 'vue'
 import * as Utils from 'src/utils'
+import * as Popups from 'src/services/popups'
 import { translate } from 'src/dict'
 import { CONTAINER_ICON_OPTS, COLOR_OPTS, PROXY_OPTS } from 'src/defaults'
 import { Container, TextInputComponent } from 'src/types'
 import { Containers } from 'src/services/containers'
 import { Permissions } from 'src/services/permissions'
-import { Sidebar } from 'src/services/sidebar'
 import TextField from '../../components/text-field.vue'
 import TextInput from '../../components/text-input.vue'
 import ToggleField from '../../components/toggle-field.vue'
@@ -302,7 +302,7 @@ function onUserAgentInput(value: string): void {
 }
 
 function openRulesPopup() {
-  Sidebar.openTabReopenRulesPopup(props.conf.id)
+  Popups.openTabReopenRulesPopup(props.conf.id)
 }
 
 function getManageRulesBtnLabel(container: Container): string {

@@ -19,7 +19,7 @@ function onBeforeRequestHandler(info: browser.webRequest.ReqDetails): optBlockin
   if (handledReqId !== info.requestId && tab.reopenInContainer) {
     handledReqId = info.requestId
 
-    const panel = Sidebar.reactive.panelsById[tab.panelId]
+    const panel = Sidebar.panelsById[tab.panelId]
     if (Utils.isTabsPanel(panel) && panel.newTabCtx === tab.reopenInContainer) {
       const dst = { panelId: tab.panelId, containerId: tab.reopenInContainer }
       const item = { id: tab.id, url: info.url, active: tab.active, index: tab.index }
@@ -57,7 +57,7 @@ export function updateWebReqHandlers() {
 
   // Check panels config
   if (Settings.state.newTabCtxReopen) {
-    for (const panel of Sidebar.reactive.panels) {
+    for (const panel of Sidebar.panels) {
       if (Utils.isTabsPanel(panel)) {
         const container = Containers.reactive.byId[panel.newTabCtx]
         if (container) {

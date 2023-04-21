@@ -43,7 +43,7 @@ async function onContainerRemovedFg(info: browser.contextualIdentities.ChangeInf
   const id = info.contextualIdentity.cookieStoreId
   let moveRulesRecalcNeeded = false
 
-  for (const panel of Sidebar.reactive.panels) {
+  for (const panel of Sidebar.panels) {
     if (!Utils.isTabsPanel(panel)) continue
     if (panel.newTabCtx === id) panel.newTabCtx = 'none'
     if (panel.moveRules.length) {

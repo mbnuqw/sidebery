@@ -1,48 +1,22 @@
-import { Panel, TabsPanel, ConfirmDialog, UpgradingState, Dialog, GroupConfig } from 'src/types'
-import { PanelConfig, SubPanelComponent, Container, SubPanelType } from 'src/types'
+import { Panel, SubPanelComponent, SubPanelType } from 'src/types'
 import { NOID } from 'src/defaults'
 import * as SidebarActions from 'src/services/sidebar.actions'
 
 export interface SidebarReactiveState {
   nav: ID[]
-  panels: Panel[]
-  panelsById: Record<ID, Panel>
+
   activePanelId: ID
   lastActivePanelId: ID
-  selectedNavId: ID
 
   horNavWidth: number
   navBtnWidth: number
 
-  panelConfigPopup: PanelConfigPopup | null
-  containerConfigPopup: ContainerConfigPopup | null
-  groupConfigPopup: GroupConfigPopup | null
-  newTabShortcutsPopup: NewTabShortcutsPopup | null
-  siteConfigPopup: SiteConfigPopup | null
-  tabMoveRulesPopup: TabMoveRulesPopup | null
-  tabReopenRulesPopup: TabReopenRulesPopup | null
-  confirm: ConfirmDialog | null
   hiddenPanelsPopup: boolean
   hiddenPanelsPopupOffset: number
   hiddenPanelsPopupOffsetSide: 'start' | 'end'
-  dialog: Dialog | null
 
+  selectedNavId: ID
   selectedHeader: ID
-  upgrading: UpgradingState | null
-}
-
-export interface PanelConfigPopup {
-  config: PanelConfig
-  index?: number
-  done: (result: ID | null) => void
-}
-
-export interface ContainerConfigPopup {
-  id: ID
-  name: string
-  icon: string
-  color: browser.ColorName
-  done: (result: ID | null) => void
 }
 
 export const enum GroupConfigResult {
@@ -50,57 +24,26 @@ export const enum GroupConfigResult {
   Cancel = 2,
 }
 
-export interface GroupConfigPopup {
-  config: GroupConfig
-  done: (result: GroupConfigResult) => void
-}
-
-export interface NewTabShortcutsPopup {
-  panel: TabsPanel
-}
-
-export interface TabMoveRulesPopup {
-  panel: TabsPanel
-}
-
-export interface TabReopenRulesPopup {
-  container: Container
-}
-
-export interface SiteConfigPopup {
-  tabId: ID
-  url: string
-}
-
 export const Sidebar = {
   reactive: {
     nav: [],
-    panels: [],
-    panelsById: {},
+
     activePanelId: NOID,
     lastActivePanelId: NOID,
-    selectedNavId: NOID,
 
     horNavWidth: 0,
     navBtnWidth: 0,
 
-    panelConfigPopup: null,
-    containerConfigPopup: null,
-    groupConfigPopup: null,
-    newTabShortcutsPopup: null,
-    tabMoveRulesPopup: null,
-    tabReopenRulesPopup: null,
-    siteConfigPopup: null,
-    confirm: null,
     hiddenPanelsPopup: false,
     hiddenPanelsPopupOffset: 0,
     hiddenPanelsPopupOffsetSide: 'start',
-    dialog: null,
 
+    selectedNavId: NOID,
     selectedHeader: NOID,
-    upgrading: null,
   } as SidebarReactiveState,
 
+  panelsById: {} as Record<ID, Panel>,
+  panels: [] as Panel[],
   ready: false,
   hasTabs: false,
   hasBookmarks: false,

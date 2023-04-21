@@ -1,6 +1,6 @@
 <template lang="pug">
 .NewTabShortcutsPopup.popup-container(@mousedown.stop.self="onCancel" @mouseup.stop)
-  .popup(v-if="Sidebar.reactive.newTabShortcutsPopup")
+  .popup(v-if="Popups.reactive.newTabShortcutsPopup")
     h2(v-if="shortcuts.length") {{translate('popup.new_tab_shortcuts.title')}}
     .shortcuts(v-if="shortcuts.length")
       .shortcut(v-for="shortcut of shortcuts" :key="shortcut.id")
@@ -50,6 +50,10 @@ import { Sidebar } from 'src/services/sidebar'
 import { Windows } from 'src/services/windows'
 import { Containers } from 'src/services/containers'
 import { Favicons } from 'src/services/favicons'
+import { Info } from 'src/services/info'
+import { SidebarConfigRState, saveSidebarConfig } from 'src/services/sidebar-config'
+import * as Utils from 'src/utils'
+import * as Popups from 'src/services/popups'
 import TextField from './text-field.vue'
 import SelectField from './select-field.vue'
 
@@ -80,14 +84,14 @@ const addBtnActive = computed<boolean>(() => {
 })
 
 const shortcuts = computed<NewTabShortcut[]>(() => {
-  if (!Sidebar.reactive.newTabShortcutsPopup) return []
+  if (!Popups.reactive.newTabShortcutsPopup) return []
 
+  const rawShortcuts = Popups.reactive.newTabShortcutsPopup.rawShortcuts
   const shortcuts: NewTabShortcut[] = []
   const ids: Record<string, string> = {}
-  const rawBtns = Sidebar.reactive.newTabShortcutsPopup.panel.newTabBtns
   let container: Container | undefined
 
-  for (const conf of rawBtns) {
+  for (const conf of rawShortcuts) {
     // Ignore empty config
     if (conf === '') {
       shortcuts.push({ id: Math.random().toString(36) })
@@ -134,9 +138,11 @@ const shortcuts = computed<NewTabShortcut[]>(() => {
 })
 
 const availableContainersOpts = computed<ContainerOption[]>(() => {
-  if (!Sidebar.reactive.newTabShortcutsPopup) return []
+  if (!Popups.reactive.newTabShortcutsPopup) return []
+  const panelId = Popups.reactive.newTabShortcutsPopup.panelId
+  const panel = Info.isSidebar ? Sidebar.panelsById[panelId] : SidebarConfigRState.panels[panelId]
+  if (!Utils.isTabsPanel(panel)) return []
 
-  const panel = Sidebar.reactive.newTabShortcutsPopup.panel
   const defaultTitle = translate('popup.new_tab_shortcuts.new_shortcut_default_container')
   const result: ContainerOption[] = [
     {
@@ -158,7 +164,7 @@ const availableContainersOpts = computed<ContainerOption[]>(() => {
 })
 
 function onAdd(): void {
-  if (!Sidebar.reactive.newTabShortcutsPopup) return
+  if (!Popups.reactive.newTabShortcutsPopup) return
   if (!addBtnActive.value) return
   if (!newShortcutURL.value && newShortcutContainerId.value === 'none') return
 
@@ -168,60 +174,87 @@ function onAdd(): void {
   if (newShortcutURL.value) btnConfig.push(newShortcutURL.value)
   if (!btnConfig.length) return
 
-  const panel = Sidebar.reactive.newTabShortcutsPopup.panel
-  panel.newTabBtns.push(btnConfig.join(', '))
+  const panelId = Popups.reactive.newTabShortcutsPopup.panelId
+  const panel = Info.isSidebar ? Sidebar.panelsById[panelId] : SidebarConfigRState.panels[panelId]
+  if (!Utils.isTabsPanel(panel)) return
+
+  const rawShortcuts = Popups.reactive.newTabShortcutsPopup.rawShortcuts
+  const shortcut = btnConfig.join(', ')
+  rawShortcuts.push(shortcut)
+  panel.newTabBtns.push(shortcut)
 
   newShortcutURL.value = ''
   newShortcutContainerId.value = 'none'
 
-  Sidebar.saveSidebar(1000)
+  if (Info.isSidebar) Sidebar.saveSidebar(1000)
+  else saveSidebarConfig(1000)
 }
 
 function onCancel(): void {
-  if (!Sidebar.reactive.newTabShortcutsPopup) return
+  if (!Popups.reactive.newTabShortcutsPopup) return
 
-  Sidebar.closeNewTabShortcutsPopup()
+  Popups.closeNewTabShortcutsPopup()
 }
 
 function shortcutUp(shortcut: NewTabShortcut): void {
-  if (!Sidebar.reactive.newTabShortcutsPopup) return
-  const panel = Sidebar.reactive.newTabShortcutsPopup.panel
+  if (!Popups.reactive.newTabShortcutsPopup) return
+  const panelId = Popups.reactive.newTabShortcutsPopup.panelId
+  const panel = Info.isSidebar ? Sidebar.panelsById[panelId] : SidebarConfigRState.panels[panelId]
+  if (!Utils.isTabsPanel(panel)) return
 
   const index = panel.newTabBtns.indexOf(shortcut.id)
   if (index === -1) return
 
   if (index <= 0) return
 
+  const rawShortcuts = Popups.reactive.newTabShortcutsPopup.rawShortcuts
+  rawShortcuts.splice(index, 1)
+  rawShortcuts.splice(index - 1, 0, shortcut.id)
+
   panel.newTabBtns.splice(index, 1)
   panel.newTabBtns.splice(index - 1, 0, shortcut.id)
 
-  Sidebar.saveSidebar(1000)
+  if (Info.isSidebar) Sidebar.saveSidebar(1000)
+  else saveSidebarConfig(1000)
 }
 
 function shortcutDown(shortcut: NewTabShortcut): void {
-  if (!Sidebar.reactive.newTabShortcutsPopup) return
-  const panel = Sidebar.reactive.newTabShortcutsPopup.panel
+  if (!Popups.reactive.newTabShortcutsPopup) return
+  const panelId = Popups.reactive.newTabShortcutsPopup.panelId
+  const panel = Info.isSidebar ? Sidebar.panelsById[panelId] : SidebarConfigRState.panels[panelId]
+  if (!Utils.isTabsPanel(panel)) return
 
   const index = panel.newTabBtns.indexOf(shortcut.id)
   if (index === -1) return
 
   if (index >= panel.newTabBtns.length - 1) return
 
+  const rawShortcuts = Popups.reactive.newTabShortcutsPopup.rawShortcuts
+  rawShortcuts.splice(index, 1)
+  rawShortcuts.splice(index + 1, 0, shortcut.id)
+
   panel.newTabBtns.splice(index, 1)
   panel.newTabBtns.splice(index + 1, 0, shortcut.id)
 
-  Sidebar.saveSidebar(1000)
+  if (Info.isSidebar) Sidebar.saveSidebar(1000)
+  else saveSidebarConfig(1000)
 }
 
 function removeShortcut(shortcut: NewTabShortcut): void {
-  if (!Sidebar.reactive.newTabShortcutsPopup) return
-  const panel = Sidebar.reactive.newTabShortcutsPopup.panel
+  if (!Popups.reactive.newTabShortcutsPopup) return
+  const panelId = Popups.reactive.newTabShortcutsPopup.panelId
+  const panel = Info.isSidebar ? Sidebar.panelsById[panelId] : SidebarConfigRState.panels[panelId]
+  if (!Utils.isTabsPanel(panel)) return
 
   const index = panel.newTabBtns.indexOf(shortcut.id)
   if (index === -1) return
 
+  const rawShortcuts = Popups.reactive.newTabShortcutsPopup.rawShortcuts
+  rawShortcuts.splice(index, 1)
+
   panel.newTabBtns.splice(index, 1)
 
-  Sidebar.saveSidebar(1000)
+  if (Info.isSidebar) Sidebar.saveSidebar(1000)
+  else saveSidebarConfig(1000)
 }
 </script>

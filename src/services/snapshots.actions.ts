@@ -10,7 +10,6 @@ import { Tabs } from 'src/services/tabs.bg'
 import { Store } from 'src/services/storage'
 import { SetupPage } from 'src/services/setup-page'
 import { Notifications } from 'src/services/notifications'
-import { Sidebar } from 'src/services/sidebar'
 import * as IPC from './ipc'
 import { RemovingSnapshotResult, SnapStoreMode } from 'src/types/snapshots'
 import { Containers } from './containers'
@@ -18,6 +17,7 @@ import { DEFAULT_CONTAINER_ID } from 'src/defaults/containers'
 import { PanelType } from 'src/types/sidebar'
 import { ItemInfo } from 'src/types/tabs'
 import { Info } from './info'
+import { createDefaultSidebarConfig, getSidebarConfigFromV4 } from './sidebar-config'
 
 const MIN_SNAP_INTERVAL = 60_000
 const MIN_LIMITING_COUNT = 1
@@ -46,7 +46,7 @@ export async function createSnapshot(auto = false): Promise<Snapshot | undefined
   const stored = storedResult?.status === 'fulfilled' ? storedResult.value : undefined
   if (!stored) return
   if (!stored.containers) stored.containers = {}
-  if (!stored.sidebar) stored.sidebar = Sidebar.createDefaultSidebar()
+  if (!stored.sidebar) stored.sidebar = createDefaultSidebarConfig()
   if (!stored.snapshots) stored.snapshots = []
 
   // Get tabs info per window per panel
@@ -660,7 +660,7 @@ export function convertFromV4(oldSnapshots: Snapshot_v4[]): Snapshot[] {
     if (snapshotV4.panels) {
       const defaultPanel = snapshotV4.panels.find(p => p.type === 'default')
       defaultPanelId = defaultPanel?.id ?? 'firefox-default'
-      snapshot.sidebar = Sidebar.convertOldPanelsConfigToNew(snapshotV4.panels)
+      snapshot.sidebar = getSidebarConfigFromV4(snapshotV4.panels)
     }
 
     // Tabs

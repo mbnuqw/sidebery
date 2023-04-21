@@ -37,7 +37,8 @@ export async function load(): Promise<void> {
 
   History.setupListeners()
 
-  if (Sidebar.reactive.panelsById.history) Sidebar.reactive.panelsById.history.ready = true
+  const historyPanel = Sidebar.panelsById.history
+  if (historyPanel) historyPanel.reactive.ready = historyPanel.ready = true
   History.ready = true
   History.reactive.ready = true
 }
@@ -46,7 +47,9 @@ export function unload(): void {
   History.ready = false
   History.reactive.ready = false
   History.reactive.list = []
-  if (Sidebar.reactive.panelsById.history) Sidebar.reactive.panelsById.history.ready = false
+
+  const historyPanel = Sidebar.panelsById.history
+  if (historyPanel) historyPanel.reactive.ready = historyPanel.ready = false
   History.resetListeners()
   cachedVisits = {}
 }
@@ -55,7 +58,7 @@ let unloadAfterTimeout: number | undefined
 export function unloadAfter(delay: number): void {
   clearTimeout(unloadAfterTimeout)
   unloadAfterTimeout = setTimeout(() => {
-    const historyPanel = Sidebar.reactive.panelsById.history
+    const historyPanel = Sidebar.panelsById.history
     if (historyPanel && Sidebar.reactive.activePanelId === historyPanel.id) return
     if (historyPanel && !historyPanel.ready) return
     if (Sidebar.subPanelOpen === SubPanelType.History) return
@@ -213,14 +216,14 @@ export function scrollToHistoryItem(id: string): void {
 }
 
 export async function openTab(item: HistoryItem, activate?: boolean): Promise<void> {
-  let panel: Panel | undefined = Sidebar.reactive.panelsById[Sidebar.reactive.activePanelId]
+  let panel: Panel | undefined = Sidebar.panelsById[Sidebar.reactive.activePanelId]
   if (!Utils.isTabsPanel(panel)) {
-    panel = Sidebar.reactive.panelsById[Sidebar.lastTabsPanelId]
+    panel = Sidebar.panelsById[Sidebar.lastTabsPanelId]
   }
   if (!Utils.isTabsPanel(panel)) {
     const activeTab = Tabs.byId[Tabs.activeId]
-    if (activeTab) panel = Sidebar.reactive.panelsById[activeTab.panelId]
-    else panel = Sidebar.reactive.panels.find(p => Utils.isTabsPanel(p))
+    if (activeTab) panel = Sidebar.panelsById[activeTab.panelId]
+    else panel = Sidebar.panels.find(p => Utils.isTabsPanel(p))
   }
 
   const tabInfo: ItemInfo = { id: 0, url: item.url, title: item.title, active: activate }

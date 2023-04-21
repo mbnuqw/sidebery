@@ -5,9 +5,10 @@ import { Windows } from 'src/services/windows'
 import { Settings } from 'src/services/settings'
 import { Tabs } from './tabs.fg'
 import { Favicons } from './favicons'
-import { GroupConfigResult, Sidebar } from './sidebar'
+import { GroupConfigResult } from './sidebar'
 import * as IPC from './ipc'
 import * as Logs from './logs'
+import * as Popups from './popups'
 
 /**
  * Set relGroupId and relPinId props in related pinned and group tabs
@@ -63,7 +64,7 @@ export async function groupTabs(tabIds: ID[], conf?: GroupConfig): Promise<void>
   }
 
   if (!tabs.length) return
-  if (tabs[0].lvl >= Settings.state.tabsTreeLimit) return
+  if (Settings.state.tabsTreeLimit === 'none' || tabs[0].lvl >= Settings.state.tabsTreeLimit) return
 
   // Find title for group tab
   if (!conf.title) {
@@ -147,7 +148,7 @@ export async function groupTabs(tabIds: ID[], conf?: GroupConfig): Promise<void>
 
 export async function openGroupConfigPopup(config: GroupConfig): Promise<GroupConfigResult> {
   return new Promise<GroupConfigResult>(ok => {
-    Sidebar.reactive.groupConfigPopup = {
+    Popups.reactive.groupConfigPopup = {
       config,
       done: result => ok(result),
     }

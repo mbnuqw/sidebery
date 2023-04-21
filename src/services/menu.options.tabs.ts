@@ -11,6 +11,7 @@ import { Menu } from 'src/services/menu'
 import { Containers } from 'src/services/containers'
 import { ItemInfo } from 'src/types/tabs'
 import * as Logs from './logs'
+import * as Popups from 'src/services/popups'
 
 export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | undefined> = {
   undoRmTab: () => ({
@@ -58,7 +59,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     const probeTab = Tabs.byId[Selection.getFirst()]
     if (!probeTab) return
 
-    for (const panel of Sidebar.reactive.panels) {
+    for (const panel of Sidebar.panels) {
       if (!Utils.isTabsPanel(panel)) continue
       if (probeTab.panelId === panel.id) continue
 
@@ -211,7 +212,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     const option: MenuOption = {
       label: translate('menu.tab.url_conf'),
       icon: 'icon_url_conf',
-      onClick: () => Sidebar.openSiteConfigPopup(firstTab),
+      onClick: () => Popups.openSiteConfigPopup(firstTab),
     }
 
     return option
@@ -434,8 +435,8 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     const tab = Tabs.byId[tabId]
     if (!tab || tab.pinned) option.inactive = true
     if (tab) {
-      const panel = Sidebar.reactive.panelsById[tab.panelId]
-      if (!panel || panel.len === 1) option.inactive = true
+      const panel = Sidebar.panelsById[tab.panelId]
+      if (!panel || panel.reactive.len === 1) option.inactive = true
     }
     if (!Settings.state.ctxMenuRenderInact && option.inactive) return
     return option
@@ -493,7 +494,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
   // -
 
   muteAllAudibleTabs: () => {
-    const panel = Sidebar.reactive.panelsById[Selection.getFirst()]
+    const panel = Sidebar.panelsById[Selection.getFirst()]
     if (!Utils.isTabsPanel(panel)) return
 
     const tabIds = Tabs.list.filter(t => t.audible && t.panelId === panel.id).map(t => t.id)
@@ -508,7 +509,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
   },
 
   closeTabsDuplicates: () => {
-    const panel = Sidebar.reactive.panelsById[Selection.getFirst()]
+    const panel = Sidebar.panelsById[Selection.getFirst()]
     if (!Utils.isTabsPanel(panel)) return
 
     const tabs = panel.tabs ?? []
@@ -524,7 +525,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
   },
 
   reloadTabs: () => {
-    const panel = Sidebar.reactive.panelsById[Selection.getFirst()]
+    const panel = Sidebar.panelsById[Selection.getFirst()]
     if (!Utils.isTabsPanel(panel)) return
 
     const tabs = panel.tabs ?? []
@@ -540,7 +541,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
   },
 
   discardTabs: () => {
-    const panel = Sidebar.reactive.panelsById[Selection.getFirst()]
+    const panel = Sidebar.panelsById[Selection.getFirst()]
     if (!Utils.isTabsPanel(panel)) return
 
     const tabIds: ID[] = []
@@ -557,7 +558,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
   },
 
   closeTabs: () => {
-    const panel = Sidebar.reactive.panelsById[Selection.getFirst()]
+    const panel = Sidebar.panelsById[Selection.getFirst()]
     if (!Utils.isTabsPanel(panel)) return
 
     const tabs = panel.tabs ?? []
@@ -573,7 +574,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
   },
 
   collapseInactiveBranches: () => {
-    const panel = Sidebar.reactive.panelsById[Selection.getFirst()]
+    const panel = Sidebar.panelsById[Selection.getFirst()]
     if (!Utils.isTabsPanel(panel)) return
     if (!Settings.state.tabsTree) return
 
@@ -596,7 +597,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
   },
 
   bookmarkTabsPanel: () => {
-    const panel = Sidebar.reactive.panelsById[Selection.getFirst()]
+    const panel = Sidebar.panelsById[Selection.getFirst()]
     if (!Utils.isTabsPanel(panel)) return
 
     const option: MenuOption = {
@@ -619,7 +620,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
   },
 
   restoreFromBookmarks: () => {
-    const panel = Sidebar.reactive.panelsById[Selection.getFirst()]
+    const panel = Sidebar.panelsById[Selection.getFirst()]
     if (!Utils.isTabsPanel(panel)) return
 
     const option: MenuOption = {
@@ -638,7 +639,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
   },
 
   convertToBookmarksPanel: () => {
-    const panel = Sidebar.reactive.panelsById[Selection.getFirst()]
+    const panel = Sidebar.panelsById[Selection.getFirst()]
     if (!Utils.isTabsPanel(panel)) return
 
     const option: MenuOption = {

@@ -1,4 +1,4 @@
-import { Panel, Container, BackupData } from 'src/types'
+import { Container, BackupData, PanelConfig } from 'src/types'
 import * as SetupPageActions from 'src/services/setup-page.actions'
 
 export type SetupPageView =
@@ -22,7 +22,7 @@ export interface SetupPageState {
   navLock: boolean
 
   selectedContainer: Container | null
-  selectedPanel: Panel | null
+  selectedPanelConfig: PanelConfig | null
 
   detailsText: string
   detailsEdit?: (newValue: string) => void
@@ -44,9 +44,6 @@ export const nav = [
   { active: false, name: 'settings_dnd', sub: true },
   { active: false, name: 'settings_search', sub: true },
   { active: false, name: 'settings_tabs', sub: true },
-  // { active: false, name: 'settings_new_tab_position', sub: true },
-  // { active: false, name: 'settings_pinned_tabs', sub: true },
-  // { active: false, name: 'settings_tabs_tree', sub: true },
   { active: false, name: 'settings_bookmarks', sub: true },
   { active: false, name: 'settings_history', sub: true },
   { active: false, name: 'settings_appearance', sub: true },
@@ -70,7 +67,7 @@ export const SetupPage = {
     activeView: 'settings',
     activeSection: 'settings_general',
     selectedContainer: null,
-    selectedPanel: null,
+    selectedPanelConfig: null,
     detailsText: '',
     detailsTitle: '',
     navLock: false,
