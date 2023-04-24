@@ -43,7 +43,7 @@
         {{translate('panel.custom_icon_url_btn')}}
       .btn(:data-active="state.customIconType === 'file'" @click="setCustomIconType('file')")
         .btn-label {{translate('panel.custom_icon_file_btn')}}
-        input(type="file" accept="image/*" @input="openCustomIconFile")
+        input(type="file" accept="image/*" @input="openCustomIconFile" @keyup="onFileInputKeyup")
       .img-box(v-if="state.customIconUrl")
         img(:src="state.customIconUrl" @load="onCustomIconLoad" @error="onCustomIconError")
       .img-rm(v-if="state.customIconUrl" @click="onCustomIconRm")
@@ -661,5 +661,12 @@ function getManageShortcutsBtnLabel(panel: TabsPanelConfig): string {
   const label = translate('panel.new_tab_shortcuts_manage_btn')
   if (panel.newTabBtns.length) return label + ` (${panel.newTabBtns.length})`
   else return label
+}
+
+function onFileInputKeyup(e: KeyboardEvent) {
+  if (e.code === 'Escape') {
+    e.stopPropagation()
+    rootEl.value?.focus()
+  }
 }
 </script>
