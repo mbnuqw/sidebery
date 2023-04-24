@@ -689,19 +689,19 @@ export function moveNavItem(srcIndex: number, dstIndex: number): void {
   Sidebar.saveSidebar(500)
 }
 
-export function createPanelFromConfig(srcPanel: PanelConfig): Panel | null {
+export function createPanelFromConfig(config: PanelConfig): Panel | null {
   let panelDefs: Panel
-  if (srcPanel.id === DEFAULT_CONTAINER_ID) panelDefs = TABS_PANEL_STATE
-  else if (srcPanel.type === PanelType.tabs) panelDefs = TABS_PANEL_STATE
-  else if (srcPanel.type === PanelType.bookmarks) panelDefs = BOOKMARKS_PANEL_STATE
-  else if (srcPanel.type === PanelType.history) panelDefs = HISTORY_PANEL_STATE
+  if (config.id === DEFAULT_CONTAINER_ID) panelDefs = TABS_PANEL_STATE
+  else if (config.type === PanelType.tabs) panelDefs = TABS_PANEL_STATE
+  else if (config.type === PanelType.bookmarks) panelDefs = BOOKMARKS_PANEL_STATE
+  else if (config.type === PanelType.history) panelDefs = HISTORY_PANEL_STATE
   else return null
 
-  const panel = Utils.recreateNormalizedObject(srcPanel as Panel, panelDefs)
-  panel.reactive.name = srcPanel.name
-  panel.reactive.color = srcPanel.color
-  panel.reactive.iconSVG = srcPanel.iconSVG
-  panel.reactive.iconIMG = srcPanel.iconIMG
+  const panel = Utils.recreateNormalizedObject(config as Panel, panelDefs)
+  panel.reactive.name = config.name
+  panel.reactive.color = config.color
+  panel.reactive.iconSVG = config.iconSVG
+  panel.reactive.iconIMG = config.iconIMG
   if (Utils.isTabsPanel(panel)) {
     panel.reactive.newTabCtx = panel.newTabCtx
     panel.reactive.newTabBtns = panel.newTabBtns
@@ -1439,6 +1439,8 @@ export function createTabsPanel(conf?: Partial<TabsPanelConfig>): TabsPanel {
   panel.reactive.color = panel.color
   panel.reactive.iconSVG = panel.iconSVG
   panel.reactive.iconIMG = panel.iconIMG
+  panel.reactive.newTabCtx = panel.newTabCtx
+  panel.reactive.newTabBtns = panel.newTabBtns
 
   if (reactFn) panel.reactive = reactFn(panel.reactive)
 
@@ -1474,6 +1476,7 @@ export function createBookmarksPanel(conf?: Partial<BookmarksPanelConfig>): Book
   panel.reactive.color = panel.color
   panel.reactive.iconSVG = panel.iconSVG
   panel.reactive.iconIMG = panel.iconIMG
+  panel.reactive.viewMode = panel.viewMode
 
   if (reactFn) panel.reactive = reactFn(panel.reactive)
 
@@ -1706,6 +1709,7 @@ export async function bookmarkTabsPanel(
 
 export function setViewMode(panel: BookmarksPanel, mode: string): void {
   panel.viewMode = mode
+  panel.reactive.viewMode = mode
   Sidebar.saveSidebar(300)
 }
 
