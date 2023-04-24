@@ -15,15 +15,15 @@ const BUNDLES = {
   'src/injections/group.ts': true,
   'src/injections/url.ts': true,
 }
-const IMPORT_RE = /(^|\n|\r\n|;)(im|ex)port\s?((?:\n|.)*?)"(\.\.?|src|vue)(\/.+?)?"/g
+const IMPORT_RE = /(^|\n|\r\n|;)(im|ex)port\s?((?:\n|.)*?)\sfrom\s"(\.\.?|src|vue)(\/.+?)?"/g
 
 const ESBUILD_DEFINE = forChromium ? { browser: 'chrome' } : undefined
 
 function fixModuleImports(data) {
   return data.replace(IMPORT_RE, (match, p1, p2, p3, p4, p5) => {
-    if (p4 === 'src') return `${p1}${p2}port ${p3}'${p5}.js'`
-    else if (p4 === 'vue') return `${p1}${p2}port ${p3}'/vendor/${VUE_DIST}'`
-    else return `${p1}${p2}port ${p3}'${p4}${p5}.js'`
+    if (p4 === 'src') return `${p1}${p2}port ${p3} from '${p5}.js'`
+    else if (p4 === 'vue') return `${p1}${p2}port ${p3} from '/vendor/${VUE_DIST}'`
+    else return `${p1}${p2}port ${p3} from '${p4}${p5}.js'`
   })
 }
 
