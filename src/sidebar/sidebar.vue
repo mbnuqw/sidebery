@@ -74,7 +74,7 @@
           .tools
             .tool-btn(
               v-if="Settings.state.subPanelRecentlyClosedBar"
-              :data-disabled="!Tabs.reactive.recentlyRemoved.length"
+              :data-disabled="!Tabs.reactive.recentlyRemovedLen"
               @click="Sidebar.openSubPanel(SubPanelType.RecentlyClosedTabs, activePanel)")
               svg: use(xlink:href="#icon_trash")
             .tool-btn(

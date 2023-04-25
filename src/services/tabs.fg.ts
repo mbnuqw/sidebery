@@ -12,7 +12,7 @@ import * as TabsColors from 'src/services/tabs.fg.colors'
 export interface TabsReactiveState {
   byId: Partial<Record<ID, ReactiveTab>>
   pinned: ReactiveTab[]
-  recentlyRemoved: RecentlyRemovedTabInfo[]
+  recentlyRemovedLen: number
 }
 
 export interface RemovedTabInfo {
@@ -40,10 +40,11 @@ export interface RecentlyRemovedTabInfo {
 
 export const Tabs = {
   ready: false,
-  reactive: { byId: {}, pinned: [], recentlyRemoved: [] } as TabsReactiveState,
+  reactive: { byId: {}, pinned: [], recentlyRemovedLen: 0 } as TabsReactiveState,
   list: [] as Tab[],
   byId: {} as Partial<Record<ID, Tab>>,
   pinned: [] as Tab[],
+  recentlyRemoved: [] as RecentlyRemovedTabInfo[],
 
   urlsInUse: {} as Record<string, number>,
   shadowMode: false,

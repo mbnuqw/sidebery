@@ -3,7 +3,7 @@
   ScrollBox
     .closed-tabs-container
       .closed-tab(
-        v-for="rmt in Tabs.reactive.recentlyRemoved"
+        v-for="rmt in Tabs.recentlyRemoved"
         :id="'rmt' + rmt.id"
         :key="rmt.id"
         :title="rmt.url"
@@ -25,7 +25,7 @@
             @mouseup="onBranchMouseUp($event, rmt)")
             svg: use(xlink:href="#icon_tree_struct")
           .container-mark(v-if="rmt.containerColor" :data-color="rmt.containerColor")
-  .nothing-placeholder(v-if="Tabs.reactive.recentlyRemoved.length === 0")
+  .nothing-placeholder(v-if="Tabs.reactive.recentlyRemovedLen === 0")
     .msg {{translate('panel.nothing')}}
 </template>
 
@@ -162,11 +162,11 @@ function onTabDragStart(e: DragEvent, tab: RecentlyRemovedTabInfo) {
 function getBranch(rootTab: RecentlyRemovedTabInfo): RecentlyRemovedTabInfo[] {
   const branch: RecentlyRemovedTabInfo[] = [rootTab]
 
-  const startIndex = Tabs.reactive.recentlyRemoved.findIndex(t => t.id === rootTab.id)
+  const startIndex = Tabs.recentlyRemoved.findIndex(t => t.id === rootTab.id)
   if (startIndex === -1) return branch
 
-  for (let i = startIndex + 1; i < Tabs.reactive.recentlyRemoved.length; i++) {
-    const tab = Tabs.reactive.recentlyRemoved[i]
+  for (let i = startIndex + 1; i < Tabs.recentlyRemoved.length; i++) {
+    const tab = Tabs.recentlyRemoved[i]
     if (!tab) break
     if (rootTab.lvl >= tab.lvl) break
     branch.push(tab)
@@ -200,10 +200,12 @@ async function openTabs(targetTab: RecentlyRemovedTabInfo, inactive: boolean, br
   // Or remove from list
   if (tabs.length === 1) tabsBranch.forEach(t => t.lvl--)
   for (const tab of tabs) {
-    const index = Tabs.reactive.recentlyRemoved.findIndex(t => t.id === tab.id)
-    if (index !== -1) Tabs.reactive.recentlyRemoved.splice(index, 1)
+    const index = Tabs.recentlyRemoved.findIndex(t => t.id === tab.id)
+    if (index !== -1) Tabs.recentlyRemoved.splice(index, 1)
   }
 
-  if (!Tabs.reactive.recentlyRemoved.length) Sidebar.closeSubPanel()
+  if (!Tabs.recentlyRemoved.length) Sidebar.closeSubPanel()
+
+  Tabs.reactive.recentlyRemovedLen = Tabs.recentlyRemoved.length
 }
 </script>

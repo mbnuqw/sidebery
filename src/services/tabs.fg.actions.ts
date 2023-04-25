@@ -124,7 +124,8 @@ export function unload(): void {
 
   Tabs.reactive.byId = {}
   Tabs.reactive.pinned = []
-  Tabs.reactive.recentlyRemoved = []
+  Tabs.reactive.recentlyRemovedLen = 0
+  Tabs.recentlyRemoved = []
   Tabs.list = []
   Tabs.byId = {}
   Tabs.urlsInUse = {}
@@ -812,9 +813,9 @@ export function rememberRemoved(tabs: Tab[]) {
     // If tab has parent
     if (tab.parentId !== NOID && tab.parentId !== parent?.id) {
       // Try to find it in recently removed
-      const index = Tabs.reactive.recentlyRemoved.findIndex(t => t.id === tab.parentId)
+      const index = Tabs.recentlyRemoved.findIndex(t => t.id === tab.parentId)
       if (index !== -1) {
-        parent = Tabs.reactive.recentlyRemoved[index] as RecentlyRemovedTabInfo
+        parent = Tabs.recentlyRemoved[index] as RecentlyRemovedTabInfo
         if (!parent.isParent) parent.isParent = true
         parentIndex = index
       } else {
@@ -844,16 +845,18 @@ export function rememberRemoved(tabs: Tab[]) {
       time: timestamp,
     }
 
-    Tabs.reactive.recentlyRemoved.splice(parentIndex, 0, removedTabInfo)
+    Tabs.recentlyRemoved.splice(parentIndex, 0, removedTabInfo)
   }
 
   // Limit recentlyRemoved list
-  const limitIndex = Tabs.reactive.recentlyRemoved.findIndex(t => {
+  const limitIndex = Tabs.recentlyRemoved.findIndex(t => {
     return timestamp - t.time > RECENTLY_REMOVED_LIMIT_MS
   })
   if (limitIndex !== -1) {
-    Tabs.reactive.recentlyRemoved = Tabs.reactive.recentlyRemoved.slice(0, limitIndex)
+    Tabs.recentlyRemoved = Tabs.recentlyRemoved.slice(0, limitIndex)
   }
+
+  Tabs.reactive.recentlyRemovedLen = Tabs.recentlyRemoved.length
 }
 
 /**
