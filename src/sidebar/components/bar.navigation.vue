@@ -165,9 +165,12 @@ const visible = computed((): NavItem[] => {
   }
 
   if (!isInline && hidden.value.length) {
-    if (lastTabsPanelIndex === -1) lastTabsPanelIndex = firstTabsPanelIndex - 1
-    if (lastTabsPanelIndex === -1) result.push(HIDDEN_PANELS_BTN)
-    else result.splice(lastTabsPanelIndex + 1, 0, HIDDEN_PANELS_BTN)
+    let hIndex = -1
+    if (lastTabsPanelIndex !== -1) hIndex = lastTabsPanelIndex + 1
+    else if (firstTabsPanelIndex !== -1) hIndex = firstTabsPanelIndex
+
+    if (hIndex !== -1) result.splice(hIndex, 0, HIDDEN_PANELS_BTN)
+    else result.push(HIDDEN_PANELS_BTN)
   }
 
   return result
