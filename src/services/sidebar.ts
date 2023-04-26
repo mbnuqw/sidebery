@@ -66,6 +66,7 @@ export const Sidebar = {
   separatorHeight: 0,
   bookmarkMargin: 0,
   switchingLock: false,
+  switchOnMouseLeave: false,
 
   reMountSidebar: null as null | (() => void),
 

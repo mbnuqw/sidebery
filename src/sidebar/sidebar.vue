@@ -296,6 +296,8 @@ function onMouseLeave(): void {
       Sidebar.subPanelComponent?.close()
     }, 300)
   }
+
+  if (Sidebar.switchOnMouseLeave) Sidebar.switchPanelOnMouseLeave()
 }
 
 function onMouseDown(e: MouseEvent): void {

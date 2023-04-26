@@ -21,6 +21,13 @@ section(ref="el")
       v-model:value="Settings.state.activateLastTabOnPanelSwitchingLoadedOnly"
       @update:value="Settings.saveDebounced(150)")
   SelectField(
+    label="settings.switch_panel_after_switching_tab"
+    optLabel="settings.switch_panel_after_switching_tab_"
+    v-model:value="Settings.state.switchPanelAfterSwitchingTab"
+    :folded="true"
+    :opts="Settings.getOpts('switchPanelAfterSwitchingTab')"
+    @update:value="toggleSwitchPanelAfterSwitchingTab")
+  SelectField(
     label="settings.tab_rm_btn"
     optLabel="settings.tab_rm_btn_"
     v-model:value="Settings.state.tabRmBtn"
@@ -361,6 +368,11 @@ async function toggleHideInact(): Promise<void> {
     Settings.state.tabsPanelSwitchActMove = true
   }
 
+  const notAlwaysSwitch = Settings.state.switchPanelAfterSwitchingTab !== 'always'
+  if (Settings.state.hideInact && notAlwaysSwitch) {
+    Settings.state.switchPanelAfterSwitchingTab = 'always'
+  }
+
   Settings.saveDebounced(150)
 }
 
@@ -381,6 +393,16 @@ async function toggleHideFoldedTabs(): Promise<void> {
   }
 
   Settings.state.hideFoldedTabs = !Settings.state.hideFoldedTabs
+
+  Settings.saveDebounced(150)
+}
+
+function toggleSwitchPanelAfterSwitchingTab() {
+  const notAlways = Settings.state.switchPanelAfterSwitchingTab !== 'always'
+
+  if (notAlways && Settings.state.hideInact) {
+    Settings.state.hideInact = false
+  }
 
   Settings.saveDebounced(150)
 }

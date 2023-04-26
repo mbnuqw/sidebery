@@ -2160,3 +2160,18 @@ export function closeSubPanel() {
   Sidebar.subPanelComponent.close()
   Sidebar.subPanelOpen = SubPanelType.Null
 }
+
+export function switchPanelOnMouseLeave() {
+  Sidebar.switchOnMouseLeave = false
+
+  const activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  if (!activePanel) return
+
+  const activeTab = Tabs.byId[Tabs.activeId]
+  if (!activeTab) return
+
+  if (activeTab.panelId === activePanel.id) return
+  if (activeTab.pinned && Settings.state.pinnedTabsPosition !== 'panel') return
+
+  Sidebar.activatePanel(activeTab.panelId)
+}

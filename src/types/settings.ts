@@ -58,6 +58,7 @@ export interface SettingsState {
   warnOnMultiTabClose: (typeof SETTINGS_OPTIONS.warnOnMultiTabClose)[number]
   activateLastTabOnPanelSwitching: boolean
   activateLastTabOnPanelSwitchingLoadedOnly: boolean
+  switchPanelAfterSwitchingTab: (typeof SETTINGS_OPTIONS.switchPanelAfterSwitchingTab)[number]
   tabRmBtn: (typeof SETTINGS_OPTIONS.tabRmBtn)[number]
   hideInact: boolean
   activateAfterClosing: (typeof SETTINGS_OPTIONS.activateAfterClosing)[number]

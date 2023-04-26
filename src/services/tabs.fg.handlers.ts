@@ -1272,12 +1272,16 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
 
   // Switch to activated tab's panel
   const activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  const switchPanel = Settings.state.switchPanelAfterSwitchingTab !== 'no'
   if (
+    switchPanel &&
     (!tab.pinned || Settings.state.pinnedTabsPosition === 'panel') &&
     !activePanel?.lockedPanel &&
     !Sidebar.switchingLock
   ) {
-    Sidebar.activatePanel(panel.id)
+    const switchOnMouseLeave = Settings.state.switchPanelAfterSwitchingTab === 'mouseleave'
+    if (switchOnMouseLeave) Sidebar.switchOnMouseLeave = true
+    else Sidebar.activatePanel(panel.id)
   }
   if ((!prevActive || prevActive.panelId !== tab.panelId) && Settings.state.hideInact) {
     Tabs.updateNativeTabsVisibility()

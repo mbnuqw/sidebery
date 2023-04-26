@@ -58,6 +58,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   warnOnMultiTabClose: 'collapsed',
   activateLastTabOnPanelSwitching: true,
   activateLastTabOnPanelSwitchingLoadedOnly: true,
+  switchPanelAfterSwitchingTab: 'always',
   tabRmBtn: 'hover',
   hideInact: false,
   activateAfterClosing: 'next',
@@ -259,4 +260,5 @@ export const SETTINGS_OPTIONS = {
   searchBarMode: ['static', 'dynamic', 'none'],
   newTabBarPosition: ['after_tabs', 'bottom'],
   oldBookmarksAfterSave: ['ask', 'del', 'keep'],
+  switchPanelAfterSwitchingTab: ['always', 'mouseleave', 'no'],
 } as const

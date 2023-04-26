@@ -1208,6 +1208,22 @@ export const setupPageTranslations: Translations = {
     en: 'no',
     ru: 'нет',
   },
+  'settings.switch_panel_after_switching_tab': {
+    en: 'Automatically switch panel on activating tab of another panel',
+    ru: 'Автоматически переключать панель при активации вкладки другой панели',
+  },
+  'settings.switch_panel_after_switching_tab_always': {
+    en: 'always',
+    ru: 'всегда',
+  },
+  'settings.switch_panel_after_switching_tab_mouseleave': {
+    en: 'after mouse leaved sidebar',
+    ru: 'после того, как мышь покинула боковую панель',
+  },
+  'settings.switch_panel_after_switching_tab_no': {
+    en: 'no',
+    ru: 'нет',
+  },
   'settings.hide_inactive_panel_tabs': {
     en: 'Hide native tabs of inactive panels',
     ru: 'Скрывать горизонтальные вкладки неактивных панелей',
