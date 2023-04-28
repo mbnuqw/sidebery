@@ -704,7 +704,7 @@ export function createPanelFromConfig(config: PanelConfig): Panel | null {
   panel.reactive.iconIMG = config.iconIMG
   if (Utils.isTabsPanel(panel)) {
     panel.reactive.newTabCtx = panel.newTabCtx
-    panel.reactive.newTabBtns = panel.newTabBtns
+    panel.reactive.newTabBtns = Utils.cloneArray(panel.newTabBtns)
   } else if (Utils.isBookmarksPanel(panel)) {
     panel.reactive.viewMode = panel.viewMode
   }
@@ -793,7 +793,7 @@ async function updateSidebar(newConfig?: SidebarConfig): Promise<void> {
 
       if (Utils.isTabsPanel(panel)) {
         panel.reactive.newTabCtx = panel.newTabCtx
-        panel.reactive.newTabBtns = panel.newTabBtns
+        panel.reactive.newTabBtns = Utils.cloneArray(panel.newTabBtns)
       } else if (Utils.isBookmarksPanel(panel)) {
         panel.reactive.viewMode = panel.viewMode
       }
@@ -1440,7 +1440,7 @@ export function createTabsPanel(conf?: Partial<TabsPanelConfig>): TabsPanel {
   panel.reactive.iconSVG = panel.iconSVG
   panel.reactive.iconIMG = panel.iconIMG
   panel.reactive.newTabCtx = panel.newTabCtx
-  panel.reactive.newTabBtns = panel.newTabBtns
+  panel.reactive.newTabBtns = Utils.cloneArray(panel.newTabBtns)
 
   if (reactFn) panel.reactive = reactFn(panel.reactive)
 

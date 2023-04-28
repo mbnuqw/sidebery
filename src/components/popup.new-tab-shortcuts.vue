@@ -3,24 +3,29 @@
   .popup(v-if="Popups.reactive.newTabShortcutsPopup")
     h2(v-if="shortcuts.length") {{translate('popup.new_tab_shortcuts.title')}}
     .shortcuts(v-if="shortcuts.length")
-      .shortcut(v-for="shortcut of shortcuts" :key="shortcut.id")
+      .shortcut(v-for="(shortcut, index) of shortcuts" :key="shortcut.id")
         .container-box(v-if="shortcut.container" :data-color="shortcut.containerColor")
           .icon-box
             svg.icon: use(:xlink:href="shortcut.containerIcon")
           .container {{shortcut.container}}
           .controls-box
-            .btn-up(@click="shortcutUp(shortcut)"): svg: use(xlink:href="#icon_expand")
-            .btn-down(@click="shortcutDown(shortcut)"): svg: use(xlink:href="#icon_expand")
-            .btn-rm(@click="removeShortcut(shortcut)"): svg: use(xlink:href="#icon_remove")
+            .btn-up(@click="shortcutUp(index)"): svg: use(xlink:href="#icon_expand")
+            .btn-down(@click="shortcutDown(index)"): svg: use(xlink:href="#icon_expand")
+            .btn-rm(@click="removeShortcut(index)"): svg: use(xlink:href="#icon_remove")
         .url-box(v-if="shortcut.url" :data-with-container="!!shortcut.container")
           .icon-box
             svg.icon(v-if="shortcut.urlIcon?.startsWith('#')"): use(:xlink:href="shortcut.urlIcon")
             img.icon(v-else :src="shortcut.urlIcon")
           .url {{shortcut.url}}
           .controls-box(v-if="!shortcut.container")
-            .btn-up(@click="shortcutUp(shortcut)"): svg: use(xlink:href="#icon_expand")
-            .btn-down(@click="shortcutDown(shortcut)"): svg: use(xlink:href="#icon_expand")
-            .btn-rm(@click="removeShortcut(shortcut)"): svg: use(xlink:href="#icon_remove")
+            .btn-up(@click="shortcutUp(index)"): svg: use(xlink:href="#icon_expand")
+            .btn-down(@click="shortcutDown(index)"): svg: use(xlink:href="#icon_expand")
+            .btn-rm(@click="removeShortcut(index)"): svg: use(xlink:href="#icon_remove")
+        .separator(v-if="!shortcut.url && !shortcut.container")
+          .controls-box
+            .btn-up(@click="shortcutUp(index)"): svg: use(xlink:href="#icon_expand")
+            .btn-down(@click="shortcutDown(index)"): svg: use(xlink:href="#icon_expand")
+            .btn-rm(@click="removeShortcut(index)"): svg: use(xlink:href="#icon_remove")
     .space
     h2 {{translate('popup.new_tab_shortcuts.create_title')}}
     SelectField.-no-separator(
@@ -37,6 +42,8 @@
       :line="true")
 
     .ctrls
+      .btn.-wide(:title="translate('popup.new_tab_shortcuts.add_br_btn')" @click="onAddBr").
+        {{translate('popup.new_tab_shortcuts.add_br_btn')}}
       .btn.-wide(:class="{ '-inactive': !addBtnActive }" @click="onAdd").
         {{translate('popup.new_tab_shortcuts.add_shortcut_btn')}}
 </template>
@@ -163,7 +170,27 @@ const availableContainersOpts = computed<ContainerOption[]>(() => {
   return result
 })
 
-function onAdd(): void {
+function onAddBr() {
+  if (!Popups.reactive.newTabShortcutsPopup) return
+
+  const panelId = Popups.reactive.newTabShortcutsPopup.panelId
+  const panel = Info.isSidebar ? Sidebar.panelsById[panelId] : SidebarConfigRState.panels[panelId]
+  if (!Utils.isTabsPanel(panel)) return
+
+  const rawShortcuts = Popups.reactive.newTabShortcutsPopup.rawShortcuts
+  const shortcut = ''
+  rawShortcuts.push(shortcut)
+  panel.newTabBtns.push(shortcut)
+
+  newShortcutURL.value = ''
+  newShortcutContainerId.value = 'none'
+
+  if (Info.isSidebar) panel.reactive.newTabBtns = Utils.cloneArray(panel.newTabBtns)
+  if (Info.isSidebar) Sidebar.saveSidebar(1000)
+  else saveSidebarConfig(1000)
+}
+
+function onAdd() {
   if (!Popups.reactive.newTabShortcutsPopup) return
   if (!addBtnActive.value) return
   if (!newShortcutURL.value && newShortcutContainerId.value === 'none') return
@@ -186,74 +213,71 @@ function onAdd(): void {
   newShortcutURL.value = ''
   newShortcutContainerId.value = 'none'
 
+  if (Info.isSidebar) panel.reactive.newTabBtns = Utils.cloneArray(panel.newTabBtns)
   if (Info.isSidebar) Sidebar.saveSidebar(1000)
   else saveSidebarConfig(1000)
 }
 
-function onCancel(): void {
+function onCancel() {
   if (!Popups.reactive.newTabShortcutsPopup) return
 
   Popups.closeNewTabShortcutsPopup()
 }
 
-function shortcutUp(shortcut: NewTabShortcut): void {
+function shortcutUp(index: number) {
   if (!Popups.reactive.newTabShortcutsPopup) return
   const panelId = Popups.reactive.newTabShortcutsPopup.panelId
   const panel = Info.isSidebar ? Sidebar.panelsById[panelId] : SidebarConfigRState.panels[panelId]
   if (!Utils.isTabsPanel(panel)) return
-
-  const index = panel.newTabBtns.indexOf(shortcut.id)
-  if (index === -1) return
 
   if (index <= 0) return
 
   const rawShortcuts = Popups.reactive.newTabShortcutsPopup.rawShortcuts
+  const shortcut = rawShortcuts[index]
   rawShortcuts.splice(index, 1)
-  rawShortcuts.splice(index - 1, 0, shortcut.id)
+  rawShortcuts.splice(index - 1, 0, shortcut)
 
   panel.newTabBtns.splice(index, 1)
-  panel.newTabBtns.splice(index - 1, 0, shortcut.id)
+  panel.newTabBtns.splice(index - 1, 0, shortcut)
 
+  if (Info.isSidebar) panel.reactive.newTabBtns = Utils.cloneArray(panel.newTabBtns)
   if (Info.isSidebar) Sidebar.saveSidebar(1000)
   else saveSidebarConfig(1000)
 }
 
-function shortcutDown(shortcut: NewTabShortcut): void {
+function shortcutDown(index: number): void {
   if (!Popups.reactive.newTabShortcutsPopup) return
   const panelId = Popups.reactive.newTabShortcutsPopup.panelId
   const panel = Info.isSidebar ? Sidebar.panelsById[panelId] : SidebarConfigRState.panels[panelId]
   if (!Utils.isTabsPanel(panel)) return
-
-  const index = panel.newTabBtns.indexOf(shortcut.id)
-  if (index === -1) return
 
   if (index >= panel.newTabBtns.length - 1) return
 
   const rawShortcuts = Popups.reactive.newTabShortcutsPopup.rawShortcuts
+  const shortcut = rawShortcuts[index]
   rawShortcuts.splice(index, 1)
-  rawShortcuts.splice(index + 1, 0, shortcut.id)
+  rawShortcuts.splice(index + 1, 0, shortcut)
 
   panel.newTabBtns.splice(index, 1)
-  panel.newTabBtns.splice(index + 1, 0, shortcut.id)
+  panel.newTabBtns.splice(index + 1, 0, shortcut)
 
+  if (Info.isSidebar) panel.reactive.newTabBtns = Utils.cloneArray(panel.newTabBtns)
   if (Info.isSidebar) Sidebar.saveSidebar(1000)
   else saveSidebarConfig(1000)
 }
 
-function removeShortcut(shortcut: NewTabShortcut): void {
+function removeShortcut(index: number): void {
   if (!Popups.reactive.newTabShortcutsPopup) return
   const panelId = Popups.reactive.newTabShortcutsPopup.panelId
   const panel = Info.isSidebar ? Sidebar.panelsById[panelId] : SidebarConfigRState.panels[panelId]
   if (!Utils.isTabsPanel(panel)) return
-
-  const index = panel.newTabBtns.indexOf(shortcut.id)
-  if (index === -1) return
 
   const rawShortcuts = Popups.reactive.newTabShortcutsPopup.rawShortcuts
   rawShortcuts.splice(index, 1)
 
   panel.newTabBtns.splice(index, 1)
 
+  if (Info.isSidebar) panel.reactive.newTabBtns = Utils.cloneArray(panel.newTabBtns)
   if (Info.isSidebar) Sidebar.saveSidebar(1000)
   else saveSidebarConfig(1000)
 }

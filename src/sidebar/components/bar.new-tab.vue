@@ -19,6 +19,7 @@
     v-for="btn of btns"
     :title="btn.tooltip"
     :data-br="!btn.title"
+    :data-wide="btn.wide"
     :data-color="btn.containerId && Containers.reactive.byId[btn.containerId]?.color"
     @mousedown="onNewTabMouseDown($event, btn)"
     @mouseup="onNewTabMouseUp($event, btn)"
@@ -34,7 +35,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, PropType, onMounted, onBeforeUnmount, triggerRef } from 'vue'
+import { computed, PropType } from 'vue'
 import { Container, DstPlaceInfo, ItemInfo, MenuType, Tab, TabsPanel } from 'src/types'
 import { DragType, DragInfo, DropType } from 'src/types'
 import { Settings } from 'src/services/settings'
@@ -54,6 +55,7 @@ import { Sidebar } from 'src/services/sidebar'
 
 interface NewTabBtn {
   id: string
+  wide?: boolean
   title?: string
   icon?: string
   containerId?: string
@@ -90,10 +92,12 @@ const btns = computed<NewTabBtn[]>(() => {
   const ids: Record<string, string> = {}
   const rawBtns = props.panel.reactive.newTabBtns
   let container: Container | undefined
+  let afterSep = false
 
   for (const conf of rawBtns) {
     if (conf === '') {
       btns.push({ id: '' })
+      if (!afterSep) afterSep = true
       continue
     }
 
@@ -103,6 +107,8 @@ const btns = computed<NewTabBtn[]>(() => {
 
     const btn: NewTabBtn = { id: conf }
     const parts: string[] = conf.split(',')
+
+    if (afterSep) btn.wide = true
 
     for (let part of parts) {
       part = part.trim()

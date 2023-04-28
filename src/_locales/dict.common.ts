@@ -265,6 +265,10 @@ export const commonTranslations: Translations = {
     en: 'Default new tab',
     ru: 'Новая вкладка по умолчанию',
   },
+  'popup.new_tab_shortcuts.add_br_btn': {
+    en: 'Add new line',
+    ru: 'Добавить новую строку',
+  },
   'popup.new_tab_shortcuts.add_shortcut_btn': {
     en: 'Add shortcut',
     ru: 'Добавить ярлык',

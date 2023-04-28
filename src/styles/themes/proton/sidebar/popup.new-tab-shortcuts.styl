@@ -86,6 +86,19 @@
   overflow: hidden
   margin-right: 2px
 
+.NewTabShortcutsPopup .shortcut .separator
+  position: relative
+  display: flex
+  align-items: center
+  &:before
+    content: ''
+    position: relative
+    height: 1px
+    width: 100%
+    margin: 14px 8px 13px
+    background-color: var(--color, var(--popup-fg))
+    opacity: .7
+
 .NewTabShortcutsPopup .shortcut .controls-box
   position: relative
   display: none

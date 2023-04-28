@@ -51,7 +51,7 @@
   flex-wrap: wrap
   z-index: 10
   padding: 0 var(--ntb-padding) var(--ntb-padding)
-  grid-gap: var(--ntb-padding)
+  grid-gap: 0 var(--ntb-padding)
   background-color: var(--frame-bg)
   z-index: 1
   transition: transform var(--d-fast), opacity var(--d-fast), z-index var(--d-fast) var(--d-fast)
@@ -94,6 +94,7 @@
   height: var(--ntb-btn-height)
   min-width: var(--ntb-btn-height)
   flex-grow: 1
+  margin-bottom: var(--ntb-padding)
   border-radius: var(--ntb-border-radius)
   background-color: var(--frame-el-bg)
   box-shadow: var(--frame-el-shadow)
@@ -138,11 +139,14 @@
     padding: 2px
     fill: var(--color, var(--frame-fg))
   &[data-br="true"]
-    height: 1px
+    height: 0
     width: 100%
     opacity: 0
+    margin: 0
     > svg
       display: none
+  &[data-wide="true"]
+    flex-grow: 1
 
 .TabsPanel .new-tab-btns[data-sel="true"] .new-tab-btn:before
   background-color: var(--frame-el-overlay-selected-bg)
