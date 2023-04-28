@@ -1,5 +1,8 @@
 @import '../../../utils'
 
+.BookmarksPopup .popup h2
+  z-index: 2
+
 .BookmarksPopup .field
   position: relative
   padding: 2px 4px
@@ -206,3 +209,19 @@
   white-space: nowrap
   overflow: hidden
   text-overflow: ellipsis
+
+.BookmarksPopup .loading-screen
+  position: absolute
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  z-index: 1
+  &:before
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    background-color: var(--popup-bg)

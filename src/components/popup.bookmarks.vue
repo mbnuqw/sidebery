@@ -53,7 +53,6 @@
           :node="node"
           :filter="foldersFilter"
           :panelId="'popup'")
-        LoadingDots(v-if="state.loading")
     .recent-locations(v-if="state.bookmarksRecentFolders.length && !state.showTree")
       .field-label {{translate('popup.bookmarks.recent_locations_label')}}
       .recent-folder(
@@ -63,6 +62,8 @@
         @click="onRecentFolderClick(folder)")
         svg.folder-icon: use(xlink:href="#icon_folder")
         .folder-label {{folder.title}}
+    .loading-screen(v-if="state.loading")
+      LoadingDots
     .ctrls
       .btn(
         v-for="ctrl of Bookmarks.reactive.popup.controls"
@@ -165,20 +166,30 @@ void (async function init() {
     }
   }, 256)
 
-  if (!Bookmarks.reactive.tree.length) await Bookmarks.load()
-  if (Bookmarks.reactive.popup.recentLocations) loadBookmarksRecentFolders()
-  setTimeout(() => (state.loading = false), 120)
+  const asyncTasks = []
+  if (!Bookmarks.reactive.tree.length) asyncTasks.push(Bookmarks.load())
+  if (Bookmarks.reactive.popup.recentLocations) asyncTasks.push(loadBookmarksRecentFolders())
+  await Promise.all(asyncTasks)
+  initRecentFolders()
+  state.loading = false
 
   validate()
 })()
 
-async function loadBookmarksRecentFolders(): Promise<void> {
+let loadedRecentFolders: ID[] | undefined
+async function loadBookmarksRecentFolders() {
   const stored = await browser.storage.local.get<Stored>('bookmarksRecentFolders')
   if (!stored.bookmarksRecentFolders || !stored.bookmarksRecentFolders.length) return
 
+  loadedRecentFolders = stored.bookmarksRecentFolders
+}
+
+function initRecentFolders() {
+  if (!loadedRecentFolders) return
+
   let firstFolderId: ID | undefined
   const folders = []
-  for (const id of stored.bookmarksRecentFolders) {
+  for (const id of loadedRecentFolders) {
     const folder = Bookmarks.reactive.byId[id]
     if (folder) {
       folders.push(folder)
