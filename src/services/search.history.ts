@@ -4,11 +4,10 @@ import { Search } from 'src/services/search'
 import { Selection } from 'src/services/selection'
 
 export async function onHistorySearch(): Promise<void> {
-  const panel = Sidebar.panelsById.history
-  if (!panel) return
-  else panel.reactive.ready = panel.ready = false
+  History.reactive.ready = History.ready = false
 
   if (Search.reactive.value) {
+    let first
     try {
       const result = await browser.history.search({
         text: Search.reactive.value,
@@ -16,19 +15,26 @@ export async function onHistorySearch(): Promise<void> {
         startTime: 0,
       })
       History.reactive.filtered = await History.normalizeHistory(result, false)
+      first = History.reactive.filtered[0]
     } catch (err) {
       History.reactive.filtered = undefined
     }
+
+    if (first) {
+      Selection.resetSelection()
+      Selection.selectHistory(first.id)
+      History.scrollToHistoryItem(first.id)
+    }
   } else {
     History.reactive.filtered = undefined
+    if (Search.prevValue) Selection.resetSelection()
   }
 
-  panel.reactive.ready = panel.ready = true
+  History.reactive.ready = History.ready = true
 }
 
 export function onHistorySearchNext(): void {
-  const panel = Sidebar.panelsById.history
-  if (!panel || !panel.ready || !History.reactive.filtered) return
+  if (!History.ready || !History.reactive.filtered) return
 
   const selId = Selection.getFirst()
   let index = History.reactive.filtered.findIndex(t => t.id === selId)
@@ -45,8 +51,7 @@ export function onHistorySearchNext(): void {
 }
 
 export function onHistorySearchPrev(): void {
-  const panel = Sidebar.panelsById.history
-  if (!panel || !panel.ready || !History.reactive.filtered) return
+  if (!History.ready || !History.reactive.filtered) return
 
   const selId = Selection.getFirst()
   let index = History.reactive.filtered.findIndex(t => t.id === selId)

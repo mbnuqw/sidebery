@@ -88,7 +88,7 @@
               @click="Sidebar.openSubPanel(SubPanelType.History, activePanel)")
               svg: use(xlink:href="#icon_clock")
 
-      SubPanel(ref="subPanel")
+      SubPanel
 
     .right-vertical-box(v-if="pinnedTabsBarRight || navBarRight")
       PinnedTabsBar(v-if="pinnedTabsBarRight")
@@ -139,7 +139,6 @@ import * as Popups from 'src/services/popups'
 
 const rootEl = ref<HTMLElement | null>(null)
 const panelBoxEl = ref<HTMLElement | null>(null)
-const subPanel = ref<SubPanelComponent | null>(null)
 
 const animations = !Settings.state.animations ? 'none' : Settings.state.animationSpeed || 'fast'
 const pinnedTabsBarTop = Settings.state.pinnedTabsPosition === 'top'
@@ -175,8 +174,6 @@ onMounted(() => {
   Sidebar.recalcSidebarSize()
 
   document.addEventListener('keyup', onDocumentKeyup)
-
-  Sidebar.subPanelComponent = subPanel.value
 })
 
 function getPanelComponent(panel: Panel): Component | undefined {
@@ -241,7 +238,13 @@ function onDocumentKeyup(e: KeyboardEvent): void {
     }
 
     // Search bar
-    if (Search.reactive.barIsShowed) Search.stop()
+    if (Search.reactive.barIsShowed) {
+      Search.stop()
+      return
+    }
+
+    // Sub-panel
+    if (Sidebar.subPanelActive) Sidebar.closeSubPanel()
   }
 }
 
@@ -290,10 +293,10 @@ function onMouseLeave(): void {
     }, 250)
   }
 
-  if (Sidebar.subPanelOpen) {
+  if (Sidebar.subPanelActive && !Search.reactive.rawValue) {
     clearTimeout(subPanelTimeout)
     subPanelTimeout = setTimeout(() => {
-      Sidebar.subPanelComponent?.close()
+      Sidebar.closeSubPanel()
     }, 300)
   }
 

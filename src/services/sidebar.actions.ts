@@ -989,7 +989,7 @@ export function activatePanel(panelId: ID, loadPanels = true): void {
 
   if (!DnD.reactive.isStarted && !Search.reactive.rawValue) saveActivePanelDebounced(1000)
 
-  if (Sidebar.subPanelOpen) Sidebar.closeSubPanel()
+  if (Sidebar.subPanelActive) Sidebar.closeSubPanel()
 }
 
 let prevSavedActPanelId = NOID
@@ -2145,20 +2145,45 @@ export function switchPanelBack(delay: number): void {
   }, delay)
 }
 
-export function openSubPanel(type: SubPanelType, panel?: Panel) {
-  if (!Sidebar.subPanelComponent) return Logs.warn('Tabs.openSubPanel: No subPanelComponent')
-  if (!panel) panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
-  if (!Utils.isTabsPanel(panel)) return Logs.warn('Tabs.openSubPanel: No panel')
+let subPanelTypeResetTimeout: number | undefined
+export function openSubPanel(type: SubPanelType, hostPanel?: Panel) {
+  if (!Utils.isTabsPanel(hostPanel)) return
 
-  Sidebar.subPanelComponent.open(type, panel)
-  Sidebar.subPanelOpen = type
+  if (type === SubPanelType.Bookmarks) {
+    let panel = Sidebar.subPanels.bookmarks
+    if (!panel) {
+      panel = Sidebar.createBookmarksPanel({ rootId: hostPanel.bookmarksFolderId })
+      Sidebar.subPanels.bookmarks = panel
+    } else {
+      panel.rootId = hostPanel.bookmarksFolderId
+    }
+  }
+
+  clearTimeout(subPanelTypeResetTimeout)
+  Sidebar.subPanelActive = true
+  Sidebar.reactive.subPanelActive = true
+  Sidebar.reactive.subPanelType = type
+
+  if (type === SubPanelType.History && !History.ready) History.load()
+
+  if (Menu.isOpen) Menu.close()
+  if (Selection.isSet()) Selection.resetSelection()
+  if (Search.reactive.rawValue) Search.search()
 }
 
 export function closeSubPanel() {
-  if (!Sidebar.subPanelComponent) return Logs.warn('Tabs.openSubPanel: No subPanelComponent')
+  if (!Sidebar.subPanelActive) return
+  Sidebar.subPanelActive = false
+  Sidebar.reactive.subPanelActive = false
 
-  Sidebar.subPanelComponent.close()
-  Sidebar.subPanelOpen = SubPanelType.Null
+  if (Selection.isSet()) Selection.resetSelection()
+  if (Menu.isOpen) Menu.close()
+  if (Search.reactive.rawValue) Search.search()
+
+  clearTimeout(subPanelTypeResetTimeout)
+  subPanelTypeResetTimeout = setTimeout(() => {
+    Sidebar.reactive.subPanelType = SubPanelType.Null
+  }, 500)
 }
 
 export function switchPanelOnMouseLeave() {

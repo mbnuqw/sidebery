@@ -31,7 +31,7 @@
 
 <script lang="ts" setup>
 import { reactive, onMounted } from 'vue'
-import { TabsPanel, DragItem, DragInfo, DropType, DragType } from 'src/types'
+import { DragItem, DragInfo, DropType, DragType } from 'src/types'
 import { translate } from 'src/dict'
 import { Menu } from 'src/services/menu'
 import { Selection } from 'src/services/selection'
@@ -47,9 +47,6 @@ const state = reactive({
   active: false,
   navOffset: 0,
 })
-const props = defineProps<{
-  panel: TabsPanel
-}>()
 
 onMounted(() => {
   if (!state.active) {
@@ -135,7 +132,7 @@ function onTabDragStart(e: DragEvent, tab: RecentlyRemovedTabInfo) {
     items: dragItems,
     windowId: Windows.id,
     incognito: Windows.incognito,
-    panelId: props.panel.id,
+    panelId: Sidebar.reactive.activePanelId,
     x: e.clientX,
     y: e.clientY,
     copy: true,
@@ -181,7 +178,7 @@ async function openTabs(targetTab: RecentlyRemovedTabInfo, inactive: boolean, br
 
   const tabsBranch = getBranch(targetTab)
   const tabs = branch ? tabsBranch : [targetTab]
-  const dst = { panelId: props.panel.id, discarded: inactive }
+  const dst = { panelId: Sidebar.reactive.activePanelId, discarded: inactive }
 
   await Tabs.open(tabs, dst)
 

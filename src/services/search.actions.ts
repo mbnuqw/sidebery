@@ -6,7 +6,7 @@ import { Sidebar } from 'src/services/sidebar'
 import * as SearchTabs from 'src/services/search.tabs'
 import * as SearchBookmarks from 'src/services/search.bookmarks'
 import * as SearchHistory from 'src/services/search.history'
-import { MenuType, Panel } from 'src/types'
+import { MenuType, Panel, SubPanelType } from 'src/types'
 import * as IPC from './ipc'
 import * as Logs from './logs'
 import { Menu } from './menu'
@@ -47,9 +47,18 @@ export function next(): void {
   const actPanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
   if (!actPanel) return
 
-  if (Utils.isTabsPanel(actPanel)) SearchTabs.onTabsSearchNext(actPanel)
-  if (Utils.isBookmarksPanel(actPanel)) SearchBookmarks.onBookmarksSearchNext(actPanel)
-  if (Utils.isHistoryPanel(actPanel)) SearchHistory.onHistorySearchNext()
+  if (Utils.isTabsPanel(actPanel)) {
+    if (Sidebar.subPanelActive) {
+      if (Sidebar.reactive.subPanelType === SubPanelType.Bookmarks && Sidebar.subPanels.bookmarks) {
+        SearchBookmarks.onBookmarksSearchNext(Sidebar.subPanels.bookmarks)
+      } else if (Sidebar.reactive.subPanelType === SubPanelType.History) {
+        SearchHistory.onHistorySearchNext()
+      }
+    } else {
+      SearchTabs.onTabsSearchNext(actPanel)
+    }
+  } else if (Utils.isBookmarksPanel(actPanel)) SearchBookmarks.onBookmarksSearchNext(actPanel)
+  else if (Utils.isHistoryPanel(actPanel)) SearchHistory.onHistorySearchNext()
 }
 
 export function prev(): void {
@@ -59,9 +68,18 @@ export function prev(): void {
   const actPanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
   if (!actPanel) return
 
-  if (Utils.isTabsPanel(actPanel)) SearchTabs.onTabsSearchPrev(actPanel)
-  if (Utils.isBookmarksPanel(actPanel)) SearchBookmarks.onBookmarksSearchPrev(actPanel)
-  if (Utils.isHistoryPanel(actPanel)) SearchHistory.onHistorySearchPrev()
+  if (Utils.isTabsPanel(actPanel)) {
+    if (Sidebar.subPanelActive) {
+      if (Sidebar.reactive.subPanelType === SubPanelType.Bookmarks && Sidebar.subPanels.bookmarks) {
+        SearchBookmarks.onBookmarksSearchPrev(Sidebar.subPanels.bookmarks)
+      } else if (Sidebar.reactive.subPanelType === SubPanelType.History) {
+        SearchHistory.onHistorySearchPrev()
+      }
+    } else {
+      SearchTabs.onTabsSearchPrev(actPanel)
+    }
+  } else if (Utils.isBookmarksPanel(actPanel)) SearchBookmarks.onBookmarksSearchPrev(actPanel)
+  else if (Utils.isHistoryPanel(actPanel)) SearchHistory.onHistorySearchPrev()
 }
 
 export function enter(): void {
@@ -76,9 +94,18 @@ export function enter(): void {
   const actPanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
   if (!actPanel) return
 
-  if (Utils.isTabsPanel(actPanel)) SearchTabs.onTabsSearchEnter(actPanel)
-  if (Utils.isBookmarksPanel(actPanel)) SearchBookmarks.onBookmarksSearchEnter(actPanel)
-  if (Utils.isHistoryPanel(actPanel)) SearchHistory.onHistorySearchEnter()
+  if (Utils.isTabsPanel(actPanel)) {
+    if (Sidebar.subPanelActive) {
+      if (Sidebar.reactive.subPanelType === SubPanelType.Bookmarks && Sidebar.subPanels.bookmarks) {
+        SearchBookmarks.onBookmarksSearchEnter(actPanel, Sidebar.subPanels.bookmarks)
+      } else if (Sidebar.reactive.subPanelType === SubPanelType.History) {
+        SearchHistory.onHistorySearchEnter()
+      }
+    } else {
+      SearchTabs.onTabsSearchEnter(actPanel)
+    }
+  } else if (Utils.isBookmarksPanel(actPanel)) SearchBookmarks.onBookmarksSearchEnter(actPanel)
+  else if (Utils.isHistoryPanel(actPanel)) SearchHistory.onHistorySearchEnter()
 }
 
 export function selectAll(): void {
@@ -127,8 +154,17 @@ export function search(value?: string): void {
   const actPanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
   if (!actPanel) return
 
-  if (Utils.isTabsPanel(actPanel)) SearchTabs.onTabsSearch(actPanel)
-  else if (Utils.isBookmarksPanel(actPanel)) SearchBookmarks.onBookmarksSearch(actPanel)
+  if (Utils.isTabsPanel(actPanel)) {
+    if (Sidebar.subPanelActive) {
+      if (Sidebar.reactive.subPanelType === SubPanelType.Bookmarks && Sidebar.subPanels.bookmarks) {
+        SearchBookmarks.onBookmarksSearch(actPanel, Sidebar.subPanels.bookmarks)
+      } else if (Sidebar.reactive.subPanelType === SubPanelType.History) {
+        SearchHistory.onHistorySearch()
+      }
+    } else {
+      SearchTabs.onTabsSearch(actPanel)
+    }
+  } else if (Utils.isBookmarksPanel(actPanel)) SearchBookmarks.onBookmarksSearch(actPanel)
   else if (Utils.isHistoryPanel(actPanel)) SearchHistory.onHistorySearch()
 
   if (value === '') {
@@ -137,6 +173,8 @@ export function search(value?: string): void {
       if (panel && panel.id === actPanel.id) continue
       reset(panel)
     }
+
+    if (Sidebar.subPanels.bookmarks) reset(Sidebar.subPanels.bookmarks)
   }
 }
 

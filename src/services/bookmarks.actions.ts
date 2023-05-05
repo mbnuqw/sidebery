@@ -1,6 +1,6 @@
 import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
-import { Bookmark, Panel, Notification, DialogConfig, DragInfo } from 'src/types'
+import { Bookmark, Panel, Notification, DialogConfig, DragInfo, SubPanelType } from 'src/types'
 import { Stored, BookmarksSortType, DstPlaceInfo, ItemInfo, TabsPanel } from 'src/types'
 import { CONTAINER_ID, NOID, BKM_OTHER_ID, BKM_ROOT_ID, PRE_SCROLL, GROUP_RE } from 'src/defaults'
 import { FOLDER_NAME_DATA_RE, GROUP_URL, PIN_MARK } from 'src/defaults'
@@ -1289,7 +1289,15 @@ export function scrollToBookmarkDebounced(id: ID, forced?: boolean, delay = 120)
 
 const scrollConf: ScrollToOptions = { behavior: 'smooth', top: 0 }
 export function scrollToBookmark(id: ID, forced?: boolean): void {
-  const panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  let panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  if (
+    Utils.isTabsPanel(panel) &&
+    Sidebar.subPanelActive &&
+    Sidebar.reactive.subPanelType === SubPanelType.Bookmarks &&
+    Sidebar.subPanels.bookmarks
+  ) {
+    panel = Sidebar.subPanels.bookmarks
+  }
   if (!Utils.isBookmarksPanel(panel) || !panel.scrollEl) return
 
   const elId = 'bookmark' + id.toString()

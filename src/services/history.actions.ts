@@ -61,7 +61,7 @@ export function unloadAfter(delay: number): void {
     const historyPanel = Sidebar.panelsById.history
     if (historyPanel && Sidebar.reactive.activePanelId === historyPanel.id) return
     if (historyPanel && !historyPanel.ready) return
-    if (Sidebar.subPanelOpen === SubPanelType.History) return
+    if (Sidebar.subPanelActive && Sidebar.reactive.subPanelType === SubPanelType.History) return
 
     History.unload()
   }, delay)
@@ -212,7 +212,7 @@ export function scrollToHistoryItem(id: string): void {
   const elId = 'history' + id
   const el = document.getElementById(elId)
 
-  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' })
 }
 
 export async function openTab(item: HistoryItem, activate?: boolean): Promise<void> {

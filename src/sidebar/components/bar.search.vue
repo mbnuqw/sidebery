@@ -53,9 +53,6 @@ function onClearBtnMouseUp(): void {
 }
 
 function onKD(e: KeyboardEvent): void {
-  // Clear input, [hide the bar]
-  if (Search.reactive.barIsShowed && e.key === 'Escape') return Search.stop()
-
   if (!Search.reactive.rawValue) return
 
   // Select all

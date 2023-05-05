@@ -1,5 +1,5 @@
 import * as Utils from 'src/utils'
-import { Panel, Bookmark, BookmarksPanel } from 'src/types'
+import { Panel, Bookmark, BookmarksPanel, DstPlaceInfo } from 'src/types'
 import { Bookmarks } from 'src/services/bookmarks'
 import { Search } from 'src/services/search'
 import { Sidebar } from 'src/services/sidebar'
@@ -47,27 +47,29 @@ function searchHistoryWalker(nodes: Bookmark[], filtered: Bookmark[]): void {
 let prevActivePanelId: ID | undefined
 let prevExpandedBookmarks: Record<ID, Record<ID, boolean>> | undefined
 let expandedBookmarks: Record<ID, boolean>
-export function onBookmarksSearch(activePanel: Panel): void {
+export function onBookmarksSearch(activePanel: Panel, panel?: Panel): void {
   if (!Bookmarks.reactive.tree.length) return
-  if (!Utils.isBookmarksPanel(activePanel)) return
 
-  const samePanel = prevActivePanelId === activePanel.id
-  prevActivePanelId = activePanel.id
+  if (!panel) panel = activePanel
+  if (!Utils.isBookmarksPanel(panel)) return
+
+  const samePanel = prevActivePanelId === panel.id
+  prevActivePanelId = panel.id
 
   if (Search.reactive.value) {
     const value = Search.reactive.value
     const prevValue = Search.prevValue
-    const rootBookmark = Bookmarks.reactive.byId[activePanel.rootId]
+    const rootBookmark = Bookmarks.reactive.byId[panel.rootId]
 
     let bookmarks: Bookmark[] | undefined
     if (value.length > prevValue.length && value.startsWith(prevValue) && samePanel) {
-      bookmarks = activePanel.reactive.filteredBookmarks
+      bookmarks = panel.reactive.filteredBookmarks
     }
     if (!bookmarks) bookmarks = rootBookmark?.children
     if (!bookmarks) bookmarks = Bookmarks.reactive.tree
 
     const filtered: Bookmark[] = []
-    if (activePanel.viewMode === 'tree') {
+    if (panel.viewMode === 'tree') {
       // Save expanded folders and close all folders in all panels
       if (!prevExpandedBookmarks) {
         prevExpandedBookmarks = Bookmarks.reactive.expanded
@@ -79,15 +81,15 @@ export function onBookmarksSearch(activePanel: Panel): void {
       expandedBookmarks = Bookmarks.reactive.expanded[activePanel.id]
 
       searchTreeWalker(bookmarks, filtered)
-    } else if (activePanel.viewMode === 'history') {
+    } else if (panel.viewMode === 'history') {
       searchHistoryWalker(bookmarks, filtered)
       filtered.sort((a, b) => (b.dateAdded ?? 0) - (a.dateAdded ?? 0))
     }
-    activePanel.reactive.filteredBookmarks = filtered
-    activePanel.reactive.filteredLen = filtered.length
+    panel.reactive.filteredBookmarks = filtered
+    panel.reactive.filteredLen = filtered.length
 
-    if (activePanel.reactive.filteredBookmarks.length) {
-      const first = activePanel.reactive.filteredBookmarks[0]
+    if (panel.reactive.filteredBookmarks.length) {
+      const first = panel.reactive.filteredBookmarks[0]
       Selection.resetSelection()
       Selection.selectBookmark(first.id)
       Bookmarks.scrollToBookmarkDebounced(first.id)
@@ -100,8 +102,8 @@ export function onBookmarksSearch(activePanel: Panel): void {
       prevExpandedBookmarks = undefined
     }
 
-    activePanel.reactive.filteredBookmarks = undefined
-    activePanel.reactive.filteredLen = undefined
+    panel.reactive.filteredBookmarks = undefined
+    panel.reactive.filteredLen = undefined
     if (Search.prevValue) Selection.resetSelection()
   }
 }
@@ -165,8 +167,8 @@ export function onBookmarksSearchPrev(panel?: Panel): void {
   Bookmarks.scrollToBookmark(prevId)
 }
 
-export function onBookmarksSearchEnter(panel?: Panel): void {
-  if (!panel) panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+export function onBookmarksSearchEnter(actPanel: Panel, panel?: Panel) {
+  if (!panel) panel = actPanel
   if (!Utils.isBookmarksPanel(panel) || !panel.reactive.filteredBookmarks) return
 
   // Try to find in another panel
@@ -178,12 +180,18 @@ export function onBookmarksSearchEnter(panel?: Panel): void {
   const bookmark = Bookmarks.reactive.byId[selId]
   if (bookmark) {
     if (bookmark.type === 'folder') {
-      return Bookmarks.toggleBranch(bookmark.id, panel.id)
+      return Bookmarks.toggleBranch(bookmark.id, actPanel.id)
     }
-    if (bookmark.type === 'bookmark') Bookmarks.open([bookmark.id], {}, false, true)
+    if (bookmark.type === 'bookmark') {
+      const dst: DstPlaceInfo = {}
+      if (Utils.isTabsPanel(actPanel)) dst.panelId = actPanel.id
+      Bookmarks.open([bookmark.id], dst, false, true)
+    }
   }
 
   Search.stop()
+
+  if (Sidebar.subPanelActive) Sidebar.closeSubPanel()
 }
 
 function* visibleBookmarks(nodes: Bookmark[]): IterableIterator<Bookmark> {

@@ -1,4 +1,4 @@
-import { Panel, SubPanelComponent, SubPanelType } from 'src/types'
+import { BookmarksPanel, Panel, SubPanelComponent, SubPanelType, TabsPanel } from 'src/types'
 import { NOID } from 'src/defaults'
 import * as SidebarActions from 'src/services/sidebar.actions'
 
@@ -17,11 +17,18 @@ export interface SidebarReactiveState {
 
   selectedNavId: ID
   selectedHeader: ID
+
+  subPanelActive: boolean
+  subPanelType: SubPanelType
 }
 
 export const enum GroupConfigResult {
   Ok = 1,
   Cancel = 2,
+}
+
+export interface SubPanels {
+  bookmarks?: BookmarksPanel
 }
 
 export const Sidebar = {
@@ -40,6 +47,9 @@ export const Sidebar = {
 
     selectedNavId: NOID,
     selectedHeader: NOID,
+
+    subPanelActive: false,
+    subPanelType: SubPanelType.Null,
   } as SidebarReactiveState,
 
   panelsById: {} as Record<ID, Panel>,
@@ -51,8 +61,10 @@ export const Sidebar = {
   lastTabsPanelId: NOID,
   scrollPositions: {} as Record<ID, number>,
   convertingPanelLock: false,
-  subPanelComponent: null as SubPanelComponent | null,
-  subPanelOpen: SubPanelType.Null,
+  // subPanelComponent: null as SubPanelComponent | null,
+  subPanelActive: false,
+  subPanelHost: null as TabsPanel | null,
+  subPanels: {} as SubPanels,
 
   width: 0,
   height: 0,

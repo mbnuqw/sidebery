@@ -214,6 +214,7 @@ function getBounds(): ItemBounds[] {
 const DEACTIVATION_DELAY = 2000
 let activationTimeout: number | undefined
 let deactivationTimeout: number | undefined
+
 watch(isActive, (c, p) => {
   clearTimeout(activationTimeout)
   clearTimeout(deactivationTimeout)
