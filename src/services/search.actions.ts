@@ -1,17 +1,18 @@
 import * as Utils from 'src/utils'
-import { MIN_SEARCH_QUERY_LEN, SEARCH_URL } from 'src/defaults'
+import { BKM_ROOT_ID, MIN_SEARCH_QUERY_LEN, SEARCH_URL } from 'src/defaults'
 import { Search } from 'src/services/search'
 import { Settings } from 'src/services/settings'
 import { Sidebar } from 'src/services/sidebar'
 import * as SearchTabs from 'src/services/search.tabs'
 import * as SearchBookmarks from 'src/services/search.bookmarks'
 import * as SearchHistory from 'src/services/search.history'
-import { MenuType, Panel, SubPanelType } from 'src/types'
+import { BookmarksPanel, MenuType, Panel, SubPanelType } from 'src/types'
 import * as IPC from './ipc'
 import * as Logs from './logs'
 import { Menu } from './menu'
 import { Windows } from './windows'
 import { History } from './history'
+import { Bookmarks } from './bookmarks'
 
 export const INPUT_TIMEOUT = 300
 
@@ -106,6 +107,90 @@ export function enter(): void {
     }
   } else if (Utils.isBookmarksPanel(actPanel)) SearchBookmarks.onBookmarksSearchEnter(actPanel)
   else if (Utils.isHistoryPanel(actPanel)) SearchHistory.onHistorySearchEnter()
+}
+
+let searchPrevPanelId: ID | undefined
+
+export function bookmarks() {
+  if (!Search.reactive.barIsShowed) return
+
+  const actPanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+
+  // Try to open bookmarks sub-panel
+  if (Utils.isTabsPanel(actPanel) && Settings.state.subPanelBookmarks) {
+    if (
+      Sidebar.subPanelActive &&
+      Sidebar.reactive.subPanelType === SubPanelType.Bookmarks &&
+      Sidebar.subPanels.bookmarks
+    ) {
+      const panel = Sidebar.subPanels.bookmarks
+      if (panel.rootId !== BKM_ROOT_ID && panel.reactive.rootOffset === 0) {
+        const folder = Bookmarks.reactive.byId[panel.rootId]
+        if (folder) {
+          const path = Bookmarks.getPath(folder)
+          panel.reactive.rootOffset = path.length + 1
+          Search.reset(panel)
+          SearchBookmarks.onBookmarksSearch(actPanel, Sidebar.subPanels.bookmarks)
+        }
+      } else {
+        Sidebar.closeSubPanel()
+      }
+    } else {
+      Sidebar.openSubPanel(SubPanelType.Bookmarks, actPanel)
+    }
+  }
+
+  // Try to open bookmarks panel
+  else if (Sidebar.hasBookmarks) {
+    let firstPanel: BookmarksPanel | undefined
+    let nextPanel: BookmarksPanel | undefined | null
+    let rootPanel: BookmarksPanel | undefined
+    for (const p of Sidebar.panels) {
+      if (Utils.isBookmarksPanel(p)) {
+        if (!firstPanel) firstPanel = p
+        if (!rootPanel && p.rootId === BKM_ROOT_ID) rootPanel = p
+        if (nextPanel === null) nextPanel = p
+        if (p.id === actPanel.id) nextPanel = null
+      }
+    }
+    if (!firstPanel) return
+
+    if (!Utils.isBookmarksPanel(actPanel)) {
+      searchPrevPanelId = actPanel.id
+      Sidebar.activatePanel(firstPanel.id)
+    } else if (nextPanel) {
+      Sidebar.activatePanel(nextPanel.id)
+    } else if (searchPrevPanelId !== undefined) {
+      Sidebar.activatePanel(searchPrevPanelId)
+      searchPrevPanelId = undefined
+    }
+  }
+}
+
+export function history() {
+  if (!Search.reactive.barIsShowed) return
+
+  const actPanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+
+  // Try to open history sub-panel
+  if (Utils.isTabsPanel(actPanel) && Settings.state.subPanelHistory) {
+    if (Sidebar.subPanelActive && Sidebar.reactive.subPanelType === SubPanelType.History) {
+      Sidebar.closeSubPanel()
+    } else {
+      Sidebar.openSubPanel(SubPanelType.History, actPanel)
+    }
+  }
+
+  // Try to switch to history panel
+  else if (Sidebar.hasHistory) {
+    if (!Utils.isHistoryPanel(actPanel)) {
+      searchPrevPanelId = actPanel.id
+      Sidebar.activatePanel('history')
+    } else if (searchPrevPanelId !== undefined) {
+      Sidebar.activatePanel(searchPrevPanelId)
+      searchPrevPanelId = undefined
+    }
+  }
 }
 
 export function selectAll(): void {

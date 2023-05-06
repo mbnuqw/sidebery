@@ -53,6 +53,20 @@ function onClearBtnMouseUp(): void {
 }
 
 function onKD(e: KeyboardEvent): void {
+  // Bookmarks
+  if (e.key === '*') {
+    e.preventDefault()
+    e.stopPropagation()
+    Search.bookmarks()
+  }
+
+  // History
+  else if (e.key === '^') {
+    e.preventDefault()
+    e.stopPropagation()
+    Search.history()
+  }
+
   if (!Search.reactive.rawValue) return
 
   // Select all

@@ -65,7 +65,18 @@ export function onBookmarksSearch(activePanel: Panel, panel?: Panel): void {
     if (value.length > prevValue.length && value.startsWith(prevValue) && samePanel) {
       bookmarks = panel.reactive.filteredBookmarks
     }
-    if (!bookmarks) bookmarks = rootBookmark?.children
+    if (!bookmarks) {
+      if (panel.reactive.rootOffset) {
+        let folder = Bookmarks.reactive.byId[panel.rootId]
+        for (let i = panel.reactive.rootOffset; i-- && folder; ) {
+          folder = Bookmarks.reactive.byId[folder.parentId]
+        }
+        if (folder) bookmarks = folder.children
+        else bookmarks = Bookmarks.reactive.tree
+      } else {
+        bookmarks = rootBookmark?.children
+      }
+    }
     if (!bookmarks) bookmarks = Bookmarks.reactive.tree
 
     const filtered: Bookmark[] = []

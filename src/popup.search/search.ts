@@ -46,6 +46,20 @@ el?.addEventListener('keydown', (e: KeyboardEvent) => {
     clearTimeout(ctxMenuKeyPressed)
     ctxMenuKeyPressed = setTimeout(() => (ctxMenuKeyPressed = undefined), 500)
   }
+
+  // Bookmarks
+  else if (e.key === '*') {
+    e.preventDefault()
+    e.stopPropagation()
+    if (Windows.id !== undefined) IPC.sendToSidebar(Windows.id, 'onOutsideSearchBookmarks')
+  }
+
+  // History
+  else if (e.key === '^') {
+    e.preventDefault()
+    e.stopPropagation()
+    if (Windows.id !== undefined) IPC.sendToSidebar(Windows.id, 'onOutsideSearchHistory')
+  }
 })
 
 el?.addEventListener('contextmenu', (e: Event) => {

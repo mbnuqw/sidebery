@@ -23,7 +23,7 @@
       svg: use(xlink:href="#icon_expand")
     .title-block
       .title(v-if="rootFolder.title" :title="rootFolder.title") {{rootFolder.title}}
-    .down-btn(:data-inactive="state.navOffset <= 0" @click="goDown")
+    .down-btn(:data-inactive="bookmarksPanel.reactive.rootOffset <= 0" @click="goDown")
       svg: use(xlink:href="#icon_expand")
 </template>
 
@@ -51,7 +51,6 @@ const state = reactive({
   active: false,
   loading: false,
   permitted: Permissions.reactive.bookmarks,
-  navOffset: 0,
 })
 const props = defineProps<{
   bookmarksPanel: BookmarksPanel
@@ -68,12 +67,12 @@ onMounted(() => {
 
 function goUp(): void {
   if (rootFolder.value?.id === BKM_ROOT_ID) return
-  state.navOffset++
+  props.bookmarksPanel.reactive.rootOffset++
 }
 
 function goDown(): void {
-  state.navOffset--
-  if (state.navOffset < 0) state.navOffset = 0
+  props.bookmarksPanel.reactive.rootOffset--
+  if (props.bookmarksPanel.reactive.rootOffset < 0) props.bookmarksPanel.reactive.rootOffset = 0
 }
 
 const bookmarksRoot = computed<Bookmark>(() => {
@@ -91,7 +90,7 @@ const rootFolder = computed<Bookmark>(() => {
   if (!hostPanel.value) return bookmarksRoot.value
 
   let folder = Bookmarks.reactive.byId[props.bookmarksPanel.rootId] ?? bookmarksRoot.value
-  for (let i = state.navOffset; i-- && folder; ) {
+  for (let i = props.bookmarksPanel.reactive.rootOffset; i-- && folder; ) {
     if (folder.parentId === BKM_ROOT_ID) return bookmarksRoot.value
     folder = Bookmarks.reactive.byId[folder.parentId]
   }

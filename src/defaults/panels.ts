@@ -48,6 +48,7 @@ export const BOOKMARKS_PANEL_STATE: BookmarksPanel = {
     bookmarks: [],
     filteredBookmarks: undefined,
     viewMode: 'tree',
+    rootOffset: 0,
   },
 }
 

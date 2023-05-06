@@ -2149,6 +2149,8 @@ let subPanelTypeResetTimeout: number | undefined
 export function openSubPanel(type: SubPanelType, hostPanel?: Panel) {
   if (!Utils.isTabsPanel(hostPanel)) return
 
+  if (hostPanel.filteredTabs) Search.reset(hostPanel)
+
   if (type === SubPanelType.Bookmarks) {
     let panel = Sidebar.subPanels.bookmarks
     if (!panel) {
@@ -2183,6 +2185,11 @@ export function closeSubPanel() {
   clearTimeout(subPanelTypeResetTimeout)
   subPanelTypeResetTimeout = setTimeout(() => {
     Sidebar.reactive.subPanelType = SubPanelType.Null
+    if (Sidebar.subPanels.bookmarks) {
+      Sidebar.subPanels.bookmarks.reactive.rootOffset = 0
+      Sidebar.subPanels.bookmarks.reactive.filteredBookmarks = undefined
+      Sidebar.subPanels.bookmarks.reactive.filteredLen = undefined
+    }
   }, 500)
 }
 

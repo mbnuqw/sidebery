@@ -51,6 +51,8 @@ async function main(): Promise<void> {
     onOutsideSearchSelectAll: Search.selectAll,
     onOutsideSearchMenu: Search.menu,
     onOutsideSearchExit: Search.onOutsideSearchExit,
+    onOutsideSearchBookmarks: Search.bookmarks,
+    onOutsideSearchHistory: Search.history,
     notifyAboutNewSnapshot: Snapshots.notifyAboutNewSnapshot,
     notifyAboutWrongProxyAuthData: Notifications.notifyAboutWrongProxyAuthData,
     notify: Notifications.notify,

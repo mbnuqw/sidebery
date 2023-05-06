@@ -262,6 +262,7 @@ export interface BookmarksPanelReactiveProps extends PanelCommonReactiveProps {
   bookmarks: Bookmark[]
   filteredBookmarks?: Bookmark[]
   viewMode: string
+  rootOffset: number
 }
 
 ///

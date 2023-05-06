@@ -82,6 +82,8 @@ export type SidebarActions = {
   onOutsideSearchSelectAll: () => void
   onOutsideSearchMenu: () => void
   onOutsideSearchExit: () => void
+  onOutsideSearchBookmarks: () => void
+  onOutsideSearchHistory: () => void
 
   moveTabsToThisWin: (tabs: Tab[], dst?: DstPlaceInfo) => Promise<boolean>
   openTabs: (items: ItemInfo[], dst: DstPlaceInfo) => Promise<boolean>
