@@ -37,6 +37,8 @@ export function onOutsideSearchInput(value: string): void {
 export function onOutsideSearchExit(): void {
   if (!Search.reactive.barIsShowed) return
 
+  if (Sidebar.subPanelActive && subPanelOpenBySearch) Sidebar.closeSubPanel()
+
   const sidebarFocused = document.hasFocus()
   if (!sidebarFocused) Search.close()
   else if (inputEl && inputEl !== document.activeElement) Search.reactive.barIsActive = false
@@ -111,6 +113,7 @@ export function enter(): void {
 }
 
 let searchPrevPanelId: ID | undefined
+let subPanelOpenBySearch = false
 
 export function bookmarks() {
   if (!Search.reactive.barIsShowed) return
@@ -139,6 +142,7 @@ export function bookmarks() {
       }
     } else {
       Sidebar.openSubPanel(SubPanelType.Bookmarks, actPanel)
+      subPanelOpenBySearch = true
     }
   }
 
@@ -180,6 +184,7 @@ export function history() {
       Sidebar.closeSubPanel()
     } else {
       Sidebar.openSubPanel(SubPanelType.History, actPanel)
+      subPanelOpenBySearch = true
     }
   }
 
@@ -324,6 +329,7 @@ export function stop(): void {
   if (Settings.state.searchBarMode === 'dynamic') Search.hideBar()
   Search.reactive.rawValue = ''
   Search.search('')
+  subPanelOpenBySearch = false
 }
 
 export function check(str: string): boolean {
@@ -378,4 +384,5 @@ export function close(): void {
   Search.reactive.rawValue = ''
   Search.search('')
   hideBar()
+  subPanelOpenBySearch = false
 }
