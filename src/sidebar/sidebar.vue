@@ -197,11 +197,14 @@ function onFocusOut(e: FocusEvent): void {
 function onDocumentKeyup(e: KeyboardEvent): void {
   // Close popups
   if (e.code === 'Escape') {
-    // Selection (without menu)
-    if (!Menu.isOpen && Selection.isSet()) Selection.resetSelection()
-
     // Context menu
-    if (Menu.isOpen) Menu.close()
+    if (Menu.isOpen) {
+      Menu.close()
+      return
+    }
+
+    // Selection
+    if (Selection.isSet()) Selection.resetSelection()
 
     // Confirm popup
     if (Popups.reactive.confirm) Popups.reactive.confirm = null

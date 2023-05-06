@@ -286,23 +286,24 @@ function selectOption(dir: number): void {
   }
 }
 
-function activateOption(opt?: MenuOption, altMode?: boolean): void {
+function activateOption(opt?: MenuOption, altMode?: boolean): boolean | undefined {
   if (!opt) {
     if (state.selected < 0) return
     const opts = state.tickActive ? tickAll.value : tackAll.value
     opt = opts[state.selected]
   }
-  if (opt.inactive) return
+  if (opt.inactive) return false
   if (altMode && opt.onAltClick) opt.onAltClick()
   if (!altMode && opt.onClick) opt.onClick()
   if (opt.sub) {
     state.selected = -1
     state.sub = { type: 'list', name: opt.label, opts: opt.sub }
-    return
+    return false
   }
   Menu.close()
   Selection.resetSelection()
   Search.stop()
+  return true
 }
 
 function closeSubMenu(): void {

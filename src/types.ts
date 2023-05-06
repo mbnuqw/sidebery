@@ -134,7 +134,7 @@ export interface SelectInputComponent {
 
 export interface ContextMenuComponent {
   selectOption(dir: number): void
-  activateOption(): void
+  activateOption(): boolean | undefined
 }
 
 export interface TextInputComponent {

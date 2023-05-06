@@ -1,5 +1,5 @@
 import * as Utils from 'src/utils'
-import { BKM_ROOT_ID, MIN_SEARCH_QUERY_LEN, SEARCH_URL } from 'src/defaults'
+import { BKM_ROOT_ID, MIN_SEARCH_QUERY_LEN, NOID, SEARCH_URL } from 'src/defaults'
 import { Search } from 'src/services/search'
 import { Settings } from 'src/services/settings'
 import { Sidebar } from 'src/services/sidebar'
@@ -13,6 +13,7 @@ import { Menu } from './menu'
 import { Windows } from './windows'
 import { History } from './history'
 import { Bookmarks } from './bookmarks'
+import { Selection } from './selection'
 
 export const INPUT_TIMEOUT = 300
 
@@ -87,8 +88,8 @@ export function enter(): void {
   if (!Search.reactive.barIsShowed) return
 
   if (Menu.isOpen) {
-    Menu.activateOption()
-    Search.close()
+    const activated = Menu.activateOption()
+    if (activated) Search.close()
     return
   }
 
@@ -124,7 +125,8 @@ export function bookmarks() {
       Sidebar.subPanels.bookmarks
     ) {
       const panel = Sidebar.subPanels.bookmarks
-      if (panel.rootId !== BKM_ROOT_ID && panel.reactive.rootOffset === 0) {
+      const isRoot = panel.rootId === BKM_ROOT_ID || panel.rootId === NOID
+      if (!isRoot && panel.reactive.rootOffset === 0) {
         const folder = Bookmarks.reactive.byId[panel.rootId]
         if (folder) {
           const path = Bookmarks.getPath(folder)
@@ -200,8 +202,35 @@ export function selectAll(): void {
   const actPanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
   if (!actPanel) return
 
-  if (Utils.isTabsPanel(actPanel)) SearchTabs.onTabsSearchSelectAll(actPanel)
-  if (Utils.isBookmarksPanel(actPanel)) SearchBookmarks.onBookmarksSearchSelectAll(actPanel)
+  if (Utils.isTabsPanel(actPanel)) {
+    if (Sidebar.subPanelActive) {
+      if (Sidebar.reactive.subPanelType === SubPanelType.Bookmarks && Sidebar.subPanels.bookmarks) {
+        SearchBookmarks.onBookmarksSearchSelectAll(Sidebar.subPanels.bookmarks)
+      }
+    } else {
+      SearchTabs.onTabsSearchSelectAll(actPanel)
+    }
+  } else if (Utils.isBookmarksPanel(actPanel)) SearchBookmarks.onBookmarksSearchSelectAll(actPanel)
+}
+
+function getMenuCoordinates(type: MenuType): [number, number] {
+  const el = document.getElementById('search_bar')
+  const sRect = el?.getBoundingClientRect()
+  const sx = sRect?.left ?? 16
+  const sy = (sRect?.bottom ?? 16) + 2
+  const firstSelectedId = Selection.getFirst()
+
+  let rect
+  if (type === MenuType.Tabs) {
+    rect = document.getElementById('tab' + String(firstSelectedId))?.getBoundingClientRect()
+  } else if (type === MenuType.Bookmarks) {
+    rect = document.getElementById('bookmark' + String(firstSelectedId))?.getBoundingClientRect()
+  } else if (type === MenuType.History) {
+    rect = document.getElementById('history' + String(firstSelectedId))?.getBoundingClientRect()
+  }
+
+  if (!rect) return [sx, sy]
+  else return [rect.left + 2, rect.bottom + 2]
 }
 
 export function menu(): void {
@@ -211,12 +240,26 @@ export function menu(): void {
   const actPanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
   if (!actPanel) return
 
-  const el = document.getElementById('search_bar')
-  const rect = el?.getBoundingClientRect()
-  const y = (rect?.bottom ?? 8) + 88
-
-  if (Utils.isTabsPanel(actPanel)) Menu.open(MenuType.Tabs, 16, y, true)
-  if (Utils.isBookmarksPanel(actPanel)) Menu.open(MenuType.Bookmarks, 16, y, true)
+  if (Utils.isTabsPanel(actPanel)) {
+    if (Sidebar.subPanelActive) {
+      if (Sidebar.reactive.subPanelType === SubPanelType.Bookmarks && Sidebar.subPanels.bookmarks) {
+        const [x, y] = getMenuCoordinates(MenuType.Bookmarks)
+        Menu.open(MenuType.Bookmarks, x, y, true)
+      } else if (Sidebar.reactive.subPanelType === SubPanelType.History) {
+        const [x, y] = getMenuCoordinates(MenuType.History)
+        Menu.open(MenuType.History, x, y, true)
+      }
+    } else {
+      const [x, y] = getMenuCoordinates(MenuType.Tabs)
+      Menu.open(MenuType.Tabs, x, y, true)
+    }
+  } else if (Utils.isBookmarksPanel(actPanel)) {
+    const [x, y] = getMenuCoordinates(MenuType.Tabs)
+    Menu.open(MenuType.Bookmarks, x, y, true)
+  } else if (Utils.isHistoryPanel(actPanel)) {
+    const [x, y] = getMenuCoordinates(MenuType.Tabs)
+    Menu.open(MenuType.History, x, y, true)
+  }
 }
 
 let searchTimeout: number | undefined

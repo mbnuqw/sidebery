@@ -457,8 +457,8 @@ export function selectOption(dir: number): void {
   if (componentInstance) componentInstance.selectOption(dir)
 }
 
-export function activateOption(): void {
-  if (componentInstance) componentInstance.activateOption()
+export function activateOption(): boolean | undefined {
+  if (componentInstance) return componentInstance.activateOption()
 }
 
 let componentInstance: ContextMenuComponent | null = null
