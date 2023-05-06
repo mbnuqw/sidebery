@@ -1,7 +1,7 @@
 <template lang="pug">
 .CtxMenu(:data-active="isActive" @mousedown.stop @mouseup.stop)
   Transition(name="menu" type="transition"): .container(v-show="state.tickActive")
-    .box(ref="tickEl" :style="state.tickPosStyle")
+    .box.tick(ref="tickEl" :style="state.tickPosStyle")
       ScrollBox
         Transition(name="sub-menu" type="transition")
           .sub-menu-box(v-if="state.sub")
@@ -66,7 +66,7 @@
               svg.flag-icon(v-if="opt.flag.icon.startsWith('#')"): use(:xlink:href="opt.flag.icon")
               img.flag-icon(v-else :src="opt.flag.icon")
   Transition(name="menu" type="transition"): .container(v-show="state.tackActive")
-    .box(ref="tackEl" :style="state.tackPosStyle")
+    .box.tack(ref="tackEl" :style="state.tackPosStyle")
       ScrollBox
         Transition(name="sub-menu" type="transition")
           .sub-menu-box(v-if="state.sub")
@@ -143,6 +143,7 @@ import { Menu } from 'src/services/menu'
 import { Mouse } from 'src/services/mouse'
 import { Search } from 'src/services/search'
 import ScrollBox from 'src/components/scroll-box.vue'
+import { PRE_SCROLL } from 'src/defaults'
 
 let lastPhase: 'tick' | 'tack' = 'tack'
 
@@ -222,6 +223,42 @@ function onMouseUp(e: MouseEvent, opt: MenuOption): void {
   else if (e.button === 1 || (e.button === 0 && e.altKey)) activateOption(opt, true)
 }
 
+const scrollConf: ScrollToOptions = { behavior: 'smooth', top: 0 }
+function scrollToOption(opt: MenuOption) {
+  const query = `.opt[title="${opt.tooltip ?? opt.label}"]`
+  const optEl = document.querySelector(query) as HTMLElement | null
+  if (!optEl) return
+
+  let scrollEl: HTMLElement | null | undefined
+  if (optEl.parentElement?.className === 'scroll-box') scrollEl = optEl.parentElement
+  else {
+    const boxClass = state.tickActive ? '.tick' : '.tack'
+    const query = `.CtxMenu ${boxClass} .scroll-container`
+    scrollEl = document.querySelector(query) as HTMLElement | null
+  }
+
+  if (!scrollEl) return
+
+  const sR = scrollEl.getBoundingClientRect()
+  const bR = optEl.getBoundingClientRect()
+  const pH = scrollEl.offsetHeight
+  const pS = scrollEl.scrollTop
+  const bH = optEl.offsetHeight
+  const bY = bR.top - sR.top + pS
+
+  if (bY < pS + PRE_SCROLL) {
+    if (pS > 0) {
+      let y = bY - PRE_SCROLL
+      if (y < 0) y = 0
+      scrollConf.top = y
+      scrollEl.scroll(scrollConf)
+    }
+  } else if (bY + bH > pS + pH - PRE_SCROLL) {
+    scrollConf.top = bY + bH - pH + PRE_SCROLL
+    scrollEl.scroll(scrollConf)
+  }
+}
+
 function selectOption(dir: number): void {
   if (!dir) return
 
@@ -232,6 +269,7 @@ function selectOption(dir: number): void {
   if (state.selected < 0) {
     if (dir > 0) state.selected = 0
     else state.selected = opts.length - 1
+    scrollToOption(opts[state.selected])
     return
   }
 
@@ -244,6 +282,7 @@ function selectOption(dir: number): void {
 
     if (i < 0 || i >= opts.length) return
     state.selected = i
+    scrollToOption(opts[i])
   }
 }
 
