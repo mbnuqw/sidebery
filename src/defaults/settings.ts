@@ -32,7 +32,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   navSwitchPanelsWheel: true,
   subPanelRecentlyClosedBar: true,
   subPanelBookmarks: true,
-  subPanelHistory: false,
+  subPanelHistory: true,
 
   // Group page
   groupLayout: 'grid',

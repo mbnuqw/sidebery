@@ -1,7 +1,7 @@
 <template lang="pug">
 .HistoryPanel.panel
-  ScrollBox(@bottom="onScrollBottom")
-    .history-groups(ref="groupsListEl")
+  ScrollBox(ref="scrollBox" @bottom="onScrollBottom")
+    .history-groups(ref="groupsListEl" v-if="!isHidden")
       .group(
         v-for="(group, i) of historyList"
         :key="group.title"
@@ -28,14 +28,15 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, reactive, onUpdated } from 'vue'
+import { ref, computed, reactive, onUpdated, onMounted } from 'vue'
 import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
-import { HistoryItem } from 'src/types'
+import { HistoryItem, ScrollBoxComponent, SubPanelType } from 'src/types'
 import { Favicons } from 'src/services/favicons'
 import { History } from 'src/services/history'
 import { Search } from 'src/services/search'
 import { Permissions } from 'src/services/permissions'
+import { Sidebar } from 'src/services/sidebar'
 import ScrollBox from 'src/components/scroll-box.vue'
 import LoadingDots from 'src/components/loading-dots.vue'
 import PanelPlaceholder from './panel-placeholder.vue'
@@ -48,6 +49,9 @@ interface HistoryGroup {
   items: HistoryItem[]
 }
 
+const props = defineProps<{ isSubPanel?: boolean }>()
+
+const scrollBox = ref<ScrollBoxComponent | null>(null)
 const groupsPositions: number[] = []
 const groupsListEl = ref<HTMLElement | null>(null)
 onUpdated(() => {
@@ -62,6 +66,25 @@ const state = reactive({
   expandedHistoryGroups: [true],
   historyLoading: false,
   allLoaded: false,
+})
+
+onMounted(() => {
+  if (scrollBox.value) {
+    if (Sidebar.subPanelActive && Sidebar.reactive.subPanelType === SubPanelType.History) {
+      History.subPanelScrollEl = scrollBox.value.getScrollBox()
+    } else {
+      History.panelScrollEl = scrollBox.value.getScrollBox()
+    }
+  }
+})
+
+// Do not render history panel content if history sub-panel is active
+const isHidden = computed(() => {
+  return (
+    !props.isSubPanel &&
+    Sidebar.reactive.subPanelActive &&
+    Sidebar.reactive.subPanelType === SubPanelType.History
+  )
 })
 
 const isFiltering = computed<boolean>(() => !!Search.reactive.value)

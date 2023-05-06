@@ -7,6 +7,7 @@ import { Tabs } from './tabs.fg'
 import { Windows } from './windows'
 import { Permissions } from './permissions'
 import { Containers } from './containers'
+import { PRE_SCROLL } from 'src/defaults'
 import * as Logs from 'src/services/logs'
 
 const UNLIMITED = 1234567
@@ -208,11 +209,35 @@ export function resetListeners(): void {
   browser.history.onTitleChanged.removeListener(onTitleChange)
 }
 
+const scrollConf: ScrollToOptions = { behavior: 'smooth', top: 0 }
 export function scrollToHistoryItem(id: string): void {
   const elId = 'history' + id
   const el = document.getElementById(elId)
+  if (!el) return
 
-  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  let scrollEl
+  if (Sidebar.subPanelActive) scrollEl = History.subPanelScrollEl
+  else scrollEl = History.panelScrollEl
+  if (!scrollEl) return
+
+  const sR = scrollEl.getBoundingClientRect()
+  const bR = el.getBoundingClientRect()
+  const pH = scrollEl.offsetHeight
+  const pS = scrollEl.scrollTop
+  const bH = el.offsetHeight
+  const bY = bR.top - sR.top + pS
+
+  if (bY < pS + PRE_SCROLL) {
+    if (pS > 0) {
+      let y = bY - PRE_SCROLL
+      if (y < 0) y = 0
+      scrollConf.top = y
+      scrollEl.scroll(scrollConf)
+    }
+  } else if (bY + bH > pS + pH - PRE_SCROLL) {
+    scrollConf.top = bY + bH - pH + PRE_SCROLL
+    scrollEl.scroll(scrollConf)
+  }
 }
 
 export async function openTab(item: HistoryItem, activate?: boolean): Promise<void> {

@@ -16,7 +16,7 @@
       .title {{titles[Sidebar.reactive.subPanelType]}}
     ClosedTabsSubPanel(v-if="isRecentlyClosedTabs")
     BookmarksSubPanel(v-else-if="isBookmarks && Sidebar.subPanels.bookmarks" :bookmarksPanel="Sidebar.subPanels.bookmarks")
-    HistoryPanel(v-else-if="isHistory")
+    HistoryPanel(v-else-if="isHistory" :isSubPanel="true")
 </template>
 
 <script lang="ts" setup>
