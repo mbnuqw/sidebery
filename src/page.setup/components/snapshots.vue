@@ -469,8 +469,7 @@ async function openSelectedTabs(): Promise<void> {
         active: false,
         cookieStoreId: item.container,
       }
-      const isDefaultContainer = !item.container || item.container === CONTAINER_ID
-      if (isDefaultContainer && conf.url && !conf.url.startsWith('about') && item.title) {
+      if (conf.url && !conf.url.startsWith('a') && item.title) {
         conf.discarded = true
         conf.title = item.title
         conf.active = false

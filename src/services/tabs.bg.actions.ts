@@ -266,7 +266,7 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
   if (prevTab) prevTab.active = false
 
   // Workaround for #196, https://bugzilla.mozilla.org/show_bug.cgi?id=1581872
-  // Should be removed, all matched tabs should be reopened with original url
+  // TODO: Remove after v5 release
   if (tab && tab.url.startsWith('about:blank#url')) {
     browser.tabs.update(tab.id, { url: tab.url.substring(15) }).catch(err => {
       Logs.err('Tabs.onTabActivated: Cannot reload tab in correct container:', err)

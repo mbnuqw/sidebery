@@ -1041,7 +1041,7 @@ export async function undoRemove(tabs: ItemInfo[], parents: Record<ID, ID>): Pro
       cookieStoreId: tab.container,
       active: false,
     }
-    if (conf.cookieStoreId === CONTAINER_ID && conf.url) {
+    if (conf.url) {
       conf.discarded = true
       conf.title = tab.title
     }
@@ -3793,15 +3793,7 @@ export async function open(
     }
 
     if (dst.discarded === undefined && items.length > 1) dst.discarded = true
-    const isDefaultContainer = !conf.cookieStoreId || conf.cookieStoreId === CONTAINER_ID
-    if (
-      dst.discarded &&
-      isDefaultContainer &&
-      conf.url &&
-      !conf.url.startsWith('about') &&
-      !dst.pinned &&
-      !conf.active
-    ) {
+    if (dst.discarded && conf.url && !conf.url.startsWith('a') && !dst.pinned && !conf.active) {
       conf.discarded = true
       conf.title = item.title
     }

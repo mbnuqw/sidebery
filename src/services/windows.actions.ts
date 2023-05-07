@@ -179,13 +179,6 @@ export async function createWithTabs(
       if (info.url && !info.pinned && !info.active) conf.discarded = true
       if (info.title && conf.discarded) conf.title = info.title
 
-      if (conf.url && info.container && info.container !== defaultContainerId) {
-        conf.cookieStoreId = info.container
-        // Workaround for #196, https://bugzilla.mozilla.org/show_bug.cgi?id=1581872
-        conf.discarded = false
-        delete conf.title
-      }
-
       processingTabs.push(browser.tabs.create(conf))
     }
   }

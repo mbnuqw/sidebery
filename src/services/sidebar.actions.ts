@@ -1875,9 +1875,8 @@ export async function restoreFromBookmarks(panel: TabsPanel, silent?: boolean): 
         const containerId = Containers.getContainerFor(info.url)
         if (containerId) conf.cookieStoreId = containerId
       }
-      const isDefaultContainer = !conf.cookieStoreId || conf.cookieStoreId === CONTAINER_ID
       const parentId = idsMap[info.parentId ?? NOID] ?? NOID
-      if (conf.url && !conf.url.startsWith('about') && isDefaultContainer) {
+      if (conf.url && !conf.url.startsWith('about')) {
         conf.discarded = true
         conf.title = info.title
       }
