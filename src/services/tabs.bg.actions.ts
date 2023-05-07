@@ -329,7 +329,7 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
 
   const tab = Tabs.byId[id]
   if (!tab) {
-    reinitTabs('onTabMoved: No tab')
+    Logs.warn('onTabMoved: No tab')
     return
   }
 

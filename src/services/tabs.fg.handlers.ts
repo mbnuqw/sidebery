@@ -1034,8 +1034,8 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
   const tab = Tabs.byId[id]
   if (!tab) {
     const msg = `Tab cannot be moved: #${id} ${info.fromIndex} > ${info.toIndex} (not found by id)`
-    Logs.err(msg)
-    return Tabs.reinitTabs()
+    Logs.warn(msg)
+    return
   }
 
   Tabs.movingTabs.splice(Tabs.movingTabs.indexOf(id), 1)
