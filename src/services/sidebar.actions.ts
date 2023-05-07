@@ -1556,12 +1556,13 @@ export async function bookmarkTabsPanel(
   const oldFolderId = panel.bookmarksFolderId
   const oldFolder = Bookmarks.reactive.byId[oldFolderId]
   let parentId = parentFolderId ?? oldFolder?.parentId
-  let parent = Bookmarks.reactive.byId[parentId ?? NOID]
+  let parent = Bookmarks.reactive.byId[parentId ?? NOID] as Bookmark | undefined
+  let isTopLvl = parentId === BKM_ROOT_ID
   let index = oldFolder?.index ?? -1
   let folderName = panel.name
 
-  // If parent is not found, ask for it
-  if (!parentFolderId && (!update || !parent)) {
+  // Ask for location
+  if (!parent && !(update && oldFolder && isTopLvl)) {
     const defaultFolderId = oldFolder?.id ?? BKM_OTHER_ID
     const result = await Bookmarks.openBookmarksPopup({
       title: translate('popup.bookmarks.save_in_bookmarks'),
@@ -1594,11 +1595,13 @@ export async function bookmarkTabsPanel(
       index = oldFolder.index
     }
 
+    isTopLvl = parentId === BKM_ROOT_ID
+
     // Set new name
     if (result.name) folderName = result.name.trim()
   }
-  if (!parent) throw Err.Canceled
-  if (index === -1) index = parent.children?.length ?? 0
+  if (!parent && !isTopLvl) throw Err.Canceled
+  if (index === -1 && parent) index = parent.children?.length ?? 0
 
   // Start progress notification
   let progress: Notification | undefined
@@ -1631,6 +1634,8 @@ export async function bookmarkTabsPanel(
 
   // Or create new folder
   else {
+    if (!parent) throw Err.Canceled
+
     const parentConf = { title: folderName, index, parentId: parent.id }
     try {
       panelFolder = (await browser.bookmarks.create(parentConf)) as Bookmark
