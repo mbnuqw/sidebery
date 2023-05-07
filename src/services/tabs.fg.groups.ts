@@ -64,7 +64,7 @@ export async function groupTabs(tabIds: ID[], conf?: GroupConfig): Promise<void>
   }
 
   if (!tabs.length) return
-  if (Settings.state.tabsTreeLimit === 'none' || tabs[0].lvl >= Settings.state.tabsTreeLimit) return
+  if (Settings.state.tabsTreeLimit !== 'none' && tabs[0].lvl >= Settings.state.tabsTreeLimit) return
 
   // Find title for group tab
   if (!conf.title) {

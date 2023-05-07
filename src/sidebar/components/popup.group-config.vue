@@ -1,12 +1,12 @@
 <template lang="pug">
 .GroupConfigPopup.popup-container(@click="onCancel")
-  .popup(v-if="Sidebar.reactive.groupConfigPopup" @click.stop)
+  .popup(v-if="Popups.reactive.groupConfigPopup" @click.stop)
     h2 {{translate('popup.group_config.popup_title')}}
     .field
       .field-label {{translate('popup.group_config.title')}}
       TextInput.input(
         ref="titleInput"
-        v-model:value="Sidebar.reactive.groupConfigPopup.config.title"
+        v-model:value="Popups.reactive.groupConfigPopup.config.title"
         :or="translate('popup.group_config.title_placeholder')"
         :tabindex="'-1'"
         :line="true"
@@ -20,7 +20,8 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
 import { translate } from 'src/dict'
-import { GroupConfigResult, Sidebar } from 'src/services/sidebar'
+import { GroupConfigResult } from 'src/services/sidebar'
+import * as Popups from 'src/services/popups'
 import TextInput from 'src/components/text-input.vue'
 import { TextInputComponent } from 'src/types'
 
@@ -39,16 +40,16 @@ function onTitleKD(e: KeyboardEvent): void {
 }
 
 function onOk(): void {
-  if (!Sidebar.reactive.groupConfigPopup) return
+  if (!Popups.reactive.groupConfigPopup) return
 
-  Sidebar.reactive.groupConfigPopup.done(GroupConfigResult.Ok)
-  Sidebar.reactive.groupConfigPopup = null
+  Popups.reactive.groupConfigPopup.done(GroupConfigResult.Ok)
+  Popups.reactive.groupConfigPopup = null
 }
 
 function onCancel(): void {
-  if (!Sidebar.reactive.groupConfigPopup) return
+  if (!Popups.reactive.groupConfigPopup) return
 
-  Sidebar.reactive.groupConfigPopup.done(GroupConfigResult.Cancel)
-  Sidebar.reactive.groupConfigPopup = null
+  Popups.reactive.groupConfigPopup.done(GroupConfigResult.Cancel)
+  Popups.reactive.groupConfigPopup = null
 }
 </script>
