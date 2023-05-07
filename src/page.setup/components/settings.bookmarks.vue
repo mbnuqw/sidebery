@@ -12,6 +12,10 @@ section(ref="el")
     :opts="Settings.getOpts('warnOnMultiBookmarkDelete')"
     @update:value="Settings.saveDebounced(150)")
   ToggleField(
+    label="settings.ask_new_bookmark_place"
+    v-model:value="Settings.state.askNewBookmarkPlace"
+    @update:value="Settings.saveDebounced(150)")
+  ToggleField(
     label="settings.bookmarks_rm_undo_note"
     v-model:value="Settings.state.bookmarksRmUndoNote"
     @update:value="Settings.saveDebounced(150)")

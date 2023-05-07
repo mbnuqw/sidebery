@@ -66,10 +66,6 @@ section(ref="el")
       :inactive="Settings.state.activateAfterClosing === 'none'"
       @update:value="Settings.saveDebounced(150)")
   ToggleField(
-    label="settings.ask_new_bookmark_place"
-    v-model:value="Settings.state.askNewBookmarkPlace"
-    @update:value="Settings.saveDebounced(150)")
-  ToggleField(
     label="settings.native_highlight"
     v-model:value="Settings.state.nativeHighlight"
     @update:value="Settings.saveDebounced(150)")

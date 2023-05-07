@@ -66,7 +66,6 @@ export interface SettingsState {
   activateAfterClosingGlobal: boolean
   activateAfterClosingNoFolded: boolean
   activateAfterClosingNoDiscarded: boolean
-  askNewBookmarkPlace: boolean
   tabsRmUndoNote: boolean
   nativeHighlight: boolean
   tabsUnreadMark: boolean
@@ -123,6 +122,7 @@ export interface SettingsState {
   // Bookmarks
   bookmarksPanel?: boolean // DEPR
   warnOnMultiBookmarkDelete: (typeof SETTINGS_OPTIONS.warnOnMultiBookmarkDelete)[number]
+  askNewBookmarkPlace: boolean
   autoCloseBookmarks: boolean
   autoRemoveOther: boolean
   highlightOpenBookmarks: boolean
