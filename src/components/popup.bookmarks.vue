@@ -198,8 +198,10 @@ function initRecentFolders() {
   }
 
   state.bookmarksRecentFolders = folders
-  if (Bookmarks.reactive.popup && firstFolderId !== undefined) {
-    Bookmarks.reactive.popup.location = firstFolderId
+
+  const popup = Bookmarks.reactive.popup
+  if (popup && popup.recentLocationAsDefault && firstFolderId !== undefined) {
+    popup.location = firstFolderId
   }
 }
 

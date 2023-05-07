@@ -24,6 +24,7 @@ export interface BookmarksPopupConfig {
   locationTree?: boolean
   location?: ID
   recentLocations?: boolean
+  recentLocationAsDefault?: boolean
   newFolderPosition?: [parentId: ID, index: number]
   target?: Bookmark
   controls?: BookmarksPopupControlConfig[]

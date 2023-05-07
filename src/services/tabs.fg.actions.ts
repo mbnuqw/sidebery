@@ -1,6 +1,6 @@
 import * as Utils from 'src/utils'
 import { CONTAINER_ID, GROUP_URL, NOID, NEWID, Err, ASKID, MOVEID, SAMEID } from 'src/defaults'
-import { BKM_OTHER_ID, ADDON_HOST, DEFAULT_CONTAINER_ID } from 'src/defaults'
+import { BKM_OTHER_ID, ADDON_HOST, DEFAULT_CONTAINER_ID, BKM_ROOT_ID } from 'src/defaults'
 import { translate } from 'src/dict'
 import { Stored, Tab, Panel, TabCache, ActiveTabsHistory, ReactiveTab, TabStatus } from 'src/types'
 import { Notification, TabSessionData, TabsTreeData, DragInfo } from 'src/types'
@@ -1803,6 +1803,15 @@ export async function bookmarkTabs(tabIds: ID[]): Promise<void> {
     const tab = Tabs.byId[id]
     if (tab) tabs.push(tab)
   }
+  if (!tabs.length) return
+
+  const panelId = tabs[0].panelId
+  const panel = Sidebar.panelsById[panelId]
+  if (!Utils.isTabsPanel(panel)) return
+
+  const hasDefaultFolder =
+    panel.bookmarksFolderId !== NOID && panel.bookmarksFolderId !== BKM_ROOT_ID
+  if (hasDefaultFolder) parentId = panel.bookmarksFolderId
 
   if (tabs.length === 1 && Settings.state.askNewBookmarkPlace) {
     const tab = tabs[0]
@@ -1815,6 +1824,7 @@ export async function bookmarkTabs(tabIds: ID[]): Promise<void> {
       location: parentId,
       locationField: true,
       recentLocations: true,
+      recentLocationAsDefault: !hasDefaultFolder,
       controls: [{ label: 'btn.save' }],
       validate: popupState => {
         popupState.nameValid = !!popupState.name
@@ -1850,6 +1860,7 @@ export async function bookmarkTabs(tabIds: ID[]): Promise<void> {
         locationField: true,
         locationTree: false,
         recentLocations: true,
+        recentLocationAsDefault: !hasDefaultFolder,
         controls: [{ label: 'btn.save' }],
       })
       if (!result) return
