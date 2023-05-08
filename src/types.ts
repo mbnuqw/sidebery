@@ -62,6 +62,7 @@ export interface Notification {
   iconColor?: string
   favicons?: string[]
   details?: string
+  detailsList?: string[]
 }
 
 export type AnyFunc = (...args: any[]) => any

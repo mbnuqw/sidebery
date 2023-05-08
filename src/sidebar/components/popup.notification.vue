@@ -13,6 +13,8 @@
       img(v-else :src="notification.icon")
     .title {{notification.title}}
   .details(v-if="notification.details" @mousedown.middle="onHideMouseDown()") {{notification.details}}
+  .details-list(v-if="notification.detailsList?.length")
+    .details-msg(v-for="msg in notification.detailsList") {{msg}}
   .progress(v-if="notification.progress"
     :data-progress-unknown="notification.progress.percent === -1"
     :style="getProgressPercent(notification)")

@@ -955,16 +955,16 @@ export async function removeTabs(tabIds: ID[], silent?: boolean): Promise<void> 
   if (activeTab) Tabs.updateSuccessionDebounced(0, toRemove)
 
   if (!silent && count > 1 && Settings.state.tabsRmUndoNote && !warn) {
-    let detailsParts = tabs.slice(0, 2).map(t => {
-      return '- ' + (t.title.length > 36 ? t.title.slice(0, 36) + '...' : t.title)
+    const nTabs = count > 3 ? tabs.slice(0, 2) : tabs
+    let detailsList = nTabs.map(t => {
+      return '- ' + t.title
     })
-    if (count > 2) detailsParts = detailsParts.concat('- ...')
-    const details = detailsParts.join('\n')
+    if (count > 3) detailsList = detailsList.concat('- ...')
 
     Notifications.notify({
       icon: '#icon_trash',
       title: String(count) + translate('notif.tabs_rm_post', count),
-      details,
+      detailsList,
       ctrl: translate('notif.undo_ctrl'),
       callback: async () => undoRemove(tabsInfo, parents),
     })
