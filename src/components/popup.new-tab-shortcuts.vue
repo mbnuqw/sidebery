@@ -3,12 +3,16 @@
   .popup(v-if="Popups.reactive.newTabShortcutsPopup")
     h2(v-if="shortcuts.length") {{translate('popup.new_tab_shortcuts.title')}}
     .shortcuts(v-if="shortcuts.length")
-      .shortcut(v-for="(shortcut, index) of shortcuts" :key="shortcut.id")
+      .shortcut(
+        v-for="(shortcut, index) of shortcuts"
+        :key="shortcut.id"
+        :data-edit="shortcut.id === editing"
+        @click="editShortcut(shortcut)")
         .container-box(v-if="shortcut.container" :data-color="shortcut.containerColor")
           .icon-box
             svg.icon: use(:xlink:href="shortcut.containerIcon")
           .container {{shortcut.container}}
-          .controls-box
+          .controls-box(@click.stop)
             .btn-up(@click="shortcutUp(index)"): svg: use(xlink:href="#icon_expand")
             .btn-down(@click="shortcutDown(index)"): svg: use(xlink:href="#icon_expand")
             .btn-rm(@click="removeShortcut(index)"): svg: use(xlink:href="#icon_remove")
@@ -17,11 +21,11 @@
             svg.icon(v-if="shortcut.urlIcon?.startsWith('#')"): use(:xlink:href="shortcut.urlIcon")
             img.icon(v-else :src="shortcut.urlIcon")
           .url {{shortcut.url}}
-          .controls-box(v-if="!shortcut.container")
+          .controls-box(v-if="!shortcut.container" @click.stop)
             .btn-up(@click="shortcutUp(index)"): svg: use(xlink:href="#icon_expand")
             .btn-down(@click="shortcutDown(index)"): svg: use(xlink:href="#icon_expand")
             .btn-rm(@click="removeShortcut(index)"): svg: use(xlink:href="#icon_remove")
-        .separator(v-if="!shortcut.url && !shortcut.container")
+        .separator(v-if="!shortcut.url && !shortcut.container" @click.stop)
           .controls-box
             .btn-up(@click="shortcutUp(index)"): svg: use(xlink:href="#icon_expand")
             .btn-down(@click="shortcutDown(index)"): svg: use(xlink:href="#icon_expand")
@@ -41,7 +45,12 @@
       :or="translate('popup.new_tab_shortcuts.new_shortcut_url_placeholder')"
       :line="true")
 
-    .ctrls
+    .ctrls(v-if="editing")
+      .btn.-wide(@click="onSaveEdit").
+        {{translate('btn.save')}}
+      .btn.-wide(@click="onCancelEdit").
+        {{translate('btn.cancel')}}
+    .ctrls(v-else)
       .btn.-wide(:title="translate('popup.new_tab_shortcuts.add_br_btn')" @click="onAddBr").
         {{translate('popup.new_tab_shortcuts.add_br_btn')}}
       .btn.-wide(:class="{ '-inactive': !addBtnActive }" @click="onAdd").
@@ -69,6 +78,7 @@ interface NewTabShortcut {
   url?: string
   urlIcon?: string
   container?: string
+  containerId?: string
   containerIcon?: string
   containerColor?: string
 }
@@ -83,6 +93,7 @@ interface ContainerOption {
 
 const newShortcutContainerId = ref('none')
 const newShortcutURL = ref('')
+const editing = ref<ID | null>(null)
 
 const addBtnActive = computed<boolean>(() => {
   const urlIsValid = !!newShortcutURL.value && DOMAIN_RE.test(newShortcutURL.value)
@@ -131,6 +142,7 @@ const shortcuts = computed<NewTabShortcut[]>(() => {
         container = Object.values(Containers.reactive.byId).find(c => c.name === part)
         if (container && !Windows.incognito) {
           shortcut.container = container.name
+          shortcut.containerId = container.id
           shortcut.containerIcon = '#' + container.icon
           shortcut.containerColor = container.color
           continue
@@ -280,5 +292,62 @@ function removeShortcut(index: number): void {
   if (Info.isSidebar) panel.reactive.newTabBtns = Utils.cloneArray(panel.newTabBtns)
   if (Info.isSidebar) Sidebar.saveSidebar(1000)
   else saveSidebarConfig(1000)
+}
+
+function editShortcut(shortcut: NewTabShortcut) {
+  if (editing.value === shortcut.id) {
+    return onCancel()
+  }
+
+  editing.value = shortcut.id
+
+  if (shortcut.containerId) newShortcutContainerId.value = shortcut.containerId
+  else newShortcutContainerId.value = 'none'
+
+  if (shortcut.url) newShortcutURL.value = shortcut.url
+  else newShortcutURL.value = ''
+}
+
+function onSaveEdit() {
+  if (!Popups.reactive.newTabShortcutsPopup) return
+  if (!newShortcutURL.value && newShortcutContainerId.value === 'none') return
+
+  const id = editing.value
+  if (!id) return
+
+  editing.value = null
+
+  const sIndex = shortcuts.value.findIndex(s => s.id === id)
+  if (sIndex === -1) return
+
+  const container = Containers.reactive.byId[newShortcutContainerId.value]
+  const sConfig = []
+  if (container?.name) sConfig.push(container.name)
+  if (newShortcutURL.value) sConfig.push(newShortcutURL.value)
+  if (!sConfig.length) return
+
+  const panelId = Popups.reactive.newTabShortcutsPopup.panelId
+  const panel = Info.isSidebar ? Sidebar.panelsById[panelId] : SidebarConfigRState.panels[panelId]
+  if (!Utils.isTabsPanel(panel)) return
+
+  const rawShortcut = sConfig.join(', ')
+  const rawShortcuts = Popups.reactive.newTabShortcutsPopup.rawShortcuts
+  rawShortcuts.splice(sIndex, 1, rawShortcut)
+  panel.newTabBtns.splice(sIndex, 1, rawShortcut)
+
+  newShortcutURL.value = ''
+  newShortcutContainerId.value = 'none'
+
+  if (Info.isSidebar) panel.reactive.newTabBtns = Utils.cloneArray(panel.newTabBtns)
+  if (Info.isSidebar) Sidebar.saveSidebar(1000)
+  else saveSidebarConfig(1000)
+}
+
+function onCancelEdit() {
+  editing.value = null
+
+  // Reset inputs
+  newShortcutContainerId.value = 'none'
+  newShortcutURL.value = ''
 }
 </script>
