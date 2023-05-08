@@ -204,6 +204,7 @@ export interface TabsPanelConfig extends PanelConfigCommonProps {
   newTabCtx: string
   dropTabCtx: string
   moveRules: TabToPanelMoveRuleConfig[]
+  moveExcludedTo: ID
   bookmarksFolderId: ID
   newTabBtns: string[]
   srcPanelConfig: SrcBookmarksPanelConfig | null

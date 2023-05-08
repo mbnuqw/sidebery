@@ -139,6 +139,14 @@
   .InfoField(v-if="Utils.isTabsPanel(conf)")
     .label {{translate('panel.tab_move_rules')}}
     .btn(@click="openRulesPopup") {{getManageRulesBtnLabel(conf)}}
+  .sub-fields(v-if="Utils.isTabsPanel(conf)")
+    SelectField(
+      label="panel.move_excluded_to"
+      :inactive="!conf.moveRules.length"
+      :value="conf.moveExcludedTo"
+      :opts="availableForMoveExcludePanelsOpts"
+      :folded="true"
+      @update:value="toggleMoveExclude")
 
   .InfoField(v-if="Utils.isTabsPanel(conf)")
     .label {{translate('panel.new_tab_shortcuts')}}
@@ -151,7 +159,7 @@ import * as Utils from 'src/utils'
 import * as Logs from 'src/services/logs'
 import * as Popups from 'src/services/popups'
 import { translate } from 'src/dict'
-import { BKM_MENU_ID, FOLDER_NAME_DATA_RE } from 'src/defaults'
+import { BKM_MENU_ID, FOLDER_NAME_DATA_RE, NOID } from 'src/defaults'
 import { DEFAULT_CONTAINER_ID, COLOR_OPTS, PANEL_ICON_OPTS } from 'src/defaults'
 import { BKM_ROOT_ID, RGB_COLORS } from 'src/defaults'
 import { TextInputComponent, PanelConfig, BookmarksPanelConfig, TabsPanelConfig } from 'src/types'
@@ -175,6 +183,14 @@ interface ContainerOption {
   title?: string
 }
 
+interface PanelOption {
+  value: ID
+  icon?: string
+  color?: string
+  tooltip?: string
+  title?: string
+}
+
 const URL_RE = /^https?:\/\/.+/
 const TABS_PANEL_ICON_OPTS = [{ value: 'icon_tabs', icon: '#icon_tabs' }, ...PANEL_ICON_OPTS]
 const BOOKMARKS_PANEL_ICON_OPTS = [
@@ -183,6 +199,7 @@ const BOOKMARKS_PANEL_ICON_OPTS = [
 ]
 const defaultContainerTooltip = translate('panel.ctr_tooltip_default')
 const noneContainerTooltip = translate('panel.ctr_tooltip_none')
+const nonePanelTooltip = translate('panel.panel_tooltip_none')
 
 const state = reactive({
   customIconUrl: '',
@@ -255,6 +272,27 @@ const availableForAutoMoveContainersOpts = computed<ContainerOption[]>(() => {
     icon: '#icon_none',
     title: noneContainerTooltip,
     tooltip: noneContainerTooltip,
+  })
+
+  return result
+})
+const availableForMoveExcludePanelsOpts = computed<PanelOption[]>(() => {
+  const result: PanelOption[] = []
+
+  for (const id of SidebarConfigRState.nav) {
+    const p = SidebarConfigRState.panels[id]
+    if (!Utils.isTabsPanel(p)) continue
+    if (p.id === props.conf.id) continue
+    const icon = p.iconIMG ? p.iconIMG : '#' + p.iconSVG
+    result.push({ value: p.id, color: p.color, icon, title: p.name })
+  }
+
+  result.push({
+    value: NOID,
+    color: 'inactive',
+    icon: '#icon_none',
+    title: nonePanelTooltip,
+    tooltip: nonePanelTooltip,
   })
 
   return result
@@ -652,7 +690,7 @@ function openShortcutsPopup(): void {
 }
 
 function getManageRulesBtnLabel(panel: TabsPanelConfig): string {
-  const label = translate('panel.tab_move_rules_manage_btn')
+  let label = translate('panel.tab_move_rules_manage_btn')
   if (panel.moveRules.length) return label + ` (${panel.moveRules.length})`
   else return label
 }
@@ -668,5 +706,11 @@ function onFileInputKeyup(e: KeyboardEvent) {
     e.stopPropagation()
     rootEl.value?.focus()
   }
+}
+
+function toggleMoveExclude(id: ID) {
+  if (!Utils.isTabsPanel(props.conf)) return
+  props.conf.moveExcludedTo = id
+  saveSidebarConfig()
 }
 </script>

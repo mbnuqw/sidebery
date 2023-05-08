@@ -35,7 +35,16 @@ export function initSidebarConfig(reactivate?: (rObj: object) => object) {
 export async function loadSidebarConfig() {
   const storage = await browser.storage.local.get<Stored>('sidebar')
   if (storage.sidebar?.nav) SidebarConfigRState.nav = storage.sidebar.nav
-  if (storage.sidebar?.panels) SidebarConfigRState.panels = storage.sidebar.panels
+  if (storage.sidebar?.panels) {
+    // Normalize configs
+    for (const conf of Object.values(storage.sidebar.panels)) {
+      if (Utils.isTabsPanel(conf)) Utils.normalizeObject(conf, TABS_PANEL_CONFIG)
+      else if (Utils.isBookmarksPanel(conf)) Utils.normalizeObject(conf, BOOKMARKS_PANEL_CONFIG)
+      else if (Utils.isHistoryPanel(conf)) Utils.normalizeObject(conf, HISTORY_PANEL_CONFIG)
+    }
+
+    SidebarConfigRState.panels = storage.sidebar.panels
+  }
 }
 
 export async function saveSidebarConfig(delay?: number) {
@@ -158,5 +167,14 @@ function updateSidebarConfig(newConfig?: SidebarConfig | null): void {
   if (!newConfig?.nav?.length) newConfig = { nav: [], panels: {} }
 
   if (newConfig.nav) SidebarConfigRState.nav = newConfig.nav
-  if (newConfig.panels) SidebarConfigRState.panels = newConfig.panels
+  if (newConfig.panels) {
+    // Normalize configs
+    for (const conf of Object.values(newConfig.panels)) {
+      if (Utils.isTabsPanel(conf)) Utils.normalizeObject(conf, TABS_PANEL_CONFIG)
+      else if (Utils.isBookmarksPanel(conf)) Utils.normalizeObject(conf, BOOKMARKS_PANEL_CONFIG)
+      else if (Utils.isHistoryPanel(conf)) Utils.normalizeObject(conf, HISTORY_PANEL_CONFIG)
+    }
+
+    SidebarConfigRState.panels = newConfig.panels
+  }
 }

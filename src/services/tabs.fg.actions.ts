@@ -4210,21 +4210,38 @@ export function moveByRule(tabId: ID, delay: number) {
     if (!tab) return
     if (!Tabs.moveRules.length) return
 
+    const currentPanel = Sidebar.panelsById[tab.panelId]
+    let excludeTo = NOID
+    if (Utils.isTabsPanel(currentPanel)) excludeTo = currentPanel.moveExcludedTo
+
     const rule = Tabs.findMoveRule(tab)
     if (rule) {
-      const panelId = rule.panelId
-      const panel = Sidebar.panelsById[panelId]
-      if (!Utils.isTabsPanel(panel)) return
-      const moveToPanelStart = Settings.state.moveNewTabParent === 'start'
-      const index = moveToPanelStart ? panel.startTabIndex : panel.nextTabIndex
-      const src: SrcPlaceInfo = { windowId: Windows.id, pinned: tab.pinned }
-      const dst: DstPlaceInfo = { panelId, index }
-      Utils.inQueue(Tabs.move, [tab], src, dst)
+      if (rule.panelId === tab.panelId) return
 
-      if (tab.active) Sidebar.switchToPanel(panelId, true, true)
+      const panelId = rule.panelId
+      moveTabToPanel(tab, panelId)
+    } else if (
+      excludeTo !== NOID &&
+      excludeTo !== tab.panelId &&
+      !tab.url.startsWith('a') &&
+      !tab.url.startsWith('m')
+    ) {
+      moveTabToPanel(tab, excludeTo)
     }
   }, delay)
   moveByRuleTimeouts.set(tabId, timeout)
+}
+
+function moveTabToPanel(tab: Tab, panelId: ID) {
+  const panel = Sidebar.panelsById[panelId]
+  if (!Utils.isTabsPanel(panel)) return
+  const moveToPanelStart = Settings.state.moveNewTabParent === 'start'
+  const index = moveToPanelStart ? panel.startTabIndex : panel.nextTabIndex
+  const src: SrcPlaceInfo = { windowId: Windows.id, pinned: tab.pinned }
+  const dst: DstPlaceInfo = { panelId, index }
+  Utils.inQueue(Tabs.move, [tab], src, dst)
+
+  if (tab.active) Sidebar.switchToPanel(panelId, true, true)
 }
 
 export function findMoveRuleBy(containerId: string, lvl?: number): TabToPanelMoveRule | undefined {
@@ -4238,8 +4255,6 @@ export function findMoveRuleBy(containerId: string, lvl?: number): TabToPanelMov
 
 export function findMoveRule(tab: Tab): TabToPanelMoveRule | undefined {
   for (const rule of Tabs.moveRules) {
-    if (rule.panelId === tab.panelId) continue
-
     if (rule.topLvlOnly && tab.lvl > 0) continue
 
     if (rule.containerId && rule.containerId !== tab.cookieStoreId) continue

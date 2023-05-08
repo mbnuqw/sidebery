@@ -195,6 +195,12 @@ export const setupPageTranslations: Translations = {
     de: 'Nicht festgelegt',
     zh_CN: '未设置',
   },
+  'panel.panel_tooltip_none': {
+    en: 'Not set',
+    ru: 'Не задана',
+    de: 'Nicht festgelegt',
+    zh_CN: '未设置',
+  },
   'panel.ctr_tooltip_default': {
     en: 'No container',
     ru: 'Без контейнера',
@@ -309,6 +315,10 @@ export const setupPageTranslations: Translations = {
   'panel.tab_move_rules_manage_btn': {
     en: 'Manage rules',
     ru: 'Управление правилами',
+  },
+  'panel.move_excluded_to': {
+    en: 'Move unmatched (excluded) tabs to panel',
+    ru: 'Перемещать остальные (исключенные) вкладки на панель',
   },
   'panel.tab_move_rules_manage_badge': {
     en: 'Manage moving rules',
