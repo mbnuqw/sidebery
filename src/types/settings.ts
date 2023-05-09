@@ -50,6 +50,8 @@ export interface SettingsState {
   dndOutside: (typeof SETTINGS_OPTIONS.dndOutside)[number]
   dndActTabFromLink: boolean
   dndActSearchTab: boolean
+  dndMoveTabs: boolean
+  dndMoveBookmarks: boolean
 
   // Search
   searchBarMode: (typeof SETTINGS_OPTIONS.searchBarMode)[number]

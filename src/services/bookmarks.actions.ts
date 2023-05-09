@@ -1469,3 +1469,15 @@ function bookmarkIsParentTab(node: Bookmark, parentTitle?: string): boolean {
 
   return childTitle.startsWith(parentTitle) && childTitle[parentTitle.length + 1] === '['
 }
+
+/**
+ * Check permission and load bookmarks
+ */
+export async function prepareBookmarks() {
+  if (!Permissions.reactive.bookmarks) {
+    const result = await Permissions.request('bookmarks')
+    if (!result) return false
+  }
+  if (!Bookmarks.reactive.tree.length) await Bookmarks.load()
+  return true
+}

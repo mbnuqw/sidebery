@@ -909,7 +909,23 @@ export async function onDrop(e: DragEvent): Promise<void> {
     (fromTabs && toBookmarksPanel) ||
     (fromTabsPanel && toBookmarks)
   ) {
-    Bookmarks.createFrom(DnD.items, getDestInfo())
+    const bookmarksWasUnloaded = !Bookmarks.reactive.tree.length
+    const copyMode = DnD.dropMode === 'copy'
+    const dstInfo = getDestInfo()
+    const items = DnD.items
+    const toRemove = Settings.state.dndMoveTabs && DnD.items.map(t => t.id)
+    const prepareResult = await Bookmarks.prepareBookmarks()
+    if (!prepareResult) return
+
+    // Recheck dst index
+    if (dstInfo.index === 0 && bookmarksWasUnloaded && toBookmarksPanel) {
+      const parent = Bookmarks.reactive.byId[dstInfo.parentId ?? NOID]
+      if (parent?.children?.length) dstInfo.index = parent.children.length
+    }
+
+    await Bookmarks.createFrom(items, dstInfo)
+
+    if (toRemove && !copyMode) Tabs.removeTabs(toRemove, true)
   }
 
   // Bookmarks to tabs
@@ -920,8 +936,13 @@ export async function onDrop(e: DragEvent): Promise<void> {
   ) {
     const dst = getDestInfo()
     const ids = DnD.items.map(i => i.id)
+    const copyMode = DnD.dropMode === 'copy'
 
     await Bookmarks.open(ids, dst)
+
+    if (Settings.state.dndMoveBookmarks && !copyMode) {
+      Bookmarks.removeBookmarks(ids, true)
+    }
   }
 
   // Bookmarks to bookmarks

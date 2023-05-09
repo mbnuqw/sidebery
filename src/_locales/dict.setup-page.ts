@@ -1122,8 +1122,24 @@ export const setupPageTranslations: Translations = {
     en: 'Activate tab created to search for dragged text',
     ru: 'Активировать вкладку, созданную для поиска перетаскиваемого текста',
   },
+  'settings.dnd_move_tabs': {
+    en: 'Close tabs after dropping them to bookmarks',
+    ru: 'Закрывать вкладки после перетаскивания их в закладки',
+  },
+  'settings.dnd_move_tabs_note': {
+    en: 'Note: Ctrl+Drop will preserve the tabs',
+    ru: 'Примечание: Ctrl+Drop сохранит вкладки',
+  },
+  'settings.dnd_move_bookmarks': {
+    en: 'Delete bookmarks after dropping them to tabs',
+    ru: 'Удалять закладки после перетаскивания их во вкладки',
+  },
+  'settings.dnd_move_bookmarks_note': {
+    en: 'Note: Ctrl+Drop will preserve the bookmarks',
+    ru: 'Примечание: Ctrl+Drop сохранит закладки',
+  },
 
-  // - Search
+  // - Search;
   'settings.search_title': {
     en: 'Search',
     ru: 'Поиск',

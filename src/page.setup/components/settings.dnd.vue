@@ -55,6 +55,16 @@ section(ref="el")
     label="settings.dnd_act_search_tab"
     v-model:value="Settings.state.dndActSearchTab"
     @update:value="Settings.saveDebounced(150)")
+  ToggleField(
+    label="settings.dnd_move_tabs"
+    :note="translate('settings.dnd_move_tabs_note')"
+    v-model:value="Settings.state.dndMoveTabs"
+    @update:value="Settings.saveDebounced(150)")
+  ToggleField(
+    label="settings.dnd_move_bookmarks"
+    :note="translate('settings.dnd_move_bookmarks_note')"
+    v-model:value="Settings.state.dndMoveBookmarks"
+    @update:value="Settings.saveDebounced(150)")
 </template>
 
 <script lang="ts" setup>
