@@ -275,15 +275,15 @@ export const commonTranslations: Translations = {
   },
 
   'popup.tab_move_rules.title': {
-    en: 'Tab moving rules',
-    ru: 'Правила перемещения вкладок',
+    en: 'Tab auto-move rules',
+    ru: 'Правила автоматического перемещения вкладок',
   },
   'popup.tab_move_rules.editor_title.new': {
-    en: 'Create a move rule',
+    en: 'Create auto-move rule',
     ru: 'Создать правило',
   },
   'popup.tab_move_rules.editor_title.edit': {
-    en: 'Edit a move rule',
+    en: 'Edit auto-move rule',
     ru: 'Редактировать правило',
   },
   'popup.tab_move_rules.rule_name_label': {
