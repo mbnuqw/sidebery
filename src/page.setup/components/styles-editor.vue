@@ -75,6 +75,7 @@ interface CssVar {
   isColor: boolean
   label: string
   name: string
+  weight: number
 }
 
 interface CssVarsGroup {
@@ -156,6 +157,15 @@ function recalcGroups(vars: CssVar[]): void {
 
   for (const v of vars) {
     if (v.key.startsWith('--s-')) continue
+
+    if (v.key.endsWith('bg')) v.weight = 1
+    else if (v.key.endsWith('fg')) v.weight = 1
+    else if (v.key.endsWith('border')) v.weight = 1
+    else if (v.key.endsWith('color')) v.weight = 1
+    else if (v.key.endsWith('accent')) v.weight = 1
+    else if (v.key.endsWith('separator')) v.weight = 1
+    else if (v.key.endsWith('shadow')) v.weight = 2
+
     const group = state.groups.find(g => {
       if (g.match) return g.match.test(v.key)
       return v.key.startsWith(g.id)
@@ -179,6 +189,12 @@ function recalcGroups(vars: CssVar[]): void {
       key = key.replace('btn', 'button')
       v.label = key.replace(FIRST_LETTER_RE, c => c.toUpperCase())
       commonGroup.vars.push(v)
+    }
+  }
+
+  for (const g of state.groups) {
+    if (g.vars.length) {
+      g.vars.sort((a, b) => a.weight - b.weight)
     }
   }
 }
@@ -231,10 +247,9 @@ async function loadVars(): Promise<void> {
     const isColor = isValueColor(value)
     let name = prop
     const re = new RegExp(`#root\\.root \\{${prop}: (.+?);\\}`)
-    props.push({ active: false, key: prop, value, re, isColor, label: prop, name })
+    props.push({ active: false, key: prop, value, re, isColor, label: prop, name, weight: 0 })
   }
 
-  props.sort((a, b) => (a.key > b.key ? 1 : -1))
   state.vars = props
 }
 
