@@ -100,6 +100,10 @@ section(ref="el")
     label="settings.tabs_panel_switch_act_move"
     :value="Settings.state.tabsPanelSwitchActMove"
     @update:value="toggleTabsPanelSwitchActMove")
+  ToggleField(
+    label="settings.tabs_panel_switch_act_move_auto"
+    :value="Settings.state.tabsPanelSwitchActMoveAuto"
+    @update:value="toggleTabsPanelSwitchActMoveAuto")
   SelectField(
     label="settings.tabs_url_in_tooltip"
     optLabel="settings.tabs_url_in_tooltip_"
@@ -376,6 +380,16 @@ function toggleTabsPanelSwitchActMove(): void {
   Settings.state.tabsPanelSwitchActMove = !Settings.state.tabsPanelSwitchActMove
 
   if (!Settings.state.tabsPanelSwitchActMove && Settings.state.hideInact) {
+    Settings.state.hideInact = false
+  }
+
+  Settings.saveDebounced(150)
+}
+
+function toggleTabsPanelSwitchActMoveAuto(): void {
+  Settings.state.tabsPanelSwitchActMoveAuto = !Settings.state.tabsPanelSwitchActMoveAuto
+
+  if (!Settings.state.tabsPanelSwitchActMoveAuto && Settings.state.hideInact) {
     Settings.state.hideInact = false
   }
 

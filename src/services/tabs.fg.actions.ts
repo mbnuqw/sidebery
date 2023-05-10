@@ -4241,7 +4241,9 @@ function moveTabToPanel(tab: Tab, panelId: ID) {
   const dst: DstPlaceInfo = { panelId, index }
   Utils.inQueue(Tabs.move, [tab], src, dst)
 
-  if (tab.active) Sidebar.switchToPanel(panelId, true, true)
+  if (tab.active && Settings.state.tabsPanelSwitchActMoveAuto) {
+    Sidebar.switchToPanel(panelId, true, true)
+  }
 }
 
 export function findMoveRuleBy(containerId: string, lvl?: number): TabToPanelMoveRule | undefined {

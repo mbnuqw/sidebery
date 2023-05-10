@@ -78,6 +78,7 @@ export interface SettingsState {
   showNewTabBtns: boolean
   newTabBarPosition: (typeof SETTINGS_OPTIONS.newTabBarPosition)[number]
   tabsPanelSwitchActMove: boolean
+  tabsPanelSwitchActMoveAuto: boolean
   tabsUrlInTooltip: (typeof SETTINGS_OPTIONS.tabsUrlInTooltip)[number]
   openSubPanelOnMouseHover: boolean
   selectActiveTabFirst: boolean

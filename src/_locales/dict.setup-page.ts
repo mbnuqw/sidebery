@@ -1427,10 +1427,14 @@ export const setupPageTranslations: Translations = {
     zh_CN: '显示重新加载进度的通知',
   },
   'settings.tabs_panel_switch_act_move': {
-    en: 'Switch panel after moving active tab to another panel',
-    ru: 'Переключать панель после перемещения активной вкладки на другую панель',
-    de: 'Wechsle Panel nach bewegen aktiver Tabs in anderes Panel',
-    zh_CN: '将活动标签页移动到另一个面板后切换面板',
+    en: 'Switch panel after manually moving active tab to another panel',
+    ru: 'Переключать панель после ручного перемещения активной вкладки на другую панель',
+    // de: 'Wechsle Panel nach bewegen aktiver Tabs in anderes Panel',
+    // zh_CN: '将活动标签页移动到另一个面板后切换面板',
+  },
+  'settings.tabs_panel_switch_act_move_auto': {
+    en: 'Switch panel after auto moving active tab to another panel',
+    ru: 'Переключать панель после автоматического перемещения активной вкладки на другую панель',
   },
   'settings.show_new_tab_btns': {
     en: 'Show new tab buttons',

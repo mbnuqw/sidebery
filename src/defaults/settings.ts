@@ -79,6 +79,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   showNewTabBtns: true,
   newTabBarPosition: 'after_tabs',
   tabsPanelSwitchActMove: false,
+  tabsPanelSwitchActMoveAuto: true,
   tabsUrlInTooltip: 'full',
   openSubPanelOnMouseHover: false,
   selectActiveTabFirst: true,
