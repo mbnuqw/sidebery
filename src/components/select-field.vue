@@ -1,7 +1,6 @@
 <template lang="pug">
 .SelectField(
   ref="rootEl"
-  :data-inline="props.inline"
   :data-inactive="props.inactive"
   :data-drop-down="dropDownOpen"
   @mousedown="switchOption"
@@ -40,7 +39,6 @@ interface SelectFieldProps {
   value: InputOption | InputOption[]
   label: string
   inactive?: boolean
-  inline?: boolean
   optLabel?: string
   opts: readonly InputOption[]
   color?: string

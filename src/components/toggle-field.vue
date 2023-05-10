@@ -1,5 +1,5 @@
 <template lang="pug">
-.ToggleField(:data-inline="props.inline" :data-inactive="props.inactive" @click="toggle")
+.ToggleField(:data-inactive="props.inactive" @click="toggle")
   .body
     .label(:style="{ color: props.color }") {{translate(props.label)}}
     ToggleInput.input(:value="props.value")
@@ -16,7 +16,6 @@ interface ToggleFieldProps {
   label: string
   inactive?: boolean
   field?: boolean
-  inline?: boolean
   color?: string
   note?: string
 }
