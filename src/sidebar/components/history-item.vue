@@ -3,8 +3,8 @@
   :id="'history' + item.id"
   :title="item.tooltip"
   :data-sel="item.sel"
-  @mousedown="onMouseDown"
-  @mouseup="onMouseUp"
+  @mousedown.stop="onMouseDown"
+  @mouseup.stop="onMouseUp"
   @contextmenu.stop="onCtxMenu")
   .body
     .fav(:title="translate('panel.history.fav_tooltip')" @mousedown.stop="onFavMouseDown")
