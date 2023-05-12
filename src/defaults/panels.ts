@@ -113,6 +113,7 @@ export const TABS_PANEL_STATE: TabsPanel = {
     updated: false,
     selNewTab: false,
     scrollRetainer: 0,
+    empty: true,
     allDiscarded: false,
     newTabCtx: 'none',
     newTabBtns: [],

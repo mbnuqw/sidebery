@@ -152,6 +152,7 @@ export function unload(): void {
       panel.reactive.tabs = []
       panel.reactive.pinnedTabs = []
       panel.reactive.len = 0
+      panel.reactive.empty = true
       panel.ready = false
       panel.reactive.ready = false
     }

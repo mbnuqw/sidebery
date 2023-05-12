@@ -3,13 +3,13 @@
   id="nav_bar"
   ref="el"
   tabindex="-1"
-  :data-overflowed="overflowed"
+  :data-overflowed="nav?.inlineOverflowed"
   :data-hidden-panels-bar="Sidebar.reactive.hiddenPanelsPopup"
   :data-layout="layout"
   @drop="onDrop")
   .main-items(@wheel.stop.prevent="onNavWheel")
     NavItemComponent(
-      v-for="(item, i) in visible"
+      v-for="(item, i) in nav?.visibleItems"
       :key="item.id"
       :item="item"
       :inlineIndex="getBtnInlineIndex(i)"
@@ -20,9 +20,9 @@
       @mouseup="onNavMouseUp($event, item)"
       @contextmenu="onNavCtxMenu($event, item)")
 
-  .static-btns(v-if="staticButtons.length")
+  .static-btns(v-if="nav?.visibleStaticButtons")
     NavItemComponent(
-      v-for="(item, i) in staticButtons"
+      v-for="(item, i) in nav.visibleStaticButtons"
       :key="item.id"
       :item="item"
       :inlineIndex="getBtnInlineIndex(i)"
@@ -41,11 +41,20 @@
     .hidden-panels-popup(:data-offset-side="Sidebar.reactive.hiddenPanelsPopupOffsetSide")
       .hidden-panels-popup-content(@mousedown.stop @mouseup.stop)
         NavItemComponent(
-          v-for="(item, i) in hidden"
+          v-for="item in nav?.hiddenPanels"
           :key="item.id"
           :item="item"
-          :inlineIndex="getBtnInlineIndex(i)"
           :dndType="'hidden-panel'"
+          @dragstart="onNavDragStart($event, item)"
+          @drop="onNavItemDrop(item)"
+          @mousedown="onNavMouseDown($event, item)"
+          @mouseup="onNavMouseUp($event, item, true)"
+          @contextmenu="onNavCtxMenu($event, item)")
+        NavItemComponent(
+          v-for="item in nav?.hiddenStaticButtons"
+          :key="item.id"
+          :item="item"
+          :dndType="'nav-item'"
           @dragstart="onNavDragStart($event, item)"
           @drop="onNavItemDrop(item)"
           @mousedown="onNavMouseDown($event, item)"
@@ -97,51 +106,44 @@ if (Settings.state.navBarLayout === 'horizontal') {
   layout = Settings.state.navBarSide
 }
 
-const hidden = computed((): NavItem[] => {
-  if (!Settings.state.hideEmptyPanels && !Settings.state.hideDiscardedTabPanels && !isInline) {
-    return []
-  }
-  const result: NavItem[] = []
+interface Nav {
+  visibleItems: NavItem[]
+  hiddenPanels?: NavItem[]
+  visibleStaticButtons?: NavBtn[]
+  hiddenStaticButtons?: NavBtn[]
+  inlineOverflowed?: boolean
+  visibleItemsMax?: number
+}
 
-  for (const id of Sidebar.reactive.nav) {
-    const panel = Sidebar.panelsById[id]
-    if (Utils.isTabsPanel(panel)) {
-      if (Settings.state.hideEmptyPanels && !panel.reactive.len) {
-        result.push(panel)
-      } else if (Settings.state.hideDiscardedTabPanels && panel.reactive.allDiscarded) {
-        result.push(panel)
-      }
-    }
-  }
+const nav = computed<Nav | undefined>(() => {
+  const ids = Sidebar.reactive.nav
+  if (!ids.length) return
 
-  return result
-})
+  const nav: Nav = { visibleItems: [] }
 
-// Close hidden panels bar if it's empty
-watch(
-  () => hidden.value.length,
-  newHiddenLen => {
-    if (!newHiddenLen && Sidebar.reactive.hiddenPanelsPopup) {
-      Sidebar.reactive.hiddenPanelsPopup = false
-    }
-  }
-)
-
-const visible = computed((): NavItem[] => {
-  const result: NavItem[] = []
+  let inlineMax = 0
   let firstTabsPanelIndex = -1
   let lastTabsPanelIndex = -1
 
-  for (const id of Sidebar.reactive.nav) {
+  for (const id of ids) {
     const panel = Sidebar.panelsById[id]
     if (panel) {
       if (Utils.isTabsPanel(panel)) {
-        if (firstTabsPanelIndex === -1) firstTabsPanelIndex = result.length
-        if (Settings.state.hideEmptyPanels && panel.reactive.len === 0) continue
-        else if (Settings.state.hideDiscardedTabPanels && panel.reactive.allDiscarded) continue
-        lastTabsPanelIndex = result.length
+        if (firstTabsPanelIndex === -1) firstTabsPanelIndex = nav.visibleItems.length
+
+        // Hidden panels
+        if (
+          (Settings.state.hideEmptyPanels && panel.reactive.empty) ||
+          (Settings.state.hideDiscardedTabPanels && panel.reactive.allDiscarded)
+        ) {
+          if (!nav.hiddenPanels) nav.hiddenPanels = []
+          nav.hiddenPanels.push(panel)
+          continue
+        }
+
+        lastTabsPanelIndex = nav.visibleItems.length
       }
-      result.push(panel)
+      nav.visibleItems.push(panel)
     } else if (!isInline) {
       const isSpace = (id as string).startsWith('sp-')
       const isDelimiter = (id as string).startsWith('sd-')
@@ -150,75 +152,96 @@ const visible = computed((): NavItem[] => {
       if (isSearch && Settings.state.searchBarMode !== 'dynamic') continue
 
       if (isSpace) {
-        result.push({ id, class: NavItemClass.space, type: SpaceType.dynamic })
+        nav.visibleItems.push({ id, class: NavItemClass.space, type: SpaceType.dynamic })
       } else if (isDelimiter) {
-        result.push({ id, class: NavItemClass.space, type: SpaceType.static })
+        nav.visibleItems.push({ id, class: NavItemClass.space, type: SpaceType.static })
       } else {
         const type = ButtonTypes[id]
         if (!type) continue
 
         const name = translate(`nav.btn_${id}`)
 
-        result.push({ id, class: NavItemClass.btn, type, name, iconSVG: BTN_ICONS[id] })
+        nav.visibleItems.push({ id, class: NavItemClass.btn, type, name, iconSVG: BTN_ICONS[id] })
       }
     }
   }
 
-  if (!isInline && hidden.value.length) {
+  if (!isInline && nav.hiddenPanels?.length) {
     let hIndex = -1
     if (lastTabsPanelIndex !== -1) hIndex = lastTabsPanelIndex + 1
     else if (firstTabsPanelIndex !== -1) hIndex = firstTabsPanelIndex
 
-    if (hIndex !== -1) result.splice(hIndex, 0, HIDDEN_PANELS_BTN)
-    else result.push(HIDDEN_PANELS_BTN)
+    if (hIndex !== -1) nav.visibleItems.splice(hIndex, 0, HIDDEN_PANELS_BTN)
+    else nav.visibleItems.push(HIDDEN_PANELS_BTN)
   }
 
-  return result
+  // Inline layout
+  if (isInline) {
+    const horNavWidth = Sidebar.reactive.horNavWidth
+    const navBtnWidth = Sidebar.reactive.navBtnWidth
+
+    nav.visibleStaticButtons = []
+    nav.hiddenStaticButtons = []
+
+    // Calc max count of all elements
+    const availableWidth = horNavWidth - 2
+    inlineMax = ~~(availableWidth / (navBtnWidth + 1))
+
+    // Get static buttons
+    const hasHiddenPanels = !!nav.hiddenPanels?.length
+    const visLen = nav.visibleItems.length
+    let max = inlineMax - visLen
+    if (hasHiddenPanels) max--
+    if (max < 0) max = 0
+    for (let i = ids.length; i--; ) {
+      const id = ids[i]
+
+      if (
+        id === 'settings' ||
+        id === 'search' ||
+        id === 'add_tp' ||
+        id === 'collapse' ||
+        id === 'create_snapshot' ||
+        id === 'remute_audio_tabs'
+      ) {
+        if (nav.hiddenPanels?.find(ni => ni.id === id)) continue
+
+        const name = translate(`nav.btn_${id}`)
+        const type = ButtonTypes[id]
+        if (!type) continue
+
+        const btn = { id, class: NavItemClass.btn, type, iconSVG: BTN_ICONS[id], name }
+        if (nav.visibleStaticButtons.length < max) nav.visibleStaticButtons.unshift(btn)
+        else nav.hiddenStaticButtons.unshift(btn)
+      }
+    }
+
+    if (hasHiddenPanels || nav.hiddenStaticButtons.length) {
+      nav.visibleStaticButtons.unshift(HIDDEN_PANELS_BTN)
+    }
+
+    // Calc max count of visible panels
+    nav.visibleItemsMax = inlineMax - nav.visibleStaticButtons.length
+
+    // Check if visible items are overflowed
+    let spLen = 0
+    for (const item of nav.visibleItems) {
+      if (Utils.isNavSpace(item)) spLen++
+    }
+    nav.inlineOverflowed = nav.visibleItems.length - spLen >= nav.visibleItemsMax
+  }
+
+  return nav
 })
 
-const staticButtons = computed((): NavBtn[] => {
-  if (!isInline) return []
-  const result: NavBtn[] = []
-
-  if (hidden.value.length) {
-    result.push(HIDDEN_PANELS_BTN)
-  }
-
-  for (const id of Sidebar.reactive.nav) {
-    if (
-      id === 'settings' ||
-      id === 'search' ||
-      id === 'add_tp' ||
-      id === 'collapse' ||
-      id === 'create_snapshot' ||
-      id === 'remute_audio_tabs'
-    ) {
-      if (hidden.value.find(ni => ni.id === id)) continue
-
-      const name = translate(`nav.btn_${id}`)
-      const type = ButtonTypes[id]
-      if (!type) continue
-
-      result.push({ id, class: NavItemClass.btn, type, iconSVG: BTN_ICONS[id], name })
+watch(
+  () => nav.value?.hiddenPanels?.length,
+  newHiddenLen => {
+    if (!newHiddenLen && Sidebar.reactive.hiddenPanelsPopup) {
+      Sidebar.reactive.hiddenPanelsPopup = false
     }
   }
-
-  return result
-})
-
-const cap = computed((): number => {
-  let availableWidth = Sidebar.reactive.horNavWidth - 2
-  let cap = ~~(availableWidth / (Sidebar.reactive.navBtnWidth + 1))
-  return cap - staticButtons.value.length
-})
-
-const overflowed = computed((): boolean => {
-  let spLen = 0
-  for (const item of visible.value) {
-    if (Utils.isNavSpace(item)) spLen++
-  }
-  return visible.value.length - spLen >= cap.value
-})
+)
 
 onMounted(() => {
   if (el.value && Settings.state.navBarLayout === 'horizontal') {
@@ -228,22 +251,27 @@ onMounted(() => {
 })
 
 function getBtnInlineIndex(index: number): number {
-  if (!cap.value) return -1
-  let activeIndex = visible.value.findIndex(btn => btn.id === Sidebar.reactive.activePanelId)
-  if (activeIndex === -1) activeIndex = 0
-  const halfCap = Math.floor(cap.value / 2)
-  let len = visible.value.length
+  if (!isInline) return -1
 
-  if (cap.value >= len) return index
-  if (halfCap > activeIndex && index < cap.value) return index
+  const visMax = nav.value?.visibleItemsMax
+  if (!visMax) return -1
+
+  const visItems = nav.value?.visibleItems
+  let activeIndex = visItems.findIndex(btn => btn.id === Sidebar.reactive.activePanelId)
+  if (activeIndex === -1) activeIndex = 0
+  const halfCap = Math.floor(visMax / 2)
+  let len = visItems?.length ?? 0
+
+  if (visMax >= len) return index
+  if (halfCap > activeIndex && index < visMax) return index
   if (activeIndex + halfCap >= len) {
-    if (index < len - cap.value) return -1
-    return index - (len - cap.value)
+    if (index < len - visMax) return -1
+    return index - (len - visMax)
   }
 
   index -= activeIndex - halfCap
-  if (!(cap.value % 2)) index--
-  if (index >= 0 && index < cap.value) return index
+  if (!(visMax % 2)) index--
+  if (index >= 0 && index < visMax) return index
   else return -1
 }
 
@@ -387,6 +415,7 @@ function onNavMouseUp(e: MouseEvent, item: NavItem, inHiddenBar?: boolean) {
       else Sidebar.openHiddenPanelsPopup()
       return
     }
+    if (inHiddenBar) Sidebar.closeHiddenPanelsPopup()
     if (isAddTP) return addTabsPanel()
     if (isSettings) {
       if (e.altKey) {
@@ -398,11 +427,6 @@ function onNavMouseUp(e: MouseEvent, item: NavItem, inHiddenBar?: boolean) {
     if (isCreateSnapshot) return Snapshots.createSnapshot()
     if (isRemuteAudioTabs) return Tabs.remuteAudibleTabs()
     if (item.type === ButtonType.collapse) collapseAll()
-    if (inHiddenBar) {
-      Sidebar.closeHiddenPanelsPopup()
-      if (Sidebar.reactive.activePanelId !== item.id) Sidebar.switchToPanel(item.id)
-      return
-    }
 
     if (Sidebar.reactive.activePanelId !== item.id) {
       if (Sidebar.reactive.hiddenPanelsPopup) Sidebar.reactive.hiddenPanelsPopup = false

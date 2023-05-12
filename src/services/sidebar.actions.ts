@@ -331,11 +331,13 @@ export function recalcTabsPanels(reset?: boolean): void {
 
     if (tabsCount) {
       panel.reactive.len = tabsCount + panel.pinnedTabs.length
+      panel.reactive.empty = false
       panel.startTabIndex = startIndex
       panel.endTabIndex = startIndex + tabsCount - 1
       panel.nextTabIndex = panel.endTabIndex + 1
     } else {
       panel.reactive.len = panel.pinnedTabs.length
+      panel.reactive.empty = panel.pinnedTabs.length === 0
       panel.startTabIndex = tabIndex
       panel.endTabIndex = tabIndex
       panel.nextTabIndex = tabIndex
