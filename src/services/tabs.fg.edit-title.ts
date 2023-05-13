@@ -1,3 +1,4 @@
+import { Settings } from './settings'
 import { Tabs } from './tabs.fg'
 import * as Utils from 'src/utils'
 
@@ -8,6 +9,12 @@ export async function editTabTitle(tabIds: ID[]) {
   const tab = Tabs.byId[firstTabId]
   const rTab = Tabs.reactive.byId[firstTabId]
   if (!tab || !rTab) return
+
+  if (tab.pinned) {
+    const ptp = Settings.state.pinnedTabsPosition
+    if (!Settings.state.pinnedTabsList) return
+    if (ptp === 'left' || ptp === 'right') return
+  }
 
   Tabs.editableTabId = tab.id
   rTab.customTitleEdit = true
