@@ -16,6 +16,7 @@ export const Search = {
     value: '',
   } as SearchState,
   prevValue: '',
+  prevExpandedBookmarks: undefined as Record<ID, Record<ID, boolean>> | undefined,
 
   ...SearchActions,
 }

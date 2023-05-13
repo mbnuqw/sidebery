@@ -45,7 +45,6 @@ function searchHistoryWalker(nodes: Bookmark[], filtered: Bookmark[]): void {
 }
 
 let prevActivePanelId: ID | undefined
-let prevExpandedBookmarks: Record<ID, Record<ID, boolean>> | undefined
 let expandedBookmarks: Record<ID, boolean>
 export function onBookmarksSearch(activePanel: Panel, panel?: Panel): void {
   if (!Bookmarks.reactive.tree.length) return
@@ -82,8 +81,8 @@ export function onBookmarksSearch(activePanel: Panel, panel?: Panel): void {
     const filtered: Bookmark[] = []
     if (panel.viewMode === 'tree') {
       // Save expanded folders and close all folders in all panels
-      if (!prevExpandedBookmarks) {
-        prevExpandedBookmarks = Bookmarks.reactive.expanded
+      if (!Search.prevExpandedBookmarks) {
+        Search.prevExpandedBookmarks = Bookmarks.reactive.expanded
         Bookmarks.reactive.expanded = {}
       }
       if (!Bookmarks.reactive.expanded[activePanel.id]) {
@@ -106,13 +105,7 @@ export function onBookmarksSearch(activePanel: Panel, panel?: Panel): void {
       Bookmarks.scrollToBookmarkDebounced(first.id)
     }
   } else {
-    // Restore state of expanded folders
-    if (prevExpandedBookmarks) {
-      Bookmarks.reactive.expanded = prevExpandedBookmarks
-      expandedBookmarks = {}
-      prevExpandedBookmarks = undefined
-    }
-
+    expandedBookmarks = {}
     panel.reactive.filteredBookmarks = undefined
     panel.reactive.filteredLen = undefined
     if (Search.prevValue) Selection.resetSelection()

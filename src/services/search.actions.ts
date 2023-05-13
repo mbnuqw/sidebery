@@ -286,28 +286,42 @@ export function search(value?: string): void {
 
   const actPanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
   if (!actPanel) return
+  let targetPanelId = actPanel.id
 
   if (Utils.isTabsPanel(actPanel)) {
     if (Sidebar.subPanelActive) {
       if (Sidebar.reactive.subPanelType === SubPanelType.Bookmarks && Sidebar.subPanels.bookmarks) {
+        targetPanelId = Sidebar.subPanels.bookmarks.id
         SearchBookmarks.onBookmarksSearch(actPanel, Sidebar.subPanels.bookmarks)
       } else if (Sidebar.reactive.subPanelType === SubPanelType.History) {
+        targetPanelId = NOID
         SearchHistory.onHistorySearch()
       }
     } else {
       SearchTabs.onTabsSearch(actPanel)
     }
   } else if (Utils.isBookmarksPanel(actPanel)) SearchBookmarks.onBookmarksSearch(actPanel)
-  else if (Utils.isHistoryPanel(actPanel)) SearchHistory.onHistorySearch()
+  else if (Utils.isHistoryPanel(actPanel)) {
+    targetPanelId = NOID
+    SearchHistory.onHistorySearch()
+  }
 
   if (value === '') {
-    for (const id of Sidebar.reactive.nav) {
-      const panel = Sidebar.panelsById[id]
-      if (panel && panel.id === actPanel.id) continue
+    for (const panel of Sidebar.panels) {
+      if (panel.id === targetPanelId) continue
       reset(panel)
     }
 
-    if (Sidebar.subPanels.bookmarks) reset(Sidebar.subPanels.bookmarks)
+    if (Search.prevExpandedBookmarks) {
+      Bookmarks.reactive.expanded = Search.prevExpandedBookmarks
+      Search.prevExpandedBookmarks = undefined
+    }
+    if (Sidebar.subPanels.bookmarks && Sidebar.subPanels.bookmarks.id !== targetPanelId) {
+      reset(Sidebar.subPanels.bookmarks)
+    }
+    if (targetPanelId !== NOID) {
+      History.reactive.filtered = undefined
+    }
   }
 }
 
@@ -319,9 +333,6 @@ export function reset(panel?: Panel): void {
   } else if (Utils.isBookmarksPanel(panel)) {
     panel.reactive.filteredBookmarks = undefined
     panel.reactive.filteredLen = undefined
-  } else if (Utils.isHistoryPanel(panel)) {
-    panel.reactive.filteredLen = undefined
-    History.reactive.filtered = undefined
   }
 }
 
