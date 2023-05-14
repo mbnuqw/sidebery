@@ -296,7 +296,7 @@ function onMouseLeave(): void {
     }, 250)
   }
 
-  if (Sidebar.subPanelActive && !Search.reactive.rawValue) {
+  if (Sidebar.subPanelActive && !Search.reactive.rawValue && !Menu.isOpen) {
     clearTimeout(subPanelTimeout)
     subPanelTimeout = setTimeout(() => {
       Sidebar.closeSubPanel()
