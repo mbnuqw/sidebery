@@ -1,4 +1,4 @@
-import { BookmarksPanel, Panel, SubPanelComponent, SubPanelType, TabsPanel } from 'src/types'
+import { BookmarksPanel, Panel, SubPanelType, TabsPanel } from 'src/types'
 import { NOID } from 'src/defaults'
 import * as SidebarActions from 'src/services/sidebar.actions'
 
@@ -61,7 +61,7 @@ export const Sidebar = {
   lastTabsPanelId: NOID,
   scrollPositions: {} as Record<ID, number>,
   convertingPanelLock: false,
-  // subPanelComponent: null as SubPanelComponent | null,
+
   subPanelActive: false,
   subPanelHost: null as TabsPanel | null,
   subPanels: {} as SubPanels,
