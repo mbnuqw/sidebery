@@ -62,7 +62,7 @@ export function unloadAfter(delay: number): void {
     const historyPanel = Sidebar.panelsById.history
     if (historyPanel && Sidebar.reactive.activePanelId === historyPanel.id) return
     if (historyPanel && !historyPanel.ready) return
-    if (Sidebar.subPanelActive && Sidebar.reactive.subPanelType === SubPanelType.History) return
+    if (Sidebar.subPanelActive && Sidebar.subPanelType === SubPanelType.History) return
 
     History.unload()
   }, delay)

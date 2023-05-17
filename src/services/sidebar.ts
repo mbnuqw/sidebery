@@ -63,6 +63,7 @@ export const Sidebar = {
   convertingPanelLock: false,
 
   subPanelActive: false,
+  subPanelType: SubPanelType.Null,
   subPanelHost: null as TabsPanel | null,
   subPanels: {} as SubPanels,
 
