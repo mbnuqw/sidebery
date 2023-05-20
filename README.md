@@ -38,7 +38,7 @@ Sidebery is a highly configurable sidebar with panels of different types. Some o
 After creating the Add-on archive, you can then use the version in Firefox as follows:
 
 1. Open Firefox
-2. Go to `about:debbuging`
+2. Go to `about:debugging`
 3. Go to "This Firefox"
 4. At "Temporary Extensions" click on "Load Temporary Add-on..."
 5. Select the `.zip` file in the `dist` directory.
