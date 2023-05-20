@@ -1,5 +1,6 @@
 .cache
 .vscode
+.direnv
 dist
 node_modules
 coverage
