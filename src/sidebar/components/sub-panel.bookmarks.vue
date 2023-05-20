@@ -1,8 +1,9 @@
 <template lang="pug">
-.BookmarksSubPanel
+.BookmarksSubPanel(@drop="onDrop")
   .content
     ScrollBox(v-if="tree && !state.loading && Permissions.reactive.bookmarks && hostPanel" ref="scrollBox")
       .bookmarks-tree
+        DragAndDropPointer(:panelId="bookmarksPanel.id" :subPanel="true")
         BookmarkNode.root-node(
           v-for="node in tree"
           :key="node.id"
@@ -18,20 +19,22 @@
       :isMsg="!tree.length && !!Bookmarks.reactive.tree.length"
       :msg="translate('panel.nothing')")
 
-  .nav(v-if="state.active && !state.loading && rootFolder && props.bookmarksPanel.rootId !== NOID")
-    .up-btn(:data-inactive="rootFolder.id === BKM_ROOT_ID" @click="goUp")
+  .nav(v-if="state.active && !state.loading && props.bookmarksPanel.rootId !== NOID && props.bookmarksPanel.rootId !== BKM_ROOT_ID")
+    .up-btn(:data-inactive="state.rootFolderId === BKM_ROOT_ID" @click="goUp")
+      .dnd-layer(@dragenter.stop="goUp")
       svg: use(xlink:href="#icon_expand")
     .title-block
-      .title(v-if="rootFolder.title" :title="rootFolder.title") {{rootFolder.title}}
+      .title(v-if="state.rootFolderTitle" :title="state.rootFolderTitle") {{state.rootFolderTitle}}
     .down-btn(:data-inactive="bookmarksPanel.reactive.rootOffset <= 0" @click="goDown")
+      .dnd-layer(@dragenter.stop="goDown")
       svg: use(xlink:href="#icon_expand")
 </template>
 
 <script lang="ts" setup>
-import { Bookmark, BookmarksPanel, ScrollBoxComponent } from 'src/types'
-import { reactive, computed, onMounted, ref } from 'vue'
+import { Bookmark, BookmarksPanel, DropType, ScrollBoxComponent } from 'src/types'
+import { reactive, computed, onMounted, ref, nextTick } from 'vue'
 import { translate } from 'src/dict'
-import { BKM_ROOT_ID, NOID } from 'src/defaults'
+import { BKM_OTHER_ID, BKM_ROOT_ID, NOID } from 'src/defaults'
 import * as Logs from 'src/services/logs'
 import * as Utils from 'src/utils'
 import { Bookmarks } from 'src/services/bookmarks'
@@ -44,13 +47,18 @@ import PanelPlaceholder from './panel-placeholder.vue'
 import ScrollBox from 'src/components/scroll-box.vue'
 import BookmarkNode from 'src/components/bookmark-node.vue'
 import LoadingDots from 'src/components/loading-dots.vue'
+import DragAndDropPointer from './dnd-pointer.vue'
+import { DnD } from 'src/services/drag-and-drop'
 
 const scrollBox = ref<ScrollBoxComponent | null>(null)
+const rootTitle = translate('sub_panel.bookmarks_panel.root_title')
 
 const state = reactive({
   active: false,
   loading: false,
   permitted: Permissions.reactive.bookmarks,
+  rootFolderId: NOID,
+  rootFolderTitle: '',
 })
 const props = defineProps<{
   bookmarksPanel: BookmarksPanel
@@ -65,41 +73,10 @@ onMounted(() => {
   open()
 })
 
-function goUp(): void {
-  if (rootFolder.value?.id === BKM_ROOT_ID) return
-  props.bookmarksPanel.reactive.rootOffset++
-}
-
-function goDown(): void {
-  props.bookmarksPanel.reactive.rootOffset--
-  if (props.bookmarksPanel.reactive.rootOffset < 0) props.bookmarksPanel.reactive.rootOffset = 0
-}
-
-const bookmarksRoot = computed<Bookmark>(() => {
-  return {
-    id: BKM_ROOT_ID,
-    type: 'folder',
-    children: Bookmarks.reactive.tree,
-    index: 0,
-    parentId: NOID,
-    title: translate('sub_panel.bookmarks_panel.root_title'),
-  }
-})
-
-const rootFolder = computed<Bookmark>(() => {
-  if (!hostPanel.value) return bookmarksRoot.value
-
-  let folder = Bookmarks.reactive.byId[props.bookmarksPanel.rootId] ?? bookmarksRoot.value
-  for (let i = props.bookmarksPanel.reactive.rootOffset; i-- && folder; ) {
-    if (folder.parentId === BKM_ROOT_ID) return bookmarksRoot.value
-    folder = Bookmarks.reactive.byId[folder.parentId]
-  }
-  return folder
-})
-
 const tree = computed(() => {
   const panel = props.bookmarksPanel
-  return panel.reactive.filteredBookmarks ?? rootFolder.value.children ?? []
+  const r = panel.reactive.filteredBookmarks ?? panel.reactive.bookmarks ?? Bookmarks.reactive.tree
+  return r
 })
 
 let bookmarksLoading = false
@@ -111,12 +88,15 @@ function open() {
     bookmarksLoading = true
     loadBookmarks().then(() => {
       bookmarksLoading = false
+      props.bookmarksPanel.ready = true
       setPanelEls()
+      updateRootTree()
       if (Search.reactive.rawValue) Search.search()
     })
   } else {
     state.active = !state.active
     setPanelEls()
+    updateRootTree()
   }
 
   if (!state.active) {
@@ -124,6 +104,25 @@ function open() {
   }
 
   if (Menu.isOpen) Menu.close()
+}
+
+function updateRootTree() {
+  const panel = props.bookmarksPanel
+  let folder = Bookmarks.reactive.byId[panel.rootId] as Bookmark | undefined
+  if (folder) {
+    for (let i = panel.reactive.rootOffset; i-- && folder; ) {
+      if (folder.parentId === BKM_ROOT_ID) {
+        folder = undefined
+        break
+      }
+      folder = Bookmarks.reactive.byId[folder.parentId]
+    }
+  }
+
+  state.rootFolderId = folder?.id ?? BKM_ROOT_ID
+  state.rootFolderTitle = folder?.title ?? rootTitle
+
+  panel.reactive.bookmarks = folder?.children ?? Bookmarks.reactive.tree
 }
 
 function setPanelEls() {
@@ -138,5 +137,37 @@ async function loadBookmarks(): Promise<void> {
   state.loading = true
   await Bookmarks.load()
   state.loading = false
+}
+
+function goUp(): void {
+  if (state.rootFolderId === BKM_ROOT_ID) return
+  props.bookmarksPanel.reactive.rootOffset++
+  updateRootTree()
+
+  if (DnD.items.length) {
+    nextTick(() => Sidebar.updateBounds())
+  }
+}
+
+function goDown(): void {
+  props.bookmarksPanel.reactive.rootOffset--
+  if (props.bookmarksPanel.reactive.rootOffset < 0) props.bookmarksPanel.reactive.rootOffset = 0
+  updateRootTree()
+
+  if (DnD.items.length) {
+    nextTick(() => Sidebar.updateBounds())
+  }
+}
+
+function onDrop(): void {
+  DnD.reactive.dstType = DropType.Bookmarks
+  if (DnD.reactive.dstParentId === -1) {
+    const panel = props.bookmarksPanel
+    if (panel.rootId !== NOID && panel.rootId !== BKM_ROOT_ID) {
+      DnD.reactive.dstParentId = panel.rootId
+    } else {
+      DnD.reactive.dstParentId = BKM_OTHER_ID
+    }
+  }
 }
 </script>

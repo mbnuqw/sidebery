@@ -70,7 +70,7 @@ const state = reactive({
 
 onMounted(() => {
   if (scrollBox.value) {
-    if (Sidebar.subPanelActive && Sidebar.reactive.subPanelType === SubPanelType.History) {
+    if (Sidebar.subPanelActive && Sidebar.subPanelType === SubPanelType.History) {
       History.subPanelScrollEl = scrollBox.value.getScrollBox()
     } else {
       History.panelScrollEl = scrollBox.value.getScrollBox()

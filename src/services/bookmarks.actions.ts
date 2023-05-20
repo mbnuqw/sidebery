@@ -1293,7 +1293,7 @@ export function scrollToBookmark(id: ID, forced?: boolean): void {
   if (
     Utils.isTabsPanel(panel) &&
     Sidebar.subPanelActive &&
-    Sidebar.reactive.subPanelType === SubPanelType.Bookmarks &&
+    Sidebar.subPanelType === SubPanelType.Bookmarks &&
     Sidebar.subPanels.bookmarks
   ) {
     panel = Sidebar.subPanels.bookmarks

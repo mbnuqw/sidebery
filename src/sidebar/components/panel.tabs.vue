@@ -9,7 +9,7 @@
   @drop="onDrop")
   PinnedTabsBar(v-if="panel.reactive.pinnedTabs.length" :panel="panel")
   ScrollBox(ref="scrollBox" :preScroll="PRE_SCROLL")
-    DragAndDropPointer(:panelId="panel.id")
+    DragAndDropPointer(:panelId="panel.id" :subPanel="false")
     .container(v-if="Settings.state.animations")
       TransitionGroup(name="tab" tag="div" type="transition" class="transition-box")
         TabComponent(
