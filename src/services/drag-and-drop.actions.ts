@@ -505,7 +505,12 @@ export function onDragEnter(e: DragEvent): void {
     if (Sidebar.reactive.hiddenPanelsPopup) Sidebar.reactive.hiddenPanelsPopup = false
     const bookmark = Bookmarks.reactive.byId[id]
     if (!bookmark) return
-    const panelId = Bookmarks.findBookmarkPanelOf(bookmark)
+
+    let dstPanel
+    if (Sidebar.subPanelActive) dstPanel = Sidebar.subPanels.bookmarks
+    else dstPanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+
+    const panelId = dstPanel?.id
     DnD.reactive.dstType = DropType.Bookmarks
     DnD.reactive.dstPanelId = panelId ?? NOID
     DnD.reactive.dstPin = false
@@ -526,7 +531,10 @@ function onPointerEnter(e: DragEvent): void {
 
   if (DnD.reactive.pointerMode !== DndPointerMode.Inside) return
 
-  const panel = Sidebar.panelsById[DnD.reactive.dstPanelId]
+  let panel
+  if (Sidebar.subPanelActive) panel = Sidebar.subPanels.bookmarks
+  else panel = Sidebar.panelsById[DnD.reactive.dstPanelId]
+
   const isTabs = Utils.isTabsPanel(panel)
   const isBookmarks = Utils.isBookmarksPanel(panel)
 
