@@ -1,3 +1,4 @@
+import { ItemBoundsType, SubPanelType, WheelDirection } from 'src/types'
 import { PRE_SCROLL } from 'src/defaults'
 import { Mouse, ResizingMode } from 'src/services/mouse'
 import { Settings } from 'src/services/settings'
@@ -6,7 +7,6 @@ import { Menu } from 'src/services/menu'
 import { Sidebar } from 'src/services/sidebar'
 import { Tabs } from 'src/services/tabs.fg'
 import { DnD } from 'src/services/drag-and-drop'
-import { ItemBoundsType, WheelDirection } from 'src/types'
 
 type TargetType =
   | 'sidebar'
@@ -69,7 +69,12 @@ export function onMouseMove(e: MouseEvent): void {
   if (multiSelectionStartId === null) return
 
   if (!Mouse.multiSelectionMode && Math.abs(e.clientY - multiSelectionStartY) > 5) {
-    const activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+    let activePanel
+    if (Sidebar.subPanelType === SubPanelType.Bookmarks && Sidebar.subPanels.bookmarks) {
+      activePanel = Sidebar.subPanels.bookmarks
+    } else {
+      activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+    }
     if (!activePanel) return
 
     Menu.close()
@@ -88,7 +93,12 @@ export function onMouseMove(e: MouseEvent): void {
   }
 
   if (Mouse.multiSelectionMode) {
-    const activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+    let activePanel
+    if (Sidebar.subPanelType === SubPanelType.Bookmarks && Sidebar.subPanels.bookmarks) {
+      activePanel = Sidebar.subPanels.bookmarks
+    } else {
+      activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+    }
     if (!activePanel || !activePanel.scrollEl) return
 
     const scroll = activePanel.scrollEl?.scrollTop || 0

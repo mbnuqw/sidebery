@@ -70,17 +70,22 @@
           :panel="panel")
 
       Transition(name="bottom-bar")
-        .BottomBar(v-if="bottomBar && Utils.isTabsPanel(activePanel)")
+        .BottomBar(
+          v-if="bottomBar && Utils.isTabsPanel(activePanel)"
+          @dragover.prevent.stop=""
+          :data-drop-target-bookmarks="DnD.reactive.dstType === DropType.BookmarksSubPanelBtn && DnD.reactive.dstPanelId === activePanel.id")
           .tools
             .tool-btn(
               v-if="Settings.state.subPanelRecentlyClosedBar"
               :data-disabled="!Tabs.reactive.recentlyRemovedLen"
               @click="Sidebar.openSubPanel(SubPanelType.RecentlyClosedTabs, activePanel)")
               svg: use(xlink:href="#icon_trash")
-            .tool-btn(
+            .tool-btn.-bookmarks(
               v-if="Settings.state.subPanelBookmarks"
               :data-disabled="!Utils.isTabsPanel(activePanel)"
+              @dragleave="onBSPBDragLeave"
               @click="Sidebar.openSubPanel(SubPanelType.Bookmarks, activePanel)")
+              .dnd-layer(data-dnd-type="bspb")
               svg: use(xlink:href="#icon_bookmarks")
             .tool-btn(
               v-if="Settings.state.subPanelHistory"
@@ -99,7 +104,7 @@
 
 <script lang="ts" setup>
 import { ref, computed, onMounted, Component } from 'vue'
-import { PanelType, Panel, MenuType, WheelDirection, SubPanelComponent } from 'src/types'
+import { PanelType, Panel, MenuType, WheelDirection, DropType } from 'src/types'
 import { SubPanelType } from 'src/types'
 import { Settings } from 'src/services/settings'
 import { GroupConfigResult, Sidebar } from 'src/services/sidebar'
@@ -296,7 +301,7 @@ function onMouseLeave(): void {
     }, 250)
   }
 
-  if (Sidebar.subPanelActive && !Search.reactive.rawValue) {
+  if (Sidebar.subPanelActive && !Search.reactive.rawValue && !Menu.isOpen && !DnD.items.length) {
     clearTimeout(subPanelTimeout)
     subPanelTimeout = setTimeout(() => {
       Sidebar.closeSubPanel()
@@ -357,5 +362,15 @@ function getPanelPos(i: number, panelId: ID): PanelPosition {
   const activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
   if (activePanel && i > activePanel.index) return 'right'
   else return 'left'
+}
+
+let onBSPBDragLeaveTimeout: number | undefined
+function onBSPBDragLeave() {
+  if (Sidebar.subPanelActive) DnD.reactive.dstType = DropType.Bookmarks
+
+  clearTimeout(onBSPBDragLeaveTimeout)
+  onBSPBDragLeaveTimeout = setTimeout(() => {
+    if (Sidebar.subPanelActive) Sidebar.updateBounds()
+  }, 120)
 }
 </script>

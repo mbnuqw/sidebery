@@ -1281,7 +1281,7 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
   ) {
     const switchOnMouseLeave = Settings.state.switchPanelAfterSwitchingTab === 'mouseleave'
     if (switchOnMouseLeave) Sidebar.switchOnMouseLeave = true
-    else Sidebar.activatePanel(panel.id)
+    else if (!Sidebar.subPanelActive) Sidebar.activatePanel(panel.id)
   }
   if ((!prevActive || prevActive.panelId !== tab.panelId) && Settings.state.hideInact) {
     Tabs.updateNativeTabsVisibility()

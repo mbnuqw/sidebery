@@ -1,5 +1,5 @@
 import * as Utils from 'src/utils'
-import { Tab, Bookmark, SelectionType } from 'src/types'
+import { Tab, Bookmark, SelectionType, SubPanelType } from 'src/types'
 import { Selection } from 'src/services/selection'
 import { Settings } from 'src/services/settings'
 import { Windows } from 'src/services/windows'
@@ -208,7 +208,9 @@ export function selectBookmarksRange(aBookmark: Bookmark, bBookmark?: Bookmark):
   }
 
   let inside = false
-  const activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  let activePanel
+  if (Sidebar.subPanelActive) activePanel = Sidebar.subPanels.bookmarks
+  else activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
   if (activePanel) {
     for (const bound of activePanel.bounds) {
       const bkm = Bookmarks.reactive.byId[bound.id]

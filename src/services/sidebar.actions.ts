@@ -4,7 +4,7 @@ import { PanelConfig, Panel, Stored, ItemBounds, Tab, Bookmark, DstPlaceInfo } f
 import { Notification, SidebarConfig, BookmarksPanelConfig } from 'src/types'
 import { PanelType, TabsPanel, BookmarksPanel, ScrollBoxComponent, SubPanelType } from 'src/types'
 import { TabsPanelConfig, ItemBoundsType, ReactiveTab, DialogConfig } from 'src/types'
-import { BOOKMARKS_PANEL_STATE, TABS_PANEL_STATE, NOID, CONTAINER_ID, Err } from 'src/defaults'
+import { BOOKMARKS_PANEL_STATE, TABS_PANEL_STATE, NOID, Err } from 'src/defaults'
 import { BOOKMARKS_PANEL_CONFIG, TABS_PANEL_CONFIG, DEFAULT_CONTAINER_ID } from 'src/defaults'
 import { BKM_ROOT_ID, BKM_OTHER_ID } from 'src/defaults'
 import { HISTORY_PANEL_CONFIG, HISTORY_PANEL_STATE, FOLDER_NAME_DATA_RE } from 'src/defaults'
@@ -408,7 +408,7 @@ export function recalcBookmarksPanels(): void {
     const rootFolder = Bookmarks.reactive.byId[panel.rootId]
     let rootContent: Bookmark[]
     let count = 0
-    if (!panel.rootId || panel.rootId === BKM_ROOT_ID) {
+    if (!panel.rootId || panel.rootId === BKM_ROOT_ID || panel.rootId === NOID) {
       rootContent = Bookmarks.reactive.tree
       count = Bookmarks.overallCount
     } else {
@@ -418,6 +418,33 @@ export function recalcBookmarksPanels(): void {
 
     panel.reactive.bookmarks = rootContent
     panel.reactive.len = count
+  }
+
+  if (Sidebar.subPanels.bookmarks) {
+    const panel = Sidebar.subPanels.bookmarks
+
+    let rootContent: Bookmark[]
+    if (!panel.rootId || panel.rootId === BKM_ROOT_ID || panel.rootId === NOID) {
+      rootContent = Bookmarks.reactive.tree
+    } else {
+      if (panel.reactive.rootOffset > 0) {
+        let folder = Bookmarks.reactive.byId[panel.rootId] as Bookmark | undefined
+        if (folder) {
+          for (let i = panel.reactive.rootOffset; i-- && folder; ) {
+            if (folder.parentId === BKM_ROOT_ID) {
+              folder = undefined
+              break
+            }
+            folder = Bookmarks.reactive.byId[folder.parentId]
+          }
+        }
+        rootContent = folder?.children ?? Bookmarks.reactive.tree
+      } else {
+        rootContent = Bookmarks.reactive.byId[panel.rootId]?.children ?? []
+      }
+    }
+
+    panel.reactive.bookmarks = rootContent
   }
 }
 
@@ -444,8 +471,19 @@ export function setPanelScrollBox(id: ID, scrollBoxComponent: ScrollBoxComponent
  * Update panel bounds
  */
 export function updateBounds(): void {
-  const panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
-  if (!panel || !panelsBoxEl || !panel.scrollEl || !panel.ready) return
+  let panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  if (!panel || !panelsBoxEl) return
+
+  let hostPanel
+  if (
+    Utils.isTabsPanel(panel) &&
+    Sidebar.subPanelType === SubPanelType.Bookmarks &&
+    Sidebar.subPanels.bookmarks
+  ) {
+    hostPanel = panel
+    panel = Sidebar.subPanels.bookmarks
+  }
+  if (!panel.scrollEl || !panel.ready) return
 
   const panelContentEl = panel.scrollComponent?.getScrollableBox()
   DnD.setActivePointer(panel.id)
@@ -458,6 +496,7 @@ export function updateBounds(): void {
   panel.topOffset = pb.top
   panel.leftOffset = bb.left
   panel.rightOffset = bb.right
+  panel.bottomOffset = pb.bottom
 
   // Check additional padding
   if (panel.scrollComponent) {
@@ -467,7 +506,7 @@ export function updateBounds(): void {
   }
 
   if (panel.type === PanelType.bookmarks && panel.viewMode === 'tree') {
-    panel.bounds = calcBookmarksTreeBounds(panel)
+    panel.bounds = calcBookmarksTreeBounds(panel, hostPanel)
   } else if (panel.type === PanelType.bookmarks && panel.viewMode === 'history') {
     panel.bounds = calcBookmarksHistoryBounds(panel)
   } else if (panel.type === PanelType.tabs) panel.bounds = calcTabsBounds(panel)
@@ -523,11 +562,12 @@ function calcTabsBounds(panel: TabsPanel): ItemBounds[] {
 /**
  * Calc bookmarks tree bounds
  */
-function calcBookmarksTreeBounds(panel: BookmarksPanel): ItemBounds[] {
+function calcBookmarksTreeBounds(panel: BookmarksPanel, hostPanel?: TabsPanel): ItemBounds[] {
   const result: ItemBounds[] = []
   if (!Utils.isBookmarksPanel(panel)) return []
 
-  const expandedBookmarks = Bookmarks.reactive.expanded[panel.id] ?? {}
+  const expPanelId = hostPanel?.id || panel.id
+  const expandedBookmarks = Bookmarks.reactive.expanded[expPanelId] ?? {}
 
   const margin = Sidebar.bookmarkMargin
   const marginA = Math.floor(margin / 2)
@@ -2161,16 +2201,19 @@ export function openSubPanel(type: SubPanelType, hostPanel?: Panel) {
     let panel = Sidebar.subPanels.bookmarks
     if (!panel) {
       panel = Sidebar.createBookmarksPanel({ rootId: hostPanel.bookmarksFolderId })
+      if (panel.rootId === NOID) panel.rootId = BKM_ROOT_ID
       Sidebar.subPanels.bookmarks = panel
     } else {
       panel.rootId = hostPanel.bookmarksFolderId
     }
+    if (Bookmarks.overallCount) panel.ready = true
   }
 
   clearTimeout(subPanelTypeResetTimeout)
   Sidebar.subPanelActive = true
   Sidebar.reactive.subPanelActive = true
   Sidebar.reactive.subPanelType = type
+  Sidebar.subPanelType = type
 
   if (type === SubPanelType.History && !History.ready) History.load()
 
@@ -2182,11 +2225,13 @@ export function openSubPanel(type: SubPanelType, hostPanel?: Panel) {
 export function closeSubPanel() {
   if (!Sidebar.subPanelActive) return
   Sidebar.subPanelActive = false
+  Sidebar.subPanelType = SubPanelType.Null
   Sidebar.reactive.subPanelActive = false
 
   if (Selection.isSet()) Selection.resetSelection()
   if (Menu.isOpen) Menu.close()
   if (Search.reactive.rawValue) Search.search()
+  if (DnD.items.length) Sidebar.updateBounds()
 
   clearTimeout(subPanelTypeResetTimeout)
   subPanelTypeResetTimeout = setTimeout(() => {
@@ -2201,6 +2246,8 @@ export function closeSubPanel() {
 
 export function switchPanelOnMouseLeave() {
   Sidebar.switchOnMouseLeave = false
+
+  if (Sidebar.subPanelActive) return
 
   const activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
   if (!activePanel) return

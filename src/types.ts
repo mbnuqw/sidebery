@@ -172,6 +172,7 @@ export const enum DropType {
   NavItem = 3,
   TabsPanel = 31,
   BookmarksPanel = 32,
+  BookmarksSubPanelBtn = 41,
 }
 
 export interface DragItem {

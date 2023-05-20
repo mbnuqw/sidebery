@@ -53,9 +53,9 @@ export function next(): void {
 
   if (Utils.isTabsPanel(actPanel)) {
     if (Sidebar.subPanelActive) {
-      if (Sidebar.reactive.subPanelType === SubPanelType.Bookmarks && Sidebar.subPanels.bookmarks) {
+      if (Sidebar.subPanelType === SubPanelType.Bookmarks && Sidebar.subPanels.bookmarks) {
         SearchBookmarks.onBookmarksSearchNext(Sidebar.subPanels.bookmarks)
-      } else if (Sidebar.reactive.subPanelType === SubPanelType.History) {
+      } else if (Sidebar.subPanelType === SubPanelType.History) {
         SearchHistory.onHistorySearchNext()
       }
     } else {
@@ -74,9 +74,9 @@ export function prev(): void {
 
   if (Utils.isTabsPanel(actPanel)) {
     if (Sidebar.subPanelActive) {
-      if (Sidebar.reactive.subPanelType === SubPanelType.Bookmarks && Sidebar.subPanels.bookmarks) {
+      if (Sidebar.subPanelType === SubPanelType.Bookmarks && Sidebar.subPanels.bookmarks) {
         SearchBookmarks.onBookmarksSearchPrev(Sidebar.subPanels.bookmarks)
-      } else if (Sidebar.reactive.subPanelType === SubPanelType.History) {
+      } else if (Sidebar.subPanelType === SubPanelType.History) {
         SearchHistory.onHistorySearchPrev()
       }
     } else {
@@ -100,9 +100,9 @@ export function enter(): void {
 
   if (Utils.isTabsPanel(actPanel)) {
     if (Sidebar.subPanelActive) {
-      if (Sidebar.reactive.subPanelType === SubPanelType.Bookmarks && Sidebar.subPanels.bookmarks) {
+      if (Sidebar.subPanelType === SubPanelType.Bookmarks && Sidebar.subPanels.bookmarks) {
         SearchBookmarks.onBookmarksSearchEnter(actPanel, Sidebar.subPanels.bookmarks)
-      } else if (Sidebar.reactive.subPanelType === SubPanelType.History) {
+      } else if (Sidebar.subPanelType === SubPanelType.History) {
         SearchHistory.onHistorySearchEnter()
       }
     } else {
@@ -124,7 +124,7 @@ export function bookmarks() {
   if (Utils.isTabsPanel(actPanel) && Settings.state.subPanelBookmarks) {
     if (
       Sidebar.subPanelActive &&
-      Sidebar.reactive.subPanelType === SubPanelType.Bookmarks &&
+      Sidebar.subPanelType === SubPanelType.Bookmarks &&
       Sidebar.subPanels.bookmarks
     ) {
       const panel = Sidebar.subPanels.bookmarks
@@ -180,7 +180,7 @@ export function history() {
 
   // Try to open history sub-panel
   if (Utils.isTabsPanel(actPanel) && Settings.state.subPanelHistory) {
-    if (Sidebar.subPanelActive && Sidebar.reactive.subPanelType === SubPanelType.History) {
+    if (Sidebar.subPanelActive && Sidebar.subPanelType === SubPanelType.History) {
       Sidebar.closeSubPanel()
     } else {
       Sidebar.openSubPanel(SubPanelType.History, actPanel)
@@ -209,7 +209,7 @@ export function selectAll(): void {
 
   if (Utils.isTabsPanel(actPanel)) {
     if (Sidebar.subPanelActive) {
-      if (Sidebar.reactive.subPanelType === SubPanelType.Bookmarks && Sidebar.subPanels.bookmarks) {
+      if (Sidebar.subPanelType === SubPanelType.Bookmarks && Sidebar.subPanels.bookmarks) {
         SearchBookmarks.onBookmarksSearchSelectAll(Sidebar.subPanels.bookmarks)
       }
     } else {
@@ -247,10 +247,10 @@ export function menu(): void {
 
   if (Utils.isTabsPanel(actPanel)) {
     if (Sidebar.subPanelActive) {
-      if (Sidebar.reactive.subPanelType === SubPanelType.Bookmarks && Sidebar.subPanels.bookmarks) {
+      if (Sidebar.subPanelType === SubPanelType.Bookmarks && Sidebar.subPanels.bookmarks) {
         const [x, y] = getMenuCoordinates(MenuType.Bookmarks)
         Menu.open(MenuType.Bookmarks, x, y, true)
-      } else if (Sidebar.reactive.subPanelType === SubPanelType.History) {
+      } else if (Sidebar.subPanelType === SubPanelType.History) {
         const [x, y] = getMenuCoordinates(MenuType.History)
         Menu.open(MenuType.History, x, y, true)
       }
@@ -290,10 +290,10 @@ export function search(value?: string): void {
 
   if (Utils.isTabsPanel(actPanel)) {
     if (Sidebar.subPanelActive) {
-      if (Sidebar.reactive.subPanelType === SubPanelType.Bookmarks && Sidebar.subPanels.bookmarks) {
+      if (Sidebar.subPanelType === SubPanelType.Bookmarks && Sidebar.subPanels.bookmarks) {
         targetPanelId = Sidebar.subPanels.bookmarks.id
         SearchBookmarks.onBookmarksSearch(actPanel, Sidebar.subPanels.bookmarks)
-      } else if (Sidebar.reactive.subPanelType === SubPanelType.History) {
+      } else if (Sidebar.subPanelType === SubPanelType.History) {
         targetPanelId = NOID
         SearchHistory.onHistorySearch()
       }

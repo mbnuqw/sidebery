@@ -214,6 +214,7 @@ body
   border-radius: var(--general-border-radius)
   background-color: var(--frame-el-bg)
   box-shadow: var(--frame-el-shadow)
+  transition: opacity var(--d-fast)
   > svg
     position: relative
     width: 16px
@@ -240,6 +241,29 @@ body
       opacity: .3
 .BottomBar[data-with-ntb="true"] .tool-btn
   width: var(--tabs-height)
+
+.BottomBar[data-drop-target-bookmarks="true"]
+  z-index: 300
+.BottomBar[data-drop-target-bookmarks="true"] .tool-btn
+  opacity: 0
+.BottomBar[data-drop-target-bookmarks="true"] .tool-btn.-bookmarks
+  opacity: 1
+  background-color: var(--frame-el-bg, var(--frame-bg))
+  box-shadow: var(--frame-el-shadow, var(--active-el-shadow))
+  > svg
+    opacity: 1
+  &:before
+    background-color: var(--frame-el-overlay-hover-bg)
+  &:after
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    z-index: 1
+    border-radius: var(--nav-btn-border-radius)
+    box-shadow: inset 0 0 0 1px var(--nav-btn-accent)
 
 .bottom-bar-enter-active
 .bottom-bar-leave-active
@@ -336,6 +360,10 @@ for i in 1..16
 for i in 1..16
   .BookmarksPanel[data-pos="center"] .pointer[data-pointer="between"][data-lvl=\"{i}\"]:before
   .BookmarksPanel[data-pos="center"] .pointer[data-pointer="between"][data-lvl=\"{i}\"]:after
+    transform: "translateX(calc(var(--bookmarks-indent) * %s + var(--bookmarks-margin)))" % i
+for i in 1..16
+  .BookmarksSubPanel .pointer[data-pointer="between"][data-lvl=\"{i}\"]:before
+  .BookmarksSubPanel .pointer[data-pointer="between"][data-lvl=\"{i}\"]:after
     transform: "translateX(calc(var(--bookmarks-indent) * %s + var(--bookmarks-margin)))" % i
 .pointer .arrow
   position: absolute

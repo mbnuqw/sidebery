@@ -120,6 +120,7 @@ export interface PanelBounds {
   topOffset: number
   leftOffset: number
   rightOffset: number
+  bottomOffset: number
   items: ItemBounds[]
 }
 
@@ -176,6 +177,7 @@ interface PanelCommonProps {
   topOffset: number
   leftOffset: number
   rightOffset: number
+  bottomOffset: number
   scrollEl: HTMLElement | null
   scrollComponent: ScrollBoxComponent | null
   bounds: ItemBounds[]
