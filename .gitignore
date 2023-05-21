@@ -8,3 +8,5 @@ addon
 build/*
 !build/*.js
 !build/*.mjs
+/.devenv/
+/.direnv/
