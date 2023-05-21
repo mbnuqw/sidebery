@@ -2356,6 +2356,27 @@ export const setupPageTranslations: Translations = {
     de: 'Auto-Schnappschuss Intervall',
     zh_CN: '自动快照间隔',
   },
+  'settings.snap_also_export': {
+    en: 'Also Auto Export',
+    // chat-gpt translations "quite literal"
+    ru: 'Также автоматически экспортировать',
+    de: 'Auch Auto-Export',
+    zh_CN: '也自动导出',
+  },
+  'settings.snap_export_path': {
+    en: 'Path to Export to',
+    // chat-gpt translations "quite literal"
+    ru: 'Путь для экспорта',
+    de: 'Pfad zum Exportieren',
+    zh_CN: '导出路径',
+  },
+  'settings.snap_export_path_ph': {
+    en: '/path/to/mdfiles/',
+    // chat-gpt translations "quite literal"
+    ru: '/путь/к/mdфайлам/',
+    de: '/pfad/zu/mddateien/',
+    zh_CN: '/路径/至/md文件/',
+  },
   'settings.snap_interval_min': {
     en: n => (n === 1 ? 'minute' : 'minutes'),
     ru: (n = 0): string => {

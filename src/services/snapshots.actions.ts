@@ -11,7 +11,7 @@ import { Store } from 'src/services/storage'
 import { SetupPage } from 'src/services/setup-page'
 import { Notifications } from 'src/services/notifications'
 import * as IPC from './ipc'
-import { RemovingSnapshotResult, SnapStoreMode } from 'src/types/snapshots'
+import { RemovingSnapshotResult, SnapStoreMode, SnapshotState } from 'src/types/snapshots'
 import { Containers } from './containers'
 import { DEFAULT_CONTAINER_ID } from 'src/defaults/containers'
 import { PanelType } from 'src/types/sidebar'
@@ -133,9 +133,27 @@ export async function createSnapshot(auto = false): Promise<Snapshot | undefined
     IPC.sendToSidebars('notifyAboutNewSnapshot')
   }
 
+  await exportSnapshot(currentSnapshot)
   return currentSnapshot
 }
 
+export async function exportSnapshot(snapshot: Snapshot) {
+
+  const mostRecentSnap = await getMostRecentSnapshot()
+  if (!mostRecentSnap || !browser?.downloads) return console.warn('failed attempt to export snapshot', {mostRecentSnap, browser})
+  
+  const { mdFile: mostRecentSnapMd, time}  = await prepareExport(mostRecentSnap)
+  console.log({ mostRecentSnap: mostRecentSnapMd, snapshot })
+  const snapExportPath = Settings.state.snapExportPath
+  let dateStr = Utils.uDate(time, '.')
+  let timeStr = Utils.uTime(time, '.',false/* ,false */)
+
+  browser.downloads.download({
+    url: URL.createObjectURL(mostRecentSnapMd),
+    filename: `${snapExportPath}/${dateStr}-${timeStr}.md`,
+    conflictAction: 'overwrite'
+  })
+}
 export async function addSnapshot(snapshot: NormalizedSnapshot) {
   if (!Info.isBg) return await IPC.bg('addSnapshot', snapshot)
 
@@ -180,7 +198,7 @@ export function minimizeSnapshot(snapshots: Snapshot[], snapshot: Snapshot): voi
   const newSidebarJSON = JSON.stringify(snapshot.sidebar)
 
   // Containers
-  for (let i = snapshots.length; i--; ) {
+  for (let i = snapshots.length; i--;) {
     const snapN = snapshots[i]
     if (!snapN || !snapN.containers) break
 
@@ -195,7 +213,7 @@ export function minimizeSnapshot(snapshots: Snapshot[], snapshot: Snapshot): voi
   }
 
   // Nav and panels
-  for (let i = snapshots.length; i--; ) {
+  for (let i = snapshots.length; i--;) {
     const snapN = snapshots[i]
     if (!snapN || !snapN.sidebar) break
 
@@ -227,7 +245,7 @@ export function minimizeSnapshot(snapshots: Snapshot[], snapshot: Snapshot): voi
         if (tab === SnapStoreMode.Unchanged) continue
 
         // per snapshot (previous)
-        for (let i = snapshots.length; i--; ) {
+        for (let i = snapshots.length; i--;) {
           const snapN = snapshots[i]
           if (!snapN) break per_win // stop tabs minimizing
 
@@ -271,7 +289,7 @@ export function getNormalizedSnapshot(
 
   // Containers
   if (snapshot.containers === SnapStoreMode.Unchanged) {
-    for (let i = index; i--; ) {
+    for (let i = index; i--;) {
       const snapN = snapshots[i]
       if (snapN && snapN.containers !== SnapStoreMode.Unchanged) {
         snapshot.containers = snapN.containers
@@ -282,7 +300,7 @@ export function getNormalizedSnapshot(
 
   // Nav and panels
   if (snapshot.sidebar === SnapStoreMode.Unchanged) {
-    for (let i = index; i--; ) {
+    for (let i = index; i--;) {
       const snapN = snapshots[i]
       if (snapN && snapN.sidebar !== SnapStoreMode.Unchanged) {
         snapshot.sidebar = snapN.sidebar
@@ -304,7 +322,7 @@ export function getNormalizedSnapshot(
         const tab = panel[ti]
 
         if (tab === SnapStoreMode.Unchanged) {
-          for (let i = index; i--; ) {
+          for (let i = index; i--;) {
             const snapN = snapshots[i]
             const tabN = snapN?.tabs[wi]?.[pi]?.[ti]
             if (tabN && tabN !== SnapStoreMode.Unchanged) {
@@ -734,6 +752,38 @@ export function updateV4GroupUrls(snapshot: NormalizedSnapshot): void {
       }
     }
   }
+}
+
+export async function getStoredSnapshots() {
+  let stored
+  try {
+    stored = await browser.storage.local.get<Stored>('snapshots')
+  } catch (err) {
+    return Logs.err('Snapshots.vue: recalcSizes: Cannot get snapshots', err)
+  }
+  return stored.snapshots
+}
+
+export async function prepareExport(snapshot: Snapshot | SnapshotState) {
+  const { id, time, containers, sidebar, tabs } = snapshot
+  const normSnapshot = { id, time, containers, sidebar, tabs }
+  const jsonStr = JSON.stringify(normSnapshot)
+  const jsonFile = new Blob([jsonStr], { type: 'application/json' })
+  const mdStr = convertToMarkdown(normSnapshot as NormalizedSnapshot)
+  const mdFile = new Blob([mdStr], { type: 'text/markdown' })
+  return { id, time, containers, sidebar, tabs, jsonFile, mdFile }
+}
+
+export async function getMostRecentSnapshot() {
+  const storedSnaps = await getStoredSnapshots()
+  if(!storedSnaps || storedSnaps.length === 0) return
+  return getNormalizedSnapshot(storedSnaps.reverse(),0)
+}
+
+export async function getMostRecentSnapshotMd() {
+  const mostRecentSnap = await getMostRecentSnapshot()
+  if (!mostRecentSnap) return
+  return (await prepareExport(mostRecentSnap)).mdFile
 }
 
 export function convertToMarkdown(snapshot: NormalizedSnapshot): string {

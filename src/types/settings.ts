@@ -1,6 +1,7 @@
 import { SETTINGS_OPTIONS } from '../defaults'
 
 export interface SettingsState {
+[x: string]: any
   // General
   version?: string // DEPR
   nativeScrollbars: boolean
@@ -158,6 +159,9 @@ export interface SettingsState {
   snapIntervalUnit: (typeof SETTINGS_OPTIONS.snapIntervalUnit)[number]
   snapLimit: number
   snapLimitUnit: (typeof SETTINGS_OPTIONS.snapLimitUnit)[number]
+  // AutoExport - gotjoshua
+  snapAutoExport: boolean
+  snapExportPath: string
 
   // Mouse
   hScrollThroughPanels?: boolean // DEPR

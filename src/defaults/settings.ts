@@ -155,6 +155,8 @@ export const DEFAULT_SETTINGS: SettingsState = {
   snapIntervalUnit: 'min',
   snapLimit: 0,
   snapLimitUnit: 'snap',
+  snapAutoExport: false,
+  snapExportPath: '',
 
   // Mouse
   hScrollAction: 'none',

@@ -20,6 +20,18 @@ section(ref="el")
     :unitOpts="SETTINGS_OPTIONS.snapIntervalUnit"
     @update:value="Settings.saveDebounced(500)"
     @update:unit="Settings.saveDebounced(150)")
+  .sub-fields
+    ToggleField(
+      label="settings.snap_also_export"
+      v-model:value="Settings.state.snapAutoExport"
+      :inactive="!Settings.state.snapInterval"
+      @update:value="Settings.saveDebounced(150)")
+    TextField(
+      label="settings.snap_export_path"
+      :or="translate('settings.snap_export_path_ph')"
+      :inactive="!Settings.state.snapAutoExport"
+      v-model:value="Settings.state.snapExportPath"
+      @update:value="Settings.saveDebounced(500)")
   NumField(
     label="settings.snap_limit"
     unitLabel="settings.snap_limit_"
@@ -43,6 +55,7 @@ import * as IPC from 'src/services/ipc'
 import { Settings } from 'src/services/settings'
 import { SetupPage } from 'src/services/setup-page'
 import NumField from '../../components/num-field.vue'
+import TextField from '../../components/text-field.vue'
 import ToggleField from '../../components/toggle-field.vue'
 import * as Utils from 'src/utils'
 

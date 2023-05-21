@@ -524,16 +524,13 @@ async function removeSnapshot(snapshot: SnapshotState): Promise<void> {
   }
 }
 
-async function recalcSizes(): Promise<void> {
-  let stored
-  try {
-    stored = await browser.storage.local.get<Stored>('snapshots')
-  } catch (err) {
-    return Logs.err('Snapshots.vue: recalcSizes: Cannot get snapshots', err)
-  }
-  if (!stored.snapshots) return
 
-  for (const snapshot of stored.snapshots) {
+
+async function recalcSizes(): Promise<void> {
+  const storedSnapshots = await Snapshots.getStoredSnapshots()
+  if (!storedSnapshots) return
+
+  for (const snapshot of storedSnapshots) {
     const snapshotState = state.snapshots.find(s => s.id === snapshot.id)
     if (snapshotState) snapshotState.sizeStr = Utils.strSize(JSON.stringify(snapshot))
   }
@@ -547,16 +544,13 @@ function getSnapInfo(s: SnapshotState): string {
   )
 }
 
+
+
 async function onExportSnapshotDropDownOpen() {
   await nextTick()
 
   if (!state.activeSnapshot) return
-  const { id, time, containers, sidebar, tabs } = state.activeSnapshot
-  const normSnapshot = { id, time, containers, sidebar, tabs }
-  const jsonStr = JSON.stringify(normSnapshot)
-  const jsonFile = new Blob([jsonStr], { type: 'application/json' })
-  const mdStr = Snapshots.convertToMarkdown(normSnapshot)
-  const mdFile = new Blob([mdStr], { type: 'text/markdown' })
+  const {time,mdFile,jsonFile} = await Snapshots.prepareExport(state.activeSnapshot)
 
   let dateStr = Utils.uDate(time, '.')
   let timeStr = Utils.uTime(time, '.')
