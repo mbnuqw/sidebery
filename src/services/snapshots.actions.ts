@@ -792,27 +792,30 @@ export function convertToMarkdown(snapshot: NormalizedSnapshot): string {
   const dateTimeStr = `${dateStr} - ${timeStr}`
   const md = [`# ${dateTimeStr}`, '']
 
+  const TAB = "  "
+  let IN = TAB
   let panelConfig
 
   for (let i = 0; i < snapshot.tabs.length; i++) {
     const win = snapshot.tabs[i]
-    const winTitle = `## ${translate('snapshot.window_title')} ${i + 1}`
+    const winTitle = `${IN}## ${translate('snapshot.window_title')} ${i + 1}`
     md.push(winTitle)
-
     for (const panel of win) {
       for (const tab of panel) {
         if (!tab.pinned && (!panelConfig || panelConfig.id !== tab.panelId)) {
           panelConfig = snapshot.sidebar?.panels?.[tab.panelId]
           if (panelConfig) {
-            const panelTitle = `### ${panelConfig.name}`
+            IN += TAB
+            const panelTitle = `${IN}### ${panelConfig.name}`
             md.push(panelTitle)
           }
         }
-
+        IN += TAB
         const tabLink = `[${tab.title}](${tab.url}")`
         const pinned = tab.pinned ? '📌' : ''
         const indent = '  '.repeat(tab.lvl ?? 0)
-        md.push(`${indent}- ${pinned}${tabLink}`)
+        md.push(`${IN}${indent}- ${pinned}${tabLink}`)
+        IN = TAB
       }
     }
   }
