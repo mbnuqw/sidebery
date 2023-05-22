@@ -1,5 +1,5 @@
 <template lang="pug">
-.Snapshots(:data-tab-select-mode="state.selectionMode")
+.Snapshots(@click="onClick")
   .wrapper
     .snapshot-list-section
       .snapshot-list(:data-empty="!state.snapshots.length")
@@ -20,7 +20,7 @@
           .rm-btn(:title="translate('snapshot.btn_remove')" @click="removeSnapshot(snapshot)")
             svg: use(xlink:href="#icon_trash")
 
-    .active-snapshot-section(:data-sel-mode="state.selectionMode")
+    .active-snapshot-section
       .header(v-if="state.activeSnapshot" @wheel="onHeaderWheel" :data-empty="!state.activeSnapshot")
         .title {{state.activeSnapshot?.dateStr ?? '?'}} - {{state.activeSnapshot?.timeStr ?? '?'}}
         DropDownButton(
@@ -60,16 +60,15 @@
                     :data-lvl="tab.lvl"
                     :data-pinned="tab.pinned"
                     :data-color="tab.containerColor"
-                    @mousedown="onTabMouseDown($event, tab)"
-                    @mouseup.stop.prevent="onTabMouseUp($event, tab)"
+                    :data-shift-sel="state.mouseUpShiftTabId === tab.id"
                     @click.stop.prevent="")
                     a.link(
-                      v-if="!state.selectionMode"
                       target="_blank"
                       :href="tab.url"
-                      @dragstart="onTabDragStart($event)")
+                      @dragstart="onTabDragStart($event)"
+                      @mousedown="onTabMouseDown($event, tab)"
+                      @mouseup.stop.prevent="onTabMouseUp($event, tab)")
                     .container-mark(v-if="tab.containerIcon")
-                    .checkbox(v-if="state.selectionMode" :data-sel="tab.sel")
                     .icon
                       img(
                         v-if="tab.domain && Favicons.reactive.list[Favicons.reactive.domains[tab.domain]]"
@@ -79,15 +78,14 @@
                     .title-url
                       .title {{tab.title}}
                       .url {{tab.url}}
-      .selection-bar(:data-active="state.selectionMode")
+                    .checkbox(
+                      :data-sel="tab.sel"
+                      @mousedown="onCheckboxMouseDown($event, tab)"
+                      @mouseup="onCheckboxMouseUp($event, tab)")
+      .selection-bar(:data-active="!!selectedTabsLen")
         .info {{translate('snapshot.selected')}} {{selectedTabsLen}}
-        .btn(
-          :class="{'-inactive': !selectedTabsLen}"
-          @click="openSelectedTabs()") {{translate('snapshot.sel.open_in_panel')}}
-        .btn(
-          :class="{'-inactive': !selectedTabsLen}"
-          @click="resetSelection()") {{translate('snapshot.sel.reset_sel')}}
-        .close-btn(@click="turnOffSelectionMode()"): svg: use(xlink:href="#icon_close")
+        .btn(@click="openSelectedTabs()") {{translate('snapshot.sel.open_in_panel')}}
+        .btn(@click="resetSelection()") {{translate('snapshot.sel.reset_sel')}}
 
     .placeholder(v-if="!state.snapshots.length")
       .btn(@click="createSnapshot()") {{translate('snapshot.btn_create_first')}}
@@ -123,6 +121,7 @@ const VOID_PANEL_CONF: PanelConfig = {
   newTabCtx: 'none',
   dropTabCtx: 'none',
   moveRules: [],
+  moveExcludedTo: -1,
   bookmarksFolderId: -1,
   newTabBtns: [],
   srcPanelConfig: null,
@@ -133,11 +132,10 @@ const dayStartMs = Utils.getDayStartMS()
 const state = reactive({
   snapshots: [] as SnapshotState[],
   activeSnapshot: null as SnapshotState | null,
-  selectionMode: false,
+  mouseUpShiftTabId: null as ID | null,
 })
 
 const selectedTabsLen = computed<number>(() => {
-  if (!state.selectionMode) return 0
   if (!state.activeSnapshot) return 0
 
   let len = 0
@@ -187,7 +185,7 @@ function onSnapshotsChange(newSnapshots?: Snapshot[]): void {
   }
 
   let activeSnapshot = snapshots.find(s => s.id === state.activeSnapshot?.id) ?? null
-  if (!activeSnapshot && state.selectionMode) turnOffSelectionMode(state.activeSnapshot)
+  if (!activeSnapshot) resetSelection(state.activeSnapshot)
   if (activeSnapshot) activeSnapshot = state.activeSnapshot
 
   state.snapshots = snapshots
@@ -274,7 +272,7 @@ function parseSnapshot(snapshots: Snapshot[], index: number): SnapshotState | un
 
 function activateSnapshot(snapshot?: SnapshotState): void {
   if (!snapshot || state.activeSnapshot === snapshot) return
-  if (state.selectionMode) turnOffSelectionMode(state.activeSnapshot)
+  resetSelection(state.activeSnapshot)
   state.activeSnapshot = snapshot
 }
 
@@ -286,7 +284,7 @@ function onHeaderWheel(e: WheelEvent): void {
   let index = state.snapshots.findIndex(s => s.id === state.activeSnapshot?.id)
   if (index === -1) return
 
-  if (state.selectionMode) turnOffSelectionMode(state.activeSnapshot)
+  resetSelection(state.activeSnapshot)
 
   // Down / Up
   let maxIndex = state.snapshots.length - 1
@@ -306,17 +304,16 @@ function onTabMouseDown(e: MouseEvent, tab: SnapTabState): void {
   mouseDownTabId = tab.id
   clearTimeout(longClickTimeout)
 
-  // Selection mode: OFF
-  if (!state.selectionMode && e.button === 0) {
+  if (e.button === 0) {
     longClickTimeout = setTimeout(() => {
-      state.selectionMode = true
       tab.sel = true
       mouseDownTabId = undefined
     }, LONG_CLICK_DELAY)
   }
 }
 
-let mouseUpShiftTabId: ID | undefined
+// let mouseUpShiftTabId: ID | undefined
+let mouseUpShiftMode = true
 function onTabMouseUp(e: MouseEvent, tab: SnapTabState): void {
   clearTimeout(longClickTimeout)
   if (mouseDownTabId !== tab.id) {
@@ -326,26 +323,53 @@ function onTabMouseUp(e: MouseEvent, tab: SnapTabState): void {
   mouseDownTabId = undefined
 
   if (e.shiftKey && e.button === 0) {
-    if (mouseUpShiftTabId === undefined) {
-      if (!state.selectionMode) state.selectionMode = true
-      mouseUpShiftTabId = tab.id
-      tab.sel = !e.altKey
+    if (state.mouseUpShiftTabId === null) {
+      state.mouseUpShiftTabId = tab.id ?? null
+      tab.sel = !tab.sel
+      mouseUpShiftMode = tab.sel
     } else {
-      selectRange(mouseUpShiftTabId, tab.id, e.altKey)
-      mouseUpShiftTabId = undefined
+      selectRange(state.mouseUpShiftTabId, tab.id, !mouseUpShiftMode)
+      state.mouseUpShiftTabId = null
     }
     return
   }
-  mouseUpShiftTabId = undefined
 
-  // Selection mode: ON
-  if (state.selectionMode && e.button === 0) {
+  if (e.ctrlKey && e.button === 0) {
     tab.sel = !tab.sel
+    return
   }
 
-  // Selection mode: OFF
-  else {
-    if (e.button === 0) openTab(tab)
+  state.mouseUpShiftTabId = null
+
+  if (e.button === 0) openTab(tab)
+}
+
+function onCheckboxMouseDown(e: MouseEvent, tab: SnapTabState): void {
+  mouseDownTabId = tab.id
+}
+
+function onCheckboxMouseUp(e: MouseEvent, tab: SnapTabState): void {
+  if (mouseDownTabId !== tab.id) {
+    mouseDownTabId = undefined
+    return
+  }
+  mouseDownTabId = undefined
+
+  if (e.shiftKey && e.button === 0) {
+    if (state.mouseUpShiftTabId === null) {
+      state.mouseUpShiftTabId = tab.id ?? null
+      tab.sel = !tab.sel
+      mouseUpShiftMode = tab.sel
+    } else {
+      selectRange(state.mouseUpShiftTabId, tab.id, !mouseUpShiftMode)
+      state.mouseUpShiftTabId = null
+    }
+    return
+  }
+  state.mouseUpShiftTabId = null
+
+  if (e.button === 0) {
+    tab.sel = !tab.sel
   }
 }
 
@@ -361,11 +385,6 @@ function onTabDragStart(e: DragEvent): void {
     const y = e.clientY - bounds.y
     if (e.dataTransfer) e.dataTransfer.setDragImage(target.parentElement, x, y)
   }
-}
-
-function turnOffSelectionMode(snapshot?: SnapshotState | null): void {
-  state.selectionMode = false
-  resetSelection(snapshot)
 }
 
 function selectRange(tabAId: ID, tabBId?: ID, deselectActually = false): void {
@@ -393,7 +412,7 @@ function resetSelection(snapshot?: SnapshotState | null): void {
   if (!snapshot && state.activeSnapshot) snapshot = state.activeSnapshot
   if (!snapshot) return
 
-  mouseUpShiftTabId = undefined
+  state.mouseUpShiftTabId = null
 
   for (const win of snapshot.windows) {
     for (const panel of win.panels) {
@@ -402,6 +421,11 @@ function resetSelection(snapshot?: SnapshotState | null): void {
       }
     }
   }
+}
+
+function onClick() {
+  state.mouseUpShiftTabId = null
+  mouseUpShiftMode = true
 }
 
 async function openTab(tab: SnapTabState): Promise<void> {
