@@ -666,6 +666,7 @@ export const VOID_PANEL_CONF: PanelConfig = {
   newTabCtx: 'none',
   dropTabCtx: 'none',
   moveRules: [],
+  moveExcludedTo: -1,
   bookmarksFolderId: -1,
   newTabBtns: [],
   srcPanelConfig: null,
