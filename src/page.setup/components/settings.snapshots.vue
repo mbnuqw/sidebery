@@ -29,6 +29,14 @@ section(ref="el")
     label="settings.snap_auto_export"
     v-model:value="Settings.state.snapAutoExport"
     @update:value="Settings.saveDebounced(150)")
+  SelectField(
+    label="settings.snap_auto_export_type"
+    optLabel="settings.snap_auto_export_type_"
+    v-model:value="Settings.state.snapAutoExportType"
+    :inactive="!Settings.state.snapAutoExport"
+    :opts="Settings.getOpts('snapAutoExportType')"
+    :folded="false"
+    @update:value="Settings.saveDebounced(150)")
   TextField(
     label="settings.snap_export_path"
     :or="translate('settings.snap_export_path_ph')"
@@ -60,6 +68,7 @@ import { Settings } from 'src/services/settings'
 import { SetupPage } from 'src/services/setup-page'
 import NumField from '../../components/num-field.vue'
 import TextField from '../../components/text-field.vue'
+import SelectField from '../../components/select-field.vue'
 import ToggleField from '../../components/toggle-field.vue'
 import * as Utils from 'src/utils'
 

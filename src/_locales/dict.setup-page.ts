@@ -2363,6 +2363,34 @@ export const setupPageTranslations: Translations = {
     de: 'Auto-Export (bei jedem Snapshot)',
     zh_CN: '自动导出（每次快照时）',
   },
+  'settings.snap_auto_export_type': {
+    en: 'Auto Export Format(s)',
+    // chat-gpt translations "quite literal"
+    ru: 'Формат(ы) автоэкспорта',
+    de: 'Auto-Export Format(e)',
+    zh_CN: '自动导出格式',
+  },
+  'settings.snap_auto_export_type_json': {
+    en: 'json',
+    // chat-gpt translations "quite literal"
+    // ru: 'Формат(ы) автоэкспорта',
+    // de: 'Auto-Export Format(e)',
+    // zh_CN: '自动导出格式',
+  },
+  'settings.snap_auto_export_type_md': {
+    en: 'md',
+    // chat-gpt translations "quite literal"
+    // ru: 'Формат(ы) автоэкспорта',
+    // de: 'Auto-Export Format(e)',
+    // zh_CN: '自动导出格式',
+  },
+  'settings.snap_auto_export_type_both': {
+    en: 'both',
+    // chat-gpt translations "quite literal"
+    // ru: 'Формат(ы) автоэкспорта',
+    // de: 'Auto-Export Format(e)',
+    // zh_CN: '自动导出格式',
+  },
   'settings.snap_export_md_tree': {
     en: 'Tree Friendly MD (add extra bullets for windows and tabs)',
     // chat-gpt translations "quite literal"

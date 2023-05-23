@@ -242,7 +242,7 @@ export const SETTINGS_OPTIONS = {
   density: ['compact', 'default', 'loose'],
   colorScheme: ['dark', 'light', 'sys', 'ff'],
   snapIntervalUnit: ['min', 'hr', 'day'],
-  snapExportFormat: ['md', 'json', 'both'],
+  snapAutoExportType: ['md', 'json', 'both'],
   snapLimitUnit: ['snap', 'kb', 'day'],
   moveNewTabPin: ['start', 'end'],
   moveNewTabParent: [
