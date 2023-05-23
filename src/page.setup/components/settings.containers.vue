@@ -1,6 +1,7 @@
 <template lang="pug">
 section(ref="el")
   h2 {{translate('settings.containers_title')}}
+  span.header-shadow
   .card(
     v-for="(container, id) in Containers.reactive.byId"
     :key="container.id"

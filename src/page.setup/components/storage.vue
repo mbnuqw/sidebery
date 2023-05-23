@@ -18,7 +18,7 @@
       .btn.-warn(@click="clearStorage") {{translate('settings.clear_storage_info')}}
 
     .storage-section
-      .sub-title {{translate('settings.favs_title')}}
+      .sub-title: .text {{translate('settings.favs_title')}}
       .favs
         .fav(v-for="fav in state.faviconsCache" :key="fav.tooltip" :title="fav.tooltip")
           img(:src="fav.favicon")

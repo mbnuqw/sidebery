@@ -3,6 +3,7 @@ section(ref="el")
   h2
     span {{translate('settings.sync_title')}}
     .title-note   (~{{state.syncedOveral}} / 100 kb)
+  span.header-shadow
   TextField(
     label="settings.sync_name"
     :or="translate('settings.sync_name_or')"

@@ -1,6 +1,7 @@
 <template lang="pug">
 section(ref="el")
   h2 {{translate('settings.help_title')}}
+  span.header-shadow
   .ctrls
     a.btn(@click="SetupPage.reactive.exportDialog = true") {{translate('settings.help_exp_data')}}
     .btn(type="file")

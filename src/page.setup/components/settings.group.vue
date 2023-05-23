@@ -1,6 +1,7 @@
 <template lang="pug">
 section(ref="el")
   h2 {{translate('settings.group_title')}}
+  span.header-shadow
   SelectField(
     label="settings.group_layout"
     optLabel="settings.group_layout_"

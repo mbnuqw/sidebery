@@ -1,6 +1,7 @@
 <template lang="pug">
 section(ref="el")
   h2 {{translate('settings.search_title')}}
+  span.header-shadow
   SelectField(
     label="settings.search_bar_mode"
     optLabel="settings.search_bar_mode_"
