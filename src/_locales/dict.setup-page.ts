@@ -2363,6 +2363,13 @@ export const setupPageTranslations: Translations = {
     de: 'Auto-Export (bei jedem Snapshot)',
     zh_CN: '自动导出（每次快照时）',
   },
+  'settings.snap_export_md_tree': {
+    en: 'Tree Friendly MD (add extra bullets for windows and tabs)',
+    // chat-gpt translations "quite literal"
+    ru: 'Дружественный к деревьям MD (добавьте дополнительные пункты для окон и вкладок)',
+    de: 'Baumfreundliches MD (zusätzliche Aufzählungszeichen für Fenster und Tabs hinzufügen)',
+    zh_CN: '树状友好MD（为窗口和标签页添加额外的项目符号）',
+  },
   'settings.snap_export_path': {
     en: 'Path to Export to (relative to downloads)',
     // chat-gpt translations "quite literal"
