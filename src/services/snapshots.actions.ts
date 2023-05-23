@@ -922,10 +922,10 @@ export function convertToMarkdown(snapshot: NormalizedSnapshot): string {
   const TAB = "  "
   let IN = TAB
   let panelConfig
-
+  let BULLET = '- ' || '' //TODO setting for tree friendly md style
   for (let i = 0; i < snapshot.tabs.length; i++) {
     const win = snapshot.tabs[i]
-    const winTitle = `${IN}## ${translate('snapshot.window_title')} ${i + 1}`
+    const winTitle = `${IN}${BULLET}## ${translate('snapshot.window_title')} ${i + 1}`
     md.push(winTitle)
     for (const panel of win) {
       for (const tab of panel) {
@@ -933,17 +933,17 @@ export function convertToMarkdown(snapshot: NormalizedSnapshot): string {
           panelConfig = snapshot.sidebar?.panels?.[tab.panelId]
           if (panelConfig) {
             IN += TAB
-            const panelTitle = `${IN}### ${panelConfig.name}`
+            const panelTitle = `${IN}${BULLET}### ${panelConfig.name}`
             md.push(panelTitle)
           }
+          IN += TAB
         }
-        IN += TAB
         const tabLink = `[${tab.title}](${tab.url}")`
         const pinned = tab.pinned ? '📌' : ''
         const indent = '  '.repeat(tab.lvl ?? 0)
         md.push(`${IN}${indent}- ${pinned}${tabLink}`)
-        IN = TAB
       }
+      IN = TAB
     }
   }
 
