@@ -2356,19 +2356,19 @@ export const setupPageTranslations: Translations = {
     de: 'Auto-Schnappschuss Intervall',
     zh_CN: '自动快照间隔',
   },
-  'settings.snap_also_export': {
-    en: 'Also Auto Export',
+  'settings.snap_auto_export': {
+    en: 'Auto Export (on every snapshot)',
     // chat-gpt translations "quite literal"
-    ru: 'Также автоматически экспортировать',
-    de: 'Auch Auto-Export',
-    zh_CN: '也自动导出',
+    ru: 'Автоэкспорт (при каждом снимке)',
+    de: 'Auto-Export (bei jedem Snapshot)',
+    zh_CN: '自动导出（每次快照时）',
   },
   'settings.snap_export_path': {
-    en: 'Path to Export to',
+    en: 'Path to Export to (relative to downloads)',
     // chat-gpt translations "quite literal"
-    ru: 'Путь для экспорта',
-    de: 'Pfad zum Exportieren',
-    zh_CN: '导出路径',
+    ru: 'Путь для экспорта (относительно загрузок)',
+    de: 'Pfad zum Exportieren (relativ zu Downloads)',
+    zh_CN: '导出路径（相对于下载）',
   },
   'settings.snap_export_path_ph': {
     en: '/path/to/mdfiles/',

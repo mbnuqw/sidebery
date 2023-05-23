@@ -109,24 +109,7 @@ import { PanelConfig, PanelType } from 'src/types/sidebar'
 import DropDownButton from 'src/components/drop-down-button.vue'
 import * as Logs from 'src/services/logs'
 
-const VOID_PANEL_CONF: PanelConfig = {
-  type: PanelType.tabs,
-  id: -1,
-  name: '',
-  color: 'toolbar',
-  iconSVG: 'icon_tabs',
-  iconIMGSrc: '',
-  iconIMG: '',
-  lockedPanel: false,
-  skipOnSwitching: false,
-  noEmpty: false,
-  newTabCtx: 'none',
-  dropTabCtx: 'none',
-  moveRules: [],
-  bookmarksFolderId: -1,
-  newTabBtns: [],
-  srcPanelConfig: null,
-}
+
 const SCROLL_CONF = { behavior: 'smooth', block: 'nearest' } as const
 
 const dayStartMs = Utils.getDayStartMS()
@@ -165,7 +148,7 @@ void (async function init(): Promise<void> {
   if (stored.snapshots.length > 0) {
     // Normalize snapshots
     for (let i = stored.snapshots.length; i--; ) {
-      const snapshot = parseSnapshot(stored.snapshots, i)
+      const snapshot = Snapshots.parseSnapshot(stored.snapshots, i)
       if (snapshot) snapshots.push(snapshot)
     }
 
@@ -182,7 +165,7 @@ function onSnapshotsChange(newSnapshots?: Snapshot[]): void {
 
   // Normalize snapshots
   for (let i = newSnapshots.length; i--; ) {
-    let snapshot = parseSnapshot(newSnapshots, i)
+    let snapshot = Snapshots.parseSnapshot(newSnapshots, i)
     if (snapshot) snapshots.push(snapshot)
   }
 
@@ -194,83 +177,83 @@ function onSnapshotsChange(newSnapshots?: Snapshot[]): void {
   state.activeSnapshot = activeSnapshot ?? snapshots[0]
 }
 
-function parseSnapshot(snapshots: Snapshot[], index: number): SnapshotState | undefined {
-  const sizeStr = Utils.strSize(JSON.stringify(snapshots[index]))
-  const snapshot = Snapshots.getNormalizedSnapshot(snapshots, index)
-  if (!snapshot) return
+// function parseSnapshot(snapshots: Snapshot[], index: number): SnapshotState | undefined {
+//   const sizeStr = Utils.strSize(JSON.stringify(snapshots[index]))
+//   const snapshot = Snapshots.getNormalizedSnapshot(snapshots, index)
+//   if (!snapshot) return
 
-  const windows: SnapWindowState[] = []
-  const winCount = snapshot.tabs.length
-  let tabsCount = 0
+//   const windows: SnapWindowState[] = []
+//   const winCount = snapshot.tabs.length
+//   let tabsCount = 0
 
-  // Per windows
-  for (const win of snapshot.tabs) {
-    if (!win.length) continue
+//   // Per windows
+//   for (const win of snapshot.tabs) {
+//     if (!win.length) continue
 
-    const panelsById: Record<ID, SnapPanelState> = {}
-    const winState: SnapWindowState = { id: tabsCount, panels: [], tabsLen: 0 }
-    windows.push(winState)
+//     const panelsById: Record<ID, SnapPanelState> = {}
+//     const winState: SnapWindowState = { id: tabsCount, panels: [], tabsLen: 0 }
+//     windows.push(winState)
 
-    // Per panels (or pinned tabs)
-    for (const panel of win) {
-      if (!panel.length) continue
+//     // Per panels (or pinned tabs)
+//     for (const panel of win) {
+//       if (!panel.length) continue
 
-      // Per tabs
-      for (const tab of panel) {
-        const container = tab.containerId ? snapshot.containers[tab.containerId] : undefined
+//       // Per tabs
+//       for (const tab of panel) {
+//         const container = tab.containerId ? snapshot.containers[tab.containerId] : undefined
 
-        let panelState = panelsById[tab.panelId]
-        if (!panelState) {
-          let panelConfig = snapshot.sidebar.panels[tab.panelId]
-          if (!panelConfig) {
-            panelConfig = Utils.cloneObject(VOID_PANEL_CONF)
-            tab.panelId = -1
-          }
+//         let panelState = panelsById[tab.panelId]
+//         if (!panelState) {
+//           let panelConfig = snapshot.sidebar.panels[tab.panelId]
+//           if (!panelConfig) {
+//             panelConfig = Utils.cloneObject(VOID_PANEL_CONF)
+//             tab.panelId = -1
+//           }
 
-          panelState = {
-            id: panelConfig.id,
-            tabs: [],
-            name: panelConfig.name,
-            iconSVG: panelConfig.iconSVG || 'icon_tabs',
-            iconIMG: panelConfig.iconIMG,
-            color: panelConfig.color,
-          }
-          panelsById[panelState.id] = panelState
-        }
+//           panelState = {
+//             id: panelConfig.id,
+//             tabs: [],
+//             name: panelConfig.name,
+//             iconSVG: panelConfig.iconSVG || 'icon_tabs',
+//             iconIMG: panelConfig.iconIMG,
+//             color: panelConfig.color,
+//           }
+//           panelsById[panelState.id] = panelState
+//         }
 
-        const tabState: SnapTabState = {
-          ...tab,
-          id: tabsCount,
-          containerIcon: container?.icon,
-          containerColor: container?.color,
-          domain: Utils.getDomainOf(tab.url),
-          iconSVG: Favicons.getFavPlaceholder(tab.url),
-          sel: false,
-        }
+//         const tabState: SnapTabState = {
+//           ...tab,
+//           id: tabsCount,
+//           containerIcon: container?.icon,
+//           containerColor: container?.color,
+//           domain: Utils.getDomainOf(tab.url),
+//           iconSVG: Favicons.getFavPlaceholder(tab.url),
+//           sel: false,
+//         }
 
-        panelState.tabs.push(tabState)
-        tabsCount++
-        winState.tabsLen++
-      }
-    }
+//         panelState.tabs.push(tabState)
+//         tabsCount++
+//         winState.tabsLen++
+//       }
+//     }
 
-    if (panelsById[-1]) winState.panels.push(panelsById[-1])
-    for (const id of snapshot.sidebar.nav) {
-      const panelState = panelsById[id]
-      if (panelState?.tabs.length) winState.panels.push(panelState)
-    }
-  }
+//     if (panelsById[-1]) winState.panels.push(panelsById[-1])
+//     for (const id of snapshot.sidebar.nav) {
+//       const panelState = panelsById[id]
+//       if (panelState?.tabs.length) winState.panels.push(panelState)
+//     }
+//   }
 
-  return {
-    ...snapshot,
-    windows,
-    dateStr: Utils.uDate(snapshot.time, '.', dayStartMs),
-    timeStr: Utils.uTime(snapshot.time),
-    sizeStr,
-    winCount,
-    tabsCount,
-  }
-}
+//   return {
+//     ...snapshot,
+//     windows,
+//     dateStr: Utils.uDate(snapshot.time, '.', dayStartMs),
+//     timeStr: Utils.uTime(snapshot.time),
+//     sizeStr,
+//     winCount,
+//     tabsCount,
+//   }
+// }
 
 function activateSnapshot(snapshot?: SnapshotState): void {
   if (!snapshot || state.activeSnapshot === snapshot) return
@@ -546,11 +529,15 @@ function getSnapInfo(s: SnapshotState): string {
 
 
 
+
 async function onExportSnapshotDropDownOpen() {
   await nextTick()
 
   if (!state.activeSnapshot) return
-  const {time,mdFile,jsonFile} = await Snapshots.prepareExport(state.activeSnapshot)
+  const prepared = await Snapshots.prepareExport(state.activeSnapshot)
+  if (!prepared) return
+  
+  const {time,mdFile,jsonFile} = prepared
 
   let dateStr = Utils.uDate(time, '.')
   let timeStr = Utils.uTime(time, '.')

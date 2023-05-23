@@ -1,7 +1,7 @@
 import { translate } from 'src/dict'
 import * as Utils from 'src/utils'
 import { NOID, CONTAINER_ID, DEFAULT_CONTAINER, GROUP_URL } from 'src/defaults'
-import { Snapshot, SnapTab, NormalizedSnapshot } from 'src/types'
+import { Snapshot, SnapTab, NormalizedSnapshot, PanelConfig } from 'src/types'
 import { Stored, Notification, Snapshot_v4 } from 'src/types'
 import * as Logs from 'src/services/logs'
 import { Settings } from 'src/services/settings'
@@ -11,13 +11,15 @@ import { Store } from 'src/services/storage'
 import { SetupPage } from 'src/services/setup-page'
 import { Notifications } from 'src/services/notifications'
 import * as IPC from './ipc'
-import { RemovingSnapshotResult, SnapStoreMode, SnapshotState } from 'src/types/snapshots'
+import { RemovingSnapshotResult, SnapPanelState, SnapStoreMode, SnapTabState, SnapWindowState, SnapshotState } from 'src/types/snapshots'
 import { Containers } from './containers'
 import { DEFAULT_CONTAINER_ID } from 'src/defaults/containers'
 import { PanelType } from 'src/types/sidebar'
 import { ItemInfo } from 'src/types/tabs'
 import { Info } from './info'
 import { createDefaultSidebarConfig, getSidebarConfigFromV4 } from './sidebar-config'
+import { Favicons } from './favicons'
+import { nextTick } from 'vue'
 
 const MIN_SNAP_INTERVAL = 60_000
 const MIN_LIMITING_COUNT = 1
@@ -29,14 +31,19 @@ let currentSnapshot: Snapshot | undefined
  * Create base snapshot
  */
 export async function createSnapshot(auto = false): Promise<Snapshot | undefined> {
+  console.log({Info});
+  
   if (!Info.isBg) return await IPC.bg('createSnapshot')
 
   // Get snapshot src data and current snapshots list
   let waiting
   try {
+    
+    console.log('updateBgTabsTreeData');
+    await Tabs.updateBgTabsTreeData(),
+    console.log('getting store');
     waiting = await Promise.allSettled([
-      browser.storage.local.get<Stored>(['sidebar', 'containers', 'snapshots']),
-      Tabs.updateBgTabsTreeData(),
+      browser.storage.local.get<Stored>(['sidebar', 'containers', 'snapshots']),    
     ])
   } catch (err) {
     Logs.err('createSnapshot: Cannot get source data', err)
@@ -45,6 +52,10 @@ export async function createSnapshot(auto = false): Promise<Snapshot | undefined
   const storedResult = waiting[0]
   const stored = storedResult?.status === 'fulfilled' ? storedResult.value : undefined
   if (!stored) return
+  
+  // there may be stored objects that don't have all of the expected sections
+  console.log({stored});
+  
   if (!stored.containers) stored.containers = {}
   if (!stored.sidebar) stored.sidebar = createDefaultSidebarConfig()
   if (!stored.snapshots) stored.snapshots = []
@@ -75,7 +86,9 @@ export async function createSnapshot(auto = false): Promise<Snapshot | undefined
 
       // Check panel
       if (snapTab.panelId !== -1) {
-        const panelConf = stored.sidebar.panels[snapTab.panelId]
+        const panelConf = stored.sidebar?.panels?.[snapTab.panelId]
+        console.log({snapTab,panelConf});
+        
         if (!panelConf) snapTab.panelId = -1
       }
 
@@ -112,6 +125,10 @@ export async function createSnapshot(auto = false): Promise<Snapshot | undefined
     sidebar: stored.sidebar,
     tabs,
   }
+  
+  if(Settings.state.snapAutoExport){
+    void exportSnapshot(currentSnapshot)
+  }
 
   minimizeSnapshot(stored.snapshots, currentSnapshot)
 
@@ -132,18 +149,15 @@ export async function createSnapshot(auto = false): Promise<Snapshot | undefined
   if (Settings.state.snapNotify) {
     IPC.sendToSidebars('notifyAboutNewSnapshot')
   }
-
-  await exportSnapshot(currentSnapshot)
+  
   return currentSnapshot
 }
 
-export async function exportSnapshot(snapshot: Snapshot) {
+export async function exportSnapshot(snapshot: Snapshot) {  
+  const prepared = await prepareExport(snapshot)
+  if (!prepared || !browser?.downloads) return console.warn('failed attempt to export snapshot', {snapshot, prepared, browser})
 
-  const mostRecentSnap = await getMostRecentSnapshot()
-  if (!mostRecentSnap || !browser?.downloads) return console.warn('failed attempt to export snapshot', {mostRecentSnap, browser})
-  
-  const { mdFile: mostRecentSnapMd, time}  = await prepareExport(mostRecentSnap)
-  console.log({ mostRecentSnap: mostRecentSnapMd, snapshot })
+  const { mdFile: mostRecentSnapMd, time}  = prepared
   const snapExportPath = Settings.state.snapExportPath
   let dateStr = Utils.uDate(time, '.')
   let timeStr = Utils.uTime(time, '.',false/* ,false */)
@@ -193,6 +207,7 @@ function isSnapshotRedundant(prevSnapshot: Snapshot, snapshot: Snapshot): boolea
   return true
 }
 
+// seems that this fx sometimes sets -1 to the tab, i needed to call auto export first or it would be full of weird -1 values for tabs
 export function minimizeSnapshot(snapshots: Snapshot[], snapshot: Snapshot): void {
   const newContainersJSON = JSON.stringify(snapshot.containers)
   const newSidebarJSON = JSON.stringify(snapshot.sidebar)
@@ -438,14 +453,14 @@ async function adaptContainers(snapshot: NormalizedSnapshot): Promise<void> {
 
 async function adaptTabsPanels(snapshot: NormalizedSnapshot): Promise<void> {
   const stored = await browser.storage.local.get<Stored>('sidebar')
-  if (!stored.sidebar) return
+  if (!stored.sidebar?.nav) return
 
   // Find last index of tabs panel
   let lastStoredTabsPanelIndex = stored.sidebar.nav.length
   while (lastStoredTabsPanelIndex-- > 0) {
     const storedId = stored.sidebar.nav[lastStoredTabsPanelIndex]
     if (storedId === undefined) break
-    const storedPanel = stored.sidebar.panels[storedId]
+    const storedPanel = stored.sidebar?.panels?.[storedId]
     if (storedPanel && storedPanel.type === PanelType.tabs) break
   }
 
@@ -454,7 +469,7 @@ async function adaptTabsPanels(snapshot: NormalizedSnapshot): Promise<void> {
   for (let i = 0; i < snapshot.sidebar.nav.length; i++) {
     const snapId = snapshot.sidebar.nav[i]
     if (snapId === undefined) continue
-    const snapPanel = snapshot.sidebar.panels[snapId]
+    const snapPanel = snapshot.sidebar?.panels?.[snapId]
     if (!snapPanel || snapPanel.type !== PanelType.tabs) continue
 
     const storedIndex = stored.sidebar.nav.indexOf(snapId)
@@ -485,7 +500,7 @@ async function adaptTabsPanels(snapshot: NormalizedSnapshot): Promise<void> {
     }
 
     for (const storedId of stored.sidebar.nav) {
-      const storedPanel = stored.sidebar.panels[storedId]
+      const storedPanel = stored.sidebar?.panels?.[storedId]
       if (!storedPanel || storedPanel.type !== PanelType.tabs) continue
 
       const snapPanelTabs = win.find(tabs => tabs[0]?.panelId === storedPanel.id)
@@ -637,6 +652,110 @@ export async function removeSnapshot(id: ID): Promise<RemovingSnapshotResult> {
   return RemovingSnapshotResult.Ok
 }
 
+export const VOID_PANEL_CONF: PanelConfig = {
+  type: PanelType.tabs,
+  id: -1,
+  name: '',
+  color: 'toolbar',
+  iconSVG: 'icon_tabs',
+  iconIMGSrc: '',
+  iconIMG: '',
+  lockedPanel: false,
+  skipOnSwitching: false,
+  noEmpty: false,
+  newTabCtx: 'none',
+  dropTabCtx: 'none',
+  moveRules: [],
+  bookmarksFolderId: -1,
+  newTabBtns: [],
+  srcPanelConfig: null,
+}
+
+export function parseSnapshot(snapshots: Snapshot[], index: number): SnapshotState | undefined {
+  const sizeStr = Utils.strSize(JSON.stringify(snapshots[index]))
+  const snapshot = getNormalizedSnapshot(snapshots, index)
+  if (!snapshot) return
+
+  const windows: SnapWindowState[] = []
+  const winCount = snapshot.tabs.length
+  let tabsCount = 0
+
+  // Per windows
+  for (const win of snapshot.tabs) {
+    if (!win.length) continue
+
+    const panelsById: Record<ID, SnapPanelState> = {}
+    const winState: SnapWindowState = { id: tabsCount, panels: [], tabsLen: 0 }
+    windows.push(winState)
+
+    // Per panels (or pinned tabs)
+    for (const panel of win) {
+      if (!panel.length) continue
+      console.log({panel});
+      
+      // Per tabs
+      for (const tab of panel) {
+        const container = tab.containerId ? snapshot.containers[tab.containerId] : undefined
+        // if(tab === -1) {
+        //   console.warn('tab -1', {tab,panel}) 
+        //   continue
+        // }
+        
+        let panelState = panelsById[tab.panelId]
+        if (!panelState) {
+          let panelConfig = snapshot.sidebar?.panels?.[tab.panelId]
+          if (!panelConfig) {
+            panelConfig = Utils.cloneObject(VOID_PANEL_CONF)
+            // console.log({tab});
+            
+            tab.panelId = -1
+          }
+
+          panelState = {
+            id: panelConfig.id,
+            tabs: [],
+            name: panelConfig.name,
+            iconSVG: panelConfig.iconSVG || 'icon_tabs',
+            iconIMG: panelConfig.iconIMG,
+            color: panelConfig.color,
+          }
+          panelsById[panelState.id] = panelState
+        }
+
+        const tabState: SnapTabState = {
+          ...tab,
+          id: tabsCount,
+          containerIcon: container?.icon,
+          containerColor: container?.color,
+          domain: Utils.getDomainOf(tab.url),
+          iconSVG: Favicons.getFavPlaceholder(tab.url),
+          sel: false,
+        }
+
+        panelState.tabs.push(tabState)
+        tabsCount++
+        winState.tabsLen++
+      }
+    }
+
+    if (panelsById[-1]) winState.panels.push(panelsById[-1])
+    for (const id of snapshot.sidebar.nav ?? []) {
+      const panelState = panelsById[id]
+      if (panelState?.tabs.length) winState.panels.push(panelState)
+    }
+  }
+  const dayStartMs = Utils.getDayStartMS()
+  return {
+    ...snapshot,
+    windows,
+    dateStr: Utils.uDate(snapshot.time, '.', dayStartMs),
+    timeStr: Utils.uTime(snapshot.time),
+    sizeStr,
+    winCount,
+    tabsCount,
+  }
+}
+
 export function isV4(snapshots?: Snapshot_v4[] | Snapshot[]): snapshots is Snapshot_v4[] {
   if (!snapshots) return false
 
@@ -701,7 +820,8 @@ export function convertFromV4(oldSnapshots: Snapshot_v4[]): Snapshot[] {
 
         // Check panel
         if (snapTab.panelId !== -1) {
-          const panelConf = snapshot.sidebar.panels[snapTab.panelId]
+          const panelConf = snapshot.sidebar?.panels?.[snapTab.panelId]
+          console.log({snapTab});
           if (!panelConf) snapTab.panelId = -1
         }
 
@@ -765,8 +885,15 @@ export async function getStoredSnapshots() {
 }
 
 export async function prepareExport(snapshot: Snapshot | SnapshotState) {
-  const { id, time, containers, sidebar, tabs } = snapshot
+  // const parsed = parseSnapshot([snapshot], 0)
+  // console.log({parsed});
+  
+  // if(!parsed)return
+  const { id, time, containers, sidebar, tabs } = snapshot //parsed
   const normSnapshot = { id, time, containers, sidebar, tabs }
+
+  console.log({normSnapshot,snapshot});
+  
   const jsonStr = JSON.stringify(normSnapshot)
   const jsonFile = new Blob([jsonStr], { type: 'application/json' })
   const mdStr = convertToMarkdown(normSnapshot as NormalizedSnapshot)

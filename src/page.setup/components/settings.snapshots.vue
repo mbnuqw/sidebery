@@ -20,18 +20,19 @@ section(ref="el")
     :unitOpts="SETTINGS_OPTIONS.snapIntervalUnit"
     @update:value="Settings.saveDebounced(500)"
     @update:unit="Settings.saveDebounced(150)")
-  .sub-fields
-    ToggleField(
-      label="settings.snap_also_export"
-      v-model:value="Settings.state.snapAutoExport"
-      :inactive="!Settings.state.snapInterval"
-      @update:value="Settings.saveDebounced(150)")
-    TextField(
-      label="settings.snap_export_path"
-      :or="translate('settings.snap_export_path_ph')"
-      :inactive="!Settings.state.snapAutoExport"
-      v-model:value="Settings.state.snapExportPath"
-      @update:value="Settings.saveDebounced(500)")
+ 
+  ToggleField(
+    label="settings.snap_auto_export"
+    v-model:value="Settings.state.snapAutoExport"
+    :inactive="!Settings.state.snapInterval"
+    @update:value="Settings.saveDebounced(150)")
+  TextField(
+    label="settings.snap_export_path"
+    :or="translate('settings.snap_export_path_ph')"
+    :inactive="!Settings.state.snapAutoExport"
+    v-model:value="Settings.state.snapExportPath"
+    @update:value="Settings.saveDebounced(500)")
+
   NumField(
     label="settings.snap_limit"
     unitLabel="settings.snap_limit_"
