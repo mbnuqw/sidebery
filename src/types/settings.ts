@@ -162,6 +162,8 @@ export interface SettingsState {
   // AutoExport - gotjoshua
   snapAutoExport: boolean
   snapExportPath: string
+  snapAutoExportType: string
+  snapExportMdTree: boolean
 
   // Mouse
   hScrollThroughPanels?: boolean // DEPR

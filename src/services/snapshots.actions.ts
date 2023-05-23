@@ -922,7 +922,7 @@ export function convertToMarkdown(snapshot: NormalizedSnapshot): string {
   const TAB = "  "
   let IN = TAB
   let panelConfig
-  let BULLET = '- ' || '' //TODO setting for tree friendly md style
+  let BULLET = (Settings.state.snapExportMdTree) ? '- ' : '' // setting for tree friendly md style
   for (let i = 0; i < snapshot.tabs.length; i++) {
     const win = snapshot.tabs[i]
     const winTitle = `${IN}${BULLET}## ${translate('snapshot.window_title')} ${i + 1}`

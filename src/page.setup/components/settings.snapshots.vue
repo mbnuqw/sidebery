@@ -22,9 +22,12 @@ section(ref="el")
     @update:unit="Settings.saveDebounced(150)")
  
   ToggleField(
+    label="settings.snap_export_md_tree"
+    v-model:value="Settings.state.snapExportMdTree"
+    @update:value="Settings.saveDebounced(150)")
+  ToggleField(
     label="settings.snap_auto_export"
     v-model:value="Settings.state.snapAutoExport"
-    :inactive="!Settings.state.snapInterval"
     @update:value="Settings.saveDebounced(150)")
   TextField(
     label="settings.snap_export_path"
