@@ -1,6 +1,7 @@
 <template lang="pug">
 section(ref="el")
   h2 {{translate('settings.dnd_title')}}
+  span.header-shadow
   ToggleField(
     label="settings.dnd_tab_act"
     v-model:value="Settings.state.dndTabAct"

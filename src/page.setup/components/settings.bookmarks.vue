@@ -1,6 +1,7 @@
 <template lang="pug">
 section(ref="el")
   h2 {{translate('settings.bookmarks_title')}}
+  span.header-shadow
   ToggleField(
     label="settings.load_bookmarks_on_demand"
     v-model:value="Settings.state.loadBookmarksOnDemand"

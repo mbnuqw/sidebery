@@ -8,9 +8,6 @@
   DndSection
   SearchSection
   TabsSection
-  //- NewTabPositionSection
-  //- PinnedTabsSection
-  //- TabsTreeSection
   BookmarksSection
   HistorySection
   AppearanceSection
@@ -42,9 +39,6 @@ import ContainersSection from './settings.containers.vue'
 import DndSection from './settings.dnd.vue'
 import SearchSection from './settings.search.vue'
 import TabsSection from './settings.tabs.vue'
-import NewTabPositionSection from './settings.new-tab-position.vue'
-import PinnedTabsSection from './settings.pinned-tabs.vue'
-import TabsTreeSection from './settings.tabs-tree.vue'
 import BookmarksSection from './settings.bookmarks.vue'
 import HistorySection from './settings.history.vue'
 import AppearanceSection from './settings.appearance.vue'

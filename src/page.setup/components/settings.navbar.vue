@@ -7,6 +7,7 @@ section(
   @drop.stop="onDrop"
   @dragend="onDragEnd")
   h2 {{translate('settings.nav_title')}}
+  span.header-shadow
   SelectField(
     label="settings.nav_bar_layout"
     optLabel="settings.nav_bar_layout_"

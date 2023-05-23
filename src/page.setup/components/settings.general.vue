@@ -1,6 +1,7 @@
 <template lang="pug">
 section(ref="el")
   h2 {{translate('settings.general_title')}}
+  span.header-shadow
   ToggleField(
     label="settings.native_scrollbars"
     v-model:value="Settings.state.nativeScrollbars"

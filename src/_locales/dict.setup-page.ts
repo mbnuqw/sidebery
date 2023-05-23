@@ -3623,7 +3623,7 @@ export const setupPageTranslations: Translations = {
   },
   'styles.css_selectors_instruction': {
     en: `NOTE: To get currently available css-selectors use debugger:
-  - Click "Copy debtools URL" button in the bottom bar
+  - Click "Copy devtools URL" button in the bottom bar
   - Open new tab with that URL
   - Select frame to inspect
     - Click on the rectangular icon (with three sections) in top-right area of the debugger page

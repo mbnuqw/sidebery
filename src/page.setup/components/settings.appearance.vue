@@ -1,6 +1,7 @@
 <template lang="pug">
 section(ref="el")
   h2 {{translate('settings.appearance_title')}}
+  span.header-shadow
   SelectField(
     label="settings.font_size"
     optLabel="settings.font_size_"

@@ -3,6 +3,7 @@ section(ref="el")
   h2
     span {{translate('settings.snapshots_title')}}
     .title-note   ({{state.snapshotsLen}}: ~{{state.snapshotsSize}})
+  span.header-shadow
   ToggleField(
     label="settings.snap_notify"
     v-model:value="Settings.state.snapNotify"

@@ -1,6 +1,7 @@
 <template lang="pug">
 section(ref="el")
   h2 {{translate('settings.history_title')}}
+  span.header-shadow
   ToggleField(
     label="settings.load_history_on_demand"
     v-model:value="Settings.state.loadHistoryOnDemand"

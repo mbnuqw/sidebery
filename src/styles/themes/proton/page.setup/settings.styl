@@ -24,6 +24,7 @@
   top: 0
   display: flex
   width: 100%
+  height: 34px
   font-size: rem(28)
   font-weight: 700
   justify-content: flex-start
@@ -33,7 +34,7 @@
   margin: 20px 16px 20px 0
   padding: 8px 0 4px
   z-index: 10
-  &:before
+  &:after
     content: ''
     position: absolute
     top: 0
@@ -42,9 +43,26 @@
     height: 50px
     background-color: var(--frame-bg)
     z-index: -1
-#root[data-toolbar-color-scheme="light"] .Settings section > h2:before
+
+.Settings section > .header-shadow
+  position: sticky
+  display: block
+  top: 66px
+  width: 100%
+  height: 0
+  z-index: 7
+
+.Settings section > .header-shadow:before
+  content: ''
+  position: absolute
+  bottom: 16px
+  left: -8px
+  width: calc(100% + 16px)
+  height: 50px
+
+#root[data-toolbar-color-scheme="light"] .Settings section > .header-shadow:before
   box-shadow: 0 8px 8px -10px #00000036
-#root[data-toolbar-color-scheme="dark"] .Settings section > h2:before
+#root[data-toolbar-color-scheme="dark"] .Settings section > .header-shadow:before
   box-shadow: 0 10px 8px -10px var(--frame-bg)
 
 .Settings .title-note
@@ -57,12 +75,32 @@
   opacity: .7
 
 .Settings .sub-title
-  position: relative
-  padding: 32px 0 16px 0
+  position: sticky
+  top: 45px
+  margin: 38px 8px 16px 16px
   color: var(--toolbar-fg)
   font-size: rem(20)
   font-weight: 700
+  z-index: 8
+  &:before
+    content: ''
+    position: absolute
+    top: 0
+    left: -16px
+    width: calc(100% + 32px)
+    height: 100%
+    background-color: var(--frame-bg)
+    z-index: -1
+#root[data-toolbar-color-scheme="light"] .Settings .sub-title:before
+  box-shadow: 0 8px 8px -10px #00000036
+#root[data-toolbar-color-scheme="dark"] .Settings .sub-title:before
+  box-shadow: 0 10px 8px -10px var(--frame-bg)
+
+.Settings .sub-title .text
+  position: relative
+  padding: 2px 0 6px 0
   opacity: .9
+  z-index: 1
 
 .Settings .IconSelectField > .IconSelectInput
   justify-content: flex-end

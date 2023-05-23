@@ -1,6 +1,7 @@
 import * as Utils from 'src/utils'
 import { CONTAINER_ID, GROUP_URL, NOID, NEWID, Err, ASKID, MOVEID, SAMEID } from 'src/defaults'
 import { BKM_OTHER_ID, ADDON_HOST, DEFAULT_CONTAINER_ID, BKM_ROOT_ID } from 'src/defaults'
+import { INITIAL_TITLE_RE } from 'src/defaults'
 import { translate } from 'src/dict'
 import { Stored, Tab, Panel, TabCache, ActiveTabsHistory, ReactiveTab, TabStatus } from 'src/types'
 import { Notification, TabSessionData, TabsTreeData, DragInfo } from 'src/types'
@@ -3839,6 +3840,7 @@ export async function reopenInContainer(ids: ID[], containerId: string) {
   if (!firstTab) return
 
   const items = Tabs.getTabsInfo(ids)
+  setURLsFromTitles(items)
   const rule = Tabs.findMoveRuleBy(containerId, firstTab.lvl)
   const panel = Sidebar.panelsById[rule?.panelId ?? NOID]
   if (Utils.isTabsPanel(panel) && panel.id !== firstTab.panelId && !firstTab.pinned) {
@@ -3846,6 +3848,15 @@ export async function reopenInContainer(ids: ID[], containerId: string) {
     await Tabs.reopen(items, dst)
   } else {
     await Tabs.reopen(items, { panelId: firstTab.panelId, containerId, pinned: firstTab.pinned })
+  }
+}
+
+function setURLsFromTitles(items: ItemInfo[]) {
+  for (const item of items) {
+    if (item.url !== 'about:blank') continue
+    if (item.title && INITIAL_TITLE_RE.test(item.title)) {
+      item.url = 'https://' + item.title
+    }
   }
 }
 
