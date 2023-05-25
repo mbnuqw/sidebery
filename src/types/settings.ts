@@ -1,7 +1,7 @@
 import { SETTINGS_OPTIONS } from '../defaults'
 
 export interface SettingsState {
-[x: string]: any
+  [x: string]: any
   // General
   version?: string // DEPR
   nativeScrollbars: boolean

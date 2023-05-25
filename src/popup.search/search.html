@@ -1,54 +1,60 @@
 <!DOCTYPE html>
 <html color-scheme="system-color">
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    html {
-      padding: 0;
-      margin: 0;
-    }
-    body {
-      --search-bg: var(--s-popup-bg, var(--s-frame-bg, -moz-dialog));
-      --search-fg: var(--s-popup-fg, var(--s-frame-fg, -moz-dialogtext));
-      background-color: var(--search-bg);
-      padding: 0;
-      margin: 0;
-    }
-    #textInput {
-      position: relative;
-      display: block;
-      width: calc(100% - 56px);
-      font-size: 1.25rem;
-      line-height: 32px;
-      color: var(--search-fg);
-      -webkit-appearance: none;
-      border: none;
-      outline: none;
-      margin: 0;
-      padding: 12px 0 12px 56px;
-      background-color: transparent;
-      resize: none;
-      z-index: 1;
-    }
-    #icon_search {
-      position: absolute;
-      width: 24px;
-      height: 24px;
-      top: 16px;
-      left: 16px;
-      fill: var(--search-fg);
-    }
-  </style>
-</head>
-<body id="root" class="root -animate">
-  <div
-    id="moz_dialog_color_scheme_probe"
-    style="background-color: -moz-dialog; color: -moz-dialogtext; position: absolute; width: 0; height: 0;">
-  </div>
-  <inject>svg://src/assets/search.svg#icon_search</inject>
-  <input id="textInput" type="text" id="hm">
-  <script type="module" src="./search.js" defer></script>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      html {
+        padding: 0;
+        margin: 0;
+      }
+      body {
+        --search-bg: var(--s-popup-bg, var(--s-frame-bg, -moz-dialog));
+        --search-fg: var(--s-popup-fg, var(--s-frame-fg, -moz-dialogtext));
+        background-color: var(--search-bg);
+        padding: 0;
+        margin: 0;
+      }
+      #textInput {
+        position: relative;
+        display: block;
+        width: calc(100% - 56px);
+        font-size: 1.25rem;
+        line-height: 32px;
+        color: var(--search-fg);
+        -webkit-appearance: none;
+        border: none;
+        outline: none;
+        margin: 0;
+        padding: 12px 0 12px 56px;
+        background-color: transparent;
+        resize: none;
+        z-index: 1;
+      }
+      #icon_search {
+        position: absolute;
+        width: 24px;
+        height: 24px;
+        top: 16px;
+        left: 16px;
+        fill: var(--search-fg);
+      }
+    </style>
+  </head>
+  <body id="root" class="root -animate">
+    <div
+      id="moz_dialog_color_scheme_probe"
+      style="
+        background-color: -moz-dialog;
+        color: -moz-dialogtext;
+        position: absolute;
+        width: 0;
+        height: 0;
+      "
+    ></div>
+    <inject>svg://src/assets/search.svg#icon_search</inject>
+    <input id="textInput" type="text" id="hm" />
+    <script type="module" src="./search.js" defer></script>
+  </body>
 </html>

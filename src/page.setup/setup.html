@@ -1,91 +1,97 @@
 <!DOCTYPE html>
 <html color-scheme="system-color">
-<head>
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Sidebery / Settings</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" type="text/css" href="../themes/proton/setup.css">
-</head>
-<body>
-  <div
-    id="moz_dialog_color_scheme_probe"
-    style="background-color: -moz-dialog; color: -moz-dialogtext; position: absolute; width: 0; height: 0;">
-  </div>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Sidebery / Settings</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" type="text/css" href="../themes/proton/setup.css" />
+  </head>
+  <body>
+    <div
+      id="moz_dialog_color_scheme_probe"
+      style="
+        background-color: -moz-dialog;
+        color: -moz-dialogtext;
+        position: absolute;
+        width: 0;
+        height: 0;
+      "
+    ></div>
 
-  <div id="root_container"></div>
+    <div id="root_container"></div>
 
-  <script type="module" src="../_locales/dict.common.js" defer></script>
-  <script type="module" src="../_locales/dict.setup-page.js" defer></script>
-  <script type="module" src="setup.js" defer></script>
+    <script type="module" src="../_locales/dict.common.js" defer></script>
+    <script type="module" src="../_locales/dict.setup-page.js" defer></script>
+    <script type="module" src="setup.js" defer></script>
 
-  <div class="hidden-assets">
-    <inject>svg://src/assets/firefox.svg#icon_ff</inject>
-    <inject>svg://src/assets/favicon-group.svg#icon_group</inject>
-    <inject>svg://src/assets/favicon-pref.svg#icon_pref</inject>
-    <inject>svg://src/assets/favicon-img.svg#icon_img</inject>
-    <inject>svg://src/assets/favicon-vid.svg#icon_vid</inject>
-    <inject>svg://src/assets/favicon-music.svg#icon_music</inject>
-    <inject>svg://src/assets/favicon-file.svg#icon_local_file</inject>
-    <inject>svg://src/assets/github.svg#icon_github</inject>
-    <inject>svg://src/assets/favicon-addons.svg#icon_addons</inject>
-    <inject>svg://src/assets/favicon-amo.svg#icon_amo</inject>
-    <inject>svg://src/assets/pin.svg#icon_pin</inject>
-    <inject>svg://src/assets/bookmarks.svg#icon_bookmarks</inject>
-    <inject>svg://src/assets/bookmarks-add.svg#icon_bookmarks_add</inject>
-    <inject>svg://src/assets/tabs.svg#icon_tabs</inject>
-    <inject>svg://src/assets/fingerprint.svg#fingerprint</inject>
-    <inject>svg://src/assets/briefcase.svg#briefcase</inject>
-    <inject>svg://src/assets/dollar.svg#dollar</inject>
-    <inject>svg://src/assets/cart.svg#cart</inject>
-    <inject>svg://src/assets/circle.svg#circle</inject>
-    <inject>svg://src/assets/gift.svg#gift</inject>
-    <inject>svg://src/assets/vacation.svg#vacation</inject>
-    <inject>svg://src/assets/food.svg#food</inject>
-    <inject>svg://src/assets/fruit.svg#fruit</inject>
-    <inject>svg://src/assets/pet.svg#pet</inject>
-    <inject>svg://src/assets/tree.svg#tree</inject>
-    <inject>svg://src/assets/chill.svg#chill</inject>
-    <inject>svg://src/assets/fence.svg#fence</inject>
-    <inject>svg://src/assets/sidebery.svg#icon_sidebery</inject>
-    <inject>svg://src/assets/expand.svg#icon_expand</inject>
-    <inject>svg://src/assets/remove.svg#icon_remove</inject>
-    <inject>svg://src/assets/hide.svg#icon_hide</inject>
-    <inject>svg://src/assets/books.svg#icon_books</inject>
-    <inject>svg://src/assets/code.svg#icon_code</inject>
-    <inject>svg://src/assets/circle-o.svg#icon_circle</inject>
-    <inject>svg://src/assets/play.svg#icon_play</inject>
-    <inject>svg://src/assets/mail.svg#icon_mail</inject>
-    <inject>svg://src/assets/man.svg#icon_man</inject>
-    <inject>svg://src/assets/archive.svg#icon_archive</inject>
-    <inject>svg://src/assets/clipboard.svg#icon_clipboard</inject>
-    <inject>svg://src/assets/book.svg#icon_book</inject>
-    <inject>svg://src/assets/coffee.svg#icon_coffee</inject>
-    <inject>svg://src/assets/search.svg#icon_search</inject>
-    <inject>svg://src/assets/lock.svg#icon_lock</inject>
-    <inject>svg://src/assets/edu.svg#icon_edu</inject>
-    <inject>svg://src/assets/none.svg#icon_none</inject>
-    <inject>svg://src/assets/settings.svg#icon_settings</inject>
-    <inject>svg://src/assets/trash.svg#icon_trash</inject>
-    <inject>svg://src/assets/clock.svg#icon_clock</inject>
-    <inject>svg://src/assets/ellipsis.svg#icon_ellipsis</inject>
-    <inject>svg://src/assets/add-tabs-panel.svg#icon_add_tabs_panel</inject>
-    <inject>svg://src/assets/web.svg#icon_web</inject>
-    <inject>svg://src/assets/folder.svg#icon_folder</inject>
-    <inject>svg://src/assets/folder-open.svg#icon_folder_open</inject>
-    <inject>svg://src/assets/flask.svg#icon_flask</inject>
-    <inject>svg://src/assets/gamepad.svg#icon_gamepad</inject>
-    <inject>svg://src/assets/bookmark-badge.svg#icon_bookmark_badge</inject>
-    <inject>svg://src/assets/bookmarks-badge.svg#icon_bookmarks_badge</inject>
-    <inject>svg://src/assets/snapshot.svg#icon_snapshot</inject>
-    <inject>svg://src/assets/close.svg#icon_close</inject>
-    <inject>svg://src/assets/mute.svg#icon_mute</inject>
-    <inject>svg://src/assets/collapse-all.svg#icon_collapse_all</inject>
-    <inject>svg://src/assets/ctr-include.svg#icon_ctr_include</inject>
-    <inject>svg://src/assets/ctr-exclude.svg#icon_ctr_exclude</inject>
-    <inject>svg://src/assets/download-in-progress.svg#icon_download_in_progress</inject>
-    <inject>svg://src/assets/plus.svg#icon_plus</inject>
-    <inject>svg://src/assets/reload.svg#icon_reload</inject>
-  </div>
-</body>
+    <div class="hidden-assets">
+      <inject>svg://src/assets/firefox.svg#icon_ff</inject>
+      <inject>svg://src/assets/favicon-group.svg#icon_group</inject>
+      <inject>svg://src/assets/favicon-pref.svg#icon_pref</inject>
+      <inject>svg://src/assets/favicon-img.svg#icon_img</inject>
+      <inject>svg://src/assets/favicon-vid.svg#icon_vid</inject>
+      <inject>svg://src/assets/favicon-music.svg#icon_music</inject>
+      <inject>svg://src/assets/favicon-file.svg#icon_local_file</inject>
+      <inject>svg://src/assets/github.svg#icon_github</inject>
+      <inject>svg://src/assets/favicon-addons.svg#icon_addons</inject>
+      <inject>svg://src/assets/favicon-amo.svg#icon_amo</inject>
+      <inject>svg://src/assets/pin.svg#icon_pin</inject>
+      <inject>svg://src/assets/bookmarks.svg#icon_bookmarks</inject>
+      <inject>svg://src/assets/bookmarks-add.svg#icon_bookmarks_add</inject>
+      <inject>svg://src/assets/tabs.svg#icon_tabs</inject>
+      <inject>svg://src/assets/fingerprint.svg#fingerprint</inject>
+      <inject>svg://src/assets/briefcase.svg#briefcase</inject>
+      <inject>svg://src/assets/dollar.svg#dollar</inject>
+      <inject>svg://src/assets/cart.svg#cart</inject>
+      <inject>svg://src/assets/circle.svg#circle</inject>
+      <inject>svg://src/assets/gift.svg#gift</inject>
+      <inject>svg://src/assets/vacation.svg#vacation</inject>
+      <inject>svg://src/assets/food.svg#food</inject>
+      <inject>svg://src/assets/fruit.svg#fruit</inject>
+      <inject>svg://src/assets/pet.svg#pet</inject>
+      <inject>svg://src/assets/tree.svg#tree</inject>
+      <inject>svg://src/assets/chill.svg#chill</inject>
+      <inject>svg://src/assets/fence.svg#fence</inject>
+      <inject>svg://src/assets/sidebery.svg#icon_sidebery</inject>
+      <inject>svg://src/assets/expand.svg#icon_expand</inject>
+      <inject>svg://src/assets/remove.svg#icon_remove</inject>
+      <inject>svg://src/assets/hide.svg#icon_hide</inject>
+      <inject>svg://src/assets/books.svg#icon_books</inject>
+      <inject>svg://src/assets/code.svg#icon_code</inject>
+      <inject>svg://src/assets/circle-o.svg#icon_circle</inject>
+      <inject>svg://src/assets/play.svg#icon_play</inject>
+      <inject>svg://src/assets/mail.svg#icon_mail</inject>
+      <inject>svg://src/assets/man.svg#icon_man</inject>
+      <inject>svg://src/assets/archive.svg#icon_archive</inject>
+      <inject>svg://src/assets/clipboard.svg#icon_clipboard</inject>
+      <inject>svg://src/assets/book.svg#icon_book</inject>
+      <inject>svg://src/assets/coffee.svg#icon_coffee</inject>
+      <inject>svg://src/assets/search.svg#icon_search</inject>
+      <inject>svg://src/assets/lock.svg#icon_lock</inject>
+      <inject>svg://src/assets/edu.svg#icon_edu</inject>
+      <inject>svg://src/assets/none.svg#icon_none</inject>
+      <inject>svg://src/assets/settings.svg#icon_settings</inject>
+      <inject>svg://src/assets/trash.svg#icon_trash</inject>
+      <inject>svg://src/assets/clock.svg#icon_clock</inject>
+      <inject>svg://src/assets/ellipsis.svg#icon_ellipsis</inject>
+      <inject>svg://src/assets/add-tabs-panel.svg#icon_add_tabs_panel</inject>
+      <inject>svg://src/assets/web.svg#icon_web</inject>
+      <inject>svg://src/assets/folder.svg#icon_folder</inject>
+      <inject>svg://src/assets/folder-open.svg#icon_folder_open</inject>
+      <inject>svg://src/assets/flask.svg#icon_flask</inject>
+      <inject>svg://src/assets/gamepad.svg#icon_gamepad</inject>
+      <inject>svg://src/assets/bookmark-badge.svg#icon_bookmark_badge</inject>
+      <inject>svg://src/assets/bookmarks-badge.svg#icon_bookmarks_badge</inject>
+      <inject>svg://src/assets/snapshot.svg#icon_snapshot</inject>
+      <inject>svg://src/assets/close.svg#icon_close</inject>
+      <inject>svg://src/assets/mute.svg#icon_mute</inject>
+      <inject>svg://src/assets/collapse-all.svg#icon_collapse_all</inject>
+      <inject>svg://src/assets/ctr-include.svg#icon_ctr_include</inject>
+      <inject>svg://src/assets/ctr-exclude.svg#icon_ctr_exclude</inject>
+      <inject>svg://src/assets/download-in-progress.svg#icon_download_in_progress</inject>
+      <inject>svg://src/assets/plus.svg#icon_plus</inject>
+      <inject>svg://src/assets/reload.svg#icon_reload</inject>
+    </div>
+  </body>
 </html>

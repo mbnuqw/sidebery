@@ -1,73 +1,79 @@
 <!DOCTYPE html>
 <html color-scheme="system-color">
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body {
-      opacity: 0;
-    }
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      body {
+        opacity: 0;
+      }
 
-    .hidden,
-    .hidden-assets {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 0;
-      height: 0;
-      overflow: hidden;
-      opacity: 0;
-    }
-  </style>
-  <link rel="stylesheet" type="text/css" href="../themes/proton/group.css" id="theme_link">
-  <link rel="icon" type="image/svg+xml" href="/assets/group-page-favicon.svg">
-  <title>...</title>
-</head>
-<body id="root" class="root -animate">
-  <div
-    id="moz_dialog_color_scheme_probe"
-    style="background-color: -moz-dialog; color: -moz-dialogtext; position: absolute; width: 0; height: 0;">
-  </div>
+      .hidden,
+      .hidden-assets {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0;
+        height: 0;
+        overflow: hidden;
+        opacity: 0;
+      }
+    </style>
+    <link rel="stylesheet" type="text/css" href="../themes/proton/group.css" id="theme_link" />
+    <link rel="icon" type="image/svg+xml" href="/assets/group-page-favicon.svg" />
+    <title>...</title>
+  </head>
+  <body id="root" class="root -animate">
+    <div
+      id="moz_dialog_color_scheme_probe"
+      style="
+        background-color: -moz-dialog;
+        color: -moz-dialogtext;
+        position: absolute;
+        width: 0;
+        height: 0;
+      "
+    ></div>
 
-  <div class="hidden-assets">
-    <inject>svg://src/assets/close.svg#icon_close</inject>
-    <inject>svg://src/assets/discard.svg#icon_discard</inject>
-    <inject>svg://src/assets/reload.svg#icon_reload</inject>
-    <inject>svg://src/assets/sidebery.svg#icon_sidebery</inject>
-    <inject>svg://src/assets/firefox.svg#icon_ff</inject>
-    <inject>svg://src/assets/favicon-group.svg#icon_group</inject>
-    <inject>svg://src/assets/favicon-img.svg#icon_img</inject>
-    <inject>svg://src/assets/favicon-vid.svg#icon_vid</inject>
-    <inject>svg://src/assets/favicon-music.svg#icon_music</inject>
-    <inject>svg://src/assets/favicon-file.svg#icon_local_file</inject>
-    <inject>svg://src/assets/favicon-pref.svg#icon_pref</inject>
-    <inject>svg://src/assets/favicon-addons.svg#icon_addons</inject>
-    <inject>svg://src/assets/favicon-perf.svg#icon_perf</inject>
-    <inject>svg://src/assets/favicon-link.svg#icon_link_favicon</inject>
-  </div>
-
-  <input type="text" id="title" class="title" value="Group" placeholder="---">
-
-  <div id="disconnected_warn" class="disconnected-warn"></div>
-
-  <div id="pinned_tab" class="pinned-tab">
-    <div id="pinned_tab_bg" class="pinned-tab-bg"></div>
-    <div class="pinned-tab-fav-box">
-      <div class="pinned-tab-fav"></div>
+    <div class="hidden-assets">
+      <inject>svg://src/assets/close.svg#icon_close</inject>
+      <inject>svg://src/assets/discard.svg#icon_discard</inject>
+      <inject>svg://src/assets/reload.svg#icon_reload</inject>
+      <inject>svg://src/assets/sidebery.svg#icon_sidebery</inject>
+      <inject>svg://src/assets/firefox.svg#icon_ff</inject>
+      <inject>svg://src/assets/favicon-group.svg#icon_group</inject>
+      <inject>svg://src/assets/favicon-img.svg#icon_img</inject>
+      <inject>svg://src/assets/favicon-vid.svg#icon_vid</inject>
+      <inject>svg://src/assets/favicon-music.svg#icon_music</inject>
+      <inject>svg://src/assets/favicon-file.svg#icon_local_file</inject>
+      <inject>svg://src/assets/favicon-pref.svg#icon_pref</inject>
+      <inject>svg://src/assets/favicon-addons.svg#icon_addons</inject>
+      <inject>svg://src/assets/favicon-perf.svg#icon_perf</inject>
+      <inject>svg://src/assets/favicon-link.svg#icon_link_favicon</inject>
     </div>
-    <div class="pinned-tab-body">
-      <div id="pinned_tab_title" class="pinned-tab-title">---</div>
-      <div id="pinned_tab_url" class="pinned-tab-url">---</div>
+
+    <input type="text" id="title" class="title" value="Group" placeholder="---" />
+
+    <div id="disconnected_warn" class="disconnected-warn"></div>
+
+    <div id="pinned_tab" class="pinned-tab">
+      <div id="pinned_tab_bg" class="pinned-tab-bg"></div>
+      <div class="pinned-tab-fav-box">
+        <div class="pinned-tab-fav"></div>
+      </div>
+      <div class="pinned-tab-body">
+        <div id="pinned_tab_title" class="pinned-tab-title">---</div>
+        <div id="pinned_tab_url" class="pinned-tab-url">---</div>
+      </div>
     </div>
-  </div>
 
-  <div id="tabs" class="tabs"></div>
+    <div id="tabs" class="tabs"></div>
 
-  <footer>
-    <svg class="logo"><use xlink:href="#icon_sidebery"></use></svg>
-  </footer>
+    <footer>
+      <svg class="logo"><use xlink:href="#icon_sidebery"></use></svg>
+    </footer>
 
-  <!-- <script type="module" src="./group.js" defer></script> -->
-</body>
+    <!-- <script type="module" src="./group.js" defer></script> -->
+  </body>
 </html>
