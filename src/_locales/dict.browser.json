@@ -340,7 +340,7 @@
     "en": "Move selected (or active) tabs to seventh panel",
     "ru": "Переместить выделенные (или активную) вкладки в седьмую панель",
     "de": "Verschiebe ausgewählte (oder aktive) Tabs in siebtes Panel",
-    "zh_CN": "将选定（或活动）标签页移动到第七个面板"
+    "zh_CN": "将选定（或活动）标签页移动到第七个面板",
     "zh_TW": "將選定（或活動）標籤頁移動到第七個面板"
   },
   "KbMoveTabsToPanel7": {
@@ -361,7 +361,7 @@
     "en": "Move selected (or active) tabs to tenth panel",
     "ru": "Переместить выделенные (или активную) вкладки в десятую панель",
     "de": "Verschiebe ausgewählte (oder aktive) Tabs in zehntes Panel",
-    "zh_CN": "将选定（或活动）标签页移动到第十个面板"
+    "zh_CN": "将选定（或活动）标签页移动到第十个面板",
     "zh_TW": "將選定（或活動）標籤頁移動到第十個面板"
   },
   "KbSearch": {

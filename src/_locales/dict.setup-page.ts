@@ -108,7 +108,8 @@ export const setupPageTranslations: Translations = {
     de: 'Tabs mit passender URL in dieser Umgebung neu öffnen.\nNewline Getrennte Liste von "Substrings" oder "/regex/":\n    example.com\n    /^(some)?regex$/\n    ...',
     zh_CN:
       '在此容器中重新打开匹配此URL列表的标签页。\n以换行符分割的 字符串 或 /正则/ 列表:\n    example.com\n    /^(some)?regex$/\n    ...',
-    zh_TW: '重新打開此容器中具有匹配 URL 的選項卡。\n換行符分隔的“字符串”或“/regex/”列表：\n example.com\n /^(some)?regex$/\n ...',
+    zh_TW:
+      '重新打開此容器中具有匹配 URL 的選項卡。\n換行符分隔的“字符串”或“/regex/”列表：\n example.com\n /^(some)?regex$/\n ...',
   },
   'container.rules_exclude': {
     en: 'Exclude URLs',
@@ -123,7 +124,8 @@ export const setupPageTranslations: Translations = {
     de: 'Tabs mit passender URL in Standardumgebung neu öffnen.\nNewline Getrennte Liste von "Substrings" oder "/regex/":\n    example.com\n    /^(some)?regex$/\n    ...',
     zh_CN:
       '在默认容器中重新打开匹配此URL列表的标签页。\n以换行符分割的 字符串 或 /正则/ 列表:\n    example.com\n    /^(some)?regex$/\n    ...',
-    zh_TW: '在默認容器中重新打開具有匹配 URL 的選項卡。\n“字符串”或“/regex/”的換行符分隔列表：\n example.com\n /^(some)?regex$/\n ...',
+    zh_TW:
+      '在默認容器中重新打開具有匹配 URL 的選項卡。\n“字符串”或“/regex/”的換行符分隔列表：\n example.com\n /^(some)?regex$/\n ...',
   },
   'container.user_agent': {
     en: 'User Agent',
@@ -2728,7 +2730,8 @@ export const setupPageTranslations: Translations = {
     de: '- Um Theme-Farbe auf Sidebery-Schaltflächen in Browseroberfläche anzuwenden, setze "svg.context-properties.content.enabled" auf "true" auf about:config Seite.',
     zh_CN:
       '- 为了将主题颜色应用于浏览器界面的 Sidebery 按钮，需要在about:config页面中设置 "svg.context-properties.content.enabled "的值为 "true".',
-    zh_TW: '- 要將主題顏色應用於瀏覽器界面中的 Sidebery 按鈕，請在 about:config 頁面中將“svg.context-properties.content.enabled”設置為“true”。',
+    zh_TW:
+      '- 要將主題顏色應用於瀏覽器界面中的 Sidebery 按鈕，請在 about:config 頁面中將“svg.context-properties.content.enabled”設置為“true”。',
   },
 
   // - Snapshots
@@ -3534,7 +3537,8 @@ export const setupPageTranslations: Translations = {
     de: 'Benötigt für:\n- Cookies löschen\n- Proxy und URL Regeln für Umgebungen\n- Screenshots für die Gruppenseite und Fensterauswahl-Panel\n- User-Agent per Umgebung ändern',
     zh_CN:
       '需要：\n- 清除 Cookies \n- 容器的代理和 URL 规则\n- 分组页面和窗口选择面板的屏幕快照\n- 更改每个容器的用户代理',
-    zh_TW: '需要：\n- 清除 cookie\n- 容器的代理和 URL 規則\n- 組頁面和窗口選擇面板的屏幕快照\n- 更改每個容器的用戶代理',
+    zh_TW:
+      '需要：\n- 清除 cookie\n- 容器的代理和 URL 規則\n- 組頁面和窗口選擇面板的屏幕快照\n- 更改每個容器的用戶代理',
   },
   'settings.perm.bookmarks_label': {
     en: 'Bookmarks:',
