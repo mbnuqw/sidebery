@@ -3795,12 +3795,12 @@ export const setupPageTranslations: Translations = {
     de: `Sidebery nutzt die Synchronisation von Firefox, deshalb:
 - müssen Sie sich in Ihrem Firefox Konto einloggen, damit es funktioniert
 - um sicher zu gehen, dass die Daten auf die Firefox Sync Server hochgeladen werden, müssen Sie in den Firefox Einstellungen oder in Ihrem Profil im Hauptmenü (Drei-Striche-Menü) auf "Jetzt synchronisieren" drücken `,
-    zh_CN: 'Sidebery 使用 Firefox 同步，因此：
+    zh_CN: `Sidebery 使用 Firefox 同步，因此：
 - 您需要登录到 Firefox 帐户才能运行
-- 要确保数据已上传到 Firefox 同步服务器，您需要在 Firefox 设置或主菜单的个人资料中按“立即同步”按钮（三行按钮）',
-    zh_TW: 'Sidebery 使用 Firefox 同步，因此：
+- 要确保数据已上传到 Firefox 同步服务器，您需要在 Firefox 设置或主菜单的个人资料中按“立即同步”按钮（三行按钮）`,
+    zh_TW: `Sidebery 使用 Firefox 同步，因此：
 - 您需要登錄到 Firefox 帳戶才能運行
-- 要確保數據已上傳到 Firefox 同步服務器，您需要在 Firefox 設置或主菜單的個人資料中按“立即同步”按鈕（三行按鈕）',
+- 要確保數據已上傳到 Firefox 同步服務器，您需要在 Firefox 設置或主菜單的個人資料中按“立即同步”按鈕（三行按鈕）`,
   },
 
   // - Help
@@ -4206,14 +4206,14 @@ export const setupPageTranslations: Translations = {
     - 选择 "/sidebar/sidebar.html" 侧边栏框架
     - 选择 "/sidebery/group.html" 分组页面框架
   - 浏览 "检查" 标签`,
-    zh_TW: '注意：要獲取當前可用的 css-selectors，請使用調試器：
+    zh_TW: `注意：要獲取當前可用的 css-selectors，請使用調試器：
    - 單擊底部欄中的“複製 開發工具 URL”按鈕
    - 使用該 URL 打開新標籤
    - 選擇要檢查的框架
      - 單擊調試器頁面右上角的矩形圖標（包含三個部分）
      - 為側邊欄框架選擇“/sidebar/sidebar.html”
      - 為群組頁面框架選擇“/sidebery/group.html”
-   - 瀏覽“檢查”選項卡',
+   - 瀏覽“檢查”選項卡`,
   },
   'styles.vars_group.other': {
     en: 'Other',
