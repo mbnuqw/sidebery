@@ -549,8 +549,6 @@ async function removeSnapshot(snapshot: SnapshotState): Promise<void> {
   }
 }
 
-
-
 async function recalcSizes(): Promise<void> {
   const storedSnapshots = await Snapshots.getStoredSnapshots()
   if (!storedSnapshots) return
@@ -569,17 +567,14 @@ function getSnapInfo(s: SnapshotState): string {
   )
 }
 
-
-
-
 async function onExportSnapshotDropDownOpen() {
   await nextTick()
 
   if (!state.activeSnapshot) return
   const prepared = await Snapshots.prepareExport(state.activeSnapshot)
   if (!prepared) return
-  
-  const {time,mdFile,jsonFile} = prepared
+
+  const { time, mdFile, jsonFile } = prepared
 
   let dateStr = Utils.uDate(time, '.')
   let timeStr = Utils.uTime(time, '.')
