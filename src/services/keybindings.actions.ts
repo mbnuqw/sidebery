@@ -156,6 +156,12 @@ function onCmd(name: string): void {
   } else if (name.startsWith('switch_to_tab_')) {
     const index = parseInt(name.slice(-1))
     if (!isNaN(index)) onKeySwitchToTab(index)
+  } else if (name === 'switch_to_next_tab') {
+    const globaly = Settings.state.scrollThroughTabs === 'global'
+    Tabs.switchTab(globaly, Settings.state.scrollThroughTabsCyclic, 1, false)
+  } else if (name === 'switch_to_prev_tab') {
+    const globaly = Settings.state.scrollThroughTabs === 'global'
+    Tabs.switchTab(globaly, Settings.state.scrollThroughTabsCyclic, -1, false)
   }
 }
 

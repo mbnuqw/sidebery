@@ -93,6 +93,8 @@ const layout = [
     'switch_to_tab_8',
     'switch_to_tab_9',
     'switch_to_last_tab',
+    'switch_to_next_tab',
+    'switch_to_prev_tab',
   ],
 
   // Move tabs

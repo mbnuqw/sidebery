@@ -287,6 +287,12 @@
     },
     "switch_to_last_tab": {
       "description": "__MSG_KbSwitchToLastTab__"
+    },
+    "switch_to_next_tab": {
+      "description": "__MSG_KbSwitchToNextTab__"
+    },
+    "switch_to_prev_tab": {
+      "description": "__MSG_KbSwitchToPrevTab__"
     }
   },
 

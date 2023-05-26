@@ -462,6 +462,14 @@
     "zh_CN": "在活动面板中切换到最后一个标签",
     "zh_TW": "在活動面板中切換到最後一個標籤"
   },
+  "KbSwitchToNextTab": {
+    "en": "Switch to the next tab (using mouse-wheel settings for tabs switching)",
+    "ru": "Переключиться на следующую вкладку (используя настройки колесика мыши для переключения вкладок)"
+  },
+  "KbSwitchToPrevTab": {
+    "en": "Switch to the prev tab (using mouse-wheel settings for tabs switching)",
+    "ru": "Переключиться на предыдущую вкладку (используя настройки колесика мыши для переключения вкладок)"
+  },
 
   "proxy_popup_title_prefix": {
     "en": "Proxy for \"",
