@@ -54,6 +54,7 @@ const layout = [
   // Active tabs history
   [
     'active_tabs_history',
+    'activate_prev_active_tab_c',
     'activate_prev_active_tab',
     'activate_next_active_tab',
     'activate_panel_prev_active_tab',
@@ -92,6 +93,8 @@ const layout = [
     'switch_to_tab_8',
     'switch_to_tab_9',
     'switch_to_last_tab',
+    'switch_to_next_tab',
+    'switch_to_prev_tab',
   ],
 
   // Move tabs

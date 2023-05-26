@@ -169,6 +169,9 @@
     "activate_panel_next_active_tab": {
       "description": "__MSG_KbActPanelNextActTab__"
     },
+    "activate_prev_active_tab_c": {
+      "description": "__MSG_KbActPrevActTabC__"
+    },
     "move_tab_to_active": {
       "description": "__MSG_KbMoveTabToAct__"
     },
@@ -285,6 +288,12 @@
     },
     "switch_to_last_tab": {
       "description": "__MSG_KbSwitchToLastTab__"
+    },
+    "switch_to_next_tab": {
+      "description": "__MSG_KbSwitchToNextTab__"
+    },
+    "switch_to_prev_tab": {
+      "description": "__MSG_KbSwitchToPrevTab__"
     }
   },
 
