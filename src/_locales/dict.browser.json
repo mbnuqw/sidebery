@@ -154,6 +154,13 @@
     "zh_CN": "折叠非活动分支",
     "zh_TW": "折疊非活動分支"
   },
+  "KbActPrevActTabC": {
+    "en": "Activate previously active tab when clicking on the active tab (Tab flip)",
+    "ru": "Активировать ранее активную вкладку при нажатии на активную вкладку",
+    "de": "Beim Klicken auf aktiven Tab Aktivierung umkehren",
+    "zh_CN": "单击活动标签页时向后激活",
+    "zh_TW": "單擊活動標籤頁時向後激活"
+  },
   "KbActPrevActTab": {
     "en": "Active tabs history: Back",
     "ru": "История активных вкладок: Назад",

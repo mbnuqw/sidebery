@@ -240,11 +240,7 @@ function onMouseUp(e: MouseEvent): void {
         withoutMods &&
         !activating
       ) {
-        const history = Settings.state.tabsSecondClickActPrevPanelOnly
-          ? Tabs.getActiveTabsHistory(Sidebar.reactive.activePanelId)
-          : Tabs.getActiveTabsHistory()
-        const prevTabId = Utils.findLast(history.actTabs, id => id !== Tabs.activeId)
-        if (prevTabId !== undefined) browser.tabs.update(prevTabId, { active: true })
+        Tabs.tabFlip()
       }
     }
     activating = false

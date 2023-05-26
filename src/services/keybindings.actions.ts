@@ -127,6 +127,7 @@ function onCmd(name: string): void {
   else if (name === 'fold_branch') onKeyFoldBranch()
   else if (name === 'expand_branch') onKeyExpandBranch()
   else if (name === 'fold_inact_branches') onKeyFoldInactiveBranches()
+  else if (name === 'activate_prev_active_tab_c') Tabs.tabFlip()
   else if (name === 'activate_prev_active_tab') {
     Tabs.switchToRecentlyActiveTab(SwitchingTabScope.global, -1)
   } else if (name === 'activate_next_active_tab') {
@@ -169,11 +170,7 @@ function onKeySwitchToTab(targetIndex?: number): void {
   else targetTab = tabsList[targetIndex]
 
   if (targetTab.id !== Tabs.activeId) browser.tabs.update(targetTab.id, { active: true })
-  else if (Settings.state.tabsSecondClickActPrev) {
-    const history = Tabs.getActiveTabsHistory()
-    const prevTabId = history.actTabs[history.actTabs.length - 1]
-    if (prevTabId !== undefined) browser.tabs.update(prevTabId, { active: true })
-  }
+  else if (Settings.state.tabsSecondClickActPrev) Tabs.tabFlip()
 }
 
 function onKeyMoveTabsToPanel(targetIndex: number): void {

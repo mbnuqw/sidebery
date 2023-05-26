@@ -3525,6 +3525,24 @@ export function getActiveTabsHistory(panelId?: ID): ActiveTabsHistory {
   }
 }
 
+export function tabFlip() {
+  const actTab = Tabs.byId[Tabs.activeId]
+  if (!actTab) return
+
+  let panelId
+  if (Settings.state.tabsSecondClickActPrevPanelOnly) {
+    if (actTab.pinned && Settings.state.pinnedTabsPosition !== 'panel') {
+      panelId = Sidebar.reactive.activePanelId
+    } else {
+      panelId = actTab.panelId
+    }
+  }
+
+  const history = Tabs.getActiveTabsHistory(panelId)
+  const prevTabId = Utils.findLast(history.actTabs, id => id !== Tabs.activeId)
+  if (prevTabId !== undefined) browser.tabs.update(prevTabId, { active: true })
+}
+
 /**
  * Undo remove tab
  */
