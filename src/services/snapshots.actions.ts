@@ -926,7 +926,7 @@ export function convertToMarkdown(snapshot: NormalizedSnapshot): string {
   const dateTimeStr = `${dateStr} - ${timeStr}`
   const md = [`# ${dateTimeStr}`, '']
 
-  const TAB = '  '
+  const TAB = Settings.state.snapExportMdTree ? '  ' : ''
   let IN = TAB
   let panelConfig
   let BULLET = Settings.state.snapExportMdTree ? '- ' : '' // setting for tree friendly md style
