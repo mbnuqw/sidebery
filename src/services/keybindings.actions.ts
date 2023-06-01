@@ -113,6 +113,9 @@ function onCmd(name: string): void {
   else if (name === 'new_tab_as_first_child') onKeyNewTabAsFirstChild()
   else if (name === 'new_tab_as_last_child') onKeyNewTabAsLastChild()
   else if (name === 'rm_tab_on_panel') onKeyRmSelectedItem()
+  else if (name === 'rm_tabs_above_in_panel') onKeyRAIP()
+  else if (name === 'rm_tabs_below_in_panel') onKeyRBIP()
+  else if (name === 'rm_tabs_other_in_panel') onKeyROIP()
   else if (name === 'activate') onKeyActivate()
   else if (name === 'reset_selection') {
     if (Windows.reactive.choosing) Windows.closeWindowsPopup()
@@ -791,6 +794,36 @@ function onKeyNewTabAsLastChild(): void {
     windowId: Windows.id,
     openerTabId: activeTab.id,
   })
+}
+
+function onKeyRAIP() {
+  const actPanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  if (!Utils.isTabsPanel(actPanel)) return
+
+  const actTab = Tabs.byId[Tabs.activeId]
+  if (!actTab || actTab.pinned || actTab.panelId !== actPanel.id) return
+
+  Tabs.removeTabsAbove()
+}
+
+function onKeyRBIP() {
+  const actPanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  if (!Utils.isTabsPanel(actPanel)) return
+
+  const actTab = Tabs.byId[Tabs.activeId]
+  if (!actTab || actTab.pinned || actTab.panelId !== actPanel.id) return
+
+  Tabs.removeTabsBelow()
+}
+
+function onKeyROIP() {
+  const actPanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  if (!Utils.isTabsPanel(actPanel)) return
+
+  const actTab = Tabs.byId[Tabs.activeId]
+  if (!actTab || actTab.pinned || actTab.panelId !== actPanel.id) return
+
+  Tabs.removeOtherTabs()
 }
 
 /**

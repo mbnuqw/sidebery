@@ -33,6 +33,9 @@ const layout = [
     'new_tab_as_first_child',
     'new_tab_as_last_child',
     'rm_tab_on_panel',
+    'rm_tabs_above_in_panel',
+    'rm_tabs_below_in_panel',
+    'rm_tabs_other_in_panel',
   ],
 
   // Selection

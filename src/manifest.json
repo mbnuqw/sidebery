@@ -105,6 +105,15 @@
     "rm_tab_on_panel": {
       "description": "__MSG_KbRm__"
     },
+    "rm_tabs_above_in_panel": {
+      "description": "__MSG_KbRmTAIP__"
+    },
+    "rm_tabs_below_in_panel": {
+      "description": "__MSG_KbRmTBIP__"
+    },
+    "rm_tabs_other_in_panel": {
+      "description": "__MSG_KbRmTOIP__"
+    },
     "select_all": {
       "description": "__MSG_KbSelectAll__"
     },

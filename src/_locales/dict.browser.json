@@ -77,6 +77,18 @@
     "zh_CN": "删除所选项目或活动标签页",
     "zh_TW": "刪除所選項目或活動標籤頁"
   },
+  "KbRmTAIP": {
+    "en": "Close tabs above (in current panel)",
+    "ru": "Закрыть вкладки выше (в текущей панели)"
+  },
+  "KbRmTBIP": {
+    "en": "Close tabs below (in current panel)",
+    "ru": "Закрыть вкладки ниже (в текущей панели)"
+  },
+  "KbRmTOIP": {
+    "en": "Close other tabs (in current panel)",
+    "ru": "Закрыть другие вкладки (в текущей панели)"
+  },
   "KbSelectAll": {
     "en": "Select all",
     "ru": "Выделить все",

@@ -723,8 +723,9 @@ export function removeTabsDescendants(tabIds: ID[]): void {
 /**
  * Remove tabs above
  */
-export function removeTabsAbove(tabIds: ID[]): void {
-  if (!tabIds || !tabIds.length) return
+export function removeTabsAbove(tabIds?: ID[]): void {
+  if (!tabIds) tabIds = [Tabs.activeId]
+  if (!tabIds.length) return
 
   let minIndex = 999999
   let startTab
@@ -751,8 +752,9 @@ export function removeTabsAbove(tabIds: ID[]): void {
 /**
  * Remove tabs below
  */
-export function removeTabsBelow(tabIds: ID[]): void {
-  if (!tabIds || !tabIds.length) return
+export function removeTabsBelow(tabIds?: ID[]): void {
+  if (!tabIds) tabIds = [Tabs.activeId]
+  if (!tabIds.length) return
 
   let maxIndex = -1
   let startTab
@@ -779,8 +781,9 @@ export function removeTabsBelow(tabIds: ID[]): void {
 /**
  * Remove other tabs
  */
-export function removeOtherTabs(tabIds: ID[]): void {
-  if (!tabIds || !tabIds.length) return
+export function removeOtherTabs(tabIds?: ID[]): void {
+  if (!tabIds) tabIds = [Tabs.activeId]
+  if (!tabIds.length) return
 
   const firstTabId = tabIds[0]
   if (firstTabId === undefined) return
