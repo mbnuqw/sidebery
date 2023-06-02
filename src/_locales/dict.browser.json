@@ -144,6 +144,26 @@
     "zh_CN": "打开菜单",
     "zh_TW": "打開菜單"
   },
+  "KbUnloadTabs": {
+    "en": "Unload selected/active tabs",
+    "ru": "Выгрузить выделенные/активные вкладки"
+  },
+  "KbUnloadATIP": {
+    "en": "Unload all tabs in panel",
+    "ru": "Выгрузить все вкладки в панели"
+  },
+  "KbUnloadOTIP": {
+    "en": "Unload other tabs in panel",
+    "ru": "Выгрузить другие вкладки на панели"
+  },
+  "KbUnloadFTIP": {
+    "en": "Unload folded tabs in panel",
+    "ru": "Выгрузить свернутые вкладки на панели"
+  },
+  "KbUnloadATIIP": {
+    "en": "Unload all tabs in inactive panels",
+    "ru": "Выгрузить все вкладки в неактивных панелях"
+  },
   "KbResetSelection": {
     "en": "Reset selection",
     "ru": "Сбросить выделение",

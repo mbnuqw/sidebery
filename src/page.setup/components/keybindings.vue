@@ -51,6 +51,16 @@ const layout = [
     'menu',
   ],
 
+  // Unloading tabs
+  [
+    'unloading_tabs',
+    'unload_tabs',
+    'unload_all_tabs_in_panel',
+    'unload_other_tabs_in_panel',
+    'unload_folded_tabs_in_panel',
+    'unload_all_tabs_in_inact_panels',
+  ],
+
   // Branch
   ['branches', 'fold_branch', 'expand_branch', 'fold_inact_branches'],
 

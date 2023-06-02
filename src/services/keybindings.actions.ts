@@ -96,6 +96,75 @@ export function resetErrors(): void {
   })
 }
 
+function onKeyUnloadTabs() {
+  const ids = Selection.isTabs() ? Selection.get() : [Tabs.activeId]
+  if (ids.length) Tabs.discardTabs(ids)
+}
+
+function onKeyUnloadAllTabsInPanel() {
+  const panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  if (!Utils.isTabsPanel(panel)) return
+
+  const tabIds: ID[] = []
+  panel.pinnedTabs.forEach(t => tabIds.push(t.id))
+  panel.tabs.forEach(t => tabIds.push(t.id))
+
+  if (tabIds.length) Tabs.discardTabs(tabIds)
+}
+
+function onKeyUnloadOtherTabsInPanel() {
+  const ids = Selection.isTabs() ? Selection.get() : [Tabs.activeId]
+  if (!ids.length) return
+
+  const firstTab = Tabs.byId[ids[0]]
+  if (!firstTab) return
+
+  const panelOfFirstTab = Sidebar.panelsById[firstTab.panelId]
+  if (!Utils.isTabsPanel(panelOfFirstTab)) return
+
+  const tabIds: ID[] = []
+  panelOfFirstTab.pinnedTabs.forEach(t => !ids.includes(t.id) && tabIds.push(t.id))
+  panelOfFirstTab.tabs.forEach(t => !ids.includes(t.id) && tabIds.push(t.id))
+
+  if (tabIds.length) Tabs.discardTabs(tabIds)
+}
+
+function onKeyUnloadFoldedTabsInPanel() {
+  const panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  if (!Utils.isTabsPanel(panel)) return
+
+  const tabIds: ID[] = []
+  panel.tabs.forEach(t => t.invisible && tabIds.push(t.id))
+
+  if (tabIds.length) Tabs.discardTabs(tabIds)
+}
+
+async function onKeyUnloadAllTabsInInactPanels() {
+  const actTab = Tabs.byId[Tabs.activeId]
+  if (!actTab) return
+
+  let actPanelId = Sidebar.reactive.activePanelId
+  const actPanel = Sidebar.panelsById[actPanelId]
+
+  if (!Utils.isTabsPanel(actPanel)) {
+    actPanelId = actTab.panelId
+  } else if (actTab.panelId !== actPanelId) {
+    await Tabs.activateLastActiveTabOf(actPanelId)
+  }
+
+  const tabIds: ID[] = []
+
+  for (const panel of Sidebar.panels) {
+    if (!Utils.isTabsPanel(panel)) continue
+    if (panel.id === actPanelId) continue
+
+    panel.pinnedTabs.forEach(t => tabIds.push(t.id))
+    panel.tabs.forEach(t => tabIds.push(t.id))
+  }
+
+  if (tabIds.length) Tabs.discardTabs(tabIds)
+}
+
 /**
  * Keybindings router
  */
@@ -127,6 +196,11 @@ function onCmd(name: string): void {
   else if (name === 'up_shift') onKeySelectExpand(-1)
   else if (name === 'down_shift') onKeySelectExpand(1)
   else if (name === 'menu') onKeyMenu()
+  else if (name === 'unload_tabs') onKeyUnloadTabs()
+  else if (name === 'unload_all_tabs_in_panel') onKeyUnloadAllTabsInPanel()
+  else if (name === 'unload_other_tabs_in_panel') onKeyUnloadOtherTabsInPanel()
+  else if (name === 'unload_folded_tabs_in_panel') onKeyUnloadFoldedTabsInPanel()
+  else if (name === 'unload_all_tabs_in_inact_panels') onKeyUnloadAllTabsInInactPanels()
   else if (name === 'fold_branch') onKeyFoldBranch()
   else if (name === 'expand_branch') onKeyExpandBranch()
   else if (name === 'fold_inact_branches') onKeyFoldInactiveBranches()

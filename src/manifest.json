@@ -156,6 +156,21 @@
     "menu": {
       "description": "__MSG_KbMenu__"
     },
+    "unload_tabs": {
+      "description": "__MSG_KbUnloadTabs__"
+    },
+    "unload_all_tabs_in_panel": {
+      "description": "__MSG_KbUnloadATIP__"
+    },
+    "unload_other_tabs_in_panel": {
+      "description": "__MSG_KbUnloadOTIP__"
+    },
+    "unload_folded_tabs_in_panel": {
+      "description": "__MSG_KbUnloadFTIP__"
+    },
+    "unload_all_tabs_in_inact_panels": {
+      "description": "__MSG_KbUnloadATIIP__"
+    },
     "fold_branch": {
       "description": "__MSG_KbFoldBranch__"
     },

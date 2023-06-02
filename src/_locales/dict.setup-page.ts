@@ -3466,6 +3466,10 @@ export const setupPageTranslations: Translations = {
     zh_CN: '选择(或激活)元素',
     zh_TW: '選擇(或激活)元素',
   },
+  'settings.kb_unloading_tabs': {
+    en: 'Unloading tabs',
+    ru: 'Выгрузка вкладок',
+  },
   'settings.kb_branches': {
     en: 'Branches',
     ru: 'Ветви',
