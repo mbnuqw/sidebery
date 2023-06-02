@@ -13,7 +13,12 @@
 
   transition(name="view" mode="out-in")
     keep-alive
-      component(:is="view")
+      SettingsView(v-if="SetupPage.reactive.activeView === 'settings'")
+      MenuEditorView(v-else-if="SetupPage.reactive.activeView === 'menu_editor'")
+      StylesEditorView(v-else-if="SetupPage.reactive.activeView === 'styles_editor'")
+      SnapshotsView(v-else-if="SetupPage.reactive.activeView === 'snapshots'")
+      StorageView(v-else-if="SetupPage.reactive.activeView === 'storage'")
+      KeybindingsView(v-else)
   
   Transition(name="popup"): BookmarksPopup(v-if="Bookmarks.reactive.popup")
   Transition(name="popup"): NewTabShortcutsPopup(v-if="Popups.reactive.newTabShortcutsPopup")
@@ -47,15 +52,6 @@ import * as Popups from 'src/services/popups'
 import { reactiveUpgrading } from 'src/services/upgrading'
 
 const animations = computed(() => (Settings.state.animations ? 'fast' : 'none'))
-const view = computed(() => {
-  if (SetupPage.reactive.activeView === 'settings') return SettingsView
-  if (SetupPage.reactive.activeView === 'menu_editor') return MenuEditorView
-  if (SetupPage.reactive.activeView === 'styles_editor') return StylesEditorView
-  if (SetupPage.reactive.activeView === 'snapshots') return SnapshotsView
-  if (SetupPage.reactive.activeView === 'storage') return StorageView
-  if (SetupPage.reactive.activeView === 'keybindings') return KeybindingsView
-  return null
-})
 
 onMounted(() => {
   document.addEventListener('keyup', onDocumentKeyup)
@@ -106,7 +102,8 @@ function onDocumentKeyup(e: KeyboardEvent): void {
 }
 
 function navigateTo(urlHash: string): void {
-  if (location.hash.endsWith(urlHash)) {
+  const cHash = location.hash.slice(1)
+  if (cHash === urlHash) {
     SetupPage.updateActiveView()
   } else {
     location.hash = urlHash
