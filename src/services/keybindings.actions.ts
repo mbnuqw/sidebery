@@ -173,7 +173,7 @@ function onCmd(name: string): void {
   } else if (name === 'switch_to_prev_tab') {
     const globaly = Settings.state.scrollThroughTabs === 'global'
     Tabs.switchTab(globaly, Settings.state.scrollThroughTabsCyclic, -1, false)
-  }
+  } else if (name === 'duplicate_tabs') onKeyDuplicateTabs(false)
 }
 
 function onKeySwitchToTab(targetIndex?: number): void {
@@ -925,6 +925,20 @@ function onKeyMoveTabsInPanel(place: 'start' | 'end', branch: boolean) {
   else if (place === 'end') dst.index = panel.nextTabIndex
 
   Tabs.move(items, src, dst)
+}
+
+function onKeyDuplicateTabs(branch: boolean) {
+  const ids = Selection.isTabs() ? Selection.get() : [Tabs.activeId]
+  if (!ids.length) return
+
+  const firstTab = Tabs.byId[ids[0]]
+  if (!firstTab || firstTab.pinned) return
+
+  if (branch && ids.length === 1) {
+    ids.push(...Tabs.getBranch(firstTab, false).map(t => t.id))
+  }
+
+  Tabs.duplicateTabs(ids)
 }
 
 /**

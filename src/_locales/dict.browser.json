@@ -417,6 +417,10 @@
     "en": "Move selected (or active) tabs to panel end",
     "ru": "Переместить выделенные (или активную) вкладки в конец панели"
   },
+  "KbDuplicateTabs": {
+    "en": "Duplicate selected (or active) tabs",
+    "ru": "Дублировать выбранные (или активные) вкладки"
+  },
   "KbSearch": {
     "en": "Search",
     "ru": "Поиск",

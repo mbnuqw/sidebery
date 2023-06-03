@@ -323,6 +323,9 @@
     },
     "switch_to_prev_tab": {
       "description": "__MSG_KbSwitchToPrevTab__"
+    },
+    "duplicate_tabs": {
+      "description": "__MSG_KbDuplicateTabs__"
     }
   },
 
