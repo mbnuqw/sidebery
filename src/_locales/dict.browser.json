@@ -421,6 +421,10 @@
     "en": "Duplicate selected (or active) tabs",
     "ru": "Дублировать выбранные (или активные) вкладки"
   },
+  "KbPinTabs": {
+    "en": "Pin/Unpin selected (or active) tabs",
+    "ru": "Закрепить/Открепить выбранные (или активные) вкладки"
+  },
   "KbSearch": {
     "en": "Search",
     "ru": "Поиск",

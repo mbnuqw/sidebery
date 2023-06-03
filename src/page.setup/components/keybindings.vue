@@ -23,7 +23,7 @@ import { SetupPage } from 'src/services/setup-page'
 import KeybindingField from 'src/page.setup/components/keybindings.keybinding.vue'
 
 const layout = [
-  ['general', '_execute_sidebar_action', 'search', 'create_snapshot', 'duplicate_tabs'],
+  ['general', '_execute_sidebar_action', 'search', 'create_snapshot', 'duplicate_tabs', 'pin_tabs'],
 
   // Creating / Removing tab
   [

@@ -174,6 +174,7 @@ function onCmd(name: string): void {
     const globaly = Settings.state.scrollThroughTabs === 'global'
     Tabs.switchTab(globaly, Settings.state.scrollThroughTabsCyclic, -1, false)
   } else if (name === 'duplicate_tabs') onKeyDuplicateTabs(false)
+  else if (name === 'pin_tabs') onKeyPinTabs()
 }
 
 function onKeySwitchToTab(targetIndex?: number): void {
@@ -939,6 +940,17 @@ function onKeyDuplicateTabs(branch: boolean) {
   }
 
   Tabs.duplicateTabs(ids)
+}
+
+function onKeyPinTabs() {
+  const ids = Selection.isTabs() ? Selection.get() : [Tabs.activeId]
+  if (!ids.length) return
+
+  const firstTab = Tabs.byId[ids[0]]
+  if (!firstTab) return
+
+  if (firstTab.pinned) Tabs.unpinTabs(ids)
+  else Tabs.pinTabs(ids)
 }
 
 /**

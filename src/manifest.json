@@ -326,6 +326,9 @@
     },
     "duplicate_tabs": {
       "description": "__MSG_KbDuplicateTabs__"
+    },
+    "pin_tabs": {
+      "description": "__MSG_KbPinTabs__"
     }
   },
 
