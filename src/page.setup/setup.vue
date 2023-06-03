@@ -24,6 +24,7 @@
   Transition(name="popup"): NewTabShortcutsPopup(v-if="Popups.reactive.newTabShortcutsPopup")
   Transition(name="popup"): TabMoveRulesPopup(v-if="Popups.reactive.tabMoveRulesPopup")
   Transition(name="popup"): TabReopenRulesPopup(v-if="Popups.reactive.tabReopenRulesPopup")
+  Transition(name="popup" type="transition"): DialogPopup(v-if="Popups.reactive.dialog" :dialog="Popups.reactive.dialog")
   Details
 
   UpgradeScreen(v-if="reactiveUpgrading.status")
@@ -46,6 +47,7 @@ import BookmarksPopup from 'src/components/popup.bookmarks.vue'
 import NewTabShortcutsPopup from 'src/components/popup.new-tab-shortcuts.vue'
 import TabMoveRulesPopup from 'src/components/popup.tab-move-rules.vue'
 import TabReopenRulesPopup from 'src/components/popup.tab-reopen-rules.vue'
+import DialogPopup from 'src/components/popup.dialog.vue'
 import UpgradeScreen from 'src/components/upgrade-screen.vue'
 import Details from './components/settings.details.vue'
 import * as Popups from 'src/services/popups'
@@ -81,6 +83,12 @@ function onDocumentKeyup(e: KeyboardEvent): void {
     // New tab shortcuts popup
     if (Popups.reactive.newTabShortcutsPopup) {
       Popups.closeNewTabShortcutsPopup()
+      return
+    }
+
+    // Dialog
+    if (Popups.reactive.dialog) {
+      Popups.reactive.dialog.result(null)
       return
     }
 

@@ -304,6 +304,7 @@ export interface Dialog {
   checkbox?: DialogCheckbox
   buttons: DialogBtn[]
   buttonsCentered?: boolean
+  buttonsInline?: boolean
   result: (answer: string | null) => void
 }
 
@@ -325,6 +326,7 @@ export interface DialogConfig {
   checkbox?: DialogCheckbox
   buttons: DialogBtn[]
   buttonsCentered?: boolean
+  buttonsInline?: boolean
 }
 
 export interface TabsPanelRemoving {

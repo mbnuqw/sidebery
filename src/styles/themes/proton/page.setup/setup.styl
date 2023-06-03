@@ -23,6 +23,7 @@
 @import '../sidebar/popup.new-tab-shortcuts'
 @import '../sidebar/popup.tab-move-rules'
 @import '../sidebar/popup.tab-reopen-rules'
+@import '../sidebar/popup.dialog'
 @import '../sidebar/bookmark-node'
 @import '../sidebar/scroll-box'
 @import '../sidebar/loading-dots'
@@ -176,6 +177,23 @@ body
   height: 0
   overflow: hidden
   opacity: 0
+
+// --- Dialog ---
+.Setup .Dialog
+  align-items: center
+
+.Setup .Dialog h2
+  padding: 12px 8px 12px
+  white-space: pre-wrap
+
+.Setup .Dialog .note
+  padding: 0 8px 8px
+  font-size: rem(14)
+  white-space: pre-wrap
+
+.Setup .Dialog .btn
+  margin: 4px
+  min-width: 0
 
 footer
   position: relative
