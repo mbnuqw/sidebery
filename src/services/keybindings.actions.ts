@@ -2,6 +2,7 @@ import * as Utils from 'src/utils'
 import { NOID } from 'src/defaults'
 import { Command, CommandUpdateDetails, ItemBounds, Tab, Bookmark, MenuType } from 'src/types'
 import { InstanceType, ItemInfo, SelectionType, ItemBoundsType } from 'src/types'
+import { DstPlaceInfo, SrcPlaceInfo } from 'src/types'
 import { Keybindings } from 'src/services/keybindings'
 import { Settings } from 'src/services/settings'
 import { Windows } from 'src/services/windows'
@@ -96,75 +97,6 @@ export function resetErrors(): void {
   })
 }
 
-function onKeyUnloadTabs() {
-  const ids = Selection.isTabs() ? Selection.get() : [Tabs.activeId]
-  if (ids.length) Tabs.discardTabs(ids)
-}
-
-function onKeyUnloadAllTabsInPanel() {
-  const panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
-  if (!Utils.isTabsPanel(panel)) return
-
-  const tabIds: ID[] = []
-  panel.pinnedTabs.forEach(t => tabIds.push(t.id))
-  panel.tabs.forEach(t => tabIds.push(t.id))
-
-  if (tabIds.length) Tabs.discardTabs(tabIds)
-}
-
-function onKeyUnloadOtherTabsInPanel() {
-  const ids = Selection.isTabs() ? Selection.get() : [Tabs.activeId]
-  if (!ids.length) return
-
-  const firstTab = Tabs.byId[ids[0]]
-  if (!firstTab) return
-
-  const panelOfFirstTab = Sidebar.panelsById[firstTab.panelId]
-  if (!Utils.isTabsPanel(panelOfFirstTab)) return
-
-  const tabIds: ID[] = []
-  panelOfFirstTab.pinnedTabs.forEach(t => !ids.includes(t.id) && tabIds.push(t.id))
-  panelOfFirstTab.tabs.forEach(t => !ids.includes(t.id) && tabIds.push(t.id))
-
-  if (tabIds.length) Tabs.discardTabs(tabIds)
-}
-
-function onKeyUnloadFoldedTabsInPanel() {
-  const panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
-  if (!Utils.isTabsPanel(panel)) return
-
-  const tabIds: ID[] = []
-  panel.tabs.forEach(t => t.invisible && tabIds.push(t.id))
-
-  if (tabIds.length) Tabs.discardTabs(tabIds)
-}
-
-async function onKeyUnloadAllTabsInInactPanels() {
-  const actTab = Tabs.byId[Tabs.activeId]
-  if (!actTab) return
-
-  let actPanelId = Sidebar.reactive.activePanelId
-  const actPanel = Sidebar.panelsById[actPanelId]
-
-  if (!Utils.isTabsPanel(actPanel)) {
-    actPanelId = actTab.panelId
-  } else if (actTab.panelId !== actPanelId) {
-    await Tabs.activateLastActiveTabOf(actPanelId)
-  }
-
-  const tabIds: ID[] = []
-
-  for (const panel of Sidebar.panels) {
-    if (!Utils.isTabsPanel(panel)) continue
-    if (panel.id === actPanelId) continue
-
-    panel.pinnedTabs.forEach(t => tabIds.push(t.id))
-    panel.tabs.forEach(t => tabIds.push(t.id))
-  }
-
-  if (tabIds.length) Tabs.discardTabs(tabIds)
-}
-
 /**
  * Keybindings router
  */
@@ -223,7 +155,9 @@ function onCmd(name: string): void {
   } else if (name.startsWith('switch_to_panel_')) {
     const panel = Sidebar.panels[parseInt(name.slice(-1))]
     if (panel) Sidebar.switchToPanel(panel.id)
-  } else if (name.startsWith('move_tabs_to_panel_')) onKeyMoveTabsToPanel(parseInt(name[19]))
+  } else if (name === 'move_tabs_to_panel_start') onKeyMoveTabsInPanel('start', true)
+  else if (name === 'move_tabs_to_panel_end') onKeyMoveTabsInPanel('end', true)
+  else if (name.startsWith('move_tabs_to_panel_')) onKeyMoveTabsToPanel(parseInt(name[19]))
   else if (name === 'search') {
     Search.start()
   } else if (name === 'switch_to_parent_tab') {
@@ -898,6 +832,99 @@ function onKeyROIP() {
   if (!actTab || actTab.pinned || actTab.panelId !== actPanel.id) return
 
   Tabs.removeOtherTabs()
+}
+
+function onKeyUnloadTabs() {
+  const ids = Selection.isTabs() ? Selection.get() : [Tabs.activeId]
+  if (ids.length) Tabs.discardTabs(ids)
+}
+
+function onKeyUnloadAllTabsInPanel() {
+  const panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  if (!Utils.isTabsPanel(panel)) return
+
+  const tabIds: ID[] = []
+  panel.pinnedTabs.forEach(t => tabIds.push(t.id))
+  panel.tabs.forEach(t => tabIds.push(t.id))
+
+  if (tabIds.length) Tabs.discardTabs(tabIds)
+}
+
+function onKeyUnloadOtherTabsInPanel() {
+  const ids = Selection.isTabs() ? Selection.get() : [Tabs.activeId]
+  if (!ids.length) return
+
+  const firstTab = Tabs.byId[ids[0]]
+  if (!firstTab) return
+
+  const panelOfFirstTab = Sidebar.panelsById[firstTab.panelId]
+  if (!Utils.isTabsPanel(panelOfFirstTab)) return
+
+  const tabIds: ID[] = []
+  panelOfFirstTab.pinnedTabs.forEach(t => !ids.includes(t.id) && tabIds.push(t.id))
+  panelOfFirstTab.tabs.forEach(t => !ids.includes(t.id) && tabIds.push(t.id))
+
+  if (tabIds.length) Tabs.discardTabs(tabIds)
+}
+
+function onKeyUnloadFoldedTabsInPanel() {
+  const panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  if (!Utils.isTabsPanel(panel)) return
+
+  const tabIds: ID[] = []
+  panel.tabs.forEach(t => t.invisible && tabIds.push(t.id))
+
+  if (tabIds.length) Tabs.discardTabs(tabIds)
+}
+
+async function onKeyUnloadAllTabsInInactPanels() {
+  const actTab = Tabs.byId[Tabs.activeId]
+  if (!actTab) return
+
+  let actPanelId = Sidebar.reactive.activePanelId
+  const actPanel = Sidebar.panelsById[actPanelId]
+
+  if (!Utils.isTabsPanel(actPanel)) {
+    actPanelId = actTab.panelId
+  } else if (actTab.panelId !== actPanelId) {
+    await Tabs.activateLastActiveTabOf(actPanelId)
+  }
+
+  const tabIds: ID[] = []
+
+  for (const panel of Sidebar.panels) {
+    if (!Utils.isTabsPanel(panel)) continue
+    if (panel.id === actPanelId) continue
+
+    panel.pinnedTabs.forEach(t => tabIds.push(t.id))
+    panel.tabs.forEach(t => tabIds.push(t.id))
+  }
+
+  if (tabIds.length) Tabs.discardTabs(tabIds)
+}
+
+function onKeyMoveTabsInPanel(place: 'start' | 'end', branch: boolean) {
+  const ids = Selection.isTabs() ? Selection.get() : [Tabs.activeId]
+  if (!ids.length) return
+
+  const firstTab = Tabs.byId[ids[0]]
+  if (!firstTab || firstTab.pinned) return
+
+  const panel = Sidebar.panelsById[firstTab.panelId]
+  if (!Utils.isTabsPanel(panel)) return
+
+  if (branch && ids.length === 1) {
+    ids.push(...Tabs.getBranch(firstTab, false).map(t => t.id))
+  }
+
+  const items = Tabs.getTabsInfo(ids)
+  const src: SrcPlaceInfo = {}
+  const dst: DstPlaceInfo = { panelId: panel.id }
+
+  if (place === 'start') dst.index = panel.startTabIndex
+  else if (place === 'end') dst.index = panel.nextTabIndex
+
+  Tabs.move(items, src, dst)
 }
 
 /**

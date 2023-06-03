@@ -273,6 +273,12 @@
     "move_tabs_to_panel_9": {
       "description": "__MSG_KbMoveTabsToPanel9__"
     },
+    "move_tabs_to_panel_start": {
+      "description": "__MSG_KbMoveTabsToPanelStart__"
+    },
+    "move_tabs_to_panel_end": {
+      "description": "__MSG_KbMoveTabsToPanelEnd__"
+    },
     "search": {
       "description": "__MSG_KbSearch__"
     },

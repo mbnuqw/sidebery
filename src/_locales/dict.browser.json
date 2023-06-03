@@ -409,6 +409,14 @@
     "zh_CN": "将选定（或活动）标签页移动到第十个面板",
     "zh_TW": "將選定（或活動）標籤頁移動到第十個面板"
   },
+  "KbMoveTabsToPanelStart": {
+    "en": "Move selected (or active) tabs to panel start",
+    "ru": "Переместить выделенные (или активную) вкладки в начало панели"
+  },
+  "KbMoveTabsToPanelEnd": {
+    "en": "Move selected (or active) tabs to panel end",
+    "ru": "Переместить выделенные (или активную) вкладки в конец панели"
+  },
   "KbSearch": {
     "en": "Search",
     "ru": "Поиск",

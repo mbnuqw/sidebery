@@ -116,6 +116,8 @@ const layout = [
     'move_tab_to_active',
     'move_tabs_up',
     'move_tabs_down',
+    'move_tabs_to_panel_start',
+    'move_tabs_to_panel_end',
     'tabs_indent',
     'tabs_outdent',
     'move_tabs_to_panel_0',
