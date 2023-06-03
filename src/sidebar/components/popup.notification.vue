@@ -62,6 +62,7 @@ function onMouseDown(): void {
 
 function onHideMouseDown(): void {
   Notifications.reactive.list.splice(props.index, 1)
+  if (!Notifications.reactive.list.length) Notifications.restartTimers()
   Notifications.setHiddenRecently()
 }
 
