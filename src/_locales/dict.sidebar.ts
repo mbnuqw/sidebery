@@ -661,6 +661,14 @@ export const sidebarTranslations: Translations = {
     zh_CN: '打开设置',
     zh_TW: '打開設置',
   },
+  'notif.history_del_sites': {
+    en: 'Clearing history',
+    ru: 'Очистка истории',
+  },
+  'notif.history_del_sites_nothing': {
+    en: 'Nothing to clear',
+    ru: 'Нечего очищать',
+  },
 
   // ---
   // -- Colors

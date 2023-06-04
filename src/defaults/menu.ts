@@ -100,6 +100,9 @@ export const HISTORY_MENU: MenuConf = [
   'separator-1',
   'copyHistoryUrls',
   'copyHistoryTitles',
+  'separator-2',
+  'deleteVisits',
+  'deleteSites',
 ]
 
 export const NEW_TAB_MENU: MenuConf = [

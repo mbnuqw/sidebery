@@ -35,6 +35,7 @@
         .label(v-else-if="ctrl.label") {{ctrl.label}}
       .separator
     .ctrl(
+      v-if="!notification.unconcealed"
       data-icon="true"
       :title="translate('notif.hide_tooltip')"
       @click="onHideMouseDown()")

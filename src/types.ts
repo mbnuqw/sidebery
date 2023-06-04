@@ -53,6 +53,7 @@ export interface Notification {
   controls?: NotificationControl[]
   ctrl?: string
   callback?: () => void
+  unconcealed?: boolean
   id?: ID
   lvl?: 'info' | 'warn' | 'err' | 'progress'
   timeout?: number
