@@ -69,7 +69,6 @@ export function closePermissionsPopup(): void {
  */
 export async function updateActiveView(): Promise<void> {
   let hash = location.hash ? location.hash.slice(1) : location.hash
-  hash.indexOf('.') // Without this, `hash.split('.') doesn't work`
   const hashArg = hash.split('.')
   hash = hashArg[0]
   const arg = hashArg[1]

@@ -1063,8 +1063,15 @@ declare namespace browser {
       maxResults?: number
     }
 
+    interface Range {
+      startTime: string | number | Date
+      endTime: string | number | Date
+    }
+
     function search(query: SearchQuery): Promise<HistoryItem[]>
     function getVisits(details: { url: string }): Promise<VisitItem[]>
+    function deleteRange(range: Range): Promise<void>
+    function deleteUrl(details: { url: string }): Promise<void>
 
     interface RemoveDetails {
       allHistory: boolean

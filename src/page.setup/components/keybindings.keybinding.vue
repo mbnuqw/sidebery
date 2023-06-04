@@ -24,11 +24,12 @@ import { translate } from 'src/dict'
 import { Command } from 'src/types'
 import { Keybindings } from 'src/services/keybindings'
 import { Info } from 'src/services/info'
+import * as Popups from 'src/services/popups'
 
 const ERR_SHOW_TIMEOUT = 2000
 
 const inputEl = ref<HTMLInputElement | null>(null)
-const state = reactive({ newShortcut: '' })
+const state = reactive({ newShortcut: '', overrideShortcut: null as Command | null })
 
 defineProps<{ keybinding: Command }>()
 
@@ -58,10 +59,40 @@ function normalizeShortcut(s?: string): string {
   return s
 }
 
-function onKBBlur(cmd: Command): void {
+async function onKBBlur(cmd: Command) {
   if (!cmd.focus) return
 
   if (errMsg) {
+    const newShortcut = state.newShortcut
+    const dup = Keybindings.reactive.list.find(k => k.shortcut === newShortcut)
+    if (dup) {
+      if (dup.name === cmd.name) {
+        Keybindings.update(cmd, { focus: false })
+        errMsg = ''
+        return
+      }
+
+      const title = translate('settings.kb_override_popup_title')
+      const noteShortcut = translate('settings.kb_override_popup_note_shortcut', newShortcut)
+      const noteUsed = translate('settings.kb_override_popup_note_used', dup.description)
+      const result = await Popups.ask({
+        title: title,
+        note: noteShortcut + '\n' + noteUsed,
+        buttonsInline: true,
+        buttonsCentered: true,
+        buttons: [
+          { label: translate('btn.yes'), value: 'set' },
+          { label: translate('btn.no'), value: '-' },
+        ],
+      })
+      if (result === 'set') {
+        removeKeybinding(dup)
+        Keybindings.update(cmd, { shortcut: newShortcut, focus: false })
+        return
+      }
+    }
+    state.overrideShortcut = cmd
+
     Keybindings.update(cmd, { focus: false, error: errMsg })
     if (errTimeout) clearTimeout(errTimeout)
     errTimeout = setTimeout(() => {

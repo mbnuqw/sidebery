@@ -8,10 +8,10 @@
       :label="dialog.checkbox.label"
       v-model:value="dialog.checkbox.value"
       @update:value="dialog.checkbox?.update")
-    .ctrls(:data-centered="dialog.buttonsCentered")
-      .btn.-wide.-wrap(
+    .ctrls(:data-centered="dialog.buttonsCentered" :data-inline="dialog.buttonsInline")
+      .btn.-wrap(
         v-for="btn of dialog.buttons"
-        :class="{ '-warn': btn.warn }"
+        :class="{ '-warn': btn.warn, '-wide': !dialog.buttonsInline }"
         @click="answer(btn.value)") {{btn.label}}
 </template>
 

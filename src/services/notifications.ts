@@ -75,7 +75,10 @@ function progress(config: Notification): Notification {
 
 function updateProgress(notification: Notification, done: number, all: number): void {
   if (!notification.progress) return
-  notification.progress.percent = Math.floor((100 / all) * done)
+  let prcnt = Math.floor((100 / all) * done)
+  if (prcnt > 100) prcnt = 100
+  if (prcnt < 0) prcnt = 0
+  notification.progress.percent = prcnt
 }
 
 function finishProgress(notification: Notification, delay = 120): void {

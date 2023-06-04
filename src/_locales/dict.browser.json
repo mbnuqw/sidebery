@@ -77,6 +77,24 @@
     "zh_CN": "删除所选项目或活动标签页",
     "zh_TW": "刪除所選項目或活動標籤頁"
   },
+  "KbRmTAIP": {
+    "en": "Close tabs above (in current panel)",
+    "ru": "Закрыть вкладки выше (в текущей панели)",
+    "zh_CN": "关闭上面的选项卡(在当前面板中)",
+    "zh_TW": "關閉上面的選項卡(在當前面板中)"
+  },
+  "KbRmTBIP": {
+    "en": "Close tabs below (in current panel)",
+    "ru": "Закрыть вкладки ниже (в текущей панели)",
+    "zh_CN": "关闭下面的选项卡(在当前面板中)",
+    "zh_TW": "關閉下面的選項卡(在當前面板中)"
+  },
+  "KbRmTOIP": {
+    "en": "Close other tabs (in current panel)",
+    "ru": "Закрыть другие вкладки (в текущей панели)",
+    "zh_CN": "关闭其他选项卡(在当前面板中)",
+    "zh_TW": "關閉其他選項卡(在當前面板中)"
+  },
   "KbSelectAll": {
     "en": "Select all",
     "ru": "Выделить все",
@@ -126,6 +144,26 @@
     "zh_CN": "打开菜单",
     "zh_TW": "打開菜單"
   },
+  "KbUnloadTabs": {
+    "en": "Unload selected/active tabs",
+    "ru": "Выгрузить выделенные/активные вкладки"
+  },
+  "KbUnloadATIP": {
+    "en": "Unload all tabs in panel",
+    "ru": "Выгрузить все вкладки в панели"
+  },
+  "KbUnloadOTIP": {
+    "en": "Unload other tabs in panel",
+    "ru": "Выгрузить другие вкладки на панели"
+  },
+  "KbUnloadFTIP": {
+    "en": "Unload folded tabs in panel",
+    "ru": "Выгрузить свернутые вкладки на панели"
+  },
+  "KbUnloadATIIP": {
+    "en": "Unload all tabs in inactive panels",
+    "ru": "Выгрузить все вкладки в неактивных панелях"
+  },
   "KbResetSelection": {
     "en": "Reset selection",
     "ru": "Сбросить выделение",
@@ -158,8 +196,8 @@
     "en": "Activate previously active tab when clicking on the active tab (Tab flip)",
     "ru": "Активировать ранее активную вкладку при нажатии на активную вкладку",
     "de": "Beim Klicken auf aktiven Tab Aktivierung umkehren",
-    "zh_CN": "单击活动标签页时向后激活",
-    "zh_TW": "單擊活動標籤頁時向後激活"
+    "zh_CN": "单击活动标签页时激活先前活动的标签页",
+    "zh_TW": "單擊活動標籤頁時激活先前活動的標籤頁"
   },
   "KbActPrevActTab": {
     "en": "Active tabs history: Back",
@@ -371,6 +409,22 @@
     "zh_CN": "将选定（或活动）标签页移动到第十个面板",
     "zh_TW": "將選定（或活動）標籤頁移動到第十個面板"
   },
+  "KbMoveTabsToPanelStart": {
+    "en": "Move selected (or active) tabs to panel start",
+    "ru": "Переместить выделенные (или активную) вкладки в начало панели"
+  },
+  "KbMoveTabsToPanelEnd": {
+    "en": "Move selected (or active) tabs to panel end",
+    "ru": "Переместить выделенные (или активную) вкладки в конец панели"
+  },
+  "KbDuplicateTabs": {
+    "en": "Duplicate selected (or active) tabs",
+    "ru": "Дублировать выбранные (или активные) вкладки"
+  },
+  "KbPinTabs": {
+    "en": "Pin/Unpin selected (or active) tabs",
+    "ru": "Закрепить/Открепить выбранные (или активные) вкладки"
+  },
   "KbSearch": {
     "en": "Search",
     "ru": "Поиск",
@@ -389,86 +443,90 @@
     "en": "Switch to first tab of active panel",
     "ru": "Переключиться на первую вкладку активной панели",
     "de": "Zum ersten Tab des aktiven Panels wechseln",
-    "zh_CN": "在活动面板中切换到第一个标签",
-    "zh_TW": "在活動面板中切換到第一個標籤"
+    "zh_CN": "在活动面板中切换到第一个标签页",
+    "zh_TW": "在活動面板中切換到第一個標籤頁"
   },
   "KbSwitchToTab1": {
     "en": "Switch to second tab of active panel",
     "ru": "Переключиться на вторую вкладку активной панели",
     "de": "Zum zweiten Tab des aktiven Panels wechseln",
-    "zh_CN": "在活动面板中切换到第二个标签",
-    "zh_TW": "在活動面板中切換到第二個標籤"
+    "zh_CN": "在活动面板中切换到第二个标签页",
+    "zh_TW": "在活動面板中切換到第二個標籤頁"
   },
   "KbSwitchToTab2": {
     "en": "Switch to third tab of active panel",
     "ru": "Переключиться на третью вкладку активной панели",
     "de": "Zum dritten Tab des aktiven Panels wechseln",
-    "zh_CN": "在活动面板中切换到第三个标签",
-    "zh_TW": "在活動面板中切換到第三個標籤"
+    "zh_CN": "在活动面板中切换到第三个标签页",
+    "zh_TW": "在活動面板中切換到第三個標籤頁"
   },
   "KbSwitchToTab3": {
     "en": "Switch to fourth tab of active panel",
     "ru": "Переключиться на четвертую вкладку активной панели",
     "de": "Zum vierten Tab des aktiven Panels wechseln",
-    "zh_CN": "在活动面板中切换到第四个标签",
-    "zh_TW": "在活動面板中切換到第四個標籤"
+    "zh_CN": "在活动面板中切换到第四个标签页",
+    "zh_TW": "在活動面板中切換到第四個標籤頁"
   },
   "KbSwitchToTab4": {
     "en": "Switch to fifth tab of active panel",
     "ru": "Переключиться на пятую вкладку активной панели",
     "de": "Zum fünften Tab des aktiven Panels wechseln",
-    "zh_CN": "在活动面板中切换到第五个标签",
-    "zh_TW": "在活動面板中切換到第五個標籤"
+    "zh_CN": "在活动面板中切换到第五个标签页",
+    "zh_TW": "在活動面板中切換到第五個標籤頁"
   },
   "KbSwitchToTab5": {
     "en": "Switch to sixth tab of active panel",
     "ru": "Переключиться на шестую вкладку активной панели",
     "de": "Zum sechsten Tab des aktiven Panels wechseln",
-    "zh_CN": "在活动面板中切换到第六个标签",
-    "zh_TW": "在活動面板中切換到第六個標籤"
+    "zh_CN": "在活动面板中切换到第六个标签页",
+    "zh_TW": "在活動面板中切換到第六個標籤頁"
   },
   "KbSwitchToTab6": {
     "en": "Switch to seventh tab of active panel",
     "ru": "Переключиться на седьмую вкладку активной панели",
     "de": "Zum siebten Tab des aktiven Panels wechseln",
-    "zh_CN": "在活动面板中切换到第七个标签",
-    "zh_TW": "在活動面板中切換到第七個標籤"
+    "zh_CN": "在活动面板中切换到第七个标签页",
+    "zh_TW": "在活動面板中切換到第七個標籤頁"
   },
   "KbSwitchToTab7": {
     "en": "Switch to eighth tab of active panel",
     "ru": "Переключиться на восьмую вкладку активной панели",
     "de": "Zum achten Tab des aktiven Panels wechseln",
-    "zh_CN": "在活动面板中切换到第八个标签",
-    "zh_TW": "在活動面板中切換到第八個標籤"
+    "zh_CN": "在活动面板中切换到第八个标签页",
+    "zh_TW": "在活動面板中切換到第八個標籤頁"
   },
   "KbSwitchToTab8": {
     "en": "Switch to ninth tab of active panel",
     "ru": "Переключиться на девятую вкладку активной панели",
     "de": "Zum neunten Tab des aktiven Panels wechseln",
-    "zh_CN": "在活动面板中切换到第九个标签",
-    "zh_TW": "在活動面板中切換到第九個標籤"
+    "zh_CN": "在活动面板中切换到第九个标签页",
+    "zh_TW": "在活動面板中切換到第九個標籤頁"
   },
   "KbSwitchToTab9": {
     "en": "Switch to tenth tab of active panel",
     "ru": "Переключиться на десятую вкладку активной панели",
     "de": "Zum zehnten Tab des aktiven Panels wechseln",
-    "zh_CN": "在活动面板中切换到第十个标签",
-    "zh_TW": "在活動面板中切換到第十個標籤"
+    "zh_CN": "在活动面板中切换到第十个标签页",
+    "zh_TW": "在活動面板中切換到第十個標籤頁"
   },
   "KbSwitchToLastTab": {
     "en": "Switch to the last tab of active panel",
     "ru": "Переключиться на последнюю вкладку активной панели",
     "de": "Zum letzten Tab des aktiven Panels wechseln",
-    "zh_CN": "在活动面板中切换到最后一个标签",
-    "zh_TW": "在活動面板中切換到最後一個標籤"
+    "zh_CN": "在活动面板中切换到最后一个标签页",
+    "zh_TW": "在活動面板中切換到最後一個標籤頁"
   },
   "KbSwitchToNextTab": {
     "en": "Switch to the next tab (using mouse-wheel settings for tabs switching)",
-    "ru": "Переключиться на следующую вкладку (используя настройки колесика мыши для переключения вкладок)"
+    "ru": "Переключиться на следующую вкладку (используя настройки колесика мыши для переключения вкладок)",
+    "zh_CN": "切换到下一个标签页(使用鼠标滚轮设置切换标签页)",
+    "zh_TW": "切換到下一個標籤頁(使用鼠標滾輪設置切換標籤頁)"
   },
   "KbSwitchToPrevTab": {
     "en": "Switch to the prev tab (using mouse-wheel settings for tabs switching)",
-    "ru": "Переключиться на предыдущую вкладку (используя настройки колесика мыши для переключения вкладок)"
+    "ru": "Переключиться на предыдущую вкладку (используя настройки колесика мыши для переключения вкладок)",
+    "zh_CN": "切换到上一个标签页(使用鼠标滚轮设置切换标签页)",
+    "zh_TW": "切換到上一個標籤頁(使用鼠標滾輪設置切換標籤頁)"
   },
 
   "proxy_popup_title_prefix": {

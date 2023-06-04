@@ -723,8 +723,9 @@ export function removeTabsDescendants(tabIds: ID[]): void {
 /**
  * Remove tabs above
  */
-export function removeTabsAbove(tabIds: ID[]): void {
-  if (!tabIds || !tabIds.length) return
+export function removeTabsAbove(tabIds?: ID[]): void {
+  if (!tabIds) tabIds = [Tabs.activeId]
+  if (!tabIds.length) return
 
   let minIndex = 999999
   let startTab
@@ -751,8 +752,9 @@ export function removeTabsAbove(tabIds: ID[]): void {
 /**
  * Remove tabs below
  */
-export function removeTabsBelow(tabIds: ID[]): void {
-  if (!tabIds || !tabIds.length) return
+export function removeTabsBelow(tabIds?: ID[]): void {
+  if (!tabIds) tabIds = [Tabs.activeId]
+  if (!tabIds.length) return
 
   let maxIndex = -1
   let startTab
@@ -779,8 +781,9 @@ export function removeTabsBelow(tabIds: ID[]): void {
 /**
  * Remove other tabs
  */
-export function removeOtherTabs(tabIds: ID[]): void {
-  if (!tabIds || !tabIds.length) return
+export function removeOtherTabs(tabIds?: ID[]): void {
+  if (!tabIds) tabIds = [Tabs.activeId]
+  if (!tabIds.length) return
 
   const firstTabId = tabIds[0]
   if (firstTabId === undefined) return
@@ -1314,7 +1317,7 @@ export async function discardTabs(tabIds: ID[] = []): Promise<void> {
 /**
  * Try to activate last active tab on the panel
  */
-export function activateLastActiveTabOf(panelId: ID): void {
+export function activateLastActiveTabOf(panelId: ID) {
   const panel = Sidebar.panelsById[panelId]
   if (!Utils.isTabsPanel(panel)) return
 
@@ -1339,7 +1342,7 @@ export function activateLastActiveTabOf(panelId: ID): void {
     tab = panelTabs.find(t => !t.discarded)
   }
   if (tab) {
-    browser.tabs.update(tab.id, { active: true }).catch(err => {
+    return browser.tabs.update(tab.id, { active: true }).catch(err => {
       Logs.err('Tabs.activateLastActiveTabOf: Cannot activate tab:', err)
     })
   }

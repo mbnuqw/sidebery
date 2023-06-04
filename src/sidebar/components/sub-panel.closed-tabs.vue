@@ -31,7 +31,7 @@
 
 <script lang="ts" setup>
 import { reactive, onMounted } from 'vue'
-import { DragItem, DragInfo, DropType, DragType } from 'src/types'
+import { DragItem, DragInfo, DropType, DragType, DstPlaceInfo } from 'src/types'
 import { translate } from 'src/dict'
 import { Menu } from 'src/services/menu'
 import { Selection } from 'src/services/selection'
@@ -41,6 +41,7 @@ import { Mouse } from 'src/services/mouse'
 import { Sidebar } from 'src/services/sidebar'
 import { DnD } from 'src/services/drag-and-drop'
 import { Windows } from 'src/services/windows'
+import * as Utils from 'src/utils'
 import ScrollBox from 'src/components/scroll-box.vue'
 
 const state = reactive({
@@ -178,7 +179,16 @@ async function openTabs(targetTab: RecentlyRemovedTabInfo, inactive: boolean, br
 
   const tabsBranch = getBranch(targetTab)
   const tabs = branch ? tabsBranch : [targetTab]
-  const dst = { panelId: Sidebar.reactive.activePanelId, discarded: inactive }
+  const panelId = Sidebar.reactive.activePanelId
+  const panel = Sidebar.panelsById[panelId]
+  if (!Utils.isTabsPanel(panel)) return
+
+  const dst: DstPlaceInfo = {
+    panelId,
+    discarded: inactive,
+    index: Tabs.getIndexForNewTab(panel),
+    parentId: Tabs.getParentForNewTab(panel),
+  }
 
   await Tabs.open(tabs, dst)
 

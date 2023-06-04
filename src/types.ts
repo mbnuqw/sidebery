@@ -53,6 +53,7 @@ export interface Notification {
   controls?: NotificationControl[]
   ctrl?: string
   callback?: () => void
+  unconcealed?: boolean
   id?: ID
   lvl?: 'info' | 'warn' | 'err' | 'progress'
   timeout?: number
@@ -304,6 +305,7 @@ export interface Dialog {
   checkbox?: DialogCheckbox
   buttons: DialogBtn[]
   buttonsCentered?: boolean
+  buttonsInline?: boolean
   result: (answer: string | null) => void
 }
 
@@ -325,6 +327,7 @@ export interface DialogConfig {
   checkbox?: DialogCheckbox
   buttons: DialogBtn[]
   buttonsCentered?: boolean
+  buttonsInline?: boolean
 }
 
 export interface TabsPanelRemoving {

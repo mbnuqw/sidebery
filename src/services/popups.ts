@@ -104,6 +104,7 @@ export function ask(conf: DialogConfig): Promise<string | null> {
       checkbox: conf.checkbox,
       buttons: conf.buttons,
       buttonsCentered: conf.buttonsCentered,
+      buttonsInline: conf.buttonsInline,
       result: (answer: string | null) => {
         ok(answer)
         reactive.dialog = null

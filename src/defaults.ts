@@ -42,6 +42,8 @@ export const SETTINGS_RE = /\/page\.setup\/setup\.html/
 export const FOLDER_NAME_DATA_RE = /^(.*) \[(.*)\]$/
 export const GROUP_INITIAL_TITLE = '...'
 export const INITIAL_TITLE_RE = /^[0-9A-Za-z-]{1,63}(\.[0-9A-Za-z-]{1,63})+\//
+export const SITE_URL_RE =
+  /^([0-9A-Za-z-]{1,63}:\/\/[0-9A-Za-z-]{1,63}(\.[0-9A-Za-z-]{1,63})+)(\/|$)/
 export const BTN_ICONS: Record<string, string> = {
   tabs_panel: 'icon_tabs',
   bookmarks_panel: 'icon_bookmarks',

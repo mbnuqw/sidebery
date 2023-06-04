@@ -37,4 +37,26 @@ export const historyMenuOptions: Record<string, () => MenuOption | MenuOption[] 
       onClick: () => History.copyTitles(selected),
     }
   },
+
+  deleteVisits: () => {
+    const selected = Selection.get()
+
+    return {
+      label: translate('menu.history.delete_visits', selected.length),
+      icon: 'icon_clock',
+      badge: 'icon_close',
+      onClick: () => History.deleteVisits(selected),
+    }
+  },
+
+  deleteSites: () => {
+    const selected = Selection.get()
+
+    return {
+      label: translate('menu.history.delete_sites', selected.length),
+      icon: 'icon_web',
+      badge: 'icon_close',
+      onClick: () => History.deleteSites(selected),
+    }
+  },
 }

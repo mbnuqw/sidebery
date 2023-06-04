@@ -7,8 +7,10 @@ import { Tabs } from './tabs.fg'
 import { Windows } from './windows'
 import { Permissions } from './permissions'
 import { Containers } from './containers'
-import { PRE_SCROLL } from 'src/defaults'
+import { PRE_SCROLL, SITE_URL_RE } from 'src/defaults'
 import * as Logs from 'src/services/logs'
+import { Notifications } from './notifications'
+import { translate } from 'src/dict'
 
 const UNLIMITED = 1234567
 const INITIAL_COUNT = 100
@@ -297,4 +299,94 @@ export async function copyTitles(ids: ID[]): Promise<void> {
 
   const resultString = titles.trim()
   if (resultString) navigator.clipboard.writeText(resultString)
+}
+
+export function deleteVisits(ids: ID[]) {
+  for (const id of ids) {
+    const itemIndex = History.reactive.list.findIndex(i => i.id === id)
+    const item = History.reactive.list[itemIndex]
+    if (!item) continue
+    if (!item.lastVisitTime) continue
+
+    const ts = item.lastVisitTime
+    browser.history.deleteRange({ startTime: ts, endTime: ts + 1 })
+    History.reactive.list.splice(itemIndex, 1)
+  }
+}
+
+export async function deleteSites(ids: ID[]) {
+  History.reactive.ready = false
+
+  let stopDeletion = false
+  const progressNotification = Notifications.progress({
+    icon: '#icon_trash',
+    title: translate('notif.history_del_sites'),
+    progress: { percent: -1 },
+    unconcealed: true,
+    ctrl: translate('btn.stop'),
+    callback: () => {
+      stopDeletion = true
+    },
+  })
+
+  const sites: Set<string> = new Set()
+
+  for (const id of ids) {
+    const itemIndex = History.reactive.list.findIndex(i => i.id === id)
+    const item = History.reactive.list[itemIndex]
+    if (!item || !item.url) continue
+
+    const reResult = SITE_URL_RE.exec(item.url)
+    if (reResult?.[1]) sites.add(reResult[1])
+  }
+
+  const items = []
+  for (const url of sites) {
+    try {
+      const result = await browser.history.search({ text: url, maxResults: 999999, startTime: 0 })
+      const filteredResults = result.filter(i => i.url?.startsWith(url))
+      const visits = await History.normalizeHistory(filteredResults, false)
+      items.push(...visits)
+    } catch {
+      Logs.warn('History.deleteSites: Cannot get visits to remove')
+    }
+  }
+
+  if (items.length === 0) {
+    Notifications.finishProgress(progressNotification, 0)
+    Notifications.notify({
+      icon: '#icon_clock',
+      title: translate('notif.history_del_sites_nothing'),
+    })
+    History.reactive.ready = true
+    return
+  }
+
+  const initialCount = items.length + 1
+  let count = 1
+  Notifications.updateProgress(progressNotification, count, initialCount)
+
+  progressNotification.detailsList = []
+  const detailsList = progressNotification.detailsList
+
+  for (const item of items) {
+    if (stopDeletion) break
+    Notifications.updateProgress(progressNotification, ++count, initialCount)
+
+    if (!item.url) continue
+
+    detailsList[0] = item.url
+
+    try {
+      await browser.history.deleteUrl({ url: item.url })
+    } catch {
+      Logs.warn(`History.deleteSites: Cannot delete url: ${item.url}`)
+      continue
+    }
+  }
+
+  History.unload()
+  await History.load()
+
+  Notifications.finishProgress(progressNotification, 0)
 }

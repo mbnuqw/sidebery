@@ -35,6 +35,7 @@
         .label(v-else-if="ctrl.label") {{ctrl.label}}
       .separator
     .ctrl(
+      v-if="!notification.unconcealed"
       data-icon="true"
       :title="translate('notif.hide_tooltip')"
       @click="onHideMouseDown()")
@@ -62,6 +63,7 @@ function onMouseDown(): void {
 
 function onHideMouseDown(): void {
   Notifications.reactive.list.splice(props.index, 1)
+  if (!Notifications.reactive.list.length) Notifications.restartTimers()
   Notifications.setHiddenRecently()
 }
 

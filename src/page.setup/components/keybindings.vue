@@ -23,7 +23,7 @@ import { SetupPage } from 'src/services/setup-page'
 import KeybindingField from 'src/page.setup/components/keybindings.keybinding.vue'
 
 const layout = [
-  ['general', '_execute_sidebar_action', 'search', 'create_snapshot'],
+  ['general', '_execute_sidebar_action', 'search', 'create_snapshot', 'duplicate_tabs', 'pin_tabs'],
 
   // Creating / Removing tab
   [
@@ -33,6 +33,9 @@ const layout = [
     'new_tab_as_first_child',
     'new_tab_as_last_child',
     'rm_tab_on_panel',
+    'rm_tabs_above_in_panel',
+    'rm_tabs_below_in_panel',
+    'rm_tabs_other_in_panel',
   ],
 
   // Selection
@@ -46,6 +49,16 @@ const layout = [
     'reset_selection',
     'activate',
     'menu',
+  ],
+
+  // Unloading tabs
+  [
+    'unloading_tabs',
+    'unload_tabs',
+    'unload_all_tabs_in_panel',
+    'unload_other_tabs_in_panel',
+    'unload_folded_tabs_in_panel',
+    'unload_all_tabs_in_inact_panels',
   ],
 
   // Branch
@@ -103,6 +116,8 @@ const layout = [
     'move_tab_to_active',
     'move_tabs_up',
     'move_tabs_down',
+    'move_tabs_to_panel_start',
+    'move_tabs_to_panel_end',
     'tabs_indent',
     'tabs_outdent',
     'move_tabs_to_panel_0',

@@ -1181,6 +1181,14 @@ export const commonTranslations: Translations = {
     zh_CN: '打开',
     zh_TW: '打開',
   },
+  'menu.history.delete_visits': {
+    en: n => (n === 1 ? 'Forget visit' : 'Forget visits'),
+    ru: n => (n === 1 ? 'Забыть запись' : 'Забыть записи'),
+  },
+  'menu.history.delete_sites': {
+    en: n => (n === 1 ? 'Forget site' : 'Forget sites'),
+    ru: n => (n === 1 ? 'Забыть сайт' : 'Забыть сайты'),
+  },
   // - Common
   'menu.copy_urls': {
     en: n => (n === 1 ? 'Copy URL' : 'Copy URLs'),

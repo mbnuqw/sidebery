@@ -3487,6 +3487,18 @@ export const setupPageTranslations: Translations = {
     zh_TW: '無效的快捷鍵',
     de: 'Ungültiges Tastenkürzel',
   },
+  'settings.kb_override_popup_title': {
+    en: 'Keybinding is already in use.\nOverride?',
+    ru: 'Сочетание клавиш уже используется.\nПереопределить?',
+  },
+  'settings.kb_override_popup_note_shortcut': {
+    en: shortcut => `Shortcut: "${shortcut}"`,
+    ru: shortcut => `Сочетание клавиш: "${shortcut}"`,
+  },
+  'settings.kb_override_popup_note_used': {
+    en: usedIn => `Used in: "${usedIn}"`,
+    ru: usedIn => `Используется в: "${usedIn}"`,
+  },
   'settings.kb_general': {
     en: 'General',
     de: 'Allgemein',
@@ -3521,6 +3533,10 @@ export const setupPageTranslations: Translations = {
     de: 'Ausgewählte (oder aktive) Elemente',
     zh_CN: '选择(或激活)元素',
     zh_TW: '選擇(或激活)元素',
+  },
+  'settings.kb_unloading_tabs': {
+    en: 'Unloading tabs',
+    ru: 'Выгрузка вкладок',
   },
   'settings.kb_branches': {
     en: 'Branches',

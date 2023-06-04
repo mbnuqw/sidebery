@@ -106,6 +106,15 @@
     "rm_tab_on_panel": {
       "description": "__MSG_KbRm__"
     },
+    "rm_tabs_above_in_panel": {
+      "description": "__MSG_KbRmTAIP__"
+    },
+    "rm_tabs_below_in_panel": {
+      "description": "__MSG_KbRmTBIP__"
+    },
+    "rm_tabs_other_in_panel": {
+      "description": "__MSG_KbRmTOIP__"
+    },
     "select_all": {
       "description": "__MSG_KbSelectAll__"
     },
@@ -147,6 +156,21 @@
     },
     "menu": {
       "description": "__MSG_KbMenu__"
+    },
+    "unload_tabs": {
+      "description": "__MSG_KbUnloadTabs__"
+    },
+    "unload_all_tabs_in_panel": {
+      "description": "__MSG_KbUnloadATIP__"
+    },
+    "unload_other_tabs_in_panel": {
+      "description": "__MSG_KbUnloadOTIP__"
+    },
+    "unload_folded_tabs_in_panel": {
+      "description": "__MSG_KbUnloadFTIP__"
+    },
+    "unload_all_tabs_in_inact_panels": {
+      "description": "__MSG_KbUnloadATIIP__"
     },
     "fold_branch": {
       "description": "__MSG_KbFoldBranch__"
@@ -250,6 +274,12 @@
     "move_tabs_to_panel_9": {
       "description": "__MSG_KbMoveTabsToPanel9__"
     },
+    "move_tabs_to_panel_start": {
+      "description": "__MSG_KbMoveTabsToPanelStart__"
+    },
+    "move_tabs_to_panel_end": {
+      "description": "__MSG_KbMoveTabsToPanelEnd__"
+    },
     "search": {
       "description": "__MSG_KbSearch__"
     },
@@ -294,6 +324,12 @@
     },
     "switch_to_prev_tab": {
       "description": "__MSG_KbSwitchToPrevTab__"
+    },
+    "duplicate_tabs": {
+      "description": "__MSG_KbDuplicateTabs__"
+    },
+    "pin_tabs": {
+      "description": "__MSG_KbPinTabs__"
     }
   },
 

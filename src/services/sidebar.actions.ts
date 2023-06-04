@@ -1032,6 +1032,8 @@ export function activatePanel(panelId: ID, loadPanels = true): void {
   if (!DnD.reactive.isStarted && !Search.reactive.rawValue) saveActivePanelDebounced(1000)
 
   if (Sidebar.subPanelActive) Sidebar.closeSubPanel()
+
+  if (Sidebar.switchOnMouseLeave) Sidebar.switchOnMouseLeave = false
 }
 
 let prevSavedActPanelId = NOID
