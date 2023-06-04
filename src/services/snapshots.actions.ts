@@ -908,18 +908,6 @@ export async function prepareExport(snapshot: Snapshot | SnapshotState) {
   return { id, time, containers, sidebar, tabs, jsonFile, mdFile }
 }
 
-export async function getMostRecentSnapshot() {
-  const storedSnaps = await getStoredSnapshots()
-  if (!storedSnaps || storedSnaps.length === 0) return
-  return getNormalizedSnapshot(storedSnaps.reverse(), 0)
-}
-
-export async function getMostRecentSnapshotMd() {
-  const mostRecentSnap = await getMostRecentSnapshot()
-  if (!mostRecentSnap) return
-  return (await prepareExport(mostRecentSnap)).mdFile
-}
-
 function groupBy(arr: any[], property: string) {
   return arr.reduce(function (memo, x) {
     if (!memo[x[property]]) { memo[x[property]] = []; }
