@@ -219,7 +219,7 @@ export function minimizeSnapshot(snapshots: Snapshot[], snapshot: Snapshot): voi
   const newSidebarJSON = JSON.stringify(snapshot.sidebar)
 
   // Containers
-  for (let i = snapshots.length; i--; ) {
+  for (let i = snapshots.length; i--;) {
     const snapN = snapshots[i]
     if (!snapN || !snapN.containers) break
 
@@ -234,7 +234,7 @@ export function minimizeSnapshot(snapshots: Snapshot[], snapshot: Snapshot): voi
   }
 
   // Nav and panels
-  for (let i = snapshots.length; i--; ) {
+  for (let i = snapshots.length; i--;) {
     const snapN = snapshots[i]
     if (!snapN || !snapN.sidebar) break
 
@@ -266,7 +266,7 @@ export function minimizeSnapshot(snapshots: Snapshot[], snapshot: Snapshot): voi
         if (tab === SnapStoreMode.Unchanged) continue
 
         // per snapshot (previous)
-        for (let i = snapshots.length; i--; ) {
+        for (let i = snapshots.length; i--;) {
           const snapN = snapshots[i]
           if (!snapN) break per_win // stop tabs minimizing
 
@@ -310,7 +310,7 @@ export function getNormalizedSnapshot(
 
   // Containers
   if (snapshot.containers === SnapStoreMode.Unchanged) {
-    for (let i = index; i--; ) {
+    for (let i = index; i--;) {
       const snapN = snapshots[i]
       if (snapN && snapN.containers !== SnapStoreMode.Unchanged) {
         snapshot.containers = snapN.containers
@@ -321,7 +321,7 @@ export function getNormalizedSnapshot(
 
   // Nav and panels
   if (snapshot.sidebar === SnapStoreMode.Unchanged) {
-    for (let i = index; i--; ) {
+    for (let i = index; i--;) {
       const snapN = snapshots[i]
       if (snapN && snapN.sidebar !== SnapStoreMode.Unchanged) {
         snapshot.sidebar = snapN.sidebar
@@ -343,7 +343,7 @@ export function getNormalizedSnapshot(
         const tab = panel[ti]
 
         if (tab === SnapStoreMode.Unchanged) {
-          for (let i = index; i--; ) {
+          for (let i = index; i--;) {
             const snapN = snapshots[i]
             const tabN = snapN?.tabs[wi]?.[pi]?.[ti]
             if (tabN && tabN !== SnapStoreMode.Unchanged) {
@@ -920,6 +920,14 @@ export async function getMostRecentSnapshotMd() {
   return (await prepareExport(mostRecentSnap)).mdFile
 }
 
+function groupBy(arr: any[], property: string) {
+  return arr.reduce(function (memo, x) {
+    if (!memo[x[property]]) { memo[x[property]] = []; }
+    memo[x[property]].push(x);
+    return memo;
+  }, {});
+}
+
 export function convertToMarkdown(snapshot: NormalizedSnapshot): string {
   const dateStr = Utils.uDate(snapshot.time, '.')
   const timeStr = Utils.uTime(snapshot.time, '.')
@@ -930,25 +938,45 @@ export function convertToMarkdown(snapshot: NormalizedSnapshot): string {
   let IN = TAB
   let panelConfig
   let BULLET = Settings.state.snapExportMdTree ? '- ' : '' // setting for tree friendly md style
+  const pinned = []
+  console.log({wins:snapshot.tabs});
+  
   for (let i = 0; i < snapshot.tabs.length; i++) {
     const win = snapshot.tabs[i]
     const winTitle = `${IN}${BULLET}## ${translate('snapshot.window_title')} ${i + 1}`
     md.push(winTitle)
+
     for (const panel of win) {
-      for (const tab of panel) {
+      // const { true: pinned = [], undefined: rest = [] } = groupBy(panel, 'pinned')
+      pinned.push(...panel.filter(t => t.pinned))
+      const rest = panel.filter(t => !t.pinned)
+      console.log({ rest, pinned });
+
+      for (const tab of (rest as SnapTab[])) {
         if (!tab.pinned && (!panelConfig || panelConfig.id !== tab.panelId)) {
           panelConfig = snapshot.sidebar?.panels?.[tab.panelId]
+
+          IN += TAB
+
           if (panelConfig) {
             IN += TAB
             const panelTitle = `${IN}${BULLET}### ${panelConfig.name}`
             md.push(panelTitle)
+            IN += TAB
+            if (pinned.length) {
+              for (const tab of (pinned as SnapTab[])) {
+                if (tab.panelId === panelConfig.id) {
+                  console.log('pinned tab', tab);
+                  const tabLink = `[${tab.title}](${tab.url}")`
+                  md.push(`${IN}- 📌 ${tabLink}`)
+                }
+              }
+            }
           }
-          IN += TAB
         }
         const tabLink = `[${tab.title}](${tab.url}")`
-        const pinned = tab.pinned ? '📌' : ''
-        const indent = '  '.repeat(tab.lvl ?? 0)
-        md.push(`${IN}${indent}- ${pinned}${tabLink}`)
+        const indentLvl = '  '.repeat(tab.lvl ?? 0)
+        md.push(`${IN}${indentLvl}- ${tabLink}`)
       }
       IN = TAB
     }
