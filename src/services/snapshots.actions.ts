@@ -45,10 +45,11 @@ export async function createSnapshot(auto = false): Promise<Snapshot | undefined
   // Get snapshot src data and current snapshots list
   let waiting
   try {
-    console.log('updateBgTabsTreeData')
-    await Tabs.updateBgTabsTreeData(), console.log('getting store')
+    // console.log('updateBgTabsTreeData')
+    // await Tabs.updateBgTabsTreeData() // is this actally better in "parallel" in the allSettled array below? or ok to do it first?
     waiting = await Promise.allSettled([
       browser.storage.local.get<Stored>(['sidebar', 'containers', 'snapshots']),
+      Tabs.updateBgTabsTreeData(),
     ])
   } catch (err) {
     Logs.err('createSnapshot: Cannot get source data', err)
@@ -166,8 +167,10 @@ export async function createSnapshot(auto = false): Promise<Snapshot | undefined
 
 export async function exportSnapshot(snapshot: NormalizedSnapshot) {
   const prepared = await prepareExport(snapshot)
-  if (!prepared || !browser?.downloads)
-    return console.warn('failed attempt to export snapshot', { snapshot, prepared, browser })
+  if (!prepared || !browser?.downloads) {
+    // console.warn('failed attempt to export snapshot', { snapshot, prepared, browser })
+    return Logs.warn('Snapshots.exportSnapshot: Cannot export snapshot')
+  }
 
   const { mdFile: mostRecentSnapMd, time } = prepared
   const snapExportPath = Settings.state.snapExportPath
@@ -933,8 +936,8 @@ export function convertToMarkdown(snapshot: NormalizedSnapshot): string {
   let panelConfig
   let BULLET = Settings.state.snapExportMdTree ? '- ' : '' // setting for tree friendly md style
   const pinned = []
-  console.log({wins:snapshot.tabs});
-  
+  console.log({ wins: snapshot.tabs });
+
   for (let i = 0; i < snapshot.tabs.length; i++) {
     const win = snapshot.tabs[i]
     const winTitle = `${IN}${BULLET}## ${translate('snapshot.window_title')} ${i + 1}`
