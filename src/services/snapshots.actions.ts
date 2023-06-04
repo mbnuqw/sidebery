@@ -132,7 +132,13 @@ export async function createSnapshot(auto = false): Promise<Snapshot | undefined
   }
 
   if (Settings.state.snapAutoExport) {
-    void exportSnapshot(currentSnapshot)
+    void exportSnapshot({
+      id: currentSnapshot.id,
+      time: currentSnapshot.time,
+      containers: stored.containers,
+      sidebar: stored.sidebar,
+      tabs,
+    })
   }
 
   minimizeSnapshot(stored.snapshots, currentSnapshot)
@@ -158,7 +164,7 @@ export async function createSnapshot(auto = false): Promise<Snapshot | undefined
   return currentSnapshot
 }
 
-export async function exportSnapshot(snapshot: Snapshot) {
+export async function exportSnapshot(snapshot: NormalizedSnapshot) {
   const prepared = await prepareExport(snapshot)
   if (!prepared || !browser?.downloads)
     return console.warn('failed attempt to export snapshot', { snapshot, prepared, browser })
