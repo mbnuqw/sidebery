@@ -46,6 +46,15 @@
       :value="Permissions.reactive.history"
       :note="translate('settings.history_info')"
       @update:value="togglePermHistory")
+  .permission(
+    ref="downloadsEl"
+    :data-highlight="SetupPage.reactive.permissions === 'downloads'"
+    @click="onHighlighClick('downloads')")
+    ToggleField(
+      label="settings.perm.downloads_label"
+      :value="Permissions.reactive.downloads"
+      :note="translate('settings.perm.downloads_info')"
+      @update:value="togglePermDownloads")
 </template>
 
 <script lang="ts" setup>
@@ -60,6 +69,7 @@ const all_urls = ref<HTMLElement | null>(null)
 const tab_hide = ref<HTMLElement | null>(null)
 const clipboard_write = ref<HTMLElement | null>(null)
 const historyEl = ref<HTMLElement | null>(null)
+const downloadsEl = ref<HTMLElement | null>(null)
 const bookmarksEl = ref<HTMLElement | null>(null)
 
 onMounted(() => {
@@ -67,6 +77,7 @@ onMounted(() => {
   SetupPage.registerEl('tab_hide', tab_hide.value)
   SetupPage.registerEl('clipboard_write', clipboard_write.value)
   SetupPage.registerEl('history', historyEl.value)
+  SetupPage.registerEl('downloads', downloadsEl.value)
   SetupPage.registerEl('bookmarks', bookmarksEl.value)
 })
 
@@ -111,6 +122,13 @@ function togglePermClipboardWrite(): void {
 function togglePermHistory(): void {
   const p = ['history']
   if (Permissions.reactive.history) browser.permissions.remove({ permissions: p })
+  else browser.permissions.request({ origins: [], permissions: p })
+}
+
+function togglePermDownloads() {
+  console.log('[DEBUG] togglePermDownloads')
+  const p = ['downloads']
+  if (Permissions.reactive.downloads) browser.permissions.remove({ permissions: p })
   else browser.permissions.request({ origins: [], permissions: p })
 }
 </script>

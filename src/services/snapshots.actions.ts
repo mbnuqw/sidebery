@@ -142,9 +142,7 @@ export async function createSnapshot(auto = false): Promise<Snapshot | undefined
 }
 
 export function exportSnapshot(snapshot: NormalizedSnapshot) {
-  if (!browser?.downloads) {
-    return Logs.warn('Snapshots.exportSnapshot: Cannot export snapshot: No perm')
-  }
+  if (!browser?.downloads) return
 
   const expType = Settings.state.snapAutoExportType
   const expInfo = prepareExport(snapshot, {

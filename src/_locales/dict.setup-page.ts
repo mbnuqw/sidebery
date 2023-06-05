@@ -3644,6 +3644,14 @@ export const setupPageTranslations: Translations = {
     zh_CN: '需要:\n-历史面板',
     zh_TW: '需要:\n-历史面板',
   },
+  'settings.perm.downloads_label': {
+    en: 'Downloads:',
+    ru: 'Загрузки:',
+  },
+  'settings.perm.downloads_info': {
+    en: 'Required for:\n- Snapshot auto export',
+    ru: 'Необходимо для:\n- Авто экспорта снепшотов',
+  },
 
   // - Storage
   'settings.storage_title': {

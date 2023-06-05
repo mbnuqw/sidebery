@@ -22,6 +22,7 @@ export async function loadPermissions(): Promise<void> {
     browser.permissions.contains({ permissions: ['clipboardWrite'] }),
     browser.permissions.contains({ permissions: ['history'] }),
     browser.permissions.contains({ permissions: ['bookmarks'] }),
+    browser.permissions.contains({ permissions: ['downloads'] }),
   ])
   Permissions.allUrls = perms[0]
   Permissions.webRequest = perms[1]
@@ -31,6 +32,7 @@ export async function loadPermissions(): Promise<void> {
   Permissions.clipboardWrite = perms[5]
   Permissions.history = perms[6]
   Permissions.bookmarks = perms[7]
+  Permissions.downloads = perms[8]
 
   Permissions.reactive.webData =
     Permissions.allUrls &&
@@ -41,11 +43,13 @@ export async function loadPermissions(): Promise<void> {
   Permissions.reactive.clipboardWrite = Permissions.clipboardWrite
   Permissions.reactive.history = Permissions.history
   Permissions.reactive.bookmarks = Permissions.bookmarks
+  Permissions.reactive.downloads = Permissions.downloads
 
   if (!Permissions.reactive.webData) onRemovedWebData()
-  if (!Permissions.reactive.tabHide) onRemovedTabHide()
-  if (!Permissions.reactive.history) onRemovedHistory()
-  if (!Permissions.reactive.bookmarks) onRemovedBookmarks()
+  if (!Permissions.tabHide) onRemovedTabHide()
+  if (!Permissions.history) onRemovedHistory()
+  if (!Permissions.bookmarks) onRemovedBookmarks()
+  if (!Permissions.downloads) onRemovedDownloads()
 }
 
 export type RequestablePermission =
@@ -54,6 +58,7 @@ export type RequestablePermission =
   | 'clipboardWrite'
   | 'history'
   | 'bookmarks'
+  | 'downloads'
 
 export async function request(...perms: RequestablePermission[]): Promise<boolean> {
   try {
@@ -74,6 +79,7 @@ export async function request(...perms: RequestablePermission[]): Promise<boolea
     else if (perms.includes('history')) SetupPage.open('history')
     else if (perms.includes('bookmarks')) SetupPage.open('bookmarks')
     else if (perms.includes('clipboardWrite')) SetupPage.open('clipboard-write')
+    else if (perms.includes('downloads')) SetupPage.open('downloads')
     return false
   }
 }
@@ -106,6 +112,10 @@ function onAdded(info: browser.permissions.Permissions) {
     Permissions.bookmarks = true
     Permissions.reactive.bookmarks = true
     onAddedBookmarks()
+  }
+  if (info.permissions?.includes('downloads')) {
+    Permissions.downloads = true
+    Permissions.reactive.downloads = true
   }
 }
 
@@ -154,6 +164,12 @@ function onRemoved(info: browser.permissions.Permissions): void {
     Permissions.bookmarks = false
     Permissions.reactive.bookmarks = false
     onRemovedBookmarks()
+  }
+
+  if (info.permissions?.includes('downloads')) {
+    Permissions.downloads = false
+    Permissions.reactive.downloads = false
+    onRemovedDownloads()
   }
 }
 
@@ -319,5 +335,31 @@ function onRemovedBookmarks(): void {
 function onRemovedBookmarksFg(): void {
   if (Info.isSidebar) {
     Bookmarks.unload()
+  }
+}
+
+///////////////
+// Downloads
+
+function onRemovedDownloads() {
+  if (Info.isBg) onRemovedDownloadsBg()
+  else onRemovedDownloadsFg()
+}
+
+function onRemovedDownloadsBg(): void {
+  let saveNeeded = false
+  if (Settings.state.snapAutoExport) {
+    Settings.state.snapAutoExport = false
+    saveNeeded = true
+  }
+
+  if (saveNeeded) {
+    Settings.saveSettings()
+  }
+}
+
+function onRemovedDownloadsFg() {
+  if (Info.isSetup) {
+    Settings.state.snapAutoExport = false
   }
 }

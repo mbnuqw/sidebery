@@ -21,29 +21,30 @@ section(ref="el")
     :unitOpts="SETTINGS_OPTIONS.snapIntervalUnit"
     @update:value="Settings.saveDebounced(500)"
     @update:unit="Settings.saveDebounced(150)")
- 
   ToggleField(
     label="settings.snap_export_md_tree"
     v-model:value="Settings.state.snapExportMdTree"
     @update:value="Settings.saveDebounced(150)")
+
   ToggleField(
     label="settings.snap_auto_export"
-    v-model:value="Settings.state.snapAutoExport"
-    @update:value="Settings.saveDebounced(150)")
-  SelectField(
-    label="settings.snap_auto_export_type"
-    optLabel="settings.snap_auto_export_type_"
-    v-model:value="Settings.state.snapAutoExportType"
-    :inactive="!Settings.state.snapAutoExport"
-    :opts="Settings.getOpts('snapAutoExportType')"
-    :folded="false"
-    @update:value="Settings.saveDebounced(150)")
-  TextField(
-    label="settings.snap_export_path"
-    :or="translate('settings.snap_export_path_ph')"
-    :inactive="!Settings.state.snapAutoExport"
-    v-model:value="Settings.state.snapExportPath"
-    @update:value="Settings.saveDebounced(500)")
+    :value="Settings.state.snapAutoExport"
+    @update:value="toggleAutoExport")
+  .sub-fields
+    SelectField(
+      label="settings.snap_auto_export_type"
+      optLabel="settings.snap_auto_export_type_"
+      v-model:value="Settings.state.snapAutoExportType"
+      :inactive="!Settings.state.snapAutoExport"
+      :opts="Settings.getOpts('snapAutoExportType')"
+      :folded="false"
+      @update:value="Settings.saveDebounced(150)")
+    TextField(
+      label="settings.snap_export_path"
+      :or="translate('settings.snap_export_path_ph')"
+      :inactive="!Settings.state.snapAutoExport"
+      v-model:value="Settings.state.snapExportPath"
+      @update:value="Settings.saveDebounced(500)")
 
   NumField(
     label="settings.snap_limit"
@@ -72,6 +73,7 @@ import TextField from '../../components/text-field.vue'
 import SelectField from '../../components/select-field.vue'
 import ToggleField from '../../components/toggle-field.vue'
 import * as Utils from 'src/utils'
+import { Permissions } from 'src/services/permissions'
 
 const el = ref<HTMLElement | null>(null)
 const state = reactive({
@@ -101,5 +103,16 @@ async function calcInfo(): Promise<void> {
   const snapshots = stored.snapshots ?? []
   state.snapshotsLen = snapshots.length.toString()
   state.snapshotsSize = Utils.bytesToStr(new Blob([JSON.stringify(snapshots)]).size)
+}
+
+async function toggleAutoExport() {
+  if (!Settings.state.snapAutoExport && !Permissions.reactive.downloads) {
+    const result = await Permissions.request('downloads')
+    if (!result) return
+  }
+
+  Settings.state.snapAutoExport = !Settings.state.snapAutoExport
+
+  Settings.saveDebounced(150)
 }
 </script>

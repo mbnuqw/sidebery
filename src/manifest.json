@@ -34,7 +34,6 @@
     "menus",
     "menus.overrideContext",
     "search",
-    "downloads",
     "theme"
   ],
 
@@ -46,7 +45,8 @@
     "bookmarks",
     "tabHide",
     "clipboardWrite",
-    "history"
+    "history",
+    "downloads"
   ],
 
   "sidebar_action": {
