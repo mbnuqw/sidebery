@@ -158,10 +158,9 @@ export interface SettingsState {
   snapIntervalUnit: (typeof SETTINGS_OPTIONS.snapIntervalUnit)[number]
   snapLimit: number
   snapLimitUnit: (typeof SETTINGS_OPTIONS.snapLimitUnit)[number]
-  // AutoExport - gotjoshua
   snapAutoExport: boolean
   snapExportPath: string
-  snapAutoExportType: string
+  snapAutoExportType: (typeof SETTINGS_OPTIONS.snapAutoExportType)[number]
   snapExportMdTree: boolean
 
   // Mouse
