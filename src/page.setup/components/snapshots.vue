@@ -471,25 +471,22 @@ async function onExportSnapshotDropDownOpen() {
   await nextTick()
 
   if (!state.activeSnapshot) return
-  const prepared = Snapshots.prepareExport(state.activeSnapshot)
-  if (!prepared) return
 
-  const { time, mdFile, jsonFile } = prepared
-
-  let dateStr = Utils.uDate(time, '.')
-  let timeStr = Utils.uTime(time, '.')
+  const expInfo = Snapshots.prepareExport(state.activeSnapshot, { JSON: true, Markdown: true })
+  const dateStr = Utils.uDate(expInfo.time, '.')
+  const timeStr = Utils.uTime(expInfo.time, '.')
 
   type Link = HTMLAnchorElement | null
   const mdSnapExportLink = document.getElementById('md_snap_export_link') as Link
   const jsonSnapExportLink = document.getElementById('json_snap_export_link') as Link
 
-  if (mdSnapExportLink) {
-    mdSnapExportLink.href = URL.createObjectURL(mdFile)
+  if (mdSnapExportLink && expInfo.mdFile) {
+    mdSnapExportLink.href = URL.createObjectURL(expInfo.mdFile)
     mdSnapExportLink.download = `sidebery-snapshot-${dateStr}-${timeStr}.md`
     mdSnapExportLink.title = `sidebery-snapshot-${dateStr}-${timeStr}.md`
   }
-  if (jsonSnapExportLink) {
-    jsonSnapExportLink.href = URL.createObjectURL(jsonFile)
+  if (jsonSnapExportLink && expInfo.jsonFile) {
+    jsonSnapExportLink.href = URL.createObjectURL(expInfo.jsonFile)
     jsonSnapExportLink.download = `sidebery-snapshot-${dateStr}-${timeStr}.json`
     jsonSnapExportLink.title = `sidebery-snapshot-${dateStr}-${timeStr}.json`
   }

@@ -1,9 +1,10 @@
 import { translate } from 'src/dict'
 import * as Utils from 'src/utils'
 import { NOID, CONTAINER_ID, DEFAULT_CONTAINER, GROUP_URL, TABS_PANEL_CONFIG } from 'src/defaults'
-import { Snapshot, SnapTab, NormalizedSnapshot, PanelConfig } from 'src/types'
+import { Snapshot, SnapTab, NormalizedSnapshot, PanelConfig, Container } from 'src/types'
 import { RemovingSnapshotResult, SnapPanelState, SnapStoreMode, SnapTabState } from 'src/types'
 import { Stored, Notification, Snapshot_v4, SnapWindowState, SnapshotState } from 'src/types'
+import { SidebarConfig } from 'src/types'
 import * as Logs from 'src/services/logs'
 import { Settings } from 'src/services/settings'
 import { Windows } from 'src/services/windows'
@@ -23,8 +24,6 @@ import { Favicons } from './favicons'
 const MIN_SNAP_INTERVAL = 60_000
 const MIN_LIMITING_COUNT = 1
 const MAX_SIZE_LIMIT = 50_000_000
-
-let currentSnapshot: Snapshot | undefined
 
 /**
  * Create base snapshot
@@ -107,7 +106,7 @@ export async function createSnapshot(auto = false): Promise<Snapshot | undefined
     tabs.push(winTabs)
   }
 
-  currentSnapshot = {
+  const currentSnapshot: NormalizedSnapshot = {
     id: Math.random().toString(36).replace('0.', Date.now().toString(36)),
     time: Date.now(),
     containers: stored.containers,
@@ -116,13 +115,7 @@ export async function createSnapshot(auto = false): Promise<Snapshot | undefined
   }
 
   if (Settings.state.snapAutoExport) {
-    exportSnapshot({
-      id: currentSnapshot.id,
-      time: currentSnapshot.time,
-      containers: stored.containers,
-      sidebar: stored.sidebar,
-      tabs,
-    })
+    exportSnapshot(currentSnapshot)
   }
 
   minimizeSnapshot(stored.snapshots, currentSnapshot)
@@ -149,22 +142,37 @@ export async function createSnapshot(auto = false): Promise<Snapshot | undefined
 }
 
 export function exportSnapshot(snapshot: NormalizedSnapshot) {
-  const prepared = prepareExport(snapshot)
-  if (!prepared || !browser?.downloads) {
-    return Logs.warn('Snapshots.exportSnapshot: Cannot export snapshot')
+  if (!browser?.downloads) {
+    return Logs.warn('Snapshots.exportSnapshot: Cannot export snapshot: No perm')
   }
 
-  const { mdFile: mostRecentSnapMd, time } = prepared
-  const snapExportPath = Settings.state.snapExportPath
-  const dateStr = Utils.uDate(time, '.')
-  const timeStr = Utils.uTime(time, '.', false)
-
-  browser.downloads.download({
-    url: URL.createObjectURL(mostRecentSnapMd),
-    filename: `${snapExportPath}/${dateStr}-${timeStr}.md`,
-    conflictAction: 'overwrite',
-    saveAs: false,
+  const expType = Settings.state.snapAutoExportType
+  const expInfo = prepareExport(snapshot, {
+    JSON: expType === 'json' || expType === 'both',
+    Markdown: expType === 'md' || expType === 'both',
   })
+
+  const snapExportPath = Settings.state.snapExportPath
+  const dateStr = Utils.uDate(expInfo.time, '.')
+  const timeStr = Utils.uTime(expInfo.time, '.', false)
+
+  if (expInfo.jsonFile) {
+    browser.downloads.download({
+      url: URL.createObjectURL(expInfo.jsonFile),
+      filename: `${snapExportPath}/${dateStr}-${timeStr}.json`,
+      conflictAction: 'overwrite',
+      saveAs: false,
+    })
+  }
+
+  if (expInfo.mdFile) {
+    browser.downloads.download({
+      url: URL.createObjectURL(expInfo.mdFile),
+      filename: `${snapExportPath}/${dateStr}-${timeStr}.md`,
+      conflictAction: 'overwrite',
+      saveAs: false,
+    })
+  }
 }
 export async function addSnapshot(snapshot: NormalizedSnapshot) {
   if (!Info.isBg) return await IPC.bg('addSnapshot', snapshot)
@@ -859,16 +867,36 @@ export async function getStoredSnapshots() {
   return stored.snapshots
 }
 
-export function prepareExport(snapshot: NormalizedSnapshot) {
+interface SnapExportTypes {
+  JSON?: boolean
+  Markdown?: boolean
+}
+
+interface SnapExportInfo {
+  id: ID
+  time: number
+  containers: Record<ID, Container>
+  sidebar: SidebarConfig
+  tabs: SnapTab[][][]
+  jsonFile?: Blob
+  mdFile?: Blob
+}
+
+export function prepareExport(snapshot: NormalizedSnapshot, type: SnapExportTypes) {
   const { id, time, containers, sidebar, tabs } = snapshot
+  const expInfo: SnapExportInfo = { id, time, containers, sidebar, tabs }
 
-  const jsonStr = JSON.stringify(snapshot)
-  const jsonFile = new Blob([jsonStr], { type: 'application/json' })
+  if (type.JSON) {
+    const jsonStr = JSON.stringify(snapshot)
+    expInfo.jsonFile = new Blob([jsonStr], { type: 'application/json' })
+  }
 
-  const mdStr = convertToMarkdown(snapshot)
-  const mdFile = new Blob([mdStr], { type: 'text/markdown' })
+  if (type.Markdown) {
+    const mdStr = convertToMarkdown(snapshot)
+    expInfo.mdFile = new Blob([mdStr], { type: 'text/markdown' })
+  }
 
-  return { id, time, containers, sidebar, tabs, jsonFile, mdFile }
+  return expInfo
 }
 
 export function convertToMarkdown(snapshot: NormalizedSnapshot): string {
