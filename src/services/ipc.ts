@@ -315,6 +315,7 @@ export function bg<T extends InstanceType.bg, A extends ActionsKeys<T>>(
   ...args: Parameters<ActionsType<T>[A]>
 ): Promise<ReturnType<ActionsType<T>[A]>> {
   const msg: Message<T, A> = { dstType: InstanceType.bg, action, args }
+  console.log(msg)
   return request(msg, AutoConnectMode.WithRetry)
 }
 

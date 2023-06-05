@@ -155,6 +155,10 @@ export const DEFAULT_SETTINGS: SettingsState = {
   snapIntervalUnit: 'min',
   snapLimit: 0,
   snapLimitUnit: 'snap',
+  snapAutoExport: false,
+  snapAutoExportType: 'md',
+  snapExportPath: '',
+  snapExportMdTree: false, // adds extra indented bullets so that all sections are collapsible in tools like Logseq
 
   // Mouse
   hScrollAction: 'none',
@@ -238,6 +242,7 @@ export const SETTINGS_OPTIONS = {
   density: ['compact', 'default', 'loose'],
   colorScheme: ['dark', 'light', 'sys', 'ff'],
   snapIntervalUnit: ['min', 'hr', 'day'],
+  snapAutoExportType: ['md', 'json', 'both'],
   snapLimitUnit: ['snap', 'kb', 'day'],
   moveNewTabPin: ['start', 'end'],
   moveNewTabParent: [

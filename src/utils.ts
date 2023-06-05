@@ -162,10 +162,10 @@ export function uDate(ms: number, delimiter?: string, dayStartTime?: number): st
 /**
  * Get time string from unix seconds
  */
-export function uTime(ms: number, delimiter = ':', sec = true): string {
+export function uTime(ms: number, delimiter = ':', sec = true, min = true): string {
   const dt = new Date(ms)
   let time = `${dt.getHours()}`.padStart(2, '0')
-  time += delimiter + `${dt.getMinutes()}`.padStart(2, '0')
+  if (min) time += delimiter + `${dt.getMinutes()}`.padStart(2, '0')
   if (sec) time += delimiter + `${dt.getSeconds()}`.padStart(2, '0')
 
   return time
