@@ -126,7 +126,6 @@ function togglePermHistory(): void {
 }
 
 function togglePermDownloads() {
-  console.log('[DEBUG] togglePermDownloads')
   const p = ['downloads']
   if (Permissions.reactive.downloads) browser.permissions.remove({ permissions: p })
   else browser.permissions.request({ origins: [], permissions: p })

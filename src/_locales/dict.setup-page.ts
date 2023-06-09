@@ -4070,6 +4070,10 @@ export const setupPageTranslations: Translations = {
     zh_CN: '窗口',
     zh_TW: '窗口',
   },
+  'snapshot.global_pin_title': {
+    en: 'Pinned tabs',
+    ru: 'Закрепленные вкладки',
+  },
   'snapshot.btn_open': {
     en: 'Open',
     ru: 'Открыть',

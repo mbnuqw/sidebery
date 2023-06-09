@@ -66,6 +66,22 @@ export const enum RemovingSnapshotResult {
   Err = -1,
 }
 
+export interface SnapExportTypes {
+  JSON?: boolean
+  Markdown?: boolean
+}
+
+export interface SnapExportInfo {
+  id: ID
+  time: number
+  containers: Record<ID, Container>
+  sidebar: SidebarConfig
+  tabs: SnapTab[][][]
+  jsonFile?: Blob
+  md?: string
+  mdFile?: Blob
+}
+
 // OLD STUFF //
 
 export interface Snapshot_v4 {

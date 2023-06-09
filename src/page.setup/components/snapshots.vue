@@ -95,7 +95,7 @@
 import { reactive, computed, nextTick } from 'vue'
 import * as Utils from 'src/utils'
 import { Stored, Snapshot, SnapshotState, RemovingSnapshotResult } from 'src/types'
-import { SnapTabState, ItemInfo, NormalizedSnapshot } from 'src/types'
+import { SnapTabState, ItemInfo, NormalizedSnapshot, SnapExportInfo } from 'src/types'
 import { CONTAINER_ID, NOID } from 'src/defaults'
 import { translate } from 'src/dict'
 import * as IPC from 'src/services/ipc'
@@ -467,26 +467,27 @@ function getSnapInfo(s: SnapshotState): string {
   )
 }
 
+let exportInfo: SnapExportInfo | undefined
 async function onExportSnapshotDropDownOpen() {
   await nextTick()
 
   if (!state.activeSnapshot) return
 
-  const expInfo = Snapshots.prepareExport(state.activeSnapshot, { JSON: true, Markdown: true })
-  const dateStr = Utils.uDate(expInfo.time, '.')
-  const timeStr = Utils.uTime(expInfo.time, '.')
+  exportInfo = Snapshots.prepareExport(state.activeSnapshot, { JSON: true, Markdown: true })
+  const dateStr = Utils.uDate(exportInfo.time, '.')
+  const timeStr = Utils.uTime(exportInfo.time, '.')
 
   type Link = HTMLAnchorElement | null
   const mdSnapExportLink = document.getElementById('md_snap_export_link') as Link
   const jsonSnapExportLink = document.getElementById('json_snap_export_link') as Link
 
-  if (mdSnapExportLink && expInfo.mdFile) {
-    mdSnapExportLink.href = URL.createObjectURL(expInfo.mdFile)
+  if (mdSnapExportLink && exportInfo.mdFile) {
+    mdSnapExportLink.href = URL.createObjectURL(exportInfo.mdFile)
     mdSnapExportLink.download = `sidebery-snapshot-${dateStr}-${timeStr}.md`
     mdSnapExportLink.title = `sidebery-snapshot-${dateStr}-${timeStr}.md`
   }
-  if (jsonSnapExportLink && expInfo.jsonFile) {
-    jsonSnapExportLink.href = URL.createObjectURL(expInfo.jsonFile)
+  if (jsonSnapExportLink && exportInfo.jsonFile) {
+    jsonSnapExportLink.href = URL.createObjectURL(exportInfo.jsonFile)
     jsonSnapExportLink.download = `sidebery-snapshot-${dateStr}-${timeStr}.json`
     jsonSnapExportLink.title = `sidebery-snapshot-${dateStr}-${timeStr}.json`
   }
@@ -496,8 +497,12 @@ function copyAsMarkdown() {
   if (!state.activeSnapshot) return
 
   const { id, time, containers, sidebar, tabs } = state.activeSnapshot
-  const markdown = Snapshots.convertToMarkdown({ id, time, containers, sidebar, tabs })
-  navigator.clipboard.writeText(markdown)
+  if (exportInfo?.md) {
+    navigator.clipboard.writeText(exportInfo.md)
+  } else {
+    const markdown = Snapshots.convertToMarkdown({ id, time, containers, sidebar, tabs })
+    navigator.clipboard.writeText(markdown)
+  }
 }
 
 function importSnapshot(importEvent: Event) {

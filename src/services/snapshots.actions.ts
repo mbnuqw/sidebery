@@ -1,10 +1,9 @@
 import { translate } from 'src/dict'
 import * as Utils from 'src/utils'
 import { NOID, CONTAINER_ID, DEFAULT_CONTAINER, GROUP_URL, TABS_PANEL_CONFIG } from 'src/defaults'
-import { Snapshot, SnapTab, NormalizedSnapshot, PanelConfig, Container } from 'src/types'
+import { Snapshot, SnapTab, NormalizedSnapshot, SnapExportTypes, SnapExportInfo } from 'src/types'
 import { RemovingSnapshotResult, SnapPanelState, SnapStoreMode, SnapTabState } from 'src/types'
 import { Stored, Notification, Snapshot_v4, SnapWindowState, SnapshotState } from 'src/types'
-import { SidebarConfig } from 'src/types'
 import * as Logs from 'src/services/logs'
 import { Settings } from 'src/services/settings'
 import { Windows } from 'src/services/windows'
@@ -868,21 +867,6 @@ export async function getStoredSnapshots() {
   return stored.snapshots
 }
 
-interface SnapExportTypes {
-  JSON?: boolean
-  Markdown?: boolean
-}
-
-interface SnapExportInfo {
-  id: ID
-  time: number
-  containers: Record<ID, Container>
-  sidebar: SidebarConfig
-  tabs: SnapTab[][][]
-  jsonFile?: Blob
-  mdFile?: Blob
-}
-
 export function prepareExport(snapshot: NormalizedSnapshot, type: SnapExportTypes) {
   const { id, time, containers, sidebar, tabs } = snapshot
   const expInfo: SnapExportInfo = { id, time, containers, sidebar, tabs }
@@ -893,8 +877,8 @@ export function prepareExport(snapshot: NormalizedSnapshot, type: SnapExportType
   }
 
   if (type.Markdown) {
-    const mdStr = convertToMarkdown(snapshot)
-    expInfo.mdFile = new Blob([mdStr], { type: 'text/markdown' })
+    expInfo.md = convertToMarkdown(snapshot)
+    expInfo.mdFile = new Blob([expInfo.md], { type: 'text/markdown' })
   }
 
   return expInfo
@@ -905,48 +889,80 @@ export function convertToMarkdown(snapshot: NormalizedSnapshot): string {
   const timeStr = Utils.uTime(snapshot.time, '.')
   const dateTimeStr = `${dateStr} - ${timeStr}`
   const md = [`# ${dateTimeStr}`, '']
+  const globalPinnedTabs = []
+  const pinnedTabsByPanelId: Map<ID, SnapTab[]> = new Map()
 
-  const TAB = Settings.state.snapExportMdTree ? '  ' : ''
-  const BULLET = Settings.state.snapExportMdTree ? '- ' : ''
-  let IN = TAB
-  let panelConfig
-  const pinned = []
+  const indent = '  '
+  const pinMark = '📌 '
+  const winIndent = ''
+  const panelsIndent = Settings.state.snapExportMdTree ? indent : ''
+  const tabsIndent = Settings.state.snapExportMdTree ? indent.repeat(2) : ''
+  const winBullet = Settings.state.snapExportMdTree ? '- ' : ''
+  const panelBullet = Settings.state.snapExportMdTree ? '- ' : ''
+  const tabBullet = '- '
 
+  // Gather pinned tabs
+  if (snapshot.tabs[0]?.[0]?.[0]?.pinned) {
+    const pinnedTabs = snapshot.tabs[0]?.[0]
+    for (const tab of pinnedTabs) {
+      const panelConfig = snapshot.sidebar.panels[tab.panelId]
+      if (panelConfig) {
+        let panelPinnedTabs = pinnedTabsByPanelId.get(tab.panelId)
+        if (!panelPinnedTabs) panelPinnedTabs = []
+        panelPinnedTabs.push(tab)
+        pinnedTabsByPanelId.set(tab.panelId, panelPinnedTabs)
+      } else {
+        globalPinnedTabs.push(tab)
+      }
+    }
+  }
+
+  // Per-window
   for (let i = 0; i < snapshot.tabs.length; i++) {
     const win = snapshot.tabs[i]
-    const winTitle = `${IN}${BULLET}## ${translate('snapshot.window_title')} ${i + 1}`
-    md.push(winTitle)
+    const winTitle = `## ${translate('snapshot.window_title')} ${i + 1}`
+    md.push(winIndent + winBullet + winTitle)
 
-    for (const panel of win) {
-      pinned.push(...panel.filter(t => t.pinned))
-      const rest = panel.filter(t => !t.pinned)
+    // Global pinned tabs
+    if (globalPinnedTabs.length) {
+      const globalPinnedTitle = `### ${translate('snapshot.global_pin_title')}`
+      md.push(panelsIndent + panelBullet + globalPinnedTitle)
 
-      for (const tab of rest) {
-        if (!tab.pinned && (!panelConfig || panelConfig.id !== tab.panelId)) {
-          panelConfig = snapshot.sidebar?.panels?.[tab.panelId]
-
-          IN += TAB
-
-          if (panelConfig) {
-            IN += TAB
-            const panelTitle = `${IN}${BULLET}### ${panelConfig.name}`
-            md.push(panelTitle)
-            IN += TAB
-            if (pinned.length) {
-              for (const tab of pinned) {
-                if (tab.panelId === panelConfig.id) {
-                  const tabLink = `[${tab.title}](${tab.url}")`
-                  md.push(`${IN}- 📌 ${tabLink}`)
-                }
-              }
-            }
-          }
-        }
-        const tabLink = `[${tab.title}](${tab.url}")`
-        const indentLvl = '  '.repeat(tab.lvl ?? 0)
-        md.push(`${IN}${indentLvl}- ${tabLink}`)
+      for (const tab of globalPinnedTabs) {
+        const tabLink = `[${tab.title}](${tab.url})`
+        md.push(tabsIndent + tabBullet + pinMark + tabLink)
       }
-      IN = TAB
+    }
+
+    // Per-panel
+    for (const id of snapshot.sidebar.nav) {
+      const panel = snapshot.sidebar.panels[id]
+      if (!Utils.isTabsPanel(panel)) continue
+
+      // Get tabs
+      const pinnedTabs = pinnedTabsByPanelId.get(id)
+      const normalTabs = win.find(p => p[0] && p[0].panelId === id && !p[0].pinned)
+      if (!pinnedTabs?.length && !normalTabs) continue
+
+      // Create panel title
+      const panelTitle = `### ${panel.name}`
+      md.push(panelsIndent + panelBullet + panelTitle)
+
+      // Pinned tabs
+      if (pinnedTabs?.length) {
+        for (const tab of pinnedTabs) {
+          const tabLink = `[${tab.title}](${tab.url})`
+          md.push(tabsIndent + tabBullet + pinMark + tabLink)
+        }
+      }
+
+      // Normal tabs
+      if (normalTabs?.length) {
+        for (const tab of normalTabs) {
+          const tabLink = `[${tab.title}](${tab.url})`
+          md.push(tabsIndent + indent.repeat(tab.lvl ?? 0) + tabBullet + tabLink)
+        }
+      }
     }
   }
 
