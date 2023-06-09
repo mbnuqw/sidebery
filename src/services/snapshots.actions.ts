@@ -66,7 +66,10 @@ export async function createSnapshot(auto = false): Promise<Snapshot | undefined
       const snapTab: SnapTab = { url: tab.url, title: tab.title, panelId: tab.panelId }
       const parent = snapTabsById[tab.parentId]
       if (parent && parent.panelId === tab.panelId) snapTab.lvl = (parent.lvl ?? 0) + 1
-      if (tab.pinned) snapTab.pinned = true
+      if (tab.pinned) {
+        snapTab.pinned = true
+        if (Settings.state.pinnedTabsPosition !== 'panel') snapTab.panelId = -1
+      }
       if (tab.cookieStoreId !== CONTAINER_ID) snapTab.containerId = tab.cookieStoreId
       if (tab.customTitle) snapTab.customTitle = tab.customTitle
       if (tab.customColor) snapTab.customColor = tab.customColor
