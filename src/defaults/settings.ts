@@ -157,8 +157,8 @@ export const DEFAULT_SETTINGS: SettingsState = {
   snapLimitUnit: 'snap',
   snapAutoExport: false,
   snapAutoExportType: 'md',
-  snapExportPath: '',
-  snapExportMdTree: false, // adds extra indented bullets so that all sections are collapsible in tools like Logseq
+  snapAutoExportPath: '',
+  snapMdFullTree: false,
 
   // Mouse
   hScrollAction: 'none',

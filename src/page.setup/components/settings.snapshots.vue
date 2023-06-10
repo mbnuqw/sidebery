@@ -23,7 +23,7 @@ section(ref="el")
     @update:unit="Settings.saveDebounced(150)")
   ToggleField(
     label="settings.snap_export_md_tree"
-    v-model:value="Settings.state.snapExportMdTree"
+    v-model:value="Settings.state.snapMdFullTree"
     @update:value="Settings.saveDebounced(150)")
 
   ToggleField(
@@ -43,7 +43,7 @@ section(ref="el")
       label="settings.snap_export_path"
       :or="translate('settings.snap_export_path_ph')"
       :inactive="!Settings.state.snapAutoExport"
-      v-model:value="Settings.state.snapExportPath"
+      v-model:value="Settings.state.snapAutoExportPath"
       @update:value="Settings.saveDebounced(500)")
 
   NumField(

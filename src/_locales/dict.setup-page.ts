@@ -2764,13 +2764,13 @@ export const setupPageTranslations: Translations = {
     zh_TW: '自動快照間隔',
   },
   'settings.snap_auto_export': {
-    en: 'Auto Export (on every snapshot)',
+    en: 'Auto export (on every snapshot)',
     ru: 'Автоэкспорт (при каждом снимке)',
     de: 'Auto-Export (bei jedem Snapshot)',
     zh_CN: '自动导出（每次快照时）',
   },
   'settings.snap_auto_export_type': {
-    en: 'Auto Export Format(s)',
+    en: 'Auto export format(s)',
     ru: 'Формат(ы) автоэкспорта',
     de: 'Auto-Export Format(e)',
     zh_CN: '自动导出格式',
@@ -2786,11 +2786,11 @@ export const setupPageTranslations: Translations = {
     ru: 'оба',
   },
   'settings.snap_export_md_tree': {
-    en: 'Tree Friendly MD (add extra bullets for windows and tabs)',
-    ru: 'Дружественный к деревьям MD (добавьте дополнительные пункты для окон и вкладок)',
+    en: 'Full-tree structure in Markdown',
+    ru: 'Полная древовидная структура в Markdown',
   },
   'settings.snap_export_path': {
-    en: 'Path to Export to (relative to downloads)',
+    en: 'Path to export to (relative to downloads)',
   },
   'settings.snap_export_path_ph': {
     en: '/path/to/mdfiles/',

@@ -159,9 +159,9 @@ export interface SettingsState {
   snapLimit: number
   snapLimitUnit: (typeof SETTINGS_OPTIONS.snapLimitUnit)[number]
   snapAutoExport: boolean
-  snapExportPath: string
+  snapAutoExportPath: string
   snapAutoExportType: (typeof SETTINGS_OPTIONS.snapAutoExportType)[number]
-  snapExportMdTree: boolean
+  snapMdFullTree: boolean
 
   // Mouse
   hScrollThroughPanels?: boolean // DEPR

@@ -152,14 +152,14 @@ export function exportSnapshot(snapshot: NormalizedSnapshot) {
     Markdown: expType === 'md' || expType === 'both',
   })
 
-  const snapExportPath = Settings.state.snapExportPath
+  const snapAutoExportPath = Settings.state.snapAutoExportPath
   const dateStr = Utils.uDate(expInfo.time, '.')
   const timeStr = Utils.uTime(expInfo.time, '.', false)
 
   if (expInfo.jsonFile) {
     browser.downloads.download({
       url: URL.createObjectURL(expInfo.jsonFile),
-      filename: `${snapExportPath}/${dateStr}-${timeStr}.json`,
+      filename: `${snapAutoExportPath}/${dateStr}-${timeStr}.json`,
       conflictAction: 'overwrite',
       saveAs: false,
     })
@@ -168,7 +168,7 @@ export function exportSnapshot(snapshot: NormalizedSnapshot) {
   if (expInfo.mdFile) {
     browser.downloads.download({
       url: URL.createObjectURL(expInfo.mdFile),
-      filename: `${snapExportPath}/${dateStr}-${timeStr}.md`,
+      filename: `${snapAutoExportPath}/${dateStr}-${timeStr}.md`,
       conflictAction: 'overwrite',
       saveAs: false,
     })
@@ -903,10 +903,10 @@ export function convertToMarkdown(snapshot: NormalizedSnapshot): string {
   const indent = '  '
   const pinMark = '📌 '
   const winIndent = ''
-  const panelsIndent = Settings.state.snapExportMdTree ? indent : ''
-  const tabsIndent = Settings.state.snapExportMdTree ? indent.repeat(2) : ''
-  const winBullet = Settings.state.snapExportMdTree ? '- ' : ''
-  const panelBullet = Settings.state.snapExportMdTree ? '- ' : ''
+  const panelsIndent = Settings.state.snapMdFullTree ? indent : ''
+  const tabsIndent = Settings.state.snapMdFullTree ? indent.repeat(2) : ''
+  const winBullet = Settings.state.snapMdFullTree ? '- ' : ''
+  const panelBullet = Settings.state.snapMdFullTree ? '- ' : ''
   const tabBullet = '- '
 
   // Gather pinned tabs
