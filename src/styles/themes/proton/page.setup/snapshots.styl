@@ -453,7 +453,6 @@ for i in 1..12
   position: absolute
   top: 0
   left: 0
-  // left: 30px
   display: block
   z-index: 1
   cursor: default
@@ -481,12 +480,11 @@ for i in 1..12
   > svg
     opacity: .7
   > svg.pin
-    bottom: -3px
-    right: -6px
+    top: 2px
+    left: 20px
     width: 12px
     height: 12px
     fill: var(--toolbar-fg)
-    opacity: 1
     filter: drop-shadow(0 0 1px var(--frame-bg))
 
 .Snapshots .tab .title-url
@@ -510,19 +508,27 @@ for i in 1..12
 .Snapshots .tab .title
   font-size: rem(12)
   color: var(--toolbar-fg)
+.Snapshots .tab[data-pinned="true"] .title
+  margin-left: 12px
 @media screen and (min-width: 1000px)
   .Snapshots .tab .title
     margin: 0 16px 0 0
     flex-grow: 1
+  .Snapshots .tab[data-pinned="true"] .title
+    margin-left: 12px
 
 .Snapshots .tab .url
   font-size: rem(11)
   color: var(--toolbar-fg)
   flex-shrink: 0
   opacity: .7
+.Snapshots .tab[data-pinned="true"] .url
+    margin-left: 12px
 @media screen and (min-width: 1000px)
   .Snapshots .tab .url
     width: 50%
+  .Snapshots .tab[data-pinned="true"] .url
+    margin-left: 12px
   for i in 1..12
     .Snapshots .tab[data-lvl=\"{i}\"] .url
       width: 'calc(50% + %s)' % (6px * i)

@@ -686,13 +686,21 @@ export function parseSnapshot(
       for (const tab of panel) {
         const container = tab.containerId ? snapshot.containers[tab.containerId] : undefined
 
+        if (tab.pinned && tab.panelId === NOID) tab.panelId = 'global_pinned'
+
         let panelState = panelsById[tab.panelId]
         if (!panelState) {
           let panelConfig = snapshot.sidebar.panels[tab.panelId]
           if (!panelConfig) {
             panelConfig = Utils.cloneObject(TABS_PANEL_CONFIG)
-            panelConfig.id = NOID
-            tab.panelId = -1
+            if (tab.pinned && tab.panelId === 'global_pinned') {
+              panelConfig.id = 'global_pinned'
+              panelConfig.name = translate('snapshot.global_pin_title')
+              panelConfig.iconSVG = 'icon_pin'
+            } else {
+              panelConfig.id = NOID
+              tab.panelId = NOID
+            }
           }
 
           panelState = {
@@ -722,7 +730,7 @@ export function parseSnapshot(
       }
     }
 
-    if (panelsById[-1]) winState.panels.push(panelsById[-1])
+    if (panelsById['global_pinned']) winState.panels.push(panelsById['global_pinned'])
     for (const id of snapshot.sidebar.nav ?? []) {
       const panelState = panelsById[id]
       if (panelState?.tabs.length) winState.panels.push(panelState)
