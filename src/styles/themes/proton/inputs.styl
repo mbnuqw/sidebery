@@ -541,8 +541,8 @@
   .label
     position: relative
     font-size: rem(16)
-    line-height: 26px
-    padding: 8px 0
+    line-height: 24px
+    padding: 11px 0
     align-self: flex-start
     color: var(--toolbar-fg)
     transition: color var(--d-fast)
@@ -550,21 +550,23 @@
     position: relative
     display: flex
     align-items: center
-    padding: 9px 0
+    padding: 8px 0
     -moz-user-select: none
   .text-input
     position: relative
-    width: 100%
+    width: 100px
+    min-width: 100px
     font-size: rem(16)
-    margin: 0 16px 0 0
+    margin: 0 0 0 auto
+    text-align: right
     transform: opacity var(--d-fast)
   &.-inline .text-input
     margin: 0
-    text-align: right
   .unit-input
     position: relative
     flex: 1 0 auto
-    padding: 0 0 0 16px
+    padding: 0 0 0 8px
+    max-width: fit-content
     -moz-user-select: none
   &:not([data-active="true"]) .text-input > input
     color: var(--toolbar-fg)

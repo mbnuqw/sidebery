@@ -7,6 +7,7 @@
         :value="props.value"
         :line="true"
         :filter="valueFilter"
+        @keydown="onKD"
         @update:value="emit('update:value', $event)")
       SelectInput.unit-input(
         v-if="props.unitOpts && props.unitLabel"
@@ -55,7 +56,35 @@ function valueFilter(e: Event): number | void {
   if (isNaN(val) || (!props.allowNegative && val < 0)) return 0
   return val
 }
+
 function select(unit: string): void {
-  if (!props.inactive) emit('update:unit', unit)
+  if (props.inactive) return
+
+  emit('update:unit', unit)
+
+  if (props.value !== undefined) {
+    let val
+    if (typeof props.value === 'string') val = parseInt(props.value)
+    else val = props.value
+    if (isNaN(val)) return
+    if (val === 0) emit('update:value', 1)
+  }
+}
+
+function onKD(e: KeyboardEvent) {
+  if (props.inactive) return
+  if (props.value === undefined) return
+
+  let val
+  if (typeof props.value === 'string') val = parseInt(props.value)
+  else val = props.value
+  if (isNaN(val)) return
+
+  if (e.key === 'ArrowUp') {
+    emit('update:value', val + 1)
+  } else if (e.key === 'ArrowDown') {
+    if (val <= 0) return
+    emit('update:value', val - 1)
+  }
 }
 </script>
