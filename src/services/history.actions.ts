@@ -33,10 +33,11 @@ export async function load(): Promise<void> {
   })
 
   const lastItemVisitTime = result[result.length - 1]?.lastVisitTime
-  History.reactive.list = await normalizeHistory(result, true, lastItemVisitTime)
+  const normList = await normalizeHistory(result, true, lastItemVisitTime)
   lastItemTime = getLastItemTime() - 1
 
-  if (!History.reactive.list.length) await loadMore()
+  if (!normList.length) await loadMore()
+  else History.reactive.list = normList
 
   History.setupListeners()
 
@@ -48,6 +49,7 @@ export async function load(): Promise<void> {
 
 export function unload(): void {
   History.ready = false
+  History.allLoaded = false
   History.reactive.ready = false
   History.reactive.list = []
 
@@ -80,8 +82,8 @@ export async function normalizeHistory(
   const normalized: HistoryItem[] = []
 
   for (const item of items) {
-    // Skip untitled visits
-    if (!item.title) continue
+    if (!item.url) continue
+    if (!item.title) item.title = Utils.getDomainOf(item.url)
 
     normalizeHistoryItem(item)
     if (allVisits && item.visitCount !== undefined && item.visitCount > 1 && item.url) {
@@ -147,7 +149,9 @@ export async function loadMore(): Promise<void> {
 
   // Second check
   if (result.length) {
-    const newItems = await normalizeHistory(result, true, after, before)
+    // Find lowest lastVisitTime
+    const llvt = result[result.length - 1]?.lastVisitTime ?? 0
+    const newItems = await normalizeHistory(result, true, llvt, before)
     if (newItems.length) {
       History.reactive.list.push(...newItems)
       lastItemTime = getLastItemTime() - 1
