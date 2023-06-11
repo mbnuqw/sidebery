@@ -156,8 +156,8 @@ export const DEFAULT_SETTINGS: SettingsState = {
   snapLimit: 0,
   snapLimitUnit: 'snap',
   snapAutoExport: false,
-  snapAutoExportType: 'md',
-  snapAutoExportPath: '',
+  snapAutoExportType: 'json',
+  snapAutoExportPath: 'Sidebery/snapshot-%Y.%M.%D-%h.%m.%s',
   snapMdFullTree: false,
 
   // Mouse
@@ -242,7 +242,7 @@ export const SETTINGS_OPTIONS = {
   density: ['compact', 'default', 'loose'],
   colorScheme: ['dark', 'light', 'sys', 'ff'],
   snapIntervalUnit: ['min', 'hr', 'day'],
-  snapAutoExportType: ['md', 'json', 'both'],
+  snapAutoExportType: ['json', 'md', 'both'],
   snapLimitUnit: ['snap', 'kb', 'day'],
   moveNewTabPin: ['start', 'end'],
   moveNewTabParent: [

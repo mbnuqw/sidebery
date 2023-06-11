@@ -171,6 +171,27 @@ export function uTime(ms: number, delimiter = ':', sec = true): string {
   return time
 }
 
+const DATE_TIME_TEMPLATE_RE = /%%|%Y|%M|%D|%h|%m|%s/g
+
+export function dateTimeTemplate(str: string, msOrDate: number | Date): string {
+  let dt: Date
+  if (typeof msOrDate === 'number') dt = new Date(msOrDate)
+  else dt = msOrDate
+
+  str = str.replace(DATE_TIME_TEMPLATE_RE, match => {
+    if (match === '%%') return '%'
+    else if (match === '%Y') return dt.getFullYear().toString()
+    else if (match === '%M') return `${dt.getMonth() + 1}`.padStart(2, '0')
+    else if (match === '%D') return `${dt.getDate()}`.padStart(2, '0')
+    else if (match === '%h') return `${dt.getHours()}`.padStart(2, '0')
+    else if (match === '%m') return `${dt.getMinutes()}`.padStart(2, '0')
+    else if (match === '%s') return `${dt.getSeconds()}`.padStart(2, '0')
+    return ''
+  })
+
+  return str
+}
+
 /**
  * Get domain of the url
  */

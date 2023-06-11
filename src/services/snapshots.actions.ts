@@ -143,6 +143,19 @@ export async function createSnapshot(auto = false): Promise<Snapshot | undefined
   return currentSnapshot
 }
 
+function getExportPath(expInfo: SnapExportInfo) {
+  let snapAutoExportPath = Settings.state.snapAutoExportPath
+  if (!snapAutoExportPath) snapAutoExportPath = 'Sidebery/snapshot-%Y.%M.%D-%h.%m.%s'
+  snapAutoExportPath = Utils.dateTimeTemplate(snapAutoExportPath, expInfo.time)
+  snapAutoExportPath = snapAutoExportPath.replace(/^\.+/, '')
+
+  const pathArr = snapAutoExportPath.split(/\/|\\/)
+  const normPathArr = pathArr.filter(part => !!part)
+  const normPath = normPathArr.join('/')
+
+  return normPath
+}
+
 export function exportSnapshot(snapshot: NormalizedSnapshot) {
   if (!browser?.downloads) return
 
@@ -152,14 +165,12 @@ export function exportSnapshot(snapshot: NormalizedSnapshot) {
     Markdown: expType === 'md' || expType === 'both',
   })
 
-  const snapAutoExportPath = Settings.state.snapAutoExportPath
-  const dateStr = Utils.uDate(expInfo.time, '.')
-  const timeStr = Utils.uTime(expInfo.time, '.', false)
+  const path = getExportPath(expInfo)
 
   if (expInfo.jsonFile) {
     browser.downloads.download({
       url: URL.createObjectURL(expInfo.jsonFile),
-      filename: `${snapAutoExportPath}/${dateStr}-${timeStr}.json`,
+      filename: `${path}.json`,
       conflictAction: 'overwrite',
       saveAs: false,
     })
@@ -168,7 +179,7 @@ export function exportSnapshot(snapshot: NormalizedSnapshot) {
   if (expInfo.mdFile) {
     browser.downloads.download({
       url: URL.createObjectURL(expInfo.mdFile),
-      filename: `${snapAutoExportPath}/${dateStr}-${timeStr}.md`,
+      filename: `${path}.md`,
       conflictAction: 'overwrite',
       saveAs: false,
     })

@@ -39,10 +39,12 @@ section(ref="el")
       :opts="Settings.getOpts('snapAutoExportType')"
       :folded="false"
       @update:value="Settings.saveDebounced(150)")
-    TextField(
+    TextField.-wide(
       label="settings.snap_export_path"
       :or="translate('settings.snap_export_path_ph')"
       :inactive="!Settings.state.snapAutoExport"
+      :line="true"
+      :note="translate('settings.snap_export_path_note')"
       v-model:value="Settings.state.snapAutoExportPath"
       @update:value="Settings.saveDebounced(500)")
 

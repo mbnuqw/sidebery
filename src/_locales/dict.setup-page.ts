@@ -2790,10 +2790,17 @@ export const setupPageTranslations: Translations = {
     ru: 'Полная древовидная структура в Markdown',
   },
   'settings.snap_export_path': {
-    en: 'Path to export to (relative to downloads)',
+    en: 'Path with file name',
+    ru: 'Путь с именем файла',
+  },
+  'settings.snap_export_path_note': {
+    en: `Note: Path is relative to the downloads folder.
+%Y - year; %M - month; %D - day; %h - hour; %m - minute; %s - second`,
+    ru: `Примечание: Путь указывается относительно папки загрузок.
+%Y - год; %M - месяц; %D - день; %h - час; %m - минута; %s - секунда`,
   },
   'settings.snap_export_path_ph': {
-    en: '/path/to/mdfiles/',
+    en: 'Sidebery/snapshot-%Y.%M.%D-%h.%m.%s',
   },
   'settings.snap_interval_min': {
     en: n => (n === 1 ? 'minute' : 'minutes'),
