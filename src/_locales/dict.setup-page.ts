@@ -898,6 +898,13 @@ export const setupPageTranslations: Translations = {
     zh_CN: '左键单击活动的标签页面板',
     zh_TW: '左鍵單擊活動選項卡面板',
   },
+  'settings.nav_act_tabs_panel_left_click_scroll': {
+    en: 'scroll to start/end',
+    ru: 'проскроллить к началу/концу',
+    de: 'Scrolle zum Anfang/Ende',
+    zh_CN: '滚动到顶部/底部',
+    zh_TW: '滾動到頂部/底部',
+  },
   'settings.nav_act_tabs_panel_left_click_new_tab': {
     en: 'create tab',
     ru: 'создать вкладку',

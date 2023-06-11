@@ -434,12 +434,14 @@ function onNavMouseUp(e: MouseEvent, item: NavItem, inHiddenBar?: boolean) {
     }
     if (isBookmarks) {
       if (Settings.state.navActBookmarksPanelLeftClickAction === 'scroll') {
-        return Bookmarks.scrollBookmarksToEdge()
+        return Sidebar.scrollPanelToEdge()
       }
     }
     if (isTabs && panel) {
       if (Settings.state.navActTabsPanelLeftClickAction === 'new_tab') {
         return Tabs.createTabInPanel(panel)
+      } else if (Settings.state.navActTabsPanelLeftClickAction === 'scroll') {
+        return Sidebar.scrollPanelToEdge()
       }
     }
   }

@@ -2181,6 +2181,20 @@ export function scrollActivePanel(y: number, offset?: boolean): void {
   panel.scrollEl.scroll(scrollConf)
 }
 
+export function scrollPanelToEdge(panel?: Panel): void {
+  if (!panel) panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  if (!panel.scrollComponent || !panel.scrollEl) return
+
+  const scrollableBoxEl = panel.scrollComponent.getScrollableBox()
+  if (!scrollableBoxEl) return
+
+  if (panel.scrollEl.scrollTop === 0) {
+    scrollableBoxEl.scrollIntoView({ behavior: 'smooth', block: 'end' })
+  } else {
+    scrollableBoxEl.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+}
+
 let switchPanelBackTimeout: number | undefined
 export function switchPanelBackResetTimeout(): void {
   clearTimeout(switchPanelBackTimeout)

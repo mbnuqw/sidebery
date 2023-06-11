@@ -206,7 +206,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
 
 // prettier-ignore
 export const SETTINGS_OPTIONS = {
-  navActTabsPanelLeftClickAction: ['new_tab', 'none'],
+  navActTabsPanelLeftClickAction: ['scroll', 'new_tab', 'none'],
   navActBookmarksPanelLeftClickAction: ['scroll', 'none'],
   navTabsPanelMidClickAction: ['rm_act_tab', 'rm_all', 'discard', 'bookmark', 'convert', 'none'],
   navBookmarksPanelMidClickAction: ['convert', 'none'],

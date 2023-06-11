@@ -79,6 +79,7 @@ section(ref="el")
       label="settings.nav_act_tabs_panel_left_click"
       optLabel="settings.nav_act_tabs_panel_left_click_"
       v-model:value="Settings.state.navActTabsPanelLeftClickAction"
+      :folded="true"
       :opts="Settings.getOpts('navActTabsPanelLeftClickAction')"
       @update:value="Settings.saveDebounced(150)")
     SelectField(

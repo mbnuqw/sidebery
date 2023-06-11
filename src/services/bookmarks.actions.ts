@@ -1244,21 +1244,6 @@ async function askWhatToDoWithOldUnusedBookmarks(folderName: string): Promise<st
   return result
 }
 
-export function scrollBookmarksToEdge(panel?: Panel): void {
-  if (!panel) panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
-  if (!Utils.isBookmarksPanel(panel)) return
-  if (!panel.scrollComponent || !panel.scrollEl) return
-
-  const scrollableBoxEl = panel.scrollComponent.getScrollableBox()
-  if (!scrollableBoxEl) return
-
-  if (panel.scrollEl.scrollTop === 0) {
-    scrollableBoxEl.scrollIntoView({ behavior: 'smooth', block: 'end' })
-  } else {
-    scrollableBoxEl.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }
-}
-
 export function getPath(bookmark: Bookmark): ID[] {
   let parent = Bookmarks.reactive.byId[bookmark.parentId]
   const path: ID[] = []
