@@ -353,6 +353,8 @@ export function getNormalizedSnapshot(
         const tab = panel[ti]
 
         if (tab === SnapStoreMode.Unchanged) {
+          if (index === 0) return
+
           for (let i = index; i--; ) {
             const snapN = snapshots[i]
             const tabN = snapN?.tabs[wi]?.[pi]?.[ti]
@@ -360,11 +362,16 @@ export function getNormalizedSnapshot(
               panel[ti] = tabN
               break
             }
+
+            if (i === 0) return
           }
         }
       }
     }
   }
+
+  if (!snapshot.sidebar || snapshot.sidebar === SnapStoreMode.Unchanged) return
+  if (!snapshot.containers || snapshot.containers === SnapStoreMode.Unchanged) return
 
   return snapshot as NormalizedSnapshot
 }
