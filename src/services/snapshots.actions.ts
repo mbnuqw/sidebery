@@ -23,6 +23,7 @@ import { Favicons } from './favicons'
 const MIN_SNAP_INTERVAL = 60_000
 const MIN_LIMITING_COUNT = 1
 const MAX_SIZE_LIMIT = 50_000_000
+const GLOB_PINNED_ID = 'global_pinned'
 
 /**
  * Create base snapshot
@@ -570,6 +571,8 @@ async function openWindow(snapshot: NormalizedSnapshot, winIndex: number): Promi
   let index = 0
   for (const panel of winTabs) {
     for (const tab of panel) {
+      if (tab.panelId === GLOB_PINNED_ID) tab.panelId = NOID
+
       const tabInfo: ItemInfo = {
         id: index++,
         url: tab.url,
@@ -704,15 +707,15 @@ export function parseSnapshot(
       for (const tab of panel) {
         const container = tab.containerId ? snapshot.containers[tab.containerId] : undefined
 
-        if (tab.pinned && tab.panelId === NOID) tab.panelId = 'global_pinned'
+        if (tab.pinned && tab.panelId === NOID) tab.panelId = GLOB_PINNED_ID
 
         let panelState = panelsById[tab.panelId]
         if (!panelState) {
           let panelConfig = snapshot.sidebar.panels[tab.panelId]
           if (!panelConfig) {
             panelConfig = Utils.cloneObject(TABS_PANEL_CONFIG)
-            if (tab.pinned && tab.panelId === 'global_pinned') {
-              panelConfig.id = 'global_pinned'
+            if (tab.pinned && tab.panelId === GLOB_PINNED_ID) {
+              panelConfig.id = GLOB_PINNED_ID
               panelConfig.name = translate('snapshot.global_pin_title')
               panelConfig.iconSVG = 'icon_pin'
             } else {
@@ -748,7 +751,7 @@ export function parseSnapshot(
       }
     }
 
-    if (panelsById['global_pinned']) winState.panels.push(panelsById['global_pinned'])
+    if (panelsById[GLOB_PINNED_ID]) winState.panels.push(panelsById[GLOB_PINNED_ID])
     for (const id of snapshot.sidebar.nav ?? []) {
       const panelState = panelsById[id]
       if (panelState?.tabs.length) winState.panels.push(panelState)
