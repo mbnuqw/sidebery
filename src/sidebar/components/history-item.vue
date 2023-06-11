@@ -39,15 +39,12 @@ function onMouseDown(e: MouseEvent): void {
       else Selection.deselectHistory(props.item.id)
       return
     }
-
-    if (Selection.isSet() && !props.item.sel) Selection.resetSelection()
   }
 
   // Middle
   else if (e.button === 1) {
     e.preventDefault()
     Mouse.blockWheel()
-    Selection.resetSelection()
   }
 
   // Right
@@ -63,6 +60,10 @@ function onMouseUp(e: MouseEvent): void {
   if (!sameTarget) return
 
   if (e.button === 0 || e.button === 1) {
+    if (Selection.isHistory() && !Search.reactive.rawValue) {
+      return Selection.resetSelection()
+    }
+
     let { dst, activateFirstTab: activateNewTab } = Bookmarks.getMouseOpeningConf(e.button)
     // Reset search input, if navigating away from the history panel
     if (Search.reactive.rawValue && activateNewTab) {
