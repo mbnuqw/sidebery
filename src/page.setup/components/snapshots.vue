@@ -89,6 +89,9 @@
 
     .placeholder(v-if="!state.snapshots.length")
       .btn(@click="createSnapshot()") {{translate('snapshot.btn_create_first')}}
+      .btn
+        .label {{translate('snapshot.btn_import_snapshot')}}
+        input(type="file" accept="application/json" @input="importSnapshot")
 </template>
 
 <script lang="ts" setup>
