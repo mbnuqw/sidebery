@@ -25,7 +25,7 @@
           BookmarkCard(v-for="bookmark in group.list" :key="bookmark.id" :node="bookmark")
 
   PanelPlaceholder(
-    :isLoading="(state.unrendered || !panel.reactive.ready)"
+    :isLoading="(state.unrendered || !panel.reactive.ready) && isActive"
     :isNotPerm="!Permissions.reactive.bookmarks"
     :permMsg="translate('panel.bookmarks.req_perm')"
     perm="bookmarks"
