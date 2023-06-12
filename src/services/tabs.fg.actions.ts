@@ -2396,16 +2396,17 @@ export function foldTabsBranch(rootTabId: ID): void {
 
   if (Settings.state.discardFolded) {
     if (Settings.state.discardFoldedDelay === 0) {
-      toHide.map(id => browser.tabs.discard(id))
+      browser.tabs.discard(toHide)
     } else {
       let delayMS = Settings.state.discardFoldedDelay
       if (Settings.state.discardFoldedDelayUnit === 'sec') delayMS *= 1000
       if (Settings.state.discardFoldedDelayUnit === 'min') delayMS *= 60000
-      setTimeout(() => {
-        const stillValid = toHide.every(id => {
-          return Tabs.reactive.byId[id] && Tabs.reactive.byId[id]?.invisible
-        })
-        if (stillValid) browser.tabs.discard(toHide)
+      clearTimeout(rootTab.autoUnloadFoldedTimeout)
+      rootTab.autoUnloadFoldedTimeout = setTimeout(() => {
+        const parentTab = Tabs.byId[rootTabId]
+        if (parentTab?.isParent && parentTab.folded) {
+          browser.tabs.discard(Tabs.getBranch(parentTab, false).map(t => t.id))
+        }
       }, delayMS)
     }
   }

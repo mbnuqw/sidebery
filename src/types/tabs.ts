@@ -1,6 +1,7 @@
 export interface Tab extends browser.tabs.Tab {
   isParent: boolean
   folded: boolean
+  autoUnloadFoldedTimeout?: number
   invisible: boolean
   parentId: ID
   panelId: ID
