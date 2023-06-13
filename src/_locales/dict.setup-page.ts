@@ -2796,6 +2796,10 @@ export const setupPageTranslations: Translations = {
     en: 'Full-tree structure in Markdown',
     ru: 'Полная древовидная структура в Markdown',
   },
+  'settings.snap_export_md_tree_note': {
+    en: 'Add additional indents and bullets to window and panel items.',
+    ru: 'Добавить дополнительные отступы и маркеры к пунктам окон и панелей.',
+  },
   'settings.snap_export_path': {
     en: 'Path with file name',
     ru: 'Путь с именем файла',

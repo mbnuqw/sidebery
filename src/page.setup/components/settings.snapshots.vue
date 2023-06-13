@@ -24,6 +24,7 @@ section(ref="el")
   ToggleField(
     label="settings.snap_export_md_tree"
     v-model:value="Settings.state.snapMdFullTree"
+    :note="translate('settings.snap_export_md_tree_note')"
     @update:value="Settings.saveDebounced(150)")
 
   ToggleField(
