@@ -556,8 +556,7 @@ async function addTabsPanel(silent?: boolean): Promise<void> {
 
     panel = Sidebar.panelsById[result]
   } else {
-    panel = Sidebar.createTabsPanel()
-    panel.color = Utils.getRandomFrom(COLOR_NAMES)
+    panel = Sidebar.createTabsPanel({ color: Utils.getRandomFrom(COLOR_NAMES) })
     Sidebar.addPanel(index, panel)
     Sidebar.recalcPanels()
     Sidebar.recalcTabsPanels()
