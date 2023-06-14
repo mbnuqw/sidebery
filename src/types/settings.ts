@@ -114,6 +114,7 @@ export interface SettingsState {
   discardFoldedDelayUnit: (typeof SETTINGS_OPTIONS.discardFoldedDelayUnit)[number]
   tabsTreeBookmarks: boolean
   treeRmOutdent: (typeof SETTINGS_OPTIONS.treeRmOutdent)[number]
+  ignoreFoldedParent: boolean
 
   // Tabs colorization
   colorizeTabs: boolean

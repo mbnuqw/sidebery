@@ -234,6 +234,11 @@ function onTabCreated(tab: Tab, attached?: boolean): void {
 
   // Find appropriate position using the current settings
   else {
+    const parent = Tabs.byId[tab.openerTabId ?? NOID]
+    if (!attached && parent?.folded && Settings.state.ignoreFoldedParent) {
+      tab.openerTabId = parent.parentId
+    }
+
     panel = Tabs.getPanelForNewTab(tab)
     if (!panel) return Logs.err('Cannot handle new tab: Cannot find target panel')
     index = Tabs.getIndexForNewTab(panel, tab)

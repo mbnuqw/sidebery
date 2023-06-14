@@ -115,6 +115,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   discardFoldedDelayUnit: 'sec',
   tabsTreeBookmarks: true,
   treeRmOutdent: 'branch',
+  ignoreFoldedParent: false,
 
   // Tabs colorization
   colorizeTabs: false,

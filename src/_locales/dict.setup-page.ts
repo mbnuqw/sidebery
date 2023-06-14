@@ -1903,6 +1903,10 @@ export const setupPageTranslations: Translations = {
     zh_CN: '仅当父标签页的面板处于活动状态时',
     zh_TW: '僅當父標籤頁的面板處於活動狀態時',
   },
+  'settings.ignore_folded_parent': {
+    en: 'Open new tab one level down if the parent tab is folded',
+    ru: 'Открывать новую вкладку на уровень ниже, если родительская вкладка свернута',
+  },
   'settings.move_new_tab': {
     en: 'Place new tab (general rule)',
     ru: 'Общее правило',
