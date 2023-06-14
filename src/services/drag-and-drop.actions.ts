@@ -994,7 +994,6 @@ export async function onDrop(e: DragEvent): Promise<void> {
     const srcInfo = getSrcInfo()
     const dstInfo = getDestInfo()
     const reopenNeeded = isContainerChanged()
-    console.log('[DEBUG] Tabs to tabs', dstInfo)
 
     if (DnD.dropMode === 'copy') await Tabs.open(DnD.items, dstInfo)
     else if (reopenNeeded) await Tabs.reopen(DnD.items, dstInfo)
