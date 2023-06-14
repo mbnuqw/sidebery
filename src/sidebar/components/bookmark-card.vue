@@ -96,7 +96,7 @@ async function onMouseDown(e: MouseEvent): Promise<void> {
     if (action === 'open_in_new') {
       const conf = Bookmarks.getMouseOpeningConf(e.button)
       await Bookmarks.open([props.node.id], conf.dst, conf.useActiveTab, conf.activateFirstTab)
-      if (conf.removeBookmark) Bookmarks.removeBookmarks([props.node.id], true)
+      if (conf.removeBookmark) Bookmarks.removeBookmarks([props.node.id], { noNotif: true })
     } else if (action === 'edit') Bookmarks.editBookmarkNode(props.node)
     else if (action === 'delete') Bookmarks.removeBookmarks([props.node.id])
   }
@@ -130,7 +130,7 @@ function onMouseUp(e: MouseEvent): void {
     if (props.node.type === 'bookmark' && props.node.url) {
       const conf = Bookmarks.getMouseOpeningConf(e.button)
       Bookmarks.open([props.node.id], conf.dst, conf.useActiveTab, conf.activateFirstTab)
-      if (conf.removeBookmark) Bookmarks.removeBookmarks([props.node.id], true)
+      if (conf.removeBookmark) Bookmarks.removeBookmarks([props.node.id], { noNotif: true })
     }
   } else if (e.button === 2) {
     if (e.ctrlKey || e.shiftKey) return

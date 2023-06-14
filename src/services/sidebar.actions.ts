@@ -1397,12 +1397,18 @@ function attachPanelTabsToNeighbourPanel(panel: TabsPanel): void {
   // TODO: Recalc tabs panels maybe?
 }
 
+interface RemovingPanelConf {
+  tabsMode?: string | null
+}
+
 /**
  * Remove panel
  */
-export async function removePanel(panelId: ID): Promise<void> {
+export async function removePanel(panelId: ID, conf?: RemovingPanelConf): Promise<void> {
   const panel = Sidebar.panelsById[panelId]
   if (!panel) return
+
+  if (!conf) conf = {}
 
   const index = Sidebar.reactive.nav.indexOf(panelId)
   let tabsSaveNeeded = false
@@ -1411,14 +1417,14 @@ export async function removePanel(panelId: ID): Promise<void> {
     if (panel.tabs.length) {
       tabsSaveNeeded = true
 
-      const mode = await askHowRemoveTabsPanel(panel.id)
-      if (mode === 'attach') {
+      if (!conf.tabsMode) conf.tabsMode = await askHowRemoveTabsPanel(panel.id)
+      if (conf.tabsMode === 'attach') {
         attachPanelTabsToNeighbourPanel(panel)
-      } else if (mode === 'save') {
+      } else if (conf.tabsMode === 'save') {
         const tabsIds = panel.tabs.map(t => t.id)
         await Sidebar.bookmarkTabsPanel(panel.id, true, true)
         await Tabs.removeTabs(tabsIds, true)
-      } else if (mode === 'close') {
+      } else if (conf.tabsMode === 'close') {
         const tabsIds = panel.tabs.map(t => t.id)
         await Tabs.removeTabs(tabsIds, true)
       } else {

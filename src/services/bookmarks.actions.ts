@@ -410,11 +410,7 @@ export async function open(
 
   if (activateFirstTab) toOpen[0].active = true
 
-  try {
-    await Tabs.open(toOpen, dst)
-  } catch (err) {
-    Logs.err('Bookmarks: Cannot open bookmark[s]', err)
-  }
+  await Tabs.open(toOpen, dst)
 
   if (toRemove.length) {
     Bookmarks.removeBookmarks(toRemove)
@@ -522,16 +518,25 @@ export function openBookmarksPopup(
   })
 }
 
+interface RemovingBookmarksConf {
+  noNotif?: boolean
+  noWarn?: boolean
+}
+
 /**
  * Remove bookmarks
  */
-export async function removeBookmarks(ids: ID[], silent = false): Promise<void> {
+export async function removeBookmarks(ids: ID[], conf?: RemovingBookmarksConf): Promise<void> {
+  if (!conf) conf = {}
+
   let count = 0
   let hasCollapsed = false
+
   const expandedBookmarks = Bookmarks.reactive.expanded[Sidebar.reactive.activePanelId]
   const deleted: Bookmark[] = []
   const idsToRemove = []
   const favicons: string[] = []
+
   const walker = (nodes: Bookmark[]) => {
     for (const n of nodes) {
       count++
@@ -543,6 +548,7 @@ export async function removeBookmarks(ids: ID[], silent = false): Promise<void> 
       }
     }
   }
+
   for (const id of ids) {
     const n = Bookmarks.reactive.byId[id]
     if (!n) continue
@@ -565,7 +571,7 @@ export async function removeBookmarks(ids: ID[], silent = false): Promise<void> 
   const warn =
     Settings.state.warnOnMultiBookmarkDelete === 'any' ||
     (Settings.state.warnOnMultiBookmarkDelete === 'collapsed' && hasCollapsed)
-  if (warn && count > 1) {
+  if (warn && !conf.noWarn && count > 1) {
     const ok = await Popups.confirm(translate('confirm.bookmarks_delete'))
     if (!ok) return
   }
@@ -574,7 +580,7 @@ export async function removeBookmarks(ids: ID[], silent = false): Promise<void> 
     await browser.bookmarks.removeTree(id)
   }
 
-  if (count > 0 && Settings.state.bookmarksRmUndoNote && !warn && !silent) {
+  if (count > 0 && Settings.state.bookmarksRmUndoNote && !warn && !conf.noNotif) {
     Notifications.notify({
       icon: '#icon_trash',
       title: String(count) + translate('notif.bookmarks_rm_post', count),

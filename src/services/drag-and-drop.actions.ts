@@ -949,15 +949,15 @@ export async function onDrop(e: DragEvent): Promise<void> {
 
   // To new tabs panel
   let tabsPanelsSaveNeeded = false
+  let newTabPanel
   if (DnD.reactive.dstPanelId === 'add_tp' && (fromTabs || fromBookmarks)) {
-    const panel = Sidebar.createTabsPanel()
+    newTabPanel = Sidebar.createTabsPanel({ color: Utils.getRandomFrom(COLOR_NAMES) })
     const index = Sidebar.getIndexForNewTabsPanel()
-    panel.color = Utils.getRandomFrom(COLOR_NAMES)
-    Sidebar.addPanel(index, panel)
+    Sidebar.addPanel(index, newTabPanel)
     Sidebar.recalcPanels()
     Sidebar.recalcTabsPanels()
-    DnD.reactive.dstPanelId = panel.id
-    DnD.reactive.dstIndex = -1
+    DnD.reactive.dstPanelId = newTabPanel.id
+    DnD.reactive.dstIndex = newTabPanel.nextTabIndex
     toTabsPanel = true
     tabsPanelsSaveNeeded = true
   }
@@ -994,6 +994,7 @@ export async function onDrop(e: DragEvent): Promise<void> {
     const srcInfo = getSrcInfo()
     const dstInfo = getDestInfo()
     const reopenNeeded = isContainerChanged()
+    console.log('[DEBUG] Tabs to tabs', dstInfo)
 
     if (DnD.dropMode === 'copy') await Tabs.open(DnD.items, dstInfo)
     else if (reopenNeeded) await Tabs.reopen(DnD.items, dstInfo)
@@ -1034,11 +1035,30 @@ export async function onDrop(e: DragEvent): Promise<void> {
     const dst = getDestInfo()
     const ids = DnD.items.map(i => i.id)
     const copyMode = DnD.dropMode === 'copy'
+    let ok = true
 
-    await Bookmarks.open(ids, dst)
+    const panel = Sidebar.panelsById[dst.panelId ?? NOID]
+    if (dst.index === -1 && Utils.isTabsPanel(panel)) {
+      dst.index = panel.nextTabIndex
+    }
 
-    if (Settings.state.dndMoveBookmarks && !copyMode) {
-      Bookmarks.removeBookmarks(ids, true)
+    try {
+      await Bookmarks.open(ids, dst)
+    } catch (err) {
+      ok = false
+      Logs.err('onDrop: Cannot open bookmark[s]', err)
+
+      if (newTabPanel) {
+        Sidebar.removePanel(newTabPanel.id, { tabsMode: 'close' })
+      }
+    }
+
+    if (ok && Settings.state.dndMoveBookmarks && !copyMode) {
+      Bookmarks.removeBookmarks(ids, { noNotif: true, noWarn: true })
+    }
+
+    if (newTabPanel) {
+      Sidebar.activatePanel(newTabPanel.id)
     }
   }
 
