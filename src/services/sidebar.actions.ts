@@ -1281,11 +1281,13 @@ export function openHiddenPanelsPopup(): void {
     let relLeft = btnRect.left - navRect.left
     if (relLeft < navRect.width / 2) {
       if (relLeft === 0) relLeft = 1
+      if (Sidebar.width < 200) relLeft /= 2
       Sidebar.reactive.hiddenPanelsPopupOffset = relLeft
       Sidebar.reactive.hiddenPanelsPopupOffsetSide = 'start'
     } else {
       let right = Sidebar.width - (relLeft + btnRect.width)
       if (right === 0) right = 1
+      if (Sidebar.width < 200) right /= 2
       Sidebar.reactive.hiddenPanelsPopupOffset = right
       Sidebar.reactive.hiddenPanelsPopupOffsetSide = 'end'
     }
