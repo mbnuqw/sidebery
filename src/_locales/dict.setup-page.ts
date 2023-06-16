@@ -1479,10 +1479,11 @@ export const setupPageTranslations: Translations = {
     zh_TW: '總是',
   },
   'settings.switch_panel_after_switching_tab_mouseleave': {
-    en: 'after mouse leaved sidebar',
-    ru: 'после того, как мышь покинула боковую панель',
-    zh_CN: '鼠标离开侧边栏后',
-    zh_TW: '鼠標離開側邊欄後',
+    en: 'if the mouse left the sidebar',
+    ru: 'если мышь покинула боковую панель',
+    // upd needed
+    // zh_CN: '鼠标离开侧边栏后',
+    // zh_TW: '鼠標離開側邊欄後',
   },
   'settings.switch_panel_after_switching_tab_no': {
     en: 'no',

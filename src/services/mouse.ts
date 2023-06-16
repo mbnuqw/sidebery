@@ -6,6 +6,7 @@ export const Mouse = {
   multiSelectionMode: false,
   resizing: null as ResizingMode,
   longClickApplied: false,
+  mouseIn: false,
 
   ...MouseActions,
 }

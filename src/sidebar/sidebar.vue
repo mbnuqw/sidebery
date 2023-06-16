@@ -273,6 +273,8 @@ const onWheel = Mouse.getWheelDebouncer(WheelDirection.Horizontal, e => {
 let leaveTimeout: number | undefined
 let subPanelTimeout: number | undefined
 function onMouseEnter(): void {
+  Mouse.mouseIn = true
+
   Sidebar.switchPanelBackResetTimeout()
 
   if (leaveTimeout) {
@@ -286,6 +288,7 @@ function onMouseEnter(): void {
 function onMouseLeave(): void {
   if (DnD.dragEndedRecently) return
 
+  Mouse.mouseIn = false
   Mouse.stopResizing()
 
   const activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]

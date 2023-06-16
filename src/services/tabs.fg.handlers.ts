@@ -15,6 +15,7 @@ import { RemovedTabInfo, Tabs } from './tabs.fg'
 import * as IPC from './ipc'
 import { Search } from './search'
 import { Containers } from './containers'
+import { Mouse } from './mouse'
 
 const EXT_HOST = browser.runtime.getURL('').slice(16)
 const URL_HOST_PATH_RE = /^([a-z0-9-]{1,63}\.)+\w+(:\d+)?\/[A-Za-z0-9-._~:/?#[\]%@!$&'()*+,;=]*$/
@@ -1284,7 +1285,7 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
     !activePanel?.lockedPanel &&
     !Sidebar.switchingLock
   ) {
-    if (Settings.state.switchPanelAfterSwitchingTab === 'mouseleave') {
+    if (Settings.state.switchPanelAfterSwitchingTab === 'mouseleave' && Mouse.mouseIn) {
       if (activePanel.id !== tab.panelId) Sidebar.switchOnMouseLeave = true
     } else if (!Sidebar.subPanelActive) {
       Sidebar.activatePanel(panel.id)
