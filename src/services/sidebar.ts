@@ -54,6 +54,7 @@ export const Sidebar = {
 
   panelsById: {} as Record<ID, Panel>,
   panels: [] as Panel[],
+  nav: [] as ID[],
   ready: false,
   hasTabs: false,
   hasBookmarks: false,

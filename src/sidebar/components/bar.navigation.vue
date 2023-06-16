@@ -122,17 +122,17 @@ const nav = computed<Nav | undefined>(() => {
   const nav: Nav = { visibleItems: [] }
 
   let inlineMax = 0
-  let firstTabsPanelIndex = -1
-  let lastTabsPanelIndex = -1
+  let staticHiddenPanelsBtnIndex = -1
+  let lastPanelIndex = -1
 
   for (const id of ids) {
     const panel = Sidebar.panelsById[id]
     if (panel) {
+      // Check tab panels
       if (Utils.isTabsPanel(panel)) {
-        if (firstTabsPanelIndex === -1) firstTabsPanelIndex = nav.visibleItems.length
-
         // Hidden tab-panels
         if (
+          panel.reactive.hidden ||
           (Settings.state.hideEmptyPanels && panel.reactive.empty) ||
           (Settings.state.hideDiscardedTabPanels && panel.reactive.allDiscarded)
         ) {
@@ -140,22 +140,27 @@ const nav = computed<Nav | undefined>(() => {
           nav.hiddenPanels.push(panel)
           continue
         }
-
-        lastTabsPanelIndex = nav.visibleItems.length
       }
 
-      // Hidden panels
-      if (panel.reactive.hidden) {
-        if (!nav.hiddenPanels) nav.hiddenPanels = []
-        nav.hiddenPanels.push(panel)
-        continue
+      // Check other type panels
+      else {
+        if (panel.reactive.hidden) {
+          if (!nav.hiddenPanels) nav.hiddenPanels = []
+          nav.hiddenPanels.push(panel)
+          continue
+        }
       }
 
-      nav.visibleItems.push(panel)
+      lastPanelIndex = nav.visibleItems.push(panel) - 1
     } else if (!isInline) {
       const isSpace = (id as string).startsWith('sp-')
       const isDelimiter = (id as string).startsWith('sd-')
       const isSearch = id === 'search'
+
+      if (id === 'hdn') {
+        staticHiddenPanelsBtnIndex = nav.visibleItems.length
+        continue
+      }
 
       if (isSearch && Settings.state.searchBarMode !== 'dynamic') continue
 
@@ -175,12 +180,11 @@ const nav = computed<Nav | undefined>(() => {
   }
 
   if (!isInline && nav.hiddenPanels?.length) {
-    let hIndex = -1
-    if (lastTabsPanelIndex !== -1) hIndex = lastTabsPanelIndex + 1
-    else if (firstTabsPanelIndex !== -1) hIndex = firstTabsPanelIndex
-
-    if (hIndex !== -1) nav.visibleItems.splice(hIndex, 0, HIDDEN_PANELS_BTN)
-    else nav.visibleItems.push(HIDDEN_PANELS_BTN)
+    if (staticHiddenPanelsBtnIndex !== -1) {
+      nav.visibleItems.splice(staticHiddenPanelsBtnIndex, 0, HIDDEN_PANELS_BTN)
+    } else if (lastPanelIndex !== -1) {
+      nav.visibleItems.splice(lastPanelIndex + 1, 0, HIDDEN_PANELS_BTN)
+    } else nav.visibleItems.push(HIDDEN_PANELS_BTN)
   }
 
   // Inline layout

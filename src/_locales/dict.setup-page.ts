@@ -1062,6 +1062,10 @@ export const setupPageTranslations: Translations = {
     zh_CN: '分隔符',
     zh_TW: '分隔符',
   },
+  'settings.nav_bar_btn_hdn': {
+    en: 'Hidden panels',
+    ru: 'Скрытые панели',
+  },
   'settings.nav_bar_btn_history': {
     en: 'History panel',
     ru: 'История',

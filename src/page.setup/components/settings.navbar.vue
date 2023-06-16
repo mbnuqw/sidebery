@@ -202,7 +202,7 @@ const enabledBtns = computed<Btn[]>(() => {
       return btn
     } else {
       const normId = normalizeItemId(id)
-      const isSpace = normId === 'sp' || normId === 'sd'
+      const isSpace = normId === 'sp' || normId === 'sd' || id === 'hdn'
       const isHorizontal = Settings.state.navBarLayout === 'horizontal'
       const isInline = Settings.state.navBarInline
       const inactive = isHorizontal && isInline && isSpace
@@ -216,7 +216,7 @@ const availableBtns = computed<Btn[]>(() => {
   const result: Btn[] = []
   // prettier-ignore
   const ids = [
-    'tabs_panel', 'bookmarks_panel', 'sp', 'sd',
+    'tabs_panel', 'bookmarks_panel', 'sp', 'sd', 'hdn',
     'history', 'search', 'add_tp', 'create_snapshot',
     'collapse', 'remute_audio_tabs', 'settings',
   ]

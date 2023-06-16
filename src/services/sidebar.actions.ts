@@ -80,7 +80,10 @@ export async function loadPanels(): Promise<void> {
 
   const sidebar = storage.sidebar
   const panelConfigs = sidebar?.panels ? Object.values(sidebar?.panels) : []
-  if (sidebar?.nav) Sidebar.reactive.nav = sidebar.nav
+  if (sidebar?.nav) {
+    Sidebar.reactive.nav = sidebar.nav
+    Sidebar.nav = sidebar.nav
+  }
 
   // Create panels from config
   for (const panelConfig of panelConfigs) {
@@ -695,6 +698,7 @@ export function recalcPanels(): void {
     if (id === 'create_snapshot') continue
     if (id === 'remute_audio_tabs') continue
     if (id === 'collapse') continue
+    if (id === 'hdn') continue
 
     const panel = Sidebar.panelsById[id]
     if (!panel) {
@@ -790,7 +794,10 @@ function updateSidebarInSetup(newConfig?: SidebarConfig | null): void {
 
   const sidebar = newConfig
   const panelConfigs = sidebar?.panels ? Object.values(sidebar?.panels) : []
-  if (sidebar?.nav) Sidebar.reactive.nav = sidebar.nav
+  if (sidebar?.nav) {
+    Sidebar.reactive.nav = sidebar.nav
+    Sidebar.nav = sidebar.nav
+  }
 
   // Normalize panels
   const newPanelsMap: Record<ID, Panel> = {}
@@ -819,6 +826,7 @@ async function updateSidebar(newConfig?: SidebarConfig): Promise<void> {
   const newPanelsMap: Record<ID, Panel> = {}
   const oldNavItems = Sidebar.reactive.nav
   Sidebar.reactive.nav = newConfig.nav
+  Sidebar.nav = newConfig.nav
 
   const prevHasTabsPanels = Sidebar.hasTabs
   const prevHasBookmarksPanels = Sidebar.hasBookmarks
@@ -1173,12 +1181,21 @@ export function switchPanel(
   const hiddenPanelsPopupIsShown = Sidebar.reactive.hiddenPanelsPopup
   const visiblePanels = []
   const hiddenPanels = []
+  const isInline = Settings.state.navBarLayout === 'horizontal' && Settings.state.navBarInline
+  let hdnIndex = -1
   let actIndex = -1
   let actIsHidden = false
   let newActIsHidden = false
 
-  for (let i = 0; i < Sidebar.panels.length; i++) {
-    const panel = Sidebar.panels[i]
+  for (const id of Sidebar.nav) {
+    if (id === 'hdn') {
+      hdnIndex = visiblePanels.length
+      continue
+    }
+
+    const panel = Sidebar.panelsById[id]
+    if (!panel) continue
+
     const isTabsPanel = Utils.isTabsPanel(panel)
     const isHidden =
       panel.hidden ||
@@ -1199,20 +1216,23 @@ export function switchPanel(
   }
 
   if (actIndex === -1) return
+  if (hdnIndex === -1 || isInline) hdnIndex = visiblePanels.length
 
   let panel
   if (!actIsHidden) {
     for (let i = actIndex + dir; i >= 0 || i < visiblePanels.length; i += dir) {
       panel = visiblePanels[i]
       newActIsHidden = false
-      if (!panel) {
-        if (dir > 0 && hiddenPanels.length && !ignoreHidden) {
+      if ((dir > 0 && i === hdnIndex) || (dir < 0 && i + 1 === hdnIndex)) {
+        if (hiddenPanels.length && !ignoreHidden) {
           Sidebar.openHiddenPanelsPopup()
-          panel = hiddenPanels[0]
+          if (dir > 0) panel = hiddenPanels[0]
+          else panel = hiddenPanels[hiddenPanels.length - 1]
           newActIsHidden = true
         }
         break
       }
+      if (!panel) break
       if (panel.skipOnSwitching) continue
       break
     }
@@ -1221,9 +1241,10 @@ export function switchPanel(
       panel = hiddenPanels[i]
       newActIsHidden = true
       if (!panel) {
-        if (dir < 0 && visiblePanels.length) {
+        if (visiblePanels.length) {
+          panel = visiblePanels[dir > 0 ? hdnIndex : hdnIndex - 1]
+          if (!panel) break
           if (hiddenPanelsPopupIsShown) Sidebar.reactive.hiddenPanelsPopup = false
-          panel = visiblePanels[visiblePanels.length - 1]
           newActIsHidden = false
         }
         break
