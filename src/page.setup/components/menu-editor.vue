@@ -200,6 +200,7 @@ const TABS_PANEL_MENU_OPTS: Record<string, string> = {
   collapseInactiveBranches: 'menu.tabs_panel.collapse_inact_branches',
   closeTabs: 'menu.tabs_panel.close',
   openPanelConfig: 'menu.common.conf',
+  hidePanel: 'menu.panels.hide_panel',
   removePanel: 'menu.tabs_panel.remove_panel',
   bookmarkTabsPanel: 'menu.tabs_panel.bookmark',
   restoreFromBookmarks: 'menu.tabs_panel.restore_from_bookmarks',
@@ -236,6 +237,7 @@ const BOOKMARKS_PANEL_MENU_OPTS: Record<string, string> = {
   unloadPanelType: 'menu.panels.unload',
   openPanelConfig: 'menu.common.conf',
   convertToTabsPanel: 'menu.bookmark.convert_to_tabs_panel',
+  hidePanel: 'menu.panels.hide_panel',
   removePanel: 'menu.tabs_panel.remove_panel',
 }
 

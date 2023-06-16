@@ -57,6 +57,21 @@ export const menuOptions: Record<string, () => MenuOption | MenuOption[] | undef
     return option
   },
 
+  hidePanel: () => {
+    const panel = Sidebar.panelsById[Selection.getFirst()]
+    if (!panel) return
+
+    const option: MenuOption = {
+      label: translate('menu.panels.hide_panel'),
+      icon: 'icon_hide',
+      onClick: () => Sidebar.hidePanel(panel.id),
+    }
+
+    if (panel.hidden) option.inactive = true
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
+    return option
+  },
+
   removePanel: () => {
     const panel = Sidebar.panelsById[Selection.getFirst()]
     if (!panel) return

@@ -1239,6 +1239,10 @@ export const commonTranslations: Translations = {
     zh_CN: '卸载',
     zh_TW: '卸載',
   },
+  'menu.panels.hide_panel': {
+    en: 'Hide panel',
+    ru: 'Скрыть панель',
+  },
   // - Menu Editor
   'menu.editor.reset': {
     en: 'Reset',

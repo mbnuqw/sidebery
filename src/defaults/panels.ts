@@ -32,6 +32,7 @@ export const BOOKMARKS_PANEL_STATE: BookmarksPanel = {
   scrollEl: null,
   scrollComponent: null,
   bounds: [],
+  hidden: false,
   ready: false,
 
   reactive: {
@@ -39,6 +40,7 @@ export const BOOKMARKS_PANEL_STATE: BookmarksPanel = {
     color: 'toolbar',
     iconSVG: 'icon_bookmarks',
     iconIMG: '',
+    hidden: false,
     tooltip: '',
     sel: false,
     len: 0,
@@ -95,6 +97,7 @@ export const TABS_PANEL_STATE: TabsPanel = {
   scrollEl: null,
   scrollComponent: null,
   bounds: [],
+  hidden: false,
   ready: true,
 
   reactive: {
@@ -102,6 +105,7 @@ export const TABS_PANEL_STATE: TabsPanel = {
     color: 'toolbar',
     iconSVG: 'icon_tabs',
     iconIMG: undefined,
+    hidden: false,
     tooltip: '',
     sel: false,
     len: 0,
@@ -145,6 +149,7 @@ export const HISTORY_PANEL_STATE: HistoryPanel = {
   scrollEl: null,
   scrollComponent: null,
   bounds: [],
+  hidden: false,
   ready: false,
 
   reactive: {
@@ -152,6 +157,7 @@ export const HISTORY_PANEL_STATE: HistoryPanel = {
     color: 'toolbar',
     iconSVG: 'icon_tabs',
     iconIMG: undefined,
+    hidden: false,
     tooltip: '',
     sel: false,
     len: 0,

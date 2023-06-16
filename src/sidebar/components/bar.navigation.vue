@@ -131,7 +131,7 @@ const nav = computed<Nav | undefined>(() => {
       if (Utils.isTabsPanel(panel)) {
         if (firstTabsPanelIndex === -1) firstTabsPanelIndex = nav.visibleItems.length
 
-        // Hidden panels
+        // Hidden tab-panels
         if (
           (Settings.state.hideEmptyPanels && panel.reactive.empty) ||
           (Settings.state.hideDiscardedTabPanels && panel.reactive.allDiscarded)
@@ -143,6 +143,14 @@ const nav = computed<Nav | undefined>(() => {
 
         lastTabsPanelIndex = nav.visibleItems.length
       }
+
+      // Hidden panels
+      if (panel.reactive.hidden) {
+        if (!nav.hiddenPanels) nav.hiddenPanels = []
+        nav.hiddenPanels.push(panel)
+        continue
+      }
+
       nav.visibleItems.push(panel)
     } else if (!isInline) {
       const isSpace = (id as string).startsWith('sp-')

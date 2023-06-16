@@ -65,8 +65,13 @@ export function registerHorizontalNavBarEl(el: HTMLElement): void {
 
 export async function loadPanels(): Promise<void> {
   const gettingActiveId = browser.sessions.getWindowValue<ID>(Windows.id, 'activePanelId')
+  const gettingHiddenPanels = browser.sessions.getWindowValue<ID[]>(Windows.id, 'hiddenPanels')
   const gettingStorage = browser.storage.local.get<Stored>('sidebar')
-  const [activeId, storage] = await Promise.all([gettingActiveId, gettingStorage])
+  const [activeId, storage, hiddenPanels] = await Promise.all([
+    gettingActiveId,
+    gettingStorage,
+    gettingHiddenPanels,
+  ])
 
   if (!storage.sidebar?.nav?.length) {
     Logs.warn('Sidebar.loadPanels: Creating default sidebar config')
@@ -88,6 +93,11 @@ export async function loadPanels(): Promise<void> {
     }
 
     panel.reactive.tooltip = getPanelTooltip(panel)
+
+    if (hiddenPanels?.length && hiddenPanels.includes(panel.id)) {
+      panel.hidden = true
+      panel.reactive.hidden = true
+    }
 
     Sidebar.panelsById[panel.id] = panel
   }
@@ -1034,6 +1044,8 @@ export function activatePanel(panelId: ID, loadPanels = true): void {
   if (Sidebar.subPanelActive) Sidebar.closeSubPanel()
 
   if (Sidebar.switchOnMouseLeave) Sidebar.switchOnMouseLeave = false
+
+  if (panel.hidden && !Sidebar.reactive.hiddenPanelsPopup) Sidebar.showPanel(panelId)
 }
 
 let prevSavedActPanelId = NOID
@@ -1070,7 +1082,7 @@ export function switchToPanel(
     !withoutTabCreation &&
     Utils.isTabsPanel(panel) &&
     (panel.noEmpty || Settings.state.hideInact || Settings.state.hideEmptyPanels) &&
-    !panel.reactive.len
+    !panel.tabs.length
   ) {
     Tabs.createTabInPanel(panel)
   }
@@ -1099,6 +1111,7 @@ export function switchToNeighbourPanel(): void {
     for (let i = activePanel.index - 1; i > 0; i--) {
       const panel = Sidebar.panels[i]
       if (panel) {
+        if (panel.hidden) continue
         if (Utils.isTabsPanel(panel)) {
           if (Settings.state.hideEmptyPanels && !panel.reactive.len) continue
           if (Settings.state.hideDiscardedTabPanels && panel.allDiscarded) continue
@@ -1113,6 +1126,7 @@ export function switchToNeighbourPanel(): void {
     for (let i = activePanel.index + 1; i < Sidebar.panels.length; i++) {
       const panel = Sidebar.panels[i]
       if (panel) {
+        if (panel.hidden) continue
         if (Utils.isTabsPanel(panel)) {
           if (Settings.state.hideEmptyPanels && !panel.reactive.len) continue
           if (Settings.state.hideDiscardedTabPanels && panel.allDiscarded) continue
@@ -1156,79 +1170,71 @@ export function switchPanel(
     return
   }
 
-  const actIndex = Sidebar.panels.findIndex(p => p.id === activePanelId)
-  if (actIndex === -1) return
+  const hiddenPanelsPopupIsShown = Sidebar.reactive.hiddenPanelsPopup
+  const visiblePanels = []
+  const hiddenPanels = []
+  let actIndex = -1
+  let actIsHidden = false
+  let newActIsHidden = false
 
-  // Find first/last visible/hidden tabs panels (if needed)
-  let lastVisibleTabsPanel = -1
-  let lastHiddenTabsPanel = -1
-  let firstHiddenTabsPanel = -1
-  if (Settings.state.hideEmptyPanels || Settings.state.hideDiscardedTabPanels) {
-    for (let i = Sidebar.panels.length; i--; ) {
-      const panel = Sidebar.panels[i]
-      if (!panel) return
-      const isTabsPanel = Utils.isTabsPanel(panel)
-      const isHidden =
-        (isTabsPanel && Settings.state.hideEmptyPanels && !panel.reactive.len) ||
-        (isTabsPanel && Settings.state.hideDiscardedTabPanels && panel.allDiscarded)
-      if (lastVisibleTabsPanel === -1 && !isHidden) {
-        lastVisibleTabsPanel = i
+  for (let i = 0; i < Sidebar.panels.length; i++) {
+    const panel = Sidebar.panels[i]
+    const isTabsPanel = Utils.isTabsPanel(panel)
+    const isHidden =
+      panel.hidden ||
+      (isTabsPanel && Settings.state.hideEmptyPanels && !panel.reactive.len) ||
+      (isTabsPanel && Settings.state.hideDiscardedTabPanels && panel.allDiscarded)
+    if (isHidden) {
+      hiddenPanels.push(panel)
+      if (panel.id === activePanelId) {
+        actIndex = hiddenPanels.length - 1
+        actIsHidden = true
       }
-      if (lastHiddenTabsPanel === -1 && isHidden) {
-        lastHiddenTabsPanel = i
+    } else {
+      visiblePanels.push(panel)
+      if (panel.id === activePanelId) {
+        actIndex = visiblePanels.length - 1
       }
-      if (lastVisibleTabsPanel !== -1 && lastHiddenTabsPanel !== -1) break
-    }
-    firstHiddenTabsPanel = Sidebar.panels.findIndex(p => {
-      const isTabsPanel = Utils.isTabsPanel(p)
-      const isHidden =
-        (isTabsPanel && Settings.state.hideEmptyPanels && !p.reactive.len) ||
-        (isTabsPanel && Settings.state.hideDiscardedTabPanels && p.allDiscarded)
-      return isHidden
-    })
-    if (lastVisibleTabsPanel === -1 && firstHiddenTabsPanel !== -1) {
-      lastVisibleTabsPanel = firstHiddenTabsPanel
     }
   }
 
-  const hasHiddenPanels = firstHiddenTabsPanel !== -1 && lastHiddenTabsPanel !== -1
+  if (actIndex === -1) return
 
-  let panel: Panel | undefined
-  for (let i = actIndex + dir; i >= 0 || i < Sidebar.panels.length; i += dir) {
-    panel = Sidebar.panels[i]
-    if (!panel) return
-    if (panel.skipOnSwitching) continue
-
-    const isTabsPanel = Utils.isTabsPanel(panel)
-    const isEmpty = isTabsPanel && !panel.reactive.len
-    const isDiscarded = isTabsPanel && (panel as TabsPanel).allDiscarded
-    const isHidden =
-      (Settings.state.hideEmptyPanels && isEmpty) ||
-      (Settings.state.hideDiscardedTabPanels && isDiscarded)
-    if (ignoreHidden && isHidden) continue
-
-    if (hasHiddenPanels && lastVisibleTabsPanel !== -1) {
-      // Open hidden panels bar
-      if (!Sidebar.reactive.hiddenPanelsPopup && i === lastVisibleTabsPanel + 1) {
-        Sidebar.openHiddenPanelsPopup()
-        i = dir > 0 ? -1 : Sidebar.panels.length
-        continue
+  let panel
+  if (!actIsHidden) {
+    for (let i = actIndex + dir; i >= 0 || i < visiblePanels.length; i += dir) {
+      panel = visiblePanels[i]
+      newActIsHidden = false
+      if (!panel) {
+        if (dir > 0 && hiddenPanels.length && !ignoreHidden) {
+          Sidebar.openHiddenPanelsPopup()
+          panel = hiddenPanels[0]
+          newActIsHidden = true
+        }
+        break
       }
-
-      // Close hidden panels bar
-      if (
-        Sidebar.reactive.hiddenPanelsPopup &&
-        ((dir > 0 && i > lastHiddenTabsPanel) || (dir < 0 && i < firstHiddenTabsPanel))
-      ) {
-        Sidebar.reactive.hiddenPanelsPopup = false
-        i = lastVisibleTabsPanel + 1
-        continue
-      }
-
-      if (Sidebar.reactive.hiddenPanelsPopup !== isHidden) continue
+      if (panel.skipOnSwitching) continue
+      break
     }
+  } else if (!ignoreHidden) {
+    for (let i = actIndex + dir; i >= 0 || i < hiddenPanels.length; i += dir) {
+      panel = hiddenPanels[i]
+      newActIsHidden = true
+      if (!panel) {
+        if (dir < 0 && visiblePanels.length) {
+          if (hiddenPanelsPopupIsShown) Sidebar.reactive.hiddenPanelsPopup = false
+          panel = visiblePanels[visiblePanels.length - 1]
+          newActIsHidden = false
+        }
+        break
+      }
+      if (panel.skipOnSwitching) continue
+      break
+    }
+  }
 
-    break
+  if (newActIsHidden && !hiddenPanelsPopupIsShown) {
+    Sidebar.openHiddenPanelsPopup()
   }
 
   if (!panel) return
@@ -1287,10 +1293,12 @@ export function closeHiddenPanelsPopup(withoutTabCreation?: boolean): void {
     !withoutTabCreation &&
     Utils.isTabsPanel(panel) &&
     (panel.noEmpty || Settings.state.hideInact || Settings.state.hideEmptyPanels) &&
-    !panel.reactive.len
+    !panel.tabs.length
   ) {
     Tabs.createTabInPanel(panel)
   }
+
+  if (panel?.hidden) Sidebar.showPanel(panel.id)
 }
 
 /**
@@ -1395,6 +1403,52 @@ function attachPanelTabsToNeighbourPanel(panel: TabsPanel): void {
   }
 
   // TODO: Recalc tabs panels maybe?
+}
+
+export function hidePanel(panelId: ID) {
+  const panel = Sidebar.panelsById[panelId]
+  if (!panel) return
+
+  if (panelId === Sidebar.reactive.activePanelId) {
+    const actTab = Tabs.byId[Tabs.activeId]
+    const actTabPanel = Sidebar.panelsById[actTab?.panelId ?? NOID]
+    if (
+      actTab &&
+      (!actTab.pinned || Settings.state.pinnedTabsPosition === 'panel') &&
+      actTab.panelId !== panelId &&
+      Utils.isTabsPanel(actTabPanel) &&
+      !actTabPanel.hidden &&
+      (!Settings.state.hideEmptyPanels || actTabPanel.reactive.len) &&
+      (!Settings.state.hideDiscardedTabPanels || !actTabPanel.allDiscarded)
+    ) {
+      Sidebar.switchToPanel(actTab.panelId)
+    } else {
+      Sidebar.switchToNeighbourPanel()
+    }
+  }
+
+  panel.hidden = true
+  panel.reactive.hidden = true
+
+  Sidebar.saveHiddenPanels()
+}
+
+export function showPanel(panelId: ID) {
+  const panel = Sidebar.panelsById[panelId]
+  if (!panel) return
+
+  panel.hidden = false
+  panel.reactive.hidden = false
+
+  Sidebar.saveHiddenPanels()
+}
+
+export function saveHiddenPanels() {
+  const hiddenPanels = []
+  for (const panel of Sidebar.panels) {
+    if (panel.hidden) hiddenPanels.push(panel.id)
+  }
+  browser.sessions.setWindowValue(Windows.id, 'hiddenPanels', hiddenPanels)
 }
 
 interface RemovingPanelConf {

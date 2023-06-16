@@ -175,6 +175,7 @@ function onCmd(name: string): void {
     Tabs.switchTab(globaly, Settings.state.scrollThroughTabsCyclic, -1, false)
   } else if (name === 'duplicate_tabs') onKeyDuplicateTabs(false)
   else if (name === 'pin_tabs') onKeyPinTabs()
+  else if (name === 'hide_act_panel') Sidebar.hidePanel(Sidebar.reactive.activePanelId)
 }
 
 function onKeySwitchToTab(targetIndex?: number): void {

@@ -43,6 +43,7 @@ export const TABS_PANEL_MENU: MenuConf = [
   'convertToBookmarksPanel',
   'separator-9',
   'openPanelConfig',
+  'hidePanel',
   'removePanel',
 ]
 
@@ -92,6 +93,7 @@ export const BOOKMARKS_PANEL_MENU: MenuConf = [
   'separator-9',
   'unloadPanelType',
   'openPanelConfig',
+  'hidePanel',
   'removePanel',
 ]
 
@@ -116,4 +118,9 @@ export const NEW_TAB_MENU: MenuConf = [
 ]
 
 // TODO: rm
-export const OTHER_PANELS_MENU: MenuConf = ['openPanelConfig', 'unloadPanelType', 'removePanel']
+export const OTHER_PANELS_MENU: MenuConf = [
+  'openPanelConfig',
+  'unloadPanelType',
+  'hidePanel',
+  'removePanel',
+]

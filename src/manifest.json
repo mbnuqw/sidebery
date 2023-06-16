@@ -330,6 +330,9 @@
     },
     "pin_tabs": {
       "description": "__MSG_KbPinTabs__"
+    },
+    "hide_act_panel": {
+      "description": "__MSG_KbHideActPanel__"
     }
   },
 

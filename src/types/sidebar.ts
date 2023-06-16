@@ -181,6 +181,7 @@ interface PanelCommonProps {
   scrollEl: HTMLElement | null
   scrollComponent: ScrollBoxComponent | null
   bounds: ItemBounds[]
+  hidden: boolean
   ready: boolean
 }
 
@@ -189,6 +190,7 @@ interface PanelCommonReactiveProps {
   color: browser.ColorName
   iconSVG: string
   iconIMG?: string
+  hidden: boolean
   tooltip: string
   sel: boolean
   len: number

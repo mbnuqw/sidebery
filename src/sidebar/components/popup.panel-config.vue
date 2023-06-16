@@ -119,6 +119,7 @@ function onSave(): void {
     panel.reactive.name = panel.name
     panel.reactive.color = panel.color
     panel.reactive.iconSVG = panel.iconSVG
+    panel.reactive.hidden = panel.hidden
     panel.reactive.tooltip = Sidebar.getPanelTooltip(panel)
     Sidebar.saveSidebar()
   }
@@ -138,6 +139,7 @@ function onSave(): void {
     panel.reactive.name = panel.name
     panel.reactive.color = panel.color
     panel.reactive.iconSVG = panel.iconSVG
+    panel.reactive.hidden = panel.hidden
 
     if (popup.index !== undefined && popup.index >= 0) {
       panel.index = popup.index

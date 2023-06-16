@@ -220,6 +220,7 @@ async function restoreTabsState(): Promise<void> {
 
     if (Utils.isTabsPanel(currentActivePanel)) {
       const currentActivePanelHidden =
+        currentActivePanel.hidden ||
         (Settings.state.hideEmptyPanels && !currentActivePanel.reactive.len) ||
         (Settings.state.hideDiscardedTabPanels && currentActivePanel.allDiscarded)
 

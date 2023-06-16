@@ -425,6 +425,10 @@
     "en": "Pin/Unpin selected (or active) tabs",
     "ru": "Закрепить/Открепить выбранные (или активные) вкладки"
   },
+  "KbHideActPanel": {
+    "en": "Hide active panel",
+    "ru": "Скрыть активную панель"
+  },
   "KbSearch": {
     "en": "Search",
     "ru": "Поиск",
