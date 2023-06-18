@@ -1562,6 +1562,13 @@ export async function removePanel(panelId: ID, conf?: RemovingPanelConf): Promis
   saveSidebar(120)
 }
 
+export function getPanelAutoName(type: PanelType): string | undefined {
+  const len = Sidebar.panels.length
+
+  if (type === PanelType.tabs) return `${translate('panel.tabs.title')}-${len}`
+  else if (type === PanelType.bookmarks) return `${translate('panel.bookmarks.title')}-${len}`
+}
+
 /**
  * Creates tabs-panel object.
  */
@@ -1578,6 +1585,7 @@ export function createTabsPanel(conf?: Partial<TabsPanelConfig>): TabsPanel {
   panel.reactive.iconIMG = panel.iconIMG
   panel.reactive.newTabCtx = panel.newTabCtx
   panel.reactive.newTabBtns = Utils.cloneArray(panel.newTabBtns)
+  panel.reactive.tooltip = Sidebar.getPanelTooltip(panel)
 
   if (reactFn) panel.reactive = reactFn(panel.reactive)
 
