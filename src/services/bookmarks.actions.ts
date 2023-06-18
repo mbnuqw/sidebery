@@ -1133,8 +1133,9 @@ export async function saveToFolder(
 
       // Bookmark
       attachTabInfoToTitle(item)
+      const url = Utils.denormalizeUrl(item.url)
       const bookmarkIndex = bookmarksList.findIndex(n => {
-        return n.type === 'bookmark' && n.title === item.title && n.url === item.url
+        return n.type === 'bookmark' && n.title === item.title && n.url === url
       })
       let bookmark = bookmarksList[bookmarkIndex]
       // Bookmark exists
@@ -1146,7 +1147,6 @@ export async function saveToFolder(
       }
       // Create bookmark
       else {
-        const url = Utils.denormalizeUrl(item.url)
         const createConf = { title: item.title, url, index, parentId: parentFolderId }
         bookmark = (await browser.bookmarks.create(createConf)) as Bookmark
       }
