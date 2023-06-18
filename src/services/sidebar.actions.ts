@@ -657,14 +657,22 @@ export function getPanelTooltip(panel: Panel): string {
   if (Utils.isTabsPanel(panel)) {
     if (Settings.state.navTabsPanelMidClickAction === 'rm_all') {
       return panel.name + '\n' + translate('nav.tabs_panel_tooltip_mid_rm_all')
+    } else if (Settings.state.navTabsPanelMidClickAction === 'rm_rmp') {
+      return panel.name + '\n' + translate('nav.tabs_panel_tooltip_mid_rm_rmp')
     } else if (Settings.state.navTabsPanelMidClickAction === 'rm_act_tab') {
       return panel.name + '\n' + translate('nav.tabs_panel_tooltip_mid_rm_act_tab')
     } else if (Settings.state.navTabsPanelMidClickAction === 'discard') {
       return panel.name + '\n' + translate('nav.tabs_panel_tooltip_mid_discard')
+    } else if (Settings.state.navTabsPanelMidClickAction === 'hide') {
+      return panel.name + '\n' + translate('nav.tabs_panel_tooltip_mid_hide')
     } else if (Settings.state.navTabsPanelMidClickAction === 'bookmark') {
       return panel.name + '\n' + translate('nav.tabs_panel_tooltip_mid_bookmark')
+    } else if (Settings.state.navTabsPanelMidClickAction === 'bkm_rmp') {
+      return panel.name + '\n' + translate('nav.tabs_panel_tooltip_mid_bkm_rmp')
     } else if (Settings.state.navTabsPanelMidClickAction === 'convert') {
       return panel.name + '\n' + translate('nav.tabs_panel_tooltip_mid_convert')
+    } else if (Settings.state.navTabsPanelMidClickAction === 'conv_hide') {
+      return panel.name + '\n' + translate('nav.tabs_panel_tooltip_mid_conv_hide')
     }
   }
   if (Utils.isBookmarksPanel(panel)) {
@@ -2036,7 +2044,7 @@ export function updateSidebarTitle(delay = 456): void {
   }, delay)
 }
 
-export async function convertToBookmarksPanel(panel: TabsPanel): Promise<void> {
+export async function convertToBookmarksPanel(panel: TabsPanel): Promise<BookmarksPanel | void> {
   if (!Permissions.bookmarks) {
     const result = await Permissions.request('bookmarks')
     if (!result) return
@@ -2165,6 +2173,8 @@ export async function convertToBookmarksPanel(panel: TabsPanel): Promise<void> {
   Notifications.finishProgress(notif, 2000)
   notif.title = translate('notif.done')
   Sidebar.convertingPanelLock = false
+
+  return bookmarksPanel
 }
 
 export async function convertToTabsPanel(

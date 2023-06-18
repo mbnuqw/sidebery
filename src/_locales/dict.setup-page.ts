@@ -959,12 +959,20 @@ export const setupPageTranslations: Translations = {
     zh_CN: '关闭标签页',
     zh_TW: '關閉標籤頁',
   },
+  'settings.nav_tabs_panel_mid_click_rm_rmp': {
+    en: 'close tabs and remove panel',
+    ru: 'закрыть вкладки и удалить панель',
+  },
   'settings.nav_tabs_panel_mid_click_discard': {
     en: 'unload tabs',
     ru: 'выгрузить вкладки',
     de: 'Entlade Tabs',
     zh_CN: '卸载标签页',
     zh_TW: '卸載標籤頁',
+  },
+  'settings.nav_tabs_panel_mid_click_hide': {
+    en: 'hide panel',
+    ru: 'скрыть панель',
   },
   'settings.nav_tabs_panel_mid_click_bookmark': {
     en: 'save panel to bookmarks',
@@ -973,12 +981,20 @@ export const setupPageTranslations: Translations = {
     zh_CN: '将面板保存到书签',
     zh_TW: '將面板保存到書籤',
   },
+  'settings.nav_tabs_panel_mid_click_bkm_rmp': {
+    en: 'save to bookmarks and remove panel',
+    ru: 'сохранить в закладки и удалить панель',
+  },
   'settings.nav_tabs_panel_mid_click_convert': {
     en: 'convert to bookmarks',
     ru: 'конвертировать в панель закладок',
     de: 'Konvertiere in Lesezeichen',
     zh_CN: '转换为书签',
     zh_TW: '轉換為書籤',
+  },
+  'settings.nav_tabs_panel_mid_click_conv_hide': {
+    en: 'convert to bookmarks panel and hide',
+    ru: 'конвертировать в панель закладок и скрыть',
   },
   'settings.nav_tabs_panel_mid_click_none': {
     en: 'none',

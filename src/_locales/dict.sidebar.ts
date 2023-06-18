@@ -412,6 +412,10 @@ export const sidebarTranslations: Translations = {
     zh_CN: '中键点击：关闭全部标签',
     zh_TW: '中鍵點擊：關閉全部標籤',
   },
+  'nav.tabs_panel_tooltip_mid_rm_rmp': {
+    en: 'Middle click: Close tabs and remove panel',
+    ru: 'Средняя кнопка мыши: Закрыть вкладки и удалить панель',
+  },
   'nav.tabs_panel_tooltip_mid_rm_act_tab': {
     en: 'Middle click: Close active tab',
     ru: 'Средняя кнопка мыши: Закрыть активную вкладку',
@@ -424,17 +428,29 @@ export const sidebarTranslations: Translations = {
     zh_CN: '中键单击：卸载标签',
     zh_TW: '中鍵單擊：卸載標籤',
   },
+  'nav.tabs_panel_tooltip_mid_hide': {
+    en: 'Middle click: Hide panel',
+    ru: 'Средняя кнопка мыши: Скрыть панель',
+  },
   'nav.tabs_panel_tooltip_mid_bookmark': {
     en: 'Middle click: Save to bookmarks',
     ru: 'Средняя кнопка мыши: Сохранить в закладки',
     zh_CN: '中键点击：保存到书签',
     zh_TW: '中鍵點擊：保存到書籤',
   },
+  'nav.tabs_panel_tooltip_mid_bkm_rmp': {
+    en: 'Middle click: Save to bookmarks and remove panel',
+    ru: 'Средняя кнопка мыши: Сохранить в закладки и удалить панель',
+  },
   'nav.tabs_panel_tooltip_mid_convert': {
     en: 'Middle click: Convert to bookmarks panel',
     ru: 'Средняя кнопка мыши: Конвертировать в панель закладок',
     zh_CN: '中键单击：转换到书签面板',
     zh_TW: '中鍵單擊：轉換到書籤面板',
+  },
+  'nav.tabs_panel_tooltip_mid_conv_hide': {
+    en: 'Middle click: Convert to bookmarks and hide panel',
+    ru: 'Средняя кнопка мыши: Конвертировать в панель закладок и скрыть',
   },
   'nav.bookmarks_panel_tooltip_mid_convert': {
     en: 'Middle click: Convert to tabs panel',

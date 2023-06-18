@@ -209,7 +209,10 @@ export const DEFAULT_SETTINGS: SettingsState = {
 export const SETTINGS_OPTIONS = {
   navActTabsPanelLeftClickAction: ['scroll', 'new_tab', 'none'],
   navActBookmarksPanelLeftClickAction: ['scroll', 'none'],
-  navTabsPanelMidClickAction: ['rm_act_tab', 'rm_all', 'discard', 'bookmark', 'convert', 'none'],
+  navTabsPanelMidClickAction: [
+    'rm_act_tab', 'rm_all', 'rm_rmp', 'discard', 'hide', 'bookmark', 'bkm_rmp', 'convert',
+    'conv_hide', 'none'
+  ],
   navBookmarksPanelMidClickAction: ['convert', 'none'],
   tabsUrlInTooltip: ['full', 'stripped', 'none'],
   groupLayout: ['grid', 'list'],

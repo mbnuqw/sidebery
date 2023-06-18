@@ -329,7 +329,7 @@ function onNavCtxMenu(e: MouseEvent, item: NavItem) {
   Menu.open(type)
 }
 
-function onNavMouseDown(e: MouseEvent, item: NavItem) {
+async function onNavMouseDown(e: MouseEvent, item: NavItem) {
   if (Utils.isNavSpace(item)) return Mouse.resetTarget()
   Mouse.setTarget('nav', item.id)
   Menu.close()
@@ -351,6 +351,16 @@ function onNavMouseDown(e: MouseEvent, item: NavItem) {
         if (toRemove.length) Tabs.removeTabs(toRemove)
       }
 
+      // Remove tabs and remove panel
+      if (Settings.state.navTabsPanelMidClickAction === 'rm_rmp') {
+        Sidebar.removePanel(panel.id, { tabsMode: 'close' })
+      }
+
+      // Hide panel
+      if (Settings.state.navTabsPanelMidClickAction === 'hide') {
+        Sidebar.hidePanel(panel.id)
+      }
+
       // Remove active tab
       if (Settings.state.navTabsPanelMidClickAction === 'rm_act_tab') {
         let actTab = Tabs.byId[Tabs.activeId]
@@ -370,9 +380,21 @@ function onNavMouseDown(e: MouseEvent, item: NavItem) {
         Sidebar.bookmarkTabsPanel(panel.id, true)
       }
 
+      // Save panel to bookmarks and remove panel
+      if (Settings.state.navTabsPanelMidClickAction === 'bkm_rmp') {
+        await Sidebar.bookmarkTabsPanel(panel.id, true, true)
+        Sidebar.removePanel(panel.id, { tabsMode: 'close' })
+      }
+
       // Convert tabs panel to bookmarks panel
       if (Settings.state.navTabsPanelMidClickAction === 'convert') {
         Sidebar.convertToBookmarksPanel(panel)
+      }
+
+      // Convert tabs panel to bookmarks panel and hide
+      if (Settings.state.navTabsPanelMidClickAction === 'conv_hide') {
+        const bookmarksPanel = await Sidebar.convertToBookmarksPanel(panel)
+        if (bookmarksPanel) Sidebar.hidePanel(bookmarksPanel.id)
       }
     }
 
@@ -382,7 +404,9 @@ function onNavMouseDown(e: MouseEvent, item: NavItem) {
 
       // Convert bookmarks panel to tabs panel
       if (Settings.state.navBookmarksPanelMidClickAction === 'convert') {
-        Sidebar.convertToTabsPanel(panel, true)
+        const panelId = await Sidebar.convertToTabsPanel(panel, true)
+        const tabsPanel = Sidebar.panelsById[panelId]
+        if (tabsPanel?.hidden) Sidebar.showPanel(panelId)
       }
     }
 
