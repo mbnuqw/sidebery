@@ -1093,14 +1093,13 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
     let dstPanel = Sidebar.panelsById[movedTab.dstPanelId]
     movedTab.dstPanelId = NOID
 
-    if (!dstPanel) {
-      dstPanel = Sidebar.panelsById[toTab.panelId]
-    } else if (
+    const outOfPanel =
       Utils.isTabsPanel(dstPanel) &&
       dstPanel.startTabIndex > -1 &&
       dstPanel.endTabIndex > -1 &&
       (dstPanel.startTabIndex > info.toIndex || dstPanel.endTabIndex + 1 < info.toIndex)
-    ) {
+
+    if (!dstPanel || outOfPanel) {
       dstPanel = Sidebar.panelsById[toTab.panelId]
     }
 
