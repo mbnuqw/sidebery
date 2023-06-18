@@ -422,12 +422,14 @@ function onNavMouseUp(e: MouseEvent, item: NavItem, inHiddenBar?: boolean) {
 
   // Left
   if (e.button === 0) {
+    const isSwitchingPanel = !!panel && Sidebar.reactive.activePanelId !== item.id
+
     if (isHiddenPanels) {
       if (Sidebar.reactive.hiddenPanelsPopup) Sidebar.closeHiddenPanelsPopup()
       else Sidebar.openHiddenPanelsPopup()
       return
     }
-    if (inHiddenBar) Sidebar.closeHiddenPanelsPopup()
+    if (inHiddenBar) Sidebar.closeHiddenPanelsPopup(isSwitchingPanel)
     if (isAddTP) return addTabsPanel()
     if (isSettings) {
       if (e.altKey) {
@@ -440,7 +442,7 @@ function onNavMouseUp(e: MouseEvent, item: NavItem, inHiddenBar?: boolean) {
     if (isRemuteAudioTabs) return Tabs.remuteAudibleTabs()
     if (item.type === ButtonType.collapse) collapseAll()
 
-    if (Sidebar.reactive.activePanelId !== item.id) {
+    if (isSwitchingPanel) {
       if (Sidebar.reactive.hiddenPanelsPopup) Sidebar.reactive.hiddenPanelsPopup = false
       return Sidebar.switchToPanel(item.id)
     }

@@ -1316,7 +1316,8 @@ export function closeHiddenPanelsPopup(withoutTabCreation?: boolean): void {
     !withoutTabCreation &&
     Utils.isTabsPanel(panel) &&
     (panel.noEmpty || Settings.state.hideInact || Settings.state.hideEmptyPanels) &&
-    !panel.tabs.length
+    !panel.tabs.length &&
+    !panel.pinnedTabs.length
   ) {
     Tabs.createTabInPanel(panel)
   }
