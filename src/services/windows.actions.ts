@@ -28,7 +28,7 @@ export async function loadWindowInfo(): Promise<void> {
   // Generate unique window id
   if (!uniqWinId) {
     uniqWinId = Utils.uid()
-    await browser.sessions.setWindowValue(browser.windows.WINDOW_ID_CURRENT, 'uniqWinId', uniqWinId)
+    browser.sessions.setWindowValue(browser.windows.WINDOW_ID_CURRENT, 'uniqWinId', uniqWinId)
   }
 
   Windows.incognito = currentWindow.incognito
