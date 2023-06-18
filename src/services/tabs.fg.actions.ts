@@ -4165,9 +4165,9 @@ function getTooltip(tab: Tab): string {
 
   let str = `${tab.title}`
   if (Settings.state.tabsUrlInTooltip === 'full') {
-    str += `\n${decodedUrl}`
+    str += `\n---\n${decodedUrl}`
   } else if (Settings.state.tabsUrlInTooltip === 'stripped') {
-    str += `\n${decodedUrl.split('?')[0]}`
+    str += `\n---\n${decodedUrl.split('?')[0]}`
   }
 
   return str

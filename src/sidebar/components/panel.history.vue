@@ -130,8 +130,7 @@ const historyList = computed((): HistoryGroup[] => {
     itemPreview.timeStr = getItemTime(itemPreview.lastVisitTime)
 
     itemPreview.tooltip = ''
-    if (itemPreview.title) itemPreview.tooltip += itemPreview.title
-    if (itemPreview.tooltip) itemPreview.tooltip += '\n'
+    if (itemPreview.title) itemPreview.tooltip += itemPreview.title + '\n---\n'
     if (itemPreview.info) itemPreview.tooltip += itemPreview.info
 
     group.items.push(itemPreview)

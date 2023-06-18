@@ -60,7 +60,7 @@ const favicon = computed((): string => {
   return Favicons.getFavicon(props.node.url)
 })
 const tooltip = computed((): string => {
-  if (props.node.title && props.node.url) return `${props.node.title}\n${props.node.url}`
+  if (props.node.title && props.node.url) return `${props.node.title}\n---\n${props.node.url}`
   else if (props.node.url) return props.node.url
   else if (props.node.title) return props.node.title
   else return ''
