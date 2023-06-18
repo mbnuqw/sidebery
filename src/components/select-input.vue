@@ -129,7 +129,14 @@ function select(option: InputOption): void {
 }
 
 function getTooltip(option: InputOption): string {
-  if (option && (option as InputObjOpt).tooltip) return (option as InputObjOpt).tooltip ?? ''
+  if (option) {
+    if (typeof option === 'object') {
+      if (option.tooltip) return option.tooltip
+      if (option.title) return option.title
+    } else if (props.label) {
+      return translate(`${props.label}${option}`, props.plurNum)
+    }
+  }
   return ''
 }
 
