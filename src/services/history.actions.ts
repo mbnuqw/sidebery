@@ -34,7 +34,7 @@ export async function load(): Promise<void> {
 
   const lastItemVisitTime = result[result.length - 1]?.lastVisitTime
   const normList = await normalizeHistory(result, true, lastItemVisitTime)
-  lastItemTime = getLastItemTime() - 1
+  lastItemTime = getLastItemTime(normList) - 1
 
   if (!normList.length) await loadMore()
   else History.reactive.list = normList
@@ -163,12 +163,14 @@ export async function loadMore(): Promise<void> {
   History.allLoaded = true
 }
 
-function getLastItemTime(): number {
-  let i = History.reactive.list.length - 1
-  let lastItem = History.reactive.list[i]
+function getLastItemTime(list?: HistoryItem[]): number {
+  if (!list) list = History.reactive.list
+
+  let i = list.length - 1
+  let lastItem = list[i]
   if (!lastItem) return Date.now()
   while (lastItem?.lastVisitTime === undefined && i > 0) {
-    lastItem = History.reactive.list[--i]
+    lastItem = list[--i]
   }
   return lastItem.lastVisitTime ?? Date.now()
 }
@@ -307,14 +309,25 @@ export async function copyTitles(ids: ID[]): Promise<void> {
 
 export function deleteVisits(ids: ID[]) {
   for (const id of ids) {
-    const itemIndex = History.reactive.list.findIndex(i => i.id === id)
-    const item = History.reactive.list[itemIndex]
+    const list = History.reactive.filtered ?? History.reactive.list
+    const itemIndex = list.findIndex(i => i.id === id)
+    const item = list[itemIndex]
     if (!item) continue
     if (!item.lastVisitTime) continue
 
     const ts = item.lastVisitTime
+
+    // Delete cached visit
+    if (item.url) {
+      const cached = cachedVisits[item.url]
+      if (cached) {
+        const index = cached.findIndex(ci => ci.visitTime === ts)
+        if (index !== -1) cached.splice(index, 1)
+      }
+    }
+
     browser.history.deleteRange({ startTime: ts, endTime: ts + 1 })
-    History.reactive.list.splice(itemIndex, 1)
+    list.splice(itemIndex, 1)
   }
 }
 
@@ -336,8 +349,9 @@ export async function deleteSites(ids: ID[]) {
   const sites: Set<string> = new Set()
 
   for (const id of ids) {
-    const itemIndex = History.reactive.list.findIndex(i => i.id === id)
-    const item = History.reactive.list[itemIndex]
+    const list = History.reactive.filtered ?? History.reactive.list
+    const itemIndex = list.findIndex(i => i.id === id)
+    const item = list[itemIndex]
     if (!item || !item.url) continue
 
     const reResult = SITE_URL_RE.exec(item.url)
@@ -346,6 +360,8 @@ export async function deleteSites(ids: ID[]) {
 
   const items = []
   for (const url of sites) {
+    delete cachedVisits[url]
+
     try {
       const result = await browser.history.search({ text: url, maxResults: 999999, startTime: 0 })
       const filteredResults = result.filter(i => i.url?.startsWith(url))

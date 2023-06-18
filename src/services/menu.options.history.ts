@@ -2,6 +2,7 @@ import { MenuOption } from 'src/types'
 import { translate } from 'src/dict'
 import { History } from './history'
 import { Selection } from './selection'
+import { Search } from './search'
 
 export const historyMenuOptions: Record<string, () => MenuOption | MenuOption[] | undefined> = {
   open: () => {
@@ -45,6 +46,7 @@ export const historyMenuOptions: Record<string, () => MenuOption | MenuOption[] 
       label: translate('menu.history.delete_visits', selected.length),
       icon: 'icon_clock',
       badge: 'icon_close',
+      keepSearching: true,
       onClick: () => History.deleteVisits(selected),
     }
   },
@@ -56,7 +58,11 @@ export const historyMenuOptions: Record<string, () => MenuOption | MenuOption[] 
       label: translate('menu.history.delete_sites', selected.length),
       icon: 'icon_web',
       badge: 'icon_close',
-      onClick: () => History.deleteSites(selected),
+      keepSearching: true,
+      onClick: async () => {
+        await History.deleteSites(selected)
+        if (Search.reactive.rawValue) Search.search()
+      },
     }
   },
 }

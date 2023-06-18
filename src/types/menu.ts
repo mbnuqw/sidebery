@@ -36,6 +36,7 @@ export interface MenuOption {
   inactive?: boolean
   sub?: MenuOption[]
   flag?: MenuOptionFlag
+  keepSearching?: boolean
   onClick?: () => void
   onAltClick?: () => void
 }

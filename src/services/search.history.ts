@@ -14,7 +14,8 @@ export async function onHistorySearch(): Promise<void> {
         maxResults: 100,
         startTime: 0,
       })
-      History.reactive.filtered = await History.normalizeHistory(result, false)
+      const norm = await History.normalizeHistory(result, true)
+      History.reactive.filtered = norm
       first = History.reactive.filtered[0]
     } catch (err) {
       History.reactive.filtered = undefined
