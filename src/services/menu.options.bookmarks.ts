@@ -406,7 +406,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
 
   convertToTabsPanel: () => {
     const panel = Sidebar.panelsById[Selection.getFirst()]
-    if (!isBookmarksPanel(panel) || !Bookmarks.reactive.tree.length) return
+    if (!isBookmarksPanel(panel)) return
 
     const option: MenuOption = {
       label: translate('menu.bookmark.convert_to_tabs_panel'),
