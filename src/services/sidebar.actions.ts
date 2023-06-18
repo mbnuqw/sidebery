@@ -1098,7 +1098,8 @@ export function switchToPanel(
     !withoutTabCreation &&
     Utils.isTabsPanel(panel) &&
     (panel.noEmpty || Settings.state.hideInact || Settings.state.hideEmptyPanels) &&
-    !panel.tabs.length
+    !panel.tabs.length &&
+    !panel.pinnedTabs.length
   ) {
     Tabs.createTabInPanel(panel)
   }
