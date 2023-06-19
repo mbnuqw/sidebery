@@ -266,10 +266,14 @@ export interface DbgInfo {
 
 interface DbgPermissions {
   allUrls: boolean
-  tabHide: boolean
-  clipboardWrite: boolean
   webRequest: boolean
   webRequestBlocking: boolean
+  proxy: boolean
+  tabHide: boolean
+  clipboardWrite: boolean
+  history: boolean
+  bookmarks: boolean
+  downloads: boolean
 }
 
 interface DbgStorage {

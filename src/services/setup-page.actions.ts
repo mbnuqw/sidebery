@@ -212,26 +212,33 @@ export async function getDbgDetails(): Promise<DbgInfo> {
   }
 
   try {
-    const [allUrls, tabHide, clipboardWrite, webRequest, wrBlocking] = await Promise.all([
+    const perms = await Promise.all([
       browser.permissions.contains({ origins: ['<all_urls>'] }),
-      browser.permissions.contains({ permissions: ['tabHide'] }),
-      browser.permissions.contains({ permissions: ['clipboardWrite'] }),
       browser.permissions.contains({ permissions: ['webRequest'] }),
       browser.permissions.contains({ permissions: ['webRequestBlocking'] }),
+      browser.permissions.contains({ permissions: ['proxy'] }),
+      browser.permissions.contains({ permissions: ['tabHide'] }),
+      browser.permissions.contains({ permissions: ['clipboardWrite'] }),
+      browser.permissions.contains({ permissions: ['history'] }),
+      browser.permissions.contains({ permissions: ['bookmarks'] }),
+      browser.permissions.contains({ permissions: ['downloads'] }),
     ])
     dbg.permissions = {
-      allUrls,
-      tabHide,
-      clipboardWrite,
-      webRequest,
-      webRequestBlocking: wrBlocking,
+      allUrls: perms[0],
+      webRequest: perms[1],
+      webRequestBlocking: perms[2],
+      proxy: perms[3],
+      tabHide: perms[4],
+      clipboardWrite: perms[5],
+      history: perms[6],
+      bookmarks: perms[7],
+      downloads: perms[8],
     }
   } catch (err) {
     dbg.permissions = (err as Error).toString()
   }
 
   try {
-    // let stored = await storage.get()
     const stored = await browser.storage.local.get<Stored>()
     dbg.storage = {
       size: Utils.strSize(JSON.stringify(stored)),
