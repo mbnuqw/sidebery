@@ -227,11 +227,11 @@ function getMenuCoordinates(type: MenuType): [number, number] {
 
   let rect
   if (type === MenuType.Tabs) {
-    rect = document.getElementById('tab' + String(firstSelectedId))?.getBoundingClientRect()
+    rect = document.getElementById(`tab${firstSelectedId}`)?.getBoundingClientRect()
   } else if (type === MenuType.Bookmarks) {
-    rect = document.getElementById('bookmark' + String(firstSelectedId))?.getBoundingClientRect()
+    rect = document.getElementById(`bookmark${firstSelectedId}`)?.getBoundingClientRect()
   } else if (type === MenuType.History) {
-    rect = document.getElementById('history' + String(firstSelectedId))?.getBoundingClientRect()
+    rect = document.getElementById(`history${firstSelectedId}`)?.getBoundingClientRect()
   }
 
   if (!rect) return [sx, sy]
