@@ -1477,6 +1477,7 @@ export async function pauseTabMedia(id?: ID): Promise<void> {
 
   const tab = id !== undefined ? Tabs.byId[id] : Tabs.list.find(t => t.audible)
   if (!tab) return
+  if (tab.url.startsWith('ab')) return
 
   const rTab = Tabs.reactive.byId[tab.id]
   if (!rTab) return
@@ -1563,6 +1564,7 @@ export async function pauseTabsMediaOfPanel(panelId: ID): Promise<void> {
   if (Settings.state.pinnedTabsPosition === 'panel') {
     for (const tab of Tabs.list) {
       if (!tab.pinned) break
+      if (tab.url.startsWith('ab')) continue
       if ((tab.audible || tab.mutedInfo?.muted) && tab.panelId === panel.id) {
         const rTab = Tabs.reactive.byId[tab.id]
         if (rTab) rTab.mediaPaused = true
@@ -1585,6 +1587,7 @@ export async function pauseTabsMediaOfPanel(panelId: ID): Promise<void> {
   }
 
   for (const tab of panel.tabs) {
+    if (tab.url.startsWith('ab')) continue
     const rTab = Tabs.reactive.byId[tab.id]
     if (tab.audible || tab.mutedInfo?.muted) {
       if (rTab) rTab.mediaPaused = true

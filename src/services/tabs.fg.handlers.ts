@@ -1023,7 +1023,7 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
 
     // Update media badges
     if (tab.audible || tab.mediaPaused || tab.mutedInfo?.muted) {
-      Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId, tab)
+      Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId)
     }
   }
 
