@@ -431,6 +431,10 @@ function onTabCreated(tab: Tab, attached?: boolean): void {
   }
 
   if (panel) Tabs.decrementScrollRetainer(panel)
+
+  if (attached && (tab.audible || tab.mediaPaused || tab.mutedInfo?.muted)) {
+    Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId, tab)
+  }
 }
 
 /**
@@ -460,13 +464,19 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
         rLocalTab.status = TabStatus.Complete
       }
       if (localTab.loading) localTab.loading = false
+      let mediaStateChanged = false
       if (localTab.audible) {
+        mediaStateChanged = true
         localTab.audible = false
         rLocalTab.mediaAudible = false
       }
       if (localTab.mediaPaused) {
+        mediaStateChanged = true
         localTab.mediaPaused = false
         rLocalTab.mediaPaused = false
+      }
+      if (mediaStateChanged) {
+        Sidebar.updateMediaStateOfPanelDebounced(100, localTab.panelId, localTab)
       }
       const groupTab = Tabs.getGroupTab(localTab)
       if (groupTab && !groupTab.discarded) Tabs.updateGroupChild(groupTab.id, tab.id)
@@ -491,6 +501,7 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
     if (change.url && localTab.mediaPaused) {
       localTab.mediaPaused = false
       rLocalTab.mediaPaused = false
+      Sidebar.updateMediaStateOfPanelDebounced(100, localTab.panelId, localTab)
     }
   }
 
@@ -526,6 +537,7 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
     if (localTab.mediaPaused) {
       localTab.mediaPaused = false
       rLocalTab.mediaPaused = false
+      Sidebar.updateMediaStateOfPanelDebounced(100, localTab.panelId, localTab)
     }
 
     // Re-color tab
@@ -620,12 +632,10 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
     if (Search.reactive.rawValue) Search.searchDebounced(500)
   }
 
-  // Handle audible change
-  if (change.audible !== undefined && change.audible) {
-    if (localTab.mediaPaused) {
-      localTab.mediaPaused = false
-      rLocalTab.mediaPaused = false
-    }
+  // Reset mediaPaused flag
+  if (change.audible !== undefined && change.audible && localTab.mediaPaused) {
+    localTab.mediaPaused = false
+    rLocalTab.mediaPaused = false
   }
 
   // Update tab object
@@ -641,6 +651,11 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
   if (change.status !== undefined) rLocalTab.status = Tabs.getStatus(localTab)
   if (change.title !== undefined) rLocalTab.title = change.title
   if (change.url !== undefined) rLocalTab.url = change.url
+
+  // Handle media state change
+  if (change.audible !== undefined || change.mutedInfo?.muted !== undefined) {
+    Sidebar.updateMediaStateOfPanelDebounced(100, localTab.panelId, localTab)
+  }
 
   // Handle unpinned tab
   if (change.pinned !== undefined && !change.pinned) {
@@ -664,6 +679,9 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, tab: browser.t
         }
       }
       if (tab.active) Sidebar.activatePanel(panel.id)
+    }
+    if (localTab.audible || localTab.mediaPaused || localTab.mutedInfo?.muted) {
+      Sidebar.updateMediaStateOfPanelDebounced(100, localTab.panelId, localTab)
     }
   }
 
@@ -1002,6 +1020,11 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
 
     // Update filtered results
     if (Search.reactive.rawValue) Search.search()
+
+    // Update media badges
+    if (tab.audible || tab.mediaPaused || tab.mutedInfo?.muted) {
+      Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId, tab)
+    }
   }
 
   // Update bookmarks marks
@@ -1105,6 +1128,7 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
 
     if (Utils.isTabsPanel(srcPanel) && Utils.isTabsPanel(dstPanel)) {
       movedTab.panelId = dstPanel.id
+      Sidebar.updateMediaStateOfPanelDebounced(100, movedTab.panelId, movedTab)
     }
   }
 

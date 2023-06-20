@@ -387,3 +387,10 @@ export type Entries<T> = (Iterator<T> & { [K in keyof T]: [K, T[K]] }[keyof T])[
 
 export type RGBA = [number, number, number, number]
 export type RGB = [number, number, number]
+
+export const enum MediaState {
+  Muted = -1,
+  Silent = 0,
+  Audible = 1,
+  Paused = 2,
+}

@@ -108,7 +108,10 @@ export async function load(): Promise<void> {
   })
 
   for (const panel of Sidebar.panels) {
-    if (Utils.isTabsPanel(panel)) panel.ready = true
+    if (Utils.isTabsPanel(panel)) {
+      panel.ready = true
+      if (panel.tabs.length) Sidebar.updateMediaStateOfPanel(panel.id)
+    }
   }
 
   if (Settings.state.colorizeTabs) Tabs.colorizeTabs()
@@ -1472,9 +1475,7 @@ export async function pauseTabMedia(id?: ID): Promise<void> {
     if (!result) return
   }
 
-  let tab: Tab | undefined
-  if (id !== undefined) tab = Tabs.byId[id]
-  else tab = Tabs.list.find(t => t.audible)
+  const tab = id !== undefined ? Tabs.byId[id] : Tabs.list.find(t => t.audible)
   if (!tab) return
 
   const rTab = Tabs.reactive.byId[tab.id]
@@ -1482,6 +1483,7 @@ export async function pauseTabMedia(id?: ID): Promise<void> {
 
   tab.mediaPaused = true
   rTab.mediaPaused = true
+  Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId, tab)
 
   browser.tabs
     .executeScript(tab.id, {
@@ -1491,8 +1493,9 @@ export async function pauseTabMedia(id?: ID): Promise<void> {
     })
     .then(results => {
       if (results.every(result => result === false)) {
-        if (tab) tab.mediaPaused = false
+        tab.mediaPaused = false
         if (rTab) rTab.mediaPaused = false
+        Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId, tab)
       }
     })
     .catch(err => {
@@ -1517,6 +1520,7 @@ export async function playTabMedia(id?: ID): Promise<void> {
 
   tab.mediaPaused = false
   rTab.mediaPaused = false
+  Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId, tab)
 
   browser.tabs
     .executeScript(tab.id, {
@@ -1537,6 +1541,7 @@ export function resetPausedMediaState(panelId: ID): void {
     if (tab && tab.mediaPaused) {
       tab.mediaPaused = false
       if (rTab) rTab.mediaPaused = false
+      Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId, tab)
     }
   }
 }
@@ -1562,12 +1567,14 @@ export async function pauseTabsMediaOfPanel(panelId: ID): Promise<void> {
         const rTab = Tabs.reactive.byId[tab.id]
         if (rTab) rTab.mediaPaused = true
         tab.mediaPaused = true
+        Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId, tab)
         browser.tabs
           .executeScript(tab.id, injectionConfig)
           .then(results => {
             if (results.every(result => result === false)) {
               if (rTab) rTab.mediaPaused = false
               tab.mediaPaused = false
+              Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId, tab)
             }
           })
           .catch(err => {
@@ -1582,12 +1589,14 @@ export async function pauseTabsMediaOfPanel(panelId: ID): Promise<void> {
     if (tab.audible || tab.mutedInfo?.muted) {
       if (rTab) rTab.mediaPaused = true
       tab.mediaPaused = true
+      Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId, tab)
       browser.tabs
         .executeScript(tab.id, injectionConfig)
         .then(results => {
           if (results.every(result => result === false)) {
             if (rTab) rTab.mediaPaused = false
             tab.mediaPaused = false
+            Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId, tab)
           }
         })
         .catch(err => {
@@ -1620,6 +1629,7 @@ export async function playTabsMediaOfPanel(panelId: ID): Promise<void> {
         const rTab = Tabs.reactive.byId[tab.id]
         if (rTab) rTab.mediaPaused = false
         tab.mediaPaused = false
+        Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId, tab)
         browser.tabs.executeScript(tab.id, injectionConfig).catch(err => {
           Logs.err('Tabs.playTabsMediaOfPanel: Cannot exec script (pinned):', err)
         })
@@ -1632,6 +1642,7 @@ export async function playTabsMediaOfPanel(panelId: ID): Promise<void> {
     if (tab.mediaPaused) {
       if (rTab) rTab.mediaPaused = false
       tab.mediaPaused = false
+      Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId, tab)
       browser.tabs.executeScript(tab.id, injectionConfig).catch(err => {
         Logs.err('Tabs.playTabsMediaOfPanel: Cannot exec script:', err)
       })
@@ -1647,6 +1658,7 @@ function recheckPausedTabs(delay = 3500): void {
         const rTab = Tabs.reactive.byId[tab.id]
         if (rTab) rTab.mediaPaused = false
         tab.mediaPaused = false
+        Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId, tab)
       }
     }
   }, delay)
@@ -1668,12 +1680,14 @@ export async function pauseAllAudibleTabsMedia(): Promise<void> {
     if (rTab && tab.audible) {
       rTab.mediaPaused = true
       tab.mediaPaused = true
+      Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId, tab)
       browser.tabs
         .executeScript(tab.id, injectionConfig)
         .then(results => {
           if (results.every(result => result === false)) {
             rTab.mediaPaused = false
             tab.mediaPaused = false
+            Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId, tab)
           }
         })
         .catch(err => {
@@ -1701,6 +1715,7 @@ export async function playAllPausedTabsMedia(): Promise<void> {
     if (rTab && tab.mediaPaused) {
       rTab.mediaPaused = false
       tab.mediaPaused = false
+      Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId, tab)
       browser.tabs.executeScript(tab.id, injectionConfig).catch(err => {
         Logs.err('Tabs.playAllPausedTabsMedia: Cannot exec script:', err)
       })
@@ -2097,6 +2112,10 @@ export async function move(
   }
 
   if (dst.panelId !== undefined && src.panelId !== dst.panelId) {
+    const firstTab = tabs[0]
+    if (firstTab) Sidebar.updateMediaStateOfPanelDebounced(100, firstTab.panelId)
+    Sidebar.updateMediaStateOfPanelDebounced(100, dst.panelId)
+
     for (const tab of tabs) {
       tab.panelId = dst.panelId
     }

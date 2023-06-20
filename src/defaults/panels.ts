@@ -1,5 +1,5 @@
 import { translate } from 'src/dict'
-import { PanelType, BookmarksPanelConfig, BookmarksPanel } from 'src/types'
+import { PanelType, BookmarksPanelConfig, BookmarksPanel, MediaState } from 'src/types'
 import { TabsPanelConfig, TabsPanel } from 'src/types'
 import { HistoryPanelConfig, HistoryPanel } from 'src/types'
 import { NavItemClass } from 'src/types/sidebar'
@@ -45,7 +45,6 @@ export const BOOKMARKS_PANEL_STATE: BookmarksPanel = {
     sel: false,
     len: 0,
     filteredLen: undefined,
-    loading: false,
     ready: false,
 
     bookmarks: [],
@@ -110,7 +109,6 @@ export const TABS_PANEL_STATE: TabsPanel = {
     sel: false,
     len: 0,
     filteredLen: undefined,
-    loading: false,
     ready: true,
 
     tabs: [],
@@ -123,6 +121,7 @@ export const TABS_PANEL_STATE: TabsPanel = {
     allDiscarded: false,
     newTabCtx: 'none',
     newTabBtns: [],
+    mediaState: MediaState.Silent,
   },
 }
 
@@ -162,7 +161,6 @@ export const HISTORY_PANEL_STATE: HistoryPanel = {
     sel: false,
     len: 0,
     filteredLen: undefined,
-    loading: false,
     ready: false,
   },
 }

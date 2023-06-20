@@ -1,7 +1,7 @@
 import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
 import { PanelConfig, Panel, Stored, ItemBounds, Tab, Bookmark, DstPlaceInfo } from 'src/types'
-import { Notification, SidebarConfig, BookmarksPanelConfig } from 'src/types'
+import { Notification, SidebarConfig, BookmarksPanelConfig, MediaState } from 'src/types'
 import { PanelType, TabsPanel, BookmarksPanel, ScrollBoxComponent, SubPanelType } from 'src/types'
 import { TabsPanelConfig, ItemBoundsType, ReactiveTab, DialogConfig } from 'src/types'
 import { BOOKMARKS_PANEL_STATE, TABS_PANEL_STATE, NOID, Err } from 'src/defaults'
@@ -1028,10 +1028,6 @@ export function activatePanel(panelId: ID, loadPanels = true): void {
   const prevPanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
   const panel = Sidebar.panelsById[panelId]
   if (!panel) return
-
-  if (panel.reactive.loading === 'err' || panel.reactive.loading === 'ok') {
-    panel.reactive.loading = false
-  }
 
   let loading: Promise<void> | undefined
   if (loadPanels && !panel.ready) {
@@ -2372,4 +2368,76 @@ export function switchPanelOnMouseLeave() {
   if (activeTab.pinned && Settings.state.pinnedTabsPosition !== 'panel') return
 
   Sidebar.activatePanel(activeTab.panelId)
+}
+
+const updateMediaStateOfPanelTimeouts: Record<ID, number> = {}
+export function updateMediaStateOfPanelDebounced(delay: number, panelId: ID, tab?: Tab) {
+  if (updateMediaStateOfPanelTimeouts[panelId] !== undefined) tab = undefined
+
+  clearTimeout(updateMediaStateOfPanelTimeouts[panelId])
+  updateMediaStateOfPanelTimeouts[panelId] = setTimeout(() => {
+    delete updateMediaStateOfPanelTimeouts[panelId]
+    updateMediaStateOfPanel(panelId, tab)
+  }, delay)
+}
+
+export function updateMediaStateOfPanel(panelId: ID, tab?: Tab) {
+  const panel = Sidebar.panelsById[panelId]
+  if (!Utils.isTabsPanel(panel)) return
+
+  if (tab && (!tab.pinned || Settings.state.pinnedTabsPosition === 'panel')) {
+    let tabMediaState = MediaState.Silent
+    if (tab.mediaPaused) tabMediaState = MediaState.Paused
+    else if (tab.mutedInfo?.muted) tabMediaState = MediaState.Muted
+    else if (tab.audible) tabMediaState = MediaState.Audible
+
+    const panelMediaState = panel.reactive.mediaState
+
+    // Audible state
+    if (tabMediaState === MediaState.Audible) {
+      panel.reactive.mediaState = MediaState.Audible
+      return
+    }
+
+    // Paused state
+    else if (tabMediaState === MediaState.Paused && panelMediaState !== MediaState.Audible) {
+      panel.reactive.mediaState = MediaState.Paused
+      return
+    }
+
+    // Muted state
+    else if (tabMediaState === MediaState.Muted && panelMediaState === MediaState.Silent) {
+      panel.reactive.mediaState = MediaState.Muted
+      return
+    }
+  }
+
+  // Unknown state, need to check all tabs
+  // ---
+  let hasPaused = false
+  let hasMuted = false
+
+  if (Settings.state.pinnedTabsPosition === 'panel') {
+    for (const t of panel.pinnedTabs) {
+      if (t.mediaPaused) hasPaused = true
+      else if (t.mutedInfo?.muted) hasMuted = true
+      else if (t.audible) {
+        panel.reactive.mediaState = MediaState.Audible
+        return
+      }
+    }
+  }
+
+  for (const t of panel.tabs) {
+    if (t.mediaPaused) hasPaused = true
+    else if (t.mutedInfo?.muted) hasMuted = true
+    else if (t.audible) {
+      panel.reactive.mediaState = MediaState.Audible
+      return
+    }
+  }
+
+  if (hasPaused) panel.reactive.mediaState = MediaState.Paused
+  else if (hasMuted) panel.reactive.mediaState = MediaState.Muted
+  else if (Tabs.ready) panel.reactive.mediaState = MediaState.Silent
 }

@@ -1,4 +1,4 @@
-import { BookmarksPanelComponent, ScrollBoxComponent } from '../types'
+import { BookmarksPanelComponent, MediaState, ScrollBoxComponent } from '../types'
 import { ReactiveTab, Tab } from './tabs'
 import { Bookmark } from './bookmarks'
 
@@ -195,7 +195,6 @@ interface PanelCommonReactiveProps {
   sel: boolean
   len: number
   filteredLen?: number
-  loading: boolean | 'ok' | 'err'
   ready: boolean
 }
 
@@ -243,6 +242,7 @@ export interface TabsPanelReactiveProps extends PanelCommonReactiveProps {
   allDiscarded: boolean
   newTabCtx: string
   newTabBtns: string[]
+  mediaState: MediaState
 }
 
 ///

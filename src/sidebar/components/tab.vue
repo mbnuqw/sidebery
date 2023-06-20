@@ -403,6 +403,7 @@ function onAudioMouseDown(e: MouseEvent, rTab: ReactiveTab): void {
       if (tab) {
         tab.mediaPaused = false
         rTab.mediaPaused = false
+        Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId, tab)
       }
     }
   }

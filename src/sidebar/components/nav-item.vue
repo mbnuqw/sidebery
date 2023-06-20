@@ -1,10 +1,9 @@
 <template lang="pug">
-//- Panel
+//- Tabs Panel
 .nav-item(
-  v-if="Utils.isNavPanel(item)"
+  v-if="Utils.isTabsPanel(item)"
   draggable="true"
   data-class="panel"
-  :data-loading="item.reactive.loading"
   :data-updated="isUpdated"
   :data-active="Sidebar.reactive.activePanelId === props.item.id"
   :data-index="inlineIndex"
@@ -13,9 +12,40 @@
   :data-sel="item.id === Sidebar.reactive.selectedNavId"
   :data-unloaded="item.reactive.ready === false"
   :data-empty="Utils.isTabsPanel(item) && item.reactive.allDiscarded"
-  :data-audible="mediaState === MediaState.Audible"
-  :data-paused="mediaState === MediaState.Paused"
-  :data-muted="mediaState === MediaState.Muted"
+  :data-audible="item.reactive.mediaState === MediaState.Audible"
+  :data-paused="item.reactive.mediaState === MediaState.Paused"
+  :data-muted="item.reactive.mediaState === MediaState.Muted"
+  :data-drop-mode="dropPointerMode(item.id)"
+  :title="item.reactive.tooltip || item.reactive.name"
+  @dragstart="emit('dragstart', $event)"
+  @drop="emit('drop', $event)"
+  @mousedown.stop="emit('mousedown', $event)"
+  @mouseup.stop="emit('mouseup', $event)"
+  @contextmenu.stop="emit('contextmenu', $event)")
+  .dnd-layer(:data-dnd-type="dndType" :data-dnd-id="item.id")
+  img.icon(v-if="!!item.reactive.iconIMG" :src="item.reactive.iconIMG")
+  svg.icon(v-else-if="item.reactive.iconSVG"): use(:xlink:href="'#' + item.reactive.iconSVG")
+  .badge
+  .audio(
+    v-if="item.reactive.mediaState !== MediaState.Silent"
+    @mousedown="onAudioMouseDown($event, item)")
+    svg.-audible: use(xlink:href="#icon_loud_badge")
+    svg.-paused: use(xlink:href="#icon_pause_12")
+    svg.-muted: use(xlink:href="#icon_mute_badge")
+  .name-box: .name {{item.reactive.name}}
+  .len(v-if="Settings.state.navBtnCount && (item.reactive.filteredLen ?? item.reactive.len)") {{item.reactive.filteredLen ?? item.reactive.len}}
+//- Bookmarks/HistoryPanel
+.nav-item(
+  v-else-if="Utils.isNavPanel(item)"
+  draggable="true"
+  data-class="panel"
+  :data-updated="isUpdated"
+  :data-active="Sidebar.reactive.activePanelId === props.item.id"
+  :data-index="inlineIndex"
+  :data-color="item.reactive.color"
+  :data-type="NavItemTypeNames[item.type] ?? item.type"
+  :data-sel="item.id === Sidebar.reactive.selectedNavId"
+  :data-unloaded="item.reactive.ready === false"
   :data-drop-mode="dropPointerMode(item.id)"
   :title="item.reactive.tooltip || item.reactive.name"
   @dragstart="emit('dragstart', $event)"
@@ -29,13 +59,7 @@
   img.icon(v-if="!!item.reactive.iconIMG" :src="item.reactive.iconIMG")
   svg.icon(v-else-if="item.reactive.iconSVG"): use(:xlink:href="'#' + item.reactive.iconSVG")
   .badge
-  Transition(name="nav-badge")
-    .audio(v-if="mediaState !== MediaState.Silent" @mousedown="onAudioMouseDown")
-      svg.-audible: use(xlink:href="#icon_loud_badge")
-      svg.-paused: use(xlink:href="#icon_pause_12")
-      svg.-muted: use(xlink:href="#icon_mute_badge")
   .name-box: .name {{item.reactive.name}}
-  .progress-spinner
   .len(v-if="Settings.state.navBtnCount && (item.reactive.filteredLen ?? item.reactive.len)") {{item.reactive.filteredLen ?? item.reactive.len}}
 //- Button
 .nav-item(
@@ -77,63 +101,27 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import * as Utils from 'src/utils'
-import { NavItem, PanelType, DropType, ReactiveTab, Tab } from 'src/types'
-import { NavItemTypeNames, DragType, Panel } from 'src/types'
+import { NavItem, PanelType, DropType, Tab } from 'src/types'
+import { NavItemTypeNames, DragType, MediaState } from 'src/types'
 import { Sidebar } from 'src/services/sidebar'
 import { DnD } from 'src/services/drag-and-drop'
 import { Settings } from 'src/services/settings'
 import { Tabs } from 'src/services/tabs.fg'
+import { TabsPanel } from 'src/types'
 
 const emit = defineEmits(['dragstart', 'drop', 'mousedown', 'mouseup', 'contextmenu'])
 
 const props = defineProps<{ item: NavItem; dndType: string; inlineIndex?: number }>()
+
+const bookmarksBadge =
+  props.item.type === PanelType.bookmarks &&
+  (props.item.iconSVG !== 'icon_bookmarks' || !!props.item.iconIMG)
 
 const isUpdated = computed<boolean>(() => {
   if (Utils.isNavPanel(props.item) && Utils.isTabsPanel(props.item)) {
     return Sidebar.reactive.activePanelId !== props.item.id && props.item.reactive.updated
   }
   return false
-})
-
-const enum MediaState {
-  Muted = -1,
-  Silent = 0,
-  Audible = 1,
-  Paused = 2,
-}
-
-const bookmarksBadge = computed<boolean>(() => {
-  const isBookmarksPanel = props.item.type === PanelType.bookmarks
-  return isBookmarksPanel && (props.item.iconSVG !== 'icon_bookmarks' || !!props.item.iconIMG)
-})
-
-const mediaState = computed<MediaState>(() => {
-  if (!Utils.isNavPanel(props.item)) return MediaState.Silent
-  if (!Utils.isTabsPanel(props.item)) return MediaState.Silent
-
-  const panel = props.item
-
-  let hasPaused = false
-  let hasMuted = false
-
-  if (Settings.state.pinnedTabsPosition === 'panel') {
-    for (const t of panel.reactive.pinnedTabs) {
-      if (t.mediaAudible && !t.mediaMuted && !t.mediaPaused) return MediaState.Audible
-      if (t.mediaPaused) hasPaused = true
-      if (t.mediaMuted) hasMuted = true
-    }
-  }
-
-  for (let t of panel.reactive.tabs) {
-    if (t.mediaAudible && !t.mediaMuted && !t.mediaPaused) return MediaState.Audible
-    if (t.mediaPaused) hasPaused = true
-    if (t.mediaMuted) hasMuted = true
-  }
-
-  if (hasPaused) return MediaState.Paused
-  if (hasMuted) return MediaState.Muted
-
-  return MediaState.Silent
 })
 
 function dropPointerMode(id: ID): string {
@@ -213,18 +201,18 @@ function activateAudibleTab(): void {
   }
 }
 
-function onAudioMouseDown(e: MouseEvent): void {
+function onAudioMouseDown(e: MouseEvent, panel: TabsPanel): void {
   e.stopPropagation()
 
-  if (mediaState.value === MediaState.Audible) {
+  if (panel.reactive.mediaState === MediaState.Audible) {
     if (e.button === 0) muteTabs()
     else if (e.button === 1) pauseMedia()
     else if (e.button === 2) activateAudibleTab()
-  } else if (mediaState.value === MediaState.Muted) {
+  } else if (panel.reactive.mediaState === MediaState.Muted) {
     if (e.button === 0) unmuteTabs()
     else if (e.button === 1) pauseMedia()
     else if (e.button === 2) activateAudibleTab()
-  } else if (mediaState.value === MediaState.Paused) {
+  } else if (panel.reactive.mediaState === MediaState.Paused) {
     if (e.button === 0) playMedia()
     else if (e.button === 1) Tabs.resetPausedMediaState(props.item.id)
     else if (e.button === 2) activateAudibleTab()
