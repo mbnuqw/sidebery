@@ -324,6 +324,13 @@
 .select-input-drop-down .opt
   flex-shrink: 0
 
+.SelectInput[data-folded="true"] .opt[data-active="true"]
+  overflow: hidden
+  > p
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
+
 .SelectInput[data-folded="true"] .opt[data-active="true"]:before
 .SelectInput[data-folded="true"] .opt[data-active="true"]:after
   border-top-right-radius: 0
