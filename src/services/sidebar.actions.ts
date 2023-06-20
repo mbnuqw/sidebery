@@ -2266,7 +2266,11 @@ export async function convertToTabsPanel(
 
 const scrollConf: ScrollToOptions = { behavior: 'smooth', top: 0 }
 export function scrollActivePanel(y: number, offset?: boolean): void {
-  const panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  let panel
+  if (Sidebar.subPanelActive && Sidebar.subPanelType === SubPanelType.Bookmarks) {
+    panel = Sidebar.subPanels.bookmarks
+  }
+  if (!panel) panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
   if (!panel?.scrollEl) return
 
   if (offset) scrollConf.top = panel.scrollEl.scrollTop - y
