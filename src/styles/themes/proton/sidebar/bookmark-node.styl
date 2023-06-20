@@ -2,9 +2,11 @@
 
 #root
   --bookmarks-indent: 12px
-  --bookmarks-bookmark-height: 28px
-  --bookmarks-folder-height: 28px
+  --bookmarks-bookmark-height: 30px
+  --bookmarks-folder-height: 30px
   --bookmarks-separator-height: 17px
+  --bookmarks-bookmark-font: rem(15) sans-serif
+  --bookmarks-folder-font: rem(15) sans-serif
   --bookmarks-margin: var(--general-margin)
   --bookmarks-border-radius: var(--general-border-radius)
   --bookmarks-inner-gap: 6px
@@ -13,16 +15,16 @@
   --bookmarks-node-activated-fg: var(--frame-fg)
 #root[data-density="compact"]
   --bookmarks-indent: 10px
-  --bookmarks-bookmark-height: 26px
-  --bookmarks-folder-height: 26px
+  --bookmarks-bookmark-height: 28px
+  --bookmarks-folder-height: 28px
   --bookmarks-separator-height: 15px
   --bookmarks-inner-gap: 5px
   --bookmarks-open-mark-top: 2px
   --bookmarks-open-mark-left: 2px
 #root[data-density="loose"]
   --bookmarks-indent: 12px
-  --bookmarks-bookmark-height: 30px
-  --bookmarks-folder-height: 30px
+  --bookmarks-bookmark-height: 32px
+  --bookmarks-folder-height: 32px
   --bookmarks-separator-height: 19px
   --bookmarks-inner-gap: 6px
 #root[data-theme="proton"][data-frame-color-scheme="dark"]
@@ -67,7 +69,6 @@
 
 .BookmarkNode[data-type="bookmark"] > .body
   height: calc(var(--bookmarks-bookmark-height) + var(--bookmarks-margin))
-  cursor: pointer
 .BookmarkNode[data-type="folder"] > .body
   height: calc(var(--bookmarks-folder-height) + var(--bookmarks-margin))
 .BookmarkNode[data-type="separator"] > .body
@@ -195,10 +196,10 @@
   mask: linear-gradient(-90deg, transparent, #000000 12px, #000000)
 
 .BookmarkNode[data-type="bookmark"] > .body > .title
-  font-size: rem(13)
+  font: var(--bookmarks-bookmark-font)
 
 .BookmarkNode[data-type="folder"] > .body > .title
-  font-size: rem(14)
+  font: var(--bookmarks-folder-font)
 
 .BookmarkNode[data-expanded="true"] > .body > .title
   color: var(--bookmarks-node-activated-fg)
