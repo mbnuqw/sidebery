@@ -197,18 +197,19 @@ function activateAudibleTab(): void {
   if (!Utils.isNavPanel(props.item)) return
   if (!Utils.isTabsPanel(props.item)) return
 
-  let audibleTab: ReactiveTab | undefined
+  let mediaTab: Tab | undefined
+  const findMedia = (t: Tab) => t.audible || t.mutedInfo?.muted || t.mediaPaused
   if (Settings.state.pinnedTabsPosition === 'panel') {
-    audibleTab = props.item.reactive.pinnedTabs.find(t => t.mediaAudible)
+    mediaTab = props.item.pinnedTabs.find(findMedia)
   }
-  if (!audibleTab) audibleTab = props.item.reactive.tabs.find(t => t.mediaAudible)
-  if (!audibleTab) return
+  if (!mediaTab) mediaTab = props.item.tabs.find(findMedia)
+  if (!mediaTab) return
 
   const history = Tabs.getActiveTabsHistory()
   const prevTabId = history.actTabs[history.actTabs.length - 1]
 
-  if (audibleTab.id !== Tabs.activeId) {
-    browser.tabs.update(audibleTab.id, { active: true })
+  if (mediaTab.id !== Tabs.activeId) {
+    browser.tabs.update(mediaTab.id, { active: true })
   } else if (prevTabId) {
     browser.tabs.update(prevTabId, { active: true })
   }
@@ -222,10 +223,13 @@ function onAudioMouseDown(e: MouseEvent): void {
     else if (e.button === 1) pauseMedia()
     else if (e.button === 2) activateAudibleTab()
   } else if (mediaState.value === MediaState.Muted) {
-    unmuteTabs()
+    if (e.button === 0) unmuteTabs()
+    else if (e.button === 1) pauseMedia()
+    else if (e.button === 2) activateAudibleTab()
   } else if (mediaState.value === MediaState.Paused) {
     if (e.button === 0) playMedia()
     else if (e.button === 1) Tabs.resetPausedMediaState(props.item.id)
+    else if (e.button === 2) activateAudibleTab()
   }
 }
 </script>
