@@ -1816,9 +1816,7 @@ export async function bookmarkTabsPanel(
     items.push({ id: 'separator' })
   }
 
-  for (const rTab of panel.tabs) {
-    const tab = Tabs.byId[rTab.id]
-    if (!tab) continue
+  for (const tab of panel.tabs) {
     const info: ItemInfo = {
       id: tab.id,
       title: tab.customTitle ?? tab.title,
@@ -1894,9 +1892,6 @@ export async function restoreFromBookmarks(panel: TabsPanel, silent?: boolean): 
     throw Logs.warn('Restoring panel from bookmarks: Root folder is empty')
   }
 
-  const pinnedTabsInPanel = Settings.state.pinnedTabsPosition === 'panel'
-  const pinnedTabs = pinnedTabsInPanel ? Utils.cloneArray(panel.pinnedTabs) : []
-  const panelTabs = Utils.cloneArray(panel.tabs)
   const idsMap: Record<ID, ID> = {}
   const reusedTabs: Record<ID, Tab> = {}
   const usedAsParent: Record<ID, true> = {}
@@ -1945,11 +1940,10 @@ export async function restoreFromBookmarks(panel: TabsPanel, silent?: boolean): 
     const isPinned = info.pinned
 
     // Find existed tab
-    const existedReactiveTab = (isPinned ? pinnedTabs : panelTabs).find(t => {
+    const existedTab = (isPinned ? panel.pinnedTabs : panel.tabs).find(t => {
       const sameURL = t.url === rawUrl || t.url === info.url
       return sameURL && t.title === info.title && !reusedTabs[t.id]
     })
-    const existedTab = existedReactiveTab ? Tabs.byId[existedReactiveTab.id] : undefined
 
     // Create pinned tab if needed
     if (isPinned) {

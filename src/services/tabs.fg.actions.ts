@@ -1438,9 +1438,8 @@ export function muteAudibleTabsOfPanel(id: ID): void {
     }
   }
 
-  for (const rTab of panel.tabs) {
-    const tab = Tabs.byId[rTab.id]
-    if (tab?.audible) browser.tabs.update(tab.id, { muted: true })
+  for (const tab of panel.tabs) {
+    if (tab.audible) browser.tabs.update(tab.id, { muted: true })
   }
 }
 export function unmuteAudibleTabsOfPanel(id: ID): void {
@@ -1458,9 +1457,8 @@ export function unmuteAudibleTabsOfPanel(id: ID): void {
     }
   }
 
-  for (const rTab of panel.tabs) {
-    const tab = Tabs.byId[rTab.id]
-    if (tab?.mutedInfo?.muted) browser.tabs.update(tab.id, { muted: false })
+  for (const tab of panel.tabs) {
+    if (tab.mutedInfo?.muted) browser.tabs.update(tab.id, { muted: false })
   }
 }
 export function switchToFirstAudibleTab(): void {
@@ -1534,11 +1532,11 @@ export function resetPausedMediaState(panelId: ID): void {
   const panel = Sidebar.panelsById[panelId]
   if (!Utils.isTabsPanel(panel)) return
 
-  for (const rTab of panel.tabs) {
-    const tab = Tabs.byId[rTab.id]
+  for (const tab of panel.tabs) {
+    const rTab = Tabs.reactive.byId[tab.id]
     if (tab && tab.mediaPaused) {
       tab.mediaPaused = false
-      rTab.mediaPaused = false
+      if (rTab) rTab.mediaPaused = false
     }
   }
 }
@@ -1560,7 +1558,7 @@ export async function pauseTabsMediaOfPanel(panelId: ID): Promise<void> {
   if (Settings.state.pinnedTabsPosition === 'panel') {
     for (const tab of Tabs.list) {
       if (!tab.pinned) break
-      if (tab.audible && tab.panelId === panel.id) {
+      if ((tab.audible || tab.mutedInfo?.muted) && tab.panelId === panel.id) {
         const rTab = Tabs.reactive.byId[tab.id]
         if (rTab) rTab.mediaPaused = true
         tab.mediaPaused = true
@@ -1579,16 +1577,16 @@ export async function pauseTabsMediaOfPanel(panelId: ID): Promise<void> {
     }
   }
 
-  for (const rTab of panel.tabs) {
-    const tab = Tabs.byId[rTab.id]
-    if (tab?.audible) {
-      rTab.mediaPaused = true
+  for (const tab of panel.tabs) {
+    const rTab = Tabs.reactive.byId[tab.id]
+    if (tab.audible || tab.mutedInfo?.muted) {
+      if (rTab) rTab.mediaPaused = true
       tab.mediaPaused = true
       browser.tabs
         .executeScript(tab.id, injectionConfig)
         .then(results => {
           if (results.every(result => result === false)) {
-            rTab.mediaPaused = false
+            if (rTab) rTab.mediaPaused = false
             tab.mediaPaused = false
           }
         })
@@ -1629,10 +1627,10 @@ export async function playTabsMediaOfPanel(panelId: ID): Promise<void> {
     }
   }
 
-  for (const rTab of panel.tabs) {
-    const tab = Tabs.byId[rTab.id]
-    if (tab?.mediaPaused) {
-      rTab.mediaPaused = false
+  for (const tab of panel.tabs) {
+    const rTab = Tabs.reactive.byId[tab.id]
+    if (tab.mediaPaused) {
+      if (rTab) rTab.mediaPaused = false
       tab.mediaPaused = false
       browser.tabs.executeScript(tab.id, injectionConfig).catch(err => {
         Logs.err('Tabs.playTabsMediaOfPanel: Cannot exec script:', err)
@@ -3269,18 +3267,14 @@ export function findSuccessorTab(tab: Tab, exclude?: ID[]): Tab | undefined {
       if (pinInPanels) panel = Sidebar.panelsById[tab.panelId]
       else panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
       if (Utils.isTabsPanel(panel)) {
-        let foundTab: Tab | undefined
         for (const tab of panel.tabs) {
-          foundTab = Tabs.byId[tab.id]
-          if (!foundTab) break
-
           // Skip discarded tab
-          if (skipDiscarded && foundTab.discarded) {
-            if (!discardedFallback) discardedFallback = foundTab
+          if (skipDiscarded && tab.discarded) {
+            if (!discardedFallback) discardedFallback = tab
             continue
           }
 
-          target = foundTab
+          target = tab
           break
         }
       }

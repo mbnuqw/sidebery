@@ -540,9 +540,7 @@ function onNavDragStart(e: DragEvent, item: NavItem) {
 
   if (Utils.isTabsPanel(panel)) {
     dragInfo.panelId = panel.id
-    for (const rTab of panel.tabs) {
-      const tab = Tabs.byId[rTab.id]
-      if (!tab) continue
+    for (const tab of panel.tabs) {
       contentList.push(tab.title)
       contentList.push(tab.url)
       contentList.push('')

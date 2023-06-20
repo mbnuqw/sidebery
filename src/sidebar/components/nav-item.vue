@@ -77,7 +77,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import * as Utils from 'src/utils'
-import { NavItem, PanelType, DropType, ReactiveTab } from 'src/types'
+import { NavItem, PanelType, DropType, ReactiveTab, Tab } from 'src/types'
 import { NavItemTypeNames, DragType, Panel } from 'src/types'
 import { Sidebar } from 'src/services/sidebar'
 import { DnD } from 'src/services/drag-and-drop'
@@ -124,12 +124,10 @@ const mediaState = computed<MediaState>(() => {
     }
   }
 
-  if (panel.ready && panel.tabs.length) {
-    for (let t of panel.reactive.tabs) {
-      if (t.mediaAudible && !t.mediaMuted && !t.mediaPaused) return MediaState.Audible
-      if (t.mediaPaused) hasPaused = true
-      if (t.mediaMuted) hasMuted = true
-    }
+  for (let t of panel.reactive.tabs) {
+    if (t.mediaAudible && !t.mediaMuted && !t.mediaPaused) return MediaState.Audible
+    if (t.mediaPaused) hasPaused = true
+    if (t.mediaMuted) hasMuted = true
   }
 
   if (hasPaused) return MediaState.Paused
