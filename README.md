@@ -5,12 +5,12 @@ Firefox extension for managing tabs and bookmarks in sidebar.
 ## Install
 
 **Stable** (4.10.2):
- [Release page](https://github.com/mbnuqw/sidebery/releases/tag/v4.10.2) |
- [Addon page](https://addons.mozilla.org/firefox/addon/sidebery/) |
- [Install](https://addons.mozilla.org/firefox/downloads/file/3994928/sidebery-4.10.2.xpi)  
+[Release page](https://github.com/mbnuqw/sidebery/releases/tag/v4.10.2) |
+[Addon page](https://addons.mozilla.org/firefox/addon/sidebery/) |
+[Install](https://addons.mozilla.org/firefox/downloads/file/3994928/sidebery-4.10.2.xpi)  
 **Beta** (5.0.0b33):
- [Release page](https://github.com/mbnuqw/sidebery/releases/tag/v5.0.0b33) |
- [Install](https://github.com/mbnuqw/sidebery/releases/download/v5.0.0b33/sidebery-5.0.0b33.xpi)
+[Release page](https://github.com/mbnuqw/sidebery/releases/tag/v5.0.0b33) |
+[Install](https://github.com/mbnuqw/sidebery/releases/download/v5.0.0b33/sidebery-5.0.0b33.xpi)
 
 > Note: Before installing the beta version make sure to save backup of the Add-on data (Sidebery settings / Help / Export).
 
@@ -54,28 +54,40 @@ Install dependencies: `npm install`
 Build and watch for changes: `npm run dev`  
 Run browser with Add-on: `npm run dev.run -- <firefox-executable>`
 
-## License
-
-[MIT](./LICENSE)
-
 ## Donate
 
-You can donate to this project, which will motivate me to spend more time on Sidebery.
+You can donate to this project, which will motivate me to answer questions, fix reported bugs, implement requested features and generally will speed up development process. Thank you.
 
-<details><summary><b> Bitcoin (BTC): </b></summary>
+<details><summary><b> Bitcoin (BTC) </b></summary>
 
 ```
 bc1q2drx3x5pfl0c68urwztvjrwgksg9u3l7mn4g4m
 ```
+
 ![btc-bc1q2drx3x5pfl0c68urwztvjrwgksg9u3l7mn4g4m](https://user-images.githubusercontent.com/6276694/215584021-b1eee3ab-ca62-4a81-acb4-cd69c27c734a.png)
 
 </details>
 
-<details><summary><b> Ethereum (ETH): </b></summary>
+<details><summary><b> Ethereum (ETH), USDT (ERC20), USDC (ERC20) </b></summary>
 
 ```
 0x11667D20AB328194AEEc68F9385CCcf713607929
 ```
+
 ![eth-0x11667D20AB328194AEEc68F9385CCcf713607929](https://user-images.githubusercontent.com/6276694/215587549-39505f92-0f80-43ec-bec1-42bf8cd570c4.png)
 
 </details>
+
+<details><summary><b> USDT (TRC20), USDC (TRC20) </b></summary>
+
+```
+TJEdp1TnsN7Jfhfi9Db8yXKDK8NEUovCZb
+```
+
+![TJEdp1TnsN7Jfhfi9Db8yXKDK8NEUovCZb](https://github.com/mbnuqw/sidebery/assets/6276694/bbdefadc-3430-4537-94f1-447244d0e72f)
+
+</details>
+
+## License
+
+[MIT](./LICENSE)
