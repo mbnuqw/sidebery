@@ -27,6 +27,16 @@
   --nav-btn-border-radius: 2px
   --nav-btn-active-shadow: inset 0 0 0 1px var(--s-accent, #00000008), inset 0 1px 3px 0 #00000016
 
+#root .NavigationBar
+  --nav-btn-badge-left: 18px
+  --nav-btn-bkm-badge-left: 16px
+#root[data-density="compact"] .NavigationBar
+  --nav-btn-badge-left: 17px
+  --nav-btn-bkm-badge-left: 15px
+#root[data-density="loose"] .NavigationBar
+  --nav-btn-badge-left: 19px
+  --nav-btn-bkm-badge-left: 17px
+
 // ---
 // -- Navigation
 // -
@@ -241,22 +251,11 @@
   fill: var(--nav-btn-fg)
 
 .NavigationBar .nav-item[data-updated="true"] > .icon
-.NavigationBar .nav-item[data-loading="ok"] > .icon
-.NavigationBar .nav-item[data-loading="err"] > .icon
   mask: radial-gradient(
     circle at calc(100% - 2px) calc(100% - 2px),
     #00000024,
     #00000024 4px,
     #000000 5px,
-    #000000
-  )
-
-.NavigationBar .nav-item[data-loading="true"] > .icon
-  mask: radial-gradient(
-    circle at calc(100% - 2px) calc(100% - 2px),
-    #00000024,
-    #00000024 7px,
-    #000000 8px,
     #000000
   )
 
@@ -268,7 +267,7 @@
   width: 10px
   height: 10px
   top: calc(50% + 1px)
-  left: calc(50% + 1px)
+  left: var(--nav-btn-bkm-badge-left)
   fill: var(--color, var(--toolbar-fg))
 .NavigationBar .nav-item:not([data-unloaded="true"]) .bookmarks-badge-icon
   opacity: .7
@@ -296,37 +295,12 @@
   font-size: rem(15)
 
 // ---
-// -- Progress spinner
-// -
-.NavigationBar .nav-item .progress-spinner
-  position: absolute
-  box-sizing: border-box
-  top: 50%
-  left: 50%
-  width: 12px
-  height: 12px
-  border-radius: 50%
-  opacity: 0
-  overflow: hidden
-  transition: opacity var(--d-norm)
-  border-top: 2px solid var(--toolbar-fg)
-  border-left: 2px solid var(--tabs-progress-bg)
-  border-right: 2px solid var(--tabs-progress-bg)
-  border-bottom: 2px solid var(--tabs-progress-bg)
-
-.NavigationBar .nav-item[data-loading="true"] .progress-spinner
-  animation: rotating-animation .5s infinite linear
-
-.NavigationBar .nav-item[data-loading="true"] .progress-spinner
-  opacity: 1
-
-// ---
 // -- Update / Highlight badge
 // -
 .NavigationBar .nav-item .badge
   position: absolute
   top: calc(50% + 3px)
-  left: calc(50% + 3px)
+  left: var(--nav-btn-badge-left)
   width: 6px
   height: 6px
   border-radius: 50%
@@ -336,19 +310,6 @@
   transition: opacity var(--d-norm), transform var(--d-norm), background-color var(--d-norm)
 
 .NavigationBar .nav-item[data-updated="true"] .badge
-.NavigationBar .nav-item[data-loading="ok"] .badge
-.NavigationBar .nav-item[data-loading="err"] .badge
-  opacity: 1
-  transform: scale(1, 1)
-
-.NavigationBar .nav-item[data-loading="ok"] .badge
-  background-color: var(--status-ok)
-
-.NavigationBar .nav-item[data-loading="err"] .badge
-  background-color: var(--status-err)
-
-.NavigationBar .nav-item[data-loading="ok"] .badge
-.NavigationBar .nav-item[data-loading="err"] .badge
   opacity: 1
   transform: scale(1, 1)
 
