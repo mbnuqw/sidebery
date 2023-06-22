@@ -151,7 +151,7 @@ function onTabCreated(tab: Tab, attached?: boolean): void {
   }
 
   // Predefined position
-  if (Tabs.newTabsPosition && Tabs.newTabsPosition[tab.index]) {
+  if (Tabs.newTabsPosition[tab.index]) {
     const position = Tabs.newTabsPosition[tab.index]
     panel = Sidebar.panelsById[position.panel]
     if (!Utils.isTabsPanel(panel)) {

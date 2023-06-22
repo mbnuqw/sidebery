@@ -1751,28 +1751,48 @@ export async function duplicateTabs(tabIds: ID[]): Promise<void> {
 
     const descendantsToDuplicate: [ID, ID][] = []
     let index = tab.index + 1
-    for (let t; index < Tabs.list.length; index++) {
-      t = Tabs.list[index]
-      if (t.lvl <= tab.lvl) break
+    let dstPanelId = tab.panelId
+    if (tab.pinned) {
+      let panel
+      if (Settings.state.pinnedTabsPosition === 'panel') {
+        panel = Sidebar.panelsById[tab.panelId]
+        if (!Utils.isTabsPanel(panel)) return
+      } else {
+        panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+        if (!Utils.isTabsPanel(panel)) panel = Sidebar.panels.find(p => Utils.isTabsPanel(p))
+        if (!Utils.isTabsPanel(panel)) return
+      }
+      dstPanelId = panel.id
+      if (Settings.state.moveNewTabPin === 'start') index = panel.startTabIndex
+      else if (Settings.state.moveNewTabPin === 'end') index = panel.nextTabIndex
+      if (index < 0) {
+        dstPanelId = NOID
+        index = Tabs.list.length
+      }
+    } else {
+      for (let t; index < Tabs.list.length; index++) {
+        t = Tabs.list[index]
+        if (t.lvl <= tab.lvl) break
 
-      if (tabIds.includes(t.id)) {
-        const dupAncestorId = Tabs.findAncestor(t.id, id => tabIds.includes(id))
-        if (dupAncestorId !== undefined) {
-          descendantsToDuplicate.push([t.id, dupAncestorId])
-          processed.push(t.id)
+        if (tabIds.includes(t.id)) {
+          const dupAncestorId = Tabs.findAncestor(t.id, id => tabIds.includes(id))
+          if (dupAncestorId !== undefined) {
+            descendantsToDuplicate.push([t.id, dupAncestorId])
+            processed.push(t.id)
+          }
         }
       }
     }
 
     const oldNewIds: Record<ID, ID> = {}
-    setNewTabPosition(index, tab.parentId, tab.panelId)
+    setNewTabPosition(index, tab.parentId, dstPanelId)
     const dupTab = await browser.tabs.duplicate(tabId, { active, index })
     oldNewIds[tabId] = dupTab.id
 
     for (const [descendantTabId, descendantParentId] of descendantsToDuplicate) {
       index++
       const dupDescendantParentId = oldNewIds[descendantParentId]
-      setNewTabPosition(index, dupDescendantParentId, tab.panelId)
+      setNewTabPosition(index, dupDescendantParentId, dstPanelId)
       const dupDescendantTab = await browser.tabs.duplicate(descendantTabId, { active, index })
       oldNewIds[descendantTabId] = dupDescendantTab.id
     }
