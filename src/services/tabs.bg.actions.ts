@@ -529,9 +529,9 @@ export async function initInternalPageScripts(tabs: Tab[]) {
   }
 }
 
-export async function injectUrlPageScript(winId: ID, tabId: ID): Promise<void> {
+export function injectUrlPageScript(winId: ID, tabId: ID) {
   try {
-    await browser.tabs
+    browser.tabs
       .executeScript(tabId, {
         file: '/injections/url.js',
         runAt: 'document_start',
@@ -549,7 +549,7 @@ export async function injectUrlPageScript(winId: ID, tabId: ID): Promise<void> {
         matchAboutBlank: true,
       })
       .catch(() => {
-        Logs.warn('Tabs.injectUrlPageScript: Cannot inject init data, reloading tab...')
+        Logs.warn('Tabs.injectUrlPageScript: Cannot inject init data, reloading tab (if active)...')
         const tab = Tabs.byId[tabId]
         if (tab.active) {
           browser.tabs.reload(tabId).catch(err => {
