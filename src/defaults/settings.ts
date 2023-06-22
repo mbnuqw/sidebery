@@ -130,7 +130,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   autoRemoveOther: false,
   highlightOpenBookmarks: false,
   activateOpenBookmarkTab: false,
-  showBookmarkLen: false,
+  showBookmarkLen: true,
   bookmarksRmUndoNote: true,
   loadBookmarksOnDemand: true,
   pinOpenedBookmarksFolder: true,
