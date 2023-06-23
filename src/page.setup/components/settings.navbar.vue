@@ -98,6 +98,7 @@ section(
               use(:xlink:href="'#' + btn.iconSVG")
             img(v-else :src="btn.iconIMG")
           .card-name {{btn.name}}
+          .card-inact-note(v-if="btn.inactive") {{translate('settings.nav_bar.inact_note')}}
         .card-badges
           .card-badge(
             v-if="btn.badgeMoveRules"

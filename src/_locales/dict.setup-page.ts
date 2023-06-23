@@ -1043,6 +1043,10 @@ export const setupPageTranslations: Translations = {
     zh_CN: '无元素',
     zh_TW: '無元素',
   },
+  'settings.nav_bar.inact_note': {
+    en: '(Inactive)',
+    ru: '(Неактивно)',
+  },
   'settings.nav_bar.available_elements': {
     en: 'Available elements',
     ru: 'Доступные элементы',
