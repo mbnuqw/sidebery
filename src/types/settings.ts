@@ -55,6 +55,8 @@ export interface SettingsState {
 
   // Search
   searchBarMode: (typeof SETTINGS_OPTIONS.searchBarMode)[number]
+  searchBookmarksShortcut: string
+  searchHistoryShortcut: string
 
   // Tabs
   warnOnMultiTabClose: (typeof SETTINGS_OPTIONS.warnOnMultiTabClose)[number]

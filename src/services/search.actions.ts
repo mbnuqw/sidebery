@@ -1,6 +1,6 @@
 import * as Utils from 'src/utils'
 import { BKM_ROOT_ID, MIN_SEARCH_QUERY_LEN, NOID, SEARCH_URL } from 'src/defaults'
-import { Search } from 'src/services/search'
+import { Search, SearchShortcut } from 'src/services/search'
 import { Settings } from 'src/services/settings'
 import { Sidebar } from 'src/services/sidebar'
 import * as SearchTabs from 'src/services/search.tabs'
@@ -396,4 +396,41 @@ export function close(): void {
   Search.search('')
   hideBar()
   subPanelOpenBySearch = false
+}
+
+export function parseShortcuts() {
+  if (Settings.state.searchBookmarksShortcut) {
+    Search.shortcuts.bookmarks = parseShortcut(Settings.state.searchBookmarksShortcut)
+  } else {
+    Search.shortcuts.bookmarks = undefined
+  }
+
+  if (Settings.state.searchHistoryShortcut) {
+    Search.shortcuts.history = parseShortcut(Settings.state.searchHistoryShortcut)
+  } else {
+    Search.shortcuts.history = undefined
+  }
+}
+
+function parseShortcut(shortcut: string): SearchShortcut | undefined {
+  const parts = shortcut
+    .trim()
+    .toLowerCase()
+    .split('+')
+    .map(p => p)
+
+  let alt = false
+  let ctrl = false
+  let meta = false
+  let key = ''
+
+  for (const part of parts) {
+    const trimmed = part.trim()
+    if (trimmed === 'alt') alt = true
+    else if (trimmed === 'ctrl') ctrl = true
+    else if (trimmed === 'meta' || trimmed === 'win' || trimmed === 'cmd') meta = true
+    else if (trimmed.length === 1) key = trimmed
+  }
+
+  if (key) return { alt, ctrl, meta, key }
 }

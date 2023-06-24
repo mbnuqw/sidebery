@@ -55,6 +55,8 @@ export const DEFAULT_SETTINGS: SettingsState = {
 
   // Search
   searchBarMode: 'dynamic',
+  searchBookmarksShortcut: '',
+  searchHistoryShortcut: '',
 
   // Tabs
   warnOnMultiTabClose: 'collapsed',

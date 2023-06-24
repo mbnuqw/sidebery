@@ -1412,6 +1412,24 @@ export const setupPageTranslations: Translations = {
     zh_CN: '不活跃',
     zh_TW: '不活躍',
   },
+  'settings.search.shortcuts': {
+    en: 'Shortcuts',
+    ru: 'Быстрый доступ',
+  },
+  'settings.search.shortcuts.note': {
+    en: `Available modifiers: ctrl, alt, cmd
+Examples: "*", "ctrl+$", "ctrl+alt+g"`,
+    ru: `Доступные модификаторы: ctrl, alt, cmd
+Примеры: "*", "ctrl+$", "ctrl+alt+g"`,
+  },
+  'settings.search.bookmarks_shortcut': {
+    en: 'Switch to bookmarks',
+    ru: 'Перейти к закладкам',
+  },
+  'settings.search.history_shortcut': {
+    en: 'Switch to history',
+    ru: 'Перейти к истории',
+  },
 
   // - Tabs
   'settings.tabs_title': {

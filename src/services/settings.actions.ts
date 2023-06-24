@@ -13,6 +13,7 @@ import { Tabs } from 'src/services/tabs.fg'
 import { Snapshots } from 'src/services/snapshots'
 import * as IPC from './ipc'
 import { updateWebReqHandlers } from './web-req.fg'
+import { Search } from './search'
 
 type Opts = typeof SETTINGS_OPTIONS
 export async function loadSettings(): Promise<void> {
@@ -33,6 +34,8 @@ export async function loadSettings(): Promise<void> {
     Settings.state.activateLastTabOnPanelSwitching = true
     Settings.state.tabsPanelSwitchActMove = true
   }
+
+  Search.parseShortcuts()
 }
 
 export async function saveSettings(): Promise<void> {
@@ -222,6 +225,8 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
       }
     }
   }
+
+  Search.parseShortcuts()
 }
 
 export function resetSettings(): void {

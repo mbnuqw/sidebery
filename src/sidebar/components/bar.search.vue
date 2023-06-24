@@ -54,14 +54,26 @@ function onClearBtnMouseUp(): void {
 
 function onKD(e: KeyboardEvent): void {
   // Bookmarks
-  if (e.key === '*') {
+  if (
+    Search.shortcuts.bookmarks &&
+    Search.shortcuts.bookmarks.key === e.key &&
+    Search.shortcuts.bookmarks.ctrl === e.ctrlKey &&
+    Search.shortcuts.bookmarks.alt === e.altKey &&
+    Search.shortcuts.bookmarks.meta === e.metaKey
+  ) {
     e.preventDefault()
     e.stopPropagation()
     Search.bookmarks()
   }
 
   // History
-  else if (e.key === '^') {
+  else if (
+    Search.shortcuts.history &&
+    Search.shortcuts.history.key === e.key &&
+    Search.shortcuts.history.ctrl === e.ctrlKey &&
+    Search.shortcuts.history.alt === e.altKey &&
+    Search.shortcuts.history.meta === e.metaKey
+  ) {
     e.preventDefault()
     e.stopPropagation()
     Search.history()

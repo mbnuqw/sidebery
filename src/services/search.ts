@@ -8,6 +8,18 @@ export interface SearchState {
   rawValue: string
 }
 
+export interface SearchShortcut {
+  ctrl: boolean
+  alt: boolean
+  meta: boolean
+  key: string
+}
+
+interface SearchShortcuts {
+  bookmarks?: SearchShortcut
+  history?: SearchShortcut
+}
+
 export const Search = {
   reactive: {
     barIsShowed: false,
@@ -17,6 +29,8 @@ export const Search = {
   } as SearchState,
   prevValue: '',
   prevExpandedBookmarks: undefined as Record<ID, Record<ID, boolean>> | undefined,
+
+  shortcuts: {} as SearchShortcuts,
 
   ...SearchActions,
 }
