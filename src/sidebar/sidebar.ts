@@ -90,16 +90,8 @@ async function main(): Promise<void> {
   Search.reactive = reactive(Search.reactive)
   Styles.reactive = reactive(Styles.reactive)
 
-  let app = createApp(SidebarRoot)
+  const app = createApp(SidebarRoot)
   app.mount('#root_container')
-
-  // Remount sidebar if some non-reactive data (settings) is changed.
-  Sidebar.reMountSidebar = () => {
-    app.unmount()
-    app = createApp(SidebarRoot)
-    app.mount('#root_container')
-    Styles.initColorScheme()
-  }
 
   if (Info.isMajorUpgrade()) {
     await showUpgradingScreen()

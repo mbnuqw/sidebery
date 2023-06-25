@@ -513,7 +513,7 @@ function calcToolbarBorder(themeColors: browser.theme.ThemeColors, parsed: Parse
 }
 
 export function applyThemeSrcVars(parsed: ParsedTheme, rootEl?: HTMLElement): void {
-  if (!rootEl) rootEl = document.getElementById('root') ?? undefined
+  if (!rootEl) rootEl = document.body
   if (!rootEl) return
 
   for (const colorName of SRC_VARS) {
@@ -534,7 +534,7 @@ export function applyThemeSrcVars(parsed: ParsedTheme, rootEl?: HTMLElement): vo
 }
 
 export function resetThemeSrcVars(): void {
-  const rootEl = document.getElementById('root')
+  const rootEl = document.body
   if (!rootEl) return
 
   for (const colorName of SRC_VARS) {

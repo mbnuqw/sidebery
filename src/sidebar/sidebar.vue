@@ -1,6 +1,7 @@
 <template lang="pug">
 #root.root.Sidebar(
   ref="rootEl"
+  :key="rrc"
   :data-native-scrollbar="Settings.state.nativeScrollbars"
   :data-native-scrollbars-thin="Settings.state.nativeScrollbarsThin"
   :data-native-scrollbars-left="Settings.state.nativeScrollbarsLeft"
@@ -103,7 +104,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, onMounted, Component } from 'vue'
+import { ref, computed, onMounted, Component, nextTick } from 'vue'
 import { PanelType, Panel, MenuType, WheelDirection, DropType } from 'src/types'
 import { SubPanelType } from 'src/types'
 import { Settings } from 'src/services/settings'
@@ -144,20 +145,43 @@ import * as Popups from 'src/services/popups'
 
 const rootEl = ref<HTMLElement | null>(null)
 const panelBoxEl = ref<HTMLElement | null>(null)
+const rrc = ref(0)
 
-const animations = !Settings.state.animations ? 'none' : Settings.state.animationSpeed || 'fast'
-const pinnedTabsBarTop = Settings.state.pinnedTabsPosition === 'top'
-const pinnedTabsBarLeft = Settings.state.pinnedTabsPosition === 'left'
-const pinnedTabsBarRight = Settings.state.pinnedTabsPosition === 'right'
-const navBarHorizontal = Settings.state.navBarLayout === 'horizontal'
-const navBarVertical = Settings.state.navBarLayout === 'vertical'
-const navBarLayout = navBarVertical ? Settings.state.navBarSide : Settings.state.navBarLayout
-const navBarLeft = navBarVertical && Settings.state.navBarSide === 'left'
-const navBarRight = navBarVertical && Settings.state.navBarSide === 'right'
-const bottomBar =
+let animations = !Settings.state.animations ? 'none' : Settings.state.animationSpeed || 'fast'
+let pinnedTabsBarTop = Settings.state.pinnedTabsPosition === 'top'
+let pinnedTabsBarLeft = Settings.state.pinnedTabsPosition === 'left'
+let pinnedTabsBarRight = Settings.state.pinnedTabsPosition === 'right'
+let navBarHorizontal = Settings.state.navBarLayout === 'horizontal'
+let navBarVertical = Settings.state.navBarLayout === 'vertical'
+let navBarLayout = navBarVertical ? Settings.state.navBarSide : Settings.state.navBarLayout
+let navBarLeft = navBarVertical && Settings.state.navBarSide === 'left'
+let navBarRight = navBarVertical && Settings.state.navBarSide === 'right'
+let bottomBar =
   Settings.state.subPanelRecentlyClosedBar ||
   Settings.state.subPanelBookmarks ||
   Settings.state.subPanelHistory
+
+function recalcStaticVars() {
+  animations = !Settings.state.animations ? 'none' : Settings.state.animationSpeed || 'fast'
+  pinnedTabsBarTop = Settings.state.pinnedTabsPosition === 'top'
+  pinnedTabsBarLeft = Settings.state.pinnedTabsPosition === 'left'
+  pinnedTabsBarRight = Settings.state.pinnedTabsPosition === 'right'
+  navBarHorizontal = Settings.state.navBarLayout === 'horizontal'
+  navBarVertical = Settings.state.navBarLayout === 'vertical'
+  navBarLayout = navBarVertical ? Settings.state.navBarSide : Settings.state.navBarLayout
+  navBarLeft = navBarVertical && Settings.state.navBarSide === 'left'
+  navBarRight = navBarVertical && Settings.state.navBarSide === 'right'
+  bottomBar =
+    Settings.state.subPanelRecentlyClosedBar ||
+    Settings.state.subPanelBookmarks ||
+    Settings.state.subPanelHistory
+}
+
+Sidebar.reMountSidebar = () => {
+  recalcStaticVars()
+  rrc.value++
+  nextTick(updSidebarEls)
+}
 
 const activePanel = computed<Panel | undefined>(() => {
   return Sidebar.panelsById[Sidebar.reactive.activePanelId]
@@ -172,12 +196,15 @@ const panels = computed<Panel[]>(() => {
   return output
 })
 
-onMounted(() => {
+function updSidebarEls() {
   if (panelBoxEl.value) Sidebar.setPanelsBoxEl(panelBoxEl.value)
   if (rootEl.value) Sidebar.registerRootEl(rootEl.value)
   Sidebar.recalcElementSizes()
   Sidebar.recalcSidebarSize()
+}
 
+onMounted(() => {
+  updSidebarEls()
   document.addEventListener('keyup', onDocumentKeyup)
 })
 
