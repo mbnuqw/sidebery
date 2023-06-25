@@ -98,6 +98,12 @@ export function enter(): void {
   const actPanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
   if (!actPanel) return
 
+  if (query.startsWith('. ')) {
+    Search.stop()
+    Sidebar.switchToPanel(actPanel.id)
+    return
+  }
+
   if (Utils.isTabsPanel(actPanel)) {
     if (Sidebar.subPanelActive) {
       if (Sidebar.subPanelType === SubPanelType.Bookmarks && Sidebar.subPanels.bookmarks) {
@@ -274,6 +280,7 @@ export function searchDebounced(delay: number, value?: string) {
 }
 
 let query = ''
+let beforeSwitchingPanelId: ID | undefined
 export function search(value?: string): void {
   if (value !== undefined) {
     if (value.length < MIN_SEARCH_QUERY_LEN) value = ''
@@ -282,6 +289,20 @@ export function search(value?: string): void {
     Search.prevValue = Search.reactive.value
     Search.reactive.value = value
     query = value.toLowerCase()
+  }
+
+  if (query.startsWith('. ')) {
+    const val = query.slice(2)
+    if (!val) return
+
+    const panel = Sidebar.panels.find(p => p.name.toLowerCase().includes(val))
+    if (panel && panel.id !== Sidebar.reactive.activePanelId) {
+      if (beforeSwitchingPanelId === undefined) {
+        beforeSwitchingPanelId = Sidebar.reactive.activePanelId
+      }
+      Sidebar.activatePanel(panel.id)
+    }
+    return
   }
 
   const actPanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
@@ -321,6 +342,11 @@ export function search(value?: string): void {
     }
     if (targetPanelId !== NOID) {
       History.reactive.filtered = undefined
+    }
+    if (beforeSwitchingPanelId !== undefined) {
+      const panel = Sidebar.panelsById[beforeSwitchingPanelId]
+      if (panel) Sidebar.activatePanel(panel.id)
+      beforeSwitchingPanelId = undefined
     }
   }
 }
