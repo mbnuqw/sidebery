@@ -38,10 +38,7 @@
 
   .bottom-bar-space(v-if="Settings.state.subPanelRecentlyClosedBar || Settings.state.subPanelBookmarks")
 
-  PanelPlaceholder(
-    :isLoading="!panel.reactive.ready"
-    :isMsg="isNothingFound"
-    :msg="translate('panel.nothing_found')")
+  PanelPlaceholder(:isMsg="isNothingFound" :msg="translate('panel.nothing_found')")
 </template>
 
 <script lang="ts" setup>

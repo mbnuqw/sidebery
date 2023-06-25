@@ -158,7 +158,6 @@ export function unload(): void {
       panel.reactive.len = 0
       panel.reactive.empty = true
       panel.ready = false
-      panel.reactive.ready = false
     }
   }
 
