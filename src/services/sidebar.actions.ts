@@ -1292,7 +1292,7 @@ export function openHiddenPanelsPopup(): void {
     } else {
       let right = Sidebar.width - (relLeft + btnRect.width)
       if (right === 0) right = 1
-      if (Sidebar.width < 200) right /= 2
+      if (Sidebar.width < 200) right = right / 2 + 1
       Sidebar.reactive.hiddenPanelsPopupOffset = right
       Sidebar.reactive.hiddenPanelsPopupOffsetSide = 'end'
     }
