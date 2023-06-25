@@ -73,7 +73,7 @@ const visibleTabs = computed<ReactiveTab[]>(() => {
   return props.panel.reactive.tabs.filter(t => !t.invisible)
 })
 const isNothingFound = computed<boolean>(() => {
-  return !!props.panel.filteredTabs && !props.panel.filteredTabs.length
+  return !!props.panel.reactive.filteredTabs && !props.panel.reactive.filteredTabs.length
 })
 
 onMounted(() => {
