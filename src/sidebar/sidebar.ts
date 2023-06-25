@@ -95,6 +95,8 @@ async function main(): Promise<void> {
 
   // Remount sidebar if some non-reactive data (settings) is changed.
   Sidebar.reMountSidebar = () => {
+    if (Search.reactive.rawValue) Search.stop()
+
     app.unmount()
     app = createApp(SidebarRoot)
     app.mount('#root_container')

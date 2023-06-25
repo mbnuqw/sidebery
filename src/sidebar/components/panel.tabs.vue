@@ -47,7 +47,7 @@
 <script lang="ts" setup>
 import { ref, computed, onMounted } from 'vue'
 import { translate } from 'src/dict'
-import { DropType, MenuType, ScrollBoxComponent, Tab, TabsPanel, ReactiveTab } from 'src/types'
+import { DropType, MenuType, ScrollBoxComponent, TabsPanel, ReactiveTab } from 'src/types'
 import { WheelDirection } from 'src/types'
 import { PRE_SCROLL } from 'src/defaults'
 import { Settings } from 'src/services/settings'
