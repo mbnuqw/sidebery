@@ -302,7 +302,7 @@ function activateOption(opt?: MenuOption, altMode?: boolean): boolean | undefine
   }
   Menu.close()
   Selection.resetSelection()
-  if (!opt.keepSearching) Search.stop()
+  if (!opt.keepSearching && Search.reactive.rawValue) Search.stop()
   return true
 }
 
