@@ -101,6 +101,7 @@ function onMouseDown(e: MouseEvent): void {
       if (!targetTab) return
       return Tabs.toggleBranch(targetTab.id)
     }
+    if (la === 'tab') return Tabs.createTabInPanel(props.panel)
     if (la === 'parent') {
       if (!Settings.state.tabsTree) return
       const activeTab = Tabs.list.find(t => t.active)

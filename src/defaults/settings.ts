@@ -228,7 +228,7 @@ export const SETTINGS_OPTIONS = {
   tabLongRightClick: ['reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'new_after',
     'new_child', 'edit_title', 'none'],
   tabCloseMiddleClick: ['close', 'discard'],
-  tabsPanelLeftClickAction: ['prev', 'expand', 'parent', 'none'],
+  tabsPanelLeftClickAction: ['prev', 'expand', 'parent', 'tab', 'none'],
   tabsPanelDoubleClickAction: ['collapse', 'tab', 'undo', 'none'],
   tabsPanelRightClickAction: ['next', 'expand', 'parent', 'menu', 'none'],
   tabsPanelMiddleClickAction: ['rm_act_tab', 'tab', 'undo', 'none'],
