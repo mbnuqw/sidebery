@@ -493,11 +493,33 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
   // -- Panel options
   // -
 
+  selectAllTabs: () => {
+    const panel = Sidebar.panelsById[Selection.getFirst()]
+    if (!Utils.isTabsPanel(panel)) return
+
+    // const ids = panel.pinnedTabs.map(t => t.id).concat(panel.tabs.map(t => t.id))
+    const ids = panel.tabs.map(t => t.id)
+    const option: MenuOption = {
+      label: translate('menu.tabs_panel.sel_all'),
+      icon: 'icon_sel_all',
+      onClick: async () => {
+        await Utils.sleep(32)
+        document.body.focus()
+        Selection.selectTabs(ids)
+      },
+    }
+    if (!ids.length) option.inactive = true
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
+    return option
+  },
+
   muteAllAudibleTabs: () => {
     const panel = Sidebar.panelsById[Selection.getFirst()]
     if (!Utils.isTabsPanel(panel)) return
 
-    const tabIds = Tabs.list.filter(t => t.audible && t.panelId === panel.id).map(t => t.id)
+    const tabIds: ID[] = []
+    panel.pinnedTabs.forEach(t => t.audible && tabIds.push(t.id))
+    panel.tabs.forEach(t => t.audible && tabIds.push(t.id))
     const option: MenuOption = {
       label: translate('menu.tabs_panel.mute_all_audible'),
       icon: 'icon_mute',

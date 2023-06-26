@@ -34,6 +34,7 @@ export const TABS_MENU: MenuConf = [
 export const TABS_PANEL_MENU: MenuConf = [
   { opts: ['undoRmTab', 'muteAllAudibleTabs', 'reloadTabs', 'discardTabs'] },
   'separator-7',
+  'selectAllTabs',
   'collapseInactiveBranches',
   'closeTabsDuplicates',
   'closeTabs',

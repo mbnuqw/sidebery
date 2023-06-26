@@ -1103,6 +1103,10 @@ export const commonTranslations: Translations = {
     zh_TW: '顏色...',
   },
   // - Tabs panel
+  'menu.tabs_panel.sel_all': {
+    en: 'Select all tabs',
+    ru: 'Выделить все вкладки',
+  },
   'menu.tabs_panel.mute_all_audible': {
     en: 'Mute all audible tabs',
     ru: 'Выключить звук',

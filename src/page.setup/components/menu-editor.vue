@@ -192,6 +192,7 @@ const TABS_MENU_OPTS: Record<string, string> = {
 }
 
 const TABS_PANEL_MENU_OPTS: Record<string, string> = {
+  selectAllTabs: 'menu.tabs_panel.sel_all',
   muteAllAudibleTabs: 'menu.tabs_panel.mute_all_audible',
   closeTabsDuplicates: 'menu.tabs_panel.dedup',
   undoRmTab: 'menu.tab.undo',
