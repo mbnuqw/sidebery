@@ -93,6 +93,7 @@ const HIDDEN_PANELS_BTN: NavBtn = {
   name: translate('nav.show_hidden_tooltip'),
   tooltip: translate('nav.show_hidden_tooltip'),
 }
+const MIN_INLINE_STATIC_BTNS_LEN = 1
 
 let droppedOnPanel = false
 
@@ -204,7 +205,7 @@ const nav = computed<Nav | undefined>(() => {
     const visLen = nav.visibleItems.length
     let max = inlineMax - visLen
     if (hasHiddenPanels) max--
-    if (max < 0) max = 0
+    if (max < MIN_INLINE_STATIC_BTNS_LEN) max = MIN_INLINE_STATIC_BTNS_LEN
     for (let i = ids.length; i--; ) {
       const id = ids[i]
 
