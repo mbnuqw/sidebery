@@ -681,13 +681,30 @@ export function sortNativeTabs(delayMS = 500): void {
       // Invert moving tabs
       if (move.step < move.ids.length) {
         const k = move.index + move.ids.length
-        const ids = Tabs.list.slice(k, k + move.step).map(t => t.id)
         const targetIndex = move.index + move.ids.length
+        const tabs = Tabs.list.slice(k, k + move.step)
+        const ids = tabs.map(t => {
+          t.moving = true
+          return t.id
+        })
         Tabs.movingTabs.push(...ids)
-        await browser.tabs.move(ids, { index: targetIndex, windowId: Windows.id })
+        await browser.tabs.move(ids, { index: targetIndex, windowId: Windows.id }).catch(err => {
+          Logs.err('Tabs.sortNativeTabs: Cannot move tabs', err)
+        })
+        tabs.forEach(t => (t.moving = undefined))
       } else {
         Tabs.movingTabs.push(...move.ids)
-        await browser.tabs.move(move.ids, { index: move.index, windowId: Windows.id })
+        move.ids.forEach(id => {
+          const tab = Tabs.byId[id]
+          if (tab) tab.moving = true
+        })
+        await browser.tabs.move(move.ids, { index: move.index, windowId: Windows.id }).catch(e => {
+          Logs.err('Tabs.sortNativeTabs: Cannot move tabs', e)
+        })
+        move.ids.forEach(id => {
+          const tab = Tabs.byId[id]
+          if (tab) tab.moving = undefined
+        })
       }
       Tabs.movingTabs = []
     }
@@ -2060,15 +2077,10 @@ export async function move(
     }
   }
 
-  // Moving tabs in current window
+  // Moving tabs inside current window
+  // ---
 
-  const tabs: Tab[] = []
-  for (const info of tabsInfo) {
-    const tab = Tabs.list[info.index ?? Tabs.byId[info.id]?.index ?? -1]
-    if (tab) tabs.push(tab)
-  }
-  const isActive = tabs.some(t => t.active)
-
+  // Normalize dst info
   if (dst.parentId === undefined) dst.parentId = NOID
   if (dst.index === undefined) dst.index = 0
   if (dst.index === -1) {
@@ -2077,123 +2089,211 @@ export async function move(
     dst.index = panel.nextTabIndex
   }
 
-  // Check if tabs was moved to the same place
-  const inside = dst.index > tabs[0].index && dst.index <= tabs[tabs.length - 1].index
-  const inFirst = tabs[0].id === dst.parentId
-  const inLast = tabs[tabs.length - 1].id === dst.parentId
-  if (inside || inFirst || inLast) return
-
-  // Normalize target index for tabs droped to the same panel
-  // If target index is greater that first tab index - decrease it by 1
-  const initialTargetIndex = dst.index
-  dst.index = dst.index <= tabs[0].index ? dst.index : dst.index - 1
-
-  const pinTab = !src.pinned && dst.pinned
-  const unpinTab = src.pinned && !dst.pinned
-
-  // Unpin tab
-  if (unpinTab) {
-    for (const t of tabs) {
-      t.unpinning = true
-      if (dst.panelId !== undefined) t.panelId = dst.panelId
-      await browser.tabs.update(t.id, { pinned: false })
-      t.unpinning = false
-    }
+  // Gather tabs by type (pinned/normal), get initial info
+  const dstTab: Tab | undefined = Tabs.list[dst.index]
+  const dstParent = Tabs.byId[dst.parentId]
+  const pinnedTabs: Tab[] = []
+  const normalTabs: Tab[] = []
+  let toPin: Tab[] | undefined
+  let toUnpin: Tab[] | undefined
+  let tabs: Tab[] = []
+  let isPinnedActive = false
+  for (const info of tabsInfo) {
+    const tab = Tabs.byId[info.id]
+    if (!tab) continue
+    if (tab.pinned) pinnedTabs.push(tab)
+    else normalTabs.push(tab)
+    tabs.push(tab)
   }
 
-  // Pin tab
-  if (pinTab) {
-    for (const t of tabs) {
-      t.lvl = 0
-      t.parentId = -1
-      await browser.tabs.update(t.id, { pinned: true })
+  if (!tabs.length) return
+
+  // Switch panelId of pinned tabs and exclude them from general list
+  if (
+    pinnedTabs.length &&
+    dst.pinned === undefined &&
+    Settings.state.pinnedTabsPosition === 'panel'
+  ) {
+    for (const tab of pinnedTabs) {
+      if (!isPinnedActive && tab.active) isPinnedActive = true
+
+      if (dst.panelId !== undefined) {
+        if (tab.audible || tab.mutedInfo?.muted || tab.mediaPaused) {
+          Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId)
+          Sidebar.updateMediaStateOfPanelDebounced(100, dst.panelId)
+        }
+
+        tab.panelId = dst.panelId
+      }
+      saveTabData(tab.id)
     }
+
+    tabs = normalTabs
   }
 
-  // Move if target index is different or pinned state changed
-  const lastTab = tabs[tabs.length - 1]
-  let moving: Promise<browser.tabs.Tab[]> | undefined
-  let moveNeeded = tabs[0].index !== dst.index && lastTab.index !== dst.index
-  if (!moveNeeded) moveNeeded = lastTab.index - tabs[0].index + 1 !== tabs.length
-  if (moveNeeded || pinTab || unpinTab) {
-    Tabs.movingTabs = []
-    let index = 0
-    for (const tab of tabs) {
-      index = Tabs.list.indexOf(tab, index)
-      Tabs.list.splice(index, 1)
-      Tabs.movingTabs.push(tab.id)
+  // Unpin
+  else if (pinnedTabs.length && !dst.pinned) {
+    for (const tab of pinnedTabs) {
+      tab.pinned = false
+      const rTab = Tabs.reactive.byId[tab.id]
+      if (rTab) rTab.pinned = false
     }
-    let targetIndex = initialTargetIndex
-    if (tabs[0].index < initialTargetIndex) targetIndex = initialTargetIndex - tabs.length
-    Tabs.list.splice(targetIndex, 0, ...tabs)
-    updateTabsIndexes()
-    moving = browser.tabs.move([...Tabs.movingTabs], {
-      windowId: Windows.id,
-      index: dst.index,
-    })
+    toUnpin = pinnedTabs
   }
 
-  if (dst.panelId !== undefined && src.panelId !== dst.panelId) {
-    const firstTab = tabs[0]
-    if (firstTab) Sidebar.updateMediaStateOfPanelDebounced(100, firstTab.panelId)
-    Sidebar.updateMediaStateOfPanelDebounced(100, dst.panelId)
-
-    for (const tab of tabs) {
-      tab.panelId = dst.panelId
+  // Pin
+  else if (normalTabs.length && dst.pinned) {
+    for (const tab of normalTabs) {
+      tab.pinned = true
+      const rTab = Tabs.reactive.byId[tab.id]
+      if (rTab) rTab.pinned = true
     }
-    if (isActive && !dst.pinned && Settings.state.tabsPanelSwitchActMove) {
+    toPin = normalTabs
+  }
+
+  // All tabs are pinned and was handled
+  if (!tabs.length) {
+    Sidebar.recalcTabsPanels()
+    Tabs.cacheTabsData()
+
+    // Switch panel
+    if (
+      isPinnedActive &&
+      dst.pinned === undefined &&
+      dst.panelId !== undefined &&
+      Settings.state.tabsPanelSwitchActMove
+    ) {
       Sidebar.activatePanel(dst.panelId)
     }
+
+    return
   }
 
+  const ids = []
+  let dstIndexIncluded = -1
+  let prevIndex = 0
+  let panelIsChanged = false
+  let isActive = false
+  let isMediaActive = false
+  let mediaPrevPanelId
+  for (const tab of tabs) {
+    // Cut tab from old index in sidebery list
+    const index = Tabs.list.indexOf(tab, prevIndex)
+    if (index === -1) continue
+    Tabs.list.splice(index, 1)
+
+    if (tab.active) isActive = true
+
+    prevIndex = index
+    ids.push(tab.id)
+
+    // Get dstIndex if target tab included in moving tabs list
+    if (dstTab && dstTab.id === tab.id) dstIndexIncluded = index
+
+    // Update panelId
+    if (dst.panelId !== undefined && tab.panelId !== dst.panelId) {
+      if (!panelIsChanged) panelIsChanged = true
+      if (!isMediaActive && (tab.audible || tab.mutedInfo?.muted || tab.mediaPaused)) {
+        isMediaActive = true
+        mediaPrevPanelId = tab.panelId
+      }
+      tab.panelId = dst.panelId
+    }
+
+    // Update parent-child relation
+    const oldParent = Tabs.byId[tab.parentId]
+    if (!oldParent || !tabs.includes(oldParent)) {
+      tab.parentId = dst.parentId
+
+      if (dstParent) browser.tabs.update(tab.id, { openerTabId: dst.parentId })
+      else browser.tabs.update(tab.id, { openerTabId: tab.id })
+    }
+  }
+
+  // Paste tabs to the new index
+  if (dstTab) {
+    const dstIndex = dstIndexIncluded !== -1 ? dstIndexIncluded : Tabs.list.indexOf(dstTab)
+    if (dstIndex === -1) return Logs.warn('Tabs.move: Cannot find index of the dstTab')
+    Tabs.list.splice(dstIndex, 0, ...tabs)
+  } else {
+    Tabs.list.splice(Tabs.list.length, 0, ...tabs)
+  }
+
+  Tabs.updateTabsIndexes()
+  Tabs.updateTabsTree()
   Sidebar.recalcTabsPanels()
-  // TODO: I need to update reactive values manualy or move this recalc to the end
-  // of this function.
 
-  const parent = Tabs.byId[dst.parentId]
+  // Update media state of panels
+  if (isMediaActive && mediaPrevPanelId && dst.panelId) {
+    Sidebar.updateMediaStateOfPanelDebounced(100, mediaPrevPanelId)
+    Sidebar.updateMediaStateOfPanelDebounced(100, dst.panelId)
+  }
 
-  // Update tabs tree
-  if (Settings.state.tabsTree) {
-    // Set first tab parentId and other parameters
-    tabs[0].parentId = dst.parentId
+  // Switch panel
+  if (
+    isActive &&
+    dst.pinned === undefined &&
+    dst.panelId !== undefined &&
+    Settings.state.tabsPanelSwitchActMove
+  ) {
+    Sidebar.activatePanel(dst.panelId)
+  }
 
-    // Get level offset for gragged branch
-    const minLvl = tabs[0].lvl
-
-    if (parent && parent.folded) {
-      const activeDroppedTab = tabs.find(t => t.active)
-      if (activeDroppedTab) {
-        browser.tabs.update(dst.parentId, { active: true }).catch(err => {
-          Logs.err('Tabs.move: Cannot activate tab:', err)
-        })
-      }
+  // Update branch colors
+  if (Settings.state.colorizeTabsBranches) {
+    for (const tab of tabs) {
+      Tabs.setBranchColor(tab.id)
     }
+  }
 
-    // TODO: update openerTabId
-    for (let i = 0; i < tabs.length; i++) {
-      const tab = tabs[i]
-
-      // Flat nodes below first node's level
-      if (tabs[i].lvl <= minLvl) {
-        tab.parentId = dst.parentId
-      }
-    }
-
-    updateTabsTree()
-
-    if (Settings.state.colorizeTabsBranches) {
-      for (const tab of tabs) {
-        Tabs.setBranchColor(tab.id)
-      }
-    }
+  // Activate folded parent tab
+  if (isActive && dstParent && dstParent.folded) {
+    browser.tabs.update(dstParent.id, { active: true }).catch(err => {
+      Logs.err('Tabs.move: Cannot activate tab:', err)
+    })
   }
 
   tabs.forEach(t => saveTabData(t.id))
   cacheTabsData()
 
-  if (moving) await moving
+  // Mark moving tabs
+  Tabs.movingTabs.push(...ids)
+  tabs.forEach(t => (t.moving = true))
 
-  if (Settings.state.hideFoldedTabs || (Settings.state.hideInact && dst.panelId !== src.panelId)) {
+  // Update native tabs
+  // ---
+  // Unpin tab
+  if (toUnpin?.length) {
+    for (const tab of toUnpin) {
+      tab.unpinning = true
+      await browser.tabs.update(tab.id, { pinned: false }).catch(err => {
+        Logs.err('Tabs.move: Cannot unpin tab', err)
+      })
+      tab.unpinning = false
+    }
+  }
+
+  // Pin tab
+  if (toPin?.length) {
+    for (const tab of toPin) {
+      await browser.tabs.update(tab.id, { pinned: true, openerTabId: tab.id }).catch(err => {
+        Logs.err('Tabs.move: Cannot pin tab', err)
+      })
+    }
+  }
+
+  // Move tabs
+  const nativeDstIndex = dst.index <= tabs[0].index ? dst.index : dst.index - 1
+  await browser.tabs.move(ids, { windowId: Windows.id, index: nativeDstIndex }).catch(err => {
+    Logs.err('Tabs.move: Cannot move native tabs', err)
+  })
+
+  // Reset moving tabs marks
+  tabs.forEach(t => (t.moving = undefined))
+  Tabs.movingTabs = []
+
+  // Update visibility
+  if (Settings.state.hideFoldedTabs || (Settings.state.hideInact && panelIsChanged)) {
     Tabs.updateNativeTabsVisibility()
   }
 }
@@ -2771,6 +2871,9 @@ export function updateTabsTreeDebounced(startIndex = 0, endIndex = -1, delay = 1
 
 /**
  * Calculates tree props
+ *
+ * - startIndex (inclusive)
+ * - endIndex (exclusive)
  */
 export function updateTabsTree(startIndex = 0, endIndex = -1): void {
   if (!Settings.state.tabsTree) return

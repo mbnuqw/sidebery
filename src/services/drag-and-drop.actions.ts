@@ -194,7 +194,10 @@ function getDestInfo(): DstPlaceInfo {
     parentId: DnD.reactive.dstParentId,
     index: DnD.reactive.dstIndex,
   }
-  if (DnD.reactive.dstPin) info.pinned = DnD.reactive.dstPin
+  const toTabs = DnD.reactive.dstType === DropType.Tabs
+
+  if (DnD.reactive.dstPin) info.pinned = true
+  else if (toTabs) info.pinned = false
 
   let dstPanel
   if (info.panelId === Sidebar.subPanels.bookmarks?.id) dstPanel = Sidebar.subPanels.bookmarks
@@ -210,10 +213,7 @@ function getDestInfo(): DstPlaceInfo {
     info.inside = true
 
     // To the last position in branch/panel
-    if (
-      Utils.isTabsPanel(dstPanel) &&
-      (DnD.reactive.dstType === DropType.Tabs || DnD.reactive.dstType === DropType.TabsPanel)
-    ) {
+    if (Utils.isTabsPanel(dstPanel) && (toTabs || DnD.reactive.dstType === DropType.TabsPanel)) {
       const parent = Tabs.byId[DnD.reactive.dstParentId]
       if (parent) {
         const branchLen = Tabs.getBranchLen(parent.id) ?? 0

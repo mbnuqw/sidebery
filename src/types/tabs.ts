@@ -30,6 +30,7 @@ export interface Tab extends browser.tabs.Tab {
   customTitle?: string
   customColor?: string
   reloadOnActivation?: boolean
+  moving?: boolean
 }
 
 export const enum TabStatus {

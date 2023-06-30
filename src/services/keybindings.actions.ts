@@ -1,7 +1,7 @@
 import * as Utils from 'src/utils'
 import { NOID } from 'src/defaults'
 import { Command, CommandUpdateDetails, ItemBounds, Tab, Bookmark, MenuType } from 'src/types'
-import { InstanceType, ItemInfo, SelectionType, ItemBoundsType } from 'src/types'
+import { InstanceType, ItemInfo, SelectionType, ItemBoundsType, TabsPanel } from 'src/types'
 import { DstPlaceInfo, SrcPlaceInfo } from 'src/types'
 import { Keybindings } from 'src/services/keybindings'
 import { Settings } from 'src/services/settings'
@@ -15,6 +15,7 @@ import { Search } from 'src/services/search'
 import { Store } from 'src/services/storage'
 import { SwitchingTabScope } from './tabs.fg.actions'
 import * as IPC from 'src/services/ipc'
+import * as Logs from 'src/services/logs'
 
 const VALID_SHORTCUT =
   /^((Ctrl|Alt|Command|MacCtrl)\+)((Shift|Alt)\+)?([A-Z0-9]|Comma|Period|Home|End|PageUp|PageDown|Space|Insert|Delete|Up|Down|Left|Right|F\d\d?)$|^((Ctrl|Alt|Command|MacCtrl)\+)?((Shift|Alt)\+)?(F\d\d?)$/
@@ -666,23 +667,23 @@ function onKeyMoveTabsToAct(): void {
 }
 
 let tabsMoving = false
-function onKeyMoveTabs(dir: 1 | -1): void {
+async function onKeyMoveTabs(dir: 1 | -1) {
   if (tabsMoving) return
 
-  let selected
-  if (Selection.isTabs()) {
-    selected = Selection.get()
-    Selection.preserveSelection()
-    Selection.allowSelectionReset(300)
-  } else {
-    selected = [Tabs.activeId]
-  }
+  let preSelected: ID[] | undefined
+  if (Selection.isTabs()) preSelected = Selection.get()
+  else preSelected = [Tabs.activeId]
 
-  const toMove = []
+  const toMove: Tab[] = []
   const toMoveById: Record<ID, Tab> = {}
-  for (const id of selected) {
+  let tabsPinned: boolean | undefined
+  for (const id of preSelected) {
     const tab = Tabs.byId[id]
     if (!tab) continue
+
+    // Ignore mixed pinned/unpinned tabs
+    if (tabsPinned === undefined) tabsPinned = tab.pinned
+    else if (tabsPinned !== tab.pinned) return
 
     toMove.push(tab)
     toMoveById[tab.id] = tab
@@ -691,7 +692,7 @@ function onKeyMoveTabs(dir: 1 | -1): void {
       for (let t, i = tab.index + 1; i < Tabs.list.length; i++) {
         t = Tabs.list[i]
         if (t.lvl <= tab.lvl) break
-        if (!selected.includes(t.id)) {
+        if (!preSelected.includes(t.id)) {
           toMove.push(t)
           toMoveById[t.id] = t
         }
@@ -700,78 +701,143 @@ function onKeyMoveTabs(dir: 1 | -1): void {
   }
 
   toMove.sort((a, b) => a.index - b.index)
+  const toMoveIds = toMove.map(t => t.id)
 
-  let minIndex = toMove[0].index
-  let maxIndex = toMove[toMove.length - 1].index
+  // Update selection
+  Selection.resetSelection(true)
+  Selection.selectTabs(toMoveIds)
+  Selection.preserveSelection()
+  Selection.allowSelectionReset(300)
 
-  const edgeTab = dir < 0 ? toMove[0] : toMove[toMove.length - 1]
+  const firstTab = toMove[0]
+  if (!firstTab) return
+
+  const edgeTab = dir < 0 ? firstTab : toMove[toMove.length - 1]
   if (!edgeTab) return
-  const panel = Sidebar.panelsById[edgeTab.panelId]
+
+  let panel = Sidebar.panelsById[edgeTab.panelId]
+  let unpin = false
+  let pin = false
   if (!Utils.isTabsPanel(panel)) return
-  if (dir < 0 && edgeTab.index === 0) return
-  if (dir < 0 && panel?.startTabIndex === edgeTab.index) return
-  if (dir > 0 && edgeTab.index === Tabs.list.length - 1) return
-  if (dir > 0 && panel?.endTabIndex === edgeTab.index) return
+  if (dir < 0 && edgeTab.pinned && edgeTab.index === panel.startTabIndex) return
+  if (dir < 0 && !edgeTab.pinned && edgeTab.index === panel.startTabIndex) pin = true
+  if (dir > 0 && edgeTab.pinned) {
+    let list: Tab[] | undefined
+    if (Settings.state.pinnedTabsPosition === 'panel') list = panel.pinnedTabs
+    else list = Tabs.pinned
+    if (!list?.length) return
+    if (edgeTab.id === list[list.length - 1]?.id) unpin = true
+  }
 
   let rootParentId = NOID
-  let step: number = dir
-  if (dir < 0) {
-    let prevTab: Tab | undefined = Tabs.list[edgeTab.index - 1]
-    if (prevTab && prevTab.panelId === edgeTab.panelId) {
-      if (prevTab.invisible) {
-        prevTab = Tabs.byId[prevTab.parentId]
-        while (prevTab && prevTab.invisible) {
-          prevTab = Tabs.byId[prevTab.parentId]
-        }
-        if (prevTab) step = prevTab.index - edgeTab.index
+  let targetIndex
+  if (firstTab.pinned) {
+    let list: Tab[] | undefined
+    if (Settings.state.pinnedTabsPosition === 'panel') list = panel.pinnedTabs
+    else list = Tabs.pinned
+
+    const index = list.findLastIndex(t => t.id === edgeTab.id)
+    if (index === -1) return
+
+    if (unpin) {
+      // Find target panel for unpinned global tab
+      if (Settings.state.pinnedTabsPosition !== 'panel') {
+        const actPanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+        if (Utils.isTabsPanel(actPanel)) panel = actPanel
+        else panel = (Sidebar.panels.find(Utils.isTabsPanel) as TabsPanel | undefined) ?? panel
       }
-      if (prevTab) rootParentId = prevTab.parentId
-      minIndex += step
+
+      targetIndex = panel.startTabIndex
+    } else if (dir < 0) {
+      const prevTab = list.findLast(t => t.index < edgeTab.index)
+      if (!prevTab) return
+      targetIndex = prevTab.index
+    } else {
+      const nextTab = list.find(t => t.index > edgeTab.index)
+      if (!nextTab) return
+      targetIndex = nextTab.index + 1
     }
   } else {
-    const nextTab = Tabs.list[edgeTab.index + 1]
-    if (nextTab && nextTab.panelId === edgeTab.panelId) {
-      if (nextTab.isParent && nextTab.folded) {
-        for (let tab, i = nextTab.index + 1; i < Tabs.list.length; i++) {
-          tab = Tabs.list[i]
-          if (!tab.invisible) break
-          step++
+    if (pin) {
+      let lastPinned: Tab | undefined
+      if (Settings.state.pinnedTabsPosition === 'panel') {
+        lastPinned = panel.pinnedTabs[panel.pinnedTabs.length - 1]
+      } else {
+        lastPinned = Tabs.pinned[Tabs.pinned.length - 1]
+      }
+      if (lastPinned) targetIndex = lastPinned.index + 1
+      else targetIndex = 0
+    } else if (dir < 0) {
+      const prevTab = panel.tabs.findLast(t => t.index < firstTab.index && !t.invisible)
+      if (!prevTab) return
+      targetIndex = prevTab.index
+      rootParentId = prevTab.parentId
+      // Increase tree lvl (only change parentId)
+      if (rootParentId !== firstTab.parentId && prevTab.lvl > firstTab.lvl) {
+        const rootParent = panel.tabs.findLast(t => {
+          return t.index < firstTab.index && !t.invisible && t.lvl === firstTab.lvl + 1
+        })
+        if (rootParent) rootParentId = rootParent.parentId
+        targetIndex = firstTab.index
+      }
+    } else {
+      const nextTab = panel.tabs.find(t => {
+        return (
+          t.index > firstTab.index && !toMoveById[t.id] && !(t.isParent && t.folded) && !t.invisible
+        )
+      })
+      if (nextTab) {
+        targetIndex = nextTab.index + 1
+        if (nextTab.isParent && !nextTab.folded) rootParentId = nextTab.id
+        else rootParentId = nextTab.parentId
+        // Decrease tree lvl (only change parentId)
+        if (rootParentId !== firstTab.parentId && nextTab.lvl < firstTab.lvl) {
+          const rootParent = panel.tabs.findLast(t => {
+            return (
+              t.index < firstTab.index &&
+              !toMoveById[t.id] &&
+              !t.invisible &&
+              t.lvl === firstTab.lvl - 1
+            )
+          })
+          if (rootParent) rootParentId = rootParent.parentId
+          targetIndex = firstTab.index
+        }
+      } else {
+        // Decrease tree lvl (only change parentId)
+        if (firstTab.lvl > 0) {
+          const rootParent = panel.tabs.findLast(t => {
+            return (
+              t.index < firstTab.index &&
+              !toMoveById[t.id] &&
+              !t.invisible &&
+              t.lvl === firstTab.lvl - 1
+            )
+          })
+          if (rootParent) rootParentId = rootParent.parentId
+          targetIndex = firstTab.index
+        } else {
+          return
         }
       }
-      if (nextTab.isParent && !nextTab.folded) {
-        rootParentId = nextTab.id
-      } else {
-        rootParentId = nextTab.parentId
-      }
-      maxIndex += step
     }
   }
 
-  const targetIndex = edgeTab.index + step
-
-  for (let tab, i = toMove.length - 1; i >= 0; i--) {
-    tab = toMove[i]
-    Tabs.list.splice(tab.index, 1)
-    Tabs.movingTabs.push(tab.id)
-    if (!toMoveById[tab.parentId]) tab.parentId = rootParentId
-  }
-  if (dir > 0) Tabs.list.splice(targetIndex - toMove.length + 1, 0, ...toMove)
-  else Tabs.list.splice(targetIndex, 0, ...toMove)
-
+  // Move tabs
+  // ---
   tabsMoving = true
-  const toMoveIds = toMove.map(t => t.id)
-  browser.tabs.move(toMoveIds, { index: targetIndex }).then(() => {
-    tabsMoving = false
+
+  const dst: DstPlaceInfo = { index: targetIndex, parentId: rootParentId, panelId: panel.id }
+
+  if (pin) dst.pinned = true
+  else if (unpin) dst.pinned = false
+  else dst.pinned = edgeTab.pinned
+
+  await Tabs.move(toMove, {}, dst).catch(err => {
+    Logs.err('KB.onKeyMoveTabs: Cannot move tabs', err)
   })
 
-  for (let i = minIndex; i <= maxIndex; i++) {
-    Tabs.list[i].index = i
-  }
-
-  Sidebar.recalcTabsPanels()
-  Tabs.updateTabsTree()
-  Tabs.cacheTabsData()
-  toMove.forEach(t => Tabs.saveTabData(t.id))
+  tabsMoving = false
 }
 
 function onKeyNewTabAsFirstChild(): void {

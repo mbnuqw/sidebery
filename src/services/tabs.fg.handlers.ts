@@ -253,9 +253,16 @@ function onTabCreated(tab: Tab, attached?: boolean): void {
   if (panel && !tab.pinned && tab.index !== index) {
     tab.dstPanelId = panel.id
     Tabs.movingTabs.push(tab.id)
-    browser.tabs.move(tab.id, { index }).catch(err => {
-      Logs.err('Tabs.onTabCreated: Cannot move the tab to the correct position:', err)
-    })
+    tab.moving = true
+    browser.tabs
+      .move(tab.id, { index })
+      .then(() => {
+        tab.moving = undefined
+      })
+      .catch(err => {
+        Logs.err('Tabs.onTabCreated: Cannot move the tab to the correct position:', err)
+        tab.moving = undefined
+      })
   }
 
   // Update tabs indexses after inserted one.
@@ -1076,13 +1083,10 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
   }
 
   // Check if target tab already placed
-  let toIndex = info.toIndex
-  if (info.toIndex > info.fromIndex) toIndex = toIndex - mvLen
-  const tabAtTargetPlace = Tabs.list[toIndex]
-  if (tabAtTargetPlace && tabAtTargetPlace.id === id) {
+  if (tab.moving !== undefined) {
     Tabs.saveTabData(id)
-    if (!Tabs.movingTabs.length) Tabs.cacheTabsData()
-    tab.dstPanelId = -1
+    if (!mvLen) Tabs.cacheTabsData()
+    tab.dstPanelId = NOID
     Sidebar.recalcTabsPanels()
     if (tab.active) Tabs.updateSuccessionDebounced(0)
     return
@@ -1096,7 +1100,7 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
   if (movedTab && movedTab.id === id) {
     Tabs.list.splice(info.fromIndex, 1)
   } else {
-    Logs.err(`Tab cannot be moved: #${id} ${info.fromIndex} > ${info.toIndex} (not found by index)`)
+    Logs.err(`Tabs.onTabMoved: #${id} ${info.fromIndex} > ${info.toIndex}: Not found by index`)
     return Tabs.reinitTabs()
   }
 
@@ -1136,7 +1140,7 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
 
   // Calc tree levels and colorize branch
   if (Settings.state.tabsTree) {
-    if (!Tabs.movingTabs.length) Tabs.updateTabsTree()
+    if (!mvLen) Tabs.updateTabsTree()
 
     if (Settings.state.colorizeTabsBranches && tab.lvl > 0) {
       Tabs.setBranchColor(tab.id)
@@ -1147,11 +1151,11 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
     Sidebar.activatePanel(movedTab.panelId)
   }
 
-  if (!Tabs.movingTabs.length) Tabs.cacheTabsData()
+  if (!mvLen) Tabs.cacheTabsData()
   Tabs.saveTabData(movedTab.id)
 
   // Update succession
-  if (!Tabs.movingTabs.length) Tabs.updateSuccessionDebounced(0)
+  if (!mvLen) Tabs.updateSuccessionDebounced(0)
 }
 
 /**
