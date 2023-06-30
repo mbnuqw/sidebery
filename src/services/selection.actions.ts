@@ -343,8 +343,8 @@ export function deselectNavItem(id: ID): void {
   if (!Selection.selected.length) selType = SelectionType.Nothing
 }
 
-export function resetSelection(): void {
-  if (resetStop) return
+export function resetSelection(forced?: boolean): void {
+  if (!forced && resetStop) return
   if (!Selection.selected.length) return
 
   if (selType === SelectionType.Header) {
