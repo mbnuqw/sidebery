@@ -291,6 +291,8 @@ export function search(value?: string): void {
     query = value.toLowerCase()
   }
 
+  if (Menu.isOpen) Menu.close()
+
   if (query.startsWith('. ')) {
     const val = query.slice(2)
     if (!val) return
