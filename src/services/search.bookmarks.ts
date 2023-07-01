@@ -133,7 +133,13 @@ export function onBookmarksSearchNext(panel?: Panel): void {
 
   nextWalkerPrevNode = undefined
   const filtered = panel.reactive.filteredBookmarks
-  const nextId = Selection.isSet() ? nextWalker(filtered) : filtered[0]?.id
+  let nextId
+  if (panel.viewMode === 'tree') {
+    nextId = Selection.isSet() ? nextWalker(filtered) : filtered[0]?.id
+  } else if (panel.viewMode === 'history') {
+    const selIndex = filtered.findIndex(b => b.sel)
+    nextId = filtered[selIndex + 1]?.id
+  }
   if (!nextId) return
 
   Selection.resetSelection()
@@ -163,7 +169,14 @@ export function onBookmarksSearchPrev(panel?: Panel): void {
   prevWalkerPrevId = undefined
   const filtered = panel.reactive.filteredBookmarks
   const filteredLen = filtered.length
-  const prevId = Selection.isSet() ? prevWalker(filtered) : filtered[filteredLen - 1]?.id
+  let prevId
+  if (panel.viewMode === 'tree') {
+    prevId = Selection.isSet() ? prevWalker(filtered) : filtered[filteredLen - 1]?.id
+  } else if (panel.viewMode === 'history') {
+    let selIndex = filtered.findLastIndex(b => b.sel)
+    if (selIndex === -1) selIndex = filtered.length
+    prevId = filtered[selIndex - 1]?.id
+  }
   if (!prevId) return
 
   Selection.resetSelection()
