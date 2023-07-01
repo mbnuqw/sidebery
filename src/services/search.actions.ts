@@ -265,10 +265,10 @@ export function menu(): void {
       Menu.open(MenuType.Tabs, x, y, true)
     }
   } else if (Utils.isBookmarksPanel(actPanel)) {
-    const [x, y] = getMenuCoordinates(MenuType.Tabs)
+    const [x, y] = getMenuCoordinates(MenuType.Bookmarks)
     Menu.open(MenuType.Bookmarks, x, y, true)
   } else if (Utils.isHistoryPanel(actPanel)) {
-    const [x, y] = getMenuCoordinates(MenuType.Tabs)
+    const [x, y] = getMenuCoordinates(MenuType.History)
     Menu.open(MenuType.History, x, y, true)
   }
 }
