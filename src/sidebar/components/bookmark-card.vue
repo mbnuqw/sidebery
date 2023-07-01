@@ -1,6 +1,6 @@
 <template lang="pug">
 .BookmarkCard(
-  :id="'bookmark' + node.id"
+  :id="'bookmark' + panelId + node.id"
   :data-selected="node.sel"
   :data-open="node.isOpen"
   :title="tooltip"
@@ -37,7 +37,7 @@ import { Mouse } from 'src/services/mouse'
 import { DnD } from 'src/services/drag-and-drop'
 import { FOLDER_NAME_DATA_RE } from 'src/defaults'
 
-const props = defineProps<{ node: Bookmark }>()
+const props = defineProps<{ node: Bookmark; panelId: ID }>()
 
 const favicon = computed((): string => {
   if (!props.node.url) return ''

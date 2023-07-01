@@ -1280,7 +1280,8 @@ export function scrollToBookmarkDebounced(id: ID, forced?: boolean, delay = 120)
 
 const scrollConf: ScrollToOptions = { behavior: 'smooth', top: 0 }
 export function scrollToBookmark(id: ID, forced?: boolean): void {
-  let panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  const actPanelId = Sidebar.reactive.activePanelId
+  let panel = Sidebar.panelsById[actPanelId]
   if (
     Utils.isTabsPanel(panel) &&
     Sidebar.subPanelActive &&
@@ -1291,7 +1292,7 @@ export function scrollToBookmark(id: ID, forced?: boolean): void {
   }
   if (!Utils.isBookmarksPanel(panel) || !panel.scrollEl) return
 
-  const elId = 'bookmark' + id.toString()
+  const elId = `bookmark${actPanelId}${id}`
   const el = document.getElementById(elId)
   const bodyEl = el?.firstElementChild as HTMLElement | null | undefined
   if (!el || !bodyEl) return

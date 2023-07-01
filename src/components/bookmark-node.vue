@@ -1,6 +1,6 @@
 <template lang="pug">
 .BookmarkNode(
-  :id="'bookmark' + node.id"
+  :id="'bookmark' + panelId + node.id"
   :data-type="node.type"
   :data-expanded="expanded"
   :data-parent="!!children?.length"
@@ -191,7 +191,7 @@ async function onMouseUp(e: MouseEvent): Promise<void> {
 
     // Scroll to sticked opened folder
     if (Settings.state.pinOpenedBookmarksFolder && isFolder && expanded.value) {
-      const bookmarkEl = document.getElementById(`bookmark${props.node.id}`)
+      const bookmarkEl = document.getElementById(`bookmark${props.panelId}${props.node.id}`)
       const bookmarkBounds = bookmarkEl?.getBoundingClientRect()
       const bookmarkBodyEl = bookmarkEl?.children[0]
       const bookmarkBodyBounds = bookmarkBodyEl?.getBoundingClientRect()

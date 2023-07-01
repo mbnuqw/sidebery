@@ -235,7 +235,8 @@ function getMenuCoordinates(type: MenuType): [number, number] {
   if (type === MenuType.Tabs) {
     rect = document.getElementById(`tab${firstSelectedId}`)?.getBoundingClientRect()
   } else if (type === MenuType.Bookmarks) {
-    rect = document.getElementById(`bookmark${firstSelectedId}`)?.getBoundingClientRect()
+    const id = `bookmark${Sidebar.reactive.activePanelId}${firstSelectedId}`
+    rect = document.getElementById(id)?.getBoundingClientRect()
   } else if (type === MenuType.History) {
     rect = document.getElementById(`history${firstSelectedId}`)?.getBoundingClientRect()
   }

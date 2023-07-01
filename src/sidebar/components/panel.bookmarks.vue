@@ -22,7 +22,11 @@
           :expanded="!!state.expandedHistoryGroups[i] || isFiltering"
           @click="toggleHistoryGroup($event, i)")
         .group-list(v-if="!!state.expandedHistoryGroups[i] || isFiltering")
-          BookmarkCard(v-for="bookmark in group.list" :key="bookmark.id" :node="bookmark")
+          BookmarkCard(
+            v-for="bookmark in group.list"
+            :key="bookmark.id"
+            :node="bookmark"
+            :panelId="panel.id")
 
   PanelPlaceholder(
     :isLoading="(state.unrendered || !panel.reactive.ready) && isActive"
@@ -179,7 +183,7 @@ function getBounds(): ItemBounds[] {
 
       // Calc bookmark height
       if (!bookmarkHeight) {
-        const el = document.getElementById(`bookmark${bookmark.id}`)
+        const el = document.getElementById(`bookmark${props.panel.id}${bookmark.id}`)
         if (!el) return []
         bookmarkHeight = el.offsetHeight
         bookmarkHalf = bookmarkHeight >> 1
