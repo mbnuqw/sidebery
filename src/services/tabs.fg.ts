@@ -1,4 +1,4 @@
-import { Tab, ActiveTabsHistory, NewTabPosition, ReactiveTab } from 'src/types'
+import { Tab, ActiveTabsHistory, NewTabPosition } from 'src/types'
 import { TabToPanelMoveRule } from 'src/types'
 import { NOID } from 'src/defaults'
 import * as TabsActions from 'src/services/tabs.fg.actions'
@@ -10,8 +10,7 @@ import * as TabsEditTitle from 'src/services/tabs.fg.edit-title'
 import * as TabsColors from 'src/services/tabs.fg.colors'
 
 export interface TabsReactiveState {
-  byId: Partial<Record<ID, ReactiveTab>>
-  pinned: ReactiveTab[]
+  pinnedIds: ID[]
   recentlyRemovedLen: number
 }
 
@@ -40,7 +39,7 @@ export interface RecentlyRemovedTabInfo {
 
 export const Tabs = {
   ready: false,
-  reactive: { byId: {}, pinned: [], recentlyRemovedLen: 0 } as TabsReactiveState,
+  reactive: { pinnedIds: [], recentlyRemovedLen: 0 } as TabsReactiveState,
   list: [] as Tab[],
   byId: {} as Partial<Record<ID, Tab>>,
   pinned: [] as Tab[],

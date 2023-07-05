@@ -7,8 +7,7 @@ export async function editTabTitle(tabIds: ID[]) {
 
   const firstTabId = tabIds[0]
   const tab = Tabs.byId[firstTabId]
-  const rTab = Tabs.reactive.byId[firstTabId]
-  if (!tab || !rTab) return
+  if (!tab) return
 
   if (tab.pinned) {
     const ptp = Settings.state.pinnedTabsPosition
@@ -17,8 +16,8 @@ export async function editTabTitle(tabIds: ID[]) {
   }
 
   Tabs.editableTabId = tab.id
-  rTab.customTitleEdit = true
-  rTab.customTitle = tab.customTitle ?? tab.title
+  tab.reactive.customTitleEdit = true
+  tab.reactive.customTitle = tab.customTitle ?? tab.title
 
   await Utils.sleep(1)
 
@@ -34,10 +33,9 @@ export async function editTabTitle(tabIds: ID[]) {
 
 export function saveCustomTitle(tabId: ID) {
   const tab = Tabs.byId[tabId]
-  const rTab = Tabs.reactive.byId[tabId]
-  if (!tab || !rTab) return
+  if (!tab) return
 
-  let value = rTab.customTitle
+  let value = tab.reactive.customTitle
   if (value) value = value.trim()
   if (value === tab.title) value = ''
 
@@ -48,10 +46,10 @@ export function saveCustomTitle(tabId: ID) {
   } else {
     if (value) {
       tab.customTitle = value
-      rTab.customTitle = value
+      tab.reactive.customTitle = value
     } else {
       tab.customTitle = undefined
-      rTab.customTitle = null
+      tab.reactive.customTitle = null
     }
   }
 

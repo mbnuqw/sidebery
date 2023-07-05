@@ -19,7 +19,15 @@ export function linkGroupWithPinnedTab(groupTab: Tab, tabs: Tab[]): void {
   if (!pin) return
 
   const [ctx, url] = pin.split('::')
-  const pinnedTab = tabs.find(t => t.pinned && t.cookieStoreId === ctx && t.url === url)
+  let pinnedTab: Tab | undefined
+  for (const tab of tabs) {
+    if (!tab.pinned) break
+    if (tab.pinned && tab.cookieStoreId === ctx && tab.url === url) {
+      pinnedTab = tab
+      break
+    }
+  }
+
   if (!pinnedTab) {
     info.searchParams.delete('pin')
     groupTab.url = info.href
@@ -132,12 +140,10 @@ export async function groupTabs(tabIds: ID[], conf?: GroupConfig): Promise<void>
   tabs[0].parentId = groupTab.id
   for (let i = 1; i < tabs.length; i++) {
     const tab = tabs[i]
-    const rTab = Tabs.reactive.byId[tab.id]
 
     if (tab.lvl <= tabs[0].lvl) {
       tab.parentId = groupTab.id
-      tab.folded = false
-      if (rTab) rTab.folded = false
+      tab.reactive.folded = tab.folded = false
     }
   }
   Tabs.updateTabsTree(tabs[0].index - 2, tabs[tabs.length - 1].index + 1)
@@ -193,7 +199,7 @@ export async function getGroupInfo(groupTabId: ID): Promise<GroupInfo | null> {
     tabs: [] as GroupedTabInfo[],
   }
 
-  const parentTab = Tabs.reactive.byId[groupTab.parentId]
+  const parentTab = Tabs.byId[groupTab.parentId]
   if (parentTab && parentTab.isGroup) {
     out.parentId = parentTab.id
   }
@@ -277,7 +283,7 @@ export function updateGroupTab(groupTab: Tab): void {
       len,
     }
 
-    const parentTab = Tabs.reactive.byId[groupTab.parentId]
+    const parentTab = Tabs.byId[groupTab.parentId]
     if (parentTab && parentTab.isGroup) {
       msg.parentId = parentTab.id
     }

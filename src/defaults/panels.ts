@@ -111,9 +111,10 @@ export const TABS_PANEL_STATE: TabsPanel = {
     filteredLen: undefined,
     ready: true,
 
-    tabs: [],
-    pinnedTabs: [],
-    filteredTabs: undefined,
+    tabIds: [],
+    pinnedTabIds: [],
+    filteredTabIds: undefined,
+    // visibleTabIds: [],
     updated: false,
     selNewTab: false,
     scrollRetainer: 0,

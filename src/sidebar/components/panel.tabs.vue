@@ -7,25 +7,22 @@
   @mouseleave="onMouseLeave"
   @dblclick="onDoubleClick"
   @drop="onDrop")
-  PinnedTabsBar(v-if="panel.reactive.pinnedTabs.length" :panel="panel")
+  PinnedTabsBar(v-if="panel.reactive.pinnedTabIds.length" :panel="panel")
   ScrollBox(ref="scrollBox" :preScroll="PRE_SCROLL")
     DragAndDropPointer(:panelId="panel.id" :subPanel="false")
     .container(v-if="Settings.state.animations")
       TransitionGroup(name="tab" tag="div" type="transition" class="transition-box")
         TabComponent(
-          v-for="tab in visibleTabs"
-          :key="tab.id"
-          :tab="tab")
+          v-for="id in visibleTabs"
+          :key="id"
+          :tabId="id")
         NewTabBar(
           v-if="Settings.state.showNewTabBtns && Settings.state.newTabBarPosition === 'after_tabs'"
           :panel="panel")
         .tab-space-filler(v-for="i in panel.reactive.scrollRetainer" :key="'tsf' + i")
         .bottom-space(:key="-9999999")
     .container(v-else)
-      TabComponent(
-        v-for="tab in visibleTabs"
-        :key="tab.id"
-        :tab="tab")
+      TabComponent(v-for="id in visibleTabs" :key="id" :tabId="id")
       NewTabBar(
         v-if="Settings.state.showNewTabBtns && Settings.state.newTabBarPosition === 'after_tabs'"
         :panel="panel")
@@ -38,13 +35,15 @@
 
   .bottom-bar-space(v-if="Settings.state.subPanelRecentlyClosedBar || Settings.state.subPanelBookmarks")
 
-  PanelPlaceholder(:isMsg="isNothingFound" :msg="translate('panel.nothing_found')")
+  PanelPlaceholder(
+    :isMsg="Search.reactive.rawValue && !panel.reactive.filteredLen"
+    :msg="translate('panel.nothing_found')")
 </template>
 
 <script lang="ts" setup>
 import { ref, computed, onMounted } from 'vue'
 import { translate } from 'src/dict'
-import { DropType, MenuType, ScrollBoxComponent, TabsPanel, ReactiveTab } from 'src/types'
+import { DropType, MenuType, ScrollBoxComponent, TabsPanel } from 'src/types'
 import { WheelDirection } from 'src/types'
 import { PRE_SCROLL } from 'src/defaults'
 import { Settings } from 'src/services/settings'
@@ -54,6 +53,7 @@ import { Sidebar } from 'src/services/sidebar'
 import { Tabs } from 'src/services/tabs.fg'
 import { Mouse } from 'src/services/mouse'
 import { DnD } from 'src/services/drag-and-drop'
+import { Search } from 'src/services/search'
 import PinnedTabsBar from './bar.pinned-tabs.vue'
 import ScrollBox from 'src/components/scroll-box.vue'
 import TabComponent from './tab.vue'
@@ -65,12 +65,14 @@ const props = defineProps<{ panel: TabsPanel }>()
 const scrollBox = ref<ScrollBoxComponent | null>(null)
 let scrollBoxEl: HTMLElement | null = null
 
-const visibleTabs = computed<ReactiveTab[]>(() => {
-  if (props.panel.reactive.filteredTabs) return props.panel.reactive.filteredTabs
-  return props.panel.reactive.tabs.filter(t => !t.invisible)
-})
-const isNothingFound = computed<boolean>(() => {
-  return !!props.panel.reactive.filteredTabs && !props.panel.reactive.filteredTabs.length
+const visibleTabs = computed<ID[]>(() => {
+  if (props.panel.reactive.filteredTabIds) {
+    return props.panel.reactive.filteredTabIds
+  }
+  return props.panel.reactive.tabIds.filter(id => {
+    const tab = Tabs.byId[id]
+    return tab && !tab.reactive.invisible
+  })
 })
 
 onMounted(() => {
@@ -101,11 +103,14 @@ function onMouseDown(e: MouseEvent): void {
       if (!targetTab) return
       return Tabs.toggleBranch(targetTab.id)
     }
-    if (la === 'tab') return Tabs.createTabInPanel(props.panel)
+    if (la === 'tab') {
+      Tabs.createTabInPanel(props.panel)
+      return
+    }
     if (la === 'parent') {
       if (!Settings.state.tabsTree) return
       const activeTab = Tabs.list.find(t => t.active)
-      if (!activeTab || !Tabs.reactive.byId[activeTab.parentId]) return
+      if (!activeTab || !Tabs.byId[activeTab.parentId]) return
       browser.tabs.update(activeTab.parentId, { active: true })
     }
   }
@@ -138,7 +143,7 @@ function onMouseDown(e: MouseEvent): void {
     if (ra === 'parent') {
       if (!Settings.state.tabsTree) return
       const activeTab = Tabs.list.find(t => t.active)
-      if (!activeTab || !Tabs.reactive.byId[activeTab.parentId]) return
+      if (!activeTab || !Tabs.byId[activeTab.parentId]) return
       browser.tabs.update(activeTab.parentId, { active: true })
     }
   }

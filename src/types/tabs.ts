@@ -1,4 +1,6 @@
-export interface Tab extends browser.tabs.Tab {
+export type NativeTab = browser.tabs.Tab
+
+export interface Tab extends NativeTab {
   isParent: boolean
   folded: boolean
   autoUnloadFoldedTimeout?: number
@@ -11,7 +13,7 @@ export interface Tab extends browser.tabs.Tab {
   updated: boolean
   loading: boolean | 'ok' | 'err'
   warn: boolean
-  unread: boolean
+  unread?: boolean
   proxified: boolean
   relGroupId: ID
   relPinId: ID
@@ -31,6 +33,8 @@ export interface Tab extends browser.tabs.Tab {
   customColor?: string
   reloadOnActivation?: boolean
   moving?: boolean
+
+  reactive: ReactiveTabProps
 }
 
 export const enum TabStatus {
@@ -41,8 +45,7 @@ export const enum TabStatus {
   Err = 5,
 }
 
-export interface ReactiveTab {
-  id: ID
+export interface ReactiveTabProps {
   active: boolean
   mediaAudible: boolean
   mediaMuted: boolean

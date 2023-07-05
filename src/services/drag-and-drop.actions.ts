@@ -473,7 +473,7 @@ export function onDragEnter(e: DragEvent): void {
     DnD.reactive.dstPin = true
     DnD.reactive.dstPanelId = id ?? NOID
     if (isPinnedTabsGlobal) {
-      const pinnedTabsLen = Tabs.reactive.pinned.length
+      const pinnedTabsLen = Tabs.pinned.length
       const lastPinnedTab = Tabs.list[pinnedTabsLen - 1]
       DnD.reactive.dstIndex = pinnedTabsLen
       DnD.reactive.dstPanelId = lastPinnedTab?.panelId ?? NOID

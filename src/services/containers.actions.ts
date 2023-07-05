@@ -201,10 +201,7 @@ export function updateContainers(newContainers?: Record<ID, Container> | null): 
   if (Info.isSidebar) {
     for (const tab of Tabs.list) {
       const container = newContainers[tab.cookieStoreId]
-      if (container) {
-        const rTab = Tabs.reactive.byId[tab.id]
-        if (rTab) rTab.containerColor = container.color
-      }
+      if (container) tab.reactive.containerColor = container.color
     }
   }
 }

@@ -7,8 +7,8 @@
   :data-dnd-id="panel?.id ?? NOID"
   @wheel="onWheel"
   @drop="onDrop")
-  .tab-wrapper(v-for="tab in pinnedTabs" :key="tab.id" :data-targeted="DnD.reactive.dstPin && dropId === tab.id")
-    Tab(:tab="tab")
+  .tab-wrapper(v-for="id in pinnedTabs" :key="id" :data-targeted="DnD.reactive.dstPin && dropId === id")
+    Tab(:tabId="id")
   .to-the-end(v-if="pinnedTabs.length")
 </template>
 
@@ -24,8 +24,8 @@ import { NOID } from 'src/defaults'
 
 const props = defineProps<{ panel?: TabsPanel }>()
 const pinnedTabs = computed(() => {
-  if (props.panel) return props.panel.reactive.pinnedTabs
-  else return Tabs.reactive.pinned
+  if (props.panel) return props.panel.reactive.pinnedTabIds
+  else return Tabs.reactive.pinnedIds
 })
 const dropId = computed(() => {
   const tab = Tabs.list[DnD.reactive.dstIndex]

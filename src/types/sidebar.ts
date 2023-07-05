@@ -1,5 +1,5 @@
 import { BookmarksPanelComponent, MediaState, ScrollBoxComponent } from '../types'
-import { ReactiveTab, Tab } from './tabs'
+import { Tab } from './tabs'
 import { Bookmark } from './bookmarks'
 
 export interface NavBtn {
@@ -232,9 +232,12 @@ export interface TabsPanel extends PanelCommonProps, TabsPanelConfig {
 }
 
 export interface TabsPanelReactiveProps extends PanelCommonReactiveProps {
-  tabs: ReactiveTab[]
-  pinnedTabs: ReactiveTab[]
-  filteredTabs?: ReactiveTab[]
+  tabIds: ID[]
+  filteredTabIds?: ID[]
+
+  pinnedTabIds: ID[]
+  // visibleTabIds: ID[]
+
   updated: boolean
   selNewTab: boolean
   scrollRetainer: number

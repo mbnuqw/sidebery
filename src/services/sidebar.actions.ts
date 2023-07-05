@@ -3,7 +3,7 @@ import { translate } from 'src/dict'
 import { PanelConfig, Panel, Stored, ItemBounds, Tab, Bookmark, DstPlaceInfo } from 'src/types'
 import { Notification, SidebarConfig, BookmarksPanelConfig, MediaState } from 'src/types'
 import { PanelType, TabsPanel, BookmarksPanel, ScrollBoxComponent, SubPanelType } from 'src/types'
-import { TabsPanelConfig, ItemBoundsType, ReactiveTab, DialogConfig } from 'src/types'
+import { TabsPanelConfig, ItemBoundsType, DialogConfig } from 'src/types'
 import { BOOKMARKS_PANEL_STATE, TABS_PANEL_STATE, NOID, Err } from 'src/defaults'
 import { BOOKMARKS_PANEL_CONFIG, TABS_PANEL_CONFIG, DEFAULT_CONTAINER_ID } from 'src/defaults'
 import { BKM_ROOT_ID, BKM_OTHER_ID } from 'src/defaults'
@@ -249,10 +249,10 @@ export function updateFontSize(): void {
 }
 
 export function recalcTabsPanels(reset?: boolean): void {
+  const pinnedTabIds: ID[] = []
   const pinnedTabs: Tab[] = []
-  const rPinnedTabs: ReactiveTab[] = []
+  const pinnedTabIdsByPanel: Record<ID, ID[]> = {}
   const pinnedTabsByPanel: Record<ID, Tab[]> = {}
-  const rPinnedTabsByPanel: Record<ID, ReactiveTab[]> = {}
   const pinnedInPanel = Settings.state.pinnedTabsPosition === 'panel'
   const discarded: Record<ID, boolean> = {}
   let tabIndex = 0
@@ -264,9 +264,6 @@ export function recalcTabsPanels(reset?: boolean): void {
 
   const firstTabsPanel = Sidebar.panels.find(p => Utils.isTabsPanel(p))
   for (; (tab = Tabs.list[tabIndex])?.pinned; tabIndex++) {
-    const rTab = Tabs.reactive.byId[tab.id]
-    if (!rTab) return Logs.err('Sidebar.recalcTabsPanels: Cannot get reactive tab')
-
     if (samePinned && Tabs.pinned[tabIndex]?.id !== tab.id) samePinned = false
 
     if (pinnedInPanel) {
@@ -281,23 +278,23 @@ export function recalcTabsPanels(reset?: boolean): void {
           continue
         }
       }
+      let pinnedTabIdsOfPanel = pinnedTabIdsByPanel[panel.id]
       let pinnedTabsOfPanel = pinnedTabsByPanel[panel.id]
-      let rPinnedTabsOfPanel = rPinnedTabsByPanel[panel.id]
       if (!pinnedTabsOfPanel) {
+        pinnedTabIdsOfPanel = pinnedTabIdsByPanel[panel.id] = []
         pinnedTabsOfPanel = pinnedTabsByPanel[panel.id] = []
-        rPinnedTabsOfPanel = rPinnedTabsByPanel[panel.id] = []
       }
       if (Utils.isTabsPanel(panel)) {
+        pinnedTabIdsOfPanel.push(tab.id)
         pinnedTabsOfPanel.push(tab)
-        rPinnedTabsOfPanel.push(rTab)
       }
 
       if (discarded[panel.id] === undefined) discarded[panel.id] = true
       if (!tab.discarded && discarded[panel.id]) discarded[panel.id] = false
     }
 
+    pinnedTabIds.push(tab.id)
     pinnedTabs.push(tab)
-    rPinnedTabs.push(rTab)
   }
 
   for (const panel of Sidebar.panels) {
@@ -306,18 +303,18 @@ export function recalcTabsPanels(reset?: boolean): void {
     const panelId = panel.id
     if (discarded[panelId] === undefined) discarded[panelId] = true
 
+    const pinnedTabIdsOfPanel = pinnedTabIdsByPanel[panelId]
     const pinnedTabsOfPanel = pinnedTabsByPanel[panelId]
-    const rPinnedTabsOfPanel = rPinnedTabsByPanel[panelId]
     if (pinnedTabsOfPanel) {
       panel.pinnedTabs = pinnedTabsOfPanel
-      panel.reactive.pinnedTabs = rPinnedTabsOfPanel
+      panel.reactive.pinnedTabIds = pinnedTabIdsOfPanel
     } else if (panel.pinnedTabs.length > 0) {
       panel.pinnedTabs = []
-      panel.reactive.pinnedTabs = []
+      panel.reactive.pinnedTabIds = []
     }
 
+    const panelTabIds: ID[] = []
     const panelTabs: Tab[] = []
-    const panelReactiveTabs: ReactiveTab[] = []
     for (; (tab = Tabs.list[tabIndex]); tabIndex++) {
       if (tab.panelId === NOID) tab.panelId = panelId
       if (tab.panelId === panelId) {
@@ -326,11 +323,8 @@ export function recalcTabsPanels(reset?: boolean): void {
         if (!tab.discarded && discarded[panelId]) discarded[panelId] = false
       } else break
 
-      const rTab = Tabs.reactive.byId[tab.id]
-      if (rTab) {
-        panelTabs.push(tab)
-        panelReactiveTabs.push(rTab)
-      }
+      panelTabIds.push(tab.id)
+      panelTabs.push(tab)
 
       tabPanelIndex++
     }
@@ -339,7 +333,7 @@ export function recalcTabsPanels(reset?: boolean): void {
     if (!same || tabsCount !== tabPanelIndex) {
       tabsCount = panelTabs.length
       panel.tabs = panelTabs
-      panel.reactive.tabs = panelReactiveTabs
+      panel.reactive.tabIds = panelTabIds
     }
 
     if (tabsCount) {
@@ -370,7 +364,7 @@ export function recalcTabsPanels(reset?: boolean): void {
 
   if (!samePinned || pinnedTabs.length !== Tabs.pinned.length) {
     Tabs.pinned = pinnedTabs
-    Tabs.reactive.pinned = rPinnedTabs
+    Tabs.reactive.pinnedIds = pinnedTabIds
   }
 }
 

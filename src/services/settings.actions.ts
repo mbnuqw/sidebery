@@ -156,17 +156,11 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
 
   if (resetTree && Sidebar.hasTabs) {
     for (const tab of Tabs.list) {
-      const rTab = Tabs.reactive.byId[tab.id]
-      if (!rTab) continue
-      rTab.isParent = false
-      tab.isParent = false
-      rTab.folded = false
-      tab.folded = false
-      rTab.invisible = false
-      tab.invisible = false
+      tab.reactive.isParent = tab.isParent = false
+      tab.reactive.folded = tab.folded = false
+      tab.reactive.invisible = tab.invisible = false
       tab.parentId = -1
-      rTab.lvl = 0
-      tab.lvl = 0
+      tab.reactive.lvl = tab.lvl = 0
     }
   }
 
@@ -214,9 +208,7 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
 
   if (tabsUpdateMarkChanged && next.tabsUpdateMark === 'none') {
     for (const tab of Tabs.list) {
-      const rTab = Tabs.reactive.byId[tab.id]
-      tab.updated = false
-      if (rTab) rTab.updated = false
+      tab.reactive.updated = tab.updated = false
     }
     for (const panel of Sidebar.panels) {
       if (Utils.isTabsPanel(panel)) {

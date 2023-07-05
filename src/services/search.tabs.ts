@@ -1,5 +1,5 @@
 import * as Utils from 'src/utils'
-import { Panel, ReactiveTab, Tab, TabsPanel } from 'src/types'
+import { Panel, Tab, TabsPanel } from 'src/types'
 import { Tabs } from 'src/services/tabs.fg'
 import { Selection } from 'src/services/selection'
 import { Search } from 'src/services/search'
@@ -26,28 +26,26 @@ export function onTabsSearch(activePanel: Panel): void {
       if (!tabs) tabs = activePanel.tabs
 
       const filtered: Tab[] = []
-      const rFiltered: ReactiveTab[] = []
+      const filteredIds: ID[] = []
       const filteredInvisible: Tab[] = []
-      const rFilteredInvisible: ReactiveTab[] = []
+      const filteredInvisibleIds: ID[] = []
       for (const tab of tabs) {
         if (Search.check(tab.title) || Search.check(tab.url)) {
-          const rTab = Tabs.reactive.byId[tab.id]
-          if (!rTab) continue
           if (!tab.invisible) {
             filtered.push(tab)
-            rFiltered.push(rTab)
+            filteredIds.push(tab.id)
           } else {
             filteredInvisible.push(tab)
-            rFilteredInvisible.push(rTab)
+            filteredInvisibleIds.push(tab.id)
           }
         }
       }
       activePanel.filteredTabs = filtered.concat(filteredInvisible)
-      activePanel.reactive.filteredTabs = rFiltered.concat(rFilteredInvisible)
+      activePanel.reactive.filteredTabIds = filteredIds.concat(filteredInvisibleIds)
       activePanel.reactive.filteredLen = activePanel.filteredTabs.length
     } else {
       activePanel.filteredTabs = undefined
-      activePanel.reactive.filteredTabs = undefined
+      activePanel.reactive.filteredTabIds = undefined
       activePanel.reactive.filteredLen = undefined
     }
 
@@ -114,7 +112,7 @@ export function onTabsSearchEnter(panel?: Panel): void {
   if (Search.reactive.value && !panel.filteredTabs?.length) return findInAnotherPanel()
 
   const selId = Selection.getFirst()
-  const tab = Tabs.reactive.byId[selId]
+  const tab = Tabs.byId[selId]
   if (tab) browser.tabs.update(tab.id, { active: true })
 
   Search.stop()
@@ -147,7 +145,7 @@ function findInAnotherPanel(): void {
   // panel.filteredLen = panel.filteredTabs.length
 
   panel.filteredTabs = undefined
-  panel.reactive.filteredTabs = undefined
+  panel.reactive.filteredTabIds = undefined
   panel.reactive.filteredLen = undefined
 
   Sidebar.activatePanel(firstMatch.panelId)

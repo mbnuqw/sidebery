@@ -34,9 +34,6 @@ export function colorizeTab(tabId: ID): void {
   const tab = Tabs.byId[tabId]
   if (!tab) return
 
-  const rTab = Tabs.reactive.byId[tab.id]
-  if (!rTab) return
-
   let srcStr, color
   if (Settings.state.colorizeTabsSrc === 'domain') {
     srcStr = Utils.getDomainOf(tab.url)
@@ -50,7 +47,7 @@ export function colorizeTab(tabId: ID): void {
     }
   }
 
-  rTab.color = color
+  tab.reactive.color = color
 }
 
 export function colorizeBranches(): void {
@@ -63,9 +60,6 @@ export function colorizeBranch(rootId: ID): void {
   const rootTab = Tabs.byId[rootId]
   if (!rootTab || rootTab.lvl > 0) return
 
-  const rRootTab = Tabs.reactive.byId[rootTab.id]
-  if (!rRootTab) return
-
   let srcStr
   if (Settings.state.colorizeTabsBranchesSrc === 'url') {
     srcStr = rootTab.url
@@ -74,14 +68,13 @@ export function colorizeBranch(rootId: ID): void {
   }
 
   const color = Utils.colorFromString(srcStr, 60)
-  rRootTab.branchColor = color
+  rootTab.reactive.branchColor = color
 
   for (let i = rootTab.index + 1; i < Tabs.list.length; i++) {
     const tab = Tabs.list[i]
     if (tab.lvl === 0) break
 
-    const rTab = Tabs.reactive.byId[tab.id]
-    if (rTab) rTab.branchColor = color
+    tab.reactive.branchColor = color
   }
 }
 
@@ -91,8 +84,7 @@ export function setBranchColor(tabId: ID): void {
   if (tab.parentId === NOID) {
     if (tab.isParent) Tabs.colorizeBranch(tab.id)
     else {
-      const rTab = Tabs.reactive.byId[tab.id]
-      if (rTab?.branchColor) rTab.branchColor = null
+      if (tab.reactive.branchColor) tab.reactive.branchColor = null
     }
     return
   }
@@ -103,12 +95,8 @@ export function setBranchColor(tabId: ID): void {
   }
   if (!parent) return
 
-  const rParent = Tabs.reactive.byId[parent.id]
-  if (!rParent) return
-
-  if (rParent.branchColor) {
-    const rTab = Tabs.reactive.byId[tabId]
-    if (rTab) rTab.branchColor = rParent.branchColor
+  if (parent.reactive.branchColor) {
+    tab.reactive.branchColor = parent.reactive.branchColor
   } else {
     Tabs.colorizeBranch(parent.id)
   }
@@ -119,11 +107,10 @@ export function setCustomColor(tabIds: ID[], color: string): void {
 
   for (const id of tabIds) {
     const tab = Tabs.byId[id]
-    const rTab = Tabs.reactive.byId[id]
-    if (!tab || !rTab) continue
+    if (!tab) continue
 
     tab.customColor = color !== 'toolbar' ? color : undefined
-    rTab.customColor = tab.customColor ?? null
+    tab.reactive.customColor = tab.customColor ?? null
 
     Tabs.saveTabData(tab.id)
   }

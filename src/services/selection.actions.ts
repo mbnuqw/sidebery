@@ -77,17 +77,15 @@ export function selectHeader(id: ID): void {
 }
 
 export function selectTab(tabId: ID): void {
-  const rTarget = Tabs.reactive.byId[tabId]
   const target = Tabs.byId[tabId]
-  if (!rTarget || !target) return
+  if (!target) return
 
   if (firstItem !== null) {
-    const firstTab = Tabs.reactive.byId[firstItem]
-    if (firstTab && firstTab.pinned !== rTarget.pinned) return
+    const firstTab = Tabs.byId[firstItem]
+    if (firstTab && firstTab.pinned !== target.pinned) return
   }
 
-  rTarget.sel = true
-  target.sel = true
+  target.reactive.sel = target.sel = true
   Selection.selected.push(tabId)
   firstItem = tabId
   selType = SelectionType.Tabs
@@ -97,12 +95,10 @@ export function selectTab(tabId: ID): void {
 
 export function selectTabs(tabIds: ID[]): void {
   for (const id of tabIds) {
-    const rTarget = Tabs.reactive.byId[id]
     const target = Tabs.byId[id]
-    if (!rTarget || !target) continue
+    if (!target) continue
 
-    rTarget.sel = true
-    target.sel = true
+    target.reactive.sel = target.sel = true
     Selection.selected.push(id)
   }
 
@@ -120,8 +116,9 @@ export function selectTabsRange(aTab: Tab, bTab?: Tab): void {
 
   if (Selection.selected.length) {
     for (const id of Selection.selected) {
-      const tab = Tabs.reactive.byId[id]
-      if (tab) tab.sel = false
+      const tab = Tabs.byId[id]
+      if (tab) tab.reactive.sel = false
+      // TODO: check why I didn't change non-reactive value
     }
     Selection.selected = []
   }
@@ -131,11 +128,8 @@ export function selectTabsRange(aTab: Tab, bTab?: Tab): void {
 
   for (let i = minIndex; i <= maxIndex; i++) {
     const target = Tabs.list[i]
-    const rTarget = Tabs.reactive.byId[target.id]
-    if (!rTarget) continue
 
-    rTarget.sel = true
-    target.sel = true
+    target.reactive.sel = target.sel = true
     Selection.selected.push(target.id)
   }
 
@@ -146,21 +140,16 @@ export function selectTabsRange(aTab: Tab, bTab?: Tab): void {
 }
 
 export function selectTabsBranch(parentTab: Tab): void {
-  parentTab.sel = true
+  parentTab.reactive.sel = parentTab.sel = true
   Selection.selected.push(parentTab.id)
   firstItem = parentTab.id
-
-  const rParentTab = Tabs.reactive.byId[parentTab.id]
-  if (rParentTab) rParentTab.sel = true
 
   if (Settings.state.tabsTree) {
     for (let tab, i = parentTab.index + 1; i < Tabs.list.length; i++) {
       tab = Tabs.list[i]
       if (tab.lvl <= parentTab.lvl) break
 
-      const rTab = Tabs.reactive.byId[tab.id]
-      if (rTab) rTab.sel = true
-      tab.sel = true
+      tab.reactive.sel = tab.sel = true
       Selection.selected.push(tab.id)
     }
   }
@@ -281,9 +270,7 @@ export function deselectTab(tabId: ID): void {
   if (index >= 0) Selection.selected.splice(index, 1)
 
   const target = Tabs.byId[tabId]
-  const rTarget = Tabs.reactive.byId[tabId]
-  if (rTarget) rTarget.sel = false
-  if (target) target.sel = false
+  if (target) target.reactive.sel = target.sel = false
 
   if (!Selection.selected.length) selType = SelectionType.Nothing
   if (firstItem === tabId) firstItem = null
@@ -354,9 +341,7 @@ export function resetSelection(forced?: boolean): void {
   if (selType === SelectionType.Tabs) {
     for (const id of Selection.selected) {
       const target = Tabs.byId[id]
-      const rTarget = Tabs.reactive.byId[id]
-      if (rTarget) rTarget.sel = false
-      if (target) target.sel = false
+      if (target) target.reactive.sel = target.sel = false
     }
 
     if (Settings.state.nativeHighlight) updateHighlightedTabs(120)

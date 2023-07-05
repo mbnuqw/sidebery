@@ -3,10 +3,10 @@ import { CONTAINER_ID, GROUP_URL, NOID, NEWID, Err, ASKID, MOVEID, SAMEID } from
 import { BKM_OTHER_ID, ADDON_HOST, DEFAULT_CONTAINER_ID, BKM_ROOT_ID } from 'src/defaults'
 import { INITIAL_TITLE_RE } from 'src/defaults'
 import { translate } from 'src/dict'
-import { Stored, Tab, Panel, TabCache, ActiveTabsHistory, ReactiveTab, TabStatus } from 'src/types'
-import { Notification, TabSessionData, TabsTreeData, DragInfo } from 'src/types'
+import { Stored, Tab, Panel, TabCache, ActiveTabsHistory, ReactiveTabProps } from 'src/types'
+import { Notification, TabSessionData, TabsTreeData, DragInfo, NativeTab } from 'src/types'
 import { WindowChoosingDetails, SrcPlaceInfo, DstPlaceInfo, ItemInfo } from 'src/types'
-import { TabsPanel, PanelType, TabTreeData, TabToPanelMoveRule } from 'src/types'
+import { TabsPanel, PanelType, TabTreeData, TabToPanelMoveRule, TabStatus } from 'src/types'
 import { TabToPanelMoveRuleConfig } from 'src/types'
 import { RecentlyRemovedTabInfo, Tabs } from 'src/services/tabs.fg'
 import * as IPC from 'src/services/ipc'
@@ -24,9 +24,79 @@ import { Selection } from './selection'
 
 const URL_WITHOUT_PROTOCOL_RE = /^(.+\.)\/?(.+\/)?\w+/
 
-export function toReactive(tab: Tab): ReactiveTab {
-  return {
-    id: tab.id,
+let reactFn: (<T extends object>(rObj: T) => T) | undefined
+export function initTabs(react: (rObj: object) => object) {
+  reactFn = react as <T extends object>(rObj: T) => T
+  Tabs.reactive = reactFn(Tabs.reactive)
+}
+
+export function mutateNativeTabToSideberyTab(nativeTab: NativeTab): Tab {
+  const tab = nativeTab as Tab
+
+  if (tab.isParent === undefined) tab.isParent = false
+  if (tab.folded === undefined) tab.folded = false
+  if (tab.invisible === undefined) tab.invisible = false
+  if (tab.parentId === undefined) tab.parentId = NOID
+  if (tab.panelId === undefined) tab.panelId = NOID
+  if (tab.lvl === undefined) tab.lvl = 0
+  if (tab.sel === undefined) tab.sel = false
+  if (tab.updated === undefined) tab.updated = false
+  if (tab.loading === undefined) tab.loading = false
+  if (tab.status === undefined) tab.status = 'complete'
+  if (tab.warn === undefined) tab.warn = false
+  if (tab.internal === undefined) tab.internal = tab.url.startsWith(ADDON_HOST)
+  if (tab.internal) tab.favIconUrl = undefined
+  else {
+    if (tab.favIconUrl === 'chrome://global/skin/icons/warning.svg') tab.warn = true
+    if (tab.favIconUrl === undefined) tab.favIconUrl = undefined
+    else if (tab.favIconUrl.startsWith('chrome:')) tab.favIconUrl = undefined
+  }
+  if (tab.mediaPaused === undefined) tab.mediaPaused = false
+  if (tab.isGroup === undefined) tab.isGroup = tab.internal && Utils.isGroupUrl(tab.url)
+
+  if (tab.reactive === undefined) {
+    tab.reactive = {
+      active: tab.active,
+      mediaAudible: tab.audible ?? false,
+      mediaMuted: tab.mutedInfo?.muted ?? false,
+      mediaPaused: tab.mediaPaused,
+      containerColor: Containers.reactive.byId[tab.cookieStoreId]?.color ?? null,
+      discarded: tab.discarded ?? false,
+      favIconUrl: tab.favIconUrl,
+      invisible: tab.invisible,
+      pinned: tab.pinned,
+      status: Tabs.getStatus(tab),
+      isParent: tab.isParent,
+      folded: tab.folded,
+      title: tab.title,
+      tooltip: getTooltip(tab),
+      customTitle: tab.customTitle ?? null,
+      customTitleEdit: false,
+      customColor: tab.customColor ?? null,
+      url: tab.url,
+      lvl: tab.lvl,
+      branchLen: 0,
+      sel: tab.sel,
+      warn: tab.warn,
+      updated: tab.updated,
+      unread: !!tab.unread,
+      flash: false,
+      branchColor: null,
+      color: null,
+      isGroup: tab.isGroup,
+    }
+  }
+
+  return tab
+}
+
+export function reactivateTab(tab: Tab) {
+  if (!tab.reactive || !reactFn) return
+  tab.reactive = reactFn(tab.reactive)
+}
+
+export function createReactiveProps(tab: Tab): ReactiveTabProps {
+  const rProps: ReactiveTabProps = {
     active: tab.active,
     mediaAudible: tab.audible ?? false,
     mediaMuted: tab.mutedInfo?.muted ?? false,
@@ -50,11 +120,17 @@ export function toReactive(tab: Tab): ReactiveTab {
     sel: tab.sel,
     warn: tab.warn,
     updated: tab.updated,
-    unread: tab.unread,
+    unread: !!tab.unread,
     flash: false,
     branchColor: null,
     color: null,
     isGroup: tab.isGroup,
+  }
+
+  if (reactFn) return reactFn(rProps)
+  else {
+    Logs.warn('Tabs.createReactiveProps: No reactFn')
+    return rProps
   }
 }
 
@@ -95,13 +171,15 @@ export async function load(): Promise<void> {
   Tabs.updateActiveGroupPage()
 
   // Scroll to active tab
-  const activeTab = Tabs.reactive.byId[Tabs.activeId]
+  const activeTab = Tabs.byId[Tabs.activeId]
   if (activeTab && !activeTab.pinned) Tabs.scrollToTab(activeTab.id)
 
   Tabs.updateNativeTabsVisibility()
   Tabs.cacheTabsData(1000)
   Tabs.list.forEach(t => {
     Tabs.updateUrlCounter(t.url, 1)
+
+    if (t.isGroup) Tabs.linkGroupWithPinnedTab(t, Tabs.list)
 
     // Recalc branch length for folded (invisible) parent tabs
     if (t.folded && t.invisible) Tabs.recalcBranchLen(t.id)
@@ -110,7 +188,10 @@ export async function load(): Promise<void> {
   for (const panel of Sidebar.panels) {
     if (Utils.isTabsPanel(panel)) {
       panel.ready = true
-      if (panel.tabs.length) Sidebar.updateMediaStateOfPanel(panel.id)
+      if (panel.tabs.length) {
+        Sidebar.updateMediaStateOfPanel(panel.id)
+        // Sidebar.recalcVisibleTabs(panel.id)
+      }
     }
   }
 
@@ -126,8 +207,7 @@ export function unload(): void {
   Tabs.ready = false
   Tabs.resetTabsListeners()
 
-  Tabs.reactive.byId = {}
-  Tabs.reactive.pinned = []
+  Tabs.reactive.pinnedIds = []
   Tabs.reactive.recentlyRemovedLen = 0
   Tabs.recentlyRemoved = []
   Tabs.list = []
@@ -153,8 +233,8 @@ export function unload(): void {
     if (Utils.isTabsPanel(panel)) {
       panel.tabs = []
       panel.pinnedTabs = []
-      panel.reactive.tabs = []
-      panel.reactive.pinnedTabs = []
+      panel.reactive.tabIds = []
+      panel.reactive.pinnedTabIds = []
       panel.reactive.len = 0
       panel.reactive.empty = true
       panel.ready = false
@@ -172,7 +252,7 @@ async function restoreTabsState(): Promise<void> {
     browser.storage.local.get<Stored>('tabsDataCache'),
     IPC.bg('isWindowTabsLocked', Windows.id),
   ])
-  const tabs = Utils.settledOr(results[0], []) as Tab[]
+  const nativeTabs = Utils.settledOr(results[0], [])
   const storage = Utils.settledOr(results[1], {})
   const isWindowTabsLocked = Utils.settledOr(results[2], false)
 
@@ -182,6 +262,7 @@ async function restoreTabsState(): Promise<void> {
     storage.tabsDataCache = [isWindowTabsLocked]
   }
 
+  let tabs: Tab[] | undefined
   let tabsCache: Record<ID, TabCache> | undefined
   let tabsSessionData: (TabSessionData | undefined)[] | undefined
 
@@ -189,16 +270,16 @@ async function restoreTabsState(): Promise<void> {
   if (!lastPanel) return Logs.err('Cannot load tabs: No tabs panels')
 
   // Find most appropriate cache data
-  if (storage.tabsDataCache) tabsCache = findCachedData(tabs, storage.tabsDataCache)
+  if (storage.tabsDataCache) tabsCache = findCachedData(nativeTabs, storage.tabsDataCache)
 
   // Restore tabs data from cache
   if (tabsCache) {
-    restoreTabsFromCache(tabs, tabsCache, lastPanel)
+    tabs = restoreTabsFromCache(nativeTabs, tabsCache, lastPanel)
   }
 
   // From session data
   else {
-    const querying = tabs.map(t =>
+    const querying = nativeTabs.map(t =>
       browser.sessions.getTabValue<TabSessionData | undefined>(t.id, 'data').catch(() => undefined)
     )
     try {
@@ -208,7 +289,7 @@ async function restoreTabsState(): Promise<void> {
       tabsSessionData = []
     }
 
-    restoreTabsFromSessionData(tabs, tabsSessionData, lastPanel)
+    tabs = restoreTabsFromSessionData(nativeTabs, tabsSessionData, lastPanel)
   }
 
   Tabs.list = tabs
@@ -257,19 +338,24 @@ async function restoreTabsState(): Promise<void> {
   Tabs.deferredEventHandling = []
 }
 
-function restoreTabsFromCache(tabs: Tab[], cache: Record<ID, TabCache>, lastPanel: Panel): void {
+function restoreTabsFromCache(
+  nativeTabs: NativeTab[],
+  cache: Record<ID, TabCache>,
+  lastPanel: Panel
+): Tab[] {
   let logWrongPanels: Record<string, null> | undefined
   const firstPanelId = lastPanel.id
   const idsMap: Record<ID, ID> = {}
+  const tabs: Tab[] = []
 
   // Go through tabs and restore sidebery props
   Tabs.byId = {}
-  Tabs.reactive.byId = {}
-  for (const tab of [...tabs]) {
-    const data = cache[tab.id]
+  for (const nativeTab of [...nativeTabs]) {
+    const data = cache[nativeTab.id]
 
     // Normalize tab
-    normalizeTab(tab, tab.pinned ? firstPanelId : NOID)
+    const tab = mutateNativeTabToSideberyTab(nativeTab)
+    if (tab.pinned) tab.panelId = firstPanelId
 
     if (data) {
       if (data.parentId === undefined) data.parentId = NOID
@@ -278,12 +364,10 @@ function restoreTabsFromCache(tabs: Tab[], cache: Record<ID, TabCache>, lastPane
       tab.panelId = data.panelId ?? lastPanel.id
       const actualParentId = idsMap[data.parentId]
       if (actualParentId !== undefined) tab.parentId = actualParentId
-      tab.folded = !!data.folded
-      if (data.customTitle) tab.customTitle = data.customTitle
-      if (data.customColor) tab.customColor = data.customColor
+      tab.reactive.folded = tab.folded = !!data.folded
+      if (data.customTitle) tab.reactive.customTitle = tab.customTitle = data.customTitle
+      if (data.customColor) tab.reactive.customColor = tab.customColor = data.customColor
       idsMap[data.id] = tab.id
-
-      if (tab.url.startsWith(GROUP_URL)) Tabs.linkGroupWithPinnedTab(tab, tabs)
     }
 
     // Normalize panelId
@@ -305,37 +389,41 @@ function restoreTabsFromCache(tabs: Tab[], cache: Record<ID, TabCache>, lastPane
       tab.parentId = tab.openerTabId
     }
 
+    Tabs.reactivateTab(tab)
     Tabs.byId[tab.id] = tab
-    Tabs.reactive.byId[tab.id] = Tabs.toReactive(tab)
+    tabs.push(tab)
   }
 
   if (logWrongPanels) {
     Logs.warn('Tabs loading: Cannot find panels: ' + Object.keys(logWrongPanels).join(' '))
   }
+
+  return tabs
 }
 
 function restoreTabsFromSessionData(
-  tabs: Tab[],
+  nativeTabs: NativeTab[],
   tabsData: (TabSessionData | undefined)[],
   lastPanel: Panel
-): void {
+): Tab[] {
   let logWrongPanels: Record<string, null> | undefined
   const firstPanelId = lastPanel.id
   const idsMap: Record<ID, ID> = {}
+  const tabs: Tab[] = []
 
   // Set tabs initial props and update state
   Tabs.byId = {}
-  Tabs.reactive.byId = {}
-  for (let data, tab, i = 0; i < tabs.length; i++) {
-    tab = tabs[i]
-    if (!tab) {
+  for (let data, nativeTab, i = 0; i < nativeTabs.length; i++) {
+    nativeTab = nativeTabs[i]
+    if (!nativeTab) {
       Logs.err('Tabs.restoreTabsFromSessionData: No tab')
       break
     }
 
     data = tabsData[i]
 
-    normalizeTab(tab, tab.pinned ? firstPanelId : NOID)
+    const tab = mutateNativeTabToSideberyTab(nativeTab)
+    if (tab.pinned) tab.panelId = firstPanelId
 
     if (data) {
       if (data.parentId === undefined) data.parentId = NOID
@@ -344,12 +432,10 @@ function restoreTabsFromSessionData(
       tab.panelId = data.panelId ?? lastPanel.id
       const actualParentId = idsMap[data.parentId]
       if (actualParentId !== undefined) tab.parentId = actualParentId
-      tab.folded = !!data.folded
-      if (data.customTitle) tab.customTitle = data.customTitle
-      if (data.customColor) tab.customColor = data.customColor
+      tab.reactive.folded = tab.folded = !!data.folded
+      if (data.customTitle) tab.reactive.customTitle = tab.customTitle = data.customTitle
+      if (data.customColor) tab.reactive.customColor = tab.customColor = data.customColor
       idsMap[data.id] = tab.id
-
-      if (tab.url.startsWith(GROUP_URL)) Tabs.linkGroupWithPinnedTab(tab, tabs)
     }
 
     // Normalize panelId
@@ -371,20 +457,23 @@ function restoreTabsFromSessionData(
       tab.parentId = tab.openerTabId
     }
 
+    Tabs.reactivateTab(tab)
     Tabs.byId[tab.id] = tab
-    Tabs.reactive.byId[tab.id] = Tabs.toReactive(tab)
+    tabs.push(tab)
   }
 
   if (logWrongPanels) {
     Logs.warn('Tabs loading: Cannot find panels: ' + Object.keys(logWrongPanels).join(' '))
   }
+
+  return tabs
 }
 
 /**
  * Find suitable tabs data for current window
  */
 function findCachedData(
-  tabs: DeepReadonly<Tab[]>,
+  tabs: DeepReadonly<NativeTab[]>,
   data: TabCache[][]
 ): Record<ID, TabCache> | undefined {
   let maxEqualityCounter = 1
@@ -440,30 +529,6 @@ function findCachedData(
   }
 
   return result
-}
-
-export function normalizeTab(tab: Tab, defaultPanelId: ID): void {
-  if (tab.isParent === undefined) tab.isParent = false
-  if (tab.folded === undefined) tab.folded = false
-  if (tab.invisible === undefined) tab.invisible = false
-  if (tab.parentId === undefined) tab.parentId = NOID
-  if (tab.panelId === undefined || tab.panelId === NOID) tab.panelId = defaultPanelId
-  if (tab.lvl === undefined) tab.lvl = 0
-  if (tab.sel === undefined) tab.sel = false
-  if (tab.updated === undefined) tab.updated = false
-  if (tab.loading === undefined) tab.loading = false
-  if (tab.status === undefined) tab.status = 'complete'
-  if (tab.warn === undefined) tab.warn = false
-  if (tab.internal === undefined) tab.internal = tab.url.startsWith(ADDON_HOST)
-  if (tab.internal) tab.favIconUrl = undefined
-  else {
-    if (tab.favIconUrl === 'chrome://global/skin/icons/warning.svg') tab.warn = true
-    if (tab.favIconUrl === undefined) tab.favIconUrl = undefined
-    else if (tab.favIconUrl.startsWith('chrome:')) tab.favIconUrl = undefined
-  }
-  if (tab.unread === undefined) tab.unread = false
-  if (tab.mediaPaused === undefined) tab.mediaPaused = false
-  if (tab.isGroup === undefined) tab.isGroup = tab.internal && Utils.isGroupUrl(tab.url)
 }
 
 /**
@@ -533,12 +598,11 @@ export function reinitTabs(delay = 500): void {
       if (Utils.isTabsPanel(panel)) panelsList.push({ id: panel.id, index: -1 })
     }
 
-    const normTabs = []
+    const normTabs: Tab[] = []
     const normTabsMap: Record<ID, Tab> = {}
-    const normReactiveTabsMap: Record<ID, ReactiveTab> = {}
-    const nativeTabs = (await browser.tabs.query({
+    const nativeTabs = await browser.tabs.query({
       windowId: browser.windows.WINDOW_ID_CURRENT,
-    })) as Tab[]
+    })
     const moves: [ID, number][] = []
     let panelId: ID | undefined
     let index = 0
@@ -585,14 +649,14 @@ export function reinitTabs(delay = 500): void {
 
         normTabs.push(tab)
         normTabsMap[tab.id] = tab
-        normReactiveTabsMap[tab.id] = Tabs.toReactive(tab)
+        tab.reactive = Tabs.createReactiveProps(tab)
         panelId = tab.panelId
       } else {
-        normalizeTab(nativeTab, panelId ?? NOID)
-        normTabs.push(nativeTab)
+        const tab = mutateNativeTabToSideberyTab(nativeTab)
+        Tabs.reactivateTab(tab)
+        normTabs.push(tab)
         if (nativeTab.active) Tabs.activeId = nativeTab.id
-        normTabsMap[nativeTab.id] = nativeTab
-        normReactiveTabsMap[nativeTab.id] = Tabs.toReactive(nativeTab)
+        normTabsMap[nativeTab.id] = tab
         index++
       }
     }
@@ -607,7 +671,6 @@ export function reinitTabs(delay = 500): void {
 
     Tabs.list = normTabs
     Tabs.byId = normTabsMap
-    Tabs.reactive.byId = normReactiveTabsMap
     Sidebar.recalcTabsPanels(true)
     updateTabsTree()
 
@@ -631,9 +694,9 @@ export function sortNativeTabs(delayMS = 500): void {
   sortNativeTabsTimeout = setTimeout(async () => {
     sortingNativeTabs = true
 
-    const nativeTabs = (await browser.tabs.query({ currentWindow: true })) as Tab[]
+    const nativeTabs = await browser.tabs.query({ currentWindow: true })
     if (!sortingNativeTabs) return sortNativeTabs()
-    const nativeTabsById: Record<ID, Tab> = {}
+    const nativeTabsById: Record<ID, NativeTab> = {}
 
     for (const nativeTab of nativeTabs) {
       nativeTabsById[nativeTab.id] = nativeTab
@@ -913,20 +976,22 @@ export async function removeTabs(tabIds: ID[], silent?: boolean): Promise<void> 
     if (!tab) continue
     if (tab.panelId !== panelId) continue
 
-    tabsMap[id] = tab
-    tabs.push(tab)
-    toRemove.push(id)
-    if (tab.invisible) hasInvisibleTab = true
+    if (!tabsMap[tab.id]) {
+      tabsMap[id] = tab
+      tabs.push(tab)
+      toRemove.push(id)
+      if (tab.invisible) hasInvisibleTab = true
+    }
 
     if ((rmChildTabsFolded && tab.folded) || rmChildTabsFoldedAll) {
       for (let t, i = tab.index + 1; i < Tabs.list.length; i++) {
         t = Tabs.list[i]
         if (!t || t.lvl <= tab.lvl) break
-        if (t.invisible) hasInvisibleTab = true
         if (!tabsMap[t.id]) {
           tabsMap[t.id] = t
           tabs.push(t)
           toRemove.push(t.id)
+          if (t.invisible) hasInvisibleTab = true
         }
       }
     }
@@ -953,13 +1018,11 @@ export async function removeTabs(tabIds: ID[], silent?: boolean): Promise<void> 
   let activeTab: Tab | undefined
 
   tabs.forEach(t => {
-    const rTab = Tabs.reactive.byId[t.id]
     parents[t.id] = t.parentId
     if (!t.invisible) visibleLen++
     t.invisible = true
-    if (rTab) rTab.invisible = true
+    t.reactive.invisible = true
     if (t.active) activeTab = t
-    return t.id
   })
   const tabsInfo = Tabs.getTabsInfo(toRemove, true)
   if (Tabs.removingTabs && Tabs.removingTabs.length) {
@@ -1091,14 +1154,11 @@ export function checkRemovedTabs(delay = 750): void {
           const tab = Tabs.byId[tabId]
           if (tab) {
             const parent = Tabs.byId[tab.parentId]
-            const rTab = Tabs.reactive.byId[tab.id]
 
             tab.lvl = parent ? parent.lvl + 1 : 0
             tab.invisible = false
-            if (rTab) {
-              rTab.lvl = tab.lvl
-              rTab.invisible = false
-            }
+            tab.reactive.lvl = tab.lvl
+            tab.reactive.invisible = false
 
             const rmIndex = Tabs.removingTabs.indexOf(tab.id)
             if (rmIndex !== -1) Tabs.removingTabs.splice(rmIndex, 1)
@@ -1191,7 +1251,7 @@ export function switchTab(globaly: boolean, cycle: boolean, step: number, pinned
   }
 }
 
-const RELOADING_QUEUE = [] as Tab[]
+const RELOADING_QUEUE: Tab[] = []
 const CHECK_INTERVAL = 300
 const MAX_CHECK_COUNT = 35
 export function reloadTabs(tabIds: ID[] = []): void {
@@ -1209,8 +1269,7 @@ export function reloadTabs(tabIds: ID[] = []): void {
     if (!tab) continue
 
     if (!RELOADING_QUEUE.includes(tab)) {
-      const rTab = Tabs.reactive.byId[tab.id]
-      if (rTab) rTab.status = TabStatus.Pending
+      tab.reactive.status = TabStatus.Pending
       tab.status = 'pending'
       tab.reloadingChecks = 1
       tabs.push(tab)
@@ -1222,8 +1281,7 @@ export function reloadTabs(tabIds: ID[] = []): void {
       while (tab && tab.lvl > parentLvl) {
         if (tab && !tabIds.includes(tab.id)) {
           if (RELOADING_QUEUE.includes(tab)) continue
-          const rTab = Tabs.reactive.byId[tab.id]
-          if (rTab) rTab.status = TabStatus.Pending
+          tab.reactive.status = TabStatus.Pending
           tab.status = 'pending'
           tab.reloadingChecks = 1
           tabs.push(tab)
@@ -1284,8 +1342,7 @@ function stopReloading(): void {
   while (RELOADING_QUEUE.length) {
     const tab = RELOADING_QUEUE.pop()
     if (tab && tab.status === 'pending') {
-      const rTab = Tabs.reactive.byId[tab.id]
-      if (rTab) rTab.status = TabStatus.Complete
+      tab.reactive.status = TabStatus.Complete
       tab.status = 'complete'
     }
   }
@@ -1495,11 +1552,7 @@ export async function pauseTabMedia(id?: ID): Promise<void> {
   if (!tab) return
   if (tab.url.startsWith('ab')) return
 
-  const rTab = Tabs.reactive.byId[tab.id]
-  if (!rTab) return
-
-  tab.mediaPaused = true
-  rTab.mediaPaused = true
+  tab.reactive.mediaPaused = tab.mediaPaused = true
   Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId, tab)
 
   browser.tabs
@@ -1510,8 +1563,7 @@ export async function pauseTabMedia(id?: ID): Promise<void> {
     })
     .then(results => {
       if (results.every(result => result === false)) {
-        tab.mediaPaused = false
-        if (rTab) rTab.mediaPaused = false
+        tab.reactive.mediaPaused = tab.mediaPaused = false
         Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId, tab)
       }
     })
@@ -1532,11 +1584,7 @@ export async function playTabMedia(id?: ID): Promise<void> {
   else tab = Tabs.list.find(t => t.mediaPaused)
   if (!tab) return
 
-  const rTab = Tabs.reactive.byId[tab.id]
-  if (!rTab) return
-
-  tab.mediaPaused = false
-  rTab.mediaPaused = false
+  tab.reactive.mediaPaused = tab.mediaPaused = false
   Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId, tab)
 
   browser.tabs
@@ -1554,10 +1602,8 @@ export function resetPausedMediaState(panelId: ID): void {
   if (!Utils.isTabsPanel(panel)) return
 
   for (const tab of panel.tabs) {
-    const rTab = Tabs.reactive.byId[tab.id]
     if (tab && tab.mediaPaused) {
-      tab.mediaPaused = false
-      if (rTab) rTab.mediaPaused = false
+      tab.reactive.mediaPaused = tab.mediaPaused = false
       Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId, tab)
     }
   }
@@ -1582,16 +1628,13 @@ export async function pauseTabsMediaOfPanel(panelId: ID): Promise<void> {
       if (!tab.pinned) break
       if (tab.url.startsWith('ab')) continue
       if ((tab.audible || tab.mutedInfo?.muted) && tab.panelId === panel.id) {
-        const rTab = Tabs.reactive.byId[tab.id]
-        if (rTab) rTab.mediaPaused = true
-        tab.mediaPaused = true
+        tab.reactive.mediaPaused = tab.mediaPaused = true
         Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId, tab)
         browser.tabs
           .executeScript(tab.id, injectionConfig)
           .then(results => {
             if (results.every(result => result === false)) {
-              if (rTab) rTab.mediaPaused = false
-              tab.mediaPaused = false
+              tab.reactive.mediaPaused = tab.mediaPaused = false
               Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId, tab)
             }
           })
@@ -1604,17 +1647,14 @@ export async function pauseTabsMediaOfPanel(panelId: ID): Promise<void> {
 
   for (const tab of panel.tabs) {
     if (tab.url.startsWith('ab')) continue
-    const rTab = Tabs.reactive.byId[tab.id]
     if (tab.audible || tab.mutedInfo?.muted) {
-      if (rTab) rTab.mediaPaused = true
-      tab.mediaPaused = true
+      tab.reactive.mediaPaused = tab.mediaPaused = true
       Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId, tab)
       browser.tabs
         .executeScript(tab.id, injectionConfig)
         .then(results => {
           if (results.every(result => result === false)) {
-            if (rTab) rTab.mediaPaused = false
-            tab.mediaPaused = false
+            tab.reactive.mediaPaused = tab.mediaPaused = false
             Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId, tab)
           }
         })
@@ -1645,9 +1685,7 @@ export async function playTabsMediaOfPanel(panelId: ID): Promise<void> {
     for (const tab of Tabs.list) {
       if (!tab.pinned) break
       if (tab.mediaPaused && tab.panelId === panel.id) {
-        const rTab = Tabs.reactive.byId[tab.id]
-        if (rTab) rTab.mediaPaused = false
-        tab.mediaPaused = false
+        tab.reactive.mediaPaused = tab.mediaPaused = false
         Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId, tab)
         browser.tabs.executeScript(tab.id, injectionConfig).catch(err => {
           Logs.err('Tabs.playTabsMediaOfPanel: Cannot exec script (pinned):', err)
@@ -1657,10 +1695,8 @@ export async function playTabsMediaOfPanel(panelId: ID): Promise<void> {
   }
 
   for (const tab of panel.tabs) {
-    const rTab = Tabs.reactive.byId[tab.id]
     if (tab.mediaPaused) {
-      if (rTab) rTab.mediaPaused = false
-      tab.mediaPaused = false
+      tab.reactive.mediaPaused = tab.mediaPaused = false
       Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId, tab)
       browser.tabs.executeScript(tab.id, injectionConfig).catch(err => {
         Logs.err('Tabs.playTabsMediaOfPanel: Cannot exec script:', err)
@@ -1674,9 +1710,7 @@ function recheckPausedTabs(delay = 3500): void {
   recheckPausedTabsTimeout = setTimeout(() => {
     for (const tab of Tabs.list) {
       if (tab.mediaPaused && tab.audible) {
-        const rTab = Tabs.reactive.byId[tab.id]
-        if (rTab) rTab.mediaPaused = false
-        tab.mediaPaused = false
+        tab.reactive.mediaPaused = tab.mediaPaused = false
         Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId, tab)
       }
     }
@@ -1695,17 +1729,14 @@ export async function pauseAllAudibleTabsMedia(): Promise<void> {
   }
 
   for (const tab of Tabs.list) {
-    const rTab = Tabs.reactive.byId[tab.id]
-    if (rTab && tab.audible) {
-      rTab.mediaPaused = true
-      tab.mediaPaused = true
+    if (tab.audible) {
+      tab.reactive.mediaPaused = tab.mediaPaused = true
       Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId, tab)
       browser.tabs
         .executeScript(tab.id, injectionConfig)
         .then(results => {
           if (results.every(result => result === false)) {
-            rTab.mediaPaused = false
-            tab.mediaPaused = false
+            tab.reactive.mediaPaused = tab.mediaPaused = false
             Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId, tab)
           }
         })
@@ -1730,10 +1761,8 @@ export async function playAllPausedTabsMedia(): Promise<void> {
   }
 
   for (const tab of Tabs.list) {
-    const rTab = Tabs.reactive.byId[tab.id]
-    if (rTab && tab.mediaPaused) {
-      rTab.mediaPaused = false
-      tab.mediaPaused = false
+    if (tab.mediaPaused) {
+      tab.reactive.mediaPaused = tab.mediaPaused = false
       Sidebar.updateMediaStateOfPanelDebounced(100, tab.panelId, tab)
       browser.tabs.executeScript(tab.id, injectionConfig).catch(err => {
         Logs.err('Tabs.playAllPausedTabsMedia: Cannot exec script:', err)
@@ -1957,18 +1986,17 @@ export async function clearTabsCookies(tabIds: ID[]): Promise<void> {
 
   for (const tabId of tabIds) {
     const tab = Tabs.byId[tabId]
-    const rTab = Tabs.reactive.byId[tabId]
-    if (!rTab || !tab) continue
+    if (!tab) continue
 
-    rTab.status = TabStatus.Loading
+    tab.reactive.status = TabStatus.Loading
 
     const url = new URL(tab.url)
     const domain = url.hostname.split('.').slice(-2).join('.')
 
     if (!domain) {
-      rTab.status = TabStatus.Err
+      tab.reactive.status = TabStatus.Err
       setTimeout(() => {
-        rTab.status = Tabs.getStatus(tab)
+        tab.reactive.status = Tabs.getStatus(tab)
       }, 2000)
       continue
     }
@@ -1993,18 +2021,18 @@ export async function clearTabsCookies(tabIds: ID[]): Promise<void> {
     Promise.all(clearing)
       .then(() => {
         setTimeout(() => {
-          rTab.status = TabStatus.Ok
+          tab.reactive.status = TabStatus.Ok
         }, 250)
         setTimeout(() => {
-          rTab.status = Tabs.getStatus(tab)
+          tab.reactive.status = Tabs.getStatus(tab)
         }, 2000)
       })
       .catch(() => {
         setTimeout(() => {
-          rTab.status = TabStatus.Err
+          tab.reactive.status = TabStatus.Err
         }, 250)
         setTimeout(() => {
-          rTab.status = Tabs.getStatus(tab)
+          tab.reactive.status = Tabs.getStatus(tab)
         }, 2000)
       })
   }
@@ -2044,9 +2072,10 @@ export async function move(
       const winNativeTabs = await browser.tabs.query({ windowId: src.windowId })
       externalTabs = []
       for (const tabInfo of tabsInfo) {
-        const tab = winNativeTabs.find(t => t.id === tabInfo.id) as Tab
-        if (!tab) continue
-        Tabs.normalizeTab(tab, tabInfo.panelId ?? dst.panelId ?? NOID)
+        const nativeTab = winNativeTabs.find(t => t.id === tabInfo.id)
+        if (!nativeTab) continue
+        const tab = mutateNativeTabToSideberyTab(nativeTab)
+        tab.panelId = tabInfo.panelId ?? dst.panelId ?? NOID
         externalTabs.push(tab)
       }
     }
@@ -2134,9 +2163,7 @@ export async function move(
   // Unpin
   else if (pinnedTabs.length && !dst.pinned) {
     for (const tab of pinnedTabs) {
-      tab.pinned = false
-      const rTab = Tabs.reactive.byId[tab.id]
-      if (rTab) rTab.pinned = false
+      tab.reactive.pinned = tab.pinned = false
     }
     toUnpin = pinnedTabs
   }
@@ -2144,9 +2171,7 @@ export async function move(
   // Pin
   else if (normalTabs.length && dst.pinned) {
     for (const tab of normalTabs) {
-      tab.pinned = true
-      const rTab = Tabs.reactive.byId[tab.id]
-      if (rTab) rTab.pinned = true
+      tab.reactive.pinned = tab.pinned = true
     }
     toPin = normalTabs
   }
@@ -2325,8 +2350,7 @@ async function moveTabsToWin(
   const tabs = []
   for (const id of tabIds) {
     const tab = Tabs.byId[id]
-    const rTab = Tabs.reactive.byId[id]
-    if (!tab || !rTab) continue
+    if (!tab) continue
     tabs.push(Utils.cloneObject(tab))
     Tabs.detachingTabIds.push(tab.id)
 
@@ -2372,20 +2396,18 @@ export async function moveToThisWin(tabs: Tab[], dst?: DstPlaceInfo): Promise<bo
 
   for (let i = 0; i < tabs.length; i++) {
     const tab = tabs[i]
-    const rTab = Tabs.reactive.byId[tab.id]
     const parent = Tabs.byId[dst.parentId ?? tab.parentId ?? NOID]
     const index = (dst.index ?? 0) + i
     if (!!tab.pinned !== !!dst.pinned) {
       await browser.tabs.update(tab.id, { pinned: !!dst.pinned })
       tab.pinned = !!dst.pinned
-      if (rTab) rTab.pinned = tab.pinned
+      tab.reactive.pinned = tab.pinned
     }
     // Reset "hidden" flag b/c moving hidden tabs between windows makes them not hidden
     tab.hidden = false
     // Check parent tab
     if (tab.parentId === -1 || (tab.parentId !== -1 && !tabIds.includes(tab.parentId))) {
-      tab.lvl = parent ? parent.lvl + 1 : 0
-      if (rTab) rTab.lvl = tab.lvl
+      tab.reactive.lvl = tab.lvl = parent ? parent.lvl + 1 : 0
       tab.parentId = parent ? parent.id : -1
     }
     // Check child tabs
@@ -2500,10 +2522,10 @@ export function recalcBranchLen(id: ID): void {
   const branchLen = Tabs.getBranchLen(id)
   if (branchLen === undefined) return
 
-  const rTab = Tabs.reactive.byId[id]
-  if (!rTab) return
+  const tab = Tabs.byId[id]
+  if (!tab) return
 
-  rTab.branchLen = branchLen
+  tab.reactive.branchLen = branchLen
 }
 
 /**
@@ -2512,23 +2534,25 @@ export function recalcBranchLen(id: ID): void {
 export function foldTabsBranch(rootTabId: ID): void {
   const toHide: ID[] = []
   const rootTab = Tabs.byId[rootTabId]
-  const rRootTab = Tabs.reactive.byId[rootTabId]
-  if (!rootTab || !rRootTab) return
+  if (!rootTab) return
+
+  const panel = Sidebar.panelsById[rootTab.panelId]
+  if (!Utils.isTabsPanel(panel)) return
 
   const hideFolded = Settings.state.hideFoldedTabs
   const hideFoldedParent = hideFolded && Settings.state.hideFoldedParent === 'any'
   const hideFoldedGroup = hideFolded && Settings.state.hideFoldedParent === 'group'
 
   rootTab.folded = true
-  rRootTab.folded = true
+  rootTab.reactive.folded = true
+  rootTab.reactive.branchLen = Tabs.getBranchLen(rootTabId) ?? 0
 
   for (let i = rootTab.index + 1; i < Tabs.list.length; i++) {
     const t = Tabs.list[i]
     if (t.lvl <= rootTab.lvl) break
     if (t.active) browser.tabs.update(rootTabId, { active: true })
     if (!t.invisible) {
-      const rTab = Tabs.reactive.byId[t.id]
-      if (rTab) rTab.invisible = true
+      t.reactive.invisible = true
       t.invisible = true
       toHide.push(t.id)
     }
@@ -2569,7 +2593,6 @@ export function foldTabsBranch(rootTabId: ID): void {
 
   saveTabData(rootTabId)
   cacheTabsData()
-  recalcBranchLen(rootTabId)
 }
 
 /**
@@ -2601,16 +2624,12 @@ export function expTabsBranch(rootTabId: ID): void {
       autoFold.push(tab)
     }
     if (tab.id === rootTabId) {
-      const rTab = Tabs.reactive.byId[tab.id]
-      tab.folded = false
-      if (rTab) rTab.folded = false
+      tab.reactive.folded = tab.folded = false
     }
     if (tab.id !== rootTabId && tab.folded) preserve.push(tab.id)
     if (tab.parentId === rootTabId || toShow.includes(tab.parentId)) {
       if (tab.invisible && (tab.parentId === rootTabId || !preserve.includes(tab.parentId))) {
-        const rTab = Tabs.reactive.byId[tab.id]
-        if (rTab) rTab.invisible = false
-        tab.invisible = false
+        tab.reactive.invisible = tab.invisible = false
 
         // Don't show sub-parent tabs if they're folded
         const leaveHidden =
@@ -2746,9 +2765,7 @@ export function flattenTabs(tabIds: ID[]): void {
 
   if (!minLvlTab.parentId) return
   for (const tab of ttf) {
-    const rTab = Tabs.reactive.byId[tab.id]
-    if (rTab) rTab.lvl = minLvlTab.lvl
-    tab.lvl = minLvlTab.lvl
+    tab.reactive.lvl = tab.lvl = minLvlTab.lvl
     tab.parentId = minLvlTab.parentId
     if (tab.parentId === -1) browser.tabs.update(tab.id, { openerTabId: tab.id })
   }
@@ -2886,64 +2903,56 @@ export function updateTabsTree(startIndex = 0, endIndex = -1): void {
   // Reset parent-flags of the last tab
   if (Tabs.list[endIndex - 1]) {
     const tab = Tabs.list[endIndex - 1]
-    const rTab = Tabs.reactive.byId[tab.id]
-    if (tab && rTab) {
-      rTab.isParent = false
+    if (tab) {
+      tab.reactive.isParent = false
       tab.isParent = false
-      rTab.folded = false
+      tab.reactive.folded = false
       tab.folded = false
     }
   }
 
   let foldedBranchLenCount = 0
   let foldedBranchLvl = -1
-  let foldedBranchRoot: ReactiveTab | undefined
+  let foldedBranchRoot: Tab | undefined
 
   for (let prevTab, tab, i = startIndex; i < endIndex; i++) {
     tab = Tabs.list[i]
-    const rTab = Tabs.reactive.byId[tab.id]
-    if (!tab || !rTab) return Logs.err('Tabs.updateTabsTree: Cannot get tab')
+    if (!tab) return Logs.err('Tabs.updateTabsTree: Cannot get tab')
 
-    if (rTab && tab.pinned) {
+    if (tab.pinned) {
       tab.parentId = -1
-      rTab.lvl = 0
+      tab.reactive.lvl = 0
       tab.lvl = 0
-      rTab.invisible = false
+      tab.reactive.invisible = false
       tab.invisible = false
-      rTab.isParent = false
+      tab.reactive.isParent = false
       tab.isParent = false
-      rTab.folded = false
+      tab.reactive.folded = false
       tab.folded = false
       continue
     }
     prevTab = Tabs.list[i - 1]
 
     let parent = Tabs.byId[tab.parentId]
-    let rParent = Tabs.reactive.byId[tab.parentId]
     if (parent && (parent.pinned || parent.index >= tab.index)) {
       parent = undefined
-      rParent = undefined
     }
 
     // Parent is defined
-    if (parent && rParent && !parent.pinned && parent.panelId === tab.panelId) {
+    if (parent && !parent.pinned && parent.panelId === tab.panelId) {
       if (parent.lvl === maxLvl) {
-        parent.isParent = false
-        rParent.isParent = false
-        parent.folded = false
-        rParent.folded = false
+        parent.reactive.isParent = parent.isParent = false
+        parent.reactive.folded = parent.folded = false
         tab.parentId = parent.parentId
-        tab.lvl = parent.lvl
-        rTab.lvl = parent.lvl
-        tab.invisible = parent.invisible
-        rTab.invisible = parent.invisible
+        tab.reactive.lvl = tab.lvl = parent.lvl
+        tab.reactive.invisible = tab.invisible = parent.invisible
       } else {
         parent.isParent = true
-        rParent.isParent = true
+        parent.reactive.isParent = true
         tab.lvl = parent.lvl + 1
-        rTab.lvl = parent.lvl + 1
+        tab.reactive.lvl = parent.lvl + 1
         tab.invisible = parent.folded || parent.invisible
-        rTab.invisible = parent.folded || parent.invisible
+        tab.reactive.invisible = parent.folded || parent.invisible
       }
 
       // if prev tab is not parent and with smaller lvl
@@ -2953,40 +2962,34 @@ export function updateTabsTree(startIndex = 0, endIndex = -1): void {
           const backTab = Tabs.list[j]
           if (backTab.id === parent.id) break
           if (backTab.panelId !== tab.panelId) break
-          const rBackTab = Tabs.reactive.byId[backTab.id]
-          if (!rBackTab) {
-            Logs.warn('Tabs.updateTabsTree: Cannot get reactive tab')
-            break
-          }
           if (parent.lvl === maxLvl) {
             backTab.parentId = parent.parentId
             backTab.isParent = false
-            rBackTab.isParent = false
+            backTab.reactive.isParent = false
             backTab.folded = false
-            rBackTab.folded = false
+            backTab.reactive.folded = false
           } else {
             backTab.parentId = parent.id
           }
-          rBackTab.lvl = tab.lvl
+          backTab.reactive.lvl = tab.lvl
           backTab.lvl = tab.lvl
-          rBackTab.invisible = tab.invisible
+          backTab.reactive.invisible = tab.invisible
         }
       }
     } else {
       tab.parentId = -1
       tab.lvl = 0
-      rTab.lvl = 0
+      tab.reactive.lvl = 0
       tab.invisible = false
-      rTab.invisible = false
+      tab.reactive.invisible = false
     }
 
     // Reset parent-flags of prev tab if current tab have same lvl
     if (prevTab && prevTab.lvl >= tab.lvl) {
-      const rPrevTab = Tabs.reactive.byId[prevTab.id]
       prevTab.isParent = false
-      if (rPrevTab) rPrevTab.isParent = false
+      prevTab.reactive.isParent = false
       prevTab.folded = false
-      if (rPrevTab) rPrevTab.folded = false
+      prevTab.reactive.folded = false
     }
 
     // Update openerTabId
@@ -3006,7 +3009,7 @@ export function updateTabsTree(startIndex = 0, endIndex = -1): void {
     // Calc folded visible branch length
     if (foldedBranchLvl > -1) {
       if (tab.lvl <= foldedBranchLvl && foldedBranchRoot) {
-        foldedBranchRoot.branchLen = foldedBranchLenCount
+        foldedBranchRoot.reactive.branchLen = foldedBranchLenCount
         foldedBranchLvl = -1
         foldedBranchLenCount = 0
         foldedBranchRoot = undefined
@@ -3016,13 +3019,13 @@ export function updateTabsTree(startIndex = 0, endIndex = -1): void {
     }
     if (tab.folded && !tab.invisible && foldedBranchLvl === -1) {
       foldedBranchLvl = tab.lvl
-      foldedBranchRoot = rTab
+      foldedBranchRoot = tab
     }
   }
 
   // Calc last folded branch length
   if (foldedBranchLvl > -1 && foldedBranchRoot) {
-    foldedBranchRoot.branchLen = foldedBranchLenCount
+    foldedBranchRoot.reactive.branchLen = foldedBranchLenCount
   }
 }
 
@@ -3909,7 +3912,7 @@ export async function open(
   for (let item, i = 0; i < items.length; i++) {
     item = items[i]
     const groupCreationNeeded = item.title && !item.url
-    const parent = Tabs.reactive.byId[dst.parentId ?? item.parentId ?? NOID]
+    const parent = Tabs.byId[dst.parentId ?? item.parentId ?? NOID]
 
     // Use dst index
     if (dst.index !== undefined) {
@@ -3979,16 +3982,12 @@ export async function open(
 
     if (item.customTitle) {
       const newTab = Tabs.byId[tab.id]
-      const newRTab = Tabs.reactive.byId[tab.id]
-      if (newTab) newTab.customTitle = item.customTitle
-      if (newRTab) newRTab.customTitle = item.customTitle
+      if (newTab) newTab.reactive.customTitle = newTab.customTitle = item.customTitle
     }
 
     if (item.customColor) {
       const newTab = Tabs.byId[tab.id]
-      const newRTab = Tabs.reactive.byId[tab.id]
-      if (newTab) newTab.customColor = item.customColor
-      if (newRTab) newRTab.customColor = item.customColor
+      if (newTab) newTab.reactive.customColor = newTab.customColor = item.customColor
     }
   }
 
@@ -4127,7 +4126,7 @@ export async function copyUrls(ids: ID[]): Promise<void> {
 
   let urls = ''
   for (const id of ids) {
-    const tab = Tabs.reactive.byId[id]
+    const tab = Tabs.byId[id]
     if (tab) urls += '\n' + tab.url
   }
 
@@ -4143,7 +4142,7 @@ export async function copyTitles(ids: ID[]): Promise<void> {
 
   let titles = ''
   for (const id of ids) {
-    const tab = Tabs.reactive.byId[id]
+    const tab = Tabs.byId[id]
     if (tab) titles += '\n' + tab.title
   }
 
@@ -4182,12 +4181,12 @@ export async function reopenTabsInNewContainer(tabIds: ID[]): Promise<void> {
 }
 
 let flashAnimationTimeout: number | undefined
-export function triggerFlashAnimation(rTab: ReactiveTab): void {
+export function triggerFlashAnimation(tab: Tab): void {
   if (flashAnimationTimeout) return
-  rTab.flash = true
+  tab.reactive.flash = true
   flashAnimationTimeout = setTimeout(() => {
     flashAnimationTimeout = undefined
-    rTab.flash = false
+    tab.reactive.flash = false
   }, 1000)
 }
 
@@ -4269,12 +4268,10 @@ export function switchToRecentlyActiveTab(scope = SwitchingTabScope.global, dir:
 
 export function pringDbgInfo(reset = false): void {
   for (const tab of Tabs.list) {
-    const rTab = Tabs.reactive.byId[tab.id]
-    if (!rTab) continue
     if (reset) {
-      rTab.title = tab.title
+      tab.reactive.title = tab.title
     } else {
-      rTab.title = `${tab.id} i${tab.index} p${tab.parentId} l${tab.lvl} ${tab.title}`
+      tab.reactive.title = `${tab.id} i${tab.index} p${tab.parentId} l${tab.lvl} ${tab.title}`
     }
   }
 }
@@ -4288,10 +4285,9 @@ export function updateTooltip(tabId: ID) {
   updateTooltipBuf.delete(tabId)
 
   const tab = Tabs.byId[tabId]
-  const rTab = Tabs.reactive.byId[tabId]
-  if (!tab || !rTab) return
+  if (!tab) return
 
-  rTab.tooltip = getTooltip(tab)
+  tab.reactive.tooltip = getTooltip(tab)
 }
 function getTooltip(tab: Tab): string {
   let decodedUrl

@@ -357,7 +357,7 @@ export function search(value?: string): void {
 export function reset(panel?: Panel): void {
   if (Utils.isTabsPanel(panel)) {
     panel.filteredTabs = undefined
-    panel.reactive.filteredTabs = undefined
+    panel.reactive.filteredTabIds = undefined
     panel.reactive.filteredLen = undefined
   } else if (Utils.isBookmarksPanel(panel)) {
     panel.reactive.filteredBookmarks = undefined
