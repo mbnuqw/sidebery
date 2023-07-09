@@ -130,6 +130,8 @@ export function reset(): void {
 }
 
 function resetDragPointer(): void {
+  if (pointerEl) pointerEl.style.transform = 'translateY(0px)'
+
   DnD.reactive.pointerMode = DndPointerMode.None
   DnD.reactive.pointerExpanding = false
   DnD.reactive.pointerLvl = 0
