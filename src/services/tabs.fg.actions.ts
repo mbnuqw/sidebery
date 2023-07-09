@@ -2931,12 +2931,9 @@ export function updateTabsTree(startIndex = 0, endIndex = -1): void {
       tab.parentId = -1
       tab.reactive.lvl = 0
       tab.lvl = 0
-      tab.reactive.invisible = false
-      tab.invisible = false
-      tab.reactive.isParent = false
-      tab.isParent = false
-      tab.reactive.folded = false
-      tab.folded = false
+      tab.reactive.invisible = tab.invisible = false
+      tab.reactive.isParent = tab.isParent = false
+      tab.reactive.folded = tab.folded = false
       continue
     }
     prevTab = Tabs.list[i - 1]
@@ -2957,10 +2954,8 @@ export function updateTabsTree(startIndex = 0, endIndex = -1): void {
       } else {
         parent.isParent = true
         parent.reactive.isParent = true
-        tab.lvl = parent.lvl + 1
-        tab.reactive.lvl = parent.lvl + 1
-        tab.invisible = parent.folded || parent.invisible
-        tab.reactive.invisible = parent.folded || parent.invisible
+        tab.reactive.lvl = tab.lvl = parent.lvl + 1
+        tab.reactive.invisible = tab.invisible = parent.folded || parent.invisible
       }
 
       // if prev tab is not parent and with smaller lvl
