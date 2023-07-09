@@ -2545,8 +2545,8 @@ export function foldTabsBranch(rootTabId: ID): void {
 
   rootTab.folded = true
   rootTab.reactive.folded = true
-  rootTab.reactive.branchLen = Tabs.getBranchLen(rootTabId) ?? 0
 
+  let len = 0
   for (let i = rootTab.index + 1; i < Tabs.list.length; i++) {
     const t = Tabs.list[i]
     if (t.lvl <= rootTab.lvl) break
@@ -2556,7 +2556,11 @@ export function foldTabsBranch(rootTabId: ID): void {
       t.invisible = true
       toHide.push(t.id)
     }
+    len++
   }
+
+  rootTab.reactive.branchLen = len
+  Tabs.incrementScrollRetainer(panel, len)
 
   if (Settings.state.discardFolded) {
     if (Settings.state.discardFoldedDelay === 0) {
@@ -2610,8 +2614,13 @@ export function expTabsBranch(rootTabId: ID): void {
   const rootTab = Tabs.byId[rootTabId]
   if (!rootTab) return
 
+  const panel = Sidebar.panelsById[rootTab.panelId]
+  if (!Utils.isTabsPanel(panel)) return
+
   rootTab.lastAccessed = Date.now()
   if (rootTab.invisible) expTabsBranch(rootTab.parentId)
+  else Tabs.resetScrollRetainer(panel)
+
   for (const tab of Tabs.list) {
     if (tab.pinned || tab.panelId !== tab.panelId) continue
     if (
