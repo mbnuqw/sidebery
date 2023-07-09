@@ -36,10 +36,10 @@ const state = reactive({
 
 let boxHeight = 0
 let contentHeight = 0
-let preScroll = 0
+let _preScroll = 0
 
 onMounted(() => {
-  if (props.preScroll) preScroll = props.preScroll
+  if (props.preScroll) _preScroll = props.preScroll
 
   if (!scrollBoxEl.value || !scrollContentEl.value) {
     throw Logs.err('ScrollBox: No DOM elements registered')
@@ -71,10 +71,10 @@ function recalcScroll(progressBar?: boolean): void {
   if (!state.topOverflow && contentY > 3) state.topOverflow = true
   if (state.topOverflow && contentY < 4) state.topOverflow = false
 
-  if (!state.bottomOverflow && contentHeight - contentY - preScroll > boxHeight) {
+  if (!state.bottomOverflow && contentHeight - contentY - _preScroll > boxHeight) {
     state.bottomOverflow = true
   }
-  if (state.bottomOverflow && contentHeight - contentY - preScroll <= boxHeight) {
+  if (state.bottomOverflow && contentHeight - contentY - _preScroll <= boxHeight) {
     state.bottomOverflow = false
     emit('bottom')
   }
