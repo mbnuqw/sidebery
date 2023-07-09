@@ -150,7 +150,9 @@ function onMouseDown(e: MouseEvent): void {
 }
 
 function onRightMouseUp(e: MouseEvent): void {
+  if (Mouse.isTarget('tab.close')) return
   Mouse.resetTarget()
+
   if (Mouse.isLocked()) return Mouse.resetClickLock()
   if (Settings.state.tabsPanelRightClickAction !== 'menu') return
   if (Selection.isSet()) return
