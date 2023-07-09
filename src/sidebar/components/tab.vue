@@ -29,8 +29,7 @@
   @dblclick.prevent.stop="onDoubleClick")
   .dnd-layer(data-dnd-type="tab" :data-dnd-id="tab.id")
   .body
-    .color-layer(
-      v-if="tabColor" :style="{ '--tab-color': tabColor }")
+    .color-layer(v-if="tabColor" :style="{ '--tab-color': tabColor }")
     .flash-fx(v-if="tab.reactive.flash")
     .unread-mark(v-if="tab.reactive.unread")
     .fav(@dragstart.stop.prevent)
