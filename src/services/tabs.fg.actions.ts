@@ -2669,7 +2669,6 @@ export function expTabsBranch(rootTabId: ID): void {
 
   // Show the parent tab when expanding the group
   if (hideFolded && (hideFoldedParent || (hideFoldedGroup && rootTab.isGroup))) {
-    rootTab.invisible = false
     browser.tabs.show?.(rootTabId).catch(err => {
       Logs.err('Tabs.expTabsBranch: Cannot show parent tab:', err)
     })
