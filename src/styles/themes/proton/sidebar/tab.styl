@@ -113,6 +113,10 @@
   &[data-active="true"]
     z-index: 20
 
+.Tab.-hidden
+  opacity: 0
+  transform: translateY(-8px)
+
 // ---
 // -- Set outline for active colored tabs
 // -
@@ -646,25 +650,6 @@
     transform-origin: 0 0
     background-color: var(--frame-fg)
 
-
-// ---
-// -- Vue transitions
-// -
-#root .tab-leave-active
-  position: absolute
-  opacity: 0
-  z-index: 0
-  transform: translateY(-6px)
-#root .tab-enter-from
-  opacity: 0
-  transform: translateY(-8px)
-
-#root .tab-part-enter-active
-#root .tab-part-leave-active
-  transition: opacity var(--d-fast)
-#root .tab-part-leave-active
-#root .tab-part-enter-from
-  opacity: 0
 
 // ---
 // -- Keyframes

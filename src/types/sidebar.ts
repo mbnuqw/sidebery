@@ -234,13 +234,13 @@ export interface TabsPanel extends PanelCommonProps, TabsPanelConfig {
 export interface TabsPanelReactiveProps extends PanelCommonReactiveProps {
   tabIds: ID[]
   filteredTabIds?: ID[]
-
   pinnedTabIds: ID[]
   // visibleTabIds: ID[]
 
   updated: boolean
   selNewTab: boolean
-  scrollRetainer: number
+  scrollRetainerHeight: number
+  scrollRetainerDecrease: boolean
   empty: boolean
   allDiscarded: boolean
   newTabCtx: string

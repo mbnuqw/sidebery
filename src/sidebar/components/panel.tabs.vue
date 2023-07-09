@@ -10,23 +10,17 @@
   PinnedTabsBar(v-if="panel.reactive.pinnedTabIds.length" :panel="panel")
   ScrollBox(ref="scrollBox" :preScroll="PRE_SCROLL")
     DragAndDropPointer(:panelId="panel.id" :subPanel="false")
-    .container(v-if="Settings.state.animations")
-      TransitionGroup(name="tab" tag="div" type="transition" class="transition-box")
-        TabComponent(
-          v-for="id in visibleTabs"
-          :key="id"
-          :tabId="id")
-        NewTabBar(
-          v-if="Settings.state.showNewTabBtns && Settings.state.newTabBarPosition === 'after_tabs'"
-          :panel="panel")
-        .tab-space-filler(v-for="i in panel.reactive.scrollRetainer" :key="'tsf' + i")
-        .bottom-space(:key="-9999999")
-    .container(v-else)
-      TabComponent(v-for="id in visibleTabs" :key="id" :tabId="id")
+    AnimatedTabList(:panel="panel")
+      TabComponent(
+        v-for="id in visibleTabs"
+        :key="id"
+        :tabId="id")
       NewTabBar(
         v-if="Settings.state.showNewTabBtns && Settings.state.newTabBarPosition === 'after_tabs'"
         :panel="panel")
-      .tab-space-filler(v-for="i in panel.reactive.scrollRetainer" :key="'tsf' + i")
+      .tab-space-filler(
+        :style="{ '--filler-height': `${panel.reactive.scrollRetainerHeight}px` }"
+        :data-decrease="panel.reactive.scrollRetainerDecrease")
       .bottom-space(:key="-9999999")
 
   NewTabBar(
@@ -60,6 +54,7 @@ import TabComponent from './tab.vue'
 import PanelPlaceholder from './panel-placeholder.vue'
 import NewTabBar from './bar.new-tab.vue'
 import DragAndDropPointer from './dnd-pointer.vue'
+import AnimatedTabList from './animated-tab-list.vue'
 
 const props = defineProps<{ panel: TabsPanel }>()
 const scrollBox = ref<ScrollBoxComponent | null>(null)
@@ -198,7 +193,7 @@ function onDoubleClick(e: MouseEvent) {
 }
 
 const onWheel = Mouse.getWheelDebouncer(WheelDirection.Vertical, (e: WheelEvent) => {
-  if (Tabs.blockedScrollPosition) Tabs.resetScrollRetainer(props.panel)
+  if (e.deltaY !== 0 && Tabs.blockedScrollPosition) Tabs.resetScrollRetainer(props.panel)
   if (Sidebar.scrollAreaRightX && e.clientX > Sidebar.scrollAreaRightX) return
   if (Sidebar.scrollAreaLeftX && e.clientX < Sidebar.scrollAreaLeftX) return
   if (Selection.isSet()) return

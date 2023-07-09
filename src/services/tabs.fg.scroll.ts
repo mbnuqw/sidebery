@@ -44,8 +44,11 @@ export function scrollToTab(id: ID): void {
 export const scrollToTabDebounced = Utils.debounce(scrollToTab)
 
 export function incrementScrollRetainer(panel: TabsPanel, count: number): void {
+  if (panel.scrollEl && panel.scrollEl.scrollTop === 0) return
+
+  const tabFullHeight = Sidebar.tabHeight + Sidebar.tabMargin
   panel.scrollRetainer += count
-  panel.reactive.scrollRetainer = panel.scrollRetainer
+  panel.reactive.scrollRetainerHeight = panel.scrollRetainer * tabFullHeight
   Tabs.blockedScrollPosition = true
 }
 
@@ -54,13 +57,27 @@ export function decrementScrollRetainer(panel: TabsPanel): void {
     Tabs.blockedScrollPosition = false
     return
   }
+
+  const tabFullHeight = Sidebar.tabHeight + Sidebar.tabMargin
   panel.scrollRetainer--
-  panel.reactive.scrollRetainer = panel.scrollRetainer
+  panel.reactive.scrollRetainerHeight = panel.scrollRetainer * tabFullHeight
   Tabs.blockedScrollPosition = true
 }
 
-export function resetScrollRetainer(panel: TabsPanel): void {
+export function resetScrollRetainer(panel: TabsPanel) {
+  if (panel.scrollRetainer > 0) animateRetainerDecrement(panel)
+
+  const tabFullHeight = Sidebar.tabHeight + Sidebar.tabMargin
   panel.scrollRetainer = 0
-  panel.reactive.scrollRetainer = panel.scrollRetainer
+  panel.reactive.scrollRetainerHeight = panel.scrollRetainer * tabFullHeight
   Tabs.blockedScrollPosition = false
+}
+
+let animateRetainerDecrementTimeout: number | undefined
+function animateRetainerDecrement(panel: TabsPanel) {
+  panel.reactive.scrollRetainerDecrease = true
+  clearTimeout(animateRetainerDecrementTimeout)
+  animateRetainerDecrementTimeout = setTimeout(() => {
+    panel.reactive.scrollRetainerDecrease = false
+  }, 300)
 }
