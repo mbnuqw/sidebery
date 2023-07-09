@@ -300,6 +300,7 @@ function onTabCreated(nativeTab: NativeTab, attached?: boolean): void {
   Tabs.list.splice(index, 0, tab)
   Tabs.reactivateTab(tab)
   Sidebar.recalcTabsPanels()
+  Sidebar.addToVisibleTabs(panel.id, tab.id)
   Tabs.updateUrlCounter(tab.url, 1)
 
   // Update tree
@@ -674,6 +675,7 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
         Tabs.list.splice(startIndex - 1, 0, tab)
         Tabs.updateTabsIndexes()
         Sidebar.recalcTabsPanels()
+        Sidebar.recalcVisibleTabs(tab.panelId)
 
         const relGroupTab = Tabs.byId[tab.relGroupId]
         if (relGroupTab) {
@@ -707,6 +709,7 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
 
     Sidebar.recalcTabsPanels()
     Tabs.updateTabsTree()
+    Sidebar.recalcVisibleTabs(panel.id)
 
     if (Utils.isTabsPanel(panel) && !panel.reactive.len) {
       if (panel.noEmpty) {
@@ -959,6 +962,8 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
     return
   }
 
+  Sidebar.removeFromVisibleTabs(panel.id, tabId)
+
   // No-empty
   if (!tab.pinned && panel.noEmpty && !panel.reactive.len) {
     Tabs.createTabInPanel(panel, { active: false })
@@ -1073,7 +1078,9 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
     Tabs.saveTabData(id)
     if (!mvLen) Tabs.cacheTabsData()
     tab.dstPanelId = NOID
+    // TODO: if tab is already placed, maybe I can skip recalcing this shit?
     Sidebar.recalcTabsPanels()
+    // Sidebar.recalcVisibleTabs(tab.panelId)
     if (tab.active) Tabs.updateSuccessionDebounced(0)
     return
   }
@@ -1101,9 +1108,11 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
   Tabs.updateTabsIndexes(minIndex, maxIndex + 1)
 
   // Update tab's panel id
+  let srcPanel
+  let dstPanel
   if (!movedTab.pinned) {
-    const srcPanel = Sidebar.panelsById[movedTab.panelId]
-    let dstPanel = Sidebar.panelsById[movedTab.dstPanelId]
+    srcPanel = Sidebar.panelsById[movedTab.panelId]
+    dstPanel = Sidebar.panelsById[movedTab.dstPanelId]
     movedTab.dstPanelId = NOID
 
     const outOfPanel =
@@ -1132,6 +1141,9 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
       Tabs.setBranchColor(tab.id)
     }
   }
+
+  if (srcPanel) Sidebar.recalcVisibleTabs(srcPanel.id)
+  if (dstPanel) Sidebar.recalcVisibleTabs(dstPanel.id)
 
   if (movedTab.panelId !== Sidebar.reactive.activePanelId && movedTab.active) {
     Sidebar.activatePanel(movedTab.panelId)

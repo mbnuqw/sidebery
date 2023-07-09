@@ -12,7 +12,7 @@
     DragAndDropPointer(:panelId="panel.id" :subPanel="false")
     AnimatedTabList(:panel="panel")
       TabComponent(
-        v-for="id in visibleTabs"
+        v-for="id in panel.reactive.visibleTabIds"
         :key="id"
         :tabId="id")
       NewTabBar(
@@ -30,12 +30,12 @@
   .bottom-bar-space(v-if="Settings.state.subPanelRecentlyClosedBar || Settings.state.subPanelBookmarks")
 
   PanelPlaceholder(
-    :isMsg="Search.reactive.rawValue && !panel.reactive.filteredLen"
+    :isMsg="!!Search.reactive.rawValue && panel.reactive.filteredLen === 0"
     :msg="translate('panel.nothing_found')")
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { translate } from 'src/dict'
 import { DropType, MenuType, ScrollBoxComponent, TabsPanel } from 'src/types'
 import { WheelDirection } from 'src/types'
@@ -59,16 +59,6 @@ import AnimatedTabList from './animated-tab-list.vue'
 const props = defineProps<{ panel: TabsPanel }>()
 const scrollBox = ref<ScrollBoxComponent | null>(null)
 let scrollBoxEl: HTMLElement | null = null
-
-const visibleTabs = computed<ID[]>(() => {
-  if (props.panel.reactive.filteredTabIds) {
-    return props.panel.reactive.filteredTabIds
-  }
-  return props.panel.reactive.tabIds.filter(id => {
-    const tab = Tabs.byId[id]
-    return tab && !tab.reactive.invisible
-  })
-})
 
 onMounted(() => {
   if (scrollBox.value) {

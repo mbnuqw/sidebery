@@ -190,7 +190,6 @@ export async function load(): Promise<void> {
       panel.ready = true
       if (panel.tabs.length) {
         Sidebar.updateMediaStateOfPanel(panel.id)
-        // Sidebar.recalcVisibleTabs(panel.id)
       }
     }
   }
@@ -233,7 +232,7 @@ export function unload(): void {
     if (Utils.isTabsPanel(panel)) {
       panel.tabs = []
       panel.pinnedTabs = []
-      panel.reactive.tabIds = []
+      panel.reactive.visibleTabIds = []
       panel.reactive.pinnedTabIds = []
       panel.reactive.len = 0
       panel.reactive.empty = true
@@ -295,6 +294,7 @@ async function restoreTabsState(): Promise<void> {
   Tabs.list = tabs
   Sidebar.recalcTabsPanels()
   if (Settings.state.tabsTree) updateTabsTree()
+  Sidebar.recalcVisibleTabs()
 
   const activeTab = tabs.find(t => t.active)
   if (activeTab) {
@@ -673,6 +673,7 @@ export function reinitTabs(delay = 500): void {
     Tabs.byId = normTabsMap
     Sidebar.recalcTabsPanels(true)
     updateTabsTree()
+    Sidebar.recalcVisibleTabs()
 
     Tabs.tabsReinitializing = false
     Tabs.normTabsMoving = false
@@ -1024,6 +1025,8 @@ export async function removeTabs(tabIds: ID[], silent?: boolean): Promise<void> 
     t.reactive.invisible = true
     if (t.active) activeTab = t
   })
+  if (tabs.length === 1) Sidebar.removeFromVisibleTabs(tabs[0].panelId, tabs[0].id)
+  else Sidebar.recalcVisibleTabs(tabs[0]?.panelId ?? NOID)
   const tabsInfo = Tabs.getTabsInfo(toRemove, true)
   if (Tabs.removingTabs && Tabs.removingTabs.length) {
     Tabs.removingTabs = [...Tabs.removingTabs, ...toRemove]
@@ -1147,7 +1150,12 @@ export function checkRemovedTabs(delay = 750): void {
   clearTimeout(checkRemovedTabsTimeout)
   checkRemovedTabsTimeout = setTimeout(() => {
     if (!Tabs.removingTabs || !Tabs.removingTabs.length) return
+    const panelIds = new Set<ID>()
+
     for (const tabId of Tabs.removingTabs) {
+      const t = Tabs.byId[tabId]
+      if (t) panelIds.add(t.panelId)
+
       browser.tabs
         .get(tabId)
         .then(() => {
@@ -1155,10 +1163,8 @@ export function checkRemovedTabs(delay = 750): void {
           if (tab) {
             const parent = Tabs.byId[tab.parentId]
 
-            tab.lvl = parent ? parent.lvl + 1 : 0
-            tab.invisible = false
-            tab.reactive.lvl = tab.lvl
-            tab.reactive.invisible = false
+            tab.reactive.lvl = tab.lvl = parent ? parent.lvl + 1 : 0
+            tab.reactive.invisible = tab.invisible = false
 
             const rmIndex = Tabs.removingTabs.indexOf(tab.id)
             if (rmIndex !== -1) Tabs.removingTabs.splice(rmIndex, 1)
@@ -1167,6 +1173,10 @@ export function checkRemovedTabs(delay = 750): void {
         .catch(() => {
           // Tab already removed
         })
+    }
+
+    for (const panelId of panelIds) {
+      Sidebar.recalcVisibleTabs(panelId)
     }
   }, delay)
 }
@@ -2201,6 +2211,7 @@ export async function move(
   let isActive = false
   let isMediaActive = false
   let mediaPrevPanelId
+  let srcPanelId
   for (const tab of tabs) {
     // Cut tab from old index in sidebery list
     const index = Tabs.list.indexOf(tab, prevIndex)
@@ -2218,6 +2229,7 @@ export async function move(
     // Update panelId
     if (dst.panelId !== undefined && tab.panelId !== dst.panelId) {
       if (!panelIsChanged) panelIsChanged = true
+      srcPanelId = tab.panelId
       if (!isMediaActive && (tab.audible || tab.mutedInfo?.muted || tab.mediaPaused)) {
         isMediaActive = true
         mediaPrevPanelId = tab.panelId
@@ -2247,6 +2259,8 @@ export async function move(
   Tabs.updateTabsIndexes()
   Tabs.updateTabsTree()
   Sidebar.recalcTabsPanels()
+  if (srcPanelId) Sidebar.recalcVisibleTabs(srcPanelId)
+  if (dst.panelId) Sidebar.recalcVisibleTabs(dst.panelId)
 
   // Update media state of panels
   if (isMediaActive && mediaPrevPanelId && dst.panelId) {
@@ -2552,12 +2566,13 @@ export function foldTabsBranch(rootTabId: ID): void {
     if (t.lvl <= rootTab.lvl) break
     if (t.active) browser.tabs.update(rootTabId, { active: true })
     if (!t.invisible) {
-      t.reactive.invisible = true
-      t.invisible = true
+      t.reactive.invisible = t.invisible = true
       toHide.push(t.id)
     }
     len++
   }
+
+  Sidebar.recalcVisibleTabs(rootTab.panelId)
 
   rootTab.reactive.branchLen = len
   Tabs.incrementScrollRetainer(panel, len)
@@ -2648,6 +2663,8 @@ export function expTabsBranch(rootTabId: ID): void {
       }
     }
   }
+
+  if (!rootTab.invisible) Sidebar.recalcVisibleTabs(rootTab.panelId)
 
   // Auto fold
   if (Settings.state.autoFoldTabs) {

@@ -232,10 +232,8 @@ export interface TabsPanel extends PanelCommonProps, TabsPanelConfig {
 }
 
 export interface TabsPanelReactiveProps extends PanelCommonReactiveProps {
-  tabIds: ID[]
-  filteredTabIds?: ID[]
+  visibleTabIds: ID[]
   pinnedTabIds: ID[]
-  // visibleTabIds: ID[]
 
   updated: boolean
   selNewTab: boolean

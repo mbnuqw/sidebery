@@ -41,12 +41,12 @@ export function onTabsSearch(activePanel: Panel): void {
         }
       }
       activePanel.filteredTabs = filtered.concat(filteredInvisible)
-      activePanel.reactive.filteredTabIds = filteredIds.concat(filteredInvisibleIds)
       activePanel.reactive.filteredLen = activePanel.filteredTabs.length
+      activePanel.reactive.visibleTabIds = filteredIds.concat(filteredInvisibleIds)
     } else {
       activePanel.filteredTabs = undefined
-      activePanel.reactive.filteredTabIds = undefined
       activePanel.reactive.filteredLen = undefined
+      Sidebar.recalcVisibleTabs(activePanel.id)
     }
 
     // Search start
@@ -145,8 +145,8 @@ function findInAnotherPanel(): void {
   // panel.filteredLen = panel.filteredTabs.length
 
   panel.filteredTabs = undefined
-  panel.reactive.filteredTabIds = undefined
   panel.reactive.filteredLen = undefined
 
+  Sidebar.recalcVisibleTabs(panel.id)
   Sidebar.activatePanel(firstMatch.panelId)
 }

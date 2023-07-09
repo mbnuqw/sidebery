@@ -162,10 +162,12 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
       tab.parentId = -1
       tab.reactive.lvl = tab.lvl = 0
     }
+    Sidebar.recalcVisibleTabs()
   }
 
   if (updateTree && Sidebar.hasTabs) {
     Tabs.updateTabsTree()
+    Sidebar.recalcVisibleTabs()
   }
 
   if ((hideInactTabs || hideFoldedTabs || hideFoldedParent) && Sidebar.hasTabs) {

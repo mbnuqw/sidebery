@@ -333,7 +333,6 @@ export function recalcTabsPanels(reset?: boolean): void {
     if (!same || tabsCount !== tabPanelIndex) {
       tabsCount = panelTabs.length
       panel.tabs = panelTabs
-      panel.reactive.tabIds = panelTabIds
     }
 
     if (tabsCount) {
@@ -366,6 +365,50 @@ export function recalcTabsPanels(reset?: boolean): void {
     Tabs.pinned = pinnedTabs
     Tabs.reactive.pinnedIds = pinnedTabIds
   }
+}
+
+export function recalcVisibleTabs(panelId?: ID) {
+  if (panelId === undefined) {
+    for (const panel of Sidebar.panels) {
+      if (!Utils.isTabsPanel(panel)) continue
+      recalcVisibleTabsInPanel(panel.id)
+    }
+  } else {
+    recalcVisibleTabsInPanel(panelId)
+  }
+}
+
+function recalcVisibleTabsInPanel(panelId: ID) {
+  const panel = Sidebar.panelsById[panelId]
+  if (!Utils.isTabsPanel(panel)) return
+
+  if (panel.filteredTabs) panel.reactive.visibleTabIds = panel.filteredTabs.map(t => t.id)
+  else {
+    const visibleTabIds = []
+    for (const tab of panel.tabs) {
+      if (!tab.invisible) visibleTabIds.push(tab.id)
+    }
+    panel.reactive.visibleTabIds = visibleTabIds
+  }
+}
+
+export function addToVisibleTabs(panelId: ID, tabId: ID) {
+  const panel = Sidebar.panelsById[panelId]
+  if (!Utils.isTabsPanel(panel)) return
+
+  const index = panel.tabs.findIndex(t => t.id === tabId)
+  if (index === -1) return recalcVisibleTabs(panelId)
+
+  panel.reactive.visibleTabIds.splice(index, 0, tabId)
+}
+
+export function removeFromVisibleTabs(panelId: ID, tabId: ID) {
+  const panel = Sidebar.panelsById[panelId]
+  if (!Utils.isTabsPanel(panel)) return
+
+  const visibleTabIds = panel.reactive.visibleTabIds
+  const index = visibleTabIds.indexOf(tabId)
+  if (index !== -1) visibleTabIds.splice(index, 1)
 }
 
 let checkDiscardedTabsInPanelTimeout: number | undefined
@@ -980,6 +1023,7 @@ async function updateSidebar(newConfig?: SidebarConfig): Promise<void> {
     }
 
     recalcTabsPanels()
+    recalcVisibleTabs()
 
     if (tabsSaveNeeded) {
       Tabs.list.forEach(t => Tabs.saveTabData(t.id))
@@ -1405,7 +1449,7 @@ export async function askHowRemoveTabsPanel(panelId: ID): Promise<string | null>
   return Popups.ask(conf)
 }
 
-function attachPanelTabsToNeighbourPanel(panel: TabsPanel): void {
+function attachPanelTabsToNeighbourPanel(panel: TabsPanel) {
   const index = Sidebar.reactive.nav.indexOf(panel.id)
   const firstPanelId = Sidebar.reactive.nav.find(id => {
     return Utils.isTabsPanel(Sidebar.panelsById[id]) && id !== panel.id
@@ -1425,7 +1469,7 @@ function attachPanelTabsToNeighbourPanel(panel: TabsPanel): void {
     }
   }
 
-  // TODO: Recalc tabs panels maybe?
+  return nearPanelId
 }
 
 export function hidePanel(panelId: ID) {
@@ -1489,6 +1533,7 @@ export async function removePanel(panelId: ID, conf?: RemovingPanelConf): Promis
 
   const index = Sidebar.reactive.nav.indexOf(panelId)
   let tabsSaveNeeded = false
+  let newPanelForTabs
 
   if (Utils.isTabsPanel(panel)) {
     if (panel.tabs.length) {
@@ -1496,7 +1541,7 @@ export async function removePanel(panelId: ID, conf?: RemovingPanelConf): Promis
 
       if (!conf.tabsMode) conf.tabsMode = await askHowRemoveTabsPanel(panel.id)
       if (conf.tabsMode === 'attach') {
-        attachPanelTabsToNeighbourPanel(panel)
+        newPanelForTabs = attachPanelTabsToNeighbourPanel(panel)
       } else if (conf.tabsMode === 'save') {
         const tabsIds = panel.tabs.map(t => t.id)
         await Sidebar.bookmarkTabsPanel(panel.id, true, true)
@@ -1538,7 +1583,10 @@ export async function removePanel(panelId: ID, conf?: RemovingPanelConf): Promis
 
   delete Sidebar.panelsById[panelId]
   recalcPanels()
-  if (Utils.isTabsPanel(panel)) recalcTabsPanels()
+  if (Utils.isTabsPanel(panel)) {
+    recalcTabsPanels()
+    if (newPanelForTabs) recalcVisibleTabs(newPanelForTabs)
+  }
 
   if (Utils.isTabsPanel(panel) && !Sidebar.hasTabs) Tabs.unload()
   if (Utils.isBookmarksPanel(panel) && !Sidebar.hasBookmarks) Bookmarks.unload()
