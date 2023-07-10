@@ -4270,6 +4270,15 @@ export function switchToRecentlyActiveTab(scope = SwitchingTabScope.global, dir:
     if (targetIdIndex !== undefined) history.actTabOffset = targetIdIndex
     Tabs.skipActiveTabsHistoryCollecting()
     if (tabId !== undefined) {
+      const tab = Tabs.byId[tabId]
+      if (
+        tab &&
+        (!tab.pinned || Settings.state.pinnedTabsPosition === 'panel') &&
+        tab.panelId !== Sidebar.reactive.activePanelId
+      ) {
+        Sidebar.activatePanel(tab.panelId)
+      }
+
       browser.tabs.update(tabId, { active: true }).catch(err => {
         Logs.err('Tabs.switchToRecentlyActiveTab: Cannot activate tab:', err)
       })
