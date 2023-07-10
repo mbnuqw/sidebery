@@ -12,7 +12,6 @@ const COPY = {
     path: `${ADDON_PATH}/_locales/`,
     handler: handleLocales,
   },
-  './src/assets/bg': `${ADDON_PATH}/assets/bg`,
   './src/assets/logo-native-dark.svg': `${ADDON_PATH}/assets/`,
   './src/assets/logo-native-light.svg': `${ADDON_PATH}/assets/`,
   './src/assets/logo-native.svg': `${ADDON_PATH}/assets/`,
