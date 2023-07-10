@@ -358,7 +358,12 @@ function onKeySelect(dir: number): void {
 
     if (Settings.state.selectActiveTabFirst && !selIsSet) {
       target = Tabs.byId[Tabs.activeId]
-      if (!target || target.panelId !== activePanel.id) {
+      const wrongPanel =
+        target &&
+        (!target.pinned || Settings.state.pinnedTabsPosition === 'panel') &&
+        target.panelId !== activePanel.id
+
+      if (!target || wrongPanel) {
         target = dir > 0 ? tabs[0] : tabs[tabs.length - 1]
       }
     } else {
