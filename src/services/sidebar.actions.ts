@@ -1144,7 +1144,11 @@ export function switchToPanel(
     !withoutTabActivation &&
     !Search.reactive.value
   ) {
-    Tabs.activateLastActiveTabOf(id)
+    // Do not switch tab if the current active tab is globally pinned
+    const actTab = Tabs.byId[Tabs.activeId]
+    if (actTab && (!actTab.pinned || Settings.state.pinnedTabsPosition === 'panel')) {
+      Tabs.activateLastActiveTabOf(id)
+    }
   }
 
   if (DnD.reactive.isStarted) updatePanelBoundsDebounced()

@@ -386,7 +386,6 @@ function onKeySelect(dir: number): void {
     Sidebar.updateBounds()
     if (!activePanel?.bounds?.length) return
 
-    const actPanelIsTabs = Utils.isTabsPanel(activePanel)
     const selIsSet = Selection.isSet()
     const selId = Selection.getFirst()
 
