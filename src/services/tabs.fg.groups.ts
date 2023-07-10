@@ -185,6 +185,7 @@ function getPinInfo(groupUrl: string): GroupPin | undefined {
  */
 export async function getGroupInfo(groupTabId: ID): Promise<GroupInfo | null> {
   if (!Tabs.ready) await Tabs.waitForTabsReady()
+  if (!Favicons.ready) await Favicons.waitForFaviconsReady()
 
   const groupTab = Tabs.byId[groupTabId]
   if (!groupTab) {

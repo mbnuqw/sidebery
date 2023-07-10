@@ -72,6 +72,19 @@ export async function loadFavicons(): Promise<void> {
       if (favicon) tab.reactive.favIconUrl = tab.favIconUrl = favicon
     }
   }
+
+  Favicons.ready = true
+  waitingForFavicons.forEach(cb => cb())
+  waitingForFavicons = []
+}
+
+let waitingForFavicons: (() => void)[] = []
+export async function waitForFaviconsReady(): Promise<void> {
+  if (Favicons.ready) return
+
+  return new Promise(ok => {
+    waitingForFavicons.push(ok)
+  })
 }
 
 function limitFavicons(): number {

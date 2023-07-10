@@ -7,6 +7,7 @@ export interface FaviconsState {
 
 export const Favicons = {
   reactive: { list: [], domains: {} } as FaviconsState,
+  ready: false,
 
   ...FaviconsActions,
 }
