@@ -2634,8 +2634,8 @@ export function expTabsBranch(rootTabId: ID): void {
 
   rootTab.lastAccessed = Date.now()
   if (rootTab.invisible) expTabsBranch(rootTab.parentId)
-  else Tabs.resetScrollRetainer(panel)
 
+  let count = 0
   for (const tab of Tabs.list) {
     if (tab.pinned || tab.panelId !== tab.panelId) continue
     if (
@@ -2654,6 +2654,7 @@ export function expTabsBranch(rootTabId: ID): void {
     if (tab.parentId === rootTabId || toShow.includes(tab.parentId)) {
       if (tab.invisible && (tab.parentId === rootTabId || !preserve.includes(tab.parentId))) {
         tab.reactive.invisible = tab.invisible = false
+        count++
 
         // Don't show sub-parent tabs if they're folded
         const leaveHidden =
@@ -2665,6 +2666,7 @@ export function expTabsBranch(rootTabId: ID): void {
   }
 
   if (!rootTab.invisible) Sidebar.recalcVisibleTabs(rootTab.panelId)
+  if (!rootTab.invisible && count) Tabs.decrementScrollRetainer(panel, count)
 
   // Auto fold
   if (Settings.state.autoFoldTabs) {

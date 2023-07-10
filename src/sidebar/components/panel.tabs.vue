@@ -18,9 +18,7 @@
       NewTabBar(
         v-if="Settings.state.showNewTabBtns && Settings.state.newTabBarPosition === 'after_tabs'"
         :panel="panel")
-      .tab-space-filler(
-        :style="{ '--filler-height': `${panel.reactive.scrollRetainerHeight}px` }"
-        :data-decrease="panel.reactive.scrollRetainerDecrease")
+      .tab-space-filler(:style="{ '--filler-height': `${panel.reactive.scrollRetainerHeight}px` }")
       .bottom-space(:key="-9999999")
 
   NewTabBar(

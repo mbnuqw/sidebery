@@ -13,9 +13,6 @@
   position: relative
   height: var(--filler-height)
   z-index: 10
-  transition: transform var(--d-fast)
-  &[data-decrease="true"]
-    transition: transform var(--d-fast), height var(--d-fast)
 
 // Extra space at the bottom
 .TabsPanel .bottom-space
@@ -76,9 +73,6 @@
   z-index: 1000
   &:before
     box-shadow: 0 -10px 12px -10px #00000064, 0 -1px 0 0 #00000008
-.ScrollBox .bottom-shadow[data-show="true"] + .scroll-container .tab-space-filler
-  transition: transform var(--d-fast), opacity var(--d-fast), height var(--d-fast)
-  z-index: 1000
 .ScrollBox .bottom-shadow[data-show="true"] + .scroll-container .bottom-space
   transition: transform var(--d-fast), opacity var(--d-fast)
   z-index: 1000

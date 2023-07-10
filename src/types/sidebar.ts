@@ -238,7 +238,6 @@ export interface TabsPanelReactiveProps extends PanelCommonReactiveProps {
   updated: boolean
   selNewTab: boolean
   scrollRetainerHeight: number
-  scrollRetainerDecrease: boolean
   empty: boolean
   allDiscarded: boolean
   newTabCtx: string
