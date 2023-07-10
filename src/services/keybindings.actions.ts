@@ -342,36 +342,67 @@ function onKeySelect(dir: number): void {
     return
   }
 
-  Sidebar.updateBounds()
   const activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
-  if (!activePanel?.bounds?.length) return
 
-  const actPanelIsTabs = Utils.isTabsPanel(activePanel)
-  const selIsSet = Selection.isSet()
-  const selId = Selection.getFirst()
+  if (Utils.isTabsPanel(activePanel)) {
+    let tabs
+    if (Settings.state.pinnedTabsPosition === 'panel') {
+      tabs = [...activePanel.pinnedTabs, ...activePanel.tabs]
+    } else {
+      tabs = [...Tabs.pinned, ...activePanel.tabs]
+    }
+    if (!tabs.length) return
 
-  let selIndex = -1
-  if (selIsSet) {
-    selIndex = activePanel.bounds.findIndex(s => s.id === selId)
-  } else if (actPanelIsTabs) {
-    selIndex = activePanel.bounds.findIndex(s => Tabs.byId[s.id]?.active)
-    if (Settings.state.selectActiveTabFirst && selIndex !== -1) selIndex -= dir
-  }
-  if (selIndex === -1 && dir < 0) selIndex = activePanel.bounds.length
+    const selIsSet = Selection.isSet()
+    let target: Tab | undefined
 
-  const target = activePanel.bounds[selIndex + dir]
-  if (target) {
+    if (Settings.state.selectActiveTabFirst && !selIsSet) {
+      target = Tabs.byId[Tabs.activeId]
+      if (!target || target.panelId !== activePanel.id) {
+        target = dir > 0 ? tabs[0] : tabs[tabs.length - 1]
+      }
+    } else {
+      let afterSel = false
+      const tabFinder = (tab: Tab) => {
+        if (tab.invisible) return false
+        if (afterSel) return true
+        if ((selIsSet && tab.sel) || (!selIsSet && tab.active)) afterSel = true
+      }
+      target = dir > 0 ? tabs.find(tabFinder) : tabs.findLast(tabFinder)
+    }
+
+    if (!target) return
+
     Selection.resetSelection()
-    if (target.type === ItemBoundsType.Header) Selection.select(target.id, SelectionType.Header)
-    else Selection.select(target.id)
-  }
+    Selection.selectTab(target.id)
 
-  // Update scroll position
-  if (target && activePanel.scrollEl) {
-    const h = activePanel.scrollEl.offsetHeight ?? 0
-    const s = activePanel.scrollEl.scrollTop ?? 0
-    if (target.start < s + 64) Sidebar.scrollActivePanel(target.start - 64)
-    if (target.end > h + s - 64) Sidebar.scrollActivePanel(target.end - h + 64)
+    Tabs.scrollToTab(target.id, true)
+  } else {
+    Sidebar.updateBounds()
+    if (!activePanel?.bounds?.length) return
+
+    const actPanelIsTabs = Utils.isTabsPanel(activePanel)
+    const selIsSet = Selection.isSet()
+    const selId = Selection.getFirst()
+
+    let selIndex = -1
+    if (selIsSet) selIndex = activePanel.bounds.findIndex(s => s.id === selId)
+    if (selIndex === -1 && dir < 0) selIndex = activePanel.bounds.length
+
+    const target = activePanel.bounds[selIndex + dir]
+    if (target) {
+      Selection.resetSelection()
+      if (target.type === ItemBoundsType.Header) Selection.select(target.id, SelectionType.Header)
+      else Selection.select(target.id)
+    }
+
+    // Update scroll position
+    if (target && activePanel.scrollEl) {
+      const h = activePanel.scrollEl.offsetHeight ?? 0
+      const s = activePanel.scrollEl.scrollTop ?? 0
+      if (target.start < s + 64) Sidebar.scrollActivePanel(target.start - 64)
+      if (target.end > h + s - 64) Sidebar.scrollActivePanel(target.end - h + 64)
+    }
   }
 }
 
