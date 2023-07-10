@@ -429,7 +429,7 @@ function onTabCreated(nativeTab: NativeTab, attached?: boolean): void {
     !tab.invisible &&
     tab.panelId === Sidebar.reactive.activePanelId
   ) {
-    Tabs.scrollToTabDebounced(120, tab.id)
+    Tabs.scrollToTabDebounced(120, tab.id, true)
   }
 
   // Re-run activation event (if the tab was attached externally)
@@ -1349,7 +1349,7 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
     Tabs.expTabsBranch(tab.parentId)
   }
 
-  if (!tab.pinned) Tabs.scrollToTabDebounced(3, tab.id)
+  if (!tab.pinned) Tabs.scrollToTabDebounced(3, tab.id, true)
 
   // Update succession
   Tabs.updateSuccessionDebounced(10)

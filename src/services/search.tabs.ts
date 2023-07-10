@@ -83,7 +83,7 @@ export function onTabsSearchNext(panel?: Panel): void {
   const tab = panel.filteredTabs[index]
   if (tab) {
     Selection.selectTab(tab.id)
-    Tabs.scrollToTab(tab.id)
+    Tabs.scrollToTab(tab.id, true)
   }
 }
 
@@ -101,7 +101,7 @@ export function onTabsSearchPrev(panel?: Panel): void {
   const tab = panel.filteredTabs[index]
   if (tab) {
     Selection.selectTab(tab.id)
-    Tabs.scrollToTab(tab.id)
+    Tabs.scrollToTab(tab.id, true)
   }
 }
 

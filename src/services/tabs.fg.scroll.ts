@@ -6,9 +6,11 @@ import { Sidebar } from './sidebar'
 import { PRE_SCROLL } from 'src/defaults'
 
 const scrollConf: ScrollToOptions = { behavior: 'auto', top: 0 }
-export function scrollToTab(id: ID): void {
+export function scrollToTab(id: ID, smooth?: boolean): void {
   const panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
   if (!Utils.isTabsPanel(panel) || !panel.scrollEl) return
+
+  scrollConf.behavior = smooth ? 'smooth' : 'auto'
 
   const isLastTab = panel.tabs[panel.tabs.length - 1]?.id === id
   if (isLastTab) {
