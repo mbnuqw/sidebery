@@ -2931,10 +2931,8 @@ export function updateTabsTree(startIndex = 0, endIndex = -1): void {
   if (Tabs.list[endIndex - 1]) {
     const tab = Tabs.list[endIndex - 1]
     if (tab) {
-      tab.reactive.isParent = false
-      tab.isParent = false
-      tab.reactive.folded = false
-      tab.folded = false
+      tab.reactive.isParent = tab.isParent = false
+      tab.reactive.folded = tab.folded = false
     }
   }
 
@@ -2948,8 +2946,7 @@ export function updateTabsTree(startIndex = 0, endIndex = -1): void {
 
     if (tab.pinned) {
       tab.parentId = -1
-      tab.reactive.lvl = 0
-      tab.lvl = 0
+      tab.reactive.lvl = tab.lvl = 0
       tab.reactive.invisible = tab.invisible = false
       tab.reactive.isParent = tab.isParent = false
       tab.reactive.folded = tab.folded = false
@@ -2971,8 +2968,7 @@ export function updateTabsTree(startIndex = 0, endIndex = -1): void {
         tab.reactive.lvl = tab.lvl = parent.lvl
         tab.reactive.invisible = tab.invisible = parent.invisible
       } else {
-        parent.isParent = true
-        parent.reactive.isParent = true
+        parent.reactive.isParent = parent.isParent = true
         tab.reactive.lvl = tab.lvl = parent.lvl + 1
         tab.reactive.invisible = tab.invisible = parent.folded || parent.invisible
       }
@@ -2986,32 +2982,25 @@ export function updateTabsTree(startIndex = 0, endIndex = -1): void {
           if (backTab.panelId !== tab.panelId) break
           if (parent.lvl === maxLvl) {
             backTab.parentId = parent.parentId
-            backTab.isParent = false
-            backTab.reactive.isParent = false
-            backTab.folded = false
-            backTab.reactive.folded = false
+            backTab.reactive.isParent = backTab.isParent = false
+            backTab.reactive.folded = backTab.folded = false
           } else {
             backTab.parentId = parent.id
           }
-          backTab.reactive.lvl = tab.lvl
-          backTab.lvl = tab.lvl
-          backTab.reactive.invisible = tab.invisible
+          backTab.reactive.lvl = backTab.lvl = tab.lvl
+          backTab.reactive.invisible = backTab.invisible = tab.invisible
         }
       }
     } else {
       tab.parentId = -1
-      tab.lvl = 0
-      tab.reactive.lvl = 0
-      tab.invisible = false
-      tab.reactive.invisible = false
+      tab.reactive.lvl = tab.lvl = 0
+      tab.reactive.invisible = tab.invisible = false
     }
 
     // Reset parent-flags of prev tab if current tab have same lvl
     if (prevTab && prevTab.lvl >= tab.lvl) {
-      prevTab.isParent = false
-      prevTab.reactive.isParent = false
-      prevTab.folded = false
-      prevTab.reactive.folded = false
+      prevTab.reactive.isParent = prevTab.isParent = false
+      prevTab.reactive.folded = prevTab.folded = false
     }
 
     // Update openerTabId
