@@ -79,6 +79,7 @@ onUpdated(() => {
     // Added item
     if (prevIndex === -1) {
       added.push(child)
+      child.style.transitionDuration = '0s'
       child.classList.add('-hidden')
     }
 
@@ -139,6 +140,7 @@ onUpdated(() => {
 
     if (added.length) {
       for (const el of added) {
+        el.style.transitionDuration = ''
         el.classList.remove('-hidden')
       }
     }
