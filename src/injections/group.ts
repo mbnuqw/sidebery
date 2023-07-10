@@ -6,7 +6,7 @@ import { NOID, SETTINGS_OPTIONS } from 'src/defaults'
 import { applyThemeSrcVars, loadCustomGroupCSS } from './group.styles'
 import * as IPC from 'src/services/ipc'
 import * as Logs from 'src/services/logs'
-import { Msg, MsgTabRemoved, MsgTabUpdated, MsgUpdated } from './group.ipc'
+import { GroupMsg } from './group.ipc'
 
 const PIN_SCREENSHOT_QUALITY = 90
 const SCREENSHOT_QUALITY = 25
@@ -129,13 +129,8 @@ async function main() {
 
   document.body.addEventListener('contextmenu', e => e.preventDefault())
 
-  // Set listeners
-  browser.runtime.onMessage.addListener((msg: Msg) => {
-    if (msg.name === 'update') onGroupUpdated(msg)
-    if (msg.name === 'create') onTabCreated(msg)
-    if (msg.name === 'updateTab') onTabUpdated(msg)
-    if (msg.name === 'remove') onTabRemoved(msg)
-  })
+  // Set listener
+  browser.runtime.onMessage.addListener(onGroupMsg)
 
   updateScreenshots()
 }
@@ -168,7 +163,7 @@ function onTitleChange(e: DOMEvent<Event, HTMLInputElement>): void {
 /**
  * Handle group page update msg
  */
-function onGroupUpdated(msg: MsgUpdated) {
+function onGroupMsg(msg: GroupMsg) {
   let i
   if (msg.index !== undefined) groupTabIndex = msg.index
   if (msg.len !== undefined) groupLen = msg.len
@@ -180,6 +175,7 @@ function onGroupUpdated(msg: MsgUpdated) {
     if (titleEl) titleEl.value = normTitle
     window.location.hash = `#${encodeURIComponent(normTitle)}`
   }
+
   if (msg.tabs !== undefined) {
     for (i = 0; i < msg.tabs.length; i++) {
       const newTab = msg.tabs[i]
@@ -201,6 +197,7 @@ function onGroupUpdated(msg: MsgUpdated) {
       tabs.splice(i, 1)
     }
   }
+
   if (msg.pin) {
     pinTab = msg.pin
     if (pinTab) {
@@ -209,6 +206,10 @@ function onGroupUpdated(msg: MsgUpdated) {
       updatePinnedTab(pinTab, (event: MouseEvent) => onTabClick(event, pinTab))
     }
   }
+
+  if (msg.createdTab) onTabCreated(msg.createdTab)
+  if (msg.updatedTab) onTabUpdated(msg.updatedTab)
+  if (msg.removedTab !== undefined) onTabRemoved(msg.removedTab)
 }
 
 /**
@@ -222,9 +223,12 @@ async function onTabCreated(tab: GroupedTabInfo) {
   if (index === -1 || index === tabs.length) {
     newTabEl.before(tab.el)
     tabs.push(tab)
-  } else {
+  } else if (index >= 0 && index < tabs.length) {
     tabs[index].el?.before(tab.el)
     tabs.splice(index, 0, tab)
+  } else {
+    Logs.warn('Cannot add new tab: Wrong index')
+    return
   }
 
   groupLen++
@@ -235,43 +239,43 @@ async function onTabCreated(tab: GroupedTabInfo) {
 /**
  * Handle tab update msg
  */
-function onTabUpdated(msg: MsgTabUpdated) {
-  const tab = tabs.find(t => t.id === msg.id)
+function onTabUpdated(upd: GroupedTabInfo) {
+  const tab = tabs.find(t => t.id === upd.id)
   if (!tab?.el) return
 
-  tab.el.setAttribute('data-status', msg.status ?? '')
-  if (msg.status === 'complete') {
-    tab.el.setAttribute('data-fav', String(!!msg.favIconUrl))
-    if (tab.favEl) tab.favEl.style.backgroundImage = `url(${msg.favIconUrl})`
-    tab.favIconUrl = msg.favIconUrl
+  tab.el.setAttribute('data-status', upd.status ?? '')
+  if (upd.status === 'complete') {
+    tab.el.setAttribute('data-fav', String(!!upd.favIconUrl))
+    if (tab.favEl) tab.favEl.style.backgroundImage = `url(${upd.favIconUrl})`
+    tab.favIconUrl = upd.favIconUrl
     takeScreenshot(tab, SCREENSHOT_QUALITY)
   }
 
-  if (tab.titleEl) tab.titleEl.textContent = msg.title
-  tab.title = msg.title
+  if (tab.titleEl) tab.titleEl.textContent = upd.title
+  tab.title = upd.title
 
   if (tab.urlEl) {
-    if (msg.url.startsWith('moz-ext')) tab.urlEl.textContent = ''
-    else tab.urlEl.textContent = msg.url
+    if (upd.url.startsWith('moz-ext')) tab.urlEl.textContent = ''
+    else tab.urlEl.textContent = upd.url
   }
-  tab.url = msg.url
+  tab.url = upd.url
 
   if (tab.favPlaceholderSvgEl) {
-    setSvgId(tab.favPlaceholderSvgEl, getFavPlaceholder(msg.url))
+    setSvgId(tab.favPlaceholderSvgEl, getFavPlaceholder(upd.url))
   }
 
-  tab.el.setAttribute('data-discarded', String(msg.discarded))
-  tab.discarded = msg.discarded
+  tab.el.setAttribute('data-discarded', String(upd.discarded))
+  tab.discarded = upd.discarded
 
-  tab.el.setAttribute('data-lvl', String(msg.lvl))
-  tab.lvl = msg.lvl
+  tab.el.setAttribute('data-lvl', String(upd.lvl))
+  tab.lvl = upd.lvl
 }
 
 /**
  * Handle tab remove msg
  */
-function onTabRemoved(msg: MsgTabRemoved) {
-  const index = tabs.findIndex(t => t.id === msg.id)
+function onTabRemoved(id: ID) {
+  const index = tabs.findIndex(t => t.id === id)
   if (index === -1) return
   tabs[index].el?.remove()
   tabs.splice(index, 1)

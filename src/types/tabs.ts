@@ -125,7 +125,7 @@ export interface GroupedTabInfo {
   title: string
   url: string
   discarded: boolean
-  favIconUrl: string
+  favIconUrl?: string
   status?: string
   el?: HTMLElement
   bgEl?: HTMLElement

@@ -4,6 +4,7 @@ import { NOID } from 'src/defaults'
 import * as Logs from 'src/services/logs'
 import { getInstanceName } from './info.actions'
 import { Windows } from './windows'
+import { GroupMsg } from 'src/injections/group.ipc'
 
 export interface PortNameData {
   srcType: InstanceType
@@ -290,7 +291,7 @@ export function setupPage<T extends InstanceType.setup, A extends ActionsKeys<T>
 /**
  * Sends message to group page
  */
-export function groupPage(dstTabId: ID, msg: any): void {
+export function groupPage(dstTabId: ID, msg: GroupMsg): void {
   browser.tabs.sendMessage(dstTabId, msg).catch(() => {
     /** Ignore possible errors **/
   })

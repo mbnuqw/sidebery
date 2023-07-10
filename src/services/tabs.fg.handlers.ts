@@ -373,14 +373,16 @@ function onTabCreated(nativeTab: NativeTab, attached?: boolean): void {
       const groupTab = Tabs.getGroupTab(tab)
       if (groupTab && !groupTab.discarded) {
         IPC.groupPage(groupTab.id, {
-          name: 'create',
-          id: tab.id,
-          index: tab.index,
-          lvl: tab.lvl - groupTab.lvl - 1,
-          title: tab.title,
-          url: tab.url,
-          discarded: tab.discarded,
-          favIconUrl: tab.favIconUrl,
+          index: groupTab.index,
+          createdTab: {
+            id: tab.id,
+            index: tab.index,
+            lvl: tab.lvl - groupTab.lvl - 1,
+            title: tab.title,
+            url: tab.url,
+            discarded: !!tab.discarded,
+            favIconUrl: tab.favIconUrl,
+          },
         })
       }
     }
@@ -1042,7 +1044,7 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
 
   const groupTab = Tabs.getGroupTab(tab)
   if (groupTab && !groupTab.discarded) {
-    IPC.groupPage(groupTab.id, { name: 'remove', id: tab.id })
+    IPC.groupPage(groupTab.id, { removedTab: tab.id })
   }
 }
 

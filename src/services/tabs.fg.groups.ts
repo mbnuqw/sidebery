@@ -1,6 +1,6 @@
 import * as Utils from 'src/utils'
 import { Tab, GroupConfig, GroupInfo, GroupedTabInfo, GroupPin } from 'src/types'
-import { MsgUpdated } from 'src/injections/group.ipc'
+import { GroupMsg } from 'src/injections/group.ipc'
 import { Windows } from 'src/services/windows'
 import { Settings } from 'src/services/settings'
 import { Tabs } from './tabs.fg'
@@ -276,8 +276,7 @@ export function updateGroupTab(groupTab: Tab): void {
       })
     }
 
-    const msg: MsgUpdated = {
-      name: 'update',
+    const msg: GroupMsg = {
       index: groupTab.index,
       parentId: groupTab.parentId,
       tabs,
@@ -310,17 +309,17 @@ export function updateGroupChild(groupId: ID, childId: ID, delay = 250): void {
     const childTab = Tabs.byId[childId]
     if (!groupTab || groupTab.discarded || !childTab) return
 
-    const updateData = {
-      name: 'updateTab',
+    const updatedTab: GroupedTabInfo = {
       id: childTab.id,
+      index: childTab.index,
       status: childTab.status,
       title: childTab.title,
       url: childTab.url,
       lvl: childTab.lvl - groupTab.lvl - 1,
-      discarded: childTab.discarded,
+      discarded: !!childTab.discarded,
       favIconUrl: childTab.favIconUrl || Favicons.getFavicon(childTab.url),
     }
-    IPC.groupPage(groupTab.id, updateData)
+    IPC.groupPage(groupTab.id, { updatedTab })
   }, delay)
 }
 
@@ -373,7 +372,7 @@ export function setGroupName(groupTabId: ID, newName: string) {
   browser.tabs
     .update(groupTabId, { url: newUrl })
     .then(() => {
-      if (!isDiscarded) return IPC.groupPage(groupTabId, { name: 'update', title: newName })
+      if (!isDiscarded) return IPC.groupPage(groupTabId, { title: newName })
     })
     .catch(() => {
       Logs.warn('setGroupName: Cannot update url')

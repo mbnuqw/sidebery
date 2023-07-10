@@ -1,25 +1,13 @@
 import { GroupedTabInfo, GroupPin } from 'src/types'
 
-export interface MsgUpdated {
-  name: 'update'
+export interface GroupMsg {
   index?: number
   len?: number
   parentId?: ID
   title?: string
   tabs?: GroupedTabInfo[]
   pin?: GroupPin
+  createdTab?: GroupedTabInfo
+  updatedTab?: GroupedTabInfo
+  removedTab?: ID
 }
-
-export type MsgTabCreated = {
-  name: 'create'
-} & GroupedTabInfo
-
-export type MsgTabUpdated = {
-  name: 'updateTab'
-} & GroupedTabInfo
-
-export type MsgTabRemoved = {
-  name: 'remove'
-} & GroupedTabInfo
-
-export type Msg = MsgUpdated | MsgTabCreated | MsgTabUpdated | MsgTabRemoved
