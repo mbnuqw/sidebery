@@ -1386,7 +1386,6 @@ export async function discardTabs(tabIds: ID[] = []): Promise<void> {
       if (!tab || tab.pinned) return false
       return true
     })
-    console.log('[DEBUG] wtf', tabIds)
   }
 
   // Update succession for active tab to prevent switching to discarded tabs
@@ -1397,7 +1396,6 @@ export async function discardTabs(tabIds: ID[] = []): Promise<void> {
     if (target) {
       // If active tab will be discraded activate another
       if (tabIds.includes(Tabs.activeId)) {
-        console.log('[DEBUG] target', target?.title)
         await browser.tabs.update(target.id, { active: true })
       } else if (activeTab.successorTabId !== target.id) {
         browser.tabs.moveInSuccession([activeTab.id], target.id).catch(err => {
