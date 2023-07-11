@@ -8,9 +8,9 @@ Firefox extension for managing tabs and bookmarks in sidebar.
 [Release page](https://github.com/mbnuqw/sidebery/releases/tag/v4.10.2) |
 [Addon page](https://addons.mozilla.org/firefox/addon/sidebery/) |
 [Install](https://addons.mozilla.org/firefox/downloads/file/3994928/sidebery-4.10.2.xpi)  
-**Beta** (5.0.0b33):
-[Release page](https://github.com/mbnuqw/sidebery/releases/tag/v5.0.0b33) |
-[Install](https://github.com/mbnuqw/sidebery/releases/download/v5.0.0b33/sidebery-5.0.0b33.xpi)
+**Beta** (v5.0.0rc1):
+[Release page](https://github.com/mbnuqw/sidebery/releases/tag/v5.0.0rc1) |
+[Install](https://github.com/mbnuqw/sidebery/releases/download/v5.0.0rc1/sidebery-5.0.0rc1.xpi)
 
 > Note: Before installing the beta version make sure to save backup of the Add-on data (Sidebery settings / Help / Export).
 
