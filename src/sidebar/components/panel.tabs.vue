@@ -25,7 +25,7 @@
     v-if="Settings.state.showNewTabBtns && Settings.state.newTabBarPosition === 'bottom'"
     :panel="panel")
 
-  .bottom-bar-space(v-if="Settings.state.subPanelRecentlyClosedBar || Settings.state.subPanelBookmarks")
+  .bottom-bar-space(v-if="bottomBarSpaceNeeded")
 
   PanelPlaceholder(
     :isMsg="!!Search.reactive.rawValue && panel.reactive.filteredLen === 0"
@@ -56,6 +56,10 @@ import AnimatedTabList from './animated-tab-list.vue'
 
 const props = defineProps<{ panel: TabsPanel }>()
 const scrollBox = ref<ScrollBoxComponent | null>(null)
+const bottomBarSpaceNeeded =
+  Settings.state.subPanelRecentlyClosedBar ||
+  Settings.state.subPanelBookmarks ||
+  Settings.state.subPanelHistory
 let scrollBoxEl: HTMLElement | null = null
 
 onMounted(() => {
