@@ -3528,6 +3528,7 @@ export function findSuccessorTab(tab: Tab, exclude?: ID[]): Tab | undefined {
                 if (!discardedFallback) discardedFallback = Tabs.byId[pTab.id]
                 continue
               }
+              if (exclude && exclude.includes(pTab.id)) continue
               target = Tabs.byId[pTab.id]
               break mainLoop
             }
