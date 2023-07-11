@@ -41,8 +41,6 @@ export const enum TabStatus {
   Complete = 1,
   Loading = 2,
   Pending = 3,
-  Ok = 4,
-  Err = 5,
 }
 
 export interface ReactiveTabProps {

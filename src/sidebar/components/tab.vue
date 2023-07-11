@@ -3,7 +3,7 @@
   :id="'tab' + tab.id"
   :data-pin="isPinned"
   :data-active="tab.reactive.active"
-  :data-loading="loading"
+  :data-loading="tab.reactive.status === TabStatus.Loading"
   :data-pending="tab.reactive.status === TabStatus.Pending"
   :data-selected="tab.reactive.sel"
   :data-audible="tab.reactive.mediaAudible"
@@ -40,17 +40,17 @@
         @dblclick.prevent.stop
         @mousedown.stop="onExpandMouseDown"
         @mouseup="onExpandMouseUp")
-        svg: use(xlink:href="#icon_expand")
+        svg.exp-icon: use(xlink:href="#icon_expand")
       .badge
-      .progress-spinner(v-if="loading === true")
+      .progress-spinner(v-if="tab.reactive.status === TabStatus.Loading")
       .child-count(v-if="tab.reactive.folded && tab.reactive.branchLen") {{tab.reactive.branchLen}}
     .audio(
       v-if="tab.reactive.mediaAudible || tab.reactive.mediaMuted || tab.reactive.mediaPaused"
       @mousedown.stop=""
       @mouseup.stop="onAudioMouseDown($event, tab)")
-      svg.-loud: use(xlink:href="#icon_loud_badge")
-      svg.-mute: use(xlink:href="#icon_mute_badge")
-      svg.-pause: use(xlink:href="#icon_pause_12")
+      svg.audio-icon.-loud: use(xlink:href="#icon_loud_badge")
+      svg.audio-icon.-mute: use(xlink:href="#icon_mute_badge")
+      svg.audio-icon.-pause: use(xlink:href="#icon_pause_12")
     .t-box(v-if="!isPinned")
       input.custom-title-input(
         v-if="tab.reactive.customTitleEdit"
@@ -68,7 +68,7 @@
       @mousedown.stop="onMouseDownClose"
       @mouseup.stop="onMouseUpClose"
       @contextmenu.stop.prevent)
-      svg: use(xlink:href="#icon_remove")
+      svg.close-icon: use(xlink:href="#icon_remove")
     .ctx(v-if="tab.reactive.containerColor")
 </template>
 
@@ -92,12 +92,6 @@ import * as Utils from 'src/utils'
 const props = defineProps<{ tabId: ID }>()
 const tab = Tabs.byId[props.tabId] as Tab
 
-const loading = computed((): boolean | 'ok' | 'err' => {
-  if (tab.reactive.status === TabStatus.Loading) return true
-  if (tab.reactive.status === TabStatus.Ok) return 'ok'
-  if (tab.reactive.status === TabStatus.Err) return 'err'
-  return false
-})
 const tabColor = computed<string>(() => {
   if (tab.reactive.customColor) return RGB_COLORS[tab.customColor as browser.ColorName]
   if (

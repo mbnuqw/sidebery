@@ -256,17 +256,18 @@
 .Tab .audio
   position: absolute
   z-index: 1
-  > svg
-    position: absolute
-    top: calc(50% - 6px)
-    left: calc(50% - 6px)
-    width: 12px
-    height: 12px
-    fill: var(--frame-fg)
-    transition: opacity var(--d-fast)
-    opacity: 0
 
-.Tab[data-pin="false"][data-active="true"] .audio > svg
+.Tab .audio-icon
+  position: absolute
+  top: calc(50% - 6px)
+  left: calc(50% - 6px)
+  width: 12px
+  height: 12px
+  fill: var(--frame-fg)
+  transition: opacity var(--d-fast)
+  opacity: 0
+
+.Tab[data-pin="false"][data-active="true"] .audio-icon
   fill: var(--tabs-activated-fg)
 
 .Tab[data-pin="false"] .audio
@@ -371,14 +372,14 @@
   z-index: -1
   cursor: pointer
   transition: opacity var(--d-fast), transform var(--d-fast)
-  > svg
-    position: absolute
-    top: 4px
-    left: 4px
-    width: 16px
-    height: 16px
-    fill: var(--frame-fg)
-.Tab[data-active="true"] .exp > svg
+.Tab .exp-icon
+  position: absolute
+  top: 4px
+  left: 4px
+  width: 16px
+  height: 16px
+  fill: var(--frame-fg)
+.Tab[data-active="true"] .exp-icon
   fill: var(--tabs-activated-fg)
 
 .Tab[data-parent="true"] .fav:hover .exp
@@ -443,7 +444,7 @@
 // ---
 // -- Count of descendants
 // -
-.Tab .fav > .child-count
+.Tab .child-count
   position: absolute
   width: 8px
   right: -2px
@@ -451,13 +452,12 @@
   font: var(--tabs-count-font)
   text-align: center
   color: var(--frame-fg)
-  transition: opacity var(--d-fast)
-.Tab[data-active="true"] .fav > .child-count
+.Tab[data-active="true"] .child-count
   color: var(--tabs-activated-fg)
 
-#root[data-search="true"] .Tab .fav > .child-count
-.Tab[data-loading="true"] .fav > .child-count
-.Tab[data-pending="true"] .fav > .child-count
+#root[data-search="true"] .Tab .child-count
+.Tab[data-loading="true"] .child-count
+.Tab[data-pending="true"] .child-count
   opacity: 0
 
 // ---
@@ -606,23 +606,24 @@
     background-color: var(--frame-el-overlay-hover-bg)
   &:active
     background-color: var(--frame-el-overlay-clicked-bg)
-  > svg
-    position: absolute
-    top: calc(50% - 9px)
-    left: calc(50% - 9px)
-    width: 18px
-    height: 18px
-    fill: var(--frame-fg)
-    opacity: .7
-    transition: fill var(--d-fast)
 
 .Tab[data-active="true"] .close
-  > svg
-    fill: var(--tabs-activated-fg)
   &:hover
     background-color: var(--active-el-overlay-hover-bg)
   &:active
     background-color: var(--active-el-overlay-clicked-bg)
+
+.Tab .close-icon
+  position: absolute
+  top: calc(50% - 9px)
+  left: calc(50% - 9px)
+  width: 18px
+  height: 18px
+  fill: var(--frame-fg)
+  opacity: .7
+
+.Tab[data-active="true"] .close-icon
+  fill: var(--tabs-activated-fg)
 
 #root[data-tabs-close-btn="always"] .Tab .close
 #root[data-tabs-close-btn="hover"] .Tab:hover .close

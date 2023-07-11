@@ -1998,18 +1998,20 @@ export async function clearTabsCookies(tabIds: ID[]): Promise<void> {
     const tab = Tabs.byId[tabId]
     if (!tab) continue
 
-    tab.reactive.status = TabStatus.Loading
-
     const url = new URL(tab.url)
     const domain = url.hostname.split('.').slice(-2).join('.')
 
     if (!domain) {
-      tab.reactive.status = TabStatus.Err
-      setTimeout(() => {
-        tab.reactive.status = Tabs.getStatus(tab)
-      }, 2000)
+      Notifications.notify({
+        lvl: 'err',
+        icon: '#icon_cookie',
+        title: translate('notif.cc.err'),
+        details: `${translate('notif.cc.err_url')}"${decodeURI(tab.url)}"`,
+      })
       continue
     }
+
+    tab.reactive.status = TabStatus.Loading
 
     const cookies = await browser.cookies.getAll({
       domain: domain,
@@ -2030,20 +2032,21 @@ export async function clearTabsCookies(tabIds: ID[]): Promise<void> {
 
     Promise.all(clearing)
       .then(() => {
-        setTimeout(() => {
-          tab.reactive.status = TabStatus.Ok
-        }, 250)
-        setTimeout(() => {
-          tab.reactive.status = Tabs.getStatus(tab)
-        }, 2000)
+        Notifications.notify({
+          icon: '#icon_cookie',
+          title: translate('notif.cc.ok'),
+          details: domain,
+        })
+        tab.reactive.status = Tabs.getStatus(tab)
       })
       .catch(() => {
-        setTimeout(() => {
-          tab.reactive.status = TabStatus.Err
-        }, 250)
-        setTimeout(() => {
-          tab.reactive.status = Tabs.getStatus(tab)
-        }, 2000)
+        Notifications.notify({
+          lvl: 'err',
+          icon: '#icon_cookie',
+          title: translate('notif.cc.err'),
+          details: domain,
+        })
+        tab.reactive.status = Tabs.getStatus(tab)
       })
   }
 }

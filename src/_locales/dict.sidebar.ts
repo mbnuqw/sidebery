@@ -685,6 +685,18 @@ export const sidebarTranslations: Translations = {
     en: 'Nothing to clear',
     ru: 'Нечего очищать',
   },
+  'notif.cc.err': {
+    en: 'Unable to clear cookies',
+    ru: 'Не удалось очистить куки',
+  },
+  'notif.cc.err_url': {
+    en: 'Incorrect URL: ',
+    ru: 'Неверный URL: ',
+  },
+  'notif.cc.ok': {
+    en: 'Cookies was cleared',
+    ru: 'Cookies были очищены',
+  },
 
   // ---
   // -- Colors
