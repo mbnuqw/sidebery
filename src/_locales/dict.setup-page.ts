@@ -2062,6 +2062,10 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_CN: '显示固定标签页的标题',
     zh_TW: '顯示固定標籤頁的標題',
   },
+  'settings.pinned.no_unload': {
+    en: 'Prevent pinned tabs from unloading',
+    ru: 'Предотвращать выгрузку закрепленных вкладок',
+  },
   'settings.pinned_auto_group': {
     en: 'Group tabs that were opened from a pinned tab',
     ru: 'Группировать вкладки, которые были открыты из закрепленной вкладки.',

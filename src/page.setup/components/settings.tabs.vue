@@ -189,6 +189,11 @@ section(ref="el")
       :inactive="Settings.state.pinnedTabsPosition !== 'panel' && Settings.state.pinnedTabsPosition!== 'top'"
       v-model:value="Settings.state.pinnedTabsList"
       @update:value="Settings.saveDebounced(150)")
+    ToggleField(
+      label="settings.pinned.no_unload"
+      :inactive="Settings.state.pinnedTabsPosition !== 'panel'"
+      v-model:value="Settings.state.pinnedNoUnload"
+      @update:value="Settings.saveDebounced(150)")
 
   .wrapper
     .sub-title: .text {{translate('settings.tabs_tree_title')}}

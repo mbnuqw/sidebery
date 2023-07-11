@@ -97,6 +97,7 @@ export interface SettingsState {
   pinnedTabsPosition: (typeof SETTINGS_OPTIONS.pinnedTabsPosition)[number]
   pinnedTabsList: boolean
   pinnedAutoGroup: boolean
+  pinnedNoUnload: boolean
 
   // Tabs tree
   tabsTree: boolean
