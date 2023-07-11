@@ -1,7 +1,7 @@
 <template lang="pug">
 .Tab(
   :id="'tab' + tab.id"
-  :data-pin="isPinned"
+  :data-pin="!!iconOnly"
   :data-active="tab.reactive.active"
   :data-loading="tab.reactive.status === TabStatus.Loading"
   :data-pending="tab.reactive.status === TabStatus.Pending"
@@ -51,7 +51,7 @@
       svg.audio-icon.-loud: use(xlink:href="#icon_loud_badge")
       svg.audio-icon.-mute: use(xlink:href="#icon_mute_badge")
       svg.audio-icon.-pause: use(xlink:href="#icon_pause_12")
-    .t-box(v-if="!isPinned")
+    .t-box(v-if="!iconOnly")
       input.custom-title-input(
         v-if="tab.reactive.customTitleEdit"
         v-model="tab.reactive.customTitle"
@@ -64,7 +64,7 @@
         @keydown="onCustomTitlteKD")
       .title(v-else) {{tab.reactive.customTitle ?? tab.reactive.title}}
     .close(
-      v-if="!isPinned && Settings.state.tabRmBtn !== 'none'"
+      v-if="!iconOnly && Settings.state.tabRmBtn !== 'none'"
       @mousedown.stop="onMouseDownClose"
       @mouseup.stop="onMouseUpClose"
       @contextmenu.stop.prevent)
@@ -89,7 +89,7 @@ import { Favicons } from 'src/services/favicons'
 import { NOID, RGB_COLORS } from 'src/defaults'
 import * as Utils from 'src/utils'
 
-const props = defineProps<{ tabId: ID }>()
+const props = defineProps<{ tabId: ID; iconOnly?: boolean }>()
 const tab = Tabs.byId[props.tabId] as Tab
 
 const tabColor = computed<string>(() => {
@@ -109,16 +109,6 @@ const tabColor = computed<string>(() => {
 const favPlaceholder = computed((): string => {
   if (tab.reactive.warn) return '#icon_warn'
   return Favicons.getFavPlaceholder(tab.reactive.url)
-})
-const isPinned = computed<boolean>(() => {
-  if (!tab.reactive.pinned) return false
-  if (
-    Settings.state.pinnedTabsList &&
-    (Settings.state.pinnedTabsPosition === 'panel' || Settings.state.pinnedTabsPosition === 'top')
-  ) {
-    return false
-  }
-  return true
 })
 
 let closeLock = false

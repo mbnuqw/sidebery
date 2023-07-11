@@ -8,7 +8,7 @@
   @wheel="onWheel"
   @drop="onDrop")
   .tab-wrapper(v-for="id in pinnedTabs" :key="id" :data-targeted="DnD.reactive.dstPin && dropId === id")
-    Tab(:tabId="id")
+    Tab(:tabId="id" :iconOnly="iconOnly")
   .to-the-end(v-if="pinnedTabs.length")
 </template>
 
@@ -33,6 +33,15 @@ const dropId = computed(() => {
   else return tab.id
 })
 const dropToEnd = computed(() => DnD.reactive.dstPin && dropId.value === NOID)
+const iconOnly = computed<boolean>(() => {
+  if (
+    Settings.state.pinnedTabsList &&
+    (Settings.state.pinnedTabsPosition === 'panel' || Settings.state.pinnedTabsPosition === 'top')
+  ) {
+    return false
+  }
+  return true
+})
 
 const onWheel = Mouse.getWheelDebouncer(WheelDirection.Vertical, (e: WheelEvent) => {
   if (
