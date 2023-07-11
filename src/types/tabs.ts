@@ -201,3 +201,26 @@ export interface TabTreeData {
   cc?: string
 }
 export type TabsTreeData = TabTreeData[]
+
+export interface RemovedTabInfo {
+  id: ID
+  index: number
+  title: string
+  parentId: ID
+  panelId: ID
+  children?: ID[]
+}
+
+export interface RecentlyClosedTabInfo {
+  id: ID
+  url: string
+  title: string
+  parentId: ID
+  isParent: boolean
+  lvl: number
+  time: number
+  containerId: string
+  containerColor?: string
+  favIconUrl?: string
+  favPlaceholder?: string
+}

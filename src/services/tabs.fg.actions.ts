@@ -7,8 +7,8 @@ import { Stored, Tab, Panel, TabCache, ActiveTabsHistory, ReactiveTabProps } fro
 import { Notification, TabSessionData, TabsTreeData, DragInfo, NativeTab } from 'src/types'
 import { WindowChoosingDetails, SrcPlaceInfo, DstPlaceInfo, ItemInfo } from 'src/types'
 import { TabsPanel, PanelType, TabTreeData, TabToPanelMoveRule, TabStatus } from 'src/types'
-import { TabToPanelMoveRuleConfig } from 'src/types'
-import { RecentlyRemovedTabInfo, Tabs } from 'src/services/tabs.fg'
+import { TabToPanelMoveRuleConfig, RecentlyClosedTabInfo } from 'src/types'
+import { Tabs } from 'src/services/tabs.fg'
 import * as IPC from 'src/services/ipc'
 import * as Logs from 'src/services/logs'
 import * as Popups from 'src/services/popups'
@@ -904,7 +904,7 @@ export function rememberRemoved(tabs: Tab[]) {
       // Try to find it in recently removed
       const index = Tabs.recentlyRemoved.findIndex(t => t.id === tab.parentId)
       if (index !== -1) {
-        parent = Tabs.recentlyRemoved[index] as RecentlyRemovedTabInfo
+        parent = Tabs.recentlyRemoved[index] as RecentlyClosedTabInfo
         if (!parent.isParent) parent.isParent = true
         parentIndex = index
       } else {
@@ -920,7 +920,7 @@ export function rememberRemoved(tabs: Tab[]) {
     if (!parent) parentIndex = 0
     else parentIndex++
 
-    const removedTabInfo: RecentlyRemovedTabInfo = {
+    const removedTabInfo: RecentlyClosedTabInfo = {
       id: tab.id,
       url: tab.url,
       title: tab.title,
@@ -3955,7 +3955,7 @@ export async function open(
     if (!Settings.state.tabsTree && groupCreationNeeded) continue
     if (!Sidebar.hasTabs && groupCreationNeeded) continue
     if (dst.pinned && groupCreationNeeded) continue
-    // Temporarily ignore groups with tree limit
+    // TODO: handle tree lvl limit
     if (Settings.state.tabsTreeLimit !== 'none' && groupCreationNeeded) continue
 
     const conf: browser.tabs.CreateProperties = {

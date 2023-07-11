@@ -31,12 +31,13 @@
 
 <script lang="ts" setup>
 import { reactive, onMounted } from 'vue'
-import { DragItem, DragInfo, DropType, DragType, DstPlaceInfo } from 'src/types'
+import { DragItem, DragInfo, DropType, DragType, DstPlaceInfo, ItemInfo } from 'src/types'
+import { RecentlyClosedTabInfo } from 'src/types'
 import { translate } from 'src/dict'
 import { Menu } from 'src/services/menu'
 import { Selection } from 'src/services/selection'
 import { Settings } from 'src/services/settings'
-import { RecentlyRemovedTabInfo, Tabs } from 'src/services/tabs.fg'
+import { Tabs } from 'src/services/tabs.fg'
 import { Mouse } from 'src/services/mouse'
 import { Sidebar } from 'src/services/sidebar'
 import { DnD } from 'src/services/drag-and-drop'
@@ -57,7 +58,7 @@ onMounted(() => {
   if (Menu.isOpen) Menu.close()
 })
 
-function onTabMouseDown(e: MouseEvent, tab: RecentlyRemovedTabInfo) {
+function onTabMouseDown(e: MouseEvent, tab: RecentlyClosedTabInfo) {
   Mouse.setTarget('closedTab', tab.id)
 
   if (e.button === 2) {
@@ -66,7 +67,7 @@ function onTabMouseDown(e: MouseEvent, tab: RecentlyRemovedTabInfo) {
   }
 }
 
-function onTabMouseUp(e: MouseEvent, tab: RecentlyRemovedTabInfo) {
+function onTabMouseUp(e: MouseEvent, tab: RecentlyClosedTabInfo) {
   const sameTarget = Mouse.isTarget('closedTab', tab.id)
   Mouse.resetTarget()
 
@@ -86,13 +87,13 @@ function onTabContextMenu(e: MouseEvent) {
   e.preventDefault()
 }
 
-function onBranchMouseDown(e: MouseEvent, tab: RecentlyRemovedTabInfo) {
+function onBranchMouseDown(e: MouseEvent, tab: RecentlyClosedTabInfo) {
   Mouse.setTarget('closedTab.branch', tab.id)
 
   e.stopPropagation()
 }
 
-function onBranchMouseUp(e: MouseEvent, tab: RecentlyRemovedTabInfo) {
+function onBranchMouseUp(e: MouseEvent, tab: RecentlyClosedTabInfo) {
   const sameTarget = Mouse.isTarget('closedTab.branch', tab.id)
   Mouse.resetTarget()
 
@@ -103,7 +104,7 @@ function onBranchMouseUp(e: MouseEvent, tab: RecentlyRemovedTabInfo) {
   openTabs(tab, true, true)
 }
 
-function onTabDragStart(e: DragEvent, tab: RecentlyRemovedTabInfo) {
+function onTabDragStart(e: DragEvent, tab: RecentlyClosedTabInfo) {
   Sidebar.updateBounds()
 
   // Check what to drag
@@ -157,8 +158,8 @@ function onTabDragStart(e: DragEvent, tab: RecentlyRemovedTabInfo) {
   }
 }
 
-function getBranch(rootTab: RecentlyRemovedTabInfo): RecentlyRemovedTabInfo[] {
-  const branch: RecentlyRemovedTabInfo[] = [rootTab]
+function getBranch(rootTab: RecentlyClosedTabInfo): RecentlyClosedTabInfo[] {
+  const branch: RecentlyClosedTabInfo[] = [rootTab]
 
   const startIndex = Tabs.recentlyRemoved.findIndex(t => t.id === rootTab.id)
   if (startIndex === -1) return branch
@@ -173,12 +174,12 @@ function getBranch(rootTab: RecentlyRemovedTabInfo): RecentlyRemovedTabInfo[] {
   return branch
 }
 
-async function openTabs(targetTab: RecentlyRemovedTabInfo, inactive: boolean, branch: boolean) {
+async function openTabs(targetTab: RecentlyClosedTabInfo, inactive: boolean, branch: boolean) {
   if (!targetTab.isParent) branch = false
   if (branch) inactive = true
 
   const tabsBranch = getBranch(targetTab)
-  const tabs = branch ? tabsBranch : [targetTab]
+  const rcTabs = branch ? tabsBranch : [targetTab]
   const panelId = Sidebar.reactive.activePanelId
   const panel = Sidebar.panelsById[panelId]
   if (!Utils.isTabsPanel(panel)) return
@@ -190,7 +191,19 @@ async function openTabs(targetTab: RecentlyRemovedTabInfo, inactive: boolean, br
     parentId: Tabs.getParentForNewTab(panel),
   }
 
-  await Tabs.open(tabs, dst)
+  const tabsToOpen: ItemInfo[] = []
+  for (const rct of rcTabs) {
+    tabsToOpen.push({
+      id: rct.id,
+      title: rct.title,
+      url: rct.url,
+      container: rct.containerId,
+      parentId: rct.parentId,
+    })
+  }
+  if (!inactive && tabsToOpen.length) tabsToOpen[0].active = true
+
+  await Tabs.open(tabsToOpen, dst)
 
   // Trigger flash animation
   // const els = []
@@ -205,8 +218,8 @@ async function openTabs(targetTab: RecentlyRemovedTabInfo, inactive: boolean, br
   // els.forEach(el => el.removeAttribute('data-flash'))
 
   // Or remove from list
-  if (tabs.length === 1) tabsBranch.forEach(t => t.lvl--)
-  for (const tab of tabs) {
+  if (rcTabs.length === 1) tabsBranch.forEach(t => t.lvl--)
+  for (const tab of rcTabs) {
     const index = Tabs.recentlyRemoved.findIndex(t => t.id === tab.id)
     if (index !== -1) Tabs.recentlyRemoved.splice(index, 1)
   }
