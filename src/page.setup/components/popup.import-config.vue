@@ -355,17 +355,20 @@ function importSidebar(backup: BackupData, toStore: Stored, containersIds: OldNe
       panel.newTabCtx = containersIds[panel.newTabCtx] ?? 'none'
 
       // Update container ids in moveRules
-      panel.moveRules = panel.moveRules.map(rule => {
-        if (rule.containerId) {
-          const newId = containersIds[rule.containerId]
-          if (newId) rule.containerId = newId
-          else {
-            delete rule.containerId
-            rule.active = false
+      if (!panel.moveRules) panel.moveRules = []
+      else {
+        panel.moveRules = panel.moveRules.map(rule => {
+          if (rule.containerId) {
+            const newId = containersIds[rule.containerId]
+            if (newId) rule.containerId = newId
+            else {
+              delete rule.containerId
+              rule.active = false
+            }
           }
-        }
-        return rule
-      })
+          return rule
+        })
+      }
     }
   }
 
