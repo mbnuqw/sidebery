@@ -300,7 +300,7 @@ function onTabCreated(nativeTab: NativeTab, attached?: boolean): void {
   Tabs.list.splice(index, 0, tab)
   Tabs.reactivateTab(tab)
   Sidebar.recalcTabsPanels()
-  Sidebar.addToVisibleTabs(panel.id, tab.id)
+  Sidebar.addToVisibleTabs(panel.id, tab)
   Tabs.updateUrlCounter(tab.url, 1)
 
   // Update tree

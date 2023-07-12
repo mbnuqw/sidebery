@@ -392,14 +392,24 @@ function recalcVisibleTabsInPanel(panelId: ID) {
   }
 }
 
-export function addToVisibleTabs(panelId: ID, tabId: ID) {
+export function addToVisibleTabs(panelId: ID, tab: Tab) {
   const panel = Sidebar.panelsById[panelId]
   if (!Utils.isTabsPanel(panel)) return
 
-  const index = panel.tabs.findIndex(t => t.id === tabId)
-  if (index === -1) return recalcVisibleTabs(panelId)
+  if (tab.index === panel.endTabIndex) {
+    panel.reactive.visibleTabIds.push(tab.id)
+    return
+  }
 
-  panel.reactive.visibleTabIds.splice(index, 0, tabId)
+  const tabId = tab.id
+  let invisibleShift = 0
+  const index = panel.tabs.findIndex(t => {
+    if (t.invisible) invisibleShift++
+    if (t.id === tabId) return true
+  })
+  if (index === -1) return recalcVisibleTabsInPanel(panelId)
+
+  panel.reactive.visibleTabIds.splice(index - invisibleShift, 0, tabId)
 }
 
 export function removeFromVisibleTabs(panelId: ID, tabId: ID) {
