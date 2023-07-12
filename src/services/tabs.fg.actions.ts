@@ -4091,7 +4091,7 @@ export function getTabsInfo(ids: ID[], setPanelId?: boolean): ItemInfo[] {
           if (!child.invisible) break
           if (ids.includes(child.id)) continue
           const subInfo: ItemInfo = {
-            id,
+            id: child.id,
             url: child.url,
             parentId: child.parentId,
             title: child.title,
