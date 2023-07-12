@@ -3558,6 +3558,9 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_CN: '切换面板',
     zh_TW: '切換面板',
   },
+  'settings.kb_scroll_active_panel': {
+    en: 'Scrolling the active panel',
+  },
   'settings.kb_switching_tab': {
     en: 'Switching between tabs',
     ru: 'Переключение вкладок',

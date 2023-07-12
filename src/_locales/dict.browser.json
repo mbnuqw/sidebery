@@ -562,11 +562,11 @@
     "zh_CN": "切换到上一个标签页(使用鼠标滚轮设置切换标签页)",
     "zh_TW": "切換到上一個標籤頁(使用鼠標滾輪設置切換標籤頁)"
   },
-  "KbScrollToPanelTop": {
+  "KbScrollToActivePanelTop": {
     "en": "Scroll to the top of the active panel"
   },
-  "KbScrollToPanelEnd": {
-    "en": "Scroll to the end of the active panel"
+  "KbScrollToActivePanelBottom": {
+    "en": "Scroll to the bottom of the active panel"
   },
 
   "proxy_popup_title_prefix": {

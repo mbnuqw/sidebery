@@ -99,6 +99,14 @@ const layout = [
     'switch_to_panel_9',
   ],
 
+  // Scrolling active tab panel.
+  [
+    'scroll_active_panel',
+    'scroll_to_active_panel_top',
+    'scroll_to_active_panel_bottom',
+    // TBD: page up / page down.
+  ],
+
   // Switching tabs
   [
     'switching_tab',
@@ -126,8 +134,6 @@ const layout = [
     'switch_to_last_tab',
     'switch_to_next_tab',
     'switch_to_prev_tab',
-    'scroll_to_panel_top',
-    'scroll_to_panel_end',
   ],
 
   // Move tabs
