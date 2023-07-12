@@ -396,6 +396,9 @@ export function addToVisibleTabs(panelId: ID, tab: Tab) {
   const panel = Sidebar.panelsById[panelId]
   if (!Utils.isTabsPanel(panel)) return
 
+  // Trigger search, which will update visibleTabIds list
+  if (panel.filteredTabs) return Search.search(undefined, true)
+
   if (tab.index === panel.endTabIndex) {
     panel.reactive.visibleTabIds.push(tab.id)
     return
