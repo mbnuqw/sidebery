@@ -886,10 +886,10 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
       }
 
       // Remove folded tabs
-      if (
+      const willBeRemoved =
         (Settings.state.rmChildTabs === 'folded' && tab.folded && !detached && !tab.reopening) ||
         (Settings.state.rmChildTabs === 'all' && !detached && !tab.reopening)
-      ) {
+      if (willBeRemoved) {
         if (!Tabs.removingTabs.includes(t.id)) {
           toRemove.push(t.id)
           continue
@@ -933,6 +933,9 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
           }
         }
       }
+
+      // Save updated child tabs
+      if (!willBeRemoved) Tabs.saveTabData(t.id)
     }
 
     // Remove child tabs
