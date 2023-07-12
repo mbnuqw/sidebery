@@ -104,6 +104,9 @@ export function resetErrors(): void {
 function onCmd(name: string): void {
   if (!Windows.focused) return
 
+  let activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  if (!activePanel) activePanel = Sidebar.panels[0]
+
   let kb: Command | undefined = Keybindings.reactive.byName[name]
   if (!kb) kb = Keybindings.reactive.list.find(k => k.name === name)
   if (!kb) return
@@ -177,6 +180,10 @@ function onCmd(name: string): void {
   } else if (name === 'switch_to_prev_tab') {
     const globaly = Settings.state.scrollThroughTabs === 'global'
     Tabs.switchTab(globaly, Settings.state.scrollThroughTabsCyclic, -1, false)
+  } else if (name === 'scroll_to_panel_top') {
+    Tabs.scrollToTab(activePanel.reactive.visibleTabIds[0], true)
+  } else if (name === 'scroll_to_panel_end') {
+    Tabs.scrollToTab(activePanel.reactive.visibleTabIds[activePanel.reactive.visibleTabIds.length - 1], true)
   } else if (name === 'duplicate_tabs') onKeyDuplicateTabs(false)
   else if (name === 'pin_tabs') onKeyPinTabs()
   else if (name === 'hide_act_panel') Sidebar.hidePanel(Sidebar.reactive.activePanelId)

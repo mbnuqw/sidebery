@@ -126,6 +126,8 @@ const layout = [
     'switch_to_last_tab',
     'switch_to_next_tab',
     'switch_to_prev_tab',
+    'scroll_to_panel_top',
+    'scroll_to_panel_end',
   ],
 
   // Move tabs

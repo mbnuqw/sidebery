@@ -355,6 +355,12 @@
     "switch_to_prev_tab": {
       "description": "__MSG_KbSwitchToPrevTab__"
     },
+    "scroll_to_panel_top": {
+      "description": "__MSG_KbScrollToPanelTop__"
+    },
+    "scroll_to_panel_end": {
+      "description": "__MSG_KbScrollToPanelEnd__"
+    },
     "duplicate_tabs": {
       "description": "__MSG_KbDuplicateTabs__"
     },
