@@ -513,6 +513,36 @@
     "zh_CN": "在活动面板中切换到第十个标签页",
     "zh_TW": "在活動面板中切換到第十個標籤頁"
   },
+  "KbSwitchToUnpinnedTab0": {
+    "en": "Switch to first unpinned tab of active panel"
+  },
+  "KbSwitchToUnpinnedTab1": {
+    "en": "Switch to second unpinned tab of active panel"
+  },
+  "KbSwitchToUnpinnedTab2": {
+    "en": "Switch to third unpinned tab of active panel"
+  },
+  "KbSwitchToUnpinnedTab3": {
+    "en": "Switch to fourth unpinned tab of active panel"
+  },
+  "KbSwitchToUnpinnedTab4": {
+    "en": "Switch to fifth unpinned tab of active panel"
+  },
+  "KbSwitchToUnpinnedTab5": {
+    "en": "Switch to sixth unpinned tab of active panel"
+  },
+  "KbSwitchToUnpinnedTab6": {
+    "en": "Switch to seventh unpinned tab of active panel"
+  },
+  "KbSwitchToUnpinnedTab7": {
+    "en": "Switch to eighth unpinned tab of active panel"
+  },
+  "KbSwitchToUnpinnedTab8": {
+    "en": "Switch to ninth unpinned tab of active panel"
+  },
+  "KbSwitchToUnpinnedTab9": {
+    "en": "Switch to tenth unpinned tab of active panel"
+  },
   "KbSwitchToLastTab": {
     "en": "Switch to the last tab of active panel",
     "ru": "Переключиться на последнюю вкладку активной панели",
@@ -531,6 +561,12 @@
     "ru": "Переключиться на предыдущую вкладку (используя настройки колесика мыши для переключения вкладок)",
     "zh_CN": "切换到上一个标签页(使用鼠标滚轮设置切换标签页)",
     "zh_TW": "切換到上一個標籤頁(使用鼠標滾輪設置切換標籤頁)"
+  },
+  "KbScrollToActivePanelTop": {
+    "en": "Scroll to the top of the active panel"
+  },
+  "KbScrollToActivePanelBottom": {
+    "en": "Scroll to the bottom of the active panel"
   },
 
   "proxy_popup_title_prefix": {

@@ -168,22 +168,40 @@ function onCmd(name: string): void {
   } else if (name.startsWith('switch_to_tab_')) {
     const index = parseInt(name.slice(-1))
     if (!isNaN(index)) onKeySwitchToTab(index)
+  } else if (name.startsWith('switch_to_unpinned_tab_')) {
+    const index = parseInt(name.slice(-1))
+    if (!isNaN(index)) onKeySwitchToTab(index, true)
   } else if (name === 'switch_to_next_tab') {
     const globaly = Settings.state.scrollThroughTabs === 'global'
     Tabs.switchTab(globaly, Settings.state.scrollThroughTabsCyclic, 1, false)
   } else if (name === 'switch_to_prev_tab') {
     const globaly = Settings.state.scrollThroughTabs === 'global'
     Tabs.switchTab(globaly, Settings.state.scrollThroughTabsCyclic, -1, false)
+  } else if (name === 'scroll_to_active_panel_top') {
+    let activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+    if (!activePanel) activePanel = Sidebar.panels[0]
+
+    Tabs.scrollToTab(activePanel.reactive.visibleTabIds[0], true)
+  } else if (name === 'scroll_to_active_panel_bottom') {
+    let activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+    if (!activePanel) activePanel = Sidebar.panels[0]
+
+    Tabs.scrollToTab(activePanel.reactive.visibleTabIds[activePanel.reactive.visibleTabIds.length - 1], true)
   } else if (name === 'duplicate_tabs') onKeyDuplicateTabs(false)
   else if (name === 'pin_tabs') onKeyPinTabs()
   else if (name === 'hide_act_panel') Sidebar.hidePanel(Sidebar.reactive.activePanelId)
 }
 
-function onKeySwitchToTab(targetIndex?: number): void {
+function onKeySwitchToTab(targetIndex?: number, unpinned?: boolean): void {
   const activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
   if (!Utils.isTabsPanel(activePanel)) return
 
-  const tabsList = [...activePanel.pinnedTabs, ...activePanel.tabs]
+  var tabsList
+  if (unpinned) {
+    tabsList = [...activePanel.tabs]
+  } else {
+    tabsList = [...activePanel.pinnedTabs, ...activePanel.tabs]
+  }
 
   let targetTab
   if (targetIndex === undefined) targetTab = tabsList[tabsList.length - 1]

@@ -99,10 +99,28 @@ const layout = [
     'switch_to_panel_9',
   ],
 
+  // Scrolling active tab panel.
+  [
+    'scroll_active_panel',
+    'scroll_to_active_panel_top',
+    'scroll_to_active_panel_bottom',
+    // TBD: page up / page down.
+  ],
+
   // Switching tabs
   [
     'switching_tab',
     'switch_to_parent_tab',
+    'switch_to_unpinned_tab_0',
+    'switch_to_unpinned_tab_1',
+    'switch_to_unpinned_tab_2',
+    'switch_to_unpinned_tab_3',
+    'switch_to_unpinned_tab_4',
+    'switch_to_unpinned_tab_5',
+    'switch_to_unpinned_tab_6',
+    'switch_to_unpinned_tab_7',
+    'switch_to_unpinned_tab_8',
+    'switch_to_unpinned_tab_9',
     'switch_to_tab_0',
     'switch_to_tab_1',
     'switch_to_tab_2',
