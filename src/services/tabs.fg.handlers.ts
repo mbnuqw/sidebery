@@ -851,6 +851,7 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
   }
 
   // Handle child tabs
+  let fullVisTabsRecalcNeeded = false
   handling_descendants: if (hasChildren) {
     const toRemove = []
     const outdentOnlyFirstChild = Settings.state.treeRmOutdent === 'first_child'
@@ -897,8 +898,12 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
       }
       // Or just make them visible
       else if (t.invisible && !Tabs.removingTabs.includes(t.id)) {
-        t.reactive.invisible = t.invisible = false
-        if (t.hidden) toShow.push(t.id)
+        // But only if this child tab is a direct descendant OR its parentTab is not folded
+        if (t.parentId === tabId || !Tabs.byId[t.parentId]?.folded) {
+          t.reactive.invisible = t.invisible = false
+          fullVisTabsRecalcNeeded = true
+          if (t.hidden) toShow.push(t.id)
+        }
       }
 
       // Decrease indent level of tabs in branch
@@ -969,7 +974,8 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
     return
   }
 
-  Sidebar.removeFromVisibleTabs(panel.id, tabId)
+  if (fullVisTabsRecalcNeeded && !Tabs.removingTabs.length) Sidebar.recalcVisibleTabs(panel.id)
+  else Sidebar.removeFromVisibleTabs(panel.id, tabId)
 
   // No-empty
   if (!tab.pinned && panel.noEmpty && !panel.reactive.len) {
