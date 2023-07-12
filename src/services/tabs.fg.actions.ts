@@ -2866,7 +2866,11 @@ export function createChildTab(tabId: ID, url?: string, containerId?: string): v
   const targetTab = Tabs.byId[tabId]
   if (!targetTab) return
 
-  const targetIndex = targetTab.index + 1
+  const panel = Sidebar.panelsById[targetTab.panelId]
+  if (!Utils.isTabsPanel(panel)) return
+
+  const conf = { openerTabId: tabId, autoGroupped: false, index: targetTab.index + 1 }
+  const targetIndex = Tabs.getIndexForNewTab(panel, conf)
 
   setNewTabPosition(targetIndex, targetTab.id, targetTab.panelId)
 
@@ -3179,16 +3183,22 @@ export function getPanelForNewTab(tab: Tab): TabsPanel | undefined {
   return findTabsPanelNearToTabIndex(tab.index)
 }
 
+interface IndexForNewTabConf {
+  openerTabId?: ID
+  autoGroupped: boolean
+  index: number
+}
+
 /**
  * Find and return index for new tab.
  */
-export function getIndexForNewTab(panel: TabsPanel, tab?: Tab): number {
-  const parent = Tabs.byId[tab?.openerTabId ?? NOID]
+export function getIndexForNewTab(panel: TabsPanel, conf?: IndexForNewTabConf): number {
+  const parent = Tabs.byId[conf?.openerTabId ?? NOID]
   const startIndex = panel.startTabIndex > -1 ? panel.startTabIndex : 0
   const nextIndex = panel.nextTabIndex > -1 ? panel.nextTabIndex : Tabs.list.length
   const activeTab = Tabs.byId[Tabs.activeId]
-  const autoGroupped = tab ? tab.autoGroupped : false
-  const fallbackIndex = tab ? tab.index : nextIndex
+  const autoGroupped = conf ? conf.autoGroupped : false
+  const fallbackIndex = conf ? conf.index : nextIndex
 
   // Place new tab opened from pinned tab
   if (parent && parent.pinned) {
