@@ -2369,6 +2369,7 @@ async function moveTabsToWin(
   tabIds: ID[],
   windowIdOrConfig?: ID | WindowChoosingDetails
 ): Promise<void> {
+  // Logs.info('Tabs.moveTabsToWin', tabIds)
   let windowId: ID
   if (windowIdOrConfig === undefined) windowId = await Windows.showWindowsPopup()
   else if (typeof windowIdOrConfig !== 'object') windowId = windowIdOrConfig
@@ -3398,6 +3399,7 @@ const enum SuccessorSearchMode {
  * after removing currenly active tab)
  */
 export function findSuccessorTab(tab: Tab, exclude?: ID[]): Tab | undefined {
+  // Logs.info('Tabs.findSuccessorTab', tab.id, exclude)
   let target
   const tree = Settings.state.tabsTree
   const rmFolded = Settings.state.rmChildTabs === 'folded'
@@ -4503,6 +4505,7 @@ function updateSuccession(exclude?: ID[]) {
   const activeTab = Tabs.byId[Tabs.activeId]
   if (activeTab) {
     const target = Tabs.findSuccessorTab(activeTab, exclude)
+    // Logs.info('Tabs.updateSuccession: active, target', activeTab.id, target?.id)
     if (target) {
       browser.tabs.moveInSuccession([activeTab.id], target.id).catch(err => {
         Logs.err('Tabs.updateSuccession: Cannot update succession:', err)

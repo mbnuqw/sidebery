@@ -1180,6 +1180,9 @@ function onTabDetached(id: ID, info: browser.tabs.DetachInfo): void {
   }
   if (Tabs.ignoreTabsEvents) return
   if (Tabs.tabsReinitializing) return Tabs.reinitTabs()
+
+  // Logs.info('Tabs.onTabDetached', id, info)
+
   const tab = Tabs.byId[id]
   if (tab) {
     tab.folded = false
@@ -1208,6 +1211,8 @@ async function onTabAttached(id: ID, info: browser.tabs.AttachInfo): Promise<voi
   }
   if (Tabs.ignoreTabsEvents) return
   if (Tabs.tabsReinitializing) return Tabs.reinitTabs()
+
+  // Logs.info('Tabs.onTabAttached', id, info)
 
   const ai = Tabs.attachingTabs.findIndex(t => t.id === id)
 
@@ -1259,6 +1264,8 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
   bufTabActivatedEventIndex = -1
   if (Tabs.ignoreTabsEvents) return
   if (Tabs.tabsReinitializing) return Tabs.reinitTabs()
+
+  // Logs.info('Tabs.onTabActivated', info.tabId, Tabs.detachingTabIds.length)
 
   // Reset selection
   if (!DnD.reactive.isStarted) Selection.resetSelection()
