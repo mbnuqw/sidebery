@@ -281,7 +281,7 @@ function onTabCreated(nativeTab: NativeTab, attached?: boolean): void {
   tab.index = index
   tab.parentId = Settings.state.tabsTree ? tab.openerTabId ?? NOID : NOID
   if (!tab.favIconUrl && !tab.internal && !tab.url.startsWith('a')) {
-    tab.favIconUrl = Favicons.getFavicon(tab.url)
+    tab.reactive.favIconUrl = tab.favIconUrl = Favicons.getFavicon(tab.url)
   }
 
   // Check if tab should be reopened in different container
