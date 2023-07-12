@@ -2112,13 +2112,18 @@ export async function move(
 
   // Move tabs to new window
   if (dst.windowId === NEWID) {
-    const info: ItemInfo[] = tabsInfo.map(t => ({
-      id: t.id,
-      url: t.url,
-      parentId: t.parentId,
-      panelId: t.panelId ?? dst.panelId,
-    }))
-    IPC.bg('createWindowWithTabs', info, { incognito: dst.incognito, tabId: MOVEID })
+    Tabs.detachingTabIds = []
+    const info: ItemInfo[] = tabsInfo.map(t => {
+      Tabs.detachingTabIds.push(t.id)
+      return {
+        id: t.id,
+        url: t.url,
+        parentId: t.parentId,
+        panelId: t.panelId ?? dst.panelId,
+      }
+    })
+    const conf = { incognito: dst.incognito, tabId: MOVEID }
+    IPC.bg('createWindowWithTabs', info, conf).finally(() => (Tabs.detachingTabIds = []))
     return
   }
 

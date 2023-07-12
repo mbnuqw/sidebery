@@ -1204,5 +1204,6 @@ export async function onDragEnd(e: DragEvent): Promise<void> {
   }, 100)
 
   // Update succession of active tab
-  Tabs.updateSuccessionDebounced(0)
+  const successionExclude = Tabs.detachingTabIds.length ? [...Tabs.detachingTabIds] : undefined
+  Tabs.updateSuccessionDebounced(0, successionExclude)
 }
