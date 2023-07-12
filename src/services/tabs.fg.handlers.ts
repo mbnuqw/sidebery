@@ -1090,12 +1090,10 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
 
   // Check if target tab already placed
   if (tab.moving !== undefined) {
-    Tabs.saveTabData(id)
-    if (!mvLen) Tabs.cacheTabsData()
     tab.dstPanelId = NOID
-    // TODO: if tab is already placed, maybe I can skip recalcing this shit?
+    Tabs.saveTabData(id)
+    Tabs.cacheTabsData(640)
     Sidebar.recalcTabsPanels()
-    // Sidebar.recalcVisibleTabs(tab.panelId)
     if (tab.active) Tabs.updateSuccessionDebounced(0)
     return
   }
@@ -1158,7 +1156,7 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
   }
 
   if (srcPanel) Sidebar.recalcVisibleTabs(srcPanel.id)
-  if (dstPanel) Sidebar.recalcVisibleTabs(dstPanel.id)
+  if (dstPanel && dstPanel !== srcPanel) Sidebar.recalcVisibleTabs(dstPanel.id)
 
   if (movedTab.panelId !== Sidebar.reactive.activePanelId && movedTab.active) {
     Sidebar.activatePanel(movedTab.panelId)
