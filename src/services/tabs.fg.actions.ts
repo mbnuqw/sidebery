@@ -2076,6 +2076,10 @@ export async function move(
   src: SrcPlaceInfo,
   dst: DstPlaceInfo
 ): Promise<void> {
+  if (!tabsInfo.length) return
+
+  // Logs.info('Tabs.move', tabsInfo.length, dst.index, dst.parentId, dst.panelId)
+
   // Ask about target window
   if (dst.windowChooseConf) {
     dst.windowId = await Windows.showWindowsPopup(dst.windowChooseConf)
@@ -2153,6 +2157,7 @@ export async function move(
   for (const info of tabsInfo) {
     const tab = Tabs.byId[info.id]
     if (!tab) continue
+    // Logs.info('Tabs.move: tabId', tab.id)
     if (tab.pinned) pinnedTabs.push(tab)
     else normalTabs.push(tab)
     tabs.push(tab)
@@ -2273,7 +2278,7 @@ export async function move(
   Tabs.updateTabsTree()
   Sidebar.recalcTabsPanels()
   if (srcPanelId) Sidebar.recalcVisibleTabs(srcPanelId)
-  if (dst.panelId) Sidebar.recalcVisibleTabs(dst.panelId)
+  if (dst.panelId && dst.panelId !== srcPanelId) Sidebar.recalcVisibleTabs(dst.panelId)
 
   // Update media state of panels
   if (isMediaActive && mediaPrevPanelId && dst.panelId) {
@@ -2336,6 +2341,7 @@ export async function move(
 
   // Move tabs
   const nativeDstIndex = dst.index <= tabs[0].index ? dst.index : dst.index - 1
+  // TODO: Do not call this fn if: all tabs go one after another and srcIndex === dstIndex
   await browser.tabs.move(ids, { windowId: Windows.id, index: nativeDstIndex }).catch(err => {
     Logs.err('Tabs.move: Cannot move native tabs', err)
   })
@@ -2452,6 +2458,9 @@ export async function moveToThisWin(tabs: Tab[], dst?: DstPlaceInfo): Promise<bo
 }
 
 export async function moveToNewPanel(tabIds: ID[]): Promise<void> {
+  if (!tabIds.length) return
+  Tabs.sortTabIds(tabIds)
+
   const probeTab = Tabs.byId[tabIds[0]]
   if (!probeTab) return Logs.warn('Tabs.moveToNewPanel: No first tab')
 

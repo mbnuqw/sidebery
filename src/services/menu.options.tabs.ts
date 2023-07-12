@@ -25,7 +25,8 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
       label: translate(`menu.tab.move_to_new_${Windows.incognito ? 'priv_window' : 'window'}`),
       icon: Windows.incognito ? 'icon_move_to_new_priv_win' : 'icon_move_to_new_norm_win',
       onClick: () => {
-        Tabs.move(Selection.getTabs(), {}, { windowId: NEWID, incognito: Windows.incognito })
+        const items = Selection.getTabsInfo(true)
+        Tabs.move(items, {}, { windowId: NEWID, incognito: Windows.incognito })
       },
     }
   },
@@ -39,7 +40,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
       option.label = translate('menu.tab.move_to_another_window')
       if (Windows.incognito) option.icon = 'icon_move_to_priv_win'
       else option.icon = 'icon_move_to_norm_win'
-      option.onClick = () => Tabs.move(Selection.getTabs(), {}, { windowId: wins[0].id })
+      option.onClick = () => Tabs.move(Selection.getTabsInfo(true), {}, { windowId: wins[0].id })
     } else {
       option.label = translate('menu.tab.move_to_window_')
       if (Windows.incognito) option.icon = 'icon_move_to_priv_wins'
@@ -47,7 +48,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
       option.onClick = () => {
         const filter = (w: Window) => w.incognito === Windows.incognito
         const windowChooseConf = { title: option.label, otherWindows: true, filter }
-        Tabs.move(Selection.getTabs(), {}, { windowChooseConf })
+        Tabs.move(Selection.getTabsInfo(true), {}, { windowChooseConf })
       }
     }
     if (!Settings.state.ctxMenuRenderInact && option.inactive) return
@@ -70,7 +71,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
         badge: 'icon_move_badge',
         color: panel.color,
         onClick: () => {
-          const items = Tabs.getTabsInfo(Selection.get())
+          const items = Selection.getTabsInfo(true)
           const src = { windowId: Windows.id, panelId: probeTab.panelId, pinned: probeTab.pinned }
           Tabs.move(items, src, { panelId: panel.id, index: panel.nextTabIndex })
         },
@@ -122,16 +123,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     const winLen = wins.length
     let items: ItemInfo[]
     if (winLen === 0) option.inactive = true
-    else {
-      items = Selection.getTabs().map(tab => ({
-        id: tab.id,
-        url: tab.url,
-        title: tab.title,
-        parentId: tab.parentId,
-        panelId: tab.panelId,
-        pinned: tab.pinned,
-      }))
-    }
+    else items = Selection.getTabsInfo(true)
 
     if (winLen <= 1) {
       if (Windows.incognito) {

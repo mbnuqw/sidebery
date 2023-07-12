@@ -231,6 +231,7 @@ function onKeyMoveTabsToPanel(targetIndex: number): void {
   if (!Utils.isTabsPanel(panel)) return
 
   const targetTabIds = Selection.isTabs() ? Selection.get() : [Tabs.activeId]
+  Tabs.sortTabIds(targetTabIds)
   const probeTab = Tabs.byId[targetTabIds[0]]
   if (probeTab && probeTab.panelId !== panel.id) {
     const items = Tabs.getTabsInfo(targetTabIds)
@@ -706,26 +707,17 @@ function onKeyMoveTabsToAct(): void {
   const activeTab = Tabs.byId[Tabs.activeId]
   if (!activeTab || activeTab.pinned) return
 
-  const items: ItemInfo[] = []
-  let panelId: ID | undefined
-  for (const id of Selection) {
-    if (Tabs.activeId === id) return
+  const items = Selection.getTabsInfo(true)
+  const firstItem = items[0]
+  if (!firstItem) return
 
-    const tab = Tabs.byId[id]
-    if (!tab || tab.pinned) continue
-    if (!panelId) panelId = tab.panelId
-
-    items.push({ id: tab.id, index: tab.index, parentId: tab.parentId })
-  }
+  const panelId = firstItem.panelId ?? NOID
+  if (!Utils.isTabsPanel(Sidebar.panelsById[panelId])) return
 
   Selection.resetSelection()
 
-  if (panelId === undefined) return
-
-  items.sort((a, b) => (a.index ?? 0) - (b.index ?? 0))
-
   const src = { panelId, pinned: false, windowId: Windows.id }
-  Tabs.move(items, src, { index: activeTab.index + 1, parentId: activeTab.id })
+  Tabs.move(items, src, { index: activeTab.index + 1, parentId: activeTab.id, panelId })
 }
 
 let tabsMoving = false
@@ -1036,6 +1028,8 @@ async function onKeyUnloadAllTabsInInactPanels() {
 function onKeyMoveTabsInPanel(place: 'start' | 'end', branch: boolean) {
   const ids = Selection.isTabs() ? Selection.get() : [Tabs.activeId]
   if (!ids.length) return
+
+  Tabs.sortTabIds(ids)
 
   const firstTab = Tabs.byId[ids[0]]
   if (!firstTab || firstTab.pinned) return

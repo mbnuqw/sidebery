@@ -1,5 +1,6 @@
 import * as Utils from 'src/utils'
-import { Tab, Bookmark, SelectionType, SubPanelType } from 'src/types'
+import * as Logs from 'src/services/logs'
+import { Tab, Bookmark, SelectionType, ItemInfo } from 'src/types'
 import { Selection } from 'src/services/selection'
 import { Settings } from 'src/services/settings'
 import { Windows } from 'src/services/windows'
@@ -41,13 +42,14 @@ export function get(): ID[] {
   return [...Selection.selected]
 }
 
-export function getTabs(): Tab[] {
-  const tabs: Tab[] = []
-  for (const id of Selection.selected) {
-    const tab = Tabs.byId[id]
-    if (tab) tabs.push(tab)
-  }
-  return tabs
+export function getTabsInfo(setPanelId?: boolean): ItemInfo[] {
+  if (selType !== SelectionType.Tabs) return []
+
+  const tabIds = [...Selection.selected]
+  Tabs.sortTabIds(tabIds)
+  // Logs.info('Sel.getTabsInfo', tabIds)
+
+  return Tabs.getTabsInfo(tabIds, setPanelId)
 }
 
 export function map<T>(cb: (v: ID, index: number, array: ID[]) => T): T[] {
