@@ -286,6 +286,36 @@
     "switch_to_parent_tab": {
       "description": "__MSG_KbSwitchToParentTab__"
     },
+    "switch_to_unpinned_tab_0": {
+      "description": "__MSG_KbSwitchToUnpinnedTab0__"
+    },
+    "switch_to_unpinned_tab_1": {
+      "description": "__MSG_KbSwitchToUnpinnedTab1__"
+    },
+    "switch_to_unpinned_tab_2": {
+      "description": "__MSG_KbSwitchToUnpinnedTab2__"
+    },
+    "switch_to_unpinned_tab_3": {
+      "description": "__MSG_KbSwitchToUnpinnedTab3__"
+    },
+    "switch_to_unpinned_tab_4": {
+      "description": "__MSG_KbSwitchToUnpinnedTab4__"
+    },
+    "switch_to_unpinned_tab_5": {
+      "description": "__MSG_KbSwitchToUnpinnedTab5__"
+    },
+    "switch_to_unpinned_tab_6": {
+      "description": "__MSG_KbSwitchToUnpinnedTab6__"
+    },
+    "switch_to_unpinned_tab_7": {
+      "description": "__MSG_KbSwitchToUnpinnedTab7__"
+    },
+    "switch_to_unpinned_tab_8": {
+      "description": "__MSG_KbSwitchToUnpinnedTab8__"
+    },
+    "switch_to_unpinned_tab_9": {
+      "description": "__MSG_KbSwitchToUnpinnedTab9__"
+    },
     "switch_to_tab_0": {
       "description": "__MSG_KbSwitchToTab0__"
     },
