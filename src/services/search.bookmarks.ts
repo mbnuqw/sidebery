@@ -46,7 +46,7 @@ function searchHistoryWalker(nodes: Bookmark[], filtered: Bookmark[]): void {
 
 let prevActivePanelId: ID | undefined
 let expandedBookmarks: Record<ID, boolean>
-export function onBookmarksSearch(activePanel: Panel, panel?: Panel): void {
+export function onBookmarksSearch(activePanel: Panel, panel?: Panel, noSel?: boolean): void {
   if (!Bookmarks.reactive.tree.length) return
 
   if (!panel) panel = activePanel
@@ -98,7 +98,7 @@ export function onBookmarksSearch(activePanel: Panel, panel?: Panel): void {
     panel.reactive.filteredBookmarks = filtered
     panel.reactive.filteredLen = filtered.length
 
-    if (panel.reactive.filteredBookmarks.length) {
+    if (panel.reactive.filteredBookmarks.length && !noSel) {
       const first = panel.reactive.filteredBookmarks[0]
       Selection.resetSelection()
       Selection.selectBookmark(first.id)

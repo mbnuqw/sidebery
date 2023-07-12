@@ -578,7 +578,7 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
     Tabs.updateTooltipDebounced(tabId, 1000)
 
     // Update filtered results
-    if (Search.reactive.rawValue) Search.searchDebounced(500)
+    if (Search.reactive.rawValue) Search.searchDebounced(500, undefined, true)
   }
 
   // Handle favicon change
@@ -638,7 +638,7 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
     Tabs.updateTooltipDebounced(tabId, 1000)
 
     // Update filtered results
-    if (Search.reactive.rawValue) Search.searchDebounced(500)
+    if (Search.reactive.rawValue) Search.searchDebounced(500, undefined, true)
   }
 
   // Reset mediaPaused flag

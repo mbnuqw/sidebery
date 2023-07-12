@@ -275,14 +275,14 @@ export function menu(): void {
 }
 
 let searchTimeout: number | undefined
-export function searchDebounced(delay: number, value?: string) {
+export function searchDebounced(delay: number, value?: string, noSel?: boolean) {
   clearTimeout(searchTimeout)
-  searchTimeout = setTimeout(() => search(value), delay)
+  searchTimeout = setTimeout(() => search(value, noSel), delay)
 }
 
 let query = ''
 let beforeSwitchingPanelId: ID | undefined
-export function search(value?: string): void {
+export function search(value?: string, noSel?: boolean): void {
   if (value !== undefined) {
     if (value.length < MIN_SEARCH_QUERY_LEN) value = ''
     if (Search.reactive.value === value) return
@@ -316,18 +316,19 @@ export function search(value?: string): void {
     if (Sidebar.subPanelActive) {
       if (Sidebar.subPanelType === SubPanelType.Bookmarks && Sidebar.subPanels.bookmarks) {
         targetPanelId = Sidebar.subPanels.bookmarks.id
-        SearchBookmarks.onBookmarksSearch(actPanel, Sidebar.subPanels.bookmarks)
+        SearchBookmarks.onBookmarksSearch(actPanel, Sidebar.subPanels.bookmarks, noSel)
       } else if (Sidebar.subPanelType === SubPanelType.History) {
         targetPanelId = NOID
-        SearchHistory.onHistorySearch()
+        SearchHistory.onHistorySearch(noSel)
       }
     } else {
-      SearchTabs.onTabsSearch(actPanel)
+      SearchTabs.onTabsSearch(actPanel, noSel)
     }
-  } else if (Utils.isBookmarksPanel(actPanel)) SearchBookmarks.onBookmarksSearch(actPanel)
-  else if (Utils.isHistoryPanel(actPanel)) {
+  } else if (Utils.isBookmarksPanel(actPanel)) {
+    SearchBookmarks.onBookmarksSearch(actPanel, undefined, noSel)
+  } else if (Utils.isHistoryPanel(actPanel)) {
     targetPanelId = NOID
-    SearchHistory.onHistorySearch()
+    SearchHistory.onHistorySearch(noSel)
   }
 
   if (value === '') {

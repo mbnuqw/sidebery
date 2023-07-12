@@ -6,7 +6,7 @@ import { Search } from 'src/services/search'
 import { Sidebar } from 'src/services/sidebar'
 
 let prevActivePanelId: ID | undefined
-export function onTabsSearch(activePanel: Panel): void {
+export function onTabsSearch(activePanel: Panel, noSel?: boolean): void {
   if (!Utils.isTabsPanel(activePanel)) return
 
   const value = Search.reactive.value
@@ -49,8 +49,8 @@ export function onTabsSearch(activePanel: Panel): void {
       Sidebar.recalcVisibleTabs(activePanel.id)
     }
 
-    // Search start
-    if (value) {
+    // Select and scroll to the first target
+    if (value && !noSel) {
       const firstTab = activePanel.filteredTabs?.[0]
       if (firstTab) {
         Selection.resetSelection()

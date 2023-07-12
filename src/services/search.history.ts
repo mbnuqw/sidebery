@@ -3,7 +3,7 @@ import { Sidebar } from 'src/services/sidebar'
 import { Search } from 'src/services/search'
 import { Selection } from 'src/services/selection'
 
-export async function onHistorySearch(): Promise<void> {
+export async function onHistorySearch(noSel?: boolean): Promise<void> {
   History.reactive.ready = History.ready = false
 
   if (Search.reactive.value) {
@@ -21,7 +21,7 @@ export async function onHistorySearch(): Promise<void> {
       History.reactive.filtered = undefined
     }
 
-    if (first) {
+    if (first && !noSel) {
       Selection.resetSelection()
       Selection.selectHistory(first.id)
       History.scrollToHistoryItem(first.id)
