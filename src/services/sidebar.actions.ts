@@ -396,7 +396,7 @@ export function addToVisibleTabs(panelId: ID, tabId: ID) {
   const panel = Sidebar.panelsById[panelId]
   if (!Utils.isTabsPanel(panel)) return
 
-  const index = panel.tabs.findIndex(t => t.id === tabId)
+  const index = panel.reactive.visibleTabIds.indexOf(tabId)
   if (index === -1) return recalcVisibleTabs(panelId)
 
   panel.reactive.visibleTabIds.splice(index, 0, tabId)
