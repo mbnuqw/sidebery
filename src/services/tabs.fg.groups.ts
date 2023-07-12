@@ -5,7 +5,7 @@ import { Windows } from 'src/services/windows'
 import { Settings } from 'src/services/settings'
 import { Tabs } from './tabs.fg'
 import { Favicons } from './favicons'
-import { GroupConfigResult } from './sidebar'
+import { GroupConfigResult, Sidebar } from './sidebar'
 import * as IPC from './ipc'
 import * as Logs from './logs'
 import * as Popups from './popups'
@@ -102,6 +102,11 @@ export async function groupTabs(tabIds: ID[], conf?: GroupConfig): Promise<void>
     if (result === GroupConfigResult.Cancel) return
   }
 
+  // Get panel
+  const panelId = tabs[0].panelId
+  const panel = Sidebar.panelsById[panelId]
+  if (!Utils.isTabsPanel(panel)) return
+
   // Find index and create group tab
   Tabs.setNewTabPosition(tabs[0].index, tabs[0].parentId, tabs[0].panelId)
   const groupTab = await browser.tabs.create({
@@ -132,24 +137,8 @@ export async function groupTabs(tabIds: ID[], conf?: GroupConfig): Promise<void>
     }
     properIndex++
   }
-  if (indexToMoveTo !== -1 && tabsToMove.length) {
-    await Tabs.move(tabsToMove, {}, { index: indexToMoveTo, parentId: groupTab.id })
-  }
-
-  // Update parent of selected tabs
-  tabs[0].parentId = groupTab.id
-  for (let i = 1; i < tabs.length; i++) {
-    const tab = tabs[i]
-
-    if (tab.lvl <= tabs[0].lvl) {
-      tab.parentId = groupTab.id
-      tab.reactive.folded = tab.folded = false
-    }
-  }
-  Tabs.updateTabsTree(tabs[0].index - 2, tabs[tabs.length - 1].index + 1)
-
-  tabs.forEach(t => Tabs.saveTabData(t.id))
-  Tabs.cacheTabsData()
+  const dst = { index: groupTab.index + 1, panelId: panel.id, parentId: groupTab.id }
+  await Tabs.move(tabs, {}, dst)
 }
 
 export async function openGroupConfigPopup(config: GroupConfig): Promise<GroupConfigResult> {
