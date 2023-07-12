@@ -793,6 +793,8 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
   if (Tabs.ignoreTabsEvents) return
   if (Tabs.tabsReinitializing) return Tabs.reinitTabs()
 
+  // Logs.info('Tabs.onTabRemoved', tabId)
+
   const removedExternally = !Tabs.removingTabs || !Tabs.removingTabs.length
   if (Tabs.removingTabs.length > 0) {
     Tabs.checkRemovedTabs()
@@ -1074,6 +1076,8 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
     Menu.close()
     Selection.resetSelection()
   }
+
+  // Logs.info('Tabs.onTabMove', id, info.fromIndex, info.toIndex)
 
   // Check if target tab already placed
   if (tab.moving !== undefined) {

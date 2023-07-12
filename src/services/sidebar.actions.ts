@@ -249,6 +249,7 @@ export function updateFontSize(): void {
 }
 
 export function recalcTabsPanels(reset?: boolean): void {
+  // Logs.info('Sidebar.recalcTabsPanels', reset)
   const pinnedTabIds: ID[] = []
   const pinnedTabs: Tab[] = []
   const pinnedTabIdsByPanel: Record<ID, ID[]> = {}
@@ -368,6 +369,7 @@ export function recalcTabsPanels(reset?: boolean): void {
 }
 
 export function recalcVisibleTabs(panelId?: ID) {
+  // Logs.info('Sidebar.recalcVisibleTabs', panelId)
   if (panelId === undefined) {
     for (const panel of Sidebar.panels) {
       if (!Utils.isTabsPanel(panel)) continue
@@ -579,6 +581,7 @@ export function updateBounds(): void {
  * Calc tabs bounds
  */
 function calcTabsBounds(panel: TabsPanel): ItemBounds[] {
+  // Logs.info('Sidebar.calcTabsBounds', panel.id)
   const result: ItemBounds[] = []
   const th = Sidebar.tabHeight
   const tm = Sidebar.tabMargin

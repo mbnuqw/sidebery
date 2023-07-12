@@ -535,6 +535,7 @@ function findCachedData(
  * Save tabs data
  */
 export function cacheTabsData(delay = 300): void {
+  // Logs.info('Tabs.cacheTabsData')
   if (cacheTabsDataTimeout) clearTimeout(cacheTabsDataTimeout)
   cacheTabsDataTimeout = setTimeout(() => {
     if (Tabs.tabsReinitializing) return
@@ -564,6 +565,7 @@ let cacheTabsDataTimeout: number | undefined
  * Save tab data to its session storage
  */
 export function saveTabData(tabId: ID): void {
+  // Logs.info('Tabs.saveTabData', tabId)
   const tab = Tabs.byId[tabId]
   if (!tab) return
 
@@ -1021,8 +1023,7 @@ export async function removeTabs(tabIds: ID[], silent?: boolean): Promise<void> 
   tabs.forEach(t => {
     parents[t.id] = t.parentId
     if (!t.invisible) visibleLen++
-    t.invisible = true
-    t.reactive.invisible = true
+    t.reactive.invisible = t.invisible = true
     if (t.active) activeTab = t
   })
   if (tabs.length === 1) Sidebar.removeFromVisibleTabs(tabs[0].panelId, tabs[0].id)
