@@ -3560,6 +3560,7 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.kb_scroll_active_panel': {
     en: 'Scrolling the active panel',
+    ru: 'Прокрутка активной панели',
   },
   'settings.kb_switching_tab': {
     en: 'Switching between tabs',

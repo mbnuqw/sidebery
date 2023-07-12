@@ -514,34 +514,44 @@
     "zh_TW": "在活動面板中切換到第十個標籤頁"
   },
   "KbSwitchToUnpinnedTab0": {
-    "en": "Switch to first unpinned tab of active panel"
+    "en": "Switch to first unpinned tab of active panel",
+    "ru": "Переключиться на первую незакрепленную вкладку активной панели"
   },
   "KbSwitchToUnpinnedTab1": {
-    "en": "Switch to second unpinned tab of active panel"
+    "en": "Switch to second unpinned tab of active panel",
+    "ru": "Переключиться на вторую незакрепленную вкладку активной панели"
   },
   "KbSwitchToUnpinnedTab2": {
-    "en": "Switch to third unpinned tab of active panel"
+    "en": "Switch to third unpinned tab of active panel",
+    "ru": "Переключиться на третью незакрепленную вкладку активной панели"
   },
   "KbSwitchToUnpinnedTab3": {
-    "en": "Switch to fourth unpinned tab of active panel"
+    "en": "Switch to fourth unpinned tab of active panel",
+    "ru": "Переключиться на четвертую незакрепленную вкладку активной панели"
   },
   "KbSwitchToUnpinnedTab4": {
-    "en": "Switch to fifth unpinned tab of active panel"
+    "en": "Switch to fifth unpinned tab of active panel",
+    "ru": "Переключиться на пятую незакрепленную вкладку активной панели"
   },
   "KbSwitchToUnpinnedTab5": {
-    "en": "Switch to sixth unpinned tab of active panel"
+    "en": "Switch to sixth unpinned tab of active panel",
+    "ru": "Переключиться на шестую незакрепленную вкладку активной панели"
   },
   "KbSwitchToUnpinnedTab6": {
-    "en": "Switch to seventh unpinned tab of active panel"
+    "en": "Switch to seventh unpinned tab of active panel",
+    "ru": "Переключиться на седьмую незакрепленную вкладку активной панели"
   },
   "KbSwitchToUnpinnedTab7": {
-    "en": "Switch to eighth unpinned tab of active panel"
+    "en": "Switch to eighth unpinned tab of active panel",
+    "ru": "Переключиться на восьмую незакрепленную вкладку активной панели"
   },
   "KbSwitchToUnpinnedTab8": {
-    "en": "Switch to ninth unpinned tab of active panel"
+    "en": "Switch to ninth unpinned tab of active panel",
+    "ru": "Переключиться на девятую незакрепленную вкладку активной панели"
   },
   "KbSwitchToUnpinnedTab9": {
-    "en": "Switch to tenth unpinned tab of active panel"
+    "en": "Switch to tenth unpinned tab of active panel",
+    "ru": "Переключиться на десятую незакрепленную вкладку активной панели"
   },
   "KbSwitchToLastTab": {
     "en": "Switch to the last tab of active panel",
@@ -563,10 +573,12 @@
     "zh_TW": "切換到上一個標籤頁(使用鼠標滾輪設置切換標籤頁)"
   },
   "KbScrollToActivePanelTop": {
-    "en": "Scroll to the top of the active panel"
+    "en": "Scroll to the top of the active panel",
+    "ru": "Прокрутить до верхней части активной панели"
   },
   "KbScrollToActivePanelBottom": {
-    "en": "Scroll to the bottom of the active panel"
+    "en": "Scroll to the bottom of the active panel",
+    "ru": "Прокрутить до нижней части активной панели"
   },
 
   "proxy_popup_title_prefix": {
