@@ -1214,18 +1214,18 @@ async function onTabAttached(id: ID, info: browser.tabs.AttachInfo): Promise<voi
   let tab
   if (ai > -1) {
     tab = Tabs.attachingTabs.splice(ai, 1)[0]
-    Tabs.reactivateTab(tab)
   } else {
     deferredActivationHandling.id = id
     const nativeTab = await browser.tabs.get(id)
     tab = Tabs.mutateNativeTabToSideberyTab(nativeTab)
-    Tabs.reactivateTab(tab)
   }
 
   tab.windowId = Windows.id
   tab.index = info.newPosition
   tab.panelId = NOID
-  tab.sel = false
+  tab.reactive.sel = tab.sel = false
+
+  Tabs.reactivateTab(tab)
 
   onTabCreated(tab, true)
 
