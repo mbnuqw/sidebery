@@ -116,9 +116,6 @@ let inputTimeout: number | undefined
 function onInput(e: Event) {
   Search.rawValue = (e.target as HTMLInputElement | null)?.value ?? ''
 
-  // TODO:...
-  if (Search.rawValue) Search.showBar()
-
   clearTimeout(inputTimeout)
   inputTimeout = setTimeout(() => {
     Search.search((e.target as HTMLInputElement | null)?.value)

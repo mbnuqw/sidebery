@@ -371,6 +371,7 @@ export function stop(): void {
   Search.reactive.rawValue = Search.rawValue = ''
   Search.search('')
   subPanelOpenBySearch = false
+  blur()
 }
 
 export function check(str: string): boolean {
@@ -385,6 +386,10 @@ export function registerInputEl(el: HTMLInputElement): void {
 
 export function focus(): void {
   if (inputEl) inputEl.focus({ preventScroll: true })
+}
+
+function blur() {
+  if (inputEl) inputEl.blur()
 }
 
 export function toggleBar(): void {
