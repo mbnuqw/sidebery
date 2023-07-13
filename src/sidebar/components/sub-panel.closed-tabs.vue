@@ -134,7 +134,7 @@ function onTabDragStart(e: DragEvent, tab: RecentlyClosedTabInfo) {
     items: dragItems,
     windowId: Windows.id,
     incognito: Windows.incognito,
-    panelId: Sidebar.reactive.activePanelId,
+    panelId: Sidebar.activePanelId,
     x: e.clientX,
     y: e.clientY,
     copy: true,
@@ -180,7 +180,7 @@ async function openTabs(targetTab: RecentlyClosedTabInfo, inactive: boolean, bra
 
   const tabsBranch = getBranch(targetTab)
   const rcTabs = branch ? tabsBranch : [targetTab]
-  const panelId = Sidebar.reactive.activePanelId
+  const panelId = Sidebar.activePanelId
   const panel = Sidebar.panelsById[panelId]
   if (!Utils.isTabsPanel(panel)) return
 

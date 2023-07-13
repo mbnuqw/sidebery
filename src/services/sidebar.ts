@@ -6,7 +6,6 @@ export interface SidebarReactiveState {
   nav: ID[]
 
   activePanelId: ID
-  lastActivePanelId: ID
 
   horNavWidth: number
   navBtnWidth: number
@@ -36,7 +35,6 @@ export const Sidebar = {
     nav: [],
 
     activePanelId: NOID,
-    lastActivePanelId: NOID,
 
     horNavWidth: 0,
     navBtnWidth: 0,
@@ -52,6 +50,8 @@ export const Sidebar = {
     subPanelType: SubPanelType.Null,
   } as SidebarReactiveState,
 
+  activePanelId: NOID,
+  lastActivePanelId: NOID,
   panelsById: {} as Record<ID, Panel>,
   panels: [] as Panel[],
   nav: [] as ID[],

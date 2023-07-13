@@ -128,7 +128,7 @@ function nextWalker(nodes: Bookmark[]): ID | undefined {
 }
 
 export function onBookmarksSearchNext(panel?: Panel): void {
-  if (!panel) panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  if (!panel) panel = Sidebar.panelsById[Sidebar.activePanelId]
   if (!Utils.isBookmarksPanel(panel) || !panel.reactive.filteredBookmarks) return
 
   nextWalkerPrevNode = undefined
@@ -163,7 +163,7 @@ function prevWalker(nodes: Bookmark[]): ID | undefined {
 }
 
 export function onBookmarksSearchPrev(panel?: Panel): void {
-  if (!panel) panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  if (!panel) panel = Sidebar.panelsById[Sidebar.activePanelId]
   if (!Utils.isBookmarksPanel(panel) || !panel.reactive.filteredBookmarks) return
 
   prevWalkerPrevId = undefined

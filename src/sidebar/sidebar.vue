@@ -317,7 +317,7 @@ function onMouseLeave(): void {
   Mouse.mouseIn = false
   Mouse.stopResizing()
 
-  const activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  const activePanel = Sidebar.panelsById[Sidebar.activePanelId]
   if (!Utils.isTabsPanel(activePanel) && activePanel?.tempMode && !Search.rawValue) {
     Sidebar.switchPanelBack(300)
   }
@@ -388,7 +388,7 @@ function getPanelPos(i: number, panelId: ID): PanelPosition {
   if (panelId === Sidebar.reactive.activePanelId) return 'center'
   if (i === -1) return 'right'
 
-  const activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  const activePanel = Sidebar.panelsById[Sidebar.activePanelId]
   if (activePanel && i > activePanel.index) return 'right'
   else return 'left'
 }

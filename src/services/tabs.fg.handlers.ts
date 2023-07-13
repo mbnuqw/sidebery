@@ -425,12 +425,7 @@ function onTabCreated(nativeTab: NativeTab, attached?: boolean): void {
   }
 
   // Scroll to new inactive tab
-  if (
-    !tab.pinned &&
-    !tab.active &&
-    !tab.invisible &&
-    tab.panelId === Sidebar.reactive.activePanelId
-  ) {
+  if (!tab.pinned && !tab.active && !tab.invisible && tab.panelId === Sidebar.activePanelId) {
     Tabs.scrollToTabDebounced(120, tab.id, true)
   }
 
@@ -704,7 +699,7 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
       panel = Sidebar.panelsById[tab.panelId]
       Tabs.saveTabData(tab.id)
 
-      if (tab.active && tab.panelId !== Sidebar.reactive.activePanelId) {
+      if (tab.active && tab.panelId !== Sidebar.activePanelId) {
         Sidebar.activatePanel(tab.panelId)
       }
     }
@@ -1020,7 +1015,7 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
       !panel.tabs.length &&
       Tabs.activeId !== tabId && // <- b/c panel will be switched in onTabActivated
       !panel.pinnedTabs.length &&
-      Sidebar.reactive.activePanelId === panel.id &&
+      Sidebar.activePanelId === panel.id &&
       !Sidebar.switchingLock
     ) {
       const activeTab = Tabs.byId[Tabs.activeId]
@@ -1158,7 +1153,7 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
   if (srcPanel) Sidebar.recalcVisibleTabs(srcPanel.id)
   if (dstPanel && dstPanel !== srcPanel) Sidebar.recalcVisibleTabs(dstPanel.id)
 
-  if (movedTab.panelId !== Sidebar.reactive.activePanelId && movedTab.active) {
+  if (movedTab.panelId !== Sidebar.activePanelId && movedTab.active) {
     Sidebar.activatePanel(movedTab.panelId)
   }
 
@@ -1319,7 +1314,7 @@ function onTabActivated(info: browser.tabs.ActiveInfo): void {
   }
 
   // Switch to activated tab's panel
-  const activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  const activePanel = Sidebar.panelsById[Sidebar.activePanelId]
   const switchPanel = Settings.state.switchPanelAfterSwitchingTab !== 'no'
   if (
     switchPanel &&

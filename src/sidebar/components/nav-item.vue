@@ -116,7 +116,7 @@ const bookmarksBadge =
   (props.item.iconSVG !== 'icon_bookmarks' || !!props.item.iconIMG)
 
 const isUpdated = computed<boolean>(() => {
-  if (Utils.isNavPanel(props.item) && Utils.isTabsPanel(props.item)) {
+  if (Utils.isTabsPanel(props.item)) {
     return Sidebar.reactive.activePanelId !== props.item.id && props.item.reactive.updated
   }
   return false

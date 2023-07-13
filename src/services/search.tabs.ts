@@ -70,7 +70,7 @@ export function onTabsSearch(activePanel: Panel, noSel?: boolean): void {
 }
 
 export function onTabsSearchNext(panel?: Panel): void {
-  if (!panel) panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  if (!panel) panel = Sidebar.panelsById[Sidebar.activePanelId]
   if (!Utils.isTabsPanel(panel) || !panel.filteredTabs) return
 
   const selId = Selection.getFirst()
@@ -88,7 +88,7 @@ export function onTabsSearchNext(panel?: Panel): void {
 }
 
 export function onTabsSearchPrev(panel?: Panel): void {
-  if (!panel) panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  if (!panel) panel = Sidebar.panelsById[Sidebar.activePanelId]
   if (!Utils.isTabsPanel(panel) || !panel.filteredTabs) return
 
   const selId = Selection.getFirst()

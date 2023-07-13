@@ -20,7 +20,7 @@ export async function open(section?: string): Promise<void> {
   let url = browser.runtime.getURL('page.setup/setup.html')
   const existedTab = Tabs.list.find(t => t.url.startsWith(url))
   const activeTab = Tabs.byId[Tabs.activeId]
-  let activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  let activePanel = Sidebar.panelsById[Sidebar.activePanelId]
   if (!Utils.isTabsPanel(activePanel)) {
     activePanel = Sidebar.panelsById[Sidebar.lastTabsPanelId]
   }

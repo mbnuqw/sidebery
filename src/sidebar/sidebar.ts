@@ -112,7 +112,7 @@ async function main(): Promise<void> {
 
   await Sidebar.loadPanels()
 
-  const actPanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  const actPanel = Sidebar.panelsById[Sidebar.activePanelId]
   const initBookmarks = !Settings.state.loadBookmarksOnDemand || Utils.isBookmarksPanel(actPanel)
   const initHistory = !Settings.state.loadHistoryOnDemand || Utils.isHistoryPanel(actPanel)
 

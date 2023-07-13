@@ -295,7 +295,7 @@ function onAddedHistoryFg(): void {
     const panel = Sidebar.panelsById.history
     if (!panel) return
 
-    if (!panel.ready && Sidebar.reactive.activePanelId === 'history') History.load()
+    if (!panel.ready && Sidebar.activePanelId === 'history') History.load()
   }
 }
 
@@ -323,7 +323,7 @@ function onAddedBookmarksFg(): void {
     const panel = Sidebar.panels.find(p => Utils.isBookmarksPanel(p))
     if (!panel) return
 
-    const actPanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+    const actPanel = Sidebar.panelsById[Sidebar.activePanelId]
     if (!panel.ready && Utils.isBookmarksPanel(actPanel)) Bookmarks.load()
   }
 }

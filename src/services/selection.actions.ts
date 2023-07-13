@@ -201,7 +201,7 @@ export function selectBookmarksRange(aBookmark: Bookmark, bBookmark?: Bookmark):
   let inside = false
   let activePanel
   if (Sidebar.subPanelActive) activePanel = Sidebar.subPanels.bookmarks
-  else activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  else activePanel = Sidebar.panelsById[Sidebar.activePanelId]
   if (activePanel) {
     for (const bound of activePanel.bounds) {
       const bkm = Bookmarks.reactive.byId[bound.id]

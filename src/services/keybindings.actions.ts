@@ -183,11 +183,11 @@ function onCmd(name: string): void {
     onKeyScrollToTopBottom(1)
   } else if (name === 'duplicate_tabs') onKeyDuplicateTabs(false)
   else if (name === 'pin_tabs') onKeyPinTabs()
-  else if (name === 'hide_act_panel') Sidebar.hidePanel(Sidebar.reactive.activePanelId)
+  else if (name === 'hide_act_panel') Sidebar.hidePanel(Sidebar.activePanelId)
 }
 
 function onKeyScrollToTopBottom(dir: 1 | -1) {
-  const activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  const activePanel = Sidebar.panelsById[Sidebar.activePanelId]
   if (!activePanel) return
 
   Sidebar.scrollActivePanel(dir > 0 ? 99999999 : 0)
@@ -199,7 +199,7 @@ interface SwitchToTab {
 }
 
 function onKeySwitchToTab(targetIndex?: number, conf?: SwitchToTab): void {
-  const actPanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  const actPanel = Sidebar.panelsById[Sidebar.activePanelId]
   if (!Utils.isTabsPanel(actPanel)) return
 
   let normTabs
@@ -264,7 +264,7 @@ function onKeyActivate(): void {
 
   // No selection
   if (!Selection.isSet()) {
-    const activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+    const activePanel = Sidebar.panelsById[Sidebar.activePanelId]
     // Select active tab
     if (Utils.isTabsPanel(activePanel) && activePanel.tabs.length) {
       const activeTab = Tabs.list.find(t => t.active && t.panelId === activePanel.id)
@@ -275,7 +275,7 @@ function onKeyActivate(): void {
   // Header
   if (Selection.isHeader()) {
     const id = Selection.getFirst()
-    const activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+    const activePanel = Sidebar.panelsById[Sidebar.activePanelId]
     if (Utils.isBookmarksPanel(activePanel) && activePanel.component) {
       activePanel.component.toggleGroupById(id)
     }
@@ -300,9 +300,9 @@ function onKeyActivate(): void {
     if (!target) return
 
     if (target.type === 'folder') {
-      const isExpanded = Bookmarks.reactive.expanded[Sidebar.reactive.activePanelId]?.[target.id]
-      if (isExpanded) Bookmarks.foldBookmark(target.id, Sidebar.reactive.activePanelId)
-      else Bookmarks.expandBookmark(target.id, Sidebar.reactive.activePanelId)
+      const isExpanded = Bookmarks.reactive.expanded[Sidebar.activePanelId]?.[target.id]
+      if (isExpanded) Bookmarks.foldBookmark(target.id, Sidebar.activePanelId)
+      else Bookmarks.expandBookmark(target.id, Sidebar.activePanelId)
     }
 
     if (target.type === 'bookmark') {
@@ -324,7 +324,7 @@ function onKeyActivate(): void {
  * New tab in active panel
  */
 function onKeyNewTabInPanel(): void {
-  let panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  let panel = Sidebar.panelsById[Sidebar.activePanelId]
   if (!Utils.isTabsPanel(panel)) panel = Sidebar.panelsById[Sidebar.lastTabsPanelId]
   if (!Utils.isTabsPanel(panel)) return
   Tabs.createTabInPanel(panel)
@@ -370,7 +370,7 @@ function onKeySelect(dir: number): void {
     return
   }
 
-  const activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  const activePanel = Sidebar.panelsById[Sidebar.activePanelId]
 
   if (Utils.isTabsPanel(activePanel)) {
     let tabs
@@ -444,7 +444,7 @@ function onKeySelect(dir: number): void {
 function onKeySelectExpand(dir: number): void {
   if (!dir) return
   Sidebar.updateBounds()
-  const activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  const activePanel = Sidebar.panelsById[Sidebar.activePanelId]
   if (!activePanel) return
   if (!activePanel.bounds?.length) return
 
@@ -494,7 +494,7 @@ function onKeySelectExpand(dir: number): void {
  */
 function onKeySelectAll(): void {
   Sidebar.updateBounds()
-  const activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  const activePanel = Sidebar.panelsById[Sidebar.activePanelId]
   if (!activePanel) return
   if (!activePanel.bounds || !activePanel.bounds.length) return
 
@@ -508,7 +508,7 @@ function onKeySelectAll(): void {
  * Open context menu
  */
 function onKeyMenu(): void {
-  const activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  const activePanel = Sidebar.panelsById[Sidebar.activePanelId]
   if (!activePanel) return
 
   const actPanelIsTabs = Utils.isTabsPanel(activePanel)
@@ -565,7 +565,7 @@ function onKeyFoldBranch(): void {
       Tabs.foldTabsBranch(tabId)
     }
   } else if (Selection.isBookmarks()) {
-    const activePanelId = Sidebar.reactive.activePanelId
+    const activePanelId = Sidebar.activePanelId
     for (const bookmarkId of Selection) {
       const bookmark = Bookmarks.reactive.byId[bookmarkId]
       const isExpanded = Bookmarks.reactive.expanded[activePanelId]?.[bookmarkId]
@@ -585,7 +585,7 @@ function onKeyExpandBranch(): void {
       Tabs.expTabsBranch(tabId)
     }
   } else if (Selection.isBookmarks()) {
-    const activePanelId = Sidebar.reactive.activePanelId
+    const activePanelId = Sidebar.activePanelId
     for (const bookmarkId of Selection) {
       const bookmark = Bookmarks.reactive.byId[bookmarkId]
       const isExpanded = Bookmarks.reactive.expanded[activePanelId]?.[bookmarkId]
@@ -596,7 +596,7 @@ function onKeyExpandBranch(): void {
 }
 
 function onKeyFoldInactiveBranches(): void {
-  const activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  const activePanel = Sidebar.panelsById[Sidebar.activePanelId]
   if (!Utils.isTabsPanel(activePanel)) return
 
   Tabs.foldAllInactiveBranches(activePanel.tabs.map(rt => Tabs.byId[rt.id] as Tab) ?? [])
@@ -796,7 +796,7 @@ async function onKeyMoveTabs(dir: 1 | -1) {
     if (unpin) {
       // Find target panel for unpinned global tab
       if (Settings.state.pinnedTabsPosition !== 'panel') {
-        const actPanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+        const actPanel = Sidebar.panelsById[Sidebar.activePanelId]
         if (Utils.isTabsPanel(actPanel)) panel = actPanel
         else panel = (Sidebar.panels.find(Utils.isTabsPanel) as TabsPanel | undefined) ?? panel
       }
@@ -927,7 +927,7 @@ function onKeyNewTabAsLastChild(): void {
 }
 
 function onKeyRAIP() {
-  const actPanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  const actPanel = Sidebar.panelsById[Sidebar.activePanelId]
   if (!Utils.isTabsPanel(actPanel)) return
 
   const actTab = Tabs.byId[Tabs.activeId]
@@ -937,7 +937,7 @@ function onKeyRAIP() {
 }
 
 function onKeyRBIP() {
-  const actPanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  const actPanel = Sidebar.panelsById[Sidebar.activePanelId]
   if (!Utils.isTabsPanel(actPanel)) return
 
   const actTab = Tabs.byId[Tabs.activeId]
@@ -947,7 +947,7 @@ function onKeyRBIP() {
 }
 
 function onKeyROIP() {
-  const actPanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  const actPanel = Sidebar.panelsById[Sidebar.activePanelId]
   if (!Utils.isTabsPanel(actPanel)) return
 
   const actTab = Tabs.byId[Tabs.activeId]
@@ -962,7 +962,7 @@ function onKeyUnloadTabs() {
 }
 
 function onKeyUnloadAllTabsInPanel() {
-  const panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  const panel = Sidebar.panelsById[Sidebar.activePanelId]
   if (!Utils.isTabsPanel(panel)) return
 
   const tabIds: ID[] = []
@@ -990,7 +990,7 @@ function onKeyUnloadOtherTabsInPanel() {
 }
 
 function onKeyUnloadFoldedTabsInPanel() {
-  const panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  const panel = Sidebar.panelsById[Sidebar.activePanelId]
   if (!Utils.isTabsPanel(panel)) return
 
   const tabIds: ID[] = []
@@ -1003,7 +1003,7 @@ async function onKeyUnloadAllTabsInInactPanels() {
   const actTab = Tabs.byId[Tabs.activeId]
   if (!actTab) return
 
-  let actPanelId = Sidebar.reactive.activePanelId
+  let actPanelId = Sidebar.activePanelId
   const actPanel = Sidebar.panelsById[actPanelId]
 
   if (!Utils.isTabsPanel(actPanel)) {

@@ -64,7 +64,7 @@ export function unloadAfter(delay: number): void {
   clearTimeout(unloadAfterTimeout)
   unloadAfterTimeout = setTimeout(() => {
     const historyPanel = Sidebar.panelsById.history
-    if (historyPanel && Sidebar.reactive.activePanelId === historyPanel.id) return
+    if (historyPanel && Sidebar.activePanelId === historyPanel.id) return
     if (historyPanel && !historyPanel.ready) return
     if (Sidebar.subPanelActive && Sidebar.subPanelType === SubPanelType.History) return
 
@@ -249,7 +249,7 @@ export function scrollToHistoryItem(id: string): void {
 }
 
 export async function openTab(item: HistoryItem, activate?: boolean): Promise<void> {
-  let panel: Panel | undefined = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  let panel: Panel | undefined = Sidebar.panelsById[Sidebar.activePanelId]
   if (!Utils.isTabsPanel(panel)) {
     panel = Sidebar.panelsById[Sidebar.lastTabsPanelId]
   }

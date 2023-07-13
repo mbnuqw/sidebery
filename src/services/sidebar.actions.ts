@@ -112,14 +112,14 @@ export async function loadPanels(): Promise<void> {
   if (!Windows.incognito) {
     let actPanel: Panel | undefined = Sidebar.panelsById[activeId]
     if (!actPanel) actPanel = Sidebar.panels.find(p => p.type === PanelType.tabs)
-    if (actPanel) Sidebar.reactive.activePanelId = actPanel.id
-    else Sidebar.reactive.activePanelId = Sidebar.panels[0]?.id ?? NOID
-    Sidebar.reactive.lastActivePanelId = Sidebar.reactive.activePanelId
+    if (actPanel) Sidebar.reactive.activePanelId = Sidebar.activePanelId = actPanel.id
+    else Sidebar.reactive.activePanelId = Sidebar.activePanelId = Sidebar.panels[0]?.id ?? NOID
+    Sidebar.lastActivePanelId = Sidebar.reactive.activePanelId
   } else {
     const tabsPanel = Sidebar.panels.find(p => p.type === PanelType.tabs)
-    if (tabsPanel) Sidebar.reactive.activePanelId = tabsPanel.id
-    else Sidebar.reactive.activePanelId = Sidebar.panels[0]?.id ?? NOID
-    Sidebar.reactive.lastActivePanelId = Sidebar.reactive.activePanelId
+    if (tabsPanel) Sidebar.reactive.activePanelId = Sidebar.activePanelId = tabsPanel.id
+    else Sidebar.reactive.activePanelId = Sidebar.activePanelId = Sidebar.panels[0]?.id ?? NOID
+    Sidebar.lastActivePanelId = Sidebar.reactive.activePanelId
   }
 
   Sidebar.ready = true
@@ -179,7 +179,7 @@ function onSidebarResize(): void {
       Sidebar.height = document.body.offsetHeight
 
       const activeTab = Tabs.byId[Tabs.activeId]
-      if (activeTab && !activeTab.pinned && activeTab.panelId === Sidebar.reactive.activePanelId) {
+      if (activeTab && !activeTab.pinned && activeTab.panelId === Sidebar.activePanelId) {
         Tabs.scrollToTab(activeTab.id)
       }
     }
@@ -536,7 +536,7 @@ export function setPanelScrollBox(id: ID, scrollBoxComponent: ScrollBoxComponent
  * Update panel bounds
  */
 export function updateBounds(): void {
-  let panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  let panel = Sidebar.panelsById[Sidebar.activePanelId]
   if (!panel || !panelsBoxEl) return
 
   let hostPanel
@@ -1050,7 +1050,7 @@ async function updateSidebar(newConfig?: SidebarConfig): Promise<void> {
   if (Sidebar.hasBookmarks) recalcBookmarksPanels()
 
   // Switch to another panel
-  if (!Sidebar.panelsById[Sidebar.reactive.activePanelId]) {
+  if (!Sidebar.panelsById[Sidebar.activePanelId]) {
     // To active tab's panel
     if (Sidebar.hasTabs && Tabs.byId[Tabs.activeId]) {
       const activeTab = Tabs.byId[Tabs.activeId]
@@ -1063,7 +1063,7 @@ async function updateSidebar(newConfig?: SidebarConfig): Promise<void> {
     }
 
     // To first panel
-    if (!Sidebar.panelsById[Sidebar.reactive.activePanelId]) {
+    if (!Sidebar.panelsById[Sidebar.activePanelId]) {
       const firstPanel = Sidebar.panels[0]
       if (firstPanel) Sidebar.activatePanel(firstPanel.id)
     }
@@ -1077,9 +1077,9 @@ async function updateSidebar(newConfig?: SidebarConfig): Promise<void> {
 }
 
 export function activatePanel(panelId: ID, loadPanels = true): void {
-  if (Sidebar.reactive.activePanelId === panelId) return
+  if (Sidebar.activePanelId === panelId) return
 
-  const prevPanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  const prevPanel = Sidebar.panelsById[Sidebar.activePanelId]
   const panel = Sidebar.panelsById[panelId]
   if (!panel) return
 
@@ -1090,8 +1090,8 @@ export function activatePanel(panelId: ID, loadPanels = true): void {
     if (panel.type === PanelType.history) loading = History.load()
   }
 
-  if (prevPanel) Sidebar.reactive.lastActivePanelId = Sidebar.reactive.activePanelId
-  Sidebar.reactive.activePanelId = panelId
+  if (prevPanel) Sidebar.lastActivePanelId = Sidebar.activePanelId
+  Sidebar.reactive.activePanelId = Sidebar.activePanelId = panelId
 
   if (Search.reactive.value && prevPanel) {
     if (loading) loading.then(() => Search.search())
@@ -1119,9 +1119,9 @@ let prevSavedActPanelId = NOID
  * Save active panel id in current window
  */
 export function saveActivePanel(): void {
-  if (Windows.incognito || prevSavedActPanelId === Sidebar.reactive.activePanelId) return
-  prevSavedActPanelId = Sidebar.reactive.activePanelId
-  browser.sessions.setWindowValue(Windows.id, 'activePanelId', Sidebar.reactive.activePanelId)
+  if (Windows.incognito || prevSavedActPanelId === Sidebar.activePanelId) return
+  prevSavedActPanelId = Sidebar.activePanelId
+  browser.sessions.setWindowValue(Windows.id, 'activePanelId', Sidebar.activePanelId)
 }
 export const saveActivePanelDebounced = Utils.debounce(saveActivePanel)
 
@@ -1175,7 +1175,7 @@ export function switchToPanel(
  */
 export function switchToNeighbourPanel(): void {
   let target: Panel | undefined
-  let activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  let activePanel = Sidebar.panelsById[Sidebar.activePanelId]
   if (!activePanel) activePanel = Sidebar.panels[0]
 
   if (!target) {
@@ -1230,14 +1230,14 @@ export function switchPanel(
   Menu.close()
   Selection.resetSelection()
 
-  const activePanelId = Sidebar.reactive.activePanelId
+  const activePanelId = Sidebar.activePanelId
 
   // If current active panel is not exist
   let activePanel = Sidebar.panelsById[activePanelId]
   if (!activePanel) {
-    activePanel = Sidebar.panelsById[Sidebar.reactive.lastActivePanelId]
+    activePanel = Sidebar.panelsById[Sidebar.lastActivePanelId]
     if (!activePanel) activePanel = Sidebar.panels[0]
-    if (activePanel) Sidebar.reactive.activePanelId = activePanel.id
+    if (activePanel) Sidebar.reactive.activePanelId = Sidebar.activePanelId = activePanel.id
     return
   }
 
@@ -1374,7 +1374,7 @@ export function openHiddenPanelsPopup(): void {
 export function closeHiddenPanelsPopup(withoutTabCreation?: boolean): void {
   Sidebar.reactive.hiddenPanelsPopup = false
 
-  const panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  const panel = Sidebar.panelsById[Sidebar.activePanelId]
   if (
     !withoutTabCreation &&
     Utils.isTabsPanel(panel) &&
@@ -1404,7 +1404,7 @@ export function goToActiveTabPanel(): void {
  * Returns active panel info
  */
 export function getActivePanelConfig(): PanelConfig | undefined {
-  const panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  const panel = Sidebar.panelsById[Sidebar.activePanelId]
   if (!panel) throw Logs.err('Sidebar: getActivePanelConfig: Active panel not found')
 
   let defaults
@@ -1496,7 +1496,7 @@ export function hidePanel(panelId: ID) {
   const panel = Sidebar.panelsById[panelId]
   if (!panel) return
 
-  if (panelId === Sidebar.reactive.activePanelId) {
+  if (panelId === Sidebar.activePanelId) {
     const actTab = Tabs.byId[Tabs.activeId]
     const actTabPanel = Sidebar.panelsById[actTab?.panelId ?? NOID]
     if (
@@ -1582,10 +1582,10 @@ export async function removePanel(panelId: ID, conf?: RemovingPanelConf): Promis
   }
 
   // Switch to another panel
-  if (panel.id === Sidebar.reactive.activePanelId) {
+  if (panel.id === Sidebar.activePanelId) {
     let nextActivePanelId
-    if (Sidebar.reactive.lastActivePanelId !== panel.id) {
-      nextActivePanelId = Sidebar.reactive.lastActivePanelId
+    if (Sidebar.lastActivePanelId !== panel.id) {
+      nextActivePanelId = Sidebar.lastActivePanelId
     } else {
       nextActivePanelId = Utils.findNear(
         Sidebar.reactive.nav,
@@ -1651,7 +1651,7 @@ export function createTabsPanel(conf?: Partial<TabsPanelConfig>): TabsPanel {
 }
 
 export function getIndexForNewTabsPanel(): number {
-  const activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  const activePanel = Sidebar.panelsById[Sidebar.activePanelId]
   let index = -1
   if (Utils.isTabsPanel(activePanel)) index = activePanel.index
   else {
@@ -1709,9 +1709,9 @@ export function addPanel<T extends Panel>(index: number, panel: T, replace?: boo
   if (replace) {
     const replaceableId = Sidebar.reactive.nav[index]
     if (replaceableId !== undefined) {
-      if (Sidebar.reactive.activePanelId === replaceableId) {
-        Sidebar.reactive.activePanelId = panel.id
-        Sidebar.reactive.lastActivePanelId = panel.id
+      if (Sidebar.activePanelId === replaceableId) {
+        Sidebar.reactive.activePanelId = Sidebar.activePanelId = panel.id
+        Sidebar.lastActivePanelId = panel.id
       }
 
       delete Sidebar.panelsById[replaceableId]
@@ -1728,7 +1728,7 @@ export function addPanel<T extends Panel>(index: number, panel: T, replace?: boo
 }
 
 export function unloadPanelType(type: PanelType): void {
-  const activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  const activePanel = Sidebar.panelsById[Sidebar.activePanelId]
   const switchNeeded = activePanel?.type === type
 
   if (switchNeeded) {
@@ -2095,7 +2095,7 @@ export function updateSidebarTitle(delay = 456): void {
   clearTimeout(updateSidebarTitleTimeout)
   updateSidebarTitleTimeout = setTimeout(() => {
     if (Settings.state.updateSidebarTitle) {
-      const panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+      const panel = Sidebar.panelsById[Sidebar.activePanelId]
       if (!panel) return
 
       browser.sidebarAction.setTitle({ title: panel.name, windowId: Windows.id })
@@ -2120,7 +2120,7 @@ export async function convertToBookmarksPanel(panel: TabsPanel): Promise<Bookmar
     return
   }
 
-  const isActive = Sidebar.reactive.activePanelId === panel.id
+  const isActive = Sidebar.activePanelId === panel.id
 
   const notif = Notifications.progress({
     icon: panel.iconIMG || (panel.iconSVG ? '#' + panel.iconSVG : undefined),
@@ -2332,7 +2332,7 @@ export function scrollActivePanel(y: number, offset?: boolean): void {
   if (Sidebar.subPanelActive && Sidebar.subPanelType === SubPanelType.Bookmarks) {
     panel = Sidebar.subPanels.bookmarks
   }
-  if (!panel) panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  if (!panel) panel = Sidebar.panelsById[Sidebar.activePanelId]
   if (!panel?.scrollEl) return
 
   if (offset) scrollConf.top = panel.scrollEl.scrollTop - y
@@ -2341,7 +2341,7 @@ export function scrollActivePanel(y: number, offset?: boolean): void {
 }
 
 export function scrollPanelToEdge(panel?: Panel): void {
-  if (!panel) panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  if (!panel) panel = Sidebar.panelsById[Sidebar.activePanelId]
   if (!panel.scrollComponent || !panel.scrollEl) return
 
   const scrollableBoxEl = panel.scrollComponent.getScrollableBox()
@@ -2424,7 +2424,7 @@ export function switchPanelOnMouseLeave() {
 
   if (Sidebar.subPanelActive) return
 
-  const activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  const activePanel = Sidebar.panelsById[Sidebar.activePanelId]
   if (!activePanel) return
 
   const activeTab = Tabs.byId[Tabs.activeId]

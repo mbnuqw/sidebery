@@ -72,7 +72,7 @@ async function loadInFg(): Promise<void> {
     if (Utils.isBookmarksPanel(panel)) panel.reactive.ready = panel.ready = true
   }
 
-  const activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  const activePanel = Sidebar.panelsById[Sidebar.activePanelId]
   if (DnD.reactive.isStarted && Utils.isBookmarksPanel(activePanel)) {
     Sidebar.updateBounds()
   }
@@ -532,7 +532,7 @@ export async function removeBookmarks(ids: ID[], conf?: RemovingBookmarksConf): 
   let count = 0
   let hasCollapsed = false
 
-  const expandedBookmarks = Bookmarks.reactive.expanded[Sidebar.reactive.activePanelId]
+  const expandedBookmarks = Bookmarks.reactive.expanded[Sidebar.activePanelId]
   const deleted: Bookmark[] = []
   const idsToRemove = []
   const favicons: string[] = []
@@ -641,7 +641,7 @@ export async function sortBookmarks(
     else notifIcon = '#icon_sort_time_des'
   }
 
-  const expandedBookmarks = Bookmarks.reactive.expanded[Sidebar.reactive.activePanelId]
+  const expandedBookmarks = Bookmarks.reactive.expanded[Sidebar.activePanelId]
 
   // Separate nodes by groups (bookmarks with the same parentId)
   const groups: Record<string, Bookmark[]> = {}
@@ -1280,7 +1280,7 @@ export function scrollToBookmarkDebounced(id: ID, forced?: boolean, delay = 120)
 
 const scrollConf: ScrollToOptions = { behavior: 'smooth', top: 0 }
 export function scrollToBookmark(id: ID, forced?: boolean): void {
-  const actPanelId = Sidebar.reactive.activePanelId
+  const actPanelId = Sidebar.activePanelId
   let panel = Sidebar.panelsById[actPanelId]
   if (
     Utils.isTabsPanel(panel) &&
@@ -1337,7 +1337,7 @@ export function* listBookmarks(nodes?: Bookmark[]): IterableIterator<Bookmark> {
 export function openAsBookmarksPanel(node: Bookmark) {
   if (node.type !== 'folder') return
 
-  const index = Sidebar.reactive.nav.indexOf(Sidebar.reactive.activePanelId)
+  const index = Sidebar.reactive.nav.indexOf(Sidebar.activePanelId)
   if (index === -1) return
 
   // Get name for new panel
@@ -1431,7 +1431,7 @@ export async function copyTitles(ids: ID[]): Promise<void> {
 }
 
 export function getTargetTabsPanelId(): ID {
-  let panelId = Sidebar.reactive.activePanelId
+  let panelId = Sidebar.activePanelId
   if (!Utils.isTabsPanel(Sidebar.panelsById[panelId])) {
     panelId = Sidebar.lastTabsPanelId
   }

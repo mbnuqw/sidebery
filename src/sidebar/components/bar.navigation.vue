@@ -447,7 +447,7 @@ function onNavMouseUp(e: MouseEvent, item: NavItem, inHiddenBar?: boolean) {
 
   // Left
   if (e.button === 0) {
-    const isSwitchingPanel = !!panel && Sidebar.reactive.activePanelId !== item.id
+    const isSwitchingPanel = !!panel && Sidebar.activePanelId !== item.id
 
     if (isHiddenPanels) {
       if (Sidebar.reactive.hiddenPanelsPopup) Sidebar.closeHiddenPanelsPopup()
@@ -608,7 +608,7 @@ async function addTabsPanel(silent?: boolean): Promise<void> {
 }
 
 function collapseAll(): void {
-  const activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  const activePanel = Sidebar.panelsById[Sidebar.activePanelId]
   if (!activePanel) return
 
   // Tabs

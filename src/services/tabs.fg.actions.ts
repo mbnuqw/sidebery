@@ -297,7 +297,7 @@ async function restoreTabsState(): Promise<void> {
   const activeTab = tabs.find(t => t.active)
   if (activeTab) {
     const actTabIsGloballyPinned = activeTab.pinned && Settings.state.pinnedTabsPosition !== 'panel'
-    const currentActivePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+    const currentActivePanel = Sidebar.panelsById[Sidebar.activePanelId]
 
     if (Utils.isTabsPanel(currentActivePanel)) {
       const currentActivePanelHidden =
@@ -311,12 +311,12 @@ async function restoreTabsState(): Promise<void> {
         targetPanel = Sidebar.panelsById[activeTab.panelId]
       }
       // or switch to panel of the first not pinned tab if active panel is hidden or not set
-      else if (currentActivePanelHidden || Sidebar.reactive.activePanelId === NOID) {
+      else if (currentActivePanelHidden || Sidebar.activePanelId === NOID) {
         const panelId = tabs.find(t => !t.pinned)?.panelId
         if (panelId) targetPanel = Sidebar.panelsById[panelId]
       }
 
-      if (targetPanel && targetPanel.id !== Sidebar.reactive.activePanelId) {
+      if (targetPanel && targetPanel.id !== Sidebar.activePanelId) {
         Sidebar.activatePanel(targetPanel.id, false)
       }
     }
@@ -1199,7 +1199,7 @@ export function switchTab(globaly: boolean, cycle: boolean, step: number, pinned
   if (!activeTab) activeTab = Tabs.list.find(t => t.active)
   if (!activeTab) return
 
-  const activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  const activePanel = Sidebar.panelsById[Sidebar.activePanelId]
   if (!Utils.isTabsPanel(activePanel)) return
 
   let targetTabId = NOID
@@ -1821,7 +1821,7 @@ export async function duplicateTabs(tabIds: ID[]): Promise<void> {
         panel = Sidebar.panelsById[tab.panelId]
         if (!Utils.isTabsPanel(panel)) return
       } else {
-        panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+        panel = Sidebar.panelsById[Sidebar.activePanelId]
         if (!Utils.isTabsPanel(panel)) panel = Sidebar.panels.find(p => Utils.isTabsPanel(p))
         if (!Utils.isTabsPanel(panel)) return
       }
@@ -2506,7 +2506,7 @@ export function updateNativeTabsVisibility(): void {
   const actTab = Tabs.byId[Tabs.activeId]
 
   let actPanel
-  if (actTab?.pinned) actPanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  if (actTab?.pinned) actPanel = Sidebar.panelsById[Sidebar.activePanelId]
   else if (actTab) actPanel = Sidebar.panelsById[actTab.panelId]
 
   const toShow = []
@@ -3130,7 +3130,7 @@ function findTabsPanelNearToTabIndex(tabIndex: number): TabsPanel | undefined {
 
 export function getPanelForNewTab(tab: Tab): TabsPanel | undefined {
   const parentTab = Tabs.byId[tab.openerTabId ?? NOID]
-  let activePanel: Panel | undefined = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  let activePanel: Panel | undefined = Sidebar.panelsById[Sidebar.activePanelId]
   if (!Utils.isTabsPanel(activePanel)) {
     activePanel = Sidebar.panelsById[Sidebar.lastTabsPanelId]
   }
@@ -3460,7 +3460,7 @@ export function findSuccessorTab(tab: Tab, exclude?: ID[]): Tab | undefined {
     if (!target) {
       let panel
       if (pinInPanels) panel = Sidebar.panelsById[tab.panelId]
-      else panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+      else panel = Sidebar.panelsById[Sidebar.activePanelId]
       if (Utils.isTabsPanel(panel)) {
         for (const tab of panel.tabs) {
           // Skip discarded tab
@@ -3727,7 +3727,7 @@ export function tabFlip() {
   let panelId
   if (Settings.state.tabsSecondClickActPrevPanelOnly) {
     if (actTab.pinned && Settings.state.pinnedTabsPosition !== 'panel') {
-      panelId = Sidebar.reactive.activePanelId
+      panelId = Sidebar.activePanelId
     } else {
       panelId = actTab.panelId
     }
@@ -4200,7 +4200,7 @@ export async function copyTitles(ids: ID[]): Promise<void> {
 }
 
 export async function createTabInNewContainer(): Promise<void> {
-  const panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  const panel = Sidebar.panelsById[Sidebar.activePanelId]
   if (!Utils.isTabsPanel(panel)) throw 'Current panel is not TabsPanel'
 
   // Open config popup
@@ -4272,7 +4272,7 @@ export function switchToRecentlyActiveTab(scope = SwitchingTabScope.global, dir:
   let history: ActiveTabsHistory | undefined
   if (scope === SwitchingTabScope.global) history = Tabs.getActiveTabsHistory()
   if (scope === SwitchingTabScope.panel) {
-    const panel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+    const panel = Sidebar.panelsById[Sidebar.activePanelId]
     if (!Utils.isTabsPanel(panel)) return
     history = Tabs.getActiveTabsHistory(panel.id)
   }
@@ -4312,7 +4312,7 @@ export function switchToRecentlyActiveTab(scope = SwitchingTabScope.global, dir:
       if (
         tab &&
         (!tab.pinned || Settings.state.pinnedTabsPosition === 'panel') &&
-        tab.panelId !== Sidebar.reactive.activePanelId
+        tab.panelId !== Sidebar.activePanelId
       ) {
         Sidebar.activatePanel(tab.panelId)
       }

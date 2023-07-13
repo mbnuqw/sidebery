@@ -166,7 +166,7 @@ function onSave(): void {
     Sidebar.saveSidebar(300)
   }
 
-  if (Settings.state.updateSidebarTitle && Sidebar.reactive.activePanelId === panel.id) {
+  if (Settings.state.updateSidebarTitle && Sidebar.activePanelId === panel.id) {
     Sidebar.updateSidebarTitle()
   }
 

@@ -73,7 +73,7 @@ export function onMouseMove(e: MouseEvent): void {
     if (Sidebar.subPanelType === SubPanelType.Bookmarks && Sidebar.subPanels.bookmarks) {
       activePanel = Sidebar.subPanels.bookmarks
     } else {
-      activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+      activePanel = Sidebar.panelsById[Sidebar.activePanelId]
     }
     if (!activePanel) return
 
@@ -97,7 +97,7 @@ export function onMouseMove(e: MouseEvent): void {
     if (Sidebar.subPanelType === SubPanelType.Bookmarks && Sidebar.subPanels.bookmarks) {
       activePanel = Sidebar.subPanels.bookmarks
     } else {
-      activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+      activePanel = Sidebar.panelsById[Sidebar.activePanelId]
     }
     if (!activePanel || !activePanel.scrollEl) return
 

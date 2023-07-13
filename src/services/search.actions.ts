@@ -48,7 +48,7 @@ export function next(): void {
   if (!Search.reactive.barIsShowed) return
   if (Menu.isOpen) return Menu.selectOption(1)
 
-  const actPanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  const actPanel = Sidebar.panelsById[Sidebar.activePanelId]
   if (!actPanel) return
 
   if (Utils.isTabsPanel(actPanel)) {
@@ -69,7 +69,7 @@ export function prev(): void {
   if (!Search.reactive.barIsShowed) return
   if (Menu.isOpen) return Menu.selectOption(-1)
 
-  const actPanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  const actPanel = Sidebar.panelsById[Sidebar.activePanelId]
   if (!actPanel) return
 
   if (Utils.isTabsPanel(actPanel)) {
@@ -95,7 +95,7 @@ export function enter(): void {
     return
   }
 
-  const actPanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  const actPanel = Sidebar.panelsById[Sidebar.activePanelId]
   if (!actPanel) return
 
   if (query.startsWith('. ')) {
@@ -124,7 +124,7 @@ let subPanelOpenBySearch = false
 export function bookmarks() {
   if (!Search.reactive.barIsShowed) return
 
-  const actPanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  const actPanel = Sidebar.panelsById[Sidebar.activePanelId]
 
   // Try to open bookmarks sub-panel
   if (Utils.isTabsPanel(actPanel) && Settings.state.subPanelBookmarks) {
@@ -182,7 +182,7 @@ export function bookmarks() {
 export function history() {
   if (!Search.reactive.barIsShowed) return
 
-  const actPanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  const actPanel = Sidebar.panelsById[Sidebar.activePanelId]
 
   // Try to open history sub-panel
   if (Utils.isTabsPanel(actPanel) && Settings.state.subPanelHistory) {
@@ -210,7 +210,7 @@ export function selectAll(): void {
   if (!Search.reactive.barIsShowed) return
   if (Menu.isOpen) return
 
-  const actPanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  const actPanel = Sidebar.panelsById[Sidebar.activePanelId]
   if (!actPanel) return
 
   if (Utils.isTabsPanel(actPanel)) {
@@ -235,7 +235,7 @@ function getMenuCoordinates(type: MenuType): [number, number] {
   if (type === MenuType.Tabs) {
     rect = document.getElementById(`tab${firstSelectedId}`)?.getBoundingClientRect()
   } else if (type === MenuType.Bookmarks) {
-    const id = `bookmark${Sidebar.reactive.activePanelId}${firstSelectedId}`
+    const id = `bookmark${Sidebar.activePanelId}${firstSelectedId}`
     rect = document.getElementById(id)?.getBoundingClientRect()
   } else if (type === MenuType.History) {
     rect = document.getElementById(`history${firstSelectedId}`)?.getBoundingClientRect()
@@ -249,7 +249,7 @@ export function menu(): void {
   if (!Search.reactive.barIsShowed) return
   if (Menu.isOpen) return Menu.close()
 
-  const actPanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  const actPanel = Sidebar.panelsById[Sidebar.activePanelId]
   if (!actPanel) return
 
   if (Utils.isTabsPanel(actPanel)) {
@@ -299,16 +299,16 @@ export function search(value?: string, noSel?: boolean): void {
     if (!val) return
 
     const panel = Sidebar.panels.find(p => p.name.toLowerCase().includes(val))
-    if (panel && panel.id !== Sidebar.reactive.activePanelId) {
+    if (panel && panel.id !== Sidebar.activePanelId) {
       if (beforeSwitchingPanelId === undefined) {
-        beforeSwitchingPanelId = Sidebar.reactive.activePanelId
+        beforeSwitchingPanelId = Sidebar.activePanelId
       }
       Sidebar.activatePanel(panel.id)
     }
     return
   }
 
-  const actPanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
+  const actPanel = Sidebar.panelsById[Sidebar.activePanelId]
   if (!actPanel) return
   let targetPanelId = actPanel.id
 
