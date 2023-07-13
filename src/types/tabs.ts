@@ -51,7 +51,6 @@ export interface ReactiveTabProps {
   containerColor: string | null
   discarded: boolean
   favIconUrl?: string
-  invisible: boolean
   pinned: boolean
   status: TabStatus
   isParent: boolean

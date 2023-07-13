@@ -158,7 +158,7 @@ export function updateSettingsFg(settings?: SettingsState | null): void {
     for (const tab of Tabs.list) {
       tab.reactive.isParent = tab.isParent = false
       tab.reactive.folded = tab.folded = false
-      tab.reactive.invisible = tab.invisible = false
+      tab.invisible = false
       tab.parentId = -1
       tab.reactive.lvl = tab.lvl = 0
     }

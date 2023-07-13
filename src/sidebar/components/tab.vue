@@ -15,7 +15,6 @@
   :data-group="tab.reactive.isGroup"
   :data-parent="tab.reactive.isParent"
   :data-folded="tab.reactive.folded && !Search.reactive.value"
-  :data-invisible="tab.reactive.invisible && !Search.reactive.value"
   :data-color="tab.reactive.containerColor"
   :data-colorized="!!tabColor"
   :data-unread="tab.reactive.unread"

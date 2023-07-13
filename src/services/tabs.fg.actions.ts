@@ -63,7 +63,6 @@ export function mutateNativeTabToSideberyTab(nativeTab: NativeTab): Tab {
       containerColor: Containers.reactive.byId[tab.cookieStoreId]?.color ?? null,
       discarded: tab.discarded ?? false,
       favIconUrl: tab.favIconUrl,
-      invisible: tab.invisible,
       pinned: tab.pinned,
       status: Tabs.getStatus(tab),
       isParent: tab.isParent,
@@ -104,7 +103,6 @@ export function createReactiveProps(tab: Tab): ReactiveTabProps {
     containerColor: Containers.reactive.byId[tab.cookieStoreId]?.color ?? null,
     discarded: tab.discarded ?? false,
     favIconUrl: tab.favIconUrl,
-    invisible: tab.invisible,
     pinned: tab.pinned,
     status: Tabs.getStatus(tab),
     isParent: tab.isParent,
@@ -1023,7 +1021,7 @@ export async function removeTabs(tabIds: ID[], silent?: boolean): Promise<void> 
   tabs.forEach(t => {
     parents[t.id] = t.parentId
     if (!t.invisible) visibleLen++
-    t.reactive.invisible = t.invisible = true
+    t.invisible = true
     if (t.active) activeTab = t
   })
   if (tabs.length === 1) Sidebar.removeFromVisibleTabs(tabs[0].panelId, tabs[0].id)
@@ -1165,7 +1163,7 @@ export function checkRemovedTabs(delay = 750): void {
             const parent = Tabs.byId[tab.parentId]
 
             tab.reactive.lvl = tab.lvl = parent ? parent.lvl + 1 : 0
-            tab.reactive.invisible = tab.invisible = false
+            tab.invisible = false
 
             const rmIndex = Tabs.removingTabs.indexOf(tab.id)
             if (rmIndex !== -1) Tabs.removingTabs.splice(rmIndex, 1)
@@ -2594,7 +2592,7 @@ export function foldTabsBranch(rootTabId: ID): void {
     if (t.lvl <= rootTab.lvl) break
     if (t.active) browser.tabs.update(rootTabId, { active: true })
     if (!t.invisible) {
-      t.reactive.invisible = t.invisible = true
+      t.invisible = true
       toHide.push(t.id)
     }
     len++
@@ -2681,7 +2679,7 @@ export function expTabsBranch(rootTabId: ID): void {
     if (tab.id !== rootTabId && tab.folded) preserve.push(tab.id)
     if (tab.parentId === rootTabId || toShow.includes(tab.parentId)) {
       if (tab.invisible && (tab.parentId === rootTabId || !preserve.includes(tab.parentId))) {
-        tab.reactive.invisible = tab.invisible = false
+        tab.invisible = false
         count++
 
         // Don't show sub-parent tabs if they're folded
@@ -2979,7 +2977,7 @@ export function updateTabsTree(startIndex = 0, endIndex = -1): void {
     if (tab.pinned) {
       tab.parentId = -1
       tab.reactive.lvl = tab.lvl = 0
-      tab.reactive.invisible = tab.invisible = false
+      tab.invisible = false
       tab.reactive.isParent = tab.isParent = false
       tab.reactive.folded = tab.folded = false
       continue
@@ -2998,11 +2996,11 @@ export function updateTabsTree(startIndex = 0, endIndex = -1): void {
         parent.reactive.folded = parent.folded = false
         tab.parentId = parent.parentId
         tab.reactive.lvl = tab.lvl = parent.lvl
-        tab.reactive.invisible = tab.invisible = parent.invisible
+        tab.invisible = parent.invisible
       } else {
         parent.reactive.isParent = parent.isParent = true
         tab.reactive.lvl = tab.lvl = parent.lvl + 1
-        tab.reactive.invisible = tab.invisible = parent.folded || parent.invisible
+        tab.invisible = parent.folded || parent.invisible
       }
 
       // if prev tab is not parent and with smaller lvl
@@ -3020,13 +3018,13 @@ export function updateTabsTree(startIndex = 0, endIndex = -1): void {
             backTab.parentId = parent.id
           }
           backTab.reactive.lvl = backTab.lvl = tab.lvl
-          backTab.reactive.invisible = backTab.invisible = tab.invisible
+          backTab.invisible = tab.invisible
         }
       }
     } else {
       tab.parentId = -1
       tab.reactive.lvl = tab.lvl = 0
-      tab.reactive.invisible = tab.invisible = false
+      tab.invisible = false
     }
 
     // Reset parent-flags of prev tab if current tab have same lvl

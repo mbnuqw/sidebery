@@ -900,7 +900,7 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
       else if (t.invisible && !Tabs.removingTabs.includes(t.id)) {
         // But only if this child tab is a direct descendant OR its parentTab is not folded
         if (t.parentId === tabId || !Tabs.byId[t.parentId]?.folded) {
-          t.reactive.invisible = t.invisible = false
+          t.invisible = false
           fullVisTabsRecalcNeeded = true
           if (t.hidden) toShow.push(t.id)
         }
