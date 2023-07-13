@@ -400,7 +400,7 @@ let activating = false
 function activate(): void {
   if (Mouse.longClickApplied) return
 
-  if (Search.reactive.rawValue) {
+  if (Search.rawValue) {
     Search.stop()
     Selection.resetSelection()
   }

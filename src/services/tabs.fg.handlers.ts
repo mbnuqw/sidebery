@@ -578,7 +578,7 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
     Tabs.updateTooltipDebounced(tabId, 1000)
 
     // Update filtered results
-    if (Search.reactive.rawValue) Search.searchDebounced(500, undefined, true)
+    if (Search.rawValue) Search.searchDebounced(500, undefined, true)
   }
 
   // Handle favicon change
@@ -638,7 +638,7 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
     Tabs.updateTooltipDebounced(tabId, 1000)
 
     // Update filtered results
-    if (Search.reactive.rawValue) Search.searchDebounced(500, undefined, true)
+    if (Search.rawValue) Search.searchDebounced(500, undefined, true)
   }
 
   // Reset mediaPaused flag
@@ -1030,7 +1030,7 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
     }
 
     // Update filtered results
-    if (Search.reactive.rawValue) Search.search()
+    if (Search.rawValue) Search.search()
 
     // Update media badges
     if (tab.audible || tab.mediaPaused || tab.mutedInfo?.muted) {

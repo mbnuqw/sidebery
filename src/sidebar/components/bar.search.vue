@@ -41,7 +41,7 @@ onMounted(() => {
 })
 
 function onClearBtnMouseDown(e: MouseEvent): void {
-  if (Search.reactive.rawValue) Search.onOutsideSearchInput('')
+  if (Search.rawValue) Search.onOutsideSearchInput('')
   else {
     Search.hideBar()
     e.preventDefault()
@@ -79,7 +79,7 @@ function onKD(e: KeyboardEvent): void {
     Search.history()
   }
 
-  if (!Search.reactive.rawValue) return
+  if (!Search.rawValue) return
 
   // Select all
   if (e.code === 'KeyA' && e.ctrlKey && e.shiftKey) {
@@ -113,17 +113,20 @@ function onKD(e: KeyboardEvent): void {
 }
 
 let inputTimeout: number | undefined
-function onInput(e: Event): void {
-  if (Search.reactive.rawValue) Search.showBar()
+function onInput(e: Event) {
+  Search.rawValue = (e.target as HTMLInputElement | null)?.value ?? ''
+
+  // TODO:...
+  if (Search.rawValue) Search.showBar()
 
   clearTimeout(inputTimeout)
   inputTimeout = setTimeout(() => {
-    Search.search((e.target as HTMLInputElement).value)
+    Search.search((e.target as HTMLInputElement | null)?.value)
   }, Search.INPUT_TIMEOUT)
 }
 
 function onChange(e: Event): void {
-  Search.search(Search.reactive.rawValue)
+  Search.search(Search.rawValue)
 }
 
 function onFocus(e: Event): void {

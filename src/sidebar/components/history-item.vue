@@ -60,13 +60,13 @@ function onMouseUp(e: MouseEvent): void {
   if (!sameTarget) return
 
   if (e.button === 0 || e.button === 1) {
-    if (Selection.isHistory() && !Search.reactive.rawValue) {
+    if (Selection.isHistory() && !Search.rawValue) {
       return Selection.resetSelection()
     }
 
     let { dst, activateFirstTab: activateNewTab } = Bookmarks.getMouseOpeningConf(e.button)
     // Reset search input, if navigating away from the history panel
-    if (Search.reactive.rawValue && activateNewTab) {
+    if (Search.rawValue && activateNewTab) {
       Search.stop()
       Selection.resetSelection()
     }

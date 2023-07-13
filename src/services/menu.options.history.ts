@@ -61,7 +61,7 @@ export const historyMenuOptions: Record<string, () => MenuOption | MenuOption[] 
       keepSearching: true,
       onClick: async () => {
         await History.deleteSites(selected)
-        if (Search.reactive.rawValue) Search.search()
+        if (Search.rawValue) Search.search()
       },
     }
   },

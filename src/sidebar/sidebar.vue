@@ -318,7 +318,7 @@ function onMouseLeave(): void {
   Mouse.stopResizing()
 
   const activePanel = Sidebar.panelsById[Sidebar.reactive.activePanelId]
-  if (!Utils.isTabsPanel(activePanel) && activePanel?.tempMode && !Search.reactive.rawValue) {
+  if (!Utils.isTabsPanel(activePanel) && activePanel?.tempMode && !Search.rawValue) {
     Sidebar.switchPanelBack(300)
   }
 
@@ -330,7 +330,7 @@ function onMouseLeave(): void {
     }, 250)
   }
 
-  if (Sidebar.subPanelActive && !Search.reactive.rawValue && !Menu.isOpen && !DnD.items.length) {
+  if (Sidebar.subPanelActive && !Search.rawValue && !Menu.isOpen && !DnD.items.length) {
     clearTimeout(subPanelTimeout)
     subPanelTimeout = setTimeout(() => {
       Sidebar.closeSubPanel()

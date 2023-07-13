@@ -24,13 +24,13 @@ export function init(): void {
 let inputTimeout: number | undefined
 export function onOutsideSearchInput(value: string): void {
   if (!Windows.focused) return
-  if (!Search.reactive.barIsShowed && Search.reactive.rawValue) Search.toggleBar()
+  if (!Search.reactive.barIsShowed && Search.rawValue) Search.toggleBar()
 
-  Search.reactive.rawValue = value
+  Search.reactive.rawValue = Search.rawValue = value
 
   clearTimeout(inputTimeout)
   inputTimeout = setTimeout(() => {
-    Search.search(Search.reactive.rawValue)
+    Search.search(Search.rawValue)
   }, INPUT_TIMEOUT)
 }
 
@@ -368,7 +368,7 @@ export function reset(panel?: Panel): void {
 
 export function stop(): void {
   if (Settings.state.searchBarMode === 'dynamic') Search.hideBar()
-  Search.reactive.rawValue = ''
+  Search.reactive.rawValue = Search.rawValue = ''
   Search.search('')
   subPanelOpenBySearch = false
 }
@@ -422,7 +422,7 @@ export function start(): void {
 
 export function close(): void {
   Search.reactive.barIsActive = false
-  Search.reactive.rawValue = ''
+  Search.reactive.rawValue = Search.rawValue = ''
   Search.search('')
   hideBar()
   subPanelOpenBySearch = false

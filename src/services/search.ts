@@ -26,7 +26,9 @@ export const Search = {
     barIsActive: false,
     barIsFocused: false,
     value: '',
+    rawValue: '',
   } as SearchState,
+  rawValue: '',
   prevValue: '',
   prevExpandedBookmarks: undefined as Record<ID, Record<ID, boolean>> | undefined,
 

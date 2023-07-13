@@ -91,7 +91,7 @@ function open() {
       props.bookmarksPanel.ready = true
       setPanelEls()
       updateRootTree()
-      if (Search.reactive.rawValue) Search.search()
+      if (Search.rawValue) Search.search()
     })
   } else {
     state.active = !state.active

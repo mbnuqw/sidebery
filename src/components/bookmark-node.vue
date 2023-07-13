@@ -180,12 +180,12 @@ async function onMouseUp(e: MouseEvent): Promise<void> {
     if (Bookmarks.reactive.popup) return
     if (e.ctrlKey || e.shiftKey) return
 
-    if (Search.reactive.rawValue && !isFolder) {
+    if (Search.rawValue && !isFolder) {
       Search.stop()
       Selection.resetSelection()
     }
 
-    if (Selection.isBookmarks() && !Search.reactive.rawValue) {
+    if (Selection.isBookmarks() && !Search.rawValue) {
       return Selection.resetSelection()
     }
 

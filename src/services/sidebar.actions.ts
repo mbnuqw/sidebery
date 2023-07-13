@@ -1105,7 +1105,7 @@ export function activatePanel(panelId: ID, loadPanels = true): void {
 
   if (Settings.state.updateSidebarTitle) Sidebar.updateSidebarTitle(0)
 
-  if (!DnD.reactive.isStarted && !Search.reactive.rawValue) saveActivePanelDebounced(1000)
+  if (!DnD.reactive.isStarted && !Search.rawValue) saveActivePanelDebounced(1000)
 
   if (Sidebar.subPanelActive) Sidebar.closeSubPanel()
 
@@ -2394,7 +2394,7 @@ export function openSubPanel(type: SubPanelType, hostPanel?: Panel) {
 
   if (Menu.isOpen) Menu.close()
   if (Selection.isSet()) Selection.resetSelection()
-  if (Search.reactive.rawValue) Search.search()
+  if (Search.rawValue) Search.search()
 }
 
 export function closeSubPanel() {
@@ -2405,7 +2405,7 @@ export function closeSubPanel() {
 
   if (Selection.isSet()) Selection.resetSelection()
   if (Menu.isOpen) Menu.close()
-  if (Search.reactive.rawValue) Search.search()
+  if (Search.rawValue) Search.search()
   if (DnD.items.length) Sidebar.updateBounds()
 
   clearTimeout(subPanelTypeResetTimeout)
