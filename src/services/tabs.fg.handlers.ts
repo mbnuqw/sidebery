@@ -113,6 +113,7 @@ function onTabCreated(nativeTab: NativeTab, attached?: boolean): void {
 
   let panel, index, reopenedTabInfo, reopenedTabPanel, createGroup, autoGroupTab
   let initialOpenerSpec = ''
+  const initialOpenerId = nativeTab.openerTabId
   const initialOpener = Tabs.byId[nativeTab.openerTabId ?? -1]
   const tab = Tabs.mutateNativeTabToSideberyTab(nativeTab)
 
@@ -346,9 +347,7 @@ function onTabCreated(nativeTab: NativeTab, attached?: boolean): void {
           treeHasChanged = true
         } else {
           tab.parentId = -1
-          browser.tabs.update(tab.id, { openerTabId: tab.id }).catch(err => {
-            Logs.err('Tabs.onTabCreated: Cannot set openerTabId:', err)
-          })
+          tab.openerTabId = undefined
         }
       }
     }
@@ -401,6 +400,17 @@ function onTabCreated(nativeTab: NativeTab, attached?: boolean): void {
 
   Tabs.saveTabData(tab.id)
   Tabs.cacheTabsData()
+
+  // Update openerTabId
+  if (initialOpenerId !== tab.openerTabId) {
+    let newOpenerTabId
+    if (tab.openerTabId === undefined || tab.openerTabId === -1) newOpenerTabId = tab.id
+    else newOpenerTabId = tab.openerTabId
+
+    browser.tabs.update(tab.id, { openerTabId: newOpenerTabId }).catch(err => {
+      Logs.err('Tabs.onTabCreated: Cannot update openerTabId', err)
+    })
+  }
 
   // Update succession
   Tabs.updateSuccessionDebounced(100)
