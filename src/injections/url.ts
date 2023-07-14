@@ -55,25 +55,23 @@ void (async () => {
   else Logs.warn('Cannot apply firefox theme colors')
 
   const titleEl = document.getElementById('title')
+  const titleNoteEl = document.getElementById('title_note')
   const targetTitleLabelEl = document.getElementById('target_title_label')
   const targetTitleEl = document.getElementById('target_title')
   const targetLinkLabelEl = document.getElementById('target_url_label')
   const targetLinkEl = document.getElementById('target_url')
   const copyBtnEl = document.getElementById('copy_btn')
-  const apiLimitNoteEl = document.getElementById('api_limit_note')
-  const apiLimitNoteMoreEl = document.getElementById('api_limit_note_more')
   if (!titleEl) return Logs.err('Cannot get element: titleEl')
+  if (!titleNoteEl) return Logs.err('Cannot get element: titleNoteEl')
   if (!targetTitleLabelEl) return Logs.err('Cannot get element: targetTitleLabelEl')
   if (!targetTitleEl) return Logs.err('Cannot get element: targetTitleEl')
   if (!targetLinkLabelEl) return Logs.err('Cannot get element: targetLinkLabelEl')
   if (!targetLinkEl) return Logs.err('Cannot get element: targetLinkEl')
   if (!copyBtnEl) return Logs.err('Cannot get element: copyBtnEl')
-  if (!apiLimitNoteEl) return Logs.err('Cannot get element: apiLimitNoteEl')
-  if (!apiLimitNoteMoreEl) return Logs.err('Cannot get element: apiLimitNoteMoreEl')
 
   // Translate
-  const titleElLable = browser.i18n.getMessage('unavailable_url')
-  if (titleElLable) titleEl.innerText = titleElLable
+  const titleLabel = browser.i18n.getMessage('unavailable_url')
+  if (titleLabel) titleEl.innerText = titleLabel
   const targetTitleLabelLable = browser.i18n.getMessage('page_title')
   if (targetTitleLabelLable) targetTitleLabelEl.innerText = targetTitleLabelLable
   const linkLabelLable = browser.i18n.getMessage('original_url')
@@ -81,9 +79,7 @@ void (async () => {
   const copyBtnLabel = browser.i18n.getMessage('copy_url')
   if (copyBtnLabel) copyBtnEl.innerText = copyBtnLabel
   const apiLimitNoteLabel = browser.i18n.getMessage('api_limit_info')
-  if (apiLimitNoteLabel) apiLimitNoteEl.innerText = apiLimitNoteLabel
-  const apiLimitNoteMoreLabel = browser.i18n.getMessage('api_limit_info_more')
-  if (apiLimitNoteMoreLabel) apiLimitNoteMoreEl.innerText = apiLimitNoteMoreLabel
+  if (apiLimitNoteLabel) titleNoteEl.innerText = apiLimitNoteLabel
 
   // Get data from URL
   const hash = window.location.hash.slice(1)

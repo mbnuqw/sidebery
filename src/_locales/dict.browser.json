@@ -596,13 +596,6 @@
     "zh_TW": "\" 容器"
   },
 
-  "unhandled_url": {
-    "en": "Unhandled URL",
-    "ru": "Неподдерживаемый URL",
-    "de": "Nicht unterstützte URL",
-    "zh_CN": "未处理的网址",
-    "zh_TW": "未處理的網址"
-  },
   "unavailable_url": {
     "en": "Unavailable URL",
     "ru": "Недоступный URL",
@@ -644,13 +637,6 @@
     "de": "Aufgrund von sicherheitsrelevanten API Beschränkungen kann Sidebery diesen Link nicht öffnen.",
     "zh_CN": "由于安全相关的 API 限制，Sidebery 无法打开此链接。",
     "zh_TW": "由於安全相關的 API 限製，Sidebery 無法打開此鏈接。"
-  },
-  "api_limit_info_more": {
-    "en": "Read more about this.",
-    "ru": "Узнать больше",
-    "de": "Mehr darüber erfahren.",
-    "zh_CN": "阅读更多关于此信息。",
-    "zh_TW": "閱讀更多關於此信息。"
   },
 
   "group_disconnected_warn": {
