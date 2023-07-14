@@ -61,7 +61,6 @@ export interface Notification {
   progress?: NotificationProgress
   icon?: string
   iconColor?: string
-  favicons?: string[]
   details?: string
   detailsList?: string[]
 }

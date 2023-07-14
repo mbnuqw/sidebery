@@ -535,7 +535,6 @@ export async function removeBookmarks(ids: ID[], conf?: RemovingBookmarksConf): 
   const expandedBookmarks = Bookmarks.reactive.expanded[Sidebar.activePanelId]
   const deleted: Bookmark[] = []
   const idsToRemove = []
-  const favicons: string[] = []
 
   const walker = (nodes: Bookmark[]) => {
     for (const n of nodes) {
@@ -554,11 +553,6 @@ export async function removeBookmarks(ids: ID[], conf?: RemovingBookmarksConf): 
     if (!n) continue
     if (ids.includes(n.parentId)) continue
     count++
-    if (n.url) {
-      const fav = Favicons.reactive.list[Favicons.reactive.domains[Utils.getDomainOf(n.url)]]
-      if (fav) favicons.push(fav)
-      else Favicons.getFavPlaceholder(n.url)
-    }
     deleted.push(n)
     idsToRemove.push(id)
     if (n.children && n.children.length) {
@@ -585,7 +579,6 @@ export async function removeBookmarks(ids: ID[], conf?: RemovingBookmarksConf): 
       icon: '#icon_trash',
       title: String(count) + translate('notif.bookmarks_rm_post', count),
       ctrl: translate('notif.undo_ctrl'),
-      favicons: favicons.length ? favicons : undefined,
       callback: () => undoRemove(deleted),
     })
   }
