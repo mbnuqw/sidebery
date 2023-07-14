@@ -15,12 +15,8 @@ interface MozFocusEvent extends FocusEvent {
 }
 
 interface Window {
-  sideberyUrlPageInjected?: boolean
-  sideberyGroupPageInjected?: boolean
   sideberyInitData?: Record<string, any>
   onSideberyInitDataReady?: () => void
-  groupTabId?: ID
-  groupWinId?: ID
 
   translations: Record<string, Record<string, PlurFn | string>> | undefined
 
