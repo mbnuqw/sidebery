@@ -64,7 +64,6 @@ export const DEFAULT_SETTINGS: SettingsState = {
   activateLastTabOnPanelSwitchingLoadedOnly: true,
   switchPanelAfterSwitchingTab: 'always',
   tabRmBtn: 'hover',
-  hideInact: false,
   activateAfterClosing: 'next',
   activateAfterClosingStayInPanel: false,
   activateAfterClosingGlobal: false,
@@ -72,7 +71,6 @@ export const DEFAULT_SETTINGS: SettingsState = {
   activateAfterClosingNoDiscarded: true,
   askNewBookmarkPlace: true,
   tabsRmUndoNote: true,
-  nativeHighlight: false,
   tabsUnreadMark: false,
   tabsUpdateMark: 'all',
   tabsUpdateMarkFirst: true,
@@ -83,7 +81,6 @@ export const DEFAULT_SETTINGS: SettingsState = {
   tabsPanelSwitchActMove: false,
   tabsPanelSwitchActMoveAuto: true,
   tabsUrlInTooltip: 'full',
-  openSubPanelOnMouseHover: false,
   selectActiveTabFirst: true,
   newTabCtxReopen: false,
 
@@ -104,8 +101,6 @@ export const DEFAULT_SETTINGS: SettingsState = {
   tabsTree: true,
   groupOnOpen: true,
   tabsTreeLimit: 'none',
-  hideFoldedTabs: false,
-  hideFoldedParent: 'none',
   autoFoldTabs: false,
   autoFoldTabsExcept: 'none',
   autoExpandTabs: false,
@@ -126,6 +121,12 @@ export const DEFAULT_SETTINGS: SettingsState = {
   colorizeTabsBranches: false,
   colorizeTabsBranchesSrc: 'url',
   inheritCustomColor: true,
+
+  // Native tabs
+  hideInact: false,
+  hideFoldedTabs: false,
+  hideFoldedParent: 'none',
+  nativeHighlight: false,
 
   // Bookmarks
   warnOnMultiBookmarkDelete: 'collapsed',

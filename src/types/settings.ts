@@ -64,14 +64,12 @@ export interface SettingsState {
   activateLastTabOnPanelSwitchingLoadedOnly: boolean
   switchPanelAfterSwitchingTab: (typeof SETTINGS_OPTIONS.switchPanelAfterSwitchingTab)[number]
   tabRmBtn: (typeof SETTINGS_OPTIONS.tabRmBtn)[number]
-  hideInact: boolean
   activateAfterClosing: (typeof SETTINGS_OPTIONS.activateAfterClosing)[number]
   activateAfterClosingStayInPanel: boolean
   activateAfterClosingGlobal: boolean
   activateAfterClosingNoFolded: boolean
   activateAfterClosingNoDiscarded: boolean
   tabsRmUndoNote: boolean
-  nativeHighlight: boolean
   tabsUnreadMark: boolean
   tabsUpdateMark: (typeof SETTINGS_OPTIONS.tabsUpdateMark)[number]
   tabsUpdateMarkFirst: boolean
@@ -82,7 +80,6 @@ export interface SettingsState {
   tabsPanelSwitchActMove: boolean
   tabsPanelSwitchActMoveAuto: boolean
   tabsUrlInTooltip: (typeof SETTINGS_OPTIONS.tabsUrlInTooltip)[number]
-  openSubPanelOnMouseHover: boolean
   selectActiveTabFirst: boolean
   newTabCtxReopen: boolean
 
@@ -103,8 +100,6 @@ export interface SettingsState {
   tabsTree: boolean
   groupOnOpen: boolean
   tabsTreeLimit: (typeof SETTINGS_OPTIONS.tabsTreeLimit)[number]
-  hideFoldedTabs: boolean
-  hideFoldedParent: (typeof SETTINGS_OPTIONS.hideFoldedParent)[number]
   autoFoldTabs: boolean
   autoFoldTabsExcept: (typeof SETTINGS_OPTIONS.autoFoldTabsExcept)[number]
   autoExpandTabs: boolean
@@ -125,6 +120,12 @@ export interface SettingsState {
   colorizeTabsBranches: boolean
   colorizeTabsBranchesSrc: (typeof SETTINGS_OPTIONS.colorizeTabsBranchesSrc)[number]
   inheritCustomColor: boolean
+
+  // Native tabs
+  hideInact: boolean
+  hideFoldedTabs: boolean
+  hideFoldedParent: (typeof SETTINGS_OPTIONS.hideFoldedParent)[number]
+  nativeHighlight: boolean
 
   // Bookmarks
   bookmarksPanel?: boolean // DEPR

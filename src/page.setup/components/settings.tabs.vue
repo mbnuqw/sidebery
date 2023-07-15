@@ -35,10 +35,6 @@ section(ref="el")
     :folded="true"
     :opts="Settings.getOpts('tabRmBtn')"
     @update:value="Settings.saveDebounced(150)")
-  ToggleField(
-    label="settings.hide_inactive_panel_tabs"
-    :value="Settings.state.hideInact"
-    @update:value="toggleHideInact")
   SelectField(
     label="settings.activate_after_closing"
     optLabel="settings.activate_after_closing_"
@@ -66,10 +62,6 @@ section(ref="el")
       v-model:value="Settings.state.activateAfterClosingNoDiscarded"
       :inactive="Settings.state.activateAfterClosing === 'none'"
       @update:value="Settings.saveDebounced(150)")
-  ToggleField(
-    label="settings.native_highlight"
-    v-model:value="Settings.state.nativeHighlight"
-    @update:value="Settings.saveDebounced(150)")
   ToggleField(
     label="settings.tabs_unread_mark"
     v-model:value="Settings.state.tabsUnreadMark"
@@ -123,10 +115,6 @@ section(ref="el")
       :inactive="!Settings.state.showNewTabBtns"
       :opts="Settings.getOpts('newTabBarPosition')"
       @update:value="Settings.saveDebounced(150)")
-  //- ToggleField(
-  //-   label="settings.open_sub_panel_on_mouse_hover"
-  //-   v-model:value="Settings.state.openSubPanelOnMouseHover"
-  //-   @update:value="Settings.saveDebounced(150)")
   ToggleField(
     label="settings.select_active_tab_first"
     v-model:value="Settings.state.selectActiveTabFirst"
@@ -213,19 +201,6 @@ section(ref="el")
       :inactive="!Settings.state.tabsTree"
       :opts="Settings.getOpts('tabsTreeLimit')"
       @update:value="Settings.saveDebounced(150)")
-    ToggleField(
-      label="settings.hide_folded_tabs"
-      :inactive="!Settings.state.tabsTree"
-      :value="Settings.state.hideFoldedTabs"
-      @update:value="toggleHideFoldedTabs")
-    .sub-fields
-      SelectField(
-        label="settings.hide_folded_parent"
-        optLabel="settings.hide_folded_parent_"
-        v-model:value="Settings.state.hideFoldedParent"
-        :inactive="!Settings.state.hideFoldedTabs"
-        :opts="Settings.getOpts('hideFoldedParent')"
-        @update:value="Settings.saveDebounced(150)")
     ToggleField(
       label="settings.auto_fold_tabs"
       :inactive="!Settings.state.tabsTree"
@@ -331,6 +306,30 @@ section(ref="el")
       label="settings.tabs.inherit_custom_color"
       :inactive="!Settings.state.tabsTree"
       v-model:value="Settings.state.inheritCustomColor"
+      @update:value="Settings.saveDebounced(150)")
+
+  .wrapper
+    .sub-title: .text {{translate('settings.tabs_native_title')}}
+    ToggleField.-no-separator(
+      label="settings.hide_inactive_panel_tabs"
+      :value="Settings.state.hideInact"
+      @update:value="toggleHideInact")
+    ToggleField(
+      label="settings.hide_folded_tabs"
+      :inactive="!Settings.state.tabsTree"
+      :value="Settings.state.hideFoldedTabs"
+      @update:value="toggleHideFoldedTabs")
+    .sub-fields
+      SelectField(
+        label="settings.hide_folded_parent"
+        optLabel="settings.hide_folded_parent_"
+        v-model:value="Settings.state.hideFoldedParent"
+        :inactive="!Settings.state.hideFoldedTabs"
+        :opts="Settings.getOpts('hideFoldedParent')"
+        @update:value="Settings.saveDebounced(150)")
+    ToggleField(
+      label="settings.native_highlight"
+      v-model:value="Settings.state.nativeHighlight"
       @update:value="Settings.saveDebounced(150)")
 </template>
 

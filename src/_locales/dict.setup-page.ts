@@ -2404,6 +2404,12 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_TW: '在子選項卡中繼承自定義（手動設置）顏色',
   },
 
+  // - Native tabs
+  'settings.tabs_native_title': {
+    en: 'Native (horizontal) tabs',
+    ru: 'Нативные (горизонтальные) вкладки',
+  },
+
   // - Bookmarks
   'settings.bookmarks_title': {
     en: 'Bookmarks',
