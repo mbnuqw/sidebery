@@ -115,12 +115,7 @@ section(ref="el")
       :inactive="!Settings.state.showNewTabBtns"
       :opts="Settings.getOpts('newTabBarPosition')"
       @update:value="Settings.saveDebounced(150)")
-  ToggleField(
-    label="settings.select_active_tab_first"
-    v-model:value="Settings.state.selectActiveTabFirst"
-    @update:value="Settings.saveDebounced(150)")
-  
-  
+
   .wrapper
     .sub-title: .text {{translate('settings.new_tab_position')}}
     SelectField.-no-separator(

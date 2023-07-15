@@ -1,16 +1,149 @@
 <template lang="pug">
 .Settings
   section(ref="el")
-    h2 {{translate('settings.kb_title')}}
+    h2 {{translate('settings.kb_general')}}
     span.header-shadow
-    .wrapper(v-for="subSection in layout")
-      template(
-        v-for="cmdName in subSection"
-        :key="cmdName")
-        KeybindingField(
-          v-if="Keybindings.reactive.byName[cmdName]"
-          :keybinding="Keybindings.reactive.byName[cmdName]")
-        .sub-title(v-else): .text {{translate('settings.kb_' + cmdName)}}
+    KeybindingField.-no-separator(:keybinding="Keybindings.reactive.byName._execute_sidebar_action")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.search")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.hide_act_panel")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.create_snapshot")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.menu")
+
+  section
+    h2 {{translate('settings.kb_switching_panel')}}
+    span.header-shadowd
+    KeybindingField.-no-separator(:keybinding="Keybindings.reactive.byName.next_panel")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.prev_panel")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_panel_0")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_panel_1")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_panel_2")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_panel_3")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_panel_4")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_panel_5")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_panel_6")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_panel_7")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_panel_8")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_panel_9")
+
+  section
+    h2 {{translate('settings.kb_scroll_active_panel')}}
+    span.header-shadowd
+    KeybindingField.-no-separator(:keybinding="Keybindings.reactive.byName.scroll_to_active_panel_top")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.scroll_to_active_panel_bottom")
+
+  section
+    h2 {{translate('settings.kb_tabs')}}
+    span.header-shadow
+    KeybindingField.-no-separator(:keybinding="Keybindings.reactive.byName.duplicate_tabs")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.pin_tabs")
+
+  section
+    h2 {{translate('settings.kb_tabs_open')}}
+    span.header-shadow
+    KeybindingField.-no-separator(:keybinding="Keybindings.reactive.byName.new_tab_on_panel")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.new_tab_in_group")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.new_tab_as_first_child")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.new_tab_as_last_child")
+
+  section
+    h2 {{translate('settings.kb_rm')}}
+    span.header-shadow
+    KeybindingField.-no-separator(:keybinding="Keybindings.reactive.byName.rm_tab_on_panel")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.rm_tabs_above_in_panel")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.rm_tabs_below_in_panel")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.rm_tabs_other_in_panel")
+
+  section
+    h2 {{translate('settings.kb_selections')}}
+    span.header-shadow
+    KeybindingField.-no-separator(:keybinding="Keybindings.reactive.byName.select_all")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.up")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.down")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.up_shift")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.down_shift")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.reset_selection")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.activate")
+    .info {{translate('settings.kb_select_act_note')}}
+    ToggleField(
+      label="settings.select_active_tab_first"
+      v-model:value="Settings.state.selectActiveTabFirst"
+      @update:value="Settings.saveDebounced(150)")
+
+  section
+    h2 {{translate('settings.kb_unloading_tabs')}}
+    span.header-shadow
+    KeybindingField.-no-separator(:keybinding="Keybindings.reactive.byName.unload_tabs")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.unload_all_tabs_in_panel")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.unload_other_tabs_in_panel")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.unload_folded_tabs_in_panel")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.unload_all_tabs_in_inact_panels")
+
+  section
+    h2 {{translate('settings.kb_branches')}}
+    span.header-shadow
+    KeybindingField.-no-separator(:keybinding="Keybindings.reactive.byName.fold_branch")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.expand_branch")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.fold_inact_branches")
+
+  section
+    h2 {{translate('settings.kb_active_tabs_history')}}
+    span.header-shadowd
+    KeybindingField.-no-separator(:keybinding="Keybindings.reactive.byName.activate_prev_active_tab_c")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.activate_prev_active_tab")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.activate_next_active_tab")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.activate_panel_prev_active_tab")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.activate_panel_next_active_tab")
+
+  section
+    h2 {{translate('settings.kb_switching_tab')}}
+    span.header-shadowd
+    KeybindingField.-no-separator(:keybinding="Keybindings.reactive.byName.switch_to_next_tab")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_prev_tab")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_parent_tab")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_unpinned_tab_0")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_unpinned_tab_1")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_unpinned_tab_2")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_unpinned_tab_3")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_unpinned_tab_4")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_unpinned_tab_5")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_unpinned_tab_6")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_unpinned_tab_7")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_unpinned_tab_8")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_unpinned_tab_9")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_tab_0")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_tab_1")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_tab_2")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_tab_3")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_tab_4")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_tab_5")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_tab_6")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_tab_7")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_tab_8")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_tab_9")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.switch_to_last_tab")
+
+  section
+    h2 {{translate('settings.kb_move_tabs')}}
+    span.header-shadowd
+    KeybindingField.-no-separator(:keybinding="Keybindings.reactive.byName.move_tab_to_active")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.move_tabs_up")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.move_tabs_down")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.move_tabs_to_panel_start")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.move_tabs_to_panel_end")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.tabs_indent")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.tabs_outdent")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.move_tabs_to_panel_0")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.move_tabs_to_panel_1")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.move_tabs_to_panel_2")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.move_tabs_to_panel_3")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.move_tabs_to_panel_4")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.move_tabs_to_panel_5")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.move_tabs_to_panel_6")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.move_tabs_to_panel_7")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.move_tabs_to_panel_8")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.move_tabs_to_panel_9")
+
+  section
     .ctrls
       .btn(@click="Keybindings.resetKeybindings") {{translate('settings.reset_kb')}}
 </template>
@@ -20,144 +153,9 @@ import { ref, onMounted } from 'vue'
 import { translate } from 'src/dict'
 import { Keybindings } from 'src/services/keybindings'
 import { SetupPage } from 'src/services/setup-page'
+import { Settings } from 'src/services/settings'
 import KeybindingField from 'src/page.setup/components/keybindings.keybinding.vue'
-
-const layout = [
-  [
-    'general',
-    '_execute_sidebar_action',
-    'search',
-    'create_snapshot',
-    'duplicate_tabs',
-    'pin_tabs',
-    'hide_act_panel',
-  ],
-
-  // Creating / Removing tab
-  [
-    'create_remove_tabs',
-    'new_tab_on_panel',
-    'new_tab_in_group',
-    'new_tab_as_first_child',
-    'new_tab_as_last_child',
-    'rm_tab_on_panel',
-    'rm_tabs_above_in_panel',
-    'rm_tabs_below_in_panel',
-    'rm_tabs_other_in_panel',
-  ],
-
-  // Selection
-  [
-    'selections',
-    'select_all',
-    'up',
-    'down',
-    'up_shift',
-    'down_shift',
-    'reset_selection',
-    'activate',
-    'menu',
-  ],
-
-  // Unloading tabs
-  [
-    'unloading_tabs',
-    'unload_tabs',
-    'unload_all_tabs_in_panel',
-    'unload_other_tabs_in_panel',
-    'unload_folded_tabs_in_panel',
-    'unload_all_tabs_in_inact_panels',
-  ],
-
-  // Branch
-  ['branches', 'fold_branch', 'expand_branch', 'fold_inact_branches'],
-
-  // Active tabs history
-  [
-    'active_tabs_history',
-    'activate_prev_active_tab_c',
-    'activate_prev_active_tab',
-    'activate_next_active_tab',
-    'activate_panel_prev_active_tab',
-    'activate_panel_next_active_tab',
-  ],
-
-  // Switching panels
-  [
-    'switching_panel',
-    'next_panel',
-    'prev_panel',
-    'switch_to_panel_0',
-    'switch_to_panel_1',
-    'switch_to_panel_2',
-    'switch_to_panel_3',
-    'switch_to_panel_4',
-    'switch_to_panel_5',
-    'switch_to_panel_6',
-    'switch_to_panel_7',
-    'switch_to_panel_8',
-    'switch_to_panel_9',
-  ],
-
-  // Scrolling active tab panel.
-  [
-    'scroll_active_panel',
-    'scroll_to_active_panel_top',
-    'scroll_to_active_panel_bottom',
-    // TBD: page up / page down.
-  ],
-
-  // Switching tabs
-  [
-    'switching_tab',
-    'switch_to_parent_tab',
-    'switch_to_unpinned_tab_0',
-    'switch_to_unpinned_tab_1',
-    'switch_to_unpinned_tab_2',
-    'switch_to_unpinned_tab_3',
-    'switch_to_unpinned_tab_4',
-    'switch_to_unpinned_tab_5',
-    'switch_to_unpinned_tab_6',
-    'switch_to_unpinned_tab_7',
-    'switch_to_unpinned_tab_8',
-    'switch_to_unpinned_tab_9',
-    'switch_to_tab_0',
-    'switch_to_tab_1',
-    'switch_to_tab_2',
-    'switch_to_tab_3',
-    'switch_to_tab_4',
-    'switch_to_tab_5',
-    'switch_to_tab_6',
-    'switch_to_tab_7',
-    'switch_to_tab_8',
-    'switch_to_tab_9',
-    'switch_to_last_tab',
-    'switch_to_next_tab',
-    'switch_to_prev_tab',
-  ],
-
-  // Move tabs
-  [
-    'move_tabs',
-    'move_tab_to_active',
-    'move_tabs_up',
-    'move_tabs_down',
-    'move_tabs_to_panel_start',
-    'move_tabs_to_panel_end',
-    'tabs_indent',
-    'tabs_outdent',
-    'move_tabs_to_panel_0',
-    'move_tabs_to_panel_1',
-    'move_tabs_to_panel_2',
-    'move_tabs_to_panel_3',
-    'move_tabs_to_panel_4',
-    'move_tabs_to_panel_5',
-    'move_tabs_to_panel_6',
-    'move_tabs_to_panel_7',
-    'move_tabs_to_panel_8',
-    'move_tabs_to_panel_9',
-  ],
-]
+import ToggleField from 'src/components/toggle-field.vue'
 
 const el = ref<HTMLElement | null>(null)
 

@@ -71,8 +71,8 @@
     "zh_TW": "打開新標籤頁作為活動標籤的最後一個子標籤"
   },
   "KbRm": {
-    "en": "Remove selected items or active tab",
-    "ru": "Удалить выделенные элементы или активную вкладку",
+    "en": "Close selected or active tab / Delete selected bookmarks",
+    "ru": "Закрыть выбранную или активную вкладку / Удалить выбранные закладки",
     "de": "Ausgewählte Elemente oder aktiven Tab entfernen",
     "zh_CN": "删除所选项目或活动标签页",
     "zh_TW": "刪除所選項目或活動標籤頁"
@@ -131,15 +131,15 @@
     "zh_TW": "向下選擇區間"
   },
   "KbActivate": {
-    "en": "Activate selection or fold/unfold an active tab branch or a selected bookmarks folder",
+    "en": "Activate selection",
     "ru": "Активировать выделенное или свернуть/развернуть ветку активной вкладки или выбранную папку закладок",
     "de": "Auswahl aktivieren oder aktiven Tab-Zweig oder ausgewählten Lesezeichenordner ein-/ausklappen",
     "zh_CN": "激活选择或折叠/展开活动选项卡分支或选定的书签文件夹",
     "zh_TW": "激活選擇或折疊/展開活動選項卡分支或選定的書籤文件夾"
   },
   "KbMenu": {
-    "en": "Open menu",
-    "ru": "Открыть меню",
+    "en": "Open menu for selected (or active) tab or bookmark",
+    "ru": "Открыть меню для выделенной (или активной) вкладки или закладки",
     "de": "Menü öffnen",
     "zh_CN": "打开菜单",
     "zh_TW": "打開菜單"
