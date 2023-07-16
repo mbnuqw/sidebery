@@ -223,7 +223,7 @@ export const SETTINGS_OPTIONS = {
   tabsUrlInTooltip: ['full', 'stripped', 'none'],
   groupLayout: ['grid', 'list'],
   hScrollAction: ['switch_panels', 'switch_act_tabs', 'none'],
-  scrollThroughTabs: ['panel', 'global', 'none'],
+  scrollThroughTabs: ['panel', 'global', 'psp', 'psg', 'none'],
   discardFoldedDelayUnit: ['sec', 'min'],
   tabDoubleClick: ['reload', 'duplicate', 'pin', 'mute', 'clear_cookies', 'exp', 'new_after',
     'new_child', 'close', 'edit_title', 'none'],

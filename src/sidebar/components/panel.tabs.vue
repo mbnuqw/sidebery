@@ -188,18 +188,31 @@ const onWheel = Mouse.getWheelDebouncer(WheelDirection.Vertical, (e: WheelEvent)
   if (e.deltaY !== 0 && Tabs.blockedScrollPosition) Tabs.resetScrollRetainer(props.panel)
   if (Sidebar.scrollAreaRightX && e.clientX > Sidebar.scrollAreaRightX) return
   if (Sidebar.scrollAreaLeftX && e.clientX < Sidebar.scrollAreaLeftX) return
-  if (Selection.isSet()) return
-  if (Settings.state.scrollThroughTabs !== 'none') {
+
+  const stt = Settings.state.scrollThroughTabs
+  const presel = stt === 'psp' || stt === 'psg'
+  const glob = stt === 'global' || stt === 'psg'
+
+  if (!presel && Selection.isSet()) return
+  if (stt !== 'none') {
     if (scrollBoxEl && Settings.state.scrollThroughTabsExceptOverflow) {
       if (scrollBoxEl.scrollHeight > scrollBoxEl.offsetHeight) return
     }
+
     e.preventDefault()
-    let globaly = (Settings.state.scrollThroughTabs === 'global') !== e.shiftKey
+
+    const globaly = glob !== e.shiftKey
     const cyclic = Settings.state.scrollThroughTabsCyclic !== e.ctrlKey
 
     if (e.deltaY !== 0) Mouse.blockWheel(WheelDirection.Horizontal)
-    if (e.deltaY > 0) Tabs.switchTab(globaly, cyclic, 1, false)
-    if (e.deltaY < 0) Tabs.switchTab(globaly, cyclic, -1, false)
+
+    if (presel) {
+      if (e.deltaY > 0) Tabs.switchTabWithPreselect(globaly, cyclic, 1)
+      else if (e.deltaY < 0) Tabs.switchTabWithPreselect(globaly, cyclic, -1)
+    } else {
+      if (e.deltaY > 0) Tabs.switchTab(globaly, cyclic, 1, false)
+      else if (e.deltaY < 0) Tabs.switchTab(globaly, cyclic, -1, false)
+    }
   }
 })
 

@@ -1180,7 +1180,7 @@ export function checkRemovedTabs(delay = 750): void {
   }, delay)
 }
 
-let switchTabPause = undefined as number | undefined
+let switchTabPause: number | undefined
 /**
  * Activate tab relative to current active tab.
  */
@@ -1254,10 +1254,83 @@ export function switchTab(globaly: boolean, cycle: boolean, step: number, pinned
   }
 
   if (targetTabId !== NOID && targetTabId !== activeTab.id) {
+    Tabs.scrollToTab(targetTabId, false)
     browser.tabs.update(targetTabId, { active: true }).catch(err => {
       Logs.err('Tabs.switchTab: Cannot activate tab (2):', err)
     })
   }
+}
+
+let switchPreselectTabPause: number | undefined
+export function switchTabWithPreselect(globaly: boolean, cycle: boolean, dir: 1 | -1): void {
+  if (switchPreselectTabPause) return
+  switchPreselectTabPause = setTimeout(() => {
+    clearTimeout(switchPreselectTabPause)
+    switchPreselectTabPause = undefined
+  }, 50)
+
+  const activePanel = Sidebar.panelsById[Sidebar.activePanelId]
+  if (!Utils.isTabsPanel(activePanel)) return
+
+  let tabs
+  if (globaly) {
+    tabs = [...Tabs.list]
+  } else {
+    if (Settings.state.pinnedTabsPosition === 'panel') {
+      tabs = [...activePanel.pinnedTabs, ...activePanel.tabs]
+    } else {
+      tabs = [...Tabs.pinned, ...activePanel.tabs]
+    }
+  }
+  if (!tabs.length) return
+
+  const selIsSet = Selection.isSet()
+  let target: Tab | undefined
+
+  if (Settings.state.selectActiveTabFirst && !selIsSet) {
+    target = Tabs.byId[Tabs.activeId]
+    const wrongPanel =
+      target &&
+      (!target.pinned || Settings.state.pinnedTabsPosition === 'panel') &&
+      target.panelId !== activePanel.id
+
+    if (!target || wrongPanel) {
+      target = dir > 0 ? tabs[0] : tabs[tabs.length - 1]
+    }
+  } else {
+    let afterSel = false
+    const tabFinder = (tab: Tab) => {
+      if (tab.invisible) return false
+      if (afterSel) return true
+      if ((selIsSet && tab.sel) || (!selIsSet && tab.active)) afterSel = true
+    }
+    target = dir > 0 ? tabs.find(tabFinder) : tabs.findLast(tabFinder)
+  }
+
+  if (!target) {
+    if (cycle) {
+      if (dir > 0) target = tabs[0]
+      else target = tabs[tabs.length - 1]
+    } else {
+      if (dir > 0) target = tabs[tabs.length - 1]
+      else target = tabs[0]
+    }
+  }
+  if (!target) return
+
+  Selection.resetSelection()
+  if (
+    globaly &&
+    (!target.pinned || Settings.state.pinnedTabsPosition === 'panel') &&
+    target.panelId !== activePanel.id
+  ) {
+    Sidebar.switchToPanel(target.panelId, true, true)
+  }
+  Selection.selectTab(target.id)
+
+  Tabs.activateSelectedOnMouseLeave = true
+
+  Tabs.scrollToTab(target.id, false)
 }
 
 const RELOADING_QUEUE: Tab[] = []

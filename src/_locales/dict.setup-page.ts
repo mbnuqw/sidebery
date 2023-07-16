@@ -3040,10 +3040,22 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_CN: '全局',
     zh_TW: '全局',
   },
+  'settings.scroll_through_tabs_psp': {
+    en: 'preselect in panel',
+    ru: 'предварительное выделение в панели',
+  },
+  'settings.scroll_through_tabs_psg': {
+    en: 'preselect globally',
+    ru: 'предварительное выделение глобально',
+  },
   'settings.scroll_through_tabs_none': {
     en: 'none',
     ru: 'выкл',
     de: 'Nie',
+  },
+  'settings.scroll_through_tabs_preselect_note': {
+    en: 'Select tab with scroll wheel and activate it after mouse leave',
+    ru: 'Выделять вкладку с помощью колеса прокрутки и активировать ее, когда курсор мыши убран',
   },
   'settings.scroll_through_visible_tabs': {
     en: 'Skip folded tabs',

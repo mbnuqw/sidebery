@@ -44,6 +44,7 @@ export const Tabs = {
   ignoreTabsEvents: false,
   activeId: NOID,
   blockedScrollPosition: false,
+  activateSelectedOnMouseLeave: false,
 
   ...TabsActions,
   ...TabsHandlers,

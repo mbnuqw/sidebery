@@ -141,6 +141,7 @@ import UpgradeScreen from '../components/upgrade-screen.vue'
 import SubPanel from './components/sub-panel.vue'
 import * as Utils from 'src/utils'
 import * as Popups from 'src/services/popups'
+import * as Logs from 'src/services/logs'
 
 const rootEl = ref<HTMLElement | null>(null)
 const panelBoxEl = ref<HTMLElement | null>(null)
@@ -338,6 +339,20 @@ function onMouseLeave(): void {
   }
 
   if (Sidebar.switchOnMouseLeave) Sidebar.switchPanelOnMouseLeave()
+
+  if (Tabs.activateSelectedOnMouseLeave && Selection.isTabs()) {
+    Tabs.activateSelectedOnMouseLeave = false
+
+    const id = Selection.get()[0]
+    Selection.resetSelection()
+
+    const targetTab = Tabs.byId[id]
+    if (!targetTab) return
+
+    browser.tabs.update(id, { active: true }).catch(err => {
+      Logs.err('MouseLeave: Cannot activate tab on mouseleave:', err)
+    })
+  }
 }
 
 function onMouseDown(e: MouseEvent): void {

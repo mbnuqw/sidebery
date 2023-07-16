@@ -13,18 +13,20 @@ section(ref="el")
     label="settings.scroll_through_tabs"
     optLabel="settings.scroll_through_tabs_"
     v-model:value="Settings.state.scrollThroughTabs"
+    :folded="true"
     :opts="Settings.getOpts('scrollThroughTabs')"
+    :note="Settings.state.scrollThroughTabs === 'psp' ? translate('settings.scroll_through_tabs_preselect_note') : undefined"
     @update:value="Settings.saveDebounced(150)")
   .sub-fields
     ToggleField(
       label="settings.scroll_through_visible_tabs"
       v-model:value="Settings.state.scrollThroughVisibleTabs"
-      :inactive="!Settings.state.tabsTree || Settings.state.scrollThroughTabs === 'none'"
+      :inactive="!Settings.state.tabsTree || Settings.state.scrollThroughTabs === 'none' || Settings.state.scrollThroughTabs === 'psp' || Settings.state.scrollThroughTabs === 'psg'"
       @update:value="Settings.saveDebounced(150)")
     ToggleField(
       label="settings.scroll_through_tabs_skip_discarded"
       v-model:value="Settings.state.scrollThroughTabsSkipDiscarded"
-      :inactive="Settings.state.scrollThroughTabs === 'none'"
+      :inactive="Settings.state.scrollThroughTabs === 'none' || Settings.state.scrollThroughTabs === 'psp' || Settings.state.scrollThroughTabs === 'psg'"
       @update:value="Settings.saveDebounced(150)")
     ToggleField(
       label="settings.scroll_through_tabs_except_overflow"
