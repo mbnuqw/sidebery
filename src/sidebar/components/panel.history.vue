@@ -12,7 +12,10 @@
           :expanded="!!state.expandedHistoryGroups[i] || isFiltering"
           @click="toggleHistoryGroup($event, i)")
         .group-list(v-if="!!state.expandedHistoryGroups[i] || isFiltering")
-          HistoryItemVue(v-for="item in group.items" :key="item.lastVisitTime" :item="item")
+          HistoryItemVue(
+            v-for="item in group.items"
+            :key="item.lastVisitTime"
+            :item="item")
       .controls(:data-loading="state.historyLoading" :data-all-loaded="state.allLoaded")
         .note(@click="onScrollBottom") {{translate('panel.history.load_more')}}
 
@@ -94,7 +97,10 @@ const historyList = computed((): HistoryGroup[] => {
   const dayStart = Utils.getDayStartMS()
   let group: HistoryGroup | undefined
   let lastGroupTitle = ''
+  let prevPreview: HistoryItem | undefined
 
+  const favs = Favicons.reactive.list
+  const favDomains = Favicons.reactive.domains
   const list = History.reactive.filtered ?? History.reactive.list
 
   for (const item of list) {
@@ -105,6 +111,7 @@ const historyList = computed((): HistoryGroup[] => {
       lastGroupTitle = gTitle
       group = { title: gTitle, items: [] }
       groups.push(group)
+      prevPreview = undefined
     }
 
     if (itemPreview.url) {
@@ -115,7 +122,7 @@ const historyList = computed((): HistoryGroup[] => {
         itemPreview.info = itemPreview.url
       }
       const domain = Utils.getDomainOf(itemPreview.url)
-      itemPreview.favicon = Favicons.reactive.list[Favicons.reactive.domains[domain]]
+      itemPreview.favicon = favs[favDomains[domain]]
 
       if (!itemPreview.title) {
         const prevItem = group.items[group.items.length - 1]
@@ -133,6 +140,16 @@ const historyList = computed((): HistoryGroup[] => {
     if (itemPreview.title) itemPreview.tooltip += itemPreview.title + '\n---\n'
     if (itemPreview.info) itemPreview.tooltip += itemPreview.info
 
+    if (item.title && prevPreview?.title) {
+      const prevTitle = prevPreview.title
+      if (item.title.length === prevTitle.length && item.title === prevTitle) {
+        if (!prevPreview.moreItems) prevPreview.moreItems = [itemPreview]
+        else prevPreview.moreItems.push(itemPreview)
+        continue
+      }
+    }
+
+    prevPreview = itemPreview
     group.items.push(itemPreview)
   }
 

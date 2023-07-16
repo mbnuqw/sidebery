@@ -1,17 +1,14 @@
 @import '../../../utils'
 
 #root
-  // --history-item-height: 30px
   --history-item-margin: var(--general-margin)
   --history-item-border-radius: var(--general-border-radius)
   --history-item-padding-left: 6px
   --history-item-padding-right: 5px
 #root[data-density="compact"]
-  // --history-item-height: 27px
   --history-item-padding-left: 6px
   --history-item-padding-right: 4px
 #root[data-density="loose"]
-  // --history-item-height: 32px
   --history-item-padding-left: 7px
   --history-item-padding-right: 6px
 
@@ -50,9 +47,6 @@
 
 .HistoryPanel .item .body
   position: relative
-  // display: flex
-  // align-items: center
-  // height: var(--history-item-height)
   padding: var(--history-item-padding-left) 0 var(--history-item-padding-right) 0
   border-radius: var(--history-item-border-radius)
   background-color: var(--frame-el-bg)
@@ -65,14 +59,19 @@
     width: 100%
     height: 100%
     border-radius: var(--history-item-border-radius)
-.HistoryPanel .item:hover .body:before
+.HistoryPanel .item .body:hover:before
   background-color: var(--frame-el-overlay-hover-bg)
-.HistoryPanel .item:active .body:before
+.HistoryPanel .item .body:active:before
   background-color: var(--frame-el-overlay-clicked-bg)
   box-shadow: inset 0 0 0 1px #00000012
-.HistoryPanel .item[data-sel="true"] .body:before
+.HistoryPanel .item .body[data-sel="true"]:before
   background-color: var(--frame-el-overlay-selected-bg)
   box-shadow: inset 0 0 0 1px var(--frame-el-overlay-selected-border)
+.HistoryPanel .item .body.-more
+.HistoryPanel .item .body.-av
+  margin-top: var(--history-item-margin)
+.HistoryPanel .item .body.-more
+  margin-bottom: var(--history-item-margin)
 
 .HistoryPanel .item .title-line
   position: relative
@@ -89,7 +88,7 @@
   line-height: 1rem
   max-height: 3rem
   flex-shrink: 1
-  opacity: .5
+  opacity: .6
 
 .HistoryPanel .item .fav
   position: relative

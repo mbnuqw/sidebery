@@ -1,22 +1,45 @@
 <template lang="pug">
-.item(
-  :id="'history' + item.id"
-  :title="item.tooltip"
-  :data-sel="item.sel"
-  @mousedown.stop="onMouseDown"
-  @mouseup.stop="onMouseUp"
-  @contextmenu.stop="onCtxMenu")
-  .body
+.item(:id="'history' + item.id")
+  .body(
+    :title="item.tooltip"
+    :data-sel="item.sel"
+    @mousedown.stop="onMouseDown($event, item)"
+    @mouseup.stop="onMouseUp($event, item)"
+    @contextmenu.stop="onCtxMenu($event, item)")
     .title-line
-      .fav(:title="translate('panel.history.fav_tooltip')" @mousedown.stop="onFavMouseDown")
+      .fav(:title="translate('panel.history.fav_tooltip')" @mousedown.stop="onFavMouseDown($event, item)")
         svg(v-if="!item.favicon"): use(xlink:href="#icon_ff")
         img(v-else :src="item.favicon")
       .title {{item.title}}
       .inline-info {{item.timeStr}}
     .url-line {{item.info}}
+  template(v-if="item.moreItems")
+    .body.-more(
+      v-if="!moreActive && !Search.reactive.rawValue"
+      @click="onMoreClick")
+      .title-line
+        .title
+        .inline-info {{translate('panel.history.show_more')}} {{item.moreItems.length}}
+    .body.-av(
+      v-else
+      v-for="subItem in item.moreItems"
+      :id="'history' + subItem.id"
+      :data-sel="subItem.sel"
+      :key="subItem.lastVisitTime"
+      @mousedown.stop="onMouseDown($event, subItem)"
+      @mouseup.stop="onMouseUp($event, subItem)"
+      @contextmenu.stop="onCtxMenu($event, subItem)")
+      .title-line
+        .fav(:title="translate('panel.history.fav_tooltip')" @mousedown.stop="onFavMouseDown($event, subItem)")
+          svg(v-if="!subItem.favicon"): use(xlink:href="#icon_ff")
+          img(v-else :src="subItem.favicon")
+        .title {{subItem.title}}
+        .inline-info {{subItem.timeStr}}
+      .url-line {{subItem.info}}
 </template>
 
 <script lang="ts" setup>
+import { ref } from 'vue'
 import { HistoryItem, MenuType } from 'src/types'
 import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
@@ -28,17 +51,18 @@ import { Search } from 'src/services/search'
 import { History } from 'src/services/history'
 import { Bookmarks } from 'src/services/bookmarks'
 
-const props = defineProps<{ item: HistoryItem }>()
+const moreActive = ref(false)
+defineProps<{ item: HistoryItem }>()
 
-function onMouseDown(e: MouseEvent): void {
-  Mouse.setTarget('history', props.item.id)
+function onMouseDown(e: MouseEvent, item: HistoryItem): void {
+  Mouse.setTarget('history', item.id)
   Menu.close()
 
   // Left
   if (e.button === 0) {
     if (e.ctrlKey) {
-      if (!props.item.sel) Selection.selectHistory(props.item.id)
-      else Selection.deselectHistory(props.item.id)
+      if (!item.sel) Selection.selectHistory(item.id)
+      else Selection.deselectHistory(item.id)
       return
     }
   }
@@ -51,12 +75,12 @@ function onMouseDown(e: MouseEvent): void {
 
   // Right
   else if (e.button === 2) {
-    if (!Settings.state.ctxMenuNative && !props.item.sel) Selection.resetSelection()
+    if (!Settings.state.ctxMenuNative && !item.sel) Selection.resetSelection()
   }
 }
 
-function onMouseUp(e: MouseEvent): void {
-  const sameTarget = Mouse.isTarget('history', props.item.id)
+function onMouseUp(e: MouseEvent, item: HistoryItem): void {
+  const sameTarget = Mouse.isTarget('history', item.id)
   Mouse.resetTarget()
   Mouse.stopLongClick()
   if (!sameTarget) return
@@ -72,7 +96,7 @@ function onMouseUp(e: MouseEvent): void {
       Search.stop()
       Selection.resetSelection()
     }
-    History.openTab(props.item, activateNewTab)
+    History.openTab(item, activateNewTab)
   }
 
   if (e.button === 2) {
@@ -80,23 +104,27 @@ function onMouseUp(e: MouseEvent): void {
 
     if (Menu.isBlocked()) return
     if (!Selection.isSet() && !Settings.state.ctxMenuNative) {
-      Selection.selectHistory(props.item.id)
+      Selection.selectHistory(item.id)
     }
     if (!Settings.state.ctxMenuNative) Menu.open(MenuType.History, e.clientX, e.clientY)
   }
 }
 
-function onFavMouseDown(): void {
-  if (!props.item.url) return
+function onMoreClick() {
+  moreActive.value = true
+}
 
-  const domain = Utils.getDomainOf(props.item.url)
-  if (domain === props.item.url) return
+function onFavMouseDown(e: MouseEvent, item: HistoryItem): void {
+  if (!item.url) return
+
+  const domain = Utils.getDomainOf(item.url)
+  if (domain === item.url) return
 
   Search.showBar()
   Search.onOutsideSearchInput(domain)
 }
 
-function onCtxMenu(e: MouseEvent): void {
+function onCtxMenu(e: MouseEvent, item: HistoryItem): void {
   if (Mouse.isLocked() || !Settings.state.ctxMenuNative || e.ctrlKey || e.shiftKey) {
     Mouse.resetClickLock()
     e.stopPropagation()
@@ -104,7 +132,7 @@ function onCtxMenu(e: MouseEvent): void {
     return
   }
 
-  if (!e.ctrlKey && !e.shiftKey && !props.item.sel) {
+  if (!e.ctrlKey && !e.shiftKey && !item.sel) {
     Selection.resetSelection()
   }
 
@@ -116,7 +144,7 @@ function onCtxMenu(e: MouseEvent): void {
 
   browser.menus.overrideContext({ showDefaults: false })
 
-  if (!Selection.isSet()) Selection.selectHistory(props.item.id)
+  if (!Selection.isSet()) Selection.selectHistory(item.id)
 
   Menu.open(MenuType.History)
 }

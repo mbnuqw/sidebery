@@ -4,4 +4,5 @@ export interface HistoryItem extends browser.history.HistoryItem {
   info?: string
   timeStr?: string
   sel?: boolean
+  moreItems?: HistoryItem[]
 }

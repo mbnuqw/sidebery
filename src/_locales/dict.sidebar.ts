@@ -71,6 +71,10 @@ export const sidebarTranslations: Translations = {
     zh_CN: '显示该站点的历史记录',
     zh_TW: '顯示該站點的歷史記錄',
   },
+  'panel.history.show_more': {
+    en: '...hidden visits:',
+    ru: '...скрытых записей:',
+  },
 
   // ---
   // -- New tab bar
