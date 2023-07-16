@@ -95,6 +95,14 @@
     "zh_CN": "关闭其他选项卡(在当前面板中)",
     "zh_TW": "關閉其他選項卡(在當前面板中)"
   },
+  "KbSelNextPanel": {
+    "en": "Select next panel",
+    "ru": "Выделить следующую панель"
+  },
+  "KbSelPrevPanel": {
+    "en": "Select previous panel",
+    "ru": "Выделить предыдущую панель"
+  },
   "KbSelectAll": {
     "en": "Select all",
     "ru": "Выделить все",

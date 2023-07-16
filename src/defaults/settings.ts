@@ -81,7 +81,6 @@ export const DEFAULT_SETTINGS: SettingsState = {
   tabsPanelSwitchActMove: false,
   tabsPanelSwitchActMoveAuto: true,
   tabsUrlInTooltip: 'full',
-  selectActiveTabFirst: true,
   newTabCtxReopen: false,
 
   // New tab position
@@ -207,6 +206,9 @@ export const DEFAULT_SETTINGS: SettingsState = {
   syncSaveCtxMenu: false,
   syncSaveStyles: false,
   syncSaveKeybindings: false,
+
+  // Keybindings
+  selectActiveTabFirst: true,
 }
 
 // prettier-ignore

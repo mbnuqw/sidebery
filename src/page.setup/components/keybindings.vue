@@ -56,18 +56,24 @@
   section
     h2 {{translate('settings.kb_selections')}}
     span.header-shadow
-    KeybindingField.-no-separator(:keybinding="Keybindings.reactive.byName.select_all")
-    KeybindingField(:keybinding="Keybindings.reactive.byName.up")
-    KeybindingField(:keybinding="Keybindings.reactive.byName.down")
-    KeybindingField(:keybinding="Keybindings.reactive.byName.up_shift")
-    KeybindingField(:keybinding="Keybindings.reactive.byName.down_shift")
+    KeybindingField.-no-separator(:keybinding="Keybindings.reactive.byName.sel_next_panel")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.sel_prev_panel")
+    InfoField(label="settings.kb_sel_tabs_bookmarks")
+    .sub-fields
+      KeybindingField.-no-separator(:keybinding="Keybindings.reactive.byName.select_all")
+      InfoField(label="settings.kb_selecting_up_down")
+      .sub-fields
+        KeybindingField.-no-separator(:keybinding="Keybindings.reactive.byName.up")
+        KeybindingField(:keybinding="Keybindings.reactive.byName.down")
+        ToggleField(
+          label="settings.select_active_tab_first"
+          v-model:value="Settings.state.selectActiveTabFirst"
+          @update:value="Settings.saveDebounced(150)")
+      KeybindingField(:keybinding="Keybindings.reactive.byName.up_shift")
+      KeybindingField(:keybinding="Keybindings.reactive.byName.down_shift")
     KeybindingField(:keybinding="Keybindings.reactive.byName.reset_selection")
     KeybindingField(:keybinding="Keybindings.reactive.byName.activate")
     .info {{translate('settings.kb_select_act_note')}}
-    ToggleField(
-      label="settings.select_active_tab_first"
-      v-model:value="Settings.state.selectActiveTabFirst"
-      @update:value="Settings.saveDebounced(150)")
 
   section
     h2 {{translate('settings.kb_unloading_tabs')}}
@@ -156,6 +162,7 @@ import { SetupPage } from 'src/services/setup-page'
 import { Settings } from 'src/services/settings'
 import KeybindingField from 'src/page.setup/components/keybindings.keybinding.vue'
 import ToggleField from 'src/components/toggle-field.vue'
+import InfoField from 'src/components/info-field.vue'
 
 const el = ref<HTMLElement | null>(null)
 

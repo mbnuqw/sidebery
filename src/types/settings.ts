@@ -80,7 +80,6 @@ export interface SettingsState {
   tabsPanelSwitchActMove: boolean
   tabsPanelSwitchActMoveAuto: boolean
   tabsUrlInTooltip: (typeof SETTINGS_OPTIONS.tabsUrlInTooltip)[number]
-  selectActiveTabFirst: boolean
   newTabCtxReopen: boolean
 
   // New tab position
@@ -210,4 +209,7 @@ export interface SettingsState {
   syncSaveCtxMenu: boolean
   syncSaveStyles: boolean
   syncSaveKeybindings: boolean
+
+  // Keybindings
+  selectActiveTabFirst: boolean
 }

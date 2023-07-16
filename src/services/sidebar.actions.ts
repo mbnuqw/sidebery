@@ -1326,6 +1326,112 @@ export function switchPanel(
   switchToPanel(panel.id, false, withoutTabCreation)
 }
 
+export function selectPanel(dir: 1 | -1) {
+  let isSelected = false
+  let selPanelId: ID | undefined
+  if (Selection.isNavItem()) {
+    const firstSelId = Selection.get()[0]
+    if (Sidebar.panelsById[firstSelId]) {
+      selPanelId = firstSelId
+      isSelected = true
+    }
+  }
+  if (selPanelId === undefined || !Sidebar.panelsById[selPanelId]) {
+    selPanelId = Sidebar.activePanelId
+  }
+
+  const selectedPanel: Panel | undefined = Sidebar.panelsById[selPanelId]
+  if (!selectedPanel) return
+
+  Menu.close()
+  Selection.resetSelection()
+
+  const hiddenPanelsPopupIsShown = Sidebar.reactive.hiddenPanelsPopup
+  const visiblePanels = []
+  const hiddenPanels = []
+  const isInline = Settings.state.navBarLayout === 'horizontal' && Settings.state.navBarInline
+  let hdnIndex = -1
+  let actIndex = -1
+  let actIsHidden = false
+  let newActIsHidden = false
+
+  for (const id of Sidebar.nav) {
+    if (id === 'hdn') {
+      hdnIndex = visiblePanels.length
+      continue
+    }
+
+    const panel = Sidebar.panelsById[id]
+    if (!panel) continue
+
+    const isTabsPanel = Utils.isTabsPanel(panel)
+    const isHidden =
+      panel.hidden ||
+      (isTabsPanel && Settings.state.hideEmptyPanels && !panel.reactive.len) ||
+      (isTabsPanel && Settings.state.hideDiscardedTabPanels && panel.allDiscarded)
+    if (isHidden) {
+      hiddenPanels.push(panel)
+      if (panel.id === selPanelId) {
+        actIndex = hiddenPanels.length - 1
+        actIsHidden = true
+      }
+    } else {
+      visiblePanels.push(panel)
+      if (panel.id === selPanelId) {
+        actIndex = visiblePanels.length - 1
+      }
+    }
+  }
+
+  if (actIndex === -1) return
+  if (hdnIndex === -1 || isInline) hdnIndex = visiblePanels.length
+
+  let panel
+  if (!actIsHidden) {
+    for (let i = actIndex + dir; i >= 0 || i < visiblePanels.length; i += dir) {
+      panel = visiblePanels[i]
+      newActIsHidden = false
+      if ((dir > 0 && i === hdnIndex) || (dir < 0 && i + 1 === hdnIndex)) {
+        if (hiddenPanels.length) {
+          Sidebar.openHiddenPanelsPopup()
+          if (dir > 0) panel = hiddenPanels[0]
+          else panel = hiddenPanels[hiddenPanels.length - 1]
+          newActIsHidden = true
+        }
+        break
+      }
+      if (!panel) break
+      break
+    }
+  } else {
+    for (let i = actIndex + dir; i >= 0 || i < hiddenPanels.length; i += dir) {
+      panel = hiddenPanels[i]
+      newActIsHidden = true
+      if (!panel) {
+        if (visiblePanels.length) {
+          panel = visiblePanels[dir > 0 ? hdnIndex : hdnIndex - 1]
+          if (!panel) break
+          if (hiddenPanelsPopupIsShown) Sidebar.reactive.hiddenPanelsPopup = false
+          newActIsHidden = false
+        }
+        break
+      }
+      break
+    }
+  }
+
+  if (newActIsHidden && !hiddenPanelsPopupIsShown) {
+    Sidebar.openHiddenPanelsPopup()
+  }
+
+  if (!panel) {
+    Selection.selectNavItem(selPanelId)
+    return
+  }
+
+  Selection.selectNavItem(panel.id)
+}
+
 export function openHiddenPanelsPopup(): void {
   const hiddenPanelsBtnEl = document.getElementById('hidden_panels_btn')
   const navBarEl = document.getElementById('nav_bar')

@@ -118,11 +118,14 @@ function onCmd(name: string): void {
   else if (name === 'rm_tabs_above_in_panel') onKeyRAIP()
   else if (name === 'rm_tabs_below_in_panel') onKeyRBIP()
   else if (name === 'rm_tabs_other_in_panel') onKeyROIP()
+  else if (name === 'sel_next_panel') Sidebar.selectPanel(1)
+  else if (name === 'sel_prev_panel') Sidebar.selectPanel(-1)
   else if (name === 'activate') onKeyActivate()
   else if (name === 'reset_selection') {
     if (Windows.reactive.choosing) Windows.closeWindowsPopup()
     Selection.resetSelection()
     Menu.close()
+    if (Sidebar.reactive.hiddenPanelsPopup) Sidebar.reactive.hiddenPanelsPopup = false
   } else if (name === 'select_all') onKeySelectAll()
   else if (name === 'up') onKeySelect(-1)
   else if (name === 'down') onKeySelect(1)
@@ -252,6 +255,13 @@ function onKeyActivate(): void {
   if (Menu.isOpen) {
     Menu.activateOption()
     return
+  }
+
+  // Switch to selected panel
+  if (Sidebar.panelsById[Selection.getFirst()]) {
+    const panelId = Selection.getFirst()
+    if (Sidebar.reactive.hiddenPanelsPopup) Sidebar.reactive.hiddenPanelsPopup = false
+    Sidebar.switchToPanel(panelId, false, false)
   }
 
   // Close hidden panels bar

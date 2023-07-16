@@ -115,6 +115,12 @@
     "rm_tabs_other_in_panel": {
       "description": "__MSG_KbRmTOIP__"
     },
+    "sel_next_panel": {
+      "description": "__MSG_KbSelNextPanel__"
+    },
+    "sel_prev_panel": {
+      "description": "__MSG_KbSelPrevPanel__"
+    },
     "select_all": {
       "description": "__MSG_KbSelectAll__"
     },
