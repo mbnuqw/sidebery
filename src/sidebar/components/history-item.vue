@@ -7,11 +7,13 @@
   @mouseup.stop="onMouseUp"
   @contextmenu.stop="onCtxMenu")
   .body
-    .fav(:title="translate('panel.history.fav_tooltip')" @mousedown.stop="onFavMouseDown")
-      svg(v-if="!item.favicon"): use(xlink:href="#icon_ff")
-      img(v-else :src="item.favicon")
-    .title {{item.title}}
-    .inline-info {{item.timeStr}}
+    .title-line
+      .fav(:title="translate('panel.history.fav_tooltip')" @mousedown.stop="onFavMouseDown")
+        svg(v-if="!item.favicon"): use(xlink:href="#icon_ff")
+        img(v-else :src="item.favicon")
+      .title {{item.title}}
+      .inline-info {{item.timeStr}}
+    .url-line {{item.info}}
 </template>
 
 <script lang="ts" setup>

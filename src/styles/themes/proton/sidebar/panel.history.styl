@@ -1,17 +1,17 @@
 @import '../../../utils'
 
 #root
-  --history-item-height: 30px
+  // --history-item-height: 30px
   --history-item-margin: var(--general-margin)
   --history-item-border-radius: var(--general-border-radius)
   --history-item-padding-left: 6px
   --history-item-padding-right: 5px
 #root[data-density="compact"]
-  --history-item-height: 27px
+  // --history-item-height: 27px
   --history-item-padding-left: 6px
   --history-item-padding-right: 4px
 #root[data-density="loose"]
-  --history-item-height: 32px
+  // --history-item-height: 32px
   --history-item-padding-left: 7px
   --history-item-padding-right: 6px
 
@@ -50,9 +50,10 @@
 
 .HistoryPanel .item .body
   position: relative
-  display: flex
-  align-items: center
-  height: var(--history-item-height)
+  // display: flex
+  // align-items: center
+  // height: var(--history-item-height)
+  padding: var(--history-item-padding-left) 0 var(--history-item-padding-right) 0
   border-radius: var(--history-item-border-radius)
   background-color: var(--frame-el-bg)
   box-shadow: var(--frame-el-shadow)
@@ -72,6 +73,23 @@
 .HistoryPanel .item[data-sel="true"] .body:before
   background-color: var(--frame-el-overlay-selected-bg)
   box-shadow: inset 0 0 0 1px var(--frame-el-overlay-selected-border)
+
+.HistoryPanel .item .title-line
+  position: relative
+  display: flex
+  align-items: center
+
+.HistoryPanel .item .url-line
+  position: relative
+  margin: 1px var(--history-item-padding-right) 0 var(--history-item-padding-left)
+  font-size: rem(11)
+  color: var(--frame-fg)
+  word-break: break-all
+  overflow: clip
+  line-height: 1rem
+  max-height: 3rem
+  flex-shrink: 1
+  opacity: .5
 
 .HistoryPanel .item .fav
   position: relative
