@@ -721,8 +721,6 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
     if (Utils.isTabsPanel(panel) && !panel.reactive.len) {
       if (panel.noEmpty) {
         Tabs.createTabInPanel(panel)
-      } else if (Settings.state.pinnedTabsPosition !== 'panel') {
-        Sidebar.switchToNeighbourPanel()
       }
     }
   }
