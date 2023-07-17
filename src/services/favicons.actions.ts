@@ -371,6 +371,7 @@ export function getFavPlaceholder(url: string): string {
     if (url.startsWith('about:dev')) return '#icon_code'
     if (url.startsWith('about:proc')) return '#icon_perf'
     if (url.startsWith('about:prot')) return '#icon_dashboard'
+    if (url.startsWith('about:debug')) return '#icon_dev'
   }
 
   return '#icon_ff'
