@@ -41,7 +41,7 @@ export function onHistorySearchNext(): void {
   let index = History.reactive.filtered.findIndex(t => t.id === selId)
 
   index += 1
-  if (index < 0 || index >= History.reactive.filtered.length) index = 0
+  if (index < 0 || index >= History.reactive.filtered.length) return
 
   Selection.resetSelection()
   const item = History.reactive.filtered[index]
@@ -58,9 +58,7 @@ export function onHistorySearchPrev(): void {
   let index = History.reactive.filtered.findIndex(t => t.id === selId)
 
   index -= 1
-  if (index < 0 || index >= History.reactive.filtered.length) {
-    index = History.reactive.filtered.length - 1
-  }
+  if (index < 0 || index >= History.reactive.filtered.length) return
 
   Selection.resetSelection()
   const item = History.reactive.filtered[index]
