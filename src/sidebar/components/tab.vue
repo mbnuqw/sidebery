@@ -122,6 +122,10 @@ function tempLockCloseBtn(): void {
 function onMouseDownClose(e: MouseEvent): void {
   if (closeLock) return
   Mouse.setTarget('tab.close', tab.id)
+  if (Menu.isOpen) {
+    Menu.close()
+    if (!Settings.state.ctxMenuNative) return
+  }
   if (Tabs.editableTabId === tab.id) {
     tab.reactive.customTitle = tab.title
   } else if (e.button === 0) {
@@ -147,7 +151,11 @@ function onMouseUpClose(e: MouseEvent): void {
 
 function onMouseDown(e: MouseEvent): void {
   Mouse.setTarget('tab', tab.id)
-  Menu.close()
+
+  if (Menu.isOpen) {
+    Menu.close()
+    if (!Settings.state.ctxMenuNative) return
+  }
   if (tab.reactive.customTitleEdit) return
 
   // Left
