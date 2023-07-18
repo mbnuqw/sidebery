@@ -198,6 +198,10 @@ export const commonTranslations: Translations = {
     zh_CN: '保存至书签',
     zh_TW: '保存至書籤',
   },
+  'popup.bookmarks.set_folder_for_tabs_panel': {
+    en: 'Set folder for this tabs panel',
+    ru: 'Установить папку для этой панели вкладок',
+  },
   'popup.bookmarks.edit_bookmark': {
     en: 'Edit bookmark',
     ru: 'Редактировать закладку',

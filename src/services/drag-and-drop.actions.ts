@@ -1,9 +1,9 @@
 import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
 import { BKM_OTHER_ID, BKM_ROOT_ID, COLOR_NAMES, CONTAINER_ID, NEWID, NOID } from 'src/defaults'
-import { PRE_SCROLL } from 'src/defaults'
-import { DragInfo, DragType, DropType, ItemBounds, ItemBoundsType, SubPanelType } from 'src/types'
-import { DstPlaceInfo, SrcPlaceInfo, InstanceType, ItemInfo } from 'src/types'
+import { BKM_MENU_ID, PRE_SCROLL } from 'src/defaults'
+import { DragInfo, DragType, DropType, ItemBounds, ItemBoundsType, Panel } from 'src/types'
+import { DstPlaceInfo, SrcPlaceInfo, InstanceType, ItemInfo, SubPanelType } from 'src/types'
 import { DnD, DndPointerMode } from 'src/services/drag-and-drop'
 import { Settings } from 'src/services/settings'
 import { Sidebar } from 'src/services/sidebar'
@@ -970,6 +970,7 @@ export async function onDrop(e: DragEvent): Promise<void> {
   }
 
   // Reset index and set folder when dropping to bookmarks panel
+  let setTabsPanelFolder = false
   if (toBookmarksPanel && !fromTabsPanel && !fromBookmarksPanel && !fromNav) {
     DnD.reactive.dstIndex = -1
     const panel = Sidebar.panelsById[DnD.reactive.dstPanelId]
@@ -978,10 +979,15 @@ export async function onDrop(e: DragEvent): Promise<void> {
       DnD.reactive.dstParentId = existedFolder ? panel.rootId : BKM_OTHER_ID
     } else if (Utils.isTabsPanel(panel)) {
       let parentId
-      if (panel.bookmarksFolderId !== NOID && panel.bookmarksFolderId !== BKM_ROOT_ID) {
+      if (
+        panel.bookmarksFolderId !== NOID &&
+        panel.bookmarksFolderId !== BKM_ROOT_ID &&
+        Bookmarks.reactive.byId[panel.bookmarksFolderId]
+      ) {
         parentId = panel.bookmarksFolderId
       } else {
         parentId = BKM_OTHER_ID
+        setTabsPanelFolder = true
       }
       DnD.reactive.dstParentId = parentId
 
@@ -1008,11 +1014,24 @@ export async function onDrop(e: DragEvent): Promise<void> {
     (fromTabs && toBookmarksPanel) ||
     (fromTabsPanel && toBookmarks)
   ) {
+    const panel = Sidebar.panelsById[DnD.reactive.dstPanelId]
     const bookmarksWasUnloaded = !Bookmarks.reactive.tree.length
     const copyMode = DnD.dropMode === 'copy'
     const dstInfo = getDestInfo()
     const items = DnD.items
     const toRemove = Settings.state.dndMoveTabs && DnD.items.map(t => t.id)
+
+    if (setTabsPanelFolder && Utils.isTabsPanel(panel)) {
+      const result = await setFolderForTabsPanel(panel, dstInfo)
+      if (!result) {
+        resetDragPointer()
+        DnD.resetOther()
+        DnD.reset()
+        Selection.resetSelection()
+        return
+      }
+    }
+
     const prepareResult = await Bookmarks.prepareBookmarks()
     if (!prepareResult) return
 
@@ -1106,6 +1125,49 @@ export async function onDrop(e: DragEvent): Promise<void> {
   Selection.resetSelection()
 
   if (tabsPanelsSaveNeeded) Sidebar.saveSidebar()
+}
+
+async function setFolderForTabsPanel(panel: Panel, dst: DstPlaceInfo) {
+  if (!Utils.isTabsPanel(panel)) return true
+  if (Bookmarks.reactive.byId[panel.bookmarksFolderId]) return true
+
+  const result = await Bookmarks.openBookmarksPopup({
+    title: translate('popup.bookmarks.set_folder_for_tabs_panel'),
+    name: panel.name,
+    nameField: true,
+    location: BKM_MENU_ID,
+    locationField: true,
+    locationTree: true,
+    controls: [{ label: 'btn.save' }],
+  })
+
+  if (result && Bookmarks.reactive.byId[result.location ?? NOID]) {
+    const parentId = result.location ?? NOID
+    const parent = Bookmarks.reactive.byId[parentId]
+    const index = parent.children?.length ?? 0
+    if (parent && result.name) {
+      let rootFolder
+      try {
+        rootFolder = await browser.bookmarks.create({
+          type: 'folder',
+          title: result.name.trim(),
+          parentId: parentId,
+          index,
+        })
+      } catch (err) {
+        Logs.err('DnD.onDrop: Cannot set folder for tabs panel', err)
+      }
+      if (rootFolder) {
+        panel.bookmarksFolderId = rootFolder.id
+        Sidebar.saveSidebar()
+
+        dst.parentId = rootFolder.id
+        dst.index = 0
+
+        return true
+      }
+    }
+  }
 }
 
 let resetOtherTimeout: number | undefined
