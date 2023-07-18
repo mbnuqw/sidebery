@@ -86,6 +86,7 @@ export async function normalizeHistory(
     if (!item.title) item.title = Utils.getDomainOf(item.url)
 
     normalizeHistoryItem(item)
+
     if (allVisits && item.visitCount !== undefined && item.visitCount > 1 && item.url) {
       let visits: browser.history.VisitItem[] | undefined = cachedVisits[item.url]
       if (!visits) {
@@ -103,10 +104,13 @@ export async function normalizeHistory(
         hItem.url = item.url
         hItem.title = item.title
         hItem.visitCount = item.visitCount
-        normalizeHistoryItem(hItem)
+        hItem.favicon = (item as HistoryItem).favicon
         normalized.push(hItem)
       }
     } else {
+      if (item.lastVisitTime === undefined) continue
+      if (after !== undefined && item.lastVisitTime < after) continue
+      if (before !== undefined && item.lastVisitTime > before) continue
       normalized.push(item)
     }
   }

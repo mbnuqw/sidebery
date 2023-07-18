@@ -118,7 +118,6 @@ const historyList = computed((): HistoryGroup[] => {
       try {
         itemPreview.info = decodeURI(itemPreview.url)
       } catch (err) {
-        Logs.warn('History panel: Cannot decodeURI:', itemPreview.url)
         itemPreview.info = itemPreview.url
       }
       const domain = Utils.getDomainOf(itemPreview.url)
