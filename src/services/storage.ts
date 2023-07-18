@@ -85,7 +85,7 @@ async function _set(newValues: Stored, srcInfo?: IPCNodeInfo): Promise<void> {
   // Or send them to background
   else {
     const srcInfo = { type: Info.instanceType, winId: Windows.id, tabId: Info.currentTabId }
-    IPC.bg('saveInLocalStorage', newValues, srcInfo)
+    return IPC.bg('saveInLocalStorage', newValues, srcInfo)
   }
 }
 async function set(newValues: Stored, delay?: number): Promise<void> {
