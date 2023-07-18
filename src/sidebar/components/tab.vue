@@ -154,7 +154,7 @@ function onMouseDown(e: MouseEvent): void {
 
   if (Menu.isOpen) {
     Menu.close()
-    if (!Settings.state.ctxMenuNative) return
+    if (!Settings.state.ctxMenuNative && e.button === 0) return
   }
   if (tab.reactive.customTitleEdit) return
 
