@@ -280,15 +280,16 @@ function checkPermissions(): void {
 }
 
 function requestPermissions(): void {
-  const request = { origins: [] as string[], permissions: [] as string[] }
+  const origins = ['<all_urls>']
+  const permissions = ['webRequest', 'webRequestBlocking', 'proxy']
   if (permWebData) {
-    request.origins.push('<all_urls>')
-    request.permissions.push('webRequest', 'webRequestBlocking')
+    origins.push('<all_urls>')
+    permissions.push('webRequest', 'webRequestBlocking')
   }
-  if (permTabHide) request.permissions.push('tabHide')
+  if (permTabHide) permissions.push('tabHide')
+  if (!origins.length && !permissions.length) return
 
-  browser.permissions.request(request).then((allowed: boolean) => {
-    browser.runtime.sendMessage({ action: 'loadPermissions' })
+  browser.permissions.request({ origins, permissions }).then((allowed: boolean) => {
     if (permWebData) permWebData = !allowed
     if (permTabHide) permTabHide = !allowed
     state.permNeeded = !allowed
