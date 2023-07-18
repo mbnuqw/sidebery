@@ -414,7 +414,11 @@ function onKeySelect(dir: number): void {
       target = dir > 0 ? tabs.find(tabFinder) : tabs.findLast(tabFinder)
     }
 
-    if (!target) return
+    if (!target) {
+      if (dir > 0) target = tabs[tabs.length - 1]
+      else target = tabs[0]
+      if (!target) return
+    }
 
     Selection.resetSelection()
     Selection.selectTab(target.id)
