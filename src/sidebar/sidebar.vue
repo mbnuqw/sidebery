@@ -344,10 +344,9 @@ function onMouseLeave(): void {
     Tabs.activateSelectedOnMouseLeave = false
 
     const id = Selection.get()[0]
-    Selection.resetSelection()
 
     const targetTab = Tabs.byId[id]
-    if (!targetTab) return
+    if (!targetTab || targetTab.id === Tabs.activeId) return Selection.resetSelection()
 
     browser.tabs.update(id, { active: true }).catch(err => {
       Logs.err('MouseLeave: Cannot activate tab on mouseleave:', err)
