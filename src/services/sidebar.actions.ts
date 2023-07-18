@@ -2505,6 +2505,11 @@ export function openSubPanel(type: SubPanelType, hostPanel?: Panel) {
 
 export function closeSubPanel() {
   if (!Sidebar.subPanelActive) return
+
+  if (Sidebar.subPanelType === SubPanelType.History && Sidebar.activePanelId !== 'history') {
+    History.unloadAfter(30_000)
+  }
+
   Sidebar.subPanelActive = false
   Sidebar.subPanelType = SubPanelType.Null
   Sidebar.reactive.subPanelActive = false
