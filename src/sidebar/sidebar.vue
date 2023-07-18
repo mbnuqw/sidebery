@@ -344,7 +344,6 @@ function onMouseLeave(): void {
     Tabs.activateSelectedOnMouseLeave = false
 
     const id = Selection.get()[0]
-
     const targetTab = Tabs.byId[id]
     if (!targetTab || targetTab.id === Tabs.activeId) return Selection.resetSelection()
 
