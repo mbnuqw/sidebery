@@ -3521,6 +3521,72 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_TW: '刪除',
   },
 
+  'settings.mouse.history_title': {
+    en: 'History items actions',
+    ru: 'Действия над элементами истории',
+  },
+  'settings.mouse.history.left_click_action': {
+    en: 'Left-click on the history item',
+    ru: 'Левый клик по элементу истории',
+  },
+  'settings.mouse.history.left_click_action_open_in_act': {
+    en: 'open in active tab',
+    de: 'Öffne im aktiven Tab',
+    ru: 'открыть в активной вкладке',
+    zh_CN: '在活动标签页打开',
+    zh_TW: '在活動標籤頁打開',
+  },
+  'settings.mouse.history.left_click_action_open_in_new': {
+    en: 'open in new tab',
+    de: 'Öffne in neuem Tab',
+    ru: 'открыть в новой вкладке',
+    zh_CN: '在新标签页打开',
+    zh_TW: '在新標籤頁打開',
+  },
+  'settings.mouse.history.new_tab_activate': {
+    en: 'Activate the new tab',
+    ru: 'Активировать новую вкладку',
+    de: 'Neuen Tab aktivieren',
+    zh_CN: '激活新标签页',
+    zh_TW: '激活新標籤頁',
+  },
+  'settings.mouse.history.new_tab_pos': {
+    en: 'Position of the new tab',
+    ru: 'Положение новой вкладки',
+    de: 'Position des neuen Tabs',
+    zh_CN: '新标签页位置',
+    zh_TW: '新標籤頁位置',
+  },
+  'settings.mouse.history.new_tab_pos_default': {
+    en: 'default',
+    ru: 'по умолчанию',
+    de: 'Standard',
+    zh_CN: '默认',
+    zh_TW: '默認',
+  },
+  'settings.mouse.history.new_tab_pos_after': {
+    en: 'after active tab',
+    de: 'Nach aktivem Tab',
+    ru: 'после активной вкладки',
+    zh_CN: '活动标签页之后',
+    zh_TW: '活動標籤頁之後',
+  },
+  'settings.mouse.history.mid_click_action': {
+    en: 'Middle-click on the history item',
+    ru: 'Средний клик по элементу истории',
+  },
+  'settings.mouse.history.mid_click_action_open_in_new': {
+    en: 'open in new tab',
+    de: 'Öffne in neuem Tab',
+    ru: 'открыть в новой вкладке',
+    zh_CN: '在新标签页打开',
+    zh_TW: '在新標籤頁打開',
+  },
+  'settings.mouse.history.mid_click_action_forget_visit': {
+    en: 'forget visit',
+    ru: 'забыть запись',
+  },
+
   // - Keybindings
   'settings.kb_title': {
     en: 'Keybindings',

@@ -271,7 +271,7 @@ export function getMouseOpeningConf(button: number): OpeningBookmarksConfig {
 
   // Left click
   if (button === 0) {
-    const panelId = Bookmarks.getTargetTabsPanelId()
+    const panelId = Sidebar.getRecentTabsPanelId()
     conf.useActiveTab = Settings.state.bookmarksLeftClickAction === 'open_in_act'
     conf.activateFirstTab = Settings.state.bookmarksLeftClickActivate
     conf.dst.panelId = panelId
@@ -286,7 +286,7 @@ export function getMouseOpeningConf(button: number): OpeningBookmarksConfig {
 
   // Middle click
   else if (button === 1) {
-    const panelId = Bookmarks.getTargetTabsPanelId()
+    const panelId = Sidebar.getRecentTabsPanelId()
     conf.activateFirstTab = Settings.state.bookmarksMidClickActivate
     conf.removeBookmark = Settings.state.bookmarksMidClickRemove
     conf.dst.panelId = panelId
@@ -1421,14 +1421,6 @@ export async function copyTitles(ids: ID[]): Promise<void> {
 
   const resultString = titles.trim()
   if (resultString) navigator.clipboard.writeText(resultString)
-}
-
-export function getTargetTabsPanelId(): ID {
-  let panelId = Sidebar.activePanelId
-  if (!Utils.isTabsPanel(Sidebar.panelsById[panelId])) {
-    panelId = Sidebar.lastTabsPanelId
-  }
-  return panelId
 }
 
 export function isFolderWithURL(folder: Bookmark): boolean {

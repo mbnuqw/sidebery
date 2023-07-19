@@ -2618,3 +2618,19 @@ export function updateMediaStateOfPanel(panelId: ID, tab?: Tab) {
   else if (hasMuted) panel.reactive.mediaState = MediaState.Muted
   else if (Tabs.ready) panel.reactive.mediaState = MediaState.Silent
 }
+
+export function getRecentTabsPanelId(): ID {
+  let panelId = Sidebar.activePanelId
+  let panel: Panel | undefined = Sidebar.panelsById[panelId]
+  if (!Utils.isTabsPanel(panel)) {
+    panelId = Sidebar.lastTabsPanelId
+    panel = Sidebar.panelsById[panelId]
+  }
+  if (!Utils.isTabsPanel(panel)) {
+    const activeTab = Tabs.byId[Tabs.activeId]
+    if (activeTab) panel = Sidebar.panelsById[activeTab.panelId]
+    else panel = Sidebar.panels.find(p => Utils.isTabsPanel(p))
+    panelId = panel?.id ?? NOID
+  }
+  return panelId
+}

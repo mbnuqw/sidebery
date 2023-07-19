@@ -134,7 +134,7 @@ async function onMouseDown(e: MouseEvent): Promise<void> {
 
     // Folder
     else if (props.node.type === 'folder') {
-      const panelId = Bookmarks.getTargetTabsPanelId()
+      const panelId = Sidebar.getRecentTabsPanelId()
       await Bookmarks.open([props.node.id], { panelId }, false, true)
     }
   }

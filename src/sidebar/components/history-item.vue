@@ -90,13 +90,18 @@ function onMouseUp(e: MouseEvent, item: HistoryItem): void {
       return Selection.resetSelection()
     }
 
-    let { dst, activateFirstTab: activateNewTab } = Bookmarks.getMouseOpeningConf(e.button)
+    if (e.button === 1) {
+      const action = Settings.state.historyMidClickAction
+      if (action === 'forget_visit') return History.deleteVisits([item.id])
+    }
+
+    let conf = History.getMouseOpeningConf(e.button)
     // Reset search input, if navigating away from the history panel
-    if (Search.rawValue && activateNewTab) {
+    if (Search.rawValue && conf.activateFirstTab) {
       Search.stop()
       Selection.resetSelection()
     }
-    History.openTab(item, activateNewTab)
+    History.open(item, conf.dst, conf.useActiveTab, conf.activateFirstTab)
   }
 
   if (e.button === 2) {

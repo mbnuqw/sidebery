@@ -1,5 +1,5 @@
 import * as Utils from 'src/utils'
-import { DstPlaceInfo, HistoryItem, ItemInfo, Panel, SubPanelType } from 'src/types'
+import { DstPlaceInfo, HistoryItem, ItemInfo, SubPanelType } from 'src/types'
 import { History } from 'src/services/history'
 import { Favicons } from 'src/services/favicons'
 import { Sidebar } from 'src/services/sidebar'
@@ -7,10 +7,11 @@ import { Tabs } from './tabs.fg'
 import { Windows } from './windows'
 import { Permissions } from './permissions'
 import { Containers } from './containers'
-import { PRE_SCROLL, SITE_URL_RE } from 'src/defaults'
+import { NOID, PRE_SCROLL, SITE_URL_RE } from 'src/defaults'
 import * as Logs from 'src/services/logs'
 import { Notifications } from './notifications'
 import { translate } from 'src/dict'
+import { Settings } from './settings'
 
 const UNLIMITED = 1234567
 const INITIAL_COUNT = 100
@@ -252,29 +253,32 @@ export function scrollToHistoryItem(id: string): void {
   }
 }
 
-export async function openTab(item: HistoryItem, activate?: boolean): Promise<void> {
-  let panel: Panel | undefined = Sidebar.panelsById[Sidebar.activePanelId]
-  if (!Utils.isTabsPanel(panel)) {
-    panel = Sidebar.panelsById[Sidebar.lastTabsPanelId]
-  }
-  if (!Utils.isTabsPanel(panel)) {
-    const activeTab = Tabs.byId[Tabs.activeId]
-    if (activeTab) panel = Sidebar.panelsById[activeTab.panelId]
-    else panel = Sidebar.panels.find(p => Utils.isTabsPanel(p))
+export async function open(
+  item: HistoryItem,
+  dst: DstPlaceInfo,
+  useActiveTab?: boolean,
+  activateFirstTab?: boolean
+): Promise<void> {
+  if (!item.url) return
+
+  if (useActiveTab) {
+    browser.tabs.update({ url: Utils.normalizeUrl(item.url, item.title) })
+    return
   }
 
-  const tabInfo: ItemInfo = { id: 0, url: item.url, title: item.title, active: activate }
-  const dstInfo: DstPlaceInfo = { windowId: Windows.id, discarded: false }
-  if (Utils.isTabsPanel(panel)) {
-    dstInfo.panelId = panel.id
+  const tabInfo: ItemInfo = { id: 0, url: item.url, title: item.title, active: activateFirstTab }
+  const dstInfo: DstPlaceInfo = { windowId: Windows.id, discarded: false, panelId: dst.panelId }
+  const panel = Sidebar.panelsById[dstInfo.panelId ?? NOID]
+  if (!Utils.isTabsPanel(panel)) return
 
-    if (item.url) {
-      dstInfo.containerId = Containers.getContainerFor(item.url)
-      if (!dstInfo.containerId && Containers.reactive.byId[panel.newTabCtx]) {
-        dstInfo.containerId = panel.newTabCtx
-      }
-    }
+  dstInfo.panelId = panel.id
+  dstInfo.containerId = Containers.getContainerFor(item.url)
+
+  if (!dstInfo.containerId && Containers.reactive.byId[panel.newTabCtx]) {
+    dstInfo.containerId = panel.newTabCtx
   }
+
+  if (dst.index !== undefined) dstInfo.index = dst.index
 
   await Tabs.open([tabInfo], dstInfo)
 }
@@ -413,4 +417,49 @@ export async function deleteSites(ids: ID[]) {
   await History.load()
 
   Notifications.finishProgress(progressNotification, 0)
+}
+
+export interface OpeningHistoryConfig {
+  dst: DstPlaceInfo
+  useActiveTab: boolean
+  activateFirstTab: boolean
+}
+
+export function getMouseOpeningConf(button: number): OpeningHistoryConfig {
+  const conf: OpeningHistoryConfig = {
+    dst: {},
+    useActiveTab: false,
+    activateFirstTab: false,
+  }
+
+  // Left click
+  if (button === 0) {
+    const panelId = Sidebar.getRecentTabsPanelId()
+    conf.useActiveTab = Settings.state.historyLeftClickAction === 'open_in_act'
+    conf.activateFirstTab = Settings.state.historyLeftClickActivate
+    conf.dst.panelId = panelId
+    if (!conf.useActiveTab && Settings.state.historyLeftClickPos === 'after') {
+      const activeTab = Tabs.byId[Tabs.activeId]
+      if (activeTab && !activeTab.pinned && activeTab.panelId === panelId) {
+        conf.dst.index = activeTab.index + 1
+        conf.dst.parentId = activeTab.parentId
+      }
+    }
+  }
+
+  // Middle click
+  else if (button === 1) {
+    const panelId = Sidebar.getRecentTabsPanelId()
+    conf.activateFirstTab = Settings.state.historyMidClickActivate
+    conf.dst.panelId = panelId
+    if (Settings.state.historyMidClickPos === 'after') {
+      const activeTab = Tabs.byId[Tabs.activeId]
+      if (activeTab && !activeTab.pinned && activeTab.panelId === panelId) {
+        conf.dst.index = activeTab.index + 1
+        conf.dst.parentId = activeTab.parentId
+      }
+    }
+  }
+
+  return conf
 }

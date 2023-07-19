@@ -199,6 +199,12 @@ export const DEFAULT_SETTINGS: SettingsState = {
   bookmarksMidClickActivate: false,
   bookmarksMidClickRemove: false,
   bookmarksMidClickPos: 'default',
+  historyLeftClickAction: 'open_in_act',
+  historyLeftClickActivate: false,
+  historyLeftClickPos: 'default',
+  historyMidClickAction: 'open_in_new',
+  historyMidClickActivate: false,
+  historyMidClickPos: 'default',
 
   // Sync
   syncName: '',
@@ -240,6 +246,9 @@ export const SETTINGS_OPTIONS = {
   bookmarksLeftClickAction: ['open_in_act', 'open_in_new'],
   bookmarksNewTabPos: ['default', 'after'],
   bookmarksMidClickAction: ['open_in_new', 'edit', 'delete'],
+  historyLeftClickAction: ['open_in_act', 'open_in_new'],
+  historyNewTabPos: ['default', 'after'],
+  historyMidClickAction: ['open_in_new', 'forget_visit'],
   tabRmBtn: ['always', 'hover', 'none'],
   activateAfterClosing: ['prev_act', 'next', 'prev', 'none'],
   tabsUpdateMark: ['all', 'pin', 'norm', 'none'],

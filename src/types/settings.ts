@@ -202,6 +202,12 @@ export interface SettingsState {
   bookmarksMidClickActivate: boolean
   bookmarksMidClickRemove: boolean
   bookmarksMidClickPos: (typeof SETTINGS_OPTIONS.bookmarksNewTabPos)[number]
+  historyLeftClickAction: (typeof SETTINGS_OPTIONS.historyLeftClickAction)[number]
+  historyLeftClickActivate: boolean
+  historyLeftClickPos: (typeof SETTINGS_OPTIONS.historyNewTabPos)[number]
+  historyMidClickAction: (typeof SETTINGS_OPTIONS.historyMidClickAction)[number]
+  historyMidClickActivate: boolean
+  historyMidClickPos: (typeof SETTINGS_OPTIONS.historyNewTabPos)[number]
 
   // Sync
   syncName: string

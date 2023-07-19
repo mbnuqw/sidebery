@@ -252,6 +252,51 @@ section(ref="el")
         :opts="Settings.getOpts('bookmarksNewTabPos')"
         :folded="false"
         @update:value="Settings.saveDebounced(150)")
+
+  .wrapper
+    .sub-title: .text {{translate('settings.mouse.history_title')}}
+    SelectField.-no-separator(
+      label="settings.mouse.history.left_click_action"
+      optLabel="settings.mouse.history.left_click_action_"
+      v-model:value="Settings.state.historyLeftClickAction"
+      :opts="Settings.getOpts('historyLeftClickAction')"
+      :folded="false"
+      @update:value="Settings.saveDebounced(150)")
+    .sub-fields
+      ToggleField(
+        label="settings.mouse.history.new_tab_activate"
+        v-model:value="Settings.state.historyLeftClickActivate"
+        :inactive="Settings.state.historyLeftClickAction !== 'open_in_new'"
+        @update:value="Settings.saveDebounced(150)")
+      SelectField(
+        label="settings.mouse.history.new_tab_pos"
+        optLabel="settings.mouse.history.new_tab_pos_"
+        v-model:value="Settings.state.historyLeftClickPos"
+        :inactive="Settings.state.historyLeftClickAction !== 'open_in_new'"
+        :opts="Settings.getOpts('historyNewTabPos')"
+        :folded="false"
+        @update:value="Settings.saveDebounced(150)")
+    SelectField(
+      label="settings.mouse.history.mid_click_action"
+      optLabel="settings.mouse.history.mid_click_action_"
+      v-model:value="Settings.state.historyMidClickAction"
+      :opts="Settings.getOpts('historyMidClickAction')"
+      :folded="false"
+      @update:value="Settings.saveDebounced(150)")
+    .sub-fields
+      ToggleField(
+        label="settings.mouse.history.new_tab_activate"
+        v-model:value="Settings.state.historyMidClickActivate"
+        :inactive="Settings.state.historyMidClickAction !== 'open_in_new'"
+        @update:value="Settings.saveDebounced(150)")
+      SelectField(
+        label="settings.mouse.history.new_tab_pos"
+        optLabel="settings.mouse.history.new_tab_pos_"
+        v-model:value="Settings.state.historyMidClickPos"
+        :inactive="Settings.state.historyMidClickAction !== 'open_in_new'"
+        :opts="Settings.getOpts('historyNewTabPos')"
+        :folded="false"
+        @update:value="Settings.saveDebounced(150)")
 </template>
 
 <script lang="ts" setup>

@@ -3,6 +3,7 @@ import { translate } from 'src/dict'
 import { History } from './history'
 import { Selection } from './selection'
 import { Search } from './search'
+import { Sidebar } from './sidebar'
 
 export const historyMenuOptions: Record<string, () => MenuOption | MenuOption[] | undefined> = {
   open: () => {
@@ -14,7 +15,7 @@ export const historyMenuOptions: Record<string, () => MenuOption | MenuOption[] 
         const list = History.reactive.filtered ?? History.reactive.list
         const target = list.find(item => item.id === firstId)
         if (!target) return
-        History.openTab(target)
+        History.open(target, { panelId: Sidebar.getRecentTabsPanelId() }, false, true)
       },
     }
   },

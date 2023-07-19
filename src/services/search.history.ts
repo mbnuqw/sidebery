@@ -74,7 +74,7 @@ export function onHistorySearchEnter(): void {
 
   const selId = Selection.getFirst()
   const item = History.reactive.filtered.find(t => t.id === selId)
-  if (item) History.openTab(item)
+  if (item) History.open(item, { panelId: Sidebar.getRecentTabsPanelId() }, false, true)
 
   Search.stop()
 }
