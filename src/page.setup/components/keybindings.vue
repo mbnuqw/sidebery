@@ -7,6 +7,7 @@
     KeybindingField(:keybinding="Keybindings.reactive.byName.search")
     KeybindingField(:keybinding="Keybindings.reactive.byName.hide_act_panel")
     KeybindingField(:keybinding="Keybindings.reactive.byName.create_snapshot")
+    KeybindingField(:keybinding="Keybindings.reactive.byName.open_snap_viewer")
     KeybindingField(:keybinding="Keybindings.reactive.byName.menu")
 
   section

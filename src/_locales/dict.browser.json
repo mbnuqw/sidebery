@@ -277,6 +277,10 @@
     "zh_CN": "创建快照",
     "zh_TW": "創建快照"
   },
+  "KbOpenSnapViewer": {
+    "en": "Open snapshots viewer",
+    "ru": "Открыть средство просмотра снепшотов"
+  },
   "KbSwitchToPanel0": {
     "en": "Switch to first panel",
     "ru": "Переключиться на первую панель",

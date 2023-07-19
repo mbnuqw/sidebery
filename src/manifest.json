@@ -220,6 +220,9 @@
     "create_snapshot": {
       "description": "__MSG_KbCreateSnapshot__"
     },
+    "open_snap_viewer": {
+      "description": "__MSG_KbOpenSnapViewer__"
+    },
     "switch_to_panel_0": {
       "description": "__MSG_KbSwitchToPanel0__"
     },

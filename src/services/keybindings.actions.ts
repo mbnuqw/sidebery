@@ -16,6 +16,7 @@ import { Store } from 'src/services/storage'
 import { SwitchingTabScope } from './tabs.fg.actions'
 import * as IPC from 'src/services/ipc'
 import * as Logs from 'src/services/logs'
+import { SetupPage } from './setup-page'
 
 const VALID_SHORTCUT =
   /^((Ctrl|Alt|Command|MacCtrl)\+)((Shift|Alt)\+)?([A-Z0-9]|Comma|Period|Home|End|PageUp|PageDown|Space|Insert|Delete|Up|Down|Left|Right|F\d\d?)$|^((Ctrl|Alt|Command|MacCtrl)\+)?((Shift|Alt)\+)?(F\d\d?)$/
@@ -156,6 +157,8 @@ function onCmd(name: string): void {
   else if (name === 'move_tabs_down') onKeyMoveTabs(1)
   else if (name === 'create_snapshot') {
     IPC.broadcast({ dstType: InstanceType.bg, action: 'createSnapshot' })
+  } else if (name === 'open_snap_viewer') {
+    SetupPage.open('snapshots')
   } else if (name.startsWith('switch_to_panel_')) {
     const panel = Sidebar.panels[parseInt(name.slice(-1))]
     if (panel) Sidebar.switchToPanel(panel.id)
