@@ -164,6 +164,7 @@ export const enum DragType {
   TabsPanel = 31,
   BookmarksPanel = 32,
   Native = 4,
+  History = 5,
 }
 export const enum DropType {
   Nowhere = 0,

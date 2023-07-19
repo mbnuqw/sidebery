@@ -929,6 +929,7 @@ export async function onDrop(e: DragEvent): Promise<void> {
   const fromNav = srcType === DragType.NavItem
   const toNav = dstType === DropType.NavItem
   const fromNewTabBar = srcType === DragType.NewTab
+  const fromHistory = srcType === DragType.History
 
   if (Sidebar.reactive.hiddenPanelsPopup) Sidebar.closeHiddenPanelsPopup()
   if ((toTabs && !DnD.reactive.dstPin) || toBookmarks) {
@@ -1099,6 +1100,11 @@ export async function onDrop(e: DragEvent): Promise<void> {
         Bookmarks.move(ids, dst)
       }
     }
+  }
+
+  // History to tabs
+  if ((fromHistory && toTabs) || (fromHistory && toTabsPanel)) {
+    Tabs.open(DnD.items, getDestInfo())
   }
 
   // NavItem to NavItem

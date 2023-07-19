@@ -5,7 +5,9 @@
     :data-sel="item.sel"
     @mousedown.stop="onMouseDown($event, item)"
     @mouseup.stop="onMouseUp($event, item)"
-    @contextmenu.stop="onCtxMenu($event, item)")
+    @contextmenu.stop="onCtxMenu($event, item)"
+    draggable="true"
+    @dragstart="onDragStart($event, item)")
     .title-line
       .fav(:title="translate('panel.history.fav_tooltip')" @mousedown.stop="onFavMouseDown($event, item)")
         svg(v-if="!item.favicon"): use(xlink:href="#icon_ff")
@@ -28,7 +30,9 @@
       :key="subItem.lastVisitTime"
       @mousedown.stop="onMouseDown($event, subItem)"
       @mouseup.stop="onMouseUp($event, subItem)"
-      @contextmenu.stop="onCtxMenu($event, subItem)")
+      @contextmenu.stop="onCtxMenu($event, subItem)"
+      draggable="true"
+      @dragstart="onDragStart($event, subItem)")
       .title-line
         .fav(:title="translate('panel.history.fav_tooltip')" @mousedown.stop="onFavMouseDown($event, subItem)")
           svg(v-if="!subItem.favicon"): use(xlink:href="#icon_ff")
@@ -40,7 +44,7 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { HistoryItem, MenuType } from 'src/types'
+import { DragInfo, DragItem, DragType, HistoryItem, MenuType } from 'src/types'
 import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
 import { Mouse } from 'src/services/mouse'
@@ -50,6 +54,9 @@ import { Settings } from 'src/services/settings'
 import { Search } from 'src/services/search'
 import { History } from 'src/services/history'
 import { Bookmarks } from 'src/services/bookmarks'
+import { Sidebar } from 'src/services/sidebar'
+import { DnD } from 'src/services/drag-and-drop'
+import { Windows } from 'src/services/windows'
 
 const moreActive = ref(false)
 defineProps<{ item: HistoryItem }>()
@@ -152,5 +159,34 @@ function onCtxMenu(e: MouseEvent, item: HistoryItem): void {
   if (!Selection.isSet()) Selection.selectHistory(item.id)
 
   Menu.open(MenuType.History)
+}
+
+function onDragStart(e: DragEvent, item: HistoryItem): void {
+  Menu.close()
+  if (!Selection.isSet()) Selection.selectBookmark(item.id)
+  Sidebar.updateBounds()
+
+  const dragInfo: DragInfo = {
+    type: DragType.History,
+    items: [{ id: item.id, url: item.url, title: item.title }],
+    windowId: Windows.id,
+    x: e.clientX,
+    y: e.clientY,
+  }
+
+  DnD.start(dragInfo)
+
+  // Set native drag info
+  if (e.dataTransfer) {
+    const url = item.url ?? ''
+    const dragImgEl = document.getElementById('drag_image')
+    e.dataTransfer.setData('application/x-sidebery-dnd', JSON.stringify(dragInfo))
+    if (Settings.state.dndOutside === 'data' ? !e.altKey : e.altKey) {
+      e.dataTransfer.setData('text/uri-list', url)
+      e.dataTransfer.setData('text/plain', url)
+    }
+    if (dragImgEl) e.dataTransfer.setDragImage(dragImgEl, -3, -3)
+    e.dataTransfer.effectAllowed = 'copyMove'
+  }
 }
 </script>
