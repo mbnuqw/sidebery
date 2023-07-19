@@ -435,6 +435,7 @@ export function getMouseOpeningConf(button: number): OpeningHistoryConfig {
   // Left click
   if (button === 0) {
     const panelId = Sidebar.getRecentTabsPanelId()
+    const panel = Sidebar.panelsById[panelId]
     conf.useActiveTab = Settings.state.historyLeftClickAction === 'open_in_act'
     conf.activateFirstTab = Settings.state.historyLeftClickActivate
     conf.dst.panelId = panelId
@@ -444,12 +445,15 @@ export function getMouseOpeningConf(button: number): OpeningHistoryConfig {
         conf.dst.index = activeTab.index + 1
         conf.dst.parentId = activeTab.parentId
       }
+    } else if (Utils.isTabsPanel(panel)) {
+      conf.dst.index = Tabs.getIndexForNewTab(panel)
     }
   }
 
   // Middle click
   else if (button === 1) {
     const panelId = Sidebar.getRecentTabsPanelId()
+    const panel = Sidebar.panelsById[panelId]
     conf.activateFirstTab = Settings.state.historyMidClickActivate
     conf.dst.panelId = panelId
     if (Settings.state.historyMidClickPos === 'after') {
@@ -458,6 +462,8 @@ export function getMouseOpeningConf(button: number): OpeningHistoryConfig {
         conf.dst.index = activeTab.index + 1
         conf.dst.parentId = activeTab.parentId
       }
+    } else if (Utils.isTabsPanel(panel)) {
+      conf.dst.index = Tabs.getIndexForNewTab(panel)
     }
   }
 

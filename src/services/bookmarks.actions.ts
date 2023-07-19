@@ -272,6 +272,7 @@ export function getMouseOpeningConf(button: number): OpeningBookmarksConfig {
   // Left click
   if (button === 0) {
     const panelId = Sidebar.getRecentTabsPanelId()
+    const panel = Sidebar.panelsById[panelId]
     conf.useActiveTab = Settings.state.bookmarksLeftClickAction === 'open_in_act'
     conf.activateFirstTab = Settings.state.bookmarksLeftClickActivate
     conf.dst.panelId = panelId
@@ -281,12 +282,15 @@ export function getMouseOpeningConf(button: number): OpeningBookmarksConfig {
         conf.dst.index = activeTab.index + 1
         conf.dst.parentId = activeTab.parentId
       }
+    } else if (Utils.isTabsPanel(panel)) {
+      conf.dst.index = Tabs.getIndexForNewTab(panel)
     }
   }
 
   // Middle click
   else if (button === 1) {
     const panelId = Sidebar.getRecentTabsPanelId()
+    const panel = Sidebar.panelsById[panelId]
     conf.activateFirstTab = Settings.state.bookmarksMidClickActivate
     conf.removeBookmark = Settings.state.bookmarksMidClickRemove
     conf.dst.panelId = panelId
@@ -296,6 +300,8 @@ export function getMouseOpeningConf(button: number): OpeningBookmarksConfig {
         conf.dst.index = activeTab.index + 1
         conf.dst.parentId = activeTab.parentId
       }
+    } else if (Utils.isTabsPanel(panel)) {
+      conf.dst.index = Tabs.getIndexForNewTab(panel)
     }
   }
 
