@@ -150,15 +150,24 @@ section(ref="el")
       :folded="true"
       @update:value="Settings.saveDebounced(150)")
     SelectField(
+      label="settings.tab_middle_click"
+      optLabel="settings.tab_action_"
+      v-model:value="Settings.state.tabMiddleClick"
+      :opts="Settings.getOpts('tabMiddleClick')"
+      :folded="true"
+      @update:value="Settings.saveDebounced(150)")
+    .sub-fields
+      ToggleField(
+        label="settings.multiple_middle_close"
+        v-model:value="Settings.state.multipleMiddleClose"
+        :inactive="Settings.state.tabMiddleClick !== 'close'"
+        :note="translate('settings.multiple_middle_close_note')"
+        @update:value="Settings.saveDebounced(150)")
+    SelectField(
       label="settings.tab_close_middle_click"
       optLabel="settings.tab_action_"
       v-model:value="Settings.state.tabCloseMiddleClick"
       :opts="Settings.getOpts('tabCloseMiddleClick')"
-      @update:value="Settings.saveDebounced(150)")
-    ToggleField(
-      label="settings.multiple_middle_close"
-      v-model:value="Settings.state.multipleMiddleClose"
-      :note="translate('settings.multiple_middle_close_note')"
       @update:value="Settings.saveDebounced(150)")
 
   .wrapper

@@ -3206,6 +3206,10 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_TW: '長按右擊標籤頁',
     de: 'Langer Rechtsklick auf Tab',
   },
+  'settings.tab_middle_click': {
+    en: 'Middle click on tab',
+    ru: 'Нажатие средней кнопкой мыши по вкладке',
+  },
   'settings.tab_close_middle_click': {
     en: 'Middle click on close tab button',
     ru: 'Нажатие средней кнопкой мыши по кнопке закрытия вкладки',

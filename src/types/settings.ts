@@ -189,6 +189,7 @@ export interface SettingsState {
   activateOnMouseUp: boolean
   tabLongLeftClick: (typeof SETTINGS_OPTIONS.tabLongLeftClick)[number]
   tabLongRightClick: (typeof SETTINGS_OPTIONS.tabLongRightClick)[number]
+  tabMiddleClick: (typeof SETTINGS_OPTIONS.tabMiddleClick)[number]
   tabCloseMiddleClick: (typeof SETTINGS_OPTIONS.tabCloseMiddleClick)[number]
   tabsPanelLeftClickAction: (typeof SETTINGS_OPTIONS.tabsPanelLeftClickAction)[number]
   tabsPanelDoubleClickAction: (typeof SETTINGS_OPTIONS.tabsPanelDoubleClickAction)[number]
