@@ -99,7 +99,7 @@
       PinnedTabsBar(v-if="pinnedTabsBarRight")
       NavigationBar.-vert(v-if="navBarRight")
   
-  UpgradeScreen(v-if="reactiveUpgrading.status?.active")
+  UpgradeScreen(v-if="reactiveUpgrading.status")
 </template>
 
 <script lang="ts" setup>

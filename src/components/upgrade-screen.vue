@@ -1,45 +1,37 @@
 <template lang="pug">
-.UpgradeScreen(:data-loading="!allDone" :data-continued="continued")
+.UpgradeScreen(ref="el" :data-loading="reactiveUpgrading.status?.status === 'loading'")
   .container
     h2.title {{translate('upgrade.title')}}
     .loading-box
       LoadingDots
-    .error(v-if="reactiveUpgrading.status?.error") {{reactiveUpgrading.status.error}}
-    .progress(v-else)
-      .list
-        .item(:data-status="reactiveUpgrading.status?.init ?? 'pending'")
-          .label {{translate('upgrade.initializing')}}
-          .status {{getStatusLabel(reactiveUpgrading.status?.init ?? 'pending')}}
-        .item(:data-status="reactiveUpgrading.status?.settings ?? 'pending'")
-          .label {{translate('upgrade.settings')}}
-          .status {{getStatusLabel(reactiveUpgrading.status?.settings ?? 'pending')}}
-        .item(:data-status="reactiveUpgrading.status?.sidebar ?? 'pending'")
-          .label {{translate('upgrade.panels_nav')}}
-          .status {{getStatusLabel(reactiveUpgrading.status?.sidebar ?? 'pending')}}
-        .item(:data-status="reactiveUpgrading.status?.snapshots ?? 'pending'")
-          .label {{translate('upgrade.snapshots')}}
-          .status {{getStatusLabel(reactiveUpgrading.status?.snapshots ?? 'pending')}}
-        .item(:data-status="reactiveUpgrading.status?.favicons ?? 'pending'")
-          .label {{translate('upgrade.fav_cache')}}
-          .status {{getStatusLabel(reactiveUpgrading.status?.favicons ?? 'pending')}}
-        .item(:data-status="reactiveUpgrading.status?.styles ?? 'pending'")
-          .label {{translate('upgrade.styles')}}
-          .status {{getStatusLabel(reactiveUpgrading.status?.styles ?? 'pending')}}
+    .progress
+      .item(v-if="backupErr" :data-status="'err'")
+        .label(v-if="backupErr.title") {{backupErr.title}}
+        .status(v-if="backupErr.note") {{backupErr.note}}
+      .list(v-if="reactiveUpgrading.status")
+        .item(
+          v-for="msg in reactiveUpgrading.status.messages"
+          :data-status="msg.status"
+          :key="msg.title")
+          .label(v-if="msg.title") {{msg.title}}
+          .status(v-if="msg.note") {{msg.note}}
     .controls
       .btn(
-        :class="{ '-inactive': !allDone }"
+        :class="{ '-inactive': reactiveUpgrading.status?.status !== 'done' && reactiveUpgrading.status?.status !== 'err' }"
         @click="onContinueClick") {{translate('upgrade.btn.continue')}}
-      a.btn.-wrap(ref="backupDataLink") {{translate('upgrade.btn.backup')}}
+      a.btn.-wrap(
+        :class="{ '-inactive': !backupReady }"
+        ref="backupDataLink") {{translate('upgrade.btn.backup')}}
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { translate } from 'src/dict'
-import { BackupData, Stored } from 'src/types'
+import { BackupData, Stored, UpgradeMsg } from 'src/types'
 import * as Utils from 'src/utils'
 import * as IPC from 'src/services/ipc'
 import * as Logs from 'src/services/logs'
-import { reactiveUpgrading } from 'src/services/upgrading'
+import { pollBgForUpgradeState, reactiveUpgrading } from 'src/services/upgrading'
 import LoadingDots from 'src/components/loading-dots.vue'
 
 onMounted(() => {
@@ -48,27 +40,43 @@ onMounted(() => {
 
 const backupDataLink = ref<HTMLAnchorElement | null>(null)
 const continued = ref(false)
+const backupReady = ref(false)
+const backupErr = ref<UpgradeMsg | null>(null)
+const el = ref<HTMLElement | null>(null)
 
-const allDone = computed<boolean>(() => {
-  if (!reactiveUpgrading.status) return false
-  if (reactiveUpgrading.status.error) return true
-  if (reactiveUpgrading.status.done) return true
-  return false
-})
-
-function getStatusLabel(status: 'done' | 'in-progress' | 'pending' | 'err' | 'no'): string {
-  if (status === 'done') return translate('upgrade.status.done')
-  if (status === 'in-progress') return translate('upgrade.status.in_progress')
-  if (status === 'err') return translate('upgrade.status.err')
-  if (status === 'no') return translate('upgrade.status.no')
-  return translate('upgrade.status.pending')
-}
+const scrollConf: ScrollToOptions = { behavior: 'smooth', top: 0 }
+let scrollTimeout: number | undefined
+watch(
+  () => reactiveUpgrading.status?.messages,
+  () => {
+    clearTimeout(scrollTimeout)
+    scrollTimeout = setTimeout(() => {
+      if (el.value) {
+        scrollConf.top = 999999
+        el.value.scroll(scrollConf)
+      }
+    }, 33)
+  }
+)
 
 function onContinueClick(): void {
-  if (!allDone.value) return
   if (continued.value) return
-  continued.value = true
+  if (reactiveUpgrading.status?.status === 'finish') return
+  if (reactiveUpgrading.status) reactiveUpgrading.status.status = 'loading'
+
+  pollBgForUpgradeState()
+  blockContinueBtn()
+
   IPC.bg('continueUpgrade')
+}
+
+let blockContinueBtnTimeout: number | undefined
+function blockContinueBtn() {
+  continued.value = true
+  clearTimeout(blockContinueBtnTimeout)
+  blockContinueBtnTimeout = setTimeout(() => {
+    continued.value = false
+  }, 500)
 }
 
 async function genBackup(): Promise<void> {
@@ -83,6 +91,12 @@ async function genBackup(): Promise<void> {
       'snapshots_v4',
     ])
   } catch (err) {
+    const errStr = err ? err.toString() : ''
+    backupErr.value = {
+      title: translate('upgrade.err.backup'),
+      note: translate('upgrade.err.backup_note') + '\n\n' + errStr,
+      status: 'err',
+    }
     return Logs.err('genBackup: Cannot get stored data for backup', err)
   }
   const backup: BackupData = { ver: browser.runtime.getManifest().version, ...stored }
@@ -97,5 +111,6 @@ async function genBackup(): Promise<void> {
     backupDataLink.value.download = `sidebery-data-${date}-${time}.json`
     backupDataLink.value.title = `sidebery-data-${date}-${time}.json`
   }
+  backupReady.value = true
 }
 </script>

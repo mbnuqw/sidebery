@@ -1,4 +1,5 @@
 import * as Utils from 'src/utils'
+import * as Logs from 'src/services/logs'
 import { Stored, InstanceType } from 'src/types'
 import { Info } from 'src/services/info'
 import { Store } from './storage'

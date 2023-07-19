@@ -1656,12 +1656,52 @@ export const commonTranslations: Translations = {
     zh_CN: '自定义样式',
     zh_TW: '自定義樣式',
   },
+  'upgrade.data_ready': {
+    en: 'All data prepared',
+    ru: 'Все данные подготовлены',
+  },
+  'upgrade.data_ready_note': {
+    en: 'You can save a backup and continue',
+    ru: 'Вы можете сохранить резервную копию и продолжить',
+  },
+  'upgrade.links': {
+    en: 'Updating Sidebery pages',
+    ru: 'Обновление страниц Sidebery',
+  },
+  'upgrade.err.backup': {
+    en: 'Cannot prepare backup',
+    ru: 'Невозможно подготовить резервную копию',
+  },
+  'upgrade.err.backup_note': {
+    en: 'Unable to get stored data',
+    ru: 'Невозможно получить сохраненные данные',
+  },
   'upgrade.err.get_stored': {
     en: 'Cannot get stored data',
     ru: 'Невозможно получить данные старой версии',
     de: 'Kann gespeicherte Daten nicht abrufen',
     zh_CN: '无法获取存储的数据',
     zh_TW: '無法獲取存儲的數據',
+  },
+  'upgrade.err.clear_stored': {
+    en: 'Cannot clear old data',
+    ru: 'Невозможно удалить старые данные',
+  },
+  'upgrade.err.set_stored': {
+    en: 'Cannot save new data',
+    ru: 'Невозможно сохранить новые данные',
+  },
+  'upgrade.err.finish': {
+    en: 'Sidebery is unable to finish the upgrade. Try to manually remove the old version of Sidebery, reload the browser and install the new version of Sidebery.',
+    ru: 'Sidebery не может завершить обновление. Попробуйте вручную удалить старую версию Sidebery, перезагрузить браузер и установить новую версию Sidebery.',
+  },
+  'upgrade.done': {
+    en: 'Sidebery successfully upgraded',
+    ru: 'Sidebery успешно обновлен',
+  },
+  'upgrade.done_note': {
+    en: 'Reloading...',
+    ru: 'Перезагрузка...',
   },
 }
 

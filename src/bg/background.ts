@@ -1,4 +1,5 @@
-import { InstanceType, SavedGroup, Stored, TabSessionData, UpgradingState } from 'src/types'
+import { InstanceType, SavedGroup, Stored, TabSessionData, UpgradeMsg } from 'src/types'
+import { UpgradingState } from 'src/types'
 import * as IPC from 'src/services/ipc'
 import * as Logs from 'src/services/logs'
 import { Settings } from 'src/services/settings'
@@ -115,119 +116,164 @@ function initToolbarButton(): void {
 
 let upgrading: UpgradingState | undefined
 async function upgrade(): Promise<void> {
-  upgrading = { active: true, init: 'in-progress' }
+  const sNoteDone = translate('upgrade.status.done')
+  const sNoteInProgress = translate('upgrade.status.in_progress')
+  const sNoteNo = translate('upgrade.status.no')
+  const sNoteErr = translate('upgrade.status.err')
+
+  let msg: UpgradeMsg = {
+    title: translate('upgrade.initializing'),
+    note: sNoteInProgress,
+    status: 'in-progress',
+  }
+  upgrading = { messages: [msg], status: 'loading' }
 
   await waitForUpgradeCheck()
 
   // Initializing
+  // ---
   const newStorage: Stored = { ver: Info.reactive.addonVer }
   let stored: Stored | undefined
   try {
     stored = await browser.storage.local.get<Stored>()
   } catch (err) {
     Logs.err('Upgrading: Cannot get stored data', err)
-    upgrading.error = translate('upgrade.err.get_stored')
-    return
+    const errStr = err ? err.toString() : ''
+    msg = upgradeMsg(translate('upgrade.err.get_stored'), errStr, 'err')
+    upgrading.status = 'err'
   }
 
-  // Moving data
-  if (stored.containers_v4) {
-    newStorage.containers = Containers.upgradeV4Containers(stored.containers_v4)
-  }
-  upgradeTabsDataCache(stored, newStorage)
-  upgrading.init = 'done'
+  if (stored) {
+    // Moving data
+    // ---
+    if (stored.containers_v4) {
+      newStorage.containers = Containers.upgradeV4Containers(stored.containers_v4)
+    }
+    upgradeTabsDataCache(stored, newStorage)
+    msg.status = 'done'
+    msg.note = sNoteDone
 
-  // Upgrading settings
-  upgrading.settings = 'in-progress'
-  await Utils.sleep(250)
-  if (stored.settings) {
-    newStorage.settings = Utils.recreateNormalizedObject(stored.settings, DEFAULT_SETTINGS)
-    newStorage.settings.theme = 'proton'
-    if (newStorage.settings.tabDoubleClick !== 'none') {
-      newStorage.settings.tabsSecondClickActPrev = false
+    // Upgrading settings
+    // ---
+    msg = upgradeMsg(translate('upgrade.settings'), sNoteInProgress, 'in-progress')
+    await Utils.sleep(250)
+    if (stored.settings) {
+      newStorage.settings = Utils.recreateNormalizedObject(stored.settings, DEFAULT_SETTINGS)
+      newStorage.settings.theme = 'proton'
+      if (newStorage.settings.tabDoubleClick !== 'none') {
+        newStorage.settings.tabsSecondClickActPrev = false
+      }
+      if (stored.settings.hScrollThroughPanels === true) {
+        newStorage.settings.hScrollAction = 'switch_panels'
+      } else if (stored.settings.hScrollThroughPanels === false) {
+        newStorage.settings.hScrollAction = 'none'
+      }
+      if ((stored.settings.moveNewTabPin as string) === 'none') {
+        newStorage.settings.moveNewTabPin = 'start'
+      }
+      msg.status = 'done'
+      msg.note = sNoteDone
+    } else {
+      msg.status = 'no'
+      msg.note = sNoteNo
     }
-    if (stored.settings.hScrollThroughPanels === true) {
-      newStorage.settings.hScrollAction = 'switch_panels'
-    } else if (stored.settings.hScrollThroughPanels === false) {
-      newStorage.settings.hScrollAction = 'none'
-    }
-    if ((stored.settings.moveNewTabPin as string) === 'none') {
-      newStorage.settings.moveNewTabPin = 'start'
-    }
-    upgrading.settings = 'done'
-  } else {
-    upgrading.settings = 'no'
-  }
 
-  // Upgrading sidebar config (panels and navigation)
-  upgrading.sidebar = 'in-progress'
-  await Utils.sleep(250)
-  if (stored.expandedBookmarks) {
-    newStorage.expandedBookmarkFolders = Bookmarks.convertOldTreeStruct(stored.expandedBookmarks)
-  }
-  if (stored.panels_v4?.length) {
-    try {
-      newStorage.sidebar = getSidebarConfigFromV4(stored.panels_v4)
-      upgrading.sidebar = 'done'
-    } catch (err) {
-      Logs.err('Upgrading: Cannot upgrade panels', err)
-      upgrading.sidebar = 'err'
+    // Upgrading sidebar config (panels and navigation)
+    // ---
+    msg = upgradeMsg(translate('upgrade.panels_nav'), sNoteInProgress, 'in-progress')
+    await Utils.sleep(250)
+    if (stored.expandedBookmarks) {
+      newStorage.expandedBookmarkFolders = Bookmarks.convertOldTreeStruct(stored.expandedBookmarks)
     }
-  } else {
-    upgrading.sidebar = 'no'
-  }
-
-  // Upgrading snapshots
-  upgrading.snapshots = 'in-progress'
-  await Utils.sleep(250)
-  if (stored.snapshots_v4?.length) {
-    try {
-      newStorage.snapshots = Snapshots.convertFromV4(stored.snapshots_v4)
-      upgrading.snapshots = 'done'
-    } catch (err) {
-      Logs.err('Upgrading: Cannot upgrade snapshots', err)
-      upgrading.snapshots = 'err'
+    if (stored.panels_v4?.length) {
+      try {
+        newStorage.sidebar = getSidebarConfigFromV4(stored.panels_v4)
+        msg.status = 'done'
+        msg.note = sNoteDone
+      } catch (err) {
+        Logs.err('Upgrading: Cannot upgrade panels', err)
+        msg.status = 'err'
+        msg.note = sNoteErr
+      }
+    } else {
+      msg.status = 'no'
+      msg.note = sNoteNo
     }
-  } else {
-    upgrading.snapshots = 'no'
-  }
 
-  // Upgrading favicons
-  upgrading.favicons = 'in-progress'
-  await Utils.sleep(250)
-  if (stored.favicons?.length && stored.favUrls) {
-    try {
-      await Favicons.upgradeFaviCache(stored, newStorage)
-      upgrading.favicons = 'done'
-    } catch (err) {
-      Logs.err('Upgrading: Cannot upgrade favicons', err)
-      upgrading.favicons = 'err'
+    // Upgrading snapshots
+    // ---
+    msg = upgradeMsg(translate('upgrade.snapshots'), sNoteInProgress, 'in-progress')
+    await Utils.sleep(250)
+    if (stored.snapshots_v4?.length) {
+      try {
+        newStorage.snapshots = Snapshots.convertFromV4(stored.snapshots_v4)
+        msg.status = 'done'
+        msg.note = sNoteDone
+      } catch (err) {
+        Logs.err('Upgrading: Cannot upgrade snapshots', err)
+        msg.status = 'err'
+        msg.note = sNoteErr
+      }
+    } else {
+      msg.status = 'no'
+      msg.note = sNoteNo
     }
-  } else {
-    upgrading.favicons = 'no'
-  }
 
-  // Upgrading styles
-  upgrading.styles = 'in-progress'
-  await Utils.sleep(250)
-  if (stored.cssVars || stored.sidebarCSS || stored.groupCSS) {
-    try {
-      Styles.upgradeCustomStyles(stored, newStorage)
-      upgrading.styles = 'done'
-    } catch (err) {
-      Logs.err('Upgrading: Cannot upgrade styles', err)
-      upgrading.styles = 'err'
+    // Upgrading favicons
+    // ---
+    msg = upgradeMsg(translate('upgrade.fav_cache'), sNoteInProgress, 'in-progress')
+    await Utils.sleep(250)
+    if (stored.favicons?.length && stored.favUrls) {
+      try {
+        await Favicons.upgradeFaviCache(stored, newStorage)
+        msg.status = 'done'
+        msg.note = sNoteDone
+      } catch (err) {
+        Logs.err('Upgrading: Cannot upgrade favicons', err)
+        msg.status = 'err'
+        msg.note = sNoteErr
+      }
+    } else {
+      msg.status = 'no'
+      msg.note = sNoteNo
     }
-  } else {
-    upgrading.styles = 'no'
-  }
 
-  upgrading.done = true
+    // Upgrading styles
+    // ---
+    msg = upgradeMsg(translate('upgrade.styles'), sNoteInProgress, 'in-progress')
+    await Utils.sleep(250)
+    if (stored.cssVars || stored.sidebarCSS || stored.groupCSS) {
+      try {
+        Styles.upgradeCustomStyles(stored, newStorage)
+        msg.status = 'done'
+        msg.note = sNoteDone
+      } catch (err) {
+        Logs.err('Upgrading: Cannot upgrade styles', err)
+        msg.status = 'err'
+        msg.note = sNoteErr
+      }
+    } else {
+      msg.status = 'no'
+      msg.note = sNoteNo
+    }
+
+    msg = upgradeMsg(translate('upgrade.data_ready'), translate('upgrade.data_ready_note'), 'done')
+    upgrading.status = 'done'
+  }
 
   await waitForApprovingUpgrade()
 
-  await recreateGroupTabs()
+  upgrading.status = 'loading'
 
+  // Upgrading Sidebery pages
+  // ---
+  msg = upgradeMsg(translate('upgrade.links'), translate('upgrade.data_ready_note'), 'in-progress')
+  await recreateGroupTabs()
+  msg.status = 'done'
+  msg.note = sNoteDone
+
+  // Removing old data
+  // ---
   const toRemove: (keyof Partial<Stored>)[] = [
     'favAutoCleanTime',
     'favUrls',
@@ -243,7 +289,6 @@ async function upgrade(): Promise<void> {
     'cssVars',
     'expandedBookmarks',
   ]
-
   try {
     await browser.storage.local.remove<Stored>(toRemove)
   } catch (err) {
@@ -251,17 +296,41 @@ async function upgrade(): Promise<void> {
     try {
       await browser.storage.local.clear()
     } catch (err) {
+      const errStr = err ? err.toString() : ''
       Logs.err('Upgrade: Cannot clear storage', err)
+      msg = upgradeMsg(translate('upgrade.err.clear_stored'), errStr, 'err')
+      await Utils.sleep(250)
+      msg = upgradeMsg(translate('upgrade.err.finish'), '', 'finish')
+      upgrading.status = 'finish'
+      return
     }
   }
 
+  // Saving the new data
+  // ---
   try {
     await browser.storage.local.set<Stored>(newStorage)
   } catch (err) {
+    const errStr = err ? err.toString() : ''
     Logs.err('Upgrade: Cannot set new values', err)
+    msg = upgradeMsg(translate('upgrade.err.set_stored'), errStr, 'err')
+    await Utils.sleep(250)
+    msg = upgradeMsg(translate('upgrade.err.finish'), '', 'finish')
+    upgrading.status = 'finish'
+    return
   }
 
+  msg = upgradeMsg(translate('upgrade.done'), translate('upgrade.done_note'), 'done')
+
+  await Utils.sleep(1000)
+
   browser.runtime.reload()
+}
+
+function upgradeMsg(title: string, note: string, status: UpgradeMsg['status']): UpgradeMsg {
+  const msg: UpgradeMsg = { title, note, status }
+  if (upgrading) upgrading.messages.push(msg)
+  return msg
 }
 
 let _firstUpgradeCheck: (() => void) | undefined

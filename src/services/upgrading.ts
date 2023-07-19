@@ -1,6 +1,7 @@
 import { UpgradingState } from 'src/types'
 import * as IPC from 'src/services/ipc'
 import * as Utils from 'src/utils'
+import * as Logs from 'src/services/logs'
 
 export interface UpgradingReactiveState {
   status: UpgradingState | null
@@ -17,11 +18,14 @@ export function initUpgrading(reactivate?: (rObj: object) => object) {
   reactiveUpgrading = reactFn(reactiveUpgrading)
 }
 
-export async function showUpgradingScreen(): Promise<void> {
-  reactiveUpgrading.status = { active: true, init: 'in-progress' }
+export function showUpgradingScreen() {
+  reactiveUpgrading.status = { messages: [], status: 'loading' }
+  pollBgForUpgradeState()
+}
 
+export async function pollBgForUpgradeState() {
   while (true) {
-    await Utils.sleep(123)
+    await Utils.sleep(200)
 
     let upgradeState
     try {
@@ -35,16 +39,10 @@ export async function showUpgradingScreen(): Promise<void> {
     }
 
     if (reactiveUpgrading.status) {
-      reactiveUpgrading.status.init = upgradeState.init
-      reactiveUpgrading.status.settings = upgradeState.settings
-      reactiveUpgrading.status.sidebar = upgradeState.sidebar
-      reactiveUpgrading.status.snapshots = upgradeState.snapshots
-      reactiveUpgrading.status.favicons = upgradeState.favicons
-      reactiveUpgrading.status.styles = upgradeState.styles
-      reactiveUpgrading.status.error = upgradeState.error
-      reactiveUpgrading.status.done = upgradeState.done
+      reactiveUpgrading.status.messages = upgradeState.messages
+      reactiveUpgrading.status.status = upgradeState.status
     }
 
-    if (upgradeState.done || upgradeState.error) break
+    if (upgradeState.status !== 'loading') break
   }
 }

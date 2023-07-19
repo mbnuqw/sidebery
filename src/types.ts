@@ -364,17 +364,15 @@ export const enum SelectionType {
   Header = 7,
 }
 
-export interface UpgradingState {
-  active: boolean
-  error?: string
-  done?: boolean
+export interface UpgradeMsg {
+  title: string
+  note: string
+  status: 'done' | 'in-progress' | 'pending' | 'err' | 'no' | 'finish'
+}
 
-  init?: 'done' | 'in-progress' | 'pending' | 'err' | 'no'
-  settings?: 'done' | 'in-progress' | 'pending' | 'err' | 'no'
-  sidebar?: 'done' | 'in-progress' | 'pending' | 'err' | 'no'
-  snapshots?: 'done' | 'in-progress' | 'pending' | 'err' | 'no'
-  favicons?: 'done' | 'in-progress' | 'pending' | 'err' | 'no'
-  styles?: 'done' | 'in-progress' | 'pending' | 'err' | 'no'
+export interface UpgradingState {
+  status: 'done' | 'loading' | 'err' | 'finish'
+  messages: UpgradeMsg[]
 }
 
 export const enum WheelDirection {

@@ -30,21 +30,7 @@ wide-screen-width = 360px
   z-index: 10000
   background-color: var(--bg)
   overflow-y: auto
-  &:before
-    content: ''
-    position: absolute
-    width: 100%
-    height: 100%
-    top: 0
-    left: 0
-    z-index: -1
-    background-color: #000
-    transition: opacity 2s
-    opacity: 0
-    cursor: progress
-.UpgradeScreen[data-continued="true"]:before
-  z-index: 1
-  opacity: .7
+  scrollbar-width: thin
 
 .UpgradeScreen .container
   position: relative
@@ -55,13 +41,17 @@ wide-screen-width = 360px
   transform: translateZ(0)
 
 .UpgradeScreen .title
-  position: relative
+  position: sticky
+  top: 0
   margin: 24px 0 8px
-  padding: 0
+  padding: 8px 0
   text-align: center
   font-size: rem(17)
   font-weight: 700
   color: var(--fg)
+  z-index: 1
+  background-color: var(--bg)
+  box-shadow: 0 0 8px 0 var(--bg)
 @media (min-width: wide-screen-width)
   .UpgradeScreen .title
     font-size: rem(24)
@@ -81,7 +71,7 @@ wide-screen-width = 360px
   position: relative
   width: 100%
   padding: 0 0 16px
-  margin: auto 0 auto
+  margin: 16px 0 auto
 
 .UpgradeScreen .progress .list
   position: relative
@@ -90,7 +80,7 @@ wide-screen-width = 360px
 
 .UpgradeScreen .progress .item
   position: relative
-  margin: 8px 0
+  margin: 10px 0
   padding: 0 0 0 13px
   color: var(--fg)
   opacity: .7
@@ -119,28 +109,58 @@ wide-screen-width = 360px
   color: var(--active-fg)
   &:before
     opacity: .7
+.UpgradeScreen .progress .item[data-status="finish"]
+  opacity: 1
+  padding: 16px 0 0 6px
+  color: var(--fg)
+  &:before
+    display: none
+  .label
+    font-size: rem(14)
+    font-weight: 400
+    line-height: 1.3rem
 
 .UpgradeScreen .progress .label
   position: relative
   font-size: rem(15)
   font-weight: 700
-  line-height: 22px
+  line-height: 1.2rem
 
 .UpgradeScreen .progress .status
   position: relative
   font-size: rem(13)
+  margin: 1px 0 0
+  white-space: pre-wrap
+  overflow-wrap: anywhere
+
+.UpgradeScreen .error-box
+  position: relative
+  margin: auto
+  max-width: 210px
 
 .UpgradeScreen .error
   position: relative
-  max-width: 210px
-  margin: auto
+  white-space: pre-wrap
+  overflow-wrap: anywhere
   text-align: center
-  font-size: rem(13)
+  font-size: rem(14)
   font-weight: 700
   color: var(--err-fg)
 
-.UpgradeScreen .controls
+.UpgradeScreen .error-note
   position: relative
+  margin: 24px 0 0 0
+  white-space: pre-wrap
+  overflow-wrap: anywhere
+  text-align: center
+  font-size: rem(14)
+  font-weight: 600
+  color: var(--fg)
+  opacity: .7
+
+.UpgradeScreen .controls
+  position: sticky
+  bottom: 0
   display: flex
   justify-content: center
   align-items: center
@@ -148,5 +168,5 @@ wide-screen-width = 360px
   grid-gap: 8px
   width: 100%
   padding: 16px 0
-
-
+  background-color: var(--bg)
+  box-shadow: 0 0 8px 0 var(--bg)

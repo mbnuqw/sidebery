@@ -24,7 +24,7 @@ import { Info } from 'src/services/info'
 import SidebarRoot from './sidebar.vue'
 import { Snapshots } from 'src/services/snapshots'
 import { updateWebReqHandlers } from 'src/services/web-req.fg'
-import { showUpgradingScreen } from 'src/services/upgrading'
+import { initUpgrading, showUpgradingScreen } from 'src/services/upgrading'
 
 async function main(): Promise<void> {
   Info.setInstanceType(InstanceType.sidebar)
@@ -90,6 +90,7 @@ async function main(): Promise<void> {
   History.reactive = reactive(History.reactive)
   Search.reactive = reactive(Search.reactive)
   Styles.reactive = reactive(Styles.reactive)
+  initUpgrading(reactive)
 
   const app = createApp(SidebarRoot)
   app.mount('#root_container')
