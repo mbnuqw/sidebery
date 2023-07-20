@@ -76,7 +76,7 @@
 import { ref, reactive, computed, nextTick } from 'vue'
 import { translate } from 'src/dict'
 import { Bookmark, Stored, TextInputComponent } from 'src/types'
-import { NOID, BKM_ROOT_ID } from 'src/defaults'
+import { NOID, BKM_ROOT_ID, BKM_OTHER_ID } from 'src/defaults'
 import { Bookmarks } from 'src/services/bookmarks'
 import { Selection } from 'src/services/selection'
 import BookmarkNode from 'src/components/bookmark-node.vue'
@@ -170,11 +170,22 @@ void (async function init() {
   if (!Bookmarks.reactive.tree.length) asyncTasks.push(Bookmarks.load())
   if (Bookmarks.reactive.popup.recentLocations) asyncTasks.push(loadBookmarksRecentFolders())
   await Promise.all(asyncTasks)
+  checkDefaultLocation()
   initRecentFolders()
   state.loading = false
 
   validate()
 })()
+
+function checkDefaultLocation() {
+  if (!Bookmarks.reactive.popup) return
+
+  const id = Bookmarks.reactive.popup.location
+  if (id === undefined || id === NOID || id === BKM_ROOT_ID) return
+
+  const node = Bookmarks.reactive.byId[id]
+  if (!node) Bookmarks.reactive.popup.location = BKM_OTHER_ID
+}
 
 let loadedRecentFolders: ID[] | undefined
 async function loadBookmarksRecentFolders() {
