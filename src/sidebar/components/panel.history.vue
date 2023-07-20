@@ -1,7 +1,7 @@
 <template lang="pug">
 .HistoryPanel.panel
   ScrollBox(ref="scrollBox" @bottom="onScrollBottom")
-    .history-groups(ref="groupsListEl" v-if="!isHidden")
+    .history-groups(v-if="!isHidden")
       .group(
         v-for="(group, i) of historyList"
         :key="group.title"
@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, reactive, onUpdated, onMounted } from 'vue'
+import { ref, computed, reactive, onMounted } from 'vue'
 import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
 import { HistoryItem, ScrollBoxComponent, SubPanelType } from 'src/types'
@@ -55,16 +55,6 @@ interface HistoryGroup {
 const props = defineProps<{ isSubPanel?: boolean }>()
 
 const scrollBox = ref<ScrollBoxComponent | null>(null)
-const groupsPositions: number[] = []
-const groupsListEl = ref<HTMLElement | null>(null)
-onUpdated(() => {
-  if (!groupsListEl.value) return
-  const len = groupsListEl.value.children.length
-  for (let el: HTMLElement, i = 0; i < len; i++) {
-    el = groupsListEl.value.children[i] as HTMLElement
-    groupsPositions[i] = el.offsetTop
-  }
-})
 const state = reactive({
   expandedHistoryGroups: [true],
   historyLoading: false,
