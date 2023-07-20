@@ -96,8 +96,7 @@ async function main(): Promise<void> {
   app.mount('#root_container')
 
   if (Info.isMajorUpgrade()) {
-    await showUpgradingScreen()
-    return
+    return showUpgradingScreen()
   }
 
   Sidebar.updateFontSize()
