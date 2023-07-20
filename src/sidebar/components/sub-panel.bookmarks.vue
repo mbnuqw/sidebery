@@ -89,12 +89,14 @@ function open() {
     loadBookmarks().then(() => {
       bookmarksLoading = false
       props.bookmarksPanel.ready = true
+      checkRootFolder()
       setPanelEls()
       updateRootTree()
       if (Search.rawValue) Search.search()
     })
   } else {
     state.active = !state.active
+    checkRootFolder()
     setPanelEls()
     updateRootTree()
   }
@@ -104,6 +106,14 @@ function open() {
   }
 
   if (Menu.isOpen) Menu.close()
+}
+
+function checkRootFolder() {
+  const id = props.bookmarksPanel.rootId
+  if (id === undefined || id === NOID || id === BKM_ROOT_ID) return
+
+  const node = Bookmarks.reactive.byId[id]
+  if (!node) props.bookmarksPanel.rootId = BKM_ROOT_ID
 }
 
 function updateRootTree() {
@@ -152,6 +162,7 @@ function goUp(): void {
 function goDown(): void {
   props.bookmarksPanel.reactive.rootOffset--
   if (props.bookmarksPanel.reactive.rootOffset < 0) props.bookmarksPanel.reactive.rootOffset = 0
+  checkRootFolder()
   updateRootTree()
 
   if (DnD.items.length) {
