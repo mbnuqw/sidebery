@@ -522,6 +522,13 @@ export function normalizeUrl(url?: string, title?: string): string | undefined {
   if (!url) return url
   if (url === 'about:newtab') return undefined
   if (url === 'about:blank') return undefined
+  if (url.startsWith('about:reader?url=')) {
+    try {
+      url = decodeURIComponent(url.slice(17))
+    } catch {
+      // Do nothing
+    }
+  }
   if (
     url.startsWith('chrome:') ||
     url.startsWith('javascript:') ||
