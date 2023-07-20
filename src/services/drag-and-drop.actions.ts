@@ -97,6 +97,9 @@ function updateTooltip(info: DragInfo): void {
   } else if (info.type === DragType.NewTab) {
     DnD.reactive.dragTooltipTitle = translate('dnd.tooltip.new_tab')
     DnD.reactive.dragTooltipInfo = ''
+  } else if (info.type === DragType.History) {
+    DnD.reactive.dragTooltipTitle = info.items[0].title ?? ''
+    DnD.reactive.dragTooltipInfo = info.items[0].url ?? ''
   } else {
     DnD.reactive.dragTooltipTitle = '---'
     DnD.reactive.dragTooltipInfo = ''
