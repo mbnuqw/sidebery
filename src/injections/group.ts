@@ -243,6 +243,14 @@ function onTabUpdated(upd: GroupedTabInfo) {
   const tab = tabs.find(t => t.id === upd.id)
   if (!tab?.el) return
 
+  let normURL
+  try {
+    normURL = decodeURI(upd.url)
+  } catch {
+    normURL = upd.url
+  }
+
+  tab.el.title = normURL
   tab.el.setAttribute('data-status', upd.status ?? '')
   if (upd.status === 'complete') {
     tab.el.setAttribute('data-fav', String(!!upd.favIconUrl))
@@ -256,7 +264,7 @@ function onTabUpdated(upd: GroupedTabInfo) {
 
   if (tab.urlEl) {
     if (upd.url.startsWith('moz-ext')) tab.urlEl.textContent = ''
-    else tab.urlEl.textContent = upd.url
+    else tab.urlEl.textContent = normURL
   }
   tab.url = upd.url
 
@@ -317,9 +325,16 @@ function createNewTabButton() {
  * Create tab element
  */
 function createTabEl(info: GroupedTabInfo, clickHandler: (e: MouseEvent) => void) {
+  let normURL
+  try {
+    normURL = decodeURI(info.url)
+  } catch {
+    normURL = info.url
+  }
+
   info.el = document.createElement('div')
   info.el.classList.add('tab')
-  info.el.title = info.url
+  info.el.title = normURL
   info.el.setAttribute('data-lvl', String(info.lvl))
   info.el.setAttribute('data-discarded', String(info.discarded))
   info.el.setAttribute('data-fav', String(!!info.favIconUrl))
@@ -354,7 +369,7 @@ function createTabEl(info: GroupedTabInfo, clickHandler: (e: MouseEvent) => void
   info.urlEl.setAttribute('href', info.url)
   info.urlEl.addEventListener('click', e => e.preventDefault())
   if (info.url.startsWith('moz-ext')) info.urlEl.textContent = ''
-  else info.urlEl.textContent = info.url
+  else info.urlEl.textContent = normURL
   infoEl.appendChild(info.urlEl)
 
   const ctrlsEl = document.createElement('div')
