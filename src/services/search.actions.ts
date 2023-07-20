@@ -469,3 +469,7 @@ function parseShortcut(shortcut: string): SearchShortcut | undefined {
 
   if (key) return { alt, ctrl, meta, key }
 }
+
+export function getSearchQuery(): string {
+  return Search.rawValue
+}

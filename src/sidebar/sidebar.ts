@@ -59,6 +59,7 @@ async function main(): Promise<void> {
     isDropEventConsumed: DnD.isDropEventConsumed,
     storageChanged: Store.storageChangeListener,
     connectTo: IPC.connectTo,
+    getSearchQuery: Search.getSearchQuery,
   })
 
   await Promise.all([

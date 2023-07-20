@@ -100,6 +100,9 @@ void (async () => {
     IPC.setWinId(win.id)
     Windows.id = win.id
     IPC.connectTo(InstanceType.sidebar, Windows.id)
+    IPC.sidebar(win.id, 'getSearchQuery').then(query => {
+      if (query) el.value = query
+    })
   }
   Styles.initColorScheme()
 })()

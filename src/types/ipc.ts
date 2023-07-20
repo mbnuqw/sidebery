@@ -94,6 +94,8 @@ export type SidebarActions = {
 
   storageChanged: (newValues: Stored) => void
   connectTo: (dstType: InstanceType, dstWinId?: ID, dstTabId?: ID) => void
+
+  getSearchQuery: () => string
 }
 
 export type SearchPopupActions = {
