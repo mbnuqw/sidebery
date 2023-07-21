@@ -15,7 +15,7 @@
       .title {{visit.reactive.title}}
     .url-line
       .url {{visit.decodedUrl}}
-      .inltm -{{visit.timeStr}}
+        .inltm -{{visit.timeStr}}
       .time {{visit.timeStr}}
   template(v-if="visit.reactive.moreVisits")
     .body.-more(
@@ -35,7 +35,7 @@ export default { name: 'HistoryItem' }
 
 <script lang="ts" setup>
 import { ref, computed } from 'vue'
-import { DragInfo, DragItem, DragType, Visit, MenuType } from 'src/types'
+import { DragInfo, DragType, Visit, MenuType } from 'src/types'
 import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
 import { Mouse } from 'src/services/mouse'
@@ -44,7 +44,6 @@ import { Selection } from 'src/services/selection'
 import { Settings } from 'src/services/settings'
 import { Search } from 'src/services/search'
 import { History } from 'src/services/history'
-import { Bookmarks } from 'src/services/bookmarks'
 import { Sidebar } from 'src/services/sidebar'
 import { DnD } from 'src/services/drag-and-drop'
 import { Windows } from 'src/services/windows'
