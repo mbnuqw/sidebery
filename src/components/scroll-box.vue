@@ -3,7 +3,7 @@
   //- .progress(ref="progressEl" :data-scrolling="state.scrolling")
   .top-shadow(:data-show="state.topOverflow")
   .bottom-shadow(:data-show="state.bottomOverflow")
-  .scroll-container(ref="scrollBoxEl" tabindex="-1" @scroll.passive="recalcScroll(true)")
+  .scroll-container(ref="scrollBoxEl" tabindex="-1" @scroll.passive="recalcScroll(true, true)")
     .scrollable(ref="scrollContentEl")
       slot
 </template>
@@ -62,7 +62,7 @@ function onWheel(e: WheelEvent): void {
 
 let hideProgress = false
 let scrollingStartEndTimeout: number | undefined
-function recalcScroll(progressBar?: boolean): void {
+function recalcScroll(progressBar?: boolean, bottomEvent?: boolean): void {
   if (!scrollBoxEl.value || !scrollContentEl.value) return
   boxHeight = scrollBoxEl.value.offsetHeight
   contentHeight = scrollContentEl.value.offsetHeight
@@ -76,7 +76,7 @@ function recalcScroll(progressBar?: boolean): void {
   }
   if (state.bottomOverflow && contentHeight - contentY - _preScroll <= boxHeight) {
     state.bottomOverflow = false
-    emit('bottom')
+    if (bottomEvent) emit('bottom')
   }
   if (contentHeight <= boxHeight) return
 
