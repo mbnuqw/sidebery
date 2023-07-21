@@ -237,7 +237,8 @@ export async function normalizeHistory(
   items: browser.history.HistoryItem[],
   allVisits: boolean,
   after?: number,
-  before?: number
+  before?: number,
+  noTitleless?: boolean
 ): Promise<Visit[]> {
   const normalized: Visit[] = []
 
@@ -257,6 +258,7 @@ export async function normalizeHistory(
       for (const visit of visits) {
         const vVisit = createVisit(item, visit, domain, decodedUrl)
         if (!vVisit) continue
+        if (noTitleless && vVisit.noTitle) continue
         if (after !== undefined && vVisit.time < after) continue
         if (before !== undefined && vVisit.time > before) continue
         normalized.push(vVisit)
@@ -264,6 +266,7 @@ export async function normalizeHistory(
       }
     } else {
       if (!iVisit) continue
+      if (noTitleless && iVisit.noTitle) continue
       if (after !== undefined && iVisit.time < after) continue
       if (before !== undefined && iVisit.time > before) continue
       normalized.push(iVisit)

@@ -14,7 +14,7 @@ export async function onHistorySearch(noSel?: boolean): Promise<void> {
         maxResults: 100,
         startTime: 0,
       })
-      const norm = await History.normalizeHistory(result, true)
+      const norm = await History.normalizeHistory(result, true, undefined, undefined, true)
       History.filtered = norm
       first = History.filtered[0]
     } catch (err) {
