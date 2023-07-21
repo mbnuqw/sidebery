@@ -1,5 +1,6 @@
 import * as Utils from 'src/utils'
-import { DstPlaceInfo, HistoryItem, ItemInfo, SubPanelType } from 'src/types'
+import { DstPlaceInfo, ItemInfo, NativeHistoryItem, NativeVisit, SubPanelType } from 'src/types'
+import { Visit, HistoryDay } from 'src/types'
 import { History } from 'src/services/history'
 import { Favicons } from 'src/services/favicons'
 import { Sidebar } from 'src/services/sidebar'
@@ -19,6 +20,74 @@ const LOAD_RANGE = 432_000_000 // 1000*60*60*24*5 - 5 days
 
 let lastItemTime = 0
 
+let reactFn: (<T extends object>(rObj: T) => T) | undefined
+export function initHistory(react: (rObj: object) => object) {
+  reactFn = react as <T extends object>(rObj: T) => T
+  History.reactive = reactFn(History.reactive)
+}
+
+export function createVisit(
+  nItem: NativeHistoryItem,
+  nVisit?: NativeVisit,
+  itemDomain?: string,
+  itemDecodedUrl?: string
+): Visit | undefined {
+  if (!nItem.url) return
+  if (nItem.lastVisitTime === undefined) return
+  if (nVisit && nVisit.visitTime === undefined) return
+
+  const time = nVisit?.visitTime ?? nItem.lastVisitTime
+  const dt = new Date(time)
+  const dtday = `${dt.getDate()}`.padStart(2, '0')
+  const dtmth = `${dt.getMonth() + 1}`.padStart(2, '0')
+  const dayId = `${dt.getFullYear()}.${dtmth}.${dtday}`
+  const h = dt.getHours().toString()
+  const m = dt.getMinutes().toString()
+  const timeStr = `${h.padStart(2, '0')}:${m.padStart(2, '0')}`
+
+  let domain
+  if (itemDomain) domain = itemDomain
+  else domain = Utils.getDomainOf(nItem.url)
+
+  let decodedUrl
+  if (itemDecodedUrl) decodedUrl = itemDecodedUrl
+  else {
+    try {
+      decodedUrl = decodeURI(nItem.url)
+    } catch {
+      decodedUrl = nItem.url
+    }
+  }
+
+  const title = nItem.title || domain
+  const tooltip = title + '\n---\n' + decodedUrl
+
+  const id = (nVisit?.visitId ?? nItem.id) + time.toString(36)
+
+  const visit: Visit = {
+    id,
+    dayId,
+    url: nItem.url,
+    decodedUrl,
+    domain,
+    title,
+    noTitle: !nItem.title,
+    time,
+    timeStr,
+    tooltip,
+
+    reactive: {
+      title,
+      tooltip,
+      sel: false,
+    },
+  }
+
+  if (reactFn) visit.reactive = reactFn(visit.reactive)
+
+  return visit
+}
+
 export async function load(): Promise<void> {
   if (!browser.history) return
   History.ready = false
@@ -34,12 +103,13 @@ export async function load(): Promise<void> {
   })
 
   const lastItemVisitTime = result[result.length - 1]?.lastVisitTime
-  const normList = await normalizeHistory(result, true, lastItemVisitTime)
-  lastItemTime = getLastItemTime(normList) - 1
+  const visits = await normalizeHistory(result, true, lastItemVisitTime)
+  lastItemTime = getLastVisitTime(visits) - 1
 
-  if (!normList.length) await loadMore()
-  else History.reactive.list = normList
+  if (!visits.length) await loadMore()
+  else History.visits = visits
 
+  History.reactive.days = History.recalcDays()
   History.setupListeners()
 
   const historyPanel = Sidebar.panelsById.history
@@ -49,15 +119,104 @@ export async function load(): Promise<void> {
 }
 
 export function unload(): void {
+  History.reactive.ready = false
+  History.reactive.days = []
+
   History.ready = false
   History.allLoaded = false
-  History.reactive.ready = false
-  History.reactive.list = []
+  History.visits = []
+  History.byId = {}
 
   const historyPanel = Sidebar.panelsById.history
   if (historyPanel) historyPanel.reactive.ready = historyPanel.ready = false
+
   History.resetListeners()
+
   cachedVisits = {}
+}
+
+function getDayTitle(time?: number, dayStartTime?: number): string {
+  if (time === undefined) return '???'
+  if (!dayStartTime) dayStartTime = Utils.getDayStartMS()
+  return Utils.uDate(time, '.', dayStartTime)
+}
+
+export function recalcDays() {
+  const days: HistoryDay[] = []
+  const dayStart = Utils.getDayStartMS()
+  let day: HistoryDay | undefined
+  let lastDayId = ''
+  let prevVisit: Visit | undefined
+
+  const visits = History.filtered ?? History.visits
+
+  for (const visit of visits) {
+    // Ignore visits without title
+    if (visit.noTitle) continue
+
+    // Create new day
+    if (lastDayId !== visit.dayId || !day) {
+      lastDayId = visit.dayId
+      day = { id: lastDayId, title: getDayTitle(visit.time, dayStart), visits: [] }
+      days.push(day)
+      prevVisit = undefined
+    }
+
+    visit.reactive.moreVisits = undefined
+
+    const vTitle = visit.title
+    const pvTitle = prevVisit?.title
+    if (prevVisit && pvTitle && vTitle.length === pvTitle.length && vTitle === pvTitle) {
+      if (!prevVisit.reactive.moreVisits) prevVisit.reactive.moreVisits = [visit.id]
+      else prevVisit.reactive.moreVisits.push(visit.id)
+      continue
+    }
+
+    prevVisit = visit
+    day.visits.push(visit.id)
+  }
+
+  return days
+}
+
+function recalcToday() {
+  const days: HistoryDay[] = []
+  const dayStart = Utils.getDayStartMS()
+  let day: HistoryDay | undefined
+  let lastDayId = ''
+  let prevVisit: Visit | undefined
+
+  const visits = History.filtered ?? History.visits
+
+  for (const visit of visits) {
+    // Ignore visits without title
+    if (visit.noTitle) continue
+
+    // Create new day
+    if (!day) {
+      lastDayId = visit.dayId
+      day = { id: lastDayId, title: getDayTitle(visit.time, dayStart), visits: [] }
+      days.push(day)
+      prevVisit = undefined
+    } else if (lastDayId !== visit.dayId) {
+      break
+    }
+
+    visit.reactive.moreVisits = undefined
+
+    const vTitle = visit.title
+    const pvTitle = prevVisit?.title
+    if (prevVisit && pvTitle && vTitle.length === pvTitle.length && vTitle === pvTitle) {
+      if (!prevVisit.reactive.moreVisits) prevVisit.reactive.moreVisits = [visit.id]
+      else prevVisit.reactive.moreVisits.push(visit.id)
+      continue
+    }
+
+    prevVisit = visit
+    day.visits.push(visit.id)
+  }
+
+  if (day) History.reactive.days[0] = day
 }
 
 let unloadAfterTimeout: number | undefined
@@ -73,20 +232,21 @@ export function unloadAfter(delay: number): void {
   }, delay)
 }
 
-let cachedVisits: Record<string, browser.history.VisitItem[]> = {}
+let cachedVisits: Record<string, NativeVisit[]> = {}
 export async function normalizeHistory(
   items: browser.history.HistoryItem[],
   allVisits: boolean,
   after?: number,
   before?: number
-): Promise<HistoryItem[]> {
-  const normalized: HistoryItem[] = []
+): Promise<Visit[]> {
+  const normalized: Visit[] = []
 
   for (const item of items) {
     if (!item.url) continue
-    if (!item.title) item.title = Utils.getDomainOf(item.url)
 
-    normalizeHistoryItem(item)
+    const iVisit = createVisit(item)
+    const domain = iVisit?.domain
+    const decodedUrl = iVisit?.decodedUrl
 
     if (allVisits && item.visitCount !== undefined && item.visitCount > 1 && item.url) {
       let visits: browser.history.VisitItem[] | undefined = cachedVisits[item.url]
@@ -95,28 +255,23 @@ export async function normalizeHistory(
         cachedVisits[item.url] = visits
       }
       for (const visit of visits) {
-        if (visit.visitTime === undefined) continue
-        if (after !== undefined && visit.visitTime < after) continue
-        if (before !== undefined && visit.visitTime > before) continue
-
-        const hItem = visit as HistoryItem
-        hItem.id += visit.visitTime.toString(36)
-        hItem.lastVisitTime = visit.visitTime
-        hItem.url = item.url
-        hItem.title = item.title
-        hItem.visitCount = item.visitCount
-        hItem.favicon = (item as HistoryItem).favicon
-        normalized.push(hItem)
+        const vVisit = createVisit(item, visit, domain, decodedUrl)
+        if (!vVisit) continue
+        if (after !== undefined && vVisit.time < after) continue
+        if (before !== undefined && vVisit.time > before) continue
+        normalized.push(vVisit)
+        History.byId[vVisit.id] = vVisit
       }
     } else {
-      if (item.lastVisitTime === undefined) continue
-      if (after !== undefined && item.lastVisitTime < after) continue
-      if (before !== undefined && item.lastVisitTime > before) continue
-      normalized.push(item)
+      if (!iVisit) continue
+      if (after !== undefined && iVisit.time < after) continue
+      if (before !== undefined && iVisit.time > before) continue
+      normalized.push(iVisit)
+      History.byId[iVisit.id] = iVisit
     }
   }
 
-  normalized.sort((a, b) => (b.lastVisitTime ?? 0) - (a.lastVisitTime ?? 0))
+  normalized.sort((a, b) => b.time - a.time)
 
   return normalized
 }
@@ -136,10 +291,11 @@ export async function loadMore(): Promise<void> {
 
   // First check
   if (result.length) {
-    const newItems = await normalizeHistory(result, true, after, before)
-    if (newItems.length) {
-      History.reactive.list.push(...newItems)
-      lastItemTime = getLastItemTime() - 1
+    const newVisits = await normalizeHistory(result, true, after, before)
+    if (newVisits.length) {
+      History.visits.push(...newVisits)
+      History.reactive.days = History.recalcDays()
+      lastItemTime = getLastVisitTime() - 1
       return
     }
   }
@@ -154,12 +310,13 @@ export async function loadMore(): Promise<void> {
 
   // Second check
   if (result.length) {
-    // Find lowest lastVisitTime
-    const llvt = result[result.length - 1]?.lastVisitTime ?? 0
-    const newItems = await normalizeHistory(result, true, llvt, before)
-    if (newItems.length) {
-      History.reactive.list.push(...newItems)
-      lastItemTime = getLastItemTime() - 1
+    // Find lowest time
+    const oldestTime = result[result.length - 1]?.lastVisitTime ?? 0
+    const newVisits = await normalizeHistory(result, true, oldestTime, before)
+    if (newVisits.length) {
+      History.visits.push(...newVisits)
+      History.reactive.days = History.recalcDays()
+      lastItemTime = getLastVisitTime() - 1
       return
     }
   }
@@ -168,44 +325,62 @@ export async function loadMore(): Promise<void> {
   History.allLoaded = true
 }
 
-function getLastItemTime(list?: HistoryItem[]): number {
-  if (!list) list = History.reactive.list
+function getLastVisitTime(list?: Visit[]): number {
+  if (!list) list = History.visits
 
-  let i = list.length - 1
-  let lastItem = list[i]
-  if (!lastItem) return Date.now()
-  while (lastItem?.lastVisitTime === undefined && i > 0) {
-    lastItem = list[--i]
-  }
-  return lastItem.lastVisitTime ?? Date.now()
+  const lastVisit = list[list.length - 1]
+  if (!lastVisit) return Date.now()
+  else return lastVisit.time
 }
 
-// ???
-function normalizeHistoryItem(item: HistoryItem): void {
-  if (item.url) {
-    const domain = Utils.getDomainOf(item.url)
-    item.favicon = Favicons.reactive.list[Favicons.reactive.domains[domain]]
-  }
-}
+function onVisit(item: NativeHistoryItem): void {
+  const visit = createVisit(item)
+  if (!visit) return
 
-function onVisit(item: HistoryItem): void {
-  normalizeHistoryItem(item)
-  History.reactive.list.unshift(item)
+  const firstVisit = History.visits[0]
+  const sortNeeded = !!firstVisit && firstVisit.time > visit.time
+
+  History.visits.unshift(visit)
+  History.byId[visit.id] = visit
+
+  if (sortNeeded) {
+    History.visits.sort((a, b) => b.time - a.time)
+  }
+
+  if (visit.noTitle) return
+
+  if (sortNeeded) {
+    History.reactive.days = History.recalcDays()
+  } else {
+    const day = History.reactive.days.find(day => day.id === visit.dayId)
+    if (day) day.visits.unshift(visit.id)
+    else History.reactive.days = History.recalcDays()
+  }
 }
 
 function onRemoved(info: browser.history.RemoveDetails): void {
-  if (info.allHistory) History.reactive.list = []
-  else {
+  if (info.allHistory) {
+    History.visits = []
+    cachedVisits = {}
+  } else {
     for (const url of info.urls) {
-      const index = History.reactive.list.findIndex(i => i.url === url)
-      if (index !== -1) History.reactive.list.splice(index, 1)
+      History.visits = History.visits.filter(v => v.url !== url)
+      cachedVisits[url] = []
     }
   }
+  History.reactive.days = History.recalcDays()
 }
 
 function onTitleChange(info: browser.history.TitleChangeDetails): void {
-  const item = History.reactive.list.find(i => i.url === info.url)
-  if (item) item.title = info.title
+  const visit = History.visits.find(v => v.id.startsWith(info.id))
+  if (visit) {
+    visit.reactive.title = visit.title = info.title
+    visit.reactive.tooltip = visit.tooltip = visit.title + '\n---\n' + visit.decodedUrl
+    if (visit.noTitle) {
+      visit.noTitle = false
+      recalcToday()
+    }
+  }
 }
 
 export function setupListeners(): void {
@@ -226,7 +401,8 @@ const scrollConf: ScrollToOptions = { behavior: 'smooth', top: 0 }
 export function scrollToHistoryItem(id: string): void {
   const elId = 'history' + id
   const el = document.getElementById(elId)
-  if (!el) return
+  const bodyEl = el?.firstElementChild as HTMLElement | null | undefined
+  if (!el || !bodyEl) return
 
   let scrollEl
   if (Sidebar.subPanelActive) scrollEl = History.subPanelScrollEl
@@ -237,7 +413,7 @@ export function scrollToHistoryItem(id: string): void {
   const bR = el.getBoundingClientRect()
   const pH = scrollEl.offsetHeight
   const pS = scrollEl.scrollTop
-  const bH = el.offsetHeight
+  const bH = bodyEl.offsetHeight
   const bY = bR.top - sR.top + pS
 
   if (bY < pS + PRE_SCROLL) {
@@ -252,27 +428,28 @@ export function scrollToHistoryItem(id: string): void {
     scrollEl.scroll(scrollConf)
   }
 }
+export const scrollToHistoryItemDebounced = Utils.debounce(scrollToHistoryItem)
 
 export async function open(
-  item: HistoryItem,
+  visit: Visit,
   dst: DstPlaceInfo,
   useActiveTab?: boolean,
   activateFirstTab?: boolean
 ): Promise<void> {
-  if (!item.url) return
+  if (!visit.url) return
 
   if (useActiveTab) {
-    browser.tabs.update({ url: Utils.normalizeUrl(item.url, item.title) })
+    browser.tabs.update({ url: Utils.normalizeUrl(visit.url, visit.title) })
     return
   }
 
-  const tabInfo: ItemInfo = { id: 0, url: item.url, title: item.title, active: activateFirstTab }
+  const tabInfo: ItemInfo = { id: 0, url: visit.url, title: visit.title, active: activateFirstTab }
   const dstInfo: DstPlaceInfo = { windowId: Windows.id, discarded: false, panelId: dst.panelId }
   const panel = Sidebar.panelsById[dstInfo.panelId ?? NOID]
   if (!Utils.isTabsPanel(panel)) return
 
   dstInfo.panelId = panel.id
-  dstInfo.containerId = Containers.getContainerFor(item.url)
+  dstInfo.containerId = Containers.getContainerFor(visit.url)
 
   if (!dstInfo.containerId && Containers.reactive.byId[panel.newTabCtx]) {
     dstInfo.containerId = panel.newTabCtx
@@ -291,8 +468,8 @@ export async function copyUrls(ids: ID[]): Promise<void> {
 
   let urls = ''
   for (const id of ids) {
-    const item = History.reactive.list.find(i => i.id === id)
-    if (item && item.url) urls += '\n' + item.url
+    const visit = History.visits.find(i => i.id === id)
+    if (visit && visit.url) urls += '\n' + visit.url
   }
 
   const resultString = urls.trim()
@@ -307,8 +484,8 @@ export async function copyTitles(ids: ID[]): Promise<void> {
 
   let titles = ''
   for (const id of ids) {
-    const item = History.reactive.list.find(i => i.id === id)
-    if (item && item.title) titles += '\n' + item.title
+    const visit = History.visits.find(i => i.id === id)
+    if (visit && visit.title) titles += '\n' + visit.title
   }
 
   const resultString = titles.trim()
@@ -317,17 +494,17 @@ export async function copyTitles(ids: ID[]): Promise<void> {
 
 export function deleteVisits(ids: ID[]) {
   for (const id of ids) {
-    const list = History.reactive.filtered ?? History.reactive.list
-    const itemIndex = list.findIndex(i => i.id === id)
-    const item = list[itemIndex]
-    if (!item) continue
-    if (!item.lastVisitTime) continue
+    const list = History.filtered ?? History.visits
+    const vIndex = list.findIndex(i => i.id === id)
+    const visit = list[vIndex]
+    if (!visit) continue
+    if (!visit.time) continue
 
-    const ts = item.lastVisitTime
+    const ts = visit.time
 
     // Delete cached visit
-    if (item.url) {
-      const cached = cachedVisits[item.url]
+    if (visit.url) {
+      const cached = cachedVisits[visit.url]
       if (cached) {
         const index = cached.findIndex(ci => ci.visitTime === ts)
         if (index !== -1) cached.splice(index, 1)
@@ -335,12 +512,16 @@ export function deleteVisits(ids: ID[]) {
     }
 
     browser.history.deleteRange({ startTime: ts, endTime: ts + 1 })
-    list.splice(itemIndex, 1)
+
+    list.splice(vIndex, 1)
+    delete History.byId[id]
   }
+  History.reactive.days = History.recalcDays()
 }
 
 export async function deleteSites(ids: ID[]) {
   History.reactive.ready = false
+  History.resetListeners()
 
   let stopDeletion = false
   const progressNotification = Notifications.progress({
@@ -357,12 +538,12 @@ export async function deleteSites(ids: ID[]) {
   const sites: Set<string> = new Set()
 
   for (const id of ids) {
-    const list = History.reactive.filtered ?? History.reactive.list
-    const itemIndex = list.findIndex(i => i.id === id)
-    const item = list[itemIndex]
-    if (!item || !item.url) continue
+    const list = History.filtered ?? History.visits
+    const vIndex = list.findIndex(i => i.id === id)
+    const visit = list[vIndex]
+    if (!visit || !visit.url) continue
 
-    const reResult = SITE_URL_RE.exec(item.url)
+    const reResult = SITE_URL_RE.exec(visit.url)
     if (reResult?.[1]) sites.add(reResult[1])
   }
 

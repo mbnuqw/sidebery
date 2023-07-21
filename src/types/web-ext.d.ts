@@ -1079,6 +1079,7 @@ declare namespace browser {
     }
 
     interface TitleChangeDetails {
+      id: string
       url: string
       title: string
     }

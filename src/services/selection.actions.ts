@@ -227,11 +227,10 @@ export function selectBookmarksRange(aBookmark: Bookmark, bBookmark?: Bookmark):
 }
 
 export function selectHistory(id: ID): void {
-  const list = History.reactive.filtered ?? History.reactive.list
-  const target = list.find(item => item.id === id)
+  const target = History.byId[id]
   if (!target) return
 
-  target.sel = true
+  target.reactive.sel = true
   Selection.selected.push(id)
   firstItem = id
   selType = SelectionType.History
@@ -306,9 +305,8 @@ export function deselectHistory(id: ID): void {
   const index = Selection.selected.indexOf(id)
   if (index >= 0) Selection.selected.splice(index, 1)
 
-  const list = History.reactive.filtered ?? History.reactive.list
-  const target = list.find(item => item.id === id)
-  if (target) target.sel = false
+  const target = History.byId[id]
+  if (target) target.reactive.sel = false
   if (!Selection.selected.length) selType = SelectionType.Nothing
   if (firstItem === id) firstItem = null
 }
@@ -358,9 +356,8 @@ export function resetSelection(forced?: boolean): void {
 
   if (selType === SelectionType.History) {
     for (const id of Selection.selected) {
-      const list = History.reactive.filtered ?? History.reactive.list
-      const target = list.find(item => item.id === id)
-      if (target) target.sel = false
+      const target = History.byId[id]
+      if (target) target.reactive.sel = false
     }
   }
 

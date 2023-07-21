@@ -88,7 +88,7 @@ async function main(): Promise<void> {
   DnD.reactive = reactive(DnD.reactive)
   Permissions.reactive = reactive(Permissions.reactive)
   Notifications.reactive = reactive(Notifications.reactive)
-  History.reactive = reactive(History.reactive)
+  History.initHistory(reactive)
   Search.reactive = reactive(Search.reactive)
   Styles.reactive = reactive(Styles.reactive)
   initUpgrading(reactive)

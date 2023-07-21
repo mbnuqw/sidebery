@@ -1,50 +1,41 @@
 <template lang="pug">
-.item(:id="'history' + item.id")
+.item(:id="'history' + visit.id")
   .body(
-    :title="item.tooltip"
-    :data-sel="item.sel"
-    @mousedown.stop="onMouseDown($event, item)"
-    @mouseup.stop="onMouseUp($event, item)"
-    @contextmenu.stop="onCtxMenu($event, item)"
+    :title="visit.reactive.tooltip"
+    :data-sel="visit.reactive.sel"
+    @mousedown.stop="onMouseDown($event, visit)"
+    @mouseup.stop="onMouseUp($event, visit)"
+    @contextmenu.stop="onCtxMenu($event, visit)"
     draggable="true"
-    @dragstart="onDragStart($event, item)")
+    @dragstart="onDragStart($event, visit)")
     .title-line
-      .fav(:title="translate('panel.history.fav_tooltip')" @mousedown.stop="onFavMouseDown($event, item)")
-        svg(v-if="!item.favicon"): use(xlink:href="#icon_ff")
-        img(v-else :src="item.favicon")
-      .title {{item.title}}
-      .inline-info {{item.timeStr}}
-    .url-line {{item.info}}
-  template(v-if="item.moreItems")
+      .fav(:title="translate('panel.history.fav_tooltip')" @mousedown.stop="onFavMouseDown($event, visit)")
+        svg(v-if="!favicon"): use(xlink:href="#icon_ff")
+        img(v-else :src="favicon")
+      .title {{visit.reactive.title}}
+      .inline-info {{visit.timeStr}}
+    .url-line {{visit.decodedUrl}}
+  template(v-if="visit.reactive.moreVisits")
     .body.-more(
       v-if="!moreActive && !Search.reactive.rawValue"
       @click="onMoreClick")
       .title-line
         .title
-        .inline-info {{translate('panel.history.show_more')}} {{item.moreItems.length}}
-    .body.-av(
+        .inline-info {{translate('panel.history.show_more')}} {{visit.reactive.moreVisits.length}}
+    HistoryItem(
       v-else
-      v-for="subItem in item.moreItems"
-      :id="'history' + subItem.id"
-      :data-sel="subItem.sel"
-      :key="subItem.lastVisitTime"
-      @mousedown.stop="onMouseDown($event, subItem)"
-      @mouseup.stop="onMouseUp($event, subItem)"
-      @contextmenu.stop="onCtxMenu($event, subItem)"
-      draggable="true"
-      @dragstart="onDragStart($event, subItem)")
-      .title-line
-        .fav(:title="translate('panel.history.fav_tooltip')" @mousedown.stop="onFavMouseDown($event, subItem)")
-          svg(v-if="!subItem.favicon"): use(xlink:href="#icon_ff")
-          img(v-else :src="subItem.favicon")
-        .title {{subItem.title}}
-        .inline-info {{subItem.timeStr}}
-      .url-line {{subItem.info}}
+      v-for="visitId in visit.reactive.moreVisits"
+      :key="visitId"
+      :visit="History.byId[visitId]")
 </template>
 
+<script lang="ts">
+export default { name: 'HistoryItem' }
+</script>
+
 <script lang="ts" setup>
-import { ref } from 'vue'
-import { DragInfo, DragItem, DragType, HistoryItem, MenuType } from 'src/types'
+import { ref, computed } from 'vue'
+import { DragInfo, DragItem, DragType, Visit, MenuType } from 'src/types'
 import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
 import { Mouse } from 'src/services/mouse'
@@ -57,19 +48,24 @@ import { Bookmarks } from 'src/services/bookmarks'
 import { Sidebar } from 'src/services/sidebar'
 import { DnD } from 'src/services/drag-and-drop'
 import { Windows } from 'src/services/windows'
+import { Favicons } from 'src/services/favicons'
 
 const moreActive = ref(false)
-defineProps<{ item: HistoryItem }>()
+const props = defineProps<{ visit: Visit }>()
 
-function onMouseDown(e: MouseEvent, item: HistoryItem): void {
-  Mouse.setTarget('history', item.id)
+const favicon = computed(() => {
+  return Favicons.reactive.list[Favicons.reactive.domains[props.visit.domain]]
+})
+
+function onMouseDown(e: MouseEvent, visit: Visit): void {
+  Mouse.setTarget('history', visit.id)
   Menu.close()
 
   // Left
   if (e.button === 0) {
     if (e.ctrlKey) {
-      if (!item.sel) Selection.selectHistory(item.id)
-      else Selection.deselectHistory(item.id)
+      if (!visit.reactive.sel) Selection.selectHistory(visit.id)
+      else Selection.deselectHistory(visit.id)
       return
     }
   }
@@ -82,12 +78,12 @@ function onMouseDown(e: MouseEvent, item: HistoryItem): void {
 
   // Right
   else if (e.button === 2) {
-    if (!Settings.state.ctxMenuNative && !item.sel) Selection.resetSelection()
+    if (!Settings.state.ctxMenuNative && !visit.reactive.sel) Selection.resetSelection()
   }
 }
 
-function onMouseUp(e: MouseEvent, item: HistoryItem): void {
-  const sameTarget = Mouse.isTarget('history', item.id)
+function onMouseUp(e: MouseEvent, visit: Visit): void {
+  const sameTarget = Mouse.isTarget('history', visit.id)
   Mouse.resetTarget()
   Mouse.stopLongClick()
   if (!sameTarget) return
@@ -99,7 +95,7 @@ function onMouseUp(e: MouseEvent, item: HistoryItem): void {
 
     if (e.button === 1) {
       const action = Settings.state.historyMidClickAction
-      if (action === 'forget_visit') return History.deleteVisits([item.id])
+      if (action === 'forget_visit') return History.deleteVisits([visit.id])
     }
 
     let conf = History.getMouseOpeningConf(e.button)
@@ -108,7 +104,7 @@ function onMouseUp(e: MouseEvent, item: HistoryItem): void {
       Search.stop()
       Selection.resetSelection()
     }
-    History.open(item, conf.dst, conf.useActiveTab, conf.activateFirstTab)
+    History.open(visit, conf.dst, conf.useActiveTab, conf.activateFirstTab)
   }
 
   if (e.button === 2) {
@@ -116,7 +112,7 @@ function onMouseUp(e: MouseEvent, item: HistoryItem): void {
 
     if (Menu.isBlocked()) return
     if (!Selection.isSet() && !Settings.state.ctxMenuNative) {
-      Selection.selectHistory(item.id)
+      Selection.selectHistory(visit.id)
     }
     if (!Settings.state.ctxMenuNative) Menu.open(MenuType.History, e.clientX, e.clientY)
   }
@@ -126,17 +122,19 @@ function onMoreClick() {
   moreActive.value = true
 }
 
-function onFavMouseDown(e: MouseEvent, item: HistoryItem): void {
-  if (!item.url) return
+function onFavMouseDown(e: MouseEvent, visit: Visit): void {
+  if (!visit.url) return
 
-  const domain = Utils.getDomainOf(item.url)
-  if (domain === item.url) return
+  const domain = Utils.getDomainOf(visit.url)
+  if (domain === visit.url) return
+
+  Selection.resetSelection()
 
   Search.showBar()
   Search.onOutsideSearchInput(domain)
 }
 
-function onCtxMenu(e: MouseEvent, item: HistoryItem): void {
+function onCtxMenu(e: MouseEvent, visit: Visit): void {
   if (Mouse.isLocked() || !Settings.state.ctxMenuNative || e.ctrlKey || e.shiftKey) {
     Mouse.resetClickLock()
     e.stopPropagation()
@@ -144,7 +142,7 @@ function onCtxMenu(e: MouseEvent, item: HistoryItem): void {
     return
   }
 
-  if (!e.ctrlKey && !e.shiftKey && !item.sel) {
+  if (!e.ctrlKey && !e.shiftKey && !visit.reactive.sel) {
     Selection.resetSelection()
   }
 
@@ -156,19 +154,19 @@ function onCtxMenu(e: MouseEvent, item: HistoryItem): void {
 
   browser.menus.overrideContext({ showDefaults: false })
 
-  if (!Selection.isSet()) Selection.selectHistory(item.id)
+  if (!Selection.isSet()) Selection.selectHistory(visit.id)
 
   Menu.open(MenuType.History)
 }
 
-function onDragStart(e: DragEvent, item: HistoryItem): void {
+function onDragStart(e: DragEvent, visit: Visit): void {
   Menu.close()
-  if (!Selection.isSet()) Selection.selectBookmark(item.id)
+  if (!Selection.isSet()) Selection.selectHistory(visit.id)
   Sidebar.updateBounds()
 
   const dragInfo: DragInfo = {
     type: DragType.History,
-    items: [{ id: item.id, url: item.url, title: item.title }],
+    items: [{ id: visit.id, url: visit.url, title: visit.title }],
     windowId: Windows.id,
     x: e.clientX,
     y: e.clientY,
@@ -178,7 +176,7 @@ function onDragStart(e: DragEvent, item: HistoryItem): void {
 
   // Set native drag info
   if (e.dataTransfer) {
-    const url = item.url ?? ''
+    const url = visit.decodedUrl ?? ''
     const dragImgEl = document.getElementById('drag_image')
     e.dataTransfer.setData('application/x-sidebery-dnd', JSON.stringify(dragInfo))
     if (Settings.state.dndOutside === 'data' ? !e.altKey : e.altKey) {

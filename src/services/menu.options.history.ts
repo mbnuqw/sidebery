@@ -12,8 +12,8 @@ export const historyMenuOptions: Record<string, () => MenuOption | MenuOption[] 
       icon: 'icon_reopen',
       onClick: () => {
         const firstId = Selection.getFirst()
-        const list = History.reactive.filtered ?? History.reactive.list
-        const target = list.find(item => item.id === firstId)
+        const list = History.filtered ?? History.visits
+        const target = list.find(v => v.id === firstId)
         if (!target) return
         History.open(target, { panelId: Sidebar.getRecentTabsPanelId() }, false, true)
       },

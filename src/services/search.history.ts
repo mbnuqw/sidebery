@@ -15,19 +15,22 @@ export async function onHistorySearch(noSel?: boolean): Promise<void> {
         startTime: 0,
       })
       const norm = await History.normalizeHistory(result, true)
-      History.reactive.filtered = norm
-      first = History.reactive.filtered[0]
+      History.filtered = norm
+      first = History.filtered[0]
     } catch (err) {
-      History.reactive.filtered = undefined
+      History.filtered = undefined
     }
+
+    History.reactive.days = History.recalcDays()
 
     if (first && !noSel) {
       Selection.resetSelection()
       Selection.selectHistory(first.id)
-      History.scrollToHistoryItem(first.id)
+      History.scrollToHistoryItemDebounced(120, first.id)
     }
   } else {
-    History.reactive.filtered = undefined
+    History.filtered = undefined
+    History.reactive.days = History.recalcDays()
     if (Search.prevValue) Selection.resetSelection()
   }
 
@@ -35,46 +38,46 @@ export async function onHistorySearch(noSel?: boolean): Promise<void> {
 }
 
 export function onHistorySearchNext(): void {
-  if (!History.ready || !History.reactive.filtered) return
+  if (!History.ready || !History.filtered) return
 
   const selId = Selection.getFirst()
-  let index = History.reactive.filtered.findIndex(t => t.id === selId)
+  let index = History.filtered.findIndex(t => t.id === selId)
 
   index += 1
-  if (index < 0 || index >= History.reactive.filtered.length) return
+  if (index < 0 || index >= History.filtered.length) return
 
   Selection.resetSelection()
-  const item = History.reactive.filtered[index]
-  if (item) {
-    Selection.selectHistory(item.id)
-    History.scrollToHistoryItem(item.id)
+  const visit = History.filtered[index]
+  if (visit) {
+    Selection.selectHistory(visit.id)
+    History.scrollToHistoryItem(visit.id)
   }
 }
 
 export function onHistorySearchPrev(): void {
-  if (!History.ready || !History.reactive.filtered) return
+  if (!History.ready || !History.filtered) return
 
   const selId = Selection.getFirst()
-  let index = History.reactive.filtered.findIndex(t => t.id === selId)
+  let index = History.filtered.findIndex(t => t.id === selId)
 
   index -= 1
-  if (index < 0 || index >= History.reactive.filtered.length) return
+  if (index < 0 || index >= History.filtered.length) return
 
   Selection.resetSelection()
-  const item = History.reactive.filtered[index]
-  if (item) {
-    Selection.selectHistory(item.id)
-    History.scrollToHistoryItem(item.id)
+  const visit = History.filtered[index]
+  if (visit) {
+    Selection.selectHistory(visit.id)
+    History.scrollToHistoryItem(visit.id)
   }
 }
 
 export function onHistorySearchEnter(): void {
   const panel = Sidebar.panelsById.history
-  if (!panel || !panel.ready || !History.reactive.filtered) return
+  if (!panel || !panel.ready || !History.filtered) return
 
   const selId = Selection.getFirst()
-  const item = History.reactive.filtered.find(t => t.id === selId)
-  if (item) History.open(item, { panelId: Sidebar.getRecentTabsPanelId() }, false, true)
+  const visit = History.filtered.find(t => t.id === selId)
+  if (visit) History.open(visit, { panelId: Sidebar.getRecentTabsPanelId() }, false, true)
 
   Search.stop()
 }

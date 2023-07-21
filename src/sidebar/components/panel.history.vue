@@ -3,19 +3,19 @@
   ScrollBox(ref="scrollBox" @bottom="onScrollBottom")
     .history-groups(v-if="!isHidden")
       .group(
-        v-for="(group, i) of historyList"
-        :key="group.title"
-        :data-folded="!state.expandedHistoryGroups[i] && !isFiltering")
+        v-for="(day, i) of History.reactive.days"
+        :key="day.title"
+        :data-folded="!state.expandedHistoryDays[i] && !isFiltering")
         SubListTitle(
-          :title="group.title"
-          :len="group.items.length"
-          :expanded="!!state.expandedHistoryGroups[i] || isFiltering"
+          :title="day.title"
+          :len="day.visits.length"
+          :expanded="!!state.expandedHistoryDays[i] || isFiltering"
           @click="toggleHistoryGroup($event, i)")
-        .group-list(v-if="!!state.expandedHistoryGroups[i] || isFiltering")
+        .group-list(v-if="!!state.expandedHistoryDays[i] || isFiltering")
           HistoryItemVue(
-            v-for="item in group.items"
-            :key="item.lastVisitTime"
-            :item="item")
+            v-for="visitId in day.visits"
+            :key="visitId"
+            :visit="History.byId[visitId]")
       .controls(:data-loading="state.historyLoading" :data-all-loaded="state.allLoaded")
         .note(@click="onScrollBottom") {{translate('panel.history.load_more')}}
 
@@ -26,7 +26,7 @@
     :isNotPerm="!Permissions.reactive.history"
     :permMsg="translate('panel.history.req_perm')"
     perm="history"
-    :isMsg="!historyList.length"
+    :isMsg="!History.reactive.days.length"
     :msg="translate('panel.nothing')")
 </template>
 
@@ -34,8 +34,7 @@
 import { ref, computed, reactive, onMounted } from 'vue'
 import * as Utils from 'src/utils'
 import { translate } from 'src/dict'
-import { HistoryItem, ScrollBoxComponent, SubPanelType } from 'src/types'
-import { Favicons } from 'src/services/favicons'
+import { ScrollBoxComponent, SubPanelType } from 'src/types'
 import { History } from 'src/services/history'
 import { Search } from 'src/services/search'
 import { Permissions } from 'src/services/permissions'
@@ -47,16 +46,11 @@ import HistoryItemVue from './history-item.vue'
 import SubListTitle from './sub-list-title.vue'
 import * as Logs from 'src/services/logs'
 
-interface HistoryGroup {
-  title: string
-  items: HistoryItem[]
-}
-
 const props = defineProps<{ isSubPanel?: boolean }>()
 
 const scrollBox = ref<ScrollBoxComponent | null>(null)
 const state = reactive({
-  expandedHistoryGroups: [true],
+  expandedHistoryDays: [true],
   historyLoading: false,
   allLoaded: false,
 })
@@ -82,91 +76,14 @@ const isHidden = computed(() => {
 
 const isFiltering = computed<boolean>(() => !!Search.reactive.value)
 
-const historyList = computed((): HistoryGroup[] => {
-  const groups: HistoryGroup[] = []
-  const dayStart = Utils.getDayStartMS()
-  let group: HistoryGroup | undefined
-  let lastGroupTitle = ''
-  let prevPreview: HistoryItem | undefined
-
-  const favs = Favicons.reactive.list
-  const favDomains = Favicons.reactive.domains
-  const list = History.reactive.filtered ?? History.reactive.list
-
-  for (const item of list) {
-    const itemPreview: HistoryItem = Utils.cloneObject(item)
-    const gTitle = getGroupTitle(itemPreview.lastVisitTime, dayStart)
-
-    if (lastGroupTitle !== gTitle || !group) {
-      lastGroupTitle = gTitle
-      group = { title: gTitle, items: [] }
-      groups.push(group)
-      prevPreview = undefined
-    }
-
-    if (itemPreview.url) {
-      try {
-        itemPreview.info = decodeURI(itemPreview.url)
-      } catch (err) {
-        itemPreview.info = itemPreview.url
-      }
-      const domain = Utils.getDomainOf(itemPreview.url)
-      itemPreview.favicon = favs[favDomains[domain]]
-
-      if (!itemPreview.title) {
-        const prevItem = group.items[group.items.length - 1]
-        if (prevItem) {
-          prevItem.info += `\n  ${itemPreview.info}`
-          prevItem.tooltip += `\n  ${itemPreview.info}`
-        }
-        continue
-      }
-    }
-
-    itemPreview.timeStr = getItemTime(itemPreview.lastVisitTime)
-
-    itemPreview.tooltip = ''
-    if (itemPreview.title) itemPreview.tooltip += itemPreview.title + '\n---\n'
-    if (itemPreview.info) itemPreview.tooltip += itemPreview.info
-
-    if (item.title && prevPreview?.title) {
-      const prevTitle = prevPreview.title
-      if (item.title.length === prevTitle.length && item.title === prevTitle) {
-        if (!prevPreview.moreItems) prevPreview.moreItems = [itemPreview]
-        else prevPreview.moreItems.push(itemPreview)
-        continue
-      }
-    }
-
-    prevPreview = itemPreview
-    group.items.push(itemPreview)
-  }
-
-  return groups
-})
-
-function getItemTime(time?: number): string {
-  if (!time) return '??:??'
-  const dt = new Date(time)
-  const h = dt.getHours().toString()
-  const m = dt.getMinutes().toString()
-  return `${h.padStart(2, '0')}:${m.padStart(2, '0')}`
-}
-
-function getGroupTitle(time?: number, dayStartTime?: number): string {
-  if (time === undefined) return '???'
-  if (!dayStartTime) dayStartTime = Utils.getDayStartMS()
-  return Utils.uDate(time, '.', dayStartTime)
-}
-
 function toggleHistoryGroup(e: MouseEvent, index: number): void {
   if (e.altKey) {
-    const value = !state.expandedHistoryGroups[index]
-    for (let i = 0; i < historyList.value.length; i++) {
-      state.expandedHistoryGroups[i] = value
+    const value = !state.expandedHistoryDays[index]
+    for (let i = 0; i < History.reactive.days.length; i++) {
+      state.expandedHistoryDays[i] = value
     }
   } else {
-    state.expandedHistoryGroups[index] = !state.expandedHistoryGroups[index]
+    state.expandedHistoryDays[index] = !state.expandedHistoryDays[index]
   }
 }
 

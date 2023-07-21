@@ -1,14 +1,18 @@
-import { HistoryItem } from 'src/types'
+import { HistoryDay, Visit } from 'src/types'
 import * as HistoryActions from 'src/services/history.actions'
 
 export interface HistoryState {
-  list: HistoryItem[]
   ready: boolean
-  filtered?: HistoryItem[]
+  days: HistoryDay[]
 }
 
 export const History = {
-  reactive: { list: [], ready: false } as HistoryState,
+  reactive: { days: [], ready: false } as HistoryState,
+
+  visits: [] as Visit[],
+  filtered: undefined as Visit[] | undefined,
+  byId: {} as Record<ID, Visit>,
+
   ready: false,
   allLoaded: false,
 

@@ -345,7 +345,8 @@ export function search(value?: string, noSel?: boolean): void {
       reset(Sidebar.subPanels.bookmarks)
     }
     if (targetPanelId !== NOID) {
-      History.reactive.filtered = undefined
+      History.filtered = undefined
+      History.recalcDays()
     }
     if (beforeSwitchingPanelId !== undefined) {
       const panel = Sidebar.panelsById[beforeSwitchingPanelId]
