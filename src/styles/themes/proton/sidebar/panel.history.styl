@@ -43,10 +43,10 @@
 
 .HistoryPanel .item
   position: relative
-  padding: 0 var(--history-item-margin) var(--history-item-margin)
 
 .HistoryPanel .item .body
   position: relative
+  margin: 0 var(--history-item-margin) var(--history-item-margin)
   padding: var(--history-item-padding-left) 0 var(--history-item-padding-right) 0
   border-radius: var(--history-item-border-radius)
   background-color: var(--frame-el-bg)
@@ -59,6 +59,7 @@
     width: 100%
     height: 100%
     border-radius: var(--history-item-border-radius)
+    z-index: 1
 .HistoryPanel .item .body:hover:before
   background-color: var(--frame-el-overlay-hover-bg)
 .HistoryPanel .item .body:active:before
@@ -77,18 +78,7 @@
   position: relative
   display: flex
   align-items: center
-
-.HistoryPanel .item .url-line
-  position: relative
-  margin: 1px var(--history-item-padding-right) 0 var(--history-item-padding-left)
-  font-size: rem(11)
-  color: var(--frame-fg)
-  word-break: break-all
-  overflow: clip
-  line-height: 1rem
-  max-height: 3rem
-  flex-shrink: 1
-  opacity: .6
+  z-index: 2
 
 .HistoryPanel .item .fav
   position: relative
@@ -111,20 +101,10 @@
   &:active
     opacity: .5
 
-.HistoryPanel .item .inline-info
-  position: relative
-  margin: 0 var(--history-item-padding-right) 0 5px
-  font-size: rem(11)
-  color: var(--frame-fg)
-  white-space: nowrap
-  overflow: hidden
-  flex-shrink: 0
-  opacity: .7
-
 .HistoryPanel .item .title
   position: relative
   width: 100%
-  margin: 0 0 1px 5px
+  margin: 0 1px 1px 5px
   font-size: rem(14)
   color: var(--frame-fg)
   white-space: nowrap
@@ -132,9 +112,57 @@
   transition: transform var(--d-fast), color var(--d-fast)
   mask: linear-gradient(-90deg, transparent, #000000 12px, #000000)
 
+.HistoryPanel .item .url-line
+  position: relative
+  display: flex
+  align-items: center
+  margin: 1px var(--history-item-padding-right) 0 var(--history-item-padding-left)
+
+.HistoryPanel .item .url
+  position: relative
+  font-size: rem(11)
+  color: var(--frame-fg)
+  word-break: break-all
+  overflow: clip
+  line-height: 1rem
+  max-height: 3rem
+  flex-shrink: 1
+  opacity: .6
+
+.HistoryPanel .item .inltm
+  position: relative
+  font-size: rem(11)
+  line-height: 1rem
+  word-break: break-all
+  opacity: 0
+
+.HistoryPanel .item .more
+  position: relative
+  margin: 0 var(--history-item-padding-right) 1px 0
+  font-size: rem(11)
+  color: var(--frame-fg)
+  white-space: nowrap
+  overflow: clip
+  flex-shrink: 0
+  line-height: 1rem
+  text-align: right
+  opacity: .7
+
+.HistoryPanel .item .time
+  position: absolute
+  bottom: 0
+  right: 0
+  margin: 0 0 0 auto
+  padding: 0 0 0 6px
+  white-space: nowrap
+  overflow: clip
+  line-height: 1rem
+  font-size: rem(11)
+  color: var(--frame-fg)
+  background-color: var(--frame-el-bg, var(--frame-bg));
+
 .HistoryPanel .history-groups .LoadingDots
   height: 36px
-
 
 .HistoryPanel .controls
   position: relative

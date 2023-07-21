@@ -13,15 +13,15 @@
         svg(v-if="!favicon"): use(xlink:href="#icon_ff")
         img(v-else :src="favicon")
       .title {{visit.reactive.title}}
-      .inline-info {{visit.timeStr}}
-    .url-line {{visit.decodedUrl}}
+    .url-line
+      .url {{visit.decodedUrl}}
+      .inltm -{{visit.timeStr}}
+      .time {{visit.timeStr}}
   template(v-if="visit.reactive.moreVisits")
     .body.-more(
       v-if="!moreActive && !Search.reactive.rawValue"
       @click="onMoreClick")
-      .title-line
-        .title
-        .inline-info {{translate('panel.history.show_more')}} {{visit.reactive.moreVisits.length}}
+      .more {{translate('panel.history.show_more')}} {{visit.reactive.moreVisits.length}}
     HistoryItem(
       v-else
       v-for="visitId in visit.reactive.moreVisits"
