@@ -76,6 +76,7 @@ const isHidden = computed(() => {
 
 const isFiltering = computed<boolean>(() => !!Search.reactive.value)
 
+let toggleTimeout: number | undefined
 function toggleHistoryGroup(e: MouseEvent, index: number): void {
   if (e.altKey) {
     const value = !state.expandedHistoryDays[index]
@@ -85,9 +86,15 @@ function toggleHistoryGroup(e: MouseEvent, index: number): void {
   } else {
     state.expandedHistoryDays[index] = !state.expandedHistoryDays[index]
   }
+
+  clearTimeout(toggleTimeout)
+  toggleTimeout = setTimeout(() => {
+    toggleTimeout = undefined
+  }, 500)
 }
 
 async function onScrollBottom(): Promise<void> {
+  if (toggleTimeout) return
   if (state.historyLoading || History.allLoaded) return
   if (isFiltering.value) return
   if (!History.ready) return
