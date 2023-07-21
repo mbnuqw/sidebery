@@ -13,6 +13,7 @@ import * as Logs from 'src/services/logs'
 import { Notifications } from './notifications'
 import { translate } from 'src/dict'
 import { Settings } from './settings'
+import { Search } from './search'
 
 const UNLIMITED = 1234567
 const INITIAL_COUNT = 100
@@ -350,7 +351,7 @@ function onVisit(item: NativeHistoryItem): void {
     History.visits.sort((a, b) => b.time - a.time)
   }
 
-  if (visit.noTitle) return
+  if (visit.noTitle || Search.rawValue) return
 
   if (sortNeeded) {
     History.reactive.days = History.recalcDays()
@@ -371,7 +372,7 @@ function onRemoved(info: browser.history.RemoveDetails): void {
       cachedVisits[url] = []
     }
   }
-  History.reactive.days = History.recalcDays()
+  if (!Search.rawValue) History.reactive.days = History.recalcDays()
 }
 
 function onTitleChange(info: browser.history.TitleChangeDetails): void {
@@ -381,7 +382,7 @@ function onTitleChange(info: browser.history.TitleChangeDetails): void {
     visit.reactive.tooltip = visit.tooltip = visit.title + '\n---\n' + visit.decodedUrl
     if (visit.noTitle) {
       visit.noTitle = false
-      recalcToday()
+      if (!Search.rawValue) recalcToday()
     }
   }
 }

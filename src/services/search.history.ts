@@ -2,9 +2,11 @@ import { History } from 'src/services/history'
 import { Sidebar } from 'src/services/sidebar'
 import { Search } from 'src/services/search'
 import { Selection } from 'src/services/selection'
+import * as Logs from 'src/services/logs'
 
 export async function onHistorySearch(noSel?: boolean): Promise<void> {
   History.reactive.ready = History.ready = false
+  History.reactive.days = []
 
   if (Search.reactive.value) {
     let first
@@ -12,9 +14,9 @@ export async function onHistorySearch(noSel?: boolean): Promise<void> {
       const result = await browser.history.search({
         text: Search.reactive.value,
         maxResults: 100,
-        startTime: 0,
+        startTime: Date.now() - 432_000_000,
       })
-      const norm = await History.normalizeHistory(result, true, undefined, undefined, true)
+      const norm = await History.normalizeHistory(result, false, undefined, undefined, true)
       History.filtered = norm
       first = History.filtered[0]
     } catch (err) {

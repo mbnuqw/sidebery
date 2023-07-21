@@ -9,7 +9,7 @@
   .overlay(
     data-dnd-type="tab"
     @dragenter="onDragEnter"
-    @click="Sidebar.closeSubPanel"
+    @click="onOverlayClick"
     @drop="onDrop")
   .sub-panel
     .header
@@ -53,6 +53,12 @@ function onDrop(): void {
 }
 
 function onDragEnter(): void {
+  if (Search.rawValue) Search.stop()
+  Sidebar.closeSubPanel()
+}
+
+function onOverlayClick() {
+  if (Search.rawValue) Search.stop()
   Sidebar.closeSubPanel()
 }
 

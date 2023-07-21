@@ -346,7 +346,7 @@ export function search(value?: string, noSel?: boolean): void {
     }
     if (targetPanelId !== NOID) {
       History.filtered = undefined
-      History.recalcDays()
+      History.reactive.days = History.recalcDays()
     }
     if (beforeSwitchingPanelId !== undefined) {
       const panel = Sidebar.panelsById[beforeSwitchingPanelId]
