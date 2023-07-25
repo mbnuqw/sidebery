@@ -12,13 +12,13 @@ import { Store } from 'src/services/storage'
 import { SetupPage } from 'src/services/setup-page'
 import { Notifications } from 'src/services/notifications'
 import * as IPC from './ipc'
+import * as Favicons from './favicons'
 import { Containers } from './containers'
 import { DEFAULT_CONTAINER_ID } from 'src/defaults/containers'
 import { PanelType } from 'src/types/sidebar'
 import { ItemInfo } from 'src/types/tabs'
 import { Info } from './info'
 import { createDefaultSidebarConfig, getSidebarConfigFromV4 } from './sidebar-config'
-import { Favicons } from './favicons'
 
 const MIN_SNAP_INTERVAL = 60_000
 const MIN_LIMITING_COUNT = 1

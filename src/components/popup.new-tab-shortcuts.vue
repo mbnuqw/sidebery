@@ -65,9 +65,9 @@ import { DOMAIN_RE } from 'src/defaults'
 import { Sidebar } from 'src/services/sidebar'
 import { Windows } from 'src/services/windows'
 import { Containers } from 'src/services/containers'
-import { Favicons } from 'src/services/favicons'
 import { Info } from 'src/services/info'
 import { SidebarConfigRState, saveSidebarConfig } from 'src/services/sidebar-config'
+import * as Favicons from 'src/services/favicons.fg'
 import * as Utils from 'src/utils'
 import * as Popups from 'src/services/popups'
 import TextField from './text-field.vue'
@@ -131,7 +131,7 @@ const shortcuts = computed<NewTabShortcut[]>(() => {
       const domain = DOMAIN_RE.exec(part)?.[2]
       if (domain) {
         shortcut.url = part
-        const favicon = Favicons.reactive.list[Favicons.reactive.domains[domain]]
+        const favicon = Favicons.reactive.byDomains[domain]
         if (favicon) shortcut.urlIcon = favicon
         else shortcut.urlIcon = '#icon_ff'
         continue

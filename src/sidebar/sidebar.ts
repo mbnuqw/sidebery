@@ -4,10 +4,10 @@ import { InstanceType } from 'src/types'
 import * as IPC from 'src/services/ipc'
 import * as Logs from 'src/services/logs'
 import * as Popups from 'src/services/popups'
+import * as Favicons from 'src/services/favicons.fg'
 import { Settings } from 'src/services/settings'
 import { Sidebar } from 'src/services/sidebar'
 import { Windows } from 'src/services/windows'
-import { Favicons } from 'src/services/favicons'
 import { Containers } from 'src/services/containers'
 import { Keybindings } from 'src/services/keybindings'
 import { Styles } from 'src/services/styles'
@@ -81,7 +81,7 @@ async function main(): Promise<void> {
   Sidebar.initSidebar(reactive)
   Popups.initPopups(reactive)
   Windows.reactive = reactive(Windows.reactive)
-  Favicons.reactive = reactive(Favicons.reactive)
+  Favicons.initFavicons(reactive)
   Bookmarks.reactive = reactive(Bookmarks.reactive)
   Tabs.reactive = reactive(Tabs.reactive)
   Tabs.initTabs(reactive)

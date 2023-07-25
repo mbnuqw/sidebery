@@ -1,7 +1,7 @@
 import { sleep } from 'src/utils'
 import { GroupPin, GroupedTabInfo, InstanceType, GroupConfig } from 'src/types'
 import { GroupPageInitData } from 'src/services/tabs.bg.actions'
-import { getFavPlaceholder } from 'src/services/favicons.actions'
+import { getFavPlaceholder } from 'src/services/favicons'
 import { NOID, SETTINGS_OPTIONS } from 'src/defaults'
 import { applyThemeSrcVars, loadCustomGroupCSS } from './group.styles'
 import * as IPC from 'src/services/ipc'

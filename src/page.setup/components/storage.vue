@@ -67,19 +67,35 @@ async function calcStorageInfo(): Promise<void> {
     .sort((a, b) => b.size - a.size)
 
   // TEMP
-  if (stored.favicons && stored.favDomains) {
+  if ((stored.favicons || stored.favicons_01) && stored.favDomains) {
+    const fullList = stored.favicons ?? [
+      ...(stored.favicons_01 ?? []),
+      ...(stored.favicons_02 ?? []),
+      ...(stored.favicons_03 ?? []),
+      ...(stored.favicons_04 ?? []),
+      ...(stored.favicons_05 ?? []),
+    ]
     state.faviconsCache = []
-    const favsDomainsInfo: { domain: string; index: number; src: string }[] = []
+    const favsDomainsInfo: { domain: string; index: number; len: number }[][] = []
     for (const d of Object.keys(stored.favDomains)) {
-      const info = stored.favDomains[d]
-      if (info) favsDomainsInfo[info.index] = { domain: d, ...info }
+      const domainInfo = stored.favDomains[d]
+      const fdi = favsDomainsInfo[domainInfo.index]
+      if (fdi) fdi.push({ domain: d, ...domainInfo })
+      else favsDomainsInfo[domainInfo.index] = [{ domain: d, ...domainInfo }]
     }
-    for (let fav, info, i = 0; i < stored.favicons.length; i++) {
-      fav = stored.favicons[i]
-      info = favsDomainsInfo[i]
+    for (let fav, domains, i = 0; i < fullList.length; i++) {
+      fav = fullList[i]
+      domains = favsDomainsInfo[i]
       const tooltipInfo = []
       if (fav) tooltipInfo.push(`${fav.substring(0, 32)}...\nSize: ${Utils.bytesToStr(fav.length)}`)
-      if (info) tooltipInfo.push(`Index: ${info.index}\nDomain: ${info.domain}\nSRC: ${info.src}`)
+      if (domains?.length) {
+        const index = domains[0].index
+        tooltipInfo.push(`Index: ${index}`)
+
+        for (const domain of domains) {
+          tooltipInfo.push(`Domain: ${domain.domain} | src url len: ${domain.len}`)
+        }
+      }
       state.faviconsCache.push({ favicon: fav, tooltip: tooltipInfo.join('\n') })
     }
   }

@@ -73,7 +73,7 @@ export type SidebarActions = {
   handleReopening: (tabId: ID, dstContainerId?: string) => number | undefined
 
   loadFavicons: () => void
-  setFavicon: (domain: string, url: string, hash: number, icon: string) => void
+  setFavicon: (domain: string, icon: string) => void
 
   onOutsideSearchInput: (value: string) => void
   onOutsideSearchNext: () => void

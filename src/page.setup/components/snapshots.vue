@@ -71,8 +71,8 @@
                     .container-mark(v-if="tab.containerIcon")
                     .icon
                       img(
-                        v-if="tab.domain && Favicons.reactive.list[Favicons.reactive.domains[tab.domain]]"
-                        :src="Favicons.reactive.list[Favicons.reactive.domains[tab.domain]]")
+                        v-if="tab.domain && Favicons.reactive.byDomains[tab.domain]"
+                        :src="Favicons.reactive.byDomains[tab.domain]")
                       svg(v-else): use(:xlink:href="tab.iconSVG")
                       svg.pin(v-if="tab.pinned"): use(xlink:href="#icon_pin")
                     .title-url
@@ -102,12 +102,12 @@ import { SnapTabState, ItemInfo, NormalizedSnapshot, SnapExportInfo } from 'src/
 import { CONTAINER_ID, NOID } from 'src/defaults'
 import { translate } from 'src/dict'
 import * as IPC from 'src/services/ipc'
+import * as Favicons from 'src/services/favicons.fg'
+import * as Logs from 'src/services/logs'
 import { Windows } from 'src/services/windows'
 import { Store } from 'src/services/storage'
 import { Snapshots } from 'src/services/snapshots'
-import { Favicons } from 'src/services/favicons'
 import DropDownButton from 'src/components/drop-down-button.vue'
-import * as Logs from 'src/services/logs'
 
 const SCROLL_CONF = { behavior: 'smooth', block: 'nearest' } as const
 

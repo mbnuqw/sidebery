@@ -84,7 +84,7 @@ import { Tabs } from 'src/services/tabs.fg'
 import { Mouse } from 'src/services/mouse'
 import { DnD } from 'src/services/drag-and-drop'
 import { Search } from 'src/services/search'
-import { Favicons } from 'src/services/favicons'
+import * as Favicons from 'src/services/favicons.fg'
 import { NOID, RGB_COLORS } from 'src/defaults'
 import * as Utils from 'src/utils'
 

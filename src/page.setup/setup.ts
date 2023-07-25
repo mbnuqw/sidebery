@@ -3,7 +3,6 @@ import Root from './setup.vue'
 import { InstanceType } from 'src/types'
 import { Settings } from 'src/services/settings'
 import { Windows } from 'src/services/windows'
-import { Favicons } from 'src/services/favicons'
 import { Containers } from 'src/services/containers'
 import { Keybindings } from 'src/services/keybindings'
 import { Bookmarks } from 'src/services/bookmarks'
@@ -12,13 +11,11 @@ import { Permissions } from 'src/services/permissions'
 import { Info } from 'src/services/info'
 import { SetupPage } from 'src/services/setup-page'
 import { Styles } from 'src/services/styles'
+import * as Favicons from 'src/services/favicons.fg'
 import * as IPC from 'src/services/ipc'
 import * as Logs from 'src/services/logs'
-import {
-  initSidebarConfig,
-  loadSidebarConfig,
-  setupSidebarConfigListeners,
-} from 'src/services/sidebar-config'
+import { initSidebarConfig, loadSidebarConfig } from 'src/services/sidebar-config'
+import { setupSidebarConfigListeners } from 'src/services/sidebar-config'
 import { showUpgradingScreen } from 'src/services/upgrading'
 import { initPopups } from 'src/services/popups'
 
@@ -30,7 +27,7 @@ async function main(): Promise<void> {
   Settings.state = reactive(Settings.state)
   Containers.reactive = reactive(Containers.reactive)
   Windows.reactive = reactive(Windows.reactive)
-  Favicons.reactive = reactive(Favicons.reactive)
+  Favicons.initFavicons(reactive)
   Keybindings.reactive = reactive(Keybindings.reactive)
   Bookmarks.reactive = reactive(Bookmarks.reactive)
   initSidebarConfig(reactive)

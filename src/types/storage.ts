@@ -17,6 +17,11 @@ export interface Stored {
   prevTabsData_v4?: TabCache[][] // DEPR
 
   favicons?: string[]
+  favicons_01?: string[]
+  favicons_02?: string[]
+  favicons_03?: string[]
+  favicons_04?: string[]
+  favicons_05?: string[]
   favHashes?: number[]
   favDomains?: Record<string, FavDomain>
   favUrls?: Record<string, number> // DEPR

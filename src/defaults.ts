@@ -60,7 +60,7 @@ export const BTN_ICONS: Record<string, string> = {
 }
 
 export const LOCALHOST_RE = /^localhost(:\d+)?/
-export const DOMAIN_RE = /^https?:\/\/(www.)?(.*?)(\/|$)/
+export const DOMAIN_RE = /^[0-9A-Za-z-]{1,63}:\/\/(www\.)?(.*?)(\/|$)/
 export const LINUX_HOME_RE = /^\/home\/(.+?)\//
 export const PATH_SEP_RE = /\/|\\/
 

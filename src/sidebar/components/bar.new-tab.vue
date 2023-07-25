@@ -44,8 +44,8 @@ import { Menu } from 'src/services/menu'
 import { Tabs } from 'src/services/tabs.fg'
 import { Mouse } from 'src/services/mouse'
 import { Containers } from 'src/services/containers'
-import { Favicons } from 'src/services/favicons'
 import { CONTAINER_ID, DOMAIN_RE, NEWID } from 'src/defaults'
+import * as Favicons from 'src/services/favicons.fg'
 import * as Utils from 'src/utils'
 import * as Logs from 'src/services/logs'
 import { Windows } from 'src/services/windows'
@@ -134,7 +134,7 @@ const btns = computed<NewTabBtn[]>(() => {
       }
     }
 
-    if (btn.domain) btn.icon = Favicons.reactive.list[Favicons.reactive.domains[btn.domain]]
+    if (btn.domain) btn.icon = Favicons.reactive.byDomains[btn.domain]
     if (!btn.icon && btn.url) btn.icon = Favicons.getFavPlaceholder(btn.url)
     if (!btn.icon && container) btn.icon = '#' + container.icon
 

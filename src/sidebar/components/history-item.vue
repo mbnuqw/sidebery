@@ -47,13 +47,13 @@ import { History } from 'src/services/history'
 import { Sidebar } from 'src/services/sidebar'
 import { DnD } from 'src/services/drag-and-drop'
 import { Windows } from 'src/services/windows'
-import { Favicons } from 'src/services/favicons'
+import * as Favicons from 'src/services/favicons.fg'
 
 const moreActive = ref(false)
 const props = defineProps<{ visit: Visit }>()
 
 const favicon = computed(() => {
-  return Favicons.reactive.list[Favicons.reactive.domains[props.visit.domain]]
+  return Favicons.reactive.byDomains[props.visit.domain]
 })
 
 function onMouseDown(e: MouseEvent, visit: Visit): void {

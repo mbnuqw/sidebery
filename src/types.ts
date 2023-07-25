@@ -234,8 +234,10 @@ export interface TabsMoveConf {
 }
 
 export interface FavDomain {
+  // Favicon/FavHash index
   index: number
-  src: string
+  // Length of source url
+  len: number
 }
 
 export interface Reminder {
