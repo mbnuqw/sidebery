@@ -275,6 +275,7 @@ async function upgrade(): Promise<void> {
   // Removing old data
   // ---
   const toRemove: (keyof Partial<Stored>)[] = [
+    'favicons',
     'favAutoCleanTime',
     'favUrls',
     'containers_v4',

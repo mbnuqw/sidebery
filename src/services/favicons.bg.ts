@@ -202,18 +202,15 @@ export function saveFavicon(url: string, icon: string): void {
 }
 
 export async function upgradeFaviCache(stored: Stored, newStorage: Stored): Promise<void> {
-  let favicons = stored.favicons ?? []
+  const favicons = stored.favicons ?? []
   const favUrls = stored.favUrls ?? {}
-
-  // Limit favicons
-  if (favicons.length > MAX_COUNT_LIMIT) {
-    favicons = favicons.slice(0, MAX_COUNT_LIMIT)
-  }
 
   // Get urls map
   const urlsMap: Record<number, string> = {}
   for (const url of Object.keys(favUrls)) {
-    if (!urlsMap[favUrls[url]]) urlsMap[favUrls[url]] = url
+    const index = favUrls[url]
+    if (typeof index !== 'number' || index < 0) continue
+    if (!urlsMap[index]) urlsMap[index] = url
   }
 
   const newFavs: string[] = []
@@ -232,9 +229,9 @@ export async function upgradeFaviCache(stored: Stored, newStorage: Stored): Prom
     } catch {
       continue
     }
-    const newIndex = newFavs.push(newFav) - 1
-    newHashes.push(hash)
     if (urlsMap[i]) {
+      newHashes.push(hash)
+      const newIndex = newFavs.push(newFav) - 1
       const url = urlsMap[i]
       const domain = Utils.getDomainOf(url)
       if (!newFavDomains[domain]) {
