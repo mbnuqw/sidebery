@@ -216,7 +216,6 @@ export async function upgradeFaviCache(stored: Stored, newStorage: Stored): Prom
     if (!urlsMap[favUrls[url]]) urlsMap[favUrls[url]] = url
   }
 
-  // Resize
   const newFavs: string[] = []
   const newFavDomains: Record<string, FavDomain> = {}
   const newHashes: number[] = []
@@ -244,7 +243,7 @@ export async function upgradeFaviCache(stored: Stored, newStorage: Stored): Prom
     }
   }
 
-  newStorage.favicons = newFavs
+  newStorage.favicons_01 = newFavs
   newStorage.favHashes = newHashes
   newStorage.favDomains = newFavDomains
 }
