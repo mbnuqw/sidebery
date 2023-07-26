@@ -47,6 +47,7 @@ import { Info } from 'src/services/info'
 import { Store } from 'src/services/storage'
 import { Permissions } from 'src/services/permissions'
 import * as Logs from 'src/services/logs'
+import * as Favicons from 'src/services/favicons'
 import { Menu } from 'src/services/menu'
 import { Styles } from 'src/services/styles'
 import { Snapshots } from 'src/services/snapshots'
@@ -477,23 +478,22 @@ async function importSnapshots(backup: BackupData, toStore: Stored): Promise<voi
 async function importFavicons(backup: BackupData, toStore: Stored): Promise<void> {
   if (!backup.favicons || !backup.favHashes || !backup.favDomains) throw 'No favicons data'
 
-  let storage
+  let favData
   try {
-    storage = await browser.storage.local.get<Stored>(['favicons', 'favHashes', 'favDomains'])
+    favData = await Favicons.loadFaviconsData()
   } catch (err) {
     return Logs.err('importFavicons: Cannot get stored favicons', err)
   }
-  if (!storage.favicons?.length || !storage.favHashes?.length || !storage.favDomains) {
-    storage.favicons = []
-    storage.favHashes = []
-    storage.favDomains = {}
-  }
 
-  let index = storage.favicons.length
+  let index = favData.favicons.length
+
+  if (index >= Favicons.MAX_COUNT_LIMIT) return Logs.warn('importFavicons: Exceeding the limit')
+
+  const oldNewIndexes = new Map<number, number>()
 
   for (const backupDomain of Object.keys(backup.favDomains)) {
     const backupDomainInfo = backup.favDomains[backupDomain]
-    const domainInfo = storage.favDomains[backupDomain]
+    const domainInfo = favData.favDomains[backupDomain]
     if (domainInfo) continue
 
     const backupIndex = backupDomainInfo.index
@@ -501,16 +501,37 @@ async function importFavicons(backup: BackupData, toStore: Stored): Promise<void
     const backupHash = backup.favHashes[backupIndex]
     if (!backupFavicon || backupHash === undefined) continue
 
-    backupDomainInfo.index = index
-    storage.favicons[index] = backupFavicon
-    storage.favHashes[index] = backupHash
-    storage.favDomains[backupDomain] = backupDomainInfo
-    index++
+    const existedIndex = favData.favHashes.indexOf(backupHash)
+    const reusedIndex = oldNewIndexes.get(backupIndex)
+
+    // Reuse favicon (from existed data)
+    if (existedIndex !== -1) {
+      backupDomainInfo.index = existedIndex
+      favData.favicons[existedIndex] = backupFavicon
+      favData.favHashes[existedIndex] = backupHash
+      favData.favDomains[backupDomain] = backupDomainInfo
+    }
+    // Reuse favicon (from backup data)
+    if (reusedIndex !== undefined) {
+      backupDomainInfo.index = reusedIndex
+      favData.favicons[reusedIndex] = backupFavicon
+      favData.favHashes[reusedIndex] = backupHash
+      favData.favDomains[backupDomain] = backupDomainInfo
+    }
+    // Add favicon
+    else {
+      oldNewIndexes.set(backupIndex, index)
+      backupDomainInfo.index = index
+      favData.favicons[index] = backupFavicon
+      favData.favHashes[index] = backupHash
+      favData.favDomains[backupDomain] = backupDomainInfo
+      index++
+    }
   }
 
-  toStore.favicons = storage.favicons
-  toStore.favHashes = storage.favHashes
-  toStore.favDomains = storage.favDomains
+  toStore.favicons_01 = favData.favicons
+  toStore.favHashes = favData.favHashes
+  toStore.favDomains = favData.favDomains
 }
 
 function importKeybindings(backup: BackupData, toStore: Stored): void {

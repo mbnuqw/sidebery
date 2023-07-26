@@ -95,7 +95,11 @@ async function genExportData(): Promise<void> {
     storageKeys.push('snapshots')
   }
   if (state.favicons) {
-    storageKeys.push('favicons')
+    storageKeys.push('favicons_01')
+    storageKeys.push('favicons_02')
+    storageKeys.push('favicons_03')
+    storageKeys.push('favicons_04')
+    storageKeys.push('favicons_05')
     storageKeys.push('favHashes')
     storageKeys.push('favDomains')
   }
@@ -106,6 +110,23 @@ async function genExportData(): Promise<void> {
   } catch (err) {
     return Logs.err('genExportData: Cannot get storage data', err)
   }
+
+  if (state.favicons) {
+    if (data.favicons_01?.length) {
+      const fullList = data.favicons_01
+      if (data.favicons_02?.length) fullList.push(...data.favicons_02)
+      if (data.favicons_03?.length) fullList.push(...data.favicons_03)
+      if (data.favicons_04?.length) fullList.push(...data.favicons_04)
+      if (data.favicons_05?.length) fullList.push(...data.favicons_05)
+      data.favicons = fullList
+    }
+    delete data.favicons_01
+    delete data.favicons_02
+    delete data.favicons_03
+    delete data.favicons_04
+    delete data.favicons_05
+  }
+
   const backup: BackupData = { ...data }
   backup.ver = browser.runtime.getManifest().version
 
