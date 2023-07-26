@@ -215,6 +215,7 @@ async function getRootStyles(
     const shadow = shadowContainerEl.attachShadow({ mode: 'open' })
     const shadowedRootEl = document.createElement('div')
     shadowedRootEl.setAttribute('id', 'root')
+    shadowedRootEl.setAttribute('data-theme', Settings.state.theme || 'proton')
     shadowedRootEl.setAttribute('data-animations', Settings.state.animationSpeed || 'fast')
     shadowedRootEl.setAttribute('data-density', Settings.state.density || 'default')
     shadowedRootEl.setAttribute('data-frame-color-scheme', Styles.reactive.frameColorScheme)

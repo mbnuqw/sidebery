@@ -12,6 +12,11 @@
   --tabs-inner-gap: 5px
   --tabs-close-btn-margin: 2px
   --tabs-audio-btn-width: 22px
+  --tabs-normal-bg: var(--frame-el-bg)
+  --tabs-normal-fg: var(--frame-fg)
+  --tabs-activated-bg: var(--active-el-bg)
+  --tabs-activated-fg: var(--active-el-fg)
+  --tabs-activated-shadow: var(--active-el-shadow)
 #root[data-density="compact"]
   --tabs-pinned-height: 28px
   --tabs-pinned-width: 28px
@@ -33,14 +38,6 @@
 #root[data-frame-color-scheme="light"]
   --tabs-progress-bg: #00000016
   --tabs-lvl-opacity: .3
-#root[data-act-el-color-scheme="dark"]
-  --tabs-activated-bg: var(--active-el-bg)
-  --tabs-activated-fg: var(--active-el-fg)
-  --tabs-activated-shadow: var(--active-el-shadow)
-#root[data-act-el-color-scheme="light"]
-  --tabs-activated-bg: var(--active-el-bg)
-  --tabs-activated-fg: var(--active-el-fg)
-  --tabs-activated-shadow: var(--active-el-shadow)
 
 .Tab
   position: relative
@@ -144,7 +141,7 @@
   align-items: center
   transition: opacity var(--d-fast), transform var(--d-fast)
   border-radius: var(--tabs-border-radius)
-  background-color: var(--frame-el-bg)
+  background-color: var(--tabs-normal-bg)
   box-shadow: var(--frame-el-shadow)
   &:after
     content: ''
@@ -155,7 +152,7 @@
     width: 1px
     height: calc(var(--tabs-height) + var(--tabs-margin))
     opacity: var(--tabs-lvl-opacity)
-    background-color: var(--frame-fg)
+    background-color: var(--tabs-normal-fg)
   &:before
     content: ''
     position: absolute
@@ -199,26 +196,26 @@
 
 #root[data-tabs-tree-lvl-marks="true"] .Tab[data-pin="false"]:not([data-lvl="0"]) .body:after
   display: block
-  box-shadow: calc(var(--tabs-indent) * -1) 0 0 0 var(--frame-fg),
-              calc(var(--tabs-indent) * -2) 0 0 0 var(--frame-fg),
-              calc(var(--tabs-indent) * -3) 0 0 0 var(--frame-fg),
-              calc(var(--tabs-indent) * -4) 0 0 0 var(--frame-fg),
-              calc(var(--tabs-indent) * -5) 0 0 0 var(--frame-fg),
-              calc(var(--tabs-indent) * -6) 0 0 0 var(--frame-fg),
-              calc(var(--tabs-indent) * -7) 0 0 0 var(--frame-fg),
-              calc(var(--tabs-indent) * -8) 0 0 0 var(--frame-fg),
-              calc(var(--tabs-indent) * -9) 0 0 0 var(--frame-fg),
-              calc(var(--tabs-indent) * -10) 0 0 0 var(--frame-fg),
-              calc(var(--tabs-indent) * -11) 0 0 0 var(--frame-fg),
-              calc(var(--tabs-indent) * -12) 0 0 0 var(--frame-fg),
-              calc(var(--tabs-indent) * -13) 0 0 0 var(--frame-fg),
-              calc(var(--tabs-indent) * -14) 0 0 0 var(--frame-fg),
-              calc(var(--tabs-indent) * -15) 0 0 0 var(--frame-fg),
-              calc(var(--tabs-indent) * -16) 0 0 0 var(--frame-fg)
+  box-shadow: calc(var(--tabs-indent) * -1) 0 0 0 var(--tabs-normal-fg),
+              calc(var(--tabs-indent) * -2) 0 0 0 var(--tabs-normal-fg),
+              calc(var(--tabs-indent) * -3) 0 0 0 var(--tabs-normal-fg),
+              calc(var(--tabs-indent) * -4) 0 0 0 var(--tabs-normal-fg),
+              calc(var(--tabs-indent) * -5) 0 0 0 var(--tabs-normal-fg),
+              calc(var(--tabs-indent) * -6) 0 0 0 var(--tabs-normal-fg),
+              calc(var(--tabs-indent) * -7) 0 0 0 var(--tabs-normal-fg),
+              calc(var(--tabs-indent) * -8) 0 0 0 var(--tabs-normal-fg),
+              calc(var(--tabs-indent) * -9) 0 0 0 var(--tabs-normal-fg),
+              calc(var(--tabs-indent) * -10) 0 0 0 var(--tabs-normal-fg),
+              calc(var(--tabs-indent) * -11) 0 0 0 var(--tabs-normal-fg),
+              calc(var(--tabs-indent) * -12) 0 0 0 var(--tabs-normal-fg),
+              calc(var(--tabs-indent) * -13) 0 0 0 var(--tabs-normal-fg),
+              calc(var(--tabs-indent) * -14) 0 0 0 var(--tabs-normal-fg),
+              calc(var(--tabs-indent) * -15) 0 0 0 var(--tabs-normal-fg),
+              calc(var(--tabs-indent) * -16) 0 0 0 var(--tabs-normal-fg)
 .Tab[data-parent="true"][data-folded="false"] + .Tab .body:after
 .Tab[data-edit="true"] + .Tab .body:after
   background-color: transparent
-  background-image: linear-gradient(0deg, var(--frame-fg) 0, var(--frame-fg) 80%, transparent 80%, transparent)
+  background-image: linear-gradient(0deg, var(--tabs-normal-fg) 0, var(--tabs-normal-fg) 80%, transparent 80%, transparent)
 
 // ---
 // -- Color layer
@@ -263,7 +260,7 @@
   left: calc(50% - 6px)
   width: 12px
   height: 12px
-  fill: var(--frame-fg)
+  fill: var(--tabs-normal-fg)
   transition: opacity var(--d-fast)
   opacity: 0
 
@@ -321,7 +318,7 @@
   left: 0
   width: 16px
   height: 16px
-  fill: var(--frame-fg)
+  fill: var(--tabs-normal-fg)
   transition: opacity var(--d-fast)
 
 .Tab .fav svg
@@ -378,7 +375,7 @@
   left: 4px
   width: 16px
   height: 16px
-  fill: var(--frame-fg)
+  fill: var(--tabs-normal-fg)
 .Tab[data-active="true"] .exp-icon
   fill: var(--tabs-activated-fg)
 
@@ -402,7 +399,7 @@
   right: -4px
   bottom: -4px
   border-radius: 50%
-  border-top: 2px solid var(--frame-fg)
+  border-top: 2px solid var(--tabs-normal-fg)
   border-left: 2px solid var(--tabs-progress-bg)
   border-right: 2px solid var(--tabs-progress-bg)
   border-bottom: 2px solid var(--tabs-progress-bg)
@@ -433,7 +430,7 @@
   transform: scale(1, 1)
 
 .Tab:not([data-loading="true"])[data-pending="true"] .badge
-  background-color: var(--frame-fg)
+  background-color: var(--tabs-normal-fg)
 
 .Tab[data-loading="ok"] .badge
   background-color: var(--status-ok)
@@ -451,7 +448,7 @@
   bottom: -6px
   font: var(--tabs-count-font)
   text-align: center
-  color: var(--frame-fg)
+  color: var(--tabs-normal-fg)
 .Tab[data-active="true"] .child-count
   color: var(--tabs-activated-fg)
 
@@ -480,7 +477,7 @@
     height: 100%
     top: 0
     left: 0
-    background-image: linear-gradient(90deg, #00000000, var(--frame-fg))
+    background-image: linear-gradient(90deg, #00000000, var(--tabs-normal-fg))
     transform: translateX(-100%)
     animation: flash-progress-animation .4s
 .Tab[data-active="true"] .flash-fx:before
@@ -523,7 +520,7 @@
   padding: 0 1px
   margin: 0
   font: var(--tabs-font)
-  color: var(--frame-fg)
+  color: var(--tabs-normal-fg)
   background-color: transparent
   appearance: none
   border: none
@@ -540,7 +537,7 @@
 .Tab .title
   position: relative
   font: var(--tabs-font)
-  color: var(--frame-fg)
+  color: var(--tabs-normal-fg)
   padding: 0 1px
   white-space: nowrap
   overflow: hidden
@@ -619,7 +616,7 @@
   left: calc(50% - 9px)
   width: 18px
   height: 18px
-  fill: var(--frame-fg)
+  fill: var(--tabs-normal-fg)
   opacity: .7
 
 .Tab[data-active="true"] .close-icon
@@ -649,7 +646,7 @@
     height: 10px
     transform: rotateZ(45deg)
     transform-origin: 0 0
-    background-color: var(--frame-fg)
+    background-color: var(--tabs-normal-fg)
 
 
 // ---
