@@ -442,7 +442,7 @@ async function importSnapshots(backup: BackupData, toStore: Stored): Promise<voi
 
     const backupNormSnapshot = Snapshots.getNormalizedSnapshot(backup.snapshots, i)
     if (backupNormSnapshot) {
-      Snapshots.updateV4GroupUrls(backupNormSnapshot)
+      Snapshots.updateInternalUrls(backupNormSnapshot)
       backupSnapshots.push(backupNormSnapshot)
     }
   }

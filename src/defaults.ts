@@ -7,9 +7,13 @@ export const PRE_SCROLL = 64
 export const ADDON_HOST = browser.runtime.getURL('')
 export const SIDEBAR_URL = browser.runtime.getURL('/sidebar/sidebar.html')
 export const GROUP_URL = browser.runtime.getURL('/sidebery/group.html')
+export const GROUP_URL_LEN = GROUP_URL.length
 export const URL_URL = browser.runtime.getURL('/sidebery/url.html')
+export const URL_URL_LEN = URL_URL.length
 export const SETUP_URL = browser.runtime.getURL('/page.setup/setup.html')
 export const SEARCH_URL = browser.runtime.getURL('/popup.search/search.html')
+export const V4_GROUP_URL_LEN = 69
+export const V4_URL_URL_LEN = 65
 export const RGB_COLORS: Record<browser.ColorName, string> = {
   blue: '#37adff',
   turquoise: '#00c79a',

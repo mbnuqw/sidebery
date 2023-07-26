@@ -466,12 +466,17 @@ export async function parseDragEvent(
 /**
  * Check if string is group url
  */
-export function isGroupUrl(url: string): boolean {
-  return url.startsWith('m') && url.includes('/sidebery/group.html', 52)
+export function isV4GroupUrl(url: string): boolean {
+  return url.startsWith('m') && url.startsWith('/group/group.html', 52)
 }
-
+export function isGroupUrl(url: string): boolean {
+  return url.startsWith('m') && url.startsWith('/sidebery/group.html', 52)
+}
+export function isV4UrlUrl(url: string): boolean {
+  return url.startsWith('m') && url.startsWith('/url/url.html', 52)
+}
 export function isUrlUrl(url: string): boolean {
-  return url.startsWith('m') && url.includes('/sidebery/url.html', 52)
+  return url.startsWith('m') && url.startsWith('/sidebery/url.html', 52)
 }
 
 export function createGroupUrl(name?: string, conf?: GroupConfig): string {

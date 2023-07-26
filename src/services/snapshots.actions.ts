@@ -1,6 +1,7 @@
 import { translate } from 'src/dict'
 import * as Utils from 'src/utils'
 import { NOID, CONTAINER_ID, DEFAULT_CONTAINER, GROUP_URL, TABS_PANEL_CONFIG } from 'src/defaults'
+import { URL_URL, V4_GROUP_URL_LEN, V4_URL_URL_LEN, GROUP_URL_LEN, URL_URL_LEN } from 'src/defaults'
 import { Snapshot, SnapTab, NormalizedSnapshot, SnapExportTypes, SnapExportInfo } from 'src/types'
 import { RemovingSnapshotResult, SnapPanelState, SnapStoreMode, SnapTabState } from 'src/types'
 import { Stored, Notification, Snapshot_v4, SnapWindowState, SnapshotState } from 'src/types'
@@ -831,6 +832,20 @@ export function convertFromV4(oldSnapshots: Snapshot_v4[]): Snapshot[] {
         if (tabV4.pinned) snapTab.pinned = true
         if (tabV4.ctr && tabV4.ctr !== CONTAINER_ID) snapTab.containerId = tabV4.ctr
 
+        // Update group url
+        if (Utils.isV4GroupUrl(snapTab.url)) {
+          let titleEndIndex: number | undefined = snapTab.url.indexOf(':id:', V4_GROUP_URL_LEN)
+          if (titleEndIndex === -1) titleEndIndex = undefined
+          const newUrl = GROUP_URL + snapTab.url.slice(V4_GROUP_URL_LEN, titleEndIndex)
+          snapTab.url = newUrl
+        }
+
+        // Update url-placeholder url
+        if (Utils.isV4UrlUrl(snapTab.url)) {
+          const newUrl = URL_URL + snapTab.url.slice(V4_URL_URL_LEN)
+          snapTab.url = newUrl
+        }
+
         // Check panel
         if (snapTab.panelId !== -1) {
           const panelConf = snapshot.sidebar.panels[snapTab.panelId]
@@ -872,13 +887,15 @@ export function convertFromV4(oldSnapshots: Snapshot_v4[]): Snapshot[] {
   return result
 }
 
-export function updateV4GroupUrls(snapshot: NormalizedSnapshot): void {
+export function updateInternalUrls(snapshot: NormalizedSnapshot): void {
   for (const win of snapshot.tabs) {
     for (const panel of win) {
       for (const tab of panel) {
         if (Utils.isGroupUrl(tab.url)) {
-          const index = tab.url.indexOf('group.html') + 10
-          const newUrl = GROUP_URL + tab.url.slice(index)
+          const newUrl = GROUP_URL + tab.url.slice(GROUP_URL_LEN)
+          tab.url = newUrl
+        } else if (Utils.isUrlUrl(tab.url)) {
+          const newUrl = URL_URL + tab.url.slice(URL_URL_LEN)
           tab.url = newUrl
         }
       }
