@@ -167,7 +167,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
       })
     }
 
-    for (const c of Object.values(Containers.reactive.byId)) {
+    for (const c of Containers.sortContainers(Object.values(Containers.reactive.byId))) {
       if (firstTab.cookieStoreId === c.id) continue
       if (ignoreRules?.[c.id]) continue
       opts.push({
@@ -227,7 +227,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
       })
     }
 
-    for (const c of Object.values(Containers.reactive.byId)) {
+    for (const c of Containers.sortContainers(Object.values(Containers.reactive.byId))) {
       if (firstTab.cookieStoreId === c.id) continue
       if (ignoreRules?.[c.id]) continue
       opts.push({
