@@ -87,6 +87,11 @@
   flex-shrink: 0
   margin: 0 0 0 var(--history-item-padding-left)
   cursor: pointer
+
+  transform: translateZ(0)
+  // Why: b/c height of sub-panel is "vh" it gets non-integer value which lead to cutting/shifting the icon
+  // Temp: until round() css function is enabled (layout.css.round.enabled)
+
   > svg, > img
     position: absolute
     width: 16px
