@@ -44,6 +44,9 @@ async function main() {
     await Promise.all([waitDOM(), waitInitData()])
   } catch (e) {
     Logs.err('Group page: Initialization error:', e)
+    const warnEl = document.getElementById('disconnected_warn')
+    if (warnEl) warnEl.textContent = browser.i18n.getMessage('group_disconnected_warn')
+    document.body.setAttribute('data-disconnected', 'true')
     return
   }
   const initData = window.sideberyInitData as GroupPageInitData
