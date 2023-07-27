@@ -483,10 +483,6 @@ function calcToolbarBorder(themeColors: browser.theme.ThemeColors, parsed: Parse
   const bar = parsed.toolbarBg
 
   if (!borderRaw || !border) return
-  if (themeColors.toolbar === themeColors.frame && borderRaw === themeColors.toolbar) {
-    parsed.vars.toolbar_border = parsed.vars.toolbar_bg
-    return
-  }
   if (borderRaw === themeColors.toolbar) return
   if (borderRaw === themeColors.frame) return
   if (border[3] === 0) return
