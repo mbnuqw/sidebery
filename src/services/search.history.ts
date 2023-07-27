@@ -14,7 +14,7 @@ export async function onHistorySearch(noSel?: boolean): Promise<void> {
       const result = await browser.history.search({
         text: Search.reactive.value,
         maxResults: 100,
-        startTime: Date.now() - 432_000_000,
+        startTime: 0,
       })
       const norm = await History.normalizeHistory(result, false, undefined, undefined, true)
       History.filtered = norm
