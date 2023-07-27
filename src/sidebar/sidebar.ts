@@ -83,7 +83,6 @@ async function main(): Promise<void> {
   Windows.reactive = reactive(Windows.reactive)
   Favicons.initFavicons(reactive)
   Bookmarks.reactive = reactive(Bookmarks.reactive)
-  Tabs.reactive = reactive(Tabs.reactive)
   Tabs.initTabs(reactive)
   DnD.reactive = reactive(DnD.reactive)
   Permissions.reactive = reactive(Permissions.reactive)

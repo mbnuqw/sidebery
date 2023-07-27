@@ -8,6 +8,10 @@ import * as TabsShadow from 'src/services/tabs.fg.shadow'
 import * as TabsScroll from 'src/services/tabs.fg.scroll'
 import * as TabsEditTitle from 'src/services/tabs.fg.edit-title'
 import * as TabsColors from 'src/services/tabs.fg.colors'
+import * as TabsRm from 'src/services/tabs.fg.rm'
+import * as TabsMove from 'src/services/tabs.fg.move'
+import * as TabsCreate from 'src/services/tabs.fg.create'
+import * as TabsMedia from 'src/services/tabs.fg.media'
 
 export interface TabsReactiveState {
   pinnedIds: ID[]
@@ -53,4 +57,8 @@ export const Tabs = {
   ...TabsScroll,
   ...TabsEditTitle,
   ...TabsColors,
+  ...TabsRm,
+  ...TabsMove,
+  ...TabsCreate,
+  ...TabsMedia,
 }

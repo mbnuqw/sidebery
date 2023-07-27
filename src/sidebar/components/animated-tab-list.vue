@@ -4,11 +4,11 @@
 </template>
 
 <script lang="ts" setup>
+import { ref, onMounted, onBeforeUpdate, onUpdated } from 'vue'
 import { Settings } from 'src/services/settings'
 import { Sidebar } from 'src/services/sidebar'
 import { Tabs } from 'src/services/tabs.fg'
 import { TabsPanel } from 'src/types'
-import { ref, onMounted, onBeforeUpdate, onUpdated } from 'vue'
 
 interface SdbrHTMLElement extends HTMLElement {
   __sdbr_isTab?: boolean
