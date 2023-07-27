@@ -9,7 +9,6 @@
   @drop="onDrop")
   .tab-wrapper(v-for="id in pinnedTabs" :key="id" :data-targeted="DnD.reactive.dstPin && dropId === id")
     Tab(:tabId="id" :iconOnly="iconOnly")
-  .to-the-end(v-if="pinnedTabs.length")
 </template>
 
 <script lang="ts" setup>

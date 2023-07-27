@@ -39,7 +39,7 @@
 
 #root[data-pinned-tabs-position="left"]:not([data-nav-layout="horizontal"]) .PinnedTabsBar
 #root[data-pinned-tabs-position="right"]:not([data-nav-layout="horizontal"]) .PinnedTabsBar
-  padding: calc(var(--general-margin) - var(--s-darker-border-width, 0px)) 0 0
+  padding: calc(var(--general-margin) - var(--s-darker-border-width, 0px)) 0 var(--tabs-margin)
   
 // Left/Right stacked with navbar
 #root[data-pinned-tabs-position="left"][data-nav-layout="left"] .PinnedTabsBar
@@ -128,43 +128,17 @@
   width: 100%
   height: 2px
 
-// ---
-// -- The last drop position
-// -
-.PinnedTabsBar .to-the-end
-  position: relative
-  opacity: 0
-  &:before
-    content: ''
-    position: absolute
-    top: 0
-    left: 0
-    background-color: var(--s-accent, var(--frame-el-overlay-selected-border))
-    box-shadow: 0 0 0 1px var(--frame-bg)
-    z-index: 2000
-
-#root[data-pinned-tabs-position="panel"] .PinnedTabsBar .to-the-end
-#root[data-pinned-tabs-position="top"] .PinnedTabsBar .to-the-end
-  &:before
-    left: -2px
-    width: 2px
-    height: var(--tabs-pinned-height)
-
-#root[data-pinned-tabs-position="panel"][data-pinned-tabs-list="true"] .PinnedTabsBar .to-the-end
-#root[data-pinned-tabs-position="top"][data-pinned-tabs-list="true"] .PinnedTabsBar .to-the-end
-  width: 100%
-  &:before
-    top: 0
-    width: 100%
-    height: 2px
-
-#root[data-pinned-tabs-position="left"] .PinnedTabsBar .to-the-end
-#root[data-pinned-tabs-position="right"] .PinnedTabsBar .to-the-end
-  width: 100%
-  &:before
-    top: -2px
-    width: var(--tabs-pinned-width)
-    height: 2px
-
-#root[data-drag="true"] .PinnedTabsBar[data-dnd-end="true"] .to-the-end
-  opacity: 1
+#root[data-drag="true"] .PinnedTabsBar[data-dnd-end="true"] .tab-wrapper:last-of-type:after
+  display: block
+  left: auto
+  right: -2px
+#root[data-pinned-tabs-position="panel"][data-pinned-tabs-list="true"]
+#root[data-pinned-tabs-position="top"][data-pinned-tabs-list="true"]
+#root[data-pinned-tabs-position="left"]
+#root[data-pinned-tabs-position="right"]
+  .PinnedTabsBar[data-dnd-end="true"] .tab-wrapper:last-of-type:after
+    display: block
+    left: auto
+    right: auto
+    top: auto
+    bottom: 0
