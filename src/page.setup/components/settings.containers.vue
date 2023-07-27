@@ -3,7 +3,7 @@ section(ref="el")
   h2 {{translate('settings.containers_title')}}
   span.header-shadow
   .card(
-    v-for="(container, id) in Containers.reactive.byId"
+    v-for="(container, id) in Containers.sortContainers(Object.values(Containers.reactive.byId))"
     :key="container.id"
     :data-color="container.color")
     .card-body(@click="SetupPage.reactive.selectedContainer = container")

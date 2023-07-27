@@ -298,3 +298,9 @@ export function getContainerFor(url: string): string | undefined {
 
   return
 }
+
+export function sortContainers(containers: Container[]): Container[] {
+  return containers.sort(function(a, b) {
+    return a.name.localeCompare(b.name)
+  })
+}

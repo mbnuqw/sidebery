@@ -121,7 +121,7 @@ export const menuOptions: Record<string, () => MenuOption | MenuOption[] | undef
     const opts: MenuOption[] = []
     const ignoreRules = Menu.ctxMenuIgnoreContainersRules
 
-    for (const c of Object.values(Containers.reactive.byId)) {
+    for (const c of Containers.sortContainers(Object.values(Containers.reactive.byId))) {
       if (ignoreRules?.[c.id]) continue
       opts.push({
         label: c.name,

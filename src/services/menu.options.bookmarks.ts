@@ -102,7 +102,7 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
 
     if (!Windows.incognito) {
       const ignoreRules = Menu.ctxMenuIgnoreContainersRules
-      for (const c of Object.values(Containers.reactive.byId)) {
+      for (const c of Containers.sortContainers(Object.values(Containers.reactive.byId))) {
         if (ignoreRules?.[c.id]) continue
         opts.push({
           label: translate('menu.bookmark.open_in_') + c.name,
