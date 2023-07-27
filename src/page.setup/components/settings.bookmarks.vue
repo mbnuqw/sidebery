@@ -149,6 +149,10 @@ async function fetchBookmarksFavicons(): Promise<void> {
   }
 
   state.fetchingBookmarksFavs = true
+  state.fetchingBookmarksFavsAll = 0
+  state.fetchingBookmarksFavsDone = 0
+  state.fetchingBookmarksFavsErrors = 0
+  state.fetchingBookmarksFavsPercent = 0
 
   const stored = await browser.storage.local.get<Stored>('favDomains')
   const favDomains: string[] = Object.keys(stored?.favDomains ?? {})
@@ -184,10 +188,7 @@ async function fetchBookmarksFavicons(): Promise<void> {
     IPC.bg('saveFavicon', hosts[host], icon)
   }
 
-  state.fetchingBookmarksFavsAll = 0
-  state.fetchingBookmarksFavsDone = 0
-  state.fetchingBookmarksFavsErrors = 0
-  state.fetchingBookmarksFavsPercent = 0
+  state.fetchingBookmarksFavs = false
 
   setTimeout(() => {
     IPC.broadcast({ dstType: InstanceType.sidebar, action: 'loadFavicons' })
