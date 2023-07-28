@@ -201,6 +201,8 @@ export function open(type: MenuType, x?: number, y?: number, customForced?: bool
         }
       }
     }
+
+    resetNativeMenu(120)
     return
   }
 
@@ -382,6 +384,10 @@ export function close(): void {
   closeCallbacks.forEach(cb => cb())
   Menu.isOpen = false
 }
+
+const resetNativeMenu = Utils.debounce(() => {
+  Menu.isOpen = false
+})
 
 /**
  * Block ctx menu for 500ms
