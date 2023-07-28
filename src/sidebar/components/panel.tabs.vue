@@ -80,6 +80,11 @@ function onMouseDown(e: MouseEvent): void {
   if (Selection.isSet()) return
 
   if (e.button === 0) {
+    if (Menu.isOpen) {
+      Menu.close()
+      if (!Settings.state.ctxMenuNative) return
+    }
+
     const la = Settings.state.tabsPanelLeftClickAction
     if (la === 'prev') return Sidebar.switchPanel(-1)
     if (la === 'expand') {
