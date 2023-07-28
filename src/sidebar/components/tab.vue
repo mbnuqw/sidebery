@@ -188,6 +188,33 @@ function onMouseDown(e: MouseEvent): void {
   else if (e.button === 1) {
     e.preventDefault()
     Mouse.blockWheel()
+
+    if (e.ctrlKey) {
+      if (Settings.state.tabMiddleClickCtrl === 'discard') {
+        Tabs.discardTabs([tab.id])
+        return
+      } else if (Settings.state.tabMiddleClickCtrl === 'duplicate') {
+        Tabs.duplicateTabs([tab.id])
+        return
+      } else if (Settings.state.tabMiddleClickCtrl === 'edit_title') {
+        Tabs.editTabTitle([tab.id])
+        return
+      }
+    }
+
+    if (e.shiftKey) {
+      if (Settings.state.tabMiddleClickShift === 'discard') {
+        Tabs.discardTabs([tab.id])
+        return
+      } else if (Settings.state.tabMiddleClickShift === 'duplicate') {
+        Tabs.duplicateTabs([tab.id])
+        return
+      } else if (Settings.state.tabMiddleClickShift === 'edit_title') {
+        Tabs.editTabTitle([tab.id])
+        return
+      }
+    }
+
     if (Settings.state.multipleMiddleClose && Settings.state.tabMiddleClick === 'close') {
       Selection.resetSelection()
       Mouse.startMultiSelection(e, tab.id)
@@ -243,6 +270,13 @@ function onMouseUp(e: MouseEvent): void {
     activating = false
   } else if (e.button === 1) {
     Mouse.stopMultiSelection()
+
+    if (
+      e.ctrlKey && Settings.state.tabMiddleClickCtrl !== 'none' ||
+      e.shiftKey && Settings.state.tabMiddleClickShift !== 'none'
+    ) {
+      return
+    }
 
     if (
       Settings.state.multipleMiddleClose &&

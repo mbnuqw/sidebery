@@ -157,6 +157,20 @@ section(ref="el")
       :folded="true"
       @update:value="Settings.saveDebounced(150)")
     .sub-fields
+      SelectField(
+        label="settings.tab_middle_click_ctrl"
+        optLabel="settings.tab_action_"
+        v-model:value="Settings.state.tabMiddleClickCtrl"
+        :opts="Settings.getOpts('tabMiddleClickModifier')"
+        :folded="true"
+        @update:value="Settings.saveDebounced(150)")
+      SelectField(
+        label="settings.tab_middle_click_shift"
+        optLabel="settings.tab_action_"
+        v-model:value="Settings.state.tabMiddleClickShift"
+        :opts="Settings.getOpts('tabMiddleClickModifier')"
+        :folded="true"
+        @update:value="Settings.saveDebounced(150)")
       ToggleField(
         label="settings.multiple_middle_close"
         v-model:value="Settings.state.multipleMiddleClose"
