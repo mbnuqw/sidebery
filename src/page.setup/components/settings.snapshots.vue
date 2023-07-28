@@ -2,7 +2,7 @@
 section(ref="el")
   h2
     span {{translate('settings.snapshots_title')}}
-    .title-note   ({{state.snapshotsLen}}: ~{{state.snapshotsSize}})
+    .title-note   ({{state.snapshotsLen}}: ~{{state.snapshotsSize}} / 10 mb)
   span.header-shadow
   ToggleField(
     label="settings.snap_notify"
@@ -56,6 +56,7 @@ section(ref="el")
     v-model:unit="Settings.state.snapLimitUnit"
     :or="'none'"
     :unitOpts="SETTINGS_OPTIONS.snapLimitUnit"
+    :maxValue="Settings.state.snapLimitUnit === 'kb' ? MAX_SIZE_LIMIT : undefined"
     @update:value="Settings.saveDebounced(500)"
     @update:unit="Settings.saveDebounced(150)")
   .ctrls
@@ -71,6 +72,7 @@ import { Stored } from 'src/types'
 import * as IPC from 'src/services/ipc'
 import { Settings } from 'src/services/settings'
 import { SetupPage } from 'src/services/setup-page'
+import { MAX_SIZE_LIMIT } from 'src/services/snapshots.actions'
 import NumField from '../../components/num-field.vue'
 import TextField from '../../components/text-field.vue'
 import SelectField from '../../components/select-field.vue'

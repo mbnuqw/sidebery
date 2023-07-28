@@ -21,9 +21,9 @@ import { ItemInfo } from 'src/types/tabs'
 import { Info } from './info'
 import { createDefaultSidebarConfig, getSidebarConfigFromV4 } from './sidebar-config'
 
+export const MAX_SIZE_LIMIT = 10_240
 const MIN_SNAP_INTERVAL = 60_000
 const MIN_LIMITING_COUNT = 1
-const MAX_SIZE_LIMIT = 50_000_000
 const GLOB_PINNED_ID = 'global_pinned'
 
 /**
@@ -612,14 +612,21 @@ async function openWindow(snapshot: NormalizedSnapshot, winIndex: number): Promi
 function limitSnapshots(snapshots: Snapshot[]): Snapshot[] | undefined {
   if (snapshots.length <= MIN_LIMITING_COUNT) return
 
-  const limit = Settings.state.snapLimit
-  const unit = Settings.state.snapLimitUnit
+  const normMaxSize = MAX_SIZE_LIMIT * 1024
+  let limit = Settings.state.snapLimit
+  let unit = Settings.state.snapLimitUnit
 
-  if (!limit) return snapshots
+  if (!limit || limit < 0) {
+    limit = MAX_SIZE_LIMIT
+    unit = 'kb'
+  }
 
   let normLimit = limit
   if (unit === 'day') normLimit = Date.now() - limit * 86400000
-  if (unit === 'kb') normLimit = limit * 1024
+  else if (unit === 'kb') {
+    if (limit > MAX_SIZE_LIMIT) limit = MAX_SIZE_LIMIT
+    normLimit = limit * 1024
+  }
 
   let index = snapshots.length
   let accum = 0
@@ -639,7 +646,7 @@ function limitSnapshots(snapshots: Snapshot[]): Snapshot[] | undefined {
 
     if (unit === 'day' && snapshot.time < normLimit) break
 
-    if (sizeAccum > MAX_SIZE_LIMIT) break
+    if (sizeAccum > normMaxSize) break
   }
 
   index++

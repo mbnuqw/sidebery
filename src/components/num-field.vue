@@ -36,6 +36,7 @@ interface NumFieldProps {
   unitLabel?: string
   allowNegative?: boolean
   note?: string
+  maxValue?: number
 }
 
 const emit = defineEmits(['update:value', 'update:unit'])
@@ -52,8 +53,9 @@ function valueFilter(e: Event): number | void {
     target.value = '-'
     return
   }
-  const val = parseInt(raw)
+  let val = parseInt(raw)
   if (isNaN(val) || (!props.allowNegative && val < 0)) return 0
+  if (props.maxValue !== undefined && val > props.maxValue) val = props.maxValue
   return val
 }
 
