@@ -284,6 +284,9 @@ function onTabCreated(nativeTab: NativeTab, attached?: boolean): void {
   if (!tab.favIconUrl && !tab.internal && !tab.url.startsWith('a')) {
     tab.reactive.favIconUrl = tab.favIconUrl = Favicons.getFavicon(tab.url)
   }
+  if (!attached && !Settings.state.autoExpandTabsOnNew && Tabs.byId[tab.parentId]?.folded) {
+    tab.invisible = true
+  }
 
   // Check if tab should be reopened in different container
   if (
@@ -301,7 +304,7 @@ function onTabCreated(nativeTab: NativeTab, attached?: boolean): void {
   Tabs.list.splice(index, 0, tab)
   Tabs.reactivateTab(tab)
   Sidebar.recalcTabsPanels()
-  Sidebar.addToVisibleTabs(panel.id, tab)
+  if (!tab.invisible) Sidebar.addToVisibleTabs(panel.id, tab)
   Tabs.updateUrlCounter(tab.url, 1)
 
   // Update tree
