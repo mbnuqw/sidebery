@@ -82,7 +82,7 @@ function onMouseDown(e: MouseEvent): void {
   if (e.button === 0) {
     if (Menu.isOpen) {
       Menu.close()
-      if (!Settings.state.ctxMenuNative) return
+      return
     }
 
     const la = Settings.state.tabsPanelLeftClickAction

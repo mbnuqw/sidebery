@@ -124,7 +124,7 @@ function onMouseDownClose(e: MouseEvent): void {
   Mouse.setTarget('tab.close', tab.id)
   if (Menu.isOpen) {
     Menu.close()
-    if (!Settings.state.ctxMenuNative) return
+    return
   }
   if (Tabs.editableTabId === tab.id) {
     tab.reactive.customTitle = tab.title
@@ -154,7 +154,7 @@ function onMouseDown(e: MouseEvent): void {
 
   if (Menu.isOpen) {
     Menu.close()
-    if (!Settings.state.ctxMenuNative && e.button === 0) return
+    if (e.button === 0) return
   }
   if (tab.reactive.customTitleEdit) return
 
