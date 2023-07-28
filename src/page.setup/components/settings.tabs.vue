@@ -115,10 +115,10 @@ section(ref="el")
       :inactive="!Settings.state.showNewTabBtns"
       :opts="Settings.getOpts('newTabBarPosition')"
       @update:value="Settings.saveDebounced(150)")
-  ToggleField(
-    label="settings.tab_warmup_on_hover"
-    v-model:value="Settings.state.tabWarmupOnHover"
-    @update:value="Settings.saveDebounced(150)")
+  //- ToggleField(
+  //-   label="settings.tab_warmup_on_hover"
+  //-   v-model:value="Settings.state.tabWarmupOnHover"
+  //-   @update:value="Settings.saveDebounced(150)")
 
   .wrapper
     .sub-title: .text {{translate('settings.new_tab_position')}}

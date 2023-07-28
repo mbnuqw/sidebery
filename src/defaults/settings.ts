@@ -82,7 +82,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
   tabsPanelSwitchActMoveAuto: true,
   tabsUrlInTooltip: 'full',
   newTabCtxReopen: false,
-  tabWarmupOnHover: false,
+  tabWarmupOnHover: true,
 
   // New tab position
   moveNewTabPin: 'start',

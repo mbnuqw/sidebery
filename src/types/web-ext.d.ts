@@ -332,6 +332,7 @@ declare namespace browser {
     function saveAsPDF(pageSettings: PageSettings): Promise<SavePDFResult>
     function duplicate(tabId: ID, opts?: DuplOpts): Promise<Tab>
     function executeScript(tabId: ID, opts: ExecuteOpts): Promise<any[]>
+    function warmup(tabId: ID): Promise<void>
 
     interface RemoveInfo {
       windowId: ID
