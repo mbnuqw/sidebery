@@ -1783,6 +1783,11 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     de: 'Unten',
     zh_CN: '底部',
     zh_TW: '底部',
+  },  
+  'settings.tab_warmup_on_hover': {
+    en: 'Preload tab contents on mouse hover (tab warmup)',
+    ru: 'Предварительная прогрузка вкладки при наведении мыши',
+    de: 'Tab-Inhalte beim Bewegen der Maus vorladen (Tab-Aufwärmen)',
   },
   'settings.select_active_tab_first': {
     en: 'Select the active tab first',

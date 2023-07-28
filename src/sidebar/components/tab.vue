@@ -25,6 +25,7 @@
   @contextmenu.stop="onCtxMenu"
   @mousedown.stop="onMouseDown"
   @mouseup.stop="onMouseUp"
+  @mouseenter.stop="onMouseEnter"
   @dblclick.prevent.stop="onDoubleClick")
   .dnd-layer(data-dnd-type="tab" :data-dnd-id="tab.id")
   .body
@@ -379,6 +380,10 @@ function onDragStart(e: DragEvent): void {
     if (dragImgEl) e.dataTransfer.setDragImage(dragImgEl, -3, -3)
     e.dataTransfer.effectAllowed = 'copyMove'
   }
+}
+
+function onMouseEnter(e: MouseEvent){
+  if (Settings.state.tabWarmupOnHover) browser.tabs.warmup(tab.id)
 }
 
 function onAudioMouseDown(e: MouseEvent, tab: Tab): void {
