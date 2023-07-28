@@ -161,7 +161,6 @@ section(ref="el")
         label="settings.tab_middle_click_ctrl"
         optLabel="settings.tab_action_"
         v-model:value="Settings.state.tabMiddleClickCtrl"
-        :inactive="Settings.state.tabMiddleClick !== 'close'"
         :opts="Settings.getOpts('tabMiddleClickModifier')"
         :folded="true"
         @update:value="Settings.saveDebounced(150)")
@@ -169,7 +168,6 @@ section(ref="el")
         label="settings.tab_middle_click_shift"
         optLabel="settings.tab_action_"
         v-model:value="Settings.state.tabMiddleClickShift"
-        :inactive="Settings.state.tabMiddleClick !== 'close'"
         :opts="Settings.getOpts('tabMiddleClickModifier')"
         :folded="true"
         @update:value="Settings.saveDebounced(150)")
