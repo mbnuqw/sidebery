@@ -3214,11 +3214,11 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
   'settings.tab_middle_click': {
     en: 'Middle click on tab',
     ru: 'Нажатие средней кнопкой мыши по вкладке',
-  },  
+  },
   'settings.tab_middle_click_ctrl': {
     en: 'With Ctrl key pressed',
     ru: 'С зажатой клавишей Ctrl',
-  },  
+  },
   'settings.tab_middle_click_shift': {
     en: 'With Shift key pressed',
     ru: 'С зажатой клавишей Shift',
