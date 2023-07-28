@@ -81,6 +81,7 @@ export interface SettingsState {
   tabsPanelSwitchActMoveAuto: boolean
   tabsUrlInTooltip: (typeof SETTINGS_OPTIONS.tabsUrlInTooltip)[number]
   newTabCtxReopen: boolean
+  tabWarmupOnHover: boolean
 
   // New tab position
   moveNewTabPin: (typeof SETTINGS_OPTIONS.moveNewTabPin)[number]
