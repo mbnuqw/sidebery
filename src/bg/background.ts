@@ -43,6 +43,8 @@ void (async function main() {
     continueUpgrade: continueUpgrade,
     saveInLocalStorage: Store.setFromRemoteFg,
     getSidebarTabs: Tabs.getSidebarTabs,
+    disableAutoReopening: WebReq.disableAutoReopening,
+    enableAutoReopening: WebReq.enableAutoReopening,
   })
 
   // Init first-need stuff

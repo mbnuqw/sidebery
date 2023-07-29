@@ -33,6 +33,7 @@ export interface Tab extends NativeTab {
   customColor?: string
   reloadOnActivation?: boolean
   moving?: boolean
+  preventAutoReopening?: boolean
 
   reactive: ReactiveTabProps
 }

@@ -253,7 +253,11 @@ export async function createFromDragEvent(e: DragEvent, dst: DstPlaceInfo): Prom
   }
 }
 
-export async function reopen(tabsInfo: ItemInfo[], dst: DstPlaceInfo): Promise<void> {
+export async function reopen(
+  tabsInfo: ItemInfo[],
+  dst: DstPlaceInfo,
+  idsMap?: Record<ID, ID>
+): Promise<void> {
   // Sort target tabs
   let minIndex = tabsInfo[0]?.index ?? 999999
   let maxIndex = tabsInfo[0]?.index ?? 0
@@ -282,7 +286,7 @@ export async function reopen(tabsInfo: ItemInfo[], dst: DstPlaceInfo): Promise<v
   }
 
   // Open new tabs
-  const idsMap: Record<ID, ID> = {}
+  if (!idsMap) idsMap = {}
   const result = await open(tabsInfo, dst, idsMap)
   if (!result) return Logs.err('Tabs: Cannot reopen tabs')
 
@@ -451,16 +455,22 @@ export async function reopenInContainer(ids: ID[], containerId: string) {
   const firstTab = Tabs.byId[ids[0]]
   if (!firstTab) return
 
+  const idsMap: Record<ID, ID> = {}
+  IPC.bg('disableAutoReopening', containerId, 1000)
+
   const items = Tabs.getTabsInfo(ids)
   setURLsFromTitles(items)
   const rule = Tabs.findMoveRuleBy(containerId, firstTab.lvl)
   const panel = Sidebar.panelsById[rule?.panelId ?? NOID]
   if (Utils.isTabsPanel(panel) && panel.id !== firstTab.panelId && !firstTab.pinned) {
     const dst = { panelId: panel.id, containerId: containerId, index: panel.nextTabIndex }
-    await Tabs.reopen(items, dst)
+    await Tabs.reopen(items, dst, idsMap)
   } else {
-    await Tabs.reopen(items, { panelId: firstTab.panelId, containerId, pinned: firstTab.pinned })
+    const dst = { panelId: firstTab.panelId, containerId, pinned: firstTab.pinned }
+    await Tabs.reopen(items, dst, idsMap)
   }
+
+  IPC.bg('enableAutoReopening', Object.values(idsMap))
 }
 
 function setURLsFromTitles(items: ItemInfo[]) {

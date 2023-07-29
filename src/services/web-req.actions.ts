@@ -24,6 +24,27 @@ const incHistory: Record<ID, string | null> = {}
 let ipCheckCtx: ID | undefined
 let userAgents: Record<ID, string> = {}
 
+let disableReopeningForContainer: string | undefined
+let disableAutoReopeningTimeout: number | undefined
+export function disableAutoReopening(containerId: string, delay: number) {
+  disableReopeningForContainer = containerId
+
+  clearTimeout(disableAutoReopeningTimeout)
+  disableAutoReopeningTimeout = setTimeout(() => {
+    disableReopeningForContainer = undefined
+  }, delay)
+}
+
+export function enableAutoReopening(excludeTabIds: ID[]) {
+  disableReopeningForContainer = undefined
+  clearTimeout(disableAutoReopeningTimeout)
+
+  for (const id of excludeTabIds) {
+    const tab = Tabs.byId[id]
+    if (tab) tab.preventAutoReopening = true
+  }
+}
+
 async function recreateTab(
   tab: Tab,
   info: browser.proxy.RequestDetails,
@@ -239,7 +260,13 @@ function proxyReqHandler(info: browser.proxy.RequestDetails): browser.proxy.Prox
   // Check hosts rules, if the rule is matched
   // return promise with the process of reopening new tab.
   // This will block request from the original tab.
-  if (tab && info.type === 'main_frame' && handledReqId !== info.requestId) {
+  if (
+    tab &&
+    !tab.preventAutoReopening &&
+    info.type === 'main_frame' &&
+    handledReqId !== info.requestId &&
+    (!disableReopeningForContainer || disableReopeningForContainer !== info.cookieStoreId)
+  ) {
     handledReqId = info.requestId
     let includedUrl
 

@@ -90,6 +90,9 @@ function onTabCreated(tab: browser.tabs.Tab): void {
 
   Tabs.byId[tab.id] = tab as Tab
 
+  const parentTab = Tabs.byId[tab.openerTabId ?? NOID]
+  if (parentTab && parentTab.preventAutoReopening) (tab as Tab).preventAutoReopening = true
+
   const tabWindow = Windows.byId[tab.windowId]
   if (!tabWindow) {
     const win: Window = {

@@ -54,6 +54,8 @@ export type BgActions = {
   continueUpgrade: () => void
   saveInLocalStorage: (newValues: Stored, srcInfo: IPCNodeInfo) => void
   getSidebarTabs: (windowId: ID, tabIds?: ID[]) => Promise<Tab[] | undefined>
+  disableAutoReopening: (containerId: string, delay: number) => void
+  enableAutoReopening: (excludeTabIds: ID[]) => void
 }
 
 export type SettingsActions = {
