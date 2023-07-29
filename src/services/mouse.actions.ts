@@ -34,10 +34,14 @@ let multiSelectionStartY = 0
 
 let targetType: TargetType | null = null
 let targetId: ID | undefined
+let ctxTargetType: TargetType | null = null
+let ctxTargetId: ID | undefined
 
 export function setTarget(type: TargetType, id?: ID): void {
   targetType = type
   targetId = id
+  ctxTargetType = type
+  ctxTargetId = id
   Mouse.longClickApplied = false
 }
 
@@ -47,9 +51,19 @@ export function resetTarget(): void {
   if (Mouse.resizing) stopResizing()
 }
 
+export function resetCtxTarget() {
+  ctxTargetType = null
+  ctxTargetId = undefined
+}
+
 export function isTarget(type: TargetType, id?: ID): boolean {
   if (id !== undefined) return id === targetId && targetType === type
   else return targetType === type
+}
+
+export function isCtxTarget(type: TargetType, id?: ID): boolean {
+  if (id !== undefined) return id === ctxTargetId && ctxTargetType === type
+  else return ctxTargetType === type
 }
 
 export function onMouseMove(e: MouseEvent): void {

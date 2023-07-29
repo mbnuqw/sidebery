@@ -157,6 +157,14 @@ function onRightMouseUp(e: MouseEvent): void {
 }
 
 function onNavCtxMenu(e: MouseEvent): void {
+  const sameTarget = Mouse.isCtxTarget('panel', props.panel.id)
+  Mouse.resetCtxTarget()
+  if (!sameTarget) {
+    e.stopPropagation()
+    e.preventDefault()
+    return
+  }
+
   if (
     Mouse.isLocked() ||
     !Settings.state.ctxMenuNative ||

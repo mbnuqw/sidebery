@@ -257,8 +257,13 @@ function onNewTabMouseUp(e: MouseEvent, btn?: NewTabBtn): void {
 }
 
 function onNewTabCtxMenu(e: MouseEvent): void {
-  // Show menu for selected tabs
-  if (Selection.isSet() && Mouse.isTarget('tab')) return
+  const sameTarget = Mouse.isCtxTarget('tab.new')
+  Mouse.resetCtxTarget()
+  if (!sameTarget) {
+    e.stopPropagation()
+    e.preventDefault()
+    return
+  }
 
   // Do not show menu if browser window is private
   if (Windows.incognito) {
