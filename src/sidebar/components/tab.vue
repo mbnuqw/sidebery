@@ -416,7 +416,9 @@ function onDragStart(e: DragEvent): void {
 }
 
 function onMouseEnter(e: MouseEvent) {
-  if (Settings.state.tabWarmupOnHover) browser.tabs.warmup(tab.id)
+  if (Settings.state.tabWarmupOnHover && !tab.active) {
+    browser.tabs.warmup(tab.id)
+  }
 }
 
 function onAudioMouseDown(e: MouseEvent, tab: Tab): void {
