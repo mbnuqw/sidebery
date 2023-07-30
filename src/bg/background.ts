@@ -1,5 +1,7 @@
 import { InstanceType, SavedGroup, Stored, TabSessionData, UpgradeMsg } from 'src/types'
 import { UpgradingState } from 'src/types'
+import { DEFAULT_SETTINGS, GROUP_URL, NOID, URL_URL, V4_GROUP_URL_LEN } from 'src/defaults'
+import { V4_URL_URL_LEN } from 'src/defaults'
 import * as IPC from 'src/services/ipc'
 import * as Logs from 'src/services/logs'
 import { Settings } from 'src/services/settings'
@@ -17,7 +19,6 @@ import { Menu } from 'src/services/menu'
 import { Styles } from 'src/services/styles'
 import { WebReq } from 'src/services/web-req'
 import * as Utils from 'src/utils'
-import { DEFAULT_SETTINGS, NOID } from 'src/defaults'
 import { translate } from 'src/dict'
 import { getSidebarConfigFromV4 } from 'src/services/sidebar-config'
 
@@ -363,11 +364,21 @@ function continueUpgrade(): void {
   if (_continueUpgrade) _continueUpgrade()
 }
 
+function upgradeV4GroupUrl(url: string): string {
+  let titleEndIndex: number | undefined = url.indexOf(':id:', V4_GROUP_URL_LEN)
+  if (titleEndIndex === -1) titleEndIndex = undefined
+  const newUrl = GROUP_URL + url.slice(V4_GROUP_URL_LEN, titleEndIndex)
+  return newUrl
+}
+
+function upgradeV4UrlUrl(url: string): string {
+  const newUrl = URL_URL + url.slice(V4_URL_URL_LEN)
+  return newUrl
+}
+
 async function recreateGroupTabs(): Promise<void> {
   const windows = await browser.windows.getAll({ windowTypes: ['normal'], populate: true })
-  const sideberyUrlBase = browser.runtime.getURL('')
-  const groupUrlBase = browser.runtime.getURL('sidebery/group.html')
-  const tabsCreating: Promise<browser.tabs.Tab>[] = []
+  const tabsCreating: Promise<browser.tabs.Tab | undefined>[] = []
 
   for (const win of windows) {
     if (win.id === undefined) continue
@@ -389,16 +400,20 @@ async function recreateGroupTabs(): Promise<void> {
       const tabData = tabsData[i]
       if (!tab || !tabData) continue
 
-      // Update legacy urls
-      if (tab.url.startsWith(sideberyUrlBase)) {
-        if (tab.url.includes('/group/group.html', 52)) {
-          tab.url = tab.url.replace('/group/group.html', '/sidebery/group.html')
-          browser.tabs.update(tab.id, { url: tab.url })
-        }
-        if (tab.url.includes('/url/url.html', 52)) {
-          tab.url = tab.url.replace('/url/url.html', '/sidebery/url.html')
-          browser.tabs.update(tab.id, { url: tab.url })
-        }
+      // Update group url of existed tab
+      if (Utils.isV4GroupUrl(tab.url)) {
+        tab.url = upgradeV4GroupUrl(tab.url)
+        await browser.tabs.update(tab.id, { url: tab.url }).catch(() => {
+          Logs.warn('Upgrade: Cannot update group page url')
+        })
+      }
+
+      // Update url-placeholder url of existed tab
+      if (Utils.isV4UrlUrl(tab.url)) {
+        tab.url = upgradeV4UrlUrl(tab.url)
+        await browser.tabs.update(tab.id, { url: tab.url }).catch(() => {
+          Logs.warn('Upgrade: Cannot update url-placeholder page url')
+        })
       }
 
       tabsMap[tabData.id] = tabData
@@ -413,7 +428,7 @@ async function recreateGroupTabs(): Promise<void> {
 
         // Set target index at which group tab should be created
         const index = i + indexOffset
-        tabsCreating.push(createUpgradedGroupTab(groupTabData, index, groupUrlBase, win.id))
+        tabsCreating.push(createUpgradedGroupTab(groupTabData, index, win.id))
         indexOffset++
 
         tabsMap[groupTabData.id] = groupTabData
@@ -424,7 +439,7 @@ async function recreateGroupTabs(): Promise<void> {
 
         while (groupTabData) {
           if (!existedParentTab) {
-            tabsCreating.push(createUpgradedGroupTab(groupTabData, index, groupUrlBase, win.id))
+            tabsCreating.push(createUpgradedGroupTab(groupTabData, index, win.id))
             indexOffset++
 
             tabsMap[groupTabData.id] = groupTabData
@@ -436,7 +451,11 @@ async function recreateGroupTabs(): Promise<void> {
     }
   }
 
-  await Promise.all(tabsCreating)
+  try {
+    await Promise.allSettled(tabsCreating)
+  } catch (err) {
+    Logs.err('recreateGroupTabs: Creating tabs', err)
+  }
 
   // Wait
   await Utils.sleep(1000)
@@ -445,16 +464,21 @@ async function recreateGroupTabs(): Promise<void> {
 async function createUpgradedGroupTab(
   groupTabData: SavedGroup,
   index: number,
-  groupUrlBase: string,
   windowId: ID
-): Promise<browser.tabs.Tab> {
-  const tab = await browser.tabs.create({
-    active: false,
-    index,
-    url: upgradeGroupPageUrl(groupUrlBase, groupTabData.url),
-    cookieStoreId: groupTabData.ctx,
-    windowId,
-  })
+): Promise<browser.tabs.Tab | undefined> {
+  let tab
+  try {
+    tab = await browser.tabs.create({
+      active: false,
+      index,
+      url: upgradeV4GroupUrl(groupTabData.url),
+      cookieStoreId: groupTabData.ctx,
+      windowId,
+    })
+  } catch (err) {
+    Logs.err('createUpgradedGroupTab: Cannot create tab', err)
+    return
+  }
 
   try {
     await browser.sessions.setTabValue(tab.id, 'data', {
@@ -463,33 +487,25 @@ async function createUpgradedGroupTab(
       parentId: groupTabData.parentId,
       folded: groupTabData.folded,
     })
-  } catch {
-    // :(
-    // anyway, we still have tabsDataCache...
+  } catch (err) {
+    Logs.err('createUpgradedGroupTab: Cannot save data', err)
   }
 
   return tab
 }
 
-function upgradeGroupPageUrl(groupUrlBase: string, oldUrl: string): string {
-  const pageConfIndex = oldUrl.indexOf('group/group.html#')
-  const pageConf = oldUrl.slice(pageConfIndex + 17)
-  const groupUrl = groupUrlBase + '#' + pageConf
-  return groupUrl
-}
-
 function upgradeTabsDataCache(oldStorage: Stored, newStorage: Stored): void {
   if (oldStorage.tabsData_v4) newStorage.tabsDataCache = oldStorage.tabsData_v4
-
-  const sideberyUrlBase = browser.runtime.getURL('')
 
   // Update internal urls
   if (newStorage.tabsDataCache) {
     for (const winTabs of newStorage.tabsDataCache) {
       for (const tab of winTabs) {
-        if (tab.url.startsWith(sideberyUrlBase)) {
-          tab.url = tab.url.replace('/group/group.html', '/sidebery/group.html')
-          tab.url = tab.url.replace('/url/url.html', '/sidebery/url.html')
+        if (Utils.isV4GroupUrl(tab.url)) {
+          tab.url = upgradeV4GroupUrl(tab.url)
+        }
+        if (Utils.isV4UrlUrl(tab.url)) {
+          tab.url = upgradeV4UrlUrl(tab.url)
         }
       }
     }
