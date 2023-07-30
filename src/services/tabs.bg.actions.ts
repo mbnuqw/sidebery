@@ -554,7 +554,8 @@ export function injectUrlPageScript(winId: ID, tabId: ID) {
       .catch(() => {
         Logs.warn('Tabs.injectUrlPageScript: Cannot inject init data, reloading tab (if active)...')
         const tab = Tabs.byId[tabId]
-        if (tab.active) {
+        if (tab.active && tab.reloadOnActivation === undefined) {
+          tab.reloadOnActivation = false
           browser.tabs.reload(tabId).catch(err => {
             Logs.err('Tabs.injectUrlPageScript: Cannot reload tab', err)
           })
@@ -608,7 +609,8 @@ export async function injectGroupPageScript(winId: ID, tabId: ID): Promise<void>
       .catch(() => {
         Logs.warn('Tabs.injectGroupPageScript: Cannot inject init data, reloading tab')
         const tab = Tabs.byId[tabId]
-        if (tab.active) {
+        if (tab.active && tab.reloadOnActivation === undefined) {
+          tab.reloadOnActivation = false
           browser.tabs.reload(tabId).catch(err => {
             Logs.err('Tabs.injectGroupPageScript: Cannot reload tab:', err)
           })
