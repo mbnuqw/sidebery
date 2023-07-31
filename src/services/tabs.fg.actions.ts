@@ -2562,6 +2562,7 @@ function updateSuccession(exclude?: ID[]) {
       browser.tabs.moveInSuccession([activeTab.id], target.id).catch(err => {
         Logs.err('Tabs.updateSuccession: Cannot update succession:', err)
       })
+      activeTab.successorTabId = target.id
       return target
     }
   }
