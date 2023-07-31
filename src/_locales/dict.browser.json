@@ -644,7 +644,7 @@
     "zh_TW": "複製網址"
   },
   "api_limit_info": {
-    "en": "Due to security-related API restrictions, Sidebery cannot open this link.",
+    "en": "Sidebery is unable to open this link due to security-related restrictions of Firefox.",
     "ru": "Из-за ограничений API, связанных с безопасностью, Sidebery не может открыть эту ссылку.",
     "de": "Aufgrund von sicherheitsrelevanten API Beschränkungen kann Sidebery diesen Link nicht öffnen.",
     "zh_CN": "由于安全相关的 API 限制，Sidebery 无法打开此链接。",
