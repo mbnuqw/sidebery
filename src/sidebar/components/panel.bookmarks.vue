@@ -253,6 +253,8 @@ onMounted(() => {
     scrollBoxEl = scrollBox.value.getScrollBox() ?? undefined
     if (scrollBoxEl) Sidebar.setPanelEls(props.panel.id, { scrollBox: scrollBoxEl })
   }
+
+  if (props.panel.id !== Sidebar.activePanelId) state.unrendered = true
 })
 
 function onDrop(): void {
