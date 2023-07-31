@@ -121,7 +121,8 @@ function onKBKey(e: KeyboardEvent, cmd: Command): void {
     if (Info.reactive.os === 'mac') keys.push('MacCtrl')
     else keys.push('Ctrl')
   }
-  if (e.altKey) keys.push('Alt')
+  if (e.metaKey && Info.reactive.os === 'mac') keys.push('Ctrl')
+  if (e.altKey && keys.length <= 1) keys.push('Alt')
   if (e.shiftKey && keys.length <= 1) keys.push('Shift')
 
   const LetterRe = /^[0-9A-Za-z]$/
