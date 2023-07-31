@@ -249,7 +249,8 @@ async function onMouseUp(e: MouseEvent): Promise<void> {
       // Open bookmark
       let conf = Bookmarks.getMouseOpeningConf(e.button)
       const useActiveTab = !newTabNeededInActPanel && conf.useActiveTab
-      Bookmarks.open([props.node.id], conf.dst, useActiveTab, conf.activateFirstTab)
+      const activateFirstTab = newTabNeededInActPanel || conf.activateFirstTab
+      Bookmarks.open([props.node.id], conf.dst, useActiveTab, activateFirstTab)
       if (conf.removeBookmark) Bookmarks.removeBookmarks([props.node.id], { noNotif: true })
     }
 
