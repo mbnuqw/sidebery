@@ -1065,6 +1065,7 @@ export async function discardTabs(tabIds: ID[] = []): Promise<void> {
         browser.tabs.moveInSuccession([activeTab.id], target.id).catch(err => {
           Logs.err('Tabs.discardTabs: Cannot update succession:', err)
         })
+        activeTab.successorTabId = target.id
       }
     }
   }
