@@ -265,6 +265,7 @@ function onKeyActivate(): void {
     const panelId = Selection.getFirst()
     if (Sidebar.reactive.hiddenPanelsPopup) Sidebar.reactive.hiddenPanelsPopup = false
     Sidebar.switchToPanel(panelId, false, false)
+    return
   }
 
   // Close hidden panels bar
