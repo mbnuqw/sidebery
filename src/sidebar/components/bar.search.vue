@@ -123,7 +123,9 @@ function onInput(e: Event) {
 }
 
 function onChange(e: Event): void {
-  Search.search(Search.rawValue)
+  const target = e.target as HTMLInputElement | null
+  const value = target?.value ?? ''
+  if (value !== Search.rawValue) Search.search(value)
 }
 
 function onFocus(e: Event): void {
