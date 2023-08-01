@@ -1412,19 +1412,19 @@ export const setupPageTranslations: Translations = {
     zh_CN: '不活跃',
     zh_TW: '不活躍',
   },
-  'settings.search_reset_on_panel_switch': {
-    en: 'Stop search on panel switching',
-    ru: 'Остановить поиск при переключении панели',
+  'settings.search_panel_switch': {
+    en: 'Keep searching when switching panels',
+    ru: 'Продолжать поиск при переключении панелей',
   },
-  'settings.search_reset_on_panel_switch_any': {
-    en: 'on',
-    ru: 'вкл',
+  'settings.search_panel_switch_any': {
+    en: 'any panel',
+    ru: 'любая панель',
   },
-  'settings.search_reset_on_panel_switch_dif_type': {
-    en: 'if panels are of different type',
-    ru: 'если панели разного типа',
+  'settings.search_panel_switch_same_type': {
+    en: 'same panel type',
+    ru: 'тот же тип панели',
   },
-  'settings.search_reset_on_panel_switch_none': {
+  'settings.search_panel_switch_none': {
     en: 'off',
     ru: 'выкл',
   },

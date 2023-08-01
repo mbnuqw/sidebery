@@ -55,7 +55,7 @@ export const DEFAULT_SETTINGS: SettingsState = {
 
   // Search
   searchBarMode: 'dynamic',
-  searchResetOnPanelSwitch: 'dif_type',
+  searchPanelSwitch: 'same_type',
   searchBookmarksShortcut: '',
   searchHistoryShortcut: '',
 
@@ -292,7 +292,7 @@ export const SETTINGS_OPTIONS = {
   colorizeTabsSrc: ['domain', 'container'],
   colorizeTabsBranchesSrc: ['url', 'domain'],
   searchBarMode: ['static', 'dynamic', 'none'],
-  searchResetOnPanelSwitch: ['any', 'dif_type', 'none'],
+  searchPanelSwitch: ['any', 'same_type', 'none'],
   newTabBarPosition: ['after_tabs', 'bottom'],
   oldBookmarksAfterSave: ['ask', 'del', 'keep'],
   switchPanelAfterSwitchingTab: ['always', 'mouseleave', 'no'],
