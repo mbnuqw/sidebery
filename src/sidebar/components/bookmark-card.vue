@@ -36,6 +36,7 @@ import { Tabs } from 'src/services/tabs.fg'
 import { Mouse } from 'src/services/mouse'
 import { DnD } from 'src/services/drag-and-drop'
 import { FOLDER_NAME_DATA_RE } from 'src/defaults'
+import { Search } from 'src/services/search'
 
 const props = defineProps<{ node: Bookmark; panelId: ID }>()
 
@@ -90,7 +91,10 @@ async function onMouseDown(e: MouseEvent): Promise<void> {
   // Middle
   else if (e.button === 1) {
     e.preventDefault()
-    if (Selection.isBookmarks()) return Selection.resetSelection()
+    if (Selection.isBookmarks()) {
+      Selection.resetSelection()
+      if (!Search.rawValue) return
+    }
 
     const action = Settings.state.bookmarksMidClickAction
     if (action === 'open_in_new') {
