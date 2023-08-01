@@ -1093,9 +1093,16 @@ export function activatePanel(panelId: ID, loadPanels = true): void {
   if (prevPanel) Sidebar.lastActivePanelId = Sidebar.activePanelId
   Sidebar.reactive.activePanelId = Sidebar.activePanelId = panelId
 
-  if (Search.reactive.value && prevPanel) {
-    if (loading) loading.then(() => Search.search())
-    else Search.search()
+  if (Search.rawValue && prevPanel) {
+    if (
+      Settings.state.searchResetOnPanelSwitch === 'any' ||
+      (Settings.state.searchResetOnPanelSwitch === 'dif_type' && prevPanel.type !== panel.type)
+    ) {
+      Search.stop()
+    } else {
+      if (loading) loading.then(() => Search.search())
+      else Search.search()
+    }
   }
 
   if (Utils.isTabsPanel(prevPanel)) Sidebar.lastTabsPanelId = prevPanel.id

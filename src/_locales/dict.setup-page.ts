@@ -1412,6 +1412,22 @@ export const setupPageTranslations: Translations = {
     zh_CN: '不活跃',
     zh_TW: '不活躍',
   },
+  'settings.search_reset_on_panel_switch': {
+    en: 'Stop search on panel switching',
+    ru: 'Остановить поиск при переключении панели',
+  },
+  'settings.search_reset_on_panel_switch_any': {
+    en: 'on',
+    ru: 'вкл',
+  },
+  'settings.search_reset_on_panel_switch_dif_type': {
+    en: 'if panels are of different type',
+    ru: 'если панели разного типа',
+  },
+  'settings.search_reset_on_panel_switch_none': {
+    en: 'off',
+    ru: 'выкл',
+  },
   'settings.search.shortcuts': {
     en: 'Shortcuts',
     ru: 'Быстрый доступ',

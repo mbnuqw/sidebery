@@ -8,6 +8,13 @@ section(ref="el")
     v-model:value="Settings.state.searchBarMode"
     :opts="Settings.getOpts('searchBarMode')"
     @update:value="Settings.saveDebounced(150)")
+  SelectField(
+    label="settings.search_reset_on_panel_switch"
+    optLabel="settings.search_reset_on_panel_switch_"
+    v-model:value="Settings.state.searchResetOnPanelSwitch"
+    :opts="Settings.getOpts('searchResetOnPanelSwitch')"
+    :folded="true"
+    @update:value="Settings.saveDebounced(150)")
   InfoField(
     label="settings.search.shortcuts"
     :value="translate('settings.search.shortcuts.note')")
