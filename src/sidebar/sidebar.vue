@@ -273,9 +273,10 @@ function onDocumentKeyup(e: KeyboardEvent): void {
     }
 
     // Search bar
-    if (Search.reactive.barIsShowed) {
+    if (Search.reactive.barIsShowed && Settings.state.searchBarMode === 'dynamic') {
       Search.stop()
-      return
+    } else if (Search.rawValue) {
+      Search.stop()
     }
 
     // Sub-panel
