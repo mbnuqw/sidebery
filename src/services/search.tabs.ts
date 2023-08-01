@@ -64,8 +64,7 @@ export function onTabsSearch(activePanel: Panel, noSel?: boolean): void {
       Selection.resetSelection()
     }
   } else {
-    if (value) findInAnotherPanel()
-    else Search.reset(activePanel)
+    Search.reset(activePanel)
   }
 }
 
