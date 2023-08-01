@@ -1,10 +1,11 @@
 import * as Utils from 'src/utils'
 import { Panel, Bookmark, BookmarksPanel, DstPlaceInfo } from 'src/types'
+import { BKM_ROOT_ID, NOID } from 'src/defaults'
 import { Bookmarks } from 'src/services/bookmarks'
 import { Search } from 'src/services/search'
 import { Sidebar } from 'src/services/sidebar'
 import { Selection } from './selection'
-import { BKM_ROOT_ID, NOID } from 'src/defaults'
+import { Tabs } from 'src/services/tabs.fg'
 
 function ancestorIsFiltered(node: Bookmark, folders: Record<ID, Bookmark>): boolean {
   let parent = Bookmarks.reactive.byId[node.parentId]
@@ -202,6 +203,11 @@ export function onBookmarksSearchEnter(actPanel: Panel, panel?: Panel) {
     if (bookmark.type === 'bookmark') {
       const dst: DstPlaceInfo = {}
       if (Utils.isTabsPanel(actPanel)) dst.panelId = actPanel.id
+      else {
+        dst.panelId = Sidebar.getRecentTabsPanelId()
+        const panel = Sidebar.panelsById[dst.panelId]
+        if (Utils.isTabsPanel(panel)) dst.index = Tabs.getIndexForNewTab(panel)
+      }
       Bookmarks.open([bookmark.id], dst, false, true)
     }
   }
