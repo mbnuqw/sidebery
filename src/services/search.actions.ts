@@ -394,8 +394,10 @@ function blur() {
 }
 
 export function toggleBar(): void {
-  if (Search.reactive.barIsShowed) hideBar()
-  else showBar()
+  if (Search.reactive.barIsShowed) {
+    if (Search.rawValue) stop()
+    else hideBar()
+  } else showBar()
 }
 
 export function showBar(): void {
