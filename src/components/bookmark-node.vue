@@ -119,7 +119,10 @@ async function onMouseDown(e: MouseEvent): Promise<void> {
   // Middle
   else if (e.button === 1) {
     e.preventDefault()
-    if (Selection.isBookmarks()) return Selection.resetSelection()
+    if (Selection.isBookmarks()) {
+      Selection.resetSelection()
+      if (!Search.rawValue) return
+    }
 
     // Bookmark
     if (props.node.type === 'bookmark' && props.node.url) {
