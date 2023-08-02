@@ -292,6 +292,7 @@ async function upgrade(): Promise<void> {
     'bookmarksPanelMenu',
     'cssVars',
     'expandedBookmarks',
+    'panelIndex',
   ]
   try {
     await browser.storage.local.remove<Stored>(toRemove)

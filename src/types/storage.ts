@@ -29,6 +29,7 @@ export interface Stored {
 
   sidebar?: SidebarConfig
   panels_v4?: OldPanelConfig[] // DEPR
+  panelIndex?: number // DEPR
 
   snapshots?: Snapshot[]
   snapshots_v4?: Snapshot_v4[] // DEPR
