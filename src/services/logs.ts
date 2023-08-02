@@ -19,11 +19,11 @@ export function setTabId(id: ID): void {
   if (id !== NOID) _tabId = `:${id}`
 }
 
-export function info<T extends Array<any>>(msg: string, ...args: T): void {
+export function info<T extends Array<unknown>>(msg: string, ...args: T): void {
   console.log(`[${_type}${_winId}${_tabId}] ${msg}`, ...args)
 }
 
-export function warn<T extends Array<any>>(msg: string, ...args: T): void {
+export function warn<T extends Array<unknown>>(msg: string, ...args: T): void {
   console.warn(`[${_type}${_winId}${_tabId}] ${msg}`, ...args)
 }
 

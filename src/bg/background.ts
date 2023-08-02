@@ -141,7 +141,7 @@ async function upgrade(): Promise<void> {
     stored = await browser.storage.local.get<Stored>()
   } catch (err) {
     Logs.err('Upgrading: Cannot get stored data', err)
-    const errStr = err ? err.toString() : ''
+    const errStr = err instanceof Error ? err.toString() : ''
     msg = upgradeMsg(translate('upgrade.err.get_stored'), errStr, 'err')
     upgrading.status = 'err'
   }
@@ -300,7 +300,7 @@ async function upgrade(): Promise<void> {
     try {
       await browser.storage.local.clear()
     } catch (err) {
-      const errStr = err ? err.toString() : ''
+      const errStr = err instanceof Error ? err.toString() : ''
       Logs.err('Upgrade: Cannot clear storage', err)
       msg = upgradeMsg(translate('upgrade.err.clear_stored'), errStr, 'err')
       await Utils.sleep(250)
@@ -315,7 +315,7 @@ async function upgrade(): Promise<void> {
   try {
     await browser.storage.local.set<Stored>(newStorage)
   } catch (err) {
-    const errStr = err ? err.toString() : ''
+    const errStr = err instanceof Error ? err.toString() : ''
     Logs.err('Upgrade: Cannot set new values', err)
     msg = upgradeMsg(translate('upgrade.err.set_stored'), errStr, 'err')
     await Utils.sleep(250)
