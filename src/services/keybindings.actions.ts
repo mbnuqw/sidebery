@@ -406,7 +406,7 @@ function onKeySelect(dir: number): void {
         target.panelId !== activePanel.id
 
       if (!target || wrongPanel) {
-        target = dir > 0 ? tabs[0] : tabs[tabs.length - 1]
+        target = dir > 0 ? tabs[0] : tabs.findLast(t => !t.invisible)
       }
     } else {
       let afterSel = false
@@ -419,7 +419,7 @@ function onKeySelect(dir: number): void {
     }
 
     if (!target) {
-      if (dir > 0) target = tabs[tabs.length - 1]
+      if (dir > 0) target = tabs.findLast(t => !t.invisible)
       else target = tabs[0]
       if (!target) return
     }
