@@ -675,8 +675,8 @@ export const setupPageTranslations: Translations = {
     zh_TW: '在左邊顯示滾動條',
   },
   'settings.sel_win_screenshots': {
-    en: 'Show screenshots in the window selection menu',
-    ru: 'Показывать скриншоты в меню выбора окна',
+    en: 'Show screenshots in the window selection menu when moving tabs via context menu',
+    ru: 'Показывать скриншоты в меню выбора окна при перемещении вкладок через контекстное меню',
     de: 'Screenshots im Fenster-Auswahl-Menü anzeigen',
     zh_CN: '在窗口选择菜单中显示屏幕截图',
     zh_TW: '在窗口選擇菜單中顯示屏幕截圖',
