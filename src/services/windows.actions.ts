@@ -7,6 +7,7 @@ import * as Logs from 'src/services/logs'
 import { Tabs } from 'src/services/tabs.bg'
 import { Settings } from 'src/services/settings'
 import * as IPC from './ipc'
+import { Containers } from './containers'
 
 export async function loadWindows(): Promise<void> {
   const windows = await browser.windows.getAll({ windowTypes: ['normal'], populate: false })
@@ -178,6 +179,9 @@ export async function createWithTabs(
 
       if (info.url && !info.pinned && !info.active) conf.discarded = true
       if (info.title && conf.discarded) conf.title = info.title
+      if (info.container !== undefined && Containers.reactive.byId[info.container]) {
+        conf.cookieStoreId = info.container
+      }
 
       processingTabs.push(browser.tabs.create(conf))
     }
