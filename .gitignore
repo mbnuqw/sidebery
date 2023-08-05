@@ -3,7 +3,6 @@
 dist
 node_modules
 coverage
-wiki
 addon
 build/*
 !build/*.js
