@@ -1733,37 +1733,53 @@ export function flattenTabs(tabIds: ID[]): void {
 
   // Gather children
   let minLvlTab = { lvl: 999 } as Tab
-  const toFlat: ID[] = []
-  const ttf: Tab[] = []
+  const idsToFlatten: ID[] = []
+  const tabsToFlatten: Tab[] = []
   for (const id of tabIds) {
     const tab = Tabs.byId[id]
     if (tab) {
-      ttf.push(tab)
-      toFlat.push(id)
+      idsToFlatten.push(id)
+      tabsToFlatten.push(tab)
     }
   }
   for (const tab of Tabs.list) {
     if (tab.hidden) continue
-    if (toFlat.includes(tab.id) && tab.lvl < minLvlTab.lvl) minLvlTab = tab
-    if (toFlat.includes(tab.parentId)) {
-      if (!toFlat.includes(tab.id)) {
-        toFlat.push(tab.id)
-        ttf.push(tab)
+    if (idsToFlatten.includes(tab.id) && tab.lvl < minLvlTab.lvl) minLvlTab = tab
+    if (idsToFlatten.includes(tab.parentId)) {
+      if (!idsToFlatten.includes(tab.id)) {
+        idsToFlatten.push(tab.id)
+        tabsToFlatten.push(tab)
       }
       if (tab.lvl < minLvlTab.lvl) minLvlTab = tab
     }
   }
 
   if (!minLvlTab.parentId) return
-  for (const tab of ttf) {
+
+  let updVisibleTabsNeeded = false
+  let updVisPanelId: ID | undefined
+  for (const tab of tabsToFlatten) {
     tab.reactive.lvl = tab.lvl = minLvlTab.lvl
     tab.parentId = minLvlTab.parentId
+    if (tab.invisible) {
+      tab.invisible = false
+
+      if (updVisPanelId === undefined) updVisPanelId = tab.panelId
+      else if (updVisPanelId !== tab.panelId) updVisPanelId = NOID
+
+      if (!updVisibleTabsNeeded) updVisibleTabsNeeded = true
+    }
     if (tab.parentId === -1) browser.tabs.update(tab.id, { openerTabId: tab.id })
   }
 
-  updateTabsTree(ttf[0].index - 1, ttf[ttf.length - 1].index + 1)
+  updateTabsTree(tabsToFlatten[0].index - 1, tabsToFlatten[tabsToFlatten.length - 1].index + 1)
 
-  ttf.forEach(t => saveTabData(t.id))
+  if (updVisibleTabsNeeded) {
+    if (updVisPanelId === NOID) Sidebar.recalcVisibleTabs()
+    else Sidebar.recalcVisibleTabs(updVisPanelId)
+  }
+
+  tabsToFlatten.forEach(t => saveTabData(t.id))
   cacheTabsData()
 }
 
