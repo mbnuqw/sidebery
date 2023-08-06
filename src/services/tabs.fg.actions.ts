@@ -1756,27 +1756,23 @@ export function flattenTabs(tabIds: ID[]): void {
 
   if (!minLvlTab.parentId) return
 
-  let updVisibleTabsNeeded = false
-  let updVisPanelId: ID | undefined
+  let updVisPanelId: ID | undefined = NOID
   for (const tab of tabsToFlatten) {
     tab.reactive.lvl = tab.lvl = minLvlTab.lvl
     tab.parentId = minLvlTab.parentId
     if (tab.invisible) {
       tab.invisible = false
 
-      if (updVisPanelId === undefined) updVisPanelId = tab.panelId
-      else if (updVisPanelId !== tab.panelId) updVisPanelId = NOID
-
-      if (!updVisibleTabsNeeded) updVisibleTabsNeeded = true
+      if (updVisPanelId === NOID) updVisPanelId = tab.panelId
+      else if (updVisPanelId && updVisPanelId !== tab.panelId) updVisPanelId = undefined
     }
     if (tab.parentId === -1) browser.tabs.update(tab.id, { openerTabId: tab.id })
   }
 
   updateTabsTree(tabsToFlatten[0].index - 1, tabsToFlatten[tabsToFlatten.length - 1].index + 1)
 
-  if (updVisibleTabsNeeded) {
-    if (updVisPanelId === NOID) Sidebar.recalcVisibleTabs()
-    else Sidebar.recalcVisibleTabs(updVisPanelId)
+  if (updVisPanelId !== NOID) {
+    Sidebar.recalcVisibleTabs(updVisPanelId)
   }
 
   tabsToFlatten.forEach(t => saveTabData(t.id))
