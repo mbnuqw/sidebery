@@ -159,7 +159,10 @@ function onSidebarResize(): void {
     // Changed width
     if (Sidebar.width !== document.body.offsetWidth) {
       Sidebar.width = document.body.offsetWidth
-      if (horizontalNavBarEl) Sidebar.reactive.horNavWidth = horizontalNavBarEl.offsetWidth
+
+      if (horizontalNavBarEl) {
+        Sidebar.reactive.horNavWidth = horizontalNavBarEl.offsetWidth
+      }
 
       if (panelsBoxEl) {
         const panelsBoxBounds = panelsBoxEl.getBoundingClientRect()
@@ -232,6 +235,10 @@ export function recalcSidebarSize(): void {
         Sidebar.scrollAreaRightX = 0
         Sidebar.scrollAreaLeftX = panelsBoxBounds.left - area
       }
+    }
+
+    if (horizontalNavBarEl) {
+      Sidebar.reactive.horNavWidth = horizontalNavBarEl.offsetWidth
     }
   }, 500)
 }
