@@ -92,6 +92,8 @@ async function main(): Promise<void> {
   Styles.reactive = reactive(Styles.reactive)
   initUpgrading(reactive)
 
+  Sidebar.updateFontSize()
+
   const app = createApp(SidebarRoot)
   app.mount('#root_container')
 
@@ -99,9 +101,7 @@ async function main(): Promise<void> {
     return showUpgradingScreen()
   }
 
-  Sidebar.updateFontSize()
   Settings.setupSettingsChangeListener()
-
   Permissions.setupListeners()
   Windows.setupWindowsListeners()
   Containers.setupContainersListeners()
