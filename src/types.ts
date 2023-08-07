@@ -312,6 +312,7 @@ export interface Dialog {
   buttons: DialogBtn[]
   buttonsCentered?: boolean
   buttonsInline?: boolean
+  buttonsDefaultFocus?: string
   result: (answer: string | null) => void
 }
 
@@ -334,6 +335,7 @@ export interface DialogConfig {
   buttons: DialogBtn[]
   buttonsCentered?: boolean
   buttonsInline?: boolean
+  buttonsDefaultFocus?: string
 }
 
 export interface TabsPanelRemoving {

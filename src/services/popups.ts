@@ -105,6 +105,7 @@ export function ask(conf: DialogConfig): Promise<string | null> {
       buttons: conf.buttons,
       buttonsCentered: conf.buttonsCentered,
       buttonsInline: conf.buttonsInline,
+      buttonsDefaultFocus: conf.buttonsDefaultFocus,
       result: (answer: string | null) => {
         ok(answer)
         reactive.dialog = null

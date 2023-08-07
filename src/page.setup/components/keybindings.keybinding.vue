@@ -84,6 +84,7 @@ async function onKBBlur(cmd: Command) {
           { label: translate('btn.yes'), value: 'set' },
           { label: translate('btn.no'), value: '-' },
         ],
+        buttonsDefaultFocus: 'set',
       })
       if (result === 'set') {
         removeKeybinding(dup)
