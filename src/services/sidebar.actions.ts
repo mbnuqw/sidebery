@@ -433,12 +433,13 @@ export function removeFromVisibleTabs(panelId: ID, tabId: ID) {
   if (index !== -1) visibleTabIds.splice(index, 1)
 }
 
-let checkDiscardedTabsInPanelTimeout: number | undefined
+const checkDiscardedTabsInPanelTimeouts = new Map<ID, number>()
 export function checkDiscardedTabsInPanelDebounced(panelId: ID, delay: number) {
-  clearTimeout(checkDiscardedTabsInPanelTimeout)
-  checkDiscardedTabsInPanelTimeout = setTimeout(() => {
+  clearTimeout(checkDiscardedTabsInPanelTimeouts.get(panelId))
+  const timeout = setTimeout(() => {
     checkDiscardedTabsInPanel(panelId)
   }, delay)
+  checkDiscardedTabsInPanelTimeouts.set(panelId, timeout)
 }
 
 export function checkDiscardedTabsInPanel(panelId: ID) {
