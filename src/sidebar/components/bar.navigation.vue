@@ -25,7 +25,6 @@
       v-for="(item, i) in nav.visibleStaticButtons"
       :key="item.id"
       :item="item"
-      :inlineIndex="getBtnInlineIndex(i)"
       :dndType="'nav-item'"
       @dragstart="onNavDragStart($event, item)"
       @drop="onNavItemDrop(item)"
@@ -40,6 +39,17 @@
     @mousedown="Sidebar.closeHiddenPanelsPopup()")
     .hidden-panels-popup(:data-offset-side="Sidebar.reactive.hiddenPanelsPopupOffsetSide")
       .hidden-panels-popup-content(@mousedown.stop @mouseup.stop)
+        NavItemComponent(
+          v-if="nav?.inlineOverflowed"
+          v-for="item in nav?.visibleItems.filter((_, i) => getBtnInlineIndex(i) === -1)"
+          :key="item.id"
+          :item="item"
+          :dndType="'hidden-panel'"
+          @dragstart="onNavDragStart($event, item)"
+          @drop="onNavItemDrop(item)"
+          @mousedown="onNavMouseDown($event, item)"
+          @mouseup="onNavMouseUp($event, item, true)"
+          @contextmenu="onNavCtxMenu($event, item)")
         NavItemComponent(
           v-for="item in nav?.hiddenPanels"
           :key="item.id"
@@ -270,7 +280,8 @@ function getBtnInlineIndex(index: number): number {
   if (!visMax) return -1
 
   const visItems = nav.value?.visibleItems
-  let activeIndex = visItems.findIndex(btn => btn.id === Sidebar.reactive.activePanelId)
+  const activePanelId = Sidebar.reactive.activePanelId
+  let activeIndex = visItems.findIndex(btn => btn.id === activePanelId)
   if (activeIndex === -1) activeIndex = 0
   const halfCap = Math.floor(visMax / 2)
   let len = visItems?.length ?? 0
