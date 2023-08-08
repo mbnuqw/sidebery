@@ -709,25 +709,38 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
 
   // Handle pinned tab
   if (change.pinned !== undefined && change.pinned) {
-    let panel = Sidebar.panelsById[tab.panelId]
+    const prevPanelId = tab.prevPanelId
+    const panelId = tab.panelId
 
-    if (tab.prevPanelId && tab.moveTime && tab.moveTime + 1000 > Date.now()) {
-      tab.panelId = tab.prevPanelId
-      panel = Sidebar.panelsById[tab.panelId]
+    const prevPanel = Sidebar.panelsById[prevPanelId]
+    const panel = Sidebar.panelsById[panelId]
+
+    // The tab was moved to another panel during the pinning
+    // process so I need to restore the previous one.
+    if (prevPanel && tab.moveTime && tab.moveTime + 1000 > Date.now()) {
+      tab.panelId = prevPanelId
       Tabs.saveTabData(tab.id)
 
-      if (tab.active && tab.panelId !== Sidebar.activePanelId) {
+      // Switch back to the actual panel
+      if (
+        tab.active &&
+        panelId === Sidebar.activePanelId &&
+        prevPanelId !== Sidebar.activePanelId
+      ) {
         Sidebar.activatePanel(tab.panelId)
       }
     }
 
     Sidebar.recalcTabsPanels()
     Tabs.updateTabsTree()
-    Sidebar.recalcVisibleTabs(panel.id)
+    if (panel) Sidebar.recalcVisibleTabs(panelId)
+    if (prevPanel && panelId !== prevPanelId) Sidebar.recalcVisibleTabs(prevPanelId)
 
-    if (Utils.isTabsPanel(panel) && !panel.reactive.len) {
-      if (panel.noEmpty) {
-        Tabs.createTabInPanel(panel)
+    const actualPanel = Sidebar.panelsById[tab.panelId]
+
+    if (Utils.isTabsPanel(actualPanel) && !actualPanel.reactive.len) {
+      if (actualPanel.noEmpty) {
+        Tabs.createTabInPanel(actualPanel)
       }
     }
   }
