@@ -43,28 +43,28 @@
     "zh_TW": "切換到上一個面板"
   },
   "KbOpenNewTabInCurrPanel": {
-    "en": "Open new tab in active panel",
+    "en": "Open a new tab in the active panel",
     "ru": "Открыть вкладку в активной панели",
     "de": "Öffne neuen Tab im aktiven Panel",
     "zh_CN": "在活动面板中打开新标签页",
     "zh_TW": "在活動面板中打開新標籤頁"
   },
   "KbOpenNewTabAfter": {
-    "en": "Open new tab after active tab",
+    "en": "Open a new tab after the active tab",
     "ru": "Открыть вкладку после активной вкладки",
     "de": "Öffne neuen Tab nach aktivem Tab",
     "zh_CN": "在活动标签后打开新标签",
     "zh_TW": "在活動標籤後打開新標籤"
   },
   "KbOpenNewTabAsFirstChild": {
-    "en": "Open new tab as the first child of active tab",
+    "en": "Open a new tab as the first child of the active tab",
     "ru": "Открыть дочернюю вкладку (в начале ветви)",
     "de": "Öffne neuen Tab als erstes Unterelement des aktiven Tabs",
     "zh_CN": "打开新标签页作为活动标签的第一个子标签",
     "zh_TW": "打開新標籤頁作為活動標籤的第一個子標籤"
   },
   "KbOpenNewTabAsLastChild": {
-    "en": "Open new tab as the last child of active tab",
+    "en": "Open a new tab as the last child of the active tab",
     "ru": "Открыть дочернюю вкладку (в конце ветви)",
     "de": "Öffne neuen Tab als letztes Unterelement des aktiven Tabs",
     "zh_CN": "打开新标签页作为活动标签的最后一个子标签",

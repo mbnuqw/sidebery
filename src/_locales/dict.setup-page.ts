@@ -1968,7 +1968,7 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_TW: '僅當父標籤頁的面板處於活動狀態時',
   },
   'settings.ignore_folded_parent': {
-    en: 'Open new tab one level down if the parent tab is folded',
+    en: 'Open a new tab one level down if the parent tab is folded',
     ru: 'Открывать новую вкладку на уровень ниже, если родительская вкладка свернута',
   },
   'settings.move_new_tab': {
@@ -3684,7 +3684,7 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     ru: 'Вкладки',
   },
   'settings.kb_tabs_open': {
-    en: 'Open new tab',
+    en: 'Open a new tab',
     ru: 'Открыть новую вкладку',
   },
   'settings.kb_rm': {
@@ -4462,7 +4462,7 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
   'styles.css_selectors_instruction': {
     en: `NOTE: To get currently available css-selectors use debugger:
   - Click "Copy devtools URL" button in the bottom bar
-  - Open new tab with that URL
+  - Open a new tab with that URL
   - Select frame to inspect
     - Click on the rectangular icon (with three sections) in top-right area of the debugger page
     - Select "/sidebar/sidebar.html" for sidebar frame
