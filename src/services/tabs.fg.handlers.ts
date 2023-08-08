@@ -258,11 +258,10 @@ function onTabCreated(nativeTab: NativeTab, attached?: boolean): void {
     tab.moving = true
     browser.tabs
       .move(tab.id, { index })
-      .then(() => {
-        tab.moving = undefined
-      })
       .catch(err => {
         Logs.err('Tabs.onTabCreated: Cannot move the tab to the correct position:', err)
+      })
+      .finally(() => {
         tab.moving = undefined
       })
   }
