@@ -679,11 +679,20 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
 
   // Handle unpinned tab
   if (change.pinned !== undefined && !change.pinned) {
-    const panel = Sidebar.panelsById[tab.panelId]
+    let panel
+    if (Settings.state.pinnedTabsPosition === 'panel') {
+      panel = Sidebar.panelsById[tab.panelId]
+    } else {
+      panel = Sidebar.panelsById[Sidebar.activePanelId]
+      if (!Utils.isTabsPanel(panel)) panel = Sidebar.panelsById[Sidebar.lastTabsPanelId]
+    }
+    if (!Utils.isTabsPanel(panel)) panel = Sidebar.panels.find(Utils.isTabsPanel)
+
     if (Utils.isTabsPanel(panel)) {
-      if (!tab.unpinning && panel.startTabIndex !== undefined) {
+      // Tab unpinning wasn't handled, do it here
+      if (!tab.unpinning) {
         const startIndex = panel.startTabIndex
-        tab.dstPanelId = tab.panelId
+        tab.dstPanelId = tab.panelId = panel.id
         Tabs.list.splice(tab.index, 1)
         Tabs.list.splice(startIndex - 1, 0, tab)
         Tabs.updateTabsIndexes()
@@ -694,9 +703,15 @@ function onTabUpdated(tabId: ID, change: browser.tabs.ChangeInfo, nativeTab: Nat
         if (relGroupTab) {
           Tabs.replaceRelGroupWithPinnedTab(relGroupTab, tab)
         } else {
-          browser.tabs.move(tabId, { index: startIndex - 1 }).catch(err => {
-            Logs.err('Tabs.onTabUpdated: Cannot move unpinned tab:', err)
-          })
+          tab.moving = true
+          browser.tabs
+            .move(tabId, { index: startIndex - 1 })
+            .catch(err => {
+              Logs.err('Tabs.onTabUpdated: Cannot move unpinned tab:', err)
+            })
+            .finally(() => {
+              tab.moving = undefined
+            })
         }
       }
       if (nativeTab.active) Sidebar.activatePanel(panel.id)
