@@ -352,15 +352,18 @@ function onKeyNewTabAfter(): void {
   if (!activeTab) return
 
   let index = activeTab.index + 1
-  for (let t; index < Tabs.list.length; index++) {
-    t = Tabs.list[index]
-    if (t.lvl <= activeTab.lvl) break
+  if (!activeTab.pinned) {
+    for (let t; index < Tabs.list.length; index++) {
+      t = Tabs.list[index]
+      if (t.lvl <= activeTab.lvl) break
+    }
   }
 
   Tabs.setNewTabPosition(index, activeTab.parentId, activeTab.panelId)
 
   const conf: browser.tabs.CreateProperties = {
     index,
+    pinned: activeTab.pinned,
     cookieStoreId: activeTab.cookieStoreId,
     windowId: Windows.id,
   }
