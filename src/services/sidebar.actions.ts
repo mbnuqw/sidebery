@@ -1314,7 +1314,7 @@ export function switchPanel(
       if (panel.skipOnSwitching) continue
       break
     }
-  } else if (!ignoreHidden) {
+  } else {
     for (let i = actIndex + dir; i >= 0 || i < hiddenPanels.length; i += dir) {
       panel = hiddenPanels[i]
       newActIsHidden = true
@@ -1332,7 +1332,7 @@ export function switchPanel(
     }
   }
 
-  if (newActIsHidden && !hiddenPanelsPopupIsShown) {
+  if (newActIsHidden && !hiddenPanelsPopupIsShown && !ignoreHidden) {
     Sidebar.openHiddenPanelsPopup()
   }
 
