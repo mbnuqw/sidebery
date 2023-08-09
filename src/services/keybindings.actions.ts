@@ -856,13 +856,17 @@ async function onKeyMoveTabs(dir: 1 | -1) {
         targetIndex = firstTab.index
       }
     } else {
-      const nextTab = panel.tabs.find(t => {
-        return (
-          t.index > firstTab.index && !toMoveById[t.id] && !(t.isParent && t.folded) && !t.invisible
-        )
-      })
+      const fIndex = firstTab.index
+      const nextTab = panel.tabs.find(t => t.index > fIndex && !toMoveById[t.id] && !t.invisible)
+
       if (nextTab) {
-        targetIndex = nextTab.index + 1
+        if (nextTab.isParent && nextTab.folded) {
+          const branchLen = Tabs.getBranchLen(nextTab.id) ?? 0
+          targetIndex = nextTab.index + 1 + branchLen
+        } else {
+          targetIndex = nextTab.index + 1
+        }
+
         if (nextTab.isParent && !nextTab.folded) rootParentId = nextTab.id
         else rootParentId = nextTab.parentId
         // Decrease tree lvl (only change parentId)
