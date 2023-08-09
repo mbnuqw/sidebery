@@ -9,6 +9,7 @@ export interface SidebarReactiveState {
 
   horNavWidth: number
   navBtnWidth: number
+  navBtnMargin: number
 
   hiddenPanelsPopup: boolean
   hiddenPanelsPopupOffset: number
@@ -38,6 +39,7 @@ export const Sidebar = {
 
     horNavWidth: 0,
     navBtnWidth: 0,
+    navBtnMargin: 0,
 
     hiddenPanelsPopup: false,
     hiddenPanelsPopupOffset: 0,

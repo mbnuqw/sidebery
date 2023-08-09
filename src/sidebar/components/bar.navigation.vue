@@ -202,13 +202,14 @@ const nav = computed<Nav | undefined>(() => {
   if (isInline) {
     const horNavWidth = Sidebar.reactive.horNavWidth
     const navBtnWidth = Sidebar.reactive.navBtnWidth
+    const navBtnMargin = Sidebar.reactive.navBtnMargin
 
     nav.visibleStaticButtons = []
     nav.hiddenStaticButtons = []
 
     // Calc max count of all elements
-    const availableWidth = horNavWidth - 2
-    inlineMax = ~~(availableWidth / (navBtnWidth + 1))
+    const availableWidth = horNavWidth - navBtnMargin
+    inlineMax = ~~(availableWidth / (navBtnWidth + navBtnMargin))
 
     // Get static buttons
     const hasHiddenPanels = !!nav.hiddenPanels?.length

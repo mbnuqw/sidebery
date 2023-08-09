@@ -39,7 +39,7 @@
 
 #root[data-pinned-tabs-position="left"]:not([data-nav-layout="horizontal"]) .PinnedTabsBar
 #root[data-pinned-tabs-position="right"]:not([data-nav-layout="horizontal"]) .PinnedTabsBar
-  padding: calc(var(--general-margin) - var(--s-darker-border-width, 0px)) 0 var(--tabs-margin)
+  padding: calc(var(--general-margin) - var(--s-darker-border-width, 0px)) 0 calc(var(--tabs-margin) * 2)
   
 // Left/Right stacked with navbar
 #root[data-pinned-tabs-position="left"][data-nav-layout="left"] .PinnedTabsBar
@@ -47,7 +47,7 @@
   height: auto
 #root[data-pinned-tabs-position="left"][data-nav-layout="left"][data-drag="true"] .PinnedTabsBar
 #root[data-pinned-tabs-position="right"][data-nav-layout="right"][data-drag="true"] .PinnedTabsBar
-  padding: calc(var(--general-margin) - var(--s-darker-border-width, 0px)) 0 calc(var(--tabs-margin) + 16px)
+  padding: calc(var(--general-margin) - var(--s-darker-border-width, 0px)) 0 16px
 
 // Top
 #root[data-pinned-tabs-position="top"] .PinnedTabsBar

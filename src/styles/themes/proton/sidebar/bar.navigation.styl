@@ -8,6 +8,7 @@
   --nav-btn-fg: var(--toolbar-fg)
   --nav-btn-accent: var(--accent)
   --nav-btn-len-margin: 0px
+  --nav-btn-border-radius: var(--general-border-radius)
   --nav-hidden-btn-border-radius: var(--general-border-radius)
   --nav-hidden-panels-popup-margin: 3px
 #root[data-density="compact"]
@@ -21,11 +22,9 @@
   --nav-btn-height: 32px
   --nav-btn-len-margin: 1px
 #root[data-toolbar-color-scheme="dark"]
-  --nav-btn-border-radius: var(--general-border-radius)
-  --nav-btn-active-shadow: inset 0 0 0 1px var(--s-accent, #ffffff08), 0 1px 3px 0 #00000036
+  --nav-btn-active-shadow: inset 0 0 0 1px var(--s-accent, #ffffff12), 0 1px 3px 0 #00000036
 #root[data-toolbar-color-scheme="light"]
-  --nav-btn-border-radius: 2px
-  --nav-btn-active-shadow: inset 0 0 0 1px var(--s-accent, #00000008), inset 0 1px 3px 0 #00000016
+  --nav-btn-active-shadow: inset 0 0 0 1px var(--s-accent, #00000016), inset 0 1px 3px 0 #00000016
 
 #root .NavigationBar
   --nav-btn-badge-left: 18px
@@ -48,7 +47,7 @@
   box-shadow: 0 0 0 1px var(--s-toolbar-border, transparent)
   &.-top
     width: 100%
-    padding: 0
+    padding: var(--nav-btn-margin)
     z-index: 3000
   &.-vert
     width: 100%
@@ -63,12 +62,12 @@
 
 .PinnedTabsBar[data-empty="false"] + .NavigationBar[data-layout="left"]
   border-top-right-radius: var(--general-border-radius)
-  padding: 0
+  padding: calc(var(--nav-btn-margin) + 1px) 0 0
   .main-items .nav-item:first-of-type
     border-top-right-radius: var(--general-border-radius)
 .PinnedTabsBar[data-empty="false"] + .NavigationBar[data-layout="right"]
   border-top-left-radius: var(--general-border-radius)
-  padding: 0
+  padding: calc(var(--nav-btn-margin) + 1px) 0 0
   .main-items .nav-item:first-of-type
     border-top-left-radius: var(--general-border-radius)
 
@@ -223,7 +222,7 @@
   // Button x position
   for i in 0..24
     &[data-index=\"{i}\"]
-      transform: "translateX(calc((var(--nav-btn-width) + 1px) * %s))" % i
+      transform: "translateX(calc((var(--nav-btn-width) + var(--nav-btn-margin)) * %s))" % i
 
 .NavigationBar.-vert .nav-item[data-type="hidden"] > svg
   transform: rotateZ(-90deg)
@@ -378,7 +377,7 @@
   position: relative
   display: flex
   flex-shrink: 0
-  grid-gap: 0 1px
+  grid-gap: 0 var(--nav-btn-margin)
 
 // ---
 // -- Hidden panels bar

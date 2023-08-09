@@ -196,6 +196,9 @@ export function recalcElementSizes(): void {
   const nbwRaw = compStyle.getPropertyValue('--nav-btn-width')
   Sidebar.reactive.navBtnWidth = Utils.parseCSSNum(nbwRaw.trim())[0]
 
+  const nbmRaw = compStyle.getPropertyValue('--nav-btn-margin')
+  Sidebar.reactive.navBtnMargin = Utils.parseCSSNum(nbmRaw.trim())[0]
+
   const thRaw = compStyle.getPropertyValue('--tabs-height')
   Sidebar.tabHeight = Utils.parseCSSNum(thRaw.trim())[0]
 
