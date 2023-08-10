@@ -27,44 +27,48 @@ section(ref="el")
     @update:value="saveSyncKb()")
   .sync-data(v-if="state.syncedSettings")
     .sync-title {{translate('settings.sync_settings_title')}}
-    .sync-list
-      .sync-item(v-for="item in state.syncedSettings" :title="item.tooltip")
-        .sync-name {{item.name || item.profileId}}
-        .sync-info {{item.timeYYYYMMDD}}
-        .sync-info {{item.timeHHMM}}
-        .sync-info {{item.size}} / 8 kb
-        .btn.sync-btn(@click.stop="applySyncData(item)") {{translate('settings.sync_apply_btn')}}
-        .btn.sync-btn.-warn(@click.stop="deleteSyncData(item.id)") {{translate('settings.sync_delete_btn')}}
+    table.sync-list
+      tr.sync-item(v-for="item in state.syncedSettings" :title="item.tooltip" :data-same-profile="item.sameProfile")
+        td.sync-name {{item.name || item.profileId}}
+        td.sync-info {{item.timeYYYYMMDD}}
+        td.sync-info {{item.timeHHMM}}
+        td.sync-info {{item.size}} / 8 kb
+        td.sync-btns
+          .btn.sync-btn(@click.stop="applySyncData(item)") {{translate('settings.sync_apply_btn')}}
+          .btn.sync-btn.-warn(@click.stop="deleteSyncData(item.id)") {{translate('settings.sync_delete_btn')}}
   .sync-data(v-if="state.syncedCtxMenu")
     .sync-title {{translate('settings.sync_ctx_menu_title')}}
-    .sync-list
-      .sync-item(v-for="item in state.syncedCtxMenu" :title="item.tooltip")
-        .sync-name {{item.name || item.profileId}}
-        .sync-info {{item.timeYYYYMMDD}}
-        .sync-info {{item.timeHHMM}}
-        .sync-info {{item.size}} / 8kb
-        .btn.sync-btn(@click.stop="applySyncData(item)") {{translate('settings.sync_apply_btn')}}
-        .btn.sync-btn.-warn(@click.stop="deleteSyncData(item.id)") {{translate('settings.sync_delete_btn')}}
+    table.sync-list
+      tr.sync-item(v-for="item in state.syncedCtxMenu" :title="item.tooltip" :data-same-profile="item.sameProfile")
+        td.sync-name {{item.name || item.profileId}}
+        td.sync-info {{item.timeYYYYMMDD}}
+        td.sync-info {{item.timeHHMM}}
+        td.sync-info {{item.size}} / 8kb
+        td.sync-btns
+          .btn.sync-btn(@click.stop="applySyncData(item)") {{translate('settings.sync_apply_btn')}}
+          .btn.sync-btn.-warn(@click.stop="deleteSyncData(item.id)") {{translate('settings.sync_delete_btn')}}
   .sync-data(v-if="state.syncedStyles")
     .sync-title {{translate('settings.sync_styles_title')}}
-    .sync-list
-      .sync-item(v-for="item in state.syncedStyles" :title="item.tooltip")
-        .sync-name {{item.name || item.profileId}}
-        .sync-info {{item.timeYYYYMMDD}}
-        .sync-info {{item.timeHHMM}}
-        .sync-info {{item.size}} / 8kb
-        .btn.sync-btn(@click.stop="applySyncData(item)") {{translate('settings.sync_apply_btn')}}
-        .btn.sync-btn.-warn(@click.stop="deleteSyncData(item.id)") {{translate('settings.sync_delete_btn')}}
+    table.sync-list
+      tr.sync-item(v-for="item in state.syncedStyles" :title="item.tooltip" :data-same-profile="item.sameProfile")
+        td.sync-name {{item.name || item.profileId}}
+        td.sync-info {{item.timeYYYYMMDD}}
+        td.sync-info {{item.timeHHMM}}
+        td.sync-info {{item.size}} / 8kb
+        td.sync-btns
+          .btn.sync-btn(@click.stop="applySyncData(item)") {{translate('settings.sync_apply_btn')}}
+          .btn.sync-btn.-warn(@click.stop="deleteSyncData(item.id)") {{translate('settings.sync_delete_btn')}}
   .sync-data(v-if="state.syncedKeybindings")
     .sync-title {{translate('settings.sync_kb_title')}}
-    .sync-list
-      .sync-item(v-for="item in state.syncedKeybindings" :title="item.tooltip")
-        .sync-name {{item.name || item.profileId}}
-        .sync-info {{item.timeYYYYMMDD}}
-        .sync-info {{item.timeHHMM}}
-        .sync-info {{item.size}} / 8kb
-        .btn.sync-btn(@click.stop="applySyncData(item)") {{translate('settings.sync_apply_btn')}}
-        .btn.sync-btn.-warn(@click.stop="deleteSyncData(item.id)") {{translate('settings.sync_delete_btn')}}
+    table.sync-list
+      tr.sync-item(v-for="item in state.syncedKeybindings" :title="item.tooltip" :data-same-profile="item.sameProfile")
+        td.sync-name {{item.name || item.profileId}}
+        td.sync-info {{item.timeYYYYMMDD}}
+        td.sync-info {{item.timeHHMM}}
+        td.sync-info {{item.size}} / 8kb
+        td.sync-btns
+          .btn.sync-btn(@click.stop="applySyncData(item)") {{translate('settings.sync_apply_btn')}}
+          .btn.sync-btn.-warn(@click.stop="deleteSyncData(item.id)") {{translate('settings.sync_delete_btn')}}
   .note-field
     .label {{translate('settings.sync_notes_title')}}
     .note {{translate('settings.sync_notes')}}
@@ -183,7 +187,7 @@ async function applySyncData(info: StoredSyncValue): Promise<void> {
 
   const syncMajorVer = Info.getMajVer(info.ver)
   const currentMajorVer = Info.majorVersion
-  let data = info.value
+  let data = Utils.cloneObject(info.value)
 
   // Upgrade data
   if (!syncMajorVer || syncMajorVer !== currentMajorVer) {
@@ -195,6 +199,17 @@ async function applySyncData(info: StoredSyncValue): Promise<void> {
       try {
         data.settings = Utils.recreateNormalizedObject(old.settings, DEFAULT_SETTINGS)
         data.settings.theme = 'proton'
+        if (data.settings.tabDoubleClick !== 'none') {
+          data.settings.tabsSecondClickActPrev = false
+        }
+        if (old.settings.hScrollThroughPanels === true) {
+          data.settings.hScrollAction = 'switch_panels'
+        } else if (old.settings.hScrollThroughPanels === false) {
+          data.settings.hScrollAction = 'none'
+        }
+        if ((old.settings.moveNewTabPin as string) === 'none') {
+          data.settings.moveNewTabPin = 'start'
+        }
       } catch (err) {
         Logs.err('Cannot upgrade legacy settings', err)
         return window.alert(translate('settings.sync.apply_err'))
@@ -202,26 +217,26 @@ async function applySyncData(info: StoredSyncValue): Promise<void> {
     }
 
     // Upgrade menu
-    if (old.tabsMenu || old.tabsPanelMenu || old.bookmarksMenu || old.bookmarksPanelMenu) {
-      try {
-        data.contextMenu = {}
-        if (old.tabsMenu?.length) {
-          data.contextMenu.tabs = Menu.upgradeMenuConf(old.tabsMenu)
-        }
-        if (old.tabsPanelMenu?.length) {
-          data.contextMenu.tabsPanel = Menu.upgradeMenuConf(old.tabsPanelMenu)
-        }
-        if (old.bookmarksMenu?.length) {
-          data.contextMenu.bookmarks = Menu.upgradeMenuConf(old.bookmarksMenu)
-        }
-        if (old.bookmarksPanelMenu?.length) {
-          data.contextMenu.bookmarksPanel = Menu.upgradeMenuConf(old.bookmarksPanelMenu)
-        }
-      } catch (err) {
-        Logs.err('Cannot upgrade legacy menu', err)
-        return window.alert(translate('settings.sync.apply_err'))
-      }
-    }
+    // if (old.tabsMenu || old.tabsPanelMenu || old.bookmarksMenu || old.bookmarksPanelMenu) {
+    //   try {
+    //     data.contextMenu = {}
+    //     if (old.tabsMenu?.length) {
+    //       data.contextMenu.tabs = Menu.upgradeMenuConf(old.tabsMenu)
+    //     }
+    //     if (old.tabsPanelMenu?.length) {
+    //       data.contextMenu.tabsPanel = Menu.upgradeMenuConf(old.tabsPanelMenu)
+    //     }
+    //     if (old.bookmarksMenu?.length) {
+    //       data.contextMenu.bookmarks = Menu.upgradeMenuConf(old.bookmarksMenu)
+    //     }
+    //     if (old.bookmarksPanelMenu?.length) {
+    //       data.contextMenu.bookmarksPanel = Menu.upgradeMenuConf(old.bookmarksPanelMenu)
+    //     }
+    //   } catch (err) {
+    //     Logs.err('Cannot upgrade legacy menu', err)
+    //     return window.alert(translate('settings.sync.apply_err'))
+    //   }
+    // }
 
     // Upgrade styles
     if (old.sidebarCSS || old.groupCSS || old.cssVars) {
@@ -234,18 +249,49 @@ async function applySyncData(info: StoredSyncValue): Promise<void> {
     }
   }
 
-  // Keep sync settings
+  // Update settings
   if (data.settings) {
+    // Keep sync settings
     data.settings.syncName = Settings.state.syncName
     data.settings.syncSaveSettings = Settings.state.syncSaveSettings
     data.settings.syncSaveCtxMenu = Settings.state.syncSaveCtxMenu
     data.settings.syncSaveStyles = Settings.state.syncSaveStyles
+    data.settings.syncSaveKeybindings = Settings.state.syncSaveKeybindings
+
+    await Store.set({ settings: data.settings })
+    Settings.loadSettings()
   }
 
-  await Store.set(Utils.cloneObject(data))
+  // Update context menu
+  if (data.contextMenu) {
+    await Store.set({ contextMenu: data.contextMenu })
+    Menu.loadCtxMenu()
+  }
 
-  if (data.settings) Settings.loadSettings()
-  if (data.contextMenu) Menu.loadCtxMenu()
+  // Update styles
+  if (data.sidebarCSS || data.groupCSS) {
+    await Store.set({
+      sidebarCSS: data.sidebarCSS,
+      groupCSS: data.groupCSS,
+    })
+  }
+
+  // Update keybindings
+  if (data.keybindings) {
+    let waiting = []
+    for (const name of Object.keys(data.keybindings)) {
+      const shortcut = data.keybindings[name]
+      if (!name || !shortcut) continue
+
+      const toRm = Keybindings.reactive.list.find(c => c.shortcut === shortcut)
+      if (toRm?.name) waiting.push(browser.commands.update({ name: toRm.name, shortcut: '' }))
+
+      waiting.push(browser.commands.update({ name, shortcut }))
+    }
+
+    await Promise.allSettled(waiting)
+    Keybindings.loadKeybindings()
+  }
 }
 
 async function deleteSyncData(key?: string): Promise<void> {
@@ -294,6 +340,7 @@ function onSyncNameUpdated(): void {
   onSyncNameUpdatedTimeout = setTimeout(() => {
     if (Settings.state.syncSaveCtxMenu) saveSyncCtxMenu()
     if (Settings.state.syncSaveStyles) saveSyncStyles()
+    if (Settings.state.syncSaveKeybindings) saveSyncKb()
   }, 500)
   Settings.saveDebounced(500)
 }

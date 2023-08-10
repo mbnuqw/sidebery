@@ -9,17 +9,6 @@
   &:not(:first-of-type)
     margin-top: 3px
 
-  &:before
-    content: ''
-    position: absolute
-    top: 0
-    left: 0
-    width: 100%
-    height: 100%
-    border-radius: 3px
-    background-color: var(--toolbar-fg)
-    opacity: 0
-
   &:not(:first-of-type):after
     content: ''
     position: absolute
@@ -47,17 +36,12 @@
 
 .sync-list
   position: relative
-  display: grid
-  grid-template-columns: 1fr
-  grid-gap: 8px 0
+  display: table
+  table-layout: auto
   padding: 0 0 0 16px
 
 .sync-item
   position: relative
-  display: grid
-  justify-content: center
-  align-items: center
-  grid-template-columns: 12fr 5fr 3fr 3fr auto auto;
   &:before
     content: ''
     position: absolute
@@ -68,27 +52,49 @@
     border-radius: 4px
     background-color: var(--toolbar-fg)
     opacity: 0
+  &:after
+    content: ''
+    position: absolute
+    top: calc(50% - 2px)
+    left: -10px
+    width: 4px
+    height: 4px
+    border-radius: 50%
+    background-color: var(--toolbar-fg)
+    opacity: .3
+  &[data-same-profile="true"]:after
+    opacity: .7
   &:hover:before
     opacity: .03
 
 .sync-name
   position: relative
+  width: 100%
+  max-width: 100px
   font-size: rem(14)
   color: var(--toolbar-fg)
   opacity: .7
   white-space: nowrap
   overflow: hidden
   text-overflow: ellipsis
+  padding: 2px 8px 2px 2px
 
 .sync-info
   position: relative
   font-size: rem(12)
   color: var(--toolbar-fg)
-  margin-left: 8px
   opacity: .7
   white-space: nowrap
+  padding: 2px 8px
+
+.sync-item[data-same-profile="true"] .sync-name
+.sync-item[data-same-profile="true"] .sync-info
+  opacity: 1
+
+.sync-btns
+  display: flex
 
 .btn.sync-btn
   font-size: rem(12)
   padding: 3px 6px
-  margin-left: 8px
+  margin-left: 4px

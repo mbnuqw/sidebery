@@ -1,4 +1,4 @@
-import { Stored, StoredSync, Entries, IPCNodeInfo } from 'src/types'
+import { Stored, StoredSync, Entries, IPCNodeInfo, SyncedData } from 'src/types'
 import { Info } from './info'
 import * as IPC from './ipc'
 import * as Logs from './logs'
@@ -104,12 +104,16 @@ function setFromRemoteFg(newValues: Stored, srcInfo: IPCNodeInfo): void {
 }
 
 const changeHandlers: { [key in keyof Stored]?: ChangeHandler } = {}
-function onKeyChange<K extends keyof Stored, H extends ChangeHandlerG<K>>(key: K, cb: H): void {
-  if (changeHandlers[key]) throw Logs.err(`Storage: onKeyChange: "${key}" handler already exists`)
+
+function onKeyChange<K extends keyof Stored, H extends ChangeHandlerG<K>>(key: K, cb: H) {
+  if (changeHandlers[key]) {
+    throw Logs.err(`Storage: onKeyChange: "${key}" handler already exists`)
+  }
+
   changeHandlers[key] = cb as ChangeHandler
 }
 
-export async function sync(name: string, value: Stored): Promise<void> {
+export async function sync(name: string, value: SyncedData): Promise<void> {
   const keys = Object.keys(value)
   const profileId = await Info.getProfileId()
   const syncPropName = profileId + '::' + name

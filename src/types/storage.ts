@@ -35,8 +35,6 @@ export interface Stored {
   snapshots_v4?: Snapshot_v4[] // DEPR
   lastSnapTime?: number
 
-  keybindings?: { [name: string]: string }
-
   contextMenu?: MenuConfs
   tabsMenu?: ContextMenuConfig_v4 // DEPR
   bookmarksMenu?: ContextMenuConfig_v4 // DEPR
@@ -52,11 +50,27 @@ export interface Stored {
   bookmarksRecentFolders?: ID[]
 }
 
+export interface SyncedData {
+  settings?: SettingsState
+
+  contextMenu?: MenuConfs
+  tabsMenu?: ContextMenuConfig_v4 // DEPR
+  bookmarksMenu?: ContextMenuConfig_v4 // DEPR
+  tabsPanelMenu?: ContextMenuConfig_v4 // DEPR
+  bookmarksPanelMenu?: ContextMenuConfig_v4 // DEPR
+
+  cssVars?: CssVars // DEPR
+  sidebarCSS?: string
+  groupCSS?: string
+
+  keybindings?: { [name: string]: string }
+}
+
 export interface StoredSyncValue {
   ver?: string
   name: string
   time: number
-  value: Stored
+  value: SyncedData
 }
 
 export interface StoredSync {

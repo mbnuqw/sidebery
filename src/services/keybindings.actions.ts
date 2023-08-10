@@ -47,6 +47,7 @@ export async function saveKeybindingsToSync(): Promise<void> {
 
   await Store.sync('kb', { keybindings })
 }
+export const saveKeybindingsToSyncDebounced = Utils.debounce(saveKeybindingsToSync)
 
 /**
  * Reset addon's keybindings
@@ -82,11 +83,11 @@ export async function update(cmd: Command, details: CommandUpdateDetails): Promi
   Object.assign(cmd, details)
 
   if (details.shortcut !== undefined && cmd.name) {
-    await browser.commands.update({ name: cmd.name, shortcut: details.shortcut })
-
     if (Settings.state.syncSaveKeybindings) {
-      Keybindings.saveKeybindingsToSync()
+      Keybindings.saveKeybindingsToSyncDebounced(150)
     }
+
+    await browser.commands.update({ name: cmd.name, shortcut: details.shortcut })
   }
 }
 
