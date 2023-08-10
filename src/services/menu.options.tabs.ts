@@ -489,7 +489,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     const panel = Sidebar.panelsById[Selection.getFirst()]
     if (!Utils.isTabsPanel(panel)) return
 
-    const ids = panel.pinnedTabs.map(t => t.id).concat(panel.tabs.map(t => t.id))
+    const ids = panel.tabs.map(t => t.id)
     const option: MenuOption = {
       label: translate('menu.tabs_panel.sel_all'),
       icon: 'icon_sel_all',
