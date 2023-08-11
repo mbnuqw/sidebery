@@ -761,7 +761,7 @@ export const setupPageTranslations: Translations = {
     zh_TW: '例如 /^tmp.+/, Google, Facebook',
   },
   'settings.ctx_menu_ignore_ctr_note': {
-    en: 'Use comma-separated list of contaianers names or /regexp/',
+    en: 'Use comma-separated list of container names or /regexp/',
     ru: 'Список названий или /regexp/ через запятую',
     de: 'Komma-getrennte Liste von Umgebungsnamen oder /regexp/ verwenden',
     zh_CN: '使用逗号分隔的容器名称列表或 /regexp/',
