@@ -106,7 +106,6 @@ export interface SettingsState {
   autoExpandTabs: boolean
   autoExpandTabsOnNew: boolean
   rmChildTabs: (typeof SETTINGS_OPTIONS.rmChildTabs)[number]
-  tabsChildCount: boolean
   tabsLvlDots: boolean
   discardFolded: boolean
   discardFoldedDelay: number

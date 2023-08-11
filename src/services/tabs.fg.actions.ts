@@ -1495,8 +1495,6 @@ export function getBranchLen(id: ID): number | undefined {
  * Recalc length of branch
  */
 export function recalcBranchLen(id: ID): void {
-  if (!Settings.state.tabsChildCount) return
-
   const branchLen = Tabs.getBranchLen(id)
   if (branchLen === undefined) return
 

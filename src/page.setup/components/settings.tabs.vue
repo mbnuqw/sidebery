@@ -231,11 +231,6 @@ section(ref="el")
       :opts="Settings.getOpts('rmChildTabs')"
       @update:value="Settings.saveDebounced(150)")
     ToggleField(
-      label="settings.tabs_child_count"
-      v-model:value="Settings.state.tabsChildCount"
-      :inactive="!Settings.state.tabsTree"
-      @update:value="Settings.saveDebounced(150)")
-    ToggleField(
       label="settings.tabs_lvl_dots"
       :inactive="!Settings.state.tabsTree"
       v-model:value="Settings.state.tabsLvlDots"

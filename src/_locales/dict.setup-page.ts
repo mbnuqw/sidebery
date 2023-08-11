@@ -2280,13 +2280,6 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     de: 'Keine',
     zh_CN: '无',
   },
-  'settings.tabs_child_count': {
-    en: 'Show count of descendants on the folded tab',
-    ru: 'Показывать количество потомков на свернутой вкладке',
-    de: 'Wenn eingeklappt, zeige Zahl der untergeordneten Tabs',
-    zh_CN: '在折叠标签上显示后代数量',
-    zh_TW: '在折疊標籤上顯示後代數量',
-  },
   'settings.tabs_lvl_dots': {
     en: 'Show marks to indicate tabs sub-tree levels',
     ru: 'Показывать отметки уровней вложенности',
