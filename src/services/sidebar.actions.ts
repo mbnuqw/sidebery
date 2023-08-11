@@ -2033,7 +2033,7 @@ export async function bookmarkTabsPanel(
   if (!silent) {
     if (progress) Notifications.finishProgress(progress, 120)
     await Utils.sleep(250)
-    Notifications.notify({ icon: '#icon_bookmarks', title: translate('notif.done') })
+    Notifications.notify({ icon: '#icon_bookmarks', title: translate('notif.panel_bkmrkd') })
   }
 }
 
@@ -2356,7 +2356,7 @@ export async function convertToBookmarksPanel(panel: TabsPanel): Promise<Bookmar
   }, 200)
 
   Notifications.finishProgress(notif, 2000)
-  notif.title = translate('notif.done')
+  notif.title = translate('notif.panel_conv')
   Sidebar.convertingPanelLock = false
 
   return bookmarksPanel
@@ -2444,7 +2444,7 @@ export async function convertToTabsPanel(
   Sidebar.saveSidebar(300)
 
   Notifications.finishProgress(notif, 2000)
-  notif.title = translate('notif.done')
+  notif.title = translate('notif.panel_conv')
   Sidebar.convertingPanelLock = false
 
   return tabsPanel.id

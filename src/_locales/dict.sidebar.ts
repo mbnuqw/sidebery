@@ -622,11 +622,19 @@ export const sidebarTranslations: Translations = {
     zh_TW: '未找到根文件夾',
   },
   'notif.restore_from_bookmarks_ok': {
-    en: 'Tabs panel was restored',
-    ru: 'Панель вкладок восстановлена',
+    en: 'The tab panel has been successfully restored',
+    ru: 'Панель вкладок успешно восстановлена',
     de: 'Tab-Panel wiederhergestellt',
     zh_CN: '标签页面板已恢复',
     zh_TW: '標籤頁面板已恢復',
+  },
+  'notif.panel_conv': {
+    en: 'The panel has been successfully converted',
+    ru: 'Панель успешно преобразована',
+  },
+  'notif.panel_bkmrkd': {
+    en: 'The panel has been successfully bookmarked',
+    ru: 'Панель успешно добавлена в закладки',
   },
   'notif.done': {
     en: 'Done',
