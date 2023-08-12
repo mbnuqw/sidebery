@@ -74,6 +74,9 @@ export const sidebarTranslations: Translations = {
   'panel.history.show_more': {
     en: '...hidden visits:',
     ru: '...скрытых записей:',
+    zh_CN: '...隐藏的访问:',
+    zh_TW: '...隱藏的訪問:',
+
   },
 
   // ---
@@ -167,7 +170,7 @@ export const sidebarTranslations: Translations = {
     en: folderName => `Tabs have been saved in "${folderName}" folder`,
     ru: folderName => `Вкладки были сохранены в папке "${folderName}"`,
     de: folderName => `Tabs wurden im Ordner "${folderName}" gespeichert`,
-    zh_CN: folderName => `标签页已保存在 "${folderName}" 文件夾中`,
+    zh_CN: folderName => `标签页已保存在 "${folderName}" 文件夹中`,
     zh_TW: folderName => `标签页已保存在 "${folderName}" 文件夾中`,
   },
   'popup.wtdwOldBookmarks.note': {
@@ -419,6 +422,8 @@ export const sidebarTranslations: Translations = {
   'nav.tabs_panel_tooltip_mid_rm_rmp': {
     en: 'Middle click: Close tabs and remove panel',
     ru: 'Средняя кнопка мыши: Закрыть вкладки и удалить панель',
+    zh_CN: '中键点击：关闭标签并移除面板',
+    zh_TW: '中鍵點擊：關閉標籤並移除面板',
   },
   'nav.tabs_panel_tooltip_mid_rm_act_tab': {
     en: 'Middle click: Close active tab',
@@ -435,6 +440,8 @@ export const sidebarTranslations: Translations = {
   'nav.tabs_panel_tooltip_mid_hide': {
     en: 'Middle click: Hide panel',
     ru: 'Средняя кнопка мыши: Скрыть панель',
+    zh_CN: '中键单击：隐藏面板',
+    zh_TW: '中鍵單擊：隱藏面板',
   },
   'nav.tabs_panel_tooltip_mid_bookmark': {
     en: 'Middle click: Save to bookmarks',
@@ -445,6 +452,8 @@ export const sidebarTranslations: Translations = {
   'nav.tabs_panel_tooltip_mid_bkm_rmp': {
     en: 'Middle click: Save to bookmarks and remove panel',
     ru: 'Средняя кнопка мыши: Сохранить в закладки и удалить панель',
+    zh_CN: '中键点击：保存到书签并移除面板',
+    zh_TW: '中鍵點擊：保存到書籤並移除面板',
   },
   'nav.tabs_panel_tooltip_mid_convert': {
     en: 'Middle click: Convert to bookmarks panel',
@@ -455,6 +464,8 @@ export const sidebarTranslations: Translations = {
   'nav.tabs_panel_tooltip_mid_conv_hide': {
     en: 'Middle click: Convert to bookmarks and hide panel',
     ru: 'Средняя кнопка мыши: Конвертировать в панель закладок и скрыть',
+    zh_CN: '中键单击：转换为书签并隐藏面板',
+    zh_TW: '中鍵單擊：轉換為書籤並隱藏面板',
   },
   'nav.bookmarks_panel_tooltip_mid_convert': {
     en: 'Middle click: Convert to tabs panel',
@@ -666,40 +677,58 @@ export const sidebarTranslations: Translations = {
   'notif.proxy_auth_err': {
     en: 'Proxy authentication error',
     ru: 'Ошибка аутентификации прокси',
+    de: 'Proxy-Authentifizierungsfehler',
     zh_CN: '代理认证错误',
     zh_TW: '代理認證錯誤',
   },
   'notif.proxy_auth_err_details': {
     en: 'Check the proxy settings to make sure that they are correct.',
     ru: 'Проверьте настройки прокси, чтобы убедиться, что они верны.',
+    de: 'Überprüfen Sie die Proxy-Einstellungen, um sicherzustellen, dass sie korrekt sind.',
     zh_CN: '检查代理设置以确保它们是正确的',
     zh_TW: '檢查代理設置以確保它們是正確的',
   },
   'notif.proxy_auth_err_ctrl': {
     en: 'Open settings',
     ru: 'Открыть настройки',
+    de: 'Einstellungen öffnen',
     zh_CN: '打开设置',
     zh_TW: '打開設置',
   },
   'notif.history_del_sites': {
     en: 'Clearing history',
     ru: 'Очистка истории',
+    de: 'Verlauf löschen',
+    zh_CN: '清除历史记录',
+    zh_TW: '清除歷史記錄',
   },
   'notif.history_del_sites_nothing': {
     en: 'Nothing to clear',
     ru: 'Нечего очищать',
+    de: 'Nichts zu löschen',
+    zh_CN: '没有要清除的内容',
+    zh_TW: '沒有要清除的內容',
   },
   'notif.cc.err': {
     en: 'Unable to clear cookies',
     ru: 'Не удалось очистить куки',
+    de: 'Cookies können nicht gelöscht werden',
+    zh_CN: '无法清除Cookie',
+    zh_TW: '無法清除Cookie',
   },
   'notif.cc.err_url': {
     en: 'Incorrect URL: ',
     ru: 'Неверный URL: ',
+    de: 'Falsche URL: ',
+    zh_CN: '不正确的网址：',
+    zh_TW: '不正確的網址：',
   },
   'notif.cc.ok': {
     en: 'Cookies was cleared',
     ru: 'Cookies были очищены',
+    de: 'Cookies wurden gelöscht',
+    zh_CN: 'Cookie已清除',
+    zh_TW: 'Cookie已清除',
   },
 
   // ---
@@ -708,54 +737,63 @@ export const sidebarTranslations: Translations = {
   'colors.toolbar': {
     en: 'Default',
     ru: 'Стандартный',
+    de: 'Standard',
     zh_CN: '默认',
     zh_TW: '默認',
   },
   'colors.blue': {
     en: 'Blue',
     ru: 'Синий',
+    de: 'Blau',
     zh_CN: '蓝色',
     zh_TW: '藍色',
   },
   'colors.turquoise': {
     en: 'Turquoise',
     ru: 'Бирюзовый',
-    zh_CN: '蓝绿色',
-    zh_TW: '蓝綠色',
+    de: 'Türkis',
+    zh_CN: '青绿色',
+    zh_TW: '青綠色',
   },
   'colors.green': {
     en: 'Green',
     ru: 'Зеленый',
+    de: 'Grün',
     zh_CN: '绿色',
     zh_TW: '綠色',
   },
   'colors.yellow': {
     en: 'Yellow',
     ru: 'Желтый',
+    de: 'Gelb',
     zh_CN: '黄色',
     zh_TW: '黃色',
   },
   'colors.orange': {
     en: 'Orange',
     ru: 'Оранжевый',
+    de: 'Orange',
     zh_CN: '橙色',
     zh_TW: '橙色',
   },
   'colors.red': {
     en: 'Red',
     ru: 'Красный',
+    de: 'Rot',
     zh_CN: '红色',
     zh_TW: '紅色',
   },
   'colors.pink': {
     en: 'Pink',
     ru: 'Розовый',
+    de: 'Pink',
     zh_CN: '粉色',
     zh_TW: '粉色',
   },
   'colors.purple': {
     en: 'Purple',
     ru: 'Фиолетовый',
+    de: 'Lila',
     zh_CN: '紫色',
     zh_TW: '紫色',
   },
