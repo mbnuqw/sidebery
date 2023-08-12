@@ -491,6 +491,10 @@ export const sidebarTranslations: Translations = {
     zh_CN: ' 标签页已关闭',
     zh_TW: ' 標籤頁已關閉',
   },
+  'notif.bookmarks_create_err': {
+    en: 'Cannot create bookmark',
+    ru: 'Невозможно создать закладку',
+  },
   'notif.bookmarks_rm_post': {
     en: n => (n === 1 ? ' bookmark removed' : ' bookmarks removed'),
     ru: (n = 0): string => {

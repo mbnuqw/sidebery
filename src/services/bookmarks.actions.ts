@@ -461,13 +461,18 @@ export async function createBookmarkNode(
       parentId = result.location ?? BKM_OTHER_ID
       if (parentId === NOID) parentId = BKM_OTHER_ID
 
-      browser.bookmarks.create({
-        parentId,
-        title: result.name,
-        type,
-        url: result.url,
-        index,
-      })
+      try {
+        await browser.bookmarks.create({
+          parentId,
+          title: result.name,
+          type,
+          url: result.url,
+          index,
+        })
+      } catch (err) {
+        Logs.err('Bookmarks.createBookmarkNode: Cannot create bookmark', err)
+        Notifications.err(translate('notif.bookmarks_create_err'))
+      }
     }
   }
 }
