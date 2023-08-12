@@ -324,8 +324,10 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
   copyBookmarksUrls: () => {
     const selected = Selection.get()
     const firstNode = Bookmarks.reactive.byId[selected[0]]
+    let len = selected.length
+    if (firstNode.children?.length) len += firstNode.children.length
     const option: MenuOption = {
-      label: translate('menu.copy_urls', selected.length),
+      label: translate('menu.copy_urls', len),
       icon: 'icon_link',
       badge: 'icon_copy_badge',
       onClick: () => Bookmarks.copyUrls(selected),
@@ -339,8 +341,10 @@ export const bookmarksMenuOptions: Record<string, () => MenuOption | MenuOption[
   copyBookmarksTitles: () => {
     const selected = Selection.get()
     const firstNode = Bookmarks.reactive.byId[selected[0]]
+    let len = selected.length
+    if (firstNode.children?.length) len += firstNode.children.length
     const option: MenuOption = {
-      label: translate('menu.copy_titles', selected.length),
+      label: translate('menu.copy_titles', len),
       icon: 'icon_title',
       badge: 'icon_copy_badge',
       onClick: () => Bookmarks.copyTitles(selected),

@@ -1403,9 +1403,12 @@ export async function copyUrls(ids: ID[]): Promise<void> {
   }
 
   let urls = ''
-  for (const id of ids) {
-    const bookmark = Bookmarks.reactive.byId[id]
-    if (bookmark && bookmark.url) urls += '\n' + bookmark.url
+  for (const node of Bookmarks.listBookmarks()) {
+    const includedItself = ids.includes(node.id)
+    if (includedItself || ids.includes(node.parentId)) {
+      if (!includedItself && node.children?.length) ids.push(node.id)
+      if (node.url) urls += '\n' + node.url
+    }
   }
 
   const resultString = urls.trim()
@@ -1419,9 +1422,12 @@ export async function copyTitles(ids: ID[]): Promise<void> {
   }
 
   let titles = ''
-  for (const id of ids) {
-    const bookmark = Bookmarks.reactive.byId[id]
-    if (bookmark && bookmark.title) titles += '\n' + bookmark.title
+  for (const node of Bookmarks.listBookmarks()) {
+    const includedItself = ids.includes(node.id)
+    if (includedItself || ids.includes(node.parentId)) {
+      if (!includedItself && node.children?.length) ids.push(node.id)
+      if (node.title) titles += '\n' + node.title
+    }
   }
 
   const resultString = titles.trim()
