@@ -27,6 +27,7 @@ export interface SetupPageState {
   detailsText: string
   detailsEdit?: (newValue: string) => void
   detailsTitle?: string
+  detailsMode?: 'view' | 'edit'
 
   exportDialog: boolean
   importedData: BackupData | null

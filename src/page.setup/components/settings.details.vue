@@ -2,11 +2,14 @@
 .DetailsBox(v-if="SetupPage.reactive.detailsText" @wheel="onDetailsWheel")
   .box
     .title(v-if="SetupPage.reactive.detailsTitle") {{SetupPage.reactive.detailsTitle}}
-    .btn(v-if="SetupPage.reactive.detailsEdit" @click="saveDetails") {{translate('settings.ctrl_save')}}
-    .btn(v-if="!SetupPage.reactive.detailsEdit" @click="copyDetails") {{translate('settings.ctrl_copy')}}
+    .btn(
+      v-if="SetupPage.reactive.detailsMode === 'view' && SetupPage.reactive.detailsEdit"
+      @click="editDetails") {{translate('settings.ctrl_edit')}}
+    .btn(v-else-if="SetupPage.reactive.detailsMode === 'edit'" @click="saveDetails") {{translate('settings.ctrl_save')}}
+    .btn(@click="copyDetails") {{translate('settings.ctrl_copy')}}
     .btn.-warn(@click="closeDetails") {{translate('settings.ctrl_close')}}
   textarea.editor(
-    v-if="SetupPage.reactive.detailsEdit"
+    v-if="SetupPage.reactive.detailsMode === 'edit' && SetupPage.reactive.detailsEdit"
     v-model="SetupPage.reactive.detailsText"
     autocomplete="off"
     autocorrect="off"
@@ -37,6 +40,10 @@ function onDetailsWheel(e: WheelEvent): void {
 function copyDetails(): void {
   if (!SetupPage.reactive.detailsText) return
   navigator.clipboard.writeText(SetupPage.reactive.detailsText)
+}
+
+function editDetails() {
+  SetupPage.reactive.detailsMode = 'edit'
 }
 
 function saveDetails(): void {

@@ -9,8 +9,6 @@
         .name {{info.name}}
         .len(v-if="info.len") {{info.len}}
         .size {{info.sizeStr}}
-        .btn(@click.stop="openStoredData(info.name)") {{translate('settings.storage_open_prop')}}
-        .btn(@click.stop="editStoredData(info.name)") {{translate('settings.storage_edit_prop')}}
         .btn.-warn(@click.stop="deleteStoredData(info.name)") {{translate('settings.storage_delete_prop')}}
 
     .ctrls
@@ -111,23 +109,9 @@ async function openStoredData(prop: string): Promise<void> {
     return
   }
   if (stored && stored[prop as keyof Stored] !== undefined) {
+    SetupPage.reactive.detailsMode = 'view'
     SetupPage.reactive.detailsTitle = prop
     SetupPage.reactive.detailsText = JSON.stringify(stored[prop as keyof Stored], null, 2)
-  }
-}
-
-async function editStoredData(prop: string): Promise<void> {
-  let stored
-  try {
-    stored = await browser.storage.local.get<Stored>(prop)
-  } catch (err) {
-    SetupPage.reactive.detailsTitle = 'Error: Cannot get value'
-    SetupPage.reactive.detailsText = String(err)
-    return
-  }
-  if (stored?.[prop as keyof Stored] !== undefined) {
-    SetupPage.reactive.detailsText = JSON.stringify(stored[prop as keyof Stored], null, 2)
-    SetupPage.reactive.detailsTitle = prop
     SetupPage.reactive.detailsEdit = (newValue: string) => {
       let json
       try {

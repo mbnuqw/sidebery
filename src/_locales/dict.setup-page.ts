@@ -616,6 +616,13 @@ export const setupPageTranslations: Translations = {
   },
 
   // - Details controls
+  'settings.ctrl_edit': {
+    en: 'EDIT',
+    ru: 'РЕДАКТИРОВАТЬ',
+    de: 'BEARBEITEN',
+    zh_CN: '编辑',
+    zh_TW: '編輯',
+  },
   'settings.ctrl_save': {
     en: 'SAVE',
     ru: 'СОХРАНИТЬ',
