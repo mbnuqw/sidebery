@@ -59,7 +59,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
   moveToPanel: () => {
     const opts: MenuOption[] = []
     const probeTab = Tabs.byId[Selection.getFirst()]
-    if (!probeTab) return
+    if (!probeTab || (probeTab.pinned && Settings.state.pinnedTabsPosition !== 'panel')) return
 
     for (const panel of Sidebar.panels) {
       if (!Utils.isTabsPanel(panel)) continue
@@ -83,6 +83,9 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
   },
 
   moveToNewPanel: () => {
+    const probeTab = Tabs.byId[Selection.getFirst()]
+    if (!probeTab || (probeTab.pinned && Settings.state.pinnedTabsPosition !== 'panel')) return
+
     const option: MenuOption = {
       label: translate('menu.tab.move_to_new_panel'),
       icon: 'icon_add_tabs_panel',
