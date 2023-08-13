@@ -66,13 +66,13 @@ export const commonTranslations: Translations = {
     en: 'Ok',
     ru: 'Ок',
     de: 'Ok',
-    zh: '是'
+    zh: '是',
   },
   'btn.no': {
     en: 'No',
     ru: 'Нет',
     de: 'Nein',
-    zh: '否'
+    zh: '否',
   },
   'btn.cancel': {
     en: 'Cancel',
@@ -395,7 +395,7 @@ export const commonTranslations: Translations = {
   'popup.tab_reopen_rules.title': {
     en: 'Tab reopening rules',
     ru: 'Правила',
-    de:'Regeln für die Wiedereröffnung der Registerkarte',
+    de: 'Regeln für die Wiedereröffnung der Registerkarte',
     zh_CN: '标签页重新打开规则',
     zh_TW: '選項卡重新打開規則',
   },
@@ -409,14 +409,14 @@ export const commonTranslations: Translations = {
   'popup.tab_reopen_rules.editor_title.new': {
     en: 'Create new rule',
     ru: 'Создать правило',
-    de:'Neue Regel erstellen',
+    de: 'Neue Regel erstellen',
     zh_CN: '创建新规则',
     zh_TW: '創建新規則',
   },
   'popup.tab_reopen_rules.editor_title.edit': {
     en: 'Edit rule',
     ru: 'Редактировать правило',
-    de:'Regel bearbeiten',
+    de: 'Regel bearbeiten',
     zh_CN: '编辑规则',
     zh_TW: '編輯規則',
   },
@@ -795,7 +795,7 @@ export const commonTranslations: Translations = {
     en: 'Remove panel',
     ru: 'Удалить панель',
     de: 'Panel entfernen',
-    zh: '移除面板'
+    zh: '移除面板',
   },
   // - Tab
   'menu.tab.undo': {
@@ -974,7 +974,7 @@ export const commonTranslations: Translations = {
     en: 'Flatten',
     ru: 'Сбросить вложенность',
     de: 'Plätten',
-    zh: '扁平化'
+    zh: '扁平化',
   },
   'menu.tab.url_conf': {
     en: 'Configure site...',
@@ -1383,85 +1383,85 @@ export const commonTranslations: Translations = {
     en: 'January',
     ru: 'Январь',
     de: 'Januar',
-    zh: '一月'
+    zh: '一月',
   },
   'time.month_1': {
     en: 'February',
     ru: 'Февраль',
     de: 'Februar',
-    zh: '二月'
+    zh: '二月',
   },
   'time.month_2': {
     en: 'March',
     ru: 'Март',
     de: 'März',
-    zh: '三月'
+    zh: '三月',
   },
   'time.month_3': {
     en: 'April',
     ru: 'Апрель',
     de: 'April',
-    zh: '四月'
+    zh: '四月',
   },
   'time.month_4': {
     en: 'May',
     ru: 'Май',
     de: 'Mai',
-    zh: '五月'
+    zh: '五月',
   },
   'time.month_5': {
     en: 'June',
     ru: 'Июнь',
     de: 'Juni',
-    zh: '六月'
+    zh: '六月',
   },
   'time.month_6': {
     en: 'July',
     ru: 'Июль',
     de: 'Juli',
-    zh: '七月'
+    zh: '七月',
   },
   'time.month_7': {
     en: 'August',
     ru: 'Август',
     de: 'August',
-    zh: '八月'
+    zh: '八月',
   },
   'time.month_8': {
     en: 'September',
     ru: 'Сентябрь',
     de: 'September',
-    zh: '九月'
+    zh: '九月',
   },
   'time.month_9': {
     en: 'October',
     ru: 'Октябрь',
     de: 'Oktober',
-    zh: '十月'
+    zh: '十月',
   },
   'time.month_10': {
     en: 'November',
     ru: 'Ноябрь',
     de: 'November',
-    zh: '十一月'
+    zh: '十一月',
   },
   'time.month_11': {
     en: 'December',
     ru: 'Декабрь',
     de: 'Dezember',
-    zh: '十二月'
+    zh: '十二月',
   },
   'time.today': {
     en: 'Today',
     ru: 'Сегодня',
     de: 'Heute',
-    zh: '今日'
+    zh: '今日',
   },
   'time.yesterday': {
     en: 'Yesterday',
     ru: 'Вчера',
     de: 'Gestern',
-    zh: '昨日'
+    zh: '昨日',
   },
   'time.this_week': {
     en: 'This week',
@@ -1595,7 +1595,7 @@ export const commonTranslations: Translations = {
       const d = (h - rh) / 24
       if (rh > 0) return `${d}天, ${rh}小時`
       else return `${d}天`
-    }
+    },
   },
 
   // ---
@@ -1762,8 +1762,10 @@ export const commonTranslations: Translations = {
     en: 'Sidebery is unable to finish the upgrade. Try to manually remove the old version of Sidebery, reload the browser and install the new version of Sidebery.',
     ru: 'Sidebery не может завершить обновление. Попробуйте вручную удалить старую версию Sidebery, перезагрузить браузер и установить новую версию Sidebery.',
     de: 'Sidebery kann das Upgrade nicht abschließen. Versuchen Sie, die alte Version von Sidebery manuell zu entfernen, den Browser neu zu laden und die neue Version von Sidebery zu installieren.',
-    zh_CN: 'Sidebery 无法完成升级。请尝试手动删除旧版本的 Sidebery，重新加载浏览器并安装新版本的 Sidebery。',
-    zh_TW: 'Sidebery 無法完成升級。請嘗試手動刪除舊版本的 Sidebery，重新加載瀏覽器並安裝新版本的 Sidebery。',
+    zh_CN:
+      'Sidebery 无法完成升级。请尝试手动删除旧版本的 Sidebery，重新加载浏览器并安装新版本的 Sidebery。',
+    zh_TW:
+      'Sidebery 無法完成升級。請嘗試手動刪除舊版本的 Sidebery，重新加載瀏覽器並安裝新版本的 Sidebery。',
   },
   'upgrade.done': {
     en: 'Sidebery successfully upgraded',
@@ -1776,7 +1778,7 @@ export const commonTranslations: Translations = {
     en: 'Reloading...',
     ru: 'Перезагрузка...',
     de: 'Neu laden...',
-    zh_CN: '重新加载...', 
+    zh_CN: '重新加载...',
     zh_TW: '重新加載...',
   },
 }

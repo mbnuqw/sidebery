@@ -8,7 +8,7 @@ export const sidebarTranslations: Translations = {
     en: 'Search...',
     ru: 'Поиск...',
     de: 'Suche...',
-    zh: '搜索...'
+    zh: '搜索...',
   },
 
   // ---
@@ -18,7 +18,7 @@ export const sidebarTranslations: Translations = {
     en: 'Warning',
     ru: 'Внимание',
     de: 'Warnung',
-    zh: '警告'
+    zh: '警告',
   },
   'confirm.tabs_close_pre': {
     en: 'Are you sure you want to close ',
@@ -49,7 +49,7 @@ export const sidebarTranslations: Translations = {
     en: 'Nothing found',
     ru: 'Ничего не найдено',
     de: 'Nichts gefunden',
-    zh: '未找到'
+    zh: '未找到',
   },
   'panel.nothing': {
     en: 'Nothing...',
@@ -73,7 +73,6 @@ export const sidebarTranslations: Translations = {
     ru: '...скрытых записей:',
     zh_CN: '...隐藏的访问:',
     zh_TW: '...隱藏的訪問:',
-
   },
 
   // ---
@@ -94,12 +93,12 @@ export const sidebarTranslations: Translations = {
   'newTabBar.in_container_prefix': {
     en: ' in "',
     ru: ' в контейнере "',
-    zh: ' 在 "'
+    zh: ' 在 "',
   },
   'newTabBar.in_container_postfix': {
     en: '" container',
     ru: '"',
-    zh: '" 容器'
+    zh: '" 容器',
   },
   'newTabBar.mid_child': {
     en: 'Middle click: Open a child tab',
@@ -122,7 +121,7 @@ export const sidebarTranslations: Translations = {
     en: 'Removing panel',
     ru: 'Удаление панели',
     de: 'Entferne Panel',
-    zh: '移除面板'
+    zh: '移除面板',
   },
   'popup.tabs_panel_removing.attach': {
     en: 'Attach tabs to neighbour panel',
@@ -184,20 +183,20 @@ export const sidebarTranslations: Translations = {
     en: 'Delete',
     ru: 'Удалить',
     de: 'Löschen',
-    zh: '刪除'
+    zh: '刪除',
   },
   'popup.wtdwOldBookmarks.keep': {
     en: 'Keep',
     ru: 'Оставить',
     de: 'Behalten',
-    zh: '保留'
+    zh: '保留',
   },
   // - Container config popup
   'popup.container.title': {
     en: 'Container',
     ru: 'Контейнер',
     de: 'Umgebung',
-    zh: '容器'
+    zh: '容器',
   },
   'popup.container.name_placeholder': {
     en: 'Container name',
@@ -313,7 +312,7 @@ export const sidebarTranslations: Translations = {
     en: 'panel',
     ru: 'панель',
     de: 'Panel',
-    zh: '面板'
+    zh: '面板',
   },
   'dnd.tooltip.tabs': {
     en: 'tabs',
@@ -379,7 +378,7 @@ export const sidebarTranslations: Translations = {
     en: 'Search',
     ru: 'Поиск',
     de: 'Suchen',
-    zh: '搜索'
+    zh: '搜索',
   },
   'nav.btn_create_snapshot': {
     en: 'Create snapshot',
@@ -477,7 +476,7 @@ export const sidebarTranslations: Translations = {
     en: 'Undo',
     ru: 'Восстановить',
     de: 'Rückgängig',
-    zh: '撤消'
+    zh: '撤消',
   },
   'notif.tabs_rm_post': {
     en: ' tabs closed',
@@ -523,7 +522,7 @@ export const sidebarTranslations: Translations = {
     en: 'View',
     ru: 'Посмотреть',
     de: 'Ansehen',
-    zh: '查看'
+    zh: '查看',
   },
   'notif.tabs_err': {
     en: 'Wrong tabs position detected',
@@ -550,7 +549,7 @@ export const sidebarTranslations: Translations = {
     en: 'Stop',
     ru: 'Остановить',
     de: 'Stopp',
-    zh: '停止'
+    zh: '停止',
   },
   'notif.tabs_panel_saving_bookmarks': {
     en: 'Saving to bookmarks...',
@@ -563,7 +562,7 @@ export const sidebarTranslations: Translations = {
     en: 'Panel saved',
     ru: 'панель сохранена в',
     de: 'Panel gespeichert',
-    zh: '面板已保存'
+    zh: '面板已保存',
   },
   'notif.tabs_panel_updated_bookmarks': {
     en: 'Bookmarks updated',
@@ -640,7 +639,7 @@ export const sidebarTranslations: Translations = {
     en: 'Done',
     ru: 'Готово',
     de: 'Fertig',
-    zh: '已完成'
+    zh: '已完成',
   },
   'notif.new_bookmark': {
     en: 'New bookmark added',
@@ -667,7 +666,7 @@ export const sidebarTranslations: Translations = {
     en: 'Save',
     ru: 'Сохранить',
     de: 'Speichern',
-    zh: '保存'
+    zh: '保存',
   },
   'notif.proxy_auth_err': {
     en: 'Proxy authentication error',
@@ -766,7 +765,7 @@ export const sidebarTranslations: Translations = {
     en: 'Orange',
     ru: 'Оранжевый',
     de: 'Orange',
-    zh: '橙色'
+    zh: '橙色',
   },
   'colors.red': {
     en: 'Red',
@@ -779,13 +778,13 @@ export const sidebarTranslations: Translations = {
     en: 'Pink',
     ru: 'Розовый',
     de: 'Pink',
-    zh: '粉色'
+    zh: '粉色',
   },
   'colors.purple': {
     en: 'Purple',
     ru: 'Фиолетовый',
     de: 'Lila',
-    zh: '紫色'
+    zh: '紫色',
   },
 }
 
