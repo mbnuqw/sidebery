@@ -1247,21 +1247,18 @@ export const setupPageTranslations: Translations = {
   },
   'settings.dnd_mod_alt': {
     en: 'alt',
-    ru: 'alt',
     de: 'Alt',
-    zh: 'alt'
+    zh: 'Alt'
   },
   'settings.dnd_mod_shift': {
     en: 'shift',
-    ru: 'shift',
     de: 'Umschalt',
-    zh: 'shift'
+    zh: 'Shift'
   },
   'settings.dnd_mod_ctrl': {
     en: 'ctrl',
-    ru: 'ctrl',
     de: 'Strg',
-    zh: 'ctrl'
+    zh: 'Ctrl'
   },
   'settings.dnd_mod_none': {
     en: 'none',
@@ -2146,35 +2143,19 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_TW: '限制標籤頁樹級別',
   },
   'settings.tabs_tree_limit_1': {
-    en: '1',
-    ru: '1',
-    de: '1',
-    zh_CN: '1',
+    en: '1'
   },
   'settings.tabs_tree_limit_2': {
-    en: '2',
-    ru: '2',
-    de: '2',
-    zh_CN: '2',
+    en: '2'
   },
   'settings.tabs_tree_limit_3': {
-    en: '3',
-    ru: '3',
-    de: '3',
-    zh_CN: '3',
-    zh_TW: '',
+    en: '3'
   },
   'settings.tabs_tree_limit_4': {
-    en: '4',
-    ru: '4',
-    de: '4',
-    zh_CN: '4',
+    en: '4'
   },
   'settings.tabs_tree_limit_5': {
-    en: '5',
-    ru: '5',
-    de: '5',
-    zh_CN: '5',
+    en: '5'
   },
   'settings.tabs_tree_limit_none': {
     en: 'none',
@@ -2228,34 +2209,19 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
     zh: '分支上限'
   },
   'settings.auto_fold_tabs_except_1': {
-    en: '1',
-    ru: '1',
-    de: '1',
-    zh_CN: '1',
+    en: '1'
   },
   'settings.auto_fold_tabs_except_2': {
-    en: '2',
-    ru: '2',
-    de: '2',
-    zh_CN: '2',
+    en: '2'
   },
   'settings.auto_fold_tabs_except_3': {
-    en: '3',
-    ru: '3',
-    de: '3',
-    zh_CN: '3',
+    en: '3'
   },
   'settings.auto_fold_tabs_except_4': {
-    en: '4',
-    ru: '4',
-    de: '4',
-    zh_CN: '4',
+    en: '4'
   },
   'settings.auto_fold_tabs_except_5': {
-    en: '5',
-    ru: '5',
-    de: '5',
-    zh_CN: '5',
+    en: '5'
   },
   'settings.auto_fold_tabs_except_none': {
     en: 'none',
@@ -2651,46 +2617,25 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_TW: '字體大小',
   },
   'settings.font_size_xxs': {
-    en: 'XXS',
-    ru: 'XXS',
-    de: 'XXS',
-    zh_CN: 'XXS',
+    en: 'XXS'
   },
   'settings.font_size_xs': {
-    en: 'XS',
-    ru: 'XS',
-    de: 'XS',
-    zh_CN: 'XS',
+    en: 'XS'
   },
   'settings.font_size_s': {
-    en: 'S',
-    ru: 'S',
-    de: 'S',
-    zh_CN: 'S',
+    en: 'S'
   },
   'settings.font_size_m': {
-    en: 'M',
-    ru: 'M',
-    de: 'M',
-    zh_CN: 'M',
+    en: 'M'
   },
   'settings.font_size_l': {
-    en: 'L',
-    ru: 'L',
-    de: 'L',
-    zh_CN: 'L',
+    en: 'L'
   },
   'settings.font_size_xl': {
-    en: 'XL',
-    ru: 'XL',
-    de: 'XL',
-    zh_CN: 'XL',
+    en: 'XL'
   },
   'settings.font_size_xxl': {
-    en: 'XXL',
-    ru: 'XXL',
-    de: 'XXL',
-    zh_CN: 'XXL',
+    en: 'XXL'
   },
   'settings.theme': {
     en: 'Theme',
@@ -2701,14 +2646,14 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.theme_proton': {
     en: 'proton',
-    ru: 'proton',
+    ru: 'протон',
     de: 'Proton',
     zh_CN: '质子',
     zh_TW: '質子',
   },
   'settings.theme_plain': {
     en: 'plain',
-    ru: 'plain',
+    ru: 'Простой',
     de: 'Schlicht',
     zh: '淡雅',
   },
@@ -2766,7 +2711,6 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.color_scheme_ff': {
     en: 'firefox',
-    ru: 'firefox',
     de: 'Firefox',
     zh: 'Firefox'
   },
@@ -2927,8 +2871,6 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.snap_export_path_ph': {
     en: 'Sidebery/snapshot-%Y.%M.%D-%h.%m.%s',
-    ru: 'Sidebery/snapshot-%Y.%M.%D-%h.%m.%s',
-    de: 'Sidebery/snapshot-%Y.%M.%D-%h.%m.%s',
     zh: 'Sidebery/快照-%Y.%M.%D-%h.%m.%s',
   },
   'settings.snap_interval_min': {
@@ -3769,7 +3711,6 @@ Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.kb_rm': {
     en: 'Close tab(s) / Delete bookmarks',
-    ru: 'Close tab(s) / Delete bookmarks',
     de: 'Tab(s) schließen / Lesezeichen löschen',
     zh_CN: '关闭标签页 / 删除书签',
     zh_TW: '關閉標籤頁 / 刪除書籤',
