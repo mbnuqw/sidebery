@@ -8,8 +8,7 @@ export const sidebarTranslations: Translations = {
     en: 'Search...',
     ru: 'Поиск...',
     de: 'Suche...',
-    zh_CN: '搜索...',
-    zh_TW: '搜索...',
+    zh: '搜索...'
   },
 
   // ---
@@ -19,8 +18,7 @@ export const sidebarTranslations: Translations = {
     en: 'Warning',
     ru: 'Внимание',
     de: 'Warnung',
-    zh_CN: '警告',
-    zh_TW: '警告',
+    zh: '警告'
   },
   'confirm.tabs_close_pre': {
     en: 'Are you sure you want to close ',
@@ -51,8 +49,7 @@ export const sidebarTranslations: Translations = {
     en: 'Nothing found',
     ru: 'Ничего не найдено',
     de: 'Nichts gefunden',
-    zh_CN: '未找到',
-    zh_TW: '未找到',
+    zh: '未找到'
   },
   'panel.nothing': {
     en: 'Nothing...',
@@ -97,14 +94,12 @@ export const sidebarTranslations: Translations = {
   'newTabBar.in_container_prefix': {
     en: ' in "',
     ru: ' в контейнере "',
-    zh_CN: ' 在 "',
-    zh_TW: ' 在 "',
+    zh: ' 在 "'
   },
   'newTabBar.in_container_postfix': {
     en: '" container',
     ru: '"',
-    zh_CN: '" 容器',
-    zh_TW: '" 容器',
+    zh: '" 容器'
   },
   'newTabBar.mid_child': {
     en: 'Middle click: Open a child tab',
@@ -127,8 +122,7 @@ export const sidebarTranslations: Translations = {
     en: 'Removing panel',
     ru: 'Удаление панели',
     de: 'Entferne Panel',
-    zh_CN: '移除面板',
-    zh_TW: '移除面板',
+    zh: '移除面板'
   },
   'popup.tabs_panel_removing.attach': {
     en: 'Attach tabs to neighbour panel',
@@ -190,23 +184,20 @@ export const sidebarTranslations: Translations = {
     en: 'Delete',
     ru: 'Удалить',
     de: 'Löschen',
-    zh_CN: '刪除',
-    zh_TW: '刪除',
+    zh: '刪除'
   },
   'popup.wtdwOldBookmarks.keep': {
     en: 'Keep',
     ru: 'Оставить',
     de: 'Behalten',
-    zh_CN: '保留',
-    zh_TW: '保留',
+    zh: '保留'
   },
   // - Container config popup
   'popup.container.title': {
     en: 'Container',
     ru: 'Контейнер',
     de: 'Umgebung',
-    zh_CN: '容器',
-    zh_TW: '容器',
+    zh: '容器'
   },
   'popup.container.name_placeholder': {
     en: 'Container name',
@@ -322,8 +313,7 @@ export const sidebarTranslations: Translations = {
     en: 'panel',
     ru: 'панель',
     de: 'Panel',
-    zh_CN: '面板',
-    zh_TW: '面板',
+    zh: '面板'
   },
   'dnd.tooltip.tabs': {
     en: 'tabs',
@@ -389,8 +379,7 @@ export const sidebarTranslations: Translations = {
     en: 'Search',
     ru: 'Поиск',
     de: 'Suchen',
-    zh_CN: '搜索',
-    zh_TW: '搜索',
+    zh: '搜索'
   },
   'nav.btn_create_snapshot': {
     en: 'Create snapshot',
@@ -488,8 +477,7 @@ export const sidebarTranslations: Translations = {
     en: 'Undo',
     ru: 'Восстановить',
     de: 'Rückgängig',
-    zh_CN: '撤消',
-    zh_TW: '撤消',
+    zh: '撤消'
   },
   'notif.tabs_rm_post': {
     en: ' tabs closed',
@@ -531,8 +519,7 @@ export const sidebarTranslations: Translations = {
     en: 'View',
     ru: 'Посмотреть',
     de: 'Ansehen',
-    zh_CN: '查看',
-    zh_TW: '查看',
+    zh: '查看'
   },
   'notif.tabs_err': {
     en: 'Wrong tabs position detected',
@@ -559,8 +546,7 @@ export const sidebarTranslations: Translations = {
     en: 'Stop',
     ru: 'Остановить',
     de: 'Stopp',
-    zh_CN: '停止',
-    zh_TW: '停止',
+    zh: '停止'
   },
   'notif.tabs_panel_saving_bookmarks': {
     en: 'Saving to bookmarks...',
@@ -573,8 +559,7 @@ export const sidebarTranslations: Translations = {
     en: 'Panel saved',
     ru: 'панель сохранена в',
     de: 'Panel gespeichert',
-    zh_CN: '面板已保存',
-    zh_TW: '面板已保存',
+    zh: '面板已保存'
   },
   'notif.tabs_panel_updated_bookmarks': {
     en: 'Bookmarks updated',
@@ -643,8 +628,7 @@ export const sidebarTranslations: Translations = {
     en: 'Done',
     ru: 'Готово',
     de: 'Fertig',
-    zh_CN: '已完成',
-    zh_TW: '已完成',
+    zh: '已完成'
   },
   'notif.new_bookmark': {
     en: 'New bookmark added',
@@ -671,8 +655,7 @@ export const sidebarTranslations: Translations = {
     en: 'Save',
     ru: 'Сохранить',
     de: 'Speichern',
-    zh_CN: '保存',
-    zh_TW: '保存',
+    zh: '保存'
   },
   'notif.proxy_auth_err': {
     en: 'Proxy authentication error',
@@ -706,8 +689,7 @@ export const sidebarTranslations: Translations = {
     en: 'Nothing to clear',
     ru: 'Нечего очищать',
     de: 'Nichts zu löschen',
-    zh_CN: '没有要清除的内容',
-    zh_TW: '沒有要清除的內容',
+    zh: '没有要清除的内容',
   },
   'notif.cc.err': {
     en: 'Unable to clear cookies',
@@ -727,8 +709,7 @@ export const sidebarTranslations: Translations = {
     en: 'Cookies was cleared',
     ru: 'Cookies были очищены',
     de: 'Cookies wurden gelöscht',
-    zh_CN: 'Cookie已清除',
-    zh_TW: 'Cookie已清除',
+    zh: 'Cookie已清除',
   },
 
   // ---
@@ -773,8 +754,7 @@ export const sidebarTranslations: Translations = {
     en: 'Orange',
     ru: 'Оранжевый',
     de: 'Orange',
-    zh_CN: '橙色',
-    zh_TW: '橙色',
+    zh: '橙色'
   },
   'colors.red': {
     en: 'Red',
@@ -787,15 +767,13 @@ export const sidebarTranslations: Translations = {
     en: 'Pink',
     ru: 'Розовый',
     de: 'Pink',
-    zh_CN: '粉色',
-    zh_TW: '粉色',
+    zh: '粉色'
   },
   'colors.purple': {
     en: 'Purple',
     ru: 'Фиолетовый',
     de: 'Lila',
-    zh_CN: '紫色',
-    zh_TW: '紫色',
+    zh: '紫色'
   },
 }
 
