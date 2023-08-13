@@ -1,5 +1,6 @@
 import * as Utils from 'src/utils'
 import { ASKID, COLOR_OPTS, CONTAINER_ID, Err, NEWID } from 'src/defaults'
+import { DEFAULT_CONTAINER_ID, PRIVATE_CONTAINER_ID } from 'src/defaults'
 import { MenuOption, Window, Tab } from 'src/types'
 import { translate } from 'src/dict'
 import { Tabs } from 'src/services/tabs.fg'
@@ -121,9 +122,12 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     const option: MenuOption = {}
     const wins = Windows.otherWindows.filter(w => w.incognito !== Windows.incognito)
     const winLen = wins.length
+    const containerId = Windows.incognito ? DEFAULT_CONTAINER_ID : PRIVATE_CONTAINER_ID
+
     let items: ItemInfo[]
+    if (winLen > 0) items = Selection.getTabsInfo(true)
+
     if (winLen === 0) option.inactive = true
-    else items = Selection.getTabsInfo(true)
 
     if (winLen <= 1) {
       if (Windows.incognito) {
@@ -133,7 +137,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
         option.label = translate('menu.tab.reopen_in_priv_window')
         option.icon = 'icon_reopen_in_priv_win'
       }
-      option.onClick = () => Tabs.reopen(items, { windowId: wins[0].id })
+      option.onClick = () => Tabs.reopen(items, { windowId: wins[0].id, containerId })
     } else {
       option.label = translate('menu.tab.reopen_in_window_')
       if (Windows.incognito) option.icon = 'icon_reopen_in_norm_wins'
@@ -143,6 +147,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
         Tabs.reopen(items, {
           windowId: ASKID,
           windowChooseConf: { title: option.label, otherWindows: true, filter },
+          containerId,
         })
       }
     }
