@@ -474,11 +474,25 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
   },
 
   editTabTitle: () => {
-    return {
+    const selected = Selection.get()
+    const firstTab = Tabs.byId[selected[0]]
+    if (!firstTab) return
+
+    const option: MenuOption = {
       label: translate('menu.tab.edit_title'),
       icon: 'icon_edit',
       onClick: () => Tabs.editTabTitle(Selection.get()),
     }
+
+    if (firstTab.pinned) {
+      option.inactive =
+        !Settings.state.pinnedTabsList ||
+        Settings.state.pinnedTabsPosition === 'left' ||
+        Settings.state.pinnedTabsPosition === 'right'
+    }
+
+    if (!Settings.state.ctxMenuRenderInact && option.inactive) return
+    return option
   },
 
   // ---
