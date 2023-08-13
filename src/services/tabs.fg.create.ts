@@ -340,13 +340,7 @@ export async function open(
       delete dst.windowChooseConf
     }
 
-    const ans = await IPC.sidebar(dst.windowId, 'openTabs', items, dst)
-    if (!ans) {
-      for (const item of items) {
-        await browser.tabs.create({ url: item.url, windowId: dst.windowId })
-      }
-    }
-
+    await IPC.bg('openTabs', items, dst)
     return true
   }
 

@@ -4,6 +4,7 @@ import { ItemInfo, DstPlaceInfo, Notification, PanelConfig } from '../types'
 import { IPCheckResult, UpgradingState } from '../types'
 import { GroupPageInitData } from 'src/services/tabs.bg.actions'
 import { Stored } from './storage'
+import { Tabs } from 'src/services/tabs.bg'
 
 export const enum InstanceType {
   unknown = -1,
@@ -54,6 +55,7 @@ export type BgActions = {
   continueUpgrade: () => void
   saveInLocalStorage: (newValues: Stored, srcInfo: IPCNodeInfo) => void
   getSidebarTabs: (windowId: ID, tabIds?: ID[]) => Promise<Tab[] | undefined>
+  openTabs: typeof Tabs.openTabs
   disableAutoReopening: (containerId: string, delay: number) => void
   enableAutoReopening: (excludeTabIds: ID[]) => void
 }

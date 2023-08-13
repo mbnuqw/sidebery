@@ -46,6 +46,7 @@ void (async function main() {
     getSidebarTabs: Tabs.getSidebarTabs,
     disableAutoReopening: WebReq.disableAutoReopening,
     enableAutoReopening: WebReq.enableAutoReopening,
+    openTabs: Tabs.openTabs,
   })
 
   // Init first-need stuff

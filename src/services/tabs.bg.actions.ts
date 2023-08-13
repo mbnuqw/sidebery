@@ -1,5 +1,5 @@
-import { Tab, Window, TabCache, TabsTreeData, GroupInfo, AnyFunc } from 'src/types'
-import { InstanceType, TabTreeData } from 'src/types'
+import { Tab, Window, TabCache, TabsTreeData, GroupInfo, AnyFunc, DstPlaceInfo } from 'src/types'
+import { InstanceType, TabTreeData, ItemInfo } from 'src/types'
 import * as Utils from 'src/utils'
 import { ADDON_HOST, GROUP_INITIAL_TITLE, GROUP_URL, NOID, SAMEID } from 'src/defaults'
 import { URL_URL, SETTINGS_OPTIONS } from 'src/defaults'
@@ -665,16 +665,32 @@ export function tabsApiProxy<T extends Array<any>>(method: string, ...args: T): 
 }
 
 export async function getSidebarTabs(windowId: ID, tabIds?: ID[]): Promise<Tab[] | undefined> {
-  const connection = IPC.getConnection(InstanceType.sidebar, windowId)
-  if (!connection) return
-  if (
-    (!connection.localPort || connection.localPort.error) &&
-    (!connection.remotePort || connection.remotePort.error)
-  ) {
+  const con = IPC.getConnection(InstanceType.sidebar, windowId)
+  if (!con) return
+  if ((!con.localPort || con.localPort.error) && (!con.remotePort || con.remotePort.error)) {
     return
   }
 
   return IPC.sidebar(windowId, 'getTabs', tabIds)
+}
+
+export async function openTabs(items: ItemInfo[], dst: DstPlaceInfo) {
+  if (dst.windowId === undefined || !Windows.byId[dst.windowId]) return false
+
+  const con = IPC.getConnection(InstanceType.sidebar, dst.windowId)
+
+  // Sidebar is connected
+  if ((con?.localPort && !con.localPort.error) || (con?.remotePort && !con.remotePort.error)) {
+    return IPC.sidebar(dst.windowId, 'openTabs', items, dst)
+  }
+
+  // No sidebar connection
+  else {
+    for (const item of items) {
+      await browser.tabs.create({ url: item.url, windowId: dst.windowId })
+    }
+    return true
+  }
 }
 
 export function setupTabsListeners(): void {
