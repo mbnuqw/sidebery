@@ -1,10 +1,13 @@
-import { Tab, TabCache, GroupInfo, TabsTreeData } from './tabs'
-import { NormalizedSnapshot, RemovingSnapshotResult, Snapshot } from './snapshots'
+import { Tab, GroupInfo, TabsTreeData } from './tabs'
 import { ItemInfo, DstPlaceInfo, Notification, PanelConfig } from '../types'
-import { IPCheckResult, UpgradingState } from '../types'
-import { GroupPageInitData } from 'src/services/tabs.bg.actions'
+import { UpgradingState } from '../types'
 import { Stored } from './storage'
 import { Tabs } from 'src/services/tabs.bg'
+import { Snapshots } from 'src/services/snapshots'
+import * as Favicons from 'src/services/favicons.bg'
+import { WebReq } from 'src/services/web-req'
+import { Windows } from 'src/services/windows'
+import { Store } from 'src/services/storage'
 
 export const enum InstanceType {
   unknown = -1,
@@ -37,31 +40,28 @@ export interface IPCNodeInfo {
 }
 
 export type BgActions = {
-  cacheTabsData: (windowId: ID, tabs: TabCache[], delay?: number) => void
-  createSnapshot: () => Promise<Snapshot | undefined>
-  addSnapshot: (snapshot: NormalizedSnapshot) => Promise<void>
-  removeSnapshot: (id: ID) => Promise<RemovingSnapshotResult>
-  openSnapshotWindows: (snapshot: NormalizedSnapshot, winIndex?: number) => Promise<void>
-  saveFavicon: (url: string, icon: string) => void
-  checkIpInfo: (cookieStoreId: ID) => Promise<IPCheckResult | null>
-  createWindowWithTabs: (
-    tabsInfo: ItemInfo[],
-    conf?: browser.windows.CreateData
-  ) => Promise<boolean>
-  isWindowTabsLocked: (id: ID) => boolean | TabCache[]
-  getGroupPageInitData: (winId: ID, tabId: ID) => Promise<GroupPageInitData>
-  tabsApiProxy: (method: string, ...args: any[]) => Promise<any>
+  cacheTabsData: typeof Tabs.cacheTabsData
+  getGroupPageInitData: typeof Tabs.getGroupPageInitData
+  tabsApiProxy: typeof Tabs.tabsApiProxy
+  getSidebarTabs: typeof Tabs.getSidebarTabs
+  openTabs: typeof Tabs.openTabs
+  createSnapshot: typeof Snapshots.createSnapshot
+  addSnapshot: typeof Snapshots.addSnapshot
+  removeSnapshot: typeof Snapshots.removeSnapshot
+  openSnapshotWindows: typeof Snapshots.openWindows
+  saveFavicon: typeof Favicons.saveFavicon
+  createWindowWithTabs: typeof Windows.createWithTabs
+  isWindowTabsLocked: typeof Windows.isWindowTabsLocked
+  saveInLocalStorage: typeof Store.setFromRemoteFg
+  checkIpInfo: typeof WebReq.checkIpInfo
+  disableAutoReopening: typeof WebReq.disableAutoReopening
+  enableAutoReopening: typeof WebReq.enableAutoReopening
   checkUpgrade: () => UpgradingState | null
   continueUpgrade: () => void
-  saveInLocalStorage: (newValues: Stored, srcInfo: IPCNodeInfo) => void
-  getSidebarTabs: (windowId: ID, tabIds?: ID[]) => Promise<Tab[] | undefined>
-  openTabs: typeof Tabs.openTabs
-  disableAutoReopening: (containerId: string, delay: number) => void
-  enableAutoReopening: (excludeTabIds: ID[]) => void
 }
 
 export type SettingsActions = {
-  storageChanged: (newValues: Stored) => void
+  storageChanged: typeof Store.storageChangeListener
   connectTo: (dstType: InstanceType, dstWinId?: ID, dstTabId?: ID) => void
 }
 

@@ -30,23 +30,23 @@ void (async function main() {
   // Register globaly available actions
   IPC.registerActions({
     cacheTabsData: Tabs.cacheTabsData,
+    getGroupPageInitData: Tabs.getGroupPageInitData,
+    tabsApiProxy: Tabs.tabsApiProxy,
+    getSidebarTabs: Tabs.getSidebarTabs,
+    openTabs: Tabs.openTabs,
     createSnapshot: Snapshots.createSnapshot,
     addSnapshot: Snapshots.addSnapshot,
     removeSnapshot: Snapshots.removeSnapshot,
     openSnapshotWindows: Snapshots.openWindows,
-    checkIpInfo: WebReq.checkIpInfo,
-    saveFavicon: Favicons.saveFavicon,
     createWindowWithTabs: Windows.createWithTabs,
     isWindowTabsLocked: Windows.isWindowTabsLocked,
-    getGroupPageInitData: Tabs.getGroupPageInitData,
-    tabsApiProxy: Tabs.tabsApiProxy,
-    checkUpgrade: checkUpgrade,
-    continueUpgrade: continueUpgrade,
+    saveFavicon: Favicons.saveFavicon,
     saveInLocalStorage: Store.setFromRemoteFg,
-    getSidebarTabs: Tabs.getSidebarTabs,
+    checkIpInfo: WebReq.checkIpInfo,
     disableAutoReopening: WebReq.disableAutoReopening,
     enableAutoReopening: WebReq.enableAutoReopening,
-    openTabs: Tabs.openTabs,
+    checkUpgrade: checkUpgrade,
+    continueUpgrade: continueUpgrade,
   })
 
   // Init first-need stuff
