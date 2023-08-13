@@ -113,9 +113,6 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
     const winLen = wins.length
     const containerId = Windows.incognito ? DEFAULT_CONTAINER_ID : PRIVATE_CONTAINER_ID
 
-    let items: ItemInfo[]
-    if (winLen > 0) items = Selection.getTabsInfo(true)
-
     if (winLen === 0) option.inactive = true
 
     if (winLen <= 1) {
@@ -127,6 +124,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
         option.icon = 'icon_reopen_in_priv_win'
       }
       option.onClick = () => {
+        const items = Selection.getTabsInfo(true)
         const pinned = items[0]?.pinned
         Tabs.reopen(items, { windowId: wins[0].id, containerId, pinned })
       }
@@ -136,6 +134,7 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
       else option.icon = 'icon_reopen_in_priv_wins'
       option.onClick = () => {
         const filter = (w: Window) => w.incognito !== Windows.incognito
+        const items = Selection.getTabsInfo(true)
         const pinned = items[0]?.pinned
         Tabs.reopen(items, {
           windowId: ASKID,
