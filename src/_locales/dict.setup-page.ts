@@ -42,8 +42,7 @@ export const setupPageTranslations: Translations = {
     en: 'Proxy',
     ru: 'Прокси',
     de: 'Proxy',
-    zh_CN: '代理',
-    zh_TW: '代理',
+    zh: '代理'
   },
   'container.proxy_host_placeholder': {
     en: '---',
@@ -149,8 +148,7 @@ export const setupPageTranslations: Translations = {
     en: 'Color',
     ru: 'Цвет',
     de: 'Farbe',
-    zh_CN: '颜色',
-    zh_TW: '颜色',
+    zh: '颜色'
   },
   'panel.lock_panel_label': {
     en: 'Prevent auto-switching from this panel',
@@ -266,8 +264,7 @@ export const setupPageTranslations: Translations = {
     en: 'Text',
     de: 'Text',
     ru: 'Текст',
-    zh_CN: '文本',
-    zh_TW: '文本',
+    zh: '文本'
   },
   'panel.custom_icon_url_btn': {
     en: 'URL',
@@ -275,8 +272,7 @@ export const setupPageTranslations: Translations = {
   'panel.custom_icon_file_btn': {
     en: 'File',
     ru: 'Файл',
-    zh_CN: '文件',
-    zh_TW: '文件',
+    zh: '文件'
   },
   'panel.custom_icon_note': {
     en: 'Text value syntax: "text::color::CSS-font-value"',
@@ -302,8 +298,7 @@ export const setupPageTranslations: Translations = {
     en: 'e.g. A::#000000ff::700 32px Roboto',
     ru: 'A::#000000ff::700 32px Roboto',
     de: 'z.B. A::#000000ff::700 32px Roboto',
-    zh_CN: '例如 A::#000000ff::700 32px Roboto',
-    zh_TW: '例如 A::#000000ff::700 32px Roboto',
+    zh: '例如 A::#000000ff::700 32px Roboto'
   },
   'panel.custom_icon_url_placeholder': {
     en: 'Custom icon URL...',
@@ -339,8 +334,7 @@ export const setupPageTranslations: Translations = {
     en: 'Reset',
     ru: 'Сбросить',
     de: 'Zurücksetzen',
-    zh_CN: '重置',
-    zh_TW: '重置',
+    zh: '重置'
   },
   'panel.bookmarks_view_mode': {
     en: 'View mode',
@@ -397,8 +391,7 @@ export const setupPageTranslations: Translations = {
   'panel.new_tab_shortcuts_manage_btn': {
     en: 'Manage shortcuts',
     ru: 'Управление ярлыками',
-    zh_CN: '管理快捷方式',
-    zh_TW: '管理快捷方式',
+    zh: '管理快捷方式'
   },
 
   // ---
@@ -443,22 +436,19 @@ export const setupPageTranslations: Translations = {
     en: 'Containers',
     ru: 'Контейнеры',
     de: 'Umgebungen',
-    zh_CN: '容器',
-    zh_TW: '容器',
+    zh: '容器'
   },
   'settings.nav_settings_dnd': {
     en: 'Drag and Drop',
     ru: 'Перетаскивание',
     de: 'Drag and Drop',
-    zh_CN: '拖拽',
-    zh_TW: '拖拽',
+    zh: '拖拽'
   },
   'settings.nav_settings_search': {
     en: 'Search',
     ru: 'Поиск',
     de: 'Suche',
-    zh_CN: '搜索',
-    zh_TW: '搜索',
+    zh: '搜索'
   },
   'settings.nav_settings_tabs': {
     en: 'Tabs',
@@ -513,8 +503,7 @@ export const setupPageTranslations: Translations = {
     en: 'Snapshots',
     ru: 'Снепшоты',
     de: 'Schnappschüsse',
-    zh_CN: '快照',
-    zh_TW: '快照',
+    zh: '快照'
   },
   'settings.nav_settings_mouse': {
     en: 'Mouse',
@@ -548,8 +537,7 @@ export const setupPageTranslations: Translations = {
     en: 'Sync',
     ru: 'Синхронизация',
     de: 'Sync',
-    zh_CN: '同步',
-    zh_TW: '同步',
+    zh: '同步'
   },
   'settings.nav_settings_help': {
     en: 'Help',
@@ -604,8 +592,7 @@ export const setupPageTranslations: Translations = {
     en: 'Snapshots viewer',
     ru: 'Снепшоты',
     de: 'Schnappschuss-Viewer',
-    zh_CN: '快照查看器',
-    zh_TW: '快照查看器',
+    zh: '快照查看器'
   },
   'settings.nav_keybindings': {
     en: 'Keybindings',
@@ -627,15 +614,13 @@ export const setupPageTranslations: Translations = {
     en: 'SAVE',
     ru: 'СОХРАНИТЬ',
     de: 'SPEICHERN',
-    zh_CN: '保存',
-    zh_TW: '保存',
+    zh: '保存'
   },
   'settings.ctrl_update': {
     en: 'UPDATE',
     ru: 'ОБНОВИТЬ',
     de: 'AKTUALISIEREN',
-    zh_CN: '更新',
-    zh_TW: '更新',
+    zh: '更新'
   },
   'settings.ctrl_copy': {
     en: 'COPY',
@@ -657,8 +642,7 @@ export const setupPageTranslations: Translations = {
     en: 'General',
     ru: 'Основные',
     de: 'Allgemein',
-    zh_CN: '通用',
-    zh_TW: '通用',
+    zh: '通用'
   },
   'settings.native_scrollbars': {
     en: 'Use native scroll-bars',
@@ -720,7 +704,7 @@ export const setupPageTranslations: Translations = {
     en: 'Permissions',
     ru: 'Разрешения',
     de: 'Berechtigungen',
-    zh_CN: '權限',
+    zh_CN: '权限',
     zh_TW: '權限',
   },
 
@@ -757,15 +741,13 @@ export const setupPageTranslations: Translations = {
     en: 'Ignore containers',
     ru: 'Не отображать контейнеры',
     de: 'Umgebungen ignorieren',
-    zh_CN: '忽略容器',
-    zh_TW: '忽略容器',
+    zh: '忽略容器'
   },
   'settings.ctx_menu_ignore_ctr_or': {
     en: 'e.g. /^tmp.+/, Google, Facebook',
     ru: 'пример: /^tmp.+/, Google, Facebook',
     de: 'z.B. /^tmp.+/, Google, Facebook',
-    zh_CN: '例如 /^tmp.+/, Google, Facebook',
-    zh_TW: '例如 /^tmp.+/, Google, Facebook',
+    zh: '例如 /^tmp.+/, Google, Facebook'
   },
   'settings.ctx_menu_ignore_ctr_note': {
     en: 'Use comma-separated list of container names or /regexp/',
@@ -802,15 +784,13 @@ export const setupPageTranslations: Translations = {
     en: 'horizontal',
     ru: 'горизонтальное',
     de: 'Horizontal',
-    zh_CN: '水平排列',
-    zh_TW: '水平排列',
+    zh: '水平排列'
   },
   'settings.nav_bar_layout_vertical': {
     en: 'vertical',
     ru: 'вертикальное',
     de: 'Vertikal',
-    zh_CN: '垂直排列',
-    zh_TW: '垂直排列',
+    zh: '垂直排列'
   },
   'settings.nav_bar_layout_hidden': {
     en: 'hidden',
@@ -944,6 +924,7 @@ export const setupPageTranslations: Translations = {
     ru: 'ничего',
     de: 'Nichts',
     zh_CN: '无',
+    zh_TW: '無',
   },
   'settings.nav_tabs_panel_mid_click': {
     en: 'Middle click on tabs panel',
@@ -969,6 +950,9 @@ export const setupPageTranslations: Translations = {
   'settings.nav_tabs_panel_mid_click_rm_rmp': {
     en: 'close tabs and remove panel',
     ru: 'закрыть вкладки и удалить панель',
+    de: 'Schließe Tabs und entferne Panel',
+    zh_CN: '关闭标签页并移除面板',
+    zh_TW: '關閉標籤頁並移除面板',
   },
   'settings.nav_tabs_panel_mid_click_discard': {
     en: 'unload tabs',
@@ -980,6 +964,9 @@ export const setupPageTranslations: Translations = {
   'settings.nav_tabs_panel_mid_click_hide': {
     en: 'hide panel',
     ru: 'скрыть панель',
+    de: 'Verstecke Panel',
+    zh_CN: '隐藏面板',
+    zh_TW: '隱藏面板',
   },
   'settings.nav_tabs_panel_mid_click_bookmark': {
     en: 'save panel to bookmarks',
@@ -991,6 +978,9 @@ export const setupPageTranslations: Translations = {
   'settings.nav_tabs_panel_mid_click_bkm_rmp': {
     en: 'save to bookmarks and remove panel',
     ru: 'сохранить в закладки и удалить панель',
+    de: 'Speichere in Lesezeichen und entferne Panel',
+    zh_CN: '保存到书签并移除面板',
+    zh_TW: '保存到書籤並移除面板',
   },
   'settings.nav_tabs_panel_mid_click_convert': {
     en: 'convert to bookmarks',
@@ -1002,12 +992,16 @@ export const setupPageTranslations: Translations = {
   'settings.nav_tabs_panel_mid_click_conv_hide': {
     en: 'convert to bookmarks panel and hide',
     ru: 'конвертировать в панель закладок и скрыть',
+    de: 'Konvertiere in Lesezeichen-Panel und verstecke',
+    zh_CN: '转换为书签面板并隐藏',
+    zh_TW: '轉換為書籤面板並隱藏',
   },
   'settings.nav_tabs_panel_mid_click_none': {
     en: 'none',
     ru: 'ничего',
     de: 'Nichts',
     zh_CN: '无',
+    zh_TW: '無',
   },
   'settings.nav_bookmarks_panel_mid_click': {
     en: 'Middle click on bookmarks panel',
@@ -1028,6 +1022,7 @@ export const setupPageTranslations: Translations = {
     ru: 'ничего',
     de: 'Nichts',
     zh_CN: '无',
+    zh_TW: '無',
   },
   'settings.nav_switch_panels_wheel': {
     en: 'Switch panels with mouse wheel over navigation bar',
@@ -1053,13 +1048,14 @@ export const setupPageTranslations: Translations = {
   'settings.nav_bar.inact_note': {
     en: '(Inactive)',
     ru: '(Неактивно)',
+    de: '(Inaktiv)',
+    zh: '(未激活)'
   },
   'settings.nav_bar.available_elements': {
     en: 'Available elements',
     ru: 'Доступные элементы',
     de: 'Verfügbare Elemente',
-    zh_CN: '可用元素',
-    zh_TW: '可用元素',
+    zh: '可用元素'
   },
   'settings.nav_bar_btn_tabs_panel': {
     en: 'Tabs panel',
@@ -1086,12 +1082,14 @@ export const setupPageTranslations: Translations = {
     en: 'Delimiter',
     ru: 'Разделитель',
     de: 'Abgrenzung',
-    zh_CN: '分隔符',
-    zh_TW: '分隔符',
+    zh: '分隔符'
   },
   'settings.nav_bar_btn_hdn': {
     en: 'Hidden panels',
     ru: 'Скрытые панели',
+    de: 'Versteckte Panels',
+    zh_CN: '隐藏面板',
+    zh_TW: '隱藏面板',
   },
   'settings.nav_bar_btn_history': {
     en: 'History panel',
@@ -1118,8 +1116,7 @@ export const setupPageTranslations: Translations = {
     en: 'Search',
     ru: 'Поиск',
     de: 'Suche',
-    zh_CN: '搜索',
-    zh_TW: '搜索',
+    zh: '搜索'
   },
   'settings.nav_bar_btn_create_snapshot': {
     en: 'Create snapshot',
@@ -1146,8 +1143,7 @@ export const setupPageTranslations: Translations = {
     en: 'Delete "',
     ru: 'Удалить панель "',
     de: 'Lösche "',
-    zh_CN: '删除 "',
-    zh_TW: '删除 "',
+    zh: '删除 "'
   },
   'settings.nav_rm_tabs_panel_confirm_post': {
     en: '" panel?\nAll tabs of this panel will be assigned to nearest tabs panel.',
@@ -1167,8 +1163,7 @@ export const setupPageTranslations: Translations = {
     en: '" panel?',
     ru: '"?',
     de: '" Panel?',
-    zh_CN: '" 面板吗?',
-    zh_TW: '" 面板吗?',
+    zh: '" 面板吗?'
   },
 
   // - Group page
@@ -1197,8 +1192,7 @@ export const setupPageTranslations: Translations = {
     en: 'list',
     ru: 'список',
     de: 'Liste',
-    zh_CN: '列表',
-    zh_TW: '列表',
+    zh: '列表'
   },
 
   // - Containers
@@ -1206,8 +1200,7 @@ export const setupPageTranslations: Translations = {
     en: 'Containers',
     ru: 'Контейнеры',
     de: 'Umgebung',
-    zh_CN: '容器',
-    zh_TW: '容器',
+    zh: '容器'
   },
   'settings.contianer_remove_confirm_prefix': {
     en: 'Are you sure you want to delete "',
@@ -1236,8 +1229,7 @@ export const setupPageTranslations: Translations = {
     en: 'Drag and Drop',
     ru: 'Перетаскивание',
     de: 'Drag and Drop',
-    zh_CN: '拖拽',
-    zh_TW: '拖拽',
+    zh: '拖拽'
   },
   'settings.dnd_tab_act': {
     en: 'Activate tab on hover',
@@ -1262,27 +1254,25 @@ export const setupPageTranslations: Translations = {
   },
   'settings.dnd_mod_alt': {
     en: 'alt',
-    ru: 'alt',
     de: 'Alt',
-    zh_CN: 'alt',
+    zh: 'Alt'
   },
   'settings.dnd_mod_shift': {
     en: 'shift',
-    ru: 'shift',
     de: 'Umschalt',
-    zh_CN: 'shift',
+    zh: 'Shift'
   },
   'settings.dnd_mod_ctrl': {
     en: 'ctrl',
-    ru: 'ctrl',
     de: 'Strg',
-    zh_CN: 'ctrl',
+    zh: 'Ctrl'
   },
   'settings.dnd_mod_none': {
     en: 'none',
     ru: 'выкл',
     de: 'Kein',
     zh_CN: '无',
+    zh_TW: '無',
   },
   'settings.dnd_outside': {
     en: 'Action on drag-and-drop to the outside of sidebar',
@@ -1338,6 +1328,7 @@ export const setupPageTranslations: Translations = {
     ru: 'выкл',
     de: 'Nie',
     zh_CN: '无',
+    zh_TW: '無',
   },
   'settings.dnd_exp_delay': {
     en: 'With delay (ms)',
@@ -1388,8 +1379,7 @@ export const setupPageTranslations: Translations = {
     en: 'Search',
     ru: 'Поиск',
     de: 'Suche',
-    zh_CN: '搜索',
-    zh_TW: '搜索',
+    zh: '搜索'
   },
   'settings.search_bar_mode': {
     en: 'Search bar mode',
@@ -1416,42 +1406,68 @@ export const setupPageTranslations: Translations = {
     en: 'inactive',
     ru: 'скрытый',
     de: 'Inaktiv',
-    zh_CN: '不活跃',
-    zh_TW: '不活躍',
+    zh_CN: '关闭',
+    zh_TW: '關閉',
   },
   'settings.search_panel_switch': {
     en: 'Keep searching when switching panels',
     ru: 'Продолжать поиск при переключении панелей',
+    de: 'Suche beim Wechseln der Panels beibehalten',
+    zh_CN: '切换面板时保持搜索',
+    zh_TW: '切換面板時保持搜索',
   },
   'settings.search_panel_switch_any': {
     en: 'any panel',
     ru: 'любая панель',
+    de: 'Jede Panel',
+    zh: '任意面板'
   },
   'settings.search_panel_switch_same_type': {
     en: 'same panel type',
     ru: 'тот же тип панели',
+    de: 'Gleicher Panel-Typ',
+    zh_CN: '同一类型的面板',
+    zh_TW: '同一類型的面板',
   },
   'settings.search_panel_switch_none': {
     en: 'off',
     ru: 'выкл',
+    de: 'Nie',
+    zh_CN: '关闭',
+    zh_TW: '關閉',
   },
   'settings.search.shortcuts': {
     en: 'Shortcuts',
     ru: 'Быстрый доступ',
+    de: 'Tastenkombinationen',
+    zh_CN: '快捷键',
+    zh_TW: '快捷鍵',
   },
   'settings.search.shortcuts.note': {
     en: `Available modifiers: ctrl, alt, cmd
 Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     ru: `Доступные модификаторы: ctrl, alt, cmd
 Примеры: "*", "ctrl+$", "ctrl+alt+g"`,
+    de: `Verfügbare Modifikatoren: ctrl, alt, cmd
+Beispiele: "*", "ctrl+$", "ctrl+alt+g"`,
+    zh_CN: `可用修饰符：ctrl, alt, cmd
+示例： "*", "ctrl+$", "ctrl+alt+g"`,
+    zh_TW: `可用修飾鍵：ctrl, alt, cmd
+範例： "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.search.bookmarks_shortcut': {
     en: 'Switch to bookmarks',
     ru: 'Перейти к закладкам',
+    de: 'Zu Lesezeichen wechseln',
+    zh_CN: '切换到书签',
+    zh_TW: '切換到書籤',
   },
   'settings.search.history_shortcut': {
     en: 'Switch to history',
     ru: 'Перейти к истории',
+    de: 'Zu Chronik wechseln',
+    zh_CN: '切换到历史记录',
+    zh_TW: '切換到歷史紀錄',
   },
 
   // - Tabs
@@ -1473,8 +1489,7 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     en: 'any',
     ru: 'любых',
     de: 'Alle',
-    zh_CN: '所有',
-    zh_TW: '所有',
+    zh: '所有'
   },
   'settings.warn_on_multi_tab_close_collapsed': {
     en: 'collapsed',
@@ -1488,6 +1503,7 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     ru: 'нет',
     de: 'Nie',
     zh_CN: '无',
+    zh_TW: '無',
   },
   'settings.activate_last_tab_on_panel_switching': {
     en: 'Activate last active tab on panel switching',
@@ -1530,6 +1546,7 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
   'settings.tab_rm_btn_none': {
     en: 'no',
     ru: 'нет',
+    zh: 'No'
   },
   'settings.switch_panel_after_switching_tab': {
     en: 'Automatically switch panel on activating tab of another panel',
@@ -1546,13 +1563,13 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
   'settings.switch_panel_after_switching_tab_mouseleave': {
     en: 'if the mouse left the sidebar',
     ru: 'если мышь покинула боковую панель',
-    // upd needed
-    // zh_CN: '鼠标离开侧边栏后',
-    // zh_TW: '鼠標離開側邊欄後',
+    zh_CN: '如果鼠标离开侧边栏',
+    zh_TW: '如果鼠標離開側邊欄',
   },
   'settings.switch_panel_after_switching_tab_no': {
     en: 'no',
     ru: 'нет',
+    zh: 'No'
   },
   'settings.hide_inactive_panel_tabs': {
     en: 'Hide native tabs of inactive panels',
@@ -1594,6 +1611,7 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     ru: 'выкл',
     de: 'nichts',
     zh_CN: '无',
+    zh_TW: '無',
   },
   'settings.activate_after_closing_prev_rule': {
     en: 'Previous tab rule',
@@ -1627,15 +1645,13 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     en: 'any',
     ru: 'любая',
     de: 'Alle',
-    zh_CN: '所有',
-    zh_TW: '所有',
+    zh: '所有'
   },
   'settings.activate_after_closing_global': {
     en: 'Globally',
     ru: 'Глобально',
     de: 'Global',
-    zh_CN: '全局',
-    zh_TW: '全局',
+    zh: '全局'
   },
   'settings.activate_after_closing_stay_in_panel': {
     en: 'Stay in panel to the last tab',
@@ -1655,8 +1671,7 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     en: 'full',
     ru: 'полный',
     de: 'Vollständig',
-    zh_CN: '完整显示',
-    zh_TW: '完整显示',
+    zh: '完整显示'
   },
   'settings.tabs_url_in_tooltip_stripped': {
     en: 'stripped',
@@ -1719,13 +1734,16 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     en: 'Show mark on tabs with updated title',
     ru: 'Показывать метку на вкладках с обновленным заголовком',
     de: 'Zeige Markierung an Tabs mit aktualisiertem Titel',
-    zh_CN: '在具有更新标题的选项卡上显示标记',
-    zh_TW: '在具有更新標題的選項卡上顯示標記',
+
+    zh_CN: '在标签页上显示更新标题的标记',
+    zh_TW: '在標籤頁上顯示更新標題的標記',
   },
   'settings.tabs_update_mark_all': {
     en: 'on',
     ru: 'вкл',
     de: 'Ein',
+    zh_CN: '打开',
+    zh_TW: '打開',
   },
   'settings.tabs_update_mark_pin': {
     en: 'only for pinned',
@@ -1745,12 +1763,14 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     en: 'off',
     ru: 'выкл',
     de: 'Aus',
+    zh_CN: '关闭',
+    zh_TW: '關閉',
   },
   'settings.tabs_update_mark_first': {
     en: 'Including the first title change with new URL',
     ru: 'Включая первое изменение заголовка с новым URL',
-    zh_CN: '包括使用新 URL 的第一个标题更改',
-    zh_TW: '包括使用新 URL 的第一個標題更改',
+    zh_CN: '包括使用新 URL 的第一次标题更改',
+    zh_TW: '包括使用新 URL 的第一次標題更改',
   },
   'settings.tabs_reload_limit': {
     en: 'Limit the count of simultaneously reloading tabs',
@@ -1770,14 +1790,14 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     en: 'Switch panel after manually moving active tab to another panel',
     ru: 'Переключать панель после ручного перемещения активной вкладки на другую панель',
     // de: 'Wechsle Panel nach bewegen aktiver Tabs in anderes Panel',
-    zh_CN: '将活动选项卡移动到另一个面板后切换面板',
-    zh_TW: '將活動選項卡移動到另一個面板後切換面板',
+    zh_CN: '手动移动活动选项卡后将面板切换到另一个面板',
+    zh_TW: '手動移動活動選項卡後將面板切換到另一個面板',
   },
   'settings.tabs_panel_switch_act_move_auto': {
     en: 'Switch panel after auto moving active tab to another panel',
     ru: 'Переключать панель после автоматического перемещения активной вкладки на другую панель',
-    zh_CN: '自动将活动选项卡移动到另一个面板后切换面板',
-    zh_TW: '自動將活動選項卡移動到另一個面板後切換面板',
+    zh_CN: '自动移动活动选项卡后将面板切换到另一个面板',
+    zh_TW: '自動移動活動選項卡後將面板切換到另一個面板',
   },
   'settings.show_new_tab_btns': {
     en: 'Show new tab buttons',
@@ -1790,8 +1810,7 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     en: 'Position',
     ru: 'Положение',
     de: 'Position',
-    zh_CN: '位置',
-    zh_TW: '位置',
+    zh: '位置'
   },
   'settings.new_tab_bar_position_after_tabs': {
     en: 'after tabs',
@@ -1804,8 +1823,7 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     en: 'bottom',
     ru: 'снизу',
     de: 'Unten',
-    zh_CN: '底部',
-    zh_TW: '底部',
+    zh: '底部'
   },
   // 'settings.tab_warmup_on_hover': {
   //   en: 'Preload tab contents on mouse hover (tab warmup)',
@@ -1840,8 +1858,7 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
       return 'секунд'
     },
     de: n => (n === 1 ? 'Sekunde' : 'Sekunden'),
-    zh_CN: n => (n === 1 ? 'second' : '秒'),
-    zh_TW: n => (n === 1 ? 'second' : '秒'),
+    zh: '秒'
   },
   'settings.discard_inactive_panel_tabs_delay_min': {
     en: n => (n === 1 ? 'minute' : 'minutes'),
@@ -1851,11 +1868,10 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
       return 'минут'
     },
     de: n => (n === 1 ? 'Minute' : 'Minuten'),
-    zh_CN: n => (n === 1 ? 'minute' : '分'),
-    zh_TW: n => (n === 1 ? 'minute' : '分'),
+    zh: '分'
   },
   'settings.tabs_second_click_act_prev': {
-    en: 'Activate previously active tab when clicking on the active tab (Tab flip)',
+    en: 'Activate previously active tab when clicking on the active tab (Tab flip',
     ru: 'Активировать ранее активную вкладку при нажатии на активную вкладку',
     de: 'Beim Klicken auf aktiven Tab Aktivierung umkehren',
     zh_CN: '单击活动标签页时向后激活',
@@ -1887,15 +1903,13 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     en: 'panel start',
     ru: 'начало панели',
     de: 'Anfang des Panels',
-    zh_CN: '面板起始位置',
-    zh_TW: '面板起始位置',
+    zh: '面板起始位置'
   },
   'settings.move_new_tab_pin_end': {
     en: 'panel end',
     ru: 'конец панели',
     de: 'Ende des Panels',
-    zh_CN: '面板末尾位置',
-    zh_TW: '面板末尾位置',
+    zh: '面板末尾位置'
   },
   'settings.move_new_tab_pin_none': {
     en: 'use general rule',
@@ -1943,15 +1957,13 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     en: 'panel start',
     ru: 'начало панели',
     de: 'Anfang des Panels',
-    zh_CN: '面板起始位置',
-    zh_TW: '面板起始位置',
+    zh: '面板起始位置'
   },
   'settings.move_new_tab_parent_end': {
     en: 'panel end',
     ru: 'конец панели',
     de: 'Ende des Panels',
-    zh_CN: '面板末尾位置',
-    zh_TW: '面板末尾位置',
+    zh: '面板末尾位置'
   },
   'settings.move_new_tab_parent_default': {
     en: 'do not move it',
@@ -1977,6 +1989,9 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
   'settings.ignore_folded_parent': {
     en: 'Open a new tab one level down if the parent tab is folded',
     ru: 'Открывать новую вкладку на уровень ниже, если родительская вкладка свернута',
+    de: 'Öffne neuen Tab eine Ebene tiefer, wenn übergeordneter Tab eingeklappt ist',
+    zh_CN: '如果父标签页已折叠，则在下一级打开新标签页',
+    zh_TW: '如果父標籤頁已折疊，則在下一級打開新標籤頁',
   },
   'settings.move_new_tab': {
     en: 'Place new tab (general rule)',
@@ -1989,15 +2004,13 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     en: 'panel start',
     ru: 'начало панели',
     de: 'Anfang des Panels',
-    zh_CN: '面板起始位置',
-    zh_TW: '面板起始位置',
+    zh: '面板起始位置'
   },
   'settings.move_new_tab_end': {
     en: 'panel end',
     ru: 'конец панели',
     de: 'Ende des Panels',
-    zh_CN: '面板末尾位置',
-    zh_TW: '面板末尾位置',
+    zh: '面板末尾位置'
   },
   'settings.move_new_tab_before': {
     en: 'before active tab',
@@ -2031,6 +2044,8 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     en: 'none',
     ru: 'выкл',
     de: 'Nichts',
+    zh_CN: '无',
+    zh_TW: '無',
   },
   'settings.move_new_tab_active_pin': {
     en: 'If active tab is pinned',
@@ -2093,6 +2108,9 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
   'settings.pinned.no_unload': {
     en: 'Prevent pinned tabs from unloading',
     ru: 'Предотвращать выгрузку закрепленных вкладок',
+    de: 'Verhindere Entladen von angehefteten Tabs',
+    zh_CN: '阻止卸载固定标签页',
+    zh_TW: '阻止卸載固定標籤頁',
   },
   'settings.pinned_auto_group': {
     en: 'Group tabs that were opened from a pinned tab',
@@ -2132,40 +2150,26 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_TW: '限制標籤頁樹級別',
   },
   'settings.tabs_tree_limit_1': {
-    en: '1',
-    ru: '1',
-    de: '1',
-    zh_CN: '1',
+    en: '1'
   },
   'settings.tabs_tree_limit_2': {
-    en: '2',
-    ru: '2',
-    de: '2',
-    zh_CN: '2',
+    en: '2'
   },
   'settings.tabs_tree_limit_3': {
-    en: '3',
-    ru: '3',
-    de: '3',
-    zh_CN: '3',
-    zh_TW: '',
+    en: '3'
   },
   'settings.tabs_tree_limit_4': {
-    en: '4',
-    ru: '4',
-    de: '4',
-    zh_CN: '4',
+    en: '4'
   },
   'settings.tabs_tree_limit_5': {
-    en: '5',
-    ru: '5',
-    de: '5',
-    zh_CN: '5',
+    en: '5'
   },
   'settings.tabs_tree_limit_none': {
     en: 'none',
     ru: 'выкл',
     de: 'Keines',
+    zh_CN: '无',
+    zh_TW: '無',
   },
   'settings.hide_folded_tabs': {
     en: 'Hide native tabs in folded branch',
@@ -2183,8 +2187,8 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
   'settings.hide_folded_parent_any': {
     en: 'any tab',
     ru: 'любую вкладку',
-    zh_CN: '任何标签页',
-    zh_TW: '任何標籤頁',
+    zh_CN: '任意标签页',
+    zh_TW: '任意標籤頁',
   },
   'settings.hide_folded_parent_group': {
     en: 'group tab',
@@ -2196,6 +2200,7 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     en: 'off',
     ru: 'выкл',
     zh_CN: '关闭',
+    zh_TW: '關閉',
   },
   'settings.auto_fold_tabs': {
     en: 'Auto fold tabs',
@@ -2208,38 +2213,22 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     en: 'Max count of open branches',
     ru: 'Максимальное количество открытых веток',
     de: 'Maximalzahl offener Zweige',
-    zh_CN: '分支上限',
-    zh_TW: '分支上限',
+    zh: '分支上限'
   },
   'settings.auto_fold_tabs_except_1': {
-    en: '1',
-    ru: '1',
-    de: '1',
-    zh_CN: '1',
+    en: '1'
   },
   'settings.auto_fold_tabs_except_2': {
-    en: '2',
-    ru: '2',
-    de: '2',
-    zh_CN: '2',
+    en: '2'
   },
   'settings.auto_fold_tabs_except_3': {
-    en: '3',
-    ru: '3',
-    de: '3',
-    zh_CN: '3',
+    en: '3'
   },
   'settings.auto_fold_tabs_except_4': {
-    en: '4',
-    ru: '4',
-    de: '4',
-    zh_CN: '4',
+    en: '4'
   },
   'settings.auto_fold_tabs_except_5': {
-    en: '5',
-    ru: '5',
-    de: '5',
-    zh_CN: '5',
+    en: '5'
   },
   'settings.auto_fold_tabs_except_none': {
     en: 'none',
@@ -2271,8 +2260,7 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     en: 'all',
     ru: 'все',
     de: 'Alle',
-    zh_CN: '所有',
-    zh_TW: '所有',
+    zh: '所有'
   },
   'settings.rm_child_tabs_folded': {
     en: 'folded',
@@ -2316,8 +2304,7 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
       return 'секунд'
     },
     de: n => (n === 1 ? 'Sekunde' : 'Sekunden'),
-    zh_CN: n => (n === 1 ? 'second' : '秒'),
-    zh_TW: n => (n === 1 ? 'second' : '秒'),
+    zh: '秒'
   },
   'settings.discard_folded_delay_min': {
     en: n => (n === 1 ? 'minute' : 'minutes'),
@@ -2327,8 +2314,7 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
       return 'минут'
     },
     de: n => (n === 1 ? 'Minute' : 'Minuten'),
-    zh_CN: n => (n === 1 ? 'minute' : '分'),
-    zh_TW: n => (n === 1 ? 'minute' : '分'),
+    zh: '分'
   },
   'settings.tabs_tree_bookmarks': {
     en: 'Preserve tree on creating bookmarks',
@@ -2384,22 +2370,19 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     en: 'domain',
     ru: 'доменное имя',
     de: 'Domäne',
-    zh_CN: '域名',
-    zh_TW: '域名',
+    zh: '域名'
   },
   'settings.colorize_tabs_src_container': {
     en: 'container',
     ru: 'контейнер',
     de: 'Umgebung',
-    zh_CN: '容器',
-    zh_TW: '容器',
+    zh: '容器'
   },
   'settings.colorize_branches': {
     en: 'Colorize branches',
     ru: 'Раскрашивать ветки',
     de: 'Zweige einfärben',
-    zh_CN: '着色分支',
-    zh_TW: '着色分支',
+    zh: '着色分支'
   },
   'settings.colorize_branches_src': {
     en: 'Generate color from',
@@ -2415,8 +2398,7 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     en: 'domain',
     ru: 'доменное имя',
     de: 'Domäne',
-    zh_CN: '域名',
-    zh_TW: '域名',
+    zh: '域名'
   },
   'settings.tabs.inherit_custom_color': {
     en: 'Inherit custom (manually set) color in the child tabs',
@@ -2429,6 +2411,9 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
   'settings.tabs_native_title': {
     en: 'Native (horizontal) tabs',
     ru: 'Нативные (горизонтальные) вкладки',
+    de: 'Native (horizontale) Tabs',
+    zh_CN: '原生（水平）标签页',
+    zh_TW: '原生（水平）標籤頁',
   },
 
   // - Bookmarks
@@ -2478,8 +2463,7 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     en: 'any',
     ru: 'любых',
     de: 'Immer',
-    zh_CN: '所有',
-    zh_TW: '所有',
+    zh: '所有'
   },
   'settings.warn_on_multi_bookmark_delete_collapsed': {
     en: 'collapsed',
@@ -2493,6 +2477,7 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     ru: 'нет',
     de: 'Nie',
     zh_CN: '无',
+    zh_TW: '無',
   },
   'settings.auto_close_bookmarks': {
     en: 'Auto-close folders',
@@ -2554,8 +2539,7 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     en: 'done',
     ru: 'завершено',
     de: 'Fertig',
-    zh_CN: '已完成',
-    zh_TW: '已完成',
+    zh: '已完成'
   },
   'settings.fetch_bookmarks_favs_errors': {
     en: 'errors',
@@ -2593,14 +2577,12 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
   'settings.old_bookmarks_after_save_del': {
     en: 'delete',
     ru: 'удалить',
-    zh_CN: '刪除',
-    zh_TW: '刪除',
+    zh: '刪除'
   },
   'settings.old_bookmarks_after_save_keep': {
     en: 'keep',
     ru: 'оставить',
-    zh_CN: '保留',
-    zh_TW: '保留',
+    zh: '保留'
   },
 
   // - History
@@ -2635,46 +2617,25 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     zh_TW: '字體大小',
   },
   'settings.font_size_xxs': {
-    en: 'XXS',
-    ru: 'XXS',
-    de: 'XXS',
-    zh_CN: 'XXS',
+    en: 'XXS'
   },
   'settings.font_size_xs': {
-    en: 'XS',
-    ru: 'XS',
-    de: 'XS',
-    zh_CN: 'XS',
+    en: 'XS'
   },
   'settings.font_size_s': {
-    en: 'S',
-    ru: 'S',
-    de: 'S',
-    zh_CN: 'S',
+    en: 'S'
   },
   'settings.font_size_m': {
-    en: 'M',
-    ru: 'M',
-    de: 'M',
-    zh_CN: 'M',
+    en: 'M'
   },
   'settings.font_size_l': {
-    en: 'L',
-    ru: 'L',
-    de: 'L',
-    zh_CN: 'L',
+    en: 'L'
   },
   'settings.font_size_xl': {
-    en: 'XL',
-    ru: 'XL',
-    de: 'XL',
-    zh_CN: 'XL',
+    en: 'XL'
   },
   'settings.font_size_xxl': {
-    en: 'XXL',
-    ru: 'XXL',
-    de: 'XXL',
-    zh_CN: 'XXL',
+    en: 'XXL'
   },
   'settings.theme': {
     en: 'Theme',
@@ -2685,52 +2646,61 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.theme_proton': {
     en: 'proton',
-    ru: 'proton',
+    ru: 'протон',
     de: 'Proton',
-    zh_CN: 'proton',
+    zh_CN: '质子',
+    zh_TW: '質子',
   },
   'settings.theme_plain': {
     en: 'plain',
-    ru: 'plain',
+    ru: 'Простой',
     de: 'Schlicht',
-    zh_CN: 'plain',
+    zh: '淡雅',
   },
   'settings.density': {
     en: 'Density',
     ru: 'Размер элементов',
+    de: 'Dichte',
+    zh: '排列方式'
   },
   'settings.density_compact': {
     en: 'compact',
     ru: 'компактный',
+    de: 'Kompakt',
+    zh_CN: '紧凑',
+    zh_TW: '緊湊',
   },
   'settings.density_default': {
     en: 'default',
     ru: 'стандартный',
+    de: 'Standard',
+    zh_CN: '默认',
+    zh_TW: '默認',
   },
   'settings.density_loose': {
     en: 'relaxed',
     ru: 'свободный',
+    de: 'Locker',
+    zh_CN: '宽松',
+    zh_TW: '鬆鬆',
   },
   'settings.switch_color_scheme': {
     en: 'Color scheme',
     ru: 'Цветовая схема',
     de: 'Farbschema',
-    zh_CN: '配色方案',
-    zh_TW: '配色方案',
+    zh: '配色方案'
   },
   'settings.color_scheme_dark': {
     en: 'dark',
     ru: 'темная',
     de: 'Dunkel',
-    zh_CN: '暗黑',
-    zh_TW: '暗黑',
+    zh: '暗黑'
   },
   'settings.color_scheme_light': {
     en: 'light',
     ru: 'светлая',
     de: 'Hell',
-    zh_CN: '明亮',
-    zh_TW: '明亮',
+    zh: '明亮'
   },
   'settings.color_scheme_sys': {
     en: 'auto: dark/light',
@@ -2741,17 +2711,14 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
   },
   'settings.color_scheme_ff': {
     en: 'firefox',
-    ru: 'firefox',
     de: 'Firefox',
-    zh_CN: 'Firefox',
-    zh_TW: 'Firefox',
+    zh: 'Firefox'
   },
   'settings.bg_noise': {
     en: 'Frosted background',
     ru: 'Матовый задний фон',
     de: 'Frostiger Hintergrund',
-    zh_CN: '磨砂背景',
-    zh_TW: '磨砂背景',
+    zh: '磨砂背景'
   },
   'settings.animations': {
     en: 'Animations',
@@ -2771,29 +2738,26 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     en: 'fast',
     ru: 'быстрая',
     de: 'Schnell',
-    zh_CN: '快',
-    zh_TW: '快',
+    zh: '快'
   },
   'settings.animation_speed_norm': {
     en: 'normal',
     ru: 'средняя',
     de: 'Normal',
-    zh_CN: '正常',
-    zh_TW: '正常',
+    zh: '正常'
   },
   'settings.animation_speed_slow': {
     en: 'slow',
     ru: 'медленная',
     de: 'Langsam',
-    zh_CN: '慢',
-    zh_TW: '慢',
+    zh: '慢'
   },
   'settings.edit_styles': {
     en: 'Edit styles',
     ru: 'Редактировать стили',
     de: 'Stile anpassen',
     zh_CN: '编辑样式',
-    zh_TW: '',
+    zh_TW: '編輯樣式',
   },
   'settings.edit_theme': {
     en: 'Edit theme',
@@ -2824,8 +2788,7 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     en: 'Snapshots',
     ru: 'Снепшоты',
     de: 'Schnappschüsse',
-    zh_CN: '快照',
-    zh_TW: '快照',
+    zh: '快照'
   },
   'settings.snap_notify': {
     en: 'Show notification after snapshot creation',
@@ -2869,27 +2832,46 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
   'settings.snap_auto_export_type_both': {
     en: 'both',
     ru: 'оба',
+    de: 'beide',
+    zh_CN: '以上两者',
+    zh_TW: '以上兩者',
   },
   'settings.snap_export_md_tree': {
     en: 'Full-tree structure in Markdown',
     ru: 'Полная древовидная структура в Markdown',
+    de: 'Vollständige Baumstruktur in Markdown',
+    zh_CN: 'Markdown 中的完整树结构',
+    zh_TW: 'Markdown 中的完整樹結構',
   },
   'settings.snap_export_md_tree_note': {
     en: 'Add additional indents and bullets to window and panel items.',
     ru: 'Добавить дополнительные отступы и маркеры к пунктам окон и панелей.',
+    de: 'Füge zusätzliche Einrückungen und Aufzählungszeichen zu Fenster- und Panel-Elementen hinzu.',
+    zh_CN: '为窗口和面板项目添加额外的缩进和项目符号。',
+    zh_TW: '為視窗和面板項目添加額外的縮進和項目符號。',
   },
   'settings.snap_export_path': {
     en: 'Path with file name',
     ru: 'Путь с именем файла',
+    de: 'Pfad mit Dateinamen',
+    zh_CN: '路径和文件名',
+    zh_TW: '路徑和文件名',
   },
   'settings.snap_export_path_note': {
     en: `Note: Path is relative to the downloads folder.
 %Y - year; %M - month; %D - day; %h - hour; %m - minute; %s - second`,
     ru: `Примечание: Путь указывается относительно папки загрузок.
 %Y - год; %M - месяц; %D - день; %h - час; %m - минута; %s - секунда`,
+    de: `Hinweis: Pfad ist relativ zum Download-Ordner.
+%Y - Jahr; %M - Monat; %D - Tag; %h - Stunde; %m - Minute; %s - Sekunde`,
+    zh_CN: `注意：路径是相对于下载文件夹的。
+%Y - 年; %M - 月; %D - 日; %h - 小时; %m - 分钟; %s - 秒`,
+    zh_TW: `注意：路徑是相对于下載檔案夾的。
+%Y - 年; %M - 月; %D - 日; %h - 小時; %m - 分鐘; %s - 秒`,
   },
   'settings.snap_export_path_ph': {
     en: 'Sidebery/snapshot-%Y.%M.%D-%h.%m.%s',
+    zh: 'Sidebery/快照-%Y.%M.%D-%h.%m.%s',
   },
   'settings.snap_interval_min': {
     en: n => (n === 1 ? 'minute' : 'minutes'),
@@ -2899,8 +2881,7 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
       return 'минут'
     },
     de: n => (n === 1 ? 'Minute' : 'Minuten'),
-    zh_CN: n => (n === 1 ? 'minute' : '分'),
-    zh_TW: n => (n === 1 ? 'minute' : '分'),
+    zh: '分'
   },
   'settings.snap_interval_hr': {
     en: n => (n === 1 ? 'hour' : 'hours'),
@@ -2910,8 +2891,8 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
       return 'часов'
     },
     de: n => (n === 1 ? 'Stunde' : 'Stunden'),
-    zh_CN: n => (n === 1 ? 'hour' : '小时'),
-    zh_TW: n => (n === 1 ? 'hour' : '小時'),
+    zh_CN: '小时',
+    zh_TW: '小時',
   },
   'settings.snap_interval_day': {
     en: n => (n === 1 ? 'day' : 'days'),
@@ -2921,20 +2902,20 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
       return 'дней'
     },
     de: n => (n === 1 ? 'Tag' : 'Tage'),
-    zh_CN: n => (n === 1 ? 'day' : '天'),
-    zh_TW: n => (n === 1 ? 'day' : '天'),
+    zh: '天'
   },
   'settings.snap_interval_none': {
     en: 'none',
     ru: 'выкл',
     de: 'Keines',
+    zh_CN: '无',
+    zh_TW: '無',
   },
   'settings.snap_limit': {
     en: 'Snapshots limit',
     ru: 'Лимиты',
     de: 'Schnappschuss Limit',
-    zh_CN: '快照上限',
-    zh_TW: '快照上限',
+    zh: '快照上限'
   },
   'settings.snap_limit_snap': {
     en: n => (n === 1 ? 'snapshot' : 'snapshots'),
@@ -2944,8 +2925,7 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
       return 'снепшотов'
     },
     de: n => (n === 1 ? 'Schnappschuss' : 'Schnappschüsse'),
-    zh_CN: n => (n === 1 ? 'snapshot' : '快照'),
-    zh_TW: n => (n === 1 ? 'snapshot' : '快照'),
+    zh: '快照'
   },
   'settings.snap_limit_kb': {
     en: n => (n === 1 ? 'kbyte' : 'kbytes'),
@@ -2954,7 +2934,7 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
       return 'кбайт'
     },
     de: n => (n === 1 ? 'kbyte' : 'kbytes'),
-    zh_CN: n => (n === 1 ? 'kbyte' : 'kbytes'),
+    zh_CN: '千字节',
     zh_TW: n => (n === 1 ? 'kbyte' : 'kbytes'),
   },
   'settings.snap_limit_day': {
@@ -2965,15 +2945,13 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
       return 'дней'
     },
     de: n => (n === 1 ? 'Tag' : 'Tage'),
-    zh_CN: n => (n === 1 ? 'day' : '天'),
-    zh_TW: n => (n === 1 ? 'day' : '天'),
+    zh: '天'
   },
   'settings.snapshots_view_label': {
     en: 'View snapshots',
     ru: 'Просмотреть снепшоты',
     de: 'Schnappschüsse ansehen',
-    zh_CN: '查看快照',
-    zh_TW: '查看快照',
+    zh: '查看快照'
   },
   'settings.make_snapshot': {
     en: 'Create snapshot',
@@ -3051,32 +3029,41 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     en: 'in panel',
     ru: 'на панели',
     de: 'Im Panel',
-    zh_CN: '在面板中',
-    zh_TW: '在面板中',
+    zh: '在面板中'
   },
   'settings.scroll_through_tabs_global': {
     en: 'globally',
     ru: 'глобально',
     de: 'Global',
-    zh_CN: '全局',
-    zh_TW: '全局',
+    zh: '全局'
   },
   'settings.scroll_through_tabs_psp': {
     en: 'preselect in panel',
     ru: 'предварительное выделение в панели',
+    de: 'Vorauswahl im Panel',
+    zh_CN: '在面板中预选',
+    zh_TW: '在面板中預選',
   },
   'settings.scroll_through_tabs_psg': {
     en: 'preselect globally',
     ru: 'предварительное выделение глобально',
+    de: 'Global vorauswählen',
+    zh_CN: '全局预选',
+    zh_TW: '全局預選',
   },
   'settings.scroll_through_tabs_none': {
     en: 'none',
     ru: 'выкл',
     de: 'Nie',
+    zh_CN: '无',
+    zh_TW: '無',
   },
   'settings.scroll_through_tabs_preselect_note': {
     en: 'Select tab with scroll wheel and activate it after mouse leave',
     ru: 'Выделять вкладку с помощью колеса прокрутки и активировать ее, когда курсор мыши убран',
+    de: 'Wähle Tab mit dem Scrollrad aus und aktiviere ihn nach Verlassen der Maus',
+    zh_CN: '使用滚轮选择标签页，并在鼠标离开后激活它',
+    zh_TW: '使用滾輪選擇標籤頁，並在滑鼠離開後啟用它',
   },
   'settings.scroll_through_visible_tabs': {
     en: 'Skip folded tabs',
@@ -3096,8 +3083,7 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     en: 'Unless panel is overflowing',
     de: 'Außer, wenn Panel überläuft',
     ru: 'За исключением случаев, когда панель переполнена',
-    zh_CN: '溢出面板除外',
-    zh_TW: '溢出面板除外',
+    zh: '溢出面板除外'
   },
   'settings.scroll_through_tabs_cyclic': {
     en: 'Cyclically',
@@ -3117,7 +3103,7 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     en: 'Positive - at the right, negative - at the left side of the panel',
     ru: 'Положительное значение - справа, отрицательное - слева на панели',
     de: 'Positiv - rechte Seite, Negativ - linke Seite des Panels',
-    zh_CN: '',
+    zh_CN: '正数 - 在面板右侧，负数 - 在面板左侧',
     zh_TW: '正数 - 面板左侧滚动 负数 - 面板右侧滚动',
   },
   'settings.auto_menu_multi_sel': {
@@ -3131,8 +3117,8 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     en: 'Only for non-native context menu',
     ru: 'Только для несистемного контекстного меню',
     de: 'Nur bei nicht-nativem Kontextmenü',
-    zh_CN: '仅适用于非本地上下文菜单',
-    zh_TW: '僅適用於非本地上下文菜單',
+    zh_CN: '仅适用于非原生上下文菜单',
+    zh_TW: '僅適用於非原生上下文菜單',
   },
   'settings.multiple_middle_close': {
     en: 'Use multi-selection when closing tabs with middle-click',
@@ -3230,14 +3216,23 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
   'settings.tab_middle_click': {
     en: 'Middle click on tab',
     ru: 'Нажатие средней кнопкой мыши по вкладке',
+    zh_CN: '中键单击标签页',
+    zh_TW: '中鍵單擊標籤頁',
+    de: 'Mittlerer Klick auf Tab',
   },
   'settings.tab_middle_click_ctrl': {
     en: 'With Ctrl key pressed',
     ru: 'С зажатой клавишей Ctrl',
+    de: 'Mit gedrückter Strg-Taste',
+    zh_CN: '按住 Ctrl 键',
+    zh_TW: '按住 Ctrl 鍵',
   },
   'settings.tab_middle_click_shift': {
     en: 'With Shift key pressed',
     ru: 'С зажатой клавишей Shift',
+    de: 'Mit gedrückter Shift-Taste',
+    zh_CN: '按住 Shift 键',
+    zh_TW: '按住 Shift 鍵',
   },
   'settings.tab_close_middle_click': {
     en: 'Middle click on close tab button',
@@ -3257,15 +3252,14 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     en: 'duplicate',
     ru: 'дублировать',
     de: 'Duplizieren',
-    zh_CN: '克隆',
-    zh_TW: '克隆',
+    zh_CN: '复制',
+    zh_TW: '複製',
   },
   'settings.tab_action_pin': {
     en: 'pin',
     ru: 'закрепить',
     de: 'Anheften',
-    zh_CN: '固定',
-    zh_TW: '固定',
+    zh: '固定'
   },
   'settings.tab_action_mute': {
     en: 'mute',
@@ -3277,9 +3271,8 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
   'settings.tab_action_clear_cookies': {
     en: 'clear cookies',
     ru: 'удалить cookies',
-    zh_CN: '清除 Cookies',
-    zh_TW: '清除 Cookies',
     de: 'Cookies löschen',
+    zh: '清除 Cookies'
   },
   'settings.tab_action_exp': {
     en: 'expand',
@@ -3326,6 +3319,7 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     en: 'none',
     ru: 'выкл',
     zh_CN: '无',
+    zh_TW: '無',
     de: 'Nichts',
   },
 
@@ -3432,8 +3426,8 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     ru: 'выкл',
     de: 'Nichts',
     zh_CN: '无',
+    zh_TW: '無',
   },
-
   'settings.mouse.new_tab_button_title': {
     en: 'New Tab button actions',
     de: 'Aktionen für neue Tab-Schaltflächen',
@@ -3557,10 +3551,16 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
   'settings.mouse.history_title': {
     en: 'History items actions',
     ru: 'Действия над элементами истории',
+    de: 'Aktionen mit Chronik-Einträgen',
+    zh_CN: '历史项目操作',
+    zh_TW: '歷史項目操作',
   },
   'settings.mouse.history.left_click_action': {
     en: 'Left-click on the history item',
     ru: 'Левый клик по элементу истории',
+    de: 'Linksklick auf Chronik-Eintrag',
+    zh_CN: '左击历史项目',
+    zh_TW: '左擊歷史項目',
   },
   'settings.mouse.history.left_click_action_open_in_act': {
     en: 'open in active tab',
@@ -3607,6 +3607,9 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
   'settings.mouse.history.mid_click_action': {
     en: 'Middle-click on the history item',
     ru: 'Средний клик по элементу истории',
+    de: 'Mittelklick auf Chronik-Eintrag',
+    zh_CN: '中键点击历史项目',
+    zh_TW: '中鍵點擊歷史項目',
   },
   'settings.mouse.history.mid_click_action_open_in_new': {
     en: 'open in new tab',
@@ -3618,6 +3621,9 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
   'settings.mouse.history.mid_click_action_forget_visit': {
     en: 'forget visit',
     ru: 'забыть запись',
+    de: 'Besuch vergessen',
+    zh_CN: '删除此记录',
+    zh_TW: '刪除此記錄',
   },
 
   // - Keybindings
@@ -3639,8 +3645,7 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     en: 'Already exists',
     ru: 'Уже существует',
     de: 'Existiert bereits',
-    zh_CN: '已存在',
-    zh_TW: '已存在',
+    zh: '已存在'
   },
   'settings.kb_err_invalid': {
     en: 'Invalid shortcut',
@@ -3652,21 +3657,29 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
   'settings.kb_override_popup_title': {
     en: 'Keybinding is already in use.\nOverride?',
     ru: 'Сочетание клавиш уже используется.\nПереопределить?',
+    de: 'Tastenkürzel wird bereits verwendet.\nÜberschreiben?',
+    zh_CN: '快捷键已被使用。\n是否覆盖？',
+    zh_TW: '快捷鍵已被使用。\n是否覆蓋？',
   },
   'settings.kb_override_popup_note_shortcut': {
     en: shortcut => `Shortcut: "${shortcut}"`,
     ru: shortcut => `Сочетание клавиш: "${shortcut}"`,
+    de: shortcut => `Tastenkürzel: "${shortcut}"`,
+    zh_CN: shortcut => `快捷键: "${shortcut}"`,
+    zh_TW: shortcut => `快捷鍵: "${shortcut}"`,
   },
   'settings.kb_override_popup_note_used': {
     en: usedIn => `Used in: "${usedIn}"`,
     ru: usedIn => `Используется в: "${usedIn}"`,
+    de: usedIn => `Verwendet in: "${usedIn}"`,
+    zh_CN: usedIn => `用于: "${usedIn}"`,
+    zh_TW: usedIn => `用於: "${usedIn}"`,
   },
   'settings.kb_general': {
     en: 'General',
     de: 'Allgemein',
     ru: 'Общие',
-    zh_CN: '通用',
-    zh_TW: '通用',
+    zh: '通用'
   },
   'settings.kb_switching_panel': {
     en: 'Switching between panels',
@@ -3678,18 +3691,29 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
   'settings.kb_scroll_active_panel': {
     en: 'Scrolling the active panel',
     ru: 'Прокрутка активной панели',
+    de: 'Scrollen des aktiven Panels',
+    zh_CN: '滚动活动面板',
+    zh_TW: '捲動活動面板',
   },
   'settings.kb_tabs': {
     en: 'Tabs',
     ru: 'Вкладки',
+    de: 'Tabs',
+    zh_CN: '标签页',
+    zh_TW: '標籤頁',
   },
   'settings.kb_tabs_open': {
     en: 'Open a new tab',
     ru: 'Открыть новую вкладку',
+    de: 'Neuen Tab öffnen',
+    zh_CN: '打开新标签页',
+    zh_TW: '打開新標籤頁',
   },
   'settings.kb_rm': {
     en: 'Close tab(s) / Delete bookmarks',
-    ru: 'Close tab(s) / Delete bookmarks',
+    de: 'Tab(s) schließen / Lesezeichen löschen',
+    zh_CN: '关闭标签页 / 删除书签',
+    zh_TW: '關閉標籤頁 / 刪除書籤',
   },
   'settings.kb_switching_tab': {
     en: 'Switching between tabs',
@@ -3708,32 +3732,43 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
   'settings.kb_selections': {
     en: 'Selecting elements',
     ru: 'Выделение элементов',
-    // de: 'Ausgewählte (oder aktive) Elemente',
-    // zh_CN: '选择(或激活)元素',
-    // zh_TW: '選擇(或激活)元素',
+    de: 'Elemente auswählen',
+    zh_CN: '选择元素',
+    zh_TW: '選擇元素',
   },
   'settings.kb_sel_tabs_bookmarks': {
     en: 'Selecting tabs / bookmarks',
     ru: 'Выделение вкладок / закладок',
+    de: 'Tabs / Lesezeichen auswählen',
+    zh_CN: '选择标签页 / 书签',
+    zh_TW: '選擇標籤頁 / 書籤',
   },
   'settings.kb_selecting_up_down': {
     en: 'Selecting up / down',
     ru: 'Выделение вверх / вниз',
+    de: 'Nach oben / unten auswählen',
+    zh_CN: '向上 / 向下选择',
+    zh_TW: '向上 / 向下選擇',
   },
   'settings.kb_select_act_note': {
     en: '- activate selected tab\n- open selected bookmark\n- fold/unfold an active tab branch or a selected bookmarks folder\n- activate selected context-menu option\n- activate selected panel',
     ru: '- активировать выделенную вкладку\n- открыть выделенную закладку\n- свернуть/развернуть ветку активной вкладки или выделенную папку закладок\n- активировать выделенный пункт контекстного меню\n- активировать выделенную панель',
+    de: '- Aktiviere ausgewählten Tab\n- Öffne ausgewähltes Lesezeichen\n- Klappe aktiven Tab-Zweig oder ausgewählten Lesezeichen-Ordner ein/aus\n- Aktiviere ausgewählte Kontextmenü-Option\n- Aktiviere ausgewähltes Panel',
+    zh_CN: '- 激活选定的标签页\n- 打开选定的书签\n- 折叠/展开活动标签页分支或选定的书签文件夹\n- 激活选定的上下文菜单选项\n- 激活选定的面板',
+    zh_TW: '- 激活選定的標籤頁\n- 打開選定的書籤\n- 折疊/展開活動標籤頁分支或選定的書籤文件夾\n- 激活選定的上下文菜單選項\n- 激活選定的面板',
   },
   'settings.kb_unloading_tabs': {
     en: 'Unload tabs',
     ru: 'Выгрузить вкладки',
+    de: 'Tabs entladen',
+    zh_CN: '卸载标签页',
+    zh_TW: '卸載標籤頁',
   },
   'settings.kb_branches': {
     en: 'Branches',
     ru: 'Ветви',
     de: 'Zweige',
-    zh_CN: '分支',
-    zh_TW: '分支',
+    zh: '分支'
   },
   'settings.kb_active_tabs_history': {
     en: 'Tabs activation history',
@@ -3855,16 +3890,21 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     en: 'Required for:\n- History panel',
     ru: 'Необходимо для:\n- Панель истории',
     de: 'Benötigt für:\n- Chronik-Panel',
-    zh_CN: '需要:\n-历史面板',
-    zh_TW: '需要:\n-历史面板',
+    zh: '需要:\n-历史面板'
   },
   'settings.perm.downloads_label': {
     en: 'Downloads:',
     ru: 'Загрузки:',
+    de: 'Downloads:',
+    zh_CN: '下载:',
+    zh_TW: '下載:',
   },
   'settings.perm.downloads_info': {
     en: 'Required for:\n- Snapshot auto export',
     ru: 'Необходимо для:\n- Авто экспорта снепшотов',
+    de: 'Benötigt für:\n- Snapshot-Auto-Export',
+    zh_CN: '需要：\n-快照自动导出',
+    zh_TW: '需要：\n-快照自動導出',
   },
 
   // - Storage
@@ -3907,8 +3947,7 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     en: 'Update',
     ru: 'Обновить',
     de: 'Aktualisieren',
-    zh_CN: '更新',
-    zh_TW: '更新',
+    zh: '更新'
   },
   'settings.clear_storage_info': {
     en: 'Delete everything',
@@ -3937,8 +3976,7 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     en: 'Sync',
     ru: 'Синхронизация',
     de: 'Sync',
-    zh_CN: '同步',
-    zh_TW: '同步',
+    zh: '同步'
   },
   'settings.sync_name': {
     en: 'Profile name for sync',
@@ -3951,8 +3989,7 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     en: 'e.g: Firefox Beta Home',
     ru: 'напр. Firefox Домашний',
     de: 'z.B. Firefox Beta Home',
-    zh_CN: '例如 Firefox Beta Home',
-    zh_TW: '例如 Firefox Beta Home',
+    zh: '例如 Firefox Beta Home'
   },
   'settings.sync_save_settings': {
     en: 'Save settings to sync storage',
@@ -4116,15 +4153,13 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     en: 'warnings',
     ru: 'предупреждения',
     de: 'Warnungen',
-    zh_CN: '警告',
-    zh_TW: '警告',
+    zh: '警告'
   },
   'settings.log_lvl_3': {
     en: 'all',
     ru: 'все',
     de: 'Alles',
-    zh_CN: '所有',
-    zh_TW: '所有',
+    zh: '所有'
   },
   'settings.copy_devtools_url': {
     en: 'Copy devtools URL',
@@ -4214,15 +4249,13 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     en: 'All',
     ru: 'Все',
     de: 'Alles',
-    zh_CN: '全部',
-    zh_TW: '全部',
+    zh: '全部'
   },
   'settings.backup_containers': {
     en: 'Containers config',
     ru: 'Конфигурация контейнеры',
     de: 'Einstellungen für Umgebungen',
-    zh_CN: '容器配置',
-    zh_TW: '容器配置',
+    zh: '容器配置'
   },
   'settings.backup_settings': {
     en: 'Settings',
@@ -4242,8 +4275,7 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     en: 'Snapshots',
     ru: 'Снепшоты',
     de: 'Screenshots',
-    zh_CN: '快照',
-    zh_TW: '快照',
+    zh: '快照'
   },
   'settings.backup_favicons': {
     en: 'Sites icons cache',
@@ -4281,8 +4313,7 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     en: 'Window',
     ru: 'Окно',
     de: 'Fenster',
-    zh_CN: '窗口',
-    zh_TW: '窗口',
+    zh: '窗口'
   },
   'snapshot.global_pin_title': {
     en: 'Pinned tabs',
@@ -4381,8 +4412,7 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
       return 'окон'
     },
     de: 'Fenster',
-    zh_CN: n => (n === 1 ? 'window' : '窗口'),
-    zh_TW: n => (n === 1 ? 'window' : '窗口'),
+    zh: '窗口'
   },
   'snapshot.snap_ctr': {
     en: n => (n === 1 ? 'container' : 'containers'),
@@ -4392,8 +4422,7 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
       return 'контейнеров'
     },
     de: n => (n === 1 ? 'Umgebung' : 'Umgebungen'),
-    zh_CN: n => (n === 1 ? 'container' : '容器'),
-    zh_TW: n => (n === 1 ? 'container' : '容器'),
+    zh: '容器'
   },
   'snapshot.snap_tab': {
     en: n => (n === 1 ? 'tab' : 'tabs'),
@@ -4403,8 +4432,8 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
       return 'вкладок'
     },
     de: n => (n === 1 ? 'Tab' : 'Tabs'),
-    zh_CN: n => (n === 1 ? 'tab' : '标签页'),
-    zh_TW: n => (n === 1 ? 'tab' : '標籤頁'),
+    zh_CN: '标签页',
+    zh_TW: '標籤頁',
   },
   'snapshot.selected': {
     en: 'Selected:',
@@ -4497,8 +4526,7 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     en: 'Other',
     ru: 'Прочие',
     de: 'Andere',
-    zh_CN: '其他',
-    zh_TW: '其他',
+    zh: '其他'
   },
   'styles.vars_group.animation': {
     en: 'Animation speed',
@@ -4546,8 +4574,7 @@ Examples: "*", "ctrl+$", "ctrl+alt+g"`,
     en: 'Tabs',
     ru: 'Вкладки',
     de: 'Tabs',
-    zh_CN: '标签页',
-    zh_TW: '标签页',
+    zh: '标签页'
   },
   'styles.vars_group.bookmarks': {
     en: 'Bookmarks',

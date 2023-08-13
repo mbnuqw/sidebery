@@ -23,8 +23,7 @@ export const commonTranslations: Translations = {
     en: 'e.g. https://example.com',
     ru: 'Ссылка...',
     de: 'z.B. https://beispiel.de',
-    zh_CN: '例如 https://example.com',
-    zh_TW: '例如 https://example.com',
+    zh: '例如 https://example.com',
   },
 
   // ---
@@ -41,8 +40,7 @@ export const commonTranslations: Translations = {
     en: 'Save',
     ru: 'Сохранить',
     de: 'Speichern',
-    zh_CN: '保存',
-    zh_TW: '保存',
+    zh: '保存',
   },
   'btn.restore': {
     en: 'Restore',
@@ -55,8 +53,7 @@ export const commonTranslations: Translations = {
     en: 'Update',
     ru: 'Обновить',
     de: 'Aktualisieren',
-    zh_CN: '更新',
-    zh_TW: '更新',
+    zh: '更新',
   },
   'btn.yes': {
     en: 'Yes',
@@ -69,29 +66,25 @@ export const commonTranslations: Translations = {
     en: 'Ok',
     ru: 'Ок',
     de: 'Ok',
-    zh_CN: 'Ok',
-    zh_TW: 'Ok',
+    zh: '是'
   },
   'btn.no': {
     en: 'No',
     ru: 'Нет',
     de: 'Nein',
-    zh_CN: 'No',
-    zh_TW: 'No',
+    zh: '否'
   },
   'btn.cancel': {
     en: 'Cancel',
     ru: 'Отмена',
     de: 'Abbrechen',
-    zh_CN: '取消',
-    zh_TW: '取消',
+    zh: '取消',
   },
   'btn.stop': {
     en: 'Stop',
     ru: 'Остановить',
     de: 'Stopp',
-    zh_CN: '停止',
-    zh_TW: '停止',
+    zh: '停止',
   },
 
   // ---
@@ -101,8 +94,7 @@ export const commonTranslations: Translations = {
     en: 'Container',
     ru: 'Контейнер',
     de: 'Umgebung',
-    zh_CN: '容器',
-    zh_TW: '容器',
+    zh: '容器',
   },
 
   // ---
@@ -174,8 +166,7 @@ export const commonTranslations: Translations = {
     en: 'Location',
     ru: 'Расположение',
     de: 'Ort',
-    zh_CN: '地址',
-    zh_TW: '地址',
+    zh: '地址',
   },
   'popup.bookmarks.location_new_folder_placeholder': {
     en: 'New folder name',
@@ -188,8 +179,7 @@ export const commonTranslations: Translations = {
     en: 'Recent locations',
     ru: 'Недавние расположения',
     de: 'Zuletzt besucht',
-    zh_CN: '最近地址',
-    zh_TW: '最近地址',
+    zh: '最近地址',
   },
   'popup.bookmarks.save_in_bookmarks': {
     en: 'Save in bookmarks',
@@ -201,6 +191,9 @@ export const commonTranslations: Translations = {
   'popup.bookmarks.set_folder_for_tabs_panel': {
     en: 'Set folder for this tabs panel',
     ru: 'Установить папку для этой панели вкладок',
+    de: 'Ordner für dieses Tab-Panel festlegen',
+    zh_CN: '设置此标签面板的文件夹',
+    zh_TW: '設置此標籤面板的文件夾',
   },
   'popup.bookmarks.edit_bookmark': {
     en: 'Edit bookmark',
@@ -283,231 +276,257 @@ export const commonTranslations: Translations = {
   'popup.new_tab_shortcuts.title': {
     en: 'New Tab Shortcuts',
     ru: 'Ярлыки новой вкладки',
+    de: 'Neue Tab-Verknüpfungen',
     zh_CN: '新标签快捷方式',
     zh_TW: '新標籤快捷方式',
   },
   'popup.new_tab_shortcuts.create_title': {
     en: 'Create shortcut',
     ru: 'Создать ярлык',
+    de: 'Verknüpfung erstellen',
     zh_CN: '创建快捷方式',
     zh_TW: '創建快捷方式',
   },
   'popup.new_tab_shortcuts.new_shortcut_container_label': {
     en: 'Container',
     ru: 'Контейнер',
-    zh_CN: '容器',
-    zh_TW: '容器',
+    de: 'Behälter',
+    zh: '容器',
   },
   'popup.new_tab_shortcuts.new_shortcut_default_container': {
     en: 'Default container',
     ru: 'Стандартный контейнер',
+    de: 'Standard-Behälter',
     zh_CN: '默认容器',
     zh_TW: '默認容器',
   },
   'popup.new_tab_shortcuts.new_shortcut_url_label': {
     en: 'URL',
     ru: 'URL-адрес',
-    zh_CN: 'URL',
-    zh_TW: 'URL',
   },
   'popup.new_tab_shortcuts.new_shortcut_url_placeholder': {
     en: 'Default new tab',
     ru: 'Новая вкладка по умолчанию',
+    de: 'Standard-Neuer Tab',
     zh_CN: '默认新标签',
     zh_TW: '默認新標籤',
   },
   'popup.new_tab_shortcuts.add_br_btn': {
     en: 'Add new line',
     ru: 'Добавить новую строку',
-    zh_CN: '添加新行',
-    zh_TW: '添加新行',
+    de: 'Neue Zeile hinzufügen',
+    zh: '添加新行',
   },
   'popup.new_tab_shortcuts.add_shortcut_btn': {
     en: 'Add shortcut',
     ru: 'Добавить ярлык',
-    zh_CN: '添加快捷方式',
-    zh_TW: '添加快捷方式',
+    de: 'Verknüpfung hinzufügen',
+    zh: '添加快捷方式',
   },
 
   'popup.tab_move_rules.title': {
     en: 'Tab auto-move rules',
     ru: 'Правила автоматического перемещения вкладок',
+    de: 'Tab Auto-Move Regeln',
     zh_CN: '标签页自动移动规则',
     zh_TW: '選項卡自動移動規則',
   },
   'popup.tab_move_rules.editor_title.new': {
     en: 'Create auto-move rule',
     ru: 'Создать правило',
+    de: 'Regel erstellen',
     zh_CN: '创建自动移动规则',
     zh_TW: '創建自動移動規則',
   },
   'popup.tab_move_rules.editor_title.edit': {
     en: 'Edit auto-move rule',
     ru: 'Редактировать правило',
+    de: 'Regel bearbeiten',
     zh_CN: '编辑自动移动规则',
     zh_TW: '編輯自動移動規則',
   },
   'popup.tab_move_rules.rule_name_label': {
     en: 'Name (optional)',
     ru: 'Название (опционально)',
+    de: 'Name (optional)',
     zh_CN: '名称（选填）',
     zh_TW: '名稱（选填）',
   },
   'popup.tab_move_rules.rule_container_label': {
     en: 'If tab is in a container',
     ru: 'Если вкладка в контейнере',
+    de: 'Wenn Tab in einem Behälter ist',
     zh_CN: '如果标签页在容器中',
     zh_TW: '如果選項卡在容器中',
   },
   'popup.tab_move_rules.rule_url_label': {
     en: 'If tab has URL ("substring" or "/RegExp/")',
     ru: 'Если вкладка имеет URL-адрес ("подстрока" или "/RegExp/")',
-    zh_CN: '如果 URL 有("字符串" 或 "/RegExp/")',
-    zh_TW: '如果 URL 有("字符串" 或 "/RegExp/")',
+    de: 'Wenn Tab URL hat ("substring" oder "/RegExp/")',
+    zh: '如果 URL 有("字符串" 或 "/RegExp/")',
   },
   'popup.tab_move_rules.rule_top_lvl_label': {
     en: 'If tab at the top level of tree',
     ru: 'Если вкладка на верхнем уровне дерева',
+    de: 'Wenn Tab auf der obersten Ebene des Baums ist',
     zh_CN: '如果标签页位于树的顶层',
     zh_TW: '如果選項卡位於樹的頂層',
   },
   'popup.tab_move_rules.add_rule_btn': {
     en: 'Add rule',
     ru: 'Добавить правило',
-    zh_CN: '添加規則',
+    de: 'Regel hinzufügen',
+    zh_CN: '添加规则',
     zh_TW: '添加規則',
   },
   'popup.tab_move_rules.edit_rule_btn.save': {
     en: 'Save',
     ru: 'Сохранить',
-    zh_CN: '保存',
-    zh_TW: '保存',
+    de: 'Regel speichern',
+    zh: '保存',
   },
   'popup.tab_move_rules.edit_rule_btn.cancel': {
     en: 'Cancel',
     ru: 'Отмена',
-    zh_CN: '取消',
-    zh_TW: '取消',
+    de: 'Abbrechen',
+    zh: '取消',
   },
 
   'popup.tab_reopen_rules.title': {
     en: 'Tab reopening rules',
     ru: 'Правила',
+    de:'Regeln für die Wiedereröffnung der Registerkarte',
     zh_CN: '标签页重新打开规则',
     zh_TW: '選項卡重新打開規則',
   },
   'popup.tab_reopen_rules.enable_label': {
     en: 'Enable listed rules',
     ru: 'Включить перечисленные правила',
+    de: 'Aktivieren Sie die aufgeführten Regeln',
     zh_CN: '启用列出的规则',
     zh_TW: '啟用列出的規則',
   },
   'popup.tab_reopen_rules.editor_title.new': {
     en: 'Create new rule',
     ru: 'Создать правило',
+    de:'Neue Regel erstellen',
     zh_CN: '创建新规则',
     zh_TW: '創建新規則',
   },
   'popup.tab_reopen_rules.editor_title.edit': {
     en: 'Edit rule',
     ru: 'Редактировать правило',
+    de:'Regel bearbeiten',
     zh_CN: '编辑规则',
     zh_TW: '編輯規則',
   },
   'popup.tab_reopen_rules.rule_name_label': {
     en: 'Name (optional)',
     ru: 'Название (опционально)',
+    de: 'Name (optional)',
     zh_CN: '名称（选填）',
     zh_TW: '名稱（选填）',
   },
   'popup.tab_reopen_rules.rule_type_label': {
     en: 'Type of the rule',
     ru: 'Тип правила',
+    de: 'Regeltyp',
     zh_CN: '规则类型',
     zh_TW: '規則類型',
   },
   'popup.tab_reopen_rules.rule_type_include': {
     en: 'Include rule',
     ru: 'Правило включения',
+    de: 'Einschlussregel',
     zh_CN: '包括规则',
     zh_TW: '包括規則',
   },
   'popup.tab_reopen_rules.rule_type_exclude': {
     en: 'Exclude rule',
     ru: 'Правило исключения',
+    de: 'Ausschlussregel',
     zh_CN: '排除规则',
     zh_TW: '排除規則',
   },
   'popup.tab_reopen_rules.rule_url_label': {
     en: 'If tab has URL ("substring" or "/RegExp/")',
     ru: 'Если вкладка имеет URL-адрес ("подстрока" или "/RegExp/")',
+    de: 'Wenn Tab URL hat ("substring" oder "/RegExp/")',
     zh_CN: '如果标签页有 URL ("字符串" 或 "/RegExp/")',
     zh_TW: '如果選項卡有 URL ("字符串" 或 "/RegExp/")',
   },
   'popup.tab_reopen_rules.rule_suffix_include': {
     en: n => `...reopen it in "${n}" container`,
     ru: n => `...открыть ee в контейнере "${n}"`,
+    de: n => `...in "${n}" Behälter wieder öffnen`,
     zh_CN: n => `...在 "${n}" 容器中重新打开它`,
     zh_TW: n => `...在 "${n}" 容器中重新打開它`,
   },
   'popup.tab_reopen_rules.rule_suffix_exclude': {
     en: n => `...and it is in "${n}" container, reopen it in default container.`,
     ru: n => `...и она находится в контейнере "${n}", открыть ее в контейнере по умолчанию.`,
+    de: n => `...und es ist in "${n}" Behälter, öffnen Sie es in Standardbehälter.`,
     zh_CN: n => `...它在 "${n}" 容器中，在默认容器中重新打开它。`,
     zh_TW: n => `...它在 "${n}" 容器中，在默認容器中重新打開它。`,
   },
   'popup.tab_reopen_rules.add_rule_btn': {
     en: 'Add rule',
     ru: 'Добавить правило',
+    de: 'Regel hinzufügen',
     zh_CN: '添加规则',
     zh_TW: '添加規則',
   },
   'popup.tab_reopen_rules.edit_rule_btn.save': {
     en: 'Save',
     ru: 'Сохранить',
-    zh_CN: '保存',
-    zh_TW: '保存',
+    de: 'Regel speichern',
+    zh: '保存',
   },
   'popup.tab_reopen_rules.edit_rule_btn.cancel': {
     en: 'Cancel',
     ru: 'Отмена',
-    zh_CN: '取消',
-    zh_TW: '取消',
+    de: 'Abbrechen',
+    zh: '取消',
   },
 
   'popup.url_rules.title': {
     en: 'Site Config',
     ru: 'Настройка сайта',
+    de: 'Seitenkonfiguration',
     zh_CN: '站点配置',
     zh_TW: '站點配置',
   },
   'popup.url_rules.match_label': {
     en: 'Select tabs by URL',
     ru: 'Выбирать вкладки по URL',
+    de: 'Tabs nach URL auswählen',
     zh_CN: '按 URL 选择标签页',
     zh_TW: '按 URL 選擇選項卡',
   },
   'popup.url_rules.custom_match_placeholder': {
     en: '"substring" or "/RegExp/"',
     ru: '"подстрока" или "/RegExp/"',
-    zh_CN: '"字符串" 或 "/RegExp/"',
-    zh_TW: '"字符串" 或 "/RegExp/"',
+    de: '"substring" oder "/RegExp/"',
+    zh: '"字符串" 或 "/RegExp/"',
   },
   'popup.url_rules.reopen_label': {
     en: 'Reopen these tabs in container:',
     ru: 'Открывать эти вкладки в контейнере:',
+    de: 'Diese Tabs in Behälter wieder öffnen:',
     zh_CN: '在容器中重新打开这些选项卡：',
     zh_TW: '在容器中重新打開這些選項卡：',
   },
   'popup.url_rules.move_label': {
     en: 'Move these tabs to panel:',
     ru: 'Перемещать эти вкладки в панель:',
+    de: 'Diese Tabs in Panel verschieben:',
     zh_CN: '将这些选项卡移动到面板：',
     zh_TW: '將這些選項卡移動到面板：',
   },
   'popup.url_rules.move_top_lvl_label': {
     en: 'If tab at the top level of tree',
     ru: 'Если вкладка на верхнем уровне дерева',
+    de: 'Wenn Tab auf der obersten Ebene des Baums ist',
     zh_CN: '如果选项卡位于树的顶层',
     zh_TW: '如果選項卡位於樹的頂層',
   },
@@ -542,21 +561,18 @@ export const commonTranslations: Translations = {
     en: 'In New Container',
     ru: 'В новом контейнере',
     de: 'In neuer Umgebung',
-    zh_CN: '在新容器中',
-    zh_TW: '在新容器中',
+    zh: '在新容器中',
   },
   'menu.new_tab_bar.manage_shortcuts': {
     en: 'Manage Shortcuts',
     ru: 'Управление ярлыками',
-    zh_CN: '管理快捷方式',
-    zh_TW: '管理快捷方式',
+    zh: '管理快捷方式',
   },
   'menu.new_tab_bar.manage_containers': {
     en: 'Manage Containers',
     ru: 'Управление контейнерами',
     de: 'Umgebungen verwalten',
-    zh_CN: '管理容器',
-    zh_TW: '管理容器',
+    zh: '管理容器',
   },
   // - Bookmark
   'menu.bookmark.open_in_sub_menu_name': {
@@ -647,15 +663,13 @@ export const commonTranslations: Translations = {
     en: 'Delete',
     ru: 'Удалить',
     de: 'Löschen',
-    zh_CN: '删除',
-    zh_TW: '刪除',
+    zh: '删除',
   },
   'menu.bookmark.sort_sub_menu_name': {
     en: 'Sort',
     ru: 'Сортировать',
     de: 'Sortieren',
-    zh_CN: '排序',
-    zh_TW: '排序',
+    zh: '排序',
   },
   'menu.bookmark.sort_by_name': {
     en: 'Sort by name',
@@ -781,8 +795,7 @@ export const commonTranslations: Translations = {
     en: 'Remove panel',
     ru: 'Удалить панель',
     de: 'Panel entfernen',
-    zh_CN: '移除面板',
-    zh_TW: '移除面板',
+    zh: '移除面板'
   },
   // - Tab
   'menu.tab.undo': {
@@ -935,7 +948,7 @@ export const commonTranslations: Translations = {
   'menu.tab.open_in_default_container': {
     en: 'Open in default container',
     ru: 'Открыть в новом контейнере',
-    zh_CN: '在默認容器中打開',
+    zh_CN: '在默认容器中打开',
     zh_TW: '在默認容器中打開',
   },
   'menu.tab.open_in_': {
@@ -961,8 +974,7 @@ export const commonTranslations: Translations = {
     en: 'Flatten',
     ru: 'Сбросить вложенность',
     de: 'Plätten',
-    zh_CN: '扁平化',
-    zh_TW: '扁平化',
+    zh: '扁平化'
   },
   'menu.tab.url_conf': {
     en: 'Configure site...',
@@ -988,8 +1000,7 @@ export const commonTranslations: Translations = {
     en: 'Mute',
     ru: 'Выключить звук',
     de: 'Stumm schalten',
-    zh_CN: '静音',
-    zh_TW: '靜音',
+    zh: '静音',
   },
   'menu.tab.unmute': {
     en: 'Unmute',
@@ -1002,8 +1013,7 @@ export const commonTranslations: Translations = {
     en: 'Clear cookies',
     ru: 'Удалить cookies',
     de: 'Cookies löschen',
-    zh_CN: '清除 Cookies',
-    zh_TW: '清除 Cookies',
+    zh: '清除 Cookies',
   },
   'menu.tab.discard': {
     en: 'Unload',
@@ -1085,8 +1095,7 @@ export const commonTranslations: Translations = {
   'menu.tab.edit': {
     en: 'Configure...',
     ru: 'Настроить...',
-    zh_CN: '配置...',
-    zh_TW: '配置...',
+    zh: '配置...',
   },
   'menu.tab.edit_title': {
     en: 'Edit title',
@@ -1110,6 +1119,9 @@ export const commonTranslations: Translations = {
   'menu.tabs_panel.sel_all': {
     en: 'Select all tabs',
     ru: 'Выделить все вкладки',
+    de: 'Alle Tabs auswählen',
+    zh_CN: '选择所有标签页',
+    zh_TW: '選擇所有標籤頁',
   },
   'menu.tabs_panel.mute_all_audible': {
     en: 'Mute all audible tabs',
@@ -1157,8 +1169,7 @@ export const commonTranslations: Translations = {
     en: 'Remove panel',
     ru: 'Удалить панель',
     de: 'Panel entfernen',
-    zh_CN: '移除面板',
-    zh_TW: '移除面板',
+    zh: '移除面板',
   },
   'menu.tabs_panel.bookmark': {
     en: 'Save to bookmarks',
@@ -1192,10 +1203,16 @@ export const commonTranslations: Translations = {
   'menu.history.delete_visits': {
     en: n => (n === 1 ? 'Forget visit' : 'Forget visits'),
     ru: n => (n === 1 ? 'Забыть запись' : 'Забыть записи'),
+    de: n => (n === 1 ? 'Besuch vergessen' : 'Besuche vergessen'),
+    zh_CN: '删除此记录',
+    zh_TW: '刪除此記錄',
   },
   'menu.history.delete_sites': {
     en: n => (n === 1 ? 'Forget site' : 'Forget sites'),
     ru: n => (n === 1 ? 'Забыть сайт' : 'Забыть сайты'),
+    de: n => (n === 1 ? 'Seite vergessen' : 'Seiten vergessen'),
+    zh_CN: '删除该站点的所有访问记录',
+    zh_TW: '刪除該站點的所有訪問記錄',
   },
   // - Common
   'menu.copy_urls': {
@@ -1230,15 +1247,13 @@ export const commonTranslations: Translations = {
     en: 'Configure panel',
     ru: 'Настройки панели',
     de: 'Panel konfigurieren',
-    zh_CN: '配置面板',
-    zh_TW: '配置面板',
+    zh: '配置面板',
   },
   'menu.common.conf_tooltip': {
     en: 'Configure panel\nAlt: Basic panel config',
     ru: 'Настройки панели\nAlt: Базовые настройки панели',
     de: 'Panel konfigurieren\nAlt: Panel Grundkonfiguration',
-    zh_CN: '配置面板\nAlt: 基本面板配置',
-    zh_TW: '配置面板\nAlt: 基本面板配置',
+    zh: '配置面板\nAlt: 基本面板配置',
   },
   'menu.panels.unload': {
     en: 'Unload',
@@ -1250,14 +1265,16 @@ export const commonTranslations: Translations = {
   'menu.panels.hide_panel': {
     en: 'Hide panel',
     ru: 'Скрыть панель',
+    de: 'Panel verstecken',
+    zh_CN: '隐藏面板',
+    zh_TW: '隱藏面板',
   },
   // - Menu Editor
   'menu.editor.reset': {
     en: 'Reset',
     ru: 'Сброс',
     de: 'Zurücksetzen',
-    zh_CN: '重置',
-    zh_TW: '重置',
+    zh: '重置',
   },
   'menu.editor.create_separator': {
     en: 'Create separator',
@@ -1291,8 +1308,7 @@ export const commonTranslations: Translations = {
     en: 'Disable',
     ru: 'Отключить',
     de: 'Deaktivieren',
-    zh_CN: '禁用',
-    zh_TW: '禁用',
+    zh: '禁用',
   },
   'menu.editor.tabs_title': {
     en: 'Tabs',
@@ -1333,15 +1349,13 @@ export const commonTranslations: Translations = {
     en: 'List',
     ru: 'Список',
     de: 'Liste',
-    zh_CN: '列表',
-    zh_TW: '列表',
+    zh: '列表',
   },
   'menu.editor.disabled_title': {
     en: 'Disabled',
     ru: 'Отключено',
     de: 'Deaktiviert',
-    zh_CN: '已禁用',
-    zh_TW: '已禁用',
+    zh: '已禁用',
   },
 
   // ---
@@ -1369,99 +1383,85 @@ export const commonTranslations: Translations = {
     en: 'January',
     ru: 'Январь',
     de: 'Januar',
-    zh_CN: '一月',
-    zh_TW: '一月',
+    zh: '一月'
   },
   'time.month_1': {
     en: 'February',
     ru: 'Февраль',
     de: 'Februar',
-    zh_CN: '二月',
-    zh_TW: '二月',
+    zh: '二月'
   },
   'time.month_2': {
     en: 'March',
     ru: 'Март',
     de: 'März',
-    zh_CN: '三月',
-    zh_TW: '三月',
+    zh: '三月'
   },
   'time.month_3': {
     en: 'April',
     ru: 'Апрель',
     de: 'April',
-    zh_CN: '四月',
-    zh_TW: '四月',
+    zh: '四月'
   },
   'time.month_4': {
     en: 'May',
     ru: 'Май',
     de: 'Mai',
-    zh_CN: '五月',
-    zh_TW: '五月',
+    zh: '五月'
   },
   'time.month_5': {
     en: 'June',
     ru: 'Июнь',
     de: 'Juni',
-    zh_CN: '六月',
-    zh_TW: '六月',
+    zh: '六月'
   },
   'time.month_6': {
     en: 'July',
     ru: 'Июль',
     de: 'Juli',
-    zh_CN: '七月',
-    zh_TW: '七月',
+    zh: '七月'
   },
   'time.month_7': {
     en: 'August',
     ru: 'Август',
     de: 'August',
-    zh_CN: '八月',
-    zh_TW: '八月',
+    zh: '八月'
   },
   'time.month_8': {
     en: 'September',
     ru: 'Сентябрь',
     de: 'September',
-    zh_CN: '九月',
-    zh_TW: '九月',
+    zh: '九月'
   },
   'time.month_9': {
     en: 'October',
     ru: 'Октябрь',
     de: 'Oktober',
-    zh_CN: '十月',
-    zh_TW: '十月',
+    zh: '十月'
   },
   'time.month_10': {
     en: 'November',
     ru: 'Ноябрь',
     de: 'November',
-    zh_CN: '十一月',
-    zh_TW: '十一月',
+    zh: '十一月'
   },
   'time.month_11': {
     en: 'December',
     ru: 'Декабрь',
     de: 'Dezember',
-    zh_CN: '十二月',
-    zh_TW: '十二月',
+    zh: '十二月'
   },
   'time.today': {
     en: 'Today',
     ru: 'Сегодня',
     de: 'Heute',
-    zh_CN: '今日',
-    zh_TW: '今日',
+    zh: '今日'
   },
   'time.yesterday': {
     en: 'Yesterday',
     ru: 'Вчера',
     de: 'Gestern',
-    zh_CN: '昨日',
-    zh_TW: '昨日',
+    zh: '昨日'
   },
   'time.this_week': {
     en: 'This week',
@@ -1546,6 +1546,56 @@ export const commonTranslations: Translations = {
       if (rh > 0) return `${d}d, ${rh}h`
       else return `${d}d`
     },
+    zh_CN: ms => {
+      if (ms === undefined || typeof ms === 'string') return '?'
+
+      const s = Math.trunc(ms / 1000)
+      if (s < 60) return `${s}秒`
+
+      const rs = s % 60
+      const m = (s - rs) / 60
+      if (m < 60) {
+        if (rs > 0) return `${m}分, ${rs}秒`
+        else return `${m}分`
+      }
+
+      const rm = m % 60
+      const h = (m - rm) / 60
+      if (h < 24) {
+        if (rm > 0) return `${h}小时, ${rm}分`
+        else return `${h}小时`
+      }
+
+      const rh = h % 24
+      const d = (h - rh) / 24
+      if (rh > 0) return `${d}天, ${rh}小时`
+      else return `${d}天`
+    },
+    zh_TW: ms => {
+      if (ms === undefined || typeof ms === 'string') return '?'
+
+      const s = Math.trunc(ms / 1000)
+      if (s < 60) return `${s}秒`
+
+      const rs = s % 60
+      const m = (s - rs) / 60
+      if (m < 60) {
+        if (rs > 0) return `${m}分, ${rs}秒`
+        else return `${m}分`
+      }
+
+      const rm = m % 60
+      const h = (m - rm) / 60
+      if (h < 24) {
+        if (rm > 0) return `${h}小時, ${rm}分`
+        else return `${h}小時`
+      }
+
+      const rh = h % 24
+      const d = (h - rh) / 24
+      if (rh > 0) return `${d}天, ${rh}小時`
+      else return `${d}天`
+    }
   },
 
   // ---
@@ -1576,8 +1626,7 @@ export const commonTranslations: Translations = {
     en: 'Done',
     ru: 'Готово',
     de: 'Abgeschlossen',
-    zh_CN: '已完成',
-    zh_TW: '已完成',
+    zh: '已完成',
   },
   'upgrade.status.in_progress': {
     en: 'In progress',
@@ -1590,8 +1639,7 @@ export const commonTranslations: Translations = {
     en: 'Pending',
     ru: 'Ожидание',
     de: 'Ausstehend',
-    zh_CN: '等待中',
-    zh_TW: '等待中',
+    zh: '等待中',
   },
   'upgrade.status.err': {
     en: 'Error',
@@ -1611,8 +1659,7 @@ export const commonTranslations: Translations = {
     en: 'Initializing',
     ru: 'Инициализация',
     de: 'Initialisiere',
-    zh_CN: '正在初始化',
-    zh_TW: '正在初始化',
+    zh: '正在初始化',
   },
   'upgrade.settings': {
     en: 'Settings',
@@ -1639,8 +1686,7 @@ export const commonTranslations: Translations = {
     en: 'Snapshots',
     ru: 'Снепшоты',
     de: 'Schnappschüsse',
-    zh_CN: '快照',
-    zh_TW: '快照',
+    zh: '快照',
   },
   'upgrade.fav_cache': {
     en: 'Favicons cache',
@@ -1659,22 +1705,37 @@ export const commonTranslations: Translations = {
   'upgrade.data_ready': {
     en: 'All data prepared',
     ru: 'Все данные подготовлены',
+    de: 'Alle Daten vorbereitet',
+    zh_CN: '所有数据准备就绪',
+    zh_TW: '所有資料準備就緒',
   },
   'upgrade.data_ready_note': {
     en: 'You can save a backup and continue',
     ru: 'Вы можете сохранить резервную копию и продолжить',
+    de: 'Sie können ein Backup speichern und fortfahren',
+    zh_CN: '您可以保存备份并继续',
+    zh_TW: '您可以儲存備份並繼續',
   },
   'upgrade.links': {
     en: 'Updating Sidebery pages',
     ru: 'Обновление страниц Sidebery',
+    de: 'Aktualisiere Sidebery Seiten',
+    zh_CN: '正在更新 Sidebery 页面',
+    zh_TW: '正在更新 Sidebery 頁面',
   },
   'upgrade.err.backup': {
     en: 'Cannot prepare backup',
     ru: 'Невозможно подготовить резервную копию',
+    de: 'Kann keine Sicherung vorbereiten',
+    zh_CN: '无法准备备份',
+    zh_TW: '無法準備備份',
   },
   'upgrade.err.backup_note': {
     en: 'Unable to get stored data',
     ru: 'Невозможно получить сохраненные данные',
+    de: 'Kann gespeicherte Daten nicht abrufen',
+    zh_CN: '无法获取存储的数据',
+    zh_TW: '無法取得儲存的資料',
   },
   'upgrade.err.get_stored': {
     en: 'Cannot get stored data',
@@ -1686,22 +1747,37 @@ export const commonTranslations: Translations = {
   'upgrade.err.clear_stored': {
     en: 'Cannot clear old data',
     ru: 'Невозможно удалить старые данные',
+    de: 'Kann alte Daten nicht löschen',
+    zh_CN: '无法清除旧数据',
+    zh_TW: '無法清除舊數據',
   },
   'upgrade.err.set_stored': {
     en: 'Cannot save new data',
     ru: 'Невозможно сохранить новые данные',
+    de: 'Kann neue Daten nicht speichern',
+    zh_CN: '无法保存新数据',
+    zh_TW: '無法保存新數據',
   },
   'upgrade.err.finish': {
     en: 'Sidebery is unable to finish the upgrade. Try to manually remove the old version of Sidebery, reload the browser and install the new version of Sidebery.',
     ru: 'Sidebery не может завершить обновление. Попробуйте вручную удалить старую версию Sidebery, перезагрузить браузер и установить новую версию Sidebery.',
+    de: 'Sidebery kann das Upgrade nicht abschließen. Versuchen Sie, die alte Version von Sidebery manuell zu entfernen, den Browser neu zu laden und die neue Version von Sidebery zu installieren.',
+    zh_CN: 'Sidebery 无法完成升级。请尝试手动删除旧版本的 Sidebery，重新加载浏览器并安装新版本的 Sidebery。',
+    zh_TW: 'Sidebery 無法完成升級。請嘗試手動刪除舊版本的 Sidebery，重新加載瀏覽器並安裝新版本的 Sidebery。',
   },
   'upgrade.done': {
     en: 'Sidebery successfully upgraded',
     ru: 'Sidebery успешно обновлен',
+    de: 'Sidebery erfolgreich aktualisiert',
+    zh_CN: 'Sidebery 升级成功',
+    zh_TW: 'Sidebery 升級成功',
   },
   'upgrade.done_note': {
     en: 'Reloading...',
     ru: 'Перезагрузка...',
+    de: 'Neu laden...',
+    zh_CN: '重新加载...', 
+    zh_TW: '重新加載...',
   },
 }
 
