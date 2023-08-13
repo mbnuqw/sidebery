@@ -390,6 +390,14 @@ export async function open(
       index = fallbackIndex + i
     }
 
+    // Normalize index for pinned tab
+    if (dst.pinned && index !== undefined) {
+      const lastPinnedTab = Tabs.pinned[Tabs.pinned.length - 1]
+      const pinIndex = lastPinnedTab ? lastPinnedTab.index + 1 : 0
+
+      if (index > pinIndex) index = pinIndex + i
+    }
+
     if (!item.url && !item.title) continue
     if (!Settings.state.tabsTree && groupCreationNeeded) continue
     if (!Sidebar.hasTabs && groupCreationNeeded) continue

@@ -100,20 +100,9 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
       label: translate('menu.tab.' + label),
       icon: Windows.incognito ? 'icon_reopen_in_new_norm_window' : 'icon_reopen_in_new_priv_win',
       onClick: () => {
-        const items: ItemInfo[] = []
-        for (const id of Selection.get()) {
-          const tab = Tabs.byId[id]
-          if (!tab) continue
-
-          items.push({
-            id: tab.id,
-            url: tab.url,
-            parentId: tab.parentId,
-            panelId: tab.panelId,
-            container: tab.cookieStoreId !== CONTAINER_ID ? tab.cookieStoreId : undefined,
-          })
-        }
-        Tabs.reopen(items, { windowId: NEWID, incognito: !Windows.incognito })
+        const items = Selection.getTabsInfo(true)
+        const pinned = items[0]?.pinned
+        Tabs.reopen(items, { windowId: NEWID, incognito: !Windows.incognito, pinned })
       },
     }
   },
@@ -137,17 +126,22 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
         option.label = translate('menu.tab.reopen_in_priv_window')
         option.icon = 'icon_reopen_in_priv_win'
       }
-      option.onClick = () => Tabs.reopen(items, { windowId: wins[0].id, containerId })
+      option.onClick = () => {
+        const pinned = items[0]?.pinned
+        Tabs.reopen(items, { windowId: wins[0].id, containerId, pinned })
+      }
     } else {
       option.label = translate('menu.tab.reopen_in_window_')
       if (Windows.incognito) option.icon = 'icon_reopen_in_norm_wins'
       else option.icon = 'icon_reopen_in_priv_wins'
       option.onClick = () => {
         const filter = (w: Window) => w.incognito !== Windows.incognito
+        const pinned = items[0]?.pinned
         Tabs.reopen(items, {
           windowId: ASKID,
           windowChooseConf: { title: option.label, otherWindows: true, filter },
           containerId,
+          pinned,
         })
       }
     }
