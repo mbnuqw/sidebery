@@ -187,7 +187,7 @@ export function exportSnapshot(snapshot: NormalizedSnapshot) {
     })
   }
 }
-export async function addSnapshot(snapshot: NormalizedSnapshot) {
+export async function addSnapshot(snapshot: NormalizedSnapshot): Promise<void> {
   if (!Info.isBg) return await IPC.bg('addSnapshot', snapshot)
 
   const stored = await browser.storage.local.get<Stored>('snapshots').catch(() => undefined)
