@@ -41,7 +41,11 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
       option.label = translate('menu.tab.move_to_another_window')
       if (Windows.incognito) option.icon = 'icon_move_to_priv_win'
       else option.icon = 'icon_move_to_norm_win'
-      option.onClick = () => Tabs.move(Selection.getTabsInfo(true), {}, { windowId: wins[0].id })
+      option.onClick = () => {
+        const items = Selection.getTabsInfo(true)
+        const dst = { windowId: wins[0].id, pinned: items[0]?.pinned }
+        Tabs.move(items, {}, dst)
+      }
     } else {
       option.label = translate('menu.tab.move_to_window_')
       if (Windows.incognito) option.icon = 'icon_move_to_priv_wins'
@@ -49,7 +53,9 @@ export const tabsMenuOptions: Record<string, () => MenuOption | MenuOption[] | u
       option.onClick = () => {
         const filter = (w: Window) => w.incognito === Windows.incognito
         const windowChooseConf = { title: option.label, otherWindows: true, filter }
-        Tabs.move(Selection.getTabsInfo(true), {}, { windowChooseConf })
+        const items = Selection.getTabsInfo(true)
+        const dst = { windowChooseConf, pinned: items[0]?.pinned }
+        Tabs.move(items, {}, dst)
       }
     }
     if (!Settings.state.ctxMenuRenderInact && option.inactive) return

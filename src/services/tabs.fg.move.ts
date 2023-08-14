@@ -18,8 +18,6 @@ export async function move(
 ): Promise<void> {
   if (!tabsInfo.length) return
 
-  // Logs.info('Tabs.move', tabsInfo.length, dst.index, dst.parentId, dst.panelId)
-
   // Ask about target window
   if (dst.windowChooseConf) {
     dst.windowId = await Windows.showWindowsPopup(dst.windowChooseConf)
@@ -70,12 +68,7 @@ export async function move(
   // Move tabs to another window
   if (dst.windowId !== undefined && dst.windowId !== Windows.id) {
     const tabIds = tabsInfo.map(t => t.id)
-    if (dst.windowId !== undefined && dst.windowId !== NOID) {
-      return moveTabsToWin(tabIds, dst.windowId)
-    } else {
-      if (dst.windowChooseConf) return moveTabsToWin(tabIds, dst.windowChooseConf)
-      else return moveTabsToWin(tabIds)
-    }
+    return moveTabsToWin(tabIds, dst)
   }
 
   // Moving tabs inside current window
@@ -305,15 +298,11 @@ export async function move(
  *  Move tabs to window if provided,
  * otherwise show window-choosing menu.
  */
-async function moveTabsToWin(
-  tabIds: ID[],
-  windowIdOrConfig?: ID | WindowChoosingDetails
-): Promise<void> {
-  // Logs.info('Tabs.moveTabsToWin', tabIds)
-  let windowId: ID
-  if (windowIdOrConfig === undefined) windowId = await Windows.showWindowsPopup()
-  else if (typeof windowIdOrConfig !== 'object') windowId = windowIdOrConfig
-  else windowId = await Windows.showWindowsPopup(windowIdOrConfig)
+async function moveTabsToWin(tabIds: ID[], dst: DstPlaceInfo): Promise<void> {
+  if (dst.windowId === undefined || dst.windowId === NOID) {
+    if (dst.windowChooseConf) dst.windowId = await Windows.showWindowsPopup(dst.windowChooseConf)
+    else dst.windowId = await Windows.showWindowsPopup()
+  }
 
   // Sort
   Tabs.sortTabIds(tabIds)
@@ -332,24 +321,25 @@ async function moveTabsToWin(
     if (!tab) continue
     tabs.push(Utils.cloneObject(tab))
     Tabs.detachingTabIds.push(tab.id)
-
-    // TODO: Option to automatically include all/folded descendant tabs?
   }
 
   let sidebarIsOpen
-  if (windowId !== Windows.id) {
-    sidebarIsOpen = await browser.sidebarAction.isOpen({ windowId }).catch(() => false)
+  if (dst.windowId !== Windows.id) {
+    sidebarIsOpen = await browser.sidebarAction
+      .isOpen({ windowId: dst.windowId })
+      .catch(() => false)
   }
 
   let moved
   if (sidebarIsOpen) {
-    moved = await IPC.sidebar(windowId, 'moveTabsToThisWin', tabs).catch(() => false)
+    delete dst.windowChooseConf
+    moved = await IPC.sidebar(dst.windowId, 'moveTabsToThisWin', tabs, dst).catch(() => false)
   }
 
   if (!moved) {
     await browser.tabs.move(
       tabs.map(t => t.id),
-      { windowId, index: -1 }
+      { windowId: dst.windowId, index: -1 }
     )
   }
 
@@ -361,15 +351,20 @@ export async function moveToThisWin(tabs: Tab[], dst?: DstPlaceInfo): Promise<bo
   if (!Tabs.attachingTabs) Tabs.attachingTabs = [...tabs]
   else Tabs.attachingTabs.push(...tabs)
 
-  // Find appropriate destination
-  if (!dst) {
-    const isPinned = tabs[0].pinned
-    const panel = Sidebar.panelsById[tabs[0].panelId]
-    let nextIndex
-    if (Utils.isTabsPanel(panel) && panel.nextTabIndex > -1) nextIndex = panel.nextTabIndex
-    else nextIndex = Tabs.list.length
-    dst = { panelId: tabs[0].panelId, parentId: -1, index: isPinned ? 0 : nextIndex }
-  }
+  const isPinned = tabs[0].pinned
+
+  let panel = Sidebar.panelsById[dst?.panelId ?? NOID]
+  if (!Utils.isTabsPanel(panel)) panel = Sidebar.panelsById[tabs[0].panelId]
+
+  let nextIndex
+  if (Utils.isTabsPanel(panel) && panel.nextTabIndex > -1) nextIndex = panel.nextTabIndex
+  else nextIndex = Tabs.list.length
+
+  // Create dst
+  if (!dst) dst = { panelId: tabs[0].panelId, parentId: -1 }
+
+  // Set index
+  if (dst.index === undefined) dst.index = isPinned ? Tabs.pinned.length : nextIndex
 
   const tabIds = tabs.map(t => t.id)
 

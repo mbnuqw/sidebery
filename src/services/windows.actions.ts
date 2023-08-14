@@ -162,7 +162,7 @@ export async function createWithTabs(
 
   // Process the tabs
   const processingTabs: Promise<browser.tabs.Tab | browser.tabs.Tab[]>[] = []
-  let index = 1
+  let index = 0
   for (const info of tabsInfo) {
     // Move
     if (moveTabs) {
