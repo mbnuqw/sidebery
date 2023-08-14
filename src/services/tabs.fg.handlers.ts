@@ -923,20 +923,19 @@ function onTabRemoved(tabId: ID, info: browser.tabs.RemoveInfo, detached?: boole
         else if (removedTabInfo) removedTabInfo.children = [t.id]
       }
 
-      // Remove folded tabs
-      const willBeRemoved =
-        (Settings.state.rmChildTabs === 'folded' && tab.folded && !detached && !tab.reopening) ||
-        (Settings.state.rmChildTabs === 'all' && !detached && !tab.reopening)
-      if (willBeRemoved) {
-        if (!Tabs.removingTabs.includes(t.id)) {
+      const willBeRemoved = Tabs.removingTabs.includes(t.id)
+      if (!willBeRemoved) {
+        const shouldBeRemoved =
+          (Settings.state.rmChildTabs === 'folded' && tab.folded && !detached && !tab.reopening) ||
+          (Settings.state.rmChildTabs === 'all' && !detached && !tab.reopening)
+        // Remove folded tabs
+        if (shouldBeRemoved) {
           toRemove.push(t.id)
           continue
         }
-      }
-      // Or just make them visible
-      else if (t.invisible && !Tabs.removingTabs.includes(t.id)) {
-        // But only if this child tab is a direct descendant OR its parentTab is not folded
-        if (t.parentId === tabId || !Tabs.byId[t.parentId]?.folded) {
+        // Or just make them visible, but only if this child tab is a direct
+        // descendant OR its parentTab is not folded
+        else if (t.invisible && (t.parentId === tabId || !Tabs.byId[t.parentId]?.folded)) {
           t.invisible = false
           fullVisTabsRecalcNeeded = true
           if (t.hidden) toShow.push(t.id)
