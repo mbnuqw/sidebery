@@ -187,6 +187,7 @@ export function exportSnapshot(snapshot: NormalizedSnapshot) {
     })
   }
 }
+
 export async function addSnapshot(snapshot: NormalizedSnapshot): Promise<void> {
   if (!Info.isBg) return await IPC.bg('addSnapshot', snapshot)
 
