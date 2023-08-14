@@ -88,6 +88,7 @@ import { Search } from 'src/services/search'
 import * as Favicons from 'src/services/favicons.fg'
 import { NOID, RGB_COLORS } from 'src/defaults'
 import * as Utils from 'src/utils'
+import * as Logs from 'src/services/logs'
 
 const props = defineProps<{ tabId: ID; iconOnly?: boolean }>()
 const tab = Tabs.byId[props.tabId] as Tab
@@ -420,10 +421,16 @@ function onMouseEnter(e: MouseEvent) {
     if (tab.active) {
       /// warmup successor tab, in case user decides to close active tab
       const successorTabId = tab.successorTabId
-      if (successorTabId && +successorTabId > -1) browser.tabs.warmup(successorTabId)
+      if (successorTabId && Tabs.byId[successorTabId]) {
+        browser.tabs
+          .warmup(successorTabId)
+          .catch(err => Logs.err('Tab.onMouseEnter: Warmup successor tab', err))
+      }
     } else {
       /// warmup hovered tab
-      browser.tabs.warmup(tab.id)
+      browser.tabs
+        .warmup(tab.id)
+        .catch(err => Logs.err('Tab.onMouseEnter: Warmup hovered tab', err))
     }
   }
 }
