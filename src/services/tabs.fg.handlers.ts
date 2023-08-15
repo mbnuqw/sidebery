@@ -1174,7 +1174,7 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
       dstPanel = Sidebar.panelsById[toTab.panelId]
     }
 
-    if (Utils.isTabsPanel(srcPanel) && Utils.isTabsPanel(dstPanel)) {
+    if (Utils.isTabsPanel(srcPanel) && Utils.isTabsPanel(dstPanel) && srcPanel.id !== dstPanel.id) {
       movedTab.panelId = dstPanel.id
       Sidebar.updateMediaStateOfPanelDebounced(100, movedTab.panelId, movedTab)
     }
