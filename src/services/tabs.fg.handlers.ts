@@ -1182,9 +1182,16 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
 
   Sidebar.recalcTabsPanels()
 
+  let nativeTabsVisibilityUpdateNeeded = false
+
   // Calc tree levels and colorize branch
   if (Settings.state.tabsTree) {
+    const toTabFolded = toTab.folded
     if (!mvLen) Tabs.updateTabsTree()
+
+    if (toTabFolded !== toTab.folded && Settings.state.hideFoldedTabs) {
+      nativeTabsVisibilityUpdateNeeded = true
+    }
 
     if (Settings.state.colorizeTabsBranches && tab.lvl > 0) {
       Tabs.setBranchColor(tab.id)
@@ -1196,6 +1203,7 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
 
   if (movedTab.panelId !== Sidebar.activePanelId && movedTab.active) {
     Sidebar.activatePanel(movedTab.panelId)
+    if (Settings.state.hideInact) nativeTabsVisibilityUpdateNeeded = true
   }
 
   if (!mvLen) Tabs.cacheTabsData()
@@ -1203,6 +1211,8 @@ function onTabMoved(id: ID, info: browser.tabs.MoveInfo): void {
 
   // Update succession
   if (!mvLen) Tabs.updateSuccessionDebounced(0)
+
+  if (nativeTabsVisibilityUpdateNeeded) Tabs.updateNativeTabsVisibility()
 }
 
 /**
