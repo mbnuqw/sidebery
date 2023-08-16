@@ -669,6 +669,7 @@ export function reinitTabs(delay = 500): void {
     Sidebar.recalcTabsPanels(true)
     updateTabsTree()
     Sidebar.recalcVisibleTabs()
+    if (Sidebar.reMountSidebar) Sidebar.reMountSidebar()
 
     Tabs.tabsReinitializing = false
     Tabs.normTabsMoving = false
