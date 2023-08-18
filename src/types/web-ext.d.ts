@@ -203,11 +203,14 @@ declare namespace browser {
       discarded?: boolean
       favIconUrl?: string
       hidden: boolean
+      width?: number
+      height?: number
       highlighted: boolean
+      sharingState?: { camera?: boolean; microphone?: boolean }
       id: ID
       index: number
       incognito: boolean
-      isArticle: boolean
+      isArticle?: boolean
       isInReaderMode: boolean
       lastAccessed: number
       mutedInfo?: MutedInfo

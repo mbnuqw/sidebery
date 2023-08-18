@@ -33,6 +33,9 @@ export function mutateNativeTabToSideberyTab(nativeTab: NativeTab): Tab {
   if (tab.invisible === undefined) tab.invisible = false
   if (tab.parentId === undefined) tab.parentId = NOID
   if (tab.panelId === undefined) tab.panelId = NOID
+  if (tab.prevPanelId === undefined) tab.prevPanelId = NOID
+  if (tab.dstPanelId === undefined) tab.dstPanelId = NOID
+  if (tab.relGroupId === undefined) tab.relGroupId = NOID
   if (tab.lvl === undefined) tab.lvl = 0
   if (tab.sel === undefined) tab.sel = false
   if (tab.updated === undefined) tab.updated = false
@@ -995,6 +998,7 @@ export function reloadTabs(tabIds: ID[] = []): void {
       }
 
       const loading = reloadingTabs.filter(tab => {
+        if (tab.reloadingChecks === undefined) return false
         return tab && tab.reloadingChecks++ <= MAX_CHECK_COUNT && tab.status === 'loading'
       })
 

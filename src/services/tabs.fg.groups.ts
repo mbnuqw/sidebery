@@ -11,7 +11,7 @@ import * as Logs from './logs'
 import * as Popups from './popups'
 
 /**
- * Set relGroupId and relPinId props in related pinned and group tabs
+ * Set relGroupId prop in related pinned and group tabs
  */
 export function linkGroupWithPinnedTab(groupTab: Tab, tabs: Tab[]): void {
   const info = new URL(groupTab.url)
@@ -38,7 +38,6 @@ export function linkGroupWithPinnedTab(groupTab: Tab, tabs: Tab[]): void {
   }
 
   pinnedTab.relGroupId = groupTab.id
-  groupTab.relPinId = pinnedTab.id
 }
 
 /**
@@ -120,10 +119,6 @@ export async function groupTabs(tabIds: ID[], conf?: GroupConfig): Promise<void>
   // Set link between group and pinned tabs
   if (conf.pinnedTab) {
     conf.pinnedTab.relGroupId = groupTab.id
-    setTimeout(() => {
-      const localTab = Tabs.byId[groupTab.id]
-      if (localTab && conf?.pinnedTab) localTab.relPinId = conf.pinnedTab.id
-    }, 500)
   }
 
   // Move tabs if needed

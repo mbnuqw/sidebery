@@ -14,15 +14,14 @@ export interface Tab extends NativeTab {
   loading: boolean | 'ok' | 'err'
   warn: boolean
   unread?: boolean
-  proxified: boolean
+  proxified?: boolean
   relGroupId: ID
-  relPinId: ID
   dstPanelId: ID
-  autoGroupped: boolean
-  unpinning: boolean
-  moveTime: number
-  childLastAccessed: number
-  reloadingChecks: number
+  autoGroupped?: boolean
+  unpinning?: boolean
+  moveTime?: number
+  childLastAccessed?: number
+  reloadingChecks?: number
   mediaPaused: boolean
   reopened?: boolean
   internal?: boolean
