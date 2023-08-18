@@ -19,8 +19,7 @@
     "build": "node build/all.js",
     "clear.npm": "rm -rf node_modules package-lock.json",
     "clear": "rm -rf addon",
-    "lint": "eslint ./src && web-ext lint -s ./addon",
-    "test": "./node_modules/.bin/jest"
+    "lint": "eslint ./src && web-ext lint -s ./addon"
   },
   "author": "mbnuqw",
   "license": "MIT",
@@ -36,7 +35,6 @@
     "eslint-config-prettier": "8.9.0",
     "eslint-plugin-prettier": "5.0.0",
     "eslint-plugin-vue": "9.16.1",
-    "jest": "29.6.2",
     "prettier": "3.0.0",
     "pug": "3.0.2",
     "stylus": "0.59.0",
@@ -62,19 +60,5 @@
   "browserslist": [
     "Firefox >= 91"
   ],
-  "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json"
-    ],
-    "setupFiles": [
-      "./test/web-ext-setup.js",
-      "./test/env-setup.js"
-    ],
-    "testMatch": [
-      "**/addon/**/__tests__/*.test.js",
-      "**/src/**/__tests__/*.test.js"
-    ]
-  },
   "sideEffects": false
 }
