@@ -616,7 +616,7 @@ export function reinitTabs(delay = 500): void {
         if (!tab.pinned) {
           const panelInfo = panelsList[panelIndex]
           if (!panelInfo) {
-            Logs.err('Tabs.reinitTabs: No panelInfo 1')
+            Logs.err('Tabs.reinitTabs: > > No panelInfo 1')
             break
           }
           if (panelInfo.id !== tab.panelId) {
@@ -624,13 +624,18 @@ export function reinitTabs(delay = 500): void {
               if (p.index === -1) p.index = index - 1
               return p.id === tab.panelId
             })
+            // Tab panel is after the current one: Switch the current panel
             if (pi > panelIndex) {
               panelIndex = pi
               const panelInfo = panelsList[panelIndex]
               if (panelInfo) panelInfo.index = index
-            } else if (pi === -1) {
+            }
+            // Tab panel is not found: Use the current panel
+            else if (pi === -1) {
               tab.panelId = panelId ?? NOID
-            } else {
+            }
+            // Tab panel is before the current one
+            else {
               const panelInfo = panelsList[pi]
               if (!panelInfo) return
               moves.push([tab.id, panelInfo.index])
